@@ -76,14 +76,14 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	gtk_box_pack_start(GTK_BOX(vbox), toolbar, false, false, 0);
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_BOTH);
 
-	myBookCollectionButton = addToolButton(toolbar, "books", ACTION_SHOW_COLLECTION);
-	mySettingsButton = addToolButton(toolbar, "settings", ACTION_SHOW_OPTIONS);
-	myLeftArrowButton = addToolButton(toolbar, "leftarrow", ACTION_UNDO);
-	myRightArrowButton = addToolButton(toolbar, "rightarrow", ACTION_REDO);
-	myContentsTableButton = addToolButton(toolbar, "contents", ACTION_SHOW_CONTENTS);
-	mySearchButton = addToolButton(toolbar, "find", ACTION_SEARCH);
-	myFindPreviousButton = addToolButton(toolbar, "findprev", ACTION_FIND_PREVIOUS);
-	myFindNextButton = addToolButton(toolbar, "findnext", ACTION_FIND_NEXT);
+	myButtons[BUTTON_BOOKS] = addToolButton(toolbar, "books", ACTION_SHOW_COLLECTION);
+	myButtons[BUTTON_SETTINGS] = addToolButton(toolbar, "settings", ACTION_SHOW_OPTIONS);
+	myButtons[BUTTON_UNDO] = addToolButton(toolbar, "leftarrow", ACTION_UNDO);
+	myButtons[BUTTON_REDO] = addToolButton(toolbar, "rightarrow", ACTION_REDO);
+	myButtons[BUTTON_CONTENTS] = addToolButton(toolbar, "contents", ACTION_SHOW_CONTENTS);
+	myButtons[BUTTON_SEARCH] = addToolButton(toolbar, "find", ACTION_SEARCH);
+	myButtons[BUTTON_FIND_PREVIOUS] = addToolButton(toolbar, "findprev", ACTION_FIND_PREVIOUS);
+	myButtons[BUTTON_FIND_NEXT] = addToolButton(toolbar, "findnext", ACTION_FIND_NEXT);
 
 	myViewWidget = new GtkViewWidget(this);
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
@@ -159,47 +159,31 @@ void GtkFBReader::setMode(ViewMode mode) {
 
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
-			gtk_widget_show(myBookCollectionButton);
-			gtk_widget_show(mySettingsButton);
-			gtk_widget_show(myLeftArrowButton);
-			gtk_widget_show(myRightArrowButton);
-			gtk_widget_show(myContentsTableButton);
-			gtk_widget_show(mySearchButton);
-			gtk_widget_show(myFindPreviousButton);
-			gtk_widget_show(myFindNextButton);
+			gtk_widget_show(myButtons[BUTTON_BOOKS]);
+			gtk_widget_show(myButtons[BUTTON_UNDO]);
+			gtk_widget_show(myButtons[BUTTON_REDO]);
+			gtk_widget_show(myButtons[BUTTON_CONTENTS]);
 			myViewWidget->setView(myBookTextView);
 			break;
 		case CONTENTS_MODE:
-			gtk_widget_show(myBookCollectionButton);
-			gtk_widget_show(mySettingsButton);
-			gtk_widget_hide(myLeftArrowButton);
-			gtk_widget_hide(myRightArrowButton);
-			gtk_widget_hide(myContentsTableButton);
-			gtk_widget_show(mySearchButton);
-			gtk_widget_show(myFindPreviousButton);
-			gtk_widget_show(myFindNextButton);
+			gtk_widget_show(myButtons[BUTTON_BOOKS]);
+			gtk_widget_hide(myButtons[BUTTON_UNDO]);
+			gtk_widget_hide(myButtons[BUTTON_REDO]);
+			gtk_widget_hide(myButtons[BUTTON_CONTENTS]);
 			myViewWidget->setView(myContentsView);
 			break;
 		case FOOTNOTE_MODE:
-			gtk_widget_hide(myBookCollectionButton);
-			gtk_widget_show(mySettingsButton);
-			gtk_widget_hide(myLeftArrowButton);
-			gtk_widget_hide(myRightArrowButton);
-			gtk_widget_show(myContentsTableButton);
-			gtk_widget_show(mySearchButton);
-			gtk_widget_show(myFindPreviousButton);
-			gtk_widget_show(myFindNextButton);
+			gtk_widget_hide(myButtons[BUTTON_BOOKS]);
+			gtk_widget_hide(myButtons[BUTTON_UNDO]);
+			gtk_widget_hide(myButtons[BUTTON_REDO]);
+			gtk_widget_show(myButtons[BUTTON_CONTENTS]);
 			myViewWidget->setView(myFootnoteView);
 			break;
 		case BOOK_COLLECTION_MODE:
-			gtk_widget_hide(myBookCollectionButton);
-			gtk_widget_show(mySettingsButton);
-			gtk_widget_hide(myLeftArrowButton);
-			gtk_widget_hide(myRightArrowButton);
-			gtk_widget_hide(myContentsTableButton);
-			gtk_widget_show(mySearchButton);
-			gtk_widget_show(myFindPreviousButton);
-			gtk_widget_show(myFindNextButton);
+			gtk_widget_hide(myButtons[BUTTON_BOOKS]);
+			gtk_widget_hide(myButtons[BUTTON_UNDO]);
+			gtk_widget_hide(myButtons[BUTTON_REDO]);
+			gtk_widget_hide(myButtons[BUTTON_CONTENTS]);
 			myCollectionView->fill();
 			myViewWidget->setView(myCollectionView);
 			break;
@@ -225,39 +209,13 @@ void GtkFBReader::close() {
  * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
  * does something strange if WIDGET is already insensitive.
  */
-static void enableButton(GtkWidget *button, bool enable) {
-	bool enabled = GTK_WIDGET_STATE(button) != GTK_STATE_INSENSITIVE;
-	if (enabled != enable) {
-		gtk_widget_set_sensitive(button, enable);
-	}
-}
-
-void GtkFBReader::enableMenuButtons() {
-	switch (mode()) {
-		case BOOK_TEXT_MODE:
-			enableButton(myLeftArrowButton, myBookTextView->canUndoPageMove());
-			enableButton(myRightArrowButton, myBookTextView->canRedoPageMove());
-			enableButton(myFindNextButton, myBookTextView->canFindNext());
-			enableButton(myFindPreviousButton, myBookTextView->canFindPrevious());
-			enableButton(myContentsTableButton, !myContentsView->isEmpty());
-			break;
-		case CONTENTS_MODE:
-			enableButton(myFindNextButton, myContentsView->canFindNext());
-			enableButton(myFindPreviousButton, myContentsView->canFindPrevious());
-			break;
-		case FOOTNOTE_MODE:
-			enableButton(myFindNextButton, myFootnoteView->canFindNext());
-			enableButton(myFindPreviousButton, myFootnoteView->canFindPrevious());
-			enableButton(myContentsTableButton, !myContentsView->isEmpty());
-			break;
-		case BOOK_COLLECTION_MODE:
-			enableButton(myFindNextButton, myCollectionView->canFindNext());
-			enableButton(myFindPreviousButton, myCollectionView->canFindPrevious());
-			break;
-		case BOOKMARKS_MODE:
-			break;
-		case UNDEFINED_MODE:
-			break;
+void GtkFBReader::setButtonEnabled(ButtonId id, bool enable) {
+	std::map<ButtonId,GtkWidget*>::const_iterator it = myButtons.find(id);
+	if (it != myButtons.end()) {
+		bool enabled = GTK_WIDGET_STATE(it->second) != GTK_STATE_INSENSITIVE;
+		if (enabled != enable) {
+			gtk_widget_set_sensitive(it->second, enable);
+		}
 	}
 }
 

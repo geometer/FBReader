@@ -198,3 +198,12 @@ void FBReader::doAction(ActionCode code) {
 			break;
 	}
 }
+
+void FBReader::enableMenuButtons() {
+	TextView *textView = (TextView*)myViewWidget->view();
+	setButtonEnabled(BUTTON_FIND_NEXT, textView->canFindNext());
+	setButtonEnabled(BUTTON_FIND_PREVIOUS, textView->canFindPrevious());
+	setButtonEnabled(BUTTON_CONTENTS, !myContentsView->isEmpty());
+	setButtonEnabled(BUTTON_UNDO, myBookTextView->canUndoPageMove());
+	setButtonEnabled(BUTTON_REDO, myBookTextView->canRedoPageMove());
+}

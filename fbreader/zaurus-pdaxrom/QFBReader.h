@@ -31,26 +31,12 @@ class QFBReader : public QMainWindow, public FBReader {
 	Q_OBJECT
 
 private:
-	enum ToolbarButton {
-		BUTTON_BOOKS,
-		BUTTON_SETTINGS,
-		BUTTON_UNDO,
-		BUTTON_REDO,
-		BUTTON_CONTENTS,
-		BUTTON_SEARCH,
-		BUTTON_FIND_NEXT,
-		BUTTON_FIND_PREVIOUS,
-	};
-
-private:
 	static std::string ImageDirectory;
 	static QPixmap loadPixmap(const std::string &name);
 	
 public:
 	QFBReader();
 	~QFBReader();
-
-	void enableMenuButtons();
 
 private:
 	void closeEvent(QCloseEvent *event);
@@ -59,8 +45,7 @@ private:
 protected:
 	void setWindowCaption(const std::string &caption);
 	void setMode(ViewMode mode);
-
-private:
+	void setButtonEnabled(ButtonId id, bool enable);
 	void cancelSlot();
 	void fullscreenSlot();
 	

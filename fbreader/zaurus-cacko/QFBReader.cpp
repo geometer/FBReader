@@ -128,37 +128,37 @@ void QFBReader::setMode(ViewMode mode) {
 	menuBar()->clear();
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/books"), this, SLOT(showCollectionSlot()));
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()));
-			myUndoItemId = menuBar()->insertItem(Resource::loadPixmap("FBReader/leftarrow"), this, SLOT(undoSlot()));
-			myRedoItemId = menuBar()->insertItem(Resource::loadPixmap("FBReader/rightarrow"), this, SLOT(redoSlot()));
-			myContentsItemId = menuBar()->insertItem(Resource::loadPixmap("FBReader/contents"), this, SLOT(showContentsSlot()));
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()));
-			myFindPreviousId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()));
-			myFindNextId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()));
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/books"), this, SLOT(showCollectionSlot()), 0, BUTTON_BOOKS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()), 0, BUTTON_SETTINGS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/leftarrow"), this, SLOT(undoSlot()), 0, BUTTON_UNDO);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/rightarrow"), this, SLOT(redoSlot()), 0, BUTTON_REDO);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/contents"), this, SLOT(showContentsSlot()), 0, BUTTON_CONTENTS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()), 0, BUTTON_SEARCH);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()), 0, BUTTON_FIND_PREVIOUS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()), 0, BUTTON_FIND_NEXT);
 			myViewWidget->setView(myBookTextView);
 			break;
 		case CONTENTS_MODE:
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/books"), this, SLOT(showCollectionSlot()));
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()));
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()));
-			myFindPreviousId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()));
-			myFindNextId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()));
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/books"), this, SLOT(showCollectionSlot()), 0, BUTTON_BOOKS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()), 0, BUTTON_SETTINGS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()), 0, BUTTON_SEARCH);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()), 0, BUTTON_FIND_PREVIOUS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()), 0, BUTTON_FIND_NEXT);
 			myViewWidget->setView(myContentsView);
 			break;
 		case FOOTNOTE_MODE:
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()));
-			myContentsItemId = menuBar()->insertItem(Resource::loadPixmap("FBReader/contents"), this, SLOT(showContentsSlot()));
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()));
-			myFindPreviousId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()));
-			myFindNextId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()));
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()), 0, BUTTON_SETTINGS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/contents"), this, SLOT(showContentsSlot()), 0, BUTTON_CONTENTS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()), 0, BUTTON_SEARCH);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()), 0, BUTTON_FIND_PREVIOUS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()), 0, BUTTON_FIND_NEXT);
 			myViewWidget->setView(myFootnoteView);
 			break;
 		case BOOK_COLLECTION_MODE:
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()));
-			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()));
-			myFindPreviousId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()));
-			myFindNextId = menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()));
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/settings"), this, SLOT(showOptionsDialogSlot()), 0, BUTTON_SETTINGS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/find"), this, SLOT(searchSlot()), 0, BUTTON_SEARCH);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findprev"), this, SLOT(findPreviousSlot()), 0, BUTTON_FIND_PREVIOUS);
+			menuBar()->insertItem(Resource::loadPixmap("FBReader/findnext"), this, SLOT(findNextSlot()), 0, BUTTON_FIND_NEXT);
 			myCollectionView->fill();
 			myViewWidget->setView(myCollectionView);
 			break;
@@ -180,36 +180,9 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void QFBReader::enableMenuButtons() {
-	if (menuBar()->count() == 0) {
-		return;
-	}
-
-	switch (mode()) {
-		case BOOK_TEXT_MODE:
-			menuBar()->setItemEnabled(myUndoItemId, myBookTextView->canUndoPageMove());
-			menuBar()->setItemEnabled(myRedoItemId, myBookTextView->canRedoPageMove());
-			menuBar()->setItemEnabled(myFindNextId, myBookTextView->canFindNext());
-			menuBar()->setItemEnabled(myFindPreviousId, myBookTextView->canFindPrevious());
-			menuBar()->setItemEnabled(myContentsItemId, !myContentsView->isEmpty());
-			break;
-		case CONTENTS_MODE:
-			menuBar()->setItemEnabled(myFindNextId, myContentsView->canFindNext());
-			menuBar()->setItemEnabled(myFindPreviousId, myContentsView->canFindPrevious());
-			break;
-		case FOOTNOTE_MODE:
-			menuBar()->setItemEnabled(myFindNextId, myFootnoteView->canFindNext());
-			menuBar()->setItemEnabled(myFindPreviousId, myFootnoteView->canFindPrevious());
-			menuBar()->setItemEnabled(myContentsItemId, !myContentsView->isEmpty());
-			break;
-		case BOOK_COLLECTION_MODE:
-			menuBar()->setItemEnabled(myFindNextId, myCollectionView->canFindNext());
-			menuBar()->setItemEnabled(myFindPreviousId, myCollectionView->canFindPrevious());
-			break;
-		case BOOKMARKS_MODE:
-			break;
-		case UNDEFINED_MODE:
-			break;
+void QFBReader::setButtonEnabled(ButtonId id, bool enable) {
+	if (menuBar()->findItem(id) != 0) {
+		menuBar()->setItemEnabled(id, enable);
 	}
 }
 

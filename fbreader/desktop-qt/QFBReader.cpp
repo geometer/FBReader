@@ -153,13 +153,10 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void QFBReader::enableMenuButtons() {
-	TextView *textView = (TextView*)myViewWidget->view();
-	menuBar()->setItemEnabled(BUTTON_FIND_NEXT, textView->canFindNext());
-	menuBar()->setItemEnabled(BUTTON_FIND_PREVIOUS, textView->canFindPrevious());
-	menuBar()->setItemEnabled(BUTTON_CONTENTS, !myContentsView->isEmpty());
-	menuBar()->setItemEnabled(BUTTON_UNDO, myBookTextView->canUndoPageMove());
-	menuBar()->setItemEnabled(BUTTON_REDO, myBookTextView->canRedoPageMove());
+void QFBReader::setButtonEnabled(ButtonId id, bool enable) {
+	if (menuBar()->findItem(id) != 0) {
+		menuBar()->setItemEnabled(id, enable);
+	}
 }
 
 void QFBReader::searchSlot() {

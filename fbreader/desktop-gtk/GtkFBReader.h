@@ -37,14 +37,16 @@ public:
 	GtkFBReader();
 	~GtkFBReader();
 
-	void enableMenuButtons();
-
 private:
 	GtkWidget *addToolButton(GtkWidget *toolbar, const std::string &name, ActionCode code);
 
 protected:
 	void setWindowCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
 	void setMode(ViewMode mode);
+	void setButtonEnabled(ButtonId id, bool enable);
+	void searchSlot();
+	void cancelSlot();
+	void fullscreenSlot() {}
 
 public:
 	gboolean handleKeySlot(GdkEventKey *);
@@ -52,23 +54,10 @@ public:
 	void close();
 
 private:
-	void searchSlot();
-	void cancelSlot();
-	void fullscreenSlot() {}
-
-private:
 	GtkWindow *myMainWindow;
 
-	GtkWidget *myBookCollectionButton;
-	GtkWidget *mySettingsButton;
-	GtkWidget *myLeftArrowButton;
-	GtkWidget *myRightArrowButton;
-	GtkWidget *myContentsTableButton;
-	GtkWidget *mySearchButton;
-	GtkWidget *myFindNextButton;
-	GtkWidget *myFindPreviousButton;
-
 	std::map<std::string,ActionCode> myKeyBindings;
+	std::map<ButtonId,GtkWidget*> myButtons;
 };
 
 #endif /* __GTKFBREADER_H__ */

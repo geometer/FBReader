@@ -32,7 +32,6 @@ class QFBReader : public QMainWindow, public FBReader {
 public:
 	QFBReader();
 
-	void enableMenuButtons();
 	void fullScreenWorkaround();
 
 private:
@@ -44,11 +43,10 @@ private:
 protected:
 	void setWindowCaption(const std::string &caption);
 	void setMode(ViewMode mode);
-
-private:
+	void setButtonEnabled(ButtonId id, bool enable);
 	void cancelSlot();
 	void fullscreenSlot();
-	
+
 private slots:
 	void showCollectionSlot() { doAction(ACTION_SHOW_COLLECTION); }
 	void showContentsSlot() { doAction(ACTION_SHOW_CONTENTS); }
@@ -62,12 +60,6 @@ private slots:
 private:
 	bool myFullScreen;
 	int myTitleHeight;
-
-	int myUndoItemId;
-	int myRedoItemId;
-	int myContentsItemId;
-	int myFindNextId;
-	int myFindPreviousId;
 
 	std::map<int,ActionCode> myKeyBindings;
 };
