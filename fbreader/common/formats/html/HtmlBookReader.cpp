@@ -45,8 +45,20 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 			myIsPreformatted = true;
 		} while (index != -1);
 	} else {
-		myConverter.convertBuffer(myBuffer);
-		BookReader::flushTextBufferToParagraph();
+		if (!myIsStarted) {
+			for (std::vector<std::string>::const_iterator it = myBuffer.begin(); !myIsStarted && (it != myBuffer.end()); it++) {
+				for (std::string::const_iterator jt = it->begin(); jt != it->end(); jt++) {
+					if (!isspace(*jt)) {
+						myIsStarted = true;
+						break;
+					}
+				}
+			}
+		}
+		if (myIsStarted) {
+			myConverter.convertBuffer(myBuffer);
+			BookReader::flushTextBufferToParagraph();
+		}
 	}
 }
 
@@ -147,15 +159,6 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _DD:
 			break;
 		//
-		case _TITLE:
-			endParagraph();
-			if (tag.Start) {
-				pushKind(TITLE);
-			} else {
-				popKind();
-			}
-			beginParagraph();
-			break;
 		case _H1:
 		case _H2:
 		case _H3:
@@ -164,9 +167,14 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _H6:
 			endParagraph();
 			if (tag.Start) {
+				insertEndOfSectionParagraph();
+				myInsideTitle = true;
+				beginContentsParagraph();
 				pushKind(SECTION_TITLE);
 			} else {
 				popKind();
+				endContentsParagraph();
+				myInsideTitle = false;
 			}
 			beginParagraph();
 			break;
@@ -179,8 +187,14 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _I:
 			addControl(EMPHASIS, tag.Start);
 			break;
+		case _HEAD:
+		case _TITLE:
 		case _STYLE:
-			myIgnoreData = tag.Start;
+			if (tag.Start) {
+				myIgnoreDataCounter++;
+			} else {
+				myIgnoreDataCounter--;
+			}
 			break;
 		case _A:
 			if (tag.Start) {
@@ -206,7 +220,7 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 }
 
 bool HtmlBookReader::characterDataHandler(const char *text, int len) {
-	if (!myIgnoreData) {
+	if (myIgnoreDataCounter == 0) {
 		addDataToBuffer(text, len);
 	}
 	return true;
@@ -216,9 +230,10 @@ void HtmlBookReader::startDocumentHandler() {
 	setMainTextModel();
 	pushKind(REGULAR);
 	beginParagraph();
-	myIgnoreData = false;
+	myIgnoreDataCounter = 0;
 	myIsPreformatted = false;
 	myIsHyperlink = false;
+	myIsStarted = false;
 }
 
 void HtmlBookReader::endDocumentHandler() {

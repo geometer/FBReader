@@ -74,13 +74,14 @@ private:
 	Paragraph *myCurrentParagraph;
 	ParagraphWithReference *myCurrentContentsParagraph;
 
+	bool mySectionContainsRegularContents;
+
 protected:
 	std::vector<std::string> myBuffer;
 
 	Image *myCurrentImage;
 
 	bool myInsideTitle;
-	bool mySectionContainsRegularContents;
 };
 
 #endif /* __BOOKREADER_H__ */

@@ -44,9 +44,10 @@ private:
 	void flushTextBufferToParagraph();
 
 private:
-	bool myIgnoreData;
+	int myIgnoreDataCounter;
 	bool myIsPreformatted;
 	bool myIsHyperlink;
+	bool myIsStarted;
 	std::stack<int> myListNumStack;
 };
 

@@ -113,6 +113,10 @@ void BookReader::flushTextBufferToParagraph() {
 		return;
 	}
 
+	if (!myInsideTitle) {
+		mySectionContainsRegularContents = true;
+	}
+
 	myCurrentParagraph->addText(myBuffer);
 	if (myCurrentContentsParagraph != 0) {
 		if (myInsideTitle) {
@@ -152,6 +156,7 @@ void BookReader::addImageToParagraph(const std::string &id) {
 	if (createSeparateParagraph) {
 		beginParagraph();
 	} else {
+		mySectionContainsRegularContents = true;
 		flushTextBufferToParagraph();
 	}
 	myCurrentParagraph->addControl(IMAGE, true);

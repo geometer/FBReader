@@ -91,9 +91,6 @@ const char *reference(const char **xmlattributes) {
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	switch (tag) {
 		case _P:
-			if (!myInsideTitle) {
-				mySectionContainsRegularContents = true;
-			}
 			beginParagraph();
 			break;
 		case _V:
@@ -138,9 +135,6 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			myInsidePoem = true;
 			break;
 		case _STANZA:
-			if (!myInsideTitle) {
-				mySectionContainsRegularContents = true;
-			}
 			pushKind(STANZA);
 			beginParagraph(Paragraph::BEFORE_SKIP_PARAGRAPH);
 			endParagraph();
@@ -174,7 +168,6 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		}
 		case _IMAGE:
 			if (!currentTextModelIsNull()) {
-				mySectionContainsRegularContents = true;
 				const char *ref = reference(xmlattributes);
 				if (ref != 0) {
 					addImageToParagraph(ref);

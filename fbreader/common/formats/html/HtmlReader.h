@@ -53,6 +53,7 @@ class HtmlReader {
 public:
 	enum TagCode {
 		_UNKNOWN,
+		_HEAD,
 		_BODY,
 		_TITLE,
 		_H1, _H2, _H3, _H4, _H5, _H6,

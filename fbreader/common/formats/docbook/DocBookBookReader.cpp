@@ -76,7 +76,6 @@ void DocBookBookReader::endElementHandler(int tag) {
 			myReadText = false;
 			popKind();
 			endContentsParagraph();
-			mySectionContainsRegularContents = true;
 			insertEndOfSectionParagraph();
 			break;
 		case _PARA:

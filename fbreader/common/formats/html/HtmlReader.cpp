@@ -98,6 +98,7 @@ static struct {
 	const char *tagName;
 	HtmlReader::TagCode tagCode;
 } HTML_TAGS[] = {
+	{ "HEAD", HtmlReader::_HEAD },
 	{ "BODY", HtmlReader::_BODY },
 	{ "TITLE", HtmlReader::_TITLE },
 	{ "H1", HtmlReader::_H1 },
