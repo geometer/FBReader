@@ -94,7 +94,6 @@ int GtkOptionsDialog::run() {
 }
 
 void GtkOptionsDialog::setSize(int width, int height) {
-	std::cout << "setSize: " << width << ", " << height << std::endl;
 	gtk_window_set_default_size(GTK_WINDOW(myDialog), width, height);
 }
 
@@ -103,8 +102,6 @@ int GtkOptionsDialog::width() const {
 
 	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
 
-	std::cout << "width: " << _width << ", " << _height << std::endl;
-
 	return _width;
 }
 
@@ -112,8 +109,6 @@ int GtkOptionsDialog::height() const {
 	int _width, _height;
 
 	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
-
-	std::cout << "height: " << _width << ", " << _height << std::endl;
 
 	return _height;
 }
