@@ -210,6 +210,12 @@ void FBReader::doAction(ActionCode code) {
 				}
 			}
 			break;
+		case ACTION_SHOW_BOOK_INFO:
+			break;
+		case ACTION_SHOW_HELP:
+			break;
+		case ACTION_ROTATE_SCREEN:
+			break;
 	}
 }
 
@@ -234,6 +240,7 @@ void FBReader::setMode(ViewMode mode) {
 		case BOOK_TEXT_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
+			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
 			setButtonVisible(ACTION_UNDO, true);
 			setButtonVisible(ACTION_REDO, true);
 			setButtonVisible(ACTION_SHOW_CONTENTS, true);
@@ -242,6 +249,7 @@ void FBReader::setMode(ViewMode mode) {
 		case CONTENTS_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
+			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
 			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
@@ -250,6 +258,7 @@ void FBReader::setMode(ViewMode mode) {
 		case FOOTNOTE_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, false);
 			setButtonVisible(ACTION_ADD_BOOK, false);
+			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
 			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, true);
@@ -258,6 +267,7 @@ void FBReader::setMode(ViewMode mode) {
 		case BOOK_COLLECTION_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, false);
 			setButtonVisible(ACTION_ADD_BOOK, true);
+			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
 			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
@@ -275,6 +285,7 @@ void FBReader::setMode(ViewMode mode) {
 void FBReader::createToolbar() {
 	addButton(ACTION_SHOW_COLLECTION, "books");
 	addButton(ACTION_ADD_BOOK, "addbook");
+	addButton(ACTION_SHOW_BOOK_INFO, "bookinfo");
 	addButton(ACTION_SHOW_OPTIONS, "settings");
 	addButton(ACTION_UNDO, "leftarrow");
 	addButton(ACTION_REDO, "rightarrow");

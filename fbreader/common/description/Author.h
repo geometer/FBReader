@@ -51,6 +51,20 @@ private:
 	std::string mySortKey;
 };
 
+class StoredAuthor : public Author {
+
+public:
+	StoredAuthor(const std::string &displayName, const std::string &sortKey) : myDisplayName(displayName), mySortKey(sortKey) {}
+	Author *createCopy() const { return new StoredAuthor(myDisplayName, mySortKey); }
+	const std::string &displayName() const { return myDisplayName; }
+	const std::string &sortKey() const { return mySortKey; }
+	bool isSingle() const { return true; }
+
+private:
+	std::string myDisplayName;
+	std::string mySortKey;
+};
+
 class SingleAuthorWith3Names : public Author {
 
 public:

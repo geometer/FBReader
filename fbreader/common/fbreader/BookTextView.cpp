@@ -119,6 +119,11 @@ void BookTextView::pushCurrentPositionIntoStack() {
 	}
 }
 
+void BookTextView::replaceCurrentPositionInStack() {
+	myPositionStack[myCurrentPointInStack].first = myFirstParagraphCursor->paragraphNumber();
+	myPositionStack[myCurrentPointInStack].second = myFirstParagraphCursor->wordNumber();
+}
+
 bool BookTextView::setFirstParagraphCursor() {
 	if (myFirstParagraphCursor == 0) {
 		if (myLastParagraphCursor == 0) {
@@ -159,6 +164,8 @@ void BookTextView::undoPageMove() {
 
 	if (myCurrentPointInStack == myPositionStack.size()) {
 		pushCurrentPositionIntoStack();
+	} else {
+		replaceCurrentPositionInStack();
 	}
 
 	myCurrentPointInStack--;
@@ -177,6 +184,7 @@ void BookTextView::redoPageMove() {
 		return;
 	}
 
+	replaceCurrentPositionInStack();
 	myCurrentPointInStack++;
 	std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
 	myFirstParagraphCursor->moveTo(pos.first, pos.second, 0);

@@ -18,6 +18,7 @@
  */
 
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLOptions.h>
 
 #include "BookDescription.h"
 #include "DescriptionReader.h"
@@ -46,7 +47,23 @@ BookDescription::BookDescription(const std::string &fileName) {
 	myFileName = fileName;
 	myIsValid = false;
 	myAuthor = 0;
-	
+
+	ZLStringOption AuthorDisplayNameOption(fileName, "AuthorDisplayName", "");
+	ZLStringOption AuthorSortKeyOption(fileName, "AuthorSortKey", "");
+	ZLStringOption TitleOption(fileName, "Title", "");
+	ZLStringOption LanguageOption(fileName, "Language", "unknown");
+
+	const std::string &displayName = AuthorDisplayNameOption.value();
+	const std::string &sortKey = AuthorSortKeyOption.value();
+	const std::string &title = TitleOption.value();
+	if (!displayName.empty() && !sortKey.empty() && !title.empty()) {
+		myAuthor = new StoredAuthor(displayName, sortKey);
+		myTitle = title;
+		myLanguage = LanguageOption.value();
+		myIsValid = true;
+		return;
+	}
+
 	ZLInputStream *stream = ZLInputStream::createStream(myFileName);
 	if (stream != 0) {
 		DescriptionReader *reader = ReaderCollection::createDescriptionReader(*this);
@@ -68,6 +85,10 @@ BookDescription::BookDescription(const std::string &fileName) {
 	if (myAuthor == 0) {
 		myAuthor = new DummyAuthor();
 	}
+	AuthorDisplayNameOption.setValue(myAuthor->displayName());
+	AuthorSortKeyOption.setValue(myAuthor->sortKey());
+	TitleOption.setValue(myTitle);
+	LanguageOption.setValue(myLanguage);
 }
 
 BookDescription::~BookDescription() {

@@ -44,6 +44,7 @@ public:
 
 private:
 	void pushCurrentPositionIntoStack();
+	void replaceCurrentPositionInStack();
 	bool setFirstParagraphCursor();
 
 private:
