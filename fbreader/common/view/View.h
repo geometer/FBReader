@@ -27,14 +27,21 @@ class PaintContext;
 
 class ViewWidget {
 
+protected:
+	ViewWidget() : myIsRotated(false) {}
+
 public:
 	void setView(View *view);
 	View *view() const { return myView; }
 
 	virtual void repaintView() = 0;
 
+	void rotate() { myIsRotated = !myIsRotated; }
+	bool isRotated() const { return myIsRotated; }
+
 private:
 	View *myView;
+	bool myIsRotated;
 };
 
 class View {
@@ -52,7 +59,7 @@ public:
 	 */
 	virtual bool onStylusPress(int, int) { return false; }
 
-	virtual void repaintView();
+	void repaintView();
 
 private:
 	ViewWidget *myWidget;

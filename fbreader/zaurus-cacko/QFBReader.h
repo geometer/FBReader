@@ -51,6 +51,7 @@ protected:
 	void cancelSlot();
 	void searchSlot();
 	void fullscreenSlot();
+	bool isRotationSupported() { return false; }
 
 private slots:
 	void doActionSlot(int buttonNumber);

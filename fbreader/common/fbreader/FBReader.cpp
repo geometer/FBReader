@@ -225,6 +225,8 @@ void FBReader::doAction(ActionCode code) {
 		case ACTION_SHOW_HELP:
 			break;
 		case ACTION_ROTATE_SCREEN:
+			myViewWidget->rotate();
+			repaintView();
 			break;
 	}
 }
@@ -303,6 +305,9 @@ void FBReader::createToolbar() {
 	addButton(ACTION_SEARCH, "find");
 	addButton(ACTION_FIND_NEXT, "findnext");
 	addButton(ACTION_FIND_PREVIOUS, "findprev");
+	if (isRotationSupported()) {
+		addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
+	}
 }
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {

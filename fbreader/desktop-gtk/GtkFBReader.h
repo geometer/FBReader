@@ -45,6 +45,7 @@ protected:
 	void searchSlot();
 	void cancelSlot();
 	void fullscreenSlot() {}
+	bool isRotationSupported() { return true; }
 
 public:
 	gboolean handleKeySlot(GdkEventKey *);
