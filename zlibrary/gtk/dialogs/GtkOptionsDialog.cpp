@@ -101,6 +101,8 @@ void GtkOptionsDialogTab::accept() {
 
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
   myTable = GTK_TABLE(gtk_table_new (0, 2, TRUE));
+  gtk_container_set_border_width (GTK_CONTAINER (myTable), 2);
+
   myRowCounter = 0;
 
   gtk_widget_show (GTK_WIDGET(myTable));
@@ -122,7 +124,7 @@ int GtkOptionsDialogTab::addRow (void) {
 }
 
 void GtkOptionsDialogTab::addItem (GtkWidget *what, int row, int fromColumn, int toColumn) {
-	gtk_table_attach (myTable, what, fromColumn, toColumn, row, row + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
+	gtk_table_attach (myTable, what, fromColumn, toColumn, row, row + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
 }
 
 void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {

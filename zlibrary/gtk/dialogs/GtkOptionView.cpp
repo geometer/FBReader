@@ -33,10 +33,10 @@
 // FIXME: geometer did some work on arranging the controls, mss will fix it
 // later when the functionality is really working
 static GtkWidget *notSoNicelyPacked (GtkWidget *label, GtkWidget *data) {
-	GtkWidget *hBox = gtk_hbox_new(TRUE, 0);
+	GtkWidget *hBox = gtk_hbox_new(FALSE, 0);
 
-	gtk_box_pack_start(GTK_BOX(hBox), label, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(hBox), data, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(hBox), label, FALSE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(hBox), data, TRUE, TRUE, 2);
 
 	gtk_widget_show_all(hBox);
 
