@@ -18,7 +18,6 @@
  */
 
 #include <ctype.h>
-#include <iostream>
 
 #include <abstract/ZLInputStream.h>
 
@@ -54,9 +53,28 @@ void HtmlBookReader::readBook(ZLInputStream &stream) {
 					if (insideTagName) {
 						tagName.append(start, ptr - start);
 					}
-					std::cerr << tagName << "\n";
 					if ((tagName == "p") || (tagName == "P")) {
 						endParagraph();
+						beginParagraph();
+					}
+					if ((tagName == "title") || (tagName == "TITLE")) {
+						endParagraph();
+						pushKind(TITLE);
+						beginParagraph();
+					}
+					if ((tagName == "/title") || (tagName == "/TITLE")) {
+						endParagraph();
+						popKind();
+						beginParagraph();
+					}
+					if ((tagName == "h1") || (tagName == "H1") || (tagName == "h2") || (tagName == "H2")) {
+						endParagraph();
+						pushKind(SECTION_TITLE);
+						beginParagraph();
+					}
+					if ((tagName == "/h1") || (tagName == "/H1") || (tagName == "/h2") || (tagName == "/H2")) {
+						endParagraph();
+						popKind();
 						beginParagraph();
 					}
 					tagName.clear();
