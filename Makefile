@@ -4,7 +4,9 @@ ALLAPPDIRS = zmahjongg zsolitaire fbreader GeometricCalculator
 
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
 	APPDIRS = zmahjongg zsolitaire fbreader GeometricCalculator
-else
+endif
+
+ifeq "$(APPDIRS)" ""
 	APPDIRS = fbreader
 endif
 
