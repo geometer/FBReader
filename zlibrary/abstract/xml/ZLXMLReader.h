@@ -28,6 +28,10 @@ class ZLInputStream;
 
 class ZLXMLReader {
 
+public:
+	static std::vector<std::string> &knownEncodings();
+
+	//
 //protected:
 public:
 	struct Tag {

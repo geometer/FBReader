@@ -28,6 +28,7 @@
 #include "CollectionView.h"
 #include "OptionsDialog.h"
 #include "FBFileHandler.h"
+#include "InfoOptions.h"
 
 #include "../description/BookDescription.h"
 #include "../bookmodel/BookModel.h"
@@ -314,8 +315,8 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Title", info.TitleOption));
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (display name)", info.AuthorDisplayNameOption));
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", info.AuthorSortKeyOption));
-		infoTab->addOption(new ZLSimpleStringOptionEntry("Language", info.LanguageOption));
-		infoTab->addOption(new ZLSimpleStringOptionEntry("Encoding", info.EncodingOption));
+		infoTab->addOption(new LanguageEntry("Language", info.LanguageOption));
+		infoTab->addOption(new EncodingEntry("Encoding", info.EncodingOption));
 		code = infoDialog->run("");
 		delete infoDialog;
 	}
