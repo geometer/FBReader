@@ -30,6 +30,7 @@ class QViewWidget : public QWidget, public ViewWidget {
 public:
 	QViewWidget(QWidget *parent);
 	~QViewWidget() {}
+	void setRotated(bool rotated);
 
 protected:
 	void repaintView();
@@ -37,6 +38,9 @@ protected:
 protected:
 	void paintEvent(QPaintEvent *event);
 	void mousePressEvent(QMouseEvent *event);
+
+private:
+	bool myIsRotated;
 };
 
 #endif /* __QVIEWWIDGET_H__ */
