@@ -117,6 +117,7 @@ const std::string GtkPaintContext::realFontFamilyName(std::string &fontFamily) c
 	font.setFamily(fontFamily.c_str());
 	return font.family().ascii();
 	*/
+    return fontFamily;
 }
 
 void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
