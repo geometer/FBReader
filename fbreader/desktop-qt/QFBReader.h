@@ -31,6 +31,18 @@ class QFBReader : public QMainWindow, public FBReader {
 	Q_OBJECT
 
 private:
+	enum ToolbarButton {
+		BUTTON_BOOKS,
+		BUTTON_SETTINGS,
+		BUTTON_UNDO,
+		BUTTON_REDO,
+		BUTTON_CONTENTS,
+		BUTTON_SEARCH,
+		BUTTON_FIND_NEXT,
+		BUTTON_FIND_PREVIOUS,
+	};
+
+private:
 	static std::string ImageDirectory;
 	static QPixmap loadPixmap(const std::string &name);
 	
@@ -63,15 +75,6 @@ private slots:
 	void findPreviousSlot() { doAction(ACTION_FIND_PREVIOUS); }
 
 private:
-	int myBooksItemId;
-	int mySettingsItemId;
-	int myUndoItemId;
-	int myRedoItemId;
-	int myContentsItemId;
-	int mySearchItemId;
-	int myFindNextId;
-	int myFindPreviousId;
-
 	std::map<int,ActionCode> myKeyBindings;
 };
 
