@@ -59,6 +59,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	accelerator->connectItem(accelerator->insertItem(Key_P), this, SLOT(findPreviousSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_O), this, SLOT(showOptionsDialogSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_I), this, SLOT(showHidePositionIndicatorSlot()));
+	// TODO: replace keycodes for Fn+3, Fn+4
 	accelerator->connectItem(accelerator->insertItem(0x200f), this, SLOT(decreaseFontSlot()));
 	accelerator->connectItem(accelerator->insertItem(0x2010), this, SLOT(increaseFontSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_Left), this, SLOT(undoSlot()));
