@@ -91,11 +91,11 @@ void CollectionView::fill() {
 
 bool CollectionView::onStylusPress(int x, int y) {
 	myTreeStateIsFrozen = true;
-	if (TextView::onStylusPress(x, y)) {
-		myTreeStateIsFrozen = false;
+	bool processedByParent = TextView::onStylusPress(x, y);
+	myTreeStateIsFrozen = false;
+	if (processedByParent) {
 		return true;
 	}
-	myTreeStateIsFrozen = false;
 
 	const ParagraphPosition *position = paragraphByCoordinate(y);
 	if (position == 0) {
