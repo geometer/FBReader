@@ -40,14 +40,14 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->repaintView();
 }
 
-struct UniversalSlotData {
-	UniversalSlotData(GtkFBReader *reader, GtkFBReader::ActionCode code) { Reader = reader; Code = code; }
+struct ActionSlotData {
+	ActionSlotData(GtkFBReader *reader, FBReader::ActionCode code) { Reader = reader; Code = code; }
 	GtkFBReader *Reader;
-	GtkFBReader::ActionCode Code;
+	FBReader::ActionCode Code;
 };
 
-static void universalSlot(GtkWidget*, gpointer data) {
-	UniversalSlotData *uData = (UniversalSlotData*)data;
+static void actionSlot(GtkWidget*, gpointer data) {
+	ActionSlotData *uData = (ActionSlotData*)data;
 	uData->Reader->doAction(uData->Code);
 }
 
@@ -61,7 +61,7 @@ GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &nam
 	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 	gtk_container_add(GTK_CONTAINER(button), image);
 	gtk_container_add(GTK_CONTAINER(toolbar), button);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(universalSlot), new UniversalSlotData(this, code));
+	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), new ActionSlotData(this, code));
 	return button;
 }
 
@@ -112,10 +112,6 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myKeyBindings["Escape"] = ACTION_CANCEL;
 	myKeyBindings["<Shift>plus"] = ACTION_INCREASE_FONT;
 	myKeyBindings["equal"] = ACTION_DECREASE_FONT;
-
-/*
-	myLastScrollingTime = QTime::currentTime();
-*/
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -176,10 +172,24 @@ void GtkFBReader::doAction(ActionCode code) {
 			findNext();
 			break;
 		case ACTION_SCROLL_FORWARD:
-			scrollForwardSlot();
+			{
+				ZLTime time;
+				int msecs = myLastScrollingTime.millisecondsTo(time);
+				if (msecs >= ScrollingDelayOption.value()) {
+					myLastScrollingTime = time;
+					nextPage();
+				}
+			}
 			break;
 		case ACTION_SCROLL_BACKWARD:
-			scrollBackwardSlot();
+			{
+				ZLTime time;
+				int msecs = myLastScrollingTime.millisecondsTo(time);
+				if (msecs >= ScrollingDelayOption.value()) {
+					myLastScrollingTime = time;
+					nextPage();
+				}
+			}
 			break;
 		case ACTION_CANCEL:
 			cancelSlot();
@@ -194,32 +204,6 @@ void GtkFBReader::doAction(ActionCode code) {
 			showHidePositionIndicator();
 			break;
 	}
-}
-
-void GtkFBReader::scrollForwardSlot() {
-/*
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-*/
-		nextPage();
-/*
-	}
-*/
-}
-
-void GtkFBReader::scrollBackwardSlot() {
-/*
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-*/
-		previousPage();
-/*
-	}
-*/
 }
 
 void GtkFBReader::cancelSlot() {
@@ -297,10 +281,6 @@ void GtkFBReader::close() {
 		delete this;
 		gtk_main_quit();
 	}
-}
-
-void GtkFBReader::repaintView() {
-	myViewWidget->repaintView();
 }
 
 /*

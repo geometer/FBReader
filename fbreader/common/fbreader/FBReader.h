@@ -35,6 +35,24 @@ class PaintContext;
 
 class FBReader {
 
+public:
+	enum ActionCode {
+		ACTION_SHOW_COLLECTION,
+		ACTION_SHOW_OPTIONS,
+		ACTION_UNDO,
+		ACTION_REDO,
+		ACTION_SHOW_CONTENTS,
+		ACTION_SEARCH,
+		ACTION_FIND_PREVIOUS,
+		ACTION_FIND_NEXT,
+		ACTION_SCROLL_FORWARD,
+		ACTION_SCROLL_BACKWARD,
+		ACTION_CANCEL,
+		ACTION_INCREASE_FONT,
+		ACTION_DECREASE_FONT,
+		ACTION_SHOW_HIDE_POSITION_INDICATOR,
+	};
+
 protected:
 	enum ViewMode {
 		UNDEFINED_MODE,
@@ -75,7 +93,6 @@ protected:
 	void showHidePositionIndicator();
 
 	virtual void setWindowCaption(const std::string &caption) = 0;
-	virtual void repaintView() = 0;
 
 public:
 	void openBook(BookDescription *description);
@@ -84,6 +101,7 @@ public:
 	void tryShowFootnoteView(const std::string &id);
 	void restorePreviousMode() { setMode(myPreviousMode); myPreviousMode = BOOK_TEXT_MODE; }
 	virtual void enableMenuButtons() = 0;
+	void repaintView();
 
 protected:
 	ViewMode myMode;

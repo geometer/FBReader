@@ -172,3 +172,9 @@ void FBReader::showHidePositionIndicator() {
 	TextView::ShowPositionIndicatorOption.setValue(!TextView::ShowPositionIndicatorOption.value());
 	repaintView();
 }
+
+void FBReader::repaintView() {
+	if (myViewWidget != 0) {
+		myViewWidget->repaintView();
+	}
+}

@@ -5,27 +5,27 @@ include $(MAKEFILESDIR)/config.mk
 
 TARGET = libzlibrary.a
 
-SUBDIRS_ALL = abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
+SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
 QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/view qt/dialogs
 GTKSUBDIRS_ALL = gtk/dialogs
 
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
-	SUBDIRS = abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml
 	QTSUBDIRS = qtopia/dialogs qtopia/options qtopia/view
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
-	SUBDIRS = abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
 	QTSUBDIRS = qt/dialogs
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-qt"
-	SUBDIRS = abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
 	QTSUBDIRS = qt/dialogs
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
-	SUBDIRS = abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
 	GTKSUBDIRS = gtk/dialogs
 endif
 

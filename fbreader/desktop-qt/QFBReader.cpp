@@ -168,12 +168,6 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void QFBReader::repaintView() {
-	if (centralWidget() != 0) {
-		centralWidget()->repaint();
-	}
-}
-
 void QFBReader::enableMenuButtons() {
 	if (menuBar()->count() == 0) {
 		return;

@@ -26,27 +26,11 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
+#include <abstract/ZLTime.h>
+
 #include "../common/fbreader/FBReader.h"
 
 class GtkFBReader : public FBReader { 
-
-public:
-	enum ActionCode {
-		ACTION_SHOW_COLLECTION,
-		ACTION_SHOW_OPTIONS,
-		ACTION_UNDO,
-		ACTION_REDO,
-		ACTION_SHOW_CONTENTS,
-		ACTION_SEARCH,
-		ACTION_FIND_PREVIOUS,
-		ACTION_FIND_NEXT,
-		ACTION_SCROLL_FORWARD,
-		ACTION_SCROLL_BACKWARD,
-		ACTION_CANCEL,
-		ACTION_INCREASE_FONT,
-		ACTION_DECREASE_FONT,
-		ACTION_SHOW_HIDE_POSITION_INDICATOR,
-	};
 
 private:
 	static std::string ImageDirectory;
@@ -69,21 +53,15 @@ public:
 
 	gboolean handleKeySlot(GdkEventKey *);
 
-	void repaintView();
 	void close();
 
 private:
 	void searchSlot();
-	void scrollForwardSlot();
-	void scrollBackwardSlot();
 	void cancelSlot();
 
-/*
 private:
-	QTime myLastScrollingTime;
-*/
+	ZLTime myLastScrollingTime;
 
-private:
 	GtkWindow *myMainWindow;
 
 	GtkWidget *myBookCollectionButton;

@@ -41,7 +41,6 @@ private:
 
 protected:
 	void setWindowCaption(const std::string &caption);
-	void repaintView();
 	void setMode(ViewMode mode);
 
 private slots:
