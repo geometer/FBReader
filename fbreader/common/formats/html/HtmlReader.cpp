@@ -192,7 +192,8 @@ void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding
 		delete myConverter;
 	}
 	myConverter = new HtmlTextConverter(encoding.c_str());
-	ZLStringInputStream startStream("<t>");
+	std::string startString = "<t>";
+	ZLStringInputStream startStream(startString);
 	myConverter->readDocument(startStream);
 
 	startDocumentHandler();
