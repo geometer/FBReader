@@ -117,7 +117,7 @@ static struct {
 	{ "CITE", HtmlReader::_CITE, },
 	{ "ABBR", HtmlReader::_ABBR, },
 	{ "ACRONYM", HtmlReader::_ACRONYM, },
-	{ "BLOCKQUOUTE", HtmlReader::_BLOCKQUOUTE, },
+	{ "BLOCKQUOTE", HtmlReader::_BLOCKQUOTE, },
 	{ "Q", HtmlReader::_Q, },
 	{ "SUB", HtmlReader::_SUB, },
 	{ "SUP", HtmlReader::_SUP, },
@@ -140,6 +140,7 @@ static struct {
 	{ "B", HtmlReader::_B },
 	{ "I", HtmlReader::_I },
 	{ "STYLE", HtmlReader::_STYLE },
+	{ "A", HtmlReader::_A },
 	{ 0, HtmlReader::_UNKNOWN }
 };
 
@@ -153,7 +154,7 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 		name = name.substr(1);
 	}
 
-	if (name.length() > 6) {
+	if (name.length() > 10) {
 		return HtmlTag(_UNKNOWN, start);
 	}
 
@@ -168,6 +169,14 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 	}
 }
 
+enum ParseState {
+	PS_TEXT,
+	PS_TAGNAME,
+	PS_ATTRIBUTENAME,
+	PS_ATTRIBUTEVALUE,
+	PS_SKIPTAG,
+};
+
 void HtmlReader::readDocument(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return;
@@ -175,60 +184,119 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 
 	startDocumentHandler();
 
-	bool insideTag = false;
-	bool insideTagName = false;
-	std::string tagName;
+	ParseState state = PS_TEXT;
+	std::string currentString;
+	int quotationCounter = 0;
+	HtmlTag currentTag(_UNKNOWN, false);
 	
 	const size_t BUFSIZE = 2048;
 	char buffer[BUFSIZE];
 	size_t length;
-	bool doBreak = false;
 	do {
 		length = stream.read(buffer, BUFSIZE);
 		char *start = buffer;
 		char *endOfBuffer = buffer + length;
 		for (char *ptr = buffer; ptr < endOfBuffer; ptr++) {
-			if (insideTag) {
-				if (*ptr == '>') {
-					insideTag = false;
-					if (insideTagName) {
-						tagName.append(start, ptr - start);
+			switch (state) {
+				case PS_TEXT:
+					if (*ptr == '<') {
+						if (!characterDataHandler(start, ptr - start)) {
+							goto endOfProcessing;
+						}
+						start = ptr + 1;
+						state = PS_TAGNAME;
 					}
-					if (!tagHandler(tag(tagName))) {
-						doBreak = true;
-						break;
+					break;
+				case PS_TAGNAME:
+					if ((*ptr == '>') || isspace(*ptr)) {
+						currentString.append(start, ptr - start);
+						start = ptr + 1;
+						currentTag = tag(currentString);
+						currentString.erase();
+						if (currentTag.Code == _UNKNOWN) {
+							state = (*ptr == '>') ? PS_TEXT : PS_SKIPTAG;
+						} else {
+							if (*ptr == '>') {
+								if (!tagHandler(currentTag)) {
+									goto endOfProcessing;
+								}
+								state = PS_TEXT;
+							} else {
+								state = PS_ATTRIBUTENAME;
+							}
+						}
 					}
-					tagName.erase();
-					start = ptr + 1;
-				} if (insideTagName && isspace(*ptr)) {
-					tagName.append(start, ptr - start);
-					insideTagName = false;
-				}
-			} else {
-				if (*ptr == '<') {
-					insideTag = true;
-					insideTagName = true;
-					if (!characterDataHandler(start, ptr - start)) {
-						doBreak = true;
-						break;
+					break;
+				case PS_ATTRIBUTENAME:
+					if ((*ptr == '>') || (*ptr == '=') || isspace(*ptr)) {
+						if (ptr != start) {
+							currentString.append(start, ptr - start);
+							currentTag.addAttribute(currentString);
+							currentString.erase();
+						}
+						start = ptr + 1;
+						if (*ptr == '>') {
+							if (!tagHandler(currentTag)) {
+								goto endOfProcessing;
+							}
+							state = PS_TEXT;
+						} else {
+							state = (*ptr == '=') ? PS_ATTRIBUTEVALUE : PS_ATTRIBUTENAME;
+						}
 					}
-					start = ptr + 1;
-				}
+					break;
+				case PS_ATTRIBUTEVALUE:
+					if (*ptr == '"') {
+						if ((ptr == start) || (quotationCounter > 0)) {
+							quotationCounter++;
+						}
+					} else if ((quotationCounter != 1) && ((*ptr == '>') || isspace(*ptr))) {
+						if (ptr != start) {
+							currentString.append(start, ptr - start);
+							if (currentString[0] == '"') {
+								currentString = currentString.substr(1, currentString.length() - 2);
+							}
+							currentTag.setLastAttributeValue(currentString);
+							currentString.erase();
+							quotationCounter = 0;
+						}
+						start = ptr + 1;
+						if (*ptr == '>') {
+							if (!tagHandler(currentTag)) {
+								goto endOfProcessing;
+							}
+							state = PS_TEXT;
+						} else {
+							state = PS_ATTRIBUTENAME;
+						}
+					}
+					break;
+				case PS_SKIPTAG:
+					if (*ptr == '>') {
+						start = ptr + 1;
+						state = PS_TEXT;
+					}
+					break;
 			}
 		}
-		if (doBreak) {
-			break;
-		}
 		if (start != endOfBuffer) {
-			if (!insideTag) {
-				if (!characterDataHandler(start, endOfBuffer - start)) {
+			switch (state) {
+				case PS_TEXT:
+					if (!characterDataHandler(start, endOfBuffer - start)) {
+						goto endOfProcessing;
+					}
 					break;
-				}
-			} else if (insideTagName) {
-				tagName.append(start, endOfBuffer - start);
+				case PS_TAGNAME:
+				case PS_ATTRIBUTENAME:
+				case PS_ATTRIBUTEVALUE:
+					currentString.append(start, endOfBuffer - start);
+					break;
+				case PS_SKIPTAG:
+					break;
 			}
 		}
   } while (length == BUFSIZE);
+endOfProcessing:
 
 	endDocumentHandler();
 

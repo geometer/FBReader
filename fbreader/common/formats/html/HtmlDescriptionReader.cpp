@@ -28,8 +28,8 @@ void HtmlDescriptionReader::startDocumentHandler() {
 
 void HtmlDescriptionReader::endDocumentHandler() {
 	addAuthor("Html", "Book", "Writer");
-	if (myTitle.empty()) {
-		myTitle.append("Html book");
+	if (myTitle.empty() || (myTitle.length() > 2048)) {
+		myTitle = "Html book";
 	} else {
 		myConverter.convertString(myTitle);
 	}

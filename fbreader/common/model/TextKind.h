@@ -35,6 +35,7 @@ enum TextKind {
 	CITE,
 	AUTHOR,
 	DATE,
+	HYPERLINK,
 	FOOTNOTE,
 	EMPHASIS,
 	STRONG,

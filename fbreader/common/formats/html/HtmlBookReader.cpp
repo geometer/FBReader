@@ -85,7 +85,7 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _ACRONYM:
 			//TODO: implement
 			break;
-		case _BLOCKQUOUTE:
+		case _BLOCKQUOTE:
 			//TODO: implement
 			break;
 		case _Q:
@@ -182,6 +182,23 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _STYLE:
 			myIgnoreData = tag.Start;
 			break;
+		case _A:
+			if (tag.Start) {
+				for (unsigned int i = 0; i < tag.Attributes.size(); i++) {
+					if (tag.Attributes[i].Name == "name") {
+					} else if (!myIsHyperlink && (tag.Attributes[i].Name == "href")) {
+						const std::string &value = tag.Attributes[i].Value;
+						if (!value.empty() && (value[0] == '#')) {
+							addHyperlinkControl(HYPERLINK, value.substr(1));
+							myIsHyperlink = true;
+						}
+					}
+				}
+			} else if (myIsHyperlink) {
+				addControl(HYPERLINK, false);
+				myIsHyperlink = false;
+			}
+			break;
 		case _UNKNOWN:
 			break;
 	}
@@ -201,6 +218,7 @@ void HtmlBookReader::startDocumentHandler() {
 	beginParagraph();
 	myIgnoreData = false;
 	myIsPreformatted = false;
+	myIsHyperlink = false;
 }
 
 void HtmlBookReader::endDocumentHandler() {

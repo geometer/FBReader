@@ -46,6 +46,7 @@ private:
 private:
 	bool myIgnoreData;
 	bool myIsPreformatted;
+	bool myIsHyperlink;
 	std::stack<int> myListNumStack;
 };
 
