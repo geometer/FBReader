@@ -42,9 +42,15 @@ public:
 	void accept();
 
 	GtkWidget *widget() { return GTK_WIDGET (myTable); }
+
+	void addItem (GtkWidget *what, int row, int fromColumn, int toColumn);
+private:
+	int addRow (void);
+	GtkOptionView *viewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
 private:
 	GtkTable *myTable;
 	gint myRowCounter;
+	std::vector<GtkOptionView *> myViews;
 };
 
 class GtkOptionsDialog : public ZLDesktopOptionsDialog {
