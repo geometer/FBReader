@@ -1,0 +1,8 @@
+Files: usr
+Priority: optional
+Section: Office
+Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Architecture: armv5tel
+Depends: qt-mt,expat
+License: GPLv2
+Description: E-book (fb2 format) reader.

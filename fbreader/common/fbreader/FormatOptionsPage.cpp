@@ -1,0 +1,92 @@
+/*
+ * FBReader -- electronic book reader
+ * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#include <abstract/ZLOptionsDialog.h>
+
+#include "FormatOptionsPage.h"
+
+#include "../textview/TextView.h"
+#include "../textview/TextStyle.h"
+#include "../textview/TextStyleOptions.h"
+
+FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
+	myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
+	myComboEntry->addValue(myComboEntry->initialValue());
+
+	TextStyleCollection &collection = TextStyleCollection::instance();
+	const int STYLES_NUMBER = 11;
+	TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, ANNOTATION, EPIGRAPH, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE };
+	for (int i = 0; i < STYLES_NUMBER; i++) {
+		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
+		if (decoration != 0) {
+			myComboEntry->addValue(decoration->name());
+		}
+	}
+	dialogTab->addOption(myComboEntry);
+
+	{
+		const std::string &name = myComboEntry->initialValue();
+		BaseTextStyle &baseStyle = collection.baseStyle();
+
+		registerEntries(dialogTab,
+			new LineSpacingOptionEntry(baseStyle.lineSpaceOption(), false),
+			0,//new ZLSimpleSpinOptionEntry("First Line Indent", baseStyle.firstLineIndentDeltaOption(), -300, 300, 1),
+			name
+		);
+
+		registerEntries(dialogTab,
+			new AlignmentOptionEntry(baseStyle.alignmentOption(), false),
+			0,
+			name
+		);
+	}
+
+	for (int i = 0; i < STYLES_NUMBER; i++) {
+		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
+		if (decoration != 0) {
+			const std::string &name = decoration->name();
+			
+			registerEntries(dialogTab,
+				new ZLSimpleSpinOptionEntry("Space Before", decoration->spaceBeforeOption(), -10, 100, 1),
+				new ZLSimpleSpinOptionEntry("Left Indent", decoration->leftIndentOption(), -300, 300, 1),
+				name
+			);
+			
+			registerEntries(dialogTab,
+				new ZLSimpleSpinOptionEntry("Space After", decoration->spaceAfterOption(), -10, 100, 1),
+				new ZLSimpleSpinOptionEntry("Right Indent", decoration->rightIndentOption(), -300, 300, 1),
+				name
+			);
+			
+			registerEntries(dialogTab,
+				new LineSpacingOptionEntry(decoration->lineSpaceOption(), true),
+				new ZLSimpleSpinOptionEntry("First Line Indent", decoration->firstLineIndentDeltaOption(), -300, 300, 1),
+				name
+			);
+
+			registerEntries(dialogTab,
+				new AlignmentOptionEntry(decoration->alignmentOption(), true),
+				0,
+				name
+			);
+		}
+	}
+
+	myComboEntry->onValueChange(myComboEntry->initialValue());
+}

@@ -1,0 +1,8 @@
+Files: bin/FBReader share apps pics144/FBReader.png pics144/FBReader/*.png
+Priority: optional
+Section: qpe/applications
+Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Architecture: arm
+Depends: expat
+License: GPLv2
+Description: E-book (fb2 format) reader.

@@ -1,0 +1,59 @@
+/*
+ * FBReader -- electronic book reader
+ * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#ifndef __COLLECTIONVIEW_H__
+#define __COLLECTIONVIEW_H__
+
+#include <map>
+
+#include "../textview/TextView.h"
+
+class FBReader;
+class BookCollection;
+class BookDescription;
+class TreeModel;
+class TreeParagraph;
+
+class CollectionView : public TextView {
+
+public:
+	CollectionView(FBReader &reader, PaintContext &context);
+	~CollectionView();
+	const std::string caption() const { return "Library"; }
+
+	void fill();
+	void gotoParagraph(int num, bool last = false);
+	bool onStylusPress(int x, int y);
+
+	void paint();
+
+protected:
+	const std::string paragraphOptionName() const { return ""; }
+	const std::string wordOptionName() const { return ""; }
+	const std::string charOptionName() const { return ""; }
+
+private:
+	FBReader &myReader;
+	BookCollection *myCollection;
+	TreeModel *myTreeModel;
+	std::map<TreeParagraph*,BookDescription*> myBooksMap;
+	bool myTreeStateIsFrozen;
+};
+
+#endif /* __COLLECTIONVIEW_H__ */

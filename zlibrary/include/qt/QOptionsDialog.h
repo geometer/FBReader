@@ -1,0 +1,1 @@
+../../qt/dialogs/QOptionsDialog.h

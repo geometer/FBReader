@@ -1,0 +1,1 @@
+../../qtopia/dialogs/FullScreenDialog.h

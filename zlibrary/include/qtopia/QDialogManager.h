@@ -1,0 +1,1 @@
+../../qtopia/dialogs/QDialogManager.h

@@ -1,0 +1,123 @@
+/*
+ * FBReader -- electronic book reader
+ * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#include "FB2DescriptionReader.h"
+
+FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : DescriptionReader(description) {
+	myReadSomething = false;
+	myReadTitle = false;
+	myReadAuthor = false;
+	myReadLanguage = false;
+	for (int i = 0; i < 3; i++) {
+		myReadAuthorName[i] = false;
+	}
+}
+
+void FB2DescriptionReader::characterDataHandler(const char *text, int len) {
+	if (myReadSomething) {
+		if (myReadTitle) {
+			addToTitle(text, len);
+		} else if (myReadLanguage) {
+			addToLanguage(text, len);
+		} else {
+			for (int i = 0; i < 3; i++) {
+				if (myReadAuthorName[i]) {
+					myAuthorNames[i].append(text, len);
+					break;
+				}
+			}
+		}
+	}
+}
+
+void FB2DescriptionReader::startElementHandler(int tag, const char **) {
+	switch (tag) {
+		case _BODY:
+			validateDescription();
+			myDoBreak = true;
+			break;
+		case _TITLE_INFO:
+			myReadSomething = true;
+			break;
+		case _BOOK_TITLE:
+			myReadTitle = true;
+			break;
+		case _AUTHOR:
+			myReadAuthor = true;
+			break;
+		case _LANG:
+			myReadLanguage = true;
+			break;
+		case _FIRST_NAME:
+			if (myReadAuthor) {
+				myReadAuthorName[0] = true;
+			}
+			break;
+		case _MIDDLE_NAME:
+			if (myReadAuthor) {
+				myReadAuthorName[1] = true;
+			}
+			break;
+		case _LAST_NAME:
+			if (myReadAuthor) {
+				myReadAuthorName[2] = true;
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+void FB2DescriptionReader::endElementHandler(int tag) {
+	switch (tag) {
+		case _TITLE_INFO:
+			myReadSomething = false;
+			break;
+		case _BOOK_TITLE:
+			myReadTitle = false;
+			break;
+		case _AUTHOR:
+			if (myReadSomething) {
+				addAuthor(myAuthorNames[0], myAuthorNames[1], myAuthorNames[2]);
+				myAuthorNames[0].erase();
+				myAuthorNames[1].erase();
+				myAuthorNames[2].erase();
+				myReadAuthor = false;
+			}
+			break;
+		case _LANG:
+			myReadLanguage = false;
+			break;
+		case _FIRST_NAME:
+			myReadAuthorName[0] = false;
+			break;
+		case _MIDDLE_NAME:
+			myReadAuthorName[1] = false;
+			break;
+		case _LAST_NAME:
+			myReadAuthorName[2] = false;
+			break;
+		default:
+			break;
+	}
+}
+
+void FB2DescriptionReader::readDescription(ZLInputStream &stream) {
+	readDocument(stream);
+}

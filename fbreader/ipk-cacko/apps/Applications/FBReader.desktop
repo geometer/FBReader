@@ -1,0 +1,8 @@
+[Desktop Entry]
+Comment=E-book reader
+Exec=FBReader
+Icon=FBReader
+Type=Application
+Name=FBReader
+Display=640x480/144dpi,480x640/144dpi
+HidePrivilege=1
