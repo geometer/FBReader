@@ -82,6 +82,8 @@ private:
 	//mutable std::map<const Image*,QImage*> myImageCache;
 	ZLColor myTextColor;
 	ZLColor mySelectedTextColor;
+
+	std::vector<std::string> myFontFamilies;
 };
 
 #endif /* __GTKPAINTCONTEXT_H__ */

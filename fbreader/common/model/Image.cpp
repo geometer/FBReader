@@ -68,5 +68,5 @@ void Image::decode() const {
 		}
 	}
 	myDataLen -= 1;
-	myEncodedData.erase();
+	std::string().swap(myEncodedData);
 }

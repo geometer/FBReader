@@ -48,13 +48,13 @@ BookCollection::BookCollection() {
 			dir.collectRegularFiles(files);
 			dir.close();
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
-				if (ZLStringUtil::stringEndsWith(*jt, ".fb2") || ZLStringUtil::stringEndsWith(*jt, ".xml")) {
+				if (ZLStringUtil::stringEndsWith(*jt, ".fb2") || ZLStringUtil::stringEndsWith(*jt, ".xml") || ZLStringUtil::stringEndsWith(*jt, ".html")) {
 					addDescription(BookDescription::create(dir.name() + '/' + *jt));
 				} else if (ZLStringUtil::stringEndsWith(*jt, ".zip")) {
 					std::list<ZLZipEntry> entries = ZLZipEntry::entriesList(dir.name() + '/' + *jt);
 					for (std::list<ZLZipEntry>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
 						const std::string &name = zit->name();
-						if (ZLStringUtil::stringEndsWith(name, ".fb2") || ZLStringUtil::stringEndsWith(name, ".xml")) {
+						if (ZLStringUtil::stringEndsWith(name, ".fb2") || ZLStringUtil::stringEndsWith(*jt, ".xml") || ZLStringUtil::stringEndsWith(name, ".html")) {
 							addDescription(BookDescription::create(zit->name()));
 						}
 					}

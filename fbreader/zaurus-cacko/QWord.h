@@ -29,7 +29,7 @@ class QWord : public Word {
 public:
 	int length() const { return myValue.length(); }
 	unsigned short charAt(int i) const { return myValue[i].unicode(); }
-	std::string utf8String() const { return myValue.utf8(); }
+	std::string utf8String() const { return (const char*)myValue.utf8(); }
 	
 private:
 	QWord(const char *utf8String, int len, int startOffset) : Word(startOffset) { myValue = QString::fromUtf8(utf8String, len); }

@@ -30,7 +30,7 @@ GtkPaintContext::GtkPaintContext() {
 	myWidth = 0;
 	myHeight = 0;
 
-	myFont = gdk_font_load("fixed");
+	myFont = 0;
 
 	myBackgroundGC = 0;
 	myTextGC = 0;
@@ -93,19 +93,22 @@ void GtkPaintContext::updatePixmap(GtkWidget *area) {
 		FL_COLOR.red = 0xd000; FL_COLOR.green = 0xd000; FL_COLOR.blue = 0xffff;
 		gdk_colormap_alloc_color(colormap, &FL_COLOR, false, false);
 		gdk_gc_set_foreground(myFillGC, &FL_COLOR);
+
+		PangoFontFamily **pangoFamilies;
+  	int nFamilies;
+  	pango_context_list_families (gtk_widget_get_pango_context (GTK_WIDGET(area)), &pangoFamilies, &nFamilies);
+		for (int i = 0; i < nFamilies; i++) {
+			myFontFamilies.push_back(pango_font_family_get_name(pangoFamilies[i]));
+		}
+		// TODO(?): sort list
+		g_free(pangoFamilies);
 	}
 
 	gdk_draw_rectangle(myPixmap, myBackgroundGC, true, 0, 0, myWidth, myHeight);
 }
 
 void GtkPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
-	/*
-	QFontDatabase db;
-	QStringList qFamilies = db.families();
-	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); it++) {
-		families.push_back((*it).ascii());
-	}
-	*/
+	families = myFontFamilies;
 }
 
 const std::string GtkPaintContext::realFontFamilyName(std::string &fontFamily) const {
@@ -117,6 +120,15 @@ const std::string GtkPaintContext::realFontFamilyName(std::string &fontFamily) c
 }
 
 void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
+	if (myFont != 0) {
+		gdk_font_unref(myFont);
+	}
+	PangoFontDescription *pangoDescription = pango_font_description_new();
+	pango_font_description_set_family(pangoDescription, family.c_str());
+	pango_font_description_set_family(pangoDescription, "Monospace");
+	pango_font_description_set_size(pangoDescription, size);
+	myFont = gdk_font_from_description(pangoDescription);
+	pango_font_description_free(pangoDescription);
 	/*
 	QFont font = myPainter->font();
 	font.setFamily(family.c_str());

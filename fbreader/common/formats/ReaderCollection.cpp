@@ -25,6 +25,8 @@
 #include "fb2/FB2BookReader.h"
 #include "docbook/DocBookDescriptionReader.h"
 #include "docbook/DocBookBookReader.h"
+#include "html/HtmlDescriptionReader.h"
+#include "html/HtmlBookReader.h"
 
 #include "../description/BookDescription.h"
 #include "../bookmodel/BookModel.h"
@@ -37,6 +39,9 @@ DescriptionReader *ReaderCollection::createDescriptionReader(BookDescription &de
 	if (ZLStringUtil::stringEndsWith(fileName, ".xml")) {
 		return new DocBookDescriptionReader(description);
 	}
+	if (ZLStringUtil::stringEndsWith(fileName, ".html")) {
+		return new HtmlDescriptionReader(description);
+	}
 	return new FB2DescriptionReader(description);
 }
 
@@ -47,6 +52,9 @@ BookReader *ReaderCollection::createBookReader(BookModel &model) {
 	}
 	if (ZLStringUtil::stringEndsWith(fileName, ".xml")) {
 		return new DocBookBookReader(model);
+	}
+	if (ZLStringUtil::stringEndsWith(fileName, ".html")) {
+		return new HtmlBookReader(model);
 	}
 	return new FB2BookReader(model);
 }

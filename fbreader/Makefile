@@ -10,7 +10,7 @@ LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS)
 
 TARGET = FBReader
 
-SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/view common/textview common/hyphenation common/fbreader
+SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/view common/textview common/hyphenation common/fbreader
 
 ifneq "$(TARGET_ARCH)" "desktop-gtk"
 	QSUBDIRS = $(TARGET_ARCH)
