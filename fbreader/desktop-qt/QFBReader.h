@@ -63,9 +63,12 @@ private slots:
 	void findPreviousSlot() { doAction(ACTION_FIND_PREVIOUS); }
 
 private:
+	int myBooksItemId;
+	int mySettingsItemId;
 	int myUndoItemId;
 	int myRedoItemId;
 	int myContentsItemId;
+	int mySearchItemId;
 	int myFindNextId;
 	int myFindPreviousId;
 

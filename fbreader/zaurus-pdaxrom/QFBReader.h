@@ -66,9 +66,12 @@ private:
 	bool myFullScreen;
 	bool myWasMaximized;
 
+	int myBooksItemId;
+	int mySettingsItemId;
 	int myUndoItemId;
 	int myRedoItemId;
 	int myContentsItemId;
+	int mySearchItemId;
 	int myFindNextId;
 	int myFindPreviousId;
 

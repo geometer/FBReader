@@ -2,10 +2,10 @@ ROOTDIR = $(PWD)
 
 include makefiles/platforms.mk
 
-ALLAPPDIRS = zmahjongg zsolitaire fbreader GeometricCalculator
+ALLAPPDIRS = fbreader zmahjongg zsolitaire GeometricCalculator
 
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
-	APPDIRS = zmahjongg zsolitaire fbreader GeometricCalculator
+	APPDIRS = fbreader zmahjongg zsolitaire GeometricCalculator
 endif
 
 ifeq "$(APPDIRS)" ""

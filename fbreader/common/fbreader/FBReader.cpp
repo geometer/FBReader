@@ -34,7 +34,7 @@
 #include "../textview/TextStyle.h"
 
 ZLBooleanOption FBReader::QuitOnCancelOption("Options", "QuitOnCancel", false);
-ZLIntegerOption FBReader::ScrollingDelayOption("Options", "ScrollingDelay", 350);
+ZLIntegerOption FBReader::ScrollingDelayOption("Options", "ScrollingDelay", 250);
 
 ZLBooleanOption FBReader::SearchBackwardOption("Search", "Backward", false);
 ZLBooleanOption FBReader::SearchIgnoreCaseOption("Search", "IgnoreCase", true);
