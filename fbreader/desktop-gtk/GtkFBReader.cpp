@@ -20,8 +20,6 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLOptions.h>
-
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
 #include "../common/fbreader/FootnoteView.h"
@@ -53,55 +51,9 @@ static void universalSlot(GtkWidget*, gpointer data) {
 	uData->Reader->doAction(uData->Code);
 }
 
-/*
-static void undo(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_UNDO);
-}
-
-static void redo(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_REDO);
-}
-
-static void showContents(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_SHOW_CONTENTS);
-}
-
-static void showCollection(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_SHOW_COLLECTION);
-}
-
-static void showOptionsDialog(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_SHOW_OPTIONS);
-}
-
-static void search(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_SEARCH);
-}
-
-static void findNext(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_FIND_NEXT);
-}
-
-static void findPrevious(GtkWidget*, gpointer data) {
-	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_FIND_PREVIOUS);
-}
-*/
-
 static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeySlot(key);
 }
-
-/*
-GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &name, GtkSignalFunc signal) {
-	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
-	GtkWidget *button = gtk_button_new();
-	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
-	gtk_container_add(GTK_CONTAINER(button), image);
-	gtk_container_add(GTK_CONTAINER(toolbar), button);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", signal, this);
-	return button;
-}
-*/
 
 GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &name, ActionCode code) {
 	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
@@ -124,16 +76,6 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	gtk_box_pack_start(GTK_BOX(vbox), toolbar, false, false, 0);
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_BOTH);
 
-	/*
-	myBookCollectionButton = addToolButton(toolbar, "books", GTK_SIGNAL_FUNC(::showCollection));
-	mySettingsButton = addToolButton(toolbar, "settings", GTK_SIGNAL_FUNC(::showOptionsDialog));
-	myLeftArrowButton = addToolButton(toolbar, "leftarrow", GTK_SIGNAL_FUNC(::undo));
-	myRightArrowButton = addToolButton(toolbar, "rightarrow", GTK_SIGNAL_FUNC(::redo));
-	myContentsTableButton = addToolButton(toolbar, "contents", GTK_SIGNAL_FUNC(::showContents));
-	mySearchButton = addToolButton(toolbar, "find", GTK_SIGNAL_FUNC(::search));
-	myFindPreviousButton = addToolButton(toolbar, "findprev", GTK_SIGNAL_FUNC(::findPrevious));
-	myFindNextButton = addToolButton(toolbar, "findnext", GTK_SIGNAL_FUNC(::findNext));
-	*/
 	myBookCollectionButton = addToolButton(toolbar, "books", ACTION_SHOW_COLLECTION);
 	mySettingsButton = addToolButton(toolbar, "settings", ACTION_SHOW_OPTIONS);
 	myLeftArrowButton = addToolButton(toolbar, "leftarrow", ACTION_UNDO);
@@ -171,7 +113,6 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myKeyBindings["<Shift>plus"] = ACTION_INCREASE_FONT;
 	myKeyBindings["equal"] = ACTION_DECREASE_FONT;
 
-	// FIXME: this way it's impossible to add increaseFontSlot/decreaseFontSlot/cancelSlot
 /*
 	myLastScrollingTime = QTime::currentTime();
 */

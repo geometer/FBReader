@@ -58,7 +58,6 @@ public:
 	void enableMenuButtons();
 
 private:
-	//GtkWidget *addToolButton(GtkWidget *toolbar, const std::string &name, GtkSignalFunc signal);
 	GtkWidget *addToolButton(GtkWidget *toolbar, const std::string &name, ActionCode code);
 
 protected:
