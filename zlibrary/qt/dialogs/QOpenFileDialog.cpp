@@ -19,6 +19,7 @@
 
 #include <qvbox.h>
 #include <qlineedit.h>
+#include <qheader.h>
 #include <qpixmap.h>
 
 #include "../../abstract/filesystem/ZLFSDir.h"
@@ -46,7 +47,8 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLFileHandler &handl
 	myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
 	myCurrentDirectoryName->setEnabled(false);
 	myListView = new QListView(myMainBox);
-	myListView->addColumn("File Name");
+	myListView->addColumn("");
+	myListView->header()->hide();
 
  	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(accept()));
  	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));

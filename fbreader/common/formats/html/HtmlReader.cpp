@@ -183,18 +183,10 @@ enum ParseState {
 };
 
 static std::string analyzeEncoding(ZLInputStream &stream) {
-	const int BUFSIZE = 1024;
-	const int BUFNUM = 50;
-	unsigned char buffer[BUFSIZE * BUFNUM];
+	const int BUFSIZE = 50120;
+	unsigned char buffer[BUFSIZE];
 
-	size_t buflen = 0;
-	for (int i = 0; i < BUFNUM; i++) {
-		int len = stream.read((char*)buffer + BUFSIZE * i, BUFSIZE);
-		buflen += len;
-		if (len != BUFSIZE) {
-			break;
-		}
-	}
+	size_t buflen = stream.read((char*)buffer, BUFSIZE);
 	EncaAnalyser analyser = enca_analyser_alloc("ru");
 	EncaEncoding encoding = enca_analyse_const(analyser, buffer, buflen);
 	std::string e = enca_charset_name(encoding.charset, ENCA_NAME_STYLE_MIME);
@@ -208,7 +200,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 	}
 
 	std::string encoding = analyzeEncoding(stream);
-	if ((encoding == "US-ASCII") || (encoding == "unknown")) {
+	if (encoding == "unknown") {
 		encoding = "windows-1252";
 	}
 
