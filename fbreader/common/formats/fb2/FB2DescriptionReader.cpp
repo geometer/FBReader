@@ -49,7 +49,7 @@ void FB2DescriptionReader::characterDataHandler(const char *text, int len) {
 void FB2DescriptionReader::startElementHandler(int tag, const char **) {
 	switch (tag) {
 		case _BODY:
-			validateDescription();
+			myReturnCode = true;
 			myDoBreak = true;
 			break;
 		case _TITLE_INFO:
@@ -118,6 +118,8 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 	}
 }
 
-void FB2DescriptionReader::readDescription(ZLInputStream &stream) {
+bool FB2DescriptionReader::readDescription(ZLInputStream &stream) {
+	myReturnCode = false;
 	readDocument(stream);
+	return myReturnCode;
 }

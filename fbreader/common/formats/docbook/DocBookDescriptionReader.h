@@ -29,13 +29,15 @@ class DocBookDescriptionReader : public DescriptionReader, public DocBookReader 
 
 public:
 	DocBookDescriptionReader(BookDescription &description);
-	void readDescription(ZLInputStream &stream);
+	bool readDescription(ZLInputStream &stream);
 
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);
 	void characterDataHandler(const char *text, int len);
 
 private:
+	bool myReturnCode;
+
 	bool myReadTitle;
 	bool myReadAuthor;
 	bool myReadAuthorName[3];

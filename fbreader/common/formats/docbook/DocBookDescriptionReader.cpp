@@ -46,7 +46,7 @@ void DocBookDescriptionReader::startElementHandler(int tag, const char **) {
 	myDepth++;
 	switch (tag) {
 		case _SECT1:
-			validateDescription();
+			myReturnCode = true;
 			myDoBreak = true;
 			break;
 		case _TITLE:
@@ -106,6 +106,8 @@ void DocBookDescriptionReader::endElementHandler(int tag) {
 	}
 }
 
-void DocBookDescriptionReader::readDescription(ZLInputStream &stream) {
+bool DocBookDescriptionReader::readDescription(ZLInputStream &stream) {
+	myReturnCode = false;
 	readDocument(stream);
+	return myReturnCode;
 }

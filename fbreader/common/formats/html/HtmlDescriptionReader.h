@@ -27,7 +27,7 @@ class HtmlDescriptionReader : public DescriptionReader, public HtmlReader {
 
 public:
 	HtmlDescriptionReader(BookDescription &description);
-	void readDescription(ZLInputStream &stream) { readDocument(stream); }
+	bool readDescription(ZLInputStream &stream) { readDocument(stream); return true; }
 
 protected:
 	void startDocumentHandler();

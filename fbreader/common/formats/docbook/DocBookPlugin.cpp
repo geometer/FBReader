@@ -32,10 +32,10 @@ bool DocBookPlugin::acceptsFile(const std::string &fileName) const {
 bool DocBookPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
 	DocBookDescriptionReader *reader = new DocBookDescriptionReader(description);
 	ZLInputStream *stream = ZLInputStream::createStream(fileName);
-	reader->readDocument(*stream);
+	bool code = reader->readDescription(*stream);
 	delete stream;
 	delete reader;
-	return true;
+	return code;
 }
 
 bool DocBookPlugin::readModel(const BookDescription &description, BookModel &model) const {

@@ -32,13 +32,12 @@ protected:
 
 public:
 	virtual ~DescriptionReader() {}
-	virtual void readDescription(ZLInputStream &stream) = 0;
+	virtual bool readDescription(ZLInputStream &stream) = 0;
 
 protected:
 	void addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName);
 	void addToTitle(const char *text, int len);
 	void addToLanguage(const char *text, int len);
-	void validateDescription();
 
 private:
 	BookDescription &myDescription;

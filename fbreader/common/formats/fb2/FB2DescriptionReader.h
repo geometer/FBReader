@@ -29,13 +29,15 @@ class FB2DescriptionReader : public DescriptionReader, public FB2Reader {
 
 public:
 	FB2DescriptionReader(BookDescription &description);
-	void readDescription(ZLInputStream &stream);
+	bool readDescription(ZLInputStream &stream);
 
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);
 	void characterDataHandler(const char *text, int len);
 
 private:
+	bool myReturnCode;
+
 	bool myReadSomething;
 	bool myReadTitle;
 	bool myReadAuthor;

@@ -32,10 +32,10 @@ bool FB2Plugin::acceptsFile(const std::string &fileName) const {
 bool FB2Plugin::readDescription(const std::string &fileName, BookDescription &description) const {
 	FB2DescriptionReader *reader = new FB2DescriptionReader(description);
 	ZLInputStream *stream = ZLInputStream::createStream(fileName);
-	reader->readDocument(*stream);
+	bool code = reader->readDescription(*stream);
 	delete stream;
 	delete reader;
-	return true;
+	return code;
 }
 
 bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) const {

@@ -29,25 +29,6 @@
 
 BookDescription *BookDescription::create(const std::string &fileName) {
 	BookDescription *description = new BookDescription(fileName);
-	if (!description->myIsValid) {
-		delete description;
-		return 0;
-	}
-	return description;
-}
-
-BookDescription::BookDescription(const BookDescription &description) {
-	myFileName = description.myFileName;
-	myAuthor = description.myAuthor->createCopy();
-	myTitle = description.myTitle;
-	myLanguage = description.myLanguage;
-	myIsValid = description.myIsValid;
-}
-
-BookDescription::BookDescription(const std::string &fileName) {
-	myFileName = fileName;
-	myIsValid = false;
-	myAuthor = 0;
 
 	ZLStringOption AuthorDisplayNameOption(fileName, "AuthorDisplayName", "");
 	ZLStringOption AuthorSortKeyOption(fileName, "AuthorSortKey", "");
@@ -65,37 +46,47 @@ BookDescription::BookDescription(const std::string &fileName) {
 		const std::string &sortKey = AuthorSortKeyOption.value();
 		const std::string &title = TitleOption.value();
 		if (!displayName.empty() && !sortKey.empty() && !title.empty()) {
-			myAuthor = new StoredAuthor(displayName, sortKey);
-			myTitle = title;
-			myLanguage = LanguageOption.value();
-			myIsValid = true;
-			return;
+			description->myAuthor = new StoredAuthor(displayName, sortKey);
+			description->myTitle = title;
+			description->myLanguage = LanguageOption.value();
+			return description;
 		}
 	} else {
 		FileSizeOption.setValue(fileStat.st_size);
 		FileMTimeOption.setValue(fileStat.st_mtime);
 	}
 
-	FormatPlugin *plugin = PluginCollection::instance().plugin(myFileName, false);
-	if (plugin != 0) {
-		plugin->readDescription(myFileName, *this);
+	FormatPlugin *plugin = PluginCollection::instance().plugin(fileName, false);
+	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
+		delete description;
+		return 0;
 	}
 
-	if (!myIsValid) {
-		return;
+	if (description->myTitle.empty()) {
+		int slashPos = fileName.find_last_of('/');
+		int dotPos = fileName.find_first_of('.', slashPos + 1);
+		description->myTitle = fileName.substr(slashPos + 1, dotPos - slashPos - 1);
 	}
-	if (myTitle.empty()) {
-		int slashPos = myFileName.find_last_of('/');
-		int dotPos = myFileName.find_first_of('.', slashPos + 1);
-		myTitle = myFileName.substr(slashPos + 1, dotPos - slashPos - 1);
+	if (description->myAuthor == 0) {
+		description->myAuthor = new DummyAuthor();
 	}
-	if (myAuthor == 0) {
-		myAuthor = new DummyAuthor();
-	}
-	AuthorDisplayNameOption.setValue(myAuthor->displayName());
-	AuthorSortKeyOption.setValue(myAuthor->sortKey());
-	TitleOption.setValue(myTitle);
-	LanguageOption.setValue(myLanguage);
+	AuthorDisplayNameOption.setValue(description->myAuthor->displayName());
+	AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
+	TitleOption.setValue(description->myTitle);
+	LanguageOption.setValue(description->myLanguage);
+	return description;
+}
+
+BookDescription::BookDescription(const BookDescription &description) {
+	myFileName = description.myFileName;
+	myAuthor = description.myAuthor->createCopy();
+	myTitle = description.myTitle;
+	myLanguage = description.myLanguage;
+}
+
+BookDescription::BookDescription(const std::string &fileName) {
+	myFileName = fileName;
+	myAuthor = 0;
 }
 
 BookDescription::~BookDescription() {

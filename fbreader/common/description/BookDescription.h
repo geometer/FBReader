@@ -45,7 +45,6 @@ private:
 	std::string myTitle;
 	std::string myFileName;
 	std::string myLanguage;
-	bool myIsValid;
 
 friend class DescriptionReader;
 };

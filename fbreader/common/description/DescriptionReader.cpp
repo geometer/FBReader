@@ -45,7 +45,3 @@ void DescriptionReader::addToTitle(const char *text, int len) {
 void DescriptionReader::addToLanguage(const char *text, int len) {
 	myDescription.myLanguage.append(text, len);
 }
-
-void DescriptionReader::validateDescription() {
-	myDescription.myIsValid = true;
-}

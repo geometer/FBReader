@@ -35,7 +35,6 @@ void HtmlDescriptionReader::endDocumentHandler() {
 	}
 	addToTitle(myTitle.c_str(), myTitle.length());
 	addToLanguage("en", 2);
-	validateDescription();
 }
 
 bool HtmlDescriptionReader::tagHandler(HtmlTag tag) {
