@@ -89,7 +89,7 @@ public:
 	ZLDoubleOption &lineSpaceOption() const { return *myLineSpaceOption; }
 	double lineSpace() const { return lineSpaceOption().value(); }
 
-	bool allowHyphenations() const { return false; }
+	bool allowHyphenations() const { return true; }
 
 private:
 	ZLStringOption *myFontFamilyOption;
@@ -103,7 +103,7 @@ private:
 class TextStyleDecoration {
 
 public:
-	TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, bool allowHyphenations);
+	TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
 
 	const std::string &name() const { return myName; }
 
@@ -119,7 +119,7 @@ public:
 	const ZLIntegerOption &verticalShiftOption() const { return myVerticalShiftOption; }
 	const ZLIntegerOption &alignmentOption() const { return myAlignmentOption; }
 	const ZLDoubleOption &lineSpaceOption() const { return myLineSpaceOption; }
-	const ZLBooleanOption &allowHyphenationsOption() const { return myAllowHyphenationsOption; }
+	const ZLBoolean3Option &allowHyphenationsOption() const { return myAllowHyphenationsOption; }
 
 private:
 	std::string myName;
@@ -140,7 +140,7 @@ private:
 
 	ZLDoubleOption myLineSpaceOption;
 
-	ZLBooleanOption myAllowHyphenationsOption;
+	ZLBoolean3Option myAllowHyphenationsOption;
 };
 
 class DecoratedTextStyle : public TextStyle {
@@ -163,7 +163,7 @@ public:
 	int verticalShift() const { return myBase.verticalShift() + myDecoration.verticalShiftOption().value(); }
 
 	AlignmentType alignment() const;
-	bool allowHyphenations() const { return myDecoration.allowHyphenationsOption().value() && myBase.allowHyphenations(); }
+	bool allowHyphenations() const;
 
 	double lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? myBase.lineSpace() : space; }
 
@@ -189,7 +189,7 @@ private:
 	TextStyleCollection();
 	~TextStyleCollection();
 
-	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShiftOption, AlignmentType alignment, double lineSpace, bool allowHyphenations);
+	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShiftOption, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
 
 private:
 	static TextStyleCollection *ourInstance;

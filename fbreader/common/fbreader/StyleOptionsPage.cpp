@@ -81,7 +81,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, PaintContext &
 			);
 
 			registerEntry(dialogTab,
-				new ZLSimpleBooleanOptionEntry("Allow Hyphenations", decoration->allowHyphenationsOption()),
+				new ZLSimpleBoolean3OptionEntry("Allow Hyphenations", decoration->allowHyphenationsOption()),
 				name
 			);
 		}

@@ -22,8 +22,8 @@
 #include "../common/collection/BookCollection.h"
 #include "GtkFBReader.h"
 
-std::string TeXHyphenator::PatternDirectory("ipk/share/FBReader/hyphenations");
+std::string TeXHyphenator::PatternDirectory("share/FBReader/hyphenations");
 std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
-std::string FBReader::HelpDirectory("ipk/share/FBReader/help");
+std::string FBReader::HelpDirectory("share/FBReader/help");
 std::string GtkFBReader::ImageDirectory("images/FBReader");
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/DocBooks");

@@ -21,7 +21,7 @@
 
 #include "TextStyle.h"
 
-TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, bool allowHyphenations) :
+TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) :
 	myName(name),
 	myFontFamilyOption("Style", myName + ":fontFamily", std::string()),
 	myFontSizeDeltaOption("Style", myName + ":fontSize", fontSizeDelta),
@@ -64,4 +64,10 @@ bool DecoratedTextStyle::italic() const {
 AlignmentType DecoratedTextStyle::alignment() const {
 	AlignmentType a = (AlignmentType)myDecoration.alignmentOption().value();
 	return (a == ALIGN_UNDEFINED) ? myBase.alignment() : a;
+}
+
+bool DecoratedTextStyle::allowHyphenations() const {
+	Boolean3 a = myDecoration.allowHyphenationsOption().value();
+	return (a == B3_UNDEFINED) ? myBase.allowHyphenations() : (a == B3_TRUE);
+	return true;
 }
