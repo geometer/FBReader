@@ -162,18 +162,17 @@ void BookReader::insertEndOfSectionParagraph() {
 }
 
 void BookReader::addImageToParagraph(const std::string &id) {
+	mySectionContainsRegularContents = true;
 	bool createSeparateParagraph = myCurrentParagraph == 0;
 	if (createSeparateParagraph) {
 		beginParagraph();
-	} else {
-		mySectionContainsRegularContents = true;
-		flushTextBufferToParagraph();
-	}
-	myCurrentParagraph->addControl(IMAGE, true);
-	myCurrentParagraph->addImage(id, myModel);
-	myCurrentParagraph->addControl(IMAGE, false);
-	if (createSeparateParagraph) {
+		myCurrentParagraph->addControl(IMAGE, true);
+		myCurrentParagraph->addImage(id, myModel);
+		myCurrentParagraph->addControl(IMAGE, false);
 		endParagraph();
+	} else {
+		flushTextBufferToParagraph();
+		myCurrentParagraph->addImage(id, myModel);
 	}
 }
 

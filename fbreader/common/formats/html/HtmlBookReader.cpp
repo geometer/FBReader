@@ -118,7 +118,7 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 			endParagraph();
 			myIsPreformatted = tag.Start;
 			if (tag.Start) {
-				pushKind(CODE);
+				pushKind(PREFORMATTED);
 			} else {
 				popKind();
 			}
