@@ -41,6 +41,7 @@ public:
 	const TextModel *footnoteModel(const std::string &id) const;
 
 	const Image *imageById(const std::string &id) const;
+	int paragraphNumberById(const std::string &id) const;
 
 	const BookDescription &description() const { return *myDescription; }
 
@@ -50,6 +51,7 @@ private:
 	PlainTextModel myContentsModel;
 	std::map<const std::string,Image*> myImages;
 	std::map<const std::string,PlainTextModel*> myFootnotes;
+	std::map<const std::string,int> myInternalHyperlinks;
 
 friend class BookReader;
 };

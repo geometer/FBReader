@@ -95,6 +95,16 @@ void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 	}
 }
 
+void BookReader::addHyperlinkLabel(std::string &label) {
+	if (myCurrentTextModel == &myModel.myBookTextModel) {
+		int paragraphNumber = myModel.bookTextModel().paragraphs().size();
+		if (myCurrentParagraph != 0) {
+			paragraphNumber--;
+		}
+		myModel.myInternalHyperlinks[label] = paragraphNumber;
+	}
+}
+
 void BookReader::addDataToBuffer(const char *data, int len) {
 	if ((len > 0) && ((myCurrentParagraph != 0) || (myCurrentImage != 0))) {
 		myBuffer.push_back(std::string());

@@ -60,6 +60,11 @@ const Image *BookModel::imageById(const std::string &id) const {
 	return (i != myImages.end()) ? i->second : 0;
 }
 
+int BookModel::paragraphNumberById(const std::string &id) const {
+	std::map<std::string,int>::const_iterator i = myInternalHyperlinks.find(id);
+	return (i != myInternalHyperlinks.end()) ? i->second : -1;
+}
+
 const Image *ImageEntry::image() const {
 	return myModel.imageById(myId);
 }

@@ -153,11 +153,17 @@ void FBReader::increaseFont() {
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id) {
-	if (myModel != 0) {
-		const TextModel *footnoteModel = myModel->footnoteModel(id);
-		if (footnoteModel != 0) {
-			myFootnoteView->setModel(footnoteModel, std::string());
-			setMode(FOOTNOTE_MODE);
+	if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
+		int linkedParagraphNumber = myModel->paragraphNumberById(id);
+		if (linkedParagraphNumber >= 0) {
+			myBookTextView->gotoParagraph(linkedParagraphNumber);
+			repaintView();
+		} else {
+			const TextModel *footnoteModel = myModel->footnoteModel(id);
+			if (footnoteModel != 0) {
+				myFootnoteView->setModel(footnoteModel, std::string());
+				setMode(FOOTNOTE_MODE);
+			}
 		}
 	}
 }
