@@ -33,6 +33,7 @@ void TextView::drawTreeNode(TreeElement::TreeElementKind kind) {
 			if (space < 2) {
 				space = 2;
 			}
+			context().setColor(TreeLinesColorOption.value());
 			context().drawLine(x, y, x, y - size);
 			context().drawLine(x + size, y, x + size, y - size);
 			context().drawLine(x, y, x + size, y);
@@ -45,28 +46,25 @@ void TextView::drawTreeNode(TreeElement::TreeElementKind kind) {
 		}
 		case TreeElement::TREE_ELEMENT_LEAF:
 		{
-			context().setColor(TreeLinesColorOption.value());
 			int size = context().wordHeight();
+			context().setColor(TreeLinesColorOption.value());
 			context().drawLine(x, y - size / 3, x + size, y - size / 3);
-			context().setColor(PaintContext::TextColorOption.value());
 			break;
 		}
 		case TreeElement::TREE_ELEMENT_TOP_RIGHT_LINE:
 		{
-			context().setColor(TreeLinesColorOption.value());
 			int size = context().wordHeight();
+			context().setColor(TreeLinesColorOption.value());
 			context().drawLine(x + size / 3 * 2, y - size / 3, x + size / 3 * 2, y - myLineProcessor.height() + 1);
 			context().drawLine(x + size / 3 * 2, y - size / 3, x + size * 4 / 3, y - size / 3);
-			context().setColor(PaintContext::TextColorOption.value());
 			break;
 		}
 		case TreeElement::TREE_ELEMENT_TOP_BOTTOM_RIGHT_LINE:
 		{
-			context().setColor(TreeLinesColorOption.value());
 			int size = context().wordHeight();
+			context().setColor(TreeLinesColorOption.value());
 			context().drawLine(x + size / 3 * 2, y, x + size / 3 * 2, y - myLineProcessor.height() + 1);
 			context().drawLine(x + size / 3 * 2, y - size / 3, x + size * 4 / 3, y - size / 3);
-			context().setColor(PaintContext::TextColorOption.value());
 			break;
 		}
 		case TreeElement::TREE_ELEMENT_SKIP:

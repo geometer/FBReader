@@ -40,3 +40,7 @@ BaseTextStyle::~BaseTextStyle() {
 	delete myAlignmentOption;
 	delete myLineSpaceOption;
 }
+
+ZLColor BaseTextStyle::color() const {
+	return RegularTextColorOption.value();
+}

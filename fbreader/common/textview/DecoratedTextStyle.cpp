@@ -107,3 +107,7 @@ bool FullDecoratedTextStyle::allowHyphenations() const {
 	return (a == B3_UNDEFINED) ? base().allowHyphenations() : (a == B3_TRUE);
 	return true;
 }
+
+ZLColor DecoratedTextStyle::color() const {
+	return decoration().isHyperlinkStyle() ? HyperlinkTextColorOption.value() : base().color();
+}

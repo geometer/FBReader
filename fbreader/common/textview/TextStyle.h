@@ -37,6 +37,10 @@ enum AlignmentType {
 
 class TextStyle {
 
+public:
+	static ZLColorOption RegularTextColorOption;
+	static ZLColorOption HyperlinkTextColorOption;
+
 protected:
 	TextStyle() {}
 	virtual ~TextStyle() {}
@@ -49,6 +53,8 @@ public:
 
 	virtual bool bold() const = 0;
 	virtual bool italic() const = 0;
+
+	virtual ZLColor color() const = 0;
 
 	virtual int spaceBefore() const = 0;
 	virtual int spaceAfter() const = 0;
@@ -79,6 +85,8 @@ public:
 	bool bold() const { return boldOption().value(); }
 	ZLBooleanOption &italicOption() const { return *myItalicOption; }
 	bool italic() const { return italicOption().value(); }
+
+	ZLColor color() const;
 
 	int spaceBefore() const { return 0; }
 	int spaceAfter() const { return 0; }
@@ -123,6 +131,9 @@ public:
 	const ZLIntegerOption &verticalShiftOption() const { return myVerticalShiftOption; }
 	const ZLBoolean3Option &allowHyphenationsOption() const { return myAllowHyphenationsOption; }
 
+	bool isHyperlinkStyle() const { return myIsHyperlinkStyle; }
+	void setHyperlinkStyle() { myIsHyperlinkStyle = true; }
+
 private:
 	std::string myName;
 
@@ -134,6 +145,8 @@ private:
 	ZLIntegerOption myVerticalShiftOption;
 
 	ZLBoolean3Option myAllowHyphenationsOption;
+
+	bool myIsHyperlinkStyle;
 };
 
 class FullTextStyleDecoration : public TextStyleDecoration {
@@ -169,12 +182,15 @@ class DecoratedTextStyle : public TextStyle {
 
 protected:
 	DecoratedTextStyle(const TextStyle &base) : myBase(base) {}
+	virtual const TextStyleDecoration &decoration() const = 0;
 
 public:
 	virtual ~DecoratedTextStyle() {}
 
 	bool isDecorated() const { return true; }
 	const TextStyle &base() const { return myBase; }
+
+	ZLColor color() const;
 
 private:
 	const TextStyle &myBase;
@@ -204,6 +220,8 @@ public:
 
 	double lineSpace() const { return base().lineSpace(); }
 
+	const TextStyleDecoration &decoration() const { return myDecoration; }
+
 private:
 	const TextStyleDecoration &myDecoration;
 };
@@ -232,6 +250,8 @@ public:
 
 	double lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base().lineSpace() : space; }
 
+	const TextStyleDecoration &decoration() const { return myDecoration; }
+
 private:
 	const FullTextStyleDecoration &myDecoration;
 };
@@ -253,8 +273,8 @@ private:
 	TextStyleCollection();
 	~TextStyleCollection();
 
-	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShiftOption, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
-	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations);
+	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShiftOption, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations, bool isHyperlink);
+	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations, bool isHyperlink);
 
 private:
 	static TextStyleCollection *ourInstance;

@@ -23,11 +23,13 @@
 
 #include "../view/PaintContext.h"
 #include "../textview/TextView.h"
+#include "../textview/TextStyle.h"
 
 ColorOptionsPage::ColorOptionsPage(ZLOptionsDialogTab *dialogTab) {
 	myComboEntry = new ComboOptionEntry(*this, "Color For", "Background");
 	myComboEntry->addValue("Background");
-	myComboEntry->addValue("Text");
+	myComboEntry->addValue("Regular Text");
+	myComboEntry->addValue("Hyperlink Text");
 	myComboEntry->addValue("Selected Text");
 	myComboEntry->addValue("Tree Lines");
 	myComboEntry->addValue("Position Indicator");
@@ -39,20 +41,24 @@ ColorOptionsPage::ColorOptionsPage(ZLOptionsDialogTab *dialogTab) {
 		myComboEntry->values()[0]
 	);
 	registerEntry(dialogTab,
-		new ZLSimpleColorOptionEntry(PaintContext::TextColorOption),
+		new ZLSimpleColorOptionEntry(TextStyle::RegularTextColorOption),
 		myComboEntry->values()[1]
 	);
 	registerEntry(dialogTab,
-		new ZLSimpleColorOptionEntry(PaintContext::SelectedTextColorOption),
+		new ZLSimpleColorOptionEntry(TextStyle::HyperlinkTextColorOption),
 		myComboEntry->values()[2]
 	);
 	registerEntry(dialogTab,
-		new ZLSimpleColorOptionEntry(TextView::TreeLinesColorOption),
+		new ZLSimpleColorOptionEntry(PaintContext::SelectedTextColorOption),
 		myComboEntry->values()[3]
 	);
 	registerEntry(dialogTab,
-		new ZLSimpleColorOptionEntry(TextView::PositionIndicatorColorOption),
+		new ZLSimpleColorOptionEntry(TextView::TreeLinesColorOption),
 		myComboEntry->values()[4]
+	);
+	registerEntry(dialogTab,
+		new ZLSimpleColorOptionEntry(TextView::PositionIndicatorColorOption),
+		myComboEntry->values()[5]
 	);
 
 	myComboEntry->onValueChange(myComboEntry->initialValue());

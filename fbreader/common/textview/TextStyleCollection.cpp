@@ -21,6 +21,11 @@
 
 #include "TextStyle.h"
 
+static const std::string COLORS = "Colors";
+
+ZLColorOption TextStyle::RegularTextColorOption(COLORS, "Text", ZLColor(0, 0, 0));
+ZLColorOption TextStyle::HyperlinkTextColorOption(COLORS, "Hyperlink", ZLColor(63, 63, 127));
+
 TextStyleCollection *TextStyleCollection::ourInstance = 0;
 
 TextStyleCollection::TextStyleCollection() {
@@ -42,32 +47,32 @@ TextStyleCollection::TextStyleCollection() {
 	}
 	myBaseStyle = new BaseTextStyle("georgia", defaultFontSize);
 
-	registerStyle(REGULAR, "Regular Paragraph", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
-	registerStyle(TITLE, "Title", 10, B3_TRUE, B3_UNDEFINED, 2, 7, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE);
-	registerStyle(POEM_TITLE, "Poem Title", 2, B3_TRUE, B3_UNDEFINED, 6, 6, 40, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE);
-	registerStyle(SECTION_TITLE, "Section Title", 6, B3_TRUE, B3_UNDEFINED, 0, 5, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE);
-	registerStyle(ANNOTATION, "Annotation", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
-	registerStyle(EPIGRAPH, "Epigraph", -2, B3_UNDEFINED, B3_TRUE, 0, 0, 80, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
-	registerStyle(SUBTITLE, "Subtitle", 0, B3_TRUE, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
-	registerStyle(AUTHOR, "Author", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE);
-	registerStyle(DATE, "Date", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 40, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE);
-	registerStyle(STANZA, "Stanza", 0, B3_UNDEFINED, B3_UNDEFINED, 6, 6, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE);
-	registerStyle(VERSE, "Verse", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE);
-	registerStyle(IMAGE, "Image", 0, B3_UNDEFINED, B3_UNDEFINED, 8, 0, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE);
-	registerStyle(CONTENTS_TABLE_ENTRY, "Contents Table", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 7, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 0.0, B3_FALSE);
-	registerStyle(LIBRARY_AUTHOR_ENTRY, "Author in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE);
-	registerStyle(LIBRARY_BOOK_ENTRY, "Book in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE);
-	registerStyle(PREFORMATTED, "Preformatted text", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE);
+	registerStyle(REGULAR, "Regular Paragraph", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
+	registerStyle(TITLE, "Title", 10, B3_TRUE, B3_UNDEFINED, 2, 7, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);
+	registerStyle(POEM_TITLE, "Poem Title", 2, B3_TRUE, B3_UNDEFINED, 6, 6, 40, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE, false);
+	registerStyle(SECTION_TITLE, "Section Title", 6, B3_TRUE, B3_UNDEFINED, 0, 5, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);
+	registerStyle(ANNOTATION, "Annotation", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
+	registerStyle(EPIGRAPH, "Epigraph", -2, B3_UNDEFINED, B3_TRUE, 0, 0, 80, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
+	registerStyle(SUBTITLE, "Subtitle", 0, B3_TRUE, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
+	registerStyle(AUTHOR, "Author", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE, false);
+	registerStyle(DATE, "Date", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 40, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE, false);
+	registerStyle(STANZA, "Stanza", 0, B3_UNDEFINED, B3_UNDEFINED, 6, 6, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
+	registerStyle(VERSE, "Verse", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
+	registerStyle(IMAGE, "Image", 0, B3_UNDEFINED, B3_UNDEFINED, 8, 0, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);
+	registerStyle(CONTENTS_TABLE_ENTRY, "Contents Table", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 7, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
+	registerStyle(LIBRARY_AUTHOR_ENTRY, "Author in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE, false);
+	registerStyle(LIBRARY_BOOK_ENTRY, "Book in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE, false);
+	registerStyle(PREFORMATTED, "Preformatted text", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
 
-	registerStyle(CITE, "Cite", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED);
-	registerStyle(HYPERLINK, "Hyperlink", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_FALSE);
-	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE);
-	registerStyle(EMPHASIS, "Emphasis", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED);
-	registerStyle(STRONG, "Strong", 0, B3_TRUE, B3_UNDEFINED, 0, B3_UNDEFINED);
-	registerStyle(SUB, "Subscript", -4, B3_UNDEFINED, B3_UNDEFINED, -4, B3_FALSE);
-	registerStyle(SUP, "Superscript", -4, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE);
-	registerStyle(CODE, "Code", 0, B3_UNDEFINED, B3_TRUE, 0, B3_FALSE);
-	registerStyle(STRIKETHROUGH, "StrikeThrough", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_UNDEFINED);
+	registerStyle(CITE, "Cite", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED, false);
+	registerStyle(HYPERLINK, "Hyperlink", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_FALSE, true);
+	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE, true);
+	registerStyle(EMPHASIS, "Emphasis", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED, false);
+	registerStyle(STRONG, "Strong", 0, B3_TRUE, B3_UNDEFINED, 0, B3_UNDEFINED, false);
+	registerStyle(SUB, "Subscript", -4, B3_UNDEFINED, B3_UNDEFINED, -4, B3_FALSE, false);
+	registerStyle(SUP, "Superscript", -4, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE, false);
+	registerStyle(CODE, "Code", 0, B3_UNDEFINED, B3_TRUE, 0, B3_FALSE, false);
+	registerStyle(STRIKETHROUGH, "StrikeThrough", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_UNDEFINED, false);
 }
 
 TextStyleCollection::~TextStyleCollection() {
@@ -77,12 +82,20 @@ TextStyleCollection::~TextStyleCollection() {
 	}
 }
 
-void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) {
-	myDecorationMap[kind] = new FullTextStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
+void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations, bool isHyperlink) {
+	FullTextStyleDecoration *decoration = new FullTextStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
+	if (isHyperlink) {
+		decoration->setHyperlinkStyle();
+	}
+	myDecorationMap[kind] = decoration;
 }
 
-void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations) {
-	myDecorationMap[kind] = new TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations);
+void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations, bool isHyperlink) {
+	TextStyleDecoration *decoration = new TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations);
+	if (isHyperlink) {
+		decoration->setHyperlinkStyle();
+	}
+	myDecorationMap[kind] = decoration;
 }
 
 const TextStyleDecoration *TextStyleCollection::decoration(TextKind kind) const {
