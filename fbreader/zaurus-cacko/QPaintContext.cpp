@@ -118,6 +118,7 @@ void QPaintContext::drawQString(int x, int y, const QString &str, const Word::Wo
 	if (mark == 0) {
 		myPainter->drawText(x, y, str);
 	} else {
+		QPen textPen = myPainter->pen();
 		int currentLetter = 0;
 		for (; (mark != 0) && (currentLetter < (int)str.length()); mark = mark->next()) {
 			int markStart = mark->start() - shift;
@@ -140,7 +141,7 @@ void QPaintContext::drawQString(int x, int y, const QString &str, const Word::Wo
 			QString insideMark = str.mid(markStart, markLen);
 			setColor(mySelectedTextColor);
 			myPainter->drawText(x, y, insideMark);
-			setColor(myTextColor);
+			myPainter->setPen(textPen);
 			x += myPainter->fontMetrics().width(insideMark);
 			currentLetter = markStart + markLen;
 		}
@@ -215,8 +216,6 @@ void QPaintContext::clear() {
 	if (myPixmap != NULL) {
 		ZLColor background = BackgroundColorOption.value();
 		myPixmap->fill(QColor(background.Red, background.Green, background.Blue));
-		myTextColor = TextColorOption.value();
-		setColor(myTextColor);
 		mySelectedTextColor = SelectedTextColorOption.value();
 	}
 }

@@ -292,8 +292,6 @@ void GtkPaintContext::clear() {
 	if (myPixmap != NULL) {
 		ZLColor background = BackgroundColorOption.value();
 		myPixmap->fill(QColor(background.Red, background.Green, background.Blue));
-		myTextColor = TextColorOption.value();
-		setColor(myTextColor);
 		mySelectedTextColor = SelectedTextColorOption.value();
 	}
 	*/

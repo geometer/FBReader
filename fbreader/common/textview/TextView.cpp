@@ -258,6 +258,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph) {
 				case TextElement::WORD_ELEMENT:
 					wordOccured = true;
 					y -= myStyle.style().verticalShift();
+					context().setColor(PaintContext::TextColorOption.value());
 					context().drawWord(x, y, (const Word&)pos.element(), pos.charNumber(), -1, false);
 					break;
 				case TextElement::IMAGE_ELEMENT:
@@ -294,6 +295,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph) {
 			int len = paragraph.charNumber();
 			if (len > 0) {
 				const Word &word = (const Word&)paragraph.wordCursor().element();
+				context().setColor(PaintContext::TextColorOption.value());
 				context().drawWord(context().x(), context().y() - myStyle.style().verticalShift(), word, 0, len, word.charAt(len - 1) != '-');
 			}
 		}

@@ -73,7 +73,6 @@ private:
 	QPainter *myPainter;
 	QPixmap *myPixmap;
 	mutable std::map<const Image*,QImage*> myImageCache;
-	ZLColor myTextColor;
 	ZLColor mySelectedTextColor;
 };
 
