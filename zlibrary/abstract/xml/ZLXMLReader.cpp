@@ -116,22 +116,10 @@ static void parseDTD(XML_Parser parser, const std::string &fileName) {
 
 const size_t BUFSIZE = 2048;
 
-ZLXMLReader::ZLXMLReader() {
-	myParser = XML_ParserCreate(NULL);
-	XML_UseForeignDTD(myParser, XML_TRUE);
-
-	const std::vector<std::string> &dtds = externalDTDs();
-	for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); it++) {
-		parseDTD(myParser, *it);
-	}
-
-	XML_SetUserData(myParser, this);
-	XML_SetStartElementHandler(myParser, fStartElementHandler);
-	XML_SetEndElementHandler(myParser, fEndElementHandler);
-	XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
-  XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, NULL);
-
+ZLXMLReader::ZLXMLReader(const char *encoding) {
+	myParser = XML_ParserCreate(encoding);
 	myParserBuffer = new char[BUFSIZE];
+	myInitialized = false;
 }
 
 ZLXMLReader::~ZLXMLReader() {
@@ -143,6 +131,22 @@ ZLXMLReader::~ZLXMLReader() {
 void ZLXMLReader::readDocument(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return;
+	}
+
+	if (!myInitialized) {
+		myInitialized = true;
+		XML_UseForeignDTD(myParser, XML_TRUE);
+
+		const std::vector<std::string> &dtds = externalDTDs();
+		for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); it++) {
+			parseDTD(myParser, *it);
+		}
+
+		XML_SetUserData(myParser, this);
+		XML_SetStartElementHandler(myParser, fStartElementHandler);
+		XML_SetEndElementHandler(myParser, fEndElementHandler);
+		XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
+    XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, NULL);
 	}
 
 	myDoBreak = false;

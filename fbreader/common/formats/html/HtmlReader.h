@@ -32,7 +32,7 @@ protected:
 	const Tag *tags() const;
 
 public:
-	HtmlTextConverter();
+	HtmlTextConverter(const char *encoding) : ZLXMLReader(encoding) {}
 	void convertBuffer(std::vector<std::string> &buffer);
 	
 public:

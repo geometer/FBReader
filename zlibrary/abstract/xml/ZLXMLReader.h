@@ -36,7 +36,7 @@ public:
 	};
 
 protected:
-	ZLXMLReader();
+	ZLXMLReader(const char *encoding = 0);
 	virtual ~ZLXMLReader();
 
 	virtual const Tag *tags() const = 0;
@@ -59,6 +59,7 @@ protected:
 private:
 	XML_Parser myParser;
 	char *myParserBuffer;
+	bool myInitialized;
 };
 
 #endif /* __ZLXMLREADER_H__ */
