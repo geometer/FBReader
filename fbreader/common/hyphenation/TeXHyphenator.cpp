@@ -133,7 +133,7 @@ void TeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	std::string fileName = PatternDirectory + "/" + language + ".pattern";
+	std::string fileName = PatternZip + ":" + language + ".pattern";
 	ZLInputStream *stream = ZLInputStream::createStream(fileName);
 	if (stream != 0) {
 		HyphenationReader reader(this);

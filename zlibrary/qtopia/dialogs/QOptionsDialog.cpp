@@ -29,6 +29,7 @@
 #include <qlabel.h>
 
 #include "../../abstract/dialogs/ZLOptionEntry.h"
+#include "../../abstract/screenSize/ZLScreenSize.h"
 
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
@@ -85,7 +86,19 @@ void QOptionsDialogTab::close() {
 }
 
 QOptionsDialogTab::QOptionsDialogTab(QTabWidget *parent) : QWidget(parent) {
-	myLayout = new QGridLayout(this, -1, 13, 12, 12);
+	int space = 10;
+	switch (ZLScreenSize::getSize()) {
+		case ZLScreenSize::SIZE_DESKTOP:
+			space = 10;
+			break;
+		case ZLScreenSize::SIZE_640x480:
+			space = 10;
+			break;
+		case ZLScreenSize::SIZE_240x320:
+			space = 3;
+			break;
+	}
+	myLayout = new QGridLayout(this, -1, 13, space, space);
 	myRowCounter = 0;
 }
 

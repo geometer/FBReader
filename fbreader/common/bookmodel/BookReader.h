@@ -53,7 +53,7 @@ protected:
 	void endParagraph();
 	void addControl(TextKind kind, bool start);
 	void addHyperlinkControl(TextKind kind, const std::string &label);
-	void addHyperlinkLabel(std::string &label);
+	void addHyperlinkLabel(const std::string &label);
 
 	void addImageToParagraph(const std::string &id);
 	void addImageToModel(const std::string &id, Image *image);

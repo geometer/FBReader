@@ -21,6 +21,7 @@
 
 #include <qtopia/QOptions.h>
 #include <qtopia/QDialogManager.h>
+#include <qtopia/QScreenSize.h>
 
 #include "QFBReader.h"
 #include "QWord.h"
@@ -31,12 +32,14 @@ int main(int argc, char **argv) {
 	QOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QWordBuilder::createInstance();
+	QScreenSize::createInstance();
 
 	QFBReader *reader = new QFBReader();
 	application.showMainWidget(reader);
 	int code = application.exec();
 	delete reader;
 
+	QScreenSize::deleteInstance();
 	QWordBuilder::deleteInstance();
 	QDialogManager::deleteInstance();
 	QOptions::deleteInstance();

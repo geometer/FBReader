@@ -5,28 +5,28 @@ include $(MAKEFILESDIR)/config.mk
 
 TARGET = libzlibrary.a
 
-SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
-QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/view qt/dialogs
-GTKSUBDIRS_ALL = gtk/dialogs
+SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml abstract/screenSize desktop/xml desktop/dialogs
+QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/view qtopia/screenSize qt/dialogs qt/screenSize
+GTKSUBDIRS_ALL = gtk/dialogs gtk/screenSize
 
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml
-	QTSUBDIRS = qtopia/dialogs qtopia/options qtopia/view
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml abstract/screenSize
+	QTSUBDIRS = qtopia/dialogs qtopia/options qtopia/view qtopia/screenSize
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
-	QTSUBDIRS = qt/dialogs
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs abstract/screenSize
+	QTSUBDIRS = qt/dialogs qt/screenSize
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-qt"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
-	QTSUBDIRS = qt/dialogs
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs abstract/screenSize
+	QTSUBDIRS = qt/dialogs qt/screenSize
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
-	GTKSUBDIRS = gtk/dialogs
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs abstract/screenSize
+	GTKSUBDIRS = gtk/dialogs gtk/screenSize
 endif
 
 .objects:

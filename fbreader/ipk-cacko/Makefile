@@ -8,7 +8,7 @@ DATADIR = $(TDIR)/data
 CTRLDIR = $(TDIR)/control
 
 FILE = $(wildcard *.control)
-PACKAGENAME = $(patsubst %.control, %, $(FILE))
+PACKAGENAME = $(patsubst %.control,%,$(FILE))
 
 version = $(shell cat ../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
@@ -20,12 +20,13 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 .tmpdir:
 	@ln -sf .. bin
 	@ln -sf ../images pics144
+	@ln -sf ../images240x320 pics
 	@cp -r ../share .
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -f bin pics144
+	@rm -f bin pics pics144
 	@rm -rf share $(TDIR)
 
 .copyfiles:

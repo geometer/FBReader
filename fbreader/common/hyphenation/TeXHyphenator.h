@@ -52,7 +52,7 @@ public:
 class TeXHyphenator : public Hyphenator {
 
 public:
-	static std::string PatternDirectory;
+	static std::string PatternZip;
 
 public:
 	~TeXHyphenator();

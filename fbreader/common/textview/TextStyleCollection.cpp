@@ -17,18 +17,36 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLScreenSize.h>
+
 #include "TextStyle.h"
 
 TextStyleCollection *TextStyleCollection::ourInstance = 0;
 
 TextStyleCollection::TextStyleCollection() {
-	myBaseStyle = new BaseTextStyle("georgia", 24);
+	int defaultFontSize = 24;
+	int defaultParagraphIndent = 30;
+	switch (ZLScreenSize::getSize()) {
+		case ZLScreenSize::SIZE_DESKTOP:
+			defaultFontSize = 24;
+			defaultParagraphIndent = 30;
+			break;
+		case ZLScreenSize::SIZE_240x320:
+			defaultFontSize = 12;
+			defaultParagraphIndent = 15;
+			break;
+		case ZLScreenSize::SIZE_640x480:
+			defaultFontSize = 24;
+			defaultParagraphIndent = 30;
+			break;
+	}
+	myBaseStyle = new BaseTextStyle("georgia", defaultFontSize);
 
-	registerStyle(REGULAR, "Regular Paragraph", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 30, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
+	registerStyle(REGULAR, "Regular Paragraph", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
 	registerStyle(TITLE, "Title", 10, B3_TRUE, B3_UNDEFINED, 2, 7, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE);
 	registerStyle(POEM_TITLE, "Poem Title", 2, B3_TRUE, B3_UNDEFINED, 6, 6, 40, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE);
 	registerStyle(SECTION_TITLE, "Section Title", 6, B3_TRUE, B3_UNDEFINED, 0, 5, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE);
-	registerStyle(ANNOTATION, "Annotation", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 30, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
+	registerStyle(ANNOTATION, "Annotation", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
 	registerStyle(EPIGRAPH, "Epigraph", -2, B3_UNDEFINED, B3_TRUE, 0, 0, 80, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
 	registerStyle(SUBTITLE, "Subtitle", 0, B3_TRUE, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE);
 	registerStyle(AUTHOR, "Author", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE);
@@ -36,14 +54,14 @@ TextStyleCollection::TextStyleCollection() {
 	registerStyle(STANZA, "Stanza", 0, B3_UNDEFINED, B3_UNDEFINED, 6, 6, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE);
 	registerStyle(VERSE, "Verse", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE);
 	registerStyle(IMAGE, "Image", 0, B3_UNDEFINED, B3_UNDEFINED, 8, 0, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE);
-	registerStyle(CONTENTS_TABLE_ENTRY, "Contents Table", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 7, 30, 0, -30, 0, ALIGN_LEFT, 0.0, B3_FALSE);
+	registerStyle(CONTENTS_TABLE_ENTRY, "Contents Table", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 7, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 0.0, B3_FALSE);
 	registerStyle(LIBRARY_AUTHOR_ENTRY, "Author in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE);
 	registerStyle(LIBRARY_BOOK_ENTRY, "Book in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE);
-	registerStyle(PREFORMATTED, "Preformatted text", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE);
+	registerStyle(PREFORMATTED, "Preformatted text", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE);
 
 	registerStyle(CITE, "Cite", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED);
 	registerStyle(HYPERLINK, "Hyperlink", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_FALSE);
-	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 0, B3_FALSE);
+	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE);
 	registerStyle(EMPHASIS, "Emphasis", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED);
 	registerStyle(STRONG, "Strong", 0, B3_TRUE, B3_UNDEFINED, 0, B3_UNDEFINED);
 	registerStyle(SUB, "Subscript", -4, B3_UNDEFINED, B3_UNDEFINED, -4, B3_FALSE);

@@ -197,7 +197,7 @@ public:
 	int leftIndent() const { return base().leftIndent(); }
 	int rightIndent() const { return base().rightIndent(); }
 	int firstLineIndentDelta() const { return base().firstLineIndentDelta(); }
-	int verticalShift() const { return base().verticalShift(); }
+	int verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
 
 	AlignmentType alignment() const { return base().alignment(); }
 	bool allowHyphenations() const;

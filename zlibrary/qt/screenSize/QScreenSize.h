@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,13 +16,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "../common/hyphenation/TeXHyphenator.h"
-#include "../common/formats/docbook/DocBookReader.h"
-#include "../common/collection/BookCollection.h"
-#include "QFBReader.h"
+#ifndef __QSCREENSIZE_H__
+#define __QSCREENSIZE_H__
 
-std::string TeXHyphenator::PatternZip("/usr/share/FBReader/hyphenationPatterns.zip");
-std::string DocBookReader::DTDDirectory("/usr/share/FBReader/formats/docbook");
-std::string QFBReader::ImageDirectory("/usr/share/pixmaps/FBReader");
-std::string FBReader::HelpDirectory("/usr/share/FBReader/help");
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "/mnt/card/FBooks:/mnt/cf/FBooks");
+#include <abstract/ZLScreenSize.h>
+
+class QScreenSize : public ZLScreenSize {
+
+public:
+	static void createInstance() { ourInstance = new QScreenSize(); }
+
+protected:
+	Size getSizeInternal() const;
+};
+
+#endif /* __QSCREENSIZE_H__ */

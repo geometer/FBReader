@@ -22,7 +22,7 @@
 #include "../common/collection/BookCollection.h"
 #include "QFBReader.h"
 
-std::string TeXHyphenator::PatternDirectory("share/FBReader/hyphenations");
+std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
 std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
 std::string QFBReader::ImageDirectory("images/FBReader");
 std::string FBReader::HelpDirectory("share/FBReader/help");

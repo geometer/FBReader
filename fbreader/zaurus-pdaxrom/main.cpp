@@ -22,6 +22,7 @@
 
 #include <desktop/XMLOptions.h>
 #include <qt/QDialogManager.h>
+#include <qt/QScreenSize.h>
 
 #include "QFBReader.h"
 #include "QWord.h"
@@ -33,6 +34,7 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QWordBuilder::createInstance();
+	QScreenSize::createInstance();
 
 	QFBReader *reader = new QFBReader();
 	application.setMainWidget(reader);
@@ -40,6 +42,7 @@ int main(int argc, char **argv) {
 	int code = application.exec();
 	delete reader;
 
+	QScreenSize::deleteInstance();
 	QWordBuilder::deleteInstance();
 	QDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();

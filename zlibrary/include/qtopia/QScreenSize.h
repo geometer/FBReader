@@ -1,0 +1,1 @@
+../../qtopia/screenSize/QScreenSize.h

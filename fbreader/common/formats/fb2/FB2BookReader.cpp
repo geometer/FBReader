@@ -89,6 +89,14 @@ const char *reference(const char **xmlattributes) {
 }
 	
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
+	const char *id = attributeValue(xmlattributes, "id");
+	if (id != 0) {
+		if (myBodyCounter > 1) {
+			setFootnoteTextModel(id);
+		} else {
+			addHyperlinkLabel(id);
+		}
+	}
 	switch (tag) {
 		case _P:
 			beginParagraph();
@@ -109,12 +117,6 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			pushKind(CITE);
 			break;
 		case _SECTION:
-			if (myBodyCounter > 1) {
-				const char *id = attributeValue(xmlattributes, "id");
-				if (id != 0) {
-					setFootnoteTextModel(id);
-				}
-			}
 			insertEndOfSectionParagraph();
 			endContentsParagraph();
 			mySectionDepth++;

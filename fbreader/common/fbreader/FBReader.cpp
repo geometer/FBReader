@@ -262,7 +262,7 @@ void FBReader::setMode(ViewMode mode) {
 
 void FBReader::createToolbar() {
 	addButton(ACTION_SHOW_COLLECTION, "books");
-	addButton(ACTION_ADD_BOOK, "addbook");
+	//addButton(ACTION_ADD_BOOK, "addbook");
 	addButton(ACTION_SHOW_OPTIONS, "settings");
 	addButton(ACTION_UNDO, "leftarrow");
 	addButton(ACTION_REDO, "rightarrow");

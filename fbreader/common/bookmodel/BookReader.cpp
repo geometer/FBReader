@@ -95,7 +95,7 @@ void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 	}
 }
 
-void BookReader::addHyperlinkLabel(std::string &label) {
+void BookReader::addHyperlinkLabel(const std::string &label) {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
 		int paragraphNumber = myModel.bookTextModel().paragraphs().size();
 		if (myCurrentParagraph != 0) {
