@@ -1,4 +1,4 @@
-include makefiles/target.mk
+include makefiles/targets.mk
 
 ALLAPPDIRS = zmahjongg zsolitaire fbreader GeometricCalculator
 
