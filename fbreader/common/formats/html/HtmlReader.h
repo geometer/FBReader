@@ -31,6 +31,8 @@ protected:
 		_UNKNOWN,
 		_BODY,
 		_P,
+		_BR,
+		_LI,
 		_TITLE,
 		_H1,
 		_H2,
@@ -43,6 +45,7 @@ protected:
 		_B,
 		_I,
 		_CITE,
+		_STYLE,
 	};
 
 	struct HtmlTag {

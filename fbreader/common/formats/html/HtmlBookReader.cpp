@@ -28,10 +28,14 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _BODY:
 			break;
 		case _P:
-			if (tag.Start) {
-				endParagraph();
-				beginParagraph();
-			}
+		case _BR:
+			endParagraph();
+			beginParagraph();
+			break;
+		case _LI:
+			//TODO: add bullet
+			endParagraph();
+			beginParagraph();
 			break;
 		case _TITLE:
 			endParagraph();
@@ -69,6 +73,9 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _CITE:
 			addControl(CITE, tag.Start);
 			break;
+		case _STYLE:
+			myIgnoreData = tag.Start;
+			break;
 		case _UNKNOWN:
 			break;
 	}
@@ -76,7 +83,7 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 }
 
 bool HtmlBookReader::characterDataHandler(const char *text, int len) {
-	if (len > 0) {
+	if ((len > 0) && !myIgnoreData) {
 		myBuffer.push_back(std::string());
 		myBuffer.back().append(text, len);
 	}

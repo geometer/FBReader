@@ -37,6 +37,9 @@ protected:
 
 	bool tagHandler(HtmlTag tag);
 	bool characterDataHandler(const char *text, int len);
+
+private:
+	bool myIgnoreData;
 };
 
 #endif /* __HTMLBOOKREADER_H__ */

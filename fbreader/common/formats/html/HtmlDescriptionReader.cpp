@@ -32,6 +32,7 @@ void HtmlDescriptionReader::endDocumentHandler() {
 		myTitle.append("Html book");
 	}
 	addToTitle(myTitle.c_str(), myTitle.length());
+	addToLanguage("en", 2);
 	validateDescription();
 }
 

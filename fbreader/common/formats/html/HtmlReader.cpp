@@ -45,6 +45,12 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 	if (name == "p") {
 		return HtmlTag(_P, start);
 	}
+	if (name == "br") {
+		return HtmlTag(_BR, start);
+	}
+	if (name == "li") {
+		return HtmlTag(_LI, start);
+	}
 	if (name == "title") {
 		return HtmlTag(_TITLE, start);
 	}
@@ -80,6 +86,9 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 	}
 	if (name == "cite") {
 		return HtmlTag(_CITE, start);
+	}
+	if (name == "style") {
+		return HtmlTag(_STYLE, start);
 	}
 	return HtmlTag(_UNKNOWN, start);
 }
