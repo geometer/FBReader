@@ -33,6 +33,14 @@ void HtmlDescriptionReader::endDocumentHandler() {
 	} else {
 		myConverter->convertString(myDescription.title());
 	}
+	if (myDescription.language() == "") {
+		if ((myDescription.encoding() == "KOI8-R") ||
+				(myDescription.encoding() == "windows-1251") ||
+				(myDescription.encoding() == "ISO-8859-5") ||
+				(myDescription.encoding() == "IBM866")) {
+			myDescription.language() = "ru";
+		}
+	}
 }
 
 bool HtmlDescriptionReader::tagHandler(HtmlTag tag) {
