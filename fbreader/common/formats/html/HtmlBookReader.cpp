@@ -30,9 +30,15 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 		myBuffer.clear();
 		int index = -1;
 		do {
+			//TODO: process '\t' and ' ' symbols
 			int oldIndex = index + 1;
 			index = fullText.find('\n', oldIndex);
-			addDataToBuffer(fullText.data() + oldIndex, index - oldIndex);
+			int len = ((index == -1) ? fullText.length() : index) - oldIndex;
+			if (len > 0) {
+				addDataToBuffer(fullText.data() + oldIndex, len);
+			} else {
+				addDataToBuffer(" ");
+			}
 			myIsPreformatted = false;
 			endParagraph();
 			beginParagraph();
@@ -126,8 +132,8 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 				endParagraph();
 				beginParagraph();
 				if (!myListNumStack.empty()) {
-					//TODO: add spaces and number/bullet instead of "*"
-					addDataToBuffer("&bull;");
+					//TODO: add spaces and number/bullet
+					addDataToBuffer("&bull; ");
 				}
 			}
 			break;

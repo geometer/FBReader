@@ -38,8 +38,7 @@ void DocBookBookReader::startElementHandler(int tag, const char **) {
 		case _SECT1:
 			myReadText = true;
 			pushKind(REGULAR);
-			myCurrentContentsParagraph = new ParagraphWithReference();
-			myCurrentContentsParagraph->addControl(CONTENTS_TABLE_ENTRY, true);
+			beginContentsParagraph();
 			break;
 		case _PARA:
 			if (myReadText) {
@@ -76,8 +75,7 @@ void DocBookBookReader::endElementHandler(int tag) {
 		case _SECT1:
 			myReadText = false;
 			popKind();
-			addContentsParagraphToModel();
-			myCurrentContentsParagraph = 0;
+			endContentsParagraph();
 			mySectionContainsRegularContents = true;
 			insertEndOfSectionParagraph();
 			break;
@@ -87,8 +85,7 @@ void DocBookBookReader::endElementHandler(int tag) {
 		case _TITLE:
 			endParagraph();
 			popKind();
-			addContentsParagraphToModel();
-			myCurrentContentsParagraph = 0;
+			endContentsParagraph();
 			myInsideTitle = false;
 			break;
 		case _EMPHASIS:

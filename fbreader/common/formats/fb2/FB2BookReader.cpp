@@ -119,12 +119,9 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 				}
 			}
 			insertEndOfSectionParagraph();
-			addContentsParagraphToModel();
+			endContentsParagraph();
 			mySectionDepth++;
-			if (currentTextModelIsMain()) {
-				myCurrentContentsParagraph = new ParagraphWithReference();
-				myCurrentContentsParagraph->addControl(CONTENTS_TABLE_ENTRY, true);
-			}
+			beginContentsParagraph();
 			break;
 		case _TITLE:
 			myInsideTitle = true;
@@ -230,8 +227,7 @@ void FB2BookReader::endElementHandler(int tag) {
 				unsetTextModel();
 			}
 			mySectionDepth--;
-			addContentsParagraphToModel();
-			myCurrentContentsParagraph = 0;
+			endContentsParagraph();
 			break;
 		case _TITLE:
 			myInsideTitle = false;

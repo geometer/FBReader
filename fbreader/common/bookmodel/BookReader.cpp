@@ -50,10 +50,6 @@ void BookReader::unsetTextModel() {
 	myCurrentTextModel = 0;
 }
 
-bool BookReader::currentTextModelIsMain() const {
-	return myCurrentTextModel == &myModel.myBookTextModel;
-}
-
 bool BookReader::currentTextModelIsNull() const {
 	return myCurrentTextModel == 0;
 }
@@ -170,7 +166,14 @@ void BookReader::addImageToModel(const std::string &id, Image *image) {
 	myModel.myImages[id] = image;
 }
 
-void BookReader::addContentsParagraphToModel() {
+void BookReader::beginContentsParagraph() {
+	if (myCurrentTextModel == &myModel.myBookTextModel) {
+		myCurrentContentsParagraph = new ParagraphWithReference();
+		myCurrentContentsParagraph->addControl(CONTENTS_TABLE_ENTRY, true);
+	}
+}
+
+void BookReader::endContentsParagraph() {
 	if (myCurrentContentsParagraph != 0) {
 		if (myCurrentContentsParagraph->reference() == -1) {
 			delete myCurrentContentsParagraph;
@@ -180,5 +183,6 @@ void BookReader::addContentsParagraphToModel() {
 			}
 			myModel.myContentsModel.addParagraph(myCurrentContentsParagraph);
 		}
+		myCurrentContentsParagraph = 0;
 	}
 }

@@ -45,7 +45,6 @@ protected:
 	void setFootnoteTextModel(const std::string &id);
 	void unsetTextModel();
 	bool currentTextModelIsNull() const;
-	bool currentTextModelIsMain() const;
 
 	void insertEndOfSectionParagraph();
 	void pushKind(TextKind kind);
@@ -57,7 +56,9 @@ protected:
 
 	void addImageToParagraph(const std::string &id);
 	void addImageToModel(const std::string &id, Image *image);
-	void addContentsParagraphToModel();
+
+	void beginContentsParagraph();
+	void endContentsParagraph();
 
 	void addDataToBuffer(const std::string &data);
 	void addDataToBuffer(const char *data, int len);
@@ -71,11 +72,11 @@ private:
 	std::vector<TextKind> myKindStack;
 
 	Paragraph *myCurrentParagraph;
+	ParagraphWithReference *myCurrentContentsParagraph;
 
 protected:
 	std::vector<std::string> myBuffer;
 
-	ParagraphWithReference *myCurrentContentsParagraph;
 	Image *myCurrentImage;
 
 	bool myInsideTitle;
