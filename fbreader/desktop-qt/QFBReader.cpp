@@ -67,32 +67,12 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	accelerator->connectItem(accelerator->insertItem(Key_Down), this, SLOT(scrollForwardSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_Escape), this, SLOT(cancelSlot()));
 
-	myLastScrollingTime = QTime::currentTime();
-
 	resize(Width.value(), Height.value());
 }
 
 QFBReader::~QFBReader() {
 	Width.setValue(width());
 	Height.setValue(height());
-}
-
-void QFBReader::scrollForwardSlot() {
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-		nextPage();
-	}
-}
-
-void QFBReader::scrollBackwardSlot() {
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-		previousPage();
-	}
 }
 
 void QFBReader::cancelSlot() {
@@ -240,11 +220,5 @@ void QFBReader::searchSlot() {
 		((TextView*)myViewWidget->view())->search(
 			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked()
 		);
-	}
-}
-
-void QFBReader::showContentsSlot() {
-	if (!myContentsView->isEmpty()) {
-		setMode(CONTENTS_MODE);
 	}
 }

@@ -23,6 +23,7 @@
 #include <string>
 
 #include <abstract/ZLOptions.h>
+#include <abstract/ZLTime.h>
 
 class BookDescription;
 class BookModel;
@@ -81,18 +82,10 @@ protected:
 	ViewMode mode() const { return myMode; }
 	virtual void setMode(ViewMode mode) = 0;
 	
-	void showOptionsDialog();
-	void nextPage();
-	void previousPage();
-	void undoPage();
-	void redoPage();
-	void increaseFont();
-	void decreaseFont();
-	void findNext();
-	void findPrevious();
-	void showHidePositionIndicator();
-
 	virtual void setWindowCaption(const std::string &caption) = 0;
+
+	virtual void searchSlot() = 0;
+	virtual void cancelSlot() = 0;
 
 public:
 	void openBook(BookDescription *description);
@@ -102,6 +95,7 @@ public:
 	void restorePreviousMode() { setMode(myPreviousMode); myPreviousMode = BOOK_TEXT_MODE; }
 	virtual void enableMenuButtons() = 0;
 	void repaintView();
+	void doAction(ActionCode code);
 
 protected:
 	ViewMode myMode;
@@ -113,6 +107,8 @@ protected:
   CollectionView *myCollectionView;	
 
 private:
+	ZLTime myLastScrollingTime;
+
 	PaintContext *myContext;
 	BookModel *myModel;
 };

@@ -26,8 +26,6 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
-#include <abstract/ZLTime.h>
-
 #include "../common/fbreader/FBReader.h"
 
 class GtkFBReader : public FBReader { 
@@ -49,8 +47,6 @@ protected:
 	void setMode(ViewMode mode);
 
 public:
-	void doAction(ActionCode code);
-
 	gboolean handleKeySlot(GdkEventKey *);
 
 	void close();
@@ -60,8 +56,6 @@ private:
 	void cancelSlot();
 
 private:
-	ZLTime myLastScrollingTime;
-
 	GtkWindow *myMainWindow;
 
 	GtkWidget *myBookCollectionButton;

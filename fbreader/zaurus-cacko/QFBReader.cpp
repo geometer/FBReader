@@ -67,7 +67,6 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 
 	myFullScreen = false;
 	myTitleHeight = -1;
-	myLastScrollingTime = QTime::currentTime();
 }
 
 void QFBReader::focusInEvent(QFocusEvent*) {
@@ -86,24 +85,6 @@ void QFBReader::resizeEvent(QResizeEvent*) {
 		topData()->normalGeometry = QRect(0, 0, -1, -1);
 		showNormal();
 		showFullScreen();
-	}
-}
-
-void QFBReader::scrollForwardSlot() {
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-		nextPage();
-	}
-}
-
-void QFBReader::scrollBackwardSlot() {
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-		previousPage();
 	}
 }
 
@@ -285,10 +266,4 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 		qCaption = qCaption.left(57) + "...";
 	}
 	setCaption(qCaption);
-}
-
-void QFBReader::showContentsSlot() {
-	if (!myContentsView->isEmpty()) {
-		setMode(CONTENTS_MODE);
-	}
 }

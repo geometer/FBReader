@@ -22,7 +22,6 @@
 #define __QFBREADER_H__
 
 #include <qmainwindow.h>
-#include <qdatetime.h>
 
 #include "../common/fbreader/FBReader.h"
 
@@ -47,26 +46,25 @@ protected:
 	void setMode(ViewMode mode);
 
 private slots:
-	void showCollectionSlot() { setMode(BOOK_COLLECTION_MODE); }
-	void showContentsSlot();
-	void showOptionsDialogSlot() { showOptionsDialog(); repaintView(); }
-	void showHidePositionIndicatorSlot() { showHidePositionIndicator(); }
-	void undoSlot() { undoPage(); }
-	void redoSlot() { redoPage(); }
-	void increaseFontSlot() { increaseFont(); }
-	void decreaseFontSlot() { decreaseFont(); }
-	void scrollForwardSlot();
-	void scrollBackwardSlot();
-	void doFullScreenSlot();
+	void showCollectionSlot() { doAction(ACTION_SHOW_COLLECTION); }
+	void showContentsSlot() { doAction(ACTION_SHOW_CONTENTS); }
+	void showOptionsDialogSlot() { doAction(ACTION_SHOW_OPTIONS); }
+	void showHidePositionIndicatorSlot() { doAction(ACTION_SHOW_HIDE_POSITION_INDICATOR); }
+	void undoSlot() { doAction(ACTION_UNDO); }
+	void redoSlot() { doAction(ACTION_REDO); }
+	void increaseFontSlot() { doAction(ACTION_INCREASE_FONT); }
+	void decreaseFontSlot() { doAction(ACTION_DECREASE_FONT); }
+	void scrollForwardSlot() { doAction(ACTION_SCROLL_FORWARD); }
+	void scrollBackwardSlot() { doAction(ACTION_SCROLL_BACKWARD); }
 	void cancelSlot();
 	void searchSlot();
-	void findNextSlot() { findNext(); }
-	void findPreviousSlot() { findPrevious(); }
+	void findNextSlot() { doAction(ACTION_FIND_NEXT); }
+	void findPreviousSlot() { doAction(ACTION_FIND_PREVIOUS); }
+	void doFullScreenSlot();
 
 private:
 	bool myFullScreen;
 	bool myWasMaximized;
-	QTime myLastScrollingTime;
 
 	int myUndoItemId;
 	int myRedoItemId;

@@ -94,64 +94,6 @@ void FBReader::openBook(BookDescription *description) {
 	}
 }
 
-void FBReader::nextPage() {
-	// TODO: check, if current view is TextView
-	((TextView*)myViewWidget->view())->scrollPageForward();
-	repaintView();
-}
-
-void FBReader::previousPage() {
-	// TODO: check, if current view is TextView
-	((TextView*)myViewWidget->view())->scrollPageBackward();
-	repaintView();
-}
-
-void FBReader::undoPage() {
-	if (mode() == BOOK_TEXT_MODE) {
-		myBookTextView->undoPageMove();
-	}
-}
-
-void FBReader::redoPage() {
-	if (mode() == BOOK_TEXT_MODE) {
-		myBookTextView->redoPageMove();
-	}
-}
-
-void FBReader::findNext() {
-	// TODO: check, if current view is TextView
-	((TextView*)myViewWidget->view())->findNext();
-}
-
-void FBReader::findPrevious() {
-	// TODO: check, if current view is TextView
-	((TextView*)myViewWidget->view())->findPrevious();
-}
-
-void FBReader::showOptionsDialog() {
-	OptionsDialog *optionsDialog = new OptionsDialog(*myContext);
-	optionsDialog->dialog().run("");
-	delete optionsDialog;
-}
-
-void FBReader::decreaseFont() {
-	ZLIntegerOption &option = TextStyleCollection::instance().baseStyle().fontSizeOption();
-	int value = option.value() - 2;
-	if (value >= 10) {
-		option.setValue(value);
-		repaintView();
-	}
-}
-
-void FBReader::increaseFont() {
-	ZLIntegerOption &option = TextStyleCollection::instance().baseStyle().fontSizeOption();
-	int value = option.value() + 2;
-	if (value <= 32) {
-		option.setValue(value);
-		repaintView();
-	}
-}
-
 void FBReader::tryShowFootnoteView(const std::string &id) {
 	if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
 		int linkedParagraphNumber = myModel->paragraphNumberById(id);
@@ -168,13 +110,88 @@ void FBReader::tryShowFootnoteView(const std::string &id) {
 	}
 }
 
-void FBReader::showHidePositionIndicator() {
-	TextView::ShowPositionIndicatorOption.setValue(!TextView::ShowPositionIndicatorOption.value());
-	repaintView();
-}
-
 void FBReader::repaintView() {
 	if (myViewWidget != 0) {
 		myViewWidget->repaintView();
+	}
+}
+
+void FBReader::doAction(ActionCode code) {
+	switch (code) {
+		case ACTION_SHOW_COLLECTION:
+			setMode(BOOK_COLLECTION_MODE);
+			break;
+		case ACTION_SHOW_OPTIONS:
+			{
+				OptionsDialog optionsDialog(*myContext);
+				optionsDialog.dialog().run("");
+				repaintView();
+			}
+			break;
+		case ACTION_UNDO:
+			if (mode() == BOOK_TEXT_MODE) {
+				myBookTextView->undoPageMove();
+			}
+			break;
+		case ACTION_REDO:
+			if (mode() == BOOK_TEXT_MODE) {
+				myBookTextView->redoPageMove();
+			}
+			break;
+		case ACTION_SHOW_CONTENTS:
+			if (!myContentsView->isEmpty()) {
+				setMode(CONTENTS_MODE);
+			}
+			break;
+		case ACTION_SEARCH:
+			searchSlot();
+			break;
+		case ACTION_FIND_PREVIOUS:
+			((TextView*)myViewWidget->view())->findPrevious();
+			break;
+		case ACTION_FIND_NEXT:
+			((TextView*)myViewWidget->view())->findNext();
+			break;
+		case ACTION_SCROLL_FORWARD:
+			if (myLastScrollingTime.millisecondsTo(ZLTime()) >= ScrollingDelayOption.value()) {
+				((TextView*)myViewWidget->view())->scrollPageForward();
+				repaintView();
+				myLastScrollingTime = ZLTime();
+			}
+			break;
+		case ACTION_SCROLL_BACKWARD:
+			if (myLastScrollingTime.millisecondsTo(ZLTime()) >= ScrollingDelayOption.value()) {
+				((TextView*)myViewWidget->view())->scrollPageBackward();
+				repaintView();
+				myLastScrollingTime = ZLTime();
+			}
+			break;
+		case ACTION_CANCEL:
+			cancelSlot();
+			break;
+		case ACTION_INCREASE_FONT:
+			{
+				ZLIntegerOption &option = TextStyleCollection::instance().baseStyle().fontSizeOption();
+				int value = option.value() + 2;
+				if (value <= 32) {
+					option.setValue(value);
+					repaintView();
+				}
+			}
+			break;
+		case ACTION_DECREASE_FONT:
+			{
+				ZLIntegerOption &option = TextStyleCollection::instance().baseStyle().fontSizeOption();
+				int value = option.value() - 2;
+				if (value >= 10) {
+					option.setValue(value);
+					repaintView();
+				}
+			}
+			break;
+		case ACTION_SHOW_HIDE_POSITION_INDICATOR:
+			TextView::ShowPositionIndicatorOption.setValue(!TextView::ShowPositionIndicatorOption.value());
+			repaintView();
+			break;
 	}
 }

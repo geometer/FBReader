@@ -144,68 +144,6 @@ gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {
 	return FALSE;
 }
 
-void GtkFBReader::doAction(ActionCode code) {
-	switch (code) {
-		case ACTION_SHOW_COLLECTION:
-			setMode(BOOK_COLLECTION_MODE);
-			break;
-		case ACTION_SHOW_OPTIONS:
-			showOptionsDialog();
-			repaintView();
-			break;
-		case ACTION_UNDO:
-			undoPage();
-			break;
-		case ACTION_REDO:
-			redoPage();
-			break;
-		case ACTION_SHOW_CONTENTS:
-			setMode(CONTENTS_MODE);
-			break;
-		case ACTION_SEARCH:
-			searchSlot();
-			break;
-		case ACTION_FIND_PREVIOUS:
-			findPrevious();
-			break;
-		case ACTION_FIND_NEXT:
-			findNext();
-			break;
-		case ACTION_SCROLL_FORWARD:
-			{
-				ZLTime time;
-				int msecs = myLastScrollingTime.millisecondsTo(time);
-				if (msecs >= ScrollingDelayOption.value()) {
-					myLastScrollingTime = time;
-					nextPage();
-				}
-			}
-			break;
-		case ACTION_SCROLL_BACKWARD:
-			{
-				ZLTime time;
-				int msecs = myLastScrollingTime.millisecondsTo(time);
-				if (msecs >= ScrollingDelayOption.value()) {
-					myLastScrollingTime = time;
-					nextPage();
-				}
-			}
-			break;
-		case ACTION_CANCEL:
-			cancelSlot();
-			break;
-		case ACTION_INCREASE_FONT:
-			increaseFont();
-			break;
-		case ACTION_DECREASE_FONT:
-			decreaseFont();
-			break;
-		case ACTION_SHOW_HIDE_POSITION_INDICATOR:
-			showHidePositionIndicator();
-			break;
-	}
-}
-
 void GtkFBReader::cancelSlot() {
 	if (QuitOnCancelOption.value() || (mode() != BOOK_TEXT_MODE)) {
 		close();

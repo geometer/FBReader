@@ -70,7 +70,6 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	accelerator->connectItem(accelerator->insertItem(Key_Return), this, SLOT(doFullScreenSlot()));
 
 	myFullScreen = false;
-	myLastScrollingTime = QTime::currentTime();
 
 	resize(Width.value(), Height.value());
 }
@@ -78,24 +77,6 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 QFBReader::~QFBReader() {
 	Width.setValue(width());
 	Height.setValue(height());
-}
-
-void QFBReader::scrollForwardSlot() {
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-		nextPage();
-	}
-}
-
-void QFBReader::scrollBackwardSlot() {
-	QTime time = QTime::currentTime();
-	int msecs = myLastScrollingTime.msecsTo(time);
-	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
-		myLastScrollingTime = time;
-		previousPage();
-	}
 }
 
 void QFBReader::doFullScreenSlot() {
@@ -268,10 +249,4 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 		qCaption = qCaption.left(57) + "...";
 	}
 	setCaption(qCaption);
-}
-
-void QFBReader::showContentsSlot() {
-	if (!myContentsView->isEmpty()) {
-		setMode(CONTENTS_MODE);
-	}
 }
