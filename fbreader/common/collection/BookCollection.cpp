@@ -52,7 +52,7 @@ BookCollection::BookCollection() {
 	for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); it++) {
 		std::vector<std::string> files;
 		ZLFSDir dir(*it);
-		dir.collectRegularFiles(files);
+		dir.collectFiles(files, false);
 		if (!files.empty()) {
 			const std::string dirName = dir.name() + '/';
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
@@ -63,7 +63,7 @@ BookCollection::BookCollection() {
 					ZLZipDir zipDir(fileName);
 					std::string zipPrefix = fileName + ':';
 					std::vector<std::string> entries;
-					zipDir.collectRegularFiles(entries);
+					zipDir.collectFiles(entries, false);
 					for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
 						if (isAcceptable(*zit)) {
 							addDescription(BookDescription::create(zipPrefix + *zit));
@@ -107,7 +107,7 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 			if (myScanSubdirs) {
 				std::vector<std::string> subdirs;
 				ZLFSDir dir(name);
-				dir.collectSubDirs(subdirs);
+				dir.collectSubDirs(subdirs, false);
 				for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
 					nameQueue.push(dir.name() + '/' + *it);
 				}

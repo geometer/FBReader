@@ -31,10 +31,12 @@ public:
 	ZLDir(const std::string &name);
 	virtual ~ZLDir() {}
 	const std::string &name() const { return myName; }
+	std::string parentName() const;
+	std::string itemName(const std::string &shortName) const;
 	virtual std::string delimiter() const = 0;
 
-	virtual void collectSubDirs(std::vector<std::string> &names) = 0;
-	virtual void collectRegularFiles(std::vector<std::string> &names) = 0;
+	virtual void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) = 0;
+	virtual void collectFiles(std::vector<std::string> &names, bool includeSymlinks) = 0;
 
 private:
 	std::string myName;

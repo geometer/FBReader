@@ -21,7 +21,39 @@
 std::string ZLDir::HomeDir = getenv("HOME");
 
 ZLDir::ZLDir(const std::string &name) : myName(name) {
-	if (!myName.empty() && (myName[0] == '~') && ((myName.length() == 1) || (myName[1] == '/'))) {
-		myName = HomeDir + myName.substr(1);
+	if (myName.empty()) {
+		myName = getenv("PWD");
+	} else if (myName[0] == '~') {
+		if ((myName.length() == 1) || (myName[1] == '/')) {
+			myName = HomeDir + myName.substr(1);
+		}
+	} else if (myName[0] != '/') {
+		myName = getenv("PWD") + '/' + myName;
 	}
+	int last = myName.length() - 1;
+	while ((last > 0) && (myName[last] == '/')) {
+		last--;
+	}
+	if (last < (int)myName.length() - 1) {
+		myName = myName.substr(0, last + 1);
+	}
+}
+
+std::string ZLDir::parentName() const {
+	std::string parent = name();
+	if (parent == "/") {
+		return parent;
+	}
+	int index = parent.rfind('/');
+	if (index <= 0) {
+		return "/";
+	}
+	return parent.substr(0, index);
+}
+
+std::string ZLDir::itemName(const std::string &shortName) const {
+	if (shortName == "..") {
+		return parentName();
+	}
+	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
 }

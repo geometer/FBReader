@@ -29,8 +29,8 @@ public:
 	ZLZipDir(const std::string &name) : ZLDir(name) {}
 	std::string delimiter() const { return ":"; }
 
-	void collectSubDirs(std::vector<std::string>&) {}
-	void collectRegularFiles(std::vector<std::string> &names);
+	void collectSubDirs(std::vector<std::string>&, bool) {}
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
 };
 
 #endif /* __ZLZIPDIR_H__ */

@@ -18,6 +18,7 @@
 
 #include <sys/stat.h>
 #include <dirent.h>
+#include <stdio.h>
 
 #include "ZLFSDir.h"
 
@@ -25,7 +26,7 @@ void ZLFSDir::create() {
 	mkdir(name().c_str(), 0x1FF);
 }
 
-void ZLFSDir::collectSubDirs(std::vector<std::string> &names) {
+void ZLFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
 		const dirent *file;
@@ -35,19 +36,31 @@ void ZLFSDir::collectSubDirs(std::vector<std::string> &names) {
 				if ((fname != ".") && (fname != "..")) {
 					names.push_back(file->d_name);
 				}
+			} else if (includeSymlinks && (file->d_type == DT_LNK)) {
+				DIR *ldir = opendir(itemName(file->d_name).c_str());
+				if (ldir != 0) {
+					closedir(ldir);
+					names.push_back(file->d_name);
+				}
 			}
 		}
 		closedir(dir);
 	}
 }
 
-void ZLFSDir::collectRegularFiles(std::vector<std::string> &names) {
+void ZLFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
 		const dirent *file;
 		while ((file = readdir(dir)) != 0) {
 			if (file->d_type == DT_REG) {
 				names.push_back(file->d_name);
+			} else if (includeSymlinks && (file->d_type == DT_LNK)) {
+				FILE *lfile = fopen(itemName(file->d_name).c_str(), "r");
+				if (lfile != 0) {
+					fclose(lfile);
+					names.push_back(file->d_name);
+				}
 			}
   	}
 		closedir(dir);

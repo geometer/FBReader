@@ -29,8 +29,8 @@ public:
 
 	void create();
 
-	void collectSubDirs(std::vector<std::string> &names);
-	void collectRegularFiles(std::vector<std::string> &names);
+	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
 };
 
 #endif /* __ZLFSDIR_H__ */

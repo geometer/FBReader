@@ -206,6 +206,7 @@ void FBReader::doAction(ActionCode code) {
 				));
 				if (description != 0) {
 					openBook(description);
+					setWindowCaption("FBReader - " + myViewWidget->view()->caption());
 					repaintView();
 				}
 			}

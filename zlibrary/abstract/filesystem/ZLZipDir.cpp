@@ -20,7 +20,7 @@
 #include "ZipHeader.h"
 #include "ZLFileInputStream.h"
 
-void ZLZipDir::collectRegularFiles(std::vector<std::string> &names) {
+void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 	ZLFileInputStream stream(name());
 	if (stream.open()) {
 		ZipHeader header;

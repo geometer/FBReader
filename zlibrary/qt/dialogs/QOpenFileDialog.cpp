@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
 #include <qvbox.h>
 #include <qlistview.h>
 #include <qpixmap.h>
@@ -93,7 +112,7 @@ void QOpenFileDialog::updateListView() {
 	}
 
 	std::vector<std::string> dirNames;
-	myCurrentDir->collectSubDirs(dirNames);
+	myCurrentDir->collectSubDirs(dirNames, true);
 	for (std::vector<std::string>::const_iterator it = dirNames.begin(); it != dirNames.end(); it++) {
 		if (isDirectoryVisible(*it)) {
 	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), true);
@@ -101,7 +120,7 @@ void QOpenFileDialog::updateListView() {
 	}
 
 	std::vector<std::string> fileNames;
-	myCurrentDir->collectRegularFiles(fileNames);
+	myCurrentDir->collectFiles(fileNames, true);
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); it++) {
 		if (isFileVisible(*it)) {
 	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), false);
@@ -117,20 +136,14 @@ void QOpenFileDialog::runItem(QListViewItem *item) {
 	QOpenFileDialogItem *dialogItem = (QOpenFileDialogItem*)item;
 
 	if (dialogItem->isDir()) {
-		std::string name = myCurrentDir->name();
-		if (dialogItem->name() == "..") {
-			name = name.substr(0, name.rfind('/'));
-		} else {
-			name += std::string("/") + dialogItem->name().ascii();
-		}
+		std::string subdir = myCurrentDir->itemName(dialogItem->name().ascii());
 		delete myCurrentDir;
-		myCurrentDir = new ZLFSDir(name);
+		myCurrentDir = new ZLFSDir(subdir);
 		updateListView();
-	} else if (dialogItem->name().endsWith(".zip")) {
-		std::string name = myCurrentDir->name();
-		name += std::string("/") + dialogItem->name().ascii();
+	} else if (ZLStringUtil::stringEndsWith(dialogItem->name().ascii(), ".zip")) {
+		std::string zip = myCurrentDir->itemName(dialogItem->name().ascii());
 		delete myCurrentDir;
-		myCurrentDir = new ZLZipDir(name);
+		myCurrentDir = new ZLZipDir(zip);
 		updateListView();
 	} else {
 		accept();
