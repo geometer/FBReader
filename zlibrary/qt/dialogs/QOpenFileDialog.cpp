@@ -103,7 +103,7 @@ void QOpenFileDialog::updateListView(const std::string &selected) {
 	myCurrentDir->collectSubDirs(dirNames, true);
 	for (std::vector<std::string>::const_iterator it = dirNames.begin(); it != dirNames.end(); it++) {
 		if (handler().isFileVisible(*it, true)) {
-	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), true);
+	 		item = new QOpenFileDialogItem(myListView, item, QString::fromUtf8(it->c_str()), true);
 			item->setPixmap(0, getPixmap(*it, true));
 			if (*it == selected) {
 				selectedItem = item;
@@ -115,7 +115,7 @@ void QOpenFileDialog::updateListView(const std::string &selected) {
 	myCurrentDir->collectFiles(fileNames, true);
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); it++) {
 		if (handler().isFileVisible(*it, false)) {
-	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), false);
+	 		item = new QOpenFileDialogItem(myListView, item, QString::fromUtf8(it->c_str()), false);
 			item->setPixmap(0, getPixmap(*it, false));
 			if (*it == selected) {
 				selectedItem = item;

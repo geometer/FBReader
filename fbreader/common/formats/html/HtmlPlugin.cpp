@@ -27,7 +27,7 @@
 #include "../../description/BookDescription.h"
 
 bool HtmlPlugin::acceptsFile(const std::string &fileName) const {
-	return ZLStringUtil::stringEndsWith(fileName, ".html");
+	return ZLStringUtil::stringEndsWith(fileName, "html") || ZLStringUtil::stringEndsWith(fileName, ".htm");
 }
 
 bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
