@@ -232,9 +232,9 @@ void ColorOptionView::_createItem() {
 
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
 
-	myColor.red = (int)(color.Red/255.0 * 65535.0);
-	myColor.blue = (int)(color.Blue/255.0 * 65535.0);
-	myColor.green = (int)(color.Green/255.0 * 65535.0);
+	myColor.red = (int)(color.Red*65535/255);
+	myColor.blue = (int)(color.Blue*65535/255);
+	myColor.green = (int)(color.Green*65535/255);
 
 	gtk_widget_modify_bg (myDrawingArea, GTK_STATE_NORMAL, &myColor);
 
