@@ -121,6 +121,15 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKey), this);
 
+	myKeyBindings["L"] = EVENT_SHOW_COLLECTION;
+	myKeyBindings["O"] = EVENT_SHOW_OPTIONS;
+	myKeyBindings["leftarrow"] = EVENT_UNDO;
+	myKeyBindings["rightarrow"] = EVENT_REDO;
+	myKeyBindings["C"] = EVENT_SHOW_CONTENTS;
+	myKeyBindings["F"] = EVENT_SEARCH;
+	myKeyBindings["P"] = EVENT_FIND_PREVIOUS;
+	myKeyBindings["N"] = EVENT_FIND_NEXT;
+
 	// FIXME: this way it's impossible to add increaseFontSlot/decreaseFontSlot/cancelSlot
 /*
 	myLastScrollingTime = QTime::currentTime();
@@ -137,53 +146,43 @@ GtkFBReader::~GtkFBReader() {
 }
 
 gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {
-	// FIXME: MSS: very bad code ahead!
-	char *accels[] = {
-		"L",									// showCollectionSlot
-		"O",									// showOptionsDialogSlot
-		"leftarrow",					// undoSlot
-		"rightarrow",					// redoSlot
-		"C",									// showContentsSlot
-		"F",									// searchSlot
-		"P",									// findPreviousSlot
-		"N",									// findNextSlot
-		NULL
-	};
-	int i;
+	EventCode code = EVENT_NONE;
 
-	for (i = 0 ; accels[i] != NULL ; ++i) {
+	for (std::map<std::string, EventCode>::const_iterator accel = myKeyBindings.begin(); accel != myKeyBindings.end() ; ++accel) {
 		guint key;
 		GdkModifierType mods;
 
-		gtk_accelerator_parse(accels[i], &key, &mods);
+		gtk_accelerator_parse(accel->first.c_str(), &key, &mods);
 
-		if (event->keyval == key && (GdkModifierType)event->state == mods)
+		if (event->keyval == key && (GdkModifierType)event->state == mods) {
+			code = accel->second;
 			break;
+		}
 	}
 
-	switch (i) {
-		case 0:
+	switch (code) {
+		case EVENT_SHOW_COLLECTION:
 			showCollectionSlot();
 			break;
-		case 1:
+		case EVENT_SHOW_OPTIONS:
 			showOptionsDialogSlot();
 			break;
-		case 2:
+		case EVENT_UNDO:
 			undoSlot();
 			break;
-		case 3:
+		case EVENT_REDO:
 			redoSlot();
 			break;
-		case 4:
+		case EVENT_SHOW_CONTENTS:
 			showContentsSlot();
 			break;
-		case 5:
+		case EVENT_SEARCH:
 			searchSlot();
 			break;
-		case 6:
+		case EVENT_FIND_PREVIOUS:
 			findPreviousSlot();
 			break;
-		case 7:
+		case EVENT_FIND_NEXT:
 			findNextSlot();
 			break;
 

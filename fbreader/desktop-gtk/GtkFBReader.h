@@ -21,12 +21,27 @@
 #ifndef __GTKFBREADER_H__
 #define __GTKFBREADER_H__
 
+#include <map>
+
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
 #include "../common/fbreader/FBReader.h"
 
 class GtkFBReader : public FBReader { 
+protected:
+	// FIXME: do we really need this enum to be protected?
+	enum EventCode {
+		EVENT_NONE,
+		EVENT_SHOW_COLLECTION,
+		EVENT_SHOW_OPTIONS,
+		EVENT_UNDO,
+		EVENT_REDO,
+		EVENT_SHOW_CONTENTS,
+		EVENT_SEARCH,
+		EVENT_FIND_PREVIOUS,
+		EVENT_FIND_NEXT
+	};
 
 private:
 	static std::string ImageDirectory;
@@ -81,6 +96,8 @@ private:
 	GtkWidget *mySearchButton;
 	GtkWidget *myFindNextButton;
 	GtkWidget *myFindPreviousButton;
+
+	std::map<std::string, EventCode> myKeyBindings;
 };
 
 #endif /* __GTKFBREADER_H__ */
