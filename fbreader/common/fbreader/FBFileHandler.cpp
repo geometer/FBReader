@@ -19,6 +19,7 @@
 #include <abstract/ZLStringUtil.h>
 
 #include "FBFileHandler.h"
+#include "../formats/FormatPlugin.h"
 
 bool FBFileHandler::isFileVisible(const std::string &shortFileName, bool dir) const {
 	if (shortFileName.length() == 0) {
@@ -27,11 +28,7 @@ bool FBFileHandler::isFileVisible(const std::string &shortFileName, bool dir) co
 	if (shortFileName[0] == '.') {
 		return dir && (shortFileName == "..");
 	}
-	return
-		dir ||
-		ZLStringUtil::stringEndsWith(shortFileName, ".html") ||
-		ZLStringUtil::stringEndsWith(shortFileName, ".zip") ||
-		ZLStringUtil::stringEndsWith(shortFileName, ".fb2");
+	return dir || (PluginCollection::instance().plugin(shortFileName, false) != 0);
 }
 
 std::string FBFileHandler::pixmapName(const std::string &shortFileName, bool dir) const {

@@ -28,6 +28,7 @@
 #include "BookCollection.h"
 #include "../description/BookDescription.h"
 #include "../description/Author.h"
+#include "../formats/FormatPlugin.h"
 
 ZLBooleanOption BookCollection::ScanSubdirsOption("Options", "ScanSubdirs", false);
 
@@ -36,10 +37,7 @@ bool DescriptionComparator::operator() (const BookDescription *d1, const BookDes
 }
 
 static bool isAcceptable(const std::string &fileName) {
-	return
-		ZLStringUtil::stringEndsWith(fileName, ".fb2") ||
-		ZLStringUtil::stringEndsWith(fileName, ".xml") ||
-		ZLStringUtil::stringEndsWith(fileName, ".html");
+	return PluginCollection::instance().plugin(fileName, true) != 0;
 }
 
 BookCollection::BookCollection() {
