@@ -37,6 +37,8 @@ GtkOptionsDialog::GtkOptionsDialog(const char *caption) {
 
   gtk_container_set_border_width (GTK_CONTAINER (myNotebook), 8);
   gtk_box_pack_start (GTK_BOX (myDialog->vbox), GTK_WIDGET(myNotebook), TRUE, TRUE, 0);
+
+  gtk_widget_show (GTK_WIDGET(myNotebook));
 }
 
 GtkOptionsDialog::~GtkOptionsDialog() {
@@ -95,6 +97,8 @@ void GtkOptionsDialogTab::accept() {
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
   myTable = GTK_TABLE(gtk_table_new (0, 2, TRUE));
   myRowCounter = 0;
+
+  gtk_widget_show (GTK_WIDGET(myTable));
 }
 
 GtkOptionsDialogTab::~GtkOptionsDialogTab() {
