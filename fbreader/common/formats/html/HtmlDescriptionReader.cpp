@@ -31,7 +31,7 @@ void HtmlDescriptionReader::endDocumentHandler() {
 	if (myTitle.empty() || (myTitle.length() > 2048)) {
 		myTitle = "Html book";
 	} else {
-		myConverter.convertString(myTitle);
+		myConverter->convertString(myTitle);
 	}
 	addToTitle(myTitle.c_str(), myTitle.length());
 	addToLanguage("en", 2);

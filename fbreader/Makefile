@@ -6,7 +6,7 @@ include $(MAKEFILESDIR)/config.mk
 
 LDFLAGS = -O2
 
-LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS)
+LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS)
 
 TARGET = FBReader
 

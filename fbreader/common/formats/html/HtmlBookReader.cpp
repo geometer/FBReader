@@ -56,7 +56,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 			}
 		}
 		if (myIsStarted) {
-			myConverter.convertBuffer(myBuffer);
+			myConverter->convertBuffer(myBuffer);
 			BookReader::flushTextBufferToParagraph();
 		}
 	}

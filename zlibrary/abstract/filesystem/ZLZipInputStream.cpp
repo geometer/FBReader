@@ -134,5 +134,7 @@ void ZLZipInputStream::close() {
 		myZStream = 0;
 	}
 
+	myBuffer.erase();
+
 	myFileStream->close();
 }

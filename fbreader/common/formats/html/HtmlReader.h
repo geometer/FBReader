@@ -102,7 +102,7 @@ public:
 
 protected:
 	HtmlReader();
-	virtual ~HtmlReader() {}
+	virtual ~HtmlReader();
 
 protected:
 	virtual void startDocumentHandler() = 0;
@@ -112,7 +112,7 @@ protected:
 	virtual bool characterDataHandler(const char *text, int len) = 0;
 
 protected:
-	HtmlTextConverter myConverter;
+	HtmlTextConverter *myConverter;
 };
 
 #endif /* __HTMLREADER_H__ */

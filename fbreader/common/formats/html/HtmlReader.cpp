@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <enca.h>
+
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLStringInputStream.h>
 
@@ -86,10 +88,14 @@ const std::vector<std::string> &HtmlTextConverter::externalDTDs() const {
 	return EXTERNAL_DTDs;
 }
 
-HtmlReader::HtmlReader() : myConverter("windows-1251") {
-	std::string str = "<t>";
-	ZLStringInputStream stream(str);
-	myConverter.readDocument(stream);
+HtmlReader::HtmlReader() {
+	myConverter = 0;
+}
+
+HtmlReader::~HtmlReader() {
+	if (myConverter != 0) {
+		delete myConverter;
+	}
 }
 
 static struct {
@@ -176,10 +182,46 @@ enum ParseState {
 	PS_SKIPTAG,
 };
 
+static std::string analyzeEncoding(ZLInputStream &stream) {
+	const int BUFSIZE = 1024;
+	const int BUFNUM = 50;
+	unsigned char buffer[BUFSIZE * BUFNUM];
+
+	size_t buflen = 0;
+	for (int i = 0; i < BUFNUM; i++) {
+		int len = stream.read((char*)buffer + BUFSIZE * i, BUFSIZE);
+		buflen += len;
+		if (len != BUFSIZE) {
+			break;
+		}
+	}
+	EncaAnalyser analyser = enca_analyser_alloc("ru");
+	EncaEncoding encoding = enca_analyse_const(analyser, buffer, buflen);
+	std::string e = enca_charset_name(encoding.charset, ENCA_NAME_STYLE_MIME);
+	enca_analyser_free(analyser);
+	return e;
+}
+
 void HtmlReader::readDocument(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return;
 	}
+
+	std::string encoding = analyzeEncoding(stream);
+	if ((encoding == "US-ASCII") || (encoding == "unknown")) {
+		encoding = "windows-1252";
+	}
+
+	if (myConverter != 0) {
+		delete myConverter;
+	}
+	myConverter = new HtmlTextConverter(encoding.c_str());
+	std::string str = "<t>";
+	ZLStringInputStream startStream(str);
+	myConverter->readDocument(startStream);
+
+	stream.close();
+	stream.open();
 
 	startDocumentHandler();
 
