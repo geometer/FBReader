@@ -58,7 +58,8 @@ public:
 	void enableMenuButtons();
 
 private:
-	GtkWidget *addToolButton(GtkWidget *toolbar, const std::string &name, GtkSignalFunc signal);
+	//GtkWidget *addToolButton(GtkWidget *toolbar, const std::string &name, GtkSignalFunc signal);
+	GtkWidget *addToolButton(GtkWidget *toolbar, const std::string &name, ActionCode code);
 
 protected:
 	void setWindowCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }

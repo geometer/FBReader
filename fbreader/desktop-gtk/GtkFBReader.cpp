@@ -42,6 +42,18 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->repaintView();
 }
 
+struct UniversalSlotData {
+	UniversalSlotData(GtkFBReader *reader, GtkFBReader::ActionCode code) { Reader = reader; Code = code; }
+	GtkFBReader *Reader;
+	GtkFBReader::ActionCode Code;
+};
+
+static void universalSlot(GtkWidget*, gpointer data) {
+	UniversalSlotData *uData = (UniversalSlotData*)data;
+	uData->Reader->doAction(uData->Code);
+}
+
+/*
 static void undo(GtkWidget*, gpointer data) {
 	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_UNDO);
 }
@@ -73,11 +85,13 @@ static void findNext(GtkWidget*, gpointer data) {
 static void findPrevious(GtkWidget*, gpointer data) {
 	((GtkFBReader*)data)->doAction(GtkFBReader::ACTION_FIND_PREVIOUS);
 }
+*/
 
 static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeySlot(key);
 }
 
+/*
 GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &name, GtkSignalFunc signal) {
 	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
 	GtkWidget *button = gtk_button_new();
@@ -85,6 +99,17 @@ GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &nam
 	gtk_container_add(GTK_CONTAINER(button), image);
 	gtk_container_add(GTK_CONTAINER(toolbar), button);
 	gtk_signal_connect(GTK_OBJECT(button), "clicked", signal, this);
+	return button;
+}
+*/
+
+GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &name, ActionCode code) {
+	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
+	GtkWidget *button = gtk_button_new();
+	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
+	gtk_container_add(GTK_CONTAINER(button), image);
+	gtk_container_add(GTK_CONTAINER(toolbar), button);
+	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(universalSlot), new UniversalSlotData(this, code));
 	return button;
 }
 
@@ -99,6 +124,7 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	gtk_box_pack_start(GTK_BOX(vbox), toolbar, false, false, 0);
 	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_BOTH);
 
+	/*
 	myBookCollectionButton = addToolButton(toolbar, "books", GTK_SIGNAL_FUNC(::showCollection));
 	mySettingsButton = addToolButton(toolbar, "settings", GTK_SIGNAL_FUNC(::showOptionsDialog));
 	myLeftArrowButton = addToolButton(toolbar, "leftarrow", GTK_SIGNAL_FUNC(::undo));
@@ -107,6 +133,15 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	mySearchButton = addToolButton(toolbar, "find", GTK_SIGNAL_FUNC(::search));
 	myFindPreviousButton = addToolButton(toolbar, "findprev", GTK_SIGNAL_FUNC(::findPrevious));
 	myFindNextButton = addToolButton(toolbar, "findnext", GTK_SIGNAL_FUNC(::findNext));
+	*/
+	myBookCollectionButton = addToolButton(toolbar, "books", ACTION_SHOW_COLLECTION);
+	mySettingsButton = addToolButton(toolbar, "settings", ACTION_SHOW_OPTIONS);
+	myLeftArrowButton = addToolButton(toolbar, "leftarrow", ACTION_UNDO);
+	myRightArrowButton = addToolButton(toolbar, "rightarrow", ACTION_REDO);
+	myContentsTableButton = addToolButton(toolbar, "contents", ACTION_SHOW_CONTENTS);
+	mySearchButton = addToolButton(toolbar, "find", ACTION_SEARCH);
+	myFindPreviousButton = addToolButton(toolbar, "findprev", ACTION_FIND_PREVIOUS);
+	myFindNextButton = addToolButton(toolbar, "findnext", ACTION_FIND_NEXT);
 
 	myViewWidget = new GtkViewWidget(this);
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
