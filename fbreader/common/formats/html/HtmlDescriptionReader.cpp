@@ -17,13 +17,19 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLInputStream.h>
+
 #include "HtmlDescriptionReader.h"
 
 HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : DescriptionReader(description) {
 }
 
 void HtmlDescriptionReader::readDescription(ZLInputStream &stream) {
+	if (!stream.open()) {
+	}
+
 	addAuthor("Html", "book", "writer");
 	addToTitle("Html book", 9);
 	validateDescription();
+	stream.close();
 }
