@@ -55,6 +55,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	accelerator->connectItem(accelerator->insertItem(Key_N), this, SLOT(findNextSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_P), this, SLOT(findPreviousSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_O), this, SLOT(showOptionsDialogSlot()));
+	accelerator->connectItem(accelerator->insertItem(Key_I), this, SLOT(showHidePositionIndicatorSlot()));
 	accelerator->connectItem(accelerator->insertItem(0x200f), this, SLOT(decreaseFontSlot()));
 	accelerator->connectItem(accelerator->insertItem(0x2010), this, SLOT(increaseFontSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_Left), this, SLOT(undoSlot()));
@@ -281,12 +282,6 @@ void QFBReader::fullScreenWorkaround() {
 		reparent(0, WType_TopLevel, QPoint(0,0));
 		reparent(0, WType_TopLevel | WStyle_Customize | WStyle_NoBorderEx, QPoint(0,0));
 		show();
-	}
-}
-
-void QFBReader::showContentsSlot() {
-	if (!myContentsView->isEmpty()) {
-		setMode(CONTENTS_MODE);
 	}
 }
 

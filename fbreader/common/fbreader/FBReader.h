@@ -72,6 +72,7 @@ protected:
 	void decreaseFont();
 	void findNext();
 	void findPrevious();
+	void showHidePositionIndicator();
 
 	virtual void setWindowCaption(const std::string &caption) = 0;
 	virtual void repaintView() = 0;

@@ -161,3 +161,8 @@ void FBReader::tryShowFootnoteView(const std::string &id) {
 		}
 	}
 }
+
+void FBReader::showHidePositionIndicator() {
+	TextView::ShowPositionIndicatorOption.setValue(!TextView::ShowPositionIndicatorOption.value());
+	repaintView();
+}

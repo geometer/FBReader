@@ -49,8 +49,9 @@ protected:
 
 private slots:
 	void showCollectionSlot() { setMode(BOOK_COLLECTION_MODE); }
-	void showContentsSlot() { setMode(CONTENTS_MODE); }
-	void showOptionsDialogSlot();
+	void showContentsSlot() { if (!myContentsView->isEmpty()) { setMode(CONTENTS_MODE); } }
+	void showOptionsDialogSlot() { showOptionsDialog(); repaintView(); }
+	void showHidePositionIndicatorSlot() { showHidePositionIndicator(); }
 	void undoSlot() { undoPage(); }
 	void redoSlot() { redoPage(); }
 	void increaseFontSlot() { increaseFont(); }

@@ -58,6 +58,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	accelerator->connectItem(accelerator->insertItem(Key_N), this, SLOT(findNextSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_P), this, SLOT(findPreviousSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_O), this, SLOT(showOptionsDialogSlot()));
+	accelerator->connectItem(accelerator->insertItem(Key_I), this, SLOT(showHidePositionIndicatorSlot()));
 	accelerator->connectItem(accelerator->insertItem('-'), this, SLOT(decreaseFontSlot()));
 	accelerator->connectItem(accelerator->insertItem('='), this, SLOT(increaseFontSlot()));
 	accelerator->connectItem(accelerator->insertItem(Key_Left), this, SLOT(undoSlot()));
@@ -246,9 +247,4 @@ void QFBReader::searchSlot() {
 			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked()
 		);
 	}
-}
-
-void QFBReader::showOptionsDialogSlot() {
-	showOptionsDialog();
-	repaintView();
 }
