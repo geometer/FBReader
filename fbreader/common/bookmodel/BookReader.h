@@ -59,6 +59,7 @@ protected:
 	void addImageToModel(const std::string &id, Image *image);
 	void addContentsParagraphToModel();
 
+	void addDataToBuffer(const std::string &data);
 	void addDataToBuffer(const char *data, int len);
 	virtual void flushTextBufferToParagraph();
 	void flushTextBufferToImage();

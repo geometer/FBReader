@@ -106,6 +106,12 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 	}
 }
 
+void BookReader::addDataToBuffer(const std::string &data) {
+	if ((myCurrentParagraph != 0) || (myCurrentImage != 0)) {
+		myBuffer.push_back(data);
+	}
+}
+
 void BookReader::flushTextBufferToParagraph() {
 	if (myBuffer.empty() || (myCurrentParagraph == 0)) {
 		return;

@@ -24,24 +24,123 @@ HtmlBookReader::HtmlBookReader(BookModel &model) : BookReader(model) {
 }
 
 void HtmlBookReader::flushTextBufferToParagraph() {
-	myConverter.convertBuffer(myBuffer);
-	BookReader::flushTextBufferToParagraph();
+	if (myIsPreformatted) {
+		std::string fullText;
+		ZLStringUtil::append(fullText, myBuffer);
+		myBuffer.clear();
+		int index = -1;
+		do {
+			int oldIndex = index + 1;
+			index = fullText.find('\n', oldIndex);
+			addDataToBuffer(fullText.data() + oldIndex, index - oldIndex);
+			myIsPreformatted = false;
+			endParagraph();
+			beginParagraph();
+			myIsPreformatted = true;
+		} while (index != -1);
+	} else {
+		myConverter.convertBuffer(myBuffer);
+		BookReader::flushTextBufferToParagraph();
+	}
 }
 
 bool HtmlBookReader::tagHandler(HtmlTag tag) {
 	switch(tag.Code) {
 		case _BODY:
 			break;
+		// 9. text
+		case _EM:
+			addControl(EMPHASIS, tag.Start);
+			break;
+		case _STRONG:
+			addControl(STRONG, tag.Start);
+			break;
+		case _DFN:
+			//TODO: implement
+			break;
+		case _CODE:
+			addControl(CODE, tag.Start);
+			break;
+		case _SAMP:
+			//TODO: implement
+			break;
+		case _KBD:
+			//TODO: implement
+			break;
+		case _VAR:
+			//TODO: implement
+			break;
+		case _CITE:
+			addControl(CITE, tag.Start);
+			break;
+		case _ABBR:
+			//TODO: implement
+			break;
+		case _ACRONYM:
+			//TODO: implement
+			break;
+		case _BLOCKQUOUTE:
+			//TODO: implement
+			break;
+		case _Q:
+			//TODO: implement
+			break;
+		case _SUB:
+			addControl(SUB, tag.Start);
+			break;
+		case _SUP:
+			addControl(SUP, tag.Start);
+			break;
 		case _P:
 		case _BR:
 			endParagraph();
 			beginParagraph();
 			break;
-		case _LI:
-			//TODO: add bullet
+		case _PRE:
 			endParagraph();
+			myIsPreformatted = tag.Start;
+			if (tag.Start) {
+				pushKind(CODE);
+			} else {
+				popKind();
+			}
 			beginParagraph();
 			break;
+		case _INS:
+			//TODO: implement
+			break;
+		case _DEL:
+			//TODO: implement
+			break;
+		// 10. lists
+		case _UL:
+		case _OL:
+			if (tag.Start) {
+				myListNumStack.push((tag.Code == _UL) ? 0 : 1);
+			} else if (!myListNumStack.empty()) {
+				myListNumStack.pop();
+			}
+			break;
+		case _LI:
+			if (tag.Start) {
+				endParagraph();
+				beginParagraph();
+				if (!myListNumStack.empty()) {
+					//TODO: add spaces and number/bullet instead of "*"
+					addDataToBuffer("&bull;");
+				}
+			}
+			break;
+		case _DT:
+			if (tag.Start) {
+				endParagraph();
+				beginParagraph();
+			}
+			break;
+		case _DL:
+		case _DD:
+			break;
+		//
 		case _TITLE:
 			endParagraph();
 			if (tag.Start) {
@@ -68,21 +167,11 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _TT:
 			addControl(CODE, tag.Start);
 			break;
-		case _STRONG:
 		case _B:
 			addControl(STRONG, tag.Start);
 			break;
 		case _I:
 			addControl(EMPHASIS, tag.Start);
-			break;
-		case _SUB:
-			addControl(SUB, tag.Start);
-			break;
-		case _SUP:
-			addControl(SUP, tag.Start);
-			break;
-		case _CITE:
-			addControl(CITE, tag.Start);
 			break;
 		case _STYLE:
 			myIgnoreData = tag.Start;
@@ -105,6 +194,7 @@ void HtmlBookReader::startDocumentHandler() {
 	pushKind(REGULAR);
 	beginParagraph();
 	myIgnoreData = false;
+	myIsPreformatted = false;
 }
 
 void HtmlBookReader::endDocumentHandler() {

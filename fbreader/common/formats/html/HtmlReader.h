@@ -54,23 +54,21 @@ public:
 	enum TagCode {
 		_UNKNOWN,
 		_BODY,
-		_P,
-		_BR,
-		_LI,
 		_TITLE,
-		_H1,
-		_H2,
-		_H3,
-		_H4,
-		_H5,
-		_H6,
+		_H1, _H2, _H3, _H4, _H5, _H6,
+		// 9. text
+		_EM, _STRONG, _DFN, _CODE, _SAMP, _KBD, _VAR, _CITE, _ABBR, _ACRONYM,
+		_BLOCKQUOUTE, _Q,
+		_SUB, _SUP,
+		_P, _BR,
+		_PRE,
+		_INS, _DEL,
+		// 10. lists
+		_UL, _OL, _LI,
+		_DL, _DT, _DD,
+		//
 		_TT,
-		_STRONG,
-		_B,
-		_I,
-		_SUB,
-		_SUP,
-		_CITE,
+		_B, _I,
 		_STYLE,
 	};
 

@@ -98,25 +98,48 @@ static struct {
 	const char *tagName;
 	HtmlReader::TagCode tagCode;
 } HTML_TAGS[] = {
-	{ "body", HtmlReader::_BODY },
-	{ "p", HtmlReader::_P },
-	{ "br", HtmlReader::_BR },
-	{ "li", HtmlReader::_LI },
-	{ "title", HtmlReader::_TITLE },
-	{ "h1", HtmlReader::_H1 },
-	{ "h2", HtmlReader::_H2 },
-	{ "h3", HtmlReader::_H3 },
-	{ "h4", HtmlReader::_H4 },
-	{ "h5", HtmlReader::_H5 },
-	{ "h6", HtmlReader::_H6 },
-	{ "tt", HtmlReader::_TT },
-	{ "b", HtmlReader::_B },
-	{ "i", HtmlReader::_I },
-	{ "strong", HtmlReader::_STRONG },
-	{ "sup", HtmlReader::_SUP },
-	{ "sub", HtmlReader::_SUB },
-	{ "cite", HtmlReader::_CITE },
-	{ "style", HtmlReader::_STYLE },
+	{ "BODY", HtmlReader::_BODY },
+	{ "TITLE", HtmlReader::_TITLE },
+	{ "H1", HtmlReader::_H1 },
+	{ "H2", HtmlReader::_H2 },
+	{ "H3", HtmlReader::_H3 },
+	{ "H4", HtmlReader::_H4 },
+	{ "H5", HtmlReader::_H5 },
+	{ "H6", HtmlReader::_H6 },
+	// 9. text
+	{ "EM", HtmlReader::_EM, },
+	{ "STRONG", HtmlReader::_STRONG, },
+	{ "DFN", HtmlReader::_DFN, },
+	{ "CODE", HtmlReader::_CODE, },
+	{ "SAMP", HtmlReader::_SAMP, },
+	{ "KBD", HtmlReader::_KBD, },
+	{ "VAR", HtmlReader::_VAR, },
+	{ "CITE", HtmlReader::_CITE, },
+	{ "ABBR", HtmlReader::_ABBR, },
+	{ "ACRONYM", HtmlReader::_ACRONYM, },
+	{ "BLOCKQUOUTE", HtmlReader::_BLOCKQUOUTE, },
+	{ "Q", HtmlReader::_Q, },
+	{ "SUB", HtmlReader::_SUB, },
+	{ "SUP", HtmlReader::_SUP, },
+	{ "P", HtmlReader::_P, },
+	{ "BR", HtmlReader::_BR, },
+	{ "PRE", HtmlReader::_PRE, },
+	{ "INS", HtmlReader::_INS, },
+	{ "DEL", HtmlReader::_DEL, },
+	// 10. lists
+	{ "UL", HtmlReader::_UL },
+	{ "OL", HtmlReader::_OL },
+	{ "LI", HtmlReader::_LI },
+	{ "DL", HtmlReader::_DL },
+	{ "DT", HtmlReader::_DT },
+	{ "DD", HtmlReader::_DD },
+	{ "MENU", HtmlReader::_UL },
+	{ "DIR", HtmlReader::_UL },
+	//
+	{ "TT", HtmlReader::_TT },
+	{ "B", HtmlReader::_B },
+	{ "I", HtmlReader::_I },
+	{ "STYLE", HtmlReader::_STYLE },
 	{ 0, HtmlReader::_UNKNOWN }
 };
 
@@ -135,7 +158,7 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 	}
 
 	for (unsigned int i = 0; i < name.length(); i++) {
-		name[i] = tolower(name[i]);
+		name[i] = toupper(name[i]);
 	}
 
 	for (unsigned int i = 0; ; i++) {

@@ -20,6 +20,8 @@
 #ifndef __HTMLBOOKREADER_H__
 #define __HTMLBOOKREADER_H__
 
+#include <stack>
+
 #include "HtmlReader.h"
 #include "../../bookmodel/BookReader.h"
 
@@ -43,6 +45,8 @@ private:
 
 private:
 	bool myIgnoreData;
+	bool myIsPreformatted;
+	std::stack<int> myListNumStack;
 };
 
 #endif /* __HTMLBOOKREADER_H__ */
