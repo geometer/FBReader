@@ -68,6 +68,8 @@ void TextView::clear() {
 		delete myLastParagraphCursor;
 		myLastParagraphCursor = 0;
 	}
+	myParagraphMap.clear();
+	myTextElementMap.clear();
 }
 
 void TextView::setModel(const TextModel *model, const std::string &name) {
