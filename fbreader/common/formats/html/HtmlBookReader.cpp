@@ -23,9 +23,9 @@
 HtmlBookReader::HtmlBookReader(BookModel &model) : BookReader(model) {
 }
 
-void HtmlBookReader::endParagraph() {
+void HtmlBookReader::flushTextBuffer() {
 	myConverter.convertBuffer(myBuffer);
-	BookReader::endParagraph();
+	BookReader::flushTextBuffer();
 }
 
 bool HtmlBookReader::tagHandler(HtmlTag tag) {

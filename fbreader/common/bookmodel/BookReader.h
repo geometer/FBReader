@@ -54,7 +54,7 @@ protected:
 	void endParagraph();
 	void addControl(TextKind kind, bool start);
 	void addHyperlinkControl(TextKind kind, const std::string &label);
-	void flushTextBuffer();
+	virtual void flushTextBuffer();
 
 	void addImageToParagraph(const std::string &id);
 	void addImageToModel(const std::string &id, Image *image);
