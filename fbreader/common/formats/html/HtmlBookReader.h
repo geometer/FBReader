@@ -29,7 +29,14 @@ class HtmlBookReader : public BookReader, public HtmlReader {
 
 public:
 	HtmlBookReader(BookModel &model);
-	void readBook(ZLInputStream &stream);
+	void readBook(ZLInputStream &stream) { readDocument(stream); }
+
+protected:
+	void startDocumentHandler();
+	void endDocumentHandler();
+
+	bool tagHandler(HtmlTag tag);
+	bool characterDataHandler(const char *text, int len);
 };
 
 #endif /* __HTMLBOOKREADER_H__ */

@@ -27,7 +27,18 @@ class HtmlDescriptionReader : public DescriptionReader, public HtmlReader {
 
 public:
 	HtmlDescriptionReader(BookDescription &description);
-	void readDescription(ZLInputStream &stream);
+	void readDescription(ZLInputStream &stream) { readDocument(stream); }
+
+protected:
+	void startDocumentHandler();
+	void endDocumentHandler();
+
+	bool tagHandler(HtmlTag tag);
+	bool characterDataHandler(const char *text, int len);
+
+private:
+	bool myReadTitle;
+	std::string myTitle;
 };
 
 #endif /* __HTMLDESCRIPTIONREADER_H__ */

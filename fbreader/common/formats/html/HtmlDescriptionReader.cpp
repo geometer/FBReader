@@ -17,19 +17,34 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLInputStream.h>
-
 #include "HtmlDescriptionReader.h"
 
 HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : DescriptionReader(description) {
 }
 
-void HtmlDescriptionReader::readDescription(ZLInputStream &stream) {
-	if (!stream.open()) {
-	}
+void HtmlDescriptionReader::startDocumentHandler() {
+	myReadTitle = false;
+}
 
-	addAuthor("Html", "book", "writer");
-	addToTitle("Html book", 9);
+void HtmlDescriptionReader::endDocumentHandler() {
+	addAuthor("Html", "Book", "Writer");
+	if (myTitle.empty()) {
+		myTitle.append("Html book");
+	}
+	addToTitle(myTitle.c_str(), myTitle.length());
 	validateDescription();
-	stream.close();
+}
+
+bool HtmlDescriptionReader::tagHandler(HtmlTag tag) {
+	if (tag.Code == _TITLE) {
+		myReadTitle = tag.Start && myTitle.empty();
+	}
+	return tag.Code != _BODY;
+}
+
+bool HtmlDescriptionReader::characterDataHandler(const char *text, int len) {
+	if (myReadTitle) {
+		myTitle.append(text, len);
+	}
+	return true;
 }

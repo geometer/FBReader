@@ -17,94 +17,78 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <ctype.h>
-
-#include <abstract/ZLInputStream.h>
-
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
 HtmlBookReader::HtmlBookReader(BookModel &model) : BookReader(model) {
 }
 
-void HtmlBookReader::readBook(ZLInputStream &stream) {
-	if (!stream.open()) {
+bool HtmlBookReader::tagHandler(HtmlTag tag) {
+	switch(tag.Code) {
+		case _BODY:
+			break;
+		case _P:
+			if (tag.Start) {
+				endParagraph();
+				beginParagraph();
+			}
+			break;
+		case _TITLE:
+			endParagraph();
+			if (tag.Start) {
+				pushKind(TITLE);
+			} else {
+				popKind();
+			}
+			beginParagraph();
+			break;
+		case _H1:
+		case _H2:
+		case _H3:
+		case _H4:
+		case _H5:
+		case _H6:
+			endParagraph();
+			if (tag.Start) {
+				pushKind(SECTION_TITLE);
+			} else {
+				popKind();
+			}
+			beginParagraph();
+			break;
+		case _TT:
+			addControl(CODE, tag.Start);
+			break;
+		case _STRONG:
+		case _B:
+			addControl(STRONG, tag.Start);
+			break;
+		case _I:
+			addControl(EMPHASIS, tag.Start);
+			break;
+		case _CITE:
+			addControl(CITE, tag.Start);
+			break;
+		case _UNKNOWN:
+			break;
 	}
+	return true;
+}
 
+bool HtmlBookReader::characterDataHandler(const char *text, int len) {
+	if (len > 0) {
+		myBuffer.push_back(std::string());
+		myBuffer.back().append(text, len);
+	}
+	return true;
+}
+
+void HtmlBookReader::startDocumentHandler() {
 	setMainTextModel();
 	pushKind(REGULAR);
 	beginParagraph();
+}
 
-	bool insideTag = false;
-	bool insideTagName = false;
-	std::string tagName;
-	
-	const size_t BUFSIZE = 2048;
-	char buffer[BUFSIZE];
-	size_t length;
-	do {
-		length = stream.read(buffer, BUFSIZE);
-		char *start = buffer;
-		char *endOfBuffer = buffer + length;
-		for (char *ptr = buffer; ptr < endOfBuffer; ptr++) {
-			if (insideTag) {
-				if (*ptr == '>') {
-					insideTag = false;
-					if (insideTagName) {
-						tagName.append(start, ptr - start);
-					}
-					if ((tagName == "p") || (tagName == "P")) {
-						endParagraph();
-						beginParagraph();
-					}
-					if ((tagName == "title") || (tagName == "TITLE")) {
-						endParagraph();
-						pushKind(TITLE);
-						beginParagraph();
-					}
-					if ((tagName == "/title") || (tagName == "/TITLE")) {
-						endParagraph();
-						popKind();
-						beginParagraph();
-					}
-					if ((tagName == "h1") || (tagName == "H1") || (tagName == "h2") || (tagName == "H2")) {
-						endParagraph();
-						pushKind(SECTION_TITLE);
-						beginParagraph();
-					}
-					if ((tagName == "/h1") || (tagName == "/H1") || (tagName == "/h2") || (tagName == "/H2")) {
-						endParagraph();
-						popKind();
-						beginParagraph();
-					}
-					tagName.clear();
-					start = ptr + 1;
-				} if (insideTagName && isspace(*ptr)) {
-					tagName.append(start, ptr - start);
-					insideTagName = false;
-				}
-			} else {
-				if (*ptr == '<') {
-					insideTag = true;
-					insideTagName = true;
-					if (start != ptr) {
-						myBuffer.push_back(std::string());
-						myBuffer.back().append(start, ptr - start);
-					}
-					start = ptr + 1;
-				}
-			}
-		}
-		if (start != endOfBuffer) {
-			if (!insideTag) {
-				myBuffer.push_back(std::string());
-				myBuffer.back().append(start, endOfBuffer - start);
-			} else if (insideTagName) {
-				tagName.append(start, endOfBuffer - start);
-			}
-		}
-  } while (length == BUFSIZE);
-
+void HtmlBookReader::endDocumentHandler() {
 	endParagraph();
-	stream.close();
 }
