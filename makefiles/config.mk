@@ -1,4 +1,4 @@
-include $(ROOTDIR)/makefiles/target.mk
+include $(ROOTDIR)/makefiles/targets.mk
 
 MAKE = ROOTDIR=$(ROOTDIR) make
 
