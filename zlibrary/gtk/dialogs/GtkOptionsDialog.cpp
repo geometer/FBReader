@@ -101,6 +101,7 @@ void GtkOptionsDialogTab::accept() {
 
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
   myTable = GTK_TABLE(gtk_table_new (0, 2, TRUE));
+	gtk_table_set_homogeneous(myTable, false);
   gtk_container_set_border_width (GTK_CONTAINER (myTable), 2);
 
   myRowCounter = 0;
