@@ -35,13 +35,18 @@
 #include "../hyphenation/Hyphenator.h"
 #include "../textview/TextStyle.h"
 
-ZLBooleanOption FBReader::QuitOnCancelOption("Options", "QuitOnCancel", false);
-ZLIntegerOption FBReader::ScrollingDelayOption("Options", "ScrollingDelay", 250);
+static const std::string OPTIONS = "Options";
+static const std::string SEARCH = "Search";
+static const std::string STATE = "State";
+static const std::string BOOK = "Book";
 
-ZLBooleanOption FBReader::SearchBackwardOption("Search", "Backward", false);
-ZLBooleanOption FBReader::SearchIgnoreCaseOption("Search", "IgnoreCase", true);
-ZLBooleanOption FBReader::SearchInWholeTextOption("Search", "WholeText", false);
-ZLStringOption FBReader::SearchPatternOption("Search", "Pattern", std::string());
+ZLBooleanOption FBReader::QuitOnCancelOption(OPTIONS, "QuitOnCancel", false);
+ZLIntegerOption FBReader::ScrollingDelayOption(OPTIONS, "ScrollingDelay", 250);
+
+ZLBooleanOption FBReader::SearchBackwardOption(SEARCH, "Backward", false);
+ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
+ZLBooleanOption FBReader::SearchInWholeTextOption(SEARCH, "WholeText", false);
+ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 FBReader::FBReader(PaintContext *context) {
 	myModel = 0;
@@ -54,7 +59,7 @@ FBReader::FBReader(PaintContext *context) {
 	myPreviousMode = BOOK_TEXT_MODE;
 
 	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
-	ZLStringOption bookName("State", "Book", howToStartString);
+	ZLStringOption bookName(STATE, BOOK, howToStartString);
 	BookDescription *description = BookDescription::create(bookName.value());
 	if (description == 0) {
 		description = BookDescription::create(howToStartString);
@@ -71,7 +76,7 @@ FBReader::~FBReader() {
 	delete myContentsView;
 	delete myCollectionView;
 	if (myModel != 0) {
-		ZLStringOption bookName("State", "Book", std::string());
+		ZLStringOption bookName(STATE, BOOK, std::string());
 		bookName.setValue(myModel->fileName());
 		delete myModel;
 	}

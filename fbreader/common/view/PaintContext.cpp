@@ -19,13 +19,16 @@
 
 #include "PaintContext.h"
 
-ZLColorOption PaintContext::BackgroundColorOption("Colors", "Background", ZLColor(255, 255, 255));
-ZLColorOption PaintContext::TextColorOption("Colors", "Text", ZLColor(0, 0, 0));
-ZLColorOption PaintContext::SelectedTextColorOption("Colors", "SelectedText", ZLColor(0, 0, 127));
+static const std::string COLORS = "Colors";
+static const std::string OPTIONS = "Options";
+
+ZLColorOption PaintContext::BackgroundColorOption(COLORS, "Background", ZLColor(255, 255, 255));
+ZLColorOption PaintContext::TextColorOption(COLORS, "Text", ZLColor(0, 0, 0));
+ZLColorOption PaintContext::SelectedTextColorOption(COLORS, "SelectedText", ZLColor(0, 0, 127));
 
 PaintContext::PaintContext() :
-			myLeftMargin("Options", "LeftMargin", 4), myRightMargin("Options", "RightMargin", 4),
-			myTopMargin("Options", "TopMargin", 0), myBottomMargin("Options", "BottomMargin", 4) {
+			myLeftMargin(OPTIONS, "LeftMargin", 4), myRightMargin(OPTIONS, "RightMargin", 4),
+			myTopMargin(OPTIONS, "TopMargin", 0), myBottomMargin(OPTIONS, "BottomMargin", 4) {
 }
 
 const std::vector<std::string> &PaintContext::fontFamilies() const {
