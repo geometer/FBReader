@@ -42,6 +42,12 @@ CollectionView::~CollectionView() {
 	}
 }
 
+static const std::string LIBRARY = "Library";
+
+const std::string &CollectionView::caption() const {
+	return LIBRARY;
+}
+
 void CollectionView::gotoParagraph(int num, bool last) {
 	if ((num >= 0) && (num < (int)myTreeModel->paragraphs().size())) {
 		TreeParagraph *tp = (TreeParagraph*)myTreeModel->paragraphs()[num];

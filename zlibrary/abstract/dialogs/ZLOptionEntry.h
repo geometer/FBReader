@@ -89,7 +89,7 @@ class ZLStringOptionEntry : public ZLOptionEntry {
 public:
 	ZLOptionKind kind() const { return STRING; }
 
-	virtual const std::string initialValue() const = 0;
+	virtual const std::string &initialValue() const = 0;
 	virtual void onAccept(const std::string &value) const = 0;
 };
 
@@ -98,7 +98,7 @@ class ZLSimpleStringOptionEntry : public ZLStringOptionEntry {
 public:
 	ZLSimpleStringOptionEntry(const std::string &name, const ZLStringOption &option) : myName(name), myOption(option) {}
 	const std::string &name() const { return myName; }
-	const std::string initialValue() const { return myOption.value(); }
+	const std::string &initialValue() const { return myOption.value(); }
 	void onAccept(const std::string &value) const { myOption.setValue(value); }
 
 private:
@@ -164,7 +164,7 @@ class ZLComboOptionEntry : public ZLOptionEntry {
 public:
 	ZLOptionKind kind() const { return COMBO; }
 
-	virtual const std::string initialValue() const = 0;
+	virtual const std::string &initialValue() const = 0;
 	virtual const std::vector<std::string> &values() const = 0;
 	virtual void onValueChange(const std::string&) {}
 	virtual void onAccept(const std::string &value) const = 0;
@@ -175,7 +175,7 @@ class ZLSimpleBoolean3OptionEntry : public ZLComboOptionEntry {
 public:
 	ZLSimpleBoolean3OptionEntry(const std::string &name, const ZLBoolean3Option &option) : myName(name), myOption(option) {}
 	const std::string &name() const { return myName; }
-	const std::string initialValue() const;
+	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value) const;
 

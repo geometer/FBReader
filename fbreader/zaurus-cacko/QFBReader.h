@@ -61,9 +61,13 @@ private:
 	int myTitleHeight;
 
 	std::map<int,ActionCode> myKeyBindings;
-	std::vector<ActionCode> myIdByPosition;
-	std::set<ActionCode> myVisibleButtons;
-	std::map<ActionCode,QPixmap*> myButtonPixmaps;
+	
+	struct ButtonInfo {
+		ActionCode Code;
+		bool IsVisible;
+		QPixmap *Pixmap;
+	};
+	std::vector<ButtonInfo> myButtons;
 };
 
 #endif /* __QFBREADER_H__ */

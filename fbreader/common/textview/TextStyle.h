@@ -44,7 +44,7 @@ protected:
 public:
 	virtual bool isDecorated() const = 0;
 
-	virtual const std::string fontFamily() const = 0;
+	virtual const std::string &fontFamily() const = 0;
 	virtual int fontSize() const = 0;
 
 	virtual bool bold() const = 0;
@@ -71,7 +71,7 @@ public:
 	bool isDecorated() const { return false; }
 
 	ZLStringOption &fontFamilyOption() const { return *myFontFamilyOption; }
-	const std::string fontFamily() const { return fontFamilyOption().value(); }
+	const std::string &fontFamily() const { return fontFamilyOption().value(); }
 
 	ZLIntegerOption &fontSizeOption() const { return *myFontSizeOption; }
 	int fontSize() const { return fontSizeOption().value(); }
@@ -187,7 +187,7 @@ private:
 	friend TextStyle *TextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
 
 public:
-	const std::string fontFamily() const;
+	const std::string &fontFamily() const;
 	int fontSize() const;
 	bool bold() const;
 	bool italic() const;
@@ -215,7 +215,7 @@ private:
 	friend TextStyle *FullTextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
 
 public:
-	const std::string fontFamily() const;
+	const std::string &fontFamily() const;
 	int fontSize() const;
 	bool bold() const;
 	bool italic() const;

@@ -55,6 +55,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
 	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
 	myKeyBindings[Key_I] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings[Key_A] = ACTION_ADD_BOOK;
 	myKeyBindings[Key_Minus] = ACTION_DECREASE_FONT;
 	myKeyBindings[Key_Equal] = ACTION_INCREASE_FONT;
 	myKeyBindings[Key_Left] = ACTION_UNDO;
@@ -155,5 +156,5 @@ void QFBReader::searchSlot() {
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {
-	doAction((ActionCode)menuBar()->idAt(buttonNumber));
+	doAction((ActionCode)buttonNumber);
 }

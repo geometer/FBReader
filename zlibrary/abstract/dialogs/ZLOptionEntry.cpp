@@ -42,7 +42,7 @@ void ZLOptionEntry::hide() {
 
 std::vector<std::string> ZLSimpleBoolean3OptionEntry::ourValues;
 
-const std::string ZLSimpleBoolean3OptionEntry::initialValue() const {
+const std::string &ZLSimpleBoolean3OptionEntry::initialValue() const {
 	return values()[myOption.value()];
 }
 

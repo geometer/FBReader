@@ -28,7 +28,7 @@ class BookTextView : public TextView {
 
 public:
 	BookTextView(FBReader &reader, PaintContext &context);
-	const std::string caption() const { return myCaption; }
+	const std::string &caption() const { return myCaption; }
 	void setCaption(const std::string &caption) { myCaption = caption; }
 
 	void setModel(const TextModel *model, const std::string &name);
@@ -41,11 +41,6 @@ public:
 	void redoPageMove();
 
 	bool onStylusPress(int x, int y);
-
-protected:
-	const std::string paragraphOptionName() const;
-	const std::string wordOptionName() const;
-	const std::string charOptionName() const;
 
 private:
 	void pushCurrentPositionIntoStack();

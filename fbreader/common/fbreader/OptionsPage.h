@@ -34,7 +34,7 @@ protected:
 	public:
 		ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue) : myPage(page), myName(name), myInitialValue(initialValue) {}
 		const std::string &name() const { return myName; }
-		const std::string initialValue() const { return myInitialValue; }
+		const std::string &initialValue() const { return myInitialValue; }
 		const std::vector<std::string> &values() const { return myValues; }
 		void onAccept(const std::string&) const {}
 		void onValueChange(const std::string &selectedValue);

@@ -26,13 +26,8 @@ class FootnoteView : public TextView {
 
 public:
 	FootnoteView(PaintContext &context) : TextView(context) {}
-	const std::string caption() const { return myCaption; }
+	const std::string &caption() const { return myCaption; }
 	void setCaption(const std::string &caption) { myCaption = caption; }
-
-protected:
-	const std::string paragraphOptionName() const { return ""; }
-	const std::string wordOptionName() const { return ""; }
-	const std::string charOptionName() const { return ""; }
 
 private:
 	std::string myCaption;

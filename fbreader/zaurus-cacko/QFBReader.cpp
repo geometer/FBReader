@@ -52,7 +52,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
 	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
 	myKeyBindings[Key_I] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
-	// TODO: replace keycodes for Fn+1, Fn+2
+	myKeyBindings[Key_A] = ACTION_ADD_BOOK;
 	myKeyBindings[0x200f] = ACTION_DECREASE_FONT;
 	myKeyBindings[0x2010] = ACTION_INCREASE_FONT;
 	myKeyBindings[Key_Left] = ACTION_UNDO;
@@ -129,9 +129,9 @@ void QFBReader::setMode(ViewMode mode) {
 	FBReader::setMode(mode);
 
 	menuBar()->clear();
-	for (std::vector<ActionCode>::const_iterator it = myIdByPosition.begin(); it != myIdByPosition.end(); it++) {
-		if (myVisibleButtons.find(*it) != myVisibleButtons.end())	{
-			menuBar()->insertItem(*myButtonPixmaps[*it], this, SLOT(emptySlot()), 0, *it);
+	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); it++) {
+		if (it->IsVisible) {
+			menuBar()->insertItem(*it->Pixmap, this, SLOT(emptySlot()), 0, it->Code);
 		}
 	}
 	centralWidget()->show();
@@ -148,9 +148,10 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 }
 
 void QFBReader::addButton(ActionCode id, const std::string &name) {
-	myIdByPosition.push_back(id);
-	setButtonVisible(id, true);
-	myButtonPixmaps[id] = new QPixmap(Resource::loadPixmap(("FBReader/" + name).c_str()));
+	myButtons.push_back(ButtonInfo());
+	myButtons.back().Code = id;
+	myButtons.back().IsVisible = true;
+	myButtons.back().Pixmap = new QPixmap(Resource::loadPixmap(("FBReader/" + name).c_str()));
 }
 
 void QFBReader::setButtonEnabled(ActionCode id, bool enable) {
@@ -160,10 +161,11 @@ void QFBReader::setButtonEnabled(ActionCode id, bool enable) {
 }
 
 void QFBReader::setButtonVisible(ActionCode id, bool visible) {
-	if (visible) {
-		myVisibleButtons.insert(id);
-	} else {
-		myVisibleButtons.erase(id);
+	for (std::vector<ButtonInfo>::iterator it = myButtons.begin(); it != myButtons.end(); it++) {
+		if (it->Code == id) {
+			it->IsVisible = visible;
+			break;
+		}
 	}
 }
 
@@ -229,7 +231,5 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {
-	if ((buttonNumber >= 0) && (buttonNumber < (int)myIdByPosition.size())) {
-		doAction(myIdByPosition[buttonNumber]);
-	}
+	doAction((ActionCode)buttonNumber);
 }

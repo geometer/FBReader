@@ -46,8 +46,8 @@ public:
 	BookCollection();
 	~BookCollection();
 
-	const std::vector<const Author*> authors() const { return myAuthors; }
-	const std::vector<BookDescription*> books(const Author *author) { return myCollection[author]; }
+	const std::vector<const Author*> &authors() const { return myAuthors; }
+	const std::vector<BookDescription*> &books(const Author *author) { return myCollection[author]; }
 
 	bool isActual() const;
 	

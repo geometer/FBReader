@@ -93,7 +93,6 @@ public:
 	virtual void gotoParagraph(int num, bool last = false);
 
 	virtual void setModel(const TextModel *model, const std::string &name);
-	virtual void saveState();
 
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward);
 	bool canFindNext() const;
@@ -106,10 +105,6 @@ public:
 protected:
 	TextView(PaintContext &context);
 	virtual ~TextView();
-
-	virtual const std::string paragraphOptionName() const = 0;
-	virtual const std::string wordOptionName() const = 0;
-	virtual const std::string charOptionName() const = 0;
 
 private:
 	void clear();

@@ -83,7 +83,7 @@ void ComboOptionView::_createItem() {
 	myLabel = new QLabel(myOption->name().c_str(), myTab);
 	myComboBox = new QComboBox(myTab);
 	const std::vector<std::string> &values = ((ZLComboOptionEntry*)myOption)->values();
-	const std::string initial = ((ZLComboOptionEntry*)myOption)->initialValue();
+	const std::string &initial = ((ZLComboOptionEntry*)myOption)->initialValue();
 	int selectedIndex = -1;
 	int index = 0;
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); it++, index++) {

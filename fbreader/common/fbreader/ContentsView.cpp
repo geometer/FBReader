@@ -27,18 +27,6 @@
 ContentsView::ContentsView(FBReader &reader, PaintContext &context) : TextView(context), myReader(reader) {
 }
 
-const std::string ContentsView::paragraphOptionName() const {
-	return "ContentsParagraph";
-}
-
-const std::string ContentsView::wordOptionName() const {
-	return "ContentsWord";
-}
-
-const std::string ContentsView::charOptionName() const {
-	return "ContentsChar";
-}
-
 bool ContentsView::onStylusPress(int x, int y) {
 	if (TextView::onStylusPress(x, y)) {
 		return true;
@@ -61,4 +49,29 @@ bool ContentsView::onStylusPress(int x, int y) {
 
 bool ContentsView::isEmpty() const {
 	return (myModel == NULL) || myModel->paragraphs().empty();
+}
+
+static const std::string PARAGRAPH_OPTION_NAME = "ContentsParagraph";
+static const std::string WORD_OPTION_NAME = "ContentsWord";
+static const std::string CHAR_OPTION_NAME = "ContentsChar";
+
+void ContentsView::saveState() {
+	if ((myModel == NULL) || (myFirstParagraphCursor == NULL)) {
+		return;
+	}
+
+	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myFirstParagraphCursor->paragraphNumber());
+	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordNumber());
+	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myFirstParagraphCursor->charNumber());
+}
+
+void ContentsView::setModel(const TextModel *model, const std::string &name) {
+	TextView::setModel(model, name);
+
+	if ((myModel != 0) && !myModel->paragraphs().empty()) {
+		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
+		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
+		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
+		myFirstParagraphCursor->moveTo(paragraphPosition.value(), wordPosition.value(), charPosition.value());
+	}
 }

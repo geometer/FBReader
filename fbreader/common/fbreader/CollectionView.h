@@ -35,18 +35,13 @@ class CollectionView : public TextView {
 public:
 	CollectionView(FBReader &reader, PaintContext &context);
 	~CollectionView();
-	const std::string caption() const { return "Library"; }
+	const std::string &caption() const;
 
 	void fill();
 	void gotoParagraph(int num, bool last = false);
 	bool onStylusPress(int x, int y);
 
 	void paint();
-
-protected:
-	const std::string paragraphOptionName() const { return ""; }
-	const std::string wordOptionName() const { return ""; }
-	const std::string charOptionName() const { return ""; }
 
 private:
 	FBReader &myReader;

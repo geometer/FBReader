@@ -31,30 +31,28 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-static const char * const BUFFER_SIZE = "UndoBufferSize";
-static const char * const POSITION_IN_BUFFER = "PositionInBuffer";
-static const char * const BUFFER_PARAGRAPH_PATTERN = "Paragraph_%i";
-static const char * const BUFFER_WORD_PATTERN = "Word_%i";
-
 BookTextView::BookTextView(FBReader &reader, PaintContext &context) : TextView(context), myReader(reader) {
 	myCurrentPointInStack = 0;
 	myMaxStackSize = 20;
 }
 
-const std::string BookTextView::paragraphOptionName() const {
-	return "Paragraph";
-}
-
-const std::string BookTextView::wordOptionName() const {
-	return "Word";
-}
-
-const std::string BookTextView::charOptionName() const {
-	return "Char";
-}
+static const std::string PARAGRAPH_OPTION_NAME = "Paragraph";
+static const std::string WORD_OPTION_NAME = "Word";
+static const std::string CHAR_OPTION_NAME = "Char";
+static const std::string BUFFER_SIZE = "UndoBufferSize";
+static const std::string POSITION_IN_BUFFER = "PositionInBuffer";
+static const char * const BUFFER_PARAGRAPH_PATTERN = "Paragraph_%i";
+static const char * const BUFFER_WORD_PATTERN = "Word_%i";
 
 void BookTextView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
+
+	if ((myModel != 0) && !myModel->paragraphs().empty()) {
+		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
+		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
+		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
+		myFirstParagraphCursor->moveTo(paragraphPosition.value(), wordPosition.value(), charPosition.value());
+	}
 
 	myPositionStack.clear();
 	myCurrentPointInStack = 0;
@@ -86,12 +84,13 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 }
 
 void BookTextView::saveState() {
-	TextView::saveState();
-
-	if (myModel == NULL) {
+	if ((myModel == 0) || (myFirstParagraphCursor == 0)) {
 		return;
 	}
 
+	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myFirstParagraphCursor->paragraphNumber());
+	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordNumber());
+	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myFirstParagraphCursor->charNumber());
 	ZLIntegerOption(myName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
 	ZLIntegerOption(myName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
@@ -121,16 +120,16 @@ void BookTextView::pushCurrentPositionIntoStack() {
 }
 
 bool BookTextView::setFirstParagraphCursor() {
-	if (myFirstParagraphCursor == NULL) {
-		if (myLastParagraphCursor == NULL) {
+	if (myFirstParagraphCursor == 0) {
+		if (myLastParagraphCursor == 0) {
 			return false;
 		}
 		myFirstParagraphCursor = myLastParagraphCursor;
-		myLastParagraphCursor = NULL;
+		myLastParagraphCursor = 0;
 	}
-	if (myLastParagraphCursor != NULL) {
+	if (myLastParagraphCursor != 0) {
 		delete myLastParagraphCursor;
-		myLastParagraphCursor = NULL;
+		myLastParagraphCursor = 0;
 	}
 	return true;
 }

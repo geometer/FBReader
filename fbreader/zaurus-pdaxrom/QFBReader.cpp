@@ -18,8 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <iostream>
-
 #include <qapplication.h>
 #include <qpixmap.h>
 #include <qmenubar.h>
@@ -57,6 +55,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
 	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
 	myKeyBindings[Key_I] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings[Key_A] = ACTION_ADD_BOOK;
 	myKeyBindings[Key_1] = ACTION_DECREASE_FONT;
 	myKeyBindings[Key_2] = ACTION_INCREASE_FONT;
 	myKeyBindings[Key_Left] = ACTION_UNDO;
@@ -186,5 +185,5 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {
-	doAction((ActionCode)menuBar()->idAt(buttonNumber));
+	doAction((ActionCode)buttonNumber);
 }

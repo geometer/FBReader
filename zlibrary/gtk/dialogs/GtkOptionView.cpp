@@ -103,7 +103,7 @@ void ComboOptionView::_createItem() {
 	myComboBox = gtk_option_menu_new ();
 
 	const std::vector<std::string> &values = ((ZLComboOptionEntry*)myOption)->values();
-	const std::string initial = ((ZLComboOptionEntry*)myOption)->initialValue();
+	const std::string &initial = ((ZLComboOptionEntry*)myOption)->initialValue();
 	int selectedIndex = -1;
 	int index = 0;
 	GtkWidget *menu;

@@ -77,9 +77,10 @@ const std::vector<std::string> &HtmlTextConverter::externalDTDs() const {
 			std::vector<std::string> files;
 			dtdPath.collectRegularFiles(files);
 			dtdPath.close();
+			std::string dtdPathName = dtdPath.name() + "/";
 			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
 				if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
-					EXTERNAL_DTDs.push_back(dtdPath.name() + "/" + *it);
+					EXTERNAL_DTDs.push_back(dtdPathName + *it);
 				}
 			}
 		}

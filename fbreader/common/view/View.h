@@ -43,7 +43,7 @@ public:
 	View(PaintContext &context) : myContext(context) {}
 	virtual ~View() {}
 
-	virtual const std::string caption() const = 0;
+	virtual const std::string &caption() const = 0;
 	virtual void paint() = 0;
 	PaintContext &context() const { return myContext; }
 

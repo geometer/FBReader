@@ -169,7 +169,7 @@ ZLStringOption::ZLStringOption(const std::string &group, const std::string &opti
 	myDefaultValue = defaultValue;
 }
 
-const std::string ZLStringOption::value() const {
+const std::string &ZLStringOption::value() const {
 	if (!myIsSynchronized) {
 		ZLOptions::instance().setGroup(myGroup);
 		myValue = ZLOptions::instance().stringValue(myOptionName, myDefaultValue);

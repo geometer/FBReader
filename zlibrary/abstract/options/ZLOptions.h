@@ -123,7 +123,7 @@ class ZLStringOption : public ZLOption {
 public:
 	ZLStringOption(const std::string &group, const std::string &optionName, const std::string &defaultValue);
 
-	const std::string value() const;
+	const std::string &value() const;
 	void setValue(const std::string &value) const;
 
 private:

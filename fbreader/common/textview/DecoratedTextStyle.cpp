@@ -49,8 +49,8 @@ TextStyle *FullTextStyleDecoration::createDecoratedStyle(const TextStyle &base) 
 	return new FullDecoratedTextStyle(base, *this);
 }
 
-const std::string PartialDecoratedTextStyle::fontFamily() const {
-	const std::string family = myDecoration.fontFamilyOption().value();
+const std::string &PartialDecoratedTextStyle::fontFamily() const {
+	const std::string &family = myDecoration.fontFamilyOption().value();
 	return (!family.empty()) ? family : base().fontFamily();
 }
 
@@ -78,8 +78,8 @@ int FullDecoratedTextStyle::firstLineIndentDelta() const {
 	return (alignment() == ALIGN_CENTER) ? 0 : base().firstLineIndentDelta() + myDecoration.firstLineIndentDeltaOption().value();
 }
 
-const std::string FullDecoratedTextStyle::fontFamily() const {
-	const std::string family = myDecoration.fontFamilyOption().value();
+const std::string &FullDecoratedTextStyle::fontFamily() const {
+	const std::string &family = myDecoration.fontFamilyOption().value();
 	return (!family.empty()) ? family : base().fontFamily();
 }
 

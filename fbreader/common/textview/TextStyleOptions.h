@@ -37,7 +37,7 @@ public:
 
 	const std::string &name() const;
 	const std::vector<std::string> &values() const { return myAllowBase ? ourAllFamiliesPlusBase : ourAllFamilies; }
-	const std::string initialValue() const;
+	const std::string &initialValue() const;
 
 	void onAccept(const std::string &value) const;
 
@@ -57,7 +57,7 @@ public:
 
 	const std::string &name() const;
 	const std::vector<std::string> &values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
-	const std::string initialValue() const;
+	const std::string &initialValue() const;
 
 	void onAccept(const std::string &value) const;
 
@@ -81,7 +81,7 @@ public:
 
 	const std::string &name() const;
 	const std::vector<std::string> &values() const { return myAllowUndefined ? values5() : values4(); }
-	const std::string initialValue() const;
+	const std::string &initialValue() const;
 
 	void onAccept(const std::string &value) const;
 

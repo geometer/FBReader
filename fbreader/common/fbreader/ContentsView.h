@@ -21,6 +21,7 @@
 #define __CONTENTSVIEW_H__
 
 #include "../textview/TextView.h"
+#include "../textview/ParagraphCursor.h"
 
 class FBReader;
 
@@ -28,17 +29,15 @@ class ContentsView : public TextView {
 
 public:
 	ContentsView(FBReader &reader, PaintContext &context);
-	const std::string caption() const { return myCaption; }
+	const std::string &caption() const { return myCaption; }
 	void setCaption(const std::string &caption) { myCaption = caption; }
+
+	void setModel(const TextModel *model, const std::string &name);
+	void saveState();
 
 	bool isEmpty() const;
 
 	bool onStylusPress(int x, int y);
-
-protected:
-	const std::string paragraphOptionName() const;
-	const std::string wordOptionName() const;
-	const std::string charOptionName() const;
 
 private:
 	FBReader &myReader;

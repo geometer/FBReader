@@ -46,19 +46,6 @@ TextView::~TextView() {
 	clear();
 }
 
-void TextView::saveState() {
-	if ((myModel == NULL) || (myFirstParagraphCursor == NULL)) {
-		return;
-	}
-
-	ZLIntegerOption paragraphPosition(myName, paragraphOptionName(), 0);
-	ZLIntegerOption wordPosition(myName, wordOptionName(), 0);
-	ZLIntegerOption charPosition(myName, charOptionName(), 0);
-	paragraphPosition.setValue(myFirstParagraphCursor->paragraphNumber());
-	wordPosition.setValue(myFirstParagraphCursor->wordNumber());
-	charPosition.setValue(myFirstParagraphCursor->charNumber());
-}
-
 void TextView::clear() {
 	if (myFirstParagraphCursor != 0) {
 		delete myFirstParagraphCursor;
@@ -80,10 +67,6 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 	if ((myModel != 0) && !myModel->paragraphs().empty()) {
 		myFirstParagraphCursor = ParagraphCursor::createCursor(*myModel);
 		myName = name;
-		ZLIntegerOption paragraphPosition(myName, paragraphOptionName(), 0);
-		ZLIntegerOption wordPosition(myName, wordOptionName(), 0);
-		ZLIntegerOption charPosition(myName, charOptionName(), 0);
-		myFirstParagraphCursor->moveTo(paragraphPosition.value(), wordPosition.value(), charPosition.value());
 	}
 }
 

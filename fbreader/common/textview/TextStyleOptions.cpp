@@ -48,8 +48,8 @@ const std::string &FontFamilyOptionEntry::name() const {
 	return FAMILY_STRING;
 }
 
-const std::string FontFamilyOptionEntry::initialValue() const {
-	std::string value = myOption.value();
+const std::string &FontFamilyOptionEntry::initialValue() const {
+	const std::string &value = myOption.value();
 	return value.empty() ? BASE_STRING : value;
 }
 
@@ -71,7 +71,7 @@ const std::string &LineSpacingOptionEntry::name() const {
 	return LINE_SPACING_STRING;
 }
 
-const std::string LineSpacingOptionEntry::initialValue() const {
+const std::string &LineSpacingOptionEntry::initialValue() const {
 	int value = (int)(10 * myOption.value() + 0.5);
 	if (value == 0) {
 		return BASE_STRING;
@@ -126,7 +126,7 @@ const std::string &AlignmentOptionEntry::name() const {
 	return ALIGNMENT_STRING;
 }
 
-const std::string AlignmentOptionEntry::initialValue() const {
+const std::string &AlignmentOptionEntry::initialValue() const {
 	unsigned int value = myOption.value();
 	if (value >= values5().size()) {
 		value = 0;

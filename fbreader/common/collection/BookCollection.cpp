@@ -34,6 +34,13 @@ bool DescriptionComparator::operator() (const BookDescription *d1, const BookDes
 	return d1->title() < d2->title();
 }
 
+static bool isAcceptable(const std::string &fileName) {
+	return
+		ZLStringUtil::stringEndsWith(fileName, ".fb2") ||
+		ZLStringUtil::stringEndsWith(fileName, ".xml") ||
+		ZLStringUtil::stringEndsWith(fileName, ".html");
+}
+
 BookCollection::BookCollection() {
 	myPath = PathOption.value();
 	myScanSubdirs = ScanSubdirsOption.value();
@@ -47,15 +54,17 @@ BookCollection::BookCollection() {
 			std::vector<std::string> files;
 			dir.collectRegularFiles(files);
 			dir.close();
+			const std::string dirName = dir.name() + '/';
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
-				if (ZLStringUtil::stringEndsWith(*jt, ".fb2") || ZLStringUtil::stringEndsWith(*jt, ".xml") || ZLStringUtil::stringEndsWith(*jt, ".html")) {
-					addDescription(BookDescription::create(dir.name() + '/' + *jt));
+				const std::string fileName = dirName + *jt;
+				if (isAcceptable(*jt)) {
+					addDescription(BookDescription::create(fileName));
 				} else if (ZLStringUtil::stringEndsWith(*jt, ".zip")) {
-					std::list<ZLZipEntry> entries = ZLZipEntry::entriesList(dir.name() + '/' + *jt);
+					std::list<ZLZipEntry> entries = ZLZipEntry::entriesList(fileName);
 					for (std::list<ZLZipEntry>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
-						const std::string &name = zit->name();
-						if (ZLStringUtil::stringEndsWith(name, ".fb2") || ZLStringUtil::stringEndsWith(*jt, ".xml") || ZLStringUtil::stringEndsWith(name, ".html")) {
-							addDescription(BookDescription::create(zit->name()));
+						const std::string &entryName = zit->name();
+						if (isAcceptable(entryName)) {
+							addDescription(BookDescription::create(entryName));
 						}
 					}
 				}
