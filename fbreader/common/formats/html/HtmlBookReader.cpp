@@ -199,9 +199,9 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _A:
 			if (tag.Start) {
 				for (unsigned int i = 0; i < tag.Attributes.size(); i++) {
-					if (tag.Attributes[i].Name == "name") {
+					if (tag.Attributes[i].Name == "NAME") {
 						addHyperlinkLabel(tag.Attributes[i].Value);
-					} else if (!myIsHyperlink && (tag.Attributes[i].Name == "href")) {
+					} else if (!myIsHyperlink && (tag.Attributes[i].Name == "HREF")) {
 						const std::string &value = tag.Attributes[i].Value;
 						if (!value.empty() && (value[0] == '#')) {
 							addHyperlinkControl(HYPERLINK, value.substr(1));

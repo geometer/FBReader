@@ -232,6 +232,9 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					if ((*ptr == '>') || (*ptr == '=') || isspace(*ptr)) {
 						if (ptr != start) {
 							currentString.append(start, ptr - start);
+							for (unsigned int i = 0; i < currentString.length(); i++) {
+								currentString[i] = toupper(currentString[i]);
+							}
 							currentTag.addAttribute(currentString);
 							currentString.erase();
 						}
