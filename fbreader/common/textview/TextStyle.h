@@ -42,6 +42,8 @@ protected:
 	virtual ~TextStyle() {}
 
 public:
+	virtual bool isDecorated() const = 0;
+
 	virtual const std::string fontFamily() const = 0;
 	virtual int fontSize() const = 0;
 
@@ -65,6 +67,8 @@ class BaseTextStyle : public TextStyle {
 public:
 	BaseTextStyle(const std::string &fontFamily, int fontSize);
 	~BaseTextStyle();
+
+	bool isDecorated() const { return false; }
 
 	ZLStringOption &fontFamilyOption() const { return *myFontFamilyOption; }
 	const std::string fontFamily() const { return fontFamilyOption().value(); }
@@ -103,7 +107,12 @@ private:
 class TextStyleDecoration {
 
 public:
-	TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
+	TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations);
+	virtual ~TextStyleDecoration() {}
+
+	virtual bool isFullDecoration() const { return false; }
+
+	virtual TextStyle *createDecoratedStyle(const TextStyle &base) const;
 
 	const std::string &name() const { return myName; }
 
@@ -111,14 +120,7 @@ public:
 	const ZLIntegerOption &fontSizeDeltaOption() const { return myFontSizeDeltaOption; }
 	const ZLBoolean3Option &boldOption() const { return myBoldOption; }
 	const ZLBoolean3Option &italicOption() const { return myItalicOption; }
-	const ZLIntegerOption &spaceBeforeOption() const { return mySpaceBeforeOption; }
-	const ZLIntegerOption &spaceAfterOption() const { return mySpaceAfterOption; }
-	const ZLIntegerOption &leftIndentOption() const { return myLeftIndentOption; }
-	const ZLIntegerOption &rightIndentOption() const { return myRightIndentOption; }
-	const ZLIntegerOption &firstLineIndentDeltaOption() const { return myFirstLineIndentDeltaOption; }
 	const ZLIntegerOption &verticalShiftOption() const { return myVerticalShiftOption; }
-	const ZLIntegerOption &alignmentOption() const { return myAlignmentOption; }
-	const ZLDoubleOption &lineSpaceOption() const { return myLineSpaceOption; }
 	const ZLBoolean3Option &allowHyphenationsOption() const { return myAllowHyphenationsOption; }
 
 private:
@@ -129,27 +131,90 @@ private:
 	ZLBoolean3Option myBoldOption;
 	ZLBoolean3Option myItalicOption;
 
+	ZLIntegerOption myVerticalShiftOption;
+
+	ZLBoolean3Option myAllowHyphenationsOption;
+};
+
+class FullTextStyleDecoration : public TextStyleDecoration {
+
+public:
+	FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
+
+	virtual bool isFullDecoration() const { return true; }
+
+	TextStyle *createDecoratedStyle(const TextStyle &base) const;
+
+	const ZLIntegerOption &spaceBeforeOption() const { return mySpaceBeforeOption; }
+	const ZLIntegerOption &spaceAfterOption() const { return mySpaceAfterOption; }
+	const ZLIntegerOption &leftIndentOption() const { return myLeftIndentOption; }
+	const ZLIntegerOption &rightIndentOption() const { return myRightIndentOption; }
+	const ZLIntegerOption &firstLineIndentDeltaOption() const { return myFirstLineIndentDeltaOption; }
+	const ZLIntegerOption &alignmentOption() const { return myAlignmentOption; }
+	const ZLDoubleOption &lineSpaceOption() const { return myLineSpaceOption; }
+
+private:
 	ZLIntegerOption mySpaceBeforeOption;
 	ZLIntegerOption mySpaceAfterOption;
 	ZLIntegerOption myLeftIndentOption;
 	ZLIntegerOption myRightIndentOption;
 	ZLIntegerOption myFirstLineIndentDeltaOption;
-	ZLIntegerOption myVerticalShiftOption;
 
 	ZLIntegerOption myAlignmentOption;
 
 	ZLDoubleOption myLineSpaceOption;
-
-	ZLBoolean3Option myAllowHyphenationsOption;
 };
 
 class DecoratedTextStyle : public TextStyle {
 
-public:
-	DecoratedTextStyle(const TextStyle &base, const TextStyleDecoration &decoration) : myBase(base), myDecoration(decoration) {}
+protected:
+	DecoratedTextStyle(const TextStyle &base) : myBase(base) {}
 
+public:
+	virtual ~DecoratedTextStyle() {}
+
+	bool isDecorated() const { return true; }
 	const TextStyle &base() const { return myBase; }
 
+private:
+	const TextStyle &myBase;
+};
+
+class PartialDecoratedTextStyle : public DecoratedTextStyle {
+
+private:
+	PartialDecoratedTextStyle(const TextStyle &base, const TextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
+	friend TextStyle *TextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
+
+public:
+	const std::string fontFamily() const;
+	int fontSize() const;
+	bool bold() const;
+	bool italic() const;
+
+	int spaceBefore() const { return base().spaceBefore(); }
+	int spaceAfter() const { return base().spaceAfter(); }
+	int leftIndent() const { return base().leftIndent(); }
+	int rightIndent() const { return base().rightIndent(); }
+	int firstLineIndentDelta() const { return base().firstLineIndentDelta(); }
+	int verticalShift() const { return base().verticalShift(); }
+
+	AlignmentType alignment() const { return base().alignment(); }
+	bool allowHyphenations() const;
+
+	double lineSpace() const { return base().lineSpace(); }
+
+private:
+	const TextStyleDecoration &myDecoration;
+};
+
+class FullDecoratedTextStyle : public DecoratedTextStyle {
+
+private:
+	FullDecoratedTextStyle(const TextStyle &base, const FullTextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
+	friend TextStyle *FullTextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
+
+public:
 	const std::string fontFamily() const;
 	int fontSize() const;
 	bool bold() const;
@@ -157,19 +222,18 @@ public:
 
 	int spaceBefore() const { return myDecoration.spaceBeforeOption().value(); }
 	int spaceAfter() const { return myDecoration.spaceAfterOption().value(); }
-	int leftIndent() const { return myBase.leftIndent() + myDecoration.leftIndentOption().value(); }
-	int rightIndent() const { return myBase.rightIndent() + myDecoration.rightIndentOption().value(); }
+	int leftIndent() const { return base().leftIndent() + myDecoration.leftIndentOption().value(); }
+	int rightIndent() const { return base().rightIndent() + myDecoration.rightIndentOption().value(); }
 	int firstLineIndentDelta() const;
-	int verticalShift() const { return myBase.verticalShift() + myDecoration.verticalShiftOption().value(); }
+	int verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
 
 	AlignmentType alignment() const;
 	bool allowHyphenations() const;
 
-	double lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? myBase.lineSpace() : space; }
+	double lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base().lineSpace() : space; }
 
 private:
-	const TextStyle &myBase;
-	const TextStyleDecoration &myDecoration;
+	const FullTextStyleDecoration &myDecoration;
 };
 
 class TextStyleCollection {
@@ -190,7 +254,7 @@ private:
 	~TextStyleCollection();
 
 	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShiftOption, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
-	void registerPartialStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations);
+	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations);
 
 private:
 	static TextStyleCollection *ourInstance;

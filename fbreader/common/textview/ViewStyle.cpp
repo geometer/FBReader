@@ -29,7 +29,7 @@ TextView::ViewStyle::ViewStyle(PaintContext &context) : myContext(context) {
 }
 
 void TextView::ViewStyle::reset() {
-	while (myStyle != &TextStyleCollection::instance().baseStyle()) {
+	while (myStyle->isDecorated()) {
 		DecoratedTextStyle *decorated = (DecoratedTextStyle*)myStyle;
 		myStyle = &decorated->base();
 		delete decorated;
@@ -38,7 +38,7 @@ void TextView::ViewStyle::reset() {
 
 void TextView::ViewStyle::applyControl(const ControlElement &control, bool revert) {
 	if (control.isStart() == revert) {
-		if (myStyle != &TextStyleCollection::instance().baseStyle()) {
+		if (myStyle->isDecorated()) {
 			DecoratedTextStyle *decorated = (DecoratedTextStyle*)myStyle;
 			myStyle = &decorated->base();
 			delete decorated;
@@ -46,7 +46,7 @@ void TextView::ViewStyle::applyControl(const ControlElement &control, bool rever
 	} else {
 		const TextStyleDecoration *decoration = TextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
-			myStyle = new DecoratedTextStyle(*myStyle, *decoration);
+			myStyle = decoration->createDecoratedStyle(*myStyle);
 		}
 	}
 	myContext.setFont(style().fontFamily(), style().fontSize(), style().bold(), style().italic());

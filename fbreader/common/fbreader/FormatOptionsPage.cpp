@@ -58,8 +58,9 @@ FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
 	}
 
 	for (int i = 0; i < STYLES_NUMBER; i++) {
-		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
-		if (decoration != 0) {
+		const TextStyleDecoration *d = collection.decoration(styles[i]);
+		if ((d != 0) && (d->isFullDecoration())) {
+			const FullTextStyleDecoration *decoration = (const FullTextStyleDecoration*)d;
 			const std::string &name = decoration->name();
 			
 			registerEntries(dialogTab,
