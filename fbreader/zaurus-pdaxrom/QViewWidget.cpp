@@ -27,19 +27,39 @@
 
 QViewWidget::QViewWidget(QWidget *parent) : QWidget(parent) {
 	setBackgroundMode(NoBackground);
+	myIsRotated = false;
+}
+
+void QViewWidget::setRotated(bool rotated) {
+	myIsRotated = rotated;
 }
 
 void QViewWidget::paintEvent(QPaintEvent*) {
-	((QPaintContext&)view()->context()).setSize(width(), height());
+	if (myIsRotated) {
+		((QPaintContext&)view()->context()).setSize(height(), width());
+	} else {
+		((QPaintContext&)view()->context()).setSize(width(), height());
+	}
 	view()->paint();
 	QPainter realPainter(this);
-	realPainter.drawPixmap(0, 0, ((QPaintContext&)view()->context()).pixmap());
+	if (myIsRotated) {
+		realPainter.rotate(-90);
+		realPainter.drawPixmap(1 - height(), -1, ((QPaintContext&)view()->context()).pixmap());
+	} else {
+		realPainter.drawPixmap(0, 0, ((QPaintContext&)view()->context()).pixmap());
+	}
 }
 
 void QViewWidget::mousePressEvent(QMouseEvent *event) {
-	view()->onStylusPress(
-		event->x() - view()->context().leftMargin().value(),
-		event->y() - view()->context().topMargin().value());
+	if (myIsRotated) {
+		view()->onStylusPress(
+			height() - event->y() - view()->context().rightMargin().value(),
+			event->x() - view()->context().topMargin().value());
+	} else {
+		view()->onStylusPress(
+			event->x() - view()->context().leftMargin().value(),
+			event->y() - view()->context().topMargin().value());
+	}
 }
 
 void QViewWidget::repaintView()	{

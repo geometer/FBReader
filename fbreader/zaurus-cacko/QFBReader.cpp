@@ -292,3 +292,9 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 	}
 	setCaption(qCaption);
 }
+
+void QFBReader::showContentsSlot() {
+	if (!myContentsView->isEmpty()) {
+		setMode(CONTENTS_MODE);
+	}
+}

@@ -248,3 +248,9 @@ void QFBReader::searchSlot() {
 		);
 	}
 }
+
+void QFBReader::showContentsSlot() {
+	if (!myContentsView->isEmpty()) {
+		setMode(CONTENTS_MODE);
+	}
+}

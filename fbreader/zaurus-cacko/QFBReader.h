@@ -46,7 +46,7 @@ protected:
 
 private slots:
 	void showCollectionSlot() { setMode(BOOK_COLLECTION_MODE); }
-	void showContentsSlot() { if (!myContentsView->isEmpty()) { setMode(CONTENTS_MODE); } }
+	void showContentsSlot();
 	void showOptionsDialogSlot() { showOptionsDialog(); fullScreenWorkaround(); }
 	void showHidePositionIndicatorSlot() { showHidePositionIndicator(); }
 	void undoSlot() { undoPage(); }
