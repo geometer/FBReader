@@ -193,5 +193,8 @@ void FBReader::doAction(ActionCode code) {
 			TextView::ShowPositionIndicatorOption.setValue(!TextView::ShowPositionIndicatorOption.value());
 			repaintView();
 			break;
+		case ACTION_FULLSCREEN:
+			fullscreenSlot();
+			break;
 	}
 }

@@ -21,7 +21,6 @@
 #include <qapplication.h>
 #include <qpixmap.h>
 #include <qmenubar.h>
-#include <qaccel.h>
 
 #include <qlayout.h>
 #include <qlineedit.h>
@@ -51,21 +50,20 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 
 	setMode(BOOK_TEXT_MODE);
 
-	QAccel *accelerator = new QAccel(this);
-	accelerator->connectItem(accelerator->insertItem(Key_L), this, SLOT(showCollectionSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_C), this, SLOT(showContentsSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_F), this, SLOT(searchSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_N), this, SLOT(findNextSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_P), this, SLOT(findPreviousSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_O), this, SLOT(showOptionsDialogSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_I), this, SLOT(showHidePositionIndicatorSlot()));
-	accelerator->connectItem(accelerator->insertItem('-'), this, SLOT(decreaseFontSlot()));
-	accelerator->connectItem(accelerator->insertItem('='), this, SLOT(increaseFontSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Left), this, SLOT(undoSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Right), this, SLOT(redoSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Up), this, SLOT(scrollBackwardSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Down), this, SLOT(scrollForwardSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Escape), this, SLOT(cancelSlot()));
+	myKeyBindings[Key_L] = ACTION_SHOW_COLLECTION;
+	myKeyBindings[Key_C] = ACTION_SHOW_CONTENTS;
+	myKeyBindings[Key_F] = ACTION_SEARCH;
+	myKeyBindings[Key_N] = ACTION_FIND_NEXT;
+	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
+	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
+	myKeyBindings[Key_I] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings[Key_Minus] = ACTION_DECREASE_FONT;
+	myKeyBindings[Key_Equal] = ACTION_INCREASE_FONT;
+	myKeyBindings[Key_Left] = ACTION_UNDO;
+	myKeyBindings[Key_Right] = ACTION_REDO;
+	myKeyBindings[Key_Up] = ACTION_SCROLL_BACKWARD;
+	myKeyBindings[Key_Down] = ACTION_SCROLL_FORWARD;
+	myKeyBindings[Key_Escape] = ACTION_CANCEL;
 
 	resize(Width.value(), Height.value());
 }
@@ -73,6 +71,13 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 QFBReader::~QFBReader() {
 	Width.setValue(width());
 	Height.setValue(height());
+}
+
+void QFBReader::keyPressEvent(QKeyEvent *event) {
+	std::map<int,ActionCode>::const_iterator it = myKeyBindings.find(event->key());
+	if (it != myKeyBindings.end()) {
+		doAction(it->second);
+	}
 }
 
 void QFBReader::cancelSlot() {

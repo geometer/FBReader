@@ -20,6 +20,8 @@
 #ifndef __QFBREADER_H__
 #define __QFBREADER_H__
 
+#include <map>
+
 #include <qmainwindow.h>
 
 #include "../common/fbreader/FBReader.h"
@@ -37,27 +39,25 @@ private:
 	void focusInEvent(QFocusEvent *event);
 	void resizeEvent(QResizeEvent *event);
 	void closeEvent(QCloseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 protected:
 	void setWindowCaption(const std::string &caption);
 	void setMode(ViewMode mode);
 
+private:
+	void cancelSlot();
+	void fullscreenSlot();
+	
 private slots:
 	void showCollectionSlot() { doAction(ACTION_SHOW_COLLECTION); }
 	void showContentsSlot() { doAction(ACTION_SHOW_CONTENTS); }
 	void showOptionsDialogSlot() { doAction(ACTION_SHOW_OPTIONS); }
-	void showHidePositionIndicatorSlot() { doAction(ACTION_SHOW_HIDE_POSITION_INDICATOR); }
 	void undoSlot() { doAction(ACTION_UNDO); }
 	void redoSlot() { doAction(ACTION_REDO); }
-	void increaseFontSlot() { doAction(ACTION_INCREASE_FONT); }
-	void decreaseFontSlot() { doAction(ACTION_DECREASE_FONT); }
-	void scrollForwardSlot() { doAction(ACTION_SCROLL_FORWARD); }
-	void scrollBackwardSlot() { doAction(ACTION_SCROLL_BACKWARD); }
-	void cancelSlot();
 	void searchSlot();
 	void findNextSlot() { doAction(ACTION_FIND_NEXT); }
 	void findPreviousSlot() { doAction(ACTION_FIND_PREVIOUS); }
-	void doFullScreenSlot();
 
 private:
 	bool myFullScreen;
@@ -68,6 +68,8 @@ private:
 	int myContentsItemId;
 	int myFindNextId;
 	int myFindPreviousId;
+
+	std::map<int,ActionCode> myKeyBindings;
 };
 
 #endif /* __QFBREADER_H__ */

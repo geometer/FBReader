@@ -54,6 +54,7 @@ public:
 private:
 	void searchSlot();
 	void cancelSlot();
+	void fullscreenSlot() {}
 
 private:
 	GtkWindow *myMainWindow;

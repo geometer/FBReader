@@ -52,6 +52,7 @@ public:
 		ACTION_INCREASE_FONT,
 		ACTION_DECREASE_FONT,
 		ACTION_SHOW_HIDE_POSITION_INDICATOR,
+		ACTION_FULLSCREEN,
 	};
 
 protected:
@@ -86,6 +87,7 @@ protected:
 
 	virtual void searchSlot() = 0;
 	virtual void cancelSlot() = 0;
+	virtual void fullscreenSlot() = 0;
 
 public:
 	void openBook(BookDescription *description);
