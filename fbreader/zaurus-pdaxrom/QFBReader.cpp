@@ -18,6 +18,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <iostream>
+
 #include <qapplication.h>
 #include <qpixmap.h>
 #include <qmenubar.h>
@@ -55,9 +57,8 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
 	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
 	myKeyBindings[Key_I] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
-	// TODO: replace keycodes for Fn+1, Fn+2
-	myKeyBindings[0x200f] = ACTION_DECREASE_FONT;
-	myKeyBindings[0x2010] = ACTION_INCREASE_FONT;
+	myKeyBindings[Key_1] = ACTION_DECREASE_FONT;
+	myKeyBindings[Key_2] = ACTION_INCREASE_FONT;
 	myKeyBindings[Key_Left] = ACTION_UNDO;
 	myKeyBindings[Key_Right] = ACTION_REDO;
 	myKeyBindings[Key_Up] = ACTION_SCROLL_BACKWARD;
