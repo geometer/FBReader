@@ -1,3 +1,5 @@
+ROOTDIR = $(PWD)
+
 include makefiles/targets.mk
 
 ALLAPPDIRS = zmahjongg zsolitaire fbreader GeometricCalculator
