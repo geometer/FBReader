@@ -27,10 +27,12 @@ class ZLZipDir : public ZLDir {
 
 public:
 	ZLZipDir(const std::string &name) : ZLDir(name) {}
-	std::string delimiter() const { return ":"; }
 
 	void collectSubDirs(std::vector<std::string>&, bool) {}
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+
+protected:
+	std::string delimiter() const { return ":"; }
 };
 
 #endif /* __ZLZIPDIR_H__ */

@@ -24,7 +24,7 @@
 
 ZLStringOption ZLOpenFileDialog::DirectoryOption("OpenFileDialog", "Directory", "~");
 	
-ZLOpenFileDialog::ZLOpenFileDialog() {
+ZLOpenFileDialog::ZLOpenFileDialog(const ZLFileHandler &handler) : myHandler(handler) {
 	std::string dirName =	DirectoryOption.value();
 	// TODO: replace this code
 	if (ZLStringUtil::stringEndsWith(dirName, ".zip")) {
@@ -36,18 +36,4 @@ ZLOpenFileDialog::ZLOpenFileDialog() {
 
 ZLOpenFileDialog::~ZLOpenFileDialog() {
 	DirectoryOption.setValue(myCurrentDir->name());
-}
-
-bool ZLOpenFileDialog::isDirectoryVisible(const std::string &name) {
-	return (name.length() > 0) && (name[0] != '.');
-}
-
-bool ZLOpenFileDialog::isFileVisible(const std::string &name) {
-	if ((name.length() == 0) || (name[0] == '.')) {
-		return false;
-	}
-	return
-		ZLStringUtil::stringEndsWith(name, ".html") ||
-		ZLStringUtil::stringEndsWith(name, ".zip") ||
-		ZLStringUtil::stringEndsWith(name, ".fb2");
 }

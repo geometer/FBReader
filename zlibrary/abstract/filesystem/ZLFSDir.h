@@ -25,12 +25,14 @@ class ZLFSDir : public ZLDir {
 
 public:
 	ZLFSDir(const std::string &name) : ZLDir(name) {}
-	std::string delimiter() const { return "/"; }
 
 	void create();
 
 	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+
+protected:
+	std::string delimiter() const { return "/"; }
 };
 
 #endif /* __ZLFSDIR_H__ */

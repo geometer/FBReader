@@ -33,6 +33,6 @@ int QDialogManager::informationBox(const char *title, const char *message, const
 	return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
 }
 
-std::string QDialogManager::getOpenFileName(const std::string &title) const {
-	return QOpenFileDialog::getOpenFileName(title.c_str());
+void QDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
+	QOpenFileDialog(title.c_str(), handler).exec();
 }

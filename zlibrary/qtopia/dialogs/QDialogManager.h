@@ -19,7 +19,7 @@
 #ifndef __QDIALOGMANAGER_H__
 #define __QDIALOGMANAGER_H__
 
-#include "../../abstract/dialogs/ZLDialogManager.h"
+#include <abstract/ZLDialogManager.h>
 
 class QDialogManager : public ZLDialogManager {
 
@@ -32,7 +32,7 @@ private:
 public:
 	ZLOptionsDialog *createOptionsDialog(const char *title) const;
 	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
-	std::string getOpenFileName(const std::string &title) const;
+	void openFileDialog(const std::string &title, const ZLFileHandler &handler) const;
 };
 
 #endif /* __QDIALOGMANAGER_H__ */

@@ -27,6 +27,7 @@
 #include "ContentsView.h"
 #include "CollectionView.h"
 #include "OptionsDialog.h"
+#include "FBFileHandler.h"
 
 #include "../description/BookDescription.h"
 #include "../bookmodel/BookModel.h"
@@ -199,7 +200,9 @@ void FBReader::doAction(ActionCode code) {
 			break;
 		case ACTION_ADD_BOOK:
 			{
-				BookDescription *description = BookDescription::create(ZLDialogManager::instance().getOpenFileName("FBReader -- Add File To Library"));
+				FBFileHandler handler;
+				ZLDialogManager::instance().openFileDialog("FBReader -- Add File To Library", handler);
+				BookDescription *description = handler.description();
 				if (description != 0) {
 					openBook(description);
 					setWindowCaption("FBReader - " + myViewWidget->view()->caption());

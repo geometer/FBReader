@@ -21,6 +21,7 @@
 #define __QOPENFILEDIALOG_H__
 
 #include <string>
+#include <map>
 
 #include <qlistview.h>
 
@@ -29,6 +30,7 @@
 
 class QVBox;
 class QLineEdit;
+class QPixmap;
 
 class QOpenFileDialogItem : public QListViewItem {
 
@@ -45,12 +47,12 @@ class QOpenFileDialog : public FullScreenDialog, public ZLOpenFileDialog {
 	Q_OBJECT
 
 public:
-	static std::string getOpenFileName(const char *caption);
+	QOpenFileDialog(const char *caption, const ZLFileHandler &handler); 
+	~QOpenFileDialog();
 
 private:
-	QOpenFileDialog(const char *caption); 
-
 	void updateListView(const std::string &selected);
+	QPixmap &getPixmap(const std::string &fileName, bool dir);
 
 protected:
 	void resizeEvent(QResizeEvent *event);
@@ -63,6 +65,7 @@ private:
 	QLineEdit *myCurrentDirectoryName;
 	QListView *myListView;
 	QVBox *myMainBox;
+	std::map<std::string,QPixmap*> myPixmaps;
 };
 
 #endif /* __QOPENFILEDIALOG_H__ */

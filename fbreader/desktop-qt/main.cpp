@@ -32,6 +32,7 @@ int main(int argc, char **argv) {
 
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
+	((QDialogManager&)QDialogManager::instance()).setPixmapPath("images");
 	QWordBuilder::createInstance();
 	QScreenSize::createInstance();
 

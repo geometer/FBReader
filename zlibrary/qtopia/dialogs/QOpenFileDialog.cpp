@@ -28,34 +28,14 @@
 
 #include "QOpenFileDialog.h"
 
-static QPixmap *folderPixmap = 0;
-static QPixmap *htmlFilePixmap = 0;
-static QPixmap *zipFilePixmap = 0;
-static QPixmap *unknownFilePixmap = 0;
-
 QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const QString name, bool dir) : QListViewItem(listView, previous, name), myIsDir(dir) {
-	if (folderPixmap == 0) {
-		folderPixmap = new QPixmap(Resource::loadPixmap("FBReader/folder"));
-		htmlFilePixmap = new QPixmap(Resource::loadPixmap("FBReader/html"));
-		zipFilePixmap = new QPixmap(Resource::loadPixmap("FBReader/zipfolder"));
-		unknownFilePixmap = new QPixmap(Resource::loadPixmap("FBReader/unknown"));
-	}
-	if (dir) {
-		setPixmap(0, *folderPixmap);
-	} else if (ZLStringUtil::stringEndsWith(name.ascii(), ".html")) {
-		setPixmap(0, *htmlFilePixmap);
-	} else if (ZLStringUtil::stringEndsWith(name.ascii(), ".zip")) {
-		setPixmap(0, *zipFilePixmap);
-	} else {
-		setPixmap(0, *unknownFilePixmap);
-	}
 }
 
 QString QOpenFileDialogItem::name() {
 	return text(0);
 }
 
-QOpenFileDialog::QOpenFileDialog(const char *caption) : FullScreenDialog(caption) {
+QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLFileHandler &handler) : FullScreenDialog(caption), ZLOpenFileDialog(handler) {
 	resize(600, 600);
 	
 	myMainBox = new QVBox(this);
@@ -72,16 +52,22 @@ QOpenFileDialog::QOpenFileDialog(const char *caption) : FullScreenDialog(caption
 	updateListView("..");
 }
 
-std::string QOpenFileDialog::getOpenFileName(const char *caption) {
-	QOpenFileDialog fileDialog(caption);
-	if (fileDialog.exec() != Accepted) {
-		return std::string();
+QOpenFileDialog::~QOpenFileDialog() {
+	for (std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.begin(); it != myPixmaps.end(); it++) {
+		delete it->second;
 	}
-	QOpenFileDialogItem *item = (QOpenFileDialogItem*)fileDialog.myListView->selectedItem();
-	if ((item == 0) || (item->isDir())) {
-		return std::string();
+}
+
+QPixmap &QOpenFileDialog::getPixmap(const std::string &fileName, bool dir) {
+	std::string pName = handler().pixmapName(fileName, dir);
+	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pName);
+	if (it == myPixmaps.end()) {
+		QPixmap *pixmap = new QPixmap(Resource::loadPixmap(pName.c_str()));
+		myPixmaps[pName] = pixmap;
+		return *pixmap;
+	} else {
+		return *it->second;
 	}
-	return fileDialog.myCurrentDir->name() + fileDialog.myCurrentDir->delimiter() + item->name().ascii();
 }
 
 void QOpenFileDialog::keyPressEvent(QKeyEvent *event) {
@@ -101,8 +87,9 @@ void QOpenFileDialog::updateListView(const std::string &selected) {
 
 	QListViewItem *item = 0;
 	QListViewItem *selectedItem = 0;
-	if (myCurrentDir->name() != "/") {
+	if ((myCurrentDir->name() != "/") && (handler().isFileVisible("..", true))) {
 		item = new QOpenFileDialogItem(myListView, 0, "..", true);
+		item->setPixmap(0, getPixmap("..", true));
 		if (selected == "..") {
 			selectedItem = item;
 		}
@@ -111,8 +98,9 @@ void QOpenFileDialog::updateListView(const std::string &selected) {
 	std::vector<std::string> dirNames;
 	myCurrentDir->collectSubDirs(dirNames, true);
 	for (std::vector<std::string>::const_iterator it = dirNames.begin(); it != dirNames.end(); it++) {
-		if (isDirectoryVisible(*it)) {
+		if (handler().isFileVisible(*it, true)) {
 	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), true);
+			item->setPixmap(0, getPixmap(*it, true));
 			if (*it == selected) {
 				selectedItem = item;
 			}
@@ -122,8 +110,9 @@ void QOpenFileDialog::updateListView(const std::string &selected) {
 	std::vector<std::string> fileNames;
 	myCurrentDir->collectFiles(fileNames, true);
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); it++) {
-		if (isFileVisible(*it)) {
+		if (handler().isFileVisible(*it, false)) {
 	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), false);
+			item->setPixmap(0, getPixmap(*it, false));
 			if (*it == selected) {
 				selectedItem = item;
 			}
@@ -156,6 +145,7 @@ void QOpenFileDialog::accept() {
 		myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
 		updateListView("..");
 	} else {
+		handler().accept(myCurrentDir->itemName(dialogItem->name().ascii()), dialogItem->isDir());
 		FullScreenDialog::accept();
 	}
 }

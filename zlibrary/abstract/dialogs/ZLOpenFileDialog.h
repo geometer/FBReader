@@ -23,20 +23,29 @@
 
 class ZLDir;
 
+class ZLFileHandler {
+
+public:
+	virtual bool isFileVisible(const std::string &shortFileName, bool dir) const = 0;
+	virtual std::string pixmapName(const std::string &shortFileName, bool dir) const = 0;
+	virtual void accept(const std::string &fullFileName, bool dir) const = 0;
+};
+
 class ZLOpenFileDialog {
 
 public:
 	static ZLStringOption DirectoryOption;
 
 protected:
-	ZLOpenFileDialog();
+	ZLOpenFileDialog(const ZLFileHandler &handler);
 	~ZLOpenFileDialog();
-
-	bool isDirectoryVisible(const std::string &name);
-	bool isFileVisible(const std::string &name);
 
 protected:
 	ZLDir *myCurrentDir;
+	const ZLFileHandler &handler() const { return myHandler; }
+
+private:
+	const ZLFileHandler &myHandler;
 };
 
 #endif /* __ZLOPENFILEDIALOG_H__ */

@@ -16,30 +16,26 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLDIALOGMANAGER_H__
-#define __ZLDIALOGMANAGER_H__
+#ifndef __FBFILEHANDLER_H__
+#define __FBFILEHANDLER_H__
 
-#include <string>
+#include <abstract/ZLOpenFileDialog.h>
 
-class ZLOptionsDialog;
-class ZLFileHandler;
+#include "../description/BookDescription.h"
 
-class ZLDialogManager {
-
-public:
-	static ZLDialogManager &instance() { return *ourInstance; } 
-	static void deleteInstance() { delete ourInstance; }
-
-protected:
-	static ZLDialogManager *ourInstance;
-
-protected:
-	virtual ~ZLDialogManager() {}
+class FBFileHandler : public ZLFileHandler {
 
 public:
-	virtual ZLOptionsDialog *createOptionsDialog(const char *title) const = 0;
-	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const = 0;
-	virtual void openFileDialog(const std::string &title, const ZLFileHandler &handler) const = 0;
+	FBFileHandler() : myDescription(0) {}
+
+	bool isFileVisible(const std::string &shortFileName, bool dir) const;
+	std::string pixmapName(const std::string &shortFileName, bool dir) const;
+	void accept(const std::string &fullFileName, bool dir) const;
+
+	BookDescription *description() const { return myDescription; }
+
+private:
+	mutable BookDescription *myDescription;
 };
 
-#endif /* __ZLDIALOGMANAGER_H__ */
+#endif /* __FBFILEHANDLER_H__ */
