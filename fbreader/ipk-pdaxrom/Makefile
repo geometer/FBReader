@@ -31,7 +31,7 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 .copyfiles:
 	@for f in $(files); do \
 		if [ -d $f ]; then \
-			ffiles=`find $$f -type f -o -type b -o -type c -o -type l`; \
+			ffiles=`find $$f -type f -o -type b -o -type c -o -type l | grep -v .svn`; \
   	else \
   		ffiles=$$f; \
   	fi; \
