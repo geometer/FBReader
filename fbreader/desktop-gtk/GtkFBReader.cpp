@@ -282,50 +282,50 @@ void GtkFBReader::enableMenuButtons() {
 }
 
 void GtkFBReader::searchSlot() {
-	/*
-	QDialog findDialog(this, 0, true);
-	findDialog.setCaption("Text search");
-	findDialog.setSizeGripEnabled(true);
+	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new_with_buttons ("Text search", NULL, GTK_DIALOG_MODAL,
+														"Go", GTK_RESPONSE_ACCEPT,
+														NULL));
+	GtkWidget *wordToSearch = gtk_entry_new();
 
-	QGridLayout *layout = new QGridLayout(&findDialog, -1, 3, 5, 5);
+	gtk_box_pack_start(GTK_BOX(findDialog->vbox), wordToSearch, true, true, 0);
+	gtk_entry_set_text (GTK_ENTRY(wordToSearch), SearchPatternOption.value().c_str());
 
-	QLineEdit *wordToSearch = new QLineEdit(&findDialog);
-	wordToSearch->setMinimumWidth(width() / 3);
-	wordToSearch->setText(QString::fromUtf8(SearchPatternOption.value().c_str()));
-	layout->addMultiCellWidget(wordToSearch, 0, 0, 0, 2);
+	GtkWidget *ignoreCase = gtk_check_button_new_with_label ("Ignore case");
+	gtk_box_pack_start(GTK_BOX(findDialog->vbox), ignoreCase, true, true, 0);
 
-	QCheckBox *ignoreCase = new QCheckBox("&Ignore case", &findDialog, 0);
-	ignoreCase->setChecked(SearchIgnoreCaseOption.value());
-	layout->addMultiCellWidget(ignoreCase, 1, 1, 0, 2);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(ignoreCase), SearchIgnoreCaseOption.value());
 
-	QCheckBox *wholeText = new QCheckBox("In w&hole text", &findDialog, 0);
-	wholeText->setChecked(SearchInWholeTextOption.value());
-	layout->addMultiCellWidget(wholeText, 2, 2, 0, 2);
+	GtkWidget *wholeText = gtk_check_button_new_with_label ("In whole text");
+	gtk_box_pack_start(GTK_BOX(findDialog->vbox), wholeText, true, true, 0);
 
-	QCheckBox *backward = new QCheckBox("&Backward", &findDialog, 0);
-	backward->setChecked(SearchBackwardOption.value());
-	layout->addMultiCellWidget(backward, 3, 3, 0, 2);
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(wholeText), SearchInWholeTextOption.value());
 
-	QPushButton *b = new QPushButton("&Go!", &findDialog);
-	layout->addWidget(b, 4, 1);
-	b->setDefault(true);
-	connect(b, SIGNAL(clicked()), &findDialog, SLOT(accept()));
+	GtkWidget *backward = gtk_check_button_new_with_label ("Backward");
+	gtk_box_pack_start(GTK_BOX(findDialog->vbox), backward, true, true, 0);
 
-	if (findDialog.exec()) {
-		QString qPattern = wordToSearch->text().stripWhiteSpace();
-		std::string pattern = (const char*)qPattern.utf8();
-		SearchPatternOption.setValue(pattern);
-		SearchIgnoreCaseOption.setValue(ignoreCase->isChecked());
-		SearchInWholeTextOption.setValue(wholeText->isChecked());
-		SearchBackwardOption.setValue(backward->isChecked());
+	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(backward), SearchBackwardOption.value());
+
+	gtk_widget_show_all(GTK_WIDGET(findDialog));
+
+	if (gtk_dialog_run (GTK_DIALOG(findDialog)) == GTK_RESPONSE_ACCEPT) {
+		SearchPatternOption.setValue(gtk_entry_get_text(GTK_ENTRY(wordToSearch)));	// FIXME: stripWhiteSpace
+		SearchIgnoreCaseOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ignoreCase)));
+		SearchInWholeTextOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wholeText)));
+		SearchBackwardOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(backward)));
 		((TextView*)myViewWidget->view())->search(
-			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked()
+			SearchPatternOption.value(),
+			SearchIgnoreCaseOption.value(),
+			SearchInWholeTextOption.value(),
+			SearchBackwardOption.value()
 		);
 	}
-	*/
+
+	gtk_widget_destroy (GTK_WIDGET(findDialog));
 }
 
 void GtkFBReader::showOptionsDialogSlot() {
 	showOptionsDialog();
 	repaintView();
 }
+
+// vim:ts=2:sw=2:noet
