@@ -22,6 +22,8 @@
 #include <string>
 #include <vector>
 
+#include <expat.h>
+
 class ZLInputStream;
 
 class ZLXMLReader {
@@ -34,7 +36,8 @@ public:
 	};
 
 protected:
-	virtual ~ZLXMLReader() {}
+	ZLXMLReader();
+	virtual ~ZLXMLReader();
 
 	virtual const Tag *tags() const = 0;
 
@@ -52,6 +55,10 @@ protected:
 
 protected:
 	bool myDoBreak;
+
+private:
+	XML_Parser myParser;
+	char *myParserBuffer;
 };
 
 #endif /* __ZLXMLREADER_H__ */

@@ -16,7 +16,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <expat.h>
 #include <string.h>
 
 #include <abstract/ZLInputStream.h>
@@ -115,6 +114,32 @@ static void parseDTD(XML_Parser parser, const std::string &fileName) {
 	delete entityStream;
 }
 
+const size_t BUFSIZE = 2048;
+
+ZLXMLReader::ZLXMLReader() {
+	myParser = XML_ParserCreate(NULL);
+	XML_UseForeignDTD(myParser, XML_TRUE);
+
+	const std::vector<std::string> &dtds = externalDTDs();
+	for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); it++) {
+		parseDTD(myParser, *it);
+	}
+
+	XML_SetUserData(myParser, this);
+	XML_SetStartElementHandler(myParser, fStartElementHandler);
+	XML_SetEndElementHandler(myParser, fEndElementHandler);
+	XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
+  XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, NULL);
+
+	myParserBuffer = new char[BUFSIZE];
+}
+
+ZLXMLReader::~ZLXMLReader() {
+	delete[] myParserBuffer;
+
+	XML_ParserFree(myParser);
+}
+
 void ZLXMLReader::readDocument(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return;
@@ -122,31 +147,14 @@ void ZLXMLReader::readDocument(ZLInputStream &stream) {
 
 	myDoBreak = false;
 
-	XML_Parser parser = XML_ParserCreate(NULL);
-	XML_UseForeignDTD(parser, XML_TRUE);
-
-	const std::vector<std::string> &dtds = externalDTDs();
-	for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); it++) {
-		parseDTD(parser, *it);
-	}
-
-	XML_SetUserData(parser, this);
-	XML_SetStartElementHandler(parser, fStartElementHandler);
-	XML_SetEndElementHandler(parser, fEndElementHandler);
-	XML_SetCharacterDataHandler(parser, fCharacterDataHandler);
-  XML_SetUnknownEncodingHandler(parser, fUnknownEncodingHandler, NULL);
-
-	const size_t BUFSIZE = 2048;
-	char buffer[BUFSIZE];
 	size_t length;
 	do {
-		length = stream.read(buffer, BUFSIZE);
-		if (XML_Parse(parser, buffer, length, 0) == XML_STATUS_ERROR) {
+		length = stream.read(myParserBuffer, BUFSIZE);
+		if (XML_Parse(myParser, myParserBuffer, length, 0) == XML_STATUS_ERROR) {
 			break;
     }
   } while ((length == BUFSIZE) && !myDoBreak);
 
-	XML_ParserFree(parser);
 	stream.close();
 }
 

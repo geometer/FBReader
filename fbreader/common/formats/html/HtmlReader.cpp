@@ -35,6 +35,12 @@ const ZLXMLReader::Tag *HtmlTextConverter::tags() const {
 	return TAGS;
 }
 
+HtmlTextConverter::HtmlTextConverter() {
+	std::string str = "<t>";
+	ZLStringInputStream stream(str);
+	readDocument(stream);
+}
+
 void HtmlTextConverter::convertBuffer(std::vector<std::string> &buffer) {
 	myBuffer = &buffer;
 	std::string str = "<t>";
@@ -52,8 +58,10 @@ void HtmlTextConverter::endElementHandler(int) {
 }
 
 void HtmlTextConverter::characterDataHandler(const char *text, int len) {
-	myBuffer->push_back(std::string());
-	myBuffer->back().append(text, len);
+	if (myBuffer != 0) {
+		myBuffer->push_back(std::string());
+		myBuffer->back().append(text, len);
+	}
 }
 
 static std::vector<std::string> EXTERNAL_DTDs;
@@ -74,6 +82,9 @@ const std::vector<std::string> &HtmlTextConverter::externalDTDs() const {
 	}
 
 	return EXTERNAL_DTDs;
+}
+
+HtmlReader::HtmlReader() {
 }
 
 HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {

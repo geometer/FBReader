@@ -32,6 +32,7 @@ protected:
 	const Tag *tags() const;
 
 public:
+	HtmlTextConverter();
 	void convertBuffer(std::vector<std::string> &buffer);
 	
 public:
@@ -86,6 +87,7 @@ public:
 	void readDocument(ZLInputStream &stream);
 
 protected:
+	HtmlReader();
 	virtual ~HtmlReader() {}
 
 protected:
