@@ -75,8 +75,6 @@ public:
 	static ZLBooleanOption SearchInWholeTextOption;
 	static ZLStringOption SearchPatternOption;
 
-	static ZLStringOption FileSearchDirectoryOption;
-
 	static std::string HelpDirectory;
 
 protected:

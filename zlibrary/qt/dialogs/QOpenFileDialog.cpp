@@ -54,11 +54,9 @@ QString QOpenFileDialogItem::name() {
 	return text(0);
 }
 
-QOpenFileDialog::QOpenFileDialog(const char *caption, const char *initPath) : QDialog() {
+QOpenFileDialog::QOpenFileDialog(const char *caption) : QDialog() {
 	setCaption(caption);
 	resize(600, 600);
-	
-	myCurrentDir = new ZLFSDir(initPath);
 
 	myMainBox = new QVBox(this);
 
@@ -71,8 +69,8 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, const char *initPath) : QD
 	updateListView();
 }
 
-std::string QOpenFileDialog::getOpenFileName(const char *caption, const char *initPath) {
-	QOpenFileDialog fileDialog(caption, initPath);
+std::string QOpenFileDialog::getOpenFileName(const char *caption) {
+	QOpenFileDialog fileDialog(caption);
 	if (fileDialog.exec() != Accepted) {
 		return std::string();
 	}
@@ -87,20 +85,6 @@ void QOpenFileDialog::resizeEvent(QResizeEvent *event) {
 	if (event != NULL) {
   	myMainBox->resize(event->size());
 	}
-}
-
-bool QOpenFileDialog::isDirectoryVisible(const std::string &name) {
-	return (name.length() > 0) && (name[0] != '.');
-}
-
-bool QOpenFileDialog::isFileVisible(const std::string &name) {
-	if ((name.length() == 0) || (name[0] == '.')) {
-		return false;
-	}
-	return
-		ZLStringUtil::stringEndsWith(name, ".html") ||
-		ZLStringUtil::stringEndsWith(name, ".zip") ||
-		ZLStringUtil::stringEndsWith(name, ".fb2");
 }
 
 void QOpenFileDialog::updateListView() {

@@ -56,24 +56,22 @@ QString QOpenFileDialogItem::name() {
 	return text(0);
 }
 
-QOpenFileDialog::QOpenFileDialog(const char *caption, const char *initPath) : FullScreenDialog(caption) {
+QOpenFileDialog::QOpenFileDialog(const char *caption) : FullScreenDialog(caption) {
 	resize(600, 600);
 	
-	myCurrentDir = new ZLFSDir(initPath);
-
 	myMainBox = new QVBox(this);
 
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("File Name");
 
- 	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(runItem(QListViewItem*)));
- 	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(runItem(QListViewItem*)));
+ 	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(accept()));
+ 	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));
 
 	updateListView();
 }
 
-std::string QOpenFileDialog::getOpenFileName(const char *caption, const char *initPath) {
-	QOpenFileDialog fileDialog(caption, initPath);
+std::string QOpenFileDialog::getOpenFileName(const char *caption) {
+	QOpenFileDialog fileDialog(caption);
 	if (fileDialog.exec() != Accepted) {
 		return std::string();
 	}
@@ -84,23 +82,15 @@ std::string QOpenFileDialog::getOpenFileName(const char *caption, const char *in
 	return fileDialog.myCurrentDir->name() + fileDialog.myCurrentDir->delimiter() + item->name().ascii();
 }
 
-bool QOpenFileDialog::isDirectoryVisible(const std::string &name) {
-	return (name.length() > 0) && (name[0] != '.');
-}
-
-bool QOpenFileDialog::isFileVisible(const std::string &name) {
-	if ((name.length() == 0) || (name[0] == '.')) {
-		return false;
+void QOpenFileDialog::keyPressEvent(QKeyEvent *event) {
+	if ((event != NULL) && (event->key() == Key_Escape)) {
+		reject();
 	}
-	return
-		ZLStringUtil::stringEndsWith(name, ".html") ||
-		ZLStringUtil::stringEndsWith(name, ".zip") ||
-		ZLStringUtil::stringEndsWith(name, ".fb2");
 }
 
 void QOpenFileDialog::resizeEvent(QResizeEvent *event) {
 	if (event != NULL) {
-  	myMainBox->resize(event->size());
+		myMainBox->resize(event->size());
 	}
 }
 
@@ -109,7 +99,7 @@ void QOpenFileDialog::updateListView() {
 
 	QListViewItem *item = NULL;
 	if (myCurrentDir->name() != "/") {
-	  item = new QOpenFileDialogItem(myListView, NULL, "..", true);
+		item = new QOpenFileDialogItem(myListView, NULL, "..", true);
 	}
 
 	std::vector<std::string> dirNames;
@@ -129,12 +119,8 @@ void QOpenFileDialog::updateListView() {
 	}
 }
 
-void QOpenFileDialog::runItem(QListViewItem *item) {
-	if (item == NULL) {
-		return;
-	}
-
-	QOpenFileDialogItem *dialogItem = (QOpenFileDialogItem*)item;
+void QOpenFileDialog::accept() {
+	QOpenFileDialogItem *dialogItem = (QOpenFileDialogItem*)myListView->currentItem();
 
 	if (dialogItem->isDir()) {
 		std::string subdir = myCurrentDir->itemName(dialogItem->name().ascii());
@@ -147,6 +133,6 @@ void QOpenFileDialog::runItem(QListViewItem *item) {
 		myCurrentDir = new ZLZipDir(zip);
 		updateListView();
 	} else {
-		accept();
+		FullScreenDialog::accept();
 	}
 }

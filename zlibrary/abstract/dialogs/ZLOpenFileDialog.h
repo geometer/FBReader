@@ -16,29 +16,27 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLDIALOGMANAGER_H__
-#define __ZLDIALOGMANAGER_H__
+#ifndef __ZLOPENFILEDIALOG_H__
+#define __ZLOPENFILEDIALOG_H__
 
-#include <string>
+#include <abstract/ZLOptions.h>
 
-class ZLOptionsDialog;
+class ZLDir;
 
-class ZLDialogManager {
-
-public:
-	static ZLDialogManager &instance() { return *ourInstance; } 
-	static void deleteInstance() { delete ourInstance; }
-
-protected:
-	static ZLDialogManager *ourInstance;
-
-protected:
-	virtual ~ZLDialogManager() {}
+class ZLOpenFileDialog {
 
 public:
-	virtual ZLOptionsDialog *createOptionsDialog(const char *title) const = 0;
-	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const = 0;
-	virtual std::string getOpenFileName(const std::string &title) const = 0;
+	static ZLStringOption DirectoryOption;
+
+protected:
+	ZLOpenFileDialog();
+	~ZLOpenFileDialog();
+
+	bool isDirectoryVisible(const std::string &name);
+	bool isFileVisible(const std::string &name);
+
+protected:
+	ZLDir *myCurrentDir;
 };
 
-#endif /* __ZLDIALOGMANAGER_H__ */
+#endif /* __ZLOPENFILEDIALOG_H__ */

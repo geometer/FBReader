@@ -25,9 +25,9 @@
 #include <qdialog.h>
 #include <qlistview.h>
 
-class QVBox;
+#include <abstract/ZLOpenFileDialog.h>
 
-class ZLDir;
+class QVBox;
 
 class QOpenFileDialogItem : public QListViewItem {
 
@@ -40,27 +40,22 @@ private:
 	bool myIsDir;
 };
 
-class QOpenFileDialog : public QDialog {
+class QOpenFileDialog : public QDialog, public ZLOpenFileDialog {
 	Q_OBJECT
 
 public:
-	static std::string getOpenFileName(const char *caption, const char *initPath);
+	static std::string getOpenFileName(const char *caption);
 
 private:
-	QOpenFileDialog(const char *caption, const char *initPath); 
+	QOpenFileDialog(const char *caption); 
 
 	void updateListView();
-
-	bool isDirectoryVisible(const std::string &name);
-	bool isFileVisible(const std::string &name);
 
 private slots:
 	void resizeEvent(QResizeEvent *event);
 	void runItem(QListViewItem *item);
 
 private:
-	ZLDir *myCurrentDir;
-
 	QListView *myListView;
 	QVBox *myMainBox;
 };

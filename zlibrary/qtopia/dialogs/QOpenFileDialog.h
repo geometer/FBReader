@@ -25,6 +25,7 @@
 #include <qlistview.h>
 
 #include "FullScreenDialog.h"
+#include "../../abstract/dialogs/ZLOpenFileDialog.h"
 
 class QVBox;
 class ZLDir;
@@ -40,27 +41,25 @@ private:
 	bool myIsDir;
 };
 
-class QOpenFileDialog : public FullScreenDialog {
+class QOpenFileDialog : public FullScreenDialog, public ZLOpenFileDialog {
 	Q_OBJECT
 
 public:
-	static std::string getOpenFileName(const char *caption, const char *initPath);
+	static std::string getOpenFileName(const char *caption);
 
 private:
-	QOpenFileDialog(const char *caption, const char *initPath); 
-
-	bool isDirectoryVisible(const std::string &name);
-	bool isFileVisible(const std::string &name);
+	QOpenFileDialog(const char *caption); 
 
 	void updateListView();
 
-private slots:
+protected:
 	void resizeEvent(QResizeEvent *event);
-	void runItem(QListViewItem *item);
+	void keyPressEvent(QKeyEvent *event);
+
+private slots:
+	void accept();
 
 private:
-	ZLDir *myCurrentDir;
-
 	QListView *myListView;
 	QVBox *myMainBox;
 };

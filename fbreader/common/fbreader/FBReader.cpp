@@ -42,8 +42,6 @@ ZLBooleanOption FBReader::SearchIgnoreCaseOption("Search", "IgnoreCase", true);
 ZLBooleanOption FBReader::SearchInWholeTextOption("Search", "WholeText", false);
 ZLStringOption FBReader::SearchPatternOption("Search", "Pattern", std::string());
 
-ZLStringOption FBReader::FileSearchDirectoryOption("Options", "FileSearch", "~");
-
 FBReader::FBReader(PaintContext *context) {
 	myModel = 0;
 	myContext = context;
@@ -201,9 +199,7 @@ void FBReader::doAction(ActionCode code) {
 			break;
 		case ACTION_ADD_BOOK:
 			{
-				BookDescription *description = BookDescription::create(ZLDialogManager::instance().getFileName(
-					"FBReader -- Add File to Library", FileSearchDirectoryOption.value()
-				));
+				BookDescription *description = BookDescription::create(ZLDialogManager::instance().getOpenFileName("FBReader -- Add File To Library"));
 				if (description != 0) {
 					openBook(description);
 					setWindowCaption("FBReader - " + myViewWidget->view()->caption());

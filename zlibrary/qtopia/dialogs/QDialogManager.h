@@ -32,7 +32,7 @@ private:
 public:
 	ZLOptionsDialog *createOptionsDialog(const char *title) const;
 	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
-	std::string getFileName(const std::string &title, const std::string &dir) const;
+	std::string getOpenFileName(const std::string &title) const;
 };
 
 #endif /* __QDIALOGMANAGER_H__ */
