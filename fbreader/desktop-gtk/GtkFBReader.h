@@ -29,22 +29,23 @@
 #include "../common/fbreader/FBReader.h"
 
 class GtkFBReader : public FBReader { 
-protected:
-	// FIXME: do we really need this enum to be protected?
-	enum EventCode {
-		EVENT_SHOW_COLLECTION,
-		EVENT_SHOW_OPTIONS,
-		EVENT_UNDO,
-		EVENT_REDO,
-		EVENT_SHOW_CONTENTS,
-		EVENT_SEARCH,
-		EVENT_FIND_PREVIOUS,
-		EVENT_FIND_NEXT,
-		EVENT_SCROLL_FORWARD,
-		EVENT_SCROLL_BACKWARD,
-		EVENT_CANCEL,
-		EVENT_INCREASE_FONT,
-		EVENT_DECREASE_FONT
+
+public:
+	enum ActionCode {
+		ACTION_SHOW_COLLECTION,
+		ACTION_SHOW_OPTIONS,
+		ACTION_UNDO,
+		ACTION_REDO,
+		ACTION_SHOW_CONTENTS,
+		ACTION_SEARCH,
+		ACTION_FIND_PREVIOUS,
+		ACTION_FIND_NEXT,
+		ACTION_SCROLL_FORWARD,
+		ACTION_SCROLL_BACKWARD,
+		ACTION_CANCEL,
+		ACTION_INCREASE_FONT,
+		ACTION_DECREASE_FONT,
+		ACTION_SHOW_HIDE_POSITION_INDICATOR,
 	};
 
 private:
@@ -64,24 +65,15 @@ protected:
 	void setMode(ViewMode mode);
 
 public:
-	void showCollectionSlot() { setMode(BOOK_COLLECTION_MODE); }
-	void showContentsSlot() { setMode(CONTENTS_MODE); }
-	void undoSlot() { undoPage(); }
-	void redoSlot() { redoPage(); }
-	void searchSlot();
-	void findNextSlot() { findNext(); }
-	void findPreviousSlot() { findPrevious(); }
-	void showOptionsDialogSlot() { showOptionsDialog(); repaintView(); }
-	void showHidePositionIndicatorSlot() { showHidePositionIndicator(); }  
+	void doAction(ActionCode code);
 
 	gboolean handleKeySlot(GdkEventKey *);
 
 	void repaintView();
 	void close();
 
-	void increaseFontSlot() { increaseFont(); }
-	void decreaseFontSlot() { decreaseFont(); }
-
+private:
+	void searchSlot();
 	void scrollForwardSlot();
 	void scrollBackwardSlot();
 	void cancelSlot();
@@ -103,7 +95,7 @@ private:
 	GtkWidget *myFindNextButton;
 	GtkWidget *myFindPreviousButton;
 
-	std::map<std::string, EventCode> myKeyBindings;
+	std::map<std::string,ActionCode> myKeyBindings;
 };
 
 #endif /* __GTKFBREADER_H__ */
