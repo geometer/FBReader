@@ -28,6 +28,7 @@
 #include <abstract/ZLOpenFileDialog.h>
 
 class QVBox;
+class QLineEdit;
 
 class QOpenFileDialogItem : public QListViewItem {
 
@@ -49,13 +50,17 @@ public:
 private:
 	QOpenFileDialog(const char *caption); 
 
-	void updateListView();
+	void updateListView(const std::string &selected);
+
+protected:
+	void resizeEvent(QResizeEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 private slots:
-	void resizeEvent(QResizeEvent *event);
-	void runItem(QListViewItem *item);
+	void accept();
 
 private:
+	QLineEdit *myCurrentDirectoryName;
 	QListView *myListView;
 	QVBox *myMainBox;
 };

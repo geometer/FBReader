@@ -31,6 +31,7 @@ public:
 	ZLDir(const std::string &name);
 	virtual ~ZLDir() {}
 	const std::string &name() const { return myName; }
+	std::string shortName() const;
 	std::string parentName() const;
 	std::string itemName(const std::string &shortName) const;
 	virtual std::string delimiter() const = 0;

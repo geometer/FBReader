@@ -18,7 +18,7 @@
  */
 
 #include <qvbox.h>
-#include <qlistview.h>
+#include <qlineedit.h>
 
 #include <qpe/resource.h>
 
@@ -26,16 +26,15 @@
 #include "../../abstract/filesystem/ZLZipDir.h"
 #include "../../abstract/util/ZLStringUtil.h"
 
-
 #include "QOpenFileDialog.h"
 
-static QPixmap *folderPixmap = NULL;
-static QPixmap *htmlFilePixmap = NULL;
-static QPixmap *zipFilePixmap = NULL;
-static QPixmap *unknownFilePixmap = NULL;
+static QPixmap *folderPixmap = 0;
+static QPixmap *htmlFilePixmap = 0;
+static QPixmap *zipFilePixmap = 0;
+static QPixmap *unknownFilePixmap = 0;
 
 QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const QString name, bool dir) : QListViewItem(listView, previous, name), myIsDir(dir) {
-	if (folderPixmap == NULL) {
+	if (folderPixmap == 0) {
 		folderPixmap = new QPixmap(Resource::loadPixmap("FBReader/folder"));
 		htmlFilePixmap = new QPixmap(Resource::loadPixmap("FBReader/html"));
 		zipFilePixmap = new QPixmap(Resource::loadPixmap("FBReader/zipfolder"));
@@ -61,13 +60,16 @@ QOpenFileDialog::QOpenFileDialog(const char *caption) : FullScreenDialog(caption
 	
 	myMainBox = new QVBox(this);
 
+	myCurrentDirectoryName = new QLineEdit(myMainBox);
+	myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
+	myCurrentDirectoryName->setEnabled(false);
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("File Name");
 
  	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(accept()));
  	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));
 
-	updateListView();
+	updateListView("..");
 }
 
 std::string QOpenFileDialog::getOpenFileName(const char *caption) {
@@ -76,30 +78,34 @@ std::string QOpenFileDialog::getOpenFileName(const char *caption) {
 		return std::string();
 	}
 	QOpenFileDialogItem *item = (QOpenFileDialogItem*)fileDialog.myListView->selectedItem();
-	if ((item == NULL) || (item->isDir())) {
+	if ((item == 0) || (item->isDir())) {
 		return std::string();
 	}
 	return fileDialog.myCurrentDir->name() + fileDialog.myCurrentDir->delimiter() + item->name().ascii();
 }
 
 void QOpenFileDialog::keyPressEvent(QKeyEvent *event) {
-	if ((event != NULL) && (event->key() == Key_Escape)) {
+	if ((event != 0) && (event->key() == Key_Escape)) {
 		reject();
 	}
 }
 
 void QOpenFileDialog::resizeEvent(QResizeEvent *event) {
-	if (event != NULL) {
+	if (event != 0) {
 		myMainBox->resize(event->size());
 	}
 }
 
-void QOpenFileDialog::updateListView() {
+void QOpenFileDialog::updateListView(const std::string &selected) {
 	myListView->clear();
 
-	QListViewItem *item = NULL;
+	QListViewItem *item = 0;
+	QListViewItem *selectedItem = 0;
 	if (myCurrentDir->name() != "/") {
-		item = new QOpenFileDialogItem(myListView, NULL, "..", true);
+		item = new QOpenFileDialogItem(myListView, 0, "..", true);
+		if (selected == "..") {
+			selectedItem = item;
+		}
 	}
 
 	std::vector<std::string> dirNames;
@@ -107,6 +113,9 @@ void QOpenFileDialog::updateListView() {
 	for (std::vector<std::string>::const_iterator it = dirNames.begin(); it != dirNames.end(); it++) {
 		if (isDirectoryVisible(*it)) {
 	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), true);
+			if (*it == selected) {
+				selectedItem = item;
+			}
 		}
 	}
 
@@ -115,7 +124,18 @@ void QOpenFileDialog::updateListView() {
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); it++) {
 		if (isFileVisible(*it)) {
 	 		item = new QOpenFileDialogItem(myListView, item, it->c_str(), false);
+			if (*it == selected) {
+				selectedItem = item;
+			}
 		}
+	}
+
+	if (selectedItem == 0) {
+		selectedItem = myListView->firstChild();
+	}
+	myListView->setSelected(selectedItem, true);
+	if (selectedItem != myListView->firstChild()) {
+		myListView->ensureItemVisible(selectedItem);
 	}
 }
 
@@ -124,14 +144,17 @@ void QOpenFileDialog::accept() {
 
 	if (dialogItem->isDir()) {
 		std::string subdir = myCurrentDir->itemName(dialogItem->name().ascii());
+		std::string selectedName = (dialogItem->name() == "..") ? myCurrentDir->shortName() : "..";
 		delete myCurrentDir;
 		myCurrentDir = new ZLFSDir(subdir);
-		updateListView();
+		myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
+		updateListView(selectedName);
 	} else if (ZLStringUtil::stringEndsWith(dialogItem->name().ascii(), ".zip")) {
 		std::string zip = myCurrentDir->itemName(dialogItem->name().ascii());
 		delete myCurrentDir;
 		myCurrentDir = new ZLZipDir(zip);
-		updateListView();
+		myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
+		updateListView("..");
 	} else {
 		FullScreenDialog::accept();
 	}
