@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>How to start</book-title> <lang>en</lang></title-info></description>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>How to start</book-title> <lang>en</lang></title-info></description>
 <body>
 <title><p>How to start</p></title>
 <p>FBReader looks for books in directories from <code>book path</code>. First of all you need to set this path. Go to options dialog (just click on <image l:href="#settings.png"/> in the toolbar) and change the value of <code>Book path</code> option in the <code>General</code> tab. This option must contain the list of directories containing <code>*.fb2</code> or <code>*.zip</code> files. Directories in the list are separated by colons.</p>
