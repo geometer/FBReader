@@ -312,3 +312,5 @@ int GtkPaintContext::height() const {
 	}
 	return myHeight - bottomMargin().value() - topMargin().value();
 }
+
+// vim:ts=2:sw=2:noet
