@@ -323,9 +323,4 @@ void GtkFBReader::searchSlot() {
 	gtk_widget_destroy (GTK_WIDGET(findDialog));
 }
 
-void GtkFBReader::showOptionsDialogSlot() {
-	showOptionsDialog();
-	repaintView();
-}
-
 // vim:ts=2:sw=2:noet

@@ -51,7 +51,8 @@ public:
 	void searchSlot();
 	void findNextSlot() { findNext(); }
 	void findPreviousSlot() { findPrevious(); }
-	void showOptionsDialogSlot();
+	void showOptionsDialogSlot() { showOptionsDialog(); repaintView(); }
+	void showHidePositionIndicatorSlot() { showHidePositionIndicator(); }  
 
 	void repaintView();
 	void close();
@@ -80,3 +81,5 @@ private:
 };
 
 #endif /* __GTKFBREADER_H__ */
+
+// vim:ts=2:sw=2:noet
