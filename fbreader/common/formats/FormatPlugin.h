@@ -17,20 +17,36 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __READERCOLLECTION_H__
-#define __READERCOLLECTION_H__
+#ifndef __FORMATPLUGIN_H__
+#define __FORMATPLUGIN_H__
 
-class DescriptionReader;
+#include <string>
+#include <vector>
+
 class BookDescription;
-
-class BookReader;
 class BookModel;
 
-class ReaderCollection {
+class FormatPlugin {
 
 public:
-	//static DescriptionReader *createDescriptionReader(BookDescription &description);
-	static BookReader *createBookReader(BookModel &model);
+	virtual bool containsMetaInfo() const = 0;
+	virtual bool acceptsFile(const std::string &fileName) const = 0;
+	virtual bool readDescription(const std::string &fileName, BookDescription &description) const = 0;
+	virtual bool readModel(BookDescription &description, BookModel &model) const = 0;
 };
 
-#endif /* __READERCOLLECTION_H__ */
+class PluginCollection {
+
+public:
+	static PluginCollection &instance();
+
+public:
+	FormatPlugin *plugin(const std::string &fileName, bool strong);
+
+private:
+	static PluginCollection *ourInstance;
+
+	std::vector<FormatPlugin*> myPlugins;
+};
+
+#endif /* __FORMATPLUGIN_H__ */

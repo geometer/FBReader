@@ -19,14 +19,13 @@
 
 #include <sys/stat.h>
 
-#include <abstract/ZLInputStream.h>
 #include <abstract/ZLOptions.h>
 
 #include "BookDescription.h"
 #include "DescriptionReader.h"
 #include "Author.h"
 
-#include "../formats/ReaderCollection.h"
+#include "../formats/FormatPlugin.h"
 
 BookDescription *BookDescription::create(const std::string &fileName) {
 	BookDescription *description = new BookDescription(fileName);
@@ -77,14 +76,9 @@ BookDescription::BookDescription(const std::string &fileName) {
 		FileMTimeOption.setValue(fileStat.st_mtime);
 	}
 
-	ZLInputStream *stream = ZLInputStream::createStream(myFileName);
-	if (stream != 0) {
-		DescriptionReader *reader = ReaderCollection::createDescriptionReader(*this);
-		if (reader != 0) {
-			reader->readDescription(*stream);
-			delete reader;
-		}
-		delete stream;
+	FormatPlugin *plugin = PluginCollection::instance().plugin(myFileName, false);
+	if (plugin != 0) {
+		plugin->readDescription(myFileName, *this);
 	}
 
 	if (!myIsValid) {

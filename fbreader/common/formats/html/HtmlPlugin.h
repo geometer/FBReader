@@ -17,20 +17,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __READERCOLLECTION_H__
-#define __READERCOLLECTION_H__
+#ifndef __HTMLPLUGIN_H__
+#define __HTMLPLUGIN_H__
 
-class DescriptionReader;
-class BookDescription;
+#include "../FormatPlugin.h"
 
-class BookReader;
-class BookModel;
-
-class ReaderCollection {
+class HtmlPlugin : public FormatPlugin {
 
 public:
-	//static DescriptionReader *createDescriptionReader(BookDescription &description);
-	static BookReader *createBookReader(BookModel &model);
+	bool containsMetaInfo() const { return false; }
+	bool acceptsFile(const std::string &fileName) const;
+	bool readDescription(const std::string &fileName, BookDescription &description) const;
+	bool readModel(BookDescription &description, BookModel &model) const;
 };
 
-#endif /* __READERCOLLECTION_H__ */
+#endif /* __HTMLPLUGIN_H__ */

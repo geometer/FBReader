@@ -31,6 +31,7 @@
 #include "../description/BookDescription.h"
 #include "../bookmodel/BookModel.h"
 
+/*
 DescriptionReader *ReaderCollection::createDescriptionReader(BookDescription &description) {
 	const std::string &fileName = description.fileName();
 	if (ZLStringUtil::stringEndsWith(fileName, ".fb2")) {
@@ -44,6 +45,7 @@ DescriptionReader *ReaderCollection::createDescriptionReader(BookDescription &de
 	}
 	return new FB2DescriptionReader(description);
 }
+*/
 
 BookReader *ReaderCollection::createBookReader(BookModel &model) {
 	const std::string &fileName = model.description().fileName();

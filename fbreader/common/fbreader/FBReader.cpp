@@ -53,7 +53,7 @@ FBReader::FBReader(PaintContext *context) {
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 
-	std::string howToStartString = HelpDirectory + "/HowToStart";
+	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
 	ZLStringOption bookName("State", "Book", howToStartString);
 	BookDescription *description = BookDescription::create(bookName.value());
 	if (description == 0) {

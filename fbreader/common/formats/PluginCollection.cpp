@@ -1,0 +1,26 @@
+#include "FormatPlugin.h"
+
+#include "fb2/FB2Plugin.h"
+#include "docbook/DocBookPlugin.h"
+#include "html/HtmlPlugin.h"
+
+PluginCollection *PluginCollection::ourInstance = 0;
+
+PluginCollection &PluginCollection::instance() {
+	if (ourInstance == 0) {
+		ourInstance = new PluginCollection();
+		ourInstance->myPlugins.push_back(new FB2Plugin());
+		ourInstance->myPlugins.push_back(new DocBookPlugin());
+		ourInstance->myPlugins.push_back(new HtmlPlugin());
+	}
+	return *ourInstance;
+}
+
+FormatPlugin *PluginCollection::plugin(const std::string &fileName, bool strong) {
+	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
+		if ((!strong || (*it)->containsMetaInfo()) && (*it)->acceptsFile(fileName)) {
+			return *it;
+		}
+	}
+	return 0;
+}
