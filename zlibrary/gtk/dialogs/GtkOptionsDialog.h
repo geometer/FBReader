@@ -65,9 +65,9 @@ protected:
 	void selectTab(const std::string &name);
 	int run();
 
-	void setSize(int /*width*/, int /*height*/) {}
-	int width() const { return 100; }
-	int height() const { return 100; }
+	void setSize(int width, int height);
+	int width() const;
+	int height() const;
 
 private:
 	GtkDialog *myDialog;
