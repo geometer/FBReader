@@ -67,8 +67,6 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myFullScreen = false;
 	myTitleHeight = -1;
 	myLastScrollingTime = QTime::currentTime();
-
-	myCollectionWidget = 0;
 }
 
 void QFBReader::focusInEvent(QFocusEvent*) {
@@ -290,4 +288,12 @@ void QFBReader::showContentsSlot() {
 	if (!myContentsView->isEmpty()) {
 		setMode(CONTENTS_MODE);
 	}
+}
+
+void QFBReader::setWindowCaption(const std::string &caption) {
+	QString qCaption = QString::fromUtf8(caption.c_str());
+	if (qCaption.length() > 60) {
+		qCaption = qCaption.left(57) + "...";
+	}
+	setCaption(qCaption);
 }

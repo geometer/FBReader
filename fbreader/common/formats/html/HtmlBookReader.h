@@ -39,6 +39,9 @@ protected:
 	bool characterDataHandler(const char *text, int len);
 
 private:
+	void endParagraph();
+
+private:
 	bool myIgnoreData;
 };
 

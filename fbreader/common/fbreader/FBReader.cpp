@@ -67,6 +67,7 @@ FBReader::~FBReader() {
 	delete myFootnoteView;
 	myContentsView->saveState();
 	delete myContentsView;
+	delete myCollectionView;
 	if (myModel != 0) {
 		ZLStringOption bookName("State", "Book", std::string());
 		bookName.setValue(myModel->fileName());

@@ -60,13 +60,13 @@ void TextView::saveState() {
 }
 
 void TextView::clear() {
-	if (myFirstParagraphCursor != NULL) {
+	if (myFirstParagraphCursor != 0) {
 		delete myFirstParagraphCursor;
-		myFirstParagraphCursor = NULL;
+		myFirstParagraphCursor = 0;
 	}
-	if (myLastParagraphCursor != NULL) {
+	if (myLastParagraphCursor != 0) {
 		delete myLastParagraphCursor;
-		myLastParagraphCursor = NULL;
+		myLastParagraphCursor = 0;
 	}
 }
 
@@ -75,7 +75,7 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 
 	myModel = model;
 
-	if ((myModel != NULL) && !myModel->paragraphs().empty()) {
+	if ((myModel != 0) && !myModel->paragraphs().empty()) {
 		myFirstParagraphCursor = ParagraphCursor::createCursor(*myModel);
 		myName = name;
 		ZLIntegerOption paragraphPosition(myName, paragraphOptionName(), 0);

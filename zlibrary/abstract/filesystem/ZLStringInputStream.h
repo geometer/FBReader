@@ -16,42 +16,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLXMLREADER_H__
-#define __ZLXMLREADER_H__
+#ifndef __ZLSTRINGINPUTSTREAM_H__
+#define __ZLSTRINGINPUTSTREAM_H__
 
-#include <string>
-#include <vector>
+#include "ZLInputStream.h"
 
-class ZLInputStream;
-
-class ZLXMLReader {
-
-//protected:
-public:
-	struct Tag {
-		const char *tagName;
-		int tagCode;
-	};
-
-protected:
-	virtual ~ZLXMLReader() {}
-
-	virtual const Tag *tags() const = 0;
+class ZLStringInputStream : public ZLInputStream {
 
 public:
-	void readDocument(ZLInputStream &stream);
+	ZLStringInputStream(const std::string &str) : myString(str) {}
+	~ZLStringInputStream() {}
+	bool open() { myPosition = 0; return true; }
+	int read(char *buffer, int maxSize);
+	void close() {}
 
-	int tag(const char *name);
-
-	virtual void startElementHandler(int tag, const char **attributes) = 0;
-	virtual void endElementHandler(int tag) = 0;
-	virtual void characterDataHandler(const char *text, int len) = 0;
-
-protected:
-	virtual const std::vector<std::string> &externalDTDs() const;
-
-protected:
-	bool myDoBreak;
+private:
+	const std::string &myString;
+	int myPosition;
 };
 
-#endif /* __ZLXMLREADER_H__ */
+#endif /* __ZSTRINGLINPUTSTREAM_H__ */

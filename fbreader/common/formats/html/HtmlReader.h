@@ -22,7 +22,29 @@
 
 #include <string>
 
+#include <abstract/ZLXMLReader.h>
+
 class ZLInputStream;
+
+class HtmlTextConverter : public ZLXMLReader {
+
+protected:
+	const Tag *tags() const;
+
+public:
+	void convertBuffer(std::vector<std::string> &buffer);
+	
+public:
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
+
+protected:
+	const std::vector<std::string> &externalDTDs() const;
+
+private:
+	std::vector<std::string> *myBuffer;
+};
 
 class HtmlReader {
 
@@ -44,6 +66,8 @@ protected:
 		_STRONG,
 		_B,
 		_I,
+		_SUB,
+		_SUP,
 		_CITE,
 		_STYLE,
 	};
@@ -70,6 +94,9 @@ protected:
 
 	virtual bool tagHandler(HtmlTag tag) = 0;
 	virtual bool characterDataHandler(const char *text, int len) = 0;
+
+protected:
+	HtmlTextConverter myConverter;
 };
 
 #endif /* __HTMLREADER_H__ */

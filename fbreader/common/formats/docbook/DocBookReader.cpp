@@ -65,7 +65,7 @@ const ZLXMLReader::Tag *DocBookReader::tags() const {
 	return TAGS;
 }
 
-std::vector<std::string> EXTERNAL_DTDs;
+static std::vector<std::string> EXTERNAL_DTDs;
 
 const std::vector<std::string> &DocBookReader::externalDTDs() const {
 	if (EXTERNAL_DTDs.empty()) {

@@ -23,6 +23,11 @@
 HtmlBookReader::HtmlBookReader(BookModel &model) : BookReader(model) {
 }
 
+void HtmlBookReader::endParagraph() {
+	myConverter.convertBuffer(myBuffer);
+	BookReader::endParagraph();
+}
+
 bool HtmlBookReader::tagHandler(HtmlTag tag) {
 	switch(tag.Code) {
 		case _BODY:
@@ -70,6 +75,12 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _I:
 			addControl(EMPHASIS, tag.Start);
 			break;
+		case _SUB:
+			addControl(SUB, tag.Start);
+			break;
+		case _SUP:
+			addControl(SUP, tag.Start);
+			break;
 		case _CITE:
 			addControl(CITE, tag.Start);
 			break;
@@ -94,6 +105,7 @@ void HtmlBookReader::startDocumentHandler() {
 	setMainTextModel();
 	pushKind(REGULAR);
 	beginParagraph();
+	myIgnoreData = false;
 }
 
 void HtmlBookReader::endDocumentHandler() {

@@ -120,6 +120,8 @@ void ZLXMLReader::readDocument(ZLInputStream &stream) {
 		return;
 	}
 
+	myDoBreak = false;
+
 	XML_Parser parser = XML_ParserCreate(NULL);
 	XML_UseForeignDTD(parser, XML_TRUE);
 

@@ -40,7 +40,7 @@ private:
 	void closeEvent(QCloseEvent *event);
 
 protected:
-	void setWindowCaption(const std::string &caption) { setCaption(QString::fromUtf8(caption.c_str())); }
+	void setWindowCaption(const std::string &caption);
 	void repaintView();
 	void setMode(ViewMode mode);
 

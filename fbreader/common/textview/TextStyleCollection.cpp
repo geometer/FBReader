@@ -41,11 +41,11 @@ TextStyleCollection::TextStyleCollection() {
 	registerStyle(LIBRARY_AUTHOR_ENTRY, "Author in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, false);
 	registerStyle(LIBRARY_BOOK_ENTRY, "Book in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, false);
 
-	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 10, ALIGN_UNDEFINED, 0.0, true);
+	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 10, ALIGN_UNDEFINED, 0.0, false);
 	registerStyle(EMPHASIS, "Emphasis", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, true);
 	registerStyle(STRONG, "Strong", 0, B3_TRUE, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, true);
-	registerStyle(SUB, "Subscript", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, false);
-	registerStyle(SUP, "Superscript", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, false);
+	registerStyle(SUB, "Subscript", -4, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, -4, ALIGN_UNDEFINED, 0.0, false);
+	registerStyle(SUP, "Superscript", -4, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 10, ALIGN_UNDEFINED, 0.0, false);
 	registerStyle(CODE, "Code", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, false);
 	registerStyle(STRIKETHROUGH, "StrikeThrough", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, true);
 }

@@ -20,8 +20,6 @@
 
 #include <abstract/ZLOptions.h>
 
-#include <iostream>
-
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
 #include "../common/fbreader/FootnoteView.h"

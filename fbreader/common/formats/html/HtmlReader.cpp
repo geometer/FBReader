@@ -18,8 +18,63 @@
  */
 
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLStringInputStream.h>
 
+#include <abstract/ZLXMLReader.h>
+#include <abstract/ZLFSDir.h>
+#include <abstract/ZLStringUtil.h>
+
+#include "../docbook/DocBookReader.h"
 #include "HtmlReader.h"
+
+static const ZLXMLReader::Tag TAGS[] = {
+	{0, 0}
+};
+
+const ZLXMLReader::Tag *HtmlTextConverter::tags() const {
+	return TAGS;
+}
+
+void HtmlTextConverter::convertBuffer(std::vector<std::string> &buffer) {
+	myBuffer = &buffer;
+	std::string str = "<t>";
+	ZLStringUtil::append(str, buffer);
+	str += "</t>";
+	buffer.clear();
+	ZLStringInputStream stream(str);
+	readDocument(stream);
+}
+	
+void HtmlTextConverter::startElementHandler(int, const char **) {
+}
+
+void HtmlTextConverter::endElementHandler(int) {
+}
+
+void HtmlTextConverter::characterDataHandler(const char *text, int len) {
+	myBuffer->push_back(std::string());
+	myBuffer->back().append(text, len);
+}
+
+static std::vector<std::string> EXTERNAL_DTDs;
+
+const std::vector<std::string> &HtmlTextConverter::externalDTDs() const {
+	if (EXTERNAL_DTDs.empty()) {
+		ZLFSDir dtdPath(DocBookReader::DTDDirectory);
+		if (dtdPath.open()) {
+			std::vector<std::string> files;
+			dtdPath.collectRegularFiles(files);
+			dtdPath.close();
+			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
+				if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
+					EXTERNAL_DTDs.push_back(dtdPath.name() + "/" + *it);
+				}
+			}
+		}
+	}
+
+	return EXTERNAL_DTDs;
+}
 
 HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 	if (name.length() == 0) {
@@ -84,6 +139,12 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 	if (name == "strong") {
 		return HtmlTag(_STRONG, start);
 	}
+	if (name == "sup") {
+		return HtmlTag(_SUP, start);
+	}
+	if (name == "sub") {
+		return HtmlTag(_SUB, start);
+	}
 	if (name == "cite") {
 		return HtmlTag(_CITE, start);
 	}
@@ -123,7 +184,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						doBreak = true;
 						break;
 					}
-					tagName.clear();
+					tagName.erase();
 					start = ptr + 1;
 				} if (insideTagName && isspace(*ptr)) {
 					tagName.append(start, ptr - start);

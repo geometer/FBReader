@@ -18,8 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <iostream>
-
 #include "GtkViewWidget.h"
 #include "GtkFBReader.h"
 #include "GtkPaintContext.h"
