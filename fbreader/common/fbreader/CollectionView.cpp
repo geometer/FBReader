@@ -92,6 +92,7 @@ void CollectionView::fill() {
 bool CollectionView::onStylusPress(int x, int y) {
 	myTreeStateIsFrozen = true;
 	if (TextView::onStylusPress(x, y)) {
+		myTreeStateIsFrozen = false;
 		return true;
 	}
 	myTreeStateIsFrozen = false;
@@ -102,7 +103,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 	}
 
 	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)myModel->paragraphs().size() < paragraphNumber)) {
+	if ((paragraphNumber < 0) || ((int)myModel->paragraphs().size() <= paragraphNumber)) {
 		return false;
 	}
 
