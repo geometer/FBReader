@@ -328,6 +328,6 @@ void GtkFBReader::searchSlot() {
 }
 
 void GtkFBReader::showOptionsDialogSlot() {
-	//showOptionsDialog();
-	//repaintView();
+	showOptionsDialog();
+	repaintView();
 }
