@@ -163,7 +163,7 @@ public:
 	int verticalShift() const { return myBase.verticalShift() + myDecoration.verticalShiftOption().value(); }
 
 	AlignmentType alignment() const;
-	bool allowHyphenations() const { return myDecoration.allowHyphenationsOption().value(); }
+	bool allowHyphenations() const { return myDecoration.allowHyphenationsOption().value() && myBase.allowHyphenations(); }
 
 	double lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? myBase.lineSpace() : space; }
 
