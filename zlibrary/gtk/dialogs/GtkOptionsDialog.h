@@ -20,6 +20,12 @@
 #ifndef __GTKOPTIONSDIALOG_H__
 #define __GTKOPTIONSDIALOG_H__
 
+#include <vector>
+
+#include <gtk/gtkdialog.h>
+#include <gtk/gtknotebook.h>
+#include <gtk/gtktable.h>
+
 #include <desktop/ZLDesktopOptionsDialog.h>
 
 class GtkOptionView;
@@ -33,15 +39,19 @@ public:
 	void addOption(ZLOptionEntry *option);
 	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
 
-	void close();
 	void accept();
+
+	GtkWidget *widget() { return GTK_WIDGET (myTable); }
+private:
+	GtkTable *myTable;
+	gint myRowCounter;
 };
 
 class GtkOptionsDialog : public ZLDesktopOptionsDialog {
 
 public:
 	GtkOptionsDialog(const char *caption);
-	~GtkOptionsDialog() {}
+	~GtkOptionsDialog();
 	ZLOptionsDialogTab *createTab(const std::string &name);
 
 protected:
@@ -52,6 +62,14 @@ protected:
 	void setSize(int /*width*/, int /*height*/) {}
 	int width() const { return 100; }
 	int height() const { return 100; }
+
+private:
+	GtkDialog *myDialog;
+	GtkNotebook *myNotebook;
+	std::vector<GtkOptionsDialogTab *> myTabs;
+	std::vector<std::string> myTabNames;
 };
+
+// vim:ts=2:sw=2:noet
 
 #endif /* __GTKOPTIONSDIALOG_H__ */

@@ -19,44 +19,86 @@
 
 #include <algorithm>
 
+#include <gtk/gtkstock.h>
+#include <gtk/gtklabel.h>
+#include <gtk/gtkbox.h>
+
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 
 #include "GtkOptionsDialog.h"
 
 GtkOptionsDialog::GtkOptionsDialog(const char *caption) {
+  myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons (caption, NULL, GTK_DIALOG_MODAL,
+          GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+          GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+          NULL));
+
+  myNotebook = GTK_NOTEBOOK(gtk_notebook_new ());
+
+  gtk_container_set_border_width (GTK_CONTAINER (myNotebook), 8);
+  gtk_box_pack_start (GTK_BOX (myDialog->vbox), GTK_WIDGET(myNotebook), TRUE, TRUE, 0);
+}
+
+GtkOptionsDialog::~GtkOptionsDialog() {
+  // I do not have to destroy myNotebook as it's a myDialog child
+  for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin (); tab != myTabs.end (); ++tab)
+    delete *tab;
+
+  gtk_widget_destroy (GTK_WIDGET(myDialog));
 }
 
 ZLOptionsDialogTab *GtkOptionsDialog::createTab(const std::string &name) {
-	GtkOptionsDialogTab *tab = new GtkOptionsDialogTab();
-	return tab;
+  GtkOptionsDialogTab *tab = new GtkOptionsDialogTab();
+  GtkWidget *label = gtk_label_new(name.c_str());
+
+  gtk_notebook_append_page (myNotebook, tab->widget (), label);
+
+  myTabs.push_back(tab);
+  myTabNames.push_back(name);
+
+  return tab;
 }
 
 std::string GtkOptionsDialog::selectedTabName() {
-	return "";
+  return myTabNames[gtk_notebook_get_current_page(myNotebook)];
 }
 
 void GtkOptionsDialog::selectTab(const std::string &name) {
+  std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
+  if (it != myTabNames.end()) {
+    gtk_notebook_set_current_page (myNotebook, it - myTabNames.begin());
+  }
 }
 
 int GtkOptionsDialog::run() {
-	return 0;
-}
+  gint response;
 
-/*
-void GtkOptionsDialog::accept() {
+  response = gtk_dialog_run (myDialog);
+
+  switch (response) {
+    case GTK_RESPONSE_ACCEPT:
+      for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin (); tab != myTabs.end (); ++tab)
+        (*tab)->accept();
+      break;
+    case GTK_RESPONSE_REJECT:
+      break;
+  }
+
+  gtk_widget_hide (GTK_WIDGET(myDialog));
+
+  return 0;
 }
-*/
 
 void GtkOptionsDialogTab::accept() {
 }
 
-void GtkOptionsDialogTab::close() {
-}
-
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
+  myTable = GTK_TABLE(gtk_table_new (0, 2, TRUE));
+  myRowCounter = 0;
 }
 
 GtkOptionsDialogTab::~GtkOptionsDialogTab() {
+  // We must not delete the widget, it's destroyed when the parent widget is destroyed
 }
 
 void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
@@ -64,3 +106,5 @@ void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
 
 void GtkOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
 }
+
+// vim:ts=2:sw=2:noet
