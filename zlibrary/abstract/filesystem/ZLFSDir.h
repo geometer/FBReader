@@ -19,26 +19,18 @@
 #ifndef __ZLFSDIR_H__
 #define __ZLFSDIR_H__
 
-#include <dirent.h>
-
 #include "ZLDir.h"
 
 class ZLFSDir : public ZLDir {
 
 public:
-	ZLFSDir(const std::string &name);
-	~ZLFSDir();
+	ZLFSDir(const std::string &name) : ZLDir(name) {}
+	std::string delimiter() const { return "/"; }
 
 	void create();
 
-	bool open();
-	void close();
-
 	void collectSubDirs(std::vector<std::string> &names);
 	void collectRegularFiles(std::vector<std::string> &names);
-
-private:
-	DIR *myDIR;
 };
 
 #endif /* __ZLFSDIR_H__ */

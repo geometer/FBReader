@@ -26,22 +26,6 @@
 
 class ZLFileInputStream;
 
-class ZLZipEntry {
-
-public:
-	static std::list<ZLZipEntry> entriesList(const std::string &zipName);
-
-private:
-	ZLZipEntry(const std::string &zipName, const std::string &fileName) : myZipName(zipName), myFileName(fileName) {}
-
-public:
-	const std::string name() const { return myZipName + ':' + myFileName; }
-
-private:
-	std::string myZipName;
-	std::string myFileName;
-};
-
 class ZLZipInputStream : public ZLInputStream {
 
 public:

@@ -17,66 +17,11 @@
  */
 
 #include "ZLZipInputStream.h"
+#include "ZipHeader.h"
 #include "ZLFileInputStream.h"
 
 const unsigned int IN_BUFFER_SIZE = 4096;
 const unsigned int OUT_BUFFER_SIZE = 65536;
-
-struct ZipHeader {
-	unsigned long Signature;
-	unsigned short Version;
-	unsigned short Flags;
-	unsigned short CompressionMethod;
-	unsigned short ModificationTime;
-	unsigned short ModificationDate;
-	unsigned long CRC32;
-	unsigned long CompressedSize;
-	unsigned long UncompressedSize;
-	unsigned short NameLength;
-	unsigned short ExtraLength;
-
-	bool readFrom(ZLFileInputStream &stream);
-};
-
-bool ZipHeader::readFrom(ZLFileInputStream &stream) {
-	int startOffset = stream.offset();
-	stream.read((char*)&Signature, 4);
-	stream.read((char*)&Version, 2);
-	stream.read((char*)&Flags, 2);
-	stream.read((char*)&CompressionMethod, 2);
-	stream.read((char*)&ModificationTime, 2);
-	stream.read((char*)&ModificationDate, 2);
-	stream.read((char*)&CRC32, 4);
-	stream.read((char*)&CompressedSize, 4);
-	stream.read((char*)&UncompressedSize, 4);
-	stream.read((char*)&NameLength, 2);
-	stream.read((char*)&ExtraLength, 2);
-	return (Signature == 0x04034B50) && (stream.offset() == startOffset + 30) && (NameLength != 0);
-}
-
-std::list<ZLZipEntry> ZLZipEntry::entriesList(const std::string &zipName) {
-	std::list<ZLZipEntry> entries;
-
-	ZLFileInputStream stream(zipName);
-	if (stream.open()) {
-		ZipHeader header;
-		while (header.readFrom(stream)) {
-			char *buffer = new char[header.NameLength];
-			if (stream.read(buffer, header.NameLength) == header.NameLength) {
-				std::string str;
-				str.append(buffer, header.NameLength);
-				entries.push_back(ZLZipEntry(zipName, str));
-			}
-			delete[] buffer;
-			stream.seek(header.ExtraLength + header.CompressedSize);
-			if (header.Flags & 0x04) {
-				stream.seek(12);
-			}
-		}
-		stream.close();
-	}
-	return entries;
-}
 
 ZLZipInputStream::ZLZipInputStream(const std::string &name) {
 	int index = name.find(':');

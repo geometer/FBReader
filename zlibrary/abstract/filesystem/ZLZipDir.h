@@ -16,27 +16,21 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLFSDIR_H__
-#define __ZLFSDIR_H__
+#ifndef __ZLZIPDIR_H__
+#define __ZLZIPDIR_H__
 
 #include <dirent.h>
 
 #include "ZLDir.h"
 
-class ZLFSDir : public ZLDir {
+class ZLZipDir : public ZLDir {
 
 public:
-	ZLFSDir(const std::string &name);
-	~ZLFSDir();
+	ZLZipDir(const std::string &name) : ZLDir(name) {}
+	std::string delimiter() const { return ":"; }
 
-	bool open();
-	void close();
-
-	void collectSubDirs(std::vector<std::string> &names);
+	void collectSubDirs(std::vector<std::string>&) {}
 	void collectRegularFiles(std::vector<std::string> &names);
-
-private:
-	DIR *myDIR;
 };
 
-#endif /* __ZLFSDIR_H__ */
+#endif /* __ZLZIPDIR_H__ */

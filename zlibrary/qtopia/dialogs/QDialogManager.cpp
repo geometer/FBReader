@@ -21,6 +21,7 @@
 
 #include "QDialogManager.h"
 #include "QOptionsDialog.h"
+#include "QOpenFileDialog.h"
 
 ZLOptionsDialog *QDialogManager::createOptionsDialog(const char *title) const {
 	return new QOptionsDialog(title);
@@ -28,4 +29,8 @@ ZLOptionsDialog *QDialogManager::createOptionsDialog(const char *title) const {
 
 int QDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
 	return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
+}
+
+std::string QDialogManager::getFileName(const std::string &title, const std::string &dir) const {
+	return QOpenFileDialog::getOpenFileName(title.c_str(), dir.c_str());
 }

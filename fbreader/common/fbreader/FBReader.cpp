@@ -17,6 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLDialogManager.h>
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLOptionsDialog.h>
 
@@ -40,6 +41,8 @@ ZLBooleanOption FBReader::SearchBackwardOption("Search", "Backward", false);
 ZLBooleanOption FBReader::SearchIgnoreCaseOption("Search", "IgnoreCase", true);
 ZLBooleanOption FBReader::SearchInWholeTextOption("Search", "WholeText", false);
 ZLStringOption FBReader::SearchPatternOption("Search", "Pattern", std::string());
+
+ZLStringOption FBReader::FileSearchDirectoryOption("Options", "FileSearch", "~");
 
 FBReader::FBReader(PaintContext *context) {
 	myModel = 0;
@@ -197,6 +200,15 @@ void FBReader::doAction(ActionCode code) {
 			fullscreenSlot();
 			break;
 		case ACTION_ADD_BOOK:
+			{
+				BookDescription *description = BookDescription::create(ZLDialogManager::instance().getFileName(
+					"FBReader -- Add File to Library", FileSearchDirectoryOption.value()
+				));
+				if (description != 0) {
+					openBook(description);
+					repaintView();
+				}
+			}
 			break;
 	}
 }
@@ -262,7 +274,7 @@ void FBReader::setMode(ViewMode mode) {
 
 void FBReader::createToolbar() {
 	addButton(ACTION_SHOW_COLLECTION, "books");
-	//addButton(ACTION_ADD_BOOK, "addbook");
+	addButton(ACTION_ADD_BOOK, "addbook");
 	addButton(ACTION_SHOW_OPTIONS, "settings");
 	addButton(ACTION_UNDO, "leftarrow");
 	addButton(ACTION_REDO, "rightarrow");

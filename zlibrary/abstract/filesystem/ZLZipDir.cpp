@@ -16,53 +16,27 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFSDir.h"
+#include "ZLZipDir.h"
+#include "ZipHeader.h"
+#include "ZLFileInputStream.h"
 
-ZLFSDir::ZLFSDir(const std::string &name) : ZLDir(name) {
-	myDIR = 0;
-}
-
-ZLFSDir::~ZLFSDir() {
-	close();
-}
-
-bool ZLFSDir::open() {
-	if (myDIR == 0) {
-		myDIR = opendir(name().c_str());
-	}
-	return myDIR != 0;
-}
-
-void ZLFSDir::close() {
-	if (myDIR != 0) {
-		closedir(myDIR);
-		myDIR = 0;
-	}
-}
-
-void ZLFSDir::collectSubDirs(std::vector<std::string> &names) {
-	if (myDIR == 0) {
-		return;
-	}
-	const dirent *file;
-	while ((file = readdir(myDIR)) != 0) {
-		if (file->d_type == DT_DIR) {
-			std::string fname = file->d_name;
-			if ((fname != ".") && (fname != "..")) {
-				names.push_back(file->d_name);
+void ZLZipDir::collectRegularFiles(std::vector<std::string> &names) {
+	ZLFileInputStream stream(name());
+	if (stream.open()) {
+		ZipHeader header;
+		while (header.readFrom(stream)) {
+			char *buffer = new char[header.NameLength];
+			if (stream.read(buffer, header.NameLength) == header.NameLength) {
+				std::string entryName;
+				entryName.append(buffer, header.NameLength);
+				names.push_back(entryName);
+			}
+			delete[] buffer;
+			stream.seek(header.ExtraLength + header.CompressedSize);
+			if (header.Flags & 0x04) {
+				stream.seek(12);
 			}
 		}
-  }
-}
-
-void ZLFSDir::collectRegularFiles(std::vector<std::string> &names) {
-	if (myDIR == 0) {
-		return;
+		stream.close();
 	}
-	const dirent *file;
-	while ((file = readdir(myDIR)) != 0) {
-		if (file->d_type == DT_REG) {
-			names.push_back(file->d_name);
-		}
-  }
 }

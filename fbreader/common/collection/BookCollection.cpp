@@ -22,6 +22,7 @@
 
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSDir.h>
+#include <abstract/ZLZipDir.h>
 #include <abstract/ZLZipInputStream.h>
 
 #include "BookCollection.h"
@@ -49,22 +50,23 @@ BookCollection::BookCollection() {
 	collectDirNames(dirs);
 
 	for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); it++) {
+		std::vector<std::string> files;
 		ZLFSDir dir(*it);
-		if (dir.open()) {
-			std::vector<std::string> files;
-			dir.collectRegularFiles(files);
-			dir.close();
+		dir.collectRegularFiles(files);
+		if (!files.empty()) {
 			const std::string dirName = dir.name() + '/';
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
 				const std::string fileName = dirName + *jt;
 				if (isAcceptable(*jt)) {
 					addDescription(BookDescription::create(fileName));
 				} else if (ZLStringUtil::stringEndsWith(*jt, ".zip")) {
-					std::list<ZLZipEntry> entries = ZLZipEntry::entriesList(fileName);
-					for (std::list<ZLZipEntry>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
-						const std::string &entryName = zit->name();
-						if (isAcceptable(entryName)) {
-							addDescription(BookDescription::create(entryName));
+					ZLZipDir zipDir(fileName);
+					std::string zipPrefix = fileName + ':';
+					std::vector<std::string> entries;
+					zipDir.collectRegularFiles(entries);
+					for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
+						if (isAcceptable(*zit)) {
+							addDescription(BookDescription::create(zipPrefix + *zit));
 						}
 					}
 				}
@@ -103,14 +105,11 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 		nameQueue.pop();
 		if (nameSet.find(name) == nameSet.end()) {
 			if (myScanSubdirs) {
+				std::vector<std::string> subdirs;
 				ZLFSDir dir(name);
-				if (dir.open()) {
-					std::vector<std::string> subdirs;
-					dir.collectSubDirs(subdirs);
-					dir.close();
-					for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
-						nameQueue.push(dir.name() + '/' + *it);
-					}
+				dir.collectSubDirs(subdirs);
+				for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
+					nameQueue.push(dir.name() + '/' + *it);
 				}
 			}
 			nameSet.insert(name);

@@ -17,58 +17,39 @@
  */
 
 #include <sys/stat.h>
+#include <dirent.h>
 
 #include "ZLFSDir.h"
-
-ZLFSDir::ZLFSDir(const std::string &name) : ZLDir(name) {
-	myDIR = 0;
-}
-
-ZLFSDir::~ZLFSDir() {
-	close();
-}
 
 void ZLFSDir::create() {
 	mkdir(name().c_str(), 0x1FF);
 }
 
-bool ZLFSDir::open() {
-	if (myDIR == 0) {
-		myDIR = opendir(name().c_str());
-	}
-	return myDIR != 0;
-}
-
-void ZLFSDir::close() {
-	if (myDIR != 0) {
-		closedir(myDIR);
-		myDIR = 0;
-	}
-}
-
 void ZLFSDir::collectSubDirs(std::vector<std::string> &names) {
-	if (myDIR == 0) {
-		return;
-	}
-	const dirent *file;
-	while ((file = readdir(myDIR)) != 0) {
-		if (file->d_type == DT_DIR) {
-			std::string fname = file->d_name;
-			if ((fname != ".") && (fname != "..")) {
-				names.push_back(file->d_name);
+	DIR *dir = opendir(name().c_str());
+	if (dir != 0) {
+		const dirent *file;
+		while ((file = readdir(dir)) != 0) {
+			if (file->d_type == DT_DIR) {
+				std::string fname = file->d_name;
+				if ((fname != ".") && (fname != "..")) {
+					names.push_back(file->d_name);
+				}
 			}
 		}
-  }
+		closedir(dir);
+	}
 }
 
 void ZLFSDir::collectRegularFiles(std::vector<std::string> &names) {
-	if (myDIR == 0) {
-		return;
+	DIR *dir = opendir(name().c_str());
+	if (dir != 0) {
+		const dirent *file;
+		while ((file = readdir(dir)) != 0) {
+			if (file->d_type == DT_REG) {
+				names.push_back(file->d_name);
+			}
+  	}
+		closedir(dir);
 	}
-	const dirent *file;
-	while ((file = readdir(myDIR)) != 0) {
-		if (file->d_type == DT_REG) {
-			names.push_back(file->d_name);
-		}
-  }
 }

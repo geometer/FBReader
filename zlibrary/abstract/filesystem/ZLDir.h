@@ -30,11 +30,8 @@ private:
 public:
 	ZLDir(const std::string &name);
 	virtual ~ZLDir() {}
-
 	const std::string &name() const { return myName; }
-
-	virtual bool open() = 0;
-	virtual void close() = 0;
+	virtual std::string delimiter() const = 0;
 
 	virtual void collectSubDirs(std::vector<std::string> &names) = 0;
 	virtual void collectRegularFiles(std::vector<std::string> &names) = 0;

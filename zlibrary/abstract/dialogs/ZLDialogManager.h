@@ -19,6 +19,8 @@
 #ifndef __ZLDIALOGMANAGER_H__
 #define __ZLDIALOGMANAGER_H__
 
+#include <string>
+
 class ZLOptionsDialog;
 
 class ZLDialogManager {
@@ -36,6 +38,7 @@ protected:
 public:
 	virtual ZLOptionsDialog *createOptionsDialog(const char *title) const = 0;
 	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const = 0;
+	virtual std::string getFileName(const std::string &title, const std::string &dir) const = 0;
 };
 
 #endif /* __ZLDIALOGMANAGER_H__ */

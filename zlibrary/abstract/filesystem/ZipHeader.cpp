@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +16,21 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <qapplication.h>
-#include <qmessagebox.h>
-#include <qfiledialog.h>
+#include "ZipHeader.h"
+#include "ZLFileInputStream.h"
 
-#include "QDialogManager.h"
-#include "QOptionsDialog.h"
-#include "QOpenFileDialog.h"
-
-ZLOptionsDialog *QDialogManager::createOptionsDialog(const char *title) const {
-	return new QOptionsDialog(title);
-}
-
-int QDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
-}
-
-std::string QDialogManager::getFileName(const std::string &title, const std::string &dir) const {
-	return QOpenFileDialog::getOpenFileName(title.c_str(), dir.c_str());
+bool ZipHeader::readFrom(ZLFileInputStream &stream) {
+	int startOffset = stream.offset();
+	stream.read((char*)&Signature, 4);
+	stream.read((char*)&Version, 2);
+	stream.read((char*)&Flags, 2);
+	stream.read((char*)&CompressionMethod, 2);
+	stream.read((char*)&ModificationTime, 2);
+	stream.read((char*)&ModificationDate, 2);
+	stream.read((char*)&CRC32, 4);
+	stream.read((char*)&CompressedSize, 4);
+	stream.read((char*)&UncompressedSize, 4);
+	stream.read((char*)&NameLength, 2);
+	stream.read((char*)&ExtraLength, 2);
+	return (Signature == 0x04034B50) && (stream.offset() == startOffset + 30) && (NameLength != 0);
 }

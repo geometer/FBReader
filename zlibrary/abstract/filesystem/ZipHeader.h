@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +16,25 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <qapplication.h>
-#include <qmessagebox.h>
-#include <qfiledialog.h>
+#ifndef __ZIPHEADER_H__
+#define __ZIPHEADER_H__
 
-#include "QDialogManager.h"
-#include "QOptionsDialog.h"
-#include "QOpenFileDialog.h"
+class ZLFileInputStream;
 
-ZLOptionsDialog *QDialogManager::createOptionsDialog(const char *title) const {
-	return new QOptionsDialog(title);
-}
+struct ZipHeader {
+	unsigned long Signature;
+	unsigned short Version;
+	unsigned short Flags;
+	unsigned short CompressionMethod;
+	unsigned short ModificationTime;
+	unsigned short ModificationDate;
+	unsigned long CRC32;
+	unsigned long CompressedSize;
+	unsigned long UncompressedSize;
+	unsigned short NameLength;
+	unsigned short ExtraLength;
 
-int QDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
-}
+	bool readFrom(ZLFileInputStream &stream);
+};
 
-std::string QDialogManager::getFileName(const std::string &title, const std::string &dir) const {
-	return QOpenFileDialog::getOpenFileName(title.c_str(), dir.c_str());
-}
+#endif /* __ZIPHEADER_H__ */
