@@ -153,7 +153,7 @@ void SpinOptionView::_onAccept() const {
 void StringOptionView::_createItem() {
 	myLabel = new QLabel(myOption->name().c_str(), myTab);
 	myLineEdit = new QLineEdit(myTab);
-	myLineEdit->setText(((ZLStringOptionEntry*)myOption)->initialValue().c_str());
+	myLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
 	int width = myToColumn - myFromColumn + 1;
 	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
 	myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);

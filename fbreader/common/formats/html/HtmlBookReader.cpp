@@ -196,6 +196,13 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 				myIgnoreDataCounter--;
 			}
 			break;
+		case _SCRIPT:
+			if (tag.Start) {
+				myIgnoreDataCounter++;
+			} else {
+				myIgnoreDataCounter--;
+			}
+			break;
 		case _A:
 			if (tag.Start) {
 				for (unsigned int i = 0; i < tag.Attributes.size(); i++) {

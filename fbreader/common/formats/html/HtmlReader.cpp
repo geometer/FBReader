@@ -144,6 +144,7 @@ static struct {
 	{ "I", HtmlReader::_I },
 	{ "STYLE", HtmlReader::_STYLE },
 	{ "A", HtmlReader::_A },
+	{ "SCRIPT", HtmlReader::_SCRIPT },
 	{ 0, HtmlReader::_UNKNOWN }
 };
 
@@ -174,10 +175,12 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 
 enum ParseState {
 	PS_TEXT,
+	PS_TAGSTART,
 	PS_TAGNAME,
 	PS_ATTRIBUTENAME,
 	PS_ATTRIBUTEVALUE,
 	PS_SKIPTAG,
+	PS_COMMENT,
 };
 
 void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding) {
@@ -199,6 +202,7 @@ void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding
 	std::string currentString;
 	int quotationCounter = 0;
 	HtmlTag currentTag(_UNKNOWN, false);
+	char endOfComment[2] = "\0";
 	
 	const size_t BUFSIZE = 2048;
 	char *buffer = new char[BUFSIZE];
@@ -215,7 +219,23 @@ void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding
 							goto endOfProcessing;
 						}
 						start = ptr + 1;
+						state = PS_TAGSTART;
+					}
+					break;
+				case PS_TAGSTART:
+					state = (*ptr == '!') ? PS_COMMENT : PS_TAGNAME;
+					break;
+				case PS_COMMENT:
+					if ((endOfComment[0] == '\0') && (*ptr != '-')) {
 						state = PS_TAGNAME;
+					} else if ((endOfComment[0] == '-') && (endOfComment[1] == '-') && (*ptr == '>')) {
+						start = ptr + 1;
+						state = PS_TEXT;
+						endOfComment[0] = '\0';
+						endOfComment[1] = '\0';
+					} else {
+						endOfComment[0] = endOfComment[1];
+						endOfComment[1] = *ptr;
 					}
 					break;
 				case PS_TAGNAME:
@@ -305,7 +325,9 @@ void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding
 				case PS_ATTRIBUTEVALUE:
 					currentString.append(start, endOfBuffer - start);
 					break;
+				case PS_TAGSTART:
 				case PS_SKIPTAG:
+				case PS_COMMENT:
 					break;
 			}
 		}

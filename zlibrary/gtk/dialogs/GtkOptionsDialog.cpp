@@ -29,8 +29,8 @@
 #include "GtkOptionsDialog.h"
 #include "GtkOptionView.h"
 
-GtkOptionsDialog::GtkOptionsDialog(const char *caption) {
-	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons (caption, NULL, GTK_DIALOG_MODAL,
+GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id) {
+	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons (caption.c_str(), NULL, GTK_DIALOG_MODAL,
 					GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 					NULL));
@@ -74,10 +74,8 @@ void GtkOptionsDialog::selectTab(const std::string &name) {
 	}
 }
 
-int GtkOptionsDialog::run() {
-	gint response;
-
-	response = gtk_dialog_run (myDialog);
+bool GtkOptionsDialog::run() {
+	gint response = gtk_dialog_run (myDialog);
 
 	switch (response) {
 		case GTK_RESPONSE_ACCEPT:
@@ -90,7 +88,7 @@ int GtkOptionsDialog::run() {
 
 	gtk_widget_hide (GTK_WIDGET(myDialog));
 
-	return 0;
+	return response == GTK_RESPONSE_ACCEPT;
 }
 
 void GtkOptionsDialog::setSize(int width, int height) {

@@ -54,7 +54,9 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_N] = ACTION_FIND_NEXT;
 	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
 	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
-	myKeyBindings[Key_I] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings[Key_I] = ACTION_SHOW_BOOK_INFO;
+	myKeyBindings[Key_D] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings[Key_R] = ACTION_ROTATE_SCREEN;
 	myKeyBindings[Key_A] = ACTION_ADD_BOOK;
 	myKeyBindings[Key_1] = ACTION_DECREASE_FONT;
 	myKeyBindings[Key_2] = ACTION_INCREASE_FONT;

@@ -20,8 +20,8 @@
 #include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"
 
-ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const char *title) const {
-	return new GtkOptionsDialog(title);
+ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
+	return new GtkOptionsDialog(id, title);
 }
 
 int GtkDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {

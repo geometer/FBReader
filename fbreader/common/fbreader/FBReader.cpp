@@ -204,13 +204,17 @@ void FBReader::doAction(ActionCode code) {
 				ZLDialogManager::instance().openFileDialog("FBReader -- Add File To Library", handler);
 				BookDescription *description = handler.description();
 				if (description != 0) {
-					openBook(description);
-					setWindowCaption("FBReader - " + myViewWidget->view()->caption());
-					repaintView();
+					if (runBookInfoDialog(description->fileName())) {
+						setMode(BOOK_TEXT_MODE);
+					}
+					delete description;
 				}
 			}
 			break;
 		case ACTION_SHOW_BOOK_INFO:
+			if ((myMode == BOOK_TEXT_MODE) || (myMode == CONTENTS_MODE) || (myMode == FOOTNOTE_MODE)) {
+				runBookInfoDialog(myModel->fileName());
+			}
 			break;
 		case ACTION_SHOW_HELP:
 			break;
@@ -293,4 +297,32 @@ void FBReader::createToolbar() {
 	addButton(ACTION_SEARCH, "find");
 	addButton(ACTION_FIND_NEXT, "findnext");
 	addButton(ACTION_FIND_PREVIOUS, "findprev");
+}
+
+bool FBReader::runBookInfoDialog(const std::string &fileName) {
+	bool code;
+	{
+		BookInfo info(fileName);
+
+		ZLOptionsDialog *infoDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
+		ZLOptionsDialogTab *infoTab = infoDialog->createTab("Info");
+		infoTab->addOption(new ZLSimpleStringOptionEntry("Title", info.TitleOption));
+		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (display name)", info.AuthorDisplayNameOption));
+		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", info.AuthorSortKeyOption));
+		infoTab->addOption(new ZLSimpleStringOptionEntry("Language", info.LanguageOption));
+		infoTab->addOption(new ZLSimpleStringOptionEntry("Encoding", info.EncodingOption));
+		code = infoDialog->run("");
+		delete infoDialog;
+	}
+	if (code) {
+		BookDescription *newDescription = BookDescription::create(fileName);
+		if (newDescription != 0) {
+			openBook(newDescription);
+			setWindowCaption("FBReader - " + myViewWidget->view()->caption());
+			repaintView();
+		} else {
+			// TODO: show information message
+		}
+	}
+	return code;
 }

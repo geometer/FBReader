@@ -37,7 +37,7 @@ protected:
 	virtual ~ZLDialogManager() {}
 
 public:
-	virtual ZLOptionsDialog *createOptionsDialog(const char *title) const = 0;
+	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const = 0;
 	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const = 0;
 	virtual void openFileDialog(const std::string &title, const ZLFileHandler &handler) const = 0;
 };

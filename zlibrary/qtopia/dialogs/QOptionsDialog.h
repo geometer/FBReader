@@ -61,17 +61,19 @@ class QOptionsDialog : public FullScreenDialog, public ZLOptionsDialog {
 	Q_OBJECT
 
 public:
-	QOptionsDialog(const char *caption);
+	QOptionsDialog(const std::string &id, const std::string &caption);
 	~QOptionsDialog() {}
 	ZLOptionsDialogTab *createTab(const std::string &name);
 
 protected:
 	const std::string &selectedTabName() const;
 	void selectTab(const std::string &name);
-	int run();
+	bool run();
+
+	void resizeEvent(QResizeEvent *);
+	void keyPressEvent(QKeyEvent *event);
 
 private slots:
-	void resizeEvent(QResizeEvent *);
 	void accept();
 
 private:

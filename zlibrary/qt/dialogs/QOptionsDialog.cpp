@@ -34,7 +34,7 @@
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
 
-QOptionsDialog::QOptionsDialog(const char *caption) : QDialog(0, caption, true) {
+QOptionsDialog::QOptionsDialog(const std::string &id, const std::string &caption) : QDialog(0, caption.c_str(), true), ZLDesktopOptionsDialog(id) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
 	myTabWidget = new QTabWidget(this);
@@ -79,11 +79,11 @@ void QOptionsDialog::selectTab(const std::string &name) {
 	}
 }
 
-int QOptionsDialog::run() {
+bool QOptionsDialog::run() {
 	for (QOptionsDialogTab *tab = myTabs.first(); tab != NULL; tab = myTabs.next()) {
 		tab->close();
 	}
-	return exec();
+	return exec() == QDialog::Accepted;
 }
 
 void QOptionsDialog::accept() {

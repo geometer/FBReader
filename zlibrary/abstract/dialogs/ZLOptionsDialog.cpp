@@ -18,11 +18,12 @@
 
 #include "ZLOptionsDialog.h"
 
-ZLStringOption ZLOptionsDialog::TabOption("OptionsDialog", "SelectedTab", "");
+ZLOptionsDialog::ZLOptionsDialog(const std::string &id) : TabOption(id, "SelectedTab", "") {
+}
 
-int ZLOptionsDialog::run(const std::string &tabName) {
+bool ZLOptionsDialog::run(const std::string &tabName) {
 	selectTab(tabName.empty() ? TabOption.value() : tabName);
-	int code = run();
+	bool code = run();
 	TabOption.setValue(selectedTabName());
 	return code;
 }

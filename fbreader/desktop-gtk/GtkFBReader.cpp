@@ -88,7 +88,8 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myKeyBindings["F"] = ACTION_SEARCH;
 	myKeyBindings["P"] = ACTION_FIND_PREVIOUS;
 	myKeyBindings["N"] = ACTION_FIND_NEXT;
-	myKeyBindings["I"] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings["D"] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings["I"] = ACTION_SHOW_BOOK_INFO;
 	myKeyBindings["A"] = ACTION_ADD_BOOK;
 	myKeyBindings["Up"] = ACTION_SCROLL_BACKWARD;
 	myKeyBindings["Down"] = ACTION_SCROLL_FORWARD;

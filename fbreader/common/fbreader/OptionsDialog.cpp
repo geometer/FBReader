@@ -34,7 +34,7 @@
 #include "../view/PaintContext.h"
 
 OptionsDialog::OptionsDialog(PaintContext &context) {
-	myDialog = ZLDialogManager::instance().createOptionsDialog("FBReader - Options");
+	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
 	ZLOptionsDialogTab *generalTab = myDialog->createTab("General");
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", FBReader::QuitOnCancelOption));

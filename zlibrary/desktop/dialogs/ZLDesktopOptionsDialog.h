@@ -26,16 +26,19 @@
 class ZLDesktopOptionsDialog : public ZLOptionsDialog {
 
 protected:
-	static ZLIntegerOption WidthOption;
-	static ZLIntegerOption HeightOption;
+	ZLDesktopOptionsDialog(const std::string &id);
 
 public:
-	int run(const std::string &tabName);
+	bool run(const std::string &tabName);
 
 protected:
 	virtual void setSize(int width, int height) = 0;
 	virtual int width() const = 0;
 	virtual int height() const = 0;
+
+protected:
+	ZLIntegerOption WidthOption;
+	ZLIntegerOption HeightOption;
 };
 
 #endif /* __ZLDESKTOPOPTIONSDIALOG_H__ */

@@ -18,12 +18,12 @@
 
 #include "ZLDesktopOptionsDialog.h"
 
-ZLIntegerOption ZLDesktopOptionsDialog::WidthOption("OptionsDialog", "Width", 400);
-ZLIntegerOption ZLDesktopOptionsDialog::HeightOption("OptionsDialog", "Height", 300);
+ZLDesktopOptionsDialog::ZLDesktopOptionsDialog(const std::string &id) : ZLOptionsDialog(id), WidthOption(id, "Width", 400), HeightOption(id, "Height", 300) {
+}
 
-int ZLDesktopOptionsDialog::run(const std::string &tabName) {
+bool ZLDesktopOptionsDialog::run(const std::string &tabName) {
 	setSize(WidthOption.value(), HeightOption.value());
-	int code = ZLOptionsDialog::run(tabName);
+	bool code = ZLOptionsDialog::run(tabName);
 	WidthOption.setValue(width());
 	HeightOption.setValue(height());
 	return code;

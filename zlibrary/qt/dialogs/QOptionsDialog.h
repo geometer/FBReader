@@ -61,14 +61,14 @@ class QOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 	Q_OBJECT
 
 public:
-	QOptionsDialog(const char *caption);
+	QOptionsDialog(const std::string &id, const std::string &caption);
 	~QOptionsDialog() {}
 	ZLOptionsDialogTab *createTab(const std::string &name);
 
 protected:
 	const std::string &selectedTabName() const;
 	void selectTab(const std::string &name);
-	int run();
+	bool run();
 
 	void setSize(int width, int height) { QDialog::resize(width, height); }
 	int width() const { return QDialog::width(); }

@@ -56,14 +56,14 @@ private:
 class GtkOptionsDialog : public ZLDesktopOptionsDialog {
 
 public:
-	GtkOptionsDialog(const char *caption);
+	GtkOptionsDialog(const std::string &id, const std::string &caption);
 	~GtkOptionsDialog();
 	ZLOptionsDialogTab *createTab(const std::string &name);
 
 protected:
 	const std::string &selectedTabName() const;
 	void selectTab(const std::string &name);
-	int run();
+	bool run();
 
 	void setSize(int width, int height);
 	int width() const;

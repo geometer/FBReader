@@ -94,6 +94,9 @@ protected:
 	virtual void cancelSlot() = 0;
 	virtual void fullscreenSlot() = 0;
 
+private:
+	bool runBookInfoDialog(const std::string &fileName);
+
 public:
 	void openBook(BookDescription *description);
 	BookTextView &textView() const { return *myBookTextView; }

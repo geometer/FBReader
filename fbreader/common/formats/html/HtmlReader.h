@@ -72,6 +72,7 @@ public:
 		_B, _I,
 		_STYLE,
 		_A,
+		_SCRIPT,
 	};
 
 protected:

@@ -36,17 +36,20 @@ public:
 class ZLOptionsDialog {
 
 protected:
-	static ZLStringOption TabOption;
-
+	ZLOptionsDialog(const std::string &id);
+	
 public:
 	virtual ~ZLOptionsDialog() {}
 	virtual ZLOptionsDialogTab *createTab(const std::string &name) = 0;
-	virtual int run(const std::string &tabName);
+	virtual bool run(const std::string &tabName);
 
 protected:
 	virtual const std::string &selectedTabName() const = 0;
 	virtual void selectTab(const std::string &name) = 0;
-	virtual int run() = 0;
+	virtual bool run() = 0;
+
+protected:
+	ZLStringOption TabOption;
 };
 
 #endif /* __ZLOPTIONSDIALOG_H__ */

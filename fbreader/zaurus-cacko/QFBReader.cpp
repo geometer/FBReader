@@ -26,9 +26,12 @@
 #include <qlineedit.h>
 #include <qcheckbox.h>
 #include <qpushbutton.h>
+#include <qlabel.h>
 #include <qdialog.h>
 
 #include <abstract/ZLOptions.h>
+
+#include <qtopia/FullScreenDialog.h>
 
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
@@ -51,7 +54,8 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_N] = ACTION_FIND_NEXT;
 	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
 	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
-	myKeyBindings[Key_I] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
+	myKeyBindings[Key_I] = ACTION_SHOW_BOOK_INFO;
+	myKeyBindings[Key_D] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
 	myKeyBindings[Key_A] = ACTION_ADD_BOOK;
 	myKeyBindings[0x200f] = ACTION_DECREASE_FONT;
 	myKeyBindings[0x2010] = ACTION_INCREASE_FONT;
@@ -228,6 +232,16 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 		qCaption = qCaption.left(57) + "...";
 	}
 	setCaption(qCaption);
+}
+
+class InfoDialog : public FullScreenDialog {
+
+public:
+	InfoDialog();
+	~InfoDialog() {}
+};
+
+InfoDialog::InfoDialog() : FullScreenDialog("FBReader -- Book Info") {
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {

@@ -34,7 +34,7 @@
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
 
-QOptionsDialog::QOptionsDialog(const char *caption) : FullScreenDialog(caption) {
+QOptionsDialog::QOptionsDialog(const std::string &id, const std::string &caption) : FullScreenDialog(caption.c_str()), ZLOptionsDialog(id) {
 	myTabWidget = new QTabWidget(this);
 }
 
@@ -57,7 +57,7 @@ void QOptionsDialog::selectTab(const std::string &name) {
 	}
 }
 
-int QOptionsDialog::run() {
+bool QOptionsDialog::run() {
 	for (QOptionsDialogTab *tab = myTabs.first(); tab != NULL; tab = myTabs.next()) {
 		tab->close();
 	}
@@ -79,6 +79,12 @@ void QOptionsDialogTab::accept() {
 
 void QOptionsDialog::resizeEvent(QResizeEvent *) {
   myTabWidget->resize(size());
+}
+
+void QOptionsDialog::keyPressEvent(QKeyEvent *event) {
+	if (event->key() == Key_Return) {
+		accept();
+	}
 }
 
 void QOptionsDialogTab::close() {
