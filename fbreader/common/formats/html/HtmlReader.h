@@ -34,6 +34,7 @@ protected:
 public:
 	HtmlTextConverter(const char *encoding) : ZLXMLReader(encoding) {}
 	void convertBuffer(std::vector<std::string> &buffer);
+	void convertString(std::string &string);
 	
 public:
 	void startElementHandler(int tag, const char **attributes);
@@ -49,7 +50,7 @@ private:
 
 class HtmlReader {
 
-protected:
+public:
 	enum TagCode {
 		_UNKNOWN,
 		_BODY,
@@ -73,6 +74,7 @@ protected:
 		_STYLE,
 	};
 
+protected:
 	struct HtmlTag {
 		TagCode Code;
 		bool Start;

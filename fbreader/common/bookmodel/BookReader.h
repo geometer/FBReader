@@ -54,11 +54,14 @@ protected:
 	void endParagraph();
 	void addControl(TextKind kind, bool start);
 	void addHyperlinkControl(TextKind kind, const std::string &label);
-	virtual void flushTextBuffer();
 
 	void addImageToParagraph(const std::string &id);
 	void addImageToModel(const std::string &id, Image *image);
 	void addContentsParagraphToModel();
+
+	void addDataToBuffer(const char *data, int len);
+	virtual void flushTextBufferToParagraph();
+	void flushTextBufferToImage();
 
 private:
 	BookModel &myModel;
@@ -66,15 +69,16 @@ private:
 
 	std::vector<TextKind> myKindStack;
 
-protected:
 	Paragraph *myCurrentParagraph;
+
+protected:
+	std::vector<std::string> myBuffer;
+
 	ParagraphWithReference *myCurrentContentsParagraph;
 	Image *myCurrentImage;
 
 	bool myInsideTitle;
 	bool mySectionContainsRegularContents;
-
-	std::vector<std::string> myBuffer;
 };
 
 #endif /* __BOOKREADER_H__ */

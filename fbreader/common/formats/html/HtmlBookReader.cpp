@@ -23,9 +23,9 @@
 HtmlBookReader::HtmlBookReader(BookModel &model) : BookReader(model) {
 }
 
-void HtmlBookReader::flushTextBuffer() {
+void HtmlBookReader::flushTextBufferToParagraph() {
 	myConverter.convertBuffer(myBuffer);
-	BookReader::flushTextBuffer();
+	BookReader::flushTextBufferToParagraph();
 }
 
 bool HtmlBookReader::tagHandler(HtmlTag tag) {
@@ -94,9 +94,8 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 }
 
 bool HtmlBookReader::characterDataHandler(const char *text, int len) {
-	if ((len > 0) && !myIgnoreData) {
-		myBuffer.push_back(std::string());
-		myBuffer.back().append(text, len);
+	if (!myIgnoreData) {
+		addDataToBuffer(text, len);
 	}
 	return true;
 }

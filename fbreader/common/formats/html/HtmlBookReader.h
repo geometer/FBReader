@@ -39,7 +39,7 @@ protected:
 	bool characterDataHandler(const char *text, int len);
 
 private:
-	void flushTextBuffer();
+	void flushTextBufferToParagraph();
 
 private:
 	bool myIgnoreData;

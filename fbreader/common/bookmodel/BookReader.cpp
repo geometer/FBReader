@@ -80,41 +80,59 @@ void BookReader::beginParagraph(Paragraph::Kind kind) {
 
 void BookReader::endParagraph() {
 	if (myCurrentParagraph != 0) {
-		flushTextBuffer();
+		flushTextBufferToParagraph();
 		myCurrentParagraph = 0;
 	}
 }
 
 void BookReader::addControl(TextKind kind, bool start) {
 	if (myCurrentParagraph != 0) {
-		flushTextBuffer();
+		flushTextBufferToParagraph();
 		myCurrentParagraph->addControl(kind, start);
 	}
 }
 
 void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 	if (myCurrentParagraph != 0) {
-		flushTextBuffer();
+		flushTextBufferToParagraph();
 		myCurrentParagraph->addHyperlinkControl(kind, label);
 	}
 }
 
-void BookReader::flushTextBuffer() {
-	if (!myBuffer.empty()) {
-		myCurrentParagraph->addText(myBuffer);
-		if (myCurrentContentsParagraph != 0) {
-			if (myInsideTitle) {
-				if (myCurrentContentsParagraph->reference() != -1) {
-					myCurrentContentsParagraph->addText(" ");
-				}
-				myCurrentContentsParagraph->addText(myBuffer);
-			}
-			if (myCurrentContentsParagraph->reference() == -1) {
-				myCurrentContentsParagraph->setReference(myModel.bookTextModel().paragraphs().size() - 1);
-			}
-		}
-		myBuffer.clear();
+void BookReader::addDataToBuffer(const char *data, int len) {
+	if ((len > 0) && ((myCurrentParagraph != 0) || (myCurrentImage != 0))) {
+		myBuffer.push_back(std::string());
+		myBuffer.back().append(data, len);
 	}
+}
+
+void BookReader::flushTextBufferToParagraph() {
+	if (myBuffer.empty() || (myCurrentParagraph == 0)) {
+		return;
+	}
+
+	myCurrentParagraph->addText(myBuffer);
+	if (myCurrentContentsParagraph != 0) {
+		if (myInsideTitle) {
+			if (myCurrentContentsParagraph->reference() != -1) {
+				myCurrentContentsParagraph->addText(" ");
+			}
+			myCurrentContentsParagraph->addText(myBuffer);
+		}
+		if (myCurrentContentsParagraph->reference() == -1) {
+			myCurrentContentsParagraph->setReference(myModel.bookTextModel().paragraphs().size() - 1);
+		}
+	}
+	myBuffer.clear();
+}
+
+void BookReader::flushTextBufferToImage() {
+	if (myBuffer.empty() || (myCurrentImage == 0)) {
+		return;
+	}
+
+	myCurrentImage->addData(myBuffer);
+	myBuffer.clear();
 }
 
 void BookReader::insertEndOfSectionParagraph() {
@@ -132,7 +150,7 @@ void BookReader::addImageToParagraph(const std::string &id) {
 	if (createSeparateParagraph) {
 		beginParagraph();
 	} else {
-		flushTextBuffer();
+		flushTextBufferToParagraph();
 	}
 	myCurrentParagraph->addControl(IMAGE, true);
 	myCurrentParagraph->addImage(id, myModel);

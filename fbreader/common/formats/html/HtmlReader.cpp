@@ -44,7 +44,17 @@ void HtmlTextConverter::convertBuffer(std::vector<std::string> &buffer) {
 	ZLStringInputStream stream(str);
 	readDocument(stream);
 }
-	
+
+void HtmlTextConverter::convertString(std::string &str) {
+	std::vector<std::string> buffer;
+	myBuffer = &buffer;
+	str = "<t>" + str + "</t>";
+	ZLStringInputStream stream(str);
+	readDocument(stream);
+	str.erase();
+	ZLStringUtil::append(str, buffer);
+}
+
 void HtmlTextConverter::startElementHandler(int, const char **) {
 }
 
@@ -78,11 +88,37 @@ const std::vector<std::string> &HtmlTextConverter::externalDTDs() const {
 	return EXTERNAL_DTDs;
 }
 
-HtmlReader::HtmlReader() : myConverter(0/*encoding*/) {
+HtmlReader::HtmlReader() : myConverter("windows-1251") {
 	std::string str = "<t>";
 	ZLStringInputStream stream(str);
 	myConverter.readDocument(stream);
 }
+
+static struct {
+	const char *tagName;
+	HtmlReader::TagCode tagCode;
+} HTML_TAGS[] = {
+	{ "body", HtmlReader::_BODY },
+	{ "p", HtmlReader::_P },
+	{ "br", HtmlReader::_BR },
+	{ "li", HtmlReader::_LI },
+	{ "title", HtmlReader::_TITLE },
+	{ "h1", HtmlReader::_H1 },
+	{ "h2", HtmlReader::_H2 },
+	{ "h3", HtmlReader::_H3 },
+	{ "h4", HtmlReader::_H4 },
+	{ "h5", HtmlReader::_H5 },
+	{ "h6", HtmlReader::_H6 },
+	{ "tt", HtmlReader::_TT },
+	{ "b", HtmlReader::_B },
+	{ "i", HtmlReader::_I },
+	{ "strong", HtmlReader::_STRONG },
+	{ "sup", HtmlReader::_SUP },
+	{ "sub", HtmlReader::_SUB },
+	{ "cite", HtmlReader::_CITE },
+	{ "style", HtmlReader::_STYLE },
+	{ 0, HtmlReader::_UNKNOWN }
+};
 
 HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 	if (name.length() == 0) {
@@ -102,64 +138,11 @@ HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
 		name[i] = tolower(name[i]);
 	}
 
-	if (name == "body") {
-		return HtmlTag(_P, start);
+	for (unsigned int i = 0; ; i++) {
+		if ((HTML_TAGS[i].tagName == 0) || HTML_TAGS[i].tagName == name) {
+			return HtmlTag(HTML_TAGS[i].tagCode, start);
+		}
 	}
-	if (name == "p") {
-		return HtmlTag(_P, start);
-	}
-	if (name == "br") {
-		return HtmlTag(_BR, start);
-	}
-	if (name == "li") {
-		return HtmlTag(_LI, start);
-	}
-	if (name == "title") {
-		return HtmlTag(_TITLE, start);
-	}
-	if (name == "h1") {
-		return HtmlTag(_H1, start);
-	}
-	if (name == "h2") {
-		return HtmlTag(_H2, start);
-	}
-	if (name == "h3") {
-		return HtmlTag(_H3, start);
-	}
-	if (name == "h4") {
-		return HtmlTag(_H4, start);
-	}
-	if (name == "h5") {
-		return HtmlTag(_H5, start);
-	}
-	if (name == "h6") {
-		return HtmlTag(_H6, start);
-	}
-	if (name == "tt") {
-		return HtmlTag(_TT, start);
-	}
-	if (name == "b") {
-		return HtmlTag(_B, start);
-	}
-	if (name == "i") {
-		return HtmlTag(_I, start);
-	}
-	if (name == "strong") {
-		return HtmlTag(_STRONG, start);
-	}
-	if (name == "sup") {
-		return HtmlTag(_SUP, start);
-	}
-	if (name == "sub") {
-		return HtmlTag(_SUB, start);
-	}
-	if (name == "cite") {
-		return HtmlTag(_CITE, start);
-	}
-	if (name == "style") {
-		return HtmlTag(_STYLE, start);
-	}
-	return HtmlTag(_UNKNOWN, start);
 }
 
 void HtmlReader::readDocument(ZLInputStream &stream) {

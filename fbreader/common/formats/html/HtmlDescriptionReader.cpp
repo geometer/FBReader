@@ -30,6 +30,8 @@ void HtmlDescriptionReader::endDocumentHandler() {
 	addAuthor("Html", "Book", "Writer");
 	if (myTitle.empty()) {
 		myTitle.append("Html book");
+	} else {
+		myConverter.convertString(myTitle);
 	}
 	addToTitle(myTitle.c_str(), myTitle.length());
 	addToLanguage("en", 2);

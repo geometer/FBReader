@@ -62,10 +62,7 @@ FB2BookReader::FB2BookReader(BookModel &model) : BookReader(model) {
 }
 
 void FB2BookReader::characterDataHandler(const char *text, int len) {
-	if ((myCurrentImage != 0) || (myCurrentParagraph != 0)) {
-		myBuffer.push_back(std::string());
-		myBuffer.back().append(text, len);
-	}
+	addDataToBuffer(text, len);
 }
 
 const char *attributeValue(const char **xmlattributes, const char *name) {
@@ -268,11 +265,8 @@ void FB2BookReader::endElementHandler(int tag) {
 			addControl(control(tag), false);
 			break;
 		case _BINARY:
-			if (myCurrentImage != 0) {
-				myCurrentImage->addData(myBuffer);
-				myBuffer.clear();
-				myCurrentImage = 0;
-			}
+			flushTextBufferToImage();
+			myCurrentImage = 0;
 			break;
 		case _BODY:
 			popKind();

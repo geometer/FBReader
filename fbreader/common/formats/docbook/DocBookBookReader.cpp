@@ -30,10 +30,7 @@ DocBookBookReader::DocBookBookReader(BookModel &model) : BookReader(model) {
 }
 
 void DocBookBookReader::characterDataHandler(const char *text, int len) {
-	if (myCurrentParagraph != 0) {
-		myBuffer.push_back(std::string());
-		myBuffer.back().append(text, len);
-	}
+	addDataToBuffer(text, len);
 }
 	
 void DocBookBookReader::startElementHandler(int tag, const char **) {
