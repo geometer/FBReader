@@ -93,8 +93,8 @@ void GtkPaintContext::updatePixmap(GtkWidget *area) {
 		gdk_gc_set_foreground(myFillGC, &FL_COLOR);
 
 		PangoFontFamily **pangoFamilies;
-  	int nFamilies;
-  	pango_context_list_families (gtk_widget_get_pango_context (GTK_WIDGET(area)), &pangoFamilies, &nFamilies);
+		int nFamilies;
+		pango_context_list_families (gtk_widget_get_pango_context (GTK_WIDGET(area)), &pangoFamilies, &nFamilies);
 		for (int i = 0; i < nFamilies; i++) {
 			myFontFamilies.push_back(pango_font_family_get_name(pangoFamilies[i]));
 		}

@@ -286,7 +286,7 @@ void GtkFBReader::searchSlot() {
 	QDialog findDialog(this, 0, true);
 	findDialog.setCaption("Text search");
 	findDialog.setSizeGripEnabled(true);
-    
+
 	QGridLayout *layout = new QGridLayout(&findDialog, -1, 3, 5, 5);
 
 	QLineEdit *wordToSearch = new QLineEdit(&findDialog);
