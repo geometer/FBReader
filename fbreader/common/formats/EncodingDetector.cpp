@@ -34,6 +34,7 @@ std::string EncodingDetector::detect(ZLInputStream &stream) {
 
 	size_t buflen = stream.read((char*)buffer, BUFSIZE);
 	EncaAnalyser analyser = enca_analyser_alloc("ru");
+  enca_set_filtering(analyser, 0);
 	EncaEncoding encoding = enca_analyse_const(analyser, buffer, buflen);
 	std::string encodingString = enca_charset_name(encoding.charset, ENCA_NAME_STYLE_MIME);
 	enca_analyser_free(analyser);
