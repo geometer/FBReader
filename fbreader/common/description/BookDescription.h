@@ -22,13 +22,26 @@
 
 #include <string>
 
+#include <abstract/ZLOptions.h>
+
 class Author;
+
+struct BookInfo {
+	BookInfo(const std::string &fileName);
+
+	bool isFull() const;
+
+	ZLStringOption AuthorDisplayNameOption;
+	ZLStringOption AuthorSortKeyOption;
+	ZLStringOption TitleOption;
+	ZLStringOption LanguageOption;
+	ZLStringOption EncodingOption;
+};
 
 class BookDescription {
 
 public:
 	static BookDescription *create(const std::string &fileName);
-	BookDescription(const BookDescription &description);
 	~BookDescription();
 
 private:
@@ -49,6 +62,11 @@ private:
 	std::string myEncoding;
 
 friend class WritableBookDescription;
+
+private:
+	// disable copying
+	BookDescription(const BookDescription &description);
+	const BookDescription &operator = (const BookDescription &description);
 };
 
 class WritableBookDescription {

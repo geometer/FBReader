@@ -30,6 +30,9 @@ void TextView::drawTreeNode(TreeElement::TreeElementKind kind) {
 			int size = context().wordHeight() / 3 * 2;
 			x += size / 2;
 			int space = size / 5;
+			if (space < 2) {
+				space = 2;
+			}
 			context().drawLine(x, y, x, y - size);
 			context().drawLine(x + size, y, x + size, y - size);
 			context().drawLine(x, y, x + size, y);

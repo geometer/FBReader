@@ -26,30 +26,38 @@
 
 #include "../formats/FormatPlugin.h"
 
+BookInfo::BookInfo(const std::string &fileName) : 
+	AuthorDisplayNameOption(fileName, "AuthorDisplayName", ""),
+	AuthorSortKeyOption(fileName, "AuthorSortKey", ""),
+	TitleOption(fileName, "Title", ""),
+	LanguageOption(fileName, "Language", "unknown"),
+	EncodingOption(fileName, "Encoding", "") {
+}
+
+bool BookInfo::isFull() const {
+	return
+		!AuthorDisplayNameOption.value().empty() &&
+		!AuthorSortKeyOption.value().empty() &&
+		!TitleOption.value().empty() &&
+		!EncodingOption.value().empty();
+}
+
 BookDescription *BookDescription::create(const std::string &fileName) {
 	BookDescription *description = new BookDescription(fileName);
 
-	ZLStringOption AuthorDisplayNameOption(fileName, "AuthorDisplayName", "");
-	ZLStringOption AuthorSortKeyOption(fileName, "AuthorSortKey", "");
-	ZLStringOption TitleOption(fileName, "Title", "");
-	ZLStringOption LanguageOption(fileName, "Language", "unknown");
-	ZLStringOption EncodingOption(fileName, "Encoding", "");
+	BookInfo info(fileName);
 
 	std::string realFileName = fileName.substr(0, fileName.find(':'));
 	ZLIntegerOption FileSizeOption(realFileName, "Size", -1);
 	ZLIntegerOption FileMTimeOption(realFileName, "MTime", -1);
-
 	struct stat fileStat;
 	stat(realFileName.c_str(), &fileStat);
 	if ((fileStat.st_size == FileSizeOption.value()) && (fileStat.st_mtime == FileMTimeOption.value())) {
-		const std::string &displayName = AuthorDisplayNameOption.value();
-		const std::string &sortKey = AuthorSortKeyOption.value();
-		const std::string &title = TitleOption.value();
-		description->myEncoding = EncodingOption.value();
-		if (!displayName.empty() && !sortKey.empty() && !title.empty()) {
-			description->myAuthor = new StoredAuthor(displayName, sortKey);
-			description->myTitle = title;
-			description->myLanguage = LanguageOption.value();
+		if (info.isFull()) {
+			description->myAuthor = new StoredAuthor(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
+			description->myTitle = info.TitleOption.value();
+			description->myLanguage = info.LanguageOption.value();
+			description->myEncoding = info.EncodingOption.value();
 			return description;
 		}
 	} else {
@@ -71,19 +79,15 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 	if (description->myAuthor == 0) {
 		description->myAuthor = new DummyAuthor();
 	}
-	AuthorDisplayNameOption.setValue(description->myAuthor->displayName());
-	AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
-	TitleOption.setValue(description->myTitle);
-	LanguageOption.setValue(description->myLanguage);
-	EncodingOption.setValue(description->myEncoding);
+	if (description->myEncoding.empty()) {
+		description->myEncoding = "auto";
+	}
+	info.AuthorDisplayNameOption.setValue(description->myAuthor->displayName());
+	info.AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
+	info.TitleOption.setValue(description->myTitle);
+	info.LanguageOption.setValue(description->myLanguage);
+	info.EncodingOption.setValue(description->myEncoding);
 	return description;
-}
-
-BookDescription::BookDescription(const BookDescription &description) {
-	myFileName = description.myFileName;
-	myAuthor = description.myAuthor->createCopy();
-	myTitle = description.myTitle;
-	myLanguage = description.myLanguage;
 }
 
 BookDescription::BookDescription(const std::string &fileName) {

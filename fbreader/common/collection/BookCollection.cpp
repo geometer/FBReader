@@ -78,6 +78,8 @@ BookCollection::BookCollection() {
 	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
 		std::sort(it->second.begin(), it->second.end(), descriptionComparator);
 	}
+
+	myForgottenBook = 0;
 }
 
 bool BookCollection::isActual() const {
@@ -120,7 +122,9 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 BookCollection::~BookCollection() {
 	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
 		for (Books::iterator jt = it->second.begin(); jt != it->second.end(); jt++) {
-			delete *jt;
+			if (*jt != myForgottenBook) {
+				delete *jt;
+			}
 		}
 	}
 }

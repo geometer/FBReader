@@ -143,9 +143,10 @@ bool CollectionView::onStylusPress(int x, int y) {
 			repaintView();
 		}
 	} else {
-		std::map<TreeParagraph*,BookDescription*>::const_iterator it = myBooksMap.find(paragraph);
+		std::map<TreeParagraph*,BookDescription*>::iterator it = myBooksMap.find(paragraph);
 		if (it != myBooksMap.end()) {
-			myReader.openBook(new BookDescription(*it->second));
+			myReader.openBook(it->second);
+			myCollection->forget(it->second);
 			myReader.showBookTextView();
 		}
 	}

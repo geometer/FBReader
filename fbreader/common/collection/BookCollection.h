@@ -50,6 +50,8 @@ public:
 	const std::vector<BookDescription*> &books(const Author *author) { return myCollection[author]; }
 
 	bool isActual() const;
+
+	void forget(BookDescription *description) { myForgottenBook = description; }
 	
 private:
 	void collectDirNames(std::set<std::string> &names);
@@ -63,6 +65,7 @@ private:
 
 	std::string myPath;
 	bool myScanSubdirs;
+	BookDescription *myForgottenBook;
 };
 
 #endif /* __BOOKCOLLECTION_H__ */

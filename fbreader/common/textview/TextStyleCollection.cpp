@@ -28,8 +28,8 @@ TextStyleCollection::TextStyleCollection() {
 	int defaultParagraphIndent = 30;
 	switch (ZLScreenSize::getSize()) {
 		case ZLScreenSize::SIZE_DESKTOP:
-			defaultFontSize = 24;
-			defaultParagraphIndent = 30;
+			defaultFontSize = 16;
+			defaultParagraphIndent = 20;
 			break;
 		case ZLScreenSize::SIZE_240x320:
 			defaultFontSize = 12;

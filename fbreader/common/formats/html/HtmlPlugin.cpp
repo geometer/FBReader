@@ -35,9 +35,9 @@ bool HtmlPlugin::acceptsFile(const std::string &fileName) const {
 bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
 	ZLInputStream *stream = ZLInputStream::createStream(fileName);
 	std::string encoding = description.encoding();
-	if (encoding == "") {
+	if (encoding.empty()) {
 		encoding = EncodingDetector::detect(*stream);
-		if (encoding == "") {
+		if (encoding.empty()) {
 			delete stream;
 			return false;
 		}
