@@ -36,10 +36,6 @@ bool DescriptionComparator::operator() (const BookDescription *d1, const BookDes
 	return d1->title() < d2->title();
 }
 
-static bool isAcceptable(const std::string &fileName) {
-	return PluginCollection::instance().plugin(fileName, true) != 0;
-}
-
 BookCollection::BookCollection() {
 	myPath = PathOption.value();
 	myScanSubdirs = ScanSubdirsOption.value();
@@ -55,7 +51,7 @@ BookCollection::BookCollection() {
 			const std::string dirName = dir.name() + '/';
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
 				const std::string fileName = dirName + *jt;
-				if (isAcceptable(*jt)) {
+				if (PluginCollection::instance().plugin(*jt, true) != 0) {
 					addDescription(BookDescription::create(fileName));
 				} else if (ZLStringUtil::stringEndsWith(*jt, ".zip")) {
 					ZLZipDir zipDir(fileName);
@@ -63,7 +59,7 @@ BookCollection::BookCollection() {
 					std::vector<std::string> entries;
 					zipDir.collectFiles(entries, false);
 					for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
-						if (isAcceptable(*zit)) {
+						if (PluginCollection::instance().plugin(*zit, true) != 0) {
 							addDescription(BookDescription::create(zipPrefix + *zit));
 						}
 					}

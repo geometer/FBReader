@@ -28,7 +28,7 @@ bool FBFileHandler::isFileVisible(const std::string &shortFileName, bool dir) co
 	if (shortFileName[0] == '.') {
 		return dir && (shortFileName == "..");
 	}
-	return dir || (PluginCollection::instance().plugin(shortFileName, false) != 0);
+	return dir || ZLStringUtil::stringEndsWith(shortFileName, ".zip") || (PluginCollection::instance().plugin(shortFileName, false) != 0);
 }
 
 std::string FBFileHandler::pixmapName(const std::string &shortFileName, bool dir) const {
