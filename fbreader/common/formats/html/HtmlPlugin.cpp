@@ -17,12 +17,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLInputStream.h>
 
 #include "HtmlPlugin.h"
 #include "HtmlDescriptionReader.h"
 #include "HtmlBookReader.h"
+#include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
 bool HtmlPlugin::acceptsFile(const std::string &fileName) const {
@@ -30,18 +33,29 @@ bool HtmlPlugin::acceptsFile(const std::string &fileName) const {
 }
 
 bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
-	HtmlDescriptionReader *reader = new HtmlDescriptionReader(description);
 	ZLInputStream *stream = ZLInputStream::createStream(fileName);
-	reader->readDocument(*stream);
-	delete stream;
+	std::string encoding = description.encoding();
+	if (encoding == "") {
+		encoding = EncodingDetector::detect(*stream);
+		if (encoding == "") {
+			delete stream;
+			return false;
+		}
+		WritableBookDescription(description).encoding() = encoding;
+	}
+
+	HtmlDescriptionReader *reader = new HtmlDescriptionReader(description);
+	reader->readDocument(*stream, encoding);
 	delete reader;
+
+	delete stream;
 	return true;
 }
 
 bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	BookReader *reader = new HtmlBookReader(model);
+	HtmlBookReader *reader = new HtmlBookReader(model);
 	ZLInputStream *stream = ZLInputStream::createStream(description.fileName());
-	reader->readBook(*stream);
+	reader->readDocument(*stream, description.encoding());
 	delete stream;
 	delete reader;
 	return true;

@@ -38,7 +38,6 @@ protected:
 
 public:
 	virtual ~BookReader() {}
-	virtual void readBook(ZLInputStream &stream) = 0;
 
 protected:
 	void setMainTextModel();

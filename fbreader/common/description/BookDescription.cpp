@@ -33,6 +33,7 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 	ZLStringOption AuthorSortKeyOption(fileName, "AuthorSortKey", "");
 	ZLStringOption TitleOption(fileName, "Title", "");
 	ZLStringOption LanguageOption(fileName, "Language", "unknown");
+	ZLStringOption EncodingOption(fileName, "Encoding", "");
 
 	std::string realFileName = fileName.substr(0, fileName.find(':'));
 	ZLIntegerOption FileSizeOption(realFileName, "Size", -1);
@@ -44,6 +45,7 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 		const std::string &displayName = AuthorDisplayNameOption.value();
 		const std::string &sortKey = AuthorSortKeyOption.value();
 		const std::string &title = TitleOption.value();
+		description->myEncoding = EncodingOption.value();
 		if (!displayName.empty() && !sortKey.empty() && !title.empty()) {
 			description->myAuthor = new StoredAuthor(displayName, sortKey);
 			description->myTitle = title;
@@ -73,6 +75,7 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 	AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
 	TitleOption.setValue(description->myTitle);
 	LanguageOption.setValue(description->myLanguage);
+	EncodingOption.setValue(description->myEncoding);
 	return description;
 }
 

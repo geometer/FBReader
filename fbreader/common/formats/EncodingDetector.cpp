@@ -17,37 +17,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __HTMLBOOKREADER_H__
-#define __HTMLBOOKREADER_H__
+#include <enca.h>
 
-#include <stack>
+#include <abstract/ZLInputStream.h>
 
-#include "HtmlReader.h"
-#include "../../bookmodel/BookReader.h"
+#include "EncodingDetector.h"
 
-class BookModel;
+static const int BUFSIZE = 50120;
 
-class HtmlBookReader : public BookReader, public HtmlReader {
+std::string EncodingDetector::detect(ZLInputStream &stream) {
+	if (!stream.open()) {
+		return "";
+	}
 
-public:
-	HtmlBookReader(BookModel &model);
+	unsigned char *buffer = new unsigned char[BUFSIZE];
 
-protected:
-	void startDocumentHandler();
-	void endDocumentHandler();
+	size_t buflen = stream.read((char*)buffer, BUFSIZE);
+	EncaAnalyser analyser = enca_analyser_alloc("ru");
+	EncaEncoding encoding = enca_analyse_const(analyser, buffer, buflen);
+	std::string encodingString = enca_charset_name(encoding.charset, ENCA_NAME_STYLE_MIME);
+	enca_analyser_free(analyser);
 
-	bool tagHandler(HtmlTag tag);
-	bool characterDataHandler(const char *text, int len);
+	delete[] buffer;
+	stream.close();
 
-private:
-	void flushTextBufferToParagraph();
-
-private:
-	int myIgnoreDataCounter;
-	bool myIsPreformatted;
-	bool myIsHyperlink;
-	bool myIsStarted;
-	std::stack<int> myListNumStack;
-};
-
-#endif /* __HTMLBOOKREADER_H__ */
+	return (encodingString == "unknown") ? "windows-1252" : encodingString;
+}

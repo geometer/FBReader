@@ -98,7 +98,7 @@ private:
 	static HtmlTag tag(std::string &name);
 
 public:
-	void readDocument(ZLInputStream &stream);
+	void readDocument(ZLInputStream &stream, const std::string &encoding);
 
 protected:
 	HtmlReader();

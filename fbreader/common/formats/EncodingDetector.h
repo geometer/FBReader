@@ -17,37 +17,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __HTMLBOOKREADER_H__
-#define __HTMLBOOKREADER_H__
+#ifndef __ENCODINGDETECTOR_H__
+#define __ENCODINGDETECTOR_H__
 
-#include <stack>
+class ZLInputStream;
 
-#include "HtmlReader.h"
-#include "../../bookmodel/BookReader.h"
-
-class BookModel;
-
-class HtmlBookReader : public BookReader, public HtmlReader {
+class EncodingDetector {
 
 public:
-	HtmlBookReader(BookModel &model);
-
-protected:
-	void startDocumentHandler();
-	void endDocumentHandler();
-
-	bool tagHandler(HtmlTag tag);
-	bool characterDataHandler(const char *text, int len);
-
-private:
-	void flushTextBufferToParagraph();
-
-private:
-	int myIgnoreDataCounter;
-	bool myIsPreformatted;
-	bool myIsHyperlink;
-	bool myIsStarted;
-	std::stack<int> myListNumStack;
+	static std::string detect(ZLInputStream &stream);
 };
 
-#endif /* __HTMLBOOKREADER_H__ */
+#endif /* __ENCODINGDETECTOR_H__ */

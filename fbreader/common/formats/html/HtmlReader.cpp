@@ -17,8 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <enca.h>
-
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLStringInputStream.h>
 
@@ -182,26 +180,9 @@ enum ParseState {
 	PS_SKIPTAG,
 };
 
-static std::string analyzeEncoding(ZLInputStream &stream) {
-	const int BUFSIZE = 50120;
-	unsigned char buffer[BUFSIZE];
-
-	size_t buflen = stream.read((char*)buffer, BUFSIZE);
-	EncaAnalyser analyser = enca_analyser_alloc("ru");
-	EncaEncoding encoding = enca_analyse_const(analyser, buffer, buflen);
-	std::string e = enca_charset_name(encoding.charset, ENCA_NAME_STYLE_MIME);
-	enca_analyser_free(analyser);
-	return e;
-}
-
-void HtmlReader::readDocument(ZLInputStream &stream) {
+void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding) {
 	if (!stream.open()) {
 		return;
-	}
-
-	std::string encoding = analyzeEncoding(stream);
-	if (encoding == "unknown") {
-		encoding = "windows-1252";
 	}
 
 	if (myConverter != 0) {
@@ -212,9 +193,6 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 	ZLStringInputStream startStream(str);
 	myConverter->readDocument(startStream);
 
-	stream.close();
-	stream.open();
-
 	startDocumentHandler();
 
 	ParseState state = PS_TEXT;
@@ -223,7 +201,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 	HtmlTag currentTag(_UNKNOWN, false);
 	
 	const size_t BUFSIZE = 2048;
-	char buffer[BUFSIZE];
+	char *buffer = new char[BUFSIZE];
 	size_t length;
 	do {
 		length = stream.read(buffer, BUFSIZE);
@@ -333,6 +311,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 		}
   } while (length == BUFSIZE);
 endOfProcessing:
+	delete[] buffer;
 
 	endDocumentHandler();
 

@@ -39,12 +39,14 @@ public:
 	const std::string &title() const { return myTitle; }
 	const std::string &fileName() const { return myFileName; }
 	const std::string &language() const { return myLanguage; }
+	const std::string &encoding() const { return myEncoding; }
 
 private:
 	Author *myAuthor;
 	std::string myTitle;
 	std::string myFileName;
 	std::string myLanguage;
+	std::string myEncoding;
 
 friend class WritableBookDescription;
 };
@@ -57,6 +59,7 @@ public:
 	std::string &title() { return myDescription.myTitle; }
 	std::string &fileName() { return myDescription.myFileName; }
 	std::string &language() { return myDescription.myLanguage; }
+	std::string &encoding() { return myDescription.myEncoding; }
 
 private:
 	BookDescription &myDescription;
