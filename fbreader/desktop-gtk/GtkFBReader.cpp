@@ -74,12 +74,8 @@ static void findPrevious(GtkWidget*, gpointer data) {
 	((GtkFBReader*)data)->findPreviousSlot();
 }
 
-static void addAccelerator (GtkAccelGroup *group, GtkWidget *widget, const char *signal, const char *accelerator) {
-	guint key;
-	GdkModifierType mods;
-
-	gtk_accelerator_parse(accelerator, &key, &mods);
-	gtk_widget_add_accelerator(widget, signal, group, key, mods, GTK_ACCEL_VISIBLE);
+static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
+	((GtkFBReader*)data)->handleKeySlot(key);
 }
 
 GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &name, GtkSignalFunc signal) {
@@ -121,22 +117,14 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	setMode(BOOK_TEXT_MODE);
 
-	GtkAccelGroup *accelGroup = gtk_accel_group_new();
+	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
-	addAccelerator(accelGroup, myBookCollectionButton, "activate", "L");
-	addAccelerator(accelGroup, mySettingsButton, "activate", "O");
-	addAccelerator(accelGroup, myLeftArrowButton, "activate", "leftarrow");
-	addAccelerator(accelGroup, myRightArrowButton, "activate", "rightarrow");
-	addAccelerator(accelGroup, myContentsTableButton, "activate", "C");
-	addAccelerator(accelGroup, mySearchButton, "activate", "F");
-	addAccelerator(accelGroup, myFindPreviousButton, "activate", "P");
-	addAccelerator(accelGroup, myFindNextButton, "activate", "N");
+	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKey), this);
 
 	// FIXME: this way it's impossible to add increaseFontSlot/decreaseFontSlot/cancelSlot
 /*
 	myLastScrollingTime = QTime::currentTime();
 */
-	gtk_window_add_accel_group (myMainWindow, accelGroup);
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -146,6 +134,64 @@ GtkFBReader::~GtkFBReader() {
 	Height.setValue(height);
 
 	delete myViewWidget;
+}
+
+gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {
+	// FIXME: MSS: very bad code ahead!
+	char *accels[] = {
+		"L",									// showCollectionSlot
+		"O",									// showOptionsDialogSlot
+		"leftarrow",					// undoSlot
+		"rightarrow",					// redoSlot
+		"C",									// showContentsSlot
+		"F",									// searchSlot
+		"P",									// findPreviousSlot
+		"N",									// findNextSlot
+		NULL
+	};
+	int i;
+
+	for (i = 0 ; accels[i] != NULL ; ++i) {
+		guint key;
+		GdkModifierType mods;
+
+		gtk_accelerator_parse(accels[i], &key, &mods);
+
+		if (event->keyval == key && (GdkModifierType)event->state == mods)
+			break;
+	}
+
+	switch (i) {
+		case 0:
+			showCollectionSlot();
+			break;
+		case 1:
+			showOptionsDialogSlot();
+			break;
+		case 2:
+			undoSlot();
+			break;
+		case 3:
+			redoSlot();
+			break;
+		case 4:
+			showContentsSlot();
+			break;
+		case 5:
+			searchSlot();
+			break;
+		case 6:
+			findPreviousSlot();
+			break;
+		case 7:
+			findNextSlot();
+			break;
+
+		default:
+			break;
+	}
+
+	return FALSE;
 }
 
 /*

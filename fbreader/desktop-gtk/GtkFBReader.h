@@ -55,6 +55,8 @@ public:
 	void showOptionsDialogSlot() { showOptionsDialog(); repaintView(); }
 	void showHidePositionIndicatorSlot() { showHidePositionIndicator(); }  
 
+	gboolean handleKeySlot(GdkEventKey *);
+
 	void repaintView();
 	void close();
 /*
