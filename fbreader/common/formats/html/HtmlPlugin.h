@@ -28,7 +28,7 @@ public:
 	bool containsMetaInfo() const { return false; }
 	bool acceptsFile(const std::string &fileName) const;
 	bool readDescription(const std::string &fileName, BookDescription &description) const;
-	bool readModel(BookDescription &description, BookModel &model) const;
+	bool readModel(const BookDescription &description, BookModel &model) const;
 };
 
 #endif /* __HTMLPLUGIN_H__ */

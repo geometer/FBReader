@@ -17,26 +17,19 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLInputStream.h>
-
 #include "BookModel.h"
 #include "BookReader.h"
 
-#include "../formats/ReaderCollection.h"
+#include "../formats/FormatPlugin.h"
 
 #include "../model/Image.h"
 #include "../description/BookDescription.h"
 
 BookModel::BookModel(const BookDescription *description) {
 	myDescription = description;
-	ZLInputStream *stream = ZLInputStream::createStream(description->fileName());
-	if (stream != 0) {
-		BookReader *reader = ReaderCollection::createBookReader(*this);
-		if (reader != 0) {
-			reader->readBook(*stream);
-			delete reader;
-		}
-		delete stream;
+	FormatPlugin *plugin = PluginCollection::instance().plugin(description->fileName(), false);
+	if (plugin != 0) {
+		plugin->readModel(*description, *this);
 	}
 }
 

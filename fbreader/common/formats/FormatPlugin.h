@@ -32,7 +32,7 @@ public:
 	virtual bool containsMetaInfo() const = 0;
 	virtual bool acceptsFile(const std::string &fileName) const = 0;
 	virtual bool readDescription(const std::string &fileName, BookDescription &description) const = 0;
-	virtual bool readModel(BookDescription &description, BookModel &model) const = 0;
+	virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
 };
 
 class PluginCollection {
@@ -40,6 +40,9 @@ class PluginCollection {
 public:
 	static PluginCollection &instance();
 
+private:
+	PluginCollection() {}
+	
 public:
 	FormatPlugin *plugin(const std::string &fileName, bool strong);
 
