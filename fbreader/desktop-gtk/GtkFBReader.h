@@ -32,7 +32,6 @@ class GtkFBReader : public FBReader {
 protected:
 	// FIXME: do we really need this enum to be protected?
 	enum EventCode {
-		EVENT_NONE,
 		EVENT_SHOW_COLLECTION,
 		EVENT_SHOW_OPTIONS,
 		EVENT_UNDO,
@@ -40,7 +39,12 @@ protected:
 		EVENT_SHOW_CONTENTS,
 		EVENT_SEARCH,
 		EVENT_FIND_PREVIOUS,
-		EVENT_FIND_NEXT
+		EVENT_FIND_NEXT,
+		EVENT_SCROLL_FORWARD,
+		EVENT_SCROLL_BACKWARD,
+		EVENT_CANCEL,
+		EVENT_INCREASE_FONT,
+		EVENT_DECREASE_FONT
 	};
 
 private:
@@ -74,13 +78,15 @@ public:
 
 	void repaintView();
 	void close();
-/*
+
 	void increaseFontSlot() { increaseFont(); }
 	void decreaseFontSlot() { decreaseFont(); }
+
 	void scrollForwardSlot();
 	void scrollBackwardSlot();
 	void cancelSlot();
 
+/*
 private:
 	QTime myLastScrollingTime;
 */

@@ -123,12 +123,17 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	myKeyBindings["L"] = EVENT_SHOW_COLLECTION;
 	myKeyBindings["O"] = EVENT_SHOW_OPTIONS;
-	myKeyBindings["leftarrow"] = EVENT_UNDO;
-	myKeyBindings["rightarrow"] = EVENT_REDO;
+	myKeyBindings["Left"] = EVENT_UNDO;
+	myKeyBindings["Right"] = EVENT_REDO;
 	myKeyBindings["C"] = EVENT_SHOW_CONTENTS;
 	myKeyBindings["F"] = EVENT_SEARCH;
 	myKeyBindings["P"] = EVENT_FIND_PREVIOUS;
 	myKeyBindings["N"] = EVENT_FIND_NEXT;
+	myKeyBindings["Up"] = EVENT_SCROLL_BACKWARD;
+	myKeyBindings["Down"] = EVENT_SCROLL_FORWARD;
+	myKeyBindings["Escape"] = EVENT_CANCEL;
+	myKeyBindings["<Shift>plus"] = EVENT_INCREASE_FONT;
+	myKeyBindings["equal"] = EVENT_DECREASE_FONT;
 
 	// FIXME: this way it's impossible to add increaseFontSlot/decreaseFontSlot/cancelSlot
 /*
@@ -146,70 +151,93 @@ GtkFBReader::~GtkFBReader() {
 }
 
 gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {
-	EventCode code = EVENT_NONE;
+	std::map<std::string, EventCode>::const_iterator accel;
 
-	for (std::map<std::string, EventCode>::const_iterator accel = myKeyBindings.begin(); accel != myKeyBindings.end() ; ++accel) {
+	for (accel = myKeyBindings.begin(); accel != myKeyBindings.end() ; ++accel) {
 		guint key;
 		GdkModifierType mods;
 
 		gtk_accelerator_parse(accel->first.c_str(), &key, &mods);
 
 		if (event->keyval == key && (GdkModifierType)event->state == mods) {
-			code = accel->second;
 			break;
 		}
 	}
 
-	switch (code) {
-		case EVENT_SHOW_COLLECTION:
-			showCollectionSlot();
-			break;
-		case EVENT_SHOW_OPTIONS:
-			showOptionsDialogSlot();
-			break;
-		case EVENT_UNDO:
-			undoSlot();
-			break;
-		case EVENT_REDO:
-			redoSlot();
-			break;
-		case EVENT_SHOW_CONTENTS:
-			showContentsSlot();
-			break;
-		case EVENT_SEARCH:
-			searchSlot();
-			break;
-		case EVENT_FIND_PREVIOUS:
-			findPreviousSlot();
-			break;
-		case EVENT_FIND_NEXT:
-			findNextSlot();
-			break;
+	if (accel != myKeyBindings.end()) {
+		switch (accel->second) {
+			case EVENT_SHOW_COLLECTION:
+				showCollectionSlot();
+				break;
+			case EVENT_SHOW_OPTIONS:
+				showOptionsDialogSlot();
+				break;
+			case EVENT_UNDO:
+				undoSlot();
+				break;
+			case EVENT_REDO:
+				redoSlot();
+				break;
+			case EVENT_SHOW_CONTENTS:
+				showContentsSlot();
+				break;
+			case EVENT_SEARCH:
+				searchSlot();
+				break;
+			case EVENT_FIND_PREVIOUS:
+				findPreviousSlot();
+				break;
+			case EVENT_FIND_NEXT:
+				findNextSlot();
+				break;
+			case EVENT_SCROLL_FORWARD:
+				scrollForwardSlot();
+				break;
+			case EVENT_SCROLL_BACKWARD:
+				scrollBackwardSlot();
+				break;
+			case EVENT_CANCEL:
+				cancelSlot();
+				break;
+			case EVENT_INCREASE_FONT:
+				increaseFontSlot();
+				break;
+			case EVENT_DECREASE_FONT:
+				decreaseFontSlot();
+				break;
 
-		default:
-			break;
+			default:
+				break;
+		}
 	}
 
 	return FALSE;
 }
 
-/*
 void GtkFBReader::scrollForwardSlot() {
+/*
 	QTime time = QTime::currentTime();
 	int msecs = myLastScrollingTime.msecsTo(time);
 	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
 		myLastScrollingTime = time;
+*/
 		nextPage();
+/*
 	}
+*/
 }
 
 void GtkFBReader::scrollBackwardSlot() {
+/*
 	QTime time = QTime::currentTime();
 	int msecs = myLastScrollingTime.msecsTo(time);
 	if ((msecs < 0) || (msecs >= ScrollingDelayOption.value())) {
 		myLastScrollingTime = time;
+*/
 		previousPage();
+/*
 	}
+*/
 }
 
 void GtkFBReader::cancelSlot() {
@@ -217,7 +245,6 @@ void GtkFBReader::cancelSlot() {
 		close();
 	}
 }
-*/
 
 void GtkFBReader::setMode(ViewMode mode) {
 	if (mode == myMode) {
