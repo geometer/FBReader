@@ -26,7 +26,7 @@ endif
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	SUBDIRS = abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/xml desktop/dialogs
-	SUBDIRS += gtk/dialogs
+	GTKSUBDIRS = gtk/dialogs
 endif
 
 .objects:
@@ -40,6 +40,13 @@ endif
 	@for subdir in $(QTSUBDIRS); do \
 		if [ -d $$subdir ]; then \
 			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk; then \
+				exit 1; \
+			fi; \
+		fi; \
+	done;
+	@for subdir in $(GTKSUBDIRS); do \
+		if [ -d $$subdir ]; then \
+			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
