@@ -46,7 +46,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
 	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	MOC = $(BASEDIR)/bin/moc
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -62,7 +62,7 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	MOC = moc-qt3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -78,7 +78,7 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	GTKINCLUDE = -I/usr/include/libxml2 -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/X11R6/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/gconf/2 -I/usr/include/orbit-2.0
