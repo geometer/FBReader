@@ -28,7 +28,7 @@ void HtmlDescriptionReader::startDocumentHandler() {
 
 void HtmlDescriptionReader::endDocumentHandler() {
 	myDescription.addAuthor("Html", "Book", "Writer");
-	if (myDescription.title().empty() || (myDescription.title().length() > 2048)) {
+	if (myDescription.title().empty()) {
 		myDescription.title() = "Html book";
 	} else {
 		myConverter->convertString(myDescription.title());

@@ -7,6 +7,7 @@ int ZLStringInputStream::read(char *buffer, int maxSize) {
 	if (size > maxSize) {
 		size = maxSize;
 	}
-	strncpy(buffer, myString.c_str() + myPosition, size);
+	strncpy(buffer, myString.data() + myPosition, size);
+	myPosition += size;
 	return size;
 }
