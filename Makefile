@@ -24,10 +24,12 @@ all:
 	done
 
 clean:
-	@for dir in $(LIBDIR) $(APPDIRS); do \
-		cd $$dir; \
-		make clean; \
-		cd ..; \
+	@for dir in $(LIBDIR) $(ALLAPPDIRS); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; \
+			make clean; \
+			cd ..; \
+		fi; \
 	done
 
 distclean: clean
