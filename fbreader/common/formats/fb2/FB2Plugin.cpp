@@ -39,9 +39,9 @@ bool FB2Plugin::readDescription(const std::string &fileName, BookDescription &de
 }
 
 bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) const {
-	FB2BookReader *reader = new FB2BookReader(model);
+	BookReader *reader = new FB2BookReader(model);
 	ZLInputStream *stream = ZLInputStream::createStream(description.fileName());
-	reader->readDocument(*stream);
+	reader->readBook(*stream);
 	delete stream;
 	delete reader;
 	return true;

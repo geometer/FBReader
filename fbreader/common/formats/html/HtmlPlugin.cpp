@@ -39,9 +39,9 @@ bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &d
 }
 
 bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	HtmlBookReader *reader = new HtmlBookReader(model);
+	BookReader *reader = new HtmlBookReader(model);
 	ZLInputStream *stream = ZLInputStream::createStream(description.fileName());
-	reader->readDocument(*stream);
+	reader->readBook(*stream);
 	delete stream;
 	delete reader;
 	return true;

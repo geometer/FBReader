@@ -22,7 +22,6 @@
 #include <abstract/ZLOptions.h>
 
 #include "BookDescription.h"
-#include "DescriptionReader.h"
 #include "Author.h"
 
 #include "../formats/FormatPlugin.h"
@@ -92,5 +91,19 @@ BookDescription::BookDescription(const std::string &fileName) {
 BookDescription::~BookDescription() {
 	if (myAuthor != 0) {
 		delete myAuthor;
+	}
+}
+
+void WritableBookDescription::addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName) {
+	Author *author = new SingleAuthorWith3Names(firstName, middleName, lastName);
+	if (myDescription.myAuthor == 0) {
+		myDescription.myAuthor = author;
+	} else if (myDescription.myAuthor->isSingle()) {
+		MultiAuthor *multiAuthor = new MultiAuthor();
+		multiAuthor->addAuthor(myDescription.myAuthor);
+		multiAuthor->addAuthor(author);
+		myDescription.myAuthor = multiAuthor;
+	} else {
+		((MultiAuthor*)myDescription.myAuthor)->addAuthor(author);
 	}
 }

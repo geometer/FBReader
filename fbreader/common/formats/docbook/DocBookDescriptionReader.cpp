@@ -19,19 +19,19 @@
 
 #include "DocBookDescriptionReader.h"
 
-DocBookDescriptionReader::DocBookDescriptionReader(BookDescription &description) : DescriptionReader(description) {
+DocBookDescriptionReader::DocBookDescriptionReader(BookDescription &description) : myDescription(description) {
 	myReadTitle = false;
 	myReadAuthor = false;
 	for (int i = 0; i < 3; i++) {
 		myReadAuthorName[i] = false;
 	}
-	addToLanguage("en", 2);
+	myDescription.language() = "en";
 	myDepth = 0;
 }
 
 void DocBookDescriptionReader::characterDataHandler(const char *text, int len) {
 	if (myReadTitle) {
-		addToTitle(text, len);
+		myDescription.title().append(text, len);
 	} else {
 		for (int i = 0; i < 3; i++) {
 			if (myReadAuthorName[i]) {
@@ -86,7 +86,7 @@ void DocBookDescriptionReader::endElementHandler(int tag) {
 			myReadTitle = false;
 			break;
 		case _AUTHOR:
-			addAuthor(myAuthorNames[0], myAuthorNames[1], myAuthorNames[2]);
+			myDescription.addAuthor(myAuthorNames[0], myAuthorNames[1], myAuthorNames[2]);
 			myAuthorNames[0].erase();
 			myAuthorNames[1].erase();
 			myAuthorNames[2].erase();

@@ -23,9 +23,9 @@
 #include <string>
 
 #include "DocBookReader.h"
-#include "../../description/DescriptionReader.h"
+#include "../../description/BookDescription.h"
 
-class DocBookDescriptionReader : public DescriptionReader, public DocBookReader {
+class DocBookDescriptionReader : public DocBookReader {
 
 public:
 	DocBookDescriptionReader(BookDescription &description);
@@ -36,6 +36,8 @@ public:
 	void characterDataHandler(const char *text, int len);
 
 private:
+	WritableBookDescription myDescription;
+
 	bool myReturnCode;
 
 	bool myReadTitle;

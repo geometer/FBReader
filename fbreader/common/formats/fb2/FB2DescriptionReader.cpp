@@ -19,22 +19,15 @@
 
 #include "FB2DescriptionReader.h"
 
-FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : DescriptionReader(description) {
-	myReadSomething = false;
-	myReadTitle = false;
-	myReadAuthor = false;
-	myReadLanguage = false;
-	for (int i = 0; i < 3; i++) {
-		myReadAuthorName[i] = false;
-	}
+FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : myDescription(description) {
 }
 
 void FB2DescriptionReader::characterDataHandler(const char *text, int len) {
 	if (myReadSomething) {
 		if (myReadTitle) {
-			addToTitle(text, len);
+			myDescription.title().append(text, len);
 		} else if (myReadLanguage) {
-			addToLanguage(text, len);
+			myDescription.language().append(text, len);
 		} else {
 			for (int i = 0; i < 3; i++) {
 				if (myReadAuthorName[i]) {
@@ -94,7 +87,7 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 			break;
 		case _AUTHOR:
 			if (myReadSomething) {
-				addAuthor(myAuthorNames[0], myAuthorNames[1], myAuthorNames[2]);
+				myDescription.addAuthor(myAuthorNames[0], myAuthorNames[1], myAuthorNames[2]);
 				myAuthorNames[0].erase();
 				myAuthorNames[1].erase();
 				myAuthorNames[2].erase();
@@ -119,6 +112,13 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 }
 
 bool FB2DescriptionReader::readDescription(ZLInputStream &stream) {
+	myReadSomething = false;
+	myReadTitle = false;
+	myReadAuthor = false;
+	myReadLanguage = false;
+	for (int i = 0; i < 3; i++) {
+		myReadAuthorName[i] = false;
+	}
 	myReturnCode = false;
 	readDocument(stream);
 	return myReturnCode;

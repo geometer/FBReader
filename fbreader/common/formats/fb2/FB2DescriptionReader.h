@@ -23,9 +23,9 @@
 #include <string>
 
 #include "FB2Reader.h"
-#include "../../description/DescriptionReader.h"
+#include "../../description/BookDescription.h"
 
-class FB2DescriptionReader : public DescriptionReader, public FB2Reader {
+class FB2DescriptionReader : public FB2Reader {
 
 public:
 	FB2DescriptionReader(BookDescription &description);
@@ -36,6 +36,8 @@ public:
 	void characterDataHandler(const char *text, int len);
 
 private:
+	WritableBookDescription myDescription;
+
 	bool myReturnCode;
 
 	bool myReadSomething;

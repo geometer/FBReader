@@ -19,7 +19,7 @@
 
 #include "HtmlDescriptionReader.h"
 
-HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : DescriptionReader(description) {
+HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : myDescription(description) {
 }
 
 void HtmlDescriptionReader::startDocumentHandler() {
@@ -27,26 +27,24 @@ void HtmlDescriptionReader::startDocumentHandler() {
 }
 
 void HtmlDescriptionReader::endDocumentHandler() {
-	addAuthor("Html", "Book", "Writer");
-	if (myTitle.empty() || (myTitle.length() > 2048)) {
-		myTitle = "Html book";
+	myDescription.addAuthor("Html", "Book", "Writer");
+	if (myDescription.title().empty() || (myDescription.title().length() > 2048)) {
+		myDescription.title() = "Html book";
 	} else {
-		myConverter->convertString(myTitle);
+		myConverter->convertString(myDescription.title());
 	}
-	addToTitle(myTitle.c_str(), myTitle.length());
-	addToLanguage("en", 2);
 }
 
 bool HtmlDescriptionReader::tagHandler(HtmlTag tag) {
 	if (tag.Code == _TITLE) {
-		myReadTitle = tag.Start && myTitle.empty();
+		myReadTitle = tag.Start && myDescription.title().empty();
 	}
 	return tag.Code != _BODY;
 }
 
 bool HtmlDescriptionReader::characterDataHandler(const char *text, int len) {
 	if (myReadTitle) {
-		myTitle.append(text, len);
+		myDescription.title().append(text, len);
 	}
 	return true;
 }

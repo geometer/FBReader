@@ -21,13 +21,12 @@
 #define __HTMLDESCRIPTIONREADER_H__
 
 #include "HtmlReader.h"
-#include "../../description/DescriptionReader.h"
+#include "../../description/BookDescription.h"
 
-class HtmlDescriptionReader : public DescriptionReader, public HtmlReader {
+class HtmlDescriptionReader : public HtmlReader {
 
 public:
 	HtmlDescriptionReader(BookDescription &description);
-	bool readDescription(ZLInputStream &stream) { readDocument(stream); return true; }
 
 protected:
 	void startDocumentHandler();
@@ -38,7 +37,7 @@ protected:
 
 private:
 	bool myReadTitle;
-	std::string myTitle;
+	WritableBookDescription myDescription;
 };
 
 #endif /* __HTMLDESCRIPTIONREADER_H__ */

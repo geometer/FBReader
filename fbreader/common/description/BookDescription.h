@@ -46,7 +46,20 @@ private:
 	std::string myFileName;
 	std::string myLanguage;
 
-friend class DescriptionReader;
+friend class WritableBookDescription;
+};
+
+class WritableBookDescription {
+
+public:
+	WritableBookDescription(BookDescription &description) : myDescription(description) {}
+	void addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName);
+	std::string &title() { return myDescription.myTitle; }
+	std::string &fileName() { return myDescription.myFileName; }
+	std::string &language() { return myDescription.myLanguage; }
+
+private:
+	BookDescription &myDescription;
 };
 
 #endif /* __BOOKDESCRIPTION_H__ */
