@@ -74,6 +74,14 @@ static void findPrevious(GtkWidget*, gpointer data) {
 	((GtkFBReader*)data)->findPreviousSlot();
 }
 
+static void addAccelerator (GtkAccelGroup *group, GtkWidget *widget, const char *signal, const char *accelerator) {
+	guint key;
+	GdkModifierType mods;
+
+	gtk_accelerator_parse(accelerator, &key, &mods);
+	gtk_widget_add_accelerator(widget, signal, group, key, mods, GTK_ACCEL_VISIBLE);
+}
+
 GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &name, GtkSignalFunc signal) {
 	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
 	GtkWidget *button = gtk_button_new();
@@ -115,20 +123,14 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	GtkAccelGroup *accelGroup = gtk_accel_group_new();
 
-#define	ADD_ACCEL(widget,signal,accel) { \
-	guint key; GdkModifierType mods; \
-	gtk_accelerator_parse(accel,&key,&mods); \
-	gtk_widget_add_accelerator(widget,signal,accelGroup,key,mods,GTK_ACCEL_VISIBLE); \
-}
-
-	ADD_ACCEL(myBookCollectionButton,"activate","L");
-	ADD_ACCEL(mySettingsButton,"activate","O");
-	ADD_ACCEL(myLeftArrowButton,"activate","leftarrow");
-	ADD_ACCEL(myRightArrowButton,"activate","rightarrow");
-	ADD_ACCEL(myContentsTableButton,"activate","C");
-	ADD_ACCEL(mySearchButton,"activate","F");
-	ADD_ACCEL(myFindPreviousButton,"activate","P");
-	ADD_ACCEL(myFindNextButton,"activate","N");
+	addAccelerator(accelGroup, myBookCollectionButton, "activate", "L");
+	addAccelerator(accelGroup, mySettingsButton, "activate", "O");
+	addAccelerator(accelGroup, myLeftArrowButton, "activate", "leftarrow");
+	addAccelerator(accelGroup, myRightArrowButton, "activate", "rightarrow");
+	addAccelerator(accelGroup, myContentsTableButton, "activate", "C");
+	addAccelerator(accelGroup, mySearchButton, "activate", "F");
+	addAccelerator(accelGroup, myFindPreviousButton, "activate", "P");
+	addAccelerator(accelGroup, myFindNextButton, "activate", "N");
 
 	// FIXME: this way it's impossible to add increaseFontSlot/decreaseFontSlot/cancelSlot
 /*
