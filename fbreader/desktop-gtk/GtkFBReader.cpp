@@ -18,6 +18,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <gtk/gtk.h>
+
 #include <abstract/ZLOptions.h>
 
 #include "../common/description/BookDescription.h"
@@ -111,24 +113,28 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	setMode(BOOK_TEXT_MODE);
 
-/*
-	QAccel *accelerator = new QAccel(this);
-	accelerator->connectItem(accelerator->insertItem(Key_L), this, SLOT(showCollectionSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_C), this, SLOT(showContentsSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_F), this, SLOT(searchSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_N), this, SLOT(findNextSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_P), this, SLOT(findPreviousSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_O), this, SLOT(showOptionsDialogSlot()));
-	accelerator->connectItem(accelerator->insertItem(0x200f), this, SLOT(decreaseFontSlot()));
-	accelerator->connectItem(accelerator->insertItem(0x2010), this, SLOT(increaseFontSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Left), this, SLOT(undoSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Right), this, SLOT(redoSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Up), this, SLOT(scrollBackwardSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Down), this, SLOT(scrollForwardSlot()));
-	accelerator->connectItem(accelerator->insertItem(Key_Escape), this, SLOT(cancelSlot()));
+	GtkAccelGroup *accelGroup = gtk_accel_group_new();
 
+#define	ADD_ACCEL(widget,signal,accel) { \
+	guint key; GdkModifierType mods; \
+	gtk_accelerator_parse(accel,&key,&mods); \
+	gtk_widget_add_accelerator(widget,signal,accelGroup,key,mods,GTK_ACCEL_VISIBLE); \
+}
+
+	ADD_ACCEL(myBookCollectionButton,"activate","L");
+	ADD_ACCEL(mySettingsButton,"activate","O");
+	ADD_ACCEL(myLeftArrowButton,"activate","leftarrow");
+	ADD_ACCEL(myRightArrowButton,"activate","rightarrow");
+	ADD_ACCEL(myContentsTableButton,"activate","C");
+	ADD_ACCEL(mySearchButton,"activate","F");
+	ADD_ACCEL(myFindPreviousButton,"activate","P");
+	ADD_ACCEL(myFindNextButton,"activate","N");
+
+	// FIXME: this way it's impossible to add increaseFontSlot/decreaseFontSlot/cancelSlot
+/*
 	myLastScrollingTime = QTime::currentTime();
 */
+	gtk_window_add_accel_group (myMainWindow, accelGroup);
 }
 
 GtkFBReader::~GtkFBReader() {

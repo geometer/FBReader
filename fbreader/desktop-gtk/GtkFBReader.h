@@ -21,7 +21,8 @@
 #ifndef __GTKFBREADER_H__
 #define __GTKFBREADER_H__
 
-#include <gtk/gtk.h>
+#include <gtk/gtkwidget.h>
+#include <gtk/gtkwindow.h>
 
 #include "../common/fbreader/FBReader.h"
 
