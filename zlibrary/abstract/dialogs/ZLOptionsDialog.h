@@ -44,7 +44,7 @@ public:
 	virtual int run(const std::string &tabName);
 
 protected:
-	virtual std::string selectedTabName() = 0;
+	virtual const std::string &selectedTabName() const = 0;
 	virtual void selectTab(const std::string &name) = 0;
 	virtual int run() = 0;
 };

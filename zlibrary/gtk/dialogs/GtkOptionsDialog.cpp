@@ -63,7 +63,7 @@ ZLOptionsDialogTab *GtkOptionsDialog::createTab(const std::string &name) {
 	return tab;
 }
 
-std::string GtkOptionsDialog::selectedTabName() {
+const std::string &GtkOptionsDialog::selectedTabName() const {
 	return myTabNames[gtk_notebook_get_current_page(myNotebook)];
 }
 

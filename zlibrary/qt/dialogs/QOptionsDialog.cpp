@@ -68,7 +68,7 @@ ZLOptionsDialogTab *QOptionsDialog::createTab(const std::string &name) {
 	return tab;
 }
 
-std::string QOptionsDialog::selectedTabName() {
+const std::string &QOptionsDialog::selectedTabName() const {
 	return myTabNames[myTabWidget->currentPageIndex()];
 }
 

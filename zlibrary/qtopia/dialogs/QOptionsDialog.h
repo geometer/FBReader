@@ -66,7 +66,7 @@ public:
 	ZLOptionsDialogTab *createTab(const std::string &name);
 
 protected:
-	std::string selectedTabName();
+	const std::string &selectedTabName() const;
 	void selectTab(const std::string &name);
 	int run();
 
