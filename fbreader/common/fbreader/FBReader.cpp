@@ -30,6 +30,7 @@
 #include "FBFileHandler.h"
 #include "InfoOptions.h"
 
+#include "../collection/BookList.h"
 #include "../description/BookDescription.h"
 #include "../bookmodel/BookModel.h"
 #include "../view/PaintContext.h"
@@ -211,6 +212,7 @@ void FBReader::doAction(ActionCode code) {
 				BookDescription *description = handler.description();
 				if (description != 0) {
 					if (runBookInfoDialog(description->fileName())) {
+						BookList().addFileName(description->fileName());
 						setMode(BOOK_TEXT_MODE);
 					}
 					delete description;

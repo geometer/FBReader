@@ -26,6 +26,7 @@
 #include <abstract/ZLZipInputStream.h>
 
 #include "BookCollection.h"
+#include "BookList.h"
 #include "../description/BookDescription.h"
 #include "../description/Author.h"
 #include "../formats/FormatPlugin.h"
@@ -40,6 +41,8 @@ BookCollection::BookCollection() {
 	myPath = PathOption.value();
 	myScanSubdirs = ScanSubdirsOption.value();
 
+	std::set<std::string> fileNamesSet;
+
 	std::set<std::string> dirs;
 	collectDirNames(dirs);
 
@@ -52,7 +55,7 @@ BookCollection::BookCollection() {
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
 				const std::string fileName = dirName + *jt;
 				if (PluginCollection::instance().plugin(*jt, true) != 0) {
-					addDescription(BookDescription::create(fileName));
+					fileNamesSet.insert(fileName);
 				} else if (ZLStringUtil::stringEndsWith(*jt, ".zip")) {
 					ZLZipDir zipDir(fileName);
 					std::string zipPrefix = fileName + ':';
@@ -60,13 +63,22 @@ BookCollection::BookCollection() {
 					zipDir.collectFiles(entries, false);
 					for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
 						if (PluginCollection::instance().plugin(*zit, true) != 0) {
-							addDescription(BookDescription::create(zipPrefix + *zit));
+							fileNamesSet.insert(zipPrefix + *zit);
 						}
 					}
 				}
 			}
 		}
 	}
+
+	BookList bookList;
+	const std::set<std::string> &bookListSet = bookList.fileNames();
+	fileNamesSet.insert(bookListSet.begin(), bookListSet.end());
+
+	for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); it++) {
+		addDescription(BookDescription::create(*it));
+	}
+
 	std::sort(myAuthors.begin(), myAuthors.end(), AuthorComparator());
 	DescriptionComparator descriptionComparator;
 	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {

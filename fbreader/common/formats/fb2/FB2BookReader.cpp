@@ -80,11 +80,25 @@ const char *attributeValue(const char **xmlattributes, const char *name) {
 	return 0;
 }
 
-const char *reference(const char **xmlattributes) {
-	const char *ref = attributeValue(xmlattributes, "xlink:href");
-	if (ref == 0) {
-		ref = attributeValue(xmlattributes, "l:href");
+const char *attributeValueByPostfix(const char **xmlattributes, const char *postfix) {
+	int postfixLen = strlen(postfix);
+	while (*xmlattributes != 0) {
+		int len = strlen(*xmlattributes);
+		bool useNext = (len >= postfixLen) && (strcmp((*xmlattributes) + len - postfixLen, postfix) == 0);
+		xmlattributes++;
+		if (*xmlattributes == 0) {
+			return 0;
+		}
+		if (useNext) {
+			return *xmlattributes;
+		}
+		xmlattributes++;
 	}
+	return 0;
+}
+
+const char *reference(const char **xmlattributes) {
+	const char *ref = attributeValueByPostfix(xmlattributes, ":href");
 	return ((ref != 0) && (*ref == '#')) ? ref + 1 : 0;
 }
 	
