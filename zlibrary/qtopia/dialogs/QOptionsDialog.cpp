@@ -84,6 +84,8 @@ void QOptionsDialog::resizeEvent(QResizeEvent *) {
 void QOptionsDialog::keyPressEvent(QKeyEvent *event) {
 	if (event->key() == Key_Return) {
 		accept();
+	} else {
+		FullScreenDialog::keyPressEvent(event);
 	}
 }
 
