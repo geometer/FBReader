@@ -32,16 +32,6 @@
 
 // FIXME: geometer did some work on arranging the controls, mss will fix it
 // later when the functionality is really working
-static GtkWidget *notSoNicelyPacked (GtkWidget *label, GtkWidget *data) {
-	GtkWidget *hBox = gtk_hbox_new(FALSE, 0);
-
-	gtk_box_pack_start(GTK_BOX(hBox), label, FALSE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(hBox), data, TRUE, TRUE, 2);
-
-	gtk_widget_show_all(hBox);
-
-	return hBox;
-}
 
 static GtkWidget *labelWithMyParams (const char *text) {
 	GtkWidget *label = gtk_label_new(text);
@@ -109,7 +99,7 @@ void ChoiceOptionView::_onAccept() const {
 #endif
 
 void ComboOptionView::_createItem() {
-	myLabel = gtk_label_new(myOption->name().c_str());
+	myLabel = labelWithMyParams(myOption->name().c_str());
 	myComboBox = gtk_option_menu_new ();
 
 	const std::vector<std::string> &values = ((ZLComboOptionEntry*)myOption)->values();
@@ -141,15 +131,20 @@ void ComboOptionView::_createItem() {
 		gtk_option_menu_set_history(GTK_OPTION_MENU(myComboBox), selectedIndex);
 	}
 
-	myTab->addItem(myBox = notSoNicelyPacked(myLabel, myComboBox), myRow, myFromColumn, myToColumn);
+	int midColumn = (myFromColumn + myToColumn)/2;
+
+	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
+	myTab->addItem(myComboBox, myRow, midColumn, myToColumn);
 }
 
 void ComboOptionView::_show() {
-	gtk_widget_show(myBox);
+	gtk_widget_show(myLabel);
+	gtk_widget_show(myComboBox);
 }
 
 void ComboOptionView::_hide() {
-	gtk_widget_hide(myBox);
+	gtk_widget_hide(myLabel);
+	gtk_widget_hide(myComboBox);
 }
 
 void ComboOptionView::_onAccept() const {
@@ -175,20 +170,25 @@ void ComboOptionView::onValueChange(void) {
 void SpinOptionView::_createItem() {
 	ZLSpinOptionEntry *tempo = (ZLSpinOptionEntry *)myOption;
 
-	myLabel = gtk_label_new(myOption->name().c_str());
+	myLabel = labelWithMyParams(myOption->name().c_str());
 
 	GtkAdjustment *adj = (GtkAdjustment *)gtk_adjustment_new (tempo->initialValue(), tempo->minValue(), tempo->maxValue(), tempo->step(), tempo->step(), 0);
 	mySpinBox = gtk_spin_button_new (adj, 1, 0);
 
-	myTab->addItem(myBox = notSoNicelyPacked(myLabel, mySpinBox), myRow, myFromColumn, myToColumn);
+	int midColumn = (myFromColumn + myToColumn)/2;
+
+	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
+	myTab->addItem(mySpinBox, myRow, midColumn, myToColumn);
 }
 
 void SpinOptionView::_show() {
-	gtk_widget_show (myBox);
+	gtk_widget_show(myLabel);
+	gtk_widget_show(mySpinBox);
 }
 
 void SpinOptionView::_hide() {
-	gtk_widget_hide (myBox);
+	gtk_widget_hide(myLabel);
+	gtk_widget_hide(mySpinBox);
 }
 
 void SpinOptionView::_onAccept() const {
@@ -200,15 +200,20 @@ void StringOptionView::_createItem() {
 	myLineEdit = gtk_entry_new();
 	gtk_entry_set_text (GTK_ENTRY(myLineEdit), ((ZLStringOptionEntry*)myOption)->initialValue().c_str());
 
-	myTab->addItem(myBox = notSoNicelyPacked (myLabel, myLineEdit), myRow, myFromColumn, myToColumn);
+	int midColumn = (myFromColumn + myToColumn)/2;
+
+	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
+	myTab->addItem(myLineEdit, myRow, midColumn, myToColumn);
 }
 
 void StringOptionView::_show() {
-	gtk_widget_show (myBox);
+	gtk_widget_show(myLabel);
+	gtk_widget_show(myLineEdit);
 }
 
 void StringOptionView::_hide() {
-	gtk_widget_hide (myBox);
+	gtk_widget_hide(myLabel);
+	gtk_widget_hide(myLineEdit);
 }
 
 void StringOptionView::_onAccept() const {
@@ -219,7 +224,7 @@ void ColorOptionView::_createItem() {
 	myWidget = gtk_button_new ();
 	myDrawingArea = gtk_drawing_area_new ();
 
-  gtk_widget_set_size_request (GTK_WIDGET (myDrawingArea), 60, 20);
+	gtk_widget_set_size_request (GTK_WIDGET (myDrawingArea), 60, 20);
 
 	gtk_container_add(GTK_CONTAINER(myWidget), myDrawingArea);
 

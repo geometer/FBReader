@@ -30,67 +30,67 @@
 #include "GtkOptionView.h"
 
 GtkOptionsDialog::GtkOptionsDialog(const char *caption) {
-  myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons (caption, NULL, GTK_DIALOG_MODAL,
-          GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-          GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
-          NULL));
+	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons (caption, NULL, GTK_DIALOG_MODAL,
+					GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
+					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+					NULL));
 
-  myNotebook = GTK_NOTEBOOK(gtk_notebook_new ());
+	myNotebook = GTK_NOTEBOOK(gtk_notebook_new ());
 
-  gtk_container_set_border_width (GTK_CONTAINER (myNotebook), 8);
-  gtk_box_pack_start (GTK_BOX (myDialog->vbox), GTK_WIDGET(myNotebook), TRUE, TRUE, 0);
+	gtk_container_set_border_width (GTK_CONTAINER (myNotebook), 8);
+	gtk_box_pack_start (GTK_BOX (myDialog->vbox), GTK_WIDGET(myNotebook), TRUE, TRUE, 0);
 
-  gtk_widget_show (GTK_WIDGET(myNotebook));
+	gtk_widget_show (GTK_WIDGET(myNotebook));
 }
 
 GtkOptionsDialog::~GtkOptionsDialog() {
-  // I do not have to destroy myNotebook as it's a myDialog child
-  for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin (); tab != myTabs.end (); ++tab)
-    delete *tab;
+	// I do not have to destroy myNotebook as it's a myDialog child
+	for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin (); tab != myTabs.end (); ++tab)
+		delete *tab;
 
-  gtk_widget_destroy (GTK_WIDGET(myDialog));
+	gtk_widget_destroy (GTK_WIDGET(myDialog));
 }
 
 ZLOptionsDialogTab *GtkOptionsDialog::createTab(const std::string &name) {
-  GtkOptionsDialogTab *tab = new GtkOptionsDialogTab();
-  GtkWidget *label = gtk_label_new(name.c_str());
+	GtkOptionsDialogTab *tab = new GtkOptionsDialogTab();
+	GtkWidget *label = gtk_label_new(name.c_str());
 
-  gtk_notebook_append_page (myNotebook, tab->widget(), label);
+	gtk_notebook_append_page (myNotebook, tab->widget(), label);
 
-  myTabs.push_back(tab);
-  myTabNames.push_back(name);
+	myTabs.push_back(tab);
+	myTabNames.push_back(name);
 
-  return tab;
+	return tab;
 }
 
 std::string GtkOptionsDialog::selectedTabName() {
-  return myTabNames[gtk_notebook_get_current_page(myNotebook)];
+	return myTabNames[gtk_notebook_get_current_page(myNotebook)];
 }
 
 void GtkOptionsDialog::selectTab(const std::string &name) {
-  std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
-  if (it != myTabNames.end()) {
-    gtk_notebook_set_current_page (myNotebook, it - myTabNames.begin());
-  }
+	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
+	if (it != myTabNames.end()) {
+		gtk_notebook_set_current_page (myNotebook, it - myTabNames.begin());
+	}
 }
 
 int GtkOptionsDialog::run() {
-  gint response;
+	gint response;
 
-  response = gtk_dialog_run (myDialog);
+	response = gtk_dialog_run (myDialog);
 
-  switch (response) {
-    case GTK_RESPONSE_ACCEPT:
-      for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin (); tab != myTabs.end (); ++tab)
-        (*tab)->accept();
-      break;
-    case GTK_RESPONSE_REJECT:
-      break;
-  }
+	switch (response) {
+		case GTK_RESPONSE_ACCEPT:
+			for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin (); tab != myTabs.end (); ++tab)
+				(*tab)->accept();
+			break;
+		case GTK_RESPONSE_REJECT:
+			break;
+	}
 
-  gtk_widget_hide (GTK_WIDGET(myDialog));
+	gtk_widget_hide (GTK_WIDGET(myDialog));
 
-  return 0;
+	return 0;
 }
 
 void GtkOptionsDialogTab::accept() {
@@ -100,17 +100,17 @@ void GtkOptionsDialogTab::accept() {
 }
 
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
-  myTable = GTK_TABLE(gtk_table_new (0, 2, TRUE));
+	myTable = GTK_TABLE(gtk_table_new (0, 4, TRUE));
 	gtk_table_set_homogeneous(myTable, false);
-  gtk_container_set_border_width (GTK_CONTAINER (myTable), 2);
+	gtk_container_set_border_width (GTK_CONTAINER (myTable), 2);
 
-  myRowCounter = 0;
+	myRowCounter = 0;
 
-  gtk_widget_show (GTK_WIDGET(myTable));
+	gtk_widget_show (GTK_WIDGET(myTable));
 }
 
 GtkOptionsDialogTab::~GtkOptionsDialogTab() {
-  // We must not delete the widget, it's destroyed when the parent widget is destroyed
+	// We must not delete the widget, it's destroyed when the parent widget is destroyed
 	for (std::vector<GtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {
 		delete (*view);
 	}
@@ -131,7 +131,7 @@ void GtkOptionsDialogTab::addItem (GtkWidget *what, int row, int fromColumn, int
 void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
 	int row = addRow ();
 
-	GtkOptionView *optionView = viewByEntry (option, row, 0, 2);
+	GtkOptionView *optionView = viewByEntry (option, row, 0, 4);
 
 	if (optionView != NULL) {
 		optionView->show();
@@ -142,8 +142,8 @@ void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
 void GtkOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
 	int row = addRow ();
 
-	GtkOptionView *optionView0 = viewByEntry (option0, row, 0, 1),
-							 	*optionView1 = viewByEntry (option1, row, 1, 2);
+	GtkOptionView *optionView0 = viewByEntry (option0, row, 0, 2),
+							 	*optionView1 = viewByEntry (option1, row, 2, 4);
 
 	if (optionView0 != NULL) {
 		optionView0->show();

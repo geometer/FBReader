@@ -122,7 +122,7 @@ protected:
 	void _onAccept() const;
 
 private:
-	GtkWidget *myBox, *myLabel, *myLineEdit;
+	GtkWidget *myLabel, *myLineEdit;
 };
 
 class SpinOptionView : public GtkOptionView {
@@ -141,7 +141,7 @@ protected:
 	void _onAccept() const;
 
 private:
-	GtkWidget *myBox, *myLabel, *mySpinBox;
+	GtkWidget *myLabel, *mySpinBox;
 };
 
 class ComboOptionView : public GtkOptionView {
@@ -165,7 +165,7 @@ private:
 	static void _onValueChange (GtkWidget *, gpointer);
 	
 private:
-	GtkWidget *myBox, *myLabel, *myComboBox;
+	GtkWidget *myLabel, *myComboBox;
 };
 
 class ColorOptionView : public GtkOptionView {
