@@ -55,16 +55,6 @@ static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeySlot(key);
 }
 
-GtkWidget *GtkFBReader::addToolButton(GtkWidget *toolbar, const std::string &name, ActionCode code) {
-	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
-	GtkWidget *button = gtk_button_new();
-	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
-	gtk_container_add(GTK_CONTAINER(button), image);
-	gtk_container_add(GTK_CONTAINER(toolbar), button);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), new ActionSlotData(this, code));
-	return button;
-}
-
 GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -72,18 +62,10 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	GtkWidget *vbox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), vbox);
 
-	GtkWidget *toolbar = gtk_toolbar_new();
-	gtk_box_pack_start(GTK_BOX(vbox), toolbar, false, false, 0);
-	gtk_toolbar_set_style(GTK_TOOLBAR(toolbar), GTK_TOOLBAR_BOTH);
-
-	myButtons[BUTTON_BOOKS] = addToolButton(toolbar, "books", ACTION_SHOW_COLLECTION);
-	myButtons[BUTTON_SETTINGS] = addToolButton(toolbar, "settings", ACTION_SHOW_OPTIONS);
-	myButtons[BUTTON_UNDO] = addToolButton(toolbar, "leftarrow", ACTION_UNDO);
-	myButtons[BUTTON_REDO] = addToolButton(toolbar, "rightarrow", ACTION_REDO);
-	myButtons[BUTTON_CONTENTS] = addToolButton(toolbar, "contents", ACTION_SHOW_CONTENTS);
-	myButtons[BUTTON_SEARCH] = addToolButton(toolbar, "find", ACTION_SEARCH);
-	myButtons[BUTTON_FIND_PREVIOUS] = addToolButton(toolbar, "findprev", ACTION_FIND_PREVIOUS);
-	myButtons[BUTTON_FIND_NEXT] = addToolButton(toolbar, "findnext", ACTION_FIND_NEXT);
+	myToolbar = gtk_toolbar_new();
+	gtk_box_pack_start(GTK_BOX(vbox), myToolbar, false, false, 0);
+	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_BOTH);
+	createToolbar();
 
 	myViewWidget = new GtkViewWidget(this);
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
@@ -145,59 +127,13 @@ gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {
 }
 
 void GtkFBReader::cancelSlot() {
-	if (QuitOnCancelOption.value() || (mode() != BOOK_TEXT_MODE)) {
+	if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
 		close();
 	}
 }
 
-void GtkFBReader::setMode(ViewMode mode) {
-	if (mode == myMode) {
-		return;
-	}
-	myPreviousMode = myMode;
-	myMode = mode;
-
-	switch (myMode) {
-		case BOOK_TEXT_MODE:
-			gtk_widget_show(myButtons[BUTTON_BOOKS]);
-			gtk_widget_show(myButtons[BUTTON_UNDO]);
-			gtk_widget_show(myButtons[BUTTON_REDO]);
-			gtk_widget_show(myButtons[BUTTON_CONTENTS]);
-			myViewWidget->setView(myBookTextView);
-			break;
-		case CONTENTS_MODE:
-			gtk_widget_show(myButtons[BUTTON_BOOKS]);
-			gtk_widget_hide(myButtons[BUTTON_UNDO]);
-			gtk_widget_hide(myButtons[BUTTON_REDO]);
-			gtk_widget_hide(myButtons[BUTTON_CONTENTS]);
-			myViewWidget->setView(myContentsView);
-			break;
-		case FOOTNOTE_MODE:
-			gtk_widget_hide(myButtons[BUTTON_BOOKS]);
-			gtk_widget_hide(myButtons[BUTTON_UNDO]);
-			gtk_widget_hide(myButtons[BUTTON_REDO]);
-			gtk_widget_show(myButtons[BUTTON_CONTENTS]);
-			myViewWidget->setView(myFootnoteView);
-			break;
-		case BOOK_COLLECTION_MODE:
-			gtk_widget_hide(myButtons[BUTTON_BOOKS]);
-			gtk_widget_hide(myButtons[BUTTON_UNDO]);
-			gtk_widget_hide(myButtons[BUTTON_REDO]);
-			gtk_widget_hide(myButtons[BUTTON_CONTENTS]);
-			myCollectionView->fill();
-			myViewWidget->setView(myCollectionView);
-			break;
-		case BOOKMARKS_MODE:
-			break;
-		case UNDEFINED_MODE:
-			break;
-	}
-	setWindowCaption("FBReader - " + myViewWidget->view()->caption());
-	repaintView();
-}
-
 void GtkFBReader::close() {
-	if (mode() != BOOK_TEXT_MODE) {
+	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();
 	} else {
 		delete this;
@@ -205,12 +141,30 @@ void GtkFBReader::close() {
 	}
 }
 
+void GtkFBReader::addButton(ActionCode id, const std::string &name) {
+	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
+	GtkWidget *button = gtk_button_new();
+	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
+	gtk_container_add(GTK_CONTAINER(button), image);
+	gtk_container_add(GTK_CONTAINER(myToolbar), button);
+	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), new ActionSlotData(this, id));
+	myButtons[id] = button;
+}
+
+void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
+	if (visible) {
+		gtk_widget_show(myButtons[id]);
+	} else {
+		gtk_widget_hide(myButtons[id]);
+	}
+}
+
 /*
  * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
  * does something strange if WIDGET is already insensitive.
  */
-void GtkFBReader::setButtonEnabled(ButtonId id, bool enable) {
-	std::map<ButtonId,GtkWidget*>::const_iterator it = myButtons.find(id);
+void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
+	std::map<ActionCode,GtkWidget*>::const_iterator it = myButtons.find(id);
 	if (it != myButtons.end()) {
 		bool enabled = GTK_WIDGET_STATE(it->second) != GTK_STATE_INSENSITIVE;
 		if (enabled != enable) {

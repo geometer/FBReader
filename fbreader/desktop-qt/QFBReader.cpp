@@ -63,17 +63,9 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_Down] = ACTION_SCROLL_FORWARD;
 	myKeyBindings[Key_Escape] = ACTION_CANCEL;
 
-	menuBar()->insertItem(loadPixmap("books"), this, SLOT(showCollectionSlot()), 0, BUTTON_BOOKS);
-	menuBar()->insertItem(loadPixmap("settings"), this, SLOT(showOptionsDialogSlot()), 0, BUTTON_SETTINGS);
-	menuBar()->insertItem(loadPixmap("leftarrow"), this, SLOT(undoSlot()), 0, BUTTON_UNDO);
-	menuBar()->insertItem(loadPixmap("rightarrow"), this, SLOT(redoSlot()), 0, BUTTON_REDO);
-	menuBar()->insertItem(loadPixmap("contents"), this, SLOT(showContentsSlot()), 0, BUTTON_CONTENTS);
-	menuBar()->insertItem(loadPixmap("find"), this, SLOT(searchSlot()), 0, BUTTON_SEARCH);
-	menuBar()->insertItem(loadPixmap("findprev"), this, SLOT(findPreviousSlot()), 0, BUTTON_FIND_PREVIOUS);
-	menuBar()->insertItem(loadPixmap("findnext"), this, SLOT(findNextSlot()), 0, BUTTON_FIND_NEXT);
-
+	createToolbar();
+	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 	resize(Width.value(), Height.value());
-
 	setMode(BOOK_TEXT_MODE);
 }
 
@@ -90,62 +82,13 @@ void QFBReader::keyPressEvent(QKeyEvent *event) {
 }
 
 void QFBReader::cancelSlot() {
-	if (QuitOnCancelOption.value() || (mode() != BOOK_TEXT_MODE)) {
+	if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
 		close();
 	}
 }
 
-QPixmap QFBReader::loadPixmap(const std::string &name) {
-	return QPixmap((ImageDirectory + "/" + name + ".png").c_str());
-}
-
-void QFBReader::setMode(ViewMode mode) {
-	if (mode == myMode) {
-		return;
-	}
-	myPreviousMode = myMode;
-	myMode = mode;
-
-	switch (myMode) {
-		case BOOK_TEXT_MODE:
-			menuBar()->setItemVisible(BUTTON_BOOKS, true);
-			menuBar()->setItemVisible(BUTTON_UNDO, true);
-			menuBar()->setItemVisible(BUTTON_REDO, true);
-			menuBar()->setItemVisible(BUTTON_CONTENTS, true);
-			myViewWidget->setView(myBookTextView);
-			break;
-		case CONTENTS_MODE:
-			menuBar()->setItemVisible(BUTTON_BOOKS, true);
-			menuBar()->setItemVisible(BUTTON_UNDO, false);
-			menuBar()->setItemVisible(BUTTON_REDO, false);
-			menuBar()->setItemVisible(BUTTON_CONTENTS, false);
-			myViewWidget->setView(myContentsView);
-			break;
-		case FOOTNOTE_MODE:
-			menuBar()->setItemVisible(BUTTON_BOOKS, false);
-			menuBar()->setItemVisible(BUTTON_UNDO, false);
-			menuBar()->setItemVisible(BUTTON_REDO, false);
-			menuBar()->setItemVisible(BUTTON_CONTENTS, true);
-			myViewWidget->setView(myFootnoteView);
-			break;
-		case BOOK_COLLECTION_MODE:
-			menuBar()->setItemVisible(BUTTON_BOOKS, false);
-			menuBar()->setItemVisible(BUTTON_UNDO, false);
-			menuBar()->setItemVisible(BUTTON_REDO, false);
-			menuBar()->setItemVisible(BUTTON_CONTENTS, false);
-			myCollectionView->fill();
-			myViewWidget->setView(myCollectionView);
-			break;
-		case BOOKMARKS_MODE:
-			break;
-		case UNDEFINED_MODE:
-			break;
-	}
-	setWindowCaption("FBReader - " + myViewWidget->view()->caption());
-}
-
 void QFBReader::closeEvent(QCloseEvent *event) {
-	if (mode() != BOOK_TEXT_MODE) {
+	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();
 		event->ignore();
 	} else {
@@ -153,7 +96,17 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void QFBReader::setButtonEnabled(ButtonId id, bool enable) {
+void QFBReader::addButton(ActionCode id, const std::string &name) {
+	menuBar()->insertItem(QPixmap((ImageDirectory + "/" + name + ".png").c_str()), this, SLOT(emptySlot()), 0, id);
+}
+
+void QFBReader::setButtonVisible(ActionCode id, bool visible) {
+	if (menuBar()->findItem(id) != 0) {
+		menuBar()->setItemVisible(id, visible);
+	}
+}
+
+void QFBReader::setButtonEnabled(ActionCode id, bool enable) {
 	if (menuBar()->findItem(id) != 0) {
 		menuBar()->setItemEnabled(id, enable);
 	}
@@ -199,4 +152,8 @@ void QFBReader::searchSlot() {
 			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked()
 		);
 	}
+}
+
+void QFBReader::doActionSlot(int buttonNumber) {
+	doAction((ActionCode)menuBar()->idAt(buttonNumber));
 }

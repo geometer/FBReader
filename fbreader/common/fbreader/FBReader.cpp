@@ -129,12 +129,12 @@ void FBReader::doAction(ActionCode code) {
 			}
 			break;
 		case ACTION_UNDO:
-			if (mode() == BOOK_TEXT_MODE) {
+			if (myMode == BOOK_TEXT_MODE) {
 				myBookTextView->undoPageMove();
 			}
 			break;
 		case ACTION_REDO:
-			if (mode() == BOOK_TEXT_MODE) {
+			if (myMode == BOOK_TEXT_MODE) {
 				myBookTextView->redoPageMove();
 			}
 			break;
@@ -201,9 +201,66 @@ void FBReader::doAction(ActionCode code) {
 
 void FBReader::enableMenuButtons() {
 	TextView *textView = (TextView*)myViewWidget->view();
-	setButtonEnabled(BUTTON_FIND_NEXT, textView->canFindNext());
-	setButtonEnabled(BUTTON_FIND_PREVIOUS, textView->canFindPrevious());
-	setButtonEnabled(BUTTON_CONTENTS, !myContentsView->isEmpty());
-	setButtonEnabled(BUTTON_UNDO, myBookTextView->canUndoPageMove());
-	setButtonEnabled(BUTTON_REDO, myBookTextView->canRedoPageMove());
+	setButtonEnabled(ACTION_FIND_NEXT, textView->canFindNext());
+	setButtonEnabled(ACTION_FIND_PREVIOUS, textView->canFindPrevious());
+	setButtonEnabled(ACTION_SHOW_CONTENTS, !myContentsView->isEmpty());
+	setButtonEnabled(ACTION_UNDO, myBookTextView->canUndoPageMove());
+	setButtonEnabled(ACTION_REDO, myBookTextView->canRedoPageMove());
+}
+
+void FBReader::setMode(ViewMode mode) {
+	if (mode == myMode) {
+		return;
+	}
+
+	myPreviousMode = myMode;
+	myMode = mode;
+
+	switch (myMode) {
+		case BOOK_TEXT_MODE:
+			setButtonVisible(ACTION_SHOW_COLLECTION, true);
+			setButtonVisible(ACTION_UNDO, true);
+			setButtonVisible(ACTION_REDO, true);
+			setButtonVisible(ACTION_SHOW_CONTENTS, true);
+			myViewWidget->setView(myBookTextView);
+			break;
+		case CONTENTS_MODE:
+			setButtonVisible(ACTION_SHOW_COLLECTION, true);
+			setButtonVisible(ACTION_UNDO, false);
+			setButtonVisible(ACTION_REDO, false);
+			setButtonVisible(ACTION_SHOW_CONTENTS, false);
+			myViewWidget->setView(myContentsView);
+			break;
+		case FOOTNOTE_MODE:
+			setButtonVisible(ACTION_SHOW_COLLECTION, false);
+			setButtonVisible(ACTION_UNDO, false);
+			setButtonVisible(ACTION_REDO, false);
+			setButtonVisible(ACTION_SHOW_CONTENTS, true);
+			myViewWidget->setView(myFootnoteView);
+			break;
+		case BOOK_COLLECTION_MODE:
+			setButtonVisible(ACTION_SHOW_COLLECTION, false);
+			setButtonVisible(ACTION_UNDO, false);
+			setButtonVisible(ACTION_REDO, false);
+			setButtonVisible(ACTION_SHOW_CONTENTS, false);
+			myCollectionView->fill();
+			myViewWidget->setView(myCollectionView);
+			break;
+		case BOOKMARKS_MODE:
+			break;
+		case UNDEFINED_MODE:
+			break;
+	}
+	setWindowCaption("FBReader - " + myViewWidget->view()->caption());
+}
+
+void FBReader::createToolbar() {
+	addButton(ACTION_SHOW_COLLECTION, "books");
+	addButton(ACTION_SHOW_OPTIONS, "settings");
+	addButton(ACTION_UNDO, "leftarrow");
+	addButton(ACTION_REDO, "rightarrow");
+	addButton(ACTION_SHOW_CONTENTS, "contents");
+	addButton(ACTION_SEARCH, "find");
+	addButton(ACTION_FIND_NEXT, "findnext");
+	addButton(ACTION_FIND_PREVIOUS, "findprev");
 }

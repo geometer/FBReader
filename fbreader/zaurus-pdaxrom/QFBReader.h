@@ -32,7 +32,6 @@ class QFBReader : public QMainWindow, public FBReader {
 
 private:
 	static std::string ImageDirectory;
-	static QPixmap loadPixmap(const std::string &name);
 	
 public:
 	QFBReader();
@@ -44,20 +43,16 @@ private:
 
 protected:
 	void setWindowCaption(const std::string &caption);
-	void setMode(ViewMode mode);
-	void setButtonEnabled(ButtonId id, bool enable);
+	void addButton(ActionCode id, const std::string &name);
+	void setButtonVisible(ActionCode id, bool visible);
+	void setButtonEnabled(ActionCode id, bool enable);
 	void cancelSlot();
+	void searchSlot();
 	void fullscreenSlot();
 	
 private slots:
-	void showCollectionSlot() { doAction(ACTION_SHOW_COLLECTION); }
-	void showContentsSlot() { doAction(ACTION_SHOW_CONTENTS); }
-	void showOptionsDialogSlot() { doAction(ACTION_SHOW_OPTIONS); }
-	void undoSlot() { doAction(ACTION_UNDO); }
-	void redoSlot() { doAction(ACTION_REDO); }
-	void searchSlot();
-	void findNextSlot() { doAction(ACTION_FIND_NEXT); }
-	void findPreviousSlot() { doAction(ACTION_FIND_PREVIOUS); }
+	void doActionSlot(int buttonNumber);
+	void emptySlot() {}
 
 private:
 	bool myFullScreen;

@@ -36,18 +36,6 @@ class PaintContext;
 
 class FBReader {
 
-protected:
-	enum ButtonId {
-		BUTTON_BOOKS,
-		BUTTON_SETTINGS,
-		BUTTON_UNDO,
-		BUTTON_REDO,
-		BUTTON_CONTENTS,
-		BUTTON_SEARCH,
-		BUTTON_FIND_NEXT,
-		BUTTON_FIND_PREVIOUS,
-	};
-
 public:
 	enum ActionCode {
 		ACTION_SHOW_COLLECTION,
@@ -92,10 +80,12 @@ protected:
 	FBReader(PaintContext *context);
 	virtual ~FBReader();
 
-	ViewMode mode() const { return myMode; }
-	virtual void setMode(ViewMode mode) = 0;
+	virtual void setMode(ViewMode mode);
 	virtual void setWindowCaption(const std::string &caption) = 0;
-	virtual void setButtonEnabled(ButtonId id, bool enable) = 0;
+	void createToolbar();
+	virtual void addButton(ActionCode id, const std::string &name) = 0;
+	virtual void setButtonVisible(ActionCode id, bool visible) = 0;
+	virtual void setButtonEnabled(ActionCode id, bool enable) = 0;
 	virtual void searchSlot() = 0;
 	virtual void cancelSlot() = 0;
 	virtual void fullscreenSlot() = 0;

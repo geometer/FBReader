@@ -37,13 +37,11 @@ public:
 	GtkFBReader();
 	~GtkFBReader();
 
-private:
-	GtkWidget *addToolButton(GtkWidget *toolbar, const std::string &name, ActionCode code);
-
 protected:
 	void setWindowCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
-	void setMode(ViewMode mode);
-	void setButtonEnabled(ButtonId id, bool enable);
+	void addButton(ActionCode id, const std::string &name);
+	void setButtonVisible(ActionCode id, bool visible);
+	void setButtonEnabled(ActionCode id, bool enable);
 	void searchSlot();
 	void cancelSlot();
 	void fullscreenSlot() {}
@@ -55,9 +53,10 @@ public:
 
 private:
 	GtkWindow *myMainWindow;
+	GtkWidget *myToolbar;
 
 	std::map<std::string,ActionCode> myKeyBindings;
-	std::map<ButtonId,GtkWidget*> myButtons;
+	std::map<ActionCode,GtkWidget*> myButtons;
 };
 
 #endif /* __GTKFBREADER_H__ */
