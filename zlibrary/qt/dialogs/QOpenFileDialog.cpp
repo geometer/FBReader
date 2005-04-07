@@ -44,7 +44,7 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLFileHandler &handl
 	myMainBox = new QVBox(this);
 
 	myCurrentDirectoryName = new QLineEdit(myMainBox);
-	myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
+	myCurrentDirectoryName->setText(QString::fromUtf8(myCurrentDir->name().c_str()));
 	myCurrentDirectoryName->setEnabled(false);
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("");
@@ -136,20 +136,20 @@ void QOpenFileDialog::accept() {
 	QOpenFileDialogItem *dialogItem = (QOpenFileDialogItem*)myListView->currentItem();
 
 	if (dialogItem->isDir()) {
-		std::string subdir = myCurrentDir->itemName(dialogItem->name().ascii());
+		std::string subdir = myCurrentDir->itemName((const char*)dialogItem->name().utf8());
 		std::string selectedName = (dialogItem->name() == "..") ? myCurrentDir->shortName() : "..";
 		delete myCurrentDir;
 		myCurrentDir = new ZLFSDir(subdir);
-		myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
+		myCurrentDirectoryName->setText(QString::fromUtf8(myCurrentDir->name().c_str()));
 		updateListView(selectedName);
-	} else if (ZLStringUtil::stringEndsWith(dialogItem->name().ascii(), ".zip")) {
-		std::string zip = myCurrentDir->itemName(dialogItem->name().ascii());
+	} else if (ZLStringUtil::stringEndsWith((const char*)dialogItem->name().utf8(), ".zip")) {
+		std::string zip = myCurrentDir->itemName((const char*)dialogItem->name().utf8());
 		delete myCurrentDir;
 		myCurrentDir = new ZLZipDir(zip);
-		myCurrentDirectoryName->setText(myCurrentDir->name().c_str());
+		myCurrentDirectoryName->setText(QString::fromUtf8(myCurrentDir->name().c_str()));
 		updateListView("..");
 	} else {
-		handler().accept(myCurrentDir->itemName(dialogItem->name().ascii()), dialogItem->isDir());
+		handler().accept(myCurrentDir->itemName((const char*)dialogItem->name().utf8()), dialogItem->isDir());
 		QDialog::accept();
 	}
 }

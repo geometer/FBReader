@@ -28,7 +28,8 @@ TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDe
 	myBoldOption("Style", myName + ":bold", bold),
 	myItalicOption("Style", myName + ":italic", italic),
 	myVerticalShiftOption("Style", myName + ":vShift", verticalShift),
-	myAllowHyphenationsOption("Style", myName + ":allowHyphenations", allowHyphenations) {
+	myAllowHyphenationsOption("Style", myName + ":allowHyphenations", allowHyphenations),
+	myIsHyperlinkStyle(false) {
 }
 
 FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),

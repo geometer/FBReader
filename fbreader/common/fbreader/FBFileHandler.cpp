@@ -34,7 +34,7 @@ bool FBFileHandler::isFileVisible(const std::string &shortFileName, bool dir) co
 std::string FBFileHandler::pixmapName(const std::string &shortFileName, bool dir) const {
 	if (dir) {
 		return "FBReader/folder";
-	} else if (ZLStringUtil::stringEndsWith(shortFileName, ".html")) {
+	} else if (ZLStringUtil::stringEndsWith(shortFileName, "html") || ZLStringUtil::stringEndsWith(shortFileName, ".htm")) {
 		return "FBReader/html";
 	} else if (ZLStringUtil::stringEndsWith(shortFileName, ".zip")) {
 		return "FBReader/zipfolder";

@@ -5,4 +5,4 @@ Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Architecture: armv5tel
 Depends: qt-mt,expat,libenca
 License: GPLv2
-Description: E-book (fb2 format) reader.
+Description: E-book reader.
