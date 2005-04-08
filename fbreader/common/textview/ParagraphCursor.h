@@ -103,6 +103,7 @@ public:
 	bool isEndOfParagraph() const;
 	bool isEndOfSection() const;
 
+	int paragraphLength() const { return myElements.size(); }
 	int paragraphNumber() const { return myParagraphIterator - myModel.paragraphs().begin(); }
 	TextMark position() const;
 	int wordNumber(const WordCursor &wi) const { return wi.myWordIterator - myElements.begin(); }

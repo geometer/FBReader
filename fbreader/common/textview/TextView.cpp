@@ -118,7 +118,13 @@ void TextView::paint() {
 		int top = bottom - PositionIndicatorHeightOption.value() + 1;
 		int left = 0;
 		int right = context().width() - 1;
-		int fillWidth = (right - left - 1) * (myLastParagraphCursor->paragraphNumber() + 1) / myModel->paragraphs().size();
+		int fillWidth;
+		int paragraphLength = myLastParagraphCursor->paragraphLength();
+		if (paragraphLength == 0) {
+			fillWidth = (right - left - 1) * (myLastParagraphCursor->paragraphNumber() + 1) / myModel->paragraphs().size();
+		} else {
+			fillWidth = (right - left - 1) * (myLastParagraphCursor->paragraphNumber() * paragraphLength + myLastParagraphCursor->wordNumber()) / myModel->paragraphs().size() / paragraphLength;
+		}
 		context().setFillColor(PositionIndicatorColorOption.value());
 		context().fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
 		context().drawLine(left, top, right, top);
