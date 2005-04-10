@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -109,6 +110,10 @@ void ComboOptionView::_show() {
 void ComboOptionView::_hide() {
 	myLabel->hide();
 	myComboBox->hide();
+}
+
+void ComboOptionView::_setActive(bool active) {
+	myComboBox->setEnabled(active);
 }
 
 void ComboOptionView::_onAccept() const {

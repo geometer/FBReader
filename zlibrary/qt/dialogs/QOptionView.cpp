@@ -112,6 +112,10 @@ void ComboOptionView::_hide() {
 	myComboBox->hide();
 }
 
+void ComboOptionView::_setActive(bool active) {
+	myComboBox->setEnabled(active);
+}
+
 void ComboOptionView::_onAccept() const {
 	((ZLComboOptionEntry*)myOption)->onAccept(myComboBox->currentText().ascii());
 }

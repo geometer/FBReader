@@ -20,34 +20,40 @@
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLInputStream.h>
 
-#include "FB2Plugin.h"
-#include "FB2DescriptionReader.h"
-#include "FB2BookReader.h"
+#include "TxtPlugin.h"
+#include "TxtDescriptionReader.h"
+#include "TxtBookReader.h"
+#include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
-bool FB2Plugin::acceptsFile(const std::string &fileName) const {
-	return ZLStringUtil::stringEndsWith(fileName, ".fb2");
+bool TxtPlugin::acceptsFile(const std::string &fileName) const {
+	return ZLStringUtil::stringEndsWith(fileName, ".txt");
 }
 
-bool FB2Plugin::readDescription(const std::string &fileName, BookDescription &description) const {
-	FB2DescriptionReader *reader = new FB2DescriptionReader(description);
+bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
 	ZLInputStream *stream = ZLInputStream::createStream(fileName);
-	bool code = reader->readDescription(*stream);
-	delete stream;
-	delete reader;
-	return code;
-}
-
-bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) const {
-	// this code fixes incorrect config entry created by fbreader of version <= 0.6.1
-	// makes no sense if old fbreader was not used
-	if (description.encoding() != "auto") {
-		BookInfo(description.fileName()).EncodingOption.setValue("auto");
+	std::string encoding = description.encoding();
+	if (encoding.empty()) {
+		encoding = EncodingDetector::detect(*stream);
+		if (encoding.empty()) {
+			delete stream;
+			return false;
+		}
+		WritableBookDescription(description).encoding() = encoding;
 	}
 
-	FB2BookReader *reader = new FB2BookReader(model);
+	TxtDescriptionReader *reader = new TxtDescriptionReader(description);
+	reader->readDocument(*stream, encoding);
+	delete reader;
+
+	delete stream;
+	return true;
+}
+
+bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) const {
+	TxtBookReader *reader = new TxtBookReader(model);
 	ZLInputStream *stream = ZLInputStream::createStream(description.fileName());
-	reader->readDocument(*stream);
+	reader->readDocument(*stream, description.encoding());
 	delete stream;
 	delete reader;
 	return true;

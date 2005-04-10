@@ -117,22 +117,13 @@ QOptionsDialogTab::~QOptionsDialogTab() {
 }
 
 void QOptionsDialogTab::addOption(ZLOptionEntry *option) {
-	QOptionView *view = viewByEntry(option, 0, 12);
-	if (view != 0) {
-		myViews.append(view);
-	}
+	createViewByEntry(option, 0, 12);
 	myRowCounter++;
 }
 
 void QOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
-	QOptionView *view0 = viewByEntry(option0, 0, 5);
-	if (view0 != 0) {
-		myViews.append(view0);
-	}
-	QOptionView *view1 = viewByEntry(option1, 7, 12);
-	if (view1 != 0) {
-		myViews.append(view1);
-	}
+	createViewByEntry(option0, 0, 5);
+	createViewByEntry(option1, 7, 12);
 	myRowCounter++;
 }
 
@@ -140,30 +131,39 @@ void QOptionsDialogTab::addItem(QWidget *widget, int row, int fromColumn, int to
 	myLayout->addMultiCellWidget(widget, row, row, fromColumn, toColumn);
 }
 
-QOptionView *QOptionsDialogTab::viewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn) {
+void QOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn) {
 	if (option == 0) {
-		return 0;
+		return;
 	}
+
+	QOptionView *view = 0;
 	switch (option->kind()) {
 		case BOOLEAN:
-			return new BooleanOptionView((ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case STRING:
-			return new StringOptionView((ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new StringOptionView((ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case CHOICE:
-			return new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case SPIN:
-			return new SpinOptionView((ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case COMBO:
-			return new ComboOptionView((ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ComboOptionView((ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case COLOR:
-			return new ColorOptionView((ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ColorOptionView((ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case UNKNOWN:
-			QOptionView* view = (QOptionView*)((ZLUserDefinedOptionEntry*)option)->createView();
+			view = (QOptionView*)((ZLUserDefinedOptionEntry*)option)->createView();
 			view->setPosition(this, myRowCounter, fromColumn, toColumn);
-			if (option->isVisible()) {
-				view->createItem();
-			}
-			return view;
+			break;
 	}
-	return 0;
+
+	if (view != 0) {
+		view->setVisible(option->isVisible());
+		myViews.append(view);
+	}
 }

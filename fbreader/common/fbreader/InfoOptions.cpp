@@ -28,6 +28,25 @@ static const char *languageShortNames[] = {
 
 std::vector<std::string> LanguageEntry::ourLanguages;
 
+static std::vector<std::string> AUTO_ENCODING;
+
+EncodingEntry::EncodingEntry(const std::string &name, ZLStringOption &encodingOption) : myName(name), myEncodingOption(encodingOption) {
+	if (initialValue() == "auto") {
+		setActive(false);
+	}
+		setActive(false);
+}
+
+const std::vector<std::string> &EncodingEntry::values() const {
+	if (initialValue() == "auto") {
+		if (AUTO_ENCODING.empty()) {
+			AUTO_ENCODING.push_back("auto");
+		}
+		return AUTO_ENCODING;
+	}
+	return ZLXMLReader::knownEncodings();
+}
+
 const std::string &LanguageEntry::initialValue() const {
 	const std::string &lang = myLanguageOption.value();
 	int i = 0;

@@ -26,11 +26,11 @@
 class EncodingEntry : public ZLComboOptionEntry {
 
 public:
-	EncodingEntry(const std::string &name, ZLStringOption &encodingOption) : myName(name), myEncodingOption(encodingOption) {}
+	EncodingEntry(const std::string &name, ZLStringOption &encodingOption);
 
 	const std::string &name() const { return myName; }
 	const std::string &initialValue() const { return myEncodingOption.value(); }
-	const std::vector<std::string> &values() const { return ZLXMLReader::knownEncodings(); }
+	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value) const { myEncodingOption.setValue(value); }
 
 private:

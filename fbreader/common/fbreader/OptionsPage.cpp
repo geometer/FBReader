@@ -24,17 +24,13 @@
 
 void OptionsPage::ComboOptionEntry::onValueChange(const std::string &selectedValue) {
 	for (std::map<ZLOptionEntry*,std::string>::const_iterator it = myPage.myEntries.begin(); it != myPage.myEntries.end(); it++) {
-		if (it->second == selectedValue) {
-			it->first->show();
-		} else {
-			it->first->hide();
-		}
+		it->first->setVisible(it->second == selectedValue);
 	}
 }
 
 void OptionsPage::registerEntry(ZLOptionsDialogTab *tab, ZLOptionEntry *entry, const std::string &name) {
 	if (entry != 0) {
-		entry->hide();
+		entry->setVisible(false);
 		myEntries[entry] = name;
 	}
 	tab->addOption(entry);
@@ -42,11 +38,11 @@ void OptionsPage::registerEntry(ZLOptionsDialogTab *tab, ZLOptionEntry *entry, c
 
 void OptionsPage::registerEntries(ZLOptionsDialogTab *tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name) {
 	if (entry0 != 0) {
-		entry0->hide();
+		entry0->setVisible(false);
 		myEntries[entry0] = name;
 	}
 	if (entry1 != 0) {
-		entry1->hide();
+		entry1->setVisible(false);
 		myEntries[entry1] = name;
 	}
 	tab->addOptions(entry0, entry1);

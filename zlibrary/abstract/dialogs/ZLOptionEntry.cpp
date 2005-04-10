@@ -26,17 +26,17 @@ OptionView::~OptionView() {
 	delete myOption;
 }
 
-void ZLOptionEntry::show() {
-	myIsVisible = true;
+void ZLOptionEntry::setVisible(bool visible) {
+	myIsVisible = visible;
 	if (myView != 0) {
-		myView->show();
+		myView->setVisible(visible);
 	}
 }
 
-void ZLOptionEntry::hide() {
-	myIsVisible = false;
+void ZLOptionEntry::setActive(bool active) {
+	myIsActive = active;
 	if (myView != 0) {
-		myView->hide();
+		myView->setActive(active);
 	}
 }
 

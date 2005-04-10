@@ -41,8 +41,8 @@ class OptionView {
 public:
 	OptionView(ZLOptionEntry *option);
 	virtual ~OptionView();
-	virtual void show() = 0;
-	virtual void hide() = 0;
+	virtual void setVisible(bool visible) = 0;
+	virtual void setActive(bool active) = 0;
 
 protected:
 	ZLOptionEntry *myOption;
@@ -51,19 +51,23 @@ protected:
 class ZLOptionEntry {
 
 public:
-	ZLOptionEntry() : myView(0), myIsVisible(true) {}
+	ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 	virtual ~ZLOptionEntry() {}
 	virtual ZLOptionKind kind() const = 0;
 	virtual const std::string &name() const = 0;
 
 	void setView(OptionView *view) { myView = view; }
-	void show();
-	void hide();
+
+	void setVisible(bool visible);
 	bool isVisible() const { return myIsVisible; }
+
+	void setActive(bool active);
+	bool isActive() const { return myIsActive; }
 
 private:
 	OptionView *myView;
 	bool myIsVisible;
+	bool myIsActive;
 };
 
 class ZLUserDefinedOptionEntry : public ZLOptionEntry {

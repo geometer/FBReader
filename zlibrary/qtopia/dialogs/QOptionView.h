@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,15 +52,26 @@ public:
 		myToColumn = toColumn;
 	}
 
-	void createItem() { _createItem(); myInitialized = true; }
-	void hide() { if (myInitialized) _hide(); }
-	void show() { if (!myInitialized) createItem(); _show(); }
+	void setVisible(bool visible) {
+		if (visible) {
+			if (!myInitialized) _createItem(); myInitialized = true; setActive(myOption->isActive()); _show();
+		} else {
+			if (myInitialized) _hide();
+		}
+	}
+	void setActive(bool active) {
+		if (myInitialized) {
+			_setActive(active);
+		}
+	}
 	void onAccept() const { if (myInitialized) _onAccept(); }
 
 protected:
 	virtual void _createItem() = 0;
 	virtual void _hide() = 0;
 	virtual void _show() = 0;
+	// TODO: replace by pure virtual method
+	virtual void _setActive(bool active) {}
 	virtual void _onAccept() const = 0;
 
 protected:
@@ -75,9 +87,6 @@ class ChoiceOptionView : public QOptionView {
 public:
 	ChoiceOptionView(ZLChoiceOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {
 		myButtons = 0;
-		if (myOption->isVisible()) {
-			createItem();
-		}
 	}
 	~ChoiceOptionView() { if (myButtons != 0) delete[] myButtons; }
 
@@ -95,11 +104,7 @@ private:
 class BooleanOptionView : public QOptionView {
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {
-		if (myOption->isVisible()) {
-			createItem();
-		}
-	}
+	BooleanOptionView(ZLBooleanOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -114,11 +119,7 @@ private:
 class StringOptionView : public QOptionView {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {
-		if (myOption->isVisible()) {
-			createItem();
-		}
-	}
+	StringOptionView(ZLStringOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -134,11 +135,7 @@ private:
 class SpinOptionView : public QOptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {
-		if (myOption->isVisible()) {
-			createItem();
-		}
-	}
+	SpinOptionView(ZLSpinOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -156,16 +153,13 @@ class ComboOptionView : public QObject, public QOptionView {
 Q_OBJECT
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {
-		if (myOption->isVisible()) {
-			createItem();
-		}
-	}
+	ComboOptionView(ZLComboOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
 	void _show();
 	void _hide();
+	void _setActive(bool active);
 	void _onAccept() const;
 
 private slots:
@@ -181,11 +175,7 @@ class ColorOptionView : public QObject, public QOptionView {
 Q_OBJECT
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {
-		if (myOption->isVisible()) {
-			createItem();
-		}
-	}
+	ColorOptionView(ZLColorOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();

@@ -41,12 +41,14 @@ public:
 
 	void accept();
 
-	GtkWidget *widget() { return GTK_WIDGET (myTable); }
+	GtkWidget *widget() { return GTK_WIDGET(myTable); }
 
-	void addItem (GtkWidget *what, int row, int fromColumn, int toColumn);
+	void addItem(GtkWidget *what, int row, int fromColumn, int toColumn);
+
 private:
-	int addRow (void);
-	GtkOptionView *viewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
+	int addRow(void);
+	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
+
 private:
 	GtkTable *myTable;
 	gint myRowCounter;

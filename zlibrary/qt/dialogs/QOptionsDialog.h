@@ -48,7 +48,7 @@ public:
 	void accept();
 
 private:
-	QOptionView *viewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn);
+	void createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn);
 
 private:
 	QGridLayout *myLayout;
