@@ -34,7 +34,6 @@ EncodingEntry::EncodingEntry(const std::string &name, ZLStringOption &encodingOp
 	if (initialValue() == "auto") {
 		setActive(false);
 	}
-		setActive(false);
 }
 
 const std::vector<std::string> &EncodingEntry::values() const {

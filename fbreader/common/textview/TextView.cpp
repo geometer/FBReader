@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <iostream>
+
 #include "TextView.h"
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
@@ -382,6 +384,20 @@ bool TextView::onStylusPress(int x, int y) {
 			int paragraphNumber = myModel->paragraphs().size() * (x - left - 1) / (right - left - 1);
 			gotoParagraph(paragraphNumber, true);
 			repaintView();
+			if ((myLastParagraphCursor != 0) && !myLastParagraphCursor->isEndOfText()) {
+				int paragraphLength = myLastParagraphCursor->paragraphLength();
+				if (paragraphLength > 0) {
+					int wordNum =
+						(x - left - 1) * myModel->paragraphs().size() * paragraphLength / (right - left - 1) -
+						myLastParagraphCursor->paragraphNumber() * paragraphLength;
+					myLastParagraphCursor->moveTo(myLastParagraphCursor->paragraphNumber(), wordNum, 0);
+					if (myFirstParagraphCursor != 0) {
+						delete myFirstParagraphCursor;
+						myFirstParagraphCursor = 0;
+					}
+					repaintView();
+				}
+			}
 			return true;
 		}
 	}

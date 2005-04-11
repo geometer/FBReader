@@ -223,17 +223,23 @@ void ParagraphCursor::clear() {
 }
 
 void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber) {
-	if ((unsigned int)paragraphNumber < myModel.paragraphs().size()) {
+	if ((unsigned int)paragraphNumber >= myModel.paragraphs().size()) {
+		return;
+	}
+
+	std::vector<Paragraph*>::const_iterator it = myModel.paragraphs().begin() + paragraphNumber;
+	if (myParagraphIterator != it) {
 		clear();
-		myParagraphIterator = myModel.paragraphs().begin() + paragraphNumber;
+		myParagraphIterator = it;
 		fill();
-		if (myElements.size() >= (unsigned int)wordNumber) {
-			myNextElement = myElements.begin() + wordNumber;
-			if ((myNextElement.myWordIterator != myElements.end()) &&
-					(myNextElement.element().kind() == TextElement::WORD_ELEMENT)) {
-				if (charNumber < ((const Word&)myNextElement.element()).length()) {
-					myNextElement.myCharNumber = charNumber;
-				}
+	}
+
+	if (myElements.size() >= (unsigned int)wordNumber) {
+		myNextElement = myElements.begin() + wordNumber;
+		if ((myNextElement.myWordIterator != myElements.end()) &&
+				(myNextElement.element().kind() == TextElement::WORD_ELEMENT)) {
+			if (charNumber < ((const Word&)myNextElement.element()).length()) {
+				myNextElement.myCharNumber = charNumber;
 			}
 		}
 	}
