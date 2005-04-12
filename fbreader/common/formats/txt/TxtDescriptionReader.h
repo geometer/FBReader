@@ -33,6 +33,7 @@ protected:
 	void endDocumentHandler();
 
 	bool characterDataHandler(const char *text, int len);
+	bool newLineHandler() { return true; }
 
 private:
 	bool myReadTitle;

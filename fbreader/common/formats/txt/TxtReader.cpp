@@ -110,7 +110,19 @@ void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding)
 	size_t length;
 	do {
 		length = stream.read(buffer, BUFSIZE);
-		characterDataHandler(buffer, length);
+		char *ptr = buffer;
+		for (size_t i = 0; i < length; i++) {
+			if (buffer[i] == '\n') {
+				if (ptr != buffer + i) {
+					characterDataHandler(ptr, buffer - ptr + i);
+				}
+				ptr = buffer + i + 1;
+				newLineHandler();
+			}
+		}
+		if (ptr != buffer + length) {
+			characterDataHandler(ptr, buffer - ptr + length);
+		}
   } while (length == BUFSIZE);
 	delete[] buffer;
 

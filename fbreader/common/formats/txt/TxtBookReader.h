@@ -37,16 +37,13 @@ protected:
 	void endDocumentHandler();
 
 	bool characterDataHandler(const char *text, int len);
+	bool newLineHandler();
 
 private:
 	void flushTextBufferToParagraph();
 
 private:
-	int myIgnoreDataCounter;
-	bool myIsPreformatted;
-	bool myIsHyperlink;
-	bool myIsStarted;
-	std::stack<int> myListNumStack;
+	int myLineFeedCounter;
 };
 
 #endif /* __TXTBOOKREADER_H__ */

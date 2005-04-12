@@ -85,7 +85,8 @@ public:
 	static ZLIntegerOption PositionIndicatorOffsetOption;
 	
 public:
-	virtual void paint();
+	void paint(bool doPaint);
+	virtual void paint() { paint(true); }
 
 	void scrollPageBackward();
 	void scrollPageForward();
@@ -111,7 +112,7 @@ private:
 
 	int paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition);
 	void skip(ParagraphCursor &paragraph, int height);
-	void drawParagraph(ParagraphCursor &paragraph);
+	void drawParagraph(ParagraphCursor &paragraph, bool doPaint);
 
 	void drawTreeNode(TreeElement::TreeElementKind kind);
 

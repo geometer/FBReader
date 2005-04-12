@@ -59,6 +59,7 @@ protected:
 	virtual void endDocumentHandler() = 0;
 
 	virtual bool characterDataHandler(const char *text, int len) = 0;
+	virtual bool newLineHandler() = 0;
 
 protected:
 	TxtTextConverter *myConverter;

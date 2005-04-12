@@ -72,7 +72,7 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 	}
 }
 
-void TextView::paint() {
+void TextView::paint(bool doPaint) {
 	myParagraphMap.clear();
 	myTextElementMap.clear();
 
@@ -110,12 +110,12 @@ void TextView::paint() {
 	context().moveYTo(0);
 	do {
 		int start = context().y() + 1;
-		drawParagraph(*myLastParagraphCursor);
+		drawParagraph(*myLastParagraphCursor, doPaint);
 		int end = context().y();
 		myParagraphMap.push_back(ParagraphPosition(myLastParagraphCursor->paragraphNumber(), start, end));
 	} while (myLastParagraphCursor->isEndOfParagraph() && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
 
-	if (ShowPositionIndicatorOption.value()) {
+	if (doPaint && ShowPositionIndicatorOption.value()) {
 		int bottom = context().height();
 		int top = bottom - PositionIndicatorHeightOption.value() + 1;
 		int left = 0;
@@ -181,12 +181,12 @@ void TextView::gotoMark(TextMark mark) {
 		return;
 	}
 	gotoParagraph(mark.ParagraphNumber);
-	repaintView();
-	// TODO: don't repaint view after each scrolling
+	paint(false);
 	while (mark > myLastParagraphCursor->position()) {
 		scrollPageForward();
-		repaintView();
+		paint(false);
 	}
+	repaintView();
 }
 
 void TextView::gotoParagraph(int num, bool last) {
@@ -220,7 +220,7 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
-void TextView::drawParagraph(ParagraphCursor &paragraph) {
+void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor(), false);
 
 	while (!paragraph.isEndOfParagraph()) {
@@ -254,57 +254,59 @@ void TextView::drawParagraph(ParagraphCursor &paragraph) {
 				break;
 		}
 
-		bool wordOccured = false;
-		for (WordCursor pos = lineStart; !pos.sameElementAs(paragraph.wordCursor()); pos.nextWord()) {
-			TextElement::Kind kind = pos.element().kind();
-			int x = context().x();
-			int y = context().y();
-			int width = myStyle.elementWidth(pos);
-			int height = myStyle.elementHeight(pos);
-
-			switch (kind) {
-				case TextElement::WORD_ELEMENT:
-					wordOccured = true;
-					y -= myStyle.style().verticalShift();
+		if (doPaint) {
+			bool wordOccured = false;
+			for (WordCursor pos = lineStart; !pos.sameElementAs(paragraph.wordCursor()); pos.nextWord()) {
+				TextElement::Kind kind = pos.element().kind();
+				int x = context().x();
+				int y = context().y();
+				int width = myStyle.elementWidth(pos);
+				int height = myStyle.elementHeight(pos);
+    
+				switch (kind) {
+					case TextElement::WORD_ELEMENT:
+						wordOccured = true;
+						y -= myStyle.style().verticalShift();
+						context().setColor(myStyle.style().color());
+						context().drawWord(x, y, (const Word&)pos.element(), pos.charNumber(), -1, false);
+						break;
+					case TextElement::IMAGE_ELEMENT:
+						wordOccured = true;
+						context().drawImage(x, y, ((const ImageElement&)pos.element()).image());
+						break;
+					case TextElement::CONTROL_ELEMENT:
+						myStyle.applyControl((const ControlElement&)pos.element(), false);
+						break;
+					case TextElement::HSPACE_ELEMENT:
+						if (wordOccured && (spaceCounter > 0)) {
+							int correction = fullCorrection / spaceCounter;
+							context().moveX(context().spaceWidth() + correction);
+							fullCorrection -= correction;
+							wordOccured = false;
+							spaceCounter--;
+						}
+						break;
+					case TextElement::TREE_ELEMENT:
+						drawTreeNode(((const TreeElement&)pos.element()).treeElementKind());
+						break;
+					case TextElement::INDENT_ELEMENT:
+					case TextElement::BEFORE_PARAGRAPH_ELEMENT:
+					case TextElement::AFTER_PARAGRAPH_ELEMENT:
+					case TextElement::EMPTY_LINE_ELEMENT:
+						break;
+				}
+				context().moveX(width);
+				if ((width > 0) && (height > 0)) {
+					myTextElementMap.push_back(TextElementPosition(paragraph.paragraphNumber(), paragraph.wordNumber(pos), kind, x, x + width - 1, y - height + 1, y));
+				}
+			}
+			if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() == TextElement::WORD_ELEMENT)) {
+				int len = paragraph.charNumber();
+				if (len > 0) {
+					const Word &word = (const Word&)paragraph.wordCursor().element();
 					context().setColor(myStyle.style().color());
-					context().drawWord(x, y, (const Word&)pos.element(), pos.charNumber(), -1, false);
-					break;
-				case TextElement::IMAGE_ELEMENT:
-					wordOccured = true;
-					context().drawImage(x, y, ((const ImageElement&)pos.element()).image());
-					break;
-				case TextElement::CONTROL_ELEMENT:
-					myStyle.applyControl((const ControlElement&)pos.element(), false);
-					break;
-				case TextElement::HSPACE_ELEMENT:
-					if (wordOccured && (spaceCounter > 0)) {
-						int correction = fullCorrection / spaceCounter;
-						context().moveX(context().spaceWidth() + correction);
-						fullCorrection -= correction;
-						wordOccured = false;
-						spaceCounter--;
-					}
-					break;
-				case TextElement::TREE_ELEMENT:
-					drawTreeNode(((const TreeElement&)pos.element()).treeElementKind());
-					break;
-				case TextElement::INDENT_ELEMENT:
-				case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-				case TextElement::AFTER_PARAGRAPH_ELEMENT:
-				case TextElement::EMPTY_LINE_ELEMENT:
-					break;
-			}
-			context().moveX(width);
-			if ((width > 0) && (height > 0)) {
-				myTextElementMap.push_back(TextElementPosition(paragraph.paragraphNumber(), paragraph.wordNumber(pos), kind, x, x + width - 1, y - height + 1, y));
-			}
-		}
-		if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() == TextElement::WORD_ELEMENT)) {
-			int len = paragraph.charNumber();
-			if (len > 0) {
-				const Word &word = (const Word&)paragraph.wordCursor().element();
-				context().setColor(myStyle.style().color());
-				context().drawWord(context().x(), context().y() - myStyle.style().verticalShift(), word, 0, len, word.charAt(len - 1) != '-');
+					context().drawWord(context().x(), context().y() - myStyle.style().verticalShift(), word, 0, len, word.charAt(len - 1) != '-');
+				}
 			}
 		}
 	}
@@ -383,7 +385,7 @@ bool TextView::onStylusPress(int x, int y) {
 		if ((x > left) && (x < right) && (y > top) && (y < bottom)) {
 			int paragraphNumber = myModel->paragraphs().size() * (x - left - 1) / (right - left - 1);
 			gotoParagraph(paragraphNumber, true);
-			repaintView();
+			paint(false);
 			if ((myLastParagraphCursor != 0) && !myLastParagraphCursor->isEndOfText()) {
 				int paragraphLength = myLastParagraphCursor->paragraphLength();
 				if (paragraphLength > 0) {
