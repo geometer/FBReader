@@ -38,6 +38,8 @@ std::string FBFileHandler::pixmapName(const std::string &shortFileName, bool dir
 		return "FBReader/html";
 	} else if (ZLStringUtil::stringEndsWith(shortFileName, ".zip")) {
 		return "FBReader/zipfolder";
+	} else if (ZLStringUtil::stringEndsWith(shortFileName, ".fb2")) {
+		return "FBReader/fb2";
 	} else {
 		return "FBReader/unknown";
 	}
