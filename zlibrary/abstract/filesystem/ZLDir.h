@@ -26,6 +26,7 @@ class ZLDir {
 
 private:
 	static std::string HomeDir;
+	static std::string PwdDir;
 	
 public:
 	ZLDir(const std::string &name);

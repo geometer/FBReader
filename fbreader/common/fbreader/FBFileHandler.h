@@ -29,7 +29,7 @@ public:
 	FBFileHandler() : myDescription(0) {}
 
 	bool isFileVisible(const std::string &shortFileName, bool dir) const;
-	std::string pixmapName(const std::string &shortFileName, bool dir) const;
+	const std::string &pixmapName(const std::string &shortFileName, bool dir) const;
 	void accept(const std::string &fullFileName, bool dir) const;
 
 	BookDescription *description() const { return myDescription; }

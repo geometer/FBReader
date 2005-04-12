@@ -31,18 +31,21 @@ bool FBFileHandler::isFileVisible(const std::string &shortFileName, bool dir) co
 	return dir || ZLStringUtil::stringEndsWith(shortFileName, ".zip") || (PluginCollection::instance().plugin(shortFileName, false) != 0);
 }
 
-std::string FBFileHandler::pixmapName(const std::string &shortFileName, bool dir) const {
+const std::string &FBFileHandler::pixmapName(const std::string &shortFileName, bool dir) const {
+	static const std::string FOLDER_ICON = "FBReader/folder";
+	static const std::string ZIPFOLDER_ICON = "FBReader/zipfolder";
+	static const std::string UNKNOWN_ICON = "FBReader/unknown";
 	if (dir) {
-		return "FBReader/folder";
-	} else if (ZLStringUtil::stringEndsWith(shortFileName, "html") || ZLStringUtil::stringEndsWith(shortFileName, ".htm")) {
-		return "FBReader/html";
+		return FOLDER_ICON;
 	} else if (ZLStringUtil::stringEndsWith(shortFileName, ".zip")) {
-		return "FBReader/zipfolder";
-	} else if (ZLStringUtil::stringEndsWith(shortFileName, ".fb2")) {
-		return "FBReader/fb2";
+		return ZIPFOLDER_ICON;
 	} else {
-		return "FBReader/unknown";
+		FormatPlugin *plugin = PluginCollection::instance().plugin(shortFileName, false);
+		if (plugin != 0) {
+			return plugin->iconName();
+		}
 	}
+	return UNKNOWN_ICON;
 }
 
 void FBFileHandler::accept(const std::string &fullFileName, bool dir) const {

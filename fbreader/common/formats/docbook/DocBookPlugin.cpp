@@ -46,3 +46,8 @@ bool DocBookPlugin::readModel(const BookDescription &description, BookModel &mod
 	delete reader;
 	return true;
 }
+
+const std::string &DocBookPlugin::iconName() const {
+	static const std::string ICON_NAME = "FBReader/unknown";
+	return ICON_NAME;
+}

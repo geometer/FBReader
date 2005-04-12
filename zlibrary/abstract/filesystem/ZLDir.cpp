@@ -19,16 +19,17 @@
 #include "ZLDir.h"
 
 std::string ZLDir::HomeDir = getenv("HOME");
+std::string ZLDir::PwdDir = getenv("PWD");
 
 ZLDir::ZLDir(const std::string &name) : myName(name) {
 	if (myName.empty()) {
-		myName = getenv("PWD");
+		myName = PwdDir;
 	} else if (myName[0] == '~') {
 		if ((myName.length() == 1) || (myName[1] == '/')) {
 			myName = HomeDir + myName.substr(1);
 		}
 	} else if (myName[0] != '/') {
-		myName = getenv("PWD") + '/' + myName;
+		myName = PwdDir + '/' + myName;
 	}
 	int last = myName.length() - 1;
 	while ((last > 0) && (myName[last] == '/')) {

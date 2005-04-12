@@ -52,3 +52,8 @@ bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) 
 	delete reader;
 	return true;
 }
+
+const std::string &FB2Plugin::iconName() const {
+	static const std::string ICON_NAME = "FBReader/fb2";
+	return ICON_NAME;
+}

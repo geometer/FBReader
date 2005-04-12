@@ -29,7 +29,13 @@ class ZLInputStream;
 class ZLXMLReader {
 
 public:
-	static std::vector<std::string> &knownEncodings();
+	static void setEncodingDescriptionPath(const std::string &path);
+	static std::string &encodingDescriptionPath() { return ourEncodingDescriptionPath; }
+	static std::vector<std::string> &knownEncodings() { return ourKnownEncodings; }
+
+private:
+	static std::string ourEncodingDescriptionPath;
+	static std::vector<std::string> ourKnownEncodings;
 
 	//
 //protected:
@@ -46,7 +52,7 @@ protected:
 	virtual const Tag *tags() const = 0;
 
 public:
-	void readDocument(ZLInputStream &stream);
+	bool readDocument(ZLInputStream &stream);
 
 	int tag(const char *name);
 

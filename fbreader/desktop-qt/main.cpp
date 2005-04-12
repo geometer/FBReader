@@ -20,6 +20,7 @@
 
 #include <qapplication.h>
 
+#include <abstract/ZLXMLReader.h>
 #include <desktop/XMLOptions.h>
 #include <qt/QDialogManager.h>
 #include <qt/QScreenSize.h>
@@ -33,6 +34,7 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath("images");
+	ZLXMLReader::setEncodingDescriptionPath("share/FBReader/encodings");
 	QWordBuilder::createInstance();
 	QScreenSize::createInstance();
 

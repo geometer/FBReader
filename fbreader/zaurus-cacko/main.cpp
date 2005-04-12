@@ -19,6 +19,7 @@
 
 #include <qpe/qpeapplication.h>
 
+#include <abstract/ZLXMLReader.h>
 #include <qtopia/QOptions.h>
 #include <qtopia/QDialogManager.h>
 #include <qtopia/QScreenSize.h>
@@ -29,6 +30,7 @@
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
 
+	ZLXMLReader::setEncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
 	QOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QWordBuilder::createInstance();

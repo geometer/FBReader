@@ -116,7 +116,7 @@ void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding)
 				if (ptr != buffer + i) {
 					characterDataHandler(ptr, buffer - ptr + i);
 				}
-				ptr = buffer + i + 1;
+				ptr = buffer + i;
 				newLineHandler();
 			}
 		}

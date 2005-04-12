@@ -29,6 +29,7 @@ public:
 	bool acceptsFile(const std::string &fileName) const;
 	bool readDescription(const std::string &fileName, BookDescription &description) const;
 	bool readModel(const BookDescription &description, BookModel &model) const;
+	const std::string &iconName() const;
 };
 
 #endif /* __TXTPLUGIN_H__ */

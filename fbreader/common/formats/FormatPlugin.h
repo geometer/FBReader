@@ -33,6 +33,7 @@ public:
 	virtual bool acceptsFile(const std::string &fileName) const = 0;
 	virtual bool readDescription(const std::string &fileName, BookDescription &description) const = 0;
 	virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
+	virtual const std::string &iconName() const = 0;
 };
 
 class PluginCollection {

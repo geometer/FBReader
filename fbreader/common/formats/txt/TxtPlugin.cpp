@@ -58,3 +58,8 @@ bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) 
 	delete reader;
 	return true;
 }
+
+const std::string &TxtPlugin::iconName() const {
+	static const std::string ICON_NAME = "FBReader/unknown";
+	return ICON_NAME;
+}

@@ -58,3 +58,8 @@ bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model)
 	delete reader;
 	return true;
 }
+
+const std::string &HtmlPlugin::iconName() const {
+	static const std::string ICON_NAME = "FBReader/html";
+	return ICON_NAME;
+}

@@ -16,36 +16,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLOPENFILEDIALOG_H__
-#define __ZLOPENFILEDIALOG_H__
+#ifndef __ENCODINGREADER_H__
+#define __ENCODINGREADER_H__
 
-#include <abstract/ZLOptions.h>
+#include "ZLXMLReader.h"
 
-class ZLDir;
-
-class ZLFileHandler {
+class EncodingReader : public ZLXMLReader {
 
 public:
-	virtual bool isFileVisible(const std::string &shortFileName, bool dir) const = 0;
-	virtual const std::string &pixmapName(const std::string &shortFileName, bool dir) const = 0;
-	virtual void accept(const std::string &fullFileName, bool dir) const = 0;
-};
+	EncodingReader(const std::string &encoding);
+	~EncodingReader() {}
+	bool fillTable(int *map);
 
-class ZLOpenFileDialog {
+protected:
+	const Tag *tags() const;
 
 public:
-	static ZLStringOption DirectoryOption;
-
-protected:
-	ZLOpenFileDialog(const ZLFileHandler &handler);
-	~ZLOpenFileDialog();
-
-protected:
-	ZLDir *myCurrentDir;
-	const ZLFileHandler &handler() const { return myHandler; }
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int) {}
+	void characterDataHandler(const char *, int) {}
 
 private:
-	const ZLFileHandler &myHandler;
+	const std::string myEncoding;
+	int *myMap;
 };
 
-#endif /* __ZLOPENFILEDIALOG_H__ */
+#endif /* __ENCODINGREADER_H__ */
