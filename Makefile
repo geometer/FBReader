@@ -16,11 +16,13 @@ LIBDIR = zlibrary
 
 all:
 	@for dir in $(LIBDIR) $(APPDIRS); do \
-		cd $$dir; \
-		if ! make; then \
-			exit 1; \
+		if [ -d $$dir ]; then \
+			cd $$dir; \
+			if ! make; then \
+				exit 1; \
+			fi; \
+			cd ..; \
 		fi; \
-		cd ..; \
 	done
 
 clean:
