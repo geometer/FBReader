@@ -21,7 +21,7 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 	@cp ../FBReader usr/lib/qt/bin
 	@cp -r ../share/FBReader usr/share
 	@mkdir -p usr/share/pixmaps/FBReader
-	@cp `find ../images -name "*.png"` usr/share/pixmaps/FBReader
+	@cp `find ../icons/640x480 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 

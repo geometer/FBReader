@@ -19,8 +19,8 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 
 .tmpdir:
 	@ln -sf .. bin
-	@ln -sf ../images pics144
-	@ln -sf ../images240x320 pics
+	@ln -sf ../icons/640x480 pics144
+	@ln -sf ../icons/320x240 pics
 	@cp -r ../share .
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)

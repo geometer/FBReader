@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
-	((QDialogManager&)QDialogManager::instance()).setPixmapPath("images");
+	((QDialogManager&)QDialogManager::instance()).setPixmapPath("icons/640x480");
 	ZLXMLReader::setEncodingDescriptionPath("share/FBReader/encodings");
 	QWordBuilder::createInstance();
 	QScreenSize::createInstance();
