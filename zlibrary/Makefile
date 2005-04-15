@@ -29,6 +29,10 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	GTKSUBDIRS = gtk/dialogs gtk/screenSize
 endif
 
+ifeq "$(TARGET_ARCH)" "palm"
+	SUBDIRS = palm
+endif
+
 .objects:
 	@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \
@@ -55,7 +59,7 @@ endif
 $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
-	@$(AR) $(TARGET) */*/*.o
+	@$(AR) $(TARGET) `find . -name *.o`
 	@echo " OK"
 
 clean:

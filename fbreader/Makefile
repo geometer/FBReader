@@ -12,12 +12,27 @@ TARGET = FBReader
 
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader
 
-ifneq "$(TARGET_ARCH)" "desktop-gtk"
-	QSUBDIRS = $(TARGET_ARCH)
-else
+ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	GTKSUBDIRS = $(TARGET_ARCH)
 endif
 
+ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
+	QSUBDIRS = $(TARGET_ARCH)
+endif
+
+ifeq "$(TARGET_ARCH)" "zaurus-cacko"
+	QSUBDIRS = $(TARGET_ARCH)
+endif
+
+ifeq "$(TARGET_ARCH)" "desktop-qt"
+	QSUBDIRS = $(TARGET_ARCH)
+endif
+
+ifeq "$(TARGET_ARCH)" "palm"
+	SUBDIRS = $(TARGET_ARCH)
+endif
+
+ALL_SUBDIRS = $(SUBDIRS) palm
 ALL_QSUBDIRS = zaurus-cacko zaurus-pdaxrom desktop-qt
 ALL_GTKSUBDIRS = desktop-gtk
 
@@ -27,6 +42,9 @@ ifeq "$(TARGET_ARCH)" "zaurus-cacko"
 endif
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
 	@$(MAKE) -C ipk-pdaxrom
+endif
+ifeq "$(TARGET_ARCH)" "palm"
+	@$(MAKE) -C palm/prc
 endif
 
 .lib:
@@ -52,14 +70,14 @@ endif
 
 $(TARGET):
 	@echo -n "Linking $@ ..."
-	@$(LD) $(LDFLAGS) -o $@ $^ */*.o */*/*.o */*/*/*.o $(LIBS)
+	@$(LD) $(LDFLAGS) -o $@ $^ `find . -name *.o` $(LIBS)
 	@echo " OK"
 	@echo -n "Stripping $@ ..."
 	@$(STRIP) $(TARGET)
 	@echo " OK"
 
 clean:
-	@for subdir in $(SUBDIRS); do \
+	@for subdir in $(ALL_SUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 	done;
 	@for subdir in $(ALL_QSUBDIRS); do \
@@ -70,4 +88,5 @@ clean:
 	done;
 	@$(MAKE) -C ipk-cacko clean
 	@$(MAKE) -C ipk-pdaxrom clean
+	@$(MAKE) -C palm/prc clean
 	@$(RM) $(TARGET) err

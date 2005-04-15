@@ -62,8 +62,10 @@ static Boolean MyFormHandleEvent(EventPtr event) {
 				WinSetCoordinateSystem(kCoordinatesStandard);
 			}
 			return true;
+
+		default:
+			return false;
 	}
-	return false;
 }
 
 
@@ -104,7 +106,7 @@ static void EventLoop(void) {
 }
 
 
-DWord PilotMain(Word cmd, Ptr cmdPBP, Word launchFlags) {
+DWord PilotMain(Word cmd, Ptr /*cmdPBP*/, Word /*launchFlags*/) {
 	Err err = 0;
 	
 	if ((cmd == sysAppLaunchCmdNormalLaunch) && ((err = StartApplication()) == 0)) {

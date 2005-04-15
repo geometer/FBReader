@@ -74,5 +74,19 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	ENCALIBS = -lenca
 endif
 
+ifeq "$(TARGET_ARCH)" "palm"
+	CC = m68k-palmos-g++
+	AR = m68k-palmos-ar rsu
+	LD = m68k-palmos-g++
+	STRIP = m68k-palmos-strip
+
+	DEPGEN = $(CC) -MM
+	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2
+	RM = rm -rvf
+	RM_QUIET = rm -rf
+	#EXPATLIBS = -lexpat
+	#ENCALIBS = -lenca
+endif
+
 ZDIR = $(ROOTDIR)/zlibrary
 ZINCLUDE = -I $(ROOTDIR)/zlibrary/include
