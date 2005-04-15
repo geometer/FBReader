@@ -1,0 +1,31 @@
+FBReader -- E-book Reader
+
+Latest information you can find at the programs home page at
+
+  http://only.mawhrin.net/~geometer/zaurus/fbreader/
+
+This file is a quick guide on how to compile the application.
+
+The program was originally written for Sharp Zaurus.  However beside two
+different platforms for Zaurus, it can be compiled for desktop.
+
+To compile the program for a particular platform you need to create a file
+called makefiles/target.mk, place there a string like
+
+  TARGET_ARCH = <your target arch>
+
+The complete list of platforms you can find in makefiles/platforms.mk, however
+currently the program is know to compile without problems on the following
+platforms:
+
+  zaurus-cacko    -- Sharp Zaurus, Cacko ROM
+  zaurus-pdaxrom  -- Sharp Zaurus, pdaXrom
+  desktop-qt      -- for desktop version of qt
+
+If you do not create makefiles/target.mk file, the program will be built for
+the default platform -- zaurus-cacko.
+
+IMPORTANT: you will need the following libraries:
+
+  expat       -- XML parsing library (available at http://expat.sourceforge.net)
+  enca        -- charset detection library (available at http://trific.ath.cx/software/enca/)
