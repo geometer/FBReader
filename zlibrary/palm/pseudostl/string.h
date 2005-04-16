@@ -10,6 +10,10 @@ namespace std {
 
 		string();
 		~string();
+		string(const string &s);
+		string(const char *s);
+		const string &operator = (const string &s);
+		const string &operator = (const char *s);
 		
 		void reserve(size_t minSize);
 		void erase() { myLength = 0; }

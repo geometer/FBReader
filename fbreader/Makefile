@@ -10,6 +10,10 @@ LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS)
 
 TARGET = FBReader
 
+ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader palm
+ALL_QSUBDIRS = zaurus-cacko zaurus-pdaxrom desktop-qt
+ALL_GTKSUBDIRS = desktop-gtk
+
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
@@ -31,10 +35,6 @@ endif
 ifeq "$(TARGET_ARCH)" "palm"
 	SUBDIRS = $(TARGET_ARCH)
 endif
-
-ALL_SUBDIRS = $(SUBDIRS) palm
-ALL_QSUBDIRS = zaurus-cacko zaurus-pdaxrom desktop-qt
-ALL_GTKSUBDIRS = desktop-gtk
 
 all: .bin
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
@@ -78,6 +78,7 @@ $(TARGET):
 
 clean:
 	@for subdir in $(ALL_SUBDIRS); do \
+		echo $$subdir; \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 	done;
 	@for subdir in $(ALL_QSUBDIRS); do \
