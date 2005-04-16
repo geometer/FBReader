@@ -72,14 +72,14 @@ private:
 class ZLIntegerOption : public ZLOption {
 
 public:
-	ZLIntegerOption(const std::string &group, const std::string &optionName, int defaultValue);
+	ZLIntegerOption(const std::string &group, const std::string &optionName, long defaultValue);
 
-	int value() const;
-	void setValue(int value) const;
+	long value() const;
+	void setValue(long value) const;
 
 private:
-	mutable int myValue;
-	int myDefaultValue;
+	mutable long myValue;
+	long myDefaultValue;
 };
 
 struct ZLColor {
@@ -88,8 +88,8 @@ struct ZLColor {
 	unsigned char Blue;
 
 	ZLColor(unsigned char r, unsigned char g, unsigned char b) : Red(r), Green(g), Blue(b) {}
-	ZLColor(int intValue = 0) : Red(intValue >> 16), Green((intValue >> 8) & 0xFF), Blue(intValue & 0xFF) {}
-	int intValue() { return (((int)Red) << 16) + (((int)Green) << 8) + Blue; }
+	ZLColor(long longValue = 0) : Red(longValue >> 16), Green((longValue >> 8) & 0xFF), Blue(longValue & 0xFF) {}
+	long intValue() { return (((long)Red) << 16) + (((long)Green) << 8) + Blue; }
 };
 
 class ZLColorOption : public ZLOption {
@@ -101,8 +101,8 @@ public:
 	void setValue(ZLColor value) const;
 
 private:
-	mutable int myIntValue;
-	int myDefaultIntValue;
+	mutable long myIntValue;
+	long myDefaultIntValue;
 };
 
 class ZLDoubleOption : public ZLOption {

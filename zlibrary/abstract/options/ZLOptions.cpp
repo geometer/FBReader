@@ -80,7 +80,7 @@ void ZLBoolean3Option::setValue(Boolean3 value) const {
 	if (myValue == myDefaultValue) {
 		ZLOptions::instance().unsetValue(myOptionName);
 	} else {
-		ZLOptions::instance().setValue(myOptionName, myValue);
+		ZLOptions::instance().setValue(myOptionName, (long)myValue);
 	}
 }
 
@@ -111,11 +111,11 @@ void ZLColorOption::setValue(ZLColor value) const {
 	}
 }
 
-ZLIntegerOption::ZLIntegerOption(const std::string &group, const std::string &optionName, int defaultValue) : ZLOption(group, optionName) {
+ZLIntegerOption::ZLIntegerOption(const std::string &group, const std::string &optionName, long defaultValue) : ZLOption(group, optionName) {
 	myDefaultValue = defaultValue;
 }
 
-int ZLIntegerOption::value() const {
+long ZLIntegerOption::value() const {
 	if (!myIsSynchronized) {
 		ZLOptions::instance().setGroup(myGroup);
 		myValue = ZLOptions::instance().integerValue(myOptionName, myDefaultValue);
@@ -124,7 +124,7 @@ int ZLIntegerOption::value() const {
 	return myValue;
 }
 
-void ZLIntegerOption::setValue(int value) const {
+void ZLIntegerOption::setValue(long value) const {
 	if (myIsSynchronized && (myValue == value)) {
 		return;
 	}

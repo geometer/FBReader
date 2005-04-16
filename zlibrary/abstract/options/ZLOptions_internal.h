@@ -42,8 +42,8 @@ public:
 	virtual bool booleanValue(const std::string &name, bool defaultValue) = 0;
 	virtual void setValue(const std::string &name, bool value) = 0;
 
-	virtual int integerValue(const std::string &name, int defaultValue) = 0;
-	virtual void setValue(const std::string &name, int value) = 0;
+	virtual long integerValue(const std::string &name, long defaultValue) = 0;
+	virtual void setValue(const std::string &name, long value) = 0;
 
 	virtual double doubleValue(const std::string &name, double defaultValue) = 0;
 	virtual void setValue(const std::string &name, double value) = 0;

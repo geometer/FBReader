@@ -1,0 +1,7 @@
+#ifndef __VECTOR__
+#define __VECTOR__
+
+#include <vector.h>
+
+#endif /* __VECTOR__ */
+

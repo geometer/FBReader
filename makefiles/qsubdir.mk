@@ -12,6 +12,7 @@ DEPFILE = .depend
 
 .dep:
 	@echo -n "Calculating dependencies ..."
+	@$(RM_QUIET) $(DEPFILE)
 	@if [ "$(SOURCES)" != "" ]; then \
 		$(DEPGEN) $(INCLUDE) $(SOURCES) >> $(DEPFILE); \
 	fi;

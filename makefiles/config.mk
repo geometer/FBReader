@@ -81,9 +81,10 @@ ifeq "$(TARGET_ARCH)" "palm"
 	STRIP = m68k-palmos-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2
+	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -Wno-non-template-friend
 	RM = rm -rvf
 	RM_QUIET = rm -rf
+ 	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl
 	#EXPATLIBS = -lexpat
 	#ENCALIBS = -lenca
 endif
