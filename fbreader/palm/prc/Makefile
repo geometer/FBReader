@@ -1,6 +1,6 @@
 NAME = FBReader
 APP = ../../$(NAME)
-APPID = PBK5
+APPID = FBRd
 RCP = $(NAME).rcp
 PRC = $(NAME).prc
 GRC = $(NAME).grc
@@ -11,7 +11,7 @@ OBJRES = m68k-palmos-obj-res
 BUILDPRC = build-prc
 
 $(PRC): grc.stamp bin.stamp
-	$(BUILDPRC) $(PRC) "$(NAME)" $(APPID) *.grc *.bin $(LINKFILES) 
+	$(BUILDPRC) $(PRC) $(NAME) $(APPID) *.grc *.bin $(LINKFILES) 
 	ls -l *.prc
 
 grc.stamp: $(APP)

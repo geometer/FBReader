@@ -5,7 +5,7 @@ include $(MAKEFILESDIR)/config.mk
 
 TARGET = libzlibrary.a
 
-SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml abstract/screenSize desktop/xml desktop/dialogs palm/pseudostl
+SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml abstract/screenSize desktop/xml desktop/dialogs palm/pseudostl palm/options
 QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/view qtopia/screenSize qt/dialogs qt/screenSize
 GTKSUBDIRS_ALL = gtk/dialogs gtk/screenSize
 
@@ -30,7 +30,7 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = palm/pseudostl abstract/options abstract/util
+	SUBDIRS = palm/pseudostl abstract/options abstract/util palm/options
 endif
 
 .objects:

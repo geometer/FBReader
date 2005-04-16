@@ -17,8 +17,8 @@ namespace std {
 		
 		void reserve(size_t minSize);
 		void erase() { myLength = 0; }
-		const std::string &operator += (const string &s);
-		const std::string &operator += (char c);
+		const string &operator += (const string &s);
+		const string &operator += (char c);
 
 		size_t length() const { return myLength; }
 		const char *data() const { return myData; }

@@ -1,18 +1,9 @@
-#include <PalmOS.h>				
-#include <PalmTypes.h>				
-#include <PalmCompatibility.h>				
+#include <abstract/ZLOptions.h>
 
+#include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
-static Err StartApplication(void) {
-	FrmGotoForm(MainFBReaderForm);
-	return 0;
-}
-
-
-static void StopApplication(void) {
-}
-
+static ZLColorOption BackgroundColor("Color", "Background", ZLColor(255, 255, 204));
 
 static Boolean MyFormHandleEvent(EventPtr event) {
 	switch (event->eType) {
@@ -21,7 +12,7 @@ static Boolean MyFormHandleEvent(EventPtr event) {
 			MenuCmdBarAddButton(menuCmdBarOnRight, AddBookBitmap, menuCmdBarResultMenuItem, 5001, NULL);
 			return false;
 
-   	case penDownEvent:  // A control button was pressed and released.
+   	case penDownEvent:
 			{
 				char txt[4];
 				int x = event->screenX;
@@ -35,16 +26,20 @@ static Boolean MyFormHandleEvent(EventPtr event) {
   	
   	case frmOpenEvent:	
 			{
+				RGBColorType bg;
+				ZLColor bgc = BackgroundColor.value();
+				bg.r = bgc.Red;
+				bg.g = bgc.Green;
+				bg.b = bgc.Blue;
 				FrmDrawForm(FrmGetActiveForm());
 				WinSetCoordinateSystem(kCoordinatesNative);
 				RGBColorType red = { 0x00, 0xff, 0x00, 0xff };
-				RGBColorType yellow = { 0x00, 0xff, 0xff, 0xa0 };
 				RGBColorType blue = { 0x00, 0x00, 0x00, 0x80 };
 				IndexedColorType iRed = WinRGBToIndex(&red);
-				IndexedColorType iYellow = WinRGBToIndex(&yellow);
+				IndexedColorType iBg = WinRGBToIndex(&bg);
 				IndexedColorType iBlue = WinRGBToIndex(&blue);
 				WinSetTextColor(iRed);
-				WinSetBackColor(iYellow);
+				WinSetBackColor(iBg);
 				WinSetForeColor(iBlue);
 				RectangleType rectangle;
 				WinGetWindowFrameRect(WinGetActiveWindow(), &rectangle);
@@ -93,7 +88,7 @@ static Boolean ApplicationHandleEvent(EventPtr event) {
 }
 
 
-static void EventLoop(void) {
+void EventLoop(void) {
 	EventType event;
 	Word error;
 	
@@ -103,16 +98,4 @@ static void EventLoop(void) {
 			FrmDispatchEvent(&event);
 		}
 	} while (event.eType != appStopEvent);
-}
-
-
-DWord PilotMain(Word cmd, Ptr /*cmdPBP*/, Word /*launchFlags*/) {
-	Err err = 0;
-	
-	if ((cmd == sysAppLaunchCmdNormalLaunch) && ((err = StartApplication()) == 0)) {
-		EventLoop();
-		StopApplication();
-	}
-
-	return err;
 }

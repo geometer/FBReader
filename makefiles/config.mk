@@ -16,6 +16,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-cacko"
 	STRIP = $(TOOLSDIR)/strip
 
 	CFLAGS = -pipe -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	LDFLAGS = -O2
 	DEPGEN = $(CC) -MM
 
 	EXTERNALINCLUDE = -I $(ROOTDIR)/external/include
@@ -32,6 +33,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
 
 	DEPGEN = $(CC) -MM
 	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	LDFLAGS = -O2
 	MOC = $(BASEDIR)/bin/moc
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -49,6 +51,7 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 
 	DEPGEN = $(CC) -MM
 	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	LDFLAGS = -O2
 	MOC = moc-qt3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -66,6 +69,7 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 
 	DEPGEN = $(CC) -MM
 	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	LDFLAGS = -O2
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	GTKINCLUDE = -I/usr/include/libxml2 -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/X11R6/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/gconf/2 -I/usr/include/orbit-2.0
@@ -81,7 +85,8 @@ ifeq "$(TARGET_ARCH)" "palm"
 	STRIP = m68k-palmos-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -Wno-non-template-friend
+	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O0 -Wno-non-template-friend
+	#LDFLAGS = -static -Wl,--gc-sections
 	RM = rm -rvf
 	RM_QUIET = rm -rf
  	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl
