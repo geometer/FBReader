@@ -41,8 +41,8 @@ public:
 	bool booleanValue(const std::string &name, bool defaultValue);
 	void setValue(const std::string &name, bool value);
 
-	int integerValue(const std::string &name, int defaultValue);
-	void setValue(const std::string &name, int value);
+	long integerValue(const std::string &name, long defaultValue);
+	void setValue(const std::string &name, long value);
 
 	double doubleValue(const std::string &name, double defaultValue);
 	void setValue(const std::string &name, double value);

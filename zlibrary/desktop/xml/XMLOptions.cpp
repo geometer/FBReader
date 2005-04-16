@@ -52,12 +52,12 @@ void XMLOptions::setValue(const std::string &name, bool value) {
 	setValue(name, std::string(value ? "true" : "false"));
 }
 
-int XMLOptions::integerValue(const std::string &name, int defaultValue) {
+long XMLOptions::integerValue(const std::string &name, long defaultValue) {
 	std::string value = stringValue(name, std::string());
 	return (!value.empty()) ? atoi(value.c_str()) : defaultValue;
 }
 
-void XMLOptions::setValue(const std::string &name, int value) {
+void XMLOptions::setValue(const std::string &name, long value) {
 	char buf[100];
 	sprintf(buf, "%d", value);
 	setValue(name, std::string(buf));

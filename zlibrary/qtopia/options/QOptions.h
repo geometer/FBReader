@@ -43,8 +43,8 @@ public:
 	bool booleanValue(const std::string &name, bool defaultValue) { return myConfig.readBoolEntry(name.c_str(), defaultValue); }
 	void setValue(const std::string &name, bool value) { myConfig.writeEntry(name.c_str(), value); }
 
-	int integerValue(const std::string &name, int defaultValue) { return myConfig.readNumEntry(name.c_str(), defaultValue); }
-	void setValue(const std::string &name, int value) { myConfig.writeEntry(name.c_str(), value); }
+	long integerValue(const std::string &name, long defaultValue) { return myConfig.readNumEntry(name.c_str(), defaultValue); }
+	void setValue(const std::string &name, long value) { myConfig.writeEntry(name.c_str(), (int)value); }
 
 	double doubleValue(const std::string &name, double defaultValue) { return myConfig.readEntry(name.c_str(), QString::number(defaultValue)).toDouble(); }
 	void setValue(const std::string &name, double value) { myConfig.writeEntry(name.c_str(), QString::number(value)); }
