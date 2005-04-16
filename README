@@ -6,26 +6,64 @@ Latest information you can find at the programs home page at
 
 This file is a quick guide on how to compile the application.
 
-The program was originally written for Sharp Zaurus.  However beside two
-different platforms for Zaurus, it can be compiled for linux desktop.
+PLATFORM DESCRIPTION
 
-To compile the program for a particular platform you need to create a file
-called makefiles/target.mk, place there a string like
+  The program was originally written for Sharp Zaurus.  However beside two
+  different platforms for Zaurus, it can be compiled for linux desktop.
 
-  TARGET_ARCH = <your target arch>
+  To compile the program for a particular platform you need to create a file
+  called makefiles/target.mk, place there a string like
 
-The complete list of platforms you can find in makefiles/platforms.mk, however
-currently the program is know to compile without problems on the following
-platforms:
+    TARGET_ARCH = <your target arch>
 
-  zaurus-cacko    -- Sharp Zaurus, Cacko ROM (in fact, any Sharp-based ROM)
-  zaurus-pdaxrom  -- Sharp Zaurus, pdaXrom
-  desktop-qt      -- (linux) desktop computer, uses qt library (version 3.*)
+  The complete list of platforms you can find in makefiles/platforms.mk,
+  however currently the program is know to compile without problems on the
+  following platforms:
 
-If you do not create makefiles/target.mk file, the program will be built for
-the default platform -- zaurus-cacko.
+    zaurus-cacko    -- Sharp Zaurus, Cacko ROM (in fact, any Sharp-based ROM)
+    zaurus-pdaxrom  -- Sharp Zaurus, pdaXrom
+    desktop-qt      -- (linux) desktop computer, uses qt library (version 3.*)
 
-IMPORTANT: you will need the following libraries:
+  If you do not create makefiles/target.mk file, the program will be built for
+  the default platform -- zaurus-cacko.
 
-  expat       -- XML parsing library (available at http://expat.sourceforge.net)
-  enca        -- charset detection library (available at http://trific.ath.cx/software/enca/)
+REQUIREMENTS
+
+  IMPORTANT: you will need the following libraries:
+
+    expat       -- XML parsing library (available at http://expat.sourceforge.net)
+    enca        -- charset detection library (available at http://trific.ath.cx/software/enca/)
+
+STEP-BY-STEP INSTRUCTIONS FOR DEBIAN
+
+  So if you are a lucky owner of a Debian system and you would like to build
+  FBReader for your computer, here are the steps that you need to perform:
+
+  1. You will need QT 3.* installed on your computer:
+
+    $ sudo apt-get install libqt3-mt-dev qt3-dev-tools
+
+  2. Install expat development package:
+
+    $ sudo apt-get install libexpat1-dev
+
+  3. Install enca libraries (bashism!):
+
+    $ pushd /tmp
+    $ mkdir enca
+    $ cd enca
+    $ wget http://www.physics.muni.cz/~yeti/Ftp/enca/i386/libenca0_1.7-1_i386.deb
+    $ wget http://www.physics.muni.cz/~yeti/Ftp/enca/i386/libenca-dev_1.7-1_i386.deb
+    $ sudo dpkg -i libenca*
+    $ cd ..
+    $ rm -rf enca
+    $ popd
+
+  4. Go to the directory where you unpacked the FBReader sources
+
+  5. Configure sources for Linux Desktop:
+    $ echo TARGET_ARCH=desktop-qt > makefiles/target.mk
+
+  6. Build FBReader:
+
+    $ make
