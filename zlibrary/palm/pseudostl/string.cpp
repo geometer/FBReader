@@ -1,3 +1,5 @@
+#include <Core/System/MemoryMgr.h>
+
 #include "string.h"
 
 namespace std {
@@ -22,10 +24,7 @@ namespace std {
 			}
 			char *d = new char[minSize];
 			if (myLength > 0) {
-				char *end = myData + myLength;
-				for (char *s_ptr = myData, *d_ptr = d; s_ptr != end; s_ptr++, d_ptr++) {
-					*d_ptr = *s_ptr;
-				}
+				MemMove(d, myData, myLength);
 			}
 			if (myData != 0) {
 				delete[] myData;
