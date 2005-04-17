@@ -4,7 +4,7 @@ Latest information you can find at the programs home page at
 
   http://only.mawhrin.net/~geometer/zaurus/fbreader/
 
-This file is a quick guide on how to compile the application.
+This file is a quick guide on how to compile the application for Linux desktop.
 
 PLATFORM DESCRIPTION
 
@@ -17,7 +17,7 @@ PLATFORM DESCRIPTION
     TARGET_ARCH = <your target arch>
 
   The complete list of platforms you can find in makefiles/platforms.mk,
-  however currently the program is know to compile without problems on the
+  however currently the program is known to compile without problems on the
   following platforms:
 
     zaurus-cacko    -- Sharp Zaurus, Cacko ROM (in fact, any Sharp-based ROM)
@@ -66,4 +66,7 @@ STEP-BY-STEP INSTRUCTIONS FOR DEBIAN
 
   6. Build FBReader:
 
+    $ cd zlibrary
+    $ make
+    $ cd ../fbreader
     $ make
