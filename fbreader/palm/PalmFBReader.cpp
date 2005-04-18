@@ -3,8 +3,6 @@
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
-static ZLColorOption BackgroundColor("Color", "Background", ZLColor(255, 255, 204));
-
 static Boolean MyFormHandleEvent(EventPtr event) {
 	switch (event->eType) {
   	case menuCmdBarOpenEvent:	
@@ -27,6 +25,7 @@ static Boolean MyFormHandleEvent(EventPtr event) {
   	case frmOpenEvent:	
 			{
 				RGBColorType bg;
+				ZLColorOption BackgroundColor("Color", "Background", ZLColor(255, 255, 204));
 				ZLColor bgc = BackgroundColor.value();
 				bg.r = bgc.Red;
 				bg.g = bgc.Green;
