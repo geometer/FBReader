@@ -39,15 +39,17 @@ void XMLConfigGroup::unsetValue(const std::string &name) {
 }
 
 XMLConfig::XMLConfig(const std::string &name) : myName(name) {
-	ZLFSDir configDir("~/." + myName);
-	ZLFileInputStream stream(configDir.name() + "/config.xml");
+	ZLFSDir *configDir = ZLFSDirManager::instance().createByName("~/." + myName);
+	ZLFileInputStream stream(configDir->name() + "/config.xml");
 	XMLConfigReader(*this).readDocument(stream);
+	delete configDir;
 }
 
 XMLConfig::~XMLConfig() {
-	ZLFSDir configDir("~/." + myName);
-	configDir.create();
-	ZLFileOutputStream stream(configDir.name() + "/config.xml");
+	ZLFSDir *configDir = ZLFSDirManager::instance().createByName("~/." + myName);
+	configDir->createPhysicalDirectory();
+	ZLFileOutputStream stream(configDir->name() + "/config.xml");
+	delete configDir;
 	if (stream.open()) {
 		XMLConfigWriter(*this, stream).write();
 		stream.close();

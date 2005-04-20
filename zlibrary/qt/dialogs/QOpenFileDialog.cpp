@@ -139,7 +139,7 @@ void QOpenFileDialog::accept() {
 		std::string subdir = myCurrentDir->itemName((const char*)dialogItem->name().utf8());
 		std::string selectedName = (dialogItem->name() == "..") ? myCurrentDir->shortName() : "..";
 		delete myCurrentDir;
-		myCurrentDir = new ZLFSDir(subdir);
+		myCurrentDir = ZLFSDirManager::instance().createByName(subdir);
 		myCurrentDirectoryName->setText(QString::fromUtf8(myCurrentDir->name().c_str()));
 		updateListView(selectedName);
 	} else if (ZLStringUtil::stringEndsWith((const char*)dialogItem->name().utf8(), ".zip")) {

@@ -40,10 +40,11 @@ std::vector<std::string> ZLXMLReader::ourKnownEncodings;
 void ZLXMLReader::setEncodingDescriptionPath(const std::string &path) {
 	ourEncodingDescriptionPath = path;
 	ourKnownEncodings.clear();
-	ZLFSDir dir(ourEncodingDescriptionPath);
-	dir.collectFiles(ourKnownEncodings, false);
+	ZLFSDir *dir = ZLFSDirManager::instance().createByName(ourEncodingDescriptionPath);
+	dir->collectFiles(ourKnownEncodings, false);
 	ourKnownEncodings.push_back("US-ASCII");
 	ourKnownEncodings.push_back("UTF-8");
+	delete dir;
 }
 
 static int fUnknownEncodingHandler(void *, const XML_Char *name, XML_Encoding *info) {

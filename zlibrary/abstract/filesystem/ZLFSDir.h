@@ -22,17 +22,30 @@
 #include "ZLDir.h"
 
 class ZLFSDir : public ZLDir {
-
-public:
+	
+protected:
 	ZLFSDir(const std::string &name) : ZLDir(name) {}
 
-	void create();
+public:
+	virtual ~ZLFSDir() {}
+	virtual void createPhysicalDirectory() = 0;
+};
 
-	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
-	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+class ZLFSDirManager {
+
+public:
+	static void deleteInstance() { delete ourInstance; }
+	static ZLFSDirManager &instance() { return *ourInstance; }
+	
+protected:
+	ZLFSDirManager() {}
+	virtual ~ZLFSDirManager() {}
+	
+public:
+	virtual ZLFSDir *createByName(const std::string &name) = 0;
 
 protected:
-	std::string delimiter() const { return "/"; }
+	static ZLFSDirManager *ourInstance;
 };
 
 #endif /* __ZLFSDIR_H__ */

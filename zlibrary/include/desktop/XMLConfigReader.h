@@ -1,1 +1,1 @@
-../../desktop/xml/XMLConfigReader.h
+../../desktop/options/XMLConfigReader.h

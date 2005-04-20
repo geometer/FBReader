@@ -16,24 +16,35 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLOpenFileDialog.h"
+#ifndef __ZLUNIXFSDIR_H__
+#define __ZLUNIXFSDIR_H__
 
-#include "../filesystem/ZLFSDir.h"
-#include "../filesystem/ZLZipDir.h"
-#include "../util/ZLStringUtil.h"
+#include <abstract/ZLFSDir.h>
 
-ZLStringOption ZLOpenFileDialog::DirectoryOption("OpenFileDialog", "Directory", "~");
+class ZLUnixFSDir : public ZLFSDir {
+
+public:
+	ZLUnixFSDir(const std::string &name) : ZLFSDir(name) {}
+
+	void createPhysicalDirectory();
+
+	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+
+protected:
+	std::string delimiter() const { return "/"; }
+};
+
+class ZLUnixFSDirManager : public ZLFSDirManager {
+
+public:
+	static void createInstance() { ourInstance = new ZLUnixFSDirManager(); }
 	
-ZLOpenFileDialog::ZLOpenFileDialog(const ZLFileHandler &handler) : myHandler(handler) {
-	std::string dirName =	DirectoryOption.value();
-	// TODO: replace this code
-	if (ZLStringUtil::stringEndsWith(dirName, ".zip")) {
-		myCurrentDir = new ZLZipDir(dirName);
-	} else {
-		myCurrentDir = ZLFSDirManager::instance().createByName(dirName);
-	}
-}
+private:
+	ZLUnixFSDirManager() {}
+	
+public:
+	ZLFSDir *createByName(const std::string &name);
+};
 
-ZLOpenFileDialog::~ZLOpenFileDialog() {
-	DirectoryOption.setValue(myCurrentDir->name());
-}
+#endif /* __ZLUNIXFSDIR_H__ */

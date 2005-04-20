@@ -21,6 +21,7 @@
 #include <qapplication.h>
 
 #include <abstract/ZLXMLReader.h>
+#include <unix/ZLUnixFSDir.h>
 #include <desktop/XMLOptions.h>
 #include <qt/QDialogManager.h>
 #include <qt/QScreenSize.h>
@@ -31,6 +32,7 @@
 int main(int argc, char **argv) {
 	QApplication application(argc, argv);
 
+	ZLUnixFSDirManager::createInstance();
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath("icons/640x480");
@@ -48,6 +50,7 @@ int main(int argc, char **argv) {
 	QWordBuilder::deleteInstance();
 	QDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
+	ZLUnixFSDirManager::deleteInstance();
 
 	return code;
 }

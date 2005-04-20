@@ -1,1 +1,1 @@
-../../desktop/xml/XMLConfigWriter.h
+../../desktop/options/XMLConfigWriter.h

@@ -73,14 +73,14 @@ static std::vector<std::string> EXTERNAL_DTDs;
 const std::vector<std::string> &HtmlTextConverter::externalDTDs() const {
 	if (EXTERNAL_DTDs.empty()) {
 		std::vector<std::string> files;
-		ZLFSDir dtdPath(DocBookReader::DTDDirectory);
-		dtdPath.collectFiles(files, false);
-		std::string dtdPathName = dtdPath.name() + "/";
+		ZLFSDir *dtdPath = ZLFSDirManager::instance().createByName(DocBookReader::DTDDirectory);
+		dtdPath->collectFiles(files, false);
 		for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
 			if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
-				EXTERNAL_DTDs.push_back(dtdPathName + *it);
+				EXTERNAL_DTDs.push_back(dtdPath->name() + "/" + *it);
 			}
 		}
+		delete dtdPath;
 	}
 
 	return EXTERNAL_DTDs;

@@ -48,10 +48,10 @@ BookCollection::BookCollection() {
 
 	for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); it++) {
 		std::vector<std::string> files;
-		ZLFSDir dir(*it);
-		dir.collectFiles(files, false);
+		ZLFSDir *dir = ZLFSDirManager::instance().createByName(*it);
+		dir->collectFiles(files, false);
 		if (!files.empty()) {
-			const std::string dirName = dir.name() + '/';
+			const std::string dirName = dir->name() + '/';
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
 				const std::string fileName = dirName + *jt;
 				if (PluginCollection::instance().plugin(*jt, true) != 0) {
@@ -69,6 +69,7 @@ BookCollection::BookCollection() {
 				}
 			}
 		}
+		delete dir;
 	}
 
 	BookList bookList;
@@ -114,11 +115,12 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 		if (nameSet.find(name) == nameSet.end()) {
 			if (myScanSubdirs) {
 				std::vector<std::string> subdirs;
-				ZLFSDir dir(name);
-				dir.collectSubDirs(subdirs, false);
+				ZLFSDir *dir = ZLFSDirManager::instance().createByName(name);
+				dir->collectSubDirs(subdirs, false);
 				for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
-					nameQueue.push(dir.name() + '/' + *it);
+					nameQueue.push(dir->name() + '/' + *it);
 				}
+				delete dir;
 			}
 			nameSet.insert(name);
 		}

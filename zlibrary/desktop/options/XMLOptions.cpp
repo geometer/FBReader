@@ -59,7 +59,7 @@ long XMLOptions::integerValue(const std::string &name, long defaultValue) {
 
 void XMLOptions::setValue(const std::string &name, long value) {
 	char buf[100];
-	sprintf(buf, "%d", value);
+	sprintf(buf, "%ld", value);
 	setValue(name, std::string(buf));
 }
 

@@ -1,1 +1,1 @@
-../../desktop/xml/XMLOptions.h
+../../desktop/options/XMLOptions.h
