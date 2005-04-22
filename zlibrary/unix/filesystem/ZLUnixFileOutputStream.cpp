@@ -16,31 +16,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFSManager.h"
-#include "ZLDir.h"
+#include "ZLUnixFileOutputStream.h"
 
-ZLDir::ZLDir(const std::string &name) : myName(name) {
-	ZLFSManager::instance().normalize(myName);
+ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name) {
+	myFile = 0;
 }
 
-std::string ZLDir::parentName() const {
-	if (myName == "/") {
-		return myName;
-	}
-	int index = myName.rfind('/');
-	if (index <= 0) {
-		return "/";
-	}
-	return myName.substr(0, index);
+ZLUnixFileOutputStream::~ZLUnixFileOutputStream() {
+	close();
 }
 
-std::string ZLDir::shortName() const {
-	return myName.substr(myName.rfind('/') + 1);
+bool ZLUnixFileOutputStream::open() {
+	close();
+	myFile = fopen(myName.c_str(), "w");
+	return myFile != 0;
 }
 
-std::string ZLDir::itemName(const std::string &shortName) const {
-	if (shortName == "..") {
-		return parentName();
+void ZLUnixFileOutputStream::write(const std::string &str) {
+	fwrite(str.data(), 1, str.length(), myFile);
+}
+
+void ZLUnixFileOutputStream::close() {
+	if (myFile != 0) {
+		fclose(myFile);
+		myFile = 0;
 	}
-	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
 }

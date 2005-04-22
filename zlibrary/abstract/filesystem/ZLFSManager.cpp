@@ -16,29 +16,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFileOutputStream.h"
+#include "ZLFSManager.h"
 
-ZLFileOutputStream::ZLFileOutputStream(const std::string &name) : myName(name) {
-	myFile = 0;
-}
-
-ZLFileOutputStream::~ZLFileOutputStream() {
-	close();
-}
-
-bool ZLFileOutputStream::open() {
-	close();
-	myFile = fopen(myName.c_str(), "w");
-	return myFile != 0;
-}
-
-void ZLFileOutputStream::write(const std::string &str) {
-	fwrite(str.data(), 1, str.length(), myFile);
-}
-
-void ZLFileOutputStream::close() {
-	if (myFile != 0) {
-		fclose(myFile);
-		myFile = 0;
-	}
-}
+ZLFSManager *ZLFSManager::ourInstance = 0;

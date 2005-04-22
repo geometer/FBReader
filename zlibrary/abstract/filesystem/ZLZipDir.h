@@ -19,8 +19,6 @@
 #ifndef __ZLZIPDIR_H__
 #define __ZLZIPDIR_H__
 
-#include <dirent.h>
-
 #include "ZLDir.h"
 
 class ZLZipDir : public ZLDir {

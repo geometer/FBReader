@@ -16,8 +16,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLFSDir.h>
+#include "../filesystem/ZLFSManager.h"
+#include "../filesystem/ZLFSDir.h"
+#include "../filesystem/ZLInputStream.h"
 
 #include "ZLXMLReader.h"
 #include "EncodingReader.h"
@@ -40,7 +41,7 @@ std::vector<std::string> ZLXMLReader::ourKnownEncodings;
 void ZLXMLReader::setEncodingDescriptionPath(const std::string &path) {
 	ourEncodingDescriptionPath = path;
 	ourKnownEncodings.clear();
-	ZLFSDir *dir = ZLFSDirManager::instance().createByName(ourEncodingDescriptionPath);
+	ZLFSDir *dir = ZLFSManager::instance().createDirectory(ourEncodingDescriptionPath);
 	dir->collectFiles(ourKnownEncodings, false);
 	ourKnownEncodings.push_back("US-ASCII");
 	ourKnownEncodings.push_back("UTF-8");
@@ -71,7 +72,7 @@ int ZLXMLReader::tag(const char *name) {
 
 static void parseDTD(XML_Parser parser, const std::string &fileName) {
 	XML_Parser entityParser = XML_ExternalEntityParserCreate(parser, 0, 0);
-	ZLInputStream *entityStream = ZLInputStream::createStream(fileName);
+	ZLInputStream *entityStream = ZLFSManager::instance().createInputStream(fileName);
 	if (entityStream->open()) {
 		const size_t BUFSIZE = 2048;
 		char buffer[BUFSIZE];

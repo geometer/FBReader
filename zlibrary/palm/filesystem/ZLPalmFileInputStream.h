@@ -16,14 +16,26 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFileInputStream.h"
-#include "ZLZipInputStream.h"
+#ifndef __ZLPALMFILEINPUTSTREAM_H__
+#define __ZLPALMFILEINPUTSTREAM_H__
 
-ZLInputStream *ZLInputStream::createStream(const std::string &name) {
-	if ((int)name.find(':') != -1) {
-		return new ZLZipInputStream(name);
-	} else {
-		return new ZLFileInputStream(name);
-	}
-}
+#include <abstract/ZLInputStream.h>
 
+class ZLPalmFileInputStream : public ZLInputStream {
+
+public:
+	ZLPalmFileInputStream(const std::string &name);
+	~ZLPalmFileInputStream();
+	bool open();
+	int read(char *buffer, int maxSize);
+	void close();
+
+	void seek(int offset);
+	int offset() const;
+
+private:
+	std::string myName;
+	//FILE *myFile;
+};
+
+#endif /* __ZLPALMFILEINPUTSTREAM_H__ */

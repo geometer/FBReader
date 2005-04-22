@@ -18,25 +18,31 @@
 
 #include "ZLZipDir.h"
 #include "ZipHeader.h"
-#include "ZLFileInputStream.h"
+#include "ZLFSManager.h"
+#include "ZLInputStream.h"
 
 void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
-	ZLFileInputStream stream(name());
-	if (stream.open()) {
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(name());
+	if (stream == 0) {
+		return;
+	}
+
+	if (stream->open()) {
 		ZipHeader header;
-		while (header.readFrom(stream)) {
+		while (header.readFrom(*stream)) {
 			char *buffer = new char[header.NameLength];
-			if (stream.read(buffer, header.NameLength) == header.NameLength) {
+			if ((unsigned int)stream->read(buffer, header.NameLength) == header.NameLength) {
 				std::string entryName;
 				entryName.append(buffer, header.NameLength);
 				names.push_back(entryName);
 			}
 			delete[] buffer;
-			stream.seek(header.ExtraLength + header.CompressedSize);
+			stream->seek(header.ExtraLength + header.CompressedSize);
 			if (header.Flags & 0x04) {
-				stream.seek(12);
+				stream->seek(12);
 			}
 		}
-		stream.close();
+		stream->close();
 	}
+	delete stream;
 }

@@ -19,7 +19,7 @@
 #ifndef __ZIPHEADER_H__
 #define __ZIPHEADER_H__
 
-class ZLFileInputStream;
+class ZLInputStream;
 
 struct ZipHeader {
 	unsigned long Signature;
@@ -34,7 +34,7 @@ struct ZipHeader {
 	unsigned short NameLength;
 	unsigned short ExtraLength;
 
-	bool readFrom(ZLFileInputStream &stream);
+	bool readFrom(ZLInputStream &stream);
 };
 
 #endif /* __ZIPHEADER_H__ */

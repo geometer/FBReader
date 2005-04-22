@@ -31,21 +31,4 @@ public:
 	virtual void createPhysicalDirectory() = 0;
 };
 
-class ZLFSDirManager {
-
-public:
-	static void deleteInstance() { delete ourInstance; }
-	static ZLFSDirManager &instance() { return *ourInstance; }
-	
-protected:
-	ZLFSDirManager() {}
-	virtual ~ZLFSDirManager() {}
-	
-public:
-	virtual ZLFSDir *createByName(const std::string &name) = 0;
-
-protected:
-	static ZLFSDirManager *ourInstance;
-};
-
 #endif /* __ZLFSDIR_H__ */

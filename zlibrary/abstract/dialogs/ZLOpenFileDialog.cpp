@@ -18,6 +18,7 @@
 
 #include "ZLOpenFileDialog.h"
 
+#include "../filesystem/ZLFSManager.h"
 #include "../filesystem/ZLFSDir.h"
 #include "../filesystem/ZLZipDir.h"
 #include "../util/ZLStringUtil.h"
@@ -30,7 +31,7 @@ ZLOpenFileDialog::ZLOpenFileDialog(const ZLFileHandler &handler) : myHandler(han
 	if (ZLStringUtil::stringEndsWith(dirName, ".zip")) {
 		myCurrentDir = new ZLZipDir(dirName);
 	} else {
-		myCurrentDir = ZLFSDirManager::instance().createByName(dirName);
+		myCurrentDir = ZLFSManager::instance().createDirectory(dirName);
 	}
 }
 

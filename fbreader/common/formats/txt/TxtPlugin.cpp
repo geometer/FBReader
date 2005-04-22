@@ -18,6 +18,7 @@
  */
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
 #include "TxtPlugin.h"
@@ -31,7 +32,7 @@ bool TxtPlugin::acceptsFile(const std::string &fileName) const {
 }
 
 bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
-	ZLInputStream *stream = ZLInputStream::createStream(fileName);
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
 	std::string encoding = description.encoding();
 	if (encoding.empty()) {
 		encoding = EncodingDetector::detect(*stream);
@@ -52,7 +53,7 @@ bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &de
 
 bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) const {
 	TxtBookReader *reader = new TxtBookReader(model);
-	ZLInputStream *stream = ZLInputStream::createStream(description.fileName());
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
 	reader->readDocument(*stream, description.encoding());
 	delete stream;
 	delete reader;

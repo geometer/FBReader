@@ -18,6 +18,7 @@
  */
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
 #include "FB2Plugin.h"
@@ -31,7 +32,7 @@ bool FB2Plugin::acceptsFile(const std::string &fileName) const {
 
 bool FB2Plugin::readDescription(const std::string &fileName, BookDescription &description) const {
 	FB2DescriptionReader *reader = new FB2DescriptionReader(description);
-	ZLInputStream *stream = ZLInputStream::createStream(fileName);
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
 	bool code = reader->readDescription(*stream);
 	delete stream;
 	delete reader;
@@ -46,7 +47,7 @@ bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) 
 	}
 
 	FB2BookReader *reader = new FB2BookReader(model);
-	ZLInputStream *stream = ZLInputStream::createStream(description.fileName());
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
 	reader->readDocument(*stream);
 	delete stream;
 	delete reader;

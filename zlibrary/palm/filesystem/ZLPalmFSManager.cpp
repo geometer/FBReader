@@ -16,28 +16,27 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLFILEINPUTSTREAM_H__
-#define __ZLFILEINPUTSTREAM_H__
+#include "ZLPalmFSManager.h"
+#include "ZLPalmFSDir.h"
+#include "ZLPalmFileInputStream.h"
+#include "../../abstract/filesystem/ZLZipInputStream.h"
+#include "ZLPalmFileOutputStream.h"
 
-#include <stdio.h>
+void ZLPalmFSManager::normalize(std::string&) {
+}
 
-#include "ZLInputStream.h"
+ZLFSDir *ZLPalmFSManager::createDirectory(const std::string &name) {
+	return new ZLPalmFSDir(name);
+}
 
-class ZLFileInputStream : public ZLInputStream {
+ZLInputStream *ZLPalmFSManager::createInputStream(const std::string &name) {
+	if ((int)name.find(':') != -1) {
+		return new ZLZipInputStream(name);
+	} else {
+		return new ZLPalmFileInputStream(name);
+	}
+}
 
-public:
-	ZLFileInputStream(const std::string &name);
-	~ZLFileInputStream();
-	bool open();
-	int read(char *buffer, int maxSize);
-	void close();
-
-	void seek(int offset) { fseek(myFile, offset, SEEK_CUR); }
-	int offset() const { return ftell(myFile); }
-
-private:
-	std::string myName;
-	FILE *myFile;
-};
-
-#endif /* __ZLFILEINPUTSTREAM_H__ */
+ZLOutputStream *ZLPalmFSManager::createOutputStream(const std::string &name) {
+	return new ZLPalmFileOutputStream(name);
+}

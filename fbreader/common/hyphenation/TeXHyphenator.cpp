@@ -21,6 +21,7 @@
 #include <vector>
 
 #include <abstract/ZLUnicodeUtil.h>
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
 #include "TeXHyphenator.h"
@@ -134,7 +135,7 @@ void TeXHyphenator::load(const std::string &language) {
 	unload();
 
 	std::string fileName = PatternZip + ":" + language + ".pattern";
-	ZLInputStream *stream = ZLInputStream::createStream(fileName);
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
 	if (stream != 0) {
 		HyphenationReader reader(this);
 		reader.readDocument(*stream);

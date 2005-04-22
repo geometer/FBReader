@@ -16,6 +16,33 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFSDir.h"
+#ifndef __ZLFSMANAGER_H__
+#define __ZLFSMANAGER_H__
 
-ZLFSDirManager *ZLFSDirManager::ourInstance = 0;
+#include <string>
+
+class ZLFSDir;
+class ZLInputStream;
+class ZLOutputStream;
+
+class ZLFSManager {
+
+public:
+	static void deleteInstance() { delete ourInstance; }
+	static ZLFSManager &instance() { return *ourInstance; }
+	
+protected:
+	ZLFSManager() {}
+	virtual ~ZLFSManager() {}
+	
+public:
+	virtual void normalize(std::string &fileName) = 0;
+	virtual ZLFSDir *createDirectory(const std::string &name) = 0;
+	virtual ZLInputStream *createInputStream(const std::string &name) = 0;
+	virtual ZLOutputStream *createOutputStream(const std::string &name) = 0;
+
+protected:
+	static ZLFSManager *ourInstance;
+};
+
+#endif /* __ZLFSMANAGER_H__ */

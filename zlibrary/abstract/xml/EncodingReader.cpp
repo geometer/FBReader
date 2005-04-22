@@ -18,7 +18,8 @@
 
 #include <stdlib.h>
 
-#include <abstract/ZLInputStream.h>
+#include "../filesystem/ZLFSManager.h"
+#include "../filesystem/ZLInputStream.h"
 
 #include "EncodingReader.h"
 
@@ -26,7 +27,7 @@ EncodingReader::EncodingReader(const std::string &encoding) : myEncoding(encodin
 }
 
 bool EncodingReader::fillTable(int *map) {
-	ZLInputStream *stream = ZLInputStream::createStream(myEncoding);
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(myEncoding);
 	if (stream == 0) {
 		return false;
 	}

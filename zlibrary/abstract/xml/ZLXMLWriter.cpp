@@ -25,7 +25,7 @@ void ZLXMLWriter::Tag::addAttribute(const std::string &name, const std::string &
 	myAttributes.push_back(Attribute(name, value));
 }
 
-void ZLXMLWriter::Tag::writeStart(ZLFileOutputStream &stream) const {
+void ZLXMLWriter::Tag::writeStart(ZLOutputStream &stream) const {
 	stream.write("<");
 	stream.write(myName.c_str());
 	for (unsigned int i = 0; i < myAttributes.size(); i++) {
@@ -41,7 +41,7 @@ void ZLXMLWriter::Tag::writeStart(ZLFileOutputStream &stream) const {
 	stream.write(">\n");
 }
 
-void ZLXMLWriter::Tag::writeEnd(ZLFileOutputStream &stream) const {
+void ZLXMLWriter::Tag::writeEnd(ZLOutputStream &stream) const {
 	if (!mySingle) {
 		stream.write("</");
 		stream.write(myName.c_str());
@@ -49,7 +49,7 @@ void ZLXMLWriter::Tag::writeEnd(ZLFileOutputStream &stream) const {
 	}
 }
 
-ZLXMLWriter::ZLXMLWriter(ZLFileOutputStream &stream) : myStream(stream) {
+ZLXMLWriter::ZLXMLWriter(ZLOutputStream &stream) : myStream(stream) {
 	myCurrentTag = 0;
 }
 

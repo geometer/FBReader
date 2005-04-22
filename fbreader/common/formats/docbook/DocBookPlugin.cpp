@@ -18,6 +18,7 @@
  */
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
 #include "DocBookPlugin.h"
@@ -31,7 +32,7 @@ bool DocBookPlugin::acceptsFile(const std::string &fileName) const {
 
 bool DocBookPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
 	DocBookDescriptionReader *reader = new DocBookDescriptionReader(description);
-	ZLInputStream *stream = ZLInputStream::createStream(fileName);
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
 	bool code = reader->readDescription(*stream);
 	delete stream;
 	delete reader;
@@ -40,7 +41,7 @@ bool DocBookPlugin::readDescription(const std::string &fileName, BookDescription
 
 bool DocBookPlugin::readModel(const BookDescription &description, BookModel &model) const {
 	DocBookBookReader *reader = new DocBookBookReader(model);
-	ZLInputStream *stream = ZLInputStream::createStream(description.fileName());
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
 	reader->readDocument(*stream);
 	delete stream;
 	delete reader;

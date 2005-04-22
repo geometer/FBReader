@@ -24,7 +24,7 @@
 
 #include "ZLInputStream.h"
 
-class ZLFileInputStream;
+class ZLInputStream;
 
 class ZLZipInputStream : public ZLInputStream {
 
@@ -35,9 +35,12 @@ public:
 	int read(char *buffer, int maxSize);
 	void close();
 
+	void seek(int offset);
+	int offset() const;
+
 private:
 	std::string myCompressedFileName;
-	ZLFileInputStream *myFileStream;
+	ZLInputStream *myFileStream;
 	bool myIsDeflated;
 
 	z_stream *myZStream; 

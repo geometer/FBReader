@@ -30,6 +30,9 @@ public:
 	int read(char *buffer, int maxSize);
 	void close() {}
 
+	void seek(int offset) { myPosition += offset; }
+	int offset() const { return myPosition; }
+
 private:
 	const std::string &myString;
 	int myPosition;

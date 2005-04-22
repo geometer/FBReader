@@ -20,7 +20,7 @@
 #include <qpe/qpeapplication.h>
 
 #include <abstract/ZLXMLReader.h>
-#include <unix/ZLUnixFSDir.h>
+#include <unix/ZLUnixFSManager.h>
 #include <qtopia/QOptions.h>
 #include <qtopia/QDialogManager.h>
 #include <qtopia/QScreenSize.h>
@@ -31,7 +31,7 @@
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
 
-	ZLUnixFSDirManager::createInstance();
+	ZLUnixFSManager::createInstance();
 	ZLXMLReader::setEncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
 	QOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	QWordBuilder::deleteInstance();
 	QDialogManager::deleteInstance();
 	QOptions::deleteInstance();
-	ZLUnixFSDirManager::deleteInstance();
+	ZLUnixFSManager::deleteInstance();
 
 	return code;
 }

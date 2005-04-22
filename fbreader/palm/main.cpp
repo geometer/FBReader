@@ -1,11 +1,19 @@
 #include <Extensions/ExpansionMgr/VFSMgr.h>
+#include <zlib.h>
 
 #include <palm/PalmOptions.h>
+#include <palm/ZLPalmFSManager.h>
+
+#include <abstract/ZLOutputStream.h>
 
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
+UInt16 ZLibRef = 0;
+
 static Err StartApplication() {
+	ZLSetup;
+	ZLPalmFSManager::createInstance();
 	PalmOptions::createInstance("FBReader");
 	FrmGotoForm(MainFBReaderForm);
 	return 0;
@@ -13,6 +21,7 @@ static Err StartApplication() {
 
 static void StopApplication() {
 	PalmOptions::deleteInstance();
+	ZLPalmFSManager::deleteInstance();
 }
 
 DWord PilotMain(Word cmd, Ptr /*cmdPBP*/, Word /*launchFlags*/) {
@@ -21,19 +30,12 @@ DWord PilotMain(Word cmd, Ptr /*cmdPBP*/, Word /*launchFlags*/) {
 	if ((cmd == sysAppLaunchCmdNormalLaunch) && ((err = StartApplication()) == 0)) {
 		EventLoop();
 
-		UInt16  unVol;
-		UInt32  ulIter;
-		UInt32  ulVFSMgrVer;
-		UInt32  ulBytesWritten;
-		UInt32  fRef;
-
-		FtrGet(sysFileCVFSMgr, vfsFtrIDVersion, &ulVFSMgrVer);
-	  ulIter = vfsIteratorStart;
-    VFSVolumeEnumerate(&unVol, &ulIter);
-
-		VFSFileOpen(unVol, "/test", vfsModeWrite | vfsModeCreate | vfsModeTruncate, &fRef);
-		VFSFileWrite(fRef, 5, "hello", &ulBytesWritten);
-		VFSFileClose(fRef);
+		ZLOutputStream *stream = ZLPalmFSManager::instance().createOutputStream("/test1");
+		if (stream->open()) {
+			stream->write("HELLO1");
+			stream->close();
+		}
+		delete stream;
 		/*
 		if (code != 0) {
 			char txt[4];

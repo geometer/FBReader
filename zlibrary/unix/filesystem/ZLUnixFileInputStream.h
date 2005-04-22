@@ -16,31 +16,28 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFSManager.h"
-#include "ZLDir.h"
+#ifndef __ZLUNIXFILEINPUTSTREAM_H__
+#define __ZLUNIXFILEINPUTSTREAM_H__
 
-ZLDir::ZLDir(const std::string &name) : myName(name) {
-	ZLFSManager::instance().normalize(myName);
-}
+#include <stdio.h>
 
-std::string ZLDir::parentName() const {
-	if (myName == "/") {
-		return myName;
-	}
-	int index = myName.rfind('/');
-	if (index <= 0) {
-		return "/";
-	}
-	return myName.substr(0, index);
-}
+#include <abstract/ZLInputStream.h>
 
-std::string ZLDir::shortName() const {
-	return myName.substr(myName.rfind('/') + 1);
-}
+class ZLUnixFileInputStream : public ZLInputStream {
 
-std::string ZLDir::itemName(const std::string &shortName) const {
-	if (shortName == "..") {
-		return parentName();
-	}
-	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
-}
+public:
+	ZLUnixFileInputStream(const std::string &name);
+	~ZLUnixFileInputStream();
+	bool open();
+	int read(char *buffer, int maxSize);
+	void close();
+
+	void seek(int offset) { fseek(myFile, offset, SEEK_CUR); }
+	int offset() const { return ftell(myFile); }
+
+private:
+	std::string myName;
+	FILE *myFile;
+};
+
+#endif /* __ZLUNIXFILEINPUTSTREAM_H__ */

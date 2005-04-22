@@ -16,31 +16,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFSManager.h"
-#include "ZLDir.h"
+#ifndef __ZLPALMFSDIR_H__
+#define __ZLPALMFSDIR_H__
 
-ZLDir::ZLDir(const std::string &name) : myName(name) {
-	ZLFSManager::instance().normalize(myName);
-}
+#include <abstract/ZLFSDir.h>
 
-std::string ZLDir::parentName() const {
-	if (myName == "/") {
-		return myName;
-	}
-	int index = myName.rfind('/');
-	if (index <= 0) {
-		return "/";
-	}
-	return myName.substr(0, index);
-}
+class ZLPalmFSDir : public ZLFSDir {
 
-std::string ZLDir::shortName() const {
-	return myName.substr(myName.rfind('/') + 1);
-}
+public:
+	ZLPalmFSDir(const std::string &name) : ZLFSDir(name) {}
 
-std::string ZLDir::itemName(const std::string &shortName) const {
-	if (shortName == "..") {
-		return parentName();
-	}
-	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
-}
+	void createPhysicalDirectory();
+
+	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+
+protected:
+	std::string delimiter() const { return "/"; }
+};
+
+#endif /* __ZLPALMFSDIR_H__ */

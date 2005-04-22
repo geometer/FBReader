@@ -16,31 +16,25 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFSManager.h"
-#include "ZLDir.h"
+#ifndef __ZLUNIXFILEOUTPUTSTREAM_H__
+#define __ZLUNIXFILEOUTPUTSTREAM_H__
 
-ZLDir::ZLDir(const std::string &name) : myName(name) {
-	ZLFSManager::instance().normalize(myName);
-}
+#include <stdio.h>
 
-std::string ZLDir::parentName() const {
-	if (myName == "/") {
-		return myName;
-	}
-	int index = myName.rfind('/');
-	if (index <= 0) {
-		return "/";
-	}
-	return myName.substr(0, index);
-}
+#include "../../abstract/filesystem/ZLOutputStream.h"
 
-std::string ZLDir::shortName() const {
-	return myName.substr(myName.rfind('/') + 1);
-}
+class ZLUnixFileOutputStream : public ZLOutputStream {
 
-std::string ZLDir::itemName(const std::string &shortName) const {
-	if (shortName == "..") {
-		return parentName();
-	}
-	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
-}
+public:
+	ZLUnixFileOutputStream(const std::string &name);
+	~ZLUnixFileOutputStream();
+	bool open();
+	void write(const std::string &str);
+	void close();
+
+private:
+	std::string myName;
+	FILE *myFile;
+};
+
+#endif /* __ZLUNIXFILEOUTPUTSTREAM_H__ */

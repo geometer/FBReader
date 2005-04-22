@@ -21,7 +21,7 @@
 #include <gtk/gtk.h>
 
 #include <abstract/ZLXMLReader.h>
-#include <unix/ZLUnixFSDir.h>
+#include <unix/ZLUnixFSManager.h>
 #include <desktop/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkScreenSize.h>
@@ -32,7 +32,7 @@
 int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);
 
-	ZLUnixFSDirManager::createInstance();
+	ZLUnixFSManager::createInstance();
 	ZLXMLReader::setEncodingDescriptionPath("share/FBReader/encodings");
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
@@ -46,7 +46,7 @@ int main(int argc, char **argv) {
 	GtkWordBuilder::deleteInstance();
 	GtkDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
-	ZLUnixFSDirManager::deleteInstance();
+	ZLUnixFSManager::deleteInstance();
 
 	return 0;
 }

@@ -23,7 +23,7 @@
 #include <vector>
 #include <string>
 
-#include <abstract/ZLFileOutputStream.h>
+#include <abstract/ZLOutputStream.h>
 
 class ZLXMLWriter {
 
@@ -42,8 +42,8 @@ private:
 		void addAttribute(const std::string &name, const std::string &value);
 		bool isSingle() const { return mySingle; }
 
-		void writeStart(ZLFileOutputStream &stream) const;
-		void writeEnd(ZLFileOutputStream &stream) const;
+		void writeStart(ZLOutputStream &stream) const;
+		void writeEnd(ZLOutputStream &stream) const;
 		
 	private:
 		std::string myName;
@@ -52,7 +52,7 @@ private:
 	};
 
 protected:
-	ZLXMLWriter(ZLFileOutputStream &stream);
+	ZLXMLWriter(ZLOutputStream &stream);
 	virtual ~ZLXMLWriter() {}
 
 	void addTag(const std::string &name, bool single);
@@ -64,7 +64,7 @@ private:
 	void flushTagStart();
 
 private:
-	ZLFileOutputStream &myStream;
+	ZLOutputStream &myStream;
 	Tag *myCurrentTag;
 	std::stack<Tag*> myTags;
 };

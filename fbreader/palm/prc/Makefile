@@ -11,16 +11,16 @@ OBJRES = m68k-palmos-obj-res
 BUILDPRC = build-prc
 
 $(PRC): grc.stamp bin.stamp
-	$(BUILDPRC) $(PRC) $(NAME) $(APPID) *.grc *.bin $(LINKFILES) 
-	ls -l *.prc
+	@$(BUILDPRC) $(PRC) $(NAME) $(APPID) *.grc *.bin $(LINKFILES) 
+	@ls -l *.prc
 
 grc.stamp: $(APP)
-	$(OBJRES) $(APP)
-	touch $@
+	@$(OBJRES) $(APP)
+	@touch $@
 
 bin.stamp:	$(RCP)
-	$(PILRC) $^ $(BINDIR)
-	touch $@
+	@$(PILRC) $^ $(BINDIR)
+	@touch $@
 
 clean:
-	rm -rf *.bin *.grc *.prc *.stamp
+	@$(RM) *.bin *.grc *.prc *.stamp

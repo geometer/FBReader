@@ -23,9 +23,6 @@
 
 class ZLInputStream {
 
-public:
-	static ZLInputStream *createStream(const std::string &name);
-
 protected:
 	ZLInputStream() {}
 
@@ -34,6 +31,9 @@ public:
 	virtual bool open() = 0;
 	virtual int read(char *buffer, int maxSize) = 0;
 	virtual void close() = 0;
+
+	virtual void seek(int offset) = 0;
+	virtual int offset() const = 0;
 };
 
 #endif /* __ZLINPUTSTREAM_H__ */

@@ -18,14 +18,15 @@
 
 #include "ZLZipInputStream.h"
 #include "ZipHeader.h"
-#include "ZLFileInputStream.h"
+#include "ZLFSManager.h"
+#include "ZLInputStream.h"
 
 const unsigned int IN_BUFFER_SIZE = 4096;
 const unsigned int OUT_BUFFER_SIZE = 65536;
 
 ZLZipInputStream::ZLZipInputStream(const std::string &name) {
 	int index = name.find(':');
-	myFileStream = new ZLFileInputStream(name.substr(0, index));
+	myFileStream = ZLFSManager::instance().createInputStream(name.substr(0, index));
 	myCompressedFileName = name.substr(index + 1);
 	myZStream = 0;
 	myInBuffer = new char[IN_BUFFER_SIZE];
@@ -137,4 +138,13 @@ void ZLZipInputStream::close() {
 	myBuffer.erase();
 
 	myFileStream->close();
+}
+
+void ZLZipInputStream::seek(int offset) {
+	// TODO: implement
+}
+
+int ZLZipInputStream::offset() const {
+	// TODO: implement
+	return 0;
 }

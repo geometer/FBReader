@@ -30,7 +30,7 @@ class XMLConfig;
 class XMLConfigWriter : public ZLXMLWriter {
 
 public:
-	XMLConfigWriter(XMLConfig &config, ZLFileOutputStream &stream) : ZLXMLWriter(stream),  myConfig(config) {}
+	XMLConfigWriter(XMLConfig &config, ZLOutputStream &stream) : ZLXMLWriter(stream),  myConfig(config) {}
 	void write();
 
 private:

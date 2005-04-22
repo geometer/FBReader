@@ -18,8 +18,9 @@
 
 #include <stack>
 
+#include "../../abstract/filesystem/ZLFSManager.h"
 #include "../../abstract/filesystem/ZLFSDir.h"
-#include "../../abstract/filesystem/ZLFileInputStream.h"
+#include "../../abstract/filesystem/ZLInputStream.h"
 
 #include "XMLConfig.h"
 #include "XMLConfigReader.h"
@@ -39,20 +40,24 @@ void XMLConfigGroup::unsetValue(const std::string &name) {
 }
 
 XMLConfig::XMLConfig(const std::string &name) : myName(name) {
-	ZLFSDir *configDir = ZLFSDirManager::instance().createByName("~/." + myName);
-	ZLFileInputStream stream(configDir->name() + "/config.xml");
-	XMLConfigReader(*this).readDocument(stream);
+	ZLFSDir *configDir = ZLFSManager::instance().createDirectory("~/." + myName);
+	ZLInputStream *stream = ZLFSManager::instance().createInputStream(configDir->name() + "/config.xml");
+	XMLConfigReader(*this).readDocument(*stream);
+	delete stream;
 	delete configDir;
 }
 
 XMLConfig::~XMLConfig() {
-	ZLFSDir *configDir = ZLFSDirManager::instance().createByName("~/." + myName);
+	ZLFSDir *configDir = ZLFSManager::instance().createDirectory("~/." + myName);
 	configDir->createPhysicalDirectory();
-	ZLFileOutputStream stream(configDir->name() + "/config.xml");
+	ZLOutputStream *stream = ZLFSManager::instance().createOutputStream(configDir->name() + "/config.xml");
 	delete configDir;
-	if (stream.open()) {
-		XMLConfigWriter(*this, stream).write();
-		stream.close();
+	if (stream != 0) {
+		if (stream->open()) {
+			XMLConfigWriter(*this, *stream).write();
+			stream->close();
+		}
+		delete stream;
 	}
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); it++) {
 		delete it->second;

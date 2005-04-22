@@ -89,7 +89,8 @@ ifeq "$(TARGET_ARCH)" "palm"
 	LDFLAGS =
 	RM = rm -rvf
 	RM_QUIET = rm -rf
- 	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl
+ 	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl -I $(ROOTDIR)/palm-external
+ 	EXTERNALLIBS = # $(ROOTDIR)/palm-external/SysZLib.prc
 	#EXPATLIBS = -lexpat
 	#ENCALIBS = -lenca
 endif

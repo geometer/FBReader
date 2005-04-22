@@ -17,9 +17,9 @@
  */
 
 #include "ZipHeader.h"
-#include "ZLFileInputStream.h"
+#include "ZLInputStream.h"
 
-bool ZipHeader::readFrom(ZLFileInputStream &stream) {
+bool ZipHeader::readFrom(ZLInputStream &stream) {
 	int startOffset = stream.offset();
 	stream.read((char*)&Signature, 4);
 	stream.read((char*)&Version, 2);

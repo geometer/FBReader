@@ -16,29 +16,24 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLFileInputStream.h"
+#ifndef __ZLUNIXFSMANAGER_H__
+#define __ZLUNIXFSMANAGER_H__
 
-ZLFileInputStream::ZLFileInputStream(const std::string &name) : myName(name) {
-	myFile = 0;
-}
+#include <abstract/ZLFSManager.h>
 
-ZLFileInputStream::~ZLFileInputStream() {
-	close();
-}
+class ZLUnixFSManager : public ZLFSManager {
 
-bool ZLFileInputStream::open() {
-	close();
-	myFile = fopen(myName.c_str(), "rb");
-	return myFile != 0;
-}
+public:
+	static void createInstance() { ourInstance = new ZLUnixFSManager(); }
+	
+private:
+	ZLUnixFSManager() {}
+	
+public:
+	void normalize(std::string &fileName);
+	ZLFSDir *createDirectory(const std::string &name);
+	ZLInputStream *createInputStream(const std::string &name);
+	ZLOutputStream *createOutputStream(const std::string &name);
+};
 
-int ZLFileInputStream::read(char *buffer, int maxSize) {
-	return fread(buffer, 1, maxSize, myFile);
-}
-
-void ZLFileInputStream::close() {
-	if (myFile != 0) {
-		fclose(myFile);
-		myFile = 0;
-	}
-}
+#endif /* __ZLUNIXFSMANAGER_H__ */

@@ -35,16 +35,4 @@ protected:
 	std::string delimiter() const { return "/"; }
 };
 
-class ZLUnixFSDirManager : public ZLFSDirManager {
-
-public:
-	static void createInstance() { ourInstance = new ZLUnixFSDirManager(); }
-	
-private:
-	ZLUnixFSDirManager() {}
-	
-public:
-	ZLFSDir *createByName(const std::string &name);
-};
-
 #endif /* __ZLUNIXFSDIR_H__ */

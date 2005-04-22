@@ -21,6 +21,7 @@
 #include <algorithm>
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLFSDir.h>
 #include <abstract/ZLZipDir.h>
 #include <abstract/ZLZipInputStream.h>
@@ -48,7 +49,7 @@ BookCollection::BookCollection() {
 
 	for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); it++) {
 		std::vector<std::string> files;
-		ZLFSDir *dir = ZLFSDirManager::instance().createByName(*it);
+		ZLFSDir *dir = ZLFSManager::instance().createDirectory(*it);
 		dir->collectFiles(files, false);
 		if (!files.empty()) {
 			const std::string dirName = dir->name() + '/';
@@ -115,7 +116,7 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 		if (nameSet.find(name) == nameSet.end()) {
 			if (myScanSubdirs) {
 				std::vector<std::string> subdirs;
-				ZLFSDir *dir = ZLFSDirManager::instance().createByName(name);
+				ZLFSDir *dir = ZLFSManager::instance().createDirectory(name);
 				dir->collectSubDirs(subdirs, false);
 				for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
 					nameQueue.push(dir->name() + '/' + *it);

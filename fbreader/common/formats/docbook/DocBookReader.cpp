@@ -18,6 +18,7 @@
  */
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLFSDir.h>
 
 #include "DocBookReader.h"
@@ -70,7 +71,7 @@ static std::vector<std::string> EXTERNAL_DTDs;
 const std::vector<std::string> &DocBookReader::externalDTDs() const {
 	if (EXTERNAL_DTDs.empty()) {
 		std::vector<std::string> files;
-		ZLFSDir *dtdPath = ZLFSDirManager::instance().createByName(DTDDirectory);
+		ZLFSDir *dtdPath = ZLFSManager::instance().createDirectory(DTDDirectory);
 		dtdPath->collectFiles(files, false);
 		for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
 			if (ZLStringUtil::stringEndsWith(*it, ".ent")) {

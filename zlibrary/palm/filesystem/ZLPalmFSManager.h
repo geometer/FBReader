@@ -16,25 +16,24 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLFILEOUTPUTSTREAM_H__
-#define __ZLFILEOUTPUTSTREAM_H__
+#ifndef __ZLPALMFSMANAGER_H__
+#define __ZLPALMFSMANAGER_H__
 
-#include <stdio.h>
+#include <abstract/ZLFSManager.h>
 
-#include <string>
-
-class ZLFileOutputStream {
+class ZLPalmFSManager : public ZLFSManager {
 
 public:
-	ZLFileOutputStream(const std::string &name);
-	~ZLFileOutputStream();
-	bool open();
-	void write(const std::string &str);
-	void close();
-
+	static void createInstance() { ourInstance = new ZLPalmFSManager(); }
+	
 private:
-	std::string myName;
-	FILE *myFile;
+	ZLPalmFSManager() {}
+	
+public:
+	void normalize(std::string &fileName);
+	ZLFSDir *createDirectory(const std::string &name);
+	ZLInputStream *createInputStream(const std::string &name);
+	ZLOutputStream *createOutputStream(const std::string &name);
 };
 
-#endif /* __ZLFILEOUTPUTSTREAM_H__ */
+#endif /* __ZLPALMFSMANAGER_H__ */

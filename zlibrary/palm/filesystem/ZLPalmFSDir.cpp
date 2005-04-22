@@ -16,17 +16,14 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <sys/stat.h>
-#include <dirent.h>
-#include <stdio.h>
+#include "ZLPalmFSDir.h"
 
-#include "ZLUnixFSDir.h"
-
-void ZLUnixFSDir::createPhysicalDirectory() {
-	mkdir(name().c_str(), 0x1FF);
+void ZLPalmFSDir::createPhysicalDirectory() {
+	//mkdir(name().c_str(), 0x1FF);
 }
 
-void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
+void ZLPalmFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
+	/*
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
 		const dirent *file;
@@ -46,9 +43,11 @@ void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSy
 		}
 		closedir(dir);
 	}
+	*/
 }
 
-void ZLUnixFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
+void ZLPalmFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
+	/*
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
 		const dirent *file;
@@ -65,4 +64,5 @@ void ZLUnixFSDir::collectFiles(std::vector<std::string> &names, bool includeSyml
   	}
 		closedir(dir);
 	}
+	*/
 }
