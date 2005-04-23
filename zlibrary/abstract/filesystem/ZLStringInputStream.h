@@ -28,6 +28,8 @@ public:
 	~ZLStringInputStream() {}
 	bool open() { myPosition = 0; return true; }
 	int read(char *buffer, int maxSize);
+	int read(unsigned short *p);
+	int read(unsigned long *p);
 	void close() {}
 
 	void seek(int offset) { myPosition += offset; }

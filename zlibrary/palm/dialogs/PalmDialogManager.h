@@ -16,26 +16,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLINPUTSTREAM_H__
-#define __ZLINPUTSTREAM_H__
+#ifndef __PALMDIALOGMANAGER_H__
+#define __PALMDIALOGMANAGER_H__
 
-#include <string>
+#include <abstract/ZLDialogManager.h>
 
-class ZLInputStream {
-
-protected:
-	ZLInputStream() {}
+class PalmDialogManager : public ZLDialogManager {
 
 public:
-	virtual ~ZLInputStream() {}
-	virtual bool open() = 0;
-	virtual int read(char *buffer, int maxSize) = 0;
-	virtual int read(unsigned short *p) = 0;
-	virtual int read(unsigned long *p) = 0;
-	virtual void close() = 0;
+	static void createInstance() { ourInstance = new PalmDialogManager(); }
 
-	virtual void seek(int offset) = 0;
-	virtual int offset() const = 0;
+private:
+	PalmDialogManager() {}
+
+public:
+	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
+	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
+	void openFileDialog(const std::string &title, const ZLFileHandler &handler) const;
 };
 
-#endif /* __ZLINPUTSTREAM_H__ */
+#endif /* __PALMDIALOGMANAGER_H__ */

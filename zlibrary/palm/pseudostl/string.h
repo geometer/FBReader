@@ -25,6 +25,7 @@ namespace std {
 		const string operator + (const string &s) const;
 
 		size_t length() const { return myLength; }
+		bool empty() const { return myLength == 0; }
 		const char *data() const { return myData; }
 		const char *c_str();
 

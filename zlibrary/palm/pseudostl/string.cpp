@@ -74,13 +74,23 @@ namespace std {
 		return StrNCompare(myData, s.myData, myLength) == 0;
 	}
 
+	void string::append(const char *s, size_t len) {
+		reserve(myLength + len);
+		StrNCopy(myData + myLength, s, len);
+		myLength += len;
+	}
+
 	const string &string::operator += (const string &s) {
-		// TODO: implement
+		reserve(myLength + s.myLength);
+		StrNCopy(myData + myLength, s.myData, s.myLength);
+		myLength += s.myLength;
 		return *this;
 	}
 
 	const string &string::operator += (char c) {
-		// TODO: implement
+		reserve(myLength + 1);
+		myData[myLength] = c;
+		myLength++;
 		return *this;
 	}
 
@@ -95,22 +105,36 @@ namespace std {
 	}
 
 	size_t string::find(char c) const {
-		// TODO: implement
-		return 0;
+		char *end = myData + myLength;
+		for (char *ptr = myData; ptr != end; ++ptr) {
+			if (*ptr == c) {
+				return ptr - myData;
+			}
+		}
+		return (size_t)-1;
 	}
 
 	size_t string::rfind(char c) const {
-		// TODO: implement
-		return 0;
+		char *end = myData - 1;
+		for (char *ptr = myData + myLength - 1; ptr != end; --ptr) {
+			if (*ptr == c) {
+				return ptr - myData;
+			}
+		}
+		return (size_t)-1;
 	}
 
 	string string::substr(size_t start, size_t len = (size_t)-1) const {
-		// TODO: implement
-		return string();
-	}
-
-	void string::append(const char *s, size_t len) {
-		// TODO: implement
+		if (start >= myLength) {
+			len = 0;
+		} else if (len > myLength - start) {
+			len = myLength - start;
+		}
+		string result;
+		result.reserve(len);
+		StrNCopy(result.myData, myData + start, len);
+		result.myLength = len;
+		return result;
 	}
 
 	void string::erase(size_t start, size_t len) {

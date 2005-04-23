@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <zlib.h>
+
 #include "ZLPalmFSManager.h"
 #include "ZLPalmFSDir.h"
 #include "ZLPalmFileInputStream.h"
@@ -31,7 +33,7 @@ ZLFSDir *ZLPalmFSManager::createDirectory(const std::string &name) {
 
 ZLInputStream *ZLPalmFSManager::createInputStream(const std::string &name) {
 	if ((int)name.find(':') != -1) {
-		return new ZLZipInputStream(name);
+		return (ZLibRef != sysInvalidRefNum) ? new ZLZipInputStream(name) : 0;
 	} else {
 		return new ZLPalmFileInputStream(name);
 	}

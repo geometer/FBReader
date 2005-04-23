@@ -16,26 +16,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLINPUTSTREAM_H__
-#define __ZLINPUTSTREAM_H__
+#include "PalmDialogManager.h"
+//#include "PalmOptionsDialog.h"
+//#include "PalmOpenFileDialog.h"
 
-#include <string>
+ZLOptionsDialog *PalmDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
+	return 0;
+	//return new PalmOptionsDialog(id, title);
+}
 
-class ZLInputStream {
+int PalmDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
+	return 0;
+	//return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
+}
 
-protected:
-	ZLInputStream() {}
-
-public:
-	virtual ~ZLInputStream() {}
-	virtual bool open() = 0;
-	virtual int read(char *buffer, int maxSize) = 0;
-	virtual int read(unsigned short *p) = 0;
-	virtual int read(unsigned long *p) = 0;
-	virtual void close() = 0;
-
-	virtual void seek(int offset) = 0;
-	virtual int offset() const = 0;
-};
-
-#endif /* __ZLINPUTSTREAM_H__ */
+void PalmDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
+	//PalmOpenFileDialog(title.c_str(), handler).exec();
+}

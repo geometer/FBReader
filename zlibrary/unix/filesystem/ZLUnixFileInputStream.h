@@ -30,6 +30,8 @@ public:
 	~ZLUnixFileInputStream();
 	bool open();
 	int read(char *buffer, int maxSize);
+	int read(unsigned short *p);
+	int read(unsigned long *p);
 	void close();
 
 	void seek(int offset) { fseek(myFile, offset, SEEK_CUR); }

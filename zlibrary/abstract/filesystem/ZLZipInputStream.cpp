@@ -21,8 +21,8 @@
 #include "ZLFSManager.h"
 #include "ZLInputStream.h"
 
-const unsigned int IN_BUFFER_SIZE = 4096;
-const unsigned int OUT_BUFFER_SIZE = 65536;
+const unsigned int IN_BUFFER_SIZE = 2048;
+const unsigned int OUT_BUFFER_SIZE = 32768;
 
 ZLZipInputStream::ZLZipInputStream(const std::string &name) {
 	int index = name.find(':');
@@ -126,6 +126,14 @@ int ZLZipInputStream::read(char *buffer, int maxSize) {
 		myAvailableSize -= maxSize;
 		return myFileStream->read(buffer, maxSize);
 	}
+}
+
+int ZLZipInputStream::read(unsigned short *p) {
+	return read((char*)p, 2);
+}
+
+int ZLZipInputStream::read(unsigned long *p) {
+	return read((char*)p, 4);
 }
 
 void ZLZipInputStream::close() {

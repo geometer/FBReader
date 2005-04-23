@@ -19,6 +19,9 @@
 #ifndef __ZLPALMFILEINPUTSTREAM_H__
 #define __ZLPALMFILEINPUTSTREAM_H__
 
+#include <PalmOS.h>
+#include <PalmTypes.h>
+
 #include <abstract/ZLInputStream.h>
 
 class ZLPalmFileInputStream : public ZLInputStream {
@@ -28,6 +31,8 @@ public:
 	~ZLPalmFileInputStream();
 	bool open();
 	int read(char *buffer, int maxSize);
+	int read(unsigned short *p);
+	int read(unsigned long *p);
 	void close();
 
 	void seek(int offset);
@@ -35,7 +40,7 @@ public:
 
 private:
 	std::string myName;
-	//FILE *myFile;
+	UInt32 myFileRef;
 };
 
 #endif /* __ZLPALMFILEINPUTSTREAM_H__ */

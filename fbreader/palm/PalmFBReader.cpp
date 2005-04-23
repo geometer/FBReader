@@ -45,9 +45,9 @@ static Boolean MyFormHandleEvent(EventPtr event) {
 				WinFillRectangle(&rectangle, 0);
 				WinDrawChars("Hello", 5, 10, 10);
 
-				int barLeft = 0;//rectangle.topLeft.x;
-				int barRight = 319;//rectangle.extent.x;
-				int barBottom = 319;//rectangle.extent.y;
+				int barLeft = 0;//rectangle.topLeft.x + 1;
+				int barRight = 319;//rectangle.extent.x - 3;
+				int barBottom = 319;//rectangle.extent.y - 3;
 				int barTop = barBottom - 16;
 				WinDrawLine(barLeft, barTop, barLeft, barBottom);
 				WinDrawLine(barRight, barTop, barRight, barBottom);
