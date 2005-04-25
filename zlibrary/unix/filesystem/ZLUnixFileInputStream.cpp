@@ -36,14 +36,6 @@ int ZLUnixFileInputStream::read(char *buffer, int maxSize) {
 	return fread(buffer, 1, maxSize, myFile);
 }
 
-int ZLUnixFileInputStream::read(unsigned short *p) {
-	return read((char*)p, 2);
-}
-
-int ZLUnixFileInputStream::read(unsigned long *p) {
-	return read((char*)p, 4);
-}
-
 void ZLUnixFileInputStream::close() {
 	if (myFile != 0) {
 		fclose(myFile);

@@ -35,6 +35,10 @@ struct ZipHeader {
 	unsigned short ExtraLength;
 
 	bool readFrom(ZLInputStream &stream);
+
+private:
+	unsigned short readShort(ZLInputStream &stream);
+	unsigned long readLong(ZLInputStream &stream);
 };
 
 #endif /* __ZIPHEADER_H__ */

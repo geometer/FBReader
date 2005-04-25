@@ -128,14 +128,6 @@ int ZLZipInputStream::read(char *buffer, int maxSize) {
 	}
 }
 
-int ZLZipInputStream::read(unsigned short *p) {
-	return read((char*)p, 2);
-}
-
-int ZLZipInputStream::read(unsigned long *p) {
-	return read((char*)p, 4);
-}
-
 void ZLZipInputStream::close() {
 	if (myZStream != 0) {
 		inflateEnd(myZStream);

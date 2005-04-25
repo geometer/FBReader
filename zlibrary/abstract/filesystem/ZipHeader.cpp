@@ -21,16 +21,32 @@
 
 bool ZipHeader::readFrom(ZLInputStream &stream) {
 	int startOffset = stream.offset();
-	stream.read(&Signature);
-	stream.read(&Version);
-	stream.read(&Flags);
-	stream.read(&CompressionMethod);
-	stream.read(&ModificationTime);
-	stream.read(&ModificationDate);
-	stream.read(&CRC32);
-	stream.read(&CompressedSize);
-	stream.read(&UncompressedSize);
-	stream.read(&NameLength);
-	stream.read(&ExtraLength);
+	Signature = readLong(stream);
+	Version = readShort(stream);
+	Flags = readShort(stream);
+	CompressionMethod = readShort(stream);
+	ModificationTime = readShort(stream);
+	ModificationDate = readShort(stream);
+	CRC32 = readLong(stream);
+	CompressedSize = readLong(stream);
+	UncompressedSize = readLong(stream);
+	NameLength = readShort(stream);
+	ExtraLength = readShort(stream);
 	return (Signature == 0x04034B50) && (stream.offset() == startOffset + 30) && (NameLength != 0);
+}
+
+unsigned short ZipHeader::readShort(ZLInputStream &stream) {
+	char buffer[2];
+	stream.read(buffer, 2);
+	return (((unsigned short)buffer[1]) << 8) + (unsigned short)buffer[0];
+}
+
+unsigned long ZipHeader::readLong(ZLInputStream &stream) {
+	char buffer[4];
+	stream.read(buffer, 4);
+	return
+		(((unsigned long)buffer[3]) << 24) +
+		(((unsigned long)buffer[2]) << 16) +
+		(((unsigned long)buffer[1]) << 8) +
+		(unsigned long)buffer[0];
 }

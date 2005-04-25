@@ -50,28 +50,6 @@ int ZLPalmFileInputStream::read(char *buffer, int maxSize) {
 	return size;
 }
 
-// TODO: optimize it
-int ZLPalmFileInputStream::read(unsigned short *p) {
-	unsigned short N = 0;
-	int code = read((char*)&N, 2);
-	unsigned char first = N;
-	unsigned char second = N >> 8;
-	*p = (((unsigned short)first) << 8) + second;
-	return code;
-}
-
-// TODO: optimize it
-int ZLPalmFileInputStream::read(unsigned long *p) {
-	unsigned long N = 0;
-	int code = read((char*)&N, 4);
-	unsigned char first = N;
-	unsigned char second = N >> 8;
-	unsigned char third = N >> 16;
-	unsigned char fourth = N >> 24;
-	*p = (((unsigned long)first) << 24) + (((unsigned long)second) << 16) + (((unsigned long)third) << 8) + fourth;
-	return code;
-}
-
 void ZLPalmFileInputStream::close() {
 	if (myFileRef != 0) {
 		VFSFileClose(myFileRef);

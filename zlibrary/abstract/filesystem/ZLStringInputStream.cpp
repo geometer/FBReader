@@ -27,11 +27,3 @@ int ZLStringInputStream::read(char *buffer, int maxSize) {
 	myPosition += size;
 	return size;
 }
-
-int ZLStringInputStream::read(unsigned short *p) {
-	return read((char*)p, 2);
-}
-
-int ZLStringInputStream::read(unsigned long *p) {
-	return read((char*)p, 4);
-}

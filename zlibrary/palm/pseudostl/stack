@@ -1,0 +1,7 @@
+#ifndef __STACK__
+#define __STACK__
+
+#include <stack.h>
+
+#endif /* __STACK__ */
+

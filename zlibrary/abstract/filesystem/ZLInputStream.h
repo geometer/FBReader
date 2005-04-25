@@ -30,8 +30,6 @@ public:
 	virtual ~ZLInputStream() {}
 	virtual bool open() = 0;
 	virtual int read(char *buffer, int maxSize) = 0;
-	virtual int read(unsigned short *p) = 0;
-	virtual int read(unsigned long *p) = 0;
 	virtual void close() = 0;
 
 	virtual void seek(int offset) = 0;

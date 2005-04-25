@@ -30,7 +30,7 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/filesystem abstract/dialogs palm/options palm/filesystem palm/dialogs
+	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/filesystem abstract/dialogs abstract/xml palm/options palm/filesystem palm/dialogs
 endif
 
 .objects:

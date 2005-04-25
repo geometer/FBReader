@@ -1,4 +1,6 @@
 #include <abstract/ZLOptions.h>
+#include <palm/ZLPalmFSManager.h>
+#include <abstract/ZLInputStream.h>
 
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
@@ -43,7 +45,18 @@ static Boolean MyFormHandleEvent(EventPtr event) {
 				RectangleType rectangle;
 				WinGetWindowFrameRect(WinGetActiveWindow(), &rectangle);
 				WinFillRectangle(&rectangle, 0);
-				WinDrawChars("Hello", 5, 10, 10);
+
+				std::string fileName = "/test1.zip:test1";
+				ZLInputStream *istream = ZLPalmFSManager::instance().createInputStream(fileName);
+				if (istream != 0) {
+					if (istream->open()) {
+						char txt[10];
+						int size = istream->read(txt, 6);
+						WinDrawChars(txt, size, 10, 10);
+						istream->close();
+					}
+					delete istream;
+				}
 
 				int barLeft = 0;//rectangle.topLeft.x + 1;
 				int barRight = 319;//rectangle.extent.x - 3;
