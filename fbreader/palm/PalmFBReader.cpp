@@ -5,11 +5,17 @@
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
-static Boolean MyFormHandleEvent(EventPtr event) {
+static IndexedColorType color(const ZLColorOption &option) {
+	ZLColor zlColor = option.value();
+	RGBColorType rgbColor = { 0x00, zlColor.Red, zlColor.Green, zlColor.Blue };
+	return WinRGBToIndex(&rgbColor);
+}
+
+static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 	switch (event->eType) {
   	case menuCmdBarOpenEvent:	
-			MenuCmdBarAddButton(menuCmdBarOnRight, OpenBookBitmap, menuCmdBarResultMenuItem, 5000, NULL);
-			MenuCmdBarAddButton(menuCmdBarOnRight, AddBookBitmap, menuCmdBarResultMenuItem, 5001, NULL);
+			MenuCmdBarAddButton(menuCmdBarOnRight, OpenBook, menuCmdBarResultMenuItem, OpenBook, "");
+			MenuCmdBarAddButton(menuCmdBarOnRight, AddBook, menuCmdBarResultMenuItem, AddBook, "");
 			return false;
 
    	case penDownEvent:
@@ -26,24 +32,13 @@ static Boolean MyFormHandleEvent(EventPtr event) {
   	
   	case frmOpenEvent:	
 			{
-				RGBColorType bg;
-				ZLColorOption BackgroundColor("Color", "Background", ZLColor(255, 255, 204));
-				ZLColor bgc = BackgroundColor.value();
-				bg.r = bgc.Red;
-				bg.g = bgc.Green;
-				bg.b = bgc.Blue;
 				FrmDrawForm(FrmGetActiveForm());
 				WinSetCoordinateSystem(kCoordinatesNative);
-				RGBColorType red = { 0x00, 0xff, 0x00, 0xff };
-				RGBColorType blue = { 0x00, 0x00, 0x00, 0x80 };
-				IndexedColorType iRed = WinRGBToIndex(&red);
-				IndexedColorType iBg = WinRGBToIndex(&bg);
-				IndexedColorType iBlue = WinRGBToIndex(&blue);
-				WinSetTextColor(iRed);
-				WinSetBackColor(iBg);
-				WinSetForeColor(iBlue);
+				WinSetBackColor(color(ZLColorOption("Color", "Background", ZLColor(255, 255, 204))));
+				WinSetForeColor(color(ZLColorOption("Color", "Foreground", ZLColor(63, 63, 63))));
+				WinSetTextColor(color(ZLColorOption("Color", "Text", ZLColor(0, 0, 127))));
 				RectangleType rectangle;
-				WinGetWindowFrameRect(WinGetActiveWindow(), &rectangle);
+				WinGetWindowFrameRect(FrmGetWindowHandle(FrmGetActiveForm()), &rectangle);
 				WinFillRectangle(&rectangle, 0);
 
 				std::string fileName = "/test1.zip:test1";
@@ -58,10 +53,10 @@ static Boolean MyFormHandleEvent(EventPtr event) {
 					delete istream;
 				}
 
-				int barLeft = 0;//rectangle.topLeft.x + 1;
-				int barRight = 319;//rectangle.extent.x - 3;
-				int barBottom = 319;//rectangle.extent.y - 3;
-				int barTop = barBottom - 16;
+				int barLeft = rectangle.topLeft.x + 2;
+				int barRight = rectangle.topLeft.x + rectangle.extent.x - 3;
+				int barBottom = rectangle.topLeft.y + rectangle.extent.y - 3;
+				int barTop = barBottom - rectangle.extent.y / 20;
 				WinDrawLine(barLeft, barTop, barLeft, barBottom);
 				WinDrawLine(barRight, barTop, barRight, barBottom);
 				WinDrawLine(barLeft, barTop, barRight, barTop);
@@ -70,15 +65,52 @@ static Boolean MyFormHandleEvent(EventPtr event) {
 			}
 			return true;
 
+		case menuEvent:
+			switch (event->data.menu.itemID) {
+				case OpenBook:
+				case AddBook:
+					FrmGotoForm(OptionsDialogForm);
+					break;
+			}
+			return false;
+
 		default:
 			return false;
 	}
 }
 
+static char *TEXT = "item";
+
+static Boolean OptionsDialogFormHandleEvent(EventPtr event) {
+	switch (event->eType) {
+  	
+  	case frmOpenEvent:	
+			{
+				FormPtr form = FrmGetActiveForm();
+				TablePtr table = (TablePtr)FrmGetObjectPtr(form, FrmGetObjectIndex(form, OptionsTable));
+				for (int i = 0; i < 5; i++) {
+					for (int j = 0; j < 5; j++) {
+						TblSetItemStyle(table, i, j, labelTableItem);
+						TblSetItemPtr(table, i, j, TEXT);
+					}
+					TblSetColumnUsable(table, i, true);
+				}
+				FrmDrawForm(form);
+			}
+			return true;
+
+		case penDownEvent:
+			FrmGotoForm(MainFBReaderForm);
+			return true;
+
+		default:
+			return false;
+	}
+}
 
 static Boolean ApplicationHandleEvent(EventPtr event) {
 	FormPtr	frm;
-	Int		formId;
+	Int16 formId;
 
 	if (event->eType == frmLoadEvent) {
 		// Load the form resource specified in the event then activate the form.
@@ -90,7 +122,10 @@ static Boolean ApplicationHandleEvent(EventPtr event) {
 		// active form is called by FrmDispatchEvent each time it receives an event.
 		switch (formId) {
 			case MainFBReaderForm:
-				FrmSetEventHandler(frm, MyFormHandleEvent);
+				FrmSetEventHandler(frm, MainFBReaderFormHandleEvent);
+				break;
+			case OptionsDialogForm:
+				FrmSetEventHandler(frm, OptionsDialogFormHandleEvent);
 				break;
 		}
 		return true;
@@ -102,7 +137,7 @@ static Boolean ApplicationHandleEvent(EventPtr event) {
 
 void EventLoop(void) {
 	EventType event;
-	Word error;
+	UInt16 error;
 	
 	do {
 		EvtGetEvent(&event, evtWaitForever);

@@ -28,17 +28,20 @@ namespace std {
 		bool empty() const { return myLength == 0; }
 		const char *data() const { return myData; }
 		const char *c_str();
+		char operator [] (size_t index) const { return myData[index]; }
 
 		string substr(size_t start, size_t len = (size_t)-1) const;
 		void append(const char *s, size_t len);
+		void swap(string &s);
 
 		int compare(const string &s, int fromPos, int len) const;
 		bool operator == (const string &s) const;
+		bool operator < (const string &s) const;
 		
-		size_t find(const string &pattern, size_t fromPos) const;
-		size_t rfind(const string &pattern, size_t fromPos) const;
-		size_t find(char c) const;
-		size_t rfind(char c) const;
+		size_t find(const string &pattern, size_t fromPos = 0) const;
+		size_t rfind(const string &pattern, size_t fromPos = (size_t)-1) const;
+		size_t find(char c, size_t fromPos = 0) const;
+		size_t rfind(char c, size_t fromPos = (size_t)-1) const;
 
 	private:
 		size_t myLength;

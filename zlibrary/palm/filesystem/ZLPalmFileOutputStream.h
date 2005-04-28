@@ -20,7 +20,6 @@
 #define __ZLPALMFILEOUTPUTSTREAM_H__
 
 #include <PalmOS.h>
-#include <PalmTypes.h>
 
 #include "../../abstract/filesystem/ZLOutputStream.h"
 

@@ -11,7 +11,7 @@ namespace std {
 
 	string::~string() {
 		if (myData != 0) {
-			delete[] myData;
+			MemPtrFree(myData);
 		}
 	}
 
@@ -56,12 +56,12 @@ namespace std {
 				minSize = (minSize & (size_t)-0x10) + 0x10;
 			}
 			myDataSize = minSize;
-			char *d = new char[myDataSize];
+			char *d = (char*)MemPtrNew(myDataSize);
 			if (myLength > 0) {
 				StrNCopy(d, myData, myLength);
 			}
 			if (myData != 0) {
-				delete[] myData;
+				MemPtrFree(myData);
 			}
 			myData = d;
 		}
@@ -78,6 +78,18 @@ namespace std {
 		reserve(myLength + len);
 		StrNCopy(myData + myLength, s, len);
 		myLength += len;
+	}
+
+	void string::swap(string &s) {
+		char *p = myData;
+		myData = s.myData;
+		s.myData = p;
+		int l = myDataSize;
+		myDataSize = s.myDataSize;
+		s.myDataSize = l;
+		l = myLength;
+		myLength = s.myLength;
+		s.myLength = l;
 	}
 
 	const string &string::operator += (const string &s) {
@@ -104,9 +116,13 @@ namespace std {
 		return 0;
 	}
 
-	size_t string::find(char c) const {
+	size_t string::find(char c, size_t fromPos) const {
+		if (fromPos > myLength) {
+			return (size_t)-1;
+		}
+
 		char *end = myData + myLength;
-		for (char *ptr = myData; ptr != end; ++ptr) {
+		for (char *ptr = myData + fromPos; ptr != end; ++ptr) {
 			if (*ptr == c) {
 				return ptr - myData;
 			}
@@ -114,9 +130,12 @@ namespace std {
 		return (size_t)-1;
 	}
 
-	size_t string::rfind(char c) const {
+	size_t string::rfind(char c, size_t fromPos) const {
+		if (fromPos > myLength) {
+			fromPos = myLength;
+		}
 		char *end = myData - 1;
-		for (char *ptr = myData + myLength - 1; ptr != end; --ptr) {
+		for (char *ptr = myData + fromPos - 1; ptr != end; --ptr) {
 			if (*ptr == c) {
 				return ptr - myData;
 			}

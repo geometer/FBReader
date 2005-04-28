@@ -31,7 +31,7 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = $(TARGET_ARCH)
+	SUBDIRS = common/model $(TARGET_ARCH)
 endif
 
 all: .bin

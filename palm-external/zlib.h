@@ -2,7 +2,6 @@
 #define __MYZLIB_H__
 
 #include <PalmOS.h>
-#include <PalmTypes.h>
 
 #define NOZLIBDEFS
 

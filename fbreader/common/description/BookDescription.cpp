@@ -72,8 +72,8 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 	}
 
 	if (description->myTitle.empty()) {
-		int slashPos = fileName.find_last_of('/');
-		int dotPos = fileName.find_first_of('.', slashPos + 1);
+		int slashPos = fileName.find('/');
+		int dotPos = fileName.rfind('.', slashPos + 1);
 		description->myTitle = fileName.substr(slashPos + 1, dotPos - slashPos - 1);
 	}
 	if (description->myAuthor == 0) {

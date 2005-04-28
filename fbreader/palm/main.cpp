@@ -7,7 +7,7 @@
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
-UInt16 ZLibRef = 0;
+UInt16 ZLibRef = sysInvalidRefNum;
 
 static Err StartApplication() {
 	ZLSetup;
@@ -23,24 +23,16 @@ static void StopApplication() {
 	PalmOptions::deleteInstance();
 	ZLPalmFSManager::deleteInstance();
 	ZLTeardown;
+
+	FrmSaveAllForms();
+	FrmCloseAllForms();
 }
 
-DWord PilotMain(Word cmd, Ptr /*cmdPBP*/, Word /*launchFlags*/) {
+UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 	Err err = 0;
 	
 	if ((cmd == sysAppLaunchCmdNormalLaunch) && ((err = StartApplication()) == 0)) {
 		EventLoop();
-
-		/*
-		if (code != 0) {
-			char txt[4];
-			txt[0] = '0' + code / 100;
-			txt[1] = '0' + code / 10 % 10;
-			txt[2] = '0' + code % 10;
-			txt[3] = '\0';
-			FrmCustomAlert(GoodnightMoonAlert, txt, 0, 0);
-		}
-		*/
 		StopApplication();
 	}
 

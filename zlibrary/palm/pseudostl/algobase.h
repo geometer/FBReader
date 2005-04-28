@@ -16,6 +16,8 @@
 #ifndef ALGOBASE_H
 #define ALGOBASE_H
 
+#include <PalmOS.h>
+
 #include <pair.h>
 #include <iterator.h>
 
@@ -50,10 +52,12 @@ inline const T& min(const T& a, const T& b, Compare comp) {
 }
 #endif
 
+#if PALMOS_SDK_VERSION >= 0x0500
 template <class T>
 inline const T& max(const T& a, const T& b) {
     return  a < b ? b : a;
 }
+#endif
 
 #if 0
 template <class T, class Compare>
