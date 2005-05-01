@@ -165,20 +165,33 @@ void GtkPaintContext::setFillColor(ZLColor color) {
 	//myPainter->setBrush(QColor(color.Red, color.Green, color.Blue));
 }
 
-static int pango_text_width (PangoContext *context, PangoFontDescription *fdesc, const std::string& text) {
+static void pango_text_size (PangoContext *context, PangoFontDescription *fdesc, const std::string& text, int *width, int *height) {
 	PangoLayout *layout = pango_layout_new(context);
 
-	pango_layout_set_text(layout, text.c_str(), text.size());
+	pango_layout_set_text(layout, text.data(), text.size());
 	pango_layout_set_font_description(layout, fdesc);
 
-	int width, height;
-	pango_layout_get_size(layout, &width, &height);
+	pango_layout_get_size(layout, width, height);
 
 //	std::cout << "pango_layout_get_width: " << text << ": " << width << ", " << height << std::endl;
 
 	g_object_unref(layout);
+}
+
+static int pango_text_width (PangoContext *context, PangoFontDescription *fdesc, const std::string& text) {
+	int width, height;
+
+	pango_text_size (context, fdesc, text, &width, &height);
 
 	return width / PANGO_SCALE;
+}
+
+static int pango_text_height (PangoContext *context, PangoFontDescription *fdesc, const std::string& text) {
+	int width, height;
+
+	pango_text_size (context, fdesc, text, &width, &height);
+
+	return height / PANGO_SCALE;
 }
 
 int GtkPaintContext::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
@@ -203,8 +216,7 @@ int GtkPaintContext::spaceWidth() const {
 }
 
 int GtkPaintContext::wordHeight() const {
-//	return 2 * gdk_char_height(myFont, 'X');
-	return 18;
+	return pango_text_height(myContext, myFont, "X");
 }
 
 /*
@@ -249,7 +261,7 @@ void GtkPaintContext::drawString(int x, int y, const std::string &str, const Wor
 
 void GtkPaintContext::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
 	x += leftMargin().value();
-	y += topMargin().value();
+	y += topMargin().value() - this->wordHeight();
 
 	std::string what;
 
@@ -264,7 +276,7 @@ void GtkPaintContext::drawWord(int x, int y, const Word &word, int start, int le
 
 	PangoLayout *layout = pango_layout_new(myContext);
 
-	pango_layout_set_text(layout, what.c_str(), what.size());
+	pango_layout_set_text(layout, what.data(), what.size());
 	pango_layout_set_font_description(layout, myFont);
 	gdk_draw_layout (myPixmap, myTextGC, x, y, layout);
 
