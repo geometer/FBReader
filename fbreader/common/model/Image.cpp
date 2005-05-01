@@ -67,6 +67,5 @@ void Image::decode() const {
 			sum >>= 8;
 		}
 	}
-	myDataLen -= 1;
 	std::string().swap(myEncodedData);
 }
