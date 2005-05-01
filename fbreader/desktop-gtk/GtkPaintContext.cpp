@@ -18,7 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <algorithm>
 
 #include <abstract/ZLUnicodeUtil.h>
 
@@ -183,7 +182,9 @@ void GtkPaintContext::drawString(int x, int y, const std::string &str, int from,
 	PangoLayout *layout = pango_layout_new(myContext);
 	pango_layout_set_text(layout, str.data() + from, len);
 	pango_layout_set_font_description(layout, myFont);
-	gdk_draw_layout (myPixmap, myTextGC, x + leftMargin().value(), y + topMargin().value() - stringHeight(), layout);
+	x += leftMargin().value();
+	y += topMargin().value() - pango_font_description_get_size(myFont) / PANGO_SCALE;
+	gdk_draw_layout (myPixmap, myTextGC, x, y, layout);
 	g_object_unref(layout);
 }
 
