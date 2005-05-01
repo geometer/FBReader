@@ -49,13 +49,17 @@ ZLFSDir *ZLUnixFSManager::createDirectory(const std::string &name) {
 }
 
 ZLInputStream *ZLUnixFSManager::createInputStream(const std::string &name) {
-	if ((int)name.find(':') != -1) {
-		return new ZLZipInputStream(name);
+	std::string fName = name;
+	normalize(fName);
+	if ((int)fName.find(':') != -1) {
+		return new ZLZipInputStream(fName);
 	} else {
-		return new ZLUnixFileInputStream(name);
+		return new ZLUnixFileInputStream(fName);
 	}
 }
 
 ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &name) {
-	return new ZLUnixFileOutputStream(name);
+	std::string fName = name;
+	normalize(fName);
+	return new ZLUnixFileOutputStream(fName);
 }

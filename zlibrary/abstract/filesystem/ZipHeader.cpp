@@ -38,15 +38,16 @@ bool ZipHeader::readFrom(ZLInputStream &stream) {
 unsigned short ZipHeader::readShort(ZLInputStream &stream) {
 	char buffer[2];
 	stream.read(buffer, 2);
-	return (((unsigned short)buffer[1]) << 8) + (unsigned short)buffer[0];
+	return ((((unsigned short)buffer[1]) & 0xFF) << 8) + ((unsigned short)buffer[0] & 0xFF);
 }
 
 unsigned long ZipHeader::readLong(ZLInputStream &stream) {
 	char buffer[4];
 	stream.read(buffer, 4);
+
 	return
-		(((unsigned long)buffer[3]) << 24) +
-		(((unsigned long)buffer[2]) << 16) +
-		(((unsigned long)buffer[1]) << 8) +
-		(unsigned long)buffer[0];
+		((((unsigned long)buffer[3]) & 0xFF) << 24) +
+		((((unsigned long)buffer[2]) & 0xFF) << 16) +
+		((((unsigned long)buffer[1]) & 0xFF) << 8) +
+		((unsigned long)buffer[0] & 0xFF);
 }
