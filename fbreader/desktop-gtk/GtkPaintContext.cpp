@@ -67,12 +67,11 @@ GtkPaintContext::~GtkPaintContext() {
 void GtkPaintContext::removeCaches() {
 	PaintContext::removeCaches();
 
-	/*
-	for (std::map<const Image*,QImage*>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {
-		delete it->second;
+	for (std::map<const Image*, GdkPixmap *>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {
+		g_object_unref(it->second);
 	}
+
 	myImageCache.clear();
-	*/
 }
 
 void GtkPaintContext::updatePixmap(GtkWidget *area) {
