@@ -18,11 +18,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "GtkPaintContext.h"
-#include "GtkWord.h"
 
 #include "../common/model/Image.h"
 
@@ -185,9 +185,7 @@ static int pango_text_height (PangoContext *context, PangoFontDescription *fdesc
 }
 
 int GtkPaintContext::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
-	//TODO: use reference!
-	//const std::string &str = word.utf8String();
-	const std::string str = word.utf8String();
+	const std::string &str = word.utf8String();
 	int startPos = ZLUnicodeUtil::length(str, start);
 	int endPos = (length != -1) ? ZLUnicodeUtil::length(str, start + length) : str.length();
 	int len = endPos - startPos;
@@ -260,9 +258,7 @@ void GtkPaintContext::drawWord(int x, int y, const Word &word, int start, int le
 	x += leftMargin().value();
 	y += topMargin().value() - this->wordHeight();
 
-	//TODO: use reference!
-	//const std::string &str = word.utf8String();
-	const std::string str = word.utf8String();
+	const std::string &str = word.utf8String();
 	int startPos = ZLUnicodeUtil::length(str, start);
 	int endPos = (length != -1) ? ZLUnicodeUtil::length(str, start + length) : str.length();
 	int len = endPos - startPos;

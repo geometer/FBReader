@@ -66,7 +66,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 
 void ParagraphCursor::ParagraphProcessor::addWord(const std::string &str, int start, int len) {
 	beforeAddWord();
-	Word *word = WordBuilder::instance().buildWord(str.data() + start, len, myOffset + start);
+	Word *word = new Word(str.data() + start, len, myOffset + start);
 	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; mit++) {
 		TextMark mark = *mit;
 		if ((mark.Offset - myOffset < start + len) && (mark.Offset - myOffset + mark.Length > start)) {

@@ -26,7 +26,6 @@
 #include <qtopia/QScreenSize.h>
 
 #include "QFBReader.h"
-#include "QWord.h"
 
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
@@ -35,7 +34,6 @@ int main(int argc, char **argv) {
 	ZLXMLReader::setEncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
 	QOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
-	QWordBuilder::createInstance();
 	QScreenSize::createInstance();
 
 	QFBReader *reader = new QFBReader();
@@ -44,7 +42,6 @@ int main(int argc, char **argv) {
 	delete reader;
 
 	QScreenSize::deleteInstance();
-	QWordBuilder::deleteInstance();
 	QDialogManager::deleteInstance();
 	QOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();

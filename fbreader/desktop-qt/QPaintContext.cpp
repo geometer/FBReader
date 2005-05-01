@@ -25,7 +25,6 @@
 #include <qimage.h>
 
 #include "QPaintContext.h"
-#include "QWord.h"
 
 #include "../common/model/Image.h"
 
@@ -97,10 +96,11 @@ void QPaintContext::setFillColor(ZLColor color) {
 }
 
 int QPaintContext::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
+	QString value = QString::fromUtf8(word.utf8String().data(), word.utf8String().length());
 	if ((start == 0) && (length == -1)) {
-		return myPainter->fontMetrics().width(((QWord&)word).myValue);
+		return myPainter->fontMetrics().width(value);
 	}
-	QString subword = ((QWord&)word).myValue.mid(start, length);
+	QString subword = value.mid(start, length);
 	if (addHyphenationSign) {
 		subword.append("-");
 	}
@@ -155,12 +155,13 @@ void QPaintContext::drawQString(int x, int y, const QString &str, const Word::Wo
 }
 
 void QPaintContext::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
+	QString value = QString::fromUtf8(word.utf8String().data(), word.utf8String().length());
 	x += leftMargin().value();
 	y += topMargin().value();
 	if ((start == 0) && (length == -1)) {
-		drawQString(x, y, ((QWord&)word).myValue, word.mark());
+		drawQString(x, y, value, word.mark());
 	} else {
-		QString subword = ((QWord&)word).myValue.mid(start, length);
+		QString subword = value.mid(start, length);
 		if (addHyphenationSign) {
 			subword.append("-");
 		}

@@ -17,9 +17,16 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "Word.h"
 
-WordBuilder *WordBuilder::ourInstance = 0;
+Word::Word(const char *utf8String, int len, int startOffset) {
+	myStartOffset = startOffset;
+	myMark = 0;
+	myUtf8Contents.append(utf8String, len);
+	myUtf8Length = ZLUnicodeUtil::utf8Length(myUtf8Contents);
+}
 
 void Word::addMark(int start, int len) {
 	WordMark *existingMark = myMark;

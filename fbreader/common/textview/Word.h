@@ -27,14 +27,14 @@
 
 class Word : public TextElement {
 
-protected:
-	Word(int startOffset) { myStartOffset = startOffset; myMark = 0; }
+public:
+	Word(const char *utf8String, int len, int startOffset);
 
 public:
-	virtual ~Word() { if (myMark != 0) delete myMark; }
+	~Word() { if (myMark != 0) delete myMark; }
 	Kind kind() const { return WORD_ELEMENT; }
-	virtual int length() const = 0;
-	virtual std::string utf8String() const = 0;
+	int length() const { return myUtf8Length; }
+	const std::string &utf8String() const { return myUtf8Contents; }
 	int startOffset() const { return myStartOffset; }
 
 	void addMark(int start, int len);
@@ -63,26 +63,13 @@ public:
 private:
 	WordMark *myMark;
 	int myStartOffset;
+	std::string myUtf8Contents;
+	int myUtf8Length;
 	
 private:
 	// assignment and copy constructor are disabled
 	Word(const Word&);
 	Word &operator = (const Word&);
-};
-
-class WordBuilder {
-
-public:
-	static WordBuilder &instance() { return *ourInstance; }
-	static void deleteInstance() { delete ourInstance; }
-
-	virtual Word *buildWord(const char *utf8String, int len, int startOffset) const = 0;
-
-protected:
-	virtual ~WordBuilder() {}
-
-protected:
-	static WordBuilder *ourInstance;
 };
 
 #endif /* __WORD_H__ */
