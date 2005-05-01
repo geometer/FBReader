@@ -307,8 +307,9 @@ int GtkPaintContext::imageHeight(const Image &image) const {
 
 void GtkPaintContext::drawImage(int x, int y, const Image &image) {
 	// TODO: should we optimize it all? we do two lookups in our cache
-	gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
-
+	// for gtk+ v2.2+ gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+	gdk_pixbuf_render_to_drawable (gtkImage(image), myPixmap, NULL, 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+	//
 	// COMMENTS:
 	// NULL			-- we have no clipping (do we need it?)
 	// 0, 0			-- offset in the image
