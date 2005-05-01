@@ -28,7 +28,6 @@ class QWord : public Word {
 
 public:
 	int length() const { return myValue.length(); }
-	unsigned short charAt(int i) const { return myValue[i].unicode(); }
 	std::string utf8String() const { return (const char*)myValue.utf8(); }
 	
 private:

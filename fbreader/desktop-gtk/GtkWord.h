@@ -21,15 +21,12 @@
 #ifndef __GTKWORD_H__
 #define __GTKWORD_H__
 
-#include <abstract/ZLUnicodeUtil.h>
-
 #include "../common/textview/Word.h"
 
 class GtkWord : public Word {
 
 public:
-	int length() const { return myUcs2Contents.size(); }
-	unsigned short charAt(int i) const { return myUcs2Contents[i]; }
+	int length() const { return myLength; }
 	std::string utf8String() const { return myUtf8Contents; }
 	
 private:
@@ -41,7 +38,7 @@ private:
 
 private:
 	std::string myUtf8Contents;
-	ZLUnicodeUtil::Ucs2String myUcs2Contents;
+	int myLength;
 
 friend class GtkWordBuilder;
 };

@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <iostream>
+#include <abstract/ZLUnicodeUtil.h>
 
 #include "TextView.h"
 #include "ParagraphCursor.h"
@@ -305,7 +305,9 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 				if (len > 0) {
 					const Word &word = (const Word&)paragraph.wordCursor().element();
 					context().setColor(myStyle.style().color());
-					context().drawWord(context().x(), context().y() - myStyle.style().verticalShift(), word, 0, len, word.charAt(len - 1) != '-');
+					ZLUnicodeUtil::Ucs2String ucs2string;
+					ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.utf8String());
+					context().drawWord(context().x(), context().y() - myStyle.style().verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
 				}
 			}
 		}

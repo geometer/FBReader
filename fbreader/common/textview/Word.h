@@ -34,7 +34,6 @@ public:
 	virtual ~Word() { if (myMark != 0) delete myMark; }
 	Kind kind() const { return WORD_ELEMENT; }
 	virtual int length() const = 0;
-	virtual unsigned short charAt(int i) const = 0;
 	virtual std::string utf8String() const = 0;
 	int startOffset() const { return myStartOffset; }
 

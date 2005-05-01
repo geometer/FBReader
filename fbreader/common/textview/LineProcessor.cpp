@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "TextView.h"
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
@@ -87,13 +89,16 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		if (!current.sameElementAs(end) && (current.element().kind() == TextElement::WORD_ELEMENT)) {
 			newWidth -= myStyle.elementWidth(current);
 			const Word &word = (Word&)current.element();
+			ZLUnicodeUtil::Ucs2String ucs2string;
+			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.utf8String());
 			HyphenationInfo info = Hyphenator::instance().info(word);
 			int spaceLeft = maxWidth - newWidth;
 			int hyphenationPosition = word.length() - 1;
 			int subwordWidth = 0;
 			for (; hyphenationPosition > 0; hyphenationPosition--) {
 				if (info.isHyphenationPossible(hyphenationPosition)) {
-					subwordWidth = myStyle.context().wordWidth(word, 0, hyphenationPosition, word.charAt(hyphenationPosition - 1) != '-');
+					//subwordWidth = myStyle.context().wordWidth(word, 0, hyphenationPosition, word.charAt(hyphenationPosition - 1) != '-');
+					subwordWidth = myStyle.context().wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
 					if (subwordWidth <= spaceLeft) {
 						break;
 					}

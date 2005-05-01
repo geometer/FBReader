@@ -47,38 +47,41 @@ bool HyphenationInfo::isHyphenationPossible(int position) {
 }
 
 HyphenationInfo Hyphenator::info(const Word &word) const {
+	ZLUnicodeUtil::Ucs2String ucs2Vector;
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.utf8String());
+
 	int wordLength = word.length();
-	unsigned short *ucs2String = new unsigned short[wordLength + 2];
-	ucs2String[0] = ' ';
-	for (int i = 0; i < wordLength; i++) {
-		unsigned short symbol = word.charAt(i);
-		ucs2String[i + 1] = ZLUnicodeUtil::isLetter(symbol) ? ZLUnicodeUtil::toLower(symbol) : ' ';
+	unsigned short *pattern = new unsigned short[wordLength + 2];
+	pattern[0] = ' ';
+	for (unsigned int i = 0; i < ucs2Vector.size(); i++) {
+		unsigned short symbol = ucs2Vector[i];
+		pattern[i + 1] = ZLUnicodeUtil::isLetter(symbol) ? ZLUnicodeUtil::toLower(symbol) : ' ';
 	}
-	ucs2String[wordLength + 1] = ' ';
+	pattern[wordLength + 1] = ' ';
 
 	HyphenationInfo info(wordLength + 2);
-	hyphenate(ucs2String, info.myMask, wordLength + 2);
+	hyphenate(pattern, info.myMask, wordLength + 2);
 
 	for (int i = 0; i < wordLength + 1; i++) {
 		if ((i < 2) || (i > wordLength - 2)) {
 			info.myMask[i] = false;
-		} else if (word.charAt(i - 1) == '-') {
+		} else if (ucs2Vector[i - 1] == '-') {
 			info.myMask[i] =
 				(i >= 3) &&
-				ZLUnicodeUtil::isLetter(word.charAt(i - 3)) &&
-				ZLUnicodeUtil::isLetter(word.charAt(i - 2)) &&
-				ZLUnicodeUtil::isLetter(word.charAt(i)) &&
-				ZLUnicodeUtil::isLetter(word.charAt(i + 1));
+				ZLUnicodeUtil::isLetter(ucs2Vector[i - 3]) &&
+				ZLUnicodeUtil::isLetter(ucs2Vector[i - 2]) &&
+				ZLUnicodeUtil::isLetter(ucs2Vector[i]) &&
+				ZLUnicodeUtil::isLetter(ucs2Vector[i + 1]);
 		} else {
 			info.myMask[i] = info.myMask[i] &&
-			ZLUnicodeUtil::isLetter(word.charAt(i - 2)) &&
-			ZLUnicodeUtil::isLetter(word.charAt(i - 1)) &&
-			ZLUnicodeUtil::isLetter(word.charAt(i)) &&
-			ZLUnicodeUtil::isLetter(word.charAt(i + 1));
+			ZLUnicodeUtil::isLetter(ucs2Vector[i - 2]) &&
+			ZLUnicodeUtil::isLetter(ucs2Vector[i - 1]) &&
+			ZLUnicodeUtil::isLetter(ucs2Vector[i]) &&
+			ZLUnicodeUtil::isLetter(ucs2Vector[i + 1]);
 		}
 	}
 
-	delete[] ucs2String;
+	delete[] pattern;
 
 	return info;
 }

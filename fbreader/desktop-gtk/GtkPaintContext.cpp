@@ -185,7 +185,9 @@ static int pango_text_height (PangoContext *context, PangoFontDescription *fdesc
 }
 
 int GtkPaintContext::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
-	const std::string &str = word.utf8String();
+	//TODO: use reference!
+	//const std::string &str = word.utf8String();
+	const std::string str = word.utf8String();
 	int startPos = ZLUnicodeUtil::length(str, start);
 	int endPos = (length != -1) ? ZLUnicodeUtil::length(str, start + length) : str.length();
 	int len = endPos - startPos;
@@ -258,7 +260,9 @@ void GtkPaintContext::drawWord(int x, int y, const Word &word, int start, int le
 	x += leftMargin().value();
 	y += topMargin().value() - this->wordHeight();
 
-	const std::string &str = word.utf8String();
+	//TODO: use reference!
+	//const std::string &str = word.utf8String();
+	const std::string str = word.utf8String();
 	int startPos = ZLUnicodeUtil::length(str, start);
 	int endPos = (length != -1) ? ZLUnicodeUtil::length(str, start + length) : str.length();
 	int len = endPos - startPos;
