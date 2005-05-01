@@ -148,6 +148,7 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + '/' + name + ".png").c_str());
 	GtkWidget *button = gtk_button_new();
 	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
+	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 	gtk_container_add(GTK_CONTAINER(button), image);
 	gtk_container_add(GTK_CONTAINER(myToolbar), button);
 	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), new ActionSlotData(this, id));
