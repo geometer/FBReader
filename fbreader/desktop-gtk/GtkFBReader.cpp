@@ -71,7 +71,7 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	myViewWidget = new GtkViewWidget(this);
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
-	gtk_signal_connect_after(GTK_OBJECT(myMainWindow), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
 	gtk_window_resize(myMainWindow, Width.value(), Height.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
