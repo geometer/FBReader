@@ -31,8 +31,6 @@ public:
 	int length() const { return myUcs2Contents.size(); }
 	unsigned short charAt(int i) const { return myUcs2Contents[i]; }
 	std::string utf8String() const { return myUtf8Contents; }
-
-  std::string mid(int start, int length) const;
 	
 private:
 	GtkWord(const char *utf8String, int len, int startOffset);

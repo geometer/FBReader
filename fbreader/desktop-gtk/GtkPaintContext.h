@@ -66,6 +66,7 @@ public:
 	void fillRectangle(int x0, int y0, int x1, int y1);
 
 private:
+	void drawString(int x, int y, const std::string &str, int from, int len);
 	//QImage &qImage(const Image &image) const;
 	//void drawQString(int x, int y, const QString &str, const Word::WordMark *mark, int shift = 0);
 
@@ -82,8 +83,8 @@ private:
 	//QPainter *myPainter;
 	//QPixmap *myPixmap;
 	//mutable std::map<const Image*,QImage*> myImageCache;
-	ZLColor myTextColor;
-	ZLColor mySelectedTextColor;
+	//ZLColor myTextColor;
+	//ZLColor mySelectedTextColor;
 
 	std::vector<std::string> myFontFamilies;
 };
