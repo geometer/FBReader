@@ -24,6 +24,7 @@
 //#include <map>
 
 #include <gtk/gtk.h>
+#include <pango/pango.h>
 
 #include "../common/view/PaintContext.h"
 #include "../common/textview/Word.h"
@@ -72,9 +73,10 @@ private:
 	GdkPixmap *myPixmap;
 	int myWidth, myHeight;
 
-	GdkFont *myFont;
+  PangoFontDescription *myFont;
 
-	GdkGC *myBackgroundGC;
+  PangoContext *myContext;
+
 	GdkGC *myTextGC;
 	GdkGC *myFillGC;
 	//QPainter *myPainter;

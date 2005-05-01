@@ -24,3 +24,19 @@ GtkWord::GtkWord(const char *utf8String, int len, int startOffset) : Word(startO
 	myUtf8Contents.append(utf8String, len);
 	ZLUnicodeUtil::utf8ToUcs2(myUcs2Contents, myUtf8Contents, -1);
 }
+
+std::string GtkWord::mid(int start, int length) const {
+  std::string result;
+
+  if (length == -1) {
+    length = this->length();
+  }
+
+  int end = std::min(this->length(), start+length);
+
+	ZLUnicodeUtil::Ucs2String tempo (myUcs2Contents.begin()+start, myUcs2Contents.begin()+end);
+
+  ZLUnicodeUtil::ucs2ToUtf8(result, tempo, -1);
+
+  return result;
+}
