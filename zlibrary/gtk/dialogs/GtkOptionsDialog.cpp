@@ -18,22 +18,40 @@
  */
 
 #include <algorithm>
-#include <iostream>
 
 #include <gtk/gtkstock.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkbox.h>
+#include <gtk/gtksignal.h>
+
+#include <gdk/gdkkeysyms.h>
 
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 
 #include "GtkOptionsDialog.h"
 #include "GtkOptionView.h"
 
+static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
+	if (key->keyval == GDK_Return && key->state == 0) {
+		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+
+		return true;
+	} else if (key->keyval == GDK_Escape && key->state == 0) {
+		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
+
+		return true;
+	}
+
+	return false;
+}
+
 GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id) {
 	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption.c_str(), NULL, GTK_DIALOG_MODAL,
 					GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 					NULL));
+
+	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
 

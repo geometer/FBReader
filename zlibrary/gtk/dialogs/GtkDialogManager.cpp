@@ -17,6 +17,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <gtk/gtk.h>
+
+#include <abstract/ZLOpenFileDialog.h>
+
 #include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"
 
@@ -26,4 +30,27 @@ ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, co
 
 int GtkDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
 	return 0;
+}
+
+void GtkDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
+  GtkWidget *dialog;
+
+  dialog = gtk_file_chooser_dialog_new(title.c_str(),
+                                       NULL,
+                                       GTK_FILE_CHOOSER_ACTION_OPEN,
+                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                       GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                       NULL);
+
+  if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+    char *filename;
+
+    filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(dialog));
+
+    handler.accept(filename, false);
+
+    g_free (filename);
+  }
+
+  gtk_widget_destroy (dialog);
 }

@@ -19,6 +19,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
@@ -177,10 +178,27 @@ void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
 	}
 }
 
+static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
+	if (key->keyval == GDK_Return && key->state == 0) {
+		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+
+		return true;
+	} else if (key->keyval == GDK_Escape && key->state == 0) {
+		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
+
+		return true;
+	}
+
+	return false;
+}
+
 void GtkFBReader::searchSlot() {
 	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new_with_buttons ("Text search", NULL, GTK_DIALOG_MODAL,
 														"Go", GTK_RESPONSE_ACCEPT,
 														NULL));
+
+	gtk_signal_connect(GTK_OBJECT(findDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
+
 	GtkWidget *wordToSearch = gtk_entry_new();
 
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), wordToSearch, true, true, 0);
