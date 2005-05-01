@@ -40,7 +40,7 @@ public:
 	void removeCaches();
 
 	GdkPixmap *pixmap() { return myPixmap; }
-	void updatePixmap(GtkWidget *area);
+	void updatePixmap(GtkWidget *area, int w, int h);
 
 	int width() const;
 	int height() const;

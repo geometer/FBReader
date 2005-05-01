@@ -23,10 +23,21 @@
 #include "GtkPaintContext.h"
 
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
-	View *view = ((GtkViewWidget*)data)->view();	
-	view->onStylusPress(
-		(int)event->x - view->context().leftMargin().value(),
-		(int)event->y - view->context().topMargin().value());
+	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
+	View *view = viewWidget->view();
+	if (viewWidget->isRotated()) {
+		view->onStylusPress(
+			viewWidget->height() - (int)event->y - view->context().rightMargin().value(),
+			(int)event->x - view->context().topMargin().value());
+	} else {
+		view->onStylusPress(
+			(int)event->x - view->context().leftMargin().value(),
+			(int)event->y - view->context().topMargin().value());
+	}
+}
+
+int GtkViewWidget::height() const {
+	return (myArea != 0) ? myArea->allocation.height : 0;
 }
 
 GtkViewWidget::GtkViewWidget(GtkFBReader *reader) {
@@ -38,8 +49,20 @@ GtkViewWidget::GtkViewWidget(GtkFBReader *reader) {
 
 void GtkViewWidget::repaintView()	{
 	GtkPaintContext &gtkContext = (GtkPaintContext&)view()->context();
-	gtkContext.updatePixmap(myArea);
+	int w = isRotated() ? myArea->allocation.height : myArea->allocation.width;
+	int h = isRotated() ? myArea->allocation.width : myArea->allocation.height;
+	gtkContext.updatePixmap(myArea, w, h);
 	view()->paint();
-	gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
+	if (isRotated()) {
+		GdkPixbuf *original = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+		gdk_pixbuf_get_from_drawable(original, gtkContext.pixmap(), gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
+		GdkPixbuf *rotated = gdk_pixbuf_rotate_simple(original, GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
+		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, rotated, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
+		gdk_pixbuf_unref(original);
+		gdk_pixbuf_unref(rotated);
+	} else {
+		gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
+	}
+	
 	myReader->enableMenuButtons();
 }

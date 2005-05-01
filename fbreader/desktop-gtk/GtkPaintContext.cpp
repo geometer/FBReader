@@ -73,10 +73,8 @@ void GtkPaintContext::removeCaches() {
 	myImageCache.clear();
 }
 
-void GtkPaintContext::updatePixmap(GtkWidget *area) {
-	int newWidth = area->allocation.width;
-	int newHeight = area->allocation.height;
-	if ((myPixmap != 0) && ((myWidth != newWidth) || (myHeight != newHeight))) {
+void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
+	if ((myPixmap != 0) && ((myWidth != w) || (myHeight != h))) {
 		gdk_pixmap_unref(myPixmap);
 		myPixmap = 0;
 		if (myTextGC != 0) {
@@ -88,8 +86,8 @@ void GtkPaintContext::updatePixmap(GtkWidget *area) {
 	}
 
 	if (myPixmap == 0) {
-		myWidth = newWidth;
-		myHeight = newHeight;
+		myWidth = w;
+		myHeight = h;
 		myPixmap = gdk_pixmap_new(area->window, myWidth, myHeight, gdk_drawable_get_depth(area->window));
 	}
 

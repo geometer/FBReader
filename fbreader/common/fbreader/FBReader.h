@@ -93,7 +93,7 @@ protected:
 	virtual void searchSlot() = 0;
 	virtual void cancelSlot() = 0;
 	virtual void fullscreenSlot() = 0;
-	virtual bool isRotationSupported() = 0;
+	virtual bool isRotationSupported() const = 0;
 
 private:
 	bool runBookInfoDialog(const std::string &fileName);

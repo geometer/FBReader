@@ -37,10 +37,7 @@ public:
 	GtkWidget *area() { return myArea; }
 
 	void repaintView();
-
-protected:
-	//void paintEvent(QPaintEvent *event);
-	//void mousePressEvent(QMouseEvent *event);
+	int height() const;
 
 private:
 	GtkFBReader *myReader;
