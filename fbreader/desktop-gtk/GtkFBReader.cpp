@@ -32,8 +32,9 @@
 static ZLIntegerOption Width("Options", "Width", 800);
 static ZLIntegerOption Height("Options", "Height", 800);
 
-static void applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
+static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->close();
+	return true;
 }
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
