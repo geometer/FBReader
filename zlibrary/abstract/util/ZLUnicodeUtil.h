@@ -33,6 +33,8 @@ public:
 	
 	static int utf8Length(const char *str, int len);
 	static int utf8Length(const std::string &str);
+	static int length(const char *str, int utf8Length);
+	static int length(const std::string &str, int utf8Length);
 	static void utf8ToUcs2(Ucs2String &to, const std::string &from, int toLength = -1);
 	static void ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength = -1);
 	static bool isLetter(Ucs2Char ch);

@@ -38,6 +38,24 @@ int ZLUnicodeUtil::utf8Length(const std::string &str) {
 	return utf8Length(str.data(), str.length());
 }
 
+int ZLUnicodeUtil::length(const char *str, int utf8Length) {
+	const char *ptr = str;
+	for (int i = 0; i < utf8Length; i++) {
+		if ((*ptr & 0x80) == 0) {
+			ptr++;
+		} else if ((*ptr & 0x20) == 0) {
+			ptr += 2;
+		} else {
+			ptr += 3;
+		}
+	}
+	return ptr - str;
+}
+
+int ZLUnicodeUtil::length(const std::string &str, int utf8Length) {
+	return length(str.data(), utf8Length);
+}
+
 void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLength) {
 	to.clear();
 	if (toLength < 0) {
