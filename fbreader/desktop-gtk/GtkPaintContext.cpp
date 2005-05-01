@@ -161,7 +161,7 @@ static void pango_text_size (PangoContext *context, PangoFontDescription *fdesc,
 	pango_layout_set_text(layout, text, len);
 	pango_layout_set_font_description(layout, fdesc);
 
-	pango_layout_get_size(layout, width, height);
+	pango_layout_get_pixel_size(layout, width, height);
 
 //	std::cout << "pango_layout_get_width: " << text << ": " << width << ", " << height << std::endl;
 
@@ -173,7 +173,7 @@ static int pango_text_width (PangoContext *context, PangoFontDescription *fdesc,
 
 	pango_text_size (context, fdesc, text, len, &width, &height);
 
-	return width / PANGO_SCALE;
+	return width;
 }
 
 static int pango_text_height (PangoContext *context, PangoFontDescription *fdesc, const char *text, int len) {
@@ -181,7 +181,7 @@ static int pango_text_height (PangoContext *context, PangoFontDescription *fdesc
 
 	pango_text_size (context, fdesc, text, len, &width, &height);
 
-	return height / PANGO_SCALE;
+	return height;
 }
 
 int GtkPaintContext::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
@@ -270,33 +270,51 @@ void GtkPaintContext::drawWord(int x, int y, const Word &word, int start, int le
 	}
 }
 
-/*
-QImage &GtkPaintContext::qImage(const Image &image) const {
-	QImage *imageRef = myImageCache[&image];
+GdkPixbuf *GtkPaintContext::gtkImage(const Image &image) const {
+	GdkPixbuf *imageRef = myImageCache[&image];
 	if (imageRef == NULL) {
-		imageRef = new QImage();
-		imageRef->loadFromData(image.data(), image.datalen());
+		GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
+		GError *error = NULL;
+
+		// TODO: properly process return value and error code
+		gdk_pixbuf_loader_write(loader, image.data(),image.datalen(), &error);
+		gdk_pixbuf_loader_close(loader, &error);
+
+		if (error != NULL) {
+			g_error_free(error);
+		}
+
+		imageRef = gdk_pixbuf_loader_get_pixbuf(loader);
+		g_object_ref(imageRef);
+
+		g_object_unref(loader);
+
 		myImageCache[&image] = imageRef;
 	}
-	return *imageRef;
+
+	return imageRef;
 }
-*/
 
 int GtkPaintContext::imageWidth(const Image &image) const {
-	return 100;
-	/*
-	int w = qImage(image).width();
-	int maxW = width();
-	return (w <= maxW) ? w : maxW;
-	*/
+	GdkPixbuf *imageRef = gtkImage(image);
+	return gdk_pixbuf_get_width(imageRef);
 }
 
 int GtkPaintContext::imageHeight(const Image &image) const {
-	//return qImage(image).height();
-	return 100;
+	GdkPixbuf *imageRef = gtkImage(image);
+	return gdk_pixbuf_get_height(imageRef);
 }
 
 void GtkPaintContext::drawImage(int x, int y, const Image &image) {
+	// TODO: should we optimize it all? we do two lookups in our cache
+	gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+
+	// COMMENTS:
+	// NULL			-- we have no clipping (do we need it?)
+	// 0, 0			-- offset in the image
+	// -1, -1		-- use the whole
+	// GDK_RGB_DITHER_NONE -- no dithering, hopefully, (0, 0) after it does not harm
+
 	//myPainter->drawImage(x + leftMargin().value(), y + topMargin().value() - imageHeight(image), qImage(image));
 }
 
