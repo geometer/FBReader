@@ -38,6 +38,7 @@ enum AlignmentType {
 class TextStyle {
 
 public:
+	static ZLColorOption SelectedTextColorOption;
 	static ZLColorOption RegularTextColorOption;
 	static ZLColorOption HyperlinkTextColorOption;
 

@@ -32,7 +32,6 @@ class PaintContext {
 
 public:
 	static ZLColorOption BackgroundColorOption;
-	static ZLColorOption SelectedTextColorOption;
 	
 protected:
 	PaintContext();

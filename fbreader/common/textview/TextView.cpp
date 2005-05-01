@@ -435,7 +435,7 @@ void TextView::drawString(int x, int y, const std::string &str, int from, int le
 				x += context().stringWidth(str, from + startPos, endPos - startPos);
 			}
 			if (markStart < qlen) {
-				context().setColor(PaintContext::SelectedTextColorOption.value());
+				context().setColor(TextStyle::SelectedTextColorOption.value());
 				{
 					int startPos = ZLUnicodeUtil::length(str.data() + from, markStart);
 					int endPos = ZLUnicodeUtil::length(str.data() + from, std::min(markStart + markLen, qlen));

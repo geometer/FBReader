@@ -23,7 +23,6 @@ static const std::string COLORS = "Colors";
 static const std::string OPTIONS = "Options";
 
 ZLColorOption PaintContext::BackgroundColorOption(COLORS, "Background", ZLColor(255, 255, 255));
-ZLColorOption PaintContext::SelectedTextColorOption(COLORS, "SelectedText", ZLColor(0, 0, 127));
 
 PaintContext::PaintContext() :
 			myLeftMargin(OPTIONS, "LeftMargin", 4), myRightMargin(OPTIONS, "RightMargin", 4),

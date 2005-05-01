@@ -78,8 +78,6 @@ private:
 
 	GdkGC *myTextGC;
 	GdkGC *myFillGC;
-	//ZLColor myTextColor;
-	//ZLColor mySelectedTextColor;
 
 	std::vector<std::string> myFontFamilies;
 	mutable std::map<const Image*,GdkPixbuf*> myImageCache;

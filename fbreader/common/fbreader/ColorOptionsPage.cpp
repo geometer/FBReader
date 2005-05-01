@@ -49,7 +49,7 @@ ColorOptionsPage::ColorOptionsPage(ZLOptionsDialogTab *dialogTab) {
 		myComboEntry->values()[2]
 	);
 	registerEntry(dialogTab,
-		new ZLSimpleColorOptionEntry(PaintContext::SelectedTextColorOption),
+		new ZLSimpleColorOptionEntry(TextStyle::SelectedTextColorOption),
 		myComboEntry->values()[3]
 	);
 	registerEntry(dialogTab,

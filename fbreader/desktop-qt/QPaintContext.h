@@ -71,7 +71,6 @@ private:
 	QPainter *myPainter;
 	QPixmap *myPixmap;
 	mutable std::map<const Image*,QImage*> myImageCache;
-	ZLColor mySelectedTextColor;
 };
 
 #endif /* __QPAINTCONTEXT_H__ */

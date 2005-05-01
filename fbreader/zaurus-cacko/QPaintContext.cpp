@@ -157,7 +157,6 @@ void QPaintContext::clear() {
 	if (myPixmap != NULL) {
 		ZLColor background = BackgroundColorOption.value();
 		myPixmap->fill(QColor(background.Red, background.Green, background.Blue));
-		mySelectedTextColor = SelectedTextColorOption.value();
 	}
 }
 

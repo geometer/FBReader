@@ -269,10 +269,6 @@ void GtkPaintContext::clear() {
 			gdk_draw_rectangle(myPixmap, bgGC, true, 0, 0, myWidth, myHeight);
 			gdk_gc_unref(bgGC);
 		}
-		// TODO: setup selected text color
-		/*
-		fillGdkColor(selectedColor, SelectedTextColorOption.value());
-		*/
 	}
 }
 
