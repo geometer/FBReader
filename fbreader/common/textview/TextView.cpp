@@ -430,7 +430,7 @@ void TextView::drawString(int x, int y, const std::string &str, int from, int le
 
 			if (markStart > currentLetter) {
 				int startPos = ZLUnicodeUtil::length(str.data() + from, currentLetter);
-				int endPos = ZLUnicodeUtil::length(str.data() + from, markStart);
+				int endPos = ZLUnicodeUtil::length(str.data() + from, std::min(markStart, qlen));
 				context().drawString(x, y, str, from + startPos, endPos - startPos);
 				x += context().stringWidth(str, from + startPos, endPos - startPos);
 			}
