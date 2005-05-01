@@ -168,106 +168,24 @@ static void pango_text_size (PangoContext *context, PangoFontDescription *fdesc,
 	g_object_unref(layout);
 }
 
-static int pango_text_width (PangoContext *context, PangoFontDescription *fdesc, const char *text, int len) {
+int GtkPaintContext::stringWidth(const std::string &str, int from, int len) const {
 	int width, height;
-
-	pango_text_size (context, fdesc, text, len, &width, &height);
-
+	pango_text_size (myContext, myFont, str.data() + from, len, &width, &height);
 	return width;
 }
 
-static int pango_text_height (PangoContext *context, PangoFontDescription *fdesc, const char *text, int len) {
+int GtkPaintContext::stringHeight() const {
 	int width, height;
-
-	pango_text_size (context, fdesc, text, len, &width, &height);
-
+	pango_text_size (myContext, myFont, "X", 1, &width, &height);
 	return height;
 }
-
-int GtkPaintContext::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
-	const std::string &str = word.utf8String();
-	int startPos = ZLUnicodeUtil::length(str, start);
-	int endPos = (length != -1) ? ZLUnicodeUtil::length(str, start + length) : str.length();
-	int len = endPos - startPos;
-
-	if (!addHyphenationSign) {
-		return pango_text_width(myContext, myFont, str.data() + startPos, len);
-	} else {
-		std::string sstr = str.substr(startPos, len) + '-';
-		return pango_text_width(myContext, myFont, sstr.data(), sstr.length());
-	}
-}
-
-int GtkPaintContext::spaceWidth() const {
-	return pango_text_width(myContext, myFont, " ", 1);
-}
-
-int GtkPaintContext::wordHeight() const {
-	return pango_text_height(myContext, myFont, "X", 1);
-}
-
-/*
-void GtkPaintContext::drawString(int x, int y, const std::string &str, const Word::WordMark *mark, int shift) {
-	if (mark == 0) {
-		myPainter->drawText(x, y, str);
-	} else {
-		int currentLetter = 0;
-		for (; (mark != 0) && (currentLetter < (int)str.length()); mark = mark->next()) {
-			int markStart = mark->start() - shift;
-			int markLen = mark->length();
-
-			if (markStart < currentLetter) {
-				markLen += markStart - currentLetter;
-				markStart = currentLetter;
-			}
-
-			if (markLen <= 0) {
-				continue;
-			}
-
-			if (markStart > currentLetter) {
-				QString beforeMark = str.mid(currentLetter, markStart - currentLetter);
-				myPainter->drawText(x, y, beforeMark);
-				x += myPainter->fontMetrics().width(beforeMark);
-			}
-			QString insideMark = str.mid(markStart, markLen);
-			setColor(mySelectedTextColor);
-			myPainter->drawText(x, y, insideMark);
-			setColor(myTextColor);
-			x += myPainter->fontMetrics().width(insideMark);
-			currentLetter = markStart + markLen;
-		}
-
-		if (currentLetter < (int)str.length()) {
-			QString afterMark = str.mid(currentLetter);
-			myPainter->drawText(x, y, afterMark);
-		}
-	}
-}
-*/
 
 void GtkPaintContext::drawString(int x, int y, const std::string &str, int from, int len) {
 	PangoLayout *layout = pango_layout_new(myContext);
 	pango_layout_set_text(layout, str.data() + from, len);
 	pango_layout_set_font_description(layout, myFont);
-	gdk_draw_layout (myPixmap, myTextGC, x, y, layout);
+	gdk_draw_layout (myPixmap, myTextGC, x + leftMargin().value(), y + topMargin().value() - stringHeight(), layout);
 	g_object_unref(layout);
-}
-
-void GtkPaintContext::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
-	x += leftMargin().value();
-	y += topMargin().value() - this->wordHeight();
-
-	const std::string &str = word.utf8String();
-	int startPos = ZLUnicodeUtil::length(str, start);
-	int endPos = (length != -1) ? ZLUnicodeUtil::length(str, start + length) : str.length();
-	int len = endPos - startPos;
-
-	if (!addHyphenationSign) {
-		drawString(x, y, str, startPos, len);
-	} else {
-		drawString(x, y, str.substr(startPos, len) + '-', 0, len + 1);
-	}
 }
 
 GdkPixbuf *GtkPaintContext::gtkImage(const Image &image) const {

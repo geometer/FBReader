@@ -1,6 +1,7 @@
 /*
  * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -94,78 +95,17 @@ void QPaintContext::setFillColor(ZLColor color) {
 	myPainter->setBrush(QColor(color.Red, color.Green, color.Blue));
 }
 
-int QPaintContext::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
-	QString value = QString::fromUtf8(word.utf8String().data(), word.utf8String().length());
-	if ((start == 0) && (length == -1)) {
-		return myPainter->fontMetrics().width(value);
-	}
-	QString subword = value.mid(start, length);
-	if (addHyphenationSign) {
-		subword.append("-");
-	}
-	return myPainter->fontMetrics().width(subword);
+int QPaintContext::stringWidth(const std::string &str, int from, int len) const {
+	return myPainter->fontMetrics().width(QString::fromUtf8(str.data() + from, len));
 }
 
-int QPaintContext::spaceWidth() const {
-	return myPainter->fontMetrics().width(" ");
-}
-
-int QPaintContext::wordHeight() const {
+int QPaintContext::stringHeight() const {
 	return myPainter->font().pointSize() + 2;
 }
 
-void QPaintContext::drawQString(int x, int y, const QString &str, const Word::WordMark *mark, int shift) {
-	if (mark == 0) {
-		myPainter->drawText(x, y, str);
-	} else {
-		QPen textPen = myPainter->pen();
-		int currentLetter = 0;
-		for (; (mark != 0) && (currentLetter < (int)str.length()); mark = mark->next()) {
-			int markStart = mark->start() - shift;
-			int markLen = mark->length();
-
-			if (markStart < currentLetter) {
-				markLen += markStart - currentLetter;
-				markStart = currentLetter;
-			}
-
-			if (markLen <= 0) {
-				continue;
-			}
-
-			if (markStart > currentLetter) {
-				QString beforeMark = str.mid(currentLetter, markStart - currentLetter);
-				myPainter->drawText(x, y, beforeMark);
-				x += myPainter->fontMetrics().width(beforeMark);
-			}
-			QString insideMark = str.mid(markStart, markLen);
-			setColor(mySelectedTextColor);
-			myPainter->drawText(x, y, insideMark);
-			myPainter->setPen(textPen);
-			x += myPainter->fontMetrics().width(insideMark);
-			currentLetter = markStart + markLen;
-		}
-
-		if (currentLetter < (int)str.length()) {
-			QString afterMark = str.mid(currentLetter);
-			myPainter->drawText(x, y, afterMark);
-		}
-	}
-}
-
-void QPaintContext::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
-	QString value = QString::fromUtf8(word.utf8String().data(), word.utf8String().length());
-	x += leftMargin().value();
-	y += topMargin().value();
-	if ((start == 0) && (length == -1)) {
-		drawQString(x, y, value, word.mark());
-	} else {
-		QString subword = value.mid(start, length);
-		if (addHyphenationSign) {
-			subword.append("-");
-		}
-		drawQString(x, y, subword, word.mark(), start);
-	}
+void QPaintContext::drawString(int x, int y, const std::string &str, int from, int len) {
+	QString qStr = QString::fromUtf8(str.data() + from, len);
+	myPainter->drawText(x + leftMargin().value(), y + topMargin().value(), qStr);
 }
 
 QImage &QPaintContext::qImage(const Image &image) const {

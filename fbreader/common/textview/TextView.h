@@ -27,6 +27,7 @@
 
 #include "../view/View.h"
 #include "TextElement.h"
+#include "Word.h"
 
 class TextModel;
 class Paragraph;
@@ -52,6 +53,9 @@ private:
 		int elementWidth(const WordCursor &cursor) const;
 		int elementHeight(const WordCursor &cursor) const;
 		int textAreaHeight() const;
+
+		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
+		int spaceWidth() const;
 
 	private:
 		const TextStyle *myStyle;
@@ -113,7 +117,8 @@ private:
 	int paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition);
 	void skip(ParagraphCursor &paragraph, int height);
 	void drawParagraph(ParagraphCursor &paragraph, bool doPaint);
-
+	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
+	void drawString(int x, int y, const std::string &str, int from, int len, const Word::WordMark *mark, int shift);
 	void drawTreeNode(TreeElement::TreeElementKind kind);
 
 protected:

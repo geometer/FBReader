@@ -57,7 +57,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		} else if (wordOccured && (elementKind == TextElement::HSPACE_ELEMENT)) { 
 			wordOccured = false;
 			internalSpaceCounter++;
-			lastSpaceWidth = myStyle.context().spaceWidth();
+			lastSpaceWidth = myStyle.spaceWidth();
 			newWidth += lastSpaceWidth;
 		}
 
@@ -97,8 +97,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 			int subwordWidth = 0;
 			for (; hyphenationPosition > 0; hyphenationPosition--) {
 				if (info.isHyphenationPossible(hyphenationPosition)) {
-					//subwordWidth = myStyle.context().wordWidth(word, 0, hyphenationPosition, word.charAt(hyphenationPosition - 1) != '-');
-					subwordWidth = myStyle.context().wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
+					subwordWidth = myStyle.wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
 					if (subwordWidth <= spaceLeft) {
 						break;
 					}

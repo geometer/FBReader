@@ -63,10 +63,10 @@ public:
 	virtual int width() const = 0;
 	virtual int height() const = 0;
 	
-	virtual int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const = 0;
-	virtual int spaceWidth() const = 0;
-	virtual int wordHeight() const = 0;
-	virtual void drawWord(int x, int y, const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) = 0;
+	virtual int stringWidth(const std::string &str, int from, int len) const = 0;
+	virtual int stringHeight() const = 0;
+	virtual void drawString(int x, int y, const std::string &str, int from, int len) = 0;
+	//virtual void drawWord(int x, int y, const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) = 0;
 
 	virtual int imageWidth(const Image &image) const = 0;
 	virtual int imageHeight(const Image &image) const = 0;

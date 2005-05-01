@@ -53,10 +53,9 @@ public:
 	void setColor(ZLColor color);
 	void setFillColor(ZLColor color);
 
-	int wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const;
-	int spaceWidth() const;
-	int wordHeight() const;
-	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
+	int stringWidth(const std::string &str, int from, int len) const;
+	int stringHeight() const;
+	void drawString(int x, int y, const std::string &str, int from, int len);
 
 	int imageWidth(const Image &image) const;
 	int imageHeight(const Image &image) const;
@@ -67,7 +66,6 @@ public:
 
 private:
 	QImage &qImage(const Image &image) const;
-	void drawQString(int x, int y, const QString &str, const Word::WordMark *mark, int shift = 0);
 
 private:
 	QPainter *myPainter;

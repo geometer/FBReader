@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "TextView.h"
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
@@ -76,7 +78,7 @@ int TextView::ViewStyle::elementWidth(const WordCursor &cursor) const {
 	const TextElement &element = cursor.element();
 	switch (element.kind()) {
 		case TextElement::WORD_ELEMENT:
-			return context().wordWidth((const Word&)element, cursor.charNumber(), -1, false);
+			return wordWidth((const Word&)element, cursor.charNumber(), -1, false);
 		case TextElement::IMAGE_ELEMENT:
 			return context().imageWidth(((const ImageElement&)element).image());
 		case TextElement::INDENT_ELEMENT:
@@ -88,7 +90,7 @@ int TextView::ViewStyle::elementWidth(const WordCursor &cursor) const {
 		case TextElement::EMPTY_LINE_ELEMENT:
 			return context().width() + abs(style().leftIndent()) + abs(style().rightIndent()) + abs(style().firstLineIndentDelta() + 1);
 		case TextElement::TREE_ELEMENT:
-			return (int)(context().wordHeight() * 4 / 3);
+			return (int)(context().stringHeight() * 4 / 3);
 		case TextElement::CONTROL_ELEMENT:
 			return 0;
 	}
@@ -99,9 +101,9 @@ int TextView::ViewStyle::elementHeight(const WordCursor &cursor) const {
 	const TextElement &element = cursor.element();
 	switch (element.kind()) {
 		case TextElement::WORD_ELEMENT:
-			return (int)(context().wordHeight() * style().lineSpace()) + style().verticalShift();
+			return (int)(context().stringHeight() * style().lineSpace()) + style().verticalShift();
 		case TextElement::TREE_ELEMENT:
-			return context().wordHeight();
+			return context().stringHeight();
 		case TextElement::IMAGE_ELEMENT:
 		{
 			int imageHeight = context().imageHeight(((const ImageElement&)element).image());
@@ -113,7 +115,7 @@ int TextView::ViewStyle::elementHeight(const WordCursor &cursor) const {
 		case TextElement::AFTER_PARAGRAPH_ELEMENT:
 			return style().spaceAfter();
 		case TextElement::EMPTY_LINE_ELEMENT:
-			return style().spaceBefore() + context().wordHeight() + style().spaceAfter();
+			return style().spaceBefore() + context().stringHeight() + style().spaceAfter();
 		case TextElement::INDENT_ELEMENT:
 		case TextElement::HSPACE_ELEMENT:
 		case TextElement::CONTROL_ELEMENT:
@@ -126,4 +128,22 @@ int TextView::ViewStyle::textAreaHeight() const {
 	return TextView::ShowPositionIndicatorOption.value() ?
 		context().height() - PositionIndicatorHeightOption.value() - PositionIndicatorOffsetOption.value() :
 		context().height();
+}
+
+int TextView::ViewStyle::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
+	const std::string &str = word.utf8String();
+	if ((start == 0) && (length == -1)) {
+		return context().stringWidth(str, 0, str.length());
+	}
+	int startPos = ZLUnicodeUtil::length(str, start);
+	int endPos = (length == -1) ? str.length() : ZLUnicodeUtil::length(str, start + length);
+	if (!addHyphenationSign) {
+		return context().stringWidth(str, startPos, endPos - startPos);
+	}
+	std::string substr = str.substr(startPos, endPos - startPos) + '-';
+	return context().stringWidth(substr, 0, substr.length());
+}
+
+int TextView::ViewStyle::spaceWidth() const {
+	return context().stringWidth(" ", 0, 1);
 }
