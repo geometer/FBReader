@@ -24,7 +24,7 @@
 static const std::string COLORS = "Colors";
 
 ZLColorOption TextStyle::RegularTextColorOption(COLORS, "Text", ZLColor(0, 0, 0));
-ZLColorOption TextStyle::SelectedTextColorOption(COLORS, "Text", ZLColor(0, 0, 127));
+ZLColorOption TextStyle::SelectedTextColorOption(COLORS, "SelectedText", ZLColor(0, 0, 127));
 ZLColorOption TextStyle::HyperlinkTextColorOption(COLORS, "Hyperlink", ZLColor(63, 63, 127));
 
 TextStyleCollection *TextStyleCollection::ourInstance = 0;

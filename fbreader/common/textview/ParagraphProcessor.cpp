@@ -70,11 +70,7 @@ void ParagraphCursor::ParagraphProcessor::addWord(const std::string &str, int st
 	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; mit++) {
 		TextMark mark = *mit;
 		if ((mark.Offset - myOffset < start + len) && (mark.Offset - myOffset + mark.Length > start)) {
-			int realStart = (mark.Offset - myOffset > start) ?
-				ZLUnicodeUtil::utf8Length(str.data() + start, mark.Offset - myOffset - start) :
-				- ZLUnicodeUtil::utf8Length(str.data() + mark.Offset - myOffset, start - mark.Offset + myOffset);
-			int realLength = ZLUnicodeUtil::utf8Length(str.data() + mark.Offset - myOffset, mark.Length);
-			word->addMark(realStart, realLength);
+			word->addMark(mark.Offset - myOffset - start, mark.Length);
 		}
 	}
 	myElements.push_back(word);
