@@ -9,8 +9,8 @@ LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS) $(
 TARGET = FBReader
 
 ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader palm
-ALL_QSUBDIRS = zaurus-cacko zaurus-pdaxrom desktop-qt
-ALL_GTKSUBDIRS = desktop-gtk
+ALL_QSUBDIRS = zaurus-cacko zaurus-pdaxrom-qt desktop-qt
+ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk
 
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader
 
@@ -18,8 +18,12 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	GTKSUBDIRS = $(TARGET_ARCH)
 endif
 
-ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
+ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	QSUBDIRS = $(TARGET_ARCH)
+endif
+
+ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
+	GTKSUBDIRS = $(TARGET_ARCH)
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
@@ -38,7 +42,7 @@ all: .bin
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
 	@$(MAKE) -C ipk-cacko
 endif
-ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
+ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	@$(MAKE) -C ipk-pdaxrom
 endif
 ifeq "$(TARGET_ARCH)" "palm"

@@ -1,4 +1,4 @@
-ALL_TARGET_ARCHS = zaurus-cacko zaurus-pdaxrom desktop-qt desktop-gtk palm
+ALL_TARGET_ARCHS = zaurus-cacko zaurus-pdaxrom-qt zaurus-pdaxrom-gtk desktop-qt desktop-gtk palm
 
 ifneq "$(wildcard $(ROOTDIR)/makefiles/target.mk)" ""
 	include $(ROOTDIR)/makefiles/target.mk

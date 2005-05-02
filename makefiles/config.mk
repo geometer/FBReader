@@ -24,7 +24,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-cacko"
 	ENCALIBS = -L $(ROOTDIR)/external/lib -lenca
 endif
 
-ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
+ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	BASEDIR = /opt/arm/3.3.2-vfp
 	CC = $(BASEDIR)/bin/armv5tel-linux-gcc
 	AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
@@ -39,6 +39,26 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom"
 	RM_QUIET = rm -rf
 	QTINCLUDE = -I $(BASEDIR)/armv5tel-cacko-linux/qt/include
 	QTLIBS = -L $(BASEDIR)/armv5tel-cacko-linux/qt/lib -lqt-mt -L $(BASEDIR)/armv5tel-cacko-linux/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
+	EXPATLIBS = -lexpat
+	ENCALIBS = -lenca
+endif
+
+ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
+	BASEDIR = /opt/arm/3.3.2-vfp
+	CC = $(BASEDIR)/bin/armv5tel-linux-gcc
+	AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
+	LD = $(BASEDIR)/bin/armv5tel-linux-g++
+	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
+
+	DEPGEN = $(CC) -MM
+	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	LDFLAGS = -O2
+	RM = rm -rvf
+	RM_QUIET = rm -rf
+	USRDIR = $(BASEDIR)/armv5tel-cacko-linux
+	INCDIR = $(USRDIR)/include
+	GTKINCLUDE = -I$(INCDIR)/libxml2 -I$(INCDIR)/libglade-2.0 -I$(INCDIR)/gtk-2.0 -I$(USRDIR)/lib/gtk-2.0/include -I$(USRDIR)/X11R6/include -I$(INCDIR)/atk-1.0 -I$(INCDIR)/pango-1.0 -I$(INCDIR)/freetype2 -I$(INCDIR)/glib-2.0 -I$(USRDIR)/lib/glib-2.0/include -I$(INCDIR)/gconf/2 -I$(INCDIR)/orbit-2.0
+	GTKLIBS = -L $(USRDIR)/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lgconf-2 -lORBit-2 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -L $(USRDIR)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
 	EXPATLIBS = -lexpat
 	ENCALIBS = -lenca
 endif
