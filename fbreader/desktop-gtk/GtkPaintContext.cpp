@@ -25,10 +25,18 @@
 
 #include "../common/model/Image.h"
 
-static void fillGdkColor(GdkColor &gdkColor, const ZLColor &zlColor) {
-	gdkColor.red = zlColor.Red * 257;
-	gdkColor.green = zlColor.Green * 257;
-	gdkColor.blue = zlColor.Blue * 257;
+static void setColor(GdkGC *gc, const ZLColor &zlColor) {
+	if (gc != 0) {
+		// TODO: check, if using of local variable is correct in this situation
+		GdkColor gdkColor;
+		gdkColor.red = zlColor.Red * 257;
+		gdkColor.green = zlColor.Green * 257;
+		gdkColor.blue = zlColor.Blue * 257;
+		GdkColormap *colormap = gdk_colormap_get_system();
+		if (gdk_colormap_alloc_color(colormap, &gdkColor, false, false)) {
+			gdk_gc_set_foreground(gc, &gdkColor);
+		}
+	}
 }
 
 GtkPaintContext::GtkPaintContext() {
@@ -39,9 +47,11 @@ GtkPaintContext::GtkPaintContext() {
 	myFont = 0;
 
 	myContext = 0;
+	myLayout = 0;
 
 	myTextGC = 0;
 	myFillGC = 0;
+	myBackGC = 0;
 }
 
 GtkPaintContext::~GtkPaintContext() {
@@ -58,8 +68,8 @@ GtkPaintContext::~GtkPaintContext() {
 	}
 
 	if (myContext != 0) {
-		// TODO: ???
-		//g_object_unref(myContext);
+		g_object_unref(myLayout);
+		g_object_unref(myContext);
 	}
 }
 
@@ -80,8 +90,10 @@ void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 		if (myTextGC != 0) {
 			gdk_gc_unref(myTextGC);
 			gdk_gc_unref(myFillGC);
+			gdk_gc_unref(myBackGC);
 			myTextGC = 0;
 			myFillGC = 0;
+			myBackGC = 0;
 		}
 	}
 
@@ -94,10 +106,12 @@ void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 	if (myTextGC == 0) {
 		myTextGC = gdk_gc_new(myPixmap);
 		myFillGC = gdk_gc_new(myPixmap);
+		myBackGC = gdk_gc_new(myPixmap);
 	}
 
 	if (myContext == 0) {
 		myContext = gtk_widget_get_pango_context(area);
+		myLayout = pango_layout_new(myContext);
 	}
 }
 
@@ -128,62 +142,42 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 	pango_font_description_set_size(myFont, size * PANGO_SCALE);
 	pango_font_description_set_weight(myFont, bold ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
 	pango_font_description_set_style(myFont, italic ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL);
+	pango_layout_set_font_description(myLayout, myFont);
 }
 
 void GtkPaintContext::setColor(ZLColor color) {
-	GdkColormap *colormap = gdk_colormap_get_system();
-	// TODO: check, if using of local variable is correct in this situation
-	GdkColor gdkColor;
-	fillGdkColor(gdkColor, color);
-	if (gdk_colormap_alloc_color(colormap, &gdkColor, false, false)) {
-		gdk_gc_set_foreground(myTextGC, &gdkColor);
-	}
+	::setColor(myTextGC, color);
 }
 
 void GtkPaintContext::setFillColor(ZLColor color) {
-	GdkColormap *colormap = gdk_colormap_get_system();
-	GdkColor gdkColor;
-	fillGdkColor(gdkColor, color);
-	if (gdk_colormap_alloc_color(colormap, &gdkColor, false, false)) {
-		gdk_gc_set_foreground(myFillGC, &gdkColor);
-	}
-}
-
-static void pango_text_size (PangoContext *context, PangoFontDescription *fdesc, const char *text, int len, int *width, int *height) {
-	/* FIXME: we should somehow check if context is good. what to return if it's not good? */
-
-	PangoLayout *layout = pango_layout_new(context);
-
-	pango_layout_set_text(layout, text, len);
-	pango_layout_set_font_description(layout, fdesc);
-
-	pango_layout_get_pixel_size(layout, width, height);
-
-//	std::cout << "pango_layout_get_width: " << text << ": " << width << ", " << height << std::endl;
-
-	g_object_unref(layout);
+	::setColor(myFillGC, color);
 }
 
 int GtkPaintContext::stringWidth(const std::string &str, int from, int len) const {
+	if (myLayout == 0) {
+		return 0;
+	}
 	int width, height;
-	pango_text_size (myContext, myFont, str.data() + from, len, &width, &height);
+	pango_layout_set_text(myLayout, str.data() + from, len);
+	pango_layout_get_pixel_size(myLayout, &width, &height);
 	return width;
 }
 
 int GtkPaintContext::stringHeight() const {
+	if (myLayout == 0) {
+		return 0;
+	}
 	int width, height;
-	pango_text_size (myContext, myFont, "X", 1, &width, &height);
+	pango_layout_set_text(myLayout, "X", 1);
+	pango_layout_get_pixel_size(myLayout, &width, &height);
 	return height;
 }
 
 void GtkPaintContext::drawString(int x, int y, const std::string &str, int from, int len) {
-	PangoLayout *layout = pango_layout_new(myContext);
-	pango_layout_set_text(layout, str.data() + from, len);
-	pango_layout_set_font_description(layout, myFont);
+	pango_layout_set_text(myLayout, str.data() + from, len);
 	x += leftMargin().value();
 	y += topMargin().value() - pango_font_description_get_size(myFont) / PANGO_SCALE;
-	gdk_draw_layout (myPixmap, myTextGC, x, y, layout);
-	g_object_unref(layout);
+	gdk_draw_layout(myPixmap, myTextGC, x, y, myLayout);
 }
 
 GdkPixbuf *GtkPaintContext::gtkImage(const Image &image) const {
@@ -259,15 +253,8 @@ void GtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 
 void GtkPaintContext::clear() {
 	if (myPixmap != NULL) {
-		GdkColormap *colormap = gdk_colormap_get_system();
-		GdkColor bgColor;
-		fillGdkColor(bgColor, BackgroundColorOption.value());
-		if (gdk_colormap_alloc_color(colormap, &bgColor, false, false)) {
-			GdkGC *bgGC = gdk_gc_new(myPixmap);
-			gdk_gc_set_foreground(bgGC, &bgColor);
-			gdk_draw_rectangle(myPixmap, bgGC, true, 0, 0, myWidth, myHeight);
-			gdk_gc_unref(bgGC);
-		}
+		::setColor(myBackGC, BackgroundColorOption.value());
+		gdk_draw_rectangle(myPixmap, myBackGC, true, 0, 0, myWidth, myHeight);
 	}
 }
 

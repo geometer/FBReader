@@ -79,6 +79,7 @@ private:
 
 	GdkGC *myTextGC;
 	GdkGC *myFillGC;
+	GdkGC *myBackGC;
 
 	std::vector<std::string> myFontFamilies;
 	mutable std::map<const Image*,GdkPixbuf*> myImageCache;
