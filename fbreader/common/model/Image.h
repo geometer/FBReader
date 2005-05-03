@@ -25,15 +25,15 @@
 class Image {
 
 public:
-	Image(const std::string &mimeType);
-	~Image();
+	Image(const std::string &mimeType) MODEL_SECTION;
+	~Image() MODEL_SECTION;
 	void addData(const std::vector<std::string> &text) { ZLStringUtil::append(myEncodedData, text); }
 	const unsigned char *data() const { decode(); return myData; }
 	unsigned int datalen() const { decode(); return myDataLen; }
 	const std::string &mimeType() const { return myMimeType; }
 
 private:
-	void decode() const;
+	void decode() const MODEL_SECTION;
 
 private:
 	std::string myMimeType;

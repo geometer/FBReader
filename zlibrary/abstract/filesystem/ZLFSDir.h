@@ -24,11 +24,14 @@
 class ZLFSDir : public ZLDir {
 	
 protected:
-	ZLFSDir(const std::string &name) : ZLDir(name) {}
+	ZLFSDir(const std::string &name) FS_SECTION;
 
 public:
-	virtual ~ZLFSDir() {}
-	virtual void createPhysicalDirectory() = 0;
+	virtual ~ZLFSDir() FS_SECTION;
+	virtual void createPhysicalDirectory() FS_SECTION = 0;
 };
+
+inline ZLFSDir::ZLFSDir(const std::string &name) : ZLDir(name) {}
+inline ZLFSDir::~ZLFSDir() {}
 
 #endif /* __ZLFSDIR_H__ */

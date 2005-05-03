@@ -3,24 +3,18 @@ APP = ../../$(NAME)
 APPID = FBRd
 RCP = $(NAME).rcp
 PRC = $(NAME).prc
-GRC = $(NAME).grc
-BIN = $(NAME).bin
 
 PILRC = pilrc -I ../../icons/palm
 OBJRES = m68k-palmos-obj-res
 BUILDPRC = build-prc
 
-$(PRC): grc.stamp bin.stamp
-	@$(BUILDPRC) $(PRC) $(NAME) $(APPID) *.grc *.bin $(LINKFILES) 
+$(PRC): bin.stamp ../../FBReader
+	@$(BUILDPRC) -o $(PRC) -n $(NAME) -c $(APPID) ../FBReader.def ../../FBReader *.bin $(LINKFILES) 
 	@ls -l *.prc
 
-grc.stamp: $(APP)
-	@$(OBJRES) $(APP)
-	@touch $@
-
-bin.stamp:	$(RCP)
-	@$(PILRC) $^ $(BINDIR)
+bin.stamp:	$(RCP) Makefile
+	@$(PILRC) $<
 	@touch $@
 
 clean:
-	@$(RM) *.bin *.grc *.prc *.stamp
+	@$(RM) *.bin *.prc *.stamp

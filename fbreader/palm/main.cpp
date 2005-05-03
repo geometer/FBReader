@@ -7,8 +7,6 @@
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
-UInt16 ZLibRef = sysInvalidRefNum;
-
 static Err StartApplication() {
 	ZLSetup;
 	ZLPalmFSManager::createInstance();

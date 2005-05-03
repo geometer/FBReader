@@ -26,14 +26,14 @@
 class ZLPalmFileInputStream : public ZLInputStream {
 
 public:
-	ZLPalmFileInputStream(const std::string &name);
-	~ZLPalmFileInputStream();
-	bool open();
-	int read(char *buffer, int maxSize);
-	void close();
+	ZLPalmFileInputStream(const std::string &name) FS_SECTION;
+	~ZLPalmFileInputStream() FS_SECTION;
+	bool open() FS_SECTION;
+	int read(char *buffer, int maxSize) FS_SECTION;
+	void close() FS_SECTION;
 
-	void seek(int offset);
-	int offset() const;
+	void seek(int offset) FS_SECTION;
+	int offset() const FS_SECTION;
 
 private:
 	std::string myName;

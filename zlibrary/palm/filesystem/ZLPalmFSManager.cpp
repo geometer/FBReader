@@ -16,6 +16,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#define NOZLIBDEFS
 #include <zlib.h>
 
 #include "ZLPalmFSManager.h"
@@ -23,6 +24,16 @@
 #include "ZLPalmFileInputStream.h"
 #include "../../abstract/filesystem/ZLZipInputStream.h"
 #include "ZLPalmFileOutputStream.h"
+
+void ZLPalmFSManager::createInstance() {
+	ourInstance = new ZLPalmFSManager();
+}
+
+ZLPalmFSManager::ZLPalmFSManager() : ZLFSManager() {
+}
+
+ZLPalmFSManager::~ZLPalmFSManager() {
+}
 
 void ZLPalmFSManager::normalize(std::string&) {
 }

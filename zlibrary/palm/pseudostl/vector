@@ -1,7 +1,7 @@
 #ifndef __VECTOR__
 #define __VECTOR__
 
-#include <vector.h>
+#include <vector1.h>
 
 #endif /* __VECTOR__ */
 

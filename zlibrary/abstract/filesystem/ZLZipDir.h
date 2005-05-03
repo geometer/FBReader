@@ -24,13 +24,18 @@
 class ZLZipDir : public ZLDir {
 
 public:
-	ZLZipDir(const std::string &name) : ZLDir(name) {}
+	ZLZipDir(const std::string &name) FS_SECTION;
+	~ZLZipDir() FS_SECTION;
 
-	void collectSubDirs(std::vector<std::string>&, bool) {}
-	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+	void collectSubDirs(std::vector<std::string>&, bool) FS_SECTION;
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
 
 protected:
-	std::string delimiter() const { return ":"; }
+	std::string delimiter() const FS_SECTION;
 };
+
+inline ZLZipDir::ZLZipDir(const std::string &name) : ZLDir(name) {}
+inline ZLZipDir::~ZLZipDir() {}
+inline void ZLZipDir::collectSubDirs(std::vector<std::string>&, bool) {}
 
 #endif /* __ZLZIPDIR_H__ */

@@ -122,10 +122,10 @@ protected:
     link_type& rightmost() { return right(header); }
     link_type& rightmost() const { return right(header); }
     size_type node_count; // keeps track of size of tree
+    Compare key_compare;
     bool insert_always;  // controls whether an element already in the
                          // tree is inserted again
 //public:
-    Compare key_compare;
     static link_type NIL;
     static link_type& left(link_type x) { 
         return (link_type&)((*x).left_link);

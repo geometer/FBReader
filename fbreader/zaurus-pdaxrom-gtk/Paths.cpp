@@ -27,6 +27,6 @@ std::string TeXHyphenator::PatternZip("/usr/share/FBReader/hyphenationPatterns.z
 std::string DocBookReader::DTDDirectory("/usr/share/FBReader/formats/docbook");
 std::string GtkFBReader::ImageDirectory("/usr/share/pixmaps/FBReader");
 std::string FBReader::HelpDirectory("/usr/share/FBReader/help");
-std::string EncodingDescriptionPath("share/FBReader/encodings");
+std::string EncodingDescriptionPath("/usr/share/FBReader/encodings");
 
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "/mnt/card/FBooks:/mnt/cf/FBooks");

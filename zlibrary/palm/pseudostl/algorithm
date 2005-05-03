@@ -1,7 +1,7 @@
 #ifndef __ALGORITHM__
 #define __ALGORITHM__
 
-#include <algo.h>
+#include <algo1.h>
 
 #endif /* __ALGORITHM__ */
 

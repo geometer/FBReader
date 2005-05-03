@@ -38,19 +38,20 @@ public:
 	};
 
 public:
-	virtual ~ParagraphEntry() {}
-	virtual Kind entryKind() const = 0;
+	ParagraphEntry() MODEL_SECTION;
+	virtual ~ParagraphEntry() MODEL_SECTION;
+	virtual Kind entryKind() const MODEL_SECTION = 0;
 };
 
 class ControlEntry : public ParagraphEntry {
 
 public:
-	ControlEntry(TextKind kind, bool isStart) : myKind(kind), myStart(isStart) {}
-	virtual ~ControlEntry() {}
-	TextKind kind() const { return myKind; }
-	Kind entryKind() const { return CONTROL_ENTRY; }
-	bool isStart() const { return myStart; }
-	virtual bool isHyperlink() const { return false; }
+	ControlEntry(TextKind kind, bool isStart) MODEL_SECTION;
+	virtual ~ControlEntry() MODEL_SECTION;
+	TextKind kind() const MODEL_SECTION;
+	Kind entryKind() const MODEL_SECTION;
+	bool isStart() const MODEL_SECTION;
+	virtual bool isHyperlink() const MODEL_SECTION;
 
 private:
 	TextKind myKind;
@@ -60,9 +61,10 @@ private:
 class HyperlinkControlEntry : public ControlEntry {
 
 public:
-	HyperlinkControlEntry(TextKind kind, const std::string &label) : ControlEntry(kind, true), myLabel(label) {}
-	bool isHyperlink() const { return true; }
-	const std::string &label() const { return myLabel; }
+	HyperlinkControlEntry(TextKind kind, const std::string &label) MODEL_SECTION;
+	~HyperlinkControlEntry() MODEL_SECTION;
+	bool isHyperlink() const MODEL_SECTION;
+	const std::string &label() const MODEL_SECTION;
 
 private:
 	std::string myLabel;
@@ -71,10 +73,12 @@ private:
 class TextEntry : public ParagraphEntry {
 
 public:
-	const std::string &text() const { return myText; }
-	void addText(const std::string &text);
-	void addText(const std::vector<std::string> &text) { ZLStringUtil::append(myText, text); }
-	Kind entryKind() const { return TEXT_ENTRY; }
+	TextEntry() MODEL_SECTION;
+	~TextEntry() MODEL_SECTION;
+	const std::string &text() const MODEL_SECTION;
+	void addText(const std::string &text) MODEL_SECTION;
+	void addText(const std::vector<std::string> &text) MODEL_SECTION;
+	Kind entryKind() const MODEL_SECTION;
  
 private:
 	std::string myText;
@@ -83,10 +87,11 @@ private:
 class ImageEntry : public ParagraphEntry {
 
 public:
-	ImageEntry(const std::string &id, const BookModel &model) : myId(id), myModel(model) {}
-	Kind entryKind() const { return IMAGE_ENTRY; }
-	const std::string &id() const { return myId; }
-	const Image *image() const;
+	ImageEntry(const std::string &id, const BookModel &model) MODEL_SECTION;
+	~ImageEntry() MODEL_SECTION;
+	Kind entryKind() const MODEL_SECTION;
+	const std::string &id() const MODEL_SECTION;
+	const Image *image() const MODEL_SECTION;
 
 private:
 	std::string myId;
@@ -106,17 +111,17 @@ public:
 	};
 
 public:
-	Paragraph(Kind kind) : myKind(kind) {}
-	virtual ~Paragraph();
-	Kind kind() const { return myKind; }
+	Paragraph(Kind kind) MODEL_SECTION;
+	virtual ~Paragraph() MODEL_SECTION;
+	Kind kind() const MODEL_SECTION;
 
-	void addControl(TextKind textKind, bool isStart) { myEntries.push_back(new ControlEntry(textKind, isStart)); }
-	void addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
-	void addText(const std::string &text);
-	void addText(const std::vector<std::string> &text);
-	void addImage(const std::string &id, const BookModel &model) { myEntries.push_back(new ImageEntry(id, model)); }
+	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
+	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
+	void addText(const std::string &text) MODEL_SECTION;
+	void addText(const std::vector<std::string> &text) MODEL_SECTION;
+	void addImage(const std::string &id, const BookModel &model) MODEL_SECTION;
 
-	const std::vector<ParagraphEntry*> &entries() const { return myEntries; }
+	const std::vector<ParagraphEntry*> &entries() const MODEL_SECTION;
 
 private:
 	Kind myKind;
@@ -126,9 +131,10 @@ private:
 class ParagraphWithReference : public Paragraph {
 
 public:
-	ParagraphWithReference() : Paragraph(TEXT_PARAGRAPH), myReference(-1) {}
-	void setReference(int reference) { myReference = reference; }
-	int reference() const { return myReference; }
+	ParagraphWithReference() MODEL_SECTION;
+	~ParagraphWithReference() MODEL_SECTION;
+	void setReference(int reference) MODEL_SECTION;
+	int reference() const MODEL_SECTION;
 
 private:
 	int myReference;
@@ -137,23 +143,17 @@ private:
 class TreeParagraph : public Paragraph {
 
 public:
-	TreeParagraph(TreeParagraph *parent = 0) : Paragraph(TREE_PARAGRAPH), myIsOpen(false), myParent(parent) {
-		if (parent != 0) {
-			parent->addChild(this);
-			myDepth = parent->myDepth + 1;
-		} else {
-			myDepth = 0;
-		}
-	}
-	bool isOpen() const { return myIsOpen; }
-	void open(bool o) { myIsOpen = o; }
-	void openTree();
-	int depth() const { return myDepth; }
-	TreeParagraph *parent() { return myParent; }
-	const std::vector<TreeParagraph*> children() const { return myChildren; }
+	TreeParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
+	~TreeParagraph() MODEL_SECTION;
+	bool isOpen() const MODEL_SECTION;
+	void open(bool o) MODEL_SECTION;
+	void openTree() MODEL_SECTION;
+	int depth() const MODEL_SECTION;
+	TreeParagraph *parent() MODEL_SECTION;
+	const std::vector<TreeParagraph*> children() const MODEL_SECTION;
 
 private:
-	void addChild(TreeParagraph *child) { myChildren.push_back(child); }
+	void addChild(TreeParagraph *child) MODEL_SECTION;
 
 private:
 	bool myIsOpen;
@@ -161,5 +161,51 @@ private:
 	TreeParagraph *myParent;
 	std::vector<TreeParagraph*> myChildren;
 };
+
+inline ParagraphEntry::ParagraphEntry() {}
+inline ParagraphEntry::~ParagraphEntry() {}
+
+inline ControlEntry::ControlEntry(TextKind kind, bool isStart) : myKind(kind), myStart(isStart) {}
+inline ControlEntry::~ControlEntry() {}
+inline TextKind ControlEntry::kind() const { return myKind; }
+inline ParagraphEntry::Kind ControlEntry::entryKind() const { return CONTROL_ENTRY; }
+inline bool ControlEntry::isStart() const { return myStart; }
+inline bool ControlEntry::isHyperlink() const { return false; }
+
+inline HyperlinkControlEntry::HyperlinkControlEntry(TextKind kind, const std::string &label) : ControlEntry(kind, true), myLabel(label) {}
+inline HyperlinkControlEntry::~HyperlinkControlEntry() {}
+inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
+inline const std::string &HyperlinkControlEntry::label() const { return myLabel; }
+
+inline TextEntry::TextEntry() {}
+inline TextEntry::~TextEntry() {}
+inline const std::string &TextEntry::text() const { return myText; }
+inline void TextEntry::addText(const std::vector<std::string> &text) { ZLStringUtil::append(myText, text); }
+inline ParagraphEntry::Kind TextEntry::entryKind() const { return TEXT_ENTRY; }
+
+inline ImageEntry::ImageEntry(const std::string &id, const BookModel &model) : myId(id), myModel(model) {}
+inline ImageEntry::~ImageEntry() {}
+inline ParagraphEntry::Kind ImageEntry::entryKind() const { return IMAGE_ENTRY; }
+inline const std::string &ImageEntry::id() const { return myId; }
+
+inline Paragraph::Paragraph(Kind kind) : myKind(kind) {}
+inline Paragraph::Kind Paragraph::kind() const { return myKind; }
+inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.push_back(new ControlEntry(textKind, isStart)); }
+inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
+inline void Paragraph::addImage(const std::string &id, const BookModel &model) { myEntries.push_back(new ImageEntry(id, model)); }
+inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return myEntries; }
+
+inline ParagraphWithReference::ParagraphWithReference() : Paragraph(TEXT_PARAGRAPH), myReference(-1) {}
+inline ParagraphWithReference::~ParagraphWithReference() {}
+inline void ParagraphWithReference::setReference(int reference) { myReference = reference; }
+inline int ParagraphWithReference::reference() const { return myReference; }
+
+inline TreeParagraph::~TreeParagraph() {}
+inline bool TreeParagraph::isOpen() const { return myIsOpen; }
+inline void TreeParagraph::open(bool o) { myIsOpen = o; }
+inline int TreeParagraph::depth() const { return myDepth; }
+inline TreeParagraph *TreeParagraph::parent() { return myParent; }
+inline const std::vector<TreeParagraph*> TreeParagraph::children() const { return myChildren; }
+inline void TreeParagraph::addChild(TreeParagraph *child) { myChildren.push_back(child); }
 
 #endif /* __PARAGRAPH_H__ */

@@ -27,29 +27,29 @@ protected:
 	static ZLOptions *ourInstance;
 
 protected:
-	ZLOptions() {}
-	virtual ~ZLOptions() {}
+	ZLOptions() OPTIONS_SECTION;
+	virtual ~ZLOptions() OPTIONS_SECTION;
 
 public:
-	static ZLOptions &instance() { return *ourInstance; }
-	static void deleteInstance() { delete ourInstance; }
+	static ZLOptions &instance() OPTIONS_SECTION;
+	static void deleteInstance() OPTIONS_SECTION;
 
-	virtual void setGroup(const std::string &name) = 0;
-	virtual void clearGroup() = 0;
+	virtual void setGroup(const std::string &name) OPTIONS_SECTION = 0;
+	virtual void clearGroup() OPTIONS_SECTION = 0;
 
-	virtual void unsetValue(const std::string &name) = 0;
+	virtual void unsetValue(const std::string &name) OPTIONS_SECTION = 0;
 
-	virtual bool booleanValue(const std::string &name, bool defaultValue) = 0;
-	virtual void setValue(const std::string &name, bool value) = 0;
+	virtual bool booleanValue(const std::string &name, bool defaultValue) OPTIONS_SECTION = 0;
+	virtual void setValue(const std::string &name, bool value) OPTIONS_SECTION = 0;
 
-	virtual long integerValue(const std::string &name, long defaultValue) = 0;
-	virtual void setValue(const std::string &name, long value) = 0;
+	virtual long integerValue(const std::string &name, long defaultValue) OPTIONS_SECTION = 0;
+	virtual void setValue(const std::string &name, long value) OPTIONS_SECTION = 0;
 
-	virtual double doubleValue(const std::string &name, double defaultValue) = 0;
-	virtual void setValue(const std::string &name, double value) = 0;
+	virtual double doubleValue(const std::string &name, double defaultValue) OPTIONS_SECTION = 0;
+	virtual void setValue(const std::string &name, double value) OPTIONS_SECTION = 0;
 
-	virtual std::string stringValue(const std::string &name, const std::string &defaultValue) = 0;
-	virtual void setValue(const std::string &name, const std::string &value) = 0;
+	virtual std::string stringValue(const std::string &name, const std::string &defaultValue) OPTIONS_SECTION = 0;
+	virtual void setValue(const std::string &name, const std::string &value) OPTIONS_SECTION = 0;
 };
 
 #endif /* __ZLOPTIONS_INTERNAL_H__ */

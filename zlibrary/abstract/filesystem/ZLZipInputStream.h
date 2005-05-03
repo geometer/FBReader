@@ -19,6 +19,7 @@
 #ifndef __ZLZIPINPUTSTREAM_H__
 #define __ZLZIPINPUTSTREAM_H__
 
+#define NOZLIBDEFS
 #include <zlib.h>
 #include <list>
 
@@ -29,14 +30,14 @@ class ZLInputStream;
 class ZLZipInputStream : public ZLInputStream {
 
 public:
-	ZLZipInputStream(const std::string &name);
-	~ZLZipInputStream();
-	bool open();
-	int read(char *buffer, int maxSize);
-	void close();
+	ZLZipInputStream(const std::string &name) FS_SECTION;
+	~ZLZipInputStream() FS_SECTION;
+	bool open() FS_SECTION;
+	int read(char *buffer, int maxSize) FS_SECTION;
+	void close() FS_SECTION;
 
-	void seek(int offset);
-	int offset() const;
+	void seek(int offset) FS_SECTION;
+	int offset() const FS_SECTION;
 
 private:
 	std::string myCompressedFileName;

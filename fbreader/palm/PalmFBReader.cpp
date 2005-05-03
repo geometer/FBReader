@@ -3,13 +3,8 @@
 #include <abstract/ZLInputStream.h>
 
 #include "PalmFBReader.h"
+#include "PalmPaintContext.h"
 #include "PalmFBReader-resources.h"
-
-static IndexedColorType color(const ZLColorOption &option) {
-	ZLColor zlColor = option.value();
-	RGBColorType rgbColor = { 0x00, zlColor.Red, zlColor.Green, zlColor.Blue };
-	return WinRGBToIndex(&rgbColor);
-}
 
 static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 	switch (event->eType) {
@@ -34,33 +29,34 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 			{
 				FrmDrawForm(FrmGetActiveForm());
 				WinSetCoordinateSystem(kCoordinatesNative);
-				WinSetBackColor(color(ZLColorOption("Color", "Background", ZLColor(255, 255, 204))));
-				WinSetForeColor(color(ZLColorOption("Color", "Foreground", ZLColor(63, 63, 63))));
-				WinSetTextColor(color(ZLColorOption("Color", "Text", ZLColor(0, 0, 127))));
-				RectangleType rectangle;
-				WinGetWindowFrameRect(FrmGetWindowHandle(FrmGetActiveForm()), &rectangle);
-				WinFillRectangle(&rectangle, 0);
+				PalmPaintContext context;
+				context.setSize(320, 320);
+				ZLColorOption foreColorOption("Color", "Foreground", ZLColor(0, 0, 255));
+				context.setColor(foreColorOption.value());
+				PaintContext::BackgroundColorOption.setValue(ZLColor(255, 255, 0));
+				context.clear();
 
 				std::string fileName = "/test1.zip:test1";
+				//std::string fileName = "/test1";
 				ZLInputStream *istream = ZLPalmFSManager::instance().createInputStream(fileName);
 				if (istream != 0) {
 					if (istream->open()) {
 						char txt[10];
 						int size = istream->read(txt, 6);
-						WinDrawChars(txt, size, 10, 10);
+						context.drawString(10, 10, txt, 0, size);
 						istream->close();
 					}
 					delete istream;
 				}
 
-				int barLeft = rectangle.topLeft.x + 2;
-				int barRight = rectangle.topLeft.x + rectangle.extent.x - 3;
-				int barBottom = rectangle.topLeft.y + rectangle.extent.y - 3;
-				int barTop = barBottom - rectangle.extent.y / 20;
-				WinDrawLine(barLeft, barTop, barLeft, barBottom);
-				WinDrawLine(barRight, barTop, barRight, barBottom);
-				WinDrawLine(barLeft, barTop, barRight, barTop);
-				WinDrawLine(barLeft, barBottom, barRight, barBottom);
+				int barLeft = 0;
+				int barRight = context.width() - 1;
+				int barBottom = context.height() - 1;
+				int barTop = barBottom - context.height() / 20;
+				context.drawLine(barLeft, barTop, barLeft, barBottom);
+				context.drawLine(barRight, barTop, barRight, barBottom);
+				context.drawLine(barLeft, barTop, barRight, barTop);
+				context.drawLine(barLeft, barBottom, barRight, barBottom);
 				WinSetCoordinateSystem(kCoordinatesStandard);
 			}
 			return true;

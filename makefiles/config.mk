@@ -1,5 +1,14 @@
 include $(ROOTDIR)/makefiles/platforms.mk
 
+DUMMY_SECTIONS = \
+	-DSTL_SECTION="" \
+	-DFS_SECTION="" \
+	-DOPTIONS_SECTION="" \
+	-DUTIL_SECTION="" \
+	-DMODEL_SECTION="" \
+	-DVIEW_SECTION="" \
+	-DTEXT_STYLE_SECTION=""
+
 MAKE = ROOTDIR=$(ROOTDIR) make
 
 ifeq "$(TARGET_ARCH)" "zaurus-cacko"
@@ -15,7 +24,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-cacko"
 	LD = $(TOOLSDIR)/g++
 	STRIP = $(TOOLSDIR)/strip
 
-	CFLAGS = -pipe -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	LDFLAGS = -O2
 	DEPGEN = $(CC) -MM
 
@@ -32,7 +41,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	LDFLAGS = -O2
 	MOC = $(BASEDIR)/bin/moc
 	RM = rm -rvf
@@ -51,7 +60,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
 	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	LDFLAGS = -O2
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -70,7 +79,7 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	LDFLAGS = -O2
 	MOC = moc-qt3
 	RM = rm -rvf
@@ -88,7 +97,7 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
 	LDFLAGS = -O2
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -105,7 +114,15 @@ ifeq "$(TARGET_ARCH)" "palm"
 	STRIP = m68k-palmos-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -Wno-non-template-friend
+	CFLAGS = \
+		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))" \
+		-DFS_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DUTIL_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DMODEL_SECTION="__attribute__ ((section(\"sec3\")))" \
+		-DVIEW_SECTION="__attribute__ ((section(\"sec2\")))" \
+		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec3\")))" \
+		-pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -Wno-non-template-friend
 	LDFLAGS =
 	RM = rm -rvf
 	RM_QUIET = rm -rf

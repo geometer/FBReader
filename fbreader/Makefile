@@ -35,7 +35,8 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = common/model $(TARGET_ARCH)
+	#SUBDIRS = common/model common/view common/textview $(TARGET_ARCH)
+	SUBDIRS = common/model common/view $(TARGET_ARCH)
 endif
 
 all: .bin
@@ -71,12 +72,20 @@ endif
 	@$(MAKE) $(TARGET)
 
 $(TARGET):
+ifeq "$(TARGET_ARCH)" "palm"
+	cd palm; \
+	m68k-palmos-multigen $(TARGET).def; \
+	m68k-palmos-as -o $(TARGET)-sections.o $(TARGET)-sections.s; \
+	cd ..; \
+	$(LD) $(LDFLAGS) -o $@ $^ `find . -name *.o` $(LIBS) -lPalmOSGlue palm/$(TARGET)-sections.ld
+else
 	@echo -n "Linking $@ ..."
 	@$(LD) $(LDFLAGS) -o $@ $^ `find . -name *.o` $(LIBS)
 	@echo " OK"
 	@echo -n "Stripping $@ ..."
 	@$(STRIP) $(TARGET)
 	@echo " OK"
+endif
 
 clean:
 	@for subdir in $(ALL_SUBDIRS); do \

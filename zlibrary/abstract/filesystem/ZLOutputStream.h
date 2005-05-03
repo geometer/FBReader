@@ -24,13 +24,20 @@
 class ZLOutputStream {
 
 protected:
-	ZLOutputStream() {}
+	ZLOutputStream() FS_SECTION;
 
 public:
-	virtual ~ZLOutputStream() {}
-	virtual bool open() = 0;
-	virtual void write(const std::string &str) = 0;
-	virtual void close() = 0;
+	virtual ~ZLOutputStream() FS_SECTION;
+	virtual bool open() FS_SECTION = 0;
+	virtual void write(const std::string &str) FS_SECTION = 0;
+	virtual void close() FS_SECTION = 0;
+
+private:
+	ZLOutputStream(const ZLOutputStream&) FS_SECTION;
+	const ZLOutputStream &operator = (const ZLOutputStream&) FS_SECTION;
 };
+
+inline ZLOutputStream::ZLOutputStream() {}
+inline ZLOutputStream::~ZLOutputStream() {}
 
 #endif /* __ZLOUTPUTSTREAM_H__ */

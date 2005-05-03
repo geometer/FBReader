@@ -3,8 +3,6 @@
 
 #include <PalmOS.h>
 
-#define NOZLIBDEFS
-
 extern "C" {
 
 #include <SysZLib.h>

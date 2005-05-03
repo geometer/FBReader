@@ -79,7 +79,7 @@ TextStyleCollection::TextStyleCollection() {
 TextStyleCollection::~TextStyleCollection() {
 	delete myBaseStyle;
 	for (std::map<TextKind,TextStyleDecoration*>::iterator it = myDecorationMap.begin(); it != myDecorationMap.end(); it++) {
-		delete it->second;
+		delete (*it).second;
 	}
 }
 
@@ -88,7 +88,7 @@ void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, 
 	if (isHyperlink) {
 		decoration->setHyperlinkStyle();
 	}
-	myDecorationMap[kind] = decoration;
+	myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(kind, decoration));
 }
 
 void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations, bool isHyperlink) {
@@ -96,10 +96,10 @@ void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, 
 	if (isHyperlink) {
 		decoration->setHyperlinkStyle();
 	}
-	myDecorationMap[kind] = decoration;
+	myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(kind, decoration));
 }
 
 const TextStyleDecoration *TextStyleCollection::decoration(TextKind kind) const {
 	std::map<TextKind,TextStyleDecoration*>::const_iterator it = myDecorationMap.find(kind);
-	return (it != myDecorationMap.end()) ? it->second : 0;
+	return (it != myDecorationMap.end()) ? (*it).second : 0;
 }

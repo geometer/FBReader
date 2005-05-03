@@ -67,13 +67,13 @@ private:
 	class ParagraphProcessor {
 
 	public:
-		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, std::vector<TextElement*> &elements);
+		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, std::vector<TextElement*> &elements) VIEW_SECTION;
 
-		void fill();
+		void fill() VIEW_SECTION;
 
 	private:
-		void beforeAddWord();
-		void addWord(const std::string &str, int start, int len);
+		void beforeAddWord() VIEW_SECTION;
+		void addWord(const std::string &str, int start, int len) VIEW_SECTION;
 
 	private:
 		const Paragraph &myParagraph;
@@ -90,44 +90,44 @@ protected:
 	ParagraphCursor(const ParagraphCursor &cursor);
 
 public:
-	static ParagraphCursor *createCursor(const TextModel &model);
-	virtual ParagraphCursor *createCopy() const = 0;
-	virtual ~ParagraphCursor();
+	static ParagraphCursor *createCursor(const TextModel &model) VIEW_SECTION;
+	virtual ParagraphCursor *createCopy() const VIEW_SECTION = 0;
+	virtual ~ParagraphCursor() VIEW_SECTION;
 
-	virtual bool previous() = 0;
-	virtual bool next() = 0;
+	virtual bool previous() VIEW_SECTION = 0;
+	virtual bool next() VIEW_SECTION = 0;
 
-	bool isStartOfText() const;
-	virtual bool isEndOfText() const = 0;
-	bool isStartOfParagraph() const;
-	bool isEndOfParagraph() const;
-	bool isEndOfSection() const;
+	bool isStartOfText() const VIEW_SECTION;
+	virtual bool isEndOfText() const VIEW_SECTION = 0;
+	bool isStartOfParagraph() const VIEW_SECTION;
+	bool isEndOfParagraph() const VIEW_SECTION;
+	bool isEndOfSection() const VIEW_SECTION;
 
 	int paragraphLength() const { return myElements.size(); }
 	int paragraphNumber() const { return myParagraphIterator - myModel.paragraphs().begin(); }
-	TextMark position() const;
+	TextMark position() const VIEW_SECTION;
 	int wordNumber(const WordCursor &wi) const { return wi.myWordIterator - myElements.begin(); }
 	int wordNumber() const { return wordNumber(myNextElement); }
 	int charNumber() const { return myNextElement.myCharNumber; }
-	void moveTo(int paragraphNumber, int wordNumber, int charNumber);
-	void moveToParagraphStart();
-	void moveToParagraphEnd();
+	void moveTo(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
+	void moveToParagraphStart() VIEW_SECTION;
+	void moveToParagraphEnd() VIEW_SECTION;
 
 	WordCursor wordCursor() const { return myNextElement; }
 	void setWordCursor(const WordCursor cursor) { myNextElement = cursor; }
-	const WordCursor begin() const { return myElements.begin(); }
-	const WordCursor end() const { return myElements.end(); }
+	const WordCursor begin() const { return WordCursor(myElements.begin()); }
+	const WordCursor end() const { return WordCursor(myElements.end()); }
 
 private:
-	void processControlParagraph(const Paragraph &paragraph);
+	void processControlParagraph(const Paragraph &paragraph) VIEW_SECTION;
 
 protected:
-	void fill();
-	void clear();
+	void fill() VIEW_SECTION;
+	void clear() VIEW_SECTION;
 
 private:
 	/* assignment is disabled */
-	ParagraphCursor &operator = (const ParagraphCursor &);
+	ParagraphCursor &operator = (const ParagraphCursor &) VIEW_SECTION;
 	
 protected:
 	const TextModel &myModel;

@@ -26,7 +26,7 @@ DEPFILE = .depend
 all: .dep $(OBJECTS)
 
 clean:
-	@$(RM) $(DEPFILE) *.o
+	@$(RM) $(DEPFILE) *.o *.s *.ld
 
 ifneq "$(wildcard $(DEPFILE))" ""
   include $(DEPFILE)

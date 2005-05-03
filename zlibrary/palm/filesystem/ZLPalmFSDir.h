@@ -24,15 +24,19 @@
 class ZLPalmFSDir : public ZLFSDir {
 
 public:
-	ZLPalmFSDir(const std::string &name) : ZLFSDir(name) {}
+	ZLPalmFSDir(const std::string &name) FS_SECTION;
+	~ZLPalmFSDir() FS_SECTION;
 
-	void createPhysicalDirectory();
+	void createPhysicalDirectory() FS_SECTION;
 
-	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
-	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
 
 protected:
-	std::string delimiter() const { return "/"; }
+	std::string delimiter() const FS_SECTION;
 };
+
+inline ZLPalmFSDir::ZLPalmFSDir(const std::string &name) : ZLFSDir(name) {}
+inline ZLPalmFSDir::~ZLPalmFSDir() {}
 
 #endif /* __ZLPALMFSDIR_H__ */

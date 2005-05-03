@@ -43,6 +43,15 @@ void TextEntry::addText(const std::string &text) {
 	myText += text;
 }
 
+TreeParagraph::TreeParagraph(TreeParagraph *parent) : Paragraph(TREE_PARAGRAPH), myIsOpen(false), myParent(parent) {
+	if (parent != 0) {
+		parent->addChild(this);
+		myDepth = parent->myDepth + 1;
+	} else {
+		myDepth = 0;
+	}
+}
+
 void TreeParagraph::openTree() {
 	for (TreeParagraph *p = parent(); p != 0; p = p->parent()) {
 		p->open(true);

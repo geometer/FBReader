@@ -43,10 +43,10 @@ friend class ZLSearchUtil;
 class ZLSearchUtil {
 
 private:
-	ZLSearchUtil();
+	ZLSearchUtil() UTIL_SECTION;
 
 public:
-	static int find(const std::string &text, const ZLSearchPattern &pattern, int pos = 0);
+	static int find(const std::string &text, const ZLSearchPattern &pattern, int pos = 0) UTIL_SECTION;
 };
 
 #endif /* __ZLSEARCHUTIL_H__ */

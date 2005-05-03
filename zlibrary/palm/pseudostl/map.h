@@ -23,7 +23,7 @@
 
 #include <tree.h>
 
-template <class Key, class T, class Compare>
+template <class Key, class T, class Compare = less<Key> >
 class map {
 public:
 
@@ -79,9 +79,9 @@ public:
     const_iterator begin() const { return t.begin(); }
     iterator end() { return t.end(); }
     const_iterator end() const { return t.end(); }
-    reverse_iterator rbegin() { return t.rbegin(); }
+    //reverse_iterator rbegin() { return t.rbegin(); }
     const_reverse_iterator rbegin() const { return t.rbegin(); }
-    reverse_iterator rend() { return t.rend(); }
+    //reverse_iterator rend() { return t.rend(); }
     const_reverse_iterator rend() const { return t.rend(); }
     bool empty() const { return t.empty(); }
     size_type size() const { return t.size(); }

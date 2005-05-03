@@ -36,22 +36,22 @@ public:
 		TREE_MODEL,
 	};
 
-	TextModel();
-	virtual ~TextModel();
-	virtual Kind kind() const = 0;
+	TextModel() MODEL_SECTION;
+	virtual ~TextModel() MODEL_SECTION;
+	virtual Kind kind() const MODEL_SECTION = 0;
 
-	const std::vector<Paragraph*> &paragraphs() const { return myParagraphs; }
-	const std::vector<TextMark> &marks() const { return myMarks; }
+	const std::vector<Paragraph*> &paragraphs() const MODEL_SECTION;
+	const std::vector<TextMark> &marks() const MODEL_SECTION;
 
-	virtual void search(const std::string &text, bool ignoreCase) const;
+	virtual void search(const std::string &text, bool ignoreCase) const MODEL_SECTION;
 
-	TextMark firstMark() const;
-	TextMark lastMark() const;
-	TextMark nextMark(TextMark position) const;
-	TextMark previousMark(TextMark position) const;
+	TextMark firstMark() const MODEL_SECTION;
+	TextMark lastMark() const MODEL_SECTION;
+	TextMark nextMark(TextMark position) const MODEL_SECTION;
+	TextMark previousMark(TextMark position) const MODEL_SECTION;
 
 protected:
-	void addParagraphInternal(Paragraph *paragraph) { myParagraphs.push_back(paragraph); }
+	void addParagraphInternal(Paragraph *paragraph) MODEL_SECTION;
 	
 private:
 	std::vector<Paragraph*> myParagraphs;
@@ -61,22 +61,31 @@ private:
 class PlainTextModel : public TextModel {
 
 public:
-	Kind kind() const { return PLAIN_TEXT_MODEL; }
-	void addParagraph(Paragraph *paragraph) { addParagraphInternal(paragraph); }
+	Kind kind() const MODEL_SECTION;
+	void addParagraph(Paragraph *paragraph) MODEL_SECTION;
 };
 
 class TreeModel : public TextModel {
 
 public:
-	TreeModel();
-	~TreeModel();
-	Kind kind() const { return TREE_MODEL; }
-	TreeParagraph *createParagraph(TreeParagraph *parent = 0);
+	TreeModel() MODEL_SECTION;
+	~TreeModel() MODEL_SECTION;
+	Kind kind() const MODEL_SECTION;
+	TreeParagraph *createParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
 	
-	void search(const std::string &text, bool ignoreCase) const;
+	void search(const std::string &text, bool ignoreCase) const MODEL_SECTION;
 
 private:
 	TreeParagraph *myRoot;
 };
+
+inline const std::vector<Paragraph*> &TextModel::paragraphs() const { return myParagraphs; }
+inline const std::vector<TextMark> &TextModel::marks() const { return myMarks; }
+inline void TextModel::addParagraphInternal(Paragraph *paragraph) { myParagraphs.push_back(paragraph); }
+
+inline TextModel::Kind PlainTextModel::kind() const { return PLAIN_TEXT_MODEL; }
+inline void PlainTextModel::addParagraph(Paragraph *paragraph) { addParagraphInternal(paragraph); }
+
+inline TextModel::Kind TreeModel::kind() const { return TREE_MODEL; }
 
 #endif /* __TEXTMODEL_H__ */

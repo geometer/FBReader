@@ -28,7 +28,7 @@
 class Word : public TextElement {
 
 public:
-	Word(const char *utf8String, int len, int startOffset);
+	Word(const char *utf8String, int len, int startOffset) VIEW_SECTION;
 
 public:
 	~Word() { if (myMark != 0) delete myMark; }
@@ -37,7 +37,7 @@ public:
 	const std::string &utf8String() const { return myUtf8Contents; }
 	int startOffset() const { return myStartOffset; }
 
-	void addMark(int start, int len);
+	void addMark(int start, int len) VIEW_SECTION;
 
 	class WordMark {
 

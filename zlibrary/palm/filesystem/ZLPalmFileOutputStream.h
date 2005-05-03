@@ -26,11 +26,15 @@
 class ZLPalmFileOutputStream : public ZLOutputStream {
 
 public:
-	ZLPalmFileOutputStream(const std::string &name);
-	~ZLPalmFileOutputStream();
-	bool open();
-	void write(const std::string &str);
-	void close();
+	ZLPalmFileOutputStream(const std::string &name) FS_SECTION;
+	~ZLPalmFileOutputStream() FS_SECTION;
+	bool open() FS_SECTION;
+	void write(const std::string &str) FS_SECTION;
+	void close() FS_SECTION;
+
+private:
+	ZLPalmFileOutputStream(const ZLPalmFileOutputStream&);
+	const ZLPalmFileOutputStream operator = (const ZLPalmFileOutputStream&);
 
 private:
 	std::string myName;

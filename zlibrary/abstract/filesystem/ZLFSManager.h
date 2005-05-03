@@ -28,18 +28,18 @@ class ZLOutputStream;
 class ZLFSManager {
 
 public:
-	static void deleteInstance() { delete ourInstance; }
-	static ZLFSManager &instance() { return *ourInstance; }
+	static void deleteInstance() FS_SECTION;
+	static ZLFSManager &instance() FS_SECTION;
 	
 protected:
-	ZLFSManager() {}
-	virtual ~ZLFSManager() {}
+	ZLFSManager() FS_SECTION;
+	virtual ~ZLFSManager() FS_SECTION;
 	
 public:
-	virtual void normalize(std::string &fileName) = 0;
-	virtual ZLFSDir *createDirectory(const std::string &name) = 0;
-	virtual ZLInputStream *createInputStream(const std::string &name) = 0;
-	virtual ZLOutputStream *createOutputStream(const std::string &name) = 0;
+	virtual void normalize(std::string &fileName) FS_SECTION = 0;
+	virtual ZLFSDir *createDirectory(const std::string &name) FS_SECTION = 0;
+	virtual ZLInputStream *createInputStream(const std::string &name) FS_SECTION = 0;
+	virtual ZLOutputStream *createOutputStream(const std::string &name) FS_SECTION = 0;
 
 protected:
 	static ZLFSManager *ourInstance;

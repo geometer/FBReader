@@ -21,6 +21,20 @@
 
 ZLOptions *ZLOptions::ourInstance = 0;
 
+ZLOptions::ZLOptions() {
+}
+
+ZLOptions::~ZLOptions() {
+}
+
+ZLOptions &ZLOptions::instance() {
+	return *ourInstance;
+}
+
+void ZLOptions::deleteInstance() {
+	delete ourInstance;
+}
+
 ZLOption::ZLOption(const std::string &group, const std::string &optionName) {
 	myGroup = group;
 	myOptionName = optionName;

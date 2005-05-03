@@ -24,16 +24,19 @@
 class ZLInputStream {
 
 protected:
-	ZLInputStream() {}
+	ZLInputStream() FS_SECTION;
 
 public:
-	virtual ~ZLInputStream() {}
-	virtual bool open() = 0;
-	virtual int read(char *buffer, int maxSize) = 0;
-	virtual void close() = 0;
+	virtual ~ZLInputStream() FS_SECTION;
+	virtual bool open() FS_SECTION = 0;
+	virtual int read(char *buffer, int maxSize) FS_SECTION = 0;
+	virtual void close() FS_SECTION = 0;
 
-	virtual void seek(int offset) = 0;
-	virtual int offset() const = 0;
+	virtual void seek(int offset) FS_SECTION = 0;
+	virtual int offset() const FS_SECTION = 0;
 };
+
+inline ZLInputStream::ZLInputStream() {}
+inline ZLInputStream::~ZLInputStream() {}
 
 #endif /* __ZLINPUTSTREAM_H__ */

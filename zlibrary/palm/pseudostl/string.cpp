@@ -172,6 +172,11 @@ namespace std {
 		return *this;
 	}
 
+	const string string::operator + (char c) const {
+		// TODO: implement
+		return *this;
+	}
+
 	const string operator + (const char *s0, const string &s1) {
 		// TODO: implement
 		return s1;

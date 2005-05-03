@@ -40,12 +40,14 @@ inline void swap(T& a, T& b) {
     b = tmp;
 }
 
-#if 0
+#if PALMOS_SDK_VERSION >= 0x0500
 template <class T>
 inline const T& min(const T& a, const T& b) {
     return b < a ? b : a;
 }
+#endif
 
+#if 0
 template <class T, class Compare>
 inline const T& min(const T& a, const T& b, Compare comp) {
     return comp(b, a) ? b : a;

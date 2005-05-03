@@ -46,3 +46,7 @@ void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 	}
 	delete stream;
 }
+
+std::string ZLZipDir::delimiter() const {
+	return ":";
+}

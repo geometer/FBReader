@@ -42,20 +42,20 @@ private:
 	class ViewStyle {
 
 	public:
-		ViewStyle(PaintContext &context);
+		ViewStyle(PaintContext &context) VIEW_SECTION;
 
-		void reset();
-		void applyControl(const ControlElement &control, bool revert);
-		void applyControls(const WordCursor &begin, const WordCursor &end, bool revert);
+		void reset() VIEW_SECTION;
+		void applyControl(const ControlElement &control, bool revert) VIEW_SECTION;
+		void applyControls(const WordCursor &begin, const WordCursor &end, bool revert) VIEW_SECTION;
 
 		const PaintContext &context() const { return myContext; }
 		const TextStyle &style() const { return *myStyle; }
-		int elementWidth(const WordCursor &cursor) const;
-		int elementHeight(const WordCursor &cursor) const;
-		int textAreaHeight() const;
+		int elementWidth(const WordCursor &cursor) const VIEW_SECTION;
+		int elementHeight(const WordCursor &cursor) const VIEW_SECTION;
+		int textAreaHeight() const VIEW_SECTION;
 
-		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
-		int spaceWidth() const;
+		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const VIEW_SECTION;
+		int spaceWidth() const VIEW_SECTION;
 
 	private:
 		const TextStyle *myStyle;
@@ -66,7 +66,7 @@ private:
 
 	public:
 		LineProcessor(ViewStyle &style) : myStyle(style) {}
-		WordCursor process(const WordCursor &start, const WordCursor &end);
+		WordCursor process(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
 
 		int width() const { return myWidth; }
 		int height() const { return myHeight; }
@@ -89,37 +89,37 @@ public:
 	static ZLIntegerOption PositionIndicatorOffsetOption;
 	
 public:
-	void paint(bool doPaint);
+	void paint(bool doPaint) VIEW_SECTION;
 	virtual void paint() { paint(true); }
 
-	void scrollPageBackward();
-	void scrollPageForward();
-	void gotoMark(TextMark mark);
-	virtual void gotoParagraph(int num, bool last = false);
+	void scrollPageBackward() VIEW_SECTION;
+	void scrollPageForward() VIEW_SECTION;
+	void gotoMark(TextMark mark) VIEW_SECTION;
+	virtual void gotoParagraph(int num, bool last = false) VIEW_SECTION;
 
-	virtual void setModel(const TextModel *model, const std::string &name);
+	virtual void setModel(const TextModel *model, const std::string &name) VIEW_SECTION;
 
-	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward);
-	bool canFindNext() const;
-	void findNext();
-	bool canFindPrevious() const;
-	void findPrevious();
+	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward) VIEW_SECTION;
+	bool canFindNext() const VIEW_SECTION;
+	void findNext() VIEW_SECTION;
+	bool canFindPrevious() const VIEW_SECTION;
+	void findPrevious() VIEW_SECTION;
 
-	bool onStylusPress(int x, int y);
+	bool onStylusPress(int x, int y) VIEW_SECTION;
 
 protected:
-	TextView(PaintContext &context);
-	virtual ~TextView();
+	TextView(PaintContext &context) VIEW_SECTION;
+	virtual ~TextView() VIEW_SECTION;
 
 private:
-	void clear();
+	void clear() VIEW_SECTION;
 
-	int paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition);
-	void skip(ParagraphCursor &paragraph, int height);
-	void drawParagraph(ParagraphCursor &paragraph, bool doPaint);
-	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
-	void drawString(int x, int y, const std::string &str, int from, int len, const Word::WordMark *mark, int shift);
-	void drawTreeNode(TreeElement::TreeElementKind kind);
+	int paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition) VIEW_SECTION;
+	void skip(ParagraphCursor &paragraph, int height) VIEW_SECTION;
+	void drawParagraph(ParagraphCursor &paragraph, bool doPaint) VIEW_SECTION;
+	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
+	void drawString(int x, int y, const std::string &str, int from, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
+	void drawTreeNode(TreeElement::TreeElementKind kind) VIEW_SECTION;
 
 protected:
 	const TextModel *myModel;
@@ -156,8 +156,8 @@ protected:
 		}
 	};
 
-	const ParagraphPosition *paragraphByCoordinate(int y) const;
-	const TextElementPosition *elementByCoordinates(int x, int y) const;
+	const ParagraphPosition *paragraphByCoordinate(int y) const VIEW_SECTION;
+	const TextElementPosition *elementByCoordinates(int x, int y) const VIEW_SECTION;
 
 private:
 	std::vector<ParagraphPosition> myParagraphMap;

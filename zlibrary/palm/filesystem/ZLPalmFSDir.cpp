@@ -66,3 +66,7 @@ void ZLPalmFSDir::collectFiles(std::vector<std::string> &names, bool includeSyml
 	}
 	*/
 }
+
+std::string ZLPalmFSDir::delimiter() const {
+	return "/";
+}

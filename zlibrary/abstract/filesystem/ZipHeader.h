@@ -34,11 +34,11 @@ struct ZipHeader {
 	unsigned short NameLength;
 	unsigned short ExtraLength;
 
-	bool readFrom(ZLInputStream &stream);
+	bool readFrom(ZLInputStream &stream) FS_SECTION;
 
 private:
-	unsigned short readShort(ZLInputStream &stream);
-	unsigned long readLong(ZLInputStream &stream);
+	unsigned short readShort(ZLInputStream &stream) FS_SECTION;
+	unsigned long readLong(ZLInputStream &stream) FS_SECTION;
 };
 
 #endif /* __ZIPHEADER_H__ */

@@ -24,16 +24,17 @@
 class ZLPalmFSManager : public ZLFSManager {
 
 public:
-	static void createInstance() { ourInstance = new ZLPalmFSManager(); }
+	static void createInstance() FS_SECTION;
+	~ZLPalmFSManager() FS_SECTION;
 	
 private:
-	ZLPalmFSManager() {}
+	ZLPalmFSManager() FS_SECTION;
 	
 public:
-	void normalize(std::string &fileName);
-	ZLFSDir *createDirectory(const std::string &name);
-	ZLInputStream *createInputStream(const std::string &name);
-	ZLOutputStream *createOutputStream(const std::string &name);
+	void normalize(std::string &fileName) FS_SECTION;
+	ZLFSDir *createDirectory(const std::string &name) FS_SECTION;
+	ZLInputStream *createInputStream(const std::string &name) FS_SECTION;
+	ZLOutputStream *createOutputStream(const std::string &name) FS_SECTION;
 };
 
 #endif /* __ZLPALMFSMANAGER_H__ */

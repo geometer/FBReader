@@ -25,27 +25,27 @@
 class ZLUnicodeUtil {
 
 private:
-	ZLUnicodeUtil();
+	ZLUnicodeUtil() UTIL_SECTION;
 
 public:
 	typedef unsigned short Ucs2Char;
 	typedef std::vector<Ucs2Char> Ucs2String;
 	
-	static int utf8Length(const char *str, int len);
-	static int utf8Length(const std::string &str);
-	static int length(const char *str, int utf8Length);
-	static int length(const std::string &str, int utf8Length);
-	static void utf8ToUcs2(Ucs2String &to, const std::string &from, int toLength = -1);
-	static void ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength = -1);
-	static bool isLetter(Ucs2Char ch);
+	static int utf8Length(const char *str, int len) UTIL_SECTION;
+	static int utf8Length(const std::string &str) UTIL_SECTION;
+	static int length(const char *str, int utf8Length) UTIL_SECTION;
+	static int length(const std::string &str, int utf8Length) UTIL_SECTION;
+	static void utf8ToUcs2(Ucs2String &to, const std::string &from, int toLength = -1) UTIL_SECTION;
+	static void ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength = -1) UTIL_SECTION;
+	static bool isLetter(Ucs2Char ch) UTIL_SECTION;
 
-	static Ucs2Char toLower(Ucs2Char ch);
-	static void toLower(Ucs2String &str);
-	static std::string toLower(const std::string &utf8String);
+	static Ucs2Char toLower(Ucs2Char ch) UTIL_SECTION;
+	static void toLower(Ucs2String &str) UTIL_SECTION;
+	static std::string toLower(const std::string &utf8String) UTIL_SECTION;
 
-	static Ucs2Char toUpper(Ucs2Char ch);
-	static void toUpper(Ucs2String &str);
-	static std::string toUpper(const std::string &utf8String);
+	static Ucs2Char toUpper(Ucs2Char ch) UTIL_SECTION;
+	static void toUpper(Ucs2String &str) UTIL_SECTION;
+	static std::string toUpper(const std::string &utf8String) UTIL_SECTION;
 };
 
 #endif /* __ZLUNICODEUTIL_H__ */

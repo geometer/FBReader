@@ -23,6 +23,13 @@ ZLDir::ZLDir(const std::string &name) : myName(name) {
 	ZLFSManager::instance().normalize(myName);
 }
 
+ZLDir::~ZLDir() {
+}
+
+const std::string &ZLDir::name() const {
+	return myName;
+}
+
 std::string ZLDir::parentName() const {
 	if (myName == "/") {
 		return myName;

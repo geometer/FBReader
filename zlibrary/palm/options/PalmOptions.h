@@ -25,28 +25,31 @@
 class PalmOptions : public ZLOptions {
 
 public:
-	static void createInstance(const char *name) { ourInstance = new PalmOptions(name); }
+	static void createInstance(const char *name) OPTIONS_SECTION;
 	
 private:
-	PalmOptions(const char* /*name*/) {}
+	PalmOptions(const char* name) OPTIONS_SECTION;
 
 public:
-	void setGroup(const std::string &/*name*/) {}
-	void clearGroup() {}
+	~PalmOptions() OPTIONS_SECTION;
+
+public:
+	void setGroup(const std::string &name) OPTIONS_SECTION;
+	void clearGroup() OPTIONS_SECTION;
 	
-	void unsetValue(const std::string &/*name*/) {}
+	void unsetValue(const std::string &name) OPTIONS_SECTION;
 
-	bool booleanValue(const std::string &/*name*/, bool defaultValue) { return defaultValue; }
-	void setValue(const std::string &/*name*/, bool /*value*/) {}
+	bool booleanValue(const std::string &name, bool defaultValue) OPTIONS_SECTION;
+	void setValue(const std::string &name, bool value) OPTIONS_SECTION;
 
-	long integerValue(const std::string &/*name*/, long defaultValue) { return defaultValue; }
-	void setValue(const std::string &/*name*/, long /*value*/) {}
+	long integerValue(const std::string &name, long defaultValue) OPTIONS_SECTION;
+	void setValue(const std::string &name, long value) OPTIONS_SECTION;
 
-	double doubleValue(const std::string &/*name*/, double defaultValue) { return defaultValue; }
-	void setValue(const std::string &/*name*/, double /*value*/) {}
+	double doubleValue(const std::string &name, double defaultValue) OPTIONS_SECTION;
+	void setValue(const std::string &name, double value) OPTIONS_SECTION;
 
-	std::string stringValue(const std::string &/*name*/, const std::string &defaultValue) { return defaultValue; }
-	void setValue(const std::string &/*name*/, const std::string &/*value*/) {}
+	std::string stringValue(const std::string &name, const std::string &defaultValue) OPTIONS_SECTION;
+	void setValue(const std::string &name, const std::string &value) OPTIONS_SECTION;
 };
 
-#endif /* __PALMOPTIONS_H__ */
+#endif  __PALMOPTIONS_H__ 

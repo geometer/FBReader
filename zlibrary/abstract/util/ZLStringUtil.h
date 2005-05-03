@@ -25,11 +25,11 @@
 class ZLStringUtil {
 
 private:
-	ZLStringUtil();
+	ZLStringUtil() UTIL_SECTION;
 
 public:
-	static void append(std::string &target, const std::vector<std::string> &text);
-	static bool stringEndsWith(const std::string &str, const std::string &end);
+	static void append(std::string &target, const std::vector<std::string> &text) UTIL_SECTION;
+	static bool stringEndsWith(const std::string &str, const std::string &end) UTIL_SECTION;
 };
 
 #endif /* __ZLSTRINGUTIL_H__ */

@@ -19,3 +19,17 @@
 #include "ZLFSManager.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
+
+void ZLFSManager::deleteInstance() {
+	delete ourInstance;
+}
+
+ZLFSManager &ZLFSManager::instance() {
+	return *ourInstance;
+}
+	
+ZLFSManager::ZLFSManager() {
+}
+
+ZLFSManager::~ZLFSManager() {
+}
