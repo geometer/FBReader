@@ -27,13 +27,14 @@
 #include <gtk/GtkScreenSize.h>
 
 #include "GtkFBReader.h"
+#include "Paths.h"
 
 int main(int argc, char **argv) {
 	gtk_disable_setlocale();
 	gtk_init(&argc, &argv);
 
 	ZLUnixFSManager::createInstance();
-	ZLXMLReader::setEncodingDescriptionPath("share/FBReader/encodings");
+	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkScreenSize::createInstance();
