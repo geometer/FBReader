@@ -26,12 +26,13 @@
 #include <qtopia/QScreenSize.h>
 
 #include "QFBReader.h"
+#include "Paths.h"
 
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
 
 	ZLUnixFSManager::createInstance();
-	ZLXMLReader::setEncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
+	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	QOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QScreenSize::createInstance();

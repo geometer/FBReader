@@ -27,6 +27,7 @@
 #include <qt/QScreenSize.h>
 
 #include "QFBReader.h"
+#include "Paths.h"
 
 int main(int argc, char **argv) {
 	QApplication application(argc, argv);
@@ -36,7 +37,7 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath("/usr/share/pixmaps");
-	ZLXMLReader::setEncodingDescriptionPath("/usr/share/FBReader/encodings");
+	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	QScreenSize::createInstance();
 
 	QFBReader *reader = new QFBReader();

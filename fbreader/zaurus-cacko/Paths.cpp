@@ -25,4 +25,6 @@
 std::string TeXHyphenator::PatternZip("/opt/QtPalmtop/share/FBReader/hyphenationPatterns.zip");
 std::string DocBookReader::DTDDirectory("/opt/QtPalmtop/share/FBReader/formats/docbook");
 std::string FBReader::HelpDirectory("/opt/QtPalmtop/share/FBReader/help");
+std::string EncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
+
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "/mnt/card/FBooks:~/Documents");
