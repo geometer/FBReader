@@ -21,6 +21,7 @@
 #include "../common/formats/docbook/DocBookReader.h"
 #include "../common/collection/BookCollection.h"
 #include "GtkFBReader.h"
+#include "Paths.h"
 
 std::string TeXHyphenator::PatternZip("/usr/share/FBReader/hyphenationPatterns.zip");
 std::string DocBookReader::DTDDirectory("/usr/share/FBReader/formats/docbook");
