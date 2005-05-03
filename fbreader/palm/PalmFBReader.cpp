@@ -36,6 +36,9 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 				PaintContext::BackgroundColorOption.setValue(ZLColor(255, 255, 0));
 				context.clear();
 
+				context.setFillColor(ZLColor(0, 255, 0));
+				context.fillRectangle(100, 100, 110, 110);
+
 				std::string fileName = "/test1.zip:test1";
 				//std::string fileName = "/test1";
 				ZLInputStream *istream = ZLPalmFSManager::instance().createInputStream(fileName);
@@ -48,6 +51,8 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 					}
 					delete istream;
 				}
+
+				context.fillRectangle(110, 110, 120, 120);
 
 				int barLeft = 0;
 				int barRight = context.width() - 1;

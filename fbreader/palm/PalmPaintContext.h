@@ -21,6 +21,8 @@
 #ifndef __PALMPAINTCONTEXT_H__
 #define __PALMQPAINTCONTEXT_H__
 
+#include <PalmOS.h>				
+
 //#include <map>
 
 #include "../common/view/PaintContext.h"
@@ -66,6 +68,7 @@ private:
 private:
 	//mutable std::map<const Image*,QImage*> myImageCache;
 	int myWidth, myHeight;
+	RGBColorType myFillColor;
 };
 
 #endif /* __PALMPAINTCONTEXT_H__ */

@@ -18,8 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <PalmOS.h>				
-
 #include "PalmPaintContext.h"
 
 #include "../common/model/Image.h"
@@ -112,8 +110,9 @@ void PalmPaintContext::setColor(ZLColor color) {
 }
 
 void PalmPaintContext::setFillColor(ZLColor color) {
-	IndexedColorType c = iColor(color);
-	//WinSetBackColor(c);
+	myFillColor.r = color.Red;
+	myFillColor.g = color.Green;
+	myFillColor.b = color.Blue;
 }
 
 int PalmPaintContext::stringWidth(const std::string &str, int from, int len) const {
@@ -183,7 +182,10 @@ void PalmPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 		r.topLeft.y = y1;
 		r.extent.y = y0 - y1 + 1;
 	}
+	RGBColorType backColor;
+	WinSetBackColorRGB(&myFillColor, &backColor);
 	WinFillRectangle(&r, 0);
+	WinSetBackColorRGB(&backColor, &myFillColor);
 	/*
 	myPainter->fillRect(x0 + leftMargin().value(), y0 + topMargin().value(),
 											x1 - x0 + 1, y1 - y0 + 1,
