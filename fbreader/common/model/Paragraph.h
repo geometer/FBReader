@@ -20,13 +20,15 @@
 #ifndef __PARAGRAPH_H__
 #define __PARAGRAPH_H__
 
+#include <map>
+
 #include <abstract/ZLStringUtil.h>
 
 #include "TextKind.h"
 
 class BookDescription;
 class Image;
-class BookModel;
+typedef std::map<const std::string,Image*> ImageMap;
 
 class ParagraphEntry {
 
@@ -87,7 +89,7 @@ private:
 class ImageEntry : public ParagraphEntry {
 
 public:
-	ImageEntry(const std::string &id, const BookModel &model) MODEL_SECTION;
+	ImageEntry(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
 	~ImageEntry() MODEL_SECTION;
 	Kind entryKind() const MODEL_SECTION;
 	const std::string &id() const MODEL_SECTION;
@@ -95,7 +97,7 @@ public:
 
 private:
 	std::string myId;
-	const BookModel &myModel;
+	const ImageMap &myMap;
 };
 
 class Paragraph {
@@ -119,7 +121,7 @@ public:
 	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
 	void addText(const std::string &text) MODEL_SECTION;
 	void addText(const std::vector<std::string> &text) MODEL_SECTION;
-	void addImage(const std::string &id, const BookModel &model) MODEL_SECTION;
+	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
 
 	const std::vector<ParagraphEntry*> &entries() const MODEL_SECTION;
 
@@ -183,7 +185,7 @@ inline const std::string &TextEntry::text() const { return myText; }
 inline void TextEntry::addText(const std::vector<std::string> &text) { ZLStringUtil::append(myText, text); }
 inline ParagraphEntry::Kind TextEntry::entryKind() const { return TEXT_ENTRY; }
 
-inline ImageEntry::ImageEntry(const std::string &id, const BookModel &model) : myId(id), myModel(model) {}
+inline ImageEntry::ImageEntry(const std::string &id, const ImageMap &imageMap) : myId(id), myMap(imageMap) {}
 inline ImageEntry::~ImageEntry() {}
 inline ParagraphEntry::Kind ImageEntry::entryKind() const { return IMAGE_ENTRY; }
 inline const std::string &ImageEntry::id() const { return myId; }
@@ -192,7 +194,7 @@ inline Paragraph::Paragraph(Kind kind) : myKind(kind) {}
 inline Paragraph::Kind Paragraph::kind() const { return myKind; }
 inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.push_back(new ControlEntry(textKind, isStart)); }
 inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
-inline void Paragraph::addImage(const std::string &id, const BookModel &model) { myEntries.push_back(new ImageEntry(id, model)); }
+inline void Paragraph::addImage(const std::string &id, const ImageMap &imageMap) { myEntries.push_back(new ImageEntry(id, imageMap)); }
 inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return myEntries; }
 
 inline ParagraphWithReference::ParagraphWithReference() : Paragraph(TEXT_PARAGRAPH), myReference(-1) {}

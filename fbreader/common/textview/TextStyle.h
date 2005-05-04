@@ -43,8 +43,8 @@ public:
 	static ZLColorOption HyperlinkTextColorOption;
 
 protected:
-	TextStyle() {}
-	virtual ~TextStyle() {}
+	TextStyle() TEXT_STYLE_SECTION;
+	virtual ~TextStyle() TEXT_STYLE_SECTION;
 
 public:
 	virtual bool isDecorated() const TEXT_STYLE_SECTION = 0;
@@ -75,34 +75,34 @@ public:
 	BaseTextStyle(const std::string &fontFamily, int fontSize) TEXT_STYLE_SECTION;
 	~BaseTextStyle() TEXT_STYLE_SECTION;
 
-	bool isDecorated() const { return false; }
+	bool isDecorated() const TEXT_STYLE_SECTION;
 
-	ZLStringOption &fontFamilyOption() const { return *myFontFamilyOption; }
-	const std::string &fontFamily() const { return fontFamilyOption().value(); }
+	ZLStringOption &fontFamilyOption() const TEXT_STYLE_SECTION;
+	const std::string &fontFamily() const TEXT_STYLE_SECTION;
 
-	ZLIntegerOption &fontSizeOption() const { return *myFontSizeOption; }
-	int fontSize() const { return fontSizeOption().value(); }
-	ZLBooleanOption &boldOption() const { return *myBoldOption; }
-	bool bold() const { return boldOption().value(); }
-	ZLBooleanOption &italicOption() const { return *myItalicOption; }
-	bool italic() const { return italicOption().value(); }
+	ZLIntegerOption &fontSizeOption() const TEXT_STYLE_SECTION;
+	int fontSize() const TEXT_STYLE_SECTION;
+	ZLBooleanOption &boldOption() const TEXT_STYLE_SECTION;
+	bool bold() const TEXT_STYLE_SECTION;
+	ZLBooleanOption &italicOption() const TEXT_STYLE_SECTION;
+	bool italic() const TEXT_STYLE_SECTION;
 
 	ZLColor color() const TEXT_STYLE_SECTION;
 
-	int spaceBefore() const { return 0; }
-	int spaceAfter() const { return 0; }
-	int leftIndent() const { return 0; }
-	int rightIndent() const { return 0; }
-	int firstLineIndentDelta() const { return 0; }
-	int verticalShift() const { return 0; }
+	int spaceBefore() const TEXT_STYLE_SECTION;
+	int spaceAfter() const TEXT_STYLE_SECTION;
+	int leftIndent() const TEXT_STYLE_SECTION;
+	int rightIndent() const TEXT_STYLE_SECTION;
+	int firstLineIndentDelta() const TEXT_STYLE_SECTION;
+	int verticalShift() const TEXT_STYLE_SECTION;
 
-	ZLIntegerOption &alignmentOption() const { return *myAlignmentOption; }
-	AlignmentType alignment() const { return (AlignmentType)alignmentOption().value(); }
+	ZLIntegerOption &alignmentOption() const TEXT_STYLE_SECTION;
+	AlignmentType alignment() const TEXT_STYLE_SECTION;
 
-	ZLDoubleOption &lineSpaceOption() const { return *myLineSpaceOption; }
-	double lineSpace() const { return lineSpaceOption().value(); }
+	ZLDoubleOption &lineSpaceOption() const TEXT_STYLE_SECTION;
+	double lineSpace() const TEXT_STYLE_SECTION;
 
-	bool allowHyphenations() const { return true; }
+	bool allowHyphenations() const TEXT_STYLE_SECTION;
 
 private:
 	ZLStringOption *myFontFamilyOption;
@@ -117,23 +117,23 @@ class TextStyleDecoration {
 
 public:
 	TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations) TEXT_STYLE_SECTION;
-	virtual ~TextStyleDecoration() {}
+	virtual ~TextStyleDecoration() TEXT_STYLE_SECTION;
 
-	virtual bool isFullDecoration() const { return false; }
+	virtual bool isFullDecoration() const TEXT_STYLE_SECTION;
 
 	virtual TextStyle *createDecoratedStyle(const TextStyle &base) const TEXT_STYLE_SECTION;
 
-	const std::string &name() const { return myName; }
+	const std::string &name() const TEXT_STYLE_SECTION;
 
-	const ZLStringOption &fontFamilyOption() const { return myFontFamilyOption; }
-	const ZLIntegerOption &fontSizeDeltaOption() const { return myFontSizeDeltaOption; }
-	const ZLBoolean3Option &boldOption() const { return myBoldOption; }
-	const ZLBoolean3Option &italicOption() const { return myItalicOption; }
-	const ZLIntegerOption &verticalShiftOption() const { return myVerticalShiftOption; }
-	const ZLBoolean3Option &allowHyphenationsOption() const { return myAllowHyphenationsOption; }
+	const ZLStringOption &fontFamilyOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerOption &fontSizeDeltaOption() const TEXT_STYLE_SECTION;
+	const ZLBoolean3Option &boldOption() const TEXT_STYLE_SECTION;
+	const ZLBoolean3Option &italicOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerOption &verticalShiftOption() const TEXT_STYLE_SECTION;
+	const ZLBoolean3Option &allowHyphenationsOption() const TEXT_STYLE_SECTION;
 
-	bool isHyperlinkStyle() const { return myIsHyperlinkStyle; }
-	void setHyperlinkStyle() { myIsHyperlinkStyle = true; }
+	bool isHyperlinkStyle() const TEXT_STYLE_SECTION;
+	void setHyperlinkStyle() TEXT_STYLE_SECTION;
 
 private:
 	std::string myName;
@@ -154,18 +154,19 @@ class FullTextStyleDecoration : public TextStyleDecoration {
 
 public:
 	FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) TEXT_STYLE_SECTION;
+	~FullTextStyleDecoration() TEXT_STYLE_SECTION;
 
-	virtual bool isFullDecoration() const { return true; }
+	virtual bool isFullDecoration() const TEXT_STYLE_SECTION;
 
 	TextStyle *createDecoratedStyle(const TextStyle &base) const TEXT_STYLE_SECTION;
 
-	const ZLIntegerOption &spaceBeforeOption() const { return mySpaceBeforeOption; }
-	const ZLIntegerOption &spaceAfterOption() const { return mySpaceAfterOption; }
-	const ZLIntegerOption &leftIndentOption() const { return myLeftIndentOption; }
-	const ZLIntegerOption &rightIndentOption() const { return myRightIndentOption; }
-	const ZLIntegerOption &firstLineIndentDeltaOption() const { return myFirstLineIndentDeltaOption; }
-	const ZLIntegerOption &alignmentOption() const { return myAlignmentOption; }
-	const ZLDoubleOption &lineSpaceOption() const { return myLineSpaceOption; }
+	const ZLIntegerOption &spaceBeforeOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerOption &spaceAfterOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerOption &leftIndentOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerOption &rightIndentOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerOption &firstLineIndentDeltaOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerOption &alignmentOption() const TEXT_STYLE_SECTION;
+	const ZLDoubleOption &lineSpaceOption() const TEXT_STYLE_SECTION;
 
 private:
 	ZLIntegerOption mySpaceBeforeOption;
@@ -182,14 +183,14 @@ private:
 class DecoratedTextStyle : public TextStyle {
 
 protected:
-	DecoratedTextStyle(const TextStyle &base) : myBase(base) {}
+	DecoratedTextStyle(const TextStyle &base) TEXT_STYLE_SECTION;
 	virtual const TextStyleDecoration &decoration() const TEXT_STYLE_SECTION = 0;
 
 public:
-	virtual ~DecoratedTextStyle() {}
+	virtual ~DecoratedTextStyle() TEXT_STYLE_SECTION;
 
-	bool isDecorated() const { return true; }
-	const TextStyle &base() const { return myBase; }
+	bool isDecorated() const TEXT_STYLE_SECTION;
+	const TextStyle &base() const TEXT_STYLE_SECTION;
 
 	ZLColor color() const TEXT_STYLE_SECTION;
 
@@ -200,28 +201,29 @@ private:
 class PartialDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-	PartialDecoratedTextStyle(const TextStyle &base, const TextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
-	friend TextStyle *TextStyleDecoration::createDecoratedStyle(const TextStyle &base) const TEXT_STYLE_SECTION;
+	PartialDecoratedTextStyle(const TextStyle &base, const TextStyleDecoration &decoration) TEXT_STYLE_SECTION;
+	friend TextStyle *TextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
 
 public:
+	virtual ~PartialDecoratedTextStyle() TEXT_STYLE_SECTION;
 	const std::string &fontFamily() const TEXT_STYLE_SECTION;
 	int fontSize() const TEXT_STYLE_SECTION;
 	bool bold() const TEXT_STYLE_SECTION;
 	bool italic() const TEXT_STYLE_SECTION;
 
-	int spaceBefore() const { return base().spaceBefore(); }
-	int spaceAfter() const { return base().spaceAfter(); }
-	int leftIndent() const { return base().leftIndent(); }
-	int rightIndent() const { return base().rightIndent(); }
-	int firstLineIndentDelta() const { return base().firstLineIndentDelta(); }
-	int verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
+	int spaceBefore() const TEXT_STYLE_SECTION;
+	int spaceAfter() const TEXT_STYLE_SECTION;
+	int leftIndent() const TEXT_STYLE_SECTION;
+	int rightIndent() const TEXT_STYLE_SECTION;
+	int firstLineIndentDelta() const TEXT_STYLE_SECTION;
+	int verticalShift() const TEXT_STYLE_SECTION;
 
-	AlignmentType alignment() const { return base().alignment(); }
+	AlignmentType alignment() const TEXT_STYLE_SECTION;
 	bool allowHyphenations() const TEXT_STYLE_SECTION;
 
-	double lineSpace() const { return base().lineSpace(); }
+	double lineSpace() const TEXT_STYLE_SECTION;
 
-	const TextStyleDecoration &decoration() const { return myDecoration; }
+	const TextStyleDecoration &decoration() const TEXT_STYLE_SECTION;
 
 private:
 	const TextStyleDecoration &myDecoration;
@@ -230,28 +232,29 @@ private:
 class FullDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-	FullDecoratedTextStyle(const TextStyle &base, const FullTextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
-	friend TextStyle *FullTextStyleDecoration::createDecoratedStyle(const TextStyle &base) const TEXT_STYLE_SECTION;
+	FullDecoratedTextStyle(const TextStyle &base, const FullTextStyleDecoration &decoration) TEXT_STYLE_SECTION;
+	friend TextStyle *FullTextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
 
 public:
+	~FullDecoratedTextStyle() TEXT_STYLE_SECTION;
 	const std::string &fontFamily() const TEXT_STYLE_SECTION;
 	int fontSize() const TEXT_STYLE_SECTION;
 	bool bold() const TEXT_STYLE_SECTION;
 	bool italic() const TEXT_STYLE_SECTION;
 
-	int spaceBefore() const { return myDecoration.spaceBeforeOption().value(); }
-	int spaceAfter() const { return myDecoration.spaceAfterOption().value(); }
-	int leftIndent() const { return base().leftIndent() + myDecoration.leftIndentOption().value(); }
-	int rightIndent() const { return base().rightIndent() + myDecoration.rightIndentOption().value(); }
+	int spaceBefore() const TEXT_STYLE_SECTION;
+	int spaceAfter() const TEXT_STYLE_SECTION;
+	int leftIndent() const TEXT_STYLE_SECTION;
+	int rightIndent() const TEXT_STYLE_SECTION;
 	int firstLineIndentDelta() const TEXT_STYLE_SECTION;
-	int verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
+	int verticalShift() const TEXT_STYLE_SECTION;
 
 	AlignmentType alignment() const TEXT_STYLE_SECTION;
 	bool allowHyphenations() const TEXT_STYLE_SECTION;
 
-	double lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base().lineSpace() : space; }
+	double lineSpace() const TEXT_STYLE_SECTION;
 
-	const TextStyleDecoration &decoration() const { return myDecoration; }
+	const TextStyleDecoration &decoration() const TEXT_STYLE_SECTION;
 
 private:
 	const FullTextStyleDecoration &myDecoration;
@@ -260,14 +263,9 @@ private:
 class TextStyleCollection {
 
 public:
-	static TextStyleCollection &instance() {
-		if (ourInstance == 0) {
-			ourInstance = new TextStyleCollection();
-		}
-		return *ourInstance;
-	}
+	static TextStyleCollection &instance() TEXT_STYLE_SECTION;
 
-	BaseTextStyle &baseStyle() const { return *myBaseStyle; }
+	BaseTextStyle &baseStyle() const TEXT_STYLE_SECTION;
 	const TextStyleDecoration *decoration(TextKind kind) const TEXT_STYLE_SECTION;
 
 private:
@@ -284,5 +282,86 @@ private:
 	BaseTextStyle *myBaseStyle;
 	std::map<TextKind,TextStyleDecoration*> myDecorationMap;
 };
+
+inline TextStyle::TextStyle() {}
+inline TextStyle::~TextStyle() {}
+
+inline bool BaseTextStyle::isDecorated() const { return false; }
+inline ZLStringOption &BaseTextStyle::fontFamilyOption() const { return *myFontFamilyOption; }
+inline const std::string &BaseTextStyle::fontFamily() const { return fontFamilyOption().value(); }
+inline ZLIntegerOption &BaseTextStyle::fontSizeOption() const { return *myFontSizeOption; }
+inline int BaseTextStyle::fontSize() const { return fontSizeOption().value(); }
+inline ZLBooleanOption &BaseTextStyle::boldOption() const { return *myBoldOption; }
+inline bool BaseTextStyle::bold() const { return boldOption().value(); }
+inline ZLBooleanOption &BaseTextStyle::italicOption() const { return *myItalicOption; }
+inline bool BaseTextStyle::italic() const { return italicOption().value(); }
+inline int BaseTextStyle::spaceBefore() const { return 0; }
+inline int BaseTextStyle::spaceAfter() const { return 0; }
+inline int BaseTextStyle::leftIndent() const { return 0; }
+inline int BaseTextStyle::rightIndent() const { return 0; }
+inline int BaseTextStyle::firstLineIndentDelta() const { return 0; }
+inline int BaseTextStyle::verticalShift() const { return 0; }
+inline ZLIntegerOption &BaseTextStyle::alignmentOption() const { return *myAlignmentOption; }
+inline AlignmentType BaseTextStyle::alignment() const { return (AlignmentType)alignmentOption().value(); }
+inline ZLDoubleOption &BaseTextStyle::lineSpaceOption() const { return *myLineSpaceOption; }
+inline double BaseTextStyle::lineSpace() const { return lineSpaceOption().value(); }
+inline bool BaseTextStyle::allowHyphenations() const { return true; }
+
+inline TextStyleDecoration::~TextStyleDecoration() {}
+inline bool TextStyleDecoration::isFullDecoration() const { return false; }
+inline const std::string &TextStyleDecoration::name() const { return myName; }
+inline const ZLStringOption &TextStyleDecoration::fontFamilyOption() const { return myFontFamilyOption; }
+inline const ZLIntegerOption &TextStyleDecoration::fontSizeDeltaOption() const { return myFontSizeDeltaOption; }
+inline const ZLBoolean3Option &TextStyleDecoration::boldOption() const { return myBoldOption; }
+inline const ZLBoolean3Option &TextStyleDecoration::italicOption() const { return myItalicOption; }
+inline const ZLIntegerOption &TextStyleDecoration::verticalShiftOption() const { return myVerticalShiftOption; }
+inline const ZLBoolean3Option &TextStyleDecoration::allowHyphenationsOption() const { return myAllowHyphenationsOption; }
+inline bool TextStyleDecoration::isHyperlinkStyle() const { return myIsHyperlinkStyle; }
+inline void TextStyleDecoration::setHyperlinkStyle() { myIsHyperlinkStyle = true; }
+
+inline FullTextStyleDecoration::~FullTextStyleDecoration() {}
+inline bool FullTextStyleDecoration::isFullDecoration() const { return true; }
+inline const ZLIntegerOption &FullTextStyleDecoration::spaceBeforeOption() const { return mySpaceBeforeOption; }
+inline const ZLIntegerOption &FullTextStyleDecoration::spaceAfterOption() const { return mySpaceAfterOption; }
+inline const ZLIntegerOption &FullTextStyleDecoration::leftIndentOption() const { return myLeftIndentOption; }
+inline const ZLIntegerOption &FullTextStyleDecoration::rightIndentOption() const { return myRightIndentOption; }
+inline const ZLIntegerOption &FullTextStyleDecoration::firstLineIndentDeltaOption() const { return myFirstLineIndentDeltaOption; }
+inline const ZLIntegerOption &FullTextStyleDecoration::alignmentOption() const { return myAlignmentOption; }
+inline const ZLDoubleOption &FullTextStyleDecoration::lineSpaceOption() const { return myLineSpaceOption; }
+
+inline DecoratedTextStyle::DecoratedTextStyle(const TextStyle &base) : myBase(base) {}
+inline DecoratedTextStyle::~DecoratedTextStyle() {}
+inline bool DecoratedTextStyle::isDecorated() const { return true; }
+inline const TextStyle &DecoratedTextStyle::base() const { return myBase; }
+
+inline PartialDecoratedTextStyle::PartialDecoratedTextStyle(const TextStyle &base, const TextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
+inline PartialDecoratedTextStyle::~PartialDecoratedTextStyle() {}
+inline int PartialDecoratedTextStyle::spaceBefore() const { return base().spaceBefore(); }
+inline int PartialDecoratedTextStyle::spaceAfter() const { return base().spaceAfter(); }
+inline int PartialDecoratedTextStyle::leftIndent() const { return base().leftIndent(); }
+inline int PartialDecoratedTextStyle::rightIndent() const { return base().rightIndent(); }
+inline int PartialDecoratedTextStyle::firstLineIndentDelta() const { return base().firstLineIndentDelta(); }
+inline int PartialDecoratedTextStyle::verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
+inline AlignmentType PartialDecoratedTextStyle::alignment() const { return base().alignment(); }
+inline double PartialDecoratedTextStyle::lineSpace() const { return base().lineSpace(); }
+inline const TextStyleDecoration &PartialDecoratedTextStyle::decoration() const { return myDecoration; }
+
+inline FullDecoratedTextStyle::FullDecoratedTextStyle(const TextStyle &base, const FullTextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
+inline FullDecoratedTextStyle::~FullDecoratedTextStyle() {}
+inline int FullDecoratedTextStyle::spaceBefore() const { return myDecoration.spaceBeforeOption().value(); }
+inline int FullDecoratedTextStyle::spaceAfter() const { return myDecoration.spaceAfterOption().value(); }
+inline int FullDecoratedTextStyle::leftIndent() const { return base().leftIndent() + myDecoration.leftIndentOption().value(); }
+inline int FullDecoratedTextStyle::rightIndent() const { return base().rightIndent() + myDecoration.rightIndentOption().value(); }
+inline int FullDecoratedTextStyle::verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
+inline double FullDecoratedTextStyle::lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base().lineSpace() : space; }
+inline const TextStyleDecoration &FullDecoratedTextStyle::decoration() const { return myDecoration; }
+
+inline TextStyleCollection &TextStyleCollection::instance() {
+	if (ourInstance == 0) {
+		ourInstance = new TextStyleCollection();
+	}
+	return *ourInstance;
+}
+inline BaseTextStyle &TextStyleCollection::baseStyle() const { return *myBaseStyle; }
 
 #endif /* __TEXTSTYLE_H__ */

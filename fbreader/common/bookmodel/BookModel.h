@@ -24,6 +24,7 @@
 #include <string>
 
 #include "../model/TextModel.h"
+#include "../model/Paragraph.h"
 
 class BookDescription;
 class Image;
@@ -40,7 +41,7 @@ public:
 	const TextModel &contentsModel() const { return myContentsModel; }
 	const TextModel *footnoteModel(const std::string &id) const;
 
-	const Image *imageById(const std::string &id) const;
+	const ImageMap &imageMap() const { return myImages; }
 	int paragraphNumberById(const std::string &id) const;
 
 	const BookDescription &description() const { return *myDescription; }
@@ -49,7 +50,7 @@ private:
 	const BookDescription *myDescription;
 	PlainTextModel myBookTextModel;
 	PlainTextModel myContentsModel;
-	std::map<const std::string,Image*> myImages;
+	ImageMap myImages;
 	std::map<const std::string,PlainTextModel*> myFootnotes;
 	std::map<const std::string,int> myInternalHyperlinks;
 

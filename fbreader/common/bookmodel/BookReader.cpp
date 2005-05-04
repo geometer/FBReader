@@ -167,12 +167,12 @@ void BookReader::addImageToParagraph(const std::string &id) {
 	if (createSeparateParagraph) {
 		beginParagraph();
 		myCurrentParagraph->addControl(IMAGE, true);
-		myCurrentParagraph->addImage(id, myModel);
+		myCurrentParagraph->addImage(id, myModel.imageMap());
 		myCurrentParagraph->addControl(IMAGE, false);
 		endParagraph();
 	} else {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addImage(id, myModel);
+		myCurrentParagraph->addImage(id, myModel.imageMap());
 	}
 }
 

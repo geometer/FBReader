@@ -16,33 +16,28 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLSCREENSIZE_H__
-#define __ZLSCREENSIZE_H__
+#ifndef __PALMSCREENSIZE_H__
+#define __PALMSCREENSIZE_H__
 
-class ZLScreenSize {
+#include <abstract/ZLScreenSize.h>
+
+class PalmScreenSize : public ZLScreenSize {
 
 public:
-	enum Size {
-		SIZE_DESKTOP,
-		SIZE_240x320,
-		SIZE_320x320,
-		SIZE_640x480
-	};
+	static void createInstance() UTIL_SECTION;
 
-	static Size getSize() UTIL_SECTION;
-	static void deleteInstance() UTIL_SECTION;
+private:
+	PalmScreenSize() UTIL_SECTION;
 
+public:
+	~PalmScreenSize() UTIL_SECTION;
+	
 protected:
-	static ZLScreenSize *ourInstance;
-
-	ZLScreenSize() UTIL_SECTION;
-	virtual ~ZLScreenSize() UTIL_SECTION;
-	virtual Size getSizeInternal() const UTIL_SECTION = 0;
+	Size getSizeInternal() const UTIL_SECTION;
 };
 
-inline ZLScreenSize::Size ZLScreenSize::getSize() { return ourInstance->getSizeInternal(); }
-inline void ZLScreenSize::deleteInstance() { delete ourInstance; }
-inline ZLScreenSize::ZLScreenSize() {}
-inline ZLScreenSize::~ZLScreenSize() {}
+inline PalmScreenSize::PalmScreenSize() {}
+inline PalmScreenSize::~PalmScreenSize() {}
+inline void PalmScreenSize::createInstance() { ourInstance = new PalmScreenSize(); }
 
-#endif /* __ZLSCREENSIZE_H__ */
+#endif /* __PALMSCREENSIZE_H__ */

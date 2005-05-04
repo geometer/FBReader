@@ -43,6 +43,11 @@ void TextEntry::addText(const std::string &text) {
 	myText += text;
 }
 
+const Image *ImageEntry::image() const {
+	ImageMap::const_iterator i = myMap.find(myId);
+	return (i != myMap.end()) ? i->second : 0;
+}
+
 TreeParagraph::TreeParagraph(TreeParagraph *parent) : Paragraph(TREE_PARAGRAPH), myIsOpen(false), myParent(parent) {
 	if (parent != 0) {
 		parent->addChild(this);

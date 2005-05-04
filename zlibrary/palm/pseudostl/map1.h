@@ -33,9 +33,8 @@ namespace std {
 			size_t operator - (const const_iterator &it) const STL_SECTION;
 
 			pair<T1,T2> &operator * () const STL_SECTION;
-			/*
-			T *operator -> () const STL_SECTION;
-
+			pair<T1,T2> *operator -> () const STL_SECTION;
+		/*
 		private:
 			T *myPtr;
 		*/
@@ -60,9 +59,8 @@ namespace std {
 			size_t operator - (const const_iterator &it) const STL_SECTION;
 
 			const pair<T1,T2> &operator * () const STL_SECTION;
+			const pair<T1,T2> *operator -> () const STL_SECTION;
 	/*
-			const T *operator -> () const STL_SECTION;
-
 		private:
 			T *myPtr;
 	*/
@@ -225,15 +223,30 @@ namespace std {
 	inline size_t map<T1,T2>::const_iterator::operator - (const map<T1,T2>::const_iterator &it) const {
 		return myPtr - it.myPtr;
 	}
+	*/
 
 	template<typename T1, typename T2>
-	inline T &map<T1,T2>::iterator::operator * () const {
-		return *myPtr;
+	inline pair<T1,T2> &map<T1,T2>::iterator::operator * () const {
+		// TODO: implement
+		return *operator -> ();
 	}
 	template<typename T1, typename T2>
-	inline T *map<T1,T2>::iterator::operator -> () const {
-		return myPtr;
+	inline pair<T1,T2> *map<T1,T2>::iterator::operator -> () const {
+		// TODO: implement
+		return 0;
 	}
+	template<typename T1, typename T2>
+	inline const pair<T1,T2> &map<T1,T2>::const_iterator::operator * () const {
+		// TODO: implement
+		return *operator -> ();
+	}
+	template<typename T1, typename T2>
+	inline const pair<T1,T2> *map<T1,T2>::const_iterator::operator -> () const {
+		// TODO: implement
+		return 0;
+	}
+
+	/*
 	template<typename T1, typename T2>
 	inline const T &map<T1,T2>::const_iterator::operator * () const {
 		return *myPtr;

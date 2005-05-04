@@ -135,7 +135,6 @@ static Boolean ApplicationHandleEvent(EventPtr event) {
 	return false;
 }
 
-
 void EventLoop(void) {
 	EventType event;
 	UInt16 error;

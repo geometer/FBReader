@@ -36,7 +36,7 @@ BookModel::BookModel(const BookDescription *description) {
 BookModel::~BookModel() {
 	delete myDescription;
 
-	for (std::map<const std::string,Image*>::const_iterator it = myImages.begin(); it != myImages.end(); it++) {
+	for (ImageMap::const_iterator it = myImages.begin(); it != myImages.end(); it++) {
 		delete it->second;
 	}
 	for (std::map<const std::string,PlainTextModel*>::const_iterator it = myFootnotes.begin(); it != myFootnotes.end(); it++) {
@@ -48,18 +48,9 @@ const std::string &BookModel::fileName() const {
 	return myDescription->fileName();
 }
 
-const Image *BookModel::imageById(const std::string &id) const {
-	std::map<std::string,Image*>::const_iterator i = myImages.find(id);
-	return (i != myImages.end()) ? i->second : 0;
-}
-
 int BookModel::paragraphNumberById(const std::string &id) const {
 	std::map<std::string,int>::const_iterator i = myInternalHyperlinks.find(id);
 	return (i != myInternalHyperlinks.end()) ? i->second : -1;
-}
-
-const Image *ImageEntry::image() const {
-	return myModel.imageById(myId);
 }
 
 const TextModel *BookModel::footnoteModel(const std::string &id) const {

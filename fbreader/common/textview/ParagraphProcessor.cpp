@@ -35,6 +35,9 @@ ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragra
 	myOffset = 0;
 }
 
+ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
+}
+
 void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 	if (myWordCounter == 0) {
 		myElements.push_back(new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT));

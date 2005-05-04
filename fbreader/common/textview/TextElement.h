@@ -26,10 +26,10 @@
 class TextElement {
 
 protected:
-	TextElement() {}
+	TextElement() VIEW_SECTION;
 
 public:
-	virtual ~TextElement() {}
+	virtual ~TextElement() VIEW_SECTION;
 
 	enum Kind {
 		WORD_ELEMENT,
@@ -43,12 +43,12 @@ public:
 		TREE_ELEMENT,
 	};
 
-	virtual Kind kind() const = 0;
+	virtual Kind kind() const VIEW_SECTION = 0;
 
 private:
 	// assignment and copy constructor are disabled
-	TextElement(const TextElement&);
-	TextElement &operator = (const TextElement&);
+	TextElement(const TextElement&) VIEW_SECTION;
+	TextElement &operator = (const TextElement&) VIEW_SECTION;
 };
 
 class Image;
@@ -56,9 +56,10 @@ class Image;
 class ImageElement : public TextElement {
 
 public:
-	ImageElement(const Image &image) : myImage(image) {}
-	Kind kind() const { return IMAGE_ELEMENT; };
-	const Image &image() const { return myImage; }
+	ImageElement(const Image &image) VIEW_SECTION;
+	~ImageElement() VIEW_SECTION;
+	Kind kind() const VIEW_SECTION;
+	const Image &image() const VIEW_SECTION;
 
 private:
 	const Image &myImage;
@@ -67,8 +68,9 @@ private:
 class SpecialTextElement : public TextElement {
 
 public:
-	SpecialTextElement(Kind kind) : myKind(kind) {}
-	Kind kind() const { return myKind; };
+	SpecialTextElement(Kind kind) VIEW_SECTION;
+	~SpecialTextElement() VIEW_SECTION;
+	Kind kind() const VIEW_SECTION;
 
 private:
 	Kind myKind;
@@ -77,11 +79,12 @@ private:
 class ControlElement : public TextElement {
 
 public:
-	ControlElement(const ControlEntry &entry) : myEntry(entry) {}
-	Kind kind() const { return CONTROL_ELEMENT; };
-	const ControlEntry &entry() const { return myEntry; }
-	TextKind textKind() const { return myEntry.kind(); }
-	bool isStart() const { return myEntry.isStart(); }
+	ControlElement(const ControlEntry &entry) VIEW_SECTION;
+	~ControlElement() VIEW_SECTION;
+	Kind kind() const VIEW_SECTION;
+	const ControlEntry &entry() const VIEW_SECTION;
+	TextKind textKind() const VIEW_SECTION;
+	bool isStart() const VIEW_SECTION;
 
 private:
 	const ControlEntry &myEntry;
@@ -99,12 +102,37 @@ public:
 		TREE_ELEMENT_SKIP,
 	};
 
-	TreeElement(TreeElementKind treeElementKind) : myTreeElementKind(treeElementKind) {}
-	Kind kind() const { return TREE_ELEMENT; };
-	TreeElementKind treeElementKind() const { return myTreeElementKind; }
+	TreeElement(TreeElementKind treeElementKind) VIEW_SECTION;
+	~TreeElement() VIEW_SECTION;
+	Kind kind() const VIEW_SECTION;
+	TreeElementKind treeElementKind() const VIEW_SECTION;
 
 private:
 	TreeElementKind myTreeElementKind;
 };
+
+inline TextElement::TextElement() {}
+inline TextElement::~TextElement() {}
+
+inline ImageElement::ImageElement(const Image &image) : myImage(image) {}
+inline ImageElement::~ImageElement() {}
+inline TextElement::Kind ImageElement::kind() const { return IMAGE_ELEMENT; };
+inline const Image &ImageElement::image() const { return myImage; }
+
+inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
+inline SpecialTextElement::~SpecialTextElement() {}
+inline TextElement::Kind SpecialTextElement::kind() const { return myKind; };
+
+inline ControlElement::ControlElement(const ControlEntry &entry) : myEntry(entry) {}
+inline ControlElement::~ControlElement() {}
+inline TextElement::Kind ControlElement::kind() const { return CONTROL_ELEMENT; };
+inline const ControlEntry &ControlElement::entry() const { return myEntry; }
+inline TextKind ControlElement::textKind() const { return myEntry.kind(); }
+inline bool ControlElement::isStart() const { return myEntry.isStart(); }
+
+inline TreeElement::TreeElement(TreeElementKind treeElementKind) : myTreeElementKind(treeElementKind) {}
+inline TreeElement::~TreeElement() {}
+inline TextElement::Kind TreeElement::kind() const { return TREE_ELEMENT; };
+inline TreeElement::TreeElementKind TreeElement::treeElementKind() const { return myTreeElementKind; }
 
 #endif /* __TEXTELEMENT_H__ */

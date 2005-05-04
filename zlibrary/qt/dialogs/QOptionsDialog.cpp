@@ -117,6 +117,7 @@ QOptionsDialogTab::QOptionsDialogTab(QTabWidget *parent) : QWidget(parent) {
 		case ZLScreenSize::SIZE_640x480:
 			space = 10;
 			break;
+		case ZLScreenSize::SIZE_320x320:
 		case ZLScreenSize::SIZE_240x320:
 			space = 3;
 			break;

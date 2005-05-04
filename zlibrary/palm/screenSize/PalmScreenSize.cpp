@@ -16,33 +16,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLSCREENSIZE_H__
-#define __ZLSCREENSIZE_H__
+#include "PalmScreenSize.h"
 
-class ZLScreenSize {
-
-public:
-	enum Size {
-		SIZE_DESKTOP,
-		SIZE_240x320,
-		SIZE_320x320,
-		SIZE_640x480
-	};
-
-	static Size getSize() UTIL_SECTION;
-	static void deleteInstance() UTIL_SECTION;
-
-protected:
-	static ZLScreenSize *ourInstance;
-
-	ZLScreenSize() UTIL_SECTION;
-	virtual ~ZLScreenSize() UTIL_SECTION;
-	virtual Size getSizeInternal() const UTIL_SECTION = 0;
-};
-
-inline ZLScreenSize::Size ZLScreenSize::getSize() { return ourInstance->getSizeInternal(); }
-inline void ZLScreenSize::deleteInstance() { delete ourInstance; }
-inline ZLScreenSize::ZLScreenSize() {}
-inline ZLScreenSize::~ZLScreenSize() {}
-
-#endif /* __ZLSCREENSIZE_H__ */
+ZLScreenSize::Size PalmScreenSize::getSizeInternal() const {
+	// TODO: implement
+	return SIZE_320x320;
+}
