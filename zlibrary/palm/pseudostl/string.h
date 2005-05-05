@@ -2,15 +2,16 @@
 #define __STRING_H__
 
 #include <sys_types.h>
-#include <unix_string.h>
 #include <Core/System/StringMgr.h>
 #include <Core/System/MemoryMgr.h>
+
+#define		strncpy(x,y,z)		StrNCopy(x,y,z)
+#define		memset(x,y,z)			MemSet(x,z,y)
 
 namespace std {
 	class string {
 	
 	public:
-
 		string() STL_SECTION;
 		~string() STL_SECTION;
 		string(const string &s) STL_SECTION;

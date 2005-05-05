@@ -119,8 +119,8 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DFS_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DUTIL_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DMODEL_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DVIEW_SECTION="__attribute__ ((section(\"sec2\")))" \
+		-DMODEL_SECTION="__attribute__ ((section(\"sec2\")))" \
+		-DVIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
 		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DPALM_TEMPORARY \
 		-pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -Wno-non-template-friend

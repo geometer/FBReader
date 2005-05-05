@@ -27,9 +27,10 @@
 class Author;
 
 struct BookInfo {
-	BookInfo(const std::string &fileName);
+	BookInfo(const std::string &fileName) MODEL_SECTION;
+	~BookInfo() MODEL_SECTION;
 
-	bool isFull() const;
+	bool isFull() const MODEL_SECTION;
 
 	ZLStringOption AuthorDisplayNameOption;
 	ZLStringOption AuthorSortKeyOption;
@@ -41,18 +42,18 @@ struct BookInfo {
 class BookDescription {
 
 public:
-	static BookDescription *create(const std::string &fileName);
-	~BookDescription();
+	static BookDescription *create(const std::string &fileName) MODEL_SECTION;
+	~BookDescription() MODEL_SECTION;
 
 private:
-	BookDescription(const std::string &fileName);
+	BookDescription(const std::string &fileName) MODEL_SECTION;
 
 public:
-	const Author *author() const { return myAuthor; }
-	const std::string &title() const { return myTitle; }
-	const std::string &fileName() const { return myFileName; }
-	const std::string &language() const { return myLanguage; }
-	const std::string &encoding() const { return myEncoding; }
+	const Author *author() const MODEL_SECTION;
+	const std::string &title() const MODEL_SECTION;
+	const std::string &fileName() const MODEL_SECTION;
+	const std::string &language() const MODEL_SECTION;
+	const std::string &encoding() const MODEL_SECTION;
 
 private:
 	Author *myAuthor;
@@ -65,22 +66,38 @@ friend class WritableBookDescription;
 
 private:
 	// disable copying
-	BookDescription(const BookDescription &description);
-	const BookDescription &operator = (const BookDescription &description);
+	BookDescription(const BookDescription &description) MODEL_SECTION;
+	const BookDescription &operator = (const BookDescription &description) MODEL_SECTION;
 };
 
 class WritableBookDescription {
 
 public:
-	WritableBookDescription(BookDescription &description) : myDescription(description) {}
-	void addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName);
-	std::string &title() { return myDescription.myTitle; }
-	std::string &fileName() { return myDescription.myFileName; }
-	std::string &language() { return myDescription.myLanguage; }
-	std::string &encoding() { return myDescription.myEncoding; }
+	WritableBookDescription(BookDescription &description) MODEL_SECTION;
+	~WritableBookDescription() MODEL_SECTION;
+	void addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName) MODEL_SECTION;
+	std::string &title() MODEL_SECTION;
+	std::string &fileName() MODEL_SECTION;
+	std::string &language() MODEL_SECTION;
+	std::string &encoding() MODEL_SECTION;
 
 private:
 	BookDescription &myDescription;
 };
+
+inline BookInfo::~BookInfo() {}
+
+inline const Author *BookDescription::author() const { return myAuthor; }
+inline const std::string &BookDescription::title() const { return myTitle; }
+inline const std::string &BookDescription::fileName() const { return myFileName; }
+inline const std::string &BookDescription::language() const { return myLanguage; }
+inline const std::string &BookDescription::encoding() const { return myEncoding; }
+
+inline WritableBookDescription::WritableBookDescription(BookDescription &description) : myDescription(description) {}
+inline WritableBookDescription::~WritableBookDescription() {}
+inline std::string &WritableBookDescription::title() { return myDescription.myTitle; }
+inline std::string &WritableBookDescription::fileName() { return myDescription.myFileName; }
+inline std::string &WritableBookDescription::language() { return myDescription.myLanguage; }
+inline std::string &WritableBookDescription::encoding() { return myDescription.myEncoding; }
 
 #endif /* __BOOKDESCRIPTION_H__ */

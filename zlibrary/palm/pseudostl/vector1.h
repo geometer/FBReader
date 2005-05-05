@@ -2,6 +2,7 @@
 #define __VECTOR1_H__
 
 #include <sys_types.h>
+#include <Core/System/MemoryMgr.h>
 
 namespace std {
 
@@ -30,8 +31,10 @@ namespace std {
 
 		private:
 			T *myPtr;
+			iterator(T *ptr) STL_SECTION;
 
 		friend struct const_iterator;
+		friend class vector;
 		};
 
 		struct const_iterator {
@@ -55,8 +58,10 @@ namespace std {
 
 		private:
 			T *myPtr;
+			const_iterator(T *ptr) STL_SECTION;
 
 		friend struct iterator;
+		friend class vector;
 		};
 
 	public:
@@ -75,6 +80,7 @@ namespace std {
 		void clear() STL_SECTION;
 		void reserve(size_t size) STL_SECTION;
 		void push_back(const T &element) STL_SECTION;
+		void pop_back() STL_SECTION;
 		void insert(const iterator &position, const const_iterator &from, const const_iterator &to) STL_SECTION;
 		void swap(vector &v) STL_SECTION;
 
@@ -88,6 +94,8 @@ namespace std {
 	vector<T>::const_iterator upper_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) STL_SECTION;
 	template<typename T>
 	vector<T>::const_iterator lower_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) STL_SECTION;
+	template<typename T, typename S>
+	void sort(const vector<T>::iterator &start, const vector<T>::iterator &end, const S &comparator) STL_SECTION;
 
 	template<typename T>
 	inline vector<T>::vector() {
@@ -106,11 +114,19 @@ namespace std {
 	inline vector<T>::iterator::iterator() {
 	}
 	template<typename T>
+	inline vector<T>::iterator::iterator(T *ptr) {
+		myPtr = ptr;
+	}
+	template<typename T>
 	inline vector<T>::const_iterator::const_iterator() {
 	}
 	template<typename T>
 	inline vector<T>::const_iterator::const_iterator(const vector<T>::iterator &it) {
 		myPtr = it.myPtr;
+	}
+	template<typename T>
+	inline vector<T>::const_iterator::const_iterator(T *ptr) {
+		myPtr = ptr;
 	}
 
 	template<typename T>
@@ -224,53 +240,66 @@ namespace std {
 	}
 
 	template<typename T>
-	bool vector<T>::empty() const {
-		// TODO: implement
-		return true;
+	inline bool vector<T>::empty() const {
+		return myLength == 0;
 	}
 	template<typename T>
-	size_t vector<T>::size() const {
-		// TODO: implement
-		return 0;
+	inline size_t vector<T>::size() const {
+		return myLength;
 	}
 	template<typename T>
-	T& vector<T>::operator[] (size_t index) const {
-		// TODO: implement
-		return front();
+	inline T& vector<T>::operator[] (size_t index) const {
+		return myData[index];
 	}
 	template<typename T>
-	T& vector<T>::front() const {
-		// TODO: implement
-		return *begin();
+	inline T& vector<T>::front() const {
+		return myData[0];
 	}
 	template<typename T>
-	T& vector<T>::back() const {
-		// TODO: implement
-		return front();
+	inline T& vector<T>::back() const {
+		return myData[myLength - 1];
 	}
 
 	template<typename T>
-	vector<T>::iterator vector<T>::begin() const {
-		// TODO: implement
-		return iterator();
+	inline vector<T>::iterator vector<T>::begin() const {
+		return iterator(myData);
 	}
 	template<typename T>
-	vector<T>::iterator vector<T>::end() const {
-		// TODO: implement
-		return iterator();
+	inline vector<T>::iterator vector<T>::end() const {
+		return iterator(myData + myLength - 1);
 	}
 
 	template<typename T>
 	inline void vector<T>::clear() {
-		// TODO: implement
+		myLength = 0;
 	}
 	template<typename T>
 	inline void vector<T>::reserve(size_t size) {
-		// TODO: implement
+		if (size > myDataSize) {
+			if (size | 0xf) {
+				size = (size & (size_t)-0x10) + 0x10;
+			}
+			myDataSize = size;
+			// TODO: use MemPtrResize
+			T *d = (T*)MemPtrNew(myDataSize * sizeof(T));
+			for (size_t i = 0; i < myLength; i++) {
+				d[i] = myData[i];
+			}
+			if (myData != 0) {
+				MemPtrFree(myData);
+			}
+			myData = d;
+		}
 	}
 	template<typename T>
 	inline void vector<T>::push_back(const T &element) {
-		// TODO: implement
+		reserve(myLength + 1);
+		myData[myLength] = element;
+		myLength++;
+	}
+	template<typename T>
+	inline void vector<T>::pop_back() {
+		myLength--;
 	}
 	template<typename T>
 	inline void vector<T>::insert(const vector<T>::iterator &position, const vector<T>::const_iterator &from, const vector<T>::const_iterator &to) {
@@ -278,7 +307,9 @@ namespace std {
 	}
 	template<typename T>
 	inline void vector<T>::swap(vector<T>::vector &v) {
-		// TODO: implement
+		int l = myLength; myLength = v.myLength; v.myLength = l;
+		int ds = myDataSize; myDataSize = v.myDataSize; v.myDataSize = ds;
+		T *d = myData; myData = v.myData; v.myData = d;
 	}
 
 	template<typename T>
@@ -290,6 +321,10 @@ namespace std {
 	inline vector<T>::const_iterator lower_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) {
 		// TODO: implement
 		return start;
+	}
+	template<typename T, typename S>
+	inline void sort(const vector<T>::iterator &start, const vector<T>::iterator &end, const S &comparator) {
+		// TODO: implement
 	}
 };
 

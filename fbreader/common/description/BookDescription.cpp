@@ -17,9 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <sys/stat.h>
-
 #include <abstract/ZLOptions.h>
+#include <abstract/ZLFSManager.h>
 
 #include "BookDescription.h"
 #include "Author.h"
@@ -43,16 +42,18 @@ bool BookInfo::isFull() const {
 }
 
 BookDescription *BookDescription::create(const std::string &fileName) {
-	BookDescription *description = new BookDescription(fileName);
-
-	BookInfo info(fileName);
-
 	std::string realFileName = fileName.substr(0, fileName.find(':'));
+	ZLFileInfo fileInfo = ZLFSManager::instance().fileInfo(realFileName);
+	if (!fileInfo.Exists) {
+		return 0;
+	}
+
+	BookDescription *description = new BookDescription(fileName);
+	BookInfo info(fileName);
 	ZLIntegerOption FileSizeOption(realFileName, "Size", -1);
 	ZLIntegerOption FileMTimeOption(realFileName, "MTime", -1);
-	struct stat fileStat;
-	stat(realFileName.c_str(), &fileStat);
-	if ((fileStat.st_size == FileSizeOption.value()) && (fileStat.st_mtime == FileMTimeOption.value())) {
+
+	if (((int)fileInfo.Size == FileSizeOption.value()) && ((int)fileInfo.MTime == FileMTimeOption.value())) {
 		if (info.isFull()) {
 			description->myAuthor = new StoredAuthor(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
 			description->myTitle = info.TitleOption.value();
@@ -61,15 +62,19 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 			return description;
 		}
 	} else {
-		FileSizeOption.setValue(fileStat.st_size);
-		FileMTimeOption.setValue(fileStat.st_mtime);
+		FileSizeOption.setValue(fileInfo.Size);
+		FileMTimeOption.setValue(fileInfo.MTime);
 	}
 
+#ifndef PALM_TEMPORARY
+	
 	FormatPlugin *plugin = PluginCollection::instance().plugin(fileName, false);
 	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
 		delete description;
 		return 0;
 	}
+
+#endif // PALM_TEMPORARY
 
 	if (description->myTitle.empty()) {
 		int slashPos = fileName.find('/');

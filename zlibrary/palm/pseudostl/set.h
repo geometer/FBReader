@@ -23,7 +23,7 @@
 
 #include <tree.h>
 
-template <class Key, class Compare>
+template <class Key, class Compare = less<Key> >
 class set {
 public:
 // typedefs:
@@ -66,8 +66,8 @@ public:
     value_compare value_comp() const { return t.key_comp(); }
     iterator begin() const { return t.begin(); }
     iterator end() const { return t.end(); }
-    reverse_iterator rbegin() const { return t.rbegin(); } 
-    reverse_iterator rend() const { return t.rend(); }
+    //reverse_iterator rbegin() const { return t.rbegin(); } 
+    //reverse_iterator rend() const { return t.rend(); }
     bool empty() const { return t.empty(); }
     size_type size() const { return t.size(); }
     size_type max_size() const { return t.max_size(); }

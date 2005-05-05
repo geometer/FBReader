@@ -1,7 +1,0 @@
-#ifndef __LIST__
-#define __LIST__
-
-#include <list.h>
-
-#endif /* __LIST__ */
-

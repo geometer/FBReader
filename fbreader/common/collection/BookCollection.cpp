@@ -75,17 +75,24 @@ BookCollection::BookCollection() {
 
 	BookList bookList;
 	const std::set<std::string> &bookListSet = bookList.fileNames();
-	fileNamesSet.insert(bookListSet.begin(), bookListSet.end());
+	//fileNamesSet.insert(bookListSet.begin(), bookListSet.end());
+	for (std::set<std::string>::const_iterator it = bookListSet.begin(); it != bookListSet.end(); it++) {
+		fileNamesSet.insert(*it);
+	}
 
 	for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); it++) {
 		addDescription(BookDescription::create(*it));
 	}
 
+#ifndef PALM_TEMPORARY
+	
 	std::sort(myAuthors.begin(), myAuthors.end(), AuthorComparator());
 	DescriptionComparator descriptionComparator;
 	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
 		std::sort(it->second.begin(), it->second.end(), descriptionComparator);
 	}
+
+#endif // PALM_TEMPORARY
 
 	myForgottenBook = 0;
 }
@@ -130,7 +137,7 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 
 BookCollection::~BookCollection() {
 	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
-		for (Books::iterator jt = it->second.begin(); jt != it->second.end(); jt++) {
+		for (Books::iterator jt = (*it).second.begin(); jt != (*it).second.end(); jt++) {
 			if (*jt != myForgottenBook) {
 				delete *jt;
 			}
@@ -149,13 +156,13 @@ void BookCollection::addDescription(BookDescription *description) {
 
 	std::map<const Author*,Books>::iterator it = myCollection.begin();
 	for (; it != myCollection.end(); it++) {
-		const Author *author1 = it->first;
+		const Author *author1 = (*it).first;
 		if ((author1->sortKey() == sortKey) && (author1->displayName() == displayName)) {
 			break;
 		}
 	}
 	if (it != myCollection.end()) {
-		it->second.push_back(description);
+		(*it).second.push_back(description);
 	} else {
 		Books books;
 		books.push_back(description);

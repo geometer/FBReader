@@ -139,7 +139,7 @@ private:
 };
 
 inline ZLColor::ZLColor(unsigned char r, unsigned char g, unsigned char b) : Red(r), Green(g), Blue(b) {}
-inline ZLColor::ZLColor(long longValue = 0) : Red(longValue >> 16), Green((longValue >> 8) & 0xFF), Blue(longValue & 0xFF) {}
+inline ZLColor::ZLColor(long longValue) : Red(longValue >> 16), Green((longValue >> 8) & 0xFF), Blue(longValue & 0xFF) {}
 inline ZLColor::~ZLColor() {}
 inline long ZLColor::intValue() { return (((long)Red) << 16) + (((long)Green) << 8) + Blue; }
 

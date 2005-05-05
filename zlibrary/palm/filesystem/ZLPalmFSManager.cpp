@@ -53,3 +53,10 @@ ZLInputStream *ZLPalmFSManager::createInputStream(const std::string &name) {
 ZLOutputStream *ZLPalmFSManager::createOutputStream(const std::string &name) {
 	return new ZLPalmFileOutputStream(name);
 }
+
+ZLFileInfo ZLPalmFSManager::fileInfo(std::string &name) {
+	// TODO: implement
+	ZLFileInfo info;
+	info.Exists = true;
+	return info;
+}

@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "string.h"
 
 // TODO: optimize (use more palm-specific functions, e.g., instead of new and delete[])
@@ -50,6 +52,17 @@ namespace std {
 		return *this;
 	}
 
+	const string &string::operator = (const char *s) {
+		myLength = 0;
+		size_t len = StrLen(s);
+		if (len > 0) {
+			reserve(len);
+			myLength = len;
+			StrNCopy(myData, s, myLength);
+		}
+		return *this;
+	}
+
 	void string::reserve(size_t minSize) {
 		if (minSize > myDataSize) {
 			if (minSize | 0xf) {
@@ -72,6 +85,17 @@ namespace std {
 			return false;
 		}
 		return StrNCompare(myData, s.myData, myLength) == 0;
+	}
+
+	bool string::operator < (const string &s) const {
+		size_t len = std::min(myLength, s.myLength);
+		int result = StrNCompare(myData, s.myData, len);
+		if (result < 0) {
+			return true;
+		} else if (result == 0) {
+			return myLength < s.myLength;
+		}
+		return false;
 	}
 
 	void string::append(const char *s, size_t len) {

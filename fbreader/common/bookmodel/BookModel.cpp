@@ -27,20 +27,22 @@
 
 BookModel::BookModel(const BookDescription *description) {
 	myDescription = description;
+#ifndef PALM_TEMPORARY
 	FormatPlugin *plugin = PluginCollection::instance().plugin(description->fileName(), false);
 	if (plugin != 0) {
 		plugin->readModel(*description, *this);
 	}
+#endif // PALM_TEMPORARY
 }
 
 BookModel::~BookModel() {
 	delete myDescription;
 
 	for (ImageMap::const_iterator it = myImages.begin(); it != myImages.end(); it++) {
-		delete it->second;
+		delete (*it).second;
 	}
 	for (std::map<const std::string,PlainTextModel*>::const_iterator it = myFootnotes.begin(); it != myFootnotes.end(); it++) {
-		delete it->second;
+		delete (*it).second;
 	}
 }
 
@@ -49,11 +51,11 @@ const std::string &BookModel::fileName() const {
 }
 
 int BookModel::paragraphNumberById(const std::string &id) const {
-	std::map<std::string,int>::const_iterator i = myInternalHyperlinks.find(id);
-	return (i != myInternalHyperlinks.end()) ? i->second : -1;
+	std::map<const std::string,int>::const_iterator it = myInternalHyperlinks.find(id);
+	return (it != myInternalHyperlinks.end()) ? (*it).second : -1;
 }
 
 const TextModel *BookModel::footnoteModel(const std::string &id) const {
-	std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.find(id);
-	return (it != myFootnotes.end()) ? it->second : 0;
+	std::map<const std::string,PlainTextModel*>::const_iterator it = myFootnotes.find(id);
+	return (it != myFootnotes.end()) ? (*it).second : 0;
 }

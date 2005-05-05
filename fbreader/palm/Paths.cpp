@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -16,25 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLUNIXFSMANAGER_H__
-#define __ZLUNIXFSMANAGER_H__
+#include "../common/collection/BookCollection.h"
 
-#include <abstract/ZLFSManager.h>
-
-class ZLUnixFSManager : public ZLFSManager {
-
-public:
-	static void createInstance() { ourInstance = new ZLUnixFSManager(); }
-	
-private:
-	ZLUnixFSManager() {}
-	
-public:
-	void normalize(std::string &fileName);
-	ZLFSDir *createDirectory(const std::string &name);
-	ZLInputStream *createInputStream(const std::string &name);
-	ZLOutputStream *createOutputStream(const std::string &name);
-	ZLFileInfo fileInfo(std::string &name);
-};
-
-#endif /* __ZLUNIXFSMANAGER_H__ */
+ZLStringOption BookCollection::PathOption("Options", "BookPath", "/FBooks");

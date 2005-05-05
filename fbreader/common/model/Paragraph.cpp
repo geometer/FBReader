@@ -45,7 +45,7 @@ void TextEntry::addText(const std::string &text) {
 
 const Image *ImageEntry::image() const {
 	ImageMap::const_iterator i = myMap.find(myId);
-	return (i != myMap.end()) ? i->second : 0;
+	return (i != myMap.end()) ? (*i).second : 0;
 }
 
 TreeParagraph::TreeParagraph(TreeParagraph *parent) : Paragraph(TREE_PARAGRAPH), myIsOpen(false), myParent(parent) {

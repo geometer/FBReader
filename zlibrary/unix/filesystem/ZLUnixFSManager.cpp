@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <sys/stat.h>
+
 #include "ZLUnixFSManager.h"
 #include "ZLUnixFSDir.h"
 #include "ZLUnixFileInputStream.h"
@@ -62,4 +64,15 @@ ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &name) {
 	std::string fName = name;
 	normalize(fName);
 	return new ZLUnixFileOutputStream(fName);
+}
+
+ZLFileInfo ZLUnixFSManager::fileInfo(std::string &name) {
+	ZLFileInfo info;
+	struct stat fileStat;
+	info.Exists = stat(name.c_str(), &fileStat) == 0;
+	if (info.Exists) {
+		info.Size = fileStat.st_size;
+		info.MTime = fileStat.st_mtime;
+	}
+	return info;
 }

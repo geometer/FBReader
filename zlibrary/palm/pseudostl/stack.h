@@ -24,8 +24,8 @@ class stack {
 friend bool operator==(const stack<Container>& x, const stack<Container>& y);
 friend bool operator<(const stack<Container>& x, const stack<Container>& y);
 public:
-    typedef Container::value_type value_type;
-    typedef Container::size_type size_type;
+    typedef typename Container::value_type value_type;
+    typedef typename Container::size_type size_type;
 protected:
     Container c;
 public:
@@ -52,8 +52,8 @@ class queue {
 friend bool operator==(const queue<Container>& x, const queue<Container>& y);
 friend bool operator<(const queue<Container>& x, const queue<Container>& y);
 public:
-    typedef Container::value_type value_type;
-    typedef Container::size_type size_type;
+    typedef typename Container::value_type value_type;
+    typedef typename Container::size_type size_type;
 protected:
     Container c;
 public:
@@ -81,8 +81,8 @@ template <class Container, class Compare>
 // Compare = less<Container::value_type> >
 class  priority_queue {
 public:
-    typedef Container::value_type value_type;
-    typedef Container::size_type size_type;
+    typedef typename Container::value_type value_type;
+    typedef typename Container::size_type size_type;
 protected:
     Container c;
     Compare comp;

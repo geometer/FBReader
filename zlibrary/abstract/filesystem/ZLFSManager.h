@@ -25,6 +25,12 @@ class ZLFSDir;
 class ZLInputStream;
 class ZLOutputStream;
 
+struct ZLFileInfo {
+	bool Exists;
+	unsigned long MTime;
+	unsigned long Size;
+};
+
 class ZLFSManager {
 
 public:
@@ -40,6 +46,7 @@ public:
 	virtual ZLFSDir *createDirectory(const std::string &name) FS_SECTION = 0;
 	virtual ZLInputStream *createInputStream(const std::string &name) FS_SECTION = 0;
 	virtual ZLOutputStream *createOutputStream(const std::string &name) FS_SECTION = 0;
+	virtual ZLFileInfo fileInfo(std::string &name) FS_SECTION = 0;
 
 protected:
 	static ZLFSManager *ourInstance;

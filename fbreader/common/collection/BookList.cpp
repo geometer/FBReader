@@ -30,7 +30,9 @@ BookList::BookList() {
 	int size = ZLIntegerOption(GROUP, SIZE, 0).value();
 	char optionName[12];
 	for (int i = 0; i < size; i++) {
+#ifndef PALM_TEMPORARY
 		sprintf(optionName, "Book%d", i);
+#endif
 		ZLStringOption bookOption(GROUP, optionName, "");
 		const std::string &fileName = bookOption.value();
 		if (!fileName.empty()) {
@@ -44,7 +46,9 @@ BookList::~BookList() {
 	int i = 0;
 	char optionName[12];
 	for (std::set<std::string>::const_iterator it = myFileNames.begin(); it != myFileNames.end(); i++, it++) {
+#ifndef PALM_TEMPORARY
 		sprintf(optionName, "Book%d", i);
+#endif
 		ZLStringOption(GROUP, optionName, "").setValue(*it);
 	}
 }

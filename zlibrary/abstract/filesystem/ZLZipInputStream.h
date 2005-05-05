@@ -21,7 +21,6 @@
 
 #define NOZLIBDEFS
 #include <zlib.h>
-#include <list>
 
 #include "ZLInputStream.h"
 
