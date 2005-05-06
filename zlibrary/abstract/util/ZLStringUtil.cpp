@@ -38,3 +38,16 @@ bool ZLStringUtil::stringEndsWith(const std::string &str, const std::string &end
 		(str.compare(str.length() - end.length(), end.length(), end) == 0);
 #endif
 }
+
+void ZLStringUtil::appendNumber(std::string &str, unsigned int n) {
+	int len = 1;
+	unsigned int base = 10;
+	for (; base <= n; base *= 10) {
+		len++;
+	}
+	str.reserve(str.length() + len);
+	for (base /= 10; base > 0; base /= 10) {
+		str += (char)(n / base + '0');
+		n %= 10;
+	}
+}

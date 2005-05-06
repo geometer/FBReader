@@ -33,7 +33,9 @@ class BookDescription;
 class DescriptionComparator {
 
 public:
-	bool operator() (const BookDescription *d1, const BookDescription *d2);
+	DescriptionComparator() MODEL_SECTION;
+	~DescriptionComparator() MODEL_SECTION;
+	bool operator() (const BookDescription *d1, const BookDescription *d2) MODEL_SECTION;
 };
 
 class BookCollection {
@@ -43,19 +45,19 @@ public:
 	static ZLBooleanOption ScanSubdirsOption;
 
 public:
-	BookCollection();
-	~BookCollection();
+	BookCollection() MODEL_SECTION;
+	~BookCollection() MODEL_SECTION;
 
-	const std::vector<const Author*> &authors() const { return myAuthors; }
-	const std::vector<BookDescription*> &books(const Author *author) { return (*myCollection.find(author)).second; }
+	const std::vector<const Author*> &authors() const MODEL_SECTION;
+	const std::vector<BookDescription*> &books(const Author *author) MODEL_SECTION;
 
-	bool isActual() const;
+	bool isActual() const MODEL_SECTION;
 
-	void forget(BookDescription *description) { myForgottenBook = description; }
+	void forget(BookDescription *description) MODEL_SECTION;
 	
 private:
-	void collectDirNames(std::set<std::string> &names);
-	void addDescription(BookDescription *description);
+	void collectDirNames(std::set<std::string> &names) MODEL_SECTION;
+	void addDescription(BookDescription *description) MODEL_SECTION;
 
 private:
 	typedef std::vector<BookDescription*> Books;
@@ -67,5 +69,12 @@ private:
 	bool myScanSubdirs;
 	BookDescription *myForgottenBook;
 };
+
+inline DescriptionComparator::DescriptionComparator() {}
+inline DescriptionComparator::~DescriptionComparator() {}
+
+inline const std::vector<const Author*> &BookCollection::authors() const { return myAuthors; }
+inline const std::vector<BookDescription*> &BookCollection::books(const Author *author) { return (*myCollection.find(author)).second; }
+inline void BookCollection::forget(BookDescription *description) { myForgottenBook = description; }
 
 #endif /* __BOOKCOLLECTION_H__ */

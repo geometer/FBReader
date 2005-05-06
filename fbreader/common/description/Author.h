@@ -139,4 +139,6 @@ inline AuthorComparator::AuthorComparator() {}
 inline AuthorComparator::~AuthorComparator() {}
 inline bool AuthorComparator::operator() (const Author *a1, const Author *a2) { return a1->sortKey() < a2->sortKey(); }
 
+//inline bool operator < (const Author *a1, const Author *a2) { return a1->sortKey() < a2->sortKey(); }
+
 #endif /* __AUTHOR_H__ */

@@ -75,7 +75,6 @@ BookCollection::BookCollection() {
 
 	BookList bookList;
 	const std::set<std::string> &bookListSet = bookList.fileNames();
-	//fileNamesSet.insert(bookListSet.begin(), bookListSet.end());
 	for (std::set<std::string>::const_iterator it = bookListSet.begin(); it != bookListSet.end(); it++) {
 		fileNamesSet.insert(*it);
 	}
@@ -84,15 +83,11 @@ BookCollection::BookCollection() {
 		addDescription(BookDescription::create(*it));
 	}
 
-#ifndef PALM_TEMPORARY
-	
 	std::sort(myAuthors.begin(), myAuthors.end(), AuthorComparator());
 	DescriptionComparator descriptionComparator;
 	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
-		std::sort(it->second.begin(), it->second.end(), descriptionComparator);
+		std::sort((*it).second.begin(), (*it).second.end(), descriptionComparator);
 	}
-
-#endif // PALM_TEMPORARY
 
 	myForgottenBook = 0;
 }

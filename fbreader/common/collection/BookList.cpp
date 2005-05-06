@@ -17,22 +17,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <stdio.h>
-
 #include <abstract/ZLOptions.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "BookList.h"
 
 static std::string GROUP = "BookList";
+static std::string BOOK = "Book";
 static std::string SIZE = "Size";
 
 BookList::BookList() {
 	int size = ZLIntegerOption(GROUP, SIZE, 0).value();
-	char optionName[12];
 	for (int i = 0; i < size; i++) {
-#ifndef PALM_TEMPORARY
-		sprintf(optionName, "Book%d", i);
-#endif
+		std::string optionName = BOOK;
+		ZLStringUtil::appendNumber(optionName, i);
 		ZLStringOption bookOption(GROUP, optionName, "");
 		const std::string &fileName = bookOption.value();
 		if (!fileName.empty()) {
@@ -44,11 +42,9 @@ BookList::BookList() {
 BookList::~BookList() {
 	ZLIntegerOption(GROUP, SIZE, 0).setValue(myFileNames.size());
 	int i = 0;
-	char optionName[12];
 	for (std::set<std::string>::const_iterator it = myFileNames.begin(); it != myFileNames.end(); i++, it++) {
-#ifndef PALM_TEMPORARY
-		sprintf(optionName, "Book%d", i);
-#endif
+		std::string optionName = BOOK;
+		ZLStringUtil::appendNumber(optionName, i);
 		ZLStringOption(GROUP, optionName, "").setValue(*it);
 	}
 }

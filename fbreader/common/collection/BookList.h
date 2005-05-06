@@ -26,15 +26,17 @@
 class BookList {
 
 public:
-	BookList();
-	~BookList();
+	BookList() MODEL_SECTION;
+	~BookList() MODEL_SECTION;
 
-	const std::set<std::string> &fileNames() const { return myFileNames; }
-	void addFileName(const std::string &fileName);
-	void removeFileName(const std::string &fileName);
+	const std::set<std::string> &fileNames() const MODEL_SECTION;
+	void addFileName(const std::string &fileName) MODEL_SECTION;
+	void removeFileName(const std::string &fileName) MODEL_SECTION;
 
 private:
 	std::set<std::string> myFileNames;
 };
+
+inline const std::set<std::string> &BookList::fileNames() const { return myFileNames; }
 
 #endif /* __BOOKLIST_H__ */

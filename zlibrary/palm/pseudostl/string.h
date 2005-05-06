@@ -49,6 +49,8 @@ namespace std {
 		size_t myLength;
 		size_t myDataSize;
 		char *myData;
+
+	friend const string operator + (const char *s0, const string &s1) STL_SECTION;
 	};
 
 	const string operator + (const char *s0, const string &s1) STL_SECTION;

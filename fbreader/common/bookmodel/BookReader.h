@@ -34,36 +34,36 @@ class ZLInputStream;
 class BookReader {
 
 protected:
-	BookReader(BookModel &model);
+	BookReader(BookModel &model) MODEL_SECTION;
 
 public:
-	virtual ~BookReader() {}
+	virtual ~BookReader() MODEL_SECTION;
 
 protected:
-	void setMainTextModel();
-	void setFootnoteTextModel(const std::string &id);
-	void unsetTextModel();
-	bool currentTextModelIsNull() const;
+	void setMainTextModel() MODEL_SECTION;
+	void setFootnoteTextModel(const std::string &id) MODEL_SECTION;
+	void unsetTextModel() MODEL_SECTION;
+	bool currentTextModelIsNull() const MODEL_SECTION;
 
-	void insertEndOfSectionParagraph();
-	void pushKind(TextKind kind);
-	void popKind();
-	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH);
-	void endParagraph();
-	void addControl(TextKind kind, bool start);
-	void addHyperlinkControl(TextKind kind, const std::string &label);
-	void addHyperlinkLabel(const std::string &label);
+	void insertEndOfSectionParagraph() MODEL_SECTION;
+	void pushKind(TextKind kind) MODEL_SECTION;
+	void popKind() MODEL_SECTION;
+	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH) MODEL_SECTION;
+	void endParagraph() MODEL_SECTION;
+	void addControl(TextKind kind, bool start) MODEL_SECTION;
+	void addHyperlinkControl(TextKind kind, const std::string &label) MODEL_SECTION;
+	void addHyperlinkLabel(const std::string &label) MODEL_SECTION;
 
-	void addImageToParagraph(const std::string &id);
-	void addImageToModel(const std::string &id, Image *image);
+	void addImageToParagraph(const std::string &id) MODEL_SECTION;
+	void addImageToModel(const std::string &id, Image *image) MODEL_SECTION;
 
-	void beginContentsParagraph();
-	void endContentsParagraph();
+	void beginContentsParagraph() MODEL_SECTION;
+	void endContentsParagraph() MODEL_SECTION;
 
-	void addDataToBuffer(const std::string &data);
-	void addDataToBuffer(const char *data, int len);
-	virtual void flushTextBufferToParagraph();
-	void flushTextBufferToImage();
+	void addDataToBuffer(const std::string &data) MODEL_SECTION;
+	void addDataToBuffer(const char *data, int len) MODEL_SECTION;
+	virtual void flushTextBufferToParagraph() MODEL_SECTION;
+	void flushTextBufferToImage() MODEL_SECTION;
 
 private:
 	BookModel &myModel;
@@ -83,5 +83,7 @@ protected:
 
 	bool myInsideTitle;
 };
+
+inline BookReader::~BookReader() {}
 
 #endif /* __BOOKREADER_H__ */

@@ -17,8 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <stdio.h>
-
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLDialogManager.h>
 
@@ -41,8 +39,8 @@ static const std::string WORD_OPTION_NAME = "Word";
 static const std::string CHAR_OPTION_NAME = "Char";
 static const std::string BUFFER_SIZE = "UndoBufferSize";
 static const std::string POSITION_IN_BUFFER = "PositionInBuffer";
-static const char * const BUFFER_PARAGRAPH_PATTERN = "Paragraph_%i";
-static const char * const BUFFER_WORD_PATTERN = "Word_%i";
+static const char * const BUFFER_PARAGRAPH_PREFIX = "Paragraph_";
+static const char * const BUFFER_WORD_PREFIX = "Word_";
 
 void BookTextView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
@@ -68,18 +66,16 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 		}
 		myCurrentPointInStack = pointInStack;
 
-		char *bufferParagraph = new char[strlen(BUFFER_PARAGRAPH_PATTERN) + 5];
-		char *bufferWord = new char[strlen(BUFFER_WORD_PATTERN) + 5];
 		for (int i = 0; i < stackSize; i++) {
-			sprintf(bufferParagraph, BUFFER_PARAGRAPH_PATTERN, i);
-			sprintf(bufferWord, BUFFER_WORD_PATTERN, i);
+			std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
+			std::string bufferWord = BUFFER_WORD_PREFIX;
+			ZLStringUtil::appendNumber(bufferParagraph, i);
+			ZLStringUtil::appendNumber(bufferWord, i);
 			std::pair<int,int> pos;
 			pos.first = ZLIntegerOption(myName, bufferParagraph, -1).value();
 			pos.second = ZLIntegerOption(myName, bufferWord, -1).value();
 			myPositionStack.push_back(pos);
 		}
-		delete[] bufferWord;
-		delete[] bufferParagraph;
 	}
 }
 
@@ -94,16 +90,14 @@ void BookTextView::saveState() {
 	ZLIntegerOption(myName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
 	ZLIntegerOption(myName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
-	char *bufferParagraph = new char[strlen(BUFFER_PARAGRAPH_PATTERN) + 5];
-	char *bufferWord = new char[strlen(BUFFER_WORD_PATTERN) + 5];
 	for (unsigned int i = 0; i < myPositionStack.size(); i++) {
-		sprintf(bufferParagraph, BUFFER_PARAGRAPH_PATTERN, i);
-		sprintf(bufferWord, BUFFER_WORD_PATTERN, i);
+		std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
+		std::string bufferWord = BUFFER_WORD_PREFIX;
+		ZLStringUtil::appendNumber(bufferParagraph, i);
+		ZLStringUtil::appendNumber(bufferWord, i);
 		ZLIntegerOption(myName, bufferParagraph, -1).setValue(myPositionStack[i].first);
 		ZLIntegerOption(myName, bufferWord, -1).setValue(myPositionStack[i].second);
 	}
-	delete[] bufferWord;
-	delete[] bufferParagraph;
 }
 
 void BookTextView::pushCurrentPositionIntoStack() {

@@ -32,19 +32,19 @@ class Image;
 class BookModel {
 
 public:
-	BookModel(const BookDescription *description);
-	~BookModel();
+	BookModel(const BookDescription *description) MODEL_SECTION;
+	~BookModel() MODEL_SECTION;
 
-	const std::string &fileName() const;
+	const std::string &fileName() const MODEL_SECTION;
 
-	const TextModel &bookTextModel() const { return myBookTextModel; }
-	const TextModel &contentsModel() const { return myContentsModel; }
-	const TextModel *footnoteModel(const std::string &id) const;
+	const TextModel &bookTextModel() const MODEL_SECTION;
+	const TextModel &contentsModel() const MODEL_SECTION;
+	const TextModel *footnoteModel(const std::string &id) const MODEL_SECTION;
 
-	const ImageMap &imageMap() const { return myImages; }
-	int paragraphNumberById(const std::string &id) const;
+	const ImageMap &imageMap() const MODEL_SECTION;
+	int paragraphNumberById(const std::string &id) const MODEL_SECTION;
 
-	const BookDescription &description() const { return *myDescription; }
+	const BookDescription &description() const MODEL_SECTION;
 
 private:
 	const BookDescription *myDescription;
@@ -56,5 +56,10 @@ private:
 
 friend class BookReader;
 };
+
+inline const TextModel &BookModel::bookTextModel() const { return myBookTextModel; }
+inline const TextModel &BookModel::contentsModel() const { return myContentsModel; }
+inline const ImageMap &BookModel::imageMap() const { return myImages; }
+inline const BookDescription &BookModel::description() const { return *myDescription; }
 
 #endif /* __BOOKMODEL_H__ */

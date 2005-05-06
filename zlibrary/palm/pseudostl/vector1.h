@@ -30,7 +30,7 @@ namespace std {
 			T *operator -> () const STL_SECTION;
 
 		private:
-			T *myPtr;
+			T *__myPtr;
 			iterator(T *ptr) STL_SECTION;
 
 		friend struct const_iterator;
@@ -57,7 +57,7 @@ namespace std {
 			const T *operator -> () const STL_SECTION;
 
 		private:
-			T *myPtr;
+			T *__myPtr;
 			const_iterator(T *ptr) STL_SECTION;
 
 		friend struct iterator;
@@ -85,28 +85,28 @@ namespace std {
 		void swap(vector &v) STL_SECTION;
 
 	private:
-		size_t myDataSize;
-		size_t myLength;
-		T *myData;
+		size_t __myDataSize;
+		size_t __myLength;
+		T *__myData;
 	};
 
 	template<typename T>
 	vector<T>::const_iterator upper_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) STL_SECTION;
 	template<typename T>
 	vector<T>::const_iterator lower_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) STL_SECTION;
-	template<typename T, typename S>
-	void sort(const vector<T>::iterator &start, const vector<T>::iterator &end, const S &comparator) STL_SECTION;
+	template<typename Iterator, typename Comparator>
+	void sort(const Iterator &startIterator, const Iterator &endIterator, const Comparator &comparator) STL_SECTION;
 
 	template<typename T>
 	inline vector<T>::vector() {
-		myDataSize = 0;
-		myLength = 0;
-		myData = 0;
+		__myDataSize = 0;
+		__myLength = 0;
+		__myData = 0;
 	}
 	template<typename T>
 	inline vector<T>::~vector() {
-		if (myData != 0) {
-			delete[] myData;
+		if (__myData != 0) {
+			delete[] __myData;
 		}
 	}
 
@@ -115,35 +115,35 @@ namespace std {
 	}
 	template<typename T>
 	inline vector<T>::iterator::iterator(T *ptr) {
-		myPtr = ptr;
+		__myPtr = ptr;
 	}
 	template<typename T>
 	inline vector<T>::const_iterator::const_iterator() {
 	}
 	template<typename T>
 	inline vector<T>::const_iterator::const_iterator(const vector<T>::iterator &it) {
-		myPtr = it.myPtr;
+		__myPtr = it.__myPtr;
 	}
 	template<typename T>
 	inline vector<T>::const_iterator::const_iterator(T *ptr) {
-		myPtr = ptr;
+		__myPtr = ptr;
 	}
 
 	template<typename T>
 	inline bool vector<T>::iterator::operator == (const vector<T>::iterator &it) const {
-		return myPtr == it.myPtr;
+		return __myPtr == it.__myPtr;
 	}
 	template<typename T>
 	inline bool vector<T>::iterator::operator == (const vector<T>::const_iterator &it) const {
-		return myPtr == it.myPtr;
+		return __myPtr == it.__myPtr;
 	}
 	template<typename T>
 	inline bool vector<T>::const_iterator::operator == (const vector<T>::iterator &it) const {
-		return myPtr == it.myPtr;
+		return __myPtr == it.__myPtr;
 	}
 	template<typename T>
 	inline bool vector<T>::const_iterator::operator == (const vector<T>::const_iterator &it) const {
-		return myPtr == it.myPtr;
+		return __myPtr == it.__myPtr;
 	}
 
 	template<typename T>
@@ -165,141 +165,141 @@ namespace std {
 
 	template<typename T>
 	inline const vector<T>::iterator &vector<T>::iterator::operator ++ (int) {
-		myPtr++;
+		__myPtr++;
 		return *this;
 	}
 	template<typename T>
 	inline const vector<T>::iterator &vector<T>::iterator::operator += (size_t offset) {
-		myPtr += offset;
+		__myPtr += offset;
 		return *this;
 	}
 	template<typename T>
 	inline const vector<T>::iterator &vector<T>::iterator::operator -- (int) {
-		myPtr--;
+		__myPtr--;
 		return *this;
 	}
 	template<typename T>
 	inline const vector<T>::iterator &vector<T>::iterator::operator + (size_t offset) const {
 		iterator it = *this;
-		it.myPtr += offset;
+		it.__myPtr += offset;
 		return it;
 	}
 	template<typename T>
 	inline size_t vector<T>::iterator::operator - (const vector<T>::iterator &it) const {
-		return myPtr - it.myPtr;
+		return __myPtr - it.__myPtr;
 	}
 	template<typename T>
 	inline size_t vector<T>::iterator::operator - (const vector<T>::const_iterator &it) const {
-		return myPtr - it.myPtr;
+		return __myPtr - it.__myPtr;
 	}
 	template<typename T>
 	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator ++ (int) {
-		myPtr++;
+		__myPtr++;
 		return *this;
 	}
 	template<typename T>
 	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator += (size_t offset) {
-		myPtr += offset;
+		__myPtr += offset;
 		return *this;
 	}
 	template<typename T>
 	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator -- (int) {
-		myPtr--;
+		__myPtr--;
 		return *this;
 	}
 	template<typename T>
 	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator + (size_t offset) const {
 		const_iterator it = *this;
-		it.myPtr += offset;
+		it.__myPtr += offset;
 		return it;
 	}
 	template<typename T>
 	inline size_t vector<T>::const_iterator::operator - (const vector<T>::iterator &it) const {
-		return myPtr - it.myPtr;
+		return __myPtr - it.__myPtr;
 	}
 	template<typename T>
 	inline size_t vector<T>::const_iterator::operator - (const vector<T>::const_iterator &it) const {
-		return myPtr - it.myPtr;
+		return __myPtr - it.__myPtr;
 	}
 
 	template<typename T>
 	inline T &vector<T>::iterator::operator * () const {
-		return *myPtr;
+		return *__myPtr;
 	}
 	template<typename T>
 	inline T *vector<T>::iterator::operator -> () const {
-		return myPtr;
+		return __myPtr;
 	}
 	template<typename T>
 	inline const T &vector<T>::const_iterator::operator * () const {
-		return *myPtr;
+		return *__myPtr;
 	}
 	template<typename T>
 	inline const T *vector<T>::const_iterator::operator -> () const {
-		return myPtr;
+		return __myPtr;
 	}
 
 	template<typename T>
 	inline bool vector<T>::empty() const {
-		return myLength == 0;
+		return __myLength == 0;
 	}
 	template<typename T>
 	inline size_t vector<T>::size() const {
-		return myLength;
+		return __myLength;
 	}
 	template<typename T>
 	inline T& vector<T>::operator[] (size_t index) const {
-		return myData[index];
+		return __myData[index];
 	}
 	template<typename T>
 	inline T& vector<T>::front() const {
-		return myData[0];
+		return __myData[0];
 	}
 	template<typename T>
 	inline T& vector<T>::back() const {
-		return myData[myLength - 1];
+		return __myData[__myLength - 1];
 	}
 
 	template<typename T>
 	inline vector<T>::iterator vector<T>::begin() const {
-		return iterator(myData);
+		return iterator(__myData);
 	}
 	template<typename T>
 	inline vector<T>::iterator vector<T>::end() const {
-		return iterator(myData + myLength - 1);
+		return iterator(__myData + __myLength - 1);
 	}
 
 	template<typename T>
 	inline void vector<T>::clear() {
-		myLength = 0;
+		__myLength = 0;
 	}
 	template<typename T>
 	inline void vector<T>::reserve(size_t size) {
-		if (size > myDataSize) {
+		if (size > __myDataSize) {
 			if (size | 0xf) {
 				size = (size & (size_t)-0x10) + 0x10;
 			}
-			myDataSize = size;
+			__myDataSize = size;
 			// TODO: use MemPtrResize
-			T *d = (T*)MemPtrNew(myDataSize * sizeof(T));
-			for (size_t i = 0; i < myLength; i++) {
-				d[i] = myData[i];
+			T *d = (T*)MemPtrNew(__myDataSize * sizeof(T));
+			for (size_t i = 0; i < __myLength; i++) {
+				d[i] = __myData[i];
 			}
-			if (myData != 0) {
-				MemPtrFree(myData);
+			if (__myData != 0) {
+				MemPtrFree(__myData);
 			}
-			myData = d;
+			__myData = d;
 		}
 	}
 	template<typename T>
 	inline void vector<T>::push_back(const T &element) {
-		reserve(myLength + 1);
-		myData[myLength] = element;
-		myLength++;
+		reserve(__myLength + 1);
+		__myData[__myLength] = element;
+		__myLength++;
 	}
 	template<typename T>
 	inline void vector<T>::pop_back() {
-		myLength--;
+		__myLength--;
 	}
 	template<typename T>
 	inline void vector<T>::insert(const vector<T>::iterator &position, const vector<T>::const_iterator &from, const vector<T>::const_iterator &to) {
@@ -307,9 +307,9 @@ namespace std {
 	}
 	template<typename T>
 	inline void vector<T>::swap(vector<T>::vector &v) {
-		int l = myLength; myLength = v.myLength; v.myLength = l;
-		int ds = myDataSize; myDataSize = v.myDataSize; v.myDataSize = ds;
-		T *d = myData; myData = v.myData; v.myData = d;
+		int l = __myLength; __myLength = v.__myLength; v.__myLength = l;
+		int ds = __myDataSize; __myDataSize = v.__myDataSize; v.__myDataSize = ds;
+		T *d = __myData; __myData = v.__myData; v.__myData = d;
 	}
 
 	template<typename T>
@@ -322,8 +322,8 @@ namespace std {
 		// TODO: implement
 		return start;
 	}
-	template<typename T, typename S>
-	inline void sort(const vector<T>::iterator &start, const vector<T>::iterator &end, const S &comparator) {
+	template<typename Iterator, typename Comparator>
+	void sort(const Iterator &startIterator, const Iterator &endIterator, const Comparator &comparator) {
 		// TODO: implement
 	}
 };

@@ -2,7 +2,6 @@
 
 #include "string.h"
 
-// TODO: optimize (use more palm-specific functions, e.g., instead of new and delete[])
 namespace std {
 
 	string::string() {
@@ -69,6 +68,7 @@ namespace std {
 				minSize = (minSize & (size_t)-0x10) + 0x10;
 			}
 			myDataSize = minSize;
+			// TODO: use MemPtrResize
 			char *d = (char*)MemPtrNew(myDataSize);
 			if (myLength > 0) {
 				StrNCopy(d, myData, myLength);
@@ -192,17 +192,30 @@ namespace std {
 	}
 
 	const string string::operator + (const string &s) const {
-		// TODO: implement
-		return *this;
+		string sum;
+		sum.reserve(myLength + s.myLength);
+		StrNCopy(sum.myData, myData, myLength);
+		StrNCopy(sum.myData + myLength, s.myData, s.myLength);
+		sum.myLength = myLength + s.myLength;
+		return sum;
 	}
 
 	const string string::operator + (char c) const {
-		// TODO: implement
-		return *this;
+		string sum;
+		sum.reserve(myLength + 1);
+		StrNCopy(sum.myData, myData, myLength);
+		sum.myData[myLength] = c;
+		sum.myLength = myLength + 1;
+		return sum;
 	}
 
 	const string operator + (const char *s0, const string &s1) {
-		// TODO: implement
-		return s1;
+		string sum;
+		int len0 = StrLen(s0);
+		sum.reserve(len0 + s1.myLength);
+		StrNCopy(sum.myData, s0, len0);
+		StrNCopy(sum.myData + len0, s1.myData, s1.myLength);
+		sum.myLength = len0 + s1.myLength;
+		return sum;
 	}
 };
