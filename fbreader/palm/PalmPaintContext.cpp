@@ -130,7 +130,7 @@ int PalmPaintContext::stringHeight() const {
 void PalmPaintContext::drawString(int x, int y, const std::string &str, int from, int len) {
 	//QString qStr = QString::fromUtf8(str.data() + from, len);
 	//myPainter->drawText(x + leftMargin().value(), y + topMargin().value(), qStr);
-	WinDrawChars(str.data() + from, len, x + leftMargin().value(), y + topMargin().value());
+	WinDrawChars(str.data() + from, len, x + leftMargin().value() + 1, y + topMargin().value());
 }
 
 /*
@@ -164,12 +164,16 @@ void PalmPaintContext::drawImage(int x, int y, const Image &image) {
 }
 
 void PalmPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	WinDrawLine(x0 + leftMargin().value(), y0 + topMargin().value(),
-							x1 + leftMargin().value(), y1 + topMargin().value());
+	WinDrawLine(x0 + leftMargin().value() + 1, y0 + topMargin().value(),
+							x1 + leftMargin().value() + 1, y1 + topMargin().value());
 }
 
 void PalmPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	RectangleType r;
+	x0 += leftMargin().value() + 1;
+	x1 += leftMargin().value() + 1;
+	y0 += topMargin().value();
+	y1 += topMargin().value();
 	if (x0 < x1) {
 		r.topLeft.x = x0;
 		r.extent.x = x1 - x0 + 1;

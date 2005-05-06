@@ -15,22 +15,22 @@ ifeq "$(TARGET_ARCH)" "zaurus-cacko"
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
 	QTSUBDIRS = qt/dialogs qt/screenSize
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
 	GTKSUBDIRS = gtk/dialogs gtk/screenSize
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-qt"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
 	QTSUBDIRS = qt/dialogs qt/screenSize
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml desktop/options desktop/dialogs abstract/screenSize unix/filesystem
 	GTKSUBDIRS = gtk/dialogs gtk/screenSize
 endif
 
