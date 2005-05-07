@@ -85,7 +85,6 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		}
 	} while (!current.sameElementAs(end));
 
-#ifndef PALM_TEMPORARY
 	if (TextView::AutoHyphenationOption.value() && myStyle.style().allowHyphenations()) {
 		if (!current.sameElementAs(end) && (current.element().kind() == TextElement::WORD_ELEMENT)) {
 			newWidth -= myStyle.elementWidth(current);
@@ -116,7 +115,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 			}
 		}
 	}
-#endif // PALM_TEMPORARY
+
 	if (removeLastSpace) {
 		myWidth -= lastSpaceWidth;
 		mySpaceCounter--;
