@@ -47,6 +47,7 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 						char txt[10];
 						int size = istream->read(txt, 6);
 						context.drawString(10, 10, txt, 0, size);
+						WinPaintChar(0x0431, 10, 50);
 						istream->close();
 					}
 					delete istream;

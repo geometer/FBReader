@@ -25,10 +25,14 @@ class ZLDir;
 
 class ZLFileHandler {
 
+protected:
+	ZLFileHandler() DIALOG_SECTION;
+	virtual ~ZLFileHandler() DIALOG_SECTION;
+	
 public:
-	virtual bool isFileVisible(const std::string &shortFileName, bool dir) const = 0;
-	virtual const std::string &pixmapName(const std::string &shortFileName, bool dir) const = 0;
-	virtual void accept(const std::string &fullFileName, bool dir) const = 0;
+	virtual bool isFileVisible(const std::string &shortFileName, bool dir) const DIALOG_SECTION = 0;
+	virtual const std::string &pixmapName(const std::string &shortFileName, bool dir) const DIALOG_SECTION = 0;
+	virtual void accept(const std::string &fullFileName, bool dir) const DIALOG_SECTION = 0;
 };
 
 class ZLOpenFileDialog {
@@ -37,15 +41,19 @@ public:
 	static ZLStringOption DirectoryOption;
 
 protected:
-	ZLOpenFileDialog(const ZLFileHandler &handler);
-	~ZLOpenFileDialog();
+	ZLOpenFileDialog(const ZLFileHandler &handler) DIALOG_SECTION;
+	~ZLOpenFileDialog() DIALOG_SECTION;
 
 protected:
 	ZLDir *myCurrentDir;
-	const ZLFileHandler &handler() const { return myHandler; }
+	const ZLFileHandler &handler() const DIALOG_SECTION;
 
 private:
 	const ZLFileHandler &myHandler;
 };
+
+inline ZLFileHandler::ZLFileHandler() {}
+inline ZLFileHandler::~ZLFileHandler() {}
+inline const ZLFileHandler &ZLOpenFileDialog::handler() const { return myHandler; }
 
 #endif /* __ZLOPENFILEDIALOG_H__ */

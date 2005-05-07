@@ -33,15 +33,15 @@ class TreeParagraph;
 class CollectionView : public TextView {
 
 public:
-	CollectionView(FBReader &reader, PaintContext &context);
-	~CollectionView();
-	const std::string &caption() const;
+	CollectionView(FBReader &reader, PaintContext &context) FB_VIEW_SECTION;
+	~CollectionView() FB_VIEW_SECTION;
+	const std::string &caption() const FB_VIEW_SECTION;
 
-	void fill();
-	void gotoParagraph(int num, bool last = false);
-	bool onStylusPress(int x, int y);
+	void fill() FB_VIEW_SECTION;
+	void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
+	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
 
-	void paint();
+	void paint() FB_VIEW_SECTION;
 
 private:
 	FBReader &myReader;

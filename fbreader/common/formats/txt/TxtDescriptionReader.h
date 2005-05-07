@@ -26,18 +26,22 @@
 class TxtDescriptionReader : public TxtReader {
 
 public:
-	TxtDescriptionReader(BookDescription &description);
+	TxtDescriptionReader(BookDescription &description) FORMATS_SECTION;
+	~TxtDescriptionReader() FORMATS_SECTION;
 
 protected:
-	void startDocumentHandler();
-	void endDocumentHandler();
+	void startDocumentHandler() FORMATS_SECTION;
+	void endDocumentHandler() FORMATS_SECTION;
 
-	bool characterDataHandler(const char *text, int len);
-	bool newLineHandler() { return true; }
+	bool characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	bool newLineHandler() FORMATS_SECTION;
 
 private:
 	bool myReadTitle;
 	WritableBookDescription myDescription;
 };
+
+inline TxtDescriptionReader::~TxtDescriptionReader() {}
+inline bool TxtDescriptionReader::newLineHandler() { return true; }
 
 #endif /* __TXTDESCRIPTIONREADER_H__ */

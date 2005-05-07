@@ -66,15 +66,11 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 		FileMTimeOption.setValue(fileInfo.MTime);
 	}
 
-#ifndef PALM_TEMPORARY
-	
 	FormatPlugin *plugin = PluginCollection::instance().plugin(fileName, false);
 	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
 		delete description;
 		return 0;
 	}
-
-#endif // PALM_TEMPORARY
 
 	if (description->myTitle.empty()) {
 		int slashPos = fileName.find('/');

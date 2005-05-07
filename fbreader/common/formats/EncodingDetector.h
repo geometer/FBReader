@@ -25,7 +25,12 @@ class ZLInputStream;
 class EncodingDetector {
 
 public:
-	static std::string detect(ZLInputStream &stream);
+	EncodingDetector() FORMATS_SECTION;
+	~EncodingDetector() FORMATS_SECTION;
+	static std::string detect(ZLInputStream &stream) FORMATS_SECTION;
 };
+
+inline EncodingDetector::EncodingDetector() {}
+inline EncodingDetector::~EncodingDetector() {}
 
 #endif /* __ENCODINGDETECTOR_H__ */

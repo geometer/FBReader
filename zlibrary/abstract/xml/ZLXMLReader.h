@@ -29,9 +29,9 @@ class ZLInputStream;
 class ZLXMLReader {
 
 public:
-	static void setEncodingDescriptionPath(const std::string &path);
-	static std::string &encodingDescriptionPath() { return ourEncodingDescriptionPath; }
-	static std::vector<std::string> &knownEncodings() { return ourKnownEncodings; }
+	static void setEncodingDescriptionPath(const std::string &path) XML_SECTION;
+	static std::string &encodingDescriptionPath() XML_SECTION;
+	static std::vector<std::string> &knownEncodings() XML_SECTION;
 
 private:
 	static std::string ourEncodingDescriptionPath;
@@ -46,22 +46,22 @@ public:
 	};
 
 protected:
-	ZLXMLReader(const char *encoding = 0);
-	virtual ~ZLXMLReader();
+	ZLXMLReader(const char *encoding = 0) XML_SECTION;
+	virtual ~ZLXMLReader() XML_SECTION;
 
-	virtual const Tag *tags() const = 0;
+	virtual const Tag *tags() const XML_SECTION = 0;
 
 public:
-	bool readDocument(ZLInputStream &stream);
+	bool readDocument(ZLInputStream &stream) XML_SECTION;
 
-	int tag(const char *name);
+	int tag(const char *name) XML_SECTION;
 
-	virtual void startElementHandler(int tag, const char **attributes) = 0;
-	virtual void endElementHandler(int tag) = 0;
-	virtual void characterDataHandler(const char *text, int len) = 0;
+	virtual void startElementHandler(int tag, const char **attributes) XML_SECTION = 0;
+	virtual void endElementHandler(int tag) XML_SECTION = 0;
+	virtual void characterDataHandler(const char *text, int len) XML_SECTION = 0;
 
 protected:
-	virtual const std::vector<std::string> &externalDTDs() const;
+	virtual const std::vector<std::string> &externalDTDs() const XML_SECTION;
 
 protected:
 	bool myDoBreak;
@@ -71,5 +71,8 @@ private:
 	char *myParserBuffer;
 	bool myInitialized;
 };
+
+inline std::string &ZLXMLReader::encodingDescriptionPath() { return ourEncodingDescriptionPath; }
+inline std::vector<std::string> &ZLXMLReader::knownEncodings() { return ourKnownEncodings; }
 
 #endif /* __ZLXMLREADER_H__ */

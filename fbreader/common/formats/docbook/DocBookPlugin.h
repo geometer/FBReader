@@ -25,11 +25,17 @@
 class DocBookPlugin : public FormatPlugin {
 
 public:
-	bool containsMetaInfo() const { return true; }
-	bool acceptsFile(const std::string &fileName) const;
-	bool readDescription(const std::string &fileName, BookDescription &description) const;
-	bool readModel(const BookDescription &description, BookModel &model) const;
-	const std::string &iconName() const;
+	DocBookPlugin() FORMATS_SECTION;
+	~DocBookPlugin() FORMATS_SECTION;
+	bool providesMetaInfo() const FORMATS_SECTION;
+	bool acceptsFile(const std::string &fileName) const FORMATS_SECTION;
+	bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION;
+	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
+	const std::string &iconName() const FORMATS_SECTION;
 };
+
+inline DocBookPlugin::DocBookPlugin() {}
+inline DocBookPlugin::~DocBookPlugin() {}
+inline bool DocBookPlugin::providesMetaInfo() const { return true; }
 
 #endif /* __DOCBOOKPLUGIN_H__ */

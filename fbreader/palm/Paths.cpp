@@ -17,6 +17,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include "../common/hyphenation/TeXHyphenator.h"
+#include "../common/formats/docbook/DocBookReader.h"
 #include "../common/collection/BookCollection.h"
+#include "../common/fbreader/FBReader.h"
 
+std::string TeXHyphenator::PatternZip("/FBReader/hyphenationPatterns.zip");
+std::string DocBookReader::DTDDirectory("/FBReader/formats/docbook");
+std::string FBReader::HelpDirectory("/FBReader/help");
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "/FBooks");

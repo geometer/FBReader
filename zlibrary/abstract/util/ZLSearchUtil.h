@@ -24,13 +24,14 @@
 class ZLSearchPattern {
 
 public:
-	ZLSearchPattern(const std::string &pattern, bool ignoreCase);
-	int length() const { return myLowerCasePattern.length(); }
+	ZLSearchPattern(const std::string &pattern, bool ignoreCase) UTIL_SECTION;
+	~ZLSearchPattern() UTIL_SECTION;
+	int length() const UTIL_SECTION;
 
 private:
-	bool ignoreCase() const { return myIgnoreCase; }
-	const std::string &lowerCasePattern() const { return myLowerCasePattern; }
-	const std::string &upperCasePattern() const { return myUpperCasePattern; }
+	bool ignoreCase() const UTIL_SECTION;
+	const std::string &lowerCasePattern() const UTIL_SECTION;
+	const std::string &upperCasePattern() const UTIL_SECTION;
 
 private:
 	bool myIgnoreCase;
@@ -48,5 +49,11 @@ private:
 public:
 	static int find(const std::string &text, const ZLSearchPattern &pattern, int pos = 0) UTIL_SECTION;
 };
+
+inline ZLSearchPattern::~ZLSearchPattern() {}
+inline int ZLSearchPattern::length() const { return myLowerCasePattern.length(); }
+inline bool ZLSearchPattern::ignoreCase() const { return myIgnoreCase; }
+inline const std::string &ZLSearchPattern::lowerCasePattern() const { return myLowerCasePattern; }
+inline const std::string &ZLSearchPattern::upperCasePattern() const { return myUpperCasePattern; }
 
 #endif /* __ZLSEARCHUTIL_H__ */

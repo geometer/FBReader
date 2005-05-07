@@ -7,6 +7,7 @@ namespace std {
 
 	template<typename T1, typename T2>
 	struct pair {
+		pair() STL_SECTION;
 		pair(const T1 &f, const T2 &s) STL_SECTION;
 		T1 first;
 		T2 second;
@@ -74,7 +75,7 @@ namespace std {
 
 		bool empty() const STL_SECTION;
 		size_t size() const STL_SECTION;
-		//T2 &operator[] (const T1 &key) const STL_SECTION;
+		T2 &operator[] (const T1 &key) const STL_SECTION;
 		iterator find(const T1 &key) const STL_SECTION;
 	/*
 		T& front() const STL_SECTION;
@@ -100,6 +101,9 @@ namespace std {
 		T *myData;
 	*/
 	};
+
+	template<typename T1, typename T2>
+	inline pair<T1,T2>::pair() {}
 
 	template<typename T1, typename T2>
 	inline pair<T1,T2>::pair(const T1 &f, const T2 &s) : first(f), second(s) {}
@@ -294,6 +298,11 @@ namespace std {
 		return iterator();
 	}
 
+	template<typename T1, typename T2>
+	inline T2 &map<T1,T2>::operator[] (const T1 &key) const {
+		// TODO: implement
+		return find(key)->second;
+	}
 	template<typename T1, typename T2>
 	inline map<T1,T2>::iterator map<T1,T2>::find(const T1 &key) const {
 		// TODO: implement

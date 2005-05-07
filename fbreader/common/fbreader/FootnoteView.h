@@ -25,12 +25,18 @@
 class FootnoteView : public TextView {
 
 public:
-	FootnoteView(PaintContext &context) : TextView(context) {}
-	const std::string &caption() const { return myCaption; }
-	void setCaption(const std::string &caption) { myCaption = caption; }
+	FootnoteView(PaintContext &context) FB_VIEW_SECTION;
+	~FootnoteView() FB_VIEW_SECTION;
+	const std::string &caption() const FB_VIEW_SECTION;
+	void setCaption(const std::string &caption) FB_VIEW_SECTION;
 
 private:
 	std::string myCaption;
 };
+
+FootnoteView::FootnoteView(PaintContext &context) : TextView(context) {}
+FootnoteView::~FootnoteView() {}
+const std::string &FootnoteView::caption() const { return myCaption; }
+void FootnoteView::setCaption(const std::string &caption) { myCaption = caption; }
 
 #endif /* __FOOTNOTEVIEW_H__ */

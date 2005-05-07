@@ -27,19 +27,23 @@ class ZLFileHandler;
 class ZLDialogManager {
 
 public:
-	static ZLDialogManager &instance() { return *ourInstance; } 
-	static void deleteInstance() { delete ourInstance; }
+	static ZLDialogManager &instance() DIALOG_SECTION;
+	static void deleteInstance() DIALOG_SECTION;
 
 protected:
 	static ZLDialogManager *ourInstance;
 
 protected:
-	virtual ~ZLDialogManager() {}
+	virtual ~ZLDialogManager() DIALOG_SECTION;
 
 public:
-	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const = 0;
-	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const = 0;
-	virtual void openFileDialog(const std::string &title, const ZLFileHandler &handler) const = 0;
+	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const DIALOG_SECTION = 0;
+	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const DIALOG_SECTION = 0;
+	virtual void openFileDialog(const std::string &title, const ZLFileHandler &handler) const DIALOG_SECTION = 0;
 };
+
+inline ZLDialogManager &ZLDialogManager::instance() { return *ourInstance; } 
+inline void ZLDialogManager::deleteInstance() { delete ourInstance; }
+inline ZLDialogManager::~ZLDialogManager() {}
 
 #endif /* __ZLDIALOGMANAGER_H__ */

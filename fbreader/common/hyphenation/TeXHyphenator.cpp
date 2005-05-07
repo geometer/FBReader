@@ -107,11 +107,13 @@ void TeXHyphenator::hyphenate(unsigned short *ucs2String, bool *mask, int length
 	for (int j = 0; j < length - 2; j++) {
 		for (int k = 1; k <= length - j; k++) {
 			TeXHyphenationPattern pattern(ucs2String + j, k);
+#ifndef PALM_TEMPORARY
 			TeXHyphenator::PatternIterator dictionaryPattern =
 				std::lower_bound(myPatternTable.begin(), myPatternTable.end(), &pattern, TeXPatternComparator());
 			if ((dictionaryPattern != myPatternTable.end()) && !TeXPatternComparator()(&pattern, *dictionaryPattern)) {
 				(*dictionaryPattern)->apply(values + j);
 			}
+#endif // PALM_TEMPORARY
 		}
 	}
 

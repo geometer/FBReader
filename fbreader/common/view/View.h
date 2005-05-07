@@ -28,16 +28,17 @@ class PaintContext;
 class ViewWidget {
 
 protected:
-	ViewWidget() : myIsRotated(false) {}
+	ViewWidget() VIEW_SECTION;
+	virtual ~ViewWidget() VIEW_SECTION;
 
 public:
-	void setView(View *view);
-	View *view() const { return myView; }
+	void setView(View *view) VIEW_SECTION;
+	View *view() const VIEW_SECTION;
 
-	virtual void repaintView() = 0;
+	virtual void repaintView() VIEW_SECTION = 0;
 
-	void rotate() { myIsRotated = !myIsRotated; }
-	bool isRotated() const { return myIsRotated; }
+	void rotate() VIEW_SECTION;
+	bool isRotated() const VIEW_SECTION;
 
 private:
 	View *myView;
@@ -47,17 +48,17 @@ private:
 class View {
 
 public:
-	View(PaintContext &context) : myContext(context) {}
-	virtual ~View() {}
+	View(PaintContext &context) VIEW_SECTION;
+	virtual ~View() VIEW_SECTION;
 
 	virtual const std::string &caption() const VIEW_SECTION = 0;
 	virtual void paint() VIEW_SECTION = 0;
-	PaintContext &context() const { return myContext; }
+	PaintContext &context() const VIEW_SECTION;
 
 	/*
 	 * returns true iff stylus pressing was processed
 	 */
-	virtual bool onStylusPress(int, int) { return false; }
+	virtual bool onStylusPress(int, int) VIEW_SECTION;
 
 	void repaintView() VIEW_SECTION;
 
@@ -67,5 +68,16 @@ private:
 
 friend void ViewWidget::setView(View *view);
 };
+
+inline ViewWidget::ViewWidget() : myIsRotated(false) {}
+inline ViewWidget::~ViewWidget() {}
+inline View *ViewWidget::view() const { return myView; }
+inline void ViewWidget::rotate() { myIsRotated = !myIsRotated; }
+inline bool ViewWidget::isRotated() const { return myIsRotated; }
+
+inline View::View(PaintContext &context) : myContext(context) {}
+inline View::~View() {}
+inline PaintContext &View::context() const { return myContext; }
+inline bool View::onStylusPress(int, int) { return false; }
 
 #endif /* __VIEW_H__ */

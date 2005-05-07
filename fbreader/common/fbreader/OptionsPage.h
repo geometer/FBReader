@@ -32,13 +32,14 @@ protected:
 	class ComboOptionEntry : public ZLComboOptionEntry {
 
 	public:
-		ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue) : myPage(page), myName(name), myInitialValue(initialValue) {}
-		const std::string &name() const { return myName; }
-		const std::string &initialValue() const { return myInitialValue; }
-		const std::vector<std::string> &values() const { return myValues; }
-		void onAccept(const std::string&) const {}
-		void onValueChange(const std::string &selectedValue);
-		void addValue(const std::string &value) { myValues.push_back(value); }
+		ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue) FB_DIALOG_SECTION;
+		~ComboOptionEntry() FB_DIALOG_SECTION;
+		const std::string &name() const FB_DIALOG_SECTION;
+		const std::string &initialValue() const FB_DIALOG_SECTION;
+		const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+		void onAccept(const std::string&) const FB_DIALOG_SECTION;
+		void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
+		void addValue(const std::string &value) FB_DIALOG_SECTION;
 
 	private:
 		OptionsPage &myPage;
@@ -48,12 +49,12 @@ protected:
 	};
 
 public:
-	OptionsPage() {}
-	virtual ~OptionsPage() {}
+	OptionsPage() FB_DIALOG_SECTION;
+	virtual ~OptionsPage() FB_DIALOG_SECTION;
 
 protected:
-	void registerEntry(ZLOptionsDialogTab *tab, ZLOptionEntry *entry, const std::string &name);
-	void registerEntries(ZLOptionsDialogTab *tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name);
+	void registerEntry(ZLOptionsDialogTab *tab, ZLOptionEntry *entry, const std::string &name) FB_DIALOG_SECTION;
+	void registerEntries(ZLOptionsDialogTab *tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name) FB_DIALOG_SECTION;
 	
 protected:
 	ComboOptionEntry *myComboEntry;
@@ -63,5 +64,16 @@ private:
 
 friend class ComboOptionEntry;
 };
+
+inline OptionsPage::ComboOptionEntry::ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue) : myPage(page), myName(name), myInitialValue(initialValue) {}
+inline OptionsPage::ComboOptionEntry::~ComboOptionEntry() {}
+inline const std::string &OptionsPage::ComboOptionEntry::name() const { return myName; }
+inline const std::string &OptionsPage::ComboOptionEntry::initialValue() const { return myInitialValue; }
+inline const std::vector<std::string> &OptionsPage::ComboOptionEntry::values() const { return myValues; }
+inline void OptionsPage::ComboOptionEntry::onAccept(const std::string&) const {}
+inline void OptionsPage::ComboOptionEntry::addValue(const std::string &value) { myValues.push_back(value); }
+
+inline OptionsPage::OptionsPage() {}
+inline OptionsPage::~OptionsPage() {}
 
 #endif /* __OPTIONSPAGE_H__ */

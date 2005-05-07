@@ -22,6 +22,7 @@
 
 #include <abstract/ZLXMLReader.h>
 #include <unix/ZLUnixFSManager.h>
+#include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkScreenSize.h>
@@ -34,6 +35,7 @@ int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);
 
 	ZLUnixFSManager::createInstance();
+	ZLUnixTimeManager::createInstance();
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
@@ -46,6 +48,7 @@ int main(int argc, char **argv) {
 	GtkDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
+	ZLUnixTimeManager::deleteInstance();
 
 	return 0;
 }

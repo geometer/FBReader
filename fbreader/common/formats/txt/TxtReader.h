@@ -32,14 +32,15 @@ protected:
 	const Tag *tags() const;
 
 public:
-	TxtTextConverter(const char *encoding) : ZLXMLReader(encoding) {}
-	void convertBuffer(std::vector<std::string> &buffer);
-	void convertString(std::string &string);
+	TxtTextConverter(const char *encoding) FORMATS_SECTION;
+	~TxtTextConverter() FORMATS_SECTION;
+	void convertBuffer(std::vector<std::string> &buffer) FORMATS_SECTION;
+	void convertString(std::string &string) FORMATS_SECTION;
 	
 public:
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, int len);
+	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
+	void endElementHandler(int tag) FORMATS_SECTION;
+	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
 private:
 	std::vector<std::string> *myBuffer;
@@ -48,21 +49,24 @@ private:
 class TxtReader {
 
 public:
-	void readDocument(ZLInputStream &stream, const std::string &encoding);
+	void readDocument(ZLInputStream &stream, const std::string &encoding) FORMATS_SECTION;
 
 protected:
-	TxtReader();
-	virtual ~TxtReader();
+	TxtReader() FORMATS_SECTION;
+	virtual ~TxtReader() FORMATS_SECTION;
 
 protected:
-	virtual void startDocumentHandler() = 0;
-	virtual void endDocumentHandler() = 0;
+	virtual void startDocumentHandler() FORMATS_SECTION = 0;
+	virtual void endDocumentHandler() FORMATS_SECTION = 0;
 
-	virtual bool characterDataHandler(const char *text, int len) = 0;
-	virtual bool newLineHandler() = 0;
+	virtual bool characterDataHandler(const char *text, int len) FORMATS_SECTION = 0;
+	virtual bool newLineHandler() FORMATS_SECTION = 0;
 
 protected:
 	TxtTextConverter *myConverter;
 };
+
+inline TxtTextConverter::TxtTextConverter(const char *encoding) : ZLXMLReader(encoding) {}
+inline TxtTextConverter::~TxtTextConverter() {}
 
 #endif /* __TXTREADER_H__ */

@@ -20,6 +20,7 @@
 #include <qpe/qpeapplication.h>
 
 #include <abstract/ZLXMLReader.h>
+#include <unix/ZLUnixTime.h>
 #include <unix/ZLUnixFSManager.h>
 #include <qtopia/QOptions.h>
 #include <qtopia/QDialogManager.h>
@@ -31,6 +32,7 @@
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
 
+	ZLUnixTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	QOptions::createInstance("FBReader");
@@ -46,6 +48,7 @@ int main(int argc, char **argv) {
 	QDialogManager::deleteInstance();
 	QOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
+	ZLUnixTimeManager::deleteInstance();
 
 	return code;
 }

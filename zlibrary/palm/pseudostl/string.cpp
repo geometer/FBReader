@@ -35,8 +35,8 @@ namespace std {
 		}
 	}
 
-	const char *string::c_str() {
-		reserve(myLength + 1);
+	const char *string::c_str() const {
+		const_reserve(myLength + 1);
 		myData[myLength] = '\0';
 		return myData;
 	}
@@ -62,7 +62,7 @@ namespace std {
 		return *this;
 	}
 
-	void string::reserve(size_t minSize) {
+	void string::const_reserve(size_t minSize) const {
 		if (minSize > myDataSize) {
 			if (minSize | 0xf) {
 				minSize = (minSize & (size_t)-0x10) + 0x10;
@@ -81,10 +81,11 @@ namespace std {
 	}
 
 	bool string::operator == (const string &s) const {
-		if (myLength != s.myLength) {
-			return false;
-		}
-		return StrNCompare(myData, s.myData, myLength) == 0;
+		return (myLength == s.myLength) && (StrNCompare(myData, s.myData, myLength) == 0);
+	}
+
+	bool string::operator == (const char *s) const {
+		return (myLength == StrLen(s)) && (StrNCompare(myData, s, myLength) == 0);
 	}
 
 	bool string::operator < (const string &s) const {

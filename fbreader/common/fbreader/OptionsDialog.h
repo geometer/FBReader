@@ -27,10 +27,10 @@ class PaintContext;
 class OptionsDialog {
 
 public:
-	OptionsDialog(PaintContext &context);
-	~OptionsDialog();
+	OptionsDialog(PaintContext &context) FB_DIALOG_SECTION;
+	~OptionsDialog() FB_DIALOG_SECTION;
 
-	ZLOptionsDialog &dialog() { return *myDialog; }
+	ZLOptionsDialog &dialog() FB_DIALOG_SECTION;
 
 private:
 	ZLOptionsDialog *myDialog;
@@ -38,5 +38,7 @@ private:
 	OptionsPage *myStylePage;
 	OptionsPage *myColorPage;
 };
+
+inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }
 
 #endif /* __OPTIONSDIALOG_H__ */

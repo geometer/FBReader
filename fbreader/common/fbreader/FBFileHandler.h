@@ -26,16 +26,21 @@
 class FBFileHandler : public ZLFileHandler {
 
 public:
-	FBFileHandler() : myDescription(0) {}
+	FBFileHandler() FB_DIALOG_SECTION;
+	~FBFileHandler() FB_DIALOG_SECTION;
 
-	bool isFileVisible(const std::string &shortFileName, bool dir) const;
-	const std::string &pixmapName(const std::string &shortFileName, bool dir) const;
-	void accept(const std::string &fullFileName, bool dir) const;
+	bool isFileVisible(const std::string &shortFileName, bool dir) const FB_DIALOG_SECTION;
+	const std::string &pixmapName(const std::string &shortFileName, bool dir) const FB_DIALOG_SECTION;
+	void accept(const std::string &fullFileName, bool dir) const FB_DIALOG_SECTION;
 
-	BookDescription *description() const { return myDescription; }
+	BookDescription *description() const FB_DIALOG_SECTION;
 
 private:
 	mutable BookDescription *myDescription;
 };
+
+inline FBFileHandler::FBFileHandler() : myDescription(0) {}
+inline FBFileHandler::~FBFileHandler() {}
+inline BookDescription *FBFileHandler::description() const { return myDescription; }
 
 #endif /* __FBFILEHANDLER_H__ */

@@ -40,7 +40,7 @@ PluginCollection &PluginCollection::instance() {
 
 FormatPlugin *PluginCollection::plugin(const std::string &fileName, bool strong) {
 	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
-		if ((!strong || (*it)->containsMetaInfo()) && (*it)->acceptsFile(fileName)) {
+		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(fileName)) {
 			return *it;
 		}
 	}

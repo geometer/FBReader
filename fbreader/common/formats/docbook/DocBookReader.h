@@ -72,12 +72,18 @@ public:
 		_UNKNOWN
 	};
 
+protected:
+	DocBookReader() FORMATS_SECTION;
+
 public:
-	DocBookReader() {}
-	const Tag *tags() const;
+	~DocBookReader() FORMATS_SECTION;
+	const Tag *tags() const FORMATS_SECTION;
 
 protected:
-	const std::vector<std::string> &externalDTDs() const;
+	const std::vector<std::string> &externalDTDs() const FORMATS_SECTION;
 };
+
+inline DocBookReader::DocBookReader() {}
+inline DocBookReader::~DocBookReader() {}
 
 #endif /* __DOCBOOKREADER_H__ */

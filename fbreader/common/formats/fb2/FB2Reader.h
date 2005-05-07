@@ -60,9 +60,15 @@ public:
 		_UNKNOWN
 	};
 
+protected:
+	FB2Reader() FORMATS_SECTION;
+	
 public:
-	FB2Reader() {}
-	const Tag *tags() const;
+	~FB2Reader() FORMATS_SECTION;
+	const Tag *tags() const FORMATS_SECTION;
 };
+
+inline FB2Reader::FB2Reader() {}
+inline FB2Reader::~FB2Reader() {}
 
 #endif /* __FB2READER_H__ */

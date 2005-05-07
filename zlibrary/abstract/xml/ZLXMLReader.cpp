@@ -23,6 +23,10 @@
 #include "ZLXMLReader.h"
 #include "EncodingReader.h"
 
+static void fCharacterDataHandler(void *userData, const char *text, int len) XML_SECTION;
+static void fStartElementHandler(void *userData, const char *name, const char **attributes) XML_SECTION;
+static void fEndElementHandler(void *userData, const char *name) XML_SECTION;
+
 static void fCharacterDataHandler(void *userData, const char *text, int len) {
 	((ZLXMLReader*)userData)->characterDataHandler(text, len);
 }

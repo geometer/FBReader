@@ -1,6 +1,7 @@
 #include <zlib.h>
 
 #include <palm/PalmOptions.h>
+#include <palm/ZLPalmTime.h>
 #include <palm/ZLPalmFSManager.h>
 #include <palm/PalmDialogManager.h>
 #include <palm/PalmScreenSize.h>
@@ -11,6 +12,7 @@
 UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 	if (cmd == sysAppLaunchCmdNormalLaunch) {
 		ZLSetup;
+		ZLPalmTimeManager::createInstance();
 		ZLPalmFSManager::createInstance();
 		PalmOptions::createInstance("FBReader");
 		PalmDialogManager::createInstance();
@@ -23,6 +25,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 		PalmDialogManager::deleteInstance();
 		PalmOptions::deleteInstance();
 		ZLPalmFSManager::deleteInstance();
+		ZLPalmTimeManager::deleteInstance();
 		ZLTeardown;
 
 		FrmSaveAllForms();

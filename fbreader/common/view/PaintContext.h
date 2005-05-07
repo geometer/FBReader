@@ -37,21 +37,21 @@ protected:
 	PaintContext() VIEW_SECTION;
 
 public:
-	virtual ~PaintContext() {}
-	virtual void removeCaches() {}
+	virtual ~PaintContext() VIEW_SECTION;
+	virtual void removeCaches() VIEW_SECTION;
 
-	int x() const { return myX; }
-	int y() const { return myY; }
+	int x() const VIEW_SECTION;
+	int y() const VIEW_SECTION;
 
-	void moveXTo(int x) { myX = x; }
-	void moveX(int deltaX) { myX += deltaX; }
-	void moveYTo(int y) { myY = y; }
-	void moveY(int deltaY) { myY += deltaY; }
+	void moveXTo(int x) VIEW_SECTION;
+	void moveX(int deltaX) VIEW_SECTION;
+	void moveYTo(int y) VIEW_SECTION;
+	void moveY(int deltaY) VIEW_SECTION;
 
-	const ZLIntegerOption &leftMargin() const { return myLeftMargin; };
-	const ZLIntegerOption &rightMargin() const { return myRightMargin; };
-	const ZLIntegerOption &topMargin() const { return myTopMargin; };
-	const ZLIntegerOption &bottomMargin() const { return myBottomMargin; };
+	const ZLIntegerOption &leftMargin() const VIEW_SECTION;;
+	const ZLIntegerOption &rightMargin() const VIEW_SECTION;;
+	const ZLIntegerOption &topMargin() const VIEW_SECTION;;
+	const ZLIntegerOption &bottomMargin() const VIEW_SECTION;;
 
 	virtual void clear() VIEW_SECTION = 0;
 
@@ -94,5 +94,21 @@ private:
 	PaintContext(const PaintContext&);
 	const PaintContext& operator = (const PaintContext&);
 };
+
+inline PaintContext::~PaintContext() {}
+inline void PaintContext::removeCaches() {}
+
+inline int PaintContext::x() const { return myX; }
+inline int PaintContext::y() const { return myY; }
+
+inline void PaintContext::moveXTo(int x) { myX = x; }
+inline void PaintContext::moveX(int deltaX) { myX += deltaX; }
+inline void PaintContext::moveYTo(int y) { myY = y; }
+inline void PaintContext::moveY(int deltaY) { myY += deltaY; }
+
+inline const ZLIntegerOption &PaintContext::leftMargin() const { return myLeftMargin; };
+inline const ZLIntegerOption &PaintContext::rightMargin() const { return myRightMargin; };
+inline const ZLIntegerOption &PaintContext::topMargin() const { return myTopMargin; };
+inline const ZLIntegerOption &PaintContext::bottomMargin() const { return myBottomMargin; };
 
 #endif /* __PAINTCONTEXT_H__ */

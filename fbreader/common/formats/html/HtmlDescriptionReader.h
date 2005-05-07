@@ -26,18 +26,21 @@
 class HtmlDescriptionReader : public HtmlReader {
 
 public:
-	HtmlDescriptionReader(BookDescription &description);
+	HtmlDescriptionReader(BookDescription &description) FORMATS_SECTION;
+	~HtmlDescriptionReader() FORMATS_SECTION;
 
 protected:
-	void startDocumentHandler();
-	void endDocumentHandler();
+	void startDocumentHandler() FORMATS_SECTION;
+	void endDocumentHandler() FORMATS_SECTION;
 
-	bool tagHandler(HtmlTag tag);
-	bool characterDataHandler(const char *text, int len);
+	bool tagHandler(HtmlTag tag) FORMATS_SECTION;
+	bool characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
 private:
 	bool myReadTitle;
 	WritableBookDescription myDescription;
 };
+
+inline HtmlDescriptionReader::~HtmlDescriptionReader() {}
 
 #endif /* __HTMLDESCRIPTIONREADER_H__ */

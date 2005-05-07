@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <cctype>
+
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLStringInputStream.h>
 

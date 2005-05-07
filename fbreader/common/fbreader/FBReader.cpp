@@ -339,3 +339,16 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 	}
 	return code;
 }
+
+BookTextView &FBReader::textView() const {
+	return *myBookTextView;
+}
+
+void FBReader::showBookTextView() {
+	setMode(BOOK_TEXT_MODE);
+}
+
+void FBReader::restorePreviousMode() {
+	setMode(myPreviousMode);
+	myPreviousMode = BOOK_TEXT_MODE;
+}

@@ -24,15 +24,20 @@
 class PalmDialogManager : public ZLDialogManager {
 
 public:
-	static void createInstance() { ourInstance = new PalmDialogManager(); }
+	static void createInstance() DIALOG_SECTION;
 
 private:
-	PalmDialogManager() {}
+	PalmDialogManager() DIALOG_SECTION;
 
 public:
-	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
-	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
-	void openFileDialog(const std::string &title, const ZLFileHandler &handler) const;
+	~PalmDialogManager() DIALOG_SECTION;
+	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const DIALOG_SECTION;
+	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const DIALOG_SECTION;
+	void openFileDialog(const std::string &title, const ZLFileHandler &handler) const DIALOG_SECTION;
 };
+
+inline void PalmDialogManager::createInstance() { ourInstance = new PalmDialogManager(); }
+inline PalmDialogManager::PalmDialogManager() {}
+inline PalmDialogManager::~PalmDialogManager() {}
 
 #endif /* __PALMDIALOGMANAGER_H__ */

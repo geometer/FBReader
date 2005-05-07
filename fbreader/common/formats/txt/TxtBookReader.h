@@ -30,20 +30,23 @@ class BookModel;
 class TxtBookReader : public BookReader, public TxtReader {
 
 public:
-	TxtBookReader(BookModel &model);
+	TxtBookReader(BookModel &model) FORMATS_SECTION;
+	~TxtBookReader() FORMATS_SECTION;
 
 protected:
-	void startDocumentHandler();
-	void endDocumentHandler();
+	void startDocumentHandler() FORMATS_SECTION;
+	void endDocumentHandler() FORMATS_SECTION;
 
-	bool characterDataHandler(const char *text, int len);
-	bool newLineHandler();
+	bool characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	bool newLineHandler() FORMATS_SECTION;
 
 private:
-	void flushTextBufferToParagraph();
+	void flushTextBufferToParagraph() FORMATS_SECTION;
 
 private:
 	int myLineFeedCounter;
 };
+
+inline TxtBookReader::~TxtBookReader() {}
 
 #endif /* __TXTBOOKREADER_H__ */

@@ -25,11 +25,17 @@
 class TxtPlugin : public FormatPlugin {
 
 public:
-	bool containsMetaInfo() const { return false; }
-	bool acceptsFile(const std::string &fileName) const;
-	bool readDescription(const std::string &fileName, BookDescription &description) const;
-	bool readModel(const BookDescription &description, BookModel &model) const;
-	const std::string &iconName() const;
+	TxtPlugin() FORMATS_SECTION;
+	~TxtPlugin() FORMATS_SECTION;
+	bool providesMetaInfo() const FORMATS_SECTION;
+	bool acceptsFile(const std::string &fileName) const FORMATS_SECTION;
+	bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION;
+	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
+	const std::string &iconName() const FORMATS_SECTION;
 };
+
+inline TxtPlugin::TxtPlugin() {}
+inline TxtPlugin::~TxtPlugin() {}
+inline bool TxtPlugin::providesMetaInfo() const { return false; }
 
 #endif /* __TXTPLUGIN_H__ */

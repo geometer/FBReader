@@ -27,12 +27,10 @@
 
 BookModel::BookModel(const BookDescription *description) {
 	myDescription = description;
-#ifndef PALM_TEMPORARY
 	FormatPlugin *plugin = PluginCollection::instance().plugin(description->fileName(), false);
 	if (plugin != 0) {
 		plugin->readModel(*description, *this);
 	}
-#endif // PALM_TEMPORARY
 }
 
 BookModel::~BookModel() {

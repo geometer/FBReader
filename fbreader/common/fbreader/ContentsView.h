@@ -28,20 +28,25 @@ class FBReader;
 class ContentsView : public TextView {
 
 public:
-	ContentsView(FBReader &reader, PaintContext &context);
-	const std::string &caption() const { return myCaption; }
-	void setCaption(const std::string &caption) { myCaption = caption; }
+	ContentsView(FBReader &reader, PaintContext &context) FB_VIEW_SECTION;
+	~ContentsView() FB_VIEW_SECTION;
+	const std::string &caption() const FB_VIEW_SECTION;
+	void setCaption(const std::string &caption) FB_VIEW_SECTION;
 
-	void setModel(const TextModel *model, const std::string &name);
-	void saveState();
+	void setModel(const TextModel *model, const std::string &name) FB_VIEW_SECTION;
+	void saveState() FB_VIEW_SECTION;
 
-	bool isEmpty() const;
+	bool isEmpty() const FB_VIEW_SECTION;
 
-	bool onStylusPress(int x, int y);
+	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
 
 private:
 	FBReader &myReader;
 	std::string myCaption;
 };
+
+inline ContentsView::~ContentsView() {}
+inline const std::string &ContentsView::caption() const { return myCaption; }
+inline void ContentsView::setCaption(const std::string &caption) { myCaption = caption; }
 
 #endif /* __CONTENTSVIEW_H__ */

@@ -81,32 +81,32 @@ public:
 	static std::string HelpDirectory;
 
 protected:
-	FBReader(PaintContext *context);
-	virtual ~FBReader();
+	FBReader(PaintContext *context) FB_SECTION;
+	virtual ~FBReader() FB_SECTION;
 
-	virtual void setMode(ViewMode mode);
-	virtual void setWindowCaption(const std::string &caption) = 0;
-	void createToolbar();
-	virtual void addButton(ActionCode id, const std::string &name) = 0;
-	virtual void setButtonVisible(ActionCode id, bool visible) = 0;
-	virtual void setButtonEnabled(ActionCode id, bool enable) = 0;
-	virtual void searchSlot() = 0;
-	virtual void cancelSlot() = 0;
-	virtual void fullscreenSlot() = 0;
-	virtual bool isRotationSupported() const = 0;
+	virtual void setMode(ViewMode mode) FB_SECTION;
+	virtual void setWindowCaption(const std::string &caption) FB_SECTION = 0;
+	void createToolbar() FB_SECTION;
+	virtual void addButton(ActionCode id, const std::string &name) FB_SECTION = 0;
+	virtual void setButtonVisible(ActionCode id, bool visible) FB_SECTION = 0;
+	virtual void setButtonEnabled(ActionCode id, bool enable) FB_SECTION = 0;
+	virtual void searchSlot() FB_SECTION = 0;
+	virtual void cancelSlot() FB_SECTION = 0;
+	virtual void fullscreenSlot() FB_SECTION = 0;
+	virtual bool isRotationSupported() const FB_SECTION = 0;
 
 private:
-	bool runBookInfoDialog(const std::string &fileName);
+	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
 
 public:
-	void openBook(BookDescription *description);
-	BookTextView &textView() const { return *myBookTextView; }
-	void showBookTextView() { setMode(BOOK_TEXT_MODE); }
-	void tryShowFootnoteView(const std::string &id);
-	void restorePreviousMode() { setMode(myPreviousMode); myPreviousMode = BOOK_TEXT_MODE; }
-	void enableMenuButtons();
-	void repaintView();
-	void doAction(ActionCode code);
+	void openBook(BookDescription *description) FB_SECTION;
+	BookTextView &textView() const;
+	void showBookTextView() FB_SECTION;
+	void tryShowFootnoteView(const std::string &id) FB_SECTION;
+	void restorePreviousMode() FB_SECTION;
+	void enableMenuButtons() FB_SECTION;
+	void repaintView() FB_SECTION;
+	void doAction(ActionCode code) FB_SECTION;
 
 protected:
 	ViewMode myMode;

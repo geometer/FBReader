@@ -28,29 +28,40 @@ class BookModel;
 
 class FormatPlugin {
 
+protected:
+	FormatPlugin() FORMATS_SECTION;
+	
 public:
-	virtual bool containsMetaInfo() const = 0;
-	virtual bool acceptsFile(const std::string &fileName) const = 0;
-	virtual bool readDescription(const std::string &fileName, BookDescription &description) const = 0;
-	virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
-	virtual const std::string &iconName() const = 0;
+	virtual ~FormatPlugin() FORMATS_SECTION;
+	virtual bool providesMetaInfo() const FORMATS_SECTION = 0;
+	virtual bool acceptsFile(const std::string &fileName) const FORMATS_SECTION = 0;
+	virtual bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION = 0;
+	virtual bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION = 0;
+	virtual const std::string &iconName() const FORMATS_SECTION = 0;
 };
 
 class PluginCollection {
 
 public:
-	static PluginCollection &instance();
+	static PluginCollection &instance() FORMATS_SECTION;
 
 private:
-	PluginCollection() {}
+	PluginCollection() FORMATS_SECTION;
+	~PluginCollection() FORMATS_SECTION;
 	
 public:
-	FormatPlugin *plugin(const std::string &fileName, bool strong);
+	FormatPlugin *plugin(const std::string &fileName, bool strong) FORMATS_SECTION;
 
 private:
 	static PluginCollection *ourInstance;
 
 	std::vector<FormatPlugin*> myPlugins;
 };
+
+inline FormatPlugin::FormatPlugin() {}
+inline FormatPlugin::~FormatPlugin() {}
+
+inline PluginCollection::PluginCollection() {}
+inline PluginCollection::~PluginCollection() {}
 
 #endif /* __FORMATPLUGIN_H__ */

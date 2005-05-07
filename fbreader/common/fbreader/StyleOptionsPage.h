@@ -28,7 +28,10 @@ class PaintContext;
 class StyleOptionsPage : public OptionsPage {
 
 public:
-	StyleOptionsPage(ZLOptionsDialogTab *dialogTab, PaintContext &context);
+	StyleOptionsPage(ZLOptionsDialogTab *dialogTab, PaintContext &context) FB_DIALOG_SECTION;
+	~StyleOptionsPage() FB_DIALOG_SECTION;
 };
+
+inline StyleOptionsPage::~StyleOptionsPage() {}
 
 #endif /* __STYLEOPTIONSPAGE_H__ */

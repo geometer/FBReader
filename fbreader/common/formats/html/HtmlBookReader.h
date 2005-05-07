@@ -30,17 +30,18 @@ class BookModel;
 class HtmlBookReader : public BookReader, public HtmlReader {
 
 public:
-	HtmlBookReader(BookModel &model);
+	HtmlBookReader(BookModel &model) FORMATS_SECTION;
+	~HtmlBookReader() FORMATS_SECTION;
 
 protected:
-	void startDocumentHandler();
-	void endDocumentHandler();
+	void startDocumentHandler() FORMATS_SECTION;
+	void endDocumentHandler() FORMATS_SECTION;
 
-	bool tagHandler(HtmlTag tag);
-	bool characterDataHandler(const char *text, int len);
+	bool tagHandler(HtmlTag tag) FORMATS_SECTION;
+	bool characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
 private:
-	void flushTextBufferToParagraph();
+	void flushTextBufferToParagraph() FORMATS_SECTION;
 
 private:
 	int myIgnoreDataCounter;
@@ -49,5 +50,7 @@ private:
 	bool myIsStarted;
 	std::stack<int> myListNumStack;
 };
+
+inline HtmlBookReader::~HtmlBookReader() {}
 
 #endif /* __HTMLBOOKREADER_H__ */

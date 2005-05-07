@@ -17,7 +17,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#ifndef PALM_TEMPORARY
+
 #include <enca.h>
+
+#endif // PALM_TEMPORARY
 
 #include <abstract/ZLInputStream.h>
 
@@ -29,6 +33,8 @@ std::string EncodingDetector::detect(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return "";
 	}
+
+#ifndef PALM_TEMPORARY
 
 	unsigned char *buffer = new unsigned char[BUFSIZE];
 
@@ -44,4 +50,10 @@ std::string EncodingDetector::detect(ZLInputStream &stream) {
 	stream.close();
 
 	return (encodingString == "unknown") ? "windows-1252" : encodingString;
+
+#else // PALM_TEMPORARY
+
+	return "windows-1252";
+
+#endif // PALM_TEMPORARY
 }

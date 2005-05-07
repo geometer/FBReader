@@ -106,7 +106,9 @@ void BookTextView::pushCurrentPositionIntoStack() {
 	pos.second = myFirstParagraphCursor->wordNumber();
 	myPositionStack.push_back(pos);
 	while (myPositionStack.size() > myMaxStackSize) {
+#ifndef PALM_TEMPORARY
 		myPositionStack.erase(myPositionStack.begin());
+#endif // PALM_TEMPORARY
 		if (myCurrentPointInStack > 0) {
 			myCurrentPointInStack--;
 		}

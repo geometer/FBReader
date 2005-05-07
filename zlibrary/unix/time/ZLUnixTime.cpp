@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,29 +16,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __DOCBOOKBOOKREADER_H__
-#define __DOCBOOKBOOKREADER_H__
+#include <sys/timeb.h>
 
-#include "DocBookReader.h"
-#include "../../bookmodel/BookReader.h"
+#include "ZLUnixTime.h"
 
-class BookModel;
-
-class DocBookBookReader : public BookReader, public DocBookReader {
-
-public:
-	DocBookBookReader(BookModel &model) FORMATS_SECTION;
-	~DocBookBookReader() FORMATS_SECTION;
-	void readBook(ZLInputStream &stream) FORMATS_SECTION;
-
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
-
-private:
-	bool myReadText;
-};
-
-inline DocBookBookReader::~DocBookBookReader() {}
-
-#endif /* __DOCBOOKBOOKREADER_H__ */
+ZLTime ZLUnixTimeManager::currentTime() const {
+	struct timeb timeB;
+	ftime(&timeB);
+	return ZLTime(timeB.time, timeB.millitm);
+}

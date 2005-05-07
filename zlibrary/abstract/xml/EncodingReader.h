@@ -24,21 +24,25 @@
 class EncodingReader : public ZLXMLReader {
 
 public:
-	EncodingReader(const std::string &encoding);
-	~EncodingReader() {}
-	bool fillTable(int *map);
+	EncodingReader(const std::string &encoding) XML_SECTION;
+	~EncodingReader() XML_SECTION;
+	bool fillTable(int *map) XML_SECTION;
 
 protected:
-	const Tag *tags() const;
+	const Tag *tags() const XML_SECTION;
 
 public:
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int) {}
-	void characterDataHandler(const char *, int) {}
+	void startElementHandler(int tag, const char **attributes) XML_SECTION;
+	void endElementHandler(int) XML_SECTION;
+	void characterDataHandler(const char *, int) XML_SECTION;
 
 private:
 	const std::string myEncoding;
 	int *myMap;
 };
+
+inline EncodingReader::~EncodingReader() {}
+inline void EncodingReader::endElementHandler(int) {}
+inline void EncodingReader::characterDataHandler(const char *, int) {}
 
 #endif /* __ENCODINGREADER_H__ */

@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <cctype>
+
 #include "TxtBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
@@ -26,8 +28,9 @@ TxtBookReader::TxtBookReader(BookModel &model) : BookReader(model) {
 void TxtBookReader::flushTextBufferToParagraph() {
 	bool bufferIsEmpty = true;
 	for (std::vector<std::string>::const_iterator it = myBuffer.begin(); bufferIsEmpty && (it != myBuffer.end()); it++) {
-		for (std::string::const_iterator jt = it->begin(); jt != it->end(); jt++) {
-			if (!isspace(*jt)) {
+		const char *end = it->data() + it->length();
+		for (const char *ptr = it->data(); ptr != end; ptr++) {
+			if (!isspace(*ptr)) {
 				bufferIsEmpty = false;
 				break;
 			}

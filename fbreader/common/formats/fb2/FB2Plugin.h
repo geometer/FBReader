@@ -25,11 +25,17 @@
 class FB2Plugin : public FormatPlugin {
 
 public:
-	bool containsMetaInfo() const { return true; }
-	bool acceptsFile(const std::string &fileName) const;
-	bool readDescription(const std::string &fileName, BookDescription &description) const;
-	bool readModel(const BookDescription &description, BookModel &model) const;
-	const std::string &iconName() const;
+	FB2Plugin() FORMATS_SECTION;
+	~FB2Plugin() FORMATS_SECTION;
+	bool providesMetaInfo() const FORMATS_SECTION;
+	bool acceptsFile(const std::string &fileName) const FORMATS_SECTION;
+	bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION;
+	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
+	const std::string &iconName() const FORMATS_SECTION;
 };
+
+inline FB2Plugin::FB2Plugin() {}
+inline FB2Plugin::~FB2Plugin() {}
+inline bool FB2Plugin::providesMetaInfo() const { return true; }
 
 #endif /* __FB2PLUGIN_H__ */

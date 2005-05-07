@@ -43,13 +43,14 @@ private:
 
 	public:
 		ViewStyle(PaintContext &context) VIEW_SECTION;
+		~ViewStyle() VIEW_SECTION;
 
 		void reset() VIEW_SECTION;
 		void applyControl(const ControlElement &control, bool revert) VIEW_SECTION;
 		void applyControls(const WordCursor &begin, const WordCursor &end, bool revert) VIEW_SECTION;
 
-		const PaintContext &context() const { return myContext; }
-		const TextStyle &style() const { return *myStyle; }
+		const PaintContext &context() const VIEW_SECTION;
+		const TextStyle &style() const VIEW_SECTION;
 		int elementWidth(const WordCursor &cursor) const VIEW_SECTION;
 		int elementHeight(const WordCursor &cursor) const VIEW_SECTION;
 		int textAreaHeight() const VIEW_SECTION;
@@ -65,12 +66,13 @@ private:
 	class LineProcessor {
 
 	public:
-		LineProcessor(ViewStyle &style) : myStyle(style) {}
+		LineProcessor(ViewStyle &style) VIEW_SECTION;
+		~LineProcessor() VIEW_SECTION;
 		WordCursor process(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
 
-		int width() const { return myWidth; }
-		int height() const { return myHeight; }
-		int spaceCounter() const { return mySpaceCounter; }
+		int width() const VIEW_SECTION;
+		int height() const VIEW_SECTION;
+		int spaceCounter() const VIEW_SECTION;
 
 	private:
 		ViewStyle &myStyle;
@@ -90,7 +92,7 @@ public:
 	
 public:
 	void paint(bool doPaint) VIEW_SECTION;
-	virtual void paint() { paint(true); }
+	virtual void paint() VIEW_SECTION;
 
 	void scrollPageBackward() VIEW_SECTION;
 	void scrollPageForward() VIEW_SECTION;
@@ -132,28 +134,16 @@ protected:
 	struct ParagraphPosition {
 		int ParagraphNumber;
 		int YStart, YEnd;
-		ParagraphPosition(int paragraphNumber, int yStart, int yEnd) {
-			ParagraphNumber = paragraphNumber;
-
-			YStart = yStart;
-			YEnd = yEnd;
-		}
+		ParagraphPosition(int paragraphNumber, int yStart, int yEnd) VIEW_SECTION;
+		~ParagraphPosition() VIEW_SECTION;
 	};
 
 	struct TextElementPosition {
 		int ParagraphNumber, TextElementNumber;
 		TextElement::Kind Kind;
 		int XStart, XEnd, YStart, YEnd;
-		TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) {
-			ParagraphNumber = paragraphNumber;
-			TextElementNumber = textElementNumber;
-			Kind = kind;
-
-			XStart = xStart;
-			XEnd = xEnd;
-			YStart = yStart;
-			YEnd = yEnd;
-		}
+		TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) VIEW_SECTION;
+		~TextElementPosition() VIEW_SECTION;
 	};
 
 	const ParagraphPosition *paragraphByCoordinate(int y) const VIEW_SECTION;
@@ -166,5 +156,23 @@ private:
 	ViewStyle myStyle;
 	LineProcessor myLineProcessor;
 };
+
+inline TextView::ViewStyle::~ViewStyle() {}
+inline const PaintContext &TextView::ViewStyle::context() const { return myContext; }
+inline const TextStyle &TextView::ViewStyle::style() const { return *myStyle; }
+
+inline TextView::LineProcessor::LineProcessor(ViewStyle &style) : myStyle(style) {}
+inline TextView::LineProcessor::~LineProcessor() {}
+inline int TextView::LineProcessor::width() const { return myWidth; }
+inline int TextView::LineProcessor::height() const { return myHeight; }
+inline int TextView::LineProcessor::spaceCounter() const { return mySpaceCounter; }
+
+inline void TextView::paint() { paint(true); }
+
+inline TextView::ParagraphPosition::ParagraphPosition(int paragraphNumber, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), YStart(yStart), YEnd(yEnd) {}
+inline TextView::ParagraphPosition::~ParagraphPosition() {}
+
+inline TextView::TextElementPosition::TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), Kind(kind), XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
+inline TextView::TextElementPosition::~TextElementPosition() {}
 
 #endif /* __TEXTVIEW_H__ */

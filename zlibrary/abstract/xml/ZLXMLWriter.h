@@ -32,18 +32,20 @@ private:
 		std::string Name;
 		std::string Value;
 
-		Attribute(const std::string &name, const std::string &value) : Name(name), Value(value) {}
+		Attribute(const std::string &name, const std::string &value) XML_SECTION;
+		~Attribute() XML_SECTION;
 	};
 
 	class Tag {
 
 	public:
-		Tag(const std::string &name, bool single);
-		void addAttribute(const std::string &name, const std::string &value);
-		bool isSingle() const { return mySingle; }
+		Tag(const std::string &name, bool single) XML_SECTION;
+		~Tag() XML_SECTION;
+		void addAttribute(const std::string &name, const std::string &value) XML_SECTION;
+		bool isSingle() const XML_SECTION;
 
-		void writeStart(ZLOutputStream &stream) const;
-		void writeEnd(ZLOutputStream &stream) const;
+		void writeStart(ZLOutputStream &stream) const XML_SECTION;
+		void writeEnd(ZLOutputStream &stream) const XML_SECTION;
 		
 	private:
 		std::string myName;
@@ -52,21 +54,29 @@ private:
 	};
 
 protected:
-	ZLXMLWriter(ZLOutputStream &stream);
-	virtual ~ZLXMLWriter() {}
+	ZLXMLWriter(ZLOutputStream &stream) XML_SECTION;
+	virtual ~ZLXMLWriter() XML_SECTION;
 
-	void addTag(const std::string &name, bool single);
-	void addAttribute(const std::string &name, const std::string &value);
-	void closeTag();
-	void closeAllTags();
+	void addTag(const std::string &name, bool single) XML_SECTION;
+	void addAttribute(const std::string &name, const std::string &value) XML_SECTION;
+	void closeTag() XML_SECTION;
+	void closeAllTags() XML_SECTION;
 
 private:
-	void flushTagStart();
+	void flushTagStart() XML_SECTION;
 
 private:
 	ZLOutputStream &myStream;
 	Tag *myCurrentTag;
 	std::stack<Tag*> myTags;
 };
+
+inline ZLXMLWriter::Attribute::Attribute(const std::string &name, const std::string &value) : Name(name), Value(value) {}
+inline ZLXMLWriter::Attribute::~Attribute() {}
+
+inline bool ZLXMLWriter::Tag::isSingle() const { return mySingle; }
+inline ZLXMLWriter::Tag::~Tag() {}
+
+inline ZLXMLWriter::~ZLXMLWriter() {}
 
 #endif /* __ZLXMLWRITER_H__ */

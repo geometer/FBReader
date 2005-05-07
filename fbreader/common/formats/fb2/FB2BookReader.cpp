@@ -36,6 +36,7 @@ static const struct {
 	{FB2Reader::_UNKNOWN, (TextKind)-1}
 };
 
+static TextKind control(int code) FORMATS_SECTION;
 static TextKind control(int code) {
 	for (int i = 0; ; i++) {
 		if ((CONTROLS[i].code == code) || (CONTROLS[i].code == FB2Reader::_UNKNOWN)) {

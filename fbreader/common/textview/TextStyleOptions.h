@@ -33,13 +33,14 @@ private:
 	static std::vector<std::string> ourAllFamiliesPlusBase;
 
 public:
-	FontFamilyOptionEntry(const ZLStringOption &option, const PaintContext &context, bool allowBase);
+	FontFamilyOptionEntry(const ZLStringOption &option, const PaintContext &context, bool allowBase) FB_DIALOG_SECTION;
+	~FontFamilyOptionEntry() FB_DIALOG_SECTION;
 
-	const std::string &name() const;
-	const std::vector<std::string> &values() const { return myAllowBase ? ourAllFamiliesPlusBase : ourAllFamilies; }
-	const std::string &initialValue() const;
+	const std::string &name() const FB_DIALOG_SECTION;
+	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+	const std::string &initialValue() const FB_DIALOG_SECTION;
 
-	void onAccept(const std::string &value) const;
+	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
 
 private:
 	const ZLStringOption &myOption;
@@ -53,13 +54,14 @@ private:
 	static std::vector<std::string> ourAllValuesPlusBase;
 
 public:
-	LineSpacingOptionEntry(const ZLDoubleOption &option, bool allowBase);
+	LineSpacingOptionEntry(const ZLDoubleOption &option, bool allowBase) FB_DIALOG_SECTION;
+	~LineSpacingOptionEntry() FB_DIALOG_SECTION;
 
-	const std::string &name() const;
-	const std::vector<std::string> &values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
-	const std::string &initialValue() const;
+	const std::string &name() const FB_DIALOG_SECTION;
+	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+	const std::string &initialValue() const FB_DIALOG_SECTION;
 
-	void onAccept(const std::string &value) const;
+	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
 
 private:
 	const ZLDoubleOption &myOption;
@@ -69,25 +71,36 @@ private:
 class AlignmentOptionEntry : public ZLComboOptionEntry {
 
 private:
-	static std::vector<std::string> &values4();
-	static std::vector<std::string> &values5();
+	static std::vector<std::string> &values4() FB_DIALOG_SECTION;
+	static std::vector<std::string> &values5() FB_DIALOG_SECTION;
 
 private:
 	static std::vector<std::string> ourValues4;
 	static std::vector<std::string> ourValues5;
 	
 public:
-	AlignmentOptionEntry(const ZLIntegerOption &option, bool allowUndefined) : myOption(option), myAllowUndefined(allowUndefined) {}
+	AlignmentOptionEntry(const ZLIntegerOption &option, bool allowUndefined) FB_DIALOG_SECTION;
+	~AlignmentOptionEntry() FB_DIALOG_SECTION;
 
-	const std::string &name() const;
-	const std::vector<std::string> &values() const { return myAllowUndefined ? values5() : values4(); }
-	const std::string &initialValue() const;
+	const std::string &name() const FB_DIALOG_SECTION;
+	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+	const std::string &initialValue() const FB_DIALOG_SECTION;
 
-	void onAccept(const std::string &value) const;
+	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
 
 private:
 	const ZLIntegerOption &myOption;
 	bool myAllowUndefined;
 };
+
+inline FontFamilyOptionEntry::~FontFamilyOptionEntry() {}
+inline const std::vector<std::string> &FontFamilyOptionEntry::values() const { return myAllowBase ? ourAllFamiliesPlusBase : ourAllFamilies; }
+
+inline LineSpacingOptionEntry::~LineSpacingOptionEntry() {}
+inline const std::vector<std::string> &LineSpacingOptionEntry::values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
+
+inline AlignmentOptionEntry::AlignmentOptionEntry(const ZLIntegerOption &option, bool allowUndefined) : myOption(option), myAllowUndefined(allowUndefined) {}
+inline AlignmentOptionEntry::~AlignmentOptionEntry() {}
+inline const std::vector<std::string> &AlignmentOptionEntry::values() const { return myAllowUndefined ? values5() : values4(); }
 
 #endif /* __TEXTSTYLEOPTIONS_H__ */

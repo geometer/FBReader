@@ -19,17 +19,50 @@
 #ifndef __ZLTIME_H__
 #define __ZLTIME_H__
 
-#include <sys/timeb.h>
-
 class ZLTime {
 
 public:
-	ZLTime();
-	long millisecondsTo(const ZLTime &time) const;
-	long millisecondsFrom(const ZLTime &time) const { return - millisecondsTo(time); }
+	ZLTime() UTIL_SECTION;
+	ZLTime(long seconds, long milliseconds) UTIL_SECTION;
+	~ZLTime() UTIL_SECTION;
+	long millisecondsTo(const ZLTime &time) const UTIL_SECTION;
+	long millisecondsFrom(const ZLTime &time) const UTIL_SECTION;
 
 private:
-	struct timeb myTime;	
+	long mySeconds;
+	long myMilliseconds;
+
+friend class ZLTimeManager;
 };
+
+class ZLTimeManager {
+
+private:
+	static ZLTimeManager &instance() UTIL_SECTION;
+
+public:
+	static void deleteInstance() UTIL_SECTION;
+	
+protected:
+	ZLTimeManager() UTIL_SECTION;
+	virtual ~ZLTimeManager() UTIL_SECTION;
+	virtual ZLTime currentTime() const UTIL_SECTION = 0;
+	
+protected:
+	static ZLTimeManager *ourInstance;
+
+friend class ZLTime;
+};
+
+inline ZLTime::ZLTime() { *this = ZLTimeManager::instance().currentTime(); }
+inline ZLTime::ZLTime(long seconds, long milliseconds) : mySeconds(seconds), myMilliseconds(milliseconds) {}
+inline ZLTime::~ZLTime() {}
+inline long ZLTime::millisecondsTo(const ZLTime &time) const { return 1000 * (time.mySeconds - mySeconds) + time.myMilliseconds - myMilliseconds; }
+inline long ZLTime::millisecondsFrom(const ZLTime &time) const { return - millisecondsTo(time); }
+
+inline ZLTimeManager &ZLTimeManager::instance() { return *ourInstance; }
+inline void ZLTimeManager::deleteInstance() { delete ourInstance; }
+inline ZLTimeManager::ZLTimeManager() {}
+inline ZLTimeManager::~ZLTimeManager() {}
 
 #endif /* __ZLTIME_H__ */

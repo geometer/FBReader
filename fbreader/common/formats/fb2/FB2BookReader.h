@@ -28,17 +28,20 @@ class BookModel;
 class FB2BookReader : public BookReader, public FB2Reader {
 
 public:
-	FB2BookReader(BookModel &model);
-	void readBook(ZLInputStream &stream);
+	FB2BookReader(BookModel &model) FORMATS_SECTION;
+	~FB2BookReader() FORMATS_SECTION;
+	void readBook(ZLInputStream &stream) FORMATS_SECTION;
 
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, int len);
+	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
+	void endElementHandler(int tag) FORMATS_SECTION;
+	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
 private:
 	int mySectionDepth;
 	int myBodyCounter;
 	bool myInsidePoem;
 };
+
+inline FB2BookReader::~FB2BookReader() {}
 
 #endif /* __FB2BOOKREADER_H__ */

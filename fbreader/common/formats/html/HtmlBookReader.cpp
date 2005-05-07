@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <cctype>
+
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
@@ -47,8 +49,9 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 	} else {
 		if (!myIsStarted) {
 			for (std::vector<std::string>::const_iterator it = myBuffer.begin(); !myIsStarted && (it != myBuffer.end()); it++) {
-				for (std::string::const_iterator jt = it->begin(); jt != it->end(); jt++) {
-					if (!isspace(*jt)) {
+				const char *end = it->data() + it->length();
+				for (const char *ptr = it->data(); ptr != end; ptr++) {
+					if (!isspace(*ptr)) {
 						myIsStarted = true;
 						break;
 					}

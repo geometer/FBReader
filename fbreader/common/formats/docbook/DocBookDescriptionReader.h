@@ -28,12 +28,13 @@
 class DocBookDescriptionReader : public DocBookReader {
 
 public:
-	DocBookDescriptionReader(BookDescription &description);
-	bool readDescription(ZLInputStream &stream);
+	DocBookDescriptionReader(BookDescription &description) FORMATS_SECTION;
+	~DocBookDescriptionReader() FORMATS_SECTION;
+	bool readDescription(ZLInputStream &stream) FORMATS_SECTION;
 
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, int len);
+	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
+	void endElementHandler(int tag) FORMATS_SECTION;
+	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
 private:
 	WritableBookDescription myDescription;
@@ -48,5 +49,7 @@ private:
 
 	int myDepth;
 };
+
+inline DocBookDescriptionReader::~DocBookDescriptionReader() {}
 
 #endif /* __DOCBOOKDESCRIPTIONREADER_H__ */

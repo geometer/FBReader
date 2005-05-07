@@ -27,25 +27,26 @@ class FBReader;
 class BookTextView : public TextView {
 
 public:
-	BookTextView(FBReader &reader, PaintContext &context);
-	const std::string &caption() const { return myCaption; }
-	void setCaption(const std::string &caption) { myCaption = caption; }
+	BookTextView(FBReader &reader, PaintContext &context) FB_VIEW_SECTION;
+	~BookTextView() FB_VIEW_SECTION;
+	const std::string &caption() const FB_VIEW_SECTION;
+	void setCaption(const std::string &caption) FB_VIEW_SECTION;
 
-	void setModel(const TextModel *model, const std::string &name);
-	void saveState();
+	void setModel(const TextModel *model, const std::string &name) FB_VIEW_SECTION;
+	void saveState() FB_VIEW_SECTION;
 
-	void gotoParagraph(int num, bool last = false);
-	bool canUndoPageMove();
-	void undoPageMove();
-	bool canRedoPageMove();
-	void redoPageMove();
+	void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
+	bool canUndoPageMove() FB_VIEW_SECTION;
+	void undoPageMove() FB_VIEW_SECTION;
+	bool canRedoPageMove() FB_VIEW_SECTION;
+	void redoPageMove() FB_VIEW_SECTION;
 
-	bool onStylusPress(int x, int y);
+	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
 
 private:
-	void pushCurrentPositionIntoStack();
-	void replaceCurrentPositionInStack();
-	bool setFirstParagraphCursor();
+	void pushCurrentPositionIntoStack() FB_VIEW_SECTION;
+	void replaceCurrentPositionInStack() FB_VIEW_SECTION;
+	bool setFirstParagraphCursor() FB_VIEW_SECTION;
 
 private:
 	std::vector<std::pair<int,int> > myPositionStack;
@@ -55,5 +56,9 @@ private:
 	FBReader &myReader;
 	std::string myCaption;
 };
+
+inline BookTextView::~BookTextView() {}
+inline const std::string &BookTextView::caption() const { return myCaption; }
+inline void BookTextView::setCaption(const std::string &caption) { myCaption = caption; }
 
 #endif /* __BOOKTEXTVIEW_H__ */

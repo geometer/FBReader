@@ -39,10 +39,10 @@ class ZLOptionEntry;
 class OptionView {
 
 public:
-	OptionView(ZLOptionEntry *option);
-	virtual ~OptionView();
-	virtual void setVisible(bool visible) = 0;
-	virtual void setActive(bool active) = 0;
+	OptionView(ZLOptionEntry *option) DIALOG_SECTION;
+	virtual ~OptionView() DIALOG_SECTION;
+	virtual void setVisible(bool visible) DIALOG_SECTION = 0;
+	virtual void setActive(bool active) DIALOG_SECTION = 0;
 
 protected:
 	ZLOptionEntry *myOption;
@@ -51,18 +51,18 @@ protected:
 class ZLOptionEntry {
 
 public:
-	ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
-	virtual ~ZLOptionEntry() {}
-	virtual ZLOptionKind kind() const = 0;
-	virtual const std::string &name() const = 0;
+	ZLOptionEntry() DIALOG_SECTION;
+	virtual ~ZLOptionEntry() DIALOG_SECTION;
+	virtual ZLOptionKind kind() const DIALOG_SECTION = 0;
+	virtual const std::string &name() const DIALOG_SECTION = 0;
 
-	void setView(OptionView *view) { myView = view; }
+	void setView(OptionView *view) DIALOG_SECTION;
 
-	void setVisible(bool visible);
-	bool isVisible() const { return myIsVisible; }
+	void setVisible(bool visible) DIALOG_SECTION;
+	bool isVisible() const DIALOG_SECTION;
 
-	void setActive(bool active);
-	bool isActive() const { return myIsActive; }
+	void setActive(bool active) DIALOG_SECTION;
+	bool isActive() const DIALOG_SECTION;
 
 private:
 	OptionView *myView;
@@ -72,38 +72,51 @@ private:
 
 class ZLUserDefinedOptionEntry : public ZLOptionEntry {
 
+protected:
+	ZLUserDefinedOptionEntry() DIALOG_SECTION;
+
 public:
-	ZLOptionKind kind() const { return UNKNOWN; }
-	virtual OptionView *createView() = 0;
+	virtual ~ZLUserDefinedOptionEntry() DIALOG_SECTION;
+	ZLOptionKind kind() const DIALOG_SECTION;
+	virtual OptionView *createView() DIALOG_SECTION = 0;
 };
 
 class ZLChoiceOptionEntry : public ZLOptionEntry {
 
-public:
-	ZLOptionKind kind() const { return CHOICE; }
+protected:
+	ZLChoiceOptionEntry() DIALOG_SECTION;
 
-	virtual const std::string &text(int index) const = 0;
-	virtual int choiceNumber() const = 0;
-	virtual int initialCheckedIndex() const = 0;
-	virtual void onAccept(int index) const = 0;
+public:
+	virtual ~ZLChoiceOptionEntry() DIALOG_SECTION;
+	ZLOptionKind kind() const DIALOG_SECTION;
+
+	virtual const std::string &text(int index) const DIALOG_SECTION = 0;
+	virtual int choiceNumber() const DIALOG_SECTION = 0;
+	virtual int initialCheckedIndex() const DIALOG_SECTION = 0;
+	virtual void onAccept(int index) const DIALOG_SECTION = 0;
 };
 
 class ZLStringOptionEntry : public ZLOptionEntry {
 
-public:
-	ZLOptionKind kind() const { return STRING; }
+protected:
+	ZLStringOptionEntry() DIALOG_SECTION;
 
-	virtual const std::string &initialValue() const = 0;
-	virtual void onAccept(const std::string &value) const = 0;
+public:
+	virtual ~ZLStringOptionEntry() DIALOG_SECTION;
+	ZLOptionKind kind() const DIALOG_SECTION;
+
+	virtual const std::string &initialValue() const DIALOG_SECTION = 0;
+	virtual void onAccept(const std::string &value) const DIALOG_SECTION = 0;
 };
 
 class ZLSimpleStringOptionEntry : public ZLStringOptionEntry {
 
 public:
-	ZLSimpleStringOptionEntry(const std::string &name, const ZLStringOption &option) : myName(name), myOption(option) {}
-	const std::string &name() const { return myName; }
-	const std::string &initialValue() const { return myOption.value(); }
-	void onAccept(const std::string &value) const { myOption.setValue(value); }
+	ZLSimpleStringOptionEntry(const std::string &name, const ZLStringOption &option) DIALOG_SECTION;
+	~ZLSimpleStringOptionEntry() DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+	const std::string &initialValue() const DIALOG_SECTION;
+	void onAccept(const std::string &value) const DIALOG_SECTION;
 
 private:
 	std::string myName;
@@ -112,20 +125,25 @@ private:
 
 class ZLBooleanOptionEntry : public ZLOptionEntry {
 
-public:
-	ZLOptionKind kind() const { return BOOLEAN; }
+protected:
+	ZLBooleanOptionEntry() DIALOG_SECTION;
 
-	virtual bool initialState() const = 0;
-	virtual void onAccept(bool state) const = 0;
+public:
+	virtual ~ZLBooleanOptionEntry() DIALOG_SECTION;
+	ZLOptionKind kind() const DIALOG_SECTION;
+
+	virtual bool initialState() const DIALOG_SECTION = 0;
+	virtual void onAccept(bool state) const DIALOG_SECTION = 0;
 };
 
 class ZLSimpleBooleanOptionEntry : public ZLBooleanOptionEntry {
 
 public:
-	ZLSimpleBooleanOptionEntry(const std::string &name, const ZLBooleanOption &option) : myName(name), myOption(option) {}
-	const std::string &name() const { return myName; }
-	bool initialState() const { return myOption.value(); }
-	void onAccept(bool state) const { myOption.setValue(state); }
+	ZLSimpleBooleanOptionEntry(const std::string &name, const ZLBooleanOption &option) DIALOG_SECTION;
+	~ZLSimpleBooleanOptionEntry() DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+	bool initialState() const DIALOG_SECTION;
+	void onAccept(bool state) const DIALOG_SECTION;
 
 private:
 	std::string myName;
@@ -134,26 +152,31 @@ private:
 
 class ZLSpinOptionEntry : public ZLOptionEntry {
 
-public:
-	ZLOptionKind kind() const { return SPIN; }
+protected:
+	ZLSpinOptionEntry() DIALOG_SECTION;
 
-	virtual int initialValue() const = 0;
-	virtual int minValue() const = 0;
-	virtual int maxValue() const = 0;
-	virtual int step() const = 0;
-	virtual void onAccept(int value) const = 0;
+public:
+	virtual ~ZLSpinOptionEntry() DIALOG_SECTION;
+	ZLOptionKind kind() const DIALOG_SECTION;
+
+	virtual int initialValue() const DIALOG_SECTION = 0;
+	virtual int minValue() const DIALOG_SECTION = 0;
+	virtual int maxValue() const DIALOG_SECTION = 0;
+	virtual int step() const DIALOG_SECTION = 0;
+	virtual void onAccept(int value) const DIALOG_SECTION = 0;
 };
 
 class ZLSimpleSpinOptionEntry : public ZLSpinOptionEntry {
 
 public:
-	ZLSimpleSpinOptionEntry(const std::string &name, const ZLIntegerOption &option, int minValue, int maxValue, int step) : myName(name), myOption(option), myMinValue(minValue), myMaxValue(maxValue), myStep(step) {}
-	const std::string &name() const { return myName; }
-	int initialValue() const { return myOption.value(); }
-	int minValue() const { return myMinValue; }
-	int maxValue() const { return myMaxValue; }
-	int step() const { return myStep; }
-	void onAccept(int value) const { myOption.setValue(value); }
+	ZLSimpleSpinOptionEntry(const std::string &name, const ZLIntegerOption &option, int minValue, int maxValue, int step) DIALOG_SECTION;
+	~ZLSimpleSpinOptionEntry() DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+	int initialValue() const DIALOG_SECTION;
+	int minValue() const DIALOG_SECTION;
+	int maxValue() const DIALOG_SECTION;
+	int step() const DIALOG_SECTION;
+	void onAccept(int value) const DIALOG_SECTION;
 
 private:
 	std::string myName;
@@ -165,23 +188,28 @@ private:
 
 class ZLComboOptionEntry : public ZLOptionEntry {
 
-public:
-	ZLOptionKind kind() const { return COMBO; }
+protected:
+	ZLComboOptionEntry() DIALOG_SECTION;
 
-	virtual const std::string &initialValue() const = 0;
-	virtual const std::vector<std::string> &values() const = 0;
-	virtual void onValueChange(const std::string&) {}
-	virtual void onAccept(const std::string &value) const = 0;
+public:
+	virtual ~ZLComboOptionEntry() DIALOG_SECTION;
+	ZLOptionKind kind() const DIALOG_SECTION;
+
+	virtual const std::string &initialValue() const DIALOG_SECTION = 0;
+	virtual const std::vector<std::string> &values() const DIALOG_SECTION = 0;
+	virtual void onValueChange(const std::string&) DIALOG_SECTION;
+	virtual void onAccept(const std::string &value) const DIALOG_SECTION = 0;
 };
 
 class ZLSimpleBoolean3OptionEntry : public ZLComboOptionEntry {
 
 public:
-	ZLSimpleBoolean3OptionEntry(const std::string &name, const ZLBoolean3Option &option) : myName(name), myOption(option) {}
-	const std::string &name() const { return myName; }
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value) const;
+	ZLSimpleBoolean3OptionEntry(const std::string &name, const ZLBoolean3Option &option) DIALOG_SECTION;
+	~ZLSimpleBoolean3OptionEntry() DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+	const std::string &initialValue() const DIALOG_SECTION;
+	const std::vector<std::string> &values() const DIALOG_SECTION;
+	void onAccept(const std::string &value) const DIALOG_SECTION;
 
 private:
 	static std::vector<std::string> ourValues;
@@ -191,23 +219,93 @@ private:
 
 class ZLColorOptionEntry : public ZLOptionEntry {
 
-public:
-	ZLOptionKind kind() const { return COLOR; }
+protected:
+	ZLColorOptionEntry() DIALOG_SECTION;
 
-	virtual const ZLColor color() const = 0;
-	virtual void onAccept(ZLColor color) = 0;
+public:
+	virtual ~ZLColorOptionEntry() DIALOG_SECTION;
+	ZLOptionKind kind() const DIALOG_SECTION;
+
+	virtual const ZLColor color() const DIALOG_SECTION = 0;
+	virtual void onAccept(ZLColor color) DIALOG_SECTION = 0;
 };
 
 class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
 
 public:
-	ZLSimpleColorOptionEntry(ZLColorOption &option) : myOption(option) {}
-	const std::string &name() const;
-	const ZLColor color() const { return myOption.value(); }
-	void onAccept(ZLColor color) { myOption.setValue(color); }
+	ZLSimpleColorOptionEntry(ZLColorOption &option) DIALOG_SECTION;
+	~ZLSimpleColorOptionEntry() DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+	const ZLColor color() const DIALOG_SECTION;
+	void onAccept(ZLColor color) DIALOG_SECTION;
 
 private:
 	ZLColorOption &myOption; 
 };
+
+inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
+inline ZLOptionEntry::~ZLOptionEntry() {}
+inline void ZLOptionEntry::setView(OptionView *view) { myView = view; }
+inline bool ZLOptionEntry::isVisible() const { return myIsVisible; }
+inline bool ZLOptionEntry::isActive() const { return myIsActive; }
+
+inline ZLUserDefinedOptionEntry::ZLUserDefinedOptionEntry() {}
+inline ZLUserDefinedOptionEntry::~ZLUserDefinedOptionEntry() {}
+inline ZLOptionKind ZLUserDefinedOptionEntry::kind() const { return UNKNOWN; }
+
+inline ZLChoiceOptionEntry::ZLChoiceOptionEntry() {}
+inline ZLChoiceOptionEntry::~ZLChoiceOptionEntry() {}
+inline ZLOptionKind ZLChoiceOptionEntry::kind() const { return CHOICE; }
+
+inline ZLStringOptionEntry::ZLStringOptionEntry() {}
+inline ZLStringOptionEntry::~ZLStringOptionEntry() {}
+inline ZLOptionKind ZLStringOptionEntry::kind() const { return STRING; }
+
+inline ZLSimpleStringOptionEntry::ZLSimpleStringOptionEntry(const std::string &name, const ZLStringOption &option) : myName(name), myOption(option) {}
+inline ZLSimpleStringOptionEntry::~ZLSimpleStringOptionEntry() {}
+inline const std::string &ZLSimpleStringOptionEntry::name() const { return myName; }
+inline const std::string &ZLSimpleStringOptionEntry::initialValue() const { return myOption.value(); }
+inline void ZLSimpleStringOptionEntry::onAccept(const std::string &value) const { myOption.setValue(value); }
+
+inline ZLBooleanOptionEntry::ZLBooleanOptionEntry() {}
+inline ZLBooleanOptionEntry::~ZLBooleanOptionEntry() {}
+inline ZLOptionKind ZLBooleanOptionEntry::kind() const { return BOOLEAN; }
+
+inline ZLSimpleBooleanOptionEntry::ZLSimpleBooleanOptionEntry(const std::string &name, const ZLBooleanOption &option) : myName(name), myOption(option) {}
+inline ZLSimpleBooleanOptionEntry::~ZLSimpleBooleanOptionEntry() {}
+inline const std::string &ZLSimpleBooleanOptionEntry::name() const { return myName; }
+inline bool ZLSimpleBooleanOptionEntry::initialState() const { return myOption.value(); }
+inline void ZLSimpleBooleanOptionEntry::onAccept(bool state) const { myOption.setValue(state); }
+
+inline ZLSpinOptionEntry::ZLSpinOptionEntry() {}
+inline ZLSpinOptionEntry::~ZLSpinOptionEntry() {}
+inline ZLOptionKind ZLSpinOptionEntry::kind() const { return SPIN; }
+
+inline ZLSimpleSpinOptionEntry::ZLSimpleSpinOptionEntry(const std::string &name, const ZLIntegerOption &option, int minValue, int maxValue, int step) : myName(name), myOption(option), myMinValue(minValue), myMaxValue(maxValue), myStep(step) {}
+inline ZLSimpleSpinOptionEntry::~ZLSimpleSpinOptionEntry() {}
+inline const std::string &ZLSimpleSpinOptionEntry::name() const { return myName; }
+inline int ZLSimpleSpinOptionEntry::initialValue() const { return myOption.value(); }
+inline int ZLSimpleSpinOptionEntry::minValue() const { return myMinValue; }
+inline int ZLSimpleSpinOptionEntry::maxValue() const { return myMaxValue; }
+inline int ZLSimpleSpinOptionEntry::step() const { return myStep; }
+inline void ZLSimpleSpinOptionEntry::onAccept(int value) const { myOption.setValue(value); }
+
+inline ZLComboOptionEntry::ZLComboOptionEntry() {}
+inline ZLComboOptionEntry::~ZLComboOptionEntry() {}
+inline ZLOptionKind ZLComboOptionEntry::kind() const { return COMBO; }
+inline void ZLComboOptionEntry::onValueChange(const std::string&) {}
+
+inline ZLSimpleBoolean3OptionEntry::ZLSimpleBoolean3OptionEntry(const std::string &name, const ZLBoolean3Option &option) : myName(name), myOption(option) {}
+inline ZLSimpleBoolean3OptionEntry::~ZLSimpleBoolean3OptionEntry() {}
+inline const std::string &ZLSimpleBoolean3OptionEntry::name() const { return myName; }
+
+inline ZLColorOptionEntry::ZLColorOptionEntry() {}
+inline ZLColorOptionEntry::~ZLColorOptionEntry() {}
+inline ZLOptionKind ZLColorOptionEntry::kind() const { return COLOR; }
+
+inline ZLSimpleColorOptionEntry::ZLSimpleColorOptionEntry(ZLColorOption &option) : myOption(option) {}
+inline ZLSimpleColorOptionEntry::~ZLSimpleColorOptionEntry() {}
+inline const ZLColor ZLSimpleColorOptionEntry::color() const { return myOption.value(); }
+inline void ZLSimpleColorOptionEntry::onAccept(ZLColor color) { myOption.setValue(color); }
 
 #endif /* __ZLOPTIONENTRY_H__ */
