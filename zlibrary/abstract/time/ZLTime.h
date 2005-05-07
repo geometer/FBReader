@@ -54,15 +54,4 @@ protected:
 friend class ZLTime;
 };
 
-inline ZLTime::ZLTime() { *this = ZLTimeManager::instance().currentTime(); }
-inline ZLTime::ZLTime(long seconds, long milliseconds) : mySeconds(seconds), myMilliseconds(milliseconds) {}
-inline ZLTime::~ZLTime() {}
-inline long ZLTime::millisecondsTo(const ZLTime &time) const { return 1000 * (time.mySeconds - mySeconds) + time.myMilliseconds - myMilliseconds; }
-inline long ZLTime::millisecondsFrom(const ZLTime &time) const { return - millisecondsTo(time); }
-
-inline ZLTimeManager &ZLTimeManager::instance() { return *ourInstance; }
-inline void ZLTimeManager::deleteInstance() { delete ourInstance; }
-inline ZLTimeManager::ZLTimeManager() {}
-inline ZLTimeManager::~ZLTimeManager() {}
-
 #endif /* __ZLTIME_H__ */

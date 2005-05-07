@@ -19,3 +19,35 @@
 #include "ZLTime.h"
 
 ZLTimeManager *ZLTimeManager::ourInstance = 0;
+
+ZLTime::ZLTime() {
+	*this = ZLTimeManager::instance().currentTime();
+}
+
+ZLTime::ZLTime(long seconds, long milliseconds) : mySeconds(seconds), myMilliseconds(milliseconds) {
+}
+
+ZLTime::~ZLTime() {
+}
+
+long ZLTime::millisecondsTo(const ZLTime &time) const {
+	return 1000 * (time.mySeconds - mySeconds) + time.myMilliseconds - myMilliseconds;
+}
+
+long ZLTime::millisecondsFrom(const ZLTime &time) const {
+	return - millisecondsTo(time);
+}
+
+ZLTimeManager &ZLTimeManager::instance() {
+	return *ourInstance;
+}
+
+void ZLTimeManager::deleteInstance() {
+	delete ourInstance;
+}
+
+ZLTimeManager::ZLTimeManager() {
+}
+
+ZLTimeManager::~ZLTimeManager() {
+}

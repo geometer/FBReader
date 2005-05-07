@@ -133,7 +133,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DFB_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DFORMATS_SECTION="__attribute__ ((section(\"sec4\")))" \
-		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DPALM_TEMPORARY \
 		-pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -Wno-non-template-friend
 	LDFLAGS =

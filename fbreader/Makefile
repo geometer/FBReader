@@ -35,7 +35,7 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	#SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation
+	#SUBDIRS = common/model common/description common/collection common/bookmodel common/view common/textview # common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/hyphenation
 	SUBDIRS += $(TARGET_ARCH)
 endif
 

@@ -18,6 +18,16 @@
 
 #include "ZLPalmTime.h"
 
+void ZLPalmTimeManager::createInstance() {
+	ourInstance = new ZLPalmTimeManager();
+}
+
+ZLPalmTimeManager::ZLPalmTimeManager() {
+}
+
+ZLPalmTimeManager::~ZLPalmTimeManager() {
+}
+
 ZLTime ZLPalmTimeManager::currentTime() const {
 	//TODO: implement
 	//struct timeb timeB;

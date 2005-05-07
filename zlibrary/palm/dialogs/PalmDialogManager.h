@@ -36,8 +36,4 @@ public:
 	void openFileDialog(const std::string &title, const ZLFileHandler &handler) const DIALOG_SECTION;
 };
 
-inline void PalmDialogManager::createInstance() { ourInstance = new PalmDialogManager(); }
-inline PalmDialogManager::PalmDialogManager() {}
-inline PalmDialogManager::~PalmDialogManager() {}
-
 #endif /* __PALMDIALOGMANAGER_H__ */

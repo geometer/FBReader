@@ -20,6 +20,16 @@
 //#include "PalmOptionsDialog.h"
 //#include "PalmOpenFileDialog.h"
 
+void PalmDialogManager::createInstance() {
+	ourInstance = new PalmDialogManager();
+}
+
+PalmDialogManager::PalmDialogManager() {
+}
+
+PalmDialogManager::~PalmDialogManager() {
+}
+
 ZLOptionsDialog *PalmDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return 0;
 	//return new PalmOptionsDialog(id, title);

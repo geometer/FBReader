@@ -32,8 +32,4 @@ public:
 	ZLTime currentTime() const UTIL_SECTION;
 };
 
-inline void ZLPalmTimeManager::createInstance() { ourInstance = new ZLPalmTimeManager(); }
-inline ZLPalmTimeManager::ZLPalmTimeManager() {}
-inline ZLPalmTimeManager::~ZLPalmTimeManager() {}
-
 #endif /* __ZLPALMTIME_H__ */
