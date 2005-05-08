@@ -19,3 +19,17 @@
 #include "ZLScreenSize.h"
 
 ZLScreenSize *ZLScreenSize::ourInstance = 0;
+
+ZLScreenSize::ZLScreenSize() {
+}
+
+ZLScreenSize::~ZLScreenSize() {
+}
+
+ZLScreenSize::Size ZLScreenSize::getSize() {
+	return ourInstance->getSizeInternal();
+}
+
+void ZLScreenSize::deleteInstance() {
+	delete ourInstance;
+}

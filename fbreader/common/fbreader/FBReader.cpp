@@ -53,7 +53,6 @@ ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 FBReader::FBReader(PaintContext *context) {
 	myModel = 0;
 	myContext = context;
-#ifndef PALM_TEMPORARY
 	myBookTextView = new BookTextView(*this, *myContext);
 	myFootnoteView = new FootnoteView(*myContext);
 	myContentsView = new ContentsView(*this, *myContext);
@@ -62,6 +61,7 @@ FBReader::FBReader(PaintContext *context) {
 	myPreviousMode = BOOK_TEXT_MODE;
 
 	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
+#ifndef PALM_TEMPORARY
 	ZLStringOption bookName(STATE, BOOK, howToStartString);
 	BookDescription *description = BookDescription::create(bookName.value());
 	if (description == 0) {
@@ -73,19 +73,20 @@ FBReader::FBReader(PaintContext *context) {
 
 FBReader::~FBReader() {
 	delete myContext;
-#ifndef PALM_TEMPORARY
 	myBookTextView->saveState();
 	delete myBookTextView;
 	delete myFootnoteView;
 	myContentsView->saveState();
 	delete myContentsView;
 	delete myCollectionView;
+#ifndef PALM_TEMPORARY
 	if (myModel != 0) {
 		ZLStringOption bookName(STATE, BOOK, std::string());
 		bookName.setValue(myModel->fileName());
 		delete myModel;
 	}
 #endif // PALM_TEMPORARY
+	TextStyleCollection::deleteInstance();
 }
 
 void FBReader::openBook(BookDescription *description) {

@@ -39,7 +39,7 @@ BookModel::~BookModel() {
 	for (ImageMap::const_iterator it = myImages.begin(); it != myImages.end(); it++) {
 		delete (*it).second;
 	}
-	for (std::map<const std::string,PlainTextModel*>::const_iterator it = myFootnotes.begin(); it != myFootnotes.end(); it++) {
+	for (std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.begin(); it != myFootnotes.end(); it++) {
 		delete (*it).second;
 	}
 }
@@ -49,11 +49,11 @@ const std::string &BookModel::fileName() const {
 }
 
 int BookModel::paragraphNumberById(const std::string &id) const {
-	std::map<const std::string,int>::const_iterator it = myInternalHyperlinks.find(id);
+	std::map<std::string,int>::const_iterator it = myInternalHyperlinks.find(id);
 	return (it != myInternalHyperlinks.end()) ? (*it).second : -1;
 }
 
 const TextModel *BookModel::footnoteModel(const std::string &id) const {
-	std::map<const std::string,PlainTextModel*>::const_iterator it = myFootnotes.find(id);
+	std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.find(id);
 	return (it != myFootnotes.end()) ? (*it).second : 0;
 }

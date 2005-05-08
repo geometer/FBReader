@@ -19,6 +19,12 @@
 
 #include "View.h"
 
+View::View(PaintContext &context) : myContext(context) {
+}
+
+View::~View() {
+}
+
 void ViewWidget::setView(View *view) {
 	myView = view;
 	myView->myWidget = this;

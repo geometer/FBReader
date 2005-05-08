@@ -29,11 +29,6 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-BookTextView::BookTextView(FBReader &reader, PaintContext &context) : TextView(context), myReader(reader) {
-	myCurrentPointInStack = 0;
-	myMaxStackSize = 20;
-}
-
 static const std::string PARAGRAPH_OPTION_NAME = "Paragraph";
 static const std::string WORD_OPTION_NAME = "Word";
 static const std::string CHAR_OPTION_NAME = "Char";
@@ -41,6 +36,14 @@ static const std::string BUFFER_SIZE = "UndoBufferSize";
 static const std::string POSITION_IN_BUFFER = "PositionInBuffer";
 static const char * const BUFFER_PARAGRAPH_PREFIX = "Paragraph_";
 static const char * const BUFFER_WORD_PREFIX = "Word_";
+
+BookTextView::BookTextView(FBReader &reader, PaintContext &context) : TextView(context), myReader(reader) {
+	myCurrentPointInStack = 0;
+	myMaxStackSize = 20;
+}
+
+BookTextView::~BookTextView() {
+}
 
 void BookTextView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);

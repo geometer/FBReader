@@ -2,6 +2,7 @@
 #define __MAP1_H__
 
 #include <sys_types.h>
+#include <vector>
 
 namespace std {
 
@@ -9,6 +10,7 @@ namespace std {
 	struct pair {
 		pair() STL_SECTION;
 		pair(const T1 &f, const T2 &s) STL_SECTION;
+		pair &operator = (const pair &p) STL_SECTION;
 		T1 first;
 		T2 second;
 	};
@@ -21,6 +23,7 @@ namespace std {
 
 		struct iterator {
 			iterator() STL_SECTION;
+
 			bool operator == (const iterator &it) const STL_SECTION;
 			bool operator == (const const_iterator &it) const STL_SECTION;
 			bool operator != (const iterator &it) const STL_SECTION;
@@ -29,18 +32,20 @@ namespace std {
 			const iterator &operator ++ (int) STL_SECTION;
 			const iterator &operator += (size_t offset) STL_SECTION;
 			const iterator &operator -- (int) STL_SECTION;
-			const iterator &operator + (size_t offset) const STL_SECTION;
+			const iterator operator + (size_t offset) const STL_SECTION;
+			const iterator operator - (size_t offset) const STL_SECTION;
 			size_t operator - (const iterator &it) const STL_SECTION;
 			size_t operator - (const const_iterator &it) const STL_SECTION;
 
 			pair<T1,T2> &operator * () const STL_SECTION;
 			pair<T1,T2> *operator -> () const STL_SECTION;
-		/*
+
 		private:
-			T *myPtr;
-		*/
+			vector<pair<T1,T2> >::iterator myIter;
+			iterator(const vector<pair<T1,T2> >::iterator &iter) STL_SECTION;
 
 		friend struct const_iterator;
+		friend class map;
 		};
 
 		struct const_iterator {
@@ -55,18 +60,20 @@ namespace std {
 			const const_iterator &operator ++ (int) STL_SECTION;
 			const const_iterator &operator += (size_t offset) STL_SECTION;
 			const const_iterator &operator -- (int) STL_SECTION;
-			const const_iterator &operator + (size_t offset) const STL_SECTION;
+			const const_iterator operator + (size_t offset) const STL_SECTION;
+			const const_iterator operator - (size_t offset) const STL_SECTION;
 			size_t operator - (const iterator &it) const STL_SECTION;
 			size_t operator - (const const_iterator &it) const STL_SECTION;
 
 			const pair<T1,T2> &operator * () const STL_SECTION;
 			const pair<T1,T2> *operator -> () const STL_SECTION;
-	/*
+
 		private:
-			T *myPtr;
-	*/
+			vector<pair<T1,T2> >::const_iterator myIter;
+			const_iterator(const vector<pair<T1,T2> >::const_iterator &iter) STL_SECTION;
 
 		friend struct iterator;
+		friend class map;
 		};
 
 	public:
@@ -75,31 +82,17 @@ namespace std {
 
 		bool empty() const STL_SECTION;
 		size_t size() const STL_SECTION;
-		T2 &operator[] (const T1 &key) const STL_SECTION;
+		T2 &operator[] (const T1 &key) STL_SECTION;
+		const T2 &operator[] (const T1 &key) const STL_SECTION;
 		iterator find(const T1 &key) const STL_SECTION;
-	/*
-		T& front() const STL_SECTION;
-		T& back() const STL_SECTION;
-	*/
 
 		iterator begin() const STL_SECTION;
 		iterator end() const STL_SECTION;
 
 		void insert(const pair<T1,T2> &p) STL_SECTION;
-	/*
-		void clear() STL_SECTION;
-		void reserve(size_t size) STL_SECTION;
-		void push_back(const T &element) STL_SECTION;
-		void insert(const iterator &position, const const_iterator &from, const const_iterator &to) STL_SECTION;
-		void swap(map &v) STL_SECTION;
-	*/
 
 	private:
-	/*
-		size_t myDataSize;
-		size_t myLength;
-		T *myData;
-	*/
+		mutable vector<pair<T1,T2> > myData;
 	};
 
 	template<typename T1, typename T2>
@@ -109,46 +102,50 @@ namespace std {
 	inline pair<T1,T2>::pair(const T1 &f, const T2 &s) : first(f), second(s) {}
 
 	template<typename T1, typename T2>
+	inline pair<T1,T2> &pair<T1,T2>::operator = (const pair<T1,T2> &p) {
+		first = p.first;
+		second = p.second;
+		return *this;
+	}
+
+	template<typename T1, typename T2>
 	inline map<T1,T2>::map() {
-		// TODO: implement
 	}
 	template<typename T1, typename T2>
 	inline map<T1,T2>::~map() {
-		// TODO: implement
 	}
 
 	template<typename T1, typename T2>
 	inline map<T1,T2>::iterator::iterator() {
-		// TODO: implement
+	}
+	template<typename T1, typename T2>
+	inline map<T1,T2>::iterator::iterator(const vector<pair<T1,T2> >::iterator &iter) : myIter(iter) {
 	}
 	template<typename T1, typename T2>
 	inline map<T1,T2>::const_iterator::const_iterator() {
-		// TODO: implement
 	}
 	template<typename T1, typename T2>
-	inline map<T1,T2>::const_iterator::const_iterator(const map<T1,T2>::iterator &it) {
-		// TODO: implement
+	inline map<T1,T2>::const_iterator::const_iterator(const map<T1,T2>::iterator &it) : myIter(it.myIter) {
+	}
+	template<typename T1, typename T2>
+	inline map<T1,T2>::const_iterator::const_iterator(const vector<pair<T1,T2> >::const_iterator &iter) : myIter(iter) {
 	}
 
 	template<typename T1, typename T2>
 	inline bool map<T1,T2>::iterator::operator == (const map<T1,T2>::iterator &it) const {
-		// TODO: implement
-		return true;
+		return myIter == it.myIter;
 	}
 	template<typename T1, typename T2>
 	inline bool map<T1,T2>::iterator::operator == (const map<T1,T2>::const_iterator &it) const {
-		// TODO: implement
-		return true;
+		return myIter == it.myIter;
 	}
 	template<typename T1, typename T2>
 	inline bool map<T1,T2>::const_iterator::operator == (const map<T1,T2>::iterator &it) const {
-		// TODO: implement
-		return true;
+		return myIter == it.myIter;
 	}
 	template<typename T1, typename T2>
 	inline bool map<T1,T2>::const_iterator::operator == (const map<T1,T2>::const_iterator &it) const {
-		// TODO: implement
-		return true;
+		return myIter == it.myIter;
 	}
 
 	template<typename T1, typename T2>
@@ -168,41 +165,47 @@ namespace std {
 		return !operator == (it);
 	}
 
-	/*
 	template<typename T1, typename T2>
 	inline const map<T1,T2>::iterator &map<T1,T2>::iterator::operator ++ (int) {
-		myPtr++;
+		myIter++;
 		return *this;
 	}
 	template<typename T1, typename T2>
 	inline const map<T1,T2>::iterator &map<T1,T2>::iterator::operator += (size_t offset) {
-		myPtr += offset;
+		myIter += offset;
 		return *this;
 	}
 	template<typename T1, typename T2>
 	inline const map<T1,T2>::iterator &map<T1,T2>::iterator::operator -- (int) {
-		myPtr--;
+		myIter--;
 		return *this;
 	}
 	template<typename T1, typename T2>
-	inline const map<T1,T2>::iterator &map<T1,T2>::iterator::operator + (size_t offset) const {
+	inline const map<T1,T2>::iterator map<T1,T2>::iterator::operator + (size_t offset) const {
 		iterator it = *this;
-		it.myPtr += offset;
+		it.myIter += offset;
+		return it;
+	}
+	template<typename T1, typename T2>
+	inline const map<T1,T2>::iterator map<T1,T2>::iterator::operator - (size_t offset) const {
+		iterator it = *this;
+		it.myIter -= offset;
 		return it;
 	}
 	template<typename T1, typename T2>
 	inline size_t map<T1,T2>::iterator::operator - (const map<T1,T2>::iterator &it) const {
-		return myPtr - it.myPtr;
+		return myIter - it.myIter;
 	}
 	template<typename T1, typename T2>
 	inline size_t map<T1,T2>::iterator::operator - (const map<T1,T2>::const_iterator &it) const {
-		return myPtr - it.myPtr;
+		return myIter - it.myIter;
 	}
 	template<typename T1, typename T2>
 	inline const map<T1,T2>::const_iterator &map<T1,T2>::const_iterator::operator ++ (int) {
-		myPtr++;
+		myIter++;
 		return *this;
 	}
+	/*
 	template<typename T1, typename T2>
 	inline const map<T1,T2>::const_iterator &map<T1,T2>::const_iterator::operator += (size_t offset) {
 		myPtr += offset;
@@ -214,7 +217,7 @@ namespace std {
 		return *this;
 	}
 	template<typename T1, typename T2>
-	inline const map<T1,T2>::const_iterator &map<T1,T2>::const_iterator::operator + (size_t offset) const {
+	inline const map<T1,T2>::const_iterator map<T1,T2>::const_iterator::operator + (size_t offset) const {
 		const_iterator it = *this;
 		it.myPtr += offset;
 		return it;
@@ -231,23 +234,21 @@ namespace std {
 
 	template<typename T1, typename T2>
 	inline pair<T1,T2> &map<T1,T2>::iterator::operator * () const {
-		// TODO: implement
-		return *operator -> ();
+		return *myIter;
 	}
 	template<typename T1, typename T2>
 	inline pair<T1,T2> *map<T1,T2>::iterator::operator -> () const {
-		// TODO: implement
-		return 0;
+		// TODO: !!!
+		return &*myIter;
 	}
 	template<typename T1, typename T2>
 	inline const pair<T1,T2> &map<T1,T2>::const_iterator::operator * () const {
-		// TODO: implement
-		return *operator -> ();
+		return *myIter;
 	}
 	template<typename T1, typename T2>
 	inline const pair<T1,T2> *map<T1,T2>::const_iterator::operator -> () const {
-		// TODO: implement
-		return 0;
+		// TODO: !!!
+		return &*myIter;
 	}
 
 	/*
@@ -265,11 +266,12 @@ namespace std {
 		// TODO: implement
 		return true;
 	}
+	*/
 	template<typename T1, typename T2>
 	size_t map<T1,T2>::size() const {
-		// TODO: implement
-		return 0;
+		return end() - begin();
 	}
+	/*
 	template<typename T1, typename T2>
 	T& map<T1,T2>::operator[] (size_t index) const {
 		// TODO: implement
@@ -289,29 +291,45 @@ namespace std {
 
 	template<typename T1, typename T2>
 	inline map<T1,T2>::iterator map<T1,T2>::begin() const {
-		// TODO: implement
-		return iterator();
+		return iterator(myData.begin());
 	}
 	template<typename T1, typename T2>
 	inline map<T1,T2>::iterator map<T1,T2>::end() const {
-		// TODO: implement
-		return iterator();
+		return iterator(myData.end());
 	}
 
 	template<typename T1, typename T2>
-	inline T2 &map<T1,T2>::operator[] (const T1 &key) const {
-		// TODO: implement
-		return find(key)->second;
+	inline T2 &map<T1,T2>::operator[] (const T1 &key) {
+		iterator it = find(key);
+		if (it == end()) {
+			insert(pair<T1,T2>(key, T2()));
+			it = end() - 1;
+		}
+		return it->second;
+	}
+	template<typename T1, typename T2>
+	inline const T2 &map<T1,T2>::operator[] (const T1 &key) const {
+		iterator it = find(key);
+		if (it == end()) {
+			insert(pair<T1,T2>(key, T2()));
+			it = end() - 1;
+		}
+		return it->second;
 	}
 	template<typename T1, typename T2>
 	inline map<T1,T2>::iterator map<T1,T2>::find(const T1 &key) const {
-		// TODO: implement
-		return iterator();
+		iterator it = begin();
+		for (; it != end(); it++) {
+			if (it->first == key) {
+				return it;
+			}
+		}
+		return it;
 	}
 
 	template<typename T1, typename T2>
 	inline void map<T1,T2>::insert(const pair<T1,T2> &p) {
-		// TODO: implement
+		myData.push_back(p);
 	}
 	/*
 	template<typename T1, typename T2>

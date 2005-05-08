@@ -40,9 +40,4 @@ protected:
 	virtual Size getSizeInternal() const UTIL_SECTION = 0;
 };
 
-inline ZLScreenSize::Size ZLScreenSize::getSize() { return ourInstance->getSizeInternal(); }
-inline void ZLScreenSize::deleteInstance() { delete ourInstance; }
-inline ZLScreenSize::ZLScreenSize() {}
-inline ZLScreenSize::~ZLScreenSize() {}
-
 #endif /* __ZLSCREENSIZE_H__ */

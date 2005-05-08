@@ -28,7 +28,7 @@
 
 class BookDescription;
 class Image;
-typedef std::map<const std::string,Image*> ImageMap;
+typedef std::map<std::string,Image*> ImageMap;
 
 class ParagraphEntry {
 

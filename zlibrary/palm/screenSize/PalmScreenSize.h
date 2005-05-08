@@ -36,8 +36,4 @@ protected:
 	Size getSizeInternal() const UTIL_SECTION;
 };
 
-inline PalmScreenSize::PalmScreenSize() {}
-inline PalmScreenSize::~PalmScreenSize() {}
-inline void PalmScreenSize::createInstance() { ourInstance = new PalmScreenSize(); }
-
 #endif /* __PALMSCREENSIZE_H__ */

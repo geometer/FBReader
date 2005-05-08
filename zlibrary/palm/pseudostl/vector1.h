@@ -22,7 +22,8 @@ namespace std {
 			const iterator &operator ++ (int) STL_SECTION;
 			const iterator &operator += (size_t offset) STL_SECTION;
 			const iterator &operator -- (int) STL_SECTION;
-			const iterator &operator + (size_t offset) const STL_SECTION;
+			const iterator &operator -= (size_t offset) STL_SECTION;
+			const iterator operator + (size_t offset) const STL_SECTION;
 			size_t operator - (const iterator &it) const STL_SECTION;
 			size_t operator - (const const_iterator &it) const STL_SECTION;
 
@@ -49,7 +50,7 @@ namespace std {
 			const const_iterator &operator ++ (int) STL_SECTION;
 			const const_iterator &operator += (size_t offset) STL_SECTION;
 			const const_iterator &operator -- (int) STL_SECTION;
-			const const_iterator &operator + (size_t offset) const STL_SECTION;
+			const const_iterator operator + (size_t offset) const STL_SECTION;
 			size_t operator - (const iterator &it) const STL_SECTION;
 			size_t operator - (const const_iterator &it) const STL_SECTION;
 
@@ -174,12 +175,17 @@ namespace std {
 		return *this;
 	}
 	template<typename T>
+	inline const vector<T>::iterator &vector<T>::iterator::operator -= (size_t offset) {
+		__myPtr -= offset;
+		return *this;
+	}
+	template<typename T>
 	inline const vector<T>::iterator &vector<T>::iterator::operator -- (int) {
 		__myPtr--;
 		return *this;
 	}
 	template<typename T>
-	inline const vector<T>::iterator &vector<T>::iterator::operator + (size_t offset) const {
+	inline const vector<T>::iterator vector<T>::iterator::operator + (size_t offset) const {
 		iterator it = *this;
 		it.__myPtr += offset;
 		return it;
@@ -208,7 +214,7 @@ namespace std {
 		return *this;
 	}
 	template<typename T>
-	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator + (size_t offset) const {
+	inline const vector<T>::const_iterator vector<T>::const_iterator::operator + (size_t offset) const {
 		const_iterator it = *this;
 		it.__myPtr += offset;
 		return it;
@@ -266,7 +272,7 @@ namespace std {
 	}
 	template<typename T>
 	inline vector<T>::iterator vector<T>::end() const {
-		return iterator(__myData + __myLength - 1);
+		return iterator(__myData + __myLength);
 	}
 
 	template<typename T>
@@ -282,10 +288,8 @@ namespace std {
 			__myDataSize = size;
 			// TODO: use MemPtrResize
 			T *d = (T*)MemPtrNew(__myDataSize * sizeof(T));
-			for (size_t i = 0; i < __myLength; i++) {
-				d[i] = __myData[i];
-			}
 			if (__myData != 0) {
+				MemMove(d, __myData, __myLength * sizeof(T));
 				MemPtrFree(__myData);
 			}
 			__myData = d;

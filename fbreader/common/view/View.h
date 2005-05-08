@@ -75,8 +75,6 @@ inline View *ViewWidget::view() const { return myView; }
 inline void ViewWidget::rotate() { myIsRotated = !myIsRotated; }
 inline bool ViewWidget::isRotated() const { return myIsRotated; }
 
-inline View::View(PaintContext &context) : myContext(context) {}
-inline View::~View() {}
 inline PaintContext &View::context() const { return myContext; }
 inline bool View::onStylusPress(int, int) { return false; }
 

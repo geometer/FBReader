@@ -51,8 +51,8 @@ private:
 	PlainTextModel myBookTextModel;
 	PlainTextModel myContentsModel;
 	ImageMap myImages;
-	std::map<const std::string,PlainTextModel*> myFootnotes;
-	std::map<const std::string,int> myInternalHyperlinks;
+	std::map<std::string,PlainTextModel*> myFootnotes;
+	std::map<std::string,int> myInternalHyperlinks;
 
 friend class BookReader;
 };

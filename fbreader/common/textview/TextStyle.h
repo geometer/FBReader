@@ -264,6 +264,7 @@ class TextStyleCollection {
 
 public:
 	static TextStyleCollection &instance() TEXT_STYLE_SECTION;
+	static void deleteInstance() TEXT_STYLE_SECTION;
 
 	BaseTextStyle &baseStyle() const TEXT_STYLE_SECTION;
 	const TextStyleDecoration *decoration(TextKind kind) const TEXT_STYLE_SECTION;
@@ -356,12 +357,6 @@ inline int FullDecoratedTextStyle::verticalShift() const { return base().vertica
 inline double FullDecoratedTextStyle::lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base().lineSpace() : space; }
 inline const TextStyleDecoration &FullDecoratedTextStyle::decoration() const { return myDecoration; }
 
-inline TextStyleCollection &TextStyleCollection::instance() {
-	if (ourInstance == 0) {
-		ourInstance = new TextStyleCollection();
-	}
-	return *ourInstance;
-}
 inline BaseTextStyle &TextStyleCollection::baseStyle() const { return *myBaseStyle; }
 
 #endif /* __TEXTSTYLE_H__ */

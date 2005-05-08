@@ -18,6 +18,16 @@
 
 #include "PalmScreenSize.h"
 
+PalmScreenSize::PalmScreenSize() {
+}
+
+PalmScreenSize::~PalmScreenSize() {
+}
+
+void PalmScreenSize::createInstance() {
+	ourInstance = new PalmScreenSize();
+}
+
 ZLScreenSize::Size PalmScreenSize::getSizeInternal() const {
 	// TODO: implement
 	return SIZE_320x320;

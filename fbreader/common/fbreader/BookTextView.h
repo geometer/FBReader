@@ -57,7 +57,6 @@ private:
 	std::string myCaption;
 };
 
-inline BookTextView::~BookTextView() {}
 inline const std::string &BookTextView::caption() const { return myCaption; }
 inline void BookTextView::setCaption(const std::string &caption) { myCaption = caption; }
 

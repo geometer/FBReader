@@ -37,12 +37,12 @@ void BookReader::setMainTextModel() {
 }
 
 void BookReader::setFootnoteTextModel(const std::string &id) {
-	std::map<const std::string,PlainTextModel*>::iterator it = myModel.myFootnotes.find(id);
+	std::map<std::string,PlainTextModel*>::iterator it = myModel.myFootnotes.find(id);
 	if (it != myModel.myFootnotes.end()) {
 		myCurrentTextModel = (*it).second;
 	} else {
 		myCurrentTextModel = new PlainTextModel();
-		myModel.myFootnotes.insert(std::pair<const std::string,PlainTextModel*>(id, myCurrentTextModel));
+		myModel.myFootnotes.insert(std::pair<std::string,PlainTextModel*>(id, myCurrentTextModel));
 	}
 }
 
@@ -101,7 +101,7 @@ void BookReader::addHyperlinkLabel(const std::string &label) {
 		if (myCurrentParagraph != 0) {
 			paragraphNumber--;
 		}
-		myModel.myInternalHyperlinks.insert(std::pair<const std::string,int>(label, paragraphNumber));
+		myModel.myInternalHyperlinks.insert(std::pair<std::string,int>(label, paragraphNumber));
 	}
 }
 
@@ -177,7 +177,7 @@ void BookReader::addImageToParagraph(const std::string &id) {
 }
 
 void BookReader::addImageToModel(const std::string &id, Image *image) {
-	myModel.myImages.insert(std::pair<const std::string,Image*>(id, image));
+	myModel.myImages.insert(std::pair<std::string,Image*>(id, image));
 }
 
 void BookReader::beginContentsParagraph() {

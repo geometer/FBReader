@@ -27,7 +27,21 @@ ZLColorOption TextStyle::RegularTextColorOption(COLORS, "Text", ZLColor(0, 0, 0)
 ZLColorOption TextStyle::SelectedTextColorOption(COLORS, "SelectedText", ZLColor(0, 0, 127));
 ZLColorOption TextStyle::HyperlinkTextColorOption(COLORS, "Hyperlink", ZLColor(63, 63, 127));
 
-TextStyleCollection *TextStyleCollection::ourInstance = 0;
+TextStyleCollection *TextStyleCollection::ourInstance = NULL;
+
+TextStyleCollection &TextStyleCollection::instance() {
+	if (ourInstance == NULL) {
+		ourInstance = new TextStyleCollection();
+	}
+	return *ourInstance;
+}
+
+void TextStyleCollection::deleteInstance() {
+	if (ourInstance != NULL) {
+		delete ourInstance;
+		ourInstance = NULL;
+	}
+}
 
 TextStyleCollection::TextStyleCollection() {
 	int defaultFontSize = 24;

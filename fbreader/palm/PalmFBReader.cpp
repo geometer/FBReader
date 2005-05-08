@@ -18,6 +18,10 @@ void PalmFBReader::fullscreenSlot() {}
 bool PalmFBReader::isRotationSupported() const { return false; }
 
 static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
+	static const UInt32 RomVersion50 = sysMakeROMVersion(5, 0, 0, sysROMStageDevelopment, 0);
+	UInt32 romVersion;
+	FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
+
 	switch (event->eType) {
   	case menuCmdBarOpenEvent:	
 			MenuCmdBarAddButton(menuCmdBarOnRight, OpenBook, menuCmdBarResultMenuItem, OpenBook, "");
@@ -27,8 +31,8 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
    	case penDownEvent:
 			{
 				char txt[4];
-				int x = event->screenX;
-				txt[0] = '0' + x / 100;
+				int x = romVersion;
+				txt[0] = '0' + x / 100 % 10;
 				txt[1] = '0' + x / 10 % 10;
 				txt[2] = '0' + x % 10;
 				txt[3] = '\0';
@@ -39,7 +43,9 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
   	case frmOpenEvent:	
 			{
 				FrmDrawForm(FrmGetActiveForm());
-				WinSetCoordinateSystem(kCoordinatesNative);
+				if (romVersion >= RomVersion50) {
+					WinSetCoordinateSystem(kCoordinatesNative);
+				}
 				PalmPaintContext *context = new PalmPaintContext();
 				PalmFBReader reader(context);
 				context->setSize(320, 320);
@@ -74,7 +80,9 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 				context->drawLine(barRight, barTop, barRight, barBottom);
 				context->drawLine(barLeft, barTop, barRight, barTop);
 				context->drawLine(barLeft, barBottom, barRight, barBottom);
-				WinSetCoordinateSystem(kCoordinatesStandard);
+				if (romVersion >= RomVersion50) {
+					WinSetCoordinateSystem(kCoordinatesStandard);
+				}
 			}
 			return true;
 
