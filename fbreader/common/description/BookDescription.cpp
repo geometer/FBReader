@@ -42,6 +42,12 @@ bool BookInfo::isFull() const {
 }
 
 BookDescription *BookDescription::create(const std::string &fileName) {
+#ifdef PALM_TEMPORARY
+	//if (fileName == "$$TEST") {
+		//BookDescription *description = new BookDescription(fileName);
+		//return description;
+	//}
+#endif
 	std::string realFileName = fileName.substr(0, fileName.find(':'));
 	ZLFileInfo fileInfo = ZLFSManager::instance().fileInfo(realFileName);
 	if (!fileInfo.Exists) {

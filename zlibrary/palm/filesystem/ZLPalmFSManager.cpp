@@ -19,6 +19,8 @@
 #define NOZLIBDEFS
 #include <zlib.h>
 
+#include <Extensions/ExpansionMgr/VFSMgr.h>
+
 #include "ZLPalmFSManager.h"
 #include "ZLPalmFSDir.h"
 #include "ZLPalmFileInputStream.h"
@@ -55,8 +57,28 @@ ZLOutputStream *ZLPalmFSManager::createOutputStream(const std::string &name) {
 }
 
 ZLFileInfo ZLPalmFSManager::fileInfo(std::string &name) {
-	// TODO: implement
 	ZLFileInfo info;
-	info.Exists = true;
+
+	UInt16  unVol;
+	UInt32  ulIter;
+	UInt32  ulVFSMgrVer;
+
+	FtrGet(sysFileCVFSMgr, vfsFtrIDVersion, &ulVFSMgrVer);
+	ulIter = vfsIteratorStart;
+	VFSVolumeEnumerate(&unVol, &ulIter);
+
+	UInt32 fileRef;
+	VFSFileOpen(unVol, name.c_str(), vfsModeRead, &fileRef);
+
+	if (fileRef != 0) {
+		info.Exists = true;
+		VFSFileSize(fileRef, &info.Size);
+		VFSFileGetDate(fileRef, vfsFileDateModified, &info.MTime);
+		VFSFileClose(fileRef);
+	} else {
+		info.Exists = false;
+		info.Size = 0;
+		info.MTime = 0;
+	}
 	return info;
 }
