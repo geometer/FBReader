@@ -65,7 +65,6 @@ public:
 	virtual int stringWidth(const std::string &str, int from, int len) const VIEW_SECTION = 0;
 	virtual int stringHeight() const VIEW_SECTION = 0;
 	virtual void drawString(int x, int y, const std::string &str, int from, int len) VIEW_SECTION = 0;
-	//virtual void drawWord(int x, int y, const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) VIEW_SECTION = 0;
 
 	virtual int imageWidth(const Image &image) const VIEW_SECTION = 0;
 	virtual int imageHeight(const Image &image) const VIEW_SECTION = 0;
@@ -94,9 +93,6 @@ private:
 	PaintContext(const PaintContext&);
 	const PaintContext& operator = (const PaintContext&);
 };
-
-inline PaintContext::~PaintContext() {}
-inline void PaintContext::removeCaches() {}
 
 inline int PaintContext::x() const { return myX; }
 inline int PaintContext::y() const { return myY; }

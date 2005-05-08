@@ -53,6 +53,7 @@ ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 FBReader::FBReader(PaintContext *context) {
 	myModel = 0;
 	myContext = context;
+#ifndef PALM_TEMPORARY
 	myBookTextView = new BookTextView(*this, *myContext);
 	myFootnoteView = new FootnoteView(*myContext);
 	myContentsView = new ContentsView(*this, *myContext);
@@ -67,10 +68,12 @@ FBReader::FBReader(PaintContext *context) {
 		description = BookDescription::create(howToStartString);
 	}
 	openBook(description);
+#endif // PALM_TEMPORARY
 }
 
 FBReader::~FBReader() {
 	delete myContext;
+#ifndef PALM_TEMPORARY
 	myBookTextView->saveState();
 	delete myBookTextView;
 	delete myFootnoteView;
@@ -82,6 +85,7 @@ FBReader::~FBReader() {
 		bookName.setValue(myModel->fileName());
 		delete myModel;
 	}
+#endif // PALM_TEMPORARY
 }
 
 void FBReader::openBook(BookDescription *description) {

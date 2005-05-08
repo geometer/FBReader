@@ -34,9 +34,9 @@ private:
 	std::string myCaption;
 };
 
-FootnoteView::FootnoteView(PaintContext &context) : TextView(context) {}
-FootnoteView::~FootnoteView() {}
-const std::string &FootnoteView::caption() const { return myCaption; }
-void FootnoteView::setCaption(const std::string &caption) { myCaption = caption; }
+inline FootnoteView::FootnoteView(PaintContext &context) : TextView(context) {}
+inline FootnoteView::~FootnoteView() {}
+inline const std::string &FootnoteView::caption() const { return myCaption; }
+inline void FootnoteView::setCaption(const std::string &caption) { myCaption = caption; }
 
 #endif /* __FOOTNOTEVIEW_H__ */

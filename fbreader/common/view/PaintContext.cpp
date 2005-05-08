@@ -29,6 +29,12 @@ PaintContext::PaintContext() :
 			myTopMargin(OPTIONS, "TopMargin", 0), myBottomMargin(OPTIONS, "BottomMargin", 4) {
 }
 
+PaintContext::~PaintContext() {
+}
+
+void PaintContext::removeCaches() {
+}
+
 const std::vector<std::string> &PaintContext::fontFamilies() const {
 	if (myFamilies.empty()) {
 		fillFamiliesList(myFamilies);

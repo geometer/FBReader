@@ -6,6 +6,17 @@
 #include "PalmPaintContext.h"
 #include "PalmFBReader-resources.h"
 
+PalmFBReader::PalmFBReader(PalmPaintContext *context) : FBReader(context) {}
+PalmFBReader::~PalmFBReader() {}
+void PalmFBReader::setWindowCaption(const std::string &caption) {}
+void PalmFBReader::addButton(ActionCode id, const std::string &name) {}
+void PalmFBReader::setButtonVisible(ActionCode id, bool visible) {}
+void PalmFBReader::setButtonEnabled(ActionCode id, bool enable) {}
+void PalmFBReader::searchSlot() {}
+void PalmFBReader::cancelSlot() {}
+void PalmFBReader::fullscreenSlot() {}
+bool PalmFBReader::isRotationSupported() const { return false; }
+
 static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 	switch (event->eType) {
   	case menuCmdBarOpenEvent:	
@@ -29,15 +40,16 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 			{
 				FrmDrawForm(FrmGetActiveForm());
 				WinSetCoordinateSystem(kCoordinatesNative);
-				PalmPaintContext context;
-				context.setSize(320, 320);
+				PalmPaintContext *context = new PalmPaintContext();
+				PalmFBReader reader(context);
+				context->setSize(320, 320);
 				ZLColorOption foreColorOption("Color", "Foreground", ZLColor(0, 0, 255));
-				context.setColor(foreColorOption.value());
+				context->setColor(foreColorOption.value());
 				PaintContext::BackgroundColorOption.setValue(ZLColor(255, 255, 0));
-				context.clear();
+				context->clear();
 
-				context.setFillColor(ZLColor(0, 255, 0));
-				context.fillRectangle(100, 100, 110, 110);
+				context->setFillColor(ZLColor(0, 255, 0));
+				context->fillRectangle(100, 100, 110, 110);
 
 				std::string fileName = "/test1.zip:test1";
 				//std::string fileName = "/test1";
@@ -46,23 +58,22 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 					if (istream->open()) {
 						char txt[10];
 						int size = istream->read(txt, 6);
-						context.drawString(10, 10, txt, 0, size);
-						WinPaintChar(0x0431, 10, 50);
+						context->drawString(10, 10, txt, 0, size);
 						istream->close();
 					}
 					delete istream;
 				}
 
-				context.fillRectangle(110, 110, 120, 120);
+				context->fillRectangle(110, 110, 120, 120);
 
 				int barLeft = 0;
-				int barRight = context.width() - 1;
-				int barBottom = context.height() - 1;
-				int barTop = barBottom - context.height() / 20;
-				context.drawLine(barLeft, barTop, barLeft, barBottom);
-				context.drawLine(barRight, barTop, barRight, barBottom);
-				context.drawLine(barLeft, barTop, barRight, barTop);
-				context.drawLine(barLeft, barBottom, barRight, barBottom);
+				int barRight = context->width() - 1;
+				int barBottom = context->height() - 1;
+				int barTop = barBottom - context->height() / 20;
+				context->drawLine(barLeft, barTop, barLeft, barBottom);
+				context->drawLine(barRight, barTop, barRight, barBottom);
+				context->drawLine(barLeft, barTop, barRight, barTop);
+				context->drawLine(barLeft, barBottom, barRight, barBottom);
 				WinSetCoordinateSystem(kCoordinatesStandard);
 			}
 			return true;
