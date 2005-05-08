@@ -44,6 +44,7 @@ class PluginCollection {
 
 public:
 	static PluginCollection &instance() FORMATS_SECTION;
+	static void deleteInstance() FORMATS_SECTION;
 
 private:
 	PluginCollection() FORMATS_SECTION;
@@ -60,8 +61,5 @@ private:
 
 inline FormatPlugin::FormatPlugin() {}
 inline FormatPlugin::~FormatPlugin() {}
-
-inline PluginCollection::PluginCollection() {}
-inline PluginCollection::~PluginCollection() {}
 
 #endif /* __FORMATPLUGIN_H__ */

@@ -46,6 +46,7 @@ class Hyphenator {
 
 public:
 	static Hyphenator &instance();
+	static void deleteInstance();
 	
 protected:
 	Hyphenator() {}

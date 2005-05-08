@@ -5,7 +5,7 @@
 #include <Core/System/StringMgr.h>
 #include <Core/System/MemoryMgr.h>
 
-#define		strncpy(x,y,z)		StrNCopy(x,y,z)
+#define		strncpy(x,y,z)		MemMove(x,y,z)
 #define		memset(x,y,z)			MemSet(x,z,y)
 #define		strcasecmp(x,y)		StrCaselessCompare(x,y)
 

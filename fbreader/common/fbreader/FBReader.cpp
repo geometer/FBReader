@@ -36,6 +36,7 @@
 #include "../view/PaintContext.h"
 #include "../hyphenation/Hyphenator.h"
 #include "../textview/TextStyle.h"
+#include "../formats/FormatPlugin.h"
 
 static const std::string OPTIONS = "Options";
 static const std::string SEARCH = "Search";
@@ -70,9 +71,7 @@ FBReader::FBReader(PaintContext *context) {
 	if (description == 0) {
 		description = BookDescription::create(howToStartString);
 	}
-#ifndef PALM_TEMPORARY
 	openBook(description);
-#endif // PALM_TEMPORARY
 }
 
 FBReader::~FBReader() {
@@ -83,14 +82,14 @@ FBReader::~FBReader() {
 	myContentsView->saveState();
 	delete myContentsView;
 	delete myCollectionView;
-#ifndef PALM_TEMPORARY
 	if (myModel != 0) {
 		ZLStringOption bookName(STATE, BOOK, std::string());
 		bookName.setValue(myModel->fileName());
 		delete myModel;
 	}
-#endif // PALM_TEMPORARY
 	TextStyleCollection::deleteInstance();
+	PluginCollection::deleteInstance();
+	Hyphenator::deleteInstance();
 }
 
 void FBReader::openBook(BookDescription *description) {

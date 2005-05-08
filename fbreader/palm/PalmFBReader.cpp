@@ -19,8 +19,10 @@ bool PalmFBReader::isRotationSupported() const { return false; }
 
 static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 	static const UInt32 RomVersion50 = sysMakeROMVersion(5, 0, 0, sysROMStageDevelopment, 0);
-	UInt32 romVersion;
-	FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
+	static UInt32 romVersion = 0;
+	if (romVersion == 0) {
+		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
+	}
 
 	switch (event->eType) {
   	case menuCmdBarOpenEvent:	
@@ -31,7 +33,10 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
    	case penDownEvent:
 			{
 				char txt[4];
-				int x = romVersion;
+				std::string s = "$$TEST";
+				std::string t = s;
+				int x = (s == t) ? 1 : 0;
+				//int x = (s == "$$TEST") ? 1 : 0;
 				txt[0] = '0' + x / 100 % 10;
 				txt[1] = '0' + x / 10 % 10;
 				txt[2] = '0' + x % 10;
@@ -40,6 +45,7 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 			}
 			return true;
   	
+  	case frmUpdateEvent:	
   	case frmOpenEvent:	
 			{
 				FrmDrawForm(FrmGetActiveForm());
@@ -48,7 +54,11 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 				}
 				PalmPaintContext *context = new PalmPaintContext();
 				PalmFBReader reader(context);
-				context->setSize(320, 320);
+				if (romVersion >= RomVersion50) {
+					context->setSize(320, 320);
+				} else {
+					context->setSize(160, 160);
+				}
 				ZLColorOption foreColorOption("Color", "Foreground", ZLColor(0, 0, 255));
 				context->setColor(foreColorOption.value());
 				PaintContext::BackgroundColorOption.setValue(ZLColor(255, 255, 0));

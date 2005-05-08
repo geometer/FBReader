@@ -2,6 +2,19 @@
 
 #include "string.h"
 
+static int strncmp(const char *s1, const char *s2, size_t len) STL_SECTION;
+static int strncmp(const char *s1, const char *s2, size_t len) {
+	const char *e1 = s1 + len;
+	for (; s1 != e1; s1++, s2++) {
+		if (*s1 < *s2) {
+			return -1;
+		} else if (*s1 > *s2) {
+			return 1;
+		}
+	}
+	return 0;
+}
+
 namespace std {
 
 	string::string() {
@@ -30,7 +43,7 @@ namespace std {
 		size_t sLength = StrLen(s);
 		if (sLength > 0) {
 			reserve(sLength);
-			StrNCopy(myData, s, sLength);
+			MemMove(myData, s, sLength);
 			myLength = sLength;
 		}
 	}
@@ -46,7 +59,7 @@ namespace std {
 		if (s.myLength > 0) {
 			reserve(s.myLength);
 			myLength = s.myLength;
-			StrNCopy(myData, s.myData, myLength);
+			MemMove(myData, s.myData, myLength);
 		}
 		return *this;
 	}
@@ -57,7 +70,7 @@ namespace std {
 		if (len > 0) {
 			reserve(len);
 			myLength = len;
-			StrNCopy(myData, s, myLength);
+			MemMove(myData, s, myLength);
 		}
 		return *this;
 	}
@@ -71,7 +84,7 @@ namespace std {
 			// TODO: use MemPtrResize
 			char *d = (char*)MemPtrNew(myDataSize);
 			if (myLength > 0) {
-				StrNCopy(d, myData, myLength);
+				MemMove(d, myData, myLength);
 			}
 			if (myData != 0) {
 				MemPtrFree(myData);
@@ -81,16 +94,16 @@ namespace std {
 	}
 
 	bool string::operator == (const string &s) const {
-		return (myLength == s.myLength) && (StrNCompare(myData, s.myData, myLength) == 0);
+		return (myLength == s.myLength) && (strncmp(myData, s.myData, myLength) == 0);
 	}
 
 	bool string::operator == (const char *s) const {
-		return (myLength == StrLen(s)) && (StrNCompare(myData, s, myLength) == 0);
+		return (myLength == StrLen(s)) && (strncmp(myData, s, myLength - 1) == 0);
 	}
 
 	bool string::operator < (const string &s) const {
 		size_t len = std::min(myLength, s.myLength);
-		int result = StrNCompare(myData, s.myData, len);
+		int result = strncmp(myData, s.myData, len);
 		if (result < 0) {
 			return true;
 		} else if (result == 0) {
@@ -101,7 +114,7 @@ namespace std {
 
 	void string::append(const char *s, size_t len) {
 		reserve(myLength + len);
-		StrNCopy(myData + myLength, s, len);
+		MemMove(myData + myLength, s, len);
 		myLength += len;
 	}
 
@@ -119,7 +132,7 @@ namespace std {
 
 	const string &string::operator += (const string &s) {
 		reserve(myLength + s.myLength);
-		StrNCopy(myData + myLength, s.myData, s.myLength);
+		MemMove(myData + myLength, s.myData, s.myLength);
 		myLength += s.myLength;
 		return *this;
 	}
@@ -176,7 +189,7 @@ namespace std {
 		}
 		string result;
 		result.reserve(len);
-		StrNCopy(result.myData, myData + start, len);
+		MemMove(result.myData, myData + start, len);
 		result.myLength = len;
 		return result;
 	}
@@ -188,15 +201,15 @@ namespace std {
 			}
 		} else {
 			myLength -= len;
-			StrNCopy(myData + start, myData + start + len, myLength - start);
+			MemMove(myData + start, myData + start + len, myLength - start);
 		}
 	}
 
 	const string string::operator + (const string &s) const {
 		string sum;
 		sum.reserve(myLength + s.myLength);
-		StrNCopy(sum.myData, myData, myLength);
-		StrNCopy(sum.myData + myLength, s.myData, s.myLength);
+		MemMove(sum.myData, myData, myLength);
+		MemMove(sum.myData + myLength, s.myData, s.myLength);
 		sum.myLength = myLength + s.myLength;
 		return sum;
 	}
@@ -204,7 +217,7 @@ namespace std {
 	const string string::operator + (char c) const {
 		string sum;
 		sum.reserve(myLength + 1);
-		StrNCopy(sum.myData, myData, myLength);
+		MemMove(sum.myData, myData, myLength);
 		sum.myData[myLength] = c;
 		sum.myLength = myLength + 1;
 		return sum;
@@ -214,8 +227,8 @@ namespace std {
 		string sum;
 		int len0 = StrLen(s0);
 		sum.reserve(len0 + s1.myLength);
-		StrNCopy(sum.myData, s0, len0);
-		StrNCopy(sum.myData + len0, s1.myData, s1.myLength);
+		MemMove(sum.myData, s0, len0);
+		MemMove(sum.myData + len0, s1.myData, s1.myLength);
 		sum.myLength = len0 + s1.myLength;
 		return sum;
 	}

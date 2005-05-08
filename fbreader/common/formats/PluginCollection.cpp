@@ -38,6 +38,22 @@ PluginCollection &PluginCollection::instance() {
 	return *ourInstance;
 }
 
+void PluginCollection::deleteInstance() {
+	if (ourInstance != 0) {
+		delete ourInstance;
+		ourInstance = 0;
+	}
+}
+
+PluginCollection::PluginCollection() {
+}
+
+PluginCollection::~PluginCollection() {
+	for (std::vector<FormatPlugin*>::const_iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
+		delete *it;
+	}
+}
+
 FormatPlugin *PluginCollection::plugin(const std::string &fileName, bool strong) {
 	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
 		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(fileName)) {

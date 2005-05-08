@@ -25,6 +25,14 @@
 
 Hyphenator *Hyphenator::ourInstance = 0;
 
+void Hyphenator::deleteInstance() {
+	if (ourInstance != 0) {
+		ourInstance->unload();
+		delete ourInstance;
+		ourInstance = 0;
+	}
+}
+
 HyphenationInfo::HyphenationInfo(int length) {
 	myLength = length;
 	myMask = new bool[myLength - 1];
