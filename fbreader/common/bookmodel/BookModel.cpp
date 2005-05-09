@@ -33,7 +33,7 @@ BookModel::BookModel(const BookDescription *description) {
 		reader.setMainTextModel();
 		reader.pushKind(REGULAR);
 		reader.beginParagraph();
-		//reader.addDataToBuffer("test text", 6);
+		//reader.addDataToBuffer("test text");
 		reader.endParagraph();
 		return;
 	}

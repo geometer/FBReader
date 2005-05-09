@@ -3,11 +3,9 @@
 
 #include <sys_types.h>
 #include <vector>
-#include <pair.h>
 
 namespace std {
 
-	/*
 	template<typename T1, typename T2>
 	struct pair {
 		pair() STL_SECTION;
@@ -16,7 +14,6 @@ namespace std {
 		T1 first;
 		T2 second;
 	};
-	*/
 
 	template<typename T1, typename T2>
 	class map {
@@ -98,7 +95,6 @@ namespace std {
 		mutable vector<pair<T1,T2> > myData;
 	};
 
-	/*
 	template<typename T1, typename T2>
 	inline pair<T1,T2>::pair() {}
 
@@ -111,7 +107,6 @@ namespace std {
 		second = p.second;
 		return *this;
 	}
-	*/
 
 	template<typename T1, typename T2>
 	inline map<T1,T2>::map() {

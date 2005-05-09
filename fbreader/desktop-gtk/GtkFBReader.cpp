@@ -107,7 +107,7 @@ GtkFBReader::~GtkFBReader() {
 	Width.setValue(width);
 	Height.setValue(height);
 
-	delete myViewWidget;
+	delete (GtkViewWidget*)myViewWidget;
 }
 
 gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {

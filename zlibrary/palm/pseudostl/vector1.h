@@ -4,6 +4,8 @@
 #include <sys_types.h>
 #include <Core/System/MemoryMgr.h>
 
+#include <new>
+
 namespace std {
 
 	template<typename T>
@@ -280,6 +282,9 @@ namespace std {
 
 	template<typename T>
 	inline void vector<T>::clear() {
+		for (size_t i = 0; i < __myLength; i++) {
+			__myData[i].~T();
+		}
 		__myLength = 0;
 	}
 	template<typename T>
@@ -300,30 +305,10 @@ namespace std {
 			__myData = d;
 		}
 	}
-	/*
-	template<typename T>
-	void construct_copy(T &dst, const T &src) STL_SECTION;
-	inline void construct_copy(unsigned short &dst, const unsigned short &src) {
-		dst = src;
-	}
-	template<typename T>
-	inline void construct_copy(T &dst, const T &src) {
-		/ *
-		T *copy = new T(src);
-		MemMove(&dst, copy, sizeof(T));
-		MemPtrFree(copy);
-		* /
-		dst(src);
-	}
-	*/
 	template<typename T>
 	inline void vector<T>::push_back(const T &element) {
 		reserve(__myLength + 1);
-		//__myData[__myLength] = element;
-		//construct_copy(__myData[__myLength], element);
-		T *copy = new T(element);
-		MemMove(__myData + __myLength, copy, sizeof(T));
-		MemPtrFree(copy);
+    new (__myData + __myLength) T(element);
 		__myLength++;
 	}
 	template<typename T>
