@@ -22,6 +22,8 @@
 
 #include "../common/model/Image.h"
 
+bool DO_PAINT = false;
+
 PalmPaintContext::PalmPaintContext() {
 	//myPainter = new QPainter();
 	//myPixmap = NULL;

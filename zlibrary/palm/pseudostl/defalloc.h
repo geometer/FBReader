@@ -117,6 +117,9 @@ inline void destroy(float**, float**) {}
 inline void destroy(double**, double**) {}
 
 template <class T1, class T2>
+void construct(T1* p, const T2& value) STL_SECTION;
+
+template <class T1, class T2>
 inline void construct(T1* p, const T2& value) {
     new (p) T1(value);
 }

@@ -9,6 +9,11 @@
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
+#include <vector>
+#include <string>
+
+PalmFBReader *READER;
+
 UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 	if (cmd == sysAppLaunchCmdNormalLaunch) {
 		ZLSetup;
@@ -18,8 +23,10 @@ UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 		PalmDialogManager::createInstance();
 		PalmScreenSize::createInstance();
 
+		READER = new PalmFBReader();
 		FrmGotoForm(MainFBReaderForm);
 		EventLoop();
+		delete READER;
 
 		PalmScreenSize::deleteInstance();
 		PalmDialogManager::deleteInstance();

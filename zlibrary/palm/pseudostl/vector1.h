@@ -106,8 +106,11 @@ namespace std {
 	}
 	template<typename T>
 	inline vector<T>::~vector() {
+		for (size_t i = 0; i < __myLength; i++) {
+			__myData[i].~T();
+		}
 		if (__myData != 0) {
-			delete[] __myData;
+			MemPtrFree(__myData);
 		}
 	}
 
@@ -288,17 +291,39 @@ namespace std {
 			__myDataSize = size;
 			// TODO: use MemPtrResize
 			T *d = (T*)MemPtrNew(__myDataSize * sizeof(T));
-			if (__myData != 0) {
+			if (__myLength != 0) {
 				MemMove(d, __myData, __myLength * sizeof(T));
+			}
+			if (__myData != 0) {
 				MemPtrFree(__myData);
 			}
 			__myData = d;
 		}
 	}
+	/*
+	template<typename T>
+	void construct_copy(T &dst, const T &src) STL_SECTION;
+	inline void construct_copy(unsigned short &dst, const unsigned short &src) {
+		dst = src;
+	}
+	template<typename T>
+	inline void construct_copy(T &dst, const T &src) {
+		/ *
+		T *copy = new T(src);
+		MemMove(&dst, copy, sizeof(T));
+		MemPtrFree(copy);
+		* /
+		dst(src);
+	}
+	*/
 	template<typename T>
 	inline void vector<T>::push_back(const T &element) {
 		reserve(__myLength + 1);
-		__myData[__myLength] = element;
+		//__myData[__myLength] = element;
+		//construct_copy(__myData[__myLength], element);
+		T *copy = new T(element);
+		MemMove(__myData + __myLength, copy, sizeof(T));
+		MemPtrFree(copy);
 		__myLength++;
 	}
 	template<typename T>

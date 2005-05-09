@@ -71,4 +71,6 @@ private:
 	RGBColorType myFillColor;
 };
 
+extern bool DO_PAINT;
+
 #endif /* __PALMPAINTCONTEXT_H__ */

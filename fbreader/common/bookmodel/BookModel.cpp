@@ -27,6 +27,17 @@
 
 BookModel::BookModel(const BookDescription *description) {
 	myDescription = description;
+#ifdef PALM_TEMPORARY
+	if (description->fileName() == "$$TEST") {
+		BookReader reader(*this);
+		reader.setMainTextModel();
+		reader.pushKind(REGULAR);
+		reader.beginParagraph();
+		//reader.addDataToBuffer("test text", 6);
+		reader.endParagraph();
+		return;
+	}
+#endif // PALM_TEMPORARY
 	FormatPlugin *plugin = PluginCollection::instance().plugin(description->fileName(), false);
 	if (plugin != 0) {
 		plugin->readModel(*description, *this);

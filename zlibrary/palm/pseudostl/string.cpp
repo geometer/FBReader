@@ -3,6 +3,8 @@
 #include "string.h"
 
 static int strncmp(const char *s1, const char *s2, size_t len) STL_SECTION;
+//static int strncpy(char *dst, const char *src, size_t len) STL_SECTION;
+
 static int strncmp(const char *s1, const char *s2, size_t len) {
 	const char *e1 = s1 + len;
 	for (; s1 != e1; s1++, s2++) {
@@ -13,6 +15,12 @@ static int strncmp(const char *s1, const char *s2, size_t len) {
 		}
 	}
 	return 0;
+}
+
+int strncpy(char *dst, const char *src, size_t len) {
+	if (len > 0) {
+		MemMove(dst, src, len);
+	}
 }
 
 namespace std {
@@ -43,7 +51,7 @@ namespace std {
 		size_t sLength = StrLen(s);
 		if (sLength > 0) {
 			reserve(sLength);
-			MemMove(myData, s, sLength);
+			strncpy(myData, s, sLength);
 			myLength = sLength;
 		}
 	}
@@ -59,7 +67,7 @@ namespace std {
 		if (s.myLength > 0) {
 			reserve(s.myLength);
 			myLength = s.myLength;
-			MemMove(myData, s.myData, myLength);
+			strncpy(myData, s.myData, myLength);
 		}
 		return *this;
 	}
@@ -70,7 +78,7 @@ namespace std {
 		if (len > 0) {
 			reserve(len);
 			myLength = len;
-			MemMove(myData, s, myLength);
+			strncpy(myData, s, myLength);
 		}
 		return *this;
 	}
@@ -84,7 +92,7 @@ namespace std {
 			// TODO: use MemPtrResize
 			char *d = (char*)MemPtrNew(myDataSize);
 			if (myLength > 0) {
-				MemMove(d, myData, myLength);
+				strncpy(d, myData, myLength);
 			}
 			if (myData != 0) {
 				MemPtrFree(myData);
@@ -114,7 +122,7 @@ namespace std {
 
 	void string::append(const char *s, size_t len) {
 		reserve(myLength + len);
-		MemMove(myData + myLength, s, len);
+		strncpy(myData + myLength, s, len);
 		myLength += len;
 	}
 
@@ -132,7 +140,7 @@ namespace std {
 
 	const string &string::operator += (const string &s) {
 		reserve(myLength + s.myLength);
-		MemMove(myData + myLength, s.myData, s.myLength);
+		strncpy(myData + myLength, s.myData, s.myLength);
 		myLength += s.myLength;
 		return *this;
 	}
@@ -189,7 +197,7 @@ namespace std {
 		}
 		string result;
 		result.reserve(len);
-		MemMove(result.myData, myData + start, len);
+		strncpy(result.myData, myData + start, len);
 		result.myLength = len;
 		return result;
 	}
@@ -201,15 +209,15 @@ namespace std {
 			}
 		} else {
 			myLength -= len;
-			MemMove(myData + start, myData + start + len, myLength - start);
+			strncpy(myData + start, myData + start + len, myLength - start);
 		}
 	}
 
 	const string string::operator + (const string &s) const {
 		string sum;
 		sum.reserve(myLength + s.myLength);
-		MemMove(sum.myData, myData, myLength);
-		MemMove(sum.myData + myLength, s.myData, s.myLength);
+		strncpy(sum.myData, myData, myLength);
+		strncpy(sum.myData + myLength, s.myData, s.myLength);
 		sum.myLength = myLength + s.myLength;
 		return sum;
 	}
@@ -217,7 +225,7 @@ namespace std {
 	const string string::operator + (char c) const {
 		string sum;
 		sum.reserve(myLength + 1);
-		MemMove(sum.myData, myData, myLength);
+		strncpy(sum.myData, myData, myLength);
 		sum.myData[myLength] = c;
 		sum.myLength = myLength + 1;
 		return sum;
@@ -227,8 +235,8 @@ namespace std {
 		string sum;
 		int len0 = StrLen(s0);
 		sum.reserve(len0 + s1.myLength);
-		MemMove(sum.myData, s0, len0);
-		MemMove(sum.myData + len0, s1.myData, s1.myLength);
+		strncpy(sum.myData, s0, len0);
+		strncpy(sum.myData + len0, s1.myData, s1.myLength);
 		sum.myLength = len0 + s1.myLength;
 		return sum;
 	}

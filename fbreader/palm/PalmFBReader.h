@@ -12,7 +12,7 @@ class PalmPaintContext;
 class PalmFBReader : public FBReader {
 
 public:
-	PalmFBReader(PalmPaintContext *context) FB_SECTION;
+	PalmFBReader() FB_SECTION;
 	~PalmFBReader() FB_SECTION;
 	void setWindowCaption(const std::string &caption) FB_SECTION;
 	void addButton(ActionCode id, const std::string &name) FB_SECTION;
@@ -23,5 +23,7 @@ public:
 	void fullscreenSlot() FB_SECTION;
 	bool isRotationSupported() const FB_SECTION;
 };
+
+extern PalmFBReader *READER;
 
 #endif /* __PALMFBREADER_H__ */

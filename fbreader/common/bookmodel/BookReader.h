@@ -34,12 +34,18 @@ class ZLInputStream;
 class BookReader {
 
 protected:
+#ifdef PALM_TEMPORARY
+public:
+#endif // PALM_TEMPORARY
 	BookReader(BookModel &model) MODEL_SECTION;
 
 public:
 	virtual ~BookReader() MODEL_SECTION;
 
 protected:
+#ifdef PALM_TEMPORARY
+public:
+#endif // PALM_TEMPORARY
 	void setMainTextModel() MODEL_SECTION;
 	void setFootnoteTextModel(const std::string &id) MODEL_SECTION;
 	void unsetTextModel() MODEL_SECTION;
@@ -83,7 +89,5 @@ protected:
 
 	bool myInsideTitle;
 };
-
-inline BookReader::~BookReader() {}
 
 #endif /* __BOOKREADER_H__ */

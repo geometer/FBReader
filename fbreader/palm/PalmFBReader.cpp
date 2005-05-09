@@ -3,11 +3,19 @@
 #include <abstract/ZLInputStream.h>
 
 #include "PalmFBReader.h"
+#include "PalmViewWidget.h"
 #include "PalmPaintContext.h"
 #include "PalmFBReader-resources.h"
 
-PalmFBReader::PalmFBReader(PalmPaintContext *context) : FBReader(context) {}
-PalmFBReader::~PalmFBReader() {}
+PalmFBReader::PalmFBReader() : FBReader(new PalmPaintContext()) {
+	myViewWidget = new PalmViewWidget();
+	setMode(BOOK_TEXT_MODE);
+}
+
+PalmFBReader::~PalmFBReader() {
+	delete (PalmViewWidget*)myViewWidget;
+}
+
 void PalmFBReader::setWindowCaption(const std::string &caption) {}
 void PalmFBReader::addButton(ActionCode id, const std::string &name) {}
 void PalmFBReader::setButtonVisible(ActionCode id, bool visible) {}
@@ -48,6 +56,10 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
   	case frmUpdateEvent:	
   	case frmOpenEvent:	
 			{
+				DO_PAINT = true;
+				READER->repaintView();
+				DO_PAINT = false;
+				/*
 				FrmDrawForm(FrmGetActiveForm());
 				if (romVersion >= RomVersion50) {
 					WinSetCoordinateSystem(kCoordinatesNative);
@@ -93,6 +105,7 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 				if (romVersion >= RomVersion50) {
 					WinSetCoordinateSystem(kCoordinatesStandard);
 				}
+				*/
 			}
 			return true;
 

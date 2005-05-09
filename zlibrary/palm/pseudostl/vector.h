@@ -53,10 +53,10 @@ protected:
     iterator end_of_storage;
     void insert_aux(iterator position, const T& x);
 public:
-    iterator begin() { return start; }
-    const_iterator begin() const { return start; }
-    iterator end() { return finish; }
-    const_iterator end() const { return finish; }
+    iterator begin() STL_SECTION;
+    const_iterator begin() const STL_SECTION;
+    iterator end() STL_SECTION;
+    const_iterator end() const STL_SECTION;
     reverse_iterator rbegin() { return reverse_iterator(end()); }
     const_reverse_iterator rbegin() const { 
         return const_reverse_iterator(end()); 
@@ -95,29 +95,12 @@ public:
 	static_allocator.deallocate(start);
     }
     vector<T>& operator=(const vector<T>& x);
-    void reserve(size_type n) {
-	if (capacity() < n) {
-	    iterator tmp = static_allocator.allocate(n);
-	    uninitialized_copy(begin(), end(), tmp);
-	    destroy(start, finish);
-	    static_allocator.deallocate(start);
-	    finish = tmp + size();
-	    start = tmp;
-	    end_of_storage = begin() + n;
-	}
-    }
+    void reserve(size_type n) STL_SECTION;
     reference front() { return *begin(); }
     const_reference front() const { return *begin(); }
     reference back() { return *(end() - 1); }
     const_reference back() const { return *(end() - 1); }
-    void push_back(const T& x) {
-	if (finish != end_of_storage) {
-	    /* Borland bug */
-	    construct(finish, x);
-	    finish++;
-	} else
-	    insert_aux(end(), x);
-    }
+    void push_back(const T& x) STL_SECTION;
     void swap(vector<T>& x) {
 	::swap(start, x.start);
 	::swap(finish, x.finish);
@@ -275,6 +258,39 @@ void vector<T>::insert(iterator position,
 	finish = tmp + size() + n;
 	start = tmp;
     }
+}
+
+template <class T>
+inline vector<T>::iterator vector<T>::begin() { return start; }
+template <class T>
+inline vector<T>::const_iterator vector<T>::begin() const { return start; }
+template <class T>
+inline vector<T>::iterator vector<T>::end() { return finish; }
+template <class T>
+inline vector<T>::const_iterator vector<T>::end() const { return finish; }
+
+template <class T>
+inline void vector<T>::reserve(size_type n) {
+	if (capacity() < n) {
+		iterator tmp = static_allocator.allocate(n);
+		uninitialized_copy(begin(), end(), tmp);
+		destroy(start, finish);
+		static_allocator.deallocate(start);
+		finish = tmp + size();
+		start = tmp;
+		end_of_storage = begin() + n;
+	}
+}
+
+template <class T>
+inline void vector<T>::push_back(const T& x) {
+	if (finish != end_of_storage) {
+		/* Borland bug */
+		construct(finish, x);
+		finish++;
+	} else {
+		insert_aux(end(), x);
+	}
 }
 
 #undef Allocator

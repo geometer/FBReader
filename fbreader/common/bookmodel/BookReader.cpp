@@ -32,6 +32,9 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	mySectionContainsRegularContents = false;
 }
 
+BookReader::~BookReader() {
+}
+
 void BookReader::setMainTextModel() {
 	myCurrentTextModel = &myModel.myBookTextModel;
 }

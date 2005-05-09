@@ -5,9 +5,10 @@
 #include <Core/System/StringMgr.h>
 #include <Core/System/MemoryMgr.h>
 
-#define		strncpy(x,y,z)		MemMove(x,y,z)
 #define		memset(x,y,z)			MemSet(x,z,y)
 #define		strcasecmp(x,y)		StrCaselessCompare(x,y)
+
+int strncpy(char *dst, const char *src, size_t len) STL_SECTION;
 
 namespace std {
 	class string {
