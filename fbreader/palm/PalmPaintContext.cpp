@@ -121,7 +121,7 @@ void PalmPaintContext::setFillColor(ZLColor color) {
 
 int PalmPaintContext::stringWidth(const std::string &str, int from, int len) const {
 	//return myPainter->fontMetrics().width(QString::fromUtf8(str.data() + from, len));
-	return 24;
+	return FntCharsWidth(str.data() + from, len);
 }
 
 int PalmPaintContext::stringHeight() const {
