@@ -64,12 +64,16 @@ FBReader::FBReader(PaintContext *context) {
 #ifndef PALM_TEMPORARY
 	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
 #else // PALM_TEMPORARY
-	std::string howToStartString = "$$TEST";
+	std::string howToStartString = "/Help.txt";
 #endif // PALM_TEMPORARY
 	ZLStringOption bookName(STATE, BOOK, howToStartString);
 	BookDescription *description = BookDescription::create(bookName.value());
 	if (description == 0) {
+#ifndef PALM_TEMPORARY
 		description = BookDescription::create(howToStartString);
+#else // PALM_TEMPORARY
+		description = BookDescription::create("$$TEST");
+#endif // PALM_TEMPORARY
 	}
 	openBook(description);
 }

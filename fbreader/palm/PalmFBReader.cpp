@@ -1,6 +1,7 @@
 #include <abstract/ZLOptions.h>
 #include <palm/ZLPalmFSManager.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLScreenSize.h>
 
 #include "PalmFBReader.h"
 #include "PalmViewWidget.h"
@@ -24,14 +25,11 @@ void PalmFBReader::searchSlot() {}
 void PalmFBReader::cancelSlot() {}
 void PalmFBReader::fullscreenSlot() {}
 bool PalmFBReader::isRotationSupported() const { return false; }
+void PalmFBReader::stylusPressEvent(int x, int y) {
+	myViewWidget->view()->onStylusPress(x, y);
+}
 
 static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
-	static const UInt32 RomVersion50 = sysMakeROMVersion(5, 0, 0, sysROMStageDevelopment, 0);
-	static UInt32 romVersion = 0;
-	if (romVersion == 0) {
-		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
-	}
-
 	switch (event->eType) {
   	case menuCmdBarOpenEvent:	
 			MenuCmdBarAddButton(menuCmdBarOnRight, OpenBook, menuCmdBarResultMenuItem, OpenBook, "");
@@ -40,16 +38,27 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 
    	case penDownEvent:
 			{
+				int x = event->screenX;
+				int y = event->screenY;
+				if (ZLScreenSize::getSize() == ZLScreenSize::SIZE_320x320) {
+					x *= 2;
+					y *= 2;
+				}
+				DO_PAINT = true;
+				READER->stylusPressEvent(x, y);
+				DO_PAINT = false;
+				/*
 				char txt[4];
-				std::string s = "$$TEST";
-				std::string t = s;
-				int x = (s == t) ? 1 : 0;
+				//std::string s = "$$TEST";
+				//std::string t = s;
+				//int x = (s == t) ? 1 : 0;
 				//int x = (s == "$$TEST") ? 1 : 0;
 				txt[0] = '0' + x / 100 % 10;
 				txt[1] = '0' + x / 10 % 10;
 				txt[2] = '0' + x % 10;
 				txt[3] = '\0';
 				FrmCustomAlert(GoodnightMoonAlert, txt, 0, 0);
+				*/
 			}
 			return true;
   	
@@ -59,53 +68,6 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 				DO_PAINT = true;
 				READER->repaintView();
 				DO_PAINT = false;
-				/*
-				FrmDrawForm(FrmGetActiveForm());
-				if (romVersion >= RomVersion50) {
-					WinSetCoordinateSystem(kCoordinatesNative);
-				}
-				PalmPaintContext *context = new PalmPaintContext();
-				PalmFBReader reader(context);
-				if (romVersion >= RomVersion50) {
-					context->setSize(320, 320);
-				} else {
-					context->setSize(160, 160);
-				}
-				ZLColorOption foreColorOption("Color", "Foreground", ZLColor(0, 0, 255));
-				context->setColor(foreColorOption.value());
-				PaintContext::BackgroundColorOption.setValue(ZLColor(255, 255, 0));
-				context->clear();
-
-				context->setFillColor(ZLColor(0, 255, 0));
-				context->fillRectangle(100, 100, 110, 110);
-
-				std::string fileName = "/test1.zip:test1";
-				//std::string fileName = "/test1";
-				ZLInputStream *istream = ZLPalmFSManager::instance().createInputStream(fileName);
-				if (istream != 0) {
-					if (istream->open()) {
-						char txt[10];
-						int size = istream->read(txt, 6);
-						context->drawString(10, 10, txt, 0, size);
-						istream->close();
-					}
-					delete istream;
-				}
-
-				context->fillRectangle(110, 110, 120, 120);
-
-				int barLeft = 0;
-				int barRight = context->width() - 1;
-				int barBottom = context->height() - 1;
-				int barTop = barBottom - context->height() / 20;
-				context->drawLine(barLeft, barTop, barLeft, barBottom);
-				context->drawLine(barRight, barTop, barRight, barBottom);
-				context->drawLine(barLeft, barTop, barRight, barTop);
-				context->drawLine(barLeft, barBottom, barRight, barBottom);
-				if (romVersion >= RomVersion50) {
-					WinSetCoordinateSystem(kCoordinatesStandard);
-				}
-				*/
 			}
 			return true;
 
