@@ -57,12 +57,31 @@ static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeySlot(key);
 }
 
+static void handleMenuItem(gpointer *self, guint data) {
+	((GtkFBReader*)self)->doAction((FBReader::ActionCode)data);
+}
+
+// MSS: how would I get rid of warnings for optional data memebers?
+static GtkItemFactoryEntry menuItems[] = {
+  { "/Library",						NULL,		NULL,           0, "<Branch>" },
+  { "/Library/Open",			NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_COLLECTION, "<Item>" },
+  { "/Library/Add To...", NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_ADD_BOOK, "<Item>" },
+	{ "/Recent",						NULL,		NULL,						0, "<Branch>" },
+	{ "/Preferences",       NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_OPTIONS, "<Item>" },
+	{ "/Close",             NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_CANCEL, "<Item>" }
+};
+
 GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
 	GtkWidget *vbox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), vbox);
+
+	GtkItemFactory *factory = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<main>", NULL);
+
+	gtk_item_factory_create_items(factory, sizeof(menuItems)/sizeof(menuItems[0]), menuItems, this);
+	gtk_box_pack_start(GTK_BOX(vbox), gtk_item_factory_get_widget(factory, "<main>"), false, false, 0);
 
 	myToolbar = gtk_toolbar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), myToolbar, false, false, 0);
