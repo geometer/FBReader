@@ -153,7 +153,19 @@ namespace std {
 	}
 
 	int string::compare(const string &s, int fromPos, int len) const {
-		// TODO: implement
+		// TODO: check for short strings (?)
+		const char *ptr0 = myData + fromPos;
+		const char *ptr1 = s.myData;
+		const char *end = ptr0 + len;
+		for (; ptr0 != end; ptr0++, ptr1++) {
+			if (*ptr0 < *ptr1) {
+				return -1;
+			}
+			if (*ptr0 > *ptr1) {
+				return 1;
+			}
+		}
+		
 		return 0;
 	}
 		
