@@ -26,12 +26,13 @@
 class EncodingEntry : public ZLComboOptionEntry {
 
 public:
-	EncodingEntry(const std::string &name, ZLStringOption &encodingOption);
+	EncodingEntry(const std::string &name, ZLStringOption &encodingOption) FB_DIALOG_SECTION;
+	~EncodingEntry() FB_DIALOG_SECTION;
 
-	const std::string &name() const { return myName; }
-	const std::string &initialValue() const { return myEncodingOption.value(); }
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value) const { myEncodingOption.setValue(value); }
+	const std::string &name() const FB_DIALOG_SECTION;
+	const std::string &initialValue() const FB_DIALOG_SECTION;
+	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
 
 private:
 	std::string myName;
@@ -41,12 +42,13 @@ private:
 class LanguageEntry : public ZLComboOptionEntry {
 
 public:
-	LanguageEntry(const std::string &name, ZLStringOption &encodingOption) : myName(name), myLanguageOption(encodingOption) {}
+	LanguageEntry(const std::string &name, ZLStringOption &encodingOption) FB_DIALOG_SECTION;
+	~LanguageEntry() FB_DIALOG_SECTION;
 
-	const std::string &name() const { return myName; }
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value) const;
+	const std::string &name() const FB_DIALOG_SECTION;
+	const std::string &initialValue() const FB_DIALOG_SECTION;
+	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
 
 private:
 	std::string myName;

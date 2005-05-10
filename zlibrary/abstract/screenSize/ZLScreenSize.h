@@ -24,6 +24,7 @@ class ZLScreenSize {
 public:
 	enum Size {
 		SIZE_DESKTOP,
+		SIZE_160x160,
 		SIZE_240x320,
 		SIZE_320x320,
 		SIZE_640x480

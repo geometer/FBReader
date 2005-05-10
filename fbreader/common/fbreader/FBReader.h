@@ -100,7 +100,7 @@ private:
 
 public:
 	void openBook(BookDescription *description) FB_SECTION;
-	BookTextView &textView() const;
+	BookTextView &textView() const FB_SECTION;
 	void showBookTextView() FB_SECTION;
 	void tryShowFootnoteView(const std::string &id) FB_SECTION;
 	void restorePreviousMode() FB_SECTION;

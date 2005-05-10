@@ -121,18 +121,18 @@ void PalmPaintContext::setFillColor(ZLColor color) {
 
 int PalmPaintContext::stringWidth(const std::string &str, int from, int len) const {
 	//return myPainter->fontMetrics().width(QString::fromUtf8(str.data() + from, len));
-	return 100;
+	return 24;
 }
 
 int PalmPaintContext::stringHeight() const {
 	//return myPainter->font().pointSize() + 2;
-	return 20;
+	return 24;
 }
 
 void PalmPaintContext::drawString(int x, int y, const std::string &str, int from, int len) {
 	//QString qStr = QString::fromUtf8(str.data() + from, len);
 	//myPainter->drawText(x + leftMargin().value(), y + topMargin().value(), qStr);
-	WinDrawChars(str.data() + from, len, x + leftMargin().value() + 1, y + topMargin().value());
+	WinDrawChars(str.data() + from, len, x + leftMargin().value() + 1, y + topMargin().value() - 24);
 }
 
 /*

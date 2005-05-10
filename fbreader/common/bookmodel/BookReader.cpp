@@ -110,14 +110,8 @@ void BookReader::addHyperlinkLabel(const std::string &label) {
 
 void BookReader::addDataToBuffer(const char *data, int len) {
 	if ((len > 0) && ((myCurrentParagraph != 0) || (myCurrentImage != 0))) {
-#ifndef PALM_TEMPORARY
 		myBuffer.push_back(std::string());
 		myBuffer.back().append(data, len);
-#else // PALM_TEMPORARY
-		std::vector<std::string> b;
-		b.push_back(std::string());
-		//b.back().append(data, len);
-#endif // PALM_TEMPORARY
 	}
 }
 

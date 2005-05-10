@@ -158,12 +158,17 @@ namespace std {
 		return !operator == (it);
 	}
 
-	/*
 	template<typename T>
 	inline const set<T>::iterator &set<T>::iterator::operator ++ (int) {
-		myPtr++;
+		// TODO: implement
 		return *this;
 	}
+	template<typename T>
+	inline const set<T>::const_iterator &set<T>::const_iterator::operator ++ (int) {
+		// TODO: implement
+		return *this;
+	}
+	/*
 	template<typename T>
 	inline const set<T>::iterator &set<T>::iterator::operator += (size_t offset) {
 		myPtr += offset;
@@ -217,24 +222,28 @@ namespace std {
 	inline size_t set<T>::const_iterator::operator - (const set<T>::const_iterator &it) const {
 		return myPtr - it.myPtr;
 	}
+*/
 
 	template<typename T>
 	inline T &set<T>::iterator::operator * () const {
-		return *myPtr;
+		//TODO: implement
+		return *operator->();
 	}
 	template<typename T>
 	inline T *set<T>::iterator::operator -> () const {
-		return myPtr;
+		//TODO: implement
+		return 0;
 	}
 	template<typename T>
 	inline const T &set<T>::const_iterator::operator * () const {
-		return *myPtr;
+		//TODO: implement
+		return *operator->();
 	}
 	template<typename T>
 	inline const T *set<T>::const_iterator::operator -> () const {
-		return myPtr;
+		//TODO: implement
+		return 0;
 	}
-*/
 
 	template<typename T>
 	inline bool set<T>::empty() const {

@@ -314,6 +314,7 @@ namespace std {
 	template<typename T>
 	inline void vector<T>::pop_back() {
 		__myLength--;
+		__myData[__myLength].~T();
 	}
 	template<typename T>
 	inline void vector<T>::insert(const vector<T>::iterator &position, const vector<T>::const_iterator &from, const vector<T>::const_iterator &to) {

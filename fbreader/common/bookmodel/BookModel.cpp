@@ -32,9 +32,11 @@ BookModel::BookModel(const BookDescription *description) {
 		BookReader reader(*this);
 		reader.setMainTextModel();
 		reader.pushKind(REGULAR);
-		reader.beginParagraph();
-		//reader.addDataToBuffer("test text");
-		reader.endParagraph();
+		for (int i = 0; i < 20; i++) {
+			reader.beginParagraph();
+			reader.addDataToBuffer("test text");
+			reader.endParagraph();
+		}
 		return;
 	}
 #endif // PALM_TEMPORARY

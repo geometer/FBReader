@@ -112,13 +112,10 @@ QOptionsDialogTab::QOptionsDialogTab(QTabWidget *parent) : QWidget(parent) {
 	int space = 10;
 	switch (ZLScreenSize::getSize()) {
 		case ZLScreenSize::SIZE_DESKTOP:
-			space = 10;
-			break;
 		case ZLScreenSize::SIZE_640x480:
 			space = 10;
 			break;
-		case ZLScreenSize::SIZE_320x320:
-		case ZLScreenSize::SIZE_240x320:
+		default:
 			space = 3;
 			break;
 	}

@@ -31,36 +31,36 @@
 class PalmPaintContext : public PaintContext {
 
 public:
-	PalmPaintContext() VIEW_SECTION;
-	~PalmPaintContext() VIEW_SECTION;
-	void removeCaches() VIEW_SECTION;
+	PalmPaintContext() PAINT_SECTION;
+	~PalmPaintContext() PAINT_SECTION;
+	void removeCaches() PAINT_SECTION;
 
 	//const QPixmap &pixmap() const { return *myPixmap; }
 
-	void setSize(int w, int h) VIEW_SECTION;
+	void setSize(int w, int h) PAINT_SECTION;
 
-	int width() const VIEW_SECTION;
-	int height() const VIEW_SECTION;
+	int width() const PAINT_SECTION;
+	int height() const PAINT_SECTION;
 
-	void clear() VIEW_SECTION;
+	void clear() PAINT_SECTION;
 
-	void fillFamiliesList(std::vector<std::string> &families) const VIEW_SECTION;
-	const std::string realFontFamilyName(std::string &fontFamily) const VIEW_SECTION;
+	void fillFamiliesList(std::vector<std::string> &families) const PAINT_SECTION;
+	const std::string realFontFamilyName(std::string &fontFamily) const PAINT_SECTION;
 
-	void setFont(const std::string &family, int size, bool bold, bool italic) VIEW_SECTION;
-	void setColor(ZLColor color) VIEW_SECTION;
-	void setFillColor(ZLColor color) VIEW_SECTION;
+	void setFont(const std::string &family, int size, bool bold, bool italic) PAINT_SECTION;
+	void setColor(ZLColor color) PAINT_SECTION;
+	void setFillColor(ZLColor color) PAINT_SECTION;
 
-	int stringWidth(const std::string &str, int from, int len) const VIEW_SECTION;
-	int stringHeight() const VIEW_SECTION;
-	void drawString(int x, int y, const std::string &str, int from, int len) VIEW_SECTION;
+	int stringWidth(const std::string &str, int from, int len) const PAINT_SECTION;
+	int stringHeight() const PAINT_SECTION;
+	void drawString(int x, int y, const std::string &str, int from, int len) PAINT_SECTION;
 
-	int imageWidth(const Image &image) const VIEW_SECTION;
-	int imageHeight(const Image &image) const VIEW_SECTION;
-	void drawImage(int x, int y, const Image &image) VIEW_SECTION;
+	int imageWidth(const Image &image) const PAINT_SECTION;
+	int imageHeight(const Image &image) const PAINT_SECTION;
+	void drawImage(int x, int y, const Image &image) PAINT_SECTION;
 
-	void drawLine(int x0, int y0, int x1, int y1) VIEW_SECTION;
-	void fillRectangle(int x0, int y0, int x1, int y1) VIEW_SECTION;
+	void drawLine(int x0, int y0, int x1, int y1) PAINT_SECTION;
+	void fillRectangle(int x0, int y0, int x1, int y1) PAINT_SECTION;
 
 private:
 	//QImage &qImage(const Image &image) const;

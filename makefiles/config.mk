@@ -9,6 +9,7 @@ DUMMY_SECTIONS = \
 	-DDIALOG_SECTION="" \
 	-DMODEL_SECTION="" \
 	-DVIEW_SECTION="" \
+	-DPAINT_SECTION="" \
 	-DFB_VIEW_SECTION="" \
 	-DTEXT_STYLE_SECTION="" \
 	-DFORMATS_SECTION="" \
@@ -123,20 +124,21 @@ ifeq "$(TARGET_ARCH)" "palm"
 #		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))"
 	CFLAGS = \
 		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))" \
-		-DXML_SECTION="__attribute__ ((section(\"sec0\")))" \
+		-DXML_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DFS_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DUTIL_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DDIALOG_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DMODEL_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DVIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
-		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec5\")))" \
-		-DFB_SECTION="__attribute__ ((section(\"sec5\")))" \
-		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DPAINT_SECTION="__attribute__ ((section(\"sec3\")))" \
+		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
+		-DFB_SECTION="__attribute__ ((section(\"sec4\")))" \
+		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec4\")))" \
 		-DFORMATS_SECTION="__attribute__ ((section(\"sec4\")))" \
-		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec5\")))" \
+		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DPALM_TEMPORARY \
-		-pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -Wno-non-template-friend
+		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O2
 	LDFLAGS =
 	RM = rm -rvf
 	RM_QUIET = rm -rf

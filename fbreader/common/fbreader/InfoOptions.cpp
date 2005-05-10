@@ -36,6 +36,9 @@ EncodingEntry::EncodingEntry(const std::string &name, ZLStringOption &encodingOp
 	}
 }
 
+EncodingEntry::~EncodingEntry() {
+}
+
 const std::vector<std::string> &EncodingEntry::values() const {
 	if (initialValue() == "auto") {
 		if (AUTO_ENCODING.empty()) {
@@ -44,6 +47,24 @@ const std::vector<std::string> &EncodingEntry::values() const {
 		return AUTO_ENCODING;
 	}
 	return ZLXMLReader::knownEncodings();
+}
+
+const std::string &EncodingEntry::name() const {
+	return myName;
+}
+
+const std::string &EncodingEntry::initialValue() const {
+	return myEncodingOption.value();
+}
+
+void EncodingEntry::onAccept(const std::string &value) const {
+	myEncodingOption.setValue(value);
+}
+
+LanguageEntry::LanguageEntry(const std::string &name, ZLStringOption &encodingOption) : myName(name), myLanguageOption(encodingOption) {
+}
+
+LanguageEntry::~LanguageEntry() {
 }
 
 const std::string &LanguageEntry::initialValue() const {
@@ -65,6 +86,10 @@ const std::vector<std::string> &LanguageEntry::values() const {
 		ourLanguages.push_back("unknown");
 	}
 	return ourLanguages;
+}
+
+const std::string &LanguageEntry::name() const {
+	return myName;
 }
 
 void LanguageEntry::onAccept(const std::string &value) const {

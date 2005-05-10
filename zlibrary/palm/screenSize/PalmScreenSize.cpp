@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <PalmOS.h>				
+
 #include "PalmScreenSize.h"
 
 PalmScreenSize::PalmScreenSize() {
@@ -28,7 +30,16 @@ void PalmScreenSize::createInstance() {
 	ourInstance = new PalmScreenSize();
 }
 
+static const UInt32 RomVersion50 = sysMakeROMVersion(5, 0, 0, sysROMStageDevelopment, 0);
+static UInt32 romVersion = 0;
+
 ZLScreenSize::Size PalmScreenSize::getSizeInternal() const {
 	// TODO: implement
+	if (romVersion == 0) {
+		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
+	}
+	if (romVersion < RomVersion50) {
+		return SIZE_160x160;
+	}
 	return SIZE_320x320;
 }

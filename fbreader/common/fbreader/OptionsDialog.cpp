@@ -40,7 +40,9 @@ OptionsDialog::OptionsDialog(PaintContext &context) {
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", FBReader::QuitOnCancelOption));
 	generalTab->addOption(new ZLSimpleSpinOptionEntry("Delay Between Page Scrollings, msecs", FBReader::ScrollingDelayOption, 0, 5000, 50));
 	generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", BookCollection::PathOption));
+#ifndef PALM_TEMPORARY
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", BookCollection::ScanSubdirsOption));
+#endif // PALM_TEMPORARY
 
 	ZLOptionsDialogTab *marginTab = myDialog->createTab("Margins");
 	marginTab->addOptions(
