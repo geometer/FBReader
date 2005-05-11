@@ -45,6 +45,8 @@ GtkViewWidget::GtkViewWidget(GtkFBReader *reader) {
 	myArea = gtk_drawing_area_new();
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
 	gtk_signal_connect(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
+
+  gtk_widget_set_double_buffered(myArea, FALSE);
 }
 
 void GtkViewWidget::repaintView()	{
