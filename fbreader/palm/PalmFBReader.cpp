@@ -3,13 +3,16 @@
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLScreenSize.h>
 
+#include <abstract/ZLTime.h>
+#include <abstract/ZLStringUtil.h>
+
 #include "PalmFBReader.h"
 #include "PalmViewWidget.h"
 #include "PalmPaintContext.h"
 #include "PalmFBReader-resources.h"
 
 PalmFBReader::PalmFBReader() : FBReader(new PalmPaintContext()) {
-	myViewWidget = new PalmViewWidget();
+	myViewWidget = new PalmViewWidget(MainFBReaderForm);
 	setMode(BOOK_TEXT_MODE);
 }
 
@@ -31,6 +34,9 @@ void PalmFBReader::stylusPressEvent(int x, int y) {
 	y -= view->context().topMargin().value();
 	view->onStylusPress(x, y);
 }
+void PalmFBReader::paintEvent() {
+	((PalmViewWidget*)myViewWidget)->paintEvent();
+}
 
 static Boolean MainFBReaderFormHandleEvent(EventPtr event) FB_SECTION;
 static Boolean ApplicationHandleEvent(EventPtr event) FB_SECTION;
@@ -45,16 +51,24 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 
 		case keyDownEvent:
 			{
-				DO_PAINT = true;
+				//ZLTime start;
 				switch (event->data.keyDown.chr) {
 					case pageUpChr:
+						DO_PAINT = true;
 						READER->doAction(FBReader::ACTION_SCROLL_BACKWARD);
+						DO_PAINT = false;
 						break;
 					case pageDownChr:
+						DO_PAINT = true;
 						READER->doAction(FBReader::ACTION_SCROLL_FORWARD);
+						DO_PAINT = false;
 						break;
 				}
-				DO_PAINT = false;
+				//ZLTime end;
+				//unsigned long timeSpent = end.millisecondsFrom(start);
+				//std::string timeS;
+				//ZLStringUtil::appendNumber(timeS, timeSpent);
+				//FrmCustomAlert(GoodnightMoonAlert, timeS.c_str(), 0, 0);
 			}
 			return true;
 
@@ -88,7 +102,7 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
   	case frmOpenEvent:	
 			{
 				DO_PAINT = true;
-				READER->repaintView();
+				READER->paintEvent();
 				DO_PAINT = false;
 			}
 			return true;

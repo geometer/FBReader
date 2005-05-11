@@ -1,6 +1,8 @@
 #include "../PalmFBReader-resources.h"
 
 FORM ID MainFBReaderForm AT (0 0 160 160)
+NOFRAME
+USABLE
 BEGIN
 END
 

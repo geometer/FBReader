@@ -25,11 +25,19 @@
 class PalmViewWidget : public ViewWidget {
 
 public:
-	PalmViewWidget();
-	~PalmViewWidget() {}
+	PalmViewWidget(UInt16 formId) VIEW_SECTION;
+	~PalmViewWidget() VIEW_SECTION;
 
 protected:
-	void repaintView();
+	void repaintView() VIEW_SECTION;
+
+public:
+	void paintEvent() VIEW_SECTION;
+
+private:
+	UInt16 myFormId;
+	WinHandle myScreenWindow;
+	WinHandle myBufferWindow;
 };
 
 #endif /* __PALMVIEWWIDGET_H__ */

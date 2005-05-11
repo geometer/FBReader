@@ -23,6 +23,7 @@ public:
 	void fullscreenSlot() FB_SECTION;
 	bool isRotationSupported() const FB_SECTION;
 	void stylusPressEvent(int x, int y) FB_SECTION;
+	void paintEvent() FB_SECTION;
 };
 
 extern PalmFBReader *READER;

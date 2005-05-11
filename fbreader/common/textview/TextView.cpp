@@ -388,19 +388,28 @@ bool TextView::onStylusPress(int x, int y) {
 
 		if ((x > left) && (x < right) && (y > top) && (y < bottom)) {
 			long paragraphNumber = myModel->paragraphs().size() * (x - left - 1) / (right - left - 1);
-			gotoParagraph(paragraphNumber, true);
-			paint(false);
-			if ((myLastParagraphCursor != 0) && !myLastParagraphCursor->isEndOfText()) {
-				long paragraphLength = myLastParagraphCursor->paragraphLength();
-				if (paragraphLength > 0) {
-					long wordNum =
-						(x - left - 1) * myModel->paragraphs().size() * paragraphLength / (right - left - 1) -
-						myLastParagraphCursor->paragraphNumber() * paragraphLength;
-					myLastParagraphCursor->moveTo(myLastParagraphCursor->paragraphNumber(), wordNum, 0);
-					if (myFirstParagraphCursor != 0) {
-						delete myFirstParagraphCursor;
-						myFirstParagraphCursor = 0;
+			if (paragraphNumber == 0) {
+				gotoParagraph(0, false);
+				repaintView();
+			} else {
+				gotoParagraph(paragraphNumber, true);
+				paint(false);
+				if ((myLastParagraphCursor != 0) && (paragraphNumber == myLastParagraphCursor->paragraphNumber())) {
+					if ((myLastParagraphCursor != 0) && !myLastParagraphCursor->isEndOfText()) {
+						long paragraphLength = myLastParagraphCursor->paragraphLength();
+						if (paragraphLength > 0) {
+							long wordNum =
+								(x - left - 1) * myModel->paragraphs().size() * paragraphLength / (right - left - 1) -
+								myLastParagraphCursor->paragraphNumber() * paragraphLength;
+							myLastParagraphCursor->moveTo(myLastParagraphCursor->paragraphNumber(), wordNum, 0);
+							if (myFirstParagraphCursor != 0) {
+								delete myFirstParagraphCursor;
+								myFirstParagraphCursor = 0;
+							}
+							repaintView();
+						}
 					}
+				} else {
 					repaintView();
 				}
 			}

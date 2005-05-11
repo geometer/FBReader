@@ -135,7 +135,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
 		-DFB_SECTION="__attribute__ ((section(\"sec4\")))" \
 		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec4\")))" \
-		-DFORMATS_SECTION="__attribute__ ((section(\"sec4\")))" \
+		-DFORMATS_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DPALM_TEMPORARY \
 		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O2

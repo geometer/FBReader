@@ -29,6 +29,7 @@ PalmPaintContext::PalmPaintContext() {
 	//myPixmap = NULL;
 	myWidth = 0;
 	myHeight = 0;
+	BackgroundColorOption.setValue(ZLColor(255, 255, 170));
 }
 
 PalmPaintContext::~PalmPaintContext() {

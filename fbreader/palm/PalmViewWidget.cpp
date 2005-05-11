@@ -21,9 +21,14 @@
 #include "PalmViewWidget.h"
 #include "PalmPaintContext.h"
 
-PalmViewWidget::PalmViewWidget() {
+PalmViewWidget::PalmViewWidget(UInt16 formId) : myFormId(formId), myScreenWindow(0), myBufferWindow(0) {
 }
 
+PalmViewWidget::~PalmViewWidget() {
+	if (myBufferWindow != 0) {
+		WinDeleteWindow(myBufferWindow, false);
+	}
+}
 /*
 void QViewWidget::paintEvent(QPaintEvent*) {
 	((QPaintContext&)view()->context()).setSize(width(), height());
@@ -39,7 +44,12 @@ void QViewWidget::mousePressEvent(QMouseEvent *event) {
 }
 */
 
-void PalmViewWidget::repaintView()	{
+void PalmViewWidget::repaintView() {
+	//FrmUpdateForm(myFormId, frmRedrawUpdateCode);
+	paintEvent();
+}
+
+void PalmViewWidget::paintEvent()	{
 	if (!DO_PAINT) {
 		return;
 	}
@@ -49,7 +59,9 @@ void PalmViewWidget::repaintView()	{
 		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
 	}
 	
-	FrmDrawForm(FrmGetActiveForm());
+	if (myScreenWindow == 0) { 
+		FrmDrawForm(FrmGetFormPtr(myFormId));
+	}
 
 	RectangleType bufferBounds;
 	bufferBounds.topLeft.x = 0;
@@ -62,20 +74,25 @@ void PalmViewWidget::repaintView()	{
 		bufferBounds.extent.x = 160;
 		bufferBounds.extent.y = 160;
 	}
+
+	if (myScreenWindow == 0) { 
+		myScreenWindow = WinGetDrawWindow();
+		Err err;
+		myBufferWindow = WinCreateOffscreenWindow(bufferBounds.extent.x, bufferBounds.extent.y, nativeFormat, &err);
+		if (err != errNone) {
+			myBufferWindow = 0;
+		}
+	}
+
 	((PalmPaintContext&)view()->context()).setSize(bufferBounds.extent.x, bufferBounds.extent.y);
 
-	Err err;
-	WinHandle screenWindow = WinGetDrawWindow();
-	WinHandle bufferWindow = WinCreateOffscreenWindow(bufferBounds.extent.x, bufferBounds.extent.y, nativeFormat, &err);
-
-	if (err == errNone) {
-		WinSetDrawWindow(bufferWindow);
+	if (myBufferWindow != 0) {
+		WinSetDrawWindow(myBufferWindow);
 	}
 	view()->paint();
-	if (err == errNone) {
-		WinSetDrawWindow(screenWindow);
-		WinCopyRectangle(bufferWindow, screenWindow, &bufferBounds, 0, 0, winPaint);
-		WinDeleteWindow(bufferWindow, false);
+	if (myBufferWindow != 0) {
+		WinSetDrawWindow(myBufferWindow);
+		WinCopyRectangle(myBufferWindow, myScreenWindow, &bufferBounds, 0, 0, winPaint);
 	}
 
 	if (romVersion >= RomVersion50) {
