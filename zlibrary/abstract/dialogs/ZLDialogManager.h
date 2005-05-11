@@ -34,6 +34,7 @@ protected:
 	static ZLDialogManager *ourInstance;
 
 protected:
+	ZLDialogManager() DIALOG_SECTION;
 	virtual ~ZLDialogManager() DIALOG_SECTION;
 
 public:
@@ -41,9 +42,5 @@ public:
 	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const DIALOG_SECTION = 0;
 	virtual void openFileDialog(const std::string &title, const ZLFileHandler &handler) const DIALOG_SECTION = 0;
 };
-
-inline ZLDialogManager &ZLDialogManager::instance() { return *ourInstance; } 
-inline void ZLDialogManager::deleteInstance() { delete ourInstance; }
-inline ZLDialogManager::~ZLDialogManager() {}
 
 #endif /* __ZLDIALOGMANAGER_H__ */

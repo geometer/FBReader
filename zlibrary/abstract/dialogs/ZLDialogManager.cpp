@@ -19,3 +19,17 @@
 #include "ZLDialogManager.h"
 
 ZLDialogManager *ZLDialogManager::ourInstance = 0;
+
+ZLDialogManager &ZLDialogManager::instance() {
+	return *ourInstance;
+} 
+
+void ZLDialogManager::deleteInstance() {
+	delete ourInstance;
+}
+
+ZLDialogManager::ZLDialogManager() {
+}
+
+ZLDialogManager::~ZLDialogManager() {
+}
