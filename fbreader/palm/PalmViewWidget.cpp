@@ -48,14 +48,36 @@ void PalmViewWidget::repaintView()	{
 	if (romVersion == 0) {
 		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
 	}
+	
 	FrmDrawForm(FrmGetActiveForm());
+
+	RectangleType bufferBounds;
+	bufferBounds.topLeft.x = 0;
+	bufferBounds.topLeft.y = 0;
 	if (romVersion >= RomVersion50) {
-		((PalmPaintContext&)view()->context()).setSize(320, 320);
 		WinSetCoordinateSystem(kCoordinatesNative);
+		bufferBounds.extent.x = 320;
+		bufferBounds.extent.y = 320;
 	} else {
-		((PalmPaintContext&)view()->context()).setSize(160, 160);
+		bufferBounds.extent.x = 160;
+		bufferBounds.extent.y = 160;
+	}
+	((PalmPaintContext&)view()->context()).setSize(bufferBounds.extent.x, bufferBounds.extent.y);
+
+	Err err;
+	WinHandle screenWindow = WinGetDrawWindow();
+	WinHandle bufferWindow = WinCreateOffscreenWindow(bufferBounds.extent.x, bufferBounds.extent.y, nativeFormat, &err);
+
+	if (err == errNone) {
+		WinSetDrawWindow(bufferWindow);
 	}
 	view()->paint();
+	if (err == errNone) {
+		WinSetDrawWindow(screenWindow);
+		WinCopyRectangle(bufferWindow, screenWindow, &bufferBounds, 0, 0, winPaint);
+		WinDeleteWindow(bufferWindow, false);
+	}
+
 	if (romVersion >= RomVersion50) {
 		WinSetCoordinateSystem(kCoordinatesStandard);
 	}

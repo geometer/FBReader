@@ -32,7 +32,7 @@ BookModel::BookModel(const BookDescription *description) {
 		BookReader reader(*this);
 		reader.setMainTextModel();
 		reader.pushKind(REGULAR);
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 200; i++) {
 			reader.beginParagraph();
 			reader.addDataToBuffer("test text");
 			reader.endParagraph();

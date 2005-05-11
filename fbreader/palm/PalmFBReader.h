@@ -5,7 +5,7 @@
 
 #include "../common/fbreader/FBReader.h"
 
-void EventLoop();
+void EventLoop() FB_SECTION;
 
 class PalmPaintContext;
 

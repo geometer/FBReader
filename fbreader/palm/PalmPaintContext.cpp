@@ -126,13 +126,13 @@ int PalmPaintContext::stringWidth(const std::string &str, int from, int len) con
 
 int PalmPaintContext::stringHeight() const {
 	//return myPainter->font().pointSize() + 2;
-	return 24;
+	return FntLineHeight();
 }
 
 void PalmPaintContext::drawString(int x, int y, const std::string &str, int from, int len) {
 	//QString qStr = QString::fromUtf8(str.data() + from, len);
 	//myPainter->drawText(x + leftMargin().value(), y + topMargin().value(), qStr);
-	WinDrawChars(str.data() + from, len, x + leftMargin().value() + 1, y + topMargin().value() - 24);
+	WinDrawChars(str.data() + from, len, x + leftMargin().value() + 1, y + topMargin().value() - stringHeight());
 }
 
 /*

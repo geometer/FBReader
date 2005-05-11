@@ -118,12 +118,12 @@ void TextView::paint(bool doPaint) {
 	} while (myLastParagraphCursor->isEndOfParagraph() && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
 
 	if (doPaint && ShowPositionIndicatorOption.value()) {
-		int bottom = context().height();
-		int top = bottom - PositionIndicatorHeightOption.value() + 1;
-		int left = 0;
-		int right = context().width() - 1;
-		int fillWidth;
-		int paragraphLength = myLastParagraphCursor->paragraphLength();
+		long bottom = context().height();
+		long top = bottom - PositionIndicatorHeightOption.value() + 1;
+		long left = 0;
+		long right = context().width() - 1;
+		long fillWidth;
+		long paragraphLength = myLastParagraphCursor->paragraphLength();
 		if (paragraphLength == 0) {
 			fillWidth = (right - left - 1) * (myLastParagraphCursor->paragraphNumber() + 1) / myModel->paragraphs().size();
 		} else {
@@ -381,19 +381,19 @@ void TextView::findPrevious() {
 
 bool TextView::onStylusPress(int x, int y) {
 	if (ShowPositionIndicatorOption.value() && (myModel != 0)) {
-		int bottom = context().height();
-		int top = bottom - PositionIndicatorHeightOption.value() + 1;
-		int left = 0;
-		int right = context().width() - 1;
+		long bottom = context().height();
+		long top = bottom - PositionIndicatorHeightOption.value() + 1;
+		long left = 0;
+		long right = context().width() - 1;
 
 		if ((x > left) && (x < right) && (y > top) && (y < bottom)) {
-			int paragraphNumber = myModel->paragraphs().size() * (x - left - 1) / (right - left - 1);
+			long paragraphNumber = myModel->paragraphs().size() * (x - left - 1) / (right - left - 1);
 			gotoParagraph(paragraphNumber, true);
 			paint(false);
 			if ((myLastParagraphCursor != 0) && !myLastParagraphCursor->isEndOfText()) {
-				int paragraphLength = myLastParagraphCursor->paragraphLength();
+				long paragraphLength = myLastParagraphCursor->paragraphLength();
 				if (paragraphLength > 0) {
-					int wordNum =
+					long wordNum =
 						(x - left - 1) * myModel->paragraphs().size() * paragraphLength / (right - left - 1) -
 						myLastParagraphCursor->paragraphNumber() * paragraphLength;
 					myLastParagraphCursor->moveTo(myLastParagraphCursor->paragraphNumber(), wordNum, 0);

@@ -26,8 +26,15 @@ void PalmFBReader::cancelSlot() {}
 void PalmFBReader::fullscreenSlot() {}
 bool PalmFBReader::isRotationSupported() const { return false; }
 void PalmFBReader::stylusPressEvent(int x, int y) {
-	myViewWidget->view()->onStylusPress(x, y);
+	View *view = myViewWidget->view();
+	x -= view->context().leftMargin().value();
+	y -= view->context().topMargin().value();
+	view->onStylusPress(x, y);
 }
+
+static Boolean MainFBReaderFormHandleEvent(EventPtr event) FB_SECTION;
+static Boolean ApplicationHandleEvent(EventPtr event) FB_SECTION;
+static Boolean OptionsDialogFormHandleEvent(EventPtr event) FB_SECTION;
 
 static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 	switch (event->eType) {
@@ -35,6 +42,21 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 			MenuCmdBarAddButton(menuCmdBarOnRight, OpenBook, menuCmdBarResultMenuItem, OpenBook, "");
 			MenuCmdBarAddButton(menuCmdBarOnRight, AddBook, menuCmdBarResultMenuItem, AddBook, "");
 			return false;
+
+		case keyDownEvent:
+			{
+				DO_PAINT = true;
+				switch (event->data.keyDown.chr) {
+					case pageUpChr:
+						READER->doAction(FBReader::ACTION_SCROLL_BACKWARD);
+						break;
+					case pageDownChr:
+						READER->doAction(FBReader::ACTION_SCROLL_FORWARD);
+						break;
+				}
+				DO_PAINT = false;
+			}
+			return true;
 
    	case penDownEvent:
 			{

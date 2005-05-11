@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <PalmOS.h>
+
 #include "ZLPalmTime.h"
 
 void ZLPalmTimeManager::createInstance() {
@@ -29,8 +31,6 @@ ZLPalmTimeManager::~ZLPalmTimeManager() {
 }
 
 ZLTime ZLPalmTimeManager::currentTime() const {
-	//TODO: implement
-	//struct timeb timeB;
-	//ftime(&timeB);
-	return ZLTime(0, 0);
+	UInt32 time = TimGetTicks() * 1000 / SysTicksPerSecond();
+	return ZLTime(time / 1000, time % 1000);
 }
