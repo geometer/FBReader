@@ -212,6 +212,8 @@ void GtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int 
 	}
 
 	if (view != 0) {
+		// !!! this line is added for test purposes, should be removed !!!
+		view->createItem();
 		view->setVisible(option->isVisible());
 		myViews.push_back(view);
 	}
