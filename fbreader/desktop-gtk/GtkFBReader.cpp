@@ -61,14 +61,13 @@ static void handleMenuItem(gpointer *self, guint data) {
 	((GtkFBReader*)self)->doAction((FBReader::ActionCode)data);
 }
 
-// MSS: how would I get rid of warnings for optional data memebers?
 static GtkItemFactoryEntry menuItems[] = {
-  { "/Library",						NULL,		NULL,           0, "<Branch>" },
-  { "/Library/Open",			NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_COLLECTION, "<Item>" },
-  { "/Library/Add To...", NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_ADD_BOOK, "<Item>" },
-	{ "/Recent",						NULL,		NULL,						0, "<Branch>" },
-	{ "/Preferences",       NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_OPTIONS, "<Item>" },
-	{ "/Close",             NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_CANCEL, "<Item>" }
+  { "/Library",						NULL,		NULL,           0, "<Branch>", NULL },
+  { "/Library/Open",			NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_COLLECTION, "<Item>", NULL },
+  { "/Library/Add To...", NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_ADD_BOOK, "<Item>", NULL },
+	{ "/Recent",						NULL,		NULL,						0, "<Branch>", NULL },
+	{ "/Preferences",       NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_OPTIONS, "<Item>", NULL },
+	{ "/Close",             NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_CANCEL, "<Item>", NULL }
 };
 
 GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
