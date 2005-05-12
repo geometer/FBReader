@@ -1,0 +1,295 @@
+#ifndef __SHARED_PTR_H__
+#define __SHARED_PTR_H__
+
+#ifdef __PTR_DEBUG__
+#include <iostream>
+#endif /* __PTR_DEBUG__ */
+
+template<class T> class shared_ptr_storage {
+	private:
+		unsigned int myCounter;
+		unsigned int myWeakCounter;
+		T* myPointer;
+
+	public:
+		shared_ptr_storage(T *pointer) {
+			myPointer = pointer;
+			myCounter = 0;
+			myWeakCounter = 0;
+#ifdef __PTR_DEBUG__
+			std::cerr << "new storage " << ((myPointer == NULL) ? "NULL" : "not NULL") << "\n";
+#endif /* __PTR_DEBUG__ */
+		}
+
+		~shared_ptr_storage() {
+#ifdef __PTR_DEBUG__
+			std::cerr << "delete storage " << ((myPointer == NULL) ? "NULL" : "not NULL") << "\n";
+#endif /* __PTR_DEBUG__ */
+		}
+
+		T* pointer() const {
+			return myPointer;
+		}
+
+		T& content() const {
+			return *myPointer;
+		}
+
+		void addReference() {
+#ifdef __PTR_DEBUG__
+			std::cerr << "add reference\n";
+#endif /* __PTR_DEBUG__ */
+			myCounter++;
+		}
+
+		void removeReference() {
+#ifdef __PTR_DEBUG__
+			std::cerr << "remove reference\n";
+#endif /* __PTR_DEBUG__ */
+			myCounter--;
+			if (myCounter == 0) {
+				T* ptr = myPointer;
+				myPointer = NULL;
+				delete ptr;
+			}
+		}
+
+		void addWeakReference() {
+			myWeakCounter++;
+		}
+
+		void removeWeakReference() {
+			myWeakCounter--;
+		}
+
+		unsigned int counter() const {
+			return myCounter + myWeakCounter;
+		}
+};
+
+template<class T> class weak_ptr;
+
+template<class T> class shared_ptr {
+	friend class weak_ptr<T>;
+
+	private:
+		shared_ptr_storage<T> *myStorage;
+
+		shared_ptr_storage<T> *newStorage(T *t) {
+			return (t == NULL) ? NULL : new shared_ptr_storage<T>(t);
+		}
+		void attachStorage(shared_ptr_storage<T> *storage) {
+			myStorage = storage;
+			if (myStorage != NULL) {
+				myStorage->addReference();
+			}
+		}
+		void detachStorage() {
+			if (myStorage != NULL) {
+				myStorage->removeReference();
+				if (myStorage->counter() == 0) {
+					delete myStorage;
+				}
+			}
+		}
+
+	public:
+		shared_ptr() {
+			myStorage = NULL;
+		}
+		shared_ptr(T *t) {
+			attachStorage(newStorage(t));
+		}
+		shared_ptr(const shared_ptr<T> &t) {
+			attachStorage(t.myStorage);
+		}
+		shared_ptr(const weak_ptr<T> &t) {
+			if (!t.isNull()) {
+				attachStorage(t.myStorage);
+			} else {
+				attachStorage(NULL);
+			}
+		}
+		~shared_ptr() {
+			detachStorage();
+		}
+		const shared_ptr<T> &operator = (T *t) {
+			detachStorage();
+			attachStorage(newStorage(t));
+			return *this;
+		}
+		const shared_ptr<T> &operator = (const shared_ptr<T> &t) {
+			if (&t != this) {
+				detachStorage();
+				attachStorage(t.myStorage);
+			}
+			return *this;
+		}
+		const shared_ptr<T> &operator = (const weak_ptr<T> &t) {
+			detachStorage();
+			if (!t.isNull()) {
+				attachStorage(t.myStorage);
+			} else {
+				attachStorage(NULL);
+			}
+			return *this;
+		}
+
+		T* operator -> () const {
+			return (myStorage == NULL) ? NULL : myStorage->pointer();
+		}
+		T& operator * () const {
+			return myStorage->content();
+		}
+		bool isNull() const {
+			return myStorage == NULL;
+		}
+		void reset() {
+			detachStorage();
+			attachStorage(NULL);
+		}
+		bool operator == (const weak_ptr<T> &t) const {
+			return operator -> () == t.operator -> ();
+		}
+		bool operator != (const weak_ptr<T> &t) const {
+			return !operator == (t);
+		}
+		bool operator < (const weak_ptr<T> &t) const {
+			return operator -> () < t.operator -> ();
+		}
+		bool operator > (const weak_ptr<T> &t) const {
+			return t.operator < (*this);
+		}
+		bool operator <= (const weak_ptr<T> &t) const {
+			return !t.operator < (*this);
+		}
+		bool operator >= (const weak_ptr<T> &t) const {
+			return !operator < (t);
+		}
+		bool operator == (const shared_ptr<T> &t) const {
+			return operator -> () == t.operator -> ();
+		}
+		bool operator != (const shared_ptr<T> &t) const {
+			return !operator == (t);
+		}
+		bool operator < (const shared_ptr<T> &t) const {
+			return operator -> () < t.operator -> ();
+		}
+		bool operator > (const shared_ptr<T> &t) const {
+			return t.operator < (*this);
+		}
+		bool operator <= (const shared_ptr<T> &t) const {
+			return !t.operator < (*this);
+		}
+		bool operator >= (const shared_ptr<T> &t) const {
+			return !operator < (t);
+		}
+};
+
+template<class T> class weak_ptr {
+	friend class shared_ptr<T>;
+	private:
+		shared_ptr_storage<T> *myStorage;
+
+		void attachStorage(shared_ptr_storage<T> *storage) {
+			myStorage = storage;
+			if (myStorage != NULL) {
+				myStorage->addWeakReference();
+			}
+		}
+		void detachStorage() {
+			if (myStorage != NULL) {
+				myStorage->removeWeakReference();
+				if (myStorage->counter() == 0) {
+					delete myStorage;
+				}
+			}
+		}
+
+	public:
+		weak_ptr() {
+			myStorage = NULL;
+		}
+		weak_ptr(const shared_ptr<T> &t) {
+			attachStorage(t.myStorage);
+		}
+		weak_ptr(const weak_ptr<T> &t) {
+			if (!t.isNull()) {
+				attachStorage(t.myStorage);
+			} else {
+				attachStorage(NULL);
+			}
+		}
+		~weak_ptr() {
+			detachStorage();
+		}
+
+		const weak_ptr<T> &operator = (const weak_ptr<T> &t) {
+			if (&t != this) {
+				detachStorage();
+				if (!t.isNull()) {
+					attachStorage(t.myStorage);
+				} else {
+					attachStorage(NULL);
+				}
+			}
+			return *this;
+		}
+		const weak_ptr<T> &operator = (const shared_ptr<T> &t) {
+			detachStorage();
+			attachStorage(t.myStorage);
+			return *this;
+		}
+
+		T* operator -> () const {
+			return (myStorage == NULL) ? NULL : myStorage->pointer();
+		}
+		T& operator * () const {
+			return myStorage->content();
+		}
+		bool isNull() const {
+			return (myStorage == NULL) || (myStorage->pointer() == NULL);
+		}
+		void reset() {
+			detachStorage();
+			attachStorage(NULL);
+		}
+		bool operator == (const weak_ptr<T> &t) const {
+			return operator -> () == t.operator -> ();
+		}
+		bool operator != (const weak_ptr<T> &t) const {
+			return !operator == (t);
+		}
+		bool operator < (const weak_ptr<T> &t) const {
+			return operator -> () < t.operator -> ();
+		}
+		bool operator > (const weak_ptr<T> &t) const {
+			return t.operator < (*this);
+		}
+		bool operator <= (const weak_ptr<T> &t) const {
+			return !t.operator < (*this);
+		}
+		bool operator >= (const weak_ptr<T> &t) const {
+			return !operator < (t);
+		}
+		bool operator == (const shared_ptr<T> &t) const {
+			return operator -> () == t.operator -> ();
+		}
+		bool operator != (const shared_ptr<T> &t) const {
+			return !operator == (t);
+		}
+		bool operator < (const shared_ptr<T> &t) const {
+			return operator -> () < t.operator -> ();
+		}
+		bool operator > (const shared_ptr<T> &t) const {
+			return t.operator < (*this);
+		}
+		bool operator <= (const shared_ptr<T> &t) const {
+			return !t.operator < (*this);
+		}
+		bool operator >= (const shared_ptr<T> &t) const {
+			return !operator < (t);
+		}
+};
+
+#endif /* __SHARED_PTR_H__ */
