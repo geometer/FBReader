@@ -11,7 +11,7 @@
 
 //int strncpy(char *dst, const char *src, size_t len) STL1_SECTION;
 
-#define TINY_DATA_SIZE 16
+#define TINY_DATA_SIZE 32
 
 namespace std {
 	class string {

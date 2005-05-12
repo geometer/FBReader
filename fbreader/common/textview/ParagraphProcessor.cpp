@@ -27,15 +27,6 @@
 
 #include "../model/Paragraph.h"
 
-TextElement *ParagraphCursor::ParagraphProcessor::myHSpaceElement = 0;
-
-void ParagraphCursor::ParagraphProcessor::clean() {
-	if (myHSpaceElement != 0) {
-		delete myHSpaceElement;
-		myHSpaceElement = 0;
-	}
-}
-
 ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, std::vector<TextElement*> &elements) : myParagraph(paragraph), myElements(elements) {
 	if (myHSpaceElement == 0) {
 		myHSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);

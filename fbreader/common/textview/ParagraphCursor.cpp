@@ -24,6 +24,15 @@
 
 #include "../model/Paragraph.h"
 
+TextElement *ParagraphCursor::myHSpaceElement = 0;
+
+void ParagraphCursor::clean() {
+	if (myHSpaceElement != 0) {
+		delete myHSpaceElement;
+		myHSpaceElement = 0;
+	}
+}
+
 ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
 	if (model.kind() == TextModel::TREE_MODEL) {
 		return new TreeParagraphCursor((TreeModel&)model);

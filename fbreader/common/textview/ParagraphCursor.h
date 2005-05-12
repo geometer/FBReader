@@ -23,6 +23,8 @@
 #include <vector>
 #include <string>
 
+#include <abstract/shared_ptr.h>
+
 #include "../model/TextModel.h"
 
 class TextElement;
@@ -53,14 +55,14 @@ friend class ParagraphCursor;
 
 class ParagraphCursor {
 
+public:
+	static void clean() VIEW_SECTION;
+
+private:
+	static TextElement *myHSpaceElement;
+
 private:
 	class ParagraphProcessor {
-
-	public:
-		static void clean() VIEW_SECTION;
-
-	private:
-		static TextElement *myHSpaceElement;
 
 	public:
 		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, std::vector<TextElement*> &elements) VIEW_SECTION;
@@ -81,6 +83,7 @@ private:
 		int myWordCounter;
 		int myOffset;
 	};
+	friend class ParagraphProcessor;
 
 protected:
 	ParagraphCursor(const TextModel &model) VIEW_SECTION;
