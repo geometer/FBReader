@@ -217,7 +217,9 @@ void ParagraphCursor::fill() {
 
 void ParagraphCursor::clear() {
 	for (std::vector<TextElement*>::const_iterator it = myElements.begin(); it != myElements.end(); it++) {
-		delete *it;
+		if ((*it)->kind() != TextElement::HSPACE_ELEMENT) {
+			delete *it;
+		}
 	}
 	myElements.clear();
 }

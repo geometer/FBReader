@@ -31,6 +31,6 @@ ZLPalmTimeManager::~ZLPalmTimeManager() {
 }
 
 ZLTime ZLPalmTimeManager::currentTime() const {
-	UInt32 time = TimGetTicks() * 1000 / SysTicksPerSecond();
-	return ZLTime(time / 1000, time % 1000);
+	UInt32 ticks = TimGetTicks() * 1000 / SysTicksPerSecond();
+	return ZLTime(ticks / 1000, ticks % 1000);
 }

@@ -2,6 +2,7 @@ include $(ROOTDIR)/makefiles/platforms.mk
 
 DUMMY_SECTIONS = \
 	-DSTL_SECTION="" \
+	-DSTL1_SECTION="" \
 	-DXML_SECTION="" \
 	-DFS_SECTION="" \
 	-DOPTIONS_SECTION="" \
@@ -124,6 +125,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 #		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))"
 	CFLAGS = \
 		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))" \
+		-DSTL1_SECTION="__attribute__ ((section(\"sec0\")))" \
 		-DXML_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DFS_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \

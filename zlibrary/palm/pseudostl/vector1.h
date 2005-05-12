@@ -290,19 +290,30 @@ namespace std {
 	template<typename T>
 	inline void vector<T>::reserve(size_t size) {
 		if (size > __myDataSize) {
+			if (__myDataSize == 0) {
+				__myDataSize = 0x10;
+			}
+			while (size > __myDataSize) {
+				__myDataSize <<= 1;
+			}
+			/*
 			if (size | 0xf) {
 				size = (size & (size_t)-0x10) + 0x10;
 			}
 			__myDataSize = size;
-			// TODO: use MemPtrResize
-			T *d = (T*)MemPtrNew(__myDataSize * sizeof(T));
-			if (__myLength != 0) {
-				MemMove(d, __myData, __myLength * sizeof(T));
+			*/
+			if (__myData == 0) {
+				__myData = (T*)MemPtrNew(__myDataSize * sizeof(T));
+			} else if (MemPtrResize(__myData, __myDataSize * sizeof(T)) != errNone) {
+				T *d = (T*)MemPtrNew(__myDataSize * sizeof(T));
+				if (__myLength != 0) {
+					MemMove(d, __myData, __myLength * sizeof(T));
+				}
+				if (__myData != 0) {
+					MemPtrFree(__myData);
+				}
+				__myData = d;
 			}
-			if (__myData != 0) {
-				MemPtrFree(__myData);
-			}
-			__myData = d;
 		}
 	}
 	template<typename T>

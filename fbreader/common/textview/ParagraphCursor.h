@@ -57,6 +57,12 @@ private:
 	class ParagraphProcessor {
 
 	public:
+		static void clean() VIEW_SECTION;
+
+	private:
+		static TextElement *myHSpaceElement;
+
+	public:
 		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, std::vector<TextElement*> &elements) VIEW_SECTION;
 		~ParagraphProcessor() VIEW_SECTION;
 

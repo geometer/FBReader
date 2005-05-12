@@ -27,7 +27,19 @@
 
 #include "../model/Paragraph.h"
 
+TextElement *ParagraphCursor::ParagraphProcessor::myHSpaceElement = 0;
+
+void ParagraphCursor::ParagraphProcessor::clean() {
+	if (myHSpaceElement != 0) {
+		delete myHSpaceElement;
+		myHSpaceElement = 0;
+	}
+}
+
 ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, std::vector<TextElement*> &elements) : myParagraph(paragraph), myElements(elements) {
+	if (myHSpaceElement == 0) {
+		myHSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
+	}
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); myLastMark++);
@@ -100,7 +112,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				const std::string &text = ((TextEntry*)*it)->text();
 				if (!text.empty()) {
 					if (isspace(text[0])) {
-						myElements.push_back(new SpecialTextElement(TextElement::HSPACE_ELEMENT));
+						myElements.push_back(myHSpaceElement);
 					}
 					const int len = text.length();
 					int firstNonSpace = -1;
@@ -108,7 +120,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 						if (isspace(text[i])) {
 							if (firstNonSpace != -1) {
 								addWord(text, firstNonSpace, i - firstNonSpace);
-								myElements.push_back(new SpecialTextElement(TextElement::HSPACE_ELEMENT));
+								myElements.push_back(myHSpaceElement);
 								firstNonSpace = -1;
 							}
 						} else if (firstNonSpace == -1) {

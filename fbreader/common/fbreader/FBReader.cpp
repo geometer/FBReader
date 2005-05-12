@@ -36,6 +36,7 @@
 #include "../view/PaintContext.h"
 #include "../hyphenation/Hyphenator.h"
 #include "../textview/TextStyle.h"
+#include "../textview/ParagraphCursor.h"
 #include "../formats/FormatPlugin.h"
 
 static const std::string OPTIONS = "Options";
@@ -94,6 +95,7 @@ FBReader::~FBReader() {
 	TextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
 	Hyphenator::deleteInstance();
+	ParagraphCursor::ParagraphProcessor::clean();
 }
 
 void FBReader::openBook(BookDescription *description) {
