@@ -55,10 +55,6 @@ public:
 		}
 	}
 	void onAccept() const { if (myInitialized) _onAccept(); }
-
-public:
-	// !!! this function is added for test purposes, should be removed !!!
-	void createItem() { if (!myInitialized) _createItem(); myInitialized = true; }
 	
 protected:
 	virtual void _createItem() = 0;

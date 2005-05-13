@@ -1,7 +1,6 @@
 #!/bin/sh
 
 TARGETS="desktop-gtk desktop-qt zaurus-cacko zaurus-pdaxrom-qt zaurus-pdaxrom-gtk palm"
-TARGETS="desktop-gtk palm"
 
 mv makefiles/target.mk makefiles/__target.mk
 
