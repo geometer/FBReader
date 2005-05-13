@@ -27,10 +27,7 @@
 
 #include "../model/Paragraph.h"
 
-ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, std::vector<TextElement*> &elements) : myParagraph(paragraph), myElements(elements) {
-	if (myHSpaceElement == 0) {
-		myHSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
-	}
+ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, const shared_ptr<TextElementVector> &elements) : myParagraph(paragraph), myElements(elements) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); myLastMark++);
@@ -43,27 +40,27 @@ ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
 
 void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 	if (myWordCounter == 0) {
-		myElements.push_back(new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT));
+		myElements->push_back(ourBeforeParagraphElement);
 		if (myParagraph.kind() == Paragraph::TEXT_PARAGRAPH) {
-			myElements.push_back(new SpecialTextElement(TextElement::INDENT_ELEMENT));
+			myElements->push_back(ourIndentElement);
 		} else if (myParagraph.kind() == Paragraph::TREE_PARAGRAPH) {
 			TreeParagraph &tp = (TreeParagraph&)myParagraph;
 			for (int i = 1; i < tp.depth() - 1; i++) {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_SKIP));
+				myElements->push_back(new TreeElement(TreeElement::TREE_ELEMENT_SKIP));
 			}
 			if (tp.depth() > 1) {
 				TreeElement::TreeElementKind tek =
 					(tp.parent()->children().back() == &tp) ?
 						TreeElement::TREE_ELEMENT_TOP_RIGHT_LINE :
 						TreeElement::TREE_ELEMENT_TOP_BOTTOM_RIGHT_LINE;
-				myElements.push_back(new TreeElement(tek));
+				myElements->push_back(new TreeElement(tek));
 			}
 			if (tp.children().empty()) {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_LEAF));
+				myElements->push_back(new TreeElement(TreeElement::TREE_ELEMENT_LEAF));
 			} else if (tp.isOpen()) {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_OPEN_NODE));
+				myElements->push_back(new TreeElement(TreeElement::TREE_ELEMENT_OPEN_NODE));
 			} else {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_CLOSED_NODE));
+				myElements->push_back(new TreeElement(TreeElement::TREE_ELEMENT_CLOSED_NODE));
 			}
 		}
 	}
@@ -79,7 +76,7 @@ void ParagraphCursor::ParagraphProcessor::addWord(const std::string &str, int st
 			word->addMark(mark.Offset - myOffset - start, mark.Length);
 		}
 	}
-	myElements.push_back(word);
+	myElements->push_back(word);
 }
 
 void ParagraphCursor::ParagraphProcessor::fill() {
@@ -87,14 +84,14 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
 		switch ((*it)->entryKind()) {
 			case ParagraphEntry::CONTROL_ENTRY:
-				myElements.push_back(new ControlElement((ControlEntry&)**it));
+				myElements->push_back(new ControlElement((ControlEntry&)**it));
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
 				beforeAddWord();
 				const Image *image = ((ImageEntry*)*it)->image();
 				if (image != NULL) {
-					myElements.push_back(new ImageElement(*image));
+					myElements->push_back(new ImageElement(*image));
 				}
 				break;
 			}
@@ -103,7 +100,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				const std::string &text = ((TextEntry*)*it)->text();
 				if (!text.empty()) {
 					if (isspace(text[0])) {
-						myElements.push_back(myHSpaceElement);
+						myElements->push_back(ourHSpaceElement);
 					}
 					const int len = text.length();
 					int firstNonSpace = -1;
@@ -111,7 +108,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 						if (isspace(text[i])) {
 							if (firstNonSpace != -1) {
 								addWord(text, firstNonSpace, i - firstNonSpace);
-								myElements.push_back(myHSpaceElement);
+								myElements->push_back(ourHSpaceElement);
 								firstNonSpace = -1;
 							}
 						} else if (firstNonSpace == -1) {
@@ -127,5 +124,5 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 		}
 	}
-	myElements.push_back(new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT));
+	myElements->push_back(ourAfterParagraphElement);
 }

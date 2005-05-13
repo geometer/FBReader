@@ -24,12 +24,32 @@
 
 #include "../model/Paragraph.h"
 
-TextElement *ParagraphCursor::myHSpaceElement = 0;
+TextElement *ParagraphCursor::ourHSpaceElement = 0;
+TextElement *ParagraphCursor::ourBeforeParagraphElement = 0;
+TextElement *ParagraphCursor::ourAfterParagraphElement = 0;
+TextElement *ParagraphCursor::ourIndentElement = 0;
+TextElement *ParagraphCursor::ourEmptyLineElement = 0;
+
+TextElementVector::~TextElementVector() {
+	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
+		if (((*it)->kind() & 0x10) == 0) {
+			delete *it;
+		}
+	}
+}
 
 void ParagraphCursor::clean() {
-	if (myHSpaceElement != 0) {
-		delete myHSpaceElement;
-		myHSpaceElement = 0;
+	if (ourHSpaceElement != 0) {
+		delete ourHSpaceElement;
+		delete ourBeforeParagraphElement;
+		delete ourAfterParagraphElement;
+		delete ourIndentElement;
+		delete ourEmptyLineElement;
+		ourHSpaceElement = 0;
+		ourBeforeParagraphElement = 0;
+		ourAfterParagraphElement = 0;
+		ourIndentElement = 0;
+		ourEmptyLineElement = 0;
 	}
 }
 
@@ -41,19 +61,26 @@ ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
 }
 
 ParagraphCursor::ParagraphCursor(const TextModel &model) : myModel(model) {
+	if (ourHSpaceElement == 0) {
+		ourHSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
+		ourBeforeParagraphElement = new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT);
+		ourAfterParagraphElement = new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT);
+		ourIndentElement = new SpecialTextElement(TextElement::INDENT_ELEMENT);
+		ourEmptyLineElement = new SpecialTextElement(TextElement::EMPTY_LINE_ELEMENT);
+	}
 	myParagraphIterator = myModel.paragraphs().begin();
 	fill();
 }
 
 ParagraphCursor::ParagraphCursor(const ParagraphCursor &cursor) : myModel(cursor.myModel) {
 	myParagraphIterator = cursor.myParagraphIterator;
-	fill();
+	myElements = cursor.myElements;
+	myNextElement = myElements->begin();
 	myNextElement.myWordIterator += cursor.wordNumber();
 	myNextElement.myCharNumber = cursor.myNextElement.myCharNumber;
 }
 
 ParagraphCursor::~ParagraphCursor() {
-	clear();
 }
 
 bool PlainTextParagraphCursor::previous() {
@@ -159,11 +186,11 @@ bool TreeParagraphCursor::isEndOfText() const {
 }
 
 bool ParagraphCursor::isStartOfParagraph() const {
-	return (myNextElement.myWordIterator == myElements.begin()) && (myNextElement.myCharNumber == 0);
+	return (myNextElement.myWordIterator == myElements->begin()) && (myNextElement.myCharNumber == 0);
 }
 
 bool ParagraphCursor::isEndOfParagraph() const {
-	return myNextElement.myWordIterator == myElements.end();
+	return myNextElement.myWordIterator == myElements->end();
 }
 
 bool ParagraphCursor::isEndOfSection() const {
@@ -172,11 +199,11 @@ bool ParagraphCursor::isEndOfSection() const {
 
 TextMark ParagraphCursor::position() const {
 	WordCursor cursor = wordCursor();
-	while ((cursor.myWordIterator != myElements.end()) &&
+	while ((cursor.myWordIterator != myElements->end()) &&
 				 (cursor.element().kind() != TextElement::WORD_ELEMENT)) {
 		cursor.nextWord();
 	}
-	if (cursor.myWordIterator != myElements.end()) {
+	if (cursor.myWordIterator != myElements->end()) {
 		return TextMark(paragraphNumber(), ((Word&)cursor.element()).startOffset(), 0);
 	}
 	return TextMark(paragraphNumber() + 1, 0, 0);
@@ -186,11 +213,12 @@ void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
 	const std::vector<ParagraphEntry*> entries = paragraph.entries();
 	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
 		ControlEntry &control = *(ControlEntry*)*it;
-		myElements.push_back(new ControlElement(control));
+		myElements->push_back(new ControlElement(control));
 	}
 }
 
 void ParagraphCursor::fill() {
+	myElements = new TextElementVector();
 	switch ((*myParagraphIterator)->kind()) {
 		case Paragraph::TEXT_PARAGRAPH:
 		case Paragraph::TREE_PARAGRAPH:
@@ -202,35 +230,30 @@ void ParagraphCursor::fill() {
 		case Paragraph::EMPTY_LINE_PARAGRAPH:
 		{
 			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements.push_back(new SpecialTextElement(TextElement::EMPTY_LINE_ELEMENT));
+			myElements->push_back(ourEmptyLineElement);
 			break;
 		}
 		case Paragraph::BEFORE_SKIP_PARAGRAPH:
 		{
 			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements.push_back(new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT));
+			myElements->push_back(ourBeforeParagraphElement);
 			break;
 		}
 		case Paragraph::AFTER_SKIP_PARAGRAPH:
 		{
 			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements.push_back(new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT));
+			myElements->push_back(ourAfterParagraphElement);
 			break;
 		}
 		case Paragraph::EOS_PARAGRAPH:
 			break;
 	}
 
-	myNextElement = myElements.begin();
+	myNextElement = myElements->begin();
 }
 
 void ParagraphCursor::clear() {
-	for (std::vector<TextElement*>::const_iterator it = myElements.begin(); it != myElements.end(); it++) {
-		if ((*it)->kind() != TextElement::HSPACE_ELEMENT) {
-			delete *it;
-		}
-	}
-	myElements.clear();
+	myElements = 0;
 }
 
 void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber) {
@@ -245,9 +268,9 @@ void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber
 		fill();
 	}
 
-	if (myElements.size() >= (unsigned int)wordNumber) {
-		myNextElement = myElements.begin() + wordNumber;
-		if ((myNextElement.myWordIterator != myElements.end()) &&
+	if (myElements->size() >= (unsigned int)wordNumber) {
+		myNextElement = myElements->begin() + wordNumber;
+		if ((myNextElement.myWordIterator != myElements->end()) &&
 				(myNextElement.element().kind() == TextElement::WORD_ELEMENT)) {
 			if (charNumber < ((const Word&)myNextElement.element()).length()) {
 				myNextElement.myCharNumber = charNumber;
@@ -257,9 +280,9 @@ void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber
 }
 
 void ParagraphCursor::moveToParagraphStart() {
-	myNextElement = myElements.begin();
+	myNextElement = myElements->begin();
 }
 
 void ParagraphCursor::moveToParagraphEnd() {
-	myNextElement = myElements.end();
+	myNextElement = myElements->end();
 }
