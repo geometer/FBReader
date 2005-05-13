@@ -29,11 +29,33 @@
 
 class TextElement;
 class Paragraph;
+class Word;
 
 class TextElementVector : public std::vector<TextElement*> {
 
 public:
 	~TextElementVector() VIEW_SECTION;
+};
+
+class TextElementPool {
+
+public:
+	static void init() VIEW_SECTION;
+	static void clean() VIEW_SECTION;
+	static Word* getWord(const char *utf8String, int len, int startOffset) VIEW_SECTION;
+	static void store(Word *word) VIEW_SECTION;
+
+	static TextElement *HSpaceElement;
+	static TextElement *BeforeParagraphElement;
+	static TextElement *AfterParagraphElement;
+	static TextElement *IndentElement;
+	static TextElement *EmptyLineElement;
+
+private:
+	static std::vector<Word*> ourWordPool;
+
+private:
+	TextElementPool() VIEW_SECTION;
 };
 
 class WordCursor {
@@ -61,16 +83,6 @@ friend class ParagraphCursor;
 
 class ParagraphCursor {
 
-public:
-	static void clean() VIEW_SECTION;
-
-private:
-	static TextElement *ourHSpaceElement;
-	static TextElement *ourBeforeParagraphElement;
-	static TextElement *ourAfterParagraphElement;
-	static TextElement *ourIndentElement;
-	static TextElement *ourEmptyLineElement;
-
 private:
 	class ParagraphProcessor {
 
@@ -93,7 +105,6 @@ private:
 		int myWordCounter;
 		int myOffset;
 	};
-	friend class ParagraphProcessor;
 
 protected:
 	ParagraphCursor(const TextModel &model) VIEW_SECTION;

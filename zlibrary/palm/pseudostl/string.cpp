@@ -96,15 +96,19 @@ namespace std {
 	}
 
 	void string::swap(string &s) {
-		char *p = __myData;
-		__myData = s.__myData;
-		s.__myData = p;
-		int l = __myDataSize;
-		__myDataSize = s.__myDataSize;
-		s.__myDataSize = l;
-		l = __myLength;
-		__myLength = s.__myLength;
-		s.__myLength = l;
+		if ((__myData != __myTinyData) && (s.__myData != s.__myTinyData)) {
+			char *p = __myData;
+			__myData = s.__myData;
+			s.__myData = p;
+			int l = __myDataSize;
+			__myDataSize = s.__myDataSize;
+			s.__myDataSize = l;
+			l = __myLength;
+			__myLength = s.__myLength;
+			s.__myLength = l;
+		} else {
+			// TODO: implement
+		}
 	}
 
 	const string &string::operator += (const string &s) {
@@ -122,7 +126,7 @@ namespace std {
 	}
 
 	int string::compare(const string &s, int fromPos, int len) const {
-		// TODO: check for short strings (?)
+		// TODO: check for short string length < len (?)
 		const char *ptr0 = __myData + fromPos;
 		const char *ptr1 = s.__myData;
 		const char *end = ptr0 + len;

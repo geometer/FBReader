@@ -31,6 +31,8 @@ public:
 	Word(const char *utf8String, int len, int startOffset) VIEW_SECTION;
 
 public:
+	void setContents(const char *utf8String, int len, int startOffset) VIEW_SECTION;
+	void clearContents() VIEW_SECTION;
 	~Word() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
 	int length() const VIEW_SECTION;
@@ -72,7 +74,9 @@ private:
 	Word &operator = (const Word&) VIEW_SECTION;
 };
 
-inline Word::~Word() { if (myMark != 0) delete myMark; }
+inline Word::Word(const char *utf8String, int len, int startOffset) { setContents(utf8String, len, startOffset); }
+inline Word::~Word() { clearContents(); }
+inline void Word::clearContents() { if (myMark != 0) delete myMark; }
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
 inline int Word::length() const { return myUtf8Length; }
 inline const std::string &Word::utf8String() const { return myUtf8Contents; }

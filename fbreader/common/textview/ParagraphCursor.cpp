@@ -24,33 +24,65 @@
 
 #include "../model/Paragraph.h"
 
-TextElement *ParagraphCursor::ourHSpaceElement = 0;
-TextElement *ParagraphCursor::ourBeforeParagraphElement = 0;
-TextElement *ParagraphCursor::ourAfterParagraphElement = 0;
-TextElement *ParagraphCursor::ourIndentElement = 0;
-TextElement *ParagraphCursor::ourEmptyLineElement = 0;
+TextElement *TextElementPool::HSpaceElement = 0;
+TextElement *TextElementPool::BeforeParagraphElement = 0;
+TextElement *TextElementPool::AfterParagraphElement = 0;
+TextElement *TextElementPool::IndentElement = 0;
+TextElement *TextElementPool::EmptyLineElement = 0;
+std::vector<Word*> TextElementPool::ourWordPool;
 
 TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
-		if (((*it)->kind() & 0x10) == 0) {
+		TextElement::Kind kind = (*it)->kind();
+		if (kind == TextElement::WORD_ELEMENT) {
+			TextElementPool::store((Word*)*it);
+		} else if ((kind & 0x10) == 0) {
 			delete *it;
 		}
 	}
 }
 
-void ParagraphCursor::clean() {
-	if (ourHSpaceElement != 0) {
-		delete ourHSpaceElement;
-		delete ourBeforeParagraphElement;
-		delete ourAfterParagraphElement;
-		delete ourIndentElement;
-		delete ourEmptyLineElement;
-		ourHSpaceElement = 0;
-		ourBeforeParagraphElement = 0;
-		ourAfterParagraphElement = 0;
-		ourIndentElement = 0;
-		ourEmptyLineElement = 0;
+void TextElementPool::init() {
+	HSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
+	BeforeParagraphElement = new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT);
+	AfterParagraphElement = new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT);
+	IndentElement = new SpecialTextElement(TextElement::INDENT_ELEMENT);
+	EmptyLineElement = new SpecialTextElement(TextElement::EMPTY_LINE_ELEMENT);
+}
+
+void TextElementPool::clean() {
+	if (HSpaceElement != 0) {
+		delete HSpaceElement;
+		delete BeforeParagraphElement;
+		delete AfterParagraphElement;
+		delete IndentElement;
+		delete EmptyLineElement;
+		HSpaceElement = 0;
+		BeforeParagraphElement = 0;
+		AfterParagraphElement = 0;
+		IndentElement = 0;
+		EmptyLineElement = 0;
 	}
+	for (std::vector<Word*>::const_iterator it = ourWordPool.begin(); it != ourWordPool.end(); it++) {
+		delete *it;
+	}
+	ourWordPool.clear();
+}
+
+Word* TextElementPool::getWord(const char *utf8String, int len, int startOffset) {
+	if (ourWordPool.empty()) {
+		return new Word(utf8String, len, startOffset);
+	} else {
+		Word *word = ourWordPool.back();
+		word->setContents(utf8String, len, startOffset);
+		ourWordPool.pop_back();
+		return word;
+	}
+}
+
+void TextElementPool::store(Word *word) {
+	word->clearContents();
+	ourWordPool.push_back(word);
 }
 
 ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
@@ -61,12 +93,8 @@ ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
 }
 
 ParagraphCursor::ParagraphCursor(const TextModel &model) : myModel(model) {
-	if (ourHSpaceElement == 0) {
-		ourHSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
-		ourBeforeParagraphElement = new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT);
-		ourAfterParagraphElement = new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT);
-		ourIndentElement = new SpecialTextElement(TextElement::INDENT_ELEMENT);
-		ourEmptyLineElement = new SpecialTextElement(TextElement::EMPTY_LINE_ELEMENT);
+	if (TextElementPool::HSpaceElement == 0) {
+		TextElementPool::init();
 	}
 	myParagraphIterator = myModel.paragraphs().begin();
 	fill();
@@ -230,19 +258,19 @@ void ParagraphCursor::fill() {
 		case Paragraph::EMPTY_LINE_PARAGRAPH:
 		{
 			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements->push_back(ourEmptyLineElement);
+			myElements->push_back(TextElementPool::EmptyLineElement);
 			break;
 		}
 		case Paragraph::BEFORE_SKIP_PARAGRAPH:
 		{
 			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements->push_back(ourBeforeParagraphElement);
+			myElements->push_back(TextElementPool::BeforeParagraphElement);
 			break;
 		}
 		case Paragraph::AFTER_SKIP_PARAGRAPH:
 		{
 			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements->push_back(ourAfterParagraphElement);
+			myElements->push_back(TextElementPool::AfterParagraphElement);
 			break;
 		}
 		case Paragraph::EOS_PARAGRAPH:

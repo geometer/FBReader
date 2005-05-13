@@ -21,9 +21,10 @@
 
 #include "Word.h"
 
-Word::Word(const char *utf8String, int len, int startOffset) {
+void Word::setContents(const char *utf8String, int len, int startOffset) {
 	myStartOffset = startOffset;
 	myMark = 0;
+	myUtf8Contents.erase();
 	myUtf8Contents.append(utf8String, len);
 	myUtf8Length = ZLUnicodeUtil::utf8Length(myUtf8Contents);
 }

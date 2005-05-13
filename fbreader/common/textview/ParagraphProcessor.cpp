@@ -40,9 +40,9 @@ ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
 
 void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 	if (myWordCounter == 0) {
-		myElements->push_back(ourBeforeParagraphElement);
+		myElements->push_back(TextElementPool::BeforeParagraphElement);
 		if (myParagraph.kind() == Paragraph::TEXT_PARAGRAPH) {
-			myElements->push_back(ourIndentElement);
+			myElements->push_back(TextElementPool::IndentElement);
 		} else if (myParagraph.kind() == Paragraph::TREE_PARAGRAPH) {
 			TreeParagraph &tp = (TreeParagraph&)myParagraph;
 			for (int i = 1; i < tp.depth() - 1; i++) {
@@ -69,7 +69,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 
 void ParagraphCursor::ParagraphProcessor::addWord(const std::string &str, int start, int len) {
 	beforeAddWord();
-	Word *word = new Word(str.data() + start, len, myOffset + start);
+	Word *word = TextElementPool::getWord(str.data() + start, len, myOffset + start);
 	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; mit++) {
 		TextMark mark = *mit;
 		if ((mark.Offset - myOffset < start + len) && (mark.Offset - myOffset + mark.Length > start)) {
@@ -100,7 +100,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				const std::string &text = ((TextEntry*)*it)->text();
 				if (!text.empty()) {
 					if (isspace(text[0])) {
-						myElements->push_back(ourHSpaceElement);
+						myElements->push_back(TextElementPool::HSpaceElement);
 					}
 					const int len = text.length();
 					int firstNonSpace = -1;
@@ -108,7 +108,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 						if (isspace(text[i])) {
 							if (firstNonSpace != -1) {
 								addWord(text, firstNonSpace, i - firstNonSpace);
-								myElements->push_back(ourHSpaceElement);
+								myElements->push_back(TextElementPool::HSpaceElement);
 								firstNonSpace = -1;
 							}
 						} else if (firstNonSpace == -1) {
@@ -124,5 +124,5 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 		}
 	}
-	myElements->push_back(ourAfterParagraphElement);
+	myElements->push_back(TextElementPool::AfterParagraphElement);
 }
