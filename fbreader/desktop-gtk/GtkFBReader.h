@@ -28,11 +28,13 @@
 
 #include "../common/fbreader/FBReader.h"
 
+struct ActionSlotData;
+
 class GtkFBReader : public FBReader { 
 
 private:
 	static std::string ImageDirectory;
-	
+
 public:
 	GtkFBReader();
 	~GtkFBReader();
@@ -47,6 +49,10 @@ protected:
 	void fullscreenSlot() {}
 	bool isRotationSupported() const { return true; }
 
+	ActionSlotData *getSlotData(ActionCode);
+
+	void buildMenu(GtkWidget *);
+
 public:
 	gboolean handleKeySlot(GdkEventKey *);
 
@@ -58,6 +64,8 @@ private:
 
 	std::map<std::string,ActionCode> myKeyBindings;
 	std::map<ActionCode,GtkWidget*> myButtons;
+
+	std::map<ActionCode,ActionSlotData*> myActions;
 };
 
 #endif /* __GTKFBREADER_H__ */

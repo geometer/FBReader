@@ -57,19 +57,6 @@ static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeySlot(key);
 }
 
-static void handleMenuItem(gpointer *self, guint data) {
-	((GtkFBReader*)self)->doAction((FBReader::ActionCode)data);
-}
-
-static GtkItemFactoryEntry menuItems[] = {
-  { "/Library",						NULL,		NULL,           0, "<Branch>", NULL },
-  { "/Library/Open",			NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_COLLECTION, "<Item>", NULL },
-  { "/Library/Add To...", NULL,   GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_ADD_BOOK, "<Item>", NULL },
-	{ "/Recent",						NULL,		NULL,						0, "<Branch>", NULL },
-	{ "/Preferences",       NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_SHOW_OPTIONS, "<Item>", NULL },
-	{ "/Close",             NULL,		GtkItemFactoryCallback(handleMenuItem), FBReader::ACTION_CANCEL, "<Item>", NULL }
-};
-
 GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -77,14 +64,16 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	GtkWidget *vbox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), vbox);
 
-	GtkItemFactory *factory = gtk_item_factory_new(GTK_TYPE_MENU_BAR, "<main>", NULL);
+	GtkWidget *menu = gtk_menu_bar_new();
 
-	gtk_item_factory_create_items(factory, sizeof(menuItems)/sizeof(menuItems[0]), menuItems, this);
-	gtk_box_pack_start(GTK_BOX(vbox), gtk_item_factory_get_widget(factory, "<main>"), false, false, 0);
+	buildMenu(menu);
+	gtk_box_pack_start(GTK_BOX(vbox), menu, false, false, 0);
+
+	gtk_widget_show_all (menu);
 
 	myToolbar = gtk_toolbar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), myToolbar, false, false, 0);
-	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_BOTH);
+	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_ICONS);
 	createToolbar();
 
 	myViewWidget = new GtkViewWidget(this);
@@ -119,11 +108,58 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myKeyBindings["equal"] = ACTION_DECREASE_FONT;
 }
 
+ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
+	ActionSlotData *data = myActions[id];
+
+	if (data == NULL) {
+		data = new ActionSlotData(this, id);
+		myActions[id] = data;
+	}
+
+	return data;
+}
+
+static GtkWidget *makeSubmenu (GtkWidget *menu, const char *label) {
+	GtkWidget *result = gtk_menu_new();
+	GtkWidget *item = gtk_menu_item_new_with_label(label);
+
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
+	gtk_menu_item_set_submenu (GTK_MENU_ITEM(item), result);
+
+	return result;
+}
+
+static void addMenuItem (GtkWidget *menu, const char *label, ActionSlotData *data) {
+	GtkWidget *item = gtk_menu_item_new_with_label(label);
+	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
+	g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(actionSlot), data);
+}
+
+void GtkFBReader::buildMenu(GtkWidget *menu) {
+	GtkWidget *submenu;
+
+	submenu = makeSubmenu(menu, "Library");
+
+	addMenuItem(submenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
+	addMenuItem(submenu, "Add To...", getSlotData(ACTION_ADD_BOOK));
+
+	submenu = makeSubmenu(menu, "Recent");
+
+	// MSS: we do not use it now...
+
+	addMenuItem(menu, "Preferences", getSlotData(ACTION_SHOW_OPTIONS));
+	addMenuItem(menu, "Close", getSlotData(ACTION_CANCEL));
+}
+
 GtkFBReader::~GtkFBReader() {
 	int width, height;
 	gtk_window_get_size(myMainWindow, &width, &height);
 	Width.setValue(width);
 	Height.setValue(height);
+
+	for (std::map<ActionCode,ActionSlotData*>::iterator item = myActions.begin(); item != myActions.end(); ++item) {
+		delete item->second;
+	}
 
 	delete (GtkViewWidget*)myViewWidget;
 }
@@ -171,7 +207,7 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 	gtk_container_add(GTK_CONTAINER(button), image);
 	gtk_container_add(GTK_CONTAINER(myToolbar), button);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), new ActionSlotData(this, id));
+	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
 	myButtons[id] = button;
 }
 
