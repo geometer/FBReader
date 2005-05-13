@@ -2,12 +2,18 @@
 
 TARGETS="desktop-gtk desktop-qt zaurus-cacko zaurus-pdaxrom-qt zaurus-pdaxrom-gtk palm"
 
-mv makefiles/target.mk makefiles/__target.mk
+if [ -r makefiles/target.mk ]
+then
+  mv makefiles/target.mk makefiles/__target.mk
+  renamed=1
+else
+  renamed=""
+fi
 
 make clean 1> /dev/null 2>&1;
 for target in $TARGETS; do
 	echo -n "Building $target ...";
-	if ! TARGET=$target make 1> $target.log 2>&1; then
+	if ! make TARGET_ARCH=$target 1> $target.log 2>&1; then
 		echo " failure";
 		break;
 	fi
@@ -16,4 +22,7 @@ for target in $TARGETS; do
 	rm $target.log;
 done
 
-mv makefiles/__target.mk makefiles/target.mk
+if [ -n "$renamed" ]
+then
+  mv makefiles/__target.mk makefiles/target.mk
+fi
