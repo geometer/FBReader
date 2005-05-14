@@ -1,6 +1,6 @@
 #include <algorithm>
 
-#include "string.h"
+#include "string1.h"
 
 static int strncmp(const char *s1, const char *s2, size_t len) STL_SECTION;
 

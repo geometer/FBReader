@@ -22,7 +22,7 @@
 
 #include <abstract/ZLXMLReader.h>
 #include <unix/ZLUnixFSManager.h>
-#include <unix/ZLTime.h>
+#include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkScreenSize.h>

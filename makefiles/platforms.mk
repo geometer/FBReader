@@ -2,7 +2,9 @@ ALL_TARGET_ARCHS = zaurus-cacko zaurus-pdaxrom-qt zaurus-pdaxrom-gtk desktop-qt 
 
 ifneq "$(wildcard $(ROOTDIR)/makefiles/target.mk)" ""
 	include $(ROOTDIR)/makefiles/target.mk
-else
+endif
+
+ifeq "$(TARGET_ARCH)" ""
 	TARGET_ARCH = zaurus-cacko
 endif
 

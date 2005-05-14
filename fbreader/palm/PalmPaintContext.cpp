@@ -209,7 +209,7 @@ void PalmPaintContext::clear() {
 	r.topLeft.y = 0;
 	r.extent.x = myWidth;
 	r.extent.y = myHeight;
-	WinFillRectangle(&r, 0);
+	WinEraseRectangle(&r, 0);
 	/*
 	if (myPixmap != NULL) {
 		ZLColor background = BackgroundColorOption.value();

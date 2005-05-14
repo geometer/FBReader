@@ -1,6 +1,6 @@
 #ifndef __STRING__
 #define __STRING__
 
-#include <string.h>
+#include <string1.h>
 
 #endif /* __STRING__ */

@@ -34,7 +34,7 @@ BookModel::BookModel(const BookDescription *description) {
 		reader.pushKind(REGULAR);
 		for (int i = 0; i < 200; i++) {
 			reader.beginParagraph();
-			reader.addDataToBuffer("t e s t t e x t");
+			reader.addDataToBuffer("test text number one");
 			reader.endParagraph();
 		}
 		return;
