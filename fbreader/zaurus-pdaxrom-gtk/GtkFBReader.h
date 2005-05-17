@@ -48,7 +48,7 @@ protected:
 	bool isRotationSupported() const { return true; }
 
 public:
-	gboolean handleKeySlot(GdkEventKey *);
+	void handleKeySlot(GdkEventKey *);
 
 	void close();
 

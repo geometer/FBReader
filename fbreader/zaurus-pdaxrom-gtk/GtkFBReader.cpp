@@ -110,7 +110,7 @@ GtkFBReader::~GtkFBReader() {
 	delete (GtkViewWidget*)myViewWidget;
 }
 
-gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {
+void GtkFBReader::handleKeySlot(GdkEventKey *event) {
 	std::map<std::string,ActionCode>::const_iterator accel;
 
 	for (accel = myKeyBindings.begin(); accel != myKeyBindings.end() ; ++accel) {
@@ -127,8 +127,6 @@ gboolean GtkFBReader::handleKeySlot(GdkEventKey *event) {
 	if (accel != myKeyBindings.end()) {
 		doAction(accel->second);
 	}
-
-	return FALSE;
 }
 
 void GtkFBReader::cancelSlot() {

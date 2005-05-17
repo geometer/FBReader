@@ -120,8 +120,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 	LD = m68k-palmos-g++
 	STRIP = m68k-palmos-strip
 
-	DEPGEN = $(CC) -MM
-#		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))"
+	DEPGEN = $(CC) -MM -DPALM_TEMPORARY
 	CFLAGS = \
 		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))" \
 		-DXML_SECTION="__attribute__ ((section(\"sec2\")))" \

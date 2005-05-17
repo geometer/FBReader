@@ -101,7 +101,7 @@ void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding)
 	myConverter = new TxtTextConverter(encoding.c_str());
 	std::string startString = "<t>";
 	ZLStringInputStream startStream(startString);
-	myConverter->readDocument(startStream);
+	//myConverter->readDocument(startStream);
 
 	startDocumentHandler();
 

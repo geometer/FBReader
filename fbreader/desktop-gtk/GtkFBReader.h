@@ -54,7 +54,7 @@ protected:
 	void buildMenu(GtkWidget *);
 
 public:
-	gboolean handleKeySlot(GdkEventKey *);
+	void handleKeySlot(GdkEventKey *);
 
 	void close();
 

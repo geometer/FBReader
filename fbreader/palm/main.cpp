@@ -1,5 +1,6 @@
 #include <zlib.h>
 
+#include <abstract/ZLXMLReader.h>
 #include <palm/PalmOptions.h>
 #include <palm/ZLPalmTime.h>
 #include <palm/ZLPalmFSManager.h>
@@ -8,6 +9,8 @@
 
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
+
+#include "Paths.h"
 
 #include <vector>
 #include <string>
@@ -19,6 +22,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 		ZLSetup;
 		ZLPalmTimeManager::createInstance();
 		ZLPalmFSManager::createInstance();
+		ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 		PalmOptions::createInstance("FBReader");
 		PalmDialogManager::createInstance();
 		PalmScreenSize::createInstance();
