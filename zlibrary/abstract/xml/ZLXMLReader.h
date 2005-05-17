@@ -22,9 +22,8 @@
 #include <string>
 #include <vector>
 
-#include <expat.h>
-
 class ZLInputStream;
+class ZLXMLReaderInternal;
 
 class ZLXMLReader {
 
@@ -59,17 +58,14 @@ public:
 	virtual void startElementHandler(int tag, const char **attributes) XML_SECTION = 0;
 	virtual void endElementHandler(int tag) XML_SECTION = 0;
 	virtual void characterDataHandler(const char *text, int len) XML_SECTION = 0;
-
-protected:
 	virtual const std::vector<std::string> &externalDTDs() const XML_SECTION;
 
 protected:
 	bool myDoBreak;
 
 private:
-	XML_Parser myParser;
+	ZLXMLReaderInternal *myInternalReader;
 	char *myParserBuffer;
-	bool myInitialized;
 };
 
 inline std::string &ZLXMLReader::encodingDescriptionPath() { return ourEncodingDescriptionPath; }

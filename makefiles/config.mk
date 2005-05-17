@@ -137,11 +137,12 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DFORMATS_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec6\")))" \
 		-DPALM_TEMPORARY \
+		-DUSE_OWN_XML_PARSER \
 		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O2
 	LDFLAGS =
 	RM = rm -rvf
 	RM_QUIET = rm -rf
- 	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl -I $(ROOTDIR)/zlibrary/palm/pseudoexpat -I $(ROOTDIR)/palm-external
+ 	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl -I $(ROOTDIR)/palm-external
  	EXTERNALLIBS = # $(ROOTDIR)/palm-external/SysZLib.prc
 	#EXPATLIBS = -lexpat
 	#ENCALIBS = -lenca

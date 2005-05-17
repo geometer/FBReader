@@ -88,7 +88,6 @@ endif
 
 clean:
 	@for subdir in $(ALL_SUBDIRS); do \
-		echo $$subdir; \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 	done;
 	@for subdir in $(ALL_QSUBDIRS); do \
