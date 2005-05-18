@@ -28,19 +28,6 @@
 class Word : public TextElement {
 
 public:
-	Word(const char *utf8String, int len, int startOffset) VIEW_SECTION;
-
-public:
-	void setContents(const char *utf8String, int len, int startOffset) VIEW_SECTION;
-	void clearContents() VIEW_SECTION;
-	~Word() VIEW_SECTION;
-	Kind kind() const VIEW_SECTION;
-	int length() const VIEW_SECTION;
-	const std::string &utf8String() const VIEW_SECTION;
-	int startOffset() const VIEW_SECTION;
-
-	void addMark(int start, int len) VIEW_SECTION;
-
 	class WordMark {
 
 	private:
@@ -60,13 +47,29 @@ public:
 		WordMark *myNext;
 	};
 
+public:
+	Word(const std::string &utf8String, size_t start, size_t length, size_t paragraphOffset) VIEW_SECTION;
+
+public:
+	~Word() VIEW_SECTION;
+	Kind kind() const VIEW_SECTION;
+	const char *data() const VIEW_SECTION;
+	size_t size() const VIEW_SECTION;
+	size_t length() const VIEW_SECTION;
+	size_t paragraphOffset() const VIEW_SECTION;
+
+	void addMark(int start, int len) VIEW_SECTION;
+
 	WordMark *mark() const VIEW_SECTION;
 
 private:
+	const std::string &myData;
+	size_t myStart;
+	size_t mySize;
+	size_t myLength;
+
 	WordMark *myMark;
-	int myStartOffset;
-	std::string myUtf8Contents;
-	int myUtf8Length;
+	size_t myParagraphOffset;
 	
 private:
 	// assignment and copy constructor are disabled
@@ -74,13 +77,12 @@ private:
 	Word &operator = (const Word&) VIEW_SECTION;
 };
 
-inline Word::Word(const char *utf8String, int len, int startOffset) { setContents(utf8String, len, startOffset); }
-inline Word::~Word() { clearContents(); }
-inline void Word::clearContents() { if (myMark != 0) delete myMark; }
+inline Word::~Word() { if (myMark != 0) delete myMark; }
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
-inline int Word::length() const { return myUtf8Length; }
-inline const std::string &Word::utf8String() const { return myUtf8Contents; }
-inline int Word::startOffset() const { return myStartOffset; }
+inline const char *Word::data() const { return myData.data() + myStart; }
+inline size_t Word::size() const { return mySize; }
+inline size_t Word::length() const { return myLength; }
+inline size_t Word::paragraphOffset() const { return myParagraphOffset; }
 inline Word::WordMark *Word::mark() const { return myMark; }
 
 inline Word::WordMark::WordMark(int start, int length) { myStart = start; myLength = length; myNext = 0; }

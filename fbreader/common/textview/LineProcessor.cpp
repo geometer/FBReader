@@ -90,7 +90,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 			newWidth -= myStyle.elementWidth(current);
 			const Word &word = (Word&)current.element();
 			ZLUnicodeUtil::Ucs2String ucs2string;
-			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.utf8String());
+			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.data(), word.size());
 			HyphenationInfo info = Hyphenator::instance().info(word);
 			int spaceLeft = maxWidth - newWidth;
 			int hyphenationPosition = word.length() - 1;

@@ -51,9 +51,9 @@ public:
 	void setColor(ZLColor color) PAINT_SECTION;
 	void setFillColor(ZLColor color) PAINT_SECTION;
 
-	int stringWidth(const std::string &str, int from, int len) const PAINT_SECTION;
+	int stringWidth(const char *str, int len) const PAINT_SECTION;
 	int stringHeight() const PAINT_SECTION;
-	void drawString(int x, int y, const std::string &str, int from, int len) PAINT_SECTION;
+	void drawString(int x, int y, const char *str, int len) PAINT_SECTION;
 
 	int imageWidth(const Image &image) const PAINT_SECTION;
 	int imageHeight(const Image &image) const PAINT_SECTION;

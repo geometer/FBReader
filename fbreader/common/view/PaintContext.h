@@ -62,9 +62,9 @@ public:
 	virtual int width() const PAINT_SECTION = 0;
 	virtual int height() const PAINT_SECTION = 0;
 	
-	virtual int stringWidth(const std::string &str, int from, int len) const PAINT_SECTION = 0;
+	virtual int stringWidth(const char *str, int len) const PAINT_SECTION = 0;
 	virtual int stringHeight() const PAINT_SECTION = 0;
-	virtual void drawString(int x, int y, const std::string &str, int from, int len) PAINT_SECTION = 0;
+	virtual void drawString(int x, int y, const char *str, int len) PAINT_SECTION = 0;
 
 	virtual int imageWidth(const Image &image) const PAINT_SECTION = 0;
 	virtual int imageHeight(const Image &image) const PAINT_SECTION = 0;

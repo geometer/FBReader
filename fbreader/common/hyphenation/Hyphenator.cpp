@@ -56,7 +56,7 @@ bool HyphenationInfo::isHyphenationPossible(int position) {
 
 HyphenationInfo Hyphenator::info(const Word &word) const {
 	ZLUnicodeUtil::Ucs2String ucs2Vector;
-	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.utf8String());
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.data(), word.size());
 
 	int wordLength = word.length();
 	unsigned short *pattern = new unsigned short[wordLength + 2];

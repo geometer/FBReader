@@ -308,7 +308,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 					const Word &word = (const Word&)paragraph.wordCursor().element();
 					context().setColor(myStyle.style().color());
 					ZLUnicodeUtil::Ucs2String ucs2string;
-					ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.utf8String());
+					ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.data(), word.size());
 					drawWord(context().x(), context().y() - myStyle.style().verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
 				}
 			}
@@ -348,6 +348,7 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 
 	myModel->search(text, ignoreCase);
 	if (myFirstParagraphCursor != 0) {
+		myFirstParagraphCursor->rebuild();
 		TextMark position = myFirstParagraphCursor->position();
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
@@ -420,10 +421,10 @@ bool TextView::onStylusPress(int x, int y) {
 	return false;
 }
 
-void TextView::drawString(int x, int y, const std::string &str, int from, int len, const Word::WordMark *mark, int shift) {
+void TextView::drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) {
 	context().setColor(myStyle.style().color());
 	if (mark == 0) {
-		context().drawString(x, y, str, from, len);
+		context().drawString(x, y, str, len);
 	} else {
 		int pos = 0;
 		for (; (mark != 0) && (pos < len); mark = mark->next()) {
@@ -441,15 +442,15 @@ void TextView::drawString(int x, int y, const std::string &str, int from, int le
 
 			if (markStart > pos) {
 				int endPos = std::min(markStart, len);
-				context().drawString(x, y, str, from + pos, endPos - pos);
-				x += context().stringWidth(str, from + pos, endPos - pos);
+				context().drawString(x, y, str + pos, endPos - pos);
+				x += context().stringWidth(str + pos, endPos - pos);
 			}
 			if (markStart < len) {
 				context().setColor(TextStyle::SelectedTextColorOption.value());
 				{
 					int endPos = std::min(markStart + markLen, len);
-					context().drawString(x, y, str, from + markStart, endPos - markStart);
-					x += context().stringWidth(str, from + markStart, endPos - markStart);
+					context().drawString(x, y, str + markStart, endPos - markStart);
+					x += context().stringWidth(str + markStart, endPos - markStart);
 				}
 				context().setColor(myStyle.style().color());
 			}
@@ -457,23 +458,25 @@ void TextView::drawString(int x, int y, const std::string &str, int from, int le
 		}
 
 		if (pos < len) {
-			context().drawString(x, y, str, from + pos, len - pos);
+			context().drawString(x, y, str + pos, len - pos);
 		}
 	}
 }
 
 void TextView::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
-	const std::string &str = word.utf8String();
+	//const std::string &str = word.utf8String();
 	if ((start == 0) && (length == -1)) {
-		drawString(x, y, str, 0, str.length(), word.mark(), 0);
+		drawString(x, y, word.data(), word.size(), word.mark(), 0);
 	} else {
-		int startPos = ZLUnicodeUtil::length(str, start);
-		int endPos = (length == -1) ? str.length() : ZLUnicodeUtil::length(str, start + length);
+		int startPos = ZLUnicodeUtil::length(word.data(), start);
+		int endPos = (length == -1) ? word.size() : ZLUnicodeUtil::length(word.data(), start + length);
 		if (!addHyphenationSign) {
-			drawString(x, y, str, startPos, endPos - startPos, word.mark(), startPos);
+			drawString(x, y, word.data() + startPos, endPos - startPos, word.mark(), startPos);
 		} else {
-			std::string substr = str.substr(startPos, endPos - startPos) + '-';
-			drawString(x, y, substr, 0, substr.length(), word.mark(), startPos);
+			std::string substr;
+			substr.append(word.data() + startPos, endPos - startPos);
+			substr += '-';
+			drawString(x, y, substr.data(), substr.length(), word.mark(), startPos);
 		}
 	}
 }

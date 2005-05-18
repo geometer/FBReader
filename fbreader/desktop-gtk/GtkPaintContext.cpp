@@ -153,12 +153,12 @@ void GtkPaintContext::setFillColor(ZLColor color) {
 	::setColor(myFillGC, color);
 }
 
-int GtkPaintContext::stringWidth(const std::string &str, int from, int len) const {
+int GtkPaintContext::stringWidth(const char *str, int len) const {
 	if (myLayout == 0) {
 		return 0;
 	}
 	int width, height;
-	pango_layout_set_text(myLayout, str.data() + from, len);
+	pango_layout_set_text(myLayout, str, len);
 	pango_layout_get_pixel_size(myLayout, &width, &height);
 	return width;
 }
@@ -173,8 +173,8 @@ int GtkPaintContext::stringHeight() const {
 	return height;
 }
 
-void GtkPaintContext::drawString(int x, int y, const std::string &str, int from, int len) {
-	pango_layout_set_text(myLayout, str.data() + from, len);
+void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
+	pango_layout_set_text(myLayout, str, len);
 	x += leftMargin().value();
 	y += topMargin().value() - pango_font_description_get_size(myFont) / PANGO_SCALE;
 	gdk_draw_layout(myPixmap, myTextGC, x, y, myLayout);

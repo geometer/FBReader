@@ -29,14 +29,11 @@ TextElement *TextElementPool::BeforeParagraphElement = 0;
 TextElement *TextElementPool::AfterParagraphElement = 0;
 TextElement *TextElementPool::IndentElement = 0;
 TextElement *TextElementPool::EmptyLineElement = 0;
-std::vector<Word*> TextElementPool::ourWordPool;
 
 TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
 		TextElement::Kind kind = (*it)->kind();
-		if (kind == TextElement::WORD_ELEMENT) {
-			TextElementPool::store((Word*)*it);
-		} else if ((kind & 0x10) == 0) {
+		if ((kind & 0x10) == 0) {
 			delete *it;
 		}
 	}
@@ -63,26 +60,6 @@ void TextElementPool::clean() {
 		IndentElement = 0;
 		EmptyLineElement = 0;
 	}
-	for (std::vector<Word*>::const_iterator it = ourWordPool.begin(); it != ourWordPool.end(); it++) {
-		delete *it;
-	}
-	ourWordPool.clear();
-}
-
-Word* TextElementPool::getWord(const char *utf8String, int len, int startOffset) {
-	if (ourWordPool.empty()) {
-		return new Word(utf8String, len, startOffset);
-	} else {
-		Word *word = ourWordPool.back();
-		word->setContents(utf8String, len, startOffset);
-		ourWordPool.pop_back();
-		return word;
-	}
-}
-
-void TextElementPool::store(Word *word) {
-	word->clearContents();
-	ourWordPool.push_back(word);
 }
 
 ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
@@ -232,7 +209,7 @@ TextMark ParagraphCursor::position() const {
 		cursor.nextWord();
 	}
 	if (cursor.myWordIterator != myElements->end()) {
-		return TextMark(paragraphNumber(), ((Word&)cursor.element()).startOffset(), 0);
+		return TextMark(paragraphNumber(), ((Word&)cursor.element()).paragraphOffset(), 0);
 	}
 	return TextMark(paragraphNumber() + 1, 0, 0);
 }
@@ -300,7 +277,7 @@ void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber
 		myNextElement = myElements->begin() + wordNumber;
 		if ((myNextElement.myWordIterator != myElements->end()) &&
 				(myNextElement.element().kind() == TextElement::WORD_ELEMENT)) {
-			if (charNumber < ((const Word&)myNextElement.element()).length()) {
+			if (charNumber < (int)((const Word&)myNextElement.element()).length()) {
 				myNextElement.myCharNumber = charNumber;
 			}
 		}

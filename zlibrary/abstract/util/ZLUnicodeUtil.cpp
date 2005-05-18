@@ -56,14 +56,14 @@ int ZLUnicodeUtil::length(const std::string &str, int utf8Length) {
 	return length(str.data(), utf8Length);
 }
 
-void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLength) {
+void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const char *from, int length, int toLength) {
 	to.clear();
 	if (toLength < 0) {
-		toLength = utf8Length(from);
+		toLength = utf8Length(from, length);
 	}
 	to.reserve(toLength);
-	const char *last = from.data() + from.length();
-	for (const char *ptr = from.data(); ptr < last;) {
+	const char *last = from + length;
+	for (const char *ptr = from; ptr < last;) {
 		if ((*ptr & 0x80) == 0) {
 			to.push_back(*ptr);
 			ptr++;
@@ -86,6 +86,10 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLe
 			ptr++;
 		}
 	}
+}
+
+void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLength) {
+	utf8ToUcs2(to, from.data(), from.length(), toLength);
 }
 
 void ZLUnicodeUtil::ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength) {

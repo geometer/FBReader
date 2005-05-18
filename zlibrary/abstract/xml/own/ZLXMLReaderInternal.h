@@ -19,7 +19,14 @@
 #ifndef __ZLXMLREADERINTERNAL_H__
 #define __ZLXMLREADERINTERNAL_H__
 
+#include <string>
+
 class ZLXMLReader;
+
+enum XMLParseState {
+	XML_PARSE_DATA,
+	XML_PARSE_TAG,
+};
 
 class ZLXMLReaderInternal {
 
@@ -27,10 +34,12 @@ public:
 	ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) XML_SECTION;
 	~ZLXMLReaderInternal() XML_SECTION;
 	void init() XML_SECTION;
-	bool parseBuffer(const char *buffer, unsigned long len) XML_SECTION;
+	bool parseBuffer(const char *buffer, size_t) XML_SECTION;
 
 private:
 	ZLXMLReader &myReader;
+	std::string myTagContents;
+	XMLParseState myState;
 };
 
 #endif /* __ZLXMLREADERINTERNAL_H__ */

@@ -120,7 +120,7 @@ private:
 	void skip(ParagraphCursor &paragraph, int height) VIEW_SECTION;
 	void drawParagraph(ParagraphCursor &paragraph, bool doPaint) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
-	void drawString(int x, int y, const std::string &str, int from, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
+	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
 	void drawTreeNode(TreeElement::TreeElementKind kind) VIEW_SECTION;
 
 protected:

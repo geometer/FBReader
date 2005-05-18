@@ -42,17 +42,12 @@ class TextElementPool {
 public:
 	static void init() VIEW_SECTION;
 	static void clean() VIEW_SECTION;
-	static Word* getWord(const char *utf8String, int len, int startOffset) VIEW_SECTION;
-	static void store(Word *word) VIEW_SECTION;
 
 	static TextElement *HSpaceElement;
 	static TextElement *BeforeParagraphElement;
 	static TextElement *AfterParagraphElement;
 	static TextElement *IndentElement;
 	static TextElement *EmptyLineElement;
-
-private:
-	static std::vector<Word*> ourWordPool;
 
 private:
 	TextElementPool() VIEW_SECTION;
@@ -139,6 +134,8 @@ public:
 	const WordCursor begin() const VIEW_SECTION;
 	const WordCursor end() const VIEW_SECTION;
 
+	void rebuild() VIEW_SECTION;
+
 private:
 	void processControlParagraph(const Paragraph &paragraph) VIEW_SECTION;
 
@@ -204,6 +201,7 @@ inline void WordCursor::previousWord() { myWordIterator--; myCharNumber = 0; }
 inline void WordCursor::setCharNumber(int num) { myCharNumber = num; }
 inline int WordCursor::charNumber() const { return myCharNumber; }
 
+inline void ParagraphCursor::rebuild() { fill(); }
 inline int ParagraphCursor::paragraphLength() const { return myElements->size(); }
 inline int ParagraphCursor::paragraphNumber() const { return myParagraphIterator - myModel.paragraphs().begin(); }
 inline int ParagraphCursor::wordNumber(const WordCursor &wi) const { return wi.myWordIterator - myElements->begin(); }

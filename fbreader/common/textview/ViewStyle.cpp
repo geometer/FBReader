@@ -131,19 +131,20 @@ int TextView::ViewStyle::textAreaHeight() const {
 }
 
 int TextView::ViewStyle::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
-	const std::string &str = word.utf8String();
 	if ((start == 0) && (length == -1)) {
-		return context().stringWidth(str, 0, str.length());
+		return context().stringWidth(word.data(), word.size());
 	}
-	int startPos = ZLUnicodeUtil::length(str, start);
-	int endPos = (length == -1) ? str.length() : ZLUnicodeUtil::length(str, start + length);
+	int startPos = ZLUnicodeUtil::length(word.data(), start);
+	int endPos = (length == -1) ? word.size() : ZLUnicodeUtil::length(word.data(), start + length);
 	if (!addHyphenationSign) {
-		return context().stringWidth(str, startPos, endPos - startPos);
+		return context().stringWidth(word.data() + startPos, endPos - startPos);
 	}
-	std::string substr = str.substr(startPos, endPos - startPos) + '-';
-	return context().stringWidth(substr, 0, substr.length());
+	std::string substr;
+	substr.append(word.data() + startPos, endPos - startPos);
+	substr += '-';
+	return context().stringWidth(substr.data(), substr.length());
 }
 
 int TextView::ViewStyle::spaceWidth() const {
-	return context().stringWidth(" ", 0, 1);
+	return context().stringWidth(" ", 1);
 }
