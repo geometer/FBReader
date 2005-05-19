@@ -28,10 +28,9 @@ void ZLXMLReaderInternal::init() {
 static const char *NULL_ATTRS = { 0 }; 
 
 void ZLXMLReaderInternal::setEncoding(const char *encoding) {
-	if (myEncodingMap != 0) {
-		delete[] myEncodingMap;
+	if (myEncodingMap == 0) {
+		myEncodingMap = new int[256];
 	}
-	myEncodingMap = new int[256];
 
 	const std::vector<std::string> &encodings = ZLXMLReader::knownEncodings();
 	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
@@ -43,8 +42,10 @@ void ZLXMLReaderInternal::setEncoding(const char *encoding) {
 				}
 			} else {
 				delete[] myEncodingMap;
+				myEncodingMap = 0;
 				if (myInternalBuffer != 0) {
 					delete[] myInternalBuffer;
+					myInternalBuffer = 0;
 				}
 			}
 			break;
