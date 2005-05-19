@@ -31,6 +31,7 @@ public:
 	static void setEncodingDescriptionPath(const std::string &path) XML_SECTION;
 	static std::string &encodingDescriptionPath() XML_SECTION;
 	static std::vector<std::string> &knownEncodings() XML_SECTION;
+	static size_t bufferSize() { return 2048; }
 
 private:
 	static std::string ourEncodingDescriptionPath;

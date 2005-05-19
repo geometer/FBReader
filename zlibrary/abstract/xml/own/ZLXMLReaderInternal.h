@@ -37,9 +37,15 @@ public:
 	bool parseBuffer(const char *buffer, size_t) XML_SECTION;
 
 private:
+	void setEncoding(const char *encoding);
+	void processData(const char *start, const char *end);
+
+private:
 	ZLXMLReader &myReader;
 	std::string myTagContents;
 	XMLParseState myState;
+	int *myEncodingMap;
+	char *myInternalBuffer;
 };
 
 #endif /* __ZLXMLREADERINTERNAL_H__ */

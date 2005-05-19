@@ -51,11 +51,9 @@ int ZLXMLReader::tag(const char *name) {
 	}
 }
 
-const size_t BUFSIZE = 2048;
-
 ZLXMLReader::ZLXMLReader(const char *encoding) {
 	myInternalReader = new ZLXMLReaderInternal(*this, encoding);
-	myParserBuffer = new char[BUFSIZE];
+	myParserBuffer = new char[bufferSize()];
 }
 
 ZLXMLReader::~ZLXMLReader() {
@@ -74,11 +72,11 @@ bool ZLXMLReader::readDocument(ZLInputStream &stream) {
 
 	size_t length;
 	do {
-		length = stream.read(myParserBuffer, BUFSIZE);
+		length = stream.read(myParserBuffer, bufferSize());
 		if (!myInternalReader->parseBuffer(myParserBuffer, length)) {
 			break;
     }
-  } while ((length == BUFSIZE) && !myDoBreak);
+  } while ((length == bufferSize()) && !myDoBreak);
 
 	stream.close();
 

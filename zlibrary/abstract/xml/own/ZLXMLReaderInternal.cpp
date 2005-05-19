@@ -1,12 +1,25 @@
 #include <cctype>
+#include <iostream>
 
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
+#include "../EncodingReader.h"
 
 ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {
+	myEncodingMap = 0;
+	myInternalBuffer = 0;
+	if (encoding != 0) {
+		setEncoding(encoding);
+	}
 }
 
 ZLXMLReaderInternal::~ZLXMLReaderInternal() {
+	if (myEncodingMap != 0) {
+		delete[] myEncodingMap;
+	}
+	if (myInternalBuffer != 0) {
+		delete[] myInternalBuffer;
+	}
 }
 
 void ZLXMLReaderInternal::init() {
@@ -14,6 +27,55 @@ void ZLXMLReaderInternal::init() {
 }
 
 static const char *NULL_ATTRS = { 0 }; 
+
+void ZLXMLReaderInternal::setEncoding(const char *encoding) {
+	std::cerr << "encoding = " << encoding << "\n";
+
+	if (myEncodingMap != 0) {
+		delete[] myEncodingMap;
+	}
+	myEncodingMap = new int[256];
+	if (myInternalBuffer == 0) {
+		myInternalBuffer = new char[3 * ZLXMLReader::bufferSize()];
+	}
+
+	const std::vector<std::string> &encodings = ZLXMLReader::knownEncodings();
+	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
+		if (strcasecmp(encoding, it->c_str()) == 0) {
+			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
+			er.fillTable(myEncodingMap);
+			break;
+		}
+	}
+}
+
+void ZLXMLReaderInternal::processData(const char *start, const char *end) {
+	if (myEncodingMap == 0) {
+		myReader.characterDataHandler(start, end - start);
+	} else {
+		char *utf8ptr = myInternalBuffer;
+		for (const char *ptr = start; ptr != end; ptr++) {
+			int &ucs2code = myEncodingMap[(unsigned char)*ptr];
+    	if (ucs2code < 0x80) {
+				*utf8ptr = (char)ucs2code;
+				utf8ptr++;
+			} else if (ucs2code < 0x800) {
+				*utf8ptr = (char)(0xC0 | ucs2code >> 6);
+				utf8ptr++;
+				*utf8ptr = (char)(0x80 | ucs2code & 0x3F);
+				utf8ptr++;
+			} else {
+				*utf8ptr = (char)(0xE0 | ucs2code >> 12);
+				utf8ptr++;
+				*utf8ptr = (char)(0x80 | ucs2code >> 6 & 0x3F);
+				utf8ptr++;
+				*utf8ptr = (char)(0x80 | ucs2code & 0x3F);
+				utf8ptr++;
+			}
+		}
+		myReader.characterDataHandler(myInternalBuffer, utf8ptr - myInternalBuffer);
+	}
+}
 
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
 	const char *start = buffer;
@@ -24,7 +86,7 @@ bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
 				switch (*ptr) {
 					case '<':
 						if (ptr != start) {
-							myReader.characterDataHandler(start, ptr - start);
+							processData(start, ptr);
 						}
 						start = ptr + 1;
 						myState = XML_PARSE_TAG;
@@ -72,13 +134,27 @@ bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
 										attributes = (const char**)&attributes_vector[0];
 									}
 								}
-								myReader.startElementHandler(myReader.tag(myTagContents.substr(0, nameLen).c_str()), attributes);
-								if (attributes_string != 0) {
-									delete[] attributes_string;
-								}
-
-								if (myTagContents[tagLen - 1] == '/') {
-									myReader.endElementHandler(myReader.tag(myTagContents.substr(0, nameLen).c_str()));
+								std::string tagName = myTagContents.substr(0, nameLen);
+								if (tagName == "?xml") {
+									std::string encoding = "encoding";
+									int count = 0;
+									bool flag = false;
+									for (const char **ptr = attributes; *ptr != 0; ptr++, count++) {
+										if (flag) {
+											setEncoding(*ptr);
+											break;
+										}
+										flag = (count % 2 == 0) && (encoding == *ptr);
+									}
+								} else {
+									myReader.startElementHandler(myReader.tag(tagName.c_str()), attributes);
+									if (attributes_string != 0) {
+										delete[] attributes_string;
+									}
+                
+									if (myTagContents[tagLen - 1] == '/') {
+										myReader.endElementHandler(myReader.tag(tagName.c_str()));
+									}
 								}
 							} else {
 								myReader.endElementHandler(myReader.tag(myTagContents.substr(1).c_str()));
@@ -96,7 +172,7 @@ bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
 	if (end != start) {
 		switch (myState) {
 			case XML_PARSE_DATA:
-				myReader.characterDataHandler(start, end - start);
+				processData(start, end);
 				break;
 			case XML_PARSE_TAG:
 				myTagContents.append(start, end - start);
