@@ -1,5 +1,4 @@
 #include <cctype>
-#include <iostream>
 
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
@@ -29,21 +28,25 @@ void ZLXMLReaderInternal::init() {
 static const char *NULL_ATTRS = { 0 }; 
 
 void ZLXMLReaderInternal::setEncoding(const char *encoding) {
-	std::cerr << "encoding = " << encoding << "\n";
-
 	if (myEncodingMap != 0) {
 		delete[] myEncodingMap;
 	}
 	myEncodingMap = new int[256];
-	if (myInternalBuffer == 0) {
-		myInternalBuffer = new char[3 * ZLXMLReader::bufferSize()];
-	}
 
 	const std::vector<std::string> &encodings = ZLXMLReader::knownEncodings();
 	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
 		if (strcasecmp(encoding, it->c_str()) == 0) {
 			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
-			er.fillTable(myEncodingMap);
+			if (er.fillTable(myEncodingMap)) {
+				if (myInternalBuffer == 0) {
+					myInternalBuffer = new char[3 * ZLXMLReader::bufferSize()];
+				}
+			} else {
+				delete[] myEncodingMap;
+				if (myInternalBuffer != 0) {
+					delete[] myInternalBuffer;
+				}
+			}
 			break;
 		}
 	}
