@@ -177,17 +177,23 @@ void FBReader::doAction(ActionCode code) {
 			((TextView*)myViewWidget->view())->findNext();
 			break;
 		case ACTION_SCROLL_FORWARD:
-			if (myLastScrollingTime.millisecondsTo(ZLTime()) >= ScrollingDelayOption.value()) {
-				((TextView*)myViewWidget->view())->scrollPageForward();
-				repaintView();
-				myLastScrollingTime = ZLTime();
+			{
+				int delay = myLastScrollingTime.millisecondsTo(ZLTime());
+				if ((delay < 0) || (delay >= ScrollingDelayOption.value())) {
+					((TextView*)myViewWidget->view())->scrollPageForward();
+					repaintView();
+					myLastScrollingTime = ZLTime();
+				}
 			}
 			break;
 		case ACTION_SCROLL_BACKWARD:
-			if (myLastScrollingTime.millisecondsTo(ZLTime()) >= ScrollingDelayOption.value()) {
-				((TextView*)myViewWidget->view())->scrollPageBackward();
-				repaintView();
-				myLastScrollingTime = ZLTime();
+			{
+				int delay = myLastScrollingTime.millisecondsTo(ZLTime());
+				if ((delay < 0) || (delay >= ScrollingDelayOption.value())) {
+					((TextView*)myViewWidget->view())->scrollPageBackward();
+					repaintView();
+					myLastScrollingTime = ZLTime();
+				}
 			}
 			break;
 		case ACTION_CANCEL:

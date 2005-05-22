@@ -154,12 +154,12 @@ int PalmPaintContext::imageWidth(const Image &image) const {
 	int maxW = width();
 	return (w <= maxW) ? w : maxW;
 	*/
-	return 100;
+	return 10;
 }
 
 int PalmPaintContext::imageHeight(const Image &image) const {
 	//return qImage(image).height();
-	return 100;
+	return 10;
 }
 
 void PalmPaintContext::drawImage(int x, int y, const Image &image) {
