@@ -20,7 +20,7 @@ namespace std {
 
 	string::string() {
 		__myLength = 0;
-		__myDataSize = TINY_DATA_SIZE;
+		__myDataSize = STRING_TINY_DATA_SIZE;
 		__myData = __myTinyData;
 	}
 
@@ -31,14 +31,14 @@ namespace std {
 	}
 
 	string::string(const string &s) {
-		__myDataSize = TINY_DATA_SIZE;
+		__myDataSize = STRING_TINY_DATA_SIZE;
 		__myData = __myTinyData;
 		operator = (s);
 	}
 
 	string::string(const char *s) {
 		__myLength = 0;
-		__myDataSize = TINY_DATA_SIZE;
+		__myDataSize = STRING_TINY_DATA_SIZE;
 		__myData = __myTinyData;
 
 		size_t sLength = StrLen(s);

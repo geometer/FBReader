@@ -12,60 +12,8 @@ namespace std {
 	class vector {
 
 	public:
-		struct const_iterator;
-
-		struct iterator {
-			iterator() STL_SECTION;
-			bool operator == (const iterator &it) const STL_SECTION;
-			bool operator == (const const_iterator &it) const STL_SECTION;
-			bool operator != (const iterator &it) const STL_SECTION;
-			bool operator != (const const_iterator &it) const STL_SECTION;
-
-			const iterator &operator ++ (int) STL_SECTION;
-			const iterator &operator += (size_t offset) STL_SECTION;
-			const iterator &operator -- (int) STL_SECTION;
-			const iterator &operator -= (size_t offset) STL_SECTION;
-			const iterator operator + (size_t offset) const STL_SECTION;
-			size_t operator - (const iterator &it) const STL_SECTION;
-			size_t operator - (const const_iterator &it) const STL_SECTION;
-
-			T &operator * () const STL_SECTION;
-			T *operator -> () const STL_SECTION;
-
-		private:
-			T *__myPtr;
-			iterator(T *ptr) STL_SECTION;
-
-		friend struct const_iterator;
-		friend class vector;
-		};
-
-		struct const_iterator {
-			const_iterator() STL_SECTION;
-			const_iterator(const iterator &it) STL_SECTION;
-
-			bool operator == (const iterator &it) const STL_SECTION;
-			bool operator == (const const_iterator &it) const STL_SECTION;
-			bool operator != (const iterator &it) const STL_SECTION;
-			bool operator != (const const_iterator &it) const STL_SECTION;
-
-			const const_iterator &operator ++ (int) STL_SECTION;
-			const const_iterator &operator += (size_t offset) STL_SECTION;
-			const const_iterator &operator -- (int) STL_SECTION;
-			const const_iterator operator + (size_t offset) const STL_SECTION;
-			size_t operator - (const iterator &it) const STL_SECTION;
-			size_t operator - (const const_iterator &it) const STL_SECTION;
-
-			const T &operator * () const STL_SECTION;
-			const T *operator -> () const STL_SECTION;
-
-		private:
-			T *__myPtr;
-			const_iterator(T *ptr) STL_SECTION;
-
-		friend struct iterator;
-		friend class vector;
-		};
+		typedef T* iterator;
+		typedef const T* const_iterator;
 
 	public:
 		vector() STL_SECTION;
@@ -117,140 +65,6 @@ namespace std {
 	}
 
 	template<typename T>
-	inline vector<T>::iterator::iterator() {
-	}
-	template<typename T>
-	inline vector<T>::iterator::iterator(T *ptr) {
-		__myPtr = ptr;
-	}
-	template<typename T>
-	inline vector<T>::const_iterator::const_iterator() {
-	}
-	template<typename T>
-	inline vector<T>::const_iterator::const_iterator(const vector<T>::iterator &it) {
-		__myPtr = it.__myPtr;
-	}
-	template<typename T>
-	inline vector<T>::const_iterator::const_iterator(T *ptr) {
-		__myPtr = ptr;
-	}
-
-	template<typename T>
-	inline bool vector<T>::iterator::operator == (const vector<T>::iterator &it) const {
-		return __myPtr == it.__myPtr;
-	}
-	template<typename T>
-	inline bool vector<T>::iterator::operator == (const vector<T>::const_iterator &it) const {
-		return __myPtr == it.__myPtr;
-	}
-	template<typename T>
-	inline bool vector<T>::const_iterator::operator == (const vector<T>::iterator &it) const {
-		return __myPtr == it.__myPtr;
-	}
-	template<typename T>
-	inline bool vector<T>::const_iterator::operator == (const vector<T>::const_iterator &it) const {
-		return __myPtr == it.__myPtr;
-	}
-
-	template<typename T>
-	inline bool vector<T>::iterator::operator != (const vector<T>::iterator &it) const {
-		return !operator == (it);
-	}
-	template<typename T>
-	inline bool vector<T>::iterator::operator != (const vector<T>::const_iterator &it) const {
-		return !operator == (it);
-	}
-	template<typename T>
-	inline bool vector<T>::const_iterator::operator != (const vector<T>::iterator &it) const {
-		return !operator == (it);
-	}
-	template<typename T>
-	inline bool vector<T>::const_iterator::operator != (const vector<T>::const_iterator &it) const {
-		return !operator == (it);
-	}
-
-	template<typename T>
-	inline const vector<T>::iterator &vector<T>::iterator::operator ++ (int) {
-		__myPtr++;
-		return *this;
-	}
-	template<typename T>
-	inline const vector<T>::iterator &vector<T>::iterator::operator += (size_t offset) {
-		__myPtr += offset;
-		return *this;
-	}
-	template<typename T>
-	inline const vector<T>::iterator &vector<T>::iterator::operator -= (size_t offset) {
-		__myPtr -= offset;
-		return *this;
-	}
-	template<typename T>
-	inline const vector<T>::iterator &vector<T>::iterator::operator -- (int) {
-		__myPtr--;
-		return *this;
-	}
-	template<typename T>
-	inline const vector<T>::iterator vector<T>::iterator::operator + (size_t offset) const {
-		iterator it = *this;
-		it.__myPtr += offset;
-		return it;
-	}
-	template<typename T>
-	inline size_t vector<T>::iterator::operator - (const vector<T>::iterator &it) const {
-		return __myPtr - it.__myPtr;
-	}
-	template<typename T>
-	inline size_t vector<T>::iterator::operator - (const vector<T>::const_iterator &it) const {
-		return __myPtr - it.__myPtr;
-	}
-	template<typename T>
-	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator ++ (int) {
-		__myPtr++;
-		return *this;
-	}
-	template<typename T>
-	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator += (size_t offset) {
-		__myPtr += offset;
-		return *this;
-	}
-	template<typename T>
-	inline const vector<T>::const_iterator &vector<T>::const_iterator::operator -- (int) {
-		__myPtr--;
-		return *this;
-	}
-	template<typename T>
-	inline const vector<T>::const_iterator vector<T>::const_iterator::operator + (size_t offset) const {
-		const_iterator it = *this;
-		it.__myPtr += offset;
-		return it;
-	}
-	template<typename T>
-	inline size_t vector<T>::const_iterator::operator - (const vector<T>::iterator &it) const {
-		return __myPtr - it.__myPtr;
-	}
-	template<typename T>
-	inline size_t vector<T>::const_iterator::operator - (const vector<T>::const_iterator &it) const {
-		return __myPtr - it.__myPtr;
-	}
-
-	template<typename T>
-	inline T &vector<T>::iterator::operator * () const {
-		return *__myPtr;
-	}
-	template<typename T>
-	inline T *vector<T>::iterator::operator -> () const {
-		return __myPtr;
-	}
-	template<typename T>
-	inline const T &vector<T>::const_iterator::operator * () const {
-		return *__myPtr;
-	}
-	template<typename T>
-	inline const T *vector<T>::const_iterator::operator -> () const {
-		return __myPtr;
-	}
-
-	template<typename T>
 	inline bool vector<T>::empty() const {
 		return __myLength == 0;
 	}
@@ -273,11 +87,11 @@ namespace std {
 
 	template<typename T>
 	inline vector<T>::iterator vector<T>::begin() const {
-		return iterator(__myData);
+		return __myData;
 	}
 	template<typename T>
 	inline vector<T>::iterator vector<T>::end() const {
-		return iterator(__myData + __myLength);
+		return __myData + __myLength;
 	}
 
 	template<typename T>
@@ -296,12 +110,6 @@ namespace std {
 			while (size > __myDataSize) {
 				__myDataSize <<= 1;
 			}
-			/*
-			if (size | 0xf) {
-				size = (size & (size_t)-0x10) + 0x10;
-			}
-			__myDataSize = size;
-			*/
 			if (__myData == 0) {
 				__myData = (T*)MemPtrNew(__myDataSize * sizeof(T));
 			} else if (MemPtrResize(__myData, __myDataSize * sizeof(T)) != errNone) {

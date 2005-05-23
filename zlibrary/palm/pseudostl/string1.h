@@ -9,7 +9,7 @@
 #define		strcasecmp(x,y)		StrCaselessCompare(x,y)
 #define		strncpy(x,y,z)		MemMove(x,y,z)
 
-#define TINY_DATA_SIZE 16
+#define STRING_TINY_DATA_SIZE 16
 
 namespace std {
 	class string {
@@ -55,7 +55,7 @@ namespace std {
 		size_t __myLength;
 		mutable size_t __myDataSize;
 		mutable char *__myData;
-		mutable char __myTinyData[TINY_DATA_SIZE];
+		mutable char __myTinyData[STRING_TINY_DATA_SIZE];
 
 	friend const string operator + (const char *s0, const string &s1) STL_SECTION;
 	};
