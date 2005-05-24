@@ -34,9 +34,11 @@ std::vector<std::string> LineSpacingOptionEntry::ourAllValuesPlusBase;
 
 FontFamilyOptionEntry::FontFamilyOptionEntry(const ZLStringOption &option, const PaintContext &context, bool allowBase) : myOption(option), myAllowBase(allowBase) {
 	if (ourAllFamiliesPlusBase.empty()) {
+#ifndef PALM_TEMPORARY
 		ourAllFamilies = context.fontFamilies();
 		ourAllFamiliesPlusBase.push_back(BASE_STRING);
 		ourAllFamiliesPlusBase.insert(ourAllFamiliesPlusBase.end(), ourAllFamilies.begin(), ourAllFamilies.end());
+#endif // PALM_TEMPORARY
 	}
 	std::string value = option.value();
 	if (!value.empty()) {

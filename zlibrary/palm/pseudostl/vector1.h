@@ -15,6 +15,10 @@ namespace std {
 		typedef T* iterator;
 		typedef const T* const_iterator;
 
+	private:
+		vector(const vector&);
+		const vector &operator= (const vector&);
+
 	public:
 		vector() STL_SECTION;
 		~vector() STL_SECTION;
