@@ -51,7 +51,7 @@ protected:
 
 	ActionSlotData *getSlotData(ActionCode);
 
-	void buildMenu(GtkWidget *);
+	void buildMenu();
 
 public:
 	void handleKeySlot(GdkEventKey *);
@@ -61,6 +61,7 @@ public:
 private:
 	GtkWindow *myMainWindow;
 	GtkWidget *myToolbar;
+	GtkWidget *myMenu;
 
 	bool myFullScreen;
 

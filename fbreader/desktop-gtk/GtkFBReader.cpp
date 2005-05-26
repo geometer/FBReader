@@ -64,12 +64,12 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	GtkWidget *vbox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), vbox);
 
-	GtkWidget *menu = gtk_menu_bar_new();
+	myMenu = gtk_menu_bar_new();
 
-	buildMenu(menu);
-	gtk_box_pack_start(GTK_BOX(vbox), menu, false, false, 0);
+	buildMenu();
+	gtk_box_pack_start(GTK_BOX(vbox), myMenu, false, false, 0);
 
-	gtk_widget_show_all (menu);
+	gtk_widget_show_all (myMenu);
 
 	myToolbar = gtk_toolbar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), myToolbar, false, false, 0);
@@ -122,7 +122,7 @@ ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
 	return data;
 }
 
-static GtkWidget *makeSubmenu (GtkWidget *menu, const char *label) {
+static GtkWidget *makeSubmenu(GtkWidget *menu, const char *label) {
 	GtkWidget *result = gtk_menu_new();
 	GtkWidget *item = gtk_menu_item_new_with_label(label);
 
@@ -132,26 +132,26 @@ static GtkWidget *makeSubmenu (GtkWidget *menu, const char *label) {
 	return result;
 }
 
-static void addMenuItem (GtkWidget *menu, const char *label, ActionSlotData *data) {
+static void addMenuItem(GtkWidget *menu, const char *label, ActionSlotData *data) {
 	GtkWidget *item = gtk_menu_item_new_with_label(label);
 	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
 	g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(actionSlot), data);
 }
 
-void GtkFBReader::buildMenu(GtkWidget *menu) {
+void GtkFBReader::buildMenu() {
 	GtkWidget *submenu;
 
-	submenu = makeSubmenu(menu, "Library");
+	submenu = makeSubmenu(myMenu, "Library");
 
 	addMenuItem(submenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
 	addMenuItem(submenu, "Add To...", getSlotData(ACTION_ADD_BOOK));
 
-	submenu = makeSubmenu(menu, "Recent");
+	submenu = makeSubmenu(myMenu, "Recent");
 
 	// MSS: we do not use it now...
 
-	addMenuItem(menu, "Preferences", getSlotData(ACTION_SHOW_OPTIONS));
-	addMenuItem(menu, "Close", getSlotData(ACTION_CANCEL));
+	addMenuItem(myMenu, "Preferences", getSlotData(ACTION_SHOW_OPTIONS));
+	addMenuItem(myMenu, "Close", getSlotData(ACTION_CANCEL));
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -200,8 +200,12 @@ void GtkFBReader::fullscreenSlot() {
 
 	if (myFullScreen) {
 		gtk_window_fullscreen(myMainWindow);
+		gtk_widget_hide(myToolbar);
+		gtk_widget_hide(myMenu);
 	} else if (!myFullScreen) {
 		gtk_window_unfullscreen(myMainWindow);
+		gtk_widget_show(myToolbar);
+		gtk_widget_show(myMenu);
 	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
