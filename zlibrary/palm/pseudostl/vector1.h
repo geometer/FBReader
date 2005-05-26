@@ -15,13 +15,11 @@ namespace std {
 		typedef T* iterator;
 		typedef const T* const_iterator;
 
-	private:
-		vector(const vector&);
-		const vector &operator= (const vector&);
-
 	public:
 		vector() STL_SECTION;
 		~vector() STL_SECTION;
+		vector(const vector &v) STL_SECTION;
+		const vector &operator= (const vector &v) STL_SECTION;
 
 		bool empty() const STL_SECTION;
 		size_t size() const STL_SECTION;
@@ -66,6 +64,31 @@ namespace std {
 		if (__myData != 0) {
 			MemPtrFree(__myData);
 		}
+	}
+	template<typename T>
+	inline vector<T>::vector(const vector<T> &v) {
+		__myDataSize = 0;
+		__myLength = 0;
+		__myData = 0;
+		reserve(v.size());
+		const T *end = v.__myData + v.__myLength;
+		const T *ptr = v.__myData;
+		T *ptr1 = __myData; 
+		for (; ptr != end; ptr++, ptr1++) {
+			*ptr1 = *ptr;
+		}
+	}
+	template<typename T>
+	inline const vector<T> &vector<T>::operator= (const vector<T> &v) {
+		clear();
+		reserve(v.size());
+		const T *end = v.__myData + v.__myLength;
+		const T *ptr = v.__myData;
+		T *ptr1 = __myData; 
+		for (; ptr != end; ptr++, ptr1++) {
+			*ptr1 = *ptr;
+		}
+		return *this;
 	}
 
 	template<typename T>

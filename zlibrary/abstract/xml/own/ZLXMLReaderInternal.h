@@ -37,8 +37,8 @@ public:
 	bool parseBuffer(const char *buffer, size_t) XML_SECTION;
 
 private:
-	void setEncoding(const char *encoding);
-	void processData(const char *start, const char *end);
+	void setEncoding(const char *encoding) XML_SECTION;
+	void processData(const char *start, const char *end) XML_SECTION;
 
 private:
 	ZLXMLReader &myReader;

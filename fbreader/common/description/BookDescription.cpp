@@ -51,7 +51,7 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 		description->myEncoding = "windows-1252";
 		return description;
 	}
-#endif
+#endif // PALM_TEMPORARY
 	std::string realFileName = fileName.substr(0, fileName.find(':'));
 	ZLFileInfo fileInfo = ZLFSManager::instance().fileInfo(realFileName);
 	if (!fileInfo.Exists) {

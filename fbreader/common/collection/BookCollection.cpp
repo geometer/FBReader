@@ -161,9 +161,7 @@ void BookCollection::addDescription(BookDescription *description) {
 	} else {
 		Books books;
 		books.push_back(description);
-#ifndef PALM_TEMPORARY
 		myCollection.insert(std::pair<const Author*,Books>(author, books));
-#endif // PALM_TEMPORARY
 		myAuthors.push_back(author);
 	}
 }
