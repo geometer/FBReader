@@ -4,7 +4,7 @@ include makefiles/platforms.mk
 
 ALLAPPDIRS = fbreader zmahjongg zsolitaire GeometricCalculator
 
-ifeq "$(TARGET_ARCH)" "zaurus-cacko"
+ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 	APPDIRS = fbreader zmahjongg zsolitaire GeometricCalculator
 endif
 

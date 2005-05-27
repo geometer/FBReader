@@ -18,7 +18,7 @@ DUMMY_SECTIONS = \
 
 MAKE = ROOTDIR=$(ROOTDIR) make
 
-ifeq "$(TARGET_ARCH)" "zaurus-cacko"
+ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 	QTDIR=/opt/Qtopia/sharp
 	TOOLSDIR = /opt/Embedix/tools/arm-linux/bin
 	MOC = $(QTDIR)/bin/moc
@@ -53,8 +53,9 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	MOC = $(BASEDIR)/bin/moc
 	RM = rm -rvf
 	RM_QUIET = rm -rf
-	QTINCLUDE = -I $(BASEDIR)/armv5tel-cacko-linux/qt/include
-	QTLIBS = -L $(BASEDIR)/armv5tel-cacko-linux/qt/lib -lqt-mt -L $(BASEDIR)/armv5tel-cacko-linux/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
+	USRDIR = $(BASEDIR)/armv5tel-cacko-linux
+	QTINCLUDE = -I $(USRDIR)/qt/include
+	QTLIBS = -L $(USRDIR)/qt/lib -lqt-mt -L $(USRDIR)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
 	EXPATLIBS = -lexpat
 	ENCALIBS = -lenca
 endif

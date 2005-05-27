@@ -1,11 +1,11 @@
-ALL_TARGET_ARCHS = zaurus-cacko zaurus-pdaxrom-qt zaurus-pdaxrom-gtk desktop-qt desktop-gtk palm maemo
+ALL_TARGET_ARCHS = zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk desktop-qt desktop-gtk palm maemo
 
 ifneq "$(wildcard $(ROOTDIR)/makefiles/target.mk)" ""
 	include $(ROOTDIR)/makefiles/target.mk
 endif
 
 ifeq "$(TARGET_ARCH)" ""
-	TARGET_ARCH = zaurus-cacko
+	TARGET_ARCH = zaurus-qtopia
 endif
 
 ifneq "$(findstring $(TARGET_ARCH),$(ALL_TARGET_ARCHS))" "$(TARGET_ARCH)"

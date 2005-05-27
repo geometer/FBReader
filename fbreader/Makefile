@@ -9,7 +9,7 @@ LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS) $(
 TARGET = FBReader
 
 ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader palm
-ALL_QSUBDIRS = zaurus-cacko zaurus-pdaxrom-qt desktop-qt
+ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt
 ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk
 
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader
@@ -30,7 +30,7 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
 	GTKSUBDIRS = $(TARGET_ARCH)
 endif
 
-ifeq "$(TARGET_ARCH)" "zaurus-cacko"
+ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 	QSUBDIRS = $(TARGET_ARCH)
 endif
 
@@ -43,8 +43,8 @@ ifeq "$(TARGET_ARCH)" "palm"
 endif
 
 all: .bin
-ifeq "$(TARGET_ARCH)" "zaurus-cacko"
-	@$(MAKE) -C ipk-cacko
+ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
+	@$(MAKE) -C ipk-qtopia
 endif
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	@$(MAKE) -C ipk-pdaxrom
@@ -100,7 +100,7 @@ clean:
 	@for subdir in $(ALL_GTKSUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
 	done;
-	@$(MAKE) -C ipk-cacko clean
+	@$(MAKE) -C ipk-qtopia clean
 	@$(MAKE) -C ipk-pdaxrom clean
 	@$(MAKE) -C palm/prc clean
 	@$(RM) $(TARGET) err

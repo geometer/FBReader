@@ -9,7 +9,7 @@ SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/option
 QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/view qtopia/screenSize qt/dialogs qt/screenSize
 GTKSUBDIRS_ALL = gtk/dialogs gtk/screenSize
 
-ifeq "$(TARGET_ARCH)" "zaurus-cacko"
+ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml abstract/xml/expat abstract/screenSize unix/filesystem unix/time
 	QTSUBDIRS = qtopia/dialogs qtopia/options qtopia/view qtopia/screenSize
 endif

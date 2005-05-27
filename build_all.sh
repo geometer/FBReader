@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TARGETS="desktop-gtk desktop-qt zaurus-cacko zaurus-pdaxrom-qt zaurus-pdaxrom-gtk palm"
+TARGETS="desktop-gtk desktop-qt zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk palm"
 
 if [ -r makefiles/target.mk ]
 then

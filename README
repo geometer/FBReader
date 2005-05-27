@@ -20,12 +20,12 @@ PLATFORM DESCRIPTION
   however currently the program is known to compile without problems on the
   following platforms:
 
-    zaurus-cacko    -- Sharp Zaurus, Cacko ROM (in fact, any Sharp-based ROM)
+    zaurus-qtopia   -- Sharp Zaurus, Cacko ROM (in fact, any Sharp-based ROM)
     zaurus-pdaxrom  -- Sharp Zaurus, pdaXrom
     desktop-qt      -- (linux) desktop computer, uses qt library (version 3.*)
 
   If you do not create makefiles/target.mk file, the program will be built for
-  the default platform -- zaurus-cacko.
+  the default platform -- zaurus-qtopia.
 
 REQUIREMENTS
 
