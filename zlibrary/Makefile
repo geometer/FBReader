@@ -34,6 +34,11 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	GTKSUBDIRS = gtk/dialogs gtk/screenSize
 endif
 
+ifeq "$(TARGET_ARCH)" "maemo"
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize unix/filesystem unix/time
+	GTKSUBDIRS = gtk/dialogs gtk/screenSize
+endif
+
 ifeq "$(TARGET_ARCH)" "palm"
 	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/xml abstract/xml/own abstract/filesystem abstract/dialogs abstract/screenSize palm/options palm/filesystem palm/dialogs palm/screenSize abstract/time palm/time
 endif

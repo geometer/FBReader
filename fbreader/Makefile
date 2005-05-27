@@ -18,6 +18,10 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	GTKSUBDIRS = $(TARGET_ARCH)
 endif
 
+ifeq "$(TARGET_ARCH)" "maemo"
+	GTKSUBDIRS = $(TARGET_ARCH)
+endif
+
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	QSUBDIRS = $(TARGET_ARCH)
 endif
