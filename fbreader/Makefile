@@ -45,7 +45,7 @@ endif
 all: .bin
 	@if [ -d $(TARGET_ARCH)/package ]; then \
 		$(MAKE) -C $(TARGET_ARCH)/package; \
-	fi
+	fi;
 
 .lib:
 	@for subdir in $(SUBDIRS); do \
@@ -93,5 +93,10 @@ clean:
 	done;
 	@for subdir in $(ALL_GTKSUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
+	done;
+	@for target in $(ALL_TARGET_ARCHS); do \
+		if [ -d $$target/package ]; then \
+			$(MAKE) -C $$target/package clean; \
+		fi; \
 	done;
 	@$(RM) $(TARGET) err
