@@ -1,6 +1,6 @@
 DEB_VERSION = 2.0
 
-ARCH = arm
+ARCH = pdaxrom_arm
 
 TDIR = __ipk
 
@@ -8,9 +8,9 @@ DATADIR = $(TDIR)/data
 CTRLDIR = $(TDIR)/control
 
 FILE = $(wildcard *.control)
-PACKAGENAME = $(patsubst %.control,%,$(FILE))
+PACKAGENAME = $(patsubst %.control, %, $(FILE))-gtk
 
-version = $(shell cat ../VERSION)
+version = $(shell cat ../../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
 files = $(shell sed -n -e "s/^Files://p" $(FILE))
 package = $(PACKAGENAME)_$(version)_$(ARCH)
@@ -18,16 +18,15 @@ package = $(PACKAGENAME)_$(version)_$(ARCH)
 all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 
 .tmpdir:
-	@ln -sf .. bin
-	@ln -sf ../icons/640x480 pics144
-	@ln -sf ../icons/320x240 pics
-	@cp -r ../share .
+	@cp ../../FBReader usr/bin
+	@cp -r ../../share/FBReader usr/share
+	@mkdir -p usr/share/pixmaps/FBReader
+	@cp `find ../../icons/640x480 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -f bin pics pics144
-	@rm -rf share $(TDIR)
+	@rm -rf usr/bin/FBReader usr/share/pixmaps/FBReader usr/share/FBReader $(TDIR)
 
 .copyfiles:
 	@for f in $(files); do \
@@ -38,7 +37,7 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
   	fi; \
   	for ff in $$ffiles; do \
   		if [ -f $$ff -o -b $$ff -o -c $$ff ]; then \
-				fdir=$(DATADIR)/opt/QtPalmtop/`dirname $$ff`; \
+				fdir=$(DATADIR)/`dirname $$ff`; \
 				mkdir -p $$fdir; \
 				cp $$ff $$fdir; \
 			else \
@@ -50,12 +49,9 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 
 $(CTRLDIR)/control:
 	@echo "Package: $(PACKAGENAME)" > $@
-	@echo -n "Installed-Size: " >> $@
-	@du -b -s $(DATADIR) | sed -e 's/[	 ].*//' >> $@
-	@echo "Filename: ./$(package).ipk" >> $@
 	@echo "Version: $(version)" >> $@
 	@echo "Depends: $(depends)" >> $@
-	@egrep -v "^(Files|Version|Depends):" $(FILE) >> $@
+	@egrep -v "^(Files|Depends):" $(FILE) >> $@
 
 package:
 	@echo -n "Packaging..."

@@ -1,1 +1,1 @@
-../../qtopia/view/QScrollableView.h
+../../qtopia/scrollableview/QScrollableView.h

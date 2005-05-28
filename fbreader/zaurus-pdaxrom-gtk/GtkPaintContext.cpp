@@ -18,7 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-
 #include <abstract/ZLUnicodeUtil.h>
 
 #include "GtkPaintContext.h"
@@ -44,10 +43,14 @@ GtkPaintContext::GtkPaintContext() {
 	myWidth = 0;
 	myHeight = 0;
 
-	myFont = 0;
-
 	myContext = 0;
-	myLayout = 0;
+
+	myFontDescription = 0;
+	myAnalysis.lang_engine = 0;
+	myAnalysis.level = 0;
+	myAnalysis.language = 0;
+	myAnalysis.extra_attrs = 0;
+	myString = pango_glyph_string_new();
 
 	myTextGC = 0;
 	myFillGC = 0;
@@ -63,12 +66,13 @@ GtkPaintContext::~GtkPaintContext() {
 		gdk_gc_unref(myFillGC);
 	}
 
-	if (myFont != 0) {
-		pango_font_description_free(myFont);
+	pango_glyph_string_free(myString);
+	
+	if (myFontDescription != 0) {
+		pango_font_description_free(myFontDescription);
 	}
 
 	if (myContext != 0) {
-		g_object_unref(myLayout);
 		g_object_unref(myContext);
 	}
 }
@@ -111,7 +115,6 @@ void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 
 	if (myContext == 0) {
 		myContext = gtk_widget_get_pango_context(area);
-		myLayout = pango_layout_new(myContext);
 	}
 }
 
@@ -134,15 +137,41 @@ const std::string GtkPaintContext::realFontFamilyName(std::string &fontFamily) c
 }
 
 void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	if (myFont == 0) {
-		myFont = pango_font_description_new();
+	bool fontChanged = false;
+
+	if (myFontDescription == 0) {
+		myFontDescription = pango_font_description_new();
+		fontChanged = true;
 	}
 
-	pango_font_description_set_family(myFont, family.c_str());
-	pango_font_description_set_size(myFont, size * PANGO_SCALE);
-	pango_font_description_set_weight(myFont, bold ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL);
-	pango_font_description_set_style(myFont, italic ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL);
-	pango_layout_set_font_description(myLayout, myFont);
+	const char *oldFamily = pango_font_description_get_family(myFontDescription);
+	if ((oldFamily == 0) || (family != oldFamily)) {
+		pango_font_description_set_family(myFontDescription, family.c_str());
+		fontChanged = true;
+	}
+
+	int newSize = size * PANGO_SCALE;
+	if (pango_font_description_get_size(myFontDescription) != newSize) {
+		pango_font_description_set_size(myFontDescription, newSize);
+		fontChanged = true;
+	}
+
+	PangoWeight newWeight = bold ? PANGO_WEIGHT_BOLD : PANGO_WEIGHT_NORMAL;
+	if (pango_font_description_get_weight(myFontDescription) != newWeight) {
+		pango_font_description_set_weight(myFontDescription, newWeight);
+		fontChanged = true;
+	}
+
+	PangoStyle newStyle = italic ? PANGO_STYLE_ITALIC : PANGO_STYLE_NORMAL;
+	if (pango_font_description_get_style(myFontDescription) != newStyle) {
+		pango_font_description_set_style(myFontDescription, newStyle);
+		fontChanged = true;
+	}
+
+	if (fontChanged) {
+		myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
+		myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
+	}
 }
 
 void GtkPaintContext::setColor(ZLColor color) {
@@ -154,30 +183,34 @@ void GtkPaintContext::setFillColor(ZLColor color) {
 }
 
 int GtkPaintContext::stringWidth(const char *str, int len) const {
-	if (myLayout == 0) {
+	if (myContext == 0) {
 		return 0;
 	}
-	int width, height;
-	pango_layout_set_text(myLayout, str, len);
-	pango_layout_get_pixel_size(myLayout, &width, &height);
-	return width;
+
+	pango_shape(str, len, &myAnalysis, myString);
+	PangoRectangle inkRectangle;
+	PangoRectangle logicalRectangle;
+	pango_glyph_string_extents(myString, myAnalysis.font, &inkRectangle, &logicalRectangle);
+	return (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
 }
 
 int GtkPaintContext::stringHeight() const {
-	if (myLayout == 0) {
+	if (myContext == 0) {
 		return 0;
 	}
-	int width, height;
-	pango_layout_set_text(myLayout, "X", 1);
-	pango_layout_get_pixel_size(myLayout, &width, &height);
-	return height;
+
+	pango_shape("X", 1, &myAnalysis, myString);
+	PangoRectangle inkRectangle;
+	PangoRectangle logicalRectangle;
+	pango_glyph_string_extents(myString, myAnalysis.font, &inkRectangle, &logicalRectangle);
+	return (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
 }
 
 void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
-	pango_layout_set_text(myLayout, str, len);
 	x += leftMargin().value();
-	y += topMargin().value() - pango_font_description_get_size(myFont) / PANGO_SCALE;
-	gdk_draw_layout(myPixmap, myTextGC, x, y, myLayout);
+	y += topMargin().value();
+	pango_shape(str, len, &myAnalysis, myString);
+	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }
 
 GdkPixbuf *GtkPaintContext::gtkImage(const Image &image) const {

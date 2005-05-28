@@ -42,6 +42,7 @@ public:
 private:
 	GtkFBReader *myReader;
 	GtkWidget *myArea;
+	GdkPixbuf *myPixbuf;
 };
 
 #endif /* __GTKVIEWWIDGET_H__ */

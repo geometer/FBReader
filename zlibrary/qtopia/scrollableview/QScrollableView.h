@@ -21,7 +21,7 @@
 
 #include <qwidget.h>
 
-#include "../../abstract/view/ZLScrollableView.h"
+#include "../../abstract/scrollableview/ZLScrollableView.h"
 
 class QPainter;
 class QScrollView;

@@ -5,13 +5,13 @@ include $(MAKEFILESDIR)/config.mk
 
 TARGET = libzlibrary.a
 
-SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml abstract/xml/expat abstract/xml/own abstract/screenSize desktop/options desktop/dialogs unix/filesystem palm/pseudostl palm/options palm/filesystem palm/dialogs palm/screenSize unix/time palm/time
-QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/view qtopia/screenSize qt/dialogs qt/screenSize
+SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/xml/own abstract/screenSize desktop/options desktop/dialogs unix/filesystem palm/pseudostl palm/options palm/filesystem palm/dialogs palm/screenSize unix/time palm/time
+QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/screenSize qt/dialogs qt/screenSize
 GTKSUBDIRS_ALL = gtk/dialogs gtk/screenSize
 
 ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/view abstract/xml abstract/xml/expat abstract/screenSize unix/filesystem unix/time
-	QTSUBDIRS = qtopia/dialogs qtopia/options qtopia/view qtopia/screenSize
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/screenSize unix/filesystem unix/time
+	QTSUBDIRS = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/screenSize
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"

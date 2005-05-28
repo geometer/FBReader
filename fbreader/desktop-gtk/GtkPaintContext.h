@@ -72,10 +72,11 @@ private:
 	GdkPixmap *myPixmap;
 	int myWidth, myHeight;
 
-  PangoFontDescription *myFont;
-
   PangoContext *myContext;
-	PangoLayout *myLayout;
+
+  PangoFontDescription *myFontDescription;
+	mutable PangoAnalysis myAnalysis;
+	PangoGlyphString *myString;
 
 	GdkGC *myTextGC;
 	GdkGC *myFillGC;

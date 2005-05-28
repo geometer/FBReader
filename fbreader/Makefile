@@ -43,15 +43,9 @@ ifeq "$(TARGET_ARCH)" "palm"
 endif
 
 all: .bin
-ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
-	@$(MAKE) -C ipk-qtopia
-endif
-ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
-	@$(MAKE) -C ipk-pdaxrom
-endif
-ifeq "$(TARGET_ARCH)" "palm"
-	@$(MAKE) -C palm/prc
-endif
+	@if [ -d $(TARGET_ARCH)/package ]; then \
+		$(MAKE) -C $(TARGET_ARCH)/package; \
+	fi
 
 .lib:
 	@for subdir in $(SUBDIRS); do \

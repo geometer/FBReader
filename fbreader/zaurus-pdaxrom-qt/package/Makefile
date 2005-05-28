@@ -10,7 +10,7 @@ CTRLDIR = $(TDIR)/control
 FILE = $(wildcard *.control)
 PACKAGENAME = $(patsubst %.control, %, $(FILE))
 
-version = $(shell cat ../VERSION)
+version = $(shell cat ../../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
 files = $(shell sed -n -e "s/^Files://p" $(FILE))
 package = $(PACKAGENAME)_$(version)_$(ARCH)
@@ -18,10 +18,10 @@ package = $(PACKAGENAME)_$(version)_$(ARCH)
 all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 
 .tmpdir:
-	@cp ../FBReader usr/lib/qt/bin
-	@cp -r ../share/FBReader usr/share
+	@cp ../../FBReader usr/lib/qt/bin
+	@cp -r ../../share/FBReader usr/share
 	@mkdir -p usr/share/pixmaps/FBReader
-	@cp `find ../icons/640x480 -name "*.png"` usr/share/pixmaps/FBReader
+	@cp `find ../../icons/640x480 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
