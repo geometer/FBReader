@@ -94,7 +94,4 @@ clean:
 	@for subdir in $(ALL_GTKSUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
 	done;
-	@$(MAKE) -C ipk-qtopia clean
-	@$(MAKE) -C ipk-pdaxrom clean
-	@$(MAKE) -C palm/prc clean
 	@$(RM) $(TARGET) err
