@@ -31,7 +31,7 @@ class GtkViewWidget : public ViewWidget {
 
 public:
 	GtkViewWidget(GtkFBReader *reader);
-	virtual ~GtkViewWidget() {}
+	~GtkViewWidget();
 
 public:
 	GtkWidget *area() { return myArea; }
@@ -42,6 +42,8 @@ public:
 private:
 	GtkFBReader *myReader;
 	GtkWidget *myArea;
+	GdkPixbuf *myOriginalPixbuf;
+	GdkPixbuf *myRotatedPixbuf;
 };
 
 #endif /* __GTKVIEWWIDGET_H__ */

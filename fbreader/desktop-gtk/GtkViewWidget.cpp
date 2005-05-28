@@ -22,6 +22,8 @@
 #include "GtkFBReader.h"
 #include "GtkPaintContext.h"
 
+#include "gdk-pixbuf-hack.h"
+
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
 	View *view = viewWidget->view();
@@ -43,10 +45,17 @@ int GtkViewWidget::height() const {
 GtkViewWidget::GtkViewWidget(GtkFBReader *reader) {
 	myReader = reader;
 	myArea = gtk_drawing_area_new();
-	myPixbuf = 0;
+	myOriginalPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
 	gtk_signal_connect(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
+}
+
+GtkViewWidget::~GtkViewWidget() {
+	if (myOriginalPixbuf != 0) {
+		gdk_pixbuf_unref(myOriginalPixbuf);
+		gdk_pixbuf_unref(myRotatedPixbuf);
+	}
 }
 
 void GtkViewWidget::repaintView()	{
@@ -56,21 +65,23 @@ void GtkViewWidget::repaintView()	{
 	gtkContext.updatePixmap(myArea, w, h);
 	view()->paint();
 	if (isRotated()) {
-		if ((myPixbuf != 0) && ((gdk_pixbuf_get_width(myPixbuf) != w) || (gdk_pixbuf_get_height(myPixbuf) != h))) {
-			gdk_pixbuf_unref(myPixbuf);
-			myPixbuf = 0;
+		if ((myOriginalPixbuf != 0) && ((gdk_pixbuf_get_width(myOriginalPixbuf) != w) || (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
+			gdk_pixbuf_unref(myOriginalPixbuf);
+			gdk_pixbuf_unref(myRotatedPixbuf);
+			myOriginalPixbuf = 0;
 		}
-		if (myPixbuf == 0) {
-			myPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+		if (myOriginalPixbuf == 0) {
+			myOriginalPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+			myRotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h, w);
 		}
-		gdk_pixbuf_get_from_drawable(myPixbuf, gtkContext.pixmap(), gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
-		GdkPixbuf *rotated = gdk_pixbuf_rotate_simple(myPixbuf, GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
-		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, rotated, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
-		gdk_pixbuf_unref(rotated);
+		gdk_pixbuf_get_from_drawable(myOriginalPixbuf, gtkContext.pixmap(), gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
+		::rotate(myRotatedPixbuf, myOriginalPixbuf);
+		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
 	} else {
-		if (myPixbuf != 0) {
-			gdk_pixbuf_unref(myPixbuf);
-			myPixbuf = 0;
+		if (myOriginalPixbuf != 0) {
+			gdk_pixbuf_unref(myOriginalPixbuf);
+			gdk_pixbuf_unref(myRotatedPixbuf);
+			myOriginalPixbuf = 0;
 		}
 		gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
 	}
