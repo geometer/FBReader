@@ -73,6 +73,8 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
+	myFullScreen = false;
+
 	gtk_window_resize(myMainWindow, Width.value(), Height.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
@@ -99,6 +101,7 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myKeyBindings["Escape"] = ACTION_CANCEL;
 	myKeyBindings["<Shift>plus"] = ACTION_INCREASE_FONT;
 	myKeyBindings["equal"] = ACTION_DECREASE_FONT;
+	myKeyBindings["Return"] = ACTION_FULLSCREEN;
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -129,8 +132,20 @@ void GtkFBReader::handleKeySlot(GdkEventKey *event) {
 	}
 }
 
+void GtkFBReader::fullscreenSlot() {
+	if (!myFullScreen) {
+		myFullScreen = true;
+		gtk_widget_hide(myToolbar);
+		gtk_window_fullscreen(myMainWindow);
+	}
+}
+
 void GtkFBReader::cancelSlot() {
-	if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
+	if (myFullScreen) {
+		myFullScreen = false;
+		gtk_widget_show(myToolbar);
+		gtk_window_unfullscreen(myMainWindow);
+	} else if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
 		close();
 	}
 }

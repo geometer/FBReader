@@ -44,7 +44,7 @@ protected:
 	void setButtonEnabled(ActionCode id, bool enable);
 	void searchSlot();
 	void cancelSlot();
-	void fullscreenSlot() {}
+	void fullscreenSlot();
 	bool isRotationSupported() const { return true; }
 
 public:
@@ -58,6 +58,8 @@ private:
 
 	std::map<std::string,ActionCode> myKeyBindings;
 	std::map<ActionCode,GtkWidget*> myButtons;
+
+	bool myFullScreen;
 };
 
 #endif /* __GTKFBREADER_H__ */
