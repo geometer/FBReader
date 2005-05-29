@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,33 +16,21 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __TXTREADER_H__
-#define __TXTREADER_H__
+#ifndef __ENCODINGCONVERTER_H__
+#define __ENCODINGCONVERTER_H__
 
 #include <string>
 
-#include <abstract/EncodingConverter.h>
-
-class ZLInputStream;
-
-class TxtReader {
+class EncodingConverter {
 
 public:
-	void readDocument(ZLInputStream &stream, const std::string &encoding) FORMATS_SECTION;
-
-protected:
-	TxtReader() FORMATS_SECTION;
-	virtual ~TxtReader() FORMATS_SECTION;
-
-protected:
-	virtual void startDocumentHandler() FORMATS_SECTION = 0;
-	virtual void endDocumentHandler() FORMATS_SECTION = 0;
-
-	virtual bool characterDataHandler(const std::string &str) FORMATS_SECTION = 0;
-	virtual bool newLineHandler() FORMATS_SECTION = 0;
+	EncodingConverter::EncodingConverter(const char *encoding) XML_SECTION;
+	EncodingConverter::~EncodingConverter() XML_SECTION;
+	void EncodingConverter::setEncoding(const char *encoding) XML_SECTION;
+	void EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
 
 private:
-	EncodingConverter myConverter;
+	int *myEncodingMap;
 };
 
-#endif /* __TXTREADER_H__ */
+#endif /* __ENCODINGCONVERTER_H__ */

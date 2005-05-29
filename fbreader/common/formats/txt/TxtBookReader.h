@@ -37,7 +37,7 @@ protected:
 	void startDocumentHandler() FORMATS_SECTION;
 	void endDocumentHandler() FORMATS_SECTION;
 
-	bool characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	bool characterDataHandler(const std::string &str) FORMATS_SECTION;
 	bool newLineHandler() FORMATS_SECTION;
 
 private:

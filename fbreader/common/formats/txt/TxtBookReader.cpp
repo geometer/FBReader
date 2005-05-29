@@ -38,14 +38,13 @@ void TxtBookReader::flushTextBufferToParagraph() {
 	}
 
 	if (!bufferIsEmpty) {
-		myConverter->convertBuffer(myBuffer);
 		BookReader::flushTextBufferToParagraph();
 		myLineFeedCounter = 0;
 	}
 }
 
-bool TxtBookReader::characterDataHandler(const char *text, int len) {
-	addDataToBuffer(text, len);
+bool TxtBookReader::characterDataHandler(const std::string &str) {
+	addDataToBuffer(str);
 	return true;
 }
 

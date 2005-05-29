@@ -30,8 +30,6 @@ void TxtDescriptionReader::endDocumentHandler() {
 	myDescription.addAuthor("Txt", "Book", "Writer");
 	if (myDescription.title().empty()) {
 		myDescription.title() = "Txt book";
-	} else {
-		myConverter->convertString(myDescription.title());
 	}
 	if (myDescription.language() == "") {
 		if ((myDescription.encoding() == "KOI8-R") ||
@@ -43,9 +41,9 @@ void TxtDescriptionReader::endDocumentHandler() {
 	}
 }
 
-bool TxtDescriptionReader::characterDataHandler(const char *text, int len) {
+bool TxtDescriptionReader::characterDataHandler(const std::string &str) {
 	if (myReadTitle) {
-		myDescription.title().append(text, len);
+		myDescription.title().append(str);
 	}
 	return true;
 }
