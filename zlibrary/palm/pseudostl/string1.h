@@ -23,7 +23,8 @@ namespace std {
 		const string &operator = (const char *s) STL_SECTION;
 		
 		void reserve(size_t minSize) const STL_SECTION;
-		void erase(size_t start = 0, size_t len = (size_t)-1) STL_SECTION;
+		void erase() STL_SECTION;
+		void erase(size_t start, size_t len = (size_t)-1) STL_SECTION;
 		const string &operator += (const string &s) STL_SECTION;
 		const string &operator += (char c) STL_SECTION;
 		const string operator + (const string &s) const STL_SECTION;
@@ -72,6 +73,7 @@ namespace std {
 	inline bool string::operator != (const char *s) const { return !operator == (s); }
 	inline bool operator == (const char *s0, const string &s1) { return s1 == s0; }
 	inline bool operator != (const char *s0, const string &s1) { return s1 != s0; }
+	inline void string::erase() { __myLength = 0; }
 };
 
 #endif /* __STRING_H__ */
