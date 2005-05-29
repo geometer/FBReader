@@ -22,40 +22,6 @@
 #include "../../model/Paragraph.h"
 #include "../../model/Image.h"
 
-static const struct {
-	FB2Reader::TagCode code;
-	TextKind kind;
-} CONTROLS[] = {
-	{FB2Reader::_SUB, SUB},	
-	{FB2Reader::_SUP, SUP},	
-	{FB2Reader::_CODE, CODE},	
-	{FB2Reader::_STRIKETHROUGH, STRIKETHROUGH},
-	{FB2Reader::_STRONG, STRONG},
-	{FB2Reader::_EMPHASIS, EMPHASIS},
-	{FB2Reader::_A, FOOTNOTE},
-	{FB2Reader::_UNKNOWN, (TextKind)-1}
-};
-
-static TextKind control(int code) FORMATS_SECTION;
-static TextKind control(int code) {
-	for (int i = 0; ; i++) {
-		if ((CONTROLS[i].code == code) || (CONTROLS[i].code == FB2Reader::_UNKNOWN)) {
-			return CONTROLS[i].kind;
-		}
-	}
-};
-
-static const struct {
-	FB2Reader::TagCode code;
-	TextKind kind;
-} PARAGRAPHS[] = {
-	{FB2Reader::_V, VERSE},	
-	{FB2Reader::_SUBTITLE, SUBTITLE},	
-	{FB2Reader::_TEXT_AUTHOR, AUTHOR},	
-	{FB2Reader::_DATE, DATE},
-	{FB2Reader::_UNKNOWN, (TextKind)-1}
-};
-
 FB2BookReader::FB2BookReader(BookModel &model) : BookReader(model) {
 	myInsidePoem = false;
 	mySectionDepth = 0;
@@ -117,16 +83,20 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			beginParagraph();
 			break;
 		case _V:
+			pushKind(VERSE);
+			beginParagraph();
+			break;
 		case _SUBTITLE:
+			pushKind(SUBTITLE);
+			beginParagraph();
+			break;
 		case _TEXT_AUTHOR:
+			pushKind(AUTHOR);
+			beginParagraph();
+			break;
 		case _DATE:
-			for (int i = 0; PARAGRAPHS[i].code != _UNKNOWN; i++) {
-				if (tag == PARAGRAPHS[i].code) {
-					pushKind(PARAGRAPHS[i].kind);
-					beginParagraph();
-					break;
-				}
-			}
+			pushKind(DATE);
+			beginParagraph();
 			break;
 		case _CITE:
 			pushKind(CITE);
@@ -166,20 +136,30 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			pushKind(ANNOTATION);
 			break;
 		case _SUB:
+			addControl(SUB, true);
+			break;
 		case _SUP:
+			addControl(SUP, true);
+			break;
 		case _CODE:
+			addControl(CODE, true);
+			break;
 		case _STRIKETHROUGH:
+			addControl(STRIKETHROUGH, true);
+			break;
 		case _STRONG:
+			addControl(STRONG, true);
+			break;
 		case _EMPHASIS:
-			addControl(control(tag), true);
+			addControl(EMPHASIS, true);
 			break;
 		case _A:
 		{
 			const char *ref = reference(xmlattributes);
 			if (ref != 0) {
-				addHyperlinkControl(control(tag), ref);
+				addHyperlinkControl(FOOTNOTE, ref);
 			} else {
-				addControl(control(tag), true);
+				addControl(FOOTNOTE, true);
 			}
 			break;
 		}
@@ -262,13 +242,25 @@ void FB2BookReader::endElementHandler(int tag) {
 			}
 			break;
 		case _SUB:
+			addControl(SUB, false);
+			break;
 		case _SUP:
+			addControl(SUP, false);
+			break;
 		case _CODE:
+			addControl(CODE, false);
+			break;
 		case _STRIKETHROUGH:
+			addControl(STRIKETHROUGH, false);
+			break;
 		case _STRONG:
+			addControl(STRONG, false);
+			break;
 		case _EMPHASIS:
+			addControl(EMPHASIS, false);
+			break;
 		case _A:
-			addControl(control(tag), false);
+			addControl(FOOTNOTE, false);
 			break;
 		case _BINARY:
 			flushTextBufferToImage();
