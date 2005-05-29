@@ -43,7 +43,7 @@ void TxtDescriptionReader::endDocumentHandler() {
 
 bool TxtDescriptionReader::characterDataHandler(const std::string &str) {
 	if (myReadTitle) {
-		myDescription.title().append(str);
+		myDescription.title() += str;
 	}
 	return true;
 }

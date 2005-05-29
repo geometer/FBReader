@@ -55,7 +55,7 @@ void EncodingConverter::convert(std::string &dst, const char *srcStart, const ch
 	if (myEncodingMap == 0) {
 		dst.append(srcStart, srcEnd - srcStart);
 	} else {
-		dst.reserve(dst.size() + 3 * (srcEnd - srcStart));
+		dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
 		for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
 			int &ucs2code = myEncodingMap[(unsigned char)*ptr];
     	if (ucs2code < 0x80) {
