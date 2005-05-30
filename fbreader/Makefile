@@ -10,7 +10,7 @@ TARGET = FBReader
 
 ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader palm
 ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt
-ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk
+ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk maemo
 
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader
 
