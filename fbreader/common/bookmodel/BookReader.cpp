@@ -130,28 +130,39 @@ void BookReader::flushTextBufferToParagraph() {
 		mySectionContainsRegularContents = true;
 	}
 
-	myCurrentParagraph->addText(myBuffer);
-	if (myCurrentContentsParagraph != 0) {
-		if (myInsideTitle) {
-			if (myCurrentContentsParagraph->reference() != -1) {
-				myCurrentContentsParagraph->addText(" ");
+	// optimization: addNonConstText can change parameter if needs
+	if ((myBuffer.size() == 1) && myCurrentContentsParagraph == 0) {
+		myCurrentParagraph->addNonConstText(myBuffer[0]);
+	} else {
+		myCurrentParagraph->addText(myBuffer);
+		if (myCurrentContentsParagraph != 0) {
+			if (myInsideTitle) {
+				if (myCurrentContentsParagraph->reference() != -1) {
+					myCurrentContentsParagraph->addText(" ");
+				}
+				myCurrentContentsParagraph->addText(myBuffer);
 			}
-			myCurrentContentsParagraph->addText(myBuffer);
-		}
-		if (myCurrentContentsParagraph->reference() == -1) {
-			myCurrentContentsParagraph->setReference(myModel.bookTextModel().paragraphs().size() - 1);
+			if (myCurrentContentsParagraph->reference() == -1) {
+				myCurrentContentsParagraph->setReference(myModel.bookTextModel().paragraphs().size() - 1);
+			}
 		}
 	}
 	myBuffer.clear();
 }
 
-void BookReader::flushTextBufferToImage() {
+void BookReader::beginImageData(const char *contentType, const char *id) {
+	myCurrentImage = new Image(contentType);
+	myModel.myImages.insert(std::pair<std::string,Image*>(id, myCurrentImage));
+}
+
+void BookReader::endImageData() {
 	if (myBuffer.empty() || (myCurrentImage == 0)) {
 		return;
 	}
 
 	myCurrentImage->addData(myBuffer);
 	myBuffer.clear();
+	myCurrentImage = 0;
 }
 
 void BookReader::insertEndOfSectionParagraph() {
@@ -177,10 +188,6 @@ void BookReader::addImageToParagraph(const std::string &id) {
 		flushTextBufferToParagraph();
 		myCurrentParagraph->addImage(id, myModel.imageMap());
 	}
-}
-
-void BookReader::addImageToModel(const std::string &id, Image *image) {
-	myModel.myImages.insert(std::pair<std::string,Image*>(id, image));
 }
 
 void BookReader::beginContentsParagraph() {

@@ -171,13 +171,13 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 			endParagraph();
 			if (tag.Start) {
 				insertEndOfSectionParagraph();
-				myInsideTitle = true;
+				enterTitle();
 				beginContentsParagraph();
 				pushKind(SECTION_TITLE);
 			} else {
 				popKind();
 				endContentsParagraph();
-				myInsideTitle = false;
+				exitTitle();
 			}
 			beginParagraph();
 			break;

@@ -26,7 +26,6 @@ DocBookBookReader::DocBookBookReader(BookModel &model) : BookReader(model) {
 	setMainTextModel();
 
 	myReadText = false;
-	myInsideTitle = false;
 }
 
 void DocBookBookReader::characterDataHandler(const char *text, int len) {
@@ -46,7 +45,7 @@ void DocBookBookReader::startElementHandler(int tag, const char **) {
 			}
 			break;
 		case _TITLE:
-			myInsideTitle = true;
+			enterTitle();
 			pushKind(SECTION_TITLE);
 			if (myReadText) {
 				beginParagraph();
@@ -85,7 +84,7 @@ void DocBookBookReader::endElementHandler(int tag) {
 			endParagraph();
 			popKind();
 			endContentsParagraph();
-			myInsideTitle = false;
+			exitTitle();
 			break;
 		case _EMPHASIS:
 			addControl(EMPHASIS, false);

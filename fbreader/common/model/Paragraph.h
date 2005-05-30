@@ -39,8 +39,10 @@ public:
 		CONTROL_ENTRY,
 	};
 
-public:
+protected:
 	ParagraphEntry() MODEL_SECTION;
+
+public:
 	virtual ~ParagraphEntry() MODEL_SECTION;
 	virtual Kind entryKind() const MODEL_SECTION = 0;
 };
@@ -76,6 +78,7 @@ class TextEntry : public ParagraphEntry {
 
 public:
 	TextEntry() MODEL_SECTION;
+	TextEntry(std::string &text) MODEL_SECTION;
 	~TextEntry() MODEL_SECTION;
 	const std::string &text() const MODEL_SECTION;
 	void addText(const std::string &text) MODEL_SECTION;
@@ -119,6 +122,7 @@ public:
 
 	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
 	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
+	void addNonConstText(std::string &text) MODEL_SECTION;
 	void addText(const std::string &text) MODEL_SECTION;
 	void addText(const std::vector<std::string> &text) MODEL_SECTION;
 	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
@@ -180,6 +184,7 @@ inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
 inline const std::string &HyperlinkControlEntry::label() const { return myLabel; }
 
 inline TextEntry::TextEntry() {}
+inline TextEntry::TextEntry(std::string &text) { myText.swap(text); }
 inline TextEntry::~TextEntry() {}
 inline const std::string &TextEntry::text() const { return myText; }
 inline void TextEntry::addText(const std::vector<std::string> &text) { ZLStringUtil::append(myText, text); }

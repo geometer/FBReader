@@ -100,15 +100,29 @@ namespace std {
 			char *p = __myData;
 			__myData = s.__myData;
 			s.__myData = p;
-			int l = __myDataSize;
-			__myDataSize = s.__myDataSize;
-			s.__myDataSize = l;
-			l = __myLength;
-			__myLength = s.__myLength;
-			s.__myLength = l;
-		} else {
-			// TODO: implement
+		} else if (__myData != __myTinyData) {
+			s.__myData = __myData;
+			__myData = __myTinyData;
+			if (s.__myLength > 0) {
+				MemMove(__myTinyData, s.__myTinyData, s.__myLength);
+			}
+		} else if (s.__myData != s.__myTinyData) {
+			__myData = s.__myData;
+			s.__myData = s.__myTinyData;
+			if (__myLength > 0) {
+				MemMove(s.__myTinyData, __myTinyData, __myLength);
+			}
+		} else if (__myLength > 0) {
+			if (s.__myLength > 0) {
+				// TODO: implement
+			} else {
+				MemMove(s.__myTinyData, __myTinyData, __myLength);
+			}
+		} else if (s.__myLength > 0) {
+			MemMove(__myTinyData, s.__myTinyData, s.__myLength);
 		}
+		int l = __myDataSize; __myDataSize = s.__myDataSize; s.__myDataSize = l;
+		l = __myLength; __myLength = s.__myLength; s.__myLength = l;
 	}
 
 	const string &string::operator += (const string &s) {

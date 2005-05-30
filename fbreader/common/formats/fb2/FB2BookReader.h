@@ -25,7 +25,7 @@
 
 class BookModel;
 
-class FB2BookReader : public BookReader, public FB2Reader {
+class FB2BookReader : public FB2Reader {
 
 public:
 	FB2BookReader(BookModel &model) FORMATS_SECTION;
@@ -40,6 +40,7 @@ private:
 	int mySectionDepth;
 	int myBodyCounter;
 	bool myInsidePoem;
+	BookReader myModelReader;
 };
 
 inline FB2BookReader::~FB2BookReader() {}

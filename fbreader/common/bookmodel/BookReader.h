@@ -33,19 +33,10 @@ class ZLInputStream;
 
 class BookReader {
 
-protected:
-#ifdef PALM_TEMPORARY
 public:
-#endif // PALM_TEMPORARY
 	BookReader(BookModel &model) MODEL_SECTION;
-
-public:
 	virtual ~BookReader() MODEL_SECTION;
 
-protected:
-#ifdef PALM_TEMPORARY
-public:
-#endif // PALM_TEMPORARY
 	void setMainTextModel() MODEL_SECTION;
 	void setFootnoteTextModel(const std::string &id) MODEL_SECTION;
 	void unsetTextModel() MODEL_SECTION;
@@ -61,7 +52,6 @@ public:
 	void addHyperlinkLabel(const std::string &label) MODEL_SECTION;
 
 	void addImageToParagraph(const std::string &id) MODEL_SECTION;
-	void addImageToModel(const std::string &id, Image *image) MODEL_SECTION;
 
 	void beginContentsParagraph() MODEL_SECTION;
 	void endContentsParagraph() MODEL_SECTION;
@@ -69,7 +59,12 @@ public:
 	void addDataToBuffer(const std::string &data) MODEL_SECTION;
 	void addDataToBuffer(const char *data, int len) MODEL_SECTION;
 	virtual void flushTextBufferToParagraph() MODEL_SECTION;
-	void flushTextBufferToImage() MODEL_SECTION;
+
+	void beginImageData(const char *contentType, const char *id) MODEL_SECTION;
+	void endImageData() MODEL_SECTION;
+
+	void enterTitle() { myInsideTitle = true; }
+	void exitTitle() { myInsideTitle = false; }
 
 private:
 	BookModel &myModel;
@@ -79,15 +74,13 @@ private:
 
 	Paragraph *myCurrentParagraph;
 	ParagraphWithReference *myCurrentContentsParagraph;
+	Image *myCurrentImage;
 
 	bool mySectionContainsRegularContents;
+	bool myInsideTitle;
 
 protected:
 	std::vector<std::string> myBuffer;
-
-	Image *myCurrentImage;
-
-	bool myInsideTitle;
 };
 
 #endif /* __BOOKREADER_H__ */

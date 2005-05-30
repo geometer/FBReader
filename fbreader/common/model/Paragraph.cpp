@@ -25,6 +25,14 @@ Paragraph::~Paragraph() {
 	}
 }
 
+void Paragraph::addNonConstText(std::string &text) {
+	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
+		myEntries.push_back(new TextEntry(text));
+	} else {
+		((TextEntry*)myEntries.back())->addText(text);
+	}
+}
+
 void Paragraph::addText(const std::string &text) {
 	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
 		myEntries.push_back(new TextEntry());
