@@ -210,7 +210,7 @@ void GtkFBReader::cancelSlot() {
 void GtkFBReader::fullscreenSlot() {
 	myFullScreen = !myFullScreen;
 
-	hildon_appview_set_fullscreen(myMainWindow, myFullScreen);
+	hildon_appview_set_fullscreen(myAppView, myFullScreen);
 	if (myFullScreen) {
 		gtk_widget_hide(myToolbar);
 	} else if (!myFullScreen) {
