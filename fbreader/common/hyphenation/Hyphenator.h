@@ -27,13 +27,13 @@ class Word;
 class HyphenationInfo {
 
 private:
-	HyphenationInfo(int length);
-	const HyphenationInfo &operator = (HyphenationInfo &info);
+	HyphenationInfo(int length) HYPHENATION_SECTION;
+	const HyphenationInfo &operator = (HyphenationInfo &info) HYPHENATION_SECTION;
 
 public:
-	HyphenationInfo(const HyphenationInfo &info);
-	~HyphenationInfo();
-	bool isHyphenationPossible(int position);
+	HyphenationInfo(const HyphenationInfo &info) HYPHENATION_SECTION;
+	~HyphenationInfo() HYPHENATION_SECTION;
+	bool isHyphenationPossible(int position) HYPHENATION_SECTION;
 	
 private:
 	int myLength;
@@ -45,8 +45,8 @@ friend class Hyphenator;
 class Hyphenator {
 
 public:
-	static Hyphenator &instance();
-	static void deleteInstance();
+	static Hyphenator &instance() HYPHENATION_SECTION;
+	static void deleteInstance() HYPHENATION_SECTION;
 	
 protected:
 	Hyphenator() {}
@@ -54,13 +54,13 @@ protected:
 public:
 	virtual ~Hyphenator() {}
 
-	virtual void load(const std::string &language) = 0;
-	virtual void unload() = 0;
+	virtual void load(const std::string &language) HYPHENATION_SECTION = 0;
+	virtual void unload() HYPHENATION_SECTION = 0;
 
-	HyphenationInfo info(const Word &word) const;
+	HyphenationInfo info(const Word &word) const HYPHENATION_SECTION;
 
 protected:
-	virtual void hyphenate(unsigned short *ucs2String, bool *mask, int length) const = 0;
+	virtual void hyphenate(unsigned short *ucs2String, bool *mask, int length) const HYPHENATION_SECTION = 0;
 
 protected:
 	static Hyphenator *ourInstance;

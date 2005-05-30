@@ -44,13 +44,6 @@ namespace std {
 	};
 
 	template<typename T>
-	vector<T>::const_iterator upper_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) STL_SECTION;
-	template<typename T>
-	vector<T>::const_iterator lower_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) STL_SECTION;
-	template<typename Iterator, typename Comparator>
-	void sort(const Iterator &startIterator, const Iterator &endIterator, const Comparator &comparator) STL_SECTION;
-
-	template<typename T>
 	inline vector<T>::vector() {
 		__myDataSize = 0;
 		__myLength = 0;
@@ -171,21 +164,6 @@ namespace std {
 		int l = __myLength; __myLength = v.__myLength; v.__myLength = l;
 		int ds = __myDataSize; __myDataSize = v.__myDataSize; v.__myDataSize = ds;
 		T *d = __myData; __myData = v.__myData; v.__myData = d;
-	}
-
-	template<typename T>
-	inline vector<T>::const_iterator upper_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) {
-		// TODO: implement
-		return start;
-	}
-	template<typename T>
-	inline vector<T>::const_iterator lower_bound(const vector<T>::const_iterator &start, const vector<T>::const_iterator &end, const T &value) {
-		// TODO: implement
-		return start;
-	}
-	template<typename Iterator, typename Comparator>
-	void sort(const Iterator &startIterator, const Iterator &endIterator, const Comparator &comparator) {
-		// TODO: implement
 	}
 };
 

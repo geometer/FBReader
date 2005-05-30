@@ -83,7 +83,7 @@ void TeXHyphenationPattern::apply(unsigned char *values) const {
 	}
 }
 
-bool TeXPatternComparator::operator() (const TeXHyphenationPattern *p1, const TeXHyphenationPattern *p2) {
+bool TeXPatternComparator::operator() (const TeXHyphenationPattern *p1, const TeXHyphenationPattern *p2) const {
 	bool firstIsShorter = p1->myLength < p2->myLength;
 	int minLength = firstIsShorter ? p1->myLength : p2->myLength;
 	unsigned short *symbols1 = p1->mySymbols;
@@ -107,13 +107,11 @@ void TeXHyphenator::hyphenate(unsigned short *ucs2String, bool *mask, int length
 	for (int j = 0; j < length - 2; j++) {
 		for (int k = 1; k <= length - j; k++) {
 			TeXHyphenationPattern pattern(ucs2String + j, k);
-#ifndef PALM_TEMPORARY
 			TeXHyphenator::PatternIterator dictionaryPattern =
 				std::lower_bound(myPatternTable.begin(), myPatternTable.end(), &pattern, TeXPatternComparator());
 			if ((dictionaryPattern != myPatternTable.end()) && !TeXPatternComparator()(&pattern, *dictionaryPattern)) {
 				(*dictionaryPattern)->apply(values + j);
 			}
-#endif // PALM_TEMPORARY
 		}
 	}
 

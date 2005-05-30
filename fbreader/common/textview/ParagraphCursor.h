@@ -34,6 +34,7 @@ class Word;
 class TextElementVector : public std::vector<TextElement*> {
 
 public:
+	TextElementVector() VIEW_SECTION;
 	~TextElementVector() VIEW_SECTION;
 };
 
@@ -183,6 +184,8 @@ public:
 	bool next() VIEW_SECTION;
 	bool isEndOfText() const VIEW_SECTION;
 };
+
+inline TextElementVector::TextElementVector() {}
 
 inline WordCursor::WordCursor() { myCharNumber = 0; }
 inline WordCursor::WordCursor(const TextElementVector::const_iterator &wordIterator) : myWordIterator(wordIterator) { myCharNumber = 0; }
