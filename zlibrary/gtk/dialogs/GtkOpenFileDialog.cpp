@@ -19,20 +19,31 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLOpenFileDialog.h>
-
-#include "GtkDialogManager.h"
-#include "GtkOptionsDialog.h"
 #include "GtkOpenFileDialog.h"
 
-ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new GtkOptionsDialog(id, title);
+GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLFileHandler &handler) : ZLOpenFileDialog(handler) {
+  myDialog = gtk_file_chooser_dialog_new(caption,
+                                       NULL,
+                                       GTK_FILE_CHOOSER_ACTION_OPEN,
+                                       GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+                                       GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
+                                       NULL);
 }
 
-int GtkDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	return 0;
+GtkOpenFileDialog::~GtkOpenFileDialog(void) {
+  gtk_widget_destroy(myDialog);
 }
 
-void GtkDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
-  GtkOpenFileDialog(title.c_str(), handler).run();
+void GtkOpenFileDialog::run() {
+	if (gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT) {
+		char *filename;
+
+		filename = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(myDialog));
+
+		handler().accept(filename, false);
+
+		g_free(filename);
+	}
 }
+
+// vim:ts=2:sw=2:noet
