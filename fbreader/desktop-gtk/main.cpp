@@ -36,9 +36,10 @@ int main(int argc, char **argv) {
 
 	ZLUnixFSManager::createInstance();
 	ZLUnixTimeManager::createInstance();
+	GtkDialogManager::createInstance();
+	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(PixmapPath);
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	XMLOptions::createInstance("FBReader");
-	GtkDialogManager::createInstance();
 	GtkScreenSize::createInstance();
 
 	new GtkFBReader();

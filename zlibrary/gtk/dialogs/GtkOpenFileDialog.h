@@ -20,7 +20,9 @@
 #ifndef __GTKOPENFILEDIALOG_H__
 #define __GTKOPENFILEDIALOG_H__
 
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
+
+#include <map>
 
 #include <abstract/ZLOpenFileDialog.h>
 
@@ -29,10 +31,24 @@ public:
 	GtkOpenFileDialog(const char *caption, const ZLFileHandler &handler); 
 	~GtkOpenFileDialog(); 
 
-  void run();
+	void run();
+
+	void activatedSlot(GtkTreePath *path, GtkTreeViewColumn *column);
+
 private:
-  GtkWidget *myDialog;
-  GtkWidget *myCurrentDirectoryName;
+	GdkPixbuf *getPixmap(const std::string &fileName, bool dir);
+
+	void updateListView(const std::string &selected);
+
+private:
+	GtkDialog *myDialog;
+	GtkListStore *myStore;
+	GtkTreeView *myView;
+	GtkEntry *myCurrentDirectoryName;
+
+	std::map<std::string,GdkPixbuf*> myPixmaps;
 };
 
 #endif
+
+// vim:ts=2:sw=2:noet
