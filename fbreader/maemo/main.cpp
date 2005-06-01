@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
+	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(PixmapPath);
 	GtkScreenSize::createInstance();
 
 	new GtkFBReader();
