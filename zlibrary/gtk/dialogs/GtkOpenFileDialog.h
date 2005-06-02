@@ -33,7 +33,7 @@ public:
 
 	void run();
 
-	void activatedSlot(GtkTreePath *path, GtkTreeViewColumn *column);
+	void activatedSlot();
 
 private:
 	GdkPixbuf *getPixmap(const std::string &fileName, bool dir);

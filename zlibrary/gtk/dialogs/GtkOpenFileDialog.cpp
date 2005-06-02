@@ -241,7 +241,7 @@ void GtkOpenFileDialog::run() {
 }
 
 void
-GtkOpenFileDialog::activatedSlot(GtkTreePath *path, GtkTreeViewColumn *column) {
+GtkOpenFileDialog::activatedSlot() {
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
 }
 
