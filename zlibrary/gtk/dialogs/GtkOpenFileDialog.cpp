@@ -20,6 +20,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <algorithm>
+
 #include <iostream>
 
 #include "../../abstract/filesystem/ZLFSManager.h"
@@ -145,6 +147,7 @@ void GtkOpenFileDialog::updateListView(const std::string &selected) {
 
 	std::vector<std::string> dirNames;
 	myCurrentDir->collectSubDirs(dirNames, true);
+	std::sort(dirNames.begin(), dirNames.end());
 	for (std::vector<std::string>::const_iterator it = dirNames.begin(); it != dirNames.end(); it++) {
 		if (handler().isFileVisible(*it, true)) {
 			gtk_list_store_append(myStore, &iter);
@@ -163,6 +166,7 @@ void GtkOpenFileDialog::updateListView(const std::string &selected) {
 
 	std::vector<std::string> fileNames;
 	myCurrentDir->collectFiles(fileNames, true);
+	std::sort(fileNames.begin(), fileNames.end());
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); it++) {
 		if (handler().isFileVisible(*it, false)) {
 			gtk_list_store_append(myStore, &iter);
