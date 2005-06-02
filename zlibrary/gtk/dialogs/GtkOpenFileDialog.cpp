@@ -47,8 +47,8 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 }
 
 static void
-activatedHandler(GtkTreeView *view, GtkTreePath *path, GtkTreeViewColumn *column) {
-	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot(path, column);
+activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn *) {
+	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
 GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLFileHandler &handler) : ZLOpenFileDialog(handler) {
