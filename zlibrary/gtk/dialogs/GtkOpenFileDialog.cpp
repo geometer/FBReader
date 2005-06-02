@@ -102,6 +102,8 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLFileHandler &h
 	gtk_widget_show_all(scrolledWindow);
 
 	updateListView("..");
+
+	gtk_widget_grab_focus(GTK_WIDGET(myView));
 }
 
 GtkOpenFileDialog::~GtkOpenFileDialog(void) {
@@ -187,7 +189,7 @@ void GtkOpenFileDialog::updateListView(const std::string &selected) {
 	if (selectedItem == 0) {
 		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
 
-		gtk_tree_selection_select_iter(selection, selectedItem);
+		gtk_tree_selection_select_iter(selection, &iter);
 	} else {
 		gtk_tree_selection_select_iter(selection, selectedItem);
 
