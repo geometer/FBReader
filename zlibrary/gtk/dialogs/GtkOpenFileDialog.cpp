@@ -46,8 +46,7 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 	return false;
 }
 
-static void
-activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn *) {
+static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn *) {
 	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
@@ -209,14 +208,18 @@ void GtkOpenFileDialog::run() {
 		GtkTreeIter iter;
 
 		if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
-			char *name;
+			char *tempo;
 			gboolean isDir;
 
-			gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 1, &name, 2, &isDir, -1);  // extract file name
+			gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 1, &tempo, 2, &isDir, -1);	// extract file name
+
+			std::string name(tempo);
+
+			g_free(tempo);
 
 			if (isDir) {
 				std::string subdir = myCurrentDir->itemName(name);
-				std::string selectedName = (std::string(name) == "..") ? myCurrentDir->shortName() : "..";
+				std::string selectedName = (name == "..") ? myCurrentDir->shortName() : "..";
 				delete myCurrentDir;
 				myCurrentDir = ZLFSManager::instance().createDirectory(subdir);
 				gtk_entry_set_text(myCurrentDirectoryName, myCurrentDir->name().c_str());
@@ -230,18 +233,13 @@ void GtkOpenFileDialog::run() {
 			} else {
 				handler().accept(myCurrentDir->itemName(name), isDir);
 
-				// MSS: ugly piece of code :(
-				g_free(name);
 				break;
 			}
-
-			g_free(name);
 		}
 	}
 }
 
-void
-GtkOpenFileDialog::activatedSlot() {
+void GtkOpenFileDialog::activatedSlot() {
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
 }
 
