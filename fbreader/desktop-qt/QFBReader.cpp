@@ -100,7 +100,7 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 }
 
 void QFBReader::addButton(ActionCode id, const std::string &name) {
-	menuBar()->insertItem(QPixmap((ImageDirectory + "/" + name + ".png").c_str()), this, SLOT(emptySlot()), 0, id);
+	menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + name + ".png").c_str()), this, SLOT(emptySlot()), 0, id);
 }
 
 void QFBReader::setButtonVisible(ActionCode id, bool visible) {

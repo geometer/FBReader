@@ -25,7 +25,7 @@
 
 std::string TeXHyphenator::PatternZip("/usr/share/FBReader/hyphenationPatterns.zip");
 std::string DocBookReader::DTDDirectory("/usr/share/FBReader/formats/docbook");
-std::string QFBReader::ImageDirectory("/usr/share/pixmaps/FBReader");
+std::string QFBReader::ImageDirectory("/usr/share/pixmaps");
 std::string FBReader::HelpDirectory("/usr/share/FBReader/help");
 std::string EncodingDescriptionPath("/usr/share/FBReader/encodings");
 

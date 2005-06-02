@@ -30,7 +30,7 @@
 
 class GtkFBReader : public FBReader { 
 
-private:
+public:
 	static std::string ImageDirectory;
 	
 public:

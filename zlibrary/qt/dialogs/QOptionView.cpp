@@ -53,7 +53,7 @@ void ChoiceOptionView::_createItem() {
 	myGroup = new QButtonGroup(myOption->name().c_str(), myTab);
 	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
 	layout->addSpacing(myGroup->fontMetrics().height());
-	myButtons = new (QRadioButton*)[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
+	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
 		myButtons[i] = new QRadioButton((QButtonGroup*)layout->parent());
 		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());

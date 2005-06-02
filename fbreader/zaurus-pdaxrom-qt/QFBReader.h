@@ -30,7 +30,7 @@
 class QFBReader : public QMainWindow, public FBReader { 
 	Q_OBJECT
 
-private:
+public:
 	static std::string ImageDirectory;
 	
 public:

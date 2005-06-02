@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 	ZLUnixFSManager::createInstance();
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
-	((QDialogManager&)QDialogManager::instance()).setPixmapPath("/usr/share/pixmaps");
+	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QFBReader::ImageDirectory);
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	QScreenSize::createInstance();
 

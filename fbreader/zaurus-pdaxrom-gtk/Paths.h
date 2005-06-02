@@ -23,6 +23,5 @@
 #include <string>
 
 extern std::string EncodingDescriptionPath;
-extern std::string PixmapPath;
 
 #endif
