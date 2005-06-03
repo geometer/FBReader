@@ -274,10 +274,11 @@ void GtkFBReader::searchSlot() {
 
 	gtk_signal_connect(GTK_OBJECT(findDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 
-	GtkWidget *wordToSearch = gtk_entry_new();
+	GtkEntry *wordToSearch = GTK_ENTRY(gtk_entry_new());
 
-	gtk_box_pack_start(GTK_BOX(findDialog->vbox), wordToSearch, true, true, 0);
-	gtk_entry_set_text (GTK_ENTRY(wordToSearch), SearchPatternOption.value().c_str());
+	gtk_box_pack_start(GTK_BOX(findDialog->vbox), GTK_WIDGET(wordToSearch), true, true, 0);
+	gtk_entry_set_text (wordToSearch, SearchPatternOption.value().c_str());
+	gtk_entry_set_activates_default(wordToSearch, TRUE);
 
 	GtkWidget *ignoreCase = gtk_check_button_new_with_label ("Ignore case");
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), ignoreCase, true, true, 0);
@@ -297,7 +298,7 @@ void GtkFBReader::searchSlot() {
 	gtk_widget_show_all(GTK_WIDGET(findDialog));
 
 	if (gtk_dialog_run (GTK_DIALOG(findDialog)) == GTK_RESPONSE_ACCEPT) {
-		SearchPatternOption.setValue(gtk_entry_get_text(GTK_ENTRY(wordToSearch)));	// FIXME: stripWhiteSpace
+		SearchPatternOption.setValue(gtk_entry_get_text(wordToSearch));		// TODO: stripWhiteSpace
 		SearchIgnoreCaseOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ignoreCase)));
 		SearchInWholeTextOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wholeText)));
 		SearchBackwardOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(backward)));
