@@ -280,17 +280,17 @@ void GtkFBReader::searchSlot() {
 	gtk_entry_set_text (wordToSearch, SearchPatternOption.value().c_str());
 	gtk_entry_set_activates_default(wordToSearch, TRUE);
 
-	GtkWidget *ignoreCase = gtk_check_button_new_with_label ("Ignore case");
+	GtkWidget *ignoreCase = gtk_check_button_new_with_mnemonic ("_Ignore case");
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), ignoreCase, true, true, 0);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(ignoreCase), SearchIgnoreCaseOption.value());
 
-	GtkWidget *wholeText = gtk_check_button_new_with_label ("In whole text");
+	GtkWidget *wholeText = gtk_check_button_new_with_mnemonic ("In w_hole text");
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), wholeText, true, true, 0);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(wholeText), SearchInWholeTextOption.value());
 
-	GtkWidget *backward = gtk_check_button_new_with_label ("Backward");
+	GtkWidget *backward = gtk_check_button_new_with_mnemonic ("_Backward");
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), backward, true, true, 0);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(backward), SearchBackwardOption.value());
