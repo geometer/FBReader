@@ -16,8 +16,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <gdk/gdk.h>
+
 #include "GtkScreenSize.h"
 
 ZLScreenSize::Size GtkScreenSize::getSizeInternal() const {
-	return SIZE_DESKTOP;
+	gint w = gdk_screen_width(), h = gdk_screen_height();
+
+	return (w == 800 && h == 480) ? SIZE_800x480 : SIZE_DESKTOP;
 }

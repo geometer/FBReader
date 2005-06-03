@@ -24,6 +24,8 @@
 
 #include <iostream>
 
+#include <abstract/ZLScreenSize.h>
+
 #include "../../abstract/filesystem/ZLFSManager.h"
 #include "../../abstract/filesystem/ZLFSDir.h"
 #include "../../abstract/filesystem/ZLZipDir.h"
@@ -58,7 +60,10 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLFileHandler &h
 
 	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 
-	gtk_window_set_default_size(GTK_WINDOW(myDialog), 600, 600);
+	if (ZLScreenSize::getSize() == ZLScreenSize::SIZE_800x480)
+		gtk_window_set_default_size(GTK_WINDOW(myDialog), 600, 400);
+	else
+		gtk_window_set_default_size(GTK_WINDOW(myDialog), 600, 600);
 
 	myCurrentDirectoryName = GTK_ENTRY(gtk_entry_new());
 
