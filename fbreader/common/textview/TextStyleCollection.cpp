@@ -60,6 +60,7 @@ TextStyleCollection::TextStyleCollection() {
 			defaultFontSize = 12;
 			defaultParagraphIndent = 15;
 			break;
+		case ZLScreenSize::SIZE_800x480:
 		case ZLScreenSize::SIZE_640x480:
 			defaultFontSize = 24;
 			defaultParagraphIndent = 30;
