@@ -63,6 +63,7 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLFileHandler &h
 	myCurrentDirectoryName = GTK_ENTRY(gtk_entry_new());
 
 	gtk_editable_set_editable(GTK_EDITABLE(myCurrentDirectoryName), FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(myCurrentDirectoryName), FALSE);
 
 	gtk_entry_set_text(myCurrentDirectoryName, myCurrentDir->name().c_str());
 
