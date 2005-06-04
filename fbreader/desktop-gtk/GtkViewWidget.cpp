@@ -18,6 +18,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <iostream>
+#include <abstract/ZLTime.h>
+
 #include "GtkViewWidget.h"
 #include "GtkFBReader.h"
 #include "GtkPaintContext.h"
@@ -65,6 +68,7 @@ void GtkViewWidget::repaintView()	{
 	gtkContext.updatePixmap(myArea, w, h);
 	view()->paint();
 	if (isRotated()) {
+		ZLTime start0;
 		if ((myOriginalPixbuf != 0) && ((gdk_pixbuf_get_width(myOriginalPixbuf) != w) || (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
 			gdk_pixbuf_unref(myRotatedPixbuf);
@@ -75,8 +79,13 @@ void GtkViewWidget::repaintView()	{
 			myRotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h, w);
 		}
 		gdk_pixbuf_get_from_drawable(myOriginalPixbuf, gtkContext.pixmap(), gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
+		ZLTime start1;
 		::rotate(myRotatedPixbuf, myOriginalPixbuf);
+		ZLTime end1;
+		std::cerr << "rotation time = " << end1.millisecondsFrom(start1) << "\n";
 		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
+		ZLTime end0;
+		std::cerr << "full time = " << end0.millisecondsFrom(start0) << "\n";
 	} else {
 		if (myOriginalPixbuf != 0) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
