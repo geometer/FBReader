@@ -111,9 +111,6 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 #else
 // old hack is below
 
-//#define OFFSET(pb, x, y) ((x) * (pb)->n_channels + (y) * (pb)->rowstride)
-#define OFFSET(pb, x, y) ((x) * 3 + (y) * (pb)->rowstride)
-
 void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
 	const gint drowstride = dst->rowstride;
 	const gint srowstride = src->rowstride;
