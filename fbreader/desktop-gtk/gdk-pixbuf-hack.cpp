@@ -114,11 +114,10 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
 	const gint drowstride = dst->rowstride;
 	const gint srowstride = src->rowstride;
-	const gint w = src->width;
 	const guchar *s1 = src->pixels;
 	const guchar *s1end = s1 + src->height * srowstride;
 	guchar *d1 = dst->pixels + drowstride * (src->width - 1);
-	const guchar *d2end = d1 - w * drowstride;
+	const guchar *d2end = d1 - src->width * drowstride;
 	for (; s1 != s1end; d1 += 3, s1 += srowstride, d2end += 3) {
 		const guchar *s = s1;
 		for (guchar *d2 = d1; d2 != d2end; d2 -= drowstride) {
