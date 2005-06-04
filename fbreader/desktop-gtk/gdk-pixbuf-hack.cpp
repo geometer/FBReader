@@ -2,7 +2,7 @@
 
 #include <string.h>
 
-#if 1
+#if 0
 //
 // pixbuf rotation
 // (copied from gqview)
@@ -111,15 +111,26 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 #else
 // old hack is below
 
-#define OFFSET(pb, x, y) ((x) * (pb)->n_channels + (y) * (pb)->rowstride)
+//#define OFFSET(pb, x, y) ((x) * (pb)->n_channels + (y) * (pb)->rowstride)
+#define OFFSET(pb, x, y) ((x) * 3 + (y) * (pb)->rowstride)
 
 void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
+  bool has_alpha = gdk_pixbuf_get_has_alpha(src);
+	const guchar *s = src->pixels;
+	const gint rowstride = dst->rowstride;
+	const gint nchannels = dst->n_channels;
+	guchar *d1 = dst->pixels + rowstride * (src->width - 1);
 	for (gint y = 0; y < src->height; y++) {
 		for (gint x = 0; x < src->width; x++) {
-			const guchar *p = src->pixels + OFFSET (src, x, y);
-			guchar *q = dst->pixels + OFFSET (dst, y, src->width - x - 1);
-			memcpy (q, p, dst->n_channels);
+			guchar *d = d1 - rowstride * x;
+			(*d++) = *s++;
+			(*d++) = *s++;
+			(*d++) = *s++;
+			if (has_alpha) {
+				*d = *s++;
+			}
 		}
+		d1 += nchannels;
 	}
 }
 #endif
