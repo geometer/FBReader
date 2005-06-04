@@ -116,15 +116,16 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 
 void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
   bool has_alpha = gdk_pixbuf_get_has_alpha(src);
-	const guchar *s = src->pixels;
-	const gint rowstride = dst->rowstride;
+	const gint drowstride = dst->rowstride;
+	const gint srowstride = src->rowstride;
 	const gint h = src->height;
 	const gint w = src->width;
-	guchar *d1 = dst->pixels + rowstride * (src->width - 1);
+	guchar *d1 = dst->pixels + drowstride * (src->width - 1);
 	if (has_alpha) {
 		for (gint y = 0; y < h; y++) {
+			const guchar *s = src->pixels + srowstride * y;
 			for (gint x = 0; x < w; x++) {
-				guchar *d = d1 - rowstride * x;
+				guchar *d = d1 - drowstride * x;
 				*d++ = *s++;
 				*d++ = *s++;
 				*d++ = *s++;
@@ -134,8 +135,9 @@ void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
 		}
 	} else {
 		for (gint y = 0; y < h; y++) {
+			const guchar *s = src->pixels + srowstride * y;
 			for (gint x = 0; x < w; x++) {
-				guchar *d = d1 - rowstride * x;
+				guchar *d = d1 - drowstride * x;
 				*d++ = *s++;
 				*d++ = *s++;
 				*d = *s++;
