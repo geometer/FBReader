@@ -119,10 +119,10 @@ void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
 	const guchar *s1 = src->pixels;
 	const guchar *s1end = s1 + h * srowstride;
 	guchar *d1 = dst->pixels + drowstride * (src->width - 1);
+	const guchar *d2end = d1 - w * drowstride;
 	if (gdk_pixbuf_get_has_alpha(src)) {
-		for (; s1 != s1end; d1 += 4, s1 += srowstride) {
+		for (; s1 != s1end; d1 += 4, s1 += srowstride, d2end += 4) {
 			const guchar *s = s1;
-			guchar *d2end = d1 - w * drowstride;
 			for (guchar *d2 = d1; d2 != d2end; d2 -= drowstride) {
 				guchar *d = d2;
 				*d++ = *s++;
@@ -132,9 +132,8 @@ void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
 			}
 		}
 	} else {
-		for (; s1 != s1end; d1 += 3, s1 += srowstride) {
+		for (; s1 != s1end; d1 += 3, s1 += srowstride, d2end += 3) {
 			const guchar *s = s1;
-			guchar *d2end = d1 - w * drowstride;
 			for (guchar *d2 = d1; d2 != d2end; d2 -= drowstride) {
 				guchar *d = d2;
 				*d++ = *s++;
