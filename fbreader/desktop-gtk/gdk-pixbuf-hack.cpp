@@ -115,7 +115,6 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 #define OFFSET(pb, x, y) ((x) * 3 + (y) * (pb)->rowstride)
 
 void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
-  bool has_alpha = gdk_pixbuf_get_has_alpha(src);
 	const gint drowstride = dst->rowstride;
 	const gint srowstride = src->rowstride;
 	const gint h = src->height;
@@ -123,7 +122,7 @@ void rotate(GdkPixbuf *dst, const GdkPixbuf *src) {
 	const guchar *s1 = src->pixels;
 	const guchar *s1end = s1 + h * srowstride;
 	guchar *d1 = dst->pixels + drowstride * (src->width - 1);
-	if (has_alpha) {
+	if (gdk_pixbuf_get_has_alpha(src)) {
 		for (; s1 != s1end; d1 += 4, s1 += srowstride) {
 			const guchar *s = s1;
 			guchar *d2end = d1 - w * drowstride;
