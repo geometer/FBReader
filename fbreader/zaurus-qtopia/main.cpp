@@ -37,7 +37,6 @@ int main(int argc, char **argv) {
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	QOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
-	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QFBReader::ImageDirectory);
 	QScreenSize::createInstance();
 
 	QFBReader *reader = new QFBReader();
