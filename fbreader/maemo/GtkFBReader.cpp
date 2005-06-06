@@ -64,7 +64,7 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
  	hildon_app_set_appview(myApp, myAppView);
  	hildon_app_set_two_part_title(myApp, FALSE);
 
-	myMenu = hildon_appview_get_menu(myAppView);
+	myMenu = GTK_WIDGET(hildon_appview_get_menu(myAppView));
 
 	buildMenu();
 
