@@ -132,7 +132,7 @@ int TextView::ViewStyle::textAreaHeight() const {
 
 int TextView::ViewStyle::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
 	if ((start == 0) && (length == -1)) {
-		return context().stringWidth(word.data(), word.size());
+		return word.width(context());
 	}
 	int startPos = ZLUnicodeUtil::length(word.data(), start);
 	int endPos = (length == -1) ? word.size() : ZLUnicodeUtil::length(word.data(), start + length);

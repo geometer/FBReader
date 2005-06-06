@@ -32,8 +32,8 @@ ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 	LD = $(TOOLSDIR)/g++
 	STRIP = $(TOOLSDIR)/strip
 
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
-	LDFLAGS = -O2
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	LDFLAGS = -O3
 	DEPGEN = $(CC) -MM
 
 	EXTERNALINCLUDE = -I $(ROOTDIR)/external/include
@@ -49,8 +49,8 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
-	LDFLAGS = -O2
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	LDFLAGS = -O3
 	MOC = $(BASEDIR)/bin/moc
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -69,8 +69,8 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
 	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
-	LDFLAGS = -O2
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	LDFLAGS = -O3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	USRDIR = $(BASEDIR)/armv5tel-cacko-linux
@@ -88,8 +88,8 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
-	LDFLAGS = -O2
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	LDFLAGS = -O3
 	MOC = moc-qt3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -106,8 +106,8 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
-	LDFLAGS = -O2
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	LDFLAGS = -O3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	GTKINCLUDE = -I/usr/include/libxml2 -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/X11R6/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include
@@ -123,8 +123,8 @@ ifeq "$(TARGET_ARCH)" "maemo"
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O2 -DNO_DEBUG
-	LDFLAGS = -O2
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	LDFLAGS = -O3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	GTKINCLUDE = -I/usr/include/libxml2 -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/X11R6/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/hildon-lgpl
@@ -158,8 +158,8 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec6\")))" \
 		-DPALM_TEMPORARY \
 		-DUSE_OWN_XML_PARSER \
-		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O2
-	LDFLAGS =
+		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O3
+	LDFLAGS = -O3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
  	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl -I $(ROOTDIR)/palm-external

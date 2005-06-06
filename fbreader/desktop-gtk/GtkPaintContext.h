@@ -84,6 +84,8 @@ private:
 
 	std::vector<std::string> myFontFamilies;
 	mutable std::map<const Image*,GdkPixbuf*> myImageCache;
+
+	mutable int myStringHeight;
 };
 
 #endif /* __GTKPAINTCONTEXT_H__ */

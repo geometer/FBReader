@@ -24,6 +24,7 @@
 #include <string>
 
 #include "TextElement.h"
+#include "../view/PaintContext.h"
 
 class Word : public TextElement {
 
@@ -57,6 +58,7 @@ public:
 	size_t size() const VIEW_SECTION;
 	size_t length() const VIEW_SECTION;
 	size_t paragraphOffset() const VIEW_SECTION;
+	int width(const PaintContext &context) const VIEW_SECTION;
 
 	void addMark(int start, int len) VIEW_SECTION;
 
@@ -70,6 +72,8 @@ private:
 
 	WordMark *myMark;
 	size_t myParagraphOffset;
+
+	mutable int myWidth;
 	
 private:
 	// assignment and copy constructor are disabled
@@ -84,6 +88,12 @@ inline size_t Word::size() const { return mySize; }
 inline size_t Word::length() const { return myLength; }
 inline size_t Word::paragraphOffset() const { return myParagraphOffset; }
 inline Word::WordMark *Word::mark() const { return myMark; }
+inline int Word::width(const PaintContext &context) const {
+	if (myWidth == -1) {
+		myWidth = context.stringWidth(data(), mySize);
+	}
+	return myWidth;
+}
 
 inline Word::WordMark::WordMark(int start, int length) { myStart = start; myLength = length; myNext = 0; }
 inline Word::WordMark::~WordMark() { if (myNext != 0) delete myNext; }

@@ -49,16 +49,24 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		if (eltHeight > newHeight) {
 			newHeight = eltHeight;
 		}
-		TextElement::Kind elementKind = current.element().kind();
-		if (elementKind == TextElement::CONTROL_ELEMENT) { 
-			myStyle.applyControl((const ControlElement&)current.element(), false);
-		} else if ((elementKind == TextElement::WORD_ELEMENT) || (elementKind == TextElement::IMAGE_ELEMENT)) { 
-			wordOccured = true;
-		} else if (wordOccured && (elementKind == TextElement::HSPACE_ELEMENT)) { 
-			wordOccured = false;
-			internalSpaceCounter++;
-			lastSpaceWidth = myStyle.spaceWidth();
-			newWidth += lastSpaceWidth;
+		switch (current.element().kind()) {
+			case TextElement::CONTROL_ELEMENT:
+				myStyle.applyControl((const ControlElement&)current.element(), false);
+				break;
+			case TextElement::WORD_ELEMENT:
+			case TextElement::IMAGE_ELEMENT:
+				wordOccured = true;
+				break;
+			case TextElement::HSPACE_ELEMENT:
+				if (wordOccured) {
+					wordOccured = false;
+					internalSpaceCounter++;
+					lastSpaceWidth = myStyle.spaceWidth();
+					newWidth += lastSpaceWidth;
+				}
+				break;
+			default:
+				break;
 		}
 
 		if ((newWidth > maxWidth) && !cursor.sameElementAs(start)) {
