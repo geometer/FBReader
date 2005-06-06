@@ -18,14 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-// #define ROTATION_TIMING
-
-#ifdef ROTATION_TIMING
-#include <iostream>
-
-#include <abstract/ZLTime.h>
-#endif
-
 #include "GtkViewWidget.h"
 #include "GtkFBReader.h"
 #include "GtkPaintContext.h"
@@ -63,6 +55,7 @@ GtkViewWidget::~GtkViewWidget() {
 	if (myOriginalPixbuf != 0) {
 		gdk_pixbuf_unref(myOriginalPixbuf);
 		gdk_pixbuf_unref(myRotatedPixbuf);
+		gdk_image_unref(myImage);
 	}
 }
 
@@ -76,33 +69,23 @@ void GtkViewWidget::repaintView()	{
 		if ((myOriginalPixbuf != 0) && ((gdk_pixbuf_get_width(myOriginalPixbuf) != w) || (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
 			gdk_pixbuf_unref(myRotatedPixbuf);
+			gdk_image_unref(myImage);
 			myOriginalPixbuf = 0;
 		}
 		if (myOriginalPixbuf == 0) {
 			myOriginalPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
 			myRotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h, w);
+			myImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
 		}
-#ifdef ROTATION_TIMING
-    ZLTime c1;
-#endif
-		gdk_pixbuf_get_from_drawable(myOriginalPixbuf, gtkContext.pixmap(), gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
-#ifdef ROTATION_TIMING
-    ZLTime c2;
-#endif
+		gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
+		gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
 		::rotate(myRotatedPixbuf, myOriginalPixbuf);
-#ifdef ROTATION_TIMING
-    ZLTime c3;
-#endif
 		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
-#ifdef ROTATION_TIMING
-    ZLTime c4;
-
-    std::cout << "Rotate: " << c2.millisecondsFrom(c1) << ", " << c3.millisecondsFrom(c2) << ", " << c4.millisecondsFrom(c3) << ", " << c2.millisecondsFrom(c1)+c3.millisecondsFrom(c2)+c4.millisecondsFrom(c3) << std::endl;
-#endif
 	} else {
 		if (myOriginalPixbuf != 0) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
 			gdk_pixbuf_unref(myRotatedPixbuf);
+			gdk_image_unref(myImage);
 			myOriginalPixbuf = 0;
 		}
 		gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
