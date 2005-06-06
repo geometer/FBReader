@@ -105,13 +105,10 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myKeyBindings["D"] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
 	myKeyBindings["I"] = ACTION_SHOW_BOOK_INFO;
 	myKeyBindings["A"] = ACTION_ADD_BOOK;
-	myKeyBindings["R"] = ACTION_ROTATE_SCREEN;
+	myKeyBindings["Return"] = ACTION_ROTATE_SCREEN;
 	myKeyBindings["Up"] = ACTION_SCROLL_BACKWARD;
 	myKeyBindings["Down"] = ACTION_SCROLL_FORWARD;
 	myKeyBindings["Escape"] = ACTION_CANCEL;
-	myKeyBindings["<Shift>plus"] = ACTION_INCREASE_FONT;
-	myKeyBindings["equal"] = ACTION_DECREASE_FONT;
-	myKeyBindings["Return"] = ACTION_FULLSCREEN;
 	myKeyBindings["F6"] = ACTION_FULLSCREEN;			// MSS: very funny :(
 	myKeyBindings["F7"] = ACTION_INCREASE_FONT;		// MSS: very funny :(
 	myKeyBindings["F8"] = ACTION_DECREASE_FONT;		// MSS: very funny :(
