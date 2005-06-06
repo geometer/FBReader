@@ -8,7 +8,7 @@ DATADIR = $(TDIR)/data
 CTRLDIR = $(TDIR)/control
 
 FILE = $(wildcard *.control)
-PACKAGENAME = $(patsubst %.control, %, $(FILE))-gtk
+PACKAGENAME = $(patsubst %.control, %, $(FILE))
 
 version = $(shell cat ../../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
