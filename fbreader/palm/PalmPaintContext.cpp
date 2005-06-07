@@ -30,6 +30,7 @@ PalmPaintContext::PalmPaintContext() {
 	myWidth = 0;
 	myHeight = 0;
 	BackgroundColorOption.setValue(ZLColor(255, 255, 170));
+	mySpaceWidth = -1;
 }
 
 PalmPaintContext::~PalmPaintContext() {
@@ -99,6 +100,9 @@ void PalmPaintContext::setFont(const std::string &family, int size, bool bold, b
 	font.setItalic(italic);
 	myPainter->setFont(font);
 	*/
+	if (false) {
+		mySpaceWidth = -1;
+	}
 }
 
 IndexedColorType iColor(ZLColor zlColor) VIEW_SECTION;
@@ -123,6 +127,13 @@ void PalmPaintContext::setFillColor(ZLColor color) {
 int PalmPaintContext::stringWidth(const char *str, int len) const {
 	//return myPainter->fontMetrics().width(QString::fromUtf8(str.data() + from, len));
 	return FntCharsWidth(str, len);
+}
+
+int PalmPaintContext::spaceWidth() const {
+	if (mySpaceWidth == -1) {
+		mySpaceWidth = stringWidth(" ", 1);
+	}
+	return mySpaceWidth;
 }
 
 int PalmPaintContext::stringHeight() const {

@@ -282,7 +282,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 					case TextElement::HSPACE_ELEMENT:
 						if (wordOccured && (spaceCounter > 0)) {
 							int correction = fullCorrection / spaceCounter;
-							context().moveX(myStyle.spaceWidth() + correction);
+							context().moveX(context().spaceWidth() + correction);
 							fullCorrection -= correction;
 							wordOccured = false;
 							spaceCounter--;

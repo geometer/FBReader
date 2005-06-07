@@ -63,6 +63,7 @@ public:
 	virtual int height() const PAINT_SECTION = 0;
 	
 	virtual int stringWidth(const char *str, int len) const PAINT_SECTION = 0;
+	virtual int spaceWidth() const PAINT_SECTION = 0;
 	virtual int stringHeight() const PAINT_SECTION = 0;
 	virtual void drawString(int x, int y, const char *str, int len) PAINT_SECTION = 0;
 

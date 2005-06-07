@@ -55,6 +55,7 @@ public:
 	void setFillColor(ZLColor color);
 
 	int stringWidth(const char *str, int len) const;
+	int spaceWidth() const;
 	int stringHeight() const;
 	void drawString(int x, int y, const char *str, int len);
 
@@ -86,6 +87,7 @@ private:
 	mutable std::map<const Image*,GdkPixbuf*> myImageCache;
 
 	mutable int myStringHeight;
+	mutable int mySpaceWidth;
 };
 
 #endif /* __GTKPAINTCONTEXT_H__ */

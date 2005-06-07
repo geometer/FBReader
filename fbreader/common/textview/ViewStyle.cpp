@@ -144,7 +144,3 @@ int TextView::ViewStyle::wordWidth(const Word &word, int start, int length, bool
 	substr += '-';
 	return context().stringWidth(substr.data(), substr.length());
 }
-
-int TextView::ViewStyle::spaceWidth() const {
-	return context().stringWidth(" ", 1);
-}

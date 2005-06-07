@@ -56,7 +56,6 @@ private:
 		int textAreaHeight() const VIEW_SECTION;
 
 		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const VIEW_SECTION;
-		int spaceWidth() const VIEW_SECTION;
 
 	private:
 		const TextStyle *myStyle;

@@ -52,6 +52,7 @@ public:
 	void setFillColor(ZLColor color) PAINT_SECTION;
 
 	int stringWidth(const char *str, int len) const PAINT_SECTION;
+	int spaceWidth() const PAINT_SECTION;
 	int stringHeight() const PAINT_SECTION;
 	void drawString(int x, int y, const char *str, int len) PAINT_SECTION;
 
@@ -69,6 +70,7 @@ private:
 	//mutable std::map<const Image*,QImage*> myImageCache;
 	int myWidth, myHeight;
 	RGBColorType myFillColor;
+	mutable int mySpaceWidth;
 };
 
 extern bool DO_PAINT;

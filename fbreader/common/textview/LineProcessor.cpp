@@ -61,7 +61,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 				if (wordOccured) {
 					wordOccured = false;
 					internalSpaceCounter++;
-					lastSpaceWidth = myStyle.spaceWidth();
+					lastSpaceWidth = myStyle.context().spaceWidth();
 					newWidth += lastSpaceWidth;
 				}
 				break;

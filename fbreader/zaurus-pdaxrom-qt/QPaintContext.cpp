@@ -31,6 +31,7 @@
 QPaintContext::QPaintContext() {
 	myPainter = new QPainter();
 	myPixmap = NULL;
+	mySpaceWidth = -1;
 }
 
 QPaintContext::~QPaintContext() {
@@ -80,11 +81,32 @@ const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) con
 
 void QPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 	QFont font = myPainter->font();
-	font.setFamily(family.c_str());
-	font.setPointSize(size);
-	font.setWeight(bold ? QFont::Bold : QFont::Normal);
-	font.setItalic(italic);
-	myPainter->setFont(font);
+	bool fontChanged = false;
+
+	if (font.family() != family.c_str()) {
+		font.setFamily(family.c_str());
+		fontChanged = true;
+	}
+
+	if (font.pointSize() != size) {
+		font.setPointSize(size);
+		fontChanged = true;
+	}
+
+	if ((font.weight() != (bold ? QFont::Bold : QFont::Normal))) {
+		font.setWeight(bold ? QFont::Bold : QFont::Normal);
+		fontChanged = true;
+	}
+
+	if (font.italic() != italic) {
+		font.setItalic(italic);
+		fontChanged = true;
+	}
+
+	if (fontChanged) {
+		myPainter->setFont(font);
+		mySpaceWidth = -1;
+	}
 }
 
 void QPaintContext::setColor(ZLColor color) {
@@ -97,6 +119,13 @@ void QPaintContext::setFillColor(ZLColor color) {
 
 int QPaintContext::stringWidth(const char *str, int len) const {
 	return myPainter->fontMetrics().width(QString::fromUtf8(str, len));
+}
+
+int QPaintContext::spaceWidth() const {
+	if (mySpaceWidth == -1) {
+		mySpaceWidth = myPainter->fontMetrics().width(" ");
+	}
+	return mySpaceWidth;
 }
 
 int QPaintContext::stringHeight() const {

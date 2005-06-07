@@ -54,6 +54,7 @@ public:
 	void setFillColor(ZLColor color);
 
 	int stringWidth(const char *str, int len) const;
+	int spaceWidth() const;
 	int stringHeight() const;
 	void drawString(int x, int y, const char *str, int len);
 
@@ -71,6 +72,7 @@ private:
 	QPainter *myPainter;
 	QPixmap *myPixmap;
 	mutable std::map<const Image*,QImage*> myImageCache;
+	mutable int mySpaceWidth;
 };
 
 #endif /* __QPAINTCONTEXT_H__ */

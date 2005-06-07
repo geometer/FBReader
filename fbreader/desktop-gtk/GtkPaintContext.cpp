@@ -57,6 +57,7 @@ GtkPaintContext::GtkPaintContext() {
 	myBackGC = 0;
 
 	myStringHeight = -1;
+	mySpaceWidth = -1;
 }
 
 GtkPaintContext::~GtkPaintContext() {
@@ -174,6 +175,7 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 		myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
 		myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
 		myStringHeight = -1;
+		mySpaceWidth = -1;
 	}
 }
 
@@ -195,6 +197,13 @@ int GtkPaintContext::stringWidth(const char *str, int len) const {
 	PangoRectangle logicalRectangle;
 	pango_glyph_string_extents(myString, myAnalysis.font, &inkRectangle, &logicalRectangle);
 	return (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
+}
+
+int GtkPaintContext::spaceWidth() const {
+	if (mySpaceWidth == -1) {
+		mySpaceWidth = stringWidth(" ", 1);
+	}
+	return mySpaceWidth;
 }
 
 int GtkPaintContext::stringHeight() const {
