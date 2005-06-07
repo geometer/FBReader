@@ -48,18 +48,12 @@ int GtkViewWidget::height() const {
 GtkViewWidget::GtkViewWidget(GtkFBReader *reader) {
 	myReader = reader;
 	myArea = gtk_drawing_area_new();
-	myOriginalPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
 	gtk_signal_connect(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
 }
 
 GtkViewWidget::~GtkViewWidget() {
-	if (myOriginalPixbuf != 0) {
-		gdk_pixbuf_unref(myOriginalPixbuf);
-		gdk_pixbuf_unref(myRotatedPixbuf);
-		gdk_image_unref(myImage);
-	}
 }
 
 void GtkViewWidget::repaintView()	{

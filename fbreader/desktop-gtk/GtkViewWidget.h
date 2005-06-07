@@ -42,9 +42,6 @@ public:
 private:
 	GtkFBReader *myReader;
 	GtkWidget *myArea;
-	GdkPixbuf *myOriginalPixbuf;
-	GdkPixbuf *myRotatedPixbuf;
-	GdkImage *myImage;
 };
 
 #endif /* __GTKVIEWWIDGET_H__ */
