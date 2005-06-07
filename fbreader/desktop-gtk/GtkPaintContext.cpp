@@ -24,6 +24,8 @@
 
 #include "../common/model/Image.h"
 
+#include "gdk-pixbuf-hack.h"
+
 static void setColor(GdkGC *gc, const ZLColor &zlColor) {
 	if (gc != 0) {
 		// TODO: check, if using of local variable is correct in this situation
@@ -254,8 +256,9 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 		gdk_draw_rectangle(wordPixmap, myBackGC, true, 0, 0, w, h1);
 		gdk_draw_glyphs(wordPixmap, myTextGC, myAnalysis.font, 0, h - 1, myString);
 		GdkPixbuf *wordPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h1);
+		GdkPixbuf *rotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h1, w);
 		gdk_pixbuf_get_from_drawable(wordPixbuf, wordPixmap, gdk_drawable_get_colormap(wordPixmap), 0, 0, 0, 0, w, h1);
-		GdkPixbuf *rotatedPixbuf = gdk_pixbuf_rotate_simple(wordPixbuf, GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
+		::rotate(rotatedPixbuf, wordPixbuf);
 		gdk_draw_pixbuf(myPixmap, myTextGC, rotatedPixbuf, 0, 0, x - h, y - w, h1, w, GDK_RGB_DITHER_NONE, 0, 0);
 
 		gdk_pixbuf_unref(rotatedPixbuf);
