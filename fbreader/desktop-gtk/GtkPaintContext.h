@@ -93,6 +93,11 @@ private:
 	mutable int mySpaceWidth;
 
 	bool myIsRotated;
+
+	GdkPixmap *myWordPixmap;
+	GdkImage *myWordImage;
+	GdkPixbuf *myWordPixbuf;
+	GdkPixbuf *myRotatedWordPixbuf;
 };
 
 #endif /* __GTKPAINTCONTEXT_H__ */

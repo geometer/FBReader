@@ -47,20 +47,23 @@ static void pixbuf_copy_block(guchar *src, gint src_row_stride, gint w, gint h,
 #define ROTATE_BUFFER_WIDTH 48
 #define ROTATE_BUFFER_HEIGHT 48
 
+static GdkPixbuf *buffer = 0;
+
 /*
  * Returns a copy of pixbuf src rotated 90 degrees clockwise or 90 counterclockwise
  *
  */
 // GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
-void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
+void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh) {
 	gint has_alpha;
-	gint sw, sh, srs;
+	//gint sw, sh, srs;
+	gint srs;
 	gint drs;
 	guchar *s_pix;
 	guchar *d_pix;
 	gint i, j;
 	gint a;
-	GdkPixbuf *buffer;
+	//GdkPixbuf *buffer;
 	guchar *b_pix;
 	gint brs;
 	gint w, h;
@@ -69,8 +72,8 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 	if (src == 0)
 		return;
 
-	sw = gdk_pixbuf_get_width(src);
-	sh = gdk_pixbuf_get_height(src);
+	//sw = gdk_pixbuf_get_width(src);
+	//sh = gdk_pixbuf_get_height(src);
 	has_alpha = gdk_pixbuf_get_has_alpha(src);
 	srs = gdk_pixbuf_get_rowstride(src);
 	s_pix = gdk_pixbuf_get_pixels(src);
@@ -80,7 +83,9 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 
 	a = (has_alpha ? 4 : 3);
 
-	buffer = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, ROTATE_BUFFER_WIDTH, ROTATE_BUFFER_HEIGHT);
+	if (buffer == 0) {
+		buffer = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, ROTATE_BUFFER_WIDTH, ROTATE_BUFFER_HEIGHT);
+	}
 	b_pix = gdk_pixbuf_get_pixels(buffer);
 	brs = gdk_pixbuf_get_rowstride(buffer);
 
@@ -103,8 +108,6 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
 			pixbuf_copy_block(b_pix, brs, w, h, d_pix, drs, x, y, a);
 		}
 	}
-
-	gdk_pixbuf_unref(buffer);
 }
 
 // vim:ts=2:sw=2:noet

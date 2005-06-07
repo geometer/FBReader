@@ -18,6 +18,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLUnicodeUtil.h>
 
 #include "GtkPaintContext.h"
@@ -60,6 +62,8 @@ GtkPaintContext::GtkPaintContext() {
 
 	myStringHeight = -1;
 	mySpaceWidth = -1;
+
+	myWordPixmap = 0;
 }
 
 GtkPaintContext::~GtkPaintContext() {
@@ -79,6 +83,13 @@ GtkPaintContext::~GtkPaintContext() {
 
 	if (myContext != 0) {
 		g_object_unref(myContext);
+	}
+
+	if (myWordPixmap != 0) {
+		gdk_pixbuf_unref(myWordPixbuf);
+		gdk_pixbuf_unref(myRotatedWordPixbuf);
+		gdk_image_unref(myWordImage);
+		gdk_pixmap_unref(myWordPixmap);
 	}
 }
 
@@ -208,9 +219,8 @@ int GtkPaintContext::stringWidth(const char *str, int len) const {
 	}
 
 	pango_shape(str, len, &myAnalysis, myString);
-	PangoRectangle inkRectangle;
 	PangoRectangle logicalRectangle;
-	pango_glyph_string_extents(myString, myAnalysis.font, &inkRectangle, &logicalRectangle);
+	pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
 	return (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
 }
 
@@ -228,9 +238,8 @@ int GtkPaintContext::stringHeight() const {
 
 	if (myStringHeight == -1) {
 		pango_shape("X", 1, &myAnalysis, myString);
-		PangoRectangle inkRectangle;
 		PangoRectangle logicalRectangle;
-		pango_glyph_string_extents(myString, myAnalysis.font, &inkRectangle, &logicalRectangle);
+		pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
 		myStringHeight = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
 	}
 	return myStringHeight;
@@ -246,24 +255,34 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 	if (!myIsRotated) {
 		gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 	} else {
-		PangoRectangle inkRectangle;
 		PangoRectangle logicalRectangle;
-		pango_glyph_string_extents(myString, myAnalysis.font, &inkRectangle, &logicalRectangle);
+		pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
 		const int w = (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
 		const int h = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
-		const int h1 = 3 * h / 2;
-		GdkPixmap *wordPixmap = gdk_pixmap_new(myPixmap, w, h1, gdk_drawable_get_depth(myPixmap));
-		gdk_draw_rectangle(wordPixmap, myBackGC, true, 0, 0, w, h1);
-		gdk_draw_glyphs(wordPixmap, myTextGC, myAnalysis.font, 0, h - 1, myString);
-		GdkPixbuf *wordPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h1);
-		GdkPixbuf *rotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h1, w);
-		gdk_pixbuf_get_from_drawable(wordPixbuf, wordPixmap, gdk_drawable_get_colormap(wordPixmap), 0, 0, 0, 0, w, h1);
-		::rotate(rotatedPixbuf, wordPixbuf);
-		gdk_draw_pixbuf(myPixmap, myTextGC, rotatedPixbuf, 0, 0, x - h, y - w, h1, w, GDK_RGB_DITHER_NONE, 0, 0);
+		const int ascent = (pango_font_metrics_get_ascent(pango_font_get_metrics(myAnalysis.font, 0)) + PANGO_SCALE / 2) / PANGO_SCALE;
 
-		gdk_pixbuf_unref(rotatedPixbuf);
-		gdk_pixbuf_unref(wordPixbuf);
-		gdk_pixmap_unref(wordPixmap);
+		if (myWordPixmap != 0) {
+			if ((gdk_pixbuf_get_width(myWordPixbuf) < w) || (gdk_pixbuf_get_height(myWordPixbuf) < h)) {
+				gdk_pixbuf_unref(myWordPixbuf);
+				gdk_pixbuf_unref(myRotatedWordPixbuf);
+				gdk_image_unref(myWordImage);
+				gdk_pixmap_unref(myWordPixmap);
+				myWordPixmap = 0;
+			}
+		}
+		if (myWordPixmap == 0) {
+			myWordPixmap = gdk_pixmap_new(myPixmap, w, h, gdk_drawable_get_depth(myPixmap));
+			myWordImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(myPixmap), w, h);
+			myWordPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+			myRotatedWordPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h, w);
+		}
+		
+		gdk_draw_rectangle(myWordPixmap, myBackGC, true, 0, 0, w, h);
+		gdk_draw_glyphs(myWordPixmap, myTextGC, myAnalysis.font, 0, ascent, myString);
+		gdk_drawable_copy_to_image(myWordPixmap, myWordImage, 0, 0, 0, 0, w, h);
+		gdk_pixbuf_get_from_image(myWordPixbuf, myWordImage, gdk_drawable_get_colormap(myWordPixmap), 0, 0, 0, 0, w, h);
+		::rotate(myRotatedWordPixbuf, myWordPixbuf, w, h);
+		gdk_draw_pixbuf(myPixmap, myTextGC, myRotatedWordPixbuf, 0, 0, x - ascent, y - w, h, w, GDK_RGB_DITHER_NONE, 0, 0);
 	}
 }
 
