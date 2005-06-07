@@ -4,10 +4,17 @@
 namespace std {
 	template <typename T>
 	const T &min(const T &x, const T &y) STL_SECTION;
+	template <typename T>
+	const T &max(const T &x, const T &y) STL_SECTION;
 
 	template <typename T>
 	inline const T &min(const T &x, const T &y) {
 		return (x < y) ? x : y;
+	}
+
+	template <typename T>
+	inline const T &max(const T &x, const T &y) {
+		return (x > y) ? x : y;
 	}
 
 	template <typename T>

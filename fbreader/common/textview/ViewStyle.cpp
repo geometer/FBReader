@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <algorithm>
+
 #include <abstract/ZLUnicodeUtil.h>
 
 #include "TextView.h"
@@ -88,7 +90,7 @@ int TextView::ViewStyle::elementWidth(const WordCursor &cursor) const {
 		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
 		case TextElement::AFTER_PARAGRAPH_ELEMENT:
 		case TextElement::EMPTY_LINE_ELEMENT:
-			return context().width() + abs(style().leftIndent()) + abs(style().rightIndent()) + abs(style().firstLineIndentDelta() + 1);
+			return context().width() + abs(style().leftIndent()) + abs(style().rightIndent()) + abs(style().firstLineIndentDelta()) + 1;
 		case TextElement::TREE_ELEMENT:
 			return context().stringHeight() * 4 / 3;
 		case TextElement::CONTROL_ELEMENT:
@@ -105,11 +107,7 @@ int TextView::ViewStyle::elementHeight(const WordCursor &cursor) const {
 		case TextElement::TREE_ELEMENT:
 			return context().stringHeight();
 		case TextElement::IMAGE_ELEMENT:
-		{
-			int imageHeight = context().imageHeight(((const ImageElement&)element).image());
-			int maxHeight = textAreaHeight();
-			return (imageHeight < maxHeight) ? imageHeight : maxHeight;
-		}
+			return std::min(context().imageHeight(((const ImageElement&)element).image()), textAreaHeight());
 		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
 			return style().spaceBefore();
 		case TextElement::AFTER_PARAGRAPH_ELEMENT:
