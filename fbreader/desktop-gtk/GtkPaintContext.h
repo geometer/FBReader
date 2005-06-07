@@ -39,6 +39,8 @@ public:
 	~GtkPaintContext();
 	void removeCaches();
 
+	void setRotation(bool rotation) { myIsRotated = rotation; }
+
 	GdkPixmap *pixmap() { return myPixmap; }
 	void updatePixmap(GtkWidget *area, int w, int h);
 
@@ -68,6 +70,7 @@ public:
 
 private:
 	GdkPixbuf *gtkImage(const Image &image) const;
+	void rotatePoint(int &x, int &y) const;
 
 private:
 	GdkPixmap *myPixmap;
@@ -88,6 +91,8 @@ private:
 
 	mutable int myStringHeight;
 	mutable int mySpaceWidth;
+
+	bool myIsRotated;
 };
 
 #endif /* __GTKPAINTCONTEXT_H__ */

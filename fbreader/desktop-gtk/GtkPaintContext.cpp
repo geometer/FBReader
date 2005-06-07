@@ -80,6 +80,19 @@ GtkPaintContext::~GtkPaintContext() {
 	}
 }
 
+inline void GtkPaintContext::rotatePoint(int &x, int &y) const {
+	if (myIsRotated) {
+		int tmp = x;
+		x = y;
+		y = myHeight - tmp - 1;
+	}
+		/*
+		int tmp = x0;
+		x0 = myWidth - y0 - 1;
+		y0 = tmp;
+		*/
+}
+
 void GtkPaintContext::removeCaches() {
 	PaintContext::removeCaches();
 
@@ -224,8 +237,30 @@ int GtkPaintContext::stringHeight() const {
 void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 	x += leftMargin().value();
 	y += topMargin().value();
+
+	rotatePoint(x, y);
+	
 	pango_shape(str, len, &myAnalysis, myString);
-	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
+	if (!myIsRotated) {
+		gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
+	} else {
+		PangoRectangle inkRectangle;
+		PangoRectangle logicalRectangle;
+		pango_glyph_string_extents(myString, myAnalysis.font, &inkRectangle, &logicalRectangle);
+		int w = (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
+		int h = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
+		GdkPixmap *wordPixmap = gdk_pixmap_new(myPixmap, w, 2 * h, gdk_drawable_get_depth(myPixmap));
+		gdk_draw_rectangle(wordPixmap, myBackGC, true, 0, 0, w, 2 * h);
+		gdk_draw_glyphs(wordPixmap, myTextGC, myAnalysis.font, 0, h - 1, myString);
+		GdkPixbuf *wordPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, 2 * h);
+		gdk_pixbuf_get_from_drawable(wordPixbuf, wordPixmap, gdk_drawable_get_colormap(wordPixmap), 0, 0, 0, 0, w, 2 * h);
+		GdkPixbuf *rotatedPixbuf = gdk_pixbuf_rotate_simple(wordPixbuf, GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
+		gdk_draw_pixbuf(myPixmap, myTextGC, rotatedPixbuf, 0, 0, x - h, y - w, 2 * h, w, GDK_RGB_DITHER_NONE, 0, 0);
+
+		gdk_pixbuf_unref(rotatedPixbuf);
+		gdk_pixbuf_unref(wordPixbuf);
+		gdk_pixmap_unref(wordPixmap);
+	}
 }
 
 GdkPixbuf *GtkPaintContext::gtkImage(const Image &image) const {
@@ -278,12 +313,26 @@ void GtkPaintContext::drawImage(int x, int y, const Image &image) {
 }
 
 void GtkPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	gdk_draw_line(myPixmap, myTextGC,
-								x0 + leftMargin().value(), y0 + topMargin().value(),
-								x1 + leftMargin().value(), y1 + topMargin().value());
+	x0 += leftMargin().value();
+	x1 += leftMargin().value();
+	y0 += topMargin().value();
+	y1 += topMargin().value();
+
+	rotatePoint(x0, y0);
+	rotatePoint(x1, y1);
+
+	gdk_draw_line(myPixmap, myTextGC, x0, y0, x1, y1);
 }
 
 void GtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
+	x0 += leftMargin().value();
+	x1 += leftMargin().value();
+	y0 += topMargin().value();
+	y1 += topMargin().value();
+
+	rotatePoint(x0, y0);
+	rotatePoint(x1, y1);
+
 	if (x1 < x0) {
 		int tmp = x1;
 		x1 = x0;
@@ -294,9 +343,7 @@ void GtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 		y1 = y0;
 		y0 = tmp;
 	}
-	gdk_draw_rectangle(myPixmap, myFillGC, true,
-										 x0 + leftMargin().value(), y0 + topMargin().value(),
-										 x1 - x0 + 1, y1 - y0 + 1);
+	gdk_draw_rectangle(myPixmap, myFillGC, true, x0, y0, x1 - x0 + 1, y1 - y0 + 1);
 }
 
 void GtkPaintContext::clear() {
@@ -310,14 +357,22 @@ int GtkPaintContext::width() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myWidth - leftMargin().value() - rightMargin().value();
+	if (myIsRotated) {
+		return myHeight - leftMargin().value() - rightMargin().value();
+	} else {
+		return myWidth - leftMargin().value() - rightMargin().value();
+	}
 }
 
 int GtkPaintContext::height() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myHeight - bottomMargin().value() - topMargin().value();
+	if (myIsRotated) {
+		return myWidth - bottomMargin().value() - topMargin().value();
+	} else {
+		return myHeight - bottomMargin().value() - topMargin().value();
+	}
 }
 
 // vim:ts=2:sw=2:noet
