@@ -90,7 +90,7 @@ int TextView::ViewStyle::elementWidth(const WordCursor &cursor) const {
 		case TextElement::EMPTY_LINE_ELEMENT:
 			return context().width() + abs(style().leftIndent()) + abs(style().rightIndent()) + abs(style().firstLineIndentDelta() + 1);
 		case TextElement::TREE_ELEMENT:
-			return (int)(context().stringHeight() * 4 / 3);
+			return context().stringHeight() * 4 / 3;
 		case TextElement::CONTROL_ELEMENT:
 			return 0;
 	}
