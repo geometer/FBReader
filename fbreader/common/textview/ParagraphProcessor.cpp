@@ -69,7 +69,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 
 void ParagraphCursor::ParagraphProcessor::addWord(const std::string &str, int start, int len) {
 	beforeAddWord();
-	Word *word = new Word(str, start, len, myOffset + start);
+	Word *word = TextElementPool::getWord(str, start, len, myOffset + start);
 	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; mit++) {
 		TextMark mark = *mit;
 		if ((mark.Offset - myOffset < start + len) && (mark.Offset - myOffset + mark.Length > start)) {
@@ -84,7 +84,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
 		switch ((*it)->entryKind()) {
 			case ParagraphEntry::CONTROL_ENTRY:
-				myElements->push_back(new ControlElement((ControlEntry&)**it));
+				myElements->push_back(TextElementPool::getControlElement((ControlEntry&)**it));
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 			{

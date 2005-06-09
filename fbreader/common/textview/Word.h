@@ -49,16 +49,16 @@ public:
 	};
 
 public:
-	Word(const std::string &utf8String, size_t start, size_t length, size_t paragraphOffset) VIEW_SECTION;
+	Word(const std::string &utf8String, size_t start, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
 
 public:
 	~Word() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
 	const char *data() const VIEW_SECTION;
-	size_t size() const VIEW_SECTION;
-	size_t length() const VIEW_SECTION;
+	unsigned short size() const VIEW_SECTION;
+	unsigned short length() const VIEW_SECTION;
 	size_t paragraphOffset() const VIEW_SECTION;
-	int width(const PaintContext &context) const VIEW_SECTION;
+	short width(const PaintContext &context) const VIEW_SECTION;
 
 	void addMark(int start, int len) VIEW_SECTION;
 
@@ -67,13 +67,13 @@ public:
 private:
 	const std::string &myData;
 	size_t myStart;
-	size_t mySize;
-	size_t myLength;
+	unsigned short mySize;
+	unsigned short myLength;
 
 	WordMark *myMark;
 	size_t myParagraphOffset;
 
-	mutable int myWidth;
+	mutable short myWidth;
 	
 private:
 	// assignment and copy constructor are disabled
@@ -84,11 +84,11 @@ private:
 inline Word::~Word() { if (myMark != 0) delete myMark; }
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
 inline const char *Word::data() const { return myData.data() + myStart; }
-inline size_t Word::size() const { return mySize; }
-inline size_t Word::length() const { return myLength; }
+inline unsigned short Word::size() const { return mySize; }
+inline unsigned short Word::length() const { return myLength; }
 inline size_t Word::paragraphOffset() const { return myParagraphOffset; }
 inline Word::WordMark *Word::mark() const { return myMark; }
-inline int Word::width(const PaintContext &context) const {
+inline short Word::width(const PaintContext &context) const {
 	if (myWidth == -1) {
 		myWidth = context.stringWidth(data(), mySize);
 	}

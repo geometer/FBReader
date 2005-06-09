@@ -30,11 +30,28 @@ TextElement *TextElementPool::AfterParagraphElement = 0;
 TextElement *TextElementPool::IndentElement = 0;
 TextElement *TextElementPool::EmptyLineElement = 0;
 
+Allocator<sizeof(Word),64> TextElementPool::myWordAllocator;
+Allocator<sizeof(ControlElement),32> TextElementPool::myControlAllocator;
+
 TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
-		TextElement::Kind kind = (*it)->kind();
-		if ((kind & 0x10) == 0) {
-			delete *it;
+		switch ((*it)->kind()) {
+			case TextElement::WORD_ELEMENT:
+				TextElementPool::storeWord((Word*)*it);
+				break;
+			case TextElement::CONTROL_ELEMENT:
+				TextElementPool::storeControlElement((ControlElement*)*it);
+				break;
+			case TextElement::IMAGE_ELEMENT:
+			case TextElement::TREE_ELEMENT:
+				delete *it;
+				break;
+			case TextElement::INDENT_ELEMENT:
+			case TextElement::HSPACE_ELEMENT:
+			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
+			case TextElement::AFTER_PARAGRAPH_ELEMENT:
+			case TextElement::EMPTY_LINE_ELEMENT:
+				break;
 		}
 	}
 }
@@ -214,7 +231,7 @@ void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
 	const std::vector<ParagraphEntry*> &entries = paragraph.entries();
 	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
 		ControlEntry &control = *(ControlEntry*)*it;
-		myElements->push_back(new ControlElement(control));
+		myElements->push_back(TextElementPool::getControlElement(control));
 	}
 }
 

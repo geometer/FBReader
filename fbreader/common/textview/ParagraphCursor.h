@@ -24,12 +24,13 @@
 #include <string>
 
 #include <abstract/shared_ptr.h>
+#include <abstract/allocator.h>
 
 #include "../model/TextModel.h"
+#include "Word.h"
 
 class TextElement;
 class Paragraph;
-class Word;
 
 class TextElementVector : public std::vector<TextElement*> {
 
@@ -50,6 +51,15 @@ public:
 	static TextElement *IndentElement;
 	static TextElement *EmptyLineElement;
 
+	static Word *getWord(const std::string &utf8String, size_t start, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
+	static void storeWord(Word *word) VIEW_SECTION;
+	static ControlElement *getControlElement(const ControlEntry &entry) VIEW_SECTION;
+	static void storeControlElement(ControlElement *element) VIEW_SECTION;
+
+private:
+	static Allocator<sizeof(Word),64> myWordAllocator;
+	static Allocator<sizeof(ControlElement),32> myControlAllocator;
+	
 private:
 	TextElementPool() VIEW_SECTION;
 };
@@ -186,6 +196,21 @@ public:
 };
 
 inline TextElementVector::TextElementVector() {}
+
+inline Word *TextElementPool::getWord(const std::string &utf8String, size_t start, unsigned short length, size_t paragraphOffset) {
+	return new (myWordAllocator.allocate()) Word(utf8String, start, length, paragraphOffset);
+}
+inline void TextElementPool::storeWord(Word *word) {
+	word->~Word();
+	myWordAllocator.free((void*)word);
+}
+inline ControlElement *TextElementPool::getControlElement(const ControlEntry &entry) {
+	return new (myControlAllocator.allocate()) ControlElement(entry);
+}
+inline void TextElementPool::storeControlElement(ControlElement *element) {
+	element->~ControlElement();
+	myControlAllocator.free((void*)element);
+}
 
 inline WordCursor::WordCursor() { myCharNumber = 0; }
 inline WordCursor::WordCursor(const TextElementVector::const_iterator &wordIterator) : myWordIterator(wordIterator) { myCharNumber = 0; }
