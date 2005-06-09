@@ -103,6 +103,13 @@ static unsigned char valuesBuffer[VALUES_BUFFER_SIZE];
 static TeXPatternComparator comparator = TeXPatternComparator();
 
 void TeXHyphenator::hyphenate(unsigned short *ucs2String, bool *mask, int length) const {
+	if (myPatternTable.empty()) {
+		for (int i = 0; i < length - 1; i++) {
+			mask[i] = false;
+		}
+		return;
+	}
+	
 	unsigned char *values = (length < VALUES_BUFFER_SIZE) ? valuesBuffer : new unsigned char[length + 1];
 	for (int i = 0; i <= length; i++) {
 		values[i] = 0;
