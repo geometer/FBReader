@@ -55,10 +55,6 @@ void TextElementPool::clean() {
 		delete IndentElement;
 		delete EmptyLineElement;
 		HSpaceElement = 0;
-		BeforeParagraphElement = 0;
-		AfterParagraphElement = 0;
-		IndentElement = 0;
-		EmptyLineElement = 0;
 	}
 }
 
