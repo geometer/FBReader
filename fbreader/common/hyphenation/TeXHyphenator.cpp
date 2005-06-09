@@ -124,7 +124,10 @@ void TeXHyphenator::hyphenate(unsigned short *ucs2String, bool *mask, int length
 			}
 			dictionaryPattern =
 				std::lower_bound(myPatternTable.begin(), myPatternTable.end(), &pattern, comparator);
-			if ((dictionaryPattern != myPatternTable.end()) && !comparator(&pattern, *dictionaryPattern)) {
+			if (dictionaryPattern == myPatternTable.end()) {
+				break;
+			}
+			if (!comparator(&pattern, *dictionaryPattern)) {
 				(*dictionaryPattern)->apply(values + j);
 			}
 		}
