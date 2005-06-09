@@ -35,7 +35,7 @@ void Hyphenator::deleteInstance() {
 
 HyphenationInfo Hyphenator::info(const Word &word) const {
 	ZLUnicodeUtil::Ucs2String ucs2Vector;
-	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.data(), word.size());
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.data(), word.size(), word.length());
 
 	int wordLength = word.length();
 
