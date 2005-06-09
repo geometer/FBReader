@@ -31,13 +31,11 @@ private:
 	const HyphenationInfo &operator = (HyphenationInfo &info) HYPHENATION_SECTION;
 
 public:
-	HyphenationInfo(const HyphenationInfo &info) HYPHENATION_SECTION;
-	~HyphenationInfo() HYPHENATION_SECTION;
-	bool isHyphenationPossible(int position) HYPHENATION_SECTION;
+	~HyphenationInfo() {}
+	bool isHyphenationPossible(size_t position) HYPHENATION_SECTION;
 	
 private:
-	int myLength;
-	bool *myMask;
+	std::vector<unsigned char> myMask;
 
 friend class Hyphenator;
 };
@@ -60,10 +58,17 @@ public:
 	HyphenationInfo info(const Word &word) const HYPHENATION_SECTION;
 
 protected:
-	virtual void hyphenate(unsigned short *ucs2String, bool *mask, int length) const HYPHENATION_SECTION = 0;
+	virtual void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const HYPHENATION_SECTION = 0;
 
 protected:
 	static Hyphenator *ourInstance;
 };
+
+inline HyphenationInfo::HyphenationInfo(int length) : myMask(length - 1, false) {
+}
+
+inline bool HyphenationInfo::isHyphenationPossible(size_t position) {
+	return (position < myMask.size()) && myMask[position];
+}
 
 #endif /* __HYPHENATOR_H__ */

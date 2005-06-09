@@ -98,11 +98,10 @@ bool TeXPatternComparator::operator() (const TeXHyphenationPattern *p1, const Te
 	return firstIsShorter;
 }
 
-#define VALUES_BUFFER_SIZE 20
-static unsigned char valuesBuffer[VALUES_BUFFER_SIZE];
+static std::vector<unsigned char> values;
 static TeXPatternComparator comparator = TeXPatternComparator();
 
-void TeXHyphenator::hyphenate(unsigned short *ucs2String, bool *mask, int length) const {
+void TeXHyphenator::hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const {
 	if (myPatternTable.empty()) {
 		for (int i = 0; i < length - 1; i++) {
 			mask[i] = false;
@@ -110,15 +109,12 @@ void TeXHyphenator::hyphenate(unsigned short *ucs2String, bool *mask, int length
 		return;
 	}
 	
-	unsigned char *values = (length < VALUES_BUFFER_SIZE) ? valuesBuffer : new unsigned char[length + 1];
-	for (int i = 0; i <= length; i++) {
-		values[i] = 0;
-	}
+	values.assign(length + 1, 0);
 	
 	for (int j = 0; j < length - 2; j++) {
 		TeXHyphenator::PatternIterator dictionaryPattern = myPatternTable.begin();
 		for (int k = 1; k <= length - j; k++) {
-			TeXHyphenationPattern pattern(ucs2String + j, k);
+			TeXHyphenationPattern pattern(&ucs2String[j], k);
 			if (comparator(&pattern, *dictionaryPattern)) {
 				continue;
 			}
@@ -128,17 +124,13 @@ void TeXHyphenator::hyphenate(unsigned short *ucs2String, bool *mask, int length
 				break;
 			}
 			if (!comparator(&pattern, *dictionaryPattern)) {
-				(*dictionaryPattern)->apply(values + j);
+				(*dictionaryPattern)->apply(&values[j]);
 			}
 		}
 	}
 
 	for (int i = 0; i < length - 1; i++) {
 		mask[i] = values[i + 1] % 2 == 1;
-	}
-
-	if (values != valuesBuffer) {
-		delete[] values;
 	}
 }
 

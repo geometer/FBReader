@@ -17,9 +17,10 @@ namespace std {
 
 	public:
 		vector() STL_SECTION;
-		~vector() STL_SECTION;
+		vector(size_t size, const T &value) STL_SECTION;
 		vector(const vector &v) STL_SECTION;
 		const vector &operator= (const vector &v) STL_SECTION;
+		~vector() STL_SECTION;
 
 		bool empty() const STL_SECTION;
 		size_t size() const STL_SECTION;
@@ -30,8 +31,9 @@ namespace std {
 		iterator begin() const STL_SECTION;
 		iterator end() const STL_SECTION;
 
-		void clear() STL_SECTION;
 		void reserve(size_t size) STL_SECTION;
+		void clear() STL_SECTION;
+		void assign(size_t size, const T &value) STL_SECTION;
 		void push_back(const T &element) STL_SECTION;
 		void pop_back() STL_SECTION;
 		void insert(const iterator &position, const const_iterator &from, const const_iterator &to) STL_SECTION;
@@ -50,12 +52,14 @@ namespace std {
 		__myData = 0;
 	}
 	template<typename T>
-	inline vector<T>::~vector() {
-		for (size_t i = 0; i < __myLength; i++) {
-			__myData[i].~T();
-		}
-		if (__myData != 0) {
-			MemPtrFree(__myData);
+	inline vector<T>::vector(size_t size, const T &value) {
+		__myDataSize = 0;
+		__myLength = 0;
+		__myData = 0;
+		reserve(size);
+		__myLength = size;
+		for (size_t i = 0; i < size; i++) {
+			__myData[i] = value;
 		}
 	}
 	template<typename T>
@@ -82,6 +86,15 @@ namespace std {
 			*ptr1 = *ptr;
 		}
 		return *this;
+	}
+	template<typename T>
+	inline vector<T>::~vector() {
+		for (size_t i = 0; i < __myLength; i++) {
+			__myData[i].~T();
+		}
+		if (__myData != 0) {
+			MemPtrFree(__myData);
+		}
 	}
 
 	template<typename T>
@@ -115,13 +128,6 @@ namespace std {
 	}
 
 	template<typename T>
-	inline void vector<T>::clear() {
-		for (size_t i = 0; i < __myLength; i++) {
-			__myData[i].~T();
-		}
-		__myLength = 0;
-	}
-	template<typename T>
 	inline void vector<T>::reserve(size_t size) {
 		if (size > __myDataSize) {
 			if (__myDataSize == 0) {
@@ -142,6 +148,23 @@ namespace std {
 				}
 				__myData = d;
 			}
+		}
+	}
+
+	template<typename T>
+	inline void vector<T>::clear() {
+		for (size_t i = 0; i < __myLength; i++) {
+			__myData[i].~T();
+		}
+		__myLength = 0;
+	}
+	template<typename T>
+	inline void vector<T>::assign(size_t size, const T &value) {
+		clear();
+		reserve(size);
+		__myLength = size;
+		for (size_t i = 0; i < size; i++) {
+			__myData[i] = value;
 		}
 	}
 	template<typename T>

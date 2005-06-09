@@ -62,12 +62,7 @@ FBReader::FBReader(PaintContext *context) {
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 
-#ifndef PALM_TEMPORARY
 	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
-#else // PALM_TEMPORARY
-	//std::string howToStartString = "/Help.txt";
-	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
-#endif // PALM_TEMPORARY
 	ZLStringOption bookName(STATE, BOOK, howToStartString);
 	BookDescription *description = BookDescription::create(bookName.value());
 	if (description == 0) {

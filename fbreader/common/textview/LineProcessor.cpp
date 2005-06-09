@@ -43,13 +43,15 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 	int internalSpaceCounter = 0;
 	int removeLastSpace = false;
 
+	TextElement::Kind elementKind = current.element().kind();
+
 	do {
 		newWidth += myStyle.elementWidth(current);
 		int eltHeight = myStyle.elementHeight(current);
 		if (eltHeight > newHeight) {
 			newHeight = eltHeight;
 		}
-		switch (current.element().kind()) {
+		switch (elementKind) {
 			case TextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ControlElement&)current.element(), false);
 				break;
@@ -76,11 +78,11 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		current.nextWord();
 		bool allowBreak = current.sameElementAs(end);
 		if (!allowBreak) {
-			TextElement::Kind nextElementKind = current.element().kind();
+			elementKind = current.element().kind();
 			allowBreak =
-				(nextElementKind != TextElement::WORD_ELEMENT) &&
-				(nextElementKind != TextElement::IMAGE_ELEMENT) &&
-				(nextElementKind != TextElement::CONTROL_ELEMENT);
+				(elementKind != TextElement::WORD_ELEMENT) &&
+				(elementKind != TextElement::IMAGE_ELEMENT) &&
+				(elementKind != TextElement::CONTROL_ELEMENT);
 		}
 		if (allowBreak) {
 			myWidth = newWidth;
@@ -97,29 +99,31 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		if (!current.sameElementAs(end) && (current.element().kind() == TextElement::WORD_ELEMENT)) {
 			newWidth -= myStyle.elementWidth(current);
 			const Word &word = (Word&)current.element();
-			ZLUnicodeUtil::Ucs2String ucs2string;
-			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.data(), word.size());
-			HyphenationInfo info = Hyphenator::instance().info(word);
 			int spaceLeft = maxWidth - newWidth;
-			int hyphenationPosition = word.length() - 1;
-			int subwordWidth = 0;
-			for (; hyphenationPosition > 0; hyphenationPosition--) {
-				if (info.isHyphenationPossible(hyphenationPosition)) {
-					subwordWidth = myStyle.wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
-					if (subwordWidth <= spaceLeft) {
-						break;
+			if ((word.length() > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
+				ZLUnicodeUtil::Ucs2String ucs2string;
+				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.data(), word.size());
+				HyphenationInfo info = Hyphenator::instance().info(word);
+				int hyphenationPosition = word.length() - 1;
+				int subwordWidth = 0;
+				for (; hyphenationPosition > 0; hyphenationPosition--) {
+					if (info.isHyphenationPossible(hyphenationPosition)) {
+						subwordWidth = myStyle.wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
+						if (subwordWidth <= spaceLeft) {
+							break;
+						}
 					}
 				}
-			}
-			if (hyphenationPosition > 0) {
-				myWidth = newWidth + subwordWidth;
-				if (newHeight > myHeight) {
-					myHeight = newHeight;
+				if (hyphenationPosition > 0) {
+					myWidth = newWidth + subwordWidth;
+					if (newHeight > myHeight) {
+						myHeight = newHeight;
+					}
+					cursor = current;
+					mySpaceCounter = internalSpaceCounter;
+					removeLastSpace = false;
+					cursor.setCharNumber(hyphenationPosition);
 				}
-				cursor = current;
-				mySpaceCounter = internalSpaceCounter;
-				removeLastSpace = false;
-				cursor.setCharNumber(hyphenationPosition);
 			}
 		}
 	}

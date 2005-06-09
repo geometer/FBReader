@@ -33,39 +33,28 @@ void Hyphenator::deleteInstance() {
 	}
 }
 
-HyphenationInfo::HyphenationInfo(int length) {
-	myLength = length;
-	myMask = new bool[myLength - 1];
-}
-
-HyphenationInfo::HyphenationInfo(const HyphenationInfo &info) {
-	myLength = info.myLength;
-	myMask = new bool[myLength - 1];
-	for (int i = 0; i < myLength - 1; i++) {
-		myMask[i] = info.myMask[i];
-	}
-}
-
-HyphenationInfo::~HyphenationInfo() {
-	delete[] myMask;
-}
-
-bool HyphenationInfo::isHyphenationPossible(int position) {
-	return (position >= 0) && (position < myLength - 1) && myMask[position];
-}
-
 HyphenationInfo Hyphenator::info(const Word &word) const {
 	ZLUnicodeUtil::Ucs2String ucs2Vector;
 	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.data(), word.size());
 
 	int wordLength = word.length();
-	unsigned short *pattern = new unsigned short[wordLength + 2];
-	pattern[0] = ' ';
+
+	static std::vector<unsigned short> pattern;
+	pattern.clear();
+	pattern.reserve(wordLength + 2);
+
+	static std::vector<unsigned char> isLetter;
+	isLetter.clear();
+	isLetter.reserve(wordLength);
+
+	pattern.push_back(' ');
 	for (unsigned int i = 0; i < ucs2Vector.size(); i++) {
 		unsigned short symbol = ucs2Vector[i];
-		pattern[i + 1] = ZLUnicodeUtil::isLetter(symbol) ? ZLUnicodeUtil::toLower(symbol) : ' ';
+		bool letter = ZLUnicodeUtil::isLetter(symbol);
+		isLetter.push_back(letter);
+		pattern.push_back(letter ? ZLUnicodeUtil::toLower(symbol) : ' ');
 	}
-	pattern[wordLength + 1] = ' ';
+	pattern.push_back(' ');
 
 	HyphenationInfo info(wordLength + 2);
 	hyphenate(pattern, info.myMask, wordLength + 2);
@@ -74,22 +63,19 @@ HyphenationInfo Hyphenator::info(const Word &word) const {
 		if ((i < 2) || (i > wordLength - 2)) {
 			info.myMask[i] = false;
 		} else if (ucs2Vector[i - 1] == '-') {
-			info.myMask[i] =
-				(i >= 3) &&
-				ZLUnicodeUtil::isLetter(ucs2Vector[i - 3]) &&
-				ZLUnicodeUtil::isLetter(ucs2Vector[i - 2]) &&
-				ZLUnicodeUtil::isLetter(ucs2Vector[i]) &&
-				ZLUnicodeUtil::isLetter(ucs2Vector[i + 1]);
+			info.myMask[i] = (i >= 3) &&
+				isLetter[i - 3] &&
+				isLetter[i - 2] &&
+				isLetter[i] &&
+				isLetter[i + 1];
 		} else {
 			info.myMask[i] = info.myMask[i] &&
-			ZLUnicodeUtil::isLetter(ucs2Vector[i - 2]) &&
-			ZLUnicodeUtil::isLetter(ucs2Vector[i - 1]) &&
-			ZLUnicodeUtil::isLetter(ucs2Vector[i]) &&
-			ZLUnicodeUtil::isLetter(ucs2Vector[i + 1]);
+				isLetter[i - 2] &&
+				isLetter[i - 1] &&
+				isLetter[i] &&
+				isLetter[i + 1];
 		}
 	}
-
-	delete[] pattern;
 
 	return info;
 }

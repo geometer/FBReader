@@ -62,7 +62,7 @@ public:
 	void unload() HYPHENATION_SECTION;
 
 protected:
-	void hyphenate(unsigned short *ucs2String, bool *mask, int length) const HYPHENATION_SECTION;
+	void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const HYPHENATION_SECTION;
 
 private:
 	typedef std::vector<TeXHyphenationPattern*>::const_iterator PatternIterator;
