@@ -51,7 +51,7 @@ public:
 	static TextElement *IndentElement;
 	static TextElement *EmptyLineElement;
 
-	static Word *getWord(const std::string &utf8String, size_t start, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
+	static Word *getWord(const char *data, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
 	static void storeWord(Word *word) VIEW_SECTION;
 	static ControlElement *getControlElement(const ControlEntry &entry) VIEW_SECTION;
 	static void storeControlElement(ControlElement *element) VIEW_SECTION;
@@ -100,7 +100,7 @@ private:
 
 	private:
 		void beforeAddWord() VIEW_SECTION;
-		void addWord(const std::string &str, int start, int len) VIEW_SECTION;
+		void addWord(const char *ptr, int offset, int len) VIEW_SECTION;
 
 	private:
 		const Paragraph &myParagraph;
@@ -197,8 +197,8 @@ public:
 
 inline TextElementVector::TextElementVector() {}
 
-inline Word *TextElementPool::getWord(const std::string &utf8String, size_t start, unsigned short length, size_t paragraphOffset) {
-	return new (myWordAllocator.allocate()) Word(utf8String, start, length, paragraphOffset);
+inline Word *TextElementPool::getWord(const char *data, unsigned short length, size_t paragraphOffset) {
+	return new (myWordAllocator.allocate()) Word(data, length, paragraphOffset);
 }
 inline void TextElementPool::storeWord(Word *word) {
 	word->~Word();

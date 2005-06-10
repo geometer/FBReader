@@ -49,7 +49,7 @@ public:
 	};
 
 public:
-	Word(const std::string &utf8String, size_t start, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
+	Word(const char *data, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
 
 public:
 	~Word() VIEW_SECTION;
@@ -65,8 +65,7 @@ public:
 	WordMark *mark() const VIEW_SECTION;
 
 private:
-	const std::string &myData;
-	size_t myStart;
+	const char *myData;
 	unsigned short mySize;
 	unsigned short myLength;
 
@@ -83,7 +82,7 @@ private:
 
 inline Word::~Word() { if (myMark != 0) delete myMark; }
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
-inline const char *Word::data() const { return myData.data() + myStart; }
+inline const char *Word::data() const { return myData; }
 inline unsigned short Word::size() const { return mySize; }
 inline unsigned short Word::length() const { return myLength; }
 inline size_t Word::paragraphOffset() const { return myParagraphOffset; }

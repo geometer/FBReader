@@ -465,7 +465,6 @@ void TextView::drawString(int x, int y, const char *str, int len, const Word::Wo
 }
 
 void TextView::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
-	//const std::string &str = word.utf8String();
 	if ((start == 0) && (length == -1)) {
 		drawString(x, y, word.data(), word.size(), word.mark(), 0);
 	} else {

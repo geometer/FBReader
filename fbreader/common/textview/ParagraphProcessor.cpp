@@ -17,7 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <cctype>
 #include <algorithm>
 
 #include <abstract/ZLUnicodeUtil.h>
@@ -26,6 +25,25 @@
 #include "Word.h"
 
 #include "../model/Paragraph.h"
+
+static unsigned char IsSpace[] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+};
 
 ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, const shared_ptr<TextElementVector> &elements) : myParagraph(paragraph), myElements(elements) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
@@ -67,13 +85,13 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 	myWordCounter++;
 }
 
-void ParagraphCursor::ParagraphProcessor::addWord(const std::string &str, int start, int len) {
+void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {
 	beforeAddWord();
-	Word *word = TextElementPool::getWord(str, start, len, myOffset + start);
+	Word *word = TextElementPool::getWord(ptr, len, offset);
 	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; mit++) {
 		TextMark mark = *mit;
-		if ((mark.Offset - myOffset < start + len) && (mark.Offset - myOffset + mark.Length > start)) {
-			word->addMark(mark.Offset - myOffset - start, mark.Length);
+		if ((mark.Offset < offset + len) && (mark.Offset + mark.Length > offset)) {
+			word->addMark(mark.Offset - offset, mark.Length);
 		}
 	}
 	myElements->push_back(word);
@@ -99,26 +117,27 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			{
 				const std::string &text = ((TextEntry*)*it)->text();
 				if (!text.empty()) {
-					if (isspace(text[0])) {
+					const char *ptr = text.data();
+					const char *end = ptr + text.length();
+					if (IsSpace[(unsigned char)*ptr]) {
 						myElements->push_back(TextElementPool::HSpaceElement);
 					}
-					const int len = text.length();
-					int firstNonSpace = -1;
-					for (int i = 0; i < len; i++) {
-						if (isspace(text[i])) {
-							if (firstNonSpace != -1) {
-								addWord(text, firstNonSpace, i - firstNonSpace);
+					const char *firstNonSpace = 0;
+					for (; ptr < end; ptr++) {
+						if (IsSpace[(unsigned char)*ptr]) {
+							if (firstNonSpace != 0) {
+								addWord(firstNonSpace, myOffset + (firstNonSpace - text.data()), ptr - firstNonSpace);
 								myElements->push_back(TextElementPool::HSpaceElement);
-								firstNonSpace = -1;
+								firstNonSpace = 0;
 							}
-						} else if (firstNonSpace == -1) {
-							firstNonSpace = i;
+						} else if (firstNonSpace == 0) {
+							firstNonSpace = ptr;
 						}
 					}
-					if (firstNonSpace != -1) {
-						addWord(text, firstNonSpace, len - firstNonSpace);
+					if (firstNonSpace != 0) {
+						addWord(firstNonSpace, myOffset + (firstNonSpace - text.data()), end - firstNonSpace);
 					}
-					myOffset += len;
+					myOffset += text.length();
 				}
 				break;
 			}

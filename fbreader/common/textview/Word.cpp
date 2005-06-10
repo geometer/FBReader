@@ -21,8 +21,8 @@
 
 #include "Word.h"
 
-Word::Word(const std::string &utf8String, size_t start, unsigned short size, size_t paragraphOffset) : myData(utf8String), myStart(start), mySize(size), myMark(0), myParagraphOffset(paragraphOffset), myWidth(-1) {
-	myLength = ZLUnicodeUtil::utf8Length(myData.data() + start, size);
+Word::Word(const char *data, unsigned short size, size_t paragraphOffset) : myData(data), mySize(size), myMark(0), myParagraphOffset(paragraphOffset), myWidth(-1) {
+	myLength = ZLUnicodeUtil::utf8Length(myData, size);
 }
 
 void Word::addMark(int start, int len) {
