@@ -115,13 +115,13 @@ int TextView::ViewStyle::wordWidth(const Word &word, int start, int length, bool
 	if ((start == 0) && (length == -1)) {
 		return word.width(context());
 	}
-	int startPos = ZLUnicodeUtil::length(word.data(), start);
-	int endPos = (length == -1) ? word.size() : ZLUnicodeUtil::length(word.data(), start + length);
+	int startPos = ZLUnicodeUtil::length(word.Data, start);
+	int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 	if (!addHyphenationSign) {
-		return context().stringWidth(word.data() + startPos, endPos - startPos);
+		return context().stringWidth(word.Data + startPos, endPos - startPos);
 	}
 	std::string substr;
-	substr.append(word.data() + startPos, endPos - startPos);
+	substr.append(word.Data + startPos, endPos - startPos);
 	substr += '-';
 	return context().stringWidth(substr.data(), substr.length());
 }

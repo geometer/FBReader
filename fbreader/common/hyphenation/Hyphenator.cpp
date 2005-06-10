@@ -35,17 +35,15 @@ void Hyphenator::deleteInstance() {
 
 HyphenationInfo Hyphenator::info(const Word &word) const {
 	ZLUnicodeUtil::Ucs2String ucs2Vector;
-	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.data(), word.size(), word.length());
-
-	int wordLength = word.length();
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.Data, word.Size, word.Length);
 
 	static std::vector<unsigned short> pattern;
 	pattern.clear();
-	pattern.reserve(wordLength + 2);
+	pattern.reserve(word.Length + 2);
 
 	static std::vector<unsigned char> isLetter;
 	isLetter.clear();
-	isLetter.reserve(wordLength);
+	isLetter.reserve(word.Length);
 
 	pattern.push_back(' ');
 	for (unsigned int i = 0; i < ucs2Vector.size(); i++) {
@@ -56,11 +54,11 @@ HyphenationInfo Hyphenator::info(const Word &word) const {
 	}
 	pattern.push_back(' ');
 
-	HyphenationInfo info(wordLength + 2);
-	hyphenate(pattern, info.myMask, wordLength + 2);
+	HyphenationInfo info(word.Length + 2);
+	hyphenate(pattern, info.myMask, word.Length + 2);
 
-	for (int i = 0; i < wordLength + 1; i++) {
-		if ((i < 2) || (i > wordLength - 2)) {
+	for (int i = 0; i < word.Length + 1; i++) {
+		if ((i < 2) || (i > word.Length - 2)) {
 			info.myMask[i] = false;
 		} else if (ucs2Vector[i - 1] == '-') {
 			info.myMask[i] = (i >= 3) &&

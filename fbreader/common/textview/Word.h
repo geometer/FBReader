@@ -49,29 +49,24 @@ public:
 	};
 
 public:
-	Word(const char *data, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
+	Word(const char *data, unsigned short size, size_t paragraphOffset) VIEW_SECTION;
 
 public:
 	~Word() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
-	const char *data() const VIEW_SECTION;
-	unsigned short size() const VIEW_SECTION;
-	unsigned short length() const VIEW_SECTION;
-	size_t paragraphOffset() const VIEW_SECTION;
 	short width(const PaintContext &context) const VIEW_SECTION;
 
 	void addMark(int start, int len) VIEW_SECTION;
 
 	WordMark *mark() const VIEW_SECTION;
 
+	const char *Data;
+	const unsigned short Size;
+	const unsigned short Length;
+	const size_t ParagraphOffset;
+
 private:
-	const char *myData;
-	unsigned short mySize;
-	unsigned short myLength;
-
 	WordMark *myMark;
-	size_t myParagraphOffset;
-
 	mutable short myWidth;
 	
 private:
@@ -82,14 +77,10 @@ private:
 
 inline Word::~Word() { if (myMark != 0) delete myMark; }
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
-inline const char *Word::data() const { return myData; }
-inline unsigned short Word::size() const { return mySize; }
-inline unsigned short Word::length() const { return myLength; }
-inline size_t Word::paragraphOffset() const { return myParagraphOffset; }
 inline Word::WordMark *Word::mark() const { return myMark; }
 inline short Word::width(const PaintContext &context) const {
 	if (myWidth == -1) {
-		myWidth = context.stringWidth(data(), mySize);
+		myWidth = context.stringWidth(Data, Size);
 	}
 	return myWidth;
 }

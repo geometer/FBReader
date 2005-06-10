@@ -222,7 +222,7 @@ TextMark ParagraphCursor::position() const {
 		cursor.nextWord();
 	}
 	if (cursor.myWordIterator != myElements->end()) {
-		return TextMark(paragraphNumber(), ((Word&)cursor.element()).paragraphOffset(), 0);
+		return TextMark(paragraphNumber(), ((Word&)cursor.element()).ParagraphOffset, 0);
 	}
 	return TextMark(paragraphNumber() + 1, 0, 0);
 }
@@ -290,7 +290,7 @@ void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber
 		myNextElement = myElements->begin() + wordNumber;
 		if ((myNextElement.myWordIterator != myElements->end()) &&
 				(myNextElement.element().kind() == TextElement::WORD_ELEMENT)) {
-			if (charNumber < (int)((const Word&)myNextElement.element()).length()) {
+			if (charNumber < (int)((const Word&)myNextElement.element()).Length) {
 				myNextElement.myCharNumber = charNumber;
 			}
 		}

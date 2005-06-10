@@ -102,11 +102,11 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 			newWidth -= myStyle.elementWidth(current);
 			const Word &word = (Word&)current.element();
 			int spaceLeft = maxWidth - newWidth;
-			if ((word.length() > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
+			if ((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
 				ZLUnicodeUtil::Ucs2String ucs2string;
-				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.data(), word.size());
+				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
 				HyphenationInfo info = Hyphenator::instance().info(word);
-				int hyphenationPosition = word.length() - 1;
+				int hyphenationPosition = word.Length - 1;
 				int subwordWidth = 0;
 				for (; hyphenationPosition > 0; hyphenationPosition--) {
 					if (info.isHyphenationPossible(hyphenationPosition)) {

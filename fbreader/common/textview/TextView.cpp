@@ -309,7 +309,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 					const Word &word = (const Word&)paragraph.wordCursor().element();
 					context().setColor(myStyle.style()->color());
 					ZLUnicodeUtil::Ucs2String ucs2string;
-					ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.data(), word.size());
+					ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
 					drawWord(context().x(), context().y() - myStyle.style()->verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
 				}
 			}
@@ -466,15 +466,15 @@ void TextView::drawString(int x, int y, const char *str, int len, const Word::Wo
 
 void TextView::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
-		drawString(x, y, word.data(), word.size(), word.mark(), 0);
+		drawString(x, y, word.Data, word.Size, word.mark(), 0);
 	} else {
-		int startPos = ZLUnicodeUtil::length(word.data(), start);
-		int endPos = (length == -1) ? word.size() : ZLUnicodeUtil::length(word.data(), start + length);
+		int startPos = ZLUnicodeUtil::length(word.Data, start);
+		int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 		if (!addHyphenationSign) {
-			drawString(x, y, word.data() + startPos, endPos - startPos, word.mark(), startPos);
+			drawString(x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos);
 		} else {
 			std::string substr;
-			substr.append(word.data() + startPos, endPos - startPos);
+			substr.append(word.Data + startPos, endPos - startPos);
 			substr += '-';
 			drawString(x, y, substr.data(), substr.length(), word.mark(), startPos);
 		}
