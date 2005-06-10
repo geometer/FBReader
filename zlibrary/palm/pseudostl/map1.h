@@ -90,6 +90,7 @@ namespace std {
 		iterator end() const STL_SECTION;
 
 		void insert(const pair<T1,T2> &p) STL_SECTION;
+		void clear() STL_SECTION;
 
 	private:
 		mutable vector<pair<T1,T2> > myData;
@@ -331,11 +332,11 @@ namespace std {
 	inline void map<T1,T2>::insert(const pair<T1,T2> &p) {
 		myData.push_back(p);
 	}
-	/*
 	template<typename T1, typename T2>
 	inline void map<T1,T2>::clear() {
-		// TODO: implement
+		myData.clear();
 	}
+	/*
 	template<typename T1, typename T2>
 	inline void map<T1,T2>::reserve(size_t size) {
 		// TODO: implement

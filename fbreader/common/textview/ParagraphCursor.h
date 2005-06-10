@@ -21,6 +21,7 @@
 #define __PARAGRAPHCURSOR_H__
 
 #include <vector>
+#include <map>
 #include <string>
 
 #include <abstract/shared_ptr.h>
@@ -89,6 +90,20 @@ friend class ParagraphCursor;
 
 class ParagraphCursor {
 
+public:
+	class Cache {
+
+	public:
+		Cache() VIEW_SECTION;
+		~Cache() VIEW_SECTION;
+
+	private:
+		static std::map<Paragraph*,shared_ptr<TextElementVector> > ourCache;
+		static int ourCacheCounter;
+
+	friend class ParagraphCursor;
+	};
+	
 private:
 	class ParagraphProcessor {
 
@@ -228,6 +243,14 @@ inline void WordCursor::nextWord() { myWordIterator++; myCharNumber = 0; }
 inline void WordCursor::previousWord() { myWordIterator--; myCharNumber = 0; }
 inline void WordCursor::setCharNumber(int num) { myCharNumber = num; }
 inline int WordCursor::charNumber() const { return myCharNumber; }
+
+inline ParagraphCursor::Cache::Cache() { ourCacheCounter++; }
+inline ParagraphCursor::Cache::~Cache() {
+	ourCacheCounter--;
+	if (ourCacheCounter == 0) {
+		ourCache.clear();
+	}
+}
 
 inline void ParagraphCursor::rebuild() { fill(); }
 inline int ParagraphCursor::paragraphLength() const { return myElements->size(); }

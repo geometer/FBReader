@@ -186,6 +186,7 @@ void FBReader::doAction(ActionCode code) {
 				int delay = myLastScrollingTime.millisecondsTo(ZLTime());
 				if ((delay < 0) || (delay >= ScrollingDelayOption.value())) {
 					//const ZLTime t;
+					ParagraphCursor::Cache cache;
 					((TextView*)myViewWidget->view())->scrollPageBackward();
 					repaintView();
 					myLastScrollingTime = ZLTime();

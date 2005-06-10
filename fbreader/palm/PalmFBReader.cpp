@@ -51,7 +51,7 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 
 		case keyDownEvent:
 			{
-				//ZLTime start;
+				ZLTime start;
 				switch (event->data.keyDown.chr) {
 					case pageUpChr:
 						DO_PAINT = true;
@@ -64,11 +64,11 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 						DO_PAINT = false;
 						break;
 				}
-				//ZLTime end;
-				//unsigned long timeSpent = end.millisecondsFrom(start);
-				//std::string timeS;
-				//ZLStringUtil::appendNumber(timeS, timeSpent);
-				//FrmCustomAlert(GoodnightMoonAlert, timeS.c_str(), 0, 0);
+				ZLTime end;
+				unsigned long timeSpent = end.millisecondsFrom(start);
+				std::string timeS;
+				ZLStringUtil::appendNumber(timeS, timeSpent);
+				FrmCustomAlert(GoodnightMoonAlert, timeS.c_str(), 0, 0);
 			}
 			return true;
 

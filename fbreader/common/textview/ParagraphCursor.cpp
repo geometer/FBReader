@@ -33,6 +33,9 @@ TextElement *TextElementPool::EmptyLineElement = 0;
 Allocator<sizeof(Word),64> TextElementPool::myWordAllocator;
 Allocator<sizeof(ControlElement),32> TextElementPool::myControlAllocator;
 
+int ParagraphCursor::Cache::ourCacheCounter = 0;
+std::map<Paragraph*,shared_ptr<TextElementVector> > ParagraphCursor::Cache::ourCache;
+
 TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
 		switch ((*it)->kind()) {
@@ -91,6 +94,9 @@ ParagraphCursor::ParagraphCursor(const TextModel &model) : myModel(model) {
 }
 
 ParagraphCursor::ParagraphCursor(const ParagraphCursor &cursor) : myModel(cursor.myModel) {
+	if (!myElements.isNull() && (ParagraphCursor::Cache::ourCacheCounter > 0)) {
+		ParagraphCursor::Cache::ourCache[*myParagraphIterator] = myElements;
+	}
 	myParagraphIterator = cursor.myParagraphIterator;
 	myElements = cursor.myElements;
 	myNextElement = myElements->begin();
@@ -236,41 +242,51 @@ void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
 }
 
 void ParagraphCursor::fill() {
-	myElements = new TextElementVector();
-	switch ((*myParagraphIterator)->kind()) {
-		case Paragraph::TEXT_PARAGRAPH:
-		case Paragraph::TREE_PARAGRAPH:
-		{
-			ParagraphProcessor processor(*(Paragraph*)*myParagraphIterator, myModel.marks(), paragraphNumber(), myElements);
-			processor.fill();
-			break;
+	if (ParagraphCursor::Cache::ourCacheCounter > 0) {
+		myElements = ParagraphCursor::Cache::ourCache[*myParagraphIterator];
+	} else {
+		myElements = 0;
+	}
+	if (myElements.isNull()) {
+		myElements = new TextElementVector();
+		switch ((*myParagraphIterator)->kind()) {
+			case Paragraph::TEXT_PARAGRAPH:
+			case Paragraph::TREE_PARAGRAPH:
+			{
+				ParagraphProcessor processor(*(Paragraph*)*myParagraphIterator, myModel.marks(), paragraphNumber(), myElements);
+				processor.fill();
+				break;
+			}
+			case Paragraph::EMPTY_LINE_PARAGRAPH:
+			{
+				processControlParagraph(*(Paragraph*)*myParagraphIterator);
+				myElements->push_back(TextElementPool::EmptyLineElement);
+				break;
+			}
+			case Paragraph::BEFORE_SKIP_PARAGRAPH:
+			{
+				processControlParagraph(*(Paragraph*)*myParagraphIterator);
+				myElements->push_back(TextElementPool::BeforeParagraphElement);
+				break;
+			}
+			case Paragraph::AFTER_SKIP_PARAGRAPH:
+			{
+				processControlParagraph(*(Paragraph*)*myParagraphIterator);
+				myElements->push_back(TextElementPool::AfterParagraphElement);
+				break;
+			}
+			case Paragraph::EOS_PARAGRAPH:
+				break;
 		}
-		case Paragraph::EMPTY_LINE_PARAGRAPH:
-		{
-			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements->push_back(TextElementPool::EmptyLineElement);
-			break;
-		}
-		case Paragraph::BEFORE_SKIP_PARAGRAPH:
-		{
-			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements->push_back(TextElementPool::BeforeParagraphElement);
-			break;
-		}
-		case Paragraph::AFTER_SKIP_PARAGRAPH:
-		{
-			processControlParagraph(*(Paragraph*)*myParagraphIterator);
-			myElements->push_back(TextElementPool::AfterParagraphElement);
-			break;
-		}
-		case Paragraph::EOS_PARAGRAPH:
-			break;
 	}
 
 	myNextElement = myElements->begin();
 }
 
 void ParagraphCursor::clear() {
+	if (!myElements.isNull() && (ParagraphCursor::Cache::ourCacheCounter > 0)) {
+		ParagraphCursor::Cache::ourCache[*myParagraphIterator] = myElements;
+	}
 	myElements = 0;
 }
 
