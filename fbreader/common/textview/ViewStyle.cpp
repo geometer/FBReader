@@ -36,19 +36,24 @@ void TextView::ViewStyle::reset() {
 	myStyle = TextStyleCollection::instance().baseStyle();
 }
 
+void TextView::ViewStyle::setStyle(const TextStylePtr style) {
+	if (myStyle != style) {
+		myStyle = style;
+		myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
+	}
+}
+
 void TextView::ViewStyle::applyControl(const ControlElement &control, bool revert) {
 	if (control.isStart() == revert) {
 		if (myStyle->isDecorated()) {
-			TextStylePtr p = ((DecoratedTextStyle&)*myStyle).base();
-			myStyle = p;
+			setStyle(((DecoratedTextStyle&)*myStyle).base());
 		}
 	} else {
 		const TextStyleDecoration *decoration = TextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
-			myStyle = decoration->createDecoratedStyle(myStyle);
+			setStyle(decoration->createDecoratedStyle(myStyle));
 		}
 	}
-	myContext.setFont(style()->fontFamily(), style()->fontSize(), style()->bold(), style()->italic());
 }
 
 void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {

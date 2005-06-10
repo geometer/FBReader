@@ -31,9 +31,11 @@ PluginCollection &PluginCollection::instance() {
 	if (ourInstance == 0) {
 		ourInstance = new PluginCollection();
 		ourInstance->myPlugins.push_back(new FB2Plugin());
+#ifndef PALM_TEMPORARY
 		ourInstance->myPlugins.push_back(new DocBookPlugin());
 		ourInstance->myPlugins.push_back(new HtmlPlugin());
 		ourInstance->myPlugins.push_back(new TxtPlugin());
+#endif // PALM_TEMPORARY
 	}
 	return *ourInstance;
 }

@@ -160,7 +160,6 @@ private:
 inline TextView::ViewStyle::~ViewStyle() {}
 inline const PaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr &TextView::ViewStyle::style() const { return myStyle; }
-inline void TextView::ViewStyle::setStyle(const TextStylePtr style) { myStyle = style; }
 
 inline TextView::LineProcessor::LineProcessor(ViewStyle &style) : myStyle(style) {}
 inline TextView::LineProcessor::~LineProcessor() {}
