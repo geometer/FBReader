@@ -30,14 +30,15 @@
 
 WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordCursor &end) {
 	WordCursor cursor = start;
+	TextStylePtr storedStyle = myStyle.style();
 	WordCursor current = cursor;
 
-	myWidth = myStyle.style().leftIndent();
+	myWidth = myStyle.style()->leftIndent();
 	int newWidth = myWidth;
 	myHeight = 0;
 	mySpaceCounter = 0;
 	int newHeight = myHeight;
-	int maxWidth = myStyle.context().width() - myStyle.style().rightIndent();
+	int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
 	int internalSpaceCounter = 0;
@@ -90,12 +91,13 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 				myHeight = newHeight;
 			}
 			cursor = current;
+			storedStyle = myStyle.style();
 			mySpaceCounter = internalSpaceCounter;
 			removeLastSpace = !wordOccured && (mySpaceCounter > 0);
 		}
 	} while (!current.sameElementAs(end));
 
-	if (TextView::AutoHyphenationOption.value() && myStyle.style().allowHyphenations()) {
+	if (TextView::AutoHyphenationOption.value() && myStyle.style()->allowHyphenations()) {
 		if (!current.sameElementAs(end) && (current.element().kind() == TextElement::WORD_ELEMENT)) {
 			newWidth -= myStyle.elementWidth(current);
 			const Word &word = (Word&)current.element();
@@ -120,6 +122,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 						myHeight = newHeight;
 					}
 					cursor = current;
+					storedStyle = myStyle.style();
 					mySpaceCounter = internalSpaceCounter;
 					removeLastSpace = false;
 					cursor.setCharNumber(hyphenationPosition);
@@ -133,7 +136,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		mySpaceCounter--;
 	}
 
-	myStyle.applyControls(cursor, current, true);
+	myStyle.setStyle(storedStyle);
 
 	return cursor;
 }

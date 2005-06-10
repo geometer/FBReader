@@ -6,14 +6,14 @@
 template<size_t ObjectSize, size_t PoolSize> class Allocator {
 	
 public:
-	Allocator();
-	~Allocator();
+	Allocator() UTIL_SECTION;
+	~Allocator() UTIL_SECTION;
 
-	void *allocate();
-	void free(void *ptr);
+	void *allocate() UTIL_SECTION;
+	void free(void *ptr) UTIL_SECTION;
 
 private:
-	void addPool();
+	void addPool() UTIL_SECTION;
 	
 private:
 	std::vector<void*> myPools;

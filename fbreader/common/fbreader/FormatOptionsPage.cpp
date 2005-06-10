@@ -42,7 +42,7 @@ FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
 
 	{
 		const std::string &name = myComboEntry->initialValue();
-		BaseTextStyle &baseStyle = collection.baseStyle();
+		BaseTextStyle &baseStyle = (BaseTextStyle&)*collection.baseStyle();
 
 		registerEntries(dialogTab,
 			new LineSpacingOptionEntry(baseStyle.lineSpaceOption(), false),

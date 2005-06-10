@@ -224,11 +224,12 @@ void TextView::gotoParagraph(int num, bool last) {
 }
 
 void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
-	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor(), false);
+	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
 
 	while (!paragraph.isEndOfParagraph()) {
-		context().moveXTo(myStyle.style().leftIndent());
+		context().moveXTo(myStyle.style()->leftIndent());
 
+		const TextStylePtr storedStyle = myStyle.style();
 		const WordCursor lineStart = paragraph.wordCursor();
 		const WordCursor lineEnd = myLineProcessor.process(lineStart, paragraph.end());
 		context().moveY(myLineProcessor.height());
@@ -236,20 +237,20 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 		if (context().y() > myStyle.textAreaHeight()) {
 			break;
 		}
-		myStyle.applyControls(lineStart, lineEnd, true);
+		myStyle.setStyle(storedStyle);
 		paragraph.setWordCursor(lineEnd);
 
 		int fullCorrection = 0;
-		switch (myStyle.style().alignment()) {
+		switch (myStyle.style()->alignment()) {
 			case ALIGN_RIGHT:
-				context().moveX(context().width() - myStyle.style().rightIndent() - myLineProcessor.width());
+				context().moveX(context().width() - myStyle.style()->rightIndent() - myLineProcessor.width());
 				break;
 			case ALIGN_CENTER:
-				context().moveX((context().width() - myStyle.style().rightIndent() - myLineProcessor.width()) / 2);
+				context().moveX((context().width() - myStyle.style()->rightIndent() - myLineProcessor.width()) / 2);
 				break;
 			case ALIGN_JUSTIFY:
 				if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
-					fullCorrection = context().width() - myStyle.style().rightIndent() - myLineProcessor.width();
+					fullCorrection = context().width() - myStyle.style()->rightIndent() - myLineProcessor.width();
 				}
 				break;
 			case ALIGN_LEFT:
@@ -269,7 +270,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 				switch (kind) {
 					case TextElement::WORD_ELEMENT:
 						wordOccured = true;
-						y -= myStyle.style().verticalShift();
+						y -= myStyle.style()->verticalShift();
 						drawWord(x, y, (const Word&)pos.element(), pos.charNumber(), -1, false);
 						break;
 					case TextElement::IMAGE_ELEMENT:
@@ -306,10 +307,10 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 				int len = paragraph.charNumber();
 				if (len > 0) {
 					const Word &word = (const Word&)paragraph.wordCursor().element();
-					context().setColor(myStyle.style().color());
+					context().setColor(myStyle.style()->color());
 					ZLUnicodeUtil::Ucs2String ucs2string;
 					ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.data(), word.size());
-					drawWord(context().x(), context().y() - myStyle.style().verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
+					drawWord(context().x(), context().y() - myStyle.style()->verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
 				}
 			}
 		}
@@ -422,7 +423,7 @@ bool TextView::onStylusPress(int x, int y) {
 }
 
 void TextView::drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) {
-	context().setColor(myStyle.style().color());
+	context().setColor(myStyle.style()->color());
 	if (mark == 0) {
 		context().drawString(x, y, str, len);
 	} else {
@@ -452,7 +453,7 @@ void TextView::drawString(int x, int y, const char *str, int len, const Word::Wo
 					context().drawString(x, y, str + markStart, endPos - markStart);
 					x += context().stringWidth(str + markStart, endPos - markStart);
 				}
-				context().setColor(myStyle.style().color());
+				context().setColor(myStyle.style()->color());
 			}
 			pos = markStart + markLen;
 		}

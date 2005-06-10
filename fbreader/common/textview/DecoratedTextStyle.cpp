@@ -42,73 +42,73 @@ FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fo
 	myLineSpaceOption("Style", name + ":lineSpace", lineSpace) {
 }
 
-TextStyle *TextStyleDecoration::createDecoratedStyle(const TextStyle &base) const {
+TextStylePtr TextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const {
 	return new PartialDecoratedTextStyle(base, *this);
 }
 
-TextStyle *FullTextStyleDecoration::createDecoratedStyle(const TextStyle &base) const {
+TextStylePtr FullTextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const {
 	return new FullDecoratedTextStyle(base, *this);
 }
 
 const std::string &PartialDecoratedTextStyle::fontFamily() const {
 	const std::string &family = myDecoration.fontFamilyOption().value();
-	return (!family.empty()) ? family : base().fontFamily();
+	return (!family.empty()) ? family : base()->fontFamily();
 }
 
 int PartialDecoratedTextStyle::fontSize() const {
-	return base().fontSize() + myDecoration.fontSizeDeltaOption().value();
+	return base()->fontSize() + myDecoration.fontSizeDeltaOption().value();
 }
 
 bool PartialDecoratedTextStyle::bold() const {
 	Boolean3 b = myDecoration.boldOption().value();
-	return (b == B3_UNDEFINED) ? base().bold() : (b == B3_TRUE);
+	return (b == B3_UNDEFINED) ? base()->bold() : (b == B3_TRUE);
 }
 
 bool PartialDecoratedTextStyle::italic() const {
 	Boolean3 i = myDecoration.italicOption().value();
-	return (i == B3_UNDEFINED) ? base().italic() : (i == B3_TRUE);
+	return (i == B3_UNDEFINED) ? base()->italic() : (i == B3_TRUE);
 }
 
 bool PartialDecoratedTextStyle::allowHyphenations() const {
 	Boolean3 a = myDecoration.allowHyphenationsOption().value();
-	return (a == B3_UNDEFINED) ? base().allowHyphenations() : (a == B3_TRUE);
+	return (a == B3_UNDEFINED) ? base()->allowHyphenations() : (a == B3_TRUE);
 	return true;
 }
 
 int FullDecoratedTextStyle::firstLineIndentDelta() const {
-	return (alignment() == ALIGN_CENTER) ? 0 : base().firstLineIndentDelta() + myDecoration.firstLineIndentDeltaOption().value();
+	return (alignment() == ALIGN_CENTER) ? 0 : base()->firstLineIndentDelta() + myDecoration.firstLineIndentDeltaOption().value();
 }
 
 const std::string &FullDecoratedTextStyle::fontFamily() const {
 	const std::string &family = myDecoration.fontFamilyOption().value();
-	return (!family.empty()) ? family : base().fontFamily();
+	return (!family.empty()) ? family : base()->fontFamily();
 }
 
 int FullDecoratedTextStyle::fontSize() const {
-	return base().fontSize() + myDecoration.fontSizeDeltaOption().value();
+	return base()->fontSize() + myDecoration.fontSizeDeltaOption().value();
 }
 
 bool FullDecoratedTextStyle::bold() const {
 	Boolean3 b = myDecoration.boldOption().value();
-	return (b == B3_UNDEFINED) ? base().bold() : (b == B3_TRUE);
+	return (b == B3_UNDEFINED) ? base()->bold() : (b == B3_TRUE);
 }
 
 bool FullDecoratedTextStyle::italic() const {
 	Boolean3 i = myDecoration.italicOption().value();
-	return (i == B3_UNDEFINED) ? base().italic() : (i == B3_TRUE);
+	return (i == B3_UNDEFINED) ? base()->italic() : (i == B3_TRUE);
 }
 
 AlignmentType FullDecoratedTextStyle::alignment() const {
 	AlignmentType a = (AlignmentType)myDecoration.alignmentOption().value();
-	return (a == ALIGN_UNDEFINED) ? base().alignment() : a;
+	return (a == ALIGN_UNDEFINED) ? base()->alignment() : a;
 }
 
 bool FullDecoratedTextStyle::allowHyphenations() const {
 	Boolean3 a = myDecoration.allowHyphenationsOption().value();
-	return (a == B3_UNDEFINED) ? base().allowHyphenations() : (a == B3_TRUE);
+	return (a == B3_UNDEFINED) ? base()->allowHyphenations() : (a == B3_TRUE);
 	return true;
 }
 
 ZLColor DecoratedTextStyle::color() const {
-	return decoration().isHyperlinkStyle() ? HyperlinkTextColorOption.value() : base().color();
+	return decoration().isHyperlinkStyle() ? HyperlinkTextColorOption.value() : base()->color();
 }

@@ -196,7 +196,8 @@ void FBReader::doAction(ActionCode code) {
 			break;
 		case ACTION_INCREASE_FONT:
 			{
-				ZLIntegerOption &option = TextStyleCollection::instance().baseStyle().fontSizeOption();
+				ZLIntegerOption &option =
+					((BaseTextStyle&)*TextStyleCollection::instance().baseStyle()).fontSizeOption();
 				int value = option.value() + 2;
 				if (value <= 32) {
 					option.setValue(value);
@@ -206,7 +207,8 @@ void FBReader::doAction(ActionCode code) {
 			break;
 		case ACTION_DECREASE_FONT:
 			{
-				ZLIntegerOption &option = TextStyleCollection::instance().baseStyle().fontSizeOption();
+				ZLIntegerOption &option =
+					((BaseTextStyle&)*TextStyleCollection::instance().baseStyle()).fontSizeOption();
 				int value = option.value() - 2;
 				if (value >= 10) {
 					option.setValue(value);

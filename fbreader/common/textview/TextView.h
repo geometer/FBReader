@@ -28,12 +28,12 @@
 #include "../view/View.h"
 #include "TextElement.h"
 #include "Word.h"
+#include "TextStyle.h"
 
 class TextModel;
 class Paragraph;
 class ParagraphCursor;
 class WordCursor;
-class TextStyle;
 class TextMark;
 
 class TextView : public View {
@@ -46,11 +46,12 @@ private:
 		~ViewStyle() VIEW_SECTION;
 
 		void reset() VIEW_SECTION;
+		void setStyle(const TextStylePtr style) VIEW_SECTION;
 		void applyControl(const ControlElement &control, bool revert) VIEW_SECTION;
-		void applyControls(const WordCursor &begin, const WordCursor &end, bool revert) VIEW_SECTION;
+		void applyControls(const WordCursor &begin, const WordCursor &end) VIEW_SECTION;
 
 		const PaintContext &context() const VIEW_SECTION;
-		const TextStyle &style() const VIEW_SECTION;
+		const TextStylePtr &style() const VIEW_SECTION;
 		int elementWidth(const WordCursor &cursor) const VIEW_SECTION;
 		int elementHeight(const WordCursor &cursor) const VIEW_SECTION;
 		int textAreaHeight() const VIEW_SECTION;
@@ -58,7 +59,7 @@ private:
 		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const VIEW_SECTION;
 
 	private:
-		const TextStyle *myStyle;
+		TextStylePtr myStyle;
 		PaintContext &myContext;
 	};
 
@@ -158,7 +159,8 @@ private:
 
 inline TextView::ViewStyle::~ViewStyle() {}
 inline const PaintContext &TextView::ViewStyle::context() const { return myContext; }
-inline const TextStyle &TextView::ViewStyle::style() const { return *myStyle; }
+inline const TextStylePtr &TextView::ViewStyle::style() const { return myStyle; }
+inline void TextView::ViewStyle::setStyle(const TextStylePtr style) { myStyle = style; }
 
 inline TextView::LineProcessor::LineProcessor(ViewStyle &style) : myStyle(style) {}
 inline TextView::LineProcessor::~LineProcessor() {}

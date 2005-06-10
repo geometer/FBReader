@@ -29,49 +29,32 @@
 #include "../view/PaintContext.h"
 
 TextView::ViewStyle::ViewStyle(PaintContext &context) : myContext(context) {
-	myStyle = &TextStyleCollection::instance().baseStyle();
+	myStyle = TextStyleCollection::instance().baseStyle();
 }
 
 void TextView::ViewStyle::reset() {
-	while (myStyle->isDecorated()) {
-		DecoratedTextStyle *decorated = (DecoratedTextStyle*)myStyle;
-		myStyle = &decorated->base();
-		delete decorated;
-	}
+	myStyle = TextStyleCollection::instance().baseStyle();
 }
 
 void TextView::ViewStyle::applyControl(const ControlElement &control, bool revert) {
 	if (control.isStart() == revert) {
 		if (myStyle->isDecorated()) {
-			DecoratedTextStyle *decorated = (DecoratedTextStyle*)myStyle;
-			myStyle = &decorated->base();
-			delete decorated;
+			TextStylePtr p = ((DecoratedTextStyle&)*myStyle).base();
+			myStyle = p;
 		}
 	} else {
 		const TextStyleDecoration *decoration = TextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
-			myStyle = decoration->createDecoratedStyle(*myStyle);
+			myStyle = decoration->createDecoratedStyle(myStyle);
 		}
 	}
-	myContext.setFont(style().fontFamily(), style().fontSize(), style().bold(), style().italic());
+	myContext.setFont(style()->fontFamily(), style()->fontSize(), style()->bold(), style()->italic());
 }
 
-void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end, bool revert) {
-	if (revert) {
-		WordCursor cursor = end;
-		while (!cursor.sameElementAs(begin)) {
-			cursor.previousWord();
-			if (cursor.element().kind() == TextElement::CONTROL_ELEMENT) {
-				applyControl((ControlElement&)cursor.element(), true);
-			}
-		}
-	} else {
-		WordCursor cursor = begin;
-		while (!cursor.sameElementAs(end)) {
-			if (cursor.element().kind() == TextElement::CONTROL_ELEMENT) {
-				applyControl((ControlElement&)cursor.element(), false);
-			}
-			cursor.nextWord();
+void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {
+	for (WordCursor cursor = begin; !cursor.sameElementAs(end); cursor.nextWord()) {
+		if (cursor.element().kind() == TextElement::CONTROL_ELEMENT) {
+			applyControl((ControlElement&)cursor.element(), false);
 		}
 	}
 }
@@ -84,13 +67,13 @@ int TextView::ViewStyle::elementWidth(const WordCursor &cursor) const {
 		case TextElement::IMAGE_ELEMENT:
 			return context().imageWidth(((const ImageElement&)element).image());
 		case TextElement::INDENT_ELEMENT:
-			return style().firstLineIndentDelta();
+			return style()->firstLineIndentDelta();
 		case TextElement::HSPACE_ELEMENT:
 			return 0;
 		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
 		case TextElement::AFTER_PARAGRAPH_ELEMENT:
 		case TextElement::EMPTY_LINE_ELEMENT:
-			return context().width() + abs(style().leftIndent()) + abs(style().rightIndent()) + abs(style().firstLineIndentDelta()) + 1;
+			return context().width() + abs(style()->leftIndent()) + abs(style()->rightIndent()) + abs(style()->firstLineIndentDelta()) + 1;
 		case TextElement::TREE_ELEMENT:
 			return context().stringHeight() * 4 / 3;
 		case TextElement::CONTROL_ELEMENT:
@@ -103,17 +86,17 @@ int TextView::ViewStyle::elementHeight(const WordCursor &cursor) const {
 	const TextElement &element = cursor.element();
 	switch (element.kind()) {
 		case TextElement::WORD_ELEMENT:
-			return (int)(context().stringHeight() * style().lineSpace()) + style().verticalShift();
+			return (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
 		case TextElement::TREE_ELEMENT:
 			return context().stringHeight();
 		case TextElement::IMAGE_ELEMENT:
 			return std::min(context().imageHeight(((const ImageElement&)element).image()), textAreaHeight());
 		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-			return style().spaceBefore();
+			return style()->spaceBefore();
 		case TextElement::AFTER_PARAGRAPH_ELEMENT:
-			return style().spaceAfter();
+			return style()->spaceAfter();
 		case TextElement::EMPTY_LINE_ELEMENT:
-			return style().spaceBefore() + context().stringHeight() + style().spaceAfter();
+			return style()->spaceBefore() + context().stringHeight() + style()->spaceAfter();
 		case TextElement::INDENT_ELEMENT:
 		case TextElement::HSPACE_ELEMENT:
 		case TextElement::CONTROL_ELEMENT:

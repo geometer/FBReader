@@ -23,6 +23,8 @@
 #include <map>
 #include <string>
 
+#include <abstract/shared_ptr.h>
+
 #include <abstract/ZLOptions.h>
 
 #include "../model/TextKind.h"
@@ -44,9 +46,10 @@ public:
 
 protected:
 	TextStyle() TEXT_STYLE_SECTION;
-	virtual ~TextStyle() TEXT_STYLE_SECTION;
 
 public:
+	virtual ~TextStyle() TEXT_STYLE_SECTION;
+
 	virtual bool isDecorated() const TEXT_STYLE_SECTION = 0;
 
 	virtual const std::string &fontFamily() const TEXT_STYLE_SECTION = 0;
@@ -68,6 +71,8 @@ public:
 
 	virtual bool allowHyphenations() const TEXT_STYLE_SECTION = 0;
 };
+
+typedef shared_ptr<TextStyle> TextStylePtr;
 
 class BaseTextStyle : public TextStyle {
 
@@ -121,7 +126,7 @@ public:
 
 	virtual bool isFullDecoration() const TEXT_STYLE_SECTION;
 
-	virtual TextStyle *createDecoratedStyle(const TextStyle &base) const TEXT_STYLE_SECTION;
+	virtual TextStylePtr createDecoratedStyle(const TextStylePtr base) const TEXT_STYLE_SECTION;
 
 	const std::string &name() const TEXT_STYLE_SECTION;
 
@@ -158,7 +163,7 @@ public:
 
 	virtual bool isFullDecoration() const TEXT_STYLE_SECTION;
 
-	TextStyle *createDecoratedStyle(const TextStyle &base) const TEXT_STYLE_SECTION;
+	TextStylePtr createDecoratedStyle(const TextStylePtr base) const TEXT_STYLE_SECTION;
 
 	const ZLIntegerOption &spaceBeforeOption() const TEXT_STYLE_SECTION;
 	const ZLIntegerOption &spaceAfterOption() const TEXT_STYLE_SECTION;
@@ -183,26 +188,26 @@ private:
 class DecoratedTextStyle : public TextStyle {
 
 protected:
-	DecoratedTextStyle(const TextStyle &base) TEXT_STYLE_SECTION;
+	DecoratedTextStyle(const TextStylePtr base) TEXT_STYLE_SECTION;
 	virtual const TextStyleDecoration &decoration() const TEXT_STYLE_SECTION = 0;
 
 public:
 	virtual ~DecoratedTextStyle() TEXT_STYLE_SECTION;
 
 	bool isDecorated() const TEXT_STYLE_SECTION;
-	const TextStyle &base() const TEXT_STYLE_SECTION;
+	const TextStylePtr &base() const TEXT_STYLE_SECTION;
 
 	ZLColor color() const TEXT_STYLE_SECTION;
 
 private:
-	const TextStyle &myBase;
+	const TextStylePtr myBase;
 };
 
 class PartialDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-	PartialDecoratedTextStyle(const TextStyle &base, const TextStyleDecoration &decoration) TEXT_STYLE_SECTION;
-	friend TextStyle *TextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
+	PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration) TEXT_STYLE_SECTION;
+	friend TextStylePtr TextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const;
 
 public:
 	virtual ~PartialDecoratedTextStyle() TEXT_STYLE_SECTION;
@@ -232,8 +237,8 @@ private:
 class FullDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-	FullDecoratedTextStyle(const TextStyle &base, const FullTextStyleDecoration &decoration) TEXT_STYLE_SECTION;
-	friend TextStyle *FullTextStyleDecoration::createDecoratedStyle(const TextStyle &base) const;
+	FullDecoratedTextStyle(const TextStylePtr base, const FullTextStyleDecoration &decoration) TEXT_STYLE_SECTION;
+	friend TextStylePtr FullTextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const;
 
 public:
 	~FullDecoratedTextStyle() TEXT_STYLE_SECTION;
@@ -266,7 +271,7 @@ public:
 	static TextStyleCollection &instance() TEXT_STYLE_SECTION;
 	static void deleteInstance() TEXT_STYLE_SECTION;
 
-	BaseTextStyle &baseStyle() const TEXT_STYLE_SECTION;
+	TextStylePtr baseStyle() const TEXT_STYLE_SECTION;
 	const TextStyleDecoration *decoration(TextKind kind) const TEXT_STYLE_SECTION;
 
 private:
@@ -280,7 +285,7 @@ private:
 	static TextStyleCollection *ourInstance;
 	
 private:
-	BaseTextStyle *myBaseStyle;
+	TextStylePtr myBaseStyle;
 	std::map<TextKind,TextStyleDecoration*> myDecorationMap;
 };
 
@@ -330,33 +335,33 @@ inline const ZLIntegerOption &FullTextStyleDecoration::firstLineIndentDeltaOptio
 inline const ZLIntegerOption &FullTextStyleDecoration::alignmentOption() const { return myAlignmentOption; }
 inline const ZLDoubleOption &FullTextStyleDecoration::lineSpaceOption() const { return myLineSpaceOption; }
 
-inline DecoratedTextStyle::DecoratedTextStyle(const TextStyle &base) : myBase(base) {}
+inline DecoratedTextStyle::DecoratedTextStyle(const TextStylePtr base) : myBase(base) {}
 inline DecoratedTextStyle::~DecoratedTextStyle() {}
 inline bool DecoratedTextStyle::isDecorated() const { return true; }
-inline const TextStyle &DecoratedTextStyle::base() const { return myBase; }
+inline const TextStylePtr &DecoratedTextStyle::base() const { return myBase; }
 
-inline PartialDecoratedTextStyle::PartialDecoratedTextStyle(const TextStyle &base, const TextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
+inline PartialDecoratedTextStyle::PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
 inline PartialDecoratedTextStyle::~PartialDecoratedTextStyle() {}
-inline int PartialDecoratedTextStyle::spaceBefore() const { return base().spaceBefore(); }
-inline int PartialDecoratedTextStyle::spaceAfter() const { return base().spaceAfter(); }
-inline int PartialDecoratedTextStyle::leftIndent() const { return base().leftIndent(); }
-inline int PartialDecoratedTextStyle::rightIndent() const { return base().rightIndent(); }
-inline int PartialDecoratedTextStyle::firstLineIndentDelta() const { return base().firstLineIndentDelta(); }
-inline int PartialDecoratedTextStyle::verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
-inline AlignmentType PartialDecoratedTextStyle::alignment() const { return base().alignment(); }
-inline double PartialDecoratedTextStyle::lineSpace() const { return base().lineSpace(); }
+inline int PartialDecoratedTextStyle::spaceBefore() const { return base()->spaceBefore(); }
+inline int PartialDecoratedTextStyle::spaceAfter() const { return base()->spaceAfter(); }
+inline int PartialDecoratedTextStyle::leftIndent() const { return base()->leftIndent(); }
+inline int PartialDecoratedTextStyle::rightIndent() const { return base()->rightIndent(); }
+inline int PartialDecoratedTextStyle::firstLineIndentDelta() const { return base()->firstLineIndentDelta(); }
+inline int PartialDecoratedTextStyle::verticalShift() const { return base()->verticalShift() + myDecoration.verticalShiftOption().value(); }
+inline AlignmentType PartialDecoratedTextStyle::alignment() const { return base()->alignment(); }
+inline double PartialDecoratedTextStyle::lineSpace() const { return base()->lineSpace(); }
 inline const TextStyleDecoration &PartialDecoratedTextStyle::decoration() const { return myDecoration; }
 
-inline FullDecoratedTextStyle::FullDecoratedTextStyle(const TextStyle &base, const FullTextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
+inline FullDecoratedTextStyle::FullDecoratedTextStyle(const TextStylePtr base, const FullTextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
 inline FullDecoratedTextStyle::~FullDecoratedTextStyle() {}
 inline int FullDecoratedTextStyle::spaceBefore() const { return myDecoration.spaceBeforeOption().value(); }
 inline int FullDecoratedTextStyle::spaceAfter() const { return myDecoration.spaceAfterOption().value(); }
-inline int FullDecoratedTextStyle::leftIndent() const { return base().leftIndent() + myDecoration.leftIndentOption().value(); }
-inline int FullDecoratedTextStyle::rightIndent() const { return base().rightIndent() + myDecoration.rightIndentOption().value(); }
-inline int FullDecoratedTextStyle::verticalShift() const { return base().verticalShift() + myDecoration.verticalShiftOption().value(); }
-inline double FullDecoratedTextStyle::lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base().lineSpace() : space; }
+inline int FullDecoratedTextStyle::leftIndent() const { return base()->leftIndent() + myDecoration.leftIndentOption().value(); }
+inline int FullDecoratedTextStyle::rightIndent() const { return base()->rightIndent() + myDecoration.rightIndentOption().value(); }
+inline int FullDecoratedTextStyle::verticalShift() const { return base()->verticalShift() + myDecoration.verticalShiftOption().value(); }
+inline double FullDecoratedTextStyle::lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base()->lineSpace() : space; }
 inline const TextStyleDecoration &FullDecoratedTextStyle::decoration() const { return myDecoration; }
 
-inline BaseTextStyle &TextStyleCollection::baseStyle() const { return *myBaseStyle; }
+inline TextStylePtr TextStyleCollection::baseStyle() const { return myBaseStyle; }
 
 #endif /* __TEXTSTYLE_H__ */

@@ -97,7 +97,6 @@ TextStyleCollection::TextStyleCollection() {
 }
 
 TextStyleCollection::~TextStyleCollection() {
-	delete myBaseStyle;
 	for (std::map<TextKind,TextStyleDecoration*>::iterator it = myDecorationMap.begin(); it != myDecorationMap.end(); it++) {
 		delete (*it).second;
 	}

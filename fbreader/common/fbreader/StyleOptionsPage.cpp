@@ -43,7 +43,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, PaintContext &
 
 	{
 		const std::string &name = myComboEntry->initialValue();
-		BaseTextStyle &baseStyle = collection.baseStyle();
+		BaseTextStyle &baseStyle = (BaseTextStyle&)*collection.baseStyle();
 
 		registerEntries(dialogTab,
 			new FontFamilyOptionEntry(baseStyle.fontFamilyOption(), context, false),
