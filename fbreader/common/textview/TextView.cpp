@@ -480,3 +480,12 @@ void TextView::drawWord(int x, int y, const Word &word, int start, int length, b
 		}
 	}
 }
+
+void TextView::clearCaches() {
+	if (myFirstParagraphCursor != 0) {
+		myFirstParagraphCursor->rebuild();
+	}
+	if (myLastParagraphCursor != 0) {
+		myLastParagraphCursor->rebuild();
+	}
+}

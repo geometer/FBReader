@@ -97,6 +97,7 @@ protected:
 
 private:
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
+	void clearTextCaches() FB_SECTION;
 
 public:
 	void openBook(BookDescription *description) FB_SECTION;

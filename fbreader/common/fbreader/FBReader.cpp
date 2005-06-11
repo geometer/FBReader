@@ -144,6 +144,7 @@ void FBReader::doAction(ActionCode code) {
 			{
 				OptionsDialog optionsDialog(*myContext);
 				optionsDialog.dialog().run("");
+				clearTextCaches();
 				repaintView();
 			}
 			break;
@@ -204,6 +205,7 @@ void FBReader::doAction(ActionCode code) {
 				int value = option.value() + 2;
 				if (value <= 32) {
 					option.setValue(value);
+					clearTextCaches();
 					repaintView();
 				}
 			}
@@ -215,6 +217,7 @@ void FBReader::doAction(ActionCode code) {
 				int value = option.value() - 2;
 				if (value >= 10) {
 					option.setValue(value);
+					clearTextCaches();
 					repaintView();
 				}
 			}
@@ -372,4 +375,11 @@ void FBReader::showBookTextView() {
 void FBReader::restorePreviousMode() {
 	setMode(myPreviousMode);
 	myPreviousMode = BOOK_TEXT_MODE;
+}
+
+void FBReader::clearTextCaches() {
+	myBookTextView->clearCaches();
+	myFootnoteView->clearCaches();
+	myContentsView->clearCaches();
+	myCollectionView->clearCaches();
 }

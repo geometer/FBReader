@@ -91,6 +91,7 @@ public:
 	static ZLIntegerOption PositionIndicatorOffsetOption;
 	
 public:
+	void clearCaches() VIEW_SECTION;
 	void paint(bool doPaint) VIEW_SECTION;
 	virtual void paint() VIEW_SECTION;
 
