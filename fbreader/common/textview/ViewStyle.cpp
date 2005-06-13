@@ -30,16 +30,18 @@
 
 TextView::ViewStyle::ViewStyle(PaintContext &context) : myContext(context) {
 	myStyle = TextStyleCollection::instance().baseStyle();
+	myWordHeight = -1;
 }
 
 void TextView::ViewStyle::reset() {
-	myStyle = TextStyleCollection::instance().baseStyle();
+	setStyle(TextStyleCollection::instance().baseStyle());
 }
 
 void TextView::ViewStyle::setStyle(const TextStylePtr style) {
 	if (myStyle != style) {
 		myStyle = style;
 		myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
+		myWordHeight = -1;
 	}
 }
 
@@ -91,7 +93,10 @@ int TextView::ViewStyle::elementHeight(const WordCursor &cursor) const {
 	const TextElement &element = cursor.element();
 	switch (element.kind()) {
 		case TextElement::WORD_ELEMENT:
-			return (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
+			if (myWordHeight == -1) {
+				myWordHeight = (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
+			}
+			return myWordHeight;
 		case TextElement::TREE_ELEMENT:
 			return context().stringHeight();
 		case TextElement::IMAGE_ELEMENT:

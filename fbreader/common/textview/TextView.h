@@ -61,6 +61,7 @@ private:
 	private:
 		TextStylePtr myStyle;
 		PaintContext &myContext;
+		mutable int myWordHeight;
 	};
 
 	class LineProcessor {
