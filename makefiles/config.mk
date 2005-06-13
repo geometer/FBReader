@@ -150,9 +150,9 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DMODEL_SECTION="__attribute__ ((section(\"sec6\")))" \
 		-DVIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
 		-DPAINT_SECTION="__attribute__ ((section(\"sec3\")))" \
-		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
+		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec4\")))" \
 		-DFB_SECTION="__attribute__ ((section(\"sec4\")))" \
-		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec4\")))" \
+		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec3\")))" \
 		-DHYPHENATION_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DFORMATS_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec6\")))" \

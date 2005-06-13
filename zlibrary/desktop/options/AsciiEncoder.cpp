@@ -18,7 +18,7 @@
 
 #include "AsciiEncoder.h"
 
-static std::string SpecialSymbols = "&<>\"";
+static std::string SpecialSymbols = "&<>\"'";
 
 std::string AsciiEncoder::encode(const std::string &source) {
 	std::string target;
