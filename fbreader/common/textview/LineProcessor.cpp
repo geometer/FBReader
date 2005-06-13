@@ -48,10 +48,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 
 	do {
 		newWidth += myStyle.elementWidth(current);
-		int eltHeight = myStyle.elementHeight(current);
-		if (eltHeight > newHeight) {
-			newHeight = eltHeight;
-		}
+		newHeight = std::max(newHeight, myStyle.elementHeight(current));
 		switch (elementKind) {
 			case TextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ControlElement&)current.element(), false);
@@ -87,9 +84,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		}
 		if (allowBreak) {
 			myWidth = newWidth;
-			if (newHeight > myHeight) {
-				myHeight = newHeight;
-			}
+			myHeight = std::max(myHeight, newHeight);
 			cursor = current;
 			storedStyle = myStyle.style();
 			mySpaceCounter = internalSpaceCounter;

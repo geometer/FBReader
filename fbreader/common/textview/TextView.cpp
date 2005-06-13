@@ -89,7 +89,8 @@ void TextView::paint(bool doPaint) {
 		int height = paragraphHeight(*myFirstParagraphCursor, true);
 		bool positionChanged = !myFirstParagraphCursor->isStartOfParagraph();
 		myFirstParagraphCursor->moveToParagraphStart();
-		while (height < myStyle.textAreaHeight()) {
+		const int textAreaHeight = myStyle.textAreaHeight();
+		while (height < textAreaHeight) {
 			if (positionChanged && myFirstParagraphCursor->isEndOfSection()) {
 				break;
 			}
@@ -101,7 +102,7 @@ void TextView::paint(bool doPaint) {
 			}
 			height += paragraphHeight(*myFirstParagraphCursor, false);
 		}
-		skip(*myFirstParagraphCursor, height - myStyle.textAreaHeight());
+		skip(*myFirstParagraphCursor, height - textAreaHeight);
 	}
 
 	if (myLastParagraphCursor != NULL) {
@@ -226,6 +227,8 @@ void TextView::gotoParagraph(int num, bool last) {
 void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
 
+	const int textAreaHeight = myStyle.textAreaHeight();
+
 	while (!paragraph.isEndOfParagraph()) {
 		context().moveXTo(myStyle.style()->leftIndent());
 
@@ -233,10 +236,10 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 		const WordCursor lineStart = paragraph.wordCursor();
 		const WordCursor lineEnd = myLineProcessor.process(lineStart, paragraph.end());
 		context().moveY(myLineProcessor.height());
-		int spaceCounter = myLineProcessor.spaceCounter();
-		if (context().y() > myStyle.textAreaHeight()) {
+		if (context().y() > textAreaHeight) {
 			break;
 		}
+		int spaceCounter = myLineProcessor.spaceCounter();
 		myStyle.setStyle(storedStyle);
 		paragraph.setWordCursor(lineEnd);
 
@@ -264,8 +267,6 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 				TextElement::Kind kind = pos.element().kind();
 				int x = context().x();
 				int y = context().y();
-				int width = myStyle.elementWidth(pos);
-				int height = myStyle.elementHeight(pos);
     
 				switch (kind) {
 					case TextElement::WORD_ELEMENT:
@@ -298,9 +299,14 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 					case TextElement::EMPTY_LINE_ELEMENT:
 						break;
 				}
+
+				int width = myStyle.elementWidth(pos);
 				context().moveX(width);
-				if ((width > 0) && (height > 0)) {
-					myTextElementMap.push_back(TextElementPosition(paragraph.paragraphNumber(), paragraph.wordNumber(pos), kind, x, x + width - 1, y - height + 1, y));
+				if (width > 0) {
+					int height = myStyle.elementHeight(pos);
+					if (height > 0) {
+						myTextElementMap.push_back(TextElementPosition(paragraph.paragraphNumber(), paragraph.wordNumber(pos), kind, x, x + width - 1, y - height + 1, y));
+					}
 				}
 			}
 			if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() == TextElement::WORD_ELEMENT)) {
