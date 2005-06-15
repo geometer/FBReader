@@ -1,0 +1,66 @@
+/*
+ * FBReader -- electronic book reader
+ * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+#include <algorithm>
+
+#include <abstract/ZLStringUtil.h>
+
+#include "BookCollection.h"
+
+const std::string GROUP = "LastOpenedBooks";
+const std::string BOOK = "Book";
+
+ZLIntegerOption LastOpenedBooks::MaxListSizeOption(GROUP, "MaxSize", 10);
+
+LastOpenedBooks::LastOpenedBooks() {
+	const int size = MaxListSizeOption.value();
+	for (int i = 0; i < size; i++) {
+		std::string num = BOOK;
+		ZLStringUtil::appendNumber(num, i);
+		std::string name = ZLStringOption(GROUP, num, "").value();
+		if (!name.empty()) {
+			BookDescriptionPtr description = BookDescription::create(name);
+			if (!description.isNull()) {
+				myBooks.push_back(description);
+			}
+		}
+	}
+}
+
+LastOpenedBooks::~LastOpenedBooks() {
+	const int size = std::min(MaxListSizeOption.value(), (long)myBooks.size());
+	for (int i = 0; i < size; i++) {
+		std::string num = BOOK;
+		ZLStringUtil::appendNumber(num, i);
+		ZLStringOption(GROUP, num, "").setValue(myBooks[i]->fileName());
+	}
+}
+
+void LastOpenedBooks::addBook(const std::string &fileName) {
+	for (Books::iterator it = myBooks.begin(); it != myBooks.end(); it++) {
+		if ((*it)->fileName() == fileName) {
+			myBooks.erase(it);
+			break;
+		}
+	}
+	BookDescriptionPtr description = BookDescription::create(fileName);
+	if (!description.isNull()) {
+		myBooks.insert(myBooks.begin(), description);
+	}
+}
