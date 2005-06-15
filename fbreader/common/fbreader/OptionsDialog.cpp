@@ -41,6 +41,7 @@ OptionsDialog::OptionsDialog(PaintContext &context) {
 	generalTab->addOption(new ZLSimpleSpinOptionEntry("Delay Between Page Scrollings, msecs", FBReader::ScrollingDelayOption, 0, 5000, 50));
 	generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", BookCollection::PathOption));
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", BookCollection::ScanSubdirsOption));
+	generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent books list size", LastOpenedBooks::MaxListSizeOption, 0, 100, 1));
 
 	ZLOptionsDialogTab *marginTab = myDialog->createTab("Margins");
 	marginTab->addOptions(
@@ -57,6 +58,7 @@ OptionsDialog::OptionsDialog(PaintContext &context) {
 
 	ZLOptionsDialogTab *indicatorTab = myDialog->createTab("Indicator");
 	indicatorTab->addOption(new ZLSimpleBooleanOptionEntry("Show Position Indicator", TextView::ShowPositionIndicatorOption));
+	indicatorTab->addOption(new ZLSimpleBooleanOptionEntry("Enable Navigation", TextView::IsIndicatorSensitiveOption));
 	indicatorTab->addOption(new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicatorHeightOption, 1, 100, 1));
 	indicatorTab->addOption(new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 0, 100, 1));
 

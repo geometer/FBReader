@@ -87,6 +87,7 @@ public:
 	static ZLBooleanOption AutoHyphenationOption;
 
 	static ZLBooleanOption ShowPositionIndicatorOption;
+	static ZLBooleanOption IsIndicatorSensitiveOption;
 	static ZLColorOption PositionIndicatorColorOption;
 	static ZLIntegerOption PositionIndicatorHeightOption;
 	static ZLIntegerOption PositionIndicatorOffsetOption;

@@ -34,10 +34,13 @@
 ZLColorOption TextView::TreeLinesColorOption("Colors", "TreeLines", ZLColor(127, 127, 127));
 ZLBooleanOption TextView::AutoHyphenationOption("Options", "AutoHyphenation", true);
 
-ZLBooleanOption TextView::ShowPositionIndicatorOption("Indicator", "Show", true);
-ZLColorOption TextView::PositionIndicatorColorOption("Indicator", "Color", ZLColor(127, 127, 127));
-ZLIntegerOption TextView::PositionIndicatorHeightOption("Indicator", "Height", 16);
-ZLIntegerOption TextView::PositionIndicatorOffsetOption("Indicator", "Offset", 4);
+const std::string INDICATOR = "Indicator";
+
+ZLBooleanOption TextView::ShowPositionIndicatorOption(INDICATOR, "Show", true);
+ZLBooleanOption TextView::IsIndicatorSensitiveOption(INDICATOR, "TouchSensitive", true);
+ZLColorOption TextView::PositionIndicatorColorOption(INDICATOR, "Color", ZLColor(127, 127, 127));
+ZLIntegerOption TextView::PositionIndicatorHeightOption(INDICATOR, "Height", 16);
+ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
 
 TextView::TextView(PaintContext &context) : View(context), myStyle(context), myLineProcessor(myStyle) {
 	myModel = NULL;
@@ -388,7 +391,7 @@ void TextView::findPrevious() {
 }
 
 bool TextView::onStylusPress(int x, int y) {
-	if (ShowPositionIndicatorOption.value() && (myModel != 0)) {
+	if (ShowPositionIndicatorOption.value() && IsIndicatorSensitiveOption.value() && (myModel != 0)) {
 		long bottom = context().height();
 		long top = bottom - PositionIndicatorHeightOption.value() + 1;
 		long left = 0;
