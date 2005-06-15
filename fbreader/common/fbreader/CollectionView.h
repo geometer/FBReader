@@ -38,7 +38,7 @@ public:
 	~CollectionView() FB_VIEW_SECTION;
 	const std::string &caption() const FB_VIEW_SECTION;
 
-	void fill() FB_VIEW_SECTION;
+	void rebuild() FB_VIEW_SECTION;
 	void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
 	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
 

@@ -38,11 +38,7 @@ CollectionView::CollectionView(FBReader &reader, PaintContext &context) : TextVi
 }
 
 CollectionView::~CollectionView() {
-	if (myCollection != 0) {
-		delete myCollection;
-		delete myTreeModel;
-		delete myLastBooksModel;
-	}
+	rebuild();
 }
 
 void CollectionView::showLastBooks(bool show) {
@@ -74,52 +70,59 @@ void CollectionView::gotoParagraph(int num, bool last) {
 }
 
 void CollectionView::paint() {
-	if (!myCollection->isActual()) {
-		fill();
+	if (myLastBooksAreShown) {
+		if (myLastBooksModel == 0) {
+			myLastBooksModel = new PlainTextModel();
+			const LastOpenedBooks lastBooks;
+			const Books &books = lastBooks.books();
+			for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
+				Paragraph *p = new Paragraph(Paragraph::TEXT_PARAGRAPH);
+				p->addControl(LIBRARY_AUTHOR_ENTRY, true);
+				p->addText((*it)->author()->displayName());
+				p->addText(". ");
+				p->addControl(LIBRARY_AUTHOR_ENTRY, false);
+				p->addControl(LIBRARY_BOOK_ENTRY, true);
+				p->addText((*it)->title());
+				myLastBooksModel->addParagraph(p);
+				myBooksMap[p] = *it;
+			}
+			setModel(myLastBooksModel, "Library");
+		}
+	} else {
+		if ((myCollection == 0) || (!myCollection->isActual())) {
+			myCollection = new BookCollection();
+			myTreeModel = new TreeModel();
+			const std::vector<const Author*> &authors = myCollection->authors();
+			for (std::vector<const Author*>::const_iterator it = authors.begin(); it != authors.end(); it++) {
+				TreeParagraph *authorParagraph = myTreeModel->createParagraph();
+				authorParagraph->addControl(LIBRARY_AUTHOR_ENTRY, true);
+				authorParagraph->addText((*it)->displayName());
+				const Books &books = myCollection->books(*it);
+				for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
+					TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
+					bookParagraph->addControl(LIBRARY_BOOK_ENTRY, true);
+					bookParagraph->addText((*jt)->title());
+					myBooksMap[bookParagraph] = *jt;
+				}
+			}
+			setModel(myTreeModel, "Library");
+		}
 	}
 	TextView::paint();
 }
 
-void CollectionView::fill() {
+void CollectionView::rebuild() {
+	myBooksMap.clear();
 	if (myCollection != 0) {
 		delete myCollection;
 		delete myTreeModel;
+		myCollection = 0;
+		myTreeModel = 0;
+	}
+	if (myLastBooksModel != 0) {
 		delete myLastBooksModel;
+		myLastBooksModel = 0;
 	}
-	myBooksMap.clear();
-
-	myCollection = new BookCollection();
-	myTreeModel = new TreeModel();
-	const std::vector<const Author*> &authors = myCollection->authors();
-	for (std::vector<const Author*>::const_iterator it = authors.begin(); it != authors.end(); it++) {
-		TreeParagraph *authorParagraph = myTreeModel->createParagraph();
-		authorParagraph->addControl(LIBRARY_AUTHOR_ENTRY, true);
-		authorParagraph->addText((*it)->displayName());
-		const Books &books = myCollection->books(*it);
-		for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
-			TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
-			bookParagraph->addControl(LIBRARY_BOOK_ENTRY, true);
-			bookParagraph->addText((*jt)->title());
-			myBooksMap[bookParagraph] = *jt;
-		}
-	}
-
-	myLastBooksModel = new PlainTextModel();
-	const LastOpenedBooks lastBooks;
-	const Books &books = lastBooks.books();
-	for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
-		Paragraph *p = new Paragraph(Paragraph::TEXT_PARAGRAPH);
-		p->addControl(LIBRARY_AUTHOR_ENTRY, true);
-		p->addText((*it)->author()->displayName());
-		p->addText(". ");
-		p->addControl(LIBRARY_AUTHOR_ENTRY, false);
-		p->addControl(LIBRARY_BOOK_ENTRY, true);
-		p->addText((*it)->title());
-		myLastBooksModel->addParagraph(p);
-		myBooksMap[p] = *it;
-	}
-
-	showLastBooks(myLastBooksAreShown);
 }
 
 bool CollectionView::onStylusPress(int x, int y) {

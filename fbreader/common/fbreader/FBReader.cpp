@@ -314,7 +314,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
-			myCollectionView->fill();
+			myCollectionView->rebuild();
 			myViewWidget->setView(myCollectionView);
 			break;
 		case BOOKMARKS_MODE:
