@@ -25,14 +25,14 @@
 
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
+#include "../description/BookDescription.h"
 
-class BookDescription;
 class Image;
 
 class BookModel {
 
 public:
-	BookModel(const BookDescription *description) MODEL_SECTION;
+	BookModel(const BookDescriptionPtr description) MODEL_SECTION;
 	~BookModel() MODEL_SECTION;
 
 	const std::string &fileName() const MODEL_SECTION;
@@ -44,10 +44,10 @@ public:
 	const ImageMap &imageMap() const MODEL_SECTION;
 	int paragraphNumberById(const std::string &id) const MODEL_SECTION;
 
-	const BookDescription &description() const MODEL_SECTION;
+	const BookDescriptionPtr description() const MODEL_SECTION;
 
 private:
-	const BookDescription *myDescription;
+	const BookDescriptionPtr myDescription;
 	PlainTextModel myBookTextModel;
 	PlainTextModel myContentsModel;
 	ImageMap myImages;
@@ -60,6 +60,6 @@ friend class BookReader;
 inline const TextModel &BookModel::bookTextModel() const { return myBookTextModel; }
 inline const TextModel &BookModel::contentsModel() const { return myContentsModel; }
 inline const ImageMap &BookModel::imageMap() const { return myImages; }
-inline const BookDescription &BookModel::description() const { return *myDescription; }
+inline const BookDescriptionPtr BookModel::description() const { return myDescription; }
 
 #endif /* __BOOKMODEL_H__ */

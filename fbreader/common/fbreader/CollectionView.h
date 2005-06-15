@@ -23,12 +23,13 @@
 #include <map>
 
 #include "../textview/TextView.h"
+#include "../description/BookDescription.h"
 
 class FBReader;
 class BookCollection;
-class BookDescription;
 class TreeModel;
-class TreeParagraph;
+class PlainTextModel;
+class Paragraph;
 
 class CollectionView : public TextView {
 
@@ -43,11 +44,15 @@ public:
 
 	void paint() FB_VIEW_SECTION;
 
+	void showLastBooks(bool show) FB_VIEW_SECTION;
+
 private:
 	FBReader &myReader;
 	BookCollection *myCollection;
 	TreeModel *myTreeModel;
-	std::map<TreeParagraph*,BookDescription*> myBooksMap;
+	PlainTextModel *myLastBooksModel;
+	std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
+	bool myLastBooksAreShown;
 	bool myTreeStateIsFrozen;
 };
 

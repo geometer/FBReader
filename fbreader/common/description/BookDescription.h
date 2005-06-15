@@ -22,9 +22,13 @@
 
 #include <string>
 
+#include <abstract/shared_ptr.h>
+
 #include <abstract/ZLOptions.h>
 
 class Author;
+class BookDescription;
+typedef shared_ptr<BookDescription> BookDescriptionPtr;
 
 struct BookInfo {
 	BookInfo(const std::string &fileName) MODEL_SECTION;
@@ -42,7 +46,7 @@ struct BookInfo {
 class BookDescription {
 
 public:
-	static BookDescription *create(const std::string &fileName) MODEL_SECTION;
+	static BookDescriptionPtr create(const std::string &fileName) MODEL_SECTION;
 	~BookDescription() MODEL_SECTION;
 
 private:

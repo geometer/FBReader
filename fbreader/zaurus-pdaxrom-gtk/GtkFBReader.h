@@ -49,14 +49,17 @@ protected:
 
 public:
 	void handleKeySlot(GdkEventKey *);
-
 	void close();
+
+private:
+	void addKeyBinding(guint keyval, GdkModifierType state, ActionCode code);
+	void addKeyBinding(const std::string &accelerator, ActionCode code);
 
 private:
 	GtkWindow *myMainWindow;
 	GtkWidget *myToolbar;
 
-	std::map<std::string,ActionCode> myKeyBindings;
+	std::map<std::pair<guint,GdkModifierType>,ActionCode> myKeyBindings;
 	std::map<ActionCode,GtkWidget*> myButtons;
 
 	bool myFullScreen;

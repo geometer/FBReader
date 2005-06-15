@@ -33,14 +33,14 @@ public:
 	const std::string &pixmapName(const std::string &shortFileName, bool dir) const FB_DIALOG_SECTION;
 	void accept(const std::string &fullFileName, bool dir) const FB_DIALOG_SECTION;
 
-	BookDescription *description() const FB_DIALOG_SECTION;
+	BookDescriptionPtr description() const FB_DIALOG_SECTION;
 
 private:
-	mutable BookDescription *myDescription;
+	mutable BookDescriptionPtr myDescription;
 };
 
 inline FBFileHandler::FBFileHandler() : myDescription(0) {}
 inline FBFileHandler::~FBFileHandler() {}
-inline BookDescription *FBFileHandler::description() const { return myDescription; }
+inline BookDescriptionPtr FBFileHandler::description() const { return myDescription; }
 
 #endif /* __FBFILEHANDLER_H__ */

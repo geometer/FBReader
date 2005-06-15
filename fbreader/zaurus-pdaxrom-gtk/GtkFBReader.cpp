@@ -84,24 +84,25 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKey), this);
 
-	myKeyBindings["L"] = ACTION_SHOW_COLLECTION;
-	myKeyBindings["O"] = ACTION_SHOW_OPTIONS;
-	myKeyBindings["Left"] = ACTION_UNDO;
-	myKeyBindings["Right"] = ACTION_REDO;
-	myKeyBindings["C"] = ACTION_SHOW_CONTENTS;
-	myKeyBindings["F"] = ACTION_SEARCH;
-	myKeyBindings["P"] = ACTION_FIND_PREVIOUS;
-	myKeyBindings["N"] = ACTION_FIND_NEXT;
-	myKeyBindings["D"] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
-	myKeyBindings["I"] = ACTION_SHOW_BOOK_INFO;
-	myKeyBindings["A"] = ACTION_ADD_BOOK;
-	myKeyBindings["R"] = ACTION_ROTATE_SCREEN;
-	myKeyBindings["Up"] = ACTION_SCROLL_BACKWARD;
-	myKeyBindings["Down"] = ACTION_SCROLL_FORWARD;
-	myKeyBindings["Escape"] = ACTION_CANCEL;
-	myKeyBindings["<Shift>plus"] = ACTION_INCREASE_FONT;
-	myKeyBindings["equal"] = ACTION_DECREASE_FONT;
-	myKeyBindings["Return"] = ACTION_FULLSCREEN;
+	addKeyBinding("L", ACTION_SHOW_COLLECTION);
+	addKeyBinding("Z", ACTION_SHOW_LAST_BOOKS);
+	addKeyBinding("C", ACTION_SHOW_CONTENTS);
+	addKeyBinding("F", ACTION_SEARCH);
+	addKeyBinding("N", ACTION_FIND_NEXT);
+	addKeyBinding("P", ACTION_FIND_PREVIOUS);
+	addKeyBinding("O", ACTION_SHOW_OPTIONS);
+	addKeyBinding("I", ACTION_SHOW_BOOK_INFO);
+	addKeyBinding("D", ACTION_SHOW_HIDE_POSITION_INDICATOR);
+	addKeyBinding("R", ACTION_ROTATE_SCREEN);
+	addKeyBinding("A", ACTION_ADD_BOOK);
+	addKeyBinding("1", ACTION_INCREASE_FONT);
+	addKeyBinding("2", ACTION_DECREASE_FONT);
+	addKeyBinding("Left", ACTION_UNDO);
+	addKeyBinding("Right", ACTION_REDO);
+	addKeyBinding("Up", ACTION_SCROLL_BACKWARD);
+	addKeyBinding("Down", ACTION_SCROLL_FORWARD);
+	addKeyBinding("Escape", ACTION_CANCEL);
+	addKeyBinding("Return", ACTION_FULLSCREEN);
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -113,22 +114,24 @@ GtkFBReader::~GtkFBReader() {
 	delete (GtkViewWidget*)myViewWidget;
 }
 
+void GtkFBReader::addKeyBinding(guint keyval, GdkModifierType state, ActionCode code) {
+	myKeyBindings[std::pair<guint,GdkModifierType>(keyval, state)] = code;
+}
+
+void GtkFBReader::addKeyBinding(const std::string &accelerator, ActionCode code) {
+	guint keyval;
+	GdkModifierType state;
+
+	gtk_accelerator_parse(accelerator.c_str(), &keyval, &state);
+	addKeyBinding(keyval, state, code);
+}
+
 void GtkFBReader::handleKeySlot(GdkEventKey *event) {
-	std::map<std::string,ActionCode>::const_iterator accel;
+	std::map<std::pair<guint,GdkModifierType>,ActionCode>::const_iterator
+		accelerator = myKeyBindings.find(std::pair<guint,GdkModifierType>(event->keyval, (GdkModifierType)event->state));
 
-	for (accel = myKeyBindings.begin(); accel != myKeyBindings.end() ; ++accel) {
-		guint key;
-		GdkModifierType mods;
-
-		gtk_accelerator_parse(accel->first.c_str(), &key, &mods);
-
-		if (event->keyval == key && (GdkModifierType)event->state == mods) {
-			break;
-		}
-	}
-
-	if (accel != myKeyBindings.end()) {
-		doAction(accel->second);
+	if (accelerator != myKeyBindings.end()) {
+		doAction(accelerator->second);
 	}
 }
 

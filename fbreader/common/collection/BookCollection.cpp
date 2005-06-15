@@ -34,7 +34,7 @@
 
 ZLBooleanOption BookCollection::ScanSubdirsOption("Options", "ScanSubdirs", false);
 
-bool DescriptionComparator::operator() (const BookDescription *d1, const BookDescription *d2) {
+bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2) {
 	return d1->title() < d2->title();
 }
 
@@ -88,8 +88,6 @@ BookCollection::BookCollection() {
 	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
 		std::sort((*it).second.begin(), (*it).second.end(), descriptionComparator);
 	}
-
-	myForgottenBook = 0;
 }
 
 bool BookCollection::isActual() const {
@@ -131,17 +129,10 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 }
 
 BookCollection::~BookCollection() {
-	for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
-		for (Books::iterator jt = (*it).second.begin(); jt != (*it).second.end(); jt++) {
-			if (*jt != myForgottenBook) {
-				delete *jt;
-			}
-		}
-	}
 }
 
-void BookCollection::addDescription(BookDescription *description) {
-	if (description == 0) {
+void BookCollection::addDescription(BookDescriptionPtr description) {
+	if (description.isNull()) {
 		return;
 	}
 

@@ -30,8 +30,8 @@
 #include "FBFileHandler.h"
 #include "InfoOptions.h"
 
+#include "../collection/BookCollection.h"
 #include "../collection/BookList.h"
-#include "../description/BookDescription.h"
 #include "../bookmodel/BookModel.h"
 #include "../view/PaintContext.h"
 #include "../hyphenation/Hyphenator.h"
@@ -64,8 +64,8 @@ FBReader::FBReader(PaintContext *context) {
 
 	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
 	ZLStringOption bookName(STATE, BOOK, howToStartString);
-	BookDescription *description = BookDescription::create(bookName.value());
-	if (description == 0) {
+	BookDescriptionPtr description = BookDescription::create(bookName.value());
+	if (description.isNull()) {
 #ifndef PALM_TEMPORARY
 		description = BookDescription::create(howToStartString);
 #else // PALM_TEMPORARY
@@ -94,8 +94,8 @@ FBReader::~FBReader() {
 	TextElementPool::clean();
 }
 
-void FBReader::openBook(BookDescription *description) {
-	if (description != 0) {
+void FBReader::openBook(BookDescriptionPtr description) {
+	if (!description.isNull()) {
 		myBookTextView->saveState();
 		myContentsView->saveState();
 		if (myModel != 0) {
@@ -110,6 +110,8 @@ void FBReader::openBook(BookDescription *description) {
 		myContentsView->setModel(&myModel->contentsModel(), description->fileName());
 		myContentsView->setCaption(description->title());
 		myContext->removeCaches();
+
+		LastOpenedBooks().addBook(description->fileName());
 	}
 }
 
@@ -138,7 +140,13 @@ void FBReader::repaintView() {
 void FBReader::doAction(ActionCode code) {
 	switch (code) {
 		case ACTION_SHOW_COLLECTION:
-			setMode(BOOK_COLLECTION_MODE);
+		case ACTION_SHOW_LAST_BOOKS:
+			myCollectionView->showLastBooks(code == ACTION_SHOW_LAST_BOOKS);
+			if (myMode != BOOK_COLLECTION_MODE) {
+				setMode(BOOK_COLLECTION_MODE);
+			} else {
+				repaintView();
+			}
 			break;
 		case ACTION_SHOW_OPTIONS:
 			{
@@ -233,13 +241,10 @@ void FBReader::doAction(ActionCode code) {
 			{
 				FBFileHandler handler;
 				ZLDialogManager::instance().openFileDialog("FBReader -- Add File To Library", handler);
-				BookDescription *description = handler.description();
-				if (description != 0) {
-					if (runBookInfoDialog(description->fileName())) {
-						BookList().addFileName(description->fileName());
-						setMode(BOOK_TEXT_MODE);
-					}
-					delete description;
+				BookDescriptionPtr description = handler.description();
+				if (!description.isNull() && runBookInfoDialog(description->fileName())) {
+					BookList().addFileName(description->fileName());
+					setMode(BOOK_TEXT_MODE);
 				}
 			}
 			break;
@@ -352,8 +357,8 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 		delete infoDialog;
 	}
 	if (code) {
-		BookDescription *newDescription = BookDescription::create(fileName);
-		if (newDescription != 0) {
+		BookDescriptionPtr newDescription = BookDescription::create(fileName);
+		if (!newDescription.isNull()) {
 			openBook(newDescription);
 			setWindowCaption("FBReader - " + myViewWidget->view()->caption());
 			repaintView();

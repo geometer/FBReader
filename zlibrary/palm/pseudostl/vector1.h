@@ -36,7 +36,9 @@ namespace std {
 		void assign(size_t size, const T &value) STL_SECTION;
 		void push_back(const T &element) STL_SECTION;
 		void pop_back() STL_SECTION;
+		void insert(const iterator &position, const T &value) STL_SECTION;
 		void insert(const iterator &position, const const_iterator &from, const const_iterator &to) STL_SECTION;
+		void erase(const iterator &position) STL_SECTION;
 		void swap(vector &v) STL_SECTION;
 
 	private:
@@ -179,7 +181,15 @@ namespace std {
 		__myData[__myLength].~T();
 	}
 	template<typename T>
+	inline void vector<T>::insert(const vector<T>::iterator &position, const T &value) {
+		// TODO: implement
+	}
+	template<typename T>
 	inline void vector<T>::insert(const vector<T>::iterator &position, const vector<T>::const_iterator &from, const vector<T>::const_iterator &to) {
+		// TODO: implement
+	}
+	template<typename T>
+	inline void vector<T>::erase(const vector<T>::iterator &position) {
 		// TODO: implement
 	}
 	template<typename T>

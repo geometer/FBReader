@@ -49,6 +49,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	setCentralWidget((QViewWidget*)myViewWidget);
 
 	myKeyBindings[Key_L] = ACTION_SHOW_COLLECTION;
+	myKeyBindings[Key_Z] = ACTION_SHOW_LAST_BOOKS;
 	myKeyBindings[Key_C] = ACTION_SHOW_CONTENTS;
 	myKeyBindings[Key_F] = ACTION_SEARCH;
 	myKeyBindings[Key_N] = ACTION_FIND_NEXT;

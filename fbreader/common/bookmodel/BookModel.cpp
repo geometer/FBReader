@@ -23,10 +23,8 @@
 #include "../formats/FormatPlugin.h"
 
 #include "../model/Image.h"
-#include "../description/BookDescription.h"
 
-BookModel::BookModel(const BookDescription *description) {
-	myDescription = description;
+BookModel::BookModel(const BookDescriptionPtr description) : myDescription(description) {
 #ifdef PALM_TEMPORARY
 	if (description->fileName() == "$$TEST") {
 		BookReader reader(*this);
@@ -47,8 +45,6 @@ BookModel::BookModel(const BookDescription *description) {
 }
 
 BookModel::~BookModel() {
-	delete myDescription;
-
 	for (ImageMap::const_iterator it = myImages.begin(); it != myImages.end(); it++) {
 		delete (*it).second;
 	}

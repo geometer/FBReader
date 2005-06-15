@@ -41,7 +41,7 @@ bool BookInfo::isFull() const {
 		!EncodingOption.value().empty();
 }
 
-BookDescription *BookDescription::create(const std::string &fileName) {
+BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 #ifdef PALM_TEMPORARY
 	if (fileName == "$$TEST") {
 		BookDescription *description = new BookDescription(fileName);
@@ -58,7 +58,7 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 		return 0;
 	}
 
-	BookDescription *description = new BookDescription(fileName);
+	BookDescriptionPtr description = new BookDescription(fileName);
 	BookInfo info(fileName);
 	ZLIntegerOption FileSizeOption(realFileName, "Size", -1);
 	ZLIntegerOption FileMTimeOption(realFileName, "MTime", -1);
@@ -78,7 +78,6 @@ BookDescription *BookDescription::create(const std::string &fileName) {
 
 	FormatPlugin *plugin = PluginCollection::instance().plugin(fileName, false);
 	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
-		delete description;
 		return 0;
 	}
 

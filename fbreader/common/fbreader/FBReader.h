@@ -25,7 +25,8 @@
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLTime.h>
 
-class BookDescription;
+#include "../description/BookDescription.h"
+
 class BookModel;
 class BookTextView;
 class FootnoteView;
@@ -57,6 +58,7 @@ public:
 		ACTION_SHOW_BOOK_INFO,
 		ACTION_SHOW_HELP,
 		ACTION_ROTATE_SCREEN,
+		ACTION_SHOW_LAST_BOOKS,
 	};
 
 protected:
@@ -100,7 +102,7 @@ private:
 	void clearTextCaches() FB_SECTION;
 
 public:
-	void openBook(BookDescription *description) FB_SECTION;
+	void openBook(BookDescriptionPtr description) FB_SECTION;
 	BookTextView &textView() const FB_SECTION;
 	void showBookTextView() FB_SECTION;
 	void tryShowFootnoteView(const std::string &id) FB_SECTION;
