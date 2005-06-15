@@ -18,8 +18,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+// MSS: please do not remove these #defines until we are happy with the numbers :)
+// #define PRINT_TIMING
+
+#ifdef PRINT_TIMING
 #include <iostream>
 #include <abstract/ZLTime.h>
+#endif
 
 #include "GtkViewWidget.h"
 #include "GtkFBReader.h"
@@ -57,16 +62,23 @@ GtkViewWidget::~GtkViewWidget() {
 }
 
 void GtkViewWidget::repaintView()	{
+#ifdef PRINT_TIMING
   const ZLTime c0;
+#endif
 	GtkPaintContext &gtkContext = (GtkPaintContext&)view()->context();
 	const int w = myArea->allocation.width;
 	const int h = myArea->allocation.height;
 	gtkContext.updatePixmap(myArea, w, h);
 	gtkContext.setRotation(isRotated());
+#ifdef PRINT_TIMING
   const ZLTime c1;
+#endif
 	view()->paint();
+#ifdef PRINT_TIMING
   const ZLTime c2;
+#endif
 	gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, w, h);
+#ifdef PRINT_TIMING
 	const ZLTime c3;
 
   std::cout <<
@@ -74,6 +86,6 @@ void GtkViewWidget::repaintView()	{
     c2.millisecondsFrom(c1) << " + " <<
     c3.millisecondsFrom(c2) << " = " <<
     c3.millisecondsFrom(c0) << std::endl;
-	
+#endif
 	myReader->enableMenuButtons();
 }
