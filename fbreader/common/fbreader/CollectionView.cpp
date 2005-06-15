@@ -112,6 +112,7 @@ void CollectionView::paint() {
 }
 
 void CollectionView::rebuild() {
+	setModel(0, "Library");
 	myBooksMap.clear();
 	if (myCollection != 0) {
 		delete myCollection;
