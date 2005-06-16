@@ -16,21 +16,21 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "View.h"
+#include "ZLView.h"
 
-View::View(PaintContext &context) : myContext(context) {
+ZLView::ZLView(ZLPaintContext &context) : myContext(context) {
 }
 
-View::~View() {
+ZLView::~ZLView() {
 }
 
-void ViewWidget::setView(View *view) {
+void ZLViewWidget::setView(ZLView *view) {
 	myView = view;
 	myView->myWidget = this;
 	repaintView();
 }
 
-void View::repaintView() {
+void ZLView::repaintView() {
 	if (myWidget != 0) {
 		myWidget->repaintView();
 	}

@@ -25,7 +25,7 @@
 class FootnoteView : public TextView {
 
 public:
-	FootnoteView(PaintContext &context) FB_VIEW_SECTION;
+	FootnoteView(ZLPaintContext &context) FB_VIEW_SECTION;
 	~FootnoteView() FB_VIEW_SECTION;
 	const std::string &caption() const FB_VIEW_SECTION;
 	void setCaption(const std::string &caption) FB_VIEW_SECTION;
@@ -34,7 +34,7 @@ private:
 	std::string myCaption;
 };
 
-inline FootnoteView::FootnoteView(PaintContext &context) : TextView(context) {}
+inline FootnoteView::FootnoteView(ZLPaintContext &context) : TextView(context) {}
 inline FootnoteView::~FootnoteView() {}
 inline const std::string &FootnoteView::caption() const { return myCaption; }
 inline void FootnoteView::setCaption(const std::string &caption) { myCaption = caption; }

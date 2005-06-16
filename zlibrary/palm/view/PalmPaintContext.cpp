@@ -43,7 +43,7 @@ PalmPaintContext::~PalmPaintContext() {
 }
 
 void PalmPaintContext::removeCaches() {
-	PaintContext::removeCaches();
+	ZLPaintContext::removeCaches();
 
 	/*
 	for (std::map<const Image*,QImage*>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {

@@ -42,7 +42,7 @@ QPaintContext::~QPaintContext() {
 }
 
 void QPaintContext::removeCaches() {
-	PaintContext::removeCaches();
+	ZLPaintContext::removeCaches();
 
 	for (std::map<const ZLImage*,QImage*>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {
 		delete it->second;

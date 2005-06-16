@@ -79,7 +79,7 @@ GtkPaintContext::~GtkPaintContext() {
 }
 
 void GtkPaintContext::removeCaches() {
-	PaintContext::removeCaches();
+	ZLPaintContext::removeCaches();
 
 	for (std::map<const ZLImage*,GdkPixbuf *>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {
 		g_object_unref(it->second);

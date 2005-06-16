@@ -19,9 +19,9 @@
 #ifndef __PALMVIEWWIDGET_H__
 #define __PALMVIEWWIDGET_H__
 
-#include <abstract/View.h>
+#include <abstract/ZLView.h>
 
-class PalmViewWidget : public ViewWidget {
+class PalmViewWidget : public ZLViewWidget {
 
 public:
 	PalmViewWidget(UInt16 formId) VIEW_SECTION;

@@ -19,7 +19,7 @@
 
 #include <abstract/ZLDialogManager.h>
 #include <abstract/ZLOptionsDialog.h>
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"
@@ -33,7 +33,7 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
-OptionsDialog::OptionsDialog(PaintContext &context) {
+OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
 	ZLOptionsDialogTab *generalTab = myDialog->createTab("General");

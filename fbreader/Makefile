@@ -12,7 +12,7 @@ ALL_SUBDIRS = common/model common/description common/collection common/bookmodel
 ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt
 ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk maemo
 
-SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/view common/textview common/hyphenation common/fbreader
+SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/txt common/textview common/hyphenation common/fbreader
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	GTKSUBDIRS = $(TARGET_ARCH)
@@ -39,7 +39,7 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/view common/textview common/hyphenation common/fbreader
+	SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/textview common/hyphenation common/fbreader
 	SUBDIRS += $(TARGET_ARCH)
 endif
 

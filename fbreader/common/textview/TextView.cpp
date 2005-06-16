@@ -40,7 +40,7 @@ ZLColorOption TextView::PositionIndicatorColorOption(INDICATOR, "Color", ZLColor
 ZLIntegerOption TextView::PositionIndicatorHeightOption(INDICATOR, "Height", 16);
 ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
 
-TextView::TextView(PaintContext &context) : View(context), myStyle(context), myLineProcessor(myStyle) {
+TextView::TextView(ZLPaintContext &context) : ZLView(context), myStyle(context), myLineProcessor(myStyle) {
 	myModel = NULL;
 
 	myFirstParagraphCursor = NULL;

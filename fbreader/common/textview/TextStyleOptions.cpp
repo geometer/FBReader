@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
 #include "TextStyleOptions.h"
 #include "TextStyle.h"
@@ -32,7 +32,7 @@ std::vector<std::string> FontFamilyOptionEntry::ourAllFamiliesPlusBase;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValues;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValuesPlusBase;
 
-FontFamilyOptionEntry::FontFamilyOptionEntry(const ZLStringOption &option, const PaintContext &context, bool allowBase) : myOption(option), myAllowBase(allowBase) {
+FontFamilyOptionEntry::FontFamilyOptionEntry(const ZLStringOption &option, const ZLPaintContext &context, bool allowBase) : myOption(option), myAllowBase(allowBase) {
 	if (ourAllFamiliesPlusBase.empty()) {
 		ourAllFamilies = context.fontFamilies();
 		ourAllFamiliesPlusBase.push_back(BASE_STRING);

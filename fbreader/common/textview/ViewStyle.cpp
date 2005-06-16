@@ -20,14 +20,14 @@
 #include <algorithm>
 
 #include <abstract/ZLUnicodeUtil.h>
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
 #include "TextView.h"
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
 #include "TextElement.h"
 
-TextView::ViewStyle::ViewStyle(PaintContext &context) : myContext(context) {
+TextView::ViewStyle::ViewStyle(ZLPaintContext &context) : myContext(context) {
 	myStyle = TextStyleCollection::instance().baseStyle();
 	myWordHeight = -1;
 }

@@ -16,27 +16,26 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __PAINTCONTEXT_H__
-#define __PAINTCONTEXT_H__
+#ifndef __ZLPAINTCONTEXT_H__
+#define __ZLPAINTCONTEXT_H__
 
 #include <vector>
 #include <string>
 
 #include <abstract/ZLOptions.h>
 
-class Word;
 class ZLImage;
 
-class PaintContext {
+class ZLPaintContext {
 
 public:
 	static ZLColorOption BackgroundColorOption;
 	
 protected:
-	PaintContext() PAINT_SECTION;
+	ZLPaintContext() PAINT_SECTION;
 
 public:
-	virtual ~PaintContext() PAINT_SECTION;
+	virtual ~ZLPaintContext() PAINT_SECTION;
 	virtual void removeCaches() PAINT_SECTION;
 
 	int x() const PAINT_SECTION;
@@ -90,21 +89,21 @@ private:
 	mutable std::vector<std::string> myFamilies;
 
 private:
-	PaintContext(const PaintContext&);
-	const PaintContext& operator = (const PaintContext&);
+	ZLPaintContext(const ZLPaintContext&);
+	const ZLPaintContext& operator = (const ZLPaintContext&);
 };
 
-inline int PaintContext::x() const { return myX; }
-inline int PaintContext::y() const { return myY; }
+inline int ZLPaintContext::x() const { return myX; }
+inline int ZLPaintContext::y() const { return myY; }
 
-inline void PaintContext::moveXTo(int x) { myX = x; }
-inline void PaintContext::moveX(int deltaX) { myX += deltaX; }
-inline void PaintContext::moveYTo(int y) { myY = y; }
-inline void PaintContext::moveY(int deltaY) { myY += deltaY; }
+inline void ZLPaintContext::moveXTo(int x) { myX = x; }
+inline void ZLPaintContext::moveX(int deltaX) { myX += deltaX; }
+inline void ZLPaintContext::moveYTo(int y) { myY = y; }
+inline void ZLPaintContext::moveY(int deltaY) { myY += deltaY; }
 
-inline const ZLIntegerOption &PaintContext::leftMargin() const { return myLeftMargin; };
-inline const ZLIntegerOption &PaintContext::rightMargin() const { return myRightMargin; };
-inline const ZLIntegerOption &PaintContext::topMargin() const { return myTopMargin; };
-inline const ZLIntegerOption &PaintContext::bottomMargin() const { return myBottomMargin; };
+inline const ZLIntegerOption &ZLPaintContext::leftMargin() const { return myLeftMargin; };
+inline const ZLIntegerOption &ZLPaintContext::rightMargin() const { return myRightMargin; };
+inline const ZLIntegerOption &ZLPaintContext::topMargin() const { return myTopMargin; };
+inline const ZLIntegerOption &ZLPaintContext::bottomMargin() const { return myBottomMargin; };
 
-#endif /* __PAINTCONTEXT_H__ */
+#endif /* __ZLPAINTCONTEXT_H__ */

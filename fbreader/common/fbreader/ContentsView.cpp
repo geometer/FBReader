@@ -24,7 +24,7 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-ContentsView::ContentsView(FBReader &reader, PaintContext &context) : TextView(context), myReader(reader) {
+ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
 }
 
 bool ContentsView::onStylusPress(int x, int y) {

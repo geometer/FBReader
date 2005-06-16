@@ -20,7 +20,7 @@
 #include <abstract/ZLDialogManager.h>
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLOptionsDialog.h>
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -52,7 +52,7 @@ ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
 ZLBooleanOption FBReader::SearchInWholeTextOption(SEARCH, "WholeText", false);
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
-FBReader::FBReader(PaintContext *context) {
+FBReader::FBReader(ZLPaintContext *context) {
 	myModel = 0;
 	myContext = context;
 	myBookTextView = new BookTextView(*this, *myContext);

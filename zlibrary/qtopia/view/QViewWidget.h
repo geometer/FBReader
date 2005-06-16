@@ -21,9 +21,9 @@
 
 #include <qwidget.h>
 
-#include <abstract/View.h>
+#include <abstract/ZLView.h>
 
-class QViewWidget : public QWidget, public ViewWidget {
+class QViewWidget : public QWidget, public ZLViewWidget {
 
 public:
 	QViewWidget(QWidget *parent, ZLApplication *application);

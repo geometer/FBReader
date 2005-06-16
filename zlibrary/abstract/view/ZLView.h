@@ -16,8 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __VIEW_H__
-#define __VIEW_H__
+#ifndef __ZLVIEW_H__
+#define __ZLVIEW_H__
 
 #include <string>
 
@@ -31,18 +31,18 @@ public:
 	virtual void enableMenuButtons() APPLICATION_SECTION = 0;
 };
 
-class View;
-class PaintContext;
+class ZLView;
+class ZLPaintContext;
 
-class ViewWidget {
+class ZLViewWidget {
 
 protected:
-	ViewWidget() VIEW_SECTION;
-	virtual ~ViewWidget() VIEW_SECTION;
+	ZLViewWidget() VIEW_SECTION;
+	virtual ~ZLViewWidget() VIEW_SECTION;
 
 public:
-	void setView(View *view) VIEW_SECTION;
-	View *view() const VIEW_SECTION;
+	void setView(ZLView *view) VIEW_SECTION;
+	ZLView *view() const VIEW_SECTION;
 
 	virtual void repaintView() VIEW_SECTION = 0;
 
@@ -50,19 +50,19 @@ public:
 	bool isRotated() const VIEW_SECTION;
 
 private:
-	View *myView;
+	ZLView *myView;
 	bool myIsRotated;
 };
 
-class View {
+class ZLView {
 
 public:
-	View(PaintContext &context) VIEW_SECTION;
-	virtual ~View() VIEW_SECTION;
+	ZLView(ZLPaintContext &context) VIEW_SECTION;
+	virtual ~ZLView() VIEW_SECTION;
 
 	virtual const std::string &caption() const VIEW_SECTION = 0;
 	virtual void paint() VIEW_SECTION = 0;
-	PaintContext &context() const VIEW_SECTION;
+	ZLPaintContext &context() const VIEW_SECTION;
 
 	/*
 	 * returns true iff stylus pressing was processed
@@ -72,22 +72,22 @@ public:
 	void repaintView() VIEW_SECTION;
 
 private:
-	ViewWidget *myWidget;
-	PaintContext &myContext;
+	ZLViewWidget *myWidget;
+	ZLPaintContext &myContext;
 
-friend void ViewWidget::setView(View *view);
+friend void ZLViewWidget::setView(ZLView *view);
 };
 
 inline ZLApplication::ZLApplication() {}
 inline ZLApplication::~ZLApplication() {}
 
-inline ViewWidget::ViewWidget() : myIsRotated(false) {}
-inline ViewWidget::~ViewWidget() {}
-inline View *ViewWidget::view() const { return myView; }
-inline void ViewWidget::rotate() { myIsRotated = !myIsRotated; }
-inline bool ViewWidget::isRotated() const { return myIsRotated; }
+inline ZLViewWidget::ZLViewWidget() : myIsRotated(false) {}
+inline ZLViewWidget::~ZLViewWidget() {}
+inline ZLView *ZLViewWidget::view() const { return myView; }
+inline void ZLViewWidget::rotate() { myIsRotated = !myIsRotated; }
+inline bool ZLViewWidget::isRotated() const { return myIsRotated; }
 
-inline PaintContext &View::context() const { return myContext; }
-inline bool View::onStylusPress(int, int) { return false; }
+inline ZLPaintContext &ZLView::context() const { return myContext; }
+inline bool ZLView::onStylusPress(int, int) { return false; }
 
-#endif /* __VIEW_H__ */
+#endif /* __ZLVIEW_H__ */

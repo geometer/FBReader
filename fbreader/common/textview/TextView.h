@@ -24,7 +24,7 @@
 #include <string>
 
 #include <abstract/ZLOptions.h>
-#include <abstract/View.h>
+#include <abstract/ZLView.h>
 
 #include "TextElement.h"
 #include "Word.h"
@@ -36,13 +36,13 @@ class ParagraphCursor;
 class WordCursor;
 class TextMark;
 
-class TextView : public View {
+class TextView : public ZLView {
 
 private:
 	class ViewStyle {
 
 	public:
-		ViewStyle(PaintContext &context) VIEW_SECTION;
+		ViewStyle(ZLPaintContext &context) VIEW_SECTION;
 		~ViewStyle() VIEW_SECTION;
 
 		void reset() VIEW_SECTION;
@@ -50,7 +50,7 @@ private:
 		void applyControl(const ControlElement &control, bool revert) VIEW_SECTION;
 		void applyControls(const WordCursor &begin, const WordCursor &end) VIEW_SECTION;
 
-		const PaintContext &context() const VIEW_SECTION;
+		const ZLPaintContext &context() const VIEW_SECTION;
 		const TextStylePtr &style() const VIEW_SECTION;
 		int elementWidth(const WordCursor &cursor) const VIEW_SECTION;
 		int elementHeight(const WordCursor &cursor) const VIEW_SECTION;
@@ -60,7 +60,7 @@ private:
 
 	private:
 		TextStylePtr myStyle;
-		PaintContext &myContext;
+		ZLPaintContext &myContext;
 		mutable int myWordHeight;
 	};
 
@@ -113,7 +113,7 @@ public:
 	bool onStylusPress(int x, int y) VIEW_SECTION;
 
 protected:
-	TextView(PaintContext &context) VIEW_SECTION;
+	TextView(ZLPaintContext &context) VIEW_SECTION;
 	virtual ~TextView() VIEW_SECTION;
 
 private:
@@ -161,7 +161,7 @@ private:
 };
 
 inline TextView::ViewStyle::~ViewStyle() {}
-inline const PaintContext &TextView::ViewStyle::context() const { return myContext; }
+inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr &TextView::ViewStyle::style() const { return myStyle; }
 
 inline TextView::LineProcessor::LineProcessor(ViewStyle &style) : myStyle(style) {}

@@ -16,25 +16,25 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "PaintContext.h"
+#include "ZLPaintContext.h"
 
 static const std::string COLORS = "Colors";
 static const std::string OPTIONS = "Options";
 
-ZLColorOption PaintContext::BackgroundColorOption(COLORS, "Background", ZLColor(255, 255, 255));
+ZLColorOption ZLPaintContext::BackgroundColorOption(COLORS, "Background", ZLColor(255, 255, 255));
 
-PaintContext::PaintContext() :
+ZLPaintContext::ZLPaintContext() :
 			myLeftMargin(OPTIONS, "LeftMargin", 4), myRightMargin(OPTIONS, "RightMargin", 4),
 			myTopMargin(OPTIONS, "TopMargin", 0), myBottomMargin(OPTIONS, "BottomMargin", 4) {
 }
 
-PaintContext::~PaintContext() {
+ZLPaintContext::~ZLPaintContext() {
 }
 
-void PaintContext::removeCaches() {
+void ZLPaintContext::removeCaches() {
 }
 
-const std::vector<std::string> &PaintContext::fontFamilies() const {
+const std::vector<std::string> &ZLPaintContext::fontFamilies() const {
 	if (myFamilies.empty()) {
 		fillFamiliesList(myFamilies);
 	}

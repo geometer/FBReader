@@ -27,7 +27,7 @@ class FBReader;
 class BookTextView : public TextView {
 
 public:
-	BookTextView(FBReader &reader, PaintContext &context) FB_VIEW_SECTION;
+	BookTextView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
 	~BookTextView() FB_VIEW_SECTION;
 	const std::string &caption() const FB_VIEW_SECTION;
 	void setCaption(const std::string &caption) FB_VIEW_SECTION;

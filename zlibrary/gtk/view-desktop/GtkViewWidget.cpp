@@ -32,7 +32,7 @@
 
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
-	View *view = viewWidget->view();
+	ZLView *view = viewWidget->view();
 	if (viewWidget->isRotated()) {
 		view->onStylusPress(
 			viewWidget->height() - (int)event->y - view->context().rightMargin().value(),

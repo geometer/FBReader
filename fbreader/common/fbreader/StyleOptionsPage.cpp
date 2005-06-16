@@ -18,7 +18,7 @@
  */
 
 #include <abstract/ZLOptionsDialog.h>
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
 #include "StyleOptionsPage.h"
 
@@ -26,7 +26,7 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
-StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, PaintContext &context) {
+StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext &context) {
 	myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
 	myComboEntry->addValue(myComboEntry->initialValue());
 

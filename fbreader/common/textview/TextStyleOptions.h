@@ -24,7 +24,7 @@
 
 #include <abstract/ZLOptionEntry.h>
 
-class PaintContext;
+class ZLPaintContext;
 
 class FontFamilyOptionEntry : public ZLComboOptionEntry {
 
@@ -33,7 +33,7 @@ private:
 	static std::vector<std::string> ourAllFamiliesPlusBase;
 
 public:
-	FontFamilyOptionEntry(const ZLStringOption &option, const PaintContext &context, bool allowBase) FB_DIALOG_SECTION;
+	FontFamilyOptionEntry(const ZLStringOption &option, const ZLPaintContext &context, bool allowBase) FB_DIALOG_SECTION;
 	~FontFamilyOptionEntry() FB_DIALOG_SECTION;
 
 	const std::string &name() const FB_DIALOG_SECTION;

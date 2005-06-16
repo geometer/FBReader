@@ -29,7 +29,7 @@
 #include "../description/BookDescription.h"
 #include "../description/Author.h"
 
-CollectionView::CollectionView(FBReader &reader, PaintContext &context) : TextView(context), myReader(reader) {
+CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
 	myCollection = 0;
 	myTreeModel = 0;
 	myLastBooksModel = 0;

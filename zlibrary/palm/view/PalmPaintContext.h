@@ -24,9 +24,9 @@
 
 //#include <map>
 
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
-class PalmPaintContext : public PaintContext {
+class PalmPaintContext : public ZLPaintContext {
 
 public:
 	PalmPaintContext() PAINT_SECTION;

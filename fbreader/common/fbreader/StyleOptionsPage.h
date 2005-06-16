@@ -23,12 +23,12 @@
 #include "OptionsPage.h"
 
 class ZLOptionsDialogTab;
-class PaintContext;
+class ZLPaintContext;
 
 class StyleOptionsPage : public OptionsPage {
 
 public:
-	StyleOptionsPage(ZLOptionsDialogTab *dialogTab, PaintContext &context) FB_DIALOG_SECTION;
+	StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext &context) FB_DIALOG_SECTION;
 	~StyleOptionsPage() FB_DIALOG_SECTION;
 };
 

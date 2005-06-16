@@ -22,12 +22,12 @@
 
 class ZLOptionsDialog;
 class OptionsPage;
-class PaintContext;
+class ZLPaintContext;
 
 class OptionsDialog {
 
 public:
-	OptionsDialog(PaintContext &context) FB_DIALOG_SECTION;
+	OptionsDialog(ZLPaintContext &context) FB_DIALOG_SECTION;
 	~OptionsDialog() FB_DIALOG_SECTION;
 
 	ZLOptionsDialog &dialog() FB_DIALOG_SECTION;

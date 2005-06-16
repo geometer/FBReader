@@ -24,7 +24,7 @@
 
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLTime.h>
-#include <abstract/View.h>
+#include <abstract/ZLView.h>
 
 #include "../description/BookDescription.h"
 
@@ -33,8 +33,8 @@ class BookTextView;
 class FootnoteView;
 class ContentsView;
 class CollectionView;
-class ViewWidget;
-class PaintContext;
+class ZLViewWidget;
+class ZLPaintContext;
 
 class FBReader : public ZLApplication {
 
@@ -84,7 +84,7 @@ public:
 	static std::string HelpDirectory;
 
 protected:
-	FBReader(PaintContext *context) FB_SECTION;
+	FBReader(ZLPaintContext *context) FB_SECTION;
 	virtual ~FBReader() FB_SECTION;
 
 	virtual void setMode(ViewMode mode) FB_SECTION;
@@ -115,7 +115,7 @@ public:
 protected:
 	ViewMode myMode;
 	ViewMode myPreviousMode;
-	ViewWidget *myViewWidget;
+	ZLViewWidget *myViewWidget;
   FootnoteView *myFootnoteView;	
   BookTextView *myBookTextView;	
   ContentsView *myContentsView;	
@@ -124,7 +124,7 @@ protected:
 private:
 	ZLTime myLastScrollingTime;
 
-	PaintContext *myContext;
+	ZLPaintContext *myContext;
 	BookModel *myModel;
 };
 

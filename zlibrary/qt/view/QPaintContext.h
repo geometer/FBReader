@@ -22,12 +22,12 @@
 
 #include <map>
 
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
 class QPixmap;
 class QImage;
 
-class QPaintContext : public PaintContext {
+class QPaintContext : public ZLPaintContext {
 
 public:
 	QPaintContext();

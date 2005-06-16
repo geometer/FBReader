@@ -23,7 +23,7 @@
 #include <vector>
 #include <string>
 
-#include <abstract/PaintContext.h>
+#include <abstract/ZLPaintContext.h>
 
 #include "TextElement.h"
 
@@ -55,7 +55,7 @@ public:
 public:
 	~Word() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
-	short width(const PaintContext &context) const VIEW_SECTION;
+	short width(const ZLPaintContext &context) const VIEW_SECTION;
 
 	void addMark(int start, int len) VIEW_SECTION;
 
@@ -79,7 +79,7 @@ private:
 inline Word::~Word() { if (myMark != 0) delete myMark; }
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
 inline Word::WordMark *Word::mark() const { return myMark; }
-inline short Word::width(const PaintContext &context) const {
+inline short Word::width(const ZLPaintContext &context) const {
 	if (myWidth == -1) {
 		myWidth = context.stringWidth(Data, Size);
 	}
