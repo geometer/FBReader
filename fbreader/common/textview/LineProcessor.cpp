@@ -26,8 +26,6 @@
 #include "TextStyle.h"
 #include "Word.h"
 
-#include "../view/PaintContext.h"
-
 #include "../hyphenation/Hyphenator.h"
 
 WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordCursor &end) {

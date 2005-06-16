@@ -24,8 +24,8 @@
 #include <string>
 
 #include <abstract/ZLOptions.h>
+#include <abstract/View.h>
 
-#include "../view/View.h"
 #include "TextElement.h"
 #include "Word.h"
 #include "TextStyle.h"

@@ -28,7 +28,7 @@
 
 class BookModel;
 class PlainTextModel;
-class Image;
+class ZLImage;
 class ZLInputStream;
 
 class BookReader {
@@ -74,7 +74,7 @@ private:
 
 	Paragraph *myCurrentParagraph;
 	ParagraphWithReference *myCurrentContentsParagraph;
-	Image *myCurrentImage;
+	ZLImage *myCurrentImage;
 
 	bool mySectionContainsRegularContents;
 	bool myInsideTitle;

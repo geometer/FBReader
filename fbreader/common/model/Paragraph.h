@@ -27,8 +27,8 @@
 #include "TextKind.h"
 
 class BookDescription;
-class Image;
-typedef std::map<std::string,Image*> ImageMap;
+class ZLImage;
+typedef std::map<std::string,ZLImage*> ImageMap;
 
 class ParagraphEntry {
 
@@ -96,7 +96,7 @@ public:
 	~ImageEntry() MODEL_SECTION;
 	Kind entryKind() const MODEL_SECTION;
 	const std::string &id() const MODEL_SECTION;
-	const Image *image() const MODEL_SECTION;
+	const ZLImage *image() const MODEL_SECTION;
 
 private:
 	std::string myId;

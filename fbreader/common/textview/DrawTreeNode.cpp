@@ -17,8 +17,9 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/PaintContext.h>
+
 #include "TextView.h"
-#include "../view/PaintContext.h"
 
 void TextView::drawTreeNode(TreeElement::TreeElementKind kind) {
 	int x = context().x();

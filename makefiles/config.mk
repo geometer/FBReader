@@ -7,6 +7,8 @@ DUMMY_SECTIONS = \
 	-DOPTIONS_SECTION="" \
 	-DUTIL_SECTION="" \
 	-DDIALOG_SECTION="" \
+	-DIMAGE_SECTION="" \
+	-DAPPLICATION_SECTION="" \
 	-DMODEL_SECTION="" \
 	-DVIEW_SECTION="" \
 	-DPAINT_SECTION="" \
@@ -147,6 +149,8 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DUTIL_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DDIALOG_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DIMAGE_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DAPPLICATION_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DMODEL_SECTION="__attribute__ ((section(\"sec6\")))" \
 		-DVIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
 		-DPAINT_SECTION="__attribute__ ((section(\"sec3\")))" \

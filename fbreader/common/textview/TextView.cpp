@@ -29,8 +29,6 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-#include "../view/PaintContext.h"
-
 ZLColorOption TextView::TreeLinesColorOption("Colors", "TreeLines", ZLColor(127, 127, 127));
 ZLBooleanOption TextView::AutoHyphenationOption("Options", "AutoHyphenation", true);
 

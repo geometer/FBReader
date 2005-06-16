@@ -107,7 +107,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
 				beforeAddWord();
-				const Image *image = ((ImageEntry*)*it)->image();
+				const ZLImage *image = ((ImageEntry*)*it)->image();
 				if (image != NULL) {
 					myElements->push_back(new ImageElement(*image));
 				}

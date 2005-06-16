@@ -20,13 +20,12 @@
 #include <algorithm>
 
 #include <abstract/ZLUnicodeUtil.h>
+#include <abstract/PaintContext.h>
 
 #include "TextView.h"
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
 #include "TextElement.h"
-
-#include "../view/PaintContext.h"
 
 TextView::ViewStyle::ViewStyle(PaintContext &context) : myContext(context) {
 	myStyle = TextStyleCollection::instance().baseStyle();

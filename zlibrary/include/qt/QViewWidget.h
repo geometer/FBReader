@@ -1,0 +1,1 @@
+../../qt/view/QViewWidget.h

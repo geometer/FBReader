@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -21,17 +20,15 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <gtk-maemo/GtkViewWidget.h>
+#include <gtk-maemo/GtkPaintContext.h>
+
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
 #include "../common/fbreader/FootnoteView.h"
 #include "../common/fbreader/ContentsView.h"
 #include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
-#include "GtkViewWidget.h"
-#include "GtkPaintContext.h"
-
-static ZLIntegerOption Width("Options", "Width", 800);
-static ZLIntegerOption Height("Options", "Height", 800);
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->close();
@@ -82,8 +79,6 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	gtk_container_add(GTK_CONTAINER(myAppView), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
-	// MSS: seems to do nothing for maemo platform
-	// gtk_window_resize(myMainWindow, Width.value(), Height.value());
 	gtk_widget_show_all(GTK_WIDGET(myApp));
 
 	setMode(BOOK_TEXT_MODE);
@@ -160,11 +155,6 @@ void GtkFBReader::buildMenu() {
 }
 
 GtkFBReader::~GtkFBReader() {
-	int width, height;
-	gtk_window_get_size(GTK_WINDOW(myApp), &width, &height);	// MSS: I'm not sure this is really useful for maemo
-	Width.setValue(width);
-	Height.setValue(height);
-
 	for (std::map<ActionCode,ActionSlotData*>::iterator item = myActions.begin(); item != myActions.end(); ++item) {
 		delete item->second;
 	}

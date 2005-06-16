@@ -24,6 +24,7 @@
 
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLTime.h>
+#include <abstract/View.h>
 
 #include "../description/BookDescription.h"
 
@@ -35,7 +36,7 @@ class CollectionView;
 class ViewWidget;
 class PaintContext;
 
-class FBReader {
+class FBReader : public ZLApplication {
 
 public:
 	enum ActionCode {

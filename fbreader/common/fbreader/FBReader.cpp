@@ -20,6 +20,7 @@
 #include <abstract/ZLDialogManager.h>
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLOptionsDialog.h>
+#include <abstract/PaintContext.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -33,7 +34,6 @@
 #include "../collection/BookCollection.h"
 #include "../collection/BookList.h"
 #include "../bookmodel/BookModel.h"
-#include "../view/PaintContext.h"
 #include "../hyphenation/Hyphenator.h"
 #include "../textview/TextStyle.h"
 #include "../textview/ParagraphCursor.h"

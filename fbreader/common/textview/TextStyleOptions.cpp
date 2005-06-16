@@ -17,10 +17,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/PaintContext.h>
+
 #include "TextStyleOptions.h"
 #include "TextStyle.h"
-
-#include "../view/PaintContext.h"
 
 static std::string FAMILY_STRING = "Family";
 static std::string LINE_SPACING_STRING = "Line Spacing";

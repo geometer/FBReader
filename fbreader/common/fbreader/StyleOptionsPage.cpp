@@ -18,10 +18,10 @@
  */
 
 #include <abstract/ZLOptionsDialog.h>
+#include <abstract/PaintContext.h>
 
 #include "StyleOptionsPage.h"
 
-#include "../view/PaintContext.h"
 #include "../textview/TextView.h"
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"

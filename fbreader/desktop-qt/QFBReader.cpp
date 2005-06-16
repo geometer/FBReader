@@ -30,14 +30,15 @@
 
 #include <abstract/ZLOptions.h>
 
+#include <qt/QViewWidget.h>
+#include <qt/QPaintContext.h>
+
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
 #include "../common/fbreader/FootnoteView.h"
 #include "../common/fbreader/ContentsView.h"
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
-#include "QViewWidget.h"
-#include "QPaintContext.h"
 
 static ZLIntegerOption Width("Options", "Width", 800);
 static ZLIntegerOption Height("Options", "Height", 800);
@@ -45,7 +46,7 @@ static ZLIntegerOption Height("Options", "Height", 800);
 QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	setWFlags(getWFlags() | WStyle_Customize);
 
-	myViewWidget = new QViewWidget(this);
+	myViewWidget = new QViewWidget(this, this);
 	setCentralWidget((QViewWidget*)myViewWidget);
 
 	myKeyBindings[Key_L] = ACTION_SHOW_COLLECTION;

@@ -32,6 +32,8 @@
 #include <abstract/ZLOptions.h>
 
 #include <qtopia/FullScreenDialog.h>
+#include <qtopia/QViewWidget.h>
+#include <qtopia/QPaintContext.h>
 
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
@@ -39,13 +41,11 @@
 #include "../common/fbreader/ContentsView.h"
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
-#include "QViewWidget.h"
-#include "QPaintContext.h"
 
 QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	setWFlags(getWFlags() | WStyle_Customize);
 
-	myViewWidget = new QViewWidget(this);
+	myViewWidget = new QViewWidget(this, this);
 	setCentralWidget((QViewWidget*)myViewWidget);
 
 	myKeyBindings[Key_L] = ACTION_SHOW_COLLECTION;

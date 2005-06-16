@@ -21,14 +21,15 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <gtk-pdaxrom/GtkViewWidget.h>
+#include <gtk-pdaxrom/GtkPaintContext.h>
+
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
 #include "../common/fbreader/FootnoteView.h"
 #include "../common/fbreader/ContentsView.h"
 #include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
-#include "GtkViewWidget.h"
-#include "GtkPaintContext.h"
 
 static ZLIntegerOption Width("Options", "Width", 800);
 static ZLIntegerOption Height("Options", "Height", 800);

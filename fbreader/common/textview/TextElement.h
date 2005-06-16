@@ -51,18 +51,18 @@ private:
 	TextElement &operator = (const TextElement&) VIEW_SECTION;
 };
 
-class Image;
+class ZLImage;
 
 class ImageElement : public TextElement {
 
 public:
-	ImageElement(const Image &image) VIEW_SECTION;
+	ImageElement(const ZLImage &image) VIEW_SECTION;
 	~ImageElement() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
-	const Image &image() const VIEW_SECTION;
+	const ZLImage &image() const VIEW_SECTION;
 
 private:
-	const Image &myImage;
+	const ZLImage &myImage;
 };
 
 class SpecialTextElement : public TextElement {
@@ -114,10 +114,10 @@ private:
 inline TextElement::TextElement() {}
 inline TextElement::~TextElement() {}
 
-inline ImageElement::ImageElement(const Image &image) : myImage(image) {}
+inline ImageElement::ImageElement(const ZLImage &image) : myImage(image) {}
 inline ImageElement::~ImageElement() {}
 inline TextElement::Kind ImageElement::kind() const { return IMAGE_ELEMENT; };
-inline const Image &ImageElement::image() const { return myImage; }
+inline const ZLImage &ImageElement::image() const { return myImage; }
 
 inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
 inline SpecialTextElement::~SpecialTextElement() {}

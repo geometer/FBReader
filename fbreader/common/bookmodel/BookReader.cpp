@@ -17,10 +17,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLImage.h>
+
 #include "BookReader.h"
 #include "BookModel.h"
 #include "../model/Paragraph.h"
-#include "../model/Image.h"
 
 BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
@@ -151,8 +152,8 @@ void BookReader::flushTextBufferToParagraph() {
 }
 
 void BookReader::beginImageData(const char *contentType, const char *id) {
-	myCurrentImage = new Image(contentType);
-	myModel.myImages.insert(std::pair<std::string,Image*>(id, myCurrentImage));
+	myCurrentImage = new ZLImage(contentType);
+	myModel.myImages.insert(std::pair<std::string,ZLImage*>(id, myCurrentImage));
 }
 
 void BookReader::endImageData() {

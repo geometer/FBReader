@@ -23,8 +23,9 @@
 #include <vector>
 #include <string>
 
+#include <abstract/PaintContext.h>
+
 #include "TextElement.h"
-#include "../view/PaintContext.h"
 
 class Word : public TextElement {
 

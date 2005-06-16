@@ -1,14 +1,14 @@
 #include <abstract/ZLOptions.h>
-#include <palm/ZLPalmFSManager.h>
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLScreenSize.h>
-
 #include <abstract/ZLTime.h>
 #include <abstract/ZLStringUtil.h>
 
+#include <palm/ZLPalmFSManager.h>
+#include <palm/PalmViewWidget.h>
+#include <palm/PalmPaintContext.h>
+
 #include "PalmFBReader.h"
-#include "PalmViewWidget.h"
-#include "PalmPaintContext.h"
 #include "PalmFBReader-resources.h"
 
 PalmFBReader::PalmFBReader() : FBReader(new PalmPaintContext()) {

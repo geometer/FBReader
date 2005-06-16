@@ -27,7 +27,7 @@
 #include "../model/Paragraph.h"
 #include "../description/BookDescription.h"
 
-class Image;
+class ZLImage;
 
 class BookModel {
 

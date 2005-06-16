@@ -17,12 +17,12 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLImage.h>
+
 #include "BookModel.h"
 #include "BookReader.h"
 
 #include "../formats/FormatPlugin.h"
-
-#include "../model/Image.h"
 
 BookModel::BookModel(const BookDescriptionPtr description) : myDescription(description) {
 #ifdef PALM_TEMPORARY
