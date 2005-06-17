@@ -30,8 +30,8 @@ void PalmFBReader::fullscreenSlot() {}
 bool PalmFBReader::isRotationSupported() const { return false; }
 void PalmFBReader::stylusPressEvent(int x, int y) {
 	ZLView *view = myViewWidget->view();
-	x -= view->context().leftMargin().value();
-	y -= view->context().topMargin().value();
+	x -= view->context().leftMargin();
+	y -= view->context().topMargin();
 	view->onStylusPress(x, y);
 }
 void PalmFBReader::paintEvent() {

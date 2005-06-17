@@ -45,12 +45,12 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 
 	ZLOptionsDialogTab *marginTab = myDialog->createTab("Margins");
 	marginTab->addOptions(
-		new ZLSimpleSpinOptionEntry("Left Margin", context.leftMargin(), 0, 100, 1),
-		new ZLSimpleSpinOptionEntry("Right Margin", context.rightMargin(), 0, 100, 1)
+		new ZLSimpleSpinOptionEntry("Left Margin", TextStyle::LeftMarginOption, 0, 100, 1),
+		new ZLSimpleSpinOptionEntry("Right Margin", TextStyle::RightMarginOption, 0, 100, 1)
 	);
 	marginTab->addOptions(
-		new ZLSimpleSpinOptionEntry("Top Margin", context.topMargin(), 0, 100, 1),
-		new ZLSimpleSpinOptionEntry("Bottom Margin", context.bottomMargin(), 0, 100, 1)
+		new ZLSimpleSpinOptionEntry("Top Margin", TextStyle::TopMarginOption, 0, 100, 1),
+		new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyle::BottomMarginOption, 0, 100, 1)
 	);
 
 	myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));

@@ -108,12 +108,19 @@ void QPaintContext::setFont(const std::string &family, int size, bool bold, bool
 	}
 }
 
-void QPaintContext::setColor(ZLColor color) {
-	myPainter->setPen(QColor(color.Red, color.Green, color.Blue));
+void QPaintContext::setColor(ZLColor color, LineStyle style) {
+	myPainter->setPen(QPen(
+		QColor(color.Red, color.Green, color.Blue),
+		1,
+		(style == SOLID_LINE) ? QPainter::SolidLine : QPainter::DashLine
+	));
 }
 
-void QPaintContext::setFillColor(ZLColor color) {
-	myPainter->setBrush(QColor(color.Red, color.Green, color.Blue));
+void QPaintContext::setFillColor(ZLColor color, FillStyle style) {
+	myPainter->setBrush(QBrush(
+		QColor(color.Red, color.Green, color.Blue),
+		(style == SOLID_FILL) ? QPainter::SolidPattern : QPainter::Dense4Pattern
+	));
 }
 
 int QPaintContext::stringWidth(const char *str, int len) const {
@@ -133,7 +140,7 @@ int QPaintContext::stringHeight() const {
 
 void QPaintContext::drawString(int x, int y, const char *str, int len) {
 	QString qStr = QString::fromUtf8(str, len);
-	myPainter->drawText(x + leftMargin().value(), y + topMargin().value(), qStr);
+	myPainter->drawText(x + leftMargin(), y + topMargin(), qStr);
 }
 
 QImage &QPaintContext::qImage(const ZLImage &image) const {
@@ -157,12 +164,12 @@ int QPaintContext::imageHeight(const ZLImage &image) const {
 }
 
 void QPaintContext::drawImage(int x, int y, const ZLImage &image) {
-	myPainter->drawImage(x + leftMargin().value(), y + topMargin().value() - imageHeight(image), qImage(image));
+	myPainter->drawImage(x + leftMargin(), y + topMargin() - imageHeight(image), qImage(image));
 }
 
 void QPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	myPainter->drawLine(x0 + leftMargin().value(), y0 + topMargin().value(),
-											x1 + leftMargin().value(), y1 + topMargin().value());
+	myPainter->drawLine(x0 + leftMargin(), y0 + topMargin(),
+											x1 + leftMargin(), y1 + topMargin());
 }
 
 void QPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
@@ -176,15 +183,20 @@ void QPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 		y1 = y0;
 		y0 = tmp;
 	}
-	myPainter->fillRect(x0 + leftMargin().value(), y0 + topMargin().value(),
+	myPainter->fillRect(x0 + leftMargin(), y0 + topMargin(),
 											x1 - x0 + 1, y1 - y0 + 1,
 											myPainter->brush());
 }
 
-void QPaintContext::clear() {
+void QPaintContext::drawFilledCircle(int x, int y, int r) {
+	x += leftMargin();
+	y += topMargin();
+	myPainter->drawEllipse(x - r, y - r, 2 * r + 1, 2 * r + 1);
+}
+
+void QPaintContext::clear(ZLColor color) {
 	if (myPixmap != NULL) {
-		ZLColor background = BackgroundColorOption.value();
-		myPixmap->fill(QColor(background.Red, background.Green, background.Blue));
+		myPixmap->fill(QColor(color.Red, color.Green, color.Blue));
 	}
 }
 
@@ -192,12 +204,12 @@ int QPaintContext::width() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myPixmap->width() - leftMargin().value() - rightMargin().value();
+	return myPixmap->width() - leftMargin() - rightMargin();
 }
 
 int QPaintContext::height() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myPixmap->height() - bottomMargin().value() - topMargin().value();
+	return myPixmap->height() - bottomMargin() - topMargin();
 }

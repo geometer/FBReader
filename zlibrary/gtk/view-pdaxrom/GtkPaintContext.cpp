@@ -177,11 +177,13 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 	}
 }
 
-void GtkPaintContext::setColor(ZLColor color) {
+void GtkPaintContext::setColor(ZLColor color, LineStyle style) {
+	// TODO: use style
 	::setColor(myTextGC, color);
 }
 
-void GtkPaintContext::setFillColor(ZLColor color) {
+void GtkPaintContext::setFillColor(ZLColor color, FillStyle style) {
+	// TODO: use style
 	::setColor(myFillGC, color);
 }
 
@@ -218,8 +220,8 @@ int GtkPaintContext::stringHeight() const {
 }
 
 void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
-	x += leftMargin().value();
-	y += topMargin().value();
+	x += leftMargin();
+	y += topMargin();
 	pango_shape(str, len, &myAnalysis, myString);
 	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }
@@ -261,8 +263,8 @@ int GtkPaintContext::imageHeight(const ZLImage &image) const {
 
 void GtkPaintContext::drawImage(int x, int y, const ZLImage &image) {
 	// TODO: should we optimize it all? we do two lookups in our cache
-	// for gtk+ v2.2+ gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
-	gdk_pixbuf_render_to_drawable (gtkImage(image), myPixmap, NULL, 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+	// for gtk+ v2.2+ gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin(), y + topMargin() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+	gdk_pixbuf_render_to_drawable (gtkImage(image), myPixmap, NULL, 0, 0, x + leftMargin(), y + topMargin() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
 	//
 	// COMMENTS:
 	// NULL			-- we have no clipping (do we need it?)
@@ -270,13 +272,13 @@ void GtkPaintContext::drawImage(int x, int y, const ZLImage &image) {
 	// -1, -1		-- use the whole
 	// GDK_RGB_DITHER_NONE -- no dithering, hopefully, (0, 0) after it does not harm
 
-	//myPainter->drawImage(x + leftMargin().value(), y + topMargin().value() - imageHeight(image), qImage(image));
+	//myPainter->drawImage(x + leftMargin(), y + topMargin() - imageHeight(image), qImage(image));
 }
 
 void GtkPaintContext::drawLine(int x0, int y0, int x1, int y1) {
 	gdk_draw_line(myPixmap, myTextGC,
-								x0 + leftMargin().value(), y0 + topMargin().value(),
-								x1 + leftMargin().value(), y1 + topMargin().value());
+								x0 + leftMargin(), y0 + topMargin(),
+								x1 + leftMargin(), y1 + topMargin());
 }
 
 void GtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
@@ -291,13 +293,17 @@ void GtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 		y0 = tmp;
 	}
 	gdk_draw_rectangle(myPixmap, myFillGC, true,
-										 x0 + leftMargin().value(), y0 + topMargin().value(),
+										 x0 + leftMargin(), y0 + topMargin(),
 										 x1 - x0 + 1, y1 - y0 + 1);
 }
 
-void GtkPaintContext::clear() {
+void GtkPaintContext::drawFilledCircle(int x, int y, int r) {
+	// TODO: implement
+}
+
+void GtkPaintContext::clear(ZLColor color) {
 	if (myPixmap != NULL) {
-		::setColor(myBackGC, BackgroundColorOption.value());
+		::setColor(myBackGC, color);
 		gdk_draw_rectangle(myPixmap, myBackGC, true, 0, 0, myWidth, myHeight);
 	}
 }
@@ -306,14 +312,14 @@ int GtkPaintContext::width() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myWidth - leftMargin().value() - rightMargin().value();
+	return myWidth - leftMargin() - rightMargin();
 }
 
 int GtkPaintContext::height() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myHeight - bottomMargin().value() - topMargin().value();
+	return myHeight - bottomMargin() - topMargin();
 }
 
 // vim:ts=2:sw=2:noet

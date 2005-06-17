@@ -29,12 +29,12 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	ZLView *view = viewWidget->view();
 	if (viewWidget->isRotated()) {
 		view->onStylusPress(
-			viewWidget->height() - (int)event->y - view->context().rightMargin().value(),
-			(int)event->x - view->context().topMargin().value());
+			viewWidget->height() - (int)event->y - view->context().rightMargin(),
+			(int)event->x - view->context().topMargin());
 	} else {
 		view->onStylusPress(
-			(int)event->x - view->context().leftMargin().value(),
-			(int)event->y - view->context().topMargin().value());
+			(int)event->x - view->context().leftMargin(),
+			(int)event->y - view->context().topMargin());
 	}
 }
 

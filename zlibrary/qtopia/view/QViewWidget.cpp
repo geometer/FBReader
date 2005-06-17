@@ -36,8 +36,8 @@ void QViewWidget::paintEvent(QPaintEvent*) {
 
 void QViewWidget::mousePressEvent(QMouseEvent *event) {
 	view()->onStylusPress(
-		event->x() - view()->context().leftMargin().value(),
-		event->y() - view()->context().topMargin().value());
+		event->x() - view()->context().leftMargin(),
+		event->y() - view()->context().topMargin());
 }
 
 void QViewWidget::repaintView()	{

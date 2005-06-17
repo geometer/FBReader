@@ -38,14 +38,14 @@ public:
 	int width() const PAINT_SECTION;
 	int height() const PAINT_SECTION;
 
-	void clear() PAINT_SECTION;
+	void clear(ZLColor color) PAINT_SECTION;
 
 	void fillFamiliesList(std::vector<std::string> &families) const PAINT_SECTION;
 	const std::string realFontFamilyName(std::string &fontFamily) const PAINT_SECTION;
 
 	void setFont(const std::string &family, int size, bool bold, bool italic) PAINT_SECTION;
-	void setColor(ZLColor color) PAINT_SECTION;
-	void setFillColor(ZLColor color) PAINT_SECTION;
+	void setColor(ZLColor color, LineStyle style = SOLID_LINE) PAINT_SECTION;
+	void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) PAINT_SECTION;
 
 	int stringWidth(const char *str, int len) const PAINT_SECTION;
 	int spaceWidth() const PAINT_SECTION;
@@ -58,6 +58,7 @@ public:
 
 	void drawLine(int x0, int y0, int x1, int y1) PAINT_SECTION;
 	void fillRectangle(int x0, int y0, int x1, int y1) PAINT_SECTION;
+	void drawFilledCircle(int x, int y, int r) PAINT_SECTION;
 
 private:
 	//QImage &qImage(const Image &image) const;

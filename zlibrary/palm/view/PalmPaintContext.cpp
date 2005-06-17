@@ -24,22 +24,12 @@
 bool DO_PAINT = false;
 
 PalmPaintContext::PalmPaintContext() {
-	//myPainter = new QPainter();
-	//myPixmap = NULL;
 	myWidth = 0;
 	myHeight = 0;
-	BackgroundColorOption.setValue(ZLColor(255, 255, 170));
 	mySpaceWidth = -1;
 }
 
 PalmPaintContext::~PalmPaintContext() {
-	/*
-	if (myPixmap != NULL) {
-		myPainter->end();
-		delete myPixmap;
-	}
-	delete myPainter;
-	*/
 }
 
 void PalmPaintContext::removeCaches() {
@@ -111,13 +101,15 @@ IndexedColorType iColor(ZLColor zlColor) {
 	return WinRGBToIndex(&rgbColor);
 }
 
-void PalmPaintContext::setColor(ZLColor color) {
+void PalmPaintContext::setColor(ZLColor color, LineStyle style) {
+	// TODO: use style
 	IndexedColorType c = iColor(color);
 	WinSetForeColor(c);
 	WinSetTextColor(c);
 }
 
-void PalmPaintContext::setFillColor(ZLColor color) {
+void PalmPaintContext::setFillColor(ZLColor color, FillStyle style) {
+	// TODO: use style
 	myFillColor.r = color.Red;
 	myFillColor.g = color.Green;
 	myFillColor.b = color.Blue;
@@ -142,8 +134,8 @@ int PalmPaintContext::stringHeight() const {
 
 void PalmPaintContext::drawString(int x, int y, const char *str, int len) {
 	//QString qStr = QString::fromUtf8(str.data() + from, len);
-	//myPainter->drawText(x + leftMargin().value(), y + topMargin().value(), qStr);
-	WinDrawChars(str, len, x + leftMargin().value() + 1, y + topMargin().value() - stringHeight());
+	//myPainter->drawText(x + leftMargin(), y + topMargin(), qStr);
+	WinDrawChars(str, len, x + leftMargin() + 1, y + topMargin() - stringHeight());
 }
 
 /*
@@ -173,20 +165,20 @@ int PalmPaintContext::imageHeight(const ZLImage &image) const {
 }
 
 void PalmPaintContext::drawImage(int x, int y, const ZLImage &image) {
-	//myPainter->drawImage(x + leftMargin().value(), y + topMargin().value() - imageHeight(image), qImage(image));
+	//myPainter->drawImage(x + leftMargin(), y + topMargin() - imageHeight(image), qImage(image));
 }
 
 void PalmPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	WinDrawLine(x0 + leftMargin().value() + 1, y0 + topMargin().value(),
-							x1 + leftMargin().value() + 1, y1 + topMargin().value());
+	WinDrawLine(x0 + leftMargin() + 1, y0 + topMargin(),
+							x1 + leftMargin() + 1, y1 + topMargin());
 }
 
 void PalmPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	RectangleType r;
-	x0 += leftMargin().value() + 1;
-	x1 += leftMargin().value() + 1;
-	y0 += topMargin().value();
-	y1 += topMargin().value();
+	x0 += leftMargin() + 1;
+	x1 += leftMargin() + 1;
+	y0 += topMargin();
+	y1 += topMargin();
 	if (x0 < x1) {
 		r.topLeft.x = x0;
 		r.extent.x = x1 - x0 + 1;
@@ -206,26 +198,24 @@ void PalmPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	WinFillRectangle(&r, 0);
 	WinSetBackColorRGB(&backColor, &myFillColor);
 	/*
-	myPainter->fillRect(x0 + leftMargin().value(), y0 + topMargin().value(),
+	myPainter->fillRect(x0 + leftMargin(), y0 + topMargin(),
 											x1 - x0 + 1, y1 - y0 + 1,
 											myPainter->brush());
 	*/
 }
 
-void PalmPaintContext::clear() {
-	WinSetBackColor(iColor(BackgroundColorOption.value()));
+void PalmPaintContext::drawFilledCircle(int x, int y, int r) {
+	// TODO: implement
+}
+
+void PalmPaintContext::clear(ZLColor color) {
+	WinSetBackColor(iColor(color));
 	RectangleType r;
 	r.topLeft.x = 0;
 	r.topLeft.y = 0;
 	r.extent.x = myWidth;
 	r.extent.y = myHeight;
 	WinEraseRectangle(&r, 0);
-	/*
-	if (myPixmap != NULL) {
-		ZLColor background = BackgroundColorOption.value();
-		myPixmap->fill(QColor(background.Red, background.Green, background.Blue));
-	}
-	*/
 }
 
 int PalmPaintContext::width() const {
@@ -233,9 +223,9 @@ int PalmPaintContext::width() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myPixmap->width() - leftMargin().value() - rightMargin().value();
+	return myPixmap->width() - leftMargin() - rightMargin();
 	*/
-	return myWidth - leftMargin().value() - rightMargin().value();
+	return myWidth - leftMargin() - rightMargin();
 }
 
 int PalmPaintContext::height() const {
@@ -243,7 +233,7 @@ int PalmPaintContext::height() const {
 	if (myPixmap == NULL) {
 		return 0;
 	}
-	return myPixmap->height() - bottomMargin().value() - topMargin().value();
+	return myPixmap->height() - bottomMargin() - topMargin();
 	*/
-	return myHeight - bottomMargin().value() - topMargin().value();
+	return myHeight - bottomMargin() - topMargin();
 }

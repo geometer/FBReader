@@ -18,14 +18,7 @@
 
 #include "ZLPaintContext.h"
 
-static const std::string COLORS = "Colors";
-static const std::string OPTIONS = "Options";
-
-ZLColorOption ZLPaintContext::BackgroundColorOption(COLORS, "Background", ZLColor(255, 255, 255));
-
-ZLPaintContext::ZLPaintContext() :
-			myLeftMargin(OPTIONS, "LeftMargin", 4), myRightMargin(OPTIONS, "RightMargin", 4),
-			myTopMargin(OPTIONS, "TopMargin", 0), myBottomMargin(OPTIONS, "BottomMargin", 4) {
+ZLPaintContext::ZLPaintContext() : myLeftMargin(0), myRightMargin(0), myTopMargin(0), myBottomMargin(0) {
 }
 
 ZLPaintContext::~ZLPaintContext() {

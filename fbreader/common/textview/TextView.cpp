@@ -79,7 +79,11 @@ void TextView::paint(bool doPaint) {
 	myParagraphMap.clear();
 	myTextElementMap.clear();
 
-	context().clear();
+	context().setLeftMargin(TextStyle::LeftMarginOption.value());
+	context().setRightMargin(TextStyle::RightMarginOption.value());
+	context().setTopMargin(TextStyle::TopMarginOption.value());
+	context().setBottomMargin(TextStyle::BottomMarginOption.value());
+	context().clear(TextStyle::BackgroundColorOption.value());
 
 	if (myFirstParagraphCursor == NULL) {
 		if (myLastParagraphCursor == NULL) {

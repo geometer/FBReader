@@ -18,7 +18,6 @@
  */
 
 #include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLPaintContext.h>
 
 #include "ColorOptionsPage.h"
 
@@ -37,7 +36,7 @@ ColorOptionsPage::ColorOptionsPage(ZLOptionsDialogTab *dialogTab) {
 	dialogTab->addOptions(myComboEntry, 0);
 
 	registerEntry(dialogTab,
-		new ZLSimpleColorOptionEntry(ZLPaintContext::BackgroundColorOption),
+		new ZLSimpleColorOptionEntry(TextStyle::BackgroundColorOption),
 		myComboEntry->values()[0]
 	);
 	registerEntry(dialogTab,

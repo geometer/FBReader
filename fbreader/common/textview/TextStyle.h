@@ -40,6 +40,12 @@ enum AlignmentType {
 class TextStyle {
 
 public:
+	static ZLIntegerOption LeftMarginOption;
+	static ZLIntegerOption RightMarginOption;
+	static ZLIntegerOption TopMarginOption;
+	static ZLIntegerOption BottomMarginOption;
+
+	static ZLColorOption BackgroundColorOption;
 	static ZLColorOption SelectedTextColorOption;
 	static ZLColorOption RegularTextColorOption;
 	static ZLColorOption HyperlinkTextColorOption;

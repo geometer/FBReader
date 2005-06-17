@@ -201,11 +201,13 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 	}
 }
 
-void GtkPaintContext::setColor(ZLColor color) {
+void GtkPaintContext::setColor(ZLColor color, LineStyle style) {
+	// TODO: use style
 	::setColor(myTextGC, color);
 }
 
-void GtkPaintContext::setFillColor(ZLColor color) {
+void GtkPaintContext::setFillColor(ZLColor color, FillStyle style) {
+	// TODO: use style
 	::setColor(myFillGC, color);
 }
 
@@ -242,8 +244,8 @@ int GtkPaintContext::stringHeight() const {
 }
 
 void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
-	x += leftMargin().value();
-	y += topMargin().value();
+	x += leftMargin();
+	y += topMargin();
 
 	rotatePoint(x, y);
 	
@@ -319,8 +321,8 @@ int GtkPaintContext::imageHeight(const ZLImage &image) const {
 
 void GtkPaintContext::drawImage(int x, int y, const ZLImage &image) {
 	// TODO: should we optimize it all? we do two lookups in our cache
-	// for gtk+ v2.2+ gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
-	gdk_pixbuf_render_to_drawable (gtkImage(image), myPixmap, NULL, 0, 0, x + leftMargin().value(), y + topMargin().value() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+	// for gtk+ v2.2+ gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin(), y + topMargin() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+	gdk_pixbuf_render_to_drawable (gtkImage(image), myPixmap, NULL, 0, 0, x + leftMargin(), y + topMargin() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
 	//
 	// COMMENTS:
 	// NULL			-- we have no clipping (do we need it?)
@@ -328,14 +330,14 @@ void GtkPaintContext::drawImage(int x, int y, const ZLImage &image) {
 	// -1, -1		-- use the whole
 	// GDK_RGB_DITHER_NONE -- no dithering, hopefully, (0, 0) after it does not harm
 
-	//myPainter->drawImage(x + leftMargin().value(), y + topMargin().value() - imageHeight(image), qImage(image));
+	//myPainter->drawImage(x + leftMargin(), y + topMargin() - imageHeight(image), qImage(image));
 }
 
 void GtkPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	x0 += leftMargin().value();
-	x1 += leftMargin().value();
-	y0 += topMargin().value();
-	y1 += topMargin().value();
+	x0 += leftMargin();
+	x1 += leftMargin();
+	y0 += topMargin();
+	y1 += topMargin();
 
 	rotatePoint(x0, y0);
 	rotatePoint(x1, y1);
@@ -344,10 +346,10 @@ void GtkPaintContext::drawLine(int x0, int y0, int x1, int y1) {
 }
 
 void GtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
-	x0 += leftMargin().value();
-	x1 += leftMargin().value();
-	y0 += topMargin().value();
-	y1 += topMargin().value();
+	x0 += leftMargin();
+	x1 += leftMargin();
+	y0 += topMargin();
+	y1 += topMargin();
 
 	rotatePoint(x0, y0);
 	rotatePoint(x1, y1);
@@ -365,9 +367,13 @@ void GtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	gdk_draw_rectangle(myPixmap, myFillGC, true, x0, y0, x1 - x0 + 1, y1 - y0 + 1);
 }
 
-void GtkPaintContext::clear() {
+void GtkPaintContext::drawFilledCircle(int x, int y, int r) {
+	// TODO: implement
+}
+
+void GtkPaintContext::clear(ZLColor color) {
 	if (myPixmap != NULL) {
-		::setColor(myBackGC, BackgroundColorOption.value());
+		::setColor(myBackGC, color);
 		gdk_draw_rectangle(myPixmap, myBackGC, true, 0, 0, myWidth, myHeight);
 	}
 }
@@ -377,9 +383,9 @@ int GtkPaintContext::width() const {
 		return 0;
 	}
 	if (myIsRotated) {
-		return myHeight - leftMargin().value() - rightMargin().value();
+		return myHeight - leftMargin() - rightMargin();
 	} else {
-		return myWidth - leftMargin().value() - rightMargin().value();
+		return myWidth - leftMargin() - rightMargin();
 	}
 }
 
@@ -388,9 +394,9 @@ int GtkPaintContext::height() const {
 		return 0;
 	}
 	if (myIsRotated) {
-		return myWidth - bottomMargin().value() - topMargin().value();
+		return myWidth - bottomMargin() - topMargin();
 	} else {
-		return myHeight - bottomMargin().value() - topMargin().value();
+		return myHeight - bottomMargin() - topMargin();
 	}
 }
 

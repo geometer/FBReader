@@ -46,12 +46,12 @@ void QViewWidget::paintEvent(QPaintEvent*) {
 void QViewWidget::mousePressEvent(QMouseEvent *event) {
 	if (isRotated()) {
 		view()->onStylusPress(
-			height() - event->y() - view()->context().rightMargin().value(),
-			event->x() - view()->context().topMargin().value());
+			height() - event->y() - view()->context().rightMargin(),
+			event->x() - view()->context().topMargin());
 	} else {
 		view()->onStylusPress(
-			event->x() - view()->context().leftMargin().value(),
-			event->y() - view()->context().topMargin().value());
+			event->x() - view()->context().leftMargin(),
+			event->y() - view()->context().topMargin());
 	}
 }
 

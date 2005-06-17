@@ -22,7 +22,14 @@
 #include "TextStyle.h"
 
 static const std::string COLORS = "Colors";
+static const std::string OPTIONS = "Options";
 
+ZLIntegerOption TextStyle::LeftMarginOption(OPTIONS, "LeftMargin", 4);
+ZLIntegerOption TextStyle::RightMarginOption(OPTIONS, "RightMargin", 4);
+ZLIntegerOption TextStyle::TopMarginOption(OPTIONS, "TopMargin", 0);
+ZLIntegerOption TextStyle::BottomMarginOption(OPTIONS, "BottomMargin", 4);
+
+ZLColorOption TextStyle::BackgroundColorOption(COLORS, "Background", ZLColor(255, 255, 255));
 ZLColorOption TextStyle::RegularTextColorOption(COLORS, "Text", ZLColor(0, 0, 0));
 ZLColorOption TextStyle::SelectedTextColorOption(COLORS, "SelectedText", ZLColor(0, 0, 127));
 ZLColorOption TextStyle::HyperlinkTextColorOption(COLORS, "Hyperlink", ZLColor(63, 63, 127));

@@ -29,7 +29,15 @@ class ZLImage;
 class ZLPaintContext {
 
 public:
-	static ZLColorOption BackgroundColorOption;
+	enum LineStyle {
+		SOLID_LINE,
+		DASH_LINE,
+	};
+
+	enum FillStyle {
+		SOLID_FILL,
+		HALF_FILL,
+	};
 	
 protected:
 	ZLPaintContext() PAINT_SECTION;
@@ -46,16 +54,21 @@ public:
 	void moveYTo(int y) PAINT_SECTION;
 	void moveY(int deltaY) PAINT_SECTION;
 
-	const ZLIntegerOption &leftMargin() const PAINT_SECTION;;
-	const ZLIntegerOption &rightMargin() const PAINT_SECTION;;
-	const ZLIntegerOption &topMargin() const PAINT_SECTION;;
-	const ZLIntegerOption &bottomMargin() const PAINT_SECTION;;
+	void setLeftMargin(int margin) PAINT_SECTION;
+	void setRightMargin(int margin) PAINT_SECTION;
+	void setTopMargin(int margin) PAINT_SECTION;
+	void setBottomMargin(int margin) PAINT_SECTION;
 
-	virtual void clear() PAINT_SECTION = 0;
+	int leftMargin() const PAINT_SECTION;
+	int rightMargin() const PAINT_SECTION;
+	int topMargin() const PAINT_SECTION;
+	int bottomMargin() const PAINT_SECTION;
+
+	virtual void clear(ZLColor color) PAINT_SECTION = 0;
 
 	virtual void setFont(const std::string &family, int size, bool bold, bool italic) PAINT_SECTION = 0;
-	virtual void setColor(ZLColor color) PAINT_SECTION = 0;
-	virtual void setFillColor(ZLColor color) PAINT_SECTION = 0;
+	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE) PAINT_SECTION = 0;
+	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) PAINT_SECTION = 0;
 
 	virtual int width() const PAINT_SECTION = 0;
 	virtual int height() const PAINT_SECTION = 0;
@@ -71,6 +84,7 @@ public:
 
 	virtual void drawLine(int x0, int y0, int x1, int y1) PAINT_SECTION = 0;
 	virtual void fillRectangle(int x0, int y0, int x1, int y1) PAINT_SECTION = 0;
+	virtual void drawFilledCircle(int x, int y, int r) PAINT_SECTION = 0;
 
 	const std::vector<std::string> &fontFamilies() const PAINT_SECTION;
 	virtual const std::string realFontFamilyName(std::string &fontFamily) const PAINT_SECTION = 0;
@@ -81,10 +95,10 @@ protected:
 private:
 	int myX, myY;
 
-	ZLIntegerOption myLeftMargin;
-	ZLIntegerOption myRightMargin;
-	ZLIntegerOption myTopMargin;
-	ZLIntegerOption myBottomMargin;
+	int myLeftMargin;
+	int myRightMargin;
+	int myTopMargin;
+	int myBottomMargin;
 
 	mutable std::vector<std::string> myFamilies;
 
@@ -101,9 +115,14 @@ inline void ZLPaintContext::moveX(int deltaX) { myX += deltaX; }
 inline void ZLPaintContext::moveYTo(int y) { myY = y; }
 inline void ZLPaintContext::moveY(int deltaY) { myY += deltaY; }
 
-inline const ZLIntegerOption &ZLPaintContext::leftMargin() const { return myLeftMargin; };
-inline const ZLIntegerOption &ZLPaintContext::rightMargin() const { return myRightMargin; };
-inline const ZLIntegerOption &ZLPaintContext::topMargin() const { return myTopMargin; };
-inline const ZLIntegerOption &ZLPaintContext::bottomMargin() const { return myBottomMargin; };
+inline void ZLPaintContext::setLeftMargin(int margin) { myLeftMargin = margin; }
+inline void ZLPaintContext::setRightMargin(int margin) { myRightMargin = margin; }
+inline void ZLPaintContext::setTopMargin(int margin) { myTopMargin = margin; }
+inline void ZLPaintContext::setBottomMargin(int margin) { myBottomMargin = margin; }
+
+inline int ZLPaintContext::leftMargin() const { return myLeftMargin; }
+inline int ZLPaintContext::rightMargin() const { return myRightMargin; }
+inline int ZLPaintContext::topMargin() const { return myTopMargin; }
+inline int ZLPaintContext::bottomMargin() const { return myBottomMargin; }
 
 #endif /* __ZLPAINTCONTEXT_H__ */
