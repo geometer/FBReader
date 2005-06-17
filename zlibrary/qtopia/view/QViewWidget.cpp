@@ -16,15 +16,21 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "QViewWidget.h"
-#include "QPaintContext.h"
+#include <algorithm>
 
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qframe.h>
 
+#include "QViewWidget.h"
+#include "QPaintContext.h"
+
 QViewWidget::QViewWidget(QWidget *parent, ZLApplication *application) : QWidget(parent), myApplication(application) {
 	setBackgroundMode(NoBackground);
+}
+
+void QViewWidget::trackStylus(bool track) {
+	setMouseTracking(track);
 }
 
 void QViewWidget::paintEvent(QPaintEvent*) {
@@ -35,9 +41,32 @@ void QViewWidget::paintEvent(QPaintEvent*) {
 }
 
 void QViewWidget::mousePressEvent(QMouseEvent *event) {
-	view()->onStylusPress(
-		event->x() - view()->context().leftMargin(),
-		event->y() - view()->context().topMargin());
+	view()->onStylusPress(x(event), y(event));
+}
+
+void QViewWidget::mouseReleaseEvent(QMouseEvent *event) {
+	view()->onStylusRelease(x(event), y(event));
+}
+
+void QViewWidget::mouseMoveEvent(QMouseEvent *event) {
+	switch (event->state()) {
+		case LeftButton:
+			view()->onStylusMovePressed(x(event), y(event));
+			break;
+		case NoButton:
+			view()->onStylusMove(x(event), y(event));
+			break;
+		default:
+			break;
+	}
+}
+
+int QViewWidget::x(const QMouseEvent *event) const {
+	return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
+}
+
+int QViewWidget::y(const QMouseEvent *event) const {
+	return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
 }
 
 void QViewWidget::repaintView()	{

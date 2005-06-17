@@ -44,6 +44,7 @@ public:
 	void setView(ZLView *view) VIEW_SECTION;
 	ZLView *view() const VIEW_SECTION;
 
+	virtual void trackStylus(bool track) VIEW_SECTION = 0;
 	virtual void repaintView() VIEW_SECTION = 0;
 
 	void rotate() VIEW_SECTION;
@@ -65,9 +66,12 @@ public:
 	ZLPaintContext &context() const VIEW_SECTION;
 
 	/*
-	 * returns true iff stylus pressing was processed
+	 * returns true iff stylus event was processed
 	 */
 	virtual bool onStylusPress(int, int) VIEW_SECTION;
+	virtual bool onStylusRelease(int, int) VIEW_SECTION;
+	virtual bool onStylusMove(int, int) VIEW_SECTION;
+	virtual bool onStylusMovePressed(int, int) VIEW_SECTION;
 
 	void repaintView() VIEW_SECTION;
 
@@ -89,5 +93,8 @@ inline bool ZLViewWidget::isRotated() const { return myIsRotated; }
 
 inline ZLPaintContext &ZLView::context() const { return myContext; }
 inline bool ZLView::onStylusPress(int, int) { return false; }
+inline bool ZLView::onStylusRelease(int, int) { return false; }
+inline bool ZLView::onStylusMove(int, int) { return false; }
+inline bool ZLView::onStylusMovePressed(int, int) { return false; }
 
 #endif /* __ZLVIEW_H__ */

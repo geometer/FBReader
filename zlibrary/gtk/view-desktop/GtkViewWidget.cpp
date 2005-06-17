@@ -59,6 +59,10 @@ GtkViewWidget::GtkViewWidget(ZLApplication *application) {
 GtkViewWidget::~GtkViewWidget() {
 }
 
+void GtkViewWidget::trackStylus(bool track) {
+	// TODO: implement
+}
+
 void GtkViewWidget::repaintView()	{
 #ifdef PRINT_TIMING
   const ZLTime c0;

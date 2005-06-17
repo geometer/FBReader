@@ -99,3 +99,7 @@ void PalmViewWidget::paintEvent()	{
 	//repaint(false);
 	//((ZLApplication*)parent())->enableMenuButtons();
 }
+
+void PalmViewWidget::trackStylus(bool track) {
+	// TODO: implement
+}

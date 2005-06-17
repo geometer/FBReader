@@ -32,6 +32,7 @@ public:
 
 protected:
 	void repaintView();
+	void trackStylus(bool track);
 
 protected:
 	void paintEvent(QPaintEvent *event);

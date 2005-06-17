@@ -219,6 +219,8 @@ int GtkPaintContext::stringWidth(const char *str, int len) const {
 	pango_shape(str, len, &myAnalysis, myString);
 	PangoRectangle logicalRectangle;
 	pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
+	std::string XXX;
+	XXX.append(str, len);
 	return (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
 }
 

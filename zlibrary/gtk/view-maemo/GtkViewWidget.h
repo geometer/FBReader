@@ -30,11 +30,11 @@ public:
 	GtkViewWidget(ZLApplication *application);
 	~GtkViewWidget();
 
-public:
 	GtkWidget *area() { return myArea; }
+	int height() const;
 
 	void repaintView();
-	int height() const;
+	void trackStylus(bool track);
 
 private:
 	ZLApplication *myApplication;

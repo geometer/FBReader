@@ -32,6 +32,7 @@ protected:
 
 public:
 	void paintEvent() VIEW_SECTION;
+	void trackStylus(bool track) VIEW_SECTION;
 
 private:
 	UInt16 myFormId;

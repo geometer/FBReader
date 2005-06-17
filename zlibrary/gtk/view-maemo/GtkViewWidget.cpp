@@ -59,6 +59,10 @@ GtkViewWidget::~GtkViewWidget() {
 	}
 }
 
+void GtkViewWidget::trackStylus(bool track) {
+	// TODO: implement
+}
+
 void GtkViewWidget::repaintView()	{
   ZLTime c0, c1, c2, c3, c4, c5, c6;
 	GtkPaintContext &gtkContext = (GtkPaintContext&)view()->context();

@@ -27,6 +27,10 @@ QViewWidget::QViewWidget(QWidget *parent, ZLApplication *application) : QWidget(
 	setBackgroundMode(NoBackground);
 }
 
+void QViewWidget::trackStylus(bool track) {
+	setMouseTracking(track);
+}
+
 void QViewWidget::paintEvent(QPaintEvent*) {
 	if (isRotated()) {
 		((QPaintContext&)view()->context()).setSize(height(), width());

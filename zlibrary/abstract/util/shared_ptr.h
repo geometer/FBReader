@@ -73,12 +73,12 @@ template<class T> class weak_ptr {
 
 		void attachStorage(shared_ptr_storage<T> *storage) {
 			myStorage = storage;
-			if (myStorage != NULL) {
+			if (myStorage != 0) {
 				myStorage->addWeakReference();
 			}
 		}
 		void detachStorage() {
-			if (myStorage != NULL) {
+			if (myStorage != 0) {
 				myStorage->removeWeakReference();
 				if (myStorage->counter() == 0) {
 					delete myStorage;
@@ -88,7 +88,7 @@ template<class T> class weak_ptr {
 
 	public:
 		weak_ptr() {
-			myStorage = NULL;
+			myStorage = 0;
 		}
 		weak_ptr(const shared_ptr<T> &t) {
 			attachStorage(t.myStorage);
@@ -97,7 +97,7 @@ template<class T> class weak_ptr {
 			if (!t.isNull()) {
 				attachStorage(t.myStorage);
 			} else {
-				attachStorage(NULL);
+				attachStorage(0);
 			}
 		}
 		~weak_ptr() {
@@ -110,7 +110,7 @@ template<class T> class weak_ptr {
 				if (!t.isNull()) {
 					attachStorage(t.myStorage);
 				} else {
-					attachStorage(NULL);
+					attachStorage(0);
 				}
 			}
 			return *this;
@@ -122,17 +122,17 @@ template<class T> class weak_ptr {
 		}
 
 		T* operator -> () const {
-			return (myStorage == NULL) ? NULL : myStorage->pointer();
+			return (myStorage == 0) ? 0 : myStorage->pointer();
 		}
 		T& operator * () const {
 			return myStorage->content();
 		}
 		bool isNull() const {
-			return (myStorage == NULL) || (myStorage->pointer() == NULL);
+			return (myStorage == 0) || (myStorage->pointer() == 0);
 		}
 		void reset() {
 			detachStorage();
-			attachStorage(NULL);
+			attachStorage(0);
 		}
 		bool operator == (const weak_ptr<T> &t) const {
 			return operator -> () == t.operator -> ();
@@ -178,13 +178,13 @@ inline shared_ptr_storage<T>::shared_ptr_storage(T *pointer) {
 	myCounter = 0;
 	myWeakCounter = 0;
 #ifdef __PTR_DEBUG__
-	std::cerr << "new storage " << ((myPointer == NULL) ? "NULL" : "not NULL") << "\n";
+	std::cerr << "new storage " << ((myPointer == 0) ? "0" : "not 0") << "\n";
 #endif /* __PTR_DEBUG__ */
 }
 template<class T>
 inline shared_ptr_storage<T>::~shared_ptr_storage() {
 #ifdef __PTR_DEBUG__
-	std::cerr << "delete storage " << ((myPointer == NULL) ? "NULL" : "not NULL") << "\n";
+	std::cerr << "delete storage " << ((myPointer == 0) ? "0" : "not 0") << "\n";
 #endif /* __PTR_DEBUG__ */
 }
 template<class T>
@@ -210,7 +210,7 @@ inline void shared_ptr_storage<T>::removeReference() {
 	myCounter--;
 	if (myCounter == 0) {
 		T* ptr = myPointer;
-		myPointer = NULL;
+		myPointer = 0;
 		delete ptr;
 	}
 }
@@ -229,18 +229,18 @@ inline unsigned int shared_ptr_storage<T>::counter() const {
 
 template<class T>
 inline shared_ptr_storage<T> *shared_ptr<T>::newStorage(T *t) {
-	return (t == NULL) ? NULL : new shared_ptr_storage<T>(t);
+	return (t == 0) ? 0 : new shared_ptr_storage<T>(t);
 }
 template<class T>
 inline void shared_ptr<T>::attachStorage(shared_ptr_storage<T> *storage) {
 	myStorage = storage;
-	if (myStorage != NULL) {
+	if (myStorage != 0) {
 		myStorage->addReference();
 	}
 }
 template<class T>
 inline void shared_ptr<T>::detachStorage() {
-	if (myStorage != NULL) {
+	if (myStorage != 0) {
 		myStorage->removeReference();
 		if (myStorage->counter() == 0) {
 			delete myStorage;
@@ -250,7 +250,7 @@ inline void shared_ptr<T>::detachStorage() {
 
 template<class T>
 inline shared_ptr<T>::shared_ptr() {
-	myStorage = NULL;
+	myStorage = 0;
 }
 template<class T>
 inline shared_ptr<T>::shared_ptr(T *t) {
@@ -265,7 +265,7 @@ inline shared_ptr<T>::shared_ptr(const weak_ptr<T> &t) {
 	if (!t.isNull()) {
 		attachStorage(t.myStorage);
 	} else {
-		attachStorage(NULL);
+		attachStorage(0);
 	}
 }
 template<class T>
@@ -292,14 +292,14 @@ inline const shared_ptr<T> &shared_ptr<T>::operator = (const weak_ptr<T> &t) {
 	if (!t.isNull()) {
 		attachStorage(t.myStorage);
 	} else {
-		attachStorage(NULL);
+		attachStorage(0);
 	}
 	return *this;
 }
 
 template<class T>
 inline T* shared_ptr<T>::operator -> () const {
-	return (myStorage == NULL) ? NULL : myStorage->pointer();
+	return (myStorage == 0) ? 0 : myStorage->pointer();
 }
 template<class T>
 inline T& shared_ptr<T>::operator * () const {
@@ -307,12 +307,12 @@ inline T& shared_ptr<T>::operator * () const {
 }
 template<class T>
 inline bool shared_ptr<T>::isNull() const {
-	return myStorage == NULL;
+	return myStorage == 0;
 }
 template<class T>
 inline void shared_ptr<T>::reset() {
 	detachStorage();
-	attachStorage(NULL);
+	attachStorage(0);
 }
 template<class T>
 inline bool shared_ptr<T>::operator == (const weak_ptr<T> &t) const {

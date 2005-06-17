@@ -239,34 +239,33 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 
 		const TextStylePtr storedStyle = myStyle.style();
 		const WordCursor lineStart = paragraph.wordCursor();
-		const WordCursor lineEnd = myLineProcessor.process(lineStart, paragraph.end());
+		paragraph.setWordCursor(myLineProcessor.process(lineStart, paragraph.end()));
 		context().moveY(myLineProcessor.height());
 		if (context().y() > textAreaHeight) {
 			break;
 		}
-		int spaceCounter = myLineProcessor.spaceCounter();
-		myStyle.setStyle(storedStyle);
-		paragraph.setWordCursor(lineEnd);
-
-		int fullCorrection = 0;
-		switch (myStyle.style()->alignment()) {
-			case ALIGN_RIGHT:
-				context().moveX(context().width() - myStyle.style()->rightIndent() - myLineProcessor.width());
-				break;
-			case ALIGN_CENTER:
-				context().moveX((context().width() - myStyle.style()->rightIndent() - myLineProcessor.width()) / 2);
-				break;
-			case ALIGN_JUSTIFY:
-				if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
-					fullCorrection = context().width() - myStyle.style()->rightIndent() - myLineProcessor.width();
-				}
-				break;
-			case ALIGN_LEFT:
-			case ALIGN_UNDEFINED:
-				break;
-		}
 
 		if (doPaint) {
+			int spaceCounter = myLineProcessor.spaceCounter();
+			int fullCorrection = 0;
+			switch (storedStyle->alignment()) {
+				case ALIGN_RIGHT:
+					context().moveX(context().width() - storedStyle->rightIndent() - myLineProcessor.width());
+					break;
+				case ALIGN_CENTER:
+					context().moveX((context().width() - storedStyle->rightIndent() - myLineProcessor.width()) / 2);
+					break;
+				case ALIGN_JUSTIFY:
+					if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
+						fullCorrection = context().width() - storedStyle->rightIndent() - myLineProcessor.width();
+					}
+					break;
+				case ALIGN_LEFT:
+				case ALIGN_UNDEFINED:
+					break;
+			}
+			myStyle.setStyle(storedStyle);
+
 			bool wordOccured = false;
 			for (WordCursor pos = lineStart; !pos.sameElementAs(paragraph.wordCursor()); pos.nextWord()) {
 				TextElement::Kind kind = pos.element().kind();
@@ -330,6 +329,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 }
 
 void TextView::skip(ParagraphCursor &paragraph, int height) {
+	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
 	while (!paragraph.isEndOfParagraph() && (height > 0)) {
 		paragraph.setWordCursor(myLineProcessor.process(paragraph.wordCursor(), paragraph.end()));
 		height -= myLineProcessor.height();
