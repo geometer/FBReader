@@ -48,15 +48,32 @@ void QViewWidget::paintEvent(QPaintEvent*) {
 }
 
 void QViewWidget::mousePressEvent(QMouseEvent *event) {
-	if (isRotated()) {
-		view()->onStylusPress(
-			height() - event->y() - view()->context().rightMargin(),
-			event->x() - view()->context().topMargin());
-	} else {
-		view()->onStylusPress(
-			event->x() - view()->context().leftMargin(),
-			event->y() - view()->context().topMargin());
+	view()->onStylusPress(x(event), y(event));
+}
+
+void QViewWidget::mouseReleaseEvent(QMouseEvent *event) {
+	view()->onStylusRelease(x(event), y(event));
+}
+
+void QViewWidget::mouseMoveEvent(QMouseEvent *event) {
+	switch (event->state()) {
+		case LeftButton:
+			view()->onStylusMovePressed(x(event), y(event));
+			break;
+		case NoButton:
+			view()->onStylusMove(x(event), y(event));
+			break;
+		default:
+			break;
 	}
+}
+
+int QViewWidget::x(const QMouseEvent *event) const {
+	return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
+}
+
+int QViewWidget::y(const QMouseEvent *event) const {
+	return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
 }
 
 void QViewWidget::repaintView()	{

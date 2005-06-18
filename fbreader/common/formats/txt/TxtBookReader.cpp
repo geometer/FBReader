@@ -22,36 +22,63 @@
 #include "TxtBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-TxtBookReader::TxtBookReader(BookModel &model) : BookReader(model) {
+TxtBookReader::TxtBookReader(BookModel &model, bool newParagraphAtNewLine, int lineBreaksBeforeNewSection) : BookReader(model), myNewParagraphAtNewLine(newParagraphAtNewLine), myLineBreaksBeforeNewSection(lineBreaksBeforeNewSection) {
 }
 
 void TxtBookReader::flushTextBufferToParagraph() {
-	bool bufferIsEmpty = true;
-	for (std::vector<std::string>::const_iterator it = myBuffer.begin(); bufferIsEmpty && (it != myBuffer.end()); it++) {
-		const char *end = it->data() + it->length();
-		for (const char *ptr = it->data(); ptr != end; ptr++) {
-			if (!isspace(*ptr)) {
-				bufferIsEmpty = false;
-				break;
-			}
-		}
-	}
-
-	if (!bufferIsEmpty) {
+	if (!myBufferIsEmpty) {
 		BookReader::flushTextBufferToParagraph();
 		myLineFeedCounter = 0;
 	}
+	myBufferIsEmpty = true;
 }
 
 bool TxtBookReader::characterDataHandler(const std::string &str) {
-	addDataToBuffer(str);
+	const char *ptr = str.data();
+	const char *end = ptr + str.length();
+	for (; ptr != end; ptr++) {
+		if (isspace(*ptr)) {
+			mySpaceCounter++;
+		} else {
+			myBufferIsEmpty = false;
+			break;
+		}
+	}
+	if (ptr != end) {
+		if (myNewLine && (mySpaceCounter >= 3)) {
+			endParagraph();
+			beginParagraph();
+		}
+		addDataToBuffer(str);
+		myNewLine = false;
+	}
 	return true;
 }
 
 bool TxtBookReader::newLineHandler() {
 	flushTextBufferToParagraph();
 	myLineFeedCounter++;
-	if (myLineFeedCounter > 1) {
+	myNewLine = true;
+	mySpaceCounter = 0;
+	bool paragraphBreak = myNewParagraphAtNewLine || (myLineFeedCounter > 1);
+	if (!myInsideContentsParagraph && (myLineFeedCounter == myLineBreaksBeforeNewSection)) {
+		myInsideContentsParagraph = true;
+		endParagraph();
+		insertEndOfSectionParagraph();
+		beginContentsParagraph();
+		enterTitle();
+		pushKind(SECTION_TITLE);
+		beginParagraph();
+		paragraphBreak = false;
+	}
+	if (myInsideContentsParagraph && (myLineFeedCounter == 1)) {
+		exitTitle();
+		endContentsParagraph();
+		popKind();
+		myInsideContentsParagraph = false;
+		paragraphBreak = true;
+	}
+	if (paragraphBreak) {
 		endParagraph();
 		beginParagraph();
 	}
@@ -61,8 +88,12 @@ bool TxtBookReader::newLineHandler() {
 void TxtBookReader::startDocumentHandler() {
 	setMainTextModel();
 	pushKind(REGULAR);
+	pushKind(SECTION_TITLE);
 	beginParagraph();
 	myLineFeedCounter = 1;
+	myInsideContentsParagraph = true;
+	beginContentsParagraph();
+	enterTitle();
 }
 
 void TxtBookReader::endDocumentHandler() {

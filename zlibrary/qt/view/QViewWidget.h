@@ -30,13 +30,18 @@ public:
 	QViewWidget(QWidget *parent, ZLApplication *application);
 	~QViewWidget() {}
 
-protected:
 	void repaintView();
 	void trackStylus(bool track);
 
 protected:
 	void paintEvent(QPaintEvent *event);
 	void mousePressEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
+
+private:
+	int x(const QMouseEvent *event) const;
+	int y(const QMouseEvent *event) const;
 
 private:
 	ZLApplication *myApplication;

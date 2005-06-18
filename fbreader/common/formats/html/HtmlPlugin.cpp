@@ -43,10 +43,31 @@ bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &d
 		WritableBookDescription(description).encoding() = encoding;
 	}
 
+	if (description.author() == 0) {
+		WritableBookDescription(description).addAuthor("Unknown", "", "Author");
+	}
+
 	HtmlDescriptionReader *reader = new HtmlDescriptionReader(description);
 	reader->readDocument(*stream, encoding);
 	delete reader;
 
+	if (description.title().empty()) {
+		int index = fileName.rfind('/');
+		std::string title = (index > 0) ? fileName.substr(index + 1) : fileName;
+		index = title.rfind('.');
+		WritableBookDescription(description).title() = (index > 0) ? title.substr(0, index) : title;
+	}
+
+	if (description.language() == "") {
+		if (description.encoding() == "US-ASCII") {
+			WritableBookDescription(description).language() = "en";
+		} else if ((description.encoding() == "KOI8-R") ||
+				(description.encoding() == "windows-1251") ||
+				(description.encoding() == "ISO-8859-5") ||
+				(description.encoding() == "IBM866")) {
+			WritableBookDescription(description).language() = "ru";
+		}
+	}
 	delete stream;
 	return true;
 }

@@ -30,7 +30,7 @@ class BookModel;
 class TxtBookReader : public BookReader, public TxtReader {
 
 public:
-	TxtBookReader(BookModel &model) FORMATS_SECTION;
+	TxtBookReader(BookModel &model, bool newParagraphAtNewLine, int lineBreaksBeforeNewSection) FORMATS_SECTION;
 	~TxtBookReader() FORMATS_SECTION;
 
 protected:
@@ -44,7 +44,14 @@ private:
 	void flushTextBufferToParagraph() FORMATS_SECTION;
 
 private:
+	bool myNewParagraphAtNewLine;
+	int myLineBreaksBeforeNewSection;
+
 	int myLineFeedCounter;
+	bool myInsideContentsParagraph;
+	bool myBufferIsEmpty;
+	bool myNewLine;
+	int mySpaceCounter;
 };
 
 inline TxtBookReader::~TxtBookReader() {}

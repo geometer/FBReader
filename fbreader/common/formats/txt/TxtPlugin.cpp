@@ -22,7 +22,6 @@
 #include <abstract/ZLInputStream.h>
 
 #include "TxtPlugin.h"
-#include "TxtDescriptionReader.h"
 #include "TxtBookReader.h"
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
@@ -32,27 +31,45 @@ bool TxtPlugin::acceptsFile(const std::string &fileName) const {
 }
 
 bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
+	WritableBookDescription wDescription(description);
+
 	std::string encoding = description.encoding();
 	if (encoding.empty()) {
+		ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
 		encoding = EncodingDetector::detect(*stream);
+		delete stream;
 		if (encoding.empty()) {
-			delete stream;
 			return false;
 		}
-		WritableBookDescription(description).encoding() = encoding;
+		wDescription.encoding() = encoding;
 	}
 
-	TxtDescriptionReader *reader = new TxtDescriptionReader(description);
-	reader->readDocument(*stream, encoding);
-	delete reader;
+	if (description.author() == 0) {
+		wDescription.addAuthor("Unknown", "", "Author");
+	}
 
-	delete stream;
+	if (description.language().empty()) {
+		int index = fileName.rfind('/');
+		std::string title = (index > 0) ? fileName.substr(index + 1) : fileName;
+		index = title.rfind('.');
+		wDescription.title() = (index > 0) ? title.substr(0, index) : title;
+		if (wDescription.language().empty()) {
+			if (wDescription.encoding() == "US-ASCII") {
+				wDescription.language() = "en";
+			} else if ((wDescription.encoding() == "KOI8-R") ||
+					(wDescription.encoding() == "windows-1251") ||
+					(wDescription.encoding() == "ISO-8859-5") ||
+					(wDescription.encoding() == "IBM866")) {
+				wDescription.language() = "ru";
+			}
+		}
+	}
+
 	return true;
 }
 
 bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	TxtBookReader *reader = new TxtBookReader(model);
+	TxtBookReader *reader = new TxtBookReader(model, false, 3);
 	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
 	reader->readDocument(*stream, description.encoding());
 	delete stream;

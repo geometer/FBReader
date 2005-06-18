@@ -4,12 +4,14 @@ include makefiles/platforms.mk
 
 ALLAPPDIRS = fbreader zmahjongg zsolitaire GeometricCalculator
 
+APPDIRS = fbreader
+
 ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
-	APPDIRS = fbreader zmahjongg zsolitaire GeometricCalculator
+	APPDIRS += zmahjongg zsolitaire GeometricCalculator
 endif
 
-ifeq "$(APPDIRS)" ""
-	APPDIRS = fbreader
+ifeq "$(TARGET_ARCH)" "desktop-qt"
+	APPDIRS += GeometricCalculator
 endif
 
 LIBDIR = zlibrary

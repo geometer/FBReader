@@ -46,21 +46,24 @@ void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding)
 	size_t length;
 	do {
 		length = stream.read(buffer, BUFSIZE);
-		char *ptr = buffer;
-		for (size_t i = 0; i < length; i++) {
-			if (buffer[i] == '\n') {
-				if (ptr != buffer + i) {
+		char *start = buffer;
+		const char *end = buffer + length;
+		for (char *ptr = start; ptr != end; ptr++) {
+			if (*ptr == '\n') {
+				if (start != ptr) {
 					str.erase();
-					myConverter.convert(str, ptr, buffer + i);
+					myConverter.convert(str, start, ptr);
 					characterDataHandler(str);
 				}
-				ptr = buffer + i;
+				start = ptr;
 				newLineHandler();
+			} else if (isspace(*ptr)) {
+				*ptr = ' ';
 			}
 		}
-		if (ptr != buffer + length) {
+		if (start != end) {
 			str.erase();
-			myConverter.convert(str, ptr, buffer + length);
+			myConverter.convert(str, start, end);
 			characterDataHandler(str);
 		}
   } while (length == BUFSIZE);

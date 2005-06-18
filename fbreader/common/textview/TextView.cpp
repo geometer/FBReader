@@ -239,11 +239,12 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 
 		const TextStylePtr storedStyle = myStyle.style();
 		const WordCursor lineStart = paragraph.wordCursor();
-		paragraph.setWordCursor(myLineProcessor.process(lineStart, paragraph.end()));
+		const WordCursor lineEnd = myLineProcessor.process(lineStart, paragraph.end());
 		context().moveY(myLineProcessor.height());
 		if (context().y() > textAreaHeight) {
 			break;
 		}
+		paragraph.setWordCursor(lineEnd);
 
 		if (doPaint) {
 			int spaceCounter = myLineProcessor.spaceCounter();
