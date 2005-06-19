@@ -252,7 +252,6 @@ inline ParagraphCursor::Cache::~Cache() {
 	}
 }
 
-inline void ParagraphCursor::rebuild() { clear(); fill(); }
 inline int ParagraphCursor::paragraphLength() const { return myElements->size(); }
 inline int ParagraphCursor::paragraphNumber() const { return myParagraphIterator - myModel.paragraphs().begin(); }
 inline int ParagraphCursor::wordNumber(const WordCursor &wi) const { return wi.myWordIterator - myElements->begin(); }

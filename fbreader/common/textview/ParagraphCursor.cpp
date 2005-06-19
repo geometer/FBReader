@@ -290,6 +290,15 @@ void ParagraphCursor::clear() {
 	myElements = 0;
 }
 
+void ParagraphCursor::rebuild() {
+	int w = wordNumber();
+	int c = charNumber();
+	clear();
+	fill();
+	myNextElement = myElements->begin() + w;
+	myNextElement.myCharNumber = c;
+}
+
 void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber) {
 	if ((unsigned int)paragraphNumber >= myModel.paragraphs().size()) {
 		return;
