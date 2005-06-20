@@ -22,7 +22,7 @@
 #include "TxtBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-TxtBookReader::TxtBookReader(BookModel &model, bool newParagraphAtNewLine, int lineBreaksBeforeNewSection) : BookReader(model), myNewParagraphAtNewLine(newParagraphAtNewLine), myLineBreaksBeforeNewSection(lineBreaksBeforeNewSection) {
+TxtBookReader::TxtBookReader(BookModel &model, const PlainTextFormat &format) : BookReader(model), myFormat(format) {
 }
 
 void TxtBookReader::flushTextBufferToParagraph() {
@@ -45,7 +45,8 @@ bool TxtBookReader::characterDataHandler(const std::string &str) {
 		}
 	}
 	if (ptr != end) {
-		if (myNewLine && (mySpaceCounter >= 3)) {
+		if ((myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) &&
+				myNewLine && (mySpaceCounter > myFormat.ignoredIndent() + 1)) {
 			endParagraph();
 			beginParagraph();
 		}
@@ -60,24 +61,30 @@ bool TxtBookReader::newLineHandler() {
 	myLineFeedCounter++;
 	myNewLine = true;
 	mySpaceCounter = 0;
-	bool paragraphBreak = myNewParagraphAtNewLine || (myLineFeedCounter > 1);
-	if (!myInsideContentsParagraph && (myLineFeedCounter == myLineBreaksBeforeNewSection)) {
-		myInsideContentsParagraph = true;
-		endParagraph();
-		insertEndOfSectionParagraph();
-		beginContentsParagraph();
-		enterTitle();
-		pushKind(SECTION_TITLE);
-		beginParagraph();
-		paragraphBreak = false;
+	bool paragraphBreak =
+		(myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) ||
+		((myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) && (myLineFeedCounter > 1));
+
+	if (myFormat.createContentsTable()) {
+		if (!myInsideContentsParagraph && (myLineFeedCounter == myFormat.emptyLinesBeforeNewSection() + 1)) {
+			myInsideContentsParagraph = true;
+			endParagraph();
+			insertEndOfSectionParagraph();
+			beginContentsParagraph();
+			enterTitle();
+			pushKind(SECTION_TITLE);
+			beginParagraph();
+			paragraphBreak = false;
+		}
+		if (myInsideContentsParagraph && (myLineFeedCounter == 1)) {
+			exitTitle();
+			endContentsParagraph();
+			popKind();
+			myInsideContentsParagraph = false;
+			paragraphBreak = true;
+		}
 	}
-	if (myInsideContentsParagraph && (myLineFeedCounter == 1)) {
-		exitTitle();
-		endContentsParagraph();
-		popKind();
-		myInsideContentsParagraph = false;
-		paragraphBreak = true;
-	}
+
 	if (paragraphBreak) {
 		endParagraph();
 		beginParagraph();
@@ -88,12 +95,13 @@ bool TxtBookReader::newLineHandler() {
 void TxtBookReader::startDocumentHandler() {
 	setMainTextModel();
 	pushKind(REGULAR);
-	pushKind(SECTION_TITLE);
 	beginParagraph();
 	myLineFeedCounter = 1;
-	myInsideContentsParagraph = true;
-	beginContentsParagraph();
+	myInsideContentsParagraph = false;
 	enterTitle();
+	myBufferIsEmpty = true;
+	myNewLine = true;
+	mySpaceCounter = 0;
 }
 
 void TxtBookReader::endDocumentHandler() {

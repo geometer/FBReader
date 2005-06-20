@@ -353,8 +353,19 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", info.AuthorSortKeyOption));
 		infoTab->addOption(new LanguageEntry("Language", info.LanguageOption));
 		infoTab->addOption(new EncodingEntry("Encoding", info.EncodingOption));
+
+		FormatPlugin *plugin = PluginCollection::instance().plugin(fileName, false);
+		FormatInfoPage *formatPage = 0;
+		if (plugin != 0) {
+			formatPage = plugin->createInfoPage(*infoDialog, fileName);
+		}
+
 		code = infoDialog->run("");
+
 		delete infoDialog;
+		if (formatPage != 0) {
+			delete formatPage;
+		}
 	}
 	if (code) {
 		BookDescriptionPtr newDescription = BookDescription::create(fileName);

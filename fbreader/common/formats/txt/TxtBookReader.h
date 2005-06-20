@@ -23,6 +23,7 @@
 #include <stack>
 
 #include "TxtReader.h"
+#include "PlainTextFormat.h"
 #include "../../bookmodel/BookReader.h"
 
 class BookModel;
@@ -30,7 +31,7 @@ class BookModel;
 class TxtBookReader : public BookReader, public TxtReader {
 
 public:
-	TxtBookReader(BookModel &model, bool newParagraphAtNewLine, int lineBreaksBeforeNewSection) FORMATS_SECTION;
+	TxtBookReader(BookModel &model, const PlainTextFormat &format) FORMATS_SECTION;
 	~TxtBookReader() FORMATS_SECTION;
 
 protected:
@@ -44,8 +45,7 @@ private:
 	void flushTextBufferToParagraph() FORMATS_SECTION;
 
 private:
-	bool myNewParagraphAtNewLine;
-	int myLineBreaksBeforeNewSection;
+	const PlainTextFormat &myFormat;
 
 	int myLineFeedCounter;
 	bool myInsideContentsParagraph;

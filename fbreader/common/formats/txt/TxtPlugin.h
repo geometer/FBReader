@@ -32,6 +32,7 @@ public:
 	bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION;
 	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
 };
 
 inline TxtPlugin::TxtPlugin() {}

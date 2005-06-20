@@ -23,6 +23,7 @@
 
 #include "TxtPlugin.h"
 #include "TxtBookReader.h"
+#include "PlainTextFormat.h"
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
@@ -69,8 +70,18 @@ bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &de
 }
 
 bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	TxtBookReader *reader = new TxtBookReader(model, false, 3);
 	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
+	if (stream == 0) {
+		return false;
+	}
+
+	PlainTextFormat format(description.fileName());
+	if (!format.initialized()) {
+		PlainTextFormatDetector detector;
+		detector.detect(*stream, format);
+	}
+
+	TxtBookReader *reader = new TxtBookReader(model, format);
 	reader->readDocument(*stream, description.encoding());
 	delete stream;
 	delete reader;
@@ -80,4 +91,8 @@ bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) 
 const std::string &TxtPlugin::iconName() const {
 	static const std::string ICON_NAME = "FBReader/unknown";
 	return ICON_NAME;
+}
+
+FormatInfoPage *TxtPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
+	return new PlainTextInfoPage(dialog, fileName);
 }

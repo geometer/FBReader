@@ -25,6 +25,17 @@
 
 class BookDescription;
 class BookModel;
+class ZLOptionsDialog;
+class ZLOptionsDialogTab;
+
+class FormatInfoPage {
+
+protected:
+	FormatInfoPage() FORMATS_SECTION;
+
+public:
+	virtual ~FormatInfoPage() FORMATS_SECTION;
+};
 
 class FormatPlugin {
 
@@ -38,6 +49,7 @@ public:
 	virtual bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION = 0;
 	virtual bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION = 0;
 	virtual const std::string &iconName() const FORMATS_SECTION = 0;
+	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
 };
 
 class PluginCollection {
@@ -59,7 +71,10 @@ private:
 	std::vector<FormatPlugin*> myPlugins;
 };
 
+inline FormatInfoPage::FormatInfoPage() {}
+inline FormatInfoPage::~FormatInfoPage() {}
 inline FormatPlugin::FormatPlugin() {}
 inline FormatPlugin::~FormatPlugin() {}
+inline FormatInfoPage *FormatPlugin::createInfoPage(ZLOptionsDialog&, const std::string&) { return 0; }
 
 #endif /* __FORMATPLUGIN_H__ */
