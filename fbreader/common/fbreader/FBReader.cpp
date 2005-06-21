@@ -282,6 +282,7 @@ void FBReader::setMode(ViewMode mode) {
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, true);
+			setButtonVisible(ACTION_SHOW_LAST_BOOKS, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
 			setButtonVisible(ACTION_UNDO, true);
@@ -291,6 +292,7 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case CONTENTS_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, true);
+			setButtonVisible(ACTION_SHOW_LAST_BOOKS, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
 			setButtonVisible(ACTION_UNDO, false);
@@ -300,6 +302,7 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case FOOTNOTE_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, false);
+			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, false);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
 			setButtonVisible(ACTION_UNDO, false);
@@ -309,6 +312,7 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case BOOK_COLLECTION_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, false);
+			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
 			setButtonVisible(ACTION_UNDO, false);
@@ -327,6 +331,7 @@ void FBReader::setMode(ViewMode mode) {
 
 void FBReader::createToolbar() {
 	addButton(ACTION_SHOW_COLLECTION, "books");
+	addButton(ACTION_SHOW_LAST_BOOKS, "history");
 	addButton(ACTION_ADD_BOOK, "addbook");
 	addButton(ACTION_SHOW_BOOK_INFO, "bookinfo");
 	addButton(ACTION_SHOW_OPTIONS, "settings");

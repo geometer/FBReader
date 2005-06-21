@@ -35,6 +35,7 @@ void BooleanOptionView::_createItem() {
 	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab);
 	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
+	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onValueChange(bool)));
 }
 
 void BooleanOptionView::_show() {
@@ -47,6 +48,10 @@ void BooleanOptionView::_hide() {
 
 void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
+}
+
+void BooleanOptionView::onValueChange(bool state) const {
+	((ZLBooleanOptionEntry*)myOption)->onValueChange(state);
 }
 
 void ChoiceOptionView::_createItem() {

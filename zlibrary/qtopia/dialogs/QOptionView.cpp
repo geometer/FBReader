@@ -35,6 +35,7 @@ void BooleanOptionView::_createItem() {
 	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab);
 	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
+	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onValueChange(bool)));
 }
 
 void BooleanOptionView::_show() {
@@ -49,11 +50,15 @@ void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
 }
 
+void BooleanOptionView::onValueChange(bool state) const {
+	((ZLBooleanOptionEntry*)myOption)->onValueChange(state);
+}
+
 void ChoiceOptionView::_createItem() {
 	myGroup = new QButtonGroup(myOption->name().c_str(), myTab);
 	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
 	layout->addSpacing(myGroup->fontMetrics().height());
-	myButtons = new (QRadioButton*)[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
+	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
 		myButtons[i] = new QRadioButton((QButtonGroup*)layout->parent());
 		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());

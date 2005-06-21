@@ -101,7 +101,9 @@ private:
 	QRadioButton **myButtons;
 };
 
-class BooleanOptionView : public QOptionView {
+class BooleanOptionView : public QObject, public QOptionView {
+
+Q_OBJECT
 
 public:
 	BooleanOptionView(ZLBooleanOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
@@ -111,6 +113,9 @@ protected:
 	void _show();
 	void _hide();
 	void _onAccept() const;
+
+private slots:
+	void onValueChange(bool) const;
 
 private:
 	QCheckBox *myCheckBox;

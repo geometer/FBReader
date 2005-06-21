@@ -46,7 +46,7 @@ bool TxtBookReader::characterDataHandler(const std::string &str) {
 	}
 	if (ptr != end) {
 		if ((myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) &&
-				myNewLine && (mySpaceCounter > myFormat.ignoredIndent() + 1)) {
+				myNewLine && (mySpaceCounter > myFormat.ignoredIndent())) {
 			endParagraph();
 			beginParagraph();
 		}

@@ -105,6 +105,10 @@ protected:
 	void _onAccept() const;
 
 private:
+	void onValueChange(void);
+	static void _onValueChange (GtkWidget *, gpointer);
+
+private:
 	GtkWidget *myCheckBox;
 };
 
@@ -152,7 +156,6 @@ protected:
 
 private:
 	void onValueChange(void);
-
 	static void _onValueChange (GtkWidget *, gpointer);
 	
 private:

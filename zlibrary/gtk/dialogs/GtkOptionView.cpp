@@ -44,6 +44,7 @@ static GtkWidget *labelWithMyParams(const char *text) {
 void BooleanOptionView::_createItem() {
 	myCheckBox = gtk_check_button_new_with_label(myOption->name().c_str());
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
+	g_signal_connect(myCheckBox, "toggled", G_CALLBACK(_onValueChange), this);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
 }
 
@@ -58,6 +59,15 @@ void BooleanOptionView::_hide() {
 void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry*)myOption)->onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
+
+void BooleanOptionView::_onValueChange(GtkWidget *, gpointer self) {
+	((BooleanOptionView*)self)->onValueChange();
+}
+
+void BooleanOptionView::onValueChange() {
+	((ZLBooleanOptionEntry*)myOption)->onValueChange(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
+}
+
 
 #if 0
 void ChoiceOptionView::_createItem() {
@@ -163,7 +173,7 @@ void ComboOptionView::_onValueChange(GtkWidget *, gpointer self) {
 	((ComboOptionView *)self)->onValueChange();
 }
 
-void ComboOptionView::onValueChange(void) {
+void ComboOptionView::onValueChange() {
 	int index = gtk_option_menu_get_history(GTK_OPTION_MENU(myComboBox));
 	ZLComboOptionEntry *o = (ZLComboOptionEntry*)myOption;
 	if ((index >= 0) && (index < (int)o->values().size())) {
@@ -259,7 +269,7 @@ void ColorOptionView::_onChangeColor(GtkWidget *, gpointer self) {
 	((ColorOptionView *)self)->onChangeColor();
 }
 
-void ColorOptionView::onChangeColor(void) {
+void ColorOptionView::onChangeColor() {
 //	myColorBar->setBackgroundColor(QColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
 	if (myColorSelectionDialog == NULL)
 		myColorSelectionDialog = gtk_color_selection_dialog_new("Select Color");

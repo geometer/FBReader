@@ -113,7 +113,7 @@ class ZLSimpleStringOptionEntry : public ZLStringOptionEntry {
 
 public:
 	ZLSimpleStringOptionEntry(const std::string &name, const ZLStringOption &option) DIALOG_SECTION;
-	~ZLSimpleStringOptionEntry() DIALOG_SECTION;
+	virtual ~ZLSimpleStringOptionEntry() DIALOG_SECTION;
 	const std::string &name() const DIALOG_SECTION;
 	const std::string &initialValue() const DIALOG_SECTION;
 	void onAccept(const std::string &value) const DIALOG_SECTION;
@@ -133,6 +133,7 @@ public:
 	ZLOptionKind kind() const DIALOG_SECTION;
 
 	virtual bool initialState() const DIALOG_SECTION = 0;
+	virtual void onValueChange(bool state) DIALOG_SECTION;
 	virtual void onAccept(bool state) const DIALOG_SECTION = 0;
 };
 
@@ -140,7 +141,7 @@ class ZLSimpleBooleanOptionEntry : public ZLBooleanOptionEntry {
 
 public:
 	ZLSimpleBooleanOptionEntry(const std::string &name, const ZLBooleanOption &option) DIALOG_SECTION;
-	~ZLSimpleBooleanOptionEntry() DIALOG_SECTION;
+	virtual ~ZLSimpleBooleanOptionEntry() DIALOG_SECTION;
 	const std::string &name() const DIALOG_SECTION;
 	bool initialState() const DIALOG_SECTION;
 	void onAccept(bool state) const DIALOG_SECTION;
@@ -170,7 +171,7 @@ class ZLSimpleSpinOptionEntry : public ZLSpinOptionEntry {
 
 public:
 	ZLSimpleSpinOptionEntry(const std::string &name, const ZLIntegerOption &option, int minValue, int maxValue, int step) DIALOG_SECTION;
-	~ZLSimpleSpinOptionEntry() DIALOG_SECTION;
+	virtual ~ZLSimpleSpinOptionEntry() DIALOG_SECTION;
 	const std::string &name() const DIALOG_SECTION;
 	int initialValue() const DIALOG_SECTION;
 	int minValue() const DIALOG_SECTION;
@@ -205,7 +206,7 @@ class ZLSimpleBoolean3OptionEntry : public ZLComboOptionEntry {
 
 public:
 	ZLSimpleBoolean3OptionEntry(const std::string &name, const ZLBoolean3Option &option) DIALOG_SECTION;
-	~ZLSimpleBoolean3OptionEntry() DIALOG_SECTION;
+	virtual ~ZLSimpleBoolean3OptionEntry() DIALOG_SECTION;
 	const std::string &name() const DIALOG_SECTION;
 	const std::string &initialValue() const DIALOG_SECTION;
 	const std::vector<std::string> &values() const DIALOG_SECTION;
@@ -234,7 +235,7 @@ class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
 
 public:
 	ZLSimpleColorOptionEntry(ZLColorOption &option) DIALOG_SECTION;
-	~ZLSimpleColorOptionEntry() DIALOG_SECTION;
+	virtual ~ZLSimpleColorOptionEntry() DIALOG_SECTION;
 	const std::string &name() const DIALOG_SECTION;
 	const ZLColor color() const DIALOG_SECTION;
 	void onAccept(ZLColor color) DIALOG_SECTION;
@@ -270,6 +271,7 @@ inline void ZLSimpleStringOptionEntry::onAccept(const std::string &value) const 
 inline ZLBooleanOptionEntry::ZLBooleanOptionEntry() {}
 inline ZLBooleanOptionEntry::~ZLBooleanOptionEntry() {}
 inline ZLOptionKind ZLBooleanOptionEntry::kind() const { return BOOLEAN; }
+inline void ZLBooleanOptionEntry::onValueChange(bool) {}
 
 inline ZLSimpleBooleanOptionEntry::ZLSimpleBooleanOptionEntry(const std::string &name, const ZLBooleanOption &option) : myName(name), myOption(option) {}
 inline ZLSimpleBooleanOptionEntry::~ZLSimpleBooleanOptionEntry() {}

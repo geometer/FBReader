@@ -22,6 +22,7 @@
 
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLOptions.h>
+#include <abstract/ZLOptionEntry.h>
 
 #include "../FormatPlugin.h"
 
@@ -62,6 +63,12 @@ public:
 
 private:
 	PlainTextFormat myFormat;
+
+	ZLSimpleSpinOptionEntry *myIgnoredIndentEntry;
+	ZLSimpleSpinOptionEntry *myEmptyLinesBeforeNewSectionEntry;
+
+friend class BreakTypeOptionEntry;
+friend class CreateContentsTableOptionEntry;
 };
 
 class PlainTextFormatDetector {
@@ -71,6 +78,35 @@ public:
 	~PlainTextFormatDetector() {}
 
 	void detect(ZLInputStream &stream, PlainTextFormat &format);
+};
+
+class BreakTypeOptionEntry : public ZLComboOptionEntry {
+
+public:
+	BreakTypeOptionEntry(PlainTextInfoPage &page, const std::string &name, ZLIntegerOption &breakTypeOption);
+	~BreakTypeOptionEntry();
+
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value) const;
+	void onValueChange(const std::string &selectedValue);
+
+private:
+	PlainTextInfoPage &myPage;
+	std::string myName;
+	ZLIntegerOption &myBreakTypeOption;
+};
+
+class CreateContentsTableOptionEntry : public ZLSimpleBooleanOptionEntry {
+
+public:
+	CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, const ZLBooleanOption &option);
+	~CreateContentsTableOptionEntry();
+	void onValueChange(bool value);
+
+private:
+	PlainTextInfoPage &myPage;
 };
 
 #endif /* __PLAINTEXTFORMAT_H__ */
