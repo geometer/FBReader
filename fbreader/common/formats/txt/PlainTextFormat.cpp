@@ -205,7 +205,7 @@ const std::string &BreakTypeOptionEntry::name() const {
 	return myName;
 }
 
-static std::string BREAK_TYPE_VALUES[3] = { "New Line", "Empty Line", "Empty Line Or Line With Indent"};
+static std::string BREAK_TYPE_VALUES[3] = { "New Line", "Empty Line", "Line With Indent"};
 static std::vector<std::string> BREAK_TYPE_VALUES_VECTOR;
 
 const std::string &BreakTypeOptionEntry::initialValue() const {
