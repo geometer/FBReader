@@ -16,6 +16,7 @@ files = $(shell sed -n -e "s/^Files://p" $(FILE))
 package = $(PACKAGENAME)_$(version)_$(ARCH)
 
 all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
+	@cp $(package).ipk ../../..
 
 .tmpdir:
 	@cp ../../FBReader usr/lib/qt/bin

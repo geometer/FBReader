@@ -37,7 +37,7 @@ clean:
 	done
 
 distclean: clean
-	rm -vf *.tgz
+	rm -vf *.tgz *.ipk *.prc
 
 archives: clean
 	@for dir in $(ALLAPPDIRS); do \

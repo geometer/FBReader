@@ -11,6 +11,7 @@ BUILDPRC = build-prc
 $(PRC): bin.stamp ../../FBReader
 	@$(BUILDPRC) -o $(PRC) -n $(NAME) -c $(APPID) ../FBReader.def ../../FBReader *.bin $(LINKFILES) 
 	@ls -l *.prc
+	@cp $(PRC) ../../..
 
 bin.stamp:	$(RCP) Makefile
 	@$(PILRC) $<
