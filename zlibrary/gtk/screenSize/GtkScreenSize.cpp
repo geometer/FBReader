@@ -23,5 +23,8 @@
 ZLScreenSize::Size GtkScreenSize::getSizeInternal() const {
 	gint w = gdk_screen_width(), h = gdk_screen_height();
 
-	return (w == 800 && h == 480) ? SIZE_800x480 : SIZE_DESKTOP;
+	if (w * h == 800 * 480) return SIZE_800x480;
+	if (w * h == 640 * 480) return SIZE_640x480;
+
+	return SIZE_DESKTOP;
 }

@@ -36,7 +36,7 @@ void ZLXMLReader::setEncodingDescriptionPath(const std::string &path) {
 	ourEncodingDescriptionPath = path;
 	ourKnownEncodings.clear();
 	ZLFSDir *dir = ZLFSManager::instance().createDirectory(ourEncodingDescriptionPath);
-	dir->collectFiles(ourKnownEncodings, false);
+	dir->collectFiles(ourKnownEncodings, true);
 	ourKnownEncodings.push_back("US-ASCII");
 	ourKnownEncodings.push_back("UTF-8");
 	delete dir;
