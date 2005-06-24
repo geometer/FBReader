@@ -28,10 +28,12 @@ public:
 		SIZE_240x320,
 		SIZE_320x320,
 		SIZE_640x480,
-		SIZE_800x480
+		SIZE_800x480,
 	};
 
-	static Size getSize() UTIL_SECTION;
+	static Size size() UTIL_SECTION;
+	static unsigned int width() UTIL_SECTION;
+	static unsigned int height() UTIL_SECTION;
 	static void deleteInstance() UTIL_SECTION;
 
 protected:
@@ -39,7 +41,11 @@ protected:
 
 	ZLScreenSize() UTIL_SECTION;
 	virtual ~ZLScreenSize() UTIL_SECTION;
-	virtual Size getSizeInternal() const UTIL_SECTION = 0;
+	virtual unsigned int widthInternal() const UTIL_SECTION = 0;
+	virtual unsigned int heightInternal() const UTIL_SECTION = 0;
 };
+
+inline unsigned int ZLScreenSize::width() { return ourInstance->widthInternal(); }
+inline unsigned int ZLScreenSize::height() { return ourInstance->heightInternal(); }
 
 #endif /* __ZLSCREENSIZE_H__ */

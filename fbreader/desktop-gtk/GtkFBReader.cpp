@@ -18,6 +18,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <iostream>
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -75,6 +77,7 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myToolbar = gtk_toolbar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), myToolbar, false, false, 0);
 	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_ICONS);
+
 	createToolbar();
 
 	myViewWidget = new GtkViewWidget(this);

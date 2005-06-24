@@ -37,10 +37,8 @@ QString QOpenFileDialogItem::name() {
 	return text(0);
 }
 
-QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLFileHandler &handler) : QDialog(), ZLOpenFileDialog(handler) {
+QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLFileHandler &handler) : QDialog(), ZLDesktopOpenFileDialog(handler) {
 	setCaption(caption);
-	// TODO: store dialog size in option
-	resize(600, 600);
 
 	myMainBox = new QVBox(this);
 

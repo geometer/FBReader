@@ -26,7 +26,7 @@
 #include <qdialog.h>
 #include <qlistview.h>
 
-#include <abstract/ZLOpenFileDialog.h>
+#include "../../desktop/dialogs/ZLDesktopOpenFileDialog.h"
 
 class QVBox;
 class QLineEdit;
@@ -42,12 +42,13 @@ private:
 	bool myIsDir;
 };
 
-class QOpenFileDialog : public QDialog, public ZLOpenFileDialog {
+class QOpenFileDialog : public QDialog, public ZLDesktopOpenFileDialog {
 	Q_OBJECT
 
 public:
 	QOpenFileDialog(const char *caption, const ZLFileHandler &handler); 
 	~QOpenFileDialog();
+	void run();
 
 private:
 	void updateListView(const std::string &selected);
@@ -56,6 +57,10 @@ private:
 protected:
 	void resizeEvent(QResizeEvent *event);
 	void keyPressEvent(QKeyEvent *event);
+
+	void setSize(int width, int height) { QDialog::resize(width, height); }
+	int width() const { return QDialog::width(); }
+	int height() const { return QDialog::height(); }
 
 private slots:
 	void accept();
@@ -66,5 +71,9 @@ private:
 	QVBox *myMainBox;
 	std::map<std::string,QPixmap*> myPixmaps;
 };
+
+inline void QOpenFileDialog::run() {
+	QDialog::exec();
+}
 
 #endif /* __QOPENFILEDIALOG_H__ */

@@ -53,7 +53,7 @@ void TextStyleCollection::deleteInstance() {
 TextStyleCollection::TextStyleCollection() {
 	int defaultFontSize = 24;
 	int defaultParagraphIndent = 30;
-	switch (ZLScreenSize::getSize()) {
+	switch (ZLScreenSize::size()) {
 		case ZLScreenSize::SIZE_DESKTOP:
 			defaultFontSize = 16;
 			defaultParagraphIndent = 20;

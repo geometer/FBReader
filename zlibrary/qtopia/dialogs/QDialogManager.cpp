@@ -32,5 +32,5 @@ int QDialogManager::informationBox(const char *title, const char *message, const
 }
 
 void QDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
-	QOpenFileDialog(title.c_str(), handler).exec();
+	QOpenFileDialog(title.c_str(), handler).run();
 }

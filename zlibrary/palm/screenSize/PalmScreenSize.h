@@ -33,7 +33,8 @@ public:
 	~PalmScreenSize() UTIL_SECTION;
 	
 protected:
-	Size getSizeInternal() const UTIL_SECTION;
+	unsigned int widthInternal() const UTIL_SECTION;
+	unsigned int heightInternal() const UTIL_SECTION;
 };
 
 #endif /* __PALMSCREENSIZE_H__ */

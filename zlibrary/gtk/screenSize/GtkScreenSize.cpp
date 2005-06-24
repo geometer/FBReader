@@ -20,11 +20,10 @@
 
 #include "GtkScreenSize.h"
 
-ZLScreenSize::Size GtkScreenSize::getSizeInternal() const {
-	gint w = gdk_screen_width(), h = gdk_screen_height();
+unsigned int GtkScreenSize::widthInternal() const {
+	return gdk_screen_width();
+}
 
-	if (w * h == 800 * 480) return SIZE_800x480;
-	if (w * h == 640 * 480) return SIZE_640x480;
-
-	return SIZE_DESKTOP;
+unsigned int GtkScreenSize::heightInternal() const {
+	return gdk_screen_height();
 }

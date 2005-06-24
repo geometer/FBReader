@@ -169,6 +169,13 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 	gtk_container_add(GTK_CONTAINER(button), image);
+
+	// toolbar with standard buttons is too wide for zaurus screen
+	GdkImage *gdkImage = GTK_IMAGE(image)->data.image.image;
+	int w = gdkImage->width;
+	int h = gdkImage->height;
+	gtk_widget_set_usize(button, w + 6, h + 6);
+
 	gtk_container_add(GTK_CONTAINER(myToolbar), button);
 	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), new ActionSlotData(this, id));
 	myButtons[id] = button;

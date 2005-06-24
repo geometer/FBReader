@@ -49,6 +49,7 @@ class QOpenFileDialog : public FullScreenDialog, public ZLOpenFileDialog {
 public:
 	QOpenFileDialog(const char *caption, const ZLFileHandler &handler); 
 	~QOpenFileDialog();
+	void run() { exec(); }
 
 private:
 	void updateListView(const std::string &selected);

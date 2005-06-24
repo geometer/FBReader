@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +16,29 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <qapplication.h>
-#include <qmessagebox.h>
-#include <qfiledialog.h>
+#ifndef __ZLDESKTOPOPENFILEDIALOG_H__
+#define __ZLDESKTOPOPENFILEDIALOG_H__
 
-#include "QDialogManager.h"
-#include "QOptionsDialog.h"
-#include "QOpenFileDialog.h"
+#include <abstract/ZLOpenFileDialog.h>
+#include <abstract/ZLOptions.h>
 
-ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new QOptionsDialog(id, title);
-}
+class ZLDesktopOpenFileDialog : public ZLOpenFileDialog {
 
-int QDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
-}
+protected:
+	ZLDesktopOpenFileDialog(const ZLFileHandler &handler);
+	virtual ~ZLDesktopOpenFileDialog();
 
-void QDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
-	QOpenFileDialog(title.c_str(), handler).runWithSize();
-}
+public:
+	void runWithSize();
+
+protected:
+	virtual void setSize(int width, int height) = 0;
+	virtual int width() const = 0;
+	virtual int height() const = 0;
+
+private:
+	ZLIntegerOption WidthOption;
+	ZLIntegerOption HeightOption;
+};
+
+#endif /* __ZLDESKTOPOPENFILEDIALOG_H__ */

@@ -95,7 +95,7 @@ void QOptionsDialogTab::close() {
 
 QOptionsDialogTab::QOptionsDialogTab(QTabWidget *parent) : QWidget(parent) {
 	int space = 10;
-	switch (ZLScreenSize::getSize()) {
+	switch (ZLScreenSize::size()) {
 		case ZLScreenSize::SIZE_640x480:
 			space = 10;
 			break;

@@ -26,7 +26,10 @@
 
 #include <abstract/ZLOpenFileDialog.h>
 
-class GtkOpenFileDialog : public ZLOpenFileDialog {
+#include "../../desktop/dialogs/ZLDesktopOpenFileDialog.h"
+
+class GtkOpenFileDialog : public ZLDesktopOpenFileDialog {
+
 public:
 	GtkOpenFileDialog(const char *caption, const ZLFileHandler &handler); 
 	~GtkOpenFileDialog(); 
@@ -34,6 +37,11 @@ public:
 	void run();
 
 	void activatedSlot();
+
+protected:
+	void setSize(int width, int height);
+	int width() const;
+	int height() const;
 
 private:
 	GdkPixbuf *getPixmap(const std::string &fileName, bool dir);

@@ -26,8 +26,23 @@ ZLScreenSize::ZLScreenSize() {
 ZLScreenSize::~ZLScreenSize() {
 }
 
-ZLScreenSize::Size ZLScreenSize::getSize() {
-	return ourInstance->getSizeInternal();
+ZLScreenSize::Size ZLScreenSize::size() {
+	unsigned int s0 = ourInstance->widthInternal();
+	unsigned int s1 = ourInstance->heightInternal();
+	switch (s0 * s1) {
+		case 160 * 160:
+			return SIZE_160x160;
+		case 240 * 320:
+			return SIZE_240x320;
+		case 320 * 320:
+			return SIZE_320x320;
+		case 640 * 480:
+			return SIZE_640x480;
+		case 800 * 480:
+			return SIZE_800x480;
+		default:
+			return SIZE_DESKTOP;
+	}
 }
 
 void ZLScreenSize::deleteInstance() {

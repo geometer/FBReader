@@ -76,7 +76,7 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 			{
 				int x = event->screenX;
 				int y = event->screenY;
-				if (ZLScreenSize::getSize() == ZLScreenSize::SIZE_320x320) {
+				if (ZLScreenSize::size() == ZLScreenSize::SIZE_320x320) {
 					x *= 2;
 					y *= 2;
 				}

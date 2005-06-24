@@ -34,5 +34,5 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 }
 
 void GtkDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
-  GtkOpenFileDialog(title.c_str(), handler).run();
+  GtkOpenFileDialog(title.c_str(), handler).runWithSize();
 }

@@ -33,13 +33,24 @@ void PalmScreenSize::createInstance() {
 static const UInt32 RomVersion50 = sysMakeROMVersion(5, 0, 0, sysROMStageDevelopment, 0);
 static UInt32 romVersion = 0;
 
-ZLScreenSize::Size PalmScreenSize::getSizeInternal() const {
+unsigned int PalmScreenSize::widthInternal() const {
 	// TODO: implement
 	if (romVersion == 0) {
 		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
 	}
 	if (romVersion < RomVersion50) {
-		return SIZE_160x160;
+		return 160;
 	}
-	return SIZE_320x320;
+	return 320;
+}
+
+unsigned int PalmScreenSize::heightInternal() const {
+	// TODO: implement
+	if (romVersion == 0) {
+		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
+	}
+	if (romVersion < RomVersion50) {
+		return 160;
+	}
+	return 320;
 }

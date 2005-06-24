@@ -22,10 +22,6 @@
 
 #include <algorithm>
 
-#include <iostream>
-
-#include <abstract/ZLScreenSize.h>
-
 #include "../../abstract/filesystem/ZLFSManager.h"
 #include "../../abstract/filesystem/ZLFSDir.h"
 #include "../../abstract/filesystem/ZLZipDir.h"
@@ -52,18 +48,13 @@ static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn
 	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLFileHandler &handler) : ZLOpenFileDialog(handler) {
+GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLFileHandler &handler) : ZLDesktopOpenFileDialog(handler) {
 	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption, NULL, GTK_DIALOG_MODAL,
 					GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 					NULL));
 
 	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
-
-	if (ZLScreenSize::getSize() == ZLScreenSize::SIZE_800x480)
-		gtk_window_set_default_size(GTK_WINDOW(myDialog), 600, 400);
-	else
-		gtk_window_set_default_size(GTK_WINDOW(myDialog), 600, 600);
 
 	myCurrentDirectoryName = GTK_ENTRY(gtk_entry_new());
 
@@ -249,6 +240,26 @@ void GtkOpenFileDialog::run() {
 
 void GtkOpenFileDialog::activatedSlot() {
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
+}
+
+void GtkOpenFileDialog::setSize(int width, int height) {
+	gtk_window_resize(GTK_WINDOW(myDialog), width, height);
+}
+
+int GtkOpenFileDialog::width() const {
+	int _width, _height;
+
+	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
+
+	return _width;
+}
+
+int GtkOpenFileDialog::height() const {
+	int _width, _height;
+
+	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
+
+	return _height;
 }
 
 // vim:ts=2:sw=2:noet

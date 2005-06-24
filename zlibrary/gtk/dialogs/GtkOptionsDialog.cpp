@@ -110,7 +110,7 @@ bool GtkOptionsDialog::run() {
 }
 
 void GtkOptionsDialog::setSize(int width, int height) {
-	gtk_window_set_default_size(GTK_WINDOW(myDialog), width, height);
+	gtk_window_resize(GTK_WINDOW(myDialog), width, height);
 }
 
 int GtkOptionsDialog::width() const {

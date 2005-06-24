@@ -27,7 +27,8 @@ public:
 	static void createInstance() { ourInstance = new GtkScreenSize(); }
 
 protected:
-	Size getSizeInternal() const;
+	unsigned int widthInternal() const;
+	unsigned int heightInternal() const;
 };
 
 #endif /* __GTKSCREENSIZE_H__ */

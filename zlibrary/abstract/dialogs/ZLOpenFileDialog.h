@@ -42,11 +42,16 @@ public:
 
 protected:
 	ZLOpenFileDialog(const ZLFileHandler &handler) DIALOG_SECTION;
-	~ZLOpenFileDialog() DIALOG_SECTION;
+	virtual ~ZLOpenFileDialog() DIALOG_SECTION;
+
+public:
+	virtual void run() DIALOG_SECTION = 0;
+
+protected:
+	const ZLFileHandler &handler() const DIALOG_SECTION;
 
 protected:
 	ZLDir *myCurrentDir;
-	const ZLFileHandler &handler() const DIALOG_SECTION;
 
 private:
 	const ZLFileHandler &myHandler;
