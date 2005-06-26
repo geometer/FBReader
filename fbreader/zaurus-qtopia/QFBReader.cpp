@@ -65,6 +65,7 @@ QFBReader::QFBReader() : FBReader(new QPaintContext()) {
 	myKeyBindings[Key_Up] = ACTION_SCROLL_BACKWARD;
 	myKeyBindings[Key_Down] = ACTION_SCROLL_FORWARD;
 	myKeyBindings[Key_Escape] = ACTION_CANCEL;
+	myKeyBindings[0x1050] = ACTION_FULLSCREEN;
 	myKeyBindings[Key_Return] = ACTION_FULLSCREEN;
 
 	myFullScreen = false;
