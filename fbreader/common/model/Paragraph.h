@@ -49,8 +49,10 @@ public:
 
 class ControlEntry : public ParagraphEntry {
 
-public:
+protected:
 	ControlEntry(TextKind kind, bool isStart) MODEL_SECTION;
+
+public:
 	virtual ~ControlEntry() MODEL_SECTION;
 	TextKind kind() const MODEL_SECTION;
 	Kind entryKind() const MODEL_SECTION;
@@ -60,6 +62,23 @@ public:
 private:
 	TextKind myKind;
 	bool myStart;
+
+friend class ControlEntryPool;
+};
+
+class ControlEntryPool {
+
+public:
+	static ControlEntryPool Pool;
+	
+public:
+	ControlEntryPool() MODEL_SECTION;
+	~ControlEntryPool() MODEL_SECTION;
+	ControlEntry *controlEntry(TextKind kind, bool isStart) MODEL_SECTION;
+
+private:
+	std::map<TextKind, ControlEntry*> myStartEntries;
+	std::map<TextKind, ControlEntry*> myEndEntries;
 };
 
 class HyperlinkControlEntry : public ControlEntry {
@@ -177,6 +196,7 @@ inline TextKind ControlEntry::kind() const { return myKind; }
 inline ParagraphEntry::Kind ControlEntry::entryKind() const { return CONTROL_ENTRY; }
 inline bool ControlEntry::isStart() const { return myStart; }
 inline bool ControlEntry::isHyperlink() const { return false; }
+inline ControlEntryPool::ControlEntryPool() {}
 
 inline HyperlinkControlEntry::HyperlinkControlEntry(TextKind kind, const std::string &label) : ControlEntry(kind, true), myLabel(label) {}
 inline HyperlinkControlEntry::~HyperlinkControlEntry() {}
@@ -197,7 +217,7 @@ inline const std::string &ImageEntry::id() const { return myId; }
 
 inline Paragraph::Paragraph(Kind kind) : myKind(kind) {}
 inline Paragraph::Kind Paragraph::kind() const { return myKind; }
-inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.push_back(new ControlEntry(textKind, isStart)); }
+inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.push_back(ControlEntryPool::Pool.controlEntry(textKind, isStart)); }
 inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
 inline void Paragraph::addImage(const std::string &id, const ImageMap &imageMap) { myEntries.push_back(new ImageEntry(id, imageMap)); }
 inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return myEntries; }

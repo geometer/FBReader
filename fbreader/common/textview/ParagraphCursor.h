@@ -43,26 +43,27 @@ public:
 class TextElementPool {
 
 public:
-	static void init() VIEW_SECTION;
-	static void clean() VIEW_SECTION;
+	static TextElementPool Pool;
 
-	static TextElement *HSpaceElement;
-	static TextElement *BeforeParagraphElement;
-	static TextElement *AfterParagraphElement;
-	static TextElement *IndentElement;
-	static TextElement *EmptyLineElement;
-
-	static Word *getWord(const char *data, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
-	static void storeWord(Word *word) VIEW_SECTION;
-	static ControlElement *getControlElement(const ControlEntry &entry) VIEW_SECTION;
-	static void storeControlElement(ControlElement *element) VIEW_SECTION;
-
-private:
-	static Allocator<sizeof(Word),64> myWordAllocator;
-	static Allocator<sizeof(ControlElement),32> myControlAllocator;
-	
-private:
+public:
 	TextElementPool() VIEW_SECTION;
+	~TextElementPool() VIEW_SECTION;
+	
+public:
+	TextElement *HSpaceElement;
+	TextElement *BeforeParagraphElement;
+	TextElement *AfterParagraphElement;
+	TextElement *IndentElement;
+	TextElement *EmptyLineElement;
+
+	Word *getWord(const char *data, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
+	void storeWord(Word *word) VIEW_SECTION;
+	ControlElement *getControlElement(const ControlEntry &entry) VIEW_SECTION;
+	void storeControlElement(ControlElement *element) VIEW_SECTION;
+
+private:
+	Allocator<sizeof(Word),64> myWordAllocator;
+	Allocator<sizeof(ControlElement),32> myControlAllocator;
 };
 
 class WordCursor {

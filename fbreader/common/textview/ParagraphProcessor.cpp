@@ -58,9 +58,9 @@ ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
 
 void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 	if (myWordCounter == 0) {
-		myElements->push_back(TextElementPool::BeforeParagraphElement);
+		myElements->push_back(TextElementPool::Pool.BeforeParagraphElement);
 		if (myParagraph.kind() == Paragraph::TEXT_PARAGRAPH) {
-			myElements->push_back(TextElementPool::IndentElement);
+			myElements->push_back(TextElementPool::Pool.IndentElement);
 		} else if (myParagraph.kind() == Paragraph::TREE_PARAGRAPH) {
 			TreeParagraph &tp = (TreeParagraph&)myParagraph;
 			for (int i = 1; i < tp.depth() - 1; i++) {
@@ -87,7 +87,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 
 void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {
 	beforeAddWord();
-	Word *word = TextElementPool::getWord(ptr, len, offset);
+	Word *word = TextElementPool::Pool.getWord(ptr, len, offset);
 	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; mit++) {
 		TextMark mark = *mit;
 		if ((mark.Offset < offset + len) && (mark.Offset + mark.Length > offset)) {
@@ -102,7 +102,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
 		switch ((*it)->entryKind()) {
 			case ParagraphEntry::CONTROL_ENTRY:
-				myElements->push_back(TextElementPool::getControlElement((ControlEntry&)**it));
+				myElements->push_back(TextElementPool::Pool.getControlElement((ControlEntry&)**it));
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
@@ -120,14 +120,14 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 					const char *ptr = text.data();
 					const char *end = ptr + text.length();
 					if (IsSpace[(unsigned char)*ptr]) {
-						myElements->push_back(TextElementPool::HSpaceElement);
+						myElements->push_back(TextElementPool::Pool.HSpaceElement);
 					}
 					const char *firstNonSpace = 0;
 					for (; ptr < end; ptr++) {
 						if (IsSpace[(unsigned char)*ptr]) {
 							if (firstNonSpace != 0) {
 								addWord(firstNonSpace, myOffset + (firstNonSpace - text.data()), ptr - firstNonSpace);
-								myElements->push_back(TextElementPool::HSpaceElement);
+								myElements->push_back(TextElementPool::Pool.HSpaceElement);
 								firstNonSpace = 0;
 							}
 						} else if (firstNonSpace == 0) {
@@ -143,5 +143,5 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 		}
 	}
-	myElements->push_back(TextElementPool::AfterParagraphElement);
+	myElements->push_back(TextElementPool::Pool.AfterParagraphElement);
 }

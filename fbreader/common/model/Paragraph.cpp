@@ -19,9 +19,34 @@
 
 #include "Paragraph.h"
 
+ControlEntryPool ControlEntryPool::Pool;
+
+ControlEntryPool::~ControlEntryPool() {
+	std::map<TextKind, ControlEntry*>::iterator it;
+	for (it = myStartEntries.begin(); it != myStartEntries.end(); it++) {
+		delete it->second;
+	}
+	for (it = myEndEntries.begin(); it != myEndEntries.end(); it++) {
+		delete it->second;
+	}
+}
+
+ControlEntry *ControlEntryPool::controlEntry(TextKind kind, bool isStart) {
+	std::map<TextKind, ControlEntry*> &entries = isStart ? myStartEntries : myEndEntries;
+	std::map<TextKind, ControlEntry*>::iterator it = entries.find(kind);
+	if (it != entries.end()) {
+		return it->second;
+	}
+	ControlEntry *entry = new ControlEntry(kind, isStart);
+	entries.insert(std::pair<TextKind, ControlEntry*>(kind, entry));
+	return entry;
+}
+	
 Paragraph::~Paragraph() {
 	for (std::vector<ParagraphEntry*>::const_iterator it = myEntries.begin(); it != myEntries.end(); it++) {
-		delete *it;
+		if (((*it)->entryKind() != ParagraphEntry::CONTROL_ENTRY) || ((ControlEntry*)*it)->isHyperlink()) {
+			delete *it;
+		}
 	}
 }
 

@@ -24,14 +24,7 @@
 
 #include "../model/Paragraph.h"
 
-TextElement *TextElementPool::HSpaceElement = 0;
-TextElement *TextElementPool::BeforeParagraphElement = 0;
-TextElement *TextElementPool::AfterParagraphElement = 0;
-TextElement *TextElementPool::IndentElement = 0;
-TextElement *TextElementPool::EmptyLineElement = 0;
-
-Allocator<sizeof(Word),64> TextElementPool::myWordAllocator;
-Allocator<sizeof(ControlElement),32> TextElementPool::myControlAllocator;
+TextElementPool TextElementPool::Pool;
 
 int ParagraphCursor::Cache::ourCacheCounter = 0;
 std::map<Paragraph*,shared_ptr<TextElementVector> > ParagraphCursor::Cache::ourCache;
@@ -40,10 +33,10 @@ TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
 		switch ((*it)->kind()) {
 			case TextElement::WORD_ELEMENT:
-				TextElementPool::storeWord((Word*)*it);
+				TextElementPool::Pool.storeWord((Word*)*it);
 				break;
 			case TextElement::CONTROL_ELEMENT:
-				TextElementPool::storeControlElement((ControlElement*)*it);
+				TextElementPool::Pool.storeControlElement((ControlElement*)*it);
 				break;
 			case TextElement::IMAGE_ELEMENT:
 			case TextElement::TREE_ELEMENT:
@@ -59,7 +52,7 @@ TextElementVector::~TextElementVector() {
 	}
 }
 
-void TextElementPool::init() {
+TextElementPool::TextElementPool() {
 	HSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
 	BeforeParagraphElement = new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT);
 	AfterParagraphElement = new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT);
@@ -67,15 +60,12 @@ void TextElementPool::init() {
 	EmptyLineElement = new SpecialTextElement(TextElement::EMPTY_LINE_ELEMENT);
 }
 
-void TextElementPool::clean() {
-	if (HSpaceElement != 0) {
-		delete HSpaceElement;
-		delete BeforeParagraphElement;
-		delete AfterParagraphElement;
-		delete IndentElement;
-		delete EmptyLineElement;
-		HSpaceElement = 0;
-	}
+TextElementPool::~TextElementPool() {
+	delete HSpaceElement;
+	delete BeforeParagraphElement;
+	delete AfterParagraphElement;
+	delete IndentElement;
+	delete EmptyLineElement;
 }
 
 ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
@@ -86,9 +76,6 @@ ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
 }
 
 ParagraphCursor::ParagraphCursor(const TextModel &model) : myModel(model) {
-	if (TextElementPool::HSpaceElement == 0) {
-		TextElementPool::init();
-	}
 	myParagraphIterator = myModel.paragraphs().begin();
 	fill();
 }
@@ -237,7 +224,7 @@ void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
 	const std::vector<ParagraphEntry*> &entries = paragraph.entries();
 	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
 		ControlEntry &control = *(ControlEntry*)*it;
-		myElements->push_back(TextElementPool::getControlElement(control));
+		myElements->push_back(TextElementPool::Pool.getControlElement(control));
 	}
 }
 
@@ -260,19 +247,19 @@ void ParagraphCursor::fill() {
 			case Paragraph::EMPTY_LINE_PARAGRAPH:
 			{
 				processControlParagraph(*(Paragraph*)*myParagraphIterator);
-				myElements->push_back(TextElementPool::EmptyLineElement);
+				myElements->push_back(TextElementPool::Pool.EmptyLineElement);
 				break;
 			}
 			case Paragraph::BEFORE_SKIP_PARAGRAPH:
 			{
 				processControlParagraph(*(Paragraph*)*myParagraphIterator);
-				myElements->push_back(TextElementPool::BeforeParagraphElement);
+				myElements->push_back(TextElementPool::Pool.BeforeParagraphElement);
 				break;
 			}
 			case Paragraph::AFTER_SKIP_PARAGRAPH:
 			{
 				processControlParagraph(*(Paragraph*)*myParagraphIterator);
-				myElements->push_back(TextElementPool::AfterParagraphElement);
+				myElements->push_back(TextElementPool::Pool.AfterParagraphElement);
 				break;
 			}
 			case Paragraph::EOS_PARAGRAPH:

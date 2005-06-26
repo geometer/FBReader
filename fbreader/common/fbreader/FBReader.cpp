@@ -91,7 +91,6 @@ FBReader::~FBReader() {
 	TextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
 	Hyphenator::deleteInstance();
-	TextElementPool::clean();
 }
 
 void FBReader::openBook(BookDescriptionPtr description) {
