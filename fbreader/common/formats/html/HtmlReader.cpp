@@ -112,6 +112,7 @@ static struct {
 	{ "H4", HtmlReader::_H4 },
 	{ "H5", HtmlReader::_H5 },
 	{ "H6", HtmlReader::_H6 },
+	{ "DIV", HtmlReader::_DIV },
 	// 9. text
 	{ "EM", HtmlReader::_EM, },
 	{ "STRONG", HtmlReader::_STRONG, },

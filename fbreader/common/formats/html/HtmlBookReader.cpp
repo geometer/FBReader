@@ -112,6 +112,12 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _SUP:
 			addControl(SUP, tag.Start);
 			break;
+		case _DIV:
+			if (!tag.Start) {
+				endParagraph();
+				beginParagraph();
+			}
+			break;
 		case _P:
 		case _BR:
 			endParagraph();
