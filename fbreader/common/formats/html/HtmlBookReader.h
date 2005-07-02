@@ -26,11 +26,12 @@
 #include "../../bookmodel/BookReader.h"
 
 class BookModel;
+class PlainTextFormat;
 
 class HtmlBookReader : public BookReader, public HtmlReader {
 
 public:
-	HtmlBookReader(BookModel &model) FORMATS_SECTION;
+	HtmlBookReader(BookModel &model, const PlainTextFormat &format) FORMATS_SECTION;
 	~HtmlBookReader() FORMATS_SECTION;
 
 protected:
@@ -44,6 +45,7 @@ private:
 	void flushTextBufferToParagraph() FORMATS_SECTION;
 
 private:
+	const PlainTextFormat &myFormat;
 	int myIgnoreDataCounter;
 	bool myIsPreformatted;
 	bool myIsHyperlink;

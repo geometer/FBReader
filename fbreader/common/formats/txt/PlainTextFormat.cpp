@@ -41,7 +41,7 @@ PlainTextFormat::PlainTextFormat(const std::string &fileName) :
 	CreateContentsTableOption(fileName, OPTION_CreateContentsTable, false) {
 }
 
-PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) : myFormat(fileName) {
+PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName) : myFormat(fileName) {
 	if (!myFormat.initialized()) {
 		PlainTextFormatDetector detector;
 		ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
@@ -51,7 +51,7 @@ PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string 
 		}
 	}
 
-	ZLOptionsDialogTab *tab = dialog.createTab("Text");
+	ZLOptionsDialogTab *tab = dialog.createTab(tabName);
 
 	BreakTypeOptionEntry *breakEntry = new BreakTypeOptionEntry(*this, "Break Paragraph At", myFormat.BreakTypeOption);
 	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry("Ignore Indent Less Than", myFormat.IgnoredIndentOption, 1, 100, 1);

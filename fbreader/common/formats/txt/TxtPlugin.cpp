@@ -94,5 +94,5 @@ const std::string &TxtPlugin::iconName() const {
 }
 
 FormatInfoPage *TxtPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	return new PlainTextInfoPage(dialog, fileName);
+	return new PlainTextInfoPage(dialog, fileName, "Text");
 }

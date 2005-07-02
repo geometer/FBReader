@@ -19,33 +19,102 @@
 
 #include <cctype>
 
+#include "../txt/PlainTextFormat.h"
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-HtmlBookReader::HtmlBookReader(BookModel &model) : BookReader(model) {
+HtmlBookReader::HtmlBookReader(BookModel &model, const PlainTextFormat &format) : BookReader(model), myFormat(format) {
 }
 
 void HtmlBookReader::flushTextBufferToParagraph() {
+	int breakType = myFormat.breakType();
 	if (myIsPreformatted) {
-		std::string fullText;
-		ZLStringUtil::append(fullText, myBuffer);
-		myBuffer.clear();
-		int index = -1;
-		do {
-			//TODO: process '\t' and ' ' symbols
-			int oldIndex = index + 1;
-			index = fullText.find('\n', oldIndex);
-			int len = ((index == -1) ? fullText.length() : index) - oldIndex;
-			if (len > 0) {
-				addDataToBuffer(fullText.data() + oldIndex, len);
-			} else {
-				addDataToBuffer(" ");
+		if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
+			std::string fullText;
+			ZLStringUtil::append(fullText, myBuffer);
+			myBuffer.clear();
+			int index = -1;
+			do {
+				//TODO: process '\t' and ' ' symbols
+				int oldIndex = index + 1;
+				index = fullText.find('\n', oldIndex);
+				int len = ((index == -1) ? fullText.length() : index) - oldIndex;
+				if (len > 0) {
+					addDataToBuffer(fullText.data() + oldIndex, len);
+				} else {
+					addDataToBuffer(" ");
+				}
+				myIsPreformatted = false;
+				endParagraph();
+				beginParagraph();
+				myIsPreformatted = true;
+			} while (index != -1);
+		} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
+			std::string fullText;
+			ZLStringUtil::append(fullText, myBuffer);
+			myBuffer.clear();
+			int spaceCounter = -1;
+			const char *start = fullText.data();
+			const char *end = start + fullText.length();
+			for (const char *ptr = start; ptr != end; ptr++) {
+				if (isspace(*ptr)) {
+					if (*ptr == '\n') {
+						spaceCounter = 0;
+					} else if (spaceCounter >= 0) {
+						spaceCounter++;
+					}
+				} else {
+					if (spaceCounter > myFormat.ignoredIndent()) {
+						if (ptr - start > spaceCounter) {
+							addDataToBuffer(start, ptr - start - spaceCounter);
+							myIsPreformatted = false;
+							endParagraph();
+							beginParagraph();
+							myIsPreformatted = true;
+						}
+						start = ptr;
+					}
+					spaceCounter = -1;
+				}
 			}
+			spaceCounter = std::max(spaceCounter, 0);
+			if (end - start > spaceCounter) {
+				addDataToBuffer(start, end - start - spaceCounter);
+				myIsPreformatted = false;
+				endParagraph();
+				beginParagraph();
+				myIsPreformatted = true;
+			}
+		} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
+			std::string fullText;
+			ZLStringUtil::append(fullText, myBuffer);
+			myBuffer.clear();
+			int brCounter = 0;
+			const char *start = fullText.data();
+			const char *end = start + fullText.length();
+			for (const char *ptr = start; ptr != end; ptr++) {
+				if (isspace(*ptr)) {
+					if (*ptr == '\n') {
+						brCounter++;
+					}
+				} else {
+					if (brCounter > 1) {
+						addDataToBuffer(start, ptr - start);
+						myIsPreformatted = false;
+						endParagraph();
+						beginParagraph();
+						myIsPreformatted = true;
+						start = ptr;
+					}
+					brCounter = 0;
+				}
+			}
+			addDataToBuffer(start, end - start);
 			myIsPreformatted = false;
 			endParagraph();
 			beginParagraph();
 			myIsPreformatted = true;
-		} while (index != -1);
+		}
 	} else {
 		if (!myIsStarted) {
 			for (std::vector<std::string>::const_iterator it = myBuffer.begin(); !myIsStarted && (it != myBuffer.end()); it++) {
@@ -131,10 +200,12 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 		case _PRE:
 			endParagraph();
 			myIsPreformatted = tag.Start;
-			if (tag.Start) {
-				pushKind(PREFORMATTED);
-			} else {
-				popKind();
+			if (myFormat.breakType() == PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
+				if (tag.Start) {
+					pushKind(PREFORMATTED);
+				} else {
+					popKind();
+				}
 			}
 			beginParagraph();
 			break;

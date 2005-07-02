@@ -24,6 +24,7 @@
 #include "HtmlPlugin.h"
 #include "HtmlDescriptionReader.h"
 #include "HtmlBookReader.h"
+#include "../txt/PlainTextFormat.h"
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
@@ -73,8 +74,18 @@ bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &d
 }
 
 bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	HtmlBookReader *reader = new HtmlBookReader(model);
 	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
+	if (stream == 0) {
+		return false;
+	}
+
+	PlainTextFormat format(description.fileName());
+	if (!format.initialized()) {
+		PlainTextFormatDetector detector;
+		detector.detect(*stream, format);
+	}
+
+	HtmlBookReader *reader = new HtmlBookReader(model, format);
 	reader->readDocument(*stream, description.encoding());
 	delete stream;
 	delete reader;
@@ -84,4 +95,8 @@ bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model)
 const std::string &HtmlPlugin::iconName() const {
 	static const std::string ICON_NAME = "FBReader/html";
 	return ICON_NAME;
+}
+
+FormatInfoPage *HtmlPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
+	return new PlainTextInfoPage(dialog, fileName, "<PRE>");
 }
