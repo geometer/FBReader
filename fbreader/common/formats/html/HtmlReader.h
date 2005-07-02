@@ -21,33 +21,11 @@
 #define __HTMLREADER_H__
 
 #include <string>
+#include <vector>
 
-#include <abstract/ZLXMLReader.h>
+#include <abstract/EncodingConverter.h>
 
 class ZLInputStream;
-
-class HtmlTextConverter : public ZLXMLReader {
-
-protected:
-	const Tag *tags() const FORMATS_SECTION;
-
-public:
-	HtmlTextConverter(const char *encoding) FORMATS_SECTION;
-	~HtmlTextConverter() FORMATS_SECTION;
-	void convertBuffer(std::vector<std::string> &buffer) FORMATS_SECTION;
-	void convertString(std::string &string) FORMATS_SECTION;
-	
-public:
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
-
-protected:
-	const std::vector<std::string> &externalDTDs() const FORMATS_SECTION;
-
-private:
-	std::vector<std::string> *myBuffer;
-};
 
 class HtmlReader {
 
@@ -117,11 +95,8 @@ protected:
 	virtual bool characterDataHandler(const char *text, int len) FORMATS_SECTION = 0;
 
 protected:
-	HtmlTextConverter *myConverter;
+	EncodingConverter myConverter;
 };
-
-inline HtmlTextConverter::HtmlTextConverter(const char *encoding) : ZLXMLReader(encoding) {}
-inline HtmlTextConverter::~HtmlTextConverter() {}
 
 inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), hasValue(false) {}
 inline HtmlReader::HtmlAttribute::~HtmlAttribute() {}

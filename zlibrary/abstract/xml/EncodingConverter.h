@@ -20,17 +20,37 @@
 #define __ENCODINGCONVERTER_H__
 
 #include <string>
+#include <map>
+
+#include <abstract/shared_ptr.h>
+
+class ControlSequenceExtension {
+
+public:
+	ControlSequenceExtension() XML_SECTION;
+	virtual ~ControlSequenceExtension() XML_SECTION;
+
+	virtual void start() XML_SECTION = 0;
+	virtual bool parseCharacter(char ch) XML_SECTION = 0;
+	virtual const std::string &buffer() const XML_SECTION = 0;
+};
 
 class EncodingConverter {
 
 public:
-	EncodingConverter::EncodingConverter(const char *encoding) XML_SECTION;
+	EncodingConverter::EncodingConverter(const char *encoding = 0) XML_SECTION;
 	EncodingConverter::~EncodingConverter() XML_SECTION;
 	void EncodingConverter::setEncoding(const char *encoding) XML_SECTION;
 	void EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+	void registerExtension(char symbol, const shared_ptr<ControlSequenceExtension> extension) XML_SECTION;
 
 private:
 	int *myEncodingMap;
+	std::map<char,shared_ptr<ControlSequenceExtension> > myExtensions;
+	shared_ptr<ControlSequenceExtension> myActiveExtension;
 };
+
+inline ControlSequenceExtension::ControlSequenceExtension() {}
+inline ControlSequenceExtension::~ControlSequenceExtension() {}
 
 #endif /* __ENCODINGCONVERTER_H__ */

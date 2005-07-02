@@ -28,7 +28,11 @@ void HtmlDescriptionReader::startDocumentHandler() {
 
 void HtmlDescriptionReader::endDocumentHandler() {
 	if (!myDescription.title().empty()) {
-		myConverter->convertString(myDescription.title());
+		const char *titleStart = myDescription.title().data();
+		const char *titleEnd = titleStart + myDescription.title().length();
+		std::string newTitle;
+		myConverter.convert(newTitle, titleStart, titleEnd);
+		myDescription.title() = newTitle;
 	}
 }
 

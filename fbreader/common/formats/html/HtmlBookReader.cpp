@@ -59,7 +59,12 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 			}
 		}
 		if (myIsStarted) {
-			myConverter->convertBuffer(myBuffer);
+			std::string buf;
+			for (std::vector<std::string>::iterator it = myBuffer.begin(); it != myBuffer.end(); it++) {
+				buf.erase();
+				myConverter.convert(buf, it->data(), it->data() + it->length());
+				*it = buf;
+			}
 			BookReader::flushTextBufferToParagraph();
 		}
 	}

@@ -29,74 +29,13 @@
 
 #include "../docbook/DocBookReader.h"
 #include "HtmlReader.h"
-
-static const ZLXMLReader::Tag TAGS[] = {
-	{0, 0}
-};
-
-const ZLXMLReader::Tag *HtmlTextConverter::tags() const {
-	return TAGS;
-}
-
-void HtmlTextConverter::convertBuffer(std::vector<std::string> &buffer) {
-	myBuffer = &buffer;
-	std::string str = "<t>";
-	ZLStringUtil::append(str, buffer);
-	str += "</t>";
-	buffer.clear();
-	ZLStringInputStream stream(str);
-	readDocument(stream);
-}
-
-void HtmlTextConverter::convertString(std::string &str) {
-	std::vector<std::string> buffer;
-	myBuffer = &buffer;
-	str = "<t>" + str + "</t>";
-	ZLStringInputStream stream(str);
-	readDocument(stream);
-	str.erase();
-	ZLStringUtil::append(str, buffer);
-}
-
-void HtmlTextConverter::startElementHandler(int, const char **) {
-}
-
-void HtmlTextConverter::endElementHandler(int) {
-}
-
-void HtmlTextConverter::characterDataHandler(const char *text, int len) {
-	if (myBuffer != 0) {
-		myBuffer->push_back(std::string());
-		myBuffer->back().append(text, len);
-	}
-}
-
-static std::vector<std::string> EXTERNAL_DTDs;
-
-const std::vector<std::string> &HtmlTextConverter::externalDTDs() const {
-	if (EXTERNAL_DTDs.empty()) {
-		std::vector<std::string> files;
-		ZLFSDir *dtdPath = ZLFSManager::instance().createDirectory(DocBookReader::DTDDirectory);
-		dtdPath->collectFiles(files, false);
-		for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
-			if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
-				EXTERNAL_DTDs.push_back(dtdPath->name() + "/" + *it);
-			}
-		}
-		delete dtdPath;
-	}
-
-	return EXTERNAL_DTDs;
-}
+#include "HtmlEntityExtension.h"
 
 HtmlReader::HtmlReader() {
-	myConverter = 0;
+	myConverter.registerExtension('&', new HtmlEntityExtension());
 }
 
 HtmlReader::~HtmlReader() {
-	if (myConverter != 0) {
-		delete myConverter;
-	}
 }
 
 static struct {
@@ -192,13 +131,7 @@ void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding
 		return;
 	}
 
-	if (myConverter != 0) {
-		delete myConverter;
-	}
-	myConverter = new HtmlTextConverter(encoding.c_str());
-	std::string startString = "<t>";
-	ZLStringInputStream startStream(startString);
-	myConverter->readDocument(startStream);
+	myConverter.setEncoding(encoding.c_str());
 
 	startDocumentHandler();
 

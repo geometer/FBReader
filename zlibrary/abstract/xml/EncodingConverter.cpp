@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <cctype>
+
 #include "EncodingConverter.h"
 #include "ZLXMLReader.h"
 #include "EncodingReader.h"
@@ -43,12 +45,28 @@ void EncodingConverter::setEncoding(const char *encoding) {
 		if (strcasecmp(encoding, it->c_str()) == 0) {
 			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
 			if (!er.fillTable(myEncodingMap)) {
-				delete[] myEncodingMap;
-				myEncodingMap = 0;
+				if (myExtensions.empty()) {
+					delete[] myEncodingMap;
+					myEncodingMap = 0;
+				} else {
+					for (int i = 0; i < 256; i++) {
+						myEncodingMap[i] = i;
+					}
+				}
 			}
 			break;
 		}
 	}
+}
+
+void EncodingConverter::registerExtension(char ch, const shared_ptr<ControlSequenceExtension> extension) {
+	if (myExtensions.empty() && myEncodingMap == 0) {
+		myEncodingMap = new int[256];
+		for (int i = 0; i < 256; i++) {
+			myEncodingMap[i] = i;
+		}
+	}
+	myExtensions[ch] = extension;
 }
 
 void EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
@@ -56,7 +74,25 @@ void EncodingConverter::convert(std::string &dst, const char *srcStart, const ch
 		dst.append(srcStart, srcEnd - srcStart);
 	} else {
 		dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
+		bool hasExtensions = !myExtensions.empty();
 		for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
+			if (hasExtensions) {
+				if (myActiveExtension.isNull()) {
+					std::map<char,shared_ptr<ControlSequenceExtension> >::const_iterator it = myExtensions.find(*ptr);
+					if (it != myExtensions.end()) {
+						myActiveExtension = it->second;
+						myActiveExtension->start();
+					}
+				}
+				if (!myActiveExtension.isNull()) {
+					if (myActiveExtension->parseCharacter(*ptr)) {
+						dst += myActiveExtension->buffer();
+						myActiveExtension = 0;
+					}
+					continue;
+				}
+			}
+
 			int &ucs2code = myEncodingMap[(unsigned char)*ptr];
     	if (ucs2code < 0x80) {
 				dst += (char)ucs2code;

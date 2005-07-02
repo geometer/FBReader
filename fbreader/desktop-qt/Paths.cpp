@@ -19,12 +19,14 @@
 
 #include "../common/hyphenation/TeXHyphenator.h"
 #include "../common/formats/docbook/DocBookReader.h"
+#include "../common/formats/html/HtmlEntityExtension.h"
 #include "../common/collection/BookCollection.h"
 #include "QFBReader.h"
 #include "Paths.h"
 
 std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
 std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
+std::string HtmlEntityExtension::CollectionFile("share/FBReader/formats/html/html.ent");
 std::string QFBReader::ImageDirectory("icons/640x480");
 std::string FBReader::HelpDirectory("share/FBReader/help");
 std::string EncodingDescriptionPath("share/FBReader/encodings");
