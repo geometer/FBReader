@@ -136,6 +136,29 @@ void FBReader::repaintView() {
 	}
 }
 
+void FBReader::bookInfoSlot() {
+	if ((myMode == BOOK_TEXT_MODE) || (myMode == CONTENTS_MODE) || (myMode == FOOTNOTE_MODE)) {
+		runBookInfoDialog(myModel->fileName());
+	}
+}
+
+void FBReader::optionsSlot() {
+	OptionsDialog optionsDialog(*myContext);
+	optionsDialog.dialog().run("");
+	clearTextCaches();
+	repaintView();
+}
+
+void FBReader::addBookSlot() {
+	FBFileHandler handler;
+	ZLDialogManager::instance().openFileDialog("FBReader -- Add File To Library", handler);
+	BookDescriptionPtr description = handler.description();
+	if (!description.isNull() && runBookInfoDialog(description->fileName())) {
+		BookList().addFileName(description->fileName());
+		setMode(BOOK_TEXT_MODE);
+	}
+}
+
 void FBReader::doAction(ActionCode code) {
 	switch (code) {
 		case ACTION_SHOW_COLLECTION:
@@ -148,12 +171,7 @@ void FBReader::doAction(ActionCode code) {
 			}
 			break;
 		case ACTION_SHOW_OPTIONS:
-			{
-				OptionsDialog optionsDialog(*myContext);
-				optionsDialog.dialog().run("");
-				clearTextCaches();
-				repaintView();
-			}
+			optionsSlot();
 			break;
 		case ACTION_UNDO:
 			if (myMode == BOOK_TEXT_MODE) {
@@ -237,20 +255,10 @@ void FBReader::doAction(ActionCode code) {
 			fullscreenSlot();
 			break;
 		case ACTION_ADD_BOOK:
-			{
-				FBFileHandler handler;
-				ZLDialogManager::instance().openFileDialog("FBReader -- Add File To Library", handler);
-				BookDescriptionPtr description = handler.description();
-				if (!description.isNull() && runBookInfoDialog(description->fileName())) {
-					BookList().addFileName(description->fileName());
-					setMode(BOOK_TEXT_MODE);
-				}
-			}
+			addBookSlot();
 			break;
 		case ACTION_SHOW_BOOK_INFO:
-			if ((myMode == BOOK_TEXT_MODE) || (myMode == CONTENTS_MODE) || (myMode == FOOTNOTE_MODE)) {
-				runBookInfoDialog(myModel->fileName());
-			}
+			bookInfoSlot();
 			break;
 		case ACTION_SHOW_HELP:
 			break;

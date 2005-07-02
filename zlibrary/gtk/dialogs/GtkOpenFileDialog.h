@@ -22,16 +22,15 @@
 
 #include <gtk/gtk.h>
 
+#include <vector>
 #include <map>
-
-#include <abstract/ZLOpenFileDialog.h>
 
 #include "../../desktop/dialogs/ZLDesktopOpenFileDialog.h"
 
 class GtkOpenFileDialog : public ZLDesktopOpenFileDialog {
 
 public:
-	GtkOpenFileDialog(const char *caption, const ZLFileHandler &handler); 
+	GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler); 
 	~GtkOpenFileDialog(); 
 
 	void run();
@@ -43,18 +42,21 @@ protected:
 	int width() const;
 	int height() const;
 
-private:
-	GdkPixbuf *getPixmap(const std::string &fileName, bool dir);
-
-	void updateListView(const std::string &selected);
+	void exitDialog();
+	void update(const std::string &selectedNodeName);
 
 private:
+	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);
+
+private:
+	bool myExitFlag;
 	GtkDialog *myDialog;
 	GtkListStore *myStore;
 	GtkTreeView *myView;
 	GtkEntry *myCurrentDirectoryName;
 
 	std::map<std::string,GdkPixbuf*> myPixmaps;
+	std::vector<ZLTreeNodePtr> myNodes;
 };
 
 #endif

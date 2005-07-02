@@ -21,26 +21,27 @@
 #include "FBFileHandler.h"
 #include "../formats/FormatPlugin.h"
 
-bool FBFileHandler::isFileVisible(const std::string &shortFileName, bool dir) const {
-	if (shortFileName.length() == 0) {
+bool FBFileHandler::isNodeVisible(const ZLTreeNodePtr node) const {
+	const std::string &name = node->name();
+	if (name.length() == 0) {
 		return false;
 	}
-	if (shortFileName[0] == '.') {
-		return dir && (shortFileName == "..");
+	if (name[0] == '.') {
+		return !node->isFile() && (name == "..");
 	}
-	return dir || ZLStringUtil::stringEndsWith(shortFileName, ".zip") || (PluginCollection::instance().plugin(shortFileName, false) != 0);
+	return !node->isFile() || ZLStringUtil::stringEndsWith(name, ".zip") || (PluginCollection::instance().plugin(name, false) != 0);
 }
 
-const std::string &FBFileHandler::pixmapName(const std::string &shortFileName, bool dir) const {
+const std::string &FBFileHandler::pixmapName(const ZLTreeNodePtr node) const {
 	static const std::string FOLDER_ICON = "FBReader/folder";
 	static const std::string ZIPFOLDER_ICON = "FBReader/zipfolder";
 	static const std::string UNKNOWN_ICON = "FBReader/unknown";
-	if (dir) {
+	if (!node->isFile()) {
 		return FOLDER_ICON;
-	} else if (ZLStringUtil::stringEndsWith(shortFileName, ".zip")) {
+	} else if (ZLStringUtil::stringEndsWith(node->name(), ".zip")) {
 		return ZIPFOLDER_ICON;
 	} else {
-		FormatPlugin *plugin = PluginCollection::instance().plugin(shortFileName, false);
+		FormatPlugin *plugin = PluginCollection::instance().plugin(node->name(), false);
 		if (plugin != 0) {
 			return plugin->iconName();
 		}
@@ -48,8 +49,6 @@ const std::string &FBFileHandler::pixmapName(const std::string &shortFileName, b
 	return UNKNOWN_ICON;
 }
 
-void FBFileHandler::accept(const std::string &fullFileName, bool dir) const {
-	if (!dir) {
-		myDescription = BookDescription::create(fullFileName);
-	}
+void FBFileHandler::accept(const ZLTreeStatePtr state) const {
+	myDescription = BookDescription::create(state->name());
 }

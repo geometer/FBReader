@@ -52,7 +52,7 @@ bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &d
 	delete reader;
 
 	if (description.title().empty()) {
-		int index = fileName.rfind('/');
+		int index = std::max((int)fileName.rfind('/'), (int)fileName.rfind(':'));
 		std::string title = (index > 0) ? fileName.substr(index + 1) : fileName;
 		index = title.rfind('.');
 		WritableBookDescription(description).title() = (index > 0) ? title.substr(0, index) : title;

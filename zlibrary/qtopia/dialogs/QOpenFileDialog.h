@@ -30,34 +30,34 @@
 
 class QVBox;
 class QLineEdit;
-class QPixmap;
 
 class QOpenFileDialogItem : public QListViewItem {
 
 public:
-	QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const QString name, bool dir);
-	bool isDir() { return myIsDir; }
-	QString name();
+	QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node);
+	ZLTreeNodePtr node() const { return myNode; }
 
 private:
-	bool myIsDir;
+	ZLTreeNodePtr myNode;
 };
 
 class QOpenFileDialog : public FullScreenDialog, public ZLOpenFileDialog {
 	Q_OBJECT
 
 public:
-	QOpenFileDialog(const char *caption, const ZLFileHandler &handler); 
+	QOpenFileDialog(const char *caption, const ZLTreeHandler &handler); 
 	~QOpenFileDialog();
-	void run() { exec(); }
+	void run();
 
 private:
-	void updateListView(const std::string &selected);
-	QPixmap &getPixmap(const std::string &fileName, bool dir);
+	QPixmap &getPixmap(const ZLTreeNodePtr node);
 
 protected:
 	void resizeEvent(QResizeEvent *event);
 	void keyPressEvent(QKeyEvent *event);
+
+	void exitDialog();
+	void update(const std::string &selectedNodeName);
 
 private slots:
 	void accept();
@@ -68,5 +68,9 @@ private:
 	QVBox *myMainBox;
 	std::map<std::string,QPixmap*> myPixmaps;
 };
+
+inline void QOpenFileDialog::run() {
+	exec();
+}
 
 #endif /* __QOPENFILEDIALOG_H__ */

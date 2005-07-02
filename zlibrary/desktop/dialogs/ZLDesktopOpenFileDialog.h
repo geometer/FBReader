@@ -25,7 +25,7 @@
 class ZLDesktopOpenFileDialog : public ZLOpenFileDialog {
 
 protected:
-	ZLDesktopOpenFileDialog(const ZLFileHandler &handler);
+	ZLDesktopOpenFileDialog(const ZLTreeHandler &handler);
 	virtual ~ZLDesktopOpenFileDialog();
 
 public:

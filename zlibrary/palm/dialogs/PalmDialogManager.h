@@ -33,7 +33,7 @@ public:
 	~PalmDialogManager() DIALOG_SECTION;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const DIALOG_SECTION;
 	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const DIALOG_SECTION;
-	void openFileDialog(const std::string &title, const ZLFileHandler &handler) const DIALOG_SECTION;
+	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const DIALOG_SECTION;
 };
 
 #endif /* __PALMDIALOGMANAGER_H__ */

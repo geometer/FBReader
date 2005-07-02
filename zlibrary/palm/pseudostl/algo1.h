@@ -34,6 +34,8 @@ namespace std {
 	Iterator lower_bound(Iterator start, Iterator end, const T &value) STL_SECTION;
 	template<typename Iterator, typename Comparator>
 	void sort(const Iterator &startIterator, const Iterator &endIterator, const Comparator &comparator) STL_SECTION;
+	template<typename Iterator>
+	void sort(const Iterator &startIterator, const Iterator &endIterator) STL_SECTION;
 
 	template<typename Iterator, typename T, typename Comparator>
 	inline Iterator upper_bound(const Iterator &start, const Iterator &end, const T &value, const Comparator &comparator) {
@@ -70,6 +72,10 @@ namespace std {
 
 	template<typename Iterator, typename Comparator>
 	inline void sort(const Iterator &startIterator, const Iterator &endIterator, const Comparator &comparator) {
+		// TODO: implement
+	}
+	template<typename Iterator>
+	inline void sort(const Iterator &startIterator, const Iterator &endIterator) {
 		// TODO: implement
 	}
 };

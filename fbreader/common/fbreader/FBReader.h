@@ -98,6 +98,10 @@ protected:
 	virtual void fullscreenSlot() FB_SECTION = 0;
 	virtual bool isRotationSupported() const FB_SECTION = 0;
 
+	virtual void bookInfoSlot() FB_SECTION;
+	virtual void optionsSlot() FB_SECTION;
+	virtual void addBookSlot() FB_SECTION;
+
 private:
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
 	void clearTextCaches() FB_SECTION;

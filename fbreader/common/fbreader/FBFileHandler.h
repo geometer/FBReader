@@ -23,15 +23,15 @@
 
 #include "../description/BookDescription.h"
 
-class FBFileHandler : public ZLFileHandler {
+class FBFileHandler : public ZLTreeHandler {
 
 public:
 	FBFileHandler() FB_DIALOG_SECTION;
 	~FBFileHandler() FB_DIALOG_SECTION;
 
-	bool isFileVisible(const std::string &shortFileName, bool dir) const FB_DIALOG_SECTION;
-	const std::string &pixmapName(const std::string &shortFileName, bool dir) const FB_DIALOG_SECTION;
-	void accept(const std::string &fullFileName, bool dir) const FB_DIALOG_SECTION;
+	bool isNodeVisible(const ZLTreeNodePtr node) const FB_DIALOG_SECTION;
+	const std::string &pixmapName(const ZLTreeNodePtr node) const FB_DIALOG_SECTION;
+	void accept(const ZLTreeStatePtr state) const FB_DIALOG_SECTION;
 
 	BookDescriptionPtr description() const FB_DIALOG_SECTION;
 

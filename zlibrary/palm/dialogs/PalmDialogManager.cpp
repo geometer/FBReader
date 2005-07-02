@@ -40,6 +40,6 @@ int PalmDialogManager::informationBox(const char *title, const char *message, co
 	//return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
 }
 
-void PalmDialogManager::openFileDialog(const std::string &title, const ZLFileHandler &handler) const {
+void PalmDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
 	//PalmOpenFileDialog(title.c_str(), handler).exec();
 }
