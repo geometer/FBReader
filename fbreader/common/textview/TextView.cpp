@@ -230,6 +230,7 @@ void TextView::gotoParagraph(int num, bool last) {
 }
 
 void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
+	myStyle.reset();
 	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
 
 	const int textAreaHeight = myStyle.textAreaHeight();
@@ -284,7 +285,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 						context().drawImage(x, y, ((const ImageElement&)pos.element()).image());
 						break;
 					case TextElement::CONTROL_ELEMENT:
-						myStyle.applyControl((const ControlElement&)pos.element(), false);
+						myStyle.applyControl((const ControlElement&)pos.element());
 						break;
 					case TextElement::HSPACE_ELEMENT:
 						if (wordOccured && (spaceCounter > 0)) {
@@ -326,19 +327,19 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 			}
 		}
 	}
-	myStyle.reset();
 }
 
 void TextView::skip(ParagraphCursor &paragraph, int height) {
+	myStyle.reset();
 	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
 	while (!paragraph.isEndOfParagraph() && (height > 0)) {
 		paragraph.setWordCursor(myLineProcessor.process(paragraph.wordCursor(), paragraph.end()));
 		height -= myLineProcessor.height();
 	}
-	myStyle.reset();
 }
 
 int TextView::paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition) {
+	myStyle.reset();
 	WordCursor cursor = paragraph.begin();
 	const WordCursor end = beforeCurrentPosition ? paragraph.wordCursor() : paragraph.end();
 	
@@ -348,8 +349,6 @@ int TextView::paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurre
 		cursor = myLineProcessor.process(cursor, end);
 		height += myLineProcessor.height();
 	}
-
-	myStyle.reset();
 
 	return height;
 }

@@ -44,15 +44,15 @@ void TextView::ViewStyle::setStyle(const TextStylePtr style) {
 	}
 }
 
-void TextView::ViewStyle::applyControl(const ControlElement &control, bool revert) {
-	if (control.isStart() == revert) {
-		if (myStyle->isDecorated()) {
-			setStyle(((DecoratedTextStyle&)*myStyle).base());
-		}
-	} else {
+void TextView::ViewStyle::applyControl(const ControlElement &control) {
+	if (control.isStart()) {
 		const TextStyleDecoration *decoration = TextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
 			setStyle(decoration->createDecoratedStyle(myStyle));
+		}
+	} else {
+		if (myStyle->isDecorated()) {
+			setStyle(((DecoratedTextStyle&)*myStyle).base());
 		}
 	}
 }
@@ -60,7 +60,7 @@ void TextView::ViewStyle::applyControl(const ControlElement &control, bool rever
 void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {
 	for (WordCursor cursor = begin; !cursor.sameElementAs(end); cursor.nextWord()) {
 		if (cursor.element().kind() == TextElement::CONTROL_ELEMENT) {
-			applyControl((ControlElement&)cursor.element(), false);
+			applyControl((ControlElement&)cursor.element());
 		}
 	}
 }

@@ -51,7 +51,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 		newHeight = std::max(newHeight, myStyle.elementHeight(current));
 		switch (elementKind) {
 			case TextElement::CONTROL_ELEMENT:
-				myStyle.applyControl((const ControlElement&)current.element(), false);
+				myStyle.applyControl((const ControlElement&)current.element());
 				break;
 			case TextElement::WORD_ELEMENT:
 			case TextElement::IMAGE_ELEMENT:
