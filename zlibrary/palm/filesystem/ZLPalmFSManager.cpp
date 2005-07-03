@@ -21,10 +21,13 @@
 
 #include <Extensions/ExpansionMgr/VFSMgr.h>
 
+#include <abstract/ZLStringUtil.h>
+
 #include "ZLPalmFSManager.h"
 #include "ZLPalmFSDir.h"
 #include "ZLPalmFileInputStream.h"
 #include "../../abstract/filesystem/ZLZipInputStream.h"
+#include "../../abstract/filesystem/ZLGzipInputStream.h"
 #include "ZLPalmFileOutputStream.h"
 
 void ZLPalmFSManager::createInstance() {
@@ -44,9 +47,19 @@ ZLFSDir *ZLPalmFSManager::createDirectory(const std::string &name) {
 	return new ZLPalmFSDir(name);
 }
 
+ZLInputStream *ZLPalmFSManager::createPlainInputStream(const std::string &name) {
+	if ((int)name.find(':') != -1) {
+		return (ZLibRef != sysInvalidRefNum) ? new ZLZipInputStream(name) : 0;
+	} else {
+		return new ZLPalmFileInputStream(name);
+	}
+}
+
 ZLInputStream *ZLPalmFSManager::createInputStream(const std::string &name) {
 	if ((int)name.find(':') != -1) {
 		return (ZLibRef != sysInvalidRefNum) ? new ZLZipInputStream(name) : 0;
+	} else if (ZLStringUtil::stringEndsWith(name, ".gz")) {
+		return new ZLGzipInputStream(name);
 	} else {
 		return new ZLPalmFileInputStream(name);
 	}
@@ -56,7 +69,7 @@ ZLOutputStream *ZLPalmFSManager::createOutputStream(const std::string &name) {
 	return new ZLPalmFileOutputStream(name);
 }
 
-ZLFileInfo ZLPalmFSManager::fileInfo(std::string &name) {
+ZLFileInfo ZLPalmFSManager::fileInfo(const std::string &name) {
 	ZLFileInfo info;
 
 	UInt16  unVol;

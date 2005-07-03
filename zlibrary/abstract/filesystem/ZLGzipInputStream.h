@@ -16,26 +16,38 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLUNIXFSMANAGER_H__
-#define __ZLUNIXFSMANAGER_H__
+#ifndef __ZLGZIPINPUTSTREAM_H__
+#define __ZLGZIPINPUTSTREAM_H__
 
-#include <abstract/ZLFSManager.h>
+#define NOZLIBDEFS
+#include <zlib.h>
 
-class ZLUnixFSManager : public ZLFSManager {
+#include "ZLInputStream.h"
+
+class ZLInputStream;
+
+class ZLGzipInputStream : public ZLInputStream {
 
 public:
-	static void createInstance() { ourInstance = new ZLUnixFSManager(); }
-	
+	ZLGzipInputStream(const std::string &name) FS_SECTION;
+	~ZLGzipInputStream() FS_SECTION;
+	bool open() FS_SECTION;
+	int read(char *buffer, int maxSize) FS_SECTION;
+	void close() FS_SECTION;
+
+	void seek(int offset) FS_SECTION;
+	int offset() const FS_SECTION;
+
 private:
-	ZLUnixFSManager() {}
-	
-public:
-	void normalize(std::string &fileName);
-	ZLFSDir *createDirectory(const std::string &name);
-	ZLInputStream *createPlainInputStream(const std::string &name);
-	ZLInputStream *createInputStream(const std::string &name);
-	ZLOutputStream *createOutputStream(const std::string &name);
-	ZLFileInfo fileInfo(const std::string &name);
+	std::string myCompressedFileName;
+	ZLInputStream *myFileStream;
+	size_t myFileSize;
+
+	z_stream *myZStream; 
+	std::string myBuffer; 
+	unsigned long myAvailableSize;
+	char *myInBuffer;
+	char *myOutBuffer;
 };
 
-#endif /* __ZLUNIXFSMANAGER_H__ */
+#endif /* __ZLGZIPINPUTSTREAM_H__ */

@@ -33,9 +33,10 @@ private:
 public:
 	void normalize(std::string &fileName) FS_SECTION;
 	ZLFSDir *createDirectory(const std::string &name) FS_SECTION;
+	ZLInputStream *createPlainInputStream(const std::string &name) FS_SECTION;
 	ZLInputStream *createInputStream(const std::string &name) FS_SECTION;
 	ZLOutputStream *createOutputStream(const std::string &name) FS_SECTION;
-	ZLFileInfo fileInfo(std::string &name) FS_SECTION;
+	ZLFileInfo fileInfo(const std::string &name) FS_SECTION;
 };
 
 #endif /* __ZLPALMFSMANAGER_H__ */

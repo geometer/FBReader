@@ -18,6 +18,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLStringUtil.h>
+
 #include "FormatPlugin.h"
 
 #include "fb2/FB2Plugin.h"
@@ -57,8 +59,9 @@ PluginCollection::~PluginCollection() {
 }
 
 FormatPlugin *PluginCollection::plugin(const std::string &fileName, bool strong) {
+	bool compressed = ZLStringUtil::stringEndsWith(fileName, ".gz");
 	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
-		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(fileName)) {
+		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(compressed ? fileName.substr(0, fileName.length() - 3) : fileName)) {
 			return *it;
 		}
 	}

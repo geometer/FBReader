@@ -52,7 +52,7 @@ bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &de
 	if (description.language().empty()) {
 		int index = std::max((int)fileName.rfind('/'), (int)fileName.rfind(':'));
 		std::string title = (index > 0) ? fileName.substr(index + 1) : fileName;
-		index = title.rfind('.');
+		index = title.find('.');
 		wDescription.title() = (index > 0) ? title.substr(0, index) : title;
 		if (wDescription.language().empty()) {
 			if (wDescription.encoding() == "US-ASCII") {

@@ -44,9 +44,10 @@ protected:
 public:
 	virtual void normalize(std::string &fileName) FS_SECTION = 0;
 	virtual ZLFSDir *createDirectory(const std::string &name) FS_SECTION = 0;
+	virtual ZLInputStream *createPlainInputStream(const std::string &name) FS_SECTION = 0;
 	virtual ZLInputStream *createInputStream(const std::string &name) FS_SECTION = 0;
 	virtual ZLOutputStream *createOutputStream(const std::string &name) FS_SECTION = 0;
-	virtual ZLFileInfo fileInfo(std::string &name) FS_SECTION = 0;
+	virtual ZLFileInfo fileInfo(const std::string &name) FS_SECTION = 0;
 
 protected:
 	static ZLFSManager *ourInstance;
