@@ -10,8 +10,8 @@ QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/scree
 GTKSUBDIRS_ALL = gtk/dialogs gtk/screenSize gtk/view-desktop gtk/view-pdaxrom gtk/view-maemo
 
 ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/screenSize abstract/view unix/filesystem unix/time
-	QTSUBDIRS = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/screenSize qtopia/view
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/screenSize abstract/view unix/filesystem unix/time desktop/options
+	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/screenSize qtopia/view qtopia/options
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"

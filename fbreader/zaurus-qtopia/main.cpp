@@ -22,12 +22,14 @@
 #include <abstract/ZLXMLReader.h>
 #include <unix/ZLUnixTime.h>
 #include <unix/ZLUnixFSManager.h>
-#include <qtopia/QOptions.h>
+#include <desktop/XMLOptions.h>
 #include <qtopia/QDialogManager.h>
 #include <qtopia/QScreenSize.h>
 
 #include "QFBReader.h"
 #include "Paths.h"
+
+void copyConfig();
 
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
@@ -35,7 +37,8 @@ int main(int argc, char **argv) {
 	ZLUnixTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
-	QOptions::createInstance("FBReader");
+	XMLOptions::createInstance("FBReader");
+	copyConfig();
 	QDialogManager::createInstance();
 	QScreenSize::createInstance();
 
@@ -46,7 +49,7 @@ int main(int argc, char **argv) {
 
 	QScreenSize::deleteInstance();
 	QDialogManager::deleteInstance();
-	QOptions::deleteInstance();
+	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLUnixTimeManager::deleteInstance();
 

@@ -17,6 +17,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "XMLOptions.h"
 #include "XMLConfig.h"
