@@ -28,12 +28,13 @@
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
-bool HtmlPlugin::acceptsFile(const std::string &fileName) const {
-	return ZLStringUtil::stringEndsWith(fileName, "html") || ZLStringUtil::stringEndsWith(fileName, ".htm");
+bool HtmlPlugin::acceptsFile(const std::string &extension) const {
+	return ZLStringUtil::stringEndsWith(extension, "html") || (extension == "htm");
 }
 
-bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
+bool HtmlPlugin::readDescription(const std::string &path, BookDescription &description) const {
+	ZLFile file(path);
+	ZLInputStream *stream = file.createInputStream();
 	std::string encoding = description.encoding();
 	if (encoding.empty()) {
 		encoding = EncodingDetector::detect(*stream);
@@ -53,10 +54,7 @@ bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &d
 	delete reader;
 
 	if (description.title().empty()) {
-		int index = std::max((int)fileName.rfind('/'), (int)fileName.rfind(':'));
-		std::string title = (index > 0) ? fileName.substr(index + 1) : fileName;
-		index = title.find('.');
-		WritableBookDescription(description).title() = (index > 0) ? title.substr(0, index) : title;
+		WritableBookDescription(description).title() = file.name();
 	}
 
 	if (description.language() == "") {
@@ -74,7 +72,7 @@ bool HtmlPlugin::readDescription(const std::string &fileName, BookDescription &d
 }
 
 bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
+	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
 	if (stream == 0) {
 		return false;
 	}

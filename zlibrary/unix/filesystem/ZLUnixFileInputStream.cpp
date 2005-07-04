@@ -32,7 +32,7 @@ bool ZLUnixFileInputStream::open() {
 	return myFile != 0;
 }
 
-int ZLUnixFileInputStream::read(char *buffer, int maxSize) {
+size_t ZLUnixFileInputStream::read(char *buffer, size_t maxSize) {
 	return fread(buffer, 1, maxSize, myFile);
 }
 

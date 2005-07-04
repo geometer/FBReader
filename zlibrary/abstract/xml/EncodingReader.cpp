@@ -27,7 +27,7 @@ EncodingReader::EncodingReader(const std::string &encoding) : myEncoding(encodin
 }
 
 bool EncodingReader::fillTable(int *map) {
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(myEncoding);
+	ZLInputStream *stream = ZLFile(myEncoding).createInputStream();
 	if (stream == 0) {
 		return false;
 	}

@@ -17,6 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLDialogManager.h>
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLOptionsDialog.h>
@@ -366,7 +367,7 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 		infoTab->addOption(new LanguageEntry("Language", info.LanguageOption));
 		infoTab->addOption(new EncodingEntry("Encoding", info.EncodingOption));
 
-		FormatPlugin *plugin = PluginCollection::instance().plugin(fileName, false);
+		FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName).extension(), false);
 		FormatInfoPage *formatPage = 0;
 		if (plugin != 0) {
 			formatPage = plugin->createInfoPage(*infoDialog, fileName);

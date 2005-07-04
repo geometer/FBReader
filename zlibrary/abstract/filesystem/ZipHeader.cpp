@@ -20,7 +20,7 @@
 #include "ZLInputStream.h"
 
 bool ZipHeader::readFrom(ZLInputStream &stream) {
-	int startOffset = stream.offset();
+	size_t startOffset = stream.offset();
 	Signature = readLong(stream);
 	Version = readShort(stream);
 	Flags = readShort(stream);

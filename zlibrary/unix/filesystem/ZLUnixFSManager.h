@@ -32,10 +32,11 @@ private:
 public:
 	void normalize(std::string &fileName);
 	ZLFSDir *createDirectory(const std::string &name);
-	ZLInputStream *createPlainInputStream(const std::string &name);
-	ZLInputStream *createInputStream(const std::string &name);
-	ZLOutputStream *createOutputStream(const std::string &name);
-	ZLFileInfo fileInfo(const std::string &name);
+
+protected:
+	ZLInputStream *createPlainInputStream(const std::string &path);
+	ZLOutputStream *createOutputStream(const std::string &path);
+	FileInfo fileInfo(const std::string &name);
 };
 
 #endif /* __ZLUNIXFSMANAGER_H__ */

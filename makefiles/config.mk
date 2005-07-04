@@ -145,7 +145,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 	CFLAGS = \
 		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))" \
 		-DXML_SECTION="__attribute__ ((section(\"sec2\")))" \
-		-DFS_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DFS_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DUTIL_SECTION="__attribute__ ((section(\"sec1\")))" \
 		-DDIALOG_SECTION="__attribute__ ((section(\"sec1\")))" \

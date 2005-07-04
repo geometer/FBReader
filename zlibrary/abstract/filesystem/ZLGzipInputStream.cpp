@@ -19,26 +19,19 @@
 #include <algorithm>
 
 #include "ZLGzipInputStream.h"
-#include "ZLFSManager.h"
-#include "ZLInputStream.h"
 
-const unsigned int IN_BUFFER_SIZE = 2048;
-const unsigned int OUT_BUFFER_SIZE = 32768;
+const size_t IN_BUFFER_SIZE = 2048;
+const size_t OUT_BUFFER_SIZE = 32768;
 
-ZLGzipInputStream::ZLGzipInputStream(const std::string &name) {
-	myFileSize = ZLFSManager::instance().fileInfo(name).Size;
-	myFileStream = ZLFSManager::instance().createPlainInputStream(name);
-	myCompressedFileName = name.substr(0, name.length() - 3);
+ZLGzipInputStream::ZLGzipInputStream(ZLInputStream *stream, size_t size) : myFileStream(stream), myFileSize(size) {
 	myZStream = 0;
-	myInBuffer = new char[IN_BUFFER_SIZE];
-	myOutBuffer = new char[OUT_BUFFER_SIZE];
+	myInBuffer = 0;
+	myOutBuffer = 0;
 }
 
 ZLGzipInputStream::~ZLGzipInputStream() {
 	close();
 	delete myFileStream;
-	delete[] myInBuffer;
-	delete[] myOutBuffer;
 }
 
 bool ZLGzipInputStream::open() {
@@ -97,12 +90,16 @@ bool ZLGzipInputStream::open() {
 	memset(myZStream, 0, sizeof(z_stream));
 	inflateInit2(myZStream, -MAX_WBITS);
 
+	myInBuffer = new char[IN_BUFFER_SIZE];
+	myOutBuffer = new char[OUT_BUFFER_SIZE];
+	myOffset = 0;
+
 	return true;
 }
 
-int ZLGzipInputStream::read(char *buffer, int maxSize) {
-	while (((int)myBuffer.length() < maxSize) && (myAvailableSize > 0)) {
-		unsigned int size = std::min(myAvailableSize, (unsigned long)IN_BUFFER_SIZE);
+size_t ZLGzipInputStream::read(char *buffer, size_t maxSize) {
+	while ((myBuffer.length() < maxSize) && (myAvailableSize > 0)) {
+		size_t size = std::min(myAvailableSize, (size_t)IN_BUFFER_SIZE);
 
 		myZStream->next_in = (Bytef*)myInBuffer;
 		myZStream->avail_in = myFileStream->read(myInBuffer, size);
@@ -122,15 +119,22 @@ int ZLGzipInputStream::read(char *buffer, int maxSize) {
 		}
 	}
 
-	if (maxSize > (int)myBuffer.length()) {
-		maxSize = myBuffer.length();
+	size_t realSize = std::min(maxSize, myBuffer.length());
+	if (buffer != 0) {
+		strncpy(buffer, myBuffer.data(), realSize);
 	}
-	strncpy(buffer, myBuffer.data(), maxSize);
-	myBuffer.erase(0, maxSize);
-	return maxSize;
+	myBuffer.erase(0, realSize);
+	myOffset += realSize;
+	return realSize;
 }
 
 void ZLGzipInputStream::close() {
+	if (myInBuffer != 0) {
+		delete[] myInBuffer;
+		delete[] myOutBuffer;
+		myInBuffer = 0;
+		myOutBuffer = 0;
+	}
 	if (myZStream != 0) {
 		inflateEnd(myZStream);
 		delete myZStream;
@@ -142,11 +146,10 @@ void ZLGzipInputStream::close() {
 	myFileStream->close();
 }
 
-void ZLGzipInputStream::seek(int offset) {
-	// TODO: implement
+void ZLGzipInputStream::seek(size_t offset) {
+	read(0, offset);
 }
 
-int ZLGzipInputStream::offset() const {
-	// TODO: implement
-	return 0;
+size_t ZLGzipInputStream::offset() const {
+	return myOffset;
 }

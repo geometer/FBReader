@@ -22,7 +22,7 @@
 #include "ZLInputStream.h"
 
 void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(name());
+	ZLInputStream *stream = ZLFile(name()).createInputStream();
 	if (stream == 0) {
 		return;
 	}

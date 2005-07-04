@@ -24,30 +24,29 @@
 
 #include "ZLInputStream.h"
 
-class ZLInputStream;
-
 class ZLGzipInputStream : public ZLInputStream {
 
 public:
-	ZLGzipInputStream(const std::string &name) FS_SECTION;
+	ZLGzipInputStream(ZLInputStream *stream, size_t size) FS_SECTION;
 	~ZLGzipInputStream() FS_SECTION;
 	bool open() FS_SECTION;
-	int read(char *buffer, int maxSize) FS_SECTION;
+	size_t read(char *buffer, size_t maxSize) FS_SECTION;
 	void close() FS_SECTION;
 
-	void seek(int offset) FS_SECTION;
-	int offset() const FS_SECTION;
+	void seek(size_t offset) FS_SECTION;
+	size_t offset() const FS_SECTION;
 
 private:
-	std::string myCompressedFileName;
 	ZLInputStream *myFileStream;
 	size_t myFileSize;
 
 	z_stream *myZStream; 
-	std::string myBuffer; 
-	unsigned long myAvailableSize;
 	char *myInBuffer;
 	char *myOutBuffer;
+
+	std::string myBuffer; 
+	size_t myAvailableSize;
+	size_t myOffset;
 };
 
 #endif /* __ZLGZIPINPUTSTREAM_H__ */

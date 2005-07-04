@@ -29,11 +29,11 @@ public:
 	ZLPalmFileInputStream(const std::string &name) FS_SECTION;
 	~ZLPalmFileInputStream() FS_SECTION;
 	bool open() FS_SECTION;
-	int read(char *buffer, int maxSize) FS_SECTION;
+	size_t read(char *buffer, size_t maxSize) FS_SECTION;
 	void close() FS_SECTION;
 
-	void seek(int offset) FS_SECTION;
-	int offset() const FS_SECTION;
+	void seek(size_t offset) FS_SECTION;
+	size_t offset() const FS_SECTION;
 
 private:
 	std::string myName;

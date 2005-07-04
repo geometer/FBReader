@@ -55,15 +55,17 @@ BookCollection::BookCollection() {
 			const std::string dirName = dir->name() + '/';
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
 				const std::string fileName = dirName + *jt;
-				if (PluginCollection::instance().plugin(*jt, true) != 0) {
+				ZLFile file(fileName);
+				const std::string extension = file.extension();
+				if (PluginCollection::instance().plugin(extension, true) != 0) {
 					fileNamesSet.insert(fileName);
-				} else if (ZLStringUtil::stringEndsWith(*jt, ".zip")) {
+				} else if (extension == "zip") {
 					ZLZipDir zipDir(fileName);
 					std::string zipPrefix = fileName + ':';
 					std::vector<std::string> entries;
 					zipDir.collectFiles(entries, false);
 					for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
-						if (PluginCollection::instance().plugin(*zit, true) != 0) {
+						if (PluginCollection::instance().plugin(ZLFile(*zit).extension(), true) != 0) {
 							fileNamesSet.insert(zipPrefix + *zit);
 						}
 					}

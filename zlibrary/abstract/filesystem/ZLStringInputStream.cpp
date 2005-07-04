@@ -16,13 +16,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <algorithm>
 #include "ZLStringInputStream.h"
 
-int ZLStringInputStream::read(char *buffer, int maxSize) {
-	int size = myString.length() - myPosition;
-	if (size > maxSize) {
-		size = maxSize;
-	}
+size_t ZLStringInputStream::read(char *buffer, size_t maxSize) {
+	size_t size = std::min(myString.length() - myPosition, maxSize);
 	strncpy(buffer, myString.data() + myPosition, size);
 	myPosition += size;
 	return size;

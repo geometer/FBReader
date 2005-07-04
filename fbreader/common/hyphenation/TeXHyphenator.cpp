@@ -146,8 +146,7 @@ void TeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	std::string fileName = PatternZip + ":" + language + ".pattern";
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
+	ZLInputStream *stream = ZLFile(PatternZip + ":" + language + ".pattern").createInputStream();
 	if (stream != 0) {
 		HyphenationReader reader(this);
 		reader.readDocument(*stream);

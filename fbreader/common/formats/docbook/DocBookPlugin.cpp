@@ -17,7 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
@@ -26,13 +25,13 @@
 #include "DocBookBookReader.h"
 #include "../../description/BookDescription.h"
 
-bool DocBookPlugin::acceptsFile(const std::string &fileName) const {
-	return ZLStringUtil::stringEndsWith(fileName, ".xml");
+bool DocBookPlugin::acceptsFile(const std::string &extension) const {
+	return extension == "xml";
 }
 
-bool DocBookPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
+bool DocBookPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	DocBookDescriptionReader *reader = new DocBookDescriptionReader(description);
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
+	ZLInputStream *stream = ZLFile(path).createInputStream();
 	bool code = reader->readDescription(*stream);
 	delete stream;
 	delete reader;
@@ -41,7 +40,7 @@ bool DocBookPlugin::readDescription(const std::string &fileName, BookDescription
 
 bool DocBookPlugin::readModel(const BookDescription &description, BookModel &model) const {
 	DocBookBookReader *reader = new DocBookBookReader(model);
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
+	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
 	reader->readDocument(*stream);
 	delete stream;
 	delete reader;

@@ -29,11 +29,16 @@ protected:
 public:
 	virtual ~ZLInputStream() FS_SECTION;
 	virtual bool open() FS_SECTION = 0;
-	virtual int read(char *buffer, int maxSize) FS_SECTION = 0;
+	virtual size_t read(char *buffer, size_t maxSize) FS_SECTION = 0;
 	virtual void close() FS_SECTION = 0;
 
-	virtual void seek(int offset) FS_SECTION = 0;
-	virtual int offset() const FS_SECTION = 0;
+	virtual void seek(size_t offset) FS_SECTION = 0;
+	virtual size_t offset() const FS_SECTION = 0;
+
+private:
+	// disable copying
+	ZLInputStream(const ZLInputStream&) FS_SECTION;
+	const ZLInputStream &operator = (const ZLInputStream&) FS_SECTION;
 };
 
 inline ZLInputStream::ZLInputStream() {}

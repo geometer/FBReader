@@ -17,7 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
@@ -27,16 +26,18 @@
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
-bool TxtPlugin::acceptsFile(const std::string &fileName) const {
-	return ZLStringUtil::stringEndsWith(fileName, ".txt");
+bool TxtPlugin::acceptsFile(const std::string &extension) const {
+	return extension == "txt";
 }
 
-bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &description) const {
+bool TxtPlugin::readDescription(const std::string &path, BookDescription &description) const {
+	ZLFile file(path);
 	WritableBookDescription wDescription(description);
 
 	std::string encoding = description.encoding();
+
 	if (encoding.empty()) {
-		ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
+		ZLInputStream *stream = file.createInputStream();
 		encoding = EncodingDetector::detect(*stream);
 		delete stream;
 		if (encoding.empty()) {
@@ -50,10 +51,7 @@ bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &de
 	}
 
 	if (description.language().empty()) {
-		int index = std::max((int)fileName.rfind('/'), (int)fileName.rfind(':'));
-		std::string title = (index > 0) ? fileName.substr(index + 1) : fileName;
-		index = title.find('.');
-		wDescription.title() = (index > 0) ? title.substr(0, index) : title;
+		wDescription.title() = file.name();
 		if (wDescription.language().empty()) {
 			if (wDescription.encoding() == "US-ASCII") {
 				wDescription.language() = "en";
@@ -70,7 +68,7 @@ bool TxtPlugin::readDescription(const std::string &fileName, BookDescription &de
 }
 
 bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
+	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
 	if (stream == 0) {
 		return false;
 	}

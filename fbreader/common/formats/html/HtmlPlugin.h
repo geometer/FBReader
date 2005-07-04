@@ -28,8 +28,8 @@ public:
 	HtmlPlugin() FORMATS_SECTION;
 	~HtmlPlugin() FORMATS_SECTION;
 	bool providesMetaInfo() const FORMATS_SECTION;
-	bool acceptsFile(const std::string &fileName) const FORMATS_SECTION;
-	bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION;
+	bool acceptsFile(const std::string &extension) const FORMATS_SECTION;
+	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
 	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;
 	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;

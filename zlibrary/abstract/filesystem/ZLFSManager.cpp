@@ -16,20 +16,49 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+//#include <iostream>
+#include <algorithm>
+
+#include <abstract/ZLStringUtil.h>
+
 #include "ZLFSManager.h"
+#include "ZLGzipInputStream.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
 
-void ZLFSManager::deleteInstance() {
-	delete ourInstance;
+ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
+	ZLFSManager::instance().normalize(myPath);
+	int index = std::max((int)myPath.rfind('/'), (int)myPath.rfind(':'));
+	myFullName = myPath.substr(index + 1);
+	if (ZLStringUtil::stringEndsWith(myFullName, ".gz")) {
+		myName = myFullName.substr(0, myFullName.length() - 3);
+		myIsCompressed = true;
+	} else {
+		myName = myFullName;
+		myIsCompressed = false;
+	}
+	index = myName.rfind('.');
+	if (index > 0) {
+		myExtension = myName.substr(index + 1);
+		myName = myName.substr(0, index);
+	}
 }
 
-ZLFSManager &ZLFSManager::instance() {
-	return *ourInstance;
-}
-	
-ZLFSManager::ZLFSManager() {
+ZLInputStream *ZLFile::createInputStream() const {
+	//std::cerr << "path = " << myPath << "\n";
+	ZLInputStream *stream = ZLFSManager::instance().createPlainInputStream(myPath);
+	if (myIsCompressed && (stream != 0)) {
+		stream = new ZLGzipInputStream(stream, size());
+	}
+	return stream;
 }
 
-ZLFSManager::~ZLFSManager() {
+ZLOutputStream *ZLFile::createOutputStream() const {
+	if (myIsCompressed) {
+		return 0;
+	}
+	if (myPath.find(":") != (size_t)-1) {
+		return 0;
+	}
+	return ZLFSManager::instance().createOutputStream(myPath);
 }

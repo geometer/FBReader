@@ -27,22 +27,22 @@ public:
 	ZLStringInputStream(const std::string &str) FS_SECTION;
 	~ZLStringInputStream() FS_SECTION;
 	bool open() FS_SECTION;
-	int read(char *buffer, int maxSize) FS_SECTION;
+	size_t read(char *buffer, size_t maxSize) FS_SECTION;
 	void close() FS_SECTION;
 
-	void seek(int offset) FS_SECTION;
-	int offset() const FS_SECTION;
+	void seek(size_t offset) FS_SECTION;
+	size_t offset() const FS_SECTION;
 
 private:
 	const std::string &myString;
-	int myPosition;
+	size_t myPosition;
 };
 
 inline ZLStringInputStream::ZLStringInputStream(const std::string &str) : myString(str) {}
 inline ZLStringInputStream::~ZLStringInputStream() {}
 inline bool ZLStringInputStream::open() { myPosition = 0; return true; }
 inline void ZLStringInputStream::close() {}
-inline void ZLStringInputStream::seek(int offset) { myPosition += offset; }
-inline int ZLStringInputStream::offset() const { return myPosition; }
+inline void ZLStringInputStream::seek(size_t offset) { myPosition += offset; }
+inline size_t ZLStringInputStream::offset() const { return myPosition; }
 
 #endif /* __ZSTRINGLINPUTSTREAM_H__ */

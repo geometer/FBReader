@@ -27,7 +27,7 @@ std::map<std::string,int> HtmlEntityExtension::ourSymbolicEntityCollection;
 
 HtmlEntityExtension::HtmlEntityExtension() {
 	if (ourSymbolicEntityCollection.empty()) {
-		ZLInputStream *stream = ZLFSManager::instance().createInputStream(CollectionFile);
+		ZLInputStream *stream = ZLFile(CollectionFile).createInputStream();
 		if (stream != 0) {
 			CollectionReader().readDocument(*stream);
 			delete stream;

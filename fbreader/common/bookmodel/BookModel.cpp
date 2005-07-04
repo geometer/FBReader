@@ -18,6 +18,7 @@
  */
 
 #include <abstract/ZLImage.h>
+#include <abstract/ZLFSManager.h>
 
 #include "BookModel.h"
 #include "BookReader.h"
@@ -38,7 +39,8 @@ BookModel::BookModel(const BookDescriptionPtr description) : myDescription(descr
 		return;
 	}
 #endif // PALM_TEMPORARY
-	FormatPlugin *plugin = PluginCollection::instance().plugin(description->fileName(), false);
+	ZLFile file(description->fileName());
+	FormatPlugin *plugin = PluginCollection::instance().plugin(file.extension(), false);
 	if (plugin != 0) {
 		plugin->readModel(*description, *this);
 	}

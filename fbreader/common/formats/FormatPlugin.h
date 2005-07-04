@@ -45,11 +45,11 @@ protected:
 public:
 	virtual ~FormatPlugin() FORMATS_SECTION;
 	virtual bool providesMetaInfo() const FORMATS_SECTION = 0;
-	virtual bool acceptsFile(const std::string &fileName) const FORMATS_SECTION = 0;
-	virtual bool readDescription(const std::string &fileName, BookDescription &description) const FORMATS_SECTION = 0;
+	virtual bool acceptsFile(const std::string &extension) const FORMATS_SECTION = 0;
+	virtual bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION = 0;
 	virtual bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION = 0;
 	virtual const std::string &iconName() const FORMATS_SECTION = 0;
-	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
+	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path) FORMATS_SECTION;
 };
 
 class PluginCollection {
@@ -63,7 +63,7 @@ private:
 	~PluginCollection() FORMATS_SECTION;
 	
 public:
-	FormatPlugin *plugin(const std::string &fileName, bool strong) FORMATS_SECTION;
+	FormatPlugin *plugin(const std::string &extension, bool strong) FORMATS_SECTION;
 
 private:
 	static PluginCollection *ourInstance;

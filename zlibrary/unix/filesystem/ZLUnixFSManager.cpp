@@ -24,7 +24,6 @@
 #include "ZLUnixFSDir.h"
 #include "ZLUnixFileInputStream.h"
 #include "../../abstract/filesystem/ZLZipInputStream.h"
-#include "../../abstract/filesystem/ZLGzipInputStream.h"
 #include "ZLUnixFileOutputStream.h"
 
 void ZLUnixFSManager::normalize(std::string &fileName) {
@@ -53,38 +52,22 @@ ZLFSDir *ZLUnixFSManager::createDirectory(const std::string &name) {
 	return new ZLUnixFSDir(name);
 }
 
-ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &name) {
-	std::string fName = name;
-	normalize(fName);
-	if ((int)fName.find(':') != -1) {
-		return new ZLZipInputStream(fName);
-	} else {
-		return new ZLUnixFileInputStream(fName);
+ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) {
+	if (path.find(':') != (size_t)-1) {
+		return new ZLZipInputStream(path);
 	}
+
+	return new ZLUnixFileInputStream(path);
 }
 
-ZLInputStream *ZLUnixFSManager::createInputStream(const std::string &name) {
-	std::string fName = name;
-	normalize(fName);
-	if ((int)fName.find(':') != -1) {
-		return new ZLZipInputStream(fName);
-	} else if (ZLStringUtil::stringEndsWith(fName, ".gz")) {
-		return new ZLGzipInputStream(fName);
-	} else {
-		return new ZLUnixFileInputStream(fName);
-	}
+ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &path) {
+	return new ZLUnixFileOutputStream(path);
 }
 
-ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &name) {
-	std::string fName = name;
-	normalize(fName);
-	return new ZLUnixFileOutputStream(fName);
-}
-
-ZLFileInfo ZLUnixFSManager::fileInfo(const std::string &name) {
-	ZLFileInfo info;
+ZLFSManager::FileInfo ZLUnixFSManager::fileInfo(const std::string &path) {
+	FileInfo info;
 	struct stat fileStat;
-	info.Exists = stat(name.c_str(), &fileStat) == 0;
+	info.Exists = stat(path.c_str(), &fileStat) == 0;
 	if (info.Exists) {
 		info.Size = fileStat.st_size;
 		info.MTime = fileStat.st_mtime;

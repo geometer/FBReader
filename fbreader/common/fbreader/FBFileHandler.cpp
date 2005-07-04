@@ -17,6 +17,7 @@
  */
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLFSManager.h>
 
 #include "FBFileHandler.h"
 #include "../formats/FormatPlugin.h"
@@ -29,7 +30,7 @@ bool FBFileHandler::isNodeVisible(const ZLTreeNodePtr node) const {
 	if (name[0] == '.') {
 		return !node->isFile() && (name == "..");
 	}
-	return !node->isFile() || ZLStringUtil::stringEndsWith(name, ".zip") || (PluginCollection::instance().plugin(name, false) != 0);
+	return !node->isFile() || ZLStringUtil::stringEndsWith(name, ".zip") || (PluginCollection::instance().plugin(ZLFile(name).extension(), false) != 0);
 }
 
 const std::string &FBFileHandler::pixmapName(const ZLTreeNodePtr node) const {
@@ -41,7 +42,7 @@ const std::string &FBFileHandler::pixmapName(const ZLTreeNodePtr node) const {
 	} else if (ZLStringUtil::stringEndsWith(node->name(), ".zip")) {
 		return ZIPFOLDER_ICON;
 	} else {
-		FormatPlugin *plugin = PluginCollection::instance().plugin(node->name(), false);
+		FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(node->name()).extension(), false);
 		if (plugin != 0) {
 			return plugin->iconName();
 		}

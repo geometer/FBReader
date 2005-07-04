@@ -44,7 +44,7 @@ bool ZLPalmFileInputStream::open() {
 	return myFileRef != 0;
 }
 
-int ZLPalmFileInputStream::read(char *buffer, int maxSize) {
+size_t ZLPalmFileInputStream::read(char *buffer, size_t maxSize) {
 	UInt32 size;
 	VFSFileRead(myFileRef, maxSize, buffer, &size);
 	return size;
@@ -57,11 +57,11 @@ void ZLPalmFileInputStream::close() {
 	}
 }
 
-void ZLPalmFileInputStream::seek(int offset) {
+void ZLPalmFileInputStream::seek(size_t offset) {
 	VFSFileSeek(myFileRef, vfsOriginCurrent, offset);
 }
 
-int ZLPalmFileInputStream::offset() const {
+size_t ZLPalmFileInputStream::offset() const {
 	UInt32 pos;
 	VFSFileTell(myFileRef, &pos);
 	return pos;

@@ -16,28 +16,27 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLZipInputStream.h"
-#include "ZipHeader.h"
-#include "ZLFSManager.h"
-#include "ZLInputStream.h"
+#include <algorithm>
 
-const unsigned int IN_BUFFER_SIZE = 2048;
-const unsigned int OUT_BUFFER_SIZE = 32768;
+#include "ZLZipInputStream.h"
+#include "ZLFSManager.h"
+#include "ZipHeader.h"
+
+const size_t IN_BUFFER_SIZE = 2048;
+const size_t OUT_BUFFER_SIZE = 32768;
 
 ZLZipInputStream::ZLZipInputStream(const std::string &name) {
 	int index = name.find(':');
-	myFileStream = ZLFSManager::instance().createInputStream(name.substr(0, index));
+	myFileStream = ZLFile(name.substr(0, index)).createInputStream();
 	myCompressedFileName = name.substr(index + 1);
 	myZStream = 0;
-	myInBuffer = new char[IN_BUFFER_SIZE];
-	myOutBuffer = new char[OUT_BUFFER_SIZE];
+	myInBuffer = 0;
+	myOutBuffer = 0;
 }
 
 ZLZipInputStream::~ZLZipInputStream() {
 	close();
 	delete myFileStream;
-	delete[] myInBuffer;
-	delete[] myOutBuffer;
 }
 
 bool ZLZipInputStream::open() {
@@ -87,13 +86,15 @@ bool ZLZipInputStream::open() {
 		inflateInit2(myZStream, -MAX_WBITS);
 	}
 
+	myInBuffer = new char[IN_BUFFER_SIZE];
+	myOutBuffer = new char[OUT_BUFFER_SIZE];
 	return true;
 }
 
-int ZLZipInputStream::read(char *buffer, int maxSize) {
+size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 	if (myIsDeflated) {
-		while (((int)myBuffer.length() < maxSize) && (myAvailableSize > 0)) {
-			unsigned int size = (myAvailableSize < IN_BUFFER_SIZE) ? myAvailableSize : IN_BUFFER_SIZE;
+		while ((myBuffer.length() < maxSize) && (myAvailableSize > 0)) {
+			size_t size = std::min(myAvailableSize, (size_t)IN_BUFFER_SIZE);
 
 			myZStream->next_in = (Bytef*)myInBuffer;
 			myZStream->avail_in = myFileStream->read(myInBuffer, size);
@@ -113,22 +114,28 @@ int ZLZipInputStream::read(char *buffer, int maxSize) {
 			}
 		}
 
-		if (maxSize > (int)myBuffer.length()) {
-			maxSize = myBuffer.length();
+		size_t realSize = std::min(maxSize, myBuffer.length());
+		if (buffer != 0) {
+			strncpy(buffer, myBuffer.data(), realSize);
 		}
-		strncpy(buffer, myBuffer.data(), maxSize);
-		myBuffer.erase(0, maxSize);
-		return maxSize;
+		myBuffer.erase(0, realSize);
+		myOffset += realSize;
+		return realSize;
 	} else {
-		if ((int)myAvailableSize < maxSize) {
-			maxSize = myAvailableSize;
-		}
-		myAvailableSize -= maxSize;
-		return myFileStream->read(buffer, maxSize);
+		size_t realSize = std::min(maxSize, myAvailableSize);
+		myAvailableSize -= realSize;
+		myOffset += realSize;
+		return myFileStream->read(buffer, realSize);
 	}
 }
 
 void ZLZipInputStream::close() {
+	if (myInBuffer == 0) {
+		delete[] myInBuffer;
+		delete[] myOutBuffer;
+		myInBuffer = 0;
+		myOutBuffer = 0;
+	}
 	if (myZStream != 0) {
 		inflateEnd(myZStream);
 		delete myZStream;
@@ -140,11 +147,10 @@ void ZLZipInputStream::close() {
 	myFileStream->close();
 }
 
-void ZLZipInputStream::seek(int offset) {
-	// TODO: implement
+void ZLZipInputStream::seek(size_t offset) {
+	read(0, offset);
 }
 
-int ZLZipInputStream::offset() const {
-	// TODO: implement
-	return 0;
+size_t ZLZipInputStream::offset() const {
+	return myOffset;
 }

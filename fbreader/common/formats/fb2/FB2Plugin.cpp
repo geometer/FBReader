@@ -17,7 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
@@ -26,13 +25,13 @@
 #include "FB2BookReader.h"
 #include "../../description/BookDescription.h"
 
-bool FB2Plugin::acceptsFile(const std::string &fileName) const {
-	return ZLStringUtil::stringEndsWith(fileName, ".fb2");
+bool FB2Plugin::acceptsFile(const std::string &extension) const {
+	return extension == "fb2";
 }
 
-bool FB2Plugin::readDescription(const std::string &fileName, BookDescription &description) const {
+bool FB2Plugin::readDescription(const std::string &path, BookDescription &description) const {
 	FB2DescriptionReader *reader = new FB2DescriptionReader(description);
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(fileName);
+	ZLInputStream *stream = ZLFile(path).createInputStream();
 	bool code = reader->readDescription(*stream);
 	delete stream;
 	delete reader;
@@ -47,7 +46,7 @@ bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) 
 	}
 
 	FB2BookReader *reader = new FB2BookReader(model);
-	ZLInputStream *stream = ZLFSManager::instance().createInputStream(description.fileName());
+	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
 	reader->readDocument(*stream);
 	delete stream;
 	delete reader;

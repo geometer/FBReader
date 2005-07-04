@@ -29,11 +29,11 @@ public:
 	ZLUnixFileInputStream(const std::string &name);
 	~ZLUnixFileInputStream();
 	bool open();
-	int read(char *buffer, int maxSize);
+	size_t read(char *buffer, size_t maxSize);
 	void close();
 
-	void seek(int offset) { fseek(myFile, offset, SEEK_CUR); }
-	int offset() const { return ftell(myFile); }
+	void seek(size_t offset) { fseek(myFile, offset, SEEK_CUR); }
+	size_t offset() const { return ftell(myFile); }
 
 private:
 	std::string myName;

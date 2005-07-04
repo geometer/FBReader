@@ -53,8 +53,8 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 	}
 #endif // PALM_TEMPORARY
 	std::string realFileName = fileName.substr(0, fileName.find(':'));
-	ZLFileInfo fileInfo = ZLFSManager::instance().fileInfo(realFileName);
-	if (!fileInfo.Exists) {
+	ZLFile file(realFileName);
+	if (!file.exists()) {
 		return 0;
 	}
 
@@ -63,7 +63,7 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 	ZLIntegerOption FileSizeOption(realFileName, "Size", -1);
 	ZLIntegerOption FileMTimeOption(realFileName, "MTime", -1);
 
-	if (((int)fileInfo.Size == FileSizeOption.value()) && ((int)fileInfo.MTime == FileMTimeOption.value())) {
+	if (((int)file.size() == FileSizeOption.value()) && ((int)file.mTime() == FileMTimeOption.value())) {
 		if (info.isFull()) {
 			description->myAuthor = new StoredAuthor(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
 			description->myTitle = info.TitleOption.value();
@@ -72,11 +72,11 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 			return description;
 		}
 	} else {
-		FileSizeOption.setValue(fileInfo.Size);
-		FileMTimeOption.setValue(fileInfo.MTime);
+		FileSizeOption.setValue(file.size());
+		FileMTimeOption.setValue(file.mTime());
 	}
 
-	FormatPlugin *plugin = PluginCollection::instance().plugin(fileName, false);
+	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName).extension(), false);
 	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
 		return 0;
 	}

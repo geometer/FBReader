@@ -50,7 +50,7 @@ static int fUnknownEncodingHandler(void *, const XML_Char *name, XML_Encoding *i
 
 static void parseDTD(XML_Parser parser, const std::string &fileName) {
 	XML_Parser entityParser = XML_ExternalEntityParserCreate(parser, 0, 0);
-	ZLInputStream *entityStream = ZLFSManager::instance().createInputStream(fileName);
+	ZLInputStream *entityStream = ZLFile(fileName).createInputStream();
 	if (entityStream->open()) {
 		const size_t BUFSIZE = 2048;
 		char buffer[BUFSIZE];
