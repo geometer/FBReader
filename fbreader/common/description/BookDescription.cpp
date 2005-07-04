@@ -21,6 +21,7 @@
 #include <abstract/ZLFSManager.h>
 
 #include "BookDescription.h"
+#include "BookDescriptionUtil.h"
 #include "Author.h"
 
 #include "../formats/FormatPlugin.h"
@@ -31,6 +32,14 @@ BookInfo::BookInfo(const std::string &fileName) :
 	TitleOption(fileName, "Title", ""),
 	LanguageOption(fileName, "Language", "unknown"),
 	EncodingOption(fileName, "Encoding", "") {
+}
+
+void BookInfo::reset() const {
+	AuthorDisplayNameOption.setValue("");
+	AuthorSortKeyOption.setValue("");
+	TitleOption.setValue("");
+	LanguageOption.setValue("unknown");
+	EncodingOption.setValue("");
 }
 
 bool BookInfo::isFull() const {
@@ -52,18 +61,16 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 		return description;
 	}
 #endif // PALM_TEMPORARY
-	std::string realFileName = fileName.substr(0, fileName.find(':'));
-	ZLFile file(realFileName);
+	int index = fileName.find(':');
+	ZLFile file((index == -1) ? fileName : fileName.substr(0, index));
 	if (!file.exists()) {
 		return 0;
 	}
 
 	BookDescriptionPtr description = new BookDescription(fileName);
-	BookInfo info(fileName);
-	ZLIntegerOption FileSizeOption(realFileName, "Size", -1);
-	ZLIntegerOption FileMTimeOption(realFileName, "MTime", -1);
 
-	if (((int)file.size() == FileSizeOption.value()) && ((int)file.mTime() == FileMTimeOption.value())) {
+	if (BookDescriptionUtil::checkInfo(file)) {
+		BookInfo info(fileName);
 		if (info.isFull()) {
 			description->myAuthor = new StoredAuthor(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
 			description->myTitle = info.TitleOption.value();
@@ -72,8 +79,10 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 			return description;
 		}
 	} else {
-		FileSizeOption.setValue(file.size());
-		FileMTimeOption.setValue(file.mTime());
+		if (index != -1) {
+			BookDescriptionUtil::resetZipInfo(file);
+		}
+		BookDescriptionUtil::saveInfo(file);
 	}
 
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName).extension(), false);
@@ -92,11 +101,14 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 	if (description->myEncoding.empty()) {
 		description->myEncoding = "auto";
 	}
-	info.AuthorDisplayNameOption.setValue(description->myAuthor->displayName());
-	info.AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
-	info.TitleOption.setValue(description->myTitle);
-	info.LanguageOption.setValue(description->myLanguage);
-	info.EncodingOption.setValue(description->myEncoding);
+	{
+		BookInfo info(fileName);
+		info.AuthorDisplayNameOption.setValue(description->myAuthor->displayName());
+		info.AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
+		info.TitleOption.setValue(description->myTitle);
+		info.LanguageOption.setValue(description->myLanguage);
+		info.EncodingOption.setValue(description->myEncoding);
+	}
 	return description;
 }
 

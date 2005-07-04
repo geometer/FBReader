@@ -23,12 +23,11 @@
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLFSDir.h>
-#include <abstract/ZLZipDir.h>
-#include <abstract/ZLZipInputStream.h>
 
 #include "BookCollection.h"
 #include "BookList.h"
 #include "../description/BookDescription.h"
+#include "../description/BookDescriptionUtil.h"
 #include "../description/Author.h"
 #include "../formats/FormatPlugin.h"
 
@@ -60,14 +59,14 @@ BookCollection::BookCollection() {
 				if (PluginCollection::instance().plugin(extension, true) != 0) {
 					fileNamesSet.insert(fileName);
 				} else if (extension == "zip") {
-					ZLZipDir zipDir(fileName);
-					std::string zipPrefix = fileName + ':';
-					std::vector<std::string> entries;
-					zipDir.collectFiles(entries, false);
-					for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
-						if (PluginCollection::instance().plugin(ZLFile(*zit).extension(), true) != 0) {
-							fileNamesSet.insert(zipPrefix + *zit);
-						}
+					if (!BookDescriptionUtil::checkInfo(file)) {
+						BookDescriptionUtil::resetZipInfo(file);
+						BookDescriptionUtil::saveInfo(file);
+					}
+					std::vector<std::string> zipEntries;
+					BookDescriptionUtil::listZipEntries(file, zipEntries);
+					for (std::vector<std::string>::const_iterator zit = zipEntries.begin(); zit != zipEntries.end(); zit++) {
+						fileNamesSet.insert(*zit);
 					}
 				}
 			}

@@ -24,6 +24,9 @@
 class ZLOption {
 
 public:
+	static void clearGroup(const std::string &group) OPTIONS_SECTION;
+	
+public:
 	ZLOption(const std::string &group, const std::string &optionName) OPTIONS_SECTION;
 	virtual ~ZLOption() OPTIONS_SECTION;
 

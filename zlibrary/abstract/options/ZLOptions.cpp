@@ -35,6 +35,11 @@ void ZLOptions::deleteInstance() {
 	delete ourInstance;
 }
 
+void ZLOption::clearGroup(const std::string &group) {
+	ZLOptions::instance().setGroup(group);
+	ZLOptions::instance().clearGroup();
+}
+
 ZLOption::ZLOption(const std::string &group, const std::string &optionName) {
 	myGroup = group;
 	myOptionName = optionName;

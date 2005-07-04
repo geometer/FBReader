@@ -16,7 +16,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-//#include <iostream>
 #include <algorithm>
 
 #include <abstract/ZLStringUtil.h>
@@ -45,7 +44,6 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 }
 
 ZLInputStream *ZLFile::createInputStream() const {
-	//std::cerr << "path = " << myPath << "\n";
 	ZLInputStream *stream = ZLFSManager::instance().createPlainInputStream(myPath);
 	if (myIsCompressed && (stream != 0)) {
 		stream = new ZLGzipInputStream(stream, size());

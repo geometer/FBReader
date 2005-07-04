@@ -35,6 +35,7 @@ struct BookInfo {
 	~BookInfo() MODEL_SECTION;
 
 	bool isFull() const MODEL_SECTION;
+	void reset() const MODEL_SECTION;
 
 	ZLStringOption AuthorDisplayNameOption;
 	ZLStringOption AuthorSortKeyOption;
