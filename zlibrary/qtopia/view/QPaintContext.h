@@ -69,6 +69,7 @@ private:
 	QImage &qImage(const ZLImage &image) const;
 
 private:
+	bool mySizeChanged;
 	QPainter *myPainter;
 	QPixmap *myPixmap;
 	mutable std::map<const ZLImage*,QImage*> myImageCache;

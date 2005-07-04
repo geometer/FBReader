@@ -32,6 +32,7 @@ QPaintContext::QPaintContext() {
 	myPainter = new QPainter();
 	myPixmap = NULL;
 	mySpaceWidth = -1;
+	mySizeChanged = false;
 }
 
 QPaintContext::~QPaintContext() {
@@ -61,6 +62,7 @@ void QPaintContext::setSize(int w, int h) {
 	}
 	if ((myPixmap == NULL) && (w > 0) && (h > 0)) {
 		myPixmap = new QPixmap(w, h);
+		mySizeChanged = true;
 		myPainter->begin(myPixmap);
 	}
 }
@@ -80,7 +82,8 @@ const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) con
 
 void QPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 	QFont font = myPainter->font();
-	bool fontChanged = false;
+	bool fontChanged = mySizeChanged;
+	mySizeChanged = false;
 
 	if (font.family() != family.c_str()) {
 		font.setFamily(family.c_str());
