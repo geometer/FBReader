@@ -109,7 +109,7 @@ private:
 	class ParagraphProcessor {
 
 	public:
-		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, const shared_ptr<TextElementVector> &elements) VIEW_SECTION;
+		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, const shared_ptr<TextElementVector> elements) VIEW_SECTION;
 		~ParagraphProcessor() VIEW_SECTION;
 
 		void fill() VIEW_SECTION;

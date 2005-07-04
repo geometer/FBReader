@@ -51,7 +51,7 @@ private:
 		void applyControls(const WordCursor &begin, const WordCursor &end) VIEW_SECTION;
 
 		const ZLPaintContext &context() const VIEW_SECTION;
-		const TextStylePtr &style() const VIEW_SECTION;
+		const TextStylePtr style() const VIEW_SECTION;
 		int elementWidth(const WordCursor &cursor) const VIEW_SECTION;
 		int elementHeight(const WordCursor &cursor) const VIEW_SECTION;
 		int textAreaHeight() const VIEW_SECTION;
@@ -162,7 +162,7 @@ private:
 
 inline TextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
-inline const TextStylePtr &TextView::ViewStyle::style() const { return myStyle; }
+inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
 inline TextView::LineProcessor::LineProcessor(ViewStyle &style) : myStyle(style) {}
 inline TextView::LineProcessor::~LineProcessor() {}

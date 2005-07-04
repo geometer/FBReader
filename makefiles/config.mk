@@ -156,7 +156,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DPAINT_SECTION="__attribute__ ((section(\"sec3\")))" \
 		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec4\")))" \
 		-DFB_SECTION="__attribute__ ((section(\"sec4\")))" \
-		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec3\")))" \
+		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DHYPHENATION_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DFORMATS_SECTION="__attribute__ ((section(\"sec5\")))" \
 		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec6\")))" \

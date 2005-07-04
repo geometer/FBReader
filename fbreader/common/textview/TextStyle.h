@@ -201,7 +201,7 @@ public:
 	virtual ~DecoratedTextStyle() TEXT_STYLE_SECTION;
 
 	bool isDecorated() const TEXT_STYLE_SECTION;
-	const TextStylePtr &base() const TEXT_STYLE_SECTION;
+	const TextStylePtr base() const TEXT_STYLE_SECTION;
 
 	ZLColor color() const TEXT_STYLE_SECTION;
 
@@ -344,7 +344,7 @@ inline const ZLDoubleOption &FullTextStyleDecoration::lineSpaceOption() const { 
 inline DecoratedTextStyle::DecoratedTextStyle(const TextStylePtr base) : myBase(base) {}
 inline DecoratedTextStyle::~DecoratedTextStyle() {}
 inline bool DecoratedTextStyle::isDecorated() const { return true; }
-inline const TextStylePtr &DecoratedTextStyle::base() const { return myBase; }
+inline const TextStylePtr DecoratedTextStyle::base() const { return myBase; }
 
 inline PartialDecoratedTextStyle::PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
 inline PartialDecoratedTextStyle::~PartialDecoratedTextStyle() {}
