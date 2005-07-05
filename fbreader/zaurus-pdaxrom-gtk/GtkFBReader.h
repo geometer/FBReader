@@ -38,7 +38,7 @@ public:
 	~GtkFBReader();
 
 protected:
-	void setWindowCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
+	void setWindowCaption(const std::string &caption);
 	void addButton(ActionCode id, const std::string &name);
 	void setButtonVisible(ActionCode id, bool visible);
 	void setButtonEnabled(ActionCode id, bool enable);

@@ -21,6 +21,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include <gtk-pdaxrom/GtkViewWidget.h>
 #include <gtk-pdaxrom/GtkPaintContext.h>
 
@@ -31,8 +33,8 @@
 #include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
-static ZLIntegerOption Width("Options", "Width", 800);
-static ZLIntegerOption Height("Options", "Height", 800);
+static ZLIntegerOption Width("Options", "Width", 350);
+static ZLIntegerOption Height("Options", "Height", 350);
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->close();
@@ -260,6 +262,17 @@ void GtkFBReader::searchSlot() {
 	}
 
 	gtk_widget_destroy (GTK_WIDGET(findDialog));
+}
+
+void GtkFBReader::setWindowCaption(const std::string &caption) {
+	int utf8Length = ZLUnicodeUtil::utf8Length(caption);
+	if (utf8Length <= 60) {
+		gtk_window_set_title(myMainWindow, caption.c_str());
+	} else {
+		int l = ZLUnicodeUtil::length(caption, 57);
+		std::string shortCaption = caption.substr(l) + "...";
+		gtk_window_set_title(myMainWindow, shortCaption.c_str());
+	}
 }
 
 // vim:ts=2:sw=2:noet
