@@ -88,3 +88,18 @@ static std::vector<std::string> EMPTY_VECTOR;
 const std::vector<std::string> &ZLXMLReader::externalDTDs() const {
 	return EMPTY_VECTOR;
 }
+
+const char *ZLXMLReader::attributeValue(const char **xmlattributes, const char *name) {
+	while (*xmlattributes != 0) {
+		bool useNext = strcmp(*xmlattributes, name) == 0;
+		xmlattributes++;
+		if (*xmlattributes == 0) {
+			return 0;
+		}
+		if (useNext) {
+			return *xmlattributes;
+		}
+		xmlattributes++;
+	}
+	return 0;
+}
