@@ -31,22 +31,6 @@ void FB2BookReader::characterDataHandler(const char *text, int len) {
 	myModelReader.addDataToBuffer(text, len);
 }
 
-static const char *attributeValue(const char **xmlattributes, const char *name) FORMATS_SECTION;
-static const char *attributeValue(const char **xmlattributes, const char *name) {
-	while (*xmlattributes != 0) {
-		bool useNext = strcmp(*xmlattributes, name) == 0;
-		xmlattributes++;
-		if (*xmlattributes == 0) {
-			return 0;
-		}
-		if (useNext) {
-			return *xmlattributes;
-		}
-		xmlattributes++;
-	}
-	return 0;
-}
-
 static const char *reference(const char **xmlattributes) FORMATS_SECTION;
 static const char *reference(const char **xmlattributes) {
 	while (*xmlattributes != 0) {
@@ -66,7 +50,7 @@ static const char *reference(const char **xmlattributes) {
 }
 	
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
-	const char *id = attributeValue(xmlattributes, "id");
+	const char *id = ZLXMLReader::attributeValue(xmlattributes, "id");
 	if (id != 0) {
 		if (myBodyCounter > 1) {
 			myModelReader.setFootnoteTextModel(id);
@@ -169,8 +153,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _BINARY:
 		{
-			const char *contentType = attributeValue(xmlattributes, "content-type");
-			const char *id = attributeValue(xmlattributes, "id");
+			const char *contentType = ZLXMLReader::attributeValue(xmlattributes, "content-type");
+			const char *id = ZLXMLReader::attributeValue(xmlattributes, "id");
 			if ((contentType != 0) && (id != 0)) {
 				myModelReader.beginImageData(contentType, id);
 			}
