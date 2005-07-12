@@ -50,7 +50,7 @@ static const char *reference(const char **xmlattributes) {
 }
 	
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
-	const char *id = ZLXMLReader::attributeValue(xmlattributes, "id");
+	const char *id = attributeValue(xmlattributes, "id");
 	if (id != 0) {
 		if (myBodyCounter > 1) {
 			myModelReader.setFootnoteTextModel(id);
@@ -153,8 +153,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _BINARY:
 		{
-			const char *contentType = ZLXMLReader::attributeValue(xmlattributes, "content-type");
-			const char *id = ZLXMLReader::attributeValue(xmlattributes, "id");
+			const char *contentType = attributeValue(xmlattributes, "content-type");
+			const char *id = attributeValue(xmlattributes, "id");
 			if ((contentType != 0) && (id != 0)) {
 				myModelReader.beginImageData(contentType, id);
 			}

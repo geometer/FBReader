@@ -25,6 +25,7 @@
 #include "FormatOptionsPage.h"
 #include "StyleOptionsPage.h"
 #include "ColorOptionsPage.h"
+#include "KeyBindingsPage.h"
 
 #include "FBReader.h"
 
@@ -63,11 +64,19 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	indicatorTab->addOption(new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 0, 100, 1));
 
 	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
+	if (true) {
+		myKeyBindingsPage = new KeyBindingsPage(myDialog->createTab("Keys"));
+	} else {
+		myKeyBindingsPage = 0;
+	}
 }
 
 OptionsDialog::~OptionsDialog() {
 	delete myFormatPage;
 	delete myStylePage;
 	delete myColorPage;
+	if (myKeyBindingsPage != 0) {
+		delete myKeyBindingsPage;
+	}
 	delete myDialog;
 }

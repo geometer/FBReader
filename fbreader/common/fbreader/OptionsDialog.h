@@ -37,6 +37,7 @@ private:
 	OptionsPage *myFormatPage;
 	OptionsPage *myStylePage;
 	OptionsPage *myColorPage;
+	OptionsPage *myKeyBindingsPage;
 };
 
 inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }
