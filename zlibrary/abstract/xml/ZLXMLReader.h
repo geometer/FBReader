@@ -33,6 +33,7 @@ public:
 	static std::vector<std::string> &knownEncodings() XML_SECTION;
 	static size_t bufferSize() { return 2048; }
 
+protected:
   static const char *attributeValue(const char **xmlattributes, const char *name) XML_SECTION;
 
 private:
