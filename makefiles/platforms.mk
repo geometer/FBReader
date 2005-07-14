@@ -6,6 +6,7 @@ endif
 
 ifeq "$(TARGET_ARCH)" ""
 	TARGET_ARCH = zaurus-qtopia
+$(warning TARGET_ARCH is not defined.  Using default -- $(TARGET_ARCH))
 endif
 
 ifneq "$(findstring $(TARGET_ARCH),$(ALL_TARGET_ARCHS))" "$(TARGET_ARCH)"
