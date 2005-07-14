@@ -21,22 +21,13 @@
 #include "ZLOpenFileDialog.h"
 
 #include "../filesystem/ZLFSManager.h"
-#include "../filesystem/ZLFSDir.h"
-#include "../filesystem/ZLZipDir.h"
+#include "../filesystem/ZLDir.h"
 #include "../util/ZLStringUtil.h"
 
 ZLStringOption ZLOpenFileDialog::DirectoryOption("OpenFileDialog", "Directory", "~");
 	
 ZLOpenFileDialog::ZLOpenFileDialog(const ZLTreeHandler &handler) {
-	std::string dirName =	DirectoryOption.value();
-	// TODO: replace this code
-	shared_ptr<ZLDir> dir;
-	if (ZLStringUtil::stringEndsWith(dirName, ".zip")) {
-		dir = new ZLZipDir(dirName);
-	} else {
-		dir = ZLFile(dirName).createZLDirectory();
-	}
-	myCurrentDir = new ZLDirTreeState(handler, dir);
+	myCurrentDir = new ZLDirTreeState(handler, ZLFile(DirectoryOption.value()).createZLDirectory());
 }
 
 ZLOpenFileDialog::~ZLOpenFileDialog() {
@@ -131,10 +122,8 @@ const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 ZLTreeStatePtr ZLDirTreeState::change(const ZLTreeNodePtr node) {
 	mySubnodes.clear();
 	myIsUpToDate = false;
-	if (!node->isFile()) {
+	if (!node->isFile() || ZLStringUtil::stringEndsWith(node->name(), ".zip")) {
 		return new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).createZLDirectory());
-	} else if (ZLStringUtil::stringEndsWith(node->name(), ".zip")) {
-		return new ZLDirTreeState(handler(), new ZLZipDir(myDir->itemName(node->name())));
 	} else {
 		return new ZLFileTreeState(handler(), myDir->itemName(node->name()));
 	}

@@ -23,15 +23,18 @@
 
 class ZLZipDir : public ZLDir {
 
-public:
+private:
 	ZLZipDir(const std::string &name) FS_SECTION;
 	~ZLZipDir() FS_SECTION;
 
+public:
 	void collectSubDirs(std::vector<std::string>&, bool) FS_SECTION;
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
 
 protected:
 	std::string delimiter() const FS_SECTION;
+
+friend class ZLFile;
 };
 
 inline ZLZipDir::ZLZipDir(const std::string &name) : ZLDir(name) {}

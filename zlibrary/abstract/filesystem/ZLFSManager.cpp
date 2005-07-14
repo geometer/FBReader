@@ -23,6 +23,7 @@
 #include "ZLFSDir.h"
 #include "ZLFSManager.h"
 #include "ZLGzipInputStream.h"
+#include "ZLZipDir.h"
 #include "ZLZipInputStream.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
@@ -77,7 +78,12 @@ ZLOutputStream *ZLFile::createOutputStream() const {
 }
 
 ZLDir *ZLFile::createZLDirectory() const {
-	return ZLFSManager::instance().createPlainDirectory(myPath);
+	if (isDirectory()) {
+		return ZLFSManager::instance().createPlainDirectory(myPath);
+	} else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {
+		return new ZLZipDir(myPath);
+	}
+	return 0;
 }
 
 void ZLFile::fillInfo() const {

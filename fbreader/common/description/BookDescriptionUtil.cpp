@@ -20,7 +20,7 @@
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLStringUtil.h>
-#include <abstract/ZLZipDir.h>
+#include <abstract/ZLDir.h>
 
 #include "BookDescriptionUtil.h"
 #include "BookDescription.h"
@@ -61,20 +61,23 @@ void BookDescriptionUtil::listZipEntries(const ZLFile &zipFile, std::vector<std:
 void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 	ZLOption::clearGroup(zipFile.path());
 
-	ZLZipDir zipDir(zipFile.path());
-	std::string zipPrefix = zipFile.path() + ':';
-	std::vector<std::string> entries;
-	int counter = 0;
-	zipDir.collectFiles(entries, false);
-	for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
-		if (PluginCollection::instance().plugin(ZLFile(*zit).extension(), true) != 0) {
-			std::string optionName = ENTRY;
-			ZLStringUtil::appendNumber(optionName, counter);
-			std::string fullName = zipPrefix + *zit;
-			ZLStringOption(zipFile.path(), optionName, "").setValue(fullName);
-			BookInfo(fullName).reset();
-			counter++;
+	ZLDir *zipDir = zipFile.createZLDirectory();
+	if (zipDir != 0) {
+		std::string zipPrefix = zipFile.path() + ':';
+		std::vector<std::string> entries;
+		int counter = 0;
+		zipDir->collectFiles(entries, false);
+		for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
+			if (PluginCollection::instance().plugin(ZLFile(*zit).extension(), true) != 0) {
+				std::string optionName = ENTRY;
+				ZLStringUtil::appendNumber(optionName, counter);
+				std::string fullName = zipPrefix + *zit;
+				ZLStringOption(zipFile.path(), optionName, "").setValue(fullName);
+				BookInfo(fullName).reset();
+				counter++;
+			}
 		}
+		ZLIntegerOption(zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);
+		delete zipDir;
 	}
-	ZLIntegerOption(zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);
 }
