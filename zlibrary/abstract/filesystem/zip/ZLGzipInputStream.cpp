@@ -18,7 +18,7 @@
 
 #include <algorithm>
 
-#include "ZLGzipInputStream.h"
+#include "ZLZip.h"
 
 const size_t IN_BUFFER_SIZE = 2048;
 const size_t OUT_BUFFER_SIZE = 32768;

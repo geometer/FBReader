@@ -16,10 +16,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZipHeader.h"
+#include "ZLZipHeader.h"
 #include "../ZLInputStream.h"
 
-bool ZipHeader::readFrom(ZLInputStream &stream) {
+bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 	size_t startOffset = stream.offset();
 	Signature = readLong(stream);
 	Version = readShort(stream);
@@ -35,13 +35,13 @@ bool ZipHeader::readFrom(ZLInputStream &stream) {
 	return (Signature == 0x04034B50) && (stream.offset() == startOffset + 30) && (NameLength != 0);
 }
 
-unsigned short ZipHeader::readShort(ZLInputStream &stream) {
+unsigned short ZLZipHeader::readShort(ZLInputStream &stream) {
 	char buffer[2];
 	stream.read(buffer, 2);
 	return ((((unsigned short)buffer[1]) & 0xFF) << 8) + ((unsigned short)buffer[0] & 0xFF);
 }
 
-unsigned long ZipHeader::readLong(ZLInputStream &stream) {
+unsigned long ZLZipHeader::readLong(ZLInputStream &stream) {
 	char buffer[4];
 	stream.read(buffer, 4);
 

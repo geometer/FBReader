@@ -16,16 +16,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLZipDir.h"
-#include "ZipHeader.h"
+#include "ZLZip.h"
+#include "ZLZipHeader.h"
 #include "../ZLFSManager.h"
-#include "../ZLInputStream.h"
 
 void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 	shared_ptr<ZLInputStream> stream = ZLFile(name()).inputStream();
 
 	if (!stream.isNull() && stream->open()) {
-		ZipHeader header;
+		ZLZipHeader header;
 		while (header.readFrom(*stream)) {
 			char *buffer = new char[header.NameLength];
 			if ((unsigned int)stream->read(buffer, header.NameLength) == header.NameLength) {

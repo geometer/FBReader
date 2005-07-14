@@ -16,8 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLZIPINPUTSTREAM_H__
-#define __ZLZIPINPUTSTREAM_H__
+#ifndef __ZLZIP_H__
+#define __ZLZIP_H__
 
 #define NOZLIBDEFS
 #include <zlib.h>
@@ -25,6 +25,7 @@
 #include <abstract/shared_ptr.h>
 
 #include "../ZLInputStream.h"
+#include "../ZLDir.h"
 
 class ZLZipInputStream : public ZLInputStream {
 
@@ -57,4 +58,54 @@ private:
 friend class ZLFile;
 };
 
-#endif /* __ZLZIPINPUTSTREAM_H__ */
+class ZLGzipInputStream : public ZLInputStream {
+
+private:
+	ZLGzipInputStream(shared_ptr<ZLInputStream> stream) FS_SECTION;
+
+public:
+	~ZLGzipInputStream() FS_SECTION;
+	bool open() FS_SECTION;
+	size_t read(char *buffer, size_t maxSize) FS_SECTION;
+	void close() FS_SECTION;
+
+	void seek(size_t offset) FS_SECTION;
+	size_t offset() const FS_SECTION;
+	size_t sizeOfOpened() FS_SECTION;
+
+private:
+	shared_ptr<ZLInputStream> myFileStream;
+	size_t myFileSize;
+
+	z_stream *myZStream; 
+	char *myInBuffer;
+	char *myOutBuffer;
+
+	std::string myBuffer; 
+	size_t myAvailableSize;
+	size_t myOffset;
+
+friend class ZLFile;
+};
+
+class ZLZipDir : public ZLDir {
+
+private:
+	ZLZipDir(const std::string &name) FS_SECTION;
+
+public:
+	~ZLZipDir() FS_SECTION;
+	void collectSubDirs(std::vector<std::string>&, bool) FS_SECTION;
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
+
+protected:
+	std::string delimiter() const FS_SECTION;
+
+friend class ZLFile;
+};
+
+inline ZLZipDir::ZLZipDir(const std::string &name) : ZLDir(name) {}
+inline ZLZipDir::~ZLZipDir() {}
+inline void ZLZipDir::collectSubDirs(std::vector<std::string>&, bool) {}
+
+#endif /* __ZLZIP_H__ */

@@ -23,9 +23,7 @@
 #include "ZLFSDir.h"
 #include "ZLFSManager.h"
 #include "ZLOutputStream.h"
-#include "zip/ZLGzipInputStream.h"
-#include "zip/ZLZipDir.h"
-#include "zip/ZLZipInputStream.h"
+#include "zip/ZLZip.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
 

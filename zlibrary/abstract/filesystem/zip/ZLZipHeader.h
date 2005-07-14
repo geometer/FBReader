@@ -21,7 +21,7 @@
 
 class ZLInputStream;
 
-struct ZipHeader {
+struct ZLZipHeader {
 	unsigned long Signature;
 	unsigned short Version;
 	unsigned short Flags;

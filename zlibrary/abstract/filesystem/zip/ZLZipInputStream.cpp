@@ -18,9 +18,9 @@
 
 #include <algorithm>
 
-#include "ZLZipInputStream.h"
+#include "ZLZip.h"
+#include "ZLZipHeader.h"
 #include "../ZLFSManager.h"
-#include "ZipHeader.h"
 
 const size_t IN_BUFFER_SIZE = 2048;
 const size_t OUT_BUFFER_SIZE = 32768;
@@ -43,7 +43,7 @@ bool ZLZipInputStream::open() {
 		return false;
 	}
 
-	ZipHeader header;
+	ZLZipHeader header;
 	while (true) {
 		if (!header.readFrom(*myBaseStream)) {
 			close();
