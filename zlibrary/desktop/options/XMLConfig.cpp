@@ -40,23 +40,18 @@ void XMLConfigGroup::unsetValue(const std::string &name) {
 }
 
 XMLConfig::XMLConfig(const std::string &name) : myName(name) {
-	ZLInputStream *stream = ZLFile("~/." + myName + "/config.xml").createInputStream();
-	XMLConfigReader(*this).readDocument(*stream);
-	delete stream;
+	XMLConfigReader(*this).readDocument(ZLFile("~/." + myName + "/config.xml").inputStream());
 }
 
 XMLConfig::~XMLConfig() {
-	ZLFSDir *configDir = (ZLFSDir*)ZLFile("~/." + myName).createZLDirectory();
-	configDir->createPhysicalDirectory();
-	delete configDir;
+	shared_ptr<ZLDir> configDir = ZLFile("~/." + myName).directory();
+	// TODO: remove type casting
+	((ZLFSDir&)*configDir).createPhysicalDirectory();
 
-	ZLOutputStream *stream = ZLFile("~/." + myName + "/config.xml").createOutputStream();
-	if (stream != 0) {
-		if (stream->open()) {
-			XMLConfigWriter(*this, *stream).write();
-			stream->close();
-		}
-		delete stream;
+	shared_ptr<ZLOutputStream> stream = ZLFile("~/." + myName + "/config.xml").outputStream();
+	if (!stream.isNull() && stream->open()) {
+		XMLConfigWriter(*this, *stream).write();
+		stream->close();
 	}
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); it++) {
 		delete it->second;

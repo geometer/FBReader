@@ -22,6 +22,8 @@
 #include <string>
 #include <vector>
 
+#include <abstract/shared_ptr.h>
+
 class ZLInputStream;
 class ZLXMLReaderInternal;
 
@@ -55,7 +57,7 @@ protected:
 	virtual const Tag *tags() const XML_SECTION = 0;
 
 public:
-	bool readDocument(ZLInputStream &stream) XML_SECTION;
+	bool readDocument(shared_ptr<ZLInputStream> stream) XML_SECTION;
 
 	int tag(const char *name) XML_SECTION;
 

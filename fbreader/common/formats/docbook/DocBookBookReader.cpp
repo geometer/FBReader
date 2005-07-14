@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLInputStream.h>
+
 #include "DocBookBookReader.h"
 
 #include "../../bookmodel/BookModel.h"
@@ -104,6 +106,6 @@ void DocBookBookReader::endElementHandler(int tag) {
 	}
 }
 
-void DocBookBookReader::readBook(ZLInputStream &stream) {
+void DocBookBookReader::readBook(shared_ptr<ZLInputStream> stream) {
 	readDocument(stream);
 }

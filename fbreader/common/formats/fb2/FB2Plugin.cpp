@@ -30,14 +30,7 @@ bool FB2Plugin::acceptsFile(const std::string &extension) const {
 }
 
 bool FB2Plugin::readDescription(const std::string &path, BookDescription &description) const {
-	FB2DescriptionReader reader(description);
-	bool code = false;
-	ZLInputStream *stream = ZLFile(path).createInputStream();
-	if (stream != 0) {
-		code = reader.readDescription(*stream);
-		delete stream;
-	}
-	return code;
+	return FB2DescriptionReader(description).readDescription(ZLFile(path).inputStream());
 }
 
 bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) const {
@@ -47,14 +40,7 @@ bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) 
 		BookInfo(description.fileName()).EncodingOption.setValue("auto");
 	}
 
-	FB2BookReader reader(model);
-	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
-	if (stream != 0) {
-		reader.readDocument(*stream);
-		delete stream;
-		return true;
-	}
-	return false;
+	return FB2BookReader(model).readDocument(ZLFile(description.fileName()).inputStream());
 }
 
 const std::string &FB2Plugin::iconName() const {

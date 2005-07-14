@@ -70,16 +70,15 @@ static std::vector<std::string> EXTERNAL_DTDs;
 
 const std::vector<std::string> &DocBookReader::externalDTDs() const {
 	if (EXTERNAL_DTDs.empty()) {
-		std::vector<std::string> files;
-		ZLDir *dtdPath = ZLFile(DTDDirectory).createZLDirectory();
-		if (dtdPath != 0) {
+		shared_ptr<ZLDir> dtdPath = ZLFile(DTDDirectory).directory();
+		if (!dtdPath.isNull()) {
+			std::vector<std::string> files;
 			dtdPath->collectFiles(files, false);
 			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
 				if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
 					EXTERNAL_DTDs.push_back(dtdPath->name() + "/" + *it);
 				}
 			}
-			delete dtdPath;
 		}
 	}
 

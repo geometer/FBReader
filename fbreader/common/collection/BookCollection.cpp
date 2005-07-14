@@ -48,8 +48,8 @@ BookCollection::BookCollection() {
 
 	for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); it++) {
 		std::vector<std::string> files;
-		ZLDir *dir = ZLFile(*it).createZLDirectory();
-		if (dir == 0) {
+		shared_ptr<ZLDir> dir = ZLFile(*it).directory();
+		if (dir.isNull()) {
 			continue;
 		}
 		dir->collectFiles(files, false);
@@ -74,7 +74,6 @@ BookCollection::BookCollection() {
 				}
 			}
 		}
-		delete dir;
 	}
 
 	BookList bookList;
@@ -119,14 +118,13 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 		nameQueue.pop();
 		if (nameSet.find(name) == nameSet.end()) {
 			if (myScanSubdirs) {
-				ZLDir *dir = ZLFile(name).createZLDirectory();
-				if (dir != 0) {
+				shared_ptr<ZLDir> dir = ZLFile(name).directory();
+				if (!dir.isNull()) {
 					std::vector<std::string> subdirs;
 					dir->collectSubDirs(subdirs, false);
 					for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
 						nameQueue.push(dir->name() + '/' + *it);
 					}
-					delete dir;
 				}
 			}
 			nameSet.insert(name);

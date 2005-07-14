@@ -34,8 +34,8 @@ bool HtmlPlugin::acceptsFile(const std::string &extension) const {
 
 bool HtmlPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
-	ZLInputStream *stream = file.createInputStream();
-	if (stream == 0) {
+	shared_ptr<ZLInputStream> stream = file.inputStream();
+	if (stream.isNull()) {
 		return false;
 	}
 
@@ -43,7 +43,6 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 	if (encoding.empty()) {
 		encoding = EncodingDetector::detect(*stream);
 		if (encoding.empty()) {
-			delete stream;
 			return false;
 		}
 		WritableBookDescription(description).encoding() = encoding;
@@ -69,13 +68,12 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 			WritableBookDescription(description).language() = "ru";
 		}
 	}
-	delete stream;
 	return true;
 }
 
 bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
-	if (stream == 0) {
+	shared_ptr<ZLInputStream> stream = ZLFile(description.fileName()).inputStream();
+	if (stream.isNull()) {
 		return false;
 	}
 
@@ -86,7 +84,6 @@ bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model)
 	}
 
 	HtmlBookReader(model, format).readDocument(*stream, description.encoding());
-	delete stream;
 	return true;
 }
 

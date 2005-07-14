@@ -27,17 +27,11 @@ EncodingReader::EncodingReader(const std::string &encoding) : myEncoding(encodin
 }
 
 bool EncodingReader::fillTable(int *map) {
-	ZLInputStream *stream = ZLFile(myEncoding).createInputStream();
-	if (stream == 0) {
-		return false;
-	}
 	myMap = map;
 	for (int i = 0; i < 255; i++) {
 		myMap[i] = i;
 	}
-	bool code = readDocument(*stream);
-	delete stream;
-	return code;
+	return readDocument(ZLFile(myEncoding).inputStream());
 }
 
 ZLXMLReader::Tag TAGS[] = {

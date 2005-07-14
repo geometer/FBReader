@@ -19,7 +19,7 @@
 #ifndef __ZLPALMFSDIR_H__
 #define __ZLPALMFSDIR_H__
 
-#include <abstract/ZLFSDir.h>
+#include "../../abstract/filesystem/ZLFSDir.h"
 
 class ZLPalmFSDir : public ZLFSDir {
 

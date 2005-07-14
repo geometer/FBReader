@@ -22,6 +22,7 @@
 
 #include "ZLFSDir.h"
 #include "ZLFSManager.h"
+#include "ZLOutputStream.h"
 #include "ZLGzipInputStream.h"
 #include "ZLZipDir.h"
 #include "ZLZipInputStream.h"
@@ -51,13 +52,21 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	}
 }
 
-ZLInputStream *ZLFile::createInputStream() const {
+shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 	if (isDirectory()) {
 		return 0;
 	}
 
-	if (myPath.find(':') != (size_t)-1) {
-		return ZLFSManager::instance().isZipSupported() ? new ZLZipInputStream(myPath) : 0;
+	size_t index = myPath.rfind(':');
+	if (index != (size_t)-1) {
+		if (!ZLFSManager::instance().isZipSupported()) {
+			return 0;
+		}
+		shared_ptr<ZLInputStream> base = ZLFile(myPath.substr(0, index)).inputStream();
+		if (base.isNull()) {
+			return 0;
+		}
+		return new ZLZipInputStream(base, myPath.substr(index + 1));
 	}
 
 	ZLInputStream *stream = ZLFSManager::instance().createPlainInputStream(myPath);
@@ -67,7 +76,7 @@ ZLInputStream *ZLFile::createInputStream() const {
 	return stream;
 }
 
-ZLOutputStream *ZLFile::createOutputStream() const {
+shared_ptr<ZLOutputStream> ZLFile::outputStream() const {
 	if (isCompressed()) {
 		return 0;
 	}
@@ -77,7 +86,7 @@ ZLOutputStream *ZLFile::createOutputStream() const {
 	return ZLFSManager::instance().createOutputStream(myPath);
 }
 
-ZLDir *ZLFile::createZLDirectory() const {
+shared_ptr<ZLDir> ZLFile::directory() const {
 	if (isDirectory()) {
 		return ZLFSManager::instance().createPlainDirectory(myPath);
 	} else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {

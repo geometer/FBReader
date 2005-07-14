@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLInputStream.h>
+
 #include "DocBookDescriptionReader.h"
 
 DocBookDescriptionReader::DocBookDescriptionReader(BookDescription &description) : myDescription(description) {
@@ -106,8 +108,6 @@ void DocBookDescriptionReader::endElementHandler(int tag) {
 	}
 }
 
-bool DocBookDescriptionReader::readDescription(ZLInputStream &stream) {
-	myReturnCode = false;
-	readDocument(stream);
-	return myReturnCode;
+bool DocBookDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
+	return readDocument(stream);
 }

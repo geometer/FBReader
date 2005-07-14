@@ -61,8 +61,8 @@ void BookDescriptionUtil::listZipEntries(const ZLFile &zipFile, std::vector<std:
 void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 	ZLOption::clearGroup(zipFile.path());
 
-	ZLDir *zipDir = zipFile.createZLDirectory();
-	if (zipDir != 0) {
+	shared_ptr<ZLDir> zipDir = zipFile.directory();
+	if (!zipDir.isNull()) {
 		std::string zipPrefix = zipFile.path() + ':';
 		std::vector<std::string> entries;
 		int counter = 0;
@@ -78,6 +78,5 @@ void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 			}
 		}
 		ZLIntegerOption(zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);
-		delete zipDir;
 	}
 }

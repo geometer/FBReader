@@ -30,21 +30,11 @@ bool DocBookPlugin::acceptsFile(const std::string &extension) const {
 }
 
 bool DocBookPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	DocBookDescriptionReader *reader = new DocBookDescriptionReader(description);
-	ZLInputStream *stream = ZLFile(path).createInputStream();
-	bool code = reader->readDescription(*stream);
-	delete stream;
-	delete reader;
-	return code;
+	return DocBookDescriptionReader(description).readDescription(ZLFile(path).inputStream());
 }
 
 bool DocBookPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	DocBookBookReader *reader = new DocBookBookReader(model);
-	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
-	reader->readDocument(*stream);
-	delete stream;
-	delete reader;
-	return true;
+	return DocBookBookReader(model).readDocument(ZLFile(description.fileName()).inputStream());
 }
 
 const std::string &DocBookPlugin::iconName() const {

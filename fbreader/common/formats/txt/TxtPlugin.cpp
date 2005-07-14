@@ -37,9 +37,11 @@ bool TxtPlugin::readDescription(const std::string &path, BookDescription &descri
 	std::string encoding = description.encoding();
 
 	if (encoding.empty()) {
-		ZLInputStream *stream = file.createInputStream();
+		shared_ptr<ZLInputStream> stream = file.inputStream();
+		if (stream.isNull()) {
+			return false;
+		}
 		encoding = EncodingDetector::detect(*stream);
-		delete stream;
 		if (encoding.empty()) {
 			return false;
 		}
@@ -68,8 +70,8 @@ bool TxtPlugin::readDescription(const std::string &path, BookDescription &descri
 }
 
 bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	ZLInputStream *stream = ZLFile(description.fileName()).createInputStream();
-	if (stream == 0) {
+	shared_ptr<ZLInputStream> stream = ZLFile(description.fileName()).inputStream();
+	if (stream.isNull()) {
 		return false;
 	}
 
@@ -80,7 +82,6 @@ bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) 
 	}
 
 	TxtBookReader(model, format).readDocument(*stream, description.encoding());
-	delete stream;
 	return true;
 }
 

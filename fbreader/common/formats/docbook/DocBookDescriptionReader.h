@@ -30,7 +30,7 @@ class DocBookDescriptionReader : public DocBookReader {
 public:
 	DocBookDescriptionReader(BookDescription &description) FORMATS_SECTION;
 	~DocBookDescriptionReader() FORMATS_SECTION;
-	bool readDescription(ZLInputStream &stream) FORMATS_SECTION;
+	bool readDescription(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
 	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
 	void endElementHandler(int tag) FORMATS_SECTION;

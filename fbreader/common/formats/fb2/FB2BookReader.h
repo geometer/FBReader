@@ -30,7 +30,7 @@ class FB2BookReader : public FB2Reader {
 public:
 	FB2BookReader(BookModel &model) FORMATS_SECTION;
 	~FB2BookReader() FORMATS_SECTION;
-	void readBook(ZLInputStream &stream) FORMATS_SECTION;
+	void readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
 	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
 	void endElementHandler(int tag) FORMATS_SECTION;

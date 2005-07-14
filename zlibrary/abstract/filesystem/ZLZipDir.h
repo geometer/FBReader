@@ -25,9 +25,9 @@ class ZLZipDir : public ZLDir {
 
 private:
 	ZLZipDir(const std::string &name) FS_SECTION;
-	~ZLZipDir() FS_SECTION;
 
 public:
+	~ZLZipDir() FS_SECTION;
 	void collectSubDirs(std::vector<std::string>&, bool) FS_SECTION;
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
 

@@ -22,12 +22,9 @@
 #include "ZLInputStream.h"
 
 void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
-	ZLInputStream *stream = ZLFile(name()).createInputStream();
-	if (stream == 0) {
-		return;
-	}
+	shared_ptr<ZLInputStream> stream = ZLFile(name()).inputStream();
 
-	if (stream->open()) {
+	if (!stream.isNull() && stream->open()) {
 		ZipHeader header;
 		while (header.readFrom(*stream)) {
 			char *buffer = new char[header.NameLength];
@@ -44,7 +41,6 @@ void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 		}
 		stream->close();
 	}
-	delete stream;
 }
 
 std::string ZLZipDir::delimiter() const {

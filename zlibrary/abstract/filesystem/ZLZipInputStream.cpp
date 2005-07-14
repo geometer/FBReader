@@ -25,10 +25,7 @@
 const size_t IN_BUFFER_SIZE = 2048;
 const size_t OUT_BUFFER_SIZE = 32768;
 
-ZLZipInputStream::ZLZipInputStream(const std::string &name) {
-	int index = name.find(':');
-	myFileStream = ZLFile(name.substr(0, index)).createInputStream();
-	myCompressedFileName = name.substr(index + 1);
+ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) : myBaseStream(base), myCompressedFileName(name) {
 	myZStream = 0;
 	myInBuffer = 0;
 	myOutBuffer = 0;
@@ -36,38 +33,37 @@ ZLZipInputStream::ZLZipInputStream(const std::string &name) {
 
 ZLZipInputStream::~ZLZipInputStream() {
 	close();
-	delete myFileStream;
 }
 
 bool ZLZipInputStream::open() {
 	close();
 
-	if (!myFileStream->open()) {
+	if (!myBaseStream->open()) {
 		return false;
 	}
 
 	ZipHeader header;
 	while (true) {
-		if (!header.readFrom(*myFileStream)) {
+		if (!header.readFrom(*myBaseStream)) {
 			close();
 			return false;
 		}
 		if (header.NameLength == myCompressedFileName.length()) {
 			char *buffer = new char[header.NameLength];
-			myFileStream->read(buffer, header.NameLength);
+			myBaseStream->read(buffer, header.NameLength);
 			std::string str;
 			str.append(buffer, header.NameLength);
 			delete[] buffer;
 			if (str == myCompressedFileName) {
-				myFileStream->seek(header.ExtraLength);
+				myBaseStream->seek(header.ExtraLength);
 				break;
 			}
 		} else {
-			myFileStream->seek(header.NameLength);
+			myBaseStream->seek(header.NameLength);
 		}
-		myFileStream->seek(header.ExtraLength + header.CompressedSize);
+		myBaseStream->seek(header.ExtraLength + header.CompressedSize);
 		if (header.Flags & 0x04) {
-			myFileStream->seek(12);
+			myBaseStream->seek(12);
 		}
 	}
 	if (header.CompressionMethod == 0) {
@@ -97,7 +93,7 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 			size_t size = std::min(myAvailableSize, (size_t)IN_BUFFER_SIZE);
 
 			myZStream->next_in = (Bytef*)myInBuffer;
-			myZStream->avail_in = myFileStream->read(myInBuffer, size);
+			myZStream->avail_in = myBaseStream->read(myInBuffer, size);
 			if (myZStream->avail_in == size) {
 				myAvailableSize -= size;
 			} else {
@@ -125,7 +121,7 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 		size_t realSize = std::min(maxSize, myAvailableSize);
 		myAvailableSize -= realSize;
 		myOffset += realSize;
-		return myFileStream->read(buffer, realSize);
+		return myBaseStream->read(buffer, realSize);
 	}
 }
 
@@ -144,7 +140,7 @@ void ZLZipInputStream::close() {
 
 	myBuffer.erase();
 
-	myFileStream->close();
+	myBaseStream->close();
 }
 
 void ZLZipInputStream::seek(size_t offset) {

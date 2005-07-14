@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLInputStream.h>
+
 #include "FB2DescriptionReader.h"
 
 FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : myDescription(description) {
@@ -111,7 +113,7 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 	}
 }
 
-bool FB2DescriptionReader::readDescription(ZLInputStream &stream) {
+bool FB2DescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
 	myReadSomething = false;
 	myReadTitle = false;
 	myReadAuthor = false;
@@ -119,7 +121,5 @@ bool FB2DescriptionReader::readDescription(ZLInputStream &stream) {
 	for (int i = 0; i < 3; i++) {
 		myReadAuthorName[i] = false;
 	}
-	myReturnCode = false;
-	readDocument(stream);
-	return myReturnCode;
+	return readDocument(stream);
 }

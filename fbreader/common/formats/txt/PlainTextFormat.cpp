@@ -44,10 +44,9 @@ PlainTextFormat::PlainTextFormat(const std::string &fileName) :
 PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName) : myFormat(fileName) {
 	if (!myFormat.initialized()) {
 		PlainTextFormatDetector detector;
-		ZLInputStream *stream = ZLFile(fileName).createInputStream();
-		if (stream != 0) {
+		shared_ptr<ZLInputStream> stream = ZLFile(fileName).inputStream();
+		if (!stream.isNull()) {
 			detector.detect(*stream, myFormat);
-			delete stream;
 		}
 	}
 

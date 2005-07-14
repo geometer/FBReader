@@ -21,6 +21,8 @@
 
 #include <string>
 
+#include <abstract/shared_ptr.h>
+
 class ZLDir;
 class ZLFSDir;
 class ZLInputStream;
@@ -90,9 +92,9 @@ public:
 	const std::string &name() const FS_SECTION;
 	const std::string &extension() const FS_SECTION;
 
-	ZLInputStream *createInputStream() const FS_SECTION;
-	ZLOutputStream *createOutputStream() const FS_SECTION;
-	ZLDir *createZLDirectory() const FS_SECTION;
+	shared_ptr<ZLInputStream> inputStream() const FS_SECTION;
+	shared_ptr<ZLOutputStream> outputStream() const FS_SECTION;
+	shared_ptr<ZLDir> directory() const FS_SECTION;
 
 private:
 	void fillInfo() const FS_SECTION;

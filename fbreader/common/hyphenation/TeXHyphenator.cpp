@@ -146,12 +146,7 @@ void TeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	ZLInputStream *stream = ZLFile(PatternZip + ":" + language + ".pattern").createInputStream();
-	if (stream != 0) {
-		HyphenationReader reader(this);
-		reader.readDocument(*stream);
-		delete stream;
-	}
+	HyphenationReader(this).readDocument(ZLFile(PatternZip + ":" + language + ".pattern").inputStream());
 	
 	std::sort(myPatternTable.begin(), myPatternTable.end(), TeXPatternComparator());
 }

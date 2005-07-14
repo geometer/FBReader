@@ -22,12 +22,16 @@
 #define NOZLIBDEFS
 #include <zlib.h>
 
+#include <abstract/shared_ptr.h>
+
 #include "ZLInputStream.h"
 
 class ZLZipInputStream : public ZLInputStream {
 
+private:
+	ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) FS_SECTION;
+
 public:
-	ZLZipInputStream(const std::string &name) FS_SECTION;
 	~ZLZipInputStream() FS_SECTION;
 	bool open() FS_SECTION;
 	size_t read(char *buffer, size_t maxSize) FS_SECTION;
@@ -37,8 +41,8 @@ public:
 	size_t offset() const FS_SECTION;
 
 private:
+	shared_ptr<ZLInputStream> myBaseStream;
 	std::string myCompressedFileName;
-	ZLInputStream *myFileStream;
 	bool myIsDeflated;
 
 	z_stream *myZStream; 
@@ -47,6 +51,8 @@ private:
 	size_t myOffset;
 	char *myInBuffer;
 	char *myOutBuffer;
+
+friend class ZLFile;
 };
 
 #endif /* __ZLZIPINPUTSTREAM_H__ */

@@ -35,10 +35,9 @@ std::vector<std::string> ZLXMLReader::ourKnownEncodings;
 void ZLXMLReader::setEncodingDescriptionPath(const std::string &path) {
 	ourEncodingDescriptionPath = path;
 	ourKnownEncodings.clear();
-	ZLDir *dir = ZLFile(ourEncodingDescriptionPath).createZLDirectory();
-	if (dir != 0) {
+	shared_ptr<ZLDir> dir = ZLFile(ourEncodingDescriptionPath).directory();
+	if (!dir.isNull()) {
 		dir->collectFiles(ourKnownEncodings, true);
-		delete dir;
 	}
 	ourKnownEncodings.push_back("US-ASCII");
 	ourKnownEncodings.push_back("UTF-8");
@@ -63,8 +62,8 @@ ZLXMLReader::~ZLXMLReader() {
 	delete myInternalReader;
 }
 
-bool ZLXMLReader::readDocument(ZLInputStream &stream) {
-	if (!stream.open()) {
+bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
+	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
 
@@ -74,13 +73,13 @@ bool ZLXMLReader::readDocument(ZLInputStream &stream) {
 
 	size_t length;
 	do {
-		length = stream.read(myParserBuffer, bufferSize());
+		length = stream->read(myParserBuffer, bufferSize());
 		if (!myInternalReader->parseBuffer(myParserBuffer, length)) {
 			break;
     }
   } while ((length == bufferSize()) && !myDoBreak);
 
-	stream.close();
+	stream->close();
 
 	return true;
 }

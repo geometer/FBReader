@@ -48,10 +48,6 @@ void EncodingConverter::setEncoding(const char *encoding) {
 				if (myExtensions.empty()) {
 					delete[] myEncodingMap;
 					myEncodingMap = 0;
-				} else {
-					for (int i = 0; i < 256; i++) {
-						myEncodingMap[i] = i;
-					}
 				}
 			}
 			break;
