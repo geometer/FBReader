@@ -72,3 +72,9 @@ size_t ZLPalmFileInputStream::offset() const {
 	VFSFileTell(myFileRef, &pos);
 	return pos;
 }
+
+size_t ZLPalmFileInputStream::sizeOfOpened() {
+	UInt32 size;
+	VFSFileSize(myFileRef, &size);
+	return size;
+}

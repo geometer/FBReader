@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <algorithm>
+
 #include "ZLFSManager.h"
 #include "ZLDir.h"
 

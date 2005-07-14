@@ -32,7 +32,7 @@ bool FBFileHandler::isNodeVisible(const ZLTreeNodePtr node) const {
 	}
 	ZLFile file(name);
 	const std::string &ext = file.extension();
-	return !node->isFile() || (ext == "zip") || (PluginCollection::instance().plugin(ext, false) != 0);
+	return !node->isFile() || file.isArchive() || (PluginCollection::instance().plugin(file.extension(), false) != 0);
 }
 
 const std::string &FBFileHandler::pixmapName(const ZLTreeNodePtr node) const {
@@ -40,13 +40,12 @@ const std::string &FBFileHandler::pixmapName(const ZLTreeNodePtr node) const {
 	static const std::string ZIPFOLDER_ICON = "FBReader/zipfolder";
 	static const std::string UNKNOWN_ICON = "FBReader/unknown";
 	ZLFile file(node->name());
-	const std::string &ext = file.extension();
 	if (!node->isFile()) {
 		return FOLDER_ICON;
-	} else if (ext == "zip") {
+	} else if (file.isArchive()) {
 		return ZIPFOLDER_ICON;
 	} else {
-		FormatPlugin *plugin = PluginCollection::instance().plugin(ext, false);
+		FormatPlugin *plugin = PluginCollection::instance().plugin(file.extension(), false);
 		if (plugin != 0) {
 			return plugin->iconName();
 		}
