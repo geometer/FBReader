@@ -37,8 +37,8 @@ void copyConfig() {
 		return;
 	}
 
-	ZLInputStream *stream = oldConfig.createInputStream();
-	if ((stream == 0) || (!stream->open())) {
+	shared_ptr<ZLInputStream> stream = oldConfig.inputStream();
+	if (stream.isNull() || !stream->open()) {
 		return;
 	}
 
