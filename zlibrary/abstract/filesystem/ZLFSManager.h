@@ -48,13 +48,14 @@ protected:
 	virtual ~ZLFSManager() FS_SECTION;
 	
 public:
-	virtual void normalize(std::string &path) FS_SECTION;
+	virtual void normalize(std::string &path) const FS_SECTION;
 
 protected:
-	virtual ZLInputStream *createPlainInputStream(const std::string &path) FS_SECTION = 0;
-	virtual ZLOutputStream *createOutputStream(const std::string &path) FS_SECTION = 0;
-	virtual ZLFSDir *createPlainDirectory(const std::string &path) FS_SECTION = 0;
-	virtual FileInfo fileInfo(const std::string &path) FS_SECTION = 0;
+	virtual ZLInputStream *createPlainInputStream(const std::string &path) const FS_SECTION = 0;
+	virtual ZLOutputStream *createOutputStream(const std::string &path) const FS_SECTION = 0;
+	virtual ZLFSDir *createPlainDirectory(const std::string &path) const FS_SECTION = 0;
+	virtual FileInfo fileInfo(const std::string &path) const FS_SECTION = 0;
+	virtual bool isZipSupported() const FS_SECTION = 0;
 
 friend class ZLFile;
 };
@@ -110,7 +111,7 @@ inline void ZLFSManager::deleteInstance() { delete ourInstance; }
 inline ZLFSManager &ZLFSManager::instance() { return *ourInstance; }
 inline ZLFSManager::ZLFSManager() {}
 inline ZLFSManager::~ZLFSManager() {}
-inline void ZLFSManager::normalize(std::string&) {}
+inline void ZLFSManager::normalize(std::string&) const {}
 
 inline ZLFile::~ZLFile() {}
 

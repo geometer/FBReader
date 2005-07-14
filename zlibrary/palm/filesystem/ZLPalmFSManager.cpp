@@ -26,7 +26,6 @@
 #include "ZLPalmFSManager.h"
 #include "ZLPalmFSDir.h"
 #include "ZLPalmFileInputStream.h"
-#include "../../abstract/filesystem/ZLZipInputStream.h"
 #include "ZLPalmFileOutputStream.h"
 
 void ZLPalmFSManager::createInstance() {
@@ -39,23 +38,23 @@ ZLPalmFSManager::ZLPalmFSManager() : ZLFSManager() {
 ZLPalmFSManager::~ZLPalmFSManager() {
 }
 
-ZLFSDir *ZLPalmFSManager::createPlainDirectory(const std::string &path) {
+ZLFSDir *ZLPalmFSManager::createPlainDirectory(const std::string &path) const {
 	return new ZLPalmFSDir(path);
 }
 
-ZLInputStream *ZLPalmFSManager::createPlainInputStream(const std::string &path) {
-	if (path.find(':') != (size_t)-1) {
-		return (ZLibRef != sysInvalidRefNum) ? new ZLZipInputStream(path) : 0;
-	}
+bool ZLPalmFSManager::isZipSupported() const {
+	return ZLibRef != sysInvalidRefNum;
+}
 
+ZLInputStream *ZLPalmFSManager::createPlainInputStream(const std::string &path) const {
 	return new ZLPalmFileInputStream(path);
 }
 
-ZLOutputStream *ZLPalmFSManager::createOutputStream(const std::string &path) {
+ZLOutputStream *ZLPalmFSManager::createOutputStream(const std::string &path) const {
 	return new ZLPalmFileOutputStream(path);
 }
 
-ZLFSManager::FileInfo ZLPalmFSManager::fileInfo(const std::string &path) {
+ZLFSManager::FileInfo ZLPalmFSManager::fileInfo(const std::string &path) const {
 	FileInfo info;
 
 	UInt16  unVol;

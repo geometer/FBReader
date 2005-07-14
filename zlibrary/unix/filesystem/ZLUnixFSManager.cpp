@@ -23,10 +23,9 @@
 #include "ZLUnixFSManager.h"
 #include "ZLUnixFSDir.h"
 #include "ZLUnixFileInputStream.h"
-#include "../../abstract/filesystem/ZLZipInputStream.h"
 #include "ZLUnixFileOutputStream.h"
 
-void ZLUnixFSManager::normalize(std::string &path) {
+void ZLUnixFSManager::normalize(std::string &path) const {
 	static std::string HomeDir = getenv("HOME");
 	static std::string PwdDir = getenv("PWD");
 
@@ -48,23 +47,23 @@ void ZLUnixFSManager::normalize(std::string &path) {
 	}
 }
 
-ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) {
+ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
 	return new ZLUnixFSDir(path);
 }
 
-ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) {
-	if (path.find(':') != (size_t)-1) {
-		return new ZLZipInputStream(path);
-	}
+bool ZLUnixFSManager::isZipSupported() const {
+	return true;
+}
 
+ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) const {
 	return new ZLUnixFileInputStream(path);
 }
 
-ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &path) {
+ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &path) const {
 	return new ZLUnixFileOutputStream(path);
 }
 
-ZLFSManager::FileInfo ZLUnixFSManager::fileInfo(const std::string &path) {
+ZLFSManager::FileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
 	FileInfo info;
 	struct stat fileStat;
 	info.Exists = stat(path.c_str(), &fileStat) == 0;

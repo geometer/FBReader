@@ -31,10 +31,11 @@ private:
 	ZLPalmFSManager() FS_SECTION;
 
 protected:
-	ZLInputStream *createPlainInputStream(const std::string &path) FS_SECTION;
-	ZLOutputStream *createOutputStream(const std::string &path) FS_SECTION;
-	ZLFSDir *createPlainDirectory(const std::string &path) FS_SECTION;
-	FileInfo fileInfo(const std::string &path) FS_SECTION;
+	ZLInputStream *createPlainInputStream(const std::string &path) const FS_SECTION;
+	ZLOutputStream *createOutputStream(const std::string &path) const FS_SECTION;
+	ZLFSDir *createPlainDirectory(const std::string &path) const FS_SECTION;
+	FileInfo fileInfo(const std::string &path) const FS_SECTION;
+	bool isZipSupported() const FS_SECTION;
 };
 
 #endif /* __ZLPALMFSMANAGER_H__ */
