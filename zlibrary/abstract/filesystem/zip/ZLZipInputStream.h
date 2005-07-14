@@ -16,21 +16,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLGZIPINPUTSTREAM_H__
-#define __ZLGZIPINPUTSTREAM_H__
+#ifndef __ZLZIPINPUTSTREAM_H__
+#define __ZLZIPINPUTSTREAM_H__
 
 #define NOZLIBDEFS
 #include <zlib.h>
 
 #include <abstract/shared_ptr.h>
 
-#include "ZLInputStream.h"
+#include "../ZLInputStream.h"
 
-class ZLGzipInputStream : public ZLInputStream {
+class ZLZipInputStream : public ZLInputStream {
+
+private:
+	ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) FS_SECTION;
 
 public:
-	ZLGzipInputStream(shared_ptr<ZLInputStream> stream) FS_SECTION;
-	~ZLGzipInputStream() FS_SECTION;
+	~ZLZipInputStream() FS_SECTION;
 	bool open() FS_SECTION;
 	size_t read(char *buffer, size_t maxSize) FS_SECTION;
 	void close() FS_SECTION;
@@ -40,16 +42,19 @@ public:
 	size_t sizeOfOpened() FS_SECTION;
 
 private:
-	shared_ptr<ZLInputStream> myFileStream;
-	size_t myFileSize;
+	shared_ptr<ZLInputStream> myBaseStream;
+	std::string myCompressedFileName;
+	bool myIsDeflated;
 
 	z_stream *myZStream; 
+	std::string myBuffer; 
+	size_t myUncompressedSize;
+	size_t myAvailableSize;
+	size_t myOffset;
 	char *myInBuffer;
 	char *myOutBuffer;
 
-	std::string myBuffer; 
-	size_t myAvailableSize;
-	size_t myOffset;
+friend class ZLFile;
 };
 
-#endif /* __ZLGZIPINPUTSTREAM_H__ */
+#endif /* __ZLZIPINPUTSTREAM_H__ */

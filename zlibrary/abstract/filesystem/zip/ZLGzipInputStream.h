@@ -16,29 +16,40 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLZIPDIR_H__
-#define __ZLZIPDIR_H__
+#ifndef __ZLGZIPINPUTSTREAM_H__
+#define __ZLGZIPINPUTSTREAM_H__
 
-#include "ZLDir.h"
+#define NOZLIBDEFS
+#include <zlib.h>
 
-class ZLZipDir : public ZLDir {
+#include <abstract/shared_ptr.h>
 
-private:
-	ZLZipDir(const std::string &name) FS_SECTION;
+#include "../ZLInputStream.h"
+
+class ZLGzipInputStream : public ZLInputStream {
 
 public:
-	~ZLZipDir() FS_SECTION;
-	void collectSubDirs(std::vector<std::string>&, bool) FS_SECTION;
-	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
+	ZLGzipInputStream(shared_ptr<ZLInputStream> stream) FS_SECTION;
+	~ZLGzipInputStream() FS_SECTION;
+	bool open() FS_SECTION;
+	size_t read(char *buffer, size_t maxSize) FS_SECTION;
+	void close() FS_SECTION;
 
-protected:
-	std::string delimiter() const FS_SECTION;
+	void seek(size_t offset) FS_SECTION;
+	size_t offset() const FS_SECTION;
+	size_t sizeOfOpened() FS_SECTION;
 
-friend class ZLFile;
+private:
+	shared_ptr<ZLInputStream> myFileStream;
+	size_t myFileSize;
+
+	z_stream *myZStream; 
+	char *myInBuffer;
+	char *myOutBuffer;
+
+	std::string myBuffer; 
+	size_t myAvailableSize;
+	size_t myOffset;
 };
 
-inline ZLZipDir::ZLZipDir(const std::string &name) : ZLDir(name) {}
-inline ZLZipDir::~ZLZipDir() {}
-inline void ZLZipDir::collectSubDirs(std::vector<std::string>&, bool) {}
-
-#endif /* __ZLZIPDIR_H__ */
+#endif /* __ZLGZIPINPUTSTREAM_H__ */

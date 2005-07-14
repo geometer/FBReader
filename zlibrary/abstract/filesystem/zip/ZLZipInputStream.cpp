@@ -19,7 +19,7 @@
 #include <algorithm>
 
 #include "ZLZipInputStream.h"
-#include "ZLFSManager.h"
+#include "../ZLFSManager.h"
 #include "ZipHeader.h"
 
 const size_t IN_BUFFER_SIZE = 2048;

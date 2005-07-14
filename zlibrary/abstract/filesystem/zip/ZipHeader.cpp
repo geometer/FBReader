@@ -17,7 +17,7 @@
  */
 
 #include "ZipHeader.h"
-#include "ZLInputStream.h"
+#include "../ZLInputStream.h"
 
 bool ZipHeader::readFrom(ZLInputStream &stream) {
 	size_t startOffset = stream.offset();

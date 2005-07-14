@@ -5,42 +5,42 @@ include $(MAKEFILESDIR)/config.mk
 
 TARGET = libzlibrary.a
 
-SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/xml/own abstract/screenSize abstract/view desktop/options desktop/dialogs unix/filesystem palm/pseudostl palm/options palm/filesystem palm/dialogs palm/screenSize unix/time palm/time palm/view
+SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/xml/own abstract/screenSize abstract/view desktop/options desktop/dialogs unix/filesystem palm/pseudostl palm/options palm/filesystem palm/dialogs palm/screenSize unix/time palm/time palm/view
 QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/screenSize qtopia/view qt/dialogs qt/screenSize qt/view
 GTKSUBDIRS_ALL = gtk/dialogs gtk/screenSize gtk/view-desktop gtk/view-pdaxrom gtk/view-maemo
 
 ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/screenSize abstract/view unix/filesystem unix/time desktop/options
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/screenSize abstract/view unix/filesystem unix/time desktop/options
 	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/screenSize qtopia/view qtopia/options
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
 	QTSUBDIRS = qt/dialogs qt/screenSize qt/view
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
 	GTKSUBDIRS = gtk/dialogs gtk/screenSize gtk/view-pdaxrom
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-qt"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
 	QTSUBDIRS = qt/dialogs qt/screenSize qt/view
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
 	GTKSUBDIRS = gtk/dialogs gtk/screenSize gtk/view-desktop
 endif
 
 ifeq "$(TARGET_ARCH)" "maemo"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat desktop/options desktop/dialogs abstract/screenSize abstract/view unix/filesystem unix/time
 	GTKSUBDIRS = gtk/dialogs gtk/screenSize gtk/view-maemo
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/xml abstract/xml/own abstract/filesystem abstract/dialogs abstract/screenSize abstract/view palm/options palm/filesystem palm/dialogs palm/screenSize abstract/time palm/time palm/view
+	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/xml abstract/xml/own abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/dialogs abstract/screenSize abstract/view palm/options palm/filesystem palm/dialogs palm/screenSize abstract/time palm/time palm/view
 endif
 
 .objects:
