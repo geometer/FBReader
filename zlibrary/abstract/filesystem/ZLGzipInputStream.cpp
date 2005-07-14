@@ -23,7 +23,8 @@
 const size_t IN_BUFFER_SIZE = 2048;
 const size_t OUT_BUFFER_SIZE = 32768;
 
-ZLGzipInputStream::ZLGzipInputStream(ZLInputStream *stream, size_t size) : myFileStream(stream), myFileSize(size) {
+ZLGzipInputStream::ZLGzipInputStream(shared_ptr<ZLInputStream> stream) : myFileStream(stream) {
+	myFileSize = 0;
 	myZStream = 0;
 	myInBuffer = 0;
 	myOutBuffer = 0;
@@ -31,7 +32,6 @@ ZLGzipInputStream::ZLGzipInputStream(ZLInputStream *stream, size_t size) : myFil
 
 ZLGzipInputStream::~ZLGzipInputStream() {
 	close();
-	delete myFileStream;
 }
 
 bool ZLGzipInputStream::open() {
@@ -40,6 +40,8 @@ bool ZLGzipInputStream::open() {
 	if (!myFileStream->open()) {
 		return false;
 	}
+
+	myFileSize = myFileStream->sizeOfOpened();
 
 	unsigned char id1;
 	unsigned char id2;
@@ -121,7 +123,7 @@ size_t ZLGzipInputStream::read(char *buffer, size_t maxSize) {
 
 	size_t realSize = std::min(maxSize, myBuffer.length());
 	if (buffer != 0) {
-		strncpy(buffer, myBuffer.data(), realSize);
+		memcpy(buffer, myBuffer.data(), realSize);
 	}
 	myBuffer.erase(0, realSize);
 	myOffset += realSize;
@@ -152,4 +154,9 @@ void ZLGzipInputStream::seek(size_t offset) {
 
 size_t ZLGzipInputStream::offset() const {
 	return myOffset;
+}
+
+size_t ZLGzipInputStream::sizeOfOpened() {
+	// TODO: implement
+	return 0;
 }

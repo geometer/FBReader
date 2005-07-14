@@ -39,6 +39,7 @@ public:
 
 	void seek(size_t offset) FS_SECTION;
 	size_t offset() const FS_SECTION;
+	size_t sizeOfOpened() FS_SECTION;
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
@@ -47,6 +48,7 @@ private:
 
 	z_stream *myZStream; 
 	std::string myBuffer; 
+	size_t myUncompressedSize;
 	size_t myAvailableSize;
 	size_t myOffset;
 	char *myInBuffer;

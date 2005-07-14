@@ -34,15 +34,12 @@ std::string ZLDir::parentName() const {
 	if (myName == "/") {
 		return myName;
 	}
-	int index = myName.rfind('/');
-	if (index <= 0) {
-		return "/";
-	}
-	return myName.substr(0, index);
+	int index = std::max((int)myName.rfind('/'), (int)myName.rfind(':'));
+	return (index == -1) ? "/" : myName.substr(0, index);
 }
 
 std::string ZLDir::shortName() const {
-	return myName.substr(myName.rfind('/') + 1);
+	return myName.substr(std::max((int)myName.rfind('/'), (int)myName.rfind(':')) + 1);
 }
 
 std::string ZLDir::itemName(const std::string &shortName) const {

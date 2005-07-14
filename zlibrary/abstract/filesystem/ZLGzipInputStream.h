@@ -22,12 +22,14 @@
 #define NOZLIBDEFS
 #include <zlib.h>
 
+#include <abstract/shared_ptr.h>
+
 #include "ZLInputStream.h"
 
 class ZLGzipInputStream : public ZLInputStream {
 
 public:
-	ZLGzipInputStream(ZLInputStream *stream, size_t size) FS_SECTION;
+	ZLGzipInputStream(shared_ptr<ZLInputStream> stream) FS_SECTION;
 	~ZLGzipInputStream() FS_SECTION;
 	bool open() FS_SECTION;
 	size_t read(char *buffer, size_t maxSize) FS_SECTION;
@@ -35,9 +37,10 @@ public:
 
 	void seek(size_t offset) FS_SECTION;
 	size_t offset() const FS_SECTION;
+	size_t sizeOfOpened() FS_SECTION;
 
 private:
-	ZLInputStream *myFileStream;
+	shared_ptr<ZLInputStream> myFileStream;
 	size_t myFileSize;
 
 	z_stream *myZStream; 

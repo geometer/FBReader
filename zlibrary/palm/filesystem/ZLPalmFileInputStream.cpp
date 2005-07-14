@@ -45,9 +45,15 @@ bool ZLPalmFileInputStream::open() {
 }
 
 size_t ZLPalmFileInputStream::read(char *buffer, size_t maxSize) {
-	UInt32 size;
-	VFSFileRead(myFileRef, maxSize, buffer, &size);
-	return size;
+	if (buffer != 0) {
+		UInt32 size;
+		VFSFileRead(myFileRef, maxSize, buffer, &size);
+		return size;
+	} else {
+		VFSFileSeek(myFileRef, vfsOriginCurrent, maxSize);
+		// TODO: return correct value
+		return maxSize;
+	}
 }
 
 void ZLPalmFileInputStream::close() {

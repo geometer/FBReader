@@ -34,6 +34,7 @@ public:
 
 	virtual void seek(size_t offset) FS_SECTION = 0;
 	virtual size_t offset() const FS_SECTION = 0;
+	virtual size_t sizeOfOpened() FS_SECTION = 0;
 
 private:
 	// disable copying

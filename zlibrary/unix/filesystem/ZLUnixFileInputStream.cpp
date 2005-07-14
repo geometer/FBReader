@@ -33,7 +33,12 @@ bool ZLUnixFileInputStream::open() {
 }
 
 size_t ZLUnixFileInputStream::read(char *buffer, size_t maxSize) {
-	return fread(buffer, 1, maxSize, myFile);
+	if (buffer != 0) {
+		return fread(buffer, 1, maxSize, myFile);
+	} else {
+		int pos = ftell(myFile);
+		return fseek(myFile, maxSize, SEEK_CUR) - pos;
+	}
 }
 
 void ZLUnixFileInputStream::close() {
@@ -41,4 +46,15 @@ void ZLUnixFileInputStream::close() {
 		fclose(myFile);
 		myFile = 0;
 	}
+}
+
+size_t ZLUnixFileInputStream::sizeOfOpened() {
+	if (myFile == 0) {
+		return 0;
+	}
+	long pos = ftell(myFile);
+	fseek(myFile, 0, SEEK_END);
+	long size = ftell(myFile);
+	fseek(myFile, pos, SEEK_SET);
+	return size;
 }

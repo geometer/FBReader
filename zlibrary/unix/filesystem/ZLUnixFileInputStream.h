@@ -34,6 +34,7 @@ public:
 
 	void seek(size_t offset) { fseek(myFile, offset, SEEK_CUR); }
 	size_t offset() const { return ftell(myFile); }
+	size_t sizeOfOpened();
 
 private:
 	std::string myName;

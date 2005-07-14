@@ -29,6 +29,7 @@ ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::s
 	myZStream = 0;
 	myInBuffer = 0;
 	myOutBuffer = 0;
+	myUncompressedSize = 0;
 }
 
 ZLZipInputStream::~ZLZipInputStream() {
@@ -74,6 +75,7 @@ bool ZLZipInputStream::open() {
 		close();
 		return false;
 	}
+	myUncompressedSize = header.UncompressedSize;
 	myAvailableSize = header.CompressedSize;
 
 	if (myIsDeflated) {
@@ -84,6 +86,7 @@ bool ZLZipInputStream::open() {
 
 	myInBuffer = new char[IN_BUFFER_SIZE];
 	myOutBuffer = new char[OUT_BUFFER_SIZE];
+	myOffset = 0;
 	return true;
 }
 
@@ -112,7 +115,7 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 
 		size_t realSize = std::min(maxSize, myBuffer.length());
 		if (buffer != 0) {
-			strncpy(buffer, myBuffer.data(), realSize);
+			memcpy(buffer, myBuffer.data(), realSize);
 		}
 		myBuffer.erase(0, realSize);
 		myOffset += realSize;
@@ -149,4 +152,8 @@ void ZLZipInputStream::seek(size_t offset) {
 
 size_t ZLZipInputStream::offset() const {
 	return myOffset;
+}
+
+size_t ZLZipInputStream::sizeOfOpened() {
+	return myUncompressedSize;
 }

@@ -122,7 +122,7 @@ const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 ZLTreeStatePtr ZLDirTreeState::change(const ZLTreeNodePtr node) {
 	mySubnodes.clear();
 	myIsUpToDate = false;
-	if (!node->isFile() || ZLStringUtil::stringEndsWith(node->name(), ".zip")) {
+	if (!node->isFile() || (ZLFile(node->name()).extension() == "zip")) {
 		return new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).directory());
 	} else {
 		return new ZLFileTreeState(handler(), myDir->itemName(node->name()));

@@ -57,8 +57,12 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 		return 0;
 	}
 
+	ZLInputStream *stream = 0;
+	
 	size_t index = myPath.rfind(':');
-	if (index != (size_t)-1) {
+	if (index == (size_t)-1) {
+		stream = ZLFSManager::instance().createPlainInputStream(myPath);
+	} else {
 		if (!ZLFSManager::instance().isZipSupported()) {
 			return 0;
 		}
@@ -66,12 +70,11 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 		if (base.isNull()) {
 			return 0;
 		}
-		return new ZLZipInputStream(base, myPath.substr(index + 1));
+		stream = new ZLZipInputStream(base, myPath.substr(index + 1));
 	}
 
-	ZLInputStream *stream = ZLFSManager::instance().createPlainInputStream(myPath);
 	if ((myArchiveType & GZIP) && (stream != 0)) {
-		stream = new ZLGzipInputStream(stream, size());
+		return ZLFSManager::instance().isZipSupported() ? new ZLGzipInputStream(stream) : 0;
 	}
 	return stream;
 }
