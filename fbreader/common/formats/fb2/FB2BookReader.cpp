@@ -17,6 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLInputStream.h>
+
 #include "FB2BookReader.h"
 #include "../../bookmodel/BookModel.h"
 #include "../../model/Paragraph.h"
