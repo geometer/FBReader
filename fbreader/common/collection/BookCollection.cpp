@@ -22,7 +22,7 @@
 
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
-#include <abstract/ZLFSDir.h>
+#include <abstract/ZLDir.h>
 
 #include "BookCollection.h"
 #include "BookList.h"
@@ -48,7 +48,10 @@ BookCollection::BookCollection() {
 
 	for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); it++) {
 		std::vector<std::string> files;
-		ZLFSDir *dir = ZLFSManager::instance().createDirectory(*it);
+		ZLDir *dir = ZLFile(*it).createZLDirectory();
+		if (dir == 0) {
+			continue;
+		}
 		dir->collectFiles(files, false);
 		if (!files.empty()) {
 			const std::string dirName = dir->name() + '/';
@@ -116,13 +119,15 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 		nameQueue.pop();
 		if (nameSet.find(name) == nameSet.end()) {
 			if (myScanSubdirs) {
-				std::vector<std::string> subdirs;
-				ZLFSDir *dir = ZLFSManager::instance().createDirectory(name);
-				dir->collectSubDirs(subdirs, false);
-				for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
-					nameQueue.push(dir->name() + '/' + *it);
+				ZLDir *dir = ZLFile(name).createZLDirectory();
+				if (dir != 0) {
+					std::vector<std::string> subdirs;
+					dir->collectSubDirs(subdirs, false);
+					for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
+						nameQueue.push(dir->name() + '/' + *it);
+					}
+					delete dir;
 				}
-				delete dir;
 			}
 			nameSet.insert(name);
 		}

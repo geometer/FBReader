@@ -29,15 +29,12 @@ public:
 	
 private:
 	ZLPalmFSManager() FS_SECTION;
-	
-public:
-	void normalize(std::string &fileName) FS_SECTION;
-	ZLFSDir *createDirectory(const std::string &name) FS_SECTION;
 
 protected:
 	ZLInputStream *createPlainInputStream(const std::string &path) FS_SECTION;
 	ZLOutputStream *createOutputStream(const std::string &path) FS_SECTION;
-	FileInfo fileInfo(const std::string &name) FS_SECTION;
+	ZLFSDir *createPlainDirectory(const std::string &path) FS_SECTION;
+	FileInfo fileInfo(const std::string &path) FS_SECTION;
 };
 
 #endif /* __ZLPALMFSMANAGER_H__ */

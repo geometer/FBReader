@@ -46,10 +46,11 @@ XMLConfig::XMLConfig(const std::string &name) : myName(name) {
 }
 
 XMLConfig::~XMLConfig() {
-	ZLFSDir *configDir = ZLFSManager::instance().createDirectory("~/." + myName);
+	ZLFSDir *configDir = (ZLFSDir*)ZLFile("~/." + myName).createZLDirectory();
 	configDir->createPhysicalDirectory();
-	ZLOutputStream *stream = ZLFile("~/." + myName + "/config.xml").createOutputStream();
 	delete configDir;
+
+	ZLOutputStream *stream = ZLFile("~/." + myName + "/config.xml").createOutputStream();
 	if (stream != 0) {
 		if (stream->open()) {
 			XMLConfigWriter(*this, *stream).write();

@@ -21,6 +21,7 @@
 
 #include <string>
 
+class ZLDir;
 class ZLFSDir;
 class ZLInputStream;
 class ZLOutputStream;
@@ -47,13 +48,13 @@ protected:
 	virtual ~ZLFSManager() FS_SECTION;
 	
 public:
-	virtual void normalize(std::string &fileName) FS_SECTION = 0;
-	virtual ZLFSDir *createDirectory(const std::string &name) FS_SECTION = 0;
+	virtual void normalize(std::string &path) FS_SECTION;
 
 protected:
 	virtual ZLInputStream *createPlainInputStream(const std::string &path) FS_SECTION = 0;
 	virtual ZLOutputStream *createOutputStream(const std::string &path) FS_SECTION = 0;
-	virtual FileInfo fileInfo(const std::string &name) FS_SECTION = 0;
+	virtual ZLFSDir *createPlainDirectory(const std::string &path) FS_SECTION = 0;
+	virtual FileInfo fileInfo(const std::string &path) FS_SECTION = 0;
 
 friend class ZLFile;
 };
@@ -90,6 +91,7 @@ public:
 
 	ZLInputStream *createInputStream() const FS_SECTION;
 	ZLOutputStream *createOutputStream() const FS_SECTION;
+	ZLDir *createZLDirectory() const FS_SECTION;
 
 private:
 	void fillInfo() const FS_SECTION;
@@ -108,6 +110,7 @@ inline void ZLFSManager::deleteInstance() { delete ourInstance; }
 inline ZLFSManager &ZLFSManager::instance() { return *ourInstance; }
 inline ZLFSManager::ZLFSManager() {}
 inline ZLFSManager::~ZLFSManager() {}
+inline void ZLFSManager::normalize(std::string&) {}
 
 inline ZLFile::~ZLFile() {}
 

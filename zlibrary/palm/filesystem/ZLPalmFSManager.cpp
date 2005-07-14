@@ -39,11 +39,8 @@ ZLPalmFSManager::ZLPalmFSManager() : ZLFSManager() {
 ZLPalmFSManager::~ZLPalmFSManager() {
 }
 
-void ZLPalmFSManager::normalize(std::string&) {
-}
-
-ZLFSDir *ZLPalmFSManager::createDirectory(const std::string &name) {
-	return new ZLPalmFSDir(name);
+ZLFSDir *ZLPalmFSManager::createPlainDirectory(const std::string &path) {
+	return new ZLPalmFSDir(path);
 }
 
 ZLInputStream *ZLPalmFSManager::createPlainInputStream(const std::string &path) {

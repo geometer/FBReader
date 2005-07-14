@@ -34,7 +34,7 @@ ZLOpenFileDialog::ZLOpenFileDialog(const ZLTreeHandler &handler) {
 	if (ZLStringUtil::stringEndsWith(dirName, ".zip")) {
 		dir = new ZLZipDir(dirName);
 	} else {
-		dir = ZLFSManager::instance().createDirectory(dirName);
+		dir = ZLFile(dirName).createZLDirectory();
 	}
 	myCurrentDir = new ZLDirTreeState(handler, dir);
 }
@@ -132,7 +132,7 @@ ZLTreeStatePtr ZLDirTreeState::change(const ZLTreeNodePtr node) {
 	mySubnodes.clear();
 	myIsUpToDate = false;
 	if (!node->isFile()) {
-		return new ZLDirTreeState(handler(), ZLFSManager::instance().createDirectory(myDir->itemName(node->name())));
+		return new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).createZLDirectory());
 	} else if (ZLStringUtil::stringEndsWith(node->name(), ".zip")) {
 		return new ZLDirTreeState(handler(), new ZLZipDir(myDir->itemName(node->name())));
 	} else {

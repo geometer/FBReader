@@ -26,30 +26,30 @@
 #include "../../abstract/filesystem/ZLZipInputStream.h"
 #include "ZLUnixFileOutputStream.h"
 
-void ZLUnixFSManager::normalize(std::string &fileName) {
+void ZLUnixFSManager::normalize(std::string &path) {
 	static std::string HomeDir = getenv("HOME");
 	static std::string PwdDir = getenv("PWD");
 
-	if (fileName.empty()) {
-		fileName = PwdDir;
-	} else if (fileName[0] == '~') {
-		if ((fileName.length() == 1) || (fileName[1] == '/')) {
-			fileName = HomeDir + fileName.substr(1);
+	if (path.empty()) {
+		path = PwdDir;
+	} else if (path[0] == '~') {
+		if ((path.length() == 1) || (path[1] == '/')) {
+			path = HomeDir + path.substr(1);
 		}
-	} else if (fileName[0] != '/') {
-		fileName = PwdDir + '/' + fileName;
+	} else if (path[0] != '/') {
+		path = PwdDir + '/' + path;
 	}
-	int last = fileName.length() - 1;
-	while ((last > 0) && (fileName[last] == '/')) {
+	int last = path.length() - 1;
+	while ((last > 0) && (path[last] == '/')) {
 		last--;
 	}
-	if (last < (int)fileName.length() - 1) {
-		fileName = fileName.substr(0, last + 1);
+	if (last < (int)path.length() - 1) {
+		path = path.substr(0, last + 1);
 	}
 }
 
-ZLFSDir *ZLUnixFSManager::createDirectory(const std::string &name) {
-	return new ZLUnixFSDir(name);
+ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) {
+	return new ZLUnixFSDir(path);
 }
 
 ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) {

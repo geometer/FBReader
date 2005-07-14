@@ -24,7 +24,6 @@
 
 #include <abstract/ZLXMLReader.h>
 #include <abstract/ZLFSManager.h>
-#include <abstract/ZLFSDir.h>
 #include <abstract/ZLStringUtil.h>
 
 #include "../docbook/DocBookReader.h"

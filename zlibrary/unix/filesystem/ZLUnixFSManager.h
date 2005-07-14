@@ -30,13 +30,13 @@ private:
 	ZLUnixFSManager() {}
 	
 public:
-	void normalize(std::string &fileName);
-	ZLFSDir *createDirectory(const std::string &name);
+	void normalize(std::string &path);
 
 protected:
 	ZLInputStream *createPlainInputStream(const std::string &path);
 	ZLOutputStream *createOutputStream(const std::string &path);
-	FileInfo fileInfo(const std::string &name);
+	ZLFSDir *createPlainDirectory(const std::string &path);
+	FileInfo fileInfo(const std::string &path);
 };
 
 #endif /* __ZLUNIXFSMANAGER_H__ */

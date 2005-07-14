@@ -35,11 +35,13 @@ std::vector<std::string> ZLXMLReader::ourKnownEncodings;
 void ZLXMLReader::setEncodingDescriptionPath(const std::string &path) {
 	ourEncodingDescriptionPath = path;
 	ourKnownEncodings.clear();
-	ZLFSDir *dir = ZLFSManager::instance().createDirectory(ourEncodingDescriptionPath);
-	dir->collectFiles(ourKnownEncodings, true);
+	ZLDir *dir = ZLFile(ourEncodingDescriptionPath).createZLDirectory();
+	if (dir != 0) {
+		dir->collectFiles(ourKnownEncodings, true);
+		delete dir;
+	}
 	ourKnownEncodings.push_back("US-ASCII");
 	ourKnownEncodings.push_back("UTF-8");
-	delete dir;
 }
 
 int ZLXMLReader::tag(const char *name) {

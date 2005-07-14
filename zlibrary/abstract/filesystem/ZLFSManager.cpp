@@ -20,6 +20,7 @@
 
 #include <abstract/ZLStringUtil.h>
 
+#include "ZLFSDir.h"
 #include "ZLFSManager.h"
 #include "ZLGzipInputStream.h"
 
@@ -67,6 +68,10 @@ ZLOutputStream *ZLFile::createOutputStream() const {
 		return 0;
 	}
 	return ZLFSManager::instance().createOutputStream(myPath);
+}
+
+ZLDir *ZLFile::createZLDirectory() const {
+	return ZLFSManager::instance().createPlainDirectory(myPath);
 }
 
 void ZLFile::fillInfo() const {
