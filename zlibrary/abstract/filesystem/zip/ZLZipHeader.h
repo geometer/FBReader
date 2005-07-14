@@ -16,8 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZIPHEADER_H__
-#define __ZIPHEADER_H__
+#ifndef __ZLZIPHEADER_H__
+#define __ZLZIPHEADER_H__
 
 class ZLInputStream;
 
@@ -41,4 +41,4 @@ private:
 	unsigned long readLong(ZLInputStream &stream) FS_SECTION;
 };
 
-#endif /* __ZIPHEADER_H__ */
+#endif /* __ZLZIPHEADER_H__ */

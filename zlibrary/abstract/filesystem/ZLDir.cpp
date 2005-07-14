@@ -16,8 +16,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <algorithm>
-
 #include "ZLFSManager.h"
 #include "ZLDir.h"
 
@@ -36,12 +34,19 @@ std::string ZLDir::parentName() const {
 	if (myName == "/") {
 		return myName;
 	}
-	int index = std::max((int)myName.rfind('/'), (int)myName.rfind(':'));
+	int index = myName.rfind(':');
+	if (index == -1) {
+		index = myName.rfind('/');
+	}
 	return (index == -1) ? "/" : myName.substr(0, index);
 }
 
 std::string ZLDir::shortName() const {
-	return myName.substr(std::max((int)myName.rfind('/'), (int)myName.rfind(':')) + 1);
+	int index = myName.rfind(':');
+	if (index == -1) {
+		index = myName.rfind('/');
+	}
+	return myName.substr(index + 1);
 }
 
 std::string ZLDir::itemName(const std::string &shortName) const {

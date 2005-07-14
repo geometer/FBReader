@@ -16,20 +16,22 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <algorithm>
-
 #include <abstract/ZLStringUtil.h>
 
 #include "ZLFSDir.h"
 #include "ZLFSManager.h"
 #include "ZLOutputStream.h"
 #include "zip/ZLZip.h"
+#include "tar/ZLTar.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
 
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
-	int index = std::max((int)myPath.rfind('/'), (int)myPath.rfind(':'));
+	int index = myPath.rfind(':');
+	if (index == -1) {
+		index = myPath.rfind('/');
+	}
 	myFullName = myPath.substr(index + 1);
 	myName = myFullName;
 
@@ -41,6 +43,11 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	}
 	if (ZLStringUtil::stringEndsWith(myName, ".zip")) {
 		myArchiveType |= ZIP;
+	} else if (ZLStringUtil::stringEndsWith(myName, ".tar")) {
+		myArchiveType |= TAR;
+	} else if (ZLStringUtil::stringEndsWith(myName, ".tgz")) {
+		myArchiveType |= TAR | GZIP;
+		myName = myName.substr(0, myName.length() - 2) + "ar";
 	}
 
 	index = myName.rfind('.');
@@ -61,14 +68,16 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 	if (index == (size_t)-1) {
 		stream = ZLFSManager::instance().createPlainInputStream(myPath);
 	} else {
-		if (!ZLFSManager::instance().isZipSupported()) {
-			return 0;
+		ZLFile baseFile(myPath.substr(0, index));
+		if (baseFile.myArchiveType & ZIP) {
+			if (ZLFSManager::instance().isZipSupported()) {
+				shared_ptr<ZLInputStream> base = baseFile.inputStream();
+				stream = base.isNull() ? 0 : new ZLZipInputStream(base, myPath.substr(index + 1));
+			}
+		} else if (baseFile.myArchiveType & TAR) {
+			shared_ptr<ZLInputStream> base = baseFile.inputStream();
+			stream = base.isNull() ? 0 : new ZLTarInputStream(base, myPath.substr(index + 1));
 		}
-		shared_ptr<ZLInputStream> base = ZLFile(myPath.substr(0, index)).inputStream();
-		if (base.isNull()) {
-			return 0;
-		}
-		stream = new ZLZipInputStream(base, myPath.substr(index + 1));
 	}
 
 	if ((myArchiveType & GZIP) && (stream != 0)) {
@@ -81,7 +90,7 @@ shared_ptr<ZLOutputStream> ZLFile::outputStream() const {
 	if (isCompressed()) {
 		return 0;
 	}
-	if (myPath.find(":") != (size_t)-1) {
+	if (myPath.find(':') != (size_t)-1) {
 		return 0;
 	}
 	return ZLFSManager::instance().createOutputStream(myPath);
@@ -92,6 +101,8 @@ shared_ptr<ZLDir> ZLFile::directory() const {
 		return ZLFSManager::instance().createPlainDirectory(myPath);
 	} else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {
 		return new ZLZipDir(myPath);
+	} else if (myArchiveType & TAR) {
+		return new ZLTarDir(myPath);
 	}
 	return 0;
 }

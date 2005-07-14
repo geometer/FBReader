@@ -109,6 +109,9 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 				if ((code != Z_OK) && (code != Z_STREAM_END)) {
 					break;
 				}
+				if (OUT_BUFFER_SIZE == myZStream->avail_out) {
+					break;
+				}
 				myBuffer.append(myOutBuffer, OUT_BUFFER_SIZE - myZStream->avail_out);
 			}
 		}
