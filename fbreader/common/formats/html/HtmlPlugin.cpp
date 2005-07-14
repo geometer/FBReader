@@ -35,6 +35,10 @@ bool HtmlPlugin::acceptsFile(const std::string &extension) const {
 bool HtmlPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
 	ZLInputStream *stream = file.createInputStream();
+	if (stream == 0) {
+		return false;
+	}
+
 	std::string encoding = description.encoding();
 	if (encoding.empty()) {
 		encoding = EncodingDetector::detect(*stream);
@@ -49,9 +53,7 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 		WritableBookDescription(description).addAuthor("Unknown", "", "Author");
 	}
 
-	HtmlDescriptionReader *reader = new HtmlDescriptionReader(description);
-	reader->readDocument(*stream, encoding);
-	delete reader;
+	HtmlDescriptionReader(description).readDocument(*stream, encoding);
 
 	if (description.title().empty()) {
 		WritableBookDescription(description).title() = file.name();
@@ -83,10 +85,8 @@ bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model)
 		detector.detect(*stream, format);
 	}
 
-	HtmlBookReader *reader = new HtmlBookReader(model, format);
-	reader->readDocument(*stream, description.encoding());
+	HtmlBookReader(model, format).readDocument(*stream, description.encoding());
 	delete stream;
-	delete reader;
 	return true;
 }
 

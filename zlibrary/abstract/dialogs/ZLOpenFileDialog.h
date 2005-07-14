@@ -45,12 +45,12 @@ public:
 class ZLTreeNode {
 
 public:
-	ZLTreeNode(const std::string &name, bool isFile);
-	~ZLTreeNode();
+	ZLTreeNode(const std::string &name, bool isFile) DIALOG_SECTION;
+	~ZLTreeNode() DIALOG_SECTION;
 
-	const std::string &name() const;
-	bool isFile() const;
-	std::string relativeName(const ZLTreeStatePtr state) const;
+	const std::string &name() const DIALOG_SECTION;
+	bool isFile() const DIALOG_SECTION;
+	std::string relativeName(const ZLTreeStatePtr state) const DIALOG_SECTION;
 
 private:
 	std::string myName;
@@ -60,17 +60,17 @@ private:
 class ZLTreeState {
 
 protected:
-	ZLTreeState(const ZLTreeHandler &handler);
+	ZLTreeState(const ZLTreeHandler &handler) DIALOG_SECTION;
 
 public:
-	virtual ~ZLTreeState();
+	virtual ~ZLTreeState() DIALOG_SECTION;
 
-	virtual ZLTreeStatePtr change(const ZLTreeNodePtr node) = 0;
+	virtual ZLTreeStatePtr change(const ZLTreeNodePtr node) DIALOG_SECTION = 0;
 
-	virtual const std::vector<ZLTreeNodePtr> &subnodes() const = 0;
-	virtual const std::string &name() const = 0;
-	virtual const std::string shortName() const = 0;
-	virtual bool isLeaf() const = 0;
+	virtual const std::vector<ZLTreeNodePtr> &subnodes() const DIALOG_SECTION = 0;
+	virtual const std::string &name() const DIALOG_SECTION = 0;
+	virtual const std::string shortName() const DIALOG_SECTION = 0;
+	virtual bool isLeaf() const DIALOG_SECTION = 0;
 
 	const ZLTreeHandler &handler() const DIALOG_SECTION;
 
@@ -81,18 +81,18 @@ private:
 class ZLDirTreeState : public ZLTreeState {
 
 public:
-	ZLDirTreeState(const ZLTreeHandler &handler, shared_ptr<ZLDir> dir);
-	~ZLDirTreeState();
+	ZLDirTreeState(const ZLTreeHandler &handler, shared_ptr<ZLDir> dir) DIALOG_SECTION;
+	~ZLDirTreeState() DIALOG_SECTION;
 
-	ZLTreeStatePtr change(const ZLTreeNodePtr node);
+	ZLTreeStatePtr change(const ZLTreeNodePtr node) DIALOG_SECTION;
 
-	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	const std::string &name() const;
-	const std::string shortName() const;
-	bool isLeaf() const;
+	const std::vector<ZLTreeNodePtr> &subnodes() const DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+	const std::string shortName() const DIALOG_SECTION;
+	bool isLeaf() const DIALOG_SECTION;
 
 private:
-	void fill() const;
+	void fill() const DIALOG_SECTION;
 
 private:
 	shared_ptr<ZLDir> myDir;
@@ -103,18 +103,18 @@ private:
 class ZLFileTreeState : public ZLTreeState {
 
 public:
-	ZLFileTreeState(const ZLTreeHandler &handler, const std::string &name);
-	~ZLFileTreeState();
+	ZLFileTreeState(const ZLTreeHandler &handler, const std::string &name) DIALOG_SECTION;
+	~ZLFileTreeState() DIALOG_SECTION;
 
-	ZLTreeStatePtr change(const ZLTreeNodePtr node);
+	ZLTreeStatePtr change(const ZLTreeNodePtr node) DIALOG_SECTION;
 
-	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	const std::string &name() const;
-	const std::string shortName() const;
-	bool isLeaf() const;
+	const std::vector<ZLTreeNodePtr> &subnodes() const DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+	const std::string shortName() const DIALOG_SECTION;
+	bool isLeaf() const DIALOG_SECTION;
 
 private:
-	void fill() const;
+	void fill() const DIALOG_SECTION;
 
 private:
 	std::string myFileName;

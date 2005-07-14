@@ -40,57 +40,57 @@ public:
 	};
 	
 protected:
-	ZLPaintContext() PAINT_SECTION;
+	ZLPaintContext() ZLVIEW_SECTION;
 
 public:
-	virtual ~ZLPaintContext() PAINT_SECTION;
-	virtual void removeCaches() PAINT_SECTION;
+	virtual ~ZLPaintContext() ZLVIEW_SECTION;
+	virtual void removeCaches() ZLVIEW_SECTION;
 
-	int x() const PAINT_SECTION;
-	int y() const PAINT_SECTION;
+	int x() const ZLVIEW_SECTION;
+	int y() const ZLVIEW_SECTION;
 
-	void moveXTo(int x) PAINT_SECTION;
-	void moveX(int deltaX) PAINT_SECTION;
-	void moveYTo(int y) PAINT_SECTION;
-	void moveY(int deltaY) PAINT_SECTION;
+	void moveXTo(int x) ZLVIEW_SECTION;
+	void moveX(int deltaX) ZLVIEW_SECTION;
+	void moveYTo(int y) ZLVIEW_SECTION;
+	void moveY(int deltaY) ZLVIEW_SECTION;
 
-	void setLeftMargin(int margin) PAINT_SECTION;
-	void setRightMargin(int margin) PAINT_SECTION;
-	void setTopMargin(int margin) PAINT_SECTION;
-	void setBottomMargin(int margin) PAINT_SECTION;
+	void setLeftMargin(int margin) ZLVIEW_SECTION;
+	void setRightMargin(int margin) ZLVIEW_SECTION;
+	void setTopMargin(int margin) ZLVIEW_SECTION;
+	void setBottomMargin(int margin) ZLVIEW_SECTION;
 
-	int leftMargin() const PAINT_SECTION;
-	int rightMargin() const PAINT_SECTION;
-	int topMargin() const PAINT_SECTION;
-	int bottomMargin() const PAINT_SECTION;
+	int leftMargin() const ZLVIEW_SECTION;
+	int rightMargin() const ZLVIEW_SECTION;
+	int topMargin() const ZLVIEW_SECTION;
+	int bottomMargin() const ZLVIEW_SECTION;
 
-	virtual void clear(ZLColor color) PAINT_SECTION = 0;
+	virtual void clear(ZLColor color) ZLVIEW_SECTION = 0;
 
-	virtual void setFont(const std::string &family, int size, bool bold, bool italic) PAINT_SECTION = 0;
-	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE) PAINT_SECTION = 0;
-	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) PAINT_SECTION = 0;
+	virtual void setFont(const std::string &family, int size, bool bold, bool italic) ZLVIEW_SECTION = 0;
+	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE) ZLVIEW_SECTION = 0;
+	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) ZLVIEW_SECTION = 0;
 
-	virtual int width() const PAINT_SECTION = 0;
-	virtual int height() const PAINT_SECTION = 0;
+	virtual int width() const ZLVIEW_SECTION = 0;
+	virtual int height() const ZLVIEW_SECTION = 0;
 	
-	virtual int stringWidth(const char *str, int len) const PAINT_SECTION = 0;
-	virtual int spaceWidth() const PAINT_SECTION = 0;
-	virtual int stringHeight() const PAINT_SECTION = 0;
-	virtual void drawString(int x, int y, const char *str, int len) PAINT_SECTION = 0;
+	virtual int stringWidth(const char *str, int len) const ZLVIEW_SECTION = 0;
+	virtual int spaceWidth() const ZLVIEW_SECTION = 0;
+	virtual int stringHeight() const ZLVIEW_SECTION = 0;
+	virtual void drawString(int x, int y, const char *str, int len) ZLVIEW_SECTION = 0;
 
-	virtual int imageWidth(const ZLImage &image) const PAINT_SECTION = 0;
-	virtual int imageHeight(const ZLImage &image) const PAINT_SECTION = 0;
-	virtual void drawImage(int x, int y, const ZLImage &image) PAINT_SECTION = 0;
+	virtual int imageWidth(const ZLImage &image) const ZLVIEW_SECTION = 0;
+	virtual int imageHeight(const ZLImage &image) const ZLVIEW_SECTION = 0;
+	virtual void drawImage(int x, int y, const ZLImage &image) ZLVIEW_SECTION = 0;
 
-	virtual void drawLine(int x0, int y0, int x1, int y1) PAINT_SECTION = 0;
-	virtual void fillRectangle(int x0, int y0, int x1, int y1) PAINT_SECTION = 0;
-	virtual void drawFilledCircle(int x, int y, int r) PAINT_SECTION = 0;
+	virtual void drawLine(int x0, int y0, int x1, int y1) ZLVIEW_SECTION = 0;
+	virtual void fillRectangle(int x0, int y0, int x1, int y1) ZLVIEW_SECTION = 0;
+	virtual void drawFilledCircle(int x, int y, int r) ZLVIEW_SECTION = 0;
 
-	const std::vector<std::string> &fontFamilies() const PAINT_SECTION;
-	virtual const std::string realFontFamilyName(std::string &fontFamily) const PAINT_SECTION = 0;
+	const std::vector<std::string> &fontFamilies() const ZLVIEW_SECTION;
+	virtual const std::string realFontFamilyName(std::string &fontFamily) const ZLVIEW_SECTION = 0;
 
 protected:
-	virtual void fillFamiliesList(std::vector<std::string> &families) const PAINT_SECTION = 0;
+	virtual void fillFamiliesList(std::vector<std::string> &families) const ZLVIEW_SECTION = 0;
 
 private:
 	int myX, myY;

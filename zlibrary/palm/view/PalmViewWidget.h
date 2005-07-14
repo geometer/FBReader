@@ -24,15 +24,15 @@
 class PalmViewWidget : public ZLViewWidget {
 
 public:
-	PalmViewWidget(UInt16 formId) VIEW_SECTION;
-	~PalmViewWidget() VIEW_SECTION;
+	PalmViewWidget(UInt16 formId) ZLVIEW_SECTION;
+	~PalmViewWidget() ZLVIEW_SECTION;
 
 protected:
-	void repaintView() VIEW_SECTION;
+	void repaintView() ZLVIEW_SECTION;
 
 public:
-	void paintEvent() VIEW_SECTION;
-	void trackStylus(bool track) VIEW_SECTION;
+	void paintEvent() ZLVIEW_SECTION;
+	void trackStylus(bool track) ZLVIEW_SECTION;
 
 private:
 	UInt16 myFormId;

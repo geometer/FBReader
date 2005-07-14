@@ -37,18 +37,18 @@ class ZLPaintContext;
 class ZLViewWidget {
 
 protected:
-	ZLViewWidget() VIEW_SECTION;
-	virtual ~ZLViewWidget() VIEW_SECTION;
+	ZLViewWidget() ZLVIEW_SECTION;
+	virtual ~ZLViewWidget() ZLVIEW_SECTION;
 
 public:
-	void setView(ZLView *view) VIEW_SECTION;
-	ZLView *view() const VIEW_SECTION;
+	void setView(ZLView *view) ZLVIEW_SECTION;
+	ZLView *view() const ZLVIEW_SECTION;
 
-	virtual void trackStylus(bool track) VIEW_SECTION = 0;
-	virtual void repaintView() VIEW_SECTION = 0;
+	virtual void trackStylus(bool track) ZLVIEW_SECTION = 0;
+	virtual void repaintView() ZLVIEW_SECTION = 0;
 
-	void rotate() VIEW_SECTION;
-	bool isRotated() const VIEW_SECTION;
+	void rotate() ZLVIEW_SECTION;
+	bool isRotated() const ZLVIEW_SECTION;
 
 private:
 	ZLView *myView;
@@ -58,22 +58,22 @@ private:
 class ZLView {
 
 public:
-	ZLView(ZLPaintContext &context) VIEW_SECTION;
-	virtual ~ZLView() VIEW_SECTION;
+	ZLView(ZLPaintContext &context) ZLVIEW_SECTION;
+	virtual ~ZLView() ZLVIEW_SECTION;
 
-	virtual const std::string &caption() const VIEW_SECTION = 0;
-	virtual void paint() VIEW_SECTION = 0;
-	ZLPaintContext &context() const VIEW_SECTION;
+	virtual const std::string &caption() const ZLVIEW_SECTION = 0;
+	virtual void paint() ZLVIEW_SECTION = 0;
+	ZLPaintContext &context() const ZLVIEW_SECTION;
 
 	/*
 	 * returns true iff stylus event was processed
 	 */
-	virtual bool onStylusPress(int, int) VIEW_SECTION;
-	virtual bool onStylusRelease(int, int) VIEW_SECTION;
-	virtual bool onStylusMove(int, int) VIEW_SECTION;
-	virtual bool onStylusMovePressed(int, int) VIEW_SECTION;
+	virtual bool onStylusPress(int, int) ZLVIEW_SECTION;
+	virtual bool onStylusRelease(int, int) ZLVIEW_SECTION;
+	virtual bool onStylusMove(int, int) ZLVIEW_SECTION;
+	virtual bool onStylusMovePressed(int, int) ZLVIEW_SECTION;
 
-	void repaintView() VIEW_SECTION;
+	void repaintView() ZLVIEW_SECTION;
 
 private:
 	ZLViewWidget *myWidget;

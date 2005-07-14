@@ -30,6 +30,7 @@ class ZLFSManager {
 protected:
 	struct FileInfo {
 		bool Exists;
+		bool IsDirectory;
 		unsigned long MTime;
 		unsigned long Size;
 	};
@@ -59,6 +60,17 @@ friend class ZLFile;
 
 class ZLFile {
 
+private:
+	enum ArchiveType {
+		NONE = 0,
+		GZIP = 0x0001,
+		BZIP2 = 0x0002,
+		COMPRESSED = 0x00ff,
+		ZIP = 0x0100,
+		TAR = 0x0200,
+		ARCHIVE = 0xff00,
+	};
+	
 public:
 	ZLFile(const std::string &path) FS_SECTION;
 	~ZLFile() FS_SECTION;
@@ -67,11 +79,14 @@ public:
 	unsigned long mTime() const FS_SECTION;
 	size_t size() const FS_SECTION;	
 
+	bool isCompressed() const FS_SECTION;
+	bool isDirectory() const FS_SECTION;
+	bool isArchive() const FS_SECTION;
+
 	const std::string &path() const FS_SECTION;
 	const std::string &fullName() const FS_SECTION;
 	const std::string &name() const FS_SECTION;
 	const std::string &extension() const FS_SECTION;
-	bool isCompressed() const FS_SECTION;
 
 	ZLInputStream *createInputStream() const FS_SECTION;
 	ZLOutputStream *createOutputStream() const FS_SECTION;
@@ -84,7 +99,7 @@ private:
 	std::string myFullName;
 	std::string myName;
 	std::string myExtension;
-	bool myIsCompressed;
+	unsigned long myArchiveType;
 	mutable ZLFSManager::FileInfo myInfo;
 	mutable bool myInfoIsFilled;
 };
@@ -96,21 +111,17 @@ inline ZLFSManager::~ZLFSManager() {}
 
 inline ZLFile::~ZLFile() {}
 
-inline bool ZLFile::exists() const { fillInfo(); return myInfo.Exists; }
-inline unsigned long ZLFile::mTime() const { fillInfo(); return myInfo.MTime; }
-inline size_t ZLFile::size() const { fillInfo(); return myInfo.Size; }
+inline bool ZLFile::exists() const { if (!myInfoIsFilled) fillInfo(); return myInfo.Exists; }
+inline unsigned long ZLFile::mTime() const { if (!myInfoIsFilled) fillInfo(); return myInfo.MTime; }
+inline size_t ZLFile::size() const { if (!myInfoIsFilled) fillInfo(); return myInfo.Size; }
 	
+inline bool ZLFile::isCompressed() const { return myArchiveType & COMPRESSED; }
+inline bool ZLFile::isDirectory() const { if (!myInfoIsFilled) fillInfo(); return myInfo.IsDirectory; }
+inline bool ZLFile::isArchive() const { return myArchiveType & ARCHIVE; }
+
 inline const std::string &ZLFile::path() const { return myPath; }
 inline const std::string &ZLFile::fullName() const { return myFullName; }
 inline const std::string &ZLFile::name() const { return myName; }
 inline const std::string &ZLFile::extension() const { return myExtension; }
-inline bool ZLFile::isCompressed() const { return myIsCompressed; }
-
-inline void ZLFile::fillInfo() const {
-	if (!myInfoIsFilled) {
-		myInfo = ZLFSManager::instance().fileInfo(myPath);
-		myInfoIsFilled = true;
-	}
-}
 
 #endif /* __ZLFSMANAGER_H__ */

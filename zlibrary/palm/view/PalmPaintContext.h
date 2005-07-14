@@ -29,36 +29,36 @@
 class PalmPaintContext : public ZLPaintContext {
 
 public:
-	PalmPaintContext() PAINT_SECTION;
-	~PalmPaintContext() PAINT_SECTION;
-	void removeCaches() PAINT_SECTION;
+	PalmPaintContext() ZLVIEW_SECTION;
+	~PalmPaintContext() ZLVIEW_SECTION;
+	void removeCaches() ZLVIEW_SECTION;
 
-	void setSize(int w, int h) PAINT_SECTION;
+	void setSize(int w, int h) ZLVIEW_SECTION;
 
-	int width() const PAINT_SECTION;
-	int height() const PAINT_SECTION;
+	int width() const ZLVIEW_SECTION;
+	int height() const ZLVIEW_SECTION;
 
-	void clear(ZLColor color) PAINT_SECTION;
+	void clear(ZLColor color) ZLVIEW_SECTION;
 
-	void fillFamiliesList(std::vector<std::string> &families) const PAINT_SECTION;
-	const std::string realFontFamilyName(std::string &fontFamily) const PAINT_SECTION;
+	void fillFamiliesList(std::vector<std::string> &families) const ZLVIEW_SECTION;
+	const std::string realFontFamilyName(std::string &fontFamily) const ZLVIEW_SECTION;
 
-	void setFont(const std::string &family, int size, bool bold, bool italic) PAINT_SECTION;
-	void setColor(ZLColor color, LineStyle style = SOLID_LINE) PAINT_SECTION;
-	void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) PAINT_SECTION;
+	void setFont(const std::string &family, int size, bool bold, bool italic) ZLVIEW_SECTION;
+	void setColor(ZLColor color, LineStyle style = SOLID_LINE) ZLVIEW_SECTION;
+	void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) ZLVIEW_SECTION;
 
-	int stringWidth(const char *str, int len) const PAINT_SECTION;
-	int spaceWidth() const PAINT_SECTION;
-	int stringHeight() const PAINT_SECTION;
-	void drawString(int x, int y, const char *str, int len) PAINT_SECTION;
+	int stringWidth(const char *str, int len) const ZLVIEW_SECTION;
+	int spaceWidth() const ZLVIEW_SECTION;
+	int stringHeight() const ZLVIEW_SECTION;
+	void drawString(int x, int y, const char *str, int len) ZLVIEW_SECTION;
 
-	int imageWidth(const ZLImage &image) const PAINT_SECTION;
-	int imageHeight(const ZLImage &image) const PAINT_SECTION;
-	void drawImage(int x, int y, const ZLImage &image) PAINT_SECTION;
+	int imageWidth(const ZLImage &image) const ZLVIEW_SECTION;
+	int imageHeight(const ZLImage &image) const ZLVIEW_SECTION;
+	void drawImage(int x, int y, const ZLImage &image) ZLVIEW_SECTION;
 
-	void drawLine(int x0, int y0, int x1, int y1) PAINT_SECTION;
-	void fillRectangle(int x0, int y0, int x1, int y1) PAINT_SECTION;
-	void drawFilledCircle(int x, int y, int r) PAINT_SECTION;
+	void drawLine(int x0, int y0, int x1, int y1) ZLVIEW_SECTION;
+	void fillRectangle(int x0, int y0, int x1, int y1) ZLVIEW_SECTION;
+	void drawFilledCircle(int x, int y, int r) ZLVIEW_SECTION;
 
 private:
 	//QImage &qImage(const Image &image) const;

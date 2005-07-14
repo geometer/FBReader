@@ -94,7 +94,7 @@ void PalmPaintContext::setFont(const std::string &family, int size, bool bold, b
 	}
 }
 
-IndexedColorType iColor(ZLColor zlColor) VIEW_SECTION;
+IndexedColorType iColor(ZLColor zlColor) ZLVIEW_SECTION;
 
 IndexedColorType iColor(ZLColor zlColor) {
 	RGBColorType rgbColor = { 0x00, zlColor.Red, zlColor.Green, zlColor.Blue };

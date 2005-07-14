@@ -29,13 +29,18 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
 	int index = std::max((int)myPath.rfind('/'), (int)myPath.rfind(':'));
 	myFullName = myPath.substr(index + 1);
-	if (ZLStringUtil::stringEndsWith(myFullName, ".gz")) {
-		myName = myFullName.substr(0, myFullName.length() - 3);
-		myIsCompressed = true;
-	} else {
-		myName = myFullName;
-		myIsCompressed = false;
+	myName = myFullName;
+
+	myArchiveType = NONE;
+
+	if (ZLStringUtil::stringEndsWith(myName, ".gz")) {
+		myName = myName.substr(0, myName.length() - 3);
+		myArchiveType |= GZIP;
 	}
+	if (ZLStringUtil::stringEndsWith(myName, ".zip")) {
+		myArchiveType |= ZIP;
+	}
+
 	index = myName.rfind('.');
 	if (index > 0) {
 		myExtension = myName.substr(index + 1);
@@ -44,19 +49,33 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 }
 
 ZLInputStream *ZLFile::createInputStream() const {
+	if (isDirectory()) {
+		return 0;
+	}
 	ZLInputStream *stream = ZLFSManager::instance().createPlainInputStream(myPath);
-	if (myIsCompressed && (stream != 0)) {
+	if ((myArchiveType & GZIP) && (stream != 0)) {
 		stream = new ZLGzipInputStream(stream, size());
 	}
 	return stream;
 }
 
 ZLOutputStream *ZLFile::createOutputStream() const {
-	if (myIsCompressed) {
+	if (isCompressed()) {
 		return 0;
 	}
 	if (myPath.find(":") != (size_t)-1) {
 		return 0;
 	}
 	return ZLFSManager::instance().createOutputStream(myPath);
+}
+
+void ZLFile::fillInfo() const {
+	size_t index = myPath.find(':');
+	if (index == (size_t)-1) {
+		myInfo = ZLFSManager::instance().fileInfo(myPath);
+	} else {
+		myInfo = ZLFSManager::instance().fileInfo(myPath.substr(index));
+		myInfo.IsDirectory = false;
+	}
+	myInfoIsFilled = true;
 }

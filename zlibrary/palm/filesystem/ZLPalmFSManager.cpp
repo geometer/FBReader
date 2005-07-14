@@ -75,10 +75,14 @@ ZLFSManager::FileInfo ZLPalmFSManager::fileInfo(const std::string &path) {
 	if (fileRef != 0) {
 		info.Exists = true;
 		VFSFileSize(fileRef, &info.Size);
+		UInt32 attributes;
+		VFSFileGetAttributes(fileRef, &attributes);
+		info.IsDirectory = attributes & vfsFileAttrDirectory;
 		VFSFileGetDate(fileRef, vfsFileDateModified, &info.MTime);
 		VFSFileClose(fileRef);
 	} else {
 		info.Exists = false;
+		info.IsDirectory = false;
 		info.Size = 0;
 		info.MTime = 0;
 	}
