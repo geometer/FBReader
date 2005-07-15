@@ -17,18 +17,23 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "../common/hyphenation/TeXHyphenator.h"
-//#include "../common/formats/docbook/DocBookReader.h"
-#include "../common/formats/html/HtmlEntityExtension.h"
-#include "../common/collection/BookCollection.h"
-#include "QFBReader.h"
-#include "Paths.h"
+#ifndef __PDBREADER_H__
+#define __PDBREADER_H__
 
-std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
-//std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
-std::string HtmlEntityExtension::CollectionFile("share/FBReader/formats/html/html.ent");
-std::string QFBReader::ImageDirectory("icons/640x480");
-std::string FBReader::HelpDirectory("share/FBReader/help");
-std::string EncodingDescriptionPath("share/FBReader/encodings");
+#include <abstract/shared_ptr.h>
 
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/DocBooks");
+#include <abstract/ZLInputStream.h>
+
+class PdbReader {
+
+public:
+	PdbReader() FORMATS_SECTION;
+	~PdbReader() FORMATS_SECTION;
+
+	bool readDocument(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+};
+
+inline PdbReader::PdbReader() {}
+inline PdbReader::~PdbReader() {}
+
+#endif /* __PDBREADER_H__ */

@@ -148,6 +148,8 @@ public:
 
 	const std::vector<ParagraphEntry*> &entries() const MODEL_SECTION;
 
+	size_t textLength() const MODEL_SECTION;
+
 private:
 	Kind myKind;
 	std::vector<ParagraphEntry*> myEntries;

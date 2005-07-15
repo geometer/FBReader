@@ -23,9 +23,10 @@
 #include "FormatPlugin.h"
 
 #include "fb2/FB2Plugin.h"
-#include "docbook/DocBookPlugin.h"
+//#include "docbook/DocBookPlugin.h"
 #include "html/HtmlPlugin.h"
 #include "txt/TxtPlugin.h"
+#include "pdb/PdbPlugin.h"
 
 PluginCollection *PluginCollection::ourInstance = 0;
 
@@ -34,9 +35,10 @@ PluginCollection &PluginCollection::instance() {
 		ourInstance = new PluginCollection();
 		ourInstance->myPlugins.push_back(new FB2Plugin());
 #ifndef PALM_TEMPORARY
-		ourInstance->myPlugins.push_back(new DocBookPlugin());
+		//ourInstance->myPlugins.push_back(new DocBookPlugin());
 		ourInstance->myPlugins.push_back(new HtmlPlugin());
 		ourInstance->myPlugins.push_back(new TxtPlugin());
+		ourInstance->myPlugins.push_back(new PdbPlugin());
 #endif // PALM_TEMPORARY
 	}
 	return *ourInstance;

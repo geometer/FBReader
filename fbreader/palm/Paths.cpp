@@ -18,14 +18,14 @@
  */
 
 #include "../common/hyphenation/TeXHyphenator.h"
-#include "../common/formats/docbook/DocBookReader.h"
+//#include "../common/formats/docbook/DocBookReader.h"
 #include "../common/formats/html/HtmlEntityExtension.h"
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/FBReader.h"
 #include "Paths.h"
 
 std::string TeXHyphenator::PatternZip("/FBReader/hyphenationPatterns.zip");
-std::string DocBookReader::DTDDirectory("/FBReader/formats/docbook");
+//std::string DocBookReader::DTDDirectory("/FBReader/formats/docbook");
 std::string HtmlEntityExtension::CollectionFile("/FBReader/formats/html/html.ent");
 std::string FBReader::HelpDirectory("/FBReader/help");
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "/FBooks");

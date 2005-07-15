@@ -156,6 +156,9 @@ private:
 	std::vector<ParagraphPosition> myParagraphMap;
 	std::vector<TextElementPosition> myTextElementMap;
 
+	std::vector<size_t> myTextSize;
+	size_t myFullTextSize;
+
 	ViewStyle myStyle;
 	LineProcessor myLineProcessor;
 };

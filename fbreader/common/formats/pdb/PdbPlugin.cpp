@@ -17,18 +17,28 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "../common/hyphenation/TeXHyphenator.h"
-//#include "../common/formats/docbook/DocBookReader.h"
-#include "../common/formats/html/HtmlEntityExtension.h"
-#include "../common/collection/BookCollection.h"
-#include "QFBReader.h"
-#include "Paths.h"
+#include <abstract/ZLFSManager.h>
+#include <abstract/ZLInputStream.h>
 
-std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
-//std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
-std::string HtmlEntityExtension::CollectionFile("share/FBReader/formats/html/html.ent");
-std::string QFBReader::ImageDirectory("icons/640x480");
-std::string FBReader::HelpDirectory("share/FBReader/help");
-std::string EncodingDescriptionPath("share/FBReader/encodings");
+#include "PdbPlugin.h"
+#include "PdbReader.h"
+//#include "PdbDescriptionReader.h"
+//#include "PdbBookReader.h"
+//#include "../../description/BookDescription.h"
 
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/DocBooks");
+bool PdbPlugin::acceptsFile(const std::string &extension) const {
+	return (extension == "pdb") || (extension == "PDB");
+}
+
+bool PdbPlugin::readDescription(const std::string &path, BookDescription &description) const {
+	PdbReader().readDocument(ZLFile(path).inputStream());
+}
+
+bool PdbPlugin::readModel(const BookDescription &description, BookModel &model) const {
+	return false;
+}
+
+const std::string &PdbPlugin::iconName() const {
+	static const std::string ICON_NAME = "FBReader/pdb";
+	return ICON_NAME;
+}

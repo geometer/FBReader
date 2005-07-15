@@ -62,6 +62,8 @@ void TextView::clear() {
 	}
 	myParagraphMap.clear();
 	myTextElementMap.clear();
+	myTextSize.clear();
+	myFullTextSize = 0;
 }
 
 void TextView::setModel(const TextModel *model, const std::string &name) {
@@ -72,6 +74,13 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 	if ((myModel != 0) && !myModel->paragraphs().empty()) {
 		myFirstParagraphCursor = ParagraphCursor::createCursor(*myModel);
 		myName = name;
+		const std::vector<Paragraph*> &paragraphs = myModel->paragraphs();
+		myTextSize.reserve(paragraphs.size() + 1);
+		myTextSize.push_back(0);
+		for (std::vector<Paragraph*>::const_iterator it = paragraphs.begin(); it != paragraphs.end(); it++) {
+			myFullTextSize += (*it)->textLength();
+			myTextSize.push_back(myFullTextSize);
+		}
 	}
 }
 
@@ -130,10 +139,12 @@ void TextView::paint(bool doPaint) {
 		long right = context().width() - 1;
 		long fillWidth;
 		long paragraphLength = myLastParagraphCursor->paragraphLength();
+		long sizeOfTextBeforeParagraph = myTextSize[myLastParagraphCursor->paragraphNumber()];
 		if (paragraphLength == 0) {
-			fillWidth = (right - left - 1) * (myLastParagraphCursor->paragraphNumber() + 1) / myModel->paragraphs().size();
+			fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
 		} else {
-			fillWidth = (right - left - 1) * (myLastParagraphCursor->paragraphNumber() * paragraphLength + myLastParagraphCursor->wordNumber()) / myModel->paragraphs().size() / paragraphLength;
+			long sizeOfParagraph = myTextSize[myLastParagraphCursor->paragraphNumber() + 1] - sizeOfTextBeforeParagraph;
+			fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * myLastParagraphCursor->wordNumber() / paragraphLength) / myFullTextSize);
 		}
 		context().setColor(TextStyle::RegularTextColorOption.value());
 		context().setFillColor(PositionIndicatorColorOption.value());
@@ -393,14 +404,23 @@ void TextView::findPrevious() {
 }
 
 bool TextView::onStylusPress(int x, int y) {
-	if (ShowPositionIndicatorOption.value() && IsIndicatorSensitiveOption.value() && (myModel != 0)) {
+	if (ShowPositionIndicatorOption.value() && IsIndicatorSensitiveOption.value() && (myTextSize.size() > 1)) {
 		long bottom = context().height();
 		long top = bottom - PositionIndicatorHeightOption.value() + 1;
 		long left = 0;
 		long right = context().width() - 1;
 
 		if ((x > left) && (x < right) && (y > top) && (y < bottom)) {
-			long paragraphNumber = myModel->paragraphs().size() * (x - left - 1) / (right - left - 1);
+			size_t textSize = (size_t)(1.0 * myFullTextSize * (x - left - 1) / (right - left - 1));
+			std::vector<size_t>::const_iterator it = std::lower_bound(myTextSize.begin(), myTextSize.end(), textSize);
+			/*
+			for (it = myTextSize.begin(); it != myTextSize.end(); it++) {
+				if (*it >= textSize) {
+					break;
+				}
+			}
+			*/
+			long paragraphNumber = std::min((long)(it - myTextSize.begin()), (long)myTextSize.size() - 1) - 1;
 			if (paragraphNumber == 0) {
 				gotoParagraph(0, false);
 				repaintView();
@@ -411,9 +431,11 @@ bool TextView::onStylusPress(int x, int y) {
 					if ((myLastParagraphCursor != 0) && !myLastParagraphCursor->isEndOfText()) {
 						long paragraphLength = myLastParagraphCursor->paragraphLength();
 						if (paragraphLength > 0) {
+							long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
+							long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
 							long wordNum =
-								(x - left - 1) * myModel->paragraphs().size() * paragraphLength / (right - left - 1) -
-								myLastParagraphCursor->paragraphNumber() * paragraphLength;
+								(long)((1.0 * (x - left - 1) / (right - left - 1) - 1.0 * sizeOfTextBeforeParagraph / myFullTextSize)
+								* myFullTextSize / sizeOfParagraph * paragraphLength);
 							myLastParagraphCursor->moveTo(myLastParagraphCursor->paragraphNumber(), wordNum, 0);
 							if (myFirstParagraphCursor != 0) {
 								delete myFirstParagraphCursor;

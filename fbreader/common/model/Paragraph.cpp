@@ -50,6 +50,16 @@ Paragraph::~Paragraph() {
 	}
 }
 
+size_t Paragraph::textLength() const {
+	size_t len = 0;
+	for (std::vector<ParagraphEntry*>::const_iterator it = myEntries.begin(); it != myEntries.end(); it++) {
+		if ((*it)->entryKind() == ParagraphEntry::TEXT_ENTRY) {
+			len += ((TextEntry*)(*it))->text().length();
+		}
+	}
+	return len;
+}
+
 void Paragraph::addNonConstText(std::string &text) {
 	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
 		myEntries.push_back(new TextEntry(text));

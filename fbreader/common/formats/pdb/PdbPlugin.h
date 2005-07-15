@@ -17,18 +17,25 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "../common/hyphenation/TeXHyphenator.h"
-//#include "../common/formats/docbook/DocBookReader.h"
-#include "../common/formats/html/HtmlEntityExtension.h"
-#include "../common/collection/BookCollection.h"
-#include "QFBReader.h"
-#include "Paths.h"
+#ifndef __PDBPLUGIN_H__
+#define __PDBPLUGIN_H__
 
-std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
-//std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
-std::string HtmlEntityExtension::CollectionFile("share/FBReader/formats/html/html.ent");
-std::string QFBReader::ImageDirectory("icons/640x480");
-std::string FBReader::HelpDirectory("share/FBReader/help");
-std::string EncodingDescriptionPath("share/FBReader/encodings");
+#include "../FormatPlugin.h"
 
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/DocBooks");
+class PdbPlugin : public FormatPlugin {
+
+public:
+	PdbPlugin() FORMATS_SECTION;
+	~PdbPlugin() FORMATS_SECTION;
+	bool providesMetaInfo() const FORMATS_SECTION;
+	bool acceptsFile(const std::string &extension) const FORMATS_SECTION;
+	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
+	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
+	const std::string &iconName() const FORMATS_SECTION;
+};
+
+inline PdbPlugin::PdbPlugin() {}
+inline PdbPlugin::~PdbPlugin() {}
+inline bool PdbPlugin::providesMetaInfo() const { return true; }
+
+#endif /* __PDBPLUGIN_H__ */

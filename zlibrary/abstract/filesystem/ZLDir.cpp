@@ -38,7 +38,7 @@ std::string ZLDir::parentName() const {
 	if (index == -1) {
 		index = myName.rfind('/');
 	}
-	return (index == -1) ? "/" : myName.substr(0, index);
+	return (index <= 0) ? "/" : myName.substr(0, index);
 }
 
 std::string ZLDir::shortName() const {

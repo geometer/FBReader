@@ -22,7 +22,6 @@
 
 #include <abstract/ZLStringUtil.h>
 
-#include "../docbook/DocBookReader.h"
 #include "TxtReader.h"
 
 TxtReader::TxtReader() : myConverter(0) {
