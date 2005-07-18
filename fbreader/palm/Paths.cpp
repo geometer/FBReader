@@ -24,9 +24,10 @@
 #include "../common/fbreader/FBReader.h"
 #include "Paths.h"
 
-std::string TeXHyphenator::PatternZip("/FBReader/hyphenationPatterns.zip");
-//std::string DocBookReader::DTDDirectory("/FBReader/formats/docbook");
-std::string HtmlEntityExtension::CollectionFile("/FBReader/formats/html/html.ent");
-std::string FBReader::HelpDirectory("/FBReader/help");
+const std::string TeXHyphenator::PatternZip("/FBReader/hyphenationPatterns.zip");
+//const std::string DocBookReader::DTDDirectory("/FBReader/formats/docbook");
+const std::string HtmlEntityExtension::CollectionFile("/FBReader/formats/html/html.ent");
+const std::string FBReader::HelpDirectory("/FBReader/help");
+const std::string EncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
+
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "/FBooks");
-std::string EncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");

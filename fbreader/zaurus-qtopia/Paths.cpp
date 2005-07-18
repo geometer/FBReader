@@ -24,10 +24,12 @@
 #include "../common/collection/BookCollection.h"
 #include "Paths.h"
 
-std::string TeXHyphenator::PatternZip("/opt/QtPalmtop/share/FBReader/hyphenationPatterns.zip");
-//std::string DocBookReader::DTDDirectory("/opt/QtPalmtop/share/FBReader/formats/docbook");
-std::string HtmlEntityExtension::CollectionFile("/opt/QtPalmtop/share/FBReader/formats/html/html.ent");
-std::string FBReader::HelpDirectory("/opt/QtPalmtop/share/FBReader/help");
-std::string EncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
+static const std::string PathPrefix = "/opt/QtPalmtop/share/FBReader/";
+
+const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
+//const std::string DocBookReader::DTDDirectory = PathPrefix + "formats/docbook";
+const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
+const std::string FBReader::HelpDirectory = PathPrefix + "help";
+const std::string EncodingDescriptionPath = PathPrefix + "encodings";
 
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "/mnt/card/FBooks:~/Documents");

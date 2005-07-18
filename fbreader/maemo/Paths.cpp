@@ -24,11 +24,11 @@
 #include "GtkFBReader.h"
 #include "Paths.h"
 
-std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
-//std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
-std::string HtmlEntityExtension::CollectionFile("share/FBReader/formats/html/html.ent");
-std::string FBReader::HelpDirectory("share/FBReader/help");
-std::string GtkFBReader::ImageDirectory("icons/640x480");
-std::string EncodingDescriptionPath("share/FBReader/encodings");
+const std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
+//const std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
+const std::string HtmlEntityExtension::CollectionFile("share/FBReader/formats/html/html.ent");
+const std::string FBReader::HelpDirectory("share/FBReader/help");
+const std::string GtkFBReader::ImageDirectory("icons/640x480");
+const std::string EncodingDescriptionPath("share/FBReader/encodings");
 
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/DocBooks");

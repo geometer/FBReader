@@ -25,7 +25,7 @@
 class HtmlEntityExtension : public ControlSequenceExtension {
 
 public:
-	static std::string CollectionFile;
+	static const std::string CollectionFile;
 
 private:
 	static std::map<std::string,int> ourSymbolicEntityCollection;

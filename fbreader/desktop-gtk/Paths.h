@@ -23,6 +23,6 @@
 
 #include <string>
 
-extern std::string EncodingDescriptionPath;
+extern const std::string EncodingDescriptionPath;
 
 #endif

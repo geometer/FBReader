@@ -81,7 +81,7 @@ public:
 	static ZLBooleanOption SearchInWholeTextOption;
 	static ZLStringOption SearchPatternOption;
 
-	static std::string HelpDirectory;
+	static const std::string HelpDirectory;
 
 protected:
 	FBReader(ZLPaintContext *context) FB_SECTION;
