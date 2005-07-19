@@ -33,8 +33,8 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLTreeHandler &handl
 
 	myMainBox = new QVBox(this);
 
-	myCurrentDirectoryName = new QLineEdit(myMainBox);
-	myCurrentDirectoryName->setEnabled(false);
+	myStateLine = new QLineEdit(myMainBox);
+	myStateLine->setEnabled(false);
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("");
 	myListView->header()->hide();
@@ -76,14 +76,14 @@ void QOpenFileDialog::resizeEvent(QResizeEvent *event) {
 }
 
 void QOpenFileDialog::update(const std::string &selectedNodeName) {
-	myCurrentDirectoryName->setText(QString::fromUtf8(myCurrentDir->name().c_str()));
+	myStateLine->setText(QString::fromUtf8(state()->name().c_str()));
 
 	myListView->clear();
 
 	QListViewItem *item = 0;
 	QListViewItem *selectedItem = 0;
 
-	const std::vector<ZLTreeNodePtr> &subnodes = myCurrentDir->subnodes();
+	const std::vector<ZLTreeNodePtr> &subnodes = state()->subnodes();
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); it++) {
 	 	item = new QOpenFileDialogItem(myListView, item, *it);
 		item->setPixmap(0, getPixmap(*it));

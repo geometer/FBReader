@@ -48,14 +48,14 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &h
 
 	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), 0);
 
-	myCurrentDirectoryName = GTK_ENTRY(gtk_entry_new());
+	myStateLine = GTK_ENTRY(gtk_entry_new());
 
-	gtk_editable_set_editable(GTK_EDITABLE(myCurrentDirectoryName), FALSE);
-	gtk_widget_set_sensitive(GTK_WIDGET(myCurrentDirectoryName), FALSE);
+	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), FALSE);
+	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), FALSE);
 
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myCurrentDirectoryName), FALSE, FALSE, 2);
+	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myStateLine), FALSE, FALSE, 2);
 
-	gtk_widget_show(GTK_WIDGET(myCurrentDirectoryName));
+	gtk_widget_show(GTK_WIDGET(myStateLine));
 
 	myStore = gtk_list_store_new(3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_INT);
 	myView = GTK_TREE_VIEW(gtk_tree_view_new_with_model(GTK_TREE_MODEL(myStore)));
@@ -111,14 +111,14 @@ GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 }
 
 void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
-	gtk_entry_set_text(myCurrentDirectoryName, myCurrentDir->name().c_str());
+	gtk_entry_set_text(myStateLine, state()->name().c_str());
 
 	gtk_list_store_clear(myStore);
 	myNodes.clear();
 
 	GtkTreeIter *selectedItem = 0;
 
-	const std::vector<ZLTreeNodePtr> &subnodes = myCurrentDir->subnodes();
+	const std::vector<ZLTreeNodePtr> &subnodes = state()->subnodes();
 	int index = 0;
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); it++, index++) {
 		GtkTreeIter iter;

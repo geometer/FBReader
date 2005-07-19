@@ -63,7 +63,7 @@ private slots:
 	void accept();
 
 private:
-	QLineEdit *myCurrentDirectoryName;
+	QLineEdit *myStateLine;
 	QListView *myListView;
 	QVBox *myMainBox;
 	std::map<std::string,QPixmap*> myPixmaps;

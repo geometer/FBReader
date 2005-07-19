@@ -137,13 +137,16 @@ protected:
 	virtual void exitDialog() DIALOG_SECTION = 0;
 	virtual void update(const std::string &selectedNodeName) DIALOG_SECTION = 0;
 	const std::string &pixmapName(const ZLTreeNodePtr node) const DIALOG_SECTION;
+	const ZLTreeStatePtr state() const;
 
-protected:
-	shared_ptr<ZLTreeState> myCurrentDir;
+private:
+	ZLTreeStatePtr myState;
 };
 
 inline ZLTreeHandler::ZLTreeHandler() {}
 inline ZLTreeHandler::~ZLTreeHandler() {}
 inline const ZLTreeHandler &ZLTreeState::handler() const { return myHandler; }
+
+inline const ZLTreeStatePtr ZLOpenFileDialog::state() const { return myState; }
 
 #endif /* __ZLOPENFILEDIALOG_H__ */

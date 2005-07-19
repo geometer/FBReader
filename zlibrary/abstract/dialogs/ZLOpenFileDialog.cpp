@@ -27,18 +27,18 @@
 ZLStringOption ZLOpenFileDialog::DirectoryOption("OpenFileDialog", "Directory", "~");
 	
 ZLOpenFileDialog::ZLOpenFileDialog(const ZLTreeHandler &handler) {
-	myCurrentDir = new ZLDirTreeState(handler, ZLFile(DirectoryOption.value()).directory());
+	myState = new ZLDirTreeState(handler, ZLFile(DirectoryOption.value()).directory());
 }
 
 ZLOpenFileDialog::~ZLOpenFileDialog() {
-	DirectoryOption.setValue(myCurrentDir->name());
+	DirectoryOption.setValue(state()->name());
 }
 
 void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
-	ZLTreeStatePtr newState = myCurrentDir->change(node);
+	ZLTreeStatePtr newState = myState->change(node);
 	if (!newState->isLeaf()) {
-		std::string selectedName = node->relativeName(myCurrentDir);
-		myCurrentDir = newState;
+		std::string selectedName = node->relativeName(myState);
+		myState = newState;
 		update(selectedName);
 	} else {
 		newState->handler().accept(newState);
@@ -47,7 +47,7 @@ void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
 }
 
 const std::string &ZLOpenFileDialog::pixmapName(const ZLTreeNodePtr node) const {
-	return myCurrentDir->handler().pixmapName(node);
+	return myState->handler().pixmapName(node);
 }
 
 ZLTreeNode::ZLTreeNode(const std::string &name, bool isFile) : myName(name), myIsFile(isFile) {

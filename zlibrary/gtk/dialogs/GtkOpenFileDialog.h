@@ -53,7 +53,7 @@ private:
 	GtkDialog *myDialog;
 	GtkListStore *myStore;
 	GtkTreeView *myView;
-	GtkEntry *myCurrentDirectoryName;
+	GtkEntry *myStateLine;
 
 	std::map<std::string,GdkPixbuf*> myPixmaps;
 	std::vector<ZLTreeNodePtr> myNodes;
