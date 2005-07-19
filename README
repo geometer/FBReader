@@ -25,6 +25,7 @@ PLATFORM DESCRIPTION
     zaurus-pdaxrom-gtk  -- Sharp Zaurus, pdaXrom, version >= 1.1.0 RC9, uses gtk library
     desktop-qt          -- (linux) desktop computer, uses qt library (version 3.*)
     desktop-gtk         -- (linux) desktop computer, uses gtk library (version 2.*)
+    maemo               -- Nokia 770
 
   If you do not create makefiles/target.mk file, the program will be built for
   the default platform -- zaurus-qtopia.
@@ -68,7 +69,4 @@ STEP-BY-STEP INSTRUCTIONS FOR DEBIAN
 
   6. Build FBReader:
 
-    $ cd zlibrary
-    $ make
-    $ cd ../fbreader
     $ make
