@@ -67,13 +67,6 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	GtkWidget *vbox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), vbox);
 
-	myMenu = gtk_menu_bar_new();
-
-	buildMenu();
-	gtk_box_pack_start(GTK_BOX(vbox), myMenu, false, false, 0);
-
-	gtk_widget_show_all (myMenu);
-
 	myToolbar = gtk_toolbar_new();
 	gtk_box_pack_start(GTK_BOX(vbox), myToolbar, false, false, 0);
 	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_ICONS);
@@ -127,38 +120,6 @@ ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
 	return data;
 }
 
-static GtkWidget *makeSubmenu(GtkWidget *menu, const char *label) {
-	GtkWidget *result = gtk_menu_new();
-	GtkWidget *item = gtk_menu_item_new_with_label(label);
-
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM(item), result);
-
-	return result;
-}
-
-static void addMenuItem(GtkWidget *menu, const char *label, ActionSlotData *data) {
-	GtkWidget *item = gtk_menu_item_new_with_label(label);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
-	g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(actionSlot), data);
-}
-
-void GtkFBReader::buildMenu() {
-	GtkWidget *submenu;
-
-	submenu = makeSubmenu(myMenu, "Library");
-
-	addMenuItem(submenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
-	addMenuItem(submenu, "Add To...", getSlotData(ACTION_ADD_BOOK));
-
-	submenu = makeSubmenu(myMenu, "Recent");
-
-	// MSS: we do not use it now...
-
-	addMenuItem(myMenu, "Preferences", getSlotData(ACTION_SHOW_OPTIONS));
-	addMenuItem(myMenu, "Close", getSlotData(ACTION_CANCEL));
-}
-
 GtkFBReader::~GtkFBReader() {
 	int width, height;
 	gtk_window_get_size(myMainWindow, &width, &height);
@@ -208,11 +169,9 @@ void GtkFBReader::fullscreenSlot() {
 	if (myFullScreen) {
 		gtk_window_fullscreen(myMainWindow);
 		gtk_widget_hide(myToolbar);
-		gtk_widget_hide(myMenu);
 	} else if (!myFullScreen) {
 		gtk_window_unfullscreen(myMainWindow);
 		gtk_widget_show(myToolbar);
-		gtk_widget_show(myMenu);
 	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
