@@ -21,6 +21,7 @@
 #define __GTKOPTIONVIEW_H__
 
 #include <gtk/gtkwidget.h>
+#include <gtk/gtkrange.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -165,12 +166,13 @@ private:
 class ColorOptionView : public GtkOptionView {
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myColorSelectionDialog(NULL) {}
+	ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	// ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myColorSelectionDialog(NULL) {}
 
 	virtual ~ColorOptionView(void) {
-		if (myColorSelectionDialog != NULL) {
-			gtk_widget_destroy (myColorSelectionDialog);
-		}
+//		if (myColorSelectionDialog != NULL) {
+//			gtk_widget_destroy(myColorSelectionDialog);
+//		}
 	}
 
 protected:
@@ -180,12 +182,17 @@ protected:
 	void _onAccept() const;
 
 private:
-	void onChangeColor();
+//	void onChangeColor();
 
-	static void _onChangeColor(GtkWidget *, gpointer);
+//	static void _onChangeColor(GtkWidget *, gpointer);
+	void onSliderMove();
+
+	static void _onSliderMove(GtkRange *, gpointer);
 
 private:
-	GtkWidget *myWidget, *myColorSelectionDialog, *myDrawingArea;
+	GtkWidget *myWidget, *myDrawingArea;
+//	GtkWidget *myColorSelectionDialog;
+	GtkWidget *myRSlider, *myGSlider, *myBSlider;
 	GdkColor myColor;
 };
 

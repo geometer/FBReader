@@ -25,7 +25,8 @@
 #include <gtk/gtkhbox.h>
 #include <gtk/gtkspinbutton.h>
 #include <gtk/gtkdrawingarea.h>
-#include <gtk/gtkcolorseldialog.h>
+// #include <gtk/gtkcolorseldialog.h>
+#include <gtk/gtkhscale.h>
 
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"
@@ -235,16 +236,38 @@ void StringOptionView::_onAccept() const {
 }
 
 void ColorOptionView::_createItem() {
-	myWidget = gtk_button_new();
+	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
+
 	myDrawingArea = gtk_drawing_area_new();
 
 	gtk_widget_set_size_request(GTK_WIDGET(myDrawingArea), 60, 20);
+//	myWidget = gtk_button_new();
+//	gtk_container_add(GTK_CONTAINER(myWidget), myDrawingArea);
+//	g_signal_connect(G_OBJECT(myWidget), "clicked", G_CALLBACK(_onChangeColor), this);
+	myWidget = gtk_table_new(3, 3, false);
 
-	gtk_container_add(GTK_CONTAINER(myWidget), myDrawingArea);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
-	g_signal_connect(G_OBJECT(myWidget), "clicked", G_CALLBACK(_onChangeColor), this);
+	myRSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
+	gtk_scale_set_draw_value(GTK_SCALE(myRSlider), false);
+	gtk_range_set_value(GTK_RANGE(myRSlider), color.Red);
+	g_signal_connect(G_OBJECT(myRSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
 
-	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
+	myGSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
+	gtk_scale_set_draw_value(GTK_SCALE(myGSlider), false);
+	gtk_range_set_value(GTK_RANGE(myGSlider), color.Green);
+	g_signal_connect(G_OBJECT(myGSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
+
+	myBSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
+	gtk_scale_set_draw_value(GTK_SCALE(myBSlider), false);
+	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
+	g_signal_connect(G_OBJECT(myBSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
+
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myRSlider, 1, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myGSlider, 1, 2, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myBSlider, 1, 2, 2, 3);
 
 	myColor.red = color.Red * 65535 / 255;
 	myColor.blue = color.Blue * 65535 / 255;
@@ -252,7 +275,12 @@ void ColorOptionView::_createItem() {
 
 	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
 
-	gtk_widget_show(myDrawingArea);
+	gtk_table_attach(GTK_TABLE(myWidget), myDrawingArea, 2, 3, 0, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+
+	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 2);
+	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 2);
+
+	gtk_widget_show_all(myWidget);
 
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
@@ -265,12 +293,12 @@ void ColorOptionView::_hide() {
 	gtk_widget_hide(myWidget);
 }
 
+#if 0
 void ColorOptionView::_onChangeColor(GtkWidget *, gpointer self) {
 	((ColorOptionView *)self)->onChangeColor();
 }
 
 void ColorOptionView::onChangeColor() {
-//	myColorBar->setBackgroundColor(QColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
 	if (myColorSelectionDialog == NULL)
 		myColorSelectionDialog = gtk_color_selection_dialog_new("Select Color");
 
@@ -288,6 +316,19 @@ void ColorOptionView::onChangeColor() {
 	}
 
 	gtk_widget_hide(myColorSelectionDialog);
+}
+#endif
+
+void ColorOptionView::_onSliderMove(GtkRange *, gpointer self) {
+	((ColorOptionView *)self)->onSliderMove();
+}
+
+void ColorOptionView::onSliderMove() {
+	myColor.red = (int)(gtk_range_get_value(GTK_RANGE(myRSlider)) * 65535 / 255);
+	myColor.blue = (int)(gtk_range_get_value(GTK_RANGE(myBSlider)) * 65535 / 255);
+	myColor.green = (int)(gtk_range_get_value(GTK_RANGE(myGSlider)) * 65535 / 255);
+
+	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
 }
 
 void ColorOptionView::_onAccept() const {
