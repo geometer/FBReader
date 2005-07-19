@@ -30,6 +30,9 @@ PLATFORM DESCRIPTION
   If you do not create makefiles/target.mk file, the program will be built for
   the default platform -- zaurus-qtopia.
 
+  This instruction describes how to build the program for desktop-qt and
+  desktop-gtk platforms for a Debian system.
+
 REQUIREMENTS
 
   IMPORTANT: you will need the following libraries:
@@ -37,36 +40,61 @@ REQUIREMENTS
     expat       -- XML parsing library (available at http://expat.sourceforge.net)
     enca        -- charset detection library (available at http://trific.ath.cx/software/enca/)
 
-STEP-BY-STEP INSTRUCTIONS FOR DEBIAN
+  'expat' is a part of Debian archive, so you can install the development
+  package for it using the following command:
 
-  So if you are a lucky owner of a Debian system and you would like to build
-  FBReader for your computer, here are the steps that you need to perform:
+    $ sudo apt-get install libexpat1-dev
+
+  'enca' is not a part of Debian archive, however there are unofficial Debian
+  packages for it. You can install them using the following commands:
+
+    $ mkdir /tmp/enca
+    $ cd /tmp/enca
+    $ wget http://www.physics.muni.cz/~yeti/Ftp/enca/i386/libenca0_1.7-1_i386.deb
+    $ wget http://www.physics.muni.cz/~yeti/Ftp/enca/i386/libenca-dev_1.7-1_i386.deb
+    $ sudo dpkg -i libenca*
+    $ cd ..
+    $ rm -rf /tmp/enca
+
+  Alternatively you can build the packages yourself (sorry, we do not provide
+  instructions for it here).
+
+BUILDING FBREADER FOR DESKTOP-QT
 
   1. You will need QT 3.* installed on your computer:
 
     $ sudo apt-get install libqt3-mt-dev qt3-dev-tools
 
-  2. Install expat development package:
+  2. Go to the directory where you unpacked the FBReader sources
 
-    $ sudo apt-get install libexpat1-dev
-
-  3. Install enca libraries (bashism!):
-
-    $ pushd /tmp
-    $ mkdir enca
-    $ cd enca
-    $ wget http://www.physics.muni.cz/~yeti/Ftp/enca/i386/libenca0_1.7-1_i386.deb
-    $ wget http://www.physics.muni.cz/~yeti/Ftp/enca/i386/libenca-dev_1.7-1_i386.deb
-    $ sudo dpkg -i libenca*
-    $ cd ..
-    $ rm -rf enca
-    $ popd
-
-  4. Go to the directory where you unpacked the FBReader sources
-
-  5. Configure sources for Linux Desktop:
+  3. Configure sources for Linux Desktop:
     $ echo TARGET_ARCH=desktop-qt > makefiles/target.mk
 
-  6. Build FBReader:
+  4. Build FBReader:
 
     $ make
+
+  At this point you should be able to run FBReader:
+
+    $ cd fbreader
+    $ ./FBReader
+
+BUILDING FBREADER FOR DESKTOP-GTK
+
+  1. You will need Gtk+ 2.* installed on your computer:
+
+    $ sudo apt-get install libgtk2.0-dev
+
+  2. Go to the directory where you unpacked the FBReader sources
+
+  3. Configure sources for Linux Desktop:
+    $ echo TARGET_ARCH=desktop-gtk > makefiles/target.mk
+
+  4. Build FBReader:
+
+    $ make
+
+  At this point you should be able to run FBReader:
+
+    $ cd fbreader
+    $ ./FBReader
