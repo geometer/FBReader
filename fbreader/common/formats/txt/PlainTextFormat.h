@@ -58,7 +58,7 @@ friend class PlainTextFormatDetector;
 class PlainTextInfoPage : public FormatInfoPage {
 
 public:
-	PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName);
+	PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName, bool showContentsEntry);
 	~PlainTextInfoPage();
 
 private:

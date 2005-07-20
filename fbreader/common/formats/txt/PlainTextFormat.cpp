@@ -41,7 +41,7 @@ PlainTextFormat::PlainTextFormat(const std::string &fileName) :
 	CreateContentsTableOption(fileName, OPTION_CreateContentsTable, false) {
 }
 
-PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName) : myFormat(fileName) {
+PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName, bool showContentsEntry) : myFormat(fileName) {
 	if (!myFormat.initialized()) {
 		PlainTextFormatDetector detector;
 		shared_ptr<ZLInputStream> stream = ZLFile(fileName).inputStream();
@@ -54,16 +54,17 @@ PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string 
 
 	BreakTypeOptionEntry *breakEntry = new BreakTypeOptionEntry(*this, "Break Paragraph At", myFormat.BreakTypeOption);
 	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry("Ignore Indent Less Than", myFormat.IgnoredIndentOption, 1, 100, 1);
-	CreateContentsTableOptionEntry *contentsTableEntry = new CreateContentsTableOptionEntry(*this, "Build Contents Table", myFormat.CreateContentsTableOption);
-	myEmptyLinesBeforeNewSectionEntry = new ZLSimpleSpinOptionEntry("Empty Lines Before New Section", myFormat.EmptyLinesBeforeNewSectionOption, 1, 100, 1);
-
 	tab->addOption(breakEntry);
 	tab->addOption(myIgnoredIndentEntry);
-	tab->addOption(contentsTableEntry);
-	tab->addOption(myEmptyLinesBeforeNewSectionEntry);
-
 	breakEntry->onValueChange(breakEntry->initialValue());
-	contentsTableEntry->onValueChange(contentsTableEntry->initialState());
+
+	if (showContentsEntry) {
+		CreateContentsTableOptionEntry *contentsTableEntry = new CreateContentsTableOptionEntry(*this, "Build Contents Table", myFormat.CreateContentsTableOption);
+		myEmptyLinesBeforeNewSectionEntry = new ZLSimpleSpinOptionEntry("Empty Lines Before New Section", myFormat.EmptyLinesBeforeNewSectionOption, 1, 100, 1);
+		tab->addOption(contentsTableEntry);
+		tab->addOption(myEmptyLinesBeforeNewSectionEntry);
+		contentsTableEntry->onValueChange(contentsTableEntry->initialState());
+	}
 }
 
 PlainTextInfoPage::~PlainTextInfoPage() {
