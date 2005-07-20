@@ -62,6 +62,88 @@ bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 	return stream->offset() == startOffset + 72;
 }
 
+class PluckerReader {
+
+public:
+	PluckerReader(shared_ptr<ZLInputStream> stream);
+	~PluckerReader();
+
+	bool readDocument();
+
+private:
+	void readRecord();
+
+private:
+	shared_ptr<ZLInputStream> myStream;
+};
+
+PluckerReader::PluckerReader(shared_ptr<ZLInputStream> stream) : myStream(stream) {
+}
+
+PluckerReader::~PluckerReader() {
+}
+
+void PluckerReader::readRecord() {
+	unsigned short uid;
+	readUnsignedShort(myStream, uid);
+	std::cerr << "uid = " << uid << "; ";
+	if (uid > 1) {
+		unsigned short paragraphs;
+		readUnsignedShort(myStream, paragraphs);
+		std::cerr << "paragraphs = " << paragraphs << "; ";
+
+		unsigned short size;
+		readUnsignedShort(myStream, size);
+		std::cerr << "size = " << size << "; ";
+
+		unsigned char type;
+		myStream->read((char*)&type, 1);
+		std::cerr << "type = " << (int)type << "; ";
+
+		unsigned char flags;
+		myStream->read((char*)&flags, 1);
+		std::cerr << "flags = " << (int)flags << "\n";
+
+		/*
+		if (type == 10) {
+			unsigned short typeCode;
+			readUnsignedShort(myStream, typeCode);
+			std::cerr << "typeCode = " << typeCode << "\n";
+		}
+		*/
+	}
+}
+
+bool PluckerReader::readDocument() {
+	std::vector<unsigned long> offsets;
+	// record-id list
+	myStream->seek(4);
+	unsigned short numRecords;
+	::readUnsignedShort(myStream, numRecords);
+	offsets.reserve(numRecords);
+
+	for (int i = 0; i < numRecords; i++) {
+		unsigned long recordOffset;
+		::readUnsignedLong(myStream, recordOffset);
+		offsets.push_back(recordOffset);
+		myStream->seek(4);
+	}
+	myStream->seek(2);
+	for (std::vector<unsigned long>::const_iterator it = offsets.begin(); it != offsets.end(); it++) {
+		size_t currentOffset = myStream->offset();
+		if (currentOffset > *it) {
+			break;
+		}
+		myStream->seek(*it - currentOffset);
+		if (myStream->offset() != *it) {
+			break;
+		}
+		//std::cerr << "currentOffset = " << myStream->offset() << "\n";
+		readRecord();
+	}
+	return false;
+}
+
 bool PdbReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	if (stream.isNull() || !stream->open()) {
 		return false;
@@ -73,50 +155,12 @@ bool PdbReader::readDocument(shared_ptr<ZLInputStream> stream) {
 		return false;
 	}
 
-	std::cerr << "name = " << header.DocName << "\n";
-	std::cerr << "id = " << header.Id << "\n";
+	//std::cerr << "name = " << header.DocName << "\n";
+	//std::cerr << "id = " << header.Id << "\n";
 
 	bool code = false;
 	if (header.Id == "DataPlkr") {
-		std::vector<unsigned long> offsets;
-		// record-id list
-		stream->seek(4);
-		unsigned short numRecords;
-		::readUnsignedShort(stream, numRecords);
-		offsets.reserve(numRecords);
-
-		for (int i = 0; i < numRecords; i++) {
-			unsigned long recordOffset;
-			::readUnsignedLong(stream, recordOffset);
-			offsets.push_back(recordOffset);
-			stream->seek(4);
-		}
-		stream->seek(2);
-		for (std::vector<unsigned long>::const_iterator it = offsets.begin(); it != offsets.end(); it++) {
-			size_t currentOffset = stream->offset();
-			if (currentOffset <= *it) {
-				stream->seek(*it - currentOffset);
-				if (stream->offset() != *it) {
-					break;
-				}
-				std::cerr << "currentOffset = " << stream->offset() << "\n";
-				unsigned short uid;
-				readUnsignedShort(stream, uid);
-				std::cerr << "uid = " << uid << "\n";
-				if (uid > 1) {
-					stream->seek(4);
-					unsigned char type;
-					stream->read((char*)&type, 1);
-					std::cerr << "type = " << (int)type << "\n";
-					stream->seek(1);
-					if (type == 10) {
-						unsigned short typeCode;
-						readUnsignedShort(stream, typeCode);
-						std::cerr << "typeCode = " << typeCode << "\n";
-					}
-				}
-			}
-		}
+		code = PluckerReader(stream).readDocument();
 	} else if (header.Id == "TEXtREAd") {
 	}
 

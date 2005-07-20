@@ -64,7 +64,7 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	indicatorTab->addOption(new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 0, 100, 1));
 
 	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
-	if (true) {
+	if (false) {
 		myKeyBindingsPage = new KeyBindingsPage(myDialog->createTab("Keys"));
 	} else {
 		myKeyBindingsPage = 0;

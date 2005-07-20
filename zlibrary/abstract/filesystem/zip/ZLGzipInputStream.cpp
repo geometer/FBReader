@@ -16,18 +16,10 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <algorithm>
-
 #include "ZLZip.h"
+#include "ZLZDecompressor.h"
 
-const size_t IN_BUFFER_SIZE = 2048;
-const size_t OUT_BUFFER_SIZE = 32768;
-
-ZLGzipInputStream::ZLGzipInputStream(shared_ptr<ZLInputStream> stream) : myFileStream(stream) {
-	myFileSize = 0;
-	myZStream = 0;
-	myInBuffer = 0;
-	myOutBuffer = 0;
+ZLGzipInputStream::ZLGzipInputStream(shared_ptr<ZLInputStream> stream) : myFileStream(stream), myFileSize(0) {
 }
 
 ZLGzipInputStream::~ZLGzipInputStream() {
@@ -86,68 +78,20 @@ bool ZLGzipInputStream::open() {
 		myFileStream->seek(2);
 	}
 
-	myAvailableSize = myFileSize - myFileStream->offset() - 8;
-
-	myZStream = new z_stream;
-	memset(myZStream, 0, sizeof(z_stream));
-	inflateInit2(myZStream, -MAX_WBITS);
-
-	myInBuffer = new char[IN_BUFFER_SIZE];
-	myOutBuffer = new char[OUT_BUFFER_SIZE];
+	myDecompressor = new ZLZDecompressor(myFileSize - myFileStream->offset() - 8);
 	myOffset = 0;
 
 	return true;
 }
 
 size_t ZLGzipInputStream::read(char *buffer, size_t maxSize) {
-	while ((myBuffer.length() < maxSize) && (myAvailableSize > 0)) {
-		size_t size = std::min(myAvailableSize, (size_t)IN_BUFFER_SIZE);
-
-		myZStream->next_in = (Bytef*)myInBuffer;
-		myZStream->avail_in = myFileStream->read(myInBuffer, size);
-		if (myZStream->avail_in == size) {
-			myAvailableSize -= size;
-		} else {
-			myAvailableSize = 0;
-		}
-		while (myZStream->avail_in > 0) {
-			myZStream->avail_out = OUT_BUFFER_SIZE;
-			myZStream->next_out = (Bytef*)myOutBuffer;
-			int code = inflate(myZStream, Z_SYNC_FLUSH);
-			if ((code != Z_OK) && (code != Z_STREAM_END)) {
-				break;
-			}
-			if (OUT_BUFFER_SIZE == myZStream->avail_out) {
-				break;
-			}
-			myBuffer.append(myOutBuffer, OUT_BUFFER_SIZE - myZStream->avail_out);
-		}
-	}
-
-	size_t realSize = std::min(maxSize, myBuffer.length());
-	if (buffer != 0) {
-		memcpy(buffer, myBuffer.data(), realSize);
-	}
-	myBuffer.erase(0, realSize);
+	size_t realSize = myDecompressor->decompress(*myFileStream, buffer, maxSize);
 	myOffset += realSize;
 	return realSize;
 }
 
 void ZLGzipInputStream::close() {
-	if (myInBuffer != 0) {
-		delete[] myInBuffer;
-		delete[] myOutBuffer;
-		myInBuffer = 0;
-		myOutBuffer = 0;
-	}
-	if (myZStream != 0) {
-		inflateEnd(myZStream);
-		delete myZStream;
-		myZStream = 0;
-	}
-
-	myBuffer.erase();
-
+	myDecompressor = 0;
 	myFileStream->close();
 }
 

@@ -19,13 +19,15 @@
 #ifndef __ZLZIP_H__
 #define __ZLZIP_H__
 
-#define NOZLIBDEFS
-#include <zlib.h>
+//#define NOZLIBDEFS
+//#include <zlib.h>
 
 #include <abstract/shared_ptr.h>
 
 #include "../ZLInputStream.h"
 #include "../ZLDir.h"
+
+class ZLZDecompressor;
 
 class ZLZipInputStream : public ZLInputStream {
 
@@ -47,13 +49,15 @@ private:
 	std::string myCompressedFileName;
 	bool myIsDeflated;
 
-	z_stream *myZStream; 
-	std::string myBuffer; 
+	//z_stream *myZStream; 
+	//std::string myBuffer; 
 	size_t myUncompressedSize;
 	size_t myAvailableSize;
 	size_t myOffset;
-	char *myInBuffer;
-	char *myOutBuffer;
+	//char *myInBuffer;
+	//char *myOutBuffer;
+
+	shared_ptr<ZLZDecompressor> myDecompressor;
 
 friend class ZLFile;
 };
@@ -77,13 +81,9 @@ private:
 	shared_ptr<ZLInputStream> myFileStream;
 	size_t myFileSize;
 
-	z_stream *myZStream; 
-	char *myInBuffer;
-	char *myOutBuffer;
-
-	std::string myBuffer; 
-	size_t myAvailableSize;
 	size_t myOffset;
+
+	shared_ptr<ZLZDecompressor> myDecompressor;
 
 friend class ZLFile;
 };
