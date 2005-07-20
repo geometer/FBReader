@@ -24,13 +24,13 @@
 #include "QFBReader.h"
 #include "Paths.h"
 
-static const std::string PathPrefix = "";
+static const std::string PathPrefix = "/usr/share/FBReader/";
 
-const std::string TeXHyphenator::PatternZip = PathPrefix + "share/FBReader/hyphenationPatterns.zip";
+const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
 //const std::string DocBookReader::DTDDirectory = "/usr/share/xml/entities/xml-iso-entities-8879.1986";
-const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "share/FBReader/formats/html/html.ent";
-const std::string QFBReader::ImageDirectory = PathPrefix + "icons/640x480";
-const std::string FBReader::HelpDirectory = PathPrefix + "share/FBReader/help";
-const std::string EncodingDescriptionPath = PathPrefix + "share/FBReader/encodings";
+const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
+const std::string QFBReader::ImageDirectory = PathPrefix + "icons";
+const std::string FBReader::HelpDirectory = PathPrefix + "help";
+const std::string EncodingDescriptionPath = PathPrefix + "encodings";
 
 ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/Books");

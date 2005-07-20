@@ -48,6 +48,22 @@ all: .bin
 		$(MAKE) -C $(TARGET_ARCH)/package; \
 	fi;
 
+install: all
+ifeq "$(findstring $(TARGET_ARCH),desktop-qt desktop-gtk)" "$(TARGET_ARCH)"
+	install -d $(DESTDIR)/usr/bin
+	install -s FBReader $(DESTDIR)/usr/bin
+	install -d $(DESTDIR)/usr/share/FBReader/
+	install -d $(DESTDIR)/usr/share/FBReader/formats/html
+	install -d $(DESTDIR)/usr/share/FBReader/icons/FBReader
+	install -m 0644 icons/640x480/FBReader.png $(DESTDIR)/usr/share/FBReader/icons
+	install -m 0644 $(wildcard icons/640x480/FBReader/*) $(DESTDIR)/usr/share/FBReader/icons/FBReader
+	install -d $(DESTDIR)/usr/share/FBReader/encodings
+	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)/usr/share/FBReader/encodings
+	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)/usr/share/FBReader
+	install -d $(DESTDIR)/usr/share/FBReader/help
+	install -m 0644 $(wildcard share/FBReader/help/*) $(DESTDIR)/usr/share/FBReader/help
+endif
+
 .lib:
 	@for subdir in $(SUBDIRS); do \
 		if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \

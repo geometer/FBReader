@@ -27,6 +27,17 @@ all:
 		fi; \
 	done
 
+install:
+	@for dir in $(APPDIRS); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; \
+			if ! make install; then \
+				exit 1; \
+			fi; \
+			cd ..; \
+		fi; \
+	done
+
 clean:
 	@for dir in $(LIBDIR) $(ALLAPPDIRS); do \
 		if [ -d $$dir ]; then \

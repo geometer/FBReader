@@ -6,6 +6,12 @@ Latest information you can find at the programs home page at
 
 This file is a quick guide on how to compile the application for Linux desktop.
 
+The section "PLATFORM DESCRIPTION" gives a brief description of the supported
+platforms.
+
+In order to build FBReader, you will need to perform the steps described in the
+sections "PRE-REQUISITES" and "BUILDING FBREADER FOR <your platform>".
+
 PLATFORM DESCRIPTION
 
   The program was originally written for Sharp Zaurus.  However beside two
@@ -16,9 +22,9 @@ PLATFORM DESCRIPTION
 
     TARGET_ARCH = <your target arch>
 
-  The complete list of platforms you can find in makefiles/platforms.mk,
-  however currently the program is known to compile without problems on the
-  following platforms:
+  The complete list of platforms you can find in makefiles/platforms.mk.
+  Currently the program is known to compile without problems on the following
+  platforms:
 
     zaurus-qtopia       -- Sharp Zaurus, Cacko ROM (in fact, any Sharp-based ROM)
     zaurus-pdaxrom-qt   -- Sharp Zaurus, pdaXrom, version >= 1.1.0 RC9, uses qt library
@@ -33,7 +39,7 @@ PLATFORM DESCRIPTION
   This instruction describes how to build the program for desktop-qt and
   desktop-gtk platforms for a Debian system.
 
-REQUIREMENTS
+PRE-REQUISITES
 
   IMPORTANT: you will need the following libraries:
 
@@ -59,26 +65,6 @@ REQUIREMENTS
   Alternatively you can build the packages yourself (sorry, we do not provide
   instructions for it here).
 
-BUILDING FBREADER FOR DESKTOP-QT
-
-  1. You will need QT 3.* installed on your computer:
-
-    $ sudo apt-get install libqt3-mt-dev qt3-dev-tools
-
-  2. Go to the directory where you unpacked the FBReader sources
-
-  3. Configure sources for Linux Desktop:
-    $ echo TARGET_ARCH=desktop-qt > makefiles/target.mk
-
-  4. Build FBReader:
-
-    $ make
-
-  At this point you should be able to run FBReader:
-
-    $ cd fbreader
-    $ ./FBReader
-
 BUILDING FBREADER FOR DESKTOP-GTK
 
   1. You will need Gtk+ 2.* installed on your computer:
@@ -94,7 +80,33 @@ BUILDING FBREADER FOR DESKTOP-GTK
 
     $ make
 
+  5. Install FBReader:
+
+    $ sudo make install
+
   At this point you should be able to run FBReader:
 
-    $ cd fbreader
-    $ ./FBReader
+    $ FBReader
+
+BUILDING FBREADER FOR DESKTOP-QT
+
+  1. You will need QT 3.* installed on your computer:
+
+    $ sudo apt-get install libqt3-mt-dev qt3-dev-tools
+
+  2. Go to the directory where you unpacked the FBReader sources
+
+  3. Configure sources for Linux Desktop:
+    $ echo TARGET_ARCH=desktop-qt > makefiles/target.mk
+
+  4. Build FBReader:
+
+    $ make
+
+  5. Install FBReader:
+
+    $ sudo make install
+
+  At this point you should be able to run FBReader:
+
+    $ FBReader
