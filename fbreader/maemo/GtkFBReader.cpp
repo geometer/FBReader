@@ -45,7 +45,7 @@ struct ActionSlotData {
 	FBReader::ActionCode Code;
 };
 
-static void actionSlot(GtkWidget*, gpointer data) {
+static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
 	ActionSlotData *uData = (ActionSlotData*)data;
 	uData->Reader->doAction(uData->Code);
 }
@@ -216,13 +216,19 @@ void GtkFBReader::close() {
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/FBReader/" + name + ".png").c_str());
-	GtkWidget *button = gtk_button_new();
-	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
+	GtkToolItem *button = gtk_tool_item_new();
+	GtkWidget *ebox = gtk_event_box_new();
+
+	gtk_container_add(GTK_CONTAINER(ebox), image);
+	gtk_container_add(GTK_CONTAINER(button), ebox);
+
+	gtk_tool_item_set_homogeneous(button, FALSE);
+	gtk_tool_item_set_expand(button, FALSE);
+
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
-	gtk_container_add(GTK_CONTAINER(button), image);
-	gtk_container_add(GTK_CONTAINER(myToolbar), button);
-	gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
-	myButtons[id] = button;
+	gtk_container_add(GTK_CONTAINER(myToolbar), (GtkWidget *)button);
+	g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
+	myButtons[id] = (GtkWidget *)button;
 }
 
 void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
