@@ -24,11 +24,13 @@
 #include "GtkFBReader.h"
 #include "Paths.h"
 
-const std::string TeXHyphenator::PatternZip("share/FBReader/hyphenationPatterns.zip");
-//const std::string DocBookReader::DTDDirectory("/usr/share/xml/entities/xml-iso-entities-8879.1986");
-const std::string HtmlEntityExtension::CollectionFile("share/FBReader/formats/html/html.ent");
-const std::string FBReader::HelpDirectory("share/FBReader/help");
-const std::string GtkFBReader::ImageDirectory("icons/640x480");
-const std::string EncodingDescriptionPath("share/FBReader/encodings");
+static const std::string PathPrefix = "/usr/share/FBReader/";
 
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/DocBooks");
+const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
+//const std::string DocBookReader::DTDDirectory = "/usr/share/xml/entities/xml-iso-entities-8879.1986";
+const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
+const std::string FBReader::HelpDirectory = PathPrefix + "help";
+const std::string GtkFBReader::ImageDirectory = PathPrefix + "icons";
+const std::string EncodingDescriptionPath = PathPrefix + "encodings";
+
+ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/Books:/media/mmc1/Books");
