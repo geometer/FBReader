@@ -49,7 +49,7 @@ all: .bin
 	fi;
 
 install: all
-ifeq "$(findstring $(TARGET_ARCH),desktop-qt desktop-gtk)" "$(TARGET_ARCH)"
+ifeq "$(findstring $(TARGET_ARCH),desktop-qt desktop-gtk maemo)" "$(TARGET_ARCH)"
 	install -d $(DESTDIR)/usr/bin
 	install -s FBReader $(DESTDIR)/usr/bin
 	install -d $(DESTDIR)/usr/share/FBReader/
