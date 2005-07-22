@@ -31,7 +31,6 @@ bool FBFileHandler::isNodeVisible(const ZLTreeNodePtr node) const {
 		return !node->isFile() && (name == "..");
 	}
 	ZLFile file(name);
-	const std::string &ext = file.extension();
 	return !node->isFile() || file.isArchive() || (PluginCollection::instance().plugin(file.extension(), false) != 0);
 }
 
