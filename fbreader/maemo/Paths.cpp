@@ -33,4 +33,4 @@ const std::string FBReader::HelpDirectory = PathPrefix + "help";
 const std::string GtkFBReader::ImageDirectory = PathPrefix + "icons";
 const std::string EncodingDescriptionPath = PathPrefix + "encodings";
 
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/Books:/media/mmc1/Books");
+ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/MyDocs/Books:/media/mmc1/Books");
