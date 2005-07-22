@@ -39,8 +39,12 @@ static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn
 	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
-static void _changedHandler(GtkTreeSelection *, gpointer self) {
-	((GtkOpenFileDialog *)self)->activatedSlot();
+static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer self) {
+	if (event->button == 1) {
+		((GtkOpenFileDialog *)self)->activatedSlot();
+	}
+
+	return FALSE;
 }
 
 GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler, GtkWindow *parent) : ZLDesktopOpenFileDialog(handler) {
@@ -70,8 +74,9 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &h
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 
 	gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
+
 	// MSS: in case we do not want single click navigation, comment out the line below
-	g_signal_connect(G_OBJECT(selection), "changed", G_CALLBACK(_changedHandler), this);
+	g_signal_connect(myView, "button-press-event", G_CALLBACK(clickHandler), this);
 
 	GtkCellRenderer *renderer;
 	GtkTreeViewColumn *column;
