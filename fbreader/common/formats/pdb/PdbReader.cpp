@@ -310,8 +310,8 @@ void PluckerReader::readRecord(size_t recordSize) {
 				std::cerr << "typeCode = " << typeCode << "\n";
 				break;
 			default:
-				//std::cerr << "type = " << (int)type << "; ";
-				//std::cerr << "size = " << size << "\n";
+				std::cerr << "type = " << (int)type << "; ";
+				std::cerr << "size = " << size << "\n";
 				break;
 		}
 
