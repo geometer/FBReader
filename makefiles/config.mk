@@ -104,7 +104,7 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
-	INSTALLDIR=/usr
+	INSTALLDIR=/usr/local
 
 	CC = gcc
 	AR = ar rsu
