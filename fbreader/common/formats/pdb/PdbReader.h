@@ -24,13 +24,15 @@
 
 #include <abstract/ZLInputStream.h>
 
+class BookModel;
+
 class PdbReader {
 
 public:
 	PdbReader() FORMATS_SECTION;
 	~PdbReader() FORMATS_SECTION;
 
-	bool readDocument(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	bool readDocument(shared_ptr<ZLInputStream> stream, BookModel &model) FORMATS_SECTION;
 };
 
 inline PdbReader::PdbReader() {}

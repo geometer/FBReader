@@ -24,18 +24,24 @@
 #include "PdbReader.h"
 //#include "PdbDescriptionReader.h"
 //#include "PdbBookReader.h"
-//#include "../../description/BookDescription.h"
+#include "../../description/BookDescription.h"
 
 bool PdbPlugin::acceptsFile(const std::string &extension) const {
 	return (extension == "pdb") || (extension == "PDB");
 }
 
 bool PdbPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	return PdbReader().readDocument(ZLFile(path).inputStream());
+	//return PdbReader().readDocument(ZLFile(path).inputStream());
+	ZLFile file(path);
+	WritableBookDescription wDescription(description);
+	wDescription.encoding() = "US_ASCII";
+	wDescription.addAuthor("Unknown", "PDB", "Author");
+	wDescription.title() = file.name();
+	return true;
 }
 
 bool PdbPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return false;
+	return PdbReader().readDocument(ZLFile(description.fileName()).inputStream(), model);
 }
 
 const std::string &PdbPlugin::iconName() const {

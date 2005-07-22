@@ -18,9 +18,14 @@
  */
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
 
+#include <abstract/ZLZDecompressor.h>
+
 #include "PdbReader.h"
+#include "../../bookmodel/BookModel.h"
+#include "../../bookmodel/BookReader.h"
 
 static void readUnsignedShort(shared_ptr<ZLInputStream> stream, unsigned short &N) {
 	stream->read((char*)&N + 1, 1);
@@ -62,47 +67,230 @@ bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 	return stream->offset() == startOffset + 72;
 }
 
-class PluckerReader {
+class PluckerReader : public BookReader {
 
 public:
-	PluckerReader(shared_ptr<ZLInputStream> stream);
+	PluckerReader(shared_ptr<ZLInputStream> stream, BookModel &model);
 	~PluckerReader();
 
 	bool readDocument();
 
 private:
-	void readRecord();
+	enum FontType {
+		FT_REGULAR = 0,
+		FT_H1 = 1,
+		FT_H2 = 2,
+		FT_H3 = 3,
+		FT_H4 = 4,
+		FT_H5 = 5,
+		FT_H6 = 6,
+		FT_BOLD = 7,
+		FT_TT = 8,
+		FT_SMALL = 9,
+		FT_SUB = 10,
+		FT_SUP = 11
+	};
+
+	void readRecord(size_t recordSize);
+	void processTextRecord(const std::string &record);
+	void changeFont(FontType font);
 
 private:
 	shared_ptr<ZLInputStream> myStream;
+	FontType myFont;
 };
 
-PluckerReader::PluckerReader(shared_ptr<ZLInputStream> stream) : myStream(stream) {
+PluckerReader::PluckerReader(shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myStream(stream), myFont(FT_REGULAR) {
 }
 
 PluckerReader::~PluckerReader() {
 }
 
-void PluckerReader::readRecord() {
+void PluckerReader::changeFont(FontType font) {
+	if (myFont == font) {
+		return;
+	}
+	switch (myFont) {
+		case FT_REGULAR:
+			break;
+		case FT_H1:
+		case FT_H2:
+			endParagraph();
+			popKind();
+			endContentsParagraph();
+			exitTitle();
+			beginParagraph();
+			break;
+		case FT_H3:
+		case FT_H4:
+		case FT_H5:
+		case FT_H6:
+			break;
+		case FT_BOLD:
+			addControl(STRONG, false);
+			break;
+		case FT_TT:
+			addControl(CODE, false);
+			break;
+		case FT_SMALL:
+			break;
+		case FT_SUB:
+			addControl(SUB, false);
+			break;
+		case FT_SUP:
+			addControl(SUP, false);
+			break;
+	}
+	myFont = font;
+	switch (myFont) {
+		case FT_REGULAR:
+			break;
+		case FT_H1:
+		case FT_H2:
+			endParagraph();
+			insertEndOfSectionParagraph();
+			enterTitle();
+			beginContentsParagraph();
+			pushKind(SECTION_TITLE);
+			beginParagraph();
+			break;
+		case FT_H3:
+		case FT_H4:
+		case FT_H5:
+		case FT_H6:
+			break;
+		case FT_BOLD:
+			addControl(STRONG, true);
+			break;
+		case FT_TT:
+			addControl(CODE, true);
+			break;
+		case FT_SMALL:
+			break;
+		case FT_SUB:
+			addControl(SUB, true);
+			break;
+		case FT_SUP:
+			addControl(SUP, true);
+			break;
+	}
+}
+
+void PluckerReader::processTextRecord(const std::string &record) {
+	beginParagraph();
+	const char *dataStart = record.data();
+	const char *dataEnd = dataStart + record.length();
+	const char *textStart = dataStart;
+	bool functionFlag = false;
+	for (const char *ptr = dataStart; ptr < dataEnd; ptr++) {
+		if (functionFlag) {
+			switch (*ptr) {
+				case 0x0A: ptr += 2; break;
+				case 0x0C: ptr += 4; break;
+				case 0x08: ptr += 0; break;
+				case 0x11:
+					ptr += 1;
+					changeFont((FontType)*ptr);
+					break;
+				case 0x1A: ptr += 2; break;
+				case 0x22: ptr += 2; break;
+				case 0x29: ptr += 1; break;
+				case 0x33: ptr += 3; break;
+				case 0x38:
+					endParagraph();
+					beginParagraph();
+					break;
+				case 0x40:
+					addControl(EMPHASIS, true);
+					break;
+				case 0x48:
+					addControl(EMPHASIS, false);
+					break;
+				case 0x53: ptr += 3; break;
+				case 0x5C: ptr += 4; break;
+				case 0x60: ptr += 0; break;
+				case 0x68: ptr += 0; break;
+				case 0x70: ptr += 0; break;
+				case 0x78: ptr += 0; break;
+				case 0x83: ptr += 3; break;
+				case 0x85: ptr += 5; break;
+				case 0x8E: ptr += 6; break;
+				case 0x8C: ptr += 4; break;
+				case 0x8A: ptr += 2; break;
+				case 0x88: ptr += 0; break;
+				case 0x90: ptr += 0; break;
+				case 0x92: ptr += 2; break;
+				case 0x97: ptr += 7; break;
+			}
+			textStart = ptr + 1;
+			functionFlag = false;
+		} else if (*ptr == 0) {
+			functionFlag = true;
+			if (textStart != ptr) {
+				addDataToBuffer(textStart, ptr - textStart);
+			}
+		}
+	}
+	endParagraph();
+}
+
+void PluckerReader::readRecord(size_t recordSize) {
 	unsigned short uid;
 	readUnsignedShort(myStream, uid);
-	std::cerr << "uid = " << uid << "; ";
-	if (uid > 1) {
+	if (uid == 1) {
+		unsigned short version;
+		readUnsignedShort(myStream, version);
+	} else {
 		unsigned short paragraphs;
 		readUnsignedShort(myStream, paragraphs);
-		std::cerr << "paragraphs = " << paragraphs << "; ";
+		//std::cerr << "paragraphs = " << paragraphs << "; ";
 
 		unsigned short size;
 		readUnsignedShort(myStream, size);
-		std::cerr << "size = " << size << "; ";
 
 		unsigned char type;
 		myStream->read((char*)&type, 1);
-		std::cerr << "type = " << (int)type << "; ";
+		//std::cerr << "type = " << (int)type << "; ";
 
 		unsigned char flags;
 		myStream->read((char*)&flags, 1);
-		std::cerr << "flags = " << (int)flags << "\n";
+		//std::cerr << "flags = " << (int)flags << "\n";
+
+		switch (type) {
+			case 1:
+				std::cerr << "size = " << size << "; ";
+				/*
+				for (unsigned short i = 0; i < paragraphs; i++) {
+					unsigned short psize;
+					unsigned short attribute;
+					readUnsignedShort(myStream, psize);
+					readUnsignedShort(myStream, attribute);
+					//std::cerr << "psize = " << psize << "; ";
+					//std::cerr << "attribute = " << attribute << "\n";
+				}
+				*/
+				myStream->seek(4 * paragraphs + 2);
+				//myStream->seek(2);
+				{
+					ZLZDecompressor decompressor(recordSize - 10 - 4 * paragraphs);
+					char buffer[1024];
+					size_t s;
+					std::string stringBuffer;
+					do {
+						s = decompressor.decompress(*myStream, buffer, 1024);
+						if (s != 0) {
+							stringBuffer.append(buffer, s);
+						}
+					} while (s == 1024);
+					std::cerr << "stringBuffer.length() = " << stringBuffer.length() << "\n";
+					processTextRecord(stringBuffer);
+				}
+				break;
+			default:
+				std::cerr << "type = " << (int)type << "; ";
+				std::cerr << "size = " << size << "\n";
+				break;
+		}
 
 		/*
 		if (type == 10) {
@@ -115,6 +303,10 @@ void PluckerReader::readRecord() {
 }
 
 bool PluckerReader::readDocument() {
+	setMainTextModel();
+	pushKind(REGULAR);
+	myFont = FT_REGULAR;
+
 	std::vector<unsigned long> offsets;
 	// record-id list
 	myStream->seek(4);
@@ -139,12 +331,13 @@ bool PluckerReader::readDocument() {
 			break;
 		}
 		//std::cerr << "currentOffset = " << myStream->offset() << "\n";
-		readRecord();
+		size_t recordSize = ((it != offsets.end() - 1) ? *(it + 1) : myStream->sizeOfOpened()) - *it;
+		readRecord(recordSize);
 	}
-	return false;
+	return true;
 }
 
-bool PdbReader::readDocument(shared_ptr<ZLInputStream> stream) {
+bool PdbReader::readDocument(shared_ptr<ZLInputStream> stream, BookModel &model) {
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
@@ -160,7 +353,7 @@ bool PdbReader::readDocument(shared_ptr<ZLInputStream> stream) {
 
 	bool code = false;
 	if (header.Id == "DataPlkr") {
-		code = PluckerReader(stream).readDocument();
+		code = PluckerReader(stream, model).readDocument();
 	} else if (header.Id == "TEXtREAd") {
 	}
 
