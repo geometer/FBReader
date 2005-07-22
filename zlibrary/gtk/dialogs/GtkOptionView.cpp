@@ -245,11 +245,13 @@ void ColorOptionView::_createItem() {
 //	myWidget = gtk_button_new();
 //	gtk_container_add(GTK_CONTAINER(myWidget), myDrawingArea);
 //	g_signal_connect(G_OBJECT(myWidget), "clicked", G_CALLBACK(_onChangeColor), this);
-	myWidget = gtk_table_new(3, 3, false);
+	myWidget = gtk_table_new(3, 4, false);
 
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 3, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
 	myRSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
 	gtk_scale_set_draw_value(GTK_SCALE(myRSlider), false);
@@ -266,24 +268,22 @@ void ColorOptionView::_createItem() {
 	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
 	g_signal_connect(G_OBJECT(myBSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
 
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myRSlider, 1, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myGSlider, 1, 2, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myBSlider, 1, 2, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myRSlider, 1, 2, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myGSlider, 1, 2, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myBSlider, 1, 2, 3, 4);
 
 	myColor.red = color.Red * 65535 / 255;
 	myColor.blue = color.Blue * 65535 / 255;
 	myColor.green = color.Green * 65535 / 255;
 
 	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
-#if 1
+
 	GtkWidget *frame = gtk_frame_new(NULL);
 
 	gtk_container_add(GTK_CONTAINER(frame), myDrawingArea);
 
-	gtk_table_attach(GTK_TABLE(myWidget), frame, 2, 3, 0, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-#else
-	gtk_table_attach(GTK_TABLE(myWidget), myDrawingArea, 2, 3, 0, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 2, 2);
-#endif
+	gtk_table_attach(GTK_TABLE(myWidget), frame, 2, 3, 1, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+
 	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 2);
 	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 2);
 
