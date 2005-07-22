@@ -40,11 +40,11 @@ public:
 	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
 	const std::string &getPixmapPath() const { return myPixmapPath; }
 
-  void setMainWindow(GtkWindow *window) { myWindow = window; }
+	void setMainWindow(GtkWindow *window) { myWindow = window; }
 
 private:
 	std::string myPixmapPath;
-  GtkWindow *myWindow;
+	GtkWindow *myWindow;
 };
 
 #endif /* __GTKDIALOGMANAGER_H__ */

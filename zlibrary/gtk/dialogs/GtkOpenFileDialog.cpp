@@ -43,9 +43,9 @@ static void _changedHandler(GtkTreeSelection *, gpointer self) {
 	((GtkOpenFileDialog *)self)->activatedSlot();
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLDesktopOpenFileDialog(handler) {
+GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler, GtkWindow *parent) : ZLDesktopOpenFileDialog(handler) {
 	myExitFlag = false;
-	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption, 0, GTK_DIALOG_MODAL,
+	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption, parent, GTK_DIALOG_MODAL,
 					GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
 					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
 					0));

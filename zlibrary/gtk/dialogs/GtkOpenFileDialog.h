@@ -30,7 +30,7 @@
 class GtkOpenFileDialog : public ZLDesktopOpenFileDialog {
 
 public:
-	GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler); 
+	GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler, GtkWindow *parent); 
 	~GtkOpenFileDialog(); 
 
 	void run();
