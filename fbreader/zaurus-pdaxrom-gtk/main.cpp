@@ -42,7 +42,10 @@ int main(int argc, char **argv) {
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkFBReader::ImageDirectory);
 	GtkScreenSize::createInstance();
 
-	new GtkFBReader();
+	GtkFBReader *reader = new GtkFBReader();
+
+	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
+
 	gtk_main();
 
 	GtkScreenSize::deleteInstance();

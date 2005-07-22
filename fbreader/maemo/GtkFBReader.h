@@ -61,6 +61,8 @@ public:
 
 	void close();
 
+	GtkWindow *getMainWindow() { return myMainWindow; }
+
 private:
 	HildonApp *myApp;
 	HildonAppView *myAppView;

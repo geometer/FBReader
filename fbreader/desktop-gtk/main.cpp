@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
 
 	GtkFBReader *reader = new GtkFBReader();
 
-  ((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
+	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
 
 	gtk_main();
 

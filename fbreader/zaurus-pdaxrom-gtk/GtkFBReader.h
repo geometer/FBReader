@@ -51,6 +51,8 @@ public:
 	void handleKeySlot(GdkEventKey *);
 	void close();
 
+	GtkWindow *getMainWindow() { return myMainWindow; }
+
 private:
 	void addKeyBinding(guint keyval, GdkModifierType state, ActionCode code);
 	void addKeyBinding(const std::string &accelerator, ActionCode code);
