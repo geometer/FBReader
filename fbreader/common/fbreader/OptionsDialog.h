@@ -24,6 +24,16 @@ class ZLOptionsDialog;
 class OptionsPage;
 class ZLPaintContext;
 
+class ZLBooleanOptionEntry;
+class ZLSpinOptionEntry;
+
+struct IndicatorPage {
+	ZLBooleanOptionEntry *ShowIndicatorEntry;
+	ZLSpinOptionEntry *HeightEntry;
+	ZLSpinOptionEntry *OffsetEntry;
+	ZLBooleanOptionEntry *EnableNavigationEntry;
+};
+
 class OptionsDialog {
 
 public:
@@ -38,6 +48,7 @@ private:
 	OptionsPage *myStylePage;
 	OptionsPage *myColorPage;
 	OptionsPage *myKeyBindingsPage;
+	IndicatorPage myIndicatorPage;
 };
 
 inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }

@@ -34,6 +34,29 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
+class ShowIndicatorEntry : public ZLSimpleBooleanOptionEntry {
+
+public:
+	ShowIndicatorEntry(IndicatorPage &page, const std::string &name, const ZLBooleanOption &option);
+	~ShowIndicatorEntry();
+	void onValueChange(bool value);
+
+private:
+	IndicatorPage &myPage;
+};
+
+ShowIndicatorEntry::ShowIndicatorEntry(IndicatorPage &page, const std::string &name, const ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {
+}
+
+ShowIndicatorEntry::~ShowIndicatorEntry() {
+}
+
+void ShowIndicatorEntry::onValueChange(bool value) {
+	myPage.HeightEntry->setVisible(value);
+	myPage.OffsetEntry->setVisible(value);
+	myPage.EnableNavigationEntry->setVisible(value);
+}
+
 OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
@@ -58,10 +81,15 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), context);
 
 	ZLOptionsDialogTab *indicatorTab = myDialog->createTab("Indicator");
-	indicatorTab->addOption(new ZLSimpleBooleanOptionEntry("Show Position Indicator", TextView::ShowPositionIndicatorOption));
-	indicatorTab->addOption(new ZLSimpleBooleanOptionEntry("Enable Navigation", TextView::IsIndicatorSensitiveOption));
-	indicatorTab->addOption(new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicatorHeightOption, 1, 100, 1));
-	indicatorTab->addOption(new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 0, 100, 1));
+	myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", TextView::ShowPositionIndicatorOption);
+	myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicatorHeightOption, 1, 100, 1);
+	myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 0, 100, 1);
+	myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", TextView::IsIndicatorSensitiveOption);
+	indicatorTab->addOption(myIndicatorPage.ShowIndicatorEntry);
+	indicatorTab->addOption(myIndicatorPage.HeightEntry);
+	indicatorTab->addOption(myIndicatorPage.OffsetEntry);
+	indicatorTab->addOption(myIndicatorPage.EnableNavigationEntry);
+	myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
 
 	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
 	if (false) {

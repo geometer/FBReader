@@ -182,14 +182,14 @@ void PluckerReader::processTextRecord(const std::string &record) {
 	bool functionFlag = false;
 	for (const char *ptr = dataStart; ptr < dataEnd; ptr++) {
 		if (functionFlag) {
-			std::cerr << "[" << (int)*ptr << "]\n";
+			//std::cerr << "[" << (int)*ptr << "]\n";
 			switch (*ptr) {
 				case 0x0A: ptr += 2; break;
 				case 0x0C: ptr += 4; break;
 				case 0x08: ptr += 0; break;
 				case 0x11:
 					ptr += 1;
-					std::cerr << "== " << (int)*ptr << "\n";
+					//std::cerr << "== " << (int)*ptr << "\n";
 					changeFont((FontType)*ptr);
 					break;
 				case 0x1A: ptr += 2; break;
@@ -304,6 +304,11 @@ void PluckerReader::readRecord(size_t recordSize) {
 					processTextRecord(stringBuffer);
 				}
 				break;
+			case 10:
+				unsigned short typeCode;
+				readUnsignedShort(myStream, typeCode);
+				std::cerr << "typeCode = " << typeCode << "\n";
+				break;
 			default:
 				//std::cerr << "type = " << (int)type << "; ";
 				//std::cerr << "size = " << size << "\n";
@@ -312,9 +317,6 @@ void PluckerReader::readRecord(size_t recordSize) {
 
 		/*
 		if (type == 10) {
-			unsigned short typeCode;
-			readUnsignedShort(myStream, typeCode);
-			std::cerr << "typeCode = " << typeCode << "\n";
 		}
 		*/
 	}
