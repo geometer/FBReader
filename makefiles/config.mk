@@ -84,13 +84,15 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-qt"
+	INSTALLDIR=/usr/local
+
 	CC = gcc
 	AR = ar rsu
 	LD = g++
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\"
 	LDFLAGS = -O3
 	MOC = moc-qt3
 	RM = rm -rvf
@@ -102,13 +104,15 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
+	INSTALLDIR=/usr/local
+
 	CC = gcc
 	AR = ar rsu
 	LD = g++
 	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\"
 	LDFLAGS = -O3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -119,6 +123,8 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 endif
 
 ifeq "$(TARGET_ARCH)" "maemo"
+	INSTALLDIR=/usr
+
 	CC = gcc
 	AR = ar rsu
 	LD = g++

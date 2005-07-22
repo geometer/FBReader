@@ -24,7 +24,7 @@
 #include "QFBReader.h"
 #include "Paths.h"
 
-static const std::string PathPrefix = "/usr/share/FBReader/";
+static const std::string PathPrefix = std::string(INSTALLDIR) + "/share/FBReader/";
 
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
 //const std::string DocBookReader::DTDDirectory = "/usr/share/xml/entities/xml-iso-entities-8879.1986";

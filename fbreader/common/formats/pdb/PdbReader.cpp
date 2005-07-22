@@ -115,16 +115,15 @@ void PluckerReader::changeFont(FontType font) {
 			break;
 		case FT_H1:
 		case FT_H2:
+		case FT_H3:
+		case FT_H4:
+		case FT_H5:
+		case FT_H6:
 			endParagraph();
 			popKind();
 			endContentsParagraph();
 			exitTitle();
 			beginParagraph();
-			break;
-		case FT_H3:
-		case FT_H4:
-		case FT_H5:
-		case FT_H6:
 			break;
 		case FT_BOLD:
 			addControl(STRONG, false);
@@ -147,17 +146,16 @@ void PluckerReader::changeFont(FontType font) {
 			break;
 		case FT_H1:
 		case FT_H2:
+		case FT_H3:
+		case FT_H4:
+		case FT_H5:
+		case FT_H6:
 			endParagraph();
 			insertEndOfSectionParagraph();
 			enterTitle();
 			beginContentsParagraph();
 			pushKind(SECTION_TITLE);
 			beginParagraph();
-			break;
-		case FT_H3:
-		case FT_H4:
-		case FT_H5:
-		case FT_H6:
 			break;
 		case FT_BOLD:
 			addControl(STRONG, true);
@@ -184,18 +182,26 @@ void PluckerReader::processTextRecord(const std::string &record) {
 	bool functionFlag = false;
 	for (const char *ptr = dataStart; ptr < dataEnd; ptr++) {
 		if (functionFlag) {
+			std::cerr << "[" << (int)*ptr << "]\n";
 			switch (*ptr) {
 				case 0x0A: ptr += 2; break;
 				case 0x0C: ptr += 4; break;
 				case 0x08: ptr += 0; break;
 				case 0x11:
 					ptr += 1;
+					std::cerr << "== " << (int)*ptr << "\n";
 					changeFont((FontType)*ptr);
 					break;
 				case 0x1A: ptr += 2; break;
 				case 0x22: ptr += 2; break;
 				case 0x29: ptr += 1; break;
-				case 0x33: ptr += 3; break;
+				case 0x33:
+					ptr += 3;
+					endParagraph();
+					beginParagraph(Paragraph::EMPTY_LINE_PARAGRAPH);
+					endParagraph();
+					beginParagraph();
+					break;
 				case 0x38:
 					endParagraph();
 					beginParagraph();
@@ -228,7 +234,22 @@ void PluckerReader::processTextRecord(const std::string &record) {
 			functionFlag = true;
 			if (textStart != ptr) {
 				addDataToBuffer(textStart, ptr - textStart);
+				//std::cerr << "{" << (int)(unsigned char)textStart[0] << "}\n";
+				//std::cerr << "{" << (int)(unsigned char)textStart[1] << "}\n";
+				//std::cerr << textStart;
 			}
+			textStart = ptr + 1;
+		} else if (*ptr == (char)160) {
+			if (textStart != ptr) {
+				addDataToBuffer(textStart, ptr - textStart);
+				//std::cerr << "{" << (int)(unsigned char)textStart[0] << "}\n";
+				//std::cerr << "{" << (int)(unsigned char)textStart[1] << "}\n";
+				//std::cerr << textStart;
+			}
+			textStart = ptr + 1;
+			changeFont(FT_REGULAR);
+			//endParagraph();
+			//beginParagraph();
 		}
 	}
 	endParagraph();
@@ -243,22 +264,19 @@ void PluckerReader::readRecord(size_t recordSize) {
 	} else {
 		unsigned short paragraphs;
 		readUnsignedShort(myStream, paragraphs);
-		//std::cerr << "paragraphs = " << paragraphs << "; ";
 
 		unsigned short size;
 		readUnsignedShort(myStream, size);
 
 		unsigned char type;
 		myStream->read((char*)&type, 1);
-		//std::cerr << "type = " << (int)type << "; ";
 
 		unsigned char flags;
 		myStream->read((char*)&flags, 1);
-		//std::cerr << "flags = " << (int)flags << "\n";
 
 		switch (type) {
 			case 1:
-				std::cerr << "size = " << size << "; ";
+				//std::cerr << "size = " << size << "; ";
 				/*
 				for (unsigned short i = 0; i < paragraphs; i++) {
 					unsigned short psize;
@@ -282,13 +300,13 @@ void PluckerReader::readRecord(size_t recordSize) {
 							stringBuffer.append(buffer, s);
 						}
 					} while (s == 1024);
-					std::cerr << "stringBuffer.length() = " << stringBuffer.length() << "\n";
+					//std::cerr << "stringBuffer.length() = " << stringBuffer.length() << "\n";
 					processTextRecord(stringBuffer);
 				}
 				break;
 			default:
-				std::cerr << "type = " << (int)type << "; ";
-				std::cerr << "size = " << size << "\n";
+				//std::cerr << "type = " << (int)type << "; ";
+				//std::cerr << "size = " << size << "\n";
 				break;
 		}
 
