@@ -54,6 +54,7 @@ ifeq "$(findstring $(TARGET_ARCH),desktop-qt desktop-gtk maemo)" "$(TARGET_ARCH)
 	install -s FBReader $(DESTDIR)/usr/bin
 	install -d $(DESTDIR)/usr/share/FBReader/
 	install -d $(DESTDIR)/usr/share/FBReader/formats/html
+	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)/usr/share/FBReader/formats/html
 	install -d $(DESTDIR)/usr/share/FBReader/icons/FBReader
 	install -m 0644 icons/640x480/FBReader.png $(DESTDIR)/usr/share/FBReader/icons
 	install -m 0644 $(wildcard icons/640x480/FBReader/*) $(DESTDIR)/usr/share/FBReader/icons/FBReader
