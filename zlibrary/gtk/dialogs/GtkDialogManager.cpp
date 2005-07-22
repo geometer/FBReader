@@ -26,7 +26,7 @@
 #include "GtkOpenFileDialog.h"
 
 ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new GtkOptionsDialog(id, title);
+	return new GtkOptionsDialog(id, title, myWindow);
 }
 
 int GtkDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {

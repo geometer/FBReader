@@ -20,6 +20,8 @@
 #ifndef __GTKDIALOGMANAGER_H__
 #define __GTKDIALOGMANAGER_H__
 
+#include <gtk/gtkwindow.h>
+
 #include <abstract/ZLDialogManager.h>
 
 class GtkDialogManager : public ZLDialogManager {
@@ -28,7 +30,7 @@ public:
 	static void createInstance() { ourInstance = new GtkDialogManager(); }
 
 private:
-	GtkDialogManager() {}
+	GtkDialogManager() : myWindow(0) {}
 
 public:
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
@@ -38,8 +40,11 @@ public:
 	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
 	const std::string &getPixmapPath() const { return myPixmapPath; }
 
+  void setMainWindow(GtkWindow *window) { myWindow = window; }
+
 private:
 	std::string myPixmapPath;
+  GtkWindow *myWindow;
 };
 
 #endif /* __GTKDIALOGMANAGER_H__ */
