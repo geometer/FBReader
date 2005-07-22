@@ -27,6 +27,7 @@
 #include <gtk/gtkdrawingarea.h>
 // #include <gtk/gtkcolorseldialog.h>
 #include <gtk/gtkhscale.h>
+#include <gtk/gtkframe.h>
 
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"
@@ -274,9 +275,15 @@ void ColorOptionView::_createItem() {
 	myColor.green = color.Green * 65535 / 255;
 
 	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
+#if 1
+	GtkWidget *frame = gtk_frame_new(NULL);
 
-	gtk_table_attach(GTK_TABLE(myWidget), myDrawingArea, 2, 3, 0, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_container_add(GTK_CONTAINER(frame), myDrawingArea);
 
+	gtk_table_attach(GTK_TABLE(myWidget), frame, 2, 3, 0, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+#else
+	gtk_table_attach(GTK_TABLE(myWidget), myDrawingArea, 2, 3, 0, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 2, 2);
+#endif
 	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 2);
 	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 2);
 
