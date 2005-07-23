@@ -66,5 +66,5 @@ void ZLImage::decode() const {
 			sum >>= 8;
 		}
 	}
-	std::string().swap(myEncodedData);
+	myEncodedData.erase();
 }

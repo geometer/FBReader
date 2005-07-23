@@ -83,7 +83,7 @@ void Paragraph::addText(const std::vector<std::string> &text) {
 }
 
 void TextEntry::addText(const std::string &text) {
-	myText += text;
+	myText.add(myText.length(), text);
 }
 
 const ZLImage *ImageEntry::image() const {

@@ -20,6 +20,7 @@
 #define __ZLIMAGE_H__
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLLowMemoryString.h>
 
 class ZLImage {
 
@@ -36,7 +37,7 @@ private:
 
 private:
 	std::string myMimeType;
-	mutable std::string myEncodedData;
+	mutable ZLLowMemoryString myEncodedData;
 	mutable unsigned char *myData;
 	mutable unsigned int myDataLen;
 };

@@ -23,6 +23,7 @@
 #include <map>
 
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLLowMemoryString.h>
 
 #include "TextKind.h"
 
@@ -99,13 +100,13 @@ public:
 	TextEntry() MODEL_SECTION;
 	TextEntry(std::string &text) MODEL_SECTION;
 	~TextEntry() MODEL_SECTION;
-	const std::string &text() const MODEL_SECTION;
+	const ZLLowMemoryString &text() const MODEL_SECTION;
 	void addText(const std::string &text) MODEL_SECTION;
 	void addText(const std::vector<std::string> &text) MODEL_SECTION;
 	Kind entryKind() const MODEL_SECTION;
  
 private:
-	std::string myText;
+	ZLLowMemoryString myText;
 };
 
 class ImageEntry : public ParagraphEntry {
@@ -206,9 +207,9 @@ inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
 inline const std::string &HyperlinkControlEntry::label() const { return myLabel; }
 
 inline TextEntry::TextEntry() {}
-inline TextEntry::TextEntry(std::string &text) { myText.swap(text); }
+inline TextEntry::TextEntry(std::string &text) { myText.add(0, text); }
 inline TextEntry::~TextEntry() {}
-inline const std::string &TextEntry::text() const { return myText; }
+inline const ZLLowMemoryString &TextEntry::text() const { return myText; }
 inline void TextEntry::addText(const std::vector<std::string> &text) { ZLStringUtil::append(myText, text); }
 inline ParagraphEntry::Kind TextEntry::entryKind() const { return TEXT_ENTRY; }
 

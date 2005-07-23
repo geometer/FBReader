@@ -92,7 +92,7 @@ private:
 	};
 
 	void readRecord(size_t recordSize);
-	void processCompressedTextRecord(const std::string &record);
+	void processCompressedTextRecord(size_t size);
 	void changeFont(FontType font);
 
 private:
@@ -174,8 +174,20 @@ void PluckerReader::changeFont(FontType font) {
 	}
 }
 
-void PluckerReader::processCompressedTextRecord(const std::string &record) {
+void PluckerReader::processCompressedTextRecord(size_t size) {
 	beginParagraph();
+
+	ZLZDecompressor decompressor(size);
+	char buffer[1024];
+	size_t s;
+	std::string record;
+	do {
+		s = decompressor.decompress(*myStream, buffer, 1024);
+		if (s != 0) {
+			record.append(buffer, s);
+		}
+	} while (s == 1024);
+
 	const char *dataStart = record.data();
 	const char *dataEnd = dataStart + record.length();
 	const char *textStart = dataStart;
@@ -338,37 +350,38 @@ void PluckerReader::readRecord(size_t recordSize) {
 				myStream->seek(4 * paragraphs + 2);
 				//myStream->seek(2);
 				{
-					ZLZDecompressor decompressor(recordSize - 10 - 4 * paragraphs);
-					char buffer[1024];
-					size_t s;
-					std::string stringBuffer;
-					do {
-						s = decompressor.decompress(*myStream, buffer, 1024);
-						if (s != 0) {
-							stringBuffer.append(buffer, s);
-						}
-					} while (s == 1024);
-					//std::cerr << "stringBuffer.length() = " << stringBuffer.length() << "\n";
 					std::string strId;
 					ZLStringUtil::appendNumber(strId, uid);
 					addHyperlinkLabel(strId);
-					processCompressedTextRecord(stringBuffer);
+
+					//std::cerr << "stringBuffer.length() = " << stringBuffer.length() << "\n";
+					processCompressedTextRecord(recordSize - 10 - 4 * paragraphs);
 				}
 				break;
 			case 3:
 				{
 					myStream->seek(2);
-					ZLZDecompressor decompressor(recordSize - 10);
-					char buffer[1024];
-					size_t s;
-					std::string stringBuffer;
+					//ZLZDecompressor decompressor(recordSize - 10);
+					//char buffer[1024];
+					std::string strId;
+					ZLStringUtil::appendNumber(strId, uid);
+					beginImageData("thePIF(compressed)", strId.c_str());
+					/*
 					do {
 						s = decompressor.decompress(*myStream, buffer, 1024);
 						if (s != 0) {
-							stringBuffer.append(buffer, s);
+							addDataToBuffer(buffer, s);
 						}
 						//std::cerr << "s = " << s << "\n";
 					} while (s == 1024);
+					*/
+					const size_t s = recordSize - 10;
+					char *buffer = new char[s];
+					if (myStream->read(buffer, s) == s) {
+						addDataToBuffer(buffer, s);
+					}
+					delete[] buffer;
+					endImageData();
 					//std::cerr << "image id = " << uid << "; ";
 					//unsigned int w = 256 * (unsigned char)stringBuffer[0] + (unsigned char)stringBuffer[1];
 					//unsigned int h = 256 * (unsigned char)stringBuffer[2] + (unsigned char)stringBuffer[3];
