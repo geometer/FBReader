@@ -48,6 +48,6 @@ void ZLStringUtil::appendNumber(std::string &str, unsigned int n) {
 	str.reserve(str.length() + len);
 	for (base /= 10; base > 0; base /= 10) {
 		str += (char)(n / base + '0');
-		n %= 10;
+		n %= base;
 	}
 }

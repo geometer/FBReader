@@ -92,7 +92,7 @@ private:
 	};
 
 	void readRecord(size_t recordSize);
-	void processTextRecord(const std::string &record);
+	void processCompressedTextRecord(const std::string &record);
 	void changeFont(FontType font);
 
 private:
@@ -174,7 +174,7 @@ void PluckerReader::changeFont(FontType font) {
 	}
 }
 
-void PluckerReader::processTextRecord(const std::string &record) {
+void PluckerReader::processCompressedTextRecord(const std::string &record) {
 	beginParagraph();
 	const char *dataStart = record.data();
 	const char *dataEnd = dataStart + record.length();
@@ -182,37 +182,82 @@ void PluckerReader::processTextRecord(const std::string &record) {
 	bool functionFlag = false;
 	for (const char *ptr = dataStart; ptr < dataEnd; ptr++) {
 		if (functionFlag) {
-			//std::cerr << "[" << (int)*ptr << "]\n";
+			bool processed = false;
+			int fn = (unsigned char)*ptr;
 			switch (*ptr) {
-				case 0x0A: ptr += 2; break;
-				case 0x0C: ptr += 4; break;
-				case 0x08: ptr += 0; break;
+				case 0x0A:
+					{
+						unsigned int recordId = 256 * (unsigned char)*(ptr + 1) + (unsigned char)*(ptr + 2);
+						std::string id;
+						ZLStringUtil::appendNumber(id, recordId);
+						addHyperlinkControl(HYPERLINK, id);
+					}
+					ptr += 2;
+					break;
+				case 0x0C:
+					{
+						unsigned int recordId = 256 * (unsigned char)*(ptr + 1) + (unsigned char)*(ptr + 2);
+						unsigned int paragraphId = 256 * (unsigned char)*(ptr + 3) + (unsigned char)*(ptr + 4);
+						std::string id;
+						ZLStringUtil::appendNumber(id, recordId);
+						id += "#";
+						ZLStringUtil::appendNumber(id, paragraphId);
+						addHyperlinkControl(HYPERLINK, id);
+						std::cerr << id << "\n";
+					}
+					ptr += 4;
+					break;
+				case 0x08:
+					addControl(HYPERLINK, false);
+					ptr += 0;
+					break;
 				case 0x11:
 					ptr += 1;
 					//std::cerr << "== " << (int)*ptr << "\n";
 					changeFont((FontType)*ptr);
+					processed = true;
 					break;
-				case 0x1A: ptr += 2; break;
+				case 0x1A:
+					{
+						unsigned int id = 256 * (unsigned char)*(ptr + 1) + (unsigned char)*(ptr + 2);
+						std::string strId;
+						ZLStringUtil::appendNumber(strId, id);
+						addImageToParagraph(strId);
+						addDataToBuffer("XXXXX" + strId);
+					}
+					ptr += 2;
+					processed = true;
+					break;
 				case 0x22: ptr += 2; break;
-				case 0x29: ptr += 1; break;
+				case 0x29:
+					ptr += 1;
+					processed = true;
+					break;
 				case 0x33:
 					ptr += 3;
 					endParagraph();
 					beginParagraph(Paragraph::EMPTY_LINE_PARAGRAPH);
 					endParagraph();
 					beginParagraph();
+					processed = true;
 					break;
 				case 0x38:
 					endParagraph();
 					beginParagraph();
+					processed = true;
 					break;
 				case 0x40:
 					addControl(EMPHASIS, true);
+					processed = true;
 					break;
 				case 0x48:
 					addControl(EMPHASIS, false);
+					processed = true;
 					break;
-				case 0x53: ptr += 3; break;
+				case 0x53:
+					ptr += 3;
+					processed = true;
+					break;
 				case 0x5C: ptr += 4; break;
 				case 0x60: ptr += 0; break;
 				case 0x68: ptr += 0; break;
@@ -229,6 +274,9 @@ void PluckerReader::processTextRecord(const std::string &record) {
 				case 0x97: ptr += 7; break;
 			}
 			textStart = ptr + 1;
+			if (!processed) {
+				//std::cerr << "[" << fn << "]\n";
+			}
 			functionFlag = false;
 		} else if (*ptr == 0) {
 			functionFlag = true;
@@ -301,17 +349,42 @@ void PluckerReader::readRecord(size_t recordSize) {
 						}
 					} while (s == 1024);
 					//std::cerr << "stringBuffer.length() = " << stringBuffer.length() << "\n";
-					processTextRecord(stringBuffer);
+					std::string strId;
+					ZLStringUtil::appendNumber(strId, uid);
+					addHyperlinkLabel(strId);
+					processCompressedTextRecord(stringBuffer);
+				}
+				break;
+			case 3:
+				{
+					myStream->seek(2);
+					ZLZDecompressor decompressor(recordSize - 10);
+					char buffer[1024];
+					size_t s;
+					std::string stringBuffer;
+					do {
+						s = decompressor.decompress(*myStream, buffer, 1024);
+						if (s != 0) {
+							stringBuffer.append(buffer, s);
+						}
+						//std::cerr << "s = " << s << "\n";
+					} while (s == 1024);
+					//std::cerr << "image id = " << uid << "; ";
+					//unsigned int w = 256 * (unsigned char)stringBuffer[0] + (unsigned char)stringBuffer[1];
+					//unsigned int h = 256 * (unsigned char)stringBuffer[2] + (unsigned char)stringBuffer[3];
+					//std::cerr << "w = " << w << "; ";
+					//std::cerr << "h = " << h << "; ";
+					//std::cerr << "len = " << stringBuffer.length() - 4 << "\n";
 				}
 				break;
 			case 10:
 				unsigned short typeCode;
 				readUnsignedShort(myStream, typeCode);
-				std::cerr << "typeCode = " << typeCode << "\n";
+				//std::cerr << "typeCode = " << typeCode << "\n";
 				break;
 			default:
-				std::cerr << "type = " << (int)type << "; ";
-				std::cerr << "size = " << size << "\n";
+				//std::cerr << "type = " << (int)type << "; ";
+				//std::cerr << "size = " << size << "\n";
 				break;
 		}
 
