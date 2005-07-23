@@ -26,24 +26,28 @@ class ZLLowMemoryString {
 public:
 	ZLLowMemoryString() UTIL_SECTION;
 	~ZLLowMemoryString() UTIL_SECTION;
+	ZLLowMemoryString(const ZLLowMemoryString &s) UTIL_SECTION;
+	const ZLLowMemoryString &operator = (const ZLLowMemoryString &s) UTIL_SECTION;
 	
 	void reserve(size_t size) UTIL_SECTION;
+
 	void erase() UTIL_SECTION;
 	void add(size_t offset, const std::string &s) UTIL_SECTION;
+	void add(size_t offset, const ZLLowMemoryString &s) UTIL_SECTION;
 	void operator += (const std::string &s) UTIL_SECTION;
+	void operator += (const ZLLowMemoryString &s) UTIL_SECTION;
+	void append(const char *s, size_t len) UTIL_SECTION;
+	void swap(ZLLowMemoryString &s) UTIL_SECTION;
 
 	size_t length() const UTIL_SECTION;
 	bool empty() const UTIL_SECTION;
 	const char *data() const UTIL_SECTION;
 	char &operator [] (size_t index) const UTIL_SECTION;
+	size_t find(char c, size_t fromPos = 0) const UTIL_SECTION;
 
 private:
 	size_t myLength;
 	char *myData;
-
-private:
-	ZLLowMemoryString(const ZLLowMemoryString &s) UTIL_SECTION;
-	const ZLLowMemoryString &operator = (const ZLLowMemoryString &s) UTIL_SECTION;
 };
 
 inline ZLLowMemoryString::ZLLowMemoryString() : myLength(0), myData(0) {}
@@ -56,5 +60,10 @@ inline char &ZLLowMemoryString::operator [] (size_t index) const { return myData
 
 inline void ZLLowMemoryString::erase() { if (myData != 0) { delete[] myData; myData = 0; } myLength = 0; }
 inline void ZLLowMemoryString::operator += (const std::string &s) { add(myLength, s); }
+inline void ZLLowMemoryString::operator += (const ZLLowMemoryString &s) { add(myLength, s); }
+inline void ZLLowMemoryString::swap(ZLLowMemoryString &s) {
+	size_t tmpLength = myLength; myLength = s.myLength; s.myLength = tmpLength;
+	char *tmpData = myData; myData = s.myData; s.myData = tmpData;
+}
 
 #endif /* __ZLLOWMEMORYSTRING_H__ */

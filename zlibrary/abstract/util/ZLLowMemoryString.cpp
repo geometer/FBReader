@@ -20,6 +20,36 @@
 
 #include "ZLLowMemoryString.h"
 
+ZLLowMemoryString::ZLLowMemoryString(const ZLLowMemoryString &s) {
+	myLength = s.myLength;
+	if (s.myData == 0) {
+		myData = 0;
+	} else {
+		myData = new char[myLength];
+		memcpy(myData, s.myData, myLength);
+	}
+}
+
+const ZLLowMemoryString &ZLLowMemoryString::operator = (const ZLLowMemoryString &s) {
+	if (myLength == s.myLength) {
+		if (myData != 0) {
+			memcpy(myData, s.myData, myLength);
+		}
+	} else {
+		myLength = s.myLength;
+		if (myData != 0) {
+			delete[] myData;
+		}
+		if (s.myData == 0) {
+			myData = 0;
+		} else {
+			myData = new char[myLength];
+			memcpy(myData, s.myData, myLength);
+		}
+	}
+	return *this;
+}
+
 void ZLLowMemoryString::reserve(size_t size) {
 	if (size > myLength) {
 		if (myData == 0) {
@@ -39,10 +69,27 @@ void ZLLowMemoryString::add(size_t offset, const std::string &s) {
 	memcpy(myData + offset, s.data(), s.length());
 }
 
-/*
-void ZLLowMemoryString::append(const char *s, size_t len) {
-	reserve(__myLength + len);
-	MemMove(__myData + __myLength, s, len);
-	__myLength += len;
+void ZLLowMemoryString::add(size_t offset, const ZLLowMemoryString &s) {
+	reserve(offset + s.myLength);
+	memcpy(myData + offset, s.myData, s.myLength);
 }
-*/
+
+void ZLLowMemoryString::append(const char *s, size_t len) {
+	size_t offset = myLength;
+	reserve(myLength + len);
+	memcpy(myData + offset, s, len);
+}
+
+size_t ZLLowMemoryString::find(char c, size_t fromPos) const {
+	if (fromPos > myLength) {
+		return (size_t)-1;
+	}
+
+	char *end = myData + myLength;
+	for (char *ptr = myData + fromPos; ptr != end; ++ptr) {
+		if (*ptr == c) {
+			return ptr - myData;
+		}
+	}
+	return (size_t)-1;
+}

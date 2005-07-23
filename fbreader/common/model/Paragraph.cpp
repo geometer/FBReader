@@ -60,7 +60,7 @@ size_t Paragraph::textLength() const {
 	return len;
 }
 
-void Paragraph::addNonConstText(std::string &text) {
+void Paragraph::addNonConstText(ZLLowMemoryString &text) {
 	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
 		myEntries.push_back(new TextEntry(text));
 	} else {
@@ -75,15 +75,11 @@ void Paragraph::addText(const std::string &text) {
 	((TextEntry*)myEntries.back())->addText(text);
 }
 
-void Paragraph::addText(const std::vector<std::string> &text) {
+void Paragraph::addText(const std::vector<ZLLowMemoryString> &text) {
 	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
 		myEntries.push_back(new TextEntry());
 	}
 	((TextEntry*)myEntries.back())->addText(text);
-}
-
-void TextEntry::addText(const std::string &text) {
-	myText.add(myText.length(), text);
 }
 
 const ZLImage *ImageEntry::image() const {

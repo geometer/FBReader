@@ -30,6 +30,7 @@ class BookModel;
 class PlainTextModel;
 class ZLImage;
 class ZLInputStream;
+class ZLLowMemoryString;
 
 class BookReader {
 
@@ -80,7 +81,7 @@ private:
 	bool myInsideTitle;
 
 protected:
-	std::vector<std::string> myBuffer;
+	std::vector<ZLLowMemoryString> myBuffer;
 };
 
 #endif /* __BOOKREADER_H__ */

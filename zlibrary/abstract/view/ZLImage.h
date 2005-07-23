@@ -27,7 +27,7 @@ class ZLImage {
 public:
 	ZLImage(const std::string &mimeType) IMAGE_SECTION;
 	~ZLImage() IMAGE_SECTION;
-	void addData(const std::vector<std::string> &text) IMAGE_SECTION;
+	void addData(const std::vector<ZLLowMemoryString> &text) IMAGE_SECTION;
 	const unsigned char *data() const IMAGE_SECTION;
 	unsigned int datalen() const IMAGE_SECTION;
 	const std::string &mimeType() const IMAGE_SECTION;
@@ -42,7 +42,7 @@ private:
 	mutable unsigned int myDataLen;
 };
 
-inline void ZLImage::addData(const std::vector<std::string> &text) { ZLStringUtil::append(myEncodedData, text); }
+inline void ZLImage::addData(const std::vector<ZLLowMemoryString> &text) { ZLStringUtil::append(myEncodedData, text); }
 inline const unsigned char *ZLImage::data() const { decode(); return myData; }
 inline unsigned int ZLImage::datalen() const { decode(); return myDataLen; }
 inline const std::string &ZLImage::mimeType() const { return myMimeType; }

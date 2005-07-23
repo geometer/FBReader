@@ -98,11 +98,12 @@ class TextEntry : public ParagraphEntry {
 
 public:
 	TextEntry() MODEL_SECTION;
-	TextEntry(std::string &text) MODEL_SECTION;
+	TextEntry(ZLLowMemoryString &text) MODEL_SECTION;
 	~TextEntry() MODEL_SECTION;
 	const ZLLowMemoryString &text() const MODEL_SECTION;
 	void addText(const std::string &text) MODEL_SECTION;
-	void addText(const std::vector<std::string> &text) MODEL_SECTION;
+	void addText(const ZLLowMemoryString &text) MODEL_SECTION;
+	void addText(const std::vector<ZLLowMemoryString> &text) MODEL_SECTION;
 	Kind entryKind() const MODEL_SECTION;
  
 private:
@@ -142,9 +143,9 @@ public:
 
 	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
 	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
-	void addNonConstText(std::string &text) MODEL_SECTION;
+	void addNonConstText(ZLLowMemoryString &text) MODEL_SECTION;
 	void addText(const std::string &text) MODEL_SECTION;
-	void addText(const std::vector<std::string> &text) MODEL_SECTION;
+	void addText(const std::vector<ZLLowMemoryString> &text) MODEL_SECTION;
 	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
 
 	const std::vector<ParagraphEntry*> &entries() const MODEL_SECTION;
@@ -207,10 +208,12 @@ inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
 inline const std::string &HyperlinkControlEntry::label() const { return myLabel; }
 
 inline TextEntry::TextEntry() {}
-inline TextEntry::TextEntry(std::string &text) { myText.add(0, text); }
+inline TextEntry::TextEntry(ZLLowMemoryString &text) { myText.swap(text); }
 inline TextEntry::~TextEntry() {}
 inline const ZLLowMemoryString &TextEntry::text() const { return myText; }
-inline void TextEntry::addText(const std::vector<std::string> &text) { ZLStringUtil::append(myText, text); }
+inline void TextEntry::addText(const std::string &text) { myText += text; }
+inline void TextEntry::addText(const ZLLowMemoryString &text) { myText += text; }
+inline void TextEntry::addText(const std::vector<ZLLowMemoryString> &text) { ZLStringUtil::append(myText, text); }
 inline ParagraphEntry::Kind TextEntry::entryKind() const { return TEXT_ENTRY; }
 
 inline ImageEntry::ImageEntry(const std::string &id, const ImageMap &imageMap) : myId(id), myMap(imageMap) {}

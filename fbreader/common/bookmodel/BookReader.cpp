@@ -111,14 +111,15 @@ void BookReader::addHyperlinkLabel(const std::string &label) {
 
 void BookReader::addDataToBuffer(const char *data, int len) {
 	if ((len > 0) && ((myCurrentParagraph != 0) || (myCurrentImage != 0))) {
-		myBuffer.push_back(std::string());
+		myBuffer.push_back(ZLLowMemoryString());
 		myBuffer.back().append(data, len);
 	}
 }
 
 void BookReader::addDataToBuffer(const std::string &data) {
 	if ((myCurrentParagraph != 0) || (myCurrentImage != 0)) {
-		myBuffer.push_back(data);
+		myBuffer.push_back(ZLLowMemoryString());
+		myBuffer.back() += data;
 	}
 }
 
