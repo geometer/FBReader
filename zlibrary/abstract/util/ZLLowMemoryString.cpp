@@ -93,3 +93,16 @@ size_t ZLLowMemoryString::find(char c, size_t fromPos) const {
 	}
 	return (size_t)-1;
 }
+
+void ZLLowMemoryString::operator += (const std::vector<ZLLowMemoryString> &text) {
+	size_t len = myLength;
+	size_t offset = myLength;
+	for (std::vector<ZLLowMemoryString>::const_iterator it = text.begin(); it != text.end(); it++) {
+		len += it->length();
+	}
+	reserve(len);
+	for (std::vector<ZLLowMemoryString>::const_iterator it = text.begin(); it != text.end(); it++) {
+		add(offset, *it);
+		offset += it->length();
+	}
+}

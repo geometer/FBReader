@@ -19,7 +19,6 @@
 #ifndef __ZLIMAGE_H__
 #define __ZLIMAGE_H__
 
-#include <abstract/ZLStringUtil.h>
 #include <abstract/ZLLowMemoryString.h>
 
 class ZLImage {
@@ -42,7 +41,7 @@ private:
 	mutable unsigned int myDataLen;
 };
 
-inline void ZLImage::addData(const std::vector<ZLLowMemoryString> &text) { ZLStringUtil::append(myEncodedData, text); }
+inline void ZLImage::addData(const std::vector<ZLLowMemoryString> &text) { myEncodedData += text; }
 inline const unsigned char *ZLImage::data() const { decode(); return myData; }
 inline unsigned int ZLImage::datalen() const { decode(); return myDataLen; }
 inline const std::string &ZLImage::mimeType() const { return myMimeType; }

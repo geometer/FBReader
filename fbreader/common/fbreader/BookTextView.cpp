@@ -19,6 +19,7 @@
 
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLDialogManager.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "BookTextView.h"
 #include "FBReader.h"

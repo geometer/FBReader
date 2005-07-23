@@ -17,20 +17,6 @@
  */
 
 #include "ZLStringUtil.h"
-#include "ZLLowMemoryString.h"
-
-void ZLStringUtil::append(ZLLowMemoryString &target, const std::vector<ZLLowMemoryString> &text) {
-	int len = target.length();
-	for (std::vector<ZLLowMemoryString>::const_iterator it = text.begin(); it != text.end(); it++) {
-		len += it->length();
-	}
-	len = target.length();
-	target.reserve(len);
-	for (std::vector<ZLLowMemoryString>::const_iterator it = text.begin(); it != text.end(); it++) {
-		target.add(len, *it);
-		len += it->length();
-	}
-}
 
 bool ZLStringUtil::stringEndsWith(const std::string &str, const std::string &end) {
 	return

@@ -22,7 +22,6 @@
 
 #include <map>
 
-#include <abstract/ZLStringUtil.h>
 #include <abstract/ZLLowMemoryString.h>
 
 #include "TextKind.h"
@@ -213,7 +212,7 @@ inline TextEntry::~TextEntry() {}
 inline const ZLLowMemoryString &TextEntry::text() const { return myText; }
 inline void TextEntry::addText(const std::string &text) { myText += text; }
 inline void TextEntry::addText(const ZLLowMemoryString &text) { myText += text; }
-inline void TextEntry::addText(const std::vector<ZLLowMemoryString> &text) { ZLStringUtil::append(myText, text); }
+inline void TextEntry::addText(const std::vector<ZLLowMemoryString> &text) { myText += text; }
 inline ParagraphEntry::Kind TextEntry::entryKind() const { return TEXT_ENTRY; }
 
 inline ImageEntry::ImageEntry(const std::string &id, const ImageMap &imageMap) : myId(id), myMap(imageMap) {}

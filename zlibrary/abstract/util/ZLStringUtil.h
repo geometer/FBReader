@@ -30,7 +30,6 @@ private:
 	ZLStringUtil() UTIL_SECTION;
 
 public:
-	static void append(ZLLowMemoryString &target, const std::vector<ZLLowMemoryString> &text) UTIL_SECTION;
 	static bool stringEndsWith(const std::string &str, const std::string &end) UTIL_SECTION;
 	static void appendNumber(std::string &str, unsigned int n) UTIL_SECTION;
 };

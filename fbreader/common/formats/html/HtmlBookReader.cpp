@@ -31,7 +31,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 	if (myIsPreformatted) {
 		if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
 			ZLLowMemoryString fullText;
-			ZLStringUtil::append(fullText, myBuffer);
+			fullText += myBuffer;
 			myBuffer.clear();
 			int index = -1;
 			do {
@@ -51,7 +51,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 			} while (index != -1);
 		} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
 			ZLLowMemoryString fullText;
-			ZLStringUtil::append(fullText, myBuffer);
+			fullText += myBuffer;
 			myBuffer.clear();
 			int spaceCounter = -1;
 			const char *start = fullText.data();
@@ -87,7 +87,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 			}
 		} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
 			ZLLowMemoryString fullText;
-			ZLStringUtil::append(fullText, myBuffer);
+			fullText += myBuffer;
 			myBuffer.clear();
 			int brCounter = 0;
 			const char *start = fullText.data();

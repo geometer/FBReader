@@ -20,6 +20,7 @@
 #define __ZLLOWMEMORYSTRING_H__
 
 #include <string>
+#include <vector>
 
 class ZLLowMemoryString {
 
@@ -36,6 +37,7 @@ public:
 	void add(size_t offset, const ZLLowMemoryString &s) UTIL_SECTION;
 	void operator += (const std::string &s) UTIL_SECTION;
 	void operator += (const ZLLowMemoryString &s) UTIL_SECTION;
+	void operator += (const std::vector<ZLLowMemoryString> &text) UTIL_SECTION;
 	void append(const char *s, size_t len) UTIL_SECTION;
 	void swap(ZLLowMemoryString &s) UTIL_SECTION;
 

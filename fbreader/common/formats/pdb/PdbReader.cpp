@@ -22,6 +22,7 @@
 #include <vector>
 
 #include <abstract/ZLZDecompressor.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "PdbReader.h"
 #include "../../bookmodel/BookModel.h"
