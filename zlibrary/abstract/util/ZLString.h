@@ -16,30 +16,33 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLLOWMEMORYSTRING_H__
-#define __ZLLOWMEMORYSTRING_H__
+#ifndef __ZLSTRING_H__
+#define __ZLSTRING_H__
 
 #include <string>
 #include <vector>
 
-class ZLLowMemoryString {
+class ZLString;
+typedef std::vector<ZLString> ZLStringBuffer;
+
+class ZLString {
 
 public:
-	ZLLowMemoryString() UTIL_SECTION;
-	~ZLLowMemoryString() UTIL_SECTION;
-	ZLLowMemoryString(const ZLLowMemoryString &s) UTIL_SECTION;
-	const ZLLowMemoryString &operator = (const ZLLowMemoryString &s) UTIL_SECTION;
+	ZLString() UTIL_SECTION;
+	~ZLString() UTIL_SECTION;
+	ZLString(const ZLString &s) UTIL_SECTION;
+	const ZLString &operator = (const ZLString &s) UTIL_SECTION;
 	
 	void reserve(size_t size) UTIL_SECTION;
 
 	void erase() UTIL_SECTION;
 	void add(size_t offset, const std::string &s) UTIL_SECTION;
-	void add(size_t offset, const ZLLowMemoryString &s) UTIL_SECTION;
+	void add(size_t offset, const ZLString &s) UTIL_SECTION;
 	void operator += (const std::string &s) UTIL_SECTION;
-	void operator += (const ZLLowMemoryString &s) UTIL_SECTION;
-	void operator += (const std::vector<ZLLowMemoryString> &text) UTIL_SECTION;
+	void operator += (const ZLString &s) UTIL_SECTION;
+	void operator += (const ZLStringBuffer &text) UTIL_SECTION;
 	void append(const char *s, size_t len) UTIL_SECTION;
-	void swap(ZLLowMemoryString &s) UTIL_SECTION;
+	void swap(ZLString &s) UTIL_SECTION;
 
 	size_t length() const UTIL_SECTION;
 	bool empty() const UTIL_SECTION;
@@ -52,20 +55,20 @@ private:
 	char *myData;
 };
 
-inline ZLLowMemoryString::ZLLowMemoryString() : myLength(0), myData(0) {}
-inline ZLLowMemoryString::~ZLLowMemoryString() { if (myData != 0) delete[] myData; }
+inline ZLString::ZLString() : myLength(0), myData(0) {}
+inline ZLString::~ZLString() { if (myData != 0) delete[] myData; }
 
-inline size_t ZLLowMemoryString::length() const { return myLength; }
-inline bool ZLLowMemoryString::empty() const { return myLength == 0; }
-inline const char *ZLLowMemoryString::data() const { return myData; }
-inline char &ZLLowMemoryString::operator [] (size_t index) const { return myData[index]; }
+inline size_t ZLString::length() const { return myLength; }
+inline bool ZLString::empty() const { return myLength == 0; }
+inline const char *ZLString::data() const { return myData; }
+inline char &ZLString::operator [] (size_t index) const { return myData[index]; }
 
-inline void ZLLowMemoryString::erase() { if (myData != 0) { delete[] myData; myData = 0; } myLength = 0; }
-inline void ZLLowMemoryString::operator += (const std::string &s) { add(myLength, s); }
-inline void ZLLowMemoryString::operator += (const ZLLowMemoryString &s) { add(myLength, s); }
-inline void ZLLowMemoryString::swap(ZLLowMemoryString &s) {
+inline void ZLString::erase() { if (myData != 0) { delete[] myData; myData = 0; } myLength = 0; }
+inline void ZLString::operator += (const std::string &s) { add(myLength, s); }
+inline void ZLString::operator += (const ZLString &s) { add(myLength, s); }
+inline void ZLString::swap(ZLString &s) {
 	size_t tmpLength = myLength; myLength = s.myLength; s.myLength = tmpLength;
 	char *tmpData = myData; myData = s.myData; s.myData = tmpData;
 }
 
-#endif /* __ZLLOWMEMORYSTRING_H__ */
+#endif /* __ZLSTRING_H__ */

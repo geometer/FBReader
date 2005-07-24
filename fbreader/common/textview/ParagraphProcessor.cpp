@@ -115,7 +115,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 			case ParagraphEntry::TEXT_ENTRY:
 			{
-				const ZLLowMemoryString &text = ((TextEntry*)*it)->text();
+				const ZLString &text = ((TextEntry*)*it)->text();
 				if (!text.empty()) {
 					const char *ptr = text.data();
 					const char *end = ptr + text.length();

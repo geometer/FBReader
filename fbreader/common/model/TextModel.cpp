@@ -44,7 +44,7 @@ void TextModel::search(const std::string &text, bool ignoreCase) const {
 		const std::vector<ParagraphEntry*> &entries = ((Paragraph*)*it)->entries();
 		for (std::vector<ParagraphEntry*>::const_iterator jt = entries.begin(); jt != entries.end(); jt++) {
 			if ((*jt)->entryKind() == ParagraphEntry::TEXT_ENTRY) {
-				const ZLLowMemoryString &str = ((TextEntry*)*jt)->text();
+				const ZLString &str = ((TextEntry*)*jt)->text();
 				for (int pos = ZLSearchUtil::find(str, pattern); pos != -1; pos = ZLSearchUtil::find(str, pattern, pos + 1)) {
 					myMarks.push_back(TextMark(it - myParagraphs.begin(), offset + pos, pattern.length()));
 				}

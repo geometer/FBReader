@@ -236,7 +236,7 @@ void PluckerReader::processCompressedTextRecord(size_t size) {
 						std::string strId;
 						ZLStringUtil::appendNumber(strId, id);
 						addImageToParagraph(strId);
-						addDataToBuffer("XXXXX" + strId);
+						addDataToBuffer(("XXXXX" + strId).data(), strId.length() + 5);
 					}
 					ptr += 2;
 					processed = true;

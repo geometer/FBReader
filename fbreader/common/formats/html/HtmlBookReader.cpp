@@ -30,7 +30,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 	int breakType = myFormat.breakType();
 	if (myIsPreformatted) {
 		if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
-			ZLLowMemoryString fullText;
+			ZLString fullText;
 			fullText += myBuffer;
 			myBuffer.clear();
 			int index = -1;
@@ -42,7 +42,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 				if (len > 0) {
 					addDataToBuffer(fullText.data() + oldIndex, len);
 				} else {
-					addDataToBuffer(" ");
+					addDataToBuffer(" ", 1);
 				}
 				myIsPreformatted = false;
 				endParagraph();
@@ -50,7 +50,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 				myIsPreformatted = true;
 			} while (index != -1);
 		} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
-			ZLLowMemoryString fullText;
+			ZLString fullText;
 			fullText += myBuffer;
 			myBuffer.clear();
 			int spaceCounter = -1;
@@ -86,7 +86,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 				myIsPreformatted = true;
 			}
 		} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
-			ZLLowMemoryString fullText;
+			ZLString fullText;
 			fullText += myBuffer;
 			myBuffer.clear();
 			int brCounter = 0;
@@ -117,7 +117,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 		}
 	} else {
 		if (!myIsStarted) {
-			for (std::vector<ZLLowMemoryString>::const_iterator it = myBuffer.begin(); !myIsStarted && (it != myBuffer.end()); it++) {
+			for (ZLStringBuffer::const_iterator it = myBuffer.begin(); !myIsStarted && (it != myBuffer.end()); it++) {
 				const char *end = it->data() + it->length();
 				for (const char *ptr = it->data(); ptr != end; ptr++) {
 					if (!isspace(*ptr)) {
@@ -129,7 +129,7 @@ void HtmlBookReader::flushTextBufferToParagraph() {
 		}
 		if (myIsStarted) {
 			std::string buf;
-			for (std::vector<ZLLowMemoryString>::iterator it = myBuffer.begin(); it != myBuffer.end(); it++) {
+			for (ZLStringBuffer::iterator it = myBuffer.begin(); it != myBuffer.end(); it++) {
 				buf.erase();
 				myConverter.convert(buf, it->data(), it->data() + it->length());
 				it->erase();
@@ -231,7 +231,7 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 				beginParagraph();
 				if (!myListNumStack.empty()) {
 					//TODO: add spaces and number/bullet
-					addDataToBuffer("&bull; ");
+					addDataToBuffer("&bull; ", 7);
 				}
 			}
 			break;

@@ -22,8 +22,6 @@
 #include <vector>
 #include <string>
 
-class ZLLowMemoryString;
-
 class ZLStringUtil {
 
 private:

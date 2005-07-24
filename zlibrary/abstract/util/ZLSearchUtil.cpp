@@ -29,7 +29,7 @@ ZLSearchPattern::ZLSearchPattern(const std::string &pattern, bool ignoreCase) {
 	}
 }
 
-int ZLSearchUtil::find(const ZLLowMemoryString &text, const ZLSearchPattern &pattern, int pos) {
+int ZLSearchUtil::find(const ZLString &text, const ZLSearchPattern &pattern, int pos) {
 	if (pattern.ignoreCase()) {
 		if (pos < 0) {
 			pos = 0;

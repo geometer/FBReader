@@ -60,7 +60,7 @@ size_t Paragraph::textLength() const {
 	return len;
 }
 
-void Paragraph::addNonConstText(ZLLowMemoryString &text) {
+void Paragraph::addNonConstText(ZLString &text) {
 	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
 		myEntries.push_back(new TextEntry(text));
 	} else {
@@ -75,7 +75,7 @@ void Paragraph::addText(const std::string &text) {
 	((TextEntry*)myEntries.back())->addText(text);
 }
 
-void Paragraph::addText(const std::vector<ZLLowMemoryString> &text) {
+void Paragraph::addText(const ZLStringBuffer &text) {
 	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
 		myEntries.push_back(new TextEntry());
 	}

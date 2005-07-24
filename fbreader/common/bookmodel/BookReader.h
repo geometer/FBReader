@@ -23,6 +23,8 @@
 #include <vector>
 #include <string>
 
+#include <abstract/ZLString.h>
+
 #include "../model/TextKind.h"
 #include "../model/Paragraph.h"
 
@@ -30,7 +32,6 @@ class BookModel;
 class PlainTextModel;
 class ZLImage;
 class ZLInputStream;
-class ZLLowMemoryString;
 
 class BookReader {
 
@@ -57,7 +58,6 @@ public:
 	void beginContentsParagraph() MODEL_SECTION;
 	void endContentsParagraph() MODEL_SECTION;
 
-	void addDataToBuffer(const std::string &data) MODEL_SECTION;
 	void addDataToBuffer(const char *data, int len) MODEL_SECTION;
 	virtual void flushTextBufferToParagraph() MODEL_SECTION;
 
@@ -81,7 +81,7 @@ private:
 	bool myInsideTitle;
 
 protected:
-	std::vector<ZLLowMemoryString> myBuffer;
+	ZLStringBuffer myBuffer;
 };
 
 #endif /* __BOOKREADER_H__ */

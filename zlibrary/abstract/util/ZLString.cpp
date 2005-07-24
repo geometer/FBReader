@@ -18,9 +18,9 @@
 
 #include <algorithm>
 
-#include "ZLLowMemoryString.h"
+#include "ZLString.h"
 
-ZLLowMemoryString::ZLLowMemoryString(const ZLLowMemoryString &s) {
+ZLString::ZLString(const ZLString &s) {
 	myLength = s.myLength;
 	if (s.myData == 0) {
 		myData = 0;
@@ -30,7 +30,7 @@ ZLLowMemoryString::ZLLowMemoryString(const ZLLowMemoryString &s) {
 	}
 }
 
-const ZLLowMemoryString &ZLLowMemoryString::operator = (const ZLLowMemoryString &s) {
+const ZLString &ZLString::operator = (const ZLString &s) {
 	if (myLength == s.myLength) {
 		if (myData != 0) {
 			memcpy(myData, s.myData, myLength);
@@ -50,7 +50,7 @@ const ZLLowMemoryString &ZLLowMemoryString::operator = (const ZLLowMemoryString 
 	return *this;
 }
 
-void ZLLowMemoryString::reserve(size_t size) {
+void ZLString::reserve(size_t size) {
 	if (size > myLength) {
 		if (myData == 0) {
 			myData = new char[size];
@@ -64,23 +64,23 @@ void ZLLowMemoryString::reserve(size_t size) {
 	}
 }
 
-void ZLLowMemoryString::add(size_t offset, const std::string &s) {
+void ZLString::add(size_t offset, const std::string &s) {
 	reserve(offset + s.length());
 	memcpy(myData + offset, s.data(), s.length());
 }
 
-void ZLLowMemoryString::add(size_t offset, const ZLLowMemoryString &s) {
+void ZLString::add(size_t offset, const ZLString &s) {
 	reserve(offset + s.myLength);
 	memcpy(myData + offset, s.myData, s.myLength);
 }
 
-void ZLLowMemoryString::append(const char *s, size_t len) {
+void ZLString::append(const char *s, size_t len) {
 	size_t offset = myLength;
 	reserve(myLength + len);
 	memcpy(myData + offset, s, len);
 }
 
-size_t ZLLowMemoryString::find(char c, size_t fromPos) const {
+size_t ZLString::find(char c, size_t fromPos) const {
 	if (fromPos > myLength) {
 		return (size_t)-1;
 	}
@@ -94,14 +94,14 @@ size_t ZLLowMemoryString::find(char c, size_t fromPos) const {
 	return (size_t)-1;
 }
 
-void ZLLowMemoryString::operator += (const std::vector<ZLLowMemoryString> &text) {
+void ZLString::operator += (const std::vector<ZLString> &text) {
 	size_t len = myLength;
 	size_t offset = myLength;
-	for (std::vector<ZLLowMemoryString>::const_iterator it = text.begin(); it != text.end(); it++) {
+	for (std::vector<ZLString>::const_iterator it = text.begin(); it != text.end(); it++) {
 		len += it->length();
 	}
 	reserve(len);
-	for (std::vector<ZLLowMemoryString>::const_iterator it = text.begin(); it != text.end(); it++) {
+	for (std::vector<ZLString>::const_iterator it = text.begin(); it != text.end(); it++) {
 		add(offset, *it);
 		offset += it->length();
 	}

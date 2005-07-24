@@ -50,7 +50,7 @@ bool TxtBookReader::characterDataHandler(const std::string &str) {
 			endParagraph();
 			beginParagraph();
 		}
-		addDataToBuffer(str);
+		addDataToBuffer(str.data(), str.length());
 		myNewLine = false;
 	}
 	return true;

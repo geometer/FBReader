@@ -20,7 +20,7 @@
 #define __ZLSEARCHUTIL_H__
 
 #include <string>
-#include <abstract/ZLLowMemoryString.h>
+#include <abstract/ZLString.h>
 
 class ZLSearchPattern {
 
@@ -48,7 +48,7 @@ private:
 	ZLSearchUtil() UTIL_SECTION;
 
 public:
-	static int find(const ZLLowMemoryString &text, const ZLSearchPattern &pattern, int pos = 0) UTIL_SECTION;
+	static int find(const ZLString &text, const ZLSearchPattern &pattern, int pos = 0) UTIL_SECTION;
 };
 
 inline ZLSearchPattern::~ZLSearchPattern() {}
