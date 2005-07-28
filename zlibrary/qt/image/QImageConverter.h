@@ -1,6 +1,6 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +17,28 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#ifndef __QIMAGECONVERTER_H__
+#define __QIMAGECONVERTER_H__
 
-#include "FB2Reader.h"
-#include "../../bookmodel/BookReader.h"
+#include <map>
+#include <qimage.h>
 
-class BookModel;
-class ZLBase64EncodedImage;
+#include "../../abstract/image/ImageConverter.h"
 
-class FB2BookReader : public FB2Reader {
+class ZLString;
+class ZLImage;
+
+class QImageConverter : public ImageConverter {
 
 public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	void readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
-
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	static QImage *qImage(const ZLImage &image);
+	static void clearCache();
 
 private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
-	BookReader myModelReader;
-	ZLBase64EncodedImage *myCurrentImage;
+	static QImage *qImageFromPalmImageFormat(const ZLString &imageData);
+
+private:
+	static std::map<const ZLImage*,QImage*> ourImageMap;
 };
 
-inline FB2BookReader::~FB2BookReader() {}
-
-#endif /* __FB2BOOKREADER_H__ */
+#endif /* __QIMAGECONVERTER_H__ */

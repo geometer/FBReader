@@ -30,7 +30,6 @@
 
 class BookModel;
 class PlainTextModel;
-class ZLImage;
 class ZLInputStream;
 
 class BookReader {
@@ -53,7 +52,8 @@ public:
 	void addHyperlinkControl(TextKind kind, const std::string &label) MODEL_SECTION;
 	void addHyperlinkLabel(const std::string &label) MODEL_SECTION;
 
-	void addImageToParagraph(const std::string &id) MODEL_SECTION;
+	void addImageReference(const std::string &id) MODEL_SECTION;
+	void addImage(const std::string &id, ZLImage *image) MODEL_SECTION;
 
 	void beginContentsParagraph() MODEL_SECTION;
 	void endContentsParagraph() MODEL_SECTION;
@@ -61,7 +61,7 @@ public:
 	void addDataToBuffer(const char *data, int len) MODEL_SECTION;
 	virtual void flushTextBufferToParagraph() MODEL_SECTION;
 
-	void beginImageData(const char *contentType, const char *id) MODEL_SECTION;
+	void beginImageData() MODEL_SECTION;
 	void endImageData() MODEL_SECTION;
 
 	void enterTitle() { myInsideTitle = true; }
@@ -75,12 +75,12 @@ private:
 
 	Paragraph *myCurrentParagraph;
 	ParagraphWithReference *myCurrentContentsParagraph;
-	ZLImage *myCurrentImage;
+	bool myProcessData;
 
 	bool mySectionContainsRegularContents;
 	bool myInsideTitle;
 
-protected:
+public:
 	ZLStringBuffer myBuffer;
 };
 

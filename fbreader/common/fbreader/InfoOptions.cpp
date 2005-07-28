@@ -22,6 +22,8 @@
 static const char *languageShortNames[] = {
 	"en",
 	"fr",
+	"de",
+	"de-traditional",
 	"ru",
 	0
 };
@@ -82,8 +84,10 @@ const std::vector<std::string> &LanguageEntry::values() const {
 	if (ourLanguages.empty()) {
 		ourLanguages.push_back("English");
 		ourLanguages.push_back("French");
+		ourLanguages.push_back("German");
+		ourLanguages.push_back("German (traditional)");
 		ourLanguages.push_back("Russian");
-		ourLanguages.push_back("unknown");
+		ourLanguages.push_back("none");
 	}
 	return ourLanguages;
 }
@@ -99,5 +103,5 @@ void LanguageEntry::onAccept(const std::string &value) const {
 			return;
 		}
 	}
-	myLanguageOption.setValue("unknown");
+	myLanguageOption.setValue("none");
 }

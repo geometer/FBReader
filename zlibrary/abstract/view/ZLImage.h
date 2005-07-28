@@ -20,30 +20,61 @@
 #define __ZLIMAGE_H__
 
 #include <abstract/ZLString.h>
+#include <abstract/shared_ptr.h>
 
 class ZLImage {
 
-public:
+protected:
 	ZLImage(const std::string &mimeType) IMAGE_SECTION;
-	~ZLImage() IMAGE_SECTION;
-	void addData(const ZLStringBuffer &text) IMAGE_SECTION;
-	const unsigned char *data() const IMAGE_SECTION;
-	unsigned int datalen() const IMAGE_SECTION;
+
+public:
+	virtual ~ZLImage() IMAGE_SECTION;
 	const std::string &mimeType() const IMAGE_SECTION;
+	virtual shared_ptr<ZLString> data() const IMAGE_SECTION = 0;
+
+private:
+	std::string myMimeType;
+};
+
+class ZLBase64EncodedImage : public ZLImage {
+
+public:
+	ZLBase64EncodedImage(const std::string &mimeType) IMAGE_SECTION;
+	~ZLBase64EncodedImage() IMAGE_SECTION;
+	void addData(const ZLStringBuffer &text) IMAGE_SECTION;
+	shared_ptr<ZLString> data() const IMAGE_SECTION;
 
 private:
 	void decode() const IMAGE_SECTION;
 
 private:
-	std::string myMimeType;
 	mutable ZLString myEncodedData;
-	mutable unsigned char *myData;
-	mutable unsigned int myDataLen;
+	mutable shared_ptr<ZLString> myData;
 };
 
-inline void ZLImage::addData(const ZLStringBuffer &text) { myEncodedData += text; }
-inline const unsigned char *ZLImage::data() const { decode(); return myData; }
-inline unsigned int ZLImage::datalen() const { decode(); return myDataLen; }
+class ZLZCompressedFileImage : public ZLImage {
+
+public:
+	ZLZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) IMAGE_SECTION;
+	~ZLZCompressedFileImage() IMAGE_SECTION;
+	shared_ptr<ZLString> data() const IMAGE_SECTION;
+
+private:
+	std::string myPath;
+	size_t myOffset;
+	size_t myCompressedSize;
+};
+
+inline ZLImage::ZLImage(const std::string &mimeType) : myMimeType(mimeType) {}
+inline ZLImage::~ZLImage() {}
 inline const std::string &ZLImage::mimeType() const { return myMimeType; }
+
+inline ZLBase64EncodedImage::ZLBase64EncodedImage(const std::string &mimeType) : ZLImage(mimeType) {}
+inline ZLBase64EncodedImage::~ZLBase64EncodedImage() {}
+inline void ZLBase64EncodedImage::addData(const ZLStringBuffer &text) { myEncodedData += text; }
+inline shared_ptr<ZLString> ZLBase64EncodedImage::data() const { decode(); return myData; }
+
+inline ZLZCompressedFileImage::ZLZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
+inline ZLZCompressedFileImage::~ZLZCompressedFileImage() {}
 
 #endif /* __ZLIMAGE_H__ */

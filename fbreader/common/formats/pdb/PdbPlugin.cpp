@@ -41,7 +41,7 @@ bool PdbPlugin::readDescription(const std::string &path, BookDescription &descri
 }
 
 bool PdbPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return PdbReader().readDocument(ZLFile(description.fileName()).inputStream(), model);
+	return PdbReader().readDocument(description.fileName(), model);
 }
 
 const std::string &PdbPlugin::iconName() const {

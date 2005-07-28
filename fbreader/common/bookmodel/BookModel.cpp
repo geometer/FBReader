@@ -33,7 +33,7 @@ BookModel::BookModel(const BookDescriptionPtr description) : myDescription(descr
 		reader.pushKind(REGULAR);
 		for (int i = 0; i < 200; i++) {
 			reader.beginParagraph();
-			reader.addDataToBuffer("test text number one");
+			reader.addDataToBuffer("test text number one", 20);
 			reader.endParagraph();
 		}
 		return;

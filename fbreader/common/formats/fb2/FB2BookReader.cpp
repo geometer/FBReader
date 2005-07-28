@@ -18,6 +18,7 @@
  */
 
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLImage.h>
 
 #include "FB2BookReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -27,6 +28,7 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myInsidePoem = false;
 	mySectionDepth = 0;
 	myBodyCounter = 0;
+	myCurrentImage = 0;
 }
 
 void FB2BookReader::characterDataHandler(const char *text, int len) {
@@ -149,7 +151,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			if (!myModelReader.currentTextModelIsNull()) {
 				const char *ref = reference(xmlattributes);
 				if (ref != 0) {
-					myModelReader.addImageToParagraph(ref);
+					myModelReader.addImageReference(ref);
 				}
 			}
 			break;
@@ -158,7 +160,9 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			const char *contentType = attributeValue(xmlattributes, "content-type");
 			const char *id = attributeValue(xmlattributes, "id");
 			if ((contentType != 0) && (id != 0)) {
-				myModelReader.beginImageData(contentType, id);
+				myCurrentImage = new ZLBase64EncodedImage(contentType);
+				myModelReader.addImage(id, myCurrentImage);
+				myModelReader.beginImageData();
 			}
 			break;
 		}
@@ -244,6 +248,11 @@ void FB2BookReader::endElementHandler(int tag) {
 			myModelReader.addControl(FOOTNOTE, false);
 			break;
 		case _BINARY:
+			if (!myModelReader.myBuffer.empty() && (myCurrentImage != 0)) {
+				myCurrentImage->addData(myModelReader.myBuffer);
+				myModelReader.myBuffer.clear();
+				myCurrentImage = 0;
+			}
 			myModelReader.endImageData();
 			break;
 		case _BODY:

@@ -1,6 +1,6 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,32 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __PDBREADER_H__
-#define __PDBREADER_H__
+#ifndef __IMAGECONVERTER_H__
+#define __IMAGECONVERTER_H__
 
-#include <abstract/shared_ptr.h>
+class ZLString;
 
-#include <abstract/ZLInputStream.h>
+class ImageConverter {
 
-class BookModel;
+protected:
+	struct Color {
+  	unsigned char Red;
+  	unsigned char Green;
+  	unsigned char Blue;
+	};
 
-class PdbReader {
+	struct PalmImageHeader {
+		PalmImageHeader(const ZLString &str);
+		
+		unsigned short Width;
+		unsigned short Height;
+		unsigned short BytesPerRow;
+		unsigned short Flags;
+		unsigned char BitsPerPixel;
+		unsigned char CompressionType;
+	};
 
-public:
-	PdbReader() FORMATS_SECTION;
-	~PdbReader() FORMATS_SECTION;
-
-	bool readDocument(const std::string &filePath, BookModel &model) FORMATS_SECTION;
+	static Color ourPalmImage8bitColormap[256];
 };
 
-inline PdbReader::PdbReader() {}
-inline PdbReader::~PdbReader() {}
-
-#endif /* __PDBREADER_H__ */
+#endif /* __IMAGECONVERTER_H__ */

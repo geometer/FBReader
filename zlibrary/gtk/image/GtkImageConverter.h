@@ -1,6 +1,6 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +17,28 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#ifndef __GTKIMAGECONVERTER_H__
+#define __GTKIMAGECONVERTER_H__
 
-#include "FB2Reader.h"
-#include "../../bookmodel/BookReader.h"
+#include <map>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
-class BookModel;
-class ZLBase64EncodedImage;
+#include "../../abstract/image/ImageConverter.h"
 
-class FB2BookReader : public FB2Reader {
+class ZLString;
+class ZLImage;
+
+class GtkImageConverter : public ImageConverter {
 
 public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	void readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
-
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	static GdkPixbuf *gtkImage(const ZLImage &image);
+	static void clearCache();
 
 private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
-	BookReader myModelReader;
-	ZLBase64EncodedImage *myCurrentImage;
+	static GdkPixbuf *gtkImageFromPalmImageFormat(const ZLString &imageData);
+
+private:
+	static std::map<const ZLImage*,GdkPixbuf*> ourImageMap;
 };
 
-inline FB2BookReader::~FB2BookReader() {}
-
-#endif /* __FB2BOOKREADER_H__ */
+#endif /* __GTKIMAGECONVERTER_H__ */

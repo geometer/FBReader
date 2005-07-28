@@ -20,8 +20,6 @@
 #ifndef __GTKPAINTCONTEXT_H__
 #define __GTKPAINTCONTEXT_H__
 
-#include <map>
-
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <pango/pango.h>
@@ -64,9 +62,6 @@ public:
 	void drawFilledCircle(int x, int y, int r);
 
 private:
-	GdkPixbuf *gtkImage(const ZLImage &image) const;
-
-private:
 	GdkPixmap *myPixmap;
 	int myWidth, myHeight;
 
@@ -81,7 +76,6 @@ private:
 	GdkGC *myBackGC;
 
 	std::vector<std::string> myFontFamilies;
-	mutable std::map<const ZLImage*,GdkPixbuf*> myImageCache;
 
 	mutable int myStringHeight;
 	mutable int mySpaceWidth;

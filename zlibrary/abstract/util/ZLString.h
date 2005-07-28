@@ -46,8 +46,10 @@ public:
 
 	size_t length() const UTIL_SECTION;
 	bool empty() const UTIL_SECTION;
+	char *data() UTIL_SECTION;
 	const char *data() const UTIL_SECTION;
-	char &operator [] (size_t index) const UTIL_SECTION;
+	char &operator [] (size_t index) UTIL_SECTION;
+	char operator [] (size_t index) const UTIL_SECTION;
 	size_t find(char c, size_t fromPos = 0) const UTIL_SECTION;
 
 private:
@@ -60,8 +62,10 @@ inline ZLString::~ZLString() { if (myData != 0) delete[] myData; }
 
 inline size_t ZLString::length() const { return myLength; }
 inline bool ZLString::empty() const { return myLength == 0; }
+inline char *ZLString::data() { return myData; }
 inline const char *ZLString::data() const { return myData; }
-inline char &ZLString::operator [] (size_t index) const { return myData[index]; }
+inline char &ZLString::operator [] (size_t index) { return myData[index]; }
+inline char ZLString::operator [] (size_t index) const { return myData[index]; }
 
 inline void ZLString::erase() { if (myData != 0) { delete[] myData; myData = 0; } myLength = 0; }
 inline void ZLString::operator += (const std::string &s) { add(myLength, s); }

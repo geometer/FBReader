@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <algorithm>
+
 #include "../filesystem/ZLFSManager.h"
 #include "../filesystem/ZLFSDir.h"
 #include "../filesystem/ZLInputStream.h"
@@ -41,6 +43,7 @@ void ZLXMLReader::setEncodingDescriptionPath(const std::string &path) {
 	}
 	ourKnownEncodings.push_back("US-ASCII");
 	ourKnownEncodings.push_back("UTF-8");
+	std::sort(ourKnownEncodings.begin(), ourKnownEncodings.end());
 }
 
 int ZLXMLReader::tag(const char *name) {

@@ -364,8 +364,8 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Title", info.TitleOption));
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (display name)", info.AuthorDisplayNameOption));
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", info.AuthorSortKeyOption));
-		infoTab->addOption(new LanguageEntry("Language", info.LanguageOption));
 		infoTab->addOption(new EncodingEntry("Encoding", info.EncodingOption));
+		infoTab->addOption(new LanguageEntry("Hyphenations", info.LanguageOption));
 
 		FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName).extension(), false);
 		FormatInfoPage *formatPage = 0;

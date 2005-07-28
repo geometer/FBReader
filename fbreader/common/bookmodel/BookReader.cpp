@@ -17,8 +17,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLImage.h>
-
 #include "BookReader.h"
 #include "BookModel.h"
 #include "../model/Paragraph.h"
@@ -27,7 +25,8 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
 	myCurrentParagraph = 0;
 	myCurrentContentsParagraph = 0;
-	myCurrentImage = 0;
+
+	myProcessData = false;
 
 	myInsideTitle = false;
 	mySectionContainsRegularContents = false;
@@ -75,6 +74,7 @@ void BookReader::beginParagraph(Paragraph::Kind kind) {
 			myCurrentParagraph->addControl(*it, true);
 		}
 		myCurrentTextModel->addParagraph(myCurrentParagraph);
+		myProcessData = true;
 	}
 }
 
@@ -82,6 +82,7 @@ void BookReader::endParagraph() {
 	if (myCurrentParagraph != 0) {
 		flushTextBufferToParagraph();
 		myCurrentParagraph = 0;
+		myProcessData = false;
 	}
 }
 
@@ -110,7 +111,7 @@ void BookReader::addHyperlinkLabel(const std::string &label) {
 }
 
 void BookReader::addDataToBuffer(const char *data, int len) {
-	if ((len > 0) && ((myCurrentParagraph != 0) || (myCurrentImage != 0))) {
+	if ((len > 0) && myProcessData) {
 		myBuffer.push_back(ZLString());
 		myBuffer.back().append(data, len);
 	}
@@ -145,19 +146,16 @@ void BookReader::flushTextBufferToParagraph() {
 	myBuffer.clear();
 }
 
-void BookReader::beginImageData(const char *contentType, const char *id) {
-	myCurrentImage = new ZLImage(contentType);
-	myModel.myImages.insert(std::pair<std::string,ZLImage*>(id, myCurrentImage));
+void BookReader::addImage(const std::string &id, ZLImage *image) {
+	myModel.myImages.insert(std::pair<std::string,ZLImage*>(id, image));
+}
+
+void BookReader::beginImageData() {
+	myProcessData = true;
 }
 
 void BookReader::endImageData() {
-	if (myBuffer.empty() || (myCurrentImage == 0)) {
-		return;
-	}
-
-	myCurrentImage->addData(myBuffer);
-	myBuffer.clear();
-	myCurrentImage = 0;
+	myProcessData = false;
 }
 
 void BookReader::insertEndOfSectionParagraph() {
@@ -170,7 +168,7 @@ void BookReader::insertEndOfSectionParagraph() {
 	}
 }
 
-void BookReader::addImageToParagraph(const std::string &id) {
+void BookReader::addImageReference(const std::string &id) {
 	mySectionContainsRegularContents = true;
 	bool createSeparateParagraph = myCurrentParagraph == 0;
 	if (createSeparateParagraph) {

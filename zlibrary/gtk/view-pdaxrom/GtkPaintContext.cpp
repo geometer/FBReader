@@ -21,6 +21,7 @@
 #include <abstract/ZLImage.h>
 
 #include "GtkPaintContext.h"
+#include "../image/GtkImageConverter.h"
 
 static void setColor(GdkGC *gc, const ZLColor &zlColor) {
 	if (gc != 0) {
@@ -80,12 +81,7 @@ GtkPaintContext::~GtkPaintContext() {
 
 void GtkPaintContext::removeCaches() {
 	ZLPaintContext::removeCaches();
-
-	for (std::map<const ZLImage*,GdkPixbuf *>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {
-		g_object_unref(it->second);
-	}
-
-	myImageCache.clear();
+	GtkImageConverter::clearCache();
 }
 
 void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
@@ -226,53 +222,38 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }
 
-GdkPixbuf *GtkPaintContext::gtkImage(const ZLImage &image) const {
-	GdkPixbuf *imageRef = myImageCache[&image];
-	if (imageRef == NULL) {
-		GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
-		GError *error = NULL;
-
-		// TODO: properly process return value and error code
-		gdk_pixbuf_loader_write(loader, image.data(),image.datalen(), &error);
-		gdk_pixbuf_loader_close(loader, &error);
-
-		if (error != NULL) {
-			g_error_free(error);
-		}
-
-		imageRef = gdk_pixbuf_loader_get_pixbuf(loader);
-		g_object_ref(imageRef);
-
-		g_object_unref(loader);
-
-		myImageCache[&image] = imageRef;
-	}
-
-	return imageRef;
-}
-
 int GtkPaintContext::imageWidth(const ZLImage &image) const {
-	GdkPixbuf *imageRef = gtkImage(image);
-	return gdk_pixbuf_get_width(imageRef);
+	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
+	return (imageRef != 0) ? gdk_pixbuf_get_width(imageRef) : 0;
 }
 
 int GtkPaintContext::imageHeight(const ZLImage &image) const {
-	GdkPixbuf *imageRef = gtkImage(image);
-	return gdk_pixbuf_get_height(imageRef);
+	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
+	return (imageRef != 0) ? gdk_pixbuf_get_height(imageRef) : 0;
 }
 
 void GtkPaintContext::drawImage(int x, int y, const ZLImage &image) {
-	// TODO: should we optimize it all? we do two lookups in our cache
-	// for gtk+ v2.2+ gdk_draw_pixbuf (myPixmap, NULL, gtkImage(image), 0, 0, x + leftMargin(), y + topMargin() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
-	gdk_pixbuf_render_to_drawable (gtkImage(image), myPixmap, NULL, 0, 0, x + leftMargin(), y + topMargin() - imageHeight(image), -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
+	if (imageRef != 0) {
+		gdk_pixbuf_render_to_drawable(
+			imageRef, myPixmap,
+			0, 0, 0,
+			x + leftMargin(), y + topMargin() - gdk_pixbuf_get_height(imageRef),
+			-1, -1, GDK_RGB_DITHER_NONE, 0, 0
+		);
+	}
+	// for gtk+ v2.2
+	// 		gdk_draw_pixbuf(
+	// 			myPixmap, 0, imageRef, 0, 0,
+	// 			x + leftMargin(), y + topMargin() - gdk_pixbuf_get_height(imageRef),
+	// 			-1, -1, GDK_RGB_DITHER_NONE, 0, 0
+	// 		);
 	//
 	// COMMENTS:
-	// NULL			-- we have no clipping (do we need it?)
+	// 0			-- we have no clipping (do we need it?)
 	// 0, 0			-- offset in the image
 	// -1, -1		-- use the whole
 	// GDK_RGB_DITHER_NONE -- no dithering, hopefully, (0, 0) after it does not harm
-
-	//myPainter->drawImage(x + leftMargin(), y + topMargin() - imageHeight(image), qImage(image));
 }
 
 void GtkPaintContext::drawLine(int x0, int y0, int x1, int y1) {

@@ -16,29 +16,22 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <abstract/ZLZDecompressor.h>
+#include <abstract/ZLFSManager.h>
+#include <abstract/ZLInputStream.h>
+
 #include "ZLImage.h"
 
-ZLImage::ZLImage(const std::string &mimeType) : myMimeType(mimeType) {
-	myData = 0;
-	myDataLen = 0;
-}
-
-ZLImage::~ZLImage() {
-	if (myData != 0) {
-		delete[] myData;
-	}
-}
-
-void ZLImage::decode() const {
-	if ((myEncodedData.empty()) || (myData != 0)) {
+void ZLBase64EncodedImage::decode() const {
+	if ((myEncodedData.empty()) || (!myData.isNull())) {
 		return;
 	}
 
-	int dataLength = myEncodedData.length();
+	size_t dataLength = myEncodedData.length();
 
-	myData = new unsigned char[dataLength / 4 * 3 + 1];
-	myDataLen = 0;
-	for (int pos = 0; pos < dataLength; myDataLen += 3) {
+	myData = new ZLString();
+	myData->reserve(dataLength / 4 * 3);
+	for (size_t pos = 0, dataPos = 0; pos < dataLength; dataPos += 3) {
 		unsigned int sum = 0;
 		for (int i = 0; (i < 4) && (pos < dataLength); pos++) {
 			char encodedByte = myEncodedData[pos];
@@ -62,9 +55,37 @@ void ZLImage::decode() const {
 			i++;
 		}
 		for (int j = 2; j >= 0; j--) {
-			myData[myDataLen + j] = sum % 256;
+			(*myData)[dataPos + j] = sum % 256;
 			sum >>= 8;
 		}
 	}
 	myEncodedData.erase();
+}
+
+
+shared_ptr<ZLString> ZLZCompressedFileImage::data() const {
+	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
+
+	shared_ptr<ZLString> imageData = new ZLString();
+
+	if (!stream.isNull() && stream->open()) {
+		stream->seek(myOffset);
+		ZLZDecompressor decompressor(myCompressedSize);
+		static const size_t charBufferSize = 2048;
+		ZLString charBuffer;
+		charBuffer.reserve(charBufferSize);
+		ZLStringBuffer buffer;
+
+		size_t s;
+		do {
+			s = decompressor.decompress(*stream, charBuffer.data(), charBufferSize);
+			if (s != 0) {
+				buffer.push_back(ZLString());
+				buffer.back().append(charBuffer.data(), s);
+			}
+		} while (s == charBufferSize);
+		*imageData += buffer;
+	}
+
+	return imageData;
 }

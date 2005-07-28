@@ -20,8 +20,6 @@
 #ifndef __QPAINTCONTEXT_H__
 #define __QPAINTCONTEXT_H__
 
-#include <map>
-
 #include <abstract/ZLPaintContext.h>
 
 class QPainter;
@@ -48,7 +46,6 @@ public:
 	const std::string realFontFamilyName(std::string &fontFamily) const;
 
 	void setFont(const std::string &family, int size, bool bold, bool italic);
-	void setColor(ZLColor color);
 	void setColor(ZLColor color, LineStyle style = SOLID_LINE);
 	void setFillColor(ZLColor color, FillStyle style = SOLID_FILL);
 
@@ -66,13 +63,9 @@ public:
 	void drawFilledCircle(int x, int y, int r);
 
 private:
-	QImage &qImage(const ZLImage &image) const;
-
-private:
 	bool mySizeChanged;
 	QPainter *myPainter;
 	QPixmap *myPixmap;
-	mutable std::map<const ZLImage*,QImage*> myImageCache;
 	mutable int mySpaceWidth;
 };
 

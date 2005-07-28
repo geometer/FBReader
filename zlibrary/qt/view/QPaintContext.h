@@ -20,10 +20,9 @@
 #ifndef __QPAINTCONTEXT_H__
 #define __QPAINTCONTEXT_H__
 
-#include <map>
-
 #include <abstract/ZLPaintContext.h>
 
+class QPainter;
 class QPixmap;
 class QImage;
 
@@ -64,12 +63,8 @@ public:
 	void drawFilledCircle(int x, int y, int r);
 
 private:
-	QImage &qImage(const ZLImage &image) const;
-
-private:
 	QPainter *myPainter;
 	QPixmap *myPixmap;
-	mutable std::map<const ZLImage*,QImage*> myImageCache;
 	mutable int mySpaceWidth;
 };
 

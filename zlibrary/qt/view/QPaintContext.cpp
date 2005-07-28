@@ -26,6 +26,7 @@
 #include <abstract/ZLImage.h>
 
 #include "QPaintContext.h"
+#include "../image/QImageConverter.h"
 
 QPaintContext::QPaintContext() {
 	myPainter = new QPainter();
@@ -43,11 +44,7 @@ QPaintContext::~QPaintContext() {
 
 void QPaintContext::removeCaches() {
 	ZLPaintContext::removeCaches();
-
-	for (std::map<const ZLImage*,QImage*>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {
-		delete it->second;
-	}
-	myImageCache.clear();
+	QImageConverter::clearCache();
 }
 
 void QPaintContext::setSize(int w, int h) {
@@ -143,28 +140,21 @@ void QPaintContext::drawString(int x, int y, const char *str, int len) {
 	myPainter->drawText(x + leftMargin(), y + topMargin(), qStr);
 }
 
-QImage &QPaintContext::qImage(const ZLImage &image) const {
-	QImage *imageRef = myImageCache[&image];
-	if (imageRef == NULL) {
-		imageRef = new QImage();
-		imageRef->loadFromData(image.data(), image.datalen());
-		myImageCache[&image] = imageRef;
-	}
-	return *imageRef;
-}
-
 int QPaintContext::imageWidth(const ZLImage &image) const {
-	int w = qImage(image).width();
-	int maxW = width();
-	return (w <= maxW) ? w : maxW;
+	QImage *qImage = QImageConverter::qImage(image);
+	return (qImage != 0) ? std::min(qImage->width(), width()) : 0;
 }
 
 int QPaintContext::imageHeight(const ZLImage &image) const {
-	return qImage(image).height();
+	QImage *qImage = QImageConverter::qImage(image);
+	return (qImage != 0) ? qImage->height() : 0;
 }
 
 void QPaintContext::drawImage(int x, int y, const ZLImage &image) {
-	myPainter->drawImage(x + leftMargin(), y + topMargin() - imageHeight(image), qImage(image));
+	QImage *qImage = QImageConverter::qImage(image);
+	if (qImage != 0) {
+		myPainter->drawImage(x + leftMargin(), y + topMargin() - qImage->height(), *qImage);
+	}
 }
 
 void QPaintContext::drawLine(int x0, int y0, int x1, int y1) {

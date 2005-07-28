@@ -26,11 +26,11 @@ TxtBookReader::TxtBookReader(BookModel &model, const PlainTextFormat &format) : 
 }
 
 void TxtBookReader::flushTextBufferToParagraph() {
-	if (!myBufferIsEmpty) {
-		BookReader::flushTextBufferToParagraph();
+	if (!myLastLineIsEmpty) {
 		myLineFeedCounter = 0;
 	}
-	myBufferIsEmpty = true;
+	myLastLineIsEmpty = true;
+	BookReader::flushTextBufferToParagraph();
 }
 
 bool TxtBookReader::characterDataHandler(const std::string &str) {
@@ -40,7 +40,7 @@ bool TxtBookReader::characterDataHandler(const std::string &str) {
 		if (isspace(*ptr)) {
 			mySpaceCounter++;
 		} else {
-			myBufferIsEmpty = false;
+			myLastLineIsEmpty = false;
 			break;
 		}
 	}
@@ -57,7 +57,10 @@ bool TxtBookReader::characterDataHandler(const std::string &str) {
 }
 
 bool TxtBookReader::newLineHandler() {
-	flushTextBufferToParagraph();
+	if (!myLastLineIsEmpty) {
+		myLineFeedCounter = 0;
+	}
+	myLastLineIsEmpty = true;
 	myLineFeedCounter++;
 	myNewLine = true;
 	mySpaceCounter = 0;
@@ -99,7 +102,7 @@ void TxtBookReader::startDocumentHandler() {
 	myLineFeedCounter = 1;
 	myInsideContentsParagraph = false;
 	enterTitle();
-	myBufferIsEmpty = true;
+	myLastLineIsEmpty = true;
 	myNewLine = true;
 	mySpaceCounter = 0;
 }

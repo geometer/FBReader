@@ -2,12 +2,8 @@
 
 TARGETS="desktop-gtk desktop-qt zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk palm"
 
-if [ -r makefiles/target.mk ]
-then
+if [ -r makefiles/target.mk ]; then
   mv makefiles/target.mk makefiles/__target.mk
-  renamed=1
-else
-  renamed=""
 fi
 
 make clean 1> /dev/null 2>&1;
@@ -22,7 +18,6 @@ for target in $TARGETS; do
 	rm $target.log;
 done
 
-if [ -n "$renamed" ]
-then
+if [ -r makefiles/__target.mk ]; then
   mv makefiles/__target.mk makefiles/target.mk
 fi

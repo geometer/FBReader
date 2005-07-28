@@ -49,7 +49,7 @@ private:
 
 	int myLineFeedCounter;
 	bool myInsideContentsParagraph;
-	bool myBufferIsEmpty;
+	bool myLastLineIsEmpty;
 	bool myNewLine;
 	int mySpaceCounter;
 };

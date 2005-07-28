@@ -23,6 +23,8 @@
 
 #include <abstract/ZLZDecompressor.h>
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLImage.h>
+#include <abstract/ZLFSManager.h>
 
 #include "PdbReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -71,7 +73,7 @@ bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 class PluckerReader : public BookReader {
 
 public:
-	PluckerReader(shared_ptr<ZLInputStream> stream, BookModel &model);
+	PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model);
 	~PluckerReader();
 
 	bool readDocument();
@@ -97,11 +99,12 @@ private:
 	void changeFont(FontType font);
 
 private:
+	std::string myFilePath;
 	shared_ptr<ZLInputStream> myStream;
 	FontType myFont;
 };
 
-PluckerReader::PluckerReader(shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myStream(stream), myFont(FT_REGULAR) {
+PluckerReader::PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myFilePath(filePath), myStream(stream), myFont(FT_REGULAR) {
 }
 
 PluckerReader::~PluckerReader() {
@@ -235,8 +238,9 @@ void PluckerReader::processCompressedTextRecord(size_t size) {
 						unsigned int id = 256 * (unsigned char)*(ptr + 1) + (unsigned char)*(ptr + 2);
 						std::string strId;
 						ZLStringUtil::appendNumber(strId, id);
-						addImageToParagraph(strId);
-						addDataToBuffer(("XXXXX" + strId).data(), strId.length() + 5);
+						endParagraph();
+						addImageReference(strId);
+						beginParagraph();
 					}
 					ptr += 2;
 					processed = true;
@@ -336,76 +340,46 @@ void PluckerReader::readRecord(size_t recordSize) {
 		myStream->read((char*)&flags, 1);
 
 		switch (type) {
-			case 1:
-				//std::cerr << "size = " << size << "; ";
-				/*
-				for (unsigned short i = 0; i < paragraphs; i++) {
-					unsigned short psize;
-					unsigned short attribute;
-					readUnsignedShort(myStream, psize);
-					readUnsignedShort(myStream, attribute);
-					//std::cerr << "psize = " << psize << "; ";
-					//std::cerr << "attribute = " << attribute << "\n";
-				}
-				*/
+			case 1: // compressed text
 				myStream->seek(4 * paragraphs + 2);
-				//myStream->seek(2);
 				{
 					std::string strId;
 					ZLStringUtil::appendNumber(strId, uid);
 					addHyperlinkLabel(strId);
-
-					//std::cerr << "stringBuffer.length() = " << stringBuffer.length() << "\n";
 					processCompressedTextRecord(recordSize - 10 - 4 * paragraphs);
 				}
 				break;
-			case 3:
+			case 3: // compressed image
 				{
 					myStream->seek(2);
-					//ZLZDecompressor decompressor(recordSize - 10);
-					//char buffer[1024];
 					std::string strId;
 					ZLStringUtil::appendNumber(strId, uid);
-					beginImageData("thePIF(compressed)", strId.c_str());
-					/*
-					do {
-						s = decompressor.decompress(*myStream, buffer, 1024);
-						if (s != 0) {
-							addDataToBuffer(buffer, s);
-						}
-						//std::cerr << "s = " << s << "\n";
-					} while (s == 1024);
-					*/
-					const size_t s = recordSize - 10;
-					char *buffer = new char[s];
-					if (myStream->read(buffer, s) == s) {
-						addDataToBuffer(buffer, s);
-					}
-					delete[] buffer;
-					endImageData();
-					//std::cerr << "image id = " << uid << "; ";
-					//unsigned int w = 256 * (unsigned char)stringBuffer[0] + (unsigned char)stringBuffer[1];
-					//unsigned int h = 256 * (unsigned char)stringBuffer[2] + (unsigned char)stringBuffer[3];
-					//std::cerr << "w = " << w << "; ";
-					//std::cerr << "h = " << h << "; ";
-					//std::cerr << "len = " << stringBuffer.length() - 4 << "\n";
+					addImage(strId, new ZLZCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 10));
 				}
 				break;
 			case 10:
 				unsigned short typeCode;
 				readUnsignedShort(myStream, typeCode);
-				//std::cerr << "typeCode = " << typeCode << "\n";
+				std::cerr << "type = " << (int)type << "; ";
+				std::cerr << "typeCode = " << typeCode << "\n";
+				break;
+			case 15: // multiimage
+				/*
+				std::cerr << "uid = " << (int)uid << "; ";
+				std::cerr << "type = " << (int)type << "; ";
+				for (int i = 0; i < size / 2; i++) {
+					unsigned short us;
+					::readUnsignedShort(myStream, us);
+					std::cerr << us << " ";
+				}
+				std::cerr << "\n";
+				*/
 				break;
 			default:
-				//std::cerr << "type = " << (int)type << "; ";
+				std::cerr << "type = " << (int)type << "\n";
 				//std::cerr << "size = " << size << "\n";
 				break;
 		}
-
-		/*
-		if (type == 10) {
-		}
-		*/
 	}
 }
 
@@ -444,7 +418,8 @@ bool PluckerReader::readDocument() {
 	return true;
 }
 
-bool PdbReader::readDocument(shared_ptr<ZLInputStream> stream, BookModel &model) {
+bool PdbReader::readDocument(const std::string &myFilePath, BookModel &model) {
+	shared_ptr<ZLInputStream> stream = ZLFile(myFilePath).inputStream();
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
@@ -460,7 +435,7 @@ bool PdbReader::readDocument(shared_ptr<ZLInputStream> stream, BookModel &model)
 
 	bool code = false;
 	if (header.Id == "DataPlkr") {
-		code = PluckerReader(stream, model).readDocument();
+		code = PluckerReader(myFilePath, stream, model).readDocument();
 	} else if (header.Id == "TEXtREAd") {
 	}
 
