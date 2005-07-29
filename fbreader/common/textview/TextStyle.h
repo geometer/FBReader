@@ -40,7 +40,7 @@ enum AlignmentType {
 class TextStyle {
 
 public:
-  static const std::string DefaultFontName;
+	static const std::string DefaultFontName;
 
 	static ZLIntegerOption LeftMarginOption;
 	static ZLIntegerOption RightMarginOption;
