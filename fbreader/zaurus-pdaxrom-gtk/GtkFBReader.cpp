@@ -220,7 +220,7 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 }
 
 void GtkFBReader::searchSlot() {
-	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new_with_buttons ("Text search", myMainWindow, GTK_DIALOG_MODAL,
+	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new_with_buttons ("Text search", getMainWindow(), GTK_DIALOG_MODAL,
 														"Go", GTK_RESPONSE_ACCEPT,
 														NULL));
 
