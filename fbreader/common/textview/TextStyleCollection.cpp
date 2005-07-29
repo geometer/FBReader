@@ -73,7 +73,7 @@ TextStyleCollection::TextStyleCollection() {
 			defaultParagraphIndent = 30;
 			break;
 	}
-	myBaseStyle = new BaseTextStyle("georgia", defaultFontSize);
+	myBaseStyle = new BaseTextStyle(TextStyle::DefaultFontName, defaultFontSize);
 
 	registerStyle(REGULAR, "Regular Paragraph", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
 	registerStyle(TITLE, "Title", 10, B3_TRUE, B3_UNDEFINED, 2, 7, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);

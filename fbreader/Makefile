@@ -48,7 +48,9 @@ all: .bin
 		$(MAKE) -C $(TARGET_ARCH)/package; \
 	fi;
 
-install: all
+install: all .really-install
+
+.really-install:
 ifeq "$(findstring $(TARGET_ARCH),desktop-qt desktop-gtk maemo)" "$(TARGET_ARCH)"
 	install -d $(DESTDIR)$(INSTALLDIR)/bin
 	install -s FBReader $(DESTDIR)$(INSTALLDIR)/bin
