@@ -94,7 +94,7 @@ size_t ZLString::find(char c, size_t fromPos) const {
 	return (size_t)-1;
 }
 
-void ZLString::operator += (const std::vector<ZLString> &text) {
+void ZLString::operator += (const ZLStringBuffer &text) {
 	size_t len = myLength;
 	size_t offset = myLength;
 	for (std::vector<ZLString>::const_iterator it = text.begin(); it != text.end(); it++) {
