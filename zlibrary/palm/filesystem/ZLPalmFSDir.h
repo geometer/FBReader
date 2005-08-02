@@ -27,8 +27,6 @@ public:
 	ZLPalmFSDir(const std::string &name) FS_SECTION;
 	~ZLPalmFSDir() FS_SECTION;
 
-	void createPhysicalDirectory() FS_SECTION;
-
 	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
 

@@ -18,10 +18,6 @@
 
 #include "ZLPalmFSDir.h"
 
-void ZLPalmFSDir::createPhysicalDirectory() {
-	//mkdir(name().c_str(), 0x1FF);
-}
-
 void ZLPalmFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	/*
 	DIR *dir = opendir(name().c_str());

@@ -97,14 +97,18 @@ shared_ptr<ZLOutputStream> ZLFile::outputStream() const {
 }
 
 shared_ptr<ZLDir> ZLFile::directory() const {
-	if (isDirectory()) {
-		return ZLFSManager::instance().createPlainDirectory(myPath);
-	} else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {
-		return new ZLZipDir(myPath);
-	} else if (myArchiveType & TAR) {
-		return new ZLTarDir(myPath);
+	if (exists()) {
+		if (isDirectory()) {
+			return ZLFSManager::instance().createPlainDirectory(myPath);
+		} else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {
+			return new ZLZipDir(myPath);
+		} else if (myArchiveType & TAR) {
+			return new ZLTarDir(myPath);
+		}
+		return 0;
+	} else {
+		return ZLFSManager::instance().createNewDirectory(myPath);
 	}
-	return 0;
 }
 
 void ZLFile::fillInfo() const {

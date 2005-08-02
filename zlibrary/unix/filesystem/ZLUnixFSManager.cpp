@@ -51,6 +51,10 @@ ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
 	return new ZLUnixFSDir(path);
 }
 
+ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
+	return (mkdir(path.c_str(), 0x1FF) == 0) ? new ZLUnixFSDir(path) : 0;
+}
+
 bool ZLUnixFSManager::isZipSupported() const {
 	return true;
 }

@@ -42,6 +42,11 @@ ZLFSDir *ZLPalmFSManager::createPlainDirectory(const std::string &path) const {
 	return new ZLPalmFSDir(path);
 }
 
+ZLFSDir *ZLPalmFSManager::createNewDirectory(const std::string &path) const {
+	// TODO: implement
+	return 0;
+}
+
 bool ZLPalmFSManager::isZipSupported() const {
 	return ZLibRef != sysInvalidRefNum;
 }

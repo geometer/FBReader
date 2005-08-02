@@ -45,14 +45,14 @@ XMLConfig::XMLConfig(const std::string &name) : myName(name) {
 
 XMLConfig::~XMLConfig() {
 	shared_ptr<ZLDir> configDir = ZLFile("~/." + myName).directory();
-	// TODO: remove type casting
-	((ZLFSDir&)*configDir).createPhysicalDirectory();
 
-	shared_ptr<ZLOutputStream> stream = ZLFile("~/." + myName + "/config.xml").outputStream();
-	if (!stream.isNull() && stream->open()) {
-		XMLConfigWriter(*this, *stream).write();
-		stream->close();
-	}
+	if (!configDir.isNull()) {
+		shared_ptr<ZLOutputStream> stream = ZLFile("~/." + myName + "/config.xml").outputStream();
+		if (!stream.isNull() && stream->open()) {
+			XMLConfigWriter(*this, *stream).write();
+			stream->close();
+		}
+	} // TODO: show error message
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); it++) {
 		delete it->second;
 	}

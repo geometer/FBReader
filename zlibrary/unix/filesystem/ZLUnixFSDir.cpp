@@ -22,10 +22,6 @@
 
 #include "ZLUnixFSDir.h"
 
-void ZLUnixFSDir::createPhysicalDirectory() {
-	mkdir(name().c_str(), 0x1FF);
-}
-
 void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {

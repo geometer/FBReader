@@ -28,7 +28,6 @@ protected:
 
 public:
 	virtual ~ZLFSDir() FS_SECTION;
-	virtual void createPhysicalDirectory() FS_SECTION = 0;
 };
 
 inline ZLFSDir::ZLFSDir(const std::string &name) : ZLDir(name) {}

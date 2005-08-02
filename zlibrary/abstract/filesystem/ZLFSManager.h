@@ -56,6 +56,7 @@ protected:
 	virtual ZLInputStream *createPlainInputStream(const std::string &path) const FS_SECTION = 0;
 	virtual ZLOutputStream *createOutputStream(const std::string &path) const FS_SECTION = 0;
 	virtual ZLFSDir *createPlainDirectory(const std::string &path) const FS_SECTION = 0;
+	virtual ZLFSDir *createNewDirectory(const std::string &path) const FS_SECTION = 0;
 	virtual FileInfo fileInfo(const std::string &path) const FS_SECTION = 0;
 	virtual bool isZipSupported() const FS_SECTION = 0;
 

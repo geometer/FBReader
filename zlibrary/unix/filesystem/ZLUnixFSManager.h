@@ -36,6 +36,7 @@ protected:
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
+	ZLFSDir *createNewDirectory(const std::string &path) const;
 	FileInfo fileInfo(const std::string &path) const;
 	bool isZipSupported() const;
 };
