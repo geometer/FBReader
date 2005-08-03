@@ -44,7 +44,7 @@ XMLConfig::XMLConfig(const std::string &name) : myName(name) {
 }
 
 XMLConfig::~XMLConfig() {
-	shared_ptr<ZLDir> configDir = ZLFile("~/." + myName).directory();
+	shared_ptr<ZLDir> configDir = ZLFile("~/." + myName).directory(true);
 
 	if (!configDir.isNull()) {
 		shared_ptr<ZLOutputStream> stream = ZLFile("~/." + myName + "/config.xml").outputStream();

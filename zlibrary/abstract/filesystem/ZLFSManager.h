@@ -95,7 +95,7 @@ public:
 
 	shared_ptr<ZLInputStream> inputStream() const FS_SECTION;
 	shared_ptr<ZLOutputStream> outputStream() const FS_SECTION;
-	shared_ptr<ZLDir> directory() const FS_SECTION;
+	shared_ptr<ZLDir> directory(bool createUnexisting = false) const FS_SECTION;
 
 private:
 	void fillInfo() const FS_SECTION;
