@@ -70,7 +70,7 @@ void ZLXMLWriter::closeTag() {
 		Tag *tag = myTags.top();
 		myTags.pop();
 		for (unsigned int i = 0; i < myTags.size(); i++) {
-			myStream.write("	");
+			myStream.write("  ");
 		}
 		tag->writeEnd(myStream);
 		delete tag;

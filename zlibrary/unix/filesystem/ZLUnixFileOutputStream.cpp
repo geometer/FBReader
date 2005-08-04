@@ -28,7 +28,7 @@ ZLUnixFileOutputStream::~ZLUnixFileOutputStream() {
 
 bool ZLUnixFileOutputStream::open() {
 	close();
-	myFile = fopen(myName.c_str(), "w");
+	myFile = fopen(myName.c_str(), "wb");
 	return myFile != 0;
 }
 
