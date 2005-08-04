@@ -126,16 +126,16 @@ static GtkWidget *makeSubmenu(GtkWidget *menu, const char *label) {
 	GtkWidget *result = gtk_menu_new();
 	GtkWidget *item = gtk_menu_item_new_with_label(label);
 
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
-	gtk_menu_item_set_submenu (GTK_MENU_ITEM(item), result);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), result);
 
 	return result;
 }
 
 static void addMenuItem(GtkWidget *menu, const char *label, ActionSlotData *data) {
 	GtkWidget *item = gtk_menu_item_new_with_label(label);
-	gtk_menu_shell_append (GTK_MENU_SHELL(menu), item);
-	g_signal_connect (G_OBJECT(item), "activate", G_CALLBACK(actionSlot), data);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(actionSlot), data);
 }
 
 void GtkFBReader::buildMenu() {
