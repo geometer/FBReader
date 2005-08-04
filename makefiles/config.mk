@@ -116,8 +116,8 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	LDFLAGS = -O3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
-	GTKINCLUDE = -I/usr/include/libxml2 -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/X11R6/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include
-	GTKLIBS = -lz -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lm -lgmodule-2.0 -ldl -lgthread-2.0
+	GTKINCLUDE := $(shell pkg-config --cflags gtk+-2.0)
+	GTKLIBS := $(shell pkg-config --libs gtk+-2.0)
 	EXPATLIBS = -lexpat
 	ENCALIBS = -lenca
 endif
