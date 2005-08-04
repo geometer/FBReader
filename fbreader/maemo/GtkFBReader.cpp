@@ -65,6 +65,8 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	buildMenu();
 
+	gtk_widget_show_all(myMenu);
+
  	myToolbar = gtk_widget_new(GTK_TYPE_TOOLBAR,
                          "orientation",   GTK_ORIENTATION_HORIZONTAL,
                          "show-arrow",    FALSE,
