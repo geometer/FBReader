@@ -50,6 +50,11 @@ static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
 	uData->Reader->doAction(uData->Code);
 }
 
+static void menuActionSlot(GtkWidget *, gpointer data) {
+	ActionSlotData *uData = (ActionSlotData*)data;
+	uData->Reader->doAction(uData->Code);
+}
+
 static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeySlot(key);
 }
@@ -137,7 +142,7 @@ static GtkWidget *makeSubmenu(GtkWidget *menu, const char *label) {
 static void addMenuItem(GtkWidget *menu, const char *label, ActionSlotData *data) {
 	GtkWidget *item = gtk_menu_item_new_with_label(label);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(actionSlot), data);
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(menuActionSlot), data);
 }
 
 void GtkFBReader::buildMenu() {
