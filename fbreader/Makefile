@@ -71,10 +71,12 @@ endif
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -m 0644 $(wildcard share/FBReader/help/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 ifeq "$(TARGET_ARCH)" "maemo"
+	install -d $(DESTDIR)/usr/share/icons/hicolor/26x26
+	install icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/
 	install -d $(DESTDIR)/usr/share/applications/hildon
 	install -m 0644 share/FBReader/fbreader.desktop $(DESTDIR)/usr/share/applications/hildon
 	install -d $(DESTDIR)/etc/others-menu
-	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/fbreader.desktop 9900_fbrea
+	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/fbreader.desktop 9900_fbreader.desktop )
 endif
 endif
 
