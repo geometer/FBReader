@@ -60,11 +60,11 @@ static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 }
 
 GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
- 	myApp = HILDON_APP(hildon_app_new());
- 	myAppView = HILDON_APPVIEW(hildon_appview_new(NULL));
+	myApp = HILDON_APP(hildon_app_new());
+	myAppView = HILDON_APPVIEW(hildon_appview_new(NULL));
 
- 	hildon_app_set_appview(myApp, myAppView);
- 	hildon_app_set_two_part_title(myApp, FALSE);
+	hildon_app_set_appview(myApp, myAppView);
+	hildon_app_set_two_part_title(myApp, FALSE);
 
 	myMenu = GTK_WIDGET(hildon_appview_get_menu(myAppView));
 
@@ -72,11 +72,11 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	gtk_widget_show_all(myMenu);
 
- 	myToolbar = gtk_widget_new(GTK_TYPE_TOOLBAR,
-                         "orientation",   GTK_ORIENTATION_HORIZONTAL,
-                         "show-arrow",    FALSE,
-                         "toolbar-style", GTK_TOOLBAR_ICONS,
-                         NULL);
+	myToolbar = gtk_widget_new(GTK_TYPE_TOOLBAR,
+															"orientation",   GTK_ORIENTATION_HORIZONTAL,
+															"show-arrow",    FALSE,
+															"toolbar-style", GTK_TOOLBAR_ICONS,
+															NULL);
 
 	createToolbar();
 
