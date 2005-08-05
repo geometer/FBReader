@@ -2,6 +2,7 @@ include $(ROOTDIR)/makefiles/platforms.mk
 
 DUMMY_SECTIONS = \
 	-DSTL_SECTION="" \
+	-DSTL1_SECTION="" \
 	-DXML_SECTION="" \
 	-DFS_SECTION="" \
 	-DOPTIONS_SECTION="" \
@@ -149,15 +150,16 @@ ifeq "$(TARGET_ARCH)" "palm"
 
 	DEPGEN = $(CC) -MM -DPALM_TEMPORARY
 	CFLAGS = \
-		-DSTL_SECTION="__attribute__ ((section(\"sec0\")))" \
+		-DSTL_SECTION="__attribute__ ((section(\"stl0\")))" \
+		-DSTL1_SECTION="__attribute__ ((section(\"stl1\")))" \
 		-DXML_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DFS_SECTION="__attribute__ ((section(\"sec2\")))" \
 		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DUTIL_SECTION="__attribute__ ((section(\"sec1\")))" \
+		-DUTIL_SECTION="__attribute__ ((section(\"sec0\")))" \
 		-DDIALOG_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DIMAGE_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DAPPLICATION_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DZLVIEW_SECTION="__attribute__ ((section(\"sec2\")))" \
+		-DIMAGE_SECTION="__attribute__ ((section(\"sec0\")))" \
+		-DAPPLICATION_SECTION="__attribute__ ((section(\"sec0\")))" \
+		-DZLVIEW_SECTION="__attribute__ ((section(\"sec0\")))" \
 		-DVIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
 		-DMODEL_SECTION="__attribute__ ((section(\"sec6\")))" \
 		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec4\")))" \

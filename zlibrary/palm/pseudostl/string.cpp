@@ -2,7 +2,7 @@
 
 #include "string1.h"
 
-static int strncmp(const char *s1, const char *s2, size_t len) STL_SECTION;
+static int strncmp(const char *s1, const char *s2, size_t len) STL1_SECTION;
 
 static int strncmp(const char *s1, const char *s2, size_t len) {
 	const char *e1 = s1 + len;
