@@ -58,13 +58,24 @@ ifeq "$(findstring $(TARGET_ARCH),desktop-qt desktop-gtk maemo)" "$(TARGET_ARCH)
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+ifeq "$(TARGET_ARCH)" "desktop-qt"
 	install -m 0644 icons/640x480/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
 	install -m 0644 $(wildcard icons/640x480/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+else
+	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
+	install -m 0644 $(wildcard icons/blueset/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+endif
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -m 0644 $(wildcard share/FBReader/help/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
+ifeq "$(TARGET_ARCH)" "maemo"
+	install -d $(DESTDIR)/usr/share/applications/hildon
+	install -m 0644 share/FBReader/fbreader.desktop $(DESTDIR)/usr/share/applications/hildon
+	install -d $(DESTDIR)/etc/others-menu
+	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/fbreader.desktop 9900_fbrea
+endif
 endif
 
 .lib:
