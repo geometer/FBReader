@@ -45,6 +45,7 @@ public:
 protected:
 	void setWindowCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
 	void addButton(ActionCode id, const std::string &name);
+	void addButtonSeparator();
 	void setButtonVisible(ActionCode id, bool visible);
 	void setButtonEnabled(ActionCode id, bool enable);
 	void searchSlot();
@@ -68,7 +69,7 @@ public:
 private:
 	HildonApp *myApp;
 	HildonAppView *myAppView;
-	GtkWidget *myToolbar;
+	GtkToolbar *myToolbar;
 	GtkWidget *myMenu;
 
 	bool myFullScreen;

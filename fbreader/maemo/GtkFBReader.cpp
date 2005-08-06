@@ -72,15 +72,13 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 
 	gtk_widget_show_all(myMenu);
 
-	myToolbar = gtk_widget_new(GTK_TYPE_TOOLBAR,
-															"orientation",   GTK_ORIENTATION_HORIZONTAL,
-															"show-arrow",    FALSE,
-															"toolbar-style", GTK_TOOLBAR_ICONS,
-															NULL);
-
+	myToolbar = (GtkToolbar*)gtk_toolbar_new();
+	gtk_toolbar_set_show_arrow(myToolbar, false);
+	gtk_toolbar_set_orientation(myToolbar, GTK_ORIENTATION_HORIZONTAL);
+	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 	createToolbar();
 
-	hildon_appview_set_toolbar(myAppView, GTK_TOOLBAR(myToolbar));
+	hildon_appview_set_toolbar(myAppView, myToolbar);
 
 	myViewWidget = new GtkViewWidget(this);
 	gtk_container_add(GTK_CONTAINER(myAppView), ((GtkViewWidget*)myViewWidget)->area());
@@ -196,7 +194,7 @@ void GtkFBReader::cancelSlot() {
 	if (myFullScreen) {
 		myFullScreen = false;
 		hildon_appview_set_fullscreen(myAppView, false);
-		gtk_widget_show(myToolbar);
+		gtk_widget_show(GTK_WIDGET(myToolbar));
 	} else if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
 		close();
 	}
@@ -207,9 +205,9 @@ void GtkFBReader::fullscreenSlot() {
 
 	hildon_appview_set_fullscreen(myAppView, myFullScreen);
 	if (myFullScreen) {
-		gtk_widget_hide(myToolbar);
+		gtk_widget_hide(GTK_WIDGET(myToolbar));
 	} else if (!myFullScreen) {
-		gtk_widget_show(myToolbar);
+		gtk_widget_show(GTK_WIDGET(myToolbar));
 	}
 }
 
@@ -233,16 +231,26 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	GdkImage *gdkImage = GTK_IMAGE(image)->data.image.image;
 	int w = gdkImage->width;
 	int h = gdkImage->height;
-	gtk_widget_set_usize(ebox, w + 4, h);
+	gtk_widget_set_usize(ebox, w + 3, h);
 
 	gtk_tool_item_set_homogeneous(button, FALSE);
 	gtk_tool_item_set_expand(button, FALSE);
 
 
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
-	gtk_container_add(GTK_CONTAINER(myToolbar), (GtkWidget *)button);
+	gtk_toolbar_insert(myToolbar, button, -1);
 	g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
-	myButtons[id] = (GtkWidget *)button;
+	myButtons[id] = (GtkWidget*)button;
+}
+
+void GtkFBReader::addButtonSeparator() {
+	/*
+	GtkWidget *spaceWidget = gtk_vseparator_new();
+	gtk_container_add(GTK_CONTAINER(space), spaceWidget);
+	*/
+	GtkToolItem *space = gtk_separator_tool_item_new();
+	gtk_separator_tool_item_set_draw((GtkSeparatorToolItem*)space, false);
+	gtk_toolbar_insert(myToolbar, space, -1);
 }
 
 void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {

@@ -22,6 +22,7 @@ PalmFBReader::~PalmFBReader() {
 
 void PalmFBReader::setWindowCaption(const std::string &caption) {}
 void PalmFBReader::addButton(ActionCode id, const std::string &name) {}
+void PalmFBReader::addButtonSeparator() {}
 void PalmFBReader::setButtonVisible(ActionCode id, bool visible) {}
 void PalmFBReader::setButtonEnabled(ActionCode id, bool enable) {}
 void PalmFBReader::searchSlot() {}

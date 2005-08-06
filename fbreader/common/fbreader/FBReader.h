@@ -91,6 +91,7 @@ protected:
 	virtual void setWindowCaption(const std::string &caption) FB_SECTION = 0;
 	void createToolbar() FB_SECTION;
 	virtual void addButton(ActionCode id, const std::string &name) FB_SECTION = 0;
+	virtual void addButtonSeparator() FB_SECTION = 0;
 	virtual void setButtonVisible(ActionCode id, bool visible) FB_SECTION = 0;
 	virtual void setButtonEnabled(ActionCode id, bool enable) FB_SECTION = 0;
 	virtual void searchSlot() FB_SECTION = 0;

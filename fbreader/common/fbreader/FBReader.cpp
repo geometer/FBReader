@@ -341,14 +341,19 @@ void FBReader::createToolbar() {
 	addButton(ACTION_SHOW_COLLECTION, "books");
 	addButton(ACTION_SHOW_LAST_BOOKS, "history");
 	addButton(ACTION_ADD_BOOK, "addbook");
+	addButtonSeparator();
 	addButton(ACTION_SHOW_BOOK_INFO, "bookinfo");
 	addButton(ACTION_SHOW_OPTIONS, "settings");
+	addButtonSeparator();
 	addButton(ACTION_UNDO, "leftarrow");
 	addButton(ACTION_REDO, "rightarrow");
+	addButtonSeparator();
 	addButton(ACTION_SHOW_CONTENTS, "contents");
+	addButtonSeparator();
 	addButton(ACTION_SEARCH, "find");
 	addButton(ACTION_FIND_NEXT, "findnext");
 	addButton(ACTION_FIND_PREVIOUS, "findprev");
+	addButtonSeparator();
 	if (isRotationSupported()) {
 		addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
 	}

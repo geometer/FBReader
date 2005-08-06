@@ -44,6 +44,7 @@ private:
 protected:
 	void setWindowCaption(const std::string &caption) { setCaption(QString::fromUtf8(caption.c_str())); }
 	void addButton(ActionCode id, const std::string &name);
+	void addButtonSeparator() {} // TODO: implement
 	void setButtonVisible(ActionCode id, bool visible);
 	void setButtonEnabled(ActionCode id, bool enable);
 	void cancelSlot();
