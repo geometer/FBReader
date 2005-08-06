@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Name=E-Book Reader
+Type=Application
+StartupWMClass=FBReader
+Exec=/usr/bin/FBReader
+Icon=FBReader
+X-Window-Icon=FBReader
+X-Window-Icon-Dimmed=FBReader
+X-HildonDesk-ShowInToolbar=true
+X-Osso-Type=application/x-executable
