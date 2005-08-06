@@ -146,14 +146,15 @@ static void addMenuItem(GtkWidget *menu, const char *label, ActionSlotData *data
 void GtkFBReader::buildMenu() {
 	GtkWidget *submenu;
 
-	addMenuItem(myMenu, "Book Info",  getSlotData(ACTION_SHOW_BOOK_INFO));
+	addMenuItem(myMenu, "Book Info...",  getSlotData(ACTION_SHOW_BOOK_INFO));
 	// MSS: this item can actually be disabled if we do not have table of contents
 	addMenuItem(myMenu, "Table Of Contents", getSlotData(ACTION_SHOW_CONTENTS));
 
 	submenu = makeSubmenu(myMenu, "Library");
 
 	addMenuItem(submenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
-	addMenuItem(submenu, "Add To...", getSlotData(ACTION_ADD_BOOK));
+	addMenuItem(submenu, "Recent", getSlotData(ACTION_SHOW_LAST_BOOKS));
+	addMenuItem(submenu, "Add Book...", getSlotData(ACTION_ADD_BOOK));
 
 	submenu = makeSubmenu(myMenu, "Find");
 
@@ -173,7 +174,7 @@ void GtkFBReader::buildMenu() {
 	// gtk_menu_shell_append(GTK_MENU_SHELL(myMenu), myRecentMenu);
 	// gtk_widget_set_sensitive(myRecentMenu, FALSE);
 
-	addMenuItem(myMenu, "Preferences", getSlotData(ACTION_SHOW_OPTIONS));
+	addMenuItem(myMenu, "Preferences...", getSlotData(ACTION_SHOW_OPTIONS));
 	addMenuItem(myMenu, "Close", getSlotData(ACTION_CANCEL));
 }
 
