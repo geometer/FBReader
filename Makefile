@@ -28,7 +28,7 @@ all:
 	done
 
 install:
-	@for dir in $(APPDIRS); do \
+	@for dir in $(LIBDIR) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
 			cd $$dir; \
 			if ! make install; then \

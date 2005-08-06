@@ -72,6 +72,8 @@ $(TARGET): .objects
 	@$(AR) $(TARGET) `find . -name *.o`
 	@echo " OK"
 
+install: $(TARGET)
+
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \
 		if [ -d $$subdir ]; then \
