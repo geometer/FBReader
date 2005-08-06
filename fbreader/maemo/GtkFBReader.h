@@ -48,6 +48,7 @@ protected:
 	void addButtonSeparator();
 	void setButtonVisible(ActionCode id, bool visible);
 	void setButtonEnabled(ActionCode id, bool enable);
+	void enableMenuButtons();
 	void searchSlot();
 	void cancelSlot();
 	void fullscreenSlot();
@@ -75,7 +76,7 @@ private:
 	bool myFullScreen;
 
 	std::map<std::string,ActionCode> myKeyBindings;
-	std::map<ActionCode,GtkWidget*> myButtons;
+	std::map<ActionCode,GtkToolItem*> myButtons;
 
 	std::map<ActionCode,ActionSlotData*> myActions;
 };

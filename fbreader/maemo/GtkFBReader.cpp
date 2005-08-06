@@ -257,24 +257,37 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 	gtk_toolbar_insert(myToolbar, button, -1);
 	g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
-	myButtons[id] = (GtkWidget*)button;
+	myButtons[id] = button;
 }
 
 void GtkFBReader::addButtonSeparator() {
-	/*
-	GtkWidget *spaceWidget = gtk_vseparator_new();
-	gtk_container_add(GTK_CONTAINER(space), spaceWidget);
-	*/
 	GtkToolItem *space = gtk_separator_tool_item_new();
 	gtk_separator_tool_item_set_draw((GtkSeparatorToolItem*)space, false);
 	gtk_toolbar_insert(myToolbar, space, -1);
 }
 
+void GtkFBReader::enableMenuButtons() {
+	FBReader::enableMenuButtons();
+	bool enableSpace = false;
+	int itemNumber = gtk_toolbar_get_n_items(myToolbar);
+	for (int i = 0; i < itemNumber; i++) {
+		GtkToolItem *item = gtk_toolbar_get_nth_item(myToolbar, i);
+		if (GTK_IS_SEPARATOR_TOOL_ITEM(item)) {
+			gtk_tool_item_set_visible_horizontal(item, enableSpace);
+			enableSpace = false;
+		} else if (gtk_tool_item_get_visible_horizontal(item)) {
+			enableSpace = true;
+		}
+	}
+}
+
 void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
 	if (visible) {
-		gtk_widget_show(myButtons[id]);
+		gtk_tool_item_set_visible_horizontal(myButtons[id], true);
+		//gtk_widget_show(myButtons[id]);
 	} else {
-		gtk_widget_hide(myButtons[id]);
+		gtk_tool_item_set_visible_horizontal(myButtons[id], false);
+		//gtk_widget_hide(myButtons[id]);
 	}
 }
 
@@ -283,11 +296,11 @@ void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
  * does something strange if WIDGET is already insensitive.
  */
 void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
-	std::map<ActionCode,GtkWidget*>::const_iterator it = myButtons.find(id);
+	std::map<ActionCode,GtkToolItem*>::const_iterator it = myButtons.find(id);
 	if (it != myButtons.end()) {
 		bool enabled = GTK_WIDGET_STATE(it->second) != GTK_STATE_INSENSITIVE;
 		if (enabled != enable) {
-			gtk_widget_set_sensitive(it->second, enable);
+			gtk_widget_set_sensitive(GTK_WIDGET(it->second), enable);
 		}
 	}
 }

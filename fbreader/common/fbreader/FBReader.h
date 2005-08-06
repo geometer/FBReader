@@ -113,7 +113,7 @@ public:
 	void showBookTextView() FB_SECTION;
 	void tryShowFootnoteView(const std::string &id) FB_SECTION;
 	void restorePreviousMode() FB_SECTION;
-	void enableMenuButtons() FB_SECTION;
+	virtual void enableMenuButtons() FB_SECTION;
 	void repaintView() FB_SECTION;
 	void doAction(ActionCode code) FB_SECTION;
 
