@@ -146,10 +146,27 @@ static void addMenuItem(GtkWidget *menu, const char *label, ActionSlotData *data
 void GtkFBReader::buildMenu() {
 	GtkWidget *submenu;
 
+	addMenuItem(myMenu, "Book Info",  getSlotData(ACTION_SHOW_BOOK_INFO));
+	// MSS: this item can actually be disabled if we do not have table of contents
+	addMenuItem(myMenu, "Table Of Contents", getSlotData(ACTION_SHOW_CONTENTS));
+
 	submenu = makeSubmenu(myMenu, "Library");
 
 	addMenuItem(submenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
 	addMenuItem(submenu, "Add To...", getSlotData(ACTION_ADD_BOOK));
+
+	submenu = makeSubmenu(myMenu, "Find");
+
+	addMenuItem(submenu, "Find Text...", getSlotData(ACTION_SEARCH));
+	addMenuItem(submenu, "Find Next", getSlotData(ACTION_FIND_NEXT));
+	addMenuItem(submenu, "Find Previous", getSlotData(ACTION_FIND_PREVIOUS));
+
+	submenu = makeSubmenu(myMenu, "View");
+
+	// MSS: these two actions can have a checkbox next to them
+	addMenuItem(submenu, "Rotate Screen", getSlotData(ACTION_ROTATE_SCREEN));
+	addMenuItem(submenu, "Full Screen", getSlotData(ACTION_FULLSCREEN));
+	// addMenuItem(submenu, "Toggle Indicator", getSlotData(ACTION_FULLSCREEN));
 
 	// MSS: we do not use it now...
 	// myRecentMenu = gtk_menu_item_new_with_label("Recent");
