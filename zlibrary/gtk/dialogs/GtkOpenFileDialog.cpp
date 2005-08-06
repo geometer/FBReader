@@ -50,8 +50,8 @@ static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer se
 GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler, GtkWindow *parent) : ZLDesktopOpenFileDialog(handler) {
 	myExitFlag = false;
 	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption, parent, GTK_DIALOG_MODAL,
-					GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+					"Ok", GTK_RESPONSE_ACCEPT,
+					"Cancel", GTK_RESPONSE_REJECT,
 					0));
 
 	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), 0);

@@ -47,8 +47,8 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 
 GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLDesktopOptionsDialog(id) {
 	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption.c_str(), parent, GTK_DIALOG_MODAL,
-					GTK_STOCK_OK, GTK_RESPONSE_ACCEPT,
-					GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT,
+					"Ok", GTK_RESPONSE_ACCEPT,
+					"Cancel", GTK_RESPONSE_REJECT,
 					NULL));
 
 	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
