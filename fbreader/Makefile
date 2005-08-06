@@ -74,9 +74,9 @@ ifeq "$(TARGET_ARCH)" "maemo"
 	install -d $(DESTDIR)/usr/share/icons/hicolor/26x26
 	install icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/
 	install -d $(DESTDIR)/usr/share/applications/hildon
-	install -m 0644 share/FBReader/fbreader.desktop $(DESTDIR)/usr/share/applications/hildon
+	install -m 0644 maemo/package/FBReader.desktop $(DESTDIR)/usr/share/applications/hildon
 	install -d $(DESTDIR)/etc/others-menu
-	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/fbreader.desktop 9900_fbreader.desktop )
+	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/FBReader.desktop 9900_FBReader.desktop )
 endif
 endif
 
