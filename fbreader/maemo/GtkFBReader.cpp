@@ -230,8 +230,14 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	gtk_container_add(GTK_CONTAINER(ebox), image);
 	gtk_container_add(GTK_CONTAINER(button), ebox);
 
+	GdkImage *gdkImage = GTK_IMAGE(image)->data.image.image;
+	int w = gdkImage->width;
+	int h = gdkImage->height;
+	gtk_widget_set_usize(ebox, w + 4, h);
+
 	gtk_tool_item_set_homogeneous(button, FALSE);
 	gtk_tool_item_set_expand(button, FALSE);
+
 
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 	gtk_container_add(GTK_CONTAINER(myToolbar), (GtkWidget *)button);
