@@ -108,12 +108,12 @@ GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
 	myKeyBindings["I"] = ACTION_SHOW_BOOK_INFO;
 	myKeyBindings["A"] = ACTION_ADD_BOOK;
 	myKeyBindings["Return"] = ACTION_ROTATE_SCREEN;
-	myKeyBindings["Up"] = ACTION_SCROLL_BACKWARD;
-	myKeyBindings["Down"] = ACTION_SCROLL_FORWARD;
+	myKeyBindings["Up"] = ACTION_DECREASE_FONT;
+	myKeyBindings["Down"] = ACTION_INCREASE_FONT;
 	myKeyBindings["Escape"] = ACTION_CANCEL;
-	myKeyBindings["F6"] = ACTION_FULLSCREEN;			// MSS: very funny :(
-	myKeyBindings["F7"] = ACTION_INCREASE_FONT;		// MSS: very funny :(
-	myKeyBindings["F8"] = ACTION_DECREASE_FONT;		// MSS: very funny :(
+	myKeyBindings["F6"] = ACTION_FULLSCREEN;
+	myKeyBindings["F7"] = ACTION_SCROLL_FORWARD;
+	myKeyBindings["F8"] = ACTION_SCROLL_BACKWARD;
 
 	myFullScreen = false;
 }
@@ -153,9 +153,10 @@ void GtkFBReader::buildMenu() {
 	addMenuItem(submenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
 	addMenuItem(submenu, "Add To...", getSlotData(ACTION_ADD_BOOK));
 
-	submenu = makeSubmenu(myMenu, "Recent");
-
 	// MSS: we do not use it now...
+	// myRecentMenu = gtk_menu_item_new_with_label("Recent");
+	// gtk_menu_shell_append(GTK_MENU_SHELL(myMenu), myRecentMenu);
+	// gtk_widget_set_sensitive(myRecentMenu, FALSE);
 
 	addMenuItem(myMenu, "Preferences", getSlotData(ACTION_SHOW_OPTIONS));
 	addMenuItem(myMenu, "Close", getSlotData(ACTION_CANCEL));
@@ -276,7 +277,8 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 
 void GtkFBReader::searchSlot() {
 	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new_with_buttons ("Text search", getMainWindow(), GTK_DIALOG_MODAL,
-														"Go", GTK_RESPONSE_ACCEPT,
+														"Find", GTK_RESPONSE_ACCEPT,
+														"Cancel", GTK_RESPONSE_REJECT,
 														NULL));
 
 	gtk_signal_connect(GTK_OBJECT(findDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
