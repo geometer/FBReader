@@ -245,13 +245,8 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	gtk_container_add(GTK_CONTAINER(ebox), image);
 	gtk_container_add(GTK_CONTAINER(button), ebox);
 
-	GdkImage *gdkImage = GTK_IMAGE(image)->data.image.image;
-	int w = gdkImage->width;
-	int h = gdkImage->height;
-	gtk_widget_set_usize(ebox, w + 3, h);
-
-	gtk_tool_item_set_homogeneous(button, FALSE);
-	gtk_tool_item_set_expand(button, FALSE);
+	gtk_tool_item_set_homogeneous(button, false);
+	gtk_tool_item_set_expand(button, false);
 
 
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
@@ -282,13 +277,7 @@ void GtkFBReader::enableMenuButtons() {
 }
 
 void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
-	if (visible) {
-		gtk_tool_item_set_visible_horizontal(myButtons[id], true);
-		//gtk_widget_show(myButtons[id]);
-	} else {
-		gtk_tool_item_set_visible_horizontal(myButtons[id], false);
-		//gtk_widget_hide(myButtons[id]);
-	}
+	gtk_tool_item_set_visible_horizontal(myButtons[id], visible);
 }
 
 /*
@@ -308,11 +297,9 @@ void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 	if (key->keyval == GDK_Return && key->state == 0) {
 		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-
 		return true;
 	} else if (key->keyval == GDK_Escape && key->state == 0) {
 		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-
 		return true;
 	}
 
