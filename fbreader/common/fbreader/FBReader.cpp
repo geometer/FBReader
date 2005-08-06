@@ -170,6 +170,7 @@ void FBReader::doAction(ActionCode code) {
 			} else {
 				repaintView();
 			}
+			setButtonVisible(ACTION_SHOW_COLLECTION, code == ACTION_SHOW_LAST_BOOKS);
 			break;
 		case ACTION_SHOW_OPTIONS:
 			optionsSlot();
