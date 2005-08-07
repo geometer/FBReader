@@ -88,7 +88,6 @@ ifeq "$(TARGET_ARCH)" "maemo"
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
 	install -m 0644 $(wildcard icons/blueset/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
