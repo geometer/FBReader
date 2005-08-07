@@ -44,8 +44,8 @@ static void pixbuf_copy_block(guchar *src, gint src_row_stride, gint w, gint h,
 	}
 }
 
-#define ROTATE_BUFFER_WIDTH 48
-#define ROTATE_BUFFER_HEIGHT 48
+#define ROTATE_BUFFER_WIDTH 24
+#define ROTATE_BUFFER_HEIGHT 24
 
 /*
  * Returns a copy of pixbuf src rotated 90 degrees clockwise or 90 counterclockwise
