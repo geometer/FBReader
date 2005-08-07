@@ -51,33 +51,56 @@ all: .bin
 install: all .really-install
 
 .really-install:
-ifeq "$(findstring $(TARGET_ARCH),desktop-qt desktop-gtk maemo)" "$(TARGET_ARCH)"
+ifeq "$(TARGET_ARCH)" "desktop-qt"
 	install -d $(DESTDIR)$(INSTALLDIR)/bin
 	install -s FBReader $(DESTDIR)$(INSTALLDIR)/bin
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-ifeq "$(TARGET_ARCH)" "desktop-qt"
 	install -m 0644 icons/640x480/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
 	install -m 0644 $(wildcard icons/640x480/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-else
-	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
-	install -m 0644 $(wildcard icons/blueset/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-endif
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -m 0644 $(wildcard share/FBReader/help/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
+endif
+ifeq "$(TARGET_ARCH)" "desktop-gtk"
+	install -d $(DESTDIR)$(INSTALLDIR)/bin
+	install -s FBReader $(DESTDIR)$(INSTALLDIR)/bin
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
+	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+	install -m 0644 icons/640x480/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
+	install -m 0644 $(wildcard icons/640x480/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
+	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
+	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
+	install -m 0644 $(wildcard share/FBReader/help/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
+endif
 ifeq "$(TARGET_ARCH)" "maemo"
+	install -d $(DESTDIR)$(INSTALLDIR)/bin
+	install -s FBReader $(DESTDIR)$(INSTALLDIR)/bin
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
+	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
+	install -m 0644 $(wildcard icons/blueset/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
+	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
+	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
+	install -m 0644 $(wildcard share/FBReader/help/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -d $(DESTDIR)/usr/share/icons/hicolor/26x26
 	install icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/
 	install -d $(DESTDIR)/usr/share/applications/hildon
 	install -m 0644 maemo/package/FBReader.desktop $(DESTDIR)/usr/share/applications/hildon
 	install -d $(DESTDIR)/etc/others-menu
 	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/FBReader.desktop 9900_FBReader.desktop )
-endif
 endif
 
 .lib:
