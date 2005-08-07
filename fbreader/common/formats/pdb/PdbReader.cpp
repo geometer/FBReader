@@ -245,9 +245,18 @@ void PluckerReader::processCompressedTextRecord(size_t size) {
 					ptr += 2;
 					processed = true;
 					break;
-				case 0x22: ptr += 2; break;
+				case 0x22:
+					// TODO: set margin
+					ptr += 2;
+					endParagraph();
+					beginParagraph();
+					processed = true;
+					break;
 				case 0x29:
+					// TODO: set alignment
 					ptr += 1;
+					endParagraph();
+					beginParagraph();
 					processed = true;
 					break;
 				case 0x33:
@@ -291,9 +300,9 @@ void PluckerReader::processCompressedTextRecord(size_t size) {
 				case 0x97: ptr += 7; break;
 			}
 			textStart = ptr + 1;
-			if (!processed) {
-				//std::cerr << "[" << fn << "]\n";
-			}
+			//if (!processed) {
+				std::cerr << "[" << fn << "]\n";
+			//}
 			functionFlag = false;
 		} else if (*ptr == 0) {
 			functionFlag = true;
