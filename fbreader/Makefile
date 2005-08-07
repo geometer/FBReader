@@ -99,7 +99,7 @@ ifeq "$(TARGET_ARCH)" "maemo"
 	install -d $(DESTDIR)/usr/share/applications/hildon
 	install -m 0644 maemo/package/FBReader.desktop $(DESTDIR)/usr/share/applications/hildon
 	install -d $(DESTDIR)/etc/others-menu
-	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/FBReader.desktop 9900_FBReader.desktop )
+	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/FBReader.desktop 0000_FBReader.desktop )
 endif
 
 .lib:
