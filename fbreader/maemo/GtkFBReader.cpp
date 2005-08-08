@@ -175,7 +175,7 @@ void GtkFBReader::buildMenu() {
 	// gtk_widget_set_sensitive(myRecentMenu, FALSE);
 
 	addMenuItem(myMenu, "Preferences...", getSlotData(ACTION_SHOW_OPTIONS));
-	addMenuItem(myMenu, "Close", getSlotData(ACTION_CANCEL));
+	addMenuItem(myMenu, "Close", getSlotData(ACTION_QUIT));
 }
 
 GtkFBReader::~GtkFBReader() {
