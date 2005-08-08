@@ -92,6 +92,10 @@ void QFBReader::cancelSlot() {
 	}
 }
 
+void QFBReader::quitSlot() {
+	close();
+}
+
 void QFBReader::closeEvent(QCloseEvent *event) {
 	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();
@@ -162,3 +166,5 @@ void QFBReader::searchSlot() {
 void QFBReader::doActionSlot(int buttonNumber) {
 	doAction((ActionCode)buttonNumber);
 }
+
+// vim:ts=2:sw=2:noet

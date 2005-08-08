@@ -125,6 +125,10 @@ void QFBReader::cancelSlot() {
 	}
 }
 
+void QFBReader::quitSlot() {
+  close();
+}
+
 void QFBReader::setMode(ViewMode mode) {
 	if (mode == myMode) {
 		return;

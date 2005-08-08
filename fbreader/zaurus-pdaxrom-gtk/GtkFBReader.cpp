@@ -160,9 +160,13 @@ void GtkFBReader::close() {
 	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();
 	} else {
-		delete this;
-		gtk_main_quit();
+		quitSlot();
 	}
+}
+
+void GtkFBReader::quitSlot() {
+	delete this;
+	gtk_main_quit();
 }
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {

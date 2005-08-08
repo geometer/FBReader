@@ -60,6 +60,7 @@ public:
 		ACTION_SHOW_HELP,
 		ACTION_ROTATE_SCREEN,
 		ACTION_SHOW_LAST_BOOKS,
+		ACTION_QUIT,
 	};
 
 protected:
@@ -97,6 +98,7 @@ protected:
 	virtual void searchSlot() FB_SECTION = 0;
 	virtual void cancelSlot() FB_SECTION = 0;
 	virtual void fullscreenSlot() FB_SECTION = 0;
+	virtual void quitSlot() FB_SECTION = 0;
 	virtual bool isRotationSupported() const FB_SECTION = 0;
 
 	virtual void bookInfoSlot() FB_SECTION;

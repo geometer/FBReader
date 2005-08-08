@@ -52,6 +52,7 @@ protected:
 	void cancelSlot();
 	void searchSlot();
 	void fullscreenSlot();
+	void quitSlot();
 	bool isRotationSupported() const { return false; }
 
 	void bookInfoSlot() { FBReader::bookInfoSlot(); fullScreenWorkaround(); }

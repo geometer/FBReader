@@ -54,7 +54,8 @@ protected:
 
 public:
 	void handleKeySlot(GdkEventKey *);
-	void close();
+	// MSS: this is not good, I suppose: the original method is protected, I make it public here...
+	void quitSlot();
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
 

@@ -27,6 +27,7 @@ void PalmFBReader::setButtonVisible(ActionCode id, bool visible) {}
 void PalmFBReader::setButtonEnabled(ActionCode id, bool enable) {}
 void PalmFBReader::searchSlot() {}
 void PalmFBReader::cancelSlot() {}
+void PalmFBReader::quitSlot() {}
 void PalmFBReader::fullscreenSlot() {}
 bool PalmFBReader::isRotationSupported() const { return false; }
 void PalmFBReader::stylusPressEvent(int x, int y) {

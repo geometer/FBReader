@@ -218,6 +218,11 @@ void GtkFBReader::cancelSlot() {
 	}
 }
 
+void GtkFBReader::quitSlot() {
+	delete this;
+	gtk_main_quit();
+}
+
 void GtkFBReader::fullscreenSlot() {
 	myFullScreen = !myFullScreen;
 
@@ -233,8 +238,7 @@ void GtkFBReader::close() {
 	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();
 	} else {
-		delete this;
-		gtk_main_quit();
+		quitSlot();
 	}
 }
 

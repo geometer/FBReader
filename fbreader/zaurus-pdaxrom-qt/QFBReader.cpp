@@ -113,6 +113,10 @@ void QFBReader::cancelSlot() {
 	}
 }
 
+void QFBReader::quitSlot() {
+	close();
+}
+
 void QFBReader::closeEvent(QCloseEvent *event) {
 	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();

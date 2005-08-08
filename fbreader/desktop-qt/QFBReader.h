@@ -50,6 +50,7 @@ protected:
 	void cancelSlot();
 	void searchSlot();
 	void fullscreenSlot() {}
+	void quitSlot();
 	bool isRotationSupported() const { return true; }
 	
 private slots:

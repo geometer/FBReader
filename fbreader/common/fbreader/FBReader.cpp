@@ -268,6 +268,9 @@ void FBReader::doAction(ActionCode code) {
 			myViewWidget->rotate();
 			repaintView();
 			break;
+		case ACTION_QUIT:
+			quitSlot();
+			break;
 	}
 }
 

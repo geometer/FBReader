@@ -52,6 +52,7 @@ protected:
 	void searchSlot();
 	void cancelSlot();
 	void fullscreenSlot();
+	void quitSlot();
 	bool isRotationSupported() const { return true; }
 
 	ActionSlotData *getSlotData(ActionCode);

@@ -22,6 +22,7 @@ public:
 	void searchSlot() FB_SECTION;
 	void cancelSlot() FB_SECTION;
 	void fullscreenSlot() FB_SECTION;
+	void quitSlot() FB_SECTION;
 	bool isRotationSupported() const FB_SECTION;
 	void stylusPressEvent(int x, int y) FB_SECTION;
 	void paintEvent() FB_SECTION;

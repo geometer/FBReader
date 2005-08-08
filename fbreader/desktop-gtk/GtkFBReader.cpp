@@ -37,7 +37,7 @@ static ZLIntegerOption Width("Options", "Width", 800);
 static ZLIntegerOption Height("Options", "Height", 800);
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkFBReader*)data)->close();
+	((GtkFBReader*)data)->quitSlot();
 	return true;
 }
 
@@ -158,9 +158,16 @@ void GtkFBReader::handleKeySlot(GdkEventKey *event) {
 //  -- fullscreen key toggles the full screen mode
 //  -- cancel key always tries to quit the application
 void GtkFBReader::cancelSlot() {
-	if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
-		close();
+	if (myMode != BOOK_TEXT_MODE) {
+		restorePreviousMode();
+	} else if (QuitOnCancelOption.value()) {
+		quitSlot();
 	}
+}
+
+void GtkFBReader::quitSlot() {
+	delete this;
+	gtk_main_quit();
 }
 
 void GtkFBReader::fullscreenSlot() {
@@ -175,15 +182,6 @@ void GtkFBReader::fullscreenSlot() {
 	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
-}
-
-void GtkFBReader::close() {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-	} else {
-		delete this;
-		gtk_main_quit();
-	}
 }
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {
