@@ -24,7 +24,7 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 	@ln -sf ../../icons/320x240 pics
 	@cp -r ../../share .
 	@rm share/FBReader/help/HowToStart.blueish.fb2
-	@mv share/FBReader/help/HowToStart{.brownish,}.fb2
+	@mv share/FBReader/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 

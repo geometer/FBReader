@@ -301,7 +301,7 @@ void PluckerReader::processCompressedTextRecord(size_t size) {
 			}
 			textStart = ptr + 1;
 			//if (!processed) {
-				std::cerr << "[" << fn << "]\n";
+			//	std::cerr << "[" << fn << "]\n";
 			//}
 			functionFlag = false;
 		} else if (*ptr == 0) {
