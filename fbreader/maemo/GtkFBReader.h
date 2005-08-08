@@ -52,7 +52,6 @@ protected:
 	void searchSlot();
 	void cancelSlot();
 	void fullscreenSlot();
-	void quitSlot();
 	bool isRotationSupported() const { return true; }
 
 	ActionSlotData *getSlotData(ActionCode);
@@ -61,6 +60,7 @@ protected:
 
 public:
 	void handleKeySlot(GdkEventKey *);
+	void quitSlot();
 
 	void close();
 

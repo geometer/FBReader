@@ -31,7 +31,7 @@
 #include "GtkFBReader.h"
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkFBReader*)data)->close();
+	((GtkFBReader*)data)->quitSlot();
 	return true;
 }
 
@@ -213,14 +213,11 @@ void GtkFBReader::cancelSlot() {
 		myFullScreen = false;
 		hildon_appview_set_fullscreen(myAppView, false);
 		gtk_widget_show(GTK_WIDGET(myToolbar));
-	} else if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
-		close();
+	} else if (myMode != BOOK_TEXT_MODE) {
+		restorePreviousMode();
+	} else if (QuitOnCancelOption.value()) {
+		quitSlot();
 	}
-}
-
-void GtkFBReader::quitSlot() {
-	delete this;
-	gtk_main_quit();
 }
 
 void GtkFBReader::fullscreenSlot() {
@@ -234,12 +231,9 @@ void GtkFBReader::fullscreenSlot() {
 	}
 }
 
-void GtkFBReader::close() {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-	} else {
-		quitSlot();
-	}
+void GtkFBReader::quitSlot() {
+	delete this;
+	gtk_main_quit();
 }
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {
