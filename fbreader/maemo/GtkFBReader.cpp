@@ -325,11 +325,6 @@ void GtkFBReader::searchSlot() {
 		gtk_dialog_add_button (findDialog, "Cancel", GTK_RESPONSE_REJECT);
 	}
 
-	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new_with_buttons ("Text search", getMainWindow(), GTK_DIALOG_MODAL,
-														"Find", GTK_RESPONSE_ACCEPT,
-														"Cancel", GTK_RESPONSE_REJECT,
-														NULL));
-
 	gtk_signal_connect(GTK_OBJECT(findDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 
 	GtkWidget *wordToSearch = gtk_entry_new();
