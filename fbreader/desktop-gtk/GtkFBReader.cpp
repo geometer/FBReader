@@ -26,6 +26,8 @@
 #include <gtk-desktop/GtkViewWidget.h>
 #include <gtk-desktop/GtkPaintContext.h>
 
+#include <abstract/ZLDeviceInfo.h>
+
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
 #include "../common/fbreader/FootnoteView.h"
@@ -232,9 +234,20 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 }
 
 void GtkFBReader::searchSlot() {
-	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new_with_buttons ("Text search", getMainWindow(), GTK_DIALOG_MODAL,
-														"Go", GTK_RESPONSE_ACCEPT,
-														NULL));
+	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new());
+
+	gtk_window_set_title(GTK_WINDOW(findDialog), "Text search");
+
+	if (getMainWindow() != 0)
+		gtk_window_set_transient_for(GTK_WINDOW(findDialog), getMainWindow());
+
+	gtk_window_set_modal(GTK_WINDOW(findDialog), TRUE);
+
+	if (ZLDeviceInfo::isKeyboardPresented()) {
+		gtk_dialog_add_button (findDialog, GTK_STOCK_FIND, GTK_RESPONSE_ACCEPT);
+	} else {
+		gtk_dialog_add_button (findDialog, "Find", GTK_RESPONSE_ACCEPT);
+	}
 
 	gtk_signal_connect(GTK_OBJECT(findDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 
@@ -244,17 +257,26 @@ void GtkFBReader::searchSlot() {
 	gtk_entry_set_text (wordToSearch, SearchPatternOption.value().c_str());
 	gtk_entry_set_activates_default(wordToSearch, TRUE);
 
-	GtkWidget *ignoreCase = gtk_check_button_new_with_mnemonic ("_Ignore case");
+	GtkWidget *ignoreCase, *wholeText, *backward;
+
+	if (ZLDeviceInfo::isKeyboardPresented()) {
+		ignoreCase = gtk_check_button_new_with_mnemonic ("_Ignore case");
+		wholeText = gtk_check_button_new_with_mnemonic ("In w_hole text");
+		backward = gtk_check_button_new_with_mnemonic ("_Backward");
+	} else {
+		ignoreCase = gtk_check_button_new_with_label ("Ignore case");
+		wholeText = gtk_check_button_new_with_label ("In whole text");
+		backward = gtk_check_button_new_with_label ("Backward");
+	}
+
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), ignoreCase, true, true, 0);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(ignoreCase), SearchIgnoreCaseOption.value());
 
-	GtkWidget *wholeText = gtk_check_button_new_with_mnemonic ("In w_hole text");
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), wholeText, true, true, 0);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(wholeText), SearchInWholeTextOption.value());
 
-	GtkWidget *backward = gtk_check_button_new_with_mnemonic ("_Backward");
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), backward, true, true, 0);
 
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(backward), SearchBackwardOption.value());

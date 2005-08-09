@@ -27,6 +27,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "../../abstract/dialogs/ZLOptionEntry.h"
+#include "../../abstract/deviceInfo/ZLDeviceInfo.h"
 
 #include "GtkOptionsDialog.h"
 #include "GtkOptionView.h"
@@ -46,10 +47,22 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 }
 
 GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLDesktopOptionsDialog(id) {
-	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption.c_str(), parent, GTK_DIALOG_MODAL,
-					"Ok", GTK_RESPONSE_ACCEPT,
-					"Cancel", GTK_RESPONSE_REJECT,
-					NULL));
+	myDialog = GTK_DIALOG(gtk_dialog_new());
+
+	gtk_window_set_title(GTK_WINDOW(myDialog), caption.c_str());
+
+	if (parent != 0)
+		gtk_window_set_transient_for(GTK_WINDOW(myDialog), parent);
+
+	gtk_window_set_modal(GTK_WINDOW(myDialog), TRUE);
+
+	if (ZLDeviceInfo::isKeyboardPresented()) {
+		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
+		gtk_dialog_add_button (myDialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
+	} else {
+		gtk_dialog_add_button (myDialog, "Ok", GTK_RESPONSE_ACCEPT);
+		gtk_dialog_add_button (myDialog, "Cancel", GTK_RESPONSE_REJECT);
+	}
 
 	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 

@@ -20,6 +20,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "../../abstract/deviceInfo/ZLDeviceInfo.h"
+
 #include "GtkOpenFileDialog.h"
 #include "GtkDialogManager.h"
 
@@ -49,10 +51,23 @@ static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer se
 
 GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler, GtkWindow *parent) : ZLDesktopOpenFileDialog(handler) {
 	myExitFlag = false;
-	myDialog = GTK_DIALOG(gtk_dialog_new_with_buttons(caption, parent, GTK_DIALOG_MODAL,
-					"Ok", GTK_RESPONSE_ACCEPT,
-					"Cancel", GTK_RESPONSE_REJECT,
-					0));
+
+	myDialog = GTK_DIALOG(gtk_dialog_new());
+
+	gtk_window_set_title(GTK_WINDOW(myDialog), caption);
+
+	if (parent != 0)
+		gtk_window_set_transient_for(GTK_WINDOW(myDialog), parent);
+
+	gtk_window_set_modal(GTK_WINDOW(myDialog), TRUE);
+
+	if (ZLDeviceInfo::isKeyboardPresented()) {
+		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
+		gtk_dialog_add_button (myDialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
+	} else {
+		gtk_dialog_add_button (myDialog, "Ok", GTK_RESPONSE_ACCEPT);
+		gtk_dialog_add_button (myDialog, "Cancel", GTK_RESPONSE_REJECT);
+	}
 
 	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), 0);
 
