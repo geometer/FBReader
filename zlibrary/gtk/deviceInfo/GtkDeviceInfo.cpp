@@ -16,25 +16,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __PALMSCREENSIZE_H__
-#define __PALMSCREENSIZE_H__
+#include <gdk/gdk.h>
 
-#include <abstract/ZLScreenSize.h>
+#include "GtkDeviceInfo.h"
 
-class PalmScreenSize : public ZLScreenSize {
+unsigned int GtkDeviceInfo::screenWidthInternal() const {
+	return gdk_screen_width();
+}
 
-public:
-	static void createInstance() UTIL_SECTION;
+unsigned int GtkDeviceInfo::screenHeightInternal() const {
+	return gdk_screen_height();
+}
 
-private:
-	PalmScreenSize() UTIL_SECTION;
-
-public:
-	~PalmScreenSize() UTIL_SECTION;
-	
-protected:
-	unsigned int widthInternal() const UTIL_SECTION;
-	unsigned int heightInternal() const UTIL_SECTION;
-};
-
-#endif /* __PALMSCREENSIZE_H__ */
+bool GtkDeviceInfo::isKeyboardPresentedInternal() const {
+	return screenSize() != SIZE_800x480;
+}

@@ -16,14 +16,26 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <qapplication.h>
+#ifndef __PALMDEVICEINFO_H__
+#define __PALMDEVICEINFO_H__
 
-#include "QScreenSize.h"
+#include <abstract/ZLDeviceInfo.h>
 
-unsigned int QScreenSize::widthInternal() const {
-	return qApp->desktop()->width();
-}
+class PalmDeviceInfo : public ZLDeviceInfo {
 
-unsigned int QScreenSize::heightInternal() const {
-	return qApp->desktop()->height();
-}
+public:
+	static void createInstance() UTIL_SECTION;
+
+private:
+	PalmDeviceInfo() UTIL_SECTION;
+
+public:
+	~PalmDeviceInfo() UTIL_SECTION;
+	
+protected:
+	unsigned int screenWidthInternal() const UTIL_SECTION;
+	unsigned int screenHeightInternal() const UTIL_SECTION;
+	bool isKeyboardPresentedInternal() const UTIL_SECTION;
+};
+
+#endif /* __PALMDEVICEINFO_H__ */

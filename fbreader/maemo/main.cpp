@@ -25,7 +25,7 @@
 #include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
-#include <gtk/GtkScreenSize.h>
+#include <gtk/GtkDeviceInfo.h>
 
 #include "GtkFBReader.h"
 #include "Paths.h"
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkFBReader::ImageDirectory);
-	GtkScreenSize::createInstance();
+	GtkDeviceInfo::createInstance();
 
 	GtkFBReader *reader = new GtkFBReader();
 
@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 
 	gtk_main();
 
-	GtkScreenSize::deleteInstance();
+	GtkDeviceInfo::deleteInstance();
 	GtkDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();

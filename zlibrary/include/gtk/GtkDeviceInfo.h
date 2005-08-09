@@ -1,0 +1,1 @@
+../../gtk/deviceInfo/GtkDeviceInfo.h

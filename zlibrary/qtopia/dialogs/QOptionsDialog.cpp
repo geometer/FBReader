@@ -28,8 +28,8 @@
 #include <qspinbox.h>
 #include <qlabel.h>
 
-#include "../../abstract/dialogs/ZLOptionEntry.h"
-#include "../../abstract/screenSize/ZLScreenSize.h"
+#include <abstract/ZLOptionEntry.h>
+#include <abstract/ZLDeviceInfo.h>
 
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
@@ -95,8 +95,8 @@ void QOptionsDialogTab::close() {
 
 QOptionsDialogTab::QOptionsDialogTab(QTabWidget *parent) : QWidget(parent) {
 	int space = 10;
-	switch (ZLScreenSize::size()) {
-		case ZLScreenSize::SIZE_640x480:
+	switch (ZLDeviceInfo::screenSize()) {
+		case ZLDeviceInfo::SIZE_640x480:
 			space = 10;
 			break;
 		default:

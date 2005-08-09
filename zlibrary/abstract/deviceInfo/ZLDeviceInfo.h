@@ -16,13 +16,13 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __ZLSCREENSIZE_H__
-#define __ZLSCREENSIZE_H__
+#ifndef __ZLDEVICEINFO_H__
+#define __ZLDEVICEINFO_H__
 
-class ZLScreenSize {
+class ZLDeviceInfo {
 
 public:
-	enum Size {
+	enum ScreenSize {
 		SIZE_DESKTOP,
 		SIZE_160x160,
 		SIZE_240x320,
@@ -31,21 +31,25 @@ public:
 		SIZE_800x480,
 	};
 
-	static Size size() UTIL_SECTION;
-	static unsigned int width() UTIL_SECTION;
-	static unsigned int height() UTIL_SECTION;
+	static ScreenSize screenSize() UTIL_SECTION;
+	static unsigned int screenWidth() UTIL_SECTION;
+	static unsigned int screenHeight() UTIL_SECTION;
+	static bool isKeyboardPresented() UTIL_SECTION;
+
 	static void deleteInstance() UTIL_SECTION;
 
 protected:
-	static ZLScreenSize *ourInstance;
+	static ZLDeviceInfo *ourInstance;
 
-	ZLScreenSize() UTIL_SECTION;
-	virtual ~ZLScreenSize() UTIL_SECTION;
-	virtual unsigned int widthInternal() const UTIL_SECTION = 0;
-	virtual unsigned int heightInternal() const UTIL_SECTION = 0;
+	ZLDeviceInfo() UTIL_SECTION;
+	virtual ~ZLDeviceInfo() UTIL_SECTION;
+	virtual unsigned int screenWidthInternal() const UTIL_SECTION = 0;
+	virtual unsigned int screenHeightInternal() const UTIL_SECTION = 0;
+	virtual bool isKeyboardPresentedInternal() const UTIL_SECTION = 0;
 };
 
-inline unsigned int ZLScreenSize::width() { return ourInstance->widthInternal(); }
-inline unsigned int ZLScreenSize::height() { return ourInstance->heightInternal(); }
+inline unsigned int ZLDeviceInfo::screenWidth() { return ourInstance->screenWidthInternal(); }
+inline unsigned int ZLDeviceInfo::screenHeight() { return ourInstance->screenHeightInternal(); }
+inline bool ZLDeviceInfo::isKeyboardPresented() { return ourInstance->isKeyboardPresentedInternal(); }
 
-#endif /* __ZLSCREENSIZE_H__ */
+#endif /* __ZLDEVICEINFO_H__ */

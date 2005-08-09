@@ -16,14 +16,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <gdk/gdk.h>
+#ifndef __GTKDEVICEINFO_H__
+#define __GTKDEVICEINFO_H__
 
-#include "GtkScreenSize.h"
+#include <abstract/ZLDeviceInfo.h>
 
-unsigned int GtkScreenSize::widthInternal() const {
-	return gdk_screen_width();
-}
+class GtkDeviceInfo : public ZLDeviceInfo {
 
-unsigned int GtkScreenSize::heightInternal() const {
-	return gdk_screen_height();
-}
+public:
+	static void createInstance() { ourInstance = new GtkDeviceInfo(); }
+
+protected:
+	unsigned int screenWidthInternal() const;
+	unsigned int screenHeightInternal() const;
+	bool isKeyboardPresentedInternal() const;
+};
+
+#endif /* __GTKDEVICEINFO_H__ */

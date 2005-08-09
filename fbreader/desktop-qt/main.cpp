@@ -25,7 +25,7 @@
 #include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
 #include <qt/QDialogManager.h>
-#include <qt/QScreenSize.h>
+#include <qt/QDeviceInfo.h>
 
 #include "QFBReader.h"
 #include "Paths.h"
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 	QDialogManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QFBReader::ImageDirectory);
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
-	QScreenSize::createInstance();
+	QDeviceInfo::createInstance();
 
 	QFBReader *reader = new QFBReader();
 	application.setMainWidget(reader);
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	int code = application.exec();
 	delete reader;
 
-	QScreenSize::deleteInstance();
+	QDeviceInfo::deleteInstance();
 	QDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();

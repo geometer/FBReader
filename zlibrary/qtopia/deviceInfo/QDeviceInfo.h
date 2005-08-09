@@ -16,19 +16,20 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __GTKSCREENSIZE_H__
-#define __GTKSCREENSIZE_H__
+#ifndef __QDEVICEINFO_H__
+#define __QDEVICEINFO_H__
 
-#include <abstract/ZLScreenSize.h>
+#include <abstract/ZLDeviceInfo.h>
 
-class GtkScreenSize : public ZLScreenSize {
+class QDeviceInfo : public ZLDeviceInfo {
 
 public:
-	static void createInstance() { ourInstance = new GtkScreenSize(); }
+	static void createInstance() { ourInstance = new QDeviceInfo(); }
 
 protected:
-	unsigned int widthInternal() const;
-	unsigned int heightInternal() const;
+	unsigned int screenWidthInternal() const;
+	unsigned int screenHeightInternal() const;
+	bool isKeyboardPresentedInternal() const;
 };
 
-#endif /* __GTKSCREENSIZE_H__ */
+#endif /* __QDEVICEINFO_H__ */

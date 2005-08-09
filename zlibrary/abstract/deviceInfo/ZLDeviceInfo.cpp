@@ -16,19 +16,19 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include "ZLScreenSize.h"
+#include "ZLDeviceInfo.h"
 
-ZLScreenSize *ZLScreenSize::ourInstance = 0;
+ZLDeviceInfo *ZLDeviceInfo::ourInstance = 0;
 
-ZLScreenSize::ZLScreenSize() {
+ZLDeviceInfo::ZLDeviceInfo() {
 }
 
-ZLScreenSize::~ZLScreenSize() {
+ZLDeviceInfo::~ZLDeviceInfo() {
 }
 
-ZLScreenSize::Size ZLScreenSize::size() {
-	unsigned int s0 = ourInstance->widthInternal();
-	unsigned int s1 = ourInstance->heightInternal();
+ZLDeviceInfo::ScreenSize ZLDeviceInfo::screenSize() {
+	unsigned int s0 = ourInstance->screenWidthInternal();
+	unsigned int s1 = ourInstance->screenHeightInternal();
 	switch (s0 * s1) {
 		case 160 * 160:
 			return SIZE_160x160;
@@ -45,6 +45,6 @@ ZLScreenSize::Size ZLScreenSize::size() {
 	}
 }
 
-void ZLScreenSize::deleteInstance() {
+void ZLDeviceInfo::deleteInstance() {
 	delete ourInstance;
 }

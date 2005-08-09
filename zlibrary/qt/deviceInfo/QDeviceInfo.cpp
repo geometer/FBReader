@@ -16,19 +16,18 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __QSCREENSIZE_H__
-#define __QSCREENSIZE_H__
+#include <qapplication.h>
 
-#include <abstract/ZLScreenSize.h>
+#include "QDeviceInfo.h"
 
-class QScreenSize : public ZLScreenSize {
+unsigned int QDeviceInfo::screenWidthInternal() const {
+	return qApp->desktop()->width();
+}
 
-public:
-	static void createInstance() { ourInstance = new QScreenSize(); }
+unsigned int QDeviceInfo::screenHeightInternal() const {
+	return qApp->desktop()->height();
+}
 
-protected:
-	unsigned int widthInternal() const;
-	unsigned int heightInternal() const;
-};
-
-#endif /* __QSCREENSIZE_H__ */
+bool QDeviceInfo::isKeyboardPresentedInternal() const {
+	return true;
+}

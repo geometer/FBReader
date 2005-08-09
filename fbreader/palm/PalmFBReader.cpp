@@ -1,6 +1,6 @@
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLInputStream.h>
-#include <abstract/ZLScreenSize.h>
+#include <abstract/ZLDeviceInfo.h>
 #include <abstract/ZLTime.h>
 #include <abstract/ZLStringUtil.h>
 
@@ -78,7 +78,7 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 			{
 				int x = event->screenX;
 				int y = event->screenY;
-				if (ZLScreenSize::size() == ZLScreenSize::SIZE_320x320) {
+				if (ZLDeviceInfo::screenSize() == ZLDeviceInfo::SIZE_320x320) {
 					x *= 2;
 					y *= 2;
 				}

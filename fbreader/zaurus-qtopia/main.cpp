@@ -24,7 +24,7 @@
 #include <unix/ZLUnixFSManager.h>
 #include <desktop/XMLOptions.h>
 #include <qtopia/QDialogManager.h>
-#include <qtopia/QScreenSize.h>
+#include <qtopia/QDeviceInfo.h>
 
 #include "QFBReader.h"
 #include "Paths.h"
@@ -40,14 +40,14 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	copyConfig();
 	QDialogManager::createInstance();
-	QScreenSize::createInstance();
+	QDeviceInfo::createInstance();
 
 	QFBReader *reader = new QFBReader();
 	application.showMainWidget(reader);
 	int code = application.exec();
 	delete reader;
 
-	QScreenSize::deleteInstance();
+	QDeviceInfo::deleteInstance();
 	QDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();

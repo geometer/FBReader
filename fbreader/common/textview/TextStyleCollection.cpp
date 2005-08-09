@@ -17,7 +17,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <abstract/ZLScreenSize.h>
+#include <abstract/ZLDeviceInfo.h>
 
 #include "TextStyle.h"
 
@@ -53,25 +53,25 @@ void TextStyleCollection::deleteInstance() {
 TextStyleCollection::TextStyleCollection() {
 	int defaultFontSize = 24;
 	int defaultParagraphIndent = 30;
-	switch (ZLScreenSize::size()) {
-		case ZLScreenSize::SIZE_DESKTOP:
+	switch (ZLDeviceInfo::screenSize()) {
+		case ZLDeviceInfo::SIZE_DESKTOP:
 			defaultFontSize = 16;
 			defaultParagraphIndent = 20;
 			break;
-		case ZLScreenSize::SIZE_160x160:
+		case ZLDeviceInfo::SIZE_160x160:
 			defaultFontSize = 8;
 			defaultParagraphIndent = 8;
 			break;
-		case ZLScreenSize::SIZE_240x320:
-		case ZLScreenSize::SIZE_320x320:
+		case ZLDeviceInfo::SIZE_240x320:
+		case ZLDeviceInfo::SIZE_320x320:
 			defaultFontSize = 12;
 			defaultParagraphIndent = 15;
 			break;
-		case ZLScreenSize::SIZE_800x480:
+		case ZLDeviceInfo::SIZE_800x480:
 			defaultFontSize = 18;
 			defaultParagraphIndent = 22;
 			break;
-		case ZLScreenSize::SIZE_640x480:
+		case ZLDeviceInfo::SIZE_640x480:
 			defaultFontSize = 24;
 			defaultParagraphIndent = 30;
 			break;

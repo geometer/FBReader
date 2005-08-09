@@ -18,22 +18,22 @@
 
 #include <PalmOS.h>				
 
-#include "PalmScreenSize.h"
+#include "PalmDeviceInfo.h"
 
-PalmScreenSize::PalmScreenSize() {
+PalmDeviceInfo::PalmDeviceInfo() {
 }
 
-PalmScreenSize::~PalmScreenSize() {
+PalmDeviceInfo::~PalmDeviceInfo() {
 }
 
-void PalmScreenSize::createInstance() {
-	ourInstance = new PalmScreenSize();
+void PalmDeviceInfo::createInstance() {
+	ourInstance = new PalmDeviceInfo();
 }
 
 static const UInt32 RomVersion50 = sysMakeROMVersion(5, 0, 0, sysROMStageDevelopment, 0);
 static UInt32 romVersion = 0;
 
-unsigned int PalmScreenSize::widthInternal() const {
+unsigned int PalmDeviceInfo::screenWidthInternal() const {
 	// TODO: implement
 	if (romVersion == 0) {
 		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
@@ -44,7 +44,7 @@ unsigned int PalmScreenSize::widthInternal() const {
 	return 320;
 }
 
-unsigned int PalmScreenSize::heightInternal() const {
+unsigned int PalmDeviceInfo::screenHeightInternal() const {
 	// TODO: implement
 	if (romVersion == 0) {
 		FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
@@ -53,4 +53,8 @@ unsigned int PalmScreenSize::heightInternal() const {
 		return 160;
 	}
 	return 320;
+}
+
+bool PalmDeviceInfo::isKeyboardPresentedInternal() const {
+	return true;
 }

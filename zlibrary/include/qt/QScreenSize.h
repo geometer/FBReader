@@ -1,1 +1,0 @@
-../../qt/screenSize/QScreenSize.h

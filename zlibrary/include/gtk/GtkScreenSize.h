@@ -1,1 +1,0 @@
-../../gtk/screenSize/GtkScreenSize.h

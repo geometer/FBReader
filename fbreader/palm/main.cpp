@@ -5,7 +5,7 @@
 #include <palm/ZLPalmTime.h>
 #include <palm/ZLPalmFSManager.h>
 #include <palm/PalmDialogManager.h>
-#include <palm/PalmScreenSize.h>
+#include <palm/PalmDeviceInfo.h>
 
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
@@ -25,14 +25,14 @@ UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 		ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 		PalmOptions::createInstance("FBReader");
 		PalmDialogManager::createInstance();
-		PalmScreenSize::createInstance();
+		PalmDeviceInfo::createInstance();
 
 		READER = new PalmFBReader();
 		FrmGotoForm(MainFBReaderForm);
 		EventLoop();
 		delete READER;
 
-		PalmScreenSize::deleteInstance();
+		PalmDeviceInfo::deleteInstance();
 		PalmDialogManager::deleteInstance();
 		PalmOptions::deleteInstance();
 		ZLPalmFSManager::deleteInstance();
