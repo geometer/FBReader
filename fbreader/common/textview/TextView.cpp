@@ -422,13 +422,6 @@ bool TextView::onStylusPress(int x, int y) {
 		if ((x > left) && (x < right) && (y > top) && (y < bottom)) {
 			size_t textSize = (size_t)(1.0 * myFullTextSize * (x - left - 1) / (right - left - 1));
 			std::vector<size_t>::const_iterator it = std::lower_bound(myTextSize.begin(), myTextSize.end(), textSize);
-			/*
-			for (it = myTextSize.begin(); it != myTextSize.end(); it++) {
-				if (*it >= textSize) {
-					break;
-				}
-			}
-			*/
 			long paragraphNumber = std::min((long)(it - myTextSize.begin()), (long)myTextSize.size() - 1) - 1;
 			if (paragraphNumber == 0) {
 				gotoParagraph(0, false);
