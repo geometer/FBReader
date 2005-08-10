@@ -241,7 +241,7 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
-void TextView::drawLine(const ParagraphCursor &paragraph, const WordCursor &from, const WordCursor &to) {
+void TextView::drawTextLine(const ParagraphCursor &paragraph, const WordCursor &from, const WordCursor &to) {
 	int spaceCounter = myLineProcessor.spaceCounter();
 	int fullCorrection = 0;
 	const bool endOfParagraph = to.sameElementAs(paragraph.end());
@@ -344,7 +344,7 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 
 		if (doPaint) {
 			myStyle.setStyle(storedStyle);
-			drawLine(paragraph, lineStart, lineEnd);
+			drawTextLine(paragraph, lineStart, lineEnd);
 		}
 	}
 }
