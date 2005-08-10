@@ -178,6 +178,8 @@ void FBReader::doAction(ActionCode code) {
 		case ACTION_UNDO:
 			if (myMode == BOOK_TEXT_MODE) {
 				myBookTextView->undoPageMove();
+			} else if (myMode == FOOTNOTE_MODE) {
+				restorePreviousMode();
 			}
 			break;
 		case ACTION_REDO:
@@ -279,7 +281,7 @@ void FBReader::enableMenuButtons() {
 	setButtonEnabled(ACTION_FIND_NEXT, textView->canFindNext());
 	setButtonEnabled(ACTION_FIND_PREVIOUS, textView->canFindPrevious());
 	setButtonEnabled(ACTION_SHOW_CONTENTS, !myContentsView->isEmpty());
-	setButtonEnabled(ACTION_UNDO, myBookTextView->canUndoPageMove());
+	setButtonEnabled(ACTION_UNDO, myBookTextView->canUndoPageMove() || (myMode == FOOTNOTE_MODE));
 	setButtonEnabled(ACTION_REDO, myBookTextView->canRedoPageMove());
 }
 
@@ -317,7 +319,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, false);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
-			setButtonVisible(ACTION_UNDO, false);
+			setButtonVisible(ACTION_UNDO, true);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, true);
 			myViewWidget->setView(myFootnoteView);

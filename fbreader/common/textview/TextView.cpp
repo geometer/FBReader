@@ -128,8 +128,9 @@ void TextView::paint(bool doPaint) {
 	do {
 		int start = context().y() + 1;
 		drawParagraph(*myLastParagraphCursor, doPaint);
-		int end = context().y();
-		myParagraphMap.push_back(ParagraphPosition(myLastParagraphCursor->paragraphNumber(), start, end));
+		if (doPaint) {
+			myParagraphMap.push_back(ParagraphPosition(myLastParagraphCursor->paragraphNumber(), start, context().y()));
+		}
 	} while (myLastParagraphCursor->isEndOfParagraph() && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
 
 	if (doPaint && ShowPositionIndicatorOption.value()) {
@@ -240,6 +241,89 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
+void TextView::drawLine(const ParagraphCursor &paragraph, const WordCursor &from, const WordCursor &to) {
+	int spaceCounter = myLineProcessor.spaceCounter();
+	int fullCorrection = 0;
+	const bool endOfParagraph = to.sameElementAs(paragraph.end());
+	const int pn = paragraph.paragraphNumber();
+	int wn = paragraph.wordNumber(from);
+	bool wordOccured = false;
+
+	switch (myStyle.style()->alignment()) {
+		case ALIGN_RIGHT:
+			context().moveX(context().width() - myStyle.style()->rightIndent() - myLineProcessor.width());
+			break;
+		case ALIGN_CENTER:
+			context().moveX((context().width() - myStyle.style()->rightIndent() - myLineProcessor.width()) / 2);
+			break;
+		case ALIGN_JUSTIFY:
+			if (!endOfParagraph && (to.element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
+				fullCorrection = context().width() - myStyle.style()->rightIndent() - myLineProcessor.width();
+			}
+			break;
+		case ALIGN_LEFT:
+		case ALIGN_UNDEFINED:
+			break;
+	}
+
+	for (WordCursor pos = from; !pos.sameElementAs(to); pos.nextWord(), wn++) {
+		TextElement::Kind kind = pos.element().kind();
+		int x = context().x();
+		int y = context().y();
+  
+		switch (kind) {
+			case TextElement::WORD_ELEMENT:
+				wordOccured = true;
+				y -= myStyle.style()->verticalShift();
+				drawWord(x, y, (const Word&)pos.element(), pos.charNumber(), -1, false);
+				break;
+			case TextElement::IMAGE_ELEMENT:
+				wordOccured = true;
+				context().drawImage(x, y, ((const ImageElement&)pos.element()).image());
+				break;
+			case TextElement::CONTROL_ELEMENT:
+				myStyle.applyControl((const ControlElement&)pos.element());
+				break;
+			case TextElement::HSPACE_ELEMENT:
+				if (wordOccured && (spaceCounter > 0)) {
+					int correction = fullCorrection / spaceCounter;
+					context().moveX(context().spaceWidth() + correction);
+					fullCorrection -= correction;
+					wordOccured = false;
+					spaceCounter--;
+				}
+				break;
+			case TextElement::TREE_ELEMENT:
+				drawTreeNode(((const TreeElement&)pos.element()).treeElementKind());
+				break;
+			case TextElement::INDENT_ELEMENT:
+			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
+			case TextElement::AFTER_PARAGRAPH_ELEMENT:
+			case TextElement::EMPTY_LINE_ELEMENT:
+				break;
+		}
+
+		int width = myStyle.elementWidth(pos);
+		context().moveX(width);
+		if (width > 0) {
+			int height = myStyle.elementHeight(pos);
+			if (height > 0) {
+				myTextElementMap.push_back(TextElementPosition(pn, wn, kind, x, x + width - 1, y - height + 1, y));
+			}
+		}
+	}
+	if (!endOfParagraph && (to.element().kind() == TextElement::WORD_ELEMENT)) {
+		int len = to.charNumber();
+		if (len > 0) {
+			const Word &word = (const Word&)to.element();
+			context().setColor(myStyle.style()->color());
+			ZLUnicodeUtil::Ucs2String ucs2string;
+			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
+			drawWord(context().x(), context().y() - myStyle.style()->verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
+		}
+	}
+}
+
 void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 	myStyle.reset();
 	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
@@ -247,9 +331,9 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 	const int textAreaHeight = myStyle.textAreaHeight();
 
 	while (!paragraph.isEndOfParagraph()) {
-		context().moveXTo(myStyle.style()->leftIndent());
-
 		const TextStylePtr storedStyle = myStyle.style();
+
+		context().moveXTo(storedStyle->leftIndent());
 		const WordCursor lineStart = paragraph.wordCursor();
 		const WordCursor lineEnd = myLineProcessor.process(lineStart, paragraph.end());
 		context().moveY(myLineProcessor.height());
@@ -259,83 +343,8 @@ void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
 		paragraph.setWordCursor(lineEnd);
 
 		if (doPaint) {
-			int spaceCounter = myLineProcessor.spaceCounter();
-			int fullCorrection = 0;
-			switch (storedStyle->alignment()) {
-				case ALIGN_RIGHT:
-					context().moveX(context().width() - storedStyle->rightIndent() - myLineProcessor.width());
-					break;
-				case ALIGN_CENTER:
-					context().moveX((context().width() - storedStyle->rightIndent() - myLineProcessor.width()) / 2);
-					break;
-				case ALIGN_JUSTIFY:
-					if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
-						fullCorrection = context().width() - storedStyle->rightIndent() - myLineProcessor.width();
-					}
-					break;
-				case ALIGN_LEFT:
-				case ALIGN_UNDEFINED:
-					break;
-			}
 			myStyle.setStyle(storedStyle);
-
-			bool wordOccured = false;
-			for (WordCursor pos = lineStart; !pos.sameElementAs(paragraph.wordCursor()); pos.nextWord()) {
-				TextElement::Kind kind = pos.element().kind();
-				int x = context().x();
-				int y = context().y();
-    
-				switch (kind) {
-					case TextElement::WORD_ELEMENT:
-						wordOccured = true;
-						y -= myStyle.style()->verticalShift();
-						drawWord(x, y, (const Word&)pos.element(), pos.charNumber(), -1, false);
-						break;
-					case TextElement::IMAGE_ELEMENT:
-						wordOccured = true;
-						context().drawImage(x, y, ((const ImageElement&)pos.element()).image());
-						break;
-					case TextElement::CONTROL_ELEMENT:
-						myStyle.applyControl((const ControlElement&)pos.element());
-						break;
-					case TextElement::HSPACE_ELEMENT:
-						if (wordOccured && (spaceCounter > 0)) {
-							int correction = fullCorrection / spaceCounter;
-							context().moveX(context().spaceWidth() + correction);
-							fullCorrection -= correction;
-							wordOccured = false;
-							spaceCounter--;
-						}
-						break;
-					case TextElement::TREE_ELEMENT:
-						drawTreeNode(((const TreeElement&)pos.element()).treeElementKind());
-						break;
-					case TextElement::INDENT_ELEMENT:
-					case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-					case TextElement::AFTER_PARAGRAPH_ELEMENT:
-					case TextElement::EMPTY_LINE_ELEMENT:
-						break;
-				}
-
-				int width = myStyle.elementWidth(pos);
-				context().moveX(width);
-				if (width > 0) {
-					int height = myStyle.elementHeight(pos);
-					if (height > 0) {
-						myTextElementMap.push_back(TextElementPosition(paragraph.paragraphNumber(), paragraph.wordNumber(pos), kind, x, x + width - 1, y - height + 1, y));
-					}
-				}
-			}
-			if (!paragraph.isEndOfParagraph() && (paragraph.wordCursor().element().kind() == TextElement::WORD_ELEMENT)) {
-				int len = paragraph.charNumber();
-				if (len > 0) {
-					const Word &word = (const Word&)paragraph.wordCursor().element();
-					context().setColor(myStyle.style()->color());
-					ZLUnicodeUtil::Ucs2String ucs2string;
-					ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
-					drawWord(context().x(), context().y() - myStyle.style()->verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
-				}
-			}
+			drawLine(paragraph, lineStart, lineEnd);
 		}
 	}
 }
