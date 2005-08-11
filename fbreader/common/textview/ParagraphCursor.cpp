@@ -285,24 +285,35 @@ void ParagraphCursor::rebuild() {
 }
 
 void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber) {
-	if ((unsigned int)paragraphNumber >= myModel.paragraphs().size()) {
-		return;
-	}
-
-	std::vector<Paragraph*>::const_iterator it = myModel.paragraphs().begin() + paragraphNumber;
+	std::vector<Paragraph*>::const_iterator it =
+		myModel.paragraphs().begin() + std::min(paragraphNumber, (int)myModel.paragraphs().size() - 1);
 	if (myParagraphIterator != it) {
 		clear();
 		myParagraphIterator = it;
 		fill();
 	}
 
-	if (myElements->size() >= (unsigned int)wordNumber) {
-		myNextElement = myElements->begin() + wordNumber;
-		if ((myNextElement.myWordIterator != myElements->end()) &&
-				(myNextElement.element().kind() == TextElement::WORD_ELEMENT)) {
-			if (charNumber < (int)((const Word&)myNextElement.element()).Length) {
-				myNextElement.myCharNumber = charNumber;
-			}
+	setWordCursor(wordCursor(wordNumber, charNumber));
+}
+
+WordCursor ParagraphCursor::wordCursor(int wordNumber, int charNumber) const {
+	wordNumber = std::max(0, wordNumber);
+	if (wordNumber > (int)myElements->size()) {
+		wordNumber = myElements->size();
+		charNumber = 0;
+	}
+	WordCursor cursor(myElements->begin() + wordNumber);
+	cursor.setCharNumber(charNumber);
+	return cursor;
+}
+
+void WordCursor::setCharNumber(int charNumber) {
+	charNumber = std::max(charNumber, 0);
+	myCharNumber = 0;
+	if (charNumber > 0) {
+		const TextElement &element = **myWordIterator;
+		if (element.kind() == TextElement::WORD_ELEMENT) {
+			myCharNumber = std::min(charNumber, (int)((const Word&)element).Length - 1);
 		}
 	}
 }

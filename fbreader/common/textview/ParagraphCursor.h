@@ -79,7 +79,7 @@ public:
 	TextElement &element() const VIEW_SECTION;
 	void nextWord() VIEW_SECTION;
 	void previousWord() VIEW_SECTION;
-	void setCharNumber(int num) VIEW_SECTION;
+	void setCharNumber(int charNumber) VIEW_SECTION;
 	int charNumber() const VIEW_SECTION;
 
 private:
@@ -152,6 +152,7 @@ public:
 	void moveTo(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
 
 	WordCursor wordCursor() const VIEW_SECTION;
+	WordCursor wordCursor(int wordNumber, int charNumber) const VIEW_SECTION;
 	void setWordCursor(const WordCursor cursor) VIEW_SECTION;
 	const WordCursor begin() const VIEW_SECTION;
 	const WordCursor end() const VIEW_SECTION;
@@ -239,7 +240,6 @@ inline bool WordCursor::sameElementAs(const WordCursor &cursor) const {
 inline TextElement &WordCursor::element() const { return **myWordIterator; }
 inline void WordCursor::nextWord() { myWordIterator++; myCharNumber = 0; }
 inline void WordCursor::previousWord() { myWordIterator--; myCharNumber = 0; }
-inline void WordCursor::setCharNumber(int num) { myCharNumber = num; }
 inline int WordCursor::charNumber() const { return myCharNumber; }
 
 inline ParagraphCursor::Cache::Cache() { ourCacheCounter++; }
