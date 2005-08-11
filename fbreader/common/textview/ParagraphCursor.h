@@ -153,8 +153,6 @@ public:
 	int wordNumber() const VIEW_SECTION;
 	int charNumber() const VIEW_SECTION;
 	void moveTo(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
-	void moveToParagraphStart() VIEW_SECTION;
-	void moveToParagraphEnd() VIEW_SECTION;
 
 	WordCursor wordCursor() const VIEW_SECTION;
 	void setWordCursor(const WordCursor cursor) VIEW_SECTION;

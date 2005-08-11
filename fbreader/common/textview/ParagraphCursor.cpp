@@ -209,7 +209,7 @@ bool ParagraphCursor::isEndOfSection() const {
 }
 
 TextMark ParagraphCursor::position() const {
-	WordCursor cursor = wordCursor();
+	WordCursor cursor = myNextElement;
 	while ((cursor.myWordIterator != myElements->end()) &&
 				 (cursor.element().kind() != TextElement::WORD_ELEMENT)) {
 		cursor.nextWord();
@@ -307,12 +307,4 @@ void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber
 			}
 		}
 	}
-}
-
-void ParagraphCursor::moveToParagraphStart() {
-	myNextElement = myElements->begin();
-}
-
-void ParagraphCursor::moveToParagraphEnd() {
-	myNextElement = myElements->end();
 }

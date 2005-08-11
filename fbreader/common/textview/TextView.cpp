@@ -100,9 +100,9 @@ void TextView::paint(bool doPaint) {
 		}
 		myFirstParagraphCursor = myLastParagraphCursor;
 		myLastParagraphCursor = NULL;
-		int height = paragraphHeight(*myFirstParagraphCursor, true);
+		int height = paragraphHeight(*myFirstParagraphCursor, myFirstParagraphCursor->wordCursor());
 		bool positionChanged = !myFirstParagraphCursor->isStartOfParagraph();
-		myFirstParagraphCursor->moveToParagraphStart();
+		myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->begin());
 		const int textAreaHeight = myStyle.textAreaHeight();
 		while (height < textAreaHeight) {
 			if (positionChanged && myFirstParagraphCursor->isEndOfSection()) {
@@ -114,9 +114,11 @@ void TextView::paint(bool doPaint) {
 			if (!myFirstParagraphCursor->isEndOfSection()) {
 				positionChanged = true;
 			}
-			height += paragraphHeight(*myFirstParagraphCursor, false);
+			height += paragraphHeight(*myFirstParagraphCursor, myFirstParagraphCursor->end());
 		}
-		skip(*myFirstParagraphCursor, height - textAreaHeight);
+		WordCursor cursor = myFirstParagraphCursor->wordCursor();
+		skip(*myFirstParagraphCursor, cursor, height - textAreaHeight);
+		myFirstParagraphCursor->setWordCursor(cursor);
 	}
 
 	if (myLastParagraphCursor != NULL) {
@@ -245,7 +247,7 @@ void TextView::gotoParagraph(int num, bool last) {
 				myFirstParagraphCursor = 0;
 			}
 			myLastParagraphCursor->moveTo(num - 1, 0, 0);
-			myLastParagraphCursor->moveToParagraphEnd();
+			myLastParagraphCursor->setWordCursor(myLastParagraphCursor->end());
 			if (myFirstParagraphCursor != 0) {
 				delete myFirstParagraphCursor;
 				myFirstParagraphCursor = 0;
@@ -351,20 +353,19 @@ void TextView::drawTextLine(const ParagraphCursor &paragraph, const LineInfo &in
 	}
 }
 
-void TextView::skip(ParagraphCursor &paragraph, int height) {
+void TextView::skip(ParagraphCursor &paragraph, WordCursor &word, int height) {
 	myStyle.reset();
-	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
+	myStyle.applyControls(paragraph.begin(), word);
 	while (!paragraph.isEndOfParagraph() && (height > 0)) {
-		const LineInfo info = processTextLine(paragraph.wordCursor(), paragraph.end());
-		paragraph.setWordCursor(info.End);
+		const LineInfo info = processTextLine(word, paragraph.end());
+		word = info.End;
 		height -= info.Height;
 	}
 }
 
-int TextView::paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition) {
+int TextView::paragraphHeight(const ParagraphCursor &paragraph, const WordCursor &end) {
 	myStyle.reset();
 	WordCursor cursor = paragraph.begin();
-	const WordCursor end = beforeCurrentPosition ? paragraph.wordCursor() : paragraph.end();
 	
 	int height = 0;
 

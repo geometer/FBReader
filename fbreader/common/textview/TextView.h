@@ -112,8 +112,8 @@ protected:
 private:
 	void clear() VIEW_SECTION;
 
-	int paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition) VIEW_SECTION;
-	void skip(ParagraphCursor &paragraph, int height) VIEW_SECTION;
+	int paragraphHeight(const ParagraphCursor &paragraph, const WordCursor &end) VIEW_SECTION;
+	void skip(ParagraphCursor &paragraph, WordCursor &word, int height) VIEW_SECTION;
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
 	void drawTextLine(const ParagraphCursor &paragraph, const LineInfo &info) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
