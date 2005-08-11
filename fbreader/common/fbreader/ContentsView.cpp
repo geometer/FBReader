@@ -61,7 +61,7 @@ void ContentsView::saveState() {
 	}
 
 	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myFirstParagraphCursor->paragraphNumber());
-	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordNumber(myFirstParagraphCursor->wordCursor()));
+	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordCursor().wordNumber());
 	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordCursor().charNumber());
 }
 

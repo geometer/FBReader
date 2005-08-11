@@ -164,18 +164,15 @@ bool TreeParagraphCursor::next() {
 	return true;
 }
 
-bool ParagraphCursor::isStartOfText() const {
-	return (myParagraphIterator == myModel.paragraphs().begin()) && isStartOfParagraph();
+bool ParagraphCursor::isFirst() const {
+	return myParagraphIterator == myModel.paragraphs().begin();
 }
 
-bool PlainTextParagraphCursor::isEndOfText() const {
-	return isEndOfParagraph() && (myParagraphIterator + 1 == myModel.paragraphs().end());
+bool PlainTextParagraphCursor::isLast() const {
+	return myParagraphIterator + 1 == myModel.paragraphs().end();
 }
 
-bool TreeParagraphCursor::isEndOfText() const {
-	if (!isEndOfParagraph()) {
-		return false;
-	}
+bool TreeParagraphCursor::isLast() const {
 	if (myParagraphIterator + 1 == myModel.paragraphs().end()) {
 		return true;
 	}
@@ -194,20 +191,12 @@ bool TreeParagraphCursor::isEndOfText() const {
 	return true;
 }
 
-bool ParagraphCursor::isStartOfParagraph() const {
-	return (myNextElement.myWordIterator == myElements->begin()) && (myNextElement.myCharNumber == 0);
-}
-
-bool ParagraphCursor::isEndOfParagraph() const {
-	return myNextElement.myWordIterator == myElements->end();
-}
-
 bool ParagraphCursor::isEndOfSection() const {
 	return (*myParagraphIterator)->kind() == Paragraph::EOS_PARAGRAPH;
 }
 
-TextMark ParagraphCursor::position() const {
-	WordCursor cursor = myNextElement;
+TextMark ParagraphCursor::position(const WordCursor &word) const {
+	WordCursor cursor = word;
 	while ((cursor.myWordIterator != myElements->end()) &&
 				 (cursor.element().kind() != TextElement::WORD_ELEMENT)) {
 		cursor.nextWord();
@@ -265,7 +254,7 @@ void ParagraphCursor::fill() {
 		}
 	}
 
-	myNextElement = myElements->begin();
+	myNextElement = WordCursor(myElements, myElements->begin());
 }
 
 void ParagraphCursor::clear() {
@@ -276,12 +265,12 @@ void ParagraphCursor::clear() {
 }
 
 void ParagraphCursor::rebuild() {
-	int w = wordNumber(myNextElement);
-	int c = myNextElement.myCharNumber;
+	int w = myNextElement.wordNumber();
+	int c = myNextElement.charNumber();
 	clear();
 	fill();
-	myNextElement = myElements->begin() + w;
-	myNextElement.myCharNumber = c;
+	myNextElement = WordCursor(myElements, myElements->begin() + w);
+	myNextElement.setCharNumber(c);
 }
 
 void ParagraphCursor::moveTo(int paragraphNumber) {
@@ -300,7 +289,7 @@ WordCursor ParagraphCursor::wordCursor(int wordNumber, int charNumber) const {
 		wordNumber = myElements->size();
 		charNumber = 0;
 	}
-	WordCursor cursor(myElements->begin() + wordNumber);
+	WordCursor cursor(myElements, myElements->begin() + wordNumber);
 	cursor.setCharNumber(charNumber);
 	return cursor;
 }

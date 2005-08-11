@@ -168,7 +168,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 				}
 			}
 			int firstParagraphNumber = myFirstParagraphCursor->paragraphNumber();
-			if (myFirstParagraphCursor->isStartOfParagraph()) {
+			if (myFirstParagraphCursor->wordCursor().isStartOfParagraph()) {
 				firstParagraphNumber--;
 			}
 			if (firstParagraphNumber >= paragraphNumber) {

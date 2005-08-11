@@ -41,10 +41,10 @@ ZLIntegerOption TextView::PositionIndicatorHeightOption(INDICATOR, "Height", 16)
 ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
 
 TextView::TextView(ZLPaintContext &context) : ZLView(context), myStyle(context) {
-	myModel = NULL;
+	myModel = 0;
 
-	myFirstParagraphCursor = NULL;
-	myLastParagraphCursor = NULL;
+	myFirstParagraphCursor = 0;
+	myLastParagraphCursor = 0;
 }
 
 TextView::~TextView() {
@@ -94,14 +94,14 @@ void TextView::paint(bool doPaint) {
 	context().setBottomMargin(TextStyle::BottomMarginOption.value());
 	context().clear(TextStyle::BackgroundColorOption.value());
 
-	if (myFirstParagraphCursor == NULL) {
-		if (myLastParagraphCursor == NULL) {
+	if (myFirstParagraphCursor == 0) {
+		if (myLastParagraphCursor == 0) {
 			return;
 		}
 		myFirstParagraphCursor = myLastParagraphCursor;
-		myLastParagraphCursor = NULL;
+		myLastParagraphCursor = 0;
 		int height = paragraphHeight(*myFirstParagraphCursor, myFirstParagraphCursor->wordCursor());
-		bool positionChanged = !myFirstParagraphCursor->isStartOfParagraph();
+		bool positionChanged = !myFirstParagraphCursor->wordCursor().isStartOfParagraph();
 		myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->begin());
 		const int textAreaHeight = myStyle.textAreaHeight();
 		while (height < textAreaHeight) {
@@ -121,7 +121,7 @@ void TextView::paint(bool doPaint) {
 		myFirstParagraphCursor->setWordCursor(cursor);
 	}
 
-	if (myLastParagraphCursor != NULL) {
+	if (myLastParagraphCursor != 0) {
 		delete myLastParagraphCursor;
 	}
 	myLastParagraphCursor = myFirstParagraphCursor->createCopy();
@@ -136,7 +136,7 @@ void TextView::paint(bool doPaint) {
 
 		std::vector<LineInfo> infos;
 
-		while (!info.End.sameElementAs(paragraphEnd)) {
+		while (!info.End.isEndOfParagraph()) {
 			info = processTextLine(info.End, paragraphEnd);
 			textAreaHeight -= info.Height;
 			if (textAreaHeight < 0) {
@@ -150,14 +150,13 @@ void TextView::paint(bool doPaint) {
 
 		if (doPaint) {
 			int start = context().y() + 1;
+			int pn = myLastParagraphCursor->paragraphNumber();
 			for (std::vector<LineInfo>::const_iterator it = infos.begin(); it != infos.end(); it++) {
-				drawTextLine(*myLastParagraphCursor, *it);
+				drawTextLine(*it, pn);
 			}
-			myParagraphMap.push_back(
-				ParagraphPosition(myLastParagraphCursor->paragraphNumber(), start, context().y())
-			);
+			myParagraphMap.push_back(ParagraphPosition(pn, start, context().y()));
 		}
-	} while (myLastParagraphCursor->wordCursor().sameElementAs(myLastParagraphCursor->end()) && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
+	} while (myLastParagraphCursor->wordCursor().isEndOfParagraph() && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
 
 	if (doPaint && ShowPositionIndicatorOption.value()) {
 		long bottom = context().height();
@@ -171,7 +170,7 @@ void TextView::paint(bool doPaint) {
 			fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
 		} else {
 			long sizeOfParagraph = myTextSize[myLastParagraphCursor->paragraphNumber() + 1] - sizeOfTextBeforeParagraph;
-			fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * myLastParagraphCursor->wordNumber(myLastParagraphCursor->wordCursor()) / paragraphLength) / myFullTextSize);
+			fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * myLastParagraphCursor->wordCursor().wordNumber() / paragraphLength) / myFullTextSize);
 		}
 		context().setColor(TextStyle::RegularTextColorOption.value());
 		context().setFillColor(PositionIndicatorColorOption.value());
@@ -184,23 +183,33 @@ void TextView::paint(bool doPaint) {
 }
 
 void TextView::scrollPageBackward() {
-	if ((myFirstParagraphCursor != NULL) && !myFirstParagraphCursor->isStartOfText()) {
-		if (myLastParagraphCursor != NULL) {
-			delete myLastParagraphCursor;
-		}
-		myLastParagraphCursor = myFirstParagraphCursor;
-		myFirstParagraphCursor = NULL;
+	if (myFirstParagraphCursor == 0) {
+		return;
 	}
+	if (myFirstParagraphCursor->isFirst() && myFirstParagraphCursor->wordCursor().isStartOfParagraph()) {
+		return;
+	}
+
+	if (myLastParagraphCursor != 0) {
+		delete myLastParagraphCursor;
+	}
+	myLastParagraphCursor = myFirstParagraphCursor;
+	myFirstParagraphCursor = 0;
 }
 
 void TextView::scrollPageForward() {
-	if ((myLastParagraphCursor != NULL) && !myLastParagraphCursor->isEndOfText()) {
-		if (myFirstParagraphCursor != NULL) {
-			delete myFirstParagraphCursor;
-		}
-		myFirstParagraphCursor = myLastParagraphCursor;
-		myLastParagraphCursor = NULL;
+	if (myLastParagraphCursor == 0) {
+		return;
 	}
+	if (myLastParagraphCursor->isLast() && myLastParagraphCursor->wordCursor().isEndOfParagraph()) {
+		return;
+	}
+
+	if (myFirstParagraphCursor != 0) {
+		delete myFirstParagraphCursor;
+	}
+	myFirstParagraphCursor = myLastParagraphCursor;
+	myLastParagraphCursor = 0;
 }
 
 const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {
@@ -229,7 +238,7 @@ void TextView::gotoMark(TextMark mark) {
 	}
 	gotoParagraph(mark.ParagraphNumber);
 	paint(false);
-	while (mark > myLastParagraphCursor->position()) {
+	while (mark > myLastParagraphCursor->position(myLastParagraphCursor->wordCursor())) {
 		scrollPageForward();
 		paint(false);
 	}
@@ -268,15 +277,14 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
-void TextView::drawTextLine(const ParagraphCursor &paragraph, const LineInfo &info) {
+void TextView::drawTextLine(const LineInfo &info, int paragraphNumber) {
 	myStyle.setStyle(info.StartStyle);
 	context().moveXTo(info.StartStyle->leftIndent());
 	context().moveY(info.Height);
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
-	const bool endOfParagraph = info.End.sameElementAs(paragraph.end());
-	const int pn = paragraph.paragraphNumber();
-	int wn = paragraph.wordNumber(info.Start);
+	const bool endOfParagraph = info.End.isEndOfParagraph();
+	int wn = info.Start.wordNumber();
 	bool wordOccured = false;
 
 	switch (myStyle.style()->alignment()) {
@@ -338,7 +346,7 @@ void TextView::drawTextLine(const ParagraphCursor &paragraph, const LineInfo &in
 		if (width > 0) {
 			int height = myStyle.elementHeight(pos);
 			if (height > 0) {
-				myTextElementMap.push_back(TextElementPosition(pn, wn, kind, x, x + width - 1, y - height + 1, y));
+				myTextElementMap.push_back(TextElementPosition(paragraphNumber, wn, kind, x, x + width - 1, y - height + 1, y));
 			}
 		}
 	}
@@ -358,7 +366,7 @@ void TextView::skip(ParagraphCursor &paragraph, WordCursor &word, int height) {
 	myStyle.reset();
 	myStyle.applyControls(paragraph.begin(), word);
 	const WordCursor paragraphEnd = paragraph.end();
-	while (!word.sameElementAs(paragraphEnd) && (height > 0)) {
+	while (!word.isEndOfParagraph() && (height > 0)) {
 		const LineInfo info = processTextLine(word, paragraphEnd);
 		word = info.End;
 		height -= info.Height;
@@ -388,7 +396,7 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 	myModel->search(text, ignoreCase);
 	if (myFirstParagraphCursor != 0) {
 		myFirstParagraphCursor->rebuild();
-		TextMark position = myFirstParagraphCursor->position();
+		TextMark position = myFirstParagraphCursor->position(myFirstParagraphCursor->wordCursor());
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
 							(backward ? myModel->previousMark(position) : myModel->nextMark(position)));
@@ -398,24 +406,24 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 bool TextView::canFindNext() const {
 	return
 		(myLastParagraphCursor != 0) &&
-		(myModel->nextMark(myLastParagraphCursor->position()).ParagraphNumber > -1);
+		(myModel->nextMark(myLastParagraphCursor->position(myLastParagraphCursor->wordCursor())).ParagraphNumber > -1);
 }
 
 void TextView::findNext() {
 	if (myLastParagraphCursor != 0) {
-		gotoMark(myModel->nextMark(myLastParagraphCursor->position()));
+		gotoMark(myModel->nextMark(myLastParagraphCursor->position(myLastParagraphCursor->wordCursor())));
 	}
 }
 
 bool TextView::canFindPrevious() const {
 	return
 		(myFirstParagraphCursor != 0) &&
-		(myModel->previousMark(myFirstParagraphCursor->position()).ParagraphNumber > -1);
+		(myModel->previousMark(myFirstParagraphCursor->position(myFirstParagraphCursor->wordCursor())).ParagraphNumber > -1);
 }
 
 void TextView::findPrevious() {
 	if (myFirstParagraphCursor != 0) {
-		gotoMark(myModel->previousMark(myFirstParagraphCursor->position()));
+		gotoMark(myModel->previousMark(myFirstParagraphCursor->position(myFirstParagraphCursor->wordCursor())));
 	}
 }
 
@@ -437,7 +445,8 @@ bool TextView::onStylusPress(int x, int y) {
 				gotoParagraph(paragraphNumber, true);
 				paint(false);
 				if ((myLastParagraphCursor != 0) && (paragraphNumber == myLastParagraphCursor->paragraphNumber())) {
-					if ((myLastParagraphCursor != 0) && !myLastParagraphCursor->isEndOfText()) {
+					if (!myLastParagraphCursor->isLast() ||
+							!myLastParagraphCursor->wordCursor().isEndOfParagraph()) {
 						long paragraphLength = myLastParagraphCursor->paragraphLength();
 						if (paragraphLength > 0) {
 							long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];

@@ -66,23 +66,30 @@ private:
 	Allocator<sizeof(ControlElement),32> myControlAllocator;
 };
 
+class ParagraphCursor;
+
 class WordCursor {
 
 private:
 	WordCursor() VIEW_SECTION;
-	WordCursor(const TextElementVector::const_iterator &wordIterator) VIEW_SECTION;
+	WordCursor(const shared_ptr<TextElementVector> elements, const TextElementVector::const_iterator &wordIterator) VIEW_SECTION;
 
 public:
 	~WordCursor() VIEW_SECTION;
-	const WordCursor& operator = (const TextElementVector::const_iterator &wordIterator) VIEW_SECTION;
 	bool sameElementAs(const WordCursor &cursor) const VIEW_SECTION;
 	TextElement &element() const VIEW_SECTION;
 	void nextWord() VIEW_SECTION;
 	void previousWord() VIEW_SECTION;
 	void setCharNumber(int charNumber) VIEW_SECTION;
+
+	int wordNumber() const VIEW_SECTION;
 	int charNumber() const VIEW_SECTION;
 
+	bool isStartOfParagraph() const VIEW_SECTION;
+	bool isEndOfParagraph() const VIEW_SECTION;
+
 private:
+	shared_ptr<TextElementVector> myElements;
 	TextElementVector::const_iterator myWordIterator;
 	int myCharNumber;
 
@@ -140,15 +147,13 @@ public:
 	virtual bool previous() VIEW_SECTION = 0;
 	virtual bool next() VIEW_SECTION = 0;
 
-	bool isStartOfText() const VIEW_SECTION;
-	virtual bool isEndOfText() const VIEW_SECTION = 0;
-	bool isStartOfParagraph() const VIEW_SECTION;
+	bool isFirst() const VIEW_SECTION;
+	virtual bool isLast() const VIEW_SECTION = 0;
 	bool isEndOfSection() const VIEW_SECTION;
 
 	int paragraphLength() const VIEW_SECTION;
 	int paragraphNumber() const VIEW_SECTION;
-	TextMark position() const VIEW_SECTION;
-	int wordNumber(const WordCursor &word) const VIEW_SECTION;
+	TextMark position(const WordCursor &word) const VIEW_SECTION;
 	void moveTo(int paragraphNumber) VIEW_SECTION;
 
 	WordCursor wordCursor() const VIEW_SECTION;
@@ -163,8 +168,6 @@ private:
 	void processControlParagraph(const Paragraph &paragraph) VIEW_SECTION;
 
 protected:
-	bool isEndOfParagraph() const VIEW_SECTION;
-
 	void fill() VIEW_SECTION;
 	void clear() VIEW_SECTION;
 
@@ -191,7 +194,7 @@ public:
 
 	bool previous() VIEW_SECTION;
 	bool next() VIEW_SECTION;
-	bool isEndOfText() const VIEW_SECTION;
+	bool isLast() const VIEW_SECTION;
 };
 
 class TreeParagraphCursor : public ParagraphCursor {
@@ -206,7 +209,7 @@ public:
 
 	bool previous() VIEW_SECTION;
 	bool next() VIEW_SECTION;
-	bool isEndOfText() const VIEW_SECTION;
+	bool isLast() const VIEW_SECTION;
 };
 
 inline TextElementVector::TextElementVector() {}
@@ -227,20 +230,20 @@ inline void TextElementPool::storeControlElement(ControlElement *element) {
 }
 
 inline WordCursor::WordCursor() { myCharNumber = 0; }
-inline WordCursor::WordCursor(const TextElementVector::const_iterator &wordIterator) : myWordIterator(wordIterator) { myCharNumber = 0; }
+inline WordCursor::WordCursor(const shared_ptr<TextElementVector> elements, const TextElementVector::const_iterator &wordIterator) : myElements(elements), myWordIterator(wordIterator) { myCharNumber = 0; }
 inline WordCursor::~WordCursor() {}
-inline const WordCursor& WordCursor::operator = (const TextElementVector::const_iterator &wordIterator) {
-	myWordIterator = wordIterator;
-	myCharNumber = 0;
-	return *this;
-}
 inline bool WordCursor::sameElementAs(const WordCursor &cursor) const {
 	return myWordIterator == cursor.myWordIterator;
 }
 inline TextElement &WordCursor::element() const { return **myWordIterator; }
 inline void WordCursor::nextWord() { myWordIterator++; myCharNumber = 0; }
 inline void WordCursor::previousWord() { myWordIterator--; myCharNumber = 0; }
+inline int WordCursor::wordNumber() const { return myWordIterator - myElements->begin(); }
 inline int WordCursor::charNumber() const { return myCharNumber; }
+inline bool WordCursor::isStartOfParagraph() const {
+	return (myWordIterator == myElements->begin()) && (myCharNumber == 0);
+}
+inline bool WordCursor::isEndOfParagraph() const { return myWordIterator == myElements->end(); }
 
 inline ParagraphCursor::Cache::Cache() { ourCacheCounter++; }
 inline ParagraphCursor::Cache::~Cache() {
@@ -252,11 +255,10 @@ inline ParagraphCursor::Cache::~Cache() {
 
 inline int ParagraphCursor::paragraphLength() const { return myElements->size(); }
 inline int ParagraphCursor::paragraphNumber() const { return myParagraphIterator - myModel.paragraphs().begin(); }
-inline int ParagraphCursor::wordNumber(const WordCursor &word) const { return word.myWordIterator - myElements->begin(); }
 inline WordCursor ParagraphCursor::wordCursor() const { return myNextElement; }
 inline void ParagraphCursor::setWordCursor(const WordCursor cursor) { myNextElement = cursor; }
-inline const WordCursor ParagraphCursor::begin() const { return WordCursor(myElements->begin()); }
-inline const WordCursor ParagraphCursor::end() const { return WordCursor(myElements->end()); }
+inline const WordCursor ParagraphCursor::begin() const { return WordCursor(myElements, myElements->begin()); }
+inline const WordCursor ParagraphCursor::end() const { return WordCursor(myElements, myElements->end()); }
 
 inline PlainTextParagraphCursor::PlainTextParagraphCursor(const PlainTextParagraphCursor &cursor) : ParagraphCursor(cursor) {}
 inline PlainTextParagraphCursor::PlainTextParagraphCursor(const TextModel &model) : ParagraphCursor(model) {}
