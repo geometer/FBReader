@@ -284,7 +284,7 @@ void ParagraphCursor::rebuild() {
 	myNextElement.myCharNumber = c;
 }
 
-void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber) {
+void ParagraphCursor::moveTo(int paragraphNumber) {
 	std::vector<Paragraph*>::const_iterator it =
 		myModel.paragraphs().begin() + std::min(paragraphNumber, (int)myModel.paragraphs().size() - 1);
 	if (myParagraphIterator != it) {
@@ -292,8 +292,6 @@ void ParagraphCursor::moveTo(int paragraphNumber, int wordNumber, int charNumber
 		myParagraphIterator = it;
 		fill();
 	}
-
-	setWordCursor(wordCursor(wordNumber, charNumber));
 }
 
 WordCursor ParagraphCursor::wordCursor(int wordNumber, int charNumber) const {

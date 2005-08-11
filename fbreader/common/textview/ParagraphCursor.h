@@ -149,7 +149,7 @@ public:
 	int paragraphNumber() const VIEW_SECTION;
 	TextMark position() const VIEW_SECTION;
 	int wordNumber(const WordCursor &word) const VIEW_SECTION;
-	void moveTo(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
+	void moveTo(int paragraphNumber) VIEW_SECTION;
 
 	WordCursor wordCursor() const VIEW_SECTION;
 	WordCursor wordCursor(int wordNumber, int charNumber) const VIEW_SECTION;

@@ -72,6 +72,7 @@ void ContentsView::setModel(const TextModel *model, const std::string &name) {
 		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
 		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
 		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
-		myFirstParagraphCursor->moveTo(paragraphPosition.value(), wordPosition.value(), charPosition.value());
+		myFirstParagraphCursor->moveTo(paragraphPosition.value());
+		myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->wordCursor(wordPosition.value(), charPosition.value()));
 	}
 }

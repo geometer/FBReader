@@ -246,7 +246,7 @@ void TextView::gotoParagraph(int num, bool last) {
 				myLastParagraphCursor = myFirstParagraphCursor;
 				myFirstParagraphCursor = 0;
 			}
-			myLastParagraphCursor->moveTo(num - 1, 0, 0);
+			myLastParagraphCursor->moveTo(num - 1);
 			myLastParagraphCursor->setWordCursor(myLastParagraphCursor->end());
 			if (myFirstParagraphCursor != 0) {
 				delete myFirstParagraphCursor;
@@ -262,7 +262,8 @@ void TextView::gotoParagraph(int num, bool last) {
 				myFirstParagraphCursor = myLastParagraphCursor;
 				myLastParagraphCursor = 0;
 			}
-			myFirstParagraphCursor->moveTo(num, 0, 0);
+			myFirstParagraphCursor->moveTo(num);
+			myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->begin());
 		}
 	}
 }
@@ -444,7 +445,8 @@ bool TextView::onStylusPress(int x, int y) {
 							long wordNum =
 								(long)((1.0 * (x - left - 1) / (right - left - 1) - 1.0 * sizeOfTextBeforeParagraph / myFullTextSize)
 								* myFullTextSize / sizeOfParagraph * paragraphLength);
-							myLastParagraphCursor->moveTo(myLastParagraphCursor->paragraphNumber(), wordNum, 0);
+							myLastParagraphCursor->moveTo(myLastParagraphCursor->paragraphNumber());
+							myLastParagraphCursor->setWordCursor(myLastParagraphCursor->wordCursor(wordNum, 0));
 							if (myFirstParagraphCursor != 0) {
 								delete myFirstParagraphCursor;
 								myFirstParagraphCursor = 0;
