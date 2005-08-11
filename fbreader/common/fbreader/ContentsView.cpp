@@ -48,7 +48,7 @@ bool ContentsView::onStylusPress(int x, int y) {
 }
 
 bool ContentsView::isEmpty() const {
-	return (myModel == NULL) || myModel->paragraphs().empty();
+	return (myModel == 0) || myModel->paragraphs().empty();
 }
 
 static const std::string PARAGRAPH_OPTION_NAME = "ContentsParagraph";
@@ -56,13 +56,13 @@ static const std::string WORD_OPTION_NAME = "ContentsWord";
 static const std::string CHAR_OPTION_NAME = "ContentsChar";
 
 void ContentsView::saveState() {
-	if ((myModel == NULL) || (myFirstParagraphCursor == NULL)) {
+	if ((myModel == 0) || myStartCursor.isNull()) {
 		return;
 	}
 
-	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myFirstParagraphCursor->paragraphNumber());
-	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordCursor().wordNumber());
-	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordCursor().charNumber());
+	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myStartCursor.paragraphCursor().paragraphNumber());
+	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myStartCursor.wordCursor().wordNumber());
+	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myStartCursor.wordCursor().charNumber());
 }
 
 void ContentsView::setModel(const TextModel *model, const std::string &name) {
@@ -72,7 +72,7 @@ void ContentsView::setModel(const TextModel *model, const std::string &name) {
 		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
 		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
 		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
-		myFirstParagraphCursor->moveTo(paragraphPosition.value());
-		myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->wordCursor(wordPosition.value(), charPosition.value()));
+		myStartCursor.moveTo(paragraphPosition.value());
+		myStartCursor.moveWordCursorTo(wordPosition.value(), charPosition.value());
 	}
 }

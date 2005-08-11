@@ -53,8 +53,8 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
 		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
 		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
-		myFirstParagraphCursor->moveTo(paragraphPosition.value());
-		myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->wordCursor(wordPosition.value(), charPosition.value()));
+		myStartCursor.moveTo(paragraphPosition.value());
+		myStartCursor.moveWordCursorTo(wordPosition.value(), charPosition.value());
 	}
 
 	myPositionStack.clear();
@@ -85,13 +85,13 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 }
 
 void BookTextView::saveState() {
-	if ((myModel == 0) || (myFirstParagraphCursor == 0)) {
+	if ((myModel == 0) || myStartCursor.isNull()) {
 		return;
 	}
 
-	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myFirstParagraphCursor->paragraphNumber());
-	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordCursor().wordNumber());
-	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordCursor().charNumber());
+	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myStartCursor.paragraphCursor().paragraphNumber());
+	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myStartCursor.wordCursor().wordNumber());
+	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myStartCursor.wordCursor().charNumber());
 	ZLIntegerOption(myName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
 	ZLIntegerOption(myName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
@@ -107,8 +107,8 @@ void BookTextView::saveState() {
 
 void BookTextView::pushCurrentPositionIntoStack() {
 	std::pair<int,int> pos;
-	pos.first = myFirstParagraphCursor->paragraphNumber();
-	pos.second = myFirstParagraphCursor->wordCursor().wordNumber();
+	pos.first = myStartCursor.paragraphCursor().paragraphNumber();
+	pos.second = myStartCursor.wordCursor().wordNumber();
 	myPositionStack.push_back(pos);
 	while (myPositionStack.size() > myMaxStackSize) {
 #ifndef PALM_TEMPORARY
@@ -121,22 +121,18 @@ void BookTextView::pushCurrentPositionIntoStack() {
 }
 
 void BookTextView::replaceCurrentPositionInStack() {
-	myPositionStack[myCurrentPointInStack].first = myFirstParagraphCursor->paragraphNumber();
-	myPositionStack[myCurrentPointInStack].second = myFirstParagraphCursor->wordCursor().wordNumber();
+	myPositionStack[myCurrentPointInStack].first = myStartCursor.paragraphCursor().paragraphNumber();
+	myPositionStack[myCurrentPointInStack].second = myStartCursor.wordCursor().wordNumber();
 }
 
 bool BookTextView::setFirstParagraphCursor() {
-	if (myFirstParagraphCursor == 0) {
-		if (myLastParagraphCursor == 0) {
-			return false;
-		}
-		myFirstParagraphCursor = myLastParagraphCursor;
-		myLastParagraphCursor = 0;
+	if (myStartCursor.isNull()) {
+		myStartCursor = myEndCursor;
 	}
-	if (myLastParagraphCursor != 0) {
-		delete myLastParagraphCursor;
-		myLastParagraphCursor = 0;
+	if (myStartCursor.isNull()) {
+		return false;
 	}
+	myEndCursor = 0;
 	return true;
 }
 
@@ -171,8 +167,8 @@ void BookTextView::undoPageMove() {
 
 	myCurrentPointInStack--;
 	std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-	myFirstParagraphCursor->moveTo(pos.first);
-	myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->wordCursor(pos.second, 0));
+	myStartCursor.moveTo(pos.first);
+	myStartCursor.moveWordCursorTo(pos.second, 0);
 
 	repaintView();
 }
@@ -189,8 +185,8 @@ void BookTextView::redoPageMove() {
 	replaceCurrentPositionInStack();
 	myCurrentPointInStack++;
 	std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-	myFirstParagraphCursor->moveTo(pos.first);
-	myFirstParagraphCursor->setWordCursor(myFirstParagraphCursor->wordCursor(pos.second, 0));
+	myStartCursor.moveTo(pos.first);
+	myStartCursor.moveWordCursorTo(pos.second, 0);
 
 	if (myCurrentPointInStack + 1 == myPositionStack.size()) {
 		myPositionStack.pop_back();
@@ -207,7 +203,7 @@ bool BookTextView::onStylusPress(int x, int y) {
 	if ((position == 0) || (position->Kind != TextElement::WORD_ELEMENT)) {
 		return false;
 	}
-	ParagraphCursor *cursor = myFirstParagraphCursor->createCopy();
+	ParagraphCursor *cursor = myStartCursor.paragraphCursor().createCopy();
 	cursor->moveTo(position->ParagraphNumber);
 	bool isHyperlink = false;
 	std::string id;

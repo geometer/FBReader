@@ -86,7 +86,6 @@ ParagraphCursor::ParagraphCursor(const ParagraphCursor &cursor) : myModel(cursor
 	}
 	myParagraphIterator = cursor.myParagraphIterator;
 	myElements = cursor.myElements;
-	myNextElement = cursor.myNextElement;
 }
 
 ParagraphCursor::~ParagraphCursor() {
@@ -253,8 +252,6 @@ void ParagraphCursor::fill() {
 				break;
 		}
 	}
-
-	myNextElement = WordCursor(myElements, myElements->begin());
 }
 
 void ParagraphCursor::clear() {
@@ -265,12 +262,17 @@ void ParagraphCursor::clear() {
 }
 
 void ParagraphCursor::rebuild() {
-	int w = myNextElement.wordNumber();
-	int c = myNextElement.charNumber();
 	clear();
 	fill();
-	myNextElement = WordCursor(myElements, myElements->begin() + w);
-	myNextElement.setCharNumber(c);
+}
+
+void FullCursor::rebuild() {
+	if (!isNull()) {
+		int w = myWordCursor.wordNumber();
+		int c = myWordCursor.charNumber();
+		myParagraphCursor->rebuild();
+		myWordCursor = myParagraphCursor->wordCursor(w, c);
+	}
 }
 
 void ParagraphCursor::moveTo(int paragraphNumber) {
@@ -302,5 +304,44 @@ void WordCursor::setCharNumber(int charNumber) {
 		if (element.kind() == TextElement::WORD_ELEMENT) {
 			myCharNumber = std::min(charNumber, (int)((const Word&)element).Length - 1);
 		}
+	}
+}
+
+const FullCursor &FullCursor::operator = (ParagraphCursor *paragraphCursor) {
+	myParagraphCursor = paragraphCursor;
+	if (paragraphCursor != 0) {
+		myWordCursor = paragraphCursor->begin();
+	} else {
+		myWordCursor.myElements = 0;
+	}
+	return *this;
+}
+
+void FullCursor::moveTo(int paragraphNumber) {
+	if (!isNull() && (paragraphNumber != myParagraphCursor->paragraphNumber())) {
+		myParagraphCursor->moveTo(paragraphNumber);
+		myWordCursor = myParagraphCursor->begin();
+	}
+}
+
+bool FullCursor::next() {
+	if (isNull() || !myParagraphCursor->next()) {
+		return false;
+	}
+	myWordCursor = myParagraphCursor->begin();
+	return true;
+}
+
+bool FullCursor::previous() {
+	if (isNull() || !myParagraphCursor->previous()) {
+		return false;
+	}
+	myWordCursor = myParagraphCursor->begin();
+	return true;
+}
+
+void FullCursor::moveWordCursorTo(int wordNumber, int charNumber) {
+	if (!isNull()) {
+		myWordCursor = myParagraphCursor->wordCursor(wordNumber, charNumber);
 	}
 }
