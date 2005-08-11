@@ -86,9 +86,7 @@ ParagraphCursor::ParagraphCursor(const ParagraphCursor &cursor) : myModel(cursor
 	}
 	myParagraphIterator = cursor.myParagraphIterator;
 	myElements = cursor.myElements;
-	myNextElement = myElements->begin();
-	myNextElement.myWordIterator += cursor.wordNumber();
-	myNextElement.myCharNumber = cursor.myNextElement.myCharNumber;
+	myNextElement = cursor.myNextElement;
 }
 
 ParagraphCursor::~ParagraphCursor() {
@@ -278,8 +276,8 @@ void ParagraphCursor::clear() {
 }
 
 void ParagraphCursor::rebuild() {
-	int w = wordNumber();
-	int c = charNumber();
+	int w = wordNumber(myNextElement);
+	int c = myNextElement.myCharNumber;
 	clear();
 	fill();
 	myNextElement = myElements->begin() + w;

@@ -89,8 +89,8 @@ void BookTextView::saveState() {
 	}
 
 	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myFirstParagraphCursor->paragraphNumber());
-	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordNumber());
-	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myFirstParagraphCursor->charNumber());
+	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordNumber(myFirstParagraphCursor->wordCursor()));
+	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myFirstParagraphCursor->wordCursor().charNumber());
 	ZLIntegerOption(myName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
 	ZLIntegerOption(myName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
@@ -107,7 +107,7 @@ void BookTextView::saveState() {
 void BookTextView::pushCurrentPositionIntoStack() {
 	std::pair<int,int> pos;
 	pos.first = myFirstParagraphCursor->paragraphNumber();
-	pos.second = myFirstParagraphCursor->wordNumber();
+	pos.second = myFirstParagraphCursor->wordNumber(myFirstParagraphCursor->wordCursor());
 	myPositionStack.push_back(pos);
 	while (myPositionStack.size() > myMaxStackSize) {
 #ifndef PALM_TEMPORARY
@@ -121,7 +121,7 @@ void BookTextView::pushCurrentPositionIntoStack() {
 
 void BookTextView::replaceCurrentPositionInStack() {
 	myPositionStack[myCurrentPointInStack].first = myFirstParagraphCursor->paragraphNumber();
-	myPositionStack[myCurrentPointInStack].second = myFirstParagraphCursor->wordNumber();
+	myPositionStack[myCurrentPointInStack].second = myFirstParagraphCursor->wordNumber(myFirstParagraphCursor->wordCursor());
 }
 
 bool BookTextView::setFirstParagraphCursor() {

@@ -143,15 +143,12 @@ public:
 	bool isStartOfText() const VIEW_SECTION;
 	virtual bool isEndOfText() const VIEW_SECTION = 0;
 	bool isStartOfParagraph() const VIEW_SECTION;
-	bool isEndOfParagraph() const VIEW_SECTION;
 	bool isEndOfSection() const VIEW_SECTION;
 
 	int paragraphLength() const VIEW_SECTION;
 	int paragraphNumber() const VIEW_SECTION;
 	TextMark position() const VIEW_SECTION;
-	int wordNumber(const WordCursor &wi) const VIEW_SECTION;
-	int wordNumber() const VIEW_SECTION;
-	int charNumber() const VIEW_SECTION;
+	int wordNumber(const WordCursor &word) const VIEW_SECTION;
 	void moveTo(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
 
 	WordCursor wordCursor() const VIEW_SECTION;
@@ -165,6 +162,8 @@ private:
 	void processControlParagraph(const Paragraph &paragraph) VIEW_SECTION;
 
 protected:
+	bool isEndOfParagraph() const VIEW_SECTION;
+
 	void fill() VIEW_SECTION;
 	void clear() VIEW_SECTION;
 
@@ -253,9 +252,7 @@ inline ParagraphCursor::Cache::~Cache() {
 
 inline int ParagraphCursor::paragraphLength() const { return myElements->size(); }
 inline int ParagraphCursor::paragraphNumber() const { return myParagraphIterator - myModel.paragraphs().begin(); }
-inline int ParagraphCursor::wordNumber(const WordCursor &wi) const { return wi.myWordIterator - myElements->begin(); }
-inline int ParagraphCursor::wordNumber() const { return wordNumber(myNextElement); }
-inline int ParagraphCursor::charNumber() const { return myNextElement.myCharNumber; }
+inline int ParagraphCursor::wordNumber(const WordCursor &word) const { return word.myWordIterator - myElements->begin(); }
 inline WordCursor ParagraphCursor::wordCursor() const { return myNextElement; }
 inline void ParagraphCursor::setWordCursor(const WordCursor cursor) { myNextElement = cursor; }
 inline const WordCursor ParagraphCursor::begin() const { return WordCursor(myElements->begin()); }

@@ -157,7 +157,7 @@ void TextView::paint(bool doPaint) {
 				ParagraphPosition(myLastParagraphCursor->paragraphNumber(), start, context().y())
 			);
 		}
-	} while (myLastParagraphCursor->isEndOfParagraph() && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
+	} while (myLastParagraphCursor->wordCursor().sameElementAs(myLastParagraphCursor->end()) && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
 
 	if (doPaint && ShowPositionIndicatorOption.value()) {
 		long bottom = context().height();
@@ -171,7 +171,7 @@ void TextView::paint(bool doPaint) {
 			fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
 		} else {
 			long sizeOfParagraph = myTextSize[myLastParagraphCursor->paragraphNumber() + 1] - sizeOfTextBeforeParagraph;
-			fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * myLastParagraphCursor->wordNumber() / paragraphLength) / myFullTextSize);
+			fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * myLastParagraphCursor->wordNumber(myLastParagraphCursor->wordCursor()) / paragraphLength) / myFullTextSize);
 		}
 		context().setColor(TextStyle::RegularTextColorOption.value());
 		context().setFillColor(PositionIndicatorColorOption.value());
@@ -356,8 +356,9 @@ void TextView::drawTextLine(const ParagraphCursor &paragraph, const LineInfo &in
 void TextView::skip(ParagraphCursor &paragraph, WordCursor &word, int height) {
 	myStyle.reset();
 	myStyle.applyControls(paragraph.begin(), word);
-	while (!paragraph.isEndOfParagraph() && (height > 0)) {
-		const LineInfo info = processTextLine(word, paragraph.end());
+	const WordCursor paragraphEnd = paragraph.end();
+	while (!word.sameElementAs(paragraphEnd) && (height > 0)) {
+		const LineInfo info = processTextLine(word, paragraphEnd);
 		word = info.End;
 		height -= info.Height;
 	}
