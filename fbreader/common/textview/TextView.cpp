@@ -139,11 +139,10 @@ void TextView::paint(bool doPaint) {
 
 		if (doPaint) {
 			int start = context().y() + 1;
-			int pn = myEndCursor.paragraphCursor().paragraphNumber();
 			for (std::vector<LineInfo>::const_iterator it = infos.begin(); it != infos.end(); it++) {
-				drawTextLine(*it, pn);
+				drawTextLine(*it);
 			}
-			myParagraphMap.push_back(ParagraphPosition(pn, start, context().y()));
+			myParagraphMap.push_back(ParagraphPosition(myEndCursor.paragraphCursor().paragraphNumber(), start, context().y()));
 		}
 	} while (myEndCursor.isEndOfParagraph() && myEndCursor.nextParagraph() && !myEndCursor.paragraphCursor().isEndOfSection());
 
@@ -256,13 +255,14 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
-void TextView::drawTextLine(const LineInfo &info, int paragraphNumber) {
+void TextView::drawTextLine(const LineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
 	context().moveXTo(info.StartStyle->leftIndent());
 	context().moveY(info.Height);
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
+	int pn = info.Start.paragraphCursor().paragraphNumber();
 	int wn = info.Start.wordNumber();
 	bool wordOccured = false;
 
@@ -325,7 +325,7 @@ void TextView::drawTextLine(const LineInfo &info, int paragraphNumber) {
 		if (width > 0) {
 			int height = myStyle.elementHeight(pos);
 			if (height > 0) {
-				myTextElementMap.push_back(TextElementPosition(paragraphNumber, wn, kind, x, x + width - 1, y - height + 1, y));
+				myTextElementMap.push_back(TextElementPosition(pn, wn, kind, x, x + width - 1, y - height + 1, y));
 			}
 		}
 	}

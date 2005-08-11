@@ -115,10 +115,10 @@ private:
 	int paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
 	void skip(WordCursor &paragraph, int height) VIEW_SECTION;
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
-	void drawTextLine(const LineInfo &info, int paragraphNumber) VIEW_SECTION;
+	void drawTextLine(const LineInfo &info) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
-	void drawTreeNode(TreeElement::TreeElementKind kind, int height) VIEW_SECTION;
+	void drawTreeNode(TreeElement::TreeElementKind kind, int height) DRAW_SECTION;
 
 protected:
 	const TextModel *myModel;

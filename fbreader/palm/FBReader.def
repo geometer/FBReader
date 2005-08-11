@@ -1,2 +1,2 @@
 application { FBReader FBRd }
-multiple code { stl0 stl1 sec0 sec1 sec2 sec3 sec4 sec5 sec6 }
+multiple code { stl0 stl1 zlb0 zlb1 zlb2 app0 app1 app2 app3 }

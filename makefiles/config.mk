@@ -1,8 +1,6 @@
 include $(ROOTDIR)/makefiles/platforms.mk
 
 DUMMY_SECTIONS = \
-	-DSTL_SECTION="" \
-	-DSTL1_SECTION="" \
 	-DXML_SECTION="" \
 	-DFS_SECTION="" \
 	-DOPTIONS_SECTION="" \
@@ -12,6 +10,7 @@ DUMMY_SECTIONS = \
 	-DAPPLICATION_SECTION="" \
 	-DMODEL_SECTION="" \
 	-DVIEW_SECTION="" \
+	-DDRAW_SECTION="" \
 	-DZLVIEW_SECTION="" \
 	-DFB_VIEW_SECTION="" \
 	-DTEXT_STYLE_SECTION="" \
@@ -152,22 +151,23 @@ ifeq "$(TARGET_ARCH)" "palm"
 	CFLAGS = \
 		-DSTL_SECTION="__attribute__ ((section(\"stl0\")))" \
 		-DSTL1_SECTION="__attribute__ ((section(\"stl1\")))" \
-		-DXML_SECTION="__attribute__ ((section(\"sec2\")))" \
-		-DFS_SECTION="__attribute__ ((section(\"sec2\")))" \
-		-DOPTIONS_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DUTIL_SECTION="__attribute__ ((section(\"sec0\")))" \
-		-DDIALOG_SECTION="__attribute__ ((section(\"sec1\")))" \
-		-DIMAGE_SECTION="__attribute__ ((section(\"sec0\")))" \
-		-DAPPLICATION_SECTION="__attribute__ ((section(\"sec0\")))" \
-		-DZLVIEW_SECTION="__attribute__ ((section(\"sec0\")))" \
-		-DVIEW_SECTION="__attribute__ ((section(\"sec3\")))" \
-		-DMODEL_SECTION="__attribute__ ((section(\"sec6\")))" \
-		-DFB_VIEW_SECTION="__attribute__ ((section(\"sec4\")))" \
-		-DFB_SECTION="__attribute__ ((section(\"sec4\")))" \
-		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"sec3\")))" \
-		-DHYPHENATION_SECTION="__attribute__ ((section(\"sec5\")))" \
-		-DFORMATS_SECTION="__attribute__ ((section(\"sec5\")))" \
-		-DFB_DIALOG_SECTION="__attribute__ ((section(\"sec6\")))" \
+		-DXML_SECTION="__attribute__ ((section(\"zlb2\")))" \
+		-DFS_SECTION="__attribute__ ((section(\"zlb2\")))" \
+		-DOPTIONS_SECTION="__attribute__ ((section(\"zlb1\")))" \
+		-DUTIL_SECTION="__attribute__ ((section(\"zlb0\")))" \
+		-DDIALOG_SECTION="__attribute__ ((section(\"zlb1\")))" \
+		-DIMAGE_SECTION="__attribute__ ((section(\"zlb0\")))" \
+		-DAPPLICATION_SECTION="__attribute__ ((section(\"zlb0\")))" \
+		-DZLVIEW_SECTION="__attribute__ ((section(\"zlb0\")))" \
+		-DVIEW_SECTION="__attribute__ ((section(\"app0\")))" \
+		-DDRAW_SECTION="__attribute__ ((section(\"app1\")))" \
+		-DMODEL_SECTION="__attribute__ ((section(\"app3\")))" \
+		-DFB_VIEW_SECTION="__attribute__ ((section(\"app1\")))" \
+		-DFB_SECTION="__attribute__ ((section(\"app1\")))" \
+		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"app0\")))" \
+		-DHYPHENATION_SECTION="__attribute__ ((section(\"app2\")))" \
+		-DFORMATS_SECTION="__attribute__ ((section(\"app2\")))" \
+		-DFB_DIALOG_SECTION="__attribute__ ((section(\"app3\")))" \
 		-DPALM_TEMPORARY \
 		-DUSE_OWN_XML_PARSER \
 		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O3
