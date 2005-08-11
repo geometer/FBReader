@@ -112,8 +112,8 @@ protected:
 private:
 	void clear() VIEW_SECTION;
 
-	int paragraphHeight(const FullCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
-	void skip(FullCursor &paragraph, int height) VIEW_SECTION;
+	int paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
+	void skip(WordCursor &paragraph, int height) VIEW_SECTION;
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
 	void drawTextLine(const LineInfo &info, int paragraphNumber) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
@@ -124,8 +124,8 @@ protected:
 	const TextModel *myModel;
 	std::string myName;
 
-	FullCursor myStartCursor;
-	FullCursor myEndCursor;
+	WordCursor myStartCursor;
+	WordCursor myEndCursor;
 
 protected:
 	struct ParagraphPosition {

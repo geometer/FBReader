@@ -194,16 +194,16 @@ bool ParagraphCursor::isEndOfSection() const {
 	return (*myParagraphIterator)->kind() == Paragraph::EOS_PARAGRAPH;
 }
 
-TextMark ParagraphCursor::position(const WordCursor &word) const {
-	WordCursor cursor = word;
-	while ((cursor.myWordIterator != myElements->end()) &&
+TextMark WordCursor::position() const {
+	WordCursor cursor = *this;
+	while (!cursor.isEndOfParagraph() &&
 				 (cursor.element().kind() != TextElement::WORD_ELEMENT)) {
 		cursor.nextWord();
 	}
-	if (cursor.myWordIterator != myElements->end()) {
-		return TextMark(paragraphNumber(), ((Word&)cursor.element()).ParagraphOffset, 0);
+	if (!cursor.isEndOfParagraph()) {
+		return TextMark(myParagraphCursor->paragraphNumber(), ((Word&)cursor.element()).ParagraphOffset, 0);
 	}
-	return TextMark(paragraphNumber() + 1, 0, 0);
+	return TextMark(myParagraphCursor->paragraphNumber() + 1, 0, 0);
 }
 
 void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
@@ -261,17 +261,10 @@ void ParagraphCursor::clear() {
 	myElements = 0;
 }
 
-void ParagraphCursor::rebuild() {
-	clear();
-	fill();
-}
-
-void FullCursor::rebuild() {
+void WordCursor::rebuild() {
 	if (!isNull()) {
-		int w = myWordCursor.wordNumber();
-		int c = myWordCursor.charNumber();
-		myParagraphCursor->rebuild();
-		myWordCursor = myParagraphCursor->wordCursor(w, c);
+		myParagraphCursor->clear();
+		myParagraphCursor->fill();
 	}
 }
 
@@ -285,63 +278,79 @@ void ParagraphCursor::moveTo(int paragraphNumber) {
 	}
 }
 
-WordCursor ParagraphCursor::wordCursor(int wordNumber, int charNumber) const {
-	wordNumber = std::max(0, wordNumber);
-	if (wordNumber > (int)myElements->size()) {
-		wordNumber = myElements->size();
-		charNumber = 0;
-	}
-	WordCursor cursor(myElements, myElements->begin() + wordNumber);
-	cursor.setCharNumber(charNumber);
-	return cursor;
-}
-
 void WordCursor::setCharNumber(int charNumber) {
 	charNumber = std::max(charNumber, 0);
 	myCharNumber = 0;
 	if (charNumber > 0) {
-		const TextElement &element = **myWordIterator;
+		const TextElement &element = *(*myParagraphCursor->myElements)[myWordNumber];
 		if (element.kind() == TextElement::WORD_ELEMENT) {
 			myCharNumber = std::min(charNumber, (int)((const Word&)element).Length - 1);
 		}
 	}
 }
 
-const FullCursor &FullCursor::operator = (ParagraphCursor *paragraphCursor) {
-	myParagraphCursor = paragraphCursor;
-	if (paragraphCursor != 0) {
-		myWordCursor = paragraphCursor->begin();
-	} else {
-		myWordCursor.myElements = 0;
+void WordCursor::moveTo(int wordNumber, int charNumber) {
+	if (!isNull()) {
+		wordNumber = std::max(0, wordNumber);
+		int size = myParagraphCursor->myElements->size();
+		if (wordNumber > size) {
+			myWordNumber = size;
+			myCharNumber = 0;
+		} else {
+			myWordNumber = wordNumber;
+			setCharNumber(charNumber);
+		}
 	}
+}
+
+const WordCursor &WordCursor::operator = (ParagraphCursor *paragraphCursor) {
+	myParagraphCursor = paragraphCursor;
+	moveToParagraphStart();
 	return *this;
 }
 
-void FullCursor::moveTo(int paragraphNumber) {
+void WordCursor::moveToParagraph(int paragraphNumber) {
 	if (!isNull() && (paragraphNumber != myParagraphCursor->paragraphNumber())) {
+		myParagraphCursor = myParagraphCursor->createCopy();
 		myParagraphCursor->moveTo(paragraphNumber);
-		myWordCursor = myParagraphCursor->begin();
+		moveToParagraphStart();
 	}
 }
 
-bool FullCursor::next() {
-	if (isNull() || !myParagraphCursor->next()) {
-		return false;
-	}
-	myWordCursor = myParagraphCursor->begin();
-	return true;
-}
-
-bool FullCursor::previous() {
-	if (isNull() || !myParagraphCursor->previous()) {
-		return false;
-	}
-	myWordCursor = myParagraphCursor->begin();
-	return true;
-}
-
-void FullCursor::moveWordCursorTo(int wordNumber, int charNumber) {
+bool WordCursor::nextParagraph() {
 	if (!isNull()) {
-		myWordCursor = myParagraphCursor->wordCursor(wordNumber, charNumber);
+		shared_ptr<ParagraphCursor> cursor = myParagraphCursor->createCopy();
+		if (cursor->next()) {
+			myParagraphCursor = cursor;
+			moveToParagraphStart();
+			return true;
+		}
+	}
+	return false;
+}
+
+bool WordCursor::previousParagraph() {
+	if (!isNull()) {
+		shared_ptr<ParagraphCursor> cursor = myParagraphCursor->createCopy();
+		if (cursor->previous()) {
+			myParagraphCursor = cursor;
+			moveToParagraphStart();
+			return true;
+		}
+	}
+	return false;
+}
+
+void WordCursor::moveToParagraphStart() {
+	if (!isNull()) {
+		myWordNumber = 0;
+		myCharNumber = 0;
+	}
+}
+
+void WordCursor::moveToParagraphEnd() {
+	if (!isNull()) {
+		myWordNumber = myParagraphCursor->myElements->size();
+		myCharNumber = 0;
 	}
 }

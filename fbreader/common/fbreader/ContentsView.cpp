@@ -61,8 +61,8 @@ void ContentsView::saveState() {
 	}
 
 	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myStartCursor.paragraphCursor().paragraphNumber());
-	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myStartCursor.wordCursor().wordNumber());
-	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myStartCursor.wordCursor().charNumber());
+	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myStartCursor.wordNumber());
+	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myStartCursor.charNumber());
 }
 
 void ContentsView::setModel(const TextModel *model, const std::string &name) {
@@ -72,7 +72,7 @@ void ContentsView::setModel(const TextModel *model, const std::string &name) {
 		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
 		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
 		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
-		myStartCursor.moveTo(paragraphPosition.value());
-		myStartCursor.moveWordCursorTo(wordPosition.value(), charPosition.value());
+		myStartCursor.moveToParagraph(paragraphPosition.value());
+		myStartCursor.moveTo(wordPosition.value(), charPosition.value());
 	}
 }

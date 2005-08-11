@@ -159,7 +159,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 				// TODO: correct next paragraph number calculation for multi-level trees
 				int nextParagraphNumber = paragraphNumber + paragraph->children().size() + 1;
 				int lastParagraphNumber = myEndCursor.paragraphCursor().paragraphNumber();
-				if (myEndCursor.wordCursor().isEndOfParagraph()) {
+				if (myEndCursor.isEndOfParagraph()) {
 					lastParagraphNumber++;
 				}
 				if (lastParagraphNumber < nextParagraphNumber) {
@@ -168,7 +168,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 				}
 			}
 			int firstParagraphNumber = myStartCursor.paragraphCursor().paragraphNumber();
-			if (myStartCursor.wordCursor().isStartOfParagraph()) {
+			if (myStartCursor.isStartOfParagraph()) {
 				firstParagraphNumber--;
 			}
 			if (firstParagraphNumber >= paragraphNumber) {
