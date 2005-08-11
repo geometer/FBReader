@@ -21,7 +21,7 @@
 
 #include "TextView.h"
 
-void TextView::drawTreeNode(TreeElement::TreeElementKind kind) {
+void TextView::drawTreeNode(TreeElement::TreeElementKind kind, int height) {
 	int x = context().x();
 	int y = context().y();
 	switch (kind) {
@@ -56,7 +56,7 @@ void TextView::drawTreeNode(TreeElement::TreeElementKind kind) {
 		{
 			int size = context().stringHeight();
 			context().setColor(TreeLinesColorOption.value());
-			context().drawLine(x + size / 3 * 2, y - size / 3, x + size / 3 * 2, y - myLineProcessor.height() + 1);
+			context().drawLine(x + size / 3 * 2, y - size / 3, x + size / 3 * 2, y - height + 1);
 			context().drawLine(x + size / 3 * 2, y - size / 3, x + size * 4 / 3, y - size / 3);
 			break;
 		}
@@ -64,7 +64,7 @@ void TextView::drawTreeNode(TreeElement::TreeElementKind kind) {
 		{
 			int size = context().stringHeight();
 			context().setColor(TreeLinesColorOption.value());
-			context().drawLine(x + size / 3 * 2, y, x + size / 3 * 2, y - myLineProcessor.height() + 1);
+			context().drawLine(x + size / 3 * 2, y, x + size / 3 * 2, y - height + 1);
 			context().drawLine(x + size / 3 * 2, y - size / 3, x + size * 4 / 3, y - size / 3);
 			break;
 		}

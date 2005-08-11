@@ -29,11 +29,10 @@
 #include "TextElement.h"
 #include "Word.h"
 #include "TextStyle.h"
+#include "ParagraphCursor.h"
 
 class TextModel;
 class Paragraph;
-class ParagraphCursor;
-class WordCursor;
 class TextMark;
 
 class TextView : public ZLView {
@@ -64,22 +63,16 @@ private:
 		mutable int myWordHeight;
 	};
 
-	class LineProcessor {
+	struct LineInfo {
+		LineInfo(const WordCursor &word, TextStylePtr style) VIEW_SECTION;
+		~LineInfo() VIEW_SECTION;
 
-	public:
-		LineProcessor(ViewStyle &style) VIEW_SECTION;
-		~LineProcessor() VIEW_SECTION;
-		WordCursor process(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
-
-		int width() const VIEW_SECTION;
-		int height() const VIEW_SECTION;
-		int spaceCounter() const VIEW_SECTION;
-
-	private:
-		ViewStyle &myStyle;
-		int myWidth;
-		int myHeight;
-		int mySpaceCounter;
+		WordCursor Start;
+		WordCursor End;
+		int Width;
+		int Height;
+		int SpaceCounter;
+		TextStylePtr StartStyle;
 	};
 
 public:
@@ -121,11 +114,11 @@ private:
 
 	int paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurrentPosition) VIEW_SECTION;
 	void skip(ParagraphCursor &paragraph, int height) VIEW_SECTION;
-	void drawParagraph(ParagraphCursor &paragraph, bool doPaint) VIEW_SECTION;
-	void drawTextLine(const ParagraphCursor &paragraph, const WordCursor &from, const WordCursor &to) VIEW_SECTION;
+	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
+	void drawTextLine(const ParagraphCursor &paragraph, const LineInfo &info) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
-	void drawTreeNode(TreeElement::TreeElementKind kind) VIEW_SECTION;
+	void drawTreeNode(TreeElement::TreeElementKind kind, int height) VIEW_SECTION;
 
 protected:
 	const TextModel *myModel;
@@ -161,18 +154,14 @@ private:
 	size_t myFullTextSize;
 
 	ViewStyle myStyle;
-	LineProcessor myLineProcessor;
 };
 
 inline TextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
-inline TextView::LineProcessor::LineProcessor(ViewStyle &style) : myStyle(style) {}
-inline TextView::LineProcessor::~LineProcessor() {}
-inline int TextView::LineProcessor::width() const { return myWidth; }
-inline int TextView::LineProcessor::height() const { return myHeight; }
-inline int TextView::LineProcessor::spaceCounter() const { return mySpaceCounter; }
+inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), End(word), Width(0), Height(0), SpaceCounter(0), StartStyle(style) {}
+inline TextView::LineInfo::~LineInfo() {}
 
 inline void TextView::paint() { paint(true); }
 

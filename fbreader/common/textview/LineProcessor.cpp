@@ -28,16 +28,17 @@
 
 #include "../hyphenation/Hyphenator.h"
 
-WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordCursor &end) {
-	WordCursor cursor = start;
-	TextStylePtr storedStyle = myStyle.style();
-	WordCursor current = cursor;
+TextView::LineInfo TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
+	LineInfo info(start, myStyle.style());
 
-	myWidth = myStyle.style()->leftIndent();
-	int newWidth = myWidth;
-	myHeight = 0;
-	mySpaceCounter = 0;
-	int newHeight = myHeight;
+	TextStylePtr storedStyle = myStyle.style();
+	WordCursor current = start;
+
+	info.Width = myStyle.style()->leftIndent();
+	int newWidth = info.Width;
+	info.Height = 0;
+	info.SpaceCounter = 0;
+	int newHeight = info.Height;
 	int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
@@ -69,7 +70,7 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 				break;
 		}
 
-		if ((newWidth > maxWidth) && !cursor.sameElementAs(start)) {
+		if ((newWidth > maxWidth) && !info.End.sameElementAs(start)) {
 			break;
 		}
 
@@ -83,12 +84,12 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 				(elementKind != TextElement::CONTROL_ELEMENT);
 		}
 		if (allowBreak) {
-			myWidth = newWidth;
-			myHeight = std::max(myHeight, newHeight);
-			cursor = current;
+			info.Width = newWidth;
+			info.Height = std::max(info.Height, newHeight);
+			info.End = current;
 			storedStyle = myStyle.style();
-			mySpaceCounter = internalSpaceCounter;
-			removeLastSpace = !wordOccured && (mySpaceCounter > 0);
+			info.SpaceCounter = internalSpaceCounter;
+			removeLastSpace = !wordOccured && (info.SpaceCounter > 0);
 		}
 	} while (!current.sameElementAs(end));
 
@@ -100,11 +101,11 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 			if ((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
 				ZLUnicodeUtil::Ucs2String ucs2string;
 				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
-				HyphenationInfo info = Hyphenator::instance().info(word);
+				HyphenationInfo hyphenationInfo = Hyphenator::instance().info(word);
 				int hyphenationPosition = word.Length - 1;
 				int subwordWidth = 0;
 				for (; hyphenationPosition > 0; hyphenationPosition--) {
-					if (info.isHyphenationPossible(hyphenationPosition)) {
+					if (hyphenationInfo.isHyphenationPossible(hyphenationPosition)) {
 						subwordWidth = myStyle.wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
 						if (subwordWidth <= spaceLeft) {
 							break;
@@ -112,24 +113,24 @@ WordCursor TextView::LineProcessor::process(const WordCursor &start, const WordC
 					}
 				}
 				if (hyphenationPosition > 0) {
-					myWidth = newWidth + subwordWidth;
-					myHeight = std::max(myHeight, newHeight);
-					cursor = current;
+					info.Width = newWidth + subwordWidth;
+					info.Height = std::max(info.Height, newHeight);
+					info.End = current;
 					storedStyle = myStyle.style();
-					mySpaceCounter = internalSpaceCounter;
+					info.SpaceCounter = internalSpaceCounter;
 					removeLastSpace = false;
-					cursor.setCharNumber(hyphenationPosition);
+					info.End.setCharNumber(hyphenationPosition);
 				}
 			}
 		}
 	}
 
 	if (removeLastSpace) {
-		myWidth -= lastSpaceWidth;
-		mySpaceCounter--;
+		info.Width -= lastSpaceWidth;
+		info.SpaceCounter--;
 	}
 
 	myStyle.setStyle(storedStyle);
 
-	return cursor;
+	return info;
 }

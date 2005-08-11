@@ -40,7 +40,7 @@ ZLColorOption TextView::PositionIndicatorColorOption(INDICATOR, "Color", ZLColor
 ZLIntegerOption TextView::PositionIndicatorHeightOption(INDICATOR, "Height", 16);
 ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
 
-TextView::TextView(ZLPaintContext &context) : ZLView(context), myStyle(context), myLineProcessor(myStyle) {
+TextView::TextView(ZLPaintContext &context) : ZLView(context), myStyle(context) {
 	myModel = NULL;
 
 	myFirstParagraphCursor = NULL;
@@ -125,11 +125,35 @@ void TextView::paint(bool doPaint) {
 	myLastParagraphCursor = myFirstParagraphCursor->createCopy();
 
 	context().moveYTo(0);
+	int textAreaHeight = myStyle.textAreaHeight();
 	do {
-		int start = context().y() + 1;
-		drawParagraph(*myLastParagraphCursor, doPaint);
+		LineInfo info(myLastParagraphCursor->wordCursor(), myStyle.style());
+		WordCursor paragraphEnd = myLastParagraphCursor->end();
+		myStyle.reset();
+		myStyle.applyControls(myLastParagraphCursor->begin(), info.Start);
+
+		std::vector<LineInfo> infos;
+
+		while (!info.End.sameElementAs(paragraphEnd)) {
+			info = processTextLine(info.End, paragraphEnd);
+			textAreaHeight -= info.Height;
+			if (textAreaHeight < 0) {
+				break;
+			}
+			infos.push_back(info);
+		}
+		if (!infos.empty()) {
+			myLastParagraphCursor->setWordCursor(infos.back().End);
+		}
+
 		if (doPaint) {
-			myParagraphMap.push_back(ParagraphPosition(myLastParagraphCursor->paragraphNumber(), start, context().y()));
+			int start = context().y() + 1;
+			for (std::vector<LineInfo>::const_iterator it = infos.begin(); it != infos.end(); it++) {
+				drawTextLine(*myLastParagraphCursor, *it);
+			}
+			myParagraphMap.push_back(
+				ParagraphPosition(myLastParagraphCursor->paragraphNumber(), start, context().y())
+			);
 		}
 	} while (myLastParagraphCursor->isEndOfParagraph() && myLastParagraphCursor->next() && !myLastParagraphCursor->isEndOfSection());
 
@@ -241,24 +265,27 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
-void TextView::drawTextLine(const ParagraphCursor &paragraph, const WordCursor &from, const WordCursor &to) {
-	int spaceCounter = myLineProcessor.spaceCounter();
+void TextView::drawTextLine(const ParagraphCursor &paragraph, const LineInfo &info) {
+	myStyle.setStyle(info.StartStyle);
+	context().moveXTo(info.StartStyle->leftIndent());
+	context().moveY(info.Height);
+	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
-	const bool endOfParagraph = to.sameElementAs(paragraph.end());
+	const bool endOfParagraph = info.End.sameElementAs(paragraph.end());
 	const int pn = paragraph.paragraphNumber();
-	int wn = paragraph.wordNumber(from);
+	int wn = paragraph.wordNumber(info.Start);
 	bool wordOccured = false;
 
 	switch (myStyle.style()->alignment()) {
 		case ALIGN_RIGHT:
-			context().moveX(context().width() - myStyle.style()->rightIndent() - myLineProcessor.width());
+			context().moveX(context().width() - myStyle.style()->rightIndent() - info.Width);
 			break;
 		case ALIGN_CENTER:
-			context().moveX((context().width() - myStyle.style()->rightIndent() - myLineProcessor.width()) / 2);
+			context().moveX((context().width() - myStyle.style()->rightIndent() - info.Width) / 2);
 			break;
 		case ALIGN_JUSTIFY:
-			if (!endOfParagraph && (to.element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
-				fullCorrection = context().width() - myStyle.style()->rightIndent() - myLineProcessor.width();
+			if (!endOfParagraph && (info.End.element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
+				fullCorrection = context().width() - myStyle.style()->rightIndent() - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:
@@ -266,7 +293,7 @@ void TextView::drawTextLine(const ParagraphCursor &paragraph, const WordCursor &
 			break;
 	}
 
-	for (WordCursor pos = from; !pos.sameElementAs(to); pos.nextWord(), wn++) {
+	for (WordCursor pos = info.Start; !pos.sameElementAs(info.End); pos.nextWord(), wn++) {
 		TextElement::Kind kind = pos.element().kind();
 		int x = context().x();
 		int y = context().y();
@@ -294,7 +321,7 @@ void TextView::drawTextLine(const ParagraphCursor &paragraph, const WordCursor &
 				}
 				break;
 			case TextElement::TREE_ELEMENT:
-				drawTreeNode(((const TreeElement&)pos.element()).treeElementKind());
+				drawTreeNode(((const TreeElement&)pos.element()).treeElementKind(), info.Height);
 				break;
 			case TextElement::INDENT_ELEMENT:
 			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
@@ -312,10 +339,10 @@ void TextView::drawTextLine(const ParagraphCursor &paragraph, const WordCursor &
 			}
 		}
 	}
-	if (!endOfParagraph && (to.element().kind() == TextElement::WORD_ELEMENT)) {
-		int len = to.charNumber();
+	if (!endOfParagraph && (info.End.element().kind() == TextElement::WORD_ELEMENT)) {
+		int len = info.End.charNumber();
 		if (len > 0) {
-			const Word &word = (const Word&)to.element();
+			const Word &word = (const Word&)info.End.element();
 			context().setColor(myStyle.style()->color());
 			ZLUnicodeUtil::Ucs2String ucs2string;
 			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
@@ -324,37 +351,13 @@ void TextView::drawTextLine(const ParagraphCursor &paragraph, const WordCursor &
 	}
 }
 
-void TextView::drawParagraph(ParagraphCursor &paragraph, bool doPaint) {
-	myStyle.reset();
-	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
-
-	const int textAreaHeight = myStyle.textAreaHeight();
-
-	while (!paragraph.isEndOfParagraph()) {
-		const TextStylePtr storedStyle = myStyle.style();
-
-		context().moveXTo(storedStyle->leftIndent());
-		const WordCursor lineStart = paragraph.wordCursor();
-		const WordCursor lineEnd = myLineProcessor.process(lineStart, paragraph.end());
-		context().moveY(myLineProcessor.height());
-		if (context().y() > textAreaHeight) {
-			break;
-		}
-		paragraph.setWordCursor(lineEnd);
-
-		if (doPaint) {
-			myStyle.setStyle(storedStyle);
-			drawTextLine(paragraph, lineStart, lineEnd);
-		}
-	}
-}
-
 void TextView::skip(ParagraphCursor &paragraph, int height) {
 	myStyle.reset();
 	myStyle.applyControls(paragraph.begin(), paragraph.wordCursor());
 	while (!paragraph.isEndOfParagraph() && (height > 0)) {
-		paragraph.setWordCursor(myLineProcessor.process(paragraph.wordCursor(), paragraph.end()));
-		height -= myLineProcessor.height();
+		const LineInfo info = processTextLine(paragraph.wordCursor(), paragraph.end());
+		paragraph.setWordCursor(info.End);
+		height -= info.Height;
 	}
 }
 
@@ -366,8 +369,9 @@ int TextView::paragraphHeight(const ParagraphCursor &paragraph, bool beforeCurre
 	int height = 0;
 
 	while (!cursor.sameElementAs(end)) {
-		cursor = myLineProcessor.process(cursor, end);
-		height += myLineProcessor.height();
+		LineInfo info = processTextLine(cursor, end);
+		cursor = info.End;
+		height += info.Height;
 	}
 
 	return height;
