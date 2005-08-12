@@ -63,6 +63,7 @@ private:
 		mutable int myWordHeight;
 	};
 
+protected:
 	struct LineInfo {
 		LineInfo(const WordCursor &word, TextStylePtr style) VIEW_SECTION;
 		~LineInfo() VIEW_SECTION;
@@ -121,11 +122,16 @@ private:
 	void drawTreeNode(TreeElement::TreeElementKind kind, int height) DRAW_SECTION;
 
 protected:
+	void setStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
+	
+protected:
 	const TextModel *myModel;
 	std::string myName;
 
 	WordCursor myStartCursor;
 	WordCursor myEndCursor;
+
+	std::vector<LineInfo> myLineInfos;
 
 protected:
 	struct ParagraphPosition {

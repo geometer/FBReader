@@ -54,6 +54,7 @@ void TextView::clear() {
 	myTextElementMap.clear();
 	myTextSize.clear();
 	myFullTextSize = 0;
+	myLineInfos.clear();
 }
 
 void TextView::setModel(const TextModel *model, const std::string &name) {
@@ -74,73 +75,79 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 	}
 }
 
-void TextView::paint(bool doPaint) {
-	myParagraphMap.clear();
-	myTextElementMap.clear();
-
-	context().setLeftMargin(TextStyle::LeftMarginOption.value());
-	context().setRightMargin(TextStyle::RightMarginOption.value());
-	context().setTopMargin(TextStyle::TopMarginOption.value());
-	context().setBottomMargin(TextStyle::BottomMarginOption.value());
-	context().clear(TextStyle::BackgroundColorOption.value());
-
-	if (myStartCursor.isNull()) {
-		if (myEndCursor.isNull()) {
-			return;
-		}
-		myStartCursor = myEndCursor;
+void TextView::setStartCursor(int paragraphNumber, int wordNumber, int charNumber) {
+	if (!myStartCursor.isNull()) {
+		myStartCursor.moveToParagraph(paragraphNumber);
+		myStartCursor.moveTo(wordNumber, charNumber);
 		myEndCursor = 0;
-		int height = paragraphHeight(myStartCursor, true);
-		bool positionChanged = !myStartCursor.isStartOfParagraph();
-		myStartCursor.moveToParagraphStart();
-		const int textAreaHeight = myStyle.textAreaHeight();
-		while (height < textAreaHeight) {
-			if (positionChanged && myStartCursor.paragraphCursor().isEndOfSection()) {
-				break;
+		myLineInfos.clear();
+	}
+}
+
+void TextView::paint(bool doPaint) {
+	if (myLineInfos.empty()) {
+		myParagraphMap.clear();
+		myTextElementMap.clear();
+
+		context().setLeftMargin(TextStyle::LeftMarginOption.value());
+		context().setRightMargin(TextStyle::RightMarginOption.value());
+		context().setTopMargin(TextStyle::TopMarginOption.value());
+		context().setBottomMargin(TextStyle::BottomMarginOption.value());
+		context().clear(TextStyle::BackgroundColorOption.value());
+
+		if (myStartCursor.isNull()) {
+			if (myEndCursor.isNull()) {
+				return;
 			}
-			if (!myStartCursor.previousParagraph()) {
-				break;
+			myStartCursor = myEndCursor;
+			myEndCursor = 0;
+			int height = paragraphHeight(myStartCursor, true);
+			bool positionChanged = !myStartCursor.isStartOfParagraph();
+			myStartCursor.moveToParagraphStart();
+			const int textAreaHeight = myStyle.textAreaHeight();
+			while (height < textAreaHeight) {
+				if (positionChanged && myStartCursor.paragraphCursor().isEndOfSection()) {
+					break;
+				}
+				if (!myStartCursor.previousParagraph()) {
+					break;
+				}
+				if (!myStartCursor.paragraphCursor().isEndOfSection()) {
+					positionChanged = true;
+				}
+				height += paragraphHeight(myStartCursor, false);
 			}
-			if (!myStartCursor.paragraphCursor().isEndOfSection()) {
-				positionChanged = true;
-			}
-			height += paragraphHeight(myStartCursor, false);
+			skip(myStartCursor, height - textAreaHeight);
 		}
-		skip(myStartCursor, height - textAreaHeight);
+
+		myEndCursor = myStartCursor;
+
+		int textAreaHeight = myStyle.textAreaHeight();
+		do {
+			LineInfo info(myEndCursor, myStyle.style());
+			WordCursor paragraphEnd = myEndCursor;
+			paragraphEnd.moveToParagraphEnd();
+			WordCursor start = myEndCursor;
+			start.moveToParagraphStart();
+
+			myStyle.reset();
+			myStyle.applyControls(start, info.Start);
+
+			while (!info.End.isEndOfParagraph()) {
+				info = processTextLine(info.End, paragraphEnd);
+				textAreaHeight -= info.Height;
+				if (textAreaHeight < 0) {
+					break;
+				}
+				myEndCursor = info.End;
+				myLineInfos.push_back(info);
+			}
+		} while (myEndCursor.isEndOfParagraph() && myEndCursor.nextParagraph() && !myEndCursor.paragraphCursor().isEndOfSection());
 	}
 
-	myEndCursor = myStartCursor;
-
-	context().moveYTo(0);
-	int textAreaHeight = myStyle.textAreaHeight();
-	std::vector<LineInfo> infos;
-	do {
-		LineInfo info(myEndCursor, myStyle.style());
-		WordCursor paragraphEnd = myEndCursor;
-		paragraphEnd.moveToParagraphEnd();
-		WordCursor start = myEndCursor;
-		start.moveToParagraphStart();
-
-		myStyle.reset();
-		myStyle.applyControls(start, info.Start);
-
-		bool infoIsAdded = false;
-		while (!info.End.isEndOfParagraph()) {
-			info = processTextLine(info.End, paragraphEnd);
-			textAreaHeight -= info.Height;
-			if (textAreaHeight < 0) {
-				break;
-			}
-			infos.push_back(info);
-			infoIsAdded = true;
-		}
-		if (infoIsAdded) {
-			myEndCursor = infos.back().End;
-		}
-	} while (myEndCursor.isEndOfParagraph() && myEndCursor.nextParagraph() && !myEndCursor.paragraphCursor().isEndOfSection());
-
 	if (doPaint) {
-		for (std::vector<LineInfo>::const_iterator it = infos.begin(); it != infos.end(); it++) {
+		context().moveYTo(0);
+		for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
 			int start = context().y() + 1;
 			drawTextLine(*it);
 			myParagraphMap.push_back(
@@ -174,20 +181,28 @@ void TextView::paint(bool doPaint) {
 	}
 }
 
+const unsigned int OVERLAPPING = 0;
+
 void TextView::scrollPageBackward() {
-	if (!myStartCursor.isNull()) {
-		if (!myStartCursor.paragraphCursor().isFirst() || !myStartCursor.isStartOfParagraph()) {
-			myEndCursor = myStartCursor;
+	if (!myLineInfos.empty()) {
+		const WordCursor &startCursor = myLineInfos.front().Start;
+		if (!startCursor.paragraphCursor().isFirst() || !startCursor.isStartOfParagraph()) {
+			//myEndCursor = myLineInfos[std::min(OVERLAPPING, myLineInfos.size() - 1)].Start;
+			myEndCursor = startCursor;
 			myStartCursor = 0;
+			myLineInfos.clear();
 		}
 	}
 }
 
 void TextView::scrollPageForward() {
-	if (!myEndCursor.isNull()) {
-		if (!myEndCursor.paragraphCursor().isLast() || !myEndCursor.isEndOfParagraph()) {
-			myStartCursor = myEndCursor;
+	if (!myLineInfos.empty()) {
+		const WordCursor &endCursor = myLineInfos.back().End;
+		if (!endCursor.paragraphCursor().isLast() || !endCursor.isEndOfParagraph()) {
+			//myStartCursor = myLineInfos[myLineInfos.size() - 1 - std::min(OVERLAPPING, myLineInfos.size() - 1)].Start;
+			myStartCursor = endCursor;
 			myEndCursor = 0;
+			myLineInfos.clear();
 		}
 	}
 }
@@ -256,6 +271,7 @@ void TextView::gotoParagraph(int num, bool last) {
 			myStartCursor.moveToParagraphStart();
 		}
 	}
+	myLineInfos.clear();
 }
 
 void TextView::drawTextLine(const LineInfo &info) {
@@ -388,7 +404,7 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 
 	myModel->search(text, ignoreCase);
 	if (!myStartCursor.isNull()) {
-		myStartCursor.rebuild();
+		clearCaches();
 		TextMark position = myStartCursor.position();
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
@@ -445,6 +461,7 @@ bool TextView::onStylusPress(int x, int y) {
 							myEndCursor.moveToParagraph(myEndCursor.paragraphCursor().paragraphNumber());
 							myEndCursor.moveTo(wordNum, 0);
 							myStartCursor = 0;
+							myLineInfos.clear();
 							repaintView();
 						}
 					}
@@ -519,6 +536,7 @@ void TextView::drawWord(int x, int y, const Word &word, int start, int length, b
 }
 
 void TextView::clearCaches() {
+	myEndCursor = 0;
+	myLineInfos.clear();
 	myStartCursor.rebuild();
-	myEndCursor.rebuild();
 }

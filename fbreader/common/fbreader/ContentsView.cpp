@@ -69,10 +69,10 @@ void ContentsView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
 
 	if ((myModel != 0) && !myModel->paragraphs().empty()) {
-		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
-		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
-		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
-		myStartCursor.moveToParagraph(paragraphPosition.value());
-		myStartCursor.moveTo(wordPosition.value(), charPosition.value());
+		setStartCursor(
+			ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
+			ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
+			ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
+		);
 	}
 }

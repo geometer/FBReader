@@ -50,11 +50,11 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
 
 	if ((myModel != 0) && !myModel->paragraphs().empty()) {
-		ZLIntegerOption paragraphPosition(myName, PARAGRAPH_OPTION_NAME, 0);
-		ZLIntegerOption wordPosition(myName, WORD_OPTION_NAME, 0);
-		ZLIntegerOption charPosition(myName, CHAR_OPTION_NAME, 0);
-		myStartCursor.moveToParagraph(paragraphPosition.value());
-		myStartCursor.moveTo(wordPosition.value(), charPosition.value());
+		setStartCursor(
+			ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
+			ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
+			ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
+		);
 	}
 
 	myPositionStack.clear();
@@ -132,6 +132,7 @@ bool BookTextView::setFirstParagraphCursor() {
 	if (myStartCursor.isNull()) {
 		return false;
 	}
+	myLineInfos.clear();
 	myEndCursor = 0;
 	return true;
 }
@@ -167,8 +168,7 @@ void BookTextView::undoPageMove() {
 
 	myCurrentPointInStack--;
 	std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-	myStartCursor.moveToParagraph(pos.first);
-	myStartCursor.moveTo(pos.second, 0);
+	setStartCursor(pos.first, pos.second, 0);
 
 	repaintView();
 }
@@ -185,8 +185,7 @@ void BookTextView::redoPageMove() {
 	replaceCurrentPositionInStack();
 	myCurrentPointInStack++;
 	std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-	myStartCursor.moveToParagraph(pos.first);
-	myStartCursor.moveTo(pos.second, 0);
+	setStartCursor(pos.first, pos.second, 0);
 
 	if (myCurrentPointInStack + 1 == myPositionStack.size()) {
 		myPositionStack.pop_back();
