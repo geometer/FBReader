@@ -36,11 +36,10 @@ TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const
 
 	info.Width = myStyle.style()->leftIndent();
 	int newWidth = info.Width;
-	info.Height = 0;
-	info.SpaceCounter = 0;
 	int newHeight = info.Height;
 	int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
 	bool wordOccured = false;
+	bool isVisible = false;
 	int lastSpaceWidth = 0;
 	int internalSpaceCounter = 0;
 	int removeLastSpace = false;
@@ -57,6 +56,7 @@ TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const
 			case TextElement::WORD_ELEMENT:
 			case TextElement::IMAGE_ELEMENT:
 				wordOccured = true;
+				isVisible = true;
 				break;
 			case TextElement::HSPACE_ELEMENT:
 				if (wordOccured) {
@@ -66,6 +66,9 @@ TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const
 					newWidth += lastSpaceWidth;
 				}
 				break;
+			case TextElement::EMPTY_LINE_ELEMENT:
+			case TextElement::TREE_ELEMENT:
+				isVisible = true;
 			default:
 				break;
 		}
@@ -84,6 +87,7 @@ TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const
 				(elementKind != TextElement::CONTROL_ELEMENT);
 		}
 		if (allowBreak) {
+			info.IsVisible = isVisible;
 			info.Width = newWidth;
 			info.Height = std::max(info.Height, newHeight);
 			info.End = current;
@@ -113,6 +117,7 @@ TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const
 					}
 				}
 				if (hyphenationPosition > 0) {
+					info.IsVisible = true;
 					info.Width = newWidth + subwordWidth;
 					info.Height = std::max(info.Height, newHeight);
 					info.End = current;

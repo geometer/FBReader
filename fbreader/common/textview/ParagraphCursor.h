@@ -153,6 +153,8 @@ public:
 
 	bool isNull() const VIEW_SECTION;
 	bool sameElementAs(const WordCursor &cursor) const VIEW_SECTION;
+	bool operator == (const WordCursor &cursor) const VIEW_SECTION;
+	bool operator != (const WordCursor &cursor) const VIEW_SECTION;
 	bool isStartOfParagraph() const VIEW_SECTION;
 	bool isEndOfParagraph() const VIEW_SECTION;
 	int wordNumber() const VIEW_SECTION;
@@ -235,7 +237,16 @@ inline WordCursor::~WordCursor() {}
 
 inline bool WordCursor::isNull() const { return myParagraphCursor.isNull(); }
 inline bool WordCursor::sameElementAs(const WordCursor &cursor) const {
-	return (myParagraphCursor == cursor.myParagraphCursor) && (myWordNumber == cursor.myWordNumber);
+	return myWordNumber == cursor.myWordNumber;
+}
+inline bool WordCursor::operator == (const WordCursor &cursor) const {
+	return
+		(myParagraphCursor->paragraphNumber() == cursor.myParagraphCursor->paragraphNumber()) &&
+		(myWordNumber == cursor.myWordNumber) &&
+		(myCharNumber == cursor.myCharNumber);
+}
+inline bool WordCursor::operator != (const WordCursor &cursor) const {
+	return !operator == (cursor);
 }
 inline TextElement &WordCursor::element() const { return *(*myParagraphCursor->myElements)[myWordNumber]; }
 inline bool WordCursor::isStartOfParagraph() const {

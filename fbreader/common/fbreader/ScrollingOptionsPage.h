@@ -17,42 +17,26 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __OPTIONSDIALOG_H__
-#define __OPTIONSDIALOG_H__
+#ifndef __SCROLLINGOPTIONSPAGE_H__
+#define __SCROLLINGOPTIONSPAGE_H__
 
-class ZLOptionsDialog;
-class OptionsPage;
-class ScrollingOptionsPage;
-class ZLPaintContext;
-
-class ZLBooleanOptionEntry;
+class ZLOptionsDialogTab;
 class ZLSpinOptionEntry;
 
-struct IndicatorPage {
-	ZLBooleanOptionEntry *ShowIndicatorEntry;
-	ZLSpinOptionEntry *HeightEntry;
-	ZLSpinOptionEntry *OffsetEntry;
-	ZLBooleanOptionEntry *EnableNavigationEntry;
-};
-
-class OptionsDialog {
+class ScrollingOptionsPage {
 
 public:
-	OptionsDialog(ZLPaintContext &context) FB_DIALOG_SECTION;
-	~OptionsDialog() FB_DIALOG_SECTION;
-
-	ZLOptionsDialog &dialog() FB_DIALOG_SECTION;
+	ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
+	~ScrollingOptionsPage() FB_DIALOG_SECTION;
 
 private:
-	ZLOptionsDialog *myDialog;
-	ScrollingOptionsPage *myScrollingPage;
-	OptionsPage *myFormatPage;
-	OptionsPage *myStylePage;
-	OptionsPage *myColorPage;
-	OptionsPage *myKeyBindingsPage;
-	IndicatorPage myIndicatorPage;
+	ZLSpinOptionEntry *myLinesToOverlapEntry;
+	ZLSpinOptionEntry *myLinesToScrollEntry;
+	ZLSpinOptionEntry *myPercentToScrollEntry;
+
+friend class OverlappingTypeEntry;
 };
 
-inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }
+inline ScrollingOptionsPage::~ScrollingOptionsPage() {}
 
-#endif /* __OPTIONSDIALOG_H__ */
+#endif /* __SCROLLINGOPTIONSPAGE_H__ */

@@ -23,6 +23,7 @@
 
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"
+#include "ScrollingOptionsPage.h"
 #include "StyleOptionsPage.h"
 #include "ColorOptionsPage.h"
 #include "KeyBindingsPage.h"
@@ -62,10 +63,11 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 
 	ZLOptionsDialogTab *generalTab = myDialog->createTab("General");
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", FBReader::QuitOnCancelOption));
-	generalTab->addOption(new ZLSimpleSpinOptionEntry("Delay Between Page Scrollings, msecs", FBReader::ScrollingDelayOption, 0, 5000, 50));
 	generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", BookCollection::PathOption));
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", BookCollection::ScanSubdirsOption));
 	generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent books list size", LastOpenedBooks::MaxListSizeOption, 0, 100, 1));
+
+	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"));
 
 	ZLOptionsDialogTab *marginTab = myDialog->createTab("Margins");
 	marginTab->addOptions(
@@ -100,6 +102,7 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 }
 
 OptionsDialog::~OptionsDialog() {
+	delete myScrollingPage;
 	delete myFormatPage;
 	delete myStylePage;
 	delete myColorPage;

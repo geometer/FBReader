@@ -17,9 +17,11 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <algorithm>
+
 #include "TextView.h"
 
-TextPaintInfo::TextPaintInfo() : myPaintState(NOTHING_TO_PAINT) {
+TextPaintInfo::TextPaintInfo(TextView &textView) : myTextView(textView), myPaintState(NOTHING_TO_PAINT) {
 }
 
 TextPaintInfo::~TextPaintInfo() {
@@ -128,89 +130,190 @@ void TextPaintInfo::moveEndCursor(int paragraphNumber, bool start) {
 	myPaintState = END_IS_KNOWN;
 }
 
-void TextPaintInfo::scrollPageBackward() {
-	if (!myStartCursor.isNull()) {
-		if (!myStartCursor.paragraphCursor().isFirst() || !myStartCursor.isStartOfParagraph()) {
-			myEndCursor = myStartCursor;
-			myStartCursor = 0;
-			myPaintState = END_IS_KNOWN;
-		}
+void TextPaintInfo::scrollPage(bool forward, OverlappingType oType, unsigned int value) {
+	if (myPaintState == READY) {
+		myPaintState = forward ? TO_SCROLL_FORWARD : TO_SCROLL_BACKWARD;
+		myOverlappingType = oType;
+		myOverlappingValue = value;
 	}
 }
 
-void TextPaintInfo::scrollPageForward() {
-	if (!myEndCursor.isNull()) {
-		if (!myEndCursor.paragraphCursor().isLast() || !myEndCursor.isEndOfParagraph()) {
-			myStartCursor = myEndCursor;
-			myEndCursor = 0;
-			myPaintState = START_IS_KNOWN;
+WordCursor TextPaintInfo::findLineFromStart(unsigned int overlappingValue) const {
+	if (myLineInfos.empty() || (overlappingValue == 0)) {
+		return WordCursor();
+	}
+
+	std::vector<LineInfo>::const_iterator it;
+	for (it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+		if (it->IsVisible) {
+			overlappingValue--;
+			if (overlappingValue == 0) {
+				break;
+			}
 		}
 	}
+	return (it != myLineInfos.end()) ? it->End : myLineInfos.back().End;
 }
 
-void TextPaintInfo::prepare(TextView &textView) {
-	textView.context().setLeftMargin(TextStyle::LeftMarginOption.value());
-	textView.context().setRightMargin(TextStyle::RightMarginOption.value());
-	textView.context().setTopMargin(TextStyle::TopMarginOption.value());
-	textView.context().setBottomMargin(TextStyle::BottomMarginOption.value());
+WordCursor TextPaintInfo::findLineFromEnd(unsigned int overlappingValue) const {
+	if (myLineInfos.empty() || (overlappingValue == 0)) {
+		return WordCursor();
+	}
+
+	std::vector<LineInfo>::const_iterator it;
+	for (it = myLineInfos.end() - 1; it != myLineInfos.begin(); it--) {
+		if (it->IsVisible) {
+			overlappingValue--;
+			if (overlappingValue == 0) {
+				break;
+			}
+		}
+	}
+	return it->Start;
+}
+
+WordCursor TextPaintInfo::findPercentFromStart(unsigned int percent) const {
+	if (myLineInfos.empty()) {
+		return WordCursor();
+	}
+
+	int height = myTextView.myStyle.textAreaHeight() * percent / 100;
+	if (height == 0) {
+		return myLineInfos.front().Start;
+	}
+	std::vector<LineInfo>::const_iterator it;
+	for (it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+		height -= it->Height;
+		if (height <= 0) {
+			break;
+		}
+	}
+	return (it != myLineInfos.end()) ? it->End : myLineInfos.back().End;
+}
+
+void TextPaintInfo::prepare() {
+	myTextView.context().setLeftMargin(TextStyle::LeftMarginOption.value());
+	myTextView.context().setRightMargin(TextStyle::RightMarginOption.value());
+	myTextView.context().setTopMargin(TextStyle::TopMarginOption.value());
+	myTextView.context().setBottomMargin(TextStyle::BottomMarginOption.value());
 
 	switch (myPaintState) {
 		case NOTHING_TO_PAINT:
 			return;
 		case READY:
 			return;
-		default:
+		case TO_SCROLL_FORWARD:
 		{
-			myLineInfos.clear();
-			if (myStartCursor.isNull()) {
-				if (myEndCursor.isNull()) {
-					return;
-				}
-				myStartCursor = myEndCursor;
-				myEndCursor = 0;
-				int height = textView.paragraphHeight(myStartCursor, true);
-				bool positionChanged = !myStartCursor.isStartOfParagraph();
-				myStartCursor.moveToParagraphStart();
-				const int textAreaHeight = textView.myStyle.textAreaHeight();
-				while (height < textAreaHeight) {
-					if (positionChanged && myStartCursor.paragraphCursor().isEndOfSection()) {
-						break;
-					}
-					if (!myStartCursor.previousParagraph()) {
-						break;
-					}
-					if (!myStartCursor.paragraphCursor().isEndOfSection()) {
-						positionChanged = true;
-					}
-					height += textView.paragraphHeight(myStartCursor, false);
-				}
-				textView.skip(myStartCursor, height - textAreaHeight);
+			WordCursor startCursor;
+			switch (myOverlappingType) {
+				case NONE:
+					break;
+				case NUMBER_OF_OVERLAPPED_LINES:
+					startCursor = findLineFromEnd(myOverlappingValue);
+					break;
+				case NUMBER_OF_SCROLLED_LINES:
+					startCursor = findLineFromStart(myOverlappingValue);
+					break;
+				case PERCENT_OF_SCROLLED:
+					startCursor = findPercentFromStart(myOverlappingValue);
+					break;
 			}
 
-			myEndCursor = myStartCursor;
-
-			int textAreaHeight = textView.myStyle.textAreaHeight();
-			do {
-				LineInfo info(myEndCursor, textView.myStyle.style());
-				WordCursor paragraphEnd = myEndCursor;
-				paragraphEnd.moveToParagraphEnd();
-				WordCursor start = myEndCursor;
-				start.moveToParagraphStart();
-
-				textView.myStyle.reset();
-				textView.myStyle.applyControls(start, info.Start);
-
-				while (!info.End.isEndOfParagraph()) {
-					info = textView.processTextLine(info.End, paragraphEnd);
-					textAreaHeight -= info.Height;
-					if (textAreaHeight < 0) {
-						break;
-					}
-					myEndCursor = info.End;
-					myLineInfos.push_back(info);
+			if (!startCursor.isNull()) {
+				WordCursor endCursor = buildInfos(startCursor);
+				if (endCursor != myEndCursor) {
+					myStartCursor = startCursor;
+					myEndCursor = endCursor;
+					break;
 				}
-			} while (myEndCursor.isEndOfParagraph() && myEndCursor.nextParagraph() && !myEndCursor.paragraphCursor().isEndOfSection());
-			myPaintState = READY;
+			}
+			myStartCursor = myEndCursor;
+			myEndCursor = buildInfos(myStartCursor);
+			break;
 		}
+		case TO_SCROLL_BACKWARD:
+		{
+			WordCursor endCursor;
+			switch (myOverlappingType) {
+				case NONE:
+					break;
+				case NUMBER_OF_OVERLAPPED_LINES:
+					endCursor = findLineFromStart(myOverlappingValue);
+					break;
+				case NUMBER_OF_SCROLLED_LINES:
+					endCursor = findLineFromEnd(myOverlappingValue);
+					break;
+				case PERCENT_OF_SCROLLED:
+					endCursor = findPercentFromStart(100 - myOverlappingValue);
+					break;
+			}
+			if (!endCursor.isNull()) {
+				WordCursor startCursor = findStart(endCursor);
+				myStartCursor = (startCursor != myStartCursor) ? startCursor : findStart(myStartCursor);
+			} else {
+				myStartCursor = findStart(myStartCursor);
+			}
+			myEndCursor = buildInfos(myStartCursor);
+			break;
+		}
+		case START_IS_KNOWN:
+			myEndCursor = buildInfos(myStartCursor);
+			break;
+		case END_IS_KNOWN:
+			myStartCursor = findStart(myEndCursor);
+			myEndCursor = buildInfos(myStartCursor);
+			break;
 	}
+	myPaintState = READY;
+}
+
+WordCursor TextPaintInfo::findStart(const WordCursor &end) {
+	WordCursor start = end;
+	int height = myTextView.paragraphHeight(start, true);
+	bool positionChanged = !start.isStartOfParagraph();
+	start.moveToParagraphStart();
+	const int textAreaHeight = myTextView.myStyle.textAreaHeight();
+	while (height < textAreaHeight) {
+		if (positionChanged && start.paragraphCursor().isEndOfSection()) {
+			break;
+		}
+		if (!start.previousParagraph()) {
+			break;
+		}
+		if (!start.paragraphCursor().isEndOfSection()) {
+			positionChanged = true;
+		}
+		height += myTextView.paragraphHeight(start, false);
+	}
+	myTextView.skip(start, height - textAreaHeight);
+	return start;
+}
+
+WordCursor TextPaintInfo::buildInfos(const WordCursor &start) {
+	myLineInfos.clear();
+
+	WordCursor end = start;
+	int textAreaHeight = myTextView.myStyle.textAreaHeight();
+	do {
+		LineInfo info(end, myTextView.myStyle.style());
+		WordCursor paragraphEnd = end;
+		paragraphEnd.moveToParagraphEnd();
+		WordCursor start = end;
+		start.moveToParagraphStart();
+
+		myTextView.myStyle.reset();
+		myTextView.myStyle.applyControls(start, info.Start);
+
+		while (!info.End.isEndOfParagraph()) {
+			info = myTextView.processTextLine(info.End, paragraphEnd);
+			textAreaHeight -= info.Height;
+			if (textAreaHeight < 0) {
+				break;
+			}
+			end = info.End;
+			myLineInfos.push_back(info);
+		}
+	} while (end.isEndOfParagraph() && end.nextParagraph() && !end.paragraphCursor().isEndOfSection());
+
+	return end;
 }

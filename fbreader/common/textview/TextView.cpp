@@ -40,7 +40,14 @@ ZLColorOption TextView::PositionIndicatorColorOption(INDICATOR, "Color", ZLColor
 ZLIntegerOption TextView::PositionIndicatorHeightOption(INDICATOR, "Height", 16);
 ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
 
-TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myStyle(context) {
+const std::string ARROW_SCROLLING = "ArrowScrolling";
+
+ZLIntegerOption TextView::OverlappingTypeOption(ARROW_SCROLLING, "OverlappingType", TextPaintInfo::NONE);
+ZLIntegerOption TextView::LinesToOverlapOption(ARROW_SCROLLING, "LinesToOverlap", 1);
+ZLIntegerOption TextView::LinesToScrollOption(ARROW_SCROLLING, "LinesToScroll", 1);
+ZLIntegerOption TextView::PercentToScrollOption(ARROW_SCROLLING, "PercentToScroll", 50);
+	
+TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myTextPaintInfo(*this), myStyle(context) {
 }
 
 TextView::~TextView() {
@@ -84,7 +91,7 @@ void TextView::paint(bool doPaint) {
 			myTextPaintInfo.rebuild(false);
 		}
 
-		myTextPaintInfo.prepare(*this);
+		myTextPaintInfo.prepare();
 	}
 
 	if (doPaint) {
@@ -128,12 +135,23 @@ void TextView::paint(bool doPaint) {
 	}
 }
 
-void TextView::scrollPageBackward() {
-	myTextPaintInfo.scrollPageBackward();
-}
-
-void TextView::scrollPageForward() {
-	myTextPaintInfo.scrollPageForward();
+void TextView::scrollPage(bool forward) {
+	TextPaintInfo::OverlappingType oType = (TextPaintInfo::OverlappingType)OverlappingTypeOption.value();
+	unsigned int value = 0;
+	switch (oType) {
+		case TextPaintInfo::NUMBER_OF_OVERLAPPED_LINES:
+			value = LinesToOverlapOption.value();
+			break;
+		case TextPaintInfo::NUMBER_OF_SCROLLED_LINES:
+			value = LinesToScrollOption.value();
+			break;
+		case TextPaintInfo::PERCENT_OF_SCROLLED:
+			value = PercentToScrollOption.value();
+			break;
+		default:
+			break;
+	}
+	myTextPaintInfo.scrollPage(forward, oType, value);
 }
 
 const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {
@@ -167,7 +185,7 @@ void TextView::gotoMark(TextMark mark) {
 		gotoParagraph(mark.ParagraphNumber);
 		paint(false);
 		while (mark > myTextPaintInfo.endCursor().position()) {
-			scrollPageForward();
+			scrollPage(true);
 			paint(false);
 		}
 		repaintView();

@@ -202,22 +202,13 @@ void FBReader::doAction(ActionCode code) {
 			((TextView*)myViewWidget->view())->findNext();
 			break;
 		case ACTION_SCROLL_FORWARD:
-			{
-				int delay = myLastScrollingTime.millisecondsTo(ZLTime());
-				if ((delay < 0) || (delay >= ScrollingDelayOption.value())) {
-					((TextView*)myViewWidget->view())->scrollPageForward();
-					repaintView();
-					myLastScrollingTime = ZLTime();
-				}
-			}
-			break;
 		case ACTION_SCROLL_BACKWARD:
 			{
 				int delay = myLastScrollingTime.millisecondsTo(ZLTime());
 				if ((delay < 0) || (delay >= ScrollingDelayOption.value())) {
 					//const ZLTime t;
 					ParagraphCursor::Cache cache;
-					((TextView*)myViewWidget->view())->scrollPageBackward();
+					((TextView*)myViewWidget->view())->scrollPage(code == ACTION_SCROLL_FORWARD);
 					repaintView();
 					myLastScrollingTime = ZLTime();
 					//std::cerr << t.millisecondsTo(myLastScrollingTime) << "\n";

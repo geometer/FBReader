@@ -45,23 +45,22 @@ public:
 
 		WordCursor Start;
 		WordCursor End;
+		bool IsVisible;
 		int Width;
 		int Height;
 		int SpaceCounter;
 		TextStylePtr StartStyle;
 	};
 
-	enum PaintState {
-		NOTHING_TO_PAINT,
-		READY,
-		START_IS_KNOWN,
-		END_IS_KNOWN,
-		TO_SCROLL_FORWARD,
-		TO_SCROLL_BACKWARD
+	enum OverlappingType {
+		NONE,
+		NUMBER_OF_OVERLAPPED_LINES,
+		NUMBER_OF_SCROLLED_LINES,
+		PERCENT_OF_SCROLLED
 	};
 
 public:
-	TextPaintInfo() VIEW_SECTION;
+	TextPaintInfo(TextView &textView) VIEW_SECTION;
 	~TextPaintInfo() VIEW_SECTION;
 
 	void clear() VIEW_SECTION;
@@ -72,21 +71,40 @@ public:
 	void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
 	void moveEndCursor(int paragraphNumber, bool start) VIEW_SECTION;
 
-	void scrollPageBackward() VIEW_SECTION;
-	void scrollPageForward() VIEW_SECTION;
-
-	void prepare(TextView &view) VIEW_SECTION;
+	void scrollPage(bool forward, OverlappingType oType, unsigned int value) VIEW_SECTION;
 
 	bool empty() const VIEW_SECTION;
 	const WordCursor &startCursor() const VIEW_SECTION;
 	const WordCursor &endCursor() const VIEW_SECTION;
 	const std::vector<LineInfo> &lineInfos() const VIEW_SECTION;
 
+	void prepare() VIEW_SECTION;
+
 private:
+	WordCursor findLineFromStart(unsigned int overlappingValue) const VIEW_SECTION;
+	WordCursor findLineFromEnd(unsigned int overlappingValue) const VIEW_SECTION;
+	WordCursor findPercentFromStart(unsigned int percent) const VIEW_SECTION;
+
+	WordCursor findStart(const WordCursor &end) VIEW_SECTION;
+	WordCursor buildInfos(const WordCursor &start) VIEW_SECTION;
+
+private:
+	TextView &myTextView;
+
+	enum {
+		NOTHING_TO_PAINT,
+		READY,
+		START_IS_KNOWN,
+		END_IS_KNOWN,
+		TO_SCROLL_FORWARD,
+		TO_SCROLL_BACKWARD
+	} myPaintState;
 	WordCursor myStartCursor;
 	WordCursor myEndCursor;
 	std::vector<LineInfo> myLineInfos;
-	PaintState myPaintState;
+
+	OverlappingType myOverlappingType;
+	unsigned int myOverlappingValue;
 };
 
 class TextView : public ZLView {
@@ -100,6 +118,11 @@ public:
 	static ZLColorOption PositionIndicatorColorOption;
 	static ZLIntegerOption PositionIndicatorHeightOption;
 	static ZLIntegerOption PositionIndicatorOffsetOption;
+
+	static ZLIntegerOption OverlappingTypeOption;
+	static ZLIntegerOption LinesToOverlapOption;
+	static ZLIntegerOption LinesToScrollOption;
+	static ZLIntegerOption PercentToScrollOption;
 	
 private:
 	class ViewStyle {
@@ -136,8 +159,7 @@ public:
 	void paint(bool doPaint) VIEW_SECTION;
 	virtual void paint() VIEW_SECTION;
 
-	void scrollPageBackward() VIEW_SECTION;
-	void scrollPageForward() VIEW_SECTION;
+	void scrollPage(bool forward) VIEW_SECTION;
 	void gotoMark(TextMark mark) VIEW_SECTION;
 	virtual void gotoParagraph(int num, bool last = false) VIEW_SECTION;
 
@@ -196,7 +218,7 @@ private:
 
 	ViewStyle myStyle;
 
-friend void TextPaintInfo::prepare(TextView &view);
+friend class TextPaintInfo;
 };
 
 inline bool TextPaintInfo::empty() const { return myPaintState == NOTHING_TO_PAINT; }
@@ -208,7 +230,7 @@ inline TextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
-inline TextPaintInfo::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), End(word), Width(0), Height(0), SpaceCounter(0), StartStyle(style) {}
+inline TextPaintInfo::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), End(word), IsVisible(false), Width(0), Height(0), SpaceCounter(0), StartStyle(style) {}
 inline TextPaintInfo::LineInfo::~LineInfo() {}
 
 inline void TextView::paint() { paint(true); }
