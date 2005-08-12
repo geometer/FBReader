@@ -55,6 +55,8 @@ void TextView::clear() {
 	myTextSize.clear();
 	myFullTextSize = 0;
 	myLineInfos.clear();
+	oldWidth = -1;
+	oldHeight = -1;
 }
 
 void TextView::setModel(const TextModel *model, const std::string &name) {
@@ -85,6 +87,12 @@ void TextView::setStartCursor(int paragraphNumber, int wordNumber, int charNumbe
 }
 
 void TextView::paint(bool doPaint) {
+	if ((context().width() != oldWidth) || (context().height() != oldHeight)) {
+		myLineInfos.clear();
+		oldWidth = context().width();
+		oldHeight = context().height();
+	}
+
 	if (myLineInfos.empty()) {
 		myParagraphMap.clear();
 		myTextElementMap.clear();

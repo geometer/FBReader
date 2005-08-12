@@ -154,7 +154,13 @@ bool CollectionView::onStylusPress(int x, int y) {
 			}
 
 			paragraph->open(!paragraph->isOpen());
-			clearCaches();
+			if (myStartCursor.isNull()) {
+				myStartCursor = myEndCursor;
+			}
+			if (!myStartCursor.isNull()) {
+				myLineInfos.clear();
+				myEndCursor = 0;
+			}
 			repaintView();
 			if (paragraph->isOpen()) {
 				// TODO: correct next paragraph number calculation for multi-level trees

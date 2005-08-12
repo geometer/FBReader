@@ -158,6 +158,7 @@ private:
 
 	std::vector<size_t> myTextSize;
 	size_t myFullTextSize;
+	int oldWidth, oldHeight;
 
 	ViewStyle myStyle;
 };
