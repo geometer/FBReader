@@ -113,6 +113,7 @@ void TextView::paint(bool doPaint) {
 
 	context().moveYTo(0);
 	int textAreaHeight = myStyle.textAreaHeight();
+	std::vector<LineInfo> infos;
 	do {
 		LineInfo info(myEndCursor, myStyle.style());
 		WordCursor paragraphEnd = myEndCursor;
@@ -123,8 +124,7 @@ void TextView::paint(bool doPaint) {
 		myStyle.reset();
 		myStyle.applyControls(start, info.Start);
 
-		std::vector<LineInfo> infos;
-
+		bool infoIsAdded = false;
 		while (!info.End.isEndOfParagraph()) {
 			info = processTextLine(info.End, paragraphEnd);
 			textAreaHeight -= info.Height;
@@ -132,42 +132,45 @@ void TextView::paint(bool doPaint) {
 				break;
 			}
 			infos.push_back(info);
+			infoIsAdded = true;
 		}
-		if (!infos.empty()) {
+		if (infoIsAdded) {
 			myEndCursor = infos.back().End;
-		}
-
-		if (doPaint) {
-			int start = context().y() + 1;
-			for (std::vector<LineInfo>::const_iterator it = infos.begin(); it != infos.end(); it++) {
-				drawTextLine(*it);
-			}
-			myParagraphMap.push_back(ParagraphPosition(myEndCursor.paragraphCursor().paragraphNumber(), start, context().y()));
 		}
 	} while (myEndCursor.isEndOfParagraph() && myEndCursor.nextParagraph() && !myEndCursor.paragraphCursor().isEndOfSection());
 
-	if (doPaint && ShowPositionIndicatorOption.value()) {
-		long bottom = context().height();
-		long top = bottom - PositionIndicatorHeightOption.value() + 1;
-		long left = 0;
-		long right = context().width() - 1;
-		long fillWidth;
-		long paragraphLength = myEndCursor.paragraphCursor().paragraphLength();
-		long paragraphNumber = myEndCursor.paragraphCursor().paragraphNumber();
-		long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
-		if (paragraphLength == 0) {
-			fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
-		} else {
-			long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
-			fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * myEndCursor.wordNumber() / paragraphLength) / myFullTextSize);
+	if (doPaint) {
+		for (std::vector<LineInfo>::const_iterator it = infos.begin(); it != infos.end(); it++) {
+			int start = context().y() + 1;
+			drawTextLine(*it);
+			myParagraphMap.push_back(
+				ParagraphPosition(it->Start.paragraphCursor().paragraphNumber(), start, context().y())
+			);
 		}
-		context().setColor(TextStyle::RegularTextColorOption.value());
-		context().setFillColor(PositionIndicatorColorOption.value());
-		context().fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
-		context().drawLine(left, top, right, top);
-		context().drawLine(left, bottom, right, bottom);
-		context().drawLine(left, bottom, left, top);
-		context().drawLine(right, bottom, right, top);
+
+		if (ShowPositionIndicatorOption.value()) {
+			long bottom = context().height();
+			long top = bottom - PositionIndicatorHeightOption.value() + 1;
+			long left = 0;
+			long right = context().width() - 1;
+			long fillWidth;
+			long paragraphLength = myEndCursor.paragraphCursor().paragraphLength();
+			long paragraphNumber = myEndCursor.paragraphCursor().paragraphNumber();
+			long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
+			if (paragraphLength == 0) {
+				fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
+			} else {
+				long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
+				fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * myEndCursor.wordNumber() / paragraphLength) / myFullTextSize);
+			}
+			context().setColor(TextStyle::RegularTextColorOption.value());
+			context().setFillColor(PositionIndicatorColorOption.value());
+			context().fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
+			context().drawLine(left, top, right, top);
+			context().drawLine(left, bottom, right, bottom);
+			context().drawLine(left, bottom, left, top);
+			context().drawLine(right, bottom, right, top);
+		}
 	}
 }
 
