@@ -28,8 +28,8 @@
 
 #include "../hyphenation/Hyphenator.h"
 
-TextView::LineInfo TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
-	LineInfo info(start, myStyle.style());
+TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
+	TextPaintInfo::LineInfo info(start, myStyle.style());
 
 	TextStylePtr storedStyle = myStyle.style();
 	WordCursor current = start;

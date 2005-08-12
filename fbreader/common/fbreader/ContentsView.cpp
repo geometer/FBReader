@@ -56,23 +56,21 @@ static const std::string WORD_OPTION_NAME = "ContentsWord";
 static const std::string CHAR_OPTION_NAME = "ContentsChar";
 
 void ContentsView::saveState() {
-	if ((myModel == 0) || myStartCursor.isNull()) {
-		return;
-	}
+	const WordCursor &cursor = myTextPaintInfo.startCursor();
 
-	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myStartCursor.paragraphCursor().paragraphNumber());
-	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myStartCursor.wordNumber());
-	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myStartCursor.charNumber());
+	if (!cursor.isNull()) {
+		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().paragraphNumber());
+		ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
+		ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
+	}
 }
 
 void ContentsView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
 
-	if ((myModel != 0) && !myModel->paragraphs().empty()) {
-		setStartCursor(
-			ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
-			ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
-			ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
-		);
-	}
+	myTextPaintInfo.moveStartCursor(
+		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
+		ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
+		ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
+	);
 }

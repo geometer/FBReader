@@ -46,7 +46,6 @@ public:
 private:
 	void pushCurrentPositionIntoStack() FB_VIEW_SECTION;
 	void replaceCurrentPositionInStack() FB_VIEW_SECTION;
-	bool setFirstParagraphCursor() FB_VIEW_SECTION;
 
 private:
 	std::vector<std::pair<int,int> > myPositionStack;

@@ -34,9 +34,73 @@
 class TextModel;
 class Paragraph;
 class TextMark;
+class TextView;
+
+class TextPaintInfo {
+
+public:
+	struct LineInfo {
+		LineInfo(const WordCursor &word, TextStylePtr style) VIEW_SECTION;
+		~LineInfo() VIEW_SECTION;
+
+		WordCursor Start;
+		WordCursor End;
+		int Width;
+		int Height;
+		int SpaceCounter;
+		TextStylePtr StartStyle;
+	};
+
+	enum PaintState {
+		NOTHING_TO_PAINT,
+		READY,
+		START_IS_KNOWN,
+		END_IS_KNOWN,
+		TO_SCROLL_FORWARD,
+		TO_SCROLL_BACKWARD
+	};
+
+public:
+	TextPaintInfo() VIEW_SECTION;
+	~TextPaintInfo() VIEW_SECTION;
+
+	void clear() VIEW_SECTION;
+	void rebuild(bool strong) VIEW_SECTION;
+	void setStartCursor(ParagraphCursor *cursor) VIEW_SECTION;
+	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
+	void moveStartCursor(int paragraphNumber, bool start) VIEW_SECTION;
+	void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
+	void moveEndCursor(int paragraphNumber, bool start) VIEW_SECTION;
+
+	void scrollPageBackward() VIEW_SECTION;
+	void scrollPageForward() VIEW_SECTION;
+
+	void prepare(TextView &view) VIEW_SECTION;
+
+	bool empty() const VIEW_SECTION;
+	const WordCursor &startCursor() const VIEW_SECTION;
+	const WordCursor &endCursor() const VIEW_SECTION;
+	const std::vector<LineInfo> &lineInfos() const VIEW_SECTION;
+
+private:
+	WordCursor myStartCursor;
+	WordCursor myEndCursor;
+	std::vector<LineInfo> myLineInfos;
+	PaintState myPaintState;
+};
 
 class TextView : public ZLView {
 
+public:
+	static ZLColorOption TreeLinesColorOption;
+	static ZLBooleanOption AutoHyphenationOption;
+
+	static ZLBooleanOption ShowPositionIndicatorOption;
+	static ZLBooleanOption IsIndicatorSensitiveOption;
+	static ZLColorOption PositionIndicatorColorOption;
+	static ZLIntegerOption PositionIndicatorHeightOption;
+	static ZLIntegerOption PositionIndicatorOffsetOption;
+	
 private:
 	class ViewStyle {
 
@@ -64,28 +128,9 @@ private:
 	};
 
 protected:
-	struct LineInfo {
-		LineInfo(const WordCursor &word, TextStylePtr style) VIEW_SECTION;
-		~LineInfo() VIEW_SECTION;
+	TextView(ZLPaintContext &context) VIEW_SECTION;
+	virtual ~TextView() VIEW_SECTION;
 
-		WordCursor Start;
-		WordCursor End;
-		int Width;
-		int Height;
-		int SpaceCounter;
-		TextStylePtr StartStyle;
-	};
-
-public:
-	static ZLColorOption TreeLinesColorOption;
-	static ZLBooleanOption AutoHyphenationOption;
-
-	static ZLBooleanOption ShowPositionIndicatorOption;
-	static ZLBooleanOption IsIndicatorSensitiveOption;
-	static ZLColorOption PositionIndicatorColorOption;
-	static ZLIntegerOption PositionIndicatorHeightOption;
-	static ZLIntegerOption PositionIndicatorOffsetOption;
-	
 public:
 	void clearCaches() VIEW_SECTION;
 	void paint(bool doPaint) VIEW_SECTION;
@@ -106,32 +151,21 @@ public:
 
 	bool onStylusPress(int x, int y) VIEW_SECTION;
 
-protected:
-	TextView(ZLPaintContext &context) VIEW_SECTION;
-	virtual ~TextView() VIEW_SECTION;
-
 private:
 	void clear() VIEW_SECTION;
 
 	int paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
 	void skip(WordCursor &paragraph, int height) VIEW_SECTION;
-	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
-	void drawTextLine(const LineInfo &info) VIEW_SECTION;
+	TextPaintInfo::LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
+	void drawTextLine(const TextPaintInfo::LineInfo &info) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) DRAW_SECTION;
 	void drawTreeNode(TreeElement::TreeElementKind kind, int height) DRAW_SECTION;
 
 protected:
-	void setStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
-	
-protected:
 	const TextModel *myModel;
 	std::string myName;
-
-	WordCursor myStartCursor;
-	WordCursor myEndCursor;
-
-	std::vector<LineInfo> myLineInfos;
+	TextPaintInfo myTextPaintInfo;
 
 protected:
 	struct ParagraphPosition {
@@ -161,14 +195,21 @@ private:
 	int oldWidth, oldHeight;
 
 	ViewStyle myStyle;
+
+friend void TextPaintInfo::prepare(TextView &view);
 };
+
+inline bool TextPaintInfo::empty() const { return myPaintState == NOTHING_TO_PAINT; }
+inline const WordCursor &TextPaintInfo::startCursor() const { return myStartCursor; }
+inline const WordCursor &TextPaintInfo::endCursor() const { return myEndCursor; }
+inline const std::vector<TextPaintInfo::LineInfo> &TextPaintInfo::lineInfos() const { return myLineInfos; }
 
 inline TextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
-inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), End(word), Width(0), Height(0), SpaceCounter(0), StartStyle(style) {}
-inline TextView::LineInfo::~LineInfo() {}
+inline TextPaintInfo::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), End(word), Width(0), Height(0), SpaceCounter(0), StartStyle(style) {}
+inline TextPaintInfo::LineInfo::~LineInfo() {}
 
 inline void TextView::paint() { paint(true); }
 

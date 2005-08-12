@@ -49,13 +49,11 @@ BookTextView::~BookTextView() {
 void BookTextView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
 
-	if ((myModel != 0) && !myModel->paragraphs().empty()) {
-		setStartCursor(
-			ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
-			ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
-			ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
-		);
-	}
+	myTextPaintInfo.moveStartCursor(
+		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
+		ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
+		ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
+	);
 
 	myPositionStack.clear();
 	myCurrentPointInStack = 0;
@@ -85,30 +83,31 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 }
 
 void BookTextView::saveState() {
-	if ((myModel == 0) || myStartCursor.isNull()) {
-		return;
-	}
+	const WordCursor &cursor = myTextPaintInfo.startCursor();
+	
+	if (!cursor.isNull()) {
+		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().paragraphNumber());
+		ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
+		ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
+		ZLIntegerOption(myName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
+		ZLIntegerOption(myName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
-	ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(myStartCursor.paragraphCursor().paragraphNumber());
-	ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(myStartCursor.wordNumber());
-	ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(myStartCursor.charNumber());
-	ZLIntegerOption(myName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
-	ZLIntegerOption(myName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
-
-	for (unsigned int i = 0; i < myPositionStack.size(); i++) {
-		std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
-		std::string bufferWord = BUFFER_WORD_PREFIX;
-		ZLStringUtil::appendNumber(bufferParagraph, i);
-		ZLStringUtil::appendNumber(bufferWord, i);
-		ZLIntegerOption(myName, bufferParagraph, -1).setValue(myPositionStack[i].first);
-		ZLIntegerOption(myName, bufferWord, -1).setValue(myPositionStack[i].second);
+		for (unsigned int i = 0; i < myPositionStack.size(); i++) {
+			std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
+			std::string bufferWord = BUFFER_WORD_PREFIX;
+			ZLStringUtil::appendNumber(bufferParagraph, i);
+			ZLStringUtil::appendNumber(bufferWord, i);
+			ZLIntegerOption(myName, bufferParagraph, -1).setValue(myPositionStack[i].first);
+			ZLIntegerOption(myName, bufferWord, -1).setValue(myPositionStack[i].second);
+		}
 	}
 }
 
 void BookTextView::pushCurrentPositionIntoStack() {
+	const WordCursor &cursor = myTextPaintInfo.startCursor();
 	std::pair<int,int> pos;
-	pos.first = myStartCursor.paragraphCursor().paragraphNumber();
-	pos.second = myStartCursor.wordNumber();
+	pos.first = cursor.paragraphCursor().paragraphNumber();
+	pos.second = cursor.wordNumber();
 	myPositionStack.push_back(pos);
 	while (myPositionStack.size() > myMaxStackSize) {
 #ifndef PALM_TEMPORARY
@@ -121,77 +120,63 @@ void BookTextView::pushCurrentPositionIntoStack() {
 }
 
 void BookTextView::replaceCurrentPositionInStack() {
-	myPositionStack[myCurrentPointInStack].first = myStartCursor.paragraphCursor().paragraphNumber();
-	myPositionStack[myCurrentPointInStack].second = myStartCursor.wordNumber();
-}
-
-bool BookTextView::setFirstParagraphCursor() {
-	if (myStartCursor.isNull()) {
-		myStartCursor = myEndCursor;
-	}
-	if (myStartCursor.isNull()) {
-		return false;
-	}
-	myLineInfos.clear();
-	myEndCursor = 0;
-	return true;
+	const WordCursor &cursor = myTextPaintInfo.startCursor();
+	myPositionStack[myCurrentPointInStack].first = cursor.paragraphCursor().paragraphNumber();
+	myPositionStack[myCurrentPointInStack].second = cursor.wordNumber();
 }
 
 void BookTextView::gotoParagraph(int num, bool last) {
-	if (!setFirstParagraphCursor()) {
-		return;
-	}
+	if (!myTextPaintInfo.empty()) {
+		while (myPositionStack.size() > myCurrentPointInStack) {
+			myPositionStack.pop_back();
+		}
+		pushCurrentPositionIntoStack();
+		myCurrentPointInStack++;
 
-	while (myPositionStack.size() > myCurrentPointInStack) {
-		myPositionStack.pop_back();
+		TextView::gotoParagraph(num, last);
 	}
-	pushCurrentPositionIntoStack();
-	myCurrentPointInStack++;
-
-	TextView::gotoParagraph(num, last);
 }
 
 bool BookTextView::canUndoPageMove() {
-	return (myCurrentPointInStack > 0) && (myCurrentPointInStack <= myPositionStack.size());
+	return
+		!myTextPaintInfo.empty() &&
+		(myCurrentPointInStack > 0) &&
+		(myCurrentPointInStack <= myPositionStack.size());
 }
 
 void BookTextView::undoPageMove() {
-	if (!canUndoPageMove() || !setFirstParagraphCursor()) {
-		return;
+	if (canUndoPageMove()) {
+		if (myCurrentPointInStack == myPositionStack.size()) {
+			pushCurrentPositionIntoStack();
+		} else {
+			replaceCurrentPositionInStack();
+		}
+
+		myCurrentPointInStack--;
+		std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
+		myTextPaintInfo.moveStartCursor(pos.first, pos.second, 0);
+
+		repaintView();
 	}
-
-	if (myCurrentPointInStack == myPositionStack.size()) {
-		pushCurrentPositionIntoStack();
-	} else {
-		replaceCurrentPositionInStack();
-	}
-
-	myCurrentPointInStack--;
-	std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-	setStartCursor(pos.first, pos.second, 0);
-
-	repaintView();
 }
 
 bool BookTextView::canRedoPageMove() {
-	return myCurrentPointInStack + 1 < myPositionStack.size();
+	return !myTextPaintInfo.empty() && (myCurrentPointInStack + 1 < myPositionStack.size());
 }
 
 void BookTextView::redoPageMove() {
-	if (!canRedoPageMove() || !setFirstParagraphCursor()) {
-		return;
+	if (canRedoPageMove()) {
+		replaceCurrentPositionInStack();
+		myCurrentPointInStack++;
+		std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
+		myTextPaintInfo.moveStartCursor(pos.first, pos.second, 0);
+
+		if (myCurrentPointInStack + 1 == myPositionStack.size()) {
+			myPositionStack.pop_back();
+		}
+
+		repaintView();
 	}
-
-	replaceCurrentPositionInStack();
-	myCurrentPointInStack++;
-	std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-	setStartCursor(pos.first, pos.second, 0);
-
-	if (myCurrentPointInStack + 1 == myPositionStack.size()) {
-		myPositionStack.pop_back();
-	}
-
-	repaintView();
 }
 
 bool BookTextView::onStylusPress(int x, int y) {
@@ -202,7 +187,7 @@ bool BookTextView::onStylusPress(int x, int y) {
 	if ((position == 0) || (position->Kind != TextElement::WORD_ELEMENT)) {
 		return false;
 	}
-	WordCursor cursor = myStartCursor;
+	WordCursor cursor = myTextPaintInfo.startCursor();
 	cursor.moveToParagraph(position->ParagraphNumber);
 	cursor.moveToParagraphStart();
 	bool isHyperlink = false;
