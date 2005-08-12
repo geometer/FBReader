@@ -181,14 +181,10 @@ void TextView::paint(bool doPaint) {
 	}
 }
 
-const unsigned int OVERLAPPING = 0;
-
 void TextView::scrollPageBackward() {
-	if (!myLineInfos.empty()) {
-		const WordCursor &startCursor = myLineInfos.front().Start;
-		if (!startCursor.paragraphCursor().isFirst() || !startCursor.isStartOfParagraph()) {
-			//myEndCursor = myLineInfos[std::min(OVERLAPPING, myLineInfos.size() - 1)].Start;
-			myEndCursor = startCursor;
+	if (!myStartCursor.isNull()) {
+		if (!myStartCursor.paragraphCursor().isFirst() || !myStartCursor.isStartOfParagraph()) {
+			myEndCursor = myStartCursor;
 			myStartCursor = 0;
 			myLineInfos.clear();
 		}
@@ -196,11 +192,9 @@ void TextView::scrollPageBackward() {
 }
 
 void TextView::scrollPageForward() {
-	if (!myLineInfos.empty()) {
-		const WordCursor &endCursor = myLineInfos.back().End;
-		if (!endCursor.paragraphCursor().isLast() || !endCursor.isEndOfParagraph()) {
-			//myStartCursor = myLineInfos[myLineInfos.size() - 1 - std::min(OVERLAPPING, myLineInfos.size() - 1)].Start;
-			myStartCursor = endCursor;
+	if (!myEndCursor.isNull()) {
+		if (!myEndCursor.paragraphCursor().isLast() || !myEndCursor.isEndOfParagraph()) {
+			myStartCursor = myEndCursor;
 			myEndCursor = 0;
 			myLineInfos.clear();
 		}
