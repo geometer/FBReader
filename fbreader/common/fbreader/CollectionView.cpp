@@ -154,6 +154,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 			}
 
 			paragraph->open(!paragraph->isOpen());
+			clearCaches();
 			repaintView();
 			if (paragraph->isOpen()) {
 				// TODO: correct next paragraph number calculation for multi-level trees
