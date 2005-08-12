@@ -93,7 +93,6 @@ void TextView::paint(bool doPaint) {
 		context().setRightMargin(TextStyle::RightMarginOption.value());
 		context().setTopMargin(TextStyle::TopMarginOption.value());
 		context().setBottomMargin(TextStyle::BottomMarginOption.value());
-		context().clear(TextStyle::BackgroundColorOption.value());
 
 		if (myStartCursor.isNull()) {
 			if (myEndCursor.isNull()) {
@@ -146,6 +145,7 @@ void TextView::paint(bool doPaint) {
 	}
 
 	if (doPaint) {
+		context().clear(TextStyle::BackgroundColorOption.value());
 		context().moveYTo(0);
 		for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
 			int start = context().y() + 1;
