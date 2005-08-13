@@ -163,14 +163,12 @@ void FBReader::addBookSlot() {
 void FBReader::doAction(ActionCode code) {
 	switch (code) {
 		case ACTION_SHOW_COLLECTION:
+			myCollectionView->showLastBooks(false);
+			setMode(BOOK_COLLECTION_MODE);
+			break;
 		case ACTION_SHOW_LAST_BOOKS:
-			myCollectionView->showLastBooks(code == ACTION_SHOW_LAST_BOOKS);
-			if (myMode != BOOK_COLLECTION_MODE) {
-				setMode(BOOK_COLLECTION_MODE);
-			} else {
-				repaintView();
-			}
-			setButtonVisible(ACTION_SHOW_COLLECTION, code == ACTION_SHOW_LAST_BOOKS);
+			myCollectionView->showLastBooks(true);
+			setMode(RECENT_BOOKS_MODE);
 			break;
 		case ACTION_SHOW_OPTIONS:
 			optionsSlot();
@@ -317,6 +315,16 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case BOOK_COLLECTION_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, false);
+			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
+			setButtonVisible(ACTION_ADD_BOOK, true);
+			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
+			setButtonVisible(ACTION_UNDO, false);
+			setButtonVisible(ACTION_REDO, false);
+			setButtonVisible(ACTION_SHOW_CONTENTS, false);
+			myCollectionView->rebuild();
+			myViewWidget->setView(myCollectionView);
+		case RECENT_BOOKS_MODE:
+			setButtonVisible(ACTION_SHOW_COLLECTION, true);
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);

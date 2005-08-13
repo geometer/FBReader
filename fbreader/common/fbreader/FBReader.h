@@ -71,6 +71,7 @@ protected:
 		CONTENTS_MODE,
 		BOOKMARKS_MODE,
 		BOOK_COLLECTION_MODE,
+		RECENT_BOOKS_MODE,
 	};
 
 public:
