@@ -196,59 +196,59 @@ void TextView::preparePaintInfo() {
 		default:
 			break;
 		case TO_SCROLL_FORWARD:
-		{
-			WordCursor startCursor;
-			switch (myOverlappingType) {
-				case NO_OVERLAPPING:
-					break;
-				case NUMBER_OF_OVERLAPPED_LINES:
-					startCursor = findLineFromEnd(myOverlappingValue);
-					break;
-				case NUMBER_OF_SCROLLED_LINES:
-					startCursor = findLineFromStart(myOverlappingValue);
-					break;
-				case PERCENT_OF_SCROLLED:
-					startCursor = findPercentFromStart(myOverlappingValue);
-					break;
-			}
-
-			if (!startCursor.isNull()) {
-				WordCursor endCursor = buildInfos(startCursor);
-				if (endCursor != myEndCursor) {
-					myStartCursor = startCursor;
-					myEndCursor = endCursor;
-					break;
+			if (!myEndCursor.paragraphCursor().isLast() || !myEndCursor.isEndOfParagraph()) {
+				WordCursor startCursor;
+				switch (myOverlappingType) {
+					case NO_OVERLAPPING:
+						break;
+					case NUMBER_OF_OVERLAPPED_LINES:
+						startCursor = findLineFromEnd(myOverlappingValue);
+						break;
+					case NUMBER_OF_SCROLLED_LINES:
+						startCursor = findLineFromStart(myOverlappingValue);
+						break;
+					case PERCENT_OF_SCROLLED:
+						startCursor = findPercentFromStart(myOverlappingValue);
+						break;
 				}
+      
+				if (!startCursor.isNull()) {
+					WordCursor endCursor = buildInfos(startCursor);
+					if (endCursor != myEndCursor) {
+						myStartCursor = startCursor;
+						myEndCursor = endCursor;
+						break;
+					}
+				}
+				myStartCursor = myEndCursor;
+				myEndCursor = buildInfos(myStartCursor);
 			}
-			myStartCursor = myEndCursor;
-			myEndCursor = buildInfos(myStartCursor);
 			break;
-		}
 		case TO_SCROLL_BACKWARD:
-		{
-			WordCursor endCursor;
-			switch (myOverlappingType) {
-				case NO_OVERLAPPING:
-					break;
-				case NUMBER_OF_OVERLAPPED_LINES:
-					endCursor = findLineFromStart(myOverlappingValue);
-					break;
-				case NUMBER_OF_SCROLLED_LINES:
-					endCursor = findLineFromEnd(myOverlappingValue);
-					break;
-				case PERCENT_OF_SCROLLED:
-					endCursor = findPercentFromStart(100 - myOverlappingValue);
-					break;
+			if (!myStartCursor.paragraphCursor().isFirst() || !myStartCursor.isStartOfParagraph()) {
+				WordCursor endCursor;
+				switch (myOverlappingType) {
+					case NO_OVERLAPPING:
+						break;
+					case NUMBER_OF_OVERLAPPED_LINES:
+						endCursor = findLineFromStart(myOverlappingValue);
+						break;
+					case NUMBER_OF_SCROLLED_LINES:
+						endCursor = findLineFromEnd(myOverlappingValue);
+						break;
+					case PERCENT_OF_SCROLLED:
+						endCursor = findPercentFromStart(100 - myOverlappingValue);
+						break;
+				}
+				if (!endCursor.isNull()) {
+					WordCursor startCursor = findStart(endCursor);
+					myStartCursor = (startCursor != myStartCursor) ? startCursor : findStart(myStartCursor);
+				} else {
+					myStartCursor = findStart(myStartCursor);
+				}
+				myEndCursor = buildInfos(myStartCursor);
 			}
-			if (!endCursor.isNull()) {
-				WordCursor startCursor = findStart(endCursor);
-				myStartCursor = (startCursor != myStartCursor) ? startCursor : findStart(myStartCursor);
-			} else {
-				myStartCursor = findStart(myStartCursor);
-			}
-			myEndCursor = buildInfos(myStartCursor);
 			break;
-		}
 		case START_IS_KNOWN:
 			myEndCursor = buildInfos(myStartCursor);
 			break;
