@@ -37,10 +37,10 @@ bool ContentsView::onStylusPress(int x, int y) {
 		return false;
 	}
 	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)myModel->paragraphs().size() < paragraphNumber)) {
+	if ((paragraphNumber < 0) || ((int)model()->paragraphs().size() < paragraphNumber)) {
 		return false;
 	}
-	Paragraph *paragraph = myModel->paragraphs()[paragraphNumber];
+	Paragraph *paragraph = model()->paragraphs()[paragraphNumber];
 	
 	myReader.textView().gotoParagraph(((ParagraphWithReference*)paragraph)->reference());
 	myReader.showBookTextView();
@@ -48,7 +48,7 @@ bool ContentsView::onStylusPress(int x, int y) {
 }
 
 bool ContentsView::isEmpty() const {
-	return (myModel == 0) || myModel->paragraphs().empty();
+	return (model() == 0) || model()->paragraphs().empty();
 }
 
 static const std::string PARAGRAPH_OPTION_NAME = "ContentsParagraph";
@@ -59,18 +59,20 @@ void ContentsView::saveState() {
 	const WordCursor &cursor = startCursor();
 
 	if (!cursor.isNull()) {
-		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().paragraphNumber());
-		ZLIntegerOption(myName, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
-		ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
+		const std::string &group = fileName();
+		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().paragraphNumber());
+		ZLIntegerOption(group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
+		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
 	}
 }
 
 void ContentsView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
 
+	const std::string &group = fileName();
 	moveStartCursor(
-		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
-		ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
-		ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
+		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).value(),
+		ZLIntegerOption(group, WORD_OPTION_NAME, 0).value(),
+		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).value()
 	);
 }

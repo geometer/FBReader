@@ -138,6 +138,9 @@ public:
 	bool onStylusPress(int x, int y) VIEW1_SECTION;
 
 protected:
+	const std::string &fileName() const VIEW_SECTION;
+	const TextModel *model() const VIEW_SECTION;
+
 	const ParagraphPosition *paragraphByCoordinate(int y) const VIEW1_SECTION;
 	const TextElementPosition *elementByCoordinates(int x, int y) const VIEW1_SECTION;
 
@@ -173,11 +176,10 @@ private:
 	WordCursor findStart(const WordCursor &end) VIEW_SECTION;
 	WordCursor buildInfos(const WordCursor &start) VIEW_SECTION;
 
-protected:
-	const TextModel *myModel;
-	std::string myName;
-
 private:
+	const TextModel *myModel;
+	std::string myFileName;
+
 	enum {
 		NOTHING_TO_PAINT,
 		READY,
@@ -221,5 +223,7 @@ inline TextView::TextElementPosition::~TextElementPosition() {}
 inline bool TextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const WordCursor &TextView::startCursor() const { return myStartCursor; }
 inline const WordCursor &TextView::endCursor() const { return myEndCursor; }
+inline const std::string &TextView::fileName() const { return myFileName; }
+inline const TextModel *TextView::model() const { return myModel; }
 
 #endif /* __TEXTVIEW_H__ */

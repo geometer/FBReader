@@ -141,12 +141,12 @@ bool CollectionView::onStylusPress(int x, int y) {
 	}
 
 	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)myModel->paragraphs().size() <= paragraphNumber)) {
+	if ((paragraphNumber < 0) || ((int)model()->paragraphs().size() <= paragraphNumber)) {
 		return false;
 	}
 
-	if (myModel == myTreeModel) {
-		TreeParagraph *paragraph = (TreeParagraph*)myModel->paragraphs()[paragraphNumber];
+	if (model() == myTreeModel) {
+		TreeParagraph *paragraph = (TreeParagraph*)model()->paragraphs()[paragraphNumber];
 		if (!paragraph->children().empty()) {
 			const TextElementPosition *elementPosition = elementByCoordinates(x, y);
 			if ((elementPosition == 0) || (elementPosition->Kind != TextElement::TREE_ELEMENT)) {
@@ -183,8 +183,8 @@ bool CollectionView::onStylusPress(int x, int y) {
 				myReader.showBookTextView();
 			}
 		}
-	} else /* if (myModel == myLastBooksModel) */ {
-		Paragraph *paragraph = (Paragraph*)myModel->paragraphs()[paragraphNumber];
+	} else /* if (model() == myLastBooksModel) */ {
+		Paragraph *paragraph = (Paragraph*)model()->paragraphs()[paragraphNumber];
 		std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
 		if (it != myBooksMap.end()) {
 			myReader.openBook(it->second);

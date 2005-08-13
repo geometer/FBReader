@@ -74,7 +74,7 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 	if ((myModel != 0) && !myModel->paragraphs().empty()) {
 		setStartCursor(ParagraphCursor::createCursor(*myModel));
 
-		myName = name;
+		myFileName = name;
 		const std::vector<Paragraph*> &paragraphs = myModel->paragraphs();
 		myTextSize.reserve(paragraphs.size() + 1);
 		myTextSize.push_back(0);
