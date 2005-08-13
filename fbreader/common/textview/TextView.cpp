@@ -42,12 +42,12 @@ ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
 
 const std::string ARROW_SCROLLING = "ArrowScrolling";
 
-ZLIntegerOption TextView::OverlappingTypeOption(ARROW_SCROLLING, "OverlappingType", TextPaintInfo::NONE);
+ZLIntegerOption TextView::OverlappingTypeOption(ARROW_SCROLLING, "OverlappingType", TextView::NO_OVERLAPPING);
 ZLIntegerOption TextView::LinesToOverlapOption(ARROW_SCROLLING, "LinesToOverlap", 1);
 ZLIntegerOption TextView::LinesToScrollOption(ARROW_SCROLLING, "LinesToScroll", 1);
 ZLIntegerOption TextView::PercentToScrollOption(ARROW_SCROLLING, "PercentToScroll", 50);
 	
-TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myTextPaintInfo(*this), myStyle(context) {
+TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context) {
 }
 
 TextView::~TextView() {
@@ -55,13 +55,15 @@ TextView::~TextView() {
 }
 
 void TextView::clear() {
-	myTextPaintInfo.clear();
+	myStartCursor = 0;
+	myEndCursor = 0;
+	myLineInfos.clear();
+	myPaintState = NOTHING_TO_PAINT;
+
 	myParagraphMap.clear();
 	myTextElementMap.clear();
 	myTextSize.clear();
 	myFullTextSize = 0;
-	oldWidth = -1;
-	oldHeight = -1;
 }
 
 void TextView::setModel(const TextModel *model, const std::string &name) {
@@ -70,7 +72,7 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 	myModel = model;
 
 	if ((myModel != 0) && !myModel->paragraphs().empty()) {
-		myTextPaintInfo.setStartCursor(ParagraphCursor::createCursor(*myModel));
+		setStartCursor(ParagraphCursor::createCursor(*myModel));
 
 		myName = name;
 		const std::vector<Paragraph*> &paragraphs = myModel->paragraphs();
@@ -83,75 +85,67 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 	}
 }
 
-void TextView::paint(bool doPaint) {
-	if (!myTextPaintInfo.empty()) {
-		if ((context().width() != oldWidth) || (context().height() != oldHeight)) {
-			oldWidth = context().width();
-			oldHeight = context().height();
-			myTextPaintInfo.rebuild(false);
-		}
+void TextView::paint() {
+	preparePaintInfo();
 
-		myTextPaintInfo.prepare();
+	myParagraphMap.clear();
+	myTextElementMap.clear();
+	context().clear(TextStyle::BackgroundColorOption.value());
+
+	if (empty()) {
+		return;
+	}
+	context().moveYTo(0);
+	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+		drawTextLine(*it);
 	}
 
-	if (doPaint) {
-		myParagraphMap.clear();
-		myTextElementMap.clear();
-		context().clear(TextStyle::BackgroundColorOption.value());
-
-		if (myTextPaintInfo.empty()) {
-			return;
+	if (ShowPositionIndicatorOption.value()) {
+		long bottom = context().height();
+		long top = bottom - PositionIndicatorHeightOption.value() + 1;
+		long left = 0;
+		long right = context().width() - 1;
+		long fillWidth;
+		long paragraphLength = endCursor().paragraphCursor().paragraphLength();
+		long paragraphNumber = endCursor().paragraphCursor().paragraphNumber();
+		long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
+		if (paragraphLength == 0) {
+			fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
+		} else {
+			long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
+			fillWidth = (long)(
+				(sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * endCursor().wordNumber() / paragraphLength) *
+				(right - left - 1) / myFullTextSize
+			);
 		}
-		context().moveYTo(0);
-		const std::vector<TextPaintInfo::LineInfo> &lineInfos = myTextPaintInfo.lineInfos();
-		for (std::vector<TextPaintInfo::LineInfo>::const_iterator it = lineInfos.begin(); it != lineInfos.end(); it++) {
-			drawTextLine(*it);
-		}
-
-		if (ShowPositionIndicatorOption.value()) {
-			long bottom = context().height();
-			long top = bottom - PositionIndicatorHeightOption.value() + 1;
-			long left = 0;
-			long right = context().width() - 1;
-			long fillWidth;
-			const WordCursor &endCursor = myTextPaintInfo.endCursor();
-			long paragraphLength = endCursor.paragraphCursor().paragraphLength();
-			long paragraphNumber = endCursor.paragraphCursor().paragraphNumber();
-			long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
-			if (paragraphLength == 0) {
-				fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
-			} else {
-				long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
-				fillWidth = (long)((right - left - 1) * (sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * endCursor.wordNumber() / paragraphLength) / myFullTextSize);
-			}
-			context().setColor(TextStyle::RegularTextColorOption.value());
-			context().setFillColor(PositionIndicatorColorOption.value());
-			context().fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
-			context().drawLine(left, top, right, top);
-			context().drawLine(left, bottom, right, bottom);
-			context().drawLine(left, bottom, left, top);
-			context().drawLine(right, bottom, right, top);
-		}
+		context().setColor(TextStyle::RegularTextColorOption.value());
+		context().setFillColor(PositionIndicatorColorOption.value());
+		context().fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
+		context().drawLine(left, top, right, top);
+		context().drawLine(left, bottom, right, bottom);
+		context().drawLine(left, bottom, left, top);
+		context().drawLine(right, bottom, right, top);
 	}
 }
 
 void TextView::scrollPage(bool forward) {
-	TextPaintInfo::OverlappingType oType = (TextPaintInfo::OverlappingType)OverlappingTypeOption.value();
-	unsigned int value = 0;
-	switch (oType) {
-		case TextPaintInfo::NUMBER_OF_OVERLAPPED_LINES:
-			value = LinesToOverlapOption.value();
-			break;
-		case TextPaintInfo::NUMBER_OF_SCROLLED_LINES:
-			value = LinesToScrollOption.value();
-			break;
-		case TextPaintInfo::PERCENT_OF_SCROLLED:
-			value = PercentToScrollOption.value();
-			break;
-		default:
-			break;
+	if (myPaintState == READY) {
+		myPaintState = forward ? TO_SCROLL_FORWARD : TO_SCROLL_BACKWARD;
+		myOverlappingType = (OverlappingType)OverlappingTypeOption.value();
+		switch (myOverlappingType) {
+			case NUMBER_OF_OVERLAPPED_LINES:
+				myOverlappingValue = LinesToOverlapOption.value();
+				break;
+			case NUMBER_OF_SCROLLED_LINES:
+				myOverlappingValue = LinesToScrollOption.value();
+				break;
+			case PERCENT_OF_SCROLLED:
+				myOverlappingValue = PercentToScrollOption.value();
+				break;
+			default:
+				break;
+		}
 	}
-	myTextPaintInfo.scrollPage(forward, oType, value);
 }
 
 const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {
@@ -178,15 +172,14 @@ void TextView::gotoMark(TextMark mark) {
 	if (mark.ParagraphNumber < 0) {
 		return;
 	}
-	const WordCursor &startCursor = myTextPaintInfo.startCursor();
-	if (!startCursor.isNull() &&
-			((startCursor.paragraphCursor().paragraphNumber() != mark.ParagraphNumber) ||
-			 (startCursor.position() > mark))) {
+	if (!startCursor().isNull() &&
+			((startCursor().paragraphCursor().paragraphNumber() != mark.ParagraphNumber) ||
+			 (startCursor().position() > mark))) {
 		gotoParagraph(mark.ParagraphNumber);
-		paint(false);
-		while (mark > myTextPaintInfo.endCursor().position()) {
+		preparePaintInfo();
+		while (mark > endCursor().position()) {
 			scrollPage(true);
-			paint(false);
+			preparePaintInfo();
 		}
 		repaintView();
 	}
@@ -195,16 +188,16 @@ void TextView::gotoMark(TextMark mark) {
 void TextView::gotoParagraph(int num, bool last) {
 	if (last) {
 		if ((num > 0) && (num <= (int)myModel->paragraphs().size())) {
-			myTextPaintInfo.moveEndCursor(num - 1, false);
+			moveEndCursor(num - 1, false);
 		}
 	} else {
 		if ((num >= 0) && (num < (int)myModel->paragraphs().size())) {
-			myTextPaintInfo.moveStartCursor(num, true);
+			moveStartCursor(num, true);
 		}
 	}
 }
 
-void TextView::drawTextLine(const TextPaintInfo::LineInfo &info) {
+void TextView::drawTextLine(const LineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
 	context().moveXTo(info.StartStyle->leftIndent());
 	int y = context().y();
@@ -304,7 +297,7 @@ void TextView::skip(WordCursor &cursor, int height) {
 	myStyle.applyControls(start, cursor);
 
 	while (!cursor.isEndOfParagraph() && (height > 0)) {
-		const TextPaintInfo::LineInfo info = processTextLine(cursor, paragraphEnd);
+		const LineInfo info = processTextLine(cursor, paragraphEnd);
 		cursor = info.End;
 		height -= info.Height;
 	}
@@ -323,7 +316,7 @@ int TextView::paragraphHeight(const WordCursor &cursor, bool beforeCurrentPositi
 	int height = 0;
 
 	while (!word.sameElementAs(end)) {
-		const TextPaintInfo::LineInfo info = processTextLine(word, end);
+		const LineInfo info = processTextLine(word, end);
 		word = info.End;
 		height += info.Height;
 	}
@@ -337,9 +330,9 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 	}
 
 	myModel->search(text, ignoreCase);
-	if (!myTextPaintInfo.startCursor().isNull()) {
+	if (!startCursor().isNull()) {
 		clearCaches();
-		TextMark position = myTextPaintInfo.startCursor().position();
+		TextMark position = startCursor().position();
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
 							(backward ? myModel->previousMark(position) : myModel->nextMark(position)));
@@ -347,26 +340,22 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 }
 
 bool TextView::canFindNext() const {
-	return
-		!myTextPaintInfo.endCursor().isNull() &&
-		(myModel->nextMark(myTextPaintInfo.endCursor().position()).ParagraphNumber > -1);
+	return !endCursor().isNull() && (myModel->nextMark(endCursor().position()).ParagraphNumber > -1);
 }
 
 void TextView::findNext() {
-	if (!myTextPaintInfo.endCursor().isNull()) {
-		gotoMark(myModel->nextMark(myTextPaintInfo.endCursor().position()));
+	if (!endCursor().isNull()) {
+		gotoMark(myModel->nextMark(endCursor().position()));
 	}
 }
 
 bool TextView::canFindPrevious() const {
-	return
-		!myTextPaintInfo.startCursor().isNull() &&
-		(myModel->previousMark(myTextPaintInfo.startCursor().position()).ParagraphNumber > -1);
+	return !startCursor().isNull() && (myModel->previousMark(startCursor().position()).ParagraphNumber > -1);
 }
 
 void TextView::findPrevious() {
-	if (!myTextPaintInfo.startCursor().isNull()) {
-		gotoMark(myModel->previousMark(myTextPaintInfo.startCursor().position()));
+	if (!startCursor().isNull()) {
+		gotoMark(myModel->previousMark(startCursor().position()));
 	}
 }
 
@@ -386,18 +375,17 @@ bool TextView::onStylusPress(int x, int y) {
 				repaintView();
 			} else {
 				gotoParagraph(paragraphNumber, true);
-				paint(false);
-				const WordCursor &endCursor = myTextPaintInfo.endCursor();
-				if (!endCursor.isNull() && (paragraphNumber == endCursor.paragraphCursor().paragraphNumber())) {
-					if (!endCursor.paragraphCursor().isLast() || !endCursor.isEndOfParagraph()) {
-						long paragraphLength = endCursor.paragraphCursor().paragraphLength();
+				preparePaintInfo();
+				if (!endCursor().isNull() && (paragraphNumber == endCursor().paragraphCursor().paragraphNumber())) {
+					if (!endCursor().paragraphCursor().isLast() || !endCursor().isEndOfParagraph()) {
+						long paragraphLength = endCursor().paragraphCursor().paragraphLength();
 						if (paragraphLength > 0) {
 							long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
 							long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
 							long wordNum =
 								(long)((1.0 * (x - left - 1) / (right - left - 1) - 1.0 * sizeOfTextBeforeParagraph / myFullTextSize)
 								* myFullTextSize / sizeOfParagraph * paragraphLength);
-							myTextPaintInfo.moveEndCursor(endCursor.paragraphCursor().paragraphNumber(), wordNum, 0);
+							moveEndCursor(endCursor().paragraphCursor().paragraphNumber(), wordNum, 0);
 							repaintView();
 						}
 					}
@@ -472,5 +460,5 @@ void TextView::drawWord(int x, int y, const Word &word, int start, int length, b
 }
 
 void TextView::clearCaches() {
-	myTextPaintInfo.rebuild(true);
+	rebuildPaintInfo(true);
 }

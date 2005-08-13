@@ -10,7 +10,7 @@ DUMMY_SECTIONS = \
 	-DAPPLICATION_SECTION="" \
 	-DMODEL_SECTION="" \
 	-DVIEW_SECTION="" \
-	-DDRAW_SECTION="" \
+	-DVIEW1_SECTION="" \
 	-DZLVIEW_SECTION="" \
 	-DFB_VIEW_SECTION="" \
 	-DTEXT_STYLE_SECTION="" \
@@ -151,6 +151,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 	CFLAGS = \
 		-DSTL_SECTION="__attribute__ ((section(\"stl0\")))" \
 		-DSTL1_SECTION="__attribute__ ((section(\"stl1\")))" \
+		-DSTL2_SECTION="__attribute__ ((section(\"stl1\")))" \
 		-DXML_SECTION="__attribute__ ((section(\"zlb2\")))" \
 		-DFS_SECTION="__attribute__ ((section(\"zlb2\")))" \
 		-DOPTIONS_SECTION="__attribute__ ((section(\"zlb1\")))" \
@@ -160,7 +161,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DAPPLICATION_SECTION="__attribute__ ((section(\"zlb0\")))" \
 		-DZLVIEW_SECTION="__attribute__ ((section(\"zlb0\")))" \
 		-DVIEW_SECTION="__attribute__ ((section(\"app0\")))" \
-		-DDRAW_SECTION="__attribute__ ((section(\"app1\")))" \
+		-DVIEW1_SECTION="__attribute__ ((section(\"app1\")))" \
 		-DMODEL_SECTION="__attribute__ ((section(\"app3\")))" \
 		-DFB_VIEW_SECTION="__attribute__ ((section(\"app1\")))" \
 		-DFB_SECTION="__attribute__ ((section(\"app1\")))" \

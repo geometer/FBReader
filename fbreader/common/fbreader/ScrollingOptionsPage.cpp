@@ -33,7 +33,7 @@ class OverlappingTypeEntry : public ZLComboOptionEntry {
 
 private:
 	static const std::string &nameByCode(int code);
-	static TextPaintInfo::OverlappingType codeByName(const std::string &name);
+	static TextView::OverlappingType codeByName(const std::string &name);
 	
 public:
 	OverlappingTypeEntry(ScrollingOptionsPage &page) FB_DIALOG_SECTION;
@@ -53,28 +53,28 @@ private:
 
 const std::string &OverlappingTypeEntry::nameByCode(int code) {
 	switch (code) {
-		case TextPaintInfo::NUMBER_OF_OVERLAPPED_LINES:
+		case TextView::NUMBER_OF_OVERLAPPED_LINES:
 			return SET_NUMBER_TO_OVERLAP;
-		case TextPaintInfo::NUMBER_OF_SCROLLED_LINES:
+		case TextView::NUMBER_OF_SCROLLED_LINES:
 			return SET_NUMBER_TO_SCROLL;
-		case TextPaintInfo::PERCENT_OF_SCROLLED:
+		case TextView::PERCENT_OF_SCROLLED:
 			return SET_PERCENT_TO_SCROLL;
 		default:
 			return NO_OVERLAPPING;
 	}
 }
 
-TextPaintInfo::OverlappingType OverlappingTypeEntry::codeByName(const std::string &name) {
+TextView::OverlappingType OverlappingTypeEntry::codeByName(const std::string &name) {
 	if (name == SET_NUMBER_TO_OVERLAP) {
-		return TextPaintInfo::NUMBER_OF_OVERLAPPED_LINES;
+		return TextView::NUMBER_OF_OVERLAPPED_LINES;
 	}
 	if (name == SET_NUMBER_TO_SCROLL) {
-		return TextPaintInfo::NUMBER_OF_SCROLLED_LINES;
+		return TextView::NUMBER_OF_SCROLLED_LINES;
 	}
 	if (name == SET_PERCENT_TO_SCROLL) {
-		return TextPaintInfo::PERCENT_OF_SCROLLED;
+		return TextView::PERCENT_OF_SCROLLED;
 	}
-	return TextPaintInfo::NONE;
+	return TextView::NO_OVERLAPPING;
 }
 
 OverlappingTypeEntry::OverlappingTypeEntry(ScrollingOptionsPage &page) : myPage(page) {

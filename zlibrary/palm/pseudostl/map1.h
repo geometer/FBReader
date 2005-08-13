@@ -8,9 +8,9 @@ namespace std {
 
 	template<typename T1, typename T2>
 	struct pair {
-		pair() STL_SECTION;
-		pair(const T1 &f, const T2 &s) STL_SECTION;
-		pair &operator = (const pair &p) STL_SECTION;
+		pair() STL2_SECTION;
+		pair(const T1 &f, const T2 &s) STL2_SECTION;
+		pair &operator = (const pair &p) STL2_SECTION;
 		T1 first;
 		T2 second;
 	};
@@ -22,75 +22,75 @@ namespace std {
 		struct const_iterator;
 
 		struct iterator {
-			iterator() STL_SECTION;
+			iterator() STL2_SECTION;
 
-			bool operator == (const iterator &it) const STL_SECTION;
-			bool operator == (const const_iterator &it) const STL_SECTION;
-			bool operator != (const iterator &it) const STL_SECTION;
-			bool operator != (const const_iterator &it) const STL_SECTION;
+			bool operator == (const iterator &it) const STL2_SECTION;
+			bool operator == (const const_iterator &it) const STL2_SECTION;
+			bool operator != (const iterator &it) const STL2_SECTION;
+			bool operator != (const const_iterator &it) const STL2_SECTION;
 
-			const iterator &operator ++ (int) STL_SECTION;
-			const iterator &operator += (size_t offset) STL_SECTION;
-			const iterator &operator -- (int) STL_SECTION;
-			const iterator operator + (size_t offset) const STL_SECTION;
-			const iterator operator - (size_t offset) const STL_SECTION;
-			size_t operator - (const iterator &it) const STL_SECTION;
-			size_t operator - (const const_iterator &it) const STL_SECTION;
+			const iterator &operator ++ (int) STL2_SECTION;
+			const iterator &operator += (size_t offset) STL2_SECTION;
+			const iterator &operator -- (int) STL2_SECTION;
+			const iterator operator + (size_t offset) const STL2_SECTION;
+			const iterator operator - (size_t offset) const STL2_SECTION;
+			size_t operator - (const iterator &it) const STL2_SECTION;
+			size_t operator - (const const_iterator &it) const STL2_SECTION;
 
-			pair<T1,T2> &operator * () const STL_SECTION;
-			pair<T1,T2> *operator -> () const STL_SECTION;
+			pair<T1,T2> &operator * () const STL2_SECTION;
+			pair<T1,T2> *operator -> () const STL2_SECTION;
 
 		private:
 			vector<pair<T1,T2> >::iterator myIter;
-			iterator(const vector<pair<T1,T2> >::iterator &iter) STL_SECTION;
+			iterator(const vector<pair<T1,T2> >::iterator &iter) STL2_SECTION;
 
 		friend struct const_iterator;
 		friend class map;
 		};
 
 		struct const_iterator {
-			const_iterator() STL_SECTION;
-			const_iterator(const iterator &it) STL_SECTION;
+			const_iterator() STL2_SECTION;
+			const_iterator(const iterator &it) STL2_SECTION;
 
-			bool operator == (const iterator &it) const STL_SECTION;
-			bool operator == (const const_iterator &it) const STL_SECTION;
-			bool operator != (const iterator &it) const STL_SECTION;
-			bool operator != (const const_iterator &it) const STL_SECTION;
+			bool operator == (const iterator &it) const STL2_SECTION;
+			bool operator == (const const_iterator &it) const STL2_SECTION;
+			bool operator != (const iterator &it) const STL2_SECTION;
+			bool operator != (const const_iterator &it) const STL2_SECTION;
 
-			const const_iterator &operator ++ (int) STL_SECTION;
-			const const_iterator &operator += (size_t offset) STL_SECTION;
-			const const_iterator &operator -- (int) STL_SECTION;
-			const const_iterator operator + (size_t offset) const STL_SECTION;
-			const const_iterator operator - (size_t offset) const STL_SECTION;
-			size_t operator - (const iterator &it) const STL_SECTION;
-			size_t operator - (const const_iterator &it) const STL_SECTION;
+			const const_iterator &operator ++ (int) STL2_SECTION;
+			const const_iterator &operator += (size_t offset) STL2_SECTION;
+			const const_iterator &operator -- (int) STL2_SECTION;
+			const const_iterator operator + (size_t offset) const STL2_SECTION;
+			const const_iterator operator - (size_t offset) const STL2_SECTION;
+			size_t operator - (const iterator &it) const STL2_SECTION;
+			size_t operator - (const const_iterator &it) const STL2_SECTION;
 
-			const pair<T1,T2> &operator * () const STL_SECTION;
-			const pair<T1,T2> *operator -> () const STL_SECTION;
+			const pair<T1,T2> &operator * () const STL2_SECTION;
+			const pair<T1,T2> *operator -> () const STL2_SECTION;
 
 		private:
 			vector<pair<T1,T2> >::const_iterator myIter;
-			const_iterator(const vector<pair<T1,T2> >::const_iterator &iter) STL_SECTION;
+			const_iterator(const vector<pair<T1,T2> >::const_iterator &iter) STL2_SECTION;
 
 		friend struct iterator;
 		friend class map;
 		};
 
 	public:
-		map() STL_SECTION;
-		~map() STL_SECTION;
+		map() STL2_SECTION;
+		~map() STL2_SECTION;
 
-		bool empty() const STL_SECTION;
-		size_t size() const STL_SECTION;
-		T2 &operator[] (const T1 &key) STL_SECTION;
-		const T2 &operator[] (const T1 &key) const STL_SECTION;
-		iterator find(const T1 &key) const STL_SECTION;
+		bool empty() const STL2_SECTION;
+		size_t size() const STL2_SECTION;
+		T2 &operator[] (const T1 &key) STL2_SECTION;
+		const T2 &operator[] (const T1 &key) const STL2_SECTION;
+		iterator find(const T1 &key) const STL2_SECTION;
 
-		iterator begin() const STL_SECTION;
-		iterator end() const STL_SECTION;
+		iterator begin() const STL2_SECTION;
+		iterator end() const STL2_SECTION;
 
-		void insert(const pair<T1,T2> &p) STL_SECTION;
-		void clear() STL_SECTION;
+		void insert(const pair<T1,T2> &p) STL2_SECTION;
+		void clear() STL2_SECTION;
 
 	private:
 		mutable vector<pair<T1,T2> > myData;

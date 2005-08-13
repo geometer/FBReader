@@ -354,3 +354,13 @@ void WordCursor::moveToParagraphEnd() {
 		myCharNumber = 0;
 	}
 }
+
+bool WordCursor::operator < (const WordCursor &cursor) const {
+	int pn0 = myParagraphCursor->paragraphNumber();
+	int pn1 = cursor.myParagraphCursor->paragraphNumber();
+	if (pn0 < pn1) return true;
+	if (pn1 < pn0) return false;
+	if (myWordNumber < cursor.myWordNumber) return true;
+	if (myWordNumber > cursor.myWordNumber) return false;
+	return myCharNumber < cursor.myCharNumber;
+}

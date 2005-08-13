@@ -28,8 +28,15 @@
 
 #include "../hyphenation/Hyphenator.h"
 
-TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
-	TextPaintInfo::LineInfo info(start, myStyle.style());
+TextView::LineInfo TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
+	std::map<WordCursor,LineInfo>::const_iterator it = myLineInfoCache.find(start);
+	if (it != myLineInfoCache.end()) {
+		const LineInfo &storedInfo = it->second;
+		myStyle.applyControls(storedInfo.Start, storedInfo.End);
+		return storedInfo;
+	}
+
+	LineInfo info(start, myStyle.style());
 
 	TextStylePtr storedStyle = myStyle.style();
 	WordCursor current = start;
@@ -137,5 +144,6 @@ TextPaintInfo::LineInfo TextView::processTextLine(const WordCursor &start, const
 
 	myStyle.setStyle(storedStyle);
 
+	myLineInfoCache.insert(std::pair<WordCursor,LineInfo>(info.Start, info));
 	return info;
 }

@@ -49,7 +49,7 @@ BookTextView::~BookTextView() {
 void BookTextView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
 
-	myTextPaintInfo.moveStartCursor(
+	moveStartCursor(
 		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).value(),
 		ZLIntegerOption(myName, WORD_OPTION_NAME, 0).value(),
 		ZLIntegerOption(myName, CHAR_OPTION_NAME, 0).value()
@@ -83,7 +83,7 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 }
 
 void BookTextView::saveState() {
-	const WordCursor &cursor = myTextPaintInfo.startCursor();
+	const WordCursor &cursor = startCursor();
 	
 	if (!cursor.isNull()) {
 		ZLIntegerOption(myName, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().paragraphNumber());
@@ -104,7 +104,7 @@ void BookTextView::saveState() {
 }
 
 void BookTextView::pushCurrentPositionIntoStack() {
-	const WordCursor &cursor = myTextPaintInfo.startCursor();
+	const WordCursor &cursor = startCursor();
 	std::pair<int,int> pos;
 	pos.first = cursor.paragraphCursor().paragraphNumber();
 	pos.second = cursor.wordNumber();
@@ -120,13 +120,13 @@ void BookTextView::pushCurrentPositionIntoStack() {
 }
 
 void BookTextView::replaceCurrentPositionInStack() {
-	const WordCursor &cursor = myTextPaintInfo.startCursor();
+	const WordCursor &cursor = startCursor();
 	myPositionStack[myCurrentPointInStack].first = cursor.paragraphCursor().paragraphNumber();
 	myPositionStack[myCurrentPointInStack].second = cursor.wordNumber();
 }
 
 void BookTextView::gotoParagraph(int num, bool last) {
-	if (!myTextPaintInfo.empty()) {
+	if (!empty()) {
 		while (myPositionStack.size() > myCurrentPointInStack) {
 			myPositionStack.pop_back();
 		}
@@ -138,10 +138,7 @@ void BookTextView::gotoParagraph(int num, bool last) {
 }
 
 bool BookTextView::canUndoPageMove() {
-	return
-		!myTextPaintInfo.empty() &&
-		(myCurrentPointInStack > 0) &&
-		(myCurrentPointInStack <= myPositionStack.size());
+	return !empty() && (myCurrentPointInStack > 0) && (myCurrentPointInStack <= myPositionStack.size());
 }
 
 void BookTextView::undoPageMove() {
@@ -154,14 +151,14 @@ void BookTextView::undoPageMove() {
 
 		myCurrentPointInStack--;
 		std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-		myTextPaintInfo.moveStartCursor(pos.first, pos.second, 0);
+		moveStartCursor(pos.first, pos.second, 0);
 
 		repaintView();
 	}
 }
 
 bool BookTextView::canRedoPageMove() {
-	return !myTextPaintInfo.empty() && (myCurrentPointInStack + 1 < myPositionStack.size());
+	return !empty() && (myCurrentPointInStack + 1 < myPositionStack.size());
 }
 
 void BookTextView::redoPageMove() {
@@ -169,7 +166,7 @@ void BookTextView::redoPageMove() {
 		replaceCurrentPositionInStack();
 		myCurrentPointInStack++;
 		std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
-		myTextPaintInfo.moveStartCursor(pos.first, pos.second, 0);
+		moveStartCursor(pos.first, pos.second, 0);
 
 		if (myCurrentPointInStack + 1 == myPositionStack.size()) {
 			myPositionStack.pop_back();
@@ -187,7 +184,7 @@ bool BookTextView::onStylusPress(int x, int y) {
 	if ((position == 0) || (position->Kind != TextElement::WORD_ELEMENT)) {
 		return false;
 	}
-	WordCursor cursor = myTextPaintInfo.startCursor();
+	WordCursor cursor = startCursor();
 	cursor.moveToParagraph(position->ParagraphNumber);
 	cursor.moveToParagraphStart();
 	bool isHyperlink = false;

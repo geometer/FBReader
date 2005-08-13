@@ -21,20 +21,7 @@
 
 #include "TextView.h"
 
-TextPaintInfo::TextPaintInfo(TextView &textView) : myTextView(textView), myPaintState(NOTHING_TO_PAINT) {
-}
-
-TextPaintInfo::~TextPaintInfo() {
-}
-
-void TextPaintInfo::clear() {
-	myStartCursor = 0;
-	myEndCursor = 0;
-	myLineInfos.clear();
-	myPaintState = NOTHING_TO_PAINT;
-}
-
-void TextPaintInfo::rebuild(bool strong) {
+void TextView::rebuildPaintInfo(bool strong) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -55,14 +42,14 @@ void TextPaintInfo::rebuild(bool strong) {
 	}
 }
 
-void TextPaintInfo::setStartCursor(ParagraphCursor *cursor) {
+void TextView::setStartCursor(ParagraphCursor *cursor) {
 	myStartCursor = cursor;
 	myEndCursor = 0;
 	myLineInfos.clear();
 	myPaintState = myStartCursor.isNull() ? NOTHING_TO_PAINT : START_IS_KNOWN;
 }
 
-void TextPaintInfo::moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) {
+void TextView::moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -77,7 +64,7 @@ void TextPaintInfo::moveStartCursor(int paragraphNumber, int wordNumber, int cha
 	myPaintState = START_IS_KNOWN;
 }
 
-void TextPaintInfo::moveStartCursor(int paragraphNumber, bool start) {
+void TextView::moveStartCursor(int paragraphNumber, bool start) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -96,7 +83,7 @@ void TextPaintInfo::moveStartCursor(int paragraphNumber, bool start) {
 	myPaintState = START_IS_KNOWN;
 }
 
-void TextPaintInfo::moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) {
+void TextView::moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -111,7 +98,7 @@ void TextPaintInfo::moveEndCursor(int paragraphNumber, int wordNumber, int charN
 	myPaintState = END_IS_KNOWN;
 }
 
-void TextPaintInfo::moveEndCursor(int paragraphNumber, bool start) {
+void TextView::moveEndCursor(int paragraphNumber, bool start) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -130,15 +117,7 @@ void TextPaintInfo::moveEndCursor(int paragraphNumber, bool start) {
 	myPaintState = END_IS_KNOWN;
 }
 
-void TextPaintInfo::scrollPage(bool forward, OverlappingType oType, unsigned int value) {
-	if (myPaintState == READY) {
-		myPaintState = forward ? TO_SCROLL_FORWARD : TO_SCROLL_BACKWARD;
-		myOverlappingType = oType;
-		myOverlappingValue = value;
-	}
-}
-
-WordCursor TextPaintInfo::findLineFromStart(unsigned int overlappingValue) const {
+WordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
 	if (myLineInfos.empty() || (overlappingValue == 0)) {
 		return WordCursor();
 	}
@@ -155,7 +134,7 @@ WordCursor TextPaintInfo::findLineFromStart(unsigned int overlappingValue) const
 	return (it != myLineInfos.end()) ? it->End : myLineInfos.back().End;
 }
 
-WordCursor TextPaintInfo::findLineFromEnd(unsigned int overlappingValue) const {
+WordCursor TextView::findLineFromEnd(unsigned int overlappingValue) const {
 	if (myLineInfos.empty() || (overlappingValue == 0)) {
 		return WordCursor();
 	}
@@ -172,12 +151,12 @@ WordCursor TextPaintInfo::findLineFromEnd(unsigned int overlappingValue) const {
 	return it->Start;
 }
 
-WordCursor TextPaintInfo::findPercentFromStart(unsigned int percent) const {
+WordCursor TextView::findPercentFromStart(unsigned int percent) const {
 	if (myLineInfos.empty()) {
 		return WordCursor();
 	}
 
-	int height = myTextView.myStyle.textAreaHeight() * percent / 100;
+	int height = myStyle.textAreaHeight() * percent / 100;
 	if (height == 0) {
 		return myLineInfos.front().Start;
 	}
@@ -191,22 +170,36 @@ WordCursor TextPaintInfo::findPercentFromStart(unsigned int percent) const {
 	return (it != myLineInfos.end()) ? it->End : myLineInfos.back().End;
 }
 
-void TextPaintInfo::prepare() {
-	myTextView.context().setLeftMargin(TextStyle::LeftMarginOption.value());
-	myTextView.context().setRightMargin(TextStyle::RightMarginOption.value());
-	myTextView.context().setTopMargin(TextStyle::TopMarginOption.value());
-	myTextView.context().setBottomMargin(TextStyle::BottomMarginOption.value());
+void TextView::preparePaintInfo() {
+	context().setLeftMargin(TextStyle::LeftMarginOption.value());
+	context().setRightMargin(TextStyle::RightMarginOption.value());
+	context().setTopMargin(TextStyle::TopMarginOption.value());
+	context().setBottomMargin(TextStyle::BottomMarginOption.value());
+
+	int newWidth = context().width();
+	int newHeight = context().height();
+	if ((newWidth != myOldWidth) || (newHeight != myOldHeight)) {
+		myOldWidth = newWidth;
+		myOldHeight = newHeight;
+		rebuildPaintInfo(false);
+	}
+
+	if ((myPaintState == NOTHING_TO_PAINT) || (myPaintState == READY)) {
+		return;
+	}
+
+	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+		myLineInfoCache.insert(std::pair<WordCursor,LineInfo>(it->Start, *it));
+	}
 
 	switch (myPaintState) {
-		case NOTHING_TO_PAINT:
-			return;
-		case READY:
-			return;
+		default:
+			break;
 		case TO_SCROLL_FORWARD:
 		{
 			WordCursor startCursor;
 			switch (myOverlappingType) {
-				case NONE:
+				case NO_OVERLAPPING:
 					break;
 				case NUMBER_OF_OVERLAPPED_LINES:
 					startCursor = findLineFromEnd(myOverlappingValue);
@@ -235,7 +228,7 @@ void TextPaintInfo::prepare() {
 		{
 			WordCursor endCursor;
 			switch (myOverlappingType) {
-				case NONE:
+				case NO_OVERLAPPING:
 					break;
 				case NUMBER_OF_OVERLAPPED_LINES:
 					endCursor = findLineFromStart(myOverlappingValue);
@@ -265,14 +258,15 @@ void TextPaintInfo::prepare() {
 			break;
 	}
 	myPaintState = READY;
+	myLineInfoCache.clear();
 }
 
-WordCursor TextPaintInfo::findStart(const WordCursor &end) {
+WordCursor TextView::findStart(const WordCursor &end) {
 	WordCursor start = end;
-	int height = myTextView.paragraphHeight(start, true);
+	int height = paragraphHeight(start, true);
 	bool positionChanged = !start.isStartOfParagraph();
 	start.moveToParagraphStart();
-	const int textAreaHeight = myTextView.myStyle.textAreaHeight();
+	const int textAreaHeight = myStyle.textAreaHeight();
 	while (height < textAreaHeight) {
 		if (positionChanged && start.paragraphCursor().isEndOfSection()) {
 			break;
@@ -283,29 +277,29 @@ WordCursor TextPaintInfo::findStart(const WordCursor &end) {
 		if (!start.paragraphCursor().isEndOfSection()) {
 			positionChanged = true;
 		}
-		height += myTextView.paragraphHeight(start, false);
+		height += paragraphHeight(start, false);
 	}
-	myTextView.skip(start, height - textAreaHeight);
+	skip(start, height - textAreaHeight);
 	return start;
 }
 
-WordCursor TextPaintInfo::buildInfos(const WordCursor &start) {
+WordCursor TextView::buildInfos(const WordCursor &start) {
 	myLineInfos.clear();
 
 	WordCursor end = start;
-	int textAreaHeight = myTextView.myStyle.textAreaHeight();
+	int textAreaHeight = myStyle.textAreaHeight();
 	do {
-		LineInfo info(end, myTextView.myStyle.style());
+		LineInfo info(end, myStyle.style());
 		WordCursor paragraphEnd = end;
 		paragraphEnd.moveToParagraphEnd();
 		WordCursor start = end;
 		start.moveToParagraphStart();
 
-		myTextView.myStyle.reset();
-		myTextView.myStyle.applyControls(start, info.Start);
+		myStyle.reset();
+		myStyle.applyControls(start, info.Start);
 
 		while (!info.End.isEndOfParagraph()) {
-			info = myTextView.processTextLine(info.End, paragraphEnd);
+			info = processTextLine(info.End, paragraphEnd);
 			textAreaHeight -= info.Height;
 			if (textAreaHeight < 0) {
 				break;

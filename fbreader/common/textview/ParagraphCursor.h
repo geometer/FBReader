@@ -155,6 +155,7 @@ public:
 	bool sameElementAs(const WordCursor &cursor) const VIEW_SECTION;
 	bool operator == (const WordCursor &cursor) const VIEW_SECTION;
 	bool operator != (const WordCursor &cursor) const VIEW_SECTION;
+	bool operator < (const WordCursor &cursor) const VIEW_SECTION;
 	bool isStartOfParagraph() const VIEW_SECTION;
 	bool isEndOfParagraph() const VIEW_SECTION;
 	int wordNumber() const VIEW_SECTION;
