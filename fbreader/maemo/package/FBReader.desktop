@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
-Name=E-Book Reader
+Name=FBReader
 Type=Application
 StartupWMClass=FBReader
 Exec=/usr/bin/FBReader
