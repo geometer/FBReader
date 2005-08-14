@@ -177,7 +177,7 @@ void FBReader::doAction(ActionCode code) {
 		case ACTION_UNDO:
 			if (myMode == BOOK_TEXT_MODE) {
 				myBookTextView->undoPageMove();
-			} else if (myMode == FOOTNOTE_MODE) {
+			} else {
 				restorePreviousMode();
 			}
 			break;
@@ -187,7 +187,7 @@ void FBReader::doAction(ActionCode code) {
 			}
 			break;
 		case ACTION_SHOW_CONTENTS:
-			if (!myContentsView->isEmpty()) {
+			if (((myMode == BOOK_TEXT_MODE) || (myMode == FOOTNOTE_MODE)) && !myContentsView->isEmpty()) {
 				setMode(CONTENTS_MODE);
 			}
 			break;
@@ -271,7 +271,7 @@ void FBReader::enableMenuButtons() {
 	setButtonEnabled(ACTION_FIND_NEXT, textView->canFindNext());
 	setButtonEnabled(ACTION_FIND_PREVIOUS, textView->canFindPrevious());
 	setButtonEnabled(ACTION_SHOW_CONTENTS, !myContentsView->isEmpty());
-	setButtonEnabled(ACTION_UNDO, myBookTextView->canUndoPageMove() || (myMode == FOOTNOTE_MODE));
+	setButtonEnabled(ACTION_UNDO, (myMode != BOOK_TEXT_MODE) || myBookTextView->canUndoPageMove());
 	setButtonEnabled(ACTION_REDO, myBookTextView->canRedoPageMove());
 }
 
@@ -289,7 +289,6 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
-			setButtonVisible(ACTION_UNDO, true);
 			setButtonVisible(ACTION_REDO, true);
 			setButtonVisible(ACTION_SHOW_CONTENTS, true);
 			myViewWidget->setView(myBookTextView);
@@ -299,7 +298,6 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
-			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			if (!StoreContentsPositionOption.value()) {
@@ -312,7 +310,6 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, false);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
-			setButtonVisible(ACTION_UNDO, true);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, true);
 			myViewWidget->setView(myFootnoteView);
@@ -322,7 +319,6 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
-			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			myCollectionView->rebuild();
@@ -332,7 +328,6 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
-			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			myCollectionView->rebuild();
