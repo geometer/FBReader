@@ -161,11 +161,11 @@ class ParagraphWithReference : public Paragraph {
 public:
 	ParagraphWithReference() MODEL_SECTION;
 	~ParagraphWithReference() MODEL_SECTION;
-	void setReference(int reference) MODEL_SECTION;
-	int reference() const MODEL_SECTION;
+	void setReference(long reference) MODEL_SECTION;
+	long reference() const MODEL_SECTION;
 
 private:
-	int myReference;
+	long myReference;
 };
 
 class TreeParagraph : public Paragraph {
@@ -229,8 +229,8 @@ inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return m
 
 inline ParagraphWithReference::ParagraphWithReference() : Paragraph(TEXT_PARAGRAPH), myReference(-1) {}
 inline ParagraphWithReference::~ParagraphWithReference() {}
-inline void ParagraphWithReference::setReference(int reference) { myReference = reference; }
-inline int ParagraphWithReference::reference() const { return myReference; }
+inline void ParagraphWithReference::setReference(long reference) { myReference = reference; }
+inline long ParagraphWithReference::reference() const { return myReference; }
 
 inline TreeParagraph::~TreeParagraph() {}
 inline bool TreeParagraph::isOpen() const { return myIsOpen; }

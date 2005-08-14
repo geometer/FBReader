@@ -77,6 +77,7 @@ protected:
 public:
 	static ZLBooleanOption QuitOnCancelOption;
 	static ZLIntegerOption ScrollingDelayOption;
+	static ZLBooleanOption StoreContentsPositionOption;
 
 	static ZLBooleanOption SearchBackwardOption;
 	static ZLBooleanOption SearchIgnoreCaseOption;

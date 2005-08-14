@@ -76,3 +76,24 @@ void ContentsView::setModel(const TextModel *model, const std::string &name) {
 		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).value()
 	);
 }
+
+void ContentsView::gotoReference() {
+	const WordCursor &cursor = myReader.textView().endCursor();
+	if (!cursor.isNull()) {
+		long reference = cursor.paragraphCursor().paragraphNumber();
+		const std::vector<Paragraph*> &allParagraphs = model()->paragraphs();
+		unsigned int selected = allParagraphs.size();
+		for (std::vector<Paragraph*>::const_iterator it = allParagraphs.begin(); it != allParagraphs.end(); it++) {
+			if (((ParagraphWithReference*)*it)->reference() >= reference) {
+				selected = it - allParagraphs.begin();
+				break;
+			}
+		}
+		if (selected > 0) {
+			selected--;
+		}
+		selectParagraph(selected);
+		gotoParagraph(selected);
+		scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
+	}
+}

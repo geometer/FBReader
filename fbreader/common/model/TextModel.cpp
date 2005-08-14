@@ -54,6 +54,13 @@ void TextModel::search(const std::string &text, bool ignoreCase) const {
 	}
 }
 
+void TextModel::selectParagraph(const unsigned int paragraphNumber) const {
+	if (paragraphNumber < paragraphs().size()) {
+		myMarks.clear();
+		myMarks.push_back(TextMark(paragraphNumber, 0, paragraphs()[paragraphNumber]->textLength()));
+	}
+}
+
 TextMark TextModel::firstMark() const {
 	return marks().empty() ? TextMark() : marks().front();
 }
@@ -106,5 +113,12 @@ void TreeModel::search(const std::string &text, bool ignoreCase) const {
 	TextModel::search(text, ignoreCase);
 	for (std::vector<TextMark>::const_iterator it = marks().begin(); it != marks().end(); it++) {
 		((TreeParagraph*)paragraphs()[it->ParagraphNumber])->openTree();
+	}
+}
+
+void TreeModel::selectParagraph(const unsigned int paragraphNumber) const {
+	if (paragraphNumber < paragraphs().size()) {
+		TextModel::selectParagraph(paragraphNumber);
+		((TreeParagraph*)paragraphs()[paragraphNumber])->openTree();
 	}
 }

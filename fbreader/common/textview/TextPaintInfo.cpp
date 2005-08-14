@@ -208,16 +208,16 @@ void TextView::preparePaintInfo() {
 		case TO_SCROLL_FORWARD:
 			if (!myEndCursor.paragraphCursor().isLast() || !myEndCursor.isEndOfParagraph()) {
 				WordCursor startCursor;
-				switch (myOverlappingType) {
+				switch (myScrollingMode) {
 					case NO_OVERLAPPING:
 						break;
-					case NUMBER_OF_OVERLAPPED_LINES:
+					case KEEP_LINES:
 						startCursor = findLineFromEnd(myOverlappingValue);
 						break;
-					case NUMBER_OF_SCROLLED_LINES:
+					case SCROLL_LINES:
 						startCursor = findLineFromStart(myOverlappingValue);
 						break;
-					case PERCENT_OF_SCROLLED:
+					case SCROLL_PERCENTAGE:
 						startCursor = findPercentFromStart(myOverlappingValue);
 						break;
 				}
@@ -241,16 +241,16 @@ void TextView::preparePaintInfo() {
 		case TO_SCROLL_BACKWARD:
 			if (!myStartCursor.paragraphCursor().isFirst() || !myStartCursor.isStartOfParagraph()) {
 				WordCursor endCursor;
-				switch (myOverlappingType) {
+				switch (myScrollingMode) {
 					case NO_OVERLAPPING:
 						break;
-					case NUMBER_OF_OVERLAPPED_LINES:
+					case KEEP_LINES:
 						endCursor = findLineFromStart(myOverlappingValue);
 						break;
-					case NUMBER_OF_SCROLLED_LINES:
+					case SCROLL_LINES:
 						endCursor = findLineFromEnd(myOverlappingValue);
 						break;
-					case PERCENT_OF_SCROLLED:
+					case SCROLL_PERCENTAGE:
 						endCursor = findPercentFromStart(100 - myOverlappingValue);
 						break;
 				}

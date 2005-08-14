@@ -42,8 +42,8 @@ ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
 
 const std::string ARROW_SCROLLING = "ArrowScrolling";
 
-ZLIntegerOption TextView::OverlappingTypeOption(ARROW_SCROLLING, "OverlappingType", TextView::NO_OVERLAPPING);
-ZLIntegerOption TextView::LinesToOverlapOption(ARROW_SCROLLING, "LinesToOverlap", 1);
+ZLIntegerOption TextView::ScrollingModeOption(ARROW_SCROLLING, "ScrollingMode", TextView::NO_OVERLAPPING);
+ZLIntegerOption TextView::LinesToKeepOption(ARROW_SCROLLING, "LinesToKeep", 1);
 ZLIntegerOption TextView::LinesToScrollOption(ARROW_SCROLLING, "LinesToScroll", 1);
 ZLIntegerOption TextView::PercentToScrollOption(ARROW_SCROLLING, "PercentToScroll", 50);
 	
@@ -129,22 +129,30 @@ void TextView::paint() {
 }
 
 void TextView::scrollPage(bool forward) {
+	ScrollingMode oType = (ScrollingMode)ScrollingModeOption.value();
+	unsigned int oValue = 0;
+	switch (oType) {
+		case KEEP_LINES:
+			oValue = LinesToKeepOption.value();
+			break;
+		case SCROLL_LINES:
+			oValue = LinesToScrollOption.value();
+			break;
+		case SCROLL_PERCENTAGE:
+			oValue = PercentToScrollOption.value();
+			break;
+		default:
+			break;
+	}
+	scrollPage(forward, oType, oValue);
+}
+
+void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) {
+	preparePaintInfo();
 	if (myPaintState == READY) {
 		myPaintState = forward ? TO_SCROLL_FORWARD : TO_SCROLL_BACKWARD;
-		myOverlappingType = (OverlappingType)OverlappingTypeOption.value();
-		switch (myOverlappingType) {
-			case NUMBER_OF_OVERLAPPED_LINES:
-				myOverlappingValue = LinesToOverlapOption.value();
-				break;
-			case NUMBER_OF_SCROLLED_LINES:
-				myOverlappingValue = LinesToScrollOption.value();
-				break;
-			case PERCENT_OF_SCROLLED:
-				myOverlappingValue = PercentToScrollOption.value();
-				break;
-			default:
-				break;
-		}
+		myScrollingMode = mode;
+		myOverlappingValue = value;
 	}
 }
 
@@ -176,9 +184,8 @@ void TextView::gotoMark(TextMark mark) {
 			((startCursor().paragraphCursor().paragraphNumber() != mark.ParagraphNumber) ||
 			 (startCursor().position() > mark))) {
 		gotoParagraph(mark.ParagraphNumber);
-		preparePaintInfo();
 		while (mark > endCursor().position()) {
-			scrollPage(true);
+			scrollPage(true, NO_OVERLAPPING, 0);
 			preparePaintInfo();
 		}
 		repaintView();
@@ -461,4 +468,8 @@ void TextView::drawWord(int x, int y, const Word &word, int start, int length, b
 
 void TextView::clearCaches() {
 	rebuildPaintInfo(true);
+}
+
+void TextView::selectParagraph(int paragraphNumber) {
+	myModel->selectParagraph(paragraphNumber);
 }

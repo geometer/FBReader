@@ -40,6 +40,8 @@ public:
 
 	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
 
+	void gotoReference() FB_VIEW_SECTION;
+
 private:
 	FBReader &myReader;
 	std::string myCaption;

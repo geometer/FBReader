@@ -47,6 +47,7 @@ static const std::string BOOK = "Book";
 
 ZLBooleanOption FBReader::QuitOnCancelOption(OPTIONS, "QuitOnCancel", false);
 ZLIntegerOption FBReader::ScrollingDelayOption(OPTIONS, "ScrollingDelay", 250);
+ZLBooleanOption FBReader::StoreContentsPositionOption(OPTIONS, "StoreContentsPosition", false);
 
 ZLBooleanOption FBReader::SearchBackwardOption(SEARCH, "Backward", false);
 ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
@@ -301,6 +302,9 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_UNDO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
+			if (!StoreContentsPositionOption.value()) {
+				myContentsView->gotoReference();
+			}
 			myViewWidget->setView(myContentsView);
 			break;
 		case FOOTNOTE_MODE:

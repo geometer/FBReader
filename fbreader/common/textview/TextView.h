@@ -48,17 +48,17 @@ public:
 	static ZLIntegerOption PositionIndicatorHeightOption;
 	static ZLIntegerOption PositionIndicatorOffsetOption;
 
-	static ZLIntegerOption OverlappingTypeOption;
-	static ZLIntegerOption LinesToOverlapOption;
+	static ZLIntegerOption ScrollingModeOption;
+	static ZLIntegerOption LinesToKeepOption;
 	static ZLIntegerOption LinesToScrollOption;
 	static ZLIntegerOption PercentToScrollOption;
 	
 public:
-	enum OverlappingType {
+	enum ScrollingMode {
 		NO_OVERLAPPING,
-		NUMBER_OF_OVERLAPPED_LINES,
-		NUMBER_OF_SCROLLED_LINES,
-		PERCENT_OF_SCROLLED
+		KEEP_LINES,
+		SCROLL_LINES,
+		SCROLL_PERCENTAGE
 	};
 
 private:
@@ -130,6 +130,9 @@ public:
 	void gotoMark(TextMark mark) VIEW_SECTION;
 	virtual void gotoParagraph(int num, bool last = false) VIEW_SECTION;
 
+	const WordCursor &startCursor() const VIEW_SECTION;
+	const WordCursor &endCursor() const VIEW_SECTION;
+
 	virtual void setModel(const TextModel *model, const std::string &name) VIEW_SECTION;
 
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward) VIEW1_SECTION;
@@ -149,8 +152,6 @@ protected:
 
 	void rebuildPaintInfo(bool strong) VIEW_SECTION;
 
-	const WordCursor &startCursor() const VIEW_SECTION;
-	const WordCursor &endCursor() const VIEW_SECTION;
 	void setStartCursor(ParagraphCursor *cursor) VIEW_SECTION;
 	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
 	void moveStartCursor(int paragraphNumber, bool start) VIEW_SECTION;
@@ -158,6 +159,9 @@ protected:
 	void moveEndCursor(int paragraphNumber, bool start) VIEW_SECTION;
 
 	bool empty() const VIEW_SECTION;
+
+	void scrollPage(bool forward, ScrollingMode mode, unsigned int value) VIEW_SECTION;
+	void selectParagraph(int paragraphNumber) VIEW1_SECTION;
 
 private:
 	void clear() VIEW_SECTION;
@@ -199,7 +203,7 @@ private:
 	std::set<LineInfo> myLineInfoCache;
 #endif // PALM_TEMPORARY
 
-	OverlappingType myOverlappingType;
+	ScrollingMode myScrollingMode;
 	unsigned int myOverlappingValue;
 
 	int myOldWidth, myOldHeight;

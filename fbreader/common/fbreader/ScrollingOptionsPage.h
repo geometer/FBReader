@@ -30,11 +30,11 @@ public:
 	~ScrollingOptionsPage() FB_DIALOG_SECTION;
 
 private:
-	ZLSpinOptionEntry *myLinesToOverlapEntry;
+	ZLSpinOptionEntry *myLinesToKeepEntry;
 	ZLSpinOptionEntry *myLinesToScrollEntry;
 	ZLSpinOptionEntry *myPercentToScrollEntry;
 
-friend class OverlappingTypeEntry;
+friend class ScrollingModeEntry;
 };
 
 inline ScrollingOptionsPage::~ScrollingOptionsPage() {}
