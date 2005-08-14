@@ -157,7 +157,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DOPTIONS_SECTION="__attribute__ ((section(\"zlb1\")))" \
 		-DUTIL_SECTION="__attribute__ ((section(\"zlb0\")))" \
 		-DDIALOG_SECTION="__attribute__ ((section(\"zlb1\")))" \
-		-DIMAGE_SECTION="__attribute__ ((section(\"zlb0\")))" \
+		-DIMAGE_SECTION="__attribute__ ((section(\"zlb1\")))" \
 		-DAPPLICATION_SECTION="__attribute__ ((section(\"zlb0\")))" \
 		-DZLVIEW_SECTION="__attribute__ ((section(\"zlb0\")))" \
 		-DVIEW_SECTION="__attribute__ ((section(\"app0\")))" \

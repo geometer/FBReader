@@ -21,6 +21,7 @@
 #define __TEXTVIEW_H__
 
 #include <vector>
+#include <set>
 #include <string>
 
 #include <abstract/ZLOptions.h>
@@ -64,8 +65,8 @@ private:
 	class ViewStyle {
 
 	public:
-		ViewStyle(ZLPaintContext &context) VIEW_SECTION;
-		~ViewStyle() VIEW_SECTION;
+		ViewStyle(ZLPaintContext &context) VIEW1_SECTION;
+		~ViewStyle() VIEW1_SECTION;
 
 		void reset() VIEW_SECTION;
 		void setStyle(const TextStylePtr style) VIEW_SECTION;
@@ -89,6 +90,8 @@ private:
 	struct LineInfo {
 		LineInfo(const WordCursor &word, TextStylePtr style) VIEW_SECTION;
 		~LineInfo() VIEW_SECTION;
+
+		bool operator < (const LineInfo &info) const VIEW_SECTION;
 
 		WordCursor Start;
 		WordCursor End;
@@ -138,8 +141,8 @@ public:
 	bool onStylusPress(int x, int y) VIEW1_SECTION;
 
 protected:
-	const std::string &fileName() const VIEW_SECTION;
-	const TextModel *model() const VIEW_SECTION;
+	const std::string &fileName() const VIEW1_SECTION;
+	const TextModel *model() const VIEW1_SECTION;
 
 	const ParagraphPosition *paragraphByCoordinate(int y) const VIEW1_SECTION;
 	const TextElementPosition *elementByCoordinates(int x, int y) const VIEW1_SECTION;
@@ -162,13 +165,14 @@ private:
 	int paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
 	void skip(WordCursor &paragraph, int height) VIEW_SECTION;
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
-	void drawTextLine(const LineInfo &info) VIEW_SECTION;
+	void drawTextLine(const LineInfo &info) VIEW1_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW1_SECTION;
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW1_SECTION;
 	void drawTreeNode(TreeElement::TreeElementKind kind, int height) VIEW1_SECTION;
 
 	void preparePaintInfo() VIEW_SECTION;
 
+	bool pageIsEmpty() const VIEW_SECTION;
 	WordCursor findLineFromStart(unsigned int overlappingValue) const VIEW_SECTION;
 	WordCursor findLineFromEnd(unsigned int overlappingValue) const VIEW_SECTION;
 	WordCursor findPercentFromStart(unsigned int percent) const VIEW_SECTION;
@@ -191,7 +195,9 @@ private:
 	WordCursor myStartCursor;
 	WordCursor myEndCursor;
 	std::vector<LineInfo> myLineInfos;
-	std::map<WordCursor,LineInfo> myLineInfoCache;
+#ifndef PALM_TEMPORARY
+	std::set<LineInfo> myLineInfoCache;
+#endif // PALM_TEMPORARY
 
 	OverlappingType myOverlappingType;
 	unsigned int myOverlappingValue;
@@ -213,6 +219,7 @@ inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
 inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), End(word), IsVisible(false), Width(0), Height(0), SpaceCounter(0), StartStyle(style) {}
 inline TextView::LineInfo::~LineInfo() {}
+inline bool TextView::LineInfo::operator < (const LineInfo &info) const { return Start < info.Start; }
 
 inline TextView::ParagraphPosition::ParagraphPosition(int paragraphNumber, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), YStart(yStart), YEnd(yEnd) {}
 inline TextView::ParagraphPosition::~ParagraphPosition() {}

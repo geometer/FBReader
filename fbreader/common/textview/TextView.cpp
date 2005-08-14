@@ -288,13 +288,13 @@ void TextView::drawTextLine(const LineInfo &info) {
 }
 
 void TextView::skip(WordCursor &cursor, int height) {
-	WordCursor start = cursor;
-	start.moveToParagraphStart();
+	WordCursor paragraphStart = cursor;
+	paragraphStart.moveToParagraphStart();
 	WordCursor paragraphEnd = cursor;
 	paragraphEnd.moveToParagraphEnd();
 
 	myStyle.reset();
-	myStyle.applyControls(start, cursor);
+	myStyle.applyControls(paragraphStart, cursor);
 
 	while (!cursor.isEndOfParagraph() && (height > 0)) {
 		const LineInfo info = processTextLine(cursor, paragraphEnd);

@@ -117,6 +117,15 @@ void TextView::moveEndCursor(int paragraphNumber, bool start) {
 	myPaintState = END_IS_KNOWN;
 }
 
+bool TextView::pageIsEmpty() const {
+	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+		if (it->IsVisible) {
+			return false;
+		}
+	}
+	return true;
+}
+
 WordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
 	if (myLineInfos.empty() || (overlappingValue == 0)) {
 		return WordCursor();
@@ -157,13 +166,14 @@ WordCursor TextView::findPercentFromStart(unsigned int percent) const {
 	}
 
 	int height = myStyle.textAreaHeight() * percent / 100;
-	if (height == 0) {
-		return myLineInfos.front().Start;
-	}
+	bool visibleLineOccured = false;
 	std::vector<LineInfo>::const_iterator it;
 	for (it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+		if (it->IsVisible) {
+			visibleLineOccured = true;
+		}
 		height -= it->Height;
-		if (height <= 0) {
+		if (visibleLineOccured && (height <= 0)) {
 			break;
 		}
 	}
@@ -188,9 +198,9 @@ void TextView::preparePaintInfo() {
 		return;
 	}
 
-	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
-		myLineInfoCache.insert(std::pair<WordCursor,LineInfo>(it->Start, *it));
-	}
+#ifndef PALM_TEMPORARY
+	myLineInfoCache.insert(myLineInfos.begin(), myLineInfos.end());
+#endif // PALM_TEMPORARY
 
 	switch (myPaintState) {
 		default:
@@ -212,9 +222,13 @@ void TextView::preparePaintInfo() {
 						break;
 				}
       
+				if (!startCursor.isNull() && (startCursor == myStartCursor)) {
+					startCursor = findLineFromStart(1);
+				}
+
 				if (!startCursor.isNull()) {
 					WordCursor endCursor = buildInfos(startCursor);
-					if (endCursor != myEndCursor) {
+					if (!pageIsEmpty()) {
 						myStartCursor = startCursor;
 						myEndCursor = endCursor;
 						break;
@@ -240,6 +254,11 @@ void TextView::preparePaintInfo() {
 						endCursor = findPercentFromStart(100 - myOverlappingValue);
 						break;
 				}
+
+				if (!endCursor.isNull() && (endCursor == myEndCursor)) {
+					endCursor = findLineFromEnd(1);
+				}
+
 				if (!endCursor.isNull()) {
 					WordCursor startCursor = findStart(endCursor);
 					myStartCursor = (startCursor != myStartCursor) ? startCursor : findStart(myStartCursor);
@@ -258,7 +277,9 @@ void TextView::preparePaintInfo() {
 			break;
 	}
 	myPaintState = READY;
+#ifndef PALM_TEMPORARY
 	myLineInfoCache.clear();
+#endif // PALM_TEMPORARY
 }
 
 WordCursor TextView::findStart(const WordCursor &end) {
@@ -286,17 +307,17 @@ WordCursor TextView::findStart(const WordCursor &end) {
 WordCursor TextView::buildInfos(const WordCursor &start) {
 	myLineInfos.clear();
 
-	WordCursor end = start;
+	WordCursor cursor = start;
 	int textAreaHeight = myStyle.textAreaHeight();
 	do {
-		LineInfo info(end, myStyle.style());
-		WordCursor paragraphEnd = end;
+		WordCursor paragraphEnd = cursor;
 		paragraphEnd.moveToParagraphEnd();
-		WordCursor start = end;
-		start.moveToParagraphStart();
+		WordCursor paragraphStart = cursor;
+		paragraphStart.moveToParagraphStart();
 
 		myStyle.reset();
-		myStyle.applyControls(start, info.Start);
+		myStyle.applyControls(paragraphStart, cursor);
+		LineInfo info(cursor, myStyle.style());
 
 		while (!info.End.isEndOfParagraph()) {
 			info = processTextLine(info.End, paragraphEnd);
@@ -304,10 +325,10 @@ WordCursor TextView::buildInfos(const WordCursor &start) {
 			if (textAreaHeight < 0) {
 				break;
 			}
-			end = info.End;
+			cursor = info.End;
 			myLineInfos.push_back(info);
 		}
-	} while (end.isEndOfParagraph() && end.nextParagraph() && !end.paragraphCursor().isEndOfSection());
+	} while (cursor.isEndOfParagraph() && cursor.nextParagraph() && !cursor.paragraphCursor().isEndOfSection());
 
-	return end;
+	return cursor;
 }

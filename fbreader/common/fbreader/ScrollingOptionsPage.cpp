@@ -25,9 +25,9 @@
 #include "../textview/TextView.h"
 
 static const std::string NO_OVERLAPPING = "No Overlapping";
-static const std::string SET_NUMBER_TO_OVERLAP = "Set Number Of Lines To Overlap";
-static const std::string SET_NUMBER_TO_SCROLL = "Set Number Of Lines To Scroll";
-static const std::string SET_PERCENT_TO_SCROLL = "Set Percent Of Lines To Scroll";
+static const std::string SET_NUMBER_TO_OVERLAP = "Keep Lines";
+static const std::string SET_NUMBER_TO_SCROLL = "Scroll Lines";
+static const std::string SET_PERCENT_TO_SCROLL = "Scroll Percentage";
 
 class OverlappingTypeEntry : public ZLComboOptionEntry {
 
@@ -88,7 +88,7 @@ OverlappingTypeEntry::~OverlappingTypeEntry() {
 }
 
 const std::string &OverlappingTypeEntry::name() const {
-	static const std::string _name = "Overlapping Type";
+	static const std::string _name = "Scrolling Mode";
 	return _name;
 }
 
@@ -112,15 +112,15 @@ void OverlappingTypeEntry::onValueChange(const std::string &selectedValue) {
 
 ScrollingOptionsPage::ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab) {
 	dialogTab->addOption(new ZLSimpleSpinOptionEntry(
-		"Delay Between Page Scrollings, msecs", FBReader::ScrollingDelayOption, 0, 5000, 50
+		"Delay Between Scrollings, msecs", FBReader::ScrollingDelayOption, 0, 5000, 50
 	));
 	ZLComboOptionEntry *typeEntry = new OverlappingTypeEntry(*this);
 	myLinesToOverlapEntry =
-		new ZLSimpleSpinOptionEntry("Lines To Overlap", TextView::LinesToOverlapOption, 1, 100, 1);
+		new ZLSimpleSpinOptionEntry("Lines To Keep", TextView::LinesToOverlapOption, 1, 100, 1);
 	myLinesToScrollEntry =
 		new ZLSimpleSpinOptionEntry("Lines To Scroll", TextView::LinesToScrollOption, 1, 100, 1);
 	myPercentToScrollEntry =
-		new ZLSimpleSpinOptionEntry("Percent To Scroll", TextView::PercentToScrollOption, 0, 100, 5);
+		new ZLSimpleSpinOptionEntry("Percent To Scroll", TextView::PercentToScrollOption, 1, 100, 5);
 	typeEntry->onValueChange(typeEntry->initialValue());
 
 	dialogTab->addOption(typeEntry);
