@@ -29,6 +29,8 @@
 #include "../description/BookDescription.h"
 #include "../description/Author.h"
 
+static const std::string LIBRARY = "Library";
+
 CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
 	myCollection = 0;
 	myTreeModel = 0;
@@ -43,10 +45,8 @@ CollectionView::~CollectionView() {
 
 void CollectionView::showLastBooks(bool show) {
 	myLastBooksAreShown = show;
-	setModel(myLastBooksAreShown ? (TreeModel*)myLastBooksModel : myTreeModel, "Library");
+	setModel(myLastBooksAreShown ? (TreeModel*)myLastBooksModel : myTreeModel, LIBRARY);
 }
-
-static const std::string LIBRARY = "Library";
 
 const std::string &CollectionView::caption() const {
 	return LIBRARY;
@@ -87,7 +87,7 @@ void CollectionView::paint() {
 				myLastBooksModel->addParagraph(p);
 				myBooksMap[p] = *it;
 			}
-			setModel(myLastBooksModel, "Library");
+			setModel(myLastBooksModel, LIBRARY);
 		}
 	} else {
 		if ((myCollection == 0) || (!myCollection->isActual())) {
@@ -106,14 +106,14 @@ void CollectionView::paint() {
 					myBooksMap[bookParagraph] = *jt;
 				}
 			}
-			setModel(myTreeModel, "Library");
+			setModel(myTreeModel, LIBRARY);
 		}
 	}
 	TextView::paint();
 }
 
 void CollectionView::rebuild() {
-	setModel(0, "Library");
+	setModel(0, LIBRARY);
 	myBooksMap.clear();
 	if (myCollection != 0) {
 		delete myCollection;
