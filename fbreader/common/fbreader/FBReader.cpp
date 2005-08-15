@@ -370,6 +370,7 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 
 		ZLOptionsDialog *infoDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
 		ZLOptionsDialogTab *infoTab = infoDialog->createTab("Info");
+		infoTab->addOption(new StringInfoEntry("File", fileName));
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Title", info.TitleOption));
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (display name)", info.AuthorDisplayNameOption));
 		infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", info.AuthorSortKeyOption));

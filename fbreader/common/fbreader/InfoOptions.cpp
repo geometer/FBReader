@@ -32,6 +32,24 @@ std::vector<std::string> LanguageEntry::ourLanguages;
 
 static std::vector<std::string> AUTO_ENCODING;
 
+StringInfoEntry::StringInfoEntry(const std::string &name, const std::string &value) : myName(name), myValue(value) {
+	setActive(false);
+}
+
+StringInfoEntry::~StringInfoEntry() {
+}
+
+const std::string &StringInfoEntry::name() const {
+	return myName;
+}
+
+const std::string &StringInfoEntry::initialValue() const {
+	return myValue;
+}
+
+void StringInfoEntry::onAccept(const std::string&) const {
+}
+
 EncodingEntry::EncodingEntry(const std::string &name, ZLStringOption &encodingOption) : myName(name), myEncodingOption(encodingOption) {
 	if (initialValue() == "auto") {
 		setActive(false);

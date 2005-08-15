@@ -232,6 +232,10 @@ void StringOptionView::_hide() {
 	gtk_widget_hide(myLineEdit);
 }
 
+void StringOptionView::_setActive(bool active) {
+	gtk_entry_set_editable(GTK_ENTRY(myLineEdit), active);
+}
+
 void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept(gtk_entry_get_text(GTK_ENTRY(myLineEdit)));
 }

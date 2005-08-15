@@ -23,6 +23,20 @@
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLXMLReader.h>
 
+class StringInfoEntry : public ZLStringOptionEntry {
+
+public:
+	StringInfoEntry(const std::string &name, const std::string &value) FB_DIALOG_SECTION;
+	~StringInfoEntry() FB_DIALOG_SECTION;
+	const std::string &name() const FB_DIALOG_SECTION;
+	const std::string &initialValue() const FB_DIALOG_SECTION;
+	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
+
+private:
+	std::string myName;
+	std::string myValue;
+};
+
 class EncodingEntry : public ZLComboOptionEntry {
 
 public:

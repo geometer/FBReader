@@ -163,6 +163,7 @@ void StringOptionView::_createItem() {
 	myLabel = new QLabel(myOption->name().c_str(), myTab);
 	myLineEdit = new QLineEdit(myTab);
 	myLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
+	myLineEdit->cursorLeft(false, myLineEdit->text().length());
 	int width = myToColumn - myFromColumn + 1;
 	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
 	myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
@@ -176,6 +177,10 @@ void StringOptionView::_show() {
 void StringOptionView::_hide() {
 	myLabel->hide();
 	myLineEdit->hide();
+}
+
+void StringOptionView::_setActive(bool active) {
+	myLineEdit->setReadOnly(!active);
 }
 
 void StringOptionView::_onAccept() const {
