@@ -11,7 +11,7 @@
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
-PalmFBReader::PalmFBReader() : FBReader(new PalmPaintContext()) {
+PalmFBReader::PalmFBReader() : FBReader(new PalmPaintContext(), std::string()) {
 	myViewWidget = new PalmViewWidget(MainFBReaderForm);
 	setMode(BOOK_TEXT_MODE);
 }

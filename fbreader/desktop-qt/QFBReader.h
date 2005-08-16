@@ -34,7 +34,7 @@ public:
 	static const std::string ImageDirectory;
 	
 public:
-	QFBReader();
+	QFBReader(const std::string& bookToOpen);
 	~QFBReader();
 
 private:

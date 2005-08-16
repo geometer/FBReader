@@ -34,7 +34,7 @@ public:
 	static const std::string ImageDirectory;
 	
 public:
-	GtkFBReader();
+	GtkFBReader(const std::string& bookToOpen);
 	~GtkFBReader();
 
 protected:

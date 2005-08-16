@@ -32,7 +32,7 @@ class QFBReader : public QMainWindow, public FBReader {
 	Q_OBJECT
 
 public:
-	QFBReader();
+	QFBReader(const std::string& bookToOpen);
 
 	void fullScreenWorkaround();
 

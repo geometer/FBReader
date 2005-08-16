@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	QDeviceInfo::createInstance();
 
-	QFBReader *reader = new QFBReader();
+	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);
 	application.setMainWidget(reader);
 	reader->showMaximized();
 	int code = application.exec();

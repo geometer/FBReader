@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkFBReader::ImageDirectory);
 	GtkDeviceInfo::createInstance();
 
-	GtkFBReader *reader = new GtkFBReader();
+	GtkFBReader *reader = new GtkFBReader(argc == 1 ? std::string() : argv[1]);
 
 	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
 

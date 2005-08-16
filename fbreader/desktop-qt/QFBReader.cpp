@@ -43,7 +43,7 @@
 static ZLIntegerOption Width("Options", "Width", 800);
 static ZLIntegerOption Height("Options", "Height", 800);
 
-QFBReader::QFBReader() : FBReader(new QPaintContext()) {
+QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
 	setWFlags(getWFlags() | WStyle_Customize);
 
 	myViewWidget = new QViewWidget(this, this);

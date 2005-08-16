@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 	QDialogManager::createInstance();
 	QDeviceInfo::createInstance();
 
-	QFBReader *reader = new QFBReader();
+	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);
 	application.showMainWidget(reader);
 	int code = application.exec();
 	delete reader;

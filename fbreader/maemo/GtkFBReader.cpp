@@ -61,7 +61,7 @@ static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeySlot(key);
 }
 
-GtkFBReader::GtkFBReader() : FBReader(new GtkPaintContext()) {
+GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
 	myApp = HILDON_APP(hildon_app_new());
 	myAppView = HILDON_APPVIEW(hildon_appview_new(NULL));
 
