@@ -68,7 +68,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	ZLStringOption bookName(STATE, BOOK, howToStartString);
 	BookDescriptionPtr description;
 
-	if (bookToOpen.size() != 0) {
+	if (!bookToOpen.empty()) {
 		description = BookDescription::create(bookToOpen);
 	}
 
