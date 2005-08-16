@@ -87,7 +87,7 @@ public:
 	static const std::string HelpDirectory;
 
 protected:
-	FBReader(ZLPaintContext *context) FB_SECTION;
+	FBReader(ZLPaintContext *context, const std::string& bookToOpen = std::string()) FB_SECTION;
 	virtual ~FBReader() FB_SECTION;
 
 	virtual void setMode(ViewMode mode) FB_SECTION;

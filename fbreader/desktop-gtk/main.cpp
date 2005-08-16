@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	GtkDeviceInfo::createInstance();
 
-	GtkFBReader *reader = new GtkFBReader();
+	GtkFBReader *reader = new GtkFBReader(argc == 1 ? std::string() : argv[1]);	// MSS: use the first argument that gtk did not consume
 
 	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
 
@@ -56,3 +56,5 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
+
+// vim:ts=2:sw=2:noet

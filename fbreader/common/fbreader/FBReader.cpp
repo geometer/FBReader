@@ -54,7 +54,7 @@ ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
 ZLBooleanOption FBReader::SearchInWholeTextOption(SEARCH, "WholeText", false);
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
-FBReader::FBReader(ZLPaintContext *context) {
+FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	myModel = 0;
 	myContext = context;
 	myBookTextView = new BookTextView(*this, *myContext);
@@ -66,7 +66,16 @@ FBReader::FBReader(ZLPaintContext *context) {
 
 	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
 	ZLStringOption bookName(STATE, BOOK, howToStartString);
-	BookDescriptionPtr description = BookDescription::create(bookName.value());
+	BookDescriptionPtr description;
+
+	if (bookToOpen.size() != 0) {
+		description = BookDescription::create(bookToOpen);
+	}
+
+	if (description.isNull()) {
+		description = BookDescription::create(bookName.value());
+	}
+
 	if (description.isNull()) {
 #ifndef PALM_TEMPORARY
 		description = BookDescription::create(howToStartString);
@@ -422,3 +431,5 @@ void FBReader::clearTextCaches() {
 	myContentsView->clearCaches();
 	myCollectionView->clearCaches();
 }
+
+// vim:ts=2:sw=2:noet
