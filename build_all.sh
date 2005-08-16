@@ -10,12 +10,12 @@ make clean 1> /dev/null 2>&1;
 for target in $TARGETS; do
 	echo -n "Building $target ...";
 	if ! TARGET_ARCH=$target make 1> $target.log 2>&1; then
-		echo " failed"
-  else
-    echo " OK"
-    rm $target.log
+		echo " failure";
+		break;
 	fi
-	make clean 1> /dev/null 2>&1
+	echo " OK"
+	make clean 1> /dev/null 2>&1;
+	rm $target.log;
 done
 
 if [ -r makefiles/__target.mk ]; then
