@@ -212,8 +212,6 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab) {
 	mySmallScrollingEntries.init(FBReader::SmallScrollingOptions, dialogTab);
 	if (ZLDeviceInfo::isMousePresented()) {
 		myMouseScrollingEntries.init(FBReader::MouseScrollingOptions, dialogTab);
-	} else {
-		myMouseScrollingEntries.myDelayEntry = 0;
 	}
 
 	mainEntry->onValueChange(mainEntry->initialValue());

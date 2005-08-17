@@ -34,19 +34,18 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 
 	gtk_window_set_title(GTK_WINDOW(dialog), title);
 
-	if (myWindow != 0)
+	if (myWindow != 0) {
 		gtk_window_set_transient_for(GTK_WINDOW(dialog), myWindow);
+	}
 
 	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 
   if (button0 != 0) {
 		gtk_dialog_add_button (dialog, button0, 0);
   }
-
   if (button1 != 0) {
 		gtk_dialog_add_button (dialog, button1, 1);
   }
-
   if (button2 != 0) {
 		gtk_dialog_add_button (dialog, button2, 2);
   }

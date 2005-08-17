@@ -135,8 +135,6 @@ void ComboOptionView::_createItem() {
 		gtk_widget_show(menuItem);
 	}
 
-	g_signal_connect(myComboBox, "changed", G_CALLBACK(_onValueChange), this);
-
 	gtk_option_menu_set_menu(GTK_OPTION_MENU(myComboBox), menu);
 
 	if (selectedIndex >= 0) {
@@ -147,6 +145,8 @@ void ComboOptionView::_createItem() {
 
 	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
 	myTab->addItem(myComboBox, myRow, midColumn, myToColumn);
+
+	g_signal_connect(myComboBox, "changed", G_CALLBACK(_onValueChange), this);
 }
 
 void ComboOptionView::_show() {
