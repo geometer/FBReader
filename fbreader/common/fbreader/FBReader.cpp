@@ -110,8 +110,6 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 
-	std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
-	ZLStringOption bookName(STATE, BOOK, howToStartString);
 	BookDescriptionPtr description;
 
 	if (!bookToOpen.empty()) {
@@ -119,15 +117,17 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	}
 
 	if (description.isNull()) {
+		std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
+		ZLStringOption bookName(STATE, BOOK, howToStartString);
 		description = BookDescription::create(bookName.value());
-	}
 
-	if (description.isNull()) {
+		if (description.isNull()) {
 #ifndef PALM_TEMPORARY
-		description = BookDescription::create(howToStartString);
+			description = BookDescription::create(howToStartString);
 #else // PALM_TEMPORARY
-		description = BookDescription::create("$$TEST");
+			description = BookDescription::create("$$TEST");
 #endif // PALM_TEMPORARY
+		}
 	}
 	openBook(description);
 }
