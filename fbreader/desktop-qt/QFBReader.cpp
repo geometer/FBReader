@@ -64,8 +64,12 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myKeyBindings[Key_Equal] = ACTION_INCREASE_FONT;
 	myKeyBindings[Key_Left] = ACTION_UNDO;
 	myKeyBindings[Key_Right] = ACTION_REDO;
-	myKeyBindings[Key_Up] = ACTION_SCROLL_BACKWARD;
-	myKeyBindings[Key_Down] = ACTION_SCROLL_FORWARD;
+	myKeyBindings[Key_PageUp] = ACTION_LARGE_SCROLL_BACKWARD;
+	myKeyBindings[Key_PageDown] = ACTION_LARGE_SCROLL_FORWARD;
+	myKeyBindings[Key_Up] = ACTION_SMALL_SCROLL_BACKWARD;
+	myKeyBindings[Key_Down] = ACTION_SMALL_SCROLL_FORWARD;
+	myKeyBindings[Key_Home] = ACTION_SCROLL_TO_START_OF_TEXT;
+	myKeyBindings[Key_End] = ACTION_SCROLL_TO_END_OF_TEXT;
 	myKeyBindings[Key_Escape] = ACTION_CANCEL;
 
 	createToolbar();
@@ -83,6 +87,16 @@ void QFBReader::keyPressEvent(QKeyEvent *event) {
 	std::map<int,ActionCode>::const_iterator it = myKeyBindings.find(event->key());
 	if (it != myKeyBindings.end()) {
 		doAction(it->second);
+	}
+}
+
+void QFBReader::wheelEvent(QWheelEvent *event) {
+	if (event->orientation() == Vertical) {
+		if (event->delta() > 0) {
+			doAction(ACTION_MOUSE_SCROLL_BACKWARD);
+		} else {
+			doAction(ACTION_MOUSE_SCROLL_FORWARD);
+		}
 	}
 }
 

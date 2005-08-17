@@ -40,6 +40,7 @@ public:
 private:
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
+	void wheelEvent(QWheelEvent *event);
 
 protected:
 	void setWindowCaption(const std::string &caption) { setCaption(QString::fromUtf8(caption.c_str())); }

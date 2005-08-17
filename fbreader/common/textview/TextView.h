@@ -48,11 +48,6 @@ public:
 	static ZLIntegerOption PositionIndicatorHeightOption;
 	static ZLIntegerOption PositionIndicatorOffsetOption;
 
-	static ZLIntegerOption ScrollingModeOption;
-	static ZLIntegerOption LinesToKeepOption;
-	static ZLIntegerOption LinesToScrollOption;
-	static ZLIntegerOption PercentToScrollOption;
-	
 public:
 	enum ScrollingMode {
 		NO_OVERLAPPING,
@@ -124,9 +119,11 @@ protected:
 
 public:
 	void clearCaches() VIEW_SECTION;
-	virtual void paint() VIEW_SECTION;
 
-	void scrollPage(bool forward) VIEW_SECTION;
+	void scrollPage(bool forward, ScrollingMode mode, unsigned int value) VIEW_SECTION;
+	void scrollToStartOfText() VIEW1_SECTION;
+	void scrollToEndOfText() VIEW1_SECTION;
+
 	void gotoMark(TextMark mark) VIEW_SECTION;
 	virtual void gotoParagraph(int num, bool last = false) VIEW_SECTION;
 
@@ -144,6 +141,8 @@ public:
 	bool onStylusPress(int x, int y) VIEW1_SECTION;
 
 protected:
+	virtual void paint() VIEW_SECTION;
+
 	const std::string &fileName() const VIEW1_SECTION;
 	const TextModel *model() const VIEW1_SECTION;
 
@@ -160,7 +159,6 @@ protected:
 
 	bool empty() const VIEW_SECTION;
 
-	void scrollPage(bool forward, ScrollingMode mode, unsigned int value) VIEW_SECTION;
 	void selectParagraph(int paragraphNumber) VIEW1_SECTION;
 
 private:

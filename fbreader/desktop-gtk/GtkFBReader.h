@@ -53,7 +53,8 @@ protected:
 	ActionSlotData *getSlotData(ActionCode);
 
 public:
-	void handleKeySlot(GdkEventKey *);
+	void handleKeyEventSlot(GdkEventKey *event);
+	void handleScrollEventSlot(GdkEventScroll *event);
 	// MSS: this is not good, I suppose: the original method is protected, I make it public here...
 	void quitSlot();
 

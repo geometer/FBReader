@@ -57,12 +57,12 @@ static Boolean MainFBReaderFormHandleEvent(EventPtr event) {
 				switch (event->data.keyDown.chr) {
 					case pageUpChr:
 						DO_PAINT = true;
-						READER->doAction(FBReader::ACTION_SCROLL_BACKWARD);
+						READER->doAction(FBReader::ACTION_LARGE_SCROLL_BACKWARD);
 						DO_PAINT = false;
 						break;
 					case pageDownChr:
 						DO_PAINT = true;
-						READER->doAction(FBReader::ACTION_SCROLL_FORWARD);
+						READER->doAction(FBReader::ACTION_LARGE_SCROLL_FORWARD);
 						DO_PAINT = false;
 						break;
 				}

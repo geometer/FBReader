@@ -39,13 +39,6 @@ ZLBooleanOption TextView::IsIndicatorSensitiveOption(INDICATOR, "TouchSensitive"
 ZLColorOption TextView::PositionIndicatorColorOption(INDICATOR, "Color", ZLColor(127, 127, 127));
 ZLIntegerOption TextView::PositionIndicatorHeightOption(INDICATOR, "Height", 16);
 ZLIntegerOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 4);
-
-const std::string ARROW_SCROLLING = "ArrowScrolling";
-
-ZLIntegerOption TextView::ScrollingModeOption(ARROW_SCROLLING, "ScrollingMode", TextView::NO_OVERLAPPING);
-ZLIntegerOption TextView::LinesToKeepOption(ARROW_SCROLLING, "LinesToKeep", 1);
-ZLIntegerOption TextView::LinesToScrollOption(ARROW_SCROLLING, "LinesToScroll", 1);
-ZLIntegerOption TextView::PercentToScrollOption(ARROW_SCROLLING, "PercentToScroll", 50);
 	
 TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context) {
 }
@@ -128,25 +121,6 @@ void TextView::paint() {
 	}
 }
 
-void TextView::scrollPage(bool forward) {
-	ScrollingMode oType = (ScrollingMode)ScrollingModeOption.value();
-	unsigned int oValue = 0;
-	switch (oType) {
-		case KEEP_LINES:
-			oValue = LinesToKeepOption.value();
-			break;
-		case SCROLL_LINES:
-			oValue = LinesToScrollOption.value();
-			break;
-		case SCROLL_PERCENTAGE:
-			oValue = PercentToScrollOption.value();
-			break;
-		default:
-			break;
-	}
-	scrollPage(forward, oType, oValue);
-}
-
 void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) {
 	preparePaintInfo();
 	if (myPaintState == READY) {
@@ -154,6 +128,18 @@ void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) 
 		myScrollingMode = mode;
 		myOverlappingValue = value;
 	}
+}
+
+void TextView::scrollToStartOfText() {
+	//gotoMark(TextMark(0, 0, 0));
+}
+
+void TextView::scrollToEndOfText() {
+	/*
+	if (myModel != 0) {
+		moveEndCursor(myModel->paragraphs().size() - 1, false);
+	}
+	*/
 }
 
 const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {

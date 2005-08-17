@@ -46,8 +46,53 @@ static const std::string STATE = "State";
 static const std::string BOOK = "Book";
 
 ZLBooleanOption FBReader::QuitOnCancelOption(OPTIONS, "QuitOnCancel", false);
-ZLIntegerOption FBReader::ScrollingDelayOption(OPTIONS, "ScrollingDelay", 250);
 ZLBooleanOption FBReader::StoreContentsPositionOption(OPTIONS, "StoreContentsPosition", false);
+
+const std::string LARGE_SCROLLING = "LargeScrolling";
+const std::string SMALL_SCROLLING = "SmallScrolling";
+const std::string MOUSE_SCROLLING = "MouseScrolling";
+
+const std::string DELAY = "ScrollingDelay";
+const std::string MODE = "Mode";
+const std::string LINES_TO_KEEP = "LinesToKeep";
+const std::string LINES_TO_SCROLL = "LinesToScroll";
+const std::string PERCENT_TO_SCROLL = "PercentToScroll";
+
+FBReader::ScrollingOptions::ScrollingOptions(
+	const std::string &delayGroup, const std::string &delayName, long delayValue,
+	const std::string &modeGroup, const std::string &modeName, long modeValue,
+	const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
+	const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
+	const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
+) : DelayOption(delayGroup, delayName, delayValue),
+		ModeOption(modeGroup, modeName, modeValue),
+		LinesToKeepOption(linesToKeepGroup, linesToKeepName, linesToKeepValue),
+		LinesToScrollOption(linesToScrollGroup, linesToScrollName, linesToScrollValue),
+		PercentToScrollOption(percentToScrollGroup, percentToScrollName, percentToScrollValue) {}
+
+FBReader::ScrollingOptions FBReader::LargeScrollingOptions(
+	OPTIONS, DELAY, 250,
+	LARGE_SCROLLING, MODE, TextView::NO_OVERLAPPING,
+	LARGE_SCROLLING, LINES_TO_KEEP, 1,
+	LARGE_SCROLLING, LINES_TO_SCROLL, 1,
+	LARGE_SCROLLING, PERCENT_TO_SCROLL, 50
+);
+
+FBReader::ScrollingOptions FBReader::SmallScrollingOptions(
+	SMALL_SCROLLING, DELAY, 50,
+	SMALL_SCROLLING, MODE, TextView::SCROLL_LINES,
+	SMALL_SCROLLING, LINES_TO_KEEP, 1,
+	SMALL_SCROLLING, LINES_TO_SCROLL, 1,
+	SMALL_SCROLLING, PERCENT_TO_SCROLL, 50
+);
+
+FBReader::ScrollingOptions FBReader::MouseScrollingOptions(
+	MOUSE_SCROLLING, DELAY, 0,
+	MOUSE_SCROLLING, MODE, TextView::SCROLL_LINES,
+	MOUSE_SCROLLING, LINES_TO_KEEP, 1,
+	MOUSE_SCROLLING, LINES_TO_SCROLL, 1,
+	MOUSE_SCROLLING, PERCENT_TO_SCROLL, 50
+);
 
 ZLBooleanOption FBReader::SearchBackwardOption(SEARCH, "Backward", false);
 ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
@@ -170,6 +215,33 @@ void FBReader::addBookSlot() {
 	}
 }
 
+void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
+	int delay = myLastScrollingTime.millisecondsTo(ZLTime());
+	if ((delay < 0) || (delay >= options.DelayOption.value())) {
+		//const ZLTime t;
+		ParagraphCursor::Cache cache;
+		TextView::ScrollingMode oType = (TextView::ScrollingMode)options.ModeOption.value();
+		unsigned int oValue = 0;
+		switch (oType) {
+			case TextView::KEEP_LINES:
+				oValue = options.LinesToKeepOption.value();
+				break;
+			case TextView::SCROLL_LINES:
+				oValue = options.LinesToScrollOption.value();
+				break;
+			case TextView::SCROLL_PERCENTAGE:
+				oValue = options.PercentToScrollOption.value();
+				break;
+			default:
+				break;
+		}
+		((TextView*)myViewWidget->view())->scrollPage(forward, oType, oValue);
+		repaintView();
+		myLastScrollingTime = ZLTime();
+		//std::cerr << t.millisecondsTo(myLastScrollingTime) << "\n";
+	}
+}
+
 void FBReader::doAction(ActionCode code) {
 	switch (code) {
 		case ACTION_SHOW_COLLECTION:
@@ -209,19 +281,23 @@ void FBReader::doAction(ActionCode code) {
 		case ACTION_FIND_NEXT:
 			((TextView*)myViewWidget->view())->findNext();
 			break;
-		case ACTION_SCROLL_FORWARD:
-		case ACTION_SCROLL_BACKWARD:
-			{
-				int delay = myLastScrollingTime.millisecondsTo(ZLTime());
-				if ((delay < 0) || (delay >= ScrollingDelayOption.value())) {
-					//const ZLTime t;
-					ParagraphCursor::Cache cache;
-					((TextView*)myViewWidget->view())->scrollPage(code == ACTION_SCROLL_FORWARD);
-					repaintView();
-					myLastScrollingTime = ZLTime();
-					//std::cerr << t.millisecondsTo(myLastScrollingTime) << "\n";
-				}
-			}
+		case ACTION_LARGE_SCROLL_FORWARD:
+		case ACTION_LARGE_SCROLL_BACKWARD:
+			doScrolling(LargeScrollingOptions, code == ACTION_LARGE_SCROLL_FORWARD);
+			break;
+		case ACTION_SMALL_SCROLL_FORWARD:
+		case ACTION_SMALL_SCROLL_BACKWARD:
+			doScrolling(SmallScrollingOptions, code == ACTION_SMALL_SCROLL_FORWARD);
+			break;
+		case ACTION_MOUSE_SCROLL_FORWARD:
+		case ACTION_MOUSE_SCROLL_BACKWARD:
+			doScrolling(MouseScrollingOptions, code == ACTION_MOUSE_SCROLL_FORWARD);
+			break;
+		case ACTION_SCROLL_TO_START_OF_TEXT:
+			((TextView*)myViewWidget->view())->scrollToStartOfText();
+			break;
+		case ACTION_SCROLL_TO_END_OF_TEXT:
+			((TextView*)myViewWidget->view())->scrollToEndOfText();
 			break;
 		case ACTION_CANCEL:
 			cancelSlot();

@@ -45,6 +45,10 @@ ZLDeviceInfo::ScreenSize ZLDeviceInfo::screenSize() {
 	}
 }
 
+bool ZLDeviceInfo::isMousePresented() {
+	return screenSize() == SIZE_DESKTOP;
+}
+
 void ZLDeviceInfo::deleteInstance() {
 	delete ourInstance;
 }

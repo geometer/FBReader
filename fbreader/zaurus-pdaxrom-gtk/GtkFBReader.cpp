@@ -104,8 +104,8 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	addKeyBinding("2", ACTION_DECREASE_FONT);
 	addKeyBinding("Left", ACTION_UNDO);
 	addKeyBinding("Right", ACTION_REDO);
-	addKeyBinding("Up", ACTION_SCROLL_BACKWARD);
-	addKeyBinding("Down", ACTION_SCROLL_FORWARD);
+	addKeyBinding("Up", ACTION_LARGE_SCROLL_BACKWARD);
+	addKeyBinding("Down", ACTION_LARGE_SCROLL_FORWARD);
 	addKeyBinding("Escape", ACTION_CANCEL);
 	addKeyBinding("Return", ACTION_FULLSCREEN);
 }

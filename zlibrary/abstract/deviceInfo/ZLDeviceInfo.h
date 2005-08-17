@@ -34,7 +34,9 @@ public:
 	static ScreenSize screenSize() UTIL_SECTION;
 	static unsigned int screenWidth() UTIL_SECTION;
 	static unsigned int screenHeight() UTIL_SECTION;
+
 	static bool isKeyboardPresented() UTIL_SECTION;
+	static bool isMousePresented() UTIL_SECTION;
 
 	static void deleteInstance() UTIL_SECTION;
 

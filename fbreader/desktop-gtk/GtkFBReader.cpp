@@ -18,8 +18,6 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#include <iostream>
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -58,8 +56,12 @@ static void actionSlot(GtkWidget*, gpointer data) {
 	uData->Reader->doAction(uData->Code);
 }
 
-static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
-	((GtkFBReader*)data)->handleKeySlot(key);
+static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
+	((GtkFBReader*)data)->handleKeyEventSlot(event);
+}
+
+static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) {
+	((GtkFBReader*)data)->handleScrollEventSlot(event);
 }
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
@@ -86,7 +88,8 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
-	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKey), this);
+	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
+	gtk_signal_connect(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
 
 	addKeyBinding("L", ACTION_SHOW_COLLECTION);
 	addKeyBinding("Z", ACTION_SHOW_LAST_BOOKS);
@@ -101,11 +104,15 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	addKeyBinding("I", ACTION_SHOW_BOOK_INFO);
 	addKeyBinding("A", ACTION_ADD_BOOK);
 	addKeyBinding("R", ACTION_ROTATE_SCREEN);
-	addKeyBinding("Up", ACTION_SCROLL_BACKWARD);
-	addKeyBinding("Down", ACTION_SCROLL_FORWARD);
+	addKeyBinding("Page_Up", ACTION_LARGE_SCROLL_BACKWARD);
+	addKeyBinding("Page_Down", ACTION_LARGE_SCROLL_FORWARD);
+	addKeyBinding("Up", ACTION_SMALL_SCROLL_BACKWARD);
+	addKeyBinding("Down", ACTION_SMALL_SCROLL_FORWARD);
+	addKeyBinding("Home", ACTION_SCROLL_TO_START_OF_TEXT);
+	addKeyBinding("End", ACTION_SCROLL_TO_END_OF_TEXT);
 	addKeyBinding("Escape", ACTION_CANCEL);
-	addKeyBinding("<Shift>plus", ACTION_INCREASE_FONT);
-	addKeyBinding("equal", ACTION_DECREASE_FONT);
+	addKeyBinding("minus", ACTION_DECREASE_FONT);
+	addKeyBinding("equal", ACTION_INCREASE_FONT);
 	addKeyBinding("Return", ACTION_FULLSCREEN);
 
 	myFullScreen = false;
@@ -147,12 +154,26 @@ void GtkFBReader::addKeyBinding(const std::string &accelerator, ActionCode code)
 	addKeyBinding(keyval, state, code);
 }
 
-void GtkFBReader::handleKeySlot(GdkEventKey *event) {
+void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
+	//std::cerr << gtk_accelerator_name(event->keyval, (GdkModifierType)event->state) << "\n";
 	std::map<std::pair<guint,GdkModifierType>,ActionCode>::const_iterator
 		accelerator = myKeyBindings.find(std::pair<guint,GdkModifierType>(event->keyval, (GdkModifierType)event->state));
 
 	if (accelerator != myKeyBindings.end()) {
 		doAction(accelerator->second);
+	}
+}
+
+void GtkFBReader::handleScrollEventSlot(GdkEventScroll *event) {
+	switch (event->direction) {
+		case GDK_SCROLL_UP:
+			doAction(ACTION_MOUSE_SCROLL_BACKWARD);
+			break;
+		case GDK_SCROLL_DOWN:
+			doAction(ACTION_MOUSE_SCROLL_FORWARD);
+			break;
+		default:
+			break;
 	}
 }
 

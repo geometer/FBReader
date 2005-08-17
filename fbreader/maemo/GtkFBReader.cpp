@@ -112,8 +112,8 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	myKeyBindings["Down"] = ACTION_INCREASE_FONT;
 	myKeyBindings["Escape"] = ACTION_CANCEL;
 	myKeyBindings["F6"] = ACTION_FULLSCREEN;
-	myKeyBindings["F7"] = ACTION_SCROLL_FORWARD;
-	myKeyBindings["F8"] = ACTION_SCROLL_BACKWARD;
+	myKeyBindings["F7"] = ACTION_LARGE_SCROLL_FORWARD;
+	myKeyBindings["F8"] = ACTION_LARGE_SCROLL_BACKWARD;
 
 	myFullScreen = false;
 }

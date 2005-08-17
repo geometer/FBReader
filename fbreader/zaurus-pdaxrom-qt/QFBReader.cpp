@@ -64,8 +64,8 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myKeyBindings[Key_2] = ACTION_INCREASE_FONT;
 	myKeyBindings[Key_Left] = ACTION_UNDO;
 	myKeyBindings[Key_Right] = ACTION_REDO;
-	myKeyBindings[Key_Up] = ACTION_SCROLL_BACKWARD;
-	myKeyBindings[Key_Down] = ACTION_SCROLL_FORWARD;
+	myKeyBindings[Key_Up] = ACTION_LARGE_SCROLL_BACKWARD;
+	myKeyBindings[Key_Down] = ACTION_LARGE_SCROLL_FORWARD;
 	myKeyBindings[Key_Escape] = ACTION_CANCEL;
 	myKeyBindings[Key_Return] = ACTION_FULLSCREEN;
 

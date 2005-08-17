@@ -20,8 +20,11 @@
 #ifndef __SCROLLINGOPTIONSPAGE_H__
 #define __SCROLLINGOPTIONSPAGE_H__
 
+#include "FBReader.h"
+
 class ZLOptionsDialogTab;
 class ZLSpinOptionEntry;
+class ZLComboOptionEntry;
 
 class ScrollingOptionsPage {
 
@@ -30,10 +33,23 @@ public:
 	~ScrollingOptionsPage() FB_DIALOG_SECTION;
 
 private:
-	ZLSpinOptionEntry *myLinesToKeepEntry;
-	ZLSpinOptionEntry *myLinesToScrollEntry;
-	ZLSpinOptionEntry *myPercentToScrollEntry;
 
+	struct ScrollingEntries {
+		ZLSpinOptionEntry *myDelayEntry;
+		ZLComboOptionEntry *myModeEntry;
+		ZLSpinOptionEntry *myLinesToKeepEntry;
+		ZLSpinOptionEntry *myLinesToScrollEntry;
+		ZLSpinOptionEntry *myPercentToScrollEntry;
+
+		void init(FBReader::ScrollingOptions &options, ZLOptionsDialogTab *dialogTab);
+		void show(bool visible);
+	};
+
+	ScrollingEntries myLargeScrollingEntries;
+	ScrollingEntries mySmallScrollingEntries;
+	ScrollingEntries myMouseScrollingEntries;
+
+friend class MainEntry;
 friend class ScrollingModeEntry;
 };
 

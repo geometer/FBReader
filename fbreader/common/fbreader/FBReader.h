@@ -48,8 +48,14 @@ public:
 		ACTION_SEARCH,
 		ACTION_FIND_PREVIOUS,
 		ACTION_FIND_NEXT,
-		ACTION_SCROLL_FORWARD,
-		ACTION_SCROLL_BACKWARD,
+		ACTION_LARGE_SCROLL_FORWARD,
+		ACTION_LARGE_SCROLL_BACKWARD,
+		ACTION_SMALL_SCROLL_FORWARD,
+		ACTION_SMALL_SCROLL_BACKWARD,
+		ACTION_MOUSE_SCROLL_FORWARD,
+		ACTION_MOUSE_SCROLL_BACKWARD,
+		ACTION_SCROLL_TO_START_OF_TEXT,
+		ACTION_SCROLL_TO_END_OF_TEXT,
 		ACTION_CANCEL,
 		ACTION_INCREASE_FONT,
 		ACTION_DECREASE_FONT,
@@ -75,9 +81,29 @@ protected:
 	};
 
 public:
+	struct ScrollingOptions {
+		ScrollingOptions(
+			const std::string &delayGroup, const std::string &delayName, long delayValue,
+			const std::string &modeGroup, const std::string &modeName, long modeValue,
+			const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
+			const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
+			const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
+		) FB_SECTION;
+		
+		ZLIntegerOption DelayOption;
+		ZLIntegerOption ModeOption;
+		ZLIntegerOption LinesToKeepOption;
+		ZLIntegerOption LinesToScrollOption;
+		ZLIntegerOption PercentToScrollOption;
+	};
+
+public:
 	static ZLBooleanOption QuitOnCancelOption;
-	static ZLIntegerOption ScrollingDelayOption;
 	static ZLBooleanOption StoreContentsPositionOption;
+
+	static ScrollingOptions LargeScrollingOptions;
+	static ScrollingOptions SmallScrollingOptions;
+	static ScrollingOptions MouseScrollingOptions;
 
 	static ZLBooleanOption SearchBackwardOption;
 	static ZLBooleanOption SearchIgnoreCaseOption;
@@ -110,6 +136,7 @@ protected:
 private:
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
 	void clearTextCaches() FB_SECTION;
+	void FBReader::doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
 
 public:
 	void openBook(BookDescriptionPtr description) FB_SECTION;
