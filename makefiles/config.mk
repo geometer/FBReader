@@ -168,7 +168,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"app0\")))" \
 		-DHYPHENATION_SECTION="__attribute__ ((section(\"app2\")))" \
 		-DFORMATS_SECTION="__attribute__ ((section(\"app2\")))" \
-		-DFB_DIALOG_SECTION="__attribute__ ((section(\"app3\")))" \
+		-DFB_DIALOG_SECTION="__attribute__ ((section(\"app4\")))" \
 		-DPALM_TEMPORARY \
 		-DUSE_OWN_XML_PARSER \
 		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O3
