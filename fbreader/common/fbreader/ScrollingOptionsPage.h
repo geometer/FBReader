@@ -41,7 +41,8 @@ private:
 		ZLSpinOptionEntry *myLinesToScrollEntry;
 		ZLSpinOptionEntry *myPercentToScrollEntry;
 
-		void init(FBReader::ScrollingOptions &options, ZLOptionsDialogTab *dialogTab);
+		void init(FBReader::ScrollingOptions &options);
+		void connect(ZLOptionsDialogTab *dialogTab);
 		void show(bool visible);
 	};
 

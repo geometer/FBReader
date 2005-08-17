@@ -175,14 +175,16 @@ void ScrollingModeEntry::onValueChange(const std::string &selectedValue) {
 	myEntries.myPercentToScrollEntry->setVisible(selectedValue == SCROLL_PERCENTAGE);
 }
 
-void ScrollingOptionsPage::ScrollingEntries::init(FBReader::ScrollingOptions &options, ZLOptionsDialogTab *dialogTab) {
+void ScrollingOptionsPage::ScrollingEntries::init(FBReader::ScrollingOptions &options) {
 	myDelayEntry = new ZLSimpleSpinOptionEntry("Delay Between Scrollings, msecs", options.DelayOption, 0, 5000, 50);
 	myModeEntry = new ScrollingModeEntry(*this, options.ModeOption);
 	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry("Lines To Keep", options.LinesToKeepOption, 1, 100, 1);
 	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry("Lines To Scroll", options.LinesToScrollOption, 1, 100, 1);
 	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry("Percent To Scroll", options.PercentToScrollOption, 1, 100, 5);
 	myModeEntry->onValueChange(myModeEntry->initialValue());
+}
 
+void ScrollingOptionsPage::ScrollingEntries::connect(ZLOptionsDialogTab *dialogTab) {
 	dialogTab->addOption(myDelayEntry);
 	dialogTab->addOption(myModeEntry);
 	dialogTab->addOption(myLinesToKeepEntry);
@@ -208,11 +210,17 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab) {
 	ZLComboOptionEntry *mainEntry = new MainEntry(*this);
 	dialogTab->addOption(mainEntry);
 
-	myLargeScrollingEntries.init(FBReader::LargeScrollingOptions, dialogTab);
-	mySmallScrollingEntries.init(FBReader::SmallScrollingOptions, dialogTab);
+	myLargeScrollingEntries.init(FBReader::LargeScrollingOptions);
+	mySmallScrollingEntries.init(FBReader::SmallScrollingOptions);
 	if (ZLDeviceInfo::isMousePresented()) {
-		myMouseScrollingEntries.init(FBReader::MouseScrollingOptions, dialogTab);
+		myMouseScrollingEntries.init(FBReader::MouseScrollingOptions);
 	}
 
 	mainEntry->onValueChange(mainEntry->initialValue());
+
+	myLargeScrollingEntries.connect(dialogTab);
+	mySmallScrollingEntries.connect(dialogTab);
+	if (ZLDeviceInfo::isMousePresented()) {
+		myMouseScrollingEntries.connect(dialogTab);
+	}
 }

@@ -66,7 +66,7 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", BookCollection::PathOption));
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", BookCollection::ScanSubdirsOption));
 	generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", LastOpenedBooks::MaxListSizeOption, 0, 100, 1));
-	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Store Position In Contents Table", FBReader::StoreContentsPositionOption));
+	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", FBReader::StoreContentsPositionOption));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"));
 
