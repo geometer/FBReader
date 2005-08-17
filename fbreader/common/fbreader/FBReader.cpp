@@ -114,7 +114,28 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	BookDescriptionPtr description;
 
 	if (!bookToOpen.empty()) {
-		description = BookDescription::create(bookToOpen);
+		ZLFile aBook = ZLFile(bookToOpen);
+
+		if (aBook.isDirectory() || aBook.isArchive()) {
+			shared_ptr<ZLDir> myDir = aBook.directory();
+			std::vector<std::string> names;
+
+			myDir->collectFiles(names, true);
+
+			for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
+				const std::string& candidate = myDir->itemName(*it);
+
+				description = BookDescription::create(candidate);
+
+				if (!description.isNull()) {
+					break;
+				}
+			}
+
+			// FIXME: what to do with the directories?
+		} else {
+			description = BookDescription::create(bookToOpen);
+		}
 	}
 
 	if (description.isNull()) {
