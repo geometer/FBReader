@@ -134,6 +134,7 @@ protected:
 	virtual void addBookSlot() FB_SECTION;
 
 private:
+	BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
 	void clearTextCaches() FB_SECTION;
 	void FBReader::doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
@@ -152,10 +153,10 @@ protected:
 	ViewMode myMode;
 	ViewMode myPreviousMode;
 	ZLViewWidget *myViewWidget;
-  FootnoteView *myFootnoteView;	
-  BookTextView *myBookTextView;	
-  ContentsView *myContentsView;	
-  CollectionView *myCollectionView;	
+	FootnoteView *myFootnoteView;	
+	BookTextView *myBookTextView;	
+	ContentsView *myContentsView;	
+	CollectionView *myCollectionView;	
 
 private:
 	ZLTime myLastScrollingTime;

@@ -100,30 +100,6 @@ ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
 ZLBooleanOption FBReader::SearchInWholeTextOption(SEARCH, "WholeText", false);
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
-static BookDescriptionPtr checkAndOpenBook(const std::string& name) {
-	BookDescriptionPtr description;
-	ZLFile aBook = ZLFile(name);
-
-	if (aBook.isArchive()) {
-		shared_ptr<ZLDir> myDir = aBook.directory();
-		std::vector<std::string> names;
-
-		myDir->collectFiles(names, true);
-
-		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-			description = checkAndOpenBook(myDir->itemName(*it));
-
-			if (!description.isNull()) {
-				break;
-			}
-		}
-	} else if (!aBook.isDirectory()) {
-		description = BookDescription::create(name);
-	}
-
-	return description;
-}
-
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	myModel = 0;
 	myContext = context;
@@ -139,7 +115,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	BookDescriptionPtr description;
 
 	if (!bookToOpen.empty()) {
-		description = checkAndOpenBook(bookToOpen);
+		description = createDescription(bookToOpen);
 	}
 
 	if (description.isNull()) {
@@ -172,6 +148,30 @@ FBReader::~FBReader() {
 	TextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
 	Hyphenator::deleteInstance();
+}
+
+BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {
+	BookDescriptionPtr description;
+	ZLFile aBook = ZLFile(fileName);
+
+	if (aBook.isArchive()) {
+		shared_ptr<ZLDir> myDir = aBook.directory();
+		std::vector<std::string> names;
+
+		myDir->collectFiles(names, true);
+
+		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
+			description = createDescription(myDir->itemName(*it));
+
+			if (!description.isNull()) {
+				break;
+			}
+		}
+	} else if (!aBook.isDirectory()) {
+		description = BookDescription::create(fileName);
+	}
+
+	return description;
 }
 
 void FBReader::openBook(BookDescriptionPtr description) {
