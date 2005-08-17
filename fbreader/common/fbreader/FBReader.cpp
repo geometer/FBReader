@@ -22,6 +22,7 @@
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLOptionsDialog.h>
 #include <abstract/ZLPaintContext.h>
+#include <abstract/ZLDir.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
