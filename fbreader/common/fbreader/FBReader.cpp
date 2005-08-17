@@ -100,6 +100,30 @@ ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
 ZLBooleanOption FBReader::SearchInWholeTextOption(SEARCH, "WholeText", false);
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
+static BookDescriptionPtr checkAndOpenBook(const std::string& name) {
+	BookDescriptionPtr description;
+	ZLFile aBook = ZLFile(name);
+
+	if (aBook.isArchive()) {
+		shared_ptr<ZLDir> myDir = aBook.directory();
+		std::vector<std::string> names;
+
+		myDir->collectFiles(names, true);
+
+		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
+			description = checkAndOpenBook(myDir->itemName(*it));
+
+			if (!description.isNull()) {
+				break;
+			}
+		}
+	} else if (!aBook.isDirectory()) {
+		description = BookDescription::create(name);
+	}
+
+	return description;
+}
+
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	myModel = 0;
 	myContext = context;
@@ -115,28 +139,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	BookDescriptionPtr description;
 
 	if (!bookToOpen.empty()) {
-		ZLFile aBook = ZLFile(bookToOpen);
-
-		if (aBook.isDirectory() || aBook.isArchive()) {
-			shared_ptr<ZLDir> myDir = aBook.directory();
-			std::vector<std::string> names;
-
-			myDir->collectFiles(names, true);
-
-			for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-				const std::string& candidate = myDir->itemName(*it);
-
-				description = BookDescription::create(candidate);
-
-				if (!description.isNull()) {
-					break;
-				}
-			}
-
-			// FIXME: what to do with the directories?
-		} else {
-			description = BookDescription::create(bookToOpen);
-		}
+		description = checkAndOpenBook(bookToOpen);
 	}
 
 	if (description.isNull()) {
