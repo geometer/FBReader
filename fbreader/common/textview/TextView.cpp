@@ -131,15 +131,15 @@ void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) 
 }
 
 void TextView::scrollToStartOfText() {
-	//gotoMark(TextMark(0, 0, 0));
+	gotoParagraph(0, false);
+	repaintView();
 }
 
 void TextView::scrollToEndOfText() {
-	/*
 	if (myModel != 0) {
-		moveEndCursor(myModel->paragraphs().size() - 1, false);
+		gotoParagraph(myModel->paragraphs().size(), true);
+		repaintView();
 	}
-	*/
 }
 
 const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {
