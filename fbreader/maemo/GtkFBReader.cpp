@@ -96,10 +96,20 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_signal_connect(GTK_OBJECT(myApp), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 	gtk_signal_connect(GTK_OBJECT(myApp), "key_press_event", G_CALLBACK(handleKey), this);
 
-	myKeyBindings["L"] = ACTION_SHOW_COLLECTION;
-	myKeyBindings["O"] = ACTION_SHOW_OPTIONS;
+	// These buttons exist and we use them.
 	myKeyBindings["Left"] = ACTION_UNDO;
 	myKeyBindings["Right"] = ACTION_REDO;
+	myKeyBindings["Return"] = ACTION_ROTATE_SCREEN;
+	myKeyBindings["Up"] = ACTION_SMALL_SCROLL_BACKWARD;
+	myKeyBindings["Down"] = ACTION_SMALL_SCROLL_FORWARD;
+	myKeyBindings["Escape"] = ACTION_CANCEL;
+	myKeyBindings["F6"] = ACTION_FULLSCREEN;
+	myKeyBindings["F7"] = ACTION_LARGE_SCROLL_FORWARD;
+	myKeyBindings["F8"] = ACTION_LARGE_SCROLL_BACKWARD;
+
+	// These buttons do not exist on the device, but they can be used in the scratchbox environment
+	myKeyBindings["L"] = ACTION_SHOW_COLLECTION;
+	myKeyBindings["O"] = ACTION_SHOW_OPTIONS;
 	myKeyBindings["C"] = ACTION_SHOW_CONTENTS;
 	myKeyBindings["F"] = ACTION_SEARCH;
 	myKeyBindings["P"] = ACTION_FIND_PREVIOUS;
@@ -107,13 +117,6 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	myKeyBindings["D"] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
 	myKeyBindings["I"] = ACTION_SHOW_BOOK_INFO;
 	myKeyBindings["A"] = ACTION_ADD_BOOK;
-	myKeyBindings["Return"] = ACTION_ROTATE_SCREEN;
-	myKeyBindings["Up"] = ACTION_DECREASE_FONT;
-	myKeyBindings["Down"] = ACTION_INCREASE_FONT;
-	myKeyBindings["Escape"] = ACTION_CANCEL;
-	myKeyBindings["F6"] = ACTION_FULLSCREEN;
-	myKeyBindings["F7"] = ACTION_LARGE_SCROLL_FORWARD;
-	myKeyBindings["F8"] = ACTION_LARGE_SCROLL_BACKWARD;
 
 	myFullScreen = false;
 }
