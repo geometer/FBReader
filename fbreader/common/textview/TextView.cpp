@@ -458,4 +458,5 @@ void TextView::clearCaches() {
 
 void TextView::selectParagraph(int paragraphNumber) {
 	myModel->selectParagraph(paragraphNumber);
+	rebuildPaintInfo(true);
 }
