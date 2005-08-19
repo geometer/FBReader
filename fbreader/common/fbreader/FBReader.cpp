@@ -244,7 +244,6 @@ void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
 	int delay = myLastScrollingTime.millisecondsTo(ZLTime());
 	if ((delay < 0) || (delay >= options.DelayOption.value())) {
 		//const ZLTime t;
-		ParagraphCursor::Cache cache;
 		TextView::ScrollingMode oType = (TextView::ScrollingMode)options.ModeOption.value();
 		unsigned int oValue = 0;
 		switch (oType) {

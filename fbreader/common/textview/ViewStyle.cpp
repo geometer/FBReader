@@ -65,11 +65,10 @@ void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCurso
 	}
 }
 
-int TextView::ViewStyle::elementWidth(const WordCursor &cursor) const {
-	const TextElement &element = cursor.element();
+int TextView::ViewStyle::elementWidth(const TextElement &element, unsigned int charNumber) const {
 	switch (element.kind()) {
 		case TextElement::WORD_ELEMENT:
-			return wordWidth((const Word&)element, cursor.charNumber(), -1, false);
+			return wordWidth((const Word&)element, charNumber, -1, false);
 		case TextElement::IMAGE_ELEMENT:
 			return context().imageWidth(((const ImageElement&)element).image());
 		case TextElement::INDENT_ELEMENT:
@@ -88,8 +87,7 @@ int TextView::ViewStyle::elementWidth(const WordCursor &cursor) const {
 	return 0;
 }
 
-int TextView::ViewStyle::elementHeight(const WordCursor &cursor) const {
-	const TextElement &element = cursor.element();
+int TextView::ViewStyle::elementHeight(const TextElement &element) const {
 	switch (element.kind()) {
 		case TextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {

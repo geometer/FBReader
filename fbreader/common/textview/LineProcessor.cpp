@@ -41,7 +41,6 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 #endif // PALM_TEMPORARY
 
 	TextStylePtr storedStyle = myStyle.style();
-	WordCursor current = start;
 
 	info.Width = myStyle.style()->leftIndent();
 	int newWidth = info.Width;
@@ -53,14 +52,17 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 	int internalSpaceCounter = 0;
 	int removeLastSpace = false;
 
-	TextElement::Kind elementKind = current.element().kind();
+	WordCursor current = start;
+	const ParagraphCursor &paragraph = current.paragraphCursor();
+	TextElement::Kind elementKind = paragraph[current.wordNumber()].kind();
 
 	do {
-		newWidth += myStyle.elementWidth(current);
-		newHeight = std::max(newHeight, myStyle.elementHeight(current));
+		const TextElement &element = paragraph[current.wordNumber()];
+		newWidth += myStyle.elementWidth(element, current.charNumber());
+		newHeight = std::max(newHeight, myStyle.elementHeight(element));
 		switch (elementKind) {
 			case TextElement::CONTROL_ELEMENT:
-				myStyle.applyControl((const ControlElement&)current.element());
+				myStyle.applyControl((const ControlElement&)element);
 				break;
 			case TextElement::WORD_ELEMENT:
 			case TextElement::IMAGE_ELEMENT:
@@ -89,7 +91,7 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 		current.nextWord();
 		bool allowBreak = current.sameElementAs(end);
 		if (!allowBreak) {
-			elementKind = current.element().kind();
+			elementKind = paragraph[current.wordNumber()].kind();
 			allowBreak =
 				(elementKind != TextElement::WORD_ELEMENT) &&
 				(elementKind != TextElement::IMAGE_ELEMENT) &&
@@ -106,10 +108,11 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 		}
 	} while (!current.sameElementAs(end));
 
+	const TextElement &element = paragraph[current.wordNumber()];
 	if (TextView::AutoHyphenationOption.value() && myStyle.style()->allowHyphenations()) {
-		if (!current.sameElementAs(end) && (current.element().kind() == TextElement::WORD_ELEMENT)) {
-			newWidth -= myStyle.elementWidth(current);
-			const Word &word = (Word&)current.element();
+		if (!current.sameElementAs(end) && (element.kind() == TextElement::WORD_ELEMENT)) {
+			newWidth -= myStyle.elementWidth(element, current.charNumber());
+			const Word &word = (Word&)element;
 			int spaceLeft = maxWidth - newWidth;
 			if ((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
 				ZLUnicodeUtil::Ucs2String ucs2string;

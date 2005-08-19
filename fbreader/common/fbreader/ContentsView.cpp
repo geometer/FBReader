@@ -81,19 +81,18 @@ void ContentsView::gotoReference() {
 	const WordCursor &cursor = myReader.textView().endCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().paragraphNumber();
-		const std::vector<Paragraph*> &allParagraphs = model()->paragraphs();
-		unsigned int selected = allParagraphs.size();
-		for (std::vector<Paragraph*>::const_iterator it = allParagraphs.begin(); it != allParagraphs.end(); it++) {
+		const std::vector<Paragraph*> &paragraphs = model()->paragraphs();
+		unsigned int selected = paragraphs.size() - 1;
+		for (std::vector<Paragraph*>::const_iterator it = paragraphs.begin() + 1; it != paragraphs.end(); it++) {
 			if (((ParagraphWithReference*)*it)->reference() >= reference) {
-				selected = it - allParagraphs.begin();
+				selected = it - paragraphs.begin() - 1;
 				break;
 			}
 		}
-		if (selected > 0) {
-			selected--;
-		}
 		selectParagraph(selected);
 		gotoParagraph(selected);
-		scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
+		if (selected != paragraphs.size() - 1) {
+			scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
+		}
 	}
 }

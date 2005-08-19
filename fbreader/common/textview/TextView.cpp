@@ -57,6 +57,8 @@ void TextView::clear() {
 	myTextElementMap.clear();
 	myTextSize.clear();
 	myFullTextSize = 0;
+
+	ParagraphCursorCache::clear();
 }
 
 void TextView::setModel(const TextModel *model, const std::string &name) {
@@ -119,6 +121,8 @@ void TextView::paint() {
 		context().drawLine(left, bottom, left, top);
 		context().drawLine(right, bottom, right, top);
 	}
+
+	ParagraphCursorCache::cleanup();
 }
 
 void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) {
@@ -167,9 +171,10 @@ void TextView::gotoMark(TextMark mark) {
 		return;
 	}
 	if (!startCursor().isNull() &&
-			((startCursor().paragraphCursor().paragraphNumber() != mark.ParagraphNumber) ||
+			(((int)startCursor().paragraphCursor().paragraphNumber() != mark.ParagraphNumber) ||
 			 (startCursor().position() > mark))) {
 		gotoParagraph(mark.ParagraphNumber);
+		preparePaintInfo();
 		while (mark > endCursor().position()) {
 			scrollPage(true, NO_OVERLAPPING, 0);
 			preparePaintInfo();
@@ -201,8 +206,6 @@ void TextView::drawTextLine(const LineInfo &info) {
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
-	int pn = info.Start.paragraphCursor().paragraphNumber();
-	int wn = info.Start.wordNumber();
 	bool wordOccured = false;
 
 	switch (myStyle.style()->alignment()) {
@@ -222,8 +225,11 @@ void TextView::drawTextLine(const LineInfo &info) {
 			break;
 	}
 
-	for (WordCursor pos = info.Start; !pos.sameElementAs(info.End); pos.nextWord(), wn++) {
-		TextElement::Kind kind = pos.element().kind();
+	const ParagraphCursor &paragraph = info.Start.paragraphCursor();
+	int paragraphNumber = paragraph.paragraphNumber();
+	for (WordCursor pos = info.Start; !pos.sameElementAs(info.End); pos.nextWord()) {
+		const TextElement &element = paragraph[pos.wordNumber()];
+		TextElement::Kind kind = element.kind();
 		int x = context().x();
 		int y = context().y();
   
@@ -231,14 +237,14 @@ void TextView::drawTextLine(const LineInfo &info) {
 			case TextElement::WORD_ELEMENT:
 				wordOccured = true;
 				y -= myStyle.style()->verticalShift();
-				drawWord(x, y, (const Word&)pos.element(), pos.charNumber(), -1, false);
+				drawWord(x, y, (const Word&)element, pos.charNumber(), -1, false);
 				break;
 			case TextElement::IMAGE_ELEMENT:
 				wordOccured = true;
-				context().drawImage(x, y, ((const ImageElement&)pos.element()).image());
+				context().drawImage(x, y, ((const ImageElement&)element).image());
 				break;
 			case TextElement::CONTROL_ELEMENT:
-				myStyle.applyControl((const ControlElement&)pos.element());
+				myStyle.applyControl((const ControlElement&)element);
 				break;
 			case TextElement::HSPACE_ELEMENT:
 				if (wordOccured && (spaceCounter > 0)) {
@@ -250,7 +256,7 @@ void TextView::drawTextLine(const LineInfo &info) {
 				}
 				break;
 			case TextElement::TREE_ELEMENT:
-				drawTreeNode(((const TreeElement&)pos.element()).treeElementKind(), info.Height);
+				drawTreeNode(((const TreeElement&)element).treeElementKind(), info.Height);
 				break;
 			case TextElement::INDENT_ELEMENT:
 			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
@@ -259,12 +265,12 @@ void TextView::drawTextLine(const LineInfo &info) {
 				break;
 		}
 
-		int width = myStyle.elementWidth(pos);
+		int width = myStyle.elementWidth(element, pos.charNumber());
 		context().moveX(width);
 		if (width > 0) {
-			int height = myStyle.elementHeight(pos);
+			int height = myStyle.elementHeight(element);
 			if (height > 0) {
-				myTextElementMap.push_back(TextElementPosition(pn, wn, kind, x, x + width - 1, y - height + 1, y));
+				myTextElementMap.push_back(TextElementPosition(paragraphNumber, pos.wordNumber(), kind, x, x + width - 1, y - height + 1, y));
 			}
 		}
 	}
@@ -324,7 +330,7 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 
 	myModel->search(text, ignoreCase);
 	if (!startCursor().isNull()) {
-		clearCaches();
+		rebuildPaintInfo(true);
 		TextMark position = startCursor().position();
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
@@ -369,7 +375,7 @@ bool TextView::onStylusPress(int x, int y) {
 			} else {
 				gotoParagraph(paragraphNumber, true);
 				preparePaintInfo();
-				if (!endCursor().isNull() && (paragraphNumber == endCursor().paragraphCursor().paragraphNumber())) {
+				if (!endCursor().isNull() && (paragraphNumber == (int)endCursor().paragraphCursor().paragraphNumber())) {
 					if (!endCursor().paragraphCursor().isLast() || !endCursor().isEndOfParagraph()) {
 						long paragraphLength = endCursor().paragraphCursor().paragraphLength();
 						if (paragraphLength > 0) {

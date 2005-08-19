@@ -70,8 +70,8 @@ private:
 
 		const ZLPaintContext &context() const VIEW_SECTION;
 		const TextStylePtr style() const VIEW_SECTION;
-		int elementWidth(const WordCursor &cursor) const VIEW_SECTION;
-		int elementHeight(const WordCursor &cursor) const VIEW_SECTION;
+		int elementWidth(const TextElement &element, unsigned int charNumber) const VIEW_SECTION;
+		int elementHeight(const TextElement &element) const VIEW_SECTION;
 		int textAreaHeight() const VIEW_SECTION;
 
 		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const VIEW_SECTION;

@@ -91,6 +91,7 @@ namespace std {
 
 		void insert(const pair<T1,T2> &p) STL2_SECTION;
 		void clear() STL2_SECTION;
+		void swap(map &m) STL_SECTION;
 
 	private:
 		mutable vector<pair<T1,T2> > myData;
@@ -335,6 +336,10 @@ namespace std {
 	template<typename T1, typename T2>
 	inline void map<T1,T2>::clear() {
 		myData.clear();
+	}
+	template<typename T1, typename T2>
+	void map<T1,T2>::swap(map<T1,T2> &m) {
+		myData.swap(m.myData);
 	}
 	/*
 	template<typename T1, typename T2>
