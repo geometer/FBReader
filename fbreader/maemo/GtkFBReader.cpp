@@ -214,12 +214,12 @@ void GtkFBReader::handleKeySlot(GdkEventKey *event) {
 //  -- fullscreen key toggles the full screen mode
 //  -- cancel key always tries to quit the application
 void GtkFBReader::cancelSlot() {
-	if (myFullScreen) {
+	if (myMode != BOOK_TEXT_MODE) {
+		restorePreviousMode();
+	} else if (myFullScreen) {
 		myFullScreen = false;
 		hildon_appview_set_fullscreen(myAppView, false);
 		gtk_widget_show(GTK_WIDGET(myToolbar));
-	} else if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
 	} else if (QuitOnCancelOption.value()) {
 		quitSlot();
 	}

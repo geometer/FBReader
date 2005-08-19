@@ -94,8 +94,8 @@ ifeq "$(TARGET_ARCH)" "maemo"
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -m 0644 share/FBReader/help/HowToStart.blueish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
-	install -d $(DESTDIR)/usr/share/icons/hicolor/26x26
-	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/
+	install -d $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
+	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	install -d $(DESTDIR)/usr/share/applications/hildon
 	install -m 0644 maemo/package/FBReader.desktop $(DESTDIR)/usr/share/applications/hildon
 	install -d $(DESTDIR)/etc/others-menu
