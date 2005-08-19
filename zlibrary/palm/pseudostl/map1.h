@@ -91,7 +91,7 @@ namespace std {
 
 		void insert(const pair<T1,T2> &p) STL2_SECTION;
 		void clear() STL2_SECTION;
-		void swap(map &m) STL_SECTION;
+		void swap(map &m) STL2_SECTION;
 
 	private:
 		mutable vector<pair<T1,T2> > myData;
