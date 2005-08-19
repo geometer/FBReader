@@ -26,31 +26,41 @@ struct TextMark {
 	int ParagraphNumber;
 	int Offset, Length;
 
-	TextMark() {
-		ParagraphNumber = -1;
-		Offset = -1;
-		Length = -1;
-	}
+	TextMark() MODEL_SECTION;
+	TextMark(int paragraphNumber, int offset, int length) MODEL_SECTION;
+	TextMark(const TextMark &mark) MODEL_SECTION;
+	const TextMark &operator = (const TextMark &mark) MODEL_SECTION;
+	~TextMark() MODEL_SECTION;
 
-	TextMark(int paragraphNumber, int offset, int length) {
-		ParagraphNumber = paragraphNumber;
-		Offset = offset;
-		Length = length;
-	}
-
-	bool operator < (const TextMark &mark) const {
-		return (ParagraphNumber < mark.ParagraphNumber) ||
-					 ((ParagraphNumber == mark.ParagraphNumber) && (Offset < mark.Offset));
-	}
-	bool operator > (const TextMark &mark) const {
-		return mark < *this;
-	}
-	bool operator <= (const TextMark &mark) const {
-		return !(*this > mark);
-	}
-	bool operator >= (const TextMark &mark) const {
-		return !(*this < mark);
-	}
+	bool operator < (const TextMark &mark) const MODEL_SECTION;
+	bool operator > (const TextMark &mark) const MODEL_SECTION;
+	bool operator <= (const TextMark &mark) const MODEL_SECTION;
+	bool operator >= (const TextMark &mark) const MODEL_SECTION;
 };
+
+inline TextMark::TextMark() : ParagraphNumber(-1), Offset(-1), Length(-1) {}
+inline TextMark::TextMark(int paragraphNumber, int offset, int length) : ParagraphNumber(paragraphNumber), Offset(offset), Length(length) {}
+inline TextMark::TextMark(const TextMark &mark) : ParagraphNumber(mark.ParagraphNumber), Offset(mark.Offset), Length(mark.Length) {}
+inline const TextMark &TextMark::operator = (const TextMark &mark) {
+	ParagraphNumber = mark.ParagraphNumber;
+	Offset = mark.Offset;
+	Length = mark.Length;
+	return *this;
+}
+inline TextMark::~TextMark() {}
+
+inline bool TextMark::operator < (const TextMark &mark) const {
+	return (ParagraphNumber < mark.ParagraphNumber) ||
+				 ((ParagraphNumber == mark.ParagraphNumber) && (Offset < mark.Offset));
+}
+inline bool TextMark::operator > (const TextMark &mark) const {
+	return mark < *this;
+}
+inline bool TextMark::operator <= (const TextMark &mark) const {
+	return !(*this > mark);
+}
+inline bool TextMark::operator >= (const TextMark &mark) const {
+	return !(*this < mark);
+}
 
 #endif /* __TEXTMARK_H__ */

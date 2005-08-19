@@ -69,11 +69,19 @@ void QViewWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 int QViewWidget::x(const QMouseEvent *event) const {
-	return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
+	if (isRotated()) {
+		return height() - std::min(std::max(event->y(), 0), height()) - view()->context().rightMargin();
+	} else {
+		return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
+	}
 }
 
 int QViewWidget::y(const QMouseEvent *event) const {
-	return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
+	if (isRotated()) {
+		return std::min(std::max(event->x(), 0), width()) - view()->context().topMargin();
+	} else {
+		return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
+	}
 }
 
 void QViewWidget::repaintView()	{

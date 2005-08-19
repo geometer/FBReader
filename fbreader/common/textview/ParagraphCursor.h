@@ -141,20 +141,26 @@ friend class WordCursor;
 class ParagraphCursorCache {
 
 public:
-	static void put(Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor);
-	static shared_ptr<ParagraphCursor> get(Paragraph *paragraph);
+	static void put(Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor) VIEW_SECTION;
+	static shared_ptr<ParagraphCursor> get(Paragraph *paragraph) VIEW_SECTION;
 
-	static void clear();
-	static void cleanup();
+	static void clear() VIEW_SECTION;
+	static void cleanup() VIEW_SECTION;
 
 private:
 	static std::map<Paragraph*, weak_ptr<ParagraphCursor> > ourCache;
+
+private:
+	// instance creation is disabled
+	ParagraphCursorCache() VIEW_SECTION;
 };
 
 class WordCursor {
 
 public:
 	WordCursor() VIEW_SECTION;
+	WordCursor(const WordCursor &cursor) VIEW_SECTION;
+	const WordCursor &operator = (const WordCursor &cursor) VIEW_SECTION;
 	const WordCursor &operator = (ParagraphCursor *paragraphCursor) VIEW_SECTION;
 	~WordCursor() VIEW_SECTION;
 
@@ -243,6 +249,13 @@ inline void TextElementPool::storeControlElement(ControlElement *element) {
 }
 
 inline WordCursor::WordCursor() : myCharNumber(0) {}
+inline WordCursor::WordCursor(const WordCursor &cursor) : myParagraphCursor(cursor.myParagraphCursor), myWordNumber(cursor.myWordNumber), myCharNumber(cursor.myCharNumber) {}
+inline const WordCursor &WordCursor::operator = (const WordCursor &cursor) {
+	myParagraphCursor = cursor.myParagraphCursor;
+	myWordNumber = cursor.myWordNumber;
+	myCharNumber = cursor.myCharNumber;
+	return *this;
+}
 inline WordCursor::~WordCursor() {}
 
 inline bool WordCursor::isNull() const { return myParagraphCursor.isNull(); }

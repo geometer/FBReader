@@ -124,13 +124,13 @@ public:
 	void scrollToStartOfText() VIEW1_SECTION;
 	void scrollToEndOfText() VIEW1_SECTION;
 
-	void gotoMark(TextMark mark) VIEW_SECTION;
-	virtual void gotoParagraph(int num, bool last = false) VIEW_SECTION;
+	void gotoMark(TextMark mark) VIEW1_SECTION;
+	virtual void gotoParagraph(int num, bool last = false) VIEW1_SECTION;
 
 	const WordCursor &startCursor() const VIEW_SECTION;
 	const WordCursor &endCursor() const VIEW_SECTION;
 
-	virtual void setModel(const TextModel *model, const std::string &name) VIEW_SECTION;
+	virtual void setModel(const TextModel *model, const std::string &name) VIEW1_SECTION;
 
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward) VIEW1_SECTION;
 	bool canFindNext() const VIEW1_SECTION;
@@ -151,11 +151,11 @@ protected:
 
 	void rebuildPaintInfo(bool strong) VIEW_SECTION;
 
-	void setStartCursor(ParagraphCursor *cursor) VIEW_SECTION;
-	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
-	void moveStartCursor(int paragraphNumber, bool start) VIEW_SECTION;
-	void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW_SECTION;
-	void moveEndCursor(int paragraphNumber, bool start) VIEW_SECTION;
+	void setStartCursor(ParagraphCursor *cursor) VIEW1_SECTION;
+	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW1_SECTION;
+	void moveStartCursor(int paragraphNumber, bool start) VIEW1_SECTION;
+	void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW1_SECTION;
+	void moveEndCursor(int paragraphNumber, bool start) VIEW1_SECTION;
 
 	bool empty() const VIEW_SECTION;
 
@@ -167,9 +167,9 @@ private:
 	int paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
 	void skip(WordCursor &paragraph, int height) VIEW_SECTION;
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
-	void drawTextLine(const LineInfo &info) VIEW1_SECTION;
-	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW1_SECTION;
-	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW1_SECTION;
+	void drawTextLine(const LineInfo &info) VIEW_SECTION;
+	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
+	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
 	void drawTreeNode(TreeElement::TreeElementKind kind, int height) VIEW1_SECTION;
 
 	void preparePaintInfo() VIEW_SECTION;
