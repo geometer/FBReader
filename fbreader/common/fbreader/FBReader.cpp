@@ -156,15 +156,32 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 
 	if (aBook.isArchive()) {
 		shared_ptr<ZLDir> myDir = aBook.directory();
-		std::vector<std::string> names;
+		std::vector<std::string> names, archives;
 
 		myDir->collectFiles(names, true);
 
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-			description = createDescription(myDir->itemName(*it));
+			const std::string& candidateName = myDir->itemName(*it);
+			ZLFile candidate = ZLFile(candidateName);
 
-			if (!description.isNull()) {
-				break;
+			if (candidate.isArchive()) {
+				archives.push_back(candidateName);
+			} else if (!candidate.isDirectory()) {
+				description = BookDescription::create(candidateName);
+
+				if (!description.isNull()) {
+					break;
+				}
+			}
+		}
+
+		if (description.isNull()) {
+			for (std::vector<std::string>::const_iterator it = archives.begin(); it != archives.end(); it++) {
+				description = createDescription(*it);
+
+				if (!description.isNull()) {
+					break;
+				}
 			}
 		}
 	} else if (!aBook.isDirectory()) {
