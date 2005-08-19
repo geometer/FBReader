@@ -286,43 +286,6 @@ void TextView::drawTextLine(const LineInfo &info) {
 	}
 }
 
-void TextView::skip(WordCursor &cursor, int height) {
-	WordCursor paragraphStart = cursor;
-	paragraphStart.moveToParagraphStart();
-	WordCursor paragraphEnd = cursor;
-	paragraphEnd.moveToParagraphEnd();
-
-	myStyle.reset();
-	myStyle.applyControls(paragraphStart, cursor);
-
-	while (!cursor.isEndOfParagraph() && (height > 0)) {
-		const LineInfo info = processTextLine(cursor, paragraphEnd);
-		cursor = info.End;
-		height -= info.Height;
-	}
-}
-
-int TextView::paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) {
-	WordCursor word = cursor;
-	word.moveToParagraphStart();
-	WordCursor end = cursor;
-	if (!beforeCurrentPosition) {
-		end.moveToParagraphEnd();
-	}
-	
-	myStyle.reset();
-
-	int height = 0;
-
-	while (!word.sameElementAs(end)) {
-		const LineInfo info = processTextLine(word, end);
-		word = info.End;
-		height += info.Height;
-	}
-
-	return height;
-}
-
 void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, bool backward) {
 	if (text.empty()) {
 		return;

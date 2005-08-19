@@ -165,7 +165,9 @@ private:
 	void clear() VIEW_SECTION;
 
 	int paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
-	void skip(WordCursor &paragraph, int height) VIEW_SECTION;
+	int paragraphLinesNumber(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
+	void skipHeight(WordCursor &paragraph, int height) VIEW_SECTION;
+	void skipLines(WordCursor &paragraph, int linesNumber) VIEW_SECTION;
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
 	void drawTextLine(const LineInfo &info) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
@@ -179,7 +181,8 @@ private:
 	WordCursor findLineFromEnd(unsigned int overlappingValue) const VIEW_SECTION;
 	WordCursor findPercentFromStart(unsigned int percent) const VIEW_SECTION;
 
-	WordCursor findStart(const WordCursor &end) VIEW_SECTION;
+	WordCursor findStartByHeight(const WordCursor &end, int textHeight) VIEW_SECTION;
+	WordCursor findStartByLinesNumber(const WordCursor &end, int linesNumber) VIEW_SECTION;
 	WordCursor buildInfos(const WordCursor &start) VIEW_SECTION;
 
 private:
