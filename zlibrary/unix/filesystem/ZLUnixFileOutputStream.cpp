@@ -16,6 +16,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
+#include <unistd.h>
+
 #include "ZLUnixFileOutputStream.h"
 
 ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name) {
