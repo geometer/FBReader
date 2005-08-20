@@ -242,7 +242,7 @@ void TextView::preparePaintInfo() {
 			if (!myStartCursor.paragraphCursor().isFirst() || !myStartCursor.isStartOfParagraph()) {
 				switch (myScrollingMode) {
 					case NO_OVERLAPPING:
-						myStartCursor = findStartByHeight(myStartCursor, myStyle.textAreaHeight());
+						myStartCursor = findStart(myStartCursor, PIXEL_UNIT, myStyle.textAreaHeight());
 						break;
 					case KEEP_LINES:
 					{
@@ -251,21 +251,21 @@ void TextView::preparePaintInfo() {
 							endCursor = findLineFromEnd(1);
 						}
 						if (!endCursor.isNull()) {
-							WordCursor startCursor = findStartByHeight(endCursor, myStyle.textAreaHeight());
+							WordCursor startCursor = findStart(endCursor, PIXEL_UNIT, myStyle.textAreaHeight());
 							myStartCursor =
 								(startCursor != myStartCursor) ?
-									startCursor : findStartByHeight(myStartCursor, myStyle.textAreaHeight());
+									startCursor : findStart(myStartCursor, PIXEL_UNIT, myStyle.textAreaHeight());
 						} else {
-							myStartCursor = findStartByHeight(myStartCursor, myStyle.textAreaHeight());
+							myStartCursor = findStart(myStartCursor, PIXEL_UNIT, myStyle.textAreaHeight());
 						}
 						break;
 					}
 					case SCROLL_LINES:
-						myStartCursor = findStartByLinesNumber(myStartCursor, myOverlappingValue);
+						myStartCursor = findStart(myStartCursor, LINE_UNIT, myOverlappingValue);
 						break;
 					case SCROLL_PERCENTAGE:
 						myStartCursor =
-							findStartByHeight(myStartCursor, myStyle.textAreaHeight() * myOverlappingValue / 100);
+							findStart(myStartCursor, PIXEL_UNIT, myStyle.textAreaHeight() * myOverlappingValue / 100);
 						break;
 				}
 				myEndCursor = buildInfos(myStartCursor);
@@ -275,7 +275,7 @@ void TextView::preparePaintInfo() {
 			myEndCursor = buildInfos(myStartCursor);
 			break;
 		case END_IS_KNOWN:
-			myStartCursor = findStartByHeight(myEndCursor, myStyle.textAreaHeight());
+			myStartCursor = findStart(myEndCursor, PIXEL_UNIT, myStyle.textAreaHeight());
 			myEndCursor = buildInfos(myStartCursor);
 			break;
 	}
@@ -285,12 +285,12 @@ void TextView::preparePaintInfo() {
 #endif // PALM_TEMPORARY
 }
 
-WordCursor TextView::findStartByHeight(const WordCursor &end, int textHeight) {
+WordCursor TextView::findStart(const WordCursor &end, SizeUnit unit, int size) {
 	WordCursor start = end;
-	textHeight -= paragraphHeight(start, true);
+	size -= paragraphSize(start, true, unit);
 	bool positionChanged = !start.isStartOfParagraph();
 	start.moveToParagraphStart();
-	while (textHeight > 0) {
+	while (size > 0) {
 		if (positionChanged && start.paragraphCursor().isEndOfSection()) {
 			break;
 		}
@@ -300,30 +300,9 @@ WordCursor TextView::findStartByHeight(const WordCursor &end, int textHeight) {
 		if (!start.paragraphCursor().isEndOfSection()) {
 			positionChanged = true;
 		}
-		textHeight -= paragraphHeight(start, false);
+		size -= paragraphSize(start, false, unit);
 	}
-	skipHeight(start, -textHeight);
-	return start;
-}
-
-WordCursor TextView::findStartByLinesNumber(const WordCursor &end, int linesNumber) {
-	WordCursor start = end;
-	linesNumber -= paragraphLinesNumber(start, true);
-	bool positionChanged = !start.isStartOfParagraph();
-	start.moveToParagraphStart();
-	while (linesNumber > 0) {
-		if (positionChanged && start.paragraphCursor().isEndOfSection()) {
-			break;
-		}
-		if (!start.previousParagraph()) {
-			break;
-		}
-		if (!start.paragraphCursor().isEndOfSection()) {
-			positionChanged = true;
-		}
-		linesNumber -= paragraphLinesNumber(start, false);
-	}
-	skipLines(start, -linesNumber);
+	skip(start, unit, -size);
 	return start;
 }
 
@@ -356,7 +335,7 @@ WordCursor TextView::buildInfos(const WordCursor &start) {
 	return cursor;
 }
 
-int TextView::paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) {
+int TextView::paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit) {
 	WordCursor word = cursor;
 	word.moveToParagraphStart();
 	WordCursor end = cursor;
@@ -366,41 +345,18 @@ int TextView::paragraphHeight(const WordCursor &cursor, bool beforeCurrentPositi
 	
 	myStyle.reset();
 
-	int height = 0;
+	int size = 0;
 
 	while (!word.sameElementAs(end)) {
 		const LineInfo info = processTextLine(word, end);
 		word = info.End;
-		height += info.Height;
+		size += infoSize(info, unit);
 	}
 
-	return height;
+	return size;
 }
 
-int TextView::paragraphLinesNumber(const WordCursor &cursor, bool beforeCurrentPosition) {
-	WordCursor word = cursor;
-	word.moveToParagraphStart();
-	WordCursor end = cursor;
-	if (!beforeCurrentPosition) {
-		end.moveToParagraphEnd();
-	}
-	
-	myStyle.reset();
-
-	int counter = 0;
-
-	while (!word.sameElementAs(end)) {
-		const LineInfo info = processTextLine(word, end);
-		word = info.End;
-		if (info.IsVisible) {
-			counter++;
-		}
-	}
-
-	return counter;
-}
-
-void TextView::skipHeight(WordCursor &cursor, int height) {
+void TextView::skip(WordCursor &cursor, SizeUnit unit, int size) {
 	WordCursor paragraphStart = cursor;
 	paragraphStart.moveToParagraphStart();
 	WordCursor paragraphEnd = cursor;
@@ -409,27 +365,9 @@ void TextView::skipHeight(WordCursor &cursor, int height) {
 	myStyle.reset();
 	myStyle.applyControls(paragraphStart, cursor);
 
-	while (!cursor.isEndOfParagraph() && (height > 0)) {
+	while (!cursor.isEndOfParagraph() && (size > 0)) {
 		const LineInfo info = processTextLine(cursor, paragraphEnd);
 		cursor = info.End;
-		height -= info.Height;
-	}
-}
-
-void TextView::skipLines(WordCursor &cursor, int linesNumber) {
-	WordCursor paragraphStart = cursor;
-	paragraphStart.moveToParagraphStart();
-	WordCursor paragraphEnd = cursor;
-	paragraphEnd.moveToParagraphEnd();
-
-	myStyle.reset();
-	myStyle.applyControls(paragraphStart, cursor);
-
-	while (!cursor.isEndOfParagraph() && (linesNumber > 0)) {
-		const LineInfo info = processTextLine(cursor, paragraphEnd);
-		cursor = info.End;
-		if (info.IsVisible) {
-			linesNumber--;
-		}
+		size -= infoSize(info, unit);
 	}
 }

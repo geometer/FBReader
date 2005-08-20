@@ -164,10 +164,6 @@ protected:
 private:
 	void clear() VIEW_SECTION;
 
-	int paragraphHeight(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
-	int paragraphLinesNumber(const WordCursor &cursor, bool beforeCurrentPosition) VIEW_SECTION;
-	void skipHeight(WordCursor &paragraph, int height) VIEW_SECTION;
-	void skipLines(WordCursor &paragraph, int linesNumber) VIEW_SECTION;
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
 	void drawTextLine(const LineInfo &info) VIEW_SECTION;
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
@@ -181,8 +177,15 @@ private:
 	WordCursor findLineFromEnd(unsigned int overlappingValue) const VIEW_SECTION;
 	WordCursor findPercentFromStart(unsigned int percent) const VIEW_SECTION;
 
-	WordCursor findStartByHeight(const WordCursor &end, int textHeight) VIEW_SECTION;
-	WordCursor findStartByLinesNumber(const WordCursor &end, int linesNumber) VIEW_SECTION;
+	enum SizeUnit {
+		PIXEL_UNIT,
+		LINE_UNIT
+	};
+	int infoSize(const LineInfo &info, SizeUnit unit) VIEW_SECTION;
+	int paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit) VIEW_SECTION;
+	void skip(WordCursor &paragraph, SizeUnit unit, int size) VIEW_SECTION;
+	WordCursor findStart(const WordCursor &end, SizeUnit unit, int textHeight) VIEW_SECTION;
+
 	WordCursor buildInfos(const WordCursor &start) VIEW_SECTION;
 
 private:
@@ -237,5 +240,8 @@ inline const WordCursor &TextView::startCursor() const { return myStartCursor; }
 inline const WordCursor &TextView::endCursor() const { return myEndCursor; }
 inline const std::string &TextView::fileName() const { return myFileName; }
 inline const TextModel *TextView::model() const { return myModel; }
+inline int TextView::infoSize(const LineInfo &info, SizeUnit unit) {
+	return (unit == PIXEL_UNIT) ? info.Height : (info.IsVisible ? 1 : 0);
+}
 
 #endif /* __TEXTVIEW_H__ */
