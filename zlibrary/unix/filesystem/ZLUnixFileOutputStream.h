@@ -34,6 +34,8 @@ public:
 
 private:
 	std::string myName;
+	std::string myTemporaryName;
+	bool myHasErrors;
 	FILE *myFile;
 };
 

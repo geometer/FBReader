@@ -28,17 +28,29 @@ ZLUnixFileOutputStream::~ZLUnixFileOutputStream() {
 
 bool ZLUnixFileOutputStream::open() {
 	close();
-	myFile = fopen(myName.c_str(), "wb");
+
+	char *tmpl = new char[myName.length() + 8];
+	strcpy(tmpl, myName.c_str());
+	strcpy(tmpl + myName.length(), ".XXXXXX");
+	myTemporaryName = mktemp(tmpl);
+	delete[] tmpl;
+
+	myFile = fopen(myTemporaryName.c_str(), "wb");
+	myHasErrors = false;
 	return myFile != 0;
 }
 
 void ZLUnixFileOutputStream::write(const std::string &str) {
-	fwrite(str.data(), 1, str.length(), myFile);
+	myHasErrors = fwrite(str.data(), 1, str.length(), myFile) != str.length();
 }
 
 void ZLUnixFileOutputStream::close() {
 	if (myFile != 0) {
 		fclose(myFile);
 		myFile = 0;
+		if (!myHasErrors) {
+			unlink(myName.c_str());
+			rename(myTemporaryName.c_str(), myName.c_str());
+		}
 	}
 }
