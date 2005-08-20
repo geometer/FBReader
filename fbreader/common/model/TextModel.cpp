@@ -31,8 +31,6 @@ TextModel::~TextModel() {
 	for (std::vector<Paragraph*>::const_iterator it = myParagraphs.begin(); it != myParagraphs.end(); it++) {
 		delete *it;
 	}
-	// TODO: ???
-	std::vector<Paragraph*>().swap(myParagraphs);
 }
 
 void TextModel::search(const std::string &text, bool ignoreCase) const {
