@@ -29,6 +29,7 @@
 #include "FootnoteView.h"
 #include "ContentsView.h"
 #include "CollectionView.h"
+#include "RecentBooksView.h"
 #include "OptionsDialog.h"
 #include "FBFileHandler.h"
 #include "InfoOptions.h"
@@ -107,6 +108,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	myFootnoteView = new FootnoteView(*myContext);
 	myContentsView = new ContentsView(*this, *myContext);
 	myCollectionView = new CollectionView(*this, *myContext);
+	myRecentBooksView = new RecentBooksView(*this, *myContext);
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 
@@ -140,6 +142,7 @@ FBReader::~FBReader() {
 	myContentsView->saveState();
 	delete myContentsView;
 	delete myCollectionView;
+	delete myRecentBooksView;
 	if (myModel != 0) {
 		ZLStringOption bookName(STATE, BOOK, std::string());
 		bookName.setValue(myModel->fileName());
@@ -286,11 +289,9 @@ void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
 void FBReader::doAction(ActionCode code) {
 	switch (code) {
 		case ACTION_SHOW_COLLECTION:
-			myCollectionView->showLastBooks(false);
 			setMode(BOOK_COLLECTION_MODE);
 			break;
 		case ACTION_SHOW_LAST_BOOKS:
-			myCollectionView->showLastBooks(true);
 			setMode(RECENT_BOOKS_MODE);
 			break;
 		case ACTION_SHOW_OPTIONS:
@@ -449,6 +450,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			myCollectionView->rebuild();
 			myViewWidget->setView(myCollectionView);
+			break;
 		case RECENT_BOOKS_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, true);
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
@@ -456,8 +458,8 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
-			myCollectionView->rebuild();
-			myViewWidget->setView(myCollectionView);
+			myRecentBooksView->rebuild();
+			myViewWidget->setView(myRecentBooksView);
 			break;
 		case BOOKMARKS_MODE:
 			break;
@@ -547,6 +549,7 @@ void FBReader::clearTextCaches() {
 	myFootnoteView->clearCaches();
 	myContentsView->clearCaches();
 	myCollectionView->clearCaches();
+	myRecentBooksView->clearCaches();
 }
 
 // vim:ts=2:sw=2:noet

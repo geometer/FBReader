@@ -17,8 +17,8 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
 
-#ifndef __COLLECTIONVIEW_H__
-#define __COLLECTIONVIEW_H__
+#ifndef __RECENTBOOKSVIEW_H__
+#define __RECENTBOOKSVIEW_H__
 
 #include <map>
 
@@ -26,30 +26,25 @@
 #include "../description/BookDescription.h"
 
 class FBReader;
-class BookCollection;
-class TreeModel;
 class PlainTextModel;
 class Paragraph;
 
-class CollectionView : public TextView {
+class RecentBooksView : public TextView {
 
 public:
-	CollectionView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
-	~CollectionView() FB_VIEW_SECTION;
+	RecentBooksView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
+	~RecentBooksView() FB_VIEW_SECTION;
 	const std::string &caption() const FB_VIEW_SECTION;
 
 	void rebuild() FB_VIEW_SECTION;
-	void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
 	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
 
 	void paint() FB_VIEW_SECTION;
 
 private:
 	FBReader &myReader;
-	BookCollection *myCollection;
-	TreeModel *myTreeModel;
+	PlainTextModel *myLastBooksModel;
 	std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
-	bool myTreeStateIsFrozen;
 };
 
-#endif /* __COLLECTIONVIEW_H__ */
+#endif /* __RECENTBOOKSVIEW_H__ */

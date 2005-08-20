@@ -33,6 +33,7 @@ class BookTextView;
 class FootnoteView;
 class ContentsView;
 class CollectionView;
+class RecentBooksView;
 class ZLViewWidget;
 class ZLPaintContext;
 
@@ -153,10 +154,13 @@ protected:
 	ViewMode myMode;
 	ViewMode myPreviousMode;
 	ZLViewWidget *myViewWidget;
+
+private:
 	FootnoteView *myFootnoteView;	
 	BookTextView *myBookTextView;	
 	ContentsView *myContentsView;	
 	CollectionView *myCollectionView;	
+	RecentBooksView *myRecentBooksView;	
 
 private:
 	ZLTime myLastScrollingTime;

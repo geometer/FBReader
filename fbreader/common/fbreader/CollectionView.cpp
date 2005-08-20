@@ -34,18 +34,11 @@ static const std::string LIBRARY = "Library";
 CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
 	myCollection = 0;
 	myTreeModel = 0;
-	myLastBooksModel = 0;
-	myLastBooksAreShown = false;
 	myTreeStateIsFrozen = false;
 }
 
 CollectionView::~CollectionView() {
 	rebuild();
-}
-
-void CollectionView::showLastBooks(bool show) {
-	myLastBooksAreShown = show;
-	setModel(myLastBooksAreShown ? (TreeModel*)myLastBooksModel : myTreeModel, LIBRARY);
 }
 
 const std::string &CollectionView::caption() const {
@@ -70,44 +63,23 @@ void CollectionView::gotoParagraph(int num, bool last) {
 }
 
 void CollectionView::paint() {
-	if (myLastBooksAreShown) {
-		if (myLastBooksModel == 0) {
-			myLastBooksModel = new PlainTextModel();
-			const LastOpenedBooks lastBooks;
-			const Books &books = lastBooks.books();
-			for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
-				Paragraph *p = new Paragraph(Paragraph::TEXT_PARAGRAPH);
-				p->addControl(RECENT_BOOK_LIST, true);
-				p->addControl(LIBRARY_AUTHOR_ENTRY, true);
-				p->addText((*it)->author()->displayName());
-				p->addText(". ");
-				p->addControl(LIBRARY_AUTHOR_ENTRY, false);
-				p->addControl(LIBRARY_BOOK_ENTRY, true);
-				p->addText((*it)->title());
-				myLastBooksModel->addParagraph(p);
-				myBooksMap[p] = *it;
+	if ((myCollection == 0) || (!myCollection->isActual())) {
+		myCollection = new BookCollection();
+		myTreeModel = new TreeModel();
+		const std::vector<const Author*> &authors = myCollection->authors();
+		for (std::vector<const Author*>::const_iterator it = authors.begin(); it != authors.end(); it++) {
+			TreeParagraph *authorParagraph = myTreeModel->createParagraph();
+			authorParagraph->addControl(LIBRARY_AUTHOR_ENTRY, true);
+			authorParagraph->addText((*it)->displayName());
+			const Books &books = myCollection->books(*it);
+			for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
+				TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
+				bookParagraph->addControl(LIBRARY_BOOK_ENTRY, true);
+				bookParagraph->addText((*jt)->title());
+				myBooksMap[bookParagraph] = *jt;
 			}
-			setModel(myLastBooksModel, LIBRARY);
 		}
-	} else {
-		if ((myCollection == 0) || (!myCollection->isActual())) {
-			myCollection = new BookCollection();
-			myTreeModel = new TreeModel();
-			const std::vector<const Author*> &authors = myCollection->authors();
-			for (std::vector<const Author*>::const_iterator it = authors.begin(); it != authors.end(); it++) {
-				TreeParagraph *authorParagraph = myTreeModel->createParagraph();
-				authorParagraph->addControl(LIBRARY_AUTHOR_ENTRY, true);
-				authorParagraph->addText((*it)->displayName());
-				const Books &books = myCollection->books(*it);
-				for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
-					TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
-					bookParagraph->addControl(LIBRARY_BOOK_ENTRY, true);
-					bookParagraph->addText((*jt)->title());
-					myBooksMap[bookParagraph] = *jt;
-				}
-			}
-			setModel(myTreeModel, LIBRARY);
-		}
+		setModel(myTreeModel, LIBRARY);
 	}
 	TextView::paint();
 }
@@ -120,10 +92,6 @@ void CollectionView::rebuild() {
 		delete myTreeModel;
 		myCollection = 0;
 		myTreeModel = 0;
-	}
-	if (myLastBooksModel != 0) {
-		delete myLastBooksModel;
-		myLastBooksModel = 0;
 	}
 }
 
@@ -145,51 +113,43 @@ bool CollectionView::onStylusPress(int x, int y) {
 		return false;
 	}
 
-	if (model() == myTreeModel) {
-		TreeParagraph *paragraph = (TreeParagraph*)model()->paragraphs()[paragraphNumber];
-		if (!paragraph->children().empty()) {
-			const TextElementPosition *elementPosition = elementByCoordinates(x, y);
-			if ((elementPosition == 0) || (elementPosition->Kind != TextElement::TREE_ELEMENT)) {
-				return false;
-			}
+	TreeParagraph *paragraph = (TreeParagraph*)model()->paragraphs()[paragraphNumber];
+	if (!paragraph->children().empty()) {
+		const TextElementPosition *elementPosition = elementByCoordinates(x, y);
+		if ((elementPosition == 0) || (elementPosition->Kind != TextElement::TREE_ELEMENT)) {
+			return false;
+		}
 
-			paragraph->open(!paragraph->isOpen());
-			rebuildPaintInfo(false);
-			repaintView();
-			if (paragraph->isOpen()) {
-				// TODO: correct next paragraph number calculation for multi-level trees
-				int nextParagraphNumber = paragraphNumber + paragraph->children().size() + 1;
-				int lastParagraphNumber = endCursor().paragraphCursor().paragraphNumber();
-				if (endCursor().isEndOfParagraph()) {
-					lastParagraphNumber++;
-				}
-				if (lastParagraphNumber < nextParagraphNumber) {
-					gotoParagraph(nextParagraphNumber, true);
-					repaintView();
-				}
+		paragraph->open(!paragraph->isOpen());
+		rebuildPaintInfo(false);
+		repaintView();
+		if (paragraph->isOpen()) {
+			// TODO: correct next paragraph number calculation for multi-level trees
+			int nextParagraphNumber = paragraphNumber + paragraph->children().size() + 1;
+			int lastParagraphNumber = endCursor().paragraphCursor().paragraphNumber();
+			if (endCursor().isEndOfParagraph()) {
+				lastParagraphNumber++;
 			}
-			int firstParagraphNumber = startCursor().paragraphCursor().paragraphNumber();
-			if (startCursor().isStartOfParagraph()) {
-				firstParagraphNumber--;
-			}
-			if (firstParagraphNumber >= paragraphNumber) {
-				gotoParagraph(paragraphNumber);
+			if (lastParagraphNumber < nextParagraphNumber) {
+				gotoParagraph(nextParagraphNumber, true);
 				repaintView();
 			}
-		} else {
-			std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
-			if (it != myBooksMap.end()) {
-				myReader.openBook(it->second);
-				myReader.showBookTextView();
-			}
 		}
-	} else /* if (model() == myLastBooksModel) */ {
-		Paragraph *paragraph = (Paragraph*)model()->paragraphs()[paragraphNumber];
+		int firstParagraphNumber = startCursor().paragraphCursor().paragraphNumber();
+		if (startCursor().isStartOfParagraph()) {
+			firstParagraphNumber--;
+		}
+		if (firstParagraphNumber >= paragraphNumber) {
+			gotoParagraph(paragraphNumber);
+			repaintView();
+		}
+	} else {
 		std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
 		if (it != myBooksMap.end()) {
 			myReader.openBook(it->second);
 			myReader.showBookTextView();
 		}
 	}
+
 	return true;
 }
