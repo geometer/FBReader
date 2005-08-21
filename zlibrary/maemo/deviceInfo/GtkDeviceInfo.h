@@ -32,6 +32,4 @@ protected:
 	bool isKeyboardPresentedInternal() const;
 };
 
-inline bool GtkDeviceInfo::isKeyboardPresentedInternal() const { return false; }
-
 #endif /* __GTKDEVICEINFO_H__ */

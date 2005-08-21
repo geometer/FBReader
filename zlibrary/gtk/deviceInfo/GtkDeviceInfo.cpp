@@ -29,5 +29,5 @@ unsigned int GtkDeviceInfo::screenHeightInternal() const {
 }
 
 bool GtkDeviceInfo::isKeyboardPresentedInternal() const {
-	return screenSize() != SIZE_800x480;
+	return true;
 }

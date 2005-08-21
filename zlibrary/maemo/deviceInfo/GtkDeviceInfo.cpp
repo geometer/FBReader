@@ -27,3 +27,7 @@ unsigned int GtkDeviceInfo::screenWidthInternal() const {
 unsigned int GtkDeviceInfo::screenHeightInternal() const {
 	return gdk_screen_height();
 }
+
+bool GtkDeviceInfo::isKeyboardPresentedInternal() const {
+	return false;
+}
