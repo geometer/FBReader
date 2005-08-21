@@ -21,7 +21,7 @@
 #include <abstract/ZLImage.h>
 
 #include "GtkPaintContext.h"
-#include "../image/GtkImageConverter.h"
+#include "../../gtk/image/GtkImageConverter.h"
 
 static void setColor(GdkGC *gc, const ZLColor &zlColor) {
 	if (gc != 0) {

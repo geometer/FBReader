@@ -20,8 +20,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <gtk-maemo/GtkViewWidget.h>
-#include <gtk-maemo/GtkPaintContext.h>
+#include <maemo/GtkViewWidget.h>
+#include <maemo/GtkPaintContext.h>
 
 #include <abstract/ZLDeviceInfo.h>
 
