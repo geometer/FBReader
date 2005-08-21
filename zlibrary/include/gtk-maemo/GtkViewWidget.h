@@ -1,1 +1,1 @@
-../../gtk/view-maemo/GtkViewWidget.h
+../../maemo/view/GtkViewWidget.h

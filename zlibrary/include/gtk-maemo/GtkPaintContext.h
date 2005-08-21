@@ -1,1 +1,1 @@
-../../gtk/view-maemo/GtkPaintContext.h
+../../maemo/view/GtkPaintContext.h
