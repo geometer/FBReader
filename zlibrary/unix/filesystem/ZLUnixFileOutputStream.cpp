@@ -43,7 +43,9 @@ bool ZLUnixFileOutputStream::open() {
 }
 
 void ZLUnixFileOutputStream::write(const std::string &str) {
-	myHasErrors = fwrite(str.data(), 1, str.length(), myFile) != str.length();
+	if (fwrite(str.data(), 1, str.length(), myFile) != str.length()) {
+		myHasErrors = true;
+	}
 }
 
 void ZLUnixFileOutputStream::close() {
@@ -51,7 +53,6 @@ void ZLUnixFileOutputStream::close() {
 		fclose(myFile);
 		myFile = 0;
 		if (!myHasErrors) {
-			unlink(myName.c_str());
 			rename(myTemporaryName.c_str(), myName.c_str());
 		}
 	}
