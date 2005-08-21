@@ -34,11 +34,13 @@ bool ZLUnixFileOutputStream::open() {
 	char *tmpl = new char[myName.length() + 8];
 	strcpy(tmpl, myName.c_str());
 	strcpy(tmpl + myName.length(), ".XXXXXX");
-	myTemporaryName = mktemp(tmpl);
-	delete[] tmpl;
+	if (mkstemp(tmpl) != -1) {
+		myTemporaryName = tmpl;
+		myFile = fopen(myTemporaryName.c_str(), "wb");
+		myHasErrors = false;
+	}
 
-	myFile = fopen(myTemporaryName.c_str(), "wb");
-	myHasErrors = false;
+	delete[] tmpl;
 	return myFile != 0;
 }
 
