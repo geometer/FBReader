@@ -25,3 +25,7 @@ size_t ZLStringInputStream::read(char *buffer, size_t maxSize) {
 	myPosition += size;
 	return size;
 }
+
+size_t ZLStringInputStream::sizeOfOpened() {
+	return myString.size();
+}

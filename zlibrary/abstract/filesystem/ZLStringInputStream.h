@@ -32,6 +32,7 @@ public:
 
 	void seek(size_t offset) FS_SECTION;
 	size_t offset() const FS_SECTION;
+	size_t sizeOfOpened() FS_SECTION;
 
 private:
 	const std::string &myString;

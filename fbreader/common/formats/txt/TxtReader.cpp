@@ -20,8 +20,6 @@
  */
 
 #include <abstract/ZLInputStream.h>
-#include <abstract/ZLStringInputStream.h>
-
 #include <abstract/ZLStringUtil.h>
 
 #include "TxtReader.h"

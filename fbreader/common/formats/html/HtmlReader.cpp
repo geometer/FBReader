@@ -22,8 +22,6 @@
 #include <cctype>
 
 #include <abstract/ZLInputStream.h>
-#include <abstract/ZLStringInputStream.h>
-
 #include <abstract/ZLXMLReader.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLStringUtil.h>
