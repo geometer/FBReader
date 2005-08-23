@@ -32,17 +32,6 @@ PalmPaintContext::PalmPaintContext() {
 PalmPaintContext::~PalmPaintContext() {
 }
 
-void PalmPaintContext::removeCaches() {
-	ZLPaintContext::removeCaches();
-
-	/*
-	for (std::map<const Image*,QImage*>::iterator it = myImageCache.begin(); it != myImageCache.end(); it++) {
-		delete it->second;
-	}
-	myImageCache.clear();
-	*/
-}
-
 void PalmPaintContext::setSize(int w, int h) {
 	myWidth = w;
 	myHeight = h;
@@ -150,21 +139,7 @@ QImage &PalmPaintContext::qImage(const Image &image) const {
 }
 */
 
-int PalmPaintContext::imageWidth(const ZLImage &image) const {
-	/*
-	int w = qImage(image).width();
-	int maxW = width();
-	return (w <= maxW) ? w : maxW;
-	*/
-	return 10;
-}
-
-int PalmPaintContext::imageHeight(const ZLImage &image) const {
-	//return qImage(image).height();
-	return 10;
-}
-
-void PalmPaintContext::drawImage(int x, int y, const ZLImage &image) {
+void PalmPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	//myPainter->drawImage(x + leftMargin(), y + topMargin() - imageHeight(image), qImage(image));
 }
 

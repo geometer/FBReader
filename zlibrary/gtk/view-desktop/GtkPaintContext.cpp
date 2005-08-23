@@ -21,7 +21,7 @@
 #include <abstract/ZLImage.h>
 
 #include "GtkPaintContext.h"
-#include "../image/GtkImageConverter.h"
+#include "../image/GtkImageManager.h"
 
 #include "gdk-pixbuf-hack.h"
 
@@ -101,11 +101,6 @@ inline void GtkPaintContext::rotatePoint(int &x, int &y) const {
 		x0 = myWidth - y0 - 1;
 		y0 = tmp;
 		*/
-}
-
-void GtkPaintContext::removeCaches() {
-	ZLPaintContext::removeCaches();
-	GtkImageConverter::clearCache();
 }
 
 void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
@@ -282,19 +277,9 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 	}
 }
 
-int GtkPaintContext::imageWidth(const ZLImage &image) const {
-	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
-	return (imageRef != 0) ? gdk_pixbuf_get_width(imageRef) : 0;
-}
-
-int GtkPaintContext::imageHeight(const ZLImage &image) const {
-	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
-	return (imageRef != 0) ? gdk_pixbuf_get_height(imageRef) : 0;
-}
-
-void GtkPaintContext::drawImage(int x, int y, const ZLImage &image) {
+void GtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	// TODO: draw rotated
-	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
+	GdkPixbuf *imageRef = ((GtkImageData&)image).pixbuf();
 	if (imageRef != 0) {
 		gdk_pixbuf_render_to_drawable(
 			imageRef, myPixmap,

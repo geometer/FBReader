@@ -23,8 +23,7 @@
 #include <string>
 
 #include <abstract/ZLOptions.h>
-
-class ZLImage;
+#include <abstract/ZLImageManager.h>
 
 class ZLPaintContext {
 
@@ -44,7 +43,6 @@ protected:
 
 public:
 	virtual ~ZLPaintContext() ZLVIEW_SECTION;
-	virtual void removeCaches() ZLVIEW_SECTION;
 
 	int x() const ZLVIEW_SECTION;
 	int y() const ZLVIEW_SECTION;
@@ -78,9 +76,9 @@ public:
 	virtual int stringHeight() const ZLVIEW_SECTION = 0;
 	virtual void drawString(int x, int y, const char *str, int len) ZLVIEW_SECTION = 0;
 
-	virtual int imageWidth(const ZLImage &image) const ZLVIEW_SECTION = 0;
-	virtual int imageHeight(const ZLImage &image) const ZLVIEW_SECTION = 0;
-	virtual void drawImage(int x, int y, const ZLImage &image) ZLVIEW_SECTION = 0;
+	int imageWidth(const ZLImageData &image) const ZLVIEW_SECTION;
+	int imageHeight(const ZLImageData &image) const ZLVIEW_SECTION;
+	virtual void drawImage(int x, int y, const ZLImageData &image) ZLVIEW_SECTION = 0;
 
 	virtual void drawLine(int x0, int y0, int x1, int y1) ZLVIEW_SECTION = 0;
 	virtual void fillRectangle(int x0, int y0, int x1, int y1) ZLVIEW_SECTION = 0;
@@ -124,5 +122,8 @@ inline int ZLPaintContext::leftMargin() const { return myLeftMargin; }
 inline int ZLPaintContext::rightMargin() const { return myRightMargin; }
 inline int ZLPaintContext::topMargin() const { return myTopMargin; }
 inline int ZLPaintContext::bottomMargin() const { return myBottomMargin; }
+
+inline int ZLPaintContext::imageWidth(const ZLImageData &image) const { return image.width(); }
+inline int ZLPaintContext::imageHeight(const ZLImageData &image) const { return image.height(); }
 
 #endif /* __ZLPAINTCONTEXT_H__ */

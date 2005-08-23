@@ -26,7 +26,7 @@
 #include <abstract/ZLImage.h>
 
 #include "QPaintContext.h"
-#include "../../qt/image/QImageConverter.h"
+#include "../../qt/image/QImageManager.h"
 #include "ZaurusFontHack.h"
 
 QPaintContext::QPaintContext() {
@@ -42,11 +42,6 @@ QPaintContext::~QPaintContext() {
 		delete myPixmap;
 	}
 	delete myPainter;
-}
-
-void QPaintContext::removeCaches() {
-	ZLPaintContext::removeCaches();
-	QImageConverter::clearCache();
 }
 
 void QPaintContext::setSize(int w, int h) {
@@ -143,21 +138,9 @@ void QPaintContext::drawString(int x, int y, const char *str, int len) {
 	myPainter->drawText(x + leftMargin(), y + topMargin(), qStr);
 }
 
-int QPaintContext::imageWidth(const ZLImage &image) const {
-	QImage *qImage = QImageConverter::qImage(image);
-	return (qImage != 0) ? std::min(qImage->width(), width()) : 0;
-}
-
-int QPaintContext::imageHeight(const ZLImage &image) const {
-	QImage *qImage = QImageConverter::qImage(image);
-	return (qImage != 0) ? qImage->height() : 0;
-}
-
-void QPaintContext::drawImage(int x, int y, const ZLImage &image) {
-	QImage *qImage = QImageConverter::qImage(image);
-	if (qImage != 0) {
-		myPainter->drawImage(x + leftMargin(), y + topMargin() - qImage->height(), *qImage);
-	}
+void QPaintContext::drawImage(int x, int y, const ZLImageData &image) {
+	const QImage &qImage = (ZLQImageData&)image;
+	myPainter->drawImage(x + leftMargin(), y + topMargin() - qImage.height(), qImage);
 }
 
 void QPaintContext::drawLine(int x0, int y0, int x1, int y1) {

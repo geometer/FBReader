@@ -31,7 +31,6 @@ class PalmPaintContext : public ZLPaintContext {
 public:
 	PalmPaintContext() ZLVIEW_SECTION;
 	~PalmPaintContext() ZLVIEW_SECTION;
-	void removeCaches() ZLVIEW_SECTION;
 
 	void setSize(int w, int h) ZLVIEW_SECTION;
 
@@ -52,9 +51,7 @@ public:
 	int stringHeight() const ZLVIEW_SECTION;
 	void drawString(int x, int y, const char *str, int len) ZLVIEW_SECTION;
 
-	int imageWidth(const ZLImage &image) const ZLVIEW_SECTION;
-	int imageHeight(const ZLImage &image) const ZLVIEW_SECTION;
-	void drawImage(int x, int y, const ZLImage &image) ZLVIEW_SECTION;
+	void drawImage(int x, int y, const ZLImageData &image) ZLVIEW_SECTION;
 
 	void drawLine(int x0, int y0, int x1, int y1) ZLVIEW_SECTION;
 	void fillRectangle(int x0, int y0, int x1, int y1) ZLVIEW_SECTION;

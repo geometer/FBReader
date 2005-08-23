@@ -24,14 +24,12 @@
 
 class QPainter;
 class QPixmap;
-class QImage;
 
 class QPaintContext : public ZLPaintContext {
 
 public:
 	QPaintContext();
 	~QPaintContext();
-	void removeCaches();
 
 	const QPixmap &pixmap() const { return *myPixmap; }
 
@@ -54,9 +52,7 @@ public:
 	int stringHeight() const;
 	void drawString(int x, int y, const char *str, int len);
 
-	int imageWidth(const ZLImage &image) const;
-	int imageHeight(const ZLImage &image) const;
-	void drawImage(int x, int y, const ZLImage &image);
+	void drawImage(int x, int y, const ZLImageData &image);
 
 	void drawLine(int x0, int y0, int x1, int y1);
 	void fillRectangle(int x0, int y0, int x1, int y1);

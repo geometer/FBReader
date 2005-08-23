@@ -19,30 +19,44 @@
 #ifndef __ZLIMAGE_H__
 #define __ZLIMAGE_H__
 
+#include <vector>
+#include <map>
+
 #include <abstract/ZLString.h>
 #include <abstract/shared_ptr.h>
 
 class ZLImage {
 
 protected:
-	ZLImage(const std::string &mimeType) IMAGE_SECTION;
+	ZLImage() IMAGE_SECTION;
 
 public:
 	virtual ~ZLImage() IMAGE_SECTION;
-	const std::string &mimeType() const IMAGE_SECTION;
-	virtual shared_ptr<ZLString> data() const IMAGE_SECTION = 0;
+	virtual bool isSingle() const = 0;
+};
 
+class ZLSingleImage : public ZLImage {
+
+protected:
+	ZLSingleImage(const std::string &mimeType) IMAGE_SECTION;
+	virtual ~ZLSingleImage() IMAGE_SECTION;
+
+public:
+	bool isSingle() const { return true; }
+	const std::string &mimeType() const IMAGE_SECTION;
+	virtual const shared_ptr<ZLString> stringData() const IMAGE_SECTION = 0;
+	
 private:
 	std::string myMimeType;
 };
 
-class ZLBase64EncodedImage : public ZLImage {
+class ZLBase64EncodedImage : public ZLSingleImage {
 
 public:
 	ZLBase64EncodedImage(const std::string &mimeType) IMAGE_SECTION;
 	~ZLBase64EncodedImage() IMAGE_SECTION;
 	void addData(const ZLStringBuffer &text) IMAGE_SECTION;
-	shared_ptr<ZLString> data() const IMAGE_SECTION;
+	const shared_ptr<ZLString> stringData() const IMAGE_SECTION;
 
 private:
 	void decode() const IMAGE_SECTION;
@@ -52,12 +66,12 @@ private:
 	mutable shared_ptr<ZLString> myData;
 };
 
-class ZLZCompressedFileImage : public ZLImage {
+class ZLZCompressedFileImage : public ZLSingleImage {
 
 public:
 	ZLZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) IMAGE_SECTION;
 	~ZLZCompressedFileImage() IMAGE_SECTION;
-	shared_ptr<ZLString> data() const IMAGE_SECTION;
+	const shared_ptr<ZLString> stringData() const IMAGE_SECTION;
 
 private:
 	std::string myPath;
@@ -65,16 +79,34 @@ private:
 	size_t myCompressedSize;
 };
 
-inline ZLImage::ZLImage(const std::string &mimeType) : myMimeType(mimeType) {}
-inline ZLImage::~ZLImage() {}
-inline const std::string &ZLImage::mimeType() const { return myMimeType; }
+class ZLMultiImage : public ZLImage {
 
-inline ZLBase64EncodedImage::ZLBase64EncodedImage(const std::string &mimeType) : ZLImage(mimeType) {}
+protected:
+	ZLMultiImage() IMAGE_SECTION;
+	virtual ~ZLMultiImage() IMAGE_SECTION;
+
+public:
+	bool isSingle() const { return false; }
+	virtual unsigned int rows() const = 0;
+	virtual unsigned int columns() const = 0;
+	virtual const ZLImage *subImage(unsigned int row, unsigned int column) const = 0;
+};
+
+inline ZLImage::ZLImage() {}
+inline ZLImage::~ZLImage() {}
+
+inline ZLSingleImage::ZLSingleImage(const std::string &mimeType) : myMimeType(mimeType) {}
+inline ZLSingleImage::~ZLSingleImage() {}
+inline const std::string &ZLSingleImage::mimeType() const { return myMimeType; }
+
+inline ZLMultiImage::ZLMultiImage() : ZLImage() {}
+inline ZLMultiImage::~ZLMultiImage() {}
+
+inline ZLBase64EncodedImage::ZLBase64EncodedImage(const std::string &mimeType) : ZLSingleImage(mimeType) {}
 inline ZLBase64EncodedImage::~ZLBase64EncodedImage() {}
 inline void ZLBase64EncodedImage::addData(const ZLStringBuffer &text) { myEncodedData += text; }
-inline shared_ptr<ZLString> ZLBase64EncodedImage::data() const { decode(); return myData; }
 
-inline ZLZCompressedFileImage::ZLZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
+inline ZLZCompressedFileImage::ZLZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
 inline ZLZCompressedFileImage::~ZLZCompressedFileImage() {}
 
 #endif /* __ZLIMAGE_H__ */

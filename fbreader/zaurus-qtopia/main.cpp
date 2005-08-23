@@ -26,6 +26,7 @@
 #include <unix/ZLUnixFSManager.h>
 #include <desktop/XMLOptions.h>
 #include <qtopia/QDialogManager.h>
+#include <qt/QImageManager.h>
 #include <qtopia/QDeviceInfo.h>
 
 #include "QFBReader.h"
@@ -42,6 +43,7 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	copyConfig();
 	QDialogManager::createInstance();
+	QImageManager::createInstance();
 	QDeviceInfo::createInstance();
 
 	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);
@@ -50,6 +52,7 @@ int main(int argc, char **argv) {
 	delete reader;
 
 	QDeviceInfo::deleteInstance();
+	QImageManager::deleteInstance();
 	QDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();

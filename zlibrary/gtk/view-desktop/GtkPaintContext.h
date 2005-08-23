@@ -31,7 +31,6 @@ class GtkPaintContext : public ZLPaintContext {
 public:
 	GtkPaintContext();
 	~GtkPaintContext();
-	void removeCaches();
 
 	void setRotation(bool rotation) { myIsRotated = rotation; }
 
@@ -55,16 +54,13 @@ public:
 	int stringHeight() const;
 	void drawString(int x, int y, const char *str, int len);
 
-	int imageWidth(const ZLImage &image) const;
-	int imageHeight(const ZLImage &image) const;
-	void drawImage(int x, int y, const ZLImage &image);
+	void drawImage(int x, int y, const ZLImageData &image);
 
 	void drawLine(int x0, int y0, int x1, int y1);
 	void fillRectangle(int x0, int y0, int x1, int y1);
 	void drawFilledCircle(int x, int y, int r);
 
 private:
-	GdkPixbuf *gtkImage(const ZLImage &image) const;
 	void rotatePoint(int &x, int &y) const;
 
 private:

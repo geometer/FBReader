@@ -21,7 +21,7 @@
 #include <abstract/ZLImage.h>
 
 #include "GtkPaintContext.h"
-#include "../../gtk/image/GtkImageConverter.h"
+#include "../../gtk/image/GtkImageManager.h"
 
 static void setColor(GdkGC *gc, const ZLColor &zlColor) {
 	if (gc != 0) {
@@ -77,11 +77,6 @@ GtkPaintContext::~GtkPaintContext() {
 	if (myContext != 0) {
 		g_object_unref(myContext);
 	}
-}
-
-void GtkPaintContext::removeCaches() {
-	ZLPaintContext::removeCaches();
-	GtkImageConverter::clearCache();
 }
 
 void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
@@ -222,18 +217,8 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }
 
-int GtkPaintContext::imageWidth(const ZLImage &image) const {
-	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
-	return (imageRef != 0) ? gdk_pixbuf_get_width(imageRef) : 0;
-}
-
-int GtkPaintContext::imageHeight(const ZLImage &image) const {
-	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
-	return (imageRef != 0) ? gdk_pixbuf_get_height(imageRef) : 0;
-}
-
-void GtkPaintContext::drawImage(int x, int y, const ZLImage &image) {
-	GdkPixbuf *imageRef = GtkImageConverter::gtkImage(image);
+void GtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
+	GdkPixbuf *imageRef = ((GtkImageData&)image).pixbuf();
 	if (imageRef != 0) {
 		gdk_pixbuf_render_to_drawable(
 			imageRef, myPixmap,

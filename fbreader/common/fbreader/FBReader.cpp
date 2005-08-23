@@ -211,7 +211,6 @@ void FBReader::openBook(BookDescriptionPtr description) {
 		myFootnoteView->setCaption(description->title());
 		myContentsView->setModel(&myModel->contentsModel(), description->fileName());
 		myContentsView->setCaption(description->title());
-		myContext->removeCaches();
 
 		LastOpenedBooks().addBook(description->fileName());
 	}

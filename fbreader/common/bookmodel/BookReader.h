@@ -69,6 +69,8 @@ public:
 	void enterTitle() { myInsideTitle = true; }
 	void exitTitle() { myInsideTitle = false; }
 
+	const BookModel &model() const { return myModel; }
+
 private:
 	BookModel &myModel;
 	PlainTextModel *myCurrentTextModel;

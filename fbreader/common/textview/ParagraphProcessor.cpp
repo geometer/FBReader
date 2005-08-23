@@ -93,7 +93,10 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				beforeAddWord();
 				const ZLImage *image = ((ImageEntry*)*it)->image();
 				if (image != NULL) {
-					myElements.push_back(new ImageElement(*image));
+					shared_ptr<ZLImageData> data = ZLImageManager::instance().imageData(*image);
+					if (!data.isNull()) {
+						myElements.push_back(new ImageElement(data));
+					}
 				}
 				break;
 			}

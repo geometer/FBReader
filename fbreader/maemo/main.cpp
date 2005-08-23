@@ -26,6 +26,7 @@
 #include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
+#include <gtk/GtkImageManager.h>
 #include <gtk/GtkDeviceInfo.h>
 
 #include "GtkFBReader.h"
@@ -40,6 +41,7 @@ int main(int argc, char **argv) {
 	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
+	GtkImageManager::createInstance();
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkFBReader::ImageDirectory);
 	GtkDeviceInfo::createInstance();
 
@@ -50,6 +52,7 @@ int main(int argc, char **argv) {
 	gtk_main();
 
 	GtkDeviceInfo::deleteInstance();
+	GtkImageManager::deleteInstance();
 	GtkDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();

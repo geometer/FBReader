@@ -32,6 +32,39 @@
 #include "../../bookmodel/BookModel.h"
 #include "../../bookmodel/BookReader.h"
 
+class ZLPluckerMultiImage : public ZLMultiImage {
+
+public:
+	ZLPluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap) IMAGE_SECTION;
+	~ZLPluckerMultiImage() IMAGE_SECTION;
+
+	void addId(const std::string &id) IMAGE_SECTION;
+
+	unsigned int rows() const;
+	unsigned int columns() const;
+	const ZLImage *subImage(unsigned int row, unsigned int column) const;
+
+private:
+	unsigned int myRows, myColumns;
+	const ImageMap &myImageMap;
+	std::vector<std::string> myIds;
+};
+
+inline ZLPluckerMultiImage::ZLPluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap) : myRows(rows), myColumns(columns), myImageMap(imageMap) {}
+inline ZLPluckerMultiImage::~ZLPluckerMultiImage() {}
+inline void ZLPluckerMultiImage::addId(const std::string &id) { myIds.push_back(id); }
+inline unsigned int ZLPluckerMultiImage::rows() const { return myRows; }
+inline unsigned int ZLPluckerMultiImage::columns() const { return myColumns; }
+
+const ZLImage *ZLPluckerMultiImage::subImage(unsigned int row, unsigned int column) const {
+	unsigned int index = row * myColumns + column;
+	if (index >= myIds.size()) {
+		return 0;
+	}
+	ImageMap::const_iterator entry = myImageMap.find(myIds[index]);
+	return (entry != myImageMap.end()) ? entry->second : 0;
+}
+
 static void readUnsignedShort(shared_ptr<ZLInputStream> stream, unsigned short &N) {
 	stream->read((char*)&N + 1, 1);
 	stream->read((char*)&N, 1);
@@ -375,17 +408,28 @@ void PluckerReader::readRecord(size_t recordSize) {
 				std::cerr << "typeCode = " << typeCode << "\n";
 				break;
 			case 15: // multiimage
-				/*
-				std::cerr << "uid = " << (int)uid << "; ";
-				std::cerr << "type = " << (int)type << "; ";
-				for (int i = 0; i < size / 2; i++) {
+			{
+				//std::cerr << "uid = " << (int)uid << "; ";
+				//std::cerr << "type = " << (int)type << "; ";
+				unsigned short columns;
+				unsigned short rows;
+				::readUnsignedShort(myStream, columns);
+				::readUnsignedShort(myStream, rows);
+				ZLPluckerMultiImage *image = new ZLPluckerMultiImage(rows, columns, model().imageMap());
+				for (int i = 0; i < size / 2 - 2; i++) {
 					unsigned short us;
 					::readUnsignedShort(myStream, us);
-					std::cerr << us << " ";
+					std::string id;
+					ZLStringUtil::appendNumber(id, us);
+					image->addId(id);
+					//std::cerr << us << " ";
 				}
-				std::cerr << "\n";
-				*/
+				//std::cerr << "\n";
+				std::string strId;
+				ZLStringUtil::appendNumber(strId, uid);
+				addImage(strId, image);
 				break;
+			}
 			default:
 				std::cerr << "type = " << (int)type << "\n";
 				//std::cerr << "size = " << size << "\n";

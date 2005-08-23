@@ -31,7 +31,6 @@ class GtkPaintContext : public ZLPaintContext {
 public:
 	GtkPaintContext();
 	~GtkPaintContext();
-	void removeCaches();
 
 	GdkPixmap *pixmap() { return myPixmap; }
 	void updatePixmap(GtkWidget *area, int w, int h);
@@ -53,9 +52,7 @@ public:
 	int stringHeight() const;
 	void drawString(int x, int y, const char *str, int len);
 
-	int imageWidth(const ZLImage &image) const;
-	int imageHeight(const ZLImage &image) const;
-	void drawImage(int x, int y, const ZLImage &image);
+	void drawImage(int x, int y, const ZLImageData &image);
 
 	void drawLine(int x0, int y0, int x1, int y1);
 	void fillRectangle(int x0, int y0, int x1, int y1);

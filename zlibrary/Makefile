@@ -40,7 +40,7 @@ ifeq "$(TARGET_ARCH)" "maemo"
 endif
 
 ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/xml abstract/xml/own abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/dialogs abstract/deviceInfo abstract/view palm/options palm/filesystem palm/dialogs palm/deviceInfo abstract/time palm/time palm/view
+	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/xml abstract/xml/own abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/dialogs abstract/deviceInfo abstract/view abstract/image palm/options palm/filesystem palm/dialogs palm/deviceInfo abstract/time palm/time palm/view
 endif
 
 .objects:

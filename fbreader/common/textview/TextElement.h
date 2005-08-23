@@ -22,6 +22,8 @@
 #ifndef __TEXTELEMENT_H__
 #define __TEXTELEMENT_H__
 
+#include <abstract/ZLImageManager.h>
+
 #include "../model/TextKind.h"
 #include "../model/Paragraph.h"
 
@@ -53,18 +55,16 @@ private:
 	TextElement &operator = (const TextElement&) VIEW_SECTION;
 };
 
-class ZLImage;
-
 class ImageElement : public TextElement {
 
 public:
-	ImageElement(const ZLImage &image) VIEW_SECTION;
+	ImageElement(const shared_ptr<ZLImageData> image) VIEW_SECTION;
 	~ImageElement() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
-	const ZLImage &image() const VIEW_SECTION;
+	const ZLImageData &image() const VIEW_SECTION;
 
 private:
-	const ZLImage &myImage;
+	const shared_ptr<ZLImageData> myImage;
 };
 
 class SpecialTextElement : public TextElement {
@@ -116,10 +116,10 @@ private:
 inline TextElement::TextElement() {}
 inline TextElement::~TextElement() {}
 
-inline ImageElement::ImageElement(const ZLImage &image) : myImage(image) {}
+inline ImageElement::ImageElement(const shared_ptr<ZLImageData> image) : myImage(image) {}
 inline ImageElement::~ImageElement() {}
 inline TextElement::Kind ImageElement::kind() const { return IMAGE_ELEMENT; };
-inline const ZLImage &ImageElement::image() const { return myImage; }
+inline const ZLImageData &ImageElement::image() const { return *myImage; }
 
 inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
 inline SpecialTextElement::~SpecialTextElement() {}

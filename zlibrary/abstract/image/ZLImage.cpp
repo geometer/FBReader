@@ -62,8 +62,12 @@ void ZLBase64EncodedImage::decode() const {
 	myEncodedData.erase();
 }
 
+const shared_ptr<ZLString> ZLBase64EncodedImage::stringData() const {
+	decode();
+	return myData;
+}
 
-shared_ptr<ZLString> ZLZCompressedFileImage::data() const {
+const shared_ptr<ZLString> ZLZCompressedFileImage::stringData() const {
 	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
 
 	shared_ptr<ZLString> imageData = new ZLString();

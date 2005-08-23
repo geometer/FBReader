@@ -24,9 +24,6 @@ ZLPaintContext::ZLPaintContext() : myLeftMargin(0), myRightMargin(0), myTopMargi
 ZLPaintContext::~ZLPaintContext() {
 }
 
-void ZLPaintContext::removeCaches() {
-}
-
 const std::vector<std::string> &ZLPaintContext::fontFamilies() const {
 	if (myFamilies.empty()) {
 		fillFamiliesList(myFamilies);
