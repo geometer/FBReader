@@ -107,6 +107,10 @@ void GtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 
 	if (myContext == 0) {
 		myContext = gtk_widget_get_pango_context(area);
+		if (myFontDescription != 0) {
+			myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
+			myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
+		}
 	}
 }
 
@@ -161,8 +165,10 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 	}
 
 	if (fontChanged) {
-		myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
-		myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
+		if (myContext != 0) {
+			myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
+			myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
+		}
 		myStringHeight = -1;
 		mySpaceWidth = -1;
 	}
