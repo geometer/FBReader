@@ -336,12 +336,11 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 				//txt.append(textStart, ptr - textStart);
 				//std::cerr << "text = " << txt << "\n";
 			}
-			//std::cerr << "\n0 ";
 		} else if (functionFlag) {
-			//std::cerr << (int)*ptr << " ";
-			if (end - ptr > ((unsigned char)*ptr) % 8 + 1) {
+			int paramCounter = ((unsigned char)*ptr) % 8;
+			if (end - ptr > paramCounter + 1) {
 				processTextFunction(ptr);
-				ptr += ((unsigned char)*ptr) % 8;
+				ptr += paramCounter;
 			} else {
 				ptr = end - 1;
 			}
