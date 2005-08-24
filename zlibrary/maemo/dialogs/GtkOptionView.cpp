@@ -156,7 +156,7 @@ void ComboOptionView::_setActive(bool active) {
 }
 
 void ComboOptionView::_onAccept() const {
-	int index = gtk_option_menu_get_history(GTK_OPTION_MENU(myComboBox));
+	int index = gtk_combo_box_get_active(GTK_COMBO_BOX(myComboBox));
 	ZLComboOptionEntry *o = (ZLComboOptionEntry*)myOption;
 	if ((index >= 0) && (index < (int)o->values().size())) {
 		((ZLComboOptionEntry*)myOption)->onAccept(o->values()[index]);
