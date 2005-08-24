@@ -62,6 +62,12 @@ private:
 	QPainter *myPainter;
 	QPixmap *myPixmap;
 	mutable int mySpaceWidth;
+
+	bool myFontIsStored;
+	std::string myStoredFamily;
+	int myStoredSize;
+	bool myStoredBold;
+	bool myStoredItalic;	
 };
 
 #endif /* __QPAINTCONTEXT_H__ */

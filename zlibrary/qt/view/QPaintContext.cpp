@@ -53,6 +53,10 @@ void QPaintContext::setSize(int w, int h) {
 	if ((myPixmap == NULL) && (w > 0) && (h > 0)) {
 		myPixmap = new QPixmap(w, h);
 		myPainter->begin(myPixmap);
+		if (myFontIsStored) {
+			myFontIsStored = false;
+			setFont(myStoredFamily, myStoredSize, myStoredBold, myStoredItalic);
+		}
 	}
 }
 
@@ -71,32 +75,40 @@ const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) con
 }
 
 void QPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	QFont font = myPainter->font();
-	bool fontChanged = false;
+	if (myPainter->device() == 0) {
+		myFontIsStored = true;
+		myStoredFamily = family;
+		myStoredSize = size;
+		myStoredBold = bold;
+		myStoredItalic= italic;
+	} else {
+		QFont font = myPainter->font();
+		bool fontChanged = false;
 
-	if (font.family() != family.c_str()) {
-		font.setFamily(family.c_str());
-		fontChanged = true;
-	}
+		if (font.family() != family.c_str()) {
+			font.setFamily(family.c_str());
+			fontChanged = true;
+		}
 
-	if (font.pointSize() != size) {
-		font.setPointSize(size);
-		fontChanged = true;
-	}
+		if (font.pointSize() != size) {
+			font.setPointSize(size);
+			fontChanged = true;
+		}
 
-	if ((font.weight() != (bold ? QFont::Bold : QFont::Normal))) {
-		font.setWeight(bold ? QFont::Bold : QFont::Normal);
-		fontChanged = true;
-	}
+		if ((font.weight() != (bold ? QFont::Bold : QFont::Normal))) {
+			font.setWeight(bold ? QFont::Bold : QFont::Normal);
+			fontChanged = true;
+		}
 
-	if (font.italic() != italic) {
-		font.setItalic(italic);
-		fontChanged = true;
-	}
+		if (font.italic() != italic) {
+			font.setItalic(italic);
+			fontChanged = true;
+		}
 
-	if (fontChanged) {
-		myPainter->setFont(font);
-		mySpaceWidth = -1;
+		if (fontChanged) {
+			myPainter->setFont(font);
+			mySpaceWidth = -1;
+		}
 	}
 }
 
