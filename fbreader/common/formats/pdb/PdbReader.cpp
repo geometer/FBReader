@@ -132,83 +132,113 @@ private:
 	void readRecord(size_t recordSize);
 	void processCompressedTextRecord(size_t compressedSize, size_t uncompressedSize, const std::vector<int> &pars);
 	void processTextParagraph(char *start, char *end);
-	void processTextFunction(char *&ptr, char *end);
+	void processTextFunction(char *ptr);
+	void setFont(FontType font, bool start);
 	void changeFont(FontType font);
+
+	void safeAddControl(TextKind kind, bool start);
+	void safeAddHyperlinkControl(const std::string &id);
+	void safeBeginParagraph();
 
 private:
 	std::string myFilePath;
 	shared_ptr<ZLInputStream> myStream;
 	FontType myFont;
+	char *myBuffer;
+	bool myParagraphStarted;
+	std::vector<std::pair<TextKind,bool> > myDelayedControls;
+	std::vector<std::string> myDelayedHyperlinks;
 };
 
 PluckerReader::PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myFilePath(filePath), myStream(stream), myFont(FT_REGULAR) {
+	myBuffer = new char[65535];
 }
 
 PluckerReader::~PluckerReader() {
+	delete[] myBuffer;
+}
+
+void PluckerReader::safeAddControl(TextKind kind, bool start) {
+	if (myParagraphStarted) {
+		addControl(kind, start);
+	} else {
+		myDelayedControls.push_back(std::pair<TextKind,bool>(kind, start));
+	}
+}
+
+void PluckerReader::safeAddHyperlinkControl(const std::string &id) {
+	if (myParagraphStarted) {
+		addHyperlinkControl(HYPERLINK, id);
+	} else {
+		myDelayedControls.push_back(std::pair<TextKind,bool>(HYPERLINK, true));
+		myDelayedHyperlinks.push_back(id);
+	}
+}
+
+void PluckerReader::safeBeginParagraph() {
+	if (!myParagraphStarted) {
+		int idIndex = 0;
+		myParagraphStarted = true;
+		beginParagraph();
+		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
+			if ((it->first == HYPERLINK) && it->second) {
+				addHyperlinkControl(HYPERLINK, myDelayedHyperlinks[idIndex]);
+				idIndex++;
+			} else {
+				addControl(it->first, it->second);
+			}
+		}
+		myDelayedControls.clear();
+		myDelayedHyperlinks.clear();
+	}
+}
+
+void PluckerReader::setFont(FontType font, bool start) {
+	switch (font) {
+		case FT_REGULAR:
+			break;
+		case FT_H1:
+		case FT_H2:
+		case FT_H3:
+		case FT_H4:
+		case FT_H5:
+		case FT_H6:
+			if (start) {
+				enterTitle();
+				pushKind(SECTION_TITLE);
+			} else {
+				popKind();
+				exitTitle();
+			}
+			break;
+		case FT_BOLD:
+			safeAddControl(STRONG, start);
+			break;
+		case FT_TT:
+			safeAddControl(CODE, start);
+			break;
+		case FT_SMALL:
+			break;
+		case FT_SUB:
+			safeAddControl(SUB, start);
+			break;
+		case FT_SUP:
+			safeAddControl(SUP, start);
+			break;
+	}
 }
 
 void PluckerReader::changeFont(FontType font) {
 	if (myFont == font) {
 		return;
 	}
-	switch (myFont) {
-		case FT_REGULAR:
-			break;
-		case FT_H1:
-		case FT_H2:
-		case FT_H3:
-		case FT_H4:
-		case FT_H5:
-		case FT_H6:
-			//popKind();
-			//exitTitle();
-			break;
-		case FT_BOLD:
-			addControl(STRONG, false);
-			break;
-		case FT_TT:
-			addControl(CODE, false);
-			break;
-		case FT_SMALL:
-			break;
-		case FT_SUB:
-			addControl(SUB, false);
-			break;
-		case FT_SUP:
-			addControl(SUP, false);
-			break;
-	}
+	setFont(myFont, false);
 	myFont = font;
-	switch (myFont) {
-		case FT_REGULAR:
-			break;
-		case FT_H1:
-		case FT_H2:
-		case FT_H3:
-		case FT_H4:
-		case FT_H5:
-		case FT_H6:
-			//enterTitle();
-			//pushKind(SECTION_TITLE);
-			break;
-		case FT_BOLD:
-			addControl(STRONG, true);
-			break;
-		case FT_TT:
-			addControl(CODE, true);
-			break;
-		case FT_SMALL:
-			break;
-		case FT_SUB:
-			addControl(SUB, true);
-			break;
-		case FT_SUP:
-			addControl(SUP, true);
-			break;
-	}
+	setFont(myFont, true);
 }
 
-static void listParameters(char *&ptr, int argc) {
+static void listParameters(char *ptr) {
+	int argc = ((unsigned char)*ptr) % 8;
 	//std::cerr << (int)(unsigned char)*ptr << "(";	
 	for (int i = 0; i < argc - 1; i++) {
 		ptr++;
@@ -231,61 +261,37 @@ static std::string fromNumber(unsigned int num) {
 	return str;
 }
 
-void PluckerReader::processTextFunction(char *&ptr, char *end) {
+void PluckerReader::processTextFunction(char *ptr) {
 	switch ((unsigned char)*ptr) {
 		case 0x08:
-			addControl(HYPERLINK, false);
+			safeAddControl(HYPERLINK, false);
 			break;
 		case 0x0A:
-			if (end - ptr >= 2) {
-				addHyperlinkControl(HYPERLINK, fromNumber(twoBytes(ptr + 1)));
-				ptr += 2;
-			} else {
-				ptr = end;
-			}
+			safeAddHyperlinkControl(fromNumber(twoBytes(ptr + 1)));
 			break;
 		case 0x0C:
-			if (end - ptr >= 4) {
-				addHyperlinkControl(HYPERLINK, fromNumber(twoBytes(ptr + 1)) + "#" + fromNumber(twoBytes(ptr + 3)));
-				ptr += 4;
-			} else {
-				ptr = end;
-			}
+			safeAddHyperlinkControl(fromNumber(twoBytes(ptr + 1)) + "#" + fromNumber(twoBytes(ptr + 3)));
 			break;
 		case 0x11:
-			if (end > ptr) {
-				changeFont((FontType)*(ptr + 1));
-				ptr += 1;
-			}
+			changeFont((FontType)*(ptr + 1));
 			break;
 		case 0x1A:
-			if (end - ptr >= 2) {
-				addImageReference(fromNumber(twoBytes(ptr + 1)));
-				ptr += 2;
-			} else {
-				ptr = end;
-			}
+			addImageReference(fromNumber(twoBytes(ptr + 1)));
 			break;
-		case 0x22: listParameters(ptr, 2); break;
-		case 0x29: listParameters(ptr, 1); break;
-		case 0x33: listParameters(ptr, 3); break;
-		case 0x38: listParameters(ptr, 0); break;
+		case 0x22: listParameters(ptr); break;
+		case 0x29: listParameters(ptr); break;
+		case 0x33: listParameters(ptr); break;
+		case 0x38: listParameters(ptr); break;
 		case 0x40: 
-			addControl(EMPHASIS, true);
+			safeAddControl(EMPHASIS, true);
 			break;
 		case 0x48:
-			addControl(EMPHASIS, false);
+			safeAddControl(EMPHASIS, false);
 			break;
 		case 0x53: // color setting is ignored
-			ptr = (end - ptr >= 3) ? ptr + 3 : end;
 			break;
 		case 0x5C:
-			if (end - ptr >= 4) {
-				addImageReference(fromNumber(twoBytes(ptr + 3)));
-				ptr += 4;
-			} else {
-				ptr = end;
-			}
+			addImageReference(fromNumber(twoBytes(ptr + 3)));
 			break;
 		case 0x60: // underlined text is ignored
 			break;
@@ -295,23 +301,27 @@ void PluckerReader::processTextFunction(char *&ptr, char *end) {
 			break;
 		case 0x78: // strike-through text is ignored
 			break;
-		case 0x83: listParameters(ptr, 3); break;
-		case 0x85: listParameters(ptr, 5); break;
-		case 0x8E: listParameters(ptr, 6); break;
-		case 0x8C: listParameters(ptr, 4); break;
-		case 0x8A: listParameters(ptr, 2); break;
-		case 0x88: listParameters(ptr, 0); break;
-		case 0x90: listParameters(ptr, 0); break;
-		case 0x92: listParameters(ptr, 2); break;
-		case 0x97: listParameters(ptr, 7); break;
-		default: listParameters(ptr, 0); break;
+		case 0x83: listParameters(ptr); break;
+		case 0x85: listParameters(ptr); break;
+		case 0x8E: listParameters(ptr); break;
+		case 0x8C: listParameters(ptr); break;
+		case 0x8A: listParameters(ptr); break;
+		case 0x88: listParameters(ptr); break;
+		case 0x90: // TODO: process table
+			break;
+		case 0x92: // TODO: process table
+			break;
+		case 0x97: // TODO: process table
+			break;
+		default: listParameters(ptr); break;
 	}
 }
 
 void PluckerReader::processTextParagraph(char *start, char *end) {
 	//std::cerr << "\n<PAR>\n";
 	changeFont(FT_REGULAR);
-	beginParagraph();
+
+	myParagraphStarted = false;
 
 	char *textStart = start;
 	bool functionFlag = false;
@@ -320,6 +330,7 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 		if (*ptr == 0) {
 			functionFlag = true;
 			if (ptr != textStart) {
+				safeBeginParagraph();
 				addDataToBuffer(textStart, ptr - textStart);
 				//std::string txt;
 				//txt.append(textStart, ptr - textStart);
@@ -328,7 +339,12 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 			//std::cerr << "\n0 ";
 		} else if (functionFlag) {
 			//std::cerr << (int)*ptr << " ";
-			processTextFunction(ptr, end - 1);
+			if (end - ptr > ((unsigned char)*ptr) % 8 + 1) {
+				processTextFunction(ptr);
+				ptr += ((unsigned char)*ptr) % 8;
+			} else {
+				ptr = end - 1;
+			}
 			functionFlag = false;
 			textStart = ptr + 1;
 		} else if ((unsigned char)*ptr == 0xA0) {
@@ -336,43 +352,40 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 		}
 	}
 	if (ptr != textStart) {
+		safeBeginParagraph();
 		addDataToBuffer(textStart, ptr - textStart);
 		//std::string txt;
 		//txt.append(textStart, ptr - textStart);
 		//std::cerr << "text = " << txt << "\n";
 	}
-	endParagraph();
+	if (myParagraphStarted) {
+		endParagraph();
+	}
 }
 
 void PluckerReader::processCompressedTextRecord(size_t compressedSize, size_t uncompressedSize, const std::vector<int> &pars) {
 	//std::cerr << "\n<RECORD>\n";
 
 	ZLZDecompressor decompressor(compressedSize);
-	char *buffer = new char[uncompressedSize];
-	if (decompressor.decompress(*myStream, buffer, uncompressedSize) != uncompressedSize) {
+	if (decompressor.decompress(*myStream, myBuffer, uncompressedSize) != uncompressedSize) {
 		return;
 	}
 
-	char *start = buffer;
-	char *end = buffer;
+	char *start = myBuffer;
+	char *end = myBuffer;
 
 	for (std::vector<int>::const_iterator it = pars.begin(); it != pars.end(); it++) {
 		start = end;
 		end = start + *it;
-		if (end > buffer + uncompressedSize) {
+		if (end > myBuffer + uncompressedSize) {
 			return;
 		}
 		processTextParagraph(start, end);
 	}
 
-	delete[] buffer;
 		/*
 		if (functionFlag) {
 			switch (*ptr) {
-				case 0x08:
-					//addControl(HYPERLINK, false);
-					ptr += 0;
-					break;
 				case 0x22:
 					// TODO: set margin
 					ptr += 2;
@@ -402,54 +415,8 @@ void PluckerReader::processCompressedTextRecord(size_t compressedSize, size_t un
 					beginParagraph();
 					processed = true;
 					break;
-				case 0x60: ptr += 0; break;
-				case 0x68: ptr += 0; break;
-				case 0x70: ptr += 0; break;
-				case 0x78: ptr += 0; break;
-				case 0x83: ptr += 3; break;
-				case 0x85: ptr += 5; break;
-				case 0x8E: ptr += 6; break;
-				case 0x8C: ptr += 4; break;
-				case 0x8A: ptr += 2; break;
-				case 0x88: ptr += 0; break;
-				case 0x90: ptr += 0; break;
-				case 0x92: ptr += 2; break;
-				case 0x97: ptr += 7; break;
 			}
-			textStart = ptr + 1;
-			std::cerr << "\n";
-			//if (!processed) {
-			//	std::cerr << "[" << fn << "]\n";
-			//}
-			functionFlag = false;
-		} else if (*ptr == 0) {
-			functionFlag = true;
-			if (textStart != ptr) {
-				addDataToBuffer(textStart, ptr - textStart);
-				std::string txt;
-				txt.append(textStart, ptr - textStart);
-				std::cerr << "text = " << txt << "\n";
-				//std::cerr << "{" << (int)(unsigned char)textStart[0] << "}\n";
-				//std::cerr << "{" << (int)(unsigned char)textStart[1] << "}\n";
-				//std::cerr << textStart;
-			}
-			textStart = ptr + 1;
-		} else if (*ptr == (char)160) {
-			if (textStart != ptr) {
-				addDataToBuffer(textStart, ptr - textStart);
-				std::string txt;
-				txt.append(textStart, ptr - textStart);
-				std::cerr << "text = " << txt << "\n";
-				//std::cerr << "{" << (int)(unsigned char)textStart[0] << "}\n";
-				//std::cerr << "{" << (int)(unsigned char)textStart[1] << "}\n";
-				//std::cerr << textStart;
-			}
-			textStart = ptr + 1;
-			changeFont(FT_REGULAR);
-			//endParagraph();
-			//beginParagraph();
-		}
-	*/
+			*/
 }
 
 void PluckerReader::readRecord(size_t recordSize) {
@@ -487,9 +454,9 @@ void PluckerReader::readRecord(size_t recordSize) {
 					addHyperlinkLabel(strId);
 					processCompressedTextRecord(recordSize - 10 - 4 * paragraphs, size, pars);
 				}
-				//if (flags & 0x1 == 0) {
+				if ((flags & 0x1) == 0) {
 					insertEndOfSectionParagraph();
-				//}
+				}
 				break;
 			case 3: // compressed image
 				{
