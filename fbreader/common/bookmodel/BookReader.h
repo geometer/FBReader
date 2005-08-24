@@ -47,7 +47,7 @@ public:
 
 	void insertEndOfSectionParagraph() MODEL_SECTION;
 	void pushKind(TextKind kind) MODEL_SECTION;
-	void popKind() MODEL_SECTION;
+	bool popKind() MODEL_SECTION;
 	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH) MODEL_SECTION;
 	void endParagraph() MODEL_SECTION;
 	void addControl(TextKind kind, bool start) MODEL_SECTION;

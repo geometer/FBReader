@@ -279,7 +279,14 @@ void PluckerReader::processTextFunction(char *ptr) {
 			addImageReference(fromNumber(twoBytes(ptr + 1)));
 			break;
 		case 0x22: listParameters(ptr); break;
-		case 0x29: listParameters(ptr); break;
+		case 0x29:
+			switch (*(ptr + 1)) {
+				case 0: safeAddControl(LEFT_ALIGNED, true); break;
+				case 1: safeAddControl(RIGHT_ALIGNED, true); break;
+				case 2: safeAddControl(CENTER_ALIGNED, true); break;
+				case 3: safeAddControl(JUSTIFY_ALIGNED, true); break;
+			}
+			break;
 		case 0x33: listParameters(ptr); break;
 		case 0x38: listParameters(ptr); break;
 		case 0x40: 
@@ -320,6 +327,8 @@ void PluckerReader::processTextFunction(char *ptr) {
 void PluckerReader::processTextParagraph(char *start, char *end) {
 	//std::cerr << "\n<PAR>\n";
 	changeFont(FT_REGULAR);
+	while (popKind()) {}
+	//pushKind(REGULAR);
 
 	myParagraphStarted = false;
 
@@ -389,15 +398,6 @@ void PluckerReader::processCompressedTextRecord(size_t compressedSize, size_t un
 					// TODO: set margin
 					ptr += 2;
 					endParagraph();
-					beginParagraph();
-					processed = true;
-					break;
-				case 0x29:
-					// TODO: set alignment
-					ptr += 1;
-					std::cerr << " (" << (int)*ptr << ")";
-					endParagraph();
-					changeFont(FT_REGULAR);
 					beginParagraph();
 					processed = true;
 					break;
@@ -504,7 +504,7 @@ void PluckerReader::readRecord(size_t recordSize) {
 
 bool PluckerReader::readDocument() {
 	setMainTextModel();
-	pushKind(REGULAR);
+	//pushKind(REGULAR);
 	myFont = FT_REGULAR;
 
 	std::vector<unsigned long> offsets;

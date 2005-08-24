@@ -63,10 +63,12 @@ void BookReader::pushKind(TextKind kind) {
 	myKindStack.push_back(kind);
 }
 
-void BookReader::popKind() {
+bool BookReader::popKind() {
 	if (!myKindStack.empty()) {
 		myKindStack.pop_back();
+		return true;
 	}
+	return false;
 }
 
 void BookReader::beginParagraph(Paragraph::Kind kind) {
