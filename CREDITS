@@ -1,1 +1,2 @@
-Thanks to GQview project for a highly optimized version of pixbuf rotation
+Thanks to GQview project (http://gqview.sourcefore.net) for a highly optimized
+version of pixbuf rotation that is used in all gtk based versions.
