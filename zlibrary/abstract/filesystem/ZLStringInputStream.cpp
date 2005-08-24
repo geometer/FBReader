@@ -29,5 +29,5 @@ size_t ZLStringInputStream::read(char *buffer, size_t maxSize) {
 }
 
 size_t ZLStringInputStream::sizeOfOpened() {
-	return myString.size();
+	return myString.length();
 }
