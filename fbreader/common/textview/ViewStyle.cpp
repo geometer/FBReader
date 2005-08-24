@@ -30,7 +30,7 @@
 #include "TextElement.h"
 
 TextView::ViewStyle::ViewStyle(ZLPaintContext &context) : myContext(context) {
-	myStyle = TextStyleCollection::instance().baseStyle();
+	setStyle(TextStyleCollection::instance().baseStyle());
 	myWordHeight = -1;
 }
 
