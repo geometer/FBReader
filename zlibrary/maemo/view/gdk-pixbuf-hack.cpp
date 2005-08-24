@@ -1,3 +1,27 @@
+/*
+ * The code is copied/based on the code from GQview
+ *
+ * Modifications are:
+ *
+ * Copyright (C) 2004, 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include "gdk-pixbuf-hack.h"
 
 #include <string.h>
@@ -49,7 +73,6 @@ static void pixbuf_copy_block(guchar *src, gint src_row_stride, gint w, gint h,
 
 /*
  * Returns a copy of pixbuf src rotated 90 degrees clockwise or 90 counterclockwise
- *
  */
 // GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
 void rotate(GdkPixbuf *dest, const GdkPixbuf *src) {
