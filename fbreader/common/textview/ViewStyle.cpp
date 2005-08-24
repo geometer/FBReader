@@ -100,7 +100,7 @@ int TextView::ViewStyle::elementHeight(const TextElement &element) const {
 			return context().stringHeight();
 		case TextElement::IMAGE_ELEMENT:
 		{
-			int shift = std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 0);
+			int shift = std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 3);
 			return std::min(context().imageHeight(((const ImageElement&)element).image()) + shift, textAreaHeight());
 		}
 		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
