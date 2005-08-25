@@ -98,11 +98,6 @@ TextStyleCollection::TextStyleCollection() {
 	registerStyle(RECENT_BOOK_LIST, "Recent Book List", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 3, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 1.2, B3_FALSE, false);
 	registerStyle(PREFORMATTED, "Preformatted text", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
 
-	registerStyle(LEFT_ALIGNED, "Left aligned", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_UNDEFINED, false);
-	registerStyle(RIGHT_ALIGNED, "Right aligned", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_RIGHT, 0.0, B3_UNDEFINED, false);
-	registerStyle(CENTER_ALIGNED, "Center aligned", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_UNDEFINED, false);
-	registerStyle(JUSTIFY_ALIGNED, "Justify aligned", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_JUSTIFY, 0.0, B3_UNDEFINED, false);
-
 	registerStyle(CITE, "Cite", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED, false);
 	registerStyle(HYPERLINK, "Hyperlink", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_FALSE, true);
 	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE, true);

@@ -66,6 +66,9 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 			case TextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ControlElement&)element);
 				break;
+			case TextElement::FORCED_CONTROL_ELEMENT:
+				myStyle.applyControl((const ForcedControlElement&)element);
+				break;
 			case TextElement::WORD_ELEMENT:
 			case TextElement::IMAGE_ELEMENT:
 				wordOccured = true;

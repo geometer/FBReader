@@ -59,10 +59,17 @@ void TextView::ViewStyle::applyControl(const ControlElement &control) {
 	}
 }
 
+void TextView::ViewStyle::applyControl(const ForcedControlElement &control) {
+	setStyle(new ForcedTextStyle(myStyle, control.entry()));
+}
+
 void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {
 	for (WordCursor cursor = begin; !cursor.sameElementAs(end); cursor.nextWord()) {
-		if (cursor.element().kind() == TextElement::CONTROL_ELEMENT) {
-			applyControl((ControlElement&)cursor.element());
+		const TextElement &element = cursor.element();
+		if (element.kind() == TextElement::CONTROL_ELEMENT) {
+			applyControl((ControlElement&)element);
+		} else if (element.kind() == TextElement::FORCED_CONTROL_ELEMENT) {
+			applyControl((ForcedControlElement&)element);
 		}
 	}
 }
@@ -83,6 +90,7 @@ int TextView::ViewStyle::elementWidth(const TextElement &element, unsigned int c
 			return context().width() + abs(style()->leftIndent()) + abs(style()->rightIndent()) + abs(style()->firstLineIndentDelta()) + 1;
 		case TextElement::TREE_ELEMENT:
 			return context().stringHeight() * 4 / 3;
+		case TextElement::FORCED_CONTROL_ELEMENT:
 		case TextElement::CONTROL_ELEMENT:
 			return 0;
 	}
@@ -111,6 +119,7 @@ int TextView::ViewStyle::elementHeight(const TextElement &element) const {
 			return style()->spaceBefore() + context().stringHeight() + style()->spaceAfter();
 		case TextElement::INDENT_ELEMENT:
 		case TextElement::HSPACE_ELEMENT:
+		case TextElement::FORCED_CONTROL_ELEMENT:
 		case TextElement::CONTROL_ELEMENT:
 			return 0;
 	}

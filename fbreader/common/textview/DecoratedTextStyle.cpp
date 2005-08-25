@@ -22,6 +22,7 @@
 #include <abstract/ZLOptions.h>
 
 #include "TextStyle.h"
+#include "../model/Paragraph.h"
 
 TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations) :
 	myName(name),
@@ -111,6 +112,22 @@ bool FullDecoratedTextStyle::allowHyphenations() const {
 	return true;
 }
 
-ZLColor DecoratedTextStyle::color() const {
-	return decoration().isHyperlinkStyle() ? HyperlinkTextColorOption.value() : base()->color();
+ZLColor PartialDecoratedTextStyle::color() const {
+	return myDecoration.isHyperlinkStyle() ? HyperlinkTextColorOption.value() : base()->color();
+}
+
+ZLColor FullDecoratedTextStyle::color() const {
+	return myDecoration.isHyperlinkStyle() ? HyperlinkTextColorOption.value() : base()->color();
+}
+
+int ForcedTextStyle::leftIndent() const {
+	return myEntry.leftIndentSupported() ? myEntry.leftIndent() : base()->leftIndent();
+}
+
+int ForcedTextStyle::rightIndent() const {
+	return myEntry.rightIndentSupported() ? myEntry.rightIndent() : base()->rightIndent();
+}
+
+AlignmentType ForcedTextStyle::alignment() const {
+	return myEntry.alignmentTypeSupported() ? myEntry.alignmentType() : base()->alignment();
 }

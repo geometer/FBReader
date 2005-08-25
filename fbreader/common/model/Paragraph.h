@@ -27,6 +27,7 @@
 #include <abstract/ZLString.h>
 
 #include "TextKind.h"
+#include "AlignmentType.h"
 
 class BookDescription;
 class ZLImage;
@@ -39,6 +40,7 @@ public:
 		TEXT_ENTRY,
 		IMAGE_ENTRY,
 		CONTROL_ENTRY,
+		FORCED_CONTROL_ENTRY,
 	};
 
 protected:
@@ -47,6 +49,39 @@ protected:
 public:
 	virtual ~ParagraphEntry() MODEL_SECTION;
 	virtual Kind entryKind() const MODEL_SECTION = 0;
+};
+
+class ForcedControlEntry : public ParagraphEntry {
+
+public:
+	ForcedControlEntry() MODEL_SECTION;
+	~ForcedControlEntry() MODEL_SECTION;
+	Kind entryKind() const MODEL_SECTION;
+
+	bool leftIndentSupported() const MODEL_SECTION;
+	int leftIndent() const MODEL_SECTION;
+	void setLeftIndent(int leftIndent) MODEL_SECTION;
+
+	bool rightIndentSupported() const MODEL_SECTION;
+	int rightIndent() const MODEL_SECTION;
+	void setRightIndent(int rightIndent) MODEL_SECTION;
+
+	bool alignmentTypeSupported() const MODEL_SECTION;
+	AlignmentType alignmentType() const MODEL_SECTION;
+	void setAlignmentType(AlignmentType alignmentType) MODEL_SECTION;
+
+private:
+	enum {
+		SUPPORT_LEFT_INDENT = 1,
+		SUPPORT_RIGHT_INDENT = 2,
+		SUPPORT_ALIGNMENT_TYPE = 4,
+	};
+
+	int myMask;
+
+	int myLeftIndent;
+	int myRightIndent;
+	AlignmentType myAlignmentType;
 };
 
 class ControlEntry : public ParagraphEntry {
@@ -143,6 +178,7 @@ public:
 	Kind kind() const MODEL_SECTION;
 
 	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
+	void addControl(ForcedControlEntry *entry) MODEL_SECTION;
 	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
 	void addNonConstText(ZLString &text) MODEL_SECTION;
 	void addText(const std::string &text) MODEL_SECTION;
@@ -195,6 +231,19 @@ private:
 inline ParagraphEntry::ParagraphEntry() {}
 inline ParagraphEntry::~ParagraphEntry() {}
 
+inline ForcedControlEntry::ForcedControlEntry() : myMask(0) {}
+inline ForcedControlEntry::~ForcedControlEntry() {}
+inline ParagraphEntry::Kind ForcedControlEntry::entryKind() const { return FORCED_CONTROL_ENTRY; }
+inline bool ForcedControlEntry::leftIndentSupported() const { return myMask & SUPPORT_LEFT_INDENT; }
+inline int ForcedControlEntry::leftIndent() const { return myLeftIndent; }
+inline void ForcedControlEntry::setLeftIndent(int leftIndent) { myLeftIndent = leftIndent; myMask |= SUPPORT_LEFT_INDENT; }
+inline bool ForcedControlEntry::rightIndentSupported() const { return myMask & SUPPORT_RIGHT_INDENT; }
+inline int ForcedControlEntry::rightIndent() const { return myRightIndent; }
+inline void ForcedControlEntry::setRightIndent(int rightIndent) { myRightIndent = rightIndent; myMask |= SUPPORT_RIGHT_INDENT; }
+inline bool ForcedControlEntry::alignmentTypeSupported() const { return myMask & SUPPORT_ALIGNMENT_TYPE; }
+inline AlignmentType ForcedControlEntry::alignmentType() const { return myAlignmentType; }
+inline void ForcedControlEntry::setAlignmentType(AlignmentType alignmentType) { myAlignmentType = alignmentType; myMask |= SUPPORT_ALIGNMENT_TYPE; }
+
 inline ControlEntry::ControlEntry(TextKind kind, bool isStart) : myKind(kind), myStart(isStart) {}
 inline ControlEntry::~ControlEntry() {}
 inline TextKind ControlEntry::kind() const { return myKind; }
@@ -225,6 +274,7 @@ inline const std::string &ImageEntry::id() const { return myId; }
 inline Paragraph::Paragraph(Kind kind) : myKind(kind) {}
 inline Paragraph::Kind Paragraph::kind() const { return myKind; }
 inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.push_back(ControlEntryPool::Pool.controlEntry(textKind, isStart)); }
+inline void Paragraph::addControl(ForcedControlEntry *entry) { myEntries.push_back(entry); }
 inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
 inline void Paragraph::addImage(const std::string &id, const ImageMap &imageMap) { myEntries.push_back(new ImageEntry(id, imageMap)); }
 inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return myEntries; }

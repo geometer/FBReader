@@ -85,6 +85,9 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 	const std::vector<ParagraphEntry*> &entries = myParagraph.entries();
 	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
 		switch ((*it)->entryKind()) {
+			case ParagraphEntry::FORCED_CONTROL_ENTRY:
+				myElements.push_back(new ForcedControlElement((ForcedControlEntry&)**it));
+				break;
 			case ParagraphEntry::CONTROL_ENTRY:
 				myElements.push_back(TextElementPool::Pool.getControlElement((ControlEntry&)**it));
 				break;

@@ -97,6 +97,13 @@ void BookReader::addControl(TextKind kind, bool start) {
 	}
 }
 
+void BookReader::addControl(ForcedControlEntry *entry) {
+	if ((myCurrentParagraph != 0) && (entry != 0)) {
+		flushTextBufferToParagraph();
+		myCurrentParagraph->addControl(entry);
+	}
+}
+
 void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 	if (myCurrentParagraph != 0) {
 		flushTextBufferToParagraph();

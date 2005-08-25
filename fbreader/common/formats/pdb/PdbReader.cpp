@@ -146,6 +146,7 @@ private:
 	FontType myFont;
 	char *myBuffer;
 	bool myParagraphStarted;
+	ForcedControlEntry *myForcedEntry;
 	std::vector<std::pair<TextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;
 };
@@ -180,6 +181,7 @@ void PluckerReader::safeBeginParagraph() {
 		int idIndex = 0;
 		myParagraphStarted = true;
 		beginParagraph();
+		addControl(myForcedEntry);
 		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
 			if ((it->first == HYPERLINK) && it->second) {
 				addHyperlinkControl(HYPERLINK, myDelayedHyperlinks[idIndex]);
@@ -188,6 +190,7 @@ void PluckerReader::safeBeginParagraph() {
 				addControl(it->first, it->second);
 			}
 		}
+		myForcedEntry = 0;
 		myDelayedControls.clear();
 		myDelayedHyperlinks.clear();
 	}
@@ -278,13 +281,22 @@ void PluckerReader::processTextFunction(char *ptr) {
 		case 0x1A:
 			addImageReference(fromNumber(twoBytes(ptr + 1)));
 			break;
-		case 0x22: listParameters(ptr); break;
+		case 0x22:
+			if (myForcedEntry == 0) {
+				myForcedEntry = new ForcedControlEntry();
+			}
+			myForcedEntry->setLeftIndent(*(ptr + 1));
+			myForcedEntry->setRightIndent(*(ptr + 2));
+			break;
 		case 0x29:
+			if (myForcedEntry == 0) {
+				myForcedEntry = new ForcedControlEntry();
+			}
 			switch (*(ptr + 1)) {
-				case 0: safeAddControl(LEFT_ALIGNED, true); break;
-				case 1: safeAddControl(RIGHT_ALIGNED, true); break;
-				case 2: safeAddControl(CENTER_ALIGNED, true); break;
-				case 3: safeAddControl(JUSTIFY_ALIGNED, true); break;
+				case 0: myForcedEntry->setAlignmentType(ALIGN_LEFT); break;
+				case 1: myForcedEntry->setAlignmentType(ALIGN_RIGHT); break;
+				case 2: myForcedEntry->setAlignmentType(ALIGN_CENTER); break;
+				case 3: myForcedEntry->setAlignmentType(ALIGN_JUSTIFY); break;
 			}
 			break;
 		case 0x33: listParameters(ptr); break;
@@ -328,7 +340,6 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 	//std::cerr << "\n<PAR>\n";
 	changeFont(FT_REGULAR);
 	while (popKind()) {}
-	//pushKind(REGULAR);
 
 	myParagraphStarted = false;
 
@@ -394,13 +405,6 @@ void PluckerReader::processCompressedTextRecord(size_t compressedSize, size_t un
 		/*
 		if (functionFlag) {
 			switch (*ptr) {
-				case 0x22:
-					// TODO: set margin
-					ptr += 2;
-					endParagraph();
-					beginParagraph();
-					processed = true;
-					break;
 				case 0x33:
 					ptr += 3;
 					endParagraph();
@@ -504,7 +508,6 @@ void PluckerReader::readRecord(size_t recordSize) {
 
 bool PluckerReader::readDocument() {
 	setMainTextModel();
-	//pushKind(REGULAR);
 	myFont = FT_REGULAR;
 
 	std::vector<unsigned long> offsets;

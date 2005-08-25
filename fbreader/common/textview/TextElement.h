@@ -39,6 +39,7 @@ public:
 		WORD_ELEMENT,
 		IMAGE_ELEMENT,
 		CONTROL_ELEMENT,
+		FORCED_CONTROL_ELEMENT,
 		TREE_ELEMENT,
 		INDENT_ELEMENT,
 		HSPACE_ELEMENT,
@@ -76,6 +77,18 @@ public:
 
 private:
 	Kind myKind;
+};
+
+class ForcedControlElement : public TextElement {
+
+public:
+	ForcedControlElement(const ForcedControlEntry &entry) VIEW_SECTION;
+	~ForcedControlElement() VIEW_SECTION;
+	Kind kind() const VIEW_SECTION;
+	const ForcedControlEntry &entry() const VIEW_SECTION;
+
+private:
+	const ForcedControlEntry &myEntry;
 };
 
 class ControlElement : public TextElement {
@@ -124,6 +137,11 @@ inline const ZLImageData &ImageElement::image() const { return *myImage; }
 inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
 inline SpecialTextElement::~SpecialTextElement() {}
 inline TextElement::Kind SpecialTextElement::kind() const { return myKind; };
+
+inline ForcedControlElement::ForcedControlElement(const ForcedControlEntry &entry) : myEntry(entry) {}
+inline ForcedControlElement::~ForcedControlElement() {}
+inline TextElement::Kind ForcedControlElement::kind() const { return FORCED_CONTROL_ELEMENT; };
+inline const ForcedControlEntry &ForcedControlElement::entry() const { return myEntry; }
 
 inline ControlElement::ControlElement(const ControlEntry &entry) : myEntry(entry) {}
 inline ControlElement::~ControlElement() {}

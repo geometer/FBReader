@@ -248,6 +248,9 @@ void TextView::drawTextLine(const LineInfo &info) {
 			case TextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ControlElement&)element);
 				break;
+			case TextElement::FORCED_CONTROL_ELEMENT:
+				myStyle.applyControl((const ForcedControlElement&)element);
+				break;
 			case TextElement::HSPACE_ELEMENT:
 				if (wordOccured && (spaceCounter > 0)) {
 					int correction = fullCorrection / spaceCounter;

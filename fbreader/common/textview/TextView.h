@@ -68,6 +68,7 @@ private:
 		void reset() VIEW_SECTION;
 		void setStyle(const TextStylePtr style) VIEW_SECTION;
 		void applyControl(const ControlElement &control) VIEW_SECTION;
+		void applyControl(const ForcedControlElement &control) VIEW_SECTION;
 		void applyControls(const WordCursor &begin, const WordCursor &end) VIEW_SECTION;
 
 		const ZLPaintContext &context() const VIEW_SECTION;

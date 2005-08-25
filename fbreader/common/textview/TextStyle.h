@@ -30,14 +30,7 @@
 #include <abstract/ZLOptions.h>
 
 #include "../model/TextKind.h"
-
-enum AlignmentType {
-	ALIGN_UNDEFINED = 0,
-	ALIGN_LEFT = 1,
-	ALIGN_RIGHT = 2,
-	ALIGN_CENTER = 3,
-	ALIGN_JUSTIFY = 4
-};
+#include "../model/AlignmentType.h"
 
 class TextStyle {
 
@@ -199,7 +192,6 @@ class DecoratedTextStyle : public TextStyle {
 
 protected:
 	DecoratedTextStyle(const TextStylePtr base) TEXT_STYLE_SECTION;
-	virtual const TextStyleDecoration &decoration() const TEXT_STYLE_SECTION = 0;
 
 public:
 	virtual ~DecoratedTextStyle() TEXT_STYLE_SECTION;
@@ -207,10 +199,39 @@ public:
 	bool isDecorated() const TEXT_STYLE_SECTION;
 	const TextStylePtr base() const TEXT_STYLE_SECTION;
 
-	ZLColor color() const TEXT_STYLE_SECTION;
-
 private:
 	const TextStylePtr myBase;
+};
+
+class ForcedControlEntry;
+
+class ForcedTextStyle : public DecoratedTextStyle {
+
+public:
+	ForcedTextStyle(TextStylePtr base, const ForcedControlEntry &entry) TEXT_STYLE_SECTION;
+	~ForcedTextStyle() TEXT_STYLE_SECTION;
+
+	const std::string &fontFamily() const TEXT_STYLE_SECTION;
+	int fontSize() const TEXT_STYLE_SECTION;
+
+	bool bold() const TEXT_STYLE_SECTION;
+	bool italic() const TEXT_STYLE_SECTION;
+
+	ZLColor color() const TEXT_STYLE_SECTION;
+
+	int spaceBefore() const TEXT_STYLE_SECTION;
+	int spaceAfter() const TEXT_STYLE_SECTION;
+	int leftIndent() const TEXT_STYLE_SECTION;
+	int rightIndent() const TEXT_STYLE_SECTION;
+	int firstLineIndentDelta() const TEXT_STYLE_SECTION;
+	int verticalShift() const TEXT_STYLE_SECTION;
+	AlignmentType alignment() const TEXT_STYLE_SECTION;
+	double lineSpace() const TEXT_STYLE_SECTION;
+
+	bool allowHyphenations() const TEXT_STYLE_SECTION;
+
+private:
+	const ForcedControlEntry &myEntry;
 };
 
 class PartialDecoratedTextStyle : public DecoratedTextStyle {
@@ -226,6 +247,8 @@ public:
 	bool bold() const TEXT_STYLE_SECTION;
 	bool italic() const TEXT_STYLE_SECTION;
 
+	ZLColor color() const TEXT_STYLE_SECTION;
+
 	int spaceBefore() const TEXT_STYLE_SECTION;
 	int spaceAfter() const TEXT_STYLE_SECTION;
 	int leftIndent() const TEXT_STYLE_SECTION;
@@ -237,8 +260,6 @@ public:
 	bool allowHyphenations() const TEXT_STYLE_SECTION;
 
 	double lineSpace() const TEXT_STYLE_SECTION;
-
-	const TextStyleDecoration &decoration() const TEXT_STYLE_SECTION;
 
 private:
 	const TextStyleDecoration &myDecoration;
@@ -257,6 +278,8 @@ public:
 	bool bold() const TEXT_STYLE_SECTION;
 	bool italic() const TEXT_STYLE_SECTION;
 
+	ZLColor color() const TEXT_STYLE_SECTION;
+
 	int spaceBefore() const TEXT_STYLE_SECTION;
 	int spaceAfter() const TEXT_STYLE_SECTION;
 	int leftIndent() const TEXT_STYLE_SECTION;
@@ -268,8 +291,6 @@ public:
 	bool allowHyphenations() const TEXT_STYLE_SECTION;
 
 	double lineSpace() const TEXT_STYLE_SECTION;
-
-	const TextStyleDecoration &decoration() const TEXT_STYLE_SECTION;
 
 private:
 	const FullTextStyleDecoration &myDecoration;
@@ -350,6 +371,20 @@ inline DecoratedTextStyle::~DecoratedTextStyle() {}
 inline bool DecoratedTextStyle::isDecorated() const { return true; }
 inline const TextStylePtr DecoratedTextStyle::base() const { return myBase; }
 
+inline ForcedTextStyle::ForcedTextStyle(TextStylePtr base, const ForcedControlEntry &entry) : DecoratedTextStyle(base), myEntry(entry) {}
+inline ForcedTextStyle::~ForcedTextStyle() {}
+inline const std::string &ForcedTextStyle::fontFamily() const { return base()->fontFamily(); }
+inline int ForcedTextStyle::fontSize() const { return base()->fontSize(); }
+inline bool ForcedTextStyle::bold() const { return base()->bold(); }
+inline bool ForcedTextStyle::italic() const { return base()->italic(); }
+inline ZLColor ForcedTextStyle::color() const { return base()->color(); }
+inline int ForcedTextStyle::spaceBefore() const { return base()->spaceBefore(); }
+inline int ForcedTextStyle::spaceAfter() const { return base()->spaceAfter(); }
+inline int ForcedTextStyle::firstLineIndentDelta() const { return base()->firstLineIndentDelta(); }
+inline int ForcedTextStyle::verticalShift() const { return base()->verticalShift(); }
+inline double ForcedTextStyle::lineSpace() const { return base()->lineSpace(); }
+inline bool ForcedTextStyle::allowHyphenations() const { return base()->allowHyphenations(); }
+
 inline PartialDecoratedTextStyle::PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
 inline PartialDecoratedTextStyle::~PartialDecoratedTextStyle() {}
 inline int PartialDecoratedTextStyle::spaceBefore() const { return base()->spaceBefore(); }
@@ -360,7 +395,6 @@ inline int PartialDecoratedTextStyle::firstLineIndentDelta() const { return base
 inline int PartialDecoratedTextStyle::verticalShift() const { return base()->verticalShift() + myDecoration.verticalShiftOption().value(); }
 inline AlignmentType PartialDecoratedTextStyle::alignment() const { return base()->alignment(); }
 inline double PartialDecoratedTextStyle::lineSpace() const { return base()->lineSpace(); }
-inline const TextStyleDecoration &PartialDecoratedTextStyle::decoration() const { return myDecoration; }
 
 inline FullDecoratedTextStyle::FullDecoratedTextStyle(const TextStylePtr base, const FullTextStyleDecoration &decoration) : DecoratedTextStyle(base), myDecoration(decoration) {}
 inline FullDecoratedTextStyle::~FullDecoratedTextStyle() {}
@@ -370,7 +404,6 @@ inline int FullDecoratedTextStyle::leftIndent() const { return base()->leftInden
 inline int FullDecoratedTextStyle::rightIndent() const { return base()->rightIndent() + myDecoration.rightIndentOption().value(); }
 inline int FullDecoratedTextStyle::verticalShift() const { return base()->verticalShift() + myDecoration.verticalShiftOption().value(); }
 inline double FullDecoratedTextStyle::lineSpace() const { double space = myDecoration.lineSpaceOption().value(); return (space == 0) ? base()->lineSpace() : space; }
-inline const TextStyleDecoration &FullDecoratedTextStyle::decoration() const { return myDecoration; }
 
 inline TextStylePtr TextStyleCollection::baseStyle() const { return myBaseStyle; }
 
