@@ -117,7 +117,6 @@ private:
 	shared_ptr<ZLInputStream> myStream;
 	FontType myFont;
 	char *myCharBuffer;
-	char *myDocCompressedBuffer;
 	bool myParagraphStarted;
 	ForcedControlEntry *myForcedEntry;
 	std::vector<std::pair<TextKind,bool> > myDelayedControls;
@@ -128,16 +127,12 @@ private:
 
 PluckerReader::PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myFilePath(filePath), myStream(stream), myFont(FT_REGULAR) {
 	myCharBuffer = new char[65535];
-	myDocCompressedBuffer = 0;
 	myBytesToSkip = 0;
 	myForcedEntry = 0;
 }
 
 PluckerReader::~PluckerReader() {
 	delete[] myCharBuffer;
-	if (myDocCompressedBuffer != 0) {
-		delete myDocCompressedBuffer;
-	}
 }
 
 void PluckerReader::safeAddControl(TextKind kind, bool start) {
@@ -452,11 +447,7 @@ void PluckerReader::readRecord(size_t recordSize) {
 				switch (myCompressionVersion) {
 					case 1:
 					{
-						size_t compressedSize = recordSize - 8 - 4 * paragraphs;
-						if (myDocCompressedBuffer == 0) {
-							myDocCompressedBuffer = new char[65535];
-						}
-						if (DocDecompressor().decompress(*myStream, myCharBuffer, compressedSize) == size) {
+						if (DocDecompressor().decompress(*myStream, myCharBuffer, recordSize - 8 - 4 * paragraphs) == size) {
 							processTextRecord(size, pars);
 						}
 						break;
@@ -475,32 +466,38 @@ void PluckerReader::readRecord(size_t recordSize) {
 				}
 				break;
 			}
-			case 2:
-			case 3:
+			case 2: // image
+			case 3: // compressed image
 			{
+				static const std::string mime = "image/palm";
 				ZLImage *image = 0;
 				if (type == 2) {
-					image = new FileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
+					image = new FileImage(mime, myFilePath, myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 1) {
-					image = new DocCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
+					image = new DocCompressedFileImage(mime, myFilePath, myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 2) {
-					image = new ZCompressedFileImage("image/palm", myFilePath, myStream->offset() + 2, recordSize - 10);
+					image = new ZCompressedFileImage(mime, myFilePath, myStream->offset() + 2, recordSize - 10);
 				}
 				if (image != 0) {
 					addImage(fromNumber(uid), image);
 				}
 				break;
 			}
+			case 9: // category record is ignored
+				break;
 			case 10:
 				unsigned short typeCode;
 				readUnsignedShort(myStream, typeCode);
 				std::cerr << "type = " << (int)type << "; ";
 				//std::cerr << "typeCode = " << typeCode << "\n";
 				break;
+			case 12: // font page record is ignored
+				break;
+			case 13: // TODO: process tables
+			case 14: // TODO: process tables
+				break;
 			case 15: // multiimage
 			{
-				//std::cerr << "uid = " << (int)uid << "; ";
-				//std::cerr << "type = " << (int)type << "; ";
 				unsigned short columns;
 				unsigned short rows;
 				::readUnsignedShort(myStream, columns);
@@ -516,7 +513,6 @@ void PluckerReader::readRecord(size_t recordSize) {
 			}
 			default:
 				std::cerr << "type = " << (int)type << "\n";
-				//std::cerr << "size = " << size << "\n";
 				break;
 		}
 	}
