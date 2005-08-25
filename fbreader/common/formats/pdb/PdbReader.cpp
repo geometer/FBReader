@@ -19,11 +19,14 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <algorithm>
 #include <vector>
 
 #include <abstract/ZLZDecompressor.h>
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLImage.h>
 #include <abstract/ZLFSManager.h>
 
@@ -138,24 +141,28 @@ private:
 	void safeAddControl(TextKind kind, bool start);
 	void safeAddHyperlinkControl(const std::string &id);
 	void safeBeginParagraph();
+	void safeEndParagraph();
 
 private:
 	std::string myFilePath;
 	shared_ptr<ZLInputStream> myStream;
 	FontType myFont;
-	char *myBuffer;
+	char *myCharBuffer;
 	bool myParagraphStarted;
 	ForcedControlEntry *myForcedEntry;
 	std::vector<std::pair<TextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;
+	int myBytesToSkip;
 };
 
 PluckerReader::PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myFilePath(filePath), myStream(stream), myFont(FT_REGULAR) {
-	myBuffer = new char[65535];
+	myCharBuffer = new char[65535];
+	myBytesToSkip = 0;
+	myForcedEntry = 0;
 }
 
 PluckerReader::~PluckerReader() {
-	delete[] myBuffer;
+	delete[] myCharBuffer;
 }
 
 void PluckerReader::safeAddControl(TextKind kind, bool start) {
@@ -177,21 +184,41 @@ void PluckerReader::safeAddHyperlinkControl(const std::string &id) {
 
 void PluckerReader::safeBeginParagraph() {
 	if (!myParagraphStarted) {
-		int idIndex = 0;
 		myParagraphStarted = true;
 		beginParagraph();
-		addControl(myForcedEntry);
+		if (myForcedEntry != 0) {
+			ForcedControlEntry *copy = new ForcedControlEntry();
+			if (myForcedEntry->leftIndentSupported()) {
+				copy->setLeftIndent(myForcedEntry->leftIndent());
+			}
+			if (myForcedEntry->rightIndentSupported()) {
+				copy->setRightIndent(myForcedEntry->rightIndent());
+			}
+			if (myForcedEntry->alignmentTypeSupported()) {
+				copy->setAlignmentType(myForcedEntry->alignmentType());
+			}
+			addControl(copy);
+		}
+		unsigned int idIndex = 0;
 		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
-			if ((it->first == HYPERLINK) && it->second) {
+			if ((it->first == HYPERLINK) && it->second && (idIndex < myDelayedHyperlinks.size())) {
 				addHyperlinkControl(HYPERLINK, myDelayedHyperlinks[idIndex]);
 				idIndex++;
 			} else {
 				addControl(it->first, it->second);
 			}
 		}
-		myForcedEntry = 0;
-		myDelayedControls.clear();
 		myDelayedHyperlinks.clear();
+	}
+}
+
+void PluckerReader::safeEndParagraph() {
+	if (myParagraphStarted) {
+		if (myBuffer.empty()) {
+			addDataToBuffer(" ", 1);
+		}
+		endParagraph();
+		myParagraphStarted = false;
 	}
 }
 
@@ -241,16 +268,16 @@ void PluckerReader::changeFont(FontType font) {
 
 static void listParameters(char *ptr) {
 	int argc = ((unsigned char)*ptr) % 8;
-	//std::cerr << (int)(unsigned char)*ptr << "(";	
+	std::cerr << (int)(unsigned char)*ptr << "(";	
 	for (int i = 0; i < argc - 1; i++) {
 		ptr++;
-		//std::cerr << (int)*ptr << ", ";	
+		std::cerr << (int)*ptr << ", ";	
 	}
 	if (argc > 0) {
 		ptr++;
-		//std::cerr << (int)*ptr;	
+		std::cerr << (int)*ptr;	
 	}
-	//std::cerr << ")\n";	
+	std::cerr << ")\n";	
 }
 
 static unsigned int twoBytes(char *ptr) {
@@ -302,8 +329,12 @@ void PluckerReader::processTextFunction(char *ptr) {
 				}
 			}
 			break;
-		case 0x33: listParameters(ptr); break;
-		case 0x38: listParameters(ptr); break;
+		case 0x33: // just break line instead of horizontal rule (TODO: draw horizontal rule?)
+			safeEndParagraph();
+			break;
+		case 0x38:
+			safeEndParagraph();
+			break;
 		case 0x40: 
 			safeAddControl(EMPHASIS, true);
 			break;
@@ -323,24 +354,32 @@ void PluckerReader::processTextFunction(char *ptr) {
 			break;
 		case 0x78: // strike-through text is ignored
 			break;
-		case 0x83: listParameters(ptr); break;
-		case 0x85: listParameters(ptr); break;
-		case 0x8E: listParameters(ptr); break;
-		case 0x8C: listParameters(ptr); break;
-		case 0x8A: listParameters(ptr); break;
-		case 0x88: listParameters(ptr); break;
-		case 0x90: // TODO: process table
+		case 0x83: 
+		{
+			static char utf8[4];
+			int len = ZLUnicodeUtil::ucs2ToUtf8(utf8, twoBytes(ptr + 2));
+			safeBeginParagraph();
+			addDataToBuffer(utf8, len);
+			myBytesToSkip = (unsigned char)*(ptr + 1);
 			break;
+		}
+		case 0x85: // TODO: process 4-byte unicode character
+			break;
+		case 0x8E: // custom font operations are ignored
+		case 0x8C:
+		case 0x8A:
+		case 0x88:
+			break;
+		case 0x90: // TODO: add table processing
 		case 0x92: // TODO: process table
-			break;
 		case 0x97: // TODO: process table
 			break;
-		default: listParameters(ptr); break;
+		default: // this should be impossible
+			break;
 	}
 }
 
 void PluckerReader::processTextParagraph(char *start, char *end) {
-	//std::cerr << "\n<PAR>\n";
 	changeFont(FT_REGULAR);
 	while (popKind()) {}
 
@@ -355,9 +394,6 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 			if (ptr != textStart) {
 				safeBeginParagraph();
 				addDataToBuffer(textStart, ptr - textStart);
-				//std::string txt;
-				//txt.append(textStart, ptr - textStart);
-				//std::cerr << "text = " << txt << "\n";
 			}
 		} else if (functionFlag) {
 			int paramCounter = ((unsigned char)*ptr) % 8;
@@ -368,7 +404,8 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 				ptr = end - 1;
 			}
 			functionFlag = false;
-			textStart = ptr + 1;
+			textStart = ptr + 1 + myBytesToSkip;
+			myBytesToSkip = 0;
 		} else {
 			if ((unsigned char)*ptr == 0xA0) {
 				*ptr = 0x20;
@@ -381,53 +418,32 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 	if (ptr != textStart) {
 		safeBeginParagraph();
 		addDataToBuffer(textStart, ptr - textStart);
-		//std::string txt;
-		//txt.append(textStart, ptr - textStart);
-		//std::cerr << "text = " << txt << "\n";
 	}
-	if (myParagraphStarted) {
-		endParagraph();
+	safeEndParagraph();
+	if (myForcedEntry != 0) {
+		delete myForcedEntry;
+		myForcedEntry = 0;
 	}
+	myDelayedControls.clear();
 }
 
 void PluckerReader::processCompressedTextRecord(size_t compressedSize, size_t uncompressedSize, const std::vector<int> &pars) {
-	//std::cerr << "\n<RECORD>\n";
-
 	ZLZDecompressor decompressor(compressedSize);
-	if (decompressor.decompress(*myStream, myBuffer, uncompressedSize) != uncompressedSize) {
+	if (decompressor.decompress(*myStream, myCharBuffer, uncompressedSize) != uncompressedSize) {
 		return;
 	}
 
-	char *start = myBuffer;
-	char *end = myBuffer;
+	char *start = myCharBuffer;
+	char *end = myCharBuffer;
 
 	for (std::vector<int>::const_iterator it = pars.begin(); it != pars.end(); it++) {
 		start = end;
 		end = start + *it;
-		if (end > myBuffer + uncompressedSize) {
+		if (end > myCharBuffer + uncompressedSize) {
 			return;
 		}
 		processTextParagraph(start, end);
 	}
-
-		/*
-		if (functionFlag) {
-			switch (*ptr) {
-				case 0x33:
-					ptr += 3;
-					endParagraph();
-					beginParagraph(Paragraph::EMPTY_LINE_PARAGRAPH);
-					endParagraph();
-					beginParagraph();
-					processed = true;
-					break;
-				case 0x38:
-					endParagraph();
-					beginParagraph();
-					processed = true;
-					break;
-			}
-			*/
 }
 
 void PluckerReader::readRecord(size_t recordSize) {

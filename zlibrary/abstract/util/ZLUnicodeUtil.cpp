@@ -94,6 +94,22 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLe
 	utf8ToUcs2(to, from.data(), from.length(), toLength);
 }
 
+int ZLUnicodeUtil::ucs2ToUtf8(char *to, Ucs2Char ch) {
+	if (ch < 0x80) {
+		*to = (char)ch;
+		return 1;
+	} else if (ch < 0x800) {
+		*to = (char)(0xC0 | ch >> 6);
+		*(to + 1) = (char)(0x80 | ch & 0x3F);
+		return 2;
+	} else {
+		*to = (char)(0xE0 | ch >> 12);
+		*(to + 1) = (char)(0x80 | ch >> 6 & 0x3F);
+		*(to + 2) = (char)(0x80 | ch & 0x3F);
+		return 3;
+	}
+}
+
 void ZLUnicodeUtil::ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength) {
 	to.erase();
 	if (toLength > 0) {
