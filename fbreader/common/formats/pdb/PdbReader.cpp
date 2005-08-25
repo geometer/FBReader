@@ -242,16 +242,16 @@ void PluckerReader::changeFont(FontType font) {
 
 static void listParameters(char *ptr) {
 	int argc = ((unsigned char)*ptr) % 8;
-	//std::cerr << (int)(unsigned char)*ptr << "(";	
+	std::cerr << (int)(unsigned char)*ptr << "(";	
 	for (int i = 0; i < argc - 1; i++) {
 		ptr++;
-		//std::cerr << (int)*ptr << ", ";	
+		std::cerr << (int)*ptr << ", ";	
 	}
 	if (argc > 0) {
 		ptr++;
-		//std::cerr << (int)*ptr;	
+		std::cerr << (int)*ptr;	
 	}
-	//std::cerr << ")\n";	
+	std::cerr << ")\n";	
 }
 
 static unsigned int twoBytes(char *ptr) {
@@ -265,6 +265,7 @@ static std::string fromNumber(unsigned int num) {
 }
 
 void PluckerReader::processTextFunction(char *ptr) {
+	listParameters(ptr);
 	switch ((unsigned char)*ptr) {
 		case 0x08:
 			safeAddControl(HYPERLINK, false);
@@ -282,21 +283,25 @@ void PluckerReader::processTextFunction(char *ptr) {
 			addImageReference(fromNumber(twoBytes(ptr + 1)));
 			break;
 		case 0x22:
-			if (myForcedEntry == 0) {
-				myForcedEntry = new ForcedControlEntry();
+			if (!myParagraphStarted) {
+				if (myForcedEntry == 0) {
+					myForcedEntry = new ForcedControlEntry();
+				}
+				myForcedEntry->setLeftIndent(*(ptr + 1));
+				myForcedEntry->setRightIndent(*(ptr + 2));
 			}
-			myForcedEntry->setLeftIndent(*(ptr + 1));
-			myForcedEntry->setRightIndent(*(ptr + 2));
 			break;
 		case 0x29:
-			if (myForcedEntry == 0) {
-				myForcedEntry = new ForcedControlEntry();
-			}
-			switch (*(ptr + 1)) {
-				case 0: myForcedEntry->setAlignmentType(ALIGN_LEFT); break;
-				case 1: myForcedEntry->setAlignmentType(ALIGN_RIGHT); break;
-				case 2: myForcedEntry->setAlignmentType(ALIGN_CENTER); break;
-				case 3: myForcedEntry->setAlignmentType(ALIGN_JUSTIFY); break;
+			if (!myParagraphStarted) {
+				if (myForcedEntry == 0) {
+					myForcedEntry = new ForcedControlEntry();
+				}
+				switch (*(ptr + 1)) {
+					case 0: myForcedEntry->setAlignmentType(ALIGN_LEFT); break;
+					case 1: myForcedEntry->setAlignmentType(ALIGN_RIGHT); break;
+					case 2: myForcedEntry->setAlignmentType(ALIGN_CENTER); break;
+					case 3: myForcedEntry->setAlignmentType(ALIGN_JUSTIFY); break;
+				}
 			}
 			break;
 		case 0x33: listParameters(ptr); break;
@@ -352,9 +357,9 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 			if (ptr != textStart) {
 				safeBeginParagraph();
 				addDataToBuffer(textStart, ptr - textStart);
-				//std::string txt;
-				//txt.append(textStart, ptr - textStart);
-				//std::cerr << "text = " << txt << "\n";
+				std::string txt;
+				txt.append(textStart, ptr - textStart);
+				std::cerr << "text = " << txt << "\n";
 			}
 		} else if (functionFlag) {
 			int paramCounter = ((unsigned char)*ptr) % 8;
@@ -366,16 +371,21 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 			}
 			functionFlag = false;
 			textStart = ptr + 1;
-		} else if ((unsigned char)*ptr == 0xA0) {
-			*ptr = 0x20;
+		} else {
+			if ((unsigned char)*ptr == 0xA0) {
+				*ptr = 0x20;
+			}
+			if (!myParagraphStarted && isspace(*ptr) && (textStart == ptr)) {
+				textStart++;
+			}
 		}
 	}
 	if (ptr != textStart) {
 		safeBeginParagraph();
 		addDataToBuffer(textStart, ptr - textStart);
-		//std::string txt;
-		//txt.append(textStart, ptr - textStart);
-		//std::cerr << "text = " << txt << "\n";
+		std::string txt;
+		txt.append(textStart, ptr - textStart);
+		std::cerr << "text = " << txt << "\n";
 	}
 	if (myParagraphStarted) {
 		endParagraph();
