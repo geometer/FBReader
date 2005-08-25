@@ -132,7 +132,7 @@ private:
 	};
 
 	void readRecord(size_t recordSize);
-	void processCompressedTextRecord(size_t compressedSize, size_t uncompressedSize, const std::vector<int> &pars);
+	void processTextRecord(size_t size, const std::vector<int> &pars);
 	void processTextParagraph(char *start, char *end);
 	void processTextFunction(char *ptr);
 	void setFont(FontType font, bool start);
@@ -148,21 +148,27 @@ private:
 	shared_ptr<ZLInputStream> myStream;
 	FontType myFont;
 	char *myCharBuffer;
+	char *myDocCompressedBuffer;
 	bool myParagraphStarted;
 	ForcedControlEntry *myForcedEntry;
 	std::vector<std::pair<TextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;
 	int myBytesToSkip;
+	unsigned short myCompressionVersion;
 };
 
 PluckerReader::PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myFilePath(filePath), myStream(stream), myFont(FT_REGULAR) {
 	myCharBuffer = new char[65535];
+	myDocCompressedBuffer = 0;
 	myBytesToSkip = 0;
 	myForcedEntry = 0;
 }
 
 PluckerReader::~PluckerReader() {
 	delete[] myCharBuffer;
+	if (myDocCompressedBuffer != 0) {
+		delete myDocCompressedBuffer;
+	}
 }
 
 void PluckerReader::safeAddControl(TextKind kind, bool start) {
@@ -427,19 +433,14 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 	myDelayedControls.clear();
 }
 
-void PluckerReader::processCompressedTextRecord(size_t compressedSize, size_t uncompressedSize, const std::vector<int> &pars) {
-	ZLZDecompressor decompressor(compressedSize);
-	if (decompressor.decompress(*myStream, myCharBuffer, uncompressedSize) != uncompressedSize) {
-		return;
-	}
-
+void PluckerReader::processTextRecord(size_t size, const std::vector<int> &pars) {
 	char *start = myCharBuffer;
 	char *end = myCharBuffer;
 
 	for (std::vector<int>::const_iterator it = pars.begin(); it != pars.end(); it++) {
 		start = end;
 		end = start + *it;
-		if (end > myCharBuffer + uncompressedSize) {
+		if (end > myCharBuffer + size) {
 			return;
 		}
 		processTextParagraph(start, end);
@@ -450,8 +451,7 @@ void PluckerReader::readRecord(size_t recordSize) {
 	unsigned short uid;
 	readUnsignedShort(myStream, uid);
 	if (uid == 1) {
-		unsigned short version;
-		readUnsignedShort(myStream, version);
+		readUnsignedShort(myStream, myCompressionVersion);
 	} else {
 		unsigned short paragraphs;
 		readUnsignedShort(myStream, paragraphs);
@@ -461,38 +461,94 @@ void PluckerReader::readRecord(size_t recordSize) {
 
 		unsigned char type;
 		myStream->read((char*)&type, 1);
+		//std::cerr << "type = " << (int)type << "\n";
 
 		unsigned char flags;
 		myStream->read((char*)&flags, 1);
 
 		switch (type) {
 			case 1: // compressed text
-				{
-					std::vector<int> pars;
-					for (int i = 0; i < paragraphs; i++) {
-						unsigned short pSize;
-						readUnsignedShort(myStream, pSize);
-						pars.push_back(pSize);
-						myStream->seek(2);
-					}
+			{
+				std::vector<int> pars;
+				for (int i = 0; i < paragraphs; i++) {
+					unsigned short pSize;
+					readUnsignedShort(myStream, pSize);
+					pars.push_back(pSize);
 					myStream->seek(2);
-					std::string strId;
-					ZLStringUtil::appendNumber(strId, uid);
-					addHyperlinkLabel(strId);
-					processCompressedTextRecord(recordSize - 10 - 4 * paragraphs, size, pars);
+				}
+				std::string strId;
+				ZLStringUtil::appendNumber(strId, uid);
+				addHyperlinkLabel(strId);
+
+				switch (myCompressionVersion) {
+					case 1:
+					{
+						size_t compressedSize = recordSize - 8 - 4 * paragraphs;
+						if (myDocCompressedBuffer == 0) {
+							myDocCompressedBuffer = new char[65535];
+						}
+						if (myStream->read(myDocCompressedBuffer, compressedSize) == compressedSize) {
+							unsigned int src_index = 0;
+							unsigned int dest_index = 0;
+            
+							while (src_index < compressedSize) {
+								unsigned int token = (unsigned char)myDocCompressedBuffer[src_index++];
+								if (0 < token && token < 9) {
+									while (token != 0) {
+										myCharBuffer[dest_index++] = myDocCompressedBuffer[src_index++];
+										token--;
+									}
+								} else if (token < 0x80) {
+									myCharBuffer[dest_index++] = token;
+								} else if (0xc0 <= token) {
+									myCharBuffer[dest_index++] = ' ';
+									myCharBuffer[dest_index++] = token ^ 0x80;
+								} else {
+									int m;
+									int n;
+            
+									token *= 256;
+									token += (unsigned char)myDocCompressedBuffer[src_index++];
+            
+									m = (token & 0x3fff) / 8;
+									n = token & 7;
+									n += 3;
+									while (n != 0) {
+										myCharBuffer[dest_index] = myCharBuffer[dest_index - m];
+										dest_index++;
+										n--;
+									}
+								}
+							}
+							if (dest_index == size) {
+								processTextRecord(size, pars);
+							}
+						}
+						break;
+					}
+					case 2:
+					{
+						myStream->seek(2);
+						ZLZDecompressor decompressor(recordSize - 10 - 4 * paragraphs);
+						if (decompressor.decompress(*myStream, myCharBuffer, size) == size) {
+							processTextRecord(size, pars);
+						}
+						break;
+					}
 				}
 				if ((flags & 0x1) == 0) {
 					insertEndOfSectionParagraph();
 				}
 				break;
+			}
 			case 3: // compressed image
-				{
-					myStream->seek(2);
-					std::string strId;
-					ZLStringUtil::appendNumber(strId, uid);
-					addImage(strId, new ZLZCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 10));
-				}
+			{
+				myStream->seek(2);
+				std::string strId;
+				ZLStringUtil::appendNumber(strId, uid);
+				addImage(strId, new ZLZCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 10));
 				break;
+			}
 			case 10:
 				unsigned short typeCode;
 				readUnsignedShort(myStream, typeCode);
