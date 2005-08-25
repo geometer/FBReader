@@ -31,41 +31,10 @@
 #include <abstract/ZLFSManager.h>
 
 #include "PdbReader.h"
+#include "DocDecompressor.h"
+#include "PluckerImages.h"
 #include "../../bookmodel/BookModel.h"
 #include "../../bookmodel/BookReader.h"
-
-class ZLPluckerMultiImage : public ZLMultiImage {
-
-public:
-	ZLPluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap) IMAGE_SECTION;
-	~ZLPluckerMultiImage() IMAGE_SECTION;
-
-	void addId(const std::string &id) IMAGE_SECTION;
-
-	unsigned int rows() const;
-	unsigned int columns() const;
-	const ZLImage *subImage(unsigned int row, unsigned int column) const;
-
-private:
-	unsigned int myRows, myColumns;
-	const ImageMap &myImageMap;
-	std::vector<std::string> myIds;
-};
-
-inline ZLPluckerMultiImage::ZLPluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap) : myRows(rows), myColumns(columns), myImageMap(imageMap) {}
-inline ZLPluckerMultiImage::~ZLPluckerMultiImage() {}
-inline void ZLPluckerMultiImage::addId(const std::string &id) { myIds.push_back(id); }
-inline unsigned int ZLPluckerMultiImage::rows() const { return myRows; }
-inline unsigned int ZLPluckerMultiImage::columns() const { return myColumns; }
-
-const ZLImage *ZLPluckerMultiImage::subImage(unsigned int row, unsigned int column) const {
-	unsigned int index = row * myColumns + column;
-	if (index >= myIds.size()) {
-		return 0;
-	}
-	ImageMap::const_iterator entry = myImageMap.find(myIds[index]);
-	return (entry != myImageMap.end()) ? entry->second : 0;
-}
 
 static void readUnsignedShort(shared_ptr<ZLInputStream> stream, unsigned short &N) {
 	stream->read((char*)&N + 1, 1);
@@ -204,6 +173,8 @@ void PluckerReader::safeBeginParagraph() {
 				copy->setAlignmentType(myForcedEntry->alignmentType());
 			}
 			addControl(copy);
+		} else {
+			addControl(REGULAR, true);
 		}
 		unsigned int idIndex = 0;
 		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
@@ -476,9 +447,7 @@ void PluckerReader::readRecord(size_t recordSize) {
 					pars.push_back(pSize);
 					myStream->seek(2);
 				}
-				std::string strId;
-				ZLStringUtil::appendNumber(strId, uid);
-				addHyperlinkLabel(strId);
+				addHyperlinkLabel(fromNumber(uid));
 
 				switch (myCompressionVersion) {
 					case 1:
@@ -487,50 +456,15 @@ void PluckerReader::readRecord(size_t recordSize) {
 						if (myDocCompressedBuffer == 0) {
 							myDocCompressedBuffer = new char[65535];
 						}
-						if (myStream->read(myDocCompressedBuffer, compressedSize) == compressedSize) {
-							unsigned int src_index = 0;
-							unsigned int dest_index = 0;
-            
-							while (src_index < compressedSize) {
-								unsigned int token = (unsigned char)myDocCompressedBuffer[src_index++];
-								if (0 < token && token < 9) {
-									while (token != 0) {
-										myCharBuffer[dest_index++] = myDocCompressedBuffer[src_index++];
-										token--;
-									}
-								} else if (token < 0x80) {
-									myCharBuffer[dest_index++] = token;
-								} else if (0xc0 <= token) {
-									myCharBuffer[dest_index++] = ' ';
-									myCharBuffer[dest_index++] = token ^ 0x80;
-								} else {
-									int m;
-									int n;
-            
-									token *= 256;
-									token += (unsigned char)myDocCompressedBuffer[src_index++];
-            
-									m = (token & 0x3fff) / 8;
-									n = token & 7;
-									n += 3;
-									while (n != 0) {
-										myCharBuffer[dest_index] = myCharBuffer[dest_index - m];
-										dest_index++;
-										n--;
-									}
-								}
-							}
-							if (dest_index == size) {
-								processTextRecord(size, pars);
-							}
+						if (DocDecompressor().decompress(*myStream, myCharBuffer, compressedSize) == size) {
+							processTextRecord(size, pars);
 						}
 						break;
 					}
 					case 2:
 					{
 						myStream->seek(2);
-						ZLZDecompressor decompressor(recordSize - 10 - 4 * paragraphs);
-						if (decompressor.decompress(*myStream, myCharBuffer, size) == size) {
+						if (ZLZDecompressor(recordSize - 10 - 4 * paragraphs).decompress(*myStream, myCharBuffer, size) == size) {
 							processTextRecord(size, pars);
 						}
 						break;
@@ -541,18 +475,36 @@ void PluckerReader::readRecord(size_t recordSize) {
 				}
 				break;
 			}
+			case 2:
+			{
+				ZLImage *image = 0;
+				image = new FileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
+				if (image != 0) {
+					addImage(fromNumber(uid), image);
+				}
+				break;
+			}
 			case 3: // compressed image
 			{
-				myStream->seek(2);
-				std::string strId;
-				ZLStringUtil::appendNumber(strId, uid);
-				addImage(strId, new ZLZCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 10));
+				ZLImage *image = 0;
+				switch (myCompressionVersion) {
+					case 1:
+						image = new DocCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
+						break;
+					case 2:
+						myStream->seek(2);
+						image = new ZCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 10);
+						break;
+				}
+				if (image != 0) {
+					addImage(fromNumber(uid), image);
+				}
 				break;
 			}
 			case 10:
 				unsigned short typeCode;
 				readUnsignedShort(myStream, typeCode);
-				//std::cerr << "type = " << (int)type << "; ";
+				std::cerr << "type = " << (int)type << "; ";
 				//std::cerr << "typeCode = " << typeCode << "\n";
 				break;
 			case 15: // multiimage
@@ -563,23 +515,17 @@ void PluckerReader::readRecord(size_t recordSize) {
 				unsigned short rows;
 				::readUnsignedShort(myStream, columns);
 				::readUnsignedShort(myStream, rows);
-				ZLPluckerMultiImage *image = new ZLPluckerMultiImage(rows, columns, model().imageMap());
+				PluckerMultiImage *image = new PluckerMultiImage(rows, columns, model().imageMap());
 				for (int i = 0; i < size / 2 - 2; i++) {
 					unsigned short us;
 					::readUnsignedShort(myStream, us);
-					std::string id;
-					ZLStringUtil::appendNumber(id, us);
-					image->addId(id);
-					//std::cerr << us << " ";
+					image->addId(fromNumber(us));
 				}
-				//std::cerr << "\n";
-				std::string strId;
-				ZLStringUtil::appendNumber(strId, uid);
-				addImage(strId, image);
+				addImage(fromNumber(uid), image);
 				break;
 			}
 			default:
-				//std::cerr << "type = " << (int)type << "\n";
+				std::cerr << "type = " << (int)type << "\n";
 				//std::cerr << "size = " << size << "\n";
 				break;
 		}

@@ -18,7 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLZDecompressor.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
@@ -67,31 +66,4 @@ void ZLBase64EncodedImage::decode() const {
 const shared_ptr<ZLString> ZLBase64EncodedImage::stringData() const {
 	decode();
 	return myData;
-}
-
-const shared_ptr<ZLString> ZLZCompressedFileImage::stringData() const {
-	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
-
-	shared_ptr<ZLString> imageData = new ZLString();
-
-	if (!stream.isNull() && stream->open()) {
-		stream->seek(myOffset);
-		ZLZDecompressor decompressor(myCompressedSize);
-		static const size_t charBufferSize = 2048;
-		ZLString charBuffer;
-		charBuffer.reserve(charBufferSize);
-		ZLStringBuffer buffer;
-
-		size_t s;
-		do {
-			s = decompressor.decompress(*stream, charBuffer.data(), charBufferSize);
-			if (s != 0) {
-				buffer.push_back(ZLString());
-				buffer.back().append(charBuffer.data(), s);
-			}
-		} while (s == charBufferSize);
-		*imageData += buffer;
-	}
-
-	return imageData;
 }
