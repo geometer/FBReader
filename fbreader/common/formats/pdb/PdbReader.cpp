@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 #include <vector>
 
@@ -242,16 +241,16 @@ void PluckerReader::changeFont(FontType font) {
 
 static void listParameters(char *ptr) {
 	int argc = ((unsigned char)*ptr) % 8;
-	std::cerr << (int)(unsigned char)*ptr << "(";	
+	//std::cerr << (int)(unsigned char)*ptr << "(";	
 	for (int i = 0; i < argc - 1; i++) {
 		ptr++;
-		std::cerr << (int)*ptr << ", ";	
+		//std::cerr << (int)*ptr << ", ";	
 	}
 	if (argc > 0) {
 		ptr++;
-		std::cerr << (int)*ptr;	
+		//std::cerr << (int)*ptr;	
 	}
-	std::cerr << ")\n";	
+	//std::cerr << ")\n";	
 }
 
 static unsigned int twoBytes(char *ptr) {
@@ -265,7 +264,6 @@ static std::string fromNumber(unsigned int num) {
 }
 
 void PluckerReader::processTextFunction(char *ptr) {
-	listParameters(ptr);
 	switch ((unsigned char)*ptr) {
 		case 0x08:
 			safeAddControl(HYPERLINK, false);
@@ -357,9 +355,9 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 			if (ptr != textStart) {
 				safeBeginParagraph();
 				addDataToBuffer(textStart, ptr - textStart);
-				std::string txt;
-				txt.append(textStart, ptr - textStart);
-				std::cerr << "text = " << txt << "\n";
+				//std::string txt;
+				//txt.append(textStart, ptr - textStart);
+				//std::cerr << "text = " << txt << "\n";
 			}
 		} else if (functionFlag) {
 			int paramCounter = ((unsigned char)*ptr) % 8;
@@ -383,9 +381,9 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 	if (ptr != textStart) {
 		safeBeginParagraph();
 		addDataToBuffer(textStart, ptr - textStart);
-		std::string txt;
-		txt.append(textStart, ptr - textStart);
-		std::cerr << "text = " << txt << "\n";
+		//std::string txt;
+		//txt.append(textStart, ptr - textStart);
+		//std::cerr << "text = " << txt << "\n";
 	}
 	if (myParagraphStarted) {
 		endParagraph();
