@@ -476,25 +476,15 @@ void PluckerReader::readRecord(size_t recordSize) {
 				break;
 			}
 			case 2:
+			case 3:
 			{
 				ZLImage *image = 0;
-				image = new FileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
-				if (image != 0) {
-					addImage(fromNumber(uid), image);
-				}
-				break;
-			}
-			case 3: // compressed image
-			{
-				ZLImage *image = 0;
-				switch (myCompressionVersion) {
-					case 1:
-						image = new DocCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
-						break;
-					case 2:
-						myStream->seek(2);
-						image = new ZCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 10);
-						break;
+				if (type == 2) {
+					image = new FileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
+				} else if (myCompressionVersion == 1) {
+					image = new DocCompressedFileImage("image/palm", myFilePath, myStream->offset(), recordSize - 8);
+				} else if (myCompressionVersion == 2) {
+					image = new ZCompressedFileImage("image/palm", myFilePath, myStream->offset() + 2, recordSize - 10);
 				}
 				if (image != 0) {
 					addImage(fromNumber(uid), image);
