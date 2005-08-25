@@ -1,2 +1,5 @@
 Thanks to GQview project (http://gqview.sourcefore.net) for a highly optimized
 version of pixbuf rotation that is used in all gtk based versions.
+
+Thanks to Plucker Viewer (http://www.plkr.org) for Pucker format description and
+some plucker-related code.
