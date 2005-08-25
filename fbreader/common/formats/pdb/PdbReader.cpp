@@ -433,6 +433,8 @@ void PluckerReader::readRecord(size_t recordSize) {
 		myStream->read((char*)&flags, 1);
 
 		switch (type) {
+			case 0: // text (TODO: found sample file and test this code)
+				std::cerr << "type = " << (int)type << "\n";
 			case 1: // compressed text
 			{
 				std::vector<int> pars;
@@ -442,27 +444,25 @@ void PluckerReader::readRecord(size_t recordSize) {
 					pars.push_back(pSize);
 					myStream->seek(2);
 				}
-				addHyperlinkLabel(fromNumber(uid));
 
-				switch (myCompressionVersion) {
-					case 1:
-					{
-						if (DocDecompressor().decompress(*myStream, myCharBuffer, recordSize - 8 - 4 * paragraphs) == size) {
-							processTextRecord(size, pars);
-						}
-						break;
-					}
-					case 2:
-					{
-						myStream->seek(2);
-						if (ZLZDecompressor(recordSize - 10 - 4 * paragraphs).decompress(*myStream, myCharBuffer, size) == size) {
-							processTextRecord(size, pars);
-						}
-						break;
-					}
+				bool doProcess = false;
+				if (type == 0) {
+					doProcess = myStream->read(myCharBuffer, size) == size;
+				} else if (myCompressionVersion == 1) {
+					doProcess =
+						DocDecompressor().decompress(*myStream, myCharBuffer, recordSize - 8 - 4 * paragraphs) == size;
+				} else if (myCompressionVersion == 2) {
+					myStream->seek(2);
+					doProcess =
+						ZLZDecompressor(recordSize - 10 - 4 * paragraphs).
+							decompress(*myStream, myCharBuffer, size) == size;
 				}
-				if ((flags & 0x1) == 0) {
-					insertEndOfSectionParagraph();
+				if (doProcess) {
+					addHyperlinkLabel(fromNumber(uid));
+					processTextRecord(size, pars);
+					if ((flags & 0x1) == 0) {
+						insertEndOfSectionParagraph();
+					}
 				}
 				break;
 			}
@@ -489,7 +489,9 @@ void PluckerReader::readRecord(size_t recordSize) {
 				unsigned short typeCode;
 				readUnsignedShort(myStream, typeCode);
 				std::cerr << "type = " << (int)type << "; ";
-				//std::cerr << "typeCode = " << typeCode << "\n";
+				std::cerr << "typeCode = " << typeCode << "\n";
+				break;
+			case 11: // style sheet record is ignored
 				break;
 			case 12: // font page record is ignored
 				break;
