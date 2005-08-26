@@ -189,6 +189,10 @@ int GtkPaintContext::stringWidth(const char *str, int len) const {
 		return 0;
 	}
 
+	if (!g_utf8_validate(str, len, 0)) {
+		return 0;
+	}
+
 	pango_shape(str, len, &myAnalysis, myString);
 	PangoRectangle logicalRectangle;
 	pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
@@ -217,6 +221,10 @@ int GtkPaintContext::stringHeight() const {
 }
 
 void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
+	if (!g_utf8_validate(str, len, 0)) {
+		return;
+	}
+
 	x += leftMargin();
 	y += topMargin();
 	pango_shape(str, len, &myAnalysis, myString);
