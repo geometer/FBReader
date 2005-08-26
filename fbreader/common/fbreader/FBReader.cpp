@@ -452,8 +452,12 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
-			myCollectionView->rebuild();
-			myViewWidget->setView(myCollectionView);
+			{
+				ZLWaitMessage *message = ZLDialogManager::instance().waitMessage("Loading book list. Please, wait...");
+				myCollectionView->rebuild();
+				myViewWidget->setView(myCollectionView);
+				delete message;
+			}
 			break;
 		case RECENT_BOOKS_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, true);

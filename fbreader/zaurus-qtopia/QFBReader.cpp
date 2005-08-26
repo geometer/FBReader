@@ -136,10 +136,9 @@ void QFBReader::setMode(ViewMode mode) {
 		return;
 	}
 
-	centralWidget()->hide();
-
 	FBReader::setMode(mode);
 
+	centralWidget()->hide();
 	menuBar()->clear();
 	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); it++) {
 		if (it->IsVisible) {
