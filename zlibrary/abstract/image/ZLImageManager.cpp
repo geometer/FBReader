@@ -18,7 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
+//#include <iostream>
 #include <algorithm>
 
 #include <abstract/ZLString.h>
@@ -128,8 +128,8 @@ PalmImageHeader::PalmImageHeader(const ZLString &str) {
 void ZLImageManager::convertFromPalmImageFormat(const ZLString &imageString, ZLImageData &imageData) const {
 	if (imageString.length() >= 16) {
 		PalmImageHeader header(imageString);
-		std::cerr << "CompressionType = " << (int)header.CompressionType << "\n";
-		std::cerr << "BitsPerPixel = " << (int)header.BitsPerPixel << "\n";
+		//std::cerr << "CompressionType = " << (int)header.CompressionType << "\n";
+		//std::cerr << "BitsPerPixel = " << (int)header.BitsPerPixel << "\n";
 		switch (header.CompressionType) {
 			case 0x00: // scanline
 				//std::cerr << "scanline encoded images are not supported yet\n";
