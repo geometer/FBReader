@@ -23,12 +23,8 @@
 #include <qtabwidget.h>
 
 #include <qlayout.h>
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qspinbox.h>
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
-#include <qlabel.h>
 
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLDeviceInfo.h>

@@ -18,9 +18,25 @@
  * 02110-1301, USA.
  */
 
+#include <qapplication.h>
+#include <qwidget.h>
+#include <qlabel.h>
+#include <qlayout.h>
+
 #include "QWaitMessage.h"
 
-QWaitMessage::QWaitMessage(const std::string&) {
+QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WType_Popup) {
+	resize(1, 1);
+	QHBoxLayout layout(this, 24);
+	QLabel *label = new QLabel(message.c_str(), this);
+	layout.add(label);
+
+	QWidget *root = QApplication::desktop();
+	move(root->width() / 2 - width() / 2, root->height() / 2 - height() / 2);
+	show();
+	move(root->width() / 2 - width() / 2, root->height() / 2 - height() / 2);
+
+	qApp->processEvents();
 }
 
 QWaitMessage::~QWaitMessage() {

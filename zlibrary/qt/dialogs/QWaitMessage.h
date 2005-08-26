@@ -18,18 +18,17 @@
  * 02110-1301, USA.
  */
 
+#ifndef __QWAITMESSAGE_H__
+#define __QWAITMESSAGE_H__
+
 #include <string>
 
+#include <qwidget.h>
 #include <qcursor.h>
 
 #include <abstract/ZLWaitMessage.h>
 
-#ifndef __QWAITMESSAGE_H__
-#define __QWAITMESSAGE_H__
-
-class QCursor;
-
-class QWaitMessage : public ZLWaitMessage {
+class QWaitMessage : public QWidget, public ZLWaitMessage {
 
 public:
 	QWaitMessage(const std::string &message);

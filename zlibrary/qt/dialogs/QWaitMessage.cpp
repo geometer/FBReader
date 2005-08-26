@@ -20,18 +20,35 @@
 
 #include <qapplication.h>
 #include <qcursor.h>
+#include <qwidget.h>
+#include <qlabel.h>
+#include <qlayout.h>
 
 #include "QWaitMessage.h"
 
-QWaitMessage::QWaitMessage(const std::string&) {
+QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Splash) {
 	QWidget *main = qApp->mainWidget();
 	if (main != 0) {
 		myCursorIsStored = true;
 		myStoredCursor = main->cursor();
-		main->setCursor(QCursor(Qt::WaitCursor));
+		main->setCursor(QCursor(WaitCursor));
 	} else {
 		myCursorIsStored = false;
 	}
+	resize(1, 1);
+	QHBoxLayout layout(this, 10);
+	QLabel *label = new QLabel(message.c_str(), this);
+	layout.add(label);
+	show();
+
+	if (main == 0) {
+		main = QApplication::desktop();
+	}
+	move(main->x() + main->width() / 2 - width() / 2, main->y() + main->height() / 2 - height() / 2);
+
+	qApp->processEvents();
+	usleep(0);
+	qApp->processEvents();
 }
 
 QWaitMessage::~QWaitMessage() {
