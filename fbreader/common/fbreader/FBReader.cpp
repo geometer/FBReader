@@ -25,6 +25,7 @@
 #include <abstract/ZLOptionsDialog.h>
 #include <abstract/ZLPaintContext.h>
 #include <abstract/ZLDir.h>
+#include <abstract/ZLWaitMessage.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -197,6 +198,7 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 }
 
 void FBReader::openBook(BookDescriptionPtr description) {
+	ZLWaitMessage *message = ZLDialogManager::instance().waitMessage("Opening book. Please, wait...");
 	if (!description.isNull()) {
 		myBookTextView->saveState();
 		myContentsView->saveState();
@@ -214,6 +216,7 @@ void FBReader::openBook(BookDescriptionPtr description) {
 
 		LastOpenedBooks().addBook(description->fileName());
 	}
+	delete message;
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id) {

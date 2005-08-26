@@ -18,30 +18,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QDIALOGMANAGER_H__
-#define __QDIALOGMANAGER_H__
+#ifndef __GTKWAITMESSAGE_H__
+#define __GTKWAITMESSAGE_H__
 
-#include "../../abstract/dialogs/ZLDialogManager.h"
+#include <string>
 
-class QDialogManager : public ZLDialogManager {
+#include <abstract/ZLWaitMessage.h>
 
-public:
-	static void createInstance() { ourInstance = new QDialogManager(); }
-
-private:
-	QDialogManager() {}
+class GtkWaitMessage : public ZLWaitMessage {
 
 public:
-	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
-	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
-	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
-	ZLWaitMessage *waitMessage(const std::string &message) const;
-
-	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
-	const std::string &getPixmapPath() const { return myPixmapPath; }
-
-private:
-	std::string myPixmapPath;
+	GtkWaitMessage(const std::string &message);
+	~GtkWaitMessage();
 };
 
-#endif /* __QDIALOGMANAGER_H__ */
+#endif /* __GTKWAITMESSAGE_H__ */

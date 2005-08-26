@@ -45,3 +45,7 @@ int PalmDialogManager::informationBox(const char *title, const char *message, co
 void PalmDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
 	//PalmOpenFileDialog(title.c_str(), handler).exec();
 }
+
+ZLWaitMessage *PalmOpenFileDialog::waitMessage(const std::string &message) const {
+	return 0;
+}

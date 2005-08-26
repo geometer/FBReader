@@ -25,6 +25,7 @@
 
 class ZLOptionsDialog;
 class ZLTreeHandler;
+class ZLWaitMessage;
 
 class ZLDialogManager {
 
@@ -43,6 +44,7 @@ public:
 	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const DIALOG_SECTION = 0;
 	virtual int informationBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const DIALOG_SECTION = 0;
 	virtual void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const DIALOG_SECTION = 0;
+	virtual ZLWaitMessage *waitMessage(const std::string &message) const DIALOG_SECTION = 0;
 };
 
 #endif /* __ZLDIALOGMANAGER_H__ */

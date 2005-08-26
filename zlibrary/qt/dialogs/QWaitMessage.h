@@ -18,30 +18,26 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QDIALOGMANAGER_H__
-#define __QDIALOGMANAGER_H__
+#include <string>
 
-#include "../../abstract/dialogs/ZLDialogManager.h"
+#include <qcursor.h>
 
-class QDialogManager : public ZLDialogManager {
+#include <abstract/ZLWaitMessage.h>
+
+#ifndef __QWAITMESSAGE_H__
+#define __QWAITMESSAGE_H__
+
+class QCursor;
+
+class QWaitMessage : public ZLWaitMessage {
 
 public:
-	static void createInstance() { ourInstance = new QDialogManager(); }
+	QWaitMessage(const std::string &message);
+	~QWaitMessage();
 
 private:
-	QDialogManager() {}
-
-public:
-	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
-	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
-	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
-	ZLWaitMessage *waitMessage(const std::string &message) const;
-
-	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
-	const std::string &getPixmapPath() const { return myPixmapPath; }
-
-private:
-	std::string myPixmapPath;
+	QCursor myStoredCursor;
+	bool myCursorIsStored;
 };
 
-#endif /* __QDIALOGMANAGER_H__ */
+#endif /* __QWAITMESSAGE_H__ */

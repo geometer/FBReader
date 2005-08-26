@@ -25,6 +25,7 @@
 #include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"
 #include "GtkOpenFileDialog.h"
+#include "GtkWaitMessage.h"
 
 ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new GtkOptionsDialog(id, title, myWindow);
@@ -52,13 +53,9 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
   }
 
   GtkWidget *label = gtk_label_new(message);
-
   gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
-
 	gtk_box_pack_start(GTK_BOX(dialog->vbox), label, TRUE, TRUE, 0);
-
 	gint response = gtk_dialog_run(dialog);
-
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
@@ -66,4 +63,8 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 
 void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
 	GtkOpenFileDialog(title.c_str(), handler, myWindow).runWithSize();
+}
+
+ZLWaitMessage *GtkDialogManager::waitMessage(const std::string &message) const {
+	return new GtkWaitMessage(message);
 }

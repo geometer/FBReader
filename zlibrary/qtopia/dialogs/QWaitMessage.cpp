@@ -18,26 +18,10 @@
  * 02110-1301, USA.
  */
 
-#include <qapplication.h>
-#include <qmessagebox.h>
-
-#include "QDialogManager.h"
-#include "QOptionsDialog.h"
-#include "QOpenFileDialog.h"
 #include "QWaitMessage.h"
 
-ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new QOptionsDialog(id, title);
+QWaitMessage::QWaitMessage(const std::string&) {
 }
 
-int QDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
-}
-
-void QDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
-	QOpenFileDialog(title.c_str(), handler).run();
-}
-
-ZLWaitMessage *QDialogManager::waitMessage(const std::string &message) const {
-	return new QWaitMessage(message);
+QWaitMessage::~QWaitMessage() {
 }
