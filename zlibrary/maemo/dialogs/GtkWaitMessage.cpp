@@ -18,12 +18,20 @@
  * 02110-1301, USA.
  */
 
+#include <gtk/gtkmain.h>
 #include <hildon-widgets/gtk-infoprint.h>
 
 #include "GtkWaitMessage.h"
 
 GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : myParent(parent) {
+	// gtk_banner_show_animation(myParent, message.c_str());
 	gtk_infoprint(myParent, message.c_str());
+
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
+
+		g_usleep(500);
+	}
 }
 
 GtkWaitMessage::~GtkWaitMessage() {
