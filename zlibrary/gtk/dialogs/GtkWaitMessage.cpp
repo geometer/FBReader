@@ -18,10 +18,27 @@
  * 02110-1301, USA.
  */
 
+#include <gtk/gtkmain.h>
+#include <gtk/gtklabel.h>
+
 #include "GtkWaitMessage.h"
 
-GtkWaitMessage::GtkWaitMessage(const std::string&) {
+GtkWaitMessage::GtkWaitMessage(const std::string& message) {
+	myWindow = gtk_window_new(GTK_WINDOW_POPUP);
+
+	GtkWidget *label = gtk_label_new(message.c_str());
+
+	gtk_misc_set_padding(GTK_MISC(label), 4, 4);    //  something nice?
+
+	gtk_container_add(GTK_CONTAINER(myWindow), label);
+
+	gtk_widget_show_all(myWindow);
+
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
+	}
 }
 
 GtkWaitMessage::~GtkWaitMessage() {
+	gtk_widget_destroy(myWindow);
 }

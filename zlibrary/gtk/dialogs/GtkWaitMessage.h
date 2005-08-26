@@ -23,6 +23,8 @@
 
 #include <string>
 
+#include <gtk/gtkwidget.h>
+
 #include <abstract/ZLWaitMessage.h>
 
 class GtkWaitMessage : public ZLWaitMessage {
@@ -30,6 +32,9 @@ class GtkWaitMessage : public ZLWaitMessage {
 public:
 	GtkWaitMessage(const std::string &message);
 	~GtkWaitMessage();
+
+private:
+	GtkWidget *myWindow;
 };
 
 #endif /* __GTKWAITMESSAGE_H__ */
