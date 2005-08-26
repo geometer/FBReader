@@ -66,5 +66,5 @@ void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHand
 }
 
 ZLWaitMessage *GtkDialogManager::waitMessage(const std::string &message) const {
-	return new GtkWaitMessage(message);
+	return new GtkWaitMessage(myWindow, message);
 }

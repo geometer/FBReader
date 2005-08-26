@@ -198,7 +198,7 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 }
 
 void FBReader::openBook(BookDescriptionPtr description) {
-	ZLWaitMessage *message = ZLDialogManager::instance().waitMessage("Opening book. Please, wait...");
+	ZLWaitMessage *message = ZLDialogManager::instance().waitMessage("Loading book. Please, wait...");
 	if (!description.isNull()) {
 		myBookTextView->saveState();
 		myContentsView->saveState();

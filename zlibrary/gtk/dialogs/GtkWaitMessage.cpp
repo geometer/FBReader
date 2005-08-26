@@ -23,16 +23,29 @@
 
 #include "GtkWaitMessage.h"
 
-GtkWaitMessage::GtkWaitMessage(const std::string& message) {
-	myWindow = gtk_window_new(GTK_WINDOW_POPUP);
-
+GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) {
+	myWindow = GTK_WINDOW(gtk_window_new(GTK_WINDOW_POPUP));
 	GtkWidget *label = gtk_label_new(message.c_str());
-
-	gtk_misc_set_padding(GTK_MISC(label), 4, 4);    //  something nice?
-
+	gtk_misc_set_padding(GTK_MISC(label), 10, 10);    //  something nice?
 	gtk_container_add(GTK_CONTAINER(myWindow), label);
+	gtk_widget_show_all(GTK_WIDGET(myWindow));
 
-	gtk_widget_show_all(myWindow);
+	int x, y, w, h;
+	if (parent != 0) {
+		gtk_window_get_position(parent, &x, &y);
+		gtk_window_get_size(parent, &w, &h);
+		x += w / 2;
+		y += h / 2;
+	} else {
+		GdkWindow *root = gdk_screen_get_root_window(gdk_screen_get_default());
+		gdk_window_get_geometry(root, &x, &y, &w, &h, 0);
+		x += w / 2;
+		y += h / 2;
+	}
+	gtk_window_get_size(myWindow, &w, &h);
+	x -= w / 2;
+	y -= h / 2;
+	gtk_window_move(myWindow, x, y);
 
 	while (gtk_events_pending()) {
 		gtk_main_iteration();
@@ -40,5 +53,5 @@ GtkWaitMessage::GtkWaitMessage(const std::string& message) {
 }
 
 GtkWaitMessage::~GtkWaitMessage() {
-	gtk_widget_destroy(myWindow);
+	gtk_widget_destroy(GTK_WIDGET(myWindow));
 }

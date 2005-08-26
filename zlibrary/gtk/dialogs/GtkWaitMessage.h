@@ -30,11 +30,11 @@
 class GtkWaitMessage : public ZLWaitMessage {
 
 public:
-	GtkWaitMessage(const std::string &message);
+	GtkWaitMessage(GtkWindow *parent, const std::string &message);
 	~GtkWaitMessage();
 
 private:
-	GtkWidget *myWindow;
+	GtkWindow *myWindow;
 };
 
 #endif /* __GTKWAITMESSAGE_H__ */
