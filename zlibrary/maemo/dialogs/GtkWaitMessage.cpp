@@ -18,10 +18,14 @@
  * 02110-1301, USA.
  */
 
+#include <hildon-widgets/gtk-infoprint.h>
+
 #include "GtkWaitMessage.h"
 
-GtkWaitMessage::GtkWaitMessage(const std::string&) {
+GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : myParent(parent) {
+	gtk_infoprint(myParent, message.c_str());
 }
 
 GtkWaitMessage::~GtkWaitMessage() {
+	gtk_banner_close(myParent);
 }

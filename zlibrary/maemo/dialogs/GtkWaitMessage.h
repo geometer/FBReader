@@ -23,13 +23,18 @@
 
 #include <string>
 
+#include <gtk/gtkwindow.h>
+
 #include <abstract/ZLWaitMessage.h>
 
 class GtkWaitMessage : public ZLWaitMessage {
 
 public:
-	GtkWaitMessage(const std::string &message);
+	GtkWaitMessage(GtkWindow *parent, const std::string &message);
 	~GtkWaitMessage();
+
+private:
+  GtkWindow *myParent;
 };
 
 #endif /* __GTKWAITMESSAGE_H__ */
