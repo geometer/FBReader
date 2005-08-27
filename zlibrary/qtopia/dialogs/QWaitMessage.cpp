@@ -31,6 +31,8 @@ QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WType_Pop
 	QLabel *label = new QLabel(message.c_str(), this);
 	layout.add(label);
 
+	qApp->processEvents();
+
 	QWidget *root = QApplication::desktop();
 	move(root->width() / 2 - width() / 2, root->height() / 2 - height() / 2);
 	show();
