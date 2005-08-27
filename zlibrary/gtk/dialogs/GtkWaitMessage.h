@@ -34,7 +34,7 @@ public:
 	~GtkWaitMessage();
 
 private:
-	GtkWindow *myWindow;
+	GtkWindow *myParent, *myWindow;
 };
 
 #endif /* __GTKWAITMESSAGE_H__ */

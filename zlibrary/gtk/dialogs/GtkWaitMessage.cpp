@@ -20,20 +20,31 @@
 
 #include <gtk/gtkmain.h>
 #include <gtk/gtklabel.h>
+#include <gdk/gdkcursor.h>
 
 #include "GtkWaitMessage.h"
 
-GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) {
+GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : myParent(parent) {
 	myWindow = GTK_WINDOW(gtk_window_new(GTK_WINDOW_POPUP));
+	gtk_window_set_accept_focus(myWindow, FALSE);
 	GtkWidget *label = gtk_label_new(message.c_str());
 	gtk_misc_set_padding(GTK_MISC(label), 10, 10);    //  something nice?
 	gtk_container_add(GTK_CONTAINER(myWindow), label);
 	gtk_widget_show_all(GTK_WIDGET(myWindow));
 
+	GdkCursor *cursor = gdk_cursor_new(GDK_WATCH);
+
+	if (myParent != 0) {
+		gdk_window_set_cursor(GTK_WIDGET(myParent)->window, cursor);
+	}
+
+	gdk_window_set_cursor(GTK_WIDGET(myWindow)->window, cursor);
+	gdk_cursor_unref(cursor);
+
 	int x, y, w, h;
-	if (parent != 0) {
-		gtk_window_get_position(parent, &x, &y);
-		gtk_window_get_size(parent, &w, &h);
+	if (myParent != 0) {
+		gtk_window_get_position(myParent, &x, &y);
+		gtk_window_get_size(myParent, &w, &h);
 		x += w / 2;
 		y += h / 2;
 	} else {
@@ -53,5 +64,8 @@ GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) {
 }
 
 GtkWaitMessage::~GtkWaitMessage() {
+	if (myParent != 0) {
+		gdk_window_set_cursor(GTK_WIDGET(myParent)->window, NULL);
+	}
 	gtk_widget_destroy(GTK_WIDGET(myWindow));
 }
