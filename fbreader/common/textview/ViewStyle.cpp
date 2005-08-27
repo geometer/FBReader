@@ -41,9 +41,9 @@ void TextView::ViewStyle::reset() {
 void TextView::ViewStyle::setStyle(const TextStylePtr style) {
 	if (myStyle != style) {
 		myStyle = style;
-		myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
 		myWordHeight = -1;
 	}
+	myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
 }
 
 void TextView::ViewStyle::applyControl(const ControlElement &control) {

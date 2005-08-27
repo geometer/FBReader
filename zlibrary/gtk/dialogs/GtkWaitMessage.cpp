@@ -65,7 +65,7 @@ GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : 
 
 GtkWaitMessage::~GtkWaitMessage() {
 	if (myParent != 0) {
-		gdk_window_set_cursor(GTK_WIDGET(myParent)->window, NULL);
+		gdk_window_set_cursor(GTK_WIDGET(myParent)->window, 0);
 	}
 	gtk_widget_destroy(GTK_WIDGET(myWindow));
 }
