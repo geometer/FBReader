@@ -35,6 +35,7 @@ QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Sp
 	} else {
 		myCursorIsStored = false;
 	}
+	setCursor(QCursor(WaitCursor));
 
 	qApp->processEvents();
 
@@ -50,7 +51,7 @@ QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Sp
 	move(main->x() + main->width() / 2 - width() / 2, main->y() + main->height() / 2 - height() / 2);
 
 	qApp->processEvents();
-	usleep(0);
+	usleep(500);
 	qApp->processEvents();
 }
 
