@@ -25,6 +25,10 @@
 #include "GtkWaitMessage.h"
 
 GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : myParent(parent) {
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
+	}
+
 	myWindow = GTK_WINDOW(gtk_window_new(GTK_WINDOW_POPUP));
 	gtk_window_set_accept_focus(myWindow, FALSE);
 	GtkWidget *label = gtk_label_new(message.c_str());

@@ -35,6 +35,9 @@ QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Sp
 	} else {
 		myCursorIsStored = false;
 	}
+
+	qApp->processEvents();
+
 	resize(1, 1);
 	QHBoxLayout layout(this, 10);
 	QLabel *label = new QLabel(message.c_str(), this);

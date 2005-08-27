@@ -60,7 +60,6 @@ public:
 	void drawFilledCircle(int x, int y, int r);
 
 private:
-	bool mySizeChanged;
 	QPainter *myPainter;
 	QPixmap *myPixmap;
 	mutable int mySpaceWidth;

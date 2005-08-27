@@ -25,11 +25,14 @@
 
 GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : myParent(parent) {
 	// gtk_banner_show_animation(myParent, message.c_str());
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
+	}
+
 	gtk_infoprint(myParent, message.c_str());
 
 	while (gtk_events_pending()) {
 		gtk_main_iteration();
-
 		g_usleep(500);
 	}
 }
