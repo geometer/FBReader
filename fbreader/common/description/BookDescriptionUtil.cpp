@@ -70,7 +70,7 @@ void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 		int counter = 0;
 		zipDir->collectFiles(entries, false);
 		for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
-			if (PluginCollection::instance().plugin(ZLFile(*zit).extension(), true) != 0) {
+			if (PluginCollection::instance().plugin(ZLFile(*zit), true) != 0) {
 				std::string optionName = ENTRY;
 				ZLStringUtil::appendNumber(optionName, counter);
 				std::string fullName = zipPrefix + *zit;

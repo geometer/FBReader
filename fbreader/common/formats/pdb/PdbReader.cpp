@@ -30,6 +30,7 @@
 #include <abstract/ZLImage.h>
 #include <abstract/ZLFileImage.h>
 #include <abstract/ZLFSManager.h>
+#include <abstract/EncodingConverter.h>
 
 #include "PdbReader.h"
 #include "DocDecompressor.h"
@@ -124,12 +125,15 @@ private:
 	std::vector<std::string> myDelayedHyperlinks;
 	int myBytesToSkip;
 	unsigned short myCompressionVersion;
+
+	EncodingConverter myConverter;
 };
 
-PluckerReader::PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myFilePath(filePath), myStream(stream), myFont(FT_REGULAR) {
+PluckerReader::PluckerReader(const std::string &filePath, shared_ptr<ZLInputStream> stream, BookModel &model) : BookReader(model), myFilePath(filePath), myStream(stream), myFont(FT_REGULAR), myConverter(0) {
 	myCharBuffer = new char[65535];
 	myBytesToSkip = 0;
 	myForcedEntry = 0;
+	myConverter.setEncoding("KOI8-R");
 }
 
 PluckerReader::~PluckerReader() {
@@ -358,6 +362,8 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 
 	myParagraphStarted = false;
 
+	std::string txtBuffer;
+
 	char *textStart = start;
 	bool functionFlag = false;
 	char *ptr = start;
@@ -366,7 +372,9 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 			functionFlag = true;
 			if (ptr != textStart) {
 				safeBeginParagraph();
-				addDataToBuffer(textStart, ptr - textStart);
+				txtBuffer.erase();
+				myConverter.convert(txtBuffer, textStart, ptr);
+				addDataToBuffer(txtBuffer.data(), txtBuffer.length());
 			}
 		} else if (functionFlag) {
 			int paramCounter = ((unsigned char)*ptr) % 8;
@@ -390,7 +398,9 @@ void PluckerReader::processTextParagraph(char *start, char *end) {
 	}
 	if (ptr != textStart) {
 		safeBeginParagraph();
-		addDataToBuffer(textStart, ptr - textStart);
+		txtBuffer.erase();
+		myConverter.convert(txtBuffer, textStart, ptr);
+		addDataToBuffer(txtBuffer.data(), txtBuffer.length());
 	}
 	safeEndParagraph();
 	if (myForcedEntry != 0) {

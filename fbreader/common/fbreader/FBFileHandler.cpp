@@ -21,40 +21,32 @@
 
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
+#include <abstract/ZLDir.h>
 
 #include "FBFileHandler.h"
 #include "../formats/FormatPlugin.h"
 
-bool FBFileHandler::isNodeVisible(const ZLTreeNodePtr node) const {
-	const std::string &name = node->name();
-	if (name.length() == 0) {
-		return false;
-	}
-	if (name[0] == '.') {
-		return !node->isFile() && (name == "..");
-	}
-	ZLFile file(name);
-	return !node->isFile() || file.isArchive() || (PluginCollection::instance().plugin(file.extension(), false) != 0);
-}
-
-const std::string &FBFileHandler::pixmapName(const ZLTreeNodePtr node) const {
+const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const {
 	static const std::string FOLDER_ICON = "FBReader/folder";
 	static const std::string ZIPFOLDER_ICON = "FBReader/zipfolder";
-	static const std::string UNKNOWN_ICON = "FBReader/unknown";
-	ZLFile file(node->name());
-	if (!node->isFile()) {
-		return FOLDER_ICON;
-	} else if (file.isArchive()) {
-		return ZIPFOLDER_ICON;
-	} else {
-		FormatPlugin *plugin = PluginCollection::instance().plugin(file.extension(), false);
-		if (plugin != 0) {
-			return plugin->iconName();
-		}
+	static const std::string NO_ICON = "";
+	if (name.length() == 0) {
+		return NO_ICON;
 	}
-	return UNKNOWN_ICON;
+	if ((name[0] == '.') && (name != "..")) {
+		return NO_ICON;
+	}
+	if (!isFile) {
+		return FOLDER_ICON;
+	}
+	ZLFile file(dir.itemName(name));
+	if (file.isArchive()) {
+		return ZIPFOLDER_ICON;
+	}
+	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
+	return (plugin != 0) ? plugin->iconName() : NO_ICON;
 }
 
-void FBFileHandler::accept(const ZLTreeStatePtr state) const {
-	myDescription = BookDescription::create(state->name());
+void FBFileHandler::accept(const ZLTreeState &state) const {
+	myDescription = BookDescription::create(state.name());
 }

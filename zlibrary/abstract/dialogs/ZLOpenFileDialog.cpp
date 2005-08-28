@@ -49,16 +49,12 @@ void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
 		myState = newState;
 		update(selectedName);
 	} else {
-		newState->handler().accept(newState);
+		newState->handler().accept(*newState);
 		exitDialog();
 	}
 }
 
-const std::string &ZLOpenFileDialog::pixmapName(const ZLTreeNodePtr node) const {
-	return myState->handler().pixmapName(node);
-}
-
-ZLTreeNode::ZLTreeNode(const std::string &name, bool isFile) : myName(name), myIsFile(isFile) {
+ZLTreeNode::ZLTreeNode(const std::string &name, bool isFile, const std::string &pixmapName) : myName(name), myIsFile(isFile), myPixmapName(pixmapName) {
 }
 
 ZLTreeNode::~ZLTreeNode() {
@@ -66,6 +62,10 @@ ZLTreeNode::~ZLTreeNode() {
 
 const std::string &ZLTreeNode::name() const {
 	return myName;
+}
+
+const std::string &ZLTreeNode::pixmapName() const {
+	return myPixmapName;
 }
 
 bool ZLTreeNode::isFile() const {
@@ -99,27 +99,27 @@ const std::string ZLDirTreeState::shortName() const {
 const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 	if (!myIsUpToDate) {
 		if (myDir->name() != "/") {
-			ZLTreeNodePtr node = new ZLTreeNode("..", false);
-			if (handler().isNodeVisible(node)) {
-				mySubnodes.push_back(node);
+			const std::string &pixmapName = handler().pixmapName(*myDir, "..", false);
+			if (!pixmapName.empty()) {
+				mySubnodes.push_back(new ZLTreeNode("..", false, pixmapName));
 			}
 		}
 		std::vector<std::string> names;
 		myDir->collectSubDirs(names, true);
 		std::sort(names.begin(), names.end());
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-			ZLTreeNodePtr node = new ZLTreeNode(*it, false);
-			if (handler().isNodeVisible(node)) {
-				mySubnodes.push_back(node);
+			const std::string &pixmapName = handler().pixmapName(*myDir, *it, false);
+			if (!pixmapName.empty()) {
+				mySubnodes.push_back(new ZLTreeNode(*it, false, pixmapName));
 			}
 		}
 		names.clear();
 		myDir->collectFiles(names, true);
 		std::sort(names.begin(), names.end());
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-			ZLTreeNodePtr node = new ZLTreeNode(*it, true);
-			if (handler().isNodeVisible(node)) {
-				mySubnodes.push_back(node);
+			const std::string &pixmapName = handler().pixmapName(*myDir, *it, true);
+			if (!pixmapName.empty()) {
+				mySubnodes.push_back(new ZLTreeNode(*it, true, pixmapName));
 			}
 		}
 		myIsUpToDate = true;

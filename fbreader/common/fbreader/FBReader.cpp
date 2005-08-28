@@ -513,7 +513,7 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 		infoTab->addOption(new EncodingEntry("Encoding", info.EncodingOption));
 		infoTab->addOption(new LanguageEntry("Hyphenations", info.LanguageOption));
 
-		FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName).extension(), false);
+		FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
 		FormatInfoPage *formatPage = 0;
 		if (plugin != 0) {
 			formatPage = plugin->createInfoPage(*infoDialog, fileName);

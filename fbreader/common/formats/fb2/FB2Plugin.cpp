@@ -27,8 +27,8 @@
 #include "FB2BookReader.h"
 #include "../../description/BookDescription.h"
 
-bool FB2Plugin::acceptsFile(const std::string &extension) const {
-	return extension == "fb2";
+bool FB2Plugin::acceptsFile(const ZLFile &file) const {
+	return file.extension() == "fb2";
 }
 
 bool FB2Plugin::readDescription(const std::string &path, BookDescription &description) const {

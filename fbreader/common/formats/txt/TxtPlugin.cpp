@@ -28,8 +28,8 @@
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
-bool TxtPlugin::acceptsFile(const std::string &extension) const {
-	return extension == "txt";
+bool TxtPlugin::acceptsFile(const ZLFile &file) const {
+	return file.extension() == "txt";
 }
 
 bool TxtPlugin::readDescription(const std::string &path, BookDescription &description) const {

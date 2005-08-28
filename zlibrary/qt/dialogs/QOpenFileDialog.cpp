@@ -53,11 +53,11 @@ QOpenFileDialog::~QOpenFileDialog() {
 }
 
 QPixmap &QOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
-	const std::string &pName = pixmapName(node);
-	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pName);
+	const std::string &pixmapName = node->pixmapName();
+	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		QPixmap *pixmap = new QPixmap((((QDialogManager&)QDialogManager::instance()).getPixmapPath() + "/" + pName + ".png").c_str());
-		myPixmaps[pName] = pixmap;
+		QPixmap *pixmap = new QPixmap((((QDialogManager&)QDialogManager::instance()).getPixmapPath() + "/" + pixmapName + ".png").c_str());
+		myPixmaps[pixmapName] = pixmap;
 		return *pixmap;
 	} else {
 		return *it->second;

@@ -30,7 +30,8 @@
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
-bool HtmlPlugin::acceptsFile(const std::string &extension) const {
+bool HtmlPlugin::acceptsFile(const ZLFile &file) const {
+	const std::string &extension = file.extension();
 	return ZLStringUtil::stringEndsWith(extension, "html") || (extension == "htm");
 }
 

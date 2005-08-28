@@ -28,8 +28,12 @@
 //#include "PdbBookReader.h"
 #include "../../description/BookDescription.h"
 
-bool PdbPlugin::acceptsFile(const std::string &extension) const {
-	return (extension == "pdb") || (extension == "PDB");
+bool PdbPlugin::acceptsFile(const ZLFile &file) const {
+	const std::string &extension = file.extension();
+	if ((extension != "pdb") && (extension != "PDB")) {
+		return false;
+	}
+	return true;
 }
 
 bool PdbPlugin::readDescription(const std::string &path, BookDescription &description) const {
@@ -47,6 +51,6 @@ bool PdbPlugin::readModel(const BookDescription &description, BookModel &model) 
 }
 
 const std::string &PdbPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/pdb";
+	static const std::string ICON_NAME = "FBReader/plucker";
 	return ICON_NAME;
 }

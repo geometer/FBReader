@@ -87,7 +87,7 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 		BookDescriptionUtil::saveInfo(file);
 	}
 
-	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName).extension(), false);
+	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
 	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
 		return 0;
 	}

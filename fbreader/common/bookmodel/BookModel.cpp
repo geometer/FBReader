@@ -42,7 +42,7 @@ BookModel::BookModel(const BookDescriptionPtr description) : myDescription(descr
 	}
 #endif // PALM_TEMPORARY
 	ZLFile file(description->fileName());
-	FormatPlugin *plugin = PluginCollection::instance().plugin(file.extension(), false);
+	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
 	if (plugin != 0) {
 		plugin->readModel(*description, *this);
 	}

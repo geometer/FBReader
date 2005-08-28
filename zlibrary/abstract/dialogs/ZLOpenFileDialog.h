@@ -39,24 +39,25 @@ protected:
 	virtual ~ZLTreeHandler() DIALOG_SECTION;
 	
 public:
-	virtual bool isNodeVisible(const ZLTreeNodePtr node) const DIALOG_SECTION = 0;
-	virtual const std::string &pixmapName(const ZLTreeNodePtr node) const DIALOG_SECTION = 0;
-	virtual void accept(const ZLTreeStatePtr state) const DIALOG_SECTION = 0;
+	virtual const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const DIALOG_SECTION = 0;
+	virtual void accept(const ZLTreeState &state) const DIALOG_SECTION = 0;
 };
 
 class ZLTreeNode {
 
 public:
-	ZLTreeNode(const std::string &name, bool isFile) DIALOG_SECTION;
+	ZLTreeNode(const std::string &name, bool isFile, const std::string &pixmapName) DIALOG_SECTION;
 	~ZLTreeNode() DIALOG_SECTION;
 
 	const std::string &name() const DIALOG_SECTION;
+	const std::string &pixmapName() const DIALOG_SECTION;
 	bool isFile() const DIALOG_SECTION;
 	std::string relativeName(const ZLTreeStatePtr state) const DIALOG_SECTION;
 
 private:
 	std::string myName;
 	bool myIsFile;
+	std::string myPixmapName;
 };
 
 class ZLTreeState {
@@ -138,7 +139,6 @@ protected:
 	void runNode(const ZLTreeNodePtr node) DIALOG_SECTION;
 	virtual void exitDialog() DIALOG_SECTION = 0;
 	virtual void update(const std::string &selectedNodeName) DIALOG_SECTION = 0;
-	const std::string &pixmapName(const ZLTreeNodePtr node) const DIALOG_SECTION;
 	const ZLTreeStatePtr state() const;
 
 private:

@@ -61,10 +61,9 @@ BookCollection::BookCollection() {
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
 				const std::string fileName = dirName + *jt;
 				ZLFile file(fileName);
-				const std::string extension = file.extension();
-				if (PluginCollection::instance().plugin(extension, true) != 0) {
+				if (PluginCollection::instance().plugin(file, true) != 0) {
 					fileNamesSet.insert(fileName);
-				} else if (extension == "zip") {
+				} else if (file.extension() == "zip") {
 					if (!BookDescriptionUtil::checkInfo(file)) {
 						BookDescriptionUtil::resetZipInfo(file);
 						BookDescriptionUtil::saveInfo(file);

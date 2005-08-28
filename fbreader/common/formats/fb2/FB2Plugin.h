@@ -30,7 +30,7 @@ public:
 	FB2Plugin() FORMATS_SECTION;
 	~FB2Plugin() FORMATS_SECTION;
 	bool providesMetaInfo() const FORMATS_SECTION;
-	bool acceptsFile(const std::string &extension) const FORMATS_SECTION;
+	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
 	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
 	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;

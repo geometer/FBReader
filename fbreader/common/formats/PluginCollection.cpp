@@ -61,10 +61,9 @@ PluginCollection::~PluginCollection() {
 	}
 }
 
-FormatPlugin *PluginCollection::plugin(const std::string &fileName, bool strong) {
-	bool compressed = ZLStringUtil::stringEndsWith(fileName, ".gz");
+FormatPlugin *PluginCollection::plugin(const ZLFile &file, bool strong) {
 	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
-		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(compressed ? fileName.substr(0, fileName.length() - 3) : fileName)) {
+		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(file)) {
 			return *it;
 		}
 	}

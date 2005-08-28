@@ -32,9 +32,8 @@ public:
 	FBFileHandler() FB_DIALOG_SECTION;
 	~FBFileHandler() FB_DIALOG_SECTION;
 
-	bool isNodeVisible(const ZLTreeNodePtr node) const FB_DIALOG_SECTION;
-	const std::string &pixmapName(const ZLTreeNodePtr node) const FB_DIALOG_SECTION;
-	void accept(const ZLTreeStatePtr state) const FB_DIALOG_SECTION;
+	const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const FB_DIALOG_SECTION;
+	void accept(const ZLTreeState &state) const FB_DIALOG_SECTION;
 
 	BookDescriptionPtr description() const FB_DIALOG_SECTION;
 
