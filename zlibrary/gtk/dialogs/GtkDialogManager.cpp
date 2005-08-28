@@ -54,6 +54,7 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 
 	GtkWidget *label = gtk_label_new(message);
 	gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+	gtk_widget_show(label);
 	gtk_box_pack_start(GTK_BOX(dialog->vbox), label, TRUE, TRUE, 0);
 	gint response = gtk_dialog_run(dialog);
 	gtk_widget_destroy(GTK_WIDGET(dialog));
