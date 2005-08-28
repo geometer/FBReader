@@ -96,6 +96,7 @@ public:
 
 private:
 	void fill() const DIALOG_SECTION;
+	void addSubnode(const std::string &name, bool isFile) const DIALOG_SECTION;
 
 private:
 	shared_ptr<ZLDir> myDir;

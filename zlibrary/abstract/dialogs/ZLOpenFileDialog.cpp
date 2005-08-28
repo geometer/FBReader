@@ -96,31 +96,29 @@ const std::string ZLDirTreeState::shortName() const {
 	return myDir->shortName();
 }
 
+void ZLDirTreeState::addSubnode(const std::string &name, bool isFile) const {
+	const std::string &pixmapName = handler().pixmapName(*myDir, name, isFile);
+	if (!pixmapName.empty()) {
+		mySubnodes.push_back(new ZLTreeNode(name, isFile, pixmapName));
+	}
+}
+
 const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 	if (!myIsUpToDate) {
 		if (myDir->name() != "/") {
-			const std::string &pixmapName = handler().pixmapName(*myDir, "..", false);
-			if (!pixmapName.empty()) {
-				mySubnodes.push_back(new ZLTreeNode("..", false, pixmapName));
-			}
+			addSubnode("..", false);
 		}
 		std::vector<std::string> names;
 		myDir->collectSubDirs(names, true);
 		std::sort(names.begin(), names.end());
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-			const std::string &pixmapName = handler().pixmapName(*myDir, *it, false);
-			if (!pixmapName.empty()) {
-				mySubnodes.push_back(new ZLTreeNode(*it, false, pixmapName));
-			}
+			addSubnode(*it, false);
 		}
 		names.clear();
 		myDir->collectFiles(names, true);
 		std::sort(names.begin(), names.end());
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
-			const std::string &pixmapName = handler().pixmapName(*myDir, *it, true);
-			if (!pixmapName.empty()) {
-				mySubnodes.push_back(new ZLTreeNode(*it, true, pixmapName));
-			}
+			addSubnode(*it, true);
 		}
 		myIsUpToDate = true;
 	}
