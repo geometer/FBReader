@@ -35,11 +35,13 @@
 #include "../description/Author.h"
 
 static const std::string LIBRARY = "Library";
+static const std::string deleteImageId = "deleteImage";
 
 CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
 	myCollection = 0;
 	myTreeModel = 0;
 	myTreeStateIsFrozen = false;
+	myImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
 }
 
 CollectionView::~CollectionView() {
@@ -67,9 +69,6 @@ void CollectionView::gotoParagraph(int num, bool last) {
 	TextView::gotoParagraph(num, last);
 }
 
-static ImageMap deleteImageMap;
-static const std::string deleteImageId = "deleteImage";
-
 void CollectionView::paint() {
 	if ((myCollection == 0) || (!myCollection->isActual())) {
 		myCollection = new BookCollection();
@@ -86,10 +85,7 @@ void CollectionView::paint() {
 				bookParagraph->addText((*jt)->title());
 				if (myCollection->isBookExternal(*jt)) {
 					bookParagraph->addText(" ");
-					bookParagraph->addImage(deleteImageId, deleteImageMap);
-				}
-				if (deleteImageMap.empty()) {
-					deleteImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
+					bookParagraph->addImage(deleteImageId, myImageMap);
 				}
 				myBooksMap[bookParagraph] = *jt;
 			}

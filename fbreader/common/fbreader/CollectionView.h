@@ -55,6 +55,7 @@ private:
 	TreeModel *myTreeModel;
 	std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
 	bool myTreeStateIsFrozen;
+	ImageMap myImageMap;
 };
 
 #endif /* __COLLECTIONVIEW_H__ */
