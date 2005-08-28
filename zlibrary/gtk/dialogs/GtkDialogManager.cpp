@@ -52,10 +52,16 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 		gtk_dialog_add_button (dialog, button2, 2);
 	}
 
+	GtkWidget *contents = gtk_hbox_new(FALSE, 10);
+	GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
+	gtk_misc_set_alignment(GTK_MISC(image), 0.5, 0.0);
+
 	GtkWidget *label = gtk_label_new(message);
 	gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
-	gtk_widget_show(label);
-	gtk_box_pack_start(GTK_BOX(dialog->vbox), label, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(contents), image, FALSE, FALSE, 0);
+	gtk_box_pack_start(GTK_BOX(contents), label, TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(dialog->vbox), contents, TRUE, TRUE, 0);
+	gtk_widget_show_all(GTK_WIDGET(dialog));
 	gint response = gtk_dialog_run(dialog);
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 
