@@ -42,19 +42,20 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 
 	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
 
-  if (button0 != 0) {
+	if (button0 != 0) {
 		gtk_dialog_add_button (dialog, button0, 0);
-  }
-  if (button1 != 0) {
+	}
+	if (button1 != 0) {
 		gtk_dialog_add_button (dialog, button1, 1);
-  }
-  if (button2 != 0) {
+	}
+	if (button2 != 0) {
 		gtk_dialog_add_button (dialog, button2, 2);
-  }
+	}
 
-  GtkWidget *label = gtk_label_new(message);
+	GtkWidget *label = gtk_label_new(message);
 
-  gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+	gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
+	gtk_widget_show(label);
 
 	gtk_box_pack_start(GTK_BOX(dialog->vbox), label, TRUE, TRUE, 0);
 
