@@ -28,7 +28,27 @@ class PdbPlugin : public FormatPlugin {
 
 public:
 	PdbPlugin() FORMATS_SECTION;
-	~PdbPlugin() FORMATS_SECTION;
+	virtual ~PdbPlugin() FORMATS_SECTION;
+	bool acceptsFile(const ZLFile &file, const std::string &typePattern) const FORMATS_SECTION;
+};
+
+class PluckerPlugin : public PdbPlugin {
+
+public:
+	PluckerPlugin() FORMATS_SECTION;
+	~PluckerPlugin() FORMATS_SECTION;
+	bool providesMetaInfo() const FORMATS_SECTION;
+	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
+	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
+	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
+	const std::string &iconName() const FORMATS_SECTION;
+};
+
+class PalmDocPlugin : public PdbPlugin {
+
+public:
+	PalmDocPlugin() FORMATS_SECTION;
+	~PalmDocPlugin() FORMATS_SECTION;
 	bool providesMetaInfo() const FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
 	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
@@ -38,6 +58,13 @@ public:
 
 inline PdbPlugin::PdbPlugin() {}
 inline PdbPlugin::~PdbPlugin() {}
-inline bool PdbPlugin::providesMetaInfo() const { return true; }
+
+inline PluckerPlugin::PluckerPlugin() {}
+inline PluckerPlugin::~PluckerPlugin() {}
+inline bool PluckerPlugin::providesMetaInfo() const { return true; }
+
+inline PalmDocPlugin::PalmDocPlugin() {}
+inline PalmDocPlugin::~PalmDocPlugin() {}
+inline bool PalmDocPlugin::providesMetaInfo() const { return true; }
 
 #endif /* __PDBPLUGIN_H__ */

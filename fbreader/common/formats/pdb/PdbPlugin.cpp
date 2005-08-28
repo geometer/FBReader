@@ -21,36 +21,38 @@
 
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLOptions.h>
 
 #include "PdbPlugin.h"
-#include "PdbReader.h"
-//#include "PdbDescriptionReader.h"
-//#include "PdbBookReader.h"
-#include "../../description/BookDescription.h"
+#include "../../description/BookDescriptionUtil.h"
 
-bool PdbPlugin::acceptsFile(const ZLFile &file) const {
+bool PdbPlugin::acceptsFile(const ZLFile &file, const std::string &typePattern) const {
 	const std::string &extension = file.extension();
 	if ((extension != "pdb") && (extension != "PDB")) {
 		return false;
 	}
-	return true;
-}
 
-bool PdbPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	//return PdbReader().readDocument(ZLFile(path).inputStream());
-	ZLFile file(path);
-	WritableBookDescription wDescription(description);
-	wDescription.encoding() = "US_ASCII";
-	wDescription.addAuthor("Unknown", "PDB", "Author");
-	wDescription.title() = file.name();
-	return true;
-}
+	std::string fileName = file.path();
+	int index = fileName.find(':');
+	ZLFile baseFile = (index == -1) ? file : ZLFile(fileName.substr(0, index));
+	bool upToDate = BookDescriptionUtil::checkInfo(baseFile);
 
-bool PdbPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return PdbReader().readDocument(description.fileName(), model);
-}
-
-const std::string &PdbPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/plucker";
-	return ICON_NAME;
+	ZLStringOption palmTypeOption(file.path(), "PalmType", "");
+	std::string palmType = palmTypeOption.value();
+	if (palmType.empty() || !upToDate) {
+		shared_ptr<ZLInputStream> stream = file.inputStream();
+		if (stream.isNull() || !stream->open()) {
+			return false;
+		}
+		stream->seek(60);
+		char id[8];
+		stream->read(id, 8);
+		stream->close();
+		palmType.append(id, 8);
+		if (!upToDate) {
+			BookDescriptionUtil::saveInfo(baseFile);
+		}
+		palmTypeOption.setValue(palmType);
+	}
+	return palmType == typePattern;
 }

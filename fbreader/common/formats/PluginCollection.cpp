@@ -39,7 +39,8 @@ PluginCollection &PluginCollection::instance() {
 		//ourInstance->myPlugins.push_back(new DocBookPlugin());
 		ourInstance->myPlugins.push_back(new HtmlPlugin());
 		ourInstance->myPlugins.push_back(new TxtPlugin());
-		ourInstance->myPlugins.push_back(new PdbPlugin());
+		ourInstance->myPlugins.push_back(new PluckerPlugin());
+		ourInstance->myPlugins.push_back(new PalmDocPlugin());
 #endif // PALM_TEMPORARY
 	}
 	return *ourInstance;
