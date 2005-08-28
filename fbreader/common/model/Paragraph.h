@@ -173,9 +173,9 @@ public:
 	};
 
 public:
-	Paragraph(Kind kind) MODEL_SECTION;
+	Paragraph() MODEL_SECTION;
 	virtual ~Paragraph() MODEL_SECTION;
-	Kind kind() const MODEL_SECTION;
+	virtual Kind kind() const MODEL_SECTION;
 
 	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
 	void addControl(ForcedControlEntry *entry) MODEL_SECTION;
@@ -190,8 +190,18 @@ public:
 	size_t textLength() const MODEL_SECTION;
 
 private:
-	Kind myKind;
 	std::vector<ParagraphEntry*> myEntries;
+};
+
+class SpecialParagraph : public Paragraph {
+
+public:
+	SpecialParagraph(Kind kind) MODEL_SECTION;
+	~SpecialParagraph() MODEL_SECTION;
+	Kind kind() const MODEL_SECTION;
+
+private:
+	Kind myKind;
 };
 
 class ParagraphWithReference : public Paragraph {
@@ -211,6 +221,8 @@ class TreeParagraph : public Paragraph {
 public:
 	TreeParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
 	~TreeParagraph() MODEL_SECTION;
+	Kind kind() const MODEL_SECTION;
+
 	bool isOpen() const MODEL_SECTION;
 	void open(bool o) MODEL_SECTION;
 	void openTree() MODEL_SECTION;
@@ -271,20 +283,25 @@ inline ImageEntry::~ImageEntry() {}
 inline ParagraphEntry::Kind ImageEntry::entryKind() const { return IMAGE_ENTRY; }
 inline const std::string &ImageEntry::id() const { return myId; }
 
-inline Paragraph::Paragraph(Kind kind) : myKind(kind) {}
-inline Paragraph::Kind Paragraph::kind() const { return myKind; }
+inline Paragraph::Paragraph() {}
+inline Paragraph::Kind Paragraph::kind() const { return TEXT_PARAGRAPH; }
 inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.push_back(ControlEntryPool::Pool.controlEntry(textKind, isStart)); }
 inline void Paragraph::addControl(ForcedControlEntry *entry) { myEntries.push_back(entry); }
 inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
 inline void Paragraph::addImage(const std::string &id, const ImageMap &imageMap) { myEntries.push_back(new ImageEntry(id, imageMap)); }
 inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return myEntries; }
 
-inline ParagraphWithReference::ParagraphWithReference() : Paragraph(TEXT_PARAGRAPH), myReference(-1) {}
+inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}
+inline SpecialParagraph::~SpecialParagraph() {}
+inline Paragraph::Kind SpecialParagraph::kind() const { return myKind; }
+
+inline ParagraphWithReference::ParagraphWithReference() : myReference(-1) {}
 inline ParagraphWithReference::~ParagraphWithReference() {}
 inline void ParagraphWithReference::setReference(long reference) { myReference = reference; }
 inline long ParagraphWithReference::reference() const { return myReference; }
 
 inline TreeParagraph::~TreeParagraph() {}
+inline Paragraph::Kind TreeParagraph::kind() const { return TREE_PARAGRAPH; }
 inline bool TreeParagraph::isOpen() const { return myIsOpen; }
 inline void TreeParagraph::open(bool o) { myIsOpen = o; }
 inline int TreeParagraph::depth() const { return myDepth; }

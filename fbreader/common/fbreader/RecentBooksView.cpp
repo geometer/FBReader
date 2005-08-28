@@ -48,7 +48,7 @@ void RecentBooksView::paint() {
 		const LastOpenedBooks lastBooks;
 		const Books &books = lastBooks.books();
 		for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
-			Paragraph *p = new Paragraph(Paragraph::TEXT_PARAGRAPH);
+			Paragraph *p = new Paragraph();
 			p->addControl(RECENT_BOOK_LIST, true);
 			p->addControl(LIBRARY_AUTHOR_ENTRY, true);
 			p->addText((*it)->author()->displayName());

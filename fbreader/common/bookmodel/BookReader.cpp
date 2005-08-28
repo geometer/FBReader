@@ -73,7 +73,7 @@ bool BookReader::popKind() {
 
 void BookReader::beginParagraph(Paragraph::Kind kind) {
 	if (!currentTextModelIsNull()) {
-		myCurrentParagraph = new Paragraph(kind);
+		myCurrentParagraph = (kind == Paragraph::TEXT_PARAGRAPH) ? new Paragraph() : new SpecialParagraph(kind);
 		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); it++) {
 			myCurrentParagraph->addControl(*it, true);
 		}
@@ -174,7 +174,7 @@ void BookReader::insertEndOfSectionParagraph() {
 			mySectionContainsRegularContents &&
 			!myCurrentTextModel->paragraphs().empty() &&
 			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::EOS_PARAGRAPH)) {
-		myCurrentTextModel->addParagraph(new Paragraph(Paragraph::EOS_PARAGRAPH));
+		myCurrentTextModel->addParagraph(new SpecialParagraph(Paragraph::EOS_PARAGRAPH));
 		mySectionContainsRegularContents = false;
 	}
 }

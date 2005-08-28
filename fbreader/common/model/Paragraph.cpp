@@ -89,7 +89,7 @@ const ZLImage *ImageEntry::image() const {
 	return (i != myMap.end()) ? (*i).second : 0;
 }
 
-TreeParagraph::TreeParagraph(TreeParagraph *parent) : Paragraph(TREE_PARAGRAPH), myIsOpen(false), myParent(parent) {
+TreeParagraph::TreeParagraph(TreeParagraph *parent) : myIsOpen(false), myParent(parent) {
 	if (parent != 0) {
 		parent->addChild(this);
 		myDepth = parent->myDepth + 1;
