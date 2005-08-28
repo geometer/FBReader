@@ -24,6 +24,7 @@
 #include "../common/formats/html/HtmlEntityExtension.h"
 #include "../common/fbreader/FBReader.h"
 #include "../common/collection/BookCollection.h"
+#include "../common/fbreader/CollectionView.h"
 #include "Paths.h"
 
 static const std::string PathPrefix = "/opt/QtPalmtop/share/FBReader/";
@@ -33,5 +34,5 @@ const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.
 const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
 const std::string FBReader::HelpDirectory = PathPrefix + "help";
 const std::string EncodingDescriptionPath = PathPrefix + "encodings";
-
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "/mnt/card/FBooks:~/Documents");
+const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics144/FBReader/remove.png";
+const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:~/Documents";

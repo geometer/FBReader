@@ -26,20 +26,6 @@
 #include "PluckerImages.h"
 #include "DocDecompressor.h"
 
-const shared_ptr<ZLString> FileImage::stringData() const {
-	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
-
-	shared_ptr<ZLString> imageData = new ZLString();
-
-	if (!stream.isNull() && stream->open()) {
-		stream->seek(myOffset);
-		imageData->reserve(mySize);
-		stream->read(imageData->data(), mySize);
-	}
-
-	return imageData;
-}
-
 const shared_ptr<ZLString> ZCompressedFileImage::stringData() const {
 	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
 

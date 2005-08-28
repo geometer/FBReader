@@ -28,6 +28,7 @@
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLImage.h>
+#include <abstract/ZLFileImage.h>
 #include <abstract/ZLFSManager.h>
 
 #include "PdbReader.h"
@@ -472,7 +473,7 @@ void PluckerReader::readRecord(size_t recordSize) {
 				static const std::string mime = "image/palm";
 				ZLImage *image = 0;
 				if (type == 2) {
-					image = new FileImage(mime, myFilePath, myStream->offset(), recordSize - 8);
+					image = new ZLFileImage(mime, myFilePath, myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 1) {
 					image = new DocCompressedFileImage(mime, myFilePath, myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 2) {

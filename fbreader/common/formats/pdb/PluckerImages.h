@@ -27,19 +27,6 @@
 #include <abstract/ZLImage.h>
 #include "../../bookmodel/BookModel.h"
 
-class FileImage : public ZLSingleImage {
-
-public:
-	FileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) IMAGE_SECTION;
-	~FileImage() IMAGE_SECTION;
-	const shared_ptr<ZLString> stringData() const IMAGE_SECTION;
-
-private:
-	std::string myPath;
-	size_t myOffset;
-	size_t mySize;
-};
-
 class ZCompressedFileImage : public ZLSingleImage {
 
 public:
@@ -83,9 +70,6 @@ private:
 	const ImageMap &myImageMap;
 	std::vector<std::string> myIds;
 };
-
-inline FileImage::FileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), mySize(size) {}
-inline FileImage::~FileImage() {}
 
 inline ZCompressedFileImage::ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
 inline ZCompressedFileImage::~ZCompressedFileImage() {}

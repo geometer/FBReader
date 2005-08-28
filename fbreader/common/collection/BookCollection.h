@@ -44,6 +44,7 @@ public:
 class BookCollection {
 
 public:
+	static const std::string DefaultBookPath;
 	static ZLStringOption PathOption;
 	static ZLBooleanOption ScanSubdirsOption;
 
@@ -52,7 +53,8 @@ public:
 	~BookCollection() MODEL_SECTION;
 
 	const std::vector<const Author*> &authors() const MODEL_SECTION;
-	const Books &books(const Author *author) MODEL_SECTION;
+	const Books &books(const Author *author) const MODEL_SECTION;
+	bool isBookExternal(BookDescriptionPtr description) const MODEL_SECTION;
 
 	bool isActual() const MODEL_SECTION;
 	
@@ -63,6 +65,7 @@ private:
 private:
 	std::vector<const Author*> myAuthors;
 	std::map<const Author*,Books> myCollection;
+	std::set<BookDescriptionPtr> myExternalBooks;
 
 	std::string myPath;
 	bool myScanSubdirs;
@@ -87,7 +90,8 @@ inline DescriptionComparator::DescriptionComparator() {}
 inline DescriptionComparator::~DescriptionComparator() {}
 
 inline const std::vector<const Author*> &BookCollection::authors() const { return myAuthors; }
-inline const Books &BookCollection::books(const Author *author) { return (*myCollection.find(author)).second; }
+inline const Books &BookCollection::books(const Author *author) const { return (*myCollection.find(author)).second; }
+inline bool BookCollection::isBookExternal(BookDescriptionPtr description) const { return myExternalBooks.find(description) != myExternalBooks.end(); }
 
 inline const Books &LastOpenedBooks::books() const { return myBooks; }
 

@@ -24,12 +24,13 @@
 #include "../common/formats/html/HtmlEntityExtension.h"
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/FBReader.h"
+#include "../common/fbreader/CollectionView.h"
 #include "Paths.h"
 
-const std::string TeXHyphenator::PatternZip("/FBReader/hyphenationPatterns.zip");
-//const std::string DocBookReader::DTDDirectory("/FBReader/formats/docbook");
-const std::string HtmlEntityExtension::CollectionFile("/FBReader/formats/html/html.ent");
-const std::string FBReader::HelpDirectory("/FBReader/help");
-const std::string EncodingDescriptionPath("/opt/QtPalmtop/share/FBReader/encodings");
-
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "/FBooks");
+const std::string TeXHyphenator::PatternZip = "/FBReader/hyphenationPatterns.zip";
+//const std::string DocBookReader::DTDDirectory = "/FBReader/formats/docbook";
+const std::string HtmlEntityExtension::CollectionFile = "/FBReader/formats/html/html.ent";
+const std::string FBReader::HelpDirectory = "/FBReader/help";
+const std::string EncodingDescriptionPath = "/FBReader/encodings";
+const std::string CollectionView::DeleteBookImageFile = "/FBReader/remove.png";
+const std::string BookCollection::DefaultBookPath = "/FBooks";

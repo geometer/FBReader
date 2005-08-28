@@ -23,14 +23,15 @@
 //#include "../common/formats/docbook/DocBookReader.h"
 #include "../common/formats/html/HtmlEntityExtension.h"
 #include "../common/collection/BookCollection.h"
+#include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 #include "Paths.h"
 
-const std::string TeXHyphenator::PatternZip("/usr/share/FBReader/hyphenationPatterns.zip");
-//const std::string DocBookReader::DTDDirectory("/usr/share/FBReader/formats/docbook");
-const std::string HtmlEntityExtension::CollectionFile("/usr/share/FBReader/formats/html/html.ent");
-const std::string GtkFBReader::ImageDirectory("/usr/share/pixmaps");
-const std::string FBReader::HelpDirectory("/usr/share/FBReader/help");
-const std::string EncodingDescriptionPath("/usr/share/FBReader/encodings");
-
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "/mnt/card/FBooks:/mnt/cf/FBooks");
+const std::string TeXHyphenator::PatternZip = "/usr/share/FBReader/hyphenationPatterns.zip";
+//const std::string DocBookReader::DTDDirectory = "/usr/share/FBReader/formats/docbook";
+const std::string HtmlEntityExtension::CollectionFile = "/usr/share/FBReader/formats/html/html.ent";
+const std::string GtkFBReader::ImageDirectory = "/usr/share/pixmaps";
+const std::string FBReader::HelpDirectory = "/usr/share/FBReader/help";
+const std::string EncodingDescriptionPath = "/usr/share/FBReader/encodings";
+const std::string CollectionView::DeleteBookImageFile = GtkFBReader::ImageDirectory + "/FBReader/remove.png";
+const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:/mnt/cf/FBooks";

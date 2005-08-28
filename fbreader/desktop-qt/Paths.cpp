@@ -23,6 +23,7 @@
 //#include "../common/formats/docbook/DocBookReader.h"
 #include "../common/formats/html/HtmlEntityExtension.h"
 #include "../common/collection/BookCollection.h"
+#include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 #include "Paths.h"
 
@@ -34,5 +35,5 @@ const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/ht
 const std::string QFBReader::ImageDirectory = PathPrefix + "icons";
 const std::string FBReader::HelpDirectory = PathPrefix + "help";
 const std::string EncodingDescriptionPath = PathPrefix + "encodings";
-
-ZLStringOption BookCollection::PathOption("Options", "BookPath", "~/FBooks:~/Books");
+const std::string CollectionView::DeleteBookImageFile = QFBReader::ImageDirectory + "/FBReader/remove.png";
+const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

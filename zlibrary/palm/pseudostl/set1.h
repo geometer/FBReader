@@ -73,7 +73,7 @@ namespace std {
 		iterator begin() const STL_SECTION;
 		iterator end() const STL_SECTION;
 
-		iterator find(const T &element) STL_SECTION;
+		iterator find(const T &element) const STL_SECTION;
 		void insert(const T &element) STL_SECTION;
 		void insert(const const_iterator &from, const const_iterator &to) STL_SECTION;
 		void erase(const T &element) STL_SECTION;
@@ -301,7 +301,7 @@ namespace std {
 	*/
 
 	template<typename T>
-	inline set<T>::iterator set<T>::find(const T &element) {
+	inline set<T>::iterator set<T>::find(const T &element) const {
 		// TODO: implement
 		return iterator();
 	}

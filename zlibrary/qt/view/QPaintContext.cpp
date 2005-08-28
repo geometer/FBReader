@@ -153,8 +153,13 @@ void QPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 }
 
 void QPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	myPainter->drawLine(x0 + leftMargin(), y0 + topMargin(),
-											x1 + leftMargin(), y1 + topMargin());
+	x0 += leftMargin();
+	x1 += leftMargin();
+	y0 += topMargin();
+	y1 += topMargin();
+	myPainter->drawPoint(x0, y0);
+	myPainter->drawLine(x0, y0, x1, y1);
+	myPainter->drawPoint(x1, y1);
 }
 
 void QPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {

@@ -19,6 +19,9 @@
  * 02110-1301, USA.
  */
 
+#include <abstract/ZLFileImage.h>
+#include <abstract/ZLDialogManager.h>
+
 #include "CollectionView.h"
 #include "FBReader.h"
 
@@ -64,6 +67,9 @@ void CollectionView::gotoParagraph(int num, bool last) {
 	TextView::gotoParagraph(num, last);
 }
 
+static ImageMap deleteImageMap;
+static const std::string deleteImageId = "deleteImage";
+
 void CollectionView::paint() {
 	if ((myCollection == 0) || (!myCollection->isActual())) {
 		myCollection = new BookCollection();
@@ -78,6 +84,13 @@ void CollectionView::paint() {
 				TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
 				bookParagraph->addControl(LIBRARY_BOOK_ENTRY, true);
 				bookParagraph->addText((*jt)->title());
+				if (myCollection->isBookExternal(*jt)) {
+					bookParagraph->addText(" ");
+					bookParagraph->addImage(deleteImageId, deleteImageMap);
+				}
+				if (deleteImageMap.empty()) {
+					deleteImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
+				}
 				myBooksMap[bookParagraph] = *jt;
 			}
 		}
@@ -102,6 +115,22 @@ bool CollectionView::onStylusPress(int x, int y) {
 	bool processedByParent = TextView::onStylusPress(x, y);
 	myTreeStateIsFrozen = false;
 	if (processedByParent) {
+		return true;
+	}
+
+	const TextElementPosition *imagePosition = elementByCoordinates(x, y);
+	if ((imagePosition != 0) && (imagePosition->Kind == TextElement::IMAGE_ELEMENT)) {
+		int paragraphNumber = imagePosition->ParagraphNumber;
+		if ((paragraphNumber < 0) || ((int)model()->paragraphs().size() <= paragraphNumber)) {
+			return false;
+		}
+		TreeParagraph *paragraph = (TreeParagraph*)model()->paragraphs()[paragraphNumber];
+		std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
+		if (it != myBooksMap.end()) {
+			BookDescription &description = *it->second;
+			const std::string question = "Remove Book\n\"" + description.title() + "\"\nfrom library?";
+			ZLDialogManager::instance().informationBox("Remove Book", question.c_str(), "Yes", "No");
+		}
 		return true;
 	}
 

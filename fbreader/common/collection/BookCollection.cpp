@@ -33,6 +33,7 @@
 #include "../description/Author.h"
 #include "../formats/FormatPlugin.h"
 
+ZLStringOption BookCollection::PathOption("Options", "BookPath", BookCollection::DefaultBookPath);
 ZLBooleanOption BookCollection::ScanSubdirsOption("Options", "ScanSubdirs", false);
 
 bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2) {
@@ -78,14 +79,18 @@ BookCollection::BookCollection() {
 		}
 	}
 
+	for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); it++) {
+		addDescription(BookDescription::create(*it));
+	}
+
 	BookList bookList;
 	const std::set<std::string> &bookListSet = bookList.fileNames();
 	for (std::set<std::string>::const_iterator it = bookListSet.begin(); it != bookListSet.end(); it++) {
-		fileNamesSet.insert(*it);
-	}
-
-	for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); it++) {
-		addDescription(BookDescription::create(*it));
+		if (fileNamesSet.find(*it) == fileNamesSet.end()) {
+			BookDescriptionPtr description = BookDescription::create(*it);
+			addDescription(description);
+			myExternalBooks.insert(description);
+		}
 	}
 
 	std::sort(myAuthors.begin(), myAuthors.end(), AuthorComparator());
