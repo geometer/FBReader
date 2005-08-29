@@ -14,6 +14,7 @@ DUMMY_SECTIONS = \
 	-DZLVIEW_SECTION="" \
 	-DFB_VIEW_SECTION="" \
 	-DTEXT_STYLE_SECTION="" \
+	-DTEXT_STYLE1_SECTION="" \
 	-DHYPHENATION_SECTION="" \
 	-DFORMATS_SECTION="" \
 	-DFB_SECTION="" \
@@ -166,6 +167,7 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DFB_VIEW_SECTION="__attribute__ ((section(\"app1\")))" \
 		-DFB_SECTION="__attribute__ ((section(\"app1\")))" \
 		-DTEXT_STYLE_SECTION="__attribute__ ((section(\"app0\")))" \
+		-DTEXT_STYLE1_SECTION="__attribute__ ((section(\"app1\")))" \
 		-DHYPHENATION_SECTION="__attribute__ ((section(\"app2\")))" \
 		-DFORMATS_SECTION="__attribute__ ((section(\"app2\")))" \
 		-DFB_DIALOG_SECTION="__attribute__ ((section(\"app4\")))" \

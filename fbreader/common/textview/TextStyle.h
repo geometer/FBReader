@@ -208,8 +208,8 @@ class ForcedControlEntry;
 class ForcedTextStyle : public DecoratedTextStyle {
 
 public:
-	ForcedTextStyle(TextStylePtr base, const ForcedControlEntry &entry) TEXT_STYLE_SECTION;
-	~ForcedTextStyle() TEXT_STYLE_SECTION;
+	ForcedTextStyle(TextStylePtr base, const ForcedControlEntry &entry) TEXT_STYLE1_SECTION;
+	~ForcedTextStyle() TEXT_STYLE1_SECTION;
 
 	const std::string &fontFamily() const TEXT_STYLE_SECTION;
 	int fontSize() const TEXT_STYLE_SECTION;
@@ -237,11 +237,11 @@ private:
 class PartialDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-	PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration) TEXT_STYLE_SECTION;
+	PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration) TEXT_STYLE1_SECTION;
 	friend TextStylePtr TextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const;
 
 public:
-	virtual ~PartialDecoratedTextStyle() TEXT_STYLE_SECTION;
+	virtual ~PartialDecoratedTextStyle() TEXT_STYLE1_SECTION;
 	const std::string &fontFamily() const TEXT_STYLE_SECTION;
 	int fontSize() const TEXT_STYLE_SECTION;
 	bool bold() const TEXT_STYLE_SECTION;
@@ -268,11 +268,11 @@ private:
 class FullDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-	FullDecoratedTextStyle(const TextStylePtr base, const FullTextStyleDecoration &decoration) TEXT_STYLE_SECTION;
+	FullDecoratedTextStyle(const TextStylePtr base, const FullTextStyleDecoration &decoration) TEXT_STYLE1_SECTION;
 	friend TextStylePtr FullTextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const;
 
 public:
-	~FullDecoratedTextStyle() TEXT_STYLE_SECTION;
+	~FullDecoratedTextStyle() TEXT_STYLE1_SECTION;
 	const std::string &fontFamily() const TEXT_STYLE_SECTION;
 	int fontSize() const TEXT_STYLE_SECTION;
 	bool bold() const TEXT_STYLE_SECTION;
@@ -306,8 +306,8 @@ public:
 	const TextStyleDecoration *decoration(TextKind kind) const TEXT_STYLE_SECTION;
 
 private:
-	TextStyleCollection() TEXT_STYLE_SECTION;
-	~TextStyleCollection() TEXT_STYLE_SECTION;
+	TextStyleCollection() TEXT_STYLE1_SECTION;
+	~TextStyleCollection() TEXT_STYLE1_SECTION;
 
 	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShiftOption, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations, bool isHyperlink) TEXT_STYLE_SECTION;
 	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations, bool isHyperlink) TEXT_STYLE_SECTION;
