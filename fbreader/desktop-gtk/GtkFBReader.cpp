@@ -131,10 +131,12 @@ ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
 }
 
 GtkFBReader::~GtkFBReader() {
-	int width, height;
-	gtk_window_get_size(myMainWindow, &width, &height);
-	Width.setValue(width);
-	Height.setValue(height);
+	if (!myFullScreen) {
+		int width, height;
+		gtk_window_get_size(myMainWindow, &width, &height);
+		Width.setValue(width);
+		Height.setValue(height);
+	}
 
 	for (std::map<ActionCode,ActionSlotData*>::iterator item = myActions.begin(); item != myActions.end(); ++item) {
 		delete item->second;
