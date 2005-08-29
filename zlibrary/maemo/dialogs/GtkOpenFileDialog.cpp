@@ -130,11 +130,11 @@ GtkOpenFileDialog::~GtkOpenFileDialog(void) {
 }
 
 GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
-	std::string pName = pixmapName(node);
-	std::map<std::string,GdkPixbuf*>::const_iterator it = myPixmaps.find(pName);
+	std::string pixmapName = pixmapName(node);
+	std::map<std::string,GdkPixbuf*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		GdkPixbuf *pixmap = gdk_pixbuf_new_from_file((((GtkDialogManager&)GtkDialogManager::instance()).getPixmapPath() + "/" + pName + ".png").c_str(), 0);
-		myPixmaps[pName] = pixmap;
+		GdkPixbuf *pixmap = gdk_pixbuf_new_from_file((((GtkDialogManager&)GtkDialogManager::instance()).getPixmapPath() + "/" + pixmapName + ".png").c_str(), 0);
+		myPixmaps[pixmapName] = pixmap;
 		return pixmap;
 	} else {
 		return it->second;
