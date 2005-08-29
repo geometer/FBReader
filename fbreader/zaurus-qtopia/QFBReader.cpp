@@ -67,8 +67,8 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myKeyBindings[Key_Up] = ACTION_LARGE_SCROLL_BACKWARD;
 	myKeyBindings[Key_Down] = ACTION_LARGE_SCROLL_FORWARD;
 	myKeyBindings[Key_Escape] = ACTION_CANCEL;
-	myKeyBindings[0x1050] = ACTION_FULLSCREEN;
-	myKeyBindings[Key_Return] = ACTION_FULLSCREEN;
+	myKeyBindings[0x1050] = ACTION_TOGGLE_FULLSCREEN;
+	myKeyBindings[Key_Return] = ACTION_TOGGLE_FULLSCREEN;
 
 	myFullScreen = false;
 	myTitleHeight = -1;
@@ -104,17 +104,12 @@ void QFBReader::resizeEvent(QResizeEvent*) {
 	}
 }
 
-void QFBReader::fullscreenSlot() {
-	if (!myFullScreen) {
-		myFullScreen = true;
+void QFBReader::toggleFullscreenSlot() {
+	myFullScreen = !myFullScreen;
+	if (myFullScreen) {
 		menuBar()->hide();
 		showFullScreen();
-	}
-}
-
-void QFBReader::cancelSlot() {
-	if (myFullScreen) {
-		myFullScreen = false;
+	} else {
 		menuBar()->show();
 		showNormal();
 		if (myTitleHeight > 0) {
@@ -122,9 +117,11 @@ void QFBReader::cancelSlot() {
 			myTitleHeight = -1;
 		}
 		setWFlags(getWFlags() | WStyle_Customize);
-	} else if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
-		close();
 	}
+}
+
+bool QFBReader::isFullscreen() const {
+	return myFullScreen;
 }
 
 void QFBReader::quitSlot() {

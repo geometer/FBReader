@@ -68,7 +68,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myKeyBindings[Key_Up] = ACTION_LARGE_SCROLL_BACKWARD;
 	myKeyBindings[Key_Down] = ACTION_LARGE_SCROLL_FORWARD;
 	myKeyBindings[Key_Escape] = ACTION_CANCEL;
-	myKeyBindings[Key_Return] = ACTION_FULLSCREEN;
+	myKeyBindings[Key_Return] = ACTION_TOGGLE_FULLSCREEN;
 
 	createToolbar();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
@@ -92,26 +92,23 @@ void QFBReader::keyPressEvent(QKeyEvent *event) {
 	}
 }
 
-void QFBReader::fullscreenSlot() {
-	if (!myFullScreen) {
-		myFullScreen = true;
+void QFBReader::toggleFullscreenSlot() {
+	myFullScreen = !myFullScreen;
+	if (myFullScreen) {
 		myWasMaximized = isMaximized();
 		menuBar()->hide();
 		showFullScreen();
-	}
-}
-
-void QFBReader::cancelSlot() {
-	if (myFullScreen) {
-		myFullScreen = false;
+	} else {
 		menuBar()->show();
 		showNormal();
 		if (myWasMaximized) {
 			showMaximized();
 		}
-	} else if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
-		close();
 	}
+}
+
+bool QFBReader::isFullscreen() const {
+	return myFullScreen;
 }
 
 void QFBReader::quitSlot() {

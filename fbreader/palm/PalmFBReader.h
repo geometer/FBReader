@@ -41,8 +41,8 @@ public:
 	void setButtonVisible(ActionCode id, bool visible) FB_SECTION;
 	void setButtonEnabled(ActionCode id, bool enable) FB_SECTION;
 	void searchSlot() FB_SECTION;
-	void cancelSlot() FB_SECTION;
-	void fullscreenSlot() FB_SECTION;
+	void toggleFullscreenSlot() FB_SECTION;
+	bool isFullscreen() const FB_SECTION;
 	void quitSlot() FB_SECTION;
 	bool isRotationSupported() const FB_SECTION;
 	void stylusPressEvent(int x, int y) FB_SECTION;

@@ -51,9 +51,9 @@ protected:
 	void addButtonSeparator() {} // TODO: implement
 	void setButtonEnabled(ActionCode id, bool enable);
 	void setButtonVisible(ActionCode id, bool visible);
-	void cancelSlot();
 	void searchSlot();
-	void fullscreenSlot();
+	void toggleFullscreenSlot();
+	bool isFullscreen() const;
 	void quitSlot();
 	bool isRotationSupported() const { return false; }
 

@@ -105,7 +105,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	myKeyBindings["Up"] = ACTION_SMALL_SCROLL_BACKWARD;
 	myKeyBindings["Down"] = ACTION_SMALL_SCROLL_FORWARD;
 	myKeyBindings["Escape"] = ACTION_CANCEL;
-	myKeyBindings["F6"] = ACTION_FULLSCREEN;
+	myKeyBindings["F6"] = ACTION_TOGGLE_FULLSCREEN;
 	myKeyBindings["F7"] = ACTION_LARGE_SCROLL_FORWARD;
 	myKeyBindings["F8"] = ACTION_LARGE_SCROLL_BACKWARD;
 
@@ -173,7 +173,7 @@ void GtkFBReader::buildMenu() {
 
 	// MSS: these two actions can have a checkbox next to them
 	addMenuItem(submenu, "Rotate Screen", getSlotData(ACTION_ROTATE_SCREEN));
-	addMenuItem(submenu, "Full Screen", getSlotData(ACTION_FULLSCREEN));
+	addMenuItem(submenu, "Full Screen", getSlotData(ACTION_TOGGLE_FULLSCREEN));
 	// addMenuItem(submenu, "Toggle Indicator", getSlotData(ACTION_FULLSCREEN));
 
 	// MSS: we do not use it now...
@@ -212,22 +212,7 @@ void GtkFBReader::handleKeySlot(GdkEventKey *event) {
 	}
 }
 
-// MSS: fullscreen is implemented differently from Zaurus stuff:
-//  -- fullscreen key toggles the full screen mode
-//  -- cancel key always tries to quit the application
-void GtkFBReader::cancelSlot() {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-	} else if (myFullScreen) {
-		myFullScreen = false;
-		hildon_appview_set_fullscreen(myAppView, false);
-		gtk_widget_show(GTK_WIDGET(myToolbar));
-	} else if (QuitOnCancelOption.value()) {
-		quitSlot();
-	}
-}
-
-void GtkFBReader::fullscreenSlot() {
+void GtkFBReader::toggleFullscreenSlot() {
 	myFullScreen = !myFullScreen;
 
 	hildon_appview_set_fullscreen(myAppView, myFullScreen);
@@ -236,6 +221,10 @@ void GtkFBReader::fullscreenSlot() {
 	} else if (!myFullScreen) {
 		gtk_widget_show(GTK_WIDGET(myToolbar));
 	}
+}
+
+bool GtkFBReader::isFullscreen() const {
+	return myFullScreen;
 }
 
 void GtkFBReader::quitSlot() {

@@ -114,7 +114,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	addKeyBinding("Escape", ACTION_CANCEL);
 	addKeyBinding("minus", ACTION_DECREASE_FONT);
 	addKeyBinding("equal", ACTION_INCREASE_FONT);
-	addKeyBinding("Return", ACTION_FULLSCREEN);
+	addKeyBinding("Return", ACTION_TOGGLE_FULLSCREEN);
 
 	myFullScreen = false;
 }
@@ -178,23 +178,12 @@ void GtkFBReader::handleScrollEventSlot(GdkEventScroll *event) {
 	}
 }
 
-// MSS: fullscreen is implemented differently from Zaurus stuff:
-//  -- fullscreen key toggles the full screen mode
-//  -- cancel key always tries to quit the application
-void GtkFBReader::cancelSlot() {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-	} else if (QuitOnCancelOption.value()) {
-		quitSlot();
-	}
-}
-
 void GtkFBReader::quitSlot() {
 	delete this;
 	gtk_main_quit();
 }
 
-void GtkFBReader::fullscreenSlot() {
+void GtkFBReader::toggleFullscreenSlot() {
 	myFullScreen = !myFullScreen;
 
 	if (myFullScreen) {
@@ -206,6 +195,10 @@ void GtkFBReader::fullscreenSlot() {
 	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
+}
+
+bool GtkFBReader::isFullscreen() const {
+	return myFullScreen;
 }
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {

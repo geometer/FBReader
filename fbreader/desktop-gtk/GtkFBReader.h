@@ -47,8 +47,8 @@ protected:
 	void setButtonVisible(ActionCode id, bool visible);
 	void setButtonEnabled(ActionCode id, bool enable);
 	void searchSlot();
-	void cancelSlot();
-	void fullscreenSlot();
+	void toggleFullscreenSlot();
+	bool isFullscreen() const;
 	bool isRotationSupported() const { return true; }
 
 	ActionSlotData *getSlotData(ActionCode);

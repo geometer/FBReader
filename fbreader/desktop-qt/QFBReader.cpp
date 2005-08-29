@@ -101,12 +101,6 @@ void QFBReader::wheelEvent(QWheelEvent *event) {
 	}
 }
 
-void QFBReader::cancelSlot() {
-	if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
-		close();
-	}
-}
-
 void QFBReader::quitSlot() {
 	close();
 }

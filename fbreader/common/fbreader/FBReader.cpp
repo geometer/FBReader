@@ -346,7 +346,13 @@ void FBReader::doAction(ActionCode code) {
 			((TextView*)myViewWidget->view())->scrollToEndOfText();
 			break;
 		case ACTION_CANCEL:
-			cancelSlot();
+			if (myMode != BOOK_TEXT_MODE) {
+				restorePreviousMode();
+			} else if (isFullscreen()) {
+				toggleFullscreenSlot();
+			} else if (QuitOnCancelOption.value()) {
+				quitSlot();
+			}
 			break;
 		case ACTION_INCREASE_FONT:
 			{
@@ -376,8 +382,13 @@ void FBReader::doAction(ActionCode code) {
 			TextView::ShowPositionIndicatorOption.setValue(!TextView::ShowPositionIndicatorOption.value());
 			repaintView();
 			break;
-		case ACTION_FULLSCREEN:
-			fullscreenSlot();
+		case ACTION_TOGGLE_FULLSCREEN:
+			toggleFullscreenSlot();
+			break;
+		case ACTION_FULLSCREEN_ON:
+			if (!isFullscreen()) {
+				toggleFullscreenSlot();
+			}
 			break;
 		case ACTION_ADD_BOOK:
 			addBookSlot();

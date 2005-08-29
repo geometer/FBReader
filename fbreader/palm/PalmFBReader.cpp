@@ -47,9 +47,9 @@ void PalmFBReader::addButtonSeparator() {}
 void PalmFBReader::setButtonVisible(ActionCode id, bool visible) {}
 void PalmFBReader::setButtonEnabled(ActionCode id, bool enable) {}
 void PalmFBReader::searchSlot() {}
-void PalmFBReader::cancelSlot() {}
 void PalmFBReader::quitSlot() {}
-void PalmFBReader::fullscreenSlot() {}
+void PalmFBReader::toggleFullscreenSlot() {}
+bool PalmFBReader::isFullscreen() const { return false; }
 bool PalmFBReader::isRotationSupported() const { return false; }
 void PalmFBReader::stylusPressEvent(int x, int y) {
 	ZLView *view = myViewWidget->view();

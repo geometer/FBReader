@@ -63,7 +63,8 @@ public:
 		ACTION_INCREASE_FONT,
 		ACTION_DECREASE_FONT,
 		ACTION_SHOW_HIDE_POSITION_INDICATOR,
-		ACTION_FULLSCREEN,
+		ACTION_TOGGLE_FULLSCREEN,
+		ACTION_FULLSCREEN_ON,
 		ACTION_ADD_BOOK,
 		ACTION_SHOW_BOOK_INFO,
 		ACTION_SHOW_HELP,
@@ -127,8 +128,10 @@ protected:
 	virtual void setButtonVisible(ActionCode id, bool visible) FB_SECTION = 0;
 	virtual void setButtonEnabled(ActionCode id, bool enable) FB_SECTION = 0;
 	virtual void searchSlot() FB_SECTION = 0;
-	virtual void cancelSlot() FB_SECTION = 0;
-	virtual void fullscreenSlot() FB_SECTION = 0;
+	void cancelSlot() FB_SECTION;
+	void fullscreenOnSlot() FB_SECTION;
+	virtual void toggleFullscreenSlot() FB_SECTION = 0;
+	virtual bool isFullscreen() const FB_SECTION = 0;
 	virtual void quitSlot() FB_SECTION = 0;
 	virtual bool isRotationSupported() const FB_SECTION = 0;
 

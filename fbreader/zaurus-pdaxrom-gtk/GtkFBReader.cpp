@@ -108,7 +108,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	addKeyBinding("Up", ACTION_LARGE_SCROLL_BACKWARD);
 	addKeyBinding("Down", ACTION_LARGE_SCROLL_FORWARD);
 	addKeyBinding("Escape", ACTION_CANCEL);
-	addKeyBinding("Return", ACTION_FULLSCREEN);
+	addKeyBinding("Return", ACTION_TOGGLE_FULLSCREEN);
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -141,22 +141,19 @@ void GtkFBReader::handleKeySlot(GdkEventKey *event) {
 	}
 }
 
-void GtkFBReader::fullscreenSlot() {
-	if (!myFullScreen) {
-		myFullScreen = true;
+void GtkFBReader::toggleFullscreenSlot() {
+	myFullScreen = !myFullScreen;
+	if (myFullScreen) {
 		gtk_widget_hide(myToolbar);
 		gtk_window_fullscreen(myMainWindow);
+	} else {
+		gtk_widget_show(myToolbar);
+		gtk_window_unfullscreen(myMainWindow);
 	}
 }
 
-void GtkFBReader::cancelSlot() {
-	if (myFullScreen) {
-		myFullScreen = false;
-		gtk_widget_show(myToolbar);
-		gtk_window_unfullscreen(myMainWindow);
-	} else if (QuitOnCancelOption.value() || (myMode != BOOK_TEXT_MODE)) {
-		close();
-	}
+bool GtkFBReader::isFullscreen() const {
+	return myFullScreen;
 }
 
 void GtkFBReader::close() {
