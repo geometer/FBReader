@@ -19,30 +19,45 @@
  * 02110-1301, USA.
  */
 
-#ifndef __PDBREADER_H__
-#define __PDBREADER_H__
+#ifndef __PALMDOCSTREAM_H__
+#define __PALMDOCSTREAM_H__
 
 #include <vector>
 
-#include <abstract/shared_ptr.h>
 #include <abstract/ZLInputStream.h>
 
-class BookModel;
+#include "PdbReader.h"
 
-class PdbUtil {
+class ZLFile;
+
+class PalmDocStream : public ZLInputStream {
 
 public:
-	static void readUnsignedShort(shared_ptr<ZLInputStream> stream, unsigned short &N);
-	static void readUnsignedLong(shared_ptr<ZLInputStream> stream, unsigned long &N);
+	PalmDocStream(ZLFile &file);
+	~PalmDocStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
+
+	void seek(size_t offset);
+	size_t offset() const;
+	size_t sizeOfOpened();
+
+private:
+	bool fillBuffer();
+
+private:
+	shared_ptr<ZLInputStream> myBase;
+	size_t myOffset;
+	bool myIsCompressed;
+	std::vector<size_t> myRecordSizes;
+	PdbHeader myHeader;
+	char *myBuffer;
+
+	size_t myMaxRecordIndex;
+	size_t myRecordIndex;
+	size_t myBufferLength;
+	size_t myBufferOffset;
 };
 
-struct PdbHeader {
-	std::string DocName;
-	unsigned short Flags;
-	std::string Id;
-	std::vector<unsigned long> Offsets;
-
-	bool read(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
-};
-
-#endif /* __PDBREADER_H__ */
+#endif /* __PALMDOCSTREAM_H__ */

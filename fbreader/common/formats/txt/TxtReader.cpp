@@ -43,12 +43,18 @@ void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding)
 	char *buffer = new char[BUFSIZE];
 	std::string str;
 	size_t length;
+	bool crlfFlag = false;
 	do {
 		length = stream.read(buffer, BUFSIZE);
 		char *start = buffer;
 		const char *end = buffer + length;
 		for (char *ptr = start; ptr != end; ptr++) {
-			if (*ptr == '\n') {
+			if ((*ptr == '\n') || (*ptr == '\r')) {
+				if (crlfFlag && (*ptr == '\n')) {
+					crlfFlag = false;
+					continue;
+				}
+				crlfFlag = *ptr == '\r';
 				if (start != ptr) {
 					str.erase();
 					myConverter.convert(str, start, ptr);
@@ -58,6 +64,7 @@ void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding)
 				newLineHandler();
 			} else if (isspace(*ptr)) {
 				*ptr = ' ';
+				crlfFlag = false;
 			}
 		}
 		if (start != end) {

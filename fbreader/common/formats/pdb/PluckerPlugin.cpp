@@ -20,10 +20,9 @@
  */
 
 #include <abstract/ZLFSManager.h>
-#include <abstract/ZLInputStream.h>
 
 #include "PdbPlugin.h"
-#include "PdbReader.h"
+#include "PluckerBookReader.h"
 #include "../../description/BookDescription.h"
 
 bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
@@ -32,15 +31,14 @@ bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
 
 bool PluckerPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
-	WritableBookDescription wDescription(description);
-	wDescription.encoding() = "US_ASCII";
-	wDescription.addAuthor("Unknown", "", "Author");
-	wDescription.title() = file.name();
+	WritableBookDescription(description).encoding() = "US_ASCII";
+	defaultAuthor(description);
+	defaultTitle(description, file.name());
 	return true;
 }
 
 bool PluckerPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return PdbReader().readDocument(description.fileName(), model);
+	return PluckerBookReader(description.fileName(), model).readDocument();
 }
 
 const std::string &PluckerPlugin::iconName() const {

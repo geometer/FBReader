@@ -20,6 +20,8 @@
 
 #include <cctype>
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "EncodingConverter.h"
 #include "ZLXMLReader.h"
 #include "EncodingReader.h"
@@ -71,6 +73,7 @@ void EncodingConverter::convert(std::string &dst, const char *srcStart, const ch
 	if (myEncodingMap == 0) {
 		dst.append(srcStart, srcEnd - srcStart);
 	} else {
+		char buffer[3];
 		dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
 		bool hasExtensions = !myExtensions.empty();
 		for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
@@ -91,17 +94,7 @@ void EncodingConverter::convert(std::string &dst, const char *srcStart, const ch
 				}
 			}
 
-			int &ucs2code = myEncodingMap[(unsigned char)*ptr];
-    	if (ucs2code < 0x80) {
-				dst += (char)ucs2code;
-			} else if (ucs2code < 0x800) {
-				dst += (char)(0xC0 | ucs2code >> 6);
-				dst += (char)(0x80 | ucs2code & 0x3F);
-			} else {
-				dst += (char)(0xE0 | ucs2code >> 12);
-				dst += (char)(0x80 | ucs2code >> 6 & 0x3F);
-				dst += (char)(0x80 | ucs2code & 0x3F);
-			}
+			dst.append(buffer, ZLUnicodeUtil::ucs2ToUtf8(buffer, myEncodingMap[(unsigned char)*ptr]));
 		}
 	}
 }

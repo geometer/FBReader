@@ -23,8 +23,10 @@
 #include <abstract/ZLInputStream.h>
 
 #include "PdbPlugin.h"
-#include "PdbReader.h"
+#include "PalmDocStream.h"
 #include "../../description/BookDescription.h"
+#include "../txt/TxtBookReader.h"
+#include "../txt/PlainTextFormat.h"
 
 bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::acceptsFile(file, "TEXtREAd");
@@ -32,18 +34,38 @@ bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
 
 bool PalmDocPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
-	WritableBookDescription wDescription(description);
-	wDescription.encoding() = "US_ASCII";
-	wDescription.addAuthor("Unknown", "", "Author");
-	wDescription.title() = file.name();
+
+	shared_ptr<ZLInputStream> stream = new PalmDocStream(file);
+	detectEncoding(description, *stream);
+	if (description.encoding().empty()) {
+		return false;
+	}
+	defaultAuthor(description);
+	defaultTitle(description, file.name());
+	defaultLanguage(description);
+
 	return true;
 }
 
 bool PalmDocPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return PdbReader().readDocument(description.fileName(), model);
+	ZLFile file(description.fileName());
+	shared_ptr<ZLInputStream> stream = new PalmDocStream(file);
+
+	PlainTextFormat format(description.fileName());
+	if (!format.initialized()) {
+		PlainTextFormatDetector detector;
+		detector.detect(*stream, format);
+	}
+
+	TxtBookReader(model, format).readDocument(*stream, description.encoding());
+	return true;
 }
 
 const std::string &PalmDocPlugin::iconName() const {
 	static const std::string ICON_NAME = "FBReader/pdb";
 	return ICON_NAME;
+}
+
+FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
+	return new PlainTextInfoPage(dialog, fileName, "Text", true);
 }

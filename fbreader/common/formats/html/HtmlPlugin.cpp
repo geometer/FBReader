@@ -27,7 +27,6 @@
 #include "HtmlDescriptionReader.h"
 #include "HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
-#include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
 bool HtmlPlugin::acceptsFile(const ZLFile &file) const {
@@ -42,35 +41,15 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 		return false;
 	}
 
-	std::string encoding = description.encoding();
-	if (encoding.empty()) {
-		encoding = EncodingDetector::detect(*stream);
-		if (encoding.empty()) {
-			return false;
-		}
-		WritableBookDescription(description).encoding() = encoding;
+	detectEncoding(description, *stream);
+	if (description.encoding().empty()) {
+		return false;
 	}
+	defaultAuthor(description);
+	HtmlDescriptionReader(description).readDocument(*stream, description.encoding());
+	defaultTitle(description, file.name());
+	defaultLanguage(description);
 
-	if (description.author() == 0) {
-		WritableBookDescription(description).addAuthor("Unknown", "", "Author");
-	}
-
-	HtmlDescriptionReader(description).readDocument(*stream, encoding);
-
-	if (description.title().empty()) {
-		WritableBookDescription(description).title() = file.name();
-	}
-
-	if (description.language() == "") {
-		if (description.encoding() == "US-ASCII") {
-			WritableBookDescription(description).language() = "en";
-		} else if ((description.encoding() == "KOI8-R") ||
-				(description.encoding() == "windows-1251") ||
-				(description.encoding() == "ISO-8859-5") ||
-				(description.encoding() == "IBM866")) {
-			WritableBookDescription(description).language() = "ru";
-		}
-	}
 	return true;
 }
 

@@ -111,22 +111,13 @@ int ZLUnicodeUtil::ucs2ToUtf8(char *to, Ucs2Char ch) {
 }
 
 void ZLUnicodeUtil::ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength) {
+	char buffer[3];
 	to.erase();
 	if (toLength > 0) {
 		to.reserve(toLength);
 	}
 	for (Ucs2String::const_iterator it = from.begin(); it != from.end(); it++) {
-		Ucs2Char ch = *it;
-		if (ch < 0x80) {
-	    to += (char)ch;
-		} else if (ch < 0x800) {
-			to += (char)(0xC0 | ch >> 6);
-			to += (char)(0x80 | ch & 0x3F);
-		} else {
-			to += (char)(0xE0 | ch >> 12);
-			to += (char)(0x80 | ch >> 6 & 0x3F);
-			to += (char)(0x80 | ch & 0x3F);
-		}
+		to.append(buffer, ucs2ToUtf8(buffer, *it));
 	}
 }
 

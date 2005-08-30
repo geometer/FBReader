@@ -29,44 +29,23 @@
 #include "../../description/BookDescription.h"
 
 bool TxtPlugin::acceptsFile(const ZLFile &file) const {
-	return file.extension() == "txt";
+	return (file.extension() == "txt") || (file.extension() == "TXT");
 }
 
 bool TxtPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
-	WritableBookDescription wDescription(description);
 
-	std::string encoding = description.encoding();
-
-	if (encoding.empty()) {
-		shared_ptr<ZLInputStream> stream = file.inputStream();
-		if (stream.isNull()) {
-			return false;
-		}
-		encoding = EncodingDetector::detect(*stream);
-		if (encoding.empty()) {
-			return false;
-		}
-		wDescription.encoding() = encoding;
+	shared_ptr<ZLInputStream> stream = file.inputStream();
+	if (stream.isNull()) {
+		return false;
 	}
-
-	if (description.author() == 0) {
-		wDescription.addAuthor("Unknown", "", "Author");
+	detectEncoding(description, *stream);
+	if (description.encoding().empty()) {
+		return false;
 	}
-
-	if (description.language().empty()) {
-		wDescription.title() = file.name();
-		if (wDescription.language().empty()) {
-			if (wDescription.encoding() == "US-ASCII") {
-				wDescription.language() = "en";
-			} else if ((wDescription.encoding() == "KOI8-R") ||
-					(wDescription.encoding() == "windows-1251") ||
-					(wDescription.encoding() == "ISO-8859-5") ||
-					(wDescription.encoding() == "IBM866")) {
-				wDescription.language() = "ru";
-			}
-		}
-	}
+	defaultAuthor(description);
+	defaultTitle(description, file.name());
+	defaultLanguage(description);
 
 	return true;
 }

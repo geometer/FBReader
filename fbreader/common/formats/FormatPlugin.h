@@ -30,6 +30,7 @@ class BookModel;
 class ZLOptionsDialog;
 class ZLOptionsDialogTab;
 class ZLFile;
+class ZLInputStream;
 
 class FormatInfoPage {
 
@@ -53,6 +54,12 @@ public:
 	virtual bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION = 0;
 	virtual const std::string &iconName() const FORMATS_SECTION = 0;
 	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path) FORMATS_SECTION;
+
+protected:
+	void detectEncoding(BookDescription &description, ZLInputStream &stream) const;
+	void defaultAuthor(BookDescription &description) const;
+	void defaultLanguage(BookDescription &description) const;
+	void defaultTitle(BookDescription &description, const std::string &title) const;
 };
 
 class PluginCollection {
