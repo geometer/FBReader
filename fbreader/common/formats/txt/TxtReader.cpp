@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLStringUtil.h>
 
@@ -43,28 +45,26 @@ void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding)
 	char *buffer = new char[BUFSIZE];
 	std::string str;
 	size_t length;
-	bool crlfFlag = false;
+	char previous = 0;
 	do {
 		length = stream.read(buffer, BUFSIZE);
 		char *start = buffer;
 		const char *end = buffer + length;
 		for (char *ptr = start; ptr != end; ptr++) {
-			if ((*ptr == '\n') || (*ptr == '\r')) {
-				if (crlfFlag && (*ptr == '\n')) {
-					crlfFlag = false;
-					continue;
-				}
-				crlfFlag = *ptr == '\r';
+			if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
 				if (start != ptr) {
 					str.erase();
 					myConverter.convert(str, start, ptr);
 					characterDataHandler(str);
 				}
-				start = ptr;
+				start = ptr + 1;
 				newLineHandler();
+				previous = *ptr;
 			} else if (isspace(*ptr)) {
+				previous = *ptr;
 				*ptr = ' ';
-				crlfFlag = false;
+			} else {
+				previous = *ptr;
 			}
 		}
 		if (start != end) {

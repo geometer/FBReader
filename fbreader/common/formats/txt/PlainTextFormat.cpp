@@ -97,12 +97,13 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 	
 	char *buffer = new char[BUFFER_SIZE];
 	int length;
+	char previous = 0;
 	do {
 		length = stream.read(buffer, BUFFER_SIZE);
 		const char *end = buffer + length;
 		for (const char *ptr = buffer; ptr != end; ptr++) {
 			currentLineLength++;
-			if (*ptr == '\n') {
+			if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
 				lineCounter++;
 				if (currentLineIsEmpty) {
 					emptyLineCounter++;
@@ -123,7 +124,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 				if (!currentLineIsEmpty) {
 					stringIndentTable[std::min(currentLineIndent, tableSize - 1)]++;
 				}
-
+        
 				currentLineIsLikeToLibRuHeader = currentLineIsEmpty;
 				currentLineIsEmpty = true;
 				currentLineLength = 0;
@@ -138,6 +139,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 					currentLineIsLikeToLibRuHeader = false;
 				}
 			}
+			previous = *ptr;
 		}
 	} while (length == BUFFER_SIZE);
 	delete[] buffer;
