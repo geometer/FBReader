@@ -28,7 +28,7 @@
 
 bool PdbPlugin::acceptsFile(const ZLFile &file, const std::string &typePattern) const {
 	const std::string &extension = file.extension();
-	if ((extension != "pdb") && (extension != "PDB")) {
+	if ((extension != "pdb") && (extension != "PDB") && (extension != "prc") && (extension != "PRC")) {
 		return false;
 	}
 
