@@ -26,10 +26,10 @@
 #include "PdbPlugin.h"
 #include "../../description/BookDescriptionUtil.h"
 
-bool PdbPlugin::acceptsFile(const ZLFile &file, const std::string &typePattern) const {
+std::string PdbPlugin::fileType(const ZLFile &file) const {
 	const std::string &extension = file.extension();
 	if ((extension != "pdb") && (extension != "PDB") && (extension != "prc") && (extension != "PRC")) {
-		return false;
+		return "";
 	}
 
 	std::string fileName = file.path();
@@ -42,7 +42,7 @@ bool PdbPlugin::acceptsFile(const ZLFile &file, const std::string &typePattern) 
 	if (palmType.empty() || !upToDate) {
 		shared_ptr<ZLInputStream> stream = file.inputStream();
 		if (stream.isNull() || !stream->open()) {
-			return false;
+			return "";
 		}
 		stream->seek(60);
 		char id[8];
@@ -54,5 +54,5 @@ bool PdbPlugin::acceptsFile(const ZLFile &file, const std::string &typePattern) 
 		}
 		palmTypeOption.setValue(palmType);
 	}
-	return palmType == typePattern;
+	return palmType;
 }

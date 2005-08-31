@@ -26,7 +26,7 @@
 #include "../../description/BookDescription.h"
 
 bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
-	return PdbPlugin::acceptsFile(file, "DataPlkr");
+	return PdbPlugin::fileType(file) == "DataPlkr";
 }
 
 bool PluckerPlugin::readDescription(const std::string &path, BookDescription &description) const {

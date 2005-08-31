@@ -29,7 +29,7 @@ class PdbPlugin : public FormatPlugin {
 public:
 	PdbPlugin() FORMATS_SECTION;
 	virtual ~PdbPlugin() FORMATS_SECTION;
-	bool acceptsFile(const ZLFile &file, const std::string &typePattern) const FORMATS_SECTION;
+	std::string fileType(const ZLFile &file) const FORMATS_SECTION;
 };
 
 class PluckerPlugin : public PdbPlugin {

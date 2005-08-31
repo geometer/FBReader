@@ -33,7 +33,7 @@
 #include "../txt/PlainTextFormat.h"
 
 bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
-	return PdbPlugin::acceptsFile(file, "TEXtREAd");
+	return PdbPlugin::fileType(file) == "TEXtREAd";
 }
 
 bool PalmDocPlugin::readDescription(const std::string &path, BookDescription &description) const {
