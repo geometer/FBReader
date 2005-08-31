@@ -19,13 +19,17 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
 #include "PdbPlugin.h"
 #include "PalmDocStream.h"
+#include "HtmlDetector.h"
 #include "../../description/BookDescription.h"
 #include "../txt/TxtBookReader.h"
+#include "../html/HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
 
 bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
@@ -57,15 +61,21 @@ bool PalmDocPlugin::readModel(const BookDescription &description, BookModel &mod
 		detector.detect(*stream, format);
 	}
 
-	TxtBookReader(model, format).readDocument(*stream, description.encoding());
+	if (HtmlDetector().isHtml(*stream)) {
+		HtmlBookReader(model, format).readDocument(*stream, description.encoding());
+	} else {
+		TxtBookReader(model, format).readDocument(*stream, description.encoding());
+	}
 	return true;
 }
 
 const std::string &PalmDocPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/pdb";
+	static const std::string ICON_NAME = "FBReader/palm";
 	return ICON_NAME;
 }
 
 FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	return new PlainTextInfoPage(dialog, fileName, "Text", true);
+	ZLFile file(fileName);
+	shared_ptr<ZLInputStream> stream = new PalmDocStream(file);
+	return new PlainTextInfoPage(dialog, fileName, "Text", !HtmlDetector().isHtml(*stream));
 }
