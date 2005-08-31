@@ -28,7 +28,7 @@
 #include "../collection/BookCollection.h"
 #include "../description/Author.h"
 
-static const std::string LIBRARY = "Library";
+static const std::string LIBRARY = "Recent Books";
 
 RecentBooksView::RecentBooksView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
 	myLastBooksModel = 0;

@@ -129,7 +129,7 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 				beginParagraph();
 				if (!myListNumStack.empty()) {
 					//TODO: add spaces and number/bullet
-					addDataToBuffer("&bull; ", 7);
+					addConvertedDataToBuffer("&bull; ", 7);
 				}
 			}
 			break;
@@ -275,8 +275,13 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len) {
 				addConvertedDataToBuffer(start, end - start);
 			}
 		} else {
-			for (; !myIsStarted && (start != end); start++) {
-				myIsStarted = !isspace(*start);
+			if (!myIsStarted) {
+				for (; start != end; start++) {
+					if (!isspace(*start)) {
+						myIsStarted = true;
+						break;
+					}
+				}
 			}
 			addConvertedDataToBuffer(start, end - start);
 		}
