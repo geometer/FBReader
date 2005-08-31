@@ -153,6 +153,7 @@ protected:
 	const TextElementPosition *elementByCoordinates(int x, int y) const VIEW1_SECTION;
 
 	void rebuildPaintInfo(bool strong) VIEW_SECTION;
+	void preparePaintInfo() VIEW_SECTION;
 
 	void setStartCursor(ParagraphCursor *cursor) VIEW1_SECTION;
 	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW1_SECTION;
@@ -172,8 +173,6 @@ private:
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
 	void drawTreeNode(TreeElement::TreeElementKind kind, int height) VIEW1_SECTION;
-
-	void preparePaintInfo() VIEW_SECTION;
 
 	bool pageIsEmpty() const VIEW_SECTION;
 	WordCursor findLineFromStart(unsigned int overlappingValue) const VIEW_SECTION;

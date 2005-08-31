@@ -39,16 +39,18 @@ QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Sp
 
 	qApp->processEvents();
 
-	resize(1, 1);
 	QHBoxLayout layout(this, 10);
 	QLabel *label = new QLabel(message.c_str(), this);
 	layout.add(label);
-	show();
 
 	if (main == 0) {
 		main = QApplication::desktop();
 	}
-	move(main->x() + main->width() / 2 - width() / 2, main->y() + main->height() / 2 - height() / 2);
+	move(
+		main->x() + main->width() / 2 - label->width() / 2 - 10,
+		main->y() + main->height() / 2 - label->height() / 2 - 10
+	);
+	show();
 
 	qApp->processEvents();
 	usleep(500);

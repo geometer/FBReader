@@ -149,7 +149,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 
 		paragraph->open(!paragraph->isOpen());
 		rebuildPaintInfo(true);
-		repaintView();
+		preparePaintInfo();
 		if (paragraph->isOpen()) {
 			// TODO: correct next paragraph number calculation for multi-level trees
 			int nextParagraphNumber = paragraphNumber + paragraph->children().size() + 1;
@@ -159,7 +159,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 			}
 			if (lastParagraphNumber < nextParagraphNumber) {
 				gotoParagraph(nextParagraphNumber, true);
-				repaintView();
+				preparePaintInfo();
 			}
 		}
 		int firstParagraphNumber = startCursor().paragraphCursor().paragraphNumber();
@@ -168,8 +168,9 @@ bool CollectionView::onStylusPress(int x, int y) {
 		}
 		if (firstParagraphNumber >= paragraphNumber) {
 			gotoParagraph(paragraphNumber);
-			repaintView();
+			preparePaintInfo();
 		}
+		repaintView();
 	} else {
 		std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
 		if (it != myBooksMap.end()) {
