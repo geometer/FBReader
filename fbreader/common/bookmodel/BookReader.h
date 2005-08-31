@@ -62,7 +62,6 @@ public:
 	void endContentsParagraph() MODEL_SECTION;
 
 	void addDataToBuffer(const char *data, int len) MODEL_SECTION;
-	virtual void flushTextBufferToParagraph() MODEL_SECTION;
 
 	void beginImageData() MODEL_SECTION;
 	void endImageData() MODEL_SECTION;
@@ -71,6 +70,9 @@ public:
 	void exitTitle() { myInsideTitle = false; }
 
 	const BookModel &model() const { return myModel; }
+
+private:
+	void flushTextBufferToParagraph() MODEL_SECTION;
 
 private:
 	BookModel &myModel;

@@ -44,7 +44,7 @@ protected:
 	bool newLineHandler() FORMATS_SECTION;
 
 private:
-	void flushTextBufferToParagraph() FORMATS_SECTION;
+	void internalEndParagraph() FORMATS_SECTION;
 
 private:
 	const PlainTextFormat &myFormat;

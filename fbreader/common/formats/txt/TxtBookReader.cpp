@@ -27,12 +27,12 @@
 TxtBookReader::TxtBookReader(BookModel &model, const PlainTextFormat &format) : BookReader(model), myFormat(format) {
 }
 
-void TxtBookReader::flushTextBufferToParagraph() {
+void TxtBookReader::internalEndParagraph() {
 	if (!myLastLineIsEmpty) {
 		myLineFeedCounter = 0;
 	}
 	myLastLineIsEmpty = true;
-	BookReader::flushTextBufferToParagraph();
+	endParagraph();
 }
 
 bool TxtBookReader::characterDataHandler(const std::string &str) {
@@ -49,7 +49,7 @@ bool TxtBookReader::characterDataHandler(const std::string &str) {
 	if (ptr != end) {
 		if ((myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) &&
 				myNewLine && (mySpaceCounter > myFormat.ignoredIndent())) {
-			endParagraph();
+			internalEndParagraph();
 			beginParagraph();
 		}
 		addDataToBuffer(str.data(), str.length());
@@ -73,7 +73,7 @@ bool TxtBookReader::newLineHandler() {
 	if (myFormat.createContentsTable()) {
 		if (!myInsideContentsParagraph && (myLineFeedCounter == myFormat.emptyLinesBeforeNewSection() + 1)) {
 			myInsideContentsParagraph = true;
-			endParagraph();
+			internalEndParagraph();
 			insertEndOfSectionParagraph();
 			beginContentsParagraph();
 			enterTitle();
@@ -91,7 +91,7 @@ bool TxtBookReader::newLineHandler() {
 	}
 
 	if (paragraphBreak) {
-		endParagraph();
+		internalEndParagraph();
 		beginParagraph();
 	}
 	return true;
@@ -110,5 +110,5 @@ void TxtBookReader::startDocumentHandler() {
 }
 
 void TxtBookReader::endDocumentHandler() {
-	endParagraph();
+	internalEndParagraph();
 }
