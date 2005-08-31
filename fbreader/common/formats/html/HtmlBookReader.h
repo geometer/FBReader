@@ -44,7 +44,7 @@ protected:
 	bool characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
 private:
-	void flushTextBufferToParagraph() FORMATS_SECTION;
+	void addConvertedDataToBuffer(const char *text, int len) FORMATS_SECTION;
 
 private:
 	const PlainTextFormat &myFormat;
@@ -53,6 +53,10 @@ private:
 	bool myIsHyperlink;
 	bool myIsStarted;
 	std::stack<int> myListNumStack;
+
+	int mySpaceCounter;
+	int myBreakCounter;
+	std::string myConverterBuffer;
 };
 
 inline HtmlBookReader::~HtmlBookReader() {}

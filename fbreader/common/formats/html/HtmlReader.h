@@ -55,6 +55,7 @@ public:
 		_STYLE,
 		_A,
 		_SCRIPT,
+		_SELECT,
 	};
 
 protected:

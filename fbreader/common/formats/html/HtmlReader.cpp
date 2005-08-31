@@ -86,6 +86,7 @@ static struct {
 	{ "STYLE", HtmlReader::_STYLE },
 	{ "A", HtmlReader::_A },
 	{ "SCRIPT", HtmlReader::_SCRIPT },
+	{ "SELECT", HtmlReader::_SELECT },
 	{ 0, HtmlReader::_UNKNOWN }
 };
 
