@@ -52,6 +52,13 @@ bool ZTXTStream::open() {
 		return false;
 	}
 	myBuffer = new char[myMaxRecordSize];
+
+	myRecordIndex = 0;
+	myBufferLength = 0;
+	myBufferOffset = 0;
+
+	myOffset = 0;
+
 	return true;
 }
 
