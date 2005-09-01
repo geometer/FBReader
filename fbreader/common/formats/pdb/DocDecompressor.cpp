@@ -30,35 +30,32 @@ size_t DocDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t c
 	unsigned int targetIndex = 0;
 
 	if (stream.read((char*)sourceBuffer, compressedSize) == compressedSize) {
-		while (sourceIndex < compressedSize) {
+		while ((sourceIndex < compressedSize) && (targetIndex < maxUncompressedSize)) {
 			unsigned int token = sourceBuffer[sourceIndex++];
 			if ((0 < token) && (token < 9)) {
-				if ((sourceIndex + token >= compressedSize) || (targetIndex + token >= maxUncompressedSize)) {
+				if ((sourceIndex + token > compressedSize) || (targetIndex + token > maxUncompressedSize)) {
 					break;
 				}
 				memcpy(buffer + targetIndex, sourceBuffer + sourceIndex, token);
 				sourceIndex += token;
 				targetIndex += token;
 			} else if (token < 0x80) {
-				if (targetIndex + 1 >= maxUncompressedSize) {
-					break;
-				}
 				buffer[targetIndex++] = token;
 			} else if (0xc0 <= token) {
-				if (targetIndex + 2 >= maxUncompressedSize) {
+				if (targetIndex + 2 > maxUncompressedSize) {
 					break;
 				}
 				buffer[targetIndex++] = ' ';
 				buffer[targetIndex++] = token ^ 0x80;
 			} else {
-				if (sourceIndex + 1 >= compressedSize) {
+				if (sourceIndex + 1 > compressedSize) {
 					break;
 				}
 				token *= 256;
 				token += sourceBuffer[sourceIndex++];
 				int m = (token & 0x3fff) / 8;
 				int n = (token & 7) + 3;
-				if (targetIndex + n >= maxUncompressedSize) {
+				if (targetIndex + n > maxUncompressedSize) {
 					break;
 				}
 				memcpy(buffer + targetIndex, buffer + targetIndex - m, n);
