@@ -64,7 +64,7 @@ const std::string &SingleAuthorWith3Names::sortKey() const {
 		mySortKey = ZLUnicodeUtil::toLower(myLastName);
 	}
 	if (mySortKey.empty()) {
-		mySortKey = "Unknown Author";
+		mySortKey = "___";
 	}
 	return mySortKey;
 }

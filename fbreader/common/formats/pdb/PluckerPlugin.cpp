@@ -32,7 +32,6 @@ bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
 bool PluckerPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
 	WritableBookDescription(description).encoding() = "US_ASCII";
-	defaultAuthor(description);
 	defaultTitle(description, file.name());
 	return true;
 }

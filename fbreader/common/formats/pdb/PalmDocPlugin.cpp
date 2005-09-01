@@ -42,7 +42,6 @@ bool PalmDocPlugin::readDescription(const std::string &path, BookDescription &de
 	if (description.encoding().empty()) {
 		return false;
 	}
-	defaultAuthor(description);
 	defaultTitle(description, file.name());
 	defaultLanguage(description);
 

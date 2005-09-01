@@ -57,7 +57,6 @@ public:
 
 protected:
 	void detectEncoding(BookDescription &description, ZLInputStream &stream) const;
-	void defaultAuthor(BookDescription &description) const;
 	void defaultLanguage(BookDescription &description) const;
 	void defaultTitle(BookDescription &description, const std::string &title) const;
 };

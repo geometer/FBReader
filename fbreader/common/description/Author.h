@@ -116,7 +116,7 @@ public:
 inline Author::Author() {}
 inline Author::~Author() {}
 
-inline DummyAuthor::DummyAuthor() : myDisplayName("Unknown Author"), mySortKey("UnknownAuthor") {}
+inline DummyAuthor::DummyAuthor() : myDisplayName("Unknown Author"), mySortKey("___") {}
 inline DummyAuthor::~DummyAuthor() {}
 inline Author *DummyAuthor::createCopy() const { return new DummyAuthor(); }
 inline const std::string &DummyAuthor::displayName() const { return myDisplayName; }

@@ -45,7 +45,6 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 	if (description.encoding().empty()) {
 		return false;
 	}
-	defaultAuthor(description);
 	HtmlDescriptionReader(description).readDocument(*stream, description.encoding());
 	defaultTitle(description, file.name());
 	defaultLanguage(description);

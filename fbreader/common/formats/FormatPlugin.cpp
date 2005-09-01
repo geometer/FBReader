@@ -32,12 +32,6 @@ void FormatPlugin::detectEncoding(BookDescription &description, ZLInputStream &s
 	}
 }
 
-void FormatPlugin::defaultAuthor(BookDescription &description) const {
-	if (description.author() == 0) {
-		WritableBookDescription(description).addAuthor("Unknown", "", "Author");
-	}
-}
-
 void FormatPlugin::defaultLanguage(BookDescription &description) const {
 	if (description.language() == "") {
 		if ((description.encoding() == "US-ASCII") ||
