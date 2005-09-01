@@ -44,13 +44,15 @@ ZLOpenFileDialog::~ZLOpenFileDialog() {
 
 void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
 	ZLTreeStatePtr newState = myState->change(node);
-	if (!newState->isLeaf()) {
-		std::string selectedName = node->relativeName(myState);
-		myState = newState;
-		update(selectedName);
-	} else {
-		newState->handler().accept(*newState);
-		exitDialog();
+	if (!newState.isNull()) {
+		if (!newState->isLeaf()) {
+			std::string selectedName = node->relativeName(myState);
+			myState = newState;
+			update(selectedName);
+		} else {
+			newState->handler().accept(*newState);
+			exitDialog();
+		}
 	}
 }
 
@@ -126,17 +128,26 @@ const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 }
 
 ZLTreeStatePtr ZLDirTreeState::change(const ZLTreeNodePtr node) {
-	mySubnodes.clear();
-	myIsUpToDate = false;
+	ZLTreeStatePtr newState;
 	if (!node->isFile() || ZLFile(node->name()).isArchive()) {
-		return new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).directory());
+		newState = new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).directory());
 	} else {
-		return new ZLFileTreeState(handler(), myDir->itemName(node->name()));
+		newState = new ZLFileTreeState(handler(), myDir->itemName(node->name()));
 	}
+	if (newState->exists()) {
+		mySubnodes.clear();
+		myIsUpToDate = false;
+		return newState;
+	}
+	return 0;
 }
 
 bool ZLDirTreeState::isLeaf() const {
 	return false;
+}
+
+bool ZLDirTreeState::exists() const {
+	return !myDir.isNull();
 }
 
 ZLFileTreeState::ZLFileTreeState(const ZLTreeHandler &handler, const std::string &name) : ZLTreeState(handler), myFileName(name) {
@@ -165,4 +176,8 @@ ZLTreeStatePtr ZLFileTreeState::change(const ZLTreeNodePtr) {
 
 bool ZLFileTreeState::isLeaf() const {
 	return true;
+}
+
+bool ZLFileTreeState::exists() const {
+	return ZLFile(myFileName).exists();
 }

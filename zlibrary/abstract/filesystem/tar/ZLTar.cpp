@@ -19,6 +19,7 @@
  */
 
 #include <algorithm>
+#include <cctype>
 
 #include "ZLTar.h"
 #include "../ZLFSManager.h"
@@ -47,6 +48,9 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 	stream->read(fileSizeString, 12);
 	Size = 0;
 	for (int i = 0; i < 12; i++) {
+		if (!isdigit(fileSizeString[i])) {
+			break;
+		}
 		Size *= 8;
 		Size += fileSizeString[i] - '0';
 	}
@@ -82,7 +86,7 @@ bool ZLTarInputStream::open() {
 			myCompressedFileSize = header.Size;
 			return true;
 		}
-		myBaseStream->seek((header.Size + 0x1ff) & 0x200);
+		myBaseStream->seek((header.Size + 0x1ff) & -0x200);
 	}
 	myBaseStream->close();
 	return false;
@@ -120,7 +124,7 @@ void ZLTarDir::collectFiles(std::vector<std::string> &names, bool) {
 			if (header.IsRegularFile) {
 				names.push_back(header.Name);
 			}
-			stream->seek((header.Size + 0x1ff) & 0x200);
+			stream->seek((header.Size + 0x1ff) & -0x200);
 		}
 		stream->close();
 	}

@@ -74,6 +74,7 @@ public:
 	virtual const std::string &name() const DIALOG_SECTION = 0;
 	virtual const std::string shortName() const DIALOG_SECTION = 0;
 	virtual bool isLeaf() const DIALOG_SECTION = 0;
+	virtual bool exists() const DIALOG_SECTION = 0;
 
 	const ZLTreeHandler &handler() const DIALOG_SECTION;
 
@@ -93,6 +94,7 @@ public:
 	const std::string &name() const DIALOG_SECTION;
 	const std::string shortName() const DIALOG_SECTION;
 	bool isLeaf() const DIALOG_SECTION;
+	bool exists() const DIALOG_SECTION;
 
 private:
 	void fill() const DIALOG_SECTION;
@@ -116,6 +118,7 @@ public:
 	const std::string &name() const DIALOG_SECTION;
 	const std::string shortName() const DIALOG_SECTION;
 	bool isLeaf() const DIALOG_SECTION;
+	bool exists() const DIALOG_SECTION;
 
 private:
 	void fill() const DIALOG_SECTION;
