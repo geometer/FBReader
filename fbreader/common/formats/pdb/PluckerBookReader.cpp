@@ -369,7 +369,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 					doProcess = myStream->read(myCharBuffer, size) == size;
 				} else if (myCompressionVersion == 1) {
 					doProcess =
-						DocDecompressor().decompress(*myStream, myCharBuffer, recordSize - 8 - 4 * paragraphs) == size;
+						DocDecompressor().decompress(*myStream, myCharBuffer, recordSize - 8 - 4 * paragraphs, size) == size;
 				} else if (myCompressionVersion == 2) {
 					myStream->seek(2);
 					doProcess =

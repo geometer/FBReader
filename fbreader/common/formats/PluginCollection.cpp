@@ -41,6 +41,7 @@ PluginCollection &PluginCollection::instance() {
 		ourInstance->myPlugins.push_back(new TxtPlugin());
 		ourInstance->myPlugins.push_back(new PluckerPlugin());
 		ourInstance->myPlugins.push_back(new PalmDocPlugin());
+		ourInstance->myPlugins.push_back(new ZTXTPlugin());
 #endif // PALM_TEMPORARY
 	}
 	return *ourInstance;

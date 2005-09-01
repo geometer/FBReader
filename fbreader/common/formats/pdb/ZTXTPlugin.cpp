@@ -23,21 +23,21 @@
 #include <abstract/ZLInputStream.h>
 
 #include "PdbPlugin.h"
-#include "PalmDocStream.h"
+#include "ZTXTStream.h"
 #include "HtmlDetector.h"
 #include "../../description/BookDescription.h"
 #include "../txt/TxtBookReader.h"
 #include "../html/HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
 
-bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
-	return PdbPlugin::fileType(file) == "TEXtREAd";
+bool ZTXTPlugin::acceptsFile(const ZLFile &file) const {
+	return PdbPlugin::fileType(file) == "zTXTGPlm";
 }
 
-bool PalmDocPlugin::readDescription(const std::string &path, BookDescription &description) const {
+bool ZTXTPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
 
-	shared_ptr<ZLInputStream> stream = new PalmDocStream(file);
+	shared_ptr<ZLInputStream> stream = new ZTXTStream(file);
 	detectEncoding(description, *stream);
 	if (description.encoding().empty()) {
 		return false;
@@ -49,9 +49,9 @@ bool PalmDocPlugin::readDescription(const std::string &path, BookDescription &de
 	return true;
 }
 
-bool PalmDocPlugin::readModel(const BookDescription &description, BookModel &model) const {
+bool ZTXTPlugin::readModel(const BookDescription &description, BookModel &model) const {
 	ZLFile file(description.fileName());
-	shared_ptr<ZLInputStream> stream = new PalmDocStream(file);
+	shared_ptr<ZLInputStream> stream = new ZTXTStream(file);
 
 	PlainTextFormat format(description.fileName());
 	if (!format.initialized()) {
@@ -67,13 +67,13 @@ bool PalmDocPlugin::readModel(const BookDescription &description, BookModel &mod
 	return true;
 }
 
-const std::string &PalmDocPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/palm";
+const std::string &ZTXTPlugin::iconName() const {
+	static const std::string ICON_NAME = "FBReader/weasel";
 	return ICON_NAME;
 }
 
-FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
+FormatInfoPage *ZTXTPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
 	ZLFile file(fileName);
-	shared_ptr<ZLInputStream> stream = new PalmDocStream(file);
+	shared_ptr<ZLInputStream> stream = new ZTXTStream(file);
 	return new PlainTextInfoPage(dialog, fileName, "Text", !HtmlDetector().isHtml(*stream));
 }

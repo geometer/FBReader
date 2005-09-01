@@ -20,20 +20,21 @@
  */
 
 #include <abstract/ZLFSManager.h>
+#include <abstract/ZLZDecompressor.h>
 
-#include "PalmDocStream.h"
+#include "ZTXTStream.h"
 #include "PdbReader.h"
 #include "DocDecompressor.h"
 
-PalmDocStream::PalmDocStream(ZLFile &file) : myBase(file.inputStream()) {
+ZTXTStream::ZTXTStream(ZLFile &file) : myBase(file.inputStream()) {
 	myBuffer = 0;
 }
 
-PalmDocStream::~PalmDocStream() {
+ZTXTStream::~ZTXTStream() {
 	close();
 }
 
-bool PalmDocStream::open() {
+bool ZTXTStream::open() {
 	close();
 	if (myBase.isNull() || !myBase->open() || !myHeader.read(myBase)) {
 		return false;
@@ -41,28 +42,20 @@ bool PalmDocStream::open() {
 
 	myBase->seek(myHeader.Offsets[0] - myBase->offset());
 
-	unsigned short version;
-	PdbUtil::readUnsignedShort(myBase, version);
-	myIsCompressed = (version == 2);
-	myBase->seek(6);
+	myBase->seek(2);
 	unsigned short records;
 	PdbUtil::readUnsignedShort(myBase, records);
 	myMaxRecordIndex = std::min(records, (unsigned short)(myHeader.Offsets.size() - 1));
+	myBase->seek(4);
 	PdbUtil::readUnsignedShort(myBase, myMaxRecordSize);
 	if (myMaxRecordSize == 0) {
 		return false;
 	}
 	myBuffer = new char[myMaxRecordSize];
-
-	myRecordIndex = 0;
-	myBufferLength = 0;
-	myBufferOffset = 0;
-
-	myOffset = 0;
 	return true;
 }
 
-bool PalmDocStream::fillBuffer() {
+bool ZTXTStream::fillBuffer() {
 	while (myBufferOffset == myBufferLength) {
 		if (myRecordIndex + 1 > myMaxRecordIndex) {
 			return false;
@@ -79,18 +72,13 @@ bool PalmDocStream::fillBuffer() {
 		if (nextOffset < currentOffset) {
 			return false;
 		}
-		if (myIsCompressed) {
-			myBufferLength = DocDecompressor().decompress(*myBase, myBuffer, nextOffset - currentOffset, myMaxRecordSize);
-		} else {
-			myBase->read(myBuffer, nextOffset - currentOffset);
-			myBufferLength = nextOffset - currentOffset;
-		}
+		myBufferLength = ZLZDecompressor(nextOffset - currentOffset).decompress(*myBase, myBuffer, myMaxRecordSize);
 		myBufferOffset = 0;
 	}
 	return true;
 }
 
-size_t PalmDocStream::read(char *buffer, size_t maxSize) {
+size_t ZTXTStream::read(char *buffer, size_t maxSize) {
 	size_t realSize = 0;
 	while (realSize < maxSize) {
 		if (!fillBuffer()) {
@@ -110,7 +98,7 @@ size_t PalmDocStream::read(char *buffer, size_t maxSize) {
 	return realSize;
 }
 
-void PalmDocStream::close() {
+void ZTXTStream::close() {
 	if (!myBase.isNull()) {
 		myBase->close();
 	}
@@ -120,15 +108,15 @@ void PalmDocStream::close() {
 	}
 }
 
-void PalmDocStream::seek(size_t offset) {
+void ZTXTStream::seek(size_t offset) {
 	read(0, offset);
 }
 
-size_t PalmDocStream::offset() const {
+size_t ZTXTStream::offset() const {
 	return myOffset;
 }
 
-size_t PalmDocStream::sizeOfOpened() {
+size_t ZTXTStream::sizeOfOpened() {
 	// TODO: implement
 	return 0;
 }

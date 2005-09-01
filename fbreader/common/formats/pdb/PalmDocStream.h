@@ -55,9 +55,10 @@ private:
 	char *myBuffer;
 
 	size_t myMaxRecordIndex;
+	unsigned short myMaxRecordSize;
 	size_t myRecordIndex;
-	size_t myBufferLength;
-	size_t myBufferOffset;
+	unsigned short myBufferLength;
+	unsigned short myBufferOffset;
 };
 
 #endif /* __PALMDOCSTREAM_H__ */

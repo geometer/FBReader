@@ -61,7 +61,7 @@ const shared_ptr<ZLString> DocCompressedFileImage::stringData() const {
 	if (!stream.isNull() && stream->open()) {
 		stream->seek(myOffset);
 		char *buffer = new char[65535];
-		size_t uncompressedSize = DocDecompressor().decompress(*stream, buffer, myCompressedSize);
+		size_t uncompressedSize = DocDecompressor().decompress(*stream, buffer, myCompressedSize, 65535);
 		imageData->append(buffer, uncompressedSize);
 		delete[] buffer;
 	}

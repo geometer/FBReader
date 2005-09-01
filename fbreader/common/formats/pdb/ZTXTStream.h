@@ -19,43 +19,46 @@
  * 02110-1301, USA.
  */
 
-#ifndef PALM_TEMPORARY
+#ifndef __ZTXTSTREAM_H__
+#define __ZTXTSTREAM_H__
 
-#include <enca.h>
-
-#endif // PALM_TEMPORARY
+#include <vector>
 
 #include <abstract/ZLInputStream.h>
 
-#include "EncodingDetector.h"
+#include "PdbReader.h"
 
-static const int BUFSIZE = 50120;
+class ZLFile;
 
-std::string EncodingDetector::detect(ZLInputStream &stream) {
-	if (!stream.open()) {
-		return "";
-	}
+class ZTXTStream : public ZLInputStream {
 
-#ifndef PALM_TEMPORARY
+public:
+	ZTXTStream(ZLFile &file);
+	~ZTXTStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-	unsigned char *buffer = new unsigned char[BUFSIZE];
+	void seek(size_t offset);
+	size_t offset() const;
+	size_t sizeOfOpened();
 
-	size_t buflen = stream.read((char*)buffer, BUFSIZE);
-	EncaAnalyser analyser = enca_analyser_alloc("ru");
-  enca_set_filtering(analyser, 0);
-	EncaEncoding encoding = enca_analyse_const(analyser, buffer, buflen);
-	const char *e = enca_charset_name(encoding.charset, ENCA_NAME_STYLE_MIME);
-	std::string encodingString = (e != 0) ? e : "unknown";
-	enca_analyser_free(analyser);
+private:
+	bool fillBuffer();
 
-	delete[] buffer;
-	stream.close();
+private:
+	shared_ptr<ZLInputStream> myBase;
+	size_t myOffset;
+	bool myIsCompressed;
+	std::vector<size_t> myRecordSizes;
+	PdbHeader myHeader;
+	char *myBuffer;
 
-	return (encodingString == "unknown") ? "ISO-8859-1" : encodingString;
+	size_t myMaxRecordIndex;
+	unsigned short myMaxRecordSize;
+	size_t myRecordIndex;
+	unsigned short myBufferLength;
+	unsigned short myBufferOffset;
+};
 
-#else // PALM_TEMPORARY
-
-	return "windows-1252";
-
-#endif // PALM_TEMPORARY
-}
+#endif /* __ZTXTSTREAM_H__ */

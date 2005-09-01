@@ -135,7 +135,7 @@ else
 	@$(LD) $(LDFLAGS) -o $@ $^ `find . -name *.o` $(LIBS)
 	@echo " OK"
 	@echo -n "Stripping $@ ..."
-	@$(STRIP) $(TARGET)
+	#@$(STRIP) $(TARGET)
 	@echo " OK"
 endif
 
