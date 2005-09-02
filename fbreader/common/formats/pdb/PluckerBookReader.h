@@ -29,7 +29,7 @@
 class PluckerBookReader : public BookReader {
 
 public:
-	PluckerBookReader(const std::string &filePath, BookModel &model);
+	PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding);
 	~PluckerBookReader();
 
 	bool readDocument();

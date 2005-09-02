@@ -23,11 +23,9 @@
 #include <abstract/ZLZDecompressor.h>
 
 #include "ZTXTStream.h"
-#include "PdbReader.h"
 #include "DocDecompressor.h"
 
-ZTXTStream::ZTXTStream(ZLFile &file) : myBase(file.inputStream()) {
-	myBuffer = 0;
+ZTXTStream::ZTXTStream(ZLFile &file) : PdbStream(file) {
 }
 
 ZTXTStream::~ZTXTStream() {
@@ -88,47 +86,4 @@ bool ZTXTStream::fillBuffer() {
 		myBufferOffset = 0;
 	}
 	return true;
-}
-
-size_t ZTXTStream::read(char *buffer, size_t maxSize) {
-	size_t realSize = 0;
-	while (realSize < maxSize) {
-		if (!fillBuffer()) {
-			break;
-		}
-		size_t size = std::min((size_t)(maxSize - realSize), (size_t)(myBufferLength - myBufferOffset));
-		if (size > 0) {
-			if (buffer != 0) {
-				memcpy(buffer + realSize, myBuffer + myBufferOffset, size);
-			}
-			realSize += size;
-			myBufferOffset += size;
-		}
-	}
-			
-	myOffset += realSize;
-	return realSize;
-}
-
-void ZTXTStream::close() {
-	if (!myBase.isNull()) {
-		myBase->close();
-	}
-	if (myBuffer != 0) {
-		delete[] myBuffer;
-		myBuffer = 0;
-	}
-}
-
-void ZTXTStream::seek(size_t offset) {
-	read(0, offset);
-}
-
-size_t ZTXTStream::offset() const {
-	return myOffset;
-}
-
-size_t ZTXTStream::sizeOfOpened() {
-	// TODO: implement
-	return 0;
 }

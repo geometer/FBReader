@@ -22,43 +22,26 @@
 #ifndef __ZTXTSTREAM_H__
 #define __ZTXTSTREAM_H__
 
-#include <vector>
-
 #include <abstract/ZLInputStream.h>
 
-#include "PdbReader.h"
+#include "PdbStream.h"
 
 class ZLFile;
 
-class ZTXTStream : public ZLInputStream {
+class ZTXTStream : public PdbStream {
 
 public:
 	ZTXTStream(ZLFile &file);
 	~ZTXTStream();
 	bool open();
-	size_t read(char *buffer, size_t maxSize);
-	void close();
 
-	void seek(size_t offset);
-	size_t offset() const;
-	size_t sizeOfOpened();
-
-private:
+protected:
 	bool fillBuffer();
 
 private:
-	shared_ptr<ZLInputStream> myBase;
-	size_t myOffset;
-	bool myIsCompressed;
-	std::vector<size_t> myRecordSizes;
-	PdbHeader myHeader;
-	char *myBuffer;
-
 	size_t myMaxRecordIndex;
 	unsigned short myMaxRecordSize;
 	size_t myRecordIndex;
-	unsigned short myBufferLength;
-	unsigned short myBufferOffset;
 };
 
 #endif /* __ZTXTSTREAM_H__ */

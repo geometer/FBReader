@@ -23,6 +23,7 @@
 
 #include "PdbPlugin.h"
 #include "PluckerBookReader.h"
+#include "PluckerTextStream.h"
 #include "../../description/BookDescription.h"
 
 bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
@@ -31,13 +32,20 @@ bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
 
 bool PluckerPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
-	WritableBookDescription(description).encoding() = "US_ASCII";
+
+	shared_ptr<ZLInputStream> stream = new PluckerTextStream(file);
+	detectEncoding(description, *stream);
+	if (description.encoding().empty()) {
+		return false;
+	}
 	defaultTitle(description, file.name());
+	defaultLanguage(description);
+
 	return true;
 }
 
 bool PluckerPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return PluckerBookReader(description.fileName(), model).readDocument();
+	return PluckerBookReader(description.fileName(), model, description.encoding()).readDocument();
 }
 
 const std::string &PluckerPlugin::iconName() const {

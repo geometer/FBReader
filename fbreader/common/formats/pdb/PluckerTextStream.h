@@ -19,32 +19,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __PALMDOCSTREAM_H__
-#define __PALMDOCSTREAM_H__
-
-#include <vector>
+#ifndef __PLUCKERTEXTSTREAM_H__
+#define __PLUCKERTEXTSTREAM_H__
 
 #include "PdbStream.h"
 
 class ZLFile;
 
-class PalmDocStream : public PdbStream {
+class PluckerTextStream : public PdbStream {
 
 public:
-	PalmDocStream(ZLFile &file);
-	~PalmDocStream();
+	PluckerTextStream(ZLFile &file);
+	~PluckerTextStream();
 	bool open();
+	void close();
 
 protected:
 	bool fillBuffer();
 
 private:
-	bool myIsCompressed;
-	std::vector<size_t> myRecordSizes;
+	void processRecord(size_t recordSize);
+	void processTextParagraph(char *start, char *end);
 
-	size_t myMaxRecordIndex;
-	unsigned short myMaxRecordSize;
+private:
+	unsigned short myCompressionVersion;
+	char *myFullBuffer;
 	size_t myRecordIndex;
 };
 
-#endif /* __PALMDOCSTREAM_H__ */
+#endif /* __PLUCKERTEXTSTREAM_H__ */

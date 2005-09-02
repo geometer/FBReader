@@ -37,11 +37,10 @@
 #include "PluckerImages.h"
 #include "../../bookmodel/BookModel.h"
 
-PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model) : BookReader(model), myFilePath(filePath), myFont(FT_REGULAR), myConverter(0) {
+PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), myFilePath(filePath), myFont(FT_REGULAR), myConverter(encoding.c_str()) {
 	myCharBuffer = new char[65535];
 	myBytesToSkip = 0;
 	myForcedEntry = 0;
-	myConverter.setEncoding("KOI8-R");
 }
 
 PluckerBookReader::~PluckerBookReader() {
@@ -274,8 +273,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 
 	char *textStart = start;
 	bool functionFlag = false;
-	char *ptr = start;
-	for (; ptr != end; ptr++) {
+	for (char *ptr = start; ptr < end; ptr++) {
 		if (*ptr == 0) {
 			functionFlag = true;
 			if (ptr != textStart) {
@@ -304,10 +302,10 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 			}
 		}
 	}
-	if (ptr != textStart) {
+	if (end != textStart) {
 		safeBeginParagraph();
 		txtBuffer.erase();
-		myConverter.convert(txtBuffer, textStart, ptr);
+		myConverter.convert(txtBuffer, textStart, end);
 		addDataToBuffer(txtBuffer.data(), txtBuffer.length());
 	}
 	safeEndParagraph();

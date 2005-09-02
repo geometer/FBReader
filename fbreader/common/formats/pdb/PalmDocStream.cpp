@@ -22,11 +22,9 @@
 #include <abstract/ZLFSManager.h>
 
 #include "PalmDocStream.h"
-#include "PdbReader.h"
 #include "DocDecompressor.h"
 
-PalmDocStream::PalmDocStream(ZLFile &file) : myBase(file.inputStream()) {
-	myBuffer = 0;
+PalmDocStream::PalmDocStream(ZLFile &file) : PdbStream(file) {
 }
 
 PalmDocStream::~PalmDocStream() {
@@ -88,47 +86,4 @@ bool PalmDocStream::fillBuffer() {
 		myBufferOffset = 0;
 	}
 	return true;
-}
-
-size_t PalmDocStream::read(char *buffer, size_t maxSize) {
-	size_t realSize = 0;
-	while (realSize < maxSize) {
-		if (!fillBuffer()) {
-			break;
-		}
-		size_t size = std::min((size_t)(maxSize - realSize), (size_t)(myBufferLength - myBufferOffset));
-		if (size > 0) {
-			if (buffer != 0) {
-				memcpy(buffer + realSize, myBuffer + myBufferOffset, size);
-			}
-			realSize += size;
-			myBufferOffset += size;
-		}
-	}
-			
-	myOffset += realSize;
-	return realSize;
-}
-
-void PalmDocStream::close() {
-	if (!myBase.isNull()) {
-		myBase->close();
-	}
-	if (myBuffer != 0) {
-		delete[] myBuffer;
-		myBuffer = 0;
-	}
-}
-
-void PalmDocStream::seek(size_t offset) {
-	read(0, offset);
-}
-
-size_t PalmDocStream::offset() const {
-	return myOffset;
-}
-
-size_t PalmDocStream::sizeOfOpened() {
-	// TODO: implement
-	return 0;
 }
