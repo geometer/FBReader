@@ -124,6 +124,7 @@ public:
 	void clearCaches() VIEW_SECTION;
 
 	void scrollPage(bool forward, ScrollingMode mode, unsigned int value) VIEW_SECTION;
+	void scrollToHome() VIEW1_SECTION;
 	void scrollToStartOfText() VIEW1_SECTION;
 	void scrollToEndOfText() VIEW1_SECTION;
 
@@ -135,7 +136,8 @@ public:
 
 	virtual void setModel(const TextModel *model, const std::string &name) VIEW1_SECTION;
 
-	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward) VIEW1_SECTION;
+	bool hasMultiSectionModel() const VIEW1_SECTION;
+	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly) VIEW1_SECTION;
 	bool canFindNext() const VIEW1_SECTION;
 	void findNext() VIEW1_SECTION;
 	bool canFindPrevious() const VIEW1_SECTION;

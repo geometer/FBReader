@@ -154,8 +154,15 @@ void QFBReader::searchSlot() {
 	backward->setChecked(SearchBackwardOption.value());
 	layout->addMultiCellWidget(backward, 3, 3, 0, 2);
 
+	QCheckBox *thisSectionOnly = ((TextView*)myViewWidget->view())->hasMultiSectionModel() ?
+		new QCheckBox("&This section only", &findDialog, 0) : 0;
+	if (thisSectionOnly != 0) {
+		thisSectionOnly->setChecked(SearchThisSectionOnlyOption.value());
+		layout->addMultiCellWidget(thisSectionOnly, 4, 4, 0, 2);
+	}
+
 	QPushButton *b = new QPushButton("&Go!", &findDialog);
-	layout->addWidget(b, 4, 1);
+	layout->addWidget(b, 5, 1);
 	b->setDefault(true);
 	connect(b, SIGNAL(clicked()), &findDialog, SLOT(accept()));
 
@@ -166,8 +173,11 @@ void QFBReader::searchSlot() {
 		SearchIgnoreCaseOption.setValue(ignoreCase->isChecked());
 		SearchInWholeTextOption.setValue(wholeText->isChecked());
 		SearchBackwardOption.setValue(backward->isChecked());
+		if (thisSectionOnly != 0) {
+			SearchThisSectionOnlyOption.setValue(thisSectionOnly->isChecked());
+		}
 		((TextView*)myViewWidget->view())->search(
-			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked()
+			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked(), SearchThisSectionOnlyOption.value()
 		);
 	}
 }

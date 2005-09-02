@@ -35,11 +35,15 @@ TextModel::~TextModel() {
 	}
 }
 
-void TextModel::search(const std::string &text, bool ignoreCase) const {
+void TextModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
 	ZLSearchPattern pattern(text, ignoreCase);
 	myMarks.clear();
 
-	for (std::vector<Paragraph*>::const_iterator it = myParagraphs.begin(); it != myParagraphs.end(); it++) {
+	std::vector<Paragraph*>::const_iterator start =
+		(startIndex < myParagraphs.size()) ? myParagraphs.begin() + startIndex : myParagraphs.end();
+	std::vector<Paragraph*>::const_iterator end =
+		(endIndex < myParagraphs.size()) ? myParagraphs.begin() + endIndex : myParagraphs.end();
+	for (std::vector<Paragraph*>::const_iterator it = start; it < end; it++) {
 		int offset = 0;
 		const std::vector<ParagraphEntry*> &entries = ((Paragraph*)*it)->entries();
 		for (std::vector<ParagraphEntry*>::const_iterator jt = entries.begin(); jt != entries.end(); jt++) {
@@ -109,8 +113,8 @@ TreeParagraph *TreeModel::createParagraph(TreeParagraph *parent) {
 	return tp;
 }
 
-void TreeModel::search(const std::string &text, bool ignoreCase) const {
-	TextModel::search(text, ignoreCase);
+void TreeModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
+	TextModel::search(text, startIndex, endIndex, ignoreCase);
 	for (std::vector<TextMark>::const_iterator it = marks().begin(); it != marks().end(); it++) {
 		((TreeParagraph*)paragraphs()[it->ParagraphNumber])->openTree();
 	}

@@ -109,6 +109,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	addKeyBinding("Page_Down", ACTION_LARGE_SCROLL_FORWARD);
 	addKeyBinding("Up", ACTION_SMALL_SCROLL_BACKWARD);
 	addKeyBinding("Down", ACTION_SMALL_SCROLL_FORWARD);
+	addKeyBinding("<Ctrl>Home", ACTION_SCROLL_TO_HOME);
 	addKeyBinding("Home", ACTION_SCROLL_TO_START_OF_TEXT);
 	addKeyBinding("End", ACTION_SCROLL_TO_END_OF_TEXT);
 	addKeyBinding("Escape", ACTION_CANCEL);
@@ -274,29 +275,39 @@ void GtkFBReader::searchSlot() {
 	gtk_entry_set_text (wordToSearch, SearchPatternOption.value().c_str());
 	gtk_entry_set_activates_default(wordToSearch, TRUE);
 
-	GtkWidget *ignoreCase, *wholeText, *backward;
+	GtkWidget *ignoreCase, *wholeText, *backward, *thisSectionOnly = 0;
+
+	bool showThisSectionOnlyOption = ((TextView*)myViewWidget->view())->hasMultiSectionModel();
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
-		ignoreCase = gtk_check_button_new_with_mnemonic ("_Ignore case");
-		wholeText = gtk_check_button_new_with_mnemonic ("In w_hole text");
-		backward = gtk_check_button_new_with_mnemonic ("_Backward");
+		ignoreCase = gtk_check_button_new_with_mnemonic("_Ignore case");
+		wholeText = gtk_check_button_new_with_mnemonic("In w_hole text");
+		backward = gtk_check_button_new_with_mnemonic("_Backward");
+		if (showThisSectionOnlyOption) {
+			thisSectionOnly = gtk_check_button_new_with_mnemonic("_This section only");
+		}
 	} else {
-		ignoreCase = gtk_check_button_new_with_label ("Ignore case");
-		wholeText = gtk_check_button_new_with_label ("In whole text");
-		backward = gtk_check_button_new_with_label ("Backward");
+		ignoreCase = gtk_check_button_new_with_label("Ignore case");
+		wholeText = gtk_check_button_new_with_label("In whole text");
+		backward = gtk_check_button_new_with_label("Backward");
+		if (showThisSectionOnlyOption) {
+			thisSectionOnly = gtk_check_button_new_with_label("This section only");
+		}
 	}
 
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), ignoreCase, true, true, 0);
-
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(ignoreCase), SearchIgnoreCaseOption.value());
 
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), wholeText, true, true, 0);
-
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(wholeText), SearchInWholeTextOption.value());
 
 	gtk_box_pack_start(GTK_BOX(findDialog->vbox), backward, true, true, 0);
-
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(backward), SearchBackwardOption.value());
+
+	if (showThisSectionOnlyOption) {
+		gtk_box_pack_start(GTK_BOX(findDialog->vbox), thisSectionOnly, true, true, 0);
+		gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON(thisSectionOnly), SearchThisSectionOnlyOption.value());
+	}
 
 	gtk_widget_show_all(GTK_WIDGET(findDialog));
 
@@ -305,11 +316,15 @@ void GtkFBReader::searchSlot() {
 		SearchIgnoreCaseOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ignoreCase)));
 		SearchInWholeTextOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(wholeText)));
 		SearchBackwardOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(backward)));
+		if (showThisSectionOnlyOption) {
+			SearchThisSectionOnlyOption.setValue(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(thisSectionOnly)));
+		}
 		((TextView*)myViewWidget->view())->search(
 			SearchPatternOption.value(),
 			SearchIgnoreCaseOption.value(),
 			SearchInWholeTextOption.value(),
-			SearchBackwardOption.value()
+			SearchBackwardOption.value(),
+			SearchThisSectionOnlyOption.value()
 		);
 	}
 

@@ -45,7 +45,7 @@ public:
 	const std::vector<Paragraph*> &paragraphs() const MODEL_SECTION;
 	const std::vector<TextMark> &marks() const MODEL_SECTION;
 
-	virtual void search(const std::string &text, bool ignoreCase) const MODEL_SECTION;
+	virtual void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
 	virtual void selectParagraph(const unsigned int paragraphNumber) const MODEL_SECTION;
 
 	TextMark firstMark() const MODEL_SECTION;
@@ -76,7 +76,7 @@ public:
 	Kind kind() const MODEL_SECTION;
 	TreeParagraph *createParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
 	
-	void search(const std::string &text, bool ignoreCase) const MODEL_SECTION;
+	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
 	void selectParagraph(const unsigned int paragraphNumber) const MODEL_SECTION;
 
 private:

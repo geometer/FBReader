@@ -102,6 +102,7 @@ FBReader::ScrollingOptions FBReader::MouseScrollingOptions(
 ZLBooleanOption FBReader::SearchBackwardOption(SEARCH, "Backward", false);
 ZLBooleanOption FBReader::SearchIgnoreCaseOption(SEARCH, "IgnoreCase", true);
 ZLBooleanOption FBReader::SearchInWholeTextOption(SEARCH, "WholeText", false);
+ZLBooleanOption FBReader::SearchThisSectionOnlyOption(SEARCH, "ThisSectionOnly", false);
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
@@ -339,6 +340,11 @@ void FBReader::doAction(ActionCode code) {
 		case ACTION_MOUSE_SCROLL_BACKWARD:
 			doScrolling(MouseScrollingOptions, code == ACTION_MOUSE_SCROLL_FORWARD);
 			break;
+		case ACTION_SCROLL_TO_HOME:
+			if (myMode == BOOK_TEXT_MODE) {
+				myBookTextView->scrollToHome();
+			}
+			break;
 		case ACTION_SCROLL_TO_START_OF_TEXT:
 			((TextView*)myViewWidget->view())->scrollToStartOfText();
 			break;
@@ -431,6 +437,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
+			setButtonVisible(ACTION_SCROLL_TO_HOME, true);
 			setButtonVisible(ACTION_REDO, true);
 			setButtonVisible(ACTION_SHOW_CONTENTS, true);
 			myViewWidget->setView(myBookTextView);
@@ -440,6 +447,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, true);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
+			setButtonVisible(ACTION_SCROLL_TO_HOME, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			if (!StoreContentsPositionOption.value()) {
@@ -452,6 +460,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, false);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, true);
+			setButtonVisible(ACTION_SCROLL_TO_HOME, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, true);
 			myViewWidget->setView(myFootnoteView);
@@ -461,6 +470,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
+			setButtonVisible(ACTION_SCROLL_TO_HOME, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			{
@@ -475,6 +485,7 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_SHOW_LAST_BOOKS, false);
 			setButtonVisible(ACTION_ADD_BOOK, true);
 			setButtonVisible(ACTION_SHOW_BOOK_INFO, false);
+			setButtonVisible(ACTION_SCROLL_TO_HOME, false);
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			myRecentBooksView->rebuild();
@@ -496,6 +507,7 @@ void FBReader::createToolbar() {
 	addButton(ACTION_SHOW_BOOK_INFO, "bookinfo");
 	addButton(ACTION_SHOW_OPTIONS, "settings");
 	addButtonSeparator();
+	addButton(ACTION_SCROLL_TO_HOME, "home");
 	addButton(ACTION_UNDO, "leftarrow");
 	addButton(ACTION_REDO, "rightarrow");
 	addButtonSeparator();

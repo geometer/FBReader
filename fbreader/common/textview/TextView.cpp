@@ -153,6 +153,11 @@ std::vector<size_t>::const_iterator TextView::nextBreakIterator() const {
 	);
 }
 
+void TextView::scrollToHome() {
+	gotoParagraph(0, false);
+	repaintView();
+}
+
 void TextView::scrollToStartOfText() {
 	if (endCursor().isNull()) {
 		return;
@@ -316,12 +321,28 @@ void TextView::drawTextLine(const LineInfo &info) {
 	}
 }
 
-void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, bool backward) {
+bool TextView::hasMultiSectionModel() const {
+	return !myTextBreaks.empty();
+}
+
+void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly) {
 	if (text.empty()) {
 		return;
 	}
 
-	myModel->search(text, ignoreCase);
+	size_t startIndex = 0;
+	size_t endIndex = myModel->paragraphs().size();
+	if (thisSectionOnly) {
+		std::vector<size_t>::const_iterator i = nextBreakIterator();
+		if (i != myTextBreaks.begin()) {
+			startIndex = *(i - 1);
+		}
+		if (i != myTextBreaks.end()) {
+			endIndex = *i;
+		}
+	}
+
+	myModel->search(text, startIndex, endIndex, ignoreCase);
 	if (!startCursor().isNull()) {
 		rebuildPaintInfo(true);
 		TextMark position = startCursor().position();

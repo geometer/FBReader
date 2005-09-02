@@ -57,6 +57,7 @@ public:
 		ACTION_SMALL_SCROLL_BACKWARD,
 		ACTION_MOUSE_SCROLL_FORWARD,
 		ACTION_MOUSE_SCROLL_BACKWARD,
+		ACTION_SCROLL_TO_HOME,
 		ACTION_SCROLL_TO_START_OF_TEXT,
 		ACTION_SCROLL_TO_END_OF_TEXT,
 		ACTION_CANCEL,
@@ -112,6 +113,7 @@ public:
 	static ZLBooleanOption SearchBackwardOption;
 	static ZLBooleanOption SearchIgnoreCaseOption;
 	static ZLBooleanOption SearchInWholeTextOption;
+	static ZLBooleanOption SearchThisSectionOnlyOption;
 	static ZLStringOption SearchPatternOption;
 
 	static const std::string HelpDirectory;
