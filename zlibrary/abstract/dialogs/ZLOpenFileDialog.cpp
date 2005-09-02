@@ -179,5 +179,6 @@ bool ZLFileTreeState::isLeaf() const {
 }
 
 bool ZLFileTreeState::exists() const {
-	return ZLFile(myFileName).exists();
+	int index = myFileName.find(':');
+	return (index == -1) ? ZLFile(myFileName).exists() : ZLFile(myFileName.substr(0, index)).exists();
 }
