@@ -19,6 +19,7 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
 #include <algorithm>
 
 #include <abstract/ZLUnicodeUtil.h>
@@ -154,12 +155,24 @@ std::vector<size_t>::const_iterator TextView::nextBreakIterator() const {
 }
 
 void TextView::scrollToHome() {
+	if (!startCursor().isNull() &&
+			startCursor().isStartOfParagraph() &&
+			startCursor().paragraphCursor().paragraphNumber() == 0) {
+		return;
+	}
+
 	gotoParagraph(0, false);
 	repaintView();
 }
 
 void TextView::scrollToStartOfText() {
 	if (endCursor().isNull()) {
+		return;
+	}
+
+	if (!startCursor().isNull() &&
+			startCursor().isStartOfParagraph() &&
+			startCursor().paragraphCursor().isFirst()) {
 		return;
 	}
 
@@ -170,6 +183,11 @@ void TextView::scrollToStartOfText() {
 
 void TextView::scrollToEndOfText() {
 	if (endCursor().isNull() || (myModel == 0)) {
+		return;
+	}
+
+	if (endCursor().isEndOfParagraph() &&
+			endCursor().paragraphCursor().isLast()) {
 		return;
 	}
 

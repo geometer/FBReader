@@ -151,6 +151,7 @@ shared_ptr<ParagraphCursor> TreeParagraphCursor::next() const {
 bool ParagraphCursor::isFirst() const {
 	return
 		(myParagraphIterator == myModel.paragraphs().begin()) ||
+		((*myParagraphIterator)->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) ||
 		((*(myParagraphIterator - 1))->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
 }
 
