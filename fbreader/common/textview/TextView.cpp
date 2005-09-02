@@ -58,7 +58,7 @@ void TextView::clear() {
 	myParagraphMap.clear();
 	myTextElementMap.clear();
 	myTextSize.clear();
-	myFullTextSize = 0;
+	myTextBreaks.clear();
 
 	ParagraphCursorCache::clear();
 }
@@ -76,8 +76,10 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 		myTextSize.reserve(paragraphs.size() + 1);
 		myTextSize.push_back(0);
 		for (std::vector<Paragraph*>::const_iterator it = paragraphs.begin(); it != paragraphs.end(); it++) {
-			myFullTextSize += (*it)->textLength();
-			myTextSize.push_back(myFullTextSize);
+			myTextSize.push_back(myTextSize.back() + (*it)->textLength());
+			if ((*it)->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) {
+				myTextBreaks.push_back(it - paragraphs.begin());
+			}
 		}
 	}
 }
@@ -102,17 +104,24 @@ void TextView::paint() {
 		long top = bottom - PositionIndicatorHeightOption.value() + 1;
 		long left = 0;
 		long right = context().width() - 1;
-		long fillWidth;
-		long paragraphLength = endCursor().paragraphCursor().paragraphLength();
-		long paragraphNumber = endCursor().paragraphCursor().paragraphNumber();
-		long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
+
+		std::vector<size_t>::const_iterator i = nextBreakIterator();
+		size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
+		size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphs().size();
+
+		size_t paragraphNumber = endCursor().paragraphCursor().paragraphNumber();
+		size_t sizeOfTextBeforeParagraph = myTextSize[paragraphNumber] - myTextSize[startIndex];
+		size_t fullTextSize = myTextSize[endIndex] - myTextSize[startIndex];
+		size_t paragraphLength = endCursor().paragraphCursor().paragraphLength();
+		size_t fillWidth;
+
 		if (paragraphLength == 0) {
-			fillWidth = (long)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / myFullTextSize);
+			fillWidth = (size_t)(1.0 * (right - left - 1) * sizeOfTextBeforeParagraph / fullTextSize);
 		} else {
-			long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
-			fillWidth = (long)(
+			size_t sizeOfParagraph = myTextSize[paragraphNumber + 1] - myTextSize[paragraphNumber];
+			fillWidth = (size_t)(
 				(sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * endCursor().wordNumber() / paragraphLength) *
-				(right - left - 1) / myFullTextSize
+				(right - left - 1) / fullTextSize
 			);
 		}
 		context().setColor(TextStyle::RegularTextColorOption.value());
@@ -136,16 +145,32 @@ void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) 
 	}
 }
 
+std::vector<size_t>::const_iterator TextView::nextBreakIterator() const {
+	return std::lower_bound(
+		myTextBreaks.begin(),
+		myTextBreaks.end(),
+		endCursor().paragraphCursor().paragraphNumber()
+	);
+}
+
 void TextView::scrollToStartOfText() {
-	gotoParagraph(0, false);
+	if (endCursor().isNull()) {
+		return;
+	}
+
+	std::vector<size_t>::const_iterator i = nextBreakIterator();
+	gotoParagraph((i != myTextBreaks.begin()) ? *(i - 1) : 0, false);
 	repaintView();
 }
 
 void TextView::scrollToEndOfText() {
-	if (myModel != 0) {
-		gotoParagraph(myModel->paragraphs().size(), true);
-		repaintView();
+	if (endCursor().isNull() || (myModel == 0)) {
+		return;
 	}
+
+	std::vector<size_t>::const_iterator i = nextBreakIterator();
+	gotoParagraph((i != myTextBreaks.end()) ? *i : myModel->paragraphs().size(), true);
+	repaintView();
 }
 
 const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {
@@ -334,24 +359,30 @@ bool TextView::onStylusPress(int x, int y) {
 		long right = context().width() - 1;
 
 		if ((x > left) && (x < right) && (y > top) && (y < bottom)) {
-			size_t textSize = (size_t)(1.0 * myFullTextSize * (x - left - 1) / (right - left - 1));
+			std::vector<size_t>::const_iterator i = nextBreakIterator();
+			size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
+			size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphs().size();
+
+			size_t fullTextSize = myTextSize[endIndex] - myTextSize[startIndex];
+			size_t textSize = (size_t)(1.0 * fullTextSize * (x - left - 1) / (right - left - 1)) + myTextSize[startIndex];
 			std::vector<size_t>::const_iterator it = std::lower_bound(myTextSize.begin(), myTextSize.end(), textSize);
-			long paragraphNumber = std::min((long)(it - myTextSize.begin()), (long)myTextSize.size() - 1) - 1;
-			if (paragraphNumber == 0) {
-				gotoParagraph(0, false);
+			size_t paragraphNumber = std::min((size_t)(it - myTextSize.begin()), endIndex) - 1;
+			if (paragraphNumber == startIndex) {
+				gotoParagraph(startIndex, false);
 				repaintView();
 			} else {
 				gotoParagraph(paragraphNumber, true);
 				preparePaintInfo();
-				if (!endCursor().isNull() && (paragraphNumber == (int)endCursor().paragraphCursor().paragraphNumber())) {
+				if (!endCursor().isNull() && (paragraphNumber == endCursor().paragraphCursor().paragraphNumber())) {
 					if (!endCursor().paragraphCursor().isLast() || !endCursor().isEndOfParagraph()) {
-						long paragraphLength = endCursor().paragraphCursor().paragraphLength();
+						size_t paragraphLength = endCursor().paragraphCursor().paragraphLength();
 						if (paragraphLength > 0) {
-							long sizeOfTextBeforeParagraph = myTextSize[paragraphNumber];
-							long sizeOfParagraph = myTextSize[paragraphNumber + 1] - sizeOfTextBeforeParagraph;
-							long wordNum =
-								(long)((1.0 * (x - left - 1) / (right - left - 1) - 1.0 * sizeOfTextBeforeParagraph / myFullTextSize)
-								* myFullTextSize / sizeOfParagraph * paragraphLength);
+							size_t sizeOfTextBeforeParagraph = myTextSize[paragraphNumber] - myTextSize[startIndex];
+							size_t sizeOfParagraph = myTextSize[paragraphNumber + 1] - myTextSize[paragraphNumber];
+							size_t wordNum =
+								(size_t)((1.0 * (x - left - 1) / (right - left - 1) * fullTextSize
+													- 1.0 * sizeOfTextBeforeParagraph)
+												 / sizeOfParagraph * paragraphLength);
 							moveEndCursor(endCursor().paragraphCursor().paragraphNumber(), wordNum, 0);
 							repaintView();
 						}

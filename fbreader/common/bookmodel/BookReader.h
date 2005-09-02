@@ -46,6 +46,7 @@ public:
 	bool currentTextModelIsNull() const MODEL_SECTION;
 
 	void insertEndOfSectionParagraph() MODEL_SECTION;
+	void insertEndOfTextParagraph() MODEL_SECTION;
 	void pushKind(TextKind kind) MODEL_SECTION;
 	bool popKind() MODEL_SECTION;
 	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH) MODEL_SECTION;

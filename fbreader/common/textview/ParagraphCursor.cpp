@@ -149,15 +149,20 @@ shared_ptr<ParagraphCursor> TreeParagraphCursor::next() const {
 }
 
 bool ParagraphCursor::isFirst() const {
-	return myParagraphIterator == myModel.paragraphs().begin();
+	return
+		(myParagraphIterator == myModel.paragraphs().begin()) ||
+		((*(myParagraphIterator - 1))->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
 }
 
 bool PlainTextParagraphCursor::isLast() const {
-	return myParagraphIterator + 1 == myModel.paragraphs().end();
+	return
+		(myParagraphIterator + 1 == myModel.paragraphs().end()) ||
+		((*(myParagraphIterator + 1))->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
 }
 
 bool TreeParagraphCursor::isLast() const {
-	if (myParagraphIterator + 1 == myModel.paragraphs().end()) {
+	if ((myParagraphIterator + 1 == myModel.paragraphs().end()) ||
+			((*(myParagraphIterator + 1))->kind() == Paragraph::END_OF_TEXT_PARAGRAPH)) {
 		return true;
 	}
 	TreeParagraph *current = (TreeParagraph*)*myParagraphIterator;
@@ -176,7 +181,7 @@ bool TreeParagraphCursor::isLast() const {
 }
 
 bool ParagraphCursor::isEndOfSection() const {
-	return (*myParagraphIterator)->kind() == Paragraph::EOS_PARAGRAPH;
+	return (*myParagraphIterator)->kind() == Paragraph::END_OF_SECTION_PARAGRAPH;
 }
 
 TextMark WordCursor::position() const {
@@ -227,7 +232,8 @@ void ParagraphCursor::fill() {
 			myElements.push_back(TextElementPool::Pool.AfterParagraphElement);
 			break;
 		}
-		case Paragraph::EOS_PARAGRAPH:
+		case Paragraph::END_OF_SECTION_PARAGRAPH:
+		case Paragraph::END_OF_TEXT_PARAGRAPH:
 			break;
 	}
 }

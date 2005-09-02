@@ -173,8 +173,18 @@ void BookReader::insertEndOfSectionParagraph() {
 	if (!currentTextModelIsNull() &&
 			mySectionContainsRegularContents &&
 			!myCurrentTextModel->paragraphs().empty() &&
-			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::EOS_PARAGRAPH)) {
-		myCurrentTextModel->addParagraph(new SpecialParagraph(Paragraph::EOS_PARAGRAPH));
+			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
+		myCurrentTextModel->addParagraph(new SpecialParagraph(Paragraph::END_OF_SECTION_PARAGRAPH));
+		mySectionContainsRegularContents = false;
+	}
+}
+
+void BookReader::insertEndOfTextParagraph() {
+	if (!currentTextModelIsNull() &&
+			mySectionContainsRegularContents &&
+			!myCurrentTextModel->paragraphs().empty() &&
+			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
+		myCurrentTextModel->addParagraph(new SpecialParagraph(Paragraph::END_OF_TEXT_PARAGRAPH));
 		mySectionContainsRegularContents = false;
 	}
 }

@@ -190,6 +190,8 @@ private:
 
 	WordCursor buildInfos(const WordCursor &start) VIEW_SECTION;
 
+	std::vector<size_t>::const_iterator nextBreakIterator() const VIEW_SECTION;
+
 private:
 	const TextModel *myModel;
 	std::string myFileName;
@@ -218,7 +220,8 @@ private:
 	std::vector<TextElementPosition> myTextElementMap;
 
 	std::vector<size_t> myTextSize;
-	size_t myFullTextSize;
+
+	std::vector<size_t> myTextBreaks;
 
 	ViewStyle myStyle;
 };

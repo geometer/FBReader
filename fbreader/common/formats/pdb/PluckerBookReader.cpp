@@ -378,7 +378,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 					addHyperlinkLabel(fromNumber(uid));
 					processTextRecord(size, pars);
 					if ((flags & 0x1) == 0) {
-						insertEndOfSectionParagraph();
+						insertEndOfTextParagraph();
 					}
 				}
 				break;
