@@ -68,6 +68,16 @@ void PluckerBookReader::safeBeginParagraph() {
 	if (!myParagraphStarted) {
 		myParagraphStarted = true;
 		beginParagraph();
+		unsigned int idIndex = 0;
+		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
+			if ((it->first == HYPERLINK) && it->second && (idIndex < myDelayedHyperlinks.size())) {
+				addHyperlinkControl(HYPERLINK, myDelayedHyperlinks[idIndex]);
+				idIndex++;
+			} else {
+				addControl(it->first, it->second);
+			}
+		}
+		myDelayedHyperlinks.clear();
 		if (myForcedEntry != 0) {
 			ForcedControlEntry *copy = new ForcedControlEntry();
 			if (myForcedEntry->leftIndentSupported()) {
@@ -83,16 +93,6 @@ void PluckerBookReader::safeBeginParagraph() {
 		} else {
 			addControl(REGULAR, true);
 		}
-		unsigned int idIndex = 0;
-		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
-			if ((it->first == HYPERLINK) && it->second && (idIndex < myDelayedHyperlinks.size())) {
-				addHyperlinkControl(HYPERLINK, myDelayedHyperlinks[idIndex]);
-				idIndex++;
-			} else {
-				addControl(it->first, it->second);
-			}
-		}
-		myDelayedHyperlinks.clear();
 	}
 }
 
@@ -189,6 +189,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			changeFont((FontType)*(ptr + 1));
 			break;
 		case 0x1A:
+			safeBeginParagraph();
 			addImageReference(fromNumber(twoBytes(ptr + 1)));
 			break;
 		case 0x22:
