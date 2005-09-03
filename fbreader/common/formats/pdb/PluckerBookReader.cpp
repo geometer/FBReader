@@ -59,7 +59,6 @@ void PluckerBookReader::safeAddHyperlinkControl(const std::string &id) {
 	if (myParagraphStarted) {
 		addHyperlinkControl(HYPERLINK, id);
 	} else {
-		myDelayedControls.push_back(std::pair<TextKind,bool>(HYPERLINK, true));
 		myDelayedHyperlinks.push_back(id);
 	}
 }
@@ -68,16 +67,13 @@ void PluckerBookReader::safeBeginParagraph() {
 	if (!myParagraphStarted) {
 		myParagraphStarted = true;
 		beginParagraph();
-		unsigned int idIndex = 0;
-		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
-			if ((it->first == HYPERLINK) && it->second && (idIndex < myDelayedHyperlinks.size())) {
-				addHyperlinkControl(HYPERLINK, myDelayedHyperlinks[idIndex]);
-				idIndex++;
-			} else {
-				addControl(it->first, it->second);
-			}
+		if (!myParagraphStored) {
+			myParagraphVector->push_back(model().bookTextModel().paragraphs().size() - 1);
+			myParagraphStored = true;
 		}
-		myDelayedHyperlinks.clear();
+		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
+			addControl(it->first, it->second);
+		}
 		if (myForcedEntry != 0) {
 			ForcedControlEntry *copy = new ForcedControlEntry();
 			if (myForcedEntry->leftIndentSupported()) {
@@ -93,6 +89,10 @@ void PluckerBookReader::safeBeginParagraph() {
 		} else {
 			addControl(REGULAR, true);
 		}
+		for (std::vector<std::string>::const_iterator it = myDelayedHyperlinks.begin(); it != myDelayedHyperlinks.end(); it++) {
+			addHyperlinkControl(HYPERLINK, *it);
+		}
+		myDelayedHyperlinks.clear();
 	}
 }
 
@@ -183,8 +183,14 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			safeAddHyperlinkControl(fromNumber(twoBytes(ptr + 1)));
 			break;
 		case 0x0C:
-			safeAddHyperlinkControl(fromNumber(twoBytes(ptr + 1)) + "#" + fromNumber(twoBytes(ptr + 3)));
+		{
+			int sectionNum = twoBytes(ptr + 1);
+			int paragraphNum = twoBytes(ptr + 3);
+			std::cerr << sectionNum << '#' << paragraphNum << "\n";
+			safeAddHyperlinkControl(fromNumber(sectionNum) + '#' + fromNumber(paragraphNum));
+			myReferencedParagraphs.insert(std::pair<int,int>(sectionNum, paragraphNum));
 			break;
+		}
 		case 0x11:
 			changeFont((FontType)*(ptr + 1));
 			break;
@@ -241,7 +247,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			break;
 		case 0x83: 
 		{
-			static char utf8[4];
+			char utf8[4];
 			int len = ZLUnicodeUtil::ucs2ToUtf8(utf8, twoBytes(ptr + 2));
 			safeBeginParagraph();
 			addDataToBuffer(utf8, len);
@@ -327,7 +333,11 @@ void PluckerBookReader::processTextRecord(size_t size, const std::vector<int> &p
 		if (end > myCharBuffer + size) {
 			return;
 		}
+		myParagraphStored = false;
 		processTextParagraph(start, end);
+		if (!myParagraphStored) {
+			myParagraphVector->push_back(-1);
+		}
 	}
 }
 
@@ -377,6 +387,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 				}
 				if (doProcess) {
 					addHyperlinkLabel(fromNumber(uid));
+					myParagraphVector = &myParagraphMap[uid];
 					processTextRecord(size, pars);
 					if ((flags & 0x1) == 0) {
 						insertEndOfTextParagraph();
@@ -466,5 +477,19 @@ bool PluckerBookReader::readDocument() {
 		readRecord(recordSize);
 	}
 	myStream->close();
+
+	for (std::set<std::pair<int,int> >::const_iterator it = myReferencedParagraphs.begin(); it != myReferencedParagraphs.end(); it++) {
+		std::map<int,std::vector<int> >::const_iterator jt = myParagraphMap.find(it->first);
+		if (jt != myParagraphMap.end()) {
+			for (unsigned int k = it->second; k < jt->second.size(); k++) {
+				if (jt->second[k] != -1) {
+					addHyperlinkLabel(fromNumber(it->first) + '#' + fromNumber(it->second), jt->second[k]);
+					break;
+				}
+			}
+		}
+	}
+	myReferencedParagraphs.clear();
+	myParagraphMap.clear();
 	return true;
 }

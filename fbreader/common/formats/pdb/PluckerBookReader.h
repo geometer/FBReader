@@ -22,6 +22,9 @@
 #ifndef __PLUCKERBOOKREADER_H__
 #define __PLUCKERBOOKREADER_H__
 
+#include <set>
+#include <map>
+
 #include <abstract/EncodingConverter.h>
 
 #include "../../bookmodel/BookReader.h"
@@ -73,6 +76,11 @@ private:
 	std::vector<std::string> myDelayedHyperlinks;
 	int myBytesToSkip;
 	unsigned short myCompressionVersion;
+
+	std::set<std::pair<int, int> > myReferencedParagraphs;
+	std::map<int, std::vector<int> > myParagraphMap;
+	std::vector<int> *myParagraphVector;
+	bool myParagraphStored;
 
 	EncodingConverter myConverter;
 };

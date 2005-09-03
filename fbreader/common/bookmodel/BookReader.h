@@ -55,6 +55,7 @@ public:
 	void addControl(ForcedControlEntry *entry) MODEL_SECTION;
 	void addHyperlinkControl(TextKind kind, const std::string &label) MODEL_SECTION;
 	void addHyperlinkLabel(const std::string &label) MODEL_SECTION;
+	void addHyperlinkLabel(const std::string &label, int paragraphNumber) MODEL_SECTION;
 
 	void addImageReference(const std::string &id) MODEL_SECTION;
 	void addImage(const std::string &id, ZLImage *image) MODEL_SECTION;
