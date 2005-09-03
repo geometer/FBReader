@@ -186,7 +186,6 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 		{
 			int sectionNum = twoBytes(ptr + 1);
 			int paragraphNum = twoBytes(ptr + 3);
-			std::cerr << sectionNum << '#' << paragraphNum << "\n";
 			safeAddHyperlinkControl(fromNumber(sectionNum) + '#' + fromNumber(paragraphNum));
 			myReferencedParagraphs.insert(std::pair<int,int>(sectionNum, paragraphNum));
 			break;
