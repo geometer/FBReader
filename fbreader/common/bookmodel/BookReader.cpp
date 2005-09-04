@@ -127,8 +127,15 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 
 void BookReader::addDataToBuffer(const char *data, int len) {
 	if ((len > 0) && myProcessData) {
-		myBuffer.push_back(ZLString());
+		myBuffer.push_back(std::string());
 		myBuffer.back().append(data, len);
+	}
+}
+
+void BookReader::addDataToBuffer(std::string &data) {
+	if (myProcessData) {
+		myBuffer.push_back(std::string());
+		myBuffer.back().swap(data);
 	}
 }
 
@@ -141,21 +148,16 @@ void BookReader::flushTextBufferToParagraph() {
 		mySectionContainsRegularContents = true;
 	}
 
-	// optimization: addNonConstText can change parameter if needs
-	if ((myBuffer.size() == 1) && myCurrentContentsParagraph == 0) {
-		myCurrentParagraph->addNonConstText(myBuffer[0]);
-	} else {
-		myCurrentParagraph->addText(myBuffer);
-		if (myCurrentContentsParagraph != 0) {
-			if (myInsideTitle) {
-				if (myCurrentContentsParagraph->reference() != -1) {
-					myCurrentContentsParagraph->addText(" ");
-				}
-				myCurrentContentsParagraph->addText(myBuffer);
+	myCurrentParagraph->addText(myBuffer, myCurrentTextModel->allocator());
+	if (myCurrentContentsParagraph != 0) {
+		if (myInsideTitle) {
+			if (myCurrentContentsParagraph->reference() != -1) {
+				myCurrentContentsParagraph->addText(" ", myModel.contentsModel().allocator());
 			}
-			if (myCurrentContentsParagraph->reference() == -1) {
-				myCurrentContentsParagraph->setReference(myModel.bookTextModel().paragraphs().size() - 1);
-			}
+			myCurrentContentsParagraph->addText(myBuffer, myModel.contentsModel().allocator());
+		}
+		if (myCurrentContentsParagraph->reference() == -1) {
+			myCurrentContentsParagraph->setReference(myModel.bookTextModel().paragraphs().size() - 1);
 		}
 	}
 	myBuffer.clear();
@@ -221,7 +223,7 @@ void BookReader::endContentsParagraph() {
 			delete myCurrentContentsParagraph;
 		} else {
 			if (myCurrentContentsParagraph->entries().size() == 1) {
-				myCurrentContentsParagraph->addText("...");
+				myCurrentContentsParagraph->addText("...", myModel.contentsModel().allocator());
 			}
 			myModel.myContentsModel.addParagraph(myCurrentContentsParagraph);
 		}

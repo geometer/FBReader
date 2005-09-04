@@ -53,6 +53,6 @@ shared_ptr<ZLImageData> QImageManager::createData() const {
 	return new ZLQImageData();
 }
 
-void QImageManager::convertImageDirect(const ZLString &stringData, ZLImageData &data) const {
+void QImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	((ZLQImageData&)data).loadFromData((const unsigned char*)stringData.data(), stringData.length());
 }

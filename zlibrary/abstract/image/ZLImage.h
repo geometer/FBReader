@@ -22,9 +22,8 @@
 #define __ZLIMAGE_H__
 
 #include <vector>
-#include <map>
+#include <string>
 
-#include <abstract/ZLString.h>
 #include <abstract/shared_ptr.h>
 
 class ZLImage {
@@ -46,7 +45,7 @@ protected:
 public:
 	bool isSingle() const { return true; }
 	const std::string &mimeType() const IMAGE_SECTION;
-	virtual const shared_ptr<ZLString> stringData() const IMAGE_SECTION = 0;
+	virtual const shared_ptr<std::string> stringData() const IMAGE_SECTION = 0;
 	
 private:
 	std::string myMimeType;
@@ -57,15 +56,15 @@ class ZLBase64EncodedImage : public ZLSingleImage {
 public:
 	ZLBase64EncodedImage(const std::string &mimeType) IMAGE_SECTION;
 	~ZLBase64EncodedImage() IMAGE_SECTION;
-	void addData(const ZLStringBuffer &text) IMAGE_SECTION;
-	const shared_ptr<ZLString> stringData() const IMAGE_SECTION;
+	void addData(const std::vector<std::string> &text) IMAGE_SECTION;
+	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
 
 private:
 	void decode() const IMAGE_SECTION;
 
 private:
-	mutable ZLString myEncodedData;
-	mutable shared_ptr<ZLString> myData;
+	mutable std::string myEncodedData;
+	mutable shared_ptr<std::string> myData;
 };
 
 class ZLMultiImage : public ZLImage {
@@ -93,6 +92,5 @@ inline ZLMultiImage::~ZLMultiImage() {}
 
 inline ZLBase64EncodedImage::ZLBase64EncodedImage(const std::string &mimeType) : ZLSingleImage(mimeType) {}
 inline ZLBase64EncodedImage::~ZLBase64EncodedImage() {}
-inline void ZLBase64EncodedImage::addData(const ZLStringBuffer &text) { myEncodedData += text; }
 
 #endif /* __ZLIMAGE_H__ */

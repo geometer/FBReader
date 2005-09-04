@@ -25,8 +25,6 @@
 #include <vector>
 #include <string>
 
-#include <abstract/ZLString.h>
-
 #include "../model/TextKind.h"
 #include "../model/Paragraph.h"
 
@@ -64,6 +62,7 @@ public:
 	void endContentsParagraph() MODEL_SECTION;
 
 	void addDataToBuffer(const char *data, int len) MODEL_SECTION;
+	void addDataToBuffer(std::string &data) MODEL_SECTION;
 
 	void beginImageData() MODEL_SECTION;
 	void endImageData() MODEL_SECTION;
@@ -90,7 +89,7 @@ private:
 	bool myInsideTitle;
 
 public:
-	ZLStringBuffer myBuffer;
+	std::vector<std::string> myBuffer;
 };
 
 #endif /* __BOOKREADER_H__ */

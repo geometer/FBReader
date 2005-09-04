@@ -26,7 +26,6 @@
 
 #include "../../abstract/image/ZLImageManager.h"
 
-class ZLString;
 class ZLImage;
 
 class ZLQImageData : public ZLImageData, public QImage {
@@ -63,7 +62,7 @@ private:
 protected:
 	~QImageManager() {}
 	shared_ptr<ZLImageData> createData() const;
-	void convertImageDirect(const ZLString &stringData, ZLImageData &imageData) const;
+	void convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
 };
 
 #endif /* __QIMAGEMANAGER_H__ */

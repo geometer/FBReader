@@ -32,7 +32,7 @@ class ZCompressedFileImage : public ZLSingleImage {
 public:
 	ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size) IMAGE_SECTION;
 	~ZCompressedFileImage() IMAGE_SECTION;
-	const shared_ptr<ZLString> stringData() const IMAGE_SECTION;
+	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
 
 private:
 	std::string myPath;
@@ -45,7 +45,7 @@ class DocCompressedFileImage : public ZLSingleImage {
 public:
 	DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) IMAGE_SECTION;
 	~DocCompressedFileImage() IMAGE_SECTION;
-	const shared_ptr<ZLString> stringData() const IMAGE_SECTION;
+	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
 
 private:
 	std::string myPath;

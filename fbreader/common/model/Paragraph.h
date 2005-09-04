@@ -23,8 +23,8 @@
 #define __PARAGRAPH_H__
 
 #include <map>
-
-#include <abstract/ZLString.h>
+#include <vector>
+#include <string>
 
 #include "TextKind.h"
 #include "AlignmentType.h"
@@ -32,6 +32,7 @@
 class BookDescription;
 class ZLImage;
 typedef std::map<std::string,ZLImage*> ImageMap;
+class RowMemoryAllocator;
 
 class ParagraphEntry {
 
@@ -133,17 +134,18 @@ private:
 class TextEntry : public ParagraphEntry {
 
 public:
-	TextEntry() MODEL_SECTION;
-	TextEntry(ZLString &text) MODEL_SECTION;
+	TextEntry(const std::string &text, RowMemoryAllocator &allocator) MODEL_SECTION;
+	TextEntry(const std::vector<std::string> &text, RowMemoryAllocator &allocator) MODEL_SECTION;
 	~TextEntry() MODEL_SECTION;
-	const ZLString &text() const MODEL_SECTION;
-	void addText(const std::string &text) MODEL_SECTION;
-	void addText(const ZLString &text) MODEL_SECTION;
-	void addText(const ZLStringBuffer &text) MODEL_SECTION;
+
 	Kind entryKind() const MODEL_SECTION;
+
+	size_t dataLength() const MODEL_SECTION;
+	const char *data() const MODEL_SECTION;
  
 private:
-	ZLString myText;
+	size_t myDataLength;
+	char *myData;
 };
 
 class ImageEntry : public ParagraphEntry {
@@ -181,9 +183,8 @@ public:
 	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
 	void addControl(ForcedControlEntry *entry) MODEL_SECTION;
 	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
-	void addNonConstText(ZLString &text) MODEL_SECTION;
-	void addText(const std::string &text) MODEL_SECTION;
-	void addText(const ZLStringBuffer &text) MODEL_SECTION;
+	void addText(const std::string &text, RowMemoryAllocator &allocator) MODEL_SECTION;
+	void addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) MODEL_SECTION;
 	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
 
 	const std::vector<ParagraphEntry*> &entries() const MODEL_SECTION;
@@ -270,13 +271,9 @@ inline HyperlinkControlEntry::~HyperlinkControlEntry() {}
 inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
 inline const std::string &HyperlinkControlEntry::label() const { return myLabel; }
 
-inline TextEntry::TextEntry() {}
-inline TextEntry::TextEntry(ZLString &text) { myText.swap(text); }
 inline TextEntry::~TextEntry() {}
-inline const ZLString &TextEntry::text() const { return myText; }
-inline void TextEntry::addText(const std::string &text) { myText += text; }
-inline void TextEntry::addText(const ZLString &text) { myText += text; }
-inline void TextEntry::addText(const ZLStringBuffer &text) { myText += text; }
+inline size_t TextEntry::dataLength() const { return myDataLength; }
+inline const char *TextEntry::data() const { return myData; }
 inline ParagraphEntry::Kind TextEntry::entryKind() const { return TEXT_ENTRY; }
 
 inline ImageEntry::ImageEntry(const std::string &id, const ImageMap &imageMap) : myId(id), myMap(imageMap) {}
@@ -291,6 +288,8 @@ inline void Paragraph::addControl(ForcedControlEntry *entry) { myEntries.push_ba
 inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
 inline void Paragraph::addImage(const std::string &id, const ImageMap &imageMap) { myEntries.push_back(new ImageEntry(id, imageMap)); }
 inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return myEntries; }
+inline void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) { myEntries.push_back(new TextEntry(text, allocator)); }
+inline void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) { myEntries.push_back(new TextEntry(text, allocator)); }
 
 inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}
 inline SpecialParagraph::~SpecialParagraph() {}

@@ -20,8 +20,13 @@
 
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "ZLImage.h"
+
+void ZLBase64EncodedImage::addData(const std::vector<std::string> &text) {
+	ZLStringUtil::append(myEncodedData, text);
+}
 
 void ZLBase64EncodedImage::decode() const {
 	if ((myEncodedData.empty()) || (!myData.isNull())) {
@@ -30,7 +35,7 @@ void ZLBase64EncodedImage::decode() const {
 
 	size_t dataLength = myEncodedData.length();
 
-	myData = new ZLString();
+	myData = new std::string();
 	myData->reserve(dataLength / 4 * 3);
 	for (size_t pos = 0, dataPos = 0; pos < dataLength; dataPos += 3) {
 		unsigned int sum = 0;
@@ -56,14 +61,14 @@ void ZLBase64EncodedImage::decode() const {
 			i++;
 		}
 		for (int j = 2; j >= 0; j--) {
-			(*myData)[dataPos + j] = sum % 256;
+			(*myData) += (char)sum % 256;
 			sum >>= 8;
 		}
 	}
 	myEncodedData.erase();
 }
 
-const shared_ptr<ZLString> ZLBase64EncodedImage::stringData() const {
+const shared_ptr<std::string> ZLBase64EncodedImage::stringData() const {
 	decode();
 	return myData;
 }

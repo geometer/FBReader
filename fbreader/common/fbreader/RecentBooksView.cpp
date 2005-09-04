@@ -51,11 +51,11 @@ void RecentBooksView::paint() {
 			Paragraph *p = new Paragraph();
 			p->addControl(RECENT_BOOK_LIST, true);
 			p->addControl(LIBRARY_AUTHOR_ENTRY, true);
-			p->addText((*it)->author()->displayName());
-			p->addText(". ");
+			p->addText((*it)->author()->displayName(), myLastBooksModel->allocator());
+			p->addText(". ", myLastBooksModel->allocator());
 			p->addControl(LIBRARY_AUTHOR_ENTRY, false);
 			p->addControl(LIBRARY_BOOK_ENTRY, true);
-			p->addText((*it)->title());
+			p->addText((*it)->title(), myLastBooksModel->allocator());
 			myLastBooksModel->addParagraph(p);
 			myBooksMap[p] = *it;
 		}

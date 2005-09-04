@@ -31,7 +31,7 @@ HtmlBookReader::HtmlBookReader(BookModel &model, const PlainTextFormat &format) 
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len) {
 	if (len > 0) {
 		myConverter.convert(myConverterBuffer, text, text + len);
-		addDataToBuffer(myConverterBuffer.data(), myConverterBuffer.length());
+		addDataToBuffer(myConverterBuffer);
 		myConverterBuffer.erase();
 	}
 }

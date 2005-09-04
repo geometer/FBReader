@@ -42,3 +42,14 @@ void ZLStringUtil::appendNumber(std::string &str, unsigned int n) {
 		n %= base;
 	}
 }
+
+void ZLStringUtil::append(std::string &str, const std::vector<std::string> &text) {
+	size_t len = str.length();
+	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		len += it->length();
+	}
+	str.reserve(len);
+	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		str += *it;
+	}
+}

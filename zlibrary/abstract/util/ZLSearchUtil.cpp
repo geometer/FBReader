@@ -31,16 +31,16 @@ ZLSearchPattern::ZLSearchPattern(const std::string &pattern, bool ignoreCase) {
 	}
 }
 
-int ZLSearchUtil::find(const ZLString &text, const ZLSearchPattern &pattern, int pos) {
+int ZLSearchUtil::find(const char *text, size_t length, const ZLSearchPattern &pattern, int pos) {
 	if (pattern.ignoreCase()) {
 		if (pos < 0) {
 			pos = 0;
 		}
 		const std::string &lower = pattern.lowerCasePattern();
 		const std::string &upper = pattern.upperCasePattern();
-		const char *last = text.data() + text.length() - pattern.lowerCasePattern().length();
+		const char *last = text + length - pattern.lowerCasePattern().length();
 		const char *patternLast = lower.data() + lower.length() - 1;
-		for (const char *i = text.data() + pos; i <= last; i++) {
+		for (const char *i = text + pos; i <= last; i++) {
 			const char *j0 = lower.data();
 			const char *j1 = upper.data();
 			const char *k = i;
@@ -50,7 +50,7 @@ int ZLSearchUtil::find(const ZLString &text, const ZLSearchPattern &pattern, int
 				}
 			}
 			if (j0 > patternLast) {
-				return i - text.data();
+				return i - text;
 			}
 		}
 		return -1;
@@ -59,9 +59,9 @@ int ZLSearchUtil::find(const ZLString &text, const ZLSearchPattern &pattern, int
 			pos = 0;
 		}
 		const std::string &lower = pattern.lowerCasePattern();
-		const char *last = text.data() + text.length() - pattern.lowerCasePattern().length();
+		const char *last = text + length - pattern.lowerCasePattern().length();
 		const char *patternLast = lower.data() + lower.length() - 1;
-		for (const char *i = text.data() + pos; i <= last; i++) {
+		for (const char *i = text + pos; i <= last; i++) {
 			const char *j0 = lower.data();
 			const char *k = i;
 			for (; j0 <= patternLast; j0++, k++) {
@@ -70,7 +70,7 @@ int ZLSearchUtil::find(const ZLString &text, const ZLSearchPattern &pattern, int
 				}
 			}
 			if (j0 > patternLast) {
-				return i - text.data();
+				return i - text;
 			}
 		}
 		return -1;

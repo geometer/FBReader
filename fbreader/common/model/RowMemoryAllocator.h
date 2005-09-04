@@ -19,33 +19,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TXTREADER_H__
-#define __TXTREADER_H__
+#ifndef __ROWMEMORYALLOCATOR_H__
+#define __ROWMEMORYALLOCATOR_H__
 
-#include <string>
+#include <vector>
 
-#include <abstract/EncodingConverter.h>
-
-class ZLInputStream;
-
-class TxtReader {
+class RowMemoryAllocator {
 
 public:
-	void readDocument(ZLInputStream &stream, const std::string &encoding) FORMATS_SECTION;
+	RowMemoryAllocator();
+	~RowMemoryAllocator();
 
-protected:
-	TxtReader() FORMATS_SECTION;
-	virtual ~TxtReader() FORMATS_SECTION;
-
-protected:
-	virtual void startDocumentHandler() FORMATS_SECTION = 0;
-	virtual void endDocumentHandler() FORMATS_SECTION = 0;
-
-	virtual bool characterDataHandler(std::string &str) FORMATS_SECTION = 0;
-	virtual bool newLineHandler() FORMATS_SECTION = 0;
+	void *allocate(size_t size);
 
 private:
-	EncodingConverter myConverter;
+	const size_t myRowSize;
+	std::vector<char*> myPool;
+	size_t myOffset;
+
+private: // disable copying
+	RowMemoryAllocator(const RowMemoryAllocator&);
+	const RowMemoryAllocator &operator = (const RowMemoryAllocator&);
 };
 
-#endif /* __TXTREADER_H__ */
+#endif /* __ROWMEMORYALLOCATOR_H__ */

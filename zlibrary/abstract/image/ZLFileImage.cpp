@@ -23,18 +23,20 @@
 
 #include "ZLFileImage.h"
 
-const shared_ptr<ZLString> ZLFileImage::stringData() const {
+const shared_ptr<std::string> ZLFileImage::stringData() const {
 	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
 
-	shared_ptr<ZLString> imageData = new ZLString();
+	shared_ptr<std::string> imageData = new std::string();
 
 	if (!stream.isNull() && stream->open()) {
 		if (mySize == 0) {
 			mySize = stream->sizeOfOpened();
 		}
 		stream->seek(myOffset);
-		imageData->reserve(mySize);
-		stream->read(imageData->data(), mySize);
+		char *buffer = new char[mySize];
+		stream->read(buffer, mySize);
+		imageData->append(buffer, mySize);
+		delete[] buffer;
 	}
 
 	return imageData;

@@ -19,33 +19,25 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TXTREADER_H__
-#define __TXTREADER_H__
+#include <algorithm>
 
-#include <string>
+#include "RowMemoryAllocator.h"
 
-#include <abstract/EncodingConverter.h>
+RowMemoryAllocator::RowMemoryAllocator() : myRowSize(102400) {
+}
 
-class ZLInputStream;
+RowMemoryAllocator::~RowMemoryAllocator() {
+	for (std::vector<char*>::const_iterator it = myPool.begin(); it != myPool.end(); it++) {
+		delete[] *it;
+	}
+}
 
-class TxtReader {
-
-public:
-	void readDocument(ZLInputStream &stream, const std::string &encoding) FORMATS_SECTION;
-
-protected:
-	TxtReader() FORMATS_SECTION;
-	virtual ~TxtReader() FORMATS_SECTION;
-
-protected:
-	virtual void startDocumentHandler() FORMATS_SECTION = 0;
-	virtual void endDocumentHandler() FORMATS_SECTION = 0;
-
-	virtual bool characterDataHandler(std::string &str) FORMATS_SECTION = 0;
-	virtual bool newLineHandler() FORMATS_SECTION = 0;
-
-private:
-	EncodingConverter myConverter;
-};
-
-#endif /* __TXTREADER_H__ */
+void *RowMemoryAllocator::allocate(size_t size) {
+	if (myPool.empty() || (myOffset + size > myRowSize)) {
+		myPool.push_back(new char[std::max(myRowSize, size)]);
+		myOffset = 0;
+	}
+	char *ptr = myPool.back() + myOffset;
+	myOffset += size;
+	return ptr;
+}

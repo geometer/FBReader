@@ -32,6 +32,7 @@ private:
 public:
 	static bool stringEndsWith(const std::string &str, const std::string &end) UTIL_SECTION;
 	static void appendNumber(std::string &str, unsigned int n) UTIL_SECTION;
+	static void append(std::string &str, const std::vector<std::string> &buffer) UTIL_SECTION;
 };
 
 #endif /* __ZLSTRINGUTIL_H__ */

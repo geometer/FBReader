@@ -20,6 +20,26 @@
  */
 
 #include "Paragraph.h"
+#include "RowMemoryAllocator.h"
+
+TextEntry::TextEntry(const std::string &text, RowMemoryAllocator &allocator) {
+	myDataLength = text.length();
+	myData = (char*)allocator.allocate(myDataLength);
+	memcpy(myData, text.data(), myDataLength);
+}
+
+TextEntry::TextEntry(const std::vector<std::string> &text, RowMemoryAllocator &allocator) {
+	myDataLength = 0;
+	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		myDataLength += it->length();
+	}
+	myData = (char*)allocator.allocate(myDataLength);
+	size_t offset = 0;
+	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		memcpy(myData + offset, it->data(), it->length());
+		offset += it->length();
+	}
+}
 
 ControlEntryPool ControlEntryPool::Pool;
 
@@ -56,32 +76,10 @@ size_t Paragraph::textLength() const {
 	size_t len = 0;
 	for (std::vector<ParagraphEntry*>::const_iterator it = myEntries.begin(); it != myEntries.end(); it++) {
 		if ((*it)->entryKind() == ParagraphEntry::TEXT_ENTRY) {
-			len += ((TextEntry*)(*it))->text().length();
+			len += ((TextEntry*)(*it))->dataLength();
 		}
 	}
 	return len;
-}
-
-void Paragraph::addNonConstText(ZLString &text) {
-	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
-		myEntries.push_back(new TextEntry(text));
-	} else {
-		((TextEntry*)myEntries.back())->addText(text);
-	}
-}
-
-void Paragraph::addText(const std::string &text) {
-	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
-		myEntries.push_back(new TextEntry());
-	}
-	((TextEntry*)myEntries.back())->addText(text);
-}
-
-void Paragraph::addText(const ZLStringBuffer &text) {
-	if (myEntries.empty() || (myEntries.back()->entryKind() != ParagraphEntry::TEXT_ENTRY)) {
-		myEntries.push_back(new TextEntry());
-	}
-	((TextEntry*)myEntries.back())->addText(text);
 }
 
 const ZLImage *ImageEntry::image() const {

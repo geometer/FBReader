@@ -26,6 +26,7 @@
 #include <string>
 
 #include "TextMark.h"
+#include "RowMemoryAllocator.h"
 
 class Paragraph;
 class TreeParagraph;
@@ -53,12 +54,15 @@ public:
 	TextMark nextMark(TextMark position) const MODEL_SECTION;
 	TextMark previousMark(TextMark position) const MODEL_SECTION;
 
+	RowMemoryAllocator &allocator() const MODEL_SECTION;
+
 protected:
 	void addParagraphInternal(Paragraph *paragraph) MODEL_SECTION;
 	
 private:
 	std::vector<Paragraph*> myParagraphs;
 	mutable std::vector<TextMark> myMarks;
+	mutable RowMemoryAllocator myAllocator;
 };
 
 class PlainTextModel : public TextModel {
@@ -86,6 +90,7 @@ private:
 inline const std::vector<Paragraph*> &TextModel::paragraphs() const { return myParagraphs; }
 inline const std::vector<TextMark> &TextModel::marks() const { return myMarks; }
 inline void TextModel::addParagraphInternal(Paragraph *paragraph) { myParagraphs.push_back(paragraph); }
+inline RowMemoryAllocator &TextModel::allocator() const { return myAllocator; }
 
 inline TextModel::Kind PlainTextModel::kind() const { return PLAIN_TEXT_MODEL; }
 inline void PlainTextModel::addParagraph(Paragraph *paragraph) { addParagraphInternal(paragraph); }

@@ -70,7 +70,7 @@ shared_ptr<ZLImageData> GtkImageManager::createData() const {
 	return new GtkImageData();
 }
 
-void GtkImageManager::convertImageDirect(const ZLString &stringData, ZLImageData &data) const {
+void GtkImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
 	GError *error = 0;
   

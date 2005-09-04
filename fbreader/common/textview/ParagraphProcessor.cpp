@@ -105,10 +105,10 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 			case ParagraphEntry::TEXT_ENTRY:
 			{
-				const ZLString &text = ((TextEntry*)*it)->text();
-				if (!text.empty()) {
-					const char *ptr = text.data();
-					const char *end = ptr + text.length();
+				const TextEntry &textEntry = *(TextEntry*)*it;
+				if (textEntry.dataLength() != 0) {
+					const char *ptr = textEntry.data();
+					const char *end = ptr + textEntry.dataLength();
 					if (isspace(*ptr)) {
 						myElements.push_back(TextElementPool::Pool.HSpaceElement);
 					}
@@ -116,7 +116,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 					for (; ptr < end; ptr++) {
 						if (isspace(*ptr)) {
 							if (firstNonSpace != 0) {
-								addWord(firstNonSpace, myOffset + (firstNonSpace - text.data()), ptr - firstNonSpace);
+								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
 								myElements.push_back(TextElementPool::Pool.HSpaceElement);
 								firstNonSpace = 0;
 							}
@@ -125,9 +125,9 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 						}
 					}
 					if (firstNonSpace != 0) {
-						addWord(firstNonSpace, myOffset + (firstNonSpace - text.data()), end - firstNonSpace);
+						addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), end - firstNonSpace);
 					}
-					myOffset += text.length();
+					myOffset += textEntry.dataLength();
 				}
 				break;
 			}

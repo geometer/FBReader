@@ -21,8 +21,6 @@
 //#include <iostream>
 #include <algorithm>
 
-#include <abstract/ZLString.h>
-
 #include "ZLImage.h"
 #include "ZLImageManager.h"
 
@@ -35,7 +33,7 @@ struct Color {
 };
 
 struct PalmImageHeader {
-	PalmImageHeader(const ZLString &str);
+	PalmImageHeader(const std::string &str);
 	
 	unsigned short Width;
 	unsigned short Height;
@@ -112,11 +110,11 @@ static Color PalmImage8bitColormap[256] = {
 	{   0,   0,   0 }, {   0,   0,   0 }, {   0,   0,   0 }, {   0,   0,   0 }
 };
 
-inline static unsigned short uShort(const ZLString &imageString, size_t offset) {
+inline static unsigned short uShort(const std::string &imageString, size_t offset) {
 	return 256 * (unsigned char)imageString[offset] + (unsigned char)imageString[offset + 1];
 }
 
-PalmImageHeader::PalmImageHeader(const ZLString &str) {
+PalmImageHeader::PalmImageHeader(const std::string &str) {
 	Width = ::uShort(str, 0);
 	Height = ::uShort(str, 2);
 	BytesPerRow = ::uShort(str, 4);
@@ -125,7 +123,7 @@ PalmImageHeader::PalmImageHeader(const ZLString &str) {
 	CompressionType = (Flags & 0x8000) ? str[13] : 0xFF;
 }
 
-void ZLImageManager::convertFromPalmImageFormat(const ZLString &imageString, ZLImageData &imageData) const {
+void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, ZLImageData &imageData) const {
 	if (imageString.length() >= 16) {
 		PalmImageHeader header(imageString);
 		//std::cerr << "CompressionType = " << (int)header.CompressionType << "\n";
@@ -283,7 +281,7 @@ shared_ptr<ZLImageData> ZLImageManager::imageData(const ZLImage &image) const {
 
 	if (image.isSingle()) {
 		const ZLSingleImage &singleImage = (const ZLSingleImage&)image;
-		shared_ptr<ZLString> stringData = singleImage.stringData();
+		shared_ptr<std::string> stringData = singleImage.stringData();
 		if (!stringData->empty()) {
 			if (singleImage.mimeType() == "image/palm") {
 				convertFromPalmImageFormat(*stringData, *data);

@@ -22,7 +22,6 @@
 #include <iostream>
 
 #include <abstract/ZLInputStream.h>
-#include <abstract/ZLStringUtil.h>
 
 #include "TxtReader.h"
 

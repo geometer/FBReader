@@ -66,7 +66,7 @@ private:
 protected:
 	~GtkImageManager() {}
 	shared_ptr<ZLImageData> createData() const;
-	void convertImageDirect(const ZLString &stringData, ZLImageData &imageData) const;
+	void convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
 };
 
 #endif /* __GTKIMAGEMANAGER_H__ */

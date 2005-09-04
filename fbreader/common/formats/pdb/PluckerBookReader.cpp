@@ -286,7 +286,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 				safeBeginParagraph();
 				txtBuffer.erase();
 				myConverter.convert(txtBuffer, textStart, ptr);
-				addDataToBuffer(txtBuffer.data(), txtBuffer.length());
+				addDataToBuffer(txtBuffer);
 			}
 		} else if (functionFlag) {
 			int paramCounter = ((unsigned char)*ptr) % 8;
@@ -312,7 +312,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 		safeBeginParagraph();
 		txtBuffer.erase();
 		myConverter.convert(txtBuffer, textStart, end);
-		addDataToBuffer(txtBuffer.data(), txtBuffer.length());
+		addDataToBuffer(txtBuffer);
 	}
 	safeEndParagraph();
 	if (myForcedEntry != 0) {

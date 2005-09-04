@@ -35,7 +35,7 @@ void TxtBookReader::internalEndParagraph() {
 	endParagraph();
 }
 
-bool TxtBookReader::characterDataHandler(const std::string &str) {
+bool TxtBookReader::characterDataHandler(std::string &str) {
 	const char *ptr = str.data();
 	const char *end = ptr + str.length();
 	for (; ptr != end; ptr++) {
@@ -52,7 +52,7 @@ bool TxtBookReader::characterDataHandler(const std::string &str) {
 			internalEndParagraph();
 			beginParagraph();
 		}
-		addDataToBuffer(str.data(), str.length());
+		addDataToBuffer(str);
 		myNewLine = false;
 	}
 	return true;

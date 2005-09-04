@@ -22,7 +22,6 @@
 #include <cctype>
 
 #include <abstract/ZLInputStream.h>
-#include <abstract/ZLString.h>
 
 #include "HtmlDetector.h"
 
@@ -37,14 +36,14 @@ bool HtmlDetector::isHtml(ZLInputStream &stream) const {
 		return false;
 	}
 
-	ZLString buffer;
-	buffer.reserve(1024);
+	const size_t bufferSize = 1024;
+	char *buffer = new char[bufferSize];
 	char sixBytes[7]; 
 	memset(sixBytes, 0, 7);
 	int valuableBytesCounter = 0;
 	bool skipFlag = true;
 	while (valuableBytesCounter < 6) {
-		size_t size = stream.read(buffer.data(), 1024);
+		size_t size = stream.read(buffer, bufferSize);
 		if (size == 0) {
 			break;
 		}
@@ -57,10 +56,11 @@ bool HtmlDetector::isHtml(ZLInputStream &stream) const {
 		}
 		if (!skipFlag && (index < size)) {
 			int bytes = std::min(6 - valuableBytesCounter, (int)(size - index));
-			memcpy(sixBytes, buffer.data() + index, bytes);
+			memcpy(sixBytes, buffer + index, bytes);
 			valuableBytesCounter += bytes;
 		}
 	}
 	stream.close();
+	delete[] buffer;
 	return strcasecmp(sixBytes, "<html>") == 0;
 }

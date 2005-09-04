@@ -22,41 +22,44 @@
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLZDecompressor.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "PluckerImages.h"
 #include "DocDecompressor.h"
 
-const shared_ptr<ZLString> ZCompressedFileImage::stringData() const {
+const shared_ptr<std::string> ZCompressedFileImage::stringData() const {
 	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
 
-	shared_ptr<ZLString> imageData = new ZLString();
+	shared_ptr<std::string> imageData = new std::string();
 
 	if (!stream.isNull() && stream->open()) {
 		stream->seek(myOffset);
 		ZLZDecompressor decompressor(myCompressedSize);
+
 		static const size_t charBufferSize = 2048;
-		ZLString charBuffer;
-		charBuffer.reserve(charBufferSize);
-		ZLStringBuffer buffer;
+		char *charBuffer = new char[charBufferSize];
+		std::vector<std::string> buffer;
 
 		size_t s;
 		do {
-			s = decompressor.decompress(*stream, charBuffer.data(), charBufferSize);
+			s = decompressor.decompress(*stream, charBuffer, charBufferSize);
 			if (s != 0) {
-				buffer.push_back(ZLString());
-				buffer.back().append(charBuffer.data(), s);
+				buffer.push_back(std::string());
+				buffer.back().append(charBuffer, s);
 			}
 		} while (s == charBufferSize);
-		*imageData += buffer;
+		ZLStringUtil::append(*imageData, buffer);
+
+		delete charBuffer;
 	}
 
 	return imageData;
 }
 
-const shared_ptr<ZLString> DocCompressedFileImage::stringData() const {
+const shared_ptr<std::string> DocCompressedFileImage::stringData() const {
 	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
 
-	shared_ptr<ZLString> imageData = new ZLString();
+	shared_ptr<std::string> imageData = new std::string();
 
 	if (!stream.isNull() && stream->open()) {
 		stream->seek(myOffset);
