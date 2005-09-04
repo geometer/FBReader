@@ -60,10 +60,12 @@ void ZLBase64EncodedImage::decode() const {
 			sum += number << (6 * (3 - i));
 			i++;
 		}
+		char triple[3];
 		for (int j = 2; j >= 0; j--) {
-			(*myData) += (char)sum % 256;
+			triple[j] = sum & 0xff; 
 			sum >>= 8;
 		}
+		myData->append(triple, 3);
 	}
 	myEncodedData.erase();
 }
