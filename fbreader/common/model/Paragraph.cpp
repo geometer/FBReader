@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include "Paragraph.h"
 #include "RowMemoryAllocator.h"
 
@@ -37,32 +39,71 @@ ForcedControlEntry::ForcedControlEntry(char *address) {
 
 const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 	if (myEntry.isNull()) {
-		switch (**myIterator) {
+		switch (*myPointer) {
 			case ParagraphEntry::TEXT_ENTRY:
-				myEntry = new TextEntry(*myIterator + 1);
+				myEntry = new TextEntry(myPointer + 1);
 				break;
 			case ParagraphEntry::CONTROL_ENTRY:
 			{
-				unsigned char token = *(*myIterator + 1);
+				unsigned char token = *(myPointer + 1);
 				myEntry = ControlEntryPool::Pool.controlEntry((TextKind)(token >> 1), (token & 1) == 1);
 				break;
 			}
 			case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
-				myEntry = new HyperlinkControlEntry(*myIterator + 1);
+				myEntry = new HyperlinkControlEntry(myPointer + 1);
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
 				ImageMap *imageMap = 0;
-				memcpy(&imageMap, *myIterator + 1, sizeof(const ImageMap*));
-				myEntry = new ImageEntry(*myIterator + sizeof(const ImageMap*) + 1, imageMap);
+				memcpy(&imageMap, myPointer + 1, sizeof(const ImageMap*));
+				myEntry = new ImageEntry(myPointer + sizeof(const ImageMap*) + 1, imageMap);
 				break;
 			}
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
-				myEntry = new ForcedControlEntry(*myIterator + 1);
+				myEntry = new ForcedControlEntry(myPointer + 1);
 				break;
 		}
 	}
 	return myEntry;
+}
+
+void Paragraph::Iterator::next() {
+	myIndex++;
+	myEntry = 0;
+	if (myIndex != myEndIndex) {
+		switch (*myPointer) {
+			case ParagraphEntry::TEXT_ENTRY:
+			{
+				size_t len;
+				memcpy(&len, myPointer + 1, sizeof(size_t));
+				myPointer += len + sizeof(size_t) + 1;
+				break;
+			}
+			case ParagraphEntry::CONTROL_ENTRY:
+				myPointer += 2;
+				break;
+			case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
+				myPointer += 2;
+				while (*myPointer != '\0') {
+					myPointer++;
+				}
+				myPointer++;
+				break;
+			case ParagraphEntry::IMAGE_ENTRY:
+				myPointer += sizeof(const ImageMap*) + 1;
+				while (*myPointer != '\0') {
+					myPointer++;
+				}
+				myPointer++;
+				break;
+			case ParagraphEntry::FORCED_CONTROL_ENTRY:
+				myPointer += 2 * sizeof(int) + 3;
+				break;
+		}
+		if (*myPointer == 0) {
+			memcpy(&myPointer, myPointer + 1, sizeof(char*));
+		}
+	}
 }
 
 void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) {
@@ -71,7 +112,7 @@ void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) 
 	*address = ParagraphEntry::TEXT_ENTRY;
 	memcpy(address + 1, &len, sizeof(size_t));
 	memcpy(address + sizeof(size_t) + 1, text.data(), len);
-	myEntryAddress.push_back(address);
+	addEntry(address);
 }
 
 void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) {
@@ -87,14 +128,14 @@ void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator
 		memcpy(address + offset, it->data(), it->length());
 		offset += it->length();
 	}
-	myEntryAddress.push_back(address);
+	addEntry(address);
 }
 
 void Paragraph::addControl(TextKind textKind, bool isStart, RowMemoryAllocator &allocator) {
 	char *address = (char*)allocator.allocate(2);
 	*address = ParagraphEntry::CONTROL_ENTRY;
 	*(address + 1) = (textKind << 1) + (isStart ? 1 : 0);
-	myEntryAddress.push_back(address);
+	addEntry(address);
 }
 
 void Paragraph::addControl(const ForcedControlEntry &entry, RowMemoryAllocator &allocator) {
@@ -104,7 +145,7 @@ void Paragraph::addControl(const ForcedControlEntry &entry, RowMemoryAllocator &
 	memcpy(address + 2, &entry.myLeftIndent, sizeof(int));
 	memcpy(address + 2 + sizeof(int), &entry.myRightIndent, sizeof(int));
 	*(address + 2 + 2 * sizeof(int)) = entry.myAlignmentType;
-	myEntryAddress.push_back(address);
+	addEntry(address);
 }
 
 void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label, RowMemoryAllocator &allocator) {
@@ -113,7 +154,7 @@ void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label,
 	*(address + 1) = textKind;
 	memcpy(address + 2, label.data(), label.length());
 	*(address + label.length() + 2) = '\0';
-	myEntryAddress.push_back(address);
+	addEntry(address);
 }
 
 void Paragraph::addImage(const std::string &id, const ImageMap &imageMap, RowMemoryAllocator &allocator) {
@@ -123,7 +164,7 @@ void Paragraph::addImage(const std::string &id, const ImageMap &imageMap, RowMem
 	memcpy(address + 1, &imageMapAddress, sizeof(const ImageMap*));
 	memcpy(address + 1 + sizeof(const ImageMap*), id.data(), id.length());
 	*(address + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
-	myEntryAddress.push_back(address);
+	addEntry(address);
 }
 
 ControlEntryPool ControlEntryPool::Pool;

@@ -40,11 +40,11 @@ class ParagraphEntry {
 
 public:
 	enum Kind {
-		TEXT_ENTRY,
-		IMAGE_ENTRY,
-		CONTROL_ENTRY,
-		HYPERLINK_CONTROL_ENTRY,
-		FORCED_CONTROL_ENTRY,
+		TEXT_ENTRY = 1,
+		IMAGE_ENTRY = 2,
+		CONTROL_ENTRY = 3,
+		HYPERLINK_CONTROL_ENTRY = 4,
+		FORCED_CONTROL_ENTRY = 5,
 	};
 
 protected:
@@ -179,8 +179,9 @@ public:
 		ParagraphEntry::Kind entryKind() const MODEL_SECTION;
 
 	private:
-		std::vector<char*>::const_iterator myIterator;	
-		const std::vector<char*>::const_iterator myEndIterator;	
+		char *myPointer;
+		size_t myIndex;
+		size_t myEndIndex;
 		mutable shared_ptr<ParagraphEntry> myEntry;
 	};
 
@@ -211,7 +212,11 @@ public:
 	size_t textLength() const MODEL_SECTION;
 
 private:
-	std::vector<char*> myEntryAddress;
+	void addEntry(char *address) MODEL_SECTION;
+
+private:
+	char *myFirstEntryAddress;
+	size_t myEntryNumber;
 
 friend class Paragraph::Iterator;
 };
@@ -300,16 +305,16 @@ inline ImageEntry::ImageEntry(const std::string &id, const ImageMap *imageMap) :
 inline ImageEntry::~ImageEntry() {}
 inline const std::string &ImageEntry::id() const { return myId; }
 
-inline Paragraph::Paragraph() {}
+inline Paragraph::Paragraph() : myEntryNumber(0) {}
 inline Paragraph::~Paragraph() {}
 inline Paragraph::Kind Paragraph::kind() const { return TEXT_PARAGRAPH; }
-inline size_t Paragraph::entryNumber() const { return myEntryAddress.size(); }
+inline size_t Paragraph::entryNumber() const { return myEntryNumber; }
+inline void Paragraph::addEntry(char *address) { if (myEntryNumber == 0) myFirstEntryAddress = address; myEntryNumber++; }
 
-inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myIterator(paragraph.myEntryAddress.begin()), myEndIterator(paragraph.myEntryAddress.end()) {}
+inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myPointer(paragraph.myFirstEntryAddress), myIndex(0), myEndIndex(paragraph.myEntryNumber) {}
 inline Paragraph::Iterator::~Iterator() {}
-inline bool Paragraph::Iterator::isEnd() const { return myIterator == myEndIterator; }
-inline void Paragraph::Iterator::next() { myIterator++; myEntry = 0; }
-inline ParagraphEntry::Kind Paragraph::Iterator::entryKind() const { return (ParagraphEntry::Kind)**myIterator; }
+inline bool Paragraph::Iterator::isEnd() const { return myIndex == myEndIndex; }
+inline ParagraphEntry::Kind Paragraph::Iterator::entryKind() const { return (ParagraphEntry::Kind)*myPointer; }
 
 inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}
 inline SpecialParagraph::~SpecialParagraph() {}

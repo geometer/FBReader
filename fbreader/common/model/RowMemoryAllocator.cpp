@@ -23,7 +23,7 @@
 
 #include "RowMemoryAllocator.h"
 
-RowMemoryAllocator::RowMemoryAllocator() : myRowSize(102400) {
+RowMemoryAllocator::RowMemoryAllocator() : myRowSize(102400), myOffset(0) {
 }
 
 RowMemoryAllocator::~RowMemoryAllocator() {
@@ -33,8 +33,13 @@ RowMemoryAllocator::~RowMemoryAllocator() {
 }
 
 void *RowMemoryAllocator::allocate(size_t size) {
-	if (myPool.empty() || (myOffset + size > myRowSize)) {
-		myPool.push_back(new char[std::max(myRowSize, size)]);
+	if (myPool.empty()) {
+		myPool.push_back(new char[std::max(myRowSize, size + 1 + sizeof(char*))]);
+	} else if (myOffset + size + 1 + sizeof(char*) > myRowSize) {
+		char *row = new char[std::max(myRowSize, size + 1 + sizeof(char*))];
+		*(myPool.back() + myOffset) = 0;
+		memcpy(myPool.back() + myOffset + 1, &row, sizeof(char*));
+		myPool.push_back(row);
 		myOffset = 0;
 	}
 	char *ptr = myPool.back() + myOffset;
