@@ -143,7 +143,7 @@ size_t Paragraph::textLength() const {
 	size_t len = 0;
 	for (Iterator it = *this; !it.isEnd(); it.next()) {
 		if (it.entryKind() == ParagraphEntry::TEXT_ENTRY) {
-			len += ((TextEntry&)it.entry()).dataLength();
+			len += ((TextEntry&)*it.entry()).dataLength();
 		}
 	}
 	return len;
