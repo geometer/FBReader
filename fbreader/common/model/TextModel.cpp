@@ -45,15 +45,14 @@ void TextModel::search(const std::string &text, size_t startIndex, size_t endInd
 		(endIndex < myParagraphs.size()) ? myParagraphs.begin() + endIndex : myParagraphs.end();
 	for (std::vector<Paragraph*>::const_iterator it = start; it < end; it++) {
 		int offset = 0;
-		const std::vector<ParagraphEntry*> &entries = ((Paragraph*)*it)->entries();
-		for (std::vector<ParagraphEntry*>::const_iterator jt = entries.begin(); jt != entries.end(); jt++) {
-			if ((*jt)->entryKind() == ParagraphEntry::TEXT_ENTRY) {
-				const char *str = ((TextEntry*)*jt)->data();
-				const size_t len = ((TextEntry*)*jt)->dataLength();
+		for (Paragraph::Iterator jt = **it; !jt.isEnd(); jt.next()) {
+			if (jt.entry().entryKind() == ParagraphEntry::TEXT_ENTRY) {
+				const char *str = ((TextEntry&)jt.entry()).data();
+				const size_t len = ((TextEntry&)jt.entry()).dataLength();
 				for (int pos = ZLSearchUtil::find(str, len, pattern); pos != -1; pos = ZLSearchUtil::find(str, len, pattern, pos + 1)) {
 					myMarks.push_back(TextMark(it - myParagraphs.begin(), offset + pos, pattern.length()));
 				}
-				offset += ((TextEntry*)*jt)->dataLength();
+				offset += len;
 			}
 		}
 	}

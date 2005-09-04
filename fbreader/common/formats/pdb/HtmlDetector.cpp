@@ -20,6 +20,7 @@
  */
 
 #include <cctype>
+#include <algorithm>
 
 #include <abstract/ZLInputStream.h>
 

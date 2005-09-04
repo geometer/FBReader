@@ -165,6 +165,21 @@ private:
 class Paragraph {
 
 public:
+	class Iterator {
+
+	public:
+		Iterator(const Paragraph &paragraph) MODEL_SECTION;
+		~Iterator() MODEL_SECTION;
+
+		bool isEnd() const MODEL_SECTION;
+		void next() MODEL_SECTION;
+		const ParagraphEntry &entry() const MODEL_SECTION;
+
+	private:
+		std::vector<ParagraphEntry*>::const_iterator myIterator;	
+		const std::vector<ParagraphEntry*>::const_iterator myEndIterator;	
+	};
+
 	enum Kind {
 		TEXT_PARAGRAPH,
 		TREE_PARAGRAPH,
@@ -187,12 +202,14 @@ public:
 	void addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) MODEL_SECTION;
 	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
 
-	const std::vector<ParagraphEntry*> &entries() const MODEL_SECTION;
+	size_t entryNumber() const MODEL_SECTION;
 
 	size_t textLength() const MODEL_SECTION;
 
 private:
 	std::vector<ParagraphEntry*> myEntries;
+
+friend class Paragraph::Iterator;
 };
 
 class SpecialParagraph : public Paragraph {
@@ -287,9 +304,15 @@ inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.p
 inline void Paragraph::addControl(ForcedControlEntry *entry) { myEntries.push_back(entry); }
 inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
 inline void Paragraph::addImage(const std::string &id, const ImageMap &imageMap) { myEntries.push_back(new ImageEntry(id, imageMap)); }
-inline const std::vector<ParagraphEntry*> &Paragraph::entries() const { return myEntries; }
 inline void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) { myEntries.push_back(new TextEntry(text, allocator)); }
 inline void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) { myEntries.push_back(new TextEntry(text, allocator)); }
+inline size_t Paragraph::entryNumber() const { return myEntries.size(); }
+
+inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myIterator(paragraph.myEntries.begin()), myEndIterator(paragraph.myEntries.end()) {}
+inline Paragraph::Iterator::~Iterator() {}
+inline bool Paragraph::Iterator::isEnd() const { return myIterator == myEndIterator; }
+inline void Paragraph::Iterator::next() { myIterator++; }
+inline const ParagraphEntry &Paragraph::Iterator::entry() const { return **myIterator; }
 
 inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}
 inline SpecialParagraph::~SpecialParagraph() {}

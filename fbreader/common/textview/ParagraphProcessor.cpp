@@ -82,19 +82,18 @@ void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, i
 }
 
 void ParagraphCursor::ParagraphProcessor::fill() {
-	const std::vector<ParagraphEntry*> &entries = myParagraph.entries();
-	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
-		switch ((*it)->entryKind()) {
+	for (Paragraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
+		switch (it.entry().entryKind()) {
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
-				myElements.push_back(new ForcedControlElement((ForcedControlEntry&)**it));
+				myElements.push_back(new ForcedControlElement((ForcedControlEntry&)it.entry()));
 				break;
 			case ParagraphEntry::CONTROL_ENTRY:
-				myElements.push_back(TextElementPool::Pool.getControlElement((ControlEntry&)**it));
+				myElements.push_back(TextElementPool::Pool.getControlElement((ControlEntry&)it.entry()));
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
 				beforeAddWord();
-				const ZLImage *image = ((ImageEntry*)*it)->image();
+				const ZLImage *image = ((ImageEntry&)it.entry()).image();
 				if (image != NULL) {
 					shared_ptr<ZLImageData> data = ZLImageManager::instance().imageData(*image);
 					if (!data.isNull()) {
@@ -105,7 +104,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 			case ParagraphEntry::TEXT_ENTRY:
 			{
-				const TextEntry &textEntry = *(TextEntry*)*it;
+				const TextEntry &textEntry = (TextEntry&)it.entry();
 				if (textEntry.dataLength() != 0) {
 					const char *ptr = textEntry.data();
 					const char *end = ptr + textEntry.dataLength();

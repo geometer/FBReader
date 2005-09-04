@@ -222,7 +222,7 @@ void BookReader::endContentsParagraph() {
 		if (myCurrentContentsParagraph->reference() == -1) {
 			delete myCurrentContentsParagraph;
 		} else {
-			if (myCurrentContentsParagraph->entries().size() == 1) {
+			if (myCurrentContentsParagraph->entryNumber() == 1) {
 				myCurrentContentsParagraph->addText("...", myModel.contentsModel().allocator());
 			}
 			myModel.myContentsModel.addParagraph(myCurrentContentsParagraph);

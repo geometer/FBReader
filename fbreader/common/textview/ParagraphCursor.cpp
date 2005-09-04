@@ -199,10 +199,8 @@ TextMark WordCursor::position() const {
 }
 
 void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
-	const std::vector<ParagraphEntry*> &entries = paragraph.entries();
-	for (std::vector<ParagraphEntry*>::const_iterator it = entries.begin(); it != entries.end(); it++) {
-		ControlEntry &control = *(ControlEntry*)*it;
-		myElements.push_back(TextElementPool::Pool.getControlElement(control));
+	for (Paragraph::Iterator it = paragraph; !it.isEnd(); it.next()) {
+		myElements.push_back(TextElementPool::Pool.getControlElement((ControlEntry&)it.entry()));
 	}
 }
 
