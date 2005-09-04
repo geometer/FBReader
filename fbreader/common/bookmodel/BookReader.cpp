@@ -75,7 +75,7 @@ void BookReader::beginParagraph(Paragraph::Kind kind) {
 	if (!currentTextModelIsNull()) {
 		myCurrentParagraph = (kind == Paragraph::TEXT_PARAGRAPH) ? new Paragraph() : new SpecialParagraph(kind);
 		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); it++) {
-			myCurrentParagraph->addControl(*it, true);
+			myCurrentParagraph->addControl(*it, true, myModel.bookTextModel().allocator());
 		}
 		myCurrentTextModel->addParagraph(myCurrentParagraph);
 		myProcessData = true;
@@ -93,21 +93,21 @@ void BookReader::endParagraph() {
 void BookReader::addControl(TextKind kind, bool start) {
 	if (myCurrentParagraph != 0) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addControl(kind, start);
+		myCurrentParagraph->addControl(kind, start, myModel.bookTextModel().allocator());
 	}
 }
 
 void BookReader::addControl(ForcedControlEntry *entry) {
 	if ((myCurrentParagraph != 0) && (entry != 0)) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addControl(entry);
+		myCurrentParagraph->addControl(entry, myModel.bookTextModel().allocator());
 	}
 }
 
 void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 	if (myCurrentParagraph != 0) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addHyperlinkControl(kind, label);
+		myCurrentParagraph->addHyperlinkControl(kind, label, myModel.bookTextModel().allocator());
 	}
 }
 
@@ -200,20 +200,20 @@ void BookReader::addImageReference(const std::string &id) {
 	bool createSeparateParagraph = myCurrentParagraph == 0;
 	if (createSeparateParagraph) {
 		beginParagraph();
-		myCurrentParagraph->addControl(IMAGE, true);
-		myCurrentParagraph->addImage(id, myModel.imageMap());
-		myCurrentParagraph->addControl(IMAGE, false);
+		myCurrentParagraph->addControl(IMAGE, true, myModel.bookTextModel().allocator());
+		myCurrentParagraph->addImage(id, myModel.imageMap(), myModel.bookTextModel().allocator());
+		myCurrentParagraph->addControl(IMAGE, false, myModel.bookTextModel().allocator());
 		endParagraph();
 	} else {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addImage(id, myModel.imageMap());
+		myCurrentParagraph->addImage(id, myModel.imageMap(), myModel.bookTextModel().allocator());
 	}
 }
 
 void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
 		myCurrentContentsParagraph = new ParagraphWithReference();
-		myCurrentContentsParagraph->addControl(CONTENTS_TABLE_ENTRY, true);
+		myCurrentContentsParagraph->addControl(CONTENTS_TABLE_ENTRY, true, myModel.contentsModel().allocator());
 	}
 }
 

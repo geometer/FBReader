@@ -82,19 +82,19 @@ private:
 class ForcedControlElement : public TextElement {
 
 public:
-	ForcedControlElement(const ForcedControlEntry &entry) VIEW_SECTION;
+	ForcedControlElement(shared_ptr<ParagraphEntry> entry) VIEW_SECTION;
 	~ForcedControlElement() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
 	const ForcedControlEntry &entry() const VIEW_SECTION;
 
 private:
-	const ForcedControlEntry &myEntry;
+	const shared_ptr<ParagraphEntry> myEntry;
 };
 
 class ControlElement : public TextElement {
 
 public:
-	ControlElement(const ControlEntry &entry) VIEW_SECTION;
+	ControlElement(shared_ptr<ParagraphEntry> entry) VIEW_SECTION;
 	~ControlElement() VIEW_SECTION;
 	Kind kind() const VIEW_SECTION;
 	const ControlEntry &entry() const VIEW_SECTION;
@@ -102,7 +102,7 @@ public:
 	bool isStart() const VIEW_SECTION;
 
 private:
-	const ControlEntry &myEntry;
+	const shared_ptr<ParagraphEntry> myEntry;
 };
 
 class TreeElement : public TextElement {
@@ -138,17 +138,17 @@ inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
 inline SpecialTextElement::~SpecialTextElement() {}
 inline TextElement::Kind SpecialTextElement::kind() const { return myKind; };
 
-inline ForcedControlElement::ForcedControlElement(const ForcedControlEntry &entry) : myEntry(entry) {}
+inline ForcedControlElement::ForcedControlElement(const shared_ptr<ParagraphEntry> entry) : myEntry(entry) {}
 inline ForcedControlElement::~ForcedControlElement() {}
 inline TextElement::Kind ForcedControlElement::kind() const { return FORCED_CONTROL_ELEMENT; };
-inline const ForcedControlEntry &ForcedControlElement::entry() const { return myEntry; }
+inline const ForcedControlEntry &ForcedControlElement::entry() const { return (const ForcedControlEntry&)*myEntry; }
 
-inline ControlElement::ControlElement(const ControlEntry &entry) : myEntry(entry) {}
+inline ControlElement::ControlElement(const shared_ptr<ParagraphEntry> entry) : myEntry(entry) {}
 inline ControlElement::~ControlElement() {}
 inline TextElement::Kind ControlElement::kind() const { return CONTROL_ELEMENT; };
-inline const ControlEntry &ControlElement::entry() const { return myEntry; }
-inline TextKind ControlElement::textKind() const { return myEntry.kind(); }
-inline bool ControlElement::isStart() const { return myEntry.isStart(); }
+inline const ControlEntry &ControlElement::entry() const { return (const ControlEntry&)*myEntry; }
+inline TextKind ControlElement::textKind() const { return entry().kind(); }
+inline bool ControlElement::isStart() const { return entry().isStart(); }
 
 inline TreeElement::TreeElement(TreeElementKind treeElementKind) : myTreeElementKind(treeElementKind) {}
 inline TreeElement::~TreeElement() {}

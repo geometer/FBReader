@@ -76,16 +76,16 @@ void CollectionView::paint() {
 		const std::vector<const Author*> &authors = myCollection->authors();
 		for (std::vector<const Author*>::const_iterator it = authors.begin(); it != authors.end(); it++) {
 			TreeParagraph *authorParagraph = myTreeModel->createParagraph();
-			authorParagraph->addControl(LIBRARY_AUTHOR_ENTRY, true);
+			authorParagraph->addControl(LIBRARY_AUTHOR_ENTRY, true, myTreeModel->allocator());
 			authorParagraph->addText((*it)->displayName(), myTreeModel->allocator());
 			const Books &books = myCollection->books(*it);
 			for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
 				TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
-				bookParagraph->addControl(LIBRARY_BOOK_ENTRY, true);
+				bookParagraph->addControl(LIBRARY_BOOK_ENTRY, true, myTreeModel->allocator());
 				bookParagraph->addText((*jt)->title(), myTreeModel->allocator());
 				if (myCollection->isBookExternal(*jt)) {
 					bookParagraph->addText(" ", myTreeModel->allocator());
-					bookParagraph->addImage(deleteImageId, myImageMap);
+					bookParagraph->addImage(deleteImageId, myImageMap, myTreeModel->allocator());
 				}
 				myBooksMap[bookParagraph] = *jt;
 			}

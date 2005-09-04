@@ -26,6 +26,8 @@
 #include <vector>
 #include <string>
 
+#include <abstract/shared_ptr.h>
+
 #include "TextKind.h"
 #include "AlignmentType.h"
 
@@ -41,6 +43,7 @@ public:
 		TEXT_ENTRY,
 		IMAGE_ENTRY,
 		CONTROL_ENTRY,
+		HYPERLINK_CONTROL_ENTRY,
 		FORCED_CONTROL_ENTRY,
 	};
 
@@ -49,7 +52,6 @@ protected:
 
 public:
 	virtual ~ParagraphEntry() MODEL_SECTION;
-	virtual Kind entryKind() const MODEL_SECTION = 0;
 };
 
 class ForcedControlEntry : public ParagraphEntry {
@@ -57,7 +59,6 @@ class ForcedControlEntry : public ParagraphEntry {
 public:
 	ForcedControlEntry() MODEL_SECTION;
 	~ForcedControlEntry() MODEL_SECTION;
-	Kind entryKind() const MODEL_SECTION;
 
 	bool leftIndentSupported() const MODEL_SECTION;
 	int leftIndent() const MODEL_SECTION;
@@ -93,7 +94,6 @@ protected:
 public:
 	virtual ~ControlEntry() MODEL_SECTION;
 	TextKind kind() const MODEL_SECTION;
-	Kind entryKind() const MODEL_SECTION;
 	bool isStart() const MODEL_SECTION;
 	virtual bool isHyperlink() const MODEL_SECTION;
 
@@ -112,20 +112,21 @@ public:
 public:
 	ControlEntryPool() MODEL_SECTION;
 	~ControlEntryPool() MODEL_SECTION;
-	ControlEntry *controlEntry(TextKind kind, bool isStart) MODEL_SECTION;
+	shared_ptr<ParagraphEntry> controlEntry(TextKind kind, bool isStart) MODEL_SECTION;
 
 private:
-	std::map<TextKind, ControlEntry*> myStartEntries;
-	std::map<TextKind, ControlEntry*> myEndEntries;
+	std::map<TextKind, shared_ptr<ParagraphEntry> > myStartEntries;
+	std::map<TextKind, shared_ptr<ParagraphEntry> > myEndEntries;
 };
 
 class HyperlinkControlEntry : public ControlEntry {
 
 public:
-	HyperlinkControlEntry(TextKind kind, const std::string &label) MODEL_SECTION;
+	//HyperlinkControlEntry(TextKind kind, const std::string &label) MODEL_SECTION;
+	HyperlinkControlEntry(const char *address) MODEL_SECTION;
 	~HyperlinkControlEntry() MODEL_SECTION;
-	bool isHyperlink() const MODEL_SECTION;
 	const std::string &label() const MODEL_SECTION;
+	bool isHyperlink() const MODEL_SECTION;
 
 private:
 	std::string myLabel;
@@ -134,18 +135,14 @@ private:
 class TextEntry : public ParagraphEntry {
 
 public:
-	TextEntry(const std::string &text, RowMemoryAllocator &allocator) MODEL_SECTION;
-	TextEntry(const std::vector<std::string> &text, RowMemoryAllocator &allocator) MODEL_SECTION;
+	TextEntry(const char *address) MODEL_SECTION;
 	~TextEntry() MODEL_SECTION;
-
-	Kind entryKind() const MODEL_SECTION;
 
 	size_t dataLength() const MODEL_SECTION;
 	const char *data() const MODEL_SECTION;
  
 private:
-	size_t myDataLength;
-	char *myData;
+	const char *myAddress;
 };
 
 class ImageEntry : public ParagraphEntry {
@@ -153,7 +150,6 @@ class ImageEntry : public ParagraphEntry {
 public:
 	ImageEntry(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
 	~ImageEntry() MODEL_SECTION;
-	Kind entryKind() const MODEL_SECTION;
 	const std::string &id() const MODEL_SECTION;
 	const ZLImage *image() const MODEL_SECTION;
 
@@ -173,11 +169,12 @@ public:
 
 		bool isEnd() const MODEL_SECTION;
 		void next() MODEL_SECTION;
-		const ParagraphEntry &entry() const MODEL_SECTION;
+		const shared_ptr<ParagraphEntry> entry() const MODEL_SECTION;
+		ParagraphEntry::Kind entryKind() const MODEL_SECTION;
 
 	private:
-		std::vector<ParagraphEntry*>::const_iterator myIterator;	
-		const std::vector<ParagraphEntry*>::const_iterator myEndIterator;	
+		std::vector<char*>::const_iterator myIterator;	
+		const std::vector<char*>::const_iterator myEndIterator;	
 	};
 
 	enum Kind {
@@ -195,19 +192,19 @@ public:
 	virtual ~Paragraph() MODEL_SECTION;
 	virtual Kind kind() const MODEL_SECTION;
 
-	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
-	void addControl(ForcedControlEntry *entry) MODEL_SECTION;
-	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
+	void addControl(TextKind textKind, bool isStart, RowMemoryAllocator &allocator) MODEL_SECTION;
+	void addControl(ForcedControlEntry *entry, RowMemoryAllocator &allocator) MODEL_SECTION;
+	void addHyperlinkControl(TextKind textKind, const std::string &label, RowMemoryAllocator &allocator) MODEL_SECTION;
 	void addText(const std::string &text, RowMemoryAllocator &allocator) MODEL_SECTION;
 	void addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) MODEL_SECTION;
-	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
+	void addImage(const std::string &id, const ImageMap &imageMap, RowMemoryAllocator &allocator) MODEL_SECTION;
 
 	size_t entryNumber() const MODEL_SECTION;
 
 	size_t textLength() const MODEL_SECTION;
 
 private:
-	std::vector<ParagraphEntry*> myEntries;
+	std::vector<char*> myEntryAddress;
 
 friend class Paragraph::Iterator;
 };
@@ -264,7 +261,6 @@ inline ParagraphEntry::~ParagraphEntry() {}
 
 inline ForcedControlEntry::ForcedControlEntry() : myMask(0) {}
 inline ForcedControlEntry::~ForcedControlEntry() {}
-inline ParagraphEntry::Kind ForcedControlEntry::entryKind() const { return FORCED_CONTROL_ENTRY; }
 inline bool ForcedControlEntry::leftIndentSupported() const { return myMask & SUPPORT_LEFT_INDENT; }
 inline int ForcedControlEntry::leftIndent() const { return myLeftIndent; }
 inline void ForcedControlEntry::setLeftIndent(int leftIndent) { myLeftIndent = leftIndent; myMask |= SUPPORT_LEFT_INDENT; }
@@ -278,41 +274,36 @@ inline void ForcedControlEntry::setAlignmentType(AlignmentType alignmentType) { 
 inline ControlEntry::ControlEntry(TextKind kind, bool isStart) : myKind(kind), myStart(isStart) {}
 inline ControlEntry::~ControlEntry() {}
 inline TextKind ControlEntry::kind() const { return myKind; }
-inline ParagraphEntry::Kind ControlEntry::entryKind() const { return CONTROL_ENTRY; }
 inline bool ControlEntry::isStart() const { return myStart; }
 inline bool ControlEntry::isHyperlink() const { return false; }
+
 inline ControlEntryPool::ControlEntryPool() {}
+inline ControlEntryPool::~ControlEntryPool() {}
 
-inline HyperlinkControlEntry::HyperlinkControlEntry(TextKind kind, const std::string &label) : ControlEntry(kind, true), myLabel(label) {}
+inline HyperlinkControlEntry::HyperlinkControlEntry(const char *address) : ControlEntry((TextKind)*address, true), myLabel(address + 1) {}
 inline HyperlinkControlEntry::~HyperlinkControlEntry() {}
-inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
 inline const std::string &HyperlinkControlEntry::label() const { return myLabel; }
+inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
 
+inline TextEntry::TextEntry(const char *address) : myAddress(address) {}
 inline TextEntry::~TextEntry() {}
-inline size_t TextEntry::dataLength() const { return myDataLength; }
-inline const char *TextEntry::data() const { return myData; }
-inline ParagraphEntry::Kind TextEntry::entryKind() const { return TEXT_ENTRY; }
+inline size_t TextEntry::dataLength() const { return *(size_t*)myAddress; }
+inline const char *TextEntry::data() const { return myAddress + sizeof(size_t); }
 
 inline ImageEntry::ImageEntry(const std::string &id, const ImageMap &imageMap) : myId(id), myMap(imageMap) {}
 inline ImageEntry::~ImageEntry() {}
-inline ParagraphEntry::Kind ImageEntry::entryKind() const { return IMAGE_ENTRY; }
 inline const std::string &ImageEntry::id() const { return myId; }
 
 inline Paragraph::Paragraph() {}
+inline Paragraph::~Paragraph() {}
 inline Paragraph::Kind Paragraph::kind() const { return TEXT_PARAGRAPH; }
-inline void Paragraph::addControl(TextKind textKind, bool isStart) { myEntries.push_back(ControlEntryPool::Pool.controlEntry(textKind, isStart)); }
-inline void Paragraph::addControl(ForcedControlEntry *entry) { myEntries.push_back(entry); }
-inline void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label) { myEntries.push_back(new HyperlinkControlEntry(textKind, label)); }
-inline void Paragraph::addImage(const std::string &id, const ImageMap &imageMap) { myEntries.push_back(new ImageEntry(id, imageMap)); }
-inline void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) { myEntries.push_back(new TextEntry(text, allocator)); }
-inline void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) { myEntries.push_back(new TextEntry(text, allocator)); }
-inline size_t Paragraph::entryNumber() const { return myEntries.size(); }
+inline size_t Paragraph::entryNumber() const { return myEntryAddress.size(); }
 
-inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myIterator(paragraph.myEntries.begin()), myEndIterator(paragraph.myEntries.end()) {}
+inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myIterator(paragraph.myEntryAddress.begin()), myEndIterator(paragraph.myEntryAddress.end()) {}
 inline Paragraph::Iterator::~Iterator() {}
 inline bool Paragraph::Iterator::isEnd() const { return myIterator == myEndIterator; }
 inline void Paragraph::Iterator::next() { myIterator++; }
-inline const ParagraphEntry &Paragraph::Iterator::entry() const { return **myIterator; }
+inline ParagraphEntry::Kind Paragraph::Iterator::entryKind() const { return (ParagraphEntry::Kind)**myIterator; }
 
 inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}
 inline SpecialParagraph::~SpecialParagraph() {}

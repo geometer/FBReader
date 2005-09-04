@@ -22,61 +22,95 @@
 #include "Paragraph.h"
 #include "RowMemoryAllocator.h"
 
-TextEntry::TextEntry(const std::string &text, RowMemoryAllocator &allocator) {
-	myDataLength = text.length();
-	myData = (char*)allocator.allocate(myDataLength);
-	memcpy(myData, text.data(), myDataLength);
+const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
+	switch (**myIterator) {
+		case ParagraphEntry::TEXT_ENTRY:
+			return new TextEntry(*myIterator + 1);
+		case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
+			return new HyperlinkControlEntry(*myIterator + 1);
+		default:
+			return *(shared_ptr<ParagraphEntry>*)(*myIterator + 1);
+	}
 }
 
-TextEntry::TextEntry(const std::vector<std::string> &text, RowMemoryAllocator &allocator) {
-	myDataLength = 0;
+void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) {
+	size_t len = text.length();
+	char *address = (char*)allocator.allocate(len + sizeof(size_t) + 1);
+	*address = ParagraphEntry::TEXT_ENTRY;
+	memcpy(address + 1, &len, sizeof(size_t));
+	memcpy(address + sizeof(size_t) + 1, text.data(), len);
+	myEntryAddress.push_back(address);
+}
+
+void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) {
+	size_t len = 0;
 	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
-		myDataLength += it->length();
+		len += it->length();
 	}
-	myData = (char*)allocator.allocate(myDataLength);
-	size_t offset = 0;
+	char *address = (char*)allocator.allocate(len + sizeof(size_t) + 1);
+	*address = ParagraphEntry::TEXT_ENTRY;
+	memcpy(address + 1, &len, sizeof(size_t));
+	size_t offset = sizeof(size_t) + 1;
 	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
-		memcpy(myData + offset, it->data(), it->length());
+		memcpy(address + offset, it->data(), it->length());
 		offset += it->length();
 	}
+	myEntryAddress.push_back(address);
+}
+
+static shared_ptr<ParagraphEntry> NULL_PTR = 0;
+
+void Paragraph::addControl(TextKind textKind, bool isStart, RowMemoryAllocator &allocator) {
+	char *address = (char*)allocator.allocate(sizeof(shared_ptr<ParagraphEntry>) + 1);
+	*address = ParagraphEntry::CONTROL_ENTRY;
+	memcpy(address + 1, &NULL_PTR, sizeof(shared_ptr<ParagraphEntry>));
+	*(shared_ptr<ParagraphEntry>*)(address + 1) = ControlEntryPool::Pool.controlEntry(textKind, isStart);
+	myEntryAddress.push_back(address);
+}
+
+void Paragraph::addControl(ForcedControlEntry *entry, RowMemoryAllocator &allocator) {
+	char *address = (char*)allocator.allocate(sizeof(shared_ptr<ParagraphEntry>) + 1);
+	*address = ParagraphEntry::FORCED_CONTROL_ENTRY;
+	memcpy(address + 1, &NULL_PTR, sizeof(shared_ptr<ParagraphEntry>));
+	*(shared_ptr<ParagraphEntry>*)(address + 1) = entry;
+	myEntryAddress.push_back(address);
+}
+
+void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label, RowMemoryAllocator &allocator) {
+	char *address = (char*)allocator.allocate(label.length() + 3);
+	*address = ParagraphEntry::HYPERLINK_CONTROL_ENTRY;
+	*(address + 1) = textKind;
+	memcpy(address + 2, label.data(), label.length());
+	*(address + label.length() + 3) = '\0';
+	myEntryAddress.push_back(address);
+}
+
+void Paragraph::addImage(const std::string &id, const ImageMap &imageMap, RowMemoryAllocator &allocator) {
+	char *address = (char*)allocator.allocate(sizeof(shared_ptr<ParagraphEntry>) + 1);
+	*address = ParagraphEntry::IMAGE_ENTRY;
+	memcpy(address + 1, &NULL_PTR, sizeof(shared_ptr<ParagraphEntry>));
+	*(shared_ptr<ParagraphEntry>*)(address + 1) = new ImageEntry(id, imageMap);
+	myEntryAddress.push_back(address);
 }
 
 ControlEntryPool ControlEntryPool::Pool;
 
-ControlEntryPool::~ControlEntryPool() {
-	std::map<TextKind, ControlEntry*>::iterator it;
-	for (it = myStartEntries.begin(); it != myStartEntries.end(); it++) {
-		delete it->second;
-	}
-	for (it = myEndEntries.begin(); it != myEndEntries.end(); it++) {
-		delete it->second;
-	}
-}
-
-ControlEntry *ControlEntryPool::controlEntry(TextKind kind, bool isStart) {
-	std::map<TextKind, ControlEntry*> &entries = isStart ? myStartEntries : myEndEntries;
-	std::map<TextKind, ControlEntry*>::iterator it = entries.find(kind);
+shared_ptr<ParagraphEntry> ControlEntryPool::controlEntry(TextKind kind, bool isStart) {
+	std::map<TextKind, shared_ptr<ParagraphEntry> > &entries = isStart ? myStartEntries : myEndEntries;
+	std::map<TextKind, shared_ptr<ParagraphEntry> >::iterator it = entries.find(kind);
 	if (it != entries.end()) {
 		return it->second;
 	}
-	ControlEntry *entry = new ControlEntry(kind, isStart);
-	entries.insert(std::pair<TextKind, ControlEntry*>(kind, entry));
+	shared_ptr<ParagraphEntry> entry = new ControlEntry(kind, isStart);
+	entries[kind] = entry;
 	return entry;
 }
 	
-Paragraph::~Paragraph() {
-	for (std::vector<ParagraphEntry*>::const_iterator it = myEntries.begin(); it != myEntries.end(); it++) {
-		if (((*it)->entryKind() != ParagraphEntry::CONTROL_ENTRY) || ((ControlEntry*)*it)->isHyperlink()) {
-			delete *it;
-		}
-	}
-}
-
 size_t Paragraph::textLength() const {
 	size_t len = 0;
-	for (std::vector<ParagraphEntry*>::const_iterator it = myEntries.begin(); it != myEntries.end(); it++) {
-		if ((*it)->entryKind() == ParagraphEntry::TEXT_ENTRY) {
-			len += ((TextEntry*)(*it))->dataLength();
+	for (Iterator it = *this; !it.isEnd(); it.next()) {
+		if (it.entryKind() == ParagraphEntry::TEXT_ENTRY) {
+			len += ((TextEntry&)it.entry()).dataLength();
 		}
 	}
 	return len;

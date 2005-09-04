@@ -46,9 +46,10 @@ void TextModel::search(const std::string &text, size_t startIndex, size_t endInd
 	for (std::vector<Paragraph*>::const_iterator it = start; it < end; it++) {
 		int offset = 0;
 		for (Paragraph::Iterator jt = **it; !jt.isEnd(); jt.next()) {
-			if (jt.entry().entryKind() == ParagraphEntry::TEXT_ENTRY) {
-				const char *str = ((TextEntry&)jt.entry()).data();
-				const size_t len = ((TextEntry&)jt.entry()).dataLength();
+			if (jt.entryKind() == ParagraphEntry::TEXT_ENTRY) {
+				const TextEntry& textEntry = (TextEntry&)*jt.entry();
+				const char *str = textEntry.data();
+				const size_t len = textEntry.dataLength();
 				for (int pos = ZLSearchUtil::find(str, len, pattern); pos != -1; pos = ZLSearchUtil::find(str, len, pattern, pos + 1)) {
 					myMarks.push_back(TextMark(it - myParagraphs.begin(), offset + pos, pattern.length()));
 				}

@@ -60,7 +60,7 @@ public:
 
 	Word *getWord(const char *data, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
 	void storeWord(Word *word) VIEW_SECTION;
-	ControlElement *getControlElement(const ControlEntry &entry) VIEW_SECTION;
+	ControlElement *getControlElement(shared_ptr<ParagraphEntry> entry) VIEW_SECTION;
 	void storeControlElement(ControlElement *element) VIEW_SECTION;
 
 private:
@@ -242,7 +242,7 @@ inline void TextElementPool::storeWord(Word *word) {
 	word->~Word();
 	myWordAllocator.free((void*)word);
 }
-inline ControlElement *TextElementPool::getControlElement(const ControlEntry &entry) {
+inline ControlElement *TextElementPool::getControlElement(shared_ptr<ParagraphEntry> entry) {
 	return new (myControlAllocator.allocate()) ControlElement(entry);
 }
 inline void TextElementPool::storeControlElement(ControlElement *element) {

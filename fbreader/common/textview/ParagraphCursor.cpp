@@ -200,7 +200,7 @@ TextMark WordCursor::position() const {
 
 void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
 	for (Paragraph::Iterator it = paragraph; !it.isEnd(); it.next()) {
-		myElements.push_back(TextElementPool::Pool.getControlElement((ControlEntry&)it.entry()));
+		myElements.push_back(TextElementPool::Pool.getControlElement(it.entry()));
 	}
 }
 
