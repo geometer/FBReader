@@ -105,16 +105,15 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 			case ParagraphEntry::TEXT_ENTRY:
 			{
-				shared_ptr<ParagraphEntry> entry = it.entry();
-				const TextEntry &textEntry = (TextEntry&)*entry;
+				const TextEntry &textEntry = (TextEntry&)*it.entry();
 				if (textEntry.dataLength() != 0) {
-					const char *ptr = textEntry.data();
-					const char *end = ptr + textEntry.dataLength();
-					if (isspace(*ptr)) {
+					const char *start = textEntry.data();
+					const char *end = start + textEntry.dataLength();
+					if (isspace(*start)) {
 						myElements.push_back(TextElementPool::Pool.HSpaceElement);
 					}
 					const char *firstNonSpace = 0;
-					for (; ptr < end; ptr++) {
+					for (const char *ptr = start; ptr < end; ptr++) {
 						if (isspace(*ptr)) {
 							if (firstNonSpace != 0) {
 								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);

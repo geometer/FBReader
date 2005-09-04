@@ -178,6 +178,7 @@ public:
 	private:
 		std::vector<char*>::const_iterator myIterator;	
 		const std::vector<char*>::const_iterator myEndIterator;	
+		mutable shared_ptr<ParagraphEntry> myEntry;
 	};
 
 	enum Kind {
@@ -290,7 +291,6 @@ inline bool HyperlinkControlEntry::isHyperlink() const { return true; }
 
 inline TextEntry::TextEntry(const char *address) : myAddress(address) {}
 inline TextEntry::~TextEntry() {}
-inline size_t TextEntry::dataLength() const { return *(size_t*)myAddress; }
 inline const char *TextEntry::data() const { return myAddress + sizeof(size_t); }
 
 inline ImageEntry::ImageEntry(const std::string &id, const ImageMap &imageMap) : myId(id), myMap(imageMap) {}
@@ -305,7 +305,7 @@ inline size_t Paragraph::entryNumber() const { return myEntryAddress.size(); }
 inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myIterator(paragraph.myEntryAddress.begin()), myEndIterator(paragraph.myEntryAddress.end()) {}
 inline Paragraph::Iterator::~Iterator() {}
 inline bool Paragraph::Iterator::isEnd() const { return myIterator == myEndIterator; }
-inline void Paragraph::Iterator::next() { myIterator++; }
+inline void Paragraph::Iterator::next() { myIterator++; myEntry = 0; }
 inline ParagraphEntry::Kind Paragraph::Iterator::entryKind() const { return (ParagraphEntry::Kind)**myIterator; }
 
 inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}

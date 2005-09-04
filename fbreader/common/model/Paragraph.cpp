@@ -22,22 +22,36 @@
 #include "Paragraph.h"
 #include "RowMemoryAllocator.h"
 
+size_t TextEntry::dataLength() const {
+	size_t len;
+	memcpy(&len, myAddress, sizeof(size_t));
+	return len;
+}
+
 const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
-	switch (**myIterator) {
-		case ParagraphEntry::TEXT_ENTRY:
-			return new TextEntry(*myIterator + 1);
-		case ParagraphEntry::CONTROL_ENTRY:
-		{
-			unsigned char token = *(*myIterator + 1);
-			return ControlEntryPool::Pool.controlEntry((TextKind)(token >> 1), (token & 1) == 1);
+	if (myEntry.isNull()) {
+		switch (**myIterator) {
+			case ParagraphEntry::TEXT_ENTRY:
+				myEntry = new TextEntry(*myIterator + 1);
+				break;
+			case ParagraphEntry::CONTROL_ENTRY:
+			{
+				unsigned char token = *(*myIterator + 1);
+				myEntry = ControlEntryPool::Pool.controlEntry((TextKind)(token >> 1), (token & 1) == 1);
+				break;
+			}
+			case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
+				myEntry = new HyperlinkControlEntry(*myIterator + 1);
+				break;
+			case ParagraphEntry::IMAGE_ENTRY:
+				myEntry = new ImageEntry(*myIterator + sizeof(const ImageMap*) + 1, *(const ImageMap*)(*myIterator + 1));
+				break;
+			default:
+				myEntry = *(shared_ptr<ParagraphEntry>*)(*myIterator + 1);
+				break;
 		}
-		case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
-			return new HyperlinkControlEntry(*myIterator + 1);
-		case ParagraphEntry::IMAGE_ENTRY:
-			return new ImageEntry(*myIterator + sizeof(const ImageMap*) + 1, *(const ImageMap*)(*myIterator + 1));
-		default:
-			return *(shared_ptr<ParagraphEntry>*)(*myIterator + 1);
 	}
+	return myEntry;
 }
 
 void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) {
