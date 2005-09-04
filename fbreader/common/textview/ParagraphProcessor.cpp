@@ -105,7 +105,8 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			}
 			case ParagraphEntry::TEXT_ENTRY:
 			{
-				const TextEntry &textEntry = (TextEntry&)*it.entry();
+				shared_ptr<ParagraphEntry> entry = it.entry();
+				const TextEntry &textEntry = (TextEntry&)*entry;
 				if (textEntry.dataLength() != 0) {
 					const char *ptr = textEntry.data();
 					const char *end = ptr + textEntry.dataLength();

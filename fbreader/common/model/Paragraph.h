@@ -52,6 +52,10 @@ protected:
 
 public:
 	virtual ~ParagraphEntry() MODEL_SECTION;
+
+private: // disable copying
+	ParagraphEntry(const ParagraphEntry &entry);
+	const ParagraphEntry &operator = (const ParagraphEntry &entry);
 };
 
 class ForcedControlEntry : public ParagraphEntry {
@@ -122,7 +126,6 @@ private:
 class HyperlinkControlEntry : public ControlEntry {
 
 public:
-	//HyperlinkControlEntry(TextKind kind, const std::string &label) MODEL_SECTION;
 	HyperlinkControlEntry(const char *address) MODEL_SECTION;
 	~HyperlinkControlEntry() MODEL_SECTION;
 	const std::string &label() const MODEL_SECTION;

@@ -71,6 +71,7 @@ void CollectionView::gotoParagraph(int num, bool last) {
 
 void CollectionView::paint() {
 	if ((myCollection == 0) || (!myCollection->isActual())) {
+		rebuild();
 		myCollection = new BookCollection();
 		myTreeModel = new TreeModel();
 		const std::vector<const Author*> &authors = myCollection->authors();

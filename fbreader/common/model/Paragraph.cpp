@@ -26,8 +26,15 @@ const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 	switch (**myIterator) {
 		case ParagraphEntry::TEXT_ENTRY:
 			return new TextEntry(*myIterator + 1);
+		case ParagraphEntry::CONTROL_ENTRY:
+		{
+			unsigned char token = *(*myIterator + 1);
+			return ControlEntryPool::Pool.controlEntry((TextKind)(token >> 1), (token & 1) == 1);
+		}
 		case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
 			return new HyperlinkControlEntry(*myIterator + 1);
+		case ParagraphEntry::IMAGE_ENTRY:
+			return new ImageEntry(*myIterator + sizeof(const ImageMap*) + 1, *(const ImageMap*)(*myIterator + 1));
 		default:
 			return *(shared_ptr<ParagraphEntry>*)(*myIterator + 1);
 	}
@@ -58,15 +65,14 @@ void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator
 	myEntryAddress.push_back(address);
 }
 
-static shared_ptr<ParagraphEntry> NULL_PTR = 0;
-
 void Paragraph::addControl(TextKind textKind, bool isStart, RowMemoryAllocator &allocator) {
-	char *address = (char*)allocator.allocate(sizeof(shared_ptr<ParagraphEntry>) + 1);
+	char *address = (char*)allocator.allocate(2);
 	*address = ParagraphEntry::CONTROL_ENTRY;
-	memcpy(address + 1, &NULL_PTR, sizeof(shared_ptr<ParagraphEntry>));
-	*(shared_ptr<ParagraphEntry>*)(address + 1) = ControlEntryPool::Pool.controlEntry(textKind, isStart);
+	*(address + 1) = (textKind << 1) + (isStart ? 1 : 0);
 	myEntryAddress.push_back(address);
 }
+
+static shared_ptr<ParagraphEntry> NULL_PTR = 0;
 
 void Paragraph::addControl(ForcedControlEntry *entry, RowMemoryAllocator &allocator) {
 	char *address = (char*)allocator.allocate(sizeof(shared_ptr<ParagraphEntry>) + 1);
@@ -81,15 +87,16 @@ void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label,
 	*address = ParagraphEntry::HYPERLINK_CONTROL_ENTRY;
 	*(address + 1) = textKind;
 	memcpy(address + 2, label.data(), label.length());
-	*(address + label.length() + 3) = '\0';
+	*(address + label.length() + 2) = '\0';
 	myEntryAddress.push_back(address);
 }
 
 void Paragraph::addImage(const std::string &id, const ImageMap &imageMap, RowMemoryAllocator &allocator) {
-	char *address = (char*)allocator.allocate(sizeof(shared_ptr<ParagraphEntry>) + 1);
+	char *address = (char*)allocator.allocate(sizeof(const ImageMap*) + id.length() + 2);
 	*address = ParagraphEntry::IMAGE_ENTRY;
-	memcpy(address + 1, &NULL_PTR, sizeof(shared_ptr<ParagraphEntry>));
-	*(shared_ptr<ParagraphEntry>*)(address + 1) = new ImageEntry(id, imageMap);
+	memcpy(address + 1, &imageMap, sizeof(const ImageMap*));
+	memcpy(address + 1 + sizeof(const ImageMap*), id.data(), id.length());
+	*(address + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
 	myEntryAddress.push_back(address);
 }
 
