@@ -154,14 +154,14 @@ private:
 class ImageEntry : public ParagraphEntry {
 
 public:
-	ImageEntry(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
+	ImageEntry(const std::string &id, const ImageMap *imageMap) MODEL_SECTION;
 	~ImageEntry() MODEL_SECTION;
 	const std::string &id() const MODEL_SECTION;
 	const ZLImage *image() const MODEL_SECTION;
 
 private:
 	std::string myId;
-	const ImageMap &myMap;
+	const ImageMap *myMap;
 };
 
 class Paragraph {
@@ -296,7 +296,7 @@ inline TextEntry::TextEntry(const char *address) : myAddress(address) {}
 inline TextEntry::~TextEntry() {}
 inline const char *TextEntry::data() const { return myAddress + sizeof(size_t); }
 
-inline ImageEntry::ImageEntry(const std::string &id, const ImageMap &imageMap) : myId(id), myMap(imageMap) {}
+inline ImageEntry::ImageEntry(const std::string &id, const ImageMap *imageMap) : myId(id), myMap(imageMap) {}
 inline ImageEntry::~ImageEntry() {}
 inline const std::string &ImageEntry::id() const { return myId; }
 

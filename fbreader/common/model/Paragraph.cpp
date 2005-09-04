@@ -51,8 +51,12 @@ const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 				myEntry = new HyperlinkControlEntry(*myIterator + 1);
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
-				myEntry = new ImageEntry(*myIterator + sizeof(const ImageMap*) + 1, *(const ImageMap*)(*myIterator + 1));
+			{
+				ImageMap *imageMap = 0;
+				memcpy(&imageMap, *myIterator + 1, sizeof(const ImageMap*));
+				myEntry = new ImageEntry(*myIterator + sizeof(const ImageMap*) + 1, imageMap);
 				break;
+			}
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
 				myEntry = new ForcedControlEntry(*myIterator + 1);
 				break;
@@ -115,7 +119,8 @@ void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label,
 void Paragraph::addImage(const std::string &id, const ImageMap &imageMap, RowMemoryAllocator &allocator) {
 	char *address = (char*)allocator.allocate(sizeof(const ImageMap*) + id.length() + 2);
 	*address = ParagraphEntry::IMAGE_ENTRY;
-	memcpy(address + 1, &imageMap, sizeof(const ImageMap*));
+	const ImageMap *imageMapAddress = &imageMap;
+	memcpy(address + 1, &imageMapAddress, sizeof(const ImageMap*));
 	memcpy(address + 1 + sizeof(const ImageMap*), id.data(), id.length());
 	*(address + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
 	myEntryAddress.push_back(address);
@@ -145,8 +150,8 @@ size_t Paragraph::textLength() const {
 }
 
 const ZLImage *ImageEntry::image() const {
-	ImageMap::const_iterator i = myMap.find(myId);
-	return (i != myMap.end()) ? (*i).second : 0;
+	ImageMap::const_iterator i = myMap->find(myId);
+	return (i != myMap->end()) ? (*i).second : 0;
 }
 
 TreeParagraph::TreeParagraph(TreeParagraph *parent) : myIsOpen(false), myParent(parent) {
