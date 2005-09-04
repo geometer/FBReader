@@ -97,8 +97,8 @@ void BookReader::addControl(TextKind kind, bool start) {
 	}
 }
 
-void BookReader::addControl(ForcedControlEntry *entry) {
-	if ((myCurrentParagraph != 0) && (entry != 0)) {
+void BookReader::addControl(const ForcedControlEntry &entry) {
+	if (myCurrentParagraph != 0) {
 		flushTextBufferToParagraph();
 		myCurrentParagraph->addControl(entry, myModel.bookTextModel().allocator());
 	}

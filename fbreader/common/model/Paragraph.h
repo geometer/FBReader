@@ -62,6 +62,7 @@ class ForcedControlEntry : public ParagraphEntry {
 
 public:
 	ForcedControlEntry() MODEL_SECTION;
+	ForcedControlEntry(char *address) MODEL_SECTION;
 	~ForcedControlEntry() MODEL_SECTION;
 
 	bool leftIndentSupported() const MODEL_SECTION;
@@ -76,18 +77,20 @@ public:
 	AlignmentType alignmentType() const MODEL_SECTION;
 	void setAlignmentType(AlignmentType alignmentType) MODEL_SECTION;
 
-private:
 	enum {
 		SUPPORT_LEFT_INDENT = 1,
 		SUPPORT_RIGHT_INDENT = 2,
 		SUPPORT_ALIGNMENT_TYPE = 4,
 	};
 
+private:
 	int myMask;
 
 	int myLeftIndent;
 	int myRightIndent;
 	AlignmentType myAlignmentType;
+
+friend class Paragraph;
 };
 
 class ControlEntry : public ParagraphEntry {
@@ -197,7 +200,7 @@ public:
 	virtual Kind kind() const MODEL_SECTION;
 
 	void addControl(TextKind textKind, bool isStart, RowMemoryAllocator &allocator) MODEL_SECTION;
-	void addControl(ForcedControlEntry *entry, RowMemoryAllocator &allocator) MODEL_SECTION;
+	void addControl(const ForcedControlEntry &entry, RowMemoryAllocator &allocator) MODEL_SECTION;
 	void addHyperlinkControl(TextKind textKind, const std::string &label, RowMemoryAllocator &allocator) MODEL_SECTION;
 	void addText(const std::string &text, RowMemoryAllocator &allocator) MODEL_SECTION;
 	void addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) MODEL_SECTION;

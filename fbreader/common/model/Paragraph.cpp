@@ -28,6 +28,13 @@ size_t TextEntry::dataLength() const {
 	return len;
 }
 
+ForcedControlEntry::ForcedControlEntry(char *address) {
+	myMask = *address;
+	memcpy(&myLeftIndent, address + 1, sizeof(int));
+	memcpy(&myRightIndent, address + 1 + sizeof(int), sizeof(int));
+	myAlignmentType = (AlignmentType)*(address + 1 + 2 * sizeof(int));
+}
+
 const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 	if (myEntry.isNull()) {
 		switch (**myIterator) {
@@ -46,8 +53,8 @@ const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 			case ParagraphEntry::IMAGE_ENTRY:
 				myEntry = new ImageEntry(*myIterator + sizeof(const ImageMap*) + 1, *(const ImageMap*)(*myIterator + 1));
 				break;
-			default:
-				myEntry = *(shared_ptr<ParagraphEntry>*)(*myIterator + 1);
+			case ParagraphEntry::FORCED_CONTROL_ENTRY:
+				myEntry = new ForcedControlEntry(*myIterator + 1);
 				break;
 		}
 	}
@@ -86,13 +93,13 @@ void Paragraph::addControl(TextKind textKind, bool isStart, RowMemoryAllocator &
 	myEntryAddress.push_back(address);
 }
 
-static shared_ptr<ParagraphEntry> NULL_PTR = 0;
-
-void Paragraph::addControl(ForcedControlEntry *entry, RowMemoryAllocator &allocator) {
-	char *address = (char*)allocator.allocate(sizeof(shared_ptr<ParagraphEntry>) + 1);
+void Paragraph::addControl(const ForcedControlEntry &entry, RowMemoryAllocator &allocator) {
+	char *address = (char*)allocator.allocate(3 + 2 * sizeof(int));
 	*address = ParagraphEntry::FORCED_CONTROL_ENTRY;
-	memcpy(address + 1, &NULL_PTR, sizeof(shared_ptr<ParagraphEntry>));
-	*(shared_ptr<ParagraphEntry>*)(address + 1) = entry;
+	*(address + 1) = entry.myMask;
+	memcpy(address + 2, &entry.myLeftIndent, sizeof(int));
+	memcpy(address + 2 + sizeof(int), &entry.myRightIndent, sizeof(int));
+	*(address + 2 + 2 * sizeof(int)) = entry.myAlignmentType;
 	myEntryAddress.push_back(address);
 }
 

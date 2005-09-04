@@ -50,7 +50,7 @@ public:
 	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH) MODEL_SECTION;
 	void endParagraph() MODEL_SECTION;
 	void addControl(TextKind kind, bool start) MODEL_SECTION;
-	void addControl(ForcedControlEntry *entry) MODEL_SECTION;
+	void addControl(const ForcedControlEntry &entry) MODEL_SECTION;
 	void addHyperlinkControl(TextKind kind, const std::string &label) MODEL_SECTION;
 	void addHyperlinkLabel(const std::string &label) MODEL_SECTION;
 	void addHyperlinkLabel(const std::string &label, int paragraphNumber) MODEL_SECTION;

@@ -75,17 +75,7 @@ void PluckerBookReader::safeBeginParagraph() {
 			addControl(it->first, it->second);
 		}
 		if (myForcedEntry != 0) {
-			ForcedControlEntry *copy = new ForcedControlEntry();
-			if (myForcedEntry->leftIndentSupported()) {
-				copy->setLeftIndent(myForcedEntry->leftIndent());
-			}
-			if (myForcedEntry->rightIndentSupported()) {
-				copy->setRightIndent(myForcedEntry->rightIndent());
-			}
-			if (myForcedEntry->alignmentTypeSupported()) {
-				copy->setAlignmentType(myForcedEntry->alignmentType());
-			}
-			addControl(copy);
+			addControl(*myForcedEntry);
 		} else {
 			addControl(REGULAR, true);
 		}
