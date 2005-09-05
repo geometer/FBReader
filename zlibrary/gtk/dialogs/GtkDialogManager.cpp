@@ -34,15 +34,7 @@ ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, co
 }
 
 int GtkDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	GtkDialog *dialog = GTK_DIALOG(gtk_dialog_new());
-
-	gtk_window_set_title(GTK_WINDOW(dialog), title);
-
-	if (myWindow != 0) {
-		gtk_window_set_transient_for(GTK_WINDOW(dialog), myWindow);
-	}
-
-	gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+	GtkDialog *dialog = createDialog(title);
 
 	if (button0 != 0) {
 		gtk_dialog_add_button (dialog, button0, 0);
@@ -55,6 +47,7 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 	}
 
 	GtkWidget *contents = gtk_hbox_new(FALSE, 10);
+	gtk_container_set_border_width(GTK_CONTAINER(contents), 10);
 	GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_INFO, GTK_ICON_SIZE_DIALOG);
 	gtk_misc_set_alignment(GTK_MISC(image), 0.5, 0.0);
 
