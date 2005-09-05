@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <abstract/ZLInputStream.h>
 
 #include "TxtReader.h"

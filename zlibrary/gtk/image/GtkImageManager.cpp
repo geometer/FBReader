@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <abstract/ZLImage.h>
 
 #include "GtkImageManager.h"
