@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include "ZLOptions.h"
 #include "ZLOptions_internal.h"
 
