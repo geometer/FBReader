@@ -30,42 +30,20 @@
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 #include "../../abstract/deviceInfo/ZLDeviceInfo.h"
 
+#include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"
 #include "GtkOptionView.h"
 
-static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (key->keyval == GDK_Return && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-
-		return true;
-	} else if (key->keyval == GDK_Escape && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-
-		return true;
-	}
-
-	return false;
-}
-
-GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLDesktopOptionsDialog(id) {
-	myDialog = GTK_DIALOG(gtk_dialog_new());
-
-	gtk_window_set_title(GTK_WINDOW(myDialog), caption.c_str());
-
-	if (parent != 0)
-		gtk_window_set_transient_for(GTK_WINDOW(myDialog), parent);
-
-	gtk_window_set_modal(GTK_WINDOW(myDialog), TRUE);
+GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id) {
+	myDialog = ((GtkDialogManager&)GtkDialogManager::instance()).createDialog(caption);
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
-		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button (myDialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
+		gtk_dialog_add_button(myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
+		gtk_dialog_add_button(myDialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
 	} else {
-		gtk_dialog_add_button (myDialog, "Ok", GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button (myDialog, "Cancel", GTK_RESPONSE_REJECT);
+		gtk_dialog_add_button(myDialog, "Ok", GTK_RESPONSE_ACCEPT);
+		gtk_dialog_add_button(myDialog, "Cancel", GTK_RESPONSE_REJECT);
 	}
-
-	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
 

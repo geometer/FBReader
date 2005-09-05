@@ -26,18 +26,6 @@
 #include "GtkOpenFileDialog.h"
 #include "GtkDialogManager.h"
 
-static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (key->keyval == GDK_Return && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-		return true;
-	} else if (key->keyval == GDK_Escape && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-		return true;
-	}
-
-	return false;
-}
-
 static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn *) {
 	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
@@ -50,17 +38,10 @@ static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer se
 	return FALSE;
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler, GtkWindow *parent) : ZLDesktopOpenFileDialog(handler) {
+GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLDesktopOpenFileDialog(handler) {
 	myExitFlag = false;
 
-	myDialog = GTK_DIALOG(gtk_dialog_new());
-
-	gtk_window_set_title(GTK_WINDOW(myDialog), caption);
-
-	if (parent != 0)
-		gtk_window_set_transient_for(GTK_WINDOW(myDialog), parent);
-
-	gtk_window_set_modal(GTK_WINDOW(myDialog), TRUE);
+	myDialog = ((GtkDialogManager&)GtkDialogManager::instance()).createDialog(caption);
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
 		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
@@ -69,8 +50,6 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &h
 		gtk_dialog_add_button (myDialog, "Ok", GTK_RESPONSE_ACCEPT);
 		gtk_dialog_add_button (myDialog, "Cancel", GTK_RESPONSE_REJECT);
 	}
-
-	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), 0);
 
 	myStateLine = GTK_ENTRY(gtk_entry_new());
 

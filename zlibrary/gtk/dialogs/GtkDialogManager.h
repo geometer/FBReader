@@ -22,6 +22,7 @@
 #define __GTKDIALOGMANAGER_H__
 
 #include <gtk/gtkwindow.h>
+#include <gtk/gtkdialog.h>
 
 #include <abstract/ZLDialogManager.h>
 
@@ -43,6 +44,8 @@ public:
 	const std::string &getPixmapPath() const { return myPixmapPath; }
 
 	void setMainWindow(GtkWindow *window) { myWindow = window; }
+
+	GtkDialog *createDialog(const std::string& title) const;
 
 private:
 	std::string myPixmapPath;

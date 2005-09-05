@@ -24,6 +24,7 @@
 
 #include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLDeviceInfo.h>
+#include <gtk/GtkDialogManager.h>
 
 #include <gtk-pdaxrom/GtkViewWidget.h>
 #include <gtk-pdaxrom/GtkPaintContext.h>
@@ -209,37 +210,14 @@ void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
 	}
 }
 
-static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (key->keyval == GDK_Return && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-
-		return true;
-	} else if (key->keyval == GDK_Escape && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-
-		return true;
-	}
-
-	return false;
-}
-
 void GtkFBReader::searchSlot() {
-	GtkDialog *findDialog = GTK_DIALOG(gtk_dialog_new());
-
-	gtk_window_set_title(GTK_WINDOW(findDialog), "Text search");
-
-	if (getMainWindow() != 0)
-		gtk_window_set_transient_for(GTK_WINDOW(findDialog), getMainWindow());
-
-	gtk_window_set_modal(GTK_WINDOW(findDialog), TRUE);
+	GtkDialog *findDialog = ((GtkDialogManager&)GtkDialogManager::instance()).createDialog("Text search");
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
 		gtk_dialog_add_button (findDialog, GTK_STOCK_FIND, GTK_RESPONSE_ACCEPT);
 	} else {
 		gtk_dialog_add_button (findDialog, "Find", GTK_RESPONSE_ACCEPT);
 	}
-
-	gtk_signal_connect(GTK_OBJECT(findDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
 
 	GtkEntry *wordToSearch = GTK_ENTRY(gtk_entry_new());
 

@@ -20,6 +20,8 @@
 
 #include <gtk/gtk.h>
 
+#include <gdk/gdkkeysyms.h>
+
 #include <abstract/ZLOpenFileDialog.h>
 
 #include "GtkDialogManager.h"
@@ -28,7 +30,7 @@
 #include "GtkWaitMessage.h"
 
 ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new GtkOptionsDialog(id, title, myWindow);
+	return new GtkOptionsDialog(id, title);
 }
 
 int GtkDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
@@ -69,9 +71,39 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 }
 
 void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
-	GtkOpenFileDialog(title.c_str(), handler, myWindow).runWithSize();
+	GtkOpenFileDialog(title.c_str(), handler).runWithSize();
 }
 
 ZLWaitMessage *GtkDialogManager::waitMessage(const std::string &message) const {
 	return new GtkWaitMessage(myWindow, message);
+}
+
+static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
+	if (key->keyval == GDK_Return && key->state == 0) {
+		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+
+		return true;
+	} else if (key->keyval == GDK_Escape && key->state == 0) {
+		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
+
+		return true;
+	}
+
+	return false;
+}
+
+GtkDialog *GtkDialogManager::createDialog(const std::string& title) const {
+	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
+
+	gtk_window_set_title(dialog, title.c_str());
+
+	if (myWindow != 0) {
+		gtk_window_set_transient_for(dialog, myWindow);
+	}
+
+	gtk_window_set_modal(dialog, TRUE);
+
+	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), NULL);
+
+  return GTK_DIALOG(dialog);
 }

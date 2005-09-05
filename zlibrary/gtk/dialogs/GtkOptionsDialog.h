@@ -59,7 +59,7 @@ private:
 class GtkOptionsDialog : public ZLDesktopOptionsDialog {
 
 public:
-	GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent);
+	GtkOptionsDialog(const std::string &id, const std::string &caption);
 	~GtkOptionsDialog();
 	ZLOptionsDialogTab *createTab(const std::string &name);
 
