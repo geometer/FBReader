@@ -105,6 +105,10 @@ TreeModel::~TreeModel() {
 	delete myRoot;
 }
 
+void TextModel::addParagraphInternal(Paragraph *paragraph) {
+	myParagraphs.push_back(paragraph);
+}
+
 TreeParagraph *TreeModel::createParagraph(TreeParagraph *parent) {
 	if (parent == 0) {
 		parent = myRoot;
@@ -126,4 +130,77 @@ void TreeModel::selectParagraph(const unsigned int paragraphNumber) const {
 		TextModel::selectParagraph(paragraphNumber);
 		((TreeParagraph*)paragraphs()[paragraphNumber])->openTree();
 	}
+}
+
+Paragraph *PlainTextModel::createParagraph(Paragraph::Kind kind) {
+	Paragraph *paragraph = (kind == Paragraph::TEXT_PARAGRAPH) ? new Paragraph() : new SpecialParagraph(kind);
+	addParagraphInternal(paragraph);
+	return paragraph;
+}
+
+ParagraphWithReference *PlainTextModel::createParagraphWithReference(long reference) {
+	ParagraphWithReference *paragraph = new ParagraphWithReference(reference);
+	addParagraphInternal(paragraph);
+	return paragraph;
+}
+
+void TextModel::addText(const std::string &text) {
+	size_t len = text.length();
+	char *address = (char*)myAllocator.allocate(len + sizeof(size_t) + 1);
+	*address = ParagraphEntry::TEXT_ENTRY;
+	memcpy(address + 1, &len, sizeof(size_t));
+	memcpy(address + sizeof(size_t) + 1, text.data(), len);
+	myParagraphs.back()->addEntry(address);
+}
+
+void TextModel::addText(const std::vector<std::string> &text) {
+	size_t len = 0;
+	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		len += it->length();
+	}
+	char *address = (char*)myAllocator.allocate(len + sizeof(size_t) + 1);
+	*address = ParagraphEntry::TEXT_ENTRY;
+	memcpy(address + 1, &len, sizeof(size_t));
+	size_t offset = sizeof(size_t) + 1;
+	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		memcpy(address + offset, it->data(), it->length());
+		offset += it->length();
+	}
+	myParagraphs.back()->addEntry(address);
+}
+
+void TextModel::addControl(TextKind textKind, bool isStart) {
+	char *address = (char*)myAllocator.allocate(2);
+	*address = ParagraphEntry::CONTROL_ENTRY;
+	*(address + 1) = (textKind << 1) + (isStart ? 1 : 0);
+	myParagraphs.back()->addEntry(address);
+}
+
+void TextModel::addControl(const ForcedControlEntry &entry) {
+	char *address = (char*)myAllocator.allocate(3 + 2 * sizeof(short));
+	*address = ParagraphEntry::FORCED_CONTROL_ENTRY;
+	*(address + 1) = entry.myMask;
+	memcpy(address + 2, &entry.myLeftIndent, sizeof(short));
+	memcpy(address + 2 + sizeof(short), &entry.myRightIndent, sizeof(short));
+	*(address + 2 + 2 * sizeof(short)) = entry.myAlignmentType;
+	myParagraphs.back()->addEntry(address);
+}
+
+void TextModel::addHyperlinkControl(TextKind textKind, const std::string &label) {
+	char *address = (char*)myAllocator.allocate(label.length() + 3);
+	*address = ParagraphEntry::HYPERLINK_CONTROL_ENTRY;
+	*(address + 1) = textKind;
+	memcpy(address + 2, label.data(), label.length());
+	*(address + label.length() + 2) = '\0';
+	myParagraphs.back()->addEntry(address);
+}
+
+void TextModel::addImage(const std::string &id, const ImageMap &imageMap) {
+	char *address = (char*)myAllocator.allocate(sizeof(const ImageMap*) + id.length() + 2);
+	*address = ParagraphEntry::IMAGE_ENTRY;
+	const ImageMap *imageMapAddress = &imageMap;
+	memcpy(address + 1, &imageMapAddress, sizeof(const ImageMap*));
+	memcpy(address + 1 + sizeof(const ImageMap*), id.data(), id.length());
+	*(address + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
+	myParagraphs.back()->addEntry(address);
 }

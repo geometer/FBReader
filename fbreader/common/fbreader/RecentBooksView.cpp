@@ -48,16 +48,13 @@ void RecentBooksView::paint() {
 		const LastOpenedBooks lastBooks;
 		const Books &books = lastBooks.books();
 		for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
-			Paragraph *p = new Paragraph();
-			p->addControl(RECENT_BOOK_LIST, true, myLastBooksModel->allocator());
-			p->addControl(LIBRARY_AUTHOR_ENTRY, true, myLastBooksModel->allocator());
-			p->addText((*it)->author()->displayName(), myLastBooksModel->allocator());
-			p->addText(". ", myLastBooksModel->allocator());
-			p->addControl(LIBRARY_AUTHOR_ENTRY, false, myLastBooksModel->allocator());
-			p->addControl(LIBRARY_BOOK_ENTRY, true, myLastBooksModel->allocator());
-			p->addText((*it)->title(), myLastBooksModel->allocator());
-			myLastBooksModel->addParagraph(p);
-			myBooksMap[p] = *it;
+			myBooksMap[myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH)] = *it;
+			myLastBooksModel->addControl(RECENT_BOOK_LIST, true);
+			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
+			myLastBooksModel->addText((*it)->author()->displayName() + ". ");
+			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, false);
+			myLastBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
+			myLastBooksModel->addText((*it)->title());
 		}
 		setModel(myLastBooksModel, LIBRARY);
 	}

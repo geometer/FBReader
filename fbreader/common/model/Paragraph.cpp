@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include "Paragraph.h"
 #include "RowMemoryAllocator.h"
 
@@ -32,9 +30,9 @@ size_t TextEntry::dataLength() const {
 
 ForcedControlEntry::ForcedControlEntry(char *address) {
 	myMask = *address;
-	memcpy(&myLeftIndent, address + 1, sizeof(int));
-	memcpy(&myRightIndent, address + 1 + sizeof(int), sizeof(int));
-	myAlignmentType = (AlignmentType)*(address + 1 + 2 * sizeof(int));
+	memcpy(&myLeftIndent, address + 1, sizeof(short));
+	memcpy(&myRightIndent, address + 1 + sizeof(short), sizeof(short));
+	myAlignmentType = (AlignmentType)*(address + 1 + 2 * sizeof(short));
 }
 
 const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
@@ -97,74 +95,13 @@ void Paragraph::Iterator::next() {
 				myPointer++;
 				break;
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
-				myPointer += 2 * sizeof(int) + 3;
+				myPointer += 2 * sizeof(short) + 3;
 				break;
 		}
 		if (*myPointer == 0) {
 			memcpy(&myPointer, myPointer + 1, sizeof(char*));
 		}
 	}
-}
-
-void Paragraph::addText(const std::string &text, RowMemoryAllocator &allocator) {
-	size_t len = text.length();
-	char *address = (char*)allocator.allocate(len + sizeof(size_t) + 1);
-	*address = ParagraphEntry::TEXT_ENTRY;
-	memcpy(address + 1, &len, sizeof(size_t));
-	memcpy(address + sizeof(size_t) + 1, text.data(), len);
-	addEntry(address);
-}
-
-void Paragraph::addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) {
-	size_t len = 0;
-	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
-		len += it->length();
-	}
-	char *address = (char*)allocator.allocate(len + sizeof(size_t) + 1);
-	*address = ParagraphEntry::TEXT_ENTRY;
-	memcpy(address + 1, &len, sizeof(size_t));
-	size_t offset = sizeof(size_t) + 1;
-	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
-		memcpy(address + offset, it->data(), it->length());
-		offset += it->length();
-	}
-	addEntry(address);
-}
-
-void Paragraph::addControl(TextKind textKind, bool isStart, RowMemoryAllocator &allocator) {
-	char *address = (char*)allocator.allocate(2);
-	*address = ParagraphEntry::CONTROL_ENTRY;
-	*(address + 1) = (textKind << 1) + (isStart ? 1 : 0);
-	addEntry(address);
-}
-
-void Paragraph::addControl(const ForcedControlEntry &entry, RowMemoryAllocator &allocator) {
-	char *address = (char*)allocator.allocate(3 + 2 * sizeof(int));
-	*address = ParagraphEntry::FORCED_CONTROL_ENTRY;
-	*(address + 1) = entry.myMask;
-	memcpy(address + 2, &entry.myLeftIndent, sizeof(int));
-	memcpy(address + 2 + sizeof(int), &entry.myRightIndent, sizeof(int));
-	*(address + 2 + 2 * sizeof(int)) = entry.myAlignmentType;
-	addEntry(address);
-}
-
-void Paragraph::addHyperlinkControl(TextKind textKind, const std::string &label, RowMemoryAllocator &allocator) {
-	char *address = (char*)allocator.allocate(label.length() + 3);
-	*address = ParagraphEntry::HYPERLINK_CONTROL_ENTRY;
-	*(address + 1) = textKind;
-	memcpy(address + 2, label.data(), label.length());
-	*(address + label.length() + 2) = '\0';
-	addEntry(address);
-}
-
-void Paragraph::addImage(const std::string &id, const ImageMap &imageMap, RowMemoryAllocator &allocator) {
-	char *address = (char*)allocator.allocate(sizeof(const ImageMap*) + id.length() + 2);
-	*address = ParagraphEntry::IMAGE_ENTRY;
-	const ImageMap *imageMapAddress = &imageMap;
-	memcpy(address + 1, &imageMapAddress, sizeof(const ImageMap*));
-	memcpy(address + 1 + sizeof(const ImageMap*), id.data(), id.length());
-	*(address + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
-	addEntry(address);
 }
 
 ControlEntryPool ControlEntryPool::Pool;

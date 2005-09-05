@@ -134,9 +134,6 @@ else
 	@echo -n "Linking $@ ..."
 	@$(LD) $(LDFLAGS) -o $@ $^ `find . -name *.o` $(LIBS)
 	@echo " OK"
-	@echo -n "Stripping $@ ..."
-	@$(STRIP) $(TARGET)
-	@echo " OK"
 endif
 
 clean:

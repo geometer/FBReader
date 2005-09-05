@@ -64,9 +64,6 @@ public:
 	void addDataToBuffer(const char *data, int len) MODEL_SECTION;
 	void addDataToBuffer(std::string &data) MODEL_SECTION;
 
-	void beginImageData() MODEL_SECTION;
-	void endImageData() MODEL_SECTION;
-
 	void enterTitle() { myInsideTitle = true; }
 	void exitTitle() { myInsideTitle = false; }
 
@@ -81,14 +78,16 @@ private:
 
 	std::vector<TextKind> myKindStack;
 
-	Paragraph *myCurrentParagraph;
-	ParagraphWithReference *myCurrentContentsParagraph;
-	bool myProcessData;
+	bool myTextParagraphExists;
+	enum {
+		DONT_ADD,
+		TO_ADD,
+		ADDED
+	} myContentsParagraphStatus;
 
 	bool mySectionContainsRegularContents;
 	bool myInsideTitle;
 
-public:
 	std::vector<std::string> myBuffer;
 };
 

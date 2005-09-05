@@ -25,10 +25,9 @@
 
 BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
-	myCurrentParagraph = 0;
-	myCurrentContentsParagraph = 0;
 
-	myProcessData = false;
+	myTextParagraphExists = false;
+	myContentsParagraphStatus = DONT_ADD;
 
 	myInsideTitle = false;
 	mySectionContainsRegularContents = false;
@@ -73,48 +72,46 @@ bool BookReader::popKind() {
 
 void BookReader::beginParagraph(Paragraph::Kind kind) {
 	if (!currentTextModelIsNull()) {
-		myCurrentParagraph = (kind == Paragraph::TEXT_PARAGRAPH) ? new Paragraph() : new SpecialParagraph(kind);
+		myCurrentTextModel->createParagraph(kind);
 		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); it++) {
-			myCurrentParagraph->addControl(*it, true, myModel.bookTextModel().allocator());
+			myCurrentTextModel->addControl(*it, true);
 		}
-		myCurrentTextModel->addParagraph(myCurrentParagraph);
-		myProcessData = true;
+		myTextParagraphExists = true;
 	}
 }
 
 void BookReader::endParagraph() {
-	if (myCurrentParagraph != 0) {
+	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph = 0;
-		myProcessData = false;
+		myTextParagraphExists = false;
 	}
 }
 
 void BookReader::addControl(TextKind kind, bool start) {
-	if (myCurrentParagraph != 0) {
+	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addControl(kind, start, myModel.bookTextModel().allocator());
+		myCurrentTextModel->addControl(kind, start);
 	}
 }
 
 void BookReader::addControl(const ForcedControlEntry &entry) {
-	if (myCurrentParagraph != 0) {
+	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addControl(entry, myModel.bookTextModel().allocator());
+		myCurrentTextModel->addControl(entry);
 	}
 }
 
 void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
-	if (myCurrentParagraph != 0) {
+	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addHyperlinkControl(kind, label, myModel.bookTextModel().allocator());
+		myCurrentTextModel->addHyperlinkControl(kind, label);
 	}
 }
 
 void BookReader::addHyperlinkLabel(const std::string &label) {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
 		int paragraphNumber = myModel.bookTextModel().paragraphs().size();
-		if (myCurrentParagraph != 0) {
+		if (myTextParagraphExists) {
 			paragraphNumber--;
 		}
 		addHyperlinkLabel(label, paragraphNumber);
@@ -126,21 +123,21 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 }
 
 void BookReader::addDataToBuffer(const char *data, int len) {
-	if ((len > 0) && myProcessData) {
+	if ((len > 0) && myTextParagraphExists) {
 		myBuffer.push_back(std::string());
 		myBuffer.back().append(data, len);
 	}
 }
 
 void BookReader::addDataToBuffer(std::string &data) {
-	if (myProcessData) {
+	if (myTextParagraphExists) {
 		myBuffer.push_back(std::string());
 		myBuffer.back().swap(data);
 	}
 }
 
 void BookReader::flushTextBufferToParagraph() {
-	if (myBuffer.empty() || (myCurrentParagraph == 0)) {
+	if (myBuffer.empty() || !myTextParagraphExists) {
 		return;
 	}
 
@@ -148,16 +145,17 @@ void BookReader::flushTextBufferToParagraph() {
 		mySectionContainsRegularContents = true;
 	}
 
-	myCurrentParagraph->addText(myBuffer, myCurrentTextModel->allocator());
-	if (myCurrentContentsParagraph != 0) {
-		if (myInsideTitle) {
-			if (myCurrentContentsParagraph->reference() != -1) {
-				myCurrentContentsParagraph->addText(" ", myModel.contentsModel().allocator());
-			}
-			myCurrentContentsParagraph->addText(myBuffer, myModel.contentsModel().allocator());
+	myCurrentTextModel->addText(myBuffer);
+	if (myContentsParagraphStatus != DONT_ADD) {
+		if (myContentsParagraphStatus == TO_ADD) {
+			myModel.myContentsModel.createParagraphWithReference(myModel.bookTextModel().paragraphs().size() - 1);
+			myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
+			myContentsParagraphStatus = ADDED;
+		} else if (myInsideTitle) {
+			myModel.myContentsModel.addText(" ");
 		}
-		if (myCurrentContentsParagraph->reference() == -1) {
-			myCurrentContentsParagraph->setReference(myModel.bookTextModel().paragraphs().size() - 1);
+		if (myInsideTitle) {
+			myModel.myContentsModel.addText(myBuffer);
 		}
 	}
 	myBuffer.clear();
@@ -167,20 +165,12 @@ void BookReader::addImage(const std::string &id, ZLImage *image) {
 	myModel.myImages.insert(std::pair<std::string,ZLImage*>(id, image));
 }
 
-void BookReader::beginImageData() {
-	myProcessData = true;
-}
-
-void BookReader::endImageData() {
-	myProcessData = false;
-}
-
 void BookReader::insertEndOfSectionParagraph() {
 	if (!currentTextModelIsNull() &&
 			mySectionContainsRegularContents &&
 			!myCurrentTextModel->paragraphs().empty() &&
 			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
-		myCurrentTextModel->addParagraph(new SpecialParagraph(Paragraph::END_OF_SECTION_PARAGRAPH));
+		myCurrentTextModel->createParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
 		mySectionContainsRegularContents = false;
 	}
 }
@@ -190,43 +180,36 @@ void BookReader::insertEndOfTextParagraph() {
 			mySectionContainsRegularContents &&
 			!myCurrentTextModel->paragraphs().empty() &&
 			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
-		myCurrentTextModel->addParagraph(new SpecialParagraph(Paragraph::END_OF_TEXT_PARAGRAPH));
+		myCurrentTextModel->createParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
 		mySectionContainsRegularContents = false;
 	}
 }
 
 void BookReader::addImageReference(const std::string &id) {
 	mySectionContainsRegularContents = true;
-	bool createSeparateParagraph = myCurrentParagraph == 0;
-	if (createSeparateParagraph) {
-		beginParagraph();
-		myCurrentParagraph->addControl(IMAGE, true, myModel.bookTextModel().allocator());
-		myCurrentParagraph->addImage(id, myModel.imageMap(), myModel.bookTextModel().allocator());
-		myCurrentParagraph->addControl(IMAGE, false, myModel.bookTextModel().allocator());
-		endParagraph();
-	} else {
+	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myCurrentParagraph->addImage(id, myModel.imageMap(), myModel.bookTextModel().allocator());
+		myCurrentTextModel->addImage(id, myModel.imageMap());
+	} else {
+		beginParagraph();
+		myCurrentTextModel->addControl(IMAGE, true);
+		myCurrentTextModel->addImage(id, myModel.imageMap());
+		myCurrentTextModel->addControl(IMAGE, false);
+		endParagraph();
 	}
 }
 
 void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
-		myCurrentContentsParagraph = new ParagraphWithReference();
-		myCurrentContentsParagraph->addControl(CONTENTS_TABLE_ENTRY, true, myModel.contentsModel().allocator());
+		myContentsParagraphStatus = TO_ADD;
 	}
 }
 
 void BookReader::endContentsParagraph() {
-	if (myCurrentContentsParagraph != 0) {
-		if (myCurrentContentsParagraph->reference() == -1) {
-			delete myCurrentContentsParagraph;
-		} else {
-			if (myCurrentContentsParagraph->entryNumber() == 1) {
-				myCurrentContentsParagraph->addText("...", myModel.contentsModel().allocator());
-			}
-			myModel.myContentsModel.addParagraph(myCurrentContentsParagraph);
+	if (myContentsParagraphStatus == ADDED) {
+		if (myModel.myContentsModel.paragraphs().back()->entryNumber() == 1) {
+			myModel.myContentsModel.addText("...");
 		}
-		myCurrentContentsParagraph = 0;
 	}
+	myContentsParagraphStatus = DONT_ADD;
 }

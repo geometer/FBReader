@@ -25,6 +25,8 @@
 #include <vector>
 #include <string>
 
+#include "Paragraph.h"
+#include "TextKind.h"
 #include "TextMark.h"
 #include "RowMemoryAllocator.h"
 
@@ -54,7 +56,12 @@ public:
 	TextMark nextMark(TextMark position) const MODEL_SECTION;
 	TextMark previousMark(TextMark position) const MODEL_SECTION;
 
-	RowMemoryAllocator &allocator() const MODEL_SECTION;
+	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
+	void addControl(const ForcedControlEntry &entry) MODEL_SECTION;
+	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
+	void addText(const std::string &text) MODEL_SECTION;
+	void addText(const std::vector<std::string> &text) MODEL_SECTION;
+	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
 
 protected:
 	void addParagraphInternal(Paragraph *paragraph) MODEL_SECTION;
@@ -69,7 +76,9 @@ class PlainTextModel : public TextModel {
 
 public:
 	Kind kind() const MODEL_SECTION;
-	void addParagraph(Paragraph *paragraph) MODEL_SECTION;
+	//void addParagraph(Paragraph *paragraph) MODEL_SECTION;
+	Paragraph *createParagraph(Paragraph::Kind kind) MODEL_SECTION;
+	ParagraphWithReference *createParagraphWithReference(long reference) MODEL_SECTION;
 };
 
 class TreeModel : public TextModel {
@@ -78,6 +87,7 @@ public:
 	TreeModel() MODEL_SECTION;
 	~TreeModel() MODEL_SECTION;
 	Kind kind() const MODEL_SECTION;
+
 	TreeParagraph *createParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
 	
 	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
@@ -89,11 +99,9 @@ private:
 
 inline const std::vector<Paragraph*> &TextModel::paragraphs() const { return myParagraphs; }
 inline const std::vector<TextMark> &TextModel::marks() const { return myMarks; }
-inline void TextModel::addParagraphInternal(Paragraph *paragraph) { myParagraphs.push_back(paragraph); }
-inline RowMemoryAllocator &TextModel::allocator() const { return myAllocator; }
 
 inline TextModel::Kind PlainTextModel::kind() const { return PLAIN_TEXT_MODEL; }
-inline void PlainTextModel::addParagraph(Paragraph *paragraph) { addParagraphInternal(paragraph); }
+//inline void PlainTextModel::addParagraph(Paragraph *paragraph) { addParagraphInternal(paragraph); }
 
 inline TextModel::Kind TreeModel::kind() const { return TREE_MODEL; }
 

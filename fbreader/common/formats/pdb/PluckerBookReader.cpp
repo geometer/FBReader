@@ -66,6 +66,7 @@ void PluckerBookReader::safeAddHyperlinkControl(const std::string &id) {
 void PluckerBookReader::safeBeginParagraph() {
 	if (!myParagraphStarted) {
 		myParagraphStarted = true;
+		myBufferIsEmpty = true;
 		beginParagraph();
 		if (!myParagraphStored) {
 			myParagraphVector->push_back(model().bookTextModel().paragraphs().size() - 1);
@@ -88,7 +89,7 @@ void PluckerBookReader::safeBeginParagraph() {
 
 void PluckerBookReader::safeEndParagraph() {
 	if (myParagraphStarted) {
-		if (myBuffer.empty()) {
+		if (myBufferIsEmpty) {
 			addDataToBuffer(" ", 1);
 		}
 		endParagraph();
@@ -240,6 +241,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			int len = ZLUnicodeUtil::ucs2ToUtf8(utf8, twoBytes(ptr + 2));
 			safeBeginParagraph();
 			addDataToBuffer(utf8, len);
+			myBufferIsEmpty = false;
 			myBytesToSkip = (unsigned char)*(ptr + 1);
 			break;
 		}
@@ -277,6 +279,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 				txtBuffer.erase();
 				myConverter.convert(txtBuffer, textStart, ptr);
 				addDataToBuffer(txtBuffer);
+				myBufferIsEmpty = false;
 			}
 		} else if (functionFlag) {
 			int paramCounter = ((unsigned char)*ptr) % 8;
@@ -303,6 +306,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 		txtBuffer.erase();
 		myConverter.convert(txtBuffer, textStart, end);
 		addDataToBuffer(txtBuffer);
+		myBufferIsEmpty = false;
 	}
 	safeEndParagraph();
 	if (myForcedEntry != 0) {

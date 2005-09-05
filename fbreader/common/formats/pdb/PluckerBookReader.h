@@ -71,6 +71,7 @@ private:
 	FontType myFont;
 	char *myCharBuffer;
 	bool myParagraphStarted;
+	bool myBufferIsEmpty;
 	ForcedControlEntry *myForcedEntry;
 	std::vector<std::pair<TextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;

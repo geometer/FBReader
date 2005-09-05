@@ -66,12 +66,12 @@ public:
 	~ForcedControlEntry() MODEL_SECTION;
 
 	bool leftIndentSupported() const MODEL_SECTION;
-	int leftIndent() const MODEL_SECTION;
-	void setLeftIndent(int leftIndent) MODEL_SECTION;
+	short leftIndent() const MODEL_SECTION;
+	void setLeftIndent(short leftIndent) MODEL_SECTION;
 
 	bool rightIndentSupported() const MODEL_SECTION;
-	int rightIndent() const MODEL_SECTION;
-	void setRightIndent(int rightIndent) MODEL_SECTION;
+	short rightIndent() const MODEL_SECTION;
+	void setRightIndent(short rightIndent) MODEL_SECTION;
 
 	bool alignmentTypeSupported() const MODEL_SECTION;
 	AlignmentType alignmentType() const MODEL_SECTION;
@@ -86,11 +86,11 @@ public:
 private:
 	int myMask;
 
-	int myLeftIndent;
-	int myRightIndent;
+	short myLeftIndent;
+	short myRightIndent;
 	AlignmentType myAlignmentType;
 
-friend class Paragraph;
+friend class TextModel;
 };
 
 class ControlEntry : public ParagraphEntry {
@@ -195,17 +195,12 @@ public:
 		END_OF_TEXT_PARAGRAPH,
 	};
 
-public:
+protected:
 	Paragraph() MODEL_SECTION;
+
+public:
 	virtual ~Paragraph() MODEL_SECTION;
 	virtual Kind kind() const MODEL_SECTION;
-
-	void addControl(TextKind textKind, bool isStart, RowMemoryAllocator &allocator) MODEL_SECTION;
-	void addControl(const ForcedControlEntry &entry, RowMemoryAllocator &allocator) MODEL_SECTION;
-	void addHyperlinkControl(TextKind textKind, const std::string &label, RowMemoryAllocator &allocator) MODEL_SECTION;
-	void addText(const std::string &text, RowMemoryAllocator &allocator) MODEL_SECTION;
-	void addText(const std::vector<std::string> &text, RowMemoryAllocator &allocator) MODEL_SECTION;
-	void addImage(const std::string &id, const ImageMap &imageMap, RowMemoryAllocator &allocator) MODEL_SECTION;
 
 	size_t entryNumber() const MODEL_SECTION;
 
@@ -219,29 +214,38 @@ private:
 	size_t myEntryNumber;
 
 friend class Paragraph::Iterator;
+friend class TextModel;
+friend class PlainTextModel;
 };
 
 class SpecialParagraph : public Paragraph {
 
-public:
+private:
 	SpecialParagraph(Kind kind) MODEL_SECTION;
+
+public:
 	~SpecialParagraph() MODEL_SECTION;
 	Kind kind() const MODEL_SECTION;
 
 private:
 	Kind myKind;
+
+friend class PlainTextModel;
 };
 
 class ParagraphWithReference : public Paragraph {
 
+private:
+	ParagraphWithReference(long reference) MODEL_SECTION;
+
 public:
-	ParagraphWithReference() MODEL_SECTION;
 	~ParagraphWithReference() MODEL_SECTION;
-	void setReference(long reference) MODEL_SECTION;
 	long reference() const MODEL_SECTION;
 
 private:
-	long myReference;
+	const long myReference;
+
+friend class PlainTextModel;
 };
 
 class TreeParagraph : public Paragraph {
@@ -274,11 +278,11 @@ inline ParagraphEntry::~ParagraphEntry() {}
 inline ForcedControlEntry::ForcedControlEntry() : myMask(0) {}
 inline ForcedControlEntry::~ForcedControlEntry() {}
 inline bool ForcedControlEntry::leftIndentSupported() const { return myMask & SUPPORT_LEFT_INDENT; }
-inline int ForcedControlEntry::leftIndent() const { return myLeftIndent; }
-inline void ForcedControlEntry::setLeftIndent(int leftIndent) { myLeftIndent = leftIndent; myMask |= SUPPORT_LEFT_INDENT; }
+inline short ForcedControlEntry::leftIndent() const { return myLeftIndent; }
+inline void ForcedControlEntry::setLeftIndent(short leftIndent) { myLeftIndent = leftIndent; myMask |= SUPPORT_LEFT_INDENT; }
 inline bool ForcedControlEntry::rightIndentSupported() const { return myMask & SUPPORT_RIGHT_INDENT; }
-inline int ForcedControlEntry::rightIndent() const { return myRightIndent; }
-inline void ForcedControlEntry::setRightIndent(int rightIndent) { myRightIndent = rightIndent; myMask |= SUPPORT_RIGHT_INDENT; }
+inline short ForcedControlEntry::rightIndent() const { return myRightIndent; }
+inline void ForcedControlEntry::setRightIndent(short rightIndent) { myRightIndent = rightIndent; myMask |= SUPPORT_RIGHT_INDENT; }
 inline bool ForcedControlEntry::alignmentTypeSupported() const { return myMask & SUPPORT_ALIGNMENT_TYPE; }
 inline AlignmentType ForcedControlEntry::alignmentType() const { return myAlignmentType; }
 inline void ForcedControlEntry::setAlignmentType(AlignmentType alignmentType) { myAlignmentType = alignmentType; myMask |= SUPPORT_ALIGNMENT_TYPE; }
@@ -311,7 +315,7 @@ inline Paragraph::Kind Paragraph::kind() const { return TEXT_PARAGRAPH; }
 inline size_t Paragraph::entryNumber() const { return myEntryNumber; }
 inline void Paragraph::addEntry(char *address) { if (myEntryNumber == 0) myFirstEntryAddress = address; myEntryNumber++; }
 
-inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myPointer(paragraph.myFirstEntryAddress), myIndex(0), myEndIndex(paragraph.myEntryNumber) {}
+inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myPointer(paragraph.myFirstEntryAddress), myIndex(0), myEndIndex(paragraph.entryNumber()) {}
 inline Paragraph::Iterator::~Iterator() {}
 inline bool Paragraph::Iterator::isEnd() const { return myIndex == myEndIndex; }
 inline ParagraphEntry::Kind Paragraph::Iterator::entryKind() const { return (ParagraphEntry::Kind)*myPointer; }
@@ -320,9 +324,8 @@ inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}
 inline SpecialParagraph::~SpecialParagraph() {}
 inline Paragraph::Kind SpecialParagraph::kind() const { return myKind; }
 
-inline ParagraphWithReference::ParagraphWithReference() : myReference(-1) {}
+inline ParagraphWithReference::ParagraphWithReference(long reference) : myReference(reference) {}
 inline ParagraphWithReference::~ParagraphWithReference() {}
-inline void ParagraphWithReference::setReference(long reference) { myReference = reference; }
 inline long ParagraphWithReference::reference() const { return myReference; }
 
 inline TreeParagraph::~TreeParagraph() {}

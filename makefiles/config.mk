@@ -33,10 +33,8 @@ ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 	CC = $(TOOLSDIR)/gcc
 	AR = $(TOOLSDIR)/ar rsu
 	LD = $(TOOLSDIR)/g++
-	STRIP = $(TOOLSDIR)/strip
 
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
-	LDFLAGS = -O3
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
 	DEPGEN = $(CC) -MM
 
 	EXTERNALINCLUDE = -I $(ROOTDIR)/external/include
@@ -49,11 +47,9 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	CC = $(BASEDIR)/bin/armv5tel-linux-gcc
 	AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
 	LD = $(BASEDIR)/bin/armv5tel-linux-g++
-	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
-	LDFLAGS = -O3
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
 	MOC = $(BASEDIR)/bin/moc
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -69,11 +65,9 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
 	CC = $(BASEDIR)/bin/armv5tel-linux-gcc
 	AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
 	LD = $(BASEDIR)/bin/armv5tel-linux-g++
-	STRIP = $(BASEDIR)/bin/armv5tel-linux-strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
-	LDFLAGS = -O3
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	USRDIR = $(BASEDIR)/armv5tel-cacko-linux
@@ -90,11 +84,9 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 	CC = gcc
 	AR = ar rsu
 	LD = g++
-	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\"
-	LDFLAGS = -O3
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DINSTALLDIR=\"$(INSTALLDIR)\"
 	MOC = moc-qt3
 	RM = rm -rvf
 	RM_QUIET = rm -rf
@@ -110,11 +102,9 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	CC = gcc
 	AR = ar rsu
 	LD = g++
-	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\"
-	LDFLAGS = -O3
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DINSTALLDIR=\"$(INSTALLDIR)\"
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	GTKINCLUDE := $(shell pkg-config --cflags gtk+-2.0)
@@ -129,11 +119,9 @@ ifeq "$(TARGET_ARCH)" "maemo"
 	CC = gcc
 	AR = ar rsu
 	LD = g++
-	STRIP = strip
 
 	DEPGEN = $(CC) -MM
-	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -O3 -DNO_DEBUG
-	LDFLAGS = -O3
+	CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	GTKINCLUDE = -I/usr/include/libxml2 -I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/X11R6/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/hildon-lgpl
@@ -146,7 +134,6 @@ ifeq "$(TARGET_ARCH)" "palm"
 	CC = m68k-palmos-g++
 	AR = m68k-palmos-ar rsu
 	LD = m68k-palmos-g++
-	STRIP = m68k-palmos-strip
 
 	DEPGEN = $(CC) -MM -DPALM_TEMPORARY
 	CFLAGS = \
@@ -173,14 +160,22 @@ ifeq "$(TARGET_ARCH)" "palm"
 		-DFB_DIALOG_SECTION="__attribute__ ((section(\"app4\")))" \
 		-DPALM_TEMPORARY \
 		-DUSE_OWN_XML_PARSER \
-		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend -O3
-	LDFLAGS = -O3
+		-pipe -fno-exceptions -fno-rtti -fno-inline -Wall -Wno-ctor-dtor-privacy -W -Wno-non-template-friend
 	RM = rm -rvf
 	RM_QUIET = rm -rf
  	EXTERNALINCLUDE = -I $(ROOTDIR)/zlibrary/palm/pseudostl -I $(ROOTDIR)/palm-external
- 	EXTERNALLIBS = # $(ROOTDIR)/palm-external/SysZLib.prc
-	#EXPATLIBS = -lexpat
-	#ENCALIBS = -lenca
+ 	EXTERNALLIBS =
+endif
+
+ifeq "$(TARGET_STATUS)" "release"
+	CFLAGS += -O3
+	LDFLAGS += -s
+endif
+ifeq "$(TARGET_STATUS)" "debug"
+	CFLAGS += -O0 -g
+endif
+ifeq "$(TARGET_STATUS)" "profile"
+	CFLAGS += -O3 -g -pg
 endif
 
 ZDIR = $(ROOTDIR)/zlibrary

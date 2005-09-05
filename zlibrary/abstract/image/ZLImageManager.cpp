@@ -20,6 +20,7 @@
 
 //#include <iostream>
 #include <algorithm>
+#include <vector>
 
 #include "ZLImage.h"
 #include "ZLImageManager.h"

@@ -21,7 +21,6 @@
 #ifndef __ZLIMAGE_H__
 #define __ZLIMAGE_H__
 
-#include <vector>
 #include <string>
 
 #include <abstract/shared_ptr.h>
@@ -51,22 +50,6 @@ private:
 	std::string myMimeType;
 };
 
-class ZLBase64EncodedImage : public ZLSingleImage {
-
-public:
-	ZLBase64EncodedImage(const std::string &mimeType) IMAGE_SECTION;
-	~ZLBase64EncodedImage() IMAGE_SECTION;
-	void addData(const std::vector<std::string> &text) IMAGE_SECTION;
-	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
-
-private:
-	void decode() const IMAGE_SECTION;
-
-private:
-	mutable std::string myEncodedData;
-	mutable shared_ptr<std::string> myData;
-};
-
 class ZLMultiImage : public ZLImage {
 
 protected:
@@ -89,8 +72,5 @@ inline const std::string &ZLSingleImage::mimeType() const { return myMimeType; }
 
 inline ZLMultiImage::ZLMultiImage() : ZLImage() {}
 inline ZLMultiImage::~ZLMultiImage() {}
-
-inline ZLBase64EncodedImage::ZLBase64EncodedImage(const std::string &mimeType) : ZLSingleImage(mimeType) {}
-inline ZLBase64EncodedImage::~ZLBase64EncodedImage() {}
 
 #endif /* __ZLIMAGE_H__ */

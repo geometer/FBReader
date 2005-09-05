@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004, 2005 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,17 +19,15 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFSManager.h>
-#include <abstract/ZLInputStream.h>
 #include <abstract/ZLStringUtil.h>
 
-#include "ZLImage.h"
+#include "Base64EncodedImage.h"
 
-void ZLBase64EncodedImage::addData(const std::vector<std::string> &text) {
+void Base64EncodedImage::addData(const std::vector<std::string> &text) {
 	ZLStringUtil::append(myEncodedData, text);
 }
 
-void ZLBase64EncodedImage::decode() const {
+void Base64EncodedImage::decode() const {
 	if ((myEncodedData.empty()) || (!myData.isNull())) {
 		return;
 	}
@@ -70,7 +69,7 @@ void ZLBase64EncodedImage::decode() const {
 	myEncodedData.erase();
 }
 
-const shared_ptr<std::string> ZLBase64EncodedImage::stringData() const {
+const shared_ptr<std::string> Base64EncodedImage::stringData() const {
 	decode();
 	return myData;
 }

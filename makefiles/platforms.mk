@@ -9,6 +9,10 @@ ifeq "$(TARGET_ARCH)" ""
 $(warning TARGET_ARCH is not defined.  Using default -- $(TARGET_ARCH))
 endif
 
+ifeq "$(TARGET_STATUS)" ""
+	TARGET_STATUS = release
+endif
+
 ifneq "$(findstring $(TARGET_ARCH),$(ALL_TARGET_ARCHS))" "$(TARGET_ARCH)"
 	$(error Unknown target $(TARGET_ARCH); valid targets are $(ALL_TARGET_ARCHS))
 endif

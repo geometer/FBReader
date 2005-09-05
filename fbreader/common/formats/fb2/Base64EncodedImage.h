@@ -19,37 +19,30 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#ifndef __BASE64ENCODEDIMAGE_H__
+#define __BASE64ENCODEDIMAGE_H__
 
-#include "FB2Reader.h"
-#include "../../bookmodel/BookReader.h"
+#include <vector>
 
-class BookModel;
-class Base64EncodedImage;
+#include <abstract/ZLImage.h>
 
-class FB2BookReader : public FB2Reader {
+class Base64EncodedImage : public ZLSingleImage {
 
 public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	void readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
-
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	Base64EncodedImage(const std::string &mimeType) IMAGE_SECTION;
+	~Base64EncodedImage() IMAGE_SECTION;
+	void addData(const std::vector<std::string> &text) IMAGE_SECTION;
+	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
 
 private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
-	BookReader myModelReader;
+	void decode() const IMAGE_SECTION;
 
-	Base64EncodedImage *myCurrentImage;
-	bool myProcessingImage;
-	std::vector<std::string> myImageBuffer;
+private:
+	mutable std::string myEncodedData;
+	mutable shared_ptr<std::string> myData;
 };
 
-inline FB2BookReader::~FB2BookReader() {}
+inline Base64EncodedImage::Base64EncodedImage(const std::string &mimeType) : ZLSingleImage(mimeType) {}
+inline Base64EncodedImage::~Base64EncodedImage() {}
 
-#endif /* __FB2BOOKREADER_H__ */
+#endif /* __BASE64ENCODEDIMAGE_H__ */
