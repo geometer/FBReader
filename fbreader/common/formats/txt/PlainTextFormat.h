@@ -49,8 +49,8 @@ public:
 private:
 	ZLBooleanOption InitializedOption;
 	ZLIntegerOption BreakTypeOption;
-	ZLIntegerOption IgnoredIndentOption;
-	ZLIntegerOption EmptyLinesBeforeNewSectionOption;
+	ZLIntegerRangeOption IgnoredIndentOption;
+	ZLIntegerRangeOption EmptyLinesBeforeNewSectionOption;
 	ZLBooleanOption CreateContentsTableOption;
 
 friend class PlainTextInfoPage;
@@ -91,7 +91,7 @@ public:
 	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value) const;
+	void onAccept(const std::string &value);
 	void onValueChange(const std::string &selectedValue);
 
 private:
@@ -103,7 +103,7 @@ private:
 class CreateContentsTableOptionEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, const ZLBooleanOption &option);
+	CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, ZLBooleanOption &option);
 	~CreateContentsTableOptionEntry();
 	void onValueChange(bool value);
 

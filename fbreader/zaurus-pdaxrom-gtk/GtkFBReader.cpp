@@ -36,8 +36,8 @@
 #include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
-static ZLIntegerOption Width("Options", "Width", 350);
-static ZLIntegerOption Height("Options", "Height", 350);
+static ZLIntegerRangeOption Width("Options", "Width", 10, 800, 350);
+static ZLIntegerRangeOption Height("Options", "Height", 10, 800, 350);
 
 // MSS: probably we want to leave it as it is, as it's for Zaurus
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {

@@ -37,10 +37,10 @@ class TextStyle {
 public:
 	static const std::string DefaultFontName;
 
-	static ZLIntegerOption LeftMarginOption;
-	static ZLIntegerOption RightMarginOption;
-	static ZLIntegerOption TopMarginOption;
-	static ZLIntegerOption BottomMarginOption;
+	static ZLIntegerRangeOption LeftMarginOption;
+	static ZLIntegerRangeOption RightMarginOption;
+	static ZLIntegerRangeOption TopMarginOption;
+	static ZLIntegerRangeOption BottomMarginOption;
 
 	static ZLColorOption BackgroundColorOption;
 	static ZLColorOption SelectedTextColorOption;
@@ -88,7 +88,7 @@ public:
 	ZLStringOption &fontFamilyOption() const TEXT_STYLE_SECTION;
 	const std::string &fontFamily() const TEXT_STYLE_SECTION;
 
-	ZLIntegerOption &fontSizeOption() const TEXT_STYLE_SECTION;
+	ZLIntegerRangeOption &fontSizeOption() const TEXT_STYLE_SECTION;
 	int fontSize() const TEXT_STYLE_SECTION;
 	ZLBooleanOption &boldOption() const TEXT_STYLE_SECTION;
 	bool bold() const TEXT_STYLE_SECTION;
@@ -114,7 +114,7 @@ public:
 
 private:
 	ZLStringOption *myFontFamilyOption;
-	ZLIntegerOption *myFontSizeOption;
+	ZLIntegerRangeOption *myFontSizeOption;
 	ZLBooleanOption *myBoldOption;
 	ZLBooleanOption *myItalicOption;
 	ZLIntegerOption *myAlignmentOption;
@@ -133,8 +133,14 @@ public:
 
 	const std::string &name() const TEXT_STYLE_SECTION;
 
+	ZLStringOption &fontFamilyOption() TEXT_STYLE_SECTION;
+	ZLIntegerRangeOption &fontSizeDeltaOption() TEXT_STYLE_SECTION;
+	ZLBoolean3Option &boldOption() TEXT_STYLE_SECTION;
+	ZLBoolean3Option &italicOption() TEXT_STYLE_SECTION;
+	ZLIntegerOption &verticalShiftOption() TEXT_STYLE_SECTION;
+	ZLBoolean3Option &allowHyphenationsOption() TEXT_STYLE_SECTION;
 	const ZLStringOption &fontFamilyOption() const TEXT_STYLE_SECTION;
-	const ZLIntegerOption &fontSizeDeltaOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerRangeOption &fontSizeDeltaOption() const TEXT_STYLE_SECTION;
 	const ZLBoolean3Option &boldOption() const TEXT_STYLE_SECTION;
 	const ZLBoolean3Option &italicOption() const TEXT_STYLE_SECTION;
 	const ZLIntegerOption &verticalShiftOption() const TEXT_STYLE_SECTION;
@@ -147,7 +153,7 @@ private:
 	std::string myName;
 
 	ZLStringOption myFontFamilyOption;
-	ZLIntegerOption myFontSizeDeltaOption;
+	ZLIntegerRangeOption myFontSizeDeltaOption;
 	ZLBoolean3Option myBoldOption;
 	ZLBoolean3Option myItalicOption;
 
@@ -168,20 +174,27 @@ public:
 
 	TextStylePtr createDecoratedStyle(const TextStylePtr base) const TEXT_STYLE_SECTION;
 
-	const ZLIntegerOption &spaceBeforeOption() const TEXT_STYLE_SECTION;
-	const ZLIntegerOption &spaceAfterOption() const TEXT_STYLE_SECTION;
-	const ZLIntegerOption &leftIndentOption() const TEXT_STYLE_SECTION;
-	const ZLIntegerOption &rightIndentOption() const TEXT_STYLE_SECTION;
-	const ZLIntegerOption &firstLineIndentDeltaOption() const TEXT_STYLE_SECTION;
+	ZLIntegerRangeOption &spaceBeforeOption() TEXT_STYLE_SECTION;
+	ZLIntegerRangeOption &spaceAfterOption() TEXT_STYLE_SECTION;
+	ZLIntegerRangeOption &leftIndentOption() TEXT_STYLE_SECTION;
+	ZLIntegerRangeOption &rightIndentOption() TEXT_STYLE_SECTION;
+	ZLIntegerRangeOption &firstLineIndentDeltaOption() TEXT_STYLE_SECTION;
+	ZLIntegerOption &alignmentOption() TEXT_STYLE_SECTION;
+	ZLDoubleOption &lineSpaceOption() TEXT_STYLE_SECTION;
+	const ZLIntegerRangeOption &spaceBeforeOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerRangeOption &spaceAfterOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerRangeOption &leftIndentOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerRangeOption &rightIndentOption() const TEXT_STYLE_SECTION;
+	const ZLIntegerRangeOption &firstLineIndentDeltaOption() const TEXT_STYLE_SECTION;
 	const ZLIntegerOption &alignmentOption() const TEXT_STYLE_SECTION;
 	const ZLDoubleOption &lineSpaceOption() const TEXT_STYLE_SECTION;
 
 private:
-	ZLIntegerOption mySpaceBeforeOption;
-	ZLIntegerOption mySpaceAfterOption;
-	ZLIntegerOption myLeftIndentOption;
-	ZLIntegerOption myRightIndentOption;
-	ZLIntegerOption myFirstLineIndentDeltaOption;
+	ZLIntegerRangeOption mySpaceBeforeOption;
+	ZLIntegerRangeOption mySpaceAfterOption;
+	ZLIntegerRangeOption myLeftIndentOption;
+	ZLIntegerRangeOption myRightIndentOption;
+	ZLIntegerRangeOption myFirstLineIndentDeltaOption;
 
 	ZLIntegerOption myAlignmentOption;
 
@@ -303,7 +316,7 @@ public:
 	static void deleteInstance() TEXT_STYLE_SECTION;
 
 	TextStylePtr baseStyle() const TEXT_STYLE_SECTION;
-	const TextStyleDecoration *decoration(TextKind kind) const TEXT_STYLE_SECTION;
+	TextStyleDecoration *decoration(TextKind kind) const TEXT_STYLE_SECTION;
 
 private:
 	TextStyleCollection() TEXT_STYLE1_SECTION;
@@ -326,7 +339,7 @@ inline TextStyle::~TextStyle() {}
 inline bool BaseTextStyle::isDecorated() const { return false; }
 inline ZLStringOption &BaseTextStyle::fontFamilyOption() const { return *myFontFamilyOption; }
 inline const std::string &BaseTextStyle::fontFamily() const { return fontFamilyOption().value(); }
-inline ZLIntegerOption &BaseTextStyle::fontSizeOption() const { return *myFontSizeOption; }
+inline ZLIntegerRangeOption &BaseTextStyle::fontSizeOption() const { return *myFontSizeOption; }
 inline int BaseTextStyle::fontSize() const { return fontSizeOption().value(); }
 inline ZLBooleanOption &BaseTextStyle::boldOption() const { return *myBoldOption; }
 inline bool BaseTextStyle::bold() const { return boldOption().value(); }
@@ -348,21 +361,34 @@ inline TextStyleDecoration::~TextStyleDecoration() {}
 inline bool TextStyleDecoration::isFullDecoration() const { return false; }
 inline const std::string &TextStyleDecoration::name() const { return myName; }
 inline const ZLStringOption &TextStyleDecoration::fontFamilyOption() const { return myFontFamilyOption; }
-inline const ZLIntegerOption &TextStyleDecoration::fontSizeDeltaOption() const { return myFontSizeDeltaOption; }
+inline const ZLIntegerRangeOption &TextStyleDecoration::fontSizeDeltaOption() const { return myFontSizeDeltaOption; }
 inline const ZLBoolean3Option &TextStyleDecoration::boldOption() const { return myBoldOption; }
 inline const ZLBoolean3Option &TextStyleDecoration::italicOption() const { return myItalicOption; }
 inline const ZLIntegerOption &TextStyleDecoration::verticalShiftOption() const { return myVerticalShiftOption; }
 inline const ZLBoolean3Option &TextStyleDecoration::allowHyphenationsOption() const { return myAllowHyphenationsOption; }
+inline ZLStringOption &TextStyleDecoration::fontFamilyOption() { return myFontFamilyOption; }
+inline ZLIntegerRangeOption &TextStyleDecoration::fontSizeDeltaOption() { return myFontSizeDeltaOption; }
+inline ZLBoolean3Option &TextStyleDecoration::boldOption() { return myBoldOption; }
+inline ZLBoolean3Option &TextStyleDecoration::italicOption() { return myItalicOption; }
+inline ZLIntegerOption &TextStyleDecoration::verticalShiftOption() { return myVerticalShiftOption; }
+inline ZLBoolean3Option &TextStyleDecoration::allowHyphenationsOption() { return myAllowHyphenationsOption; }
 inline bool TextStyleDecoration::isHyperlinkStyle() const { return myIsHyperlinkStyle; }
 inline void TextStyleDecoration::setHyperlinkStyle() { myIsHyperlinkStyle = true; }
 
 inline FullTextStyleDecoration::~FullTextStyleDecoration() {}
 inline bool FullTextStyleDecoration::isFullDecoration() const { return true; }
-inline const ZLIntegerOption &FullTextStyleDecoration::spaceBeforeOption() const { return mySpaceBeforeOption; }
-inline const ZLIntegerOption &FullTextStyleDecoration::spaceAfterOption() const { return mySpaceAfterOption; }
-inline const ZLIntegerOption &FullTextStyleDecoration::leftIndentOption() const { return myLeftIndentOption; }
-inline const ZLIntegerOption &FullTextStyleDecoration::rightIndentOption() const { return myRightIndentOption; }
-inline const ZLIntegerOption &FullTextStyleDecoration::firstLineIndentDeltaOption() const { return myFirstLineIndentDeltaOption; }
+inline ZLIntegerRangeOption &FullTextStyleDecoration::spaceBeforeOption() { return mySpaceBeforeOption; }
+inline ZLIntegerRangeOption &FullTextStyleDecoration::spaceAfterOption() { return mySpaceAfterOption; }
+inline ZLIntegerRangeOption &FullTextStyleDecoration::leftIndentOption() { return myLeftIndentOption; }
+inline ZLIntegerRangeOption &FullTextStyleDecoration::rightIndentOption() { return myRightIndentOption; }
+inline ZLIntegerRangeOption &FullTextStyleDecoration::firstLineIndentDeltaOption() { return myFirstLineIndentDeltaOption; }
+inline ZLIntegerOption &FullTextStyleDecoration::alignmentOption() { return myAlignmentOption; }
+inline ZLDoubleOption &FullTextStyleDecoration::lineSpaceOption() { return myLineSpaceOption; }
+inline const ZLIntegerRangeOption &FullTextStyleDecoration::spaceBeforeOption() const { return mySpaceBeforeOption; }
+inline const ZLIntegerRangeOption &FullTextStyleDecoration::spaceAfterOption() const { return mySpaceAfterOption; }
+inline const ZLIntegerRangeOption &FullTextStyleDecoration::leftIndentOption() const { return myLeftIndentOption; }
+inline const ZLIntegerRangeOption &FullTextStyleDecoration::rightIndentOption() const { return myRightIndentOption; }
+inline const ZLIntegerRangeOption &FullTextStyleDecoration::firstLineIndentDeltaOption() const { return myFirstLineIndentDeltaOption; }
 inline const ZLIntegerOption &FullTextStyleDecoration::alignmentOption() const { return myAlignmentOption; }
 inline const ZLDoubleOption &FullTextStyleDecoration::lineSpaceOption() const { return myLineSpaceOption; }
 

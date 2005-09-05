@@ -26,6 +26,7 @@
 
 #include "../textview/TextView.h"
 #include "../description/BookDescription.h"
+#include "../collection/BookCollection.h"
 
 class FBReader;
 class PlainTextModel;
@@ -46,7 +47,7 @@ public:
 private:
 	FBReader &myReader;
 	PlainTextModel *myLastBooksModel;
-	std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
+	Books myBooks;
 };
 
 #endif /* __RECENTBOOKSVIEW_H__ */

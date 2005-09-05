@@ -44,7 +44,7 @@ public:
 	const std::string &name() const FB_DIALOG_SECTION;
 	const std::string &initialValue() const FB_DIALOG_SECTION;
 	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &text) const FB_DIALOG_SECTION;
+	void onAccept(const std::string &text) FB_DIALOG_SECTION;
 	void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
 
 private:
@@ -66,7 +66,7 @@ public:
 	const std::string &name() const FB_DIALOG_SECTION;
 	const std::string &initialValue() const FB_DIALOG_SECTION;
 	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &text) const FB_DIALOG_SECTION;
+	void onAccept(const std::string &text) FB_DIALOG_SECTION;
 	void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
 	void onMadeVisible() FB_DIALOG_SECTION;
 
@@ -102,7 +102,7 @@ const std::vector<std::string> &MainEntry::values() const {
 	return myValues;
 }
 
-void MainEntry::onAccept(const std::string&) const {
+void MainEntry::onAccept(const std::string&) {
 }
 
 void MainEntry::onValueChange(const std::string &selectedValue) {
@@ -162,7 +162,7 @@ const std::vector<std::string> &ScrollingModeEntry::values() const {
 	return myValues;
 }
 
-void ScrollingModeEntry::onAccept(const std::string &text) const {
+void ScrollingModeEntry::onAccept(const std::string &text) {
 	myOption.setValue(codeByName(text));
 }
 
@@ -178,11 +178,11 @@ void ScrollingModeEntry::onValueChange(const std::string &selectedValue) {
 }
 
 void ScrollingOptionsPage::ScrollingEntries::init(FBReader::ScrollingOptions &options) {
-	myDelayEntry = new ZLSimpleSpinOptionEntry("Delay Between Scrollings, msecs", options.DelayOption, 0, 5000, 50);
+	myDelayEntry = new ZLSimpleSpinOptionEntry("Delay Between Scrollings, msecs", options.DelayOption, 50);
 	myModeEntry = new ScrollingModeEntry(*this, options.ModeOption);
-	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry("Lines To Keep", options.LinesToKeepOption, 1, 100, 1);
-	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry("Lines To Scroll", options.LinesToScrollOption, 1, 100, 1);
-	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry("Percent To Scroll", options.PercentToScrollOption, 1, 100, 5);
+	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry("Lines To Keep", options.LinesToKeepOption, 1);
+	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry("Lines To Scroll", options.LinesToScrollOption, 1);
+	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry("Percent To Scroll", options.PercentToScrollOption, 5);
 	myModeEntry->onValueChange(myModeEntry->initialValue());
 }
 

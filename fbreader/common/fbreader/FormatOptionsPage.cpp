@@ -60,26 +60,26 @@ FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
 	}
 
 	for (int i = 0; i < STYLES_NUMBER; i++) {
-		const TextStyleDecoration *d = collection.decoration(styles[i]);
+		TextStyleDecoration *d = collection.decoration(styles[i]);
 		if ((d != 0) && (d->isFullDecoration())) {
-			const FullTextStyleDecoration *decoration = (const FullTextStyleDecoration*)d;
+			FullTextStyleDecoration *decoration = (FullTextStyleDecoration*)d;
 			const std::string &name = decoration->name();
 			
 			registerEntries(dialogTab,
-				new ZLSimpleSpinOptionEntry("Space Before", decoration->spaceBeforeOption(), -10, 100, 1),
-				new ZLSimpleSpinOptionEntry("Left Indent", decoration->leftIndentOption(), -300, 300, 1),
+				new ZLSimpleSpinOptionEntry("Space Before", decoration->spaceBeforeOption(), 1),
+				new ZLSimpleSpinOptionEntry("Left Indent", decoration->leftIndentOption(), 1),
 				name
 			);
 			
 			registerEntries(dialogTab,
-				new ZLSimpleSpinOptionEntry("Space After", decoration->spaceAfterOption(), -10, 100, 1),
-				new ZLSimpleSpinOptionEntry("Right Indent", decoration->rightIndentOption(), -300, 300, 1),
+				new ZLSimpleSpinOptionEntry("Space After", decoration->spaceAfterOption(), 1),
+				new ZLSimpleSpinOptionEntry("Right Indent", decoration->rightIndentOption(), 1),
 				name
 			);
 			
 			registerEntries(dialogTab,
 				new LineSpacingOptionEntry(decoration->lineSpaceOption(), true),
-				new ZLSimpleSpinOptionEntry("First Line Indent", decoration->firstLineIndentDeltaOption(), -300, 300, 1),
+				new ZLSimpleSpinOptionEntry("First Line Indent", decoration->firstLineIndentDeltaOption(), 1),
 				name
 			);
 

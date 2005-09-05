@@ -27,7 +27,7 @@
 TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations) :
 	myName(name),
 	myFontFamilyOption("Style", myName + ":fontFamily", std::string()),
-	myFontSizeDeltaOption("Style", myName + ":fontSize", fontSizeDelta),
+	myFontSizeDeltaOption("Style", myName + ":fontSize", -16, 16, fontSizeDelta),
 	myBoldOption("Style", myName + ":bold", bold),
 	myItalicOption("Style", myName + ":italic", italic),
 	myVerticalShiftOption("Style", myName + ":vShift", verticalShift),
@@ -36,11 +36,11 @@ TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDe
 }
 
 FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
-	mySpaceBeforeOption("Style", name + ":spaceBefore", spaceBefore),
-	mySpaceAfterOption("Style", name + ":spaceAfter", spaceAfter),
-	myLeftIndentOption("Style", name + ":leftIndent", leftIndent),
-	myRightIndentOption("Style", name + ":rightIndent", rightIndent),
-	myFirstLineIndentDeltaOption("Style", name + ":firstLineIndentDelta", firstLineIndentDelta),
+	mySpaceBeforeOption("Style", name + ":spaceBefore", -10, 100, spaceBefore),
+	mySpaceAfterOption("Style", name + ":spaceAfter", -10, 100, spaceAfter),
+	myLeftIndentOption("Style", name + ":leftIndent", -300, 300, leftIndent),
+	myRightIndentOption("Style", name + ":rightIndent", -300, 300, rightIndent),
+	myFirstLineIndentDeltaOption("Style", name + ":firstLineIndentDelta", -300, 300, firstLineIndentDelta),
 	myAlignmentOption("Style", name + ":alignment", alignment),
 	myLineSpaceOption("Style", name + ":lineSpace", lineSpace) {
 }

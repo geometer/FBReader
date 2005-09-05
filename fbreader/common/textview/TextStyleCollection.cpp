@@ -26,10 +26,10 @@
 static const std::string COLORS = "Colors";
 static const std::string OPTIONS = "Options";
 
-ZLIntegerOption TextStyle::LeftMarginOption(OPTIONS, "LeftMargin", 4);
-ZLIntegerOption TextStyle::RightMarginOption(OPTIONS, "RightMargin", 4);
-ZLIntegerOption TextStyle::TopMarginOption(OPTIONS, "TopMargin", 0);
-ZLIntegerOption TextStyle::BottomMarginOption(OPTIONS, "BottomMargin", 4);
+ZLIntegerRangeOption TextStyle::LeftMarginOption(OPTIONS, "LeftMargin", 0, 100, 4);
+ZLIntegerRangeOption TextStyle::RightMarginOption(OPTIONS, "RightMargin", 0, 100, 4);
+ZLIntegerRangeOption TextStyle::TopMarginOption(OPTIONS, "TopMargin", 0, 100, 0);
+ZLIntegerRangeOption TextStyle::BottomMarginOption(OPTIONS, "BottomMargin", 0, 100, 4);
 
 ZLColorOption TextStyle::BackgroundColorOption(COLORS, "Background", ZLColor(255, 255, 255));
 ZLColorOption TextStyle::RegularTextColorOption(COLORS, "Text", ZLColor(0, 0, 0));
@@ -131,7 +131,7 @@ void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, 
 	myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(kind, decoration));
 }
 
-const TextStyleDecoration *TextStyleCollection::decoration(TextKind kind) const {
+TextStyleDecoration *TextStyleCollection::decoration(TextKind kind) const {
 	std::map<TextKind,TextStyleDecoration*>::const_iterator it = myDecorationMap.find(kind);
 	return (it != myDecorationMap.end()) ? (*it).second : 0;
 }

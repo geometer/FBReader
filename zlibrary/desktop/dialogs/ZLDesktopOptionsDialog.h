@@ -39,8 +39,8 @@ protected:
 	virtual int height() const = 0;
 
 protected:
-	ZLIntegerOption WidthOption;
-	ZLIntegerOption HeightOption;
+	ZLIntegerRangeOption WidthOption;
+	ZLIntegerRangeOption HeightOption;
 };
 
 #endif /* __ZLDESKTOPOPTIONSDIALOG_H__ */

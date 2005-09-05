@@ -40,7 +40,7 @@
 class ShowIndicatorEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	ShowIndicatorEntry(IndicatorPage &page, const std::string &name, const ZLBooleanOption &option);
+	ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option);
 	~ShowIndicatorEntry();
 	void onValueChange(bool value);
 
@@ -48,7 +48,7 @@ private:
 	IndicatorPage &myPage;
 };
 
-ShowIndicatorEntry::ShowIndicatorEntry(IndicatorPage &page, const std::string &name, const ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {
+ShowIndicatorEntry::ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {
 }
 
 ShowIndicatorEntry::~ShowIndicatorEntry() {
@@ -67,19 +67,19 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", FBReader::QuitOnCancelOption));
 	generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", BookCollection::PathOption));
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", BookCollection::ScanSubdirsOption));
-	generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", LastOpenedBooks::MaxListSizeOption, 0, 100, 1));
+	generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", LastOpenedBooks::MaxListSizeOption, 1));
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", FBReader::StoreContentsPositionOption));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"));
 
 	ZLOptionsDialogTab *marginTab = myDialog->createTab("Margins");
 	marginTab->addOptions(
-		new ZLSimpleSpinOptionEntry("Left Margin", TextStyle::LeftMarginOption, 0, 100, 1),
-		new ZLSimpleSpinOptionEntry("Right Margin", TextStyle::RightMarginOption, 0, 100, 1)
+		new ZLSimpleSpinOptionEntry("Left Margin", TextStyle::LeftMarginOption, 1),
+		new ZLSimpleSpinOptionEntry("Right Margin", TextStyle::RightMarginOption, 1)
 	);
 	marginTab->addOptions(
-		new ZLSimpleSpinOptionEntry("Top Margin", TextStyle::TopMarginOption, 0, 100, 1),
-		new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyle::BottomMarginOption, 0, 100, 1)
+		new ZLSimpleSpinOptionEntry("Top Margin", TextStyle::TopMarginOption, 1),
+		new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyle::BottomMarginOption, 1)
 	);
 
 	myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));
@@ -87,8 +87,8 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 
 	ZLOptionsDialogTab *indicatorTab = myDialog->createTab("Indicator");
 	myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", TextView::ShowPositionIndicatorOption);
-	myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicatorHeightOption, 1, 100, 1);
-	myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 0, 100, 1);
+	myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicatorHeightOption, 1);
+	myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 1);
 	myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", TextView::IsIndicatorSensitiveOption);
 	indicatorTab->addOption(myIndicatorPage.ShowIndicatorEntry);
 	indicatorTab->addOption(myIndicatorPage.HeightEntry);

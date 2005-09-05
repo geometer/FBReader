@@ -35,8 +35,8 @@
 #include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
-static ZLIntegerOption Width("Options", "Width", 800);
-static ZLIntegerOption Height("Options", "Height", 800);
+static ZLIntegerRangeOption Width("Options", "Width", 10, 2000, 800);
+static ZLIntegerRangeOption Height("Options", "Height", 10, 2000, 800);
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->quitSlot();

@@ -132,16 +132,14 @@ void TreeModel::selectParagraph(const unsigned int paragraphNumber) const {
 	}
 }
 
-Paragraph *PlainTextModel::createParagraph(Paragraph::Kind kind) {
+void PlainTextModel::createParagraph(Paragraph::Kind kind) {
 	Paragraph *paragraph = (kind == Paragraph::TEXT_PARAGRAPH) ? new Paragraph() : new SpecialParagraph(kind);
 	addParagraphInternal(paragraph);
-	return paragraph;
 }
 
-ParagraphWithReference *PlainTextModel::createParagraphWithReference(long reference) {
+void PlainTextModel::createParagraphWithReference(long reference) {
 	ParagraphWithReference *paragraph = new ParagraphWithReference(reference);
 	addParagraphInternal(paragraph);
-	return paragraph;
 }
 
 void TextModel::addText(const std::string &text) {

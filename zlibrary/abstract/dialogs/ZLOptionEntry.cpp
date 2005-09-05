@@ -57,7 +57,7 @@ const std::vector<std::string> &ZLSimpleBoolean3OptionEntry::values() const {
 	return ourValues;
 }
 
-void ZLSimpleBoolean3OptionEntry::onAccept(const std::string &value) const {
+void ZLSimpleBoolean3OptionEntry::onAccept(const std::string &value) {
 	for (unsigned int i = 0; i < values().size(); i++) {
 		if (values()[i] == value) {
 			myOption.setValue((Boolean3)i);

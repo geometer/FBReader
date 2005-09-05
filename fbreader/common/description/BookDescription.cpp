@@ -36,7 +36,7 @@ BookInfo::BookInfo(const std::string &fileName) :
 	EncodingOption(fileName, "Encoding", "") {
 }
 
-void BookInfo::reset() const {
+void BookInfo::reset() {
 	AuthorDisplayNameOption.setValue("");
 	AuthorSortKeyOption.setValue("");
 	TitleOption.setValue("");

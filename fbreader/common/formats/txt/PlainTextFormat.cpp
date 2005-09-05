@@ -38,8 +38,8 @@ const std::string OPTION_CreateContentsTable = "CreateContentsTable";
 PlainTextFormat::PlainTextFormat(const std::string &fileName) :
 	InitializedOption(fileName, OPTION_Initialized, false),
 	BreakTypeOption(fileName, OPTION_BreakType, 0),
-	IgnoredIndentOption(fileName, OPTION_IgnoredIndent, -1),
-	EmptyLinesBeforeNewSectionOption(fileName, OPTION_EmptyLinesBeforeNewSection, -1),
+	IgnoredIndentOption(fileName, OPTION_IgnoredIndent, 1, 100, 1),
+	EmptyLinesBeforeNewSectionOption(fileName, OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
 	CreateContentsTableOption(fileName, OPTION_CreateContentsTable, false) {
 }
 
@@ -55,14 +55,14 @@ PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string 
 	ZLOptionsDialogTab *tab = dialog.createTab(tabName);
 
 	BreakTypeOptionEntry *breakEntry = new BreakTypeOptionEntry(*this, "Break Paragraph At", myFormat.BreakTypeOption);
-	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry("Ignore Indent Less Than", myFormat.IgnoredIndentOption, 1, 100, 1);
+	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry("Ignore Indent Less Than", myFormat.IgnoredIndentOption, 1);
 	tab->addOption(breakEntry);
 	tab->addOption(myIgnoredIndentEntry);
 	breakEntry->onValueChange(breakEntry->initialValue());
 
 	if (showContentsEntry) {
 		CreateContentsTableOptionEntry *contentsTableEntry = new CreateContentsTableOptionEntry(*this, "Build Contents Table", myFormat.CreateContentsTableOption);
-		myEmptyLinesBeforeNewSectionEntry = new ZLSimpleSpinOptionEntry("Empty Lines Before New Section", myFormat.EmptyLinesBeforeNewSectionOption, 1, 100, 1);
+		myEmptyLinesBeforeNewSectionEntry = new ZLSimpleSpinOptionEntry("Empty Lines Before New Section", myFormat.EmptyLinesBeforeNewSectionOption, 1);
 		tab->addOption(contentsTableEntry);
 		tab->addOption(myEmptyLinesBeforeNewSectionEntry);
 		contentsTableEntry->onValueChange(contentsTableEntry->initialState());
@@ -233,7 +233,7 @@ const std::vector<std::string> &BreakTypeOptionEntry::values() const {
 	return BREAK_TYPE_VALUES_VECTOR;
 }
 
-void BreakTypeOptionEntry::onAccept(const std::string &value) const {
+void BreakTypeOptionEntry::onAccept(const std::string &value) {
 	if (value == BREAK_TYPE_VALUES[0]) {
 		myBreakTypeOption.setValue(PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE);
 	} else if (value == BREAK_TYPE_VALUES[1]) {
@@ -247,7 +247,7 @@ void BreakTypeOptionEntry::onValueChange(const std::string &selectedValue) {
 	myPage.myIgnoredIndentEntry->setVisible(selectedValue == BREAK_TYPE_VALUES[2]);
 }
 
-CreateContentsTableOptionEntry::CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, const ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {
+CreateContentsTableOptionEntry::CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {
 }
 
 CreateContentsTableOptionEntry::~CreateContentsTableOptionEntry() {

@@ -47,8 +47,8 @@ public:
 	static ZLBooleanOption ShowPositionIndicatorOption;
 	static ZLBooleanOption IsIndicatorSensitiveOption;
 	static ZLColorOption PositionIndicatorColorOption;
-	static ZLIntegerOption PositionIndicatorHeightOption;
-	static ZLIntegerOption PositionIndicatorOffsetOption;
+	static ZLIntegerRangeOption PositionIndicatorHeightOption;
+	static ZLIntegerRangeOption PositionIndicatorOffsetOption;
 
 public:
 	enum ScrollingMode {

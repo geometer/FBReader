@@ -28,7 +28,7 @@
 const std::string GROUP = "LastOpenedBooks";
 const std::string BOOK = "Book";
 
-ZLIntegerOption LastOpenedBooks::MaxListSizeOption(GROUP, "MaxSize", 10);
+ZLIntegerRangeOption LastOpenedBooks::MaxListSizeOption(GROUP, "MaxSize", 1, 100, 10);
 
 LastOpenedBooks::LastOpenedBooks() {
 	const int size = MaxListSizeOption.value();

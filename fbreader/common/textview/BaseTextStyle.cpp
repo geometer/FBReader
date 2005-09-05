@@ -27,7 +27,7 @@ BaseTextStyle::BaseTextStyle(const std::string &fontFamily, int fontSize) {
 	std::string group = "Style";
 
 	myFontFamilyOption = new ZLStringOption(group, "Base:fontFamily", fontFamily);
-	myFontSizeOption = new ZLIntegerOption(group, "Base:fontSize", fontSize);
+	myFontSizeOption = new ZLIntegerRangeOption(group, "Base:fontSize", 0, 32, fontSize);
 	myBoldOption = new ZLBooleanOption(group, "Base:bold", false);
 	myItalicOption = new ZLBooleanOption(group, "Base:italic", false);
 	myAlignmentOption = new ZLIntegerOption(group, "Base:alignment", ALIGN_JUSTIFY);

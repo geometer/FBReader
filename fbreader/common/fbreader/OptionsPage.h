@@ -39,7 +39,7 @@ protected:
 		const std::string &name() const FB_DIALOG_SECTION;
 		const std::string &initialValue() const FB_DIALOG_SECTION;
 		const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-		void onAccept(const std::string&) const FB_DIALOG_SECTION;
+		void onAccept(const std::string&) FB_DIALOG_SECTION;
 		void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
 		void addValue(const std::string &value) FB_DIALOG_SECTION;
 
@@ -72,7 +72,7 @@ inline OptionsPage::ComboOptionEntry::~ComboOptionEntry() {}
 inline const std::string &OptionsPage::ComboOptionEntry::name() const { return myName; }
 inline const std::string &OptionsPage::ComboOptionEntry::initialValue() const { return myInitialValue; }
 inline const std::vector<std::string> &OptionsPage::ComboOptionEntry::values() const { return myValues; }
-inline void OptionsPage::ComboOptionEntry::onAccept(const std::string&) const {}
+inline void OptionsPage::ComboOptionEntry::onAccept(const std::string&) {}
 inline void OptionsPage::ComboOptionEntry::addValue(const std::string &value) { myValues.push_back(value); }
 
 inline OptionsPage::OptionsPage() {}

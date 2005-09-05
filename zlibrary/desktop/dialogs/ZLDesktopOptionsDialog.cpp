@@ -20,7 +20,7 @@
 
 #include "ZLDesktopOptionsDialog.h"
 
-ZLDesktopOptionsDialog::ZLDesktopOptionsDialog(const std::string &id) : ZLOptionsDialog(id), WidthOption(id, "Width", 400), HeightOption(id, "Height", 300) {
+ZLDesktopOptionsDialog::ZLDesktopOptionsDialog(const std::string &id) : ZLOptionsDialog(id), WidthOption(id, "Width", 10, 2000, 400), HeightOption(id, "Height", 10, 2000, 300) {
 }
 
 bool ZLDesktopOptionsDialog::run(const std::string &tabName) {

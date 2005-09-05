@@ -69,11 +69,11 @@ FBReader::ScrollingOptions::ScrollingOptions(
 	const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
 	const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
 	const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
-) : DelayOption(delayGroup, delayName, delayValue),
+) : DelayOption(delayGroup, delayName, 0, 5000, delayValue),
 		ModeOption(modeGroup, modeName, modeValue),
-		LinesToKeepOption(linesToKeepGroup, linesToKeepName, linesToKeepValue),
-		LinesToScrollOption(linesToScrollGroup, linesToScrollName, linesToScrollValue),
-		PercentToScrollOption(percentToScrollGroup, percentToScrollName, percentToScrollValue) {}
+		LinesToKeepOption(linesToKeepGroup, linesToKeepName, 1, 100, linesToKeepValue),
+		LinesToScrollOption(linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
+		PercentToScrollOption(percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
 
 FBReader::ScrollingOptions FBReader::LargeScrollingOptions(
 	OPTIONS, DELAY, 250,
@@ -362,26 +362,20 @@ void FBReader::doAction(ActionCode code) {
 			break;
 		case ACTION_INCREASE_FONT:
 			{
-				ZLIntegerOption &option =
+				ZLIntegerRangeOption &option =
 					((BaseTextStyle&)*TextStyleCollection::instance().baseStyle()).fontSizeOption();
-				int value = option.value() + 2;
-				if (value <= 32) {
-					option.setValue(value);
-					clearTextCaches();
-					repaintView();
-				}
+				option.setValue(option.value() + 2);
+				clearTextCaches();
+				repaintView();
 			}
 			break;
 		case ACTION_DECREASE_FONT:
 			{
-				ZLIntegerOption &option =
+				ZLIntegerRangeOption &option =
 					((BaseTextStyle&)*TextStyleCollection::instance().baseStyle()).fontSizeOption();
-				int value = option.value() - 2;
-				if (value >= 10) {
-					option.setValue(value);
-					clearTextCaches();
-					repaintView();
-				}
+				option.setValue(option.value() - 2);
+				clearTextCaches();
+				repaintView();
 			}
 			break;
 		case ACTION_SHOW_HIDE_POSITION_INDICATOR:

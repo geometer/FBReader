@@ -25,7 +25,6 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-#include "../collection/BookCollection.h"
 #include "../description/Author.h"
 
 static const std::string LIBRARY = "Recent Books";
@@ -46,9 +45,9 @@ void RecentBooksView::paint() {
 	if (myLastBooksModel == 0) {
 		myLastBooksModel = new PlainTextModel();
 		const LastOpenedBooks lastBooks;
-		const Books &books = lastBooks.books();
-		for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
-			myBooksMap[myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH)] = *it;
+		myBooks = lastBooks.books();
+		for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); it++) {
+			myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
 			myLastBooksModel->addControl(RECENT_BOOK_LIST, true);
 			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
 			myLastBooksModel->addText((*it)->author()->displayName() + ". ");
@@ -63,7 +62,7 @@ void RecentBooksView::paint() {
 
 void RecentBooksView::rebuild() {
 	setModel(0, LIBRARY);
-	myBooksMap.clear();
+	myBooks.clear();
 	if (myLastBooksModel != 0) {
 		delete myLastBooksModel;
 		myLastBooksModel = 0;
@@ -76,20 +75,11 @@ bool RecentBooksView::onStylusPress(int x, int y) {
 	}
 
 	const ParagraphPosition *position = paragraphByCoordinate(y);
-	if (position == 0) {
+	if ((position == 0) || (position->ParagraphNumber >= (int)myBooks.size())) {
 		return false;
 	}
 
-	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)model()->paragraphs().size() <= paragraphNumber)) {
-		return false;
-	}
-
-	Paragraph *paragraph = (Paragraph*)model()->paragraphs()[paragraphNumber];
-	std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
-	if (it != myBooksMap.end()) {
-		myReader.openBook(it->second);
-		myReader.showBookTextView();
-	}
+	myReader.openBook(myBooks[position->ParagraphNumber]);
+	myReader.showBookTextView();
 	return true;
 }

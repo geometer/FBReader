@@ -34,7 +34,7 @@ std::vector<std::string> FontFamilyOptionEntry::ourAllFamiliesPlusBase;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValues;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValuesPlusBase;
 
-FontFamilyOptionEntry::FontFamilyOptionEntry(const ZLStringOption &option, const ZLPaintContext &context, bool allowBase) : myOption(option), myAllowBase(allowBase) {
+FontFamilyOptionEntry::FontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context, bool allowBase) : myOption(option), myAllowBase(allowBase) {
 	if (ourAllFamiliesPlusBase.empty()) {
 		ourAllFamilies = context.fontFamilies();
 		ourAllFamiliesPlusBase.push_back(BASE_STRING);
@@ -55,11 +55,11 @@ const std::string &FontFamilyOptionEntry::initialValue() const {
 	return value.empty() ? BASE_STRING : value;
 }
 
-void FontFamilyOptionEntry::onAccept(const std::string &value) const {
+void FontFamilyOptionEntry::onAccept(const std::string &value) {
 	myOption.setValue((value == BASE_STRING) ? std::string() : value);
 }
 
-LineSpacingOptionEntry::LineSpacingOptionEntry(const ZLDoubleOption &option, bool allowBase) : myOption(option), myAllowBase(allowBase) {
+LineSpacingOptionEntry::LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase) : myOption(option), myAllowBase(allowBase) {
 	if (ourAllValuesPlusBase.empty()) {
 		for (int i = 5; i <= 20; i++) {
 			ourAllValues.push_back(std::string() + (char)(i / 10 + '0') + '.' + (char)(i % 10 + '0'));
@@ -86,7 +86,7 @@ const std::string &LineSpacingOptionEntry::initialValue() const {
 	return ourAllValues[15];
 }
 
-void LineSpacingOptionEntry::onAccept(const std::string &value) const {
+void LineSpacingOptionEntry::onAccept(const std::string &value) {
 	if (value == BASE_STRING) {
 		myOption.setValue(0.0);
 	} else {
@@ -136,7 +136,7 @@ const std::string &AlignmentOptionEntry::initialValue() const {
 	return values5()[value];
 }
 
-void AlignmentOptionEntry::onAccept(const std::string &value) const {
+void AlignmentOptionEntry::onAccept(const std::string &value) {
 	for (unsigned int i = 0; i < values5().size(); i++) {
 		if (values5()[i] == value) {
 			myOption.setValue(i);

@@ -49,7 +49,7 @@ const std::string &StringInfoEntry::initialValue() const {
 	return myValue;
 }
 
-void StringInfoEntry::onAccept(const std::string&) const {
+void StringInfoEntry::onAccept(const std::string&) {
 }
 
 EncodingEntry::EncodingEntry(const std::string &name, ZLStringOption &encodingOption) : myName(name), myEncodingOption(encodingOption) {
@@ -79,7 +79,7 @@ const std::string &EncodingEntry::initialValue() const {
 	return myEncodingOption.value();
 }
 
-void EncodingEntry::onAccept(const std::string &value) const {
+void EncodingEntry::onAccept(const std::string &value) {
 	myEncodingOption.setValue(value);
 }
 
@@ -116,7 +116,7 @@ const std::string &LanguageEntry::name() const {
 	return myName;
 }
 
-void LanguageEntry::onAccept(const std::string &value) const {
+void LanguageEntry::onAccept(const std::string &value) {
 	for (int i = 0; languageShortNames[i] != 0; i++) {
 		if (value == values()[i]) {
 			myLanguageOption.setValue(languageShortNames[i]);

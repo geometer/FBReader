@@ -76,9 +76,8 @@ class PlainTextModel : public TextModel {
 
 public:
 	Kind kind() const MODEL_SECTION;
-	//void addParagraph(Paragraph *paragraph) MODEL_SECTION;
-	Paragraph *createParagraph(Paragraph::Kind kind) MODEL_SECTION;
-	ParagraphWithReference *createParagraphWithReference(long reference) MODEL_SECTION;
+	void createParagraph(Paragraph::Kind kind) MODEL_SECTION;
+	void createParagraphWithReference(long reference) MODEL_SECTION;
 };
 
 class TreeModel : public TextModel {

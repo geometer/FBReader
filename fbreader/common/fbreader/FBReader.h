@@ -95,11 +95,11 @@ public:
 			const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
 		) FB_SECTION;
 		
-		ZLIntegerOption DelayOption;
+		ZLIntegerRangeOption DelayOption;
 		ZLIntegerOption ModeOption;
-		ZLIntegerOption LinesToKeepOption;
-		ZLIntegerOption LinesToScrollOption;
-		ZLIntegerOption PercentToScrollOption;
+		ZLIntegerRangeOption LinesToKeepOption;
+		ZLIntegerRangeOption LinesToScrollOption;
+		ZLIntegerRangeOption PercentToScrollOption;
 	};
 
 public:

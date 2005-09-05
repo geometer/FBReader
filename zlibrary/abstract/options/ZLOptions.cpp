@@ -51,8 +51,7 @@ ZLOption::ZLOption(const std::string &group, const std::string &optionName) {
 ZLOption::~ZLOption() {
 }
 
-ZLBooleanOption::ZLBooleanOption(const std::string &group, const std::string &optionName, bool defaultValue) : ZLOption(group, optionName) {
-	myDefaultValue = defaultValue;
+ZLBooleanOption::ZLBooleanOption(const std::string &group, const std::string &optionName, bool defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBooleanOption::~ZLBooleanOption() {
@@ -67,7 +66,7 @@ bool ZLBooleanOption::value() const {
 	return myValue;
 }
 
-void ZLBooleanOption::setValue(bool value) const {
+void ZLBooleanOption::setValue(bool value) {
 	if (myIsSynchronized && (myValue == value)) {
 		return;
 	}
@@ -81,8 +80,7 @@ void ZLBooleanOption::setValue(bool value) const {
 	}
 }
 
-ZLBoolean3Option::ZLBoolean3Option(const std::string &group, const std::string &optionName, Boolean3 defaultValue) : ZLOption(group, optionName) {
-	myDefaultValue = defaultValue;
+ZLBoolean3Option::ZLBoolean3Option(const std::string &group, const std::string &optionName, Boolean3 defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBoolean3Option::~ZLBoolean3Option() {
@@ -97,7 +95,7 @@ Boolean3 ZLBoolean3Option::value() const {
 	return myValue;
 }
 
-void ZLBoolean3Option::setValue(Boolean3 value) const {
+void ZLBoolean3Option::setValue(Boolean3 value) {
 	if (myIsSynchronized && (myValue == value)) {
 		return;
 	}
@@ -111,8 +109,7 @@ void ZLBoolean3Option::setValue(Boolean3 value) const {
 	}
 }
 
-ZLColorOption::ZLColorOption(const std::string &group, const std::string &optionName, ZLColor defaultValue) : ZLOption(group, optionName) {
-	myDefaultIntValue = defaultValue.intValue();
+ZLColorOption::ZLColorOption(const std::string &group, const std::string &optionName, ZLColor defaultValue) : ZLOption(group, optionName), myDefaultIntValue(defaultValue.intValue()) {
 }
 
 ZLColorOption::~ZLColorOption() {
@@ -127,7 +124,7 @@ ZLColor ZLColorOption::value() const {
 	return ZLColor(myIntValue);
 }
 
-void ZLColorOption::setValue(ZLColor value) const {
+void ZLColorOption::setValue(ZLColor value) {
 	if (myIsSynchronized && (myIntValue == value.intValue())) {
 		return;
 	}
@@ -141,8 +138,7 @@ void ZLColorOption::setValue(ZLColor value) const {
 	}
 }
 
-ZLIntegerOption::ZLIntegerOption(const std::string &group, const std::string &optionName, long defaultValue) : ZLOption(group, optionName) {
-	myDefaultValue = defaultValue;
+ZLIntegerOption::ZLIntegerOption(const std::string &group, const std::string &optionName, long defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLIntegerOption::~ZLIntegerOption() {
@@ -157,7 +153,7 @@ long ZLIntegerOption::value() const {
 	return myValue;
 }
 
-void ZLIntegerOption::setValue(long value) const {
+void ZLIntegerOption::setValue(long value) {
 	if (myIsSynchronized && (myValue == value)) {
 		return;
 	}
@@ -171,8 +167,46 @@ void ZLIntegerOption::setValue(long value) const {
 	}
 }
 
-ZLDoubleOption::ZLDoubleOption(const std::string &group, const std::string &optionName, double defaultValue) : ZLOption(group, optionName) {
-	myDefaultValue = defaultValue;
+ZLIntegerRangeOption::ZLIntegerRangeOption(const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue) : ZLOption(group, optionName), myMinValue(minValue), myMaxValue(maxValue), myDefaultValue(defaultValue) {
+}
+
+ZLIntegerRangeOption::~ZLIntegerRangeOption() {
+}
+
+long ZLIntegerRangeOption::value() const {
+	if (!myIsSynchronized) {
+		ZLOptions::instance().setGroup(myGroup);
+		myValue = ZLOptions::instance().integerValue(myOptionName, myDefaultValue);
+		myValue = std::max(std::min(myMaxValue, myValue), myMinValue);
+		myIsSynchronized = true;
+	}
+	return myValue;
+}
+
+void ZLIntegerRangeOption::setValue(long value) {
+	value = std::max(std::min(myMaxValue, value), myMinValue);
+	if (myIsSynchronized && (myValue == value)) {
+		return;
+	}
+	myValue = value;
+	myIsSynchronized = true;
+	ZLOptions::instance().setGroup(myGroup);
+	if (myValue == myDefaultValue) {
+		ZLOptions::instance().unsetValue(myOptionName);
+	} else {
+		ZLOptions::instance().setValue(myOptionName, myValue);
+	}
+}
+
+long ZLIntegerRangeOption::minValue() const {
+	return myMinValue;
+}
+
+long ZLIntegerRangeOption::maxValue() const {
+	return myMaxValue;
+}
+
+ZLDoubleOption::ZLDoubleOption(const std::string &group, const std::string &optionName, double defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLDoubleOption::~ZLDoubleOption() {
@@ -187,7 +221,7 @@ double ZLDoubleOption::value() const {
 	return myValue;
 }
 
-void ZLDoubleOption::setValue(double value) const {
+void ZLDoubleOption::setValue(double value) {
 	if (myIsSynchronized && (myValue == value)) {
 		return;
 	}
@@ -201,8 +235,7 @@ void ZLDoubleOption::setValue(double value) const {
 	}
 }
 
-ZLStringOption::ZLStringOption(const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLOption(group, optionName){
-	myDefaultValue = defaultValue;
+ZLStringOption::ZLStringOption(const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLStringOption::~ZLStringOption() {
@@ -217,7 +250,7 @@ const std::string &ZLStringOption::value() const {
 	return myValue;
 }
 
-void ZLStringOption::setValue(const std::string &value) const {
+void ZLStringOption::setValue(const std::string &value) {
 	if (myIsSynchronized && (myValue == value)) {
 		return;
 	}

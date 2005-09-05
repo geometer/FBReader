@@ -32,7 +32,7 @@ public:
 	~StringInfoEntry() FB_DIALOG_SECTION;
 	const std::string &name() const FB_DIALOG_SECTION;
 	const std::string &initialValue() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
+	void onAccept(const std::string &value) FB_DIALOG_SECTION;
 
 private:
 	std::string myName;
@@ -48,7 +48,7 @@ public:
 	const std::string &name() const FB_DIALOG_SECTION;
 	const std::string &initialValue() const FB_DIALOG_SECTION;
 	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
+	void onAccept(const std::string &value) FB_DIALOG_SECTION;
 
 private:
 	std::string myName;
@@ -64,7 +64,7 @@ public:
 	const std::string &name() const FB_DIALOG_SECTION;
 	const std::string &initialValue() const FB_DIALOG_SECTION;
 	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &value) const FB_DIALOG_SECTION;
+	void onAccept(const std::string &value) FB_DIALOG_SECTION;
 
 private:
 	std::string myName;

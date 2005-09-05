@@ -41,8 +41,8 @@
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-static ZLIntegerOption Width("Options", "Width", 350);
-static ZLIntegerOption Height("Options", "Height", 350);
+static ZLIntegerRangeOption Width("Options", "Width", 10, 800, 350);
+static ZLIntegerRangeOption Height("Options", "Height", 10, 800, 350);
 
 QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
 	setWFlags(getWFlags() | WStyle_Customize);

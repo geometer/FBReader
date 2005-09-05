@@ -74,7 +74,7 @@ private:
 class LastOpenedBooks {
 
 public:
-	static ZLIntegerOption MaxListSizeOption;
+	static ZLIntegerRangeOption MaxListSizeOption;
 
 public:
 	LastOpenedBooks() MODEL_SECTION;

@@ -54,7 +54,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
 		);
 
 		registerEntries(dialogTab,
-			new ZLSimpleSpinOptionEntry("Size", baseStyle.fontSizeOption(), 10, 32, 2),
+			new ZLSimpleSpinOptionEntry("Size", baseStyle.fontSizeOption(), 2),
 			new ZLSimpleBooleanOptionEntry("Italic", baseStyle.italicOption()),
 			name
 		);
@@ -66,7 +66,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
 	}
 
 	for (int i = 0; i < STYLES_NUMBER; i++) {
-		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
+		TextStyleDecoration *decoration = collection.decoration(styles[i]);
 		if (decoration != 0) {
 			const std::string &name = decoration->name();
 
@@ -77,7 +77,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
 			);
 
 			registerEntries(dialogTab,
-				new ZLSimpleSpinOptionEntry("Size Difference", decoration->fontSizeDeltaOption(), -16, 16, 2),
+				new ZLSimpleSpinOptionEntry("Size Difference", decoration->fontSizeDeltaOption(), 2),
 				new ZLSimpleBoolean3OptionEntry("Italic", decoration->italicOption()),
 				name
 			);
