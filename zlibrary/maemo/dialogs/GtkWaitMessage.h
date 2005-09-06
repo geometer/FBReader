@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <gtk/gtkwindow.h>
+#include <gtk/gtkwidget.h>
 
 #include <abstract/ZLWaitMessage.h>
 
@@ -34,7 +34,7 @@ public:
 	~GtkWaitMessage();
 
 private:
-  GtkWindow *myParent;
+	GtkWindow *myParent, *myWindow;
 };
 
 #endif /* __GTKWAITMESSAGE_H__ */
