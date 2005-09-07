@@ -213,7 +213,7 @@ private:
 	char *myFirstEntryAddress;
 	size_t myEntryNumber;
 
-friend class Paragraph::Iterator;
+friend class Iterator;
 friend class TextModel;
 friend class PlainTextModel;
 };

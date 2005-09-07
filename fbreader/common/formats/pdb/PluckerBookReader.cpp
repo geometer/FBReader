@@ -69,7 +69,7 @@ void PluckerBookReader::safeBeginParagraph() {
 		myBufferIsEmpty = true;
 		beginParagraph();
 		if (!myParagraphStored) {
-			myParagraphVector->push_back(model().bookTextModel().paragraphs().size() - 1);
+			myParagraphVector->push_back(model().bookTextModel().paragraphsNumber() - 1);
 			myParagraphStored = true;
 		}
 		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {

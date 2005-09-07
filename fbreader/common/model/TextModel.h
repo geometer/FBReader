@@ -24,6 +24,7 @@
 
 #include <vector>
 #include <string>
+#include <algorithm>
 
 #include "Paragraph.h"
 #include "TextKind.h"
@@ -36,6 +37,26 @@ class TreeParagraph;
 class TextModel {
 
 public:
+	class Iterator {
+
+	public:
+		Iterator(const TextModel &model, size_t index) MODEL_SECTION;
+		~Iterator() MODEL_SECTION;
+
+		size_t index() const MODEL_SECTION;
+		bool isStart() const MODEL_SECTION;
+		bool isEnd() const MODEL_SECTION;
+		void previous() MODEL_SECTION;
+		void next() MODEL_SECTION;
+
+		const Paragraph *paragraph() const MODEL_SECTION;
+
+	private:
+		const TextModel &myModel;
+		std::vector<Paragraph*>::const_iterator myIterator;
+	};
+	
+public:
 	enum Kind {
 		PLAIN_TEXT_MODEL,
 		TREE_MODEL,
@@ -46,10 +67,11 @@ public:
 	virtual Kind kind() const MODEL_SECTION = 0;
 
 	const std::vector<Paragraph*> &paragraphs() const MODEL_SECTION;
+	size_t paragraphsNumber() const MODEL_SECTION;
 	const std::vector<TextMark> &marks() const MODEL_SECTION;
 
 	virtual void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
-	virtual void selectParagraph(const unsigned int paragraphNumber) const MODEL_SECTION;
+	virtual void selectParagraph(size_t index) const MODEL_SECTION;
 
 	TextMark firstMark() const MODEL_SECTION;
 	TextMark lastMark() const MODEL_SECTION;
@@ -70,6 +92,8 @@ private:
 	std::vector<Paragraph*> myParagraphs;
 	mutable std::vector<TextMark> myMarks;
 	mutable RowMemoryAllocator myAllocator;
+
+friend class Iterator;
 };
 
 class PlainTextModel : public TextModel {
@@ -90,17 +114,28 @@ public:
 	TreeParagraph *createParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
 	
 	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
-	void selectParagraph(const unsigned int paragraphNumber) const MODEL_SECTION;
+	void selectParagraph(size_t index) const MODEL_SECTION;
 
 private:
 	TreeParagraph *myRoot;
 };
 
 inline const std::vector<Paragraph*> &TextModel::paragraphs() const { return myParagraphs; }
+inline size_t TextModel::paragraphsNumber() const { return myParagraphs.size(); }
 inline const std::vector<TextMark> &TextModel::marks() const { return myMarks; }
 
+inline TextModel::Iterator::Iterator(const TextModel &model, size_t index) : myModel(model), myIterator(model.myParagraphs.begin() + std::min(model.paragraphsNumber() - 1, index)) {}
+inline TextModel::Iterator::~Iterator() {}
+
+inline size_t TextModel::Iterator::index() const { return myIterator - myModel.myParagraphs.begin(); }
+inline bool TextModel::Iterator::isStart() const { return myIterator == myModel.myParagraphs.begin(); }
+inline bool TextModel::Iterator::isEnd() const { return myIterator == myModel.myParagraphs.begin(); }
+inline void TextModel::Iterator::previous() { myIterator--; }
+inline void TextModel::Iterator::next() { myIterator++; }
+
+inline const Paragraph *TextModel::Iterator::paragraph() const { return *myIterator; }
+
 inline TextModel::Kind PlainTextModel::kind() const { return PLAIN_TEXT_MODEL; }
-//inline void PlainTextModel::addParagraph(Paragraph *paragraph) { addParagraphInternal(paragraph); }
 
 inline TextModel::Kind TreeModel::kind() const { return TREE_MODEL; }
 

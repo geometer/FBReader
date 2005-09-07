@@ -59,10 +59,10 @@ void TextModel::search(const std::string &text, size_t startIndex, size_t endInd
 	}
 }
 
-void TextModel::selectParagraph(const unsigned int paragraphNumber) const {
-	if (paragraphNumber < paragraphs().size()) {
+void TextModel::selectParagraph(size_t index) const {
+	if (index < paragraphsNumber()) {
 		myMarks.clear();
-		myMarks.push_back(TextMark(paragraphNumber, 0, paragraphs()[paragraphNumber]->textLength()));
+		myMarks.push_back(TextMark(index, 0, Iterator(*this, index).paragraph()->textLength()));
 	}
 }
 
@@ -121,14 +121,14 @@ TreeParagraph *TreeModel::createParagraph(TreeParagraph *parent) {
 void TreeModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
 	TextModel::search(text, startIndex, endIndex, ignoreCase);
 	for (std::vector<TextMark>::const_iterator it = marks().begin(); it != marks().end(); it++) {
-		((TreeParagraph*)paragraphs()[it->ParagraphNumber])->openTree();
+		((TreeParagraph*)Iterator(*this, it->ParagraphNumber).paragraph())->openTree();
 	}
 }
 
-void TreeModel::selectParagraph(const unsigned int paragraphNumber) const {
-	if (paragraphNumber < paragraphs().size()) {
-		TextModel::selectParagraph(paragraphNumber);
-		((TreeParagraph*)paragraphs()[paragraphNumber])->openTree();
+void TreeModel::selectParagraph(size_t index) const {
+	if (index < paragraphsNumber()) {
+		TextModel::selectParagraph(index);
+		((TreeParagraph*)Iterator(*this, index).paragraph())->openTree();
 	}
 }
 

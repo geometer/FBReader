@@ -110,7 +110,7 @@ void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 
 void BookReader::addHyperlinkLabel(const std::string &label) {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
-		int paragraphNumber = myModel.bookTextModel().paragraphs().size();
+		int paragraphNumber = myModel.bookTextModel().paragraphsNumber();
 		if (myTextParagraphExists) {
 			paragraphNumber--;
 		}
@@ -148,7 +148,7 @@ void BookReader::flushTextBufferToParagraph() {
 	myCurrentTextModel->addText(myBuffer);
 	if (myContentsParagraphStatus != DONT_ADD) {
 		if (myContentsParagraphStatus == TO_ADD) {
-			myModel.myContentsModel.createParagraphWithReference(myModel.bookTextModel().paragraphs().size() - 1);
+			myModel.myContentsModel.createParagraphWithReference(myModel.bookTextModel().paragraphsNumber() - 1);
 			myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 			myContentsParagraphStatus = ADDED;
 		} else if (myInsideTitle) {
@@ -166,22 +166,24 @@ void BookReader::addImage(const std::string &id, ZLImage *image) {
 }
 
 void BookReader::insertEndOfSectionParagraph() {
-	if (!currentTextModelIsNull() &&
-			mySectionContainsRegularContents &&
-			!myCurrentTextModel->paragraphs().empty() &&
-			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
-		myCurrentTextModel->createParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
-		mySectionContainsRegularContents = false;
+	if (!currentTextModelIsNull() && mySectionContainsRegularContents) {
+		size_t size = myCurrentTextModel->paragraphsNumber();
+		if ((size > 0) &&
+				(TextModel::Iterator(*myCurrentTextModel, (size_t)-1).paragraph()->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
+			myCurrentTextModel->createParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
+			mySectionContainsRegularContents = false;
+		}
 	}
 }
 
 void BookReader::insertEndOfTextParagraph() {
-	if (!currentTextModelIsNull() &&
-			mySectionContainsRegularContents &&
-			!myCurrentTextModel->paragraphs().empty() &&
-			(myCurrentTextModel->paragraphs().back()->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
-		myCurrentTextModel->createParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
-		mySectionContainsRegularContents = false;
+	if (!currentTextModelIsNull() && mySectionContainsRegularContents) {
+		size_t size = myCurrentTextModel->paragraphsNumber();
+		if ((size > 0) &&
+				(TextModel::Iterator(*myCurrentTextModel, (size_t)-1).paragraph()->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
+			myCurrentTextModel->createParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
+			mySectionContainsRegularContents = false;
+		}
 	}
 }
 
@@ -207,7 +209,7 @@ void BookReader::beginContentsParagraph() {
 
 void BookReader::endContentsParagraph() {
 	if (myContentsParagraphStatus == ADDED) {
-		if (myModel.myContentsModel.paragraphs().back()->entryNumber() == 1) {
+		if (TextModel::Iterator(myModel.myContentsModel, (size_t)-1).paragraph()->entryNumber() == 1) {
 			myModel.myContentsModel.addText("...");
 		}
 	}
