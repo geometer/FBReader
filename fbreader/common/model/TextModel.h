@@ -46,7 +46,6 @@ public:
 	virtual ~TextModel() MODEL_SECTION;
 	virtual Kind kind() const MODEL_SECTION = 0;
 
-	const std::vector<Paragraph*> &paragraphs() const MODEL_SECTION;
 	size_t paragraphsNumber() const MODEL_SECTION;
 	Paragraph *operator[] (size_t index) MODEL_SECTION;
 	const Paragraph *operator[] (size_t index) const MODEL_SECTION;
@@ -100,7 +99,6 @@ private:
 	TreeParagraph *myRoot;
 };
 
-inline const std::vector<Paragraph*> &TextModel::paragraphs() const { return myParagraphs; }
 inline size_t TextModel::paragraphsNumber() const { return myParagraphs.size(); }
 inline const std::vector<TextMark> &TextModel::marks() const { return myMarks; }
 

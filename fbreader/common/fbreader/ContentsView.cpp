@@ -39,18 +39,18 @@ bool ContentsView::onStylusPress(int x, int y) {
 		return false;
 	}
 	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)model()->paragraphs().size() < paragraphNumber)) {
+	if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() < paragraphNumber)) {
 		return false;
 	}
-	Paragraph *paragraph = model()->paragraphs()[paragraphNumber];
+	const ParagraphWithReference *paragraph = (const ParagraphWithReference*)(*model())[paragraphNumber];
 	
-	myReader.textView().gotoParagraph(((ParagraphWithReference*)paragraph)->reference());
+	myReader.textView().gotoParagraph(paragraph->reference());
 	myReader.showBookTextView();
 	return true;
 }
 
 bool ContentsView::isEmpty() const {
-	return (model() == 0) || model()->paragraphs().empty();
+	return (model() == 0) || (model()->paragraphsNumber() == 0);
 }
 
 static const std::string PARAGRAPH_OPTION_NAME = "ContentsParagraph";
@@ -83,17 +83,16 @@ void ContentsView::gotoReference() {
 	const WordCursor &cursor = myReader.textView().endCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
-		const std::vector<Paragraph*> &paragraphs = model()->paragraphs();
-		unsigned int selected = paragraphs.size() - 1;
-		for (std::vector<Paragraph*>::const_iterator it = paragraphs.begin() + 1; it != paragraphs.end(); it++) {
-			if (((ParagraphWithReference*)*it)->reference() >= reference) {
-				selected = it - paragraphs.begin() - 1;
+		size_t selected = model()->paragraphsNumber() - 1;
+		for (size_t i = 1; i < model()->paragraphsNumber(); i++) {
+			if (((const ParagraphWithReference*)(*model())[i])->reference() >= reference) {
+				selected = i - 1;
 				break;
 			}
 		}
 		selectParagraph(selected);
 		gotoParagraph(selected);
-		if (selected != paragraphs.size() - 1) {
+		if (selected != model()->paragraphsNumber() - 1) {
 			scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
 		}
 	}

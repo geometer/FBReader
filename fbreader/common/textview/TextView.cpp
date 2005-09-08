@@ -68,17 +68,17 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 
 	myModel = model;
 
-	if ((myModel != 0) && !myModel->paragraphs().empty()) {
+	if ((myModel != 0) && (myModel->paragraphsNumber() != 0)) {
 		setStartCursor(ParagraphCursor::createCursor(*myModel));
 
 		myFileName = name;
-		const std::vector<Paragraph*> &paragraphs = myModel->paragraphs();
-		myTextSize.reserve(paragraphs.size() + 1);
+		size_t size = myModel->paragraphsNumber();
+		myTextSize.reserve(size + 1);
 		myTextSize.push_back(0);
-		for (std::vector<Paragraph*>::const_iterator it = paragraphs.begin(); it != paragraphs.end(); it++) {
-			myTextSize.push_back(myTextSize.back() + (*it)->textLength());
-			if ((*it)->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) {
-				myTextBreaks.push_back(it - paragraphs.begin());
+		for (size_t i= 0; i< size; i++) {
+			myTextSize.push_back(myTextSize.back() + (*myModel)[i]->textLength());
+			if ((*myModel)[i]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) {
+				myTextBreaks.push_back(i);
 			}
 		}
 	}
@@ -107,7 +107,7 @@ void TextView::paint() {
 
 		std::vector<size_t>::const_iterator i = nextBreakIterator();
 		size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
-		size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphs().size();
+		size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
 
 		size_t paragraphNumber = endCursor().paragraphCursor().index();
 		size_t sizeOfTextBeforeParagraph = myTextSize[paragraphNumber] - myTextSize[startIndex];
@@ -187,7 +187,7 @@ void TextView::scrollToEndOfText() {
 	}
 
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
-	gotoParagraph((i != myTextBreaks.end()) ? *i : myModel->paragraphs().size(), true);
+	gotoParagraph((i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber(), true);
 	repaintView();
 }
 
@@ -230,11 +230,11 @@ void TextView::gotoMark(TextMark mark) {
 
 void TextView::gotoParagraph(int num, bool last) {
 	if (last) {
-		if ((num > 0) && (num <= (int)myModel->paragraphs().size())) {
+		if ((num > 0) && (num <= (int)myModel->paragraphsNumber())) {
 			moveEndCursor(num - 1, false);
 		}
 	} else {
-		if ((num >= 0) && (num < (int)myModel->paragraphs().size())) {
+		if ((num >= 0) && (num < (int)myModel->paragraphsNumber())) {
 			moveStartCursor(num, true);
 		}
 	}
@@ -344,7 +344,7 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 	}
 
 	size_t startIndex = 0;
-	size_t endIndex = myModel->paragraphs().size();
+	size_t endIndex = myModel->paragraphsNumber();
 	if (thisSectionOnly) {
 		std::vector<size_t>::const_iterator i = nextBreakIterator();
 		if (i != myTextBreaks.begin()) {
@@ -395,7 +395,7 @@ bool TextView::onStylusPress(int x, int y) {
 		if ((x > left) && (x < right) && (y > top) && (y < bottom)) {
 			std::vector<size_t>::const_iterator i = nextBreakIterator();
 			size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
-			size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphs().size();
+			size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
 
 			size_t fullTextSize = myTextSize[endIndex] - myTextSize[startIndex];
 			size_t textSize = (size_t)(1.0 * fullTextSize * (x - left - 1) / (right - left - 1)) + myTextSize[startIndex];

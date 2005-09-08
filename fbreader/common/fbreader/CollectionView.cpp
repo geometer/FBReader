@@ -53,12 +53,12 @@ const std::string &CollectionView::caption() const {
 }
 
 void CollectionView::gotoParagraph(int num, bool last) {
-	if ((num >= 0) && (num < (int)myTreeModel->paragraphs().size())) {
-		TreeParagraph *tp = (TreeParagraph*)myTreeModel->paragraphs()[num];
+	if ((num >= 0) && (num < (int)myTreeModel->paragraphsNumber())) {
+		TreeParagraph *tp = (TreeParagraph*)(*myTreeModel)[num];
 		if (myTreeStateIsFrozen) {
 			TreeParagraph *parent = tp->parent();
 			while ((num > 0) && (parent != 0) && !parent->isOpen()) {
-				for (num--; ((num > 0) && parent != myTreeModel->paragraphs()[num]); num--);
+				for (num--; ((num > 0) && parent != (*myTreeModel)[num]); num--);
 				parent = parent->parent();
 			}
 		} else {
@@ -118,10 +118,10 @@ bool CollectionView::onStylusPress(int x, int y) {
 	const TextElementPosition *imagePosition = elementByCoordinates(x, y);
 	if ((imagePosition != 0) && (imagePosition->Kind == TextElement::IMAGE_ELEMENT)) {
 		int paragraphNumber = imagePosition->ParagraphNumber;
-		if ((paragraphNumber < 0) || ((int)model()->paragraphs().size() <= paragraphNumber)) {
+		if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() <= paragraphNumber)) {
 			return false;
 		}
-		TreeParagraph *paragraph = (TreeParagraph*)model()->paragraphs()[paragraphNumber];
+		TreeParagraph *paragraph = (TreeParagraph*)(*myTreeModel)[paragraphNumber];
 		std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
 		if (it != myBooksMap.end()) {
 			BookDescription &description = *it->second;
@@ -137,11 +137,11 @@ bool CollectionView::onStylusPress(int x, int y) {
 	}
 
 	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)model()->paragraphs().size() <= paragraphNumber)) {
+	if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() <= paragraphNumber)) {
 		return false;
 	}
 
-	TreeParagraph *paragraph = (TreeParagraph*)model()->paragraphs()[paragraphNumber];
+	TreeParagraph *paragraph = (TreeParagraph*)(*myTreeModel)[paragraphNumber];
 	if (!paragraph->children().empty()) {
 		const TextElementPosition *elementPosition = elementByCoordinates(x, y);
 		if ((elementPosition == 0) || (elementPosition->Kind != TextElement::TREE_ELEMENT)) {
