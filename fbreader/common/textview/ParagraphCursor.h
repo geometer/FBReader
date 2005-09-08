@@ -70,14 +70,11 @@ private:
 
 class ParagraphCursor {
 
-protected:
-	typedef std::vector<Paragraph*>::const_iterator ParagraphIterator;
-	
 private:
 	class ParagraphProcessor {
 
 	public:
-		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) VIEW_SECTION;
+		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements) VIEW_SECTION;
 		~ParagraphProcessor() VIEW_SECTION;
 
 		void fill() VIEW_SECTION;
@@ -97,9 +94,8 @@ private:
 	};
 
 protected:
-	ParagraphCursor(const TextModel &model, const ParagraphIterator &iterator) VIEW_SECTION;
-	virtual ParagraphCursor *createCursor(const ParagraphIterator &iterator) const VIEW_SECTION = 0;
-	shared_ptr<ParagraphCursor> cursor(const ParagraphIterator &iterator) const VIEW_SECTION;
+	ParagraphCursor(const TextModel &model, size_t index) VIEW_SECTION;
+	virtual ParagraphCursor *createCursor(size_t index) const VIEW_SECTION = 0;
 
 public:
 	static ParagraphCursor *createCursor(const TextModel &model) VIEW_SECTION;
@@ -109,12 +105,12 @@ public:
 	virtual bool isLast() const VIEW_SECTION = 0;
 	bool isEndOfSection() const VIEW_SECTION;
 
-	unsigned int paragraphLength() const VIEW_SECTION;
-	unsigned int paragraphNumber() const VIEW_SECTION;
+	size_t paragraphLength() const VIEW_SECTION;
+	size_t index() const VIEW_SECTION;
 
 	virtual shared_ptr<ParagraphCursor> previous() const VIEW_SECTION = 0;
 	virtual shared_ptr<ParagraphCursor> next() const VIEW_SECTION = 0;
-	shared_ptr<ParagraphCursor> cursor(int paragraphNumber) const VIEW_SECTION;
+	shared_ptr<ParagraphCursor> cursor(size_t index) const VIEW_SECTION;
 
 	const TextElement &operator [] (size_t index) const VIEW_SECTION;
 
@@ -134,7 +130,7 @@ private:
 	
 protected:
 	const TextModel &myModel;
-	ParagraphIterator myParagraphIterator;
+	size_t myIndex;
 	TextElementVector myElements;
 
 friend class WordCursor;
@@ -143,14 +139,14 @@ friend class WordCursor;
 class ParagraphCursorCache {
 
 public:
-	static void put(Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor) VIEW_SECTION;
-	static shared_ptr<ParagraphCursor> get(Paragraph *paragraph) VIEW_SECTION;
+	static void put(const Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor) VIEW_SECTION;
+	static shared_ptr<ParagraphCursor> get(const Paragraph *paragraph) VIEW_SECTION;
 
 	static void clear() VIEW_SECTION;
 	static void cleanup() VIEW_SECTION;
 
 private:
-	static std::map<Paragraph*, weak_ptr<ParagraphCursor> > ourCache;
+	static std::map<const Paragraph*, weak_ptr<ParagraphCursor> > ourCache;
 
 private:
 	// instance creation is disabled
@@ -200,10 +196,10 @@ private:
 class PlainTextParagraphCursor : public ParagraphCursor {
 
 private:
-	PlainTextParagraphCursor(const TextModel &model, const ParagraphIterator &iterator) VIEW_SECTION;
+	PlainTextParagraphCursor(const TextModel &model, size_t index) VIEW_SECTION;
 
 protected:
-	ParagraphCursor *createCursor(const ParagraphIterator &iterator) const VIEW_SECTION;
+	ParagraphCursor *createCursor(size_t index) const VIEW_SECTION;
 
 public:
 	~PlainTextParagraphCursor() VIEW_SECTION;
@@ -218,10 +214,10 @@ friend class ParagraphCursor;
 class TreeParagraphCursor : public ParagraphCursor {
 
 private:
-	TreeParagraphCursor(const TreeModel &model, const ParagraphIterator &iterator) VIEW_SECTION;
+	TreeParagraphCursor(const TreeModel &model, size_t index) VIEW_SECTION;
 
 protected:
-	ParagraphCursor *createCursor(const ParagraphIterator &iterator) const VIEW_SECTION;
+	ParagraphCursor *createCursor(size_t index) const VIEW_SECTION;
 
 public:
 	~TreeParagraphCursor() VIEW_SECTION;
@@ -266,7 +262,7 @@ inline bool WordCursor::sameElementAs(const WordCursor &cursor) const {
 }
 inline bool WordCursor::operator == (const WordCursor &cursor) const {
 	return
-		(myParagraphCursor->paragraphNumber() == cursor.myParagraphCursor->paragraphNumber()) &&
+		(myParagraphCursor->index() == cursor.myParagraphCursor->index()) &&
 		(myWordNumber == cursor.myWordNumber) &&
 		(myCharNumber == cursor.myCharNumber);
 }
@@ -287,16 +283,16 @@ inline const ParagraphCursor &WordCursor::paragraphCursor() const { return *myPa
 inline void WordCursor::nextWord() { myWordNumber++; myCharNumber = 0; }
 inline void WordCursor::previousWord() { myWordNumber--; myCharNumber = 0; }
 
-inline unsigned int ParagraphCursor::paragraphLength() const { return myElements.size(); }
-inline unsigned int ParagraphCursor::paragraphNumber() const { return myParagraphIterator - myModel.paragraphs().begin(); }
+inline size_t ParagraphCursor::paragraphLength() const { return myElements.size(); }
+inline size_t ParagraphCursor::index() const { return myIndex; }
 inline const TextElement &ParagraphCursor::operator [] (size_t index) const { return *myElements[index]; }
 
-inline PlainTextParagraphCursor::PlainTextParagraphCursor(const TextModel &model, const ParagraphIterator &iterator) : ParagraphCursor(model, iterator) {}
+inline PlainTextParagraphCursor::PlainTextParagraphCursor(const TextModel &model, size_t index) : ParagraphCursor(model, index) {}
 inline PlainTextParagraphCursor::~PlainTextParagraphCursor() {}
-inline ParagraphCursor *PlainTextParagraphCursor::createCursor(const ParagraphIterator &iterator) const { return new PlainTextParagraphCursor(myModel, iterator); }
+inline ParagraphCursor *PlainTextParagraphCursor::createCursor(size_t index) const { return new PlainTextParagraphCursor(myModel, index); }
 
-inline TreeParagraphCursor::TreeParagraphCursor(const TreeModel &model, const ParagraphIterator &iterator) : ParagraphCursor(model, iterator) {}
+inline TreeParagraphCursor::TreeParagraphCursor(const TreeModel &model, size_t index) : ParagraphCursor(model, index) {}
 inline TreeParagraphCursor::~TreeParagraphCursor() {}
-inline ParagraphCursor *TreeParagraphCursor::createCursor(const ParagraphIterator &iterator) const { return new TreeParagraphCursor((const TreeModel&)myModel, iterator); }
+inline ParagraphCursor *TreeParagraphCursor::createCursor(size_t index) const { return new TreeParagraphCursor((const TreeModel&)myModel, index); }
 
 #endif /* __PARAGRAPHCURSOR_H__ */

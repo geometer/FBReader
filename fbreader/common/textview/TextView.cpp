@@ -109,7 +109,7 @@ void TextView::paint() {
 		size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
 		size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphs().size();
 
-		size_t paragraphNumber = endCursor().paragraphCursor().paragraphNumber();
+		size_t paragraphNumber = endCursor().paragraphCursor().index();
 		size_t sizeOfTextBeforeParagraph = myTextSize[paragraphNumber] - myTextSize[startIndex];
 		size_t fullTextSize = myTextSize[endIndex] - myTextSize[startIndex];
 		size_t paragraphLength = endCursor().paragraphCursor().paragraphLength();
@@ -146,17 +146,13 @@ void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) 
 }
 
 std::vector<size_t>::const_iterator TextView::nextBreakIterator() const {
-	return std::lower_bound(
-		myTextBreaks.begin(),
-		myTextBreaks.end(),
-		endCursor().paragraphCursor().paragraphNumber()
-	);
+	return std::lower_bound(myTextBreaks.begin(), myTextBreaks.end(), endCursor().paragraphCursor().index());
 }
 
 void TextView::scrollToHome() {
 	if (!startCursor().isNull() &&
 			startCursor().isStartOfParagraph() &&
-			startCursor().paragraphCursor().paragraphNumber() == 0) {
+			startCursor().paragraphCursor().index() == 0) {
 		return;
 	}
 
@@ -220,7 +216,7 @@ void TextView::gotoMark(TextMark mark) {
 		return;
 	}
 	if (!startCursor().isNull() &&
-			(((int)startCursor().paragraphCursor().paragraphNumber() != mark.ParagraphNumber) ||
+			(((int)startCursor().paragraphCursor().index() != mark.ParagraphNumber) ||
 			 (startCursor().position() > mark))) {
 		gotoParagraph(mark.ParagraphNumber);
 		preparePaintInfo();
@@ -249,7 +245,7 @@ void TextView::drawTextLine(const LineInfo &info) {
 	context().moveXTo(info.StartStyle->leftIndent());
 	int y = context().y();
 	myParagraphMap.push_back(
-		ParagraphPosition(info.Start.paragraphCursor().paragraphNumber(), y + 1, y + info.Height)
+		ParagraphPosition(info.Start.paragraphCursor().index(), y + 1, y + info.Height)
 	);
 	context().moveY(info.Height);
 	int spaceCounter = info.SpaceCounter;
@@ -275,7 +271,7 @@ void TextView::drawTextLine(const LineInfo &info) {
 	}
 
 	const ParagraphCursor &paragraph = info.Start.paragraphCursor();
-	int paragraphNumber = paragraph.paragraphNumber();
+	int paragraphNumber = paragraph.index();
 	for (WordCursor pos = info.Start; !pos.sameElementAs(info.End); pos.nextWord()) {
 		const TextElement &element = paragraph[pos.wordNumber()];
 		TextElement::Kind kind = element.kind();
@@ -411,7 +407,7 @@ bool TextView::onStylusPress(int x, int y) {
 			} else {
 				gotoParagraph(paragraphNumber, true);
 				preparePaintInfo();
-				if (!endCursor().isNull() && (paragraphNumber == endCursor().paragraphCursor().paragraphNumber())) {
+				if (!endCursor().isNull() && (paragraphNumber == endCursor().paragraphCursor().index())) {
 					if (!endCursor().paragraphCursor().isLast() || !endCursor().isEndOfParagraph()) {
 						size_t paragraphLength = endCursor().paragraphCursor().paragraphLength();
 						if (paragraphLength > 0) {
@@ -421,7 +417,7 @@ bool TextView::onStylusPress(int x, int y) {
 								(size_t)((1.0 * (x - left - 1) / (right - left - 1) * fullTextSize
 													- 1.0 * sizeOfTextBeforeParagraph)
 												 / sizeOfParagraph * paragraphLength);
-							moveEndCursor(endCursor().paragraphCursor().paragraphNumber(), wordNum, 0);
+							moveEndCursor(endCursor().paragraphCursor().index(), wordNum, 0);
 							repaintView();
 						}
 					}

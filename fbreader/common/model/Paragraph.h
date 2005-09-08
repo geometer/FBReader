@@ -260,6 +260,7 @@ public:
 	void openTree() MODEL_SECTION;
 	int depth() const MODEL_SECTION;
 	TreeParagraph *parent() MODEL_SECTION;
+	const TreeParagraph *parent() const MODEL_SECTION;
 	const std::vector<TreeParagraph*> &children() const MODEL_SECTION;
 
 private:
@@ -334,6 +335,7 @@ inline bool TreeParagraph::isOpen() const { return myIsOpen; }
 inline void TreeParagraph::open(bool o) { myIsOpen = o; }
 inline int TreeParagraph::depth() const { return myDepth; }
 inline TreeParagraph *TreeParagraph::parent() { return myParent; }
+inline const TreeParagraph *TreeParagraph::parent() const { return myParent; }
 inline const std::vector<TreeParagraph*> &TreeParagraph::children() const { return myChildren; }
 inline void TreeParagraph::addChild(TreeParagraph *child) { myChildren.push_back(child); }
 

@@ -28,7 +28,7 @@
 
 TextElementPool TextElementPool::Pool;
 
-std::map<Paragraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
+std::map<const Paragraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
 
 TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
@@ -72,105 +72,104 @@ TextElementPool::~TextElementPool() {
 
 ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
 	if (model.kind() == TextModel::TREE_MODEL) {
-		return new TreeParagraphCursor((const TreeModel&)model, model.paragraphs().begin());
+		return new TreeParagraphCursor((const TreeModel&)model, 0);
 	}
-	return new PlainTextParagraphCursor((const PlainTextModel&)model, model.paragraphs().begin());
+	return new PlainTextParagraphCursor((const PlainTextModel&)model, 0);
 }
 
-ParagraphCursor::ParagraphCursor(const TextModel &model, const ParagraphIterator &iterator) : myModel(model), myParagraphIterator(iterator) {
+ParagraphCursor::ParagraphCursor(const TextModel &model, size_t index) : myModel(model), myIndex(index) {
 	fill();
 }
 
 ParagraphCursor::~ParagraphCursor() {
 }
 
-shared_ptr<ParagraphCursor> ParagraphCursor::cursor(const ParagraphIterator &iterator) const {
-	shared_ptr<ParagraphCursor> result = ParagraphCursorCache::get(*iterator);
+shared_ptr<ParagraphCursor> ParagraphCursor::cursor(size_t index) const {
+	shared_ptr<ParagraphCursor> result = ParagraphCursorCache::get(myModel[index]);
 	if (result.isNull()) {
-		result = createCursor(iterator);
-		ParagraphCursorCache::put(*iterator, result);
+		result = createCursor(index);
+		ParagraphCursorCache::put(myModel[index], result);
 	}
 	return result;
 }
 
 shared_ptr<ParagraphCursor> PlainTextParagraphCursor::previous() const {
-	return isFirst() ? 0 : cursor(myParagraphIterator - 1);
+	return isFirst() ? 0 : cursor(myIndex - 1);
 }
 
 shared_ptr<ParagraphCursor> TreeParagraphCursor::previous() const {
 	if (isFirst()) {
 		return 0;
 	}
-	ParagraphIterator it = myParagraphIterator;
-	TreeParagraph *oldTreeParagraph = (TreeParagraph*)*it;
-	TreeParagraph *parent = oldTreeParagraph->parent();
-	it--;
-	TreeParagraph *newTreeParagraph = (TreeParagraph*)*it;
+	const TreeParagraph *oldTreeParagraph = (const TreeParagraph*)myModel[myIndex];
+	const TreeParagraph *parent = oldTreeParagraph->parent();
+	size_t index = myIndex - 1;
+	const TreeParagraph *newTreeParagraph = (TreeParagraph*)myModel[index];
 	if (newTreeParagraph != parent) {
-		TreeParagraph *lastNotOpen = newTreeParagraph;
-		for (TreeParagraph *p = newTreeParagraph->parent(); p != parent; p = p->parent()) {
+		const TreeParagraph *lastNotOpen = newTreeParagraph;
+		for (const TreeParagraph *p = newTreeParagraph->parent(); p != parent; p = p->parent()) {
 			if (!p->isOpen()) {
 				lastNotOpen = p;
 			}
 		}
-		while (*it != lastNotOpen) {
-			it--;
+		while (myModel[index] != lastNotOpen) {
+			index--;
 		}
 	}
-	return cursor(it);
+	return cursor(index);
 }
 
 shared_ptr<ParagraphCursor> PlainTextParagraphCursor::next() const {
-	return isLast() ? 0 : cursor(myParagraphIterator + 1);
+	return isLast() ? 0 : cursor(myIndex + 1);
 }
 
 shared_ptr<ParagraphCursor> TreeParagraphCursor::next() const {
-	if (myParagraphIterator + 1 == myModel.paragraphs().end()) {
+	if (myIndex + 1 == myModel.paragraphsNumber()) {
 		return 0;
 	}
-	TreeParagraph *current = (TreeParagraph*)*myParagraphIterator;
+	const TreeParagraph *current = (const TreeParagraph*)myModel[myIndex];
 	if (!current->children().empty() && current->isOpen()) {
-		return cursor(myParagraphIterator + 1);
+		return cursor(myIndex + 1);
 	}
 
-	TreeParagraph *parent = current->parent();
+	const TreeParagraph *parent = current->parent();
 	while ((parent != 0) && (current == parent->children().back())) {
 		current = parent;
 		parent = current->parent();
 	}
 	if (parent != 0) {
-		ParagraphIterator it = myParagraphIterator;
-		do {
-			it++;
-		} while (((TreeParagraph*)*it)->parent() != parent);
-		return cursor(it);
+		size_t index = myIndex + 1;
+		while (((const TreeParagraph*)myModel[index])->parent() != parent) {
+			index++;
+		}
+		return cursor(index);
 	}
 	return 0;
 }
 
 bool ParagraphCursor::isFirst() const {
 	return
-		(myParagraphIterator == myModel.paragraphs().begin()) ||
-		((*myParagraphIterator)->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) ||
-		((*(myParagraphIterator - 1))->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
+		(myIndex == 0) ||
+		(myModel[myIndex]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) ||
+		(myModel[myIndex - 1]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
 }
 
 bool PlainTextParagraphCursor::isLast() const {
 	return
-		(myParagraphIterator + 1 == myModel.paragraphs().end()) ||
-		((*(myParagraphIterator + 1))->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
+		(myIndex + 1 == myModel.paragraphsNumber()) ||
+		(myModel[myIndex + 1]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
 }
 
 bool TreeParagraphCursor::isLast() const {
-	if ((myParagraphIterator + 1 == myModel.paragraphs().end()) ||
-			((*(myParagraphIterator + 1))->kind() == Paragraph::END_OF_TEXT_PARAGRAPH)) {
+	if ((myIndex + 1 == myModel.paragraphsNumber()) ||
+			(myModel[myIndex + 1]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH)) {
 		return true;
 	}
-	TreeParagraph *current = (TreeParagraph*)*myParagraphIterator;
+	const TreeParagraph *current = (const TreeParagraph*)myModel[myIndex];
 	if (current->isOpen() && !current->children().empty()) {
 		return false;
 	}
-	TreeParagraph *parent = current->parent();
+	const TreeParagraph *parent = current->parent();
 	while (parent != 0) {
 		if (current != parent->children().back()) {
 			return false;
@@ -182,20 +181,20 @@ bool TreeParagraphCursor::isLast() const {
 }
 
 bool ParagraphCursor::isEndOfSection() const {
-	return (*myParagraphIterator)->kind() == Paragraph::END_OF_SECTION_PARAGRAPH;
+	return myModel[myIndex]->kind() == Paragraph::END_OF_SECTION_PARAGRAPH;
 }
 
 TextMark WordCursor::position() const {
 	const ParagraphCursor &paragraph = *myParagraphCursor;
-	unsigned int paragraphLength = paragraph.paragraphLength();
+	size_t paragraphLength = paragraph.paragraphLength();
 	unsigned int wordNumber = myWordNumber;
 	while ((wordNumber != paragraphLength) && (paragraph[wordNumber].kind() != TextElement::WORD_ELEMENT)) {
 		wordNumber++;
 	}
 	if (wordNumber != paragraphLength) {
-		return TextMark(paragraph.paragraphNumber(), ((Word&)paragraph[wordNumber]).ParagraphOffset, 0);
+		return TextMark(paragraph.index(), ((Word&)paragraph[wordNumber]).ParagraphOffset, 0);
 	}
-	return TextMark(paragraph.paragraphNumber() + 1, 0, 0);
+	return TextMark(paragraph.index() + 1, 0, 0);
 }
 
 void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
@@ -205,29 +204,30 @@ void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
 }
 
 void ParagraphCursor::fill() {
-	switch ((*myParagraphIterator)->kind()) {
+	const Paragraph &paragraph = *myModel[myIndex];
+	switch (paragraph.kind()) {
 		case Paragraph::TEXT_PARAGRAPH:
 		case Paragraph::TREE_PARAGRAPH:
 		{
-			ParagraphProcessor processor(*(Paragraph*)*myParagraphIterator, myModel.marks(), paragraphNumber(), myElements);
+			ParagraphProcessor processor(paragraph, myModel.marks(), index(), myElements);
 			processor.fill();
 			break;
 		}
 		case Paragraph::EMPTY_LINE_PARAGRAPH:
 		{
-			processControlParagraph(*(Paragraph*)*myParagraphIterator);
+			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.EmptyLineElement);
 			break;
 		}
 		case Paragraph::BEFORE_SKIP_PARAGRAPH:
 		{
-			processControlParagraph(*(Paragraph*)*myParagraphIterator);
+			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.BeforeParagraphElement);
 			break;
 		}
 		case Paragraph::AFTER_SKIP_PARAGRAPH:
 		{
-			processControlParagraph(*(Paragraph*)*myParagraphIterator);
+			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.AfterParagraphElement);
 			break;
 		}
@@ -241,11 +241,11 @@ void ParagraphCursor::clear() {
 	myElements.clear();
 }
 
-void ParagraphCursorCache::put(Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor) {
+void ParagraphCursorCache::put(const Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor) {
 	ourCache[paragraph] = cursor;
 }
 
-shared_ptr<ParagraphCursor> ParagraphCursorCache::get(Paragraph *paragraph) {
+shared_ptr<ParagraphCursor> ParagraphCursorCache::get(const Paragraph *paragraph) {
 	return ourCache[paragraph];
 }
 
@@ -254,8 +254,8 @@ void ParagraphCursorCache::clear() {
 }
 
 void ParagraphCursorCache::cleanup() {
-	std::map<Paragraph*, weak_ptr<ParagraphCursor> > cleanedCache;
-	for (std::map<Paragraph*, weak_ptr<ParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); it++) {
+	std::map<const Paragraph*, weak_ptr<ParagraphCursor> > cleanedCache;
+	for (std::map<const Paragraph*, weak_ptr<ParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); it++) {
 		if (!it->second.isNull()) {
 			cleanedCache.insert(*it);
 		}
@@ -268,12 +268,6 @@ void WordCursor::rebuild() {
 		myParagraphCursor->clear();
 		myParagraphCursor->fill();
 	}
-}
-
-shared_ptr<ParagraphCursor> ParagraphCursor::cursor(int paragraphNumber) const {
-	return cursor(
-		myModel.paragraphs().begin() + std::min((size_t)paragraphNumber, myModel.paragraphs().size() - 1)
-	);
 }
 
 void WordCursor::setCharNumber(int charNumber) {
@@ -308,7 +302,7 @@ const WordCursor &WordCursor::operator = (ParagraphCursor *paragraphCursor) {
 }
 
 void WordCursor::moveToParagraph(int paragraphNumber) {
-	if (!isNull() && (paragraphNumber != (int)myParagraphCursor->paragraphNumber())) {
+	if (!isNull() && (paragraphNumber != (int)myParagraphCursor->index())) {
 		myParagraphCursor = myParagraphCursor->cursor(paragraphNumber);
 		moveToParagraphStart();
 	}
@@ -351,8 +345,8 @@ void WordCursor::moveToParagraphEnd() {
 }
 
 bool WordCursor::operator < (const WordCursor &cursor) const {
-	int pn0 = myParagraphCursor->paragraphNumber();
-	int pn1 = cursor.myParagraphCursor->paragraphNumber();
+	int pn0 = myParagraphCursor->index();
+	int pn1 = cursor.myParagraphCursor->index();
 	if (pn0 < pn1) return true;
 	if (pn1 < pn0) return false;
 	if (myWordNumber < cursor.myWordNumber) return true;

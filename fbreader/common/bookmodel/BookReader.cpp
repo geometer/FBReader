@@ -168,8 +168,7 @@ void BookReader::addImage(const std::string &id, ZLImage *image) {
 void BookReader::insertEndOfSectionParagraph() {
 	if (!currentTextModelIsNull() && mySectionContainsRegularContents) {
 		size_t size = myCurrentTextModel->paragraphsNumber();
-		if ((size > 0) &&
-				(TextModel::Iterator(*myCurrentTextModel, (size_t)-1).paragraph()->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
+		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
 			myCurrentTextModel->createParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
 			mySectionContainsRegularContents = false;
 		}
@@ -179,8 +178,7 @@ void BookReader::insertEndOfSectionParagraph() {
 void BookReader::insertEndOfTextParagraph() {
 	if (!currentTextModelIsNull() && mySectionContainsRegularContents) {
 		size_t size = myCurrentTextModel->paragraphsNumber();
-		if ((size > 0) &&
-				(TextModel::Iterator(*myCurrentTextModel, (size_t)-1).paragraph()->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
+		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
 			myCurrentTextModel->createParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
 			mySectionContainsRegularContents = false;
 		}
@@ -209,7 +207,7 @@ void BookReader::beginContentsParagraph() {
 
 void BookReader::endContentsParagraph() {
 	if (myContentsParagraphStatus == ADDED) {
-		if (TextModel::Iterator(myModel.myContentsModel, (size_t)-1).paragraph()->entryNumber() == 1) {
+		if (myModel.myContentsModel[(size_t)-1]->entryNumber() == 1) {
 			myModel.myContentsModel.addText("...");
 		}
 	}

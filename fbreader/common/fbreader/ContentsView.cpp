@@ -62,7 +62,7 @@ void ContentsView::saveState() {
 
 	if (!cursor.isNull()) {
 		const std::string &group = fileName();
-		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().paragraphNumber());
+		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
 		ZLIntegerOption(group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
 		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
 	}
@@ -82,7 +82,7 @@ void ContentsView::setModel(const TextModel *model, const std::string &name) {
 void ContentsView::gotoReference() {
 	const WordCursor &cursor = myReader.textView().endCursor();
 	if (!cursor.isNull()) {
-		long reference = cursor.paragraphCursor().paragraphNumber();
+		long reference = cursor.paragraphCursor().index();
 		const std::vector<Paragraph*> &paragraphs = model()->paragraphs();
 		unsigned int selected = paragraphs.size() - 1;
 		for (std::vector<Paragraph*>::const_iterator it = paragraphs.begin() + 1; it != paragraphs.end(); it++) {

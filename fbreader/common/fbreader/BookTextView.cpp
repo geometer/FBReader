@@ -89,7 +89,7 @@ void BookTextView::saveState() {
 	const std::string &group = fileName();
 
 	if (!cursor.isNull()) {
-		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().paragraphNumber());
+		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
 		ZLIntegerOption(group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
 		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
 		ZLIntegerOption(group, BUFFER_SIZE, 0).setValue(myPositionStack.size());
@@ -109,7 +109,7 @@ void BookTextView::saveState() {
 void BookTextView::pushCurrentPositionIntoStack() {
 	const WordCursor &cursor = startCursor();
 	std::pair<int,int> pos;
-	pos.first = cursor.paragraphCursor().paragraphNumber();
+	pos.first = cursor.paragraphCursor().index();
 	pos.second = cursor.wordNumber();
 	myPositionStack.push_back(pos);
 	while (myPositionStack.size() > myMaxStackSize) {
@@ -124,7 +124,7 @@ void BookTextView::pushCurrentPositionIntoStack() {
 
 void BookTextView::replaceCurrentPositionInStack() {
 	const WordCursor &cursor = startCursor();
-	myPositionStack[myCurrentPointInStack].first = cursor.paragraphCursor().paragraphNumber();
+	myPositionStack[myCurrentPointInStack].first = cursor.paragraphCursor().index();
 	myPositionStack[myCurrentPointInStack].second = cursor.wordNumber();
 }
 
