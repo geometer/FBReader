@@ -67,7 +67,7 @@ public:
 
 	// FIXME: we need to figure out the way to find the main window :( Bloody hildon.
 	// GtkWindow *getMainWindow() { return myMainWindow; }
-	GtkWindow *getMainWindow() { return NULL; }
+	GtkWindow *getMainWindow() { return (GtkWindow *)myApp; }
 
 private:
 	HildonApp *myApp;
