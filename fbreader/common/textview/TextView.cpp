@@ -215,20 +215,26 @@ void TextView::gotoMark(TextMark mark) {
 	if (mark.ParagraphNumber < 0) {
 		return;
 	}
-	if (startCursor().isNull() || endCursor().isNull()) {
+	bool doRepaint = false;
+	if (startCursor().isNull()) {
+		doRepaint = true;
 		preparePaintInfo();
 	}
-	if (startCursor().isNull() || endCursor().isNull()) {
+	if (startCursor().isNull()) {
 		return;
 	}
 	if (((int)startCursor().paragraphCursor().index() != mark.ParagraphNumber) ||
-			(startCursor().position() > mark) || (endCursor().position() < mark)) {
+			(startCursor().position() > mark)) {
+		doRepaint = true;
 		gotoParagraph(mark.ParagraphNumber);
 		preparePaintInfo();
-		while (mark > endCursor().position()) {
-			scrollPage(true, NO_OVERLAPPING, 0);
-			preparePaintInfo();
-		}
+	}
+	while (mark > endCursor().position()) {
+		doRepaint = true;
+		scrollPage(true, NO_OVERLAPPING, 0);
+		preparePaintInfo();
+	}
+	if (doRepaint) {
 		repaintView();
 	}
 }
