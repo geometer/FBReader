@@ -30,10 +30,12 @@ public:
 	RowMemoryAllocator();
 	~RowMemoryAllocator();
 
-	void *allocate(size_t size);
+	char *allocate(size_t size);
+	char *reallocateLast(char *ptr, size_t newSize);
 
 private:
 	const size_t myRowSize;
+	size_t myCurrentRowSize;
 	std::vector<char*> myPool;
 	size_t myOffset;
 

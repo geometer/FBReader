@@ -26,7 +26,7 @@
 #include "TextModel.h"
 #include "Paragraph.h"
 
-TextModel::TextModel() {
+TextModel::TextModel() : myLastEntryStart(0) {
 }
 
 TextModel::~TextModel() {
@@ -107,6 +107,7 @@ TreeModel::~TreeModel() {
 
 void TextModel::addParagraphInternal(Paragraph *paragraph) {
 	myParagraphs.push_back(paragraph);
+	myLastEntryStart = 0;
 }
 
 TreeParagraph *TreeModel::createParagraph(TreeParagraph *parent) {
@@ -144,11 +145,20 @@ void PlainTextModel::createParagraphWithReference(long reference) {
 
 void TextModel::addText(const std::string &text) {
 	size_t len = text.length();
-	char *address = (char*)myAllocator.allocate(len + sizeof(size_t) + 1);
-	*address = ParagraphEntry::TEXT_ENTRY;
-	memcpy(address + 1, &len, sizeof(size_t));
-	memcpy(address + sizeof(size_t) + 1, text.data(), len);
-	myParagraphs.back()->addEntry(address);
+	if ((myLastEntryStart != 0) && (*myLastEntryStart == ParagraphEntry::TEXT_ENTRY)) {
+		size_t oldLen = 0;
+		memcpy(&oldLen, myLastEntryStart + 1, sizeof(size_t));
+		size_t newLen = oldLen + len;
+		myLastEntryStart = myAllocator.reallocateLast(myLastEntryStart, newLen + sizeof(size_t) + 1);
+		memcpy(myLastEntryStart + 1, &newLen, sizeof(size_t));
+		memcpy(myLastEntryStart + sizeof(size_t) + 1 + oldLen, text.data(), len);
+	} else {
+		myLastEntryStart = myAllocator.allocate(len + sizeof(size_t) + 1);
+		*myLastEntryStart = ParagraphEntry::TEXT_ENTRY;
+		memcpy(myLastEntryStart + 1, &len, sizeof(size_t));
+		memcpy(myLastEntryStart + sizeof(size_t) + 1, text.data(), len);
+		myParagraphs.back()->addEntry(myLastEntryStart);
+	}
 }
 
 void TextModel::addText(const std::vector<std::string> &text) {
@@ -156,49 +166,62 @@ void TextModel::addText(const std::vector<std::string> &text) {
 	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
 		len += it->length();
 	}
-	char *address = (char*)myAllocator.allocate(len + sizeof(size_t) + 1);
-	*address = ParagraphEntry::TEXT_ENTRY;
-	memcpy(address + 1, &len, sizeof(size_t));
-	size_t offset = sizeof(size_t) + 1;
-	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
-		memcpy(address + offset, it->data(), it->length());
-		offset += it->length();
+	if ((myLastEntryStart != 0) && (*myLastEntryStart == ParagraphEntry::TEXT_ENTRY)) {
+		size_t oldLen = 0;
+		memcpy(&oldLen, myLastEntryStart + 1, sizeof(size_t));
+		size_t newLen = oldLen + len;
+		myLastEntryStart = myAllocator.reallocateLast(myLastEntryStart, newLen + sizeof(size_t) + 1);
+		memcpy(myLastEntryStart + 1, &newLen, sizeof(size_t));
+		size_t offset = sizeof(size_t) + 1 + oldLen;
+		for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+			memcpy(myLastEntryStart + offset, it->data(), it->length());
+			offset += it->length();
+		}
+	} else {
+		myLastEntryStart = myAllocator.allocate(len + sizeof(size_t) + 1);
+		*myLastEntryStart = ParagraphEntry::TEXT_ENTRY;
+		memcpy(myLastEntryStart + 1, &len, sizeof(size_t));
+		size_t offset = sizeof(size_t) + 1;
+		for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+			memcpy(myLastEntryStart + offset, it->data(), it->length());
+			offset += it->length();
+		}
+		myParagraphs.back()->addEntry(myLastEntryStart);
 	}
-	myParagraphs.back()->addEntry(address);
 }
 
 void TextModel::addControl(TextKind textKind, bool isStart) {
-	char *address = (char*)myAllocator.allocate(2);
-	*address = ParagraphEntry::CONTROL_ENTRY;
-	*(address + 1) = (textKind << 1) + (isStart ? 1 : 0);
-	myParagraphs.back()->addEntry(address);
+	myLastEntryStart = myAllocator.allocate(2);
+	*myLastEntryStart = ParagraphEntry::CONTROL_ENTRY;
+	*(myLastEntryStart + 1) = (textKind << 1) + (isStart ? 1 : 0);
+	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
 void TextModel::addControl(const ForcedControlEntry &entry) {
-	char *address = (char*)myAllocator.allocate(3 + 2 * sizeof(short));
-	*address = ParagraphEntry::FORCED_CONTROL_ENTRY;
-	*(address + 1) = entry.myMask;
-	memcpy(address + 2, &entry.myLeftIndent, sizeof(short));
-	memcpy(address + 2 + sizeof(short), &entry.myRightIndent, sizeof(short));
-	*(address + 2 + 2 * sizeof(short)) = entry.myAlignmentType;
-	myParagraphs.back()->addEntry(address);
+	myLastEntryStart = myAllocator.allocate(3 + 2 * sizeof(short));
+	*myLastEntryStart = ParagraphEntry::FORCED_CONTROL_ENTRY;
+	*(myLastEntryStart + 1) = entry.myMask;
+	memcpy(myLastEntryStart + 2, &entry.myLeftIndent, sizeof(short));
+	memcpy(myLastEntryStart + 2 + sizeof(short), &entry.myRightIndent, sizeof(short));
+	*(myLastEntryStart + 2 + 2 * sizeof(short)) = entry.myAlignmentType;
+	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
 void TextModel::addHyperlinkControl(TextKind textKind, const std::string &label) {
-	char *address = (char*)myAllocator.allocate(label.length() + 3);
-	*address = ParagraphEntry::HYPERLINK_CONTROL_ENTRY;
-	*(address + 1) = textKind;
-	memcpy(address + 2, label.data(), label.length());
-	*(address + label.length() + 2) = '\0';
-	myParagraphs.back()->addEntry(address);
+	myLastEntryStart = myAllocator.allocate(label.length() + 3);
+	*myLastEntryStart = ParagraphEntry::HYPERLINK_CONTROL_ENTRY;
+	*(myLastEntryStart + 1) = textKind;
+	memcpy(myLastEntryStart + 2, label.data(), label.length());
+	*(myLastEntryStart + label.length() + 2) = '\0';
+	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
 void TextModel::addImage(const std::string &id, const ImageMap &imageMap) {
-	char *address = (char*)myAllocator.allocate(sizeof(const ImageMap*) + id.length() + 2);
-	*address = ParagraphEntry::IMAGE_ENTRY;
+	myLastEntryStart = myAllocator.allocate(sizeof(const ImageMap*) + id.length() + 2);
+	*myLastEntryStart = ParagraphEntry::IMAGE_ENTRY;
 	const ImageMap *imageMapAddress = &imageMap;
-	memcpy(address + 1, &imageMapAddress, sizeof(const ImageMap*));
-	memcpy(address + 1 + sizeof(const ImageMap*), id.data(), id.length());
-	*(address + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
-	myParagraphs.back()->addEntry(address);
+	memcpy(myLastEntryStart + 1, &imageMapAddress, sizeof(const ImageMap*));
+	memcpy(myLastEntryStart + 1 + sizeof(const ImageMap*), id.data(), id.length());
+	*(myLastEntryStart + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
+	myParagraphs.back()->addEntry(myLastEntryStart);
 }

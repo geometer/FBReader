@@ -32,11 +32,13 @@ RowMemoryAllocator::~RowMemoryAllocator() {
 	}
 }
 
-void *RowMemoryAllocator::allocate(size_t size) {
+char *RowMemoryAllocator::allocate(size_t size) {
 	if (myPool.empty()) {
-		myPool.push_back(new char[std::max(myRowSize, size + 1 + sizeof(char*))]);
+		myCurrentRowSize = std::max(myRowSize, size + 1 + sizeof(char*));
+		myPool.push_back(new char[myCurrentRowSize]);
 	} else if (myOffset + size + 1 + sizeof(char*) > myRowSize) {
-		char *row = new char[std::max(myRowSize, size + 1 + sizeof(char*))];
+		myCurrentRowSize = std::max(myRowSize, size + 1 + sizeof(char*));
+		char *row = new char[myCurrentRowSize];
 		*(myPool.back() + myOffset) = 0;
 		memcpy(myPool.back() + myOffset + 1, &row, sizeof(char*));
 		myPool.push_back(row);
@@ -45,4 +47,20 @@ void *RowMemoryAllocator::allocate(size_t size) {
 	char *ptr = myPool.back() + myOffset;
 	myOffset += size;
 	return ptr;
+}
+
+char *RowMemoryAllocator::reallocateLast(char *ptr, size_t newSize) {
+	if (ptr + newSize + 1 + sizeof(char*) <= myPool.back() + myCurrentRowSize) {
+		myOffset = ptr - myPool.back() + newSize;
+		return ptr;
+	} else {
+		myCurrentRowSize = std::max(myRowSize, newSize + 1 + sizeof(char*));
+		char *row = new char[myCurrentRowSize];
+		memcpy(row, ptr, myOffset - (ptr - myPool.back()));
+		*ptr = 0;
+		memcpy(ptr + 1, &row, sizeof(char*));
+		myPool.push_back(row);
+		myOffset = newSize;
+		return row;
+	}
 }

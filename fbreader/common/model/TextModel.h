@@ -73,6 +73,8 @@ private:
 	std::vector<Paragraph*> myParagraphs;
 	mutable std::vector<TextMark> myMarks;
 	mutable RowMemoryAllocator myAllocator;
+
+	char *myLastEntryStart;
 };
 
 class PlainTextModel : public TextModel {

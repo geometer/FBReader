@@ -215,9 +215,14 @@ void TextView::gotoMark(TextMark mark) {
 	if (mark.ParagraphNumber < 0) {
 		return;
 	}
-	if (!startCursor().isNull() &&
-			(((int)startCursor().paragraphCursor().index() != mark.ParagraphNumber) ||
-			 (startCursor().position() > mark))) {
+	if (startCursor().isNull() || endCursor().isNull()) {
+		preparePaintInfo();
+	}
+	if (startCursor().isNull() || endCursor().isNull()) {
+		return;
+	}
+	if (((int)startCursor().paragraphCursor().index() != mark.ParagraphNumber) ||
+			(startCursor().position() > mark) || (endCursor().position() < mark)) {
 		gotoParagraph(mark.ParagraphNumber);
 		preparePaintInfo();
 		while (mark > endCursor().position()) {
