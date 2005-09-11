@@ -184,7 +184,8 @@ bool BookTextView::onStylusPress(int x, int y) {
 		return true;
 	}
 	const TextElementPosition *position = elementByCoordinates(x, y);
-	if ((position == 0) || (position->Kind != TextElement::WORD_ELEMENT)) {
+	if ((position == 0) ||
+			((position->Kind != TextElement::WORD_ELEMENT) && (position->Kind != TextElement::IMAGE_ELEMENT))) {
 		return false;
 	}
 	WordCursor cursor = startCursor();
