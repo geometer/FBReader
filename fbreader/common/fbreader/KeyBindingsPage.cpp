@@ -20,10 +20,10 @@
  */
 
 #include <abstract/ZLOptionsDialog.h>
+#include <abstract/ZLOptionEntry.h>
 
 #include "KeyBindingsPage.h"
 
 KeyBindingsPage::KeyBindingsPage(ZLOptionsDialogTab *dialogTab) {
-	myComboEntry = new ComboOptionEntry(*this, "Key For", "");
-	dialogTab->addOption(myComboEntry);
+	dialogTab->addOption(new ZLKeyOptionEntry("KEY"));
 }

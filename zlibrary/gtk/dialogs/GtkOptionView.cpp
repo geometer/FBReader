@@ -18,6 +18,9 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
+#include <gtk/gtk.h>
 #include <gtk/gtkcheckbutton.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkmenu.h>
@@ -119,9 +122,7 @@ void ComboOptionView::_createItem() {
 	const std::string &initial = ((ZLComboOptionEntry*)myOption)->initialValue();
 	int selectedIndex = -1;
 	int index = 0;
-	GtkWidget *menu;
-
-	menu = gtk_menu_new();
+	GtkWidget *menu = gtk_menu_new();
 
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); it++, index++) {
 		GtkWidget *menuItem = gtk_menu_item_new_with_label(it->c_str());
@@ -247,9 +248,6 @@ void ColorOptionView::_createItem() {
 	myDrawingArea = gtk_drawing_area_new();
 
 	gtk_widget_set_size_request(GTK_WIDGET(myDrawingArea), 60, 20);
-//	myWidget = gtk_button_new();
-//	gtk_container_add(GTK_CONTAINER(myWidget), myDrawingArea);
-//	g_signal_connect(G_OBJECT(myWidget), "clicked", G_CALLBACK(_onChangeColor), this);
 	myWidget = gtk_table_new(3, 4, false);
 
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
@@ -305,32 +303,6 @@ void ColorOptionView::_hide() {
 	gtk_widget_hide(myWidget);
 }
 
-#if 0
-void ColorOptionView::_onChangeColor(GtkWidget *, gpointer self) {
-	((ColorOptionView *)self)->onChangeColor();
-}
-
-void ColorOptionView::onChangeColor() {
-	if (myColorSelectionDialog == NULL)
-		myColorSelectionDialog = gtk_color_selection_dialog_new("Select Color");
-
-	GtkColorSelection *colorSelection = GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(myColorSelectionDialog)->colorsel);
-
-	gtk_color_selection_set_previous_color(colorSelection, &myColor);
-	gtk_color_selection_set_current_color(colorSelection, &myColor);
-	gtk_color_selection_set_has_palette(colorSelection, TRUE);
-
-	gint response = gtk_dialog_run(GTK_DIALOG(myColorSelectionDialog));
-
-	if (response == GTK_RESPONSE_OK) {
-		gtk_color_selection_get_current_color(colorSelection, &myColor);
-		gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
-	}
-
-	gtk_widget_hide(myColorSelectionDialog);
-}
-#endif
-
 void ColorOptionView::_onSliderMove(GtkRange *, gpointer self) {
 	((ColorOptionView *)self)->onSliderMove();
 }
@@ -345,6 +317,30 @@ void ColorOptionView::onSliderMove() {
 
 void ColorOptionView::_onAccept() const {
 	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(myColor.red/256, myColor.green/256, myColor.blue/256));
+}
+
+static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
+	//((GtkFBReader*)data)->handleKeyEventSlot(event);
+	std::cerr << ":: " << event->state << " : " << event->keyval << "\n";
+}
+
+void KeyOptionView::_createItem() {
+	myWidget = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(myWidget), "text");
+
+	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+	gtk_signal_connect(GTK_OBJECT(myWidget), "key_press_event", G_CALLBACK(handleKeyEvent), this);
+}
+
+void KeyOptionView::_show() {
+	gtk_widget_show(myWidget);
+}
+
+void KeyOptionView::_hide() {
+	gtk_widget_hide(myWidget);
+}
+
+void KeyOptionView::_onAccept() const {
 }
 
 // vim:ts=2:sw=2:noet

@@ -169,13 +169,7 @@ class ColorOptionView : public GtkOptionView {
 
 public:
 	ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
-	// ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myColorSelectionDialog(NULL) {}
-
-	virtual ~ColorOptionView(void) {
-//		if (myColorSelectionDialog != NULL) {
-//			gtk_widget_destroy(myColorSelectionDialog);
-//		}
-	}
+	virtual ~ColorOptionView(void) {}
 
 protected:
 	void _createItem();
@@ -184,18 +178,30 @@ protected:
 	void _onAccept() const;
 
 private:
-//	void onChangeColor();
-
-//	static void _onChangeColor(GtkWidget *, gpointer);
 	void onSliderMove();
 
 	static void _onSliderMove(GtkRange *, gpointer);
 
 private:
 	GtkWidget *myWidget, *myDrawingArea;
-//	GtkWidget *myColorSelectionDialog;
 	GtkWidget *myRSlider, *myGSlider, *myBSlider;
 	GdkColor myColor;
+};
+
+class KeyOptionView : public GtkOptionView {
+
+public:
+	KeyOptionView(ZLKeyOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	virtual ~KeyOptionView(void) {}
+
+protected:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _onAccept() const;
+
+private:
+	GtkWidget *myWidget;
 };
 
 #endif /* __GTKOPTIONVIEW_H__ */

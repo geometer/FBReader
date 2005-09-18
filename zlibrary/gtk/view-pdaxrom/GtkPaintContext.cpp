@@ -207,15 +207,11 @@ int GtkPaintContext::spaceWidth() const {
 }
 
 int GtkPaintContext::stringHeight() const {
-	if (myContext == 0) {
+	if (myFontDescription == 0) {
 		return 0;
 	}
-
 	if (myStringHeight == -1) {
-		pango_shape("X", 1, &myAnalysis, myString);
-		PangoRectangle logicalRectangle;
-		pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
-		myStringHeight = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
+		myStringHeight = pango_font_description_get_size(myFontDescription) / PANGO_SCALE + 2;
 	}
 	return myStringHeight;
 }

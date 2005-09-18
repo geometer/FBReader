@@ -33,6 +33,7 @@ enum ZLOptionKind {
 	SPIN,
 	COMBO,
 	COLOR,
+	KEY,
 	UNKNOWN,
 };
 
@@ -231,6 +232,20 @@ public:
 	virtual void onAccept(ZLColor color) DIALOG_SECTION = 0;
 };
 
+class ZLKeyOptionEntry : public ZLOptionEntry {
+
+public:
+	ZLKeyOptionEntry(const std::string &name) DIALOG_SECTION;
+	~ZLKeyOptionEntry() DIALOG_SECTION;
+
+protected:
+	ZLOptionKind kind() const DIALOG_SECTION;
+	const std::string &name() const DIALOG_SECTION;
+
+private:
+	std::string myName;
+};
+
 class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
 
 public:
@@ -309,5 +324,10 @@ inline ZLSimpleColorOptionEntry::ZLSimpleColorOptionEntry(ZLColorOption &option)
 inline ZLSimpleColorOptionEntry::~ZLSimpleColorOptionEntry() {}
 inline const ZLColor ZLSimpleColorOptionEntry::color() const { return myOption.value(); }
 inline void ZLSimpleColorOptionEntry::onAccept(ZLColor color) { myOption.setValue(color); }
+
+inline ZLKeyOptionEntry::ZLKeyOptionEntry(const std::string &name) : myName(name) {}
+inline ZLKeyOptionEntry::~ZLKeyOptionEntry() {}
+inline ZLOptionKind ZLKeyOptionEntry::kind() const { return KEY; }
+inline const std::string &ZLKeyOptionEntry::name() const { return myName; }
 
 #endif /* __ZLOPTIONENTRY_H__ */

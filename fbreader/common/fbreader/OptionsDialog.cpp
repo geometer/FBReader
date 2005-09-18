@@ -97,11 +97,7 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
 
 	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
-	if (false) {
-		myKeyBindingsPage = new KeyBindingsPage(myDialog->createTab("Keys"));
-	} else {
-		myKeyBindingsPage = 0;
-	}
+	myKeyBindingsPage = new KeyBindingsPage(myDialog->createTab("Keys"));
 }
 
 OptionsDialog::~OptionsDialog() {
@@ -109,8 +105,6 @@ OptionsDialog::~OptionsDialog() {
 	delete myFormatPage;
 	delete myStylePage;
 	delete myColorPage;
-	if (myKeyBindingsPage != 0) {
-		delete myKeyBindingsPage;
-	}
+	delete myKeyBindingsPage;
 	delete myDialog;
 }

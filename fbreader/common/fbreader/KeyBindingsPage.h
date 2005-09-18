@@ -26,7 +26,7 @@
 
 class ZLOptionsDialogTab;
 
-class KeyBindingsPage : public OptionsPage {
+class KeyBindingsPage {
 
 public:
 	KeyBindingsPage(ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
