@@ -227,6 +227,7 @@ void QFBReader::searchSlot() {
 			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked(), SearchThisSectionOnlyOption.value()
 		);
 	}
+	repaintView();
 	enableMenuButtons();
 	fullScreenWorkaround();
 }

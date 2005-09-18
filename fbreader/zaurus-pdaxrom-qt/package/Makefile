@@ -1,6 +1,12 @@
+include ../../../makefiles/target.mk
+
 DEB_VERSION = 2.0
 
+ifeq "$(PDAXROM_VERSION)" "rc11"
+ARCH = pdaxrom_rc11_arm
+else
 ARCH = pdaxrom_arm
+endif
 
 TDIR = __ipk
 
@@ -13,6 +19,7 @@ PACKAGENAME = $(patsubst %.control, %, $(FILE))
 version = $(shell cat ../../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
 files = $(shell sed -n -e "s/^Files://p" $(FILE))
+
 package = $(PACKAGENAME)_$(version)_$(ARCH)
 
 all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir

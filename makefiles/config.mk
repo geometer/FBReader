@@ -43,8 +43,12 @@ ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
+ifeq "$(PDAXROM_VERSION)" "rc11"
+	BASEDIR = /opt/cross/arm/3.4.4-xscale-softvfp
+else
 	BASEDIR = /opt/arm/3.3.2-vfp
-	CC = $(BASEDIR)/bin/armv5tel-linux-gcc
+endif
+	CC = $(BASEDIR)/bin/armv5tel-linux-gcc -I $(BASEDIR)/include
 	AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
 	LD = $(BASEDIR)/bin/armv5tel-linux-g++
 
@@ -57,7 +61,8 @@ ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
 	QTINCLUDE = -I $(USRDIR)/qt/include
 	QTLIBS = -L $(USRDIR)/qt/lib -lqt-mt -L $(USRDIR)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
 	EXPATLIBS = -lexpat
-	ENCALIBS = -lenca
+	#ENCALIBS = -L $(USRDIR)/lib -lenca
+	ENCALIBS = $(USRDIR)/lib/libenca.so.0
 endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
