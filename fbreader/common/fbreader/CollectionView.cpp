@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLFileImage.h>
 #include <abstract/ZLDialogManager.h>
 
@@ -76,19 +78,21 @@ void CollectionView::paint() {
 		myTreeModel = new TreeModel();
 		const std::vector<const Author*> &authors = myCollection->authors();
 		for (std::vector<const Author*>::const_iterator it = authors.begin(); it != authors.end(); it++) {
-			TreeParagraph *authorParagraph = myTreeModel->createParagraph();
-			myTreeModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
-			myTreeModel->addText((*it)->displayName());
 			const Books &books = myCollection->books(*it);
-			for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
-				TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
-				myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
-				myTreeModel->addText((*jt)->title());
-				if (myCollection->isBookExternal(*jt)) {
-					myTreeModel->addText(" ");
-					myTreeModel->addImage(deleteImageId, myImageMap);
+			if (!books.empty()) {
+				TreeParagraph *authorParagraph = myTreeModel->createParagraph();
+				myTreeModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
+				myTreeModel->addText((*it)->displayName());
+				for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
+					TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
+					myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
+					myTreeModel->addText((*jt)->title());
+					if (myCollection->isBookExternal(*jt)) {
+						myTreeModel->addText(" ");
+						myTreeModel->addImage(deleteImageId, myImageMap);
+					}
+					myBooksMap[bookParagraph] = *jt;
 				}
-				myBooksMap[bookParagraph] = *jt;
 			}
 		}
 		setModel(myTreeModel, LIBRARY);
@@ -126,7 +130,8 @@ bool CollectionView::onStylusPress(int x, int y) {
 		if (it != myBooksMap.end()) {
 			BookDescription &description = *it->second;
 			const std::string question = "Remove Book\n\"" + description.title() + "\"\nfrom library?";
-			ZLDialogManager::instance().informationBox("Remove Book", question.c_str(), "Yes", "No");
+			if (ZLDialogManager::instance().informationBox("Remove Book", question.c_str(), "Yes", "No") == 0) {
+			}
 		}
 		return true;
 	}

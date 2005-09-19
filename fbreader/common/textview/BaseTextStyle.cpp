@@ -31,7 +31,7 @@ BaseTextStyle::BaseTextStyle(const std::string &fontFamily, int fontSize) {
 	myBoldOption = new ZLBooleanOption(group, "Base:bold", false);
 	myItalicOption = new ZLBooleanOption(group, "Base:italic", false);
 	myAlignmentOption = new ZLIntegerOption(group, "Base:alignment", ALIGN_JUSTIFY);
-	myLineSpaceOption = new ZLDoubleOption(group, "Base:lineSpacing", 1.0);
+	myLineSpaceOption = new ZLDoubleOption(group, "Base:lineSpacing", 1.3);
 }
 
 BaseTextStyle::~BaseTextStyle() {

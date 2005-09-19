@@ -93,8 +93,8 @@ TextStyleCollection::TextStyleCollection() {
 	registerStyle(VERSE, "Verse", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
 	registerStyle(IMAGE, "Image", 0, B3_UNDEFINED, B3_UNDEFINED, 8, 0, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);
 	registerStyle(CONTENTS_TABLE_ENTRY, "Contents Table", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 7, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
-	registerStyle(LIBRARY_AUTHOR_ENTRY, "Author in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE, false);
-	registerStyle(LIBRARY_BOOK_ENTRY, "Book in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 1.2, B3_FALSE, false);
+	registerStyle(LIBRARY_AUTHOR_ENTRY, "Author in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
+	registerStyle(LIBRARY_BOOK_ENTRY, "Book in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
 	registerStyle(RECENT_BOOK_LIST, "Recent Book List", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 3, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 1.2, B3_FALSE, false);
 	registerStyle(PREFORMATTED, "Preformatted text", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
 
