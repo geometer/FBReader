@@ -216,7 +216,7 @@ private:
 	ScrollingMode myScrollingMode;
 	unsigned int myOverlappingValue;
 
-	int myOldWidth, myOldHeight;
+	int myOldWidth, myOldHeight, myOldShowIndicator;
 
 	std::vector<ParagraphPosition> myParagraphMap;
 	std::vector<TextElementPosition> myTextElementMap;

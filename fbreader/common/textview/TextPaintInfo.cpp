@@ -190,9 +190,11 @@ void TextView::preparePaintInfo() {
 
 	int newWidth = context().width();
 	int newHeight = context().height();
-	if ((newWidth != myOldWidth) || (newHeight != myOldHeight)) {
+	bool newShowIndicator = ShowPositionIndicatorOption.value();
+	if ((newWidth != myOldWidth) || (newHeight != myOldHeight) || (newShowIndicator != myOldShowIndicator)) {
 		myOldWidth = newWidth;
 		myOldHeight = newHeight;
+		myOldShowIndicator = newShowIndicator;
 		rebuildPaintInfo(false);
 	}
 
