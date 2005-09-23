@@ -42,7 +42,7 @@ ZLColorOption TextView::PositionIndicatorColorOption(INDICATOR, "Color", ZLColor
 ZLIntegerRangeOption TextView::PositionIndicatorHeightOption(INDICATOR, "Height", 1, 100, 16);
 ZLIntegerRangeOption TextView::PositionIndicatorOffsetOption(INDICATOR, "Offset", 0, 100, 4);
 	
-TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myOldShowIndicator(false), myStyle(context) {
+TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context) {
 }
 
 TextView::~TextView() {

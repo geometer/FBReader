@@ -189,12 +189,10 @@ void TextView::preparePaintInfo() {
 	context().setBottomMargin(TextStyle::BottomMarginOption.value());
 
 	int newWidth = context().width();
-	int newHeight = context().height();
-	bool newShowIndicator = ShowPositionIndicatorOption.value();
-	if ((newWidth != myOldWidth) || (newHeight != myOldHeight) || (newShowIndicator != myOldShowIndicator)) {
+	int newHeight = myStyle.textAreaHeight();
+	if ((newWidth != myOldWidth) || (newHeight != myOldHeight)) {
 		myOldWidth = newWidth;
 		myOldHeight = newHeight;
-		myOldShowIndicator = newShowIndicator;
 		rebuildPaintInfo(false);
 	}
 
