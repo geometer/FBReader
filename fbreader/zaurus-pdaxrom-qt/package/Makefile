@@ -1,4 +1,4 @@
-include ../../../makefiles/target.mk
+include ../../../makefiles/platforms.mk
 
 DEB_VERSION = 2.0
 
