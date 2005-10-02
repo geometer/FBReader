@@ -32,12 +32,18 @@ void TextView::rebuildPaintInfo(bool strong) {
 	if (!myStartCursor.isNull()) {
 		if (strong) {
 			myStartCursor.rebuild();
+#ifndef PALM_TEMPORARY
+			myLineInfoCache.clear();
+#endif // PALM_TEMPORARY
 		}
 		myEndCursor = 0;
 		myPaintState = START_IS_KNOWN;
 	} else {
 		if (strong) {
 			myEndCursor.rebuild();
+#ifndef PALM_TEMPORARY
+			myLineInfoCache.clear();
+#endif // PALM_TEMPORARY
 		}
 		myStartCursor = 0;
 		myPaintState = END_IS_KNOWN;
@@ -66,7 +72,7 @@ void TextView::moveStartCursor(int paragraphNumber, int wordNumber, int charNumb
 	myPaintState = START_IS_KNOWN;
 }
 
-void TextView::moveStartCursor(int paragraphNumber, bool start) {
+void TextView::moveStartCursor(int paragraphNumber) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -75,11 +81,7 @@ void TextView::moveStartCursor(int paragraphNumber, bool start) {
 		myStartCursor = myEndCursor;
 	}
 	myStartCursor.moveToParagraph(paragraphNumber);
-	if (start) {
-		myStartCursor.moveToParagraphStart();
-	} else {
-		myStartCursor.moveToParagraphEnd();
-	}
+	myStartCursor.moveToParagraphStart();
 	myEndCursor = 0;
 	myLineInfos.clear();
 	myPaintState = START_IS_KNOWN;
@@ -100,7 +102,7 @@ void TextView::moveEndCursor(int paragraphNumber, int wordNumber, int charNumber
 	myPaintState = END_IS_KNOWN;
 }
 
-void TextView::moveEndCursor(int paragraphNumber, bool start) {
+void TextView::moveEndCursor(int paragraphNumber) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -109,11 +111,7 @@ void TextView::moveEndCursor(int paragraphNumber, bool start) {
 		myEndCursor = myStartCursor;
 	}
 	myEndCursor.moveToParagraph(paragraphNumber);
-	if (start) {
-		myEndCursor.moveToParagraphStart();
-	} else {
-		myEndCursor.moveToParagraphEnd();
-	}
+	myEndCursor.moveToParagraphStart();
 	myStartCursor = 0;
 	myLineInfos.clear();
 	myPaintState = END_IS_KNOWN;

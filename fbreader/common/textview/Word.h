@@ -78,7 +78,6 @@ private:
 	Word &operator = (const Word&) VIEW_SECTION;
 };
 
-inline Word::~Word() { if (myMark != 0) delete myMark; }
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
 inline Word::WordMark *Word::mark() const { return myMark; }
 inline short Word::width(const ZLPaintContext &context) const {
@@ -89,7 +88,6 @@ inline short Word::width(const ZLPaintContext &context) const {
 }
 
 inline Word::WordMark::WordMark(int start, int length) { myStart = start; myLength = length; myNext = 0; }
-inline Word::WordMark::~WordMark() { if (myNext != 0) delete myNext; }
 inline void Word::WordMark::setNext(Word::WordMark *mark) { myNext = mark; }
 inline int Word::WordMark::start() const { return myStart; }
 inline int Word::WordMark::length() const { return myLength; }

@@ -188,6 +188,54 @@ void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept((const char*)myLineEdit->text().utf8());
 }
 
+class KeyButton : public QPushButton {
+
+public:
+	KeyButton(QWidget *parent);
+
+protected:
+	void focusInEvent(QFocusEvent*);
+	void focusOutEvent(QFocusEvent*);
+	void mousePressEvent(QMouseEvent *);
+	void keyPressEvent(QKeyEvent *keyEvent);
+};
+
+KeyButton::KeyButton(QWidget *parent) : QPushButton(parent) {
+	focusOutEvent(0);
+}
+
+void KeyButton::focusInEvent(QFocusEvent*) {
+	setText("Press key to set action");
+}
+
+void KeyButton::focusOutEvent(QFocusEvent*) {
+	setText("Press this button to start");
+}
+
+void KeyButton::mousePressEvent(QMouseEvent*) {
+	setFocus();
+}
+
+void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
+	setText("Select action for: " + keyEvent->text());
+}
+
+void KeyOptionView::_createItem() {
+	myKeyButton = new KeyButton(myTab);
+	myTab->addItem(myKeyButton, myRow, myFromColumn, myToColumn);
+}
+
+void KeyOptionView::_show() {
+	myKeyButton->show();
+}
+
+void KeyOptionView::_hide() {
+	myKeyButton->hide();
+}
+
+void KeyOptionView::_onAccept() const {
+}
+
 void ColorOptionView::_createItem() {
 	myWidget = new QWidget(myTab);
 	QGridLayout *layout = new QGridLayout(myWidget, 3, 3, 0, 10);

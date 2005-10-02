@@ -18,29 +18,35 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGREADER_H__
-#define __ENCODINGREADER_H__
+#ifndef __QVIEWWIDGET_H__
+#define __QVIEWWIDGET_H__
 
-#include "ZLXMLReader.h"
+#include <qwidget.h>
 
-class EncodingReader : public ZLXMLReader {
+#include <abstract/ZLView.h>
+
+class QViewWidget : public QWidget, public ZLViewWidget {
 
 public:
-	EncodingReader(const std::string &encoding) XML_SECTION;
-	~EncodingReader() XML_SECTION;
-	bool fillTable(int *map) XML_SECTION;
+	QViewWidget(QWidget *parent, ZLApplication *application);
+	~QViewWidget() {}
 
 protected:
-	const Tag *tags() const XML_SECTION;
+	void repaintView();
+	void trackStylus(bool track);
 
-public:
-	void startElementHandler(int tag, const char **attributes) XML_SECTION;
-	void endElementHandler(int) XML_SECTION;
-	void characterDataHandler(const char *, int) XML_SECTION;
+protected:
+	void paintEvent(QPaintEvent *event);
+	void mousePressEvent(QMouseEvent *event);
+	void mouseReleaseEvent(QMouseEvent *event);
+	void mouseMoveEvent(QMouseEvent *event);
 
 private:
-	const std::string myEncoding;
-	int *myMap;
+	int x(const QMouseEvent *event) const;
+	int y(const QMouseEvent *event) const;
+
+private:
+	ZLApplication *myApplication;
 };
 
-#endif /* __ENCODINGREADER_H__ */
+#endif /* __QVIEWWIDGET_H__ */

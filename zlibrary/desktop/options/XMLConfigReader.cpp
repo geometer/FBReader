@@ -40,6 +40,18 @@ const ZLXMLReader::Tag *XMLConfigReader::tags() const {
 	return TAGS;
 }
 
+XMLConfigReader::XMLConfigReader(XMLConfig &config) : myConfig(config), myGroup(0) {
+}
+
+XMLConfigReader::~XMLConfigReader() {
+}
+
+void XMLConfigReader::endElementHandler(int) {
+}
+
+void XMLConfigReader::characterDataHandler(const char*, int) {
+}
+
 void XMLConfigReader::startElementHandler(int tag, const char **attributes) {
 	switch (tag) {
 		case _CONFIG:

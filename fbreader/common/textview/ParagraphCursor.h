@@ -246,6 +246,10 @@ inline void TextElementPool::storeControlElement(ControlElement *element) {
 	myControlAllocator.free((void*)element);
 }
 
+inline size_t ParagraphCursor::index() const { return myIndex; }
+inline const TextElement &ParagraphCursor::operator [] (size_t index) const { return *myElements[index]; }
+inline size_t ParagraphCursor::paragraphLength() const { return myElements.size(); }
+
 inline WordCursor::WordCursor() : myCharNumber(0) {}
 inline WordCursor::WordCursor(const WordCursor &cursor) : myParagraphCursor(cursor.myParagraphCursor), myWordNumber(cursor.myWordNumber), myCharNumber(cursor.myCharNumber) {}
 inline const WordCursor &WordCursor::operator = (const WordCursor &cursor) {
@@ -282,10 +286,6 @@ inline const ParagraphCursor &WordCursor::paragraphCursor() const { return *myPa
 
 inline void WordCursor::nextWord() { myWordNumber++; myCharNumber = 0; }
 inline void WordCursor::previousWord() { myWordNumber--; myCharNumber = 0; }
-
-inline size_t ParagraphCursor::paragraphLength() const { return myElements.size(); }
-inline size_t ParagraphCursor::index() const { return myIndex; }
-inline const TextElement &ParagraphCursor::operator [] (size_t index) const { return *myElements[index]; }
 
 inline PlainTextParagraphCursor::PlainTextParagraphCursor(const TextModel &model, size_t index) : ParagraphCursor(model, index) {}
 inline PlainTextParagraphCursor::~PlainTextParagraphCursor() {}

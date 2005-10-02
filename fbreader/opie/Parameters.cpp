@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004, 2005 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,29 +19,6 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGREADER_H__
-#define __ENCODINGREADER_H__
+#include "../common/textview/TextStyle.h"
 
-#include "ZLXMLReader.h"
-
-class EncodingReader : public ZLXMLReader {
-
-public:
-	EncodingReader(const std::string &encoding) XML_SECTION;
-	~EncodingReader() XML_SECTION;
-	bool fillTable(int *map) XML_SECTION;
-
-protected:
-	const Tag *tags() const XML_SECTION;
-
-public:
-	void startElementHandler(int tag, const char **attributes) XML_SECTION;
-	void endElementHandler(int) XML_SECTION;
-	void characterDataHandler(const char *, int) XML_SECTION;
-
-private:
-	const std::string myEncoding;
-	int *myMap;
-};
-
-#endif /* __ENCODINGREADER_H__ */
+const std::string TextStyle::DefaultFontName = "georgia";

@@ -106,6 +106,9 @@ ZLBooleanOption FBReader::SearchThisSectionOnlyOption(SEARCH, "ThisSectionOnly",
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
+	if (BookCollection::PathOption.value() == "") {
+		BookCollection::PathOption.setValue(BookCollection::DefaultBookPath);
+	}
 	myModel = 0;
 	myContext = context;
 	myBookTextView = new BookTextView(*this, *myContext);

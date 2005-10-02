@@ -33,6 +33,7 @@ class QLabel;
 class QSpinBox;
 class QCheckBox;
 class QLineEdit;
+class QPushButton;
 class QRadioButton;
 class QComboBox;
 class QSlider;
@@ -175,6 +176,24 @@ private slots:
 private:
 	QLabel *myLabel;
 	QComboBox *myComboBox;
+};
+
+class KeyOptionView : public QObject, public QOptionView {
+
+Q_OBJECT
+
+public:
+	KeyOptionView(ZLKeyOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
+	virtual ~KeyOptionView() {}
+
+protected:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _onAccept() const;
+
+private:
+	QPushButton *myKeyButton;
 };
 
 class ColorOptionView : public QObject, public QOptionView {

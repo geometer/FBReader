@@ -32,11 +32,12 @@ protected:
 	const Tag *tags() const;
 
 public:
-	XMLConfigReader(XMLConfig &config) : myConfig(config), myGroup(0) {}
+	XMLConfigReader(XMLConfig &config);
+	~XMLConfigReader();
 
 	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int) {}
-	void characterDataHandler(const char*, int) {}
+	void endElementHandler(int);
+	void characterDataHandler(const char*, int);
 
 private:
 	XMLConfig &myConfig;

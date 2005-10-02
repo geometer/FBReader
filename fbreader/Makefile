@@ -9,7 +9,7 @@ LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS) $(
 TARGET = FBReader
 
 ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/pdb common/formats/txt common/textview common/hyphenation common/fbreader palm
-ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt
+ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt opie
 ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk maemo
 
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/textview common/hyphenation common/fbreader
@@ -32,6 +32,14 @@ endif
 
 ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
 	QSUBDIRS = $(TARGET_ARCH)
+endif
+
+ifeq "$(TARGET_ARCH)" "qvfb-opie"
+	QSUBDIRS = opie
+endif
+
+ifeq "$(TARGET_ARCH)" "opensimpad-opie"
+	QSUBDIRS = opie
 endif
 
 ifeq "$(TARGET_ARCH)" "desktop-qt"
@@ -151,4 +159,5 @@ clean:
 			$(MAKE) -C $$target/package clean; \
 		fi; \
 	done;
+	@cd opie/package; $(MAKE) clean; cd ../..
 	@$(RM) $(TARGET) err

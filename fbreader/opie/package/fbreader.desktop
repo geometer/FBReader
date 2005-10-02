@@ -1,0 +1,7 @@
+[Desktop Entry]
+CanFastLoad=1
+Exec=FBReader
+Icon=fbreader/FBReader
+Type=Application
+Name=FBReader
+Comment=E-Book Reader

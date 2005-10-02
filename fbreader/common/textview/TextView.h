@@ -159,9 +159,9 @@ protected:
 
 	void setStartCursor(ParagraphCursor *cursor) VIEW1_SECTION;
 	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW1_SECTION;
-	void moveStartCursor(int paragraphNumber, bool start) VIEW1_SECTION;
+	void moveStartCursor(int paragraphNumber) VIEW1_SECTION;
 	void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW1_SECTION;
-	void moveEndCursor(int paragraphNumber, bool start) VIEW1_SECTION;
+	void moveEndCursor(int paragraphNumber) VIEW1_SECTION;
 
 	bool empty() const VIEW_SECTION;
 

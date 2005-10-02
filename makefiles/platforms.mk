@@ -1,4 +1,4 @@
-ALL_TARGET_ARCHS = zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk desktop-qt desktop-gtk palm maemo
+ALL_TARGET_ARCHS = zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk desktop-qt desktop-gtk palm maemo qvfb-opie opensimpad-opie
 
 ifneq "$(wildcard $(ROOTDIR)/makefiles/target.mk)" ""
 	include $(ROOTDIR)/makefiles/target.mk

@@ -1,0 +1,9 @@
+Package: FBReader-opie
+Version: 0.6.4
+Section: apps
+Priority: extra
+Architecture: arm
+Depends: libqpe1, libqte2, libexpat0, libenca0
+Installed-Size: 829440
+Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Description: E-Book reader.

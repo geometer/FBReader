@@ -28,6 +28,15 @@
 EncodingReader::EncodingReader(const std::string &encoding) : myEncoding(encoding) {
 }
 
+EncodingReader::~EncodingReader() {
+}
+
+void EncodingReader::endElementHandler(int) {
+}
+
+void EncodingReader::characterDataHandler(const char *, int) {
+}
+
 bool EncodingReader::fillTable(int *map) {
 	myMap = map;
 	for (int i = 0; i < 255; i++) {

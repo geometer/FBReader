@@ -19,37 +19,18 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLUnicodeUtil.h>
+#include "../common/hyphenation/TeXHyphenator.h"
+#include "../common/formats/html/HtmlEntityExtension.h"
+#include "../common/collection/BookCollection.h"
+#include "../common/fbreader/CollectionView.h"
+#include "QFBReader.h"
+#include "Paths.h"
 
-#include "Word.h"
+static const std::string PathPrefix = std::string(INSTALLDIR) + "/opt/QtPalmtop/share/FBReader/";
 
-Word::Word(const char *data, unsigned short size, size_t paragraphOffset) : Data(data), Size(size), Length(ZLUnicodeUtil::utf8Length(Data, size)), ParagraphOffset(paragraphOffset), myMark(0), myWidth(-1) {
-}
-
-Word::~Word() {
-	if (myMark != 0) {
-		delete myMark;
-	}
-}
-
-void Word::addMark(int start, int len) {
-	WordMark *existingMark = myMark;
-	WordMark *mark = new WordMark(start, len);
-
-	if ((existingMark == 0) || (existingMark->start() > start)) {
-		mark->setNext(existingMark);
-		myMark = mark;
-	} else {
-		while ((existingMark->next() != 0) && (existingMark->next()->start() < start)) {
-			existingMark = existingMark->myNext;
-		}
-		mark->setNext(existingMark->myNext);
-		existingMark->setNext(mark);
-	}
-}
-
-Word::WordMark::~WordMark() {
-	if (myNext != 0) {
-		delete myNext;
-	}
-}
+const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
+const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
+const std::string FBReader::HelpDirectory = PathPrefix + "help";
+const std::string EncodingDescriptionPath = PathPrefix + "encodings";
+const std::string CollectionView::DeleteBookImageFile = PathPrefix + "/opt/QtPalmtop/pics/fbreader/remove.png";
+const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

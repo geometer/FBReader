@@ -33,7 +33,8 @@
 #include "../description/Author.h"
 #include "../formats/FormatPlugin.h"
 
-ZLStringOption BookCollection::PathOption("Options", "BookPath", BookCollection::DefaultBookPath);
+ZLStringOption BookCollection::PathOption("Options", "BookPath", "");
+//ZLStringOption BookCollection::PathOption("Options", "BookPath", BookCollection::DefaultBookPath);
 ZLBooleanOption BookCollection::ScanSubdirsOption("Options", "ScanSubdirs", false);
 
 bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2) {

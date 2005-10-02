@@ -111,7 +111,7 @@ void QFBReader::toggleFullscreenSlot() {
 		showFullScreen();
 	} else {
 		menuBar()->show();
-		showNormal();
+		showMaximized();
 		if (myTitleHeight > 0) {
 			move(1, myTitleHeight);
 			myTitleHeight = -1;
@@ -229,15 +229,6 @@ void QFBReader::searchSlot() {
 	}
 	repaintView();
 	enableMenuButtons();
-	fullScreenWorkaround();
-}
-
-void QFBReader::fullScreenWorkaround() {
-	if (myFullScreen) {
-		reparent(0, WType_TopLevel, QPoint(0,0));
-		reparent(0, WType_TopLevel | WStyle_Customize | WStyle_NoBorderEx, QPoint(0,0));
-		show();
-	}
 }
 
 void QFBReader::setWindowCaption(const std::string &caption) {

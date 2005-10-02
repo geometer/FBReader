@@ -63,6 +63,7 @@ void CollectionView::gotoParagraph(int num, bool last) {
 			}
 		} else {
 			tp->openTree();
+			rebuildPaintInfo(true);
 		}
 	}
 	

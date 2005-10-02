@@ -242,11 +242,11 @@ void TextView::gotoMark(TextMark mark) {
 void TextView::gotoParagraph(int num, bool last) {
 	if (last) {
 		if ((num > 0) && (num <= (int)myModel->paragraphsNumber())) {
-			moveEndCursor(num - 1, false);
+			moveEndCursor(num);
 		}
 	} else {
 		if ((num >= 0) && (num < (int)myModel->paragraphsNumber())) {
-			moveStartCursor(num, true);
+			moveStartCursor(num);
 		}
 	}
 }
