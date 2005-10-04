@@ -24,7 +24,7 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 	@rm usr/share/FBReader/help/HowToStart.blueish.fb2
 	@mv usr/share/FBReader/help/HowToStart.brownish.fb2 usr/share/FBReader/help/HowToStart.fb2
 	@mkdir -p usr/share/pixmaps/FBReader
-	@cp `find ../../icons/640x480 -name "*.png"` usr/share/pixmaps/FBReader
+	@cp `find ../../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 

@@ -20,8 +20,8 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 
 .tmpdir:
 	@ln -sf ../.. bin
-	@ln -sf ../../icons/640x480 pics144
-	@ln -sf ../../icons/320x240 pics
+	@ln -sf ../../icons/34x28 pics144
+	@ln -sf ../../icons/18x14 pics
 	@cp -r ../../share .
 	@rm share/FBReader/help/HowToStart.blueish.fb2
 	@mv share/FBReader/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2

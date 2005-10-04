@@ -193,7 +193,13 @@ protected:
 	void _onAccept() const;
 
 private:
+	QWidget *myWidget;
 	QPushButton *myKeyButton;
+	QLabel *myLabel;
+	QComboBox *myComboBox;
+	std::string myCurrentKey;
+
+friend class KeyButton;
 };
 
 class ColorOptionView : public QObject, public QOptionView {

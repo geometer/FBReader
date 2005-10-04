@@ -45,8 +45,6 @@
 #include "QFBReader.h"
 
 QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
-	setWFlags(getWFlags() | WStyle_Customize);
-
 	myViewWidget = new QViewWidget(this, this);
 	setCentralWidget((QViewWidget*)myViewWidget);
 
@@ -71,7 +69,6 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myKeyBindings[Key_Return] = ACTION_TOGGLE_FULLSCREEN;
 
 	myFullScreen = false;
-	myTitleHeight = -1;
 
 	createToolbar();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
@@ -94,11 +91,6 @@ void QFBReader::focusInEvent(QFocusEvent*) {
 
 void QFBReader::resizeEvent(QResizeEvent*) {
 	if (myFullScreen && (size() != qApp->desktop()->size())) {
-		int titleHeight = topData()->normalGeometry.top();
-		if (titleHeight > 0) {
-			myTitleHeight = titleHeight;
-		}
-		topData()->normalGeometry = QRect(0, 0, -1, -1);
 		showNormal();
 		showFullScreen();
 	}
@@ -108,15 +100,12 @@ void QFBReader::toggleFullscreenSlot() {
 	myFullScreen = !myFullScreen;
 	if (myFullScreen) {
 		menuBar()->hide();
+		showNormal();
 		showFullScreen();
 	} else {
 		menuBar()->show();
+		showNormal();
 		showMaximized();
-		if (myTitleHeight > 0) {
-			move(1, myTitleHeight);
-			myTitleHeight = -1;
-		}
-		setWFlags(getWFlags() | WStyle_Customize);
 	}
 }
 
@@ -159,7 +148,7 @@ void QFBReader::addButton(ActionCode id, const std::string &name) {
 	myButtons.push_back(ButtonInfo());
 	myButtons.back().Code = id;
 	myButtons.back().IsVisible = true;
-	myButtons.back().Pixmap = new QPixmap(Resource::loadPixmap(("FBReader/" + name).c_str()));
+	myButtons.back().Pixmap = new QPixmap(Resource::loadPixmap(("fbreader/" + name).c_str()));
 }
 
 void QFBReader::setButtonEnabled(ActionCode id, bool enable) {

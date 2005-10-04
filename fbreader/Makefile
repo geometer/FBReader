@@ -13,47 +13,35 @@ ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt opie
 ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk maemo
 
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/textview common/hyphenation common/fbreader
-
-ifeq "$(TARGET_ARCH)" "desktop-gtk"
-	GTKSUBDIRS = $(TARGET_ARCH)
+ifeq "$(TARGET_ARCH)" "palm"
+	SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/textview common/hyphenation common/fbreader
 endif
 
-ifeq "$(TARGET_ARCH)" "maemo"
-	GTKSUBDIRS = $(TARGET_ARCH)
-endif
-
-ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-qt"
-	QSUBDIRS = $(TARGET_ARCH)
-endif
-
-ifeq "$(TARGET_ARCH)" "zaurus-pdaxrom-gtk"
-	GTKSUBDIRS = $(TARGET_ARCH)
-endif
-
-ifeq "$(TARGET_ARCH)" "zaurus-qtopia"
-	QSUBDIRS = $(TARGET_ARCH)
-endif
+PLATFORM_SUBDIR = $(TARGET_ARCH)
 
 ifeq "$(TARGET_ARCH)" "qvfb-opie"
-	QSUBDIRS = opie
+	PLATFORM_SUBDIR = opie
 endif
 
 ifeq "$(TARGET_ARCH)" "opensimpad-opie"
-	QSUBDIRS = opie
+	PLATFORM_SUBDIR = opie
 endif
 
-ifeq "$(TARGET_ARCH)" "desktop-qt"
-	QSUBDIRS = $(TARGET_ARCH)
+ifeq "$(UI_TYPE)" "gtk"
+	GTKSUBDIRS += $(PLATFORM_SUBDIR)
 endif
 
-ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/textview common/hyphenation common/fbreader
-	SUBDIRS += $(TARGET_ARCH)
+ifeq "$(UI_TYPE)" "qt"
+	QSUBDIRS += $(PLATFORM_SUBDIR)
+endif
+
+ifeq "$(UI_TYPE)" "palm"
+	SUBDIRS += $(PLATFORM_SUBDIR)
 endif
 
 all: .bin
-	@if [ -d $(TARGET_ARCH)/package ]; then \
-		$(MAKE) -C $(TARGET_ARCH)/package; \
+	@if [ -d $(PLATFORM_SUBDIR)/package ]; then \
+		$(MAKE) -C $(PLATFORM_SUBDIR)/package; \
 	fi;
 
 install: all .really-install
@@ -66,8 +54,8 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -m 0644 icons/640x480/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
-	install -m 0644 $(wildcard icons/640x480/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+	install -m 0644 icons/34x28/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
+	install -m 0644 $(wildcard icons/34x28/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
@@ -81,8 +69,8 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -m 0644 icons/640x480/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
-	install -m 0644 $(wildcard icons/640x480/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
+	install -m 0644 icons/34x28/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
+	install -m 0644 $(wildcard icons/34x28/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
