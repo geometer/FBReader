@@ -19,7 +19,10 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
 #include <gtk/gtk.h>
+
+#include <libosso.h>
 
 #include <abstract/ZLXMLReader.h>
 #include <unix/ZLUnixFSManager.h>
@@ -33,6 +36,15 @@
 #include "Paths.h"
 
 int main(int argc, char **argv) {
+	osso_context_t *context = 0;
+
+	// MSS: put the real version here
+	if ((context = osso_initialize("FBReader", "0.6.4", TRUE, NULL)) == 0) {
+		// MSS:
+		std::cerr << "Failed to initialize!" << std::endl;
+		exit(1);
+	}
+
 	gtk_disable_setlocale();
 	gtk_init(&argc, &argv);
 
@@ -57,6 +69,8 @@ int main(int argc, char **argv) {
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLUnixTimeManager::deleteInstance();
+
+	osso_deinitialize(context);
 
 	return 0;
 }

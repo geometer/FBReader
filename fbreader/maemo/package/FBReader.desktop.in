@@ -9,4 +9,6 @@ Icon=FBReader
 X-Window-Icon=FBReader
 X-Window-Icon-Dimmed=FBReader
 X-HildonDesk-ShowInToolbar=true
+XO-Osso-Service=net.mawhrin.FBReader
 X-Osso-Type=application/x-executable
+Terminal=false
