@@ -213,9 +213,11 @@ KeyButton::KeyButton(KeyOptionView &keyView) : QPushButton(keyView.myWidget), my
 
 void KeyButton::focusInEvent(QFocusEvent*) {
 	setText("Press key to set action");
+	grabKeyboard();
 }
 
 void KeyButton::focusOutEvent(QFocusEvent*) {
+	releaseKeyboard();
 	setText("Press this button to select key");
 }
 
