@@ -17,8 +17,8 @@ clean: .cleandir
 	@cp control $(DEBDIR)
 	@cp ../../FBReader $(BASEDIR)/bin
 	@cp fbreader.desktop $(BASEDIR)/apps/Applications
-	@cp ../../icons/34x28/FBReader.png $(BASEDIR)/pics/fbreader
-	@cp ../../icons/34x28/FBReader/*.png $(BASEDIR)/pics/fbreader
+	@cp ../../icons/22x18/FBReader.png $(BASEDIR)/pics/fbreader
+	@cp ../../icons/22x18/FBReader/*.png $(BASEDIR)/pics/fbreader
 	@cp -r ../../share  $(BASEDIR)
 	@rm -rf `find $(BASEDIR)/share -name ".svn"`
 

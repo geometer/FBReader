@@ -15,3 +15,4 @@ net.mawhrin.FBReader.services: net.mawhrin.FBReader.services.in
 	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
 clean:
+	$(RM) FBReader.desktop net.mawhrin.FBReader.services
