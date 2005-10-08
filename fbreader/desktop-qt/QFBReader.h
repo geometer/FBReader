@@ -58,9 +58,6 @@ protected:
 private slots:
 	void doActionSlot(int buttonNumber);
 	void emptySlot() {}
-
-private:
-	std::map<int,ActionCode> myKeyBindings;
 };
 
 #endif /* __QFBREADER_H__ */

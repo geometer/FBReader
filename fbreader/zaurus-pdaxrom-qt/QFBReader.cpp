@@ -33,6 +33,7 @@
 
 #include <qt/QViewWidget.h>
 #include <qt/QPaintContext.h>
+#include <qt/QKeyUtil.h>
 
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
@@ -50,25 +51,25 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myViewWidget = new QViewWidget(this, this);
 	setCentralWidget((QViewWidget*)myViewWidget);
 
-	myKeyBindings[Key_L] = ACTION_SHOW_COLLECTION;
-	myKeyBindings[Key_Z] = ACTION_SHOW_LAST_BOOKS;
-	myKeyBindings[Key_C] = ACTION_SHOW_CONTENTS;
-	myKeyBindings[Key_F] = ACTION_SEARCH;
-	myKeyBindings[Key_N] = ACTION_FIND_NEXT;
-	myKeyBindings[Key_P] = ACTION_FIND_PREVIOUS;
-	myKeyBindings[Key_O] = ACTION_SHOW_OPTIONS;
-	myKeyBindings[Key_I] = ACTION_SHOW_BOOK_INFO;
-	myKeyBindings[Key_D] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
-	myKeyBindings[Key_R] = ACTION_ROTATE_SCREEN;
-	myKeyBindings[Key_A] = ACTION_ADD_BOOK;
-	myKeyBindings[Key_1] = ACTION_DECREASE_FONT;
-	myKeyBindings[Key_2] = ACTION_INCREASE_FONT;
-	myKeyBindings[Key_Left] = ACTION_UNDO;
-	myKeyBindings[Key_Right] = ACTION_REDO;
-	myKeyBindings[Key_Up] = ACTION_LARGE_SCROLL_BACKWARD;
-	myKeyBindings[Key_Down] = ACTION_LARGE_SCROLL_FORWARD;
-	myKeyBindings[Key_Escape] = ACTION_CANCEL;
-	myKeyBindings[Key_Return] = ACTION_TOGGLE_FULLSCREEN;
+	bindKey(Key_L, ACTION_SHOW_COLLECTION);
+	bindKey(Key_Z, ACTION_SHOW_LAST_BOOKS);
+	bindKey(Key_C, ACTION_SHOW_CONTENTS);
+	bindKey(Key_F, ACTION_SEARCH);
+	bindKey(Key_N, ACTION_FIND_NEXT);
+	bindKey(Key_P, ACTION_FIND_PREVIOUS);
+	bindKey(Key_O, ACTION_SHOW_OPTIONS);
+	bindKey(Key_I, ACTION_SHOW_BOOK_INFO);
+	bindKey(Key_D, ACTION_SHOW_HIDE_POSITION_INDICATOR);
+	bindKey(Key_R, ACTION_ROTATE_SCREEN);
+	bindKey(Key_A, ACTION_ADD_BOOK);
+	bindKey(Key_1, ACTION_DECREASE_FONT);
+	bindKey(Key_2, ACTION_INCREASE_FONT);
+	bindKey(Key_Left, ACTION_UNDO);
+	bindKey(Key_Right, ACTION_REDO);
+	bindKey(Key_Up, ACTION_LARGE_SCROLL_BACKWARD);
+	bindKey(Key_Down, ACTION_LARGE_SCROLL_FORWARD);
+	bindKey(Key_Escape, ACTION_CANCEL);
+	bindKey(Key_Return, ACTION_TOGGLE_FULLSCREEN);
 
 	createToolbar();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
@@ -86,10 +87,7 @@ QFBReader::~QFBReader() {
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {
-	std::map<int,ActionCode>::const_iterator it = myKeyBindings.find(event->key());
-	if (it != myKeyBindings.end()) {
-		doAction(it->second);
-	}
+	doAction(QKeyUtil::keyName(event));
 }
 
 void QFBReader::toggleFullscreenSlot() {

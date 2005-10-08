@@ -32,6 +32,7 @@
 #include <qlayout.h>
 
 #include <abstract/ZLStringUtil.h>
+#include <qtopia/QKeyUtil.h>
 
 #include "QOptionView.h"
 #include "QOptionsDialog.h"
@@ -225,116 +226,8 @@ void KeyButton::mousePressEvent(QMouseEvent*) {
 	setFocus();
 }
 
-static std::string keyName(int key) {
-	if ((key < 128) && isprint(key) && (!isspace(key)) && (key != '&')) {
-		std::string name;
-		name += (char)toupper(key);
-		return name;
-	}
-	switch (key) {
-		case QObject::Key_Escape:
-		case 27:
-			return "Esc";
-		case QObject::Key_Tab:
-			return "Tab";
-		case QObject::Key_BackTab:
-			return "BackTab";
-		case QObject::Key_BackSpace:
-			return "BackSpace";
-		case QObject::Key_Return:
-		case 13:
-			return "Return";
-		case QObject::Key_Enter:
-			return "Enter";
-		case QObject::Key_Insert:
-			return "Insert";
-		case QObject::Key_Delete:
-			return "Delete";
-		case QObject::Key_Pause:
-			return "Pause";
-		case QObject::Key_Print:
-			return "Print";
-		case QObject::Key_SysReq:
-			return "SysReq";
-		case QObject::Key_Home:
-			return "Home";
-		case QObject::Key_End:
-			return "End";
-		case QObject::Key_Left:
-			return "LeftArrow";
-		case QObject::Key_Up:
-			return "UpArrow";
-		case QObject::Key_Right:
-			return "RightArrow";
-		case QObject::Key_Down:
-			return "DownArrow";
-		case QObject::Key_PageUp:
-			return "PgUp";
-		case QObject::Key_PageDown:
-			return "PgDown";
-		case QObject::Key_F1:
-			return "F1";
-		case QObject::Key_F2:
-			return "F2";
-		case QObject::Key_F3:
-			return "F3";
-		case QObject::Key_F4:
-			return "F4";
-		case QObject::Key_F5:
-			return "F5";
-		case QObject::Key_F6:
-			return "F6";
-		case QObject::Key_F7:
-			return "F7";
-		case QObject::Key_F8:
-			return "F8";
-		case QObject::Key_F9:
-			return "F9";
-		case QObject::Key_F10:
-			return "F10";
-		case QObject::Key_F11:
-			return "F11";
-		case QObject::Key_F12:
-			return "F12";
-		case ' ':
-			return "Space";
-		case '&':
-			return "&&";
-		case QObject::Key_CapsLock:
-			return "CapsLock";
-		case QObject::Key_NumLock:
-			return "NumLock";
-		case QObject::Key_ScrollLock:
-			return "ScrollLock";
-	}
-	return "";
-}
-
-static std::string text(QKeyEvent *keyEvent) {
-	QString txt = keyEvent->text();
-	int key = keyEvent->key();
-	int state = keyEvent->state();
-
-	std::string name = (const char*)txt.upper().utf8();
-	if (name.empty() || ((name.length() == 1) && !isprint(name[0]) || isspace(name[0]))) {
-		name = keyName(key);
-	}
-	if (name.empty()) {
-		return "";
-	}
-
-	name = '<' + name + '>';
-	if (state & 0x400) {
-		name = "<Alt>+" + name;
-	}
-	if (state & 0x200) {
-		name = "<Ctrl>+" + name;
-	}
-	return name;
-}
-
 void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
-	std::string keyText = ::text(keyEvent);
+	std::string keyText = QKeyUtil::keyName(keyEvent);
 	if (!keyText.empty()) {
 		myKeyView.myLabel->setText("Action For " + QString::fromUtf8(keyText.c_str()));
 		myKeyView.myLabel->show();

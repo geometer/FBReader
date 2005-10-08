@@ -61,8 +61,6 @@ private slots:
 private:
 	bool myFullScreen;
 	bool myWasMaximized;
-
-	std::map<int,ActionCode> myKeyBindings;
 };
 
 #endif /* __QFBREADER_H__ */

@@ -68,8 +68,6 @@ private slots:
 private:
 	bool myFullScreen;
 	int myTitleHeight;
-
-	std::map<int,ActionCode> myKeyBindings;
 	
 	struct ButtonInfo {
 		ActionCode Code;

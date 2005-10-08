@@ -582,4 +582,15 @@ void FBReader::clearTextCaches() {
 	myRecentBooksView->clearCaches();
 }
 
+void FBReader::bindKey(const std::string &key, ActionCode code) {
+	myKeyBindings[key] = code;
+}
+
+void FBReader::doAction(const std::string &keyName) {
+	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(keyName);
+	if (it != myKeyBindings.end()) {
+		doAction(it->second);
+	}
+}
+
 // vim:ts=2:sw=2:noet

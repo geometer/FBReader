@@ -23,6 +23,7 @@
 #define __FBREADER_H__
 
 #include <string>
+#include <map>
 
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLTime.h>
@@ -43,36 +44,38 @@ class FBReader : public ZLApplication {
 
 public:
 	enum ActionCode {
-		NO_ACTION,
-		ACTION_SHOW_COLLECTION,
-		ACTION_SHOW_OPTIONS,
-		ACTION_UNDO,
-		ACTION_REDO,
-		ACTION_SHOW_CONTENTS,
-		ACTION_SEARCH,
-		ACTION_FIND_PREVIOUS,
-		ACTION_FIND_NEXT,
-		ACTION_LARGE_SCROLL_FORWARD,
-		ACTION_LARGE_SCROLL_BACKWARD,
-		ACTION_SMALL_SCROLL_FORWARD,
-		ACTION_SMALL_SCROLL_BACKWARD,
-		ACTION_MOUSE_SCROLL_FORWARD,
-		ACTION_MOUSE_SCROLL_BACKWARD,
-		ACTION_SCROLL_TO_HOME,
-		ACTION_SCROLL_TO_START_OF_TEXT,
-		ACTION_SCROLL_TO_END_OF_TEXT,
-		ACTION_CANCEL,
-		ACTION_INCREASE_FONT,
-		ACTION_DECREASE_FONT,
-		ACTION_SHOW_HIDE_POSITION_INDICATOR,
-		ACTION_TOGGLE_FULLSCREEN,
-		ACTION_FULLSCREEN_ON,
-		ACTION_ADD_BOOK,
-		ACTION_SHOW_BOOK_INFO,
-		ACTION_SHOW_HELP,
-		ACTION_ROTATE_SCREEN,
-		ACTION_SHOW_LAST_BOOKS,
-		ACTION_QUIT,
+		// please, don't change these numbers
+		// add new action id's at end of this enumeration
+		NO_ACTION = 0,
+		ACTION_SHOW_COLLECTION = 1,
+		ACTION_SHOW_OPTIONS = 2,
+		ACTION_UNDO = 3,
+		ACTION_REDO = 4,
+		ACTION_SHOW_CONTENTS = 5,
+		ACTION_SEARCH = 6,
+		ACTION_FIND_PREVIOUS = 7,
+		ACTION_FIND_NEXT = 8,
+		ACTION_LARGE_SCROLL_FORWARD = 9,
+		ACTION_LARGE_SCROLL_BACKWARD = 11,
+		ACTION_SMALL_SCROLL_FORWARD = 12,
+		ACTION_SMALL_SCROLL_BACKWARD = 13,
+		ACTION_MOUSE_SCROLL_FORWARD = 14,
+		ACTION_MOUSE_SCROLL_BACKWARD = 15,
+		ACTION_SCROLL_TO_HOME = 16,
+		ACTION_SCROLL_TO_START_OF_TEXT = 17,
+		ACTION_SCROLL_TO_END_OF_TEXT = 18,
+		ACTION_CANCEL = 19,
+		ACTION_INCREASE_FONT = 20,
+		ACTION_DECREASE_FONT = 21,
+		ACTION_SHOW_HIDE_POSITION_INDICATOR = 22,
+		ACTION_TOGGLE_FULLSCREEN = 23,
+		ACTION_FULLSCREEN_ON = 24,
+		ACTION_ADD_BOOK = 25,
+		ACTION_SHOW_BOOK_INFO = 26,
+		ACTION_SHOW_HELP = 27,
+		ACTION_ROTATE_SCREEN = 28,
+		ACTION_SHOW_LAST_BOOKS = 29,
+		ACTION_QUIT = 30,
 	};
 
 protected:
@@ -142,6 +145,8 @@ protected:
 	virtual void optionsSlot() FB_SECTION;
 	virtual void addBookSlot() FB_SECTION;
 
+	void bindKey(const std::string &key, ActionCode code) FB_SECTION;
+
 private:
 	BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
@@ -157,6 +162,7 @@ public:
 	virtual void enableMenuButtons() FB_SECTION;
 	void repaintView() FB_SECTION;
 	void doAction(ActionCode code) FB_SECTION;
+	void doAction(const std::string &keyName) FB_SECTION;
 
 protected:
 	ViewMode myMode;
@@ -170,11 +176,12 @@ private:
 	CollectionView *myCollectionView;	
 	RecentBooksView *myRecentBooksView;	
 
-private:
 	ZLTime myLastScrollingTime;
 
 	ZLPaintContext *myContext;
 	BookModel *myModel;
+
+	std::map<std::string,ActionCode> myKeyBindings;
 };
 
 #endif /* __FBREADER_H__ */
