@@ -296,6 +296,8 @@ void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
 
 void FBReader::doAction(ActionCode code) {
 	switch (code) {
+		case NO_ACTION:
+			break;
 		case ACTION_SHOW_COLLECTION:
 			setMode(BOOK_COLLECTION_MODE);
 			break;

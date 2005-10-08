@@ -353,6 +353,10 @@ void KeyOptionView::_createItem() {
 	myLabel->setTextFormat(QObject::PlainText);
 	layout->addWidget(myLabel, 1, 0);
 	myComboBox = new QComboBox(myWidget);
+	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
+	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); it++) {
+		myComboBox->insertItem(it->c_str());
+	}
 	layout->addWidget(myComboBox, 1, 1);
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }

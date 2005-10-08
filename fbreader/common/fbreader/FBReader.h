@@ -43,6 +43,7 @@ class FBReader : public ZLApplication {
 
 public:
 	enum ActionCode {
+		NO_ACTION,
 		ACTION_SHOW_COLLECTION,
 		ACTION_SHOW_OPTIONS,
 		ACTION_UNDO,
@@ -72,7 +73,6 @@ public:
 		ACTION_ROTATE_SCREEN,
 		ACTION_SHOW_LAST_BOOKS,
 		ACTION_QUIT,
-		LAST_ACTION,
 	};
 
 protected:
@@ -118,9 +118,6 @@ public:
 	static ZLStringOption SearchPatternOption;
 
 	static const std::string HelpDirectory;
-
-public:
-	static std::string actionName(ActionCode code);
 
 protected:
 	FBReader(ZLPaintContext *context, const std::string& bookToOpen = std::string()) FB_SECTION;

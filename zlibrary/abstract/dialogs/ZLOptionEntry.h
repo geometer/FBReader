@@ -237,6 +237,9 @@ class ZLKeyOptionEntry : public ZLOptionEntry {
 public:
 	ZLKeyOptionEntry(const std::string &name) DIALOG_SECTION;
 	~ZLKeyOptionEntry() DIALOG_SECTION;
+	void addActionName(const std::string &actionName) DIALOG_SECTION;
+	const std::vector<std::string> &actionNames() const DIALOG_SECTION;
+	virtual void onAccept() DIALOG_SECTION = 0;
 
 protected:
 	ZLOptionKind kind() const DIALOG_SECTION;
@@ -244,6 +247,7 @@ protected:
 
 private:
 	std::string myName;
+	std::vector<std::string> myActionNames;
 };
 
 class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
@@ -327,6 +331,8 @@ inline void ZLSimpleColorOptionEntry::onAccept(ZLColor color) { myOption.setValu
 
 inline ZLKeyOptionEntry::ZLKeyOptionEntry(const std::string &name) : myName(name) {}
 inline ZLKeyOptionEntry::~ZLKeyOptionEntry() {}
+inline void ZLKeyOptionEntry::addActionName(const std::string &actionName) { myActionNames.push_back(actionName); }
+inline const std::vector<std::string> &ZLKeyOptionEntry::actionNames() const { return myActionNames; }
 inline ZLOptionKind ZLKeyOptionEntry::kind() const { return KEY; }
 inline const std::string &ZLKeyOptionEntry::name() const { return myName; }
 
