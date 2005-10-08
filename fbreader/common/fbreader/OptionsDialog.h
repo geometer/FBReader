@@ -22,6 +22,8 @@
 #ifndef __OPTIONSDIALOG_H__
 #define __OPTIONSDIALOG_H__
 
+class FBReader;
+
 class ZLOptionsDialog;
 class OptionsPage;
 class ScrollingOptionsPage;
@@ -41,7 +43,7 @@ struct IndicatorPage {
 class OptionsDialog {
 
 public:
-	OptionsDialog(ZLPaintContext &context) FB_DIALOG_SECTION;
+	OptionsDialog(FBReader &fbreader, ZLPaintContext &context) FB_DIALOG_SECTION;
 	~OptionsDialog() FB_DIALOG_SECTION;
 
 	ZLOptionsDialog &dialog() FB_DIALOG_SECTION;

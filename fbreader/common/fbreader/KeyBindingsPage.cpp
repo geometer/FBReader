@@ -28,19 +28,22 @@
 class FBReaderKeyOptionEntry : public ZLKeyOptionEntry {
 
 public:
-	FBReaderKeyOptionEntry();
+	FBReaderKeyOptionEntry(FBReader &fbreader);
 	~FBReaderKeyOptionEntry();
 	void onAccept();
 
 private:
 	void addAction(FBReader::ActionCode code, const std::string &name);
+
+private:
+	FBReader &myFBReader;
 };
 
 void FBReaderKeyOptionEntry::addAction(FBReader::ActionCode code, const std::string &name) {
 	addActionName(name);
 }
 
-FBReaderKeyOptionEntry::FBReaderKeyOptionEntry() : ZLKeyOptionEntry("Key settings") {
+FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOptionEntry("Key settings"), myFBReader(fbreader) {
 	addAction(FBReader::NO_ACTION, "None");
 
 	// switch view
@@ -70,9 +73,9 @@ FBReaderKeyOptionEntry::FBReaderKeyOptionEntry() : ZLKeyOptionEntry("Key setting
 	addAction(FBReader::ACTION_SHOW_HIDE_POSITION_INDICATOR, "Toggle Position Indicator");
 	addAction(FBReader::ACTION_TOGGLE_FULLSCREEN, "Toggle Fullscreen Mode");
 	addAction(FBReader::ACTION_FULLSCREEN_ON, "Switch To Fullscreen Mode");
-	//if (FBReader::isRotationSupported()) {
+	if (myFBReader.isRotationSupported()) {
 		addAction(FBReader::ACTION_ROTATE_SCREEN, "Rotate Screen");
-	//}
+	}
 
 	// dialogs
 	addAction(FBReader::ACTION_SHOW_OPTIONS, "Show Options Dialog");
@@ -90,6 +93,6 @@ FBReaderKeyOptionEntry::~FBReaderKeyOptionEntry() {
 void FBReaderKeyOptionEntry::onAccept() {
 }
 
-KeyBindingsPage::KeyBindingsPage(ZLOptionsDialogTab *dialogTab) {
-	dialogTab->addOption(new FBReaderKeyOptionEntry());
+KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
+	dialogTab->addOption(new FBReaderKeyOptionEntry(fbreader));
 }

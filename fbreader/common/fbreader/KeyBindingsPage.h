@@ -24,12 +24,13 @@
 
 #include "OptionsPage.h"
 
+class FBReader;
 class ZLOptionsDialogTab;
 
 class KeyBindingsPage {
 
 public:
-	KeyBindingsPage(ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
+	KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
 	~KeyBindingsPage() FB_DIALOG_SECTION;
 };
 

@@ -252,7 +252,7 @@ void FBReader::bookInfoSlot() {
 }
 
 void FBReader::optionsSlot() {
-	OptionsDialog optionsDialog(*myContext);
+	OptionsDialog optionsDialog(*this, *myContext);
 	optionsDialog.dialog().run("");
 	clearTextCaches();
 	repaintView();

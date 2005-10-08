@@ -60,7 +60,7 @@ void ShowIndicatorEntry::onValueChange(bool value) {
 	myPage.EnableNavigationEntry->setVisible(value);
 }
 
-OptionsDialog::OptionsDialog(ZLPaintContext &context) {
+OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
 	ZLOptionsDialogTab *generalTab = myDialog->createTab("General");
@@ -97,7 +97,7 @@ OptionsDialog::OptionsDialog(ZLPaintContext &context) {
 	myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
 
 	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
-	myKeyBindingsPage = new KeyBindingsPage(myDialog->createTab("Keys"));
+	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
 }
 
 OptionsDialog::~OptionsDialog() {

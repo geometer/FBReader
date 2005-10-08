@@ -139,7 +139,6 @@ protected:
 	virtual void toggleFullscreenSlot() FB_SECTION = 0;
 	virtual bool isFullscreen() const FB_SECTION = 0;
 	virtual void quitSlot() FB_SECTION = 0;
-	virtual bool isRotationSupported() const FB_SECTION = 0;
 
 	virtual void bookInfoSlot() FB_SECTION;
 	virtual void optionsSlot() FB_SECTION;
@@ -154,6 +153,7 @@ private:
 	void FBReader::doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
 
 public:
+	virtual bool isRotationSupported() const FB_SECTION = 0;
 	void openBook(BookDescriptionPtr description) FB_SECTION;
 	BookTextView &textView() const FB_SECTION;
 	void showBookTextView() FB_SECTION;
