@@ -240,6 +240,8 @@ public:
 	void addActionName(const std::string &actionName) DIALOG_SECTION;
 	const std::vector<std::string> &actionNames() const DIALOG_SECTION;
 	virtual void onAccept() DIALOG_SECTION = 0;
+	virtual int actionIndex(const std::string &key) DIALOG_SECTION = 0;
+	virtual void onValueChange(const std::string &key, int index) DIALOG_SECTION = 0;
 
 protected:
 	ZLOptionKind kind() const DIALOG_SECTION;

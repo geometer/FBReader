@@ -583,14 +583,26 @@ void FBReader::clearTextCaches() {
 }
 
 void FBReader::bindKey(const std::string &key, ActionCode code) {
-	myKeyBindings[key] = code;
+	if (code == NO_ACTION) {
+		std::map<std::string,ActionCode>::iterator it = myKeyBindings.find(key);
+		if (it != myKeyBindings.end()) {
+			myKeyBindings.erase(it);
+		}
+	} else {
+		myKeyBindings[key] = code;
+	}
 }
 
-void FBReader::doAction(const std::string &keyName) {
-	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(keyName);
+void FBReader::doAction(const std::string &key) {
+	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(key);
 	if (it != myKeyBindings.end()) {
 		doAction(it->second);
 	}
+}
+
+FBReader::ActionCode FBReader::keyBinding(const std::string &key) {
+	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(key);
+	return (it != myKeyBindings.end()) ? it->second : NO_ACTION;
 }
 
 // vim:ts=2:sw=2:noet

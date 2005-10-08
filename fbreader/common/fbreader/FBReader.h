@@ -144,7 +144,7 @@ protected:
 	virtual void optionsSlot() FB_SECTION;
 	virtual void addBookSlot() FB_SECTION;
 
-	void bindKey(const std::string &key, ActionCode code) FB_SECTION;
+	void doAction(const std::string &key) FB_SECTION;
 
 private:
 	BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
@@ -162,7 +162,9 @@ public:
 	virtual void enableMenuButtons() FB_SECTION;
 	void repaintView() FB_SECTION;
 	void doAction(ActionCode code) FB_SECTION;
-	void doAction(const std::string &keyName) FB_SECTION;
+
+	void bindKey(const std::string &key, ActionCode code) FB_SECTION;
+	ActionCode keyBinding(const std::string &key) FB_SECTION;
 
 protected:
 	ViewMode myMode;

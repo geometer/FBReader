@@ -229,8 +229,10 @@ void KeyButton::mousePressEvent(QMouseEvent*) {
 void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
 	std::string keyText = QKeyUtil::keyName(keyEvent);
 	if (!keyText.empty()) {
+		myKeyView.myCurrentKey = keyText;
 		myKeyView.myLabel->setText("Action For " + QString::fromUtf8(keyText.c_str()));
 		myKeyView.myLabel->show();
+		myKeyView.myComboBox->setCurrentItem(((ZLKeyOptionEntry*)myKeyView.myOption)->actionIndex(keyText));
 		myKeyView.myComboBox->show();
 	}
 }
@@ -248,6 +250,7 @@ void KeyOptionView::_createItem() {
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); it++) {
 		myComboBox->insertItem(it->c_str());
 	}
+	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChange(int)));
 	layout->addWidget(myComboBox, 1, 1);
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
@@ -272,6 +275,13 @@ void KeyOptionView::_hide() {
 }
 
 void KeyOptionView::_onAccept() const {
+	((ZLKeyOptionEntry*)myOption)->onAccept();
+}
+
+void KeyOptionView::onValueChange(int index) {
+	if (!myCurrentKey.empty()) {
+		((ZLKeyOptionEntry*)myOption)->onValueChange(myCurrentKey, index);
+	}
 }
 
 void ColorOptionView::_createItem() {

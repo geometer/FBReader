@@ -31,15 +31,23 @@ public:
 	FBReaderKeyOptionEntry(FBReader &fbreader);
 	~FBReaderKeyOptionEntry();
 	void onAccept();
+	int actionIndex(const std::string &key);
+	void onValueChange(const std::string &key, int index);
 
 private:
 	void addAction(FBReader::ActionCode code, const std::string &name);
 
 private:
 	FBReader &myFBReader;
+	std::vector<FBReader::ActionCode> myCodeByIndex;
+	std::map<FBReader::ActionCode,int> myIndexByCode;
+
+	std::map<std::string,FBReader::ActionCode> myChangedCodes;
 };
 
 void FBReaderKeyOptionEntry::addAction(FBReader::ActionCode code, const std::string &name) {
+	myIndexByCode[code] = myCodeByIndex.size();
+	myCodeByIndex.push_back(code);
 	addActionName(name);
 }
 
@@ -91,6 +99,18 @@ FBReaderKeyOptionEntry::~FBReaderKeyOptionEntry() {
 }
 
 void FBReaderKeyOptionEntry::onAccept() {
+	for (std::map<std::string,FBReader::ActionCode>::const_iterator it = myChangedCodes.begin(); it != myChangedCodes.end(); it++) {
+		myFBReader.bindKey(it->first, it->second);
+	}
+}
+
+int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {
+	std::map<std::string,FBReader::ActionCode>::const_iterator it = myChangedCodes.find(key);
+	return myIndexByCode[(it != myChangedCodes.end()) ? it->second : myFBReader.keyBinding(key)];
+}
+
+void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
+	myChangedCodes[key] = myCodeByIndex[index];
 }
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
