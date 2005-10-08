@@ -192,6 +192,9 @@ protected:
 	void _hide();
 	void _onAccept() const;
 
+private slots:
+	void onValueChange(int);
+
 private:
 	QWidget *myWidget;
 	QPushButton *myKeyButton;
