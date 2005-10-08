@@ -71,6 +71,8 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	bindKey("<Esc>", ACTION_CANCEL);
 	bindKey("<Return>", ACTION_TOGGLE_FULLSCREEN);
 
+	readBindings();
+
 	createToolbar();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 

@@ -69,6 +69,8 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	bindKey("<OK>", ACTION_TOGGLE_FULLSCREEN);
 	bindKey("<Return>", ACTION_TOGGLE_FULLSCREEN);
 
+	readBindings();
+
 	myFullScreen = false;
 
 	createToolbar();

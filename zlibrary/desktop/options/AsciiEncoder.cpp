@@ -27,7 +27,11 @@ std::string AsciiEncoder::encode(const std::string &source) {
 	target.reserve(4 * source.length());
 	for (unsigned int i = 0; i < source.length(); i++) {
 		unsigned char num = source[i];
-		if ((num > 0x20) && (num < 0x7F) && ((int)SpecialSymbols.find(num) == -1)) {
+		if (source[i] == '>') {
+			target += "&gt;";
+		} else if (source[i] == '<') {
+			target += "&lt;";
+		} else if ((num >= 0x20) && (num < 0x7F) && ((int)SpecialSymbols.find(num) == -1)) {
 			if (source[i] == '\\') {
 				target += '\\';
 			}

@@ -146,6 +146,10 @@ protected:
 
 	void doAction(const std::string &key) FB_SECTION;
 
+	// TODO: move to private (read default bindings from file)
+	void readBindings() FB_SECTION;
+	void saveBindings() FB_SECTION;
+
 private:
 	BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
