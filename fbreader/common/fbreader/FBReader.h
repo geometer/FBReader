@@ -56,26 +56,26 @@ public:
 		ACTION_FIND_PREVIOUS = 7,
 		ACTION_FIND_NEXT = 8,
 		ACTION_LARGE_SCROLL_FORWARD = 9,
-		ACTION_LARGE_SCROLL_BACKWARD = 11,
-		ACTION_SMALL_SCROLL_FORWARD = 12,
-		ACTION_SMALL_SCROLL_BACKWARD = 13,
-		ACTION_MOUSE_SCROLL_FORWARD = 14,
-		ACTION_MOUSE_SCROLL_BACKWARD = 15,
-		ACTION_SCROLL_TO_HOME = 16,
-		ACTION_SCROLL_TO_START_OF_TEXT = 17,
-		ACTION_SCROLL_TO_END_OF_TEXT = 18,
-		ACTION_CANCEL = 19,
-		ACTION_INCREASE_FONT = 20,
-		ACTION_DECREASE_FONT = 21,
-		ACTION_SHOW_HIDE_POSITION_INDICATOR = 22,
-		ACTION_TOGGLE_FULLSCREEN = 23,
-		ACTION_FULLSCREEN_ON = 24,
-		ACTION_ADD_BOOK = 25,
-		ACTION_SHOW_BOOK_INFO = 26,
-		ACTION_SHOW_HELP = 27,
-		ACTION_ROTATE_SCREEN = 28,
-		ACTION_SHOW_LAST_BOOKS = 29,
-		ACTION_QUIT = 30,
+		ACTION_LARGE_SCROLL_BACKWARD = 10,
+		ACTION_SMALL_SCROLL_FORWARD = 11,
+		ACTION_SMALL_SCROLL_BACKWARD = 12,
+		ACTION_MOUSE_SCROLL_FORWARD = 13,
+		ACTION_MOUSE_SCROLL_BACKWARD = 14,
+		ACTION_SCROLL_TO_HOME = 15,
+		ACTION_SCROLL_TO_START_OF_TEXT = 16,
+		ACTION_SCROLL_TO_END_OF_TEXT = 17,
+		ACTION_CANCEL = 18,
+		ACTION_INCREASE_FONT = 19,
+		ACTION_DECREASE_FONT = 20,
+		ACTION_SHOW_HIDE_POSITION_INDICATOR = 21,
+		ACTION_TOGGLE_FULLSCREEN = 22,
+		ACTION_FULLSCREEN_ON = 23,
+		ACTION_ADD_BOOK = 24,
+		ACTION_SHOW_BOOK_INFO = 25,
+		ACTION_SHOW_HELP = 26,
+		ACTION_ROTATE_SCREEN = 27,
+		ACTION_SHOW_LAST_BOOKS = 28,
+		ACTION_QUIT = 29,
 	};
 
 protected:
@@ -107,6 +107,8 @@ public:
 	};
 
 public:
+	static const std::string KeymapFile;
+
 	static ZLBooleanOption QuitOnCancelOption;
 	static ZLBooleanOption StoreContentsPositionOption;
 
@@ -146,15 +148,14 @@ protected:
 
 	void doAction(const std::string &key) FB_SECTION;
 
-	// TODO: move to private (read default bindings from file)
-	void readBindings() FB_SECTION;
-	void saveBindings() FB_SECTION;
-
 private:
 	BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
 	void clearTextCaches() FB_SECTION;
 	void FBReader::doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
+
+	void readBindings() FB_SECTION;
+	void saveBindings() FB_SECTION;
 
 public:
 	virtual bool isRotationSupported() const FB_SECTION = 0;

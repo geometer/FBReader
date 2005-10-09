@@ -1,0 +1,24 @@
+<keymap>
+	<binding key="&lt;L&gt;" action="1"/>
+	<binding key="&lt;O&gt;" action="2"/>
+	<binding key="&lt;LeftArrow&gt;" action="3"/>
+	<binding key="&lt;RightArrow&gt;" action="4"/>
+	<binding key="&lt;C&gt;" action="5"/>
+	<binding key="&lt;F&gt;" action="6"/>
+	<binding key="&lt;P&gt;" action="7"/>
+	<binding key="&lt;N&gt;" action="8"/>
+	<binding key="&lt;F7&gt;" action="9"/>
+	<binding key="&lt;F8&gt;" action="10"/>
+	<binding key="&lt;DownArrow&gt;" action="9"/>
+	<binding key="&lt;UpArrow&gt;" action="10"/>
+	<binding key="&lt;Ctrl&gt;+&lt;Home&gt;" action="15"/>
+	<binding key="&lt;Home&gt;" action="16"/>
+	<binding key="&lt;End&gt;" action="17"/>
+	<binding key="&lt;Esc&gt;" action="18"/>
+	<binding key="&lt;D&gt;" action="21"/>
+	<binding key="&lt;F6&gt;" action="22"/>
+	<binding key="&lt;A&gt;" action="24"/>
+	<binding key="&lt;I&gt;" action="25"/>
+	<binding key="&lt;Return&gt;" action="27"/>
+	<binding key="&lt;Z&gt;" action="28"/>
+</keymap>

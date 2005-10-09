@@ -51,31 +51,6 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myViewWidget = new QViewWidget(this, this);
 	setCentralWidget((QViewWidget*)myViewWidget);
 
-	bindKey("<L>", ACTION_SHOW_COLLECTION);
-	bindKey("<Z>", ACTION_SHOW_LAST_BOOKS);
-	bindKey("<C>", ACTION_SHOW_CONTENTS);
-	bindKey("<F>", ACTION_SEARCH);
-	bindKey("<N>", ACTION_FIND_NEXT);
-	bindKey("<P>", ACTION_FIND_PREVIOUS);
-	bindKey("<O>", ACTION_SHOW_OPTIONS);
-	bindKey("<I>", ACTION_SHOW_BOOK_INFO);
-	bindKey("<D>", ACTION_SHOW_HIDE_POSITION_INDICATOR);
-	bindKey("<A>", ACTION_ADD_BOOK);
-	bindKey("<R>", ACTION_ROTATE_SCREEN);
-	bindKey("<->", ACTION_DECREASE_FONT);
-	bindKey("<=>", ACTION_INCREASE_FONT);
-	bindKey("<LeftArrow>", ACTION_UNDO);
-	bindKey("<RightArrow>", ACTION_REDO);
-	bindKey("<PageUp>", ACTION_LARGE_SCROLL_BACKWARD);
-	bindKey("<PageDown>", ACTION_LARGE_SCROLL_FORWARD);
-	bindKey("<UpArrow>", ACTION_SMALL_SCROLL_BACKWARD);
-	bindKey("<DownArrow>", ACTION_SMALL_SCROLL_FORWARD);
-	bindKey("<Home>", ACTION_SCROLL_TO_START_OF_TEXT);
-	bindKey("<End>", ACTION_SCROLL_TO_END_OF_TEXT);
-	bindKey("<Esc>", ACTION_CANCEL);
-
-	readBindings();
-
 	createToolbar();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 	resize(Width.value(), Height.value());

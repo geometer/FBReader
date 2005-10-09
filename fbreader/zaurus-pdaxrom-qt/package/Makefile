@@ -28,8 +28,10 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 .tmpdir:
 	@cp ../../FBReader usr/lib/qt/bin
 	@cp -r ../../share/FBReader usr/share
-	@mkdir share/FBReader/help
-	@cp ../../data/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2
+	@mkdir -p usr/share/FBReader/help
+	@cp ../../data/help/HowToStart.brownish.fb2 usr/share/FBReader/help/HowToStart.fb2
+	@mkdir -p usr/share/FBReader/default
+	@cp ../../data/default/keymap.desktop.xml usr/share/FBReader/default/keymap.xml
 	@mkdir -p usr/share/pixmaps/FBReader
 	@cp `find ../../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)

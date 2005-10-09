@@ -61,6 +61,8 @@ ifeq "$(TARGET_ARCH)" "desktop-qt"
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -m 0644 data/help/HowToStart.brownish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
+	install -m 0644 data/default/keymap.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
 endif
 ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	install -d $(DESTDIR)$(INSTALLDIR)/bin
@@ -76,6 +78,8 @@ ifeq "$(TARGET_ARCH)" "desktop-gtk"
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -m 0644 data/help/HowToStart.brownish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
+	install -m 0644 data/default/keymap.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
 endif
 ifeq "$(TARGET_ARCH)" "maemo"
 	install -d $(DESTDIR)$(INSTALLDIR)/bin
@@ -90,6 +94,8 @@ ifeq "$(TARGET_ARCH)" "maemo"
 	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
 	install -m 0644 data/help/HowToStart.blueish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
+	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
+	install -m 0644 data/default/keymap.maemo.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
 	install -d $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	install -d $(DESTDIR)/usr/share/applications/hildon

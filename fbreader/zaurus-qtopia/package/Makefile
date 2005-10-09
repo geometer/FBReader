@@ -25,6 +25,8 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 	@cp -r ../../share .
 	@mkdir share/FBReader/help
 	@cp ../../data/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2
+	@mkdir share/FBReader/default
+	@cp ../../data/default/keymap.qtopia.xml share/FBReader/default/keymap.xml
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 

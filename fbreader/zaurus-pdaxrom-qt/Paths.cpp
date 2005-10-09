@@ -27,6 +27,7 @@
 #include "QFBReader.h"
 #include "Paths.h"
 
+const std::string FBReader::KeymapFile = "/usr/share/FBReader/default/keymap.xml";
 const std::string TeXHyphenator::PatternZip = "/usr/share/FBReader/hyphenationPatterns.zip";
 //const std::string DocBookReader::DTDDirectory = "/usr/share/FBReader/formats/docbook";
 const std::string HtmlEntityExtension::CollectionFile = "/usr/share/FBReader/formats/html/html.ent";

@@ -49,28 +49,6 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myViewWidget = new QViewWidget(this, this);
 	setCentralWidget((QViewWidget*)myViewWidget);
 
-	bindKey("<L>", ACTION_SHOW_COLLECTION);
-	bindKey("<Z>", ACTION_SHOW_LAST_BOOKS);
-	bindKey("<C>", ACTION_SHOW_CONTENTS);
-	bindKey("<F>", ACTION_SEARCH);
-	bindKey("<N>", ACTION_FIND_NEXT);
-	bindKey("<P>", ACTION_FIND_PREVIOUS);
-	bindKey("<O>", ACTION_SHOW_OPTIONS);
-	bindKey("<I>", ACTION_SHOW_BOOK_INFO);
-	bindKey("<D>", ACTION_SHOW_HIDE_POSITION_INDICATOR);
-	bindKey("<A>", ACTION_ADD_BOOK);
-	bindKey("<Font ->", ACTION_DECREASE_FONT);
-	bindKey("<Font +>", ACTION_INCREASE_FONT);
-	bindKey("<LeftArrow>", ACTION_UNDO);
-	bindKey("<RightArrow>", ACTION_REDO);
-	bindKey("<UpArrow>", ACTION_LARGE_SCROLL_BACKWARD);
-	bindKey("<DownArrow>", ACTION_LARGE_SCROLL_FORWARD);
-	bindKey("<Esc>", ACTION_CANCEL);
-	bindKey("<OK>", ACTION_TOGGLE_FULLSCREEN);
-	bindKey("<Return>", ACTION_TOGGLE_FULLSCREEN);
-
-	readBindings();
-
 	myFullScreen = false;
 
 	createToolbar();

@@ -26,7 +26,6 @@
 #include <abstract/ZLPaintContext.h>
 #include <abstract/ZLDir.h>
 #include <abstract/ZLWaitMessage.h>
-#include <abstract/ZLStringUtil.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -140,6 +139,8 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 		}
 	}
 	openBook(description);
+
+	readBindings();
 }
 
 FBReader::~FBReader() {
@@ -606,43 +607,6 @@ void FBReader::doAction(const std::string &key) {
 FBReader::ActionCode FBReader::keyBinding(const std::string &key) {
 	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(key);
 	return (it != myKeyBindings.end()) ? it->second : NO_ACTION;
-}
-
-static const std::string BINDINGS_GROUP = "Keys";
-static const std::string BINDINGS_NUMBER = "Number";
-static const std::string BINDED_KEY = "Key";
-static const std::string BINDED_ACTION = "Action";
-
-void FBReader::readBindings() {
-	int size = ZLIntegerRangeOption(BINDINGS_GROUP, BINDINGS_NUMBER, 0, 256, 0).value();
-	for (int i = 0; i < size; i++) {
-		std::string key = BINDED_KEY;
-		ZLStringUtil::appendNumber(key, i);
-		std::string keyValue = ZLStringOption(BINDINGS_GROUP, key, "").value();
-		if (!keyValue.empty()) {
-			std::string action = BINDED_ACTION;
-			ZLStringUtil::appendNumber(action, i);
-			int actionValue = ZLIntegerOption(BINDINGS_GROUP, action, -1).value();
-			if (actionValue != -1) {
-				bindKey(keyValue, (ActionCode)actionValue);
-			}
-		}
-	}
-}
-
-void FBReader::saveBindings() {
-	ZLOption::clearGroup(BINDINGS_GROUP);
-	int counter = 0;
-	for (std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.begin(); it != myKeyBindings.end(); it++) {
-		std::string key = BINDED_KEY;
-		ZLStringUtil::appendNumber(key, counter);
-		std::string action = BINDED_ACTION;
-		ZLStringUtil::appendNumber(action, counter);
-		ZLStringOption(BINDINGS_GROUP, key, "").setValue(it->first);
-		ZLIntegerOption(BINDINGS_GROUP, action, -1).setValue(it->second);
-		counter++;
-	}
-	ZLIntegerRangeOption(BINDINGS_GROUP, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
 }
 
 // vim:ts=2:sw=2:noet

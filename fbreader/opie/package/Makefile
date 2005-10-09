@@ -21,6 +21,10 @@ clean: .cleandir
 	@cp ../../icons/22x18/FBReader/*.png $(BASEDIR)/pics/fbreader
 	@cp -r ../../share  $(BASEDIR)
 	@rm -rf `find $(BASEDIR)/share -name ".svn"`
+	@mkdir $(BASEDIR)/share/FBReader/help
+	@cp ../../data/help/HowToStart.brownish.fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
+	@mkdir $(BASEDIR)/share/FBReader/default
+	@cp ../../data/default/keymap.qtopia.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 
 .buildpackage:
 	@dpkg -b data fbreader-opie_0.6.4_arm.ipk
