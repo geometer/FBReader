@@ -23,8 +23,8 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 	@ln -sf ../../icons/34x28 pics144
 	@ln -sf ../../icons/22x18 pics
 	@cp -r ../../share .
-	@rm share/FBReader/help/HowToStart.blueish.fb2
-	@mv share/FBReader/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2
+	@mkdir share/FBReader/help
+	@cp ../../data/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
