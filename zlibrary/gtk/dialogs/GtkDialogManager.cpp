@@ -72,14 +72,16 @@ ZLWaitMessage *GtkDialogManager::waitMessage(const std::string &message) const {
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (key->keyval == GDK_Return && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+	if (!((GtkDialogManager&)GtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
+		if (key->keyval == GDK_Return) {
+			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+			return true;
+		}
 
-		return true;
-	} else if (key->keyval == GDK_Escape && key->state == 0) {
-		gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-
-		return true;
+		if (key->keyval == GDK_Escape) {
+			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
+			return true;
+		}
 	}
 
 	return false;

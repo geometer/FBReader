@@ -34,6 +34,7 @@
 
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"
+#include "GtkDialogManager.h"
 
 static GtkWidget *labelWithMyParams(const char *text) {
 	GtkWidget *label = gtk_label_new(text);
@@ -313,16 +314,19 @@ static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
 
 static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {
 	gtk_button_set_label(GTK_BUTTON(button), "Press key to set action");
-	// TODO: grab keyboard
+	gdk_keyboard_grab(button->window, true, GDK_CURRENT_TIME);
+	((GtkDialogManager&)GtkDialogManager::instance()).grabKeyboard(true);
 }
 
 static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer) {
 	gtk_button_set_label(GTK_BUTTON(button), "Press this button to select key");
-	// TODO: ungrab keyboard
+	((GtkDialogManager&)GtkDialogManager::instance()).grabKeyboard(false);
+	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
 }
 
-static void key_view_key_press_event(GtkWidget *button, GdkEventKey *event, gpointer data) {
+static bool key_view_key_press_event(GtkWidget*, GdkEventKey *event, gpointer data) {
 	((KeyOptionView*)data)->setKey(GtkKeyUtil::keyName(event));
+	return true;
 }
 
 static void key_view_button_press_event(GtkWidget *button, GdkEventButton*, gpointer) {

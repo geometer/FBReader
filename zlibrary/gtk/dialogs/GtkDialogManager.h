@@ -32,7 +32,7 @@ public:
 	static void createInstance() { ourInstance = new GtkDialogManager(); }
 
 private:
-	GtkDialogManager() : myWindow(0) {}
+	GtkDialogManager() : myWindow(0), myIsKeyboardGrabbed(false) {}
 
 public:
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
@@ -47,9 +47,13 @@ public:
 
 	GtkDialog *createDialog(const std::string& title) const;
 
+	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
+	bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
+
 private:
 	std::string myPixmapPath;
 	GtkWindow *myWindow;
+	bool myIsKeyboardGrabbed;
 };
 
 #endif /* __GTKDIALOGMANAGER_H__ */
