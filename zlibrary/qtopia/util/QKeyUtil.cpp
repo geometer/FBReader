@@ -24,6 +24,7 @@
 #include <qevent.h>
 
 #include <abstract/ZLUnicodeUtil.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "QKeyUtil.h"
 
@@ -31,7 +32,6 @@ std::string QKeyUtil::keyName(QKeyEvent *keyEvent) {
 	QString txt = keyEvent->text();
 	int key = keyEvent->key();
 	int state = keyEvent->state();
-	std::cerr << "state = " << state << "\n";
 
 	std::string name;
 	if ((txt.length() == 1) && txt[0].isPrint() && !txt[0].isSpace()) {
@@ -40,7 +40,11 @@ std::string QKeyUtil::keyName(QKeyEvent *keyEvent) {
 		name = keyName(key);
 	}
 	if (name.empty()) {
-		return "";
+		std::string last;
+		ZLStringUtil::appendNumber(last, state);
+		last += "+";
+		ZLStringUtil::appendNumber(last, key);
+		return last;
 	}
 
 	name = '<' + name + '>';

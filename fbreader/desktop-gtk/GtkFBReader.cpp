@@ -22,11 +22,12 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <abstract/ZLDeviceInfo.h>
+
+#include <gtk/GtkDialogManager.h>
+#include <gtk/GtkKeyUtil.h>
 #include <gtk-desktop/GtkViewWidget.h>
 #include <gtk-desktop/GtkPaintContext.h>
-
-#include <abstract/ZLDeviceInfo.h>
-#include <gtk/GtkDialogManager.h>
 
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
@@ -93,31 +94,6 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
 
-	addKeyBinding("L", ACTION_SHOW_COLLECTION);
-	addKeyBinding("Z", ACTION_SHOW_LAST_BOOKS);
-	addKeyBinding("O", ACTION_SHOW_OPTIONS);
-	addKeyBinding("Left", ACTION_UNDO);
-	addKeyBinding("Right", ACTION_REDO);
-	addKeyBinding("C", ACTION_SHOW_CONTENTS);
-	addKeyBinding("F", ACTION_SEARCH);
-	addKeyBinding("P", ACTION_FIND_PREVIOUS);
-	addKeyBinding("N", ACTION_FIND_NEXT);
-	addKeyBinding("D", ACTION_SHOW_HIDE_POSITION_INDICATOR);
-	addKeyBinding("I", ACTION_SHOW_BOOK_INFO);
-	addKeyBinding("A", ACTION_ADD_BOOK);
-	addKeyBinding("R", ACTION_ROTATE_SCREEN);
-	addKeyBinding("Page_Up", ACTION_LARGE_SCROLL_BACKWARD);
-	addKeyBinding("Page_Down", ACTION_LARGE_SCROLL_FORWARD);
-	addKeyBinding("Up", ACTION_SMALL_SCROLL_BACKWARD);
-	addKeyBinding("Down", ACTION_SMALL_SCROLL_FORWARD);
-	addKeyBinding("<Ctrl>Home", ACTION_SCROLL_TO_HOME);
-	addKeyBinding("Home", ACTION_SCROLL_TO_START_OF_TEXT);
-	addKeyBinding("End", ACTION_SCROLL_TO_END_OF_TEXT);
-	addKeyBinding("Escape", ACTION_CANCEL);
-	addKeyBinding("minus", ACTION_DECREASE_FONT);
-	addKeyBinding("equal", ACTION_INCREASE_FONT);
-	addKeyBinding("Return", ACTION_TOGGLE_FULLSCREEN);
-
 	myFullScreen = false;
 }
 
@@ -147,26 +123,8 @@ GtkFBReader::~GtkFBReader() {
 	delete (GtkViewWidget*)myViewWidget;
 }
 
-void GtkFBReader::addKeyBinding(guint keyval, GdkModifierType state, ActionCode code) {
-	myKeyBindings[std::pair<guint,GdkModifierType>(keyval, state)] = code;
-}
-
-void GtkFBReader::addKeyBinding(const std::string &accelerator, ActionCode code) {
-	guint keyval;
-	GdkModifierType state;
-
-	gtk_accelerator_parse(accelerator.c_str(), &keyval, &state);
-	addKeyBinding(keyval, state, code);
-}
-
 void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
-	//std::cerr << gtk_accelerator_name(event->keyval, (GdkModifierType)event->state) << "\n";
-	std::map<std::pair<guint,GdkModifierType>,ActionCode>::const_iterator
-		accelerator = myKeyBindings.find(std::pair<guint,GdkModifierType>(event->keyval, (GdkModifierType)event->state));
-
-	if (accelerator != myKeyBindings.end()) {
-		doAction(accelerator->second);
-	}
+	doAction(GtkKeyUtil::keyName(event));
 }
 
 void GtkFBReader::handleScrollEventSlot(GdkEventScroll *event) {

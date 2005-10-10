@@ -62,18 +62,12 @@ public:
 	GtkWindow *getMainWindow() { return myMainWindow; }
 
 private:
-	void addKeyBinding(guint keyval, GdkModifierType state, ActionCode code);
-	void addKeyBinding(const std::string &accelerator, ActionCode code);
-
-private:
 	GtkWindow *myMainWindow;
 	GtkWidget *myToolbar;
 
 	bool myFullScreen;
 
-	std::map<std::pair<guint,GdkModifierType>,ActionCode> myKeyBindings;
 	std::map<ActionCode,GtkWidget*> myButtons;
-
 	std::map<ActionCode,ActionSlotData*> myActions;
 };
 

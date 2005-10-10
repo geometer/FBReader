@@ -18,6 +18,7 @@
 	<binding key="&lt;=&gt;" action="19"/>
 	<binding key="&lt;-&gt;" action="20"/>
 	<binding key="&lt;D&gt;" action="21"/>
+	<binding key="&lt;Return&gt;" action="22"/>
 	<binding key="&lt;A&gt;" action="24"/>
 	<binding key="&lt;I&gt;" action="25"/>
 	<binding key="&lt;R&gt;" action="27"/>
