@@ -65,6 +65,8 @@ protected:
 	// TODO: replace by pure virtual method
 	virtual void _setActive(bool active) {}
 	virtual void _onAccept() const = 0;
+	static void _onValueChange (GtkWidget*, gpointer self);
+	virtual void onValueChange() {}
 
 protected:
 	GtkOptionsDialogTab *myTab;
@@ -108,7 +110,6 @@ protected:
 
 private:
 	void onValueChange(void);
-	static void _onValueChange (GtkWidget *, gpointer);
 
 private:
 	GtkWidget *myCheckBox;
@@ -159,7 +160,6 @@ protected:
 
 private:
 	void onValueChange(void);
-	static void _onValueChange (GtkWidget *, gpointer);
 	
 private:
 	GtkWidget *myLabel, *myComboBox;
@@ -194,6 +194,8 @@ public:
 	KeyOptionView(ZLKeyOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
 	virtual ~KeyOptionView(void) {}
 
+	void setKey(const std::string &key);
+
 protected:
 	void _createItem();
 	void _show();
@@ -201,7 +203,11 @@ protected:
 	void _onAccept() const;
 
 private:
-	GtkWidget *myWidget;
+	void onValueChange();
+
+private:
+	GtkWidget *myWidget, *myKeyButton, *myLabel, *myComboBox;
+	std::string myCurrentKey;
 };
 
 #endif /* __GTKOPTIONVIEW_H__ */

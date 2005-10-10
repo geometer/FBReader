@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <gtk/gtk.h>
 #include <gtk/gtkcheckbutton.h>
 #include <gtk/gtklabel.h>
@@ -29,15 +27,13 @@
 #include <gtk/gtkhbox.h>
 #include <gtk/gtkspinbutton.h>
 #include <gtk/gtkdrawingarea.h>
-// #include <gtk/gtkcolorseldialog.h>
 #include <gtk/gtkhscale.h>
 #include <gtk/gtkframe.h>
 
+#include <gtk/GtkKeyUtil.h>
+
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"
-
-// FIXME: geometer did some work on arranging the controls, mss will fix it
-// later when the functionality is really working
 
 static GtkWidget *labelWithMyParams(const char *text) {
 	GtkWidget *label = gtk_label_new(text);
@@ -45,6 +41,10 @@ static GtkWidget *labelWithMyParams(const char *text) {
 	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_RIGHT);
 
 	return label;
+}
+
+void GtkOptionView::_onValueChange(GtkWidget*, gpointer self) {
+	((GtkOptionView*)self)->onValueChange();
 }
 
 void BooleanOptionView::_createItem() {
@@ -64,10 +64,6 @@ void BooleanOptionView::_hide() {
 
 void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry*)myOption)->onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
-}
-
-void BooleanOptionView::_onValueChange(GtkWidget *, gpointer self) {
-	((BooleanOptionView*)self)->onValueChange();
 }
 
 void BooleanOptionView::onValueChange() {
@@ -126,12 +122,9 @@ void ComboOptionView::_createItem() {
 
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); it++, index++) {
 		GtkWidget *menuItem = gtk_menu_item_new_with_label(it->c_str());
-
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuItem);
-
 		if (*it == initial) {
 			selectedIndex = index;
-
 			gtk_menu_set_active(GTK_MENU(menu), index);
 		}
 		gtk_widget_show(menuItem);
@@ -171,10 +164,6 @@ void ComboOptionView::_onAccept() const {
 	if ((index >= 0) && (index < (int)o->values().size())) {
 		((ZLComboOptionEntry*)myOption)->onAccept(o->values()[index]);
 	}
-}
-
-void ComboOptionView::_onValueChange(GtkWidget *, gpointer self) {
-	((ComboOptionView *)self)->onValueChange();
 }
 
 void ComboOptionView::onValueChange() {
@@ -320,20 +309,86 @@ void ColorOptionView::_onAccept() const {
 }
 
 static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
-	//((GtkFBReader*)data)->handleKeyEventSlot(event);
-	std::cerr << ":: " << event->state << " : " << event->keyval << "\n";
+}
+
+static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {
+	gtk_button_set_label(GTK_BUTTON(button), "Press key to set action");
+	// TODO: grab keyboard
+}
+
+static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer) {
+	gtk_button_set_label(GTK_BUTTON(button), "Press this button to select key");
+	// TODO: ungrab keyboard
+}
+
+static void key_view_key_press_event(GtkWidget *button, GdkEventKey *event, gpointer data) {
+	((KeyOptionView*)data)->setKey(GtkKeyUtil::keyName(event));
+}
+
+static void key_view_button_press_event(GtkWidget *button, GdkEventButton*, gpointer) {
+	gtk_widget_grab_focus(button);
 }
 
 void KeyOptionView::_createItem() {
-	myWidget = gtk_entry_new();
-	gtk_entry_set_text(GTK_ENTRY(myWidget), "text");
+	myKeyButton = gtk_button_new();
+	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_in_event", G_CALLBACK(key_view_focus_in_event), 0);
+	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_out_event", G_CALLBACK(key_view_focus_out_event), 0);
+	gtk_signal_connect(GTK_OBJECT(myKeyButton), "key_press_event", G_CALLBACK(key_view_key_press_event), this);
+	gtk_signal_connect(GTK_OBJECT(myKeyButton), "button_press_event", G_CALLBACK(key_view_button_press_event), 0);
+	key_view_focus_out_event(myKeyButton, 0, 0);
+
+	myLabel = gtk_label_new("");
+
+	myComboBox = gtk_option_menu_new();
+	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
+	GtkWidget *menu = gtk_menu_new();
+	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); it++) {
+		GtkWidget *menuItem = gtk_menu_item_new_with_label(it->c_str());
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuItem);
+		gtk_widget_show(menuItem);
+	}
+	gtk_option_menu_set_menu(GTK_OPTION_MENU(myComboBox), menu);
+
+	myWidget = gtk_table_new(2, 2, false);
+	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 5);
+	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 5);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myKeyButton, 0, 2, 0, 1);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myLabel, 0, 1, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), myComboBox, 1, 2, 1, 2);
+	g_signal_connect(myComboBox, "changed", G_CALLBACK(_onValueChange), this);
 
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
-	gtk_signal_connect(GTK_OBJECT(myWidget), "key_press_event", G_CALLBACK(handleKeyEvent), this);
+}
+
+void KeyOptionView::onValueChange() {
+	if (!myCurrentKey.empty()) {
+		((ZLKeyOptionEntry*)myOption)->onValueChange(
+			myCurrentKey,
+			gtk_option_menu_get_history(GTK_OPTION_MENU(myComboBox))
+		);
+	}
+}
+
+void KeyOptionView::setKey(const std::string &key) {
+	if (!key.empty()) {
+		myCurrentKey = key;
+		gtk_label_set_text(GTK_LABEL(myLabel), ("Action For " + key).c_str());
+		gtk_widget_show(myLabel);
+		gtk_option_menu_set_history(GTK_OPTION_MENU(myComboBox), ((ZLKeyOptionEntry*)myOption)->actionIndex(key));
+		gtk_widget_show(myComboBox);
+	}
 }
 
 void KeyOptionView::_show() {
 	gtk_widget_show(myWidget);
+	gtk_widget_show(myKeyButton);
+	if (!myCurrentKey.empty()) {
+		gtk_widget_show(myLabel);
+		gtk_widget_show(myComboBox);
+	} else {
+		gtk_widget_hide(myLabel);
+		gtk_widget_hide(myComboBox);
+	}
 }
 
 void KeyOptionView::_hide() {
@@ -341,6 +396,7 @@ void KeyOptionView::_hide() {
 }
 
 void KeyOptionView::_onAccept() const {
+	((ZLKeyOptionEntry*)myOption)->onAccept();
 }
 
 // vim:ts=2:sw=2:noet
