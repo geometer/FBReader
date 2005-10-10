@@ -23,15 +23,20 @@
 #include <qobject.h>
 #include <qevent.h>
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "QKeyUtil.h"
 
 std::string QKeyUtil::keyName(QKeyEvent *keyEvent) {
 	QString txt = keyEvent->text();
 	int key = keyEvent->key();
 	int state = keyEvent->state();
+	std::cerr << "state = " << state << "\n";
 
-	std::string name = (const char*)txt.upper().utf8();
-	if (name.empty() || ((name.length() == 1) && !isprint(name[0]) || isspace(name[0]))) {
+	std::string name;
+	if ((txt.length() == 1) && txt[0].isPrint() && !txt[0].isSpace()) {
+		name = ZLUnicodeUtil::toUpper((const char*)txt.utf8());
+	} else {
 		name = keyName(key);
 	}
 	if (name.empty()) {
@@ -39,10 +44,10 @@ std::string QKeyUtil::keyName(QKeyEvent *keyEvent) {
 	}
 
 	name = '<' + name + '>';
-	if (state & 0x400) {
+	if (state & 0x20) {
 		name = "<Alt>+" + name;
 	}
-	if (state & 0x200) {
+	if (state & 0x10) {
 		name = "<Ctrl>+" + name;
 	}
 	return name;
