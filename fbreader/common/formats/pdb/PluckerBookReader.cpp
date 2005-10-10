@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
+//#include <iostream>
 
 #include <algorithm>
 #include <vector>
@@ -141,6 +141,7 @@ void PluckerBookReader::changeFont(FontType font) {
 	setFont(myFont, true);
 }
 
+/*
 static void listParameters(char *ptr) {
 	int argc = ((unsigned char)*ptr) % 8;
 	std::cerr << (int)(unsigned char)*ptr << "(";	
@@ -154,6 +155,7 @@ static void listParameters(char *ptr) {
 	}
 	std::cerr << ")\n";	
 }
+*/
 
 static unsigned int twoBytes(char *ptr) {
 	return 256 * (unsigned char)*ptr + (unsigned char)*(ptr + 1);
@@ -355,7 +357,6 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 
 		switch (type) {
 			case 0: // text (TODO: found sample file and test this code)
-				std::cerr << "type = " << (int)type << "\n";
 			case 1: // compressed text
 			{
 				std::vector<int> pars;
@@ -410,8 +411,8 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 			case 10:
 				unsigned short typeCode;
 				PdbUtil::readUnsignedShort(myStream, typeCode);
-				std::cerr << "type = " << (int)type << "; ";
-				std::cerr << "typeCode = " << typeCode << "\n";
+				//std::cerr << "type = " << (int)type << "; ";
+				//std::cerr << "typeCode = " << typeCode << "\n";
 				break;
 			case 11: // style sheet record is ignored
 				break;
@@ -436,7 +437,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 				break;
 			}
 			default:
-				std::cerr << "type = " << (int)type << "\n";
+				//std::cerr << "type = " << (int)type << "\n";
 				break;
 		}
 	}
