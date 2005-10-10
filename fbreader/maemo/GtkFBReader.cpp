@@ -22,10 +22,11 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <maemo/GtkViewWidget.h>
-#include <maemo/GtkPaintContext.h>
-
 #include <abstract/ZLDeviceInfo.h>
+
+#include <maemo/GtkViewWidget.h>
+#include <maemo/GtkKeyUtil.h>
+#include <maemo/GtkPaintContext.h>
 
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
@@ -59,8 +60,8 @@ static void menuActionSlot(GtkWidget *, gpointer data) {
 	uData->Reader->doAction(uData->Code);
 }
 
-static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
-	((GtkFBReader*)data)->handleKeySlot(key);
+static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
+	((GtkFBReader*)data)->handleKeyEventSlot(key);
 }
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
@@ -97,28 +98,6 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	gtk_signal_connect(GTK_OBJECT(myApp), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 	gtk_signal_connect(GTK_OBJECT(myApp), "key_press_event", G_CALLBACK(handleKey), this);
-
-	// These buttons exist and we use them.
-	myKeyBindings["Left"] = ACTION_UNDO;
-	myKeyBindings["Right"] = ACTION_REDO;
-	myKeyBindings["Return"] = ACTION_ROTATE_SCREEN;
-	myKeyBindings["Up"] = ACTION_SMALL_SCROLL_BACKWARD;
-	myKeyBindings["Down"] = ACTION_SMALL_SCROLL_FORWARD;
-	myKeyBindings["Escape"] = ACTION_CANCEL;
-	myKeyBindings["F6"] = ACTION_TOGGLE_FULLSCREEN;
-	myKeyBindings["F7"] = ACTION_LARGE_SCROLL_FORWARD;
-	myKeyBindings["F8"] = ACTION_LARGE_SCROLL_BACKWARD;
-
-	// These buttons do not exist on the device, but they can be used in the scratchbox environment
-	myKeyBindings["L"] = ACTION_SHOW_COLLECTION;
-	myKeyBindings["O"] = ACTION_SHOW_OPTIONS;
-	myKeyBindings["C"] = ACTION_SHOW_CONTENTS;
-	myKeyBindings["F"] = ACTION_SEARCH;
-	myKeyBindings["P"] = ACTION_FIND_PREVIOUS;
-	myKeyBindings["N"] = ACTION_FIND_NEXT;
-	myKeyBindings["D"] = ACTION_SHOW_HIDE_POSITION_INDICATOR;
-	myKeyBindings["I"] = ACTION_SHOW_BOOK_INFO;
-	myKeyBindings["A"] = ACTION_ADD_BOOK;
 
 	myFullScreen = false;
 }
@@ -193,23 +172,8 @@ GtkFBReader::~GtkFBReader() {
 	delete (GtkViewWidget*)myViewWidget;
 }
 
-void GtkFBReader::handleKeySlot(GdkEventKey *event) {
-	std::map<std::string,ActionCode>::const_iterator accel;
-
-	for (accel = myKeyBindings.begin(); accel != myKeyBindings.end() ; ++accel) {
-		guint key;
-		GdkModifierType mods;
-
-		gtk_accelerator_parse(accel->first.c_str(), &key, &mods);
-
-		if (event->keyval == key && (GdkModifierType)event->state == mods) {
-			break;
-		}
-	}
-
-	if (accel != myKeyBindings.end()) {
-		doAction(accel->second);
-	}
+void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
+	doAction(GtkKeyUtil::keyName(event));
 }
 
 void GtkFBReader::toggleFullscreenSlot() {

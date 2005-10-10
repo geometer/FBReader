@@ -24,8 +24,9 @@
 
 #include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLDeviceInfo.h>
-#include <gtk/GtkDialogManager.h>
 
+#include <gtk/GtkDialogManager.h>
+#include <gtk/GtkKeyUtil.h>
 #include <gtk-pdaxrom/GtkViewWidget.h>
 #include <gtk-pdaxrom/GtkPaintContext.h>
 
@@ -61,7 +62,7 @@ static void actionSlot(GtkWidget*, gpointer data) {
 }
 
 static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
-	((GtkFBReader*)data)->handleKeySlot(key);
+	((GtkFBReader*)data)->handleKeyEventSlot(key);
 }
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
@@ -90,26 +91,6 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKey), this);
-
-	addKeyBinding("L", ACTION_SHOW_COLLECTION);
-	addKeyBinding("Z", ACTION_SHOW_LAST_BOOKS);
-	addKeyBinding("C", ACTION_SHOW_CONTENTS);
-	addKeyBinding("F", ACTION_SEARCH);
-	addKeyBinding("N", ACTION_FIND_NEXT);
-	addKeyBinding("P", ACTION_FIND_PREVIOUS);
-	addKeyBinding("O", ACTION_SHOW_OPTIONS);
-	addKeyBinding("I", ACTION_SHOW_BOOK_INFO);
-	addKeyBinding("D", ACTION_SHOW_HIDE_POSITION_INDICATOR);
-	addKeyBinding("R", ACTION_ROTATE_SCREEN);
-	addKeyBinding("A", ACTION_ADD_BOOK);
-	addKeyBinding("1", ACTION_INCREASE_FONT);
-	addKeyBinding("2", ACTION_DECREASE_FONT);
-	addKeyBinding("Left", ACTION_UNDO);
-	addKeyBinding("Right", ACTION_REDO);
-	addKeyBinding("Up", ACTION_LARGE_SCROLL_BACKWARD);
-	addKeyBinding("Down", ACTION_LARGE_SCROLL_FORWARD);
-	addKeyBinding("Escape", ACTION_CANCEL);
-	addKeyBinding("Return", ACTION_TOGGLE_FULLSCREEN);
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -121,25 +102,8 @@ GtkFBReader::~GtkFBReader() {
 	delete (GtkViewWidget*)myViewWidget;
 }
 
-void GtkFBReader::addKeyBinding(guint keyval, GdkModifierType state, ActionCode code) {
-	myKeyBindings[std::pair<guint,GdkModifierType>(keyval, state)] = code;
-}
-
-void GtkFBReader::addKeyBinding(const std::string &accelerator, ActionCode code) {
-	guint keyval;
-	GdkModifierType state;
-
-	gtk_accelerator_parse(accelerator.c_str(), &keyval, &state);
-	addKeyBinding(keyval, state, code);
-}
-
-void GtkFBReader::handleKeySlot(GdkEventKey *event) {
-	std::map<std::pair<guint,GdkModifierType>,ActionCode>::const_iterator
-		accelerator = myKeyBindings.find(std::pair<guint,GdkModifierType>(event->keyval, (GdkModifierType)event->state));
-
-	if (accelerator != myKeyBindings.end()) {
-		doAction(accelerator->second);
-	}
+void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
+	doAction(GtkKeyUtil::keyName(event));
 }
 
 void GtkFBReader::toggleFullscreenSlot() {

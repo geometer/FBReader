@@ -60,7 +60,7 @@ protected:
 	void buildMenu();
 
 public:
-	void handleKeySlot(GdkEventKey *);
+	void handleKeyEventSlot(GdkEventKey*);
 	void quitSlot();
 
 	void close();
@@ -77,7 +77,6 @@ private:
 
 	bool myFullScreen;
 
-	std::map<std::string,ActionCode> myKeyBindings;
 	std::map<ActionCode,GtkToolItem*> myButtons;
 
 	std::map<ActionCode,ActionSlotData*> myActions;
