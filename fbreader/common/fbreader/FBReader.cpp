@@ -108,9 +108,6 @@ ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 ZLBooleanOption FBReader::KeyboardControlOption("Keyboard", "FullControl", false);
 
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
-	if (KeyboardControlOption.value()) {
-		grabAllKeys(true);
-	}
 	if (BookCollection::PathOption.value() == "") {
 		BookCollection::PathOption.setValue(BookCollection::DefaultBookPath);
 	}
@@ -167,9 +164,6 @@ FBReader::~FBReader() {
 	TextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
 	Hyphenator::deleteInstance();
-	if (KeyboardControlOption.value()) {
-		grabAllKeys(false);
-	}
 }
 
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {

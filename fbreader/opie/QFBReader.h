@@ -35,6 +35,7 @@ class QFBReader : public QMainWindow, public FBReader {
 
 public:
 	QFBReader(const std::string& bookToOpen);
+	~QFBReader();
 
 private:
 	void focusInEvent(QFocusEvent *event);

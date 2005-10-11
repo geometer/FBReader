@@ -46,6 +46,9 @@
 #include "QFBReader.h"
 
 QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
+	if (KeyboardControlOption.value()) {
+		grabAllKeys(true);
+	}
 	myViewWidget = new QViewWidget(this, this);
 	setCentralWidget((QViewWidget*)myViewWidget);
 
@@ -54,6 +57,12 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	createToolbar();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 	setMode(BOOK_TEXT_MODE);
+}
+
+QFBReader::~QFBReader() {
+	if (KeyboardControlOption.value()) {
+		grabAllKeys(false);
+	}
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {
