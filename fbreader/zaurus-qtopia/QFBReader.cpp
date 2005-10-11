@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <qapplication.h>
+#include <qpe/qpeapplication.h>
 #include <qpixmap.h>
 #include <qmenubar.h>
 #include <qpe/resource.h>
@@ -228,4 +228,16 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 
 void QFBReader::doActionSlot(int buttonNumber) {
 	doAction((ActionCode)buttonNumber);
+}
+
+bool QFBReader::isFullKeyboardControlSupported() const {
+	return true;
+}
+
+void QFBReader::grabAllKeys(bool grab) {
+	if (grab) {
+		QPEApplication::grabKeyboard();
+	} else {
+		QPEApplication::ungrabKeyboard();
+	}
 }

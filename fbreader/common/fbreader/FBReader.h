@@ -122,6 +122,8 @@ public:
 	static ZLBooleanOption SearchThisSectionOnlyOption;
 	static ZLStringOption SearchPatternOption;
 
+	static ZLBooleanOption KeyboardControlOption;
+
 	static const std::string HelpDirectory;
 
 protected:
@@ -159,6 +161,9 @@ private:
 
 public:
 	virtual bool isRotationSupported() const FB_SECTION = 0;
+	virtual bool isFullKeyboardControlSupported() const FB_SECTION;
+	virtual void grabAllKeys(bool grab) FB_SECTION;
+
 	void openBook(BookDescriptionPtr description) FB_SECTION;
 	BookTextView &textView() const FB_SECTION;
 	void showBookTextView() FB_SECTION;

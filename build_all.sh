@@ -1,6 +1,6 @@
 #!/bin/sh
 
-TARGETS="desktop-gtk desktop-qt zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk qvfb-opie opensimpad-opie palm"
+TARGETS="desktop-gtk desktop-qt zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk qvfb-opie opensimpad-opie"
 
 make clean 1> /dev/null 2>&1;
 

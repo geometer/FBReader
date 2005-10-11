@@ -105,7 +105,12 @@ ZLBooleanOption FBReader::SearchInWholeTextOption(SEARCH, "WholeText", false);
 ZLBooleanOption FBReader::SearchThisSectionOnlyOption(SEARCH, "ThisSectionOnly", false);
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
+ZLBooleanOption FBReader::KeyboardControlOption("Keyboard", "FullControl", false);
+
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
+	if (KeyboardControlOption.value()) {
+		grabAllKeys(true);
+	}
 	if (BookCollection::PathOption.value() == "") {
 		BookCollection::PathOption.setValue(BookCollection::DefaultBookPath);
 	}
@@ -162,6 +167,9 @@ FBReader::~FBReader() {
 	TextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
 	Hyphenator::deleteInstance();
+	if (KeyboardControlOption.value()) {
+		grabAllKeys(false);
+	}
 }
 
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {
@@ -258,6 +266,7 @@ void FBReader::bookInfoSlot() {
 void FBReader::optionsSlot() {
 	OptionsDialog optionsDialog(*this, *myContext);
 	optionsDialog.dialog().run("");
+	grabAllKeys(KeyboardControlOption.value());
 	clearTextCaches();
 	repaintView();
 }
@@ -607,6 +616,13 @@ void FBReader::doAction(const std::string &key) {
 FBReader::ActionCode FBReader::keyBinding(const std::string &key) {
 	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(key);
 	return (it != myKeyBindings.end()) ? it->second : NO_ACTION;
+}
+
+bool FBReader::isFullKeyboardControlSupported() const {
+	return false;
+}
+
+void FBReader::grabAllKeys(bool) {
 }
 
 // vim:ts=2:sw=2:noet

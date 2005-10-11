@@ -25,6 +25,24 @@
 #include "FBReader.h"
 #include "KeyBindingsPage.h"
 
+class KeyboardControlEntry : public ZLSimpleBooleanOptionEntry {
+
+public:
+	KeyboardControlEntry(FBReader &fbreader);
+	void onValueChange(bool state);
+
+private:
+	FBReader &myFBReader;
+};
+
+KeyboardControlEntry::KeyboardControlEntry(FBReader &fbreader) : ZLSimpleBooleanOptionEntry("Grab System Keys", FBReader::KeyboardControlOption), myFBReader(fbreader) {
+}
+
+void KeyboardControlEntry::onValueChange(bool state) {
+	ZLSimpleBooleanOptionEntry::onValueChange(state);
+	myFBReader.grabAllKeys(state);
+}
+
 class FBReaderKeyOptionEntry : public ZLKeyOptionEntry {
 
 public:
@@ -114,5 +132,8 @@ void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
 }
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
+	if (fbreader.isFullKeyboardControlSupported()) {
+		dialogTab->addOption(new KeyboardControlEntry(fbreader));
+	}
 	dialogTab->addOption(new FBReaderKeyOptionEntry(fbreader));
 }

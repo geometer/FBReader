@@ -55,7 +55,10 @@ protected:
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 	void quitSlot();
+
 	bool isRotationSupported() const { return false; }
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
 
 	void bookInfoSlot() { FBReader::bookInfoSlot(); fullScreenWorkaround(); }
 	void optionsSlot() { FBReader::optionsSlot(); fullScreenWorkaround(); }
