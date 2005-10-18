@@ -38,6 +38,7 @@ public:
 	~QFBReader();
 
 private:
+	void timerEvent(QTimerEvent *event);
 	void focusInEvent(QFocusEvent *event);
 	void resizeEvent(QResizeEvent *event);
 	void closeEvent(QCloseEvent *event);
@@ -65,6 +66,7 @@ private slots:
 
 private:
 	bool myFullScreen;
+	bool myCloseFlag;
 	
 	struct ButtonInfo {
 		ActionCode Code;

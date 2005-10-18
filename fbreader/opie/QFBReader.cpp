@@ -45,7 +45,7 @@
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
+QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen), myCloseFlag(false) {
 	if (KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}
@@ -66,6 +66,7 @@ QFBReader::~QFBReader() {
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {
+	killTimers();
 	doAction(QKeyUtil::keyName(event));
 }
 
@@ -101,6 +102,7 @@ bool QFBReader::isFullscreen() const {
 }
 
 void QFBReader::quitSlot() {
+	myCloseFlag = true;
   close();
 }
 
@@ -122,12 +124,22 @@ void QFBReader::setMode(ViewMode mode) {
 	enableMenuButtons();
 }
 
-void QFBReader::closeEvent(QCloseEvent *event) {
+void QFBReader::timerEvent(QTimerEvent *) {
 	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();
-		event->ignore();
 	} else {
+		myCloseFlag = true;
+		close();
+	}
+	killTimers();
+}
+
+void QFBReader::closeEvent(QCloseEvent *event) {
+	if (myCloseFlag) {
 		event->accept();
+	} else {
+		startTimer(50);
+		event->ignore();
 	}
 }
 
