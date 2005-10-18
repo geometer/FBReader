@@ -58,7 +58,7 @@ std::string QKeyUtil::keyName(QKeyEvent *keyEvent) {
 }
 
 std::string QKeyUtil::keyName(int key) {
-	if ((key < 128) && isprint(key) && (!isspace(key)) && (key != '&')) {
+	if ((key < 128) && isprint(key) && !isspace(key)) {
 		std::string name;
 		name += (char)toupper(key);
 		return name;
@@ -130,8 +130,6 @@ std::string QKeyUtil::keyName(int key) {
 			return "F12";
 		case ' ':
 			return "Space";
-		case '&':
-			return "&&";
 		case QObject::Key_CapsLock:
 			return "CapsLock";
 		case QObject::Key_NumLock:
