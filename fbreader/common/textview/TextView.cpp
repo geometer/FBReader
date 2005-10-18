@@ -229,6 +229,9 @@ void TextView::gotoMark(TextMark mark) {
 		gotoParagraph(mark.ParagraphNumber);
 		preparePaintInfo();
 	}
+	if (endCursor().isNull()) {
+		preparePaintInfo();
+	}
 	while (mark > endCursor().position()) {
 		doRepaint = true;
 		scrollPage(true, NO_OVERLAPPING, 0);
