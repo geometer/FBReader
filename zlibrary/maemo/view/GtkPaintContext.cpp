@@ -129,8 +129,18 @@ void GtkPaintContext::fillFamiliesList(std::vector<std::string> &families) const
 }
 
 const std::string GtkPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	// TODO: implement
-	return fontFamily;
+	if (myContext == 0) {
+		return fontFamily;
+	}
+	PangoFontDescription *description = pango_font_description_new();
+	pango_font_description_set_family(description, fontFamily.c_str());
+	pango_font_description_set_size(description, 12);
+	PangoFont *font = pango_context_load_font(myContext, description);
+	pango_font_description_free(description);
+	description = pango_font_describe(font);
+	std::string realFamily = pango_font_description_get_family(description);
+	pango_font_description_free(description);
+	return realFamily;
 }
 
 void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {

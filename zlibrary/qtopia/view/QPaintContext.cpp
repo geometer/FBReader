@@ -71,9 +71,8 @@ void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 }
 
 const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	QFont font;
-	font.setFamily(fontFamily.c_str());
-	return font.family().ascii();
+	QString fullName = QFontInfo(QFont(fontFamily.c_str())).family();
+	return fullName.left(fullName.find(" [")).ascii();
 }
 
 void QPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
