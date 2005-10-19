@@ -63,7 +63,7 @@ void QPaintContext::setSize(int w, int h) {
 	}
 }
 
-static const std::string HELVETICA = "Helvetica";
+static const std::string HELVETICA = "helvetica";
 
 void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 	std::set<std::string> famSet = ZaurusFontHack::families();
@@ -87,6 +87,7 @@ const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) con
 			return HELVETICA;
 		}
 	}
+	std::cerr << fullName.ascii();
 	return fullName.left(fullName.find(" [")).ascii();
 }
 

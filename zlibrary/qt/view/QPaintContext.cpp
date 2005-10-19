@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qfontmetrics.h>
