@@ -120,7 +120,7 @@ std::string QKeyUtil::keyName(int key) {
 		case 4156:
 			return "OK>+<Left";
 		case QObject::Key_F12:
-			return "F12";
+			return "OK>+<Esc";
 		case ' ':
 			return "Space";
 		case QObject::Key_CapsLock:
