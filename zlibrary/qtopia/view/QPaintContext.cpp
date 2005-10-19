@@ -24,6 +24,7 @@
 #include <qfontdatabase.h>
 #include <qimage.h>
 
+#include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLImage.h>
 
 #include "QPaintContext.h"
@@ -80,10 +81,11 @@ void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 }
 
 const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) const {
+	std::string family = ZLUnicodeUtil::toLower(fontFamily);
 	std::set<std::string> famSet = ZaurusFontHack::families();
 	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); it++) {
-		if (*it == fontFamily) {
-			return fontFamily;
+		if (*it == family) {
+			return family;
 		}
 	}
 	return HELVETICA;
