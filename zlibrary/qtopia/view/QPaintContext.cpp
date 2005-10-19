@@ -80,15 +80,13 @@ void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 }
 
 const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	QString fullName = QFontInfo(QFont(fontFamily.c_str())).family();
-	if (fullName.isNull() || fullName.isEmpty()) {
-		fullName = QFontInfo(QFont::defaultFont()).family();
-		if (fullName.isNull() || fullName.isEmpty()) {
-			return HELVETICA;
+	std::set<std::string> famSet = ZaurusFontHack::families();
+	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); it++) {
+		if (*it == fontFamily) {
+			return fontFamily;
 		}
 	}
-	std::cerr << fullName.ascii();
-	return fullName.left(fullName.find(" [")).ascii();
+	return HELVETICA;
 }
 
 void QPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
