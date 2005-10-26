@@ -36,4 +36,4 @@ const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/ht
 const std::string FBReader::HelpDirectory = PathPrefix + "help";
 const std::string EncodingDescriptionPath = PathPrefix + "encodings";
 const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics144/FBReader/remove.png";
-const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:~/Documents";
+const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:~/Documents/FBooks";
