@@ -45,7 +45,7 @@
 static ZLIntegerRangeOption Width("Options", "Width", 10, 2000, 800);
 static ZLIntegerRangeOption Height("Options", "Height", 10, 2000, 800);
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
+QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen), myFullScreen(false), myWasMaximized(false) {
 	setWFlags(getWFlags() | WStyle_Customize);
 
 	myViewWidget = new QViewWidget(this, this);
@@ -58,8 +58,29 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 }
 
 QFBReader::~QFBReader() {
-	Width.setValue(width());
-	Height.setValue(height());
+	if (!isFullscreen() && !isMaximized()) {
+		Width.setValue(width());
+		Height.setValue(height());
+	}
+}
+
+void QFBReader::toggleFullscreenSlot() {
+	myFullScreen = !myFullScreen;
+	if (myFullScreen) {
+		myWasMaximized = isMaximized();
+		menuBar()->hide();
+		showFullScreen();
+	} else {
+		menuBar()->show();
+		showNormal();
+		if (myWasMaximized) {
+			showMaximized();
+		}
+	}
+}
+
+bool QFBReader::isFullscreen() const {
+	return myFullScreen;
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {

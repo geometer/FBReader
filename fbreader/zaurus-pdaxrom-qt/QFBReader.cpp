@@ -55,6 +55,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 
 	myFullScreen = false;
+	myWasMaximized = false;
 
 	resize(Width.value(), Height.value());
 
@@ -62,8 +63,10 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 }
 
 QFBReader::~QFBReader() {
-	Width.setValue(width());
-	Height.setValue(height());
+	if (!isFullscreen()) {
+		Width.setValue(width());
+		Height.setValue(height());
+	}
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {

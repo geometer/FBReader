@@ -50,14 +50,18 @@ protected:
 	void setButtonVisible(ActionCode id, bool visible);
 	void setButtonEnabled(ActionCode id, bool enable);
 	void searchSlot();
-	void toggleFullscreenSlot() {}
-	bool isFullscreen() const { return false; }
+	void toggleFullscreenSlot();
+	bool isFullscreen() const;
 	void quitSlot();
 	bool isRotationSupported() const { return true; }
 	
 private slots:
 	void doActionSlot(int buttonNumber);
 	void emptySlot() {}
+
+private:
+	bool myFullScreen;
+	bool myWasMaximized;
 };
 
 #endif /* __QFBREADER_H__ */
