@@ -298,28 +298,32 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 }
 
 void GtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	// TODO: draw rotated
 	GdkPixbuf *imageRef = ((GtkImageData&)image).pixbuf();
 	if (imageRef != 0) {
-		gdk_pixbuf_render_to_drawable(
-			imageRef, myPixmap,
-			0, 0, 0,
-			x + leftMargin(), y + topMargin() - gdk_pixbuf_get_height(imageRef),
-			-1, -1, GDK_RGB_DITHER_NONE, 0, 0
-		);
+		x += leftMargin();
+		y += topMargin();
+
+		if (!myIsRotated) {
+			gdk_pixbuf_render_to_drawable(
+				imageRef, myPixmap,
+				0, 0, 0,
+				x, y - gdk_pixbuf_get_height(imageRef),
+				-1, -1, GDK_RGB_DITHER_NONE, 0, 0
+			);
+		} else {
+			const int w = gdk_pixbuf_get_width(imageRef);
+			const int h = gdk_pixbuf_get_height(imageRef);
+			rotatePoint(x, y);
+			GdkPixbuf *rotated = gdk_pixbuf_rotate_simple(imageRef, GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
+			gdk_pixbuf_render_to_drawable(
+				rotated, myPixmap,
+				0, 0, 0,
+				x - h, y - w,
+				h, w, GDK_RGB_DITHER_NONE, 0, 0
+			);
+			gdk_pixbuf_unref(rotated);
+		}
 	}
-	// for gtk+ v2.2
-	// 		gdk_draw_pixbuf(
-	// 			myPixmap, 0, imageRef, 0, 0,
-	// 			x + leftMargin(), y + topMargin() - gdk_pixbuf_get_height(imageRef),
-	// 			-1, -1, GDK_RGB_DITHER_NONE, 0, 0
-	// 		);
-	//
-	// COMMENTS:
-	// 0			-- we have no clipping (do we need it?)
-	// 0, 0			-- offset in the image
-	// -1, -1		-- use the whole
-	// GDK_RGB_DITHER_NONE -- no dithering, hopefully, (0, 0) after it does not harm
 }
 
 void GtkPaintContext::drawLine(int x0, int y0, int x1, int y1) {
