@@ -1,10 +1,17 @@
+include ../../../makefiles/platforms.mk
+
 BASEDIR = data/opt/QtPalmtop
 DEBDIR = data/DEBIAN
 
+version = $(shell cat ../../VERSION)
+package = fbreader-opie_opensimpad-0.9.0_$(version)_arm.ipk
+
 all:
+ifeq "$(TARGET_ARCH)" "opensimpad-opie"
 	@make .builddir
 	@make .buildpackage
 	@make .cleandir
+endif
 
 clean: .cleandir
 	@rm -f *.ipk
@@ -27,7 +34,9 @@ clean: .cleandir
 	@cp ../../data/default/keymap.opie-opensimpad.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 
 .buildpackage:
-	@dpkg -b data fbreader-opie_0.6.4_arm.ipk
+	@dpkg -b data $(package)
+	@cp $(package) ../../..
+
 
 .cleandir:
 	@rm -rf data

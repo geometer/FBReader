@@ -3,9 +3,9 @@ include ../../../makefiles/platforms.mk
 DEB_VERSION = 2.0
 
 ifeq "$(PDAXROM_VERSION)" "rc11"
-ARCH = pdaxrom_rc11_arm
+ARCH = pdaxrom-1.1.0rc11_armv5tel
 else
-ARCH = pdaxrom_arm
+ARCH = pdaxrom-1.1.0rc10_armv5tel
 endif
 
 TDIR = __ipk
