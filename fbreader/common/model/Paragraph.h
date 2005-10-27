@@ -263,6 +263,8 @@ public:
 	const TreeParagraph *parent() const MODEL_SECTION;
 	const std::vector<TreeParagraph*> &children() const MODEL_SECTION;
 
+	void removeFromParent() MODEL_SECTION;
+
 private:
 	void addChild(TreeParagraph *child) MODEL_SECTION;
 

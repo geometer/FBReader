@@ -130,6 +130,9 @@ bool CollectionView::onStylusPress(int x, int y) {
 			BookDescription &description = *it->second;
 			const std::string question = "Remove Book\n\"" + description.title() + "\"\nfrom library?";
 			if (ZLDialogManager::instance().informationBox("Remove Book", question.c_str(), "Yes", "No") == 0) {
+				myTreeModel->removeParagraph(paragraphNumber);
+				rebuildPaintInfo(true);
+				repaintView();
 			}
 		}
 		return true;

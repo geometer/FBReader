@@ -110,6 +110,19 @@ void TextModel::addParagraphInternal(Paragraph *paragraph) {
 	myLastEntryStart = 0;
 }
 
+void TextModel::removeParagraphInternal(int index) {
+	if ((index >= 0) && (index < (int)myParagraphs.size())) {
+		myParagraphs.erase(myParagraphs.begin() + index);
+	}
+}
+
+void TreeModel::removeParagraph(int index) {
+	TreeParagraph *p = (TreeParagraph*)(*this)[index];
+	p->removeFromParent();
+	removeParagraphInternal(index);
+	delete p;
+}
+
 TreeParagraph *TreeModel::createParagraph(TreeParagraph *parent) {
 	if (parent == 0) {
 		parent = myRoot;

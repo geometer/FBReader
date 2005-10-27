@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include "Paragraph.h"
 #include "RowMemoryAllocator.h"
 
@@ -144,5 +146,11 @@ TreeParagraph::TreeParagraph(TreeParagraph *parent) : myIsOpen(false), myParent(
 void TreeParagraph::openTree() {
 	for (TreeParagraph *p = parent(); p != 0; p = p->parent()) {
 		p->open(true);
+	}
+}
+
+void TreeParagraph::removeFromParent() {
+	if (myParent != 0) {
+		myParent->myChildren.erase(std::find(myParent->myChildren.begin(), myParent->myChildren.end(), this));
 	}
 }

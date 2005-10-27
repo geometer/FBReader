@@ -68,6 +68,7 @@ public:
 
 protected:
 	void addParagraphInternal(Paragraph *paragraph) MODEL_SECTION;
+	void removeParagraphInternal(int index) MODEL_SECTION;
 	
 private:
 	std::vector<Paragraph*> myParagraphs;
@@ -93,6 +94,8 @@ public:
 	Kind kind() const MODEL_SECTION;
 
 	TreeParagraph *createParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
+
+	void removeParagraph(int index) MODEL_SECTION;
 	
 	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
 	void selectParagraph(size_t index) const MODEL_SECTION;
