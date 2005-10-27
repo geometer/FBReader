@@ -61,11 +61,13 @@ ifeq "$(TARGET_ARCH)" "qvfb-opie"
 endif
 
 ifeq "$(TARGET_ARCH)" "opensimpad-opie"
-	TOOLSDIR = /stuff/build/tmp/cross/arm-linux/bin
-	OEDIR = /stuff/build/tmp/staging/arm-linux
-	QTDIR = /stuff/build/tmp/staging/arm-linux/qt2
+	BASEDIR = /stuff/build/tmp
 
-	MOC = /stuff/build/tmp/staging/i686-linux/bin/moc
+	TOOLSDIR = $(BASEDIR)/cross/arm-linux/bin
+	OEDIR = $(BASEDIR)/staging/arm-linux
+	QTDIR = $(BASEDIR)/staging/arm-linux/qt2
+
+	MOC = $(BASEDIR)/staging/i686-linux/bin/moc
 	RM = rm -rvf
 	RM_QUIET = rm -rf
 	QTINCLUDE = -I $(QTDIR)/include
