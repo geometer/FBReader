@@ -31,6 +31,7 @@
 #include "../textview/ParagraphCursor.h"
 
 #include "../collection/BookCollection.h"
+#include "../collection/BookList.h"
 #include "../description/BookDescription.h"
 #include "../description/Author.h"
 
@@ -130,6 +131,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 			BookDescription &description = *it->second;
 			const std::string question = "Remove Book\n\"" + description.title() + "\"\nfrom library?";
 			if (ZLDialogManager::instance().informationBox("Remove Book", question.c_str(), "Yes", "No") == 0) {
+				BookList().removeFileName(description.fileName());
 				myTreeModel->removeParagraph(paragraphNumber);
 				rebuildPaintInfo(true);
 				repaintView();
