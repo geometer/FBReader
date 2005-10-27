@@ -4,7 +4,7 @@ BASEDIR = data/opt/QtPalmtop
 DEBDIR = data/DEBIAN
 
 version = $(shell cat ../../VERSION)
-package = fbreader-opie_opensimpad-0.9.0_$(version)_arm.ipk
+package = fbreader-opie_$(version)_opensimpad-0.9.0_arm.ipk
 
 all:
 ifeq "$(TARGET_ARCH)" "opensimpad-opie"
