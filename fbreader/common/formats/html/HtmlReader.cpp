@@ -50,6 +50,7 @@ static struct {
 	{ "H5", HtmlReader::_H5 },
 	{ "H6", HtmlReader::_H6 },
 	{ "DIV", HtmlReader::_DIV },
+	{ "IMG", HtmlReader::_IMAGE },
 	// 9. text
 	{ "EM", HtmlReader::_EM, },
 	{ "STRONG", HtmlReader::_STRONG, },

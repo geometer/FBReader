@@ -53,18 +53,22 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 }
 
 bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	shared_ptr<ZLInputStream> stream = ZLFile(description.fileName()).inputStream();
+	std::string fileName = description.fileName();
+	shared_ptr<ZLInputStream> stream = ZLFile(fileName).inputStream();
 	if (stream.isNull()) {
 		return false;
 	}
 
-	PlainTextFormat format(description.fileName());
+	PlainTextFormat format(fileName);
 	if (!format.initialized()) {
 		PlainTextFormatDetector detector;
 		detector.detect(*stream, format);
 	}
 
-	HtmlBookReader(model, format).readDocument(*stream, description.encoding());
+	int index0 = fileName.rfind('/');
+	int index1 = fileName.rfind(':');
+	HtmlBookReader(fileName.substr(0, std::max(index0, index1) + 1), model, format).readDocument(*stream, description.encoding());
+
 	return true;
 }
 

@@ -39,6 +39,7 @@ public:
 		_TITLE,
 		_H1, _H2, _H3, _H4, _H5, _H6,
 		_DIV,
+		_IMAGE,
 		// 9. text
 		_EM, _STRONG, _DFN, _CODE, _SAMP, _KBD, _VAR, _CITE, _ABBR, _ACRONYM,
 		_BLOCKQUOTE, _Q,

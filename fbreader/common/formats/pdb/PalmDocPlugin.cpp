@@ -59,7 +59,7 @@ bool PalmDocPlugin::readModel(const BookDescription &description, BookModel &mod
 	}
 
 	if (HtmlDetector().isHtml(*stream)) {
-		HtmlBookReader(model, format).readDocument(*stream, description.encoding());
+		HtmlBookReader("", model, format).readDocument(*stream, description.encoding());
 	} else {
 		TxtBookReader(model, format).readDocument(*stream, description.encoding());
 	}
