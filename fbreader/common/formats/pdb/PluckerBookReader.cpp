@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <cctype>
 
 #include <abstract/ZLZDecompressor.h>
 #include <abstract/ZLStringUtil.h>
