@@ -19,6 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include "../common/textview/TextStyle.h"
+#include "../../common/textview/TextStyle.h"
 
 const std::string TextStyle::DefaultFontName = "georgia";

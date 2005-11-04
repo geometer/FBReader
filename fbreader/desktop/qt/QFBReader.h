@@ -26,7 +26,7 @@
 
 #include <qmainwindow.h>
 
-#include "../common/fbreader/FBReader.h"
+#include "../../common/fbreader/FBReader.h"
 
 class QFBReader : public QMainWindow, public FBReader { 
 	Q_OBJECT

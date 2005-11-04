@@ -19,11 +19,10 @@
  * 02110-1301, USA.
  */
 
-#include "../common/hyphenation/TeXHyphenator.h"
-//#include "../common/formats/docbook/DocBookReader.h"
-#include "../common/formats/html/HtmlEntityExtension.h"
-#include "../common/collection/BookCollection.h"
-#include "../common/fbreader/CollectionView.h"
+#include "../../common/hyphenation/TeXHyphenator.h"
+#include "../../common/formats/html/HtmlEntityExtension.h"
+#include "../../common/collection/BookCollection.h"
+#include "../../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 #include "Paths.h"
 
@@ -31,7 +30,6 @@ static const std::string PathPrefix = std::string(INSTALLDIR) + "/share/FBReader
 
 const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
-//const std::string DocBookReader::DTDDirectory = "/usr/share/xml/entities/xml-iso-entities-8879.1986";
 const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
 const std::string QFBReader::ImageDirectory = PathPrefix + "icons";
 const std::string FBReader::HelpDirectory = PathPrefix + "help";
