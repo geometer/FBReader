@@ -1,0 +1,7 @@
+[Desktop Entry]
+Comment=E-book reader
+Exec=FBReader
+Icon=FBReader
+Type=Application
+Name=FBReader
+HidePrivilege=1
