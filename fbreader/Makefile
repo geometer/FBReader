@@ -4,107 +4,30 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS) $(EXTERNALLIBS)
+LIBS = $(UILIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS) $(EXTERNALLIBS)
 
 TARGET = FBReader
 
-ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/pdb common/formats/txt common/formats/chm common/textview common/hyphenation common/fbreader palm
-ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt opie
-ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk maemo
+ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/pdb common/formats/txt common/formats/chm common/textview common/hyphenation common/fbreader palm desktop pdaxrom
+ALL_ARCHSUBDIRS = palm desktop pdaxrom opie zaurus maemo
+ALL_QSUBDIRS = zaurus/qtopia pdaxrom/qt desktop/qt opie
+ALL_GTKSUBDIRS = pdaxrom/gtk desktop/gtk maemo
 
 SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/formats/chm common/textview common/hyphenation common/fbreader
-ifeq "$(TARGET_ARCH)" "palm"
-	SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/textview common/hyphenation common/fbreader
-endif
 
 PLATFORM_SUBDIR = $(TARGET_ARCH)
 
-ifeq "$(TARGET_ARCH)" "qvfb-opie"
-	PLATFORM_SUBDIR = opie
+GTKPLATFORMS = "gtk maemo"
+ifeq "$(UI_TYPE)" "$(findstring $(UI_TYPE), $(GTKPLATFORMS))"
+	GTKSUBDIRS = $(TARGET_ARCH)/$(UI_TYPE)
 endif
 
-ifeq "$(TARGET_ARCH)" "opensimpad-opie"
-	PLATFORM_SUBDIR = opie
+QTPLATFORMS = "qt qtopia opie"
+ifeq "$(UI_TYPE)" "$(findstring $(UI_TYPE), $(QTPLATFORMS))"
+	QSUBDIRS = $(TARGET_ARCH)/$(UI_TYPE)
 endif
 
-ifeq "$(UI_TYPE)" "gtk"
-	GTKSUBDIRS += $(PLATFORM_SUBDIR)
-endif
-
-ifeq "$(UI_TYPE)" "qt"
-	QSUBDIRS += $(PLATFORM_SUBDIR)
-endif
-
-ifeq "$(UI_TYPE)" "palm"
-	SUBDIRS += $(PLATFORM_SUBDIR)
-endif
-
-all: .bin
-	@if [ -d $(PLATFORM_SUBDIR)/package ]; then \
-		$(MAKE) -C $(PLATFORM_SUBDIR)/package; \
-	fi;
-
-install: all .really-install
-
-.really-install:
-ifeq "$(TARGET_ARCH)" "desktop-qt"
-	install -d $(DESTDIR)$(INSTALLDIR)/bin
-	install -s FBReader $(DESTDIR)$(INSTALLDIR)/bin
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
-	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -m 0644 icons/34x28/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
-	install -m 0644 $(wildcard icons/34x28/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
-	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
-	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
-	install -m 0644 data/help/HowToStart.brownish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
-	install -m 0644 data/default/keymap.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
-endif
-ifeq "$(TARGET_ARCH)" "desktop-gtk"
-	install -d $(DESTDIR)$(INSTALLDIR)/bin
-	install -s FBReader $(DESTDIR)$(INSTALLDIR)/bin
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
-	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -m 0644 icons/34x28/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
-	install -m 0644 $(wildcard icons/34x28/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
-	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
-	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
-	install -m 0644 data/help/HowToStart.brownish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
-	install -m 0644 data/default/keymap.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
-endif
-ifeq "$(TARGET_ARCH)" "maemo"
-	install -d $(DESTDIR)$(INSTALLDIR)/bin
-	install -s FBReader $(DESTDIR)$(INSTALLDIR)/bin
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
-	install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -m 0644 $(wildcard icons/blueset/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
-	install -m 0644 $(wildcard share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
-	install -m 0644 $(wildcard share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
-	install -m 0644 data/help/HowToStart.blueish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
-	install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
-	install -m 0644 data/default/keymap.maemo.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
-	install -d $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
-	install -m 0644 icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
-	install -d $(DESTDIR)/usr/share/applications/hildon
-	install -m 0644 maemo/package/FBReader.desktop $(DESTDIR)/usr/share/applications/hildon
-	install -d $(DESTDIR)/etc/others-menu
-	( cd $(DESTDIR)/etc/others-menu ; ln -sf ../../usr/share/applications/hildon/FBReader.desktop 0000_FBReader.desktop )
-endif
-
-.lib:
+all:
 	@for subdir in $(SUBDIRS); do \
 		if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 			exit 1; \
@@ -120,27 +43,24 @@ endif
 			exit 1; \
 		fi; \
 	done;
-
-.bin: .lib
-	@$(RM) $(TARGET)
-	@$(MAKE) $(TARGET)
-
-$(TARGET):
-ifeq "$(TARGET_ARCH)" "palm"
-	cd palm; \
-	m68k-palmos-multigen $(TARGET).def; \
-	m68k-palmos-as -o $(TARGET)-sections.o $(TARGET)-sections.s; \
-	cd ..; \
-	$(LD) $(LDFLAGS) -o $@ $^ `find . -name *.o` $(LIBS) -lPalmOSGlue palm/$(TARGET)-sections.ld
-else
-	@echo -n "Linking $@ ..."
-	@$(LD) $(LDFLAGS) -o $@ $^ `find . -name *.o` $(LIBS)
+	@echo -n "Linking $(TARGET) ..."
+	@$(LD) $(LDFLAGS) -o $(TARGET) `find . -name *.o` $(LIBS)
 	@echo " OK"
-endif
+
+install: all .really-install
+
+.really-install:
+	@cd $(TARGET_ARCH); make install 
+
+package:
+	@cd $(TARGET_ARCH); make all 
 
 clean:
 	@for subdir in $(ALL_SUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
+	done;
+	@for subdir in $(ALL_ARCHSUBDIRS); do \
+		cd $$subdir; make clean; cd ..; \
 	done;
 	@for subdir in $(ALL_QSUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk clean; \
@@ -148,10 +68,4 @@ clean:
 	@for subdir in $(ALL_GTKSUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
 	done;
-	@for target in $(ALL_TARGET_ARCHS); do \
-		if [ -d $$target/package ]; then \
-			$(MAKE) -C $$target/package clean; \
-		fi; \
-	done;
-	@cd opie/package; $(MAKE) clean; cd ../..
 	@$(RM) $(TARGET) err
