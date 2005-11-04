@@ -33,7 +33,7 @@ class PlainTextFormat;
 class HtmlBookReader : public BookReader, public HtmlReader {
 
 public:
-	HtmlBookReader(BookModel &model, const PlainTextFormat &format) FORMATS_SECTION;
+	HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format) FORMATS_SECTION;
 	~HtmlBookReader() FORMATS_SECTION;
 
 protected:
@@ -47,6 +47,8 @@ private:
 	void addConvertedDataToBuffer(const char *text, int len) FORMATS_SECTION;
 
 private:
+	std::string myBaseDirPath;
+
 	const PlainTextFormat &myFormat;
 	int myIgnoreDataCounter;
 	bool myIsPreformatted;
