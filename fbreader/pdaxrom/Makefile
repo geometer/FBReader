@@ -1,44 +1,50 @@
-include ../../../makefiles/platforms.mk
+ROOTDIR = $(PWD)/../..
+include $(ROOTDIR)/makefiles/platforms.mk
 
 DEB_VERSION = 2.0
-
-ifeq "$(PDAXROM_VERSION)" "rc11"
-ARCH = pdaxrom-1.1.0rc11_armv5tel
-else
-ARCH = pdaxrom-1.1.0rc10_armv5tel
-endif
 
 TDIR = __ipk
 
 DATADIR = $(TDIR)/data
 CTRLDIR = $(TDIR)/control
 
-FILE = $(wildcard *.control)
-PACKAGENAME = $(patsubst %.control, %, $(FILE))
+PACKAGENAME = FBReader-$(UI_TYPE)
+FILE = $(PACKAGENAME).control
 
-version = $(shell cat ../../VERSION)
+ifeq "$(UI_TYPE)" "gtk"
+BINDIR = usr/bin
+else
+BINDIR = usr/lib/qt/bin
+endif
+
+version = $(shell cat ../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
 files = $(shell sed -n -e "s/^Files://p" $(FILE))
+package = $(PACKAGENAME)_$(version)_$(TARGET_ARCH)_armv5tel.ipk
 
-package = $(PACKAGENAME)_$(version)_$(ARCH)
+all: .tmpdir .copyfiles $(CTRLDIR)/control $(package) .rmtmpdir
+	@cp $(package) ../..
 
-all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
-	@cp $(package).ipk ../../..
+install:
 
 .tmpdir:
-	@cp ../../FBReader usr/lib/qt/bin
-	@cp -r ../../share/FBReader usr/share
+	@mkdir -p $(BINDIR)
+	@cp ../FBReader $(BINDIR)
+	@cp -r ../share/FBReader usr/share
 	@mkdir -p usr/share/FBReader/help
-	@cp ../../data/help/HowToStart.brownish.fb2 usr/share/FBReader/help/HowToStart.fb2
+	@cp ../data/help/HowToStart.brownish.fb2 usr/share/FBReader/help/HowToStart.fb2
 	@mkdir -p usr/share/FBReader/default
-	@cp ../../data/default/keymap.pdaxrom.xml usr/share/FBReader/default/keymap.xml
+	@cp ../data/default/keymap.pdaxrom.xml usr/share/FBReader/default/keymap.xml
 	@mkdir -p usr/share/pixmaps/FBReader
-	@cp `find ../../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
+	@cp `find ../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -rf usr/lib/qt/bin/FBReader usr/share/pixmaps/FBReader usr/share/FBReader $(TDIR)
+	@rm -rf $(BINDIR)/FBReader usr/share/pixmaps usr/share/FBReader $(TDIR)
+	@if [ -d $(BINDIR) ]; then \
+		rmdir -p $(BINDIR) --ignore-fail-on-non-empty; \
+	fi;
 
 .copyfiles:
 	@for f in $(files); do \
@@ -65,13 +71,13 @@ $(CTRLDIR)/control:
 	@echo "Depends: $(depends)" >> $@
 	@egrep -v "^(Files|Depends):" $(FILE) >> $@
 
-package:
+$(package):
 	@echo -n "Packaging..."
 	@echo "$(DEB_VERSION)" > $(TDIR)/debian-binary
 	@tar czf $(TDIR)/control.tar.gz -C $(CTRLDIR) .
 	@tar czf $(TDIR)/data.tar.gz -C $(DATADIR) .
 	@rm -rf $(CTRLDIR) $(DATADIR)
-	@tar czf $(package).ipk -C $(TDIR) ./debian-binary ./control.tar.gz ./data.tar.gz
+	@tar czf $(package) -C $(TDIR) ./debian-binary ./control.tar.gz ./data.tar.gz
 	@echo " OK"
 
 clean: .rmtmpdir

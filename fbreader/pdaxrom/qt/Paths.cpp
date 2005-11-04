@@ -19,20 +19,20 @@
  * 02110-1301, USA.
  */
 
-#include "../common/hyphenation/TeXHyphenator.h"
-//#include "../common/formats/docbook/DocBookReader.h"
-#include "../common/formats/html/HtmlEntityExtension.h"
-#include "../common/collection/BookCollection.h"
-#include "../common/fbreader/CollectionView.h"
+#include "../../common/hyphenation/TeXHyphenator.h"
+#include "../../common/formats/html/HtmlEntityExtension.h"
+#include "../../common/collection/BookCollection.h"
+#include "../../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 #include "Paths.h"
 
-const std::string FBReader::KeymapFile = "/usr/share/FBReader/default/keymap.xml";
-const std::string TeXHyphenator::PatternZip = "/usr/share/FBReader/hyphenationPatterns.zip";
-//const std::string DocBookReader::DTDDirectory = "/usr/share/FBReader/formats/docbook";
-const std::string HtmlEntityExtension::CollectionFile = "/usr/share/FBReader/formats/html/html.ent";
+static const std::string PREFIX = "/usr/share/FBReader/";
+const std::string FBReader::KeymapFile = PREFIX + "default/keymap.xml";
+const std::string TeXHyphenator::PatternZip = PREFIX + "hyphenationPatterns.zip";
+const std::string HtmlEntityExtension::CollectionFile = PREFIX + "formats/html/html.ent";
+const std::string FBReader::HelpDirectory = PREFIX + "help";
+const std::string EncodingDescriptionPath = PREFIX + "encodings";
+
 const std::string QFBReader::ImageDirectory = "/usr/share/pixmaps";
-const std::string FBReader::HelpDirectory = "/usr/share/FBReader/help";
-const std::string EncodingDescriptionPath = "/usr/share/FBReader/encodings";
 const std::string CollectionView::DeleteBookImageFile = QFBReader::ImageDirectory + "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:/mnt/cf/FBooks";

@@ -35,11 +35,11 @@
 #include <qt/QPaintContext.h>
 #include <qt/QKeyUtil.h>
 
-#include "../common/description/BookDescription.h"
-#include "../common/fbreader/BookTextView.h"
-#include "../common/fbreader/FootnoteView.h"
-#include "../common/fbreader/ContentsView.h"
-#include "../common/fbreader/CollectionView.h"
+#include "../../common/description/BookDescription.h"
+#include "../../common/fbreader/BookTextView.h"
+#include "../../common/fbreader/FootnoteView.h"
+#include "../../common/fbreader/ContentsView.h"
+#include "../../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
 static ZLIntegerRangeOption Width("Options", "Width", 10, 800, 350);
