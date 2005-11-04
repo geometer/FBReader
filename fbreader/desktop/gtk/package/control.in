@@ -1,7 +1,0 @@
-Package: FBReader-gtk
-Version: VERSION
-Architecture: i386
-Depends: libgtk2.0-0, libexpat1, libenca0
-Conflicts: fbreader-qt
-Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
-Description: E-Book reader.
