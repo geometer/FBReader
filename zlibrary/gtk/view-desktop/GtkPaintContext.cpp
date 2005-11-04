@@ -314,7 +314,8 @@ void GtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 			const int w = gdk_pixbuf_get_width(imageRef);
 			const int h = gdk_pixbuf_get_height(imageRef);
 			rotatePoint(x, y);
-			GdkPixbuf *rotated = gdk_pixbuf_rotate_simple(imageRef, GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE);
+			GdkPixbuf *rotated = gdk_pixbuf_new(GDK_COLORSPACE_RGB, gdk_pixbuf_get_has_alpha(imageRef), 8, h, w);
+			::rotate(rotated, imageRef, w, h);
 			gdk_pixbuf_render_to_drawable(
 				rotated, myPixmap,
 				0, 0, 0,

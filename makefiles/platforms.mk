@@ -1,7 +1,4 @@
-ALL_TARGET_ARCHS = zaurus-qtopia zaurus-pdaxrom-qt zaurus-pdaxrom-gtk desktop-qt desktop-gtk palm maemo qvfb-opie opensimpad-opie
-
-GTK_PLATFORMS = desktop-gtk zaurus-pdaxrom-gtk maemo
-QT_PLATFORMS = desktop-qt zaurus-pdaxrom-qt zaurus-qtopia qvfb-opie opensimpad-opie
+ALL_TARGET_ARCHS = zaurus pdaxrom-1.1.0rc10 pdaxrom-1.1.0rc11 desktop desktop-static palm maemo qvfb opensimpad-0.9.0
 
 ifneq "$(wildcard $(ROOTDIR)/makefiles/target.mk)" ""
 	include $(ROOTDIR)/makefiles/target.mk
@@ -15,20 +12,8 @@ ifeq "$(TARGET_STATUS)" ""
 	TARGET_STATUS = release
 endif
 
-ifeq "$(findstring $(TARGET_ARCH),$(GTK_PLATFORMS))" "$(TARGET_ARCH)"
-	UI_TYPE = gtk
-endif
-
-ifeq "$(findstring $(TARGET_ARCH),$(QT_PLATFORMS))" "$(TARGET_ARCH)"
-	UI_TYPE = qt
-endif
-
-ifeq "$(TARGET_ARCH)" "palm"
-	UI_TYPE = palm
-endif
-
 ifneq "$(findstring $(TARGET_ARCH),$(ALL_TARGET_ARCHS))" "$(TARGET_ARCH)"
-$(error Unknown target $(TARGET_ARCH); valid targets are $(ALL_TARGET_ARCHS))
+$(error Unknown target $(TARGET_ARCH))
 endif
 
 # IMPORTANT: if you want to compile the stuff for your architecture

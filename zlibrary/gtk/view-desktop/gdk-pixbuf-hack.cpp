@@ -104,7 +104,7 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh) {
 	drs = gdk_pixbuf_get_rowstride(dest);
 	d_pix = gdk_pixbuf_get_pixels(dest);
 
-	a = (has_alpha ? 4 : 3);
+	a = has_alpha ? 4 : 3;
 
 	if (buffer == 0) {
 		buffer = gdk_pixbuf_new(GDK_COLORSPACE_RGB, has_alpha, 8, ROTATE_BUFFER_WIDTH, ROTATE_BUFFER_HEIGHT);
@@ -113,11 +113,11 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh) {
 	brs = gdk_pixbuf_get_rowstride(buffer);
 
 	for (i = 0; i < sh; i+= ROTATE_BUFFER_WIDTH) {
-		w = MIN(ROTATE_BUFFER_WIDTH, (sh - i));
+		w = MIN(ROTATE_BUFFER_WIDTH, sh - i);
 		for (j = 0; j < sw; j += ROTATE_BUFFER_HEIGHT) {
 			gint x, y;
 
-			h = MIN(ROTATE_BUFFER_HEIGHT, (sw - j));
+			h = MIN(ROTATE_BUFFER_HEIGHT, sw - j);
 			pixbuf_copy_block_rotate(s_pix, srs, j, i, b_pix, brs, h, w, a, counter_clockwise);
 
 			if (counter_clockwise) {

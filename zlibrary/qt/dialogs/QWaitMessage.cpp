@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <unistd.h>
+
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qwidget.h>
@@ -53,7 +55,7 @@ QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Sp
 	show();
 
 	qApp->processEvents();
-	usleep(500);
+	usleep(5000);
 	qApp->processEvents();
 }
 
