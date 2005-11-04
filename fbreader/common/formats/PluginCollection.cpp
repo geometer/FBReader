@@ -28,6 +28,7 @@
 #include "html/HtmlPlugin.h"
 #include "txt/TxtPlugin.h"
 #include "pdb/PdbPlugin.h"
+#include "chm/CHMPlugin.h"
 
 PluginCollection *PluginCollection::ourInstance = 0;
 
@@ -42,6 +43,7 @@ PluginCollection &PluginCollection::instance() {
 		ourInstance->myPlugins.push_back(new PluckerPlugin());
 		ourInstance->myPlugins.push_back(new PalmDocPlugin());
 		ourInstance->myPlugins.push_back(new ZTXTPlugin());
+		ourInstance->myPlugins.push_back(new CHMPlugin());
 #endif // PALM_TEMPORARY
 	}
 	return *ourInstance;

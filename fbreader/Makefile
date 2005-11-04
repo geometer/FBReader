@@ -8,11 +8,11 @@ LIBS = $(QTLIBS) $(GTKLIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS) $(
 
 TARGET = FBReader
 
-ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/pdb common/formats/txt common/textview common/hyphenation common/fbreader palm
+ALL_SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/pdb common/formats/txt common/formats/chm common/textview common/hyphenation common/fbreader palm
 ALL_QSUBDIRS = zaurus-qtopia zaurus-pdaxrom-qt desktop-qt opie
 ALL_GTKSUBDIRS = zaurus-pdaxrom-gtk desktop-gtk maemo
 
-SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/textview common/hyphenation common/fbreader
+SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/formats/chm common/textview common/hyphenation common/fbreader
 ifeq "$(TARGET_ARCH)" "palm"
 	SUBDIRS = common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/textview common/hyphenation common/fbreader
 endif
