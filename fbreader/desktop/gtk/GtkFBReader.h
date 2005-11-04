@@ -27,7 +27,7 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
-#include "../common/fbreader/FBReader.h"
+#include "../../common/fbreader/FBReader.h"
 
 struct ActionSlotData;
 

@@ -21,13 +21,11 @@
 
 #include <cctype>
 
-#include <abstract/ZLFileImage.h>
-
 #include "../txt/PlainTextFormat.h"
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format) : BookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
+HtmlBookReader::HtmlBookReader(BookModel &model, const PlainTextFormat &format) : BookReader(model), myFormat(format) {
 }
 
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len) {
@@ -41,18 +39,6 @@ void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len) {
 bool HtmlBookReader::tagHandler(HtmlTag tag) {
 	switch(tag.Code) {
 		case _BODY:
-			break;
-		case _IMAGE:
-			endParagraph();
-			for (unsigned int i = 0; i < tag.Attributes.size(); i++) {
-				if (tag.Attributes[i].Name == "SRC") {
-					std::string fileName = tag.Attributes[i].Value;
-					addImageReference(fileName);
-					ZLImage *image = new ZLFileImage("image/auto", myBaseDirPath + fileName, 0);
-					addImage(fileName, image);
-				}
-			}
-			beginParagraph();
 			break;
 		// 9. text
 		case _EM:
