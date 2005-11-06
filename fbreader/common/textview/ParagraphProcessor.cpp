@@ -108,12 +108,25 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				if (textEntry.dataLength() != 0) {
 					const char *start = textEntry.data();
 					const char *end = start + textEntry.dataLength();
-					if (ZLUnicodeUtil::isSpace(ZLUnicodeUtil::firstChar(start))) {
+					ZLUnicodeUtil::Ucs2Char ch;
+					ZLUnicodeUtil::firstChar(ch, start);
+					if (ZLUnicodeUtil::isSpace(ch)) {
 						myElements.push_back(TextElementPool::Pool.HSpaceElement);
 					}
 					const char *firstNonSpace = 0;
-					for (const char *ptr = start; ptr < end; ptr += ZLUnicodeUtil::length(ptr, 1)) {
-						if (ZLUnicodeUtil::isSpace(ZLUnicodeUtil::firstChar(ptr))) {
+					int charLength = 0;
+					bool breakableBefore = false;
+					for (const char *ptr = start; ptr < end; ptr += charLength) {
+						if (breakableBefore) {
+							if (firstNonSpace != 0) {
+								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
+								firstNonSpace = 0;
+							}
+							breakableBefore = false;
+							continue;
+						}
+						charLength = ZLUnicodeUtil::firstChar(ch, ptr);
+						if (ZLUnicodeUtil::isSpace(ch)) {
 							if (firstNonSpace != 0) {
 								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
 								myElements.push_back(TextElementPool::Pool.HSpaceElement);
@@ -121,6 +134,18 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 							}
 						} else if (firstNonSpace == 0) {
 							firstNonSpace = ptr;
+						} else {
+							switch (ZLUnicodeUtil::isBreakable(ch)) {
+								case ZLUnicodeUtil::NO_BREAKABLE:
+									break;
+								case ZLUnicodeUtil::BREAKABLE_BEFORE:
+									addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
+									firstNonSpace = 0;
+									break;
+								case ZLUnicodeUtil::BREAKABLE_AFTER:
+									breakableBefore = true;
+									break;
+							}
 						}
 					}
 					if (firstNonSpace != 0) {

@@ -94,21 +94,22 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLe
 	utf8ToUcs2(to, from.data(), from.length(), toLength);
 }
 
-ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::firstChar(const char *utf8String) {
+int ZLUnicodeUtil::firstChar(Ucs2Char &ch, const char *utf8String) {
 	if ((*utf8String & 0x80) == 0) {
-		return *utf8String;
+		ch = *utf8String;
+		return 1;
 	} else if ((*utf8String & 0x20) == 0) {
-		Ucs2Char ch = *utf8String & 0x1f;
-		ch << 6;
+		ch = *utf8String & 0x1f;
+		ch <<= 6;
 		ch += *(utf8String + 1) & 0x3f;
-		return ch;
+		return 2;
 	} else {
-		Ucs2Char ch = *utf8String & 0x0f;
+		ch = *utf8String & 0x0f;
 		ch <<= 6;
 		ch += *(utf8String + 1) & 0x3f;
 		ch <<= 6;
 		ch += *(utf8String + 2) & 0x3f;
-		return ch;
+		return 3;
 	}
 }
 
@@ -169,6 +170,62 @@ bool ZLUnicodeUtil::isSpace(Ucs2Char ch) {
 		(ch == 8239) ||
 		(ch == 8287) ||
 		(ch == 12288);
+}
+
+ZLUnicodeUtil::Breakable ZLUnicodeUtil::isBreakable(Ucs2Char c) {
+	if (c <= 0x2000) {
+		return NO_BREAKABLE;
+	}
+
+	if (((c < 0x2000) || (c > 0x2006)) &&
+			((c < 0x2008) || (c > 0x2046)) &&
+			((c < 0x207D) || (c > 0x207E)) &&
+			((c < 0x208D) || (c > 0x208E)) &&
+			((c < 0x2329) || (c > 0x232A)) &&
+			((c < 0x3001) || (c > 0x3003)) &&
+			((c < 0x3008) || (c > 0x3011)) &&
+			((c < 0x3014) || (c > 0x301F)) &&
+			((c < 0xFD3E) || (c > 0xFD3F)) &&
+			((c < 0xFE30) || (c > 0xFE44)) &&
+			((c < 0xFE49) || (c > 0xFE52)) &&
+			((c < 0xFE54) || (c > 0xFE61)) &&
+			((c < 0xFE6A) || (c > 0xFE6B)) &&
+			((c < 0xFF01) || (c > 0xFF03)) &&
+			((c < 0xFF05) || (c > 0xFF0A)) &&
+			((c < 0xFF0C) || (c > 0xFF0F)) &&
+			((c < 0xFF1A) || (c > 0xFF1B)) &&
+			((c < 0xFF1F) || (c > 0xFF20)) &&
+			((c < 0xFF3B) || (c > 0xFF3D)) &&
+			((c < 0xFF61) || (c > 0xFF65)) &&
+			(c != 0xFE63) &&
+			(c != 0xFE68) &&
+			(c != 0x3030) &&
+			(c != 0x30FB) &&
+			(c != 0xFF3F) &&
+			(c != 0xFF5B) &&
+			(c != 0xFF5D)) {
+		return NO_BREAKABLE;
+	}
+
+	if (((c >= 0x201A) && (c <= 0x201C)) ||
+			((c >= 0x201E) && (c <= 0x201F))) { 
+		return BREAKABLE_BEFORE; 
+	}
+	switch (c) { 
+		case 0x2018: case 0x2039: case 0x2045: 
+		case 0x207D: case 0x208D: case 0x2329: 
+		case 0x3008: case 0x300A: case 0x300C: 
+		case 0x300E: case 0x3010: case 0x3014: 
+		case 0x3016: case 0x3018: case 0x301A: 
+		case 0x301D: case 0xFD3E: case 0xFE35: 
+		case 0xFE37: case 0xFE39: case 0xFE3B: 
+		case 0xFE3D: case 0xFE3F: case 0xFE41: 
+		case 0xFE43: case 0xFE59: case 0xFE5B: 
+		case 0xFE5D: case 0xFF08: case 0xFF3B: 
+		case 0xFF5B: case 0xFF62: 
+			return BREAKABLE_BEFORE; 
+	} 
+	return BREAKABLE_AFTER;
 }
 
 ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::toLower(Ucs2Char ch) {

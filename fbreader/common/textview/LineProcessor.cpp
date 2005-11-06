@@ -93,12 +93,13 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 			break;
 		}
 
+		TextElement::Kind previousKind = elementKind;
 		current.nextWord();
 		bool allowBreak = current.sameElementAs(end);
 		if (!allowBreak) {
 			elementKind = paragraph[current.wordNumber()].kind();
 			allowBreak =
-				(elementKind != TextElement::WORD_ELEMENT) &&
+				((elementKind != TextElement::WORD_ELEMENT) || (previousKind == TextElement::WORD_ELEMENT)) &&
 				(elementKind != TextElement::IMAGE_ELEMENT) &&
 				(elementKind != TextElement::CONTROL_ELEMENT);
 		}
