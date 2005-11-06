@@ -94,6 +94,24 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLe
 	utf8ToUcs2(to, from.data(), from.length(), toLength);
 }
 
+ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::firstChar(const char *utf8String) {
+	if ((*utf8String & 0x80) == 0) {
+		return *utf8String;
+	} else if ((*utf8String & 0x20) == 0) {
+		Ucs2Char ch = *utf8String & 0x1f;
+		ch << 6;
+		ch += *(utf8String + 1) & 0x3f;
+		return ch;
+	} else {
+		Ucs2Char ch = *utf8String & 0x0f;
+		ch <<= 6;
+		ch += *(utf8String + 1) & 0x3f;
+		ch <<= 6;
+		ch += *(utf8String + 2) & 0x3f;
+		return ch;
+	}
+}
+
 int ZLUnicodeUtil::ucs2ToUtf8(char *to, Ucs2Char ch) {
 	if (ch < 0x80) {
 		*to = (char)ch;
@@ -137,6 +155,20 @@ bool ZLUnicodeUtil::isLetter(Ucs2Char ch) {
 		((0x410 <= ch) && (ch <= 0x44F)) ||
 		// cyrillic YO & yo
 		(ch == 0x401) || (ch == 0x451);
+}
+
+bool ZLUnicodeUtil::isSpace(Ucs2Char ch) {
+	return
+		((9 <= ch) && (ch <= 13)) ||
+		(ch == 32) ||
+		//(ch == 160) ||
+		(ch == 5760) ||
+		((8192 <= ch) && (ch <= 8203)) ||
+		(ch == 8232) ||
+		(ch == 8233) ||
+		(ch == 8239) ||
+		(ch == 8287) ||
+		(ch == 12288);
 }
 
 ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::toLower(Ucs2Char ch) {

@@ -20,7 +20,6 @@
  */
 
 #include <algorithm>
-#include <cctype>
 
 #include <abstract/ZLUnicodeUtil.h>
 
@@ -109,12 +108,12 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				if (textEntry.dataLength() != 0) {
 					const char *start = textEntry.data();
 					const char *end = start + textEntry.dataLength();
-					if (isspace(*start)) {
+					if (ZLUnicodeUtil::isSpace(ZLUnicodeUtil::firstChar(start))) {
 						myElements.push_back(TextElementPool::Pool.HSpaceElement);
 					}
 					const char *firstNonSpace = 0;
-					for (const char *ptr = start; ptr < end; ptr++) {
-						if (isspace(*ptr)) {
+					for (const char *ptr = start; ptr < end; ptr += ZLUnicodeUtil::length(ptr, 1)) {
+						if (ZLUnicodeUtil::isSpace(ZLUnicodeUtil::firstChar(ptr))) {
 							if (firstNonSpace != 0) {
 								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
 								myElements.push_back(TextElementPool::Pool.HSpaceElement);
