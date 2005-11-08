@@ -20,8 +20,6 @@
 
 #include <cctype>
 
-#include <abstract/ZLUnicodeUtil.h>
-
 #include "EncodingConverter.h"
 #include "ZLXMLReader.h"
 #include "EncodingReader.h"
@@ -41,8 +39,13 @@ EncodingConverter::~EncodingConverter() {
 
 void EncodingConverter::setEncoding(const char *encoding) {
 	if (myEncodingMap == 0) {
-		myEncodingMap = new int[256];
+		myEncodingMap = new char*[256];
+	} else {
+		for (int i = 0; i < 256; i++) {
+			delete[] myEncodingMap[i];
+		}
 	}
+	memset(myEncodingMap, 0, 256);
 
 	const std::vector<std::string> &encodings = ZLXMLReader::knownEncodings();
 	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
@@ -61,9 +64,11 @@ void EncodingConverter::setEncoding(const char *encoding) {
 
 void EncodingConverter::registerExtension(char ch, const shared_ptr<ControlSequenceExtension> extension) {
 	if (myExtensions.empty() && myEncodingMap == 0) {
-		myEncodingMap = new int[256];
+		myEncodingMap = new char*[256];
 		for (int i = 0; i < 256; i++) {
-			myEncodingMap[i] = i;
+			myEncodingMap[i] = new char[2];
+			myEncodingMap[i][0] = i;
+			myEncodingMap[i][1] = '\0';
 		}
 	}
 	myExtensions[ch] = extension;
@@ -73,7 +78,6 @@ void EncodingConverter::convert(std::string &dst, const char *srcStart, const ch
 	if (myEncodingMap == 0) {
 		dst.append(srcStart, srcEnd - srcStart);
 	} else {
-		char buffer[3];
 		dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
 		bool hasExtensions = !myExtensions.empty();
 		for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
@@ -94,7 +98,7 @@ void EncodingConverter::convert(std::string &dst, const char *srcStart, const ch
 				}
 			}
 
-			dst.append(buffer, ZLUnicodeUtil::ucs2ToUtf8(buffer, myEncodingMap[(unsigned char)*ptr]));
+			dst.append(myEncodingMap[(unsigned char)*ptr]);
 		}
 	}
 }

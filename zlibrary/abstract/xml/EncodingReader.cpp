@@ -20,6 +20,8 @@
 
 #include <stdlib.h>
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "../filesystem/ZLFSManager.h"
 #include "../filesystem/ZLInputStream.h"
 
@@ -39,10 +41,26 @@ void EncodingReader::characterDataHandler(const char *, int) {
 
 bool EncodingReader::fillTable(int *map) {
 	myMap = map;
-	for (int i = 0; i < 255; i++) {
+	for (int i = 0; i < 256; i++) {
 		myMap[i] = i;
 	}
 	return readDocument(ZLFile(myEncoding).inputStream());
+}
+
+bool EncodingReader::fillTable(char **map) {
+	int *intMap = new int[256];
+	bool code = fillTable(intMap);
+	if (code) {
+		char buffer[3];
+		for (int i = 0; i < 256; i++) {
+			int len = ZLUnicodeUtil::ucs2ToUtf8(buffer, intMap[i]);
+			map[i] = new char[len + 1];
+			memcpy(map[i], buffer, len);
+			map[i][len] = '\0';
+		}
+	}
+	delete[] intMap;
+	return code;
 }
 
 ZLXMLReader::Tag TAGS[] = {
