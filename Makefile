@@ -13,7 +13,7 @@ APPDIR = fbreader
 
 all: .lib .app
 
-install:
+install: all
 	cd $(APPDIR); make install
 
 package: all

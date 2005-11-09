@@ -47,6 +47,9 @@ public:
 	void registerExtension(char symbol, const shared_ptr<ControlSequenceExtension> extension) XML_SECTION;
 
 private:
+	void EncodingConverter::setDummyEncoding() XML_SECTION;
+
+private:
 	char **myEncodingMap;
 	std::map<char,shared_ptr<ControlSequenceExtension> > myExtensions;
 	shared_ptr<ControlSequenceExtension> myActiveExtension;

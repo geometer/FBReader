@@ -52,24 +52,30 @@ void EncodingConverter::setEncoding(const char *encoding) {
 		if (strcasecmp(encoding, it->c_str()) == 0) {
 			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
 			if (!er.fillTable(myEncodingMap)) {
-				if (myExtensions.empty()) {
-					delete[] myEncodingMap;
-					myEncodingMap = 0;
-				}
+				delete[] myEncodingMap;
+				myEncodingMap = 0;
 			}
 			break;
 		}
 	}
+
+	if (!myExtensions.empty()) {
+		setDummyEncoding();
+	}
+}
+
+void EncodingConverter::setDummyEncoding() {
+	myEncodingMap = new char*[256];
+	for (int i = 0; i < 256; i++) {
+		myEncodingMap[i] = new char[2];
+		myEncodingMap[i][0] = i;
+		myEncodingMap[i][1] = '\0';
+	}
 }
 
 void EncodingConverter::registerExtension(char ch, const shared_ptr<ControlSequenceExtension> extension) {
-	if (myExtensions.empty() && myEncodingMap == 0) {
-		myEncodingMap = new char*[256];
-		for (int i = 0; i < 256; i++) {
-			myEncodingMap[i] = new char[2];
-			myEncodingMap[i][0] = i;
-			myEncodingMap[i][1] = '\0';
-		}
+	if (myExtensions.empty() && (myEncodingMap == 0)) {
+		setDummyEncoding();
 	}
 	myExtensions[ch] = extension;
 }
