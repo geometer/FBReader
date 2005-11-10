@@ -1,6 +1,6 @@
 include $(ROOTDIR)/makefiles/arch/dummy.mk
 
-BASEDIR = /stuff/build/opensimpad-0.9.0
+BASEDIR = /stuff/build/openzaurus
 
 TOOLSDIR = $(BASEDIR)/cross/arm-linux/bin
 OEDIR = $(BASEDIR)/staging/arm-linux
