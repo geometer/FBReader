@@ -8,7 +8,7 @@ version = $(shell cat ../VERSION)
 package = fbreader-opie_$(version)_$(TARGET_ARCH)_arm.ipk
 
 all:
-ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"
+ifneq "$(TARGET_ARCH)" "qvfb"
 	@make .builddir
 	@make .buildpackage
 	@make .cleandir
