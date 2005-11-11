@@ -29,6 +29,7 @@ EncodingConverter::EncodingConverter(const char *encoding) {
 	if (encoding != 0) {
 		setEncoding(encoding);
 	}
+	myExtensionNumber = 0;
 }
 
 EncodingConverter::~EncodingConverter() {
@@ -59,7 +60,7 @@ void EncodingConverter::setEncoding(const char *encoding) {
 		}
 	}
 
-	if (!myExtensions.empty()) {
+	if (myExtensionNumber > 0) {
 		setDummyEncoding();
 	}
 }
@@ -74,10 +75,13 @@ void EncodingConverter::setDummyEncoding() {
 }
 
 void EncodingConverter::registerExtension(char ch, const shared_ptr<ControlSequenceExtension> extension) {
-	if (myExtensions.empty() && (myEncodingMap == 0)) {
+	if ((myExtensionNumber == 0) && (myEncodingMap == 0)) {
 		setDummyEncoding();
 	}
-	myExtensions[ch] = extension;
+	if (myExtensions[(unsigned char)ch].isNull()) {
+		myExtensionNumber++;
+	}
+	myExtensions[(unsigned char)ch] = extension;
 }
 
 void EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
@@ -85,13 +89,11 @@ void EncodingConverter::convert(std::string &dst, const char *srcStart, const ch
 		dst.append(srcStart, srcEnd - srcStart);
 	} else {
 		dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
-		bool hasExtensions = !myExtensions.empty();
 		for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
-			if (hasExtensions) {
+			if (myExtensionNumber > 0) {
 				if (myActiveExtension.isNull()) {
-					std::map<char,shared_ptr<ControlSequenceExtension> >::const_iterator it = myExtensions.find(*ptr);
-					if (it != myExtensions.end()) {
-						myActiveExtension = it->second;
+					myActiveExtension = myExtensions[(unsigned char)*ptr];
+					if (!myActiveExtension.isNull()) {
 						myActiveExtension->start();
 					}
 				}

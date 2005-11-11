@@ -51,7 +51,8 @@ private:
 
 private:
 	char **myEncodingMap;
-	std::map<char,shared_ptr<ControlSequenceExtension> > myExtensions;
+	shared_ptr<ControlSequenceExtension> myExtensions[256];
+	int myExtensionNumber;
 	shared_ptr<ControlSequenceExtension> myActiveExtension;
 };
 
