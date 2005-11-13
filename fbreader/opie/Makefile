@@ -24,11 +24,15 @@ clean: .cleandir
 	@mkdir -p $(BASEDIR)/bin
 	@mkdir -p $(BASEDIR)/apps/Applications
 	@mkdir -p $(BASEDIR)/pics/fbreader
-	@cp control $(DEBDIR)
+	@sed "s/VERSION/$(version)/" control.in > $(DEBDIR)/control
 	@cp ../FBReader $(BASEDIR)/bin
 	@cp fbreader.desktop $(BASEDIR)/apps/Applications
 	@cp ../icons/22x18/FBReader.png $(BASEDIR)/pics/fbreader
+ifeq "$(TARGET_ARCH)" "openzaurus"
+	@cp ../icons/34x28/FBReader/*.png $(BASEDIR)/pics/fbreader
+else
 	@cp ../icons/22x18/FBReader/*.png $(BASEDIR)/pics/fbreader
+endif
 	@cp -r ../share  $(BASEDIR)
 	@rm -rf `find $(BASEDIR)/share -name ".svn"`
 	@mkdir $(BASEDIR)/share/FBReader/help
