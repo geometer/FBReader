@@ -27,8 +27,8 @@
 #include "../formats/FormatPlugin.h"
 
 const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const {
-	static const std::string FOLDER_ICON = "FBReader/folder";
-	static const std::string ZIPFOLDER_ICON = "FBReader/zipfolder";
+	static const std::string FOLDER_ICON = ImageDirectory + "/folder";
+	static const std::string ZIPFOLDER_ICON = ImageDirectory + "/zipfolder";
 	static const std::string NO_ICON = "";
 	if (name.length() == 0) {
 		return NO_ICON;
@@ -44,7 +44,7 @@ const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string
 		return ZIPFOLDER_ICON;
 	}
 	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
-	return (plugin != 0) ? plugin->iconName() : NO_ICON;
+	return (plugin != 0) ? (ImageDirectory + "/" + plugin->iconName()) : NO_ICON;
 }
 
 void FBFileHandler::accept(const ZLTreeState &state) const {

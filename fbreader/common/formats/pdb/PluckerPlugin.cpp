@@ -49,6 +49,6 @@ bool PluckerPlugin::readModel(const BookDescription &description, BookModel &mod
 }
 
 const std::string &PluckerPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/plucker";
+	static const std::string ICON_NAME = "plucker";
 	return ICON_NAME;
 }

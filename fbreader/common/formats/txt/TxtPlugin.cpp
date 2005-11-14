@@ -66,7 +66,7 @@ bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) 
 }
 
 const std::string &TxtPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/unknown";
+	static const std::string ICON_NAME = "unknown";
 	return ICON_NAME;
 }
 

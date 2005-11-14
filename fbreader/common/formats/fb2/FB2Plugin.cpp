@@ -46,6 +46,6 @@ bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) 
 }
 
 const std::string &FB2Plugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/fb2";
+	static const std::string ICON_NAME = "fb2";
 	return ICON_NAME;
 }

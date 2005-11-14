@@ -23,6 +23,7 @@
 #include "../../common/formats/html/HtmlEntityExtension.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
+#include "../../common/fbreader/FBFileHandler.h"
 #include "QFBReader.h"
 #include "Paths.h"
 
@@ -32,6 +33,8 @@ const std::string TeXHyphenator::PatternZip = PREFIX + "hyphenationPatterns.zip"
 const std::string HtmlEntityExtension::CollectionFile = PREFIX + "formats/html/html.ent";
 const std::string FBReader::HelpDirectory = PREFIX + "help";
 const std::string EncodingDescriptionPath = PREFIX + "encodings";
+
+const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string QFBReader::ImageDirectory = "/usr/share/pixmaps";
 const std::string CollectionView::DeleteBookImageFile = QFBReader::ImageDirectory + "/FBReader/remove.png";

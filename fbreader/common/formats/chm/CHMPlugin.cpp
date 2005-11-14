@@ -85,6 +85,6 @@ bool CHMPlugin::readModel(const BookDescription &description, BookModel &model) 
 }
 
 const std::string &CHMPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/html";
+	static const std::string ICON_NAME = "html";
 	return ICON_NAME;
 }

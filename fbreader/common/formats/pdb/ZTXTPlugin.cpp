@@ -67,7 +67,7 @@ bool ZTXTPlugin::readModel(const BookDescription &description, BookModel &model)
 }
 
 const std::string &ZTXTPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/weasel";
+	static const std::string ICON_NAME = "weasel";
 	return ICON_NAME;
 }
 

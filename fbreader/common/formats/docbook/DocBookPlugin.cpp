@@ -40,6 +40,6 @@ bool DocBookPlugin::readModel(const BookDescription &description, BookModel &mod
 }
 
 const std::string &DocBookPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/unknown";
+	static const std::string ICON_NAME = "unknown";
 	return ICON_NAME;
 }

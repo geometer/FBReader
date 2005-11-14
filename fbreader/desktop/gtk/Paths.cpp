@@ -23,10 +23,13 @@
 #include "../../common/formats/html/HtmlEntityExtension.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
+#include "../../common/fbreader/FBFileHandler.h"
 #include "GtkFBReader.h"
 #include "Paths.h"
 
 static const std::string PathPrefix = std::string(INSTALLDIR) + "/share/FBReader/";
+
+const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";

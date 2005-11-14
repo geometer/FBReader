@@ -29,6 +29,9 @@
 class FBFileHandler : public ZLTreeHandler {
 
 public:
+	static const std::string ImageDirectory;
+
+public:
 	FBFileHandler() FB_DIALOG_SECTION;
 	~FBFileHandler() FB_DIALOG_SECTION;
 

@@ -67,7 +67,7 @@ bool PalmDocPlugin::readModel(const BookDescription &description, BookModel &mod
 }
 
 const std::string &PalmDocPlugin::iconName() const {
-	static const std::string ICON_NAME = "FBReader/palm";
+	static const std::string ICON_NAME = "palm";
 	return ICON_NAME;
 }
 
