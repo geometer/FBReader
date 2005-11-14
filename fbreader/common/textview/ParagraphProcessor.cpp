@@ -110,8 +110,10 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 					const char *end = start + textEntry.dataLength();
 					ZLUnicodeUtil::Ucs2Char ch;
 					ZLUnicodeUtil::firstChar(ch, start);
+					bool spaceInserted = false;
 					if (ZLUnicodeUtil::isSpace(ch)) {
 						myElements.push_back(TextElementPool::Pool.HSpaceElement);
+						spaceInserted = true;
 					}
 					const char *firstNonSpace = 0;
 					int charLength = 0;
@@ -121,6 +123,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 							if (firstNonSpace != 0) {
 								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
 								firstNonSpace = 0;
+								spaceInserted = false;
 							}
 							charLength = 0;
 							breakableBefore = false;
@@ -131,7 +134,11 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 							if (firstNonSpace != 0) {
 								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
 								myElements.push_back(TextElementPool::Pool.HSpaceElement);
+								spaceInserted = true;
 								firstNonSpace = 0;
+							} else if (!spaceInserted) {
+								myElements.push_back(TextElementPool::Pool.HSpaceElement);
+								spaceInserted = true;
 							}
 						} else if (firstNonSpace == 0) {
 							firstNonSpace = ptr;
@@ -141,7 +148,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 									break;
 								case ZLUnicodeUtil::BREAKABLE_BEFORE:
 									addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
-									firstNonSpace = 0;
+									firstNonSpace = ptr;
 									break;
 								case ZLUnicodeUtil::BREAKABLE_AFTER:
 									breakableBefore = true;
