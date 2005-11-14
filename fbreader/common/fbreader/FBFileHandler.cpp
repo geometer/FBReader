@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <map>
+
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLDir.h>
@@ -30,6 +32,7 @@ const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string
 	static const std::string FOLDER_ICON = ImageDirectory + "/folder";
 	static const std::string ZIPFOLDER_ICON = ImageDirectory + "/zipfolder";
 	static const std::string NO_ICON = "";
+	static std::map<FormatPlugin*,std::string> pluginIcons;
 	if (name.length() == 0) {
 		return NO_ICON;
 	}
@@ -44,7 +47,14 @@ const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string
 		return ZIPFOLDER_ICON;
 	}
 	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
-	return (plugin != 0) ? (ImageDirectory + "/" + plugin->iconName()) : NO_ICON;
+	if (plugin == 0) {
+		return NO_ICON;
+	}
+	std::map<FormatPlugin*,std::string>::const_iterator i = pluginIcons.find(plugin);
+	if (i == pluginIcons.end()) {
+		pluginIcons[plugin] = ImageDirectory + "/" + plugin->iconName();
+	}
+	return pluginIcons[plugin];
 }
 
 void FBFileHandler::accept(const ZLTreeState &state) const {

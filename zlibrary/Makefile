@@ -5,7 +5,7 @@ include $(MAKEFILESDIR)/config.mk
 TARGET = libzlibrary.a
 
 SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/xml/own abstract/deviceInfo abstract/view abstract/image desktop/options desktop/dialogs unix/filesystem palm/pseudostl palm/options palm/filesystem palm/dialogs palm/deviceInfo unix/time palm/time palm/view
-QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/deviceInfo qtopia/view qtopia/util qt/dialogs qt/deviceInfo qt/view qt/image qt/util opie/view opie-opensimpad/util
+QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/deviceInfo qtopia/view qtopia/util qt/dialogs qt/deviceInfo qt/view qt/image qt/util opie/view opie-opensimpad/util opie-openzaurus/util
 GTKSUBDIRS_ALL = gtk/dialogs gtk/deviceInfo gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/deviceInfo maemo/view maemo/util
 
 SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/image desktop/options desktop/dialogs abstract/deviceInfo abstract/view unix/filesystem unix/time
@@ -22,7 +22,13 @@ endif
 endif
 ifeq "$(UI_TYPE)" "opie"
 	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/image desktop/options abstract/deviceInfo abstract/view unix/filesystem unix/time
-	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/deviceInfo opie/view qtopia/options opie-opensimpad/util qt/image
+	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/deviceInfo opie/view qtopia/options qt/image
+ifeq "$(TARGET_ARCH)" "openzaurus"
+	QTSUBDIRS += opie-openzaurus/util
+endif
+ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"
+	QTSUBDIRS += opie-opensimpad/util
+endif
 endif
 ifeq "$(UI_TYPE)" "qtopia"
 	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/deviceInfo abstract/view unix/filesystem unix/time abstract/image desktop/options
