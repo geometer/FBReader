@@ -38,7 +38,11 @@ endif
 	@mkdir $(BASEDIR)/share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
 	@mkdir $(BASEDIR)/share/FBReader/default
+ifeq "$(TARGET_ARCH)" "openzaurus"
+	@cp ../data/default/keymap.pdaxrom.xml $(BASEDIR)/share/FBReader/default/keymap.xml
+else
 	@cp ../data/default/keymap.opie-opensimpad.xml $(BASEDIR)/share/FBReader/default/keymap.xml
+endif
 
 .buildpackage:
 	@dpkg -b data $(package)

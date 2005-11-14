@@ -122,6 +122,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
 								firstNonSpace = 0;
 							}
+							charLength = 0;
 							breakableBefore = false;
 							continue;
 						}

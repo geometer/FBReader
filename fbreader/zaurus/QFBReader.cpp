@@ -131,6 +131,7 @@ void QFBReader::setMode(ViewMode mode) {
 	}
 	centralWidget()->show();
 	enableMenuButtons();
+	fullScreenWorkaround();
 }
 
 void QFBReader::closeEvent(QCloseEvent *event) {
