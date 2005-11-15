@@ -60,7 +60,7 @@ void EncodingConverter::setEncoding(const char *encoding) {
 		}
 	}
 
-	if (myExtensionNumber > 0) {
+	if ((myExtensionNumber > 0) && (myEncodingMap == 0)) {
 		setDummyEncoding();
 	}
 }
