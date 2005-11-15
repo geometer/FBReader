@@ -59,9 +59,9 @@ bool ZTXTPlugin::readModel(const BookDescription &description, BookModel &model)
 	}
 
 	if (HtmlDetector().isHtml(*stream)) {
-		HtmlBookReader("", model, format).readDocument(*stream, description.encoding());
+		HtmlBookReader("", model, format, description.encoding()).readDocument(*stream);
 	} else {
-		TxtBookReader(model, format).readDocument(*stream, description.encoding());
+		TxtBookReader(model, format, description.encoding()).readDocument(*stream);
 	}
 	return true;
 }

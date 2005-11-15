@@ -85,10 +85,10 @@ private:
 	static HtmlTag tag(std::string &name) FORMATS_SECTION;
 
 public:
-	void readDocument(ZLInputStream &stream, const std::string &encoding) FORMATS_SECTION;
+	void readDocument(ZLInputStream &stream) FORMATS_SECTION;
 
 protected:
-	HtmlReader() FORMATS_SECTION;
+	HtmlReader(const std::string &encoding) FORMATS_SECTION;
 	virtual ~HtmlReader() FORMATS_SECTION;
 
 protected:

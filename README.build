@@ -1,12 +1,12 @@
 This is very short description of FBReader build procedure.
 
-0. Compiler.
+1. Compiler.
 
 All version of FBReader are configured for building on linux desktop
 computer. You need gcc compiler for building desktop version or cross
 gcc compiler for building package for another platform.
 
-1. Libraries.
+2. Libraries.
 
 FBReader requires
   ** expat -- library for XML parsing. AFAIK, all popular destributions
@@ -43,13 +43,13 @@ Before building FBReader, you should check (and may be edit) 2 files:
         TARGET_ARCH = maemo                 UI_TYPE = maemo
 
   ** makefiles/arch/$(TARGET_ARCH).mk
-     This file defines compiler name and location, headers and librarues
+     This file defines compiler name and location, headers and libraries
      locations, compilation flags, installation path (for desktop), etc.
 
 4. How to build.
 
 Just type 'make' in FBReader root directory. (FBReader root directory ==
-directory vith name like fbreader-0.7.1.)
+directory containing this file.)
 
 5. How to install.
 

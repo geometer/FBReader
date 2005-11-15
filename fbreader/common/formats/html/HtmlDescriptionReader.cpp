@@ -21,7 +21,7 @@
 
 #include "HtmlDescriptionReader.h"
 
-HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : myDescription(description) {
+HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : HtmlReader(description.encoding()), myDescription(description) {
 }
 
 void HtmlDescriptionReader::startDocumentHandler() {

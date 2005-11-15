@@ -41,6 +41,7 @@ public:
 
 private:
 	const std::string myEncoding;
+	int myBytesNumber;
 	int *myMap;
 };
 

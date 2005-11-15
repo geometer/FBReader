@@ -27,7 +27,7 @@
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format) : BookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
+HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), BookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
 }
 
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len) {

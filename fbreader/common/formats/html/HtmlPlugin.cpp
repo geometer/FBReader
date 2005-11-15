@@ -45,7 +45,7 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 	if (description.encoding().empty()) {
 		return false;
 	}
-	HtmlDescriptionReader(description).readDocument(*stream, description.encoding());
+	HtmlDescriptionReader(description).readDocument(*stream);
 	defaultTitle(description, file.name());
 	defaultLanguage(description);
 
@@ -67,7 +67,7 @@ bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model)
 
 	int index0 = fileName.rfind('/');
 	int index1 = fileName.rfind(':');
-	HtmlBookReader(fileName.substr(0, std::max(index0, index1) + 1), model, format).readDocument(*stream, description.encoding());
+	HtmlBookReader(fileName.substr(0, std::max(index0, index1) + 1), model, format, description.encoding()).readDocument(*stream);
 
 	return true;
 }

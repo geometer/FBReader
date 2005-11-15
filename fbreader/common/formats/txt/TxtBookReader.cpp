@@ -24,7 +24,7 @@
 #include "TxtBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-TxtBookReader::TxtBookReader(BookModel &model, const PlainTextFormat &format) : BookReader(model), myFormat(format) {
+TxtBookReader::TxtBookReader(BookModel &model, const PlainTextFormat &format, const std::string &encoding) : TxtReader(encoding), BookReader(model), myFormat(format) {
 }
 
 void TxtBookReader::internalEndParagraph() {

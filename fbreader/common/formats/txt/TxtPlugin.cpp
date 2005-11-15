@@ -61,7 +61,7 @@ bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) 
 		detector.detect(*stream, format);
 	}
 
-	TxtBookReader(model, format).readDocument(*stream, description.encoding());
+	TxtBookReader(model, format, description.encoding()).readDocument(*stream);
 	return true;
 }
 

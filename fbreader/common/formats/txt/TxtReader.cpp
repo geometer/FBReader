@@ -25,18 +25,16 @@
 
 #include "TxtReader.h"
 
-TxtReader::TxtReader() : myConverter(0) {
+TxtReader::TxtReader(const std::string &encoding) : myConverter(encoding.c_str()) {
 }
 
 TxtReader::~TxtReader() {
 }
 
-void TxtReader::readDocument(ZLInputStream &stream, const std::string &encoding) {
+void TxtReader::readDocument(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return;
 	}
-
-	myConverter.setEncoding(encoding.c_str());
 
 	startDocumentHandler();
 

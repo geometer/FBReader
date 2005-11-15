@@ -29,7 +29,7 @@
 #include "HtmlReader.h"
 #include "HtmlEntityExtension.h"
 
-HtmlReader::HtmlReader() {
+HtmlReader::HtmlReader(const std::string &encoding) : myConverter(encoding.c_str()) {
 	myConverter.registerExtension('&', new HtmlEntityExtension());
 }
 
@@ -126,12 +126,10 @@ enum ParseState {
 	PS_COMMENT,
 };
 
-void HtmlReader::readDocument(ZLInputStream &stream, const std::string &encoding) {
+void HtmlReader::readDocument(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return;
 	}
-
-	myConverter.setEncoding(encoding.c_str());
 
 	startDocumentHandler();
 

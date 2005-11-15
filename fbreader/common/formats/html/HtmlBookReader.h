@@ -30,10 +30,10 @@
 class BookModel;
 class PlainTextFormat;
 
-class HtmlBookReader : public BookReader, public HtmlReader {
+class HtmlBookReader : public HtmlReader, public BookReader {
 
 public:
-	HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format) FORMATS_SECTION;
+	HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) FORMATS_SECTION;
 	~HtmlBookReader() FORMATS_SECTION;
 
 protected:

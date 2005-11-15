@@ -30,10 +30,10 @@
 
 class BookModel;
 
-class TxtBookReader : public BookReader, public TxtReader {
+class TxtBookReader : public TxtReader, public BookReader {
 
 public:
-	TxtBookReader(BookModel &model, const PlainTextFormat &format) FORMATS_SECTION;
+	TxtBookReader(BookModel &model, const PlainTextFormat &format, const std::string &encoding) FORMATS_SECTION;
 	~TxtBookReader() FORMATS_SECTION;
 
 protected:

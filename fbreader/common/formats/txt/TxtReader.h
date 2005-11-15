@@ -31,10 +31,10 @@ class ZLInputStream;
 class TxtReader {
 
 public:
-	void readDocument(ZLInputStream &stream, const std::string &encoding) FORMATS_SECTION;
+	void readDocument(ZLInputStream &stream) FORMATS_SECTION;
 
 protected:
-	TxtReader() FORMATS_SECTION;
+	TxtReader(const std::string &encoding) FORMATS_SECTION;
 	virtual ~TxtReader() FORMATS_SECTION;
 
 protected:

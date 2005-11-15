@@ -74,7 +74,16 @@ const ZLXMLReader::Tag *EncodingReader::tags() const {
 }
 
 void EncodingReader::startElementHandler(int tag, const char **attributes) {
-	if ((tag == 1) && (attributes[0] != 0) && (attributes[2] != 0)) {
+	static const std::string BYTES = "bytes";
+	if (tag == 0) {
+		myBytesNumber = 1;
+		if ((attributes[0] != 0) && (BYTES == attributes[0])) {
+			myBytesNumber = atoi(attributes[1]);
+		}
+		if (myBytesNumber == 2) {
+		} else {
+		}
+	} else if ((tag == 1) && (attributes[0] != 0) && (attributes[2] != 0)) {
 		char *ptr = 0;
 		myMap[strtol(attributes[1], &ptr, 16)] = strtol(attributes[3], &ptr, 16);
 	}
