@@ -2,7 +2,7 @@
 
 export DIR=fbreader-`cat fbreader/VERSION`
 mkdir $DIR
-cp -r Makefile zlibrary fbreader makefiles $DIR
+cp -r Makefile zlibrary fbreader makefiles README.build $DIR
 
 rm -rf `find $DIR -name ".svn"`
 cd $DIR

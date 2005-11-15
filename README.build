@@ -1,0 +1,60 @@
+This is very short description of FBReader build procedure.
+
+0. Compiler.
+
+All version of FBReader are configured for building on linux desktop
+computer. You need gcc compiler for building desktop version or cross
+gcc compiler for building package for another platform.
+
+1. Libraries.
+
+FBReader requires
+  ** expat -- library for XML parsing. AFAIK, all popular destributions
+     includes package with name like 'expat-dev' or 'libepat-dev'.
+     If you cannot find expat in your distribution, please visit
+     http://expat.sourceforge.net
+  ** enca -- encoding detection library (http://trific.ath.cx/software/enca/)
+  ** UI library -- this depends on your target platform. For desktop,
+       Qt library, version >= 3.0
+     OR
+       GTK+ library, version >= 2.4 
+     should be installed.
+
+3. How to configure.
+
+Before building FBReader, you should check (and may be edit) 2 files:
+  ** makefiles/target.mk
+     In this file you should define 3 variables:
+       TARGET_ARCH -- target platform for building FBReader
+       UI_TYPE -- UI library
+       TARGET_STATUS -- "release", "debug" or "profile". "release" is
+         reasonable choice for almost all users.
+
+     Possible pairs for TARGET_ARCH + UI_TYPE are:
+        TARGET_ARCH = desktop               UI_TYPE = gtk
+        TARGET_ARCH = desktop               UI_TYPE = qt
+        TARGET_ARCH = zaurus                UI_TYPE = qtopia
+        TARGET_ARCH = openzaurus            UI_TYPE = opie
+        TARGET_ARCH = pdaxrom-1.1.0rc10     UI_TYPE = gtk
+        TARGET_ARCH = pdaxrom-1.1.0rc10     UI_TYPE = qt
+        TARGET_ARCH = pdaxrom-1.1.0rc11     UI_TYPE = gtk
+        TARGET_ARCH = pdaxrom-1.1.0rc11     UI_TYPE = qt
+        TARGET_ARCH = opensimpad-0.9.0      UI_TYPE = opie
+        TARGET_ARCH = maemo                 UI_TYPE = maemo
+
+  ** makefiles/arch/$(TARGET_ARCH).mk
+     This file defines compiler name and location, headers and librarues
+     locations, compilation flags, installation path (for desktop), etc.
+
+4. How to build.
+
+Just type 'make' in FBReader root directory. (FBReader root directory ==
+directory vith name like fbreader-0.7.1.)
+
+5. How to install.
+
+If you want to install FBReader on your desktop computer, just run 'make install'
+as root in FBReader root directory.
+
+If you want to create package for another platform, run 'make package' in
+FBReader root directory.
