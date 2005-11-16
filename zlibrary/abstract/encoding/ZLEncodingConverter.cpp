@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include "../filesystem/ZLFSManager.h"
 #include "../filesystem/ZLDir.h"
 
