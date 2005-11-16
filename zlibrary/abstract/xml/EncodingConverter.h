@@ -40,20 +40,50 @@ public:
 class EncodingConverter {
 
 public:
-	EncodingConverter::EncodingConverter(const char *encoding = 0) XML_SECTION;
-	EncodingConverter::~EncodingConverter() XML_SECTION;
-	void EncodingConverter::setEncoding(const char *encoding) XML_SECTION;
-	void EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+	static shared_ptr<EncodingConverter> createConverter(const std::string &encoding) XML_SECTION;
+
+protected:
+	EncodingConverter() XML_SECTION;
+
+public:
+	virtual ~EncodingConverter() XML_SECTION;
+	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION = 0;
 	void registerExtension(char symbol, const shared_ptr<ControlSequenceExtension> extension) XML_SECTION;
 
-private:
-	void EncodingConverter::setDummyEncoding() XML_SECTION;
-
-private:
-	char **myEncodingMap;
+protected:
 	shared_ptr<ControlSequenceExtension> myExtensions[256];
 	int myExtensionNumber;
 	shared_ptr<ControlSequenceExtension> myActiveExtension;
+};
+
+class DummyEncodingConverter : public EncodingConverter {
+
+private:
+	DummyEncodingConverter() XML_SECTION;
+
+public:
+	~DummyEncodingConverter() XML_SECTION;
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+
+friend class EncodingConverter;
+};
+
+class OneByteEncodingConverter : public EncodingConverter {
+
+private:
+	OneByteEncodingConverter(char **encodingMap) XML_SECTION;
+
+public:
+	~OneByteEncodingConverter() XML_SECTION;
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+
+private:
+	void setDummyEncoding() XML_SECTION;
+
+private:
+	char **myEncodingMap;
+
+friend class EncodingConverter;
 };
 
 inline ControlSequenceExtension::ControlSequenceExtension() {}

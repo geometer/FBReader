@@ -99,7 +99,7 @@ protected:
 	virtual bool characterDataHandler(const char *text, int len) FORMATS_SECTION = 0;
 
 protected:
-	EncodingConverter myConverter;
+	shared_ptr<EncodingConverter> myConverter;
 };
 
 inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), hasValue(false) {}

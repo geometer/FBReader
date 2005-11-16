@@ -83,7 +83,7 @@ private:
 	std::vector<int> *myParagraphVector;
 	bool myParagraphStored;
 
-	EncodingConverter myConverter;
+	shared_ptr<EncodingConverter> myConverter;
 };
 
 #endif /* __PLUCKERBOOKREADER_H__ */

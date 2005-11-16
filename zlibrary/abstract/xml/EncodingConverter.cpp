@@ -18,95 +18,103 @@
  * 02110-1301, USA.
  */
 
-#include <cctype>
-
 #include "EncodingConverter.h"
 #include "ZLXMLReader.h"
 #include "EncodingReader.h"
 
-EncodingConverter::EncodingConverter(const char *encoding) {
-	myEncodingMap = 0;
-	if (encoding != 0) {
-		setEncoding(encoding);
+shared_ptr<EncodingConverter> EncodingConverter::createConverter(const std::string &encoding) {
+	if (!encoding.empty()) {
+		const std::vector<std::string> &encodingList = ZLXMLReader::knownEncodings();
+		std::vector<std::string>::const_iterator it;
+		for (it = encodingList.begin(); it != encodingList.end(); it++) {
+			if (strcasecmp(encoding.c_str(), it->c_str()) == 0) {
+				break;
+			}
+		}
+
+		if (it != encodingList.end()) {
+			char **encodingMap = new char*[256];
+			memset(encodingMap, 0, 256);
+			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
+			if (er.fillTable(encodingMap)) {
+				return new OneByteEncodingConverter(encodingMap);
+			}
+			delete[] encodingMap;
+		}
 	}
-	myExtensionNumber = 0;
+
+	return new DummyEncodingConverter();
+}
+
+EncodingConverter::EncodingConverter() : myExtensionNumber(0) {
 }
 
 EncodingConverter::~EncodingConverter() {
-	if (myEncodingMap != 0) {
-		delete[] myEncodingMap;
-	}
-}
-
-void EncodingConverter::setEncoding(const char *encoding) {
-	if (myEncodingMap == 0) {
-		myEncodingMap = new char*[256];
-	} else {
-		for (int i = 0; i < 256; i++) {
-			delete[] myEncodingMap[i];
-		}
-	}
-	memset(myEncodingMap, 0, 256);
-
-	const std::vector<std::string> &encodings = ZLXMLReader::knownEncodings();
-	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
-		if (strcasecmp(encoding, it->c_str()) == 0) {
-			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
-			if (!er.fillTable(myEncodingMap)) {
-				delete[] myEncodingMap;
-				myEncodingMap = 0;
-			}
-			break;
-		}
-	}
-
-	if ((myExtensionNumber > 0) && (myEncodingMap == 0)) {
-		setDummyEncoding();
-	}
-}
-
-void EncodingConverter::setDummyEncoding() {
-	myEncodingMap = new char*[256];
-	for (int i = 0; i < 256; i++) {
-		myEncodingMap[i] = new char[2];
-		myEncodingMap[i][0] = i;
-		myEncodingMap[i][1] = '\0';
-	}
 }
 
 void EncodingConverter::registerExtension(char ch, const shared_ptr<ControlSequenceExtension> extension) {
-	if ((myExtensionNumber == 0) && (myEncodingMap == 0)) {
-		setDummyEncoding();
-	}
 	if (myExtensions[(unsigned char)ch].isNull()) {
 		myExtensionNumber++;
 	}
 	myExtensions[(unsigned char)ch] = extension;
 }
 
-void EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	if (myEncodingMap == 0) {
+DummyEncodingConverter::DummyEncodingConverter() {
+}
+
+DummyEncodingConverter::~DummyEncodingConverter() {
+}
+
+void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
+	if (myExtensionNumber == 0) {
 		dst.append(srcStart, srcEnd - srcStart);
 	} else {
-		dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
+		dst.reserve(dst.length() + srcEnd - srcStart);
 		for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
-			if (myExtensionNumber > 0) {
-				if (myActiveExtension.isNull()) {
-					myActiveExtension = myExtensions[(unsigned char)*ptr];
-					if (!myActiveExtension.isNull()) {
-						myActiveExtension->start();
-					}
-				}
+			if (myActiveExtension.isNull()) {
+				myActiveExtension = myExtensions[(unsigned char)*ptr];
 				if (!myActiveExtension.isNull()) {
-					if (myActiveExtension->parseCharacter(*ptr)) {
-						dst += myActiveExtension->buffer();
-						myActiveExtension = 0;
-					}
-					continue;
+					myActiveExtension->start();
 				}
 			}
-
-			dst.append(myEncodingMap[(unsigned char)*ptr]);
+			if (myActiveExtension.isNull()) {
+				dst += *ptr;
+			} else {
+				if (myActiveExtension->parseCharacter(*ptr)) {
+					dst += myActiveExtension->buffer();
+					myActiveExtension = 0;
+				}
+			}
 		}
+	}
+}
+
+OneByteEncodingConverter::OneByteEncodingConverter(char **encodingMap) : myEncodingMap(encodingMap) {
+}
+
+OneByteEncodingConverter::~OneByteEncodingConverter() {
+	delete[] myEncodingMap;
+}
+
+void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
+	dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
+	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
+		if (myExtensionNumber > 0) {
+			if (myActiveExtension.isNull()) {
+				myActiveExtension = myExtensions[(unsigned char)*ptr];
+				if (!myActiveExtension.isNull()) {
+					myActiveExtension->start();
+				}
+			}
+			if (!myActiveExtension.isNull()) {
+				if (myActiveExtension->parseCharacter(*ptr)) {
+					dst += myActiveExtension->buffer();
+					myActiveExtension = 0;
+				}
+				continue;
+			}
+		}
+
+		dst += myEncodingMap[(unsigned char)*ptr];
 	}
 }

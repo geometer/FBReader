@@ -33,7 +33,7 @@ void HtmlDescriptionReader::endDocumentHandler() {
 		const char *titleStart = myDescription.title().data();
 		const char *titleEnd = titleStart + myDescription.title().length();
 		std::string newTitle;
-		myConverter.convert(newTitle, titleStart, titleEnd);
+		myConverter->convert(newTitle, titleStart, titleEnd);
 		myDescription.title() = newTitle;
 	}
 }

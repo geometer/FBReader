@@ -45,7 +45,7 @@ protected:
 	virtual bool newLineHandler() FORMATS_SECTION = 0;
 
 private:
-	EncodingConverter myConverter;
+	shared_ptr<EncodingConverter> myConverter;
 };
 
 #endif /* __TXTREADER_H__ */

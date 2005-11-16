@@ -38,7 +38,8 @@
 #include "PluckerImages.h"
 #include "../../bookmodel/BookModel.h"
 
-PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), myFilePath(filePath), myFont(FT_REGULAR), myConverter(encoding.c_str()) {
+PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), myFilePath(filePath), myFont(FT_REGULAR) {
+	myConverter = EncodingConverter::createConverter(encoding);
 	myCharBuffer = new char[65535];
 	myBytesToSkip = 0;
 	myForcedEntry = 0;
@@ -280,7 +281,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 			if (ptr != textStart) {
 				safeBeginParagraph();
 				txtBuffer.erase();
-				myConverter.convert(txtBuffer, textStart, ptr);
+				myConverter->convert(txtBuffer, textStart, ptr);
 				addDataToBuffer(txtBuffer);
 				myBufferIsEmpty = false;
 			}
@@ -307,7 +308,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 	if (end != textStart) {
 		safeBeginParagraph();
 		txtBuffer.erase();
-		myConverter.convert(txtBuffer, textStart, end);
+		myConverter->convert(txtBuffer, textStart, end);
 		addDataToBuffer(txtBuffer);
 		myBufferIsEmpty = false;
 	}

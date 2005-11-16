@@ -29,8 +29,9 @@
 #include "HtmlReader.h"
 #include "HtmlEntityExtension.h"
 
-HtmlReader::HtmlReader(const std::string &encoding) : myConverter(encoding.c_str()) {
-	myConverter.registerExtension('&', new HtmlEntityExtension());
+HtmlReader::HtmlReader(const std::string &encoding) {
+	myConverter = EncodingConverter::createConverter(encoding);
+	myConverter->registerExtension('&', new HtmlEntityExtension());
 }
 
 HtmlReader::~HtmlReader() {

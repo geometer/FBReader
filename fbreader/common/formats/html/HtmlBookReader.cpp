@@ -32,7 +32,7 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len) {
 	if (len > 0) {
-		myConverter.convert(myConverterBuffer, text, text + len);
+		myConverter->convert(myConverterBuffer, text, text + len);
 		addDataToBuffer(myConverterBuffer);
 		myConverterBuffer.erase();
 	}

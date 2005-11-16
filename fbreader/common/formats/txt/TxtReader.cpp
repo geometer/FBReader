@@ -25,7 +25,8 @@
 
 #include "TxtReader.h"
 
-TxtReader::TxtReader(const std::string &encoding) : myConverter(encoding.c_str()) {
+TxtReader::TxtReader(const std::string &encoding) {
+	myConverter = EncodingConverter::createConverter(encoding);
 }
 
 TxtReader::~TxtReader() {
@@ -51,7 +52,7 @@ void TxtReader::readDocument(ZLInputStream &stream) {
 			if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
 				if (start != ptr) {
 					str.erase();
-					myConverter.convert(str, start, ptr);
+					myConverter->convert(str, start, ptr);
 					characterDataHandler(str);
 				}
 				start = ptr + 1;
@@ -66,7 +67,7 @@ void TxtReader::readDocument(ZLInputStream &stream) {
 		}
 		if (start != end) {
 			str.erase();
-			myConverter.convert(str, start, end);
+			myConverter->convert(str, start, end);
 			characterDataHandler(str);
 		}
   } while (length == BUFSIZE);
