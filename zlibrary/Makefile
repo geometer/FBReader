@@ -21,7 +21,7 @@ else
 endif
 endif
 ifeq "$(UI_TYPE)" "opie"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/image desktop/options abstract/deviceInfo abstract/view unix/filesystem unix/time
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image desktop/options abstract/deviceInfo abstract/view unix/filesystem unix/time
 	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/deviceInfo opie/view qtopia/options qt/image
 ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"
 	QTSUBDIRS += opie-opensimpad/util
@@ -30,7 +30,7 @@ else
 endif
 endif
 ifeq "$(UI_TYPE)" "qtopia"
-	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/deviceInfo abstract/view unix/filesystem unix/time abstract/image desktop/options
+	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/encoding abstract/deviceInfo abstract/view unix/filesystem unix/time abstract/image desktop/options
 	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/deviceInfo qtopia/view qtopia/options qtopia/util qt/image
 endif
 ifeq "$(UI_TYPE)" "maemo"
