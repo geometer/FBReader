@@ -25,7 +25,7 @@
 #include "../filesystem/ZLFSManager.h"
 #include "../filesystem/ZLInputStream.h"
 
-#include "ZLEncodingReader.h"
+#include "EncodingReader.h"
 
 EncodingReader::EncodingReader(const std::string &encoding) : myEncoding(encoding) {
 }

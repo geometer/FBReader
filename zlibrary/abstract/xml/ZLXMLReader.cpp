@@ -24,8 +24,9 @@
 #include "../filesystem/ZLFSDir.h"
 #include "../filesystem/ZLInputStream.h"
 
+#include "../encoding/EncodingReader.h"
+
 #include "ZLXMLReader.h"
-#include "../encoding/ZLEncodingReader.h"
 
 #ifdef USE_OWN_XML_PARSER
 #include "own/ZLXMLReaderInternal.h"

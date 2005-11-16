@@ -23,7 +23,7 @@
 
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
-#include "ZLEncodingReader.h"
+#include "EncodingReader.h"
 
 std::string ZLEncodingConverter::ourEncodingDescriptionPath;
 std::vector<std::string> ZLEncodingConverter::ourKnownEncodings;

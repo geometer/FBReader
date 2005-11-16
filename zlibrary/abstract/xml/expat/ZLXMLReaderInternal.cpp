@@ -24,7 +24,7 @@
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
 #include "../../encoding/ZLEncodingConverter.h"
-#include "../../encoding/ZLEncodingReader.h"
+#include "../../encoding/EncodingReader.h"
 
 static void fCharacterDataHandler(void *userData, const char *text, int len) {
 	((ZLXMLReader*)userData)->characterDataHandler(text, len);
