@@ -51,13 +51,11 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 		}
 
 		if (it != encodingList.end()) {
-			char **encodingMap = new char*[256];
-			memset(encodingMap, 0, 256);
 			EncodingReader er(encodingDescriptionPath() + '/' + *it);
-			if (er.fillTable(encodingMap)) {
+			char **encodingMap = er.createCharTable();
+			if (encodingMap != 0) {
 				return new OneByteEncodingConverter(encodingMap);
 			}
-			delete[] encodingMap;
 		}
 	}
 

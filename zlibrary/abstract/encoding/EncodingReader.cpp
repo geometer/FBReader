@@ -47,20 +47,25 @@ bool EncodingReader::fillTable(int *map) {
 	return readDocument(ZLFile(myEncoding).inputStream());
 }
 
-bool EncodingReader::fillTable(char **map) {
+char **EncodingReader::createCharTable() {
 	int *intMap = new int[256];
 	bool code = fillTable(intMap);
 	if (code) {
+		char **encodingMap = new char*[256];
+		memset(encodingMap, 0, 256);
 		char buffer[3];
 		for (int i = 0; i < 256; i++) {
 			int len = ZLUnicodeUtil::ucs2ToUtf8(buffer, intMap[i]);
-			map[i] = new char[len + 1];
-			memcpy(map[i], buffer, len);
-			map[i][len] = '\0';
+			encodingMap[i] = new char[len + 1];
+			memcpy(encodingMap[i], buffer, len);
+			encodingMap[i][len] = '\0';
 		}
+		delete[] intMap;
+		return encodingMap;
+	} else {
+		delete[] intMap;
+		return 0;
 	}
-	delete[] intMap;
-	return code;
 }
 
 ZLXMLReader::Tag TAGS[] = {

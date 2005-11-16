@@ -28,7 +28,7 @@ class EncodingReader : public ZLXMLReader {
 public:
 	EncodingReader(const std::string &encoding) XML_SECTION;
 	~EncodingReader() XML_SECTION;
-	bool fillTable(char **map) XML_SECTION;
+	char **createCharTable() XML_SECTION;
 	bool fillTable(int *map) XML_SECTION;
 
 protected:
