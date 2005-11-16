@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <abstract/ZLEncodingConverter.h>
+
 #include "InfoOptions.h"
 
 static const char *languageShortNames[] = {
@@ -68,7 +70,7 @@ const std::vector<std::string> &EncodingEntry::values() const {
 		}
 		return AUTO_ENCODING;
 	}
-	return ZLXMLReader::knownEncodings();
+	return ZLEncodingConverter::knownEncodings();
 }
 
 const std::string &EncodingEntry::name() const {

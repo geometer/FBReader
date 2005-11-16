@@ -24,7 +24,7 @@
 
 #include <libosso.h>
 
-#include <abstract/ZLXMLReader.h>
+#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 
 	ZLUnixFSManager::createInstance();
 	ZLUnixTimeManager::createInstance();
-	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
+	ZLEncodingConverter::setEncodingDescriptionPath(EncodingDescriptionPath);
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();

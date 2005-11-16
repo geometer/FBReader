@@ -20,7 +20,6 @@
  */
 
 #include <abstract/ZLFSManager.h>
-#include <abstract/EncodingConverter.h>
 
 #include "PdbReader.h"
 #include "../../bookmodel/BookModel.h"

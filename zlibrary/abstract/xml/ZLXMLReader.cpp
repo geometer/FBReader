@@ -25,28 +25,13 @@
 #include "../filesystem/ZLInputStream.h"
 
 #include "ZLXMLReader.h"
-#include "EncodingReader.h"
+#include "../encoding/ZLEncodingReader.h"
 
 #ifdef USE_OWN_XML_PARSER
 #include "own/ZLXMLReaderInternal.h"
 #else // USE_OWN_XML_PARSER
 #include "expat/ZLXMLReaderInternal.h"
 #endif // USE_OWN_XML_PARSER
-
-std::string ZLXMLReader::ourEncodingDescriptionPath;
-std::vector<std::string> ZLXMLReader::ourKnownEncodings;
-
-void ZLXMLReader::setEncodingDescriptionPath(const std::string &path) {
-	ourEncodingDescriptionPath = path;
-	ourKnownEncodings.clear();
-	shared_ptr<ZLDir> dir = ZLFile(ourEncodingDescriptionPath).directory();
-	if (!dir.isNull()) {
-		dir->collectFiles(ourKnownEncodings, true);
-	}
-	ourKnownEncodings.push_back("US-ASCII");
-	ourKnownEncodings.push_back("UTF-8");
-	std::sort(ourKnownEncodings.begin(), ourKnownEncodings.end());
-}
 
 int ZLXMLReader::tag(const char *name) {
 	const Tag *_tags = tags();

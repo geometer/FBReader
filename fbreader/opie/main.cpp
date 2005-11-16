@@ -21,7 +21,7 @@
 
 #include <qpe/qpeapplication.h>
 
-#include <abstract/ZLXMLReader.h>
+#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixTime.h>
 #include <unix/ZLUnixFSManager.h>
 #include <desktop/XMLOptions.h>
@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 
 	ZLUnixTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
-	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
+	ZLEncodingConverter::setEncodingDescriptionPath(EncodingDescriptionPath);
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QImageManager::createInstance();

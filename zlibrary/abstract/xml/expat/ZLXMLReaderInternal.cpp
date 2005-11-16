@@ -23,7 +23,8 @@
 
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
-#include "../EncodingReader.h"
+#include "../../encoding/ZLEncodingConverter.h"
+#include "../../encoding/ZLEncodingReader.h"
 
 static void fCharacterDataHandler(void *userData, const char *text, int len) {
 	((ZLXMLReader*)userData)->characterDataHandler(text, len);
@@ -39,10 +40,10 @@ static void fEndElementHandler(void *userData, const char *name) {
 
 static int fUnknownEncodingHandler(void *, const XML_Char *name, XML_Encoding *info) {
 	bool code = false;
-	const std::vector<std::string> &encodings = ZLXMLReader::knownEncodings();
+	const std::vector<std::string> &encodings = ZLEncodingConverter::knownEncodings();
 	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
 		if (strcasecmp(name, it->c_str()) == 0) {
-			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
+			EncodingReader er(ZLEncodingConverter::encodingDescriptionPath() + '/' + *it);
 			code = er.fillTable(info->map);
 			break;
 		}

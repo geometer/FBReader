@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004, 2005 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,33 +18,39 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TXTREADER_H__
-#define __TXTREADER_H__
+#ifndef __ENCODINGCONVERTERS_H__
+#define __ENCODINGCONVERTERS_H__
 
-#include <string>
+#include "ZLEncodingConverter.h"
 
-#include <abstract/ZLEncodingConverter.h>
-
-class ZLInputStream;
-
-class TxtReader {
-
-public:
-	void readDocument(ZLInputStream &stream) FORMATS_SECTION;
-
-protected:
-	TxtReader(const std::string &encoding) FORMATS_SECTION;
-	virtual ~TxtReader() FORMATS_SECTION;
-
-protected:
-	virtual void startDocumentHandler() FORMATS_SECTION = 0;
-	virtual void endDocumentHandler() FORMATS_SECTION = 0;
-
-	virtual bool characterDataHandler(std::string &str) FORMATS_SECTION = 0;
-	virtual bool newLineHandler() FORMATS_SECTION = 0;
+class DummyEncodingConverter : public ZLEncodingConverter {
 
 private:
-	shared_ptr<ZLEncodingConverter> myConverter;
+	DummyEncodingConverter() XML_SECTION;
+
+public:
+	~DummyEncodingConverter() XML_SECTION;
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+
+friend class ZLEncodingConverter;
 };
 
-#endif /* __TXTREADER_H__ */
+class OneByteEncodingConverter : public ZLEncodingConverter {
+
+private:
+	OneByteEncodingConverter(char **encodingMap) XML_SECTION;
+
+public:
+	~OneByteEncodingConverter() XML_SECTION;
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+
+private:
+	void setDummyEncoding() XML_SECTION;
+
+private:
+	char **myEncodingMap;
+
+friend class ZLEncodingConverter;
+};
+
+#endif /* __ENCODINGCONVERTERS_H__ */

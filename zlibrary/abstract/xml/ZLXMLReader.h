@@ -32,17 +32,10 @@ class ZLXMLReaderInternal;
 class ZLXMLReader {
 
 public:
-	static void setEncodingDescriptionPath(const std::string &path) XML_SECTION;
-	static std::string &encodingDescriptionPath() XML_SECTION;
-	static std::vector<std::string> &knownEncodings() XML_SECTION;
 	static size_t bufferSize() { return 2048; }
 
 protected:
   static const char *attributeValue(const char **xmlattributes, const char *name) XML_SECTION;
-
-private:
-	static std::string ourEncodingDescriptionPath;
-	static std::vector<std::string> ourKnownEncodings;
 
 	//
 //protected:
@@ -75,8 +68,5 @@ private:
 	ZLXMLReaderInternal *myInternalReader;
 	char *myParserBuffer;
 };
-
-inline std::string &ZLXMLReader::encodingDescriptionPath() { return ourEncodingDescriptionPath; }
-inline std::vector<std::string> &ZLXMLReader::knownEncodings() { return ourKnownEncodings; }
 
 #endif /* __ZLXMLREADER_H__ */

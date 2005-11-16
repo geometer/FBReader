@@ -39,7 +39,7 @@
 #include "../../bookmodel/BookModel.h"
 
 PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), myFilePath(filePath), myFont(FT_REGULAR) {
-	myConverter = EncodingConverter::createConverter(encoding);
+	myConverter = ZLEncodingConverter::createConverter(encoding);
 	myCharBuffer = new char[65535];
 	myBytesToSkip = 0;
 	myForcedEntry = 0;

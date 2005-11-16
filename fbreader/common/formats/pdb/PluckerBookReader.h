@@ -25,7 +25,7 @@
 #include <set>
 #include <map>
 
-#include <abstract/EncodingConverter.h>
+#include <abstract/ZLEncodingConverter.h>
 
 #include "../../bookmodel/BookReader.h"
 
@@ -83,7 +83,7 @@ private:
 	std::vector<int> *myParagraphVector;
 	bool myParagraphStored;
 
-	shared_ptr<EncodingConverter> myConverter;
+	shared_ptr<ZLEncodingConverter> myConverter;
 };
 
 #endif /* __PLUCKERBOOKREADER_H__ */

@@ -21,7 +21,7 @@
 
 #include <qapplication.h>
 
-#include <abstract/ZLXMLReader.h>
+#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
@@ -42,7 +42,7 @@ int main(int argc, char **argv) {
 	QDialogManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QFBReader::ImageDirectory);
 	QImageManager::createInstance();
-	ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
+	ZLEncodingConverter::setEncodingDescriptionPath(EncodingDescriptionPath);
 	QDeviceInfo::createInstance();
 
 	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);

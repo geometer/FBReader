@@ -23,7 +23,6 @@
 #define __INFOOPTIONS_H__
 
 #include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLXMLReader.h>
 
 class StringInfoEntry : public ZLStringOptionEntry {
 

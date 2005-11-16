@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include <abstract/EncodingConverter.h>
+#include <abstract/ZLEncodingConverter.h>
 
 class ZLInputStream;
 
@@ -99,7 +99,7 @@ protected:
 	virtual bool characterDataHandler(const char *text, int len) FORMATS_SECTION = 0;
 
 protected:
-	shared_ptr<EncodingConverter> myConverter;
+	shared_ptr<ZLEncodingConverter> myConverter;
 };
 
 inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), hasValue(false) {}

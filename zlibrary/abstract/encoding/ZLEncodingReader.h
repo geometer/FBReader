@@ -21,7 +21,7 @@
 #ifndef __ENCODINGREADER_H__
 #define __ENCODINGREADER_H__
 
-#include "ZLXMLReader.h"
+#include "../xml/ZLXMLReader.h"
 
 class EncodingReader : public ZLXMLReader {
 

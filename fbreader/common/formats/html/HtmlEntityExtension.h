@@ -22,10 +22,12 @@
 #ifndef __HTMLENTITYEXTENSION_H__
 #define __HTMLENTITYEXTENSION_H__
 
-#include <abstract/EncodingConverter.h>
+#include <map>
+
+#include <abstract/ZLEncodingConverter.h>
 #include <abstract/ZLXMLReader.h>
 
-class HtmlEntityExtension : public ControlSequenceExtension {
+class HtmlEntityExtension : public ZLControlSequenceExtension {
 
 public:
 	static const std::string CollectionFile;

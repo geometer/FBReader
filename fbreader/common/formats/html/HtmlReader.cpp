@@ -30,7 +30,7 @@
 #include "HtmlEntityExtension.h"
 
 HtmlReader::HtmlReader(const std::string &encoding) {
-	myConverter = EncodingConverter::createConverter(encoding);
+	myConverter = ZLEncodingConverter::createConverter(encoding);
 	myConverter->registerExtension('&', new HtmlEntityExtension());
 }
 

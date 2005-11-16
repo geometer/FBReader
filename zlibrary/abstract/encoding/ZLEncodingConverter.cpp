@@ -18,13 +18,31 @@
  * 02110-1301, USA.
  */
 
-#include "EncodingConverter.h"
-#include "ZLXMLReader.h"
-#include "EncodingReader.h"
+#include "../filesystem/ZLFSManager.h"
+#include "../filesystem/ZLDir.h"
 
-shared_ptr<EncodingConverter> EncodingConverter::createConverter(const std::string &encoding) {
+#include "ZLEncodingConverter.h"
+#include "EncodingConverters.h"
+#include "ZLEncodingReader.h"
+
+std::string ZLEncodingConverter::ourEncodingDescriptionPath;
+std::vector<std::string> ZLEncodingConverter::ourKnownEncodings;
+
+void ZLEncodingConverter::setEncodingDescriptionPath(const std::string &path) {
+	ourEncodingDescriptionPath = path;
+	ourKnownEncodings.clear();
+	shared_ptr<ZLDir> dir = ZLFile(ourEncodingDescriptionPath).directory();
+	if (!dir.isNull()) {
+		dir->collectFiles(ourKnownEncodings, true);
+	}
+	ourKnownEncodings.push_back("US-ASCII");
+	ourKnownEncodings.push_back("UTF-8");
+	std::sort(ourKnownEncodings.begin(), ourKnownEncodings.end());
+}
+
+shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::string &encoding) {
 	if (!encoding.empty()) {
-		const std::vector<std::string> &encodingList = ZLXMLReader::knownEncodings();
+		const std::vector<std::string> &encodingList = knownEncodings();
 		std::vector<std::string>::const_iterator it;
 		for (it = encodingList.begin(); it != encodingList.end(); it++) {
 			if (strcasecmp(encoding.c_str(), it->c_str()) == 0) {
@@ -35,7 +53,7 @@ shared_ptr<EncodingConverter> EncodingConverter::createConverter(const std::stri
 		if (it != encodingList.end()) {
 			char **encodingMap = new char*[256];
 			memset(encodingMap, 0, 256);
-			EncodingReader er(ZLXMLReader::encodingDescriptionPath() + '/' + *it);
+			EncodingReader er(encodingDescriptionPath() + '/' + *it);
 			if (er.fillTable(encodingMap)) {
 				return new OneByteEncodingConverter(encodingMap);
 			}
@@ -46,13 +64,13 @@ shared_ptr<EncodingConverter> EncodingConverter::createConverter(const std::stri
 	return new DummyEncodingConverter();
 }
 
-EncodingConverter::EncodingConverter() : myExtensionNumber(0) {
+ZLEncodingConverter::ZLEncodingConverter() : myExtensionNumber(0) {
 }
 
-EncodingConverter::~EncodingConverter() {
+ZLEncodingConverter::~ZLEncodingConverter() {
 }
 
-void EncodingConverter::registerExtension(char ch, const shared_ptr<ControlSequenceExtension> extension) {
+void ZLEncodingConverter::registerExtension(char ch, const shared_ptr<ZLControlSequenceExtension> extension) {
 	if (myExtensions[(unsigned char)ch].isNull()) {
 		myExtensionNumber++;
 	}
