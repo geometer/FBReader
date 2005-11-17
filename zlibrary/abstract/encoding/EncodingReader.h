@@ -25,24 +25,55 @@
 
 class EncodingReader : public ZLXMLReader {
 
-public:
+protected:
 	EncodingReader(const std::string &encoding) XML_SECTION;
-	~EncodingReader() XML_SECTION;
-	char **createCharTable() XML_SECTION;
-	bool fillTable(int *map) XML_SECTION;
+
+public:
+	virtual ~EncodingReader() XML_SECTION;
 
 protected:
 	const Tag *tags() const XML_SECTION;
 
 public:
-	void startElementHandler(int tag, const char **attributes) XML_SECTION;
+	virtual void startElementHandler(int tag, const char **attributes) XML_SECTION;
 	void endElementHandler(int) XML_SECTION;
 	void characterDataHandler(const char *, int) XML_SECTION;
+	int bytesNumber() const XML_SECTION;
+
+protected:
+	const std::string myFilePath;
+	int myBytesNumber;
+};
+
+class EncodingIntReader : public EncodingReader {
+
+public:
+	EncodingIntReader(const std::string &encoding) XML_SECTION;
+	~EncodingIntReader() XML_SECTION;
+	bool fillTable(int *map) XML_SECTION;
+
+public:
+	void startElementHandler(int tag, const char **attributes) XML_SECTION;
 
 private:
-	const std::string myEncoding;
-	int myBytesNumber;
 	int *myMap;
 };
+
+class EncodingCharReader : public EncodingReader {
+
+public:
+	EncodingCharReader(const std::string &encoding) XML_SECTION;
+	~EncodingCharReader() XML_SECTION;
+	char **createTable() XML_SECTION;
+
+public:
+	void startElementHandler(int tag, const char **attributes) XML_SECTION;
+
+private:
+	char **myMap;
+	char myBuffer[3];
+};
+
+inline int EncodingReader::bytesNumber() const { return myBytesNumber; }
 
 #endif /* __ENCODINGREADER_H__ */

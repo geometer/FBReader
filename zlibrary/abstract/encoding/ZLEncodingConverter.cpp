@@ -53,10 +53,14 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 		}
 
 		if (it != encodingList.end()) {
-			EncodingReader er(encodingDescriptionPath() + '/' + *it);
-			char **encodingMap = er.createCharTable();
+			EncodingCharReader er(*it);
+			char **encodingMap = er.createTable();
 			if (encodingMap != 0) {
-				return new OneByteEncodingConverter(encodingMap);
+				if (er.bytesNumber() == 1) {
+					return new OneByteEncodingConverter(encodingMap);
+				} else if (er.bytesNumber() == 2) {
+					return new TwoBytesEncodingConverter(encodingMap);
+				}
 			}
 		}
 	}
@@ -75,6 +79,9 @@ void ZLEncodingConverter::registerExtension(char ch, const shared_ptr<ZLControlS
 		myExtensionNumber++;
 	}
 	myExtensions[(unsigned char)ch] = extension;
+}
+
+void ZLEncodingConverter::reset() {
 }
 
 DummyEncodingConverter::DummyEncodingConverter() {
@@ -108,9 +115,19 @@ void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, con
 }
 
 OneByteEncodingConverter::OneByteEncodingConverter(char **encodingMap) : myEncodingMap(encodingMap) {
+	for (int i = 0; i < 256; i++) {
+		if (myEncodingMap[i] == 0) {
+			myEncodingMap[i] = new char[2];
+			myEncodingMap[i][0] = i;
+			myEncodingMap[i][1] = '\0';
+		}
+	}
 }
 
 OneByteEncodingConverter::~OneByteEncodingConverter() {
+	for (int i = 0; i < 256; i++) {
+		delete[] myEncodingMap[i];
+	}
 	delete[] myEncodingMap;
 }
 
@@ -135,4 +152,66 @@ void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, c
 
 		dst += myEncodingMap[(unsigned char)*ptr];
 	}
+}
+
+TwoBytesEncodingConverter::TwoBytesEncodingConverter(char **encodingMap) : myEncodingMap(encodingMap), myLastCharIsNotProcessed(false) {
+}
+
+TwoBytesEncodingConverter::~TwoBytesEncodingConverter() {
+	for (int i = 0; i < 32768; i++) {
+		if (myEncodingMap[i] != 0) {
+			delete[] myEncodingMap[i];
+		}
+	}
+	delete[] myEncodingMap;
+}
+
+void TwoBytesEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
+	if (srcStart == srcEnd) {
+		return;
+	}
+
+	dst.reserve(dst.length() + 3 * (srcEnd - srcStart) / 2);
+	if (myLastCharIsNotProcessed) {
+		const char *utf8 = myEncodingMap[0x100 * (myLastChar & 0x7F) + (unsigned char)*srcStart];
+		if (utf8 != 0) {
+			dst += utf8;
+		}
+		srcStart++;
+		myLastCharIsNotProcessed = false;
+	}
+	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
+		if (myExtensionNumber > 0) {
+			if (myActiveExtension.isNull()) {
+				myActiveExtension = myExtensions[(unsigned char)*ptr];
+				if (!myActiveExtension.isNull()) {
+					myActiveExtension->start();
+				}
+			}
+			if (!myActiveExtension.isNull()) {
+				if (myActiveExtension->parseCharacter(*ptr)) {
+					dst += myActiveExtension->buffer();
+					myActiveExtension = 0;
+				}
+				continue;
+			}
+		}
+
+		if (((*ptr) & 0x80) == 0) {
+			dst += *ptr;
+		} else if (ptr + 1 == srcEnd) {
+			myLastChar = *ptr;
+			myLastCharIsNotProcessed = true;
+		} else {
+			const char *utf8 = myEncodingMap[0x100 * ((*ptr) & 0x7F) + (unsigned char)*(ptr + 1)];
+			if (utf8 != 0) {
+				dst += utf8;
+			}
+			ptr++;
+		}
+	}
+}
+
+void TwoBytesEncodingConverter::reset() {
+	myLastCharIsNotProcessed = false;
 }

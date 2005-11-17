@@ -53,9 +53,10 @@ protected:
 	ZLEncodingConverter() XML_SECTION;
 
 public:
+	void registerExtension(char symbol, const shared_ptr<ZLControlSequenceExtension> extension) XML_SECTION;
 	virtual ~ZLEncodingConverter() XML_SECTION;
 	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION = 0;
-	void registerExtension(char symbol, const shared_ptr<ZLControlSequenceExtension> extension) XML_SECTION;
+	virtual void reset() XML_SECTION;
 
 protected:
 	shared_ptr<ZLControlSequenceExtension> myExtensions[256];

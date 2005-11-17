@@ -26,8 +26,9 @@
 #include "../filesystem/ZLInputStream.h"
 
 #include "EncodingReader.h"
+#include "ZLEncodingConverter.h"
 
-EncodingReader::EncodingReader(const std::string &encoding) : myEncoding(encoding) {
+EncodingReader::EncodingReader(const std::string &encoding) : myFilePath(ZLEncodingConverter::encodingDescriptionPath() + '/' + encoding) {
 }
 
 EncodingReader::~EncodingReader() {
@@ -37,35 +38,6 @@ void EncodingReader::endElementHandler(int) {
 }
 
 void EncodingReader::characterDataHandler(const char *, int) {
-}
-
-bool EncodingReader::fillTable(int *map) {
-	myMap = map;
-	for (int i = 0; i < 256; i++) {
-		myMap[i] = i;
-	}
-	return readDocument(ZLFile(myEncoding).inputStream());
-}
-
-char **EncodingReader::createCharTable() {
-	int *intMap = new int[256];
-	bool code = fillTable(intMap);
-	if (code) {
-		char **encodingMap = new char*[256];
-		memset(encodingMap, 0, 256);
-		char buffer[3];
-		for (int i = 0; i < 256; i++) {
-			int len = ZLUnicodeUtil::ucs2ToUtf8(buffer, intMap[i]);
-			encodingMap[i] = new char[len + 1];
-			memcpy(encodingMap[i], buffer, len);
-			encodingMap[i][len] = '\0';
-		}
-		delete[] intMap;
-		return encodingMap;
-	} else {
-		delete[] intMap;
-		return 0;
-	}
 }
 
 ZLXMLReader::Tag TAGS[] = {
@@ -78,18 +50,85 @@ const ZLXMLReader::Tag *EncodingReader::tags() const {
 	return TAGS;
 }
 
+static const std::string BYTES = "bytes";
+
 void EncodingReader::startElementHandler(int tag, const char **attributes) {
-	static const std::string BYTES = "bytes";
 	if (tag == 0) {
 		myBytesNumber = 1;
 		if ((attributes[0] != 0) && (BYTES == attributes[0])) {
 			myBytesNumber = atoi(attributes[1]);
 		}
-		if (myBytesNumber == 2) {
-		} else {
-		}
-	} else if ((tag == 1) && (attributes[0] != 0) && (attributes[2] != 0)) {
+	}
+}
+
+EncodingIntReader::EncodingIntReader(const std::string &encoding) : EncodingReader(encoding) {
+}
+
+EncodingIntReader::~EncodingIntReader() {
+}
+
+bool EncodingIntReader::fillTable(int *map) {
+	myMap = map;
+	for (int i = 0; i < 256; i++) {
+		myMap[i] = i;
+	}
+	return readDocument(ZLFile(myFilePath).inputStream());
+}
+
+void EncodingIntReader::startElementHandler(int tag, const char **attributes) {
+	EncodingReader::startElementHandler(tag, attributes);
+	if ((tag == 1) && (attributes[0] != 0) && (attributes[2] != 0)) {
 		char *ptr = 0;
 		myMap[strtol(attributes[1], &ptr, 16)] = strtol(attributes[3], &ptr, 16);
+	}
+}
+
+EncodingCharReader::EncodingCharReader(const std::string &encoding) : EncodingReader(encoding) {
+}
+
+EncodingCharReader::~EncodingCharReader() {
+}
+
+char **EncodingCharReader::createTable() {
+	myMap = 0;
+	if (!readDocument(ZLFile(myFilePath).inputStream()) && (myMap != 0)) {
+		int length = (myBytesNumber == 1) ? 256 : 32768;
+		for (int i = 0; i < length; i++) {
+			if (myMap[i] != 0) {
+				delete[] myMap[i];
+			}
+		}
+		delete[] myMap;
+		myMap = 0;
+	}
+
+	return myMap;
+}
+
+void EncodingCharReader::startElementHandler(int tag, const char **attributes) {
+	EncodingReader::startElementHandler(tag, attributes);
+
+	if (tag == 0) {
+		int length = (myBytesNumber == 1) ? 256 : 32768;
+		myMap = new char*[length];
+		memset(myMap, 0, length * sizeof(char*));
+	} else if ((tag == 1) && (attributes[0] != 0) && (attributes[2] != 0)) {
+		static char *ptr = 0;
+		int index = strtol(attributes[1], &ptr, 16);
+		if (myBytesNumber == 1) {
+			if ((index < 0) || (index >= 256)) {
+				return;
+			}
+		} else {
+			index -= 32768;
+			if ((index < 0) || (index >= 32768)) {
+				return;
+			}
+		}
+		int value = strtol(attributes[3], &ptr, 16);
+		int len = ZLUnicodeUtil::ucs2ToUtf8(myBuffer, value);
+		myMap[index] = new char[len + 1];
+		memcpy(myMap[index], myBuffer, len);
+		myMap[index][len] = '\0';
 	}
 }

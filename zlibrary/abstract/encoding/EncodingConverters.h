@@ -45,10 +45,26 @@ public:
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
 
 private:
-	void setDummyEncoding() XML_SECTION;
+	char **myEncodingMap;
+
+friend class ZLEncodingConverter;
+};
+
+class TwoBytesEncodingConverter : public ZLEncodingConverter {
+
+private:
+	TwoBytesEncodingConverter(char **encodingMap) XML_SECTION;
+
+public:
+	~TwoBytesEncodingConverter() XML_SECTION;
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+	void reset() XML_SECTION;
 
 private:
 	char **myEncodingMap;
+	
+	char myLastChar;
+	bool myLastCharIsNotProcessed;
 
 friend class ZLEncodingConverter;
 };

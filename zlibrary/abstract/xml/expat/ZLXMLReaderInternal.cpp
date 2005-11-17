@@ -43,7 +43,7 @@ static int fUnknownEncodingHandler(void *, const XML_Char *name, XML_Encoding *i
 	const std::vector<std::string> &encodings = ZLEncodingConverter::knownEncodings();
 	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
 		if (strcasecmp(name, it->c_str()) == 0) {
-			EncodingReader er(ZLEncodingConverter::encodingDescriptionPath() + '/' + *it);
+			EncodingIntReader er(*it);
 			code = er.fillTable(info->map);
 			break;
 		}

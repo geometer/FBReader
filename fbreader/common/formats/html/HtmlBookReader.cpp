@@ -39,6 +39,7 @@ void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len) {
 }
 
 bool HtmlBookReader::tagHandler(HtmlTag tag) {
+	myConverter->reset();
 	switch(tag.Code) {
 		case _BODY:
 			break;
