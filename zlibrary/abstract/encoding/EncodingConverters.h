@@ -21,6 +21,8 @@
 #ifndef __ENCODINGCONVERTERS_H__
 #define __ENCODINGCONVERTERS_H__
 
+#include <iconv.h>
+
 #include "ZLEncodingConverter.h"
 
 class DummyEncodingConverter : public ZLEncodingConverter {
@@ -65,6 +67,24 @@ private:
 	
 	char myLastChar;
 	bool myLastCharIsNotProcessed;
+
+friend class ZLEncodingConverter;
+};
+
+class IconvEncodingConverter : public ZLEncodingConverter {
+
+private:
+	IconvEncodingConverter(const std::string &encoding) XML_SECTION;
+
+public:
+	~IconvEncodingConverter() XML_SECTION;
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+	void reset() XML_SECTION;
+	bool isInitialized() const XML_SECTION;
+
+private:
+	iconv_t myIConverter;
+	std::string myBuffer;
 
 friend class ZLEncodingConverter;
 };
