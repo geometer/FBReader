@@ -40,7 +40,7 @@ void EncodingReader::endElementHandler(int) {
 void EncodingReader::characterDataHandler(const char *, int) {
 }
 
-ZLXMLReader::Tag TAGS[] = {
+static ZLXMLReader::Tag TAGS[] = {
 	{ "encoding", 0 },
 	{ "char", 1 },
 	{ 0, 2 }

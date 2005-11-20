@@ -18,48 +18,20 @@
  * 02110-1301, USA.
  */
 
-#include <algorithm>
-//#include <iostream>
-
-#include "../filesystem/ZLFSManager.h"
-#include "../filesystem/ZLDir.h"
-
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
 #include "EncodingReader.h"
-
-std::string ZLEncodingConverter::ourEncodingDescriptionPath;
-std::vector<std::string> ZLEncodingConverter::ourKnownEncodings;
-
-void ZLEncodingConverter::setEncodingDescriptionPath(const std::string &path) {
-	ourEncodingDescriptionPath = path;
-	ourKnownEncodings.clear();
-	shared_ptr<ZLDir> dir = ZLFile(ourEncodingDescriptionPath).directory();
-	if (!dir.isNull()) {
-		dir->collectFiles(ourKnownEncodings, true);
-	}
-	ourKnownEncodings.push_back("US-ASCII");
-	ourKnownEncodings.push_back("UTF-8");
-	std::sort(ourKnownEncodings.begin(), ourKnownEncodings.end());
-	/*
-	for (std::vector<std::string>::const_iterator i = ourKnownEncodings.begin(); i != ourKnownEncodings.end(); i++) {
-		std::cerr << *i << ": " << ((iconv_open("utf-8", i->c_str()) != (iconv_t)-1) ? '+' : '-') << "\n";
-	}
-	*/
-}
 
 shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::string &encoding) {
 	if (encoding.empty()) {
 		return new DummyEncodingConverter();
 	}
 
-	/*
 	IconvEncodingConverter *converter = new IconvEncodingConverter(encoding);
 	if (converter->isInitialized()) {
 		return converter;
 	}
 	delete converter;
-	*/
 
 	const std::vector<std::string> &encodingList = knownEncodings();
 	std::vector<std::string>::const_iterator it;
@@ -243,51 +215,47 @@ IconvEncodingConverter::~IconvEncodingConverter() {
 }
 
 void IconvEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	if (srcStart == srcEnd) {
+	if ((srcStart == srcEnd) || (myIConverter == (iconv_t)-1)) {
 		return;
 	}
 
 	// TODO: process extensions
-	if (myIConverter == (iconv_t)-1) {
-		dst.append(srcStart, srcEnd - srcStart);
+	size_t inSize;
+	char *in;
+	if (myBuffer.empty()) {
+		inSize = srcEnd - srcStart;
+		in = (char*)srcStart;
 	} else {
-		size_t inSize;
-		char *in;
-		if (myBuffer.empty()) {
-			inSize = srcEnd - srcStart;
-			in = (char*)srcStart;
-		} else {
-			myBuffer.append(srcStart, srcEnd - srcStart);
-			inSize = myBuffer.length();
-			in = (char*)myBuffer.data();
-		}
+		myBuffer.append(srcStart, srcEnd - srcStart);
+		inSize = myBuffer.length();
+		in = (char*)myBuffer.data();
+	}
 
-		size_t outSize = 3 * inSize;
-		const size_t startOutSize = outSize;
-		char *outBuffer = new char[outSize];
-		char *out = (char*)outBuffer;
+	size_t outSize = 3 * inSize;
+	const size_t startOutSize = outSize;
+	char *outBuffer = new char[outSize];
+	char *out = (char*)outBuffer;
 
 iconvlabel:
-		iconv(myIConverter, &in, &inSize, &out, &outSize);
-		if (inSize != 0) {
-			if (myBuffer.empty()) {
-				myBuffer.append(in, inSize);
-			} else {
-				myBuffer.erase(0, myBuffer.length() - inSize);
-			}
+	iconv(myIConverter, &in, &inSize, &out, &outSize);
+	if (inSize != 0) {
+		if (myBuffer.empty()) {
+			myBuffer.append(in, inSize);
 		} else {
-			myBuffer.erase();
+			myBuffer.erase(0, myBuffer.length() - inSize);
 		}
-		if ((myBuffer.length() > 1) && (outSize == startOutSize)) {
-			// looks like myBuffer contains incorrect character at start
-			myBuffer.erase(0, 1);
-			in = (char*)myBuffer.data();
-			inSize = myBuffer.length();
-			goto iconvlabel;
-		}
-		dst.append(outBuffer, startOutSize - outSize);
-		delete[] outBuffer;
+	} else {
+		myBuffer.erase();
 	}
+	if ((myBuffer.length() > 1) && (outSize == startOutSize)) {
+		// looks like myBuffer contains incorrect character at start
+		myBuffer.erase(0, 1);
+		in = (char*)myBuffer.data();
+		inSize = myBuffer.length();
+		goto iconvlabel;
+	}
+	dst.append(outBuffer, startOutSize - outSize);
+	delete[] outBuffer;
 }
 
 void IconvEncodingConverter::reset() {
