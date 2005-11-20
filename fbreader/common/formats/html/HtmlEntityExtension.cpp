@@ -28,6 +28,14 @@
 
 std::map<std::string,int> HtmlEntityExtension::ourSymbolicEntityCollection;
 
+int HtmlEntityExtension::symbolNumber(const std::string &name) {
+	if (ourSymbolicEntityCollection.empty()) {
+		CollectionReader().readDocument(ZLFile(CollectionFile).inputStream());
+	}
+	std::map<std::string,int>::const_iterator it = ourSymbolicEntityCollection.find(name);
+	return (it == ourSymbolicEntityCollection.end()) ? 0 : it->second;
+}
+
 HtmlEntityExtension::HtmlEntityExtension() {
 	if (ourSymbolicEntityCollection.empty()) {
 		CollectionReader().readDocument(ZLFile(CollectionFile).inputStream());

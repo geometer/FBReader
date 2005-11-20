@@ -36,7 +36,7 @@ protected:
 	void endDocumentHandler() FORMATS_SECTION;
 
 	bool tagHandler(HtmlTag tag) FORMATS_SECTION;
-	bool characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
 
 private:
 	bool myReadTitle;

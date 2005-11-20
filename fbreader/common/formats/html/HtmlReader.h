@@ -96,7 +96,7 @@ protected:
 	virtual void endDocumentHandler() FORMATS_SECTION = 0;
 
 	virtual bool tagHandler(HtmlTag tag) FORMATS_SECTION = 0;
-	virtual bool characterDataHandler(const char *text, int len) FORMATS_SECTION = 0;
+	virtual bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION = 0;
 
 protected:
 	shared_ptr<ZLEncodingConverter> myConverter;

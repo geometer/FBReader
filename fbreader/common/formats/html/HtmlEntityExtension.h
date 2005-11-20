@@ -31,6 +31,7 @@ class HtmlEntityExtension : public ZLControlSequenceExtension {
 
 public:
 	static const std::string CollectionFile;
+	static int symbolNumber(const std::string &name);
 
 private:
 	static std::map<std::string,int> ourSymbolicEntityCollection;
