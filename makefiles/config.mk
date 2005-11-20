@@ -4,6 +4,8 @@ MAKE = ROOTDIR=$(ROOTDIR) make
 
 include $(ROOTDIR)/makefiles/arch/$(TARGET_ARCH).mk
 
+CFLAGS += -DLIBICONV_PLUG
+
 ifeq "$(TARGET_STATUS)" "release"
 	CFLAGS += -O3
 	LDFLAGS += -s
