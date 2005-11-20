@@ -110,8 +110,13 @@ void TextView::moveEndCursor(int paragraphNumber) {
 	if (myEndCursor.isNull()) {
 		myEndCursor = myStartCursor;
 	}
-	myEndCursor.moveToParagraph(paragraphNumber);
-	myEndCursor.moveToParagraphStart();
+	if (paragraphNumber == 0) {
+		myEndCursor.moveToParagraph(paragraphNumber);
+		myEndCursor.moveToParagraphStart();
+	} else {
+		myEndCursor.moveToParagraph(paragraphNumber - 1);
+		myEndCursor.moveToParagraphEnd();
+	}
 	myStartCursor = 0;
 	myLineInfos.clear();
 	myPaintState = END_IS_KNOWN;
