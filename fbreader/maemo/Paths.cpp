@@ -21,7 +21,7 @@
 
 #include "../common/hyphenation/TeXHyphenator.h"
 //#include "../common/formats/docbook/DocBookReader.h"
-#include "../common/formats/html/HtmlEntityExtension.h"
+#include "../common/formats/html/HtmlEntityCollection.h"
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
 #include "../common/fbreader/FBFileHandler.h"
@@ -35,7 +35,7 @@ const std::string FBFileHandler::ImageDirectory = "FBReader";
 const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
 //const std::string DocBookReader::DTDDirectory = "/usr/share/xml/entities/xml-iso-entities-8879.1986";
-const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
+const std::string HtmlEntityCollection::CollectionFile = PathPrefix + "formats/html/html.ent";
 const std::string FBReader::HelpDirectory = PathPrefix + "help";
 const std::string GtkFBReader::ImageDirectory = PathPrefix + "icons";
 const std::string EncodingDescriptionPath = PathPrefix + "encodings";

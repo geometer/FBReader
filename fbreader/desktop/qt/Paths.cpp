@@ -20,7 +20,7 @@
  */
 
 #include "../../common/hyphenation/TeXHyphenator.h"
-#include "../../common/formats/html/HtmlEntityExtension.h"
+#include "../../common/formats/html/HtmlEntityCollection.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
@@ -33,7 +33,7 @@ const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
-const std::string HtmlEntityExtension::CollectionFile = PathPrefix + "formats/html/html.ent";
+const std::string HtmlEntityCollection::CollectionFile = PathPrefix + "formats/html/html.ent";
 const std::string QFBReader::ImageDirectory = PathPrefix + "icons";
 const std::string FBReader::HelpDirectory = PathPrefix + "help";
 const std::string EncodingDescriptionPath = PathPrefix + "encodings";

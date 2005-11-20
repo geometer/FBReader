@@ -25,7 +25,7 @@
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLXMLReader.h>
 
-#include "HtmlEntityExtension.h"
+#include "HtmlEntityCollection.h"
 
 class CollectionReader : public ZLXMLReader {
 
@@ -42,9 +42,9 @@ private:
 	std::map<std::string,int> &myCollection;
 };
 
-std::map<std::string,int> HtmlEntityExtension::ourCollection;
+std::map<std::string,int> HtmlEntityCollection::ourCollection;
 
-int HtmlEntityExtension::symbolNumber(const std::string &name) {
+int HtmlEntityCollection::symbolNumber(const std::string &name) {
 	if (ourCollection.empty()) {
 		CollectionReader(ourCollection).readDocument(ZLFile(CollectionFile).inputStream());
 	}

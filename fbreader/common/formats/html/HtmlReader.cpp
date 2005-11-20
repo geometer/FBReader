@@ -28,7 +28,7 @@
 #include <abstract/ZLUnicodeUtil.h>
 
 #include "HtmlReader.h"
-#include "HtmlEntityExtension.h"
+#include "HtmlEntityCollection.h"
 
 HtmlReader::HtmlReader(const std::string &encoding) {
 	myConverter = ZLEncodingConverter::createConverter(encoding);
@@ -147,7 +147,7 @@ static int specialSymbolNumber(SpecialType type, const std::string &txt) {
 	char *end = 0;
 	switch (type) {
 		case ST_NAME:
-			return HtmlEntityExtension::symbolNumber(txt);
+			return HtmlEntityCollection::symbolNumber(txt);
 		case ST_DEC:
 			return strtol(txt.c_str() + 1, &end, 10);
 		case ST_HEX:

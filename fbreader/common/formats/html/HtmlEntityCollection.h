@@ -19,13 +19,13 @@
  * 02110-1301, USA.
  */
 
-#ifndef __HTMLENTITYEXTENSION_H__
-#define __HTMLENTITYEXTENSION_H__
+#ifndef __HTMLENTITYCOLLECTION_H__
+#define __HTMLENTITYCOLLECTION_H__
 
 #include <string>
 #include <map>
 
-class HtmlEntityExtension {
+class HtmlEntityCollection {
 
 public:
 	static const std::string CollectionFile;
@@ -35,7 +35,7 @@ private:
 	static std::map<std::string,int> ourCollection;
 
 private:
-	HtmlEntityExtension() FORMATS_SECTION;
+	HtmlEntityCollection() FORMATS_SECTION;
 };
 
-#endif /* __HTMLENTITYEXTENSION_H__ */
+#endif /* __HTMLENTITYCOLLECTION_H__ */
