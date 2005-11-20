@@ -177,7 +177,6 @@ void IconvEncodingConverter::convert(std::string &dst, const char *srcStart, con
 		return;
 	}
 
-	// TODO: process extensions
 	size_t inSize;
 	char *in;
 	if (myBuffer.empty()) {
@@ -242,7 +241,7 @@ bool IconvEncodingConverter::fillTable(int *map) {
 		iconv(myIConverter, &in, &inSize, &out, &outSize);
 		if (inSize == 0) {
 			ZLUnicodeUtil::Ucs2Char ch;
-			ZLUnicodeUtil::firstChar(ch, inBuffer);
+			ZLUnicodeUtil::firstChar(ch, outBuffer);
 			map[i] = ch;
 		} else {
 			map[i] = i;
