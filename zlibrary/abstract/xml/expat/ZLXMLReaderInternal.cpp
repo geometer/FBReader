@@ -20,11 +20,10 @@
 
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLEncodingConverter.h>
 
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
-#include "../../encoding/ZLEncodingConverter.h"
-#include "../../encoding/EncodingReader.h"
 
 static void fCharacterDataHandler(void *userData, const char *text, int len) {
 	((ZLXMLReader*)userData)->characterDataHandler(text, len);
@@ -39,16 +38,11 @@ static void fEndElementHandler(void *userData, const char *name) {
 }
 
 static int fUnknownEncodingHandler(void *, const XML_Char *name, XML_Encoding *info) {
-	bool code = false;
-	const std::vector<std::string> &encodings = ZLEncodingConverter::knownEncodings();
-	for (std::vector<std::string>::const_iterator it = encodings.begin(); it != encodings.end(); it++) {
-		if (strcasecmp(name, it->c_str()) == 0) {
-			EncodingIntReader er(*it);
-			code = er.fillTable(info->map);
-			break;
-		}
+	shared_ptr<ZLEncodingConverter> converter = ZLEncodingConverter::createConverter(name);
+	if (!converter.isNull() && converter->fillTable(info->map)) {
+		return XML_STATUS_OK;
 	}
-	return code ? XML_STATUS_OK : XML_STATUS_ERROR;
+	return XML_STATUS_ERROR;
 }
 
 static void parseDTD(XML_Parser parser, const std::string &fileName) {

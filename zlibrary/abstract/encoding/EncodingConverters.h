@@ -33,6 +33,7 @@ private:
 public:
 	~DummyEncodingConverter() XML_SECTION;
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+	bool fillTable(int *map) XML_SECTION;
 
 friend class ZLEncodingConverter;
 };
@@ -40,13 +41,15 @@ friend class ZLEncodingConverter;
 class OneByteEncodingConverter : public ZLEncodingConverter {
 
 private:
-	OneByteEncodingConverter(char **encodingMap) XML_SECTION;
+	OneByteEncodingConverter(const std::string &encoding, char **encodingMap) XML_SECTION;
 
 public:
 	~OneByteEncodingConverter() XML_SECTION;
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
+	bool fillTable(int *map) XML_SECTION;
 
 private:
+	const std::string myEncoding;
 	char **myEncodingMap;
 
 friend class ZLEncodingConverter;
@@ -61,6 +64,7 @@ public:
 	~TwoBytesEncodingConverter() XML_SECTION;
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
 	void reset() XML_SECTION;
+	bool fillTable(int *map) XML_SECTION;
 
 private:
 	char **myEncodingMap;
@@ -81,6 +85,7 @@ public:
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
 	void reset() XML_SECTION;
 	bool isInitialized() const XML_SECTION;
+	bool fillTable(int *map) XML_SECTION;
 
 private:
 	iconv_t myIConverter;

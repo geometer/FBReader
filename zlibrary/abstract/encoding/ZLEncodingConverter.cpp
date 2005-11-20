@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <abstract/ZLUnicodeUtil.h>
+
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
 #include "EncodingReader.h"
@@ -46,7 +48,7 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 		char **encodingMap = er.createTable();
 		if (encodingMap != 0) {
 			if (er.bytesNumber() == 1) {
-				return new OneByteEncodingConverter(encodingMap);
+				return new OneByteEncodingConverter(*it, encodingMap);
 			} else if (er.bytesNumber() == 2) {
 				return new TwoBytesEncodingConverter(encodingMap);
 			}
@@ -75,7 +77,14 @@ void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, con
 	dst.append(srcStart, srcEnd - srcStart);
 }
 
-OneByteEncodingConverter::OneByteEncodingConverter(char **encodingMap) : myEncodingMap(encodingMap) {
+bool DummyEncodingConverter::fillTable(int *map) {
+	for (int i = 0; i < 255; i++) {
+		map[i] = i;
+	}
+	return true;
+}
+
+OneByteEncodingConverter::OneByteEncodingConverter(const std::string &encoding, char **encodingMap) : myEncoding(encoding), myEncodingMap(encodingMap) {
 	for (int i = 0; i < 256; i++) {
 		if (myEncodingMap[i] == 0) {
 			myEncodingMap[i] = new char[2];
@@ -97,6 +106,10 @@ void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, c
 	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
 		dst += myEncodingMap[(unsigned char)*ptr];
 	}
+}
+
+bool OneByteEncodingConverter::fillTable(int *map) {
+	return EncodingIntReader(myEncoding).fillTable(map);
 }
 
 TwoBytesEncodingConverter::TwoBytesEncodingConverter(char **encodingMap) : myEncodingMap(encodingMap), myLastCharIsNotProcessed(false) {
@@ -143,6 +156,10 @@ void TwoBytesEncodingConverter::convert(std::string &dst, const char *srcStart, 
 
 void TwoBytesEncodingConverter::reset() {
 	myLastCharIsNotProcessed = false;
+}
+
+bool TwoBytesEncodingConverter::fillTable(int*) {
+	return false;
 }
 
 IconvEncodingConverter::IconvEncodingConverter(const std::string &encoding) {
@@ -205,4 +222,31 @@ void IconvEncodingConverter::reset() {
 
 bool IconvEncodingConverter::isInitialized() const {
 	return myIConverter != (iconv_t)-1;
+}
+
+bool IconvEncodingConverter::fillTable(int *map) {
+	if (!isInitialized()) {
+		return false;
+	}
+
+	char inBuffer[1];
+	char outBuffer[3];
+	char *in, *out;
+	size_t inSize, outSize;
+	for (int i = 0; i < 256; i++) {
+		in = inBuffer;
+		out = outBuffer;
+		inSize = 1;
+		outSize = 3;
+		inBuffer[0] = i;
+		iconv(myIConverter, &in, &inSize, &out, &outSize);
+		if (inSize == 0) {
+			ZLUnicodeUtil::Ucs2Char ch;
+			ZLUnicodeUtil::firstChar(ch, inBuffer);
+			map[i] = ch;
+		} else {
+			map[i] = i;
+		}
+	}
+	return true;
 }

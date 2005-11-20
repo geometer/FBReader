@@ -45,6 +45,7 @@ public:
 	virtual ~ZLEncodingConverter() XML_SECTION;
 	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION = 0;
 	virtual void reset() XML_SECTION;
+	virtual bool fillTable(int *map) XML_SECTION = 0;
 };
 
 inline std::string &ZLEncodingConverter::encodingDescriptionPath() { return ourEncodingDescriptionPath; }
