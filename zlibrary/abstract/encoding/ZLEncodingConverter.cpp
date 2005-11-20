@@ -56,17 +56,10 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 	return new DummyEncodingConverter();
 }
 
-ZLEncodingConverter::ZLEncodingConverter() : myExtensionNumber(0) {
+ZLEncodingConverter::ZLEncodingConverter() {
 }
 
 ZLEncodingConverter::~ZLEncodingConverter() {
-}
-
-void ZLEncodingConverter::registerExtension(char ch, const shared_ptr<ZLControlSequenceExtension> extension) {
-	if (myExtensions[(unsigned char)ch].isNull()) {
-		myExtensionNumber++;
-	}
-	myExtensions[(unsigned char)ch] = extension;
 }
 
 void ZLEncodingConverter::reset() {
@@ -79,27 +72,7 @@ DummyEncodingConverter::~DummyEncodingConverter() {
 }
 
 void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	if (myExtensionNumber == 0) {
-		dst.append(srcStart, srcEnd - srcStart);
-	} else {
-		dst.reserve(dst.length() + srcEnd - srcStart);
-		for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
-			if (myActiveExtension.isNull()) {
-				myActiveExtension = myExtensions[(unsigned char)*ptr];
-				if (!myActiveExtension.isNull()) {
-					myActiveExtension->start();
-				}
-			}
-			if (myActiveExtension.isNull()) {
-				dst += *ptr;
-			} else {
-				if (myActiveExtension->parseCharacter(*ptr)) {
-					dst += myActiveExtension->buffer();
-					myActiveExtension = 0;
-				}
-			}
-		}
-	}
+	dst.append(srcStart, srcEnd - srcStart);
 }
 
 OneByteEncodingConverter::OneByteEncodingConverter(char **encodingMap) : myEncodingMap(encodingMap) {
@@ -122,22 +95,6 @@ OneByteEncodingConverter::~OneByteEncodingConverter() {
 void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
 	dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
 	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
-		if (myExtensionNumber > 0) {
-			if (myActiveExtension.isNull()) {
-				myActiveExtension = myExtensions[(unsigned char)*ptr];
-				if (!myActiveExtension.isNull()) {
-					myActiveExtension->start();
-				}
-			}
-			if (!myActiveExtension.isNull()) {
-				if (myActiveExtension->parseCharacter(*ptr)) {
-					dst += myActiveExtension->buffer();
-					myActiveExtension = 0;
-				}
-				continue;
-			}
-		}
-
 		dst += myEncodingMap[(unsigned char)*ptr];
 	}
 }
@@ -169,22 +126,6 @@ void TwoBytesEncodingConverter::convert(std::string &dst, const char *srcStart, 
 		myLastCharIsNotProcessed = false;
 	}
 	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
-		if (myExtensionNumber > 0) {
-			if (myActiveExtension.isNull()) {
-				myActiveExtension = myExtensions[(unsigned char)*ptr];
-				if (!myActiveExtension.isNull()) {
-					myActiveExtension->start();
-				}
-			}
-			if (!myActiveExtension.isNull()) {
-				if (myActiveExtension->parseCharacter(*ptr)) {
-					dst += myActiveExtension->buffer();
-					myActiveExtension = 0;
-				}
-				continue;
-			}
-		}
-
 		if (((*ptr) & 0x80) == 0) {
 			dst += *ptr;
 		} else if (ptr + 1 == srcEnd) {

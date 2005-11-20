@@ -22,55 +22,20 @@
 #ifndef __HTMLENTITYEXTENSION_H__
 #define __HTMLENTITYEXTENSION_H__
 
+#include <string>
 #include <map>
 
-#include <abstract/ZLEncodingConverter.h>
-#include <abstract/ZLXMLReader.h>
-
-class HtmlEntityExtension : public ZLControlSequenceExtension {
+class HtmlEntityExtension {
 
 public:
 	static const std::string CollectionFile;
 	static int symbolNumber(const std::string &name);
 
 private:
-	static std::map<std::string,int> ourSymbolicEntityCollection;
-
-	class CollectionReader : public ZLXMLReader {
-
-	protected:
-		const Tag *tags() const FORMATS_SECTION;
-
-	public:
-		void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-		void endElementHandler(int tag) FORMATS_SECTION;
-		void characterDataHandler(const char *text, int len) FORMATS_SECTION;
-	};
-
-public:
-	HtmlEntityExtension() FORMATS_SECTION;
-	virtual ~HtmlEntityExtension() FORMATS_SECTION;
-
-	void start() FORMATS_SECTION;
-	bool parseCharacter(char ch) FORMATS_SECTION;
-	const std::string &buffer() const FORMATS_SECTION;
+	static std::map<std::string,int> ourCollection;
 
 private:
-	std::string myBuffer;
-
-	enum {
-		UNDEFINED,
-		AS_SYMBOLIC,
-		AS_DECIMAL,
-		AS_HEXADECIMAL
-	} myParseType;
+	HtmlEntityExtension() FORMATS_SECTION;
 };
-
-inline HtmlEntityExtension::~HtmlEntityExtension() {}
-inline void HtmlEntityExtension::start() { myBuffer.erase(); myParseType = UNDEFINED; }
-inline const std::string &HtmlEntityExtension::buffer() const { return myBuffer; }
-
-inline void HtmlEntityExtension::CollectionReader::endElementHandler(int) {}
-inline void HtmlEntityExtension::CollectionReader::characterDataHandler(const char*, int) {}
 
 #endif /* __HTMLENTITYEXTENSION_H__ */

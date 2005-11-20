@@ -26,17 +26,6 @@
 
 #include <abstract/shared_ptr.h>
 
-class ZLControlSequenceExtension {
-
-public:
-	ZLControlSequenceExtension() XML_SECTION;
-	virtual ~ZLControlSequenceExtension() XML_SECTION;
-
-	virtual void start() XML_SECTION = 0;
-	virtual bool parseCharacter(char ch) XML_SECTION = 0;
-	virtual const std::string &buffer() const XML_SECTION = 0;
-};
-
 class ZLEncodingConverter {
 
 public:
@@ -53,19 +42,10 @@ protected:
 	ZLEncodingConverter() XML_SECTION;
 
 public:
-	void registerExtension(char symbol, const shared_ptr<ZLControlSequenceExtension> extension) XML_SECTION;
 	virtual ~ZLEncodingConverter() XML_SECTION;
 	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION = 0;
 	virtual void reset() XML_SECTION;
-
-protected:
-	shared_ptr<ZLControlSequenceExtension> myExtensions[256];
-	int myExtensionNumber;
-	shared_ptr<ZLControlSequenceExtension> myActiveExtension;
 };
-
-inline ZLControlSequenceExtension::ZLControlSequenceExtension() {}
-inline ZLControlSequenceExtension::~ZLControlSequenceExtension() {}
 
 inline std::string &ZLEncodingConverter::encodingDescriptionPath() { return ourEncodingDescriptionPath; }
 inline std::vector<std::string> &ZLEncodingConverter::knownEncodings() { return ourKnownEncodings; }

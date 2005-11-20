@@ -32,7 +32,6 @@
 
 HtmlReader::HtmlReader(const std::string &encoding) {
 	myConverter = ZLEncodingConverter::createConverter(encoding);
-	myConverter->registerExtension('&', new HtmlEntityExtension());
 }
 
 HtmlReader::~HtmlReader() {
