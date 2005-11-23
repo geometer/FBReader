@@ -42,7 +42,7 @@ static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn
 	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
-static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer self) {
+static gboolean clickHandler(GtkWidget *, GdkEventButton *event, gpointer self) {
 	if (event->button == 1) {
 		((GtkOpenFileDialog *)self)->activatedSlot();
 	}
