@@ -100,5 +100,5 @@ GtkDialog *GtkDialogManager::createDialog(const std::string& title) const {
 
 	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), NULL);
 
-  return GTK_DIALOG(dialog);
+	return GTK_DIALOG(dialog);
 }
