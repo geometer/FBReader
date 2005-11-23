@@ -93,15 +93,15 @@ std::string GtkKeyUtil::keyName(int keyval) {
 			case GDK_F3:
 				return "F3";
 			case GDK_F4:
-				return "F4";
+				return "Menu";
 			case GDK_F5:
 				return "F5";
 			case GDK_F6:
-				return "F6";
+				return "FullScreen";
 			case GDK_F7:
-				return "F7";
+				return "ZoomIn";
 			case GDK_F8:
-				return "F8";
+				return "ZoomOut";
 			case GDK_F9:
 				return "F9";
 			case GDK_F10:
