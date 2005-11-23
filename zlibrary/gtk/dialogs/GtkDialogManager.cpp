@@ -37,13 +37,13 @@ int GtkDialogManager::informationBox(const char *title, const char *message, con
 	GtkDialog *dialog = createDialog(title);
 
 	if (button0 != 0) {
-		gtk_dialog_add_button (dialog, button0, 0);
+		gtk_dialog_add_button(dialog, button0, 0);
 	}
 	if (button1 != 0) {
-		gtk_dialog_add_button (dialog, button1, 1);
+		gtk_dialog_add_button(dialog, button1, 1);
 	}
 	if (button2 != 0) {
-		gtk_dialog_add_button (dialog, button2, 2);
+		gtk_dialog_add_button(dialog, button2, 2);
 	}
 
 	GtkWidget *contents = gtk_hbox_new(FALSE, 10);
