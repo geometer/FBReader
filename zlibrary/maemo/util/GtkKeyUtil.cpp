@@ -51,73 +51,27 @@ std::string GtkKeyUtil::keyName(int keyval) {
 	} else {
 		switch (keyval) {
 			case GDK_Escape:
-				return "Esc";
-			case GDK_Tab:
-				return "Tab";
-			case GDK_BackSpace:
-				return "BackSpace";
+				return "Escape";
 			case GDK_Return:
-				return "Return";
-			case GDK_Insert:
-				return "Insert";
-			case GDK_Delete:
-				return "Delete";
-			case GDK_Pause:
-				return "Pause";
-			case GDK_Print:
-				return "Print";
-			case GDK_Sys_Req:
-				return "SysReq";
-			case GDK_Clear:
-				return "Clear";
-			case GDK_Home:
-				return "Home";
-			case GDK_End:
-				return "End";
+				return "ScrollKey Select";
 			case GDK_Left:
-				return "LeftArrow";
+				return "ScrollKey Left";
 			case GDK_Up:
-				return "UpArrow";
+				return "ScrollKey Up";
 			case GDK_Right:
-				return "RightArrow";
+				return "ScrollKey Right";
 			case GDK_Down:
-				return "DownArrow";
-			case GDK_Page_Up:
-				return "PageUp";
-			case GDK_Page_Down:
-				return "PageDown";
-			case GDK_F1:
-				return "F1";
-			case GDK_F2:
-				return "F2";
-			case GDK_F3:
-				return "F3";
+				return "ScrollKey Down";
 			case GDK_F4:
 				return "Menu";
 			case GDK_F5:
-				return "F5";
+				return "Home";
 			case GDK_F6:
 				return "FullScreen";
 			case GDK_F7:
-				return "ZoomIn";
+				return "ZoomKey +";
 			case GDK_F8:
-				return "ZoomOut";
-			case GDK_F9:
-				return "F9";
-			case GDK_F10:
-				return "F10";
-			case GDK_F11:
-				return "F11";
-			case GDK_F12:
-				return "F12";
-			case ' ':
-				return "Space";
-			case GDK_Caps_Lock:
-				return "CapsLock";
-			case GDK_Num_Lock:
-				return "NumLock";
-			case GDK_Scroll_Lock:
-				return "ScrollLock";
+				return "ZoomKey -";
 		}
 	}
 	return "";
