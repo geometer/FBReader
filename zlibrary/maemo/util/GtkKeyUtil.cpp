@@ -53,7 +53,7 @@ std::string GtkKeyUtil::keyName(int keyval) {
 			case GDK_Escape:
 				return "Escape";
 			case GDK_Return:
-				return "ScrollKey Select";
+				return "ScrollKey Center";
 			case GDK_Left:
 				return "ScrollKey Left";
 			case GDK_Up:

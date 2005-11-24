@@ -7,5 +7,5 @@
 	<binding key="&lt;ScrollKey Up&gt;" action="12"/>
 	<binding key="&lt;Escape&gt;" action="18"/>
 	<binding key="&lt;FullScreen&gt;" action="22"/>
-  <binding key="&lt;ScrollKey Select&gt;" action="27"/>
+  <binding key="&lt;ScrollKey Center&gt;" action="27"/>
 </keymap>
