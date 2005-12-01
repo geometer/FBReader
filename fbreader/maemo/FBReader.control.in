@@ -1,0 +1,21 @@
+Package: fbreader-maemo
+Version: VERSION
+Architecture: arm
+Depends: maemo
+Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Description: e-book reader
+ FBReader was originally written for Sharp Zaurus, however it now supports
+ more Linux platforms.
+ .
+ Main features:
+  * supports fb2 format (quite popular in Russia)
+  * supports subset of HTML
+  * reads directly from zip archives (you can have several books in one
+    archive)
+  * supports various character encodings
+  * automatically determines encoding
+  * keeps the last open book and the last read positions for all open books
+    between runs
+  * automatic hyphenation (patterns for several languages are included)
+ .
+ Home page: http://only.mawhrin.net/fbreader/
