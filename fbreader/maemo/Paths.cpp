@@ -28,7 +28,7 @@
 #include "GtkFBReader.h"
 #include "Paths.h"
 
-static const std::string PathPrefix = "/usr/share/FBReader/";
+static const std::string PathPrefix = "/var/lib/install/usr/share/FBReader/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
