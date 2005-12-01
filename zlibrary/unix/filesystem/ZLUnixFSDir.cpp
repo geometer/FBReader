@@ -27,19 +27,24 @@
 void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
+		const std::string namePrefix = name() + "/";
 		const dirent *file;
+		struct stat fileInfo;
+		std::string shortName;
+		std::string fullName;
 		while ((file = readdir(dir)) != 0) {
-			if (file->d_type == DT_DIR) {
-				std::string fname = file->d_name;
-				if ((fname != ".") && (fname != "..")) {
-					names.push_back(file->d_name);
-				}
-			} else if (includeSymlinks && (file->d_type == DT_LNK)) {
-				DIR *ldir = opendir(itemName(file->d_name).c_str());
-				if (ldir != 0) {
-					closedir(ldir);
-					names.push_back(file->d_name);
-				}
+			shortName = file->d_name;
+			if ((shortName == ".") || (shortName == "..")) {
+				continue;
+			}
+			fullName = namePrefix + shortName;
+			if (includeSymlinks) {
+				stat(fullName.c_str(), &fileInfo);
+			} else {
+				lstat(fullName.c_str(), &fileInfo);
+			}
+			if (S_ISDIR(fileInfo.st_mode)) {
+				names.push_back(shortName);
 			}
 		}
 		closedir(dir);
@@ -49,18 +54,26 @@ void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSy
 void ZLUnixFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
+		const std::string namePrefix = name() + "/";
 		const dirent *file;
+		struct stat fileInfo;
+		std::string shortName;
+		std::string fullName;
 		while ((file = readdir(dir)) != 0) {
-			if (file->d_type == DT_REG) {
-				names.push_back(file->d_name);
-			} else if (includeSymlinks && (file->d_type == DT_LNK)) {
-				FILE *lfile = fopen(itemName(file->d_name).c_str(), "r");
-				if (lfile != 0) {
-					fclose(lfile);
-					names.push_back(file->d_name);
-				}
+			shortName = file->d_name;
+			if ((shortName == ".") || (shortName == "..")) {
+				continue;
 			}
-  	}
+			fullName = namePrefix + shortName;
+			if (includeSymlinks) {
+				stat(fullName.c_str(), &fileInfo);
+			} else {
+				lstat(fullName.c_str(), &fileInfo);
+			}
+			if (S_ISREG(fileInfo.st_mode)) {
+				names.push_back(shortName);
+			}
+		}
 		closedir(dir);
 	}
 }
