@@ -173,6 +173,8 @@ public:
 	void repaintView() FB_SECTION;
 	void doAction(ActionCode code) FB_SECTION;
 
+	bool tryQuit() FB_SECTION;
+
 	void bindKey(const std::string &key, ActionCode code) FB_SECTION;
 	ActionCode keyBinding(const std::string &key) FB_SECTION;
 
