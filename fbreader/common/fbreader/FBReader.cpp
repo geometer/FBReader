@@ -415,7 +415,11 @@ void FBReader::doAction(ActionCode code) {
 			repaintView();
 			break;
 		case ACTION_QUIT:
-			tryQuit();
+			if (myMode == BOOK_TEXT_MODE) {
+				quitSlot();
+			} else {
+				restorePreviousMode();
+			}
 			break;
 	}
 }
@@ -617,16 +621,6 @@ bool FBReader::isFullKeyboardControlSupported() const {
 }
 
 void FBReader::grabAllKeys(bool) {
-}
-
-bool FBReader::tryQuit() {
-	if (myMode == BOOK_TEXT_MODE) {
-		quitSlot();
-		return true;
-	} else {
-		restorePreviousMode();
-		return false;
-	}
 }
 
 // vim:ts=2:sw=2:noet

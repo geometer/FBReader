@@ -35,8 +35,9 @@
 #include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
-static bool applicationQuit(GtkWidget*, GdkEvent *event, gpointer data) {
-	return !((GtkFBReader*)data)->tryQuit();
+static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
+	((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
+	return true;
 }
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
