@@ -357,7 +357,8 @@ static bool key_view_key_press_event(GtkWidget*, GdkEventKey *event, gpointer da
 	return true;
 }
 
-static void key_view_button_press_event(GtkWidget *button, GdkEventButton*, gpointer) {
+static void key_view_button_press_event(GtkWidget *button, GdkEventButton*, gpointer data) {
+	((KeyOptionView*)data)->setKey("");
 	gtk_widget_grab_focus(button);
 }
 
@@ -366,7 +367,7 @@ void KeyOptionView::_createItem() {
 	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_in_event", G_CALLBACK(key_view_focus_in_event), 0);
 	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_out_event", G_CALLBACK(key_view_focus_out_event), 0);
 	gtk_signal_connect(GTK_OBJECT(myKeyButton), "key_press_event", G_CALLBACK(key_view_key_press_event), this);
-	gtk_signal_connect(GTK_OBJECT(myKeyButton), "button_press_event", G_CALLBACK(key_view_button_press_event), 0);
+	gtk_signal_connect(GTK_OBJECT(myKeyButton), "button_press_event", G_CALLBACK(key_view_button_press_event), this);
 	key_view_focus_out_event(myKeyButton, 0, 0);
 
 	myLabel = gtk_label_new("");
@@ -381,7 +382,7 @@ void KeyOptionView::_createItem() {
 	}
 	gtk_option_menu_set_menu(GTK_OPTION_MENU(myComboBox), menu);
 
-	myWidget = gtk_table_new(2, 2, false);
+	myWidget = gtk_table_new(5, 5, false);
 	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 5);
 	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 5);
 	gtk_table_attach_defaults(GTK_TABLE(myWidget), myKeyButton, 0, 2, 0, 1);
@@ -402,12 +403,15 @@ void KeyOptionView::onValueChange() {
 }
 
 void KeyOptionView::setKey(const std::string &key) {
+	myCurrentKey = key;
 	if (!key.empty()) {
-		myCurrentKey = key;
 		gtk_label_set_text(GTK_LABEL(myLabel), ("Action For " + key).c_str());
 		gtk_widget_show(myLabel);
 		gtk_option_menu_set_history(GTK_OPTION_MENU(myComboBox), ((ZLKeyOptionEntry*)myOption)->actionIndex(key));
 		gtk_widget_show(myComboBox);
+	} else {
+		gtk_widget_hide(myLabel);
+		gtk_widget_hide(myComboBox);
 	}
 }
 
