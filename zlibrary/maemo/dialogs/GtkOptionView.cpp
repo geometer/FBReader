@@ -353,6 +353,7 @@ static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer
 
 static bool key_view_key_press_event(GtkWidget*, GdkEventKey *event, gpointer data) {
 	((KeyOptionView*)data)->setKey(GtkKeyUtil::keyName(event));
+	gtk_widget_grab_focus(((KeyOptionView*)data)->comboBox());
 	return true;
 }
 

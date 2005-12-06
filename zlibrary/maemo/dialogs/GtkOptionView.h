@@ -215,6 +215,9 @@ protected:
 private:
 	void onValueChange();
 
+public:
+	GtkWidget *comboBox() const { return myComboBox; }
+
 private:
 	GtkWidget *myWidget, *myKeyButton, *myLabel, *myComboBox;
 	std::string myCurrentKey;
