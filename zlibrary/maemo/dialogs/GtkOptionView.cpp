@@ -382,7 +382,7 @@ void KeyOptionView::_createItem() {
 	}
 	gtk_option_menu_set_menu(GTK_OPTION_MENU(myComboBox), menu);
 
-	myWidget = gtk_table_new(5, 5, false);
+	myWidget = gtk_table_new(2, 2, false);
 	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 5);
 	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 5);
 	gtk_table_attach_defaults(GTK_TABLE(myWidget), myKeyButton, 0, 2, 0, 1);

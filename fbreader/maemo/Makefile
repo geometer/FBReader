@@ -50,4 +50,4 @@ package:
 	@rm -rf $(TMPDIR)
 
 clean:
-	$(RM) FBReader.desktop net.mawhrin.FBReader.services
+	$(RM) FBReader.desktop net.mawhrin.FBReader.services *.deb
