@@ -23,7 +23,6 @@
 #include <abstract/ZLZDecompressor.h>
 
 #include "ZTXTStream.h"
-#include "DocDecompressor.h"
 
 ZTXTStream::ZTXTStream(ZLFile &file) : PdbStream(file) {
 }
