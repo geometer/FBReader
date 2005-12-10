@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLZDecompressor.h>
 
