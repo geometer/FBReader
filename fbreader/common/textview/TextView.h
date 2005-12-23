@@ -106,6 +106,15 @@ protected:
 		int YStart, YEnd;
 		ParagraphPosition(int paragraphNumber, int yStart, int yEnd) VIEW_SECTION;
 		~ParagraphPosition() VIEW_SECTION;
+
+		struct RangeChecker {
+			RangeChecker(int y) : myY(y) {}
+			bool operator()(const ParagraphPosition &position) const {
+				return (myY >= position.YStart) && (myY <= position.YEnd);
+			}
+
+			int myY;
+		};
 	};
 
 	struct TextElementPosition {
@@ -114,6 +123,17 @@ protected:
 		int XStart, XEnd, YStart, YEnd;
 		TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) VIEW_SECTION;
 		~TextElementPosition() VIEW_SECTION;
+
+		struct RangeChecker {
+			RangeChecker(int x, int y) : myX(x), myY(y) {}
+			bool operator()(const TextElementPosition &position) const {
+				return
+					(myX >= position.XStart) && (myX <= position.XEnd) &&
+					(myY >= position.YStart) && (myY <= position.YEnd);
+			}
+
+			int myX, myY;
+		};
 	};
 
 protected:

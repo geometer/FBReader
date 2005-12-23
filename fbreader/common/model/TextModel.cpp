@@ -30,7 +30,7 @@ TextModel::TextModel() : myLastEntryStart(0) {
 }
 
 TextModel::~TextModel() {
-	for (std::vector<Paragraph*>::const_iterator it = myParagraphs.begin(); it != myParagraphs.end(); it++) {
+	for (std::vector<Paragraph*>::const_iterator it = myParagraphs.begin(); it != myParagraphs.end(); ++it) {
 		delete *it;
 	}
 }
@@ -43,7 +43,7 @@ void TextModel::search(const std::string &text, size_t startIndex, size_t endInd
 		(startIndex < myParagraphs.size()) ? myParagraphs.begin() + startIndex : myParagraphs.end();
 	std::vector<Paragraph*>::const_iterator end =
 		(endIndex < myParagraphs.size()) ? myParagraphs.begin() + endIndex : myParagraphs.end();
-	for (std::vector<Paragraph*>::const_iterator it = start; it < end; it++) {
+	for (std::vector<Paragraph*>::const_iterator it = start; it < end; ++it) {
 		int offset = 0;
 		for (Paragraph::Iterator jt = **it; !jt.isEnd(); jt.next()) {
 			if (jt.entryKind() == ParagraphEntry::TEXT_ENTRY) {
@@ -85,13 +85,13 @@ TextMark TextModel::previousMark(TextMark position) const {
 	}
 	std::vector<TextMark>::const_iterator it = std::lower_bound(marks().begin(), marks().end(), position);
 	if (it == marks().end()) {
-		it--;
+		--it;
 	}
 	if (*it >= position) {
 		if (it == marks().begin()) {
 			return TextMark();
 		}
-		it--;
+		--it;
 	}
 	return *it;
 }
@@ -134,7 +134,7 @@ TreeParagraph *TreeModel::createParagraph(TreeParagraph *parent) {
 
 void TreeModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
 	TextModel::search(text, startIndex, endIndex, ignoreCase);
-	for (std::vector<TextMark>::const_iterator it = marks().begin(); it != marks().end(); it++) {
+	for (std::vector<TextMark>::const_iterator it = marks().begin(); it != marks().end(); ++it) {
 		((TreeParagraph*)(*this)[it->ParagraphNumber])->openTree();
 	}
 }
@@ -176,7 +176,7 @@ void TextModel::addText(const std::string &text) {
 
 void TextModel::addText(const std::vector<std::string> &text) {
 	size_t len = 0;
-	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); ++it) {
 		len += it->length();
 	}
 	if ((myLastEntryStart != 0) && (*myLastEntryStart == ParagraphEntry::TEXT_ENTRY)) {
@@ -186,7 +186,7 @@ void TextModel::addText(const std::vector<std::string> &text) {
 		myLastEntryStart = myAllocator.reallocateLast(myLastEntryStart, newLen + sizeof(size_t) + 1);
 		memcpy(myLastEntryStart + 1, &newLen, sizeof(size_t));
 		size_t offset = sizeof(size_t) + 1 + oldLen;
-		for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); ++it) {
 			memcpy(myLastEntryStart + offset, it->data(), it->length());
 			offset += it->length();
 		}
@@ -195,7 +195,7 @@ void TextModel::addText(const std::vector<std::string> &text) {
 		*myLastEntryStart = ParagraphEntry::TEXT_ENTRY;
 		memcpy(myLastEntryStart + 1, &len, sizeof(size_t));
 		size_t offset = sizeof(size_t) + 1;
-		for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); it++) {
+		for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); ++it) {
 			memcpy(myLastEntryStart + offset, it->data(), it->length());
 			offset += it->length();
 		}

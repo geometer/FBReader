@@ -2,13 +2,10 @@ ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
-# MSS: I keep UI_TYPE here, while it might be not as useful...
 DEBIAN_PACKAGE = fbreader-$(UI_TYPE)_$(VERSION)-1_arm.deb
 
 BINDIR=/usr/bin
 TMPDIR=tmp
-
-encodings=
 
 all: package
 

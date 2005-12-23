@@ -27,7 +27,7 @@ RowMemoryAllocator::RowMemoryAllocator() : myRowSize(102400), myOffset(0) {
 }
 
 RowMemoryAllocator::~RowMemoryAllocator() {
-	for (std::vector<char*>::const_iterator it = myPool.begin(); it != myPool.end(); it++) {
+	for (std::vector<char*>::const_iterator it = myPool.begin(); it != myPool.end(); ++it) {
 		delete[] *it;
 	}
 }

@@ -75,7 +75,7 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
 		size_t size = myModel->paragraphsNumber();
 		myTextSize.reserve(size + 1);
 		myTextSize.push_back(0);
-		for (size_t i= 0; i< size; i++) {
+		for (size_t i= 0; i < size; i++) {
 			myTextSize.push_back(myTextSize.back() + (*myModel)[i]->textLength());
 			if ((*myModel)[i]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) {
 				myTextBreaks.push_back(i);
@@ -95,7 +95,7 @@ void TextView::paint() {
 		return;
 	}
 	context().moveYTo(0);
-	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		drawTextLine(*it);
 	}
 
@@ -192,23 +192,15 @@ void TextView::scrollToEndOfText() {
 }
 
 const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {
-	for (std::vector<ParagraphPosition>::const_iterator it = myParagraphMap.begin(); it != myParagraphMap.end(); it++) {
-		const ParagraphPosition &position = *it;
-		if ((position.YStart <= y) && (y <= position.YEnd)) {
-			return &position;
-		}
-	}
-	return 0;
+	std::vector<ParagraphPosition>::const_iterator it =
+		std::find_if(myParagraphMap.begin(), myParagraphMap.end(), ParagraphPosition::RangeChecker(y));
+	return (it != myParagraphMap.end()) ? &*it : 0;
 }
 
 const TextView::TextElementPosition *TextView::elementByCoordinates(int x, int y) const {
-	for (std::vector<TextElementPosition>::const_iterator it = myTextElementMap.begin(); it != myTextElementMap.end(); it++) {
-		const TextElementPosition &position = *it;
-		if ((position.YStart <= y) && (y <= position.YEnd) && (position.XStart <= x) && (x <= position.XEnd)) {
-			return &position;
-		}
-	}
-	return 0;
+	std::vector<TextElementPosition>::const_iterator it =
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), TextElementPosition::RangeChecker(x, y));
+	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
 void TextView::gotoMark(TextMark mark) {

@@ -123,7 +123,7 @@ void TextView::moveEndCursor(int paragraphNumber) {
 }
 
 bool TextView::pageIsEmpty() const {
-	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		if (it->IsVisible) {
 			return false;
 		}
@@ -137,7 +137,7 @@ WordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
 	}
 
 	std::vector<LineInfo>::const_iterator it;
-	for (it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+	for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		if (it->IsVisible) {
 			overlappingValue--;
 			if (overlappingValue == 0) {
@@ -154,7 +154,7 @@ WordCursor TextView::findLineFromEnd(unsigned int overlappingValue) const {
 	}
 
 	std::vector<LineInfo>::const_iterator it;
-	for (it = myLineInfos.end() - 1; it != myLineInfos.begin(); it--) {
+	for (it = myLineInfos.end() - 1; it != myLineInfos.begin(); --it) {
 		if (it->IsVisible) {
 			overlappingValue--;
 			if (overlappingValue == 0) {
@@ -173,7 +173,7 @@ WordCursor TextView::findPercentFromStart(unsigned int percent) const {
 	int height = myStyle.textAreaHeight() * percent / 100;
 	bool visibleLineOccured = false;
 	std::vector<LineInfo>::const_iterator it;
-	for (it = myLineInfos.begin(); it != myLineInfos.end(); it++) {
+	for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		if (it->IsVisible) {
 			visibleLineOccured = true;
 		}

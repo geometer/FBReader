@@ -31,7 +31,7 @@ TextElementPool TextElementPool::Pool;
 std::map<const Paragraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
 
 TextElementVector::~TextElementVector() {
-	for (TextElementVector::const_iterator it = begin(); it != end(); it++) {
+	for (TextElementVector::const_iterator it = begin(); it != end(); ++it) {
 		switch ((*it)->kind()) {
 			case TextElement::WORD_ELEMENT:
 				TextElementPool::Pool.storeWord((Word*)*it);
@@ -255,7 +255,7 @@ void ParagraphCursorCache::clear() {
 
 void ParagraphCursorCache::cleanup() {
 	std::map<const Paragraph*, weak_ptr<ParagraphCursor> > cleanedCache;
-	for (std::map<const Paragraph*, weak_ptr<ParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); it++) {
+	for (std::map<const Paragraph*, weak_ptr<ParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); ++it) {
 		if (!it->second.isNull()) {
 			cleanedCache.insert(*it);
 		}

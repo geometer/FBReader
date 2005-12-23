@@ -43,6 +43,7 @@ bool CHMPlugin::readDescription(const std::string &path, BookDescription &descri
 bool CHMPlugin::readModel(const BookDescription &description, BookModel &model) const {
 	shared_ptr<ZLInputStream> stream = ZLFile(description.fileName()).inputStream();
 	if (!stream.isNull() && stream->open()) {
+		// header start
 		char itsf[5];
 		stream->read(itsf, 4);
 		itsf[4] = '\0';
@@ -55,19 +56,29 @@ bool CHMPlugin::readModel(const BookDescription &description, BookModel &model) 
 		std::cerr << "version = " << version << "\n";
 		std::cerr << "totalLength = " << totalLength << "\n";
 
-		stream->seek(44 + 16);
+		stream->seek(44);
+		stream->seek(16);
+		// header end
 
+		// additional header data start
 		unsigned long long offset;
 		stream->read((char*)&offset, 8);
 		std::cerr << "offset = " << offset << "\n";
+		// additional header data end
+
+		// hmm...
 		stream->seek(16);
 
+		// header section 0 start
 		stream->seek(8);
 		unsigned long long fileSize;
 		stream->read((char*)&fileSize, 8);
 		std::cerr << "fileSize = " << fileSize << "\n";
 		stream->seek(8);
+		// header section 0 end
 		
+		// header section 1 start
+		// directory header start
 		char itsp[5];
 		stream->read(itsp, 4);
 		itsp[4] = '\0';
@@ -78,6 +89,8 @@ bool CHMPlugin::readModel(const BookDescription &description, BookModel &model) 
 		stream->read((char*)&length, 4);
 		std::cerr << "version = " << version << "\n";
 		std::cerr << "length = " << length << "\n";
+		// ...
+		// header section 1 end
 
 		stream->close();
 	}

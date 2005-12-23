@@ -110,7 +110,7 @@ TextStyleCollection::TextStyleCollection() {
 }
 
 TextStyleCollection::~TextStyleCollection() {
-	for (std::map<TextKind,TextStyleDecoration*>::iterator it = myDecorationMap.begin(); it != myDecorationMap.end(); it++) {
+	for (std::map<TextKind,TextStyleDecoration*>::iterator it = myDecorationMap.begin(); it != myDecorationMap.end(); ++it) {
 		delete (*it).second;
 	}
 }

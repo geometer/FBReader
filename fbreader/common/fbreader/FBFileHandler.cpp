@@ -36,9 +36,6 @@ const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string
 	if (name.length() == 0) {
 		return NO_ICON;
 	}
-	if ((name[0] == '.') && (name != "..")) {
-		return NO_ICON;
-	}
 	if (!isFile) {
 		return FOLDER_ICON;
 	}

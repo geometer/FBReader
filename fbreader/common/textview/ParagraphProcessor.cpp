@@ -31,7 +31,7 @@
 ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
-	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); myLastMark++);
+	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
 	myWordCounter = 0;
 	myOffset = 0;
 }
@@ -71,7 +71,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {
 	beforeAddWord();
 	Word *word = TextElementPool::Pool.getWord(ptr, len, offset);
-	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; mit++) {
+	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		TextMark mark = *mit;
 		if ((mark.Offset < offset + len) && (mark.Offset + mark.Length > offset)) {
 			word->addMark(mark.Offset - offset, mark.Length);
