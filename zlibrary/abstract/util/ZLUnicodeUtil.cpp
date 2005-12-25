@@ -146,6 +146,8 @@ bool ZLUnicodeUtil::isLetter(Ucs2Char ch) {
 		(('Z' <= ch) && (ch <= 'Z')) ||
 		// ' is "letter" (in French, for example)
 		(ch == '\'') ||
+		// ^ is "letter" (in Esperanto)
+		(ch == '^') ||
 		// latin1
 		((0xC0 <= ch) && (ch <= 0xFF) && (ch != 0xD7) && (ch != 0xF7)) ||
 		// ligatures OE & oe
