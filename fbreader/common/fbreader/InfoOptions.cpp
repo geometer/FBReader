@@ -19,20 +19,13 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <abstract/ZLEncodingConverter.h>
 
 #include "InfoOptions.h"
 
-static const char *languageShortNames[] = {
-	"en",
-	"fr",
-	"de",
-	"de-traditional",
-	"ru",
-	0
-};
-
-std::vector<std::string> LanguageEntry::ourLanguages;
+#include "../hyphenation/TeXHyphenator.h"
 
 static std::vector<std::string> AUTO_ENCODING;
 
@@ -92,26 +85,14 @@ LanguageEntry::~LanguageEntry() {
 }
 
 const std::string &LanguageEntry::initialValue() const {
-	const std::string &lang = myLanguageOption.value();
-	int i = 0;
-	for (; languageShortNames[i] != 0; i++) {
-		if (lang == languageShortNames[i]) {
-			break;
-		}
-	}
-	return values()[i];
+	const std::vector<std::string> &codes = TeXHyphenator::languageCodes();
+	const std::vector<std::string> &names = TeXHyphenator::languageNames();
+	const size_t index = std::find(codes.begin(), codes.end(), myLanguageOption.value()) - codes.begin();
+	return (index < names.size()) ? names[index] : names.back();
 }
 
 const std::vector<std::string> &LanguageEntry::values() const {
-	if (ourLanguages.empty()) {
-		ourLanguages.push_back("English");
-		ourLanguages.push_back("French");
-		ourLanguages.push_back("German");
-		ourLanguages.push_back("German (traditional)");
-		ourLanguages.push_back("Russian");
-		ourLanguages.push_back("none");
-	}
-	return ourLanguages;
+	return TeXHyphenator::languageNames();
 }
 
 const std::string &LanguageEntry::name() const {
@@ -119,11 +100,8 @@ const std::string &LanguageEntry::name() const {
 }
 
 void LanguageEntry::onAccept(const std::string &value) {
-	for (int i = 0; languageShortNames[i] != 0; i++) {
-		if (value == values()[i]) {
-			myLanguageOption.setValue(languageShortNames[i]);
-			return;
-		}
-	}
-	myLanguageOption.setValue("none");
+	const std::vector<std::string> &codes = TeXHyphenator::languageCodes();
+	const std::vector<std::string> &names = TeXHyphenator::languageNames();
+	const size_t index = std::find(names.begin(), names.end(), value) - names.begin();
+	myLanguageOption.setValue((index < codes.size()) ? codes[index] : codes.back());
 }

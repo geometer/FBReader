@@ -68,8 +68,6 @@ public:
 private:
 	std::string myName;
 	ZLStringOption &myLanguageOption;
-
-	static std::vector<std::string> ourLanguages;
 };
 
 #endif /* __INFOOPTIONS_H__ */

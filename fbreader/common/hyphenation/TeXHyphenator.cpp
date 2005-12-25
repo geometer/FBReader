@@ -23,7 +23,9 @@
 #include <vector>
 
 #include <abstract/ZLUnicodeUtil.h>
+#include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
+#include <abstract/ZLDir.h>
 #include <abstract/ZLInputStream.h>
 
 #include "TeXHyphenator.h"
@@ -34,6 +36,71 @@ Hyphenator &Hyphenator::instance() {
 		ourInstance = new TeXHyphenator();
 	}
 	return *ourInstance;
+}
+
+std::vector<std::string> TeXHyphenator::LanguageCodes;
+std::vector<std::string> TeXHyphenator::LanguageNames;
+
+static const std::string POSTFIX = ".pattern";
+static const std::string NONE = "none";
+static const std::string LANGUAGE = "language";
+
+static const ZLXMLReader::Tag TAGS[] = {
+	{ 0, 0 }
+};
+
+class LanguageReader : public ZLXMLReader {
+
+public:
+	LanguageReader(std::string &name) : myLanguageName(name) {}
+
+	const Tag *tags() const { return TAGS; }
+
+	void startElementHandler(int tag, const char **attributes) {
+		if ((attributes[0] != 0) && (LANGUAGE == attributes[0])) {
+			myLanguageName = attributes[1];
+		}
+		myDoBreak = true;
+	}
+	void endElementHandler(int) {}
+	void characterDataHandler(const char*, int) {}
+
+private:
+	std::string &myLanguageName;
+};
+
+void TeXHyphenator::collectLanguages() {
+	if (LanguageNames.empty()) {
+		shared_ptr<ZLDir> patternDir = ZLFile(PatternZip).directory(false);
+		if (!patternDir.isNull()) {
+			std::vector<std::string> files;
+			patternDir->collectFiles(files, false);
+			std::sort(files.begin(), files.end());
+			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it) {
+				if (ZLStringUtil::stringEndsWith(*it, POSTFIX)) {
+					std::string code = it->substr(0, it->size() - POSTFIX.size());
+					std::string name;
+					LanguageReader(name).readDocument(ZLFile(PatternZip + ":" + *it).inputStream());
+					if (!name.empty()) {
+						LanguageCodes.push_back(code);
+						LanguageNames.push_back(name);
+					}
+				}
+			}
+		}
+		LanguageCodes.push_back(NONE);
+		LanguageNames.push_back(NONE);
+	}
+}
+
+const std::vector<std::string> &TeXHyphenator::languageCodes() {
+	collectLanguages();
+	return LanguageCodes;
+}
+
+const std::vector<std::string> &TeXHyphenator::languageNames() {
+	collectLanguages();
+	return LanguageNames;
 }
 
 TeXHyphenationPattern::TeXHyphenationPattern(unsigned short *ucs2String, int length) {
@@ -148,7 +215,7 @@ void TeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	HyphenationReader(this).readDocument(ZLFile(PatternZip + ":" + language + ".pattern").inputStream());
+	HyphenationReader(this).readDocument(ZLFile(PatternZip + ":" + language + POSTFIX).inputStream());
 	
 	std::sort(myPatternTable.begin(), myPatternTable.end(), TeXPatternComparator());
 }
