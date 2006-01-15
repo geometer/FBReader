@@ -76,7 +76,7 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 			std::string bufferWord = BUFFER_WORD_PREFIX;
 			ZLStringUtil::appendNumber(bufferParagraph, i);
 			ZLStringUtil::appendNumber(bufferWord, i);
-			std::pair<int,int> pos;
+			Position pos;
 			pos.first = ZLIntegerOption(fileName(), bufferParagraph, -1).value();
 			pos.second = ZLIntegerOption(fileName(), bufferWord, -1).value();
 			myPositionStack.push_back(pos);
@@ -108,7 +108,7 @@ void BookTextView::saveState() {
 
 void BookTextView::pushCurrentPositionIntoStack() {
 	const WordCursor &cursor = startCursor();
-	std::pair<int,int> pos;
+	Position pos;
 	pos.first = cursor.paragraphCursor().index();
 	pos.second = cursor.wordNumber();
 	myPositionStack.push_back(pos);
@@ -153,7 +153,7 @@ void BookTextView::undoPageMove() {
 		}
 
 		myCurrentPointInStack--;
-		std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
+		Position &pos = myPositionStack[myCurrentPointInStack];
 		moveStartCursor(pos.first, pos.second, 0);
 
 		repaintView();
@@ -168,7 +168,7 @@ void BookTextView::redoPageMove() {
 	if (canRedoPageMove()) {
 		replaceCurrentPositionInStack();
 		myCurrentPointInStack++;
-		std::pair<int,int> &pos = myPositionStack[myCurrentPointInStack];
+		Position &pos = myPositionStack[myCurrentPointInStack];
 		moveStartCursor(pos.first, pos.second, 0);
 
 		if (myCurrentPointInStack + 1 == myPositionStack.size()) {

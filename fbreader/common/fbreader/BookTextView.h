@@ -22,6 +22,8 @@
 #ifndef __BOOKTEXTVIEW_H__
 #define __BOOKTEXTVIEW_H__
 
+#include <deque>
+
 #include "../textview/TextView.h"
 
 class FBReader;
@@ -50,7 +52,9 @@ private:
 	void replaceCurrentPositionInStack() FB_VIEW_SECTION;
 
 private:
-	std::vector<std::pair<int,int> > myPositionStack;
+	typedef std::pair<int,int> Position;
+	typedef std::deque<Position> PositionStack;
+	PositionStack myPositionStack;
 	unsigned int myCurrentPointInStack;
 	unsigned int myMaxStackSize;
 
