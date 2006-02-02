@@ -15,6 +15,7 @@ GTKINCLUDE = -I$(INCDIR)/libxml2 -I$(INCDIR)/libglade-2.0 -I$(INCDIR)/gtk-2.0 -I
 EXPATLIBS = -lexpat
 #ENCALIBS = -L $(USRDIR)/lib -lenca
 ENCALIBS = $(USRDIR)/lib/libenca.so.0
+BZIP2LIBS = -lbz2
 
 ifeq "$(UI_TYPE)" "qt"
 	UILIBS = -L $(USRDIR)/qt/lib -lqt-mt -L $(USRDIR)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE

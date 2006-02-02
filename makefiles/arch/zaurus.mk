@@ -16,3 +16,4 @@ DEPGEN = $(CC) -MM
 
 EXPATLIBS = -lexpat
 ENCALIBS = -lenca
+BZIP2LIBS = -lbz2
