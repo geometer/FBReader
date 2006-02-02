@@ -46,6 +46,8 @@ bool ZLBzip2InputStream::open() {
 	}
 	myBaseAvailableSize = myBaseStream->sizeOfOpened();
 	myBzStream.avail_in = 0;
+	myBzStream.total_in_lo32 = myBaseAvailableSize;
+	myBzStream.total_in_hi32 = myBaseAvailableSize >> 32;
 	myBaseBuffer = new char[BUFFER_SIZE];
 	myOffset = 0;
 	
@@ -55,21 +57,21 @@ bool ZLBzip2InputStream::open() {
 size_t ZLBzip2InputStream::read(char *buffer, size_t maxSize) {
 	myBzStream.avail_out = maxSize;
 	myBzStream.next_out = buffer;
-	size_t realSize = 0;
 
-	while ((myBaseAvailableSize > 0) && (realSize != maxSize)) {
+	while (((myBaseAvailableSize > 0) || (myBzStream.avail_in > 0)) && (myBzStream.avail_out > 0)) {
 		if (myBzStream.avail_in == 0) {
-			myBzStream.next_in = myBaseBuffer;
 			myBzStream.avail_in = std::min(BUFFER_SIZE, myBaseAvailableSize);
-			myBaseAvailableSize -= myBzStream.avail_in;
+			myBzStream.next_in = myBaseBuffer;
 			myBaseStream->read(myBaseBuffer, myBzStream.avail_in);
+			myBaseAvailableSize -= myBzStream.avail_in;
 		}
 		if (BZ2_bzDecompress(&myBzStream) != BZ_OK) {
 			myBaseAvailableSize = 0;
+			myBzStream.avail_in = 0;
 			break;
 		}
-		realSize += maxSize - myBzStream.avail_out;
 	}
+	size_t realSize = maxSize - myBzStream.avail_out;
 	myOffset += realSize;
 	return realSize;
 }
@@ -84,8 +86,11 @@ void ZLBzip2InputStream::close() {
 }
 
 void ZLBzip2InputStream::seek(size_t offset) {
-	// TODO: does it work correct?
-	read(0, offset);
+	if (offset != 0) {
+		char *buffer = new char[offset];
+		read(buffer, offset);
+		delete[] buffer;
+	}
 }
 
 size_t ZLBzip2InputStream::offset() const {
