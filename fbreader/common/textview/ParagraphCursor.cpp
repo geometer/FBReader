@@ -77,7 +77,8 @@ ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
 	return new PlainTextParagraphCursor((const PlainTextModel&)model, 0);
 }
 
-ParagraphCursor::ParagraphCursor(const TextModel &model, size_t index) : myModel(model), myIndex(index) {
+ParagraphCursor::ParagraphCursor(const TextModel &model, size_t index) : myModel(model) {
+	myIndex = std::min(index, myModel.paragraphsNumber() - 1);
 	fill();
 }
 

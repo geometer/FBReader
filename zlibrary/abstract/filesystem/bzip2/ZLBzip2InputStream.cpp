@@ -1,0 +1,98 @@
+/*
+ * Copyright (C) 2004, 2005 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
+#include <algorithm>
+
+#include "ZLBzip2InputStream.h"
+
+ZLBzip2InputStream::ZLBzip2InputStream(shared_ptr<ZLInputStream> base) : myBaseStream(base), myBaseBuffer(0) {
+	myBzStream.bzalloc = 0;
+	myBzStream.bzfree = 0;
+	myBzStream.opaque = 0;
+}
+
+ZLBzip2InputStream::~ZLBzip2InputStream() {
+	close();
+}
+
+const size_t BUFFER_SIZE = 2048;
+
+bool ZLBzip2InputStream::open() {
+	close();
+
+	if (BZ2_bzDecompressInit(&myBzStream, 0, 0) != BZ_OK) {
+		return false;
+	}
+
+	if (!myBaseStream->open()) {
+		return false;
+	}
+	myBaseAvailableSize = myBaseStream->sizeOfOpened();
+	myBzStream.avail_in = 0;
+	myBaseBuffer = new char[BUFFER_SIZE];
+	myOffset = 0;
+	
+	return true;
+}
+
+size_t ZLBzip2InputStream::read(char *buffer, size_t maxSize) {
+	myBzStream.avail_out = maxSize;
+	myBzStream.next_out = buffer;
+	size_t realSize = 0;
+
+	while ((myBaseAvailableSize > 0) && (realSize != maxSize)) {
+		if (myBzStream.avail_in == 0) {
+			myBzStream.next_in = myBaseBuffer;
+			myBzStream.avail_in = std::min(BUFFER_SIZE, myBaseAvailableSize);
+			myBaseAvailableSize -= myBzStream.avail_in;
+			myBaseStream->read(myBaseBuffer, myBzStream.avail_in);
+		}
+		if (BZ2_bzDecompress(&myBzStream) != BZ_OK) {
+			myBaseAvailableSize = 0;
+			break;
+		}
+		realSize += maxSize - myBzStream.avail_out;
+	}
+	myOffset += realSize;
+	return realSize;
+}
+
+void ZLBzip2InputStream::close() {
+	myBaseStream->close();
+	if (myBaseBuffer != 0) {
+		delete[] myBaseBuffer;
+		myBaseBuffer = 0;
+		BZ2_bzDecompressEnd(&myBzStream);
+	}
+}
+
+void ZLBzip2InputStream::seek(size_t offset) {
+	// TODO: does it work correct?
+	read(0, offset);
+}
+
+size_t ZLBzip2InputStream::offset() const {
+	return myOffset;
+}
+
+size_t ZLBzip2InputStream::sizeOfOpened() {
+	// TODO: implement
+	return 0;
+}

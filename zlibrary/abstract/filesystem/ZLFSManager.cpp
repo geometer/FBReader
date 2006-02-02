@@ -25,6 +25,7 @@
 #include "ZLOutputStream.h"
 #include "zip/ZLZip.h"
 #include "tar/ZLTar.h"
+#include "bzip2/ZLBzip2InputStream.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
 
@@ -42,6 +43,10 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	if (ZLStringUtil::stringEndsWith(myName, ".gz")) {
 		myName = myName.substr(0, myName.length() - 3);
 		myArchiveType |= GZIP;
+	}
+	if (ZLStringUtil::stringEndsWith(myName, ".bz2")) {
+		myName = myName.substr(0, myName.length() - 4);
+		myArchiveType |= BZIP2;
 	}
 	if (ZLStringUtil::stringEndsWith(myName, ".zip")) {
 		myArchiveType |= ZIP;
@@ -84,6 +89,9 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 
 	if ((myArchiveType & GZIP) && (stream != 0)) {
 		return ZLFSManager::instance().isZipSupported() ? new ZLGzipInputStream(stream) : 0;
+	}
+	if ((myArchiveType & BZIP2) && (stream != 0)) {
+		return new ZLBzip2InputStream(stream);
 	}
 	return stream;
 }

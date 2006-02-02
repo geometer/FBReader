@@ -21,9 +21,6 @@
 #ifndef __ZLZIP_H__
 #define __ZLZIP_H__
 
-//#define NOZLIBDEFS
-//#include <zlib.h>
-
 #include <abstract/shared_ptr.h>
 
 #include "../ZLInputStream.h"
@@ -51,13 +48,9 @@ private:
 	std::string myCompressedFileName;
 	bool myIsDeflated;
 
-	//z_stream *myZStream; 
-	//std::string myBuffer; 
 	size_t myUncompressedSize;
 	size_t myAvailableSize;
 	size_t myOffset;
-	//char *myInBuffer;
-	//char *myOutBuffer;
 
 	shared_ptr<ZLZDecompressor> myDecompressor;
 

@@ -22,6 +22,7 @@ endif
 
 EXPATLIBS = -lexpat
 ENCALIBS = -lenca
+BZIP2LIBS = -lbz2
 
 RM = rm -rvf
 RM_QUIET = rm -rf
