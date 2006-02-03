@@ -48,6 +48,7 @@ private:
 
 	bz_stream myBzStream;
 	char *myBaseBuffer;
+	char *myTrashBuffer;
 	size_t myBaseAvailableSize;
 
 friend class ZLFile;

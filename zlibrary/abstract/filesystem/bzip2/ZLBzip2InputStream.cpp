@@ -49,6 +49,7 @@ bool ZLBzip2InputStream::open() {
 	myBzStream.total_in_lo32 = myBaseAvailableSize;
 	myBzStream.total_in_hi32 = myBaseAvailableSize >> 32;
 	myBaseBuffer = new char[BUFFER_SIZE];
+	myTrashBuffer = new char[BUFFER_SIZE];
 	myOffset = 0;
 	
 	return true;
@@ -80,16 +81,20 @@ void ZLBzip2InputStream::close() {
 	myBaseStream->close();
 	if (myBaseBuffer != 0) {
 		delete[] myBaseBuffer;
+		delete[] myTrashBuffer;
 		myBaseBuffer = 0;
+		myTrashBuffer = 0;
 		BZ2_bzDecompressEnd(&myBzStream);
 	}
 }
 
 void ZLBzip2InputStream::seek(size_t offset) {
-	if (offset != 0) {
-		char *buffer = new char[offset];
-		read(buffer, offset);
-		delete[] buffer;
+	while (offset != 0) {
+		size_t rSize = read(myTrashBuffer, std::min(BUFFER_SIZE, offset));
+		if (rSize == 0) {
+			break;
+		}
+		offset -= std::min(rSize, offset);
 	}
 }
 
