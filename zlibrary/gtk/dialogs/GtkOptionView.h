@@ -23,6 +23,9 @@
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkrange.h>
+#include <gtk/gtkframe.h>
+#include <gtk/gtkradiobutton.h>
+#include <gtk/gtkbox.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -76,14 +79,13 @@ private:
 	bool myInitialized;
 };
 
-#if 0
 class ChoiceOptionView : public GtkOptionView {
 
 public:
 	ChoiceOptionView(ZLChoiceOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {
-		myButtons = 0;
+		myFrame = 0;
 	}
-	~ChoiceOptionView() { if (myButtons != 0) delete[] myButtons; }
+	~ChoiceOptionView() { if (myFrame != 0) delete[] myButtons; }
 
 protected:
 	void _createItem();
@@ -93,9 +95,9 @@ protected:
 
 private:
 	GtkFrame *myFrame;
-	QRadioButton **myButtons;
+	GtkBox *myVBox;
+	GtkRadioButton **myButtons;
 };
-#endif
 
 class BooleanOptionView : public GtkOptionView {
 

@@ -184,9 +184,7 @@ void GtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int 
 			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 		case CHOICE:
-#if 0
 			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
-#endif
 			break;
 		case SPIN:
 			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, row, fromColumn, toColumn);

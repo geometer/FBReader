@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <gtk/gtk.h>
 #include <gtk/gtkcheckbutton.h>
 #include <gtk/gtklabel.h>
@@ -72,44 +74,48 @@ void BooleanOptionView::onValueChange() {
 }
 
 
-#if 0
 void ChoiceOptionView::_createItem() {
 	myFrame = GTK_FRAME(gtk_frame_new(myOption->name().c_str()));
+	myVBox = GTK_BOX(gtk_vbox_new(true, 10));
+	gtk_container_set_border_width(GTK_CONTAINER(myVBox), 5);
 
-	gtk_widget_show(GTK_WIDGET(myFrame));
-
-	GtkWidget *group = NULL;
-
-    myTab;
-	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
-	layout->addSpacing(myGroup->fontMetrics().height());
-	myButtons = new (QRadioButton*)[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
-		myButtons[i] = new QRadioButton((QButtonGroup*)layout->parent());
-		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());
-		layout->addWidget(myButtons[i]);
+	int num = ((ZLChoiceOptionEntry*)myOption)->choiceNumber();
+	myButtons = new (GtkRadioButton*)[num];
+	GSList *group = 0;
+	for (int i = 0; i < num; i++) {
+		myButtons[i] = GTK_RADIO_BUTTON(gtk_radio_button_new_with_label(group, ((ZLChoiceOptionEntry*)myOption)->text(i).c_str()));
+		group = gtk_radio_button_get_group(myButtons[i]);
+		gtk_box_pack_start (myVBox, GTK_WIDGET(myButtons[i]), true, true, 0);
 	}
-	myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]->setChecked(true);
-	myTab->addItem(myGroup, myRow, myFromColumn, myToColumn);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myButtons[2]), true);
+	gtk_container_add(GTK_CONTAINER(myFrame), GTK_WIDGET(myVBox));
+	myTab->addItem(GTK_WIDGET(myFrame), myRow, myFromColumn, myToColumn);
 }
 
 void ChoiceOptionView::_show() {
-	myGroup->show();
+	gtk_widget_show(GTK_WIDGET(myFrame));
+	gtk_widget_show(GTK_WIDGET(myVBox));
+	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
+		gtk_widget_show(GTK_WIDGET(myButtons[i]));
+	}
 }
 
 void ChoiceOptionView::_hide() {
-	myGroup->hide();
+	gtk_widget_hide(GTK_WIDGET(myFrame));
+	gtk_widget_hide(GTK_WIDGET(myVBox));
+	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
+		gtk_widget_hide(GTK_WIDGET(myButtons[i]));
+	}
 }
 
 void ChoiceOptionView::_onAccept() const {
 	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
-		if (myButtons[i]->isChecked()) {
+		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myButtons[i]))) {
 			((ZLChoiceOptionEntry*)myOption)->onAccept(i);
 			return;
 		}
 	}
 }
-#endif
 
 void ComboOptionView::_createItem() {
 	myLabel = labelWithMyParams(myOption->name().c_str());
