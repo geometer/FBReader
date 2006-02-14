@@ -60,6 +60,52 @@ void ShowIndicatorEntry::onValueChange(bool value) {
 	myPage.EnableNavigationEntry->setVisible(value);
 }
 
+class RotationTypeEntry : public ZLChoiceOptionEntry {
+
+public:
+	RotationTypeEntry() {}
+	const std::string &name() const;
+	const std::string &text(int index) const;
+	int choiceNumber() const;
+	int initialCheckedIndex() const;
+	void onAccept(int index);
+};
+
+static const std::string ROTATION_TYPE = "Rotation Type";
+static const std::string ROTATION_0 = "Disabled";
+static const std::string ROTATION_90 = "90 Degrees Clockwise";
+static const std::string ROTATION_180 = "180 Degrees";
+static const std::string ROTATION_270 = "90 Degrees Counterclockwise";
+
+const std::string &RotationTypeEntry::name() const {
+	return ROTATION_TYPE;
+}
+
+const std::string &RotationTypeEntry::text(int index) const {
+	switch (index) {
+		case 1:
+			return ROTATION_90;
+		case 2:
+			return ROTATION_180;
+		case 3:
+			return ROTATION_270;
+		default:
+			return ROTATION_0;
+	}
+}
+
+int RotationTypeEntry::choiceNumber() const {
+	return 4;
+}
+
+int RotationTypeEntry::initialCheckedIndex() const {
+	return 1;
+}
+
+void RotationTypeEntry::onAccept(int index) {
+}
+
+
 OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
@@ -95,6 +141,9 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	indicatorTab->addOption(myIndicatorPage.OffsetEntry);
 	indicatorTab->addOption(myIndicatorPage.EnableNavigationEntry);
 	myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
+
+	ZLOptionsDialogTab *rotationTab = myDialog->createTab("Rotation");
+	rotationTab->addOption(new RotationTypeEntry());
 
 	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
 	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
