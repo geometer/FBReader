@@ -85,7 +85,7 @@ void GtkViewWidget::repaintView()	{
 	const int w = myArea->allocation.width;
 	const int h = myArea->allocation.height;
 	gtkContext.updatePixmap(myArea, w, h);
-	gtkContext.setRotation(rotation() != DEGREES0);
+	gtkContext.setRotation(rotation());
 #ifdef PRINT_TIMING
   const ZLTime c1;
 #endif

@@ -26,6 +26,7 @@
 #include <pango/pango.h>
 
 #include <abstract/ZLPaintContext.h>
+#include <abstract/ZLView.h>
 
 class GtkPaintContext : public ZLPaintContext {
 
@@ -33,7 +34,7 @@ public:
 	GtkPaintContext();
 	~GtkPaintContext();
 
-	void setRotation(bool rotation) { myIsRotated = rotation; }
+	void setRotation(ZLViewWidget::Angle angle) { myAngle = angle; }
 
 	GdkPixmap *pixmap() { return myPixmap; }
 	void updatePixmap(GtkWidget *area, int w, int h);
@@ -83,7 +84,7 @@ private:
 	mutable int myStringHeight;
 	mutable int mySpaceWidth;
 
-	bool myIsRotated;
+	ZLViewWidget::Angle myAngle;
 
 	GdkPixmap *myWordPixmap;
 	GdkImage *myWordImage;

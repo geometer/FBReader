@@ -33,7 +33,7 @@
 
 static void pixbuf_copy_block_rotate(guchar *src, gint src_row_stride, gint x, gint y,
 						 guchar *dest, gint dest_row_stride, gint w, gint h,
-						 gint bytes_per_pixel, gint counter_clockwise) {
+						 gint bytes_per_pixel, bool counter_clockwise) {
 	gint i, j;
 	guchar *sp;
 	guchar *dp;
@@ -77,7 +77,7 @@ static GdkPixbuf *buffer = 0;
  * Returns a copy of pixbuf src rotated 90 degrees clockwise or 90 counterclockwise
  */
 // GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
-void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh) {
+void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh, bool counter_clockwise) {
 	gint has_alpha;
 	//gint sw, sh, srs;
 	gint srs;
@@ -90,7 +90,6 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh) {
 	guchar *b_pix;
 	gint brs;
 	gint w, h;
-	gint counter_clockwise = true;
 
 	if (src == 0)
 		return;
