@@ -164,8 +164,10 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	indicatorTab->addOption(myIndicatorPage.EnableNavigationEntry);
 	myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
 
-	ZLOptionsDialogTab *rotationTab = myDialog->createTab("Rotation");
-	rotationTab->addOption(new RotationTypeEntry());
+	if (fbreader.isRotationSupported()) {
+		ZLOptionsDialogTab *rotationTab = myDialog->createTab("Rotation");
+		rotationTab->addOption(new RotationTypeEntry());
+	}
 
 	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
 	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
