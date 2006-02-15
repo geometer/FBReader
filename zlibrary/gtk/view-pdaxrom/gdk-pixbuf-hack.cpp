@@ -128,4 +128,46 @@ void rotate90(GdkPixbuf *dest, const GdkPixbuf *src, bool counter_clockwise) {
 	gdk_pixbuf_unref(buffer);
 }
 
+void rotate180(GdkPixbuf *buffer) {
+	if (buffer == 0)
+		return;
+
+	const gint width = gdk_pixbuf_get_width(buffer);
+	const gint height = gdk_pixbuf_get_height(buffer);
+	const gint brs = gdk_pixbuf_get_rowstride(buffer);
+	guchar *s_pix = gdk_pixbuf_get_pixels(buffer);
+	guchar *d_pix = s_pix + (height - 1) * brs;
+
+	const gint a = gdk_pixbuf_get_has_alpha(buffer) ? 4 : 3;
+
+	guchar *tmp = new guchar[a];
+
+	while (s_pix < d_pix) {
+		guchar *s = s_pix;
+		guchar *d = d_pix + (width - 1) * a;
+		for (int i = 0; i < width; i++) {
+			memcpy(tmp, s, a);
+			memcpy(s, d, a);
+			memcpy(d, tmp, a);
+			s += a;
+			d -= a;
+		}
+		s_pix += brs;
+		d_pix -= brs;
+	}
+	if (s_pix == d_pix) {
+		guchar *s = s_pix;
+		guchar *d = d_pix + (width - 1) * a;
+		while (s < d) {
+			memcpy(tmp, s, a);
+			memcpy(s, d, a);
+			memcpy(d, tmp, a);
+			s += a;
+			d -= a;
+		}
+	}
+
+	delete[] tmp;
+}
+
 // vim:ts=2:sw=2:noet
