@@ -34,28 +34,30 @@
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
 	ZLView *view = viewWidget->view();
+	int x, y;
 	switch (viewWidget->rotation()) {
 		default:
-			view->onStylusPress(
-				(int)event->x - view->context().leftMargin(),
-				(int)event->y - view->context().topMargin());
+			x = (int)event->x - view->context().leftMargin(),
+			y = (int)event->y - view->context().topMargin();
 			break;
 		case ZLViewWidget::DEGREES90:
-			view->onStylusPress(
-				viewWidget->height() - (int)event->y - view->context().rightMargin(),
-				(int)event->x - view->context().topMargin());
+			x = viewWidget->height() - (int)event->y - view->context().rightMargin(),
+			y = (int)event->x - view->context().topMargin();
 			break;
 		case ZLViewWidget::DEGREES180:
-			view->onStylusPress(
-				viewWidget->height() - (int)event->y - view->context().rightMargin(),
-				(int)event->x - view->context().topMargin());
+			x = viewWidget->width() - (int)event->x - view->context().rightMargin(),
+			y = viewWidget->height() - (int)event->y - view->context().bottomMargin();
 			break;
 		case ZLViewWidget::DEGREES270:
-			view->onStylusPress(
-				viewWidget->height() - (int)event->y - view->context().rightMargin(),
-				(int)event->x - view->context().topMargin());
+			x = (int)event->y - view->context().leftMargin();
+			y = viewWidget->width() - (int)event->x - view->context().bottomMargin();
 			break;
 	}
+	view->onStylusPress(x, y);
+}
+
+int GtkViewWidget::width() const {
+	return (myArea != 0) ? myArea->allocation.width : 0;
 }
 
 int GtkViewWidget::height() const {

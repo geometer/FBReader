@@ -281,8 +281,42 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 		default:
 			gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 			break;
-		case ZLViewWidget::DEGREES90:
 		case ZLViewWidget::DEGREES180:
+		{
+			PangoRectangle logicalRectangle;
+			pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
+			const int w = (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
+			const int h = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
+			const int ascent = (pango_font_metrics_get_ascent(pango_font_get_metrics(myAnalysis.font, 0)) + PANGO_SCALE / 2) / PANGO_SCALE;
+    
+			if (myWordPixmap != 0) {
+				if ((gdk_pixbuf_get_width(myWordPixbuf) < w) ||
+						(gdk_pixbuf_get_width(myRotatedWordPixbuf) < w) ||
+						(gdk_pixbuf_get_height(myWordPixbuf) < h) ||
+						(gdk_pixbuf_get_height(myRotatedWordPixbuf) < h)) {
+					gdk_pixbuf_unref(myWordPixbuf);
+					gdk_pixbuf_unref(myRotatedWordPixbuf);
+					gdk_image_unref(myWordImage);
+					gdk_pixmap_unref(myWordPixmap);
+					myWordPixmap = 0;
+				}
+			}
+			if (myWordPixmap == 0) {
+				myWordPixmap = gdk_pixmap_new(myPixmap, w, h, gdk_drawable_get_depth(myPixmap));
+				myWordImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(myPixmap), w, h);
+				myWordPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+				myRotatedWordPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+			}
+			
+			gdk_draw_rectangle(myWordPixmap, myBackGC, true, 0, 0, w, h);
+			gdk_draw_glyphs(myWordPixmap, myTextGC, myAnalysis.font, 0, ascent, myString);
+			gdk_drawable_copy_to_image(myWordPixmap, myWordImage, 0, 0, 0, 0, w, h);
+			gdk_pixbuf_get_from_image(myWordPixbuf, myWordImage, gdk_drawable_get_colormap(myWordPixmap), 0, 0, 0, 0, w, h);
+			::rotate180(myRotatedWordPixbuf, myWordPixbuf, w, h);
+			gdk_draw_pixbuf(myPixmap, myTextGC, myRotatedWordPixbuf, 0, 0, x - w, y, w, h, GDK_RGB_DITHER_NONE, 0, 0);
+			break;
+		}
+		case ZLViewWidget::DEGREES90:
 		case ZLViewWidget::DEGREES270:
 		{
 			PangoRectangle logicalRectangle;
@@ -290,10 +324,12 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 			const int w = (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
 			const int h = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
 			const int ascent = (pango_font_metrics_get_ascent(pango_font_get_metrics(myAnalysis.font, 0)) + PANGO_SCALE / 2) / PANGO_SCALE;
-			const int descent = (pango_font_metrics_get_descent(pango_font_get_metrics(myAnalysis.font, 0)) + PANGO_SCALE / 2) / PANGO_SCALE;
     
 			if (myWordPixmap != 0) {
-				if ((gdk_pixbuf_get_width(myWordPixbuf) < w) || (gdk_pixbuf_get_height(myWordPixbuf) < h)) {
+				if ((gdk_pixbuf_get_width(myWordPixbuf) < w) ||
+						(gdk_pixbuf_get_width(myRotatedWordPixbuf) < h) ||
+						(gdk_pixbuf_get_height(myWordPixbuf) < h) ||
+						(gdk_pixbuf_get_height(myRotatedWordPixbuf) < w)) {
 					gdk_pixbuf_unref(myWordPixbuf);
 					gdk_pixbuf_unref(myRotatedWordPixbuf);
 					gdk_image_unref(myWordImage);
@@ -312,11 +348,12 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 			gdk_draw_glyphs(myWordPixmap, myTextGC, myAnalysis.font, 0, ascent, myString);
 			gdk_drawable_copy_to_image(myWordPixmap, myWordImage, 0, 0, 0, 0, w, h);
 			gdk_pixbuf_get_from_image(myWordPixbuf, myWordImage, gdk_drawable_get_colormap(myWordPixmap), 0, 0, 0, 0, w, h);
-			::rotate(myRotatedWordPixbuf, myWordPixbuf, w, h, myAngle == ZLViewWidget::DEGREES90);
+			::rotate90(myRotatedWordPixbuf, myWordPixbuf, w, h, myAngle == ZLViewWidget::DEGREES90);
 			if (myAngle == ZLViewWidget::DEGREES90) {
 				x -= ascent;
 				y -= w;
 			} else {
+				const int descent = (pango_font_metrics_get_descent(pango_font_get_metrics(myAnalysis.font, 0)) + PANGO_SCALE / 2) / PANGO_SCALE;
 				x += h - ascent - descent;
 			}
 			gdk_draw_pixbuf(myPixmap, myTextGC, myRotatedWordPixbuf, 0, 0, x, y, h, w, GDK_RGB_DITHER_NONE, 0, 0);
@@ -340,19 +377,38 @@ void GtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 					-1, -1, GDK_RGB_DITHER_NONE, 0, 0
 				);
 				break;
-			case ZLViewWidget::DEGREES90:
 			case ZLViewWidget::DEGREES180:
+			{
+				const int w = gdk_pixbuf_get_width(imageRef);
+				const int h = gdk_pixbuf_get_height(imageRef);
+				rotatePoint(x, y);
+				GdkPixbuf *rotated = gdk_pixbuf_new(GDK_COLORSPACE_RGB, gdk_pixbuf_get_has_alpha(imageRef), 8, w, h);
+				::rotate180(rotated, imageRef, w, h);
+				gdk_pixbuf_render_to_drawable(
+					rotated, myPixmap,
+					0, 0, 0,
+					x - w, y,
+					w, h, GDK_RGB_DITHER_NONE, 0, 0
+				);
+				gdk_pixbuf_unref(rotated);
+				break;
+			}
+			case ZLViewWidget::DEGREES90:
 			case ZLViewWidget::DEGREES270:
 			{
 				const int w = gdk_pixbuf_get_width(imageRef);
 				const int h = gdk_pixbuf_get_height(imageRef);
 				rotatePoint(x, y);
 				GdkPixbuf *rotated = gdk_pixbuf_new(GDK_COLORSPACE_RGB, gdk_pixbuf_get_has_alpha(imageRef), 8, h, w);
-				::rotate(rotated, imageRef, w, h, myAngle == ZLViewWidget::DEGREES90);
+				::rotate90(rotated, imageRef, w, h, myAngle == ZLViewWidget::DEGREES90);
+				if (myAngle == ZLViewWidget::DEGREES90) {
+					x -= h;
+					y -= w;
+				}
 				gdk_pixbuf_render_to_drawable(
 					rotated, myPixmap,
 					0, 0, 0,
-					x - h, y - w,
+					x, y,
 					h, w, GDK_RGB_DITHER_NONE, 0, 0
 				);
 				gdk_pixbuf_unref(rotated);

@@ -32,6 +32,7 @@ public:
 	~GtkViewWidget();
 
 	GtkWidget *area() { return myArea; }
+	int width() const;
 	int height() const;
 
 	void repaintView();

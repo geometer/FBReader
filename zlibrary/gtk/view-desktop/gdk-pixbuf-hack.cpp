@@ -76,8 +76,7 @@ static GdkPixbuf *buffer = 0;
 /*
  * Returns a copy of pixbuf src rotated 90 degrees clockwise or 90 counterclockwise
  */
-// GdkPixbuf *pixbuf_copy_rotate_90(GdkPixbuf *src, gint counter_clockwise)
-void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh, bool counter_clockwise) {
+void rotate90(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh, bool counter_clockwise) {
 	gint has_alpha;
 	//gint sw, sh, srs;
 	gint srs;
@@ -129,6 +128,31 @@ void rotate(GdkPixbuf *dest, const GdkPixbuf *src, int sw, int sh, bool counter_
 
 			pixbuf_copy_block(b_pix, brs, w, h, d_pix, drs, x, y, a);
 		}
+	}
+}
+
+void rotate180(GdkPixbuf *dest, GdkPixbuf *src, int sw, int sh) {
+	if (src == 0)
+		return;
+
+	gint srs = gdk_pixbuf_get_rowstride(src);
+	guchar *s_pix = gdk_pixbuf_get_pixels(src);
+
+	gint drs = gdk_pixbuf_get_rowstride(dest);
+	guchar *d_pix = gdk_pixbuf_get_pixels(dest) + (sh - 1) * drs;
+
+	const gint a = gdk_pixbuf_get_has_alpha(src) ? 4 : 3;
+
+	for (int i = 0; i < sh; i++) {
+		guchar *s = s_pix;
+		guchar *d = d_pix + (sw - 1) * a;
+		for (int j = 0; j < sw; j++) {
+			memcpy(d, s, a);
+			s += a;
+			d -= a;
+		}
+		s_pix += srs;
+		d_pix -= drs;
 	}
 }
 
