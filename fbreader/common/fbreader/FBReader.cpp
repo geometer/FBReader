@@ -107,6 +107,8 @@ ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 ZLBooleanOption FBReader::KeyboardControlOption("Keyboard", "FullControl", false);
 
+ZLIntegerOption FBReader::RotationAngleOption("Rotation", "Angle", ZLViewWidget::DEGREES270);
+
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	if (BookCollection::PathOption.value() == "") {
 		BookCollection::PathOption.setValue(BookCollection::DefaultBookPath);
@@ -411,8 +413,14 @@ void FBReader::doAction(ActionCode code) {
 		case ACTION_SHOW_HELP:
 			break;
 		case ACTION_ROTATE_SCREEN:
-			myViewWidget->rotate();
-			repaintView();
+			if (isRotationSupported()) {
+				if (myViewWidget->rotation() == ZLViewWidget::DEGREES0) {
+					myViewWidget->rotate((ZLViewWidget::Angle)RotationAngleOption.value());
+				} else {
+					myViewWidget->rotate(ZLViewWidget::DEGREES0);
+				}
+				repaintView();
+			}
 			break;
 		case ACTION_QUIT:
 			if (myMode == BOOK_TEXT_MODE) {
@@ -431,6 +439,11 @@ void FBReader::enableMenuButtons() {
 	setButtonEnabled(ACTION_SHOW_CONTENTS, !myContentsView->isEmpty());
 	setButtonEnabled(ACTION_UNDO, (myMode != BOOK_TEXT_MODE) || myBookTextView->canUndoPageMove());
 	setButtonEnabled(ACTION_REDO, myBookTextView->canRedoPageMove());
+	if (isRotationSupported()) {
+		setButtonVisible(ACTION_ROTATE_SCREEN,
+			(RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
+			(myViewWidget->rotation() != ZLViewWidget::DEGREES0));
+	}
 }
 
 void FBReader::setMode(ViewMode mode) {

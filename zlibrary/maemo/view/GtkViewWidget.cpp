@@ -28,14 +28,27 @@
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
 	ZLView *view = viewWidget->view();
-	if (viewWidget->isRotated()) {
-		view->onStylusPress(
-			viewWidget->height() - (int)event->y - view->context().rightMargin(),
-			(int)event->x - view->context().topMargin());
-	} else {
-		view->onStylusPress(
-			(int)event->x - view->context().leftMargin(),
-			(int)event->y - view->context().topMargin());
+	switch (viewWidget->rotation()) {
+		default:
+			view->onStylusPress(
+				(int)event->x - view->context().leftMargin(),
+				(int)event->y - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES90:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES180:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES270:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
 	}
 }
 
@@ -65,15 +78,14 @@ void GtkViewWidget::trackStylus(bool track) {
 }
 
 void GtkViewWidget::repaintView()	{
-  //ZLTime c0, c1, c2, c3, c4, c5, c6;
 	GtkPaintContext &gtkContext = (GtkPaintContext&)view()->context();
-	int w = isRotated() ? myArea->allocation.height : myArea->allocation.width;
-	int h = isRotated() ? myArea->allocation.width : myArea->allocation.height;
+	Angle angle = rotation();
+	bool isRotated = (angle == DEGREES90) || (angle == DEGREES270);
+	int w = isRotated ? myArea->allocation.height : myArea->allocation.width;
+	int h = isRotated ? myArea->allocation.width : myArea->allocation.height;
 	gtkContext.updatePixmap(myArea, w, h);
-  //c1 = ZLTime();
 	view()->paint();
-  //c2 = ZLTime();
-	if (isRotated()) {
+	if (isRotated) {
 		if ((myOriginalPixbuf != 0) && ((gdk_pixbuf_get_width(myOriginalPixbuf) != w) || (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
 			gdk_pixbuf_unref(myRotatedPixbuf);
@@ -86,13 +98,9 @@ void GtkViewWidget::repaintView()	{
 			myImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
 		}
 		gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
-    //c3 = ZLTime();
 		gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
-    //c4 = ZLTime();
 		::rotate(myRotatedPixbuf, myOriginalPixbuf);
-    //c5 = ZLTime();
 		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
-    //c6 = ZLTime();
 	} else {
 		if (myOriginalPixbuf != 0) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
@@ -100,21 +108,8 @@ void GtkViewWidget::repaintView()	{
 			gdk_image_unref(myImage);
 			myOriginalPixbuf = 0;
 		}
-    //c3 = c4 = c5 = ZLTime();
 		gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
-    //c6 = ZLTime();
 	}
-
-	/*
-  std::cout <<
-    c1.millisecondsFrom(c0) << ", " <<
-    c2.millisecondsFrom(c1) << ", " <<
-    c3.millisecondsFrom(c2) << ", " <<
-    c4.millisecondsFrom(c3) << ", " <<
-    c5.millisecondsFrom(c4) << ", " <<
-    c6.millisecondsFrom(c5) << ", " <<
-    c6.millisecondsFrom(c0) << std::endl;
-	*/
 	
 	myApplication->enableMenuButtons();
 }

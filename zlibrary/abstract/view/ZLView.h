@@ -38,6 +38,14 @@ class ZLPaintContext;
 
 class ZLViewWidget {
 
+public:
+	enum Angle {
+		DEGREES0 = 0,
+		DEGREES90 = 90,
+		DEGREES180 = 180,
+		DEGREES270 = 270
+	};
+
 protected:
 	ZLViewWidget() ZLVIEW_SECTION;
 	virtual ~ZLViewWidget() ZLVIEW_SECTION;
@@ -49,12 +57,12 @@ public:
 	virtual void trackStylus(bool track) ZLVIEW_SECTION = 0;
 	virtual void repaintView() ZLVIEW_SECTION = 0;
 
-	void rotate() ZLVIEW_SECTION;
-	bool isRotated() const ZLVIEW_SECTION;
+	void rotate(Angle rotation) ZLVIEW_SECTION;
+	Angle rotation() const ZLVIEW_SECTION;
 
 private:
 	ZLView *myView;
-	bool myIsRotated;
+	Angle myRotation;
 };
 
 class ZLView {
@@ -87,11 +95,11 @@ friend void ZLViewWidget::setView(ZLView *view);
 inline ZLApplication::ZLApplication() {}
 inline ZLApplication::~ZLApplication() {}
 
-inline ZLViewWidget::ZLViewWidget() : myIsRotated(false) {}
+inline ZLViewWidget::ZLViewWidget() : myRotation(DEGREES0) {}
 inline ZLViewWidget::~ZLViewWidget() {}
 inline ZLView *ZLViewWidget::view() const { return myView; }
-inline void ZLViewWidget::rotate() { myIsRotated = !myIsRotated; }
-inline bool ZLViewWidget::isRotated() const { return myIsRotated; }
+inline void ZLViewWidget::rotate(Angle rotation) { myRotation = rotation; }
+inline ZLViewWidget::Angle ZLViewWidget::rotation() const { return myRotation; }
 
 inline ZLPaintContext &ZLView::context() const { return myContext; }
 inline bool ZLView::onStylusPress(int, int) { return false; }

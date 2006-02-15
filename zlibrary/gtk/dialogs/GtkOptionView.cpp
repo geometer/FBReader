@@ -87,7 +87,7 @@ void ChoiceOptionView::_createItem() {
 		group = gtk_radio_button_get_group(myButtons[i]);
 		gtk_box_pack_start (myVBox, GTK_WIDGET(myButtons[i]), true, true, 0);
 	}
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myButtons[2]), true);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]), true);
 	gtk_container_add(GTK_CONTAINER(myFrame), GTK_WIDGET(myVBox));
 	myTab->addItem(GTK_WIDGET(myFrame), myRow, myFromColumn, myToColumn);
 }

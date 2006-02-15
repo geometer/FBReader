@@ -124,6 +124,8 @@ public:
 
 	static ZLBooleanOption KeyboardControlOption;
 
+	static ZLIntegerOption RotationAngleOption;
+
 	static const std::string HelpDirectory;
 
 protected:

@@ -34,14 +34,27 @@
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
 	ZLView *view = viewWidget->view();
-	if (viewWidget->isRotated()) {
-		view->onStylusPress(
-			viewWidget->height() - (int)event->y - view->context().rightMargin(),
-			(int)event->x - view->context().topMargin());
-	} else {
-		view->onStylusPress(
-			(int)event->x - view->context().leftMargin(),
-			(int)event->y - view->context().topMargin());
+	switch (viewWidget->rotation()) {
+		default:
+			view->onStylusPress(
+				(int)event->x - view->context().leftMargin(),
+				(int)event->y - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES90:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES180:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES270:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
 	}
 }
 
@@ -72,7 +85,7 @@ void GtkViewWidget::repaintView()	{
 	const int w = myArea->allocation.width;
 	const int h = myArea->allocation.height;
 	gtkContext.updatePixmap(myArea, w, h);
-	gtkContext.setRotation(isRotated());
+	gtkContext.setRotation(rotation() != DEGREES0);
 #ifdef PRINT_TIMING
   const ZLTime c1;
 #endif

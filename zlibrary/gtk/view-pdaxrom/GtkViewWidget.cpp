@@ -27,14 +27,27 @@
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
 	ZLView *view = viewWidget->view();
-	if (viewWidget->isRotated()) {
-		view->onStylusPress(
-			viewWidget->height() - (int)event->y - view->context().rightMargin(),
-			(int)event->x - view->context().topMargin());
-	} else {
-		view->onStylusPress(
-			(int)event->x - view->context().leftMargin(),
-			(int)event->y - view->context().topMargin());
+	switch (viewWidget->rotation()) {
+		default:
+			view->onStylusPress(
+				(int)event->x - view->context().leftMargin(),
+				(int)event->y - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES90:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES180:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
+		case ZLViewWidget::DEGREES270:
+			view->onStylusPress(
+				viewWidget->height() - (int)event->y - view->context().rightMargin(),
+				(int)event->x - view->context().topMargin());
+			break;
 	}
 }
 
@@ -65,11 +78,13 @@ void GtkViewWidget::trackStylus(bool track) {
 
 void GtkViewWidget::repaintView()	{
 	GtkPaintContext &gtkContext = (GtkPaintContext&)view()->context();
-	int w = isRotated() ? myArea->allocation.height : myArea->allocation.width;
-	int h = isRotated() ? myArea->allocation.width : myArea->allocation.height;
+	Angle angle = rotation();
+	bool isRotated = (angle == DEGREES90) || (angle == DEGREES270);
+	int w = isRotated ? myArea->allocation.height : myArea->allocation.width;
+	int h = isRotated ? myArea->allocation.width : myArea->allocation.height;
 	gtkContext.updatePixmap(myArea, w, h);
 	view()->paint();
-	if (isRotated()) {
+	if (isRotated) {
 		if ((myOriginalPixbuf != 0) && ((gdk_pixbuf_get_width(myOriginalPixbuf) != w) || (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
 			gdk_pixbuf_unref(myRotatedPixbuf);
