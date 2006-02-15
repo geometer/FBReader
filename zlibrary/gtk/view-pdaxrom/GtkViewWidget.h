@@ -32,6 +32,7 @@ public:
 	~GtkViewWidget();
 
 	GtkWidget *area() { return myArea; }
+	int width() const;
 	int height() const;
 
 	void repaintView();
@@ -42,9 +43,7 @@ private:
 	GtkWidget *myArea;
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
-	GdkPixbuf *myPixbuf180;
 	GdkImage *myImage;
-	GdkImage *myImage180;
 };
 
 #endif /* __GTKVIEWWIDGET_H__ */

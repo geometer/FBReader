@@ -49,6 +49,10 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	view->onStylusPress(x, y);
 }
 
+int GtkViewWidget::width() const {
+	return (myArea != 0) ? myArea->allocation.width : 0;
+}
+
 int GtkViewWidget::height() const {
 	return (myArea != 0) ? myArea->allocation.height : 0;
 }
@@ -82,60 +86,57 @@ void GtkViewWidget::repaintView()	{
 	int h = isRotated ? myArea->allocation.width : myArea->allocation.height;
 	gtkContext.updatePixmap(myArea, w, h);
 	view()->paint();
-	if (isRotated) {
-		if (myPixbuf180 != 0) {
-			gdk_pixbuf_unref(myPixbuf180);
-			gdk_image_unref(myImage180);
-			myPixbuf180 = 0;
-		}
-		if ((myOriginalPixbuf != 0) && ((gdk_pixbuf_get_width(myOriginalPixbuf) != w) || (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
-			gdk_pixbuf_unref(myOriginalPixbuf);
-			gdk_pixbuf_unref(myRotatedPixbuf);
-			gdk_image_unref(myImage);
-			myOriginalPixbuf = 0;
-		}
-		if (myOriginalPixbuf == 0) {
-			myOriginalPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
-			myRotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h, w);
-			myImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
-		}
-		gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
-		gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
-		::rotate90(myRotatedPixbuf, myOriginalPixbuf, angle == DEGREES90);
-		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
-	} else if (angle == DEGREES180) {
-		if (myOriginalPixbuf != 0) {
-			gdk_pixbuf_unref(myOriginalPixbuf);
-			gdk_pixbuf_unref(myRotatedPixbuf);
-			gdk_image_unref(myImage);
-			myOriginalPixbuf = 0;
-		}
-		if ((myPixbuf180 != 0) && ((gdk_pixbuf_get_width(myPixbuf180) != w) || (gdk_pixbuf_get_height(myPixbuf180) != h))) {
-			gdk_pixbuf_unref(myPixbuf180);
-			gdk_image_unref(myImage180);
-			myPixbuf180 = 0;
-		}
-		if (myPixbuf180 == 0) {
-			myPixbuf180 = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
-			myImage180 = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
-		}
-		gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage180, 0, 0, 0, 0, w, h);
-		gdk_pixbuf_get_from_image(myPixbuf180, myImage180, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
-		::rotate180(myPixbuf180);
-		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myPixbuf180, 0, 0, 0, 0, w, h, GDK_RGB_DITHER_NONE, 0, 0);
-	} else {
-		if (myPixbuf180 != 0) {
-			gdk_pixbuf_unref(myPixbuf180);
-			gdk_image_unref(myImage180);
-			myPixbuf180 = 0;
-		}
-		if (myOriginalPixbuf != 0) {
-			gdk_pixbuf_unref(myOriginalPixbuf);
-			gdk_pixbuf_unref(myRotatedPixbuf);
-			gdk_image_unref(myImage);
-			myOriginalPixbuf = 0;
-		}
-		gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
+	switch (angle) {
+		default:
+			cleanOriginalPixbuf();
+			cleanRotatedPixbuf();
+			gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(),
+											0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
+			break;
+		case DEGREES180:
+			cleanRotatedPixbuf();
+			if ((myOriginalPixbuf != 0) &&
+					((gdk_pixbuf_get_width(myOriginalPixbuf) != w) ||
+					 (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
+				cleanOriginalPixbuf();
+			}
+			if (myOriginalPixbuf == 0) {
+				myOriginalPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+				myImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
+			}
+			gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
+			gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()),
+																0, 0, 0, 0, w, h);
+			::rotate180(myOriginalPixbuf);
+			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myOriginalPixbuf,
+											0, 0, 0, 0, w, h, GDK_RGB_DITHER_NONE, 0, 0);
+			break;
+		case DEGREES90:
+		case DEGREES270:
+			if ((myOriginalPixbuf != 0) &&
+					((gdk_pixbuf_get_width(myOriginalPixbuf) != w) ||
+					 (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
+				cleanOriginalPixbuf();
+			}
+			if ((myRotatedPixbuf != 0) &&
+					((gdk_pixbuf_get_width(myRotatedPixbuf) != h) ||
+					 (gdk_pixbuf_get_height(myRotatedPixbuf) != w))) {
+				cleanRotatedPixbuf();
+			}
+			if (myOriginalPixbuf == 0) {
+				myOriginalPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+				myImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
+			}
+			if (myRotatedPixbuf == 0) {
+				myRotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h, w);
+			}
+			gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
+			gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()),
+																0, 0, 0, 0, w, h);
+			::rotate90(myRotatedPixbuf, myOriginalPixbuf, angle == DEGREES90);
+			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf,
+											0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
+			break;
 	}
 
 	myApplication->enableMenuButtons();
