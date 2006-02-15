@@ -49,16 +49,16 @@ void QViewWidget::paintEvent(QPaintEvent*) {
 			realPainter.drawPixmap(0, 0, ((QPaintContext&)view()->context()).pixmap());
 			break;
 		case DEGREES90:
-			realPainter.rotate(90);
-			realPainter.drawPixmap(-1, 1 - width(), ((QPaintContext&)view()->context()).pixmap());
+			realPainter.rotate(270);
+			realPainter.drawPixmap(1 - height(), -1, ((QPaintContext&)view()->context()).pixmap());
 			break;
 		case DEGREES180:
 			realPainter.rotate(180);
 			realPainter.drawPixmap(1 - width(), 1 - height(), ((QPaintContext&)view()->context()).pixmap());
 			break;
 		case DEGREES270:
-			realPainter.rotate(270);
-			realPainter.drawPixmap(1 - height(), -1, ((QPaintContext&)view()->context()).pixmap());
+			realPainter.rotate(90);
+			realPainter.drawPixmap(-1, 1 - width(), ((QPaintContext&)view()->context()).pixmap());
 			break;
 	}
 }
@@ -89,11 +89,11 @@ int QViewWidget::x(const QMouseEvent *event) const {
 		default:
 			return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
 		case DEGREES90:
-			return std::min(std::max(event->y(), 0), height()) - view()->context().leftMargin();
+			return height() - std::min(std::max(event->y(), 0), height()) - view()->context().rightMargin();
 		case DEGREES180:
 			return width() - std::min(std::max(event->x(), 0), width()) - view()->context().rightMargin();
 		case DEGREES270:
-			return height() - std::min(std::max(event->y(), 0), height()) - view()->context().rightMargin();
+			return std::min(std::max(event->y(), 0), height()) - view()->context().leftMargin();
 	}
 }
 
@@ -102,11 +102,11 @@ int QViewWidget::y(const QMouseEvent *event) const {
 		default:
 			return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
 		case DEGREES90:
-			return width() - std::min(std::max(event->x(), 0), width()) - view()->context().bottomMargin();
+			return std::min(std::max(event->x(), 0), width()) - view()->context().topMargin();
 		case DEGREES180:
 			return height() - std::min(std::max(event->y(), 0), height()) - view()->context().bottomMargin();
 		case DEGREES270:
-			return std::min(std::max(event->x(), 0), width()) - view()->context().topMargin();
+			return width() - std::min(std::max(event->x(), 0), width()) - view()->context().bottomMargin();
 	}
 }
 

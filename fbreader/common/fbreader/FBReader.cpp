@@ -107,7 +107,7 @@ ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 ZLBooleanOption FBReader::KeyboardControlOption("Keyboard", "FullControl", false);
 
-ZLIntegerOption FBReader::RotationAngleOption("Rotation", "Angle", ZLViewWidget::DEGREES270);
+ZLIntegerOption FBReader::RotationAngleOption("Rotation", "Angle", ZLViewWidget::DEGREES90);
 
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	if (BookCollection::PathOption.value() == "") {
