@@ -135,10 +135,10 @@ void rotate180(GdkPixbuf *dest, GdkPixbuf *src, int sw, int sh) {
 	if (src == 0)
 		return;
 
-	gint srs = gdk_pixbuf_get_rowstride(src);
+	const gint srs = gdk_pixbuf_get_rowstride(src);
 	guchar *s_pix = gdk_pixbuf_get_pixels(src);
 
-	gint drs = gdk_pixbuf_get_rowstride(dest);
+	const gint drs = gdk_pixbuf_get_rowstride(dest);
 	guchar *d_pix = gdk_pixbuf_get_pixels(dest) + (sh - 1) * drs;
 
 	const gint a = gdk_pixbuf_get_has_alpha(src) ? 4 : 3;
