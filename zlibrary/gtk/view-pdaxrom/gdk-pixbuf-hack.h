@@ -23,6 +23,7 @@
 
 #include <gtk/gtk.h>
 
-void rotate(GdkPixbuf *dst, const GdkPixbuf *src);
+void rotate90(GdkPixbuf *dst, const GdkPixbuf *src, bool counter_clockwise);
+void rotate180(GdkPixbuf *buffer);
 
 #endif /* __GDK_PIXBUF_HACK_H__ */
