@@ -80,7 +80,7 @@ void ChoiceOptionView::_createItem() {
 	gtk_container_set_border_width(GTK_CONTAINER(myVBox), 5);
 
 	int num = ((ZLChoiceOptionEntry*)myOption)->choiceNumber();
-	myButtons = new (GtkRadioButton*)[num];
+	myButtons = new GtkRadioButton* [num];
 	GSList *group = 0;
 	for (int i = 0; i < num; i++) {
 		myButtons[i] = GTK_RADIO_BUTTON(gtk_radio_button_new_with_label(group, ((ZLChoiceOptionEntry*)myOption)->text(i).c_str()));

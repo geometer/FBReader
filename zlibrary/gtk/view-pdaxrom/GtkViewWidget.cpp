@@ -27,28 +27,26 @@
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
 	ZLView *view = viewWidget->view();
+	int x, y;
 	switch (viewWidget->rotation()) {
 		default:
-			view->onStylusPress(
-				(int)event->x - view->context().leftMargin(),
-				(int)event->y - view->context().topMargin());
+			x = (int)event->x - view->context().leftMargin(),
+			y = (int)event->y - view->context().topMargin();
 			break;
 		case ZLViewWidget::DEGREES90:
-			view->onStylusPress(
-				viewWidget->height() - (int)event->y - view->context().rightMargin(),
-				(int)event->x - view->context().topMargin());
+			x = viewWidget->height() - (int)event->y - view->context().rightMargin(),
+			y = (int)event->x - view->context().topMargin();
 			break;
 		case ZLViewWidget::DEGREES180:
-			view->onStylusPress(
-				viewWidget->height() - (int)event->y - view->context().rightMargin(),
-				(int)event->x - view->context().topMargin());
+			x = viewWidget->width() - (int)event->x - view->context().rightMargin(),
+			y = viewWidget->height() - (int)event->y - view->context().bottomMargin();
 			break;
 		case ZLViewWidget::DEGREES270:
-			view->onStylusPress(
-				viewWidget->height() - (int)event->y - view->context().rightMargin(),
-				(int)event->x - view->context().topMargin());
+			x = (int)event->y - view->context().leftMargin();
+			y = viewWidget->width() - (int)event->x - view->context().bottomMargin();
 			break;
 	}
+	view->onStylusPress(x, y);
 }
 
 int GtkViewWidget::height() const {
@@ -85,6 +83,11 @@ void GtkViewWidget::repaintView()	{
 	gtkContext.updatePixmap(myArea, w, h);
 	view()->paint();
 	if (isRotated) {
+		if (myPixbuf180 != 0) {
+			gdk_pixbuf_unref(myPixbuf180);
+			gdk_image_unref(myImage180);
+			myPixbuf180 = 0;
+		}
 		if ((myOriginalPixbuf != 0) && ((gdk_pixbuf_get_width(myOriginalPixbuf) != w) || (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
 			gdk_pixbuf_unref(myRotatedPixbuf);
@@ -98,9 +101,34 @@ void GtkViewWidget::repaintView()	{
 		}
 		gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
 		gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
-		::rotate(myRotatedPixbuf, myOriginalPixbuf);
+		::rotate90(myRotatedPixbuf, myOriginalPixbuf, angle == DEGREES90);
 		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
+	} else if (angle == DEGREES180) {
+		if (myOriginalPixbuf != 0) {
+			gdk_pixbuf_unref(myOriginalPixbuf);
+			gdk_pixbuf_unref(myRotatedPixbuf);
+			gdk_image_unref(myImage);
+			myOriginalPixbuf = 0;
+		}
+		if ((myPixbuf180 != 0) && ((gdk_pixbuf_get_width(myPixbuf180) != w) || (gdk_pixbuf_get_height(myPixbuf180) != h))) {
+			gdk_pixbuf_unref(myPixbuf180);
+			gdk_image_unref(myImage180);
+			myPixbuf180 = 0;
+		}
+		if (myPixbuf180 == 0) {
+			myPixbuf180 = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, w, h);
+			myImage180 = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
+		}
+		gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage180, 0, 0, 0, 0, w, h);
+		gdk_pixbuf_get_from_image(myPixbuf180, myImage180, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
+		::rotate180(myPixbuf180);
+		gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myPixbuf180, 0, 0, 0, 0, w, h, GDK_RGB_DITHER_NONE, 0, 0);
 	} else {
+		if (myPixbuf180 != 0) {
+			gdk_pixbuf_unref(myPixbuf180);
+			gdk_image_unref(myImage180);
+			myPixbuf180 = 0;
+		}
 		if (myOriginalPixbuf != 0) {
 			gdk_pixbuf_unref(myOriginalPixbuf);
 			gdk_pixbuf_unref(myRotatedPixbuf);
