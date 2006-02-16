@@ -1,7 +1,7 @@
 Package: fbreader-qt
 Version: VERSION
 Architecture: i386
-Depends: libqt3c102-mt, libexpat1, libenca0
+Depends: libqt3c102-mt, libexpat1, libenca0, libbz2-1.0
 Conflicts: fbreader-gtk
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Description: E-Book reader.
