@@ -67,7 +67,7 @@ bool TcrPlugin::readModel(const BookDescription &description, BookModel &model) 
 }
 
 const std::string &TcrPlugin::iconName() const {
-	static const std::string ICON_NAME = "unknown";
+	static const std::string ICON_NAME = "tcr";
 	return ICON_NAME;
 }
 
