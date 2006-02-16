@@ -39,6 +39,10 @@ public:
 	void trackStylus(bool track);
 
 private:
+	void cleanOriginalPixbuf();
+	void cleanRotatedPixbuf();
+
+private:
 	ZLApplication *myApplication;
 	GtkWidget *myArea;
 	GdkPixbuf *myOriginalPixbuf;

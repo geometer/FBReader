@@ -61,16 +61,29 @@ GtkViewWidget::GtkViewWidget(ZLApplication *application) {
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
 	myOriginalPixbuf = 0;
+	myRotatedPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
 	gtk_signal_connect(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
 }
 
 GtkViewWidget::~GtkViewWidget() {
+	cleanOriginalPixbuf();
+	cleanRotatedPixbuf();
+}
+
+void GtkViewWidget::cleanOriginalPixbuf() {
 	if (myOriginalPixbuf != 0) {
 		gdk_pixbuf_unref(myOriginalPixbuf);
-		gdk_pixbuf_unref(myRotatedPixbuf);
 		gdk_image_unref(myImage);
+		myOriginalPixbuf = 0;
+	}
+}
+
+void GtkViewWidget::cleanRotatedPixbuf() {
+	if (myRotatedPixbuf != 0) {
+		gdk_pixbuf_unref(myRotatedPixbuf);
+		myRotatedPixbuf = 0;
 	}
 }
 
