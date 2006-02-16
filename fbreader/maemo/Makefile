@@ -8,6 +8,7 @@ BINDIR=/usr/bin
 TMPDIR=tmp
 
 all: package
+	@cp $(DEBIAN_PACKAGE) ../..
 
 #install: FBReader.desktop net.mawhrin.FBReader.services
 install: FBReader.desktop
