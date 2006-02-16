@@ -24,6 +24,6 @@ clean:
 	cd $(APPDIR); make clean
 
 distclean: clean
-	rm -vf *.tgz *.ipk *.deb *.prc
+	rm -vf *.tgz *.ipk *.deb *.prc *.log
 
 archives: clean
