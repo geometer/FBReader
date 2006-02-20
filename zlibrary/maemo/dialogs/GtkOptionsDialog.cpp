@@ -52,7 +52,6 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 
 GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLDesktopOptionsDialog(id) {
 	myDialog = GTK_DIALOG(gtk_dialog_new());
-	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
 
 	gtk_window_set_title(GTK_WINDOW(myDialog), caption.c_str());
 
@@ -60,6 +59,7 @@ GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &cap
 		gtk_window_set_transient_for(GTK_WINDOW(myDialog), parent);
 
 	gtk_window_set_modal(GTK_WINDOW(myDialog), TRUE);
+	gtk_window_maximize(GTK_WINDOW(myDialog));
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
 		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
