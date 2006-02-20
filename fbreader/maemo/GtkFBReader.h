@@ -29,6 +29,7 @@
 
 #include <hildon-widgets/hildon-app.h>
 #include <hildon-widgets/hildon-appview.h>
+#include <libosso.h>
 
 #include "../common/fbreader/FBReader.h"
 
@@ -63,9 +64,7 @@ public:
 	void handleKeyEventSlot(GdkEventKey*);
 	void quitSlot();
 
-	// FIXME: we need to figure out the way to find the main window :( Bloody hildon.
-	// GtkWindow *getMainWindow() { return myMainWindow; }
-	GtkWindow *getMainWindow() { return (GtkWindow *)myApp; }
+	HildonApp *getMainWindow() const { return myApp; }
 
 private:
 	HildonApp *myApp;

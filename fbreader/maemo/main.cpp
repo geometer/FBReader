@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <locale.h>
+#include <libintl.h>
 #include <gtk/gtk.h>
 
 #include <abstract/ZLEncodingConverter.h>
@@ -33,7 +35,27 @@
 #include "Paths.h"
 
 int main(int argc, char **argv) {
+	/*
+	HildonApp* app;
+	HildonAppView* main_view;
+
+	gtk_init( &argc, &argv );
+
+	app = HILDON_APP ( hildon_app_new () );
+	hildon_app_set_title ( app, "MaemoPad" );
+	hildon_app_set_two_part_title ( app, TRUE );
+
+	osso_initialize ( "FBReader", "0.0", TRUE, NULL );
+	main_view = HILDON_APPVIEW(hildon_appview_new("MyMainView"));
+	hildon_app_set_appview( app, main_view );
+
+	gtk_widget_show(GTK_WIDGET(app));
+	gtk_main();
+
+	return 0;
+	*/
 	gtk_disable_setlocale();
+
 	gtk_init(&argc, &argv);
 
 	ZLUnixFSManager::createInstance();
@@ -47,7 +69,7 @@ int main(int argc, char **argv) {
 
 	GtkFBReader *reader = new GtkFBReader(argc == 1 ? std::string() : argv[1]);
 
-	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
+	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(GTK_WINDOW(reader->getMainWindow()));
 
 	gtk_main();
 

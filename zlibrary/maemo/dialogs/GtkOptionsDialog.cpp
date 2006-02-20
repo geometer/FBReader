@@ -52,6 +52,7 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 
 GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLDesktopOptionsDialog(id) {
 	myDialog = GTK_DIALOG(gtk_dialog_new());
+	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
 
 	gtk_window_set_title(GTK_WINDOW(myDialog), caption.c_str());
 

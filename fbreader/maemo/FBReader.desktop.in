@@ -1,14 +1,11 @@
 [Desktop Entry]
 Encoding=UTF-8
 Version=1.0
-Name=FBReader
 Type=Application
-StartupWMClass=FBReader
+Name=FBReader
 Exec=/var/lib/install@BINDIR@/FBReader
 Icon=FBReader
 X-Window-Icon=FBReader
 X-Window-Icon-Dimmed=FBReader
-X-HildonDesk-ShowInToolbar=true
-XO-Osso-Service=net.mawhrin.FBReader
+X-Osso-Service=FBReader
 X-Osso-Type=application/x-executable
-Terminal=false

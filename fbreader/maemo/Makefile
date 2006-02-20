@@ -10,8 +10,7 @@ TMPDIR=tmp
 all: package
 	@cp $(DEBIAN_PACKAGE) ../..
 
-#install: FBReader.desktop net.mawhrin.FBReader.services
-install: FBReader.desktop
+install: FBReader.desktop com.nokia.FBReader.service
 	@install -d $(DESTDIR)/usr/bin
 	@install -s ../FBReader $(DESTDIR)/usr/bin
 	@install -d $(DESTDIR)/usr/share/FBReader/
@@ -32,11 +31,13 @@ install: FBReader.desktop
 	@install -m 0644 FBReader.desktop $(DESTDIR)/usr/share/applications/hildon
 	@install -d $(DESTDIR)/etc/others-menu/extra_applications
 	@cd $(DESTDIR)/etc/others-menu/extra_applications; ln -sf ../../../usr/share/applications/hildon/FBReader.desktop 0000_FBReader.desktop
+	@install -d $(DESTDIR)/usr/lib/dbus-1.0/services
+	@install -m 0644 com.nokia.FBReader.service $(DESTDIR)/usr/lib/dbus-1.0/services
 
 FBReader.desktop: FBReader.desktop.in
 	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
-net.mawhrin.FBReader.services: net.mawhrin.FBReader.services.in
+com.nokia.FBReader.service: com.nokia.FBReader.service.in
 	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
 package:
@@ -48,4 +49,4 @@ package:
 	@rm -rf $(TMPDIR)
 
 clean:
-	$(RM) FBReader.desktop net.mawhrin.FBReader.services *.deb
+	$(RM) FBReader.desktop com.nokia.FBReader.service *.deb

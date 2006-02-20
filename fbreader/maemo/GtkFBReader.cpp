@@ -66,10 +66,12 @@ static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
 	myApp = HILDON_APP(hildon_app_new());
-	myAppView = HILDON_APPVIEW(hildon_appview_new(NULL));
-
-	hildon_app_set_appview(myApp, myAppView);
+	hildon_app_set_title(myApp, "FBReader");
 	hildon_app_set_two_part_title(myApp, FALSE);
+
+	osso_initialize("FBReader", "0.7.2", true, 0);
+
+	myAppView = HILDON_APPVIEW(hildon_appview_new("MainView"));
 
 	myMenu = GTK_WIDGET(hildon_appview_get_menu(myAppView));
 
@@ -89,12 +91,11 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_container_add(GTK_CONTAINER(myAppView), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
+	hildon_app_set_appview(myApp, myAppView);
+
 	gtk_widget_show_all(GTK_WIDGET(myApp));
 
 	setMode(BOOK_TEXT_MODE);
-
-	// MSS: for some reason it's not required for maemo platform
-	// gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
 	gtk_signal_connect(GTK_OBJECT(myApp), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 	gtk_signal_connect(GTK_OBJECT(myApp), "key_press_event", G_CALLBACK(handleKey), this);
@@ -271,7 +272,7 @@ void GtkFBReader::searchSlot() {
 	gtk_window_set_title(GTK_WINDOW(findDialog), "Text search");
 
 	if (getMainWindow() != 0)
-		gtk_window_set_transient_for(GTK_WINDOW(findDialog), getMainWindow());
+		gtk_window_set_transient_for(GTK_WINDOW(findDialog), GTK_WINDOW(getMainWindow()));
 
 	gtk_window_set_modal(GTK_WINDOW(findDialog), TRUE);
 

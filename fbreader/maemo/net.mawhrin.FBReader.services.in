@@ -1,4 +1,0 @@
-# Sample service description file
-[D-BUS Service]
-Name=net.mawhrin.FBReader
-Exec=@BINDIR@/FBReader
