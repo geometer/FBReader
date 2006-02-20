@@ -10,7 +10,10 @@ TMPDIR=tmp
 all: package
 	@cp $(DEBIAN_PACKAGE) ../..
 
-install: FBReader.desktop com.nokia.FBReader.service
+DESKTOP_FILE=FBReader.desktop
+SERVICE_FILE=FBReader.service
+
+install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(DESTDIR)/usr/bin
 	@install -s ../FBReader $(DESTDIR)/usr/bin
 	@install -d $(DESTDIR)/usr/share/FBReader/
@@ -28,16 +31,16 @@ install: FBReader.desktop com.nokia.FBReader.service
 	@install -d $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	@install -m 0644 ../icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	@install -d $(DESTDIR)/usr/share/applications/hildon
-	@install -m 0644 FBReader.desktop $(DESTDIR)/usr/share/applications/hildon
+	@install -m 0644 $(DESKTOP_FILE) $(DESTDIR)/usr/share/applications/hildon
 	@install -d $(DESTDIR)/etc/others-menu/extra_applications
-	@cd $(DESTDIR)/etc/others-menu/extra_applications; ln -sf ../../../usr/share/applications/hildon/FBReader.desktop 0000_FBReader.desktop
+	@cd $(DESTDIR)/etc/others-menu/extra_applications; ln -sf ../../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
 	@install -d $(DESTDIR)/usr/lib/dbus-1.0/services
-	@install -m 0644 com.nokia.FBReader.service $(DESTDIR)/usr/lib/dbus-1.0/services
+	@install -m 0644 $(SERVICE_FILE) $(DESTDIR)/usr/lib/dbus-1.0/services
 
-FBReader.desktop: FBReader.desktop.in
+$(DESKTOP_FILE): $(DESKTOP_FILE).in
 	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
-com.nokia.FBReader.service: com.nokia.FBReader.service.in
+$(SERVICE_FILE): $(SERVICE_FILE).in
 	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
 package:
@@ -49,4 +52,4 @@ package:
 	@rm -rf $(TMPDIR)
 
 clean:
-	$(RM) FBReader.desktop com.nokia.FBReader.service *.deb
+	$(RM) $(DESKTOP_FILE) $(SERVICE_FILE) *.deb
