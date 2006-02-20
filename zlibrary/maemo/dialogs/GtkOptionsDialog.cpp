@@ -59,7 +59,7 @@ GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &cap
 		gtk_window_set_transient_for(GTK_WINDOW(myDialog), parent);
 
 	gtk_window_set_modal(GTK_WINDOW(myDialog), TRUE);
-	gtk_window_maximize(GTK_WINDOW(myDialog));
+	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
 		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
@@ -69,7 +69,7 @@ GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &cap
 		gtk_dialog_add_button (myDialog, "Cancel", GTK_RESPONSE_REJECT);
 	}
 
-	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), NULL);
+	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), 0);
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
 
@@ -155,7 +155,7 @@ void GtkOptionsDialogTab::accept() {
 }
 
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
-	myScrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(NULL, NULL));
+	myScrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
 	gtk_scrolled_window_set_policy(myScrolledWindow, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	myTable = GTK_TABLE(gtk_table_new(0, 4, false));
 	gtk_scrolled_window_add_with_viewport(myScrolledWindow, GTK_WIDGET(myTable));
