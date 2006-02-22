@@ -19,8 +19,6 @@
  */
 
 #include <gtk/gtkmain.h>
-#include <gtk/gtklabel.h>
-#include <gdk/gdkcursor.h>
 #include <hildon-widgets/gtk-infoprint.h>
 
 #include "GtkWaitMessage.h"
