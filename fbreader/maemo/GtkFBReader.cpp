@@ -69,9 +69,9 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	hildon_app_set_title(myApp, "FBReader");
 	hildon_app_set_two_part_title(myApp, FALSE);
 
-	osso_initialize("FBReader", "0.7.2", true, 0);
+	osso_initialize("FBReader", "0.0", true, 0);
 
-	myAppView = HILDON_APPVIEW(hildon_appview_new("MainView"));
+	myAppView = HILDON_APPVIEW(hildon_appview_new(0));
 
 	myMenu = GTK_WIDGET(hildon_appview_get_menu(myAppView));
 
