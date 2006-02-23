@@ -29,12 +29,12 @@ void ZLXMLWriter::Tag::addAttribute(const std::string &name, const std::string &
 
 void ZLXMLWriter::Tag::writeStart(ZLOutputStream &stream) const {
 	stream.write("<");
-	stream.write(myName.c_str());
+	stream.write(myName);
 	for (unsigned int i = 0; i < myAttributes.size(); i++) {
 		stream.write(" ");
-		stream.write(myAttributes[i].Name.c_str());
+		stream.write(myAttributes[i].Name);
 		stream.write("=\"");
-		stream.write(myAttributes[i].Value.c_str());
+		stream.write(myAttributes[i].Value);
 		stream.write("\"");
 	}
 	if (mySingle) {
@@ -46,7 +46,7 @@ void ZLXMLWriter::Tag::writeStart(ZLOutputStream &stream) const {
 void ZLXMLWriter::Tag::writeEnd(ZLOutputStream &stream) const {
 	if (!mySingle) {
 		stream.write("</");
-		stream.write(myName.c_str());
+		stream.write(myName);
 		stream.write(">\n");
 	}
 }
