@@ -25,7 +25,6 @@
 #include <abstract/ZLOptionsDialog.h>
 #include <abstract/ZLPaintContext.h>
 #include <abstract/ZLDir.h>
-#include <abstract/ZLWaitMessage.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -209,8 +208,23 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 	return description;
 }
 
+class OpenBookRunnable : public ZLRunnable {
+
+public:
+	OpenBookRunnable(FBReader &reader, BookDescriptionPtr description) : myReader(reader), myDescription(description) {}
+	void run() { myReader.openBookInternal(myDescription); }
+
+private:
+	FBReader &myReader;
+	BookDescriptionPtr myDescription;
+};
+
 void FBReader::openBook(BookDescriptionPtr description) {
-	ZLWaitMessage *message = ZLDialogManager::instance().waitMessage("Loading book. Please, wait...");
+	OpenBookRunnable runnable(*this, description);
+	ZLDialogManager::instance().wait(runnable, "Loading book. Please, wait...");
+}
+
+void FBReader::openBookInternal(BookDescriptionPtr description) {
 	if (!description.isNull()) {
 		myBookTextView->saveState();
 		myContentsView->saveState();
@@ -228,7 +242,6 @@ void FBReader::openBook(BookDescriptionPtr description) {
 
 		LastOpenedBooks().addBook(description->fileName());
 	}
-	delete message;
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id) {
@@ -446,6 +459,21 @@ void FBReader::enableMenuButtons() {
 	}
 }
 
+class RebuildCollectionRunnable : public ZLRunnable {
+
+public:
+	RebuildCollectionRunnable(FBReader &reader) : myReader(reader) {}
+	void run() { myReader.rebuildCollectionInternal(); }
+
+private:
+	FBReader &myReader;
+};
+
+void FBReader::rebuildCollectionInternal() {
+	myCollectionView->rebuild();
+	myViewWidget->setView(myCollectionView);
+}
+
 void FBReader::setMode(ViewMode mode) {
 	if (mode == myMode) {
 		return;
@@ -497,10 +525,8 @@ void FBReader::setMode(ViewMode mode) {
 			setButtonVisible(ACTION_REDO, false);
 			setButtonVisible(ACTION_SHOW_CONTENTS, false);
 			{
-				ZLWaitMessage *message = ZLDialogManager::instance().waitMessage("Loading book list. Please, wait...");
-				myCollectionView->rebuild();
-				myViewWidget->setView(myCollectionView);
-				delete message;
+				RebuildCollectionRunnable runnable(*this);
+				ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
 			}
 			break;
 		case RECENT_BOOKS_MODE:

@@ -27,9 +27,9 @@
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <desktop/XMLOptions.h>
-#include <gtk/GtkDialogManager.h>
+#include <maemo/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>
-#include <gtk/GtkDeviceInfo.h>
+#include <maemo/GtkDeviceInfo.h>
 
 #include "GtkFBReader.h"
 #include "Paths.h"

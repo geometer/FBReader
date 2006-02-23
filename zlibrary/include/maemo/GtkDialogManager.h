@@ -1,0 +1,1 @@
+../../maemo/dialogs/GtkDialogManager.h

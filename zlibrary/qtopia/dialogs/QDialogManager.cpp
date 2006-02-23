@@ -38,6 +38,7 @@ void QDialogManager::openFileDialog(const std::string &title, const ZLTreeHandle
 	QOpenFileDialog(title.c_str(), handler).run();
 }
 
-ZLWaitMessage *QDialogManager::waitMessage(const std::string &message) const {
-	return new QWaitMessage(message);
+void QDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
+	QWaitMessage waitMessage(message);
+	runnable.run();
 }

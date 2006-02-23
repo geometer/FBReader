@@ -178,6 +178,12 @@ public:
 	void bindKey(const std::string &key, ActionCode code) FB_SECTION;
 	ActionCode keyBinding(const std::string &key) FB_SECTION;
 
+private:
+	void openBookInternal(BookDescriptionPtr description) FB_SECTION;
+	friend class OpenBookRunnable;
+	void rebuildCollectionInternal() FB_SECTION;
+	friend class RebuildCollectionRunnable;
+
 protected:
 	ViewMode myMode;
 	ViewMode myPreviousMode;

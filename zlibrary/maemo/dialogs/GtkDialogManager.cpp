@@ -19,13 +19,13 @@
  */
 
 #include <gtk/gtk.h>
+#include <hildon-widgets/gtk-infoprint.h>
 
 #include <abstract/ZLOpenFileDialog.h>
 
 #include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"
 #include "GtkOpenFileDialog.h"
-#include "GtkWaitMessage.h"
 
 ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new GtkOptionsDialog(id, title, myWindow);
@@ -57,6 +57,31 @@ void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHand
 	GtkOpenFileDialog(title.c_str(), handler, myWindow).runWithSize();
 }
 
-ZLWaitMessage *GtkDialogManager::waitMessage(const std::string &message) const {
-	return new GtkWaitMessage(myWindow, message);
+struct RunnableWithFlag {
+	ZLRunnable *runnable;
+	bool flag;
+};
+
+static void *runRunnable(void *data) {
+	RunnableWithFlag &rwf = *(RunnableWithFlag*)data;
+	rwf.runnable->run();
+	rwf.flag = false;
+	return 0;
+}
+
+void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
+	if (myWindow == 0) {
+		runnable.run();
+	} else {
+		gtk_banner_show_animation(myWindow, message.c_str());
+		RunnableWithFlag rwf;
+		rwf.runnable = &runnable;
+		rwf.flag = true;
+		pthread_t thread;
+		pthread_create(&thread, 0, runRunnable, &rwf);
+		while (rwf.flag) {
+			gtk_main_iteration();
+		}
+		gtk_banner_close(myWindow);
+	}
 }

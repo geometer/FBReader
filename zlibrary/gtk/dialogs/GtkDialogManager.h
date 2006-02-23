@@ -38,7 +38,7 @@ public:
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
-	ZLWaitMessage *waitMessage(const std::string &message) const;
+	void wait(ZLRunnable &runnable, const std::string &message) const;
 
 	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
 	const std::string &getPixmapPath() const { return myPixmapPath; }

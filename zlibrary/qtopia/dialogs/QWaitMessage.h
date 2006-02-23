@@ -25,9 +25,7 @@
 
 #include <qwidget.h>
 
-#include <abstract/ZLWaitMessage.h>
-
-class QWaitMessage : public QWidget, public ZLWaitMessage {
+class QWaitMessage : public QWidget {
 
 public:
 	QWaitMessage(const std::string &message);

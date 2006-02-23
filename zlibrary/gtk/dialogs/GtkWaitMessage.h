@@ -25,9 +25,7 @@
 
 #include <gtk/gtkwidget.h>
 
-#include <abstract/ZLWaitMessage.h>
-
-class GtkWaitMessage : public ZLWaitMessage {
+class GtkWaitMessage {
 
 public:
 	GtkWaitMessage(GtkWindow *parent, const std::string &message);

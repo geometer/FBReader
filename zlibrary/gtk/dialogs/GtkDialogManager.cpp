@@ -67,8 +67,9 @@ void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHand
 	GtkOpenFileDialog(title.c_str(), handler).runWithSize();
 }
 
-ZLWaitMessage *GtkDialogManager::waitMessage(const std::string &message) const {
-	return new GtkWaitMessage(myWindow, message);
+void QDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
+	GtkWaitMessage waitMessage(message);
+	runnable.run();
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
