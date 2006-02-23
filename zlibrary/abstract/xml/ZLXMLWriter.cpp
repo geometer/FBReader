@@ -27,27 +27,36 @@ void ZLXMLWriter::Tag::addAttribute(const std::string &name, const std::string &
 	myAttributes.push_back(Attribute(name, value));
 }
 
+static const std::string LANGLE = "<";
+static const std::string LANGLE_SLASH = "</";
+static const std::string RANGLE_EOL = ">\n";
+static const std::string SLASH = "/";
+static const std::string SPACE = " ";
+static const std::string TWO_SPACES = "  ";
+static const std::string QUOTE = "\"";
+static const std::string EQUALS_QUOTE = "=\"";
+
 void ZLXMLWriter::Tag::writeStart(ZLOutputStream &stream) const {
-	stream.write("<");
+	stream.write(LANGLE);
 	stream.write(myName);
 	for (unsigned int i = 0; i < myAttributes.size(); i++) {
-		stream.write(" ");
+		stream.write(SPACE);
 		stream.write(myAttributes[i].Name);
-		stream.write("=\"");
+		stream.write(EQUALS_QUOTE);
 		stream.write(myAttributes[i].Value);
-		stream.write("\"");
+		stream.write(QUOTE);
 	}
 	if (mySingle) {
-		stream.write("/");
+		stream.write(SLASH);
 	}
-	stream.write(">\n");
+	stream.write(RANGLE_EOL);
 }
 
 void ZLXMLWriter::Tag::writeEnd(ZLOutputStream &stream) const {
 	if (!mySingle) {
-		stream.write("</");
+		stream.write(LANGLE_SLASH);
 		stream.write(myName);
-		stream.write(">\n");
+		stream.write(RANGLE_EOL);
 	}
 }
 
@@ -72,7 +81,7 @@ void ZLXMLWriter::closeTag() {
 		Tag *tag = myTags.top();
 		myTags.pop();
 		for (unsigned int i = 0; i < myTags.size(); i++) {
-			myStream.write("  ");
+			myStream.write(TWO_SPACES);
 		}
 		tag->writeEnd(myStream);
 		delete tag;
@@ -88,7 +97,7 @@ void ZLXMLWriter::closeAllTags() {
 void ZLXMLWriter::flushTagStart() {
 	if (myCurrentTag != 0) {
 		for (unsigned int i = 0; i < myTags.size(); i++) {
-			myStream.write("  ");
+			myStream.write(TWO_SPACES);
 		}
 		myCurrentTag->writeStart(myStream);
 		if (!myCurrentTag->isSingle()) {

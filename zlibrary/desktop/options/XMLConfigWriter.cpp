@@ -22,17 +22,23 @@
 #include "XMLConfig.h"
 #include "AsciiEncoder.h"
 
+const std::string CONFIG = "config";
+const std::string GROUP = "group";
+const std::string NAME = "name";
+const std::string OPTION = "option";
+const std::string VALUE = "value";
+
 void XMLConfigWriter::write() {
-	addTag("config", false);
+	addTag(CONFIG, false);
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myConfig.myGroups.begin(); it != myConfig.myGroups.end(); it++) {
 		const std::map<std::string,std::string> &values = it->second->values();
 		if (!values.empty()) {
-			addTag("group", false);
-			addAttribute("name", AsciiEncoder::encode(it->first));
+			addTag(GROUP, false);
+			addAttribute(NAME, AsciiEncoder::encode(it->first));
 			for (std::map<std::string,std::string>::const_iterator jt = values.begin(); jt != values.end(); jt++) {
-				addTag("option", true);
-				addAttribute("name", AsciiEncoder::encode(jt->first));
-				addAttribute("value", AsciiEncoder::encode(jt->second));
+				addTag(OPTION, true);
+				addAttribute(NAME, AsciiEncoder::encode(jt->first));
+				addAttribute(VALUE, AsciiEncoder::encode(jt->second));
 			}
 			closeTag();
 		}

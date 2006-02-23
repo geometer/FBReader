@@ -23,19 +23,35 @@
 static std::string SpecialSymbols = "&<>\"'";
 
 std::string AsciiEncoder::encode(const std::string &source) {
+	const char *start = source.data();
+	const char *end = start + source.length();
+
+	bool doEncode = false;
+	for (const char *ptr = start; ptr < end; ptr++) {
+		const unsigned char num = *ptr;
+		if ((num < 0x20) || (num >= 0x7F) || (num == '\\') || ((int)SpecialSymbols.find(num) != -1)) {
+			doEncode = true;
+			break;
+		}
+	}
+
+	if (!doEncode) {
+		return source;
+	}
+
 	std::string target;
 	target.reserve(4 * source.length());
-	for (unsigned int i = 0; i < source.length(); i++) {
-		unsigned char num = source[i];
-		if (source[i] == '>') {
+	for (const char *ptr = start; ptr < end; ptr++) {
+		const unsigned char num = *ptr;
+		if (num == '>') {
 			target += "&gt;";
-		} else if (source[i] == '<') {
+		} else if (num == '<') {
 			target += "&lt;";
 		} else if ((num >= 0x20) && (num < 0x7F) && ((int)SpecialSymbols.find(num) == -1)) {
-			if (source[i] == '\\') {
+			if (num == '\\') {
 				target += '\\';
 			}
-			target += source[i];
+			target += num;
 		} else {
 			target += '\\';
 			target += '0' + num / 100;
@@ -47,26 +63,32 @@ std::string AsciiEncoder::encode(const std::string &source) {
 }
 
 std::string AsciiEncoder::decode(const std::string &source) {
+	if ((int)source.find('\\') == -1) {
+		return source;
+	}
+
+	const char *start = source.data();
+	const char *end = start + source.length();
 	std::string target;
 	target.reserve(source.length());
-	for (unsigned int i = 0; i < source.length();) {
-		if (source[i] != '\\') {
-			target += source[i];
-			i++;
+	for (const char *ptr = start; ptr < end;) {
+		if (*ptr != '\\') {
+			target += *ptr;
+			ptr++;
 		} else {
-			i++;
-			if (i == source.length()) {
+			ptr++;
+			if (ptr == end) {
 				break;
 			}
-			if (source[i] == '\\') {
+			if (*ptr == '\\') {
 				target += '\\';
-				i++;
+				ptr++;
 			} else {
-				if (i + 2 >= source.length()) {
+				if (ptr + 2 >= end) {
 					break;
 				}
-				target += (unsigned char)(100 * (source[i] - '0') + 10 * (source[i + 1] - '0') + source[i + 2] - '0');
-				i += 3;
+				target += (unsigned char)(100 * (*ptr - '0') + 10 * (*(ptr + 1) - '0') + *(ptr + 2) - '0');
+				ptr += 3;
 			}
 		}
 	}
