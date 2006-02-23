@@ -18,9 +18,9 @@
  * 02110-1301, USA.
  */
 
-#include "AsciiEncoder.h"
+#include <abstract/ZLUnicodeUtil.h>
 
-static std::string SpecialSymbols = "&<>\"'";
+#include "AsciiEncoder.h"
 
 std::string AsciiEncoder::encode(const std::string &source) {
 	const char *start = source.data();
@@ -28,29 +28,34 @@ std::string AsciiEncoder::encode(const std::string &source) {
 
 	bool doEncode = false;
 	for (const char *ptr = start; ptr < end; ptr++) {
-		const unsigned char num = *ptr;
-		if ((num < 0x20) || (num >= 0x7F) || (num == '\\') || ((int)SpecialSymbols.find(num) != -1)) {
+		if ((*ptr == '&') || (*ptr == '<') || (*ptr == '>') ||
+				(*ptr == '"') || (*ptr == '\'') || (*ptr == '\\')) {
 			doEncode = true;
 			break;
 		}
 	}
 
-	if (!doEncode) {
+	if (!doEncode && ZLUnicodeUtil::isUtf8String(source)) {
 		return source;
 	}
 
 	std::string target;
-	target.reserve(4 * source.length());
+	target.reserve(6 * source.length());
 	for (const char *ptr = start; ptr < end; ptr++) {
 		const unsigned char num = *ptr;
 		if (num == '>') {
 			target += "&gt;";
 		} else if (num == '<') {
 			target += "&lt;";
-		} else if ((num >= 0x20) && (num < 0x7F) && ((int)SpecialSymbols.find(num) == -1)) {
-			if (num == '\\') {
-				target += '\\';
-			}
+		} else if (num == '&') {
+			target += "&amp;";
+		} else if (num == '\'') {
+			target += "&apos;";
+		} else if (num == '"') {
+			target += "&quot;";
+		} else if (num == '\\') {
+			target += "\\";
+		} else if (num < 0x7F) {
 			target += num;
 		} else {
 			target += '\\';

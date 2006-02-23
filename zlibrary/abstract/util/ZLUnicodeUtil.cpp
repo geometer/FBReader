@@ -20,6 +20,36 @@
 
 #include "ZLUnicodeUtil.h"
 
+int ZLUnicodeUtil::isUtf8String(const char *str, int len) {
+	const char *last = str + len;
+	for (; str < last; str++) {
+		if ((*str & 0x80) != 0) {
+			if ((*str & 0xE0) == 0xC0) {
+				str++;
+				if ((str == last) || (*str & 0xC0) != 0x80) {
+					return false;
+				}
+			} else if ((*str & 0xF0) == 0xE0) {
+				str++;
+				if ((str == last) || (*str & 0xC0) != 0x80) {
+					return false;
+				}
+				str++;
+				if ((str == last) || (*str & 0xC0) != 0x80) {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
+int ZLUnicodeUtil::isUtf8String(const std::string &str) {
+	return isUtf8String(str.data(), str.length());
+}
+
 int ZLUnicodeUtil::utf8Length(const char *str, int len) {
 	const char *last = str + len;
 	int counter = 0;

@@ -27,6 +27,7 @@ void ZLXMLWriter::Tag::addAttribute(const std::string &name, const std::string &
 	myAttributes.push_back(Attribute(name, value));
 }
 
+static const std::string XML_BANNER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 static const std::string LANGLE = "<";
 static const std::string LANGLE_SLASH = "</";
 static const std::string RANGLE_EOL = ">\n";
@@ -61,6 +62,7 @@ void ZLXMLWriter::Tag::writeEnd(ZLOutputStream &stream) const {
 }
 
 ZLXMLWriter::ZLXMLWriter(ZLOutputStream &stream) : myStream(stream) {
+	stream.write(XML_BANNER);
 	myCurrentTag = 0;
 }
 

@@ -39,6 +39,8 @@ public:
 		BREAKABLE_AFTER
 	};
 	
+	static int isUtf8String(const char *str, int len) UTIL_SECTION;
+	static int isUtf8String(const std::string &str) UTIL_SECTION;
 	static int utf8Length(const char *str, int len) UTIL_SECTION;
 	static int utf8Length(const std::string &str) UTIL_SECTION;
 	static int length(const char *str, int utf8Length) UTIL_SECTION;
