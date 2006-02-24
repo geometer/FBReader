@@ -31,7 +31,7 @@ public:
 	static void createInstance() { ourInstance = new GtkDialogManager(); }
 
 private:
-	GtkDialogManager() : myWindow(0), myIsKeyboardGrabbed(false) {}
+	GtkDialogManager() : myIsInitialized(false), myWindow(0), myIsKeyboardGrabbed(false) {}
 
 public:
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
@@ -42,13 +42,14 @@ public:
 	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
 	const std::string &getPixmapPath() const { return myPixmapPath; }
 
-	void setMainWindow(GtkWindow *window) { myWindow = window; }
+	void setMainWindow(GtkWindow *window) { myIsInitialized = true; myWindow = window; }
 
 	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
 	bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
 
 private:
 	std::string myPixmapPath;
+	bool myIsInitialized;
 	GtkWindow *myWindow;
 	bool myIsKeyboardGrabbed;
 };

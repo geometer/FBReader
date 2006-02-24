@@ -70,7 +70,7 @@ static void *runRunnable(void *data) {
 }
 
 void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	if (myWindow == 0) {
+	if (!myIsInitialized) {
 		runnable.run();
 	} else {
 		gtk_banner_show_animation(myWindow, message.c_str());

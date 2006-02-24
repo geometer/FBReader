@@ -34,6 +34,14 @@
 #include "GtkFBReader.h"
 #include "Paths.h"
 
+class ConfigSaverRunnable : public ZLRunnable {
+
+public:
+	void run() {
+		XMLOptions::deleteInstance();
+	}
+};
+
 int main(int argc, char **argv) {
 	gtk_disable_setlocale();
 
@@ -54,10 +62,13 @@ int main(int argc, char **argv) {
 
 	gtk_main();
 
+	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);
+
 	GtkDeviceInfo::deleteInstance();
 	GtkImageManager::deleteInstance();
+	ConfigSaverRunnable configSaver;
+	GtkDialogManager::instance().wait(configSaver, "Saving config...");
 	GtkDialogManager::deleteInstance();
-	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLUnixTimeManager::deleteInstance();
 
