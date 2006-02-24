@@ -31,14 +31,7 @@ std::string GtkKeyUtil::keyName(GdkEventKey *event) {
 		return "";
 	}
 
-	name = '<' + name + '>';
-	if (event->state & 0x8) {
-		name = "<Alt>+" + name;
-	}
-	if (event->state & 0x4) {
-		name = "<Ctrl>+" + name;
-	}
-	return name;
+	return '<' + name + '>';
 }
 
 std::string GtkKeyUtil::keyName(int keyval) {
