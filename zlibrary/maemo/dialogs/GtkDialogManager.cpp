@@ -20,6 +20,7 @@
 
 #include <gtk/gtk.h>
 #include <hildon-widgets/gtk-infoprint.h>
+#include <hildon-note.h>
 
 #include <abstract/ZLOpenFileDialog.h>
 
@@ -31,8 +32,9 @@ ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, co
 	return new GtkOptionsDialog(id, title, myWindow);
 }
 
-int GtkDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	GtkDialog *dialog = GTK_DIALOG(gtk_message_dialog_new(myWindow, GTK_DIALOG_MODAL, GTK_MESSAGE_INFO, GTK_BUTTONS_NONE, message));
+int GtkDialogManager::questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
+	//GtkDialog *dialog = GTK_DIALOG(gtk_message_dialog_new(myWindow, GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, message));
+	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message, 0));
 
 	gtk_window_set_title(GTK_WINDOW(dialog), title);
 

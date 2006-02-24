@@ -37,7 +37,7 @@ ZLOptionsDialog *PalmDialogManager::createOptionsDialog(const std::string &id, c
 	//return new PalmOptionsDialog(id, title);
 }
 
-int PalmDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
+int PalmDialogManager::questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
 	return 0;
 	//return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
 }

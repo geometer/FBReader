@@ -30,7 +30,7 @@ ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, cons
 	return new QOptionsDialog(id, title);
 }
 
-int QDialogManager::informationBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
+int QDialogManager::questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
 	return QMessageBox::information(qApp->mainWidget(), title, message, button0, button1, button2);
 }
 
