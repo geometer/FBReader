@@ -67,14 +67,19 @@ public:
 	HildonApp *getMainWindow() const { return myApp; }
 
 private:
+	GtkMenu *makeSubmenu(GtkMenu *menu, const char *label);
+	void addMenuItem(GtkMenu *menu, const char *label, ActionSlotData *data);
+
+private:
 	HildonApp *myApp;
 	HildonAppView *myAppView;
 	GtkToolbar *myToolbar;
-	GtkWidget *myMenu;
+	GtkMenu *myMenu;
 
 	bool myFullScreen;
 
 	std::map<ActionCode,GtkToolItem*> myButtons;
+	std::map<ActionCode,GtkMenuItem*> myMenuItems;
 
 	std::map<ActionCode,ActionSlotData*> myActions;
 };

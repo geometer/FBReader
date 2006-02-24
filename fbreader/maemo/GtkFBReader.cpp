@@ -73,13 +73,13 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	myAppView = HILDON_APPVIEW(hildon_appview_new(0));
 
-	myMenu = GTK_WIDGET(hildon_appview_get_menu(myAppView));
+	myMenu = GTK_MENU(hildon_appview_get_menu(myAppView));
 
 	buildMenu();
 
-	gtk_widget_show_all(myMenu);
+	gtk_widget_show_all(GTK_WIDGET(myMenu));
 
-	myToolbar = (GtkToolbar*)gtk_toolbar_new();
+	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
 	gtk_toolbar_set_show_arrow(myToolbar, false);
 	gtk_toolbar_set_orientation(myToolbar, GTK_ORIENTATION_HORIZONTAL);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
@@ -114,47 +114,46 @@ ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
 	return data;
 }
 
-static GtkWidget *makeSubmenu(GtkWidget *menu, const char *label) {
-	GtkWidget *result = gtk_menu_new();
-	GtkWidget *item = gtk_menu_item_new_with_label(label);
+GtkMenu *GtkFBReader::makeSubmenu(GtkMenu *menu, const char *label) {
+	GtkMenu *submenu = GTK_MENU(gtk_menu_new());
+	GtkMenuItem *item = GTK_MENU_ITEM(gtk_menu_item_new_with_label(label));
 
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(item), result);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(item));
+	gtk_menu_item_set_submenu(item, GTK_WIDGET(submenu));
 
-	return result;
+	return submenu;
 }
 
-static void addMenuItem(GtkWidget *menu, const char *label, ActionSlotData *data) {
-	GtkWidget *item = gtk_menu_item_new_with_label(label);
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+void GtkFBReader::addMenuItem(GtkMenu *menu, const char *label, ActionSlotData *data) {
+	GtkMenuItem *item = GTK_MENU_ITEM(gtk_menu_item_new_with_label(label));
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(item));
 	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(menuActionSlot), data);
+	myMenuItems[data->Code] = item;
 }
 
 void GtkFBReader::buildMenu() {
-	GtkWidget *submenu;
-
 	addMenuItem(myMenu, "Book Info...",  getSlotData(ACTION_SHOW_BOOK_INFO));
 	// MSS: this item can actually be disabled if we do not have table of contents
 	addMenuItem(myMenu, "Table Of Contents", getSlotData(ACTION_SHOW_CONTENTS));
 
-	submenu = makeSubmenu(myMenu, "Library");
+	GtkMenu *librarySubmenu = makeSubmenu(myMenu, "Library");
 
-	addMenuItem(submenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
-	addMenuItem(submenu, "Recent", getSlotData(ACTION_SHOW_LAST_BOOKS));
-	addMenuItem(submenu, "Add Book...", getSlotData(ACTION_ADD_BOOK));
+	addMenuItem(librarySubmenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
+	addMenuItem(librarySubmenu, "Recent", getSlotData(ACTION_SHOW_LAST_BOOKS));
+	addMenuItem(librarySubmenu, "Add Book...", getSlotData(ACTION_ADD_BOOK));
 
-	submenu = makeSubmenu(myMenu, "Find");
+	GtkMenu *findSubmenu = makeSubmenu(myMenu, "Find");
 
-	addMenuItem(submenu, "Find Text...", getSlotData(ACTION_SEARCH));
-	addMenuItem(submenu, "Find Next", getSlotData(ACTION_FIND_NEXT));
-	addMenuItem(submenu, "Find Previous", getSlotData(ACTION_FIND_PREVIOUS));
+	addMenuItem(findSubmenu, "Find Text...", getSlotData(ACTION_SEARCH));
+	addMenuItem(findSubmenu, "Find Next", getSlotData(ACTION_FIND_NEXT));
+	addMenuItem(findSubmenu, "Find Previous", getSlotData(ACTION_FIND_PREVIOUS));
 
-	submenu = makeSubmenu(myMenu, "View");
+	GtkMenu *viewSubmenu = makeSubmenu(myMenu, "View");
 
 	// MSS: these two actions can have a checkbox next to them
-	addMenuItem(submenu, "Rotate Screen", getSlotData(ACTION_ROTATE_SCREEN));
-	addMenuItem(submenu, "Full Screen", getSlotData(ACTION_TOGGLE_FULLSCREEN));
-	// addMenuItem(submenu, "Toggle Indicator", getSlotData(ACTION_FULLSCREEN));
+	addMenuItem(viewSubmenu, "Rotate Screen", getSlotData(ACTION_ROTATE_SCREEN));
+	addMenuItem(viewSubmenu, "Full Screen", getSlotData(ACTION_TOGGLE_FULLSCREEN));
+	// addMenuItem(viewSubmenu, "Toggle Indicator", getSlotData(ACTION_FULLSCREEN));
 
 	// MSS: we do not use it now...
 	// myRecentMenu = gtk_menu_item_new_with_label("Recent");
@@ -238,6 +237,14 @@ void GtkFBReader::enableMenuButtons() {
 
 void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
 	gtk_tool_item_set_visible_horizontal(myButtons[id], visible);
+	GtkMenuItem *item = myMenuItems[id];
+	if (item != 0) {
+		if (visible) {
+			gtk_widget_show(GTK_WIDGET(item));
+		} else {
+			gtk_widget_hide(GTK_WIDGET(item));
+		}
+	}
 }
 
 /*
@@ -251,6 +258,10 @@ void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
 		if (enabled != enable) {
 			gtk_widget_set_sensitive(GTK_WIDGET(it->second), enable);
 		}
+	}
+	GtkMenuItem *item = myMenuItems[id];
+	if (item != 0) {
+		gtk_widget_set_sensitive(GTK_WIDGET(item), enable);
 	}
 }
 
