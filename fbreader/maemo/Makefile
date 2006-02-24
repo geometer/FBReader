@@ -12,6 +12,7 @@ all: package
 
 DESKTOP_FILE=FBReader.desktop
 SERVICE_FILE=FBReader.service
+BACKUP_CONF=FBReader.backup
 
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(DESTDIR)/usr/bin
@@ -36,6 +37,8 @@ install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@cd $(DESTDIR)/etc/others-menu/extra_applications; ln -sf ../../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
 	@install -d $(DESTDIR)/usr/lib/dbus-1.0/services
 	@install -m 0644 $(SERVICE_FILE) $(DESTDIR)/usr/lib/dbus-1.0/services
+	@install -d $(DESTDIR)/etc/osso-backup/applications
+	@install -m 0644 $(BACKUP_CONF) $(DESTDIR)/etc/osso-backup/applications/FBReader.conf
 
 $(DESKTOP_FILE): $(DESKTOP_FILE).in
 	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
