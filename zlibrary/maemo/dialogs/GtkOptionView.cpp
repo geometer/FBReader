@@ -31,7 +31,7 @@
 #include <gtk/gtkentry.h>
 #include <gtk/gtkcombobox.h>
 
-#include <hildon-widgets/hildon-number-editor.h>
+#include <hildon-number-editor.h>
 
 #include <maemo/GtkKeyUtil.h>
 
