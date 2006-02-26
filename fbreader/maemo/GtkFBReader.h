@@ -68,7 +68,7 @@ public:
 
 private:
 	GtkMenu *makeSubmenu(GtkMenu *menu, const char *label);
-	void addMenuItem(GtkMenu *menu, const char *label, ActionSlotData *data);
+	void addMenuItem(GtkMenu *menu, const char *label, ActionCode code);
 
 private:
 	HildonApp *myApp;

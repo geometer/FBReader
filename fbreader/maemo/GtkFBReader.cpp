@@ -124,44 +124,41 @@ GtkMenu *GtkFBReader::makeSubmenu(GtkMenu *menu, const char *label) {
 	return submenu;
 }
 
-void GtkFBReader::addMenuItem(GtkMenu *menu, const char *label, ActionSlotData *data) {
+void GtkFBReader::addMenuItem(GtkMenu *menu, const char *label, ActionCode code) {
 	GtkMenuItem *item = GTK_MENU_ITEM(gtk_menu_item_new_with_label(label));
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(item));
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(menuActionSlot), data);
-	myMenuItems[data->Code] = item;
+	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(menuActionSlot), getSlotData(code));
+	myMenuItems[code] = item;
 }
 
 void GtkFBReader::buildMenu() {
-	addMenuItem(myMenu, "Book Info...",  getSlotData(ACTION_SHOW_BOOK_INFO));
+	addMenuItem(myMenu, "Book Info...",  ACTION_SHOW_BOOK_INFO);
 	// MSS: this item can actually be disabled if we do not have table of contents
-	addMenuItem(myMenu, "Table Of Contents", getSlotData(ACTION_SHOW_CONTENTS));
+	addMenuItem(myMenu, "Table Of Contents", ACTION_SHOW_CONTENTS);
 
 	GtkMenu *librarySubmenu = makeSubmenu(myMenu, "Library");
-
-	addMenuItem(librarySubmenu, "Open", getSlotData(ACTION_SHOW_COLLECTION));
-	addMenuItem(librarySubmenu, "Recent", getSlotData(ACTION_SHOW_LAST_BOOKS));
-	addMenuItem(librarySubmenu, "Add Book...", getSlotData(ACTION_ADD_BOOK));
+	addMenuItem(librarySubmenu, "Open", ACTION_SHOW_COLLECTION);
+	addMenuItem(librarySubmenu, "Recent", ACTION_SHOW_LAST_BOOKS);
+	addMenuItem(librarySubmenu, "Add Book...", ACTION_ADD_BOOK);
 
 	GtkMenu *findSubmenu = makeSubmenu(myMenu, "Find");
-
-	addMenuItem(findSubmenu, "Find Text...", getSlotData(ACTION_SEARCH));
-	addMenuItem(findSubmenu, "Find Next", getSlotData(ACTION_FIND_NEXT));
-	addMenuItem(findSubmenu, "Find Previous", getSlotData(ACTION_FIND_PREVIOUS));
+	addMenuItem(findSubmenu, "Find Text...", ACTION_SEARCH);
+	addMenuItem(findSubmenu, "Find Next", ACTION_FIND_NEXT);
+	addMenuItem(findSubmenu, "Find Previous", ACTION_FIND_PREVIOUS);
 
 	GtkMenu *viewSubmenu = makeSubmenu(myMenu, "View");
-
 	// MSS: these two actions can have a checkbox next to them
-	addMenuItem(viewSubmenu, "Rotate Screen", getSlotData(ACTION_ROTATE_SCREEN));
-	addMenuItem(viewSubmenu, "Full Screen", getSlotData(ACTION_TOGGLE_FULLSCREEN));
-	// addMenuItem(viewSubmenu, "Toggle Indicator", getSlotData(ACTION_FULLSCREEN));
+	addMenuItem(viewSubmenu, "Rotate Screen", ACTION_ROTATE_SCREEN);
+	addMenuItem(viewSubmenu, "Full Screen", ACTION_TOGGLE_FULLSCREEN);
+	addMenuItem(viewSubmenu, "Toggle Indicator", ACTION_SHOW_HIDE_POSITION_INDICATOR);
 
 	// MSS: we do not use it now...
 	// myRecentMenu = gtk_menu_item_new_with_label("Recent");
 	// gtk_menu_shell_append(GTK_MENU_SHELL(myMenu), myRecentMenu);
 	// gtk_widget_set_sensitive(myRecentMenu, FALSE);
 
-	addMenuItem(myMenu, "Preferences...", getSlotData(ACTION_SHOW_OPTIONS));
-	addMenuItem(myMenu, "Close", getSlotData(ACTION_QUIT));
+	addMenuItem(myMenu, "Preferences...", ACTION_SHOW_OPTIONS);
+	addMenuItem(myMenu, "Close", ACTION_QUIT);
 }
 
 GtkFBReader::~GtkFBReader() {
