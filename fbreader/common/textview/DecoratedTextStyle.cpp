@@ -24,25 +24,27 @@
 #include "TextStyle.h"
 #include "../model/Paragraph.h"
 
+static const std::string STYLE = "Style";
+
 TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations) :
 	myName(name),
-	myFontFamilyOption("Style", myName + ":fontFamily", std::string()),
-	myFontSizeDeltaOption("Style", myName + ":fontSize", -16, 16, fontSizeDelta),
-	myBoldOption("Style", myName + ":bold", bold),
-	myItalicOption("Style", myName + ":italic", italic),
-	myVerticalShiftOption("Style", myName + ":vShift", verticalShift),
-	myAllowHyphenationsOption("Style", myName + ":allowHyphenations", allowHyphenations),
+	myFontFamilyOption(STYLE, myName + ":fontFamily", std::string()),
+	myFontSizeDeltaOption(STYLE, myName + ":fontSize", -16, 16, fontSizeDelta),
+	myBoldOption(STYLE, myName + ":bold", bold),
+	myItalicOption(STYLE, myName + ":italic", italic),
+	myVerticalShiftOption(STYLE, myName + ":vShift", verticalShift),
+	myAllowHyphenationsOption(STYLE, myName + ":allowHyphenations", allowHyphenations),
 	myIsHyperlinkStyle(false) {
 }
 
 FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
-	mySpaceBeforeOption("Style", name + ":spaceBefore", -10, 100, spaceBefore),
-	mySpaceAfterOption("Style", name + ":spaceAfter", -10, 100, spaceAfter),
-	myLeftIndentOption("Style", name + ":leftIndent", -300, 300, leftIndent),
-	myRightIndentOption("Style", name + ":rightIndent", -300, 300, rightIndent),
-	myFirstLineIndentDeltaOption("Style", name + ":firstLineIndentDelta", -300, 300, firstLineIndentDelta),
-	myAlignmentOption("Style", name + ":alignment", alignment),
-	myLineSpaceOption("Style", name + ":lineSpace", lineSpace) {
+	mySpaceBeforeOption(STYLE, name + ":spaceBefore", -10, 100, spaceBefore),
+	mySpaceAfterOption(STYLE, name + ":spaceAfter", -10, 100, spaceAfter),
+	myLeftIndentOption(STYLE, name + ":leftIndent", -300, 300, leftIndent),
+	myRightIndentOption(STYLE, name + ":rightIndent", -300, 300, rightIndent),
+	myFirstLineIndentDeltaOption(STYLE, name + ":firstLineIndentDelta", -300, 300, firstLineIndentDelta),
+	myAlignmentOption(STYLE, name + ":alignment", alignment),
+	myLineSpaceOption(STYLE, name + ":lineSpace", lineSpace) {
 }
 
 TextStylePtr TextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const {
