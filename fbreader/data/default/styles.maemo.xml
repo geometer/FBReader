@@ -1,5 +1,5 @@
 <DeafultStyles>
-	<base family="Georgia"/>
+	<base family="Sans"/>
 	<style id="0" name="Regular Paragraph" firstLineIndentDelta="default" allowHyphenations="true"/>
 	<style id="1" name="Title" fontSizeDelta="10" bold="true" spaceBefore="2" spaceAfter="7" alignment="center" allowHyphenations="false"/>
 	<style id="3" name="Poem Title" fontSizeDelta="2" bold="true" spaceBefore="6" spaceAfter="6" leftIndent="40" allowHyphenations="false"/>
