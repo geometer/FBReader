@@ -28,6 +28,7 @@
 #include "Paths.h"
 
 const std::string FBReader::KeymapFile = "/FBReader/default/keymap.xml";
+const std::string TextStyleCollection::StylesFilePath = "/FBReader/default/styles.xml";
 const std::string TeXHyphenator::PatternZip = "/FBReader/hyphenationPatterns.zip";
 //const std::string DocBookReader::DTDDirectory = "/FBReader/formats/docbook";
 const std::string HtmlEntityCollection::CollectionFile = "/FBReader/formats/html/html.ent";

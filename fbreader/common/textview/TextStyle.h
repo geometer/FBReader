@@ -35,8 +35,6 @@
 class TextStyle {
 
 public:
-	static const std::string DefaultFontName;
-
 	static ZLIntegerRangeOption LeftMarginOption;
 	static ZLIntegerRangeOption RightMarginOption;
 	static ZLIntegerRangeOption TopMarginOption;
@@ -312,6 +310,8 @@ private:
 class TextStyleCollection {
 
 public:
+	static const std::string StylesFilePath;
+
 	static TextStyleCollection &instance() TEXT_STYLE_SECTION;
 	static void deleteInstance() TEXT_STYLE_SECTION;
 
@@ -322,15 +322,14 @@ private:
 	TextStyleCollection() TEXT_STYLE1_SECTION;
 	~TextStyleCollection() TEXT_STYLE1_SECTION;
 
-	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShiftOption, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations, bool isHyperlink) TEXT_STYLE_SECTION;
-	void registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations, bool isHyperlink) TEXT_STYLE_SECTION;
-
 private:
 	static TextStyleCollection *ourInstance;
 	
 private:
 	TextStylePtr myBaseStyle;
 	std::map<TextKind,TextStyleDecoration*> myDecorationMap;
+
+friend class StyleReader;
 };
 
 inline TextStyle::TextStyle() {}

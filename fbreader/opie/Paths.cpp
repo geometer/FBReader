@@ -32,6 +32,7 @@ static const std::string PathPrefix = std::string(INSTALLDIR) + "/opt/QtPalmtop/
 const std::string FBFileHandler::ImageDirectory = "fbreader";
 
 const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
+const std::string TextStyleCollection::StylesFilePath = PathPrefix + "default/styles.xml";
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
 const std::string HtmlEntityCollection::CollectionFile = PathPrefix + "formats/html/html.ent";
 const std::string FBReader::HelpDirectory = PathPrefix + "help";

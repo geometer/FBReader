@@ -33,6 +33,7 @@ static const std::string PathPrefix = "/var/lib/install/usr/share/FBReader/";
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
+const std::string TextStyleCollection::StylesFilePath = PathPrefix + "default/styles.xml";
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
 //const std::string DocBookReader::DTDDirectory = "/usr/share/xml/entities/xml-iso-entities-8879.1986";
 const std::string HtmlEntityCollection::CollectionFile = PathPrefix + "formats/html/html.ent";

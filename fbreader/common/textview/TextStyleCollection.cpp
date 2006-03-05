@@ -20,6 +20,9 @@
  */
 
 #include <abstract/ZLDeviceInfo.h>
+#include <abstract/ZLXMLReader.h>
+#include <abstract/ZLFSManager.h>
+#include <abstract/ZLInputStream.h>
 
 #include "TextStyle.h"
 
@@ -52,83 +55,173 @@ void TextStyleCollection::deleteInstance() {
 	}
 }
 
-TextStyleCollection::TextStyleCollection() {
-	int defaultFontSize = 24;
-	int defaultParagraphIndent = 30;
+class StyleReader : public ZLXMLReader {
+
+public:
+	StyleReader(TextStyleCollection &collection) : myCollection(collection) {}
+
+	const Tag *tags() const;
+
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int) {}
+	void characterDataHandler(const char*, int) {}
+
+private:
+	static int intValue(const char **attributes, const char *name);
+	static double doubleValue(const char **attributes, const char *name);
+	static bool booleanValue(const char **attributes, const char *name);
+	static Boolean3 b3Value(const char **attributes, const char *name);
+	static int defaultParagraphIndent();
+
+private:
+	TextStyleCollection &myCollection;
+};
+
+static const ZLXMLReader::Tag TAGS[] = {
+	{ "base", 1 },
+	{ "style", 2 },
+	{ 0, 0 }
+};
+
+const ZLXMLReader::Tag *StyleReader::tags() const {
+	return TAGS;
+}
+
+static const std::string TRUE_STRING = "true";
+
+inline int StyleReader::intValue(const char **attributes, const char *name) {
+	const char *stringValue = attributeValue(attributes, name);
+	return (stringValue == 0) ? 0 : atoi(stringValue);
+}
+
+inline double StyleReader::doubleValue(const char **attributes, const char *name) {
+	const char *stringValue = attributeValue(attributes, name);
+	return (stringValue == 0) ? 0 : atof(stringValue);
+}
+
+inline bool StyleReader::booleanValue(const char **attributes, const char *name) {
+	const char *stringValue = attributeValue(attributes, name);
+	return (stringValue != 0) && (TRUE_STRING == stringValue);
+}
+
+inline Boolean3 StyleReader::b3Value(const char **attributes, const char *name) {
+	const char *stringValue = attributeValue(attributes, name);
+	return (stringValue == 0) ? B3_UNDEFINED : ((TRUE_STRING == stringValue) ? B3_TRUE : B3_FALSE);
+}
+
+int StyleReader::defaultParagraphIndent() {
 	switch (ZLDeviceInfo::screenSize()) {
 		case ZLDeviceInfo::SIZE_DESKTOP:
-			defaultFontSize = 16;
-			defaultParagraphIndent = 20;
-			break;
+			return 20;
 		case ZLDeviceInfo::SIZE_160x160:
-			defaultFontSize = 8;
-			defaultParagraphIndent = 8;
-			break;
+			return 8;
 		case ZLDeviceInfo::SIZE_240x320:
 		case ZLDeviceInfo::SIZE_320x320:
-			defaultFontSize = 12;
-			defaultParagraphIndent = 15;
-			break;
+			return 15;
 		case ZLDeviceInfo::SIZE_800x480:
-			defaultFontSize = 18;
-			defaultParagraphIndent = 22;
-			break;
+			return 22;
 		case ZLDeviceInfo::SIZE_640x480:
-			defaultFontSize = 24;
-			defaultParagraphIndent = 30;
-			break;
+			return 30;
 	}
-	myBaseStyle = new BaseTextStyle(TextStyle::DefaultFontName, defaultFontSize);
+	return 0;
+}
 
-	registerStyle(REGULAR, "Regular Paragraph", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
-	registerStyle(TITLE, "Title", 10, B3_TRUE, B3_UNDEFINED, 2, 7, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);
-	registerStyle(POEM_TITLE, "Poem Title", 2, B3_TRUE, B3_UNDEFINED, 6, 6, 40, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE, false);
-	registerStyle(SECTION_TITLE, "Section Title", 6, B3_TRUE, B3_UNDEFINED, 0, 5, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);
-	registerStyle(ANNOTATION, "Annotation", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, defaultParagraphIndent, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
-	registerStyle(EPIGRAPH, "Epigraph", -2, B3_UNDEFINED, B3_TRUE, 0, 0, 80, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
-	registerStyle(SUBTITLE, "Subtitle", 0, B3_TRUE, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_TRUE, false);
-	registerStyle(AUTHOR, "Author", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE, false);
-	registerStyle(DATE, "Date", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 40, 0, 0, 0, ALIGN_UNDEFINED, 0.0, B3_FALSE, false);
-	registerStyle(STANZA, "Stanza", 0, B3_UNDEFINED, B3_UNDEFINED, 6, 6, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
-	registerStyle(VERSE, "Verse", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 20, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
-	registerStyle(IMAGE, "Image", 0, B3_UNDEFINED, B3_UNDEFINED, 8, 0, 0, 0, 0, 0, ALIGN_CENTER, 0.0, B3_FALSE, false);
-	registerStyle(CONTENTS_TABLE_ENTRY, "Contents Table", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 7, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
-	registerStyle(LIBRARY_AUTHOR_ENTRY, "Author in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
-	registerStyle(LIBRARY_BOOK_ENTRY, "Book in Library", -2, B3_UNDEFINED, B3_UNDEFINED, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
-	registerStyle(RECENT_BOOK_LIST, "Recent Book List", 0, B3_UNDEFINED, B3_UNDEFINED, 0, 3, defaultParagraphIndent, 0, -defaultParagraphIndent, 0, ALIGN_LEFT, 1.2, B3_FALSE, false);
-	registerStyle(PREFORMATTED, "Preformatted text", 0, B3_UNDEFINED, B3_TRUE, 0, 0, 0, 0, 0, 0, ALIGN_LEFT, 0.0, B3_FALSE, false);
+void StyleReader::startElementHandler(int tag, const char **attributes) {
+	if (tag == 1) {
+		int defaultFontSize = 24;
+		switch (ZLDeviceInfo::screenSize()) {
+			case ZLDeviceInfo::SIZE_DESKTOP:
+				defaultFontSize = 16;
+				break;
+			case ZLDeviceInfo::SIZE_160x160:
+				defaultFontSize = 8;
+				break;
+			case ZLDeviceInfo::SIZE_240x320:
+			case ZLDeviceInfo::SIZE_320x320:
+				defaultFontSize = 12;
+				break;
+			case ZLDeviceInfo::SIZE_800x480:
+				defaultFontSize = 18;
+				break;
+			case ZLDeviceInfo::SIZE_640x480:
+				defaultFontSize = 24;
+				break;
+		}
+		myCollection.myBaseStyle = new BaseTextStyle(attributeValue(attributes, "family"), defaultFontSize);
+	} else if (tag == 2) {
+		const char *idString = attributeValue(attributes, "id");
+		const char *name = attributeValue(attributes, "name");
+		if ((idString != 0) && (name != 0)) {
+			TextKind id = (TextKind)atoi(idString);
+			TextStyleDecoration *decoration;
 
-	registerStyle(CITE, "Cite", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED, false);
-	registerStyle(HYPERLINK, "Hyperlink", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_FALSE, true);
-	registerStyle(FOOTNOTE, "Footnote", -6, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE, true);
-	registerStyle(EMPHASIS, "Emphasis", 0, B3_UNDEFINED, B3_TRUE, 0, B3_UNDEFINED, false);
-	registerStyle(STRONG, "Strong", 0, B3_TRUE, B3_UNDEFINED, 0, B3_UNDEFINED, false);
-	registerStyle(SUB, "Subscript", -4, B3_UNDEFINED, B3_UNDEFINED, -4, B3_FALSE, false);
-	registerStyle(SUP, "Superscript", -4, B3_UNDEFINED, B3_UNDEFINED, 10, B3_FALSE, false);
-	registerStyle(CODE, "Code", 0, B3_UNDEFINED, B3_TRUE, 0, B3_FALSE, false);
-	registerStyle(STRIKETHROUGH, "StrikeThrough", 0, B3_UNDEFINED, B3_UNDEFINED, 0, B3_UNDEFINED, false);
+			int fontSizeDelta = intValue(attributes, "fontSizeDelta");
+			Boolean3 bold = b3Value(attributes, "bold");
+			Boolean3 italic = b3Value(attributes, "italic");
+			int verticalShift = intValue(attributes, "vShift");
+			Boolean3 allowHyphenations = b3Value(attributes, "allowHyphenations");
+			bool isHyperlink = booleanValue(attributes, "isHyperlink");
+
+			if (booleanValue(attributes, "partial")) {
+				decoration = new TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations);
+			} else {
+				int spaceBefore = intValue(attributes, "spaceBefore");
+				int spaceAfter = intValue(attributes, "spaceAfter");
+				int leftIndent = intValue(attributes, "leftIndent");
+				int rightIndent = intValue(attributes, "rightIndent");
+
+				int firstLineIndentDelta = 0;
+				const char *firstLineIndentDeltaString = attributeValue(attributes, "firstLineIndentDelta");
+				if (firstLineIndentDeltaString != 0) {
+					if (strcmp(firstLineIndentDeltaString, "default") == 0) {
+						firstLineIndentDelta = defaultParagraphIndent();
+					} else if (strcmp(firstLineIndentDeltaString, "-default") == 0) {
+						firstLineIndentDelta = -defaultParagraphIndent();
+					} else {
+						firstLineIndentDelta = atoi(firstLineIndentDeltaString);
+					}
+				}
+
+				AlignmentType alignment = ALIGN_UNDEFINED;
+				const char *alignmentString = attributeValue(attributes, "alignment");
+				if (alignmentString != 0) {
+					if (strcmp(alignmentString, "left") == 0) {
+						alignment = ALIGN_LEFT;
+					} else if (strcmp(alignmentString, "rigth") == 0) {
+						alignment = ALIGN_RIGHT;
+					} else if (strcmp(alignmentString, "center") == 0) {
+						alignment = ALIGN_CENTER;
+					} else if (strcmp(alignmentString, "justify") == 0) {
+						alignment = ALIGN_JUSTIFY;
+					}
+				}
+				double lineSpace = doubleValue(attributes, "lineSpace");
+
+				decoration = new FullTextStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
+			}
+			if (isHyperlink) {
+				decoration->setHyperlinkStyle();
+			}
+			myCollection.myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(id, decoration));
+		}
+	}
+}
+
+TextStyleCollection::TextStyleCollection() : myBaseStyle(0) {
+	shared_ptr<ZLInputStream> stream = ZLFile(StylesFilePath).inputStream();
+	if (!stream.isNull() && stream->open()) {
+		StyleReader(*this).readDocument(stream);
+		stream->close();
+	}
+	if (myBaseStyle == 0) {
+		myBaseStyle = new BaseTextStyle("", 20);
+	}
 }
 
 TextStyleCollection::~TextStyleCollection() {
 	for (std::map<TextKind,TextStyleDecoration*>::iterator it = myDecorationMap.begin(); it != myDecorationMap.end(); ++it) {
 		delete (*it).second;
 	}
-}
-
-void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations, bool isHyperlink) {
-	FullTextStyleDecoration *decoration = new FullTextStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
-	if (isHyperlink) {
-		decoration->setHyperlinkStyle();
-	}
-	myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(kind, decoration));
-}
-
-void TextStyleCollection::registerStyle(TextKind kind, const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations, bool isHyperlink) {
-	TextStyleDecoration *decoration = new TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations);
-	if (isHyperlink) {
-		decoration->setHyperlinkStyle();
-	}
-	myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(kind, decoration));
 }
 
 TextStyleDecoration *TextStyleCollection::decoration(TextKind kind) const {

@@ -33,6 +33,7 @@ static const std::string PathPrefix = "/opt/QtPalmtop/share/FBReader/";
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
+const std::string TextStyleCollection::StylesFilePath = PathPrefix + "default/styles.xml";
 const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
 //const std::string DocBookReader::DTDDirectory = PathPrefix + "formats/docbook";
 const std::string HtmlEntityCollection::CollectionFile = PathPrefix + "formats/html/html.ent";

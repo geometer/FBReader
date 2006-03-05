@@ -35,6 +35,7 @@ install:
 	@cp ../data/help/HowToStart.brownish.fb2 usr/share/FBReader/help/HowToStart.fb2
 	@mkdir -p usr/share/FBReader/default
 	@cp ../data/default/keymap.pdaxrom.xml usr/share/FBReader/default/keymap.xml
+	@cp ../data/default/styles.default.xml usr/share/FBReader/default/styles.xml
 	@mkdir -p usr/share/pixmaps/FBReader
 	@cp `find ../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)

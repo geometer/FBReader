@@ -29,6 +29,7 @@
 
 static const std::string PREFIX = "/usr/share/FBReader/";
 const std::string FBReader::KeymapFile = PREFIX + "default/keymap.xml";
+const std::string TextStyleCollection::StylesFilePath = PathPrefix + "default/styles.xml";
 const std::string TeXHyphenator::PatternZip = PREFIX + "hyphenationPatterns.zip";
 const std::string HtmlEntityCollection::CollectionFile = PREFIX + "formats/html/html.ent";
 const std::string FBReader::HelpDirectory = PREFIX + "help";

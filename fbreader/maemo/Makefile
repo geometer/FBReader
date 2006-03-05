@@ -29,6 +29,7 @@ install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -m 0644 ../data/help/HowToStart.blueish.fb2 $(DESTDIR)/usr/share/FBReader/help/HowToStart.fb2
 	@install -d $(DESTDIR)/usr/share/FBReader/default
 	@install -m 0644 ../data/default/keymap.maemo.xml $(DESTDIR)/usr/share/FBReader/default/keymap.xml
+	@install -m 0644 ../data/default/styles.maemo.xml $(DESTDIR)/usr/share/FBReader/default/styles.xml
 	@install -d $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	@install -m 0644 ../icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	@install -d $(DESTDIR)/usr/share/applications/hildon

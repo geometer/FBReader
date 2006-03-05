@@ -29,6 +29,7 @@ install:
 	@cp ../data/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2
 	@mkdir share/FBReader/default
 	@cp ../data/default/keymap.qtopia.xml share/FBReader/default/keymap.xml
+	@cp ../data/default/styles.default.xml share/FBReader/default/styles.xml
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
