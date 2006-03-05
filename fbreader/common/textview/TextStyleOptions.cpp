@@ -101,12 +101,17 @@ void LineSpacingOptionEntry::onAccept(const std::string &value) {
 std::vector<std::string> AlignmentOptionEntry::ourValues4;
 std::vector<std::string> AlignmentOptionEntry::ourValues5;
 
+static const std::string LEFT = "Left";
+static const std::string RIGHT = "Right";
+static const std::string CENTER = "Center";
+static const std::string JUSTIFY = "Justify";
+
 std::vector<std::string> &AlignmentOptionEntry::values4() {
 	if (ourValues4.empty()) {
-		ourValues4.push_back("Left");
-		ourValues4.push_back("Right");
-		ourValues4.push_back("Center");
-		ourValues4.push_back("Justify");
+		ourValues4.push_back(LEFT);
+		ourValues4.push_back(RIGHT);
+		ourValues4.push_back(CENTER);
+		ourValues4.push_back(JUSTIFY);
 	}
 	return ourValues4;
 }
@@ -114,10 +119,10 @@ std::vector<std::string> &AlignmentOptionEntry::values4() {
 std::vector<std::string> &AlignmentOptionEntry::values5() {
 	if (ourValues5.empty()) {
 		ourValues5.push_back(BASE_STRING);
-		ourValues5.push_back("Left");
-		ourValues5.push_back("Right");
-		ourValues5.push_back("Center");
-		ourValues5.push_back("Justify");
+		ourValues5.push_back(LEFT);
+		ourValues5.push_back(RIGHT);
+		ourValues5.push_back(CENTER);
+		ourValues5.push_back(JUSTIFY);
 	}
 	return ourValues5;
 }
