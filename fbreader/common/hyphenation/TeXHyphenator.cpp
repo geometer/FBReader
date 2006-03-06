@@ -30,6 +30,7 @@
 
 #include "TeXHyphenator.h"
 #include "HyphenationReader.h"
+#include "../Files.h"
 
 Hyphenator &Hyphenator::instance() {
 	if (ourInstance == 0) {
@@ -69,9 +70,13 @@ private:
 	std::string &myLanguageName;
 };
 
+const std::string TeXHyphenator::PatternZip() {
+	return Files::PathPrefix + "hyphenationPatterns.zip";
+}
+
 void TeXHyphenator::collectLanguages() {
 	if (LanguageNames.empty()) {
-		shared_ptr<ZLDir> patternDir = ZLFile(PatternZip).directory(false);
+		shared_ptr<ZLDir> patternDir = ZLFile(PatternZip()).directory(false);
 		if (!patternDir.isNull()) {
 			std::vector<std::string> files;
 			patternDir->collectFiles(files, false);
@@ -80,7 +85,7 @@ void TeXHyphenator::collectLanguages() {
 				if (ZLStringUtil::stringEndsWith(*it, POSTFIX)) {
 					std::string code = it->substr(0, it->size() - POSTFIX.size());
 					std::string name;
-					LanguageReader(name).readDocument(ZLFile(PatternZip + ":" + *it).inputStream());
+					LanguageReader(name).readDocument(ZLFile(PatternZip() + ":" + *it).inputStream());
 					if (!name.empty()) {
 						LanguageCodes.push_back(code);
 						LanguageNames.push_back(name);
@@ -215,7 +220,7 @@ void TeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	HyphenationReader(this).readDocument(ZLFile(PatternZip + ":" + language + POSTFIX).inputStream());
+	HyphenationReader(this).readDocument(ZLFile(PatternZip() + ":" + language + POSTFIX).inputStream());
 	
 	std::sort(myPatternTable.begin(), myPatternTable.end(), TeXPatternComparator());
 }

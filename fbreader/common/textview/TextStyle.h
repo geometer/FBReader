@@ -310,8 +310,6 @@ private:
 class TextStyleCollection {
 
 public:
-	static const std::string StylesFilePath;
-
 	static TextStyleCollection &instance() TEXT_STYLE_SECTION;
 	static void deleteInstance() TEXT_STYLE_SECTION;
 

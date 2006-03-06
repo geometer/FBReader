@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include "../../common/hyphenation/TeXHyphenator.h"
+#include "../../common/Files.h"
 #include "../../common/formats/html/HtmlEntityCollection.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
@@ -27,13 +27,12 @@
 #include "QFBReader.h"
 #include "Paths.h"
 
-static const std::string PREFIX = "/usr/share/FBReader/";
-const std::string FBReader::KeymapFile = PREFIX + "default/keymap.xml";
-const std::string TextStyleCollection::StylesFilePath = PREFIX + "default/styles.xml";
-const std::string TeXHyphenator::PatternZip = PREFIX + "hyphenationPatterns.zip";
-const std::string HtmlEntityCollection::CollectionFile = PREFIX + "formats/html/html.ent";
-const std::string FBReader::HelpDirectory = PREFIX + "help";
-const std::string EncodingDescriptionPath = PREFIX + "encodings";
+const std::string Files::PathPrefix = "/usr/share/FBReader/";
+const std::string Files::PathDelimiter = "/";
+
+const std::string HtmlEntityCollection::CollectionFile = Files::PathPrefix + "formats/html/html.ent";
+const std::string FBReader::HelpDirectory = Files::PathPrefix + "help";
+const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 

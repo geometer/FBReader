@@ -19,8 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include "../common/hyphenation/TeXHyphenator.h"
-//#include "../common/formats/docbook/DocBookReader.h"
+#include "../common/Files.h"
 #include "../common/formats/html/HtmlEntityCollection.h"
 #include "../common/fbreader/FBReader.h"
 #include "../common/collection/BookCollection.h"
@@ -28,14 +27,11 @@
 #include "../common/fbreader/FBFileHandler.h"
 #include "Paths.h"
 
-static const std::string PathPrefix = "/opt/QtPalmtop/share/FBReader/";
+const std::string Files::PathPrefix = "/opt/QtPalmtop/share/FBReader/";
+const std::string Files::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
-const std::string FBReader::KeymapFile = PathPrefix + "default/keymap.xml";
-const std::string TextStyleCollection::StylesFilePath = PathPrefix + "default/styles.xml";
-const std::string TeXHyphenator::PatternZip = PathPrefix + "hyphenationPatterns.zip";
-//const std::string DocBookReader::DTDDirectory = PathPrefix + "formats/docbook";
 const std::string HtmlEntityCollection::CollectionFile = PathPrefix + "formats/html/html.ent";
 const std::string FBReader::HelpDirectory = PathPrefix + "help";
 const std::string EncodingDescriptionPath = PathPrefix + "encodings";

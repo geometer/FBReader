@@ -25,6 +25,7 @@
 #include <abstract/ZLFSManager.h>
 
 #include "FBReader.h"
+#include "../Files.h"
 
 static const std::string BINDINGS_GROUP = "Keys";
 static const std::string BINDINGS_NUMBER = "Number";
@@ -65,8 +66,10 @@ void KeyBindingsReader::startElementHandler(int tag, const char **attributes) {
 	}
 }
 
+static const std::string KeymapFile = "keymap.xml";
+
 void FBReader::readBindings() {
-	shared_ptr<ZLInputStream> stream = ZLFile(KeymapFile).inputStream();
+	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
 	if (!stream.isNull() && stream->open()) {
 		std::map<std::string,FBReader::ActionCode> keymap;
 		KeyBindingsReader(keymap).readDocument(stream);
@@ -94,7 +97,7 @@ void FBReader::readBindings() {
 
 void FBReader::saveBindings() {
 	std::map<std::string,FBReader::ActionCode> keymap;
-	shared_ptr<ZLInputStream> stream = ZLFile(KeymapFile).inputStream();
+	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
 	if (!stream.isNull() && stream->open()) {
 		KeyBindingsReader(keymap).readDocument(stream);
 		stream->close();

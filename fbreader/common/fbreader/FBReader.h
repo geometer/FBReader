@@ -107,8 +107,6 @@ public:
 	};
 
 public:
-	static const std::string KeymapFile;
-
 	static ZLBooleanOption QuitOnCancelOption;
 	static ZLBooleanOption StoreContentsPositionOption;
 

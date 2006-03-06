@@ -54,7 +54,7 @@ public:
 class TeXHyphenator : public Hyphenator {
 
 private:
-	static const std::string PatternZip;
+	static const std::string PatternZip();
 	static std::vector<std::string> LanguageCodes;
 	static std::vector<std::string> LanguageNames;
 	static void collectLanguages();

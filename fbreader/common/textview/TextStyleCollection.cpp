@@ -25,6 +25,7 @@
 #include <abstract/ZLInputStream.h>
 
 #include "TextStyle.h"
+#include "../Files.h"
 
 static const std::string COLORS = "Colors";
 static const std::string OPTIONS = "Options";
@@ -208,7 +209,7 @@ void StyleReader::startElementHandler(int tag, const char **attributes) {
 }
 
 TextStyleCollection::TextStyleCollection() : myBaseStyle(0) {
-	shared_ptr<ZLInputStream> stream = ZLFile(StylesFilePath).inputStream();
+	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + "styles.xml").inputStream();
 	if (!stream.isNull() && stream->open()) {
 		StyleReader(*this).readDocument(stream);
 		stream->close();
