@@ -174,13 +174,14 @@ void StyleReader::startElementHandler(int tag, const char **attributes) {
 				int firstLineIndentDelta = 0;
 				const char *firstLineIndentDeltaString = attributeValue(attributes, "firstLineIndentDelta");
 				if (firstLineIndentDeltaString != 0) {
-					if (strcmp(firstLineIndentDeltaString, "default") == 0) {
+					if (strncmp(firstLineIndentDeltaString, "default", 7) == 0) {
 						firstLineIndentDelta = defaultParagraphIndent();
-					} else if (strcmp(firstLineIndentDeltaString, "-default") == 0) {
+						firstLineIndentDeltaString += 7;
+					} else if (strncmp(firstLineIndentDeltaString, "-default", 8) == 0) {
 						firstLineIndentDelta = -defaultParagraphIndent();
-					} else {
-						firstLineIndentDelta = atoi(firstLineIndentDeltaString);
+						firstLineIndentDeltaString += 8;
 					}
+					firstLineIndentDelta += atoi(firstLineIndentDeltaString);
 				}
 
 				AlignmentType alignment = ALIGN_UNDEFINED;

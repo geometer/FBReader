@@ -15,7 +15,7 @@
 	<style id="23" name="Contents Table" spaceAfter="7" firstLineIndentDelta="-default" alignment="left"/>
 	<style id="24" name="Author in Library" fontSizeDelta="-2" alignment="left" allowHyphenations="false"/>
 	<style id="25" name="Book in Library" fontSizeDelta="-2" alignment="left" allowHyphenations="false"/>
-	<style id="26" name="Recent Book List" spaceAfter="3" firstLineIndentDelta="-default" alignment="left"/>
+	<style id="26" name="Recent Book List" spaceAfter="3" leftIndent="20" firstLineIndentDelta="-default-20" alignment="left"/>
 	<style id="9" name="Preformatted text" italic="true" alignment="left" allowHyphenations="false"/>
 
 	<style id="12" partial="true" name="Cite" italic="true"/>
