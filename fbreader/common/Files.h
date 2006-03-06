@@ -31,6 +31,9 @@ public:
 	static const std::string PathDelimiter;
 
 	static const std::string DefaultFilesPathPrefix();
+
+private:
+	Files();
 };
 
 #endif /* __FILES_H__ */
