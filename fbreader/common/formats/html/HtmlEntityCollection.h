@@ -28,7 +28,6 @@
 class HtmlEntityCollection {
 
 public:
-	static const std::string CollectionFile;
 	static int symbolNumber(const std::string &name);
 
 private:

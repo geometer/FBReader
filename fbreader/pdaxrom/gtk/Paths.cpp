@@ -20,7 +20,6 @@
  */
 
 #include "../../common/Files.h"
-#include "../../common/formats/html/HtmlEntityCollection.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
@@ -30,7 +29,6 @@
 const std::string Files::PathPrefix = "/usr/share/FBReader/";
 const std::string Files::PathDelimiter = "/";
 
-const std::string HtmlEntityCollection::CollectionFile = Files::PathPrefix + "formats/html/html.ent";
 const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";

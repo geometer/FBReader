@@ -20,7 +20,6 @@
  */
 
 #include "../common/Files.h"
-#include "../common/formats/html/HtmlEntityCollection.h"
 #include "../common/fbreader/FBReader.h"
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
@@ -32,7 +31,6 @@ const std::string Files::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
-const std::string HtmlEntityCollection::CollectionFile = Files::PathPrefix + "formats/html/html.ent";
 const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics144/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:~/Documents/FBooks";

@@ -26,6 +26,7 @@
 #include <abstract/ZLXMLReader.h>
 
 #include "HtmlEntityCollection.h"
+#include "../../Files.h"
 
 class CollectionReader : public ZLXMLReader {
 
@@ -46,7 +47,9 @@ std::map<std::string,int> HtmlEntityCollection::ourCollection;
 
 int HtmlEntityCollection::symbolNumber(const std::string &name) {
 	if (ourCollection.empty()) {
-		CollectionReader(ourCollection).readDocument(ZLFile(CollectionFile).inputStream());
+		CollectionReader(ourCollection).readDocument(ZLFile(
+			Files::PathPrefix + "formats" + Files::PathDelimiter + "html" + Files::PathDelimiter + "html.ent"
+		).inputStream());
 	}
 	std::map<std::string,int>::const_iterator it = ourCollection.find(name);
 	return (it == ourCollection.end()) ? 0 : it->second;
