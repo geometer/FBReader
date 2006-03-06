@@ -32,9 +32,9 @@ const std::string Files::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
-const std::string HtmlEntityCollection::CollectionFile = PathPrefix + "formats/html/html.ent";
-const std::string FBReader::HelpDirectory = PathPrefix + "help";
-const std::string GtkFBReader::ImageDirectory = PathPrefix + "icons";
-const std::string EncodingDescriptionPath = PathPrefix + "encodings";
+const std::string HtmlEntityCollection::CollectionFile = Files::PathPrefix + "formats/html/html.ent";
+const std::string FBReader::HelpDirectory = Files::PathPrefix + "help";
+const std::string GtkFBReader::ImageDirectory = Files::PathPrefix + "icons";
+const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 const std::string CollectionView::DeleteBookImageFile = GtkFBReader::ImageDirectory + "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/MyDocs/Books:/media/mmc1/Books";
