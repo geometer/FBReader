@@ -30,7 +30,7 @@
 #include <qtopia/QDeviceInfo.h>
 
 #include "QFBReader.h"
-#include "Paths.h"
+#include "../common/Files.h"
 
 void copyConfig();
 
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 
 	ZLUnixTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
-	ZLEncodingConverter::setEncodingDescriptionPath(EncodingDescriptionPath);
+	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	XMLOptions::createInstance("FBReader");
 	copyConfig();
 	QDialogManager::createInstance();

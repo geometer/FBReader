@@ -24,7 +24,6 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 #include "GtkFBReader.h"
-#include "Paths.h"
 
 const std::string Files::PathPrefix = std::string(INSTALLDIR) + "/share/FBReader/";
 const std::string Files::PathDelimiter = "/";
@@ -32,6 +31,5 @@ const std::string Files::PathDelimiter = "/";
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string GtkFBReader::ImageDirectory = Files::PathPrefix + "icons";
-const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 const std::string CollectionView::DeleteBookImageFile = GtkFBReader::ImageDirectory + "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

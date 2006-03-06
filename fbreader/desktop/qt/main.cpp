@@ -30,7 +30,7 @@
 #include <qt/QDeviceInfo.h>
 
 #include "QFBReader.h"
-#include "Paths.h"
+#include "../common/Files.h"
 
 int main(int argc, char **argv) {
 	QApplication application(argc, argv);
@@ -41,7 +41,7 @@ int main(int argc, char **argv) {
 	QDialogManager::createInstance();
 	QImageManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QFBReader::ImageDirectory);
-	ZLEncodingConverter::setEncodingDescriptionPath(EncodingDescriptionPath);
+	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	QDeviceInfo::createInstance();
 
 	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);

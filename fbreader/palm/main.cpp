@@ -31,8 +31,6 @@
 #include "PalmFBReader.h"
 #include "PalmFBReader-resources.h"
 
-#include "Paths.h"
-
 #include <vector>
 #include <string>
 
@@ -43,7 +41,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr /*cmdPBP*/, UInt16 /*launchFlags*/) {
 		ZLSetup;
 		ZLPalmTimeManager::createInstance();
 		ZLPalmFSManager::createInstance();
-		ZLXMLReader::setEncodingDescriptionPath(EncodingDescriptionPath);
+		ZLXMLReader::setEncodingDescriptionPath("/FBReader/encodings");
 		PalmOptions::createInstance("FBReader");
 		PalmDialogManager::createInstance();
 		PalmDeviceInfo::createInstance();

@@ -24,13 +24,11 @@
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
 #include "../common/fbreader/FBFileHandler.h"
-#include "Paths.h"
 
 const std::string Files::PathPrefix = "/opt/QtPalmtop/share/FBReader/";
 const std::string Files::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
-const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics144/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:~/Documents/FBooks";

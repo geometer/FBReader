@@ -30,7 +30,7 @@
 #include <gtk/GtkDeviceInfo.h>
 
 #include "GtkFBReader.h"
-#include "Paths.h"
+#include "../common/Files.h"
 
 int main(int argc, char **argv) {
 	gtk_disable_setlocale();
@@ -38,7 +38,8 @@ int main(int argc, char **argv) {
 
 	ZLUnixTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
-	ZLEncodingConverter::setEncodingDescriptionPath(EncodingDescriptionPath);
+	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
+
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();

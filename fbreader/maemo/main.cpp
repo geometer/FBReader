@@ -32,7 +32,7 @@
 #include <maemo/GtkDeviceInfo.h>
 
 #include "GtkFBReader.h"
-#include "Paths.h"
+#include "../common/Files.h"
 
 class ConfigSaverRunnable : public ZLRunnable {
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
 
 	ZLUnixFSManager::createInstance();
 	ZLUnixTimeManager::createInstance();
-	ZLEncodingConverter::setEncodingDescriptionPath(EncodingDescriptionPath);
+	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();

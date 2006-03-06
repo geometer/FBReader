@@ -22,8 +22,6 @@
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/FBReader.h"
 #include "../common/fbreader/CollectionView.h"
-#include "Paths.h"
 
-const std::string EncodingDescriptionPath = "/FBReader/encodings";
 const std::string CollectionView::DeleteBookImageFile = "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "/FBooks";
