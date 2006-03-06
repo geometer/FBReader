@@ -30,7 +30,7 @@
 #include <qt/QDeviceInfo.h>
 
 #include "QFBReader.h"
-#include "../common/Files.h"
+#include "../../common/Files.h"
 
 int main(int argc, char **argv) {
 	QApplication application(argc, argv);
