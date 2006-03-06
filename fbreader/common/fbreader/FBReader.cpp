@@ -36,6 +36,7 @@
 #include "FBFileHandler.h"
 #include "InfoOptions.h"
 
+#include "../Files.h"
 #include "../collection/BookCollection.h"
 #include "../collection/BookList.h"
 #include "../bookmodel/BookModel.h"
@@ -129,7 +130,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	}
 
 	if (description.isNull()) {
-		std::string howToStartString = HelpDirectory + "/HowToStart.fb2";
+		std::string howToStartString = Files::PathPrefix + "help" + Files::PathDelimiter + "HowToStart.fb2";
 		ZLStringOption bookName(STATE, BOOK, howToStartString);
 		description = BookDescription::create(bookName.value());
 

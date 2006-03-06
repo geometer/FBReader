@@ -31,7 +31,6 @@ const std::string Files::PathPrefix = "/usr/share/FBReader/";
 const std::string Files::PathDelimiter = "/";
 
 const std::string HtmlEntityCollection::CollectionFile = Files::PathPrefix + "formats/html/html.ent";
-const std::string FBReader::HelpDirectory = Files::PathPrefix + "help";
 const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";

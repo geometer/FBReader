@@ -33,7 +33,6 @@ const std::string Files::PathDelimiter = "/";
 const std::string FBFileHandler::ImageDirectory = "fbreader";
 
 const std::string HtmlEntityCollection::CollectionFile = Files::PathPrefix + "formats/html/html.ent";
-const std::string FBReader::HelpDirectory = Files::PathPrefix + "help";
 const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics/fbreader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

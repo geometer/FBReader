@@ -124,8 +124,6 @@ public:
 
 	static ZLIntegerOption RotationAngleOption;
 
-	static const std::string HelpDirectory;
-
 protected:
 	FBReader(ZLPaintContext *context, const std::string& bookToOpen = std::string()) FB_SECTION;
 	virtual ~FBReader() FB_SECTION;

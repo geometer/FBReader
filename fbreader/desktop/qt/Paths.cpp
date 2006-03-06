@@ -34,7 +34,6 @@ const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string HtmlEntityCollection::CollectionFile = Files::PathPrefix + "formats/html/html.ent";
 const std::string QFBReader::ImageDirectory = Files::PathPrefix + "icons";
-const std::string FBReader::HelpDirectory = Files::PathPrefix + "help";
 const std::string EncodingDescriptionPath = Files::PathPrefix + "encodings";
 const std::string CollectionView::DeleteBookImageFile = QFBReader::ImageDirectory + "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

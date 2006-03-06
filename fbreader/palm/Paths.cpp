@@ -26,7 +26,6 @@
 #include "Paths.h"
 
 const std::string HtmlEntityCollection::CollectionFile = "/FBReader/formats/html/html.ent";
-const std::string FBReader::HelpDirectory = "/FBReader/help";
 const std::string EncodingDescriptionPath = "/FBReader/encodings";
 const std::string CollectionView::DeleteBookImageFile = "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "/FBooks";
