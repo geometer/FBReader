@@ -1,4 +1,4 @@
-<DeafultStyles>
+<DefaultStyles>
 	<base family="Georgia"/>
 	<style id="0" name="Regular Paragraph" firstLineIndentDelta="default" allowHyphenations="true"/>
 	<style id="1" name="Title" fontSizeDelta="10" bold="true" spaceBefore="2" spaceAfter="7" alignment="center" allowHyphenations="false"/>
@@ -27,4 +27,4 @@
 	<style id="20" partial="true" name="Superscript" fontSizeDelta="-4" vShift="10" allowHyphenations="false"/>
 	<style id="21" partial="true" name="Code" italic="true" allowHyphenations="false"/>
 	<style id="22" partial="true" name="StrikeThrough"/>
-</DeafultStyles>
+</DefaultStyles>
