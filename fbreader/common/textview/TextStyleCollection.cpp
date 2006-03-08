@@ -69,6 +69,7 @@ public:
 
 private:
 	static int intValue(const char **attributes, const char *name);
+	static int indentValue(const char **attributes, const char *name);
 	static double doubleValue(const char **attributes, const char *name);
 	static bool booleanValue(const char **attributes, const char *name);
 	static Boolean3 b3Value(const char **attributes, const char *name);
@@ -93,6 +94,20 @@ static const std::string TRUE_STRING = "true";
 inline int StyleReader::intValue(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
 	return (stringValue == 0) ? 0 : atoi(stringValue);
+}
+
+inline int StyleReader::indentValue(const char **attributes, const char *name) {
+	const char *stringValue = attributeValue(attributes, name);
+	if (stringValue == 0) {
+		return 0;
+	}
+	if (strcmp(stringValue, "default") == 0) {
+		return defaultParagraphIndent();
+	}
+	if (strcmp(stringValue, "-default") == 0) {
+		return -defaultParagraphIndent();
+	}
+	return atoi(stringValue);
 }
 
 inline double StyleReader::doubleValue(const char **attributes, const char *name) {
@@ -168,21 +183,9 @@ void StyleReader::startElementHandler(int tag, const char **attributes) {
 			} else {
 				int spaceBefore = intValue(attributes, "spaceBefore");
 				int spaceAfter = intValue(attributes, "spaceAfter");
-				int leftIndent = intValue(attributes, "leftIndent");
+				int leftIndent = indentValue(attributes, "leftIndent");
 				int rightIndent = intValue(attributes, "rightIndent");
-
-				int firstLineIndentDelta = 0;
-				const char *firstLineIndentDeltaString = attributeValue(attributes, "firstLineIndentDelta");
-				if (firstLineIndentDeltaString != 0) {
-					if (strncmp(firstLineIndentDeltaString, "default", 7) == 0) {
-						firstLineIndentDelta = defaultParagraphIndent();
-						firstLineIndentDeltaString += 7;
-					} else if (strncmp(firstLineIndentDeltaString, "-default", 8) == 0) {
-						firstLineIndentDelta = -defaultParagraphIndent();
-						firstLineIndentDeltaString += 8;
-					}
-					firstLineIndentDelta += atoi(firstLineIndentDeltaString);
-				}
+				int firstLineIndentDelta = indentValue(attributes, "firstLineIndentDelta");
 
 				AlignmentType alignment = ALIGN_UNDEFINED;
 				const char *alignmentString = attributeValue(attributes, "alignment");

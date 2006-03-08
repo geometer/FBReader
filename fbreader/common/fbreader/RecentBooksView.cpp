@@ -48,7 +48,6 @@ void RecentBooksView::paint() {
 		myBooks = lastBooks.books();
 		for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); it++) {
 			myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
-			myLastBooksModel->addControl(REGULAR, true);
 			myLastBooksModel->addControl(RECENT_BOOK_LIST, true);
 			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
 			myLastBooksModel->addText((*it)->author()->displayName() + ". ");

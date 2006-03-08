@@ -36,8 +36,8 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
 	myComboEntry->addValue(myComboEntry->initialValue());
 
 	TextStyleCollection &collection = TextStyleCollection::instance();
-	const int STYLES_NUMBER = 21;
-	TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, CONTENTS_TABLE_ENTRY, LIBRARY_AUTHOR_ENTRY, LIBRARY_BOOK_ENTRY, ANNOTATION, EPIGRAPH, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE, CITE, HYPERLINK, FOOTNOTE, EMPHASIS, STRONG, PREFORMATTED, CODE };
+	const int STYLES_NUMBER = 22;
+	TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, CONTENTS_TABLE_ENTRY, RECENT_BOOK_LIST, LIBRARY_AUTHOR_ENTRY, LIBRARY_BOOK_ENTRY, ANNOTATION, EPIGRAPH, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE, CITE, HYPERLINK, FOOTNOTE, EMPHASIS, STRONG, PREFORMATTED, CODE };
 	for (int i = 0; i < STYLES_NUMBER; i++) {
 		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
 		if (decoration != 0) {
