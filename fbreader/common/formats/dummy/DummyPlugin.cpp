@@ -19,37 +19,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#include <abstract/ZLFSManager.h>
+#include <abstract/ZLInputStream.h>
 
-#include "FB2Reader.h"
-#include "../../bookmodel/BookReader.h"
+#include "DummyPlugin.h"
+#include "DummyDescriptionReader.h"
+#include "DummyBookReader.h"
+#include "../../description/BookDescription.h"
 
-class BookModel;
-class Base64EncodedImage;
+bool DummyPlugin::acceptsFile(const ZLFile &file) const {
+	return file.extension() == "dummy";
+}
 
-class FB2BookReader : public FB2Reader {
+bool DummyPlugin::readDescription(const std::string &path, BookDescription &description) const {
+	return DummyDescriptionReader(description).readDescription(ZLFile(path).inputStream());
+}
 
-public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+bool DummyPlugin::readModel(const BookDescription &description, BookModel &model) const {
+	return DummyBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
+}
 
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
-
-private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
-	BookReader myModelReader;
-
-	Base64EncodedImage *myCurrentImage;
-	bool myProcessingImage;
-	std::vector<std::string> myImageBuffer;
-};
-
-inline FB2BookReader::~FB2BookReader() {}
-
-#endif /* __FB2BOOKREADER_H__ */
+const std::string &DummyPlugin::iconName() const {
+	static const std::string ICON_NAME = "unknown";
+	return ICON_NAME;
+}

@@ -42,7 +42,7 @@ bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) 
 		BookInfo(description.fileName()).EncodingOption.setValue("auto");
 	}
 
-	return FB2BookReader(model).readDocument(ZLFile(description.fileName()).inputStream());
+	return FB2BookReader(model).readBook(ZLFile(description.fileName()).inputStream());
 }
 
 const std::string &FB2Plugin::iconName() const {

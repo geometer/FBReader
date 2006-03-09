@@ -19,37 +19,26 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#include <abstract/ZLInputStream.h>
 
-#include "FB2Reader.h"
-#include "../../bookmodel/BookReader.h"
+#include "OEBBookReader.h"
+#include "../../bookmodel/BookModel.h"
 
-class BookModel;
-class Base64EncodedImage;
+OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
+}
 
-class FB2BookReader : public FB2Reader {
+/*
+void OEBBookReader::characterDataHandler(const char *text, int len) {
+}
 
-public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+void OEBBookReader::startElementHandler(int tag, const char **xmlattributes) {
+}
 
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+void OEBBookReader::endElementHandler(int tag) {
+}
+*/
 
-private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
-	BookReader myModelReader;
-
-	Base64EncodedImage *myCurrentImage;
-	bool myProcessingImage;
-	std::vector<std::string> myImageBuffer;
-};
-
-inline FB2BookReader::~FB2BookReader() {}
-
-#endif /* __FB2BOOKREADER_H__ */
+bool OEBBookReader::readBook(shared_ptr<ZLInputStream> stream) {
+	//return readDocument(stream);
+	return true;
+}

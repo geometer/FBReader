@@ -19,37 +19,25 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#ifndef __OEBPLUGIN_H__
+#define __OEBPLUGIN_H__
 
-#include "FB2Reader.h"
-#include "../../bookmodel/BookReader.h"
+#include "../FormatPlugin.h"
 
-class BookModel;
-class Base64EncodedImage;
-
-class FB2BookReader : public FB2Reader {
+class OEBPlugin : public FormatPlugin {
 
 public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
-
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
-
-private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
-	BookReader myModelReader;
-
-	Base64EncodedImage *myCurrentImage;
-	bool myProcessingImage;
-	std::vector<std::string> myImageBuffer;
+	OEBPlugin() FORMATS_SECTION;
+	~OEBPlugin() FORMATS_SECTION;
+	bool providesMetaInfo() const FORMATS_SECTION;
+	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
+	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
+	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
+	const std::string &iconName() const FORMATS_SECTION;
 };
 
-inline FB2BookReader::~FB2BookReader() {}
+inline OEBPlugin::OEBPlugin() {}
+inline OEBPlugin::~OEBPlugin() {}
+inline bool OEBPlugin::providesMetaInfo() const { return true; }
 
-#endif /* __FB2BOOKREADER_H__ */
+#endif /* __OEBPLUGIN_H__ */

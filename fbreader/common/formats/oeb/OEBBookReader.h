@@ -19,37 +19,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#ifndef __OEBBOOKREADER_H__
+#define __OEBBOOKREADER_H__
 
-#include "FB2Reader.h"
 #include "../../bookmodel/BookReader.h"
 
-class BookModel;
-class Base64EncodedImage;
-
-class FB2BookReader : public FB2Reader {
+class OEBBookReader {
 
 public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
+	OEBBookReader(BookModel &model) FORMATS_SECTION;
+	~OEBBookReader() FORMATS_SECTION;
 	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
+	/*
 	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
 	void endElementHandler(int tag) FORMATS_SECTION;
 	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	*/
 
 private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
 	BookReader myModelReader;
-
-	Base64EncodedImage *myCurrentImage;
-	bool myProcessingImage;
-	std::vector<std::string> myImageBuffer;
 };
 
-inline FB2BookReader::~FB2BookReader() {}
+inline OEBBookReader::~OEBBookReader() {}
 
-#endif /* __FB2BOOKREADER_H__ */
+#endif /* __OEBBOOKREADER_H__ */

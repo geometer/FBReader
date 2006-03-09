@@ -19,37 +19,30 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2BOOKREADER_H__
-#define __FB2BOOKREADER_H__
+#ifndef __DUMMYDESCRIPTIONREADER_H__
+#define __DUMMYDESCRIPTIONREADER_H__
 
-#include "FB2Reader.h"
-#include "../../bookmodel/BookReader.h"
+#include <string>
 
-class BookModel;
-class Base64EncodedImage;
+#include "../../description/BookDescription.h"
 
-class FB2BookReader : public FB2Reader {
+class DummyDescriptionReader {
 
 public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	DummyDescriptionReader(BookDescription &description) FORMATS_SECTION;
+	~DummyDescriptionReader() FORMATS_SECTION;
+	bool readDescription(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
+	/*
 	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
 	void endElementHandler(int tag) FORMATS_SECTION;
 	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	*/
 
 private:
-	int mySectionDepth;
-	int myBodyCounter;
-	bool myInsidePoem;
-	BookReader myModelReader;
-
-	Base64EncodedImage *myCurrentImage;
-	bool myProcessingImage;
-	std::vector<std::string> myImageBuffer;
+	WritableBookDescription myDescription;
 };
 
-inline FB2BookReader::~FB2BookReader() {}
+inline DummyDescriptionReader::~DummyDescriptionReader() {}
 
-#endif /* __FB2BOOKREADER_H__ */
+#endif /* __DUMMYDESCRIPTIONREADER_H__ */

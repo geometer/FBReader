@@ -272,6 +272,6 @@ void FB2BookReader::endElementHandler(int tag) {
 	}
 }
 
-void FB2BookReader::readBook(shared_ptr<ZLInputStream> stream) {
-	readDocument(stream);
+bool FB2BookReader::readBook(shared_ptr<ZLInputStream> stream) {
+	return readDocument(stream);
 }
