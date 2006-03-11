@@ -54,7 +54,7 @@ protected:
 public:
 	bool readDocument(shared_ptr<ZLInputStream> stream) XML_SECTION;
 
-	int tag(const char *name) XML_SECTION;
+	virtual int tag(const char *name) XML_SECTION;
 
 	virtual void startElementHandler(int tag, const char **attributes) XML_SECTION = 0;
 	virtual void endElementHandler(int tag) XML_SECTION = 0;

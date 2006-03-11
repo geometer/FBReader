@@ -19,28 +19,30 @@
  * 02110-1301, USA.
  */
 
+#ifndef __XMLROOTTESTER_H__
+#define __XMLROOTTESTER_H__
+
+#include <abstract/ZLXMLReader.h>
 #include <abstract/ZLFSManager.h>
-#include <abstract/ZLInputStream.h>
 
-#include "OEBPlugin.h"
-#include "OEBDescriptionReader.h"
-#include "OEBBookReader.h"
-#include "../util/XMLRootTester.h"
-#include "../../description/BookDescription.h"
+class XMLRootTester : private ZLXMLReader {
 
-bool OEBPlugin::acceptsFile(const ZLFile &file) const {
-	return (file.extension() == "xml") && XMLRootTester("oeb").test(file);
-}
+public:
+  XMLRootTester(const std::string &root);
+  bool test(const ZLFile &file);
 
-bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	return OEBDescriptionReader(description).readDescription(ZLFile(path).inputStream());
-}
+private:
+  const Tag *tags() const { return 0; }
 
-bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return OEBBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
-}
+  int tag(const char *name);
 
-const std::string &OEBPlugin::iconName() const {
-	static const std::string ICON_NAME = "oeb";
-	return ICON_NAME;
-}
+  void startElementHandler(int tag, const char **attributes);
+  void endElementHandler(int tag);
+  void characterDataHandler(const char *text, int len);
+
+private:
+  const std::string myRoot;
+  bool myResult;
+};
+
+#endif /* __XMLROOTTESTER_H__ */

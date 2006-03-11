@@ -19,28 +19,34 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
 
-#include "OEBPlugin.h"
-#include "OEBDescriptionReader.h"
-#include "OEBBookReader.h"
-#include "../util/XMLRootTester.h"
-#include "../../description/BookDescription.h"
+#include "XMLRootTester.h"
 
-bool OEBPlugin::acceptsFile(const ZLFile &file) const {
-	return (file.extension() == "xml") && XMLRootTester("oeb").test(file);
+XMLRootTester::XMLRootTester(const std::string &root) : myRoot(root) {
 }
 
-bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	return OEBDescriptionReader(description).readDescription(ZLFile(path).inputStream());
+bool XMLRootTester::test(const ZLFile &file) {
+  shared_ptr<ZLInputStream> stream = file.inputStream();
+  if (stream.isNull() || !stream->open()) {
+    return false;
+  }
+  myResult = false;
+  readDocument(stream);
+  return myResult;
 }
 
-bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return OEBBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
+int XMLRootTester::tag(const char *name) {
+  return (myRoot == name) ? 1 : 0;
 }
 
-const std::string &OEBPlugin::iconName() const {
-	static const std::string ICON_NAME = "oeb";
-	return ICON_NAME;
+void XMLRootTester::startElementHandler(int tag, const char**) {
+  myResult = tag == 1;
+  myDoBreak = true;
+}
+
+void XMLRootTester::endElementHandler(int) {
+}
+
+void XMLRootTester::characterDataHandler(const char*, int) {
 }
