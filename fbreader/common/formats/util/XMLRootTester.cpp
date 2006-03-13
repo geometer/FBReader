@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLInputStream.h>
 
 #include "XMLRootTester.h"
@@ -27,6 +29,7 @@ XMLRootTester::XMLRootTester(const std::string &root) : myRoot(root) {
 }
 
 bool XMLRootTester::test(const ZLFile &file) {
+	std::cerr << file.name() << "\n";
   shared_ptr<ZLInputStream> stream = file.inputStream();
   if (stream.isNull() || !stream->open()) {
     return false;
@@ -42,7 +45,8 @@ int XMLRootTester::tag(const char *name) {
 
 void XMLRootTester::startElementHandler(int tag, const char**) {
   myResult = tag == 1;
-  myDoBreak = true;
+	std::cerr << "tag = " << tag << "\n";
+	interrupt();
 }
 
 void XMLRootTester::endElementHandler(int) {

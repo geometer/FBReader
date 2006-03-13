@@ -61,7 +61,7 @@ public:
 		if ((attributes[0] != 0) && (LANGUAGE == attributes[0])) {
 			myLanguageName = attributes[1];
 		}
-		myDoBreak = true;
+		interrupt();
 	}
 	void endElementHandler(int) {}
 	void characterDataHandler(const char*, int) {}

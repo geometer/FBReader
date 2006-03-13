@@ -61,12 +61,23 @@ public:
 	virtual void characterDataHandler(const char *text, int len) XML_SECTION = 0;
 	virtual const std::vector<std::string> &externalDTDs() const XML_SECTION;
 
+	bool isInterrupted() const XML_SECTION;
+
 protected:
-	bool myDoBreak;
+	void interrupt() XML_SECTION;
 
 private:
+	bool myInterrupted;
 	ZLXMLReaderInternal *myInternalReader;
 	char *myParserBuffer;
 };
+
+inline bool ZLXMLReader::isInterrupted() const {
+	return myInterrupted;
+}
+
+inline void ZLXMLReader::interrupt() {
+	myInterrupted = true;
+}
 
 #endif /* __ZLXMLREADER_H__ */

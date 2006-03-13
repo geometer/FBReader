@@ -26,15 +26,21 @@
 #include "../ZLXMLReader.h"
 
 static void fCharacterDataHandler(void *userData, const char *text, int len) {
-	((ZLXMLReader*)userData)->characterDataHandler(text, len);
+	if (!((ZLXMLReader*)userData)->isInterrupted()) {
+		((ZLXMLReader*)userData)->characterDataHandler(text, len);
+	}
 }
 
 static void fStartElementHandler(void *userData, const char *name, const char **attributes) {
-	((ZLXMLReader*)userData)->startElementHandler(((ZLXMLReader*)userData)->tag(name), attributes);
+	if (!((ZLXMLReader*)userData)->isInterrupted()) {
+		((ZLXMLReader*)userData)->startElementHandler(((ZLXMLReader*)userData)->tag(name), attributes);
+	}
 }
 
 static void fEndElementHandler(void *userData, const char *name) {
-	((ZLXMLReader*)userData)->endElementHandler(((ZLXMLReader*)userData)->tag(name));
+	if (!((ZLXMLReader*)userData)->isInterrupted()) {
+		((ZLXMLReader*)userData)->endElementHandler(((ZLXMLReader*)userData)->tag(name));
+	}
 }
 
 static int fUnknownEncodingHandler(void *, const XML_Char *name, XML_Encoding *info) {

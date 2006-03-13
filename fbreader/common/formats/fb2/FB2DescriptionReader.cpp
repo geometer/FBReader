@@ -47,7 +47,7 @@ void FB2DescriptionReader::startElementHandler(int tag, const char **) {
 	switch (tag) {
 		case _BODY:
 			myReturnCode = true;
-			myDoBreak = true;
+			interrupt();
 			break;
 		case _TITLE_INFO:
 			myReadSomething = true;
