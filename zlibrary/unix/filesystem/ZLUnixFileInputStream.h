@@ -34,7 +34,7 @@ public:
 	size_t read(char *buffer, size_t maxSize);
 	void close();
 
-	void seek(size_t offset) { fseek(myFile, offset, SEEK_CUR); }
+	void seek(int offset) { fseek(myFile, offset, SEEK_CUR); }
 	size_t offset() const { return ftell(myFile); }
 	size_t sizeOfOpened();
 

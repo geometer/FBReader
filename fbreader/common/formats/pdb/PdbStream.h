@@ -36,7 +36,7 @@ public:
 	size_t read(char *buffer, size_t maxSize);
 	virtual void close();
 
-	void seek(size_t offset);
+	void seek(int offset);
 	size_t offset() const;
 	size_t sizeOfOpened();
 

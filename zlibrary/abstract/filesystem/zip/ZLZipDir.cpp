@@ -35,10 +35,7 @@ void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 				names.push_back(entryName);
 			}
 			delete[] buffer;
-			stream->seek(header.ExtraLength + header.CompressedSize);
-			if (header.Flags & 0x04) {
-				stream->seek(12);
-			}
+			ZLZipHeader::skipEntry(*stream, header);
 		}
 		stream->close();
 	}

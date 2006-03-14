@@ -103,8 +103,12 @@ void ZLTarInputStream::close() {
 	myBaseStream->close();
 }
 
-void ZLTarInputStream::seek(size_t offset) {
-	read(0, offset);
+void ZLTarInputStream::seek(int offset) {
+	if (offset > 0) {
+		read(0, offset);
+	} else if (offset < 0) {
+		// TODO: implement
+	}
 }
 
 size_t ZLTarInputStream::offset() const {

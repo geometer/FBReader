@@ -34,7 +34,7 @@ public:
 	virtual size_t read(char *buffer, size_t maxSize) FS_SECTION = 0;
 	virtual void close() FS_SECTION = 0;
 
-	virtual void seek(size_t offset) FS_SECTION = 0;
+	virtual void seek(int offset) FS_SECTION = 0;
 	virtual size_t offset() const FS_SECTION = 0;
 	virtual size_t sizeOfOpened() FS_SECTION = 0;
 

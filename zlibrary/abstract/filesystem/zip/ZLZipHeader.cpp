@@ -18,9 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include "ZLZipHeader.h"
+#include "ZLZDecompressor.h"
 #include "../ZLInputStream.h"
 
 bool ZLZipHeader::readFrom(ZLInputStream &stream) {
@@ -36,11 +35,19 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 	UncompressedSize = readLong(stream);
 	NameLength = readShort(stream);
 	ExtraLength = readShort(stream);
-	std::cerr << "Signature = " << Signature << "\n";
-	std::cerr << "startOffset = " << startOffset << "\n";
-	std::cerr << "NameLength = " << NameLength << "\n";
-	std::cerr << "Flags = " << Flags << "\n";
 	return (Signature == 0x04034B50) && (stream.offset() == startOffset + 30) && (NameLength != 0);
+}
+
+void ZLZipHeader::skipEntry(ZLInputStream &stream, const ZLZipHeader &header) {
+	if (header.Flags & 0x08) {
+		stream.seek(header.ExtraLength);
+		ZLZDecompressor decompressor((size_t)-1);
+		while (decompressor.decompress(stream, 0, 2048) == 2048) {
+		}
+		stream.seek(16);
+	} else {
+		stream.seek(header.ExtraLength + header.CompressedSize);
+	}
 }
 
 unsigned short ZLZipHeader::readShort(ZLInputStream &stream) {

@@ -88,13 +88,17 @@ void ZLBzip2InputStream::close() {
 	}
 }
 
-void ZLBzip2InputStream::seek(size_t offset) {
-	while (offset != 0) {
-		size_t rSize = read(myTrashBuffer, std::min(BUFFER_SIZE, offset));
-		if (rSize == 0) {
-			break;
+void ZLBzip2InputStream::seek(int offset) {
+	if (offset > 0) {
+		while (offset != 0) {
+			size_t rSize = read(myTrashBuffer, std::min(BUFFER_SIZE, (size_t)offset));
+			if (rSize == 0) {
+				break;
+			}
+			offset -= std::min(rSize, (size_t)offset);
 		}
-		offset -= std::min(rSize, offset);
+	} else if (offset < 0) {
+		// TODO: implement
 	}
 }
 

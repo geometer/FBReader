@@ -65,6 +65,11 @@ size_t ZLZDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t m
 				break;
 			}
 			myBuffer.append(myOutBuffer, OUT_BUFFER_SIZE - myZStream->avail_out);
+			if (code == Z_STREAM_END) {
+				myAvailableSize = 0;
+				stream.seek(-myZStream->avail_in);
+				break;
+			}
 		}
 	}
 

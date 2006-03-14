@@ -37,7 +37,7 @@ public:
 	size_t read(char *buffer, size_t maxSize) FS_SECTION;
 	void close() FS_SECTION;
 
-	void seek(size_t offset) FS_SECTION;
+	void seek(int offset) FS_SECTION;
 	size_t offset() const FS_SECTION;
 	size_t sizeOfOpened() FS_SECTION;
 

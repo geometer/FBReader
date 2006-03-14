@@ -60,8 +60,12 @@ void PdbStream::close() {
 	}
 }
 
-void PdbStream::seek(size_t offset) {
-	read(0, offset);
+void PdbStream::seek(int offset) {
+	if (offset > 0) {
+		read(0, offset);
+	} else if (offset < 0) {
+		// TODO: implement
+	}
 }
 
 size_t PdbStream::offset() const {

@@ -97,8 +97,12 @@ void ZLGzipInputStream::close() {
 	myFileStream->close();
 }
 
-void ZLGzipInputStream::seek(size_t offset) {
-	read(0, offset);
+void ZLGzipInputStream::seek(int offset) {
+	if (offset > 0) {
+		read(0, offset);
+	} else if (offset < 0) {
+		// TODO: implement
+	}
 }
 
 size_t ZLGzipInputStream::offset() const {

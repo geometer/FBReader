@@ -58,10 +58,7 @@ bool ZLZipInputStream::open() {
 		} else {
 			myBaseStream->seek(header.NameLength);
 		}
-		myBaseStream->seek(header.ExtraLength + header.CompressedSize);
-		if (header.Flags & 0x04) {
-			myBaseStream->seek(12);
-		}
+		ZLZipHeader::skipEntry(*myBaseStream, header);
 	}
 	if (header.CompressionMethod == 0) {
 		myIsDeflated = false;
@@ -73,6 +70,9 @@ bool ZLZipInputStream::open() {
 	}
 	myUncompressedSize = header.UncompressedSize;
 	myAvailableSize = header.CompressedSize;
+	if (myAvailableSize == 0) {
+		myAvailableSize = (size_t)-1;
+	}
 
 	if (myIsDeflated) {
 		myDecompressor = new ZLZDecompressor(myAvailableSize);
@@ -100,8 +100,12 @@ void ZLZipInputStream::close() {
 	myBaseStream->close();
 }
 
-void ZLZipInputStream::seek(size_t offset) {
-	read(0, offset);
+void ZLZipInputStream::seek(int offset) {
+	if (offset > 0) {
+		read(0, offset);
+	} else if (offset < 0) {
+		// TODO: implement
+	}
 }
 
 size_t ZLZipInputStream::offset() const {
@@ -109,5 +113,6 @@ size_t ZLZipInputStream::offset() const {
 }
 
 size_t ZLZipInputStream::sizeOfOpened() {
+	// TODO: implement for files with Flags & 0x08
 	return myUncompressedSize;
 }
