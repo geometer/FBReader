@@ -29,18 +29,18 @@
 #include "../../description/BookDescription.h"
 
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
-	return (file.extension() == "xml") && XMLRootTester("oeb").test(file);
+  return file.extension() == "opf";
 }
 
 bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	return OEBDescriptionReader(description).readDescription(ZLFile(path).inputStream());
+  return OEBDescriptionReader(description).readDescription(ZLFile(path).inputStream());
 }
 
 bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return OEBBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
+  return OEBBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
 }
 
 const std::string &OEBPlugin::iconName() const {
-	static const std::string ICON_NAME = "oeb";
-	return ICON_NAME;
+  static const std::string ICON_NAME = "oeb";
+  return ICON_NAME;
 }
