@@ -46,7 +46,7 @@ static const std::string POSTFIX = ".pattern";
 static const std::string NONE = "none";
 static const std::string LANGUAGE = "language";
 
-class LanguageReader : public ZLXMLReaderBase {
+class LanguageReader : public ZLXMLReader {
 
 public:
 	LanguageReader(std::string &name) : myLanguageName(name) {}
@@ -57,8 +57,6 @@ public:
 		}
 		interrupt();
 	}
-	void endElementHandler(const char*) {}
-	void characterDataHandler(const char*, int) {}
 
 private:
 	std::string &myLanguageName;

@@ -24,7 +24,7 @@
 
 #include <abstract/ZLXMLReader.h>
 
-class FB2Reader : public ZLXMLReader {
+class FB2Reader : public ZLXMLReader2 {
 
 public:
 //protected:

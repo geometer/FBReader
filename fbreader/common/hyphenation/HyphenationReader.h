@@ -28,7 +28,7 @@
 
 class TeXHyphenator;
 
-class HyphenationReader : public ZLXMLReaderBase {
+class HyphenationReader : public ZLXMLReader {
 
 public:
 	HyphenationReader(TeXHyphenator *hyphenator) HYPHENATION_SECTION;

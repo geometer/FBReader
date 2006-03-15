@@ -56,14 +56,12 @@ void TextStyleCollection::deleteInstance() {
 	}
 }
 
-class StyleReader : public ZLXMLReaderBase {
+class StyleReader : public ZLXMLReader {
 
 public:
 	StyleReader(TextStyleCollection &collection) : myCollection(collection) {}
 
 	void startElementHandler(const char *tag, const char **attributes);
-	void endElementHandler(const char*) {}
-	void characterDataHandler(const char*, int) {}
 
 private:
 	static int intValue(const char **attributes, const char *name);

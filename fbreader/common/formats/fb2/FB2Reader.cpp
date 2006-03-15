@@ -21,7 +21,7 @@
 
 #include "FB2Reader.h"
 
-static const ZLXMLReader::Tag TAGS[] = {
+static const ZLXMLReader2::Tag TAGS[] = {
 	{"p", FB2Reader::_P},
 	{"subtitle", FB2Reader::_SUBTITLE},
 	{"cite", FB2Reader::_CITE},
@@ -55,6 +55,6 @@ static const ZLXMLReader::Tag TAGS[] = {
 	{0, FB2Reader::_UNKNOWN}
 };
 
-const ZLXMLReader::Tag *FB2Reader::tags() const {
+const ZLXMLReader2::Tag *FB2Reader::tags() const {
 	return TAGS;
 }

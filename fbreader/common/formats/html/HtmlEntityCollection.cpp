@@ -28,13 +28,11 @@
 #include "HtmlEntityCollection.h"
 #include "../../Files.h"
 
-class CollectionReader : public ZLXMLReaderBase {
+class CollectionReader : public ZLXMLReader {
 
 public:
 	CollectionReader(std::map<std::string,int> &collection);
 	void startElementHandler(const char *tag, const char **attributes);
-	void endElementHandler(const char*) {}
-	void characterDataHandler(const char*, int) {}
 
 private:
 	std::map<std::string,int> &myCollection;
