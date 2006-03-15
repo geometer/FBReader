@@ -25,7 +25,6 @@
 #include "OEBPlugin.h"
 #include "OEBDescriptionReader.h"
 #include "OEBBookReader.h"
-#include "../util/XMLRootTester.h"
 #include "../../description/BookDescription.h"
 
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
