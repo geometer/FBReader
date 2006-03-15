@@ -22,68 +22,40 @@
 #include "XMLConfig.h"
 #include "AsciiEncoder.h"
 
-enum TagCode {
-	_CONFIG,
-	_GROUP,
-	_OPTION,
-	_UNKNOWN
-};
-
-static const ZLXMLReader::Tag TAGS[] = {
-	{ "config", _CONFIG },
-	{ "group", _GROUP },
-	{ "option", _OPTION },
-	{ 0, _UNKNOWN }
-};
-
-const ZLXMLReader::Tag *XMLConfigReader::tags() const {
-	return TAGS;
-}
-
 XMLConfigReader::XMLConfigReader(XMLConfig &config) : myConfig(config), myGroup(0) {
 }
 
 XMLConfigReader::~XMLConfigReader() {
 }
 
-void XMLConfigReader::endElementHandler(int) {
-}
+void XMLConfigReader::startElementHandler(const char *tag, const char **attributes) {
+	static const std::string GROUP = "group";
+	static const std::string OPTION = "option";
 
-void XMLConfigReader::characterDataHandler(const char*, int) {
-}
-
-void XMLConfigReader::startElementHandler(int tag, const char **attributes) {
-	switch (tag) {
-		case _CONFIG:
-			break;
-		case _GROUP:
-		{
+	if (GROUP == tag) {
+		bool correct = true;
+		for (int i = 0; i < 2; i++) {
+			if (attributes[i] == 0) {
+				correct = false;
+				break;
+			}
+		}
+		if (correct && (strcmp(attributes[0], "name") == 0)) {
+			myGroup = new XMLConfigGroup();
+			myConfig.myGroups[AsciiEncoder::decode(attributes[1])] = myGroup; 
+		}
+	} else if (OPTION == tag) {
+		if (myGroup != 0) {
 			bool correct = true;
-			for (int i = 0; i < 2; i++) {
+			for (int i = 0; i < 4; i++) {
 				if (attributes[i] == 0) {
 					correct = false;
 					break;
 				}
 			}
-			if (correct && (strcmp(attributes[0], "name") == 0)) {
-				myGroup = new XMLConfigGroup();
-				myConfig.myGroups[AsciiEncoder::decode(attributes[1])] = myGroup; 
+			if (correct && (strcmp(attributes[0], "name") == 0) && (strcmp(attributes[2], "value") == 0)) {
+   			myGroup->setValue(AsciiEncoder::decode(attributes[1]), AsciiEncoder::decode(attributes[3])); 
 			}
-			break;
 		}
-		case _OPTION:
-			if (myGroup != 0) {
-				bool correct = true;
-				for (int i = 0; i < 4; i++) {
-					if (attributes[i] == 0) {
-						correct = false;
-						break;
-					}
-				}
-				if (correct && (strcmp(attributes[0], "name") == 0) && (strcmp(attributes[2], "value") == 0)) {
-   				myGroup->setValue(AsciiEncoder::decode(attributes[1]), AsciiEncoder::decode(attributes[3])); 
-				}
-			}
-			break;
 	}
 }

@@ -28,16 +28,11 @@ class XMLConfigGroup;
 
 class XMLConfigReader : public ZLXMLReader {
 
-protected:
-	const Tag *tags() const;
-
 public:
 	XMLConfigReader(XMLConfig &config);
 	~XMLConfigReader();
 
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int);
-	void characterDataHandler(const char*, int);
+	void startElementHandler(const char *tag, const char **attributes);
 
 private:
 	XMLConfig &myConfig;

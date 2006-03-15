@@ -33,14 +33,9 @@ std::vector<std::string> ZLEncodingConverter::ourKnownEncodings;
 
 class EncodingListReader : public ZLXMLReader {
 
-protected:
-	const Tag *tags() const;
-
 public:
 	EncodingListReader(std::vector<std::string> &knownEncodings);
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int) {}
-	void characterDataHandler(const char *, int) {}
+	void startElementHandler(const char *tag, const char **attributes);
 
 private:
 	std::vector<std::string> &myKnownEncodings;
@@ -49,20 +44,11 @@ private:
 EncodingListReader::EncodingListReader(std::vector<std::string> &knownEncodings) : myKnownEncodings(knownEncodings) {
 }
 
-static const ZLXMLReader::Tag TAGS[] = {
-	{ "known-encodings", 0 },
-	{ "encoding", 1 },
-	{ 0, 2 }
-};
+void EncodingListReader::startElementHandler(const char *tag, const char **attributes) {
+	static const std::string ENCODING = "encoding";
+	static const std::string NAME = "name";
 
-const ZLXMLReader::Tag *EncodingListReader::tags() const {
-	return TAGS;
-}
-
-static const std::string NAME = "name";
-
-void EncodingListReader::startElementHandler(int tag, const char **attributes) {
-	if ((tag == 1) && (attributes[0] != 0) && (NAME == attributes[0])) {
+	if ((ENCODING == tag) && (attributes[0] != 0) && (NAME == attributes[0])) {
 		myKnownEncodings.push_back(attributes[1]);
 	}
 }

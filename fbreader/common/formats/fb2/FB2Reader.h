@@ -24,10 +24,25 @@
 
 #include <abstract/ZLXMLReader.h>
 
-class FB2Reader : public ZLXMLReader2 {
+class FB2Reader : public ZLXMLReader {
 
 public:
-//protected:
+	struct Tag {
+		const char *tagName;
+		int tagCode;
+	};
+
+public:
+	virtual int tag(const char *name) FORMATS_SECTION;
+
+	virtual void startElementHandler(int tag, const char **attributes) FORMATS_SECTION = 0;
+	virtual void endElementHandler(int tag) FORMATS_SECTION = 0;
+
+private:
+	void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
+	void endElementHandler(const char *tag) FORMATS_SECTION;
+
+public:
 	enum TagCode {
 		_P,
 		_SUBTITLE,
@@ -67,7 +82,6 @@ protected:
 	
 public:
 	~FB2Reader() FORMATS_SECTION;
-	const Tag *tags() const FORMATS_SECTION;
 };
 
 inline FB2Reader::FB2Reader() {}

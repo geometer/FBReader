@@ -21,7 +21,15 @@
 
 #include "FB2Reader.h"
 
-static const ZLXMLReader2::Tag TAGS[] = {
+void FB2Reader::startElementHandler(const char *t, const char **attributes) {
+	startElementHandler(tag(t), attributes);
+}
+
+void FB2Reader::endElementHandler(const char *t) {
+	endElementHandler(tag(t));
+}
+
+static const FB2Reader::Tag TAGS[] = {
 	{"p", FB2Reader::_P},
 	{"subtitle", FB2Reader::_SUBTITLE},
 	{"cite", FB2Reader::_CITE},
@@ -55,6 +63,10 @@ static const ZLXMLReader2::Tag TAGS[] = {
 	{0, FB2Reader::_UNKNOWN}
 };
 
-const ZLXMLReader2::Tag *FB2Reader::tags() const {
-	return TAGS;
+int FB2Reader::tag(const char *name) {
+	for (int i = 0; ; i++) {
+		if ((TAGS[i].tagName == 0) || (strcmp(name, TAGS[i].tagName) == 0)) {
+			return TAGS[i].tagCode;
+		}
+	}
 }

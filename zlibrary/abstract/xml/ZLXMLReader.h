@@ -29,7 +29,7 @@
 class ZLInputStream;
 class ZLXMLReaderInternal;
 
-class ZLXMLReaderBase {
+class ZLXMLReader {
 
 public:
 	static size_t bufferSize() { return 2048; }
@@ -38,15 +38,15 @@ protected:
   static const char *attributeValue(const char **xmlattributes, const char *name) XML_SECTION;
 
 protected:
-	ZLXMLReaderBase(const char *encoding = 0) XML_SECTION;
-	virtual ~ZLXMLReaderBase() XML_SECTION;
+	ZLXMLReader(const char *encoding = 0) XML_SECTION;
+	virtual ~ZLXMLReader() XML_SECTION;
 
 public:
 	bool readDocument(shared_ptr<ZLInputStream> stream) XML_SECTION;
 
-	virtual void startElementHandler(const char *tag, const char **attributes) XML_SECTION = 0;
-	virtual void endElementHandler(const char *tag) XML_SECTION = 0;
-	virtual void characterDataHandler(const char *text, int len) XML_SECTION = 0;
+	virtual void startElementHandler(const char *tag, const char **attributes) XML_SECTION;
+	virtual void endElementHandler(const char *tag) XML_SECTION;
+	virtual void characterDataHandler(const char *text, int len) XML_SECTION;
 	virtual const std::vector<std::string> &externalDTDs() const XML_SECTION;
 
 	bool isInterrupted() const XML_SECTION;
@@ -60,36 +60,11 @@ private:
 	char *myParserBuffer;
 };
 
-class ZLXMLReader : public ZLXMLReaderBase {
-
-//protected:
-public:
-	struct Tag {
-		const char *tagName;
-		int tagCode;
-	};
-
-protected:
-	ZLXMLReader(const char *encoding = 0) : ZLXMLReaderBase(encoding) {}
-
-	virtual const Tag *tags() const XML_SECTION = 0;
-
-public:
-	virtual int tag(const char *name) XML_SECTION;
-
-	virtual void startElementHandler(int tag, const char **attributes) XML_SECTION = 0;
-	virtual void endElementHandler(int tag) XML_SECTION = 0;
-
-private:
-	void startElementHandler(const char *tag, const char **attributes) XML_SECTION;
-	void endElementHandler(const char *tag) XML_SECTION;
-};
-
-inline bool ZLXMLReaderBase::isInterrupted() const {
+inline bool ZLXMLReader::isInterrupted() const {
 	return myInterrupted;
 }
 
-inline void ZLXMLReaderBase::interrupt() {
+inline void ZLXMLReader::interrupt() {
 	myInterrupted = true;
 }
 

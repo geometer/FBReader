@@ -31,13 +31,8 @@ protected:
 public:
 	virtual ~EncodingReader() XML_SECTION;
 
-protected:
-	const Tag *tags() const XML_SECTION;
-
 public:
-	virtual void startElementHandler(int tag, const char **attributes) XML_SECTION;
-	void endElementHandler(int) XML_SECTION;
-	void characterDataHandler(const char *, int) XML_SECTION;
+	virtual void startElementHandler(const char *tag, const char **attributes) XML_SECTION;
 	int bytesNumber() const XML_SECTION;
 
 protected:
@@ -53,7 +48,7 @@ public:
 	bool fillTable(int *map) XML_SECTION;
 
 public:
-	void startElementHandler(int tag, const char **attributes) XML_SECTION;
+	void startElementHandler(const char *tag, const char **attributes) XML_SECTION;
 
 private:
 	int *myMap;
@@ -67,7 +62,7 @@ public:
 	char **createTable() XML_SECTION;
 
 public:
-	void startElementHandler(int tag, const char **attributes) XML_SECTION;
+	void startElementHandler(const char *tag, const char **attributes) XML_SECTION;
 
 private:
 	char **myMap;

@@ -34,26 +34,13 @@ EncodingReader::EncodingReader(const std::string &encoding) : myFilePath(ZLEncod
 EncodingReader::~EncodingReader() {
 }
 
-void EncodingReader::endElementHandler(int) {
-}
+static const std::string ENCODING = "encoding";
+static const std::string CHAR = "char";
 
-void EncodingReader::characterDataHandler(const char *, int) {
-}
+void EncodingReader::startElementHandler(const char *tag, const char **attributes) {
+  static const std::string BYTES = "bytes";
 
-static ZLXMLReader::Tag TAGS[] = {
-	{ "encoding", 0 },
-	{ "char", 1 },
-	{ 0, 2 }
-};
-
-const ZLXMLReader::Tag *EncodingReader::tags() const {
-	return TAGS;
-}
-
-static const std::string BYTES = "bytes";
-
-void EncodingReader::startElementHandler(int tag, const char **attributes) {
-	if (tag == 0) {
+	if (ENCODING == tag) {
 		myBytesNumber = 1;
 		if ((attributes[0] != 0) && (BYTES == attributes[0])) {
 			myBytesNumber = atoi(attributes[1]);
@@ -75,9 +62,9 @@ bool EncodingIntReader::fillTable(int *map) {
 	return readDocument(ZLFile(myFilePath).inputStream());
 }
 
-void EncodingIntReader::startElementHandler(int tag, const char **attributes) {
+void EncodingIntReader::startElementHandler(const char *tag, const char **attributes) {
 	EncodingReader::startElementHandler(tag, attributes);
-	if ((tag == 1) && (attributes[0] != 0) && (attributes[2] != 0)) {
+	if ((CHAR == tag) && (attributes[0] != 0) && (attributes[2] != 0)) {
 		char *ptr = 0;
 		myMap[strtol(attributes[1], &ptr, 16)] = strtol(attributes[3], &ptr, 16);
 	}
@@ -105,14 +92,14 @@ char **EncodingCharReader::createTable() {
 	return myMap;
 }
 
-void EncodingCharReader::startElementHandler(int tag, const char **attributes) {
+void EncodingCharReader::startElementHandler(const char *tag, const char **attributes) {
 	EncodingReader::startElementHandler(tag, attributes);
 
-	if (tag == 0) {
+	if (ENCODING == tag) {
 		int length = (myBytesNumber == 1) ? 256 : 32768;
 		myMap = new char*[length];
 		memset(myMap, 0, length * sizeof(char*));
-	} else if ((tag == 1) && (attributes[0] != 0) && (attributes[2] != 0)) {
+	} else if ((CHAR == tag) && (attributes[0] != 0) && (attributes[2] != 0)) {
 		static char *ptr = 0;
 		int index = strtol(attributes[1], &ptr, 16);
 		if (myBytesNumber == 1) {

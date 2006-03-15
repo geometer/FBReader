@@ -23,18 +23,18 @@
 
 #include <expat.h>
 
-class ZLXMLReaderBase;
+class ZLXMLReader;
 
 class ZLXMLReaderInternal {
 
 public:
-	ZLXMLReaderInternal(ZLXMLReaderBase &reader, const char *encoding);
+	ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding);
 	~ZLXMLReaderInternal();
 	void init();
 	bool parseBuffer(const char *buffer, size_t len);
 
 private:
-	ZLXMLReaderBase &myReader;
+	ZLXMLReader &myReader;
 	XML_Parser myParser;
 	bool myInitialized;
 };
