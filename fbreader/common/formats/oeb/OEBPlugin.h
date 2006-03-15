@@ -38,6 +38,6 @@ public:
 
 inline OEBPlugin::OEBPlugin() {}
 inline OEBPlugin::~OEBPlugin() {}
-inline bool OEBPlugin::providesMetaInfo() const { return true; }
+inline bool OEBPlugin::providesMetaInfo() const { return false; }
 
 #endif /* __OEBPLUGIN_H__ */
