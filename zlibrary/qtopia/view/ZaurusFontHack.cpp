@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#ifdef USE_ZAURUS_FONTHACK
+
 #include <dirent.h>
 
 #include "ZaurusFontHack.h"
@@ -41,3 +43,5 @@ std::set<std::string> ZaurusFontHack::families() {
 	closedir(fontPath);
 	return fams;
 }
+
+#endif /* USE_ZAURUS_FONTHACK */

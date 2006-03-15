@@ -21,6 +21,8 @@
 #ifndef __ZAURUSFONTHACK_H__
 #define __ZAURUSFONTHACK_H__
 
+#ifdef USE_ZAURUS_FONTHACK
+
 #include <set>
 #include <string>
 
@@ -29,5 +31,7 @@ class ZaurusFontHack {
 public:
 	static std::set<std::string> families();
 };
+
+#endif /* USE_ZAURUS_FONTHACK */
 
 #endif /* __ZAURUSFONTHACK_H__ */

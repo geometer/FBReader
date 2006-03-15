@@ -29,7 +29,9 @@
 
 #include "QPaintContext.h"
 #include "../../qt/image/QImageManager.h"
-#include "ZaurusFontHack.h"
+#ifdef USE_ZAURUS_FONTHACK
+  #include "ZaurusFontHack.h"
+#endif /* USE_ZAURUS_FONTHACK */
 
 QPaintContext::QPaintContext() {
 	myPainter = new QPainter();
@@ -67,14 +69,26 @@ void QPaintContext::setSize(int w, int h) {
 static const std::string HELVETICA = "helvetica";
 
 void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
-	std::set<std::string> famSet = ZaurusFontHack::families();
 	bool helveticaFlag = false;
+#ifdef USE_ZAURUS_FONTHACK
+	std::set<std::string> famSet = ZaurusFontHack::families();
 	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); it++) {
 		if (*it == HELVETICA) {
 			helveticaFlag = true;
 		}
 		families.push_back(*it);
 	}
+#else /* USE_ZAURUS_FONTHACK */
+	QFontDatabase db;
+	QStringList qFamilies = db.families();
+	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); it++) {
+		std::string family = (*it).ascii();
+		if (family == HELVETICA) {
+			helveticaFlag = true;
+		}
+		families.push_back(family);
+	}
+#endif /* USE_ZAURUS_FONTHACK */
 	if (!helveticaFlag) {
 		families.push_back(HELVETICA);
 	}

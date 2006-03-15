@@ -24,7 +24,7 @@
 #include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
-#include <desktop/XMLOptions.h>
+#include <abstract/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>
 #include <gtk/GtkDeviceInfo.h>

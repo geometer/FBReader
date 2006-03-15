@@ -1,1 +1,0 @@
-../../desktop/options/AsciiEncoder.h

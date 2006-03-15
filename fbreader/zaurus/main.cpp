@@ -24,7 +24,7 @@
 #include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixTime.h>
 #include <unix/ZLUnixFSManager.h>
-#include <desktop/XMLOptions.h>
+#include <abstract/XMLOptions.h>
 #include <qtopia/QDialogManager.h>
 #include <qt/QImageManager.h>
 #include <qtopia/QDeviceInfo.h>
