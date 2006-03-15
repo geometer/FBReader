@@ -34,6 +34,14 @@
 #include "expat/ZLXMLReaderInternal.h"
 #endif // USE_OWN_XML_PARSER
 
+void ZLXMLReader::startElementHandler(const char *t, const char **attributes) {
+	startElementHandler(tag(t), attributes);
+}
+
+void ZLXMLReader::endElementHandler(const char *t) {
+	endElementHandler(tag(t));
+}
+
 int ZLXMLReader::tag(const char *name) {
 	const Tag *_tags = tags();
 	for (int i = 0; ; i++) {
@@ -43,17 +51,17 @@ int ZLXMLReader::tag(const char *name) {
 	}
 }
 
-ZLXMLReader::ZLXMLReader(const char *encoding) {
+ZLXMLReaderBase::ZLXMLReaderBase(const char *encoding) {
 	myInternalReader = new ZLXMLReaderInternal(*this, encoding);
 	myParserBuffer = new char[bufferSize()];
 }
 
-ZLXMLReader::~ZLXMLReader() {
+ZLXMLReaderBase::~ZLXMLReaderBase() {
 	delete[] myParserBuffer;
 	delete myInternalReader;
 }
 
-bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
+bool ZLXMLReaderBase::readDocument(shared_ptr<ZLInputStream> stream) {
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
@@ -77,11 +85,11 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 
 static std::vector<std::string> EMPTY_VECTOR;
 
-const std::vector<std::string> &ZLXMLReader::externalDTDs() const {
+const std::vector<std::string> &ZLXMLReaderBase::externalDTDs() const {
 	return EMPTY_VECTOR;
 }
 
-const char *ZLXMLReader::attributeValue(const char **xmlattributes, const char *name) {
+const char *ZLXMLReaderBase::attributeValue(const char **xmlattributes, const char *name) {
 	while (*xmlattributes != 0) {
 		bool useNext = strcmp(*xmlattributes, name) == 0;
 		xmlattributes++;

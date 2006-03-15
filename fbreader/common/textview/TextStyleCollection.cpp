@@ -56,15 +56,13 @@ void TextStyleCollection::deleteInstance() {
 	}
 }
 
-class StyleReader : public ZLXMLReader {
+class StyleReader : public ZLXMLReaderBase {
 
 public:
 	StyleReader(TextStyleCollection &collection) : myCollection(collection) {}
 
-	const Tag *tags() const;
-
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int) {}
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char*) {}
 	void characterDataHandler(const char*, int) {}
 
 private:
@@ -78,16 +76,6 @@ private:
 private:
 	TextStyleCollection &myCollection;
 };
-
-static const ZLXMLReader::Tag TAGS[] = {
-	{ "base", 1 },
-	{ "style", 2 },
-	{ 0, 0 }
-};
-
-const ZLXMLReader::Tag *StyleReader::tags() const {
-	return TAGS;
-}
 
 static const std::string TRUE_STRING = "true";
 
@@ -142,8 +130,11 @@ int StyleReader::defaultParagraphIndent() {
 	return 0;
 }
 
-void StyleReader::startElementHandler(int tag, const char **attributes) {
-	if (tag == 1) {
+void StyleReader::startElementHandler(const char *tag, const char **attributes) {
+	static const std::string BASE = "base";
+	static const std::string STYLE = "style";
+
+	if (BASE == tag) {
 		int defaultFontSize = 24;
 		switch (ZLDeviceInfo::screenSize()) {
 			case ZLDeviceInfo::SIZE_DESKTOP:
@@ -164,7 +155,7 @@ void StyleReader::startElementHandler(int tag, const char **attributes) {
 				break;
 		}
 		myCollection.myBaseStyle = new BaseTextStyle(attributeValue(attributes, "family"), defaultFontSize);
-	} else if (tag == 2) {
+	} else if (STYLE == tag) {
 		const char *idString = attributeValue(attributes, "id");
 		const char *name = attributeValue(attributes, "name");
 		if ((idString != 0) && (name != 0)) {

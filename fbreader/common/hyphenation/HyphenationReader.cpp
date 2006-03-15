@@ -22,34 +22,22 @@
 #include "HyphenationReader.h"
 #include "TeXHyphenator.h"
 
-enum TagCode {
-	_PATTERN,
-	_UNKNOWN
-};
-
-static const ZLXMLReader::Tag TAGS[] = {
-	{ "pattern", _PATTERN },
-	{ 0, _UNKNOWN }
-};
-
-const ZLXMLReader::Tag *HyphenationReader::tags() const {
-	return TAGS;
-}
-
 void HyphenationReader::characterDataHandler(const char *text, int len) {
 	if (myReadPattern) {
 		myBuffer.append(text, len);
 	}
 }
 
-void HyphenationReader::startElementHandler(int tag, const char **) {
-	if (tag == _PATTERN) {
+static const std::string PATTERN = "pattern";
+
+void HyphenationReader::startElementHandler(const char *tag, const char **) {
+	if (PATTERN == tag) {
 		myReadPattern = true;
 	}
 }
 
-void HyphenationReader::endElementHandler(int tag) {
-	if (tag == _PATTERN) {
+void HyphenationReader::endElementHandler(const char *tag) {
+	if (PATTERN == tag) {
 		myReadPattern = false;
 		if (!myBuffer.empty()) {
 			myHyphenator->myPatternTable.push_back(new TeXHyphenationPattern(myBuffer));

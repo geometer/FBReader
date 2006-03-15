@@ -32,32 +32,23 @@ static const std::string BINDINGS_NUMBER = "Number";
 static const std::string BINDED_KEY = "Key";
 static const std::string BINDED_ACTION = "Action";
 
-class KeyBindingsReader : public ZLXMLReader {
+class KeyBindingsReader : public ZLXMLReaderBase {
 
 public:
 	KeyBindingsReader(std::map<std::string,FBReader::ActionCode> &keymap) : myKeymap(keymap) {}
 
-	const Tag *tags() const;
-
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int) {}
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char*) {}
 	void characterDataHandler(const char*, int) {}
 
 private:
 	std::map<std::string,FBReader::ActionCode> &myKeymap;
 };
 
-static const ZLXMLReader::Tag TAGS[] = {
-	{ "binding", 1 },
-	{ 0, 0 }
-};
+void KeyBindingsReader::startElementHandler(const char *tag, const char **attributes) {
+	static const std::string BINDING = "binding";
 
-const ZLXMLReader::Tag *KeyBindingsReader::tags() const {
-	return TAGS;
-}
-
-void KeyBindingsReader::startElementHandler(int tag, const char **attributes) {
-	if (tag == 1) {
+	if (BINDING == tag) {
 		const char *key = attributeValue(attributes, "key");
 		const char *action = attributeValue(attributes, "action");
 		if ((key != 0) && (action != 0)) {

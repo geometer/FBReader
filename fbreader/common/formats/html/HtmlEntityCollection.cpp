@@ -28,15 +28,12 @@
 #include "HtmlEntityCollection.h"
 #include "../../Files.h"
 
-class CollectionReader : public ZLXMLReader {
-
-protected:
-	const Tag *tags() const;
+class CollectionReader : public ZLXMLReaderBase {
 
 public:
 	CollectionReader(std::map<std::string,int> &collection);
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int) {}
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char*) {}
 	void characterDataHandler(const char*, int) {}
 
 private:
@@ -55,20 +52,13 @@ int HtmlEntityCollection::symbolNumber(const std::string &name) {
 	return (it == ourCollection.end()) ? 0 : it->second;
 }
 
-static const ZLXMLReader::Tag TAGS[] = {
-	{ "entity", 1 },
-	{ 0, 0 }
-};
-
 CollectionReader::CollectionReader(std::map<std::string,int> &collection) : myCollection(collection) {
 }
 
-const ZLXMLReader::Tag *CollectionReader::tags() const {
-	return TAGS;
-}
+void CollectionReader::startElementHandler(const char *tag, const char **attributes) {
+	static const std::string ENTITY = "entity";
 
-void CollectionReader::startElementHandler(int tag, const char **attributes) {
-	if (tag == 1) {
+	if (ENTITY == tag) {
 		for (int i = 0; i < 4; i++) {
 			if (attributes[i] == 0) {
 				return;

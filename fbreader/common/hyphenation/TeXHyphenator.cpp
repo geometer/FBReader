@@ -46,24 +46,18 @@ static const std::string POSTFIX = ".pattern";
 static const std::string NONE = "none";
 static const std::string LANGUAGE = "language";
 
-static const ZLXMLReader::Tag TAGS[] = {
-	{ 0, 0 }
-};
-
-class LanguageReader : public ZLXMLReader {
+class LanguageReader : public ZLXMLReaderBase {
 
 public:
 	LanguageReader(std::string &name) : myLanguageName(name) {}
 
-	const Tag *tags() const { return TAGS; }
-
-	void startElementHandler(int tag, const char **attributes) {
+	void startElementHandler(const char*, const char **attributes) {
 		if ((attributes[0] != 0) && (LANGUAGE == attributes[0])) {
 			myLanguageName = attributes[1];
 		}
 		interrupt();
 	}
-	void endElementHandler(int) {}
+	void endElementHandler(const char*) {}
 	void characterDataHandler(const char*, int) {}
 
 private:

@@ -26,20 +26,20 @@
 #include "../ZLXMLReader.h"
 
 static void fCharacterDataHandler(void *userData, const char *text, int len) {
-	if (!((ZLXMLReader*)userData)->isInterrupted()) {
-		((ZLXMLReader*)userData)->characterDataHandler(text, len);
+	if (!((ZLXMLReaderBase*)userData)->isInterrupted()) {
+		((ZLXMLReaderBase*)userData)->characterDataHandler(text, len);
 	}
 }
 
 static void fStartElementHandler(void *userData, const char *name, const char **attributes) {
-	if (!((ZLXMLReader*)userData)->isInterrupted()) {
-		((ZLXMLReader*)userData)->startElementHandler(((ZLXMLReader*)userData)->tag(name), attributes);
+	if (!((ZLXMLReaderBase*)userData)->isInterrupted()) {
+		((ZLXMLReaderBase*)userData)->startElementHandler(name, attributes);
 	}
 }
 
 static void fEndElementHandler(void *userData, const char *name) {
-	if (!((ZLXMLReader*)userData)->isInterrupted()) {
-		((ZLXMLReader*)userData)->endElementHandler(((ZLXMLReader*)userData)->tag(name));
+	if (!((ZLXMLReaderBase*)userData)->isInterrupted()) {
+		((ZLXMLReaderBase*)userData)->endElementHandler(name);
 	}
 }
 
@@ -68,7 +68,7 @@ static void parseDTD(XML_Parser parser, const std::string &fileName) {
 	XML_ParserFree(entityParser);
 }
 
-ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding) : myReader(reader) {
+ZLXMLReaderInternal::ZLXMLReaderInternal(ZLXMLReaderBase &reader, const char *encoding) : myReader(reader) {
 	myParser = XML_ParserCreate(encoding);
 	myInitialized = false;
 }

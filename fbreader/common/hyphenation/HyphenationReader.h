@@ -28,16 +28,14 @@
 
 class TeXHyphenator;
 
-class HyphenationReader : public ZLXMLReader {
+class HyphenationReader : public ZLXMLReaderBase {
 
 public:
 	HyphenationReader(TeXHyphenator *hyphenator) HYPHENATION_SECTION;
 	~HyphenationReader() HYPHENATION_SECTION;
 
-	const Tag *tags() const HYPHENATION_SECTION;
-
-	void startElementHandler(int tag, const char **attributes) HYPHENATION_SECTION;
-	void endElementHandler(int tag) HYPHENATION_SECTION;
+	void startElementHandler(const char *tag, const char **attributes) HYPHENATION_SECTION;
+	void endElementHandler(const char *tag) HYPHENATION_SECTION;
 	void characterDataHandler(const char *text, int len) HYPHENATION_SECTION;
 
 private:
