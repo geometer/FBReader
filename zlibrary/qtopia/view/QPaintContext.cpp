@@ -95,6 +95,7 @@ void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 }
 
 const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) const {
+#ifdef USE_ZAURUS_FONTHACK
 	std::string family = ZLUnicodeUtil::toLower(fontFamily);
 	std::set<std::string> famSet = ZaurusFontHack::families();
 	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); it++) {
@@ -103,6 +104,16 @@ const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) con
 		}
 	}
 	return HELVETICA;
+#else /* USE_ZAURUS_FONTHACK */
+	QString fullName = QFontInfo(QFont(fontFamily.c_str())).family();
+	if (fullName.isNull() || fullName.isEmpty()) {
+		fullName = QFontInfo(QFont::defaultFont()).family();
+		if (fullName.isNull() || fullName.isEmpty()) {
+			return HELVETICA;
+		}
+	}
+	return fullName.left(fullName.find(" [")).ascii();
+#endif /* USE_ZAURUS_FONTHACK */
 }
 
 void QPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {

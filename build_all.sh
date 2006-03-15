@@ -23,4 +23,5 @@ do_build pdaxrom-1.1.0rc10 gtk
 do_build pdaxrom-1.1.0rc10 qt
 do_build pdaxrom-1.1.0rc11 gtk
 do_build pdaxrom-1.1.0rc11 qt
+do_build pma400 qtopia
 #do_build palm palm
