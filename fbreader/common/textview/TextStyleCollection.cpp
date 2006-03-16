@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLDeviceInfo.h>
 #include <abstract/ZLXMLReader.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
@@ -65,11 +64,9 @@ public:
 
 private:
 	static int intValue(const char **attributes, const char *name);
-	static int indentValue(const char **attributes, const char *name);
 	static double doubleValue(const char **attributes, const char *name);
 	static bool booleanValue(const char **attributes, const char *name);
 	static Boolean3 b3Value(const char **attributes, const char *name);
-	static int defaultParagraphIndent();
 
 private:
 	TextStyleCollection &myCollection;
@@ -80,20 +77,6 @@ static const std::string TRUE_STRING = "true";
 inline int StyleReader::intValue(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
 	return (stringValue == 0) ? 0 : atoi(stringValue);
-}
-
-inline int StyleReader::indentValue(const char **attributes, const char *name) {
-	const char *stringValue = attributeValue(attributes, name);
-	if (stringValue == 0) {
-		return 0;
-	}
-	if (strcmp(stringValue, "default") == 0) {
-		return defaultParagraphIndent();
-	}
-	if (strcmp(stringValue, "-default") == 0) {
-		return -defaultParagraphIndent();
-	}
-	return atoi(stringValue);
 }
 
 inline double StyleReader::doubleValue(const char **attributes, const char *name) {
@@ -111,48 +94,12 @@ inline Boolean3 StyleReader::b3Value(const char **attributes, const char *name) 
 	return (stringValue == 0) ? B3_UNDEFINED : ((TRUE_STRING == stringValue) ? B3_TRUE : B3_FALSE);
 }
 
-int StyleReader::defaultParagraphIndent() {
-	switch (ZLDeviceInfo::screenSize()) {
-		case ZLDeviceInfo::SIZE_DESKTOP:
-			return 20;
-		case ZLDeviceInfo::SIZE_160x160:
-			return 8;
-		case ZLDeviceInfo::SIZE_240x320:
-		case ZLDeviceInfo::SIZE_320x320:
-			return 15;
-		case ZLDeviceInfo::SIZE_800x480:
-			return 22;
-		case ZLDeviceInfo::SIZE_640x480:
-			return 30;
-	}
-	return 0;
-}
-
 void StyleReader::startElementHandler(const char *tag, const char **attributes) {
 	static const std::string BASE = "base";
 	static const std::string STYLE = "style";
 
 	if (BASE == tag) {
-		int defaultFontSize = 24;
-		switch (ZLDeviceInfo::screenSize()) {
-			case ZLDeviceInfo::SIZE_DESKTOP:
-				defaultFontSize = 16;
-				break;
-			case ZLDeviceInfo::SIZE_160x160:
-				defaultFontSize = 8;
-				break;
-			case ZLDeviceInfo::SIZE_240x320:
-			case ZLDeviceInfo::SIZE_320x320:
-				defaultFontSize = 12;
-				break;
-			case ZLDeviceInfo::SIZE_800x480:
-				defaultFontSize = 18;
-				break;
-			case ZLDeviceInfo::SIZE_640x480:
-				defaultFontSize = 24;
-				break;
-		}
-		myCollection.myBaseStyle = new BaseTextStyle(attributeValue(attributes, "family"), defaultFontSize);
+		myCollection.myBaseStyle = new BaseTextStyle(attributeValue(attributes, "family"), intValue(attributes, "fontSize"));
 	} else if (STYLE == tag) {
 		const char *idString = attributeValue(attributes, "id");
 		const char *name = attributeValue(attributes, "name");
@@ -172,9 +119,9 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 			} else {
 				int spaceBefore = intValue(attributes, "spaceBefore");
 				int spaceAfter = intValue(attributes, "spaceAfter");
-				int leftIndent = indentValue(attributes, "leftIndent");
+				int leftIndent = intValue(attributes, "leftIndent");
 				int rightIndent = intValue(attributes, "rightIndent");
-				int firstLineIndentDelta = indentValue(attributes, "firstLineIndentDelta");
+				int firstLineIndentDelta = intValue(attributes, "firstLineIndentDelta");
 
 				AlignmentType alignment = ALIGN_UNDEFINED;
 				const char *alignmentString = attributeValue(attributes, "alignment");
