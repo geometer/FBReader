@@ -26,7 +26,7 @@ install:
 	@install -m 0644 ../data/help/HowToStart.brownish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
 	@install -m 0644 ../data/default/keymap.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
-	@install -m 0644 ../data/default/styles.default.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/styles.xml
+	@install -m 0644 ../data/default/styles.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/styles.xml
 
 tarball:
 	@make DESTDIR=$(TMPDIR) install

@@ -40,7 +40,7 @@ endif
 	@mkdir $(BASEDIR)/share/FBReader/default
 ifeq "$(TARGET_ARCH)" "openzaurus"
 	@cp ../data/default/keymap.opie-opensimpad.xml $(BASEDIR)/share/FBReader/default/keymap.xml
-	@cp ../data/default/styles.default.xml $(BASEDIR)/share/FBReader/default/styles.xml
+	@cp ../data/default/styles.640x480.xml $(BASEDIR)/share/FBReader/default/styles.xml
 else
 endif
 
