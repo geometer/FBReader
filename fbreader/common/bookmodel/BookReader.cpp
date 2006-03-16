@@ -123,9 +123,13 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 }
 
 void BookReader::addDataToBuffer(const char *data, int len) {
-	if ((len > 0) && myTextParagraphExists) {
+	if ((len != 0) && myTextParagraphExists) {
 		myBuffer.push_back(std::string());
-		myBuffer.back().append(data, len);
+		if (len > 0) {
+			myBuffer.back().append(data, len);
+		} else {
+			myBuffer.back().append(data);
+		}
 	}
 }
 

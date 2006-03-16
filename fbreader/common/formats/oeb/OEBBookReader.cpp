@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLInputStream.h>
 
 #include "OEBBookReader.h"
@@ -27,18 +29,31 @@
 OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
 }
 
-/*
 void OEBBookReader::characterDataHandler(const char *text, int len) {
 }
 
-void OEBBookReader::startElementHandler(int tag, const char **xmlattributes) {
+static const std::string REFERENCE = "reference";
+
+void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
+  if (REFERENCE == tag) {
+    const char *text = attributeValue(xmlattributes, "title");
+    if (text != 0) {
+      myModelReader.beginContentsParagraph();
+      myModelReader.beginParagraph();
+      myModelReader.addDataToBuffer(text);
+      myModelReader.endParagraph();
+      myModelReader.endContentsParagraph();
+    }
+  } else {
+    std::cerr << tag << "\n";
+  }
 }
 
-void OEBBookReader::endElementHandler(int tag) {
+void OEBBookReader::endElementHandler(const char *tag) {
 }
-*/
 
 bool OEBBookReader::readBook(shared_ptr<ZLInputStream> stream) {
-	//return readDocument(stream);
-	return true;
+  	myModelReader.setMainTextModel();
+	myModelReader.pushKind(REGULAR);
+	return readDocument(stream);
 }

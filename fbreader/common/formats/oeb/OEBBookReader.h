@@ -22,20 +22,20 @@
 #ifndef __OEBBOOKREADER_H__
 #define __OEBBOOKREADER_H__
 
+#include <abstract/ZLXMLReader.h>
+
 #include "../../bookmodel/BookReader.h"
 
-class OEBBookReader {
+class OEBBookReader : public ZLXMLReader {
 
 public:
 	OEBBookReader(BookModel &model) FORMATS_SECTION;
 	~OEBBookReader() FORMATS_SECTION;
 	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
-	/*
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
+	void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
+	void endElementHandler(const char *tag) FORMATS_SECTION;
 	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
-	*/
 
 private:
 	BookReader myModelReader;
