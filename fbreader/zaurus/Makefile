@@ -35,7 +35,7 @@ install:
 	@cp ../data/default/keymap.qtopia.xml share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.default.xml share/FBReader/default/styles.xml
 	@mkdir -p apps/Applications
-	@cp FBReader.desktop apps/Applications
+	@cp FBReader.$(RESOLUTION).desktop apps/Applications
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
