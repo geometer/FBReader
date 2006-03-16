@@ -7,15 +7,19 @@ TDIR = __ipk
 DATADIR = $(TDIR)/data
 CTRLDIR = $(TDIR)/control
 
-FILE = $(wildcard *.control)
-PACKAGENAME = $(patsubst %.control,%,$(FILE))
+PACKAGENAME = FBReader
+CONTROLFILE = $(PACKAGENAME).$(RESOLUTION).control
 
 version = $(shell cat ../VERSION)
-depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
-files = $(shell sed -n -e "s/^Files://p" $(FILE))
-package = $(PACKAGENAME)_$(version)_$(ARCH)
+depends = $(shell sed -n -e "s/^Depends: *//p" $(CONTROLFILE))
+files = $(shell sed -n -e "s/^Files://p" $(CONTROLFILE))
+package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
 
-all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
+all:
+	@RESOLUTION=240x320 $(MAKE) ipk
+	@RESOLUTION=640x480 $(MAKE) ipk
+
+ipk: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 	@cp $(package).ipk ../..
 
 install:
@@ -30,12 +34,14 @@ install:
 	@mkdir share/FBReader/default
 	@cp ../data/default/keymap.qtopia.xml share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.default.xml share/FBReader/default/styles.xml
+	@mkdir -p apps/Applications
+	@cp FBReader.desktop apps/Applications
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
 	@rm -f bin pics pics144
-	@rm -rf share $(TDIR)
+	@rm -rf apps share $(TDIR)
 
 .copyfiles:
 	@for f in $(files); do \
@@ -63,7 +69,7 @@ $(CTRLDIR)/control:
 	@echo "Filename: ./$(package).ipk" >> $@
 	@echo "Version: $(version)" >> $@
 	@echo "Depends: $(depends)" >> $@
-	@egrep -v "^(Files|Version|Depends):" $(FILE) >> $@
+	@egrep -v "^(Files|Version|Depends):" $(CONTROLFILE) >> $@
 
 package:
 	@echo -n "Packaging..."
