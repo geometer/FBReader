@@ -24,15 +24,15 @@
 
 #include <abstract/ZLInputStream.h>
 
-#include "HtmlDetector.h"
+#include "TextFormatDetector.h"
 
-HtmlDetector::HtmlDetector() {
+TextFormatDetector::TextFormatDetector() {
 }
 
-HtmlDetector::~HtmlDetector() {
+TextFormatDetector::~TextFormatDetector() {
 }
 
-bool HtmlDetector::isHtml(ZLInputStream &stream) const {
+bool TextFormatDetector::isHtml(ZLInputStream &stream) const {
 	if (!stream.open()) {
 		return false;
 	}
@@ -64,4 +64,16 @@ bool HtmlDetector::isHtml(ZLInputStream &stream) const {
 	stream.close();
 	delete[] buffer;
 	return strcasecmp(sixBytes, "<html>") == 0;
+}
+
+bool TextFormatDetector::isPPL(ZLInputStream &stream) const {
+	if (!stream.open()) {
+		return false;
+	}
+
+	char buffer[3]; 
+	bool result =
+	  (stream.read(buffer, 3) == 3) && (strncmp(buffer, "PPL", 3) == 0);
+	stream.close();
+	return result;
 }

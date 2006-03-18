@@ -24,7 +24,7 @@
 
 #include "TcrPlugin.h"
 #include "TcrStream.h"
-#include "../pdb/HtmlDetector.h"
+#include "../util/TextFormatDetector.h"
 #include "../../description/BookDescription.h"
 #include "../txt/TxtBookReader.h"
 #include "../html/HtmlBookReader.h"
@@ -58,7 +58,7 @@ bool TcrPlugin::readModel(const BookDescription &description, BookModel &model) 
 		detector.detect(*stream, format);
 	}
 
-	if (HtmlDetector().isHtml(*stream)) {
+	if (TextFormatDetector().isHtml(*stream)) {
 		HtmlBookReader("", model, format, description.encoding()).readDocument(*stream);
 	} else {
 		TxtBookReader(model, format, description.encoding()).readDocument(*stream);
@@ -74,5 +74,5 @@ const std::string &TcrPlugin::iconName() const {
 FormatInfoPage *TcrPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
 	ZLFile file(fileName);
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
-	return new PlainTextInfoPage(dialog, fileName, "Text", !HtmlDetector().isHtml(*stream));
+	return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
 }

@@ -19,18 +19,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __HTMLDETECTOR_H__
-#define __HTMLDETECTOR_H__
+#ifndef __TEXTFORMATDETECTOR_H__
+#define __TEXTFORMATDETECTOR_H__
 
 class ZLInputStream;
 
-class HtmlDetector {
+class TextFormatDetector {
 
 public:
-	HtmlDetector();
-	~HtmlDetector();
+	TextFormatDetector();
+	~TextFormatDetector();
 
 	bool isHtml(ZLInputStream &stream) const;
+	bool isPPL(ZLInputStream &stream) const;
 };
 
-#endif /* __HTMLDETECTOR_H__ */
+#endif /* __TEXTFORMATDETECTOR_H__ */

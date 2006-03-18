@@ -68,6 +68,7 @@ void TcrStream::close() {
 	for (int i = 0; i < 256; i++) {
 		myDictionary[i].erase();
 	}
+	myBuffer.erase();
 }
 
 size_t TcrStream::read(char *buffer, size_t maxSize) {
