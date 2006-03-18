@@ -24,55 +24,16 @@
 
 #include "PdbPlugin.h"
 #include "ZTXTStream.h"
-#include "../util/TextFormatDetector.h"
-#include "../../description/BookDescription.h"
-#include "../txt/TxtBookReader.h"
-#include "../html/HtmlBookReader.h"
-#include "../txt/PlainTextFormat.h"
 
 bool ZTXTPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "zTXTGPlm";
 }
 
-bool ZTXTPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	ZLFile file(path);
-
-	shared_ptr<ZLInputStream> stream = new ZTXTStream(file);
-	detectEncoding(description, *stream);
-	if (description.encoding().empty()) {
-		return false;
-	}
-	defaultTitle(description, file.name());
-	defaultLanguage(description);
-
-	return true;
-}
-
-bool ZTXTPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	ZLFile file(description.fileName());
-	shared_ptr<ZLInputStream> stream = new ZTXTStream(file);
-
-	PlainTextFormat format(description.fileName());
-	if (!format.initialized()) {
-		PlainTextFormatDetector detector;
-		detector.detect(*stream, format);
-	}
-
-	if (TextFormatDetector().isHtml(*stream)) {
-		HtmlBookReader("", model, format, description.encoding()).readDocument(*stream);
-	} else {
-		TxtBookReader(model, format, description.encoding()).readDocument(*stream);
-	}
-	return true;
+shared_ptr<ZLInputStream> ZTXTPlugin::createStream(ZLFile &file) const {
+	return new ZTXTStream(file);
 }
 
 const std::string &ZTXTPlugin::iconName() const {
 	static const std::string ICON_NAME = "weasel";
 	return ICON_NAME;
-}
-
-FormatInfoPage *ZTXTPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	ZLFile file(fileName);
-	shared_ptr<ZLInputStream> stream = new ZTXTStream(file);
-	return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
 }

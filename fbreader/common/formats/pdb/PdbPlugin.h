@@ -22,6 +22,8 @@
 #ifndef __PDBPLUGIN_H__
 #define __PDBPLUGIN_H__
 
+#include <abstract/shared_ptr.h>
+
 #include "../FormatPlugin.h"
 
 class PdbPlugin : public FormatPlugin {
@@ -48,30 +50,42 @@ public:
 	const std::string &iconName() const FORMATS_SECTION;
 };
 
-class PalmDocPlugin : public PdbPlugin {
+class SimplePdbPlugin : public PdbPlugin {
+
+public:
+	SimplePdbPlugin() FORMATS_SECTION;
+	~SimplePdbPlugin() FORMATS_SECTION;
+	bool providesMetaInfo() const FORMATS_SECTION;
+	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
+	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
+
+protected:
+	virtual shared_ptr<ZLInputStream> createStream(ZLFile &file) const = 0;
+};
+
+class PalmDocPlugin : public SimplePdbPlugin {
 
 public:
 	PalmDocPlugin() FORMATS_SECTION;
 	~PalmDocPlugin() FORMATS_SECTION;
-	bool providesMetaInfo() const FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
-	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
-	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
+
+protected:
+	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
 };
 
-class ZTXTPlugin : public PdbPlugin {
+class ZTXTPlugin : public SimplePdbPlugin {
 
 public:
 	ZTXTPlugin() FORMATS_SECTION;
 	~ZTXTPlugin() FORMATS_SECTION;
-	bool providesMetaInfo() const FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
-	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
-	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
+
+protected:
+	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
 };
 
 inline PdbPlugin::PdbPlugin() {}
@@ -81,12 +95,14 @@ inline PluckerPlugin::PluckerPlugin() {}
 inline PluckerPlugin::~PluckerPlugin() {}
 inline bool PluckerPlugin::providesMetaInfo() const { return false; }
 
+inline SimplePdbPlugin::SimplePdbPlugin() {}
+inline SimplePdbPlugin::~SimplePdbPlugin() {}
+inline bool SimplePdbPlugin::providesMetaInfo() const { return false; }
+
 inline PalmDocPlugin::PalmDocPlugin() {}
 inline PalmDocPlugin::~PalmDocPlugin() {}
-inline bool PalmDocPlugin::providesMetaInfo() const { return false; }
 
 inline ZTXTPlugin::ZTXTPlugin() {}
 inline ZTXTPlugin::~ZTXTPlugin() {}
-inline bool ZTXTPlugin::providesMetaInfo() const { return false; }
 
 #endif /* __PDBPLUGIN_H__ */
