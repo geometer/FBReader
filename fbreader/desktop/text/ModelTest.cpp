@@ -4,14 +4,14 @@
 #include <abstract/XMLOptions.h>
 #include <unix/ZLUnixFSManager.h>
 
-#include "../common/model/Paragraph.h"
-#include "../common/bookmodel/BookModel.h"
-#include "../common/bookmodel/BookReader.h"
-
-#include "../common/Files.h"
-#include "../common/collection/BookCollection.h"
-#include "../common/fbreader/CollectionView.h"
-#include "../common/fbreader/FBFileHandler.h"
+#include "../../common/model/Paragraph.h"
+#include "../../common/bookmodel/BookModel.h"
+#include "../../common/bookmodel/BookReader.h"
+             
+#include "../../common/Files.h"
+#include "../../common/collection/BookCollection.h"
+#include "../../common/fbreader/CollectionView.h"
+#include "../../common/fbreader/FBFileHandler.h"
 
 const std::string Files::PathPrefix = std::string(INSTALLDIR) + "/share/FBReader/";
 const std::string Files::PathDelimiter = "/";
@@ -23,8 +23,7 @@ const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";
 
 void dumpParagraph(const Paragraph &paragraph) {
   std::cout << "PARAGRAPH: ";
-  Paragraph::Iterator it(paragraph);
-  do {
+  for (Paragraph::Iterator it(paragraph); !it.isEnd(); it.next()) {
     ParagraphEntry::Kind kind = it.entryKind();
     std::cout << kind << " ";
     shared_ptr<ParagraphEntry> entry = it.entry();
@@ -32,27 +31,31 @@ void dumpParagraph(const Paragraph &paragraph) {
       std::cout << "NULL";
     } else {
       switch (kind) {
-	case ParagraphEntry::TEXT_ENTRY:
-	  {
-	    TextEntry &text = (TextEntry&)*entry;
-	    std::string s;
-	    s.append(text.data(), text.dataLength());
-	    std::cerr << s;
-	  }
-	  break;
-	case ParagraphEntry::IMAGE_ENTRY:
-	  break;
-	case ParagraphEntry::CONTROL_ENTRY:
-	  break;
-	case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
-	  break;
-	case ParagraphEntry::FORCED_CONTROL_ENTRY:
-	  break;
+        case ParagraphEntry::TEXT_ENTRY:
+          {
+            TextEntry &text = (TextEntry&)*entry;
+            std::string s;
+            s.append(text.data(), text.dataLength());
+            std::cout << s;
+          }
+          break;
+        case ParagraphEntry::IMAGE_ENTRY:
+          break;
+        case ParagraphEntry::CONTROL_ENTRY:
+        case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
+					{
+            ControlEntry &control = (ControlEntry&)*entry;
+						std::cout << "CTRL" << control.kind();
+						std::cout << (control.isStart() ? "+" : "-");
+						std::cout << (control.isHyperlink() ? "+" : "-");
+					}
+          break;
+        case ParagraphEntry::FORCED_CONTROL_ENTRY:
+          break;
       }
     }
-    it.next();
     std::cout << ";";
-  } while (!it.isEnd());
+  }
   std::cout << "\n";
 }
 
