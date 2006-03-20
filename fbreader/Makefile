@@ -44,7 +44,7 @@ all:
 		fi; \
 	done;
 	@echo -n "Linking $(TARGET) ..."
-	@$(LD) $(LDFLAGS) -o $(TARGET) `find . -name *.o` $(LIBS)
+	@$(LD) $(LDFLAGS) -o $(TARGET) `find common -name *.o` $(TARGET_ARCH)/$(UI_TYPE)/*.o $(LIBS)
 	@echo " OK"
 
 install: all .really-install
