@@ -41,7 +41,7 @@ void FB2BookReader::characterDataHandler(const char *text, int len) {
 	if (myProcessingImage) {
 		myImageBuffer.push_back(str);
 	} else {
-		myModelReader.addDataToBuffer(str);
+		myModelReader.addData(str);
 	}
 }
 

@@ -94,7 +94,7 @@ void PluckerBookReader::safeEndParagraph() {
 	if (myParagraphStarted) {
 		if (myBufferIsEmpty) {
 			static const std::string SPACE = " ";
-			addDataToBuffer(SPACE);
+			addData(SPACE);
 		}
 		endParagraph();
 		myParagraphStarted = false;
@@ -246,7 +246,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			char utf8[4];
 			int len = ZLUnicodeUtil::ucs2ToUtf8(utf8, twoBytes(ptr + 2));
 			safeBeginParagraph();
-			addDataToBuffer(std::string(utf8, len));
+			addData(std::string(utf8, len));
 			myBufferIsEmpty = false;
 			myBytesToSkip = (unsigned char)*(ptr + 1);
 			break;
@@ -284,7 +284,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 				safeBeginParagraph();
 				txtBuffer.erase();
 				myConverter->convert(txtBuffer, textStart, ptr);
-				addDataToBuffer(txtBuffer);
+				addData(txtBuffer);
 				myBufferIsEmpty = false;
 			}
 		} else if (functionFlag) {
@@ -311,7 +311,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 		safeBeginParagraph();
 		txtBuffer.erase();
 		myConverter->convert(txtBuffer, textStart, end);
-		addDataToBuffer(txtBuffer);
+		addData(txtBuffer);
 		myBufferIsEmpty = false;
 	}
 	safeEndParagraph();

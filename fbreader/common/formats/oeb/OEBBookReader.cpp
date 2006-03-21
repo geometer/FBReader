@@ -40,7 +40,7 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
     if (text != 0) {
       myModelReader.beginContentsParagraph();
       myModelReader.beginParagraph();
-      myModelReader.addDataToBuffer(text);
+      myModelReader.addData(text);
       myModelReader.endParagraph();
       myModelReader.endContentsParagraph();
     }

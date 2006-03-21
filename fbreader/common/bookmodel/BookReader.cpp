@@ -120,20 +120,24 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 	myModel.myInternalHyperlinks.insert(std::pair<std::string,int>(label, paragraphNumber));
 }
 
-void BookReader::addDataToBuffer(const std::string &data) {
+void BookReader::addData(const std::string &data) {
 	if (!data.empty() && myTextParagraphExists) {
 		myBuffer.push_back(data);
 		if (!myInsideTitle) {
 			mySectionContainsRegularContents = true;
 		}
 		if (myInsideTitle && (myReference != -1)) {
-			if (myAddSpace) {
-				myContentsBuffer.push_back(" ");
-				myAddSpace = false;
-			}
-			myContentsBuffer.push_back(data);
+			addContentsData(data);
 		}
 	}
+}
+
+void BookReader::addContentsData(const std::string &data) {
+	if (myAddSpace) {
+		myContentsBuffer.push_back(" ");
+		myAddSpace = false;
+	}
+	myContentsBuffer.push_back(data);
 }
 
 void BookReader::flushTextBufferToParagraph() {
@@ -184,14 +188,14 @@ void BookReader::addImageReference(const std::string &id) {
 void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
 		myReference = myCurrentTextModel->paragraphsNumber();
+		myModel.myContentsModel.createParagraphWithReference(myReference);
+		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 		myAddSpace = false;
 	}
 }
 
 void BookReader::endContentsParagraph() {
 	if (myReference != -1) {
-		myModel.myContentsModel.createParagraphWithReference(myReference);
-		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 		if (!myContentsBuffer.empty()) {
 			myModel.myContentsModel.addText(myContentsBuffer);
 			myContentsBuffer.clear();

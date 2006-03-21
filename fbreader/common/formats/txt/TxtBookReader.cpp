@@ -52,7 +52,7 @@ bool TxtBookReader::characterDataHandler(std::string &str) {
 			internalEndParagraph();
 			beginParagraph();
 		}
-		addDataToBuffer(str);
+		addData(str);
 		myNewLine = false;
 	}
 	return true;

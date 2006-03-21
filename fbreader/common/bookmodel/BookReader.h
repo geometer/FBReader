@@ -60,7 +60,8 @@ public:
 	void beginContentsParagraph() MODEL_SECTION;
 	void endContentsParagraph() MODEL_SECTION;
 
-	void addDataToBuffer(const std::string &data) MODEL_SECTION;
+	void addData(const std::string &data) MODEL_SECTION;
+	void addContentsData(const std::string &data) MODEL_SECTION;
 
 	void enterTitle() { myInsideTitle = true; }
 	void exitTitle() { myInsideTitle = false; }
