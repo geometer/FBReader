@@ -79,11 +79,7 @@ private:
 	std::vector<TextKind> myKindStack;
 
 	bool myTextParagraphExists;
-	enum {
-		DONT_ADD,
-		TO_ADD,
-		ADDED
-	} myContentsParagraphStatus;
+	bool myCreateContentsParagraph;
 
 	bool mySectionContainsRegularContents;
 	bool myInsideTitle;

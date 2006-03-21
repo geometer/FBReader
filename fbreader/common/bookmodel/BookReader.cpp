@@ -27,7 +27,7 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
 
 	myTextParagraphExists = false;
-	myContentsParagraphStatus = DONT_ADD;
+	myCreateContentsParagraph = false;
 	myAddSpace = false;
 	myReference = -1;
 
@@ -129,27 +129,23 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 	if ((len != 0) && myTextParagraphExists) {
 		myBuffer.push_back(std::string());
 		myBuffer.back().append(data, len);
-	}
-	if (myContentsParagraphStatus == TO_ADD) {
-		myContentsParagraphStatus = ADDED;
-	}
-	if ((len != 0) && myTextParagraphExists && myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
-		if (myAddSpace) {
-			myContentsBuffer.push_back(" ");
-			myAddSpace = false;
+		myCreateContentsParagraph = true;
+		if (myInsideTitle && (myReference != -1)) {
+			if (myAddSpace) {
+				myContentsBuffer.push_back(" ");
+				myAddSpace = false;
+			}
+			myContentsBuffer.push_back(std::string());
+			myContentsBuffer.back().append(data, len);
 		}
-		myContentsBuffer.push_back(std::string());
-		myContentsBuffer.back().append(data, len);
 	}
 }
 
 void BookReader::addDataToBuffer(const std::string &data) {
 	if (!data.empty() && myTextParagraphExists) {
 		myBuffer.push_back(data);
-		if (myContentsParagraphStatus == TO_ADD) {
-			myContentsParagraphStatus = ADDED;
-		}
-		if (myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
+		myCreateContentsParagraph = true;
+		if (myInsideTitle && (myReference != -1)) {
 			if (myAddSpace) {
 				myContentsBuffer.push_back(" ");
 				myAddSpace = false;
@@ -210,14 +206,14 @@ void BookReader::addImageReference(const std::string &id) {
 
 void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
-		myContentsParagraphStatus = TO_ADD;
+		myCreateContentsParagraph = false;
 		myReference = myCurrentTextModel->paragraphsNumber();
 		myAddSpace = false;
 	}
 }
 
 void BookReader::endContentsParagraph() {
-	if (myContentsParagraphStatus == ADDED) {
+	if (myCreateContentsParagraph && (myReference != -1)) {
 		myModel.myContentsModel.createParagraphWithReference(myReference);
 		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 		if (!myContentsBuffer.empty()) {
@@ -228,6 +224,5 @@ void BookReader::endContentsParagraph() {
 		}
 		myAddSpace = false;
 	}
-	myContentsParagraphStatus = DONT_ADD;
 	myReference = -1;
 }
