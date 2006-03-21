@@ -133,10 +133,9 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 	}
 }
 
-void BookReader::addDataToBuffer(std::string &data) {
+void BookReader::addDataToBuffer(const std::string &data) {
 	if (myTextParagraphExists) {
-		myBuffer.push_back(std::string());
-		myBuffer.back().swap(data);
+		myBuffer.push_back(data);
 	}
 }
 
