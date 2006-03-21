@@ -89,10 +89,12 @@ void PluckerBookReader::safeBeginParagraph() {
 	}
 }
 
+
 void PluckerBookReader::safeEndParagraph() {
 	if (myParagraphStarted) {
 		if (myBufferIsEmpty) {
-			addDataToBuffer(" ", 1);
+			static const std::string SPACE = " ";
+			addDataToBuffer(SPACE);
 		}
 		endParagraph();
 		myParagraphStarted = false;
@@ -244,7 +246,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			char utf8[4];
 			int len = ZLUnicodeUtil::ucs2ToUtf8(utf8, twoBytes(ptr + 2));
 			safeBeginParagraph();
-			addDataToBuffer(utf8, len);
+			addDataToBuffer(std::string(utf8, len));
 			myBufferIsEmpty = false;
 			myBytesToSkip = (unsigned char)*(ptr + 1);
 			break;

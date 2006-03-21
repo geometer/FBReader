@@ -60,7 +60,6 @@ public:
 	void beginContentsParagraph() MODEL_SECTION;
 	void endContentsParagraph() MODEL_SECTION;
 
-	void addDataToBuffer(const char *data, int len = -1) MODEL_SECTION;
 	void addDataToBuffer(const std::string &data) MODEL_SECTION;
 
 	void enterTitle() { myInsideTitle = true; }

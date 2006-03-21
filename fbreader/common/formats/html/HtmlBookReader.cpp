@@ -37,7 +37,7 @@ void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool co
 			addDataToBuffer(myConverterBuffer);
 			myConverterBuffer.erase();
 		} else {
-			addDataToBuffer(text, len);
+			addDataToBuffer(std::string(text, len));
 		}
 	}
 }
@@ -243,7 +243,8 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 						if (start < ptr) {
 							addConvertedDataToBuffer(start, ptr - start, convert);
 						} else {
-							addDataToBuffer(" ", 1);
+							static const std::string SPACE = " ";
+							addDataToBuffer(SPACE);
 						}
 						endParagraph();
 						beginParagraph();

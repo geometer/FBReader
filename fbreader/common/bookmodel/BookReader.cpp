@@ -121,13 +121,6 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 	myModel.myInternalHyperlinks.insert(std::pair<std::string,int>(label, paragraphNumber));
 }
 
-void BookReader::addDataToBuffer(const char *data, int len) {
-	if ((len != 0) && myTextParagraphExists) {
-		std::string strData(data, len);
-		addDataToBuffer(strData);
-	}
-}
-
 void BookReader::addDataToBuffer(const std::string &data) {
 	if (!data.empty() && myTextParagraphExists) {
 		myBuffer.push_back(data);
