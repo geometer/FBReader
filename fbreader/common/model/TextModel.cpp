@@ -175,6 +175,9 @@ void TextModel::addText(const std::string &text) {
 }
 
 void TextModel::addText(const std::vector<std::string> &text) {
+	if (text.size() == 0) {
+		return;
+	}
 	size_t len = 0;
 	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); ++it) {
 		len += it->length();

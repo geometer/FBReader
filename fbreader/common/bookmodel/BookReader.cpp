@@ -127,7 +127,7 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 		myBuffer.push_back(std::string());
 		myBuffer.back().append(data, len);
 	}
-	if ((len != 0) && myTextParagraphExists && (myContentsParagraphStatus != DONT_ADD)) {
+	if ((len != 0) && myTextParagraphExists && myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
 		myContentsBuffer.push_back(std::string());
 		myContentsBuffer.back().append(data, len);
 	}
@@ -136,7 +136,7 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 void BookReader::addDataToBuffer(const std::string &data) {
 	if (myTextParagraphExists) {
 		myBuffer.push_back(data);
-		if (myContentsParagraphStatus != DONT_ADD) {
+		if (myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
 			myContentsBuffer.push_back(data);
 		}
 	}
@@ -158,11 +158,9 @@ void BookReader::flushTextBufferToParagraph() {
 			myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 			myContentsParagraphStatus = ADDED;
 		} else if (myInsideTitle) {
-			myModel.myContentsModel.addText(" ");
+			myContentsBuffer.insert(myContentsBuffer.begin(), " ");
 		}
-		if (myInsideTitle) {
-			myModel.myContentsModel.addText(myContentsBuffer);
-		}
+		myModel.myContentsModel.addText(myContentsBuffer);
 	}
 	myContentsBuffer.clear();
 	myBuffer.clear();
@@ -216,6 +214,14 @@ void BookReader::endContentsParagraph() {
 	if (myContentsParagraphStatus == ADDED) {
 		if (myModel.myContentsModel[(size_t)-1]->entryNumber() == 1) {
 			myModel.myContentsModel.addText("...");
+			/*
+			if (!myContentsBuffer.empty()) {
+				myModel.myContentsModel.addText(myContentsBuffer);
+				myContentsBuffer.clear();
+			} else {
+				myModel.myContentsModel.addText("...");
+			}
+			*/
 		}
 	}
 	myContentsParagraphStatus = DONT_ADD;
