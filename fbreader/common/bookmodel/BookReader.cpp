@@ -27,7 +27,6 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
 
 	myTextParagraphExists = false;
-	myCreateContentsParagraph = false;
 	myAddSpace = false;
 	myReference = -1;
 
@@ -124,7 +123,6 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 void BookReader::addDataToBuffer(const std::string &data) {
 	if (!data.empty() && myTextParagraphExists) {
 		myBuffer.push_back(data);
-		myCreateContentsParagraph = true;
 		if (!myInsideTitle) {
 			mySectionContainsRegularContents = true;
 		}
@@ -185,14 +183,13 @@ void BookReader::addImageReference(const std::string &id) {
 
 void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
-		myCreateContentsParagraph = false;
 		myReference = myCurrentTextModel->paragraphsNumber();
 		myAddSpace = false;
 	}
 }
 
 void BookReader::endContentsParagraph() {
-	if (myCreateContentsParagraph && (myReference != -1)) {
+	if (myReference != -1) {
 		myModel.myContentsModel.createParagraphWithReference(myReference);
 		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 		if (!myContentsBuffer.empty()) {

@@ -48,6 +48,9 @@ private:
 	Base64EncodedImage *myCurrentImage;
 	bool myProcessingImage;
 	std::vector<std::string> myImageBuffer;
+
+	bool mySectionStarted;
+	bool myInsideTitle1;
 };
 
 inline FB2BookReader::~FB2BookReader() {}

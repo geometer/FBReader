@@ -32,6 +32,8 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myBodyCounter = 0;
 	myCurrentImage = 0;
 	myProcessingImage = false;
+	mySectionStarted = false;
+	myInsideTitle1 = false;
 }
 
 void FB2BookReader::characterDataHandler(const char *text, int len) {
@@ -73,6 +75,13 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	switch (tag) {
 		case _P:
 			myModelReader.beginParagraph();
+			if (mySectionStarted) {
+				myModelReader.beginContentsParagraph();
+				if (!myInsideTitle1) {
+					myModelReader.endContentsParagraph();
+				}
+				mySectionStarted = false;
+			}
 			break;
 		case _V:
 			myModelReader.pushKind(VERSE);
@@ -95,9 +104,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _SECTION:
 			myModelReader.insertEndOfSectionParagraph();
-			myModelReader.endContentsParagraph();
 			mySectionDepth++;
-			myModelReader.beginContentsParagraph();
+			mySectionStarted = true;
 			break;
 		case _TITLE:
 			myModelReader.enterTitle();
@@ -108,6 +116,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 				myModelReader.pushKind(TITLE);
 			} else {
 				myModelReader.pushKind(SECTION_TITLE);
+				myInsideTitle1 = true;
 			}
 			break;
 		case _POEM:
@@ -210,11 +219,13 @@ void FB2BookReader::endElementHandler(int tag) {
 				myModelReader.unsetTextModel();
 			}
 			mySectionDepth--;
-			myModelReader.endContentsParagraph();
+			mySectionStarted = false;
 			break;
 		case _TITLE:
 			myModelReader.exitTitle();
 			myModelReader.popKind();
+			myModelReader.endContentsParagraph();
+			myInsideTitle1 = false;
 			break;
 		case _POEM:
 			myInsidePoem = false;

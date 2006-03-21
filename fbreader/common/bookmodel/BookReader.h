@@ -77,7 +77,6 @@ private:
 	std::vector<TextKind> myKindStack;
 
 	bool myTextParagraphExists;
-	bool myCreateContentsParagraph;
 
 	bool mySectionContainsRegularContents;
 	bool myInsideTitle;
