@@ -89,6 +89,7 @@ private:
 	bool myInsideTitle;
 
 	std::vector<std::string> myBuffer;
+	std::vector<std::string> myContentsBuffer;
 };
 
 #endif /* __BOOKREADER_H__ */

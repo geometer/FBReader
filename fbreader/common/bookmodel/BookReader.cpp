@@ -125,17 +125,20 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 void BookReader::addDataToBuffer(const char *data, int len) {
 	if ((len != 0) && myTextParagraphExists) {
 		myBuffer.push_back(std::string());
-		if (len > 0) {
-			myBuffer.back().append(data, len);
-		} else {
-			myBuffer.back().append(data);
-		}
+		myBuffer.back().append(data, len);
+	}
+	if ((len != 0) && myTextParagraphExists && (myContentsParagraphStatus != DONT_ADD)) {
+		myContentsBuffer.push_back(std::string());
+		myContentsBuffer.back().append(data, len);
 	}
 }
 
 void BookReader::addDataToBuffer(const std::string &data) {
 	if (myTextParagraphExists) {
 		myBuffer.push_back(data);
+		if (myContentsParagraphStatus != DONT_ADD) {
+			myContentsBuffer.push_back(data);
+		}
 	}
 }
 
@@ -158,9 +161,10 @@ void BookReader::flushTextBufferToParagraph() {
 			myModel.myContentsModel.addText(" ");
 		}
 		if (myInsideTitle) {
-			myModel.myContentsModel.addText(myBuffer);
+			myModel.myContentsModel.addText(myContentsBuffer);
 		}
 	}
+	myContentsBuffer.clear();
 	myBuffer.clear();
 }
 
