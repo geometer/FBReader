@@ -90,6 +90,7 @@ private:
 
 	std::vector<std::string> myBuffer;
 	std::vector<std::string> myContentsBuffer;
+	bool myAddSpace;
 };
 
 #endif /* __BOOKREADER_H__ */

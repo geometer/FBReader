@@ -28,6 +28,8 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 
 	myTextParagraphExists = false;
 	myContentsParagraphStatus = DONT_ADD;
+	myAddSpace = false;
+
 
 	myInsideTitle = false;
 	mySectionContainsRegularContents = false;
@@ -128,6 +130,10 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 		myBuffer.back().append(data, len);
 	}
 	if ((len != 0) && myTextParagraphExists && myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
+		if (myAddSpace) {
+			myContentsBuffer.push_back(" ");
+			myAddSpace = false;
+		}
 		myContentsBuffer.push_back(std::string());
 		myContentsBuffer.back().append(data, len);
 	}
@@ -137,6 +143,10 @@ void BookReader::addDataToBuffer(const std::string &data) {
 	if (myTextParagraphExists) {
 		myBuffer.push_back(data);
 		if (myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
+			if (myAddSpace) {
+				myContentsBuffer.push_back(" ");
+				myAddSpace = false;
+			}
 			myContentsBuffer.push_back(data);
 		}
 	}
@@ -157,12 +167,9 @@ void BookReader::flushTextBufferToParagraph() {
 			myModel.myContentsModel.createParagraphWithReference(myModel.bookTextModel().paragraphsNumber() - 1);
 			myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 			myContentsParagraphStatus = ADDED;
-		} else if (myInsideTitle) {
-			myContentsBuffer.insert(myContentsBuffer.begin(), " ");
 		}
-		myModel.myContentsModel.addText(myContentsBuffer);
+		myAddSpace = true;
 	}
-	myContentsBuffer.clear();
 	myBuffer.clear();
 }
 
@@ -212,17 +219,13 @@ void BookReader::beginContentsParagraph() {
 
 void BookReader::endContentsParagraph() {
 	if (myContentsParagraphStatus == ADDED) {
-		if (myModel.myContentsModel[(size_t)-1]->entryNumber() == 1) {
+		if (!myContentsBuffer.empty()) {
+			myModel.myContentsModel.addText(myContentsBuffer);
+			myContentsBuffer.clear();
+		} else {
 			myModel.myContentsModel.addText("...");
-			/*
-			if (!myContentsBuffer.empty()) {
-				myModel.myContentsModel.addText(myContentsBuffer);
-				myContentsBuffer.clear();
-			} else {
-				myModel.myContentsModel.addText("...");
-			}
-			*/
 		}
+		myAddSpace = false;
 	}
 	myContentsParagraphStatus = DONT_ADD;
 }
