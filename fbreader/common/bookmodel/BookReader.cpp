@@ -130,6 +130,9 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 		myBuffer.push_back(std::string());
 		myBuffer.back().append(data, len);
 		myCreateContentsParagraph = true;
+		if (!myInsideTitle) {
+			mySectionContainsRegularContents = true;
+		}
 		if (myInsideTitle && (myReference != -1)) {
 			if (myAddSpace) {
 				myContentsBuffer.push_back(" ");
@@ -145,6 +148,9 @@ void BookReader::addDataToBuffer(const std::string &data) {
 	if (!data.empty() && myTextParagraphExists) {
 		myBuffer.push_back(data);
 		myCreateContentsParagraph = true;
+		if (!myInsideTitle) {
+			mySectionContainsRegularContents = true;
+		}
 		if (myInsideTitle && (myReference != -1)) {
 			if (myAddSpace) {
 				myContentsBuffer.push_back(" ");
@@ -156,14 +162,8 @@ void BookReader::addDataToBuffer(const std::string &data) {
 }
 
 void BookReader::flushTextBufferToParagraph() {
-	if (!myBuffer.empty()) {
-		if (!myInsideTitle) {
-			mySectionContainsRegularContents = true;
-		}
-
-		myCurrentTextModel->addText(myBuffer);
-		myBuffer.clear();
-	}
+	myCurrentTextModel->addText(myBuffer);
+	myBuffer.clear();
 }
 
 void BookReader::addImage(const std::string &id, ZLImage *image) {
