@@ -124,9 +124,7 @@ void BookReader::addData(const std::string &data) {
 		if (!myInsideTitle) {
 			mySectionContainsRegularContents = true;
 		}
-		if (myInsideTitle) {
-			addContentsData(data);
-		}
+		addContentsData(data);
 	}
 }
 
