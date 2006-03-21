@@ -78,14 +78,13 @@ private:
 	std::vector<TextKind> myKindStack;
 
 	bool myTextParagraphExists;
+	bool myContentsParagraphExists;
 
 	bool mySectionContainsRegularContents;
 	bool myInsideTitle;
 
 	std::vector<std::string> myBuffer;
 	std::vector<std::string> myContentsBuffer;
-	bool myAddSpace;
-	int myReference;
 };
 
 #endif /* __BOOKREADER_H__ */

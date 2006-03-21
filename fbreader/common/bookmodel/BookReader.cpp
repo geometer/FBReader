@@ -27,8 +27,7 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
 
 	myTextParagraphExists = false;
-	myAddSpace = false;
-	myReference = -1;
+	myContentsParagraphExists = false;
 
 	myInsideTitle = false;
 	mySectionContainsRegularContents = false;
@@ -80,7 +79,6 @@ void BookReader::beginParagraph(Paragraph::Kind kind) {
 void BookReader::endParagraph() {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myAddSpace = true;
 		myTextParagraphExists = false;
 	}
 }
@@ -126,18 +124,16 @@ void BookReader::addData(const std::string &data) {
 		if (!myInsideTitle) {
 			mySectionContainsRegularContents = true;
 		}
-		if (myInsideTitle && (myReference != -1)) {
+		if (myInsideTitle) {
 			addContentsData(data);
 		}
 	}
 }
 
 void BookReader::addContentsData(const std::string &data) {
-	if (myAddSpace) {
-		myContentsBuffer.push_back(" ");
-		myAddSpace = false;
+	if (!data.empty() && myContentsParagraphExists) {
+		myContentsBuffer.push_back(data);
 	}
-	myContentsBuffer.push_back(data);
 }
 
 void BookReader::flushTextBufferToParagraph() {
@@ -187,22 +183,20 @@ void BookReader::addImageReference(const std::string &id) {
 
 void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
-		myReference = myCurrentTextModel->paragraphsNumber();
-		myModel.myContentsModel.createParagraphWithReference(myReference);
+		myModel.myContentsModel.createParagraphWithReference(myCurrentTextModel->paragraphsNumber());
 		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
-		myAddSpace = false;
+		myContentsParagraphExists = true;
 	}
 }
 
 void BookReader::endContentsParagraph() {
-	if (myReference != -1) {
+	if (myContentsParagraphExists) {
 		if (!myContentsBuffer.empty()) {
 			myModel.myContentsModel.addText(myContentsBuffer);
 			myContentsBuffer.clear();
 		} else {
 			myModel.myContentsModel.addText("...");
 		}
-		myAddSpace = false;
+		myContentsParagraphExists = false;
 	}
-	myReference = -1;
 }

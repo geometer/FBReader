@@ -81,6 +81,9 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 					myModelReader.endContentsParagraph();
 				}
 				mySectionStarted = false;
+			} else if (myInsideTitle1) {
+				static const std::string SPACE = " ";
+				myModelReader.addContentsData(SPACE);
 			}
 			break;
 		case _V:
