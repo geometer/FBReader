@@ -56,10 +56,6 @@ void BookReader::unsetTextModel() {
 	myCurrentTextModel = 0;
 }
 
-bool BookReader::currentTextModelIsNull() const {
-	return myCurrentTextModel == 0;
-}
-
 void BookReader::pushKind(TextKind kind) {
 	myKindStack.push_back(kind);
 }
@@ -73,7 +69,7 @@ bool BookReader::popKind() {
 }
 
 void BookReader::beginParagraph(Paragraph::Kind kind) {
-	if (!currentTextModelIsNull()) {
+	if (myCurrentTextModel != 0) {
 		myCurrentTextModel->createParagraph(kind);
 		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); it++) {
 			myCurrentTextModel->addControl(*it, true);
@@ -171,7 +167,7 @@ void BookReader::addImage(const std::string &id, ZLImage *image) {
 }
 
 void BookReader::insertEndOfSectionParagraph() {
-	if (!currentTextModelIsNull() && mySectionContainsRegularContents) {
+	if ((myCurrentTextModel != 0) && mySectionContainsRegularContents) {
 		size_t size = myCurrentTextModel->paragraphsNumber();
 		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
 			myCurrentTextModel->createParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
@@ -181,7 +177,7 @@ void BookReader::insertEndOfSectionParagraph() {
 }
 
 void BookReader::insertEndOfTextParagraph() {
-	if (!currentTextModelIsNull() && mySectionContainsRegularContents) {
+	if ((myCurrentTextModel != 0) && mySectionContainsRegularContents) {
 		size_t size = myCurrentTextModel->paragraphsNumber();
 		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
 			myCurrentTextModel->createParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
@@ -191,16 +187,18 @@ void BookReader::insertEndOfTextParagraph() {
 }
 
 void BookReader::addImageReference(const std::string &id) {
-	mySectionContainsRegularContents = true;
-	if (myTextParagraphExists) {
-		flushTextBufferToParagraph();
-		myCurrentTextModel->addImage(id, myModel.imageMap());
-	} else {
-		beginParagraph();
-		myCurrentTextModel->addControl(IMAGE, true);
-		myCurrentTextModel->addImage(id, myModel.imageMap());
-		myCurrentTextModel->addControl(IMAGE, false);
-		endParagraph();
+	if (myCurrentTextModel != 0) {
+		mySectionContainsRegularContents = true;
+		if (myTextParagraphExists) {
+			flushTextBufferToParagraph();
+			myCurrentTextModel->addImage(id, myModel.imageMap());
+		} else {
+			beginParagraph();
+			myCurrentTextModel->addControl(IMAGE, true);
+			myCurrentTextModel->addImage(id, myModel.imageMap());
+			myCurrentTextModel->addControl(IMAGE, false);
+			endParagraph();
+		}
 	}
 }
 

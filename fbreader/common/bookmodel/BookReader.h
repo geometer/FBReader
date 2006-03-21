@@ -41,7 +41,6 @@ public:
 	void setMainTextModel() MODEL_SECTION;
 	void setFootnoteTextModel(const std::string &id) MODEL_SECTION;
 	void unsetTextModel() MODEL_SECTION;
-	bool currentTextModelIsNull() const MODEL_SECTION;
 
 	void insertEndOfSectionParagraph() MODEL_SECTION;
 	void insertEndOfTextParagraph() MODEL_SECTION;

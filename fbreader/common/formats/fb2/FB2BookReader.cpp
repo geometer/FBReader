@@ -156,13 +156,13 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		}
 		case _IMAGE:
-			if (!myModelReader.currentTextModelIsNull()) {
-				const char *ref = reference(xmlattributes);
-				if (ref != 0) {
-					myModelReader.addImageReference(ref);
-				}
+		{
+			const char *ref = reference(xmlattributes);
+			if (ref != 0) {
+				myModelReader.addImageReference(ref);
 			}
 			break;
+		}
 		case _BINARY:
 		{
 			const char *contentType = attributeValue(xmlattributes, "content-type");
