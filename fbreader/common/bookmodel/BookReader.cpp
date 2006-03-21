@@ -29,7 +29,7 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	myTextParagraphExists = false;
 	myContentsParagraphStatus = DONT_ADD;
 	myAddSpace = false;
-
+	myReference = -1;
 
 	myInsideTitle = false;
 	mySectionContainsRegularContents = false;
@@ -164,8 +164,6 @@ void BookReader::flushTextBufferToParagraph() {
 	myCurrentTextModel->addText(myBuffer);
 	if (myContentsParagraphStatus != DONT_ADD) {
 		if (myContentsParagraphStatus == TO_ADD) {
-			myModel.myContentsModel.createParagraphWithReference(myModel.bookTextModel().paragraphsNumber() - 1);
-			myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 			myContentsParagraphStatus = ADDED;
 		}
 		myAddSpace = true;
@@ -214,11 +212,14 @@ void BookReader::addImageReference(const std::string &id) {
 void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
 		myContentsParagraphStatus = TO_ADD;
+		myReference = myCurrentTextModel->paragraphsNumber();
 	}
 }
 
 void BookReader::endContentsParagraph() {
 	if (myContentsParagraphStatus == ADDED) {
+		myModel.myContentsModel.createParagraphWithReference(myReference);
+		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 		if (!myContentsBuffer.empty()) {
 			myModel.myContentsModel.addText(myContentsBuffer);
 			myContentsBuffer.clear();
@@ -228,4 +229,5 @@ void BookReader::endContentsParagraph() {
 		myAddSpace = false;
 	}
 	myContentsParagraphStatus = DONT_ADD;
+	myReference = -1;
 }
