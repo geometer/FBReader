@@ -85,6 +85,7 @@ void BookReader::beginParagraph(Paragraph::Kind kind) {
 void BookReader::endParagraph() {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
+		myAddSpace = true;
 		myTextParagraphExists = false;
 	}
 }
@@ -129,6 +130,9 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 		myBuffer.push_back(std::string());
 		myBuffer.back().append(data, len);
 	}
+	if (myContentsParagraphStatus == TO_ADD) {
+		myContentsParagraphStatus = ADDED;
+	}
 	if ((len != 0) && myTextParagraphExists && myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
 		if (myAddSpace) {
 			myContentsBuffer.push_back(" ");
@@ -140,8 +144,11 @@ void BookReader::addDataToBuffer(const char *data, int len) {
 }
 
 void BookReader::addDataToBuffer(const std::string &data) {
-	if (myTextParagraphExists) {
+	if (!data.empty() && myTextParagraphExists) {
 		myBuffer.push_back(data);
+		if (myContentsParagraphStatus == TO_ADD) {
+			myContentsParagraphStatus = ADDED;
+		}
 		if (myInsideTitle && (myContentsParagraphStatus != DONT_ADD)) {
 			if (myAddSpace) {
 				myContentsBuffer.push_back(" ");
@@ -153,22 +160,14 @@ void BookReader::addDataToBuffer(const std::string &data) {
 }
 
 void BookReader::flushTextBufferToParagraph() {
-	if (myBuffer.empty() || !myTextParagraphExists) {
-		return;
-	}
-
-	if (!myInsideTitle) {
-		mySectionContainsRegularContents = true;
-	}
-
-	myCurrentTextModel->addText(myBuffer);
-	if (myContentsParagraphStatus != DONT_ADD) {
-		if (myContentsParagraphStatus == TO_ADD) {
-			myContentsParagraphStatus = ADDED;
+	if (!myBuffer.empty()) {
+		if (!myInsideTitle) {
+			mySectionContainsRegularContents = true;
 		}
-		myAddSpace = true;
+
+		myCurrentTextModel->addText(myBuffer);
+		myBuffer.clear();
 	}
-	myBuffer.clear();
 }
 
 void BookReader::addImage(const std::string &id, ZLImage *image) {
@@ -213,6 +212,7 @@ void BookReader::beginContentsParagraph() {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
 		myContentsParagraphStatus = TO_ADD;
 		myReference = myCurrentTextModel->paragraphsNumber();
+		myAddSpace = false;
 	}
 }
 
