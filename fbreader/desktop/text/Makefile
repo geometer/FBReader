@@ -5,7 +5,10 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 include $(MAKEFILESDIR)/subdir.mk
 
-all: run
+all: rmold run
+
+rmold:
+	@rm ModelTest
 
 run: ModelTest
 	@./ModelTest test1.fb2 > test1.tmp

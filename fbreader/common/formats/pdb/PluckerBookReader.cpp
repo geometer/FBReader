@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-//#include <iostream>
-
 #include <algorithm>
 #include <vector>
 #include <cctype>
