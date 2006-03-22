@@ -8,7 +8,7 @@ include $(MAKEFILESDIR)/subdir.mk
 all: rmold run
 
 rmold:
-	@rm ModelTest
+	@rm -f ModelTest
 
 run: ModelTest
 	@./ModelTest test1.fb2 > test1.tmp

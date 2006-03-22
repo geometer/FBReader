@@ -35,9 +35,12 @@ void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool co
 		if (convert) {
 			myConverter->convert(myConverterBuffer, text, text + len);
 			addData(myConverterBuffer);
+			addContentsData(myConverterBuffer);
 			myConverterBuffer.erase();
 		} else {
-			addData(std::string(text, len));
+			std::string strText(text, len);
+			addData(strText);
+			addContentsData(strText);
 		}
 	}
 }

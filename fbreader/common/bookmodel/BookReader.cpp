@@ -120,11 +120,10 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 
 void BookReader::addData(const std::string &data) {
 	if (!data.empty() && myTextParagraphExists) {
-		myBuffer.push_back(data);
 		if (!myInsideTitle) {
 			mySectionContainsRegularContents = true;
 		}
-		addContentsData(data);
+		myBuffer.push_back(data);
 	}
 }
 

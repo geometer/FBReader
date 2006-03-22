@@ -37,11 +37,14 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 }
 
 void FB2BookReader::characterDataHandler(const char *text, int len) {
-	std::string str(text, len);
-	if (myProcessingImage) {
-		myImageBuffer.push_back(str);
-	} else {
-		myModelReader.addData(str);
+	if ((len > 0) && myModelReader.paragraphIsOpen()) {
+		std::string str(text, len);
+		if (myProcessingImage) {
+			myImageBuffer.push_back(str);
+		} else {
+			myModelReader.addData(str);
+			myModelReader.addContentsData(str);
+		}
 	}
 }
 
@@ -111,7 +114,6 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			mySectionStarted = true;
 			break;
 		case _TITLE:
-			myModelReader.enterTitle();
 			if (myInsidePoem) {
 				myModelReader.pushKind(POEM_TITLE);
 			} else if (mySectionDepth == 0) {
@@ -119,6 +121,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 				myModelReader.pushKind(TITLE);
 			} else {
 				myModelReader.pushKind(SECTION_TITLE);
+				myModelReader.enterTitle();
 				myInsideTitle1 = true;
 			}
 			break;

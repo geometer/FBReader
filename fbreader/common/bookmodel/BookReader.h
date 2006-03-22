@@ -48,6 +48,7 @@ public:
 	bool popKind() MODEL_SECTION;
 	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH) MODEL_SECTION;
 	void endParagraph() MODEL_SECTION;
+	bool paragraphIsOpen() const MODEL_SECTION;
 	void addControl(TextKind kind, bool start) MODEL_SECTION;
 	void addControl(const ForcedControlEntry &entry) MODEL_SECTION;
 	void addHyperlinkControl(TextKind kind, const std::string &label) MODEL_SECTION;
@@ -86,5 +87,9 @@ private:
 	std::vector<std::string> myBuffer;
 	std::vector<std::string> myContentsBuffer;
 };
+
+inline bool BookReader::paragraphIsOpen() const {
+	return myTextParagraphExists;
+}
 
 #endif /* __BOOKREADER_H__ */
