@@ -38,7 +38,13 @@ public:
 	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
 private:
+	enum ReaderState {
+		READ_MANIFEST,
+		READ_
+	};
+
 	BookReader myModelReader;
+	ReaderState myState;
 };
 
 inline OEBBookReader::~OEBBookReader() {}

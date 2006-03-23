@@ -32,6 +32,7 @@ OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
 void OEBBookReader::characterDataHandler(const char *text, int len) {
 }
 
+static const std::string MANIFEST = "manifest";
 static const std::string REFERENCE = "reference";
 
 void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
