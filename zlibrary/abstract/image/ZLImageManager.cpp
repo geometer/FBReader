@@ -18,7 +18,6 @@
  * 02110-1301, USA.
  */
 
-//#include <iostream>
 #include <algorithm>
 #include <vector>
 
@@ -283,7 +282,7 @@ shared_ptr<ZLImageData> ZLImageManager::imageData(const ZLImage &image) const {
 	if (image.isSingle()) {
 		const ZLSingleImage &singleImage = (const ZLSingleImage&)image;
 		shared_ptr<std::string> stringData = singleImage.stringData();
-		if (!stringData->empty()) {
+		if (!stringData.isNull() && !stringData->empty()) {
 			if (singleImage.mimeType() == "image/palm") {
 				convertFromPalmImageFormat(*stringData, *data);
 			} else {

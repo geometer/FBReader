@@ -37,7 +37,7 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 }
 
 void FB2BookReader::characterDataHandler(const char *text, int len) {
-	if ((len > 0) && myModelReader.paragraphIsOpen()) {
+	if ((len > 0) && (myProcessingImage || myModelReader.paragraphIsOpen())) {
 		std::string str(text, len);
 		if (myProcessingImage) {
 			myImageBuffer.push_back(str);
