@@ -75,7 +75,9 @@ size_t TcrStream::read(char *buffer, size_t maxSize) {
 	size_t size = 0;
 	if (myBuffer.length() > 0) {
 		size += std::min(maxSize, myBuffer.length());
-		strncpy(buffer, myBuffer.data(), size);
+		if (buffer != 0) {
+		  strncpy(buffer, myBuffer.data(), size);
+		}
 		myBuffer.erase(0, size);
 	}
 	while (size < maxSize) {
@@ -86,7 +88,9 @@ size_t TcrStream::read(char *buffer, size_t maxSize) {
 		size_t len = myDictionary[index].length();
 		if (len > 0) {
 			size_t freeSize = maxSize - size;
-			strncpy(buffer + size, myDictionary[index].data(), std::min(len, freeSize));
+			if (buffer != 0) {
+				strncpy(buffer + size, myDictionary[index].data(), std::min(len, freeSize));
+			}
 			size += std::min(len, freeSize);
 			if (len > freeSize) {
 				myBuffer = myDictionary[index].substr(freeSize);
