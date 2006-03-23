@@ -69,6 +69,10 @@ void PPLBookReader::addParagraph() {
 				(myCurrentParagraph[0] == '*') &&
 				(myCurrentParagraph[1] == ' ')) {
 			myCurrentParagraph.erase(0, 2);
+			myModelReader.insertEndOfSectionParagraph();
+			myModelReader.beginContentsParagraph();
+			myModelReader.addContentsData(myCurrentParagraph);
+			myModelReader.endContentsParagraph();
 			myModelReader.beginParagraph();
 			myModelReader.addControl(SECTION_TITLE, true);
 			myModelReader.addData(myCurrentParagraph);

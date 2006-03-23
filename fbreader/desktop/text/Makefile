@@ -17,6 +17,8 @@ run: ModelTest
 	@cmp test2.tmp test2.out
 	@./ModelTest test3.fb2 > test3.tmp
 	@cmp test3.tmp test3.out
+	@./ModelTest test4.tcr > test4.tmp
+	@cmp test4.tmp test4.out
 
 ModelTest: ModelTest.o
 	@g++ -o $@ $< `find ../../common -name "*.o"` -L ../../../zlibrary -lzlibrary -lbz2 -lz -lexpat -lenca
