@@ -148,8 +148,11 @@ protected:
 
 	void doAction(const std::string &key) FB_SECTION;
 
-private:
+protected:
 	BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
+	void resetWindowCaption();
+
+private:
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
 	void clearTextCaches() FB_SECTION;
 	void FBReader::doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;

@@ -546,6 +546,10 @@ void FBReader::setMode(ViewMode mode) {
 		case UNDEFINED_MODE:
 			break;
 	}
+	resetWindowCaption();
+}
+
+void FBReader::resetWindowCaption() {
 	setWindowCaption("FBReader - " + myViewWidget->view()->caption());
 }
 

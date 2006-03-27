@@ -68,6 +68,7 @@ protected:
 private slots:
 	void doActionSlot(int buttonNumber);
 	void emptySlot() {}
+	void setDocument(const QString &fileName);
 
 private:
 	bool myFullScreen;

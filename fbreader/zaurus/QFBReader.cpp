@@ -251,3 +251,12 @@ void QFBReader::grabAllKeys(bool grab) {
 		QPEApplication::ungrabKeyboard();
 	}
 }
+
+void QFBReader::setDocument(const QString &fileName) {
+	BookDescriptionPtr description = createDescription((const char*)fileName.utf8());
+	if (!description.isNull()) {
+		openBook(description);
+		repaintView();
+		resetWindowCaption();
+	}
+}
