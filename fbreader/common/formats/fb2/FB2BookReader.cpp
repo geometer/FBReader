@@ -77,7 +77,6 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	}
 	switch (tag) {
 		case _P:
-			myModelReader.beginParagraph();
 			if (mySectionStarted) {
 				myModelReader.beginContentsParagraph();
 				if (!myInsideTitle1) {
@@ -88,6 +87,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 				static const std::string SPACE = " ";
 				myModelReader.addContentsData(SPACE);
 			}
+			myModelReader.beginParagraph();
 			break;
 		case _V:
 			myModelReader.pushKind(VERSE);
