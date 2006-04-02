@@ -68,6 +68,7 @@ static void *runRunnable(void *data) {
 	RunnableWithFlag &rwf = *(RunnableWithFlag*)data;
 	rwf.runnable->run();
 	rwf.flag = false;
+	pthread_exit(0);
 	return 0;
 }
 
@@ -84,6 +85,7 @@ void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) co
 		while (rwf.flag) {
 			gtk_main_iteration();
 		}
+		pthread_join(thread, 0);
 		gtk_banner_close(myWindow);
 	}
 }

@@ -72,5 +72,7 @@ int main(int argc, char **argv) {
 	ZLUnixFSManager::deleteInstance();
 	ZLUnixTimeManager::deleteInstance();
 
+	pthread_exit(0);
+
 	return 0;
 }
