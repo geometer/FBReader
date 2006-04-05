@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -35,8 +37,12 @@
 #include "../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
+static bool quitFlag = false;
+
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
+	if (!quitFlag) {
+		((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
+	}
 	return true;
 }
 
@@ -189,8 +195,11 @@ bool GtkFBReader::isFullscreen() const {
 }
 
 void GtkFBReader::quitSlot() {
-	delete this;
-	gtk_main_quit();
+	if (!quitFlag) {
+		quitFlag = true;
+		delete this;
+		gtk_main_quit();
+	}
 }
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {

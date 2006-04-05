@@ -40,11 +40,15 @@
 static ZLIntegerRangeOption Width("Options", "Width", 10, 800, 350);
 static ZLIntegerRangeOption Height("Options", "Height", 10, 800, 350);
 
-// MSS: probably we want to leave it as it is, as it's for Zaurus
+static bool quitFlag = false;
+
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkFBReader*)data)->close();
+	if (!quitFlag) {
+		((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
+	}
 	return true;
 }
+
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->repaintView();
@@ -121,17 +125,12 @@ bool GtkFBReader::isFullscreen() const {
 	return myFullScreen;
 }
 
-void GtkFBReader::close() {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-	} else {
-		quitSlot();
-	}
-}
-
 void GtkFBReader::quitSlot() {
-	delete this;
-	gtk_main_quit();
+	if (!quitFlag) {
+		quitFlag = true;
+		delete this;
+		gtk_main_quit();
+	}
 }
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {

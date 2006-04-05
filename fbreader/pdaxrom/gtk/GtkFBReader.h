@@ -52,7 +52,6 @@ protected:
 
 public:
 	void handleKeyEventSlot(GdkEventKey*);
-	void close();
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
 

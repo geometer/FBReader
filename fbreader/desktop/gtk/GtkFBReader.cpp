@@ -39,8 +39,12 @@
 static ZLIntegerRangeOption Width("Options", "Width", 10, 2000, 800);
 static ZLIntegerRangeOption Height("Options", "Height", 10, 2000, 800);
 
+static bool quitFlag = false;
+
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkFBReader*)data)->quitSlot();
+	if (!quitFlag) {
+		((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
+	}
 	return true;
 }
 
@@ -141,8 +145,11 @@ void GtkFBReader::handleScrollEventSlot(GdkEventScroll *event) {
 }
 
 void GtkFBReader::quitSlot() {
-	delete this;
-	gtk_main_quit();
+	if (!quitFlag) {
+		quitFlag = true;
+		delete this;
+		gtk_main_quit();
+	}
 }
 
 void GtkFBReader::toggleFullscreenSlot() {
