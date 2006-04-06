@@ -73,9 +73,10 @@ static void *runRunnable(void *data) {
 }
 
 void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	if (!myIsInitialized) {
+	if (!myIsInitialized || myIsWaiting) {
 		runnable.run();
 	} else {
+		myIsWaiting = true;
 		gtk_banner_show_animation(myWindow, message.c_str());
 		RunnableWithFlag rwf;
 		rwf.runnable = &runnable;
@@ -87,5 +88,6 @@ void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) co
 		}
 		pthread_join(thread, 0);
 		gtk_banner_close(myWindow);
+		myIsWaiting = false;
 	}
 }

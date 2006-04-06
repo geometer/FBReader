@@ -26,8 +26,13 @@ ZLDialogManager &ZLDialogManager::instance() {
 	return *ourInstance;
 } 
 
+bool ZLDialogManager::isInitialized() {
+	return ourInstance != 0;
+}
+
 void ZLDialogManager::deleteInstance() {
 	delete ourInstance;
+	ourInstance = 0;
 }
 
 ZLDialogManager::ZLDialogManager() {

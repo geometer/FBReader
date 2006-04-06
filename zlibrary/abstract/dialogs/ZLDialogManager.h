@@ -36,6 +36,7 @@ public:
 class ZLDialogManager {
 
 public:
+	static bool isInitialized() DIALOG_SECTION;
 	static ZLDialogManager &instance() DIALOG_SECTION;
 	static void deleteInstance() DIALOG_SECTION;
 

@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -29,6 +27,7 @@
 #include <maemo/GtkViewWidget.h>
 #include <maemo/GtkKeyUtil.h>
 #include <maemo/GtkPaintContext.h>
+#include <maemo/GtkDialogManager.h>
 
 #include "../common/description/BookDescription.h"
 #include "../common/fbreader/BookTextView.h"
@@ -40,7 +39,8 @@
 static bool quitFlag = false;
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	if (!quitFlag) {
+	if (!quitFlag && GtkDialogManager::isInitialized() &&
+			!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting()) {
 		((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
 	}
 	return true;
@@ -67,7 +67,10 @@ static void menuActionSlot(GtkWidget *, gpointer data) {
 }
 
 static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
-	((GtkFBReader*)data)->handleKeyEventSlot(key);
+	if (!quitFlag && GtkDialogManager::isInitialized() &&
+			!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting()) {
+		((GtkFBReader*)data)->handleKeyEventSlot(key);
+	}
 }
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {

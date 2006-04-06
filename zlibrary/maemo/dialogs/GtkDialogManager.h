@@ -31,13 +31,15 @@ public:
 	static void createInstance() { ourInstance = new GtkDialogManager(); }
 
 private:
-	GtkDialogManager() : myIsInitialized(false), myWindow(0), myIsKeyboardGrabbed(false) {}
+	GtkDialogManager() : myIsInitialized(false), myWindow(0), myIsKeyboardGrabbed(false), myIsWaiting(false) {}
 
 public:
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
+
 	void wait(ZLRunnable &runnable, const std::string &message) const;
+	bool isWaiting() const { return myIsWaiting; }
 
 	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
 	const std::string &getPixmapPath() const { return myPixmapPath; }
@@ -52,6 +54,8 @@ private:
 	bool myIsInitialized;
 	GtkWindow *myWindow;
 	bool myIsKeyboardGrabbed;
+
+	mutable bool myIsWaiting;
 };
 
 #endif /* __GTKDIALOGMANAGER_H__ */
