@@ -13,7 +13,7 @@ ALL_ARCHSUBDIRS = palm desktop pdaxrom opie zaurus maemo
 ALL_QSUBDIRS = zaurus/qtopia pdaxrom/qt desktop/qt opie pma400/qtopia
 ALL_GTKSUBDIRS = pdaxrom/gtk desktop/gtk maemo
 
-SUBDIRS = common common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/formats/tcr common/formats/util common/textview common/hyphenation common/fbreader
+SUBDIRS = common common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/formats/tcr common/formats/chm common/formats/oeb common/formats/util common/textview common/hyphenation common/fbreader
 
 PLATFORM_SUBDIR = $(TARGET_ARCH)
 

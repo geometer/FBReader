@@ -253,10 +253,12 @@ void QFBReader::grabAllKeys(bool grab) {
 }
 
 void QFBReader::setDocument(const QString &fileName) {
-	BookDescriptionPtr description = createDescription((const char*)fileName.utf8());
-	if (!description.isNull()) {
-		openBook(description);
-		repaintView();
-		resetWindowCaption();
+	if (!fileName.isEmpty()) {
+		BookDescriptionPtr description = createDescription((const char*)fileName.utf8());
+		if (!description.isNull()) {
+			openBook(description);
+			repaintView();
+			resetWindowCaption();
+		}
 	}
 }
