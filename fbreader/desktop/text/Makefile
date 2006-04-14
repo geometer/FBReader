@@ -24,3 +24,6 @@ ModelTest: ModelTest.o
 	@g++ -o $@ $< `find ../../common -name "*.o"` -L ../../../zlibrary -lzlibrary -lbz2 -lz -lexpat -lenca
 
 ModelTest.o: ModelTest.cpp
+
+distclean: clean
+	@rm -vf *.tmp ModelTest
