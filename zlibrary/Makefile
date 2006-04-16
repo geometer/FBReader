@@ -9,9 +9,11 @@ QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/devic
 GTKSUBDIRS_ALL = gtk/dialogs gtk/deviceInfo gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/deviceInfo maemo/view maemo/util
 
 SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig desktop/dialogs abstract/deviceInfo abstract/view unix/filesystem unix/time
+
 ifeq "$(UI_TYPE)" "qt"
 	QTSUBDIRS = qt/dialogs qt/deviceInfo qt/view qt/image qt/util
 endif
+
 ifeq "$(UI_TYPE)" "gtk"
 	GTKSUBDIRS = gtk/dialogs gtk/deviceInfo gtk/image gtk/util
 ifeq "$(TARGET_ARCH)" "desktop"
@@ -20,6 +22,11 @@ else
 	GTKSUBDIRS += gtk/view-pdaxrom
 endif
 endif
+
+ifeq "$(UI_TYPE)" "gpe"
+	GTKSUBDIRS = gtk/dialogs gtk/deviceInfo gtk/image gtk/util maemo/view
+endif
+
 ifeq "$(UI_TYPE)" "opie"
 	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig abstract/deviceInfo abstract/view unix/filesystem unix/time
 	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/deviceInfo opie/view qtopia/options qt/image
@@ -29,13 +36,16 @@ else
 	QTSUBDIRS += opie-openzaurus/util
 endif
 endif
+
 ifeq "$(UI_TYPE)" "qtopia"
 	SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/encoding abstract/deviceInfo abstract/view unix/filesystem unix/time abstract/image abstract/xmlconfig
 	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/deviceInfo qtopia/view qtopia/options qtopia/util qt/image
 endif
+
 ifeq "$(UI_TYPE)" "maemo"
 	GTKSUBDIRS = maemo/dialogs maemo/deviceInfo maemo/view gtk/image maemo/util
 endif
+
 ifeq "$(UI_TYPE)" "palm"
 	SUBDIRS = palm/pseudostl abstract/options abstract/util abstract/xml abstract/xml/own abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/dialogs abstract/deviceInfo abstract/view abstract/image palm/options palm/filesystem palm/dialogs palm/deviceInfo abstract/time palm/time palm/view
 endif

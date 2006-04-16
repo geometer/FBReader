@@ -1,0 +1,9 @@
+Package: fbreader-gpe
+Version: VERSION
+Section: apps
+Priority: extra
+Architecture: arm
+Depends: libstdc++6, libexpat0, libenca0, bzip2
+Installed-Size: 829440
+Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Description: E-Book reader.

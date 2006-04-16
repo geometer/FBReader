@@ -29,8 +29,8 @@
 #include "txt/TxtPlugin.h"
 #include "pdb/PdbPlugin.h"
 #include "tcr/TcrPlugin.h"
-#include "oeb/OEBPlugin.h"
-#include "chm/CHMPlugin.h"
+//#include "oeb/OEBPlugin.h"
+//#include "chm/CHMPlugin.h"
 
 PluginCollection *PluginCollection::ourInstance = 0;
 
@@ -46,8 +46,8 @@ PluginCollection &PluginCollection::instance() {
 		ourInstance->myPlugins.push_back(new PalmDocPlugin());
 		ourInstance->myPlugins.push_back(new ZTXTPlugin());
 		ourInstance->myPlugins.push_back(new TcrPlugin());
-		ourInstance->myPlugins.push_back(new CHMPlugin());
-		ourInstance->myPlugins.push_back(new OEBPlugin());
+		//ourInstance->myPlugins.push_back(new CHMPlugin());
+		//ourInstance->myPlugins.push_back(new OEBPlugin());
 #endif // PALM_TEMPORARY
 	}
 	return *ourInstance;

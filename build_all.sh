@@ -13,6 +13,7 @@ do_build() {
 }
 
 do_build openzaurus opie
+do_build openzaurus gpe
 do_build opensimpad-0.9.0 opie
 do_build qvfb opie
 #do_build maemo maemo

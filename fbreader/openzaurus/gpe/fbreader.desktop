@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=FBReader
+Comment=E-Book Reader
+Exec=FBReader
+Icon=fbreader/FBReader
+Type=Application
+Terminal=0
+Categories=Application;Utility
+StartupNotify=True
