@@ -171,7 +171,7 @@ bool GtkFBReader::isFullscreen() const {
 }
 
 void GtkFBReader::addButton(ActionCode id, const std::string &name) {
-	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + name + ".png").c_str());
+	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/fbreader/" + name + ".png").c_str());
 	GtkWidget *button = gtk_button_new();
 	gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);

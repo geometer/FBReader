@@ -102,7 +102,9 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &h
 
 GtkOpenFileDialog::~GtkOpenFileDialog(void) {
 	for(std::map<std::string,GdkPixbuf*>::iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
-		g_object_unref(G_OBJECT(it->second));
+		if (it->second != 0) {
+			g_object_unref(G_OBJECT(it->second));
+		}
 	}
 
 	gtk_widget_destroy(GTK_WIDGET(myDialog));

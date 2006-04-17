@@ -26,11 +26,12 @@
 #include <abstract/ZLDir.h>
 
 #include "FBFileHandler.h"
+#include "../Files.h"
 #include "../formats/FormatPlugin.h"
 
 const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const {
-	static const std::string FOLDER_ICON = ImageDirectory + "/folder";
-	static const std::string ZIPFOLDER_ICON = ImageDirectory + "/zipfolder";
+	static const std::string FOLDER_ICON = ImageDirectory + Files::PathDelimiter + "folder";
+	static const std::string ZIPFOLDER_ICON = ImageDirectory + Files::PathDelimiter + "zipfolder";
 	static const std::string NO_ICON = "";
 	static std::map<FormatPlugin*,std::string> pluginIcons;
 	if (name.length() == 0) {
@@ -49,7 +50,7 @@ const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string
 	}
 	std::map<FormatPlugin*,std::string>::const_iterator i = pluginIcons.find(plugin);
 	if (i == pluginIcons.end()) {
-		pluginIcons[plugin] = ImageDirectory + "/" + plugin->iconName();
+		pluginIcons[plugin] = ImageDirectory + Files::PathDelimiter + plugin->iconName();
 	}
 	return pluginIcons[plugin];
 }

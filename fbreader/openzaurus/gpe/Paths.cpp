@@ -28,8 +28,8 @@
 const std::string Files::PathPrefix = "/usr/share/FBReader/";
 const std::string Files::PathDelimiter = "/";
 
-const std::string FBFileHandler::ImageDirectory = "FBReader";
+const std::string FBFileHandler::ImageDirectory = "fbreader";
 
-const std::string GtkFBReader::ImageDirectory = "/usr/share/pixmaps/fbreader/";
-const std::string CollectionView::DeleteBookImageFile = GtkFBReader::ImageDirectory + "/remove.png";
+const std::string GtkFBReader::ImageDirectory = "/usr/share/pixmaps";
+const std::string CollectionView::DeleteBookImageFile = GtkFBReader::ImageDirectory + "/fbreader/remove.png";
 const std::string BookCollection::DefaultBookPath = "/media/cf/FBooks:~/FBooks";
