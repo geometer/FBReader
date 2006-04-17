@@ -6,7 +6,7 @@ TARGET = libzlibrary.a
 
 SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/scrollableview abstract/xml abstract/xml/expat abstract/xml/own abstract/encoding abstract/deviceInfo abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem palm/pseudostl palm/options palm/filesystem palm/dialogs palm/deviceInfo unix/time palm/time palm/view
 QTSUBDIRS_ALL = qtopia/dialogs qtopia/options qtopia/scrollableview qtopia/deviceInfo qtopia/view qtopia/util qt/dialogs qt/deviceInfo qt/view qt/image qt/util opie/view opie-opensimpad/util opie-openzaurus/util
-GTKSUBDIRS_ALL = gtk/dialogs gtk/deviceInfo gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/deviceInfo maemo/view maemo/util
+GTKSUBDIRS_ALL = gtk/dialogs gtk/deviceInfo gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/deviceInfo maemo/view maemo/util gpe/dialogs
 
 SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig desktop/dialogs abstract/deviceInfo abstract/view unix/filesystem unix/time
 
@@ -24,7 +24,7 @@ endif
 endif
 
 ifeq "$(UI_TYPE)" "gpe"
-	GTKSUBDIRS = gtk/dialogs gtk/deviceInfo gtk/image gtk/util maemo/view
+	GTKSUBDIRS = gpe/dialogs gtk/deviceInfo gtk/image gtk/util maemo/view
 endif
 
 ifeq "$(UI_TYPE)" "opie"
