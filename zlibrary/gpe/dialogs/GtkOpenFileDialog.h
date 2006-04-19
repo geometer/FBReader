@@ -26,9 +26,9 @@
 #include <vector>
 #include <map>
 
-#include "../../desktop/dialogs/ZLDesktopOpenFileDialog.h"
+#include "../../abstract/dialogs/ZLOpenFileDialog.h"
 
-class GtkOpenFileDialog : public ZLDesktopOpenFileDialog {
+class GtkOpenFileDialog : public ZLOpenFileDialog {
 
 public:
 	GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler); 

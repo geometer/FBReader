@@ -64,7 +64,7 @@ int GtkDialogManager::questionBox(const char *title, const char *message, const 
 }
 
 void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
-	GtkOpenFileDialog(title.c_str(), handler).runWithSize();
+	GtkOpenFileDialog(title.c_str(), handler).run();
 }
 
 void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {

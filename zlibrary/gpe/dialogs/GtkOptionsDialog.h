@@ -27,7 +27,7 @@
 #include <gtk/gtknotebook.h>
 #include <gtk/gtktable.h>
 
-#include <desktop/ZLDesktopOptionsDialog.h>
+#include <abstract/ZLOptionsDialog.h>
 
 class GtkOptionView;
 
@@ -56,7 +56,7 @@ private:
 	std::vector<GtkOptionView *> myViews;
 };
 
-class GtkOptionsDialog : public ZLDesktopOptionsDialog {
+class GtkOptionsDialog : public ZLOptionsDialog {
 
 public:
 	GtkOptionsDialog(const std::string &id, const std::string &caption);

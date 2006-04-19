@@ -34,7 +34,7 @@
 #include "GtkOptionsDialog.h"
 #include "GtkOptionView.h"
 
-GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id) {
+GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption) : ZLOptionsDialog(id) {
 	myDialog = ((GtkDialogManager&)GtkDialogManager::instance()).createDialog(caption);
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
@@ -46,11 +46,13 @@ GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &cap
 	}
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
+	gtk_notebook_set_scrollable(myNotebook,true);
 
 	gtk_container_set_border_width(GTK_CONTAINER(myNotebook), 8);
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myNotebook), TRUE, TRUE, 0);
+	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myNotebook), true, true, 0);
 
 	gtk_widget_show(GTK_WIDGET(myNotebook));
+	gtk_window_resize(GTK_WINDOW(myDialog), 1000, 1000);
 }
 
 GtkOptionsDialog::~GtkOptionsDialog() {
@@ -100,27 +102,6 @@ bool GtkOptionsDialog::run() {
 
 	return response == GTK_RESPONSE_ACCEPT;
 }
-
-void GtkOptionsDialog::setSize(int width, int height) {
-	gtk_window_resize(GTK_WINDOW(myDialog), width, height);
-}
-
-int GtkOptionsDialog::width() const {
-	int _width, _height;
-
-	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
-
-	return _width;
-}
-
-int GtkOptionsDialog::height() const {
-	int _width, _height;
-
-	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
-
-	return _height;
-}
-
 
 void GtkOptionsDialogTab::accept() {
 	for (std::vector<GtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {

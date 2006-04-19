@@ -38,7 +38,7 @@ static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer se
 	return FALSE;
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLDesktopOpenFileDialog(handler) {
+GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLOpenFileDialog(handler) {
 	myExitFlag = false;
 
 	myDialog = ((GtkDialogManager&)GtkDialogManager::instance()).createDialog(caption);
@@ -98,6 +98,7 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &h
 	update("");
 
 	gtk_widget_grab_focus(GTK_WIDGET(myView));
+	gtk_window_resize(GTK_WINDOW(myDialog), 1000, 1000);
 }
 
 GtkOpenFileDialog::~GtkOpenFileDialog(void) {
@@ -188,21 +189,3 @@ void GtkOpenFileDialog::exitDialog() {
 void GtkOpenFileDialog::activatedSlot() {
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
 }
-
-void GtkOpenFileDialog::setSize(int width, int height) {
-	gtk_window_resize(GTK_WINDOW(myDialog), width, height);
-}
-
-int GtkOpenFileDialog::width() const {
-	int _width;
-	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, 0);
-	return _width;
-}
-
-int GtkOpenFileDialog::height() const {
-	int _height;
-	gtk_window_get_size(GTK_WINDOW(myDialog), 0, &_height);
-	return _height;
-}
-
-// vim:ts=2:sw=2:noet

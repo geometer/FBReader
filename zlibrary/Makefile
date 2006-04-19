@@ -25,6 +25,7 @@ endif
 
 ifeq "$(UI_TYPE)" "gpe"
 	GTKSUBDIRS = gpe/dialogs gtk/deviceInfo gtk/image gtk/util maemo/view
+  SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig abstract/deviceInfo abstract/view unix/filesystem unix/time
 endif
 
 ifeq "$(UI_TYPE)" "opie"
