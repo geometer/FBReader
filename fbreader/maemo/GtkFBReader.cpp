@@ -38,16 +38,24 @@
 
 static bool quitFlag = false;
 
+static bool acceptAction() {
+	return
+		!quitFlag &&
+		GtkDialogManager::isInitialized() &&
+		!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting();
+}
+
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	if (!quitFlag && GtkDialogManager::isInitialized() &&
-			!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting()) {
+	if (acceptAction()) {
 		((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
 	}
 	return true;
 }
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkFBReader*)data)->repaintView();
+	if (acceptAction()) {
+		((GtkFBReader*)data)->repaintView();
+	}
 }
 
 struct ActionSlotData {
@@ -57,18 +65,21 @@ struct ActionSlotData {
 };
 
 static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
-	ActionSlotData *uData = (ActionSlotData*)data;
-	uData->Reader->doAction(uData->Code);
+	if (acceptAction()) {
+		ActionSlotData *uData = (ActionSlotData*)data;
+		uData->Reader->doAction(uData->Code);
+	}
 }
 
 static void menuActionSlot(GtkWidget *, gpointer data) {
-	ActionSlotData *uData = (ActionSlotData*)data;
-	uData->Reader->doAction(uData->Code);
+	if (acceptAction()) {
+		ActionSlotData *uData = (ActionSlotData*)data;
+		uData->Reader->doAction(uData->Code);
+	}
 }
 
 static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
-	if (!quitFlag && GtkDialogManager::isInitialized() &&
-			!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting()) {
+	if (acceptAction()) {
 		((GtkFBReader*)data)->handleKeyEventSlot(key);
 	}
 }
