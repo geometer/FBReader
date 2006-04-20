@@ -52,6 +52,7 @@ static const std::string BOOK = "Book";
 
 ZLBooleanOption FBReader::QuitOnCancelOption(OPTIONS, "QuitOnCancel", false);
 ZLBooleanOption FBReader::StoreContentsPositionOption(OPTIONS, "StoreContentsPosition", false);
+ZLIntegerRangeOption FBReader::KeyDelayOption(OPTIONS, "KeyDelay", 0, 5000, 750);
 
 const std::string LARGE_SCROLLING = "LargeScrolling";
 const std::string SMALL_SCROLLING = "SmallScrolling";
@@ -314,6 +315,20 @@ void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
 		repaintView();
 		myLastScrollingTime = ZLTime();
 		//std::cerr << t.millisecondsTo(myLastScrollingTime) << "\n";
+	}
+}
+
+bool FBReader::isScrollingAction(ActionCode code) {
+	switch (code) {
+		case ACTION_LARGE_SCROLL_FORWARD:
+		case ACTION_LARGE_SCROLL_BACKWARD:
+		case ACTION_SMALL_SCROLL_FORWARD:
+		case ACTION_SMALL_SCROLL_BACKWARD:
+		case ACTION_MOUSE_SCROLL_FORWARD:
+		case ACTION_MOUSE_SCROLL_BACKWARD:
+			return true;
+		default:
+			return false;
 	}
 }
 
@@ -651,7 +666,10 @@ void FBReader::bindKey(const std::string &key, ActionCode code) {
 void FBReader::doAction(const std::string &key) {
 	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(key);
 	if (it != myKeyBindings.end()) {
-		doAction(it->second);
+		if (isScrollingAction(it->second) || (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())) {
+			doAction(it->second);
+			myLastKeyActionTime = ZLTime();
+		}
 	}
 }
 

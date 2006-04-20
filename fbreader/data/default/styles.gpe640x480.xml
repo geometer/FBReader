@@ -1,0 +1,30 @@
+<DefaultStyles>
+	<base family="Sans" fontSize="16"/>
+	<style id="0" name="Regular Paragraph" firstLineIndentDelta="22" allowHyphenations="true"/>
+	<style id="1" name="Title" fontSizeDelta="10" bold="true" spaceBefore="2" spaceAfter="7" alignment="center" allowHyphenations="false"/>
+	<style id="3" name="Poem Title" fontSizeDelta="2" bold="true" spaceBefore="6" spaceAfter="6" leftIndent="40" allowHyphenations="false"/>
+	<style id="2" name="Section Title" fontSizeDelta="6" bold="true" spaceAfter="5" alignment="center" allowHyphenations="false"/>
+	<style id="5" name="Annotation" fontSizeDelta="-2" firstLineIndentDelta="22" allowHyphenations="true"/>
+	<style id="6" name="Epigraph" fontSizeDelta="-2" italic="true" leftIndent="80" allowHyphenations="true"/>
+	<style id="4" name="Subtitle" bold="true" allowHyphenations="true"/>
+	<style id="13" name="Author" leftIndent="20" allowHyphenations="false"/>
+	<style id="14" name="Date" leftIndent="40" allowHyphenations="false"/>
+	<style id="7" name="Stanza" spaceBefore="6" spaceAfter="6" alignment="left" allowHyphenations="false"/>
+	<style id="8" name="Verse" leftIndent="20" alignment="left" allowHyphenations="false"/>
+	<style id="10" name="Image" spaceBefore="8" alignment="center"/>
+	<style id="23" name="Contents Table" spaceAfter="7" leftIndent="22" firstLineIndentDelta="-22" alignment="left"/>
+	<style id="24" name="Author in Library" fontSizeDelta="-2" alignment="left" allowHyphenations="false"/>
+	<style id="25" name="Book in Library" fontSizeDelta="-2" alignment="left" allowHyphenations="false"/>
+	<style id="26" name="Recent Book List" spaceAfter="3" leftIndent="22" firstLineIndentDelta="-22" alignment="left" lineSpacing="1.2"/>
+	<style id="9" name="Preformatted text" italic="true" alignment="left" allowHyphenations="false"/>
+
+	<style id="12" partial="true" name="Cite" italic="true"/>
+	<style id="15" partial="true" name="Hyperlink" allowHyphenations="false" isHyperlink="true"/>
+	<style id="16" partial="true" name="Footnote" fontSizeDelta="-6" vShift="10" allowHyphenations="false" isHyperlink="true"/>
+	<style id="17" partial="true" name="Emphasis" italic="true"/>
+	<style id="18" partial="true" name="Strong" bold="true"/>
+	<style id="19" partial="true" name="Subscript" fontSizeDelta="-4" vShift="-4" allowHyphenations="false"/>
+	<style id="20" partial="true" name="Superscript" fontSizeDelta="-4" vShift="10" allowHyphenations="false"/>
+	<style id="21" partial="true" name="Code" italic="true" allowHyphenations="false"/>
+	<style id="22" partial="true" name="StrikeThrough"/>
+</DefaultStyles>

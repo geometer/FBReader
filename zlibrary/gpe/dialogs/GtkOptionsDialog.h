@@ -26,6 +26,7 @@
 #include <gtk/gtkdialog.h>
 #include <gtk/gtknotebook.h>
 #include <gtk/gtktable.h>
+#include <gtk/gtkscrolledwindow.h>
 
 #include <abstract/ZLOptionsDialog.h>
 
@@ -42,7 +43,7 @@ public:
 
 	void accept();
 
-	GtkWidget *widget() { return GTK_WIDGET(myTable); }
+	GtkWidget *widget() { return GTK_WIDGET(myScrolledWindow); }
 
 	void addItem(GtkWidget *what, int row, int fromColumn, int toColumn);
 
@@ -51,6 +52,7 @@ private:
 	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
 
 private:
+	GtkScrolledWindow *myScrolledWindow;
 	GtkTable *myTable;
 	gint myRowCounter;
 	std::vector<GtkOptionView *> myViews;

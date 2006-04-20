@@ -5,20 +5,30 @@ ifeq "$(UI_TYPE)" "opie"
 	BASEDIR = data/opt/QtPalmtop
 	PICSDIR = $(BASEDIR)/pics/fbreader
 	APPDIR = $(BASEDIR)/apps/Applications
-	STYLE = 640x480
+	STYLE = $(RESOLUTION)
 else # UI_TYPE == gpe
 	BASEDIR = data/usr
 	PICSDIR = $(BASEDIR)/share/pixmaps/fbreader
 	APPDIR = $(BASEDIR)/share/applications
-	STYLE = maemo
+	STYLE = gpe$(RESOLUTION)
+endif
+
+ifeq "$(RESOLUTION)" "240x320"
+  ICONSIZE = 18x15
+else
+  ICONSIZE = 34x28
 endif
 
 DEBDIR = data/DEBIAN
 
 version = $(shell cat ../VERSION)
-package = fbreader-$(UI_TYPE)_$(version)_$(TARGET_ARCH)_arm.ipk
+package = fbreader-$(UI_TYPE)_$(version)_$(TARGET_ARCH)_$(RESOLUTION)_arm.ipk
 
 all:
+	@RESOLUTION=240x320 $(MAKE) ipk
+	@RESOLUTION=640x480 $(MAKE) ipk
+
+ipk:
 	@make .builddir
 	@make .buildpackage
 	@make .cleandir
@@ -34,8 +44,8 @@ clean: .cleandir
 	@mkdir -p $(BASEDIR)/bin
 	@cp ../FBReader $(BASEDIR)/bin
 	@mkdir -p $(PICSDIR)
-	@cp ../icons/22x18/FBReader.png $(PICSDIR)
-	@cp ../icons/34x28/FBReader/*.png $(PICSDIR)
+	@cp ../icons/$(ICONSIZE)/FBReader.png $(PICSDIR)
+	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(PICSDIR)
 	@cp -r ../share  $(BASEDIR)
 	@rm -rf `find $(BASEDIR)/share -name ".svn"`
 	@mkdir $(BASEDIR)/share/FBReader/help

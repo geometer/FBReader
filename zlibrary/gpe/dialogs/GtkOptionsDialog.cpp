@@ -110,12 +110,14 @@ void GtkOptionsDialogTab::accept() {
 }
 
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
+	myScrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
+	gtk_scrolled_window_set_policy(myScrolledWindow, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	myTable = GTK_TABLE(gtk_table_new(0, 4, false));
-	gtk_container_set_border_width(GTK_CONTAINER(myTable), 2);
+	gtk_scrolled_window_add_with_viewport(myScrolledWindow, GTK_WIDGET(myTable));
 
 	myRowCounter = 0;
 
-	gtk_widget_show(GTK_WIDGET(myTable));
+	gtk_widget_show_all(GTK_WIDGET(myScrolledWindow));
 }
 
 GtkOptionsDialogTab::~GtkOptionsDialogTab() {

@@ -20,6 +20,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <gpe/init.h>
 
 #include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
@@ -34,7 +35,9 @@
 
 int main(int argc, char **argv) {
 	gtk_disable_setlocale();
-	gtk_init(&argc, &argv);
+  if (!gpe_application_init (&argc, &argv)) {
+		return 1;
+	}
 
 	ZLUnixFSManager::createInstance();
 	ZLUnixTimeManager::createInstance();

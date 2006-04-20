@@ -109,6 +109,7 @@ public:
 public:
 	static ZLBooleanOption QuitOnCancelOption;
 	static ZLBooleanOption StoreContentsPositionOption;
+	static ZLIntegerRangeOption KeyDelayOption;
 
 	static ScrollingOptions LargeScrollingOptions;
 	static ScrollingOptions SmallScrollingOptions;
@@ -159,6 +160,7 @@ private:
 
 	void readBindings() FB_SECTION;
 	void saveBindings() FB_SECTION;
+	bool isScrollingAction(ActionCode code) FB_SECTION;
 
 public:
 	virtual bool isRotationSupported() const FB_SECTION = 0;
@@ -196,6 +198,7 @@ private:
 	RecentBooksView *myRecentBooksView;	
 
 	ZLTime myLastScrollingTime;
+	ZLTime myLastKeyActionTime;
 
 	ZLPaintContext *myContext;
 	BookModel *myModel;

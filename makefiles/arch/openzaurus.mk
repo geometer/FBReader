@@ -21,7 +21,7 @@ BZIP2LIBS = -lbz2
 ifeq "$(UI_TYPE)" "opie"
 	UILIBS = -lqte -lqpe
 else
-	UILIBS = -lgtk-x11-2.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0
+	UILIBS = -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0
 endif
 
 CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG $(DUMMY_SECTIONS) -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline

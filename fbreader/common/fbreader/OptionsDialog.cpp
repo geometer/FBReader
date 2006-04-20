@@ -137,6 +137,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", BookCollection::ScanSubdirsOption));
 	generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", LastOpenedBooks::MaxListSizeOption, 1));
 	generalTab->addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", FBReader::StoreContentsPositionOption));
+	generalTab->addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", FBReader::KeyDelayOption, 50));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"));
 

@@ -99,6 +99,8 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
 
 	myFullScreen = false;
+
+	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/fbreader/FBReader.png").c_str());
 }
 
 ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
