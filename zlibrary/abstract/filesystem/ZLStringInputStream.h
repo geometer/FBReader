@@ -32,7 +32,7 @@ public:
 	size_t read(char *buffer, size_t maxSize) FS_SECTION;
 	void close() FS_SECTION;
 
-	void seek(size_t offset) FS_SECTION;
+	void seek(int offset) FS_SECTION;
 	size_t offset() const FS_SECTION;
 	size_t sizeOfOpened() FS_SECTION;
 
@@ -45,7 +45,7 @@ inline ZLStringInputStream::ZLStringInputStream(const std::string &str) : myStri
 inline ZLStringInputStream::~ZLStringInputStream() {}
 inline bool ZLStringInputStream::open() { myPosition = 0; return true; }
 inline void ZLStringInputStream::close() {}
-inline void ZLStringInputStream::seek(size_t offset) { myPosition += offset; }
+inline void ZLStringInputStream::seek(int offset) { myPosition += offset; }
 inline size_t ZLStringInputStream::offset() const { return myPosition; }
 
 #endif /* __ZSTRINGLINPUTSTREAM_H__ */
