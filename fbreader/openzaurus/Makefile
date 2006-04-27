@@ -49,7 +49,7 @@ clean: .cleandir
 	@cp -r ../share  $(BASEDIR)
 	@rm -rf `find $(BASEDIR)/share -name ".svn"`
 	@mkdir $(BASEDIR)/share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
+	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
 	@mkdir $(BASEDIR)/share/FBReader/default
 	@cp ../data/default/keymap.qtopia.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(STYLE).xml $(BASEDIR)/share/FBReader/default/styles.xml

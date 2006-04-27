@@ -25,6 +25,8 @@
 #include <map>
 
 #include <gtk/gtkwidget.h>
+#include <gtk/gtktoolbar.h>
+#include <gtk/gtktoolitem.h>
 #include <gtk/gtkwindow.h>
 
 #include "../../common/fbreader/FBReader.h"
@@ -63,11 +65,11 @@ public:
 
 private:
 	GtkWindow *myMainWindow;
-	GtkWidget *myToolbar;
+	GtkToolbar *myToolbar;
 
 	bool myFullScreen;
 
-	std::map<ActionCode,GtkWidget*> myButtons;
+	std::map<ActionCode,GtkToolItem*> myButtons;
 	std::map<ActionCode,ActionSlotData*> myActions;
 };
 

@@ -32,7 +32,7 @@ install:
 	@cp ../FBReader $(BINDIR)
 	@cp -r ../share/FBReader usr/share
 	@mkdir -p usr/share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.fb2 usr/share/FBReader/help/HowToStart.fb2
+	@cp ../data/help/HowToStart.brownish.640x480.fb2 usr/share/FBReader/help/HowToStart.fb2
 	@mkdir -p usr/share/FBReader/default
 	@cp ../data/default/keymap.pdaxrom.xml usr/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.640x480.xml usr/share/FBReader/default/styles.xml

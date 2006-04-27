@@ -142,14 +142,14 @@ void GtkOptionsDialogTab::addItem(GtkWidget *what, int row, int fromColumn, int 
 void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
 	int row = addRow();
 
-	createViewByEntry(option, row, 0, 4);
+	createViewByEntry(option, row, 0, 8);
 }
 
 void GtkOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
 	int row = addRow();
 
-	createViewByEntry(option0, row, 0, 2);
-	createViewByEntry(option1, row, 2, 4);
+	createViewByEntry(option0, row, 0, 4);
+	createViewByEntry(option1, row, 4, 8);
 }
 
 void GtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn) {

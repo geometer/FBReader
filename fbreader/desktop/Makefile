@@ -23,7 +23,7 @@ install:
 	@install -m 0644 $(wildcard ../share/FBReader/encodings/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/encodings
 	@install -m 0644 $(wildcard ../share/FBReader/*.zip) $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/help
-	@install -m 0644 ../data/help/HowToStart.brownish.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
+	@install -m 0644 ../data/help/HowToStart.brownish.640x480.fb2 $(DESTDIR)$(INSTALLDIR)/share/FBReader/help/HowToStart.fb2
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
 	@install -m 0644 ../data/default/keymap.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/styles.xml

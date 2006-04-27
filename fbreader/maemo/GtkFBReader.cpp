@@ -227,7 +227,6 @@ void GtkFBReader::addButton(ActionCode id, const std::string &name) {
 	gtk_tool_item_set_homogeneous(button, false);
 	gtk_tool_item_set_expand(button, false);
 
-
 	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 	gtk_toolbar_insert(myToolbar, button, -1);
 	g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));

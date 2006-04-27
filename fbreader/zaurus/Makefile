@@ -30,7 +30,7 @@ install:
 	@ln -sf ../icons/18x15 pics
 	@cp -r ../share .
 	@mkdir share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.fb2 share/FBReader/help/HowToStart.fb2
+	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 share/FBReader/help/HowToStart.fb2
 	@mkdir share/FBReader/default
 	@cp ../data/default/keymap.qtopia.xml share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(RESOLUTION).xml share/FBReader/default/styles.xml

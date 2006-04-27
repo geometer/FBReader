@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <gtk/gtk.h>
 #include <gtk/gtkcheckbutton.h>
 #include <gtk/gtklabel.h>
@@ -214,7 +212,7 @@ void StringOptionView::_createItem() {
 	myLineEdit = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(myLineEdit), ((ZLStringOptionEntry*)myOption)->initialValue().c_str());
 
-	int midColumn = (myFromColumn + myToColumn)/2;
+	int midColumn = (myFromColumn + myToColumn) / 2 - 1;
 
 	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
 	myTab->addItem(myLineEdit, myRow, midColumn, myToColumn);
