@@ -29,11 +29,11 @@
 #include <maemo/GtkPaintContext.h>
 #include <maemo/GtkDialogManager.h>
 
-#include "../common/description/BookDescription.h"
-#include "../common/fbreader/BookTextView.h"
-#include "../common/fbreader/FootnoteView.h"
-#include "../common/fbreader/ContentsView.h"
-#include "../common/fbreader/CollectionView.h"
+#include "../../common/description/BookDescription.h"
+#include "../../common/fbreader/BookTextView.h"
+#include "../../common/fbreader/FootnoteView.h"
+#include "../../common/fbreader/ContentsView.h"
+#include "../../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
 static bool quitFlag = false;

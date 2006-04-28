@@ -31,7 +31,7 @@
 #include <hildon-widgets/hildon-appview.h>
 #include <libosso.h>
 
-#include "../common/fbreader/FBReader.h"
+#include "../../common/fbreader/FBReader.h"
 
 struct ActionSlotData;
 

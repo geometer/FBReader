@@ -2,13 +2,15 @@ ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
-DEBIAN_PACKAGE = fbreader-$(UI_TYPE)_$(VERSION)-1_arm.deb
+PACKAGE_NAME = fbreader-$(UI_TYPE)
+PACKAGE_FILE = $(PACKAGE_NAME)_$(VERSION)-1_arm.deb
 
-BINDIR=/usr/bin
+PREFIX=/var/lib/install
+BINDIR=$(PREFIX)/usr/bin
 TMPDIR=tmp
 
 all: package
-	@cp $(DEBIAN_PACKAGE) ../..
+	@cp $(PACKAGE_FILE) ../..
 
 DESKTOP_FILE=FBReader.desktop
 SERVICE_FILE=FBReader.service
@@ -51,8 +53,8 @@ package:
 	@mkdir $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
 	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed "s/VERSION/$(VERSION)/" FBReader.control.in > $(TMPDIR)/DEBIAN/control
-	@fakeroot dpkg-deb -b $(TMPDIR) $(DEBIAN_PACKAGE)
+	@sed -e "s/@VERSION@/$(VERSION)/" -e "s#@PACKAGE@#$(PACKAGE_NAME)#" FBReader.control.in > $(TMPDIR)/DEBIAN/control
+	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 
 clean:

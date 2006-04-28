@@ -1,5 +1,5 @@
-Package: fbreader-maemo
-Version: VERSION
+Package: @PACKAGE@
+Version: @VERSION@
 Architecture: arm
 Depends: maemo
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>

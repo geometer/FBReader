@@ -32,7 +32,7 @@
 #include <maemo/GtkDeviceInfo.h>
 
 #include "GtkFBReader.h"
-#include "../common/Files.h"
+#include "../../common/Files.h"
 
 class ConfigSaverRunnable : public ZLRunnable {
 
