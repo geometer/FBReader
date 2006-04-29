@@ -60,21 +60,21 @@ void QOptionsDialog::selectTab(const std::string &name) {
 }
 
 bool QOptionsDialog::run() {
-	for (QOptionsDialogTab *tab = myTabs.first(); tab != NULL; tab = myTabs.next()) {
+	for (QOptionsDialogTab *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
 		tab->close();
 	}
 	return exec();
 }
 
 void QOptionsDialog::accept() {
-	for (QOptionsDialogTab *tab = myTabs.first(); tab != NULL; tab = myTabs.next()) {
+	for (QOptionsDialogTab *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
 		tab->accept();
 	}
 	FullScreenDialog::accept();
 }
 
 void QOptionsDialogTab::accept() {
-	for (QOptionView *view = myViews.first(); view != NULL; view = myViews.next()) {
+	for (QOptionView *view = myViews.first(); view != 0; view = myViews.next()) {
 		view->onAccept();
 	}
 }
@@ -110,7 +110,7 @@ QOptionsDialogTab::QOptionsDialogTab(QTabWidget *parent) : QWidget(parent) {
 }
 
 QOptionsDialogTab::~QOptionsDialogTab() {
-	for (QOptionView *view = myViews.first(); view != NULL; view = myViews.next()) {
+	for (QOptionView *view = myViews.first(); view != 0; view = myViews.next()) {
 		delete view;
 	}
 }
