@@ -84,12 +84,25 @@ static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 	}
 }
 
+static void hardwareStateHandler(osso_hw_state_t *state, gpointer data) {
+	// TODO: what is more expensive operation here? :)
+	if (acceptAction() && state->shutdown_ind) {
+		((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
+	}
+}
+
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
 	myApp = HILDON_APP(hildon_app_new());
 	hildon_app_set_title(myApp, "FBReader");
 	hildon_app_set_two_part_title(myApp, FALSE);
 
-	osso_initialize("FBReader", "0.0", true, 0);
+	osso_context_t *context = osso_initialize("FBReader", "0.0", true, 0);
+
+	// TODO: should we actually check if the context was successfully created?
+
+	osso_hw_state_t state = { true, 0, 0, 0, OSSO_DEVMODE_NORMAL };
+
+	osso_hw_set_event_cb (context, &state, hardwareStateHandler, this);
 
 	myAppView = HILDON_APPVIEW(hildon_appview_new(0));
 
