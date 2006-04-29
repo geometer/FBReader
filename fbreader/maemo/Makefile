@@ -53,7 +53,7 @@ package:
 	@mkdir $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
 	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(VERSION)/" -e "s#@PACKAGE@#$(PACKAGE_NAME)#" FBReader.control.in > $(TMPDIR)/DEBIAN/control
+	@sed -e "s/@VERSION@/$(VERSION)/" -e "s#@PACKAGE@#$(PACKAGE_NAME)#" -e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" FBReader.control.in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 

@@ -3,6 +3,7 @@ Version: @VERSION@
 Architecture: arm
 Depends: maemo
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Installed-Size: @SIZE@
 Description: e-book reader
  FBReader was originally written for Sharp Zaurus, however it now supports
  more Linux platforms.
