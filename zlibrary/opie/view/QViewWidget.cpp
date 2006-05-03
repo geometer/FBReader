@@ -27,7 +27,7 @@
 #include "QViewWidget.h"
 #include "QPaintContext.h"
 
-QViewWidget::QViewWidget(QWidget *parent, ZLApplication *application) : QWidget(parent), myApplication(application) {
+QViewWidget::QViewWidget(QWidget *parent, ZLApplication *application, Angle initialAngle) : QWidget(parent), ZLViewWidget(initialAngle), myApplication(application) {
 	setBackgroundMode(NoBackground);
 }
 

@@ -28,7 +28,7 @@
 class GtkViewWidget : public ZLViewWidget {
 
 public:
-	GtkViewWidget(ZLApplication *application);
+	GtkViewWidget(ZLApplication *application, Angle initialAngle);
 	~GtkViewWidget();
 
 	GtkWidget *area() { return myArea; }

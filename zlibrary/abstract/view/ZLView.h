@@ -47,7 +47,7 @@ public:
 	};
 
 protected:
-	ZLViewWidget() ZLVIEW_SECTION;
+	ZLViewWidget(Angle initialAngle) ZLVIEW_SECTION;
 	virtual ~ZLViewWidget() ZLVIEW_SECTION;
 
 public:
@@ -95,7 +95,7 @@ friend void ZLViewWidget::setView(ZLView *view);
 inline ZLApplication::ZLApplication() {}
 inline ZLApplication::~ZLApplication() {}
 
-inline ZLViewWidget::ZLViewWidget() : myRotation(DEGREES0) {}
+inline ZLViewWidget::ZLViewWidget(Angle initialAngle) : myRotation(initialAngle) {}
 inline ZLViewWidget::~ZLViewWidget() {}
 inline ZLView *ZLViewWidget::view() const { return myView; }
 inline void ZLViewWidget::rotate(Angle rotation) { myRotation = rotation; }

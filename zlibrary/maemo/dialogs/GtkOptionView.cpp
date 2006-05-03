@@ -212,10 +212,9 @@ void StringOptionView::_createItem() {
 	myLineEdit = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(myLineEdit), ((ZLStringOptionEntry*)myOption)->initialValue().c_str());
 
-	int midColumn = (myFromColumn + myToColumn)/2;
-
-	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
-	myTab->addItem(myLineEdit, myRow, midColumn, myToColumn);
+	int width = myToColumn - myFromColumn;
+	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4);
+	myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
 }
 
 void StringOptionView::_show() {

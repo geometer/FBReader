@@ -56,7 +56,7 @@ int GtkViewWidget::height() const {
 	return (myArea != 0) ? myArea->allocation.height : 0;
 }
 
-GtkViewWidget::GtkViewWidget(ZLApplication *application) {
+GtkViewWidget::GtkViewWidget(ZLApplication *application, Angle initialAngle) : ZLViewWidget(initialAngle) {
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
 	gtk_widget_set_double_buffered(myArea, false);

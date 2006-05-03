@@ -48,7 +48,7 @@ static ZLIntegerRangeOption Height("Options", "Height", 10, 800, 350);
 QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
 	setWFlags(getWFlags() | WStyle_Customize);
 
-	myViewWidget = new QViewWidget(this, this);
+	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)RotationAngleOption.value());
 	setCentralWidget((QViewWidget*)myViewWidget);
 
 	createToolbar();

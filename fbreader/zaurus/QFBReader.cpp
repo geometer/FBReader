@@ -51,7 +51,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	}
 	setWFlags(getWFlags() | WStyle_Customize);
 
-	myViewWidget = new QViewWidget(this, this);
+	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)RotationAngleOption.value());
 	setCentralWidget((QViewWidget*)myViewWidget);
 
 	myFullScreen = false;

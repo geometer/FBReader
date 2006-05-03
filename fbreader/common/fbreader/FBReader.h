@@ -136,6 +136,7 @@ public:
 	static ZLBooleanOption KeyboardControlOption;
 
 	static ZLIntegerOption RotationAngleOption;
+	static ZLIntegerOption AngleStateOption;
 
 protected:
 	FBReader(ZLPaintContext *context, const std::string& bookToOpen = std::string()) FB_SECTION;

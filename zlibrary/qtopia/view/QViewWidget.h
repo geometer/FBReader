@@ -28,7 +28,7 @@
 class QViewWidget : public QWidget, public ZLViewWidget {
 
 public:
-	QViewWidget(QWidget *parent, ZLApplication *application);
+	QViewWidget(QWidget *parent, ZLApplication *application, Angle initialAngle);
 	~QViewWidget() {}
 
 protected:

@@ -157,7 +157,7 @@ void GtkOptionsDialogTab::accept() {
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
 	myScrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
 	gtk_scrolled_window_set_policy(myScrolledWindow, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	myTable = GTK_TABLE(gtk_table_new(0, 4, false));
+	myTable = GTK_TABLE(gtk_table_new(0, 12, false));
 	gtk_scrolled_window_add_with_viewport(myScrolledWindow, GTK_WIDGET(myTable));
 
 	myRowCounter = 0;
@@ -187,14 +187,14 @@ void GtkOptionsDialogTab::addItem(GtkWidget *what, int row, int fromColumn, int 
 void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
 	int row = addRow();
 
-	createViewByEntry(option, row, 0, 4);
+	createViewByEntry(option, row, 0, 12);
 }
 
 void GtkOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
 	int row = addRow();
 
-	createViewByEntry(option0, row, 0, 2);
-	createViewByEntry(option1, row, 2, 4);
+	createViewByEntry(option0, row, 0, 6);
+	createViewByEntry(option1, row, 6, 12);
 }
 
 void GtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn) {

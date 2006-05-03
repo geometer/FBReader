@@ -120,7 +120,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	hildon_appview_set_toolbar(myAppView, myToolbar);
 
-	myViewWidget = new GtkViewWidget(this);
+	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myAppView), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 

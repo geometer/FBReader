@@ -49,6 +49,7 @@ static const std::string OPTIONS = "Options";
 static const std::string SEARCH = "Search";
 static const std::string STATE = "State";
 static const std::string BOOK = "Book";
+static const std::string ANGLE = "Book";
 
 ZLBooleanOption FBReader::QuitOnCancelOption(OPTIONS, "QuitOnCancel", false);
 ZLBooleanOption FBReader::StoreContentsPositionOption(OPTIONS, "StoreContentsPosition", false);
@@ -108,7 +109,8 @@ ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 ZLBooleanOption FBReader::KeyboardControlOption("Keyboard", "FullControl", false);
 
-ZLIntegerOption FBReader::RotationAngleOption("Rotation", "Angle", ZLViewWidget::DEGREES90);
+ZLIntegerOption FBReader::RotationAngleOption("Rotation", ANGLE, ZLViewWidget::DEGREES90);
+ZLIntegerOption FBReader::AngleStateOption(STATE, ANGLE, ZLViewWidget::DEGREES0);
 
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 	if (BookCollection::PathOption.value() == "") {
@@ -460,6 +462,7 @@ void FBReader::doAction(ActionCode code) {
 						(ZLViewWidget::Angle)optionValue : ZLViewWidget::DEGREES0;
 				}
 				myViewWidget->rotate(newAngle);
+				AngleStateOption.setValue(newAngle);
 				repaintView();
 			}
 			break;
