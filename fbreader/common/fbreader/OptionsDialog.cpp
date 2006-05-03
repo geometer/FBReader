@@ -76,6 +76,7 @@ static const std::string ROTATION_0 = "Disabled";
 static const std::string ROTATION_90 = "90 Degrees Counterclockwise";
 static const std::string ROTATION_180 = "180 Degrees";
 static const std::string ROTATION_270 = "90 Degrees Clockwise";
+static const std::string ROTATION_USE_4_DIRECTIONS = "Cycle Through All 4 Directions";
 
 const std::string &RotationTypeEntry::name() const {
 	return ROTATION_TYPE;
@@ -89,13 +90,15 @@ const std::string &RotationTypeEntry::text(int index) const {
 			return ROTATION_180;
 		case 3:
 			return ROTATION_270;
+		case 4:
+			return ROTATION_USE_4_DIRECTIONS;
 		default:
 			return ROTATION_0;
 	}
 }
 
 int RotationTypeEntry::choiceNumber() const {
-	return 4;
+	return 5;
 }
 
 int RotationTypeEntry::initialCheckedIndex() const {
@@ -108,11 +111,13 @@ int RotationTypeEntry::initialCheckedIndex() const {
 			return 2;
 		case ZLViewWidget::DEGREES270:
 			return 3;
+		case -1:
+			return 4;
 	}
 }
 
 void RotationTypeEntry::onAccept(int index) {
-	ZLViewWidget::Angle angle = ZLViewWidget::DEGREES0;
+	int angle = ZLViewWidget::DEGREES0;
 	switch (index) {
 		case 1:
 			angle = ZLViewWidget::DEGREES90;
@@ -122,6 +127,9 @@ void RotationTypeEntry::onAccept(int index) {
 			break;
 		case 3:
 			angle = ZLViewWidget::DEGREES270;
+			break;
+		case 4:
+			angle = -1;
 			break;
 	}
 	FBReader::RotationAngleOption.setValue(angle);

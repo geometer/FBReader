@@ -437,11 +437,29 @@ void FBReader::doAction(ActionCode code) {
 			break;
 		case ACTION_ROTATE_SCREEN:
 			if (isRotationSupported()) {
-				if (myViewWidget->rotation() == ZLViewWidget::DEGREES0) {
-					myViewWidget->rotate((ZLViewWidget::Angle)RotationAngleOption.value());
+				int optionValue = RotationAngleOption.value();
+				ZLViewWidget::Angle oldAngle = myViewWidget->rotation();
+				ZLViewWidget::Angle newAngle = ZLViewWidget::DEGREES0;
+				if (optionValue == -1) {
+					switch (oldAngle) {
+						case ZLViewWidget::DEGREES0:
+							newAngle = ZLViewWidget::DEGREES90;
+							break;
+						case ZLViewWidget::DEGREES90:
+							newAngle = ZLViewWidget::DEGREES180;
+							break;
+						case ZLViewWidget::DEGREES180:
+							newAngle = ZLViewWidget::DEGREES270;
+							break;
+						case ZLViewWidget::DEGREES270:
+							newAngle = ZLViewWidget::DEGREES0;
+							break;
+					}
 				} else {
-					myViewWidget->rotate(ZLViewWidget::DEGREES0);
+					newAngle = (oldAngle == ZLViewWidget::DEGREES0) ?
+						(ZLViewWidget::Angle)optionValue : ZLViewWidget::DEGREES0;
 				}
+				myViewWidget->rotate(newAngle);
 				repaintView();
 			}
 			break;
