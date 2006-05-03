@@ -49,7 +49,7 @@ static const std::string OPTIONS = "Options";
 static const std::string SEARCH = "Search";
 static const std::string STATE = "State";
 static const std::string BOOK = "Book";
-static const std::string ANGLE = "Book";
+static const std::string ANGLE = "Angle";
 
 ZLBooleanOption FBReader::QuitOnCancelOption(OPTIONS, "QuitOnCancel", false);
 ZLBooleanOption FBReader::StoreContentsPositionOption(OPTIONS, "StoreContentsPosition", false);
