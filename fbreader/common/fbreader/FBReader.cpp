@@ -144,13 +144,9 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) {
 		}
 	}
 	openBook(description);
-
-	readBindings();
 }
 
 FBReader::~FBReader() {
-	saveBindings();
-
 	delete myContext;
 	myBookTextView->saveState();
 	delete myBookTextView;
@@ -295,7 +291,6 @@ void FBReader::addBookSlot() {
 void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
 	int delay = myLastScrollingTime.millisecondsTo(ZLTime());
 	if ((delay < 0) || (delay >= options.DelayOption.value())) {
-		//const ZLTime t;
 		TextView::ScrollingMode oType = (TextView::ScrollingMode)options.ModeOption.value();
 		unsigned int oValue = 0;
 		switch (oType) {
@@ -314,7 +309,6 @@ void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
 		((TextView*)myViewWidget->view())->scrollPage(forward, oType, oValue);
 		repaintView();
 		myLastScrollingTime = ZLTime();
-		//std::cerr << t.millisecondsTo(myLastScrollingTime) << "\n";
 	}
 }
 
@@ -652,30 +646,14 @@ void FBReader::clearTextCaches() {
 	myRecentBooksView->clearCaches();
 }
 
-void FBReader::bindKey(const std::string &key, ActionCode code) {
-	if (code == NO_ACTION) {
-		std::map<std::string,ActionCode>::iterator it = myKeyBindings.find(key);
-		if (it != myKeyBindings.end()) {
-			myKeyBindings.erase(it);
-		}
-	} else {
-		myKeyBindings[key] = code;
-	}
-}
-
 void FBReader::doAction(const std::string &key) {
-	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(key);
-	if (it != myKeyBindings.end()) {
-		if (isScrollingAction(it->second) || (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())) {
-			doAction(it->second);
+	ActionCode code = myKeyBindings.getBinding(key);
+	if (code != NO_ACTION) {
+		if (isScrollingAction(code) || (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())) {
+			doAction(code);
 			myLastKeyActionTime = ZLTime();
 		}
 	}
-}
-
-FBReader::ActionCode FBReader::keyBinding(const std::string &key) {
-	std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.find(key);
-	return (it != myKeyBindings.end()) ? it->second : NO_ACTION;
 }
 
 bool FBReader::isFullKeyboardControlSupported() const {

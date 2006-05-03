@@ -40,43 +40,55 @@ class RecentBooksView;
 class ZLViewWidget;
 class ZLPaintContext;
 
-class FBReader : public ZLApplication {
+enum ActionCode {
+	// please, don't change these numbers
+	// add new action id's at end of this enumeration
+	NO_ACTION = 0,
+	ACTION_SHOW_COLLECTION = 1,
+	ACTION_SHOW_OPTIONS = 2,
+	ACTION_UNDO = 3,
+	ACTION_REDO = 4,
+	ACTION_SHOW_CONTENTS = 5,
+	ACTION_SEARCH = 6,
+	ACTION_FIND_PREVIOUS = 7,
+	ACTION_FIND_NEXT = 8,
+	ACTION_LARGE_SCROLL_FORWARD = 9,
+	ACTION_LARGE_SCROLL_BACKWARD = 10,
+	ACTION_SMALL_SCROLL_FORWARD = 11,
+	ACTION_SMALL_SCROLL_BACKWARD = 12,
+	ACTION_MOUSE_SCROLL_FORWARD = 13,
+	ACTION_MOUSE_SCROLL_BACKWARD = 14,
+	ACTION_SCROLL_TO_HOME = 15,
+	ACTION_SCROLL_TO_START_OF_TEXT = 16,
+	ACTION_SCROLL_TO_END_OF_TEXT = 17,
+	ACTION_CANCEL = 18,
+	ACTION_INCREASE_FONT = 19,
+	ACTION_DECREASE_FONT = 20,
+	ACTION_SHOW_HIDE_POSITION_INDICATOR = 21,
+	ACTION_TOGGLE_FULLSCREEN = 22,
+	ACTION_FULLSCREEN_ON = 23,
+	ACTION_ADD_BOOK = 24,
+	ACTION_SHOW_BOOK_INFO = 25,
+	ACTION_SHOW_HELP = 26,
+	ACTION_ROTATE_SCREEN = 27,
+	ACTION_SHOW_LAST_BOOKS = 28,
+	ACTION_QUIT = 29,
+};
+
+class KeyBindings {
 
 public:
-	enum ActionCode {
-		// please, don't change these numbers
-		// add new action id's at end of this enumeration
-		NO_ACTION = 0,
-		ACTION_SHOW_COLLECTION = 1,
-		ACTION_SHOW_OPTIONS = 2,
-		ACTION_UNDO = 3,
-		ACTION_REDO = 4,
-		ACTION_SHOW_CONTENTS = 5,
-		ACTION_SEARCH = 6,
-		ACTION_FIND_PREVIOUS = 7,
-		ACTION_FIND_NEXT = 8,
-		ACTION_LARGE_SCROLL_FORWARD = 9,
-		ACTION_LARGE_SCROLL_BACKWARD = 10,
-		ACTION_SMALL_SCROLL_FORWARD = 11,
-		ACTION_SMALL_SCROLL_BACKWARD = 12,
-		ACTION_MOUSE_SCROLL_FORWARD = 13,
-		ACTION_MOUSE_SCROLL_BACKWARD = 14,
-		ACTION_SCROLL_TO_HOME = 15,
-		ACTION_SCROLL_TO_START_OF_TEXT = 16,
-		ACTION_SCROLL_TO_END_OF_TEXT = 17,
-		ACTION_CANCEL = 18,
-		ACTION_INCREASE_FONT = 19,
-		ACTION_DECREASE_FONT = 20,
-		ACTION_SHOW_HIDE_POSITION_INDICATOR = 21,
-		ACTION_TOGGLE_FULLSCREEN = 22,
-		ACTION_FULLSCREEN_ON = 23,
-		ACTION_ADD_BOOK = 24,
-		ACTION_SHOW_BOOK_INFO = 25,
-		ACTION_SHOW_HELP = 26,
-		ACTION_ROTATE_SCREEN = 27,
-		ACTION_SHOW_LAST_BOOKS = 28,
-		ACTION_QUIT = 29,
-	};
+	KeyBindings();
+	~KeyBindings();
+
+	void bindKey(const std::string &key, ActionCode code);
+	ActionCode getBinding(const std::string &key);
+
+private:
+	std::map<std::string,ActionCode> myBindingsMap;
+};
+
+class FBReader : public ZLApplication {
 
 protected:
 	enum ViewMode {
@@ -156,10 +168,8 @@ protected:
 private:
 	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
 	void clearTextCaches() FB_SECTION;
-	void FBReader::doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
+	void doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
 
-	void readBindings() FB_SECTION;
-	void saveBindings() FB_SECTION;
 	bool isScrollingAction(ActionCode code) FB_SECTION;
 
 public:
@@ -176,8 +186,7 @@ public:
 	void repaintView() FB_SECTION;
 	void doAction(ActionCode code) FB_SECTION;
 
-	void bindKey(const std::string &key, ActionCode code) FB_SECTION;
-	ActionCode keyBinding(const std::string &key) FB_SECTION;
+	KeyBindings &keyBindings();
 
 private:
 	void openBookInternal(BookDescriptionPtr description) FB_SECTION;
@@ -203,7 +212,11 @@ private:
 	ZLPaintContext *myContext;
 	BookModel *myModel;
 
-	std::map<std::string,ActionCode> myKeyBindings;
+	KeyBindings myKeyBindings;
 };
+
+inline KeyBindings &FBReader::keyBindings() {
+	return myKeyBindings;
+}
 
 #endif /* __FBREADER_H__ */

@@ -44,7 +44,7 @@ static bool quitFlag = false;
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	if (!quitFlag) {
-		((GtkFBReader*)data)->doAction(FBReader::ACTION_QUIT);
+		((GtkFBReader*)data)->doAction(ACTION_QUIT);
 	}
 	return true;
 }
@@ -55,9 +55,9 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 }
 
 struct ActionSlotData {
-	ActionSlotData(GtkFBReader *reader, FBReader::ActionCode code) { Reader = reader; Code = code; }
+	ActionSlotData(GtkFBReader *reader, ActionCode code) { Reader = reader; Code = code; }
 	GtkFBReader *Reader;
-	FBReader::ActionCode Code;
+	ActionCode Code;
 };
 
 static void actionSlot(GtkWidget*, gpointer data) {

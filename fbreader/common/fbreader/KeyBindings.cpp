@@ -35,12 +35,12 @@ static const std::string BINDED_ACTION = "Action";
 class KeyBindingsReader : public ZLXMLReader {
 
 public:
-	KeyBindingsReader(std::map<std::string,FBReader::ActionCode> &keymap) : myKeymap(keymap) {}
+	KeyBindingsReader(std::map<std::string,ActionCode> &keymap) : myKeymap(keymap) {}
 
 	void startElementHandler(const char *tag, const char **attributes);
 
 private:
-	std::map<std::string,FBReader::ActionCode> &myKeymap;
+	std::map<std::string,ActionCode> &myKeymap;
 };
 
 void KeyBindingsReader::startElementHandler(const char *tag, const char **attributes) {
@@ -50,20 +50,20 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 		const char *key = attributeValue(attributes, "key");
 		const char *action = attributeValue(attributes, "action");
 		if ((key != 0) && (action != 0)) {
-			myKeymap[key] = (FBReader::ActionCode)atoi(action);
+			myKeymap[key] = (ActionCode)atoi(action);
 		}
 	}
 }
 
 static const std::string KeymapFile = "keymap.xml";
 
-void FBReader::readBindings() {
+KeyBindings::KeyBindings() {
 	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
 	if (!stream.isNull() && stream->open()) {
-		std::map<std::string,FBReader::ActionCode> keymap;
+		std::map<std::string,ActionCode> keymap;
 		KeyBindingsReader(keymap).readDocument(stream);
 		stream->close();
-		for (std::map<std::string,FBReader::ActionCode>::const_iterator it = keymap.begin(); it != keymap.end(); it++) {
+		for (std::map<std::string,ActionCode>::const_iterator it = keymap.begin(); it != keymap.end(); it++) {
 			bindKey(it->first, it->second);
 		}
 	}
@@ -84,8 +84,8 @@ void FBReader::readBindings() {
 	}
 }
 
-void FBReader::saveBindings() {
-	std::map<std::string,FBReader::ActionCode> keymap;
+KeyBindings::~KeyBindings() {
+	std::map<std::string,ActionCode> keymap;
 	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
 	if (!stream.isNull() && stream->open()) {
 		KeyBindingsReader(keymap).readDocument(stream);
@@ -94,9 +94,10 @@ void FBReader::saveBindings() {
 
 	ZLOption::clearGroup(BINDINGS_GROUP);
 	int counter = 0;
-	for (std::map<std::string,ActionCode>::const_iterator it = myKeyBindings.begin(); it != myKeyBindings.end(); it++) {
+	for (std::map<std::string,ActionCode>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); it++) {
 		std::map<std::string,ActionCode>::const_iterator original = keymap.find(it->first);
-		if ((original == keymap.end()) || original->second != it->second) {
+		ActionCode defaultAction = (original == keymap.end()) ? NO_ACTION : original->second;
+		if (defaultAction != it->second) {
 			std::string key = BINDED_KEY;
 			ZLStringUtil::appendNumber(key, counter);
 			std::string action = BINDED_ACTION;
@@ -107,4 +108,13 @@ void FBReader::saveBindings() {
 		}
 	}
 	ZLIntegerRangeOption(BINDINGS_GROUP, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
+}
+
+void KeyBindings::bindKey(const std::string &key, ActionCode code) {
+	myBindingsMap[key] = code;
+}
+
+ActionCode KeyBindings::getBinding(const std::string &key) {
+	std::map<std::string,ActionCode>::const_iterator it = myBindingsMap.find(key);
+	return (it != myBindingsMap.end()) ? it->second : NO_ACTION;
 }
