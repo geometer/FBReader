@@ -481,7 +481,6 @@ private:
 
 void FBReader::rebuildCollectionInternal() {
 	myCollectionView->rebuild();
-	myViewWidget->setView(myCollectionView);
 }
 
 void FBReader::setMode(ViewMode mode) {
@@ -538,6 +537,7 @@ void FBReader::setMode(ViewMode mode) {
 				RebuildCollectionRunnable runnable(*this);
 				ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
 			}
+			myViewWidget->setView(myCollectionView);
 			break;
 		case RECENT_BOOKS_MODE:
 			setButtonVisible(ACTION_SHOW_COLLECTION, true);
