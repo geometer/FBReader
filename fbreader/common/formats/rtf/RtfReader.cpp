@@ -313,7 +313,7 @@ int RtfReader::ecApplyPropChange(int iprop, int val) {
       (*(int *) (pb+rgprop[iprop].offset)) = val;
       break;
     case actnSpec:
-      return ecParseSpecialProperty(iprop, val);
+      return ecParseSpecialProperty(iprop);
       break;
     default:
       DPRINT("parse failed: bad table\n");
@@ -366,7 +366,7 @@ int RtfReader::ecStyleChange(int st, int val) {
 // Set a property that requires code to evaluate.
 //
 
-int RtfReader::ecParseSpecialProperty(int iprop, int val) {
+int RtfReader::ecParseSpecialProperty(int iprop) {
   switch (iprop) {
     case ipropPard:
       memset(&state.pap, 0, sizeof(state.pap));

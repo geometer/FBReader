@@ -164,7 +164,7 @@ protected:
 private:
     
   int ecApplyPropChange(int iprop, int val);
-	int ecParseSpecialProperty(int iprop, int val);
+	int ecParseSpecialProperty(int iprop);
 	int ecApplyPictPropChange(int pprop);
 	int ecChangeDest(int idest);
 	int ecEndGroupAction(int rds);
