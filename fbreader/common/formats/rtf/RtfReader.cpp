@@ -67,7 +67,7 @@ typedef enum {actnSpec, actnByte, actnWord} ACTN;
 typedef enum {propChp, propPap, propSep, propDop} PROPTYPE;
 
 typedef enum {istyleIndex} SPROP;
-typedef enum {ipfnParagraph, ipfnBin, ipfnCodePage, ipfnSkipDest,
+typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
 typedef enum {idestInfo, idestTitle, idestAuthor, idestPict, idestStyleSheet,
     idestFootnote, idestSkip } IDEST;
@@ -155,6 +155,7 @@ SYM rgsymRtf[] = {
 //  keyword   dflt  fPassDflt   kwd     idx
   { "\x0a",   0,    false,   kwdSpec,  ipfnParagraph },
   { "\x0d",   0,    false,   kwdSpec,  ipfnParagraph },
+  { "'",    0,    false,   kwdSpec,  ipfnHex },
   { "*",    0,    false,   kwdSpec,  ipfnSkipDest },
   { "ansicpg",  0,    false,   kwdSpec,  ipfnCodePage },
   { "bin",    0,    false,   kwdSpec,  ipfnBin },
@@ -274,8 +275,7 @@ static void fillKeywordMap() {
 //
 //
 
-int RtfReader::ecApplyPropChange(int iprop, int val)
-{
+int RtfReader::ecApplyPropChange(int iprop, int val) {
   char *pb = NULL;
   CHP oldChp = state.chp;
   
@@ -284,91 +284,73 @@ int RtfReader::ecApplyPropChange(int iprop, int val)
   if (state.rds == rdsSkip)         // If we're skipping text,
     return ecOK;          // don't do anything.
 
-  switch (rgprop[iprop].prop)
-  {
-  case propDop:
-    pb = (char *) &state.dop;
-    break;
-  case propSep:
-    pb = (char *) &state.sep;
-    break;
-  case propPap:
-    pb = (char *) &state.pap;
-    break;
-  case propChp:
-    pb = (char *) &state.chp;
-    break;
-  default:
-    if (rgprop[iprop].actn != actnSpec)
-  {
+  switch (rgprop[iprop].prop) {
+    case propDop:
+      pb = (char *) &state.dop;
+      break;
+    case propSep:
+      pb = (char *) &state.sep;
+      break;
+    case propPap:
+      pb = (char *) &state.pap;
+      break;
+    case propChp:
+      pb = (char *) &state.chp;
+      break;
+    default:
+      if (rgprop[iprop].actn != actnSpec) {
+        DPRINT("parse failed: bad table\n");
+        return ecBadTable;
+      }
+      break;
+  }
+  
+  switch (rgprop[iprop].actn) {
+    case actnByte:
+      (*(bool *) (pb + rgprop[iprop].offset)) = (val != 0);
+      break;
+    case actnWord:
+      (*(int *) (pb+rgprop[iprop].offset)) = val;
+      break;
+    case actnSpec:
+      return ecParseSpecialProperty(iprop, val);
+      break;
+    default:
       DPRINT("parse failed: bad table\n");
       return ecBadTable;
   }
-    break;
-  }
   
-  switch (rgprop[iprop].actn)
-  {
-  case actnByte:
-    (*(bool *) (pb + rgprop[iprop].offset)) = (val != 0);
-    break;
-  case actnWord:
-    (*(int *) (pb+rgprop[iprop].offset)) = val;
-    break;
-  case actnSpec:
-    return ecParseSpecialProperty(iprop, val);
-    break;
-  default:
-    {
-    DPRINT("parse failed: bad table\n");
-    return ecBadTable;
-  }
-  }
-  
-  if (state.chp.fItalic != oldChp.fItalic)
-  {
-    if (state.chp.fItalic)
-    {
-    startElementHandler(_ITALIC);
-  }
-    else
-    {
-    endElementHandler(_ITALIC);
-  }
+  if (state.chp.fItalic != oldChp.fItalic) {
+    if (state.chp.fItalic) {
+      startElementHandler(_ITALIC);
+    } else {
+      endElementHandler(_ITALIC);
+    }
   }
 
-  if (state.chp.fBold != oldChp.fBold)
-  {
-    if (state.chp.fBold)
-    {
-    startElementHandler(_BOLD);
+  if (state.chp.fBold != oldChp.fBold) {
+    if (state.chp.fBold) {
+      startElementHandler(_BOLD);
+    } else {
+      endElementHandler(_BOLD);
     }
-    else
-    {
-    endElementHandler(_BOLD);
-  }
   }
   
   return ecOK;
 }
 
 char style_attributes[1][256];
-int RtfReader::ecStyleChange(int st, int val)
-{
-  if (st != istyleIndex)
-  {
+int RtfReader::ecStyleChange(int st, int val) {
+  if (st != istyleIndex) {
     return ecOK;
   }
 
-  if (state.rds == rdsStyleSheet)
-  {
+  if (state.rds == rdsStyleSheet) {
     DPRINT ("Add style index: %i\n", val);
     
     sprintf(style_attributes[0], "%i", val);
     startElementHandler(_STYLE_INFO, (const char **) style_attributes);
-  }
-  else /*if (state.rds == rdsContent)*/
-  {
+  } else /*if (state.rds == rdsContent)*/ {
     DPRINT ("Change style index: %i\n", val);
 
     sprintf(style_attributes[0], "%i", val);
@@ -384,31 +366,27 @@ int RtfReader::ecStyleChange(int st, int val)
 // Set a property that requires code to evaluate.
 //
 
-int RtfReader::ecParseSpecialProperty(int iprop, int val)
-{
-  switch (iprop)
-  {
-  case ipropPard:
-    memset(&state.pap, 0, sizeof(state.pap));
-    return ecOK;
-  case ipropPlain:
-    if (state.chp.fItalic)
-    {
-      endElementHandler(_ITALIC);
-    }
+int RtfReader::ecParseSpecialProperty(int iprop, int val) {
+  switch (iprop) {
+    case ipropPard:
+      memset(&state.pap, 0, sizeof(state.pap));
+      return ecOK;
+    case ipropPlain:
+      if (state.chp.fItalic) {
+        endElementHandler(_ITALIC);
+      }
 
-    if (state.chp.fBold)
-    {
-      endElementHandler(_BOLD);
-    }
-  
-    memset(&state.chp, 0, sizeof(state.chp));
-    return ecOK;
-  case ipropSectd:
-    memset(&state.sep, 0, sizeof(state.sep));
-    return ecOK;
-  default:
-    return ecBadTable;
+      if (state.chp.fBold) {
+        endElementHandler(_BOLD);
+      }
+    
+      memset(&state.chp, 0, sizeof(state.chp));
+      return ecOK;
+    case ipropSectd:
+      memset(&state.sep, 0, sizeof(state.sep));
+      return ecOK;
+    default:
+      return ecBadTable;
   }
   
   DPRINT("parse failed: bad table\n");
@@ -418,19 +396,17 @@ int RtfReader::ecParseSpecialProperty(int iprop, int val)
 
 static const char *image_png_type[] = {"image/png"};
 static const char *image_jpeg_type[] = {"image/jpeg"};
-int RtfReader::ecApplyPictPropChange(int pprop)
-{
-  switch (pprop)
-  {
-  case ppropPng:
-    startElementHandler(_IMAGE_TYPE, image_png_type);
-    return ecOK;
-  case ppropJpeg:
-    startElementHandler(_IMAGE_TYPE, image_jpeg_type);
-    return ecOK;
-  default:
-    DPRINT("parse failed: bad table\n");
-    return ecBadTable;
+int RtfReader::ecApplyPictPropChange(int pprop) {
+  switch (pprop) {
+    case ppropPng:
+      startElementHandler(_IMAGE_TYPE, image_png_type);
+      return ecOK;
+    case ppropJpeg:
+      startElementHandler(_IMAGE_TYPE, image_jpeg_type);
+      return ecOK;
+    default:
+      DPRINT("parse failed: bad table\n");
+      return ecBadTable;
   }
 
   return ecBadTable;
@@ -442,64 +418,47 @@ int RtfReader::ecApplyPictPropChange(int pprop)
 // There's usually more to do here than this...
 //
 
-int RtfReader::ecChangeDest(int idest)
-{
-  if (state.rds == rdsSkip)       // if we're skipping text,
-  {
+int RtfReader::ecChangeDest(int idest) {
+  if (state.rds == rdsSkip) {      // if we're skipping text,
 //    DPRINT("skipping...\n");
     return ecOK;        // don't do anything
   }
 
-  switch (idest)
-  {
+  switch (idest) {
     case idestInfo:
-    {
-        DPRINT("title info\n");
+      DPRINT("title info\n");
       state.rds = rdsTitleInfo;
       startElementHandler(_TITLE_INFO);
       break;
-    }
     case idestTitle:
-    {
-        DPRINT("title\n");
+      DPRINT("title\n");
       state.rds = rdsTitle;
       startElementHandler(_BOOK_TITLE);
       break;
-    }
     case idestAuthor:
-    {
-        DPRINT("author\n");
+      DPRINT("author\n");
       state.rds = rdsAuthor;
       startElementHandler(_AUTHOR);
       break;
-    }
     case idestPict:
-    {
-        DPRINT("picture\n");
+      DPRINT("picture\n");
       state.ris = risHexStream;
       state.rds = rdsImage;
       startElementHandler(_IMAGE);
       break;
-    }
     case idestFootnote:
-    {
       DPRINT("footnote\n");
       state.rds = rdsFootnote;
       startElementHandler(_FOOTNOTE);
       break;
-    }
     case idestStyleSheet:
-    {
       DPRINT("style sheet\n");
       state.rds = rdsStyleSheet;
       startElementHandler(_STYLE_SHEET);
       break;
-    }
     default:
-    {
       state.rds = rdsSkip;        // when in doubt, skip it...
       break;
-    }
   }
   return ecOK;
 }
@@ -511,55 +470,38 @@ int RtfReader::ecChangeDest(int idest)
 // If there's any cleanup that needs to be done, do it now.
 //
 
-int RtfReader::ecEndGroupAction(int rds)
-{
-  if (rds == rdsSkip)       // if we're skipping text,
-  {
+int RtfReader::ecEndGroupAction(int rds) {
+  if (rds == rdsSkip) {      // if we're skipping text,
     return ecOK;        // don't do anything
   }
 
-  switch (rds)
-  {
+  switch (rds) {
     case rdsTitleInfo:
-    {
       DPRINT("info end\n");
       endElementHandler(_TITLE_INFO);
       break;
-    }
     case rdsTitle:
-    {
       DPRINT("title end\n");
       endElementHandler(_BOOK_TITLE);
       break;
-    }
     case rdsAuthor:
-    {
       DPRINT("author end\n");
       endElementHandler(_AUTHOR);
       break;
-    }
     case rdsImage:
-    {
       DPRINT("image end\n");
       endElementHandler(_IMAGE);
       break;
-    }
     case rdsFootnote:
-    {
       DPRINT("footnote end\n");
       endElementHandler(_FOOTNOTE);
       break;
-    }
     case rdsStyleSheet:
-    {
       DPRINT("style sheet end\n");
       endElementHandler(_STYLE_INFO);
       break;
-    }
     default:
-    {
       break;
-    }
   }
   return ecOK;
 }
@@ -571,67 +513,59 @@ int RtfReader::ecEndGroupAction(int rds)
 //
 static const char *encoding1251 = "windows-1251";
 
-int RtfReader::ecParseSpecialKeyword(int ipfn, int param)
-{
+int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
   if (state.rds == rdsSkip && ipfn != ipfnBin)  // if we're skipping, and it's not
     return ecOK;            // the \bin keyword, ignore it.
-  switch (ipfn)
-  {
-  case ipfnParagraph:
-    startElementHandler(_P);
-    break;
-  case ipfnParagraphReset:
-    startElementHandler(_P_RESET);
-    break;
-  case ipfnBin:
-    state.ris = risBin;
-    cbBin = param;
-    break;
-  case ipfnCodePage:
-    startElementHandler(_ENCODING);
-    if ((param == 1251) && (encoding != encoding1251))
-    {
-      encoding = encoding1251;
-      myConverter = ZLEncodingConverter::createConverter(encoding);
-    }
-    else
-    {
-    }
-    break;
-  case ipfnSkipDest:
-    fSkipDestIfUnk = true;
-    break;
-  default:
-    DPRINT("parse failed: bad table\n");
+  switch (ipfn) {
+    case ipfnParagraph:
+      startElementHandler(_P);
+      break;
+    case ipfnParagraphReset:
+      startElementHandler(_P_RESET);
+      break;
+    case ipfnBin:
+			if (param > 0) {
+				myParserState = READ_BINARY_DATA;
+				myBinaryDataSize = param;
+			}
+      break;
+    case ipfnHex:
+      myParserState = READ_HEX_SYMBOL;
+      break;
+    case ipfnCodePage:
+      startElementHandler(_ENCODING);
+      if ((param == 1251) && (encoding != encoding1251)) {
+        encoding = encoding1251;
+        myConverter = ZLEncodingConverter::createConverter(encoding);
+      } else {
+				// ???
+      }
+      break;
+    case ipfnSkipDest:
+      fSkipDestIfUnk = true;
+      break;
+    default:
+      DPRINT("parse failed: bad table\n");
 
-    return ecBadTable;
+      return ecBadTable;
   }
   return ecOK;
 }
 
-enum ParserState {
-  READ_NORMAL_DATA,
-  READ_HEX_DATA,
-  READ_HEX_SYMBOL,
-  READ_KEYWORD,
-  READ_KEYWORD_PARAMETER,
-};
-
 int RtfReader::ecRtfParse() {
   bool readNextChar = true;
   int ec;
-  int cNibble = 2;
-  int b = 0;
-  ParserState parserState = READ_NORMAL_DATA;
+  myParserState = READ_NORMAL_DATA;
 
   std::string keyword;
   std::string parameterString;
   std::string hexString;
 
   const char *ptr = myStreamBuffer;
-  const char *end = myStreamBuffer;
+  const char *end = myStreamBuffer + 1;
   while (!is_interrupted) {
     if (readNextChar) {
+      ptr++;
       if (ptr == end) {
         ptr = myStreamBuffer;
         end = myStreamBuffer + myStream->read(myStreamBuffer, rtfStreamBufferSize);
@@ -639,145 +573,129 @@ int RtfReader::ecRtfParse() {
         if (ptr == end) {
           break;
         }
-      }
-      
-      ptr++;
+			}
     } else {
       readNextChar = true;
     }
 
-    if (state.ris == risBin) {           // if we're parsing binary data, handle it directly
-      if ((ec = ecParseChar(*ptr)) != ecOK)
-        return ec;
-    } else {
-      switch (parserState) {
-        case READ_NORMAL_DATA:
-          switch (*ptr) {
-            case '{':
-              myStateStack.push(state);
-              state.ris = risNorm;
-              break;
-            case '}':
-            {
-              if (myStateStack.empty()) {
-                return ecStackUnderflow;
-              }
-              
-              if (state.rds != myStateStack.top().rds) {
-                if ((ec = ecEndGroupAction(state.rds)) != ecOK)
-                  return ec;
-              }
-              
-              CHP oldChp = state.chp;
-              state = myStateStack.top();
-              myStateStack.pop();
-          
-              if (state.chp.fItalic != oldChp.fItalic) {
-                if (state.chp.fItalic) {
-                  startElementHandler(_ITALIC);
-                } else {
-                  endElementHandler(_ITALIC);
-                }
-              }
-          
-              if (state.chp.fBold != oldChp.fBold) {
-                if (state.chp.fBold) {
-                  startElementHandler(_BOLD);
-                } else {
-                  endElementHandler(_BOLD);
-                }
-              }
-              
-              break;
+    switch (myParserState) {
+      case READ_BINARY_DATA:
+        if ((ec = ecParseChar(*ptr)) != ecOK)
+          return ec;
+				myBinaryDataSize--;
+				if (myBinaryDataSize == 0) {
+					myParserState = READ_NORMAL_DATA;
+				}
+			  break;
+      case READ_NORMAL_DATA:
+        switch (*ptr) {
+          case '{':
+            myStateStack.push(state);
+            state.ris = risNorm;
+            break;
+          case '}':
+          {
+            if (myStateStack.empty()) {
+              return ecStackUnderflow;
             }
-            case '\\':
-              keyword.clear();
-              parserState = READ_KEYWORD;
-              break;
-            case 0x0d:
-            case 0x0a:      // cr and lf are noise characters...
-              break;
-            default:
-              if (state.ris == risNorm) {
-                if ((ec = ecParseChar(*ptr)) != ecOK) {
-                  return ec;
-                }
-              } else {         // parsing hex data
-                b = b << 4;
-          
-                if (isxdigit(*ptr)) {
-                  char s[2];
-                  s[0] = *ptr;
-                  s[1] = '\0';
-                  b += strtol(s, 0, 16);
-                }
-          
-                cNibble--;
-                if (cNibble == 0) {
-                  cNibble = 2;
-                  b = 0;
-                }
-              }           // end else (ris != risNorm)
-              break;
-          }     // switch
-          break;
-        case READ_HEX_DATA:
-          break;
-        case READ_HEX_SYMBOL:
-          hexString += *ptr;
-          if (hexString.size() == 2) {
-            char ch = strtol(hexString.c_str(), 0, 16); 
-            if ((ec = ecParseChar(ch)) != ecOK)
-              return ec;
-            parserState = READ_NORMAL_DATA;
-          }
-          break;
-        case READ_KEYWORD:
-          if (keyword.empty() && !isalpha(*ptr)) {
-            if (*ptr == '\'') {
-              hexString.clear();
-              parserState = READ_HEX_SYMBOL;
-            } else {
-              keyword = *ptr;
-              if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
+            
+            if (state.rds != myStateStack.top().rds) {
+              if ((ec = ecEndGroupAction(state.rds)) != ecOK)
                 return ec;
-              parserState = READ_NORMAL_DATA;
             }
-          } else {
-            if (isalpha(*ptr)) {
-              keyword += *ptr;
-            } else if ((*ptr == '-') || isdigit(*ptr)) {
-              parameterString = *ptr;
-              parserState = READ_KEYWORD_PARAMETER;
-            } else {
-              readNextChar = *ptr == ' ';
-              if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
-                return ec;
-              parserState = READ_NORMAL_DATA;
+            
+            CHP oldChp = state.chp;
+            state = myStateStack.top();
+            myStateStack.pop();
+        
+            if (state.chp.fItalic != oldChp.fItalic) {
+              if (state.chp.fItalic) {
+                startElementHandler(_ITALIC);
+              } else {
+                endElementHandler(_ITALIC);
+              }
             }
+        
+            if (state.chp.fBold != oldChp.fBold) {
+              if (state.chp.fBold) {
+                startElementHandler(_BOLD);
+              } else {
+                endElementHandler(_BOLD);
+              }
+            }
+            
+            break;
           }
-          break;
-        case READ_KEYWORD_PARAMETER:
-          if (isdigit(*ptr)) {
-            parameterString += *ptr;
+          case '\\':
+            keyword.clear();
+            myParserState = READ_KEYWORD;
+            break;
+          case 0x0d:
+          case 0x0a:      // cr and lf are noise characters...
+            break;
+          default:
+            if (state.ris == risNorm) {
+              if ((ec = ecParseChar(*ptr)) != ecOK) {
+                return ec;
+              }
+            } else {         // parsing hex data
+             	hexString += *ptr;
+              if (hexString.size() == 2) {
+                char ch = strtol(hexString.c_str(), 0, 16); 
+                hexString.clear();
+                if ((ec = ecParseChar(ch)) != ecOK)
+                  return ec;
+							}
+            }           // end else (ris != risNorm)
+            break;
+        }     // switch
+        break;
+      case READ_HEX_SYMBOL:
+        hexString += *ptr;
+        if (hexString.size() == 2) {
+          char ch = strtol(hexString.c_str(), 0, 16); 
+          hexString.clear();
+          if ((ec = ecParseChar(ch)) != ecOK)
+            return ec;
+          myParserState = READ_NORMAL_DATA;
+        }
+        break;
+      case READ_KEYWORD:
+        if (keyword.empty() && !isalpha(*ptr)) {
+          keyword = *ptr;
+          if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
+            return ec;
+        } else {
+          if (isalpha(*ptr)) {
+            keyword += *ptr;
+          } else if ((*ptr == '-') || isdigit(*ptr)) {
+            parameterString = *ptr;
+            myParserState = READ_KEYWORD_PARAMETER;
           } else {
-            int param = atoi(parameterString.c_str());
             readNextChar = *ptr == ' ';
-            if ((ec = ecTranslateKeyword(keyword, param, true)) != ecOK)
+            if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
               return ec;
-            parserState = READ_NORMAL_DATA;
           }
-          break;
-      }
-    }       // else (ris != risBin)
+        }
+        break;
+      case READ_KEYWORD_PARAMETER:
+        if (isdigit(*ptr)) {
+          parameterString += *ptr;
+        } else {
+          int param = atoi(parameterString.c_str());
+          readNextChar = *ptr == ' ';
+          if ((ec = ecTranslateKeyword(keyword, param, true)) != ecOK)
+            return ec;
+        }
+        break;
+    }
   }         // while
   
   return (is_interrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
 }
 
 int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-  //DPRINT("keyword: %s[%x, %i], param: %i, fparam: %i\n", 
-  //   szKeyword, szKeyword[0], strlen(szKeyword), param, fParam);
+  myParserState = READ_NORMAL_DATA;
 
   std::map<std::string, RtfKeywordInfo*>::const_iterator it = myKeywordMap.find(keyword);
   
@@ -826,10 +744,6 @@ int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fP
 
 int RtfReader::ecParseChar(int ch)
 {
-//  DPRINT("%c", ch);
-  
-  if (state.ris == risBin && --cbBin <= 0)
-    state.ris = risNorm;
   switch (state.rds)
   {
   case rdsSkip:
@@ -871,14 +785,13 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
   startDocumentHandler();
 
   fSkipDestIfUnk = false;
-  cbBin = 0;
 
   memset(&state, 0, sizeof(state));
   state.rds = rdsContent;
   state.ris = risNorm;
 
   int ret = ecRtfParse();
-  bool code = ret != ecOK;
+  bool code = ret == ecOK;
   if (!code) {
     DPRINT("parse failed: %i\n", ret);
   }

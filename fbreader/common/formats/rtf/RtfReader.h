@@ -178,7 +178,6 @@ private:
 
 	int is_interrupted;	
 	bool fSkipDestIfUnk;
-	long cbBin;
 
 	RtfReaderState state;
 
@@ -191,6 +190,15 @@ private:
 private:
 	shared_ptr<ZLInputStream> myStream;
 	char *myStreamBuffer;
+
+  enum {
+    READ_NORMAL_DATA,
+    READ_BINARY_DATA,
+    READ_HEX_SYMBOL,
+    READ_KEYWORD,
+    READ_KEYWORD_PARAMETER,
+  } myParserState;
+	int myBinaryDataSize;
 };
 
 #endif /* __RTFREADER_H__ */
