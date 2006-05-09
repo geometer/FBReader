@@ -182,7 +182,6 @@ private:
 	int cGroup;
 	bool fSkipDestIfUnk;
 	long cbBin;
-	long lParam;
 
 	RtfReaderState state;
 

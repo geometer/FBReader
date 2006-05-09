@@ -828,8 +828,8 @@ int RtfReader::ecRtfParse() {
 
 int RtfReader::ecParseRtfKeyword(void) {
     int ch;
-    char fParam = false;
-    char fNeg = false;
+    bool fParam = false;
+    bool fNeg = false;
     int param = 0;
     char *pch;
     char szKeyword[30];
@@ -875,9 +875,6 @@ int RtfReader::ecParseRtfKeyword(void) {
             }
             pch[0] = '\0';
             param = atoi(szParameter);
-            if (fNeg)
-                param = -param;
-            lParam = atol(szParameter);
             if (fNeg)
                 param = -param;
         }
@@ -987,7 +984,6 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
     cGroup = 0;
     fSkipDestIfUnk = false;
     cbBin = 0;
-    lParam = 0;
 
     stack.reserve(30);
 
