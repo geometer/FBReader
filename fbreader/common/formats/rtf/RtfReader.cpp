@@ -50,13 +50,30 @@ RtfReader::RtfReader(const std::string &encoding) {
   {
     myConverter = NULL;
   }
-  
-//    streamBuffer = NULL;
 }
 
 RtfReader::~RtfReader() {
 }
-// RTF parser tables
+
+// What types of properties are there?
+typedef enum {ipropBold, ipropItalic, ipropUnderline, ipropLeftInd,
+              ipropRightInd, ipropFirstInd, ipropCols, ipropPgnX,
+              ipropPgnY, ipropXaPage, ipropYaPage, ipropXaLeft,
+              ipropXaRight, ipropYaTop, ipropYaBottom, ipropPgnStart,
+              ipropSbk, ipropPgnFormat, ipropFacingp, ipropLandscape,
+              ipropJust, ipropPard, ipropPlain, ipropSectd,
+              ipropMax } IPROP;
+typedef enum {ppropPng, ppropJpeg } PPROP;
+
+typedef enum {actnSpec, actnByte, actnWord} ACTN;
+typedef enum {propChp, propPap, propSep, propDop} PROPTYPE;
+
+typedef enum {istyleIndex} SPROP;
+typedef enum {ipfnParagraph, ipfnBin, ipfnHex, ipfnCodePage, ipfnSkipDest,
+	      ipfnParagraphReset } IPFN;
+typedef enum {idestInfo, idestTitle, idestAuthor, idestPict, idestStyleSheet,
+	      idestFootnote, idestSkip } IDEST;
+typedef enum {kwdChar, kwdDest, kwdProp, kwdPictProp, kwdStyle, kwdSpec} KWD;
 
 typedef struct propmod
 {
@@ -64,6 +81,8 @@ typedef struct propmod
     PROPTYPE prop;          // structure containing value
     int  offset;            // offset of value from base of structure
 } PROP;
+
+// RTF parser tables
 
 // Property descriptions
 PROP rgprop [ipropMax] = {
@@ -653,7 +672,7 @@ int RtfReader::getChar(void)
         }
 
         startCounter = 0;
-        endCounter = stream->read(myStreamBuffer, rtfStreamBufferSize);
+        endCounter = myStream->read(myStreamBuffer, rtfStreamBufferSize);
         
         if (endCounter == 0)
         {
@@ -678,13 +697,11 @@ void RtfReader::unGetChar(int ch)
     myStreamBuffer[startCounter] = ch;
 }
 
-int RtfReader::ecRtfParse(ZLInputStream &stream)
-{
+int RtfReader::ecRtfParse() {
     int ch;
     int ec;
     int cNibble = 2;
     int b = 0;
-    this->stream = &stream;
 
     while (((ch = getChar()) != -1) && !is_interrupted)
     {
@@ -960,16 +977,16 @@ void RtfReader::interrupt(void)
     is_interrupted = true;
 }
 
-bool RtfReader::readDocument(ZLInputStream &stream) {
+bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
     DPRINT("readDocument\n");
-    if (!stream.open()) {
+    if (stream.isNull() || !stream->open()) {
             return false;
     }
 
+		myStream = stream;
     myStreamBuffer = new char[rtfStreamBufferSize];
     
     startCounter = endCounter = rtfStreamBufferSize;
-    this->stream = NULL;
 
     is_interrupted = false;
     startDocumentHandler();
@@ -985,15 +1002,16 @@ bool RtfReader::readDocument(ZLInputStream &stream) {
     state.rds = rdsContent;
     state.ris = risNorm;
 
-    int ret = ecRtfParse(stream);
+    int ret = ecRtfParse();
     bool code = ret != ecOK;
     if (!code) {
         DPRINT("parse failed: %i\n", ret);
 		}
     endDocumentHandler();
-    this->stream = NULL;
     stack.reserve(0);
-    stream.close();
+		
     delete[] myStreamBuffer;
-    return code;
+    myStream->close();
+    
+		return code;
 }

@@ -90,33 +90,12 @@ struct RtfReaderState
 };
 
 
-// What types of properties are there?
-typedef enum {ipropBold, ipropItalic, ipropUnderline, ipropLeftInd,
-              ipropRightInd, ipropFirstInd, ipropCols, ipropPgnX,
-              ipropPgnY, ipropXaPage, ipropYaPage, ipropXaLeft,
-              ipropXaRight, ipropYaTop, ipropYaBottom, ipropPgnStart,
-              ipropSbk, ipropPgnFormat, ipropFacingp, ipropLandscape,
-              ipropJust, ipropPard, ipropPlain, ipropSectd,
-              ipropMax } IPROP;
-typedef enum {ppropPng, ppropJpeg } PPROP;
-
-typedef enum {actnSpec, actnByte, actnWord} ACTN;
-typedef enum {propChp, propPap, propSep, propDop} PROPTYPE;
-
-typedef enum {ipfnParagraph, ipfnBin, ipfnHex, ipfnCodePage, ipfnSkipDest,
-	      ipfnParagraphReset } IPFN;
-typedef enum {idestInfo, idestTitle, idestAuthor, idestPict, idestStyleSheet,
-	      idestFootnote, idestSkip } IDEST;
-typedef enum {kwdChar, kwdDest, kwdProp, kwdPictProp, kwdStyle, kwdSpec} KWD;
-
-typedef enum {istyleIndex} SPROP;
-
 class ZLInputStream;
 
 class RtfReader {
 
 public:
-	bool readDocument(ZLInputStream &stream) FORMATS_SECTION;
+	bool readDocument(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
 protected:
 	RtfReader(const std::string &encoding) FORMATS_SECTION;
@@ -183,7 +162,7 @@ protected:
 
 private:
     
-        int ecApplyPropChange(int iprop, int val);
+  int ecApplyPropChange(int iprop, int val);
 	int ecParseSpecialProperty(int iprop, int val);
 	int ecApplyPictPropChange(int pprop);
 	int ecTranslateKeyword(char *szKeyword, int param, bool fParam);
@@ -198,7 +177,7 @@ private:
 	int ecParseRtfKeyword(void);
 	int ecParseChar(int ch);
 
-	int ecRtfParse(ZLInputStream &stream);
+	int ecRtfParse();
 
 	int is_interrupted;	
 	int cGroup;
@@ -213,10 +192,12 @@ private:
 
 	int startCounter;
 	int endCounter;
-	char *myStreamBuffer;
-	ZLInputStream *stream;
 	int getChar(void);
 	void unGetChar(int ch);
+
+private:
+	shared_ptr<ZLInputStream> myStream;
+	char *myStreamBuffer;
 };
 
 #endif /* __RTFREADER_H__ */

@@ -47,7 +47,7 @@ bool RtfPlugin::readDescription(const std::string &path, BookDescription &descri
 
 	detectEncoding(description, *stream);
 
-	if (!RtfDescriptionReader(description).readDocument(*stream))
+	if (!RtfDescriptionReader(description).readDocument(stream))
 	{
             DPRINT("Failed\n");
 	    return false;
@@ -73,7 +73,7 @@ bool RtfPlugin::readModel(const BookDescription &description, BookModel &model) 
 
     DPRINT("read data for: %s\n", fileName.data());
 	
-    ret = RtfBookReader(model, description.encoding()).readDocument(*stream);
+    ret = RtfBookReader(model, description.encoding()).readDocument(stream);
     
     DPRINT(ret ? "OK\n" : "Failed\n");
     
