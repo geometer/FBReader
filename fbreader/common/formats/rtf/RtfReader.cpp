@@ -277,7 +277,8 @@ static void fillKeywordMap() {
 
 int RtfReader::ecApplyPropChange(int iprop, int val) {
   char *pb = NULL;
-  CHP oldChp = state.chp;
+  bool oldItalic = state.chp.fItalic;
+  bool oldBold = state.chp.fBold;
   
 //  DPRINT("Aply prop change: %i %i\n", iprop, val);
 
@@ -320,7 +321,7 @@ int RtfReader::ecApplyPropChange(int iprop, int val) {
       return ecBadTable;
   }
   
-  if (state.chp.fItalic != oldChp.fItalic) {
+  if (state.chp.fItalic != oldItalic) {
     if (state.chp.fItalic) {
       startElementHandler(_ITALIC);
     } else {
@@ -328,7 +329,7 @@ int RtfReader::ecApplyPropChange(int iprop, int val) {
     }
   }
 
-  if (state.chp.fBold != oldChp.fBold) {
+  if (state.chp.fBold != oldBold) {
     if (state.chp.fBold) {
       startElementHandler(_BOLD);
     } else {
@@ -524,10 +525,10 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
       startElementHandler(_P_RESET);
       break;
     case ipfnBin:
-			if (param > 0) {
-				myParserState = READ_BINARY_DATA;
-				myBinaryDataSize = param;
-			}
+      if (param > 0) {
+        myParserState = READ_BINARY_DATA;
+        myBinaryDataSize = param;
+      }
       break;
     case ipfnHex:
       myParserState = READ_HEX_SYMBOL;
@@ -538,7 +539,7 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
         encoding = encoding1251;
         myConverter = ZLEncodingConverter::createConverter(encoding);
       } else {
-				// ???
+        // ???
       }
       break;
     case ipfnSkipDest:
@@ -573,7 +574,7 @@ int RtfReader::ecRtfParse() {
         if (ptr == end) {
           break;
         }
-			}
+      }
     } else {
       readNextChar = true;
     }
@@ -582,11 +583,11 @@ int RtfReader::ecRtfParse() {
       case READ_BINARY_DATA:
         if ((ec = ecParseChar(*ptr)) != ecOK)
           return ec;
-				myBinaryDataSize--;
-				if (myBinaryDataSize == 0) {
-					myParserState = READ_NORMAL_DATA;
-				}
-			  break;
+        myBinaryDataSize--;
+        if (myBinaryDataSize == 0) {
+          myParserState = READ_NORMAL_DATA;
+        }
+        break;
       case READ_NORMAL_DATA:
         switch (*ptr) {
           case '{':
@@ -604,11 +605,12 @@ int RtfReader::ecRtfParse() {
                 return ec;
             }
             
-            CHP oldChp = state.chp;
+            bool oldItalic = state.chp.fItalic;
+            bool oldBold = state.chp.fBold;
             state = myStateStack.top();
             myStateStack.pop();
         
-            if (state.chp.fItalic != oldChp.fItalic) {
+            if (state.chp.fItalic != oldItalic) {
               if (state.chp.fItalic) {
                 startElementHandler(_ITALIC);
               } else {
@@ -616,7 +618,7 @@ int RtfReader::ecRtfParse() {
               }
             }
         
-            if (state.chp.fBold != oldChp.fBold) {
+            if (state.chp.fBold != oldBold) {
               if (state.chp.fBold) {
                 startElementHandler(_BOLD);
               } else {
@@ -635,13 +637,13 @@ int RtfReader::ecRtfParse() {
             break;
           default:
             if (state.ReadDataAsHex) {
-             	hexString += *ptr;
+               hexString += *ptr;
               if (hexString.size() == 2) {
                 char ch = strtol(hexString.c_str(), 0, 16); 
                 hexString.clear();
                 if ((ec = ecParseChar(ch)) != ecOK)
                   return ec;
-							}
+              }
             } else {
               if ((ec = ecParseChar(*ptr)) != ecOK) {
                 return ec;
