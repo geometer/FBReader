@@ -44,9 +44,9 @@ RtfReader::RtfReader(const std::string &encoding) {
   this->encoding = encoding;
   
   if (!encoding.empty()) {
-  myConverter = ZLEncodingConverter::createConverter(encoding);
+    myConverter = ZLEncodingConverter::createConverter(encoding);
   } else {
-  myConverter = NULL;
+    myConverter = NULL;
   }
 }
 
@@ -442,7 +442,7 @@ int RtfReader::ecChangeDest(int idest) {
       break;
     case idestPict:
       DPRINT("picture\n");
-      state.ris = risHexStream;
+      state.ReadDataAsHex = true;
       state.rds = rdsImage;
       startElementHandler(_IMAGE);
       break;
@@ -591,7 +591,7 @@ int RtfReader::ecRtfParse() {
         switch (*ptr) {
           case '{':
             myStateStack.push(state);
-            state.ris = risNorm;
+            state.ReadDataAsHex = false;
             break;
           case '}':
           {
@@ -634,11 +634,7 @@ int RtfReader::ecRtfParse() {
           case 0x0a:      // cr and lf are noise characters...
             break;
           default:
-            if (state.ris == risNorm) {
-              if ((ec = ecParseChar(*ptr)) != ecOK) {
-                return ec;
-              }
-            } else {         // parsing hex data
+            if (state.ReadDataAsHex) {
              	hexString += *ptr;
               if (hexString.size() == 2) {
                 char ch = strtol(hexString.c_str(), 0, 16); 
@@ -646,9 +642,13 @@ int RtfReader::ecRtfParse() {
                 if ((ec = ecParseChar(ch)) != ecOK)
                   return ec;
 							}
-            }           // end else (ris != risNorm)
+            } else {
+              if ((ec = ecParseChar(*ptr)) != ecOK) {
+                return ec;
+              }
+            }
             break;
-        }     // switch
+        }
         break;
       case READ_HEX_SYMBOL:
         hexString += *ptr;
@@ -788,7 +788,7 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
 
   memset(&state, 0, sizeof(state));
   state.rds = rdsContent;
-  state.ris = risNorm;
+  state.ReadDataAsHex = false;
 
   int ret = ecRtfParse();
   bool code = ret == ecOK;

@@ -72,7 +72,6 @@ typedef struct doc_prop
     bool fLandscape;            // landscape or portrait??
 } DOP;                  // DOcument Properties
 
-typedef enum { risNorm, risBin, risHexSingle, risHexStream/*, risSkip*/} RIS;       // Rtf Internal State
 typedef enum { rdsTitleInfo, rdsTitle, rdsAuthor, rdsContent, rdsImage, 
 	       rdsStyleSheet, rdsFootnote, rdsSkip } RDS;              // Rtf Destination State
 
@@ -85,7 +84,8 @@ struct RtfReaderState
     SEP sep;
     DOP dop;
     RDS rds;
-    RIS ris;
+
+		bool ReadDataAsHex;
     
     int style;
 };
