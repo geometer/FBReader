@@ -24,6 +24,7 @@
 
 #include <string>
 #include <map>
+#include <stack>
 
 #include <abstract/ZLEncodingConverter.h>
 #include <stdio.h>
@@ -179,13 +180,12 @@ private:
 	int ecRtfParse();
 
 	int is_interrupted;	
-	int cGroup;
 	bool fSkipDestIfUnk;
 	long cbBin;
 
 	RtfReaderState state;
 
-	std::vector<RtfReaderState> stack;
+	std::stack<RtfReaderState> myStateStack;
 
 
 	int startCounter;

@@ -663,14 +663,6 @@ int RtfReader::ecRtfParse() {
 
     while (((ch = getChar()) != -1) && !is_interrupted)
     {
-//        DPRINT("main loop char: %c\n", ch);
-        
-        if (cGroup < 0)
-        {
-            DPRINT("parse failed: StackUnderflow\n");
-
-            return ecStackUnderflow;
-        }
         if (state.ris == risBin)                      // if we're parsing binary data, handle it directly
         {
             if ((ec = ecParseChar(ch)) != ecOK)
@@ -681,65 +673,42 @@ int RtfReader::ecRtfParse() {
             switch (ch)
             {
             case '{':
-                DPRINT("{");
-                stack.push_back(state);
+                myStateStack.push(state);
                 state.ris = risNorm;
-                cGroup++;
                 break;
             case '}':
-                int ec;
-                CHP oldChp;
-
-                DPRINT("}");
-
-                if (cGroup == 0)
-                {
-                    DPRINT("parse failed: stack underflow\n");
-
+						{
+                if (myStateStack.empty()) {
                     return ecStackUnderflow;
                 }
                 
-                oldChp = state.chp;
-                DPRINT("old chp: %i, %i\n", oldChp.fItalic, oldChp.fBold);
-                
-                if (state.rds != stack.back().rds)
-                {
+                if (state.rds != myStateStack.top().rds) {
                     if ((ec = ecEndGroupAction(state.rds)) != ecOK)
-                    return ec;
+                        return ec;
                 }
                 
-                state = stack.back();
-                stack.pop_back();
+                CHP oldChp = state.chp;
+                state = myStateStack.top();
+                myStateStack.pop();
 
-                cGroup--;
-
-                if (state.chp.fItalic != oldChp.fItalic)
-                {
-                    DPRINT("new italic: %i\n", state.chp.fItalic);
-                    if (state.chp.fItalic)
-                    {
-                            startElementHandler(_ITALIC);
-                    }
-                    else
-                    {
+                if (state.chp.fItalic != oldChp.fItalic) {
+                    if (state.chp.fItalic) {
+                        startElementHandler(_ITALIC);
+                    } else {
                         endElementHandler(_ITALIC);
                     }
                 }
 
-                if (state.chp.fBold != oldChp.fBold)
-                {
-                    DPRINT("new bold: %i\n", state.chp.fBold);
-                    if (state.chp.fBold)
-                    {
-                            startElementHandler(_BOLD);
-                    }
-                    else
-                    {
+                if (state.chp.fBold != oldChp.fBold) {
+                    if (state.chp.fBold) {
+                        startElementHandler(_BOLD);
+                    } else {
                         endElementHandler(_BOLD);
                     }
                 }
                 
                 break;
+						}
             case '\\':
                 if ((ec = ecParseRtfKeyword()) != ecOK)
                     return ec;
@@ -797,25 +766,7 @@ int RtfReader::ecRtfParse() {
         }           // else (ris != risBin)
     }               // while
     
-    if (is_interrupted)
-    {
-        return ecOK;
-    }
-    
-    if (cGroup < 0)
-    {
-        DPRINT("parse failed: stack underflow\n");
-
-        return ecStackUnderflow;
-    }
-    
-    if (cGroup > 0)
-    {
-        DPRINT("parse failed: unmatched brace\n");
-
-        return ecUnmatchedBrace;
-    }
-    return ecOK;
+    return (is_interrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
 }
 
 //
@@ -981,11 +932,8 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
     is_interrupted = false;
     startDocumentHandler();
 
-    cGroup = 0;
     fSkipDestIfUnk = false;
     cbBin = 0;
-
-    stack.reserve(30);
 
     memset(&state, 0, sizeof(state));
     state.rds = rdsContent;
@@ -997,7 +945,10 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
         DPRINT("parse failed: %i\n", ret);
 		}
     endDocumentHandler();
-    stack.reserve(0);
+
+		while (!myStateStack.empty()) {
+    	myStateStack.pop();
+		}
 		
     delete[] myStreamBuffer;
     myStream->close();
