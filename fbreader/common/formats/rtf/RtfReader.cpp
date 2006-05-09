@@ -725,25 +725,11 @@ int RtfReader::ecRtfParse() {
                 else {               // parsing hex data
                     b = b << 4;
 
-                    if (isdigit(ch)) {
-                        b += (char) ch - '0';
-                    } else {
-                        if (islower(ch)) {
-                            if (ch < 'a' || ch > 'f') {
-                                DPRINT("parse failed: invalid hex\n");
-
-                                return ecInvalidHex;
-                            }
-                            b += (char) ch - 'a' + 10;
-                        }
-                        else {
-                            if (ch < 'A' || ch > 'F') {
-                                DPRINT("parse failed: invalid hex\n");
-
-                                return ecInvalidHex;
-                            }
-                            b += (char) ch - 'A' + 10;
-                        }
+                    if (isxdigit(ch)) {
+											  char s[2];
+												s[0] = ch;
+												s[1] = '\0';
+											  b += strtol(s, 0, 16);
                     }
 
                     cNibble--;
