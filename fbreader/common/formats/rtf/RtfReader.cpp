@@ -779,8 +779,6 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
   myStream = stream;
   myStreamBuffer = new char[rtfStreamBufferSize];
   
-  startCounter = endCounter = rtfStreamBufferSize;
-
   is_interrupted = false;
   startDocumentHandler();
 

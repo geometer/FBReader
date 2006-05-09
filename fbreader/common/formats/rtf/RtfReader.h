@@ -181,13 +181,9 @@ private:
 
 	RtfReaderState state;
 
+private:
 	std::stack<RtfReaderState> myStateStack;
 
-
-	int startCounter;
-	int endCounter;
-
-private:
 	shared_ptr<ZLInputStream> myStream;
 	char *myStreamBuffer;
 
