@@ -170,11 +170,8 @@ private:
 	int ecEndGroupAction(int rds);
 	int ecStyleChange(int st, int val);
 
-	int ecPushRtfState(void);
-	int ecPopRtfState(void);
-	
 	int ecParseSpecialKeyword(int ipfn, int param);
-	int ecParseRtfKeyword(void);
+	int ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 	int ecParseChar(int ch);
 
 	int ecRtfParse();
@@ -190,8 +187,6 @@ private:
 
 	int startCounter;
 	int endCounter;
-	int getChar(void);
-	void unGetChar(int ch);
 
 private:
 	shared_ptr<ZLInputStream> myStream;
