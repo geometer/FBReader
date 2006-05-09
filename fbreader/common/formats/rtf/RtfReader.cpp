@@ -112,7 +112,7 @@ PROP rgprop [ipropMax] = {
     { actnSpec,   propSep,    0 },                          // ipropSectd
 };
 
-struct RtfKeyword {
+struct RtfKeywordInfo {
   int DefaultValue;              // default value to use
   bool UseDefaultValue;         // true to use default value from this table
   KWD BaseAction;               // base action to take
@@ -120,7 +120,7 @@ struct RtfKeyword {
                             // index into destination table if kwd == kwdDest
                             // character to print if kwd == kwdChar
 	
-	RtfKeyword(int _DefaultValue, bool _UseDefaultValue, KWD _BaseAction, int _Index) {
+	RtfKeywordInfo(int _DefaultValue, bool _UseDefaultValue, KWD _BaseAction, int _Index) {
 		DefaultValue = _DefaultValue;
 		UseDefaultValue = _UseDefaultValue;
 		BaseAction = _BaseAction;
@@ -128,7 +128,17 @@ struct RtfKeyword {
 	}
 };
 
-static std::map<std::string, RtfKeyword> myKeywordMap;
+class RtfKeywordCharInfo : public RtfKeywordInfo {
+
+public:
+	RtfKeywordCharInfo(int chr) : RtfKeywordInfo(0, false, kwdChar, 0), myChar(chr) {}
+	int getChar() const { return myChar; }
+	
+private:
+	int myChar;
+};
+
+static std::map<std::string, RtfKeywordInfo*> myKeywordMap;
 
 typedef struct symbol
 {
@@ -149,30 +159,27 @@ SYM rgsymRtf[] = {
     { "\x0d",     0,      false,     kwdSpec,    ipfnParagraph },
     { "'",        0,      false,     kwdSpec,    ipfnHex },
     { "*",        0,      false,     kwdSpec,    ipfnSkipDest },
-    { "-",        0,      false,     kwdChar,    '-' },
-    { "\\",       0,      false,     kwdChar,    '\\' },
-    { "_",        0,      false,     kwdChar,    '-' },
     { "ansicpg",  0,      false,     kwdSpec,    ipfnCodePage },
+		{ "bin",      0,      false,     kwdSpec,    ipfnBin },
+    { "par",      0,      false,     kwdSpec,    ipfnParagraph },
+//  {   "pard",     0,      false,     kwdSpec,    ipfnParagraphReset },
+
     { "author",   0,      false,     kwdDest,    idestAuthor },
-    { "b",        1,      false,     kwdProp,    ipropBold },
-    { "bin",      0,      false,     kwdSpec,    ipfnBin },
-    { "bullet",   0,      false,     kwdChar,    '\x95' },
+    { "footnote", 0,      false,     kwdDest,    idestFootnote },
+    { "stylesheet",   0,  false,     kwdDest,    idestStyleSheet },
+    { "info",     0,      false,     kwdDest,    idestInfo },
+    { "pict",     0,      false,     kwdDest,    idestPict },
+    { "title",    0,      false,     kwdDest,    idestTitle },
     { "buptim",   0,      false,     kwdDest,    idestSkip },
     { "colortbl", 0,      false,     kwdDest,    idestSkip },
-    { "cols",     1,      false,     kwdProp,    ipropCols },
     { "comment",  0,      false,     kwdDest,    idestSkip },
     { "creatim",  0,      false,     kwdDest,    idestSkip },
     { "doccomm",  0,      false,     kwdDest,    idestSkip },
-    { "emdash",   0,      false,     kwdChar,    '\x97' },
-    { "endash",   0,      false,     kwdChar,    '\x96' },
-    { "facingp",  1,      true,      kwdProp,    ipropFacingp },
-    { "fi",       0,      false,     kwdProp,    ipropFirstInd },
     { "fonttbl",  0,      false,     kwdDest,    idestSkip },
     { "footer",   0,      false,     kwdDest,    idestSkip },
     { "footerf",  0,      false,     kwdDest,    idestSkip },
     { "footerl",  0,      false,     kwdDest,    idestSkip },
     { "footerr",  0,      false,     kwdDest,    idestSkip },
-    { "footnote", 0,      false,     kwdDest,    idestFootnote },
     { "ftncn",    0,      false,     kwdDest,    idestSkip },
     { "ftnsep",   0,      false,     kwdDest,    idestSkip },
     { "ftnsepc",  0,      false,     kwdDest,    idestSkip },
@@ -180,23 +187,30 @@ SYM rgsymRtf[] = {
     { "headerf",  0,      false,     kwdDest,    idestSkip },
     { "headerl",  0,      false,     kwdDest,    idestSkip },
     { "headerr",  0,      false,     kwdDest,    idestSkip },
-    { "i",        1,      false,     kwdProp,    ipropItalic },
-    { "info",     0,      false,     kwdDest,    idestInfo },
-    { "jpegblip", 0,         false,            kwdPictProp, ppropJpeg },
     { "keywords", 0,      false,     kwdDest,    idestSkip },
+    { "operator", 0,      false,     kwdDest,    idestSkip },
+    { "printim",  0,      false,     kwdDest,    idestSkip },
+    { "private1", 0,      false,     kwdDest,    idestSkip },
+    { "revtim",   0,      false,     kwdDest,    idestSkip },
+    { "rxe",      0,      false,     kwdDest,    idestSkip },
+    { "subject",  0,      false,     kwdDest,    idestSkip },
+    { "tc",       0,      false,     kwdDest,    idestSkip },
+    { "txe",      0,      false,     kwdDest,    idestSkip },
+    { "xe",       0,      false,     kwdDest,    idestSkip },
+    
+		{ "b",        1,      false,     kwdProp,    ipropBold },
+    { "cols",     1,      false,     kwdProp,    ipropCols },
+    { "facingp",  1,      true,      kwdProp,    ipropFacingp },
+    { "fi",       0,      false,     kwdProp,    ipropFirstInd },
+    { "i",        1,      false,     kwdProp,    ipropItalic },
     { "landscape",1,      true,      kwdProp,    ipropLandscape },
-    { "ldblquote",    0,      false,     kwdChar,     '\x93' },
     { "li",       0,      false,     kwdProp,    ipropLeftInd },
-    { "lquote",    0,      false,     kwdChar,     '\x91' },
     { "margb",    1440,   false,     kwdProp,    ipropYaBottom },
     { "margl",    1800,   false,     kwdProp,    ipropXaLeft },
     { "margr",    1800,   false,     kwdProp,    ipropXaRight },
     { "margt",    1440,   false,     kwdProp,    ipropYaTop },
-    { "operator", 0,      false,     kwdDest,    idestSkip },
     { "paperh",   15480,  false,     kwdProp,    ipropYaPage },
     { "paperw",   12240,  false,     kwdProp,    ipropXaPage },
-    { "par",      0,      false,     kwdSpec,    ipfnParagraph },
-//  {   "pard",     0,      false,     kwdSpec,    ipfnParagraphReset },
     { "pgndec",   pgDec,  true,      kwdProp,    ipropPgnFormat },
     { "pgnlcltr", pgLLtr, true,      kwdProp,    ipropPgnFormat },
     { "pgnlcrm",  pgLRom, true,      kwdProp,    ipropPgnFormat },
@@ -205,47 +219,53 @@ SYM rgsymRtf[] = {
     { "pgnucrm",  pgURom, true,      kwdProp,    ipropPgnFormat },
     { "pgnx",     0,      false,     kwdProp,    ipropPgnX },
     { "pgny",     0,      false,     kwdProp,    ipropPgnY },
-    { "pict",     0,      false,     kwdDest,    idestPict },
-    { "pngblip",         0,         false,            kwdPictProp, ppropPng },
-    { "printim",  0,      false,     kwdDest,    idestSkip },
-    { "private1", 0,      false,     kwdDest,    idestSkip },
     { "qc",       justC,  true,      kwdProp,    ipropJust },
     { "ql",       justL,  true,      kwdProp,    ipropJust },
     { "qr",       justR,  true,      kwdProp,    ipropJust },
     { "qj",       justF,  true,      kwdProp,    ipropJust },
-    { "rdblquote",    0,      false,     kwdChar,     '\x94' },
-    { "revtim",   0,      false,     kwdDest,    idestSkip },
-    { "ri",       0,      false,     kwdProp,    ipropRightInd },
-    { "rquote",    0,      false,     kwdChar,     '\x92' },
-    { "rxe",      0,      false,     kwdDest,    idestSkip },
-
-    { "s",        0,      false,     kwdStyle,   istyleIndex },
     { "sbkcol",   sbkCol, true,      kwdProp,    ipropSbk },
     { "sbkeven",  sbkEvn, true,      kwdProp,    ipropSbk },
     { "sbknone",  sbkNon, true,      kwdProp,    ipropSbk },
     { "sbkodd",   sbkOdd, true,      kwdProp,    ipropSbk },
     { "sbkpage",  sbkPg,  true,      kwdProp,    ipropSbk },
-    { "stylesheet",   0,  false,     kwdDest,    idestStyleSheet },
-    { "subject",  0,      false,     kwdDest,    idestSkip },
-    { "tab",      0,      false,     kwdChar,    0x09 },
-    { "tc",       0,      false,     kwdDest,    idestSkip },
-    { "title",    0,      false,     kwdDest,    idestTitle },
-    { "txe",      0,      false,     kwdDest,    idestSkip },
+    { "ri",       0,      false,     kwdProp,    ipropRightInd },
     { "u",        1,      false,     kwdProp,    ipropUnderline },
-    { "xe",       0,      false,     kwdDest,    idestSkip },
 
-    { "{",        0,      false,     kwdChar,    '{' },
-    { "}",        0,      false,     kwdChar,    '}' },
-    { "~",        0,      false,     kwdChar,    ' ' },
+    { "jpegblip", 0,      false,     kwdPictProp, ppropJpeg },
+    { "pngblip",  0,      false,     kwdPictProp, ppropPng },
+
+    { "s",        0,      false,     kwdStyle,   istyleIndex },
+
     };
 
+struct ckw {
+	const char *kw;
+	char chr;
+} charKeyWords[] = {
+  { "-",        '-' },
+  { "\\",       '\\' },
+  { "_",        '-' },
+  { "bullet",   '\x95' },
+  { "emdash",   '\x97' },
+  { "endash",   '\x96' },
+  { "ldblquote", '\x93' },
+  { "lquote",    '\x91' },
+  { "{",        '{' },
+  { "}",        '}' },
+  { "~",        ' ' },
+  { "rdblquote", '\x94' },
+  { "rquote",    '\x92' },
+  { "tab",      0x09 },
+};
+		
 static void fillKeywordMap() {
 	if (myKeywordMap.empty()) {
 		for (unsigned int i = 0; i < sizeof(rgsymRtf) / sizeof(SYM); i++) {
 			const symbol &s = rgsymRtf[i];
-			myKeywordMap.insert(
-				std::pair<std::string,RtfKeyword>(s.szKeyword, RtfKeyword(s.dflt, s.fPassDflt, s.kwd, s.idx))
-			);
+			myKeywordMap[s.szKeyword] = new RtfKeywordInfo(s.dflt, s.fPassDflt, s.kwd, s.idx);
+		}
+		for (unsigned int i = 0; i < sizeof(charKeyWords) / sizeof(struct ckw); i++) {
+			myKeywordMap[charKeyWords[i].kw] = new RtfKeywordCharInfo(charKeyWords[i].chr);
 		}
 	}
 }
@@ -418,68 +438,6 @@ int RtfReader::ecApplyPictPropChange(int pprop)
 
     return ecBadTable;
 } 
-//
-// %%Function: ecTranslateKeyword.
-//
-// Step 3.
-// Search rgsymRtf for szKeyword and evaluate it appropriately.
-//
-// Inputs:
-// szKeyword:   The RTF control to evaluate.
-// param:       The parameter of the RTF control.
-// fParam:      true if the control had a parameter; (that is, if param is valid)
-//              false if it did not.
-//
-
-int RtfReader::ecTranslateKeyword(char *szKeyword, int param, bool fParam)
-{
-    DPRINT("keyword: %s[%x, %i], param: %i, fparam: %i\n", 
-       szKeyword, szKeyword[0], strlen(szKeyword), param, fParam);
-
-		fillKeywordMap();
-
-		std::map<std::string, RtfKeyword>::const_iterator it = myKeywordMap.find(szKeyword);
-    
-		if (it == myKeywordMap.end()) {
-        if (fSkipDestIfUnk)         // if this is a new destination
-            state.rds = rdsSkip;          // skip the destination
-                                    // else just discard it
-        fSkipDestIfUnk = false;
-
-//        DPRINT("unknown keyword\n");        
-        return ecOK;
-    }
-
-    // found it!  use kwd and idx to determine what to do with it.
-
-    fSkipDestIfUnk = false;
-		const RtfKeyword &keyword = it->second;
-    switch (keyword.BaseAction) {
-        case kwdProp:
-            if (keyword.UseDefaultValue || !fParam)
-                param = keyword.DefaultValue;
-            return ecApplyPropChange(keyword.Index, param);
-        case kwdChar:
-            return ecParseChar(keyword.Index);
-        case kwdDest:
-            return ecChangeDest(keyword.Index);
-        case kwdPictProp:
-            return ecApplyPictPropChange(keyword.Index);
-        case kwdStyle:
-            return ecStyleChange(keyword.Index, param);
-        case kwdSpec:
-            return ecParseSpecialKeyword(keyword.Index, param);
-        default:
-            DPRINT("parse failed: bad table\n");
-
-            return ecBadTable;
-    }
-
-    DPRINT("parse failed: bad table\n");
-
-    return ecBadTable;
-}
-
 //
 // %%Function: ecChangeDest
 //
@@ -868,8 +826,7 @@ int RtfReader::ecRtfParse() {
 // call ecTranslateKeyword to dispatch the control.
 //
 
-int RtfReader::ecParseRtfKeyword(void)
-{
+int RtfReader::ecParseRtfKeyword(void) {
     int ch;
     char fParam = false;
     char fNeg = false;
@@ -877,8 +834,6 @@ int RtfReader::ecParseRtfKeyword(void)
     char *pch;
     char szKeyword[30];
     char szParameter[20];
-
-//    DPRINT("parse keyword\n");
 
     szKeyword[0] = '\0';
     szParameter[0] = '\0';
@@ -890,56 +845,92 @@ int RtfReader::ecParseRtfKeyword(void)
         return ecEndOfFile;
     }
         
-    if (!isalpha(ch))           // a control symbol; no delimiter.
-    {
+    if (!isalpha(ch)) {
         szKeyword[0] = (char) ch;
         szKeyword[1] = '\0';
-
-        return ecTranslateKeyword(szKeyword, 0, fParam);
-    }
-    
-    for (pch = szKeyword; isalpha(ch); ch = getChar(), pch++)
-    {
-        pch[0] = (char) ch;
-    }
-
-    pch[0] = '\0';
-
-//    DPRINT("keyword: %s, next char: %c\n", szKeyword, ch);
-
-    if (ch == '-')
-    {
-        fNeg  = true;
-        if ((ch = getChar()) == -1)
-        {
-            DPRINT("parse failed: end of file\n");
-            return ecEndOfFile;
-        }
-    }
-    
-    if (isdigit(ch))
-    {
-        fParam = true;         // a digit after the control means we have a parameter
-        for (pch = szParameter; isdigit(ch); ch = getChar(), pch++)
+    } else {
+        for (pch = szKeyword; isalpha(ch); ch = getChar(), pch++)
         {
             pch[0] = (char) ch;
         }
+
         pch[0] = '\0';
-        param = atoi(szParameter);
-        if (fNeg)
-            param = -param;
-        lParam = atol(szParameter);
-        if (fNeg)
-            param = -param;
+
+        if (ch == '-')
+        {
+            fNeg  = true;
+            if ((ch = getChar()) == -1)
+            {
+                DPRINT("parse failed: end of file\n");
+                return ecEndOfFile;
+            }
+        }
+        
+        if (isdigit(ch))
+        {
+            fParam = true;         // a digit after the control means we have a parameter
+            for (pch = szParameter; isdigit(ch); ch = getChar(), pch++)
+            {
+                pch[0] = (char) ch;
+            }
+            pch[0] = '\0';
+            param = atoi(szParameter);
+            if (fNeg)
+                param = -param;
+            lParam = atol(szParameter);
+            if (fNeg)
+                param = -param;
+        }
+
+        if (ch != ' ')
+            unGetChar(ch);
+		}
+        
+    //DPRINT("keyword: %s[%x, %i], param: %i, fparam: %i\n", 
+    //   szKeyword, szKeyword[0], strlen(szKeyword), param, fParam);
+
+		std::map<std::string, RtfKeywordInfo*>::const_iterator it = myKeywordMap.find(szKeyword);
+    
+		if (it == myKeywordMap.end()) {
+        if (fSkipDestIfUnk)         // if this is a new destination
+            state.rds = rdsSkip;          // skip the destination
+                                    // else just discard it
+        fSkipDestIfUnk = false;
+
+//        DPRINT("unknown keyword\n");        
+        return ecOK;
     }
 
-//    DPRINT("parameter: %s\n", szParameter);
-    
-    if (ch != ' ')
-        unGetChar(ch);
-        
-    return ecTranslateKeyword(szKeyword, param, fParam);
+    // found it!  use kwd and idx to determine what to do with it.
+
+    fSkipDestIfUnk = false;
+		const RtfKeywordInfo &keywordInfo = *it->second;
+    switch (keywordInfo.BaseAction) {
+        case kwdProp:
+            if (keywordInfo.UseDefaultValue || !fParam)
+                param = keywordInfo.DefaultValue;
+            return ecApplyPropChange(keywordInfo.Index, param);
+        case kwdChar:
+            return ecParseChar(((const RtfKeywordCharInfo&)keywordInfo).getChar());
+        case kwdDest:
+            return ecChangeDest(keywordInfo.Index);
+        case kwdPictProp:
+            return ecApplyPictPropChange(keywordInfo.Index);
+        case kwdStyle:
+            return ecStyleChange(keywordInfo.Index, param);
+        case kwdSpec:
+            return ecParseSpecialKeyword(keywordInfo.Index, param);
+        default:
+            DPRINT("parse failed: bad table\n");
+
+            return ecBadTable;
+    }
+
+    DPRINT("parse failed: bad table\n");
+
+    return ecBadTable;
 }
+
 
 //
 // %%Function: ecParseChar
@@ -982,6 +973,8 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
     if (stream.isNull() || !stream->open()) {
             return false;
     }
+
+		fillKeywordMap();
 
 		myStream = stream;
     myStreamBuffer = new char[rtfStreamBufferSize];

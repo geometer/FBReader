@@ -165,7 +165,6 @@ private:
   int ecApplyPropChange(int iprop, int val);
 	int ecParseSpecialProperty(int iprop, int val);
 	int ecApplyPictPropChange(int pprop);
-	int ecTranslateKeyword(char *szKeyword, int param, bool fParam);
 	int ecChangeDest(int idest);
 	int ecEndGroupAction(int rds);
 	int ecStyleChange(int st, int val);
