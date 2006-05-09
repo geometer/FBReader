@@ -615,7 +615,7 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param)
     return ecOK;
 }
 
-int RtfReader::getChar(void)
+int RtfReader::getChar()
 {
     int ch;
     
@@ -760,14 +760,13 @@ int RtfReader::ecRtfParse() {
 // call ecTranslateKeyword to dispatch the control.
 //
 
-int RtfReader::ecParseRtfKeyword(void) {
+int RtfReader::ecParseRtfKeyword() {
     int ch;
     bool fParam = false;
-    bool fNeg = false;
     int param = 0;
     char *pch;
     char szKeyword[30];
-    char szParameter[20];
+    char szParameter[21];
 
     szKeyword[0] = '\0';
     szParameter[0] = '\0';
@@ -786,29 +785,18 @@ int RtfReader::ecParseRtfKeyword(void) {
         for (pch = szKeyword; isalpha(ch); ch = getChar(), pch++) {
             pch[0] = (char) ch;
         }
+				*pch = '\0';
 
-        pch[0] = '\0';
-
-        if (ch == '-') {
-            fNeg  = true;
-            if ((ch = getChar()) == -1)
-            {
-                DPRINT("parse failed: end of file\n");
-                return ecEndOfFile;
-            }
-        }
-        
-        if (isdigit(ch))
-        {
+				pch = szParameter;
+        if ((ch == '-') || isdigit(ch)) {
             fParam = true;         // a digit after the control means we have a parameter
-            for (pch = szParameter; isdigit(ch); ch = getChar(), pch++)
-            {
-                pch[0] = (char) ch;
-            }
-            pch[0] = '\0';
+						do {
+					  	  *pch = (char)ch;
+								ch = getChar();
+								pch++;
+						} while (isdigit(ch));
+            *pch = '\0';
             param = atoi(szParameter);
-            if (fNeg)
-                param = -param;
         }
 
         if (ch != ' ')
@@ -891,7 +879,7 @@ int RtfReader::ecParseChar(int ch)
     }
 }
 
-void RtfReader::interrupt(void)
+void RtfReader::interrupt()
 {
 //    flushBuffer();
     is_interrupted = true;
