@@ -733,16 +733,13 @@ int RtfReader::ecRtfParse() {
                     }
 
                     cNibble--;
-                    if (!cNibble)
-                    {
-
+                    if (cNibble == 0) {
                         if ((ec = ecParseChar(b)) != ecOK)
                             return ec;
                         cNibble = 2;
                         b = 0;
                         
-                        if (state.ris == risHexSingle)
-                        {
+                        if (state.ris == risHexSingle) {
                             state.ris = risNorm;
                         }
                     }
