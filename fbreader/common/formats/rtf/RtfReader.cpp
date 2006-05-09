@@ -744,28 +744,25 @@ int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fP
 // Route the character to the appropriate destination stream.
 //
 
-int RtfReader::ecParseChar(int ch)
-{
-  switch (state.rds)
-  {
-  case rdsSkip:
-//    DPRINT("%c", ch);
-    // Toss this character.
-    return ecOK;
-  case rdsTitle:
-  case rdsAuthor:
-  case rdsContent:
-  case rdsFootnote:
-  case rdsImage:
-    return characterPrint(ch) ? ecOK : ecNoEncoding;
-  default:
-  // handle other destinations....
-    return ecOK;
+int RtfReader::ecParseChar(int ch) {
+  switch (state.rds) {
+    case rdsSkip:
+//      DPRINT("%c", ch);
+      // Toss this character.
+      return ecOK;
+    case rdsTitle:
+    case rdsAuthor:
+    case rdsContent:
+    case rdsFootnote:
+    case rdsImage:
+      return characterPrint(ch) ? ecOK : ecNoEncoding;
+    default:
+    // handle other destinations....
+      return ecOK;
   }
 }
 
-void RtfReader::interrupt()
-{
+void RtfReader::interrupt() {
 //  flushBuffer();
   is_interrupted = true;
 }
