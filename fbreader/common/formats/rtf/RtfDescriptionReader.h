@@ -30,18 +30,21 @@
 class RtfDescriptionReader : public RtfReader {
 
 public:
-	RtfDescriptionReader(BookDescription &description) FORMATS_SECTION;
-	~RtfDescriptionReader() FORMATS_SECTION;
-//	bool readDescription(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
-	void startDocumentHandler() FORMATS_SECTION;
-	void endDocumentHandler() FORMATS_SECTION;
+	RtfDescriptionReader(BookDescription &description);
+	~RtfDescriptionReader();
+//	bool readDescription(shared_ptr<ZLInputStream> stream);
+	void startDocumentHandler();
+	void endDocumentHandler();
 
-	void startElementHandler(int tag, const char **attributes = NULL) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes = NULL);
+	void endElementHandler(int tag);
 	
-	bool characterDataHandler(std::string &str) FORMATS_SECTION;
-	bool characterPrint(char ch) FORMATS_SECTION;
-	void flushBuffer() FORMATS_SECTION;
+	bool characterDataHandler(std::string &str);
+	bool characterPrint(char ch);
+	void flushBuffer();
+
+	void insertImage(const std::string &fileName, size_t startOffset, size_t size) {}
+
 private:
 	WritableBookDescription myDescription;
 	std::string author;
@@ -60,9 +63,7 @@ private:
 	bool hasAuthor;
 	bool hasEncoding;
 
-	int outputCounter;
-	static const int outputBufferSize = 256;
-	char outputBuffer[outputBufferSize];
+	std::string outputBuffer;
 };
 
 inline RtfDescriptionReader::~RtfDescriptionReader() {}

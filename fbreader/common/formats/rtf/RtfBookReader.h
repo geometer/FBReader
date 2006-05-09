@@ -28,7 +28,7 @@
 #include "../../bookmodel/BookReader.h"
 
 class BookModel;
-class BinaryImage;
+class RtfImage;
 
 
 class RtfBookReader : public RtfReader, public BookReader {
@@ -47,6 +47,8 @@ public:
 	bool characterPrint(char ch) FORMATS_SECTION;
 	void flushBuffer() FORMATS_SECTION;
 
+	void insertImage(const std::string &fileName, size_t startOffset, size_t size);
+
 protected:
 	struct StyleInfo {
 	    int id;
@@ -56,7 +58,6 @@ protected:
 	std::vector<StyleInfo> styles;
 	StyleInfo *currentStyleInfo;    
 
-	BinaryImage *currentImage;
 	int imageIndex;
 	int footnoteIndex;
 
@@ -84,9 +85,7 @@ protected:
 	std::vector<RtfBookReaderState> stack;
 	RtfBookReaderState state;
 
-        int outputCounter;
-        static const int outputBufferSize = 4096;
-	char outputBuffer[outputBufferSize];
+	std::string outputBuffer;
 };
 
 inline RtfBookReader::~RtfBookReader() {}

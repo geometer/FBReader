@@ -258,13 +258,13 @@ struct ckw {
   
 static void fillKeywordMap() {
   if (myKeywordMap.empty()) {
-  for (unsigned int i = 0; i < sizeof(rgsymRtf) / sizeof(SYM); i++) {
-    const symbol &s = rgsymRtf[i];
-    myKeywordMap[s.szKeyword] = new RtfKeywordInfo(s.dflt, s.fPassDflt, s.kwd, s.idx);
-  }
-  for (unsigned int i = 0; i < sizeof(charKeyWords) / sizeof(struct ckw); i++) {
-    myKeywordMap[charKeyWords[i].kw] = new RtfKeywordCharInfo(charKeyWords[i].chr);
-  }
+    for (unsigned int i = 0; i < sizeof(rgsymRtf) / sizeof(SYM); i++) {
+      const symbol &s = rgsymRtf[i];
+      myKeywordMap[s.szKeyword] = new RtfKeywordInfo(s.dflt, s.fPassDflt, s.kwd, s.idx);
+    }
+    for (unsigned int i = 0; i < sizeof(charKeyWords) / sizeof(struct ckw); i++) {
+      myKeywordMap[charKeyWords[i].kw] = new RtfKeywordCharInfo(charKeyWords[i].chr);
+    }
   }
 }
 
@@ -554,142 +554,141 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
 }
 
 int RtfReader::ecRtfParse() {
-  bool readNextChar = true;
   int ec;
   myParserState = READ_NORMAL_DATA;
 
   std::string keyword;
   std::string parameterString;
   std::string hexString;
+	int imageStartOffset = -1;
 
-  const char *ptr = myStreamBuffer;
-  const char *end = myStreamBuffer + 1;
   while (!is_interrupted) {
-    if (readNextChar) {
-      ptr++;
-      if (ptr == end) {
-        ptr = myStreamBuffer;
-        end = myStreamBuffer + myStream->read(myStreamBuffer, rtfStreamBufferSize);
-        
-        if (ptr == end) {
-          break;
-        }
-      }
-    } else {
-      readNextChar = true;
-    }
-
-    switch (myParserState) {
-      case READ_BINARY_DATA:
-        if ((ec = ecParseChar(*ptr)) != ecOK)
-          return ec;
-        myBinaryDataSize--;
-        if (myBinaryDataSize == 0) {
-          myParserState = READ_NORMAL_DATA;
-        }
-        break;
-      case READ_NORMAL_DATA:
-        switch (*ptr) {
-          case '{':
-            myStateStack.push(state);
-            state.ReadDataAsHex = false;
-            break;
-          case '}':
-          {
-            if (myStateStack.empty()) {
-              return ecStackUnderflow;
-            }
-            
-            if (state.rds != myStateStack.top().rds) {
-              if ((ec = ecEndGroupAction(state.rds)) != ecOK)
-                return ec;
-            }
-            
-            bool oldItalic = state.chp.fItalic;
-            bool oldBold = state.chp.fBold;
-            state = myStateStack.top();
-            myStateStack.pop();
-        
-            if (state.chp.fItalic != oldItalic) {
-              if (state.chp.fItalic) {
-                startElementHandler(_ITALIC);
-              } else {
-                endElementHandler(_ITALIC);
-              }
-            }
-        
-            if (state.chp.fBold != oldBold) {
-              if (state.chp.fBold) {
-                startElementHandler(_BOLD);
-              } else {
-                endElementHandler(_BOLD);
-              }
-            }
-            
-            break;
+    const char *ptr = myStreamBuffer;
+    const char *end = myStreamBuffer + myStream->read(myStreamBuffer, rtfStreamBufferSize);
+		if (ptr == end) {
+			break;
+		}
+  	bool readNextChar = true;
+		while (ptr != end) {
+      switch (myParserState) {
+        case READ_BINARY_DATA:
+          if ((ec = ecParseChar(*ptr)) != ecOK)
+            return ec;
+          myBinaryDataSize--;
+          if (myBinaryDataSize == 0) {
+            myParserState = READ_NORMAL_DATA;
           }
-          case '\\':
-            keyword.clear();
-            myParserState = READ_KEYWORD;
-            break;
-          case 0x0d:
-          case 0x0a:      // cr and lf are noise characters...
-            break;
-          default:
-            if (state.ReadDataAsHex) {
-               hexString += *ptr;
-              if (hexString.size() == 2) {
-                char ch = strtol(hexString.c_str(), 0, 16); 
-                hexString.clear();
-                if ((ec = ecParseChar(ch)) != ecOK)
+          break;
+        case READ_NORMAL_DATA:
+          switch (*ptr) {
+            case '{':
+              myStateStack.push(state);
+              state.ReadDataAsHex = false;
+              break;
+            case '}':
+            {
+							if (imageStartOffset >= 0) {
+			          int imageSize = myStream->offset() + (ptr - end) - imageStartOffset;
+								insertImage(myFileName, imageStartOffset, imageSize);
+								imageStartOffset = -1;
+							}
+
+              if (myStateStack.empty()) {
+                return ecStackUnderflow;
+              }
+              
+              if (state.rds != myStateStack.top().rds) {
+                if ((ec = ecEndGroupAction(state.rds)) != ecOK)
                   return ec;
               }
-            } else {
-              if ((ec = ecParseChar(*ptr)) != ecOK) {
-                return ec;
+              
+              bool oldItalic = state.chp.fItalic;
+              bool oldBold = state.chp.fBold;
+              state = myStateStack.top();
+              myStateStack.pop();
+          
+              if (state.chp.fItalic != oldItalic) {
+                if (state.chp.fItalic) {
+                  startElementHandler(_ITALIC);
+                } else {
+                  endElementHandler(_ITALIC);
+                }
               }
+          
+              if (state.chp.fBold != oldBold) {
+                if (state.chp.fBold) {
+                  startElementHandler(_BOLD);
+                } else {
+                  endElementHandler(_BOLD);
+                }
+              }
+              
+              break;
             }
-            break;
-        }
-        break;
-      case READ_HEX_SYMBOL:
-        hexString += *ptr;
-        if (hexString.size() == 2) {
-          char ch = strtol(hexString.c_str(), 0, 16); 
-          hexString.clear();
-          if ((ec = ecParseChar(ch)) != ecOK)
-            return ec;
-          myParserState = READ_NORMAL_DATA;
-        }
-        break;
-      case READ_KEYWORD:
-        if (keyword.empty() && !isalpha(*ptr)) {
-          keyword = *ptr;
-          if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
-            return ec;
-        } else {
-          if (isalpha(*ptr)) {
-            keyword += *ptr;
-          } else if ((*ptr == '-') || isdigit(*ptr)) {
-            parameterString = *ptr;
-            myParserState = READ_KEYWORD_PARAMETER;
-          } else {
-            readNextChar = *ptr == ' ';
+            case '\\':
+              keyword.clear();
+              myParserState = READ_KEYWORD;
+              break;
+            case 0x0d:
+            case 0x0a:      // cr and lf are noise characters...
+              break;
+            default:
+              if (state.ReadDataAsHex) {
+								if (imageStartOffset == -1) {
+								  imageStartOffset = myStream->offset() + (ptr - end);
+								}
+              } else {
+                if ((ec = ecParseChar(*ptr)) != ecOK) {
+                  return ec;
+                }
+              }
+              break;
+          }
+          break;
+        case READ_HEX_SYMBOL:
+          hexString += *ptr;
+          if (hexString.size() == 2) {
+            char ch = strtol(hexString.c_str(), 0, 16); 
+            hexString.clear();
+            if ((ec = ecParseChar(ch)) != ecOK)
+              return ec;
+            myParserState = READ_NORMAL_DATA;
+          }
+          break;
+        case READ_KEYWORD:
+          if (keyword.empty() && !isalpha(*ptr)) {
+            keyword = *ptr;
             if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
               return ec;
+          } else {
+            if (isalpha(*ptr)) {
+              keyword += *ptr;
+            } else if ((*ptr == '-') || isdigit(*ptr)) {
+              parameterString = *ptr;
+              myParserState = READ_KEYWORD_PARAMETER;
+            } else {
+              readNextChar = *ptr == ' ';
+              if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
+                return ec;
+            }
           }
-        }
-        break;
-      case READ_KEYWORD_PARAMETER:
-        if (isdigit(*ptr)) {
-          parameterString += *ptr;
-        } else {
-          int param = atoi(parameterString.c_str());
-          readNextChar = *ptr == ' ';
-          if ((ec = ecTranslateKeyword(keyword, param, true)) != ecOK)
-            return ec;
-        }
-        break;
+          break;
+        case READ_KEYWORD_PARAMETER:
+          if (isdigit(*ptr)) {
+            parameterString += *ptr;
+          } else {
+            int param = atoi(parameterString.c_str());
+            readNextChar = *ptr == ' ';
+            if ((ec = ecTranslateKeyword(keyword, param, true)) != ecOK)
+              return ec;
+          }
+          break;
+      }
+      if (readNextChar) {
+        ptr++;
+      } else {
+        readNextChar = true;
+      }
     }
   }         // while
   
@@ -767,15 +766,15 @@ void RtfReader::interrupt() {
   is_interrupted = true;
 }
 
-bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
-  DPRINT("readDocument\n");
-  if (stream.isNull() || !stream->open()) {
+bool RtfReader::readDocument(const std::string &fileName) {
+	myFileName = fileName;
+	myStream = ZLFile(fileName).inputStream();
+  if (myStream.isNull() || !myStream->open()) {
       return false;
   }
 
   fillKeywordMap();
 
-  myStream = stream;
   myStreamBuffer = new char[rtfStreamBufferSize];
   
   is_interrupted = false;
@@ -788,6 +787,7 @@ bool RtfReader::readDocument(shared_ptr<ZLInputStream> stream) {
   state.ReadDataAsHex = false;
 
   int ret = ecRtfParse();
+	std::cerr << "ret = " << ret << "\n";
   bool code = ret == ecOK;
   if (!code) {
     DPRINT("parse failed: %i\n", ret);

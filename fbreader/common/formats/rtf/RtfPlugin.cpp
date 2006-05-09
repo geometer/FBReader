@@ -19,6 +19,9 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+#include <abstract/ZLTime.h>
+
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
@@ -47,7 +50,7 @@ bool RtfPlugin::readDescription(const std::string &path, BookDescription &descri
 
 	detectEncoding(description, *stream);
 
-	if (!RtfDescriptionReader(description).readDocument(stream))
+	if (!RtfDescriptionReader(description).readDocument(path))
 	{
             DPRINT("Failed\n");
 	    return false;
@@ -61,23 +64,10 @@ bool RtfPlugin::readDescription(const std::string &path, BookDescription &descri
 }
 
 bool RtfPlugin::readModel(const BookDescription &description, BookModel &model) const {
-    bool ret;
-    std::string fileName = description.fileName();
-    shared_ptr<ZLInputStream> stream = ZLFile(fileName).inputStream();
-
-    DPRINT("readModel\n");
-    
-    if (stream.isNull()) {
-	return false;
-    }
-
-    DPRINT("read data for: %s\n", fileName.data());
-	
-    ret = RtfBookReader(model, description.encoding()).readDocument(stream);
-    
-    DPRINT(ret ? "OK\n" : "Failed\n");
-    
-    return ret;
+	ZLTime start;
+  int ret = RtfBookReader(model, description.encoding()).readDocument(description.fileName());
+	std::cerr << start.millisecondsTo(ZLTime());
+	return ret;
 }
 
 const std::string &RtfPlugin::iconName() const {

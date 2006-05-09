@@ -19,55 +19,53 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
 #include <cctype>
 
 #include "RtfBookReader.h"
 #include "../../bookmodel/BookModel.h"
-#include "BinaryImage.h"
+#include "RtfImage.h"
 
 RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) 
     : RtfReader(encoding), BookReader(model) {
-//    outputBuffer = NULL;
 }
 
 bool RtfBookReader::characterPrint(char ch) {
-    if (myConverter == NULL) {
-        return false;
-    }
-    
     if ((state.state != READ_TEXT) && (state.state != READ_IMAGE)) {
         return true;
     }
 
-    outputBuffer[outputCounter] = ch;
-    outputCounter++;
+    outputBuffer += ch;
     
-    if (outputCounter == outputBufferSize) {
-        flushBuffer();
-    }
-
     return true;
 }
 
 void RtfBookReader::flushBuffer() {
-//    DPRINT("flush buffer\n");
-    if (outputCounter > 0)
-    {
-    if (state.state == READ_TEXT)
-    {    
-        std::string newString;
-        
-        myConverter->convert(newString, outputBuffer, outputBuffer + outputCounter);
-        characterDataHandler(newString);
-    }
-    else if (state.state == READ_IMAGE)
-    {
-        std::string newString(outputBuffer, outputCounter);
-        characterDataHandler(newString);
-    }
+  if (outputBuffer.size() > 0) {
+    if (state.state == READ_TEXT) {    
+      std::string newString;
     
-    outputCounter = 0;
+      myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
+      characterDataHandler(newString);
+    } else if (state.state == READ_IMAGE) {
+      characterDataHandler(outputBuffer);
     }
+    outputBuffer.clear();
+	}
+}
+
+void RtfBookReader::insertImage(const std::string &fileName, size_t startOffset, size_t size) {
+  ZLImage *image = new RtfImage("image/jpeg", fileName, startOffset, size);
+
+  std::string id;
+  char tmp[256];
+
+  sprintf(tmp, "InternalImage%i", imageIndex);
+
+  id.append(tmp);
+  addImageReference(id);   
+  addImage(id, image);
+  imageIndex++;
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
@@ -88,9 +86,6 @@ bool RtfBookReader::characterDataHandler(std::string &str) {
     }
     case READ_IMAGE:
     {
-        if (currentImage != NULL) {
-        currentImage->addData(str);
-        }
         break;
     }
 /*
@@ -108,11 +103,7 @@ bool RtfBookReader::characterDataHandler(std::string &str) {
 
 void RtfBookReader::startDocumentHandler() {
     DPRINT("start doc handler\n");
-//    outputBuffer = new char[outputBufferSize];
     
-    outputCounter = 0;
-    
-    currentImage = NULL;
     imageIndex = 0;
     
     footnoteIndex = 1;
@@ -272,16 +263,6 @@ void RtfBookReader::startElementHandler(int tag, const char **attributes) {
         break;
         }
         
-        currentImage = new BinaryImage(attributes[0]);
-        
-        sprintf(tmp, "InternalImage%i", imageIndex);
-        DPRINT("image reference: %s\n", tmp);
-
-        id.append(tmp);
-        addImageReference(id);   
-        addImage(id, currentImage);
-        imageIndex++;
-        
         DPRINT("add image done\n");
         break;
     }
@@ -411,7 +392,6 @@ void RtfBookReader::endElementHandler(int tag) {
         
         flushBuffer();
         
-        currentImage = NULL;
         state.state = READ_TEXT;
         
         break;

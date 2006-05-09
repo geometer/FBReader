@@ -26,6 +26,7 @@
 #include <map>
 #include <stack>
 
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLEncodingConverter.h>
 #include <stdio.h>
 //#define DPRINT(x...) {FILE *flog; flog=fopen("/tmp/reader_log", "a+"); fprintf(flog, ## x); fclose(flog);}
@@ -96,7 +97,7 @@ class ZLInputStream;
 class RtfReader {
 
 public:
-	bool readDocument(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	bool readDocument(const std::string &fileName) FORMATS_SECTION;
 
 protected:
 	RtfReader(const std::string &encoding) FORMATS_SECTION;
@@ -113,7 +114,8 @@ protected:
 
 	virtual bool characterDataHandler(std::string &str) FORMATS_SECTION = 0;
 	virtual bool characterPrint(char ch) FORMATS_SECTION = 0;
-//	virtual void flushBuffer() FORMATS_SECTION = 0;
+
+	virtual void insertImage(const std::string &fileName, size_t startOffset, size_t size) = 0;
 
 	void interrupt(void);
 	shared_ptr<ZLEncodingConverter> myConverter;
@@ -182,10 +184,11 @@ private:
 	RtfReaderState state;
 
 private:
-	std::stack<RtfReaderState> myStateStack;
-
+	std::string myFileName;
 	shared_ptr<ZLInputStream> myStream;
 	char *myStreamBuffer;
+
+	std::stack<RtfReaderState> myStateStack;
 
   enum {
     READ_NORMAL_DATA,

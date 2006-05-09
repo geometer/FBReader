@@ -19,38 +19,31 @@
  * 02110-1301, USA.
  */
 
-#ifndef __BINARYIMAGE_H__
-#define __BINARYIMAGE_H__
+#ifndef __RTFIMAGE_H__
+#define __RTFIMAGE_H__
 
 #include <vector>
-#include <string>
 
 #include <abstract/ZLImage.h>
 
-class BinaryImage : public ZLSingleImage {
+class RtfImage : public ZLSingleImage {
 
 public:
-	BinaryImage(const std::string &mimeType) IMAGE_SECTION;
-	~BinaryImage() IMAGE_SECTION;
-	void addData(const std::string &text);
-	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
+	RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length);
+	~RtfImage();
+	const shared_ptr<std::string> stringData() const;
 
 private:
+	void read() const;
+
+private:
+	std::string myFileName;
+	size_t myStartOffset;
+	size_t myLength;
 	mutable shared_ptr<std::string> myData;
 };
 
-inline BinaryImage::BinaryImage(const std::string &mimeType) : ZLSingleImage(mimeType) 
-{
-    myData = new std::string();
-}
+inline RtfImage::RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length) : ZLSingleImage(mimeType), myFileName(fileName), myStartOffset(startOffset), myLength(length) {}
+inline RtfImage::~RtfImage() {}
 
-inline BinaryImage::~BinaryImage() {}
-
-inline void BinaryImage::addData(const std::string &text) {
-    myData->append(text);
-}
-const shared_ptr<std::string> BinaryImage::stringData() const {
-	return myData;
-}
-
-#endif /* __BINARYIMAGE_H__ */
+#endif /* __RTFIMAGE_H__ */

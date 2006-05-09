@@ -35,9 +35,6 @@ RtfDescriptionReader::RtfDescriptionReader(BookDescription &description)
 
 void RtfDescriptionReader::startDocumentHandler()
 {
-//    DPRINT("start doc handler\n");
-
-    outputCounter = 0;
     state = READ_NONE;
     hasTitle = false;
     hasAuthor = false;
@@ -69,53 +66,35 @@ void RtfDescriptionReader::endDocumentHandler()
     }
 }
 
-bool RtfDescriptionReader::characterPrint(char ch)
-{
-    if (myConverter == NULL)
-    {
-	return false;
-    }
-    
-    if (state != READ_TITLE && state != READ_AUTHOR)
-    {
-	return true;
-    }
+bool RtfDescriptionReader::characterPrint(char ch) {
+  if (state != READ_TITLE && state != READ_AUTHOR) {
+	  return true;
+  }
 
-    outputBuffer[outputCounter] = ch;
-    outputCounter++;
-    
-    if (outputCounter == outputBufferSize)
-    {
-	flushBuffer();
-    }
+  outputBuffer += ch;
 
-    return true;
+  return true;
 }
 
-void RtfDescriptionReader::flushBuffer()
-{
-    if (outputCounter > 0)
-    {
-        std::string newString;
-	myConverter->convert(newString, outputBuffer, outputBuffer + outputCounter);
-	characterDataHandler(newString);
-	outputCounter = 0;
-    }
+void RtfDescriptionReader::flushBuffer() {
+  if (!outputBuffer.empty()) {
+    std::string newString;
+	  myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.size());
+	  characterDataHandler(newString);
+	  outputBuffer.clear();
+  }
 }
 
 bool RtfDescriptionReader::characterDataHandler(std::string &str) {
-    switch (state)
-    {
-	case READ_TITLE:
-	    DPRINT("%c\n", str[0]);
-	    title.append(str);
-	    return true;
-	case READ_AUTHOR:
-	    DPRINT("%c\n", str[0]);
-	    author.append(str);
-	    return true;
-    }
-    return false;
+  switch (state) {
+    case READ_TITLE:
+      title.append(str);
+      return true;
+	  case READ_AUTHOR:
+      author.append(str);
+      return true;
+  }
+  return false;
 }
 
 void RtfDescriptionReader::startElementHandler(int tag, const char **) {
