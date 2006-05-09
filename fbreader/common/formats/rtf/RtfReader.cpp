@@ -783,15 +783,13 @@ int RtfReader::ecParseRtfKeyword(void) {
         szKeyword[0] = (char) ch;
         szKeyword[1] = '\0';
     } else {
-        for (pch = szKeyword; isalpha(ch); ch = getChar(), pch++)
-        {
+        for (pch = szKeyword; isalpha(ch); ch = getChar(), pch++) {
             pch[0] = (char) ch;
         }
 
         pch[0] = '\0';
 
-        if (ch == '-')
-        {
+        if (ch == '-') {
             fNeg  = true;
             if ((ch = getChar()) == -1)
             {
