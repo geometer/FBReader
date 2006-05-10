@@ -117,7 +117,7 @@ protected:
 	virtual void addChar(const char ch) = 0;
 	virtual void addCharData(const char *data, size_t len) = 0;
 
-	virtual void insertImage(const std::string &fileName, size_t startOffset, size_t size) = 0;
+	virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
 
 	void interrupt(void);
 	shared_ptr<ZLEncodingConverter> myConverter;

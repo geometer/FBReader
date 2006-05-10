@@ -397,15 +397,19 @@ int RtfReader::ecParseSpecialProperty(int iprop) {
   return ecBadTable;
 }
 
-static const char *image_png_type[] = {"image/png"};
-static const char *image_jpeg_type[] = {"image/jpeg"};
+static const std::string image_png_type = "image/png";
+static const std::string image_jpeg_type = "image/jpeg";
+static const std::string *current_image_type = &image_png_type;
+
 int RtfReader::ecApplyPictPropChange(int pprop) {
   switch (pprop) {
     case ppropPng:
       startElementHandler(_IMAGE_TYPE);
+			current_image_type = &image_png_type;
       return ecOK;
     case ppropJpeg:
       startElementHandler(_IMAGE_TYPE);
+			current_image_type = &image_jpeg_type;
       return ecOK;
     default:
       DPRINT("parse failed: bad table\n");
@@ -610,7 +614,7 @@ int RtfReader::ecRtfParse() {
 
 							if (imageStartOffset >= 0) {
 			          int imageSize = myStream->offset() + (ptr - end) - imageStartOffset;
-								insertImage(myFileName, imageStartOffset, imageSize);
+								insertImage(*current_image_type, myFileName, imageStartOffset, imageSize);
 								imageStartOffset = -1;
 							}
 

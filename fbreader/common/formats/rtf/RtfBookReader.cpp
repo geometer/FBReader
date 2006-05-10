@@ -64,8 +64,8 @@ void RtfBookReader::flushBuffer() {
 	}
 }
 
-void RtfBookReader::insertImage(const std::string &fileName, size_t startOffset, size_t size) {
-  ZLImage *image = new RtfImage("image/jpeg", fileName, startOffset, size);
+void RtfBookReader::insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) {
+  ZLImage *image = new RtfImage(mimeType, fileName, startOffset, size);
 
   std::string id = "InternalImage";
 	ZLStringUtil::appendNumber(id, imageIndex++);

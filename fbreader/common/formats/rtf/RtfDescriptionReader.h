@@ -44,7 +44,7 @@ public:
 
 	void addChar(const char ch);
 	void addCharData(const char *data, size_t len);
-	void insertImage(const std::string &fileName, size_t startOffset, size_t size) {}
+	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
 
 private:
 	WritableBookDescription myDescription;

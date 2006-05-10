@@ -157,3 +157,6 @@ void RtfDescriptionReader::endElementHandler(int tag) {
 	    interrupt();
 	}
 }
+
+void RtfDescriptionReader::insertImage(const std::string&, const std::string&, size_t, size_t) {
+}
