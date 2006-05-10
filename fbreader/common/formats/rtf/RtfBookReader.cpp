@@ -137,7 +137,7 @@ void RtfBookReader::endDocumentHandler() {
     stack.reserve(0);
 }
 
-void RtfBookReader::startElementHandler(int tag, const char **attributes) {
+void RtfBookReader::startElementHandler(int tag) {
 //    DPRINT("start handler: %i\n", tag);
     switch(tag)
     {

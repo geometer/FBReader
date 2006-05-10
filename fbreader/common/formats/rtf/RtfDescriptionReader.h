@@ -36,7 +36,7 @@ public:
 	void startDocumentHandler();
 	void endDocumentHandler();
 
-	void startElementHandler(int tag, const char **attributes = NULL);
+	void startElementHandler(int tag);
 	void endElementHandler(int tag);
 	
 	bool characterDataHandler(std::string &str);

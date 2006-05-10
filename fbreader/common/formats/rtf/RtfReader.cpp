@@ -352,12 +352,12 @@ int RtfReader::ecStyleChange(int st, int val) {
     DPRINT ("Add style index: %i\n", val);
     
     sprintf(style_attributes[0], "%i", val);
-    startElementHandler(_STYLE_INFO, (const char **) style_attributes);
+    startElementHandler(_STYLE_INFO);
   } else /*if (state.rds == rdsContent)*/ {
     DPRINT ("Change style index: %i\n", val);
 
     sprintf(style_attributes[0], "%i", val);
-    startElementHandler(_STYLE_SET, (const char **) style_attributes);
+    startElementHandler(_STYLE_SET);
   }
   
   return ecOK;
@@ -402,10 +402,10 @@ static const char *image_jpeg_type[] = {"image/jpeg"};
 int RtfReader::ecApplyPictPropChange(int pprop) {
   switch (pprop) {
     case ppropPng:
-      startElementHandler(_IMAGE_TYPE, image_png_type);
+      startElementHandler(_IMAGE_TYPE);
       return ecOK;
     case ppropJpeg:
-      startElementHandler(_IMAGE_TYPE, image_jpeg_type);
+      startElementHandler(_IMAGE_TYPE);
       return ecOK;
     default:
       DPRINT("parse failed: bad table\n");
@@ -823,7 +823,6 @@ void RtfReader::ecParseCharData(const char *data, size_t len) {
 }
 
 void RtfReader::interrupt() {
-//  flushBuffer();
   is_interrupted = true;
 }
 
@@ -850,7 +849,7 @@ bool RtfReader::readDocument(const std::string &fileName) {
   int ret = ecRtfParse();
   bool code = ret == ecOK;
   if (!code) {
-    DPRINT("parse failed: %i\n", ret);
+		std::cerr << "parse failed: " << ret << "\n";
   }
   endDocumentHandler();
 

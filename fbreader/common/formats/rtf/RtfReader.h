@@ -109,7 +109,7 @@ protected:
 	virtual void startDocumentHandler() = 0;
 	virtual void endDocumentHandler() = 0;
 
-	virtual void startElementHandler(int tag, const char **attributes = NULL) = 0;
+	virtual void startElementHandler(int tag) = 0;
 	virtual void endElementHandler(int tag) = 0;
 
 	virtual bool characterDataHandler(std::string &str) = 0;

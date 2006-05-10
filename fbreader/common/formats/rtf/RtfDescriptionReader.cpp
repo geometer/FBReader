@@ -99,7 +99,7 @@ bool RtfDescriptionReader::characterDataHandler(std::string &str) {
   return false;
 }
 
-void RtfDescriptionReader::startElementHandler(int tag, const char **) {
+void RtfDescriptionReader::startElementHandler(int tag) {
 //    DPRINT("start handler: %i\n", tag);
 	switch (tag) {
 		case _BODY:
