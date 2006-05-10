@@ -30,14 +30,16 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding)
     : RtfReader(encoding), BookReader(model) {
 }
 
-bool RtfBookReader::characterPrint(char ch) {
-    if ((state.state != READ_TEXT) && (state.state != READ_IMAGE)) {
-        return true;
-    }
-
+void RtfBookReader::addChar(const char ch) {
+  if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
     outputBuffer += ch;
-    
-    return true;
+  }
+}
+
+void RtfBookReader::addCharData(const char *data, size_t len) {
+  if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
+    outputBuffer.append(data, len);
+  }
 }
 
 void RtfBookReader::flushBuffer() {

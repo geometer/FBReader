@@ -97,23 +97,25 @@ class ZLInputStream;
 class RtfReader {
 
 public:
-	bool readDocument(const std::string &fileName) FORMATS_SECTION;
+	bool readDocument(const std::string &fileName);
 
 protected:
-	RtfReader(const std::string &encoding) FORMATS_SECTION;
-	virtual ~RtfReader() FORMATS_SECTION;
+	RtfReader(const std::string &encoding);
+	virtual ~RtfReader();
 
 protected:
 	std::string encoding;
 	
-	virtual void startDocumentHandler() FORMATS_SECTION = 0;
-	virtual void endDocumentHandler() FORMATS_SECTION = 0;
+	virtual void startDocumentHandler() = 0;
+	virtual void endDocumentHandler() = 0;
 
-	virtual void startElementHandler(int tag, const char **attributes = NULL) FORMATS_SECTION = 0;
-	virtual void endElementHandler(int tag) FORMATS_SECTION = 0;
+	virtual void startElementHandler(int tag, const char **attributes = NULL) = 0;
+	virtual void endElementHandler(int tag) = 0;
 
-	virtual bool characterDataHandler(std::string &str) FORMATS_SECTION = 0;
-	virtual bool characterPrint(char ch) FORMATS_SECTION = 0;
+	virtual bool characterDataHandler(std::string &str) = 0;
+
+	virtual void addChar(const char ch) = 0;
+	virtual void addCharData(const char *data, size_t len) = 0;
 
 	virtual void insertImage(const std::string &fileName, size_t startOffset, size_t size) = 0;
 
@@ -174,7 +176,8 @@ private:
 
 	int ecParseSpecialKeyword(int ipfn, int param);
 	int ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
-	int ecParseChar(int ch);
+	void ecParseChar(char ch);
+	void ecParseCharData(const char *data, size_t len);
 
 	int ecRtfParse();
 
@@ -183,6 +186,14 @@ private:
 
 	RtfReaderState state;
 
+  enum ParserState {
+    READ_NORMAL_DATA,
+    READ_BINARY_DATA,
+    READ_HEX_SYMBOL,
+    READ_KEYWORD,
+    READ_KEYWORD_PARAMETER,
+  };
+
 private:
 	std::string myFileName;
 	shared_ptr<ZLInputStream> myStream;
@@ -190,13 +201,7 @@ private:
 
 	std::stack<RtfReaderState> myStateStack;
 
-  enum {
-    READ_NORMAL_DATA,
-    READ_BINARY_DATA,
-    READ_HEX_SYMBOL,
-    READ_KEYWORD,
-    READ_KEYWORD_PARAMETER,
-  } myParserState;
+	ParserState myParserState;
 	int myBinaryDataSize;
 };
 

@@ -66,14 +66,16 @@ void RtfDescriptionReader::endDocumentHandler()
     }
 }
 
-bool RtfDescriptionReader::characterPrint(char ch) {
-  if (state != READ_TITLE && state != READ_AUTHOR) {
-	  return true;
-  }
+void RtfDescriptionReader::addChar(const char ch) {
+  if ((state == READ_TITLE) || (state == READ_AUTHOR)) {
+    outputBuffer += ch;
+	}
+}
 
-  outputBuffer += ch;
-
-  return true;
+void RtfDescriptionReader::addCharData(const char *data, size_t len) {
+  if ((state == READ_TITLE) || (state == READ_AUTHOR)) {
+    outputBuffer.append(data, len);
+	}
 }
 
 void RtfDescriptionReader::flushBuffer() {

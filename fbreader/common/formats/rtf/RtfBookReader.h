@@ -34,19 +34,20 @@ class RtfImage;
 class RtfBookReader : public RtfReader, public BookReader {
 
 public:
-	RtfBookReader(BookModel &model, const std::string &encoding) FORMATS_SECTION;
-	~RtfBookReader() FORMATS_SECTION;
+	RtfBookReader(BookModel &model, const std::string &encoding);
+	~RtfBookReader();
 
-	void startDocumentHandler() FORMATS_SECTION;
-	void endDocumentHandler() FORMATS_SECTION;
+	void startDocumentHandler();
+	void endDocumentHandler();
 
-	void startElementHandler(int tag, const char **attributes = NULL) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes = NULL);
+	void endElementHandler(int tag);
 
-	bool characterDataHandler(std::string &str) FORMATS_SECTION;
-	bool characterPrint(char ch) FORMATS_SECTION;
-	void flushBuffer() FORMATS_SECTION;
+	bool characterDataHandler(std::string &str);
+	void flushBuffer();
 
+	void addChar(const char ch);
+	void addCharData(const char *data, size_t len);
 	void insertImage(const std::string &fileName, size_t startOffset, size_t size);
 
 protected:

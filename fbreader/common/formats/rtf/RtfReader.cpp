@@ -556,6 +556,7 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
 int RtfReader::ecRtfParse() {
   int ec;
   myParserState = READ_NORMAL_DATA;
+	ParserState previousState = READ_NORMAL_DATA;
 
   std::string keyword;
   std::string parameterString;
@@ -568,12 +569,23 @@ int RtfReader::ecRtfParse() {
 		if (ptr == end) {
 			break;
 		}
+		const char *normalDataStart = ptr;
+		const char *dataStart = ptr;
   	bool readNextChar = true;
 		while (ptr != end) {
+			if (previousState != myParserState) {
+				if (previousState == READ_NORMAL_DATA) {
+					if (!state.ReadDataAsHex && (ptr - 1 > normalDataStart)) {
+					  ecParseCharData(normalDataStart, ptr - normalDataStart - 1);
+					}
+				} else if (myParserState == READ_NORMAL_DATA) {
+					normalDataStart = ptr;
+				}
+				previousState = myParserState;
+			}
       switch (myParserState) {
         case READ_BINARY_DATA:
-          if ((ec = ecParseChar(*ptr)) != ecOK)
-            return ec;
+          ecParseChar(*ptr);
           myBinaryDataSize--;
           if (myBinaryDataSize == 0) {
             myParserState = READ_NORMAL_DATA;
@@ -582,11 +594,20 @@ int RtfReader::ecRtfParse() {
         case READ_NORMAL_DATA:
           switch (*ptr) {
             case '{':
+							if (ptr > normalDataStart) {
+							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+							}
+							normalDataStart = ptr + 1;
               myStateStack.push(state);
               state.ReadDataAsHex = false;
               break;
             case '}':
             {
+							if (ptr > normalDataStart) {
+							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+							}
+							normalDataStart = ptr + 1;
+
 							if (imageStartOffset >= 0) {
 			          int imageSize = myStream->offset() + (ptr - end) - imageStartOffset;
 								insertImage(myFileName, imageStartOffset, imageSize);
@@ -626,11 +647,20 @@ int RtfReader::ecRtfParse() {
               break;
             }
             case '\\':
+							if (ptr > normalDataStart) {
+							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+							}
+							normalDataStart = ptr + 1;
               keyword.clear();
               myParserState = READ_KEYWORD;
+							dataStart = ptr + 1;
               break;
             case 0x0d:
             case 0x0a:      // cr and lf are noise characters...
+							if (ptr > normalDataStart) {
+							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+								normalDataStart = ptr;
+							}
               break;
             default:
               if (state.ReadDataAsHex) {
@@ -638,9 +668,7 @@ int RtfReader::ecRtfParse() {
 								  imageStartOffset = myStream->offset() + (ptr - end);
 								}
               } else {
-                if ((ec = ecParseChar(*ptr)) != ecOK) {
-                  return ec;
-                }
+                //ecParseChar(*ptr);
               }
               break;
           }
@@ -650,34 +678,34 @@ int RtfReader::ecRtfParse() {
           if (hexString.size() == 2) {
             char ch = strtol(hexString.c_str(), 0, 16); 
             hexString.clear();
-            if ((ec = ecParseChar(ch)) != ecOK)
-              return ec;
+            ecParseChar(ch);
             myParserState = READ_NORMAL_DATA;
           }
           break;
         case READ_KEYWORD:
-          if (keyword.empty() && !isalpha(*ptr)) {
-            keyword = *ptr;
-            if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
-              return ec;
-          } else {
-            if (isalpha(*ptr)) {
-              keyword += *ptr;
-            } else if ((*ptr == '-') || isdigit(*ptr)) {
-              parameterString = *ptr;
-              myParserState = READ_KEYWORD_PARAMETER;
-            } else {
-              readNextChar = *ptr == ' ';
+					if (!isalpha(*ptr)) {
+            if (ptr == dataStart) {
+              keyword = *ptr;
               if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
                 return ec;
+            } else {
+							keyword.append(dataStart, ptr - dataStart);
+              if ((*ptr == '-') || isdigit(*ptr)) {
+								dataStart = ptr;
+                myParserState = READ_KEYWORD_PARAMETER;
+              } else {
+                readNextChar = *ptr == ' ';
+                if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
+                  return ec;
+              }
             }
-          }
+					}
           break;
         case READ_KEYWORD_PARAMETER:
-          if (isdigit(*ptr)) {
-            parameterString += *ptr;
-          } else {
+          if (!isdigit(*ptr)) {
+						parameterString.append(dataStart, ptr - dataStart);
             int param = atoi(parameterString.c_str());
+						parameterString.clear();
             readNextChar = *ptr == ' ';
             if ((ec = ecTranslateKeyword(keyword, param, true)) != ecOK)
               return ec;
@@ -690,7 +718,22 @@ int RtfReader::ecRtfParse() {
         readNextChar = true;
       }
     }
-  }         // while
+		if (dataStart < end) {
+			if (previousState == READ_NORMAL_DATA) {
+				ecParseCharData(normalDataStart, end - normalDataStart - 1);
+			}
+			switch (myParserState) {
+				case READ_KEYWORD:
+					keyword.append(dataStart, end - dataStart);
+					break;
+				case READ_KEYWORD_PARAMETER:
+					parameterString.append(dataStart, end - dataStart);
+					break;
+				default:
+					break;
+			}
+		}
+  }
   
   return (is_interrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
 }
@@ -720,7 +763,8 @@ int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fP
         param = keywordInfo.DefaultValue;
       return ecApplyPropChange(keywordInfo.Index, param);
     case kwdChar:
-      return ecParseChar(((const RtfKeywordCharInfo&)keywordInfo).getChar());
+      ecParseChar(((const RtfKeywordCharInfo&)keywordInfo).getChar());
+			return ecOK;
     case kwdDest:
       return ecChangeDest(keywordInfo.Index);
     case kwdPictProp:
@@ -743,21 +787,31 @@ int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fP
 // Route the character to the appropriate destination stream.
 //
 
-int RtfReader::ecParseChar(int ch) {
+void RtfReader::ecParseChar(char ch) {
   switch (state.rds) {
     case rdsSkip:
-//      DPRINT("%c", ch);
-      // Toss this character.
-      return ecOK;
+    default:
+      return;
     case rdsTitle:
     case rdsAuthor:
     case rdsContent:
     case rdsFootnote:
     case rdsImage:
-      return characterPrint(ch) ? ecOK : ecNoEncoding;
+      addChar(ch);
+  }
+}
+
+void RtfReader::ecParseCharData(const char *data, size_t len) {
+  switch (state.rds) {
+    case rdsSkip:
     default:
-    // handle other destinations....
-      return ecOK;
+      return;
+    case rdsTitle:
+    case rdsAuthor:
+    case rdsContent:
+    case rdsFootnote:
+    case rdsImage:
+      addCharData(data, len);
   }
 }
 
@@ -787,7 +841,6 @@ bool RtfReader::readDocument(const std::string &fileName) {
   state.ReadDataAsHex = false;
 
   int ret = ecRtfParse();
-	std::cerr << "ret = " << ret << "\n";
   bool code = ret == ecOK;
   if (!code) {
     DPRINT("parse failed: %i\n", ret);
