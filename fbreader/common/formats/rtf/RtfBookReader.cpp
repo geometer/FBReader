@@ -88,8 +88,8 @@ void RtfBookReader::startDocumentHandler() {
     DPRINT("start doc handler\n");
     
     imageIndex = 0;
-    
     footnoteIndex = 1;
+
     currentStyleInfo = 0;    
     
     state.state = READ_TEXT;
@@ -195,33 +195,24 @@ void RtfBookReader::startElementHandler(int tag) {
 			break;
     case _FOOTNOTE:
     {
-      std::string id;
-      std::string id_name;
-      char tmp[256];
-
       flushBuffer();
-      sprintf(tmp, "%i", footnoteIndex);
-      id.append(tmp);
 
-      sprintf(tmp, "foonoteIndex%i", footnoteIndex);
-      id_name.append(tmp);
-      
-      DPRINT("footnote reference: %s\n", tmp);
+  		std::string id;
+			ZLStringUtil::appendNumber(id, footnoteIndex++);
 
-      
       stack.push_back(state);
-      state.id = id_name;
+      state.id = id;
       state.state = READ_TEXT;
       state.isItalic = false;
       state.isBold = false;
       state.style = -1;
       state.isPrevImage = false;
       
-      addHyperlinkControl(FOOTNOTE, id_name);        
+      addHyperlinkControl(FOOTNOTE, id);        
       addData(id);
       addControl(FOOTNOTE, false);
       
-      setFootnoteTextModel(id_name);
+      setFootnoteTextModel(id);
       pushKind(REGULAR);
       beginParagraph();
       
@@ -235,54 +226,43 @@ void RtfBookReader::startElementHandler(int tag) {
 }
 
 void RtfBookReader::endElementHandler(int tag) {
-//    DPRINT("end handler: %i\n", tag);
-
-    switch(tag)
-    {
+  switch(tag) {
     case _BOLD:
-    {
-        DPRINT("bold end.\n");
-        
-        if (state.state != READ_TEXT)
-        {
-        DPRINT("change style not in text.\n");
-        break;
-        }
-        
-        flushBuffer();
-        
-        state.isBold = false;
-        
-        DPRINT("remove style strong.\n");
-        
-        addControl(STRONG, false);
-        popKind();
-        
-        break;        
-    }
-    case _ITALIC:
-    {
-        DPRINT("italic end.\n");
-        
-        if (state.state != READ_TEXT)
-        {
-        DPRINT("change style not in text.\n");
-        break;
-        }
-        
-        flushBuffer();
-        
-        state.isItalic = false;
+      DPRINT("bold end.\n");
 
-        if (!state.isBold)
-        {        
+      if (state.state != READ_TEXT) {
+        DPRINT("change style not in text.\n");
+        break;
+      }
+        
+      flushBuffer();
+        
+      state.isBold = false;
+        
+      DPRINT("remove style strong.\n");
+        
+      addControl(STRONG, false);
+      popKind();
+        
+      break;        
+    case _ITALIC:
+      DPRINT("italic end.\n");
+        
+      if (state.state != READ_TEXT) {
+        DPRINT("change style not in text.\n");
+        break;
+      }
+        
+      flushBuffer();
+        
+      state.isItalic = false;
+
+      if (!state.isBold) {        
         DPRINT("remove style emphasis.\n");
         
         addControl(EMPHASIS, false);
         popKind();
-        }
-        else
-        {
+      } else {
         DPRINT("remove style strong n emphasis, add strong.\n");
         
         addControl(STRONG, false);
@@ -292,60 +272,44 @@ void RtfBookReader::endElementHandler(int tag) {
         
         pushKind(STRONG);
         addControl(STRONG, true);
-        }
+      }
         
-        break;
-    }
+      break;
     case _TITLE_INFO:
     case _AUTHOR:
     case _ENCODING:
     case _BOOK_TITLE:
-    {
-        state.state = READ_TEXT;
-        break;
-    }
     case _STYLE_INFO:
-    {
-        state.state = READ_TEXT;
-        break;
-    }
+      state.state = READ_TEXT;
+      break;
     case _STYLE_SET:
-    {
-        break;
-    }
+      break;
     case _IMAGE:
-    {
-        DPRINT("image end.\n");
+      DPRINT("image end.\n");
         
-        flushBuffer();
+      flushBuffer();
         
-        state.state = READ_TEXT;
+      state.state = READ_TEXT;
         
-        break;
-    }
+      break;
     case _FOOTNOTE:
-    {
-        DPRINT("footnote end.\n");
+      DPRINT("footnote end.\n");
         
-        flushBuffer();
-        endParagraph();
-        popKind();
-        
-        state = stack.back();
-        stack.pop_back();
-        
-        if (state.id == "")
-        {
+      flushBuffer();
+      endParagraph();
+      popKind();
+      
+      state = stack.back();
+      stack.pop_back();
+      
+      if (state.id == "") {
         setMainTextModel();
-        }
-        else
-        {
+      } else {
         setFootnoteTextModel(state.id);
-        }
-        
-        break;
-    }
+      }
+      
+      break;
     default:
-        break;
-    }
+      break;
+  }
 }
