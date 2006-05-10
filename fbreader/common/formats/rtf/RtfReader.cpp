@@ -121,10 +121,10 @@ struct RtfKeywordInfo {
               // character to print if kwd == kwdChar
   
   RtfKeywordInfo(int _DefaultValue, bool _UseDefaultValue, KWD _BaseAction, int _Index) {
-  DefaultValue = _DefaultValue;
-  UseDefaultValue = _UseDefaultValue;
-  BaseAction = _BaseAction;
-  Index = _Index;
+    DefaultValue = _DefaultValue;
+    UseDefaultValue = _UseDefaultValue;
+    BaseAction = _BaseAction;
+    Index = _Index;
   }
 };
 
@@ -421,10 +421,9 @@ int RtfReader::ecApplyPictPropChange(int pprop) {
 // There's usually more to do here than this...
 //
 
-int RtfReader::ecChangeDest(int idest) {
-  if (state.rds == rdsSkip) {      // if we're skipping text,
-//    DPRINT("skipping...\n");
-    return ecOK;        // don't do anything
+void RtfReader::ecChangeDest(int idest) {
+  if (state.rds == rdsSkip) {
+    return;
   }
 
   switch (idest) {
@@ -463,7 +462,6 @@ int RtfReader::ecChangeDest(int idest) {
       state.rds = rdsSkip;        // when in doubt, skip it...
       break;
   }
-  return ecOK;
 }
 
 //
@@ -774,7 +772,8 @@ int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fP
       ecParseChar(((const RtfKeywordCharInfo&)keywordInfo).getChar());
 			return ecOK;
     case kwdDest:
-      return ecChangeDest(keywordInfo.Index);
+      ecChangeDest(keywordInfo.Index);
+			return ecOK;
     case kwdPictProp:
       return ecApplyPictPropChange(keywordInfo.Index);
     case kwdStyle:
