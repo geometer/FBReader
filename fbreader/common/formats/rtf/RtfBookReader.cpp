@@ -167,13 +167,6 @@ void RtfBookReader::startElementHandler(int tag) {
     case _ENCODING:
       state.state = READ_NONE;
       break;
-    case _BOOK_TITLE:
-//      state = READ_CONTENT;
-      state.state = READ_NONE;
-      break;
-    case _STYLE_INFO:
-      state.state = READ_NONE;
-      break;
     case _STYLE_SET:
       state.style = 0;
       break;
