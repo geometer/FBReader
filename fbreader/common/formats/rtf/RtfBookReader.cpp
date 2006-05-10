@@ -30,33 +30,37 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding)
     : RtfReader(encoding), BookReader(model) {
 }
 
+static const size_t maxBufferSize = 1024;
+
 void RtfBookReader::addChar(const char ch) {
   if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
-    outputBuffer.push_back(std::string(&ch, 1));
+    outputBuffer += ch;
+		if (outputBuffer.size() >= maxBufferSize) {
+			flushBuffer();
+		}
   }
 }
 
 void RtfBookReader::addCharData(const char *data, size_t len) {
   if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
-    outputBuffer.push_back(std::string(data, len));
+    outputBuffer.append(data, len);
+		if (outputBuffer.size() >= maxBufferSize) {
+			flushBuffer();
+		}
   }
 }
 
 void RtfBookReader::flushBuffer() {
-  if (outputBuffer.size() > 0) {
+  if (!outputBuffer.empty()) {
     if (state.state == READ_TEXT) {    
-      std::string newString;
-    
-			for (std::vector<std::string>::const_iterator it = outputBuffer.begin(); it != outputBuffer.end(); ++it) {
-      	myConverter->convert(newString, it->data(), it->data() + it->length());
-			}
+      static std::string newString;
+     	myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
       characterDataHandler(newString);
+			newString.erase();
     } else if (state.state == READ_IMAGE) {
-			for (std::vector<std::string>::iterator it = outputBuffer.begin(); it != outputBuffer.end(); ++it) {
-      	characterDataHandler(*it);
-			}
+     	characterDataHandler(outputBuffer);
     }
-    outputBuffer.clear();
+    outputBuffer.erase();
 	}
 }
 

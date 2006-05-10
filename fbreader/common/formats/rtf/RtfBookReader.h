@@ -86,7 +86,7 @@ protected:
 	std::vector<RtfBookReaderState> stack;
 	RtfBookReaderState state;
 
-	std::vector<std::string> outputBuffer;
+	std::string outputBuffer;
 };
 
 inline RtfBookReader::~RtfBookReader() {}
