@@ -26,8 +26,6 @@
 
 #include "RtfReader.h"
 
-// RTF parser error codes
-
 static const int rtfStreamBufferSize = 4096;
 
 enum ErrorCode {
