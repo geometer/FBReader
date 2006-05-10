@@ -74,36 +74,14 @@ void RtfBookReader::insertImage(const std::string &mimeType, const std::string &
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
-//    DPRINT("%c", str[0]);
-
-    switch (state.state)
-    {
-    case READ_TEXT:
-    {
-        if (state.isPrevImage)
-        {
-        beginParagraph();
-        state.isPrevImage = false;
-        }
-        
-        addData(str);
-        break;
+  if (state.state == READ_TEXT) {
+    if (state.isPrevImage) {
+      beginParagraph();
+      state.isPrevImage = false;
     }
-    case READ_IMAGE:
-    {
-        break;
-    }
-/*
-    case READ_STYLE_INFO:
-    {
-        if (currentStyleInfo != NULL) {
-        currentStyleInfo->name.append(str);
-        }
-        break;
-    }
-*/    
-    }
-    return true;
+    addData(str);
+  }
+  return true;
 }
 
 void RtfBookReader::startDocumentHandler() {
