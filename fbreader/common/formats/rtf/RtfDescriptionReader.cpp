@@ -83,7 +83,7 @@ void RtfDescriptionReader::flushBuffer() {
     std::string newString;
 	  myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.size());
 	  characterDataHandler(newString);
-	  outputBuffer.clear();
+	  outputBuffer.erase();
   }
 }
 

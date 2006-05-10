@@ -651,7 +651,7 @@ int RtfReader::ecRtfParse() {
 							  ecParseCharData(normalDataStart, ptr - normalDataStart);
 							}
 							normalDataStart = ptr + 1;
-              keyword.clear();
+              keyword.erase();
               myParserState = READ_KEYWORD;
 							dataStart = ptr + 1;
               break;
@@ -659,8 +659,8 @@ int RtfReader::ecRtfParse() {
             case 0x0a:      // cr and lf are noise characters...
 							if (ptr > normalDataStart) {
 							  ecParseCharData(normalDataStart, ptr - normalDataStart);
-								normalDataStart = ptr;
 							}
+							normalDataStart = ptr;
               break;
             default:
               if (state.ReadDataAsHex) {
@@ -677,7 +677,7 @@ int RtfReader::ecRtfParse() {
           hexString += *ptr;
           if (hexString.size() == 2) {
             char ch = strtol(hexString.c_str(), 0, 16); 
-            hexString.clear();
+            hexString.erase();
             ecParseChar(ch);
             myParserState = READ_NORMAL_DATA;
           }
@@ -705,7 +705,7 @@ int RtfReader::ecRtfParse() {
           if (!isdigit(*ptr)) {
 						parameterString.append(dataStart, ptr - dataStart);
             int param = atoi(parameterString.c_str());
-						parameterString.clear();
+						parameterString.erase();
             readNextChar = *ptr == ' ';
             if ((ec = ecTranslateKeyword(keyword, param, true)) != ecOK)
               return ec;
@@ -718,10 +718,18 @@ int RtfReader::ecRtfParse() {
         readNextChar = true;
       }
     }
-		if (dataStart < end) {
-			if (previousState == READ_NORMAL_DATA) {
-				ecParseCharData(normalDataStart, end - normalDataStart - 1);
+		if (previousState == READ_NORMAL_DATA) {
+			if (myParserState == READ_NORMAL_DATA) {
+				if (end > normalDataStart) {
+					ecParseCharData(normalDataStart, end - normalDataStart);
+				}
+			} else {
+				if (end - 1 > normalDataStart) {
+					ecParseCharData(normalDataStart, end - normalDataStart - 1);
+				}
 			}
+		}
+		if (dataStart < end) {
 			switch (myParserState) {
 				case READ_KEYWORD:
 					keyword.append(dataStart, end - dataStart);

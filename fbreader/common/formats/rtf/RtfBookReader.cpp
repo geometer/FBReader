@@ -32,13 +32,13 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding)
 
 void RtfBookReader::addChar(const char ch) {
   if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
-    outputBuffer += ch;
+    outputBuffer.push_back(std::string(&ch, 1));
   }
 }
 
 void RtfBookReader::addCharData(const char *data, size_t len) {
   if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
-    outputBuffer.append(data, len);
+    outputBuffer.push_back(std::string(data, len));
   }
 }
 
@@ -47,10 +47,14 @@ void RtfBookReader::flushBuffer() {
     if (state.state == READ_TEXT) {    
       std::string newString;
     
-      myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
+			for (std::vector<std::string>::const_iterator it = outputBuffer.begin(); it != outputBuffer.end(); ++it) {
+      	myConverter->convert(newString, it->data(), it->data() + it->length());
+			}
       characterDataHandler(newString);
     } else if (state.state == READ_IMAGE) {
-      characterDataHandler(outputBuffer);
+			for (std::vector<std::string>::iterator it = outputBuffer.begin(); it != outputBuffer.end(); ++it) {
+      	characterDataHandler(*it);
+			}
     }
     outputBuffer.clear();
 	}
