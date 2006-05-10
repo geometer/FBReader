@@ -35,7 +35,7 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding)
 static const size_t maxBufferSize = 1024;
 
 void RtfBookReader::addChar(const char ch) {
-  if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
+  if (state.readState == READ_TEXT) {
     outputBuffer += ch;
 		if (outputBuffer.size() >= maxBufferSize) {
 			flushBuffer();
@@ -44,7 +44,7 @@ void RtfBookReader::addChar(const char ch) {
 }
 
 void RtfBookReader::addCharData(const char *data, size_t len) {
-  if (state.state == READ_TEXT) {
+  if (state.readState == READ_TEXT) {
     outputBuffer.append(data, len);
 		if (outputBuffer.size() >= maxBufferSize) {
 			flushBuffer();
@@ -54,7 +54,7 @@ void RtfBookReader::addCharData(const char *data, size_t len) {
 
 void RtfBookReader::flushBuffer() {
   if (!outputBuffer.empty()) {
-    if (state.state == READ_TEXT) {    
+    if (state.readState == READ_TEXT) {    
       static std::string newString;
      	myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
       characterDataHandler(newString);
@@ -74,7 +74,7 @@ void RtfBookReader::insertImage(const std::string &mimeType, const std::string &
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
-  if (state.state == READ_TEXT) {
+  if (state.readState == READ_TEXT) {
     if (state.isPrevImage) {
       beginParagraph();
       state.isPrevImage = false;
@@ -92,7 +92,7 @@ void RtfBookReader::startDocumentHandler() {
 
     currentStyleInfo = 0;    
     
-    state.state = READ_TEXT;
+    state.readState = READ_TEXT;
     state.isItalic = false;
     state.isBold = false;
     state.id = "";
@@ -120,7 +120,7 @@ void RtfBookReader::startElementHandler(int tag) {
       beginParagraph();
       break;
     case _BOLD:
-      if (state.state != READ_TEXT) {
+      if (state.readState != READ_TEXT) {
         DPRINT("change style not in text.\n");
         break;
       }
@@ -136,7 +136,7 @@ void RtfBookReader::startElementHandler(int tag) {
 
       break;        
     case _ITALIC:
-      if (state.state != READ_TEXT) {
+      if (state.readState != READ_TEXT) {
         DPRINT("change style not in text.\n");
         break;
       }
@@ -165,7 +165,7 @@ void RtfBookReader::startElementHandler(int tag) {
     case _TITLE_INFO:
     case _AUTHOR:
     case _ENCODING:
-      state.state = READ_NONE;
+      state.readState = READ_NONE;
       break;
     case _STYLE_SET:
       state.style = 0;
@@ -181,7 +181,7 @@ void RtfBookReader::startElementHandler(int tag) {
 
       state.isPrevImage = true;
         
-      state.state = READ_IMAGE;
+      state.readState = READ_IMAGE;
 
       break;
 		case _IMAGE_TYPE:
@@ -195,7 +195,7 @@ void RtfBookReader::startElementHandler(int tag) {
 
       stack.push_back(state);
       state.id = id;
-      state.state = READ_TEXT;
+      state.readState = READ_TEXT;
       state.isItalic = false;
       state.isBold = false;
       state.style = -1;
@@ -213,7 +213,7 @@ void RtfBookReader::startElementHandler(int tag) {
       break;
     }
     default:
-      state.state = READ_TEXT;
+      state.readState = READ_TEXT;
       break;
   }
 }
@@ -223,7 +223,7 @@ void RtfBookReader::endElementHandler(int tag) {
     case _BOLD:
       DPRINT("bold end.\n");
 
-      if (state.state != READ_TEXT) {
+      if (state.readState != READ_TEXT) {
         DPRINT("change style not in text.\n");
         break;
       }
@@ -241,7 +241,7 @@ void RtfBookReader::endElementHandler(int tag) {
     case _ITALIC:
       DPRINT("italic end.\n");
         
-      if (state.state != READ_TEXT) {
+      if (state.readState != READ_TEXT) {
         DPRINT("change style not in text.\n");
         break;
       }
@@ -273,7 +273,7 @@ void RtfBookReader::endElementHandler(int tag) {
     case _ENCODING:
     case _BOOK_TITLE:
     case _STYLE_INFO:
-      state.state = READ_TEXT;
+      state.readState = READ_TEXT;
       break;
     case _STYLE_SET:
       break;
@@ -282,7 +282,7 @@ void RtfBookReader::endElementHandler(int tag) {
         
       flushBuffer();
         
-      state.state = READ_TEXT;
+      state.readState = READ_TEXT;
         
       break;
     case _FOOTNOTE:

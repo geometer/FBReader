@@ -62,20 +62,17 @@ protected:
 	int imageIndex;
 	int footnoteIndex;
 
-	enum STATE
-	{
+	enum ReadState {
 	    READ_NONE,
-//	    READ_TITLE,
 	    READ_TEXT,
 	    READ_IMAGE,
-//	    READ_FOOTNOTE,
 	    READ_STYLE_INFO,
 	};
 	
 	struct RtfBookReaderState
 	{
 	    std::string id;
-	    int state;
+	    ReadState readState;
 	    bool isItalic;
 	    bool isBold;
 	    int style;
