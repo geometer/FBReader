@@ -28,8 +28,7 @@
 #include "../../bookmodel/BookModel.h"
 #include "RtfImage.h"
 
-RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) 
-    : RtfReader(encoding), BookReader(model) {
+RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) : RtfReader(encoding), BookReader(model) {
 }
 
 static const size_t maxBufferSize = 1024;
@@ -92,7 +91,7 @@ void RtfBookReader::startDocumentHandler() {
 
     currentStyleInfo = 0;    
     
-    state.readState = READ_TEXT;
+    state.readState = READ_NONE;
     state.isItalic = false;
     state.isBold = false;
     state.id = "";
@@ -162,6 +161,8 @@ void RtfBookReader::startElementHandler(int tag) {
         addControl(STRONG, true);
       }
       break;
+    case _BOOK_TITLE:
+    case _STYLE_INFO:
     case _TITLE_INFO:
     case _AUTHOR:
     case _ENCODING:
