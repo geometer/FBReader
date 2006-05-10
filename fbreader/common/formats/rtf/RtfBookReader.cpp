@@ -84,31 +84,26 @@ bool RtfBookReader::characterDataHandler(std::string &str) {
 }
 
 void RtfBookReader::startDocumentHandler() {
-    DPRINT("start doc handler\n");
-    
-    imageIndex = 0;
-    footnoteIndex = 1;
+  imageIndex = 0;
+  footnoteIndex = 1;
 
-    currentStyleInfo = 0;    
-    
-    state.readState = READ_NONE;
-    state.isItalic = false;
-    state.isBold = false;
-    state.id = "";
-    state.style = -1;
-    state.isPrevImage = false;
+  currentStyleInfo = 0;    
+  
+  state.readState = READ_NONE;
+  state.isItalic = false;
+  state.isBold = false;
+  state.id = "";
+  state.style = -1;
+  state.isPrevImage = false;
 
-    myBookReader.setMainTextModel();
-    myBookReader.pushKind(REGULAR);
-    myBookReader.beginParagraph();
+  myBookReader.setMainTextModel();
+  myBookReader.pushKind(REGULAR);
+  myBookReader.beginParagraph();
 }
 
 void RtfBookReader::endDocumentHandler() {
-    DPRINT("end doc handler\n");
-
-    flushBuffer();
-    myBookReader.endParagraph();
-    myBookReader.popKind();
+  flushBuffer();
+  myBookReader.endParagraph();
 }
 
 void RtfBookReader::startElementHandler(int tag) {
@@ -280,11 +275,7 @@ void RtfBookReader::endElementHandler(int tag) {
       break;
     case _IMAGE:
       DPRINT("image end.\n");
-        
-      flushBuffer();
-        
       state.readState = READ_TEXT;
-        
       break;
     case _FOOTNOTE:
       DPRINT("footnote end.\n");
