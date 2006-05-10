@@ -22,6 +22,8 @@
 #include <iostream>
 #include <cctype>
 
+#include <abstract/ZLStringUtil.h>
+
 #include "RtfBookReader.h"
 #include "../../bookmodel/BookModel.h"
 #include "RtfImage.h"
@@ -42,7 +44,7 @@ void RtfBookReader::addChar(const char ch) {
 }
 
 void RtfBookReader::addCharData(const char *data, size_t len) {
-  if ((state.state == READ_TEXT) || (state.state == READ_IMAGE)) {
+  if (state.state == READ_TEXT) {
     outputBuffer.append(data, len);
 		if (outputBuffer.size() >= maxBufferSize) {
 			flushBuffer();
@@ -57,8 +59,6 @@ void RtfBookReader::flushBuffer() {
      	myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
       characterDataHandler(newString);
 			newString.erase();
-    } else if (state.state == READ_IMAGE) {
-     	characterDataHandler(outputBuffer);
     }
     outputBuffer.erase();
 	}
@@ -67,15 +67,10 @@ void RtfBookReader::flushBuffer() {
 void RtfBookReader::insertImage(const std::string &fileName, size_t startOffset, size_t size) {
   ZLImage *image = new RtfImage("image/jpeg", fileName, startOffset, size);
 
-  std::string id;
-  char tmp[256];
-
-  sprintf(tmp, "InternalImage%i", imageIndex);
-
-  id.append(tmp);
+  std::string id = "InternalImage";
+	ZLStringUtil::appendNumber(id, imageIndex++);
   addImageReference(id);   
   addImage(id, image);
-  imageIndex++;
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
@@ -240,12 +235,9 @@ void RtfBookReader::startElementHandler(int tag, const char **attributes) {
         break;
     }
     case _STYLE_SET:
-    {
         state.style = 0;
         break;
-    }
     case _IMAGE:
-    {
         DPRINT("image start.\n");
     
         flushBuffer();
@@ -260,22 +252,8 @@ void RtfBookReader::startElementHandler(int tag, const char **attributes) {
         state.state = READ_IMAGE;
 
         break;
-    }
-    case _IMAGE_TYPE:
-    {
-        std::string id;
-        char tmp[256];
-
-        DPRINT("add image: %i, type: %s\n", imageIndex, attributes[0]);
-        
-        if ((attributes == NULL) || (attributes[0] == NULL))
-        {
-        break;
-        }
-        
-        DPRINT("add image done\n");
-        break;
-    }
+		case _IMAGE_TYPE:
+			break;
     case _FOOTNOTE:
     {
         std::string id;

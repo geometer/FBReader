@@ -30,15 +30,17 @@
 
 static const int rtfStreamBufferSize = 4096;
 
-#define ecOK 0            // Everything's fine!
-#define ecStackUnderflow  1     // Unmatched '}'
-#define ecStackOverflow   2     // Too many '{' -- memory exhausted
-#define ecUnmatchedBrace  3     // RTF ended during an open group.
-#define ecInvalidHex    4     // invalid hex character found in data
-#define ecBadTable      5     // RTF table (sym or prop) invalid
-#define ecAssertion     6     // Assertion failure
-#define ecEndOfFile     7     // End of file reached while reading RTF
-#define ecNoEncoding      8
+enum ErrorCode {
+  ecOK,                    // Everything's fine!
+  ecStackUnderflow,        // Unmatched '}'
+  ecStackOverflow,         // Too many '{' -- memory exhausted
+  ecUnmatchedBrace,        // RTF ended during an open group.
+  ecInvalidHex,            // invalid hex character found in data
+  ecBadTable,              // RTF table (sym or prop) invalid
+  ecAssertion,             // Assertion failure
+  ecEndOfFile,             // End of file reached while reading RTF
+  ecNoEncoding,
+};
 
 RtfReader::RtfReader(const std::string &encoding) {
   this->encoding = encoding;
@@ -554,7 +556,7 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
 }
 
 int RtfReader::ecRtfParse() {
-  int ec;
+  int ec = ecOK;
   myParserState = READ_NORMAL_DATA;
 	ParserState previousState = READ_NORMAL_DATA;
 
@@ -563,7 +565,7 @@ int RtfReader::ecRtfParse() {
   std::string hexString;
 	int imageStartOffset = -1;
 
-  while (!is_interrupted) {
+  while (!is_interrupted && (ec == ecOK)) {
     const char *ptr = myStreamBuffer;
     const char *end = myStreamBuffer + myStream->read(myStreamBuffer, rtfStreamBufferSize);
 		if (ptr == end) {
@@ -619,8 +621,7 @@ int RtfReader::ecRtfParse() {
               }
               
               if (state.rds != myStateStack.top().rds) {
-                if ((ec = ecEndGroupAction(state.rds)) != ecOK)
-                  return ec;
+                ec = ecEndGroupAction(state.rds);
               }
               
               bool oldItalic = state.chp.fItalic;
@@ -686,8 +687,7 @@ int RtfReader::ecRtfParse() {
 					if (!isalpha(*ptr)) {
             if (ptr == dataStart) {
               keyword = *ptr;
-              if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
-                return ec;
+              ec = ecTranslateKeyword(keyword, 0, false);
             } else {
 							keyword.append(dataStart, ptr - dataStart);
               if ((*ptr == '-') || isdigit(*ptr)) {
@@ -695,8 +695,7 @@ int RtfReader::ecRtfParse() {
                 myParserState = READ_KEYWORD_PARAMETER;
               } else {
                 readNextChar = *ptr == ' ';
-                if ((ec = ecTranslateKeyword(keyword, 0, false)) != ecOK)
-                  return ec;
+                ec = ecTranslateKeyword(keyword, 0, false);
               }
             }
 					}
@@ -707,8 +706,7 @@ int RtfReader::ecRtfParse() {
             int param = atoi(parameterString.c_str());
 						parameterString.erase();
             readNextChar = *ptr == ' ';
-            if ((ec = ecTranslateKeyword(keyword, param, true)) != ecOK)
-              return ec;
+            ec = ecTranslateKeyword(keyword, param, true);
           }
           break;
       }
@@ -743,6 +741,8 @@ int RtfReader::ecRtfParse() {
 		}
   }
   
+	if (ec != ecOK)
+		return ec;
   return (is_interrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
 }
 
