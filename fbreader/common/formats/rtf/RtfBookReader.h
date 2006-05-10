@@ -31,7 +31,7 @@ class BookModel;
 class RtfImage;
 
 
-class RtfBookReader : public RtfReader, public BookReader {
+class RtfBookReader : public RtfReader {
 
 public:
 	RtfBookReader(BookModel &model, const std::string &encoding);
@@ -84,6 +84,9 @@ protected:
 	RtfBookReaderState state;
 
 	std::string outputBuffer;
+
+private:
+	BookReader myBookReader;
 };
 
 inline RtfBookReader::~RtfBookReader() {}

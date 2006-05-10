@@ -28,7 +28,7 @@
 #include "../../bookmodel/BookModel.h"
 #include "RtfImage.h"
 
-RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) : RtfReader(encoding), BookReader(model) {
+RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) : RtfReader(encoding), myBookReader(model) {
 }
 
 static const size_t maxBufferSize = 1024;
@@ -68,17 +68,17 @@ void RtfBookReader::insertImage(const std::string &mimeType, const std::string &
 
   std::string id = "InternalImage";
 	ZLStringUtil::appendNumber(id, imageIndex++);
-  addImageReference(id);   
-  addImage(id, image);
+  myBookReader.addImageReference(id);   
+  myBookReader.addImage(id, image);
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
   if (state.readState == READ_TEXT) {
     if (state.isPrevImage) {
-      beginParagraph();
+      myBookReader.beginParagraph();
       state.isPrevImage = false;
     }
-    addData(str);
+    myBookReader.addData(str);
   }
   return true;
 }
@@ -98,25 +98,25 @@ void RtfBookReader::startDocumentHandler() {
     state.style = -1;
     state.isPrevImage = false;
 
-    setMainTextModel();
-    pushKind(REGULAR);
-    beginParagraph();
+    myBookReader.setMainTextModel();
+    myBookReader.pushKind(REGULAR);
+    myBookReader.beginParagraph();
 }
 
 void RtfBookReader::endDocumentHandler() {
     DPRINT("end doc handler\n");
 
     flushBuffer();
-    endParagraph();
-    popKind();
+    myBookReader.endParagraph();
+    myBookReader.popKind();
 }
 
 void RtfBookReader::startElementHandler(int tag) {
   switch(tag) {
     case _P:
       flushBuffer();
-      endParagraph();
-      beginParagraph();
+      myBookReader.endParagraph();
+      myBookReader.beginParagraph();
       break;
     case _BOLD:
       if (state.readState != READ_TEXT) {
@@ -130,8 +130,8 @@ void RtfBookReader::startElementHandler(int tag) {
         
       DPRINT("add style strong.\n");
         
-      pushKind(STRONG);
-      addControl(STRONG, true);
+      myBookReader.pushKind(STRONG);
+      myBookReader.addControl(STRONG, true);
 
       break;        
     case _ITALIC:
@@ -147,18 +147,18 @@ void RtfBookReader::startElementHandler(int tag) {
       if (!state.isBold) {        
         DPRINT("add style emphasis.\n");
         
-        pushKind(EMPHASIS);
-        addControl(EMPHASIS, true);
+        myBookReader.pushKind(EMPHASIS);
+        myBookReader.addControl(EMPHASIS, true);
       } else {
         DPRINT("add style emphasis and strong.\n");
         
-        popKind();
-        addControl(STRONG, false);
+        myBookReader.popKind();
+        myBookReader.addControl(STRONG, false);
         
-        pushKind(EMPHASIS);
-        addControl(EMPHASIS, true);
-        pushKind(STRONG);
-        addControl(STRONG, true);
+        myBookReader.pushKind(EMPHASIS);
+        myBookReader.addControl(EMPHASIS, true);
+        myBookReader.pushKind(STRONG);
+        myBookReader.addControl(STRONG, true);
       }
       break;
     case _BOOK_TITLE:
@@ -177,7 +177,7 @@ void RtfBookReader::startElementHandler(int tag) {
       flushBuffer();
 
       if (!state.isPrevImage) {
-        endParagraph();
+        myBookReader.endParagraph();
       }
 
       state.isPrevImage = true;
@@ -202,13 +202,13 @@ void RtfBookReader::startElementHandler(int tag) {
       state.style = -1;
       state.isPrevImage = false;
       
-      addHyperlinkControl(FOOTNOTE, id);        
-      addData(id);
-      addControl(FOOTNOTE, false);
+      myBookReader.addHyperlinkControl(FOOTNOTE, id);        
+      myBookReader.addData(id);
+      myBookReader.addControl(FOOTNOTE, false);
       
-      setFootnoteTextModel(id);
-      pushKind(REGULAR);
-      beginParagraph();
+      myBookReader.setFootnoteTextModel(id);
+      myBookReader.pushKind(REGULAR);
+      myBookReader.beginParagraph();
       
       footnoteIndex++;
       break;
@@ -235,8 +235,8 @@ void RtfBookReader::endElementHandler(int tag) {
         
       DPRINT("remove style strong.\n");
         
-      addControl(STRONG, false);
-      popKind();
+      myBookReader.addControl(STRONG, false);
+      myBookReader.popKind();
         
       break;        
     case _ITALIC:
@@ -254,18 +254,18 @@ void RtfBookReader::endElementHandler(int tag) {
       if (!state.isBold) {        
         DPRINT("remove style emphasis.\n");
         
-        addControl(EMPHASIS, false);
-        popKind();
+        myBookReader.addControl(EMPHASIS, false);
+        myBookReader.popKind();
       } else {
         DPRINT("remove style strong n emphasis, add strong.\n");
         
-        addControl(STRONG, false);
-        popKind();
-        addControl(EMPHASIS, false);
-        popKind();
+        myBookReader.addControl(STRONG, false);
+        myBookReader.popKind();
+        myBookReader.addControl(EMPHASIS, false);
+        myBookReader.popKind();
         
-        pushKind(STRONG);
-        addControl(STRONG, true);
+        myBookReader.pushKind(STRONG);
+        myBookReader.addControl(STRONG, true);
       }
         
       break;
@@ -290,16 +290,16 @@ void RtfBookReader::endElementHandler(int tag) {
       DPRINT("footnote end.\n");
         
       flushBuffer();
-      endParagraph();
-      popKind();
+      myBookReader.endParagraph();
+      myBookReader.popKind();
       
       state = stack.back();
       stack.pop_back();
       
       if (state.id == "") {
-        setMainTextModel();
+        myBookReader.setMainTextModel();
       } else {
-        setFootnoteTextModel(state.id);
+        myBookReader.setFootnoteTextModel(state.id);
       }
       
       break;
