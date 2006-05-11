@@ -5,7 +5,14 @@ VERSION = $(shell cat ../VERSION)
 PACKAGE_NAME = fbreader-$(UI_TYPE)
 PACKAGE_FILE = $(PACKAGE_NAME)_$(VERSION)-1_arm.deb
 
+ifeq "$(UI_TYPE)" "maemo"
 PREFIX=/var/lib/install
+DBUSDIR=/usr/lib/dbus-1.0/services
+else
+PREFIX=
+DBUSDIR=/usr/share/dbus-1/services
+endif
+
 BINDIR=$(PREFIX)/usr/bin
 TMPDIR=tmp
 
@@ -36,10 +43,15 @@ install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -m 0644 ../icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	@install -d $(DESTDIR)/usr/share/applications/hildon
 	@install -m 0644 $(DESKTOP_FILE) $(DESTDIR)/usr/share/applications/hildon
+ifeq "$(UI_TYPE)" "maemo"
 	@install -d $(DESTDIR)/etc/others-menu/extra_applications
 	@cd $(DESTDIR)/etc/others-menu/extra_applications; ln -sf ../../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
-	@install -d $(DESTDIR)/usr/lib/dbus-1.0/services
-	@install -m 0644 $(SERVICE_FILE) $(DESTDIR)/usr/lib/dbus-1.0/services
+else
+	@install -d $(DESTDIR)/etc/others-menu
+	@cd $(DESTDIR)/etc/others-menu; ln -sf ../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
+endif
+	@install -d $(DESTDIR)$(DBUSDIR)
+	@install -m 0644 $(SERVICE_FILE) $(DESTDIR)$(DBUSDIR)
 	@install -d $(DESTDIR)/etc/osso-backup/applications
 	@install -m 0644 $(BACKUP_CONF) $(DESTDIR)/etc/osso-backup/applications/FBReader.conf
 
@@ -49,13 +61,33 @@ $(DESKTOP_FILE): $(DESKTOP_FILE).in
 $(SERVICE_FILE): $(SERVICE_FILE).in
 	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
+ifeq "$(UI_TYPE)" "maemo"
 package:
 	@mkdir $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
 	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(VERSION)/" -e "s#@PACKAGE@#$(PACKAGE_NAME)#" -e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" FBReader.control.in > $(TMPDIR)/DEBIAN/control
+	@sed -e "s/@VERSION@/$(VERSION)/" \
+		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
+		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
+		-e "s#@DEPENDS@#maemo#" \
+		FBReader.control.in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
+else
+package:
+	@mkdir $(TMPDIR)
+	make DESTDIR=$(PWD)/$(TMPDIR) install
+	@mkdir -p $(TMPDIR)/DEBIAN
+	@sed -e "s/@VERSION@/$(VERSION)/" \
+		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
+		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
+		-e "s#@DEPENDS@#`dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`#" \
+		FBReader.control.in > $(TMPDIR)/DEBIAN/control
+	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
+	@rm -rf $(TMPDIR)
+endif
 
 clean:
 	$(RM) $(DESKTOP_FILE) $(SERVICE_FILE) *.deb
+
+# vim:ts=8:sw=8:noet

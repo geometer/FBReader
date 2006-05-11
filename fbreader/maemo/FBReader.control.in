@@ -1,7 +1,7 @@
 Package: @PACKAGE@
 Version: @VERSION@
 Architecture: arm
-Depends: maemo
+Depends: @DEPENDS@
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Installed-Size: @SIZE@
 Description: e-book reader

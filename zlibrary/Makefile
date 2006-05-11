@@ -43,7 +43,7 @@ ifeq "$(UI_TYPE)" "qtopia"
 	QTSUBDIRS = qtopia/dialogs qtopia/scrollableview qtopia/deviceInfo qtopia/view qtopia/options qtopia/util qt/image
 endif
 
-ifeq "$(UI_TYPE)" "maemo"
+ifeq "$(UI_TYPE)" "$(findstring $(UI_TYPE), maemo maemo2)"
 	GTKSUBDIRS = maemo/dialogs maemo/deviceInfo maemo/view gtk/image maemo/util
 endif
 
