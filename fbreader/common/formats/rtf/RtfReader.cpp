@@ -538,7 +538,6 @@ RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
 
 int RtfReader::ecRtfParse() {
   ParserState parserState = READ_NORMAL_DATA;
-	ParserState previousState = READ_NORMAL_DATA;
 
   std::string keyword;
   std::string parameterString;
@@ -551,20 +550,9 @@ int RtfReader::ecRtfParse() {
 		if (ptr == end) {
 			break;
 		}
-		const char *normalDataStart = ptr;
 		const char *dataStart = ptr;
   	bool readNextChar = true;
 		while (ptr != end) {
-			if (previousState != parserState) {
-				if (previousState == READ_NORMAL_DATA) {
-					if (!state.ReadDataAsHex && (ptr - 1 > normalDataStart)) {
-					  ecParseCharData(normalDataStart, ptr - normalDataStart - 1);
-					}
-				} else if (parserState == READ_NORMAL_DATA) {
-					normalDataStart = ptr;
-				}
-				previousState = parserState;
-			}
       switch (parserState) {
         case READ_BINARY_DATA:
           ecParseChar(*ptr);
@@ -576,19 +564,19 @@ int RtfReader::ecRtfParse() {
         case READ_NORMAL_DATA:
           switch (*ptr) {
             case '{':
-							if (ptr > normalDataStart) {
-							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+							if (ptr > dataStart) {
+							  ecParseCharData(dataStart, ptr - dataStart);
 							}
-							normalDataStart = ptr + 1;
+							dataStart = ptr + 1;
               myStateStack.push(state);
               state.ReadDataAsHex = false;
               break;
             case '}':
             {
-							if (ptr > normalDataStart) {
-							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+							if (ptr > dataStart) {
+							  ecParseCharData(dataStart, ptr - dataStart);
 							}
-							normalDataStart = ptr + 1;
+							dataStart = ptr + 1;
 
 							if (imageStartOffset >= 0) {
 			          int imageSize = myStream->offset() + (ptr - end) - imageStartOffset;
@@ -628,28 +616,25 @@ int RtfReader::ecRtfParse() {
               break;
             }
             case '\\':
-							if (ptr > normalDataStart) {
-							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+							if (ptr > dataStart) {
+							  ecParseCharData(dataStart, ptr - dataStart);
 							}
-							normalDataStart = ptr + 1;
+							dataStart = ptr + 1;
               keyword.erase();
               parserState = READ_KEYWORD;
-							dataStart = ptr + 1;
               break;
             case 0x0d:
             case 0x0a:      // cr and lf are noise characters...
-							if (ptr > normalDataStart) {
-							  ecParseCharData(normalDataStart, ptr - normalDataStart);
+							if (ptr > dataStart) {
+							  ecParseCharData(dataStart, ptr - dataStart);
 							}
-							normalDataStart = ptr;
+							dataStart = ptr + 1;
               break;
             default:
               if (state.ReadDataAsHex) {
 								if (imageStartOffset == -1) {
 								  imageStartOffset = myStream->offset() + (ptr - end);
 								}
-              } else {
-                //ecParseChar(*ptr);
               }
               break;
           }
@@ -668,6 +653,7 @@ int RtfReader::ecRtfParse() {
             if (ptr == dataStart) {
               keyword = *ptr;
               parserState = ecTranslateKeyword(keyword, 0, false);
+							dataStart = ptr + 1;
             } else {
 							keyword.append(dataStart, ptr - dataStart);
               if ((*ptr == '-') || isdigit(*ptr)) {
@@ -676,6 +662,7 @@ int RtfReader::ecRtfParse() {
               } else {
                 readNextChar = *ptr == ' ';
                 parserState = ecTranslateKeyword(keyword, 0, false);
+								dataStart = readNextChar ? ptr + 1 : ptr;
               }
             }
 					}
@@ -687,6 +674,7 @@ int RtfReader::ecRtfParse() {
 						parameterString.erase();
             readNextChar = *ptr == ' ';
             parserState = ecTranslateKeyword(keyword, param, true);
+						dataStart = readNextChar ? ptr + 1 : ptr;
           }
           break;
       }
@@ -696,19 +684,10 @@ int RtfReader::ecRtfParse() {
         readNextChar = true;
       }
     }
-		if (previousState == READ_NORMAL_DATA) {
-			if (parserState == READ_NORMAL_DATA) {
-				if (end > normalDataStart) {
-					ecParseCharData(normalDataStart, end - normalDataStart);
-				}
-			} else {
-				if (end - 1 > normalDataStart) {
-					ecParseCharData(normalDataStart, end - normalDataStart - 1);
-				}
-			}
-		}
 		if (dataStart < end) {
 			switch (parserState) {
+				case READ_NORMAL_DATA:
+					ecParseCharData(dataStart, end - dataStart);
 				case READ_KEYWORD:
 					keyword.append(dataStart, end - dataStart);
 					break;
