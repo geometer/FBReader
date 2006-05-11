@@ -338,14 +338,14 @@ void RtfReader::ecStyleChange(int st, int val) {
   }
 
   if (state.rds == rdsStyleSheet) {
-    DPRINT ("Add style index: %i\n", val);
+		//std::cerr << "Add style index: " << val << "\n";
     
-    sprintf(style_attributes[0], "%i", val);
+    //sprintf(style_attributes[0], "%i", val);
     startElementHandler(_STYLE_INFO);
   } else /*if (state.rds == rdsContent)*/ {
-    DPRINT ("Change style index: %i\n", val);
+		//std::cerr << "Set style index: " << val << "\n";
 
-    sprintf(style_attributes[0], "%i", val);
+    //sprintf(style_attributes[0], "%i", val);
     startElementHandler(_STYLE_SET);
   }
 }
@@ -391,7 +391,7 @@ void RtfReader::ecApplyPictPropChange(int pprop) {
 	    myNextImageMimeType = "image/jpeg";
 			break;
     default:
-	    myNextImageMimeType = "";
+	    myNextImageMimeType = "image/unknown";
 			break;
   }
 } 
