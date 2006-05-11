@@ -166,16 +166,24 @@ protected:
 	};
 
 private:
-    
-  int ecApplyPropChange(int iprop, int val);
-	int ecParseSpecialProperty(int iprop);
-	int ecApplyPictPropChange(int pprop);
-	void ecChangeDest(int idest);
-	int ecEndGroupAction(int rds);
-	int ecStyleChange(int st, int val);
 
-	int ecParseSpecialKeyword(int ipfn, int param);
-	int ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
+  enum ParserState {
+    READ_NORMAL_DATA,
+    READ_BINARY_DATA,
+    READ_HEX_SYMBOL,
+    READ_KEYWORD,
+    READ_KEYWORD_PARAMETER,
+  };
+    
+  void ecApplyPropChange(int iprop, int val);
+	void ecParseSpecialProperty(int iprop);
+	void ecApplyPictPropChange(int pprop);
+	void ecChangeDest(int idest);
+	void ecEndGroupAction(int rds);
+	void ecStyleChange(int st, int val);
+
+	ParserState ecParseSpecialKeyword(int ipfn, int param);
+	ParserState ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 	void ecParseChar(char ch);
 	void ecParseCharData(const char *data, size_t len);
 
@@ -186,14 +194,6 @@ private:
 
 	RtfReaderState state;
 
-  enum ParserState {
-    READ_NORMAL_DATA,
-    READ_BINARY_DATA,
-    READ_HEX_SYMBOL,
-    READ_KEYWORD,
-    READ_KEYWORD_PARAMETER,
-  };
-
 private:
 	std::string myFileName;
 	shared_ptr<ZLInputStream> myStream;
@@ -201,7 +201,6 @@ private:
 
 	std::stack<RtfReaderState> myStateStack;
 
-	ParserState myParserState;
 	int myBinaryDataSize;
 };
 

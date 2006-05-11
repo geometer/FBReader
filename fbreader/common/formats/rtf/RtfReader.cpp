@@ -31,13 +31,7 @@ static const int rtfStreamBufferSize = 4096;
 enum ErrorCode {
   ecOK,                    // Everything's fine!
   ecStackUnderflow,        // Unmatched '}'
-  ecStackOverflow,         // Too many '{' -- memory exhausted
   ecUnmatchedBrace,        // RTF ended during an open group.
-  ecInvalidHex,            // invalid hex character found in data
-  ecBadTable,              // RTF table (sym or prop) invalid
-  ecAssertion,             // Assertion failure
-  ecEndOfFile,             // End of file reached while reading RTF
-  ecNoEncoding,
 };
 
 RtfReader::RtfReader(const std::string &encoding) {
@@ -275,7 +269,7 @@ static void fillKeywordMap() {
 //
 //
 
-int RtfReader::ecApplyPropChange(int iprop, int val) {
+void RtfReader::ecApplyPropChange(int iprop, int val) {
   char *pb = NULL;
   bool oldItalic = state.chp.fItalic;
   bool oldBold = state.chp.fBold;
@@ -283,7 +277,7 @@ int RtfReader::ecApplyPropChange(int iprop, int val) {
 //  DPRINT("Aply prop change: %i %i\n", iprop, val);
 
   if (state.rds == rdsSkip)         // If we're skipping text,
-    return ecOK;          // don't do anything.
+    return;          // don't do anything.
 
   switch (rgprop[iprop].prop) {
     case propDop:
@@ -300,10 +294,9 @@ int RtfReader::ecApplyPropChange(int iprop, int val) {
       break;
     default:
       if (rgprop[iprop].actn != actnSpec) {
-        DPRINT("parse failed: bad table\n");
-        return ecBadTable;
+				std::cerr << "parse failed: bad table 0\n";
+        return;
       }
-      break;
   }
   
   switch (rgprop[iprop].actn) {
@@ -314,11 +307,11 @@ int RtfReader::ecApplyPropChange(int iprop, int val) {
       (*(int *) (pb+rgprop[iprop].offset)) = val;
       break;
     case actnSpec:
-      return ecParseSpecialProperty(iprop);
-      break;
+      ecParseSpecialProperty(iprop);
+      return;
     default:
-      DPRINT("parse failed: bad table\n");
-      return ecBadTable;
+			std::cerr << "parse failed: bad table 1\n";
+      return;
   }
   
   if (state.chp.fItalic != oldItalic) {
@@ -336,14 +329,12 @@ int RtfReader::ecApplyPropChange(int iprop, int val) {
       endElementHandler(_BOLD);
     }
   }
-  
-  return ecOK;
 }
 
 char style_attributes[1][256];
-int RtfReader::ecStyleChange(int st, int val) {
+void RtfReader::ecStyleChange(int st, int val) {
   if (st != istyleIndex) {
-    return ecOK;
+    return;
   }
 
   if (state.rds == rdsStyleSheet) {
@@ -357,8 +348,6 @@ int RtfReader::ecStyleChange(int st, int val) {
     sprintf(style_attributes[0], "%i", val);
     startElementHandler(_STYLE_SET);
   }
-  
-  return ecOK;
 }
 
 //
@@ -367,11 +356,11 @@ int RtfReader::ecStyleChange(int st, int val) {
 // Set a property that requires code to evaluate.
 //
 
-int RtfReader::ecParseSpecialProperty(int iprop) {
+void RtfReader::ecParseSpecialProperty(int iprop) {
   switch (iprop) {
     case ipropPard:
       memset(&state.pap, 0, sizeof(state.pap));
-      return ecOK;
+      break;
     case ipropPlain:
       if (state.chp.fItalic) {
         endElementHandler(_ITALIC);
@@ -382,39 +371,33 @@ int RtfReader::ecParseSpecialProperty(int iprop) {
       }
     
       memset(&state.chp, 0, sizeof(state.chp));
-      return ecOK;
+      break;
     case ipropSectd:
       memset(&state.sep, 0, sizeof(state.sep));
-      return ecOK;
-    default:
-      return ecBadTable;
+      break;
+		default:
+			std::cerr << "parse failed: bad table 2\n";
+			break;
   }
-  
-  DPRINT("parse failed: bad table\n");
-
-  return ecBadTable;
 }
 
 static const std::string image_png_type = "image/png";
 static const std::string image_jpeg_type = "image/jpeg";
 static const std::string *current_image_type = &image_png_type;
 
-int RtfReader::ecApplyPictPropChange(int pprop) {
+void RtfReader::ecApplyPictPropChange(int pprop) {
   switch (pprop) {
     case ppropPng:
       startElementHandler(_IMAGE_TYPE);
 			current_image_type = &image_png_type;
-      return ecOK;
+			break;
     case ppropJpeg:
       startElementHandler(_IMAGE_TYPE);
 			current_image_type = &image_jpeg_type;
-      return ecOK;
+			break;
     default:
-      DPRINT("parse failed: bad table\n");
-      return ecBadTable;
+			std::cerr << "parse failed: bad table 3\n";
   }
-
-  return ecBadTable;
 } 
 //
 // %%Function: ecChangeDest
@@ -473,9 +456,9 @@ void RtfReader::ecChangeDest(int idest) {
 // If there's any cleanup that needs to be done, do it now.
 //
 
-int RtfReader::ecEndGroupAction(int rds) {
+void RtfReader::ecEndGroupAction(int rds) {
   if (rds == rdsSkip) {      // if we're skipping text,
-    return ecOK;        // don't do anything
+    return;        // don't do anything
   }
 
   switch (rds) {
@@ -506,7 +489,6 @@ int RtfReader::ecEndGroupAction(int rds) {
     default:
       break;
   }
-  return ecOK;
 }
 
 //
@@ -516,9 +498,10 @@ int RtfReader::ecEndGroupAction(int rds) {
 //
 static const char *encoding1251 = "windows-1251";
 
-int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
+RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
+	ParserState parserState = READ_NORMAL_DATA;
   if (state.rds == rdsSkip && ipfn != ipfnBin)  // if we're skipping, and it's not
-    return ecOK;            // the \bin keyword, ignore it.
+    return parserState;            // the \bin keyword, ignore it.
   switch (ipfn) {
     case ipfnParagraph:
       startElementHandler(_P);
@@ -528,12 +511,12 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
       break;
     case ipfnBin:
       if (param > 0) {
-        myParserState = READ_BINARY_DATA;
+        parserState = READ_BINARY_DATA;
         myBinaryDataSize = param;
       }
       break;
     case ipfnHex:
-      myParserState = READ_HEX_SYMBOL;
+      parserState = READ_HEX_SYMBOL;
       break;
     case ipfnCodePage:
       startElementHandler(_ENCODING);
@@ -548,16 +531,13 @@ int RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
       fSkipDestIfUnk = true;
       break;
     default:
-      DPRINT("parse failed: bad table\n");
-
-      return ecBadTable;
+			std::cerr << "parse failed: bad table 4\n";
   }
-  return ecOK;
+	return parserState;
 }
 
 int RtfReader::ecRtfParse() {
-  int ec = ecOK;
-  myParserState = READ_NORMAL_DATA;
+  ParserState parserState = READ_NORMAL_DATA;
 	ParserState previousState = READ_NORMAL_DATA;
 
   std::string keyword;
@@ -565,7 +545,7 @@ int RtfReader::ecRtfParse() {
   std::string hexString;
 	int imageStartOffset = -1;
 
-  while (!is_interrupted && (ec == ecOK)) {
+  while (!is_interrupted) {
     const char *ptr = myStreamBuffer;
     const char *end = myStreamBuffer + myStream->read(myStreamBuffer, rtfStreamBufferSize);
 		if (ptr == end) {
@@ -575,22 +555,22 @@ int RtfReader::ecRtfParse() {
 		const char *dataStart = ptr;
   	bool readNextChar = true;
 		while (ptr != end) {
-			if (previousState != myParserState) {
+			if (previousState != parserState) {
 				if (previousState == READ_NORMAL_DATA) {
 					if (!state.ReadDataAsHex && (ptr - 1 > normalDataStart)) {
 					  ecParseCharData(normalDataStart, ptr - normalDataStart - 1);
 					}
-				} else if (myParserState == READ_NORMAL_DATA) {
+				} else if (parserState == READ_NORMAL_DATA) {
 					normalDataStart = ptr;
 				}
-				previousState = myParserState;
+				previousState = parserState;
 			}
-      switch (myParserState) {
+      switch (parserState) {
         case READ_BINARY_DATA:
           ecParseChar(*ptr);
           myBinaryDataSize--;
           if (myBinaryDataSize == 0) {
-            myParserState = READ_NORMAL_DATA;
+            parserState = READ_NORMAL_DATA;
           }
           break;
         case READ_NORMAL_DATA:
@@ -621,7 +601,7 @@ int RtfReader::ecRtfParse() {
               }
               
               if (state.rds != myStateStack.top().rds) {
-                ec = ecEndGroupAction(state.rds);
+                ecEndGroupAction(state.rds);
               }
               
               bool oldItalic = state.chp.fItalic;
@@ -653,7 +633,7 @@ int RtfReader::ecRtfParse() {
 							}
 							normalDataStart = ptr + 1;
               keyword.erase();
-              myParserState = READ_KEYWORD;
+              parserState = READ_KEYWORD;
 							dataStart = ptr + 1;
               break;
             case 0x0d:
@@ -680,22 +660,22 @@ int RtfReader::ecRtfParse() {
             char ch = strtol(hexString.c_str(), 0, 16); 
             hexString.erase();
             ecParseChar(ch);
-            myParserState = READ_NORMAL_DATA;
+            parserState = READ_NORMAL_DATA;
           }
           break;
         case READ_KEYWORD:
 					if (!isalpha(*ptr)) {
             if (ptr == dataStart) {
               keyword = *ptr;
-              ec = ecTranslateKeyword(keyword, 0, false);
+              parserState = ecTranslateKeyword(keyword, 0, false);
             } else {
 							keyword.append(dataStart, ptr - dataStart);
               if ((*ptr == '-') || isdigit(*ptr)) {
 								dataStart = ptr;
-                myParserState = READ_KEYWORD_PARAMETER;
+                parserState = READ_KEYWORD_PARAMETER;
               } else {
                 readNextChar = *ptr == ' ';
-                ec = ecTranslateKeyword(keyword, 0, false);
+                parserState = ecTranslateKeyword(keyword, 0, false);
               }
             }
 					}
@@ -706,7 +686,7 @@ int RtfReader::ecRtfParse() {
             int param = atoi(parameterString.c_str());
 						parameterString.erase();
             readNextChar = *ptr == ' ';
-            ec = ecTranslateKeyword(keyword, param, true);
+            parserState = ecTranslateKeyword(keyword, param, true);
           }
           break;
       }
@@ -717,7 +697,7 @@ int RtfReader::ecRtfParse() {
       }
     }
 		if (previousState == READ_NORMAL_DATA) {
-			if (myParserState == READ_NORMAL_DATA) {
+			if (parserState == READ_NORMAL_DATA) {
 				if (end > normalDataStart) {
 					ecParseCharData(normalDataStart, end - normalDataStart);
 				}
@@ -728,7 +708,7 @@ int RtfReader::ecRtfParse() {
 			}
 		}
 		if (dataStart < end) {
-			switch (myParserState) {
+			switch (parserState) {
 				case READ_KEYWORD:
 					keyword.append(dataStart, end - dataStart);
 					break;
@@ -741,13 +721,11 @@ int RtfReader::ecRtfParse() {
 		}
   }
   
-	if (ec != ecOK)
-		return ec;
   return (is_interrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
 }
 
-int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-  myParserState = READ_NORMAL_DATA;
+RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
+  ParserState parserState = READ_NORMAL_DATA;
 
   std::map<std::string, RtfKeywordInfo*>::const_iterator it = myKeywordMap.find(keyword);
   
@@ -758,7 +736,7 @@ int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fP
     fSkipDestIfUnk = false;
 
 //    DPRINT("unknown keyword\n");    
-    return ecOK;
+    return parserState;
   }
 
   // found it!  use kwd and idx to determine what to do with it.
@@ -769,24 +747,28 @@ int RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fP
     case kwdProp:
       if (keywordInfo.UseDefaultValue || !fParam)
         param = keywordInfo.DefaultValue;
-      return ecApplyPropChange(keywordInfo.Index, param);
+      ecApplyPropChange(keywordInfo.Index, param);
+			break;
     case kwdChar:
       ecParseChar(((const RtfKeywordCharInfo&)keywordInfo).getChar());
-			return ecOK;
+			break;
     case kwdDest:
       ecChangeDest(keywordInfo.Index);
-			return ecOK;
+			break;
     case kwdPictProp:
-      return ecApplyPictPropChange(keywordInfo.Index);
+      ecApplyPictPropChange(keywordInfo.Index);
+			break;
     case kwdStyle:
-      return ecStyleChange(keywordInfo.Index, param);
+      ecStyleChange(keywordInfo.Index, param);
+			break;
     case kwdSpec:
-      return ecParseSpecialKeyword(keywordInfo.Index, param);
+      parserState = ecParseSpecialKeyword(keywordInfo.Index, param);
+			break;
+		default:
+	    std::cerr << "parse failed: bad table 5\n";
+			break;
   }
-
-  //DPRINT("parse failed: bad table\n");
-
-  return ecBadTable;
+	return parserState;
 }
 
 
