@@ -202,6 +202,7 @@ private:
 	std::stack<RtfReaderState> myStateStack;
 
 	int myBinaryDataSize;
+	std::string myNextImageMimeType;
 };
 
 #endif /* __RTFREADER_H__ */
