@@ -32,7 +32,6 @@ class RtfDescriptionReader : public RtfReader {
 public:
 	RtfDescriptionReader(BookDescription &description);
 	~RtfDescriptionReader();
-//	bool readDescription(shared_ptr<ZLInputStream> stream);
 	void startDocumentHandler();
 	void endDocumentHandler();
 
@@ -42,7 +41,7 @@ public:
 	bool characterDataHandler(std::string &str);
 	void flushBuffer();
 
-	void addCharData(const char *data, size_t len);
+	void addCharData(const char *data, size_t len, bool convert);
 	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
 
 private:

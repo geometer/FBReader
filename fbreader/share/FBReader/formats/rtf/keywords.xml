@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rtfKeywords>
+  <char keyword="-" value="-"/>
+  <char keyword="\" value="\"/>
+  <char keyword="_" value="-"/>
+  <char keyword="bullet" value="&#x2022;"/>
+  <char keyword="endash" value="&#x2013;"/>
+  <char keyword="emdash" value="&#x2014;"/>
+  <char keyword="{" value="{"/>
+  <char keyword="}" value="}"/>
+  <char keyword="~" value=" "/>
+  <char keyword="lquote" value="&#x2018;"/>
+  <char keyword="rquote" value="&#x2019;"/>
+  <char keyword="ldblquote" value="&#x201C;"/>
+  <char keyword="rdblquote" value="&#x201D;"/>
+  <char keyword="tab", value="&#x09;"/>
+</rtfKeywords>

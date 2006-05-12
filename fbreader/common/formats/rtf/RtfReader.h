@@ -114,7 +114,7 @@ protected:
 
 	virtual bool characterDataHandler(std::string &str) = 0;
 
-	virtual void addCharData(const char *data, size_t len) = 0;
+	virtual void addCharData(const char *data, size_t len, bool convert) = 0;
 
 	virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
 
@@ -173,7 +173,7 @@ public:
     READ_KEYWORD_PARAMETER,
   };
     
-	void ecParseCharData(const char *data, size_t len);
+	void ecParseCharData(const char *data, size_t len, bool convert = true);
 	void ecApplyPictPropChange(const std::string &mimeType);
 	void ecChangeDest(int idest);
 	void ecStyleChange();

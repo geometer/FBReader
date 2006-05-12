@@ -22,8 +22,11 @@
 #include <iostream>
 #include <cctype>
 
+#include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLXMLReader.h>
 
+#include "../../Files.h"
 #include "RtfReader.h"
 
 static const int rtfStreamBufferSize = 4096;
@@ -128,14 +131,14 @@ private:
 class RtfKeywordCharInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordCharInfo(char chr) : myChar(chr) {}
+  RtfKeywordCharInfo(const std::string &chr) : myChar(chr) {}
 	RtfReader::ParserState run(RtfReader &reader, int*) const {
-    reader.ecParseCharData(&myChar, 1);
+    reader.ecParseCharData(myChar.data(), myChar.length(), false);
 		return RtfReader::READ_NORMAL_DATA;
 	}
   
 private:
-  char myChar;
+	std::string myChar;
 };
 
 class RtfKeywordDestinationInfo : public RtfKeywordInfo {
@@ -231,26 +234,6 @@ struct pkw {
 
   };
 
-struct ckw {
-  const char *kw;
-  char chr;
-} charKeyWords[] = {
-  { "-",    '-' },
-  { "\\",     '\\' },
-  { "_",    '-' },
-  { "bullet",   '\x95' },
-  { "emdash",   '\x97' },
-  { "endash",   '\x96' },
-  { "ldblquote", '\x93' },
-  { "lquote",  '\x91' },
-  { "{",    '{' },
-  { "}",    '}' },
-  { "~",    ' ' },
-  { "rdblquote", '\x94' },
-  { "rquote",  '\x92' },
-  { "tab",    0x09 },
-};
-  
 struct dkw {
 	const char *kw;
 	IDEST dest;
@@ -303,15 +286,42 @@ struct skw {
   { "par",      ipfnParagraph },
 //  {   "pard",   ipfnParagraphReset },
 };
+
+static const std::string charTag = "char";
   
+class RtfKeywordsReader : public ZLXMLReader {
+
+public:
+	RtfKeywordsReader(std::map<std::string, RtfKeywordInfo*> &keywordMap) : myKeywordMap(keywordMap) {
+	}
+
+	void startElementHandler(const char *tag, const char **attributes) {
+		const char *keyword = attributeValue(attributes, "keyword");
+		if (keyword != 0) {
+			if (charTag == tag) {
+				const char *value = attributeValue(attributes, "value");
+				if (value != 0) {
+          myKeywordMap[keyword] = new RtfKeywordCharInfo(value);
+				}
+			}
+		}
+	}
+
+private:
+	std::map<std::string, RtfKeywordInfo*> &myKeywordMap;
+};
+
 static void fillKeywordMap() {
   if (myKeywordMap.empty()) {
+	  RtfKeywordsReader(myKeywordMap).readDocument(
+	    ZLFile(
+			  Files::PathPrefix + "formats" + Files::PathDelimiter + "rtf" + Files::PathDelimiter + "keywords.xml"
+		  ).inputStream()
+		);
+
     for (unsigned int i = 0; i < sizeof(propKeyWords) / sizeof(struct pkw); i++) {
       const struct pkw &s = propKeyWords[i];
       myKeywordMap[s.kw] = new RtfKeywordPropInfo(s.dflt, s.fPassDflt, s.idx);
-    }
-    for (unsigned int i = 0; i < sizeof(charKeyWords) / sizeof(struct ckw); i++) {
-      myKeywordMap[charKeyWords[i].kw] = new RtfKeywordCharInfo(charKeyWords[i].chr);
     }
     for (unsigned int i = 0; i < sizeof(destKeyWords) / sizeof(struct dkw); i++) {
       myKeywordMap[destKeyWords[i].kw] = new RtfKeywordDestinationInfo(destKeyWords[i].dest);
@@ -765,7 +775,7 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
 }
 
 
-void RtfReader::ecParseCharData(const char *data, size_t len) {
+void RtfReader::ecParseCharData(const char *data, size_t len, bool convert) {
   switch (state.rds) {
     case rdsSkip:
     default:
@@ -775,7 +785,7 @@ void RtfReader::ecParseCharData(const char *data, size_t len) {
     case rdsContent:
     case rdsFootnote:
     case rdsImage:
-      addCharData(data, len);
+      addCharData(data, len, convert);
   }
 }
 

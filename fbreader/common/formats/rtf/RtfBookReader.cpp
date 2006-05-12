@@ -33,11 +33,17 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) : Rt
 
 static const size_t maxBufferSize = 1024;
 
-void RtfBookReader::addCharData(const char *data, size_t len) {
+void RtfBookReader::addCharData(const char *data, size_t len, bool convert) {
   if (state.readState == READ_TEXT) {
-    outputBuffer.append(data, len);
-		if (outputBuffer.size() >= maxBufferSize) {
+		if (convert || myConverter.isNull()) {
+      outputBuffer.append(data, len);
+			if (outputBuffer.size() >= maxBufferSize) {
+				flushBuffer();
+			}
+		} else {
 			flushBuffer();
+      std::string newString(data, len);
+      characterDataHandler(newString);
 		}
   }
 }
@@ -45,10 +51,14 @@ void RtfBookReader::addCharData(const char *data, size_t len) {
 void RtfBookReader::flushBuffer() {
   if (!outputBuffer.empty()) {
     if (state.readState == READ_TEXT) {    
-      static std::string newString;
-     	myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
-      characterDataHandler(newString);
-			newString.erase();
+			if (!myConverter.isNull()) {
+        static std::string newString;
+     	 	myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
+        characterDataHandler(newString);
+				newString.erase();
+			} else {
+        characterDataHandler(outputBuffer);
+			}
     }
     outputBuffer.erase();
 	}
