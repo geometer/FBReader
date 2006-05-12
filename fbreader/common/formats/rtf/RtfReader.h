@@ -178,9 +178,9 @@ public:
 	void ecChangeDest(int idest);
 	void ecStyleChange();
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
+  void ecApplyPropChange(int iprop, int val);
 
 private:
-  void ecApplyPropChange(int iprop, int val);
 	void ecParseSpecialProperty(int iprop);
 	void ecEndGroupAction(int rds);
 

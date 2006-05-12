@@ -64,7 +64,6 @@ typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
 typedef enum {idestInfo, idestTitle, idestAuthor, idestPict, idestStyleSheet,
     idestFootnote, idestSkip } IDEST;
-typedef enum {kwdChar, kwdDest, kwdProp, kwdPictProp, kwdStyle, kwdSpec} KWD;
 
 typedef struct propmod
 {
@@ -104,31 +103,35 @@ PROP rgprop [ipropMax] = {
 };
 
 struct RtfKeywordInfo {
-  int DefaultValue;        // default value to use
-  bool UseDefaultValue;     // true to use default value from this table
-  KWD BaseAction;         // base action to take
-  int Index;         // index into property table if kwd == kwdProp
-              // index into destination table if kwd == kwdDest
-              // character to print if kwd == kwdChar
-  
-  RtfKeywordInfo(int _DefaultValue, bool _UseDefaultValue, KWD _BaseAction, int _Index) {
-    DefaultValue = _DefaultValue;
-    UseDefaultValue = _UseDefaultValue;
-    BaseAction = _BaseAction;
-    Index = _Index;
-  }
+
+protected:
 	virtual ~RtfKeywordInfo() {}
 
-	virtual RtfReader::ParserState run(RtfReader &reader, int parameter) const {
+public:
+	virtual RtfReader::ParserState run(RtfReader &reader, int *parameter) const = 0;
+};
+
+class RtfKeywordPropInfo : public RtfKeywordInfo {
+
+public:
+  RtfKeywordPropInfo(int defaultParameter, bool alwaysUseDefaultParameter, int index) : myDefaultParameter(defaultParameter), myAlwaysUseDefaultParameter(alwaysUseDefaultParameter), myIndex(index) {}
+	RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
+    reader.ecApplyPropChange(myIndex,
+				(parameter && !myAlwaysUseDefaultParameter) ? *parameter : myDefaultParameter);
 		return RtfReader::READ_NORMAL_DATA;
 	}
+  
+private:
+  int myDefaultParameter;
+	bool myAlwaysUseDefaultParameter;
+	int myIndex;
 };
 
 class RtfKeywordCharInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordCharInfo(char chr) : RtfKeywordInfo(0, false, kwdChar, 0), myChar(chr) {}
-	RtfReader::ParserState run(RtfReader &reader, int) const {
+  RtfKeywordCharInfo(char chr) : myChar(chr) {}
+	RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecParseCharData(&myChar, 1);
 		return RtfReader::READ_NORMAL_DATA;
 	}
@@ -140,8 +143,8 @@ private:
 class RtfKeywordDestinationInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordDestinationInfo(IDEST dest) : RtfKeywordInfo(0, false, kwdDest, 0), myDest(dest) {}
-	RtfReader::ParserState run(RtfReader &reader, int) const {
+  RtfKeywordDestinationInfo(IDEST dest) : myDest(dest) {}
+	RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecChangeDest(myDest);
 		return RtfReader::READ_NORMAL_DATA;
 	}
@@ -153,8 +156,8 @@ private:
 class RtfKeywordStyleInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordStyleInfo() : RtfKeywordInfo(0, false, kwdStyle, 0) {}
-	RtfReader::ParserState run(RtfReader &reader, int) const {
+  RtfKeywordStyleInfo() {}
+	RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecStyleChange();
 		return RtfReader::READ_NORMAL_DATA;
 	}
@@ -165,9 +168,9 @@ private:
 class RtfKeywordSpecInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordSpecInfo(IPFN ipfn) : RtfKeywordInfo(0, false, kwdSpec, 0), myIpfn(ipfn) {}
-	RtfReader::ParserState run(RtfReader &reader, int parameter) const {
-    return reader.ecParseSpecialKeyword(myIpfn, parameter);
+  RtfKeywordSpecInfo(IPFN ipfn) : myIpfn(ipfn) {}
+	RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
+    return reader.ecParseSpecialKeyword(myIpfn, parameter ? *parameter : 0);
 	}
   
 private:
@@ -177,8 +180,8 @@ private:
 class RtfKeywordPictureInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordPictureInfo(const std::string &mimeType) : RtfKeywordInfo(0, false, kwdPictProp, 0), myMimeType(mimeType) {}
-	RtfReader::ParserState run(RtfReader &reader, int) const {
+  RtfKeywordPictureInfo(const std::string &mimeType) : myMimeType(mimeType) {}
+	RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecApplyPictPropChange(myMimeType);
 		return RtfReader::READ_NORMAL_DATA;
 	}
@@ -189,21 +192,12 @@ private:
 
 static std::map<std::string, RtfKeywordInfo*> myKeywordMap;
 
-typedef struct symbol
-{
-  char *szKeyword;    // RTF keyword
-  int  dflt;        // default value to use
-  bool fPassDflt;     // true to use default value from this table
-  int  idx;         // index into property table if kwd == kwdProp
-              // index into destination table if kwd == kwdDest
-              // character to print if kwd == kwdChar
-} SYM;
-
-
-// Keyword descriptions
-SYM rgsymRtf[] = {
-//  keyword   dflt  fPassDflt   kwd     idx
-
+struct pkw {
+  char *kw;
+  int  dflt;
+  bool fPassDflt;
+  int  idx;
+} propKeyWords[] = {
   { "b",             1,    false,   ipropBold },
   { "cols",          1,    false,   ipropCols },
   { "facingp",       1,    true,    ipropFacingp },
@@ -314,9 +308,9 @@ struct skw {
   
 static void fillKeywordMap() {
   if (myKeywordMap.empty()) {
-    for (unsigned int i = 0; i < sizeof(rgsymRtf) / sizeof(SYM); i++) {
-      const symbol &s = rgsymRtf[i];
-      myKeywordMap[s.szKeyword] = new RtfKeywordInfo(s.dflt, s.fPassDflt, kwdProp, s.idx);
+    for (unsigned int i = 0; i < sizeof(propKeyWords) / sizeof(struct pkw); i++) {
+      const struct pkw &s = propKeyWords[i];
+      myKeywordMap[s.kw] = new RtfKeywordPropInfo(s.dflt, s.fPassDflt, s.idx);
     }
     for (unsigned int i = 0; i < sizeof(charKeyWords) / sizeof(struct ckw); i++) {
       myKeywordMap[charKeyWords[i].kw] = new RtfKeywordCharInfo(charKeyWords[i].chr);
@@ -772,22 +766,7 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
   // found it!  use kwd and idx to determine what to do with it.
 
   fSkipDestIfUnk = false;
-  const RtfKeywordInfo &keywordInfo = *it->second;
-  switch (keywordInfo.BaseAction) {
-    case kwdProp:
-      if (keywordInfo.UseDefaultValue || !fParam)
-        param = keywordInfo.DefaultValue;
-      ecApplyPropChange(keywordInfo.Index, param);
-			break;
-    case kwdChar:
-    case kwdPictProp:
-    case kwdDest:
-    case kwdStyle:
-    case kwdSpec:
-			parserState = keywordInfo.run(*this, param);
-			break;
-  }
-	return parserState;
+	return it->second->run(*this, fParam ? &param : 0);
 }
 
 
