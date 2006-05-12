@@ -39,8 +39,6 @@ RtfReader::RtfReader(const std::string &encoding) {
   
   if (!encoding.empty()) {
     myConverter = ZLEncodingConverter::createConverter(encoding);
-  } else {
-    myConverter = NULL;
   }
 }
 
