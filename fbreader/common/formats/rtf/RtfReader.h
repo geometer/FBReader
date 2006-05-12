@@ -169,6 +169,7 @@ public:
 	void ecParseChar(char ch);
 	void ecApplyPictPropChange(const std::string &mimeType);
 	void ecChangeDest(int idest);
+	void ecStyleChange();
 
 private:
 
@@ -183,7 +184,6 @@ private:
   void ecApplyPropChange(int iprop, int val);
 	void ecParseSpecialProperty(int iprop);
 	void ecEndGroupAction(int rds);
-	void ecStyleChange(int st, int val);
 
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
 	ParserState ecTranslateKeyword(const std::string &keyword, int param, bool fParam);

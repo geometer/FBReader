@@ -60,7 +60,6 @@ typedef enum {ppropPng, ppropJpeg } PPROP;
 typedef enum {actnSpec, actnByte, actnWord} ACTN;
 typedef enum {propChp, propPap, propSep, propDop} PROPTYPE;
 
-typedef enum {istyleIndex} SPROP;
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
 typedef enum {idestInfo, idestTitle, idestAuthor, idestPict, idestStyleSheet,
@@ -120,14 +119,14 @@ struct RtfKeywordInfo {
   }
 	virtual ~RtfKeywordInfo() {}
 
-	virtual void run(RtfReader &reader) const {}
+	virtual void run(RtfReader &reader, int parameter) const {}
 };
 
 class RtfKeywordCharInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordCharInfo(char chr) : RtfKeywordInfo(0, false, kwdChar, 0), myChar(chr) {}
-	void run(RtfReader &reader) const {
+	void run(RtfReader &reader, int) const {
     reader.ecParseChar(myChar);
 	}
   
@@ -139,7 +138,7 @@ class RtfKeywordDestinationInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordDestinationInfo(IDEST dest) : RtfKeywordInfo(0, false, kwdDest, 0), myDest(dest) {}
-	void run(RtfReader &reader) const {
+	void run(RtfReader &reader, int) const {
     reader.ecChangeDest(myDest);
 	}
   
@@ -147,11 +146,34 @@ private:
   IDEST myDest;
 };
 
+class RtfKeywordStyleInfo : public RtfKeywordInfo {
+
+public:
+  RtfKeywordStyleInfo() : RtfKeywordInfo(0, false, kwdStyle, 0) {}
+	void run(RtfReader &reader, int) const {
+    reader.ecStyleChange();
+	}
+  
+private:
+};
+
+class RtfKeywordSpecInfo : public RtfKeywordInfo {
+
+public:
+  RtfKeywordSpecInfo(IPFN ipfn) : RtfKeywordInfo(0, false, kwdSpec, 0), myIpfn(ipfn) {}
+	IPFN getIpfn() { return myIpfn; }
+	void run(RtfReader &reader, int) const {
+	}
+  
+private:
+	IPFN myIpfn;
+};
+
 class RtfKeywordPictureInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordPictureInfo(const std::string &mimeType) : RtfKeywordInfo(0, false, kwdPictProp, 0), myMimeType(mimeType) {}
-	void run(RtfReader &reader) const {
+	void run(RtfReader &reader, int) const {
     reader.ecApplyPictPropChange(myMimeType);
 	}
   
@@ -166,7 +188,6 @@ typedef struct symbol
   char *szKeyword;    // RTF keyword
   int  dflt;        // default value to use
   bool fPassDflt;     // true to use default value from this table
-  KWD  kwd;         // base action to take
   int  idx;         // index into property table if kwd == kwdProp
               // index into destination table if kwd == kwdDest
               // character to print if kwd == kwdChar
@@ -176,49 +197,39 @@ typedef struct symbol
 // Keyword descriptions
 SYM rgsymRtf[] = {
 //  keyword   dflt  fPassDflt   kwd     idx
-  { "\x0a",     0,    false,   kwdSpec,  ipfnParagraph },
-  { "\x0d",     0,    false,   kwdSpec,  ipfnParagraph },
-  { "'",        0,    false,   kwdSpec,  ipfnHex },
-  { "*",        0,    false,   kwdSpec,  ipfnSkipDest },
-  { "ansicpg",  0,    false,   kwdSpec,  ipfnCodePage },
-  { "bin",      0,    false,   kwdSpec,  ipfnBin },
-  { "par",      0,    false,   kwdSpec,  ipfnParagraph },
-//  {   "pard",   0,    false,   kwdSpec,  ipfnParagraphReset },
 
-  { "b",             1,    false,   kwdProp,  ipropBold },
-  { "cols",          1,    false,   kwdProp,  ipropCols },
-  { "facingp",       1,    true,    kwdProp,  ipropFacingp },
-  { "fi",            0,    false,   kwdProp,  ipropFirstInd },
-  { "i",             1,    false,   kwdProp,  ipropItalic },
-  { "landscape",     1,    true,    kwdProp,  ipropLandscape },
-  { "li",            0,    false,   kwdProp,  ipropLeftInd },
-  { "margb",      1440,    false,   kwdProp,  ipropYaBottom },
-  { "margl",      1800,    false,   kwdProp,  ipropXaLeft },
-  { "margr",      1800,    false,   kwdProp,  ipropXaRight },
-  { "margt",      1440,    false,   kwdProp,  ipropYaTop },
-  { "paperh",    15480,    false,   kwdProp,  ipropYaPage },
-  { "paperw",    12240,    false,   kwdProp,  ipropXaPage },
-  { "pgndec",    pgDec,    true,    kwdProp,  ipropPgnFormat },
-  { "pgnlcltr", pgLLtr,    true,    kwdProp,  ipropPgnFormat },
-  { "pgnlcrm",  pgLRom,    true,    kwdProp,  ipropPgnFormat },
-  { "pgnstart",      1,    true,    kwdProp,  ipropPgnStart },
-  { "pgnucltr", pgULtr,    true,    kwdProp,  ipropPgnFormat },
-  { "pgnucrm",  pgURom,    true,    kwdProp,  ipropPgnFormat },
-  { "pgnx",          0,    false,   kwdProp,  ipropPgnX },
-  { "pgny",          0,    false,   kwdProp,  ipropPgnY },
-  { "qc",        justC,    true,    kwdProp,  ipropJust },
-  { "ql",        justL,    true,    kwdProp,  ipropJust },
-  { "qr",        justR,    true,    kwdProp,  ipropJust },
-  { "qj",        justF,    true,    kwdProp,  ipropJust },
-  { "sbkcol",   sbkCol,    true,    kwdProp,  ipropSbk },
-  { "sbkeven",  sbkEvn,    true,    kwdProp,  ipropSbk },
-  { "sbknone",  sbkNon,    true,    kwdProp,  ipropSbk },
-  { "sbkodd",   sbkOdd,    true,    kwdProp,  ipropSbk },
-  { "sbkpage",   sbkPg,    true,    kwdProp,  ipropSbk },
-  { "ri",            0,    false,   kwdProp,  ipropRightInd },
-  { "u",             1,    false,   kwdProp,  ipropUnderline },
-
-  { "s",             0,    false,   kwdStyle,   istyleIndex },
+  { "b",             1,    false,   ipropBold },
+  { "cols",          1,    false,   ipropCols },
+  { "facingp",       1,    true,    ipropFacingp },
+  { "fi",            0,    false,   ipropFirstInd },
+  { "i",             1,    false,   ipropItalic },
+  { "landscape",     1,    true,    ipropLandscape },
+  { "li",            0,    false,   ipropLeftInd },
+  { "margb",      1440,    false,   ipropYaBottom },
+  { "margl",      1800,    false,   ipropXaLeft },
+  { "margr",      1800,    false,   ipropXaRight },
+  { "margt",      1440,    false,   ipropYaTop },
+  { "paperh",    15480,    false,   ipropYaPage },
+  { "paperw",    12240,    false,   ipropXaPage },
+  { "pgndec",    pgDec,    true,    ipropPgnFormat },
+  { "pgnlcltr", pgLLtr,    true,    ipropPgnFormat },
+  { "pgnlcrm",  pgLRom,    true,    ipropPgnFormat },
+  { "pgnstart",      1,    true,    ipropPgnStart },
+  { "pgnucltr", pgULtr,    true,    ipropPgnFormat },
+  { "pgnucrm",  pgURom,    true,    ipropPgnFormat },
+  { "pgnx",          0,    false,   ipropPgnX },
+  { "pgny",          0,    false,   ipropPgnY },
+  { "qc",        justC,    true,    ipropJust },
+  { "ql",        justL,    true,    ipropJust },
+  { "qr",        justR,    true,    ipropJust },
+  { "qj",        justF,    true,    ipropJust },
+  { "sbkcol",   sbkCol,    true,    ipropSbk },
+  { "sbkeven",  sbkEvn,    true,    ipropSbk },
+  { "sbknone",  sbkNon,    true,    ipropSbk },
+  { "sbkodd",   sbkOdd,    true,    ipropSbk },
+  { "sbkpage",   sbkPg,    true,    ipropSbk },
+  { "ri",            0,    false,   ipropRightInd },
+  { "u",             1,    false,   ipropUnderline },
 
   };
 
@@ -280,12 +291,26 @@ struct dkw {
   { "txe",        idestSkip },
   { "xe",         idestSkip },
 };
+
+struct skw {
+	const char *kw;
+	IPFN ipfn;
+} specKeyWords[] = {
+  { "\x0a",     ipfnParagraph },
+  { "\x0d",     ipfnParagraph },
+  { "'",        ipfnHex },
+  { "*",        ipfnSkipDest },
+  { "ansicpg",  ipfnCodePage },
+  { "bin",      ipfnBin },
+  { "par",      ipfnParagraph },
+//  {   "pard",   ipfnParagraphReset },
+};
   
 static void fillKeywordMap() {
   if (myKeywordMap.empty()) {
     for (unsigned int i = 0; i < sizeof(rgsymRtf) / sizeof(SYM); i++) {
       const symbol &s = rgsymRtf[i];
-      myKeywordMap[s.szKeyword] = new RtfKeywordInfo(s.dflt, s.fPassDflt, s.kwd, s.idx);
+      myKeywordMap[s.szKeyword] = new RtfKeywordInfo(s.dflt, s.fPassDflt, kwdProp, s.idx);
     }
     for (unsigned int i = 0; i < sizeof(charKeyWords) / sizeof(struct ckw); i++) {
       myKeywordMap[charKeyWords[i].kw] = new RtfKeywordCharInfo(charKeyWords[i].chr);
@@ -293,8 +318,12 @@ static void fillKeywordMap() {
     for (unsigned int i = 0; i < sizeof(destKeyWords) / sizeof(struct dkw); i++) {
       myKeywordMap[destKeyWords[i].kw] = new RtfKeywordDestinationInfo(destKeyWords[i].dest);
     }
+    for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
+      myKeywordMap[specKeyWords[i].kw] = new RtfKeywordSpecInfo(specKeyWords[i].ipfn);
+    }
 		myKeywordMap["jpegblip"] = new RtfKeywordPictureInfo("image/jpeg");
 		myKeywordMap["pngblip"] = new RtfKeywordPictureInfo("image/png");
+		myKeywordMap["s"] = new RtfKeywordStyleInfo();
   }
 }
 
@@ -367,12 +396,8 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
   }
 }
 
-char style_attributes[1][256];
-void RtfReader::ecStyleChange(int st, int val) {
-  if (st != istyleIndex) {
-    return;
-  }
-
+//char style_attributes[1][256];
+void RtfReader::ecStyleChange() {
   if (state.rds == rdsStyleSheet) {
 		//std::cerr << "Add style index: " << val << "\n";
     
@@ -750,16 +775,11 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
     case kwdChar:
     case kwdPictProp:
     case kwdDest:
-			keywordInfo.run(*this);
-			break;
     case kwdStyle:
-      ecStyleChange(keywordInfo.Index, param);
+			keywordInfo.run(*this, param);
 			break;
     case kwdSpec:
-      parserState = ecParseSpecialKeyword(keywordInfo.Index, param);
-			break;
-		default:
-	    std::cerr << "parse failed: bad table 5\n";
+      parserState = ecParseSpecialKeyword(((RtfKeywordSpecInfo&)keywordInfo).getIpfn(), param);
 			break;
   }
 	return parserState;
