@@ -114,7 +114,6 @@ protected:
 
 	virtual bool characterDataHandler(std::string &str) = 0;
 
-	virtual void addChar(const char ch) = 0;
 	virtual void addCharData(const char *data, size_t len) = 0;
 
 	virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
@@ -166,7 +165,7 @@ protected:
 	};
 
 public:
-	void ecParseChar(char ch);
+	void ecParseCharData(const char *data, size_t len);
 	void ecApplyPictPropChange(const std::string &mimeType);
 	void ecChangeDest(int idest);
 	void ecStyleChange();
@@ -187,7 +186,6 @@ private:
 
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
 	ParserState ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
-	void ecParseCharData(const char *data, size_t len);
 
 	int ecRtfParse();
 

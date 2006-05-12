@@ -127,7 +127,7 @@ class RtfKeywordCharInfo : public RtfKeywordInfo {
 public:
   RtfKeywordCharInfo(char chr) : RtfKeywordInfo(0, false, kwdChar, 0), myChar(chr) {}
 	void run(RtfReader &reader, int) const {
-    reader.ecParseChar(myChar);
+    reader.ecParseCharData(&myChar, 1);
 	}
   
 private:
@@ -599,7 +599,8 @@ int RtfReader::ecRtfParse() {
 		while (ptr != end) {
       switch (parserState) {
         case READ_BINARY_DATA:
-          ecParseChar(*ptr);
+					// TODO: optimize
+          ecParseCharData(ptr, 1);
           myBinaryDataSize--;
           if (myBinaryDataSize == 0) {
             parserState = READ_NORMAL_DATA;
@@ -688,7 +689,7 @@ int RtfReader::ecRtfParse() {
           if (hexString.size() == 2) {
             char ch = strtol(hexString.c_str(), 0, 16); 
             hexString.erase();
-            ecParseChar(ch);
+            ecParseCharData(&ch, 1);
             parserState = READ_NORMAL_DATA;
           }
           break;
@@ -785,26 +786,6 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
 	return parserState;
 }
 
-
-//
-// %%Function: ecParseChar
-//
-// Route the character to the appropriate destination stream.
-//
-
-void RtfReader::ecParseChar(char ch) {
-  switch (state.rds) {
-    case rdsSkip:
-    default:
-      return;
-    case rdsTitle:
-    case rdsAuthor:
-    case rdsContent:
-    case rdsFootnote:
-    case rdsImage:
-      addChar(ch);
-  }
-}
 
 void RtfReader::ecParseCharData(const char *data, size_t len) {
   switch (state.rds) {

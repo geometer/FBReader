@@ -33,15 +33,6 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) : Rt
 
 static const size_t maxBufferSize = 1024;
 
-void RtfBookReader::addChar(const char ch) {
-  if (state.readState == READ_TEXT) {
-    outputBuffer += ch;
-		if (outputBuffer.size() >= maxBufferSize) {
-			flushBuffer();
-		}
-  }
-}
-
 void RtfBookReader::addCharData(const char *data, size_t len) {
   if (state.readState == READ_TEXT) {
     outputBuffer.append(data, len);
