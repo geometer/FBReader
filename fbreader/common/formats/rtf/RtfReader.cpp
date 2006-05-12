@@ -749,8 +749,6 @@ int RtfReader::ecRtfParse() {
 }
 
 RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-  ParserState parserState = READ_NORMAL_DATA;
-
   std::map<std::string, RtfKeywordInfo*>::const_iterator it = myKeywordMap.find(keyword);
   
   if (it == myKeywordMap.end()) {
@@ -760,12 +758,11 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
     fSkipDestIfUnk = false;
 
 //    DPRINT("unknown keyword\n");    
-    return parserState;
+    return READ_NORMAL_DATA;
   }
 
-  // found it!  use kwd and idx to determine what to do with it.
-
   fSkipDestIfUnk = false;
+
 	return it->second->run(*this, fParam ? &param : 0);
 }
 
