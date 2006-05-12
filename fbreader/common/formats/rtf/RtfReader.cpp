@@ -29,6 +29,8 @@
 #include "../../Files.h"
 #include "RtfReader.h"
 
+std::map<std::string, RtfKeywordInfo*> RtfReader::ourKeywordMap;
+
 static const int rtfStreamBufferSize = 4096;
 
 enum ErrorCode {
@@ -189,8 +191,6 @@ private:
   const std::string myMimeType;
 };
 
-static std::map<std::string, RtfKeywordInfo*> myKeywordMap;
-
 struct pkw {
   char *kw;
   int  dflt;
@@ -274,9 +274,9 @@ private:
   std::map<std::string, RtfKeywordInfo*> &myKeywordMap;
 };
 
-static void fillKeywordMap() {
-  if (myKeywordMap.empty()) {
-    RtfKeywordsReader(myKeywordMap).readDocument(
+void RtfReader::fillKeywordMap() {
+  if (ourKeywordMap.empty()) {
+    RtfKeywordsReader(ourKeywordMap).readDocument(
       ZLFile(
         Files::PathPrefix + "formats" + Files::PathDelimiter + "rtf" + Files::PathDelimiter + "keywords.xml"
       ).inputStream()
@@ -284,14 +284,14 @@ static void fillKeywordMap() {
 
     for (unsigned int i = 0; i < sizeof(propKeyWords) / sizeof(struct pkw); i++) {
       const struct pkw &s = propKeyWords[i];
-      myKeywordMap[s.kw] = new RtfKeywordPropInfo(s.dflt, s.fPassDflt, s.idx);
+      ourKeywordMap[s.kw] = new RtfKeywordPropInfo(s.dflt, s.fPassDflt, s.idx);
     }
     for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
-      myKeywordMap[specKeyWords[i].kw] = new RtfKeywordSpecInfo(specKeyWords[i].ipfn);
+      ourKeywordMap[specKeyWords[i].kw] = new RtfKeywordSpecInfo(specKeyWords[i].ipfn);
     }
-    myKeywordMap["jpegblip"] = new RtfKeywordPictureInfo("image/jpeg");
-    myKeywordMap["pngblip"] = new RtfKeywordPictureInfo("image/png");
-    myKeywordMap["s"] = new RtfKeywordStyleInfo();
+    ourKeywordMap["jpegblip"] = new RtfKeywordPictureInfo("image/jpeg");
+    ourKeywordMap["pngblip"] = new RtfKeywordPictureInfo("image/png");
+    ourKeywordMap["s"] = new RtfKeywordStyleInfo();
   }
 }
 
@@ -706,9 +706,9 @@ int RtfReader::ecRtfParse() {
 }
 
 RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-  std::map<std::string, RtfKeywordInfo*>::const_iterator it = myKeywordMap.find(keyword);
+  std::map<std::string, RtfKeywordInfo*>::const_iterator it = ourKeywordMap.find(keyword);
   
-  if (it == myKeywordMap.end()) {
+  if (it == ourKeywordMap.end()) {
     if (fSkipDestIfUnk)     // if this is a new destination
       state.rds = DESTINATION_SKIP;      // skip the destination
                   // else just discard it

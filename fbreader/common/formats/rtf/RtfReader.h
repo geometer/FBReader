@@ -101,8 +101,14 @@ struct RtfReaderState
 
 
 class ZLInputStream;
+class RtfKeywordInfo;
 
 class RtfReader {
+
+private:
+	static void RtfReader::fillKeywordMap();
+
+	static std::map<std::string, RtfKeywordInfo*> ourKeywordMap;
 
 public:
 	bool readDocument(const std::string &fileName);
