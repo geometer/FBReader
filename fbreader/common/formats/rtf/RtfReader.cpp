@@ -118,16 +118,45 @@ struct RtfKeywordInfo {
     BaseAction = _BaseAction;
     Index = _Index;
   }
+	virtual ~RtfKeywordInfo() {}
+
+	virtual void run(RtfReader &reader) const {}
 };
 
 class RtfKeywordCharInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordCharInfo(int chr) : RtfKeywordInfo(0, false, kwdChar, 0), myChar(chr) {}
-  int getChar() const { return myChar; }
+  RtfKeywordCharInfo(char chr) : RtfKeywordInfo(0, false, kwdChar, 0), myChar(chr) {}
+	void run(RtfReader &reader) const {
+    reader.ecParseChar(myChar);
+	}
   
 private:
-  int myChar;
+  char myChar;
+};
+
+class RtfKeywordDestinationInfo : public RtfKeywordInfo {
+
+public:
+  RtfKeywordDestinationInfo(IDEST dest) : RtfKeywordInfo(0, false, kwdDest, 0), myDest(dest) {}
+	void run(RtfReader &reader) const {
+    reader.ecChangeDest(myDest);
+	}
+  
+private:
+  IDEST myDest;
+};
+
+class RtfKeywordPictureInfo : public RtfKeywordInfo {
+
+public:
+  RtfKeywordPictureInfo(const std::string &mimeType) : RtfKeywordInfo(0, false, kwdPictProp, 0), myMimeType(mimeType) {}
+	void run(RtfReader &reader) const {
+    reader.ecApplyPictPropChange(myMimeType);
+	}
+  
+private:
+  const std::string myMimeType;
 };
 
 static std::map<std::string, RtfKeywordInfo*> myKeywordMap;
@@ -156,40 +185,6 @@ SYM rgsymRtf[] = {
   { "par",      0,    false,   kwdSpec,  ipfnParagraph },
 //  {   "pard",   0,    false,   kwdSpec,  ipfnParagraphReset },
 
-  { "author",     0,    false,   kwdDest,  idestAuthor },
-  { "footnote",   0,    false,   kwdDest,  idestFootnote },
-  { "stylesheet", 0,    false,   kwdDest,  idestStyleSheet },
-  { "info",       0,    false,   kwdDest,  idestInfo },
-  { "pict",       0,    false,   kwdDest,  idestPict },
-  { "title",      0,    false,   kwdDest,  idestTitle },
-  { "buptim",     0,    false,   kwdDest,  idestSkip },
-  { "colortbl",   0,    false,   kwdDest,  idestSkip },
-  { "comment",    0,    false,   kwdDest,  idestSkip },
-  { "creatim",    0,    false,   kwdDest,  idestSkip },
-  { "doccomm",    0,    false,   kwdDest,  idestSkip },
-  { "fonttbl",    0,    false,   kwdDest,  idestSkip },
-  { "footer",     0,    false,   kwdDest,  idestSkip },
-  { "footerf",    0,    false,   kwdDest,  idestSkip },
-  { "footerl",    0,    false,   kwdDest,  idestSkip },
-  { "footerr",    0,    false,   kwdDest,  idestSkip },
-  { "ftncn",      0,    false,   kwdDest,  idestSkip },
-  { "ftnsep",     0,    false,   kwdDest,  idestSkip },
-  { "ftnsepc",    0,    false,   kwdDest,  idestSkip },
-  { "header",     0,    false,   kwdDest,  idestSkip },
-  { "headerf",    0,    false,   kwdDest,  idestSkip },
-  { "headerl",    0,    false,   kwdDest,  idestSkip },
-  { "headerr",    0,    false,   kwdDest,  idestSkip },
-  { "keywords",   0,    false,   kwdDest,  idestSkip },
-  { "operator",   0,    false,   kwdDest,  idestSkip },
-  { "printim",    0,    false,   kwdDest,  idestSkip },
-  { "private1",   0,    false,   kwdDest,  idestSkip },
-  { "revtim",     0,    false,   kwdDest,  idestSkip },
-  { "rxe",        0,    false,   kwdDest,  idestSkip },
-  { "subject",    0,    false,   kwdDest,  idestSkip },
-  { "tc",         0,    false,   kwdDest,  idestSkip },
-  { "txe",        0,    false,   kwdDest,  idestSkip },
-  { "xe",         0,    false,   kwdDest,  idestSkip },
-  
   { "b",             1,    false,   kwdProp,  ipropBold },
   { "cols",          1,    false,   kwdProp,  ipropCols },
   { "facingp",       1,    true,    kwdProp,  ipropFacingp },
@@ -223,9 +218,6 @@ SYM rgsymRtf[] = {
   { "ri",            0,    false,   kwdProp,  ipropRightInd },
   { "u",             1,    false,   kwdProp,  ipropUnderline },
 
-  { "jpegblip",      0,    false,   kwdPictProp, ppropJpeg },
-  { "pngblip",       0,    false,   kwdPictProp, ppropPng },
-
   { "s",             0,    false,   kwdStyle,   istyleIndex },
 
   };
@@ -250,6 +242,45 @@ struct ckw {
   { "tab",    0x09 },
 };
   
+struct dkw {
+	const char *kw;
+	IDEST dest;
+} destKeyWords[] = {
+  { "author",     idestAuthor },
+  { "footnote",   idestFootnote },
+  { "stylesheet", idestStyleSheet },
+  { "info",       idestInfo },
+  { "pict",       idestPict },
+  { "title",      idestTitle },
+  { "buptim",     idestSkip },
+  { "colortbl",   idestSkip },
+  { "comment",    idestSkip },
+  { "creatim",    idestSkip },
+  { "doccomm",    idestSkip },
+  { "fonttbl",    idestSkip },
+  { "footer",     idestSkip },
+  { "footerf",    idestSkip },
+  { "footerl",    idestSkip },
+  { "footerr",    idestSkip },
+  { "ftncn",      idestSkip },
+  { "ftnsep",     idestSkip },
+  { "ftnsepc",    idestSkip },
+  { "header",     idestSkip },
+  { "headerf",    idestSkip },
+  { "headerl",    idestSkip },
+  { "headerr",    idestSkip },
+  { "keywords",   idestSkip },
+  { "operator",   idestSkip },
+  { "printim",    idestSkip },
+  { "private1",   idestSkip },
+  { "revtim",     idestSkip },
+  { "rxe",        idestSkip },
+  { "subject",    idestSkip },
+  { "tc",         idestSkip },
+  { "txe",        idestSkip },
+  { "xe",         idestSkip },
+};
+  
 static void fillKeywordMap() {
   if (myKeywordMap.empty()) {
     for (unsigned int i = 0; i < sizeof(rgsymRtf) / sizeof(SYM); i++) {
@@ -259,6 +290,11 @@ static void fillKeywordMap() {
     for (unsigned int i = 0; i < sizeof(charKeyWords) / sizeof(struct ckw); i++) {
       myKeywordMap[charKeyWords[i].kw] = new RtfKeywordCharInfo(charKeyWords[i].chr);
     }
+    for (unsigned int i = 0; i < sizeof(destKeyWords) / sizeof(struct dkw); i++) {
+      myKeywordMap[destKeyWords[i].kw] = new RtfKeywordDestinationInfo(destKeyWords[i].dest);
+    }
+		myKeywordMap["jpegblip"] = new RtfKeywordPictureInfo("image/jpeg");
+		myKeywordMap["pngblip"] = new RtfKeywordPictureInfo("image/png");
   }
 }
 
@@ -381,20 +417,11 @@ void RtfReader::ecParseSpecialProperty(int iprop) {
   }
 }
 
-void RtfReader::ecApplyPictPropChange(int pprop) {
+void RtfReader::ecApplyPictPropChange(const std::string &mimeType) {
   startElementHandler(_IMAGE_TYPE);
-  switch (pprop) {
-    case ppropPng:
-	    myNextImageMimeType = "image/png";
-			break;
-    case ppropJpeg:
-	    myNextImageMimeType = "image/jpeg";
-			break;
-    default:
-	    myNextImageMimeType = "image/unknown";
-			break;
-  }
+	myNextImageMimeType = mimeType;
 } 
+
 //
 // %%Function: ecChangeDest
 //
@@ -453,10 +480,6 @@ void RtfReader::ecChangeDest(int idest) {
 //
 
 void RtfReader::ecEndGroupAction(int rds) {
-  if (rds == rdsSkip) {      // if we're skipping text,
-    return;        // don't do anything
-  }
-
   switch (rds) {
     case rdsTitleInfo:
       DPRINT("info end\n");
@@ -725,13 +748,9 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
       ecApplyPropChange(keywordInfo.Index, param);
 			break;
     case kwdChar:
-      ecParseChar(((const RtfKeywordCharInfo&)keywordInfo).getChar());
-			break;
-    case kwdDest:
-      ecChangeDest(keywordInfo.Index);
-			break;
     case kwdPictProp:
-      ecApplyPictPropChange(keywordInfo.Index);
+    case kwdDest:
+			keywordInfo.run(*this);
 			break;
     case kwdStyle:
       ecStyleChange(keywordInfo.Index, param);
