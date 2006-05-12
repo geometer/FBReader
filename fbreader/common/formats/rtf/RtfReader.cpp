@@ -119,15 +119,18 @@ struct RtfKeywordInfo {
   }
 	virtual ~RtfKeywordInfo() {}
 
-	virtual void run(RtfReader &reader, int parameter) const {}
+	virtual RtfReader::ParserState run(RtfReader &reader, int parameter) const {
+		return RtfReader::READ_NORMAL_DATA;
+	}
 };
 
 class RtfKeywordCharInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordCharInfo(char chr) : RtfKeywordInfo(0, false, kwdChar, 0), myChar(chr) {}
-	void run(RtfReader &reader, int) const {
+	RtfReader::ParserState run(RtfReader &reader, int) const {
     reader.ecParseCharData(&myChar, 1);
+		return RtfReader::READ_NORMAL_DATA;
 	}
   
 private:
@@ -138,8 +141,9 @@ class RtfKeywordDestinationInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordDestinationInfo(IDEST dest) : RtfKeywordInfo(0, false, kwdDest, 0), myDest(dest) {}
-	void run(RtfReader &reader, int) const {
+	RtfReader::ParserState run(RtfReader &reader, int) const {
     reader.ecChangeDest(myDest);
+		return RtfReader::READ_NORMAL_DATA;
 	}
   
 private:
@@ -150,8 +154,9 @@ class RtfKeywordStyleInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordStyleInfo() : RtfKeywordInfo(0, false, kwdStyle, 0) {}
-	void run(RtfReader &reader, int) const {
+	RtfReader::ParserState run(RtfReader &reader, int) const {
     reader.ecStyleChange();
+		return RtfReader::READ_NORMAL_DATA;
 	}
   
 private:
@@ -161,8 +166,8 @@ class RtfKeywordSpecInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordSpecInfo(IPFN ipfn) : RtfKeywordInfo(0, false, kwdSpec, 0), myIpfn(ipfn) {}
-	IPFN getIpfn() { return myIpfn; }
-	void run(RtfReader &reader, int) const {
+	RtfReader::ParserState run(RtfReader &reader, int parameter) const {
+    return reader.ecParseSpecialKeyword(myIpfn, parameter);
 	}
   
 private:
@@ -173,8 +178,9 @@ class RtfKeywordPictureInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordPictureInfo(const std::string &mimeType) : RtfKeywordInfo(0, false, kwdPictProp, 0), myMimeType(mimeType) {}
-	void run(RtfReader &reader, int) const {
+	RtfReader::ParserState run(RtfReader &reader, int) const {
     reader.ecApplyPictPropChange(myMimeType);
+		return RtfReader::READ_NORMAL_DATA;
 	}
   
 private:
@@ -777,10 +783,8 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
     case kwdPictProp:
     case kwdDest:
     case kwdStyle:
-			keywordInfo.run(*this, param);
-			break;
     case kwdSpec:
-      parserState = ecParseSpecialKeyword(((RtfKeywordSpecInfo&)keywordInfo).getIpfn(), param);
+			parserState = keywordInfo.run(*this, param);
 			break;
   }
 	return parserState;

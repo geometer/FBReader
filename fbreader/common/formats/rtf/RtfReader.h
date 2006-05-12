@@ -165,13 +165,6 @@ protected:
 	};
 
 public:
-	void ecParseCharData(const char *data, size_t len);
-	void ecApplyPictPropChange(const std::string &mimeType);
-	void ecChangeDest(int idest);
-	void ecStyleChange();
-
-private:
-
   enum ParserState {
     READ_NORMAL_DATA,
     READ_BINARY_DATA,
@@ -180,11 +173,17 @@ private:
     READ_KEYWORD_PARAMETER,
   };
     
+	void ecParseCharData(const char *data, size_t len);
+	void ecApplyPictPropChange(const std::string &mimeType);
+	void ecChangeDest(int idest);
+	void ecStyleChange();
+	ParserState ecParseSpecialKeyword(int ipfn, int param);
+
+private:
   void ecApplyPropChange(int iprop, int val);
 	void ecParseSpecialProperty(int iprop);
 	void ecEndGroupAction(int rds);
 
-	ParserState ecParseSpecialKeyword(int ipfn, int param);
 	ParserState ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 
 	int ecRtfParse();
