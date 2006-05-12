@@ -63,8 +63,6 @@ typedef enum {propChp, propPap, propSep, propDop} PROPTYPE;
 
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
-typedef enum {idestInfo, idestTitle, idestAuthor, idestPict, idestStyleSheet,
-    idestFootnote, idestSkip } IDEST;
 
 typedef struct propmod
 {
@@ -106,62 +104,62 @@ PROP rgprop [ipropMax] = {
 struct RtfKeywordInfo {
 
 protected:
-	virtual ~RtfKeywordInfo() {}
+  virtual ~RtfKeywordInfo() {}
 
 public:
-	virtual RtfReader::ParserState run(RtfReader &reader, int *parameter) const = 0;
+  virtual RtfReader::ParserState run(RtfReader &reader, int *parameter) const = 0;
 };
 
 class RtfKeywordPropInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordPropInfo(int defaultParameter, bool alwaysUseDefaultParameter, int index) : myDefaultParameter(defaultParameter), myAlwaysUseDefaultParameter(alwaysUseDefaultParameter), myIndex(index) {}
-	RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
+  RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
     reader.ecApplyPropChange(myIndex,
-				(parameter && !myAlwaysUseDefaultParameter) ? *parameter : myDefaultParameter);
-		return RtfReader::READ_NORMAL_DATA;
-	}
+        (parameter && !myAlwaysUseDefaultParameter) ? *parameter : myDefaultParameter);
+    return RtfReader::READ_NORMAL_DATA;
+  }
   
 private:
   int myDefaultParameter;
-	bool myAlwaysUseDefaultParameter;
-	int myIndex;
+  bool myAlwaysUseDefaultParameter;
+  int myIndex;
 };
 
 class RtfKeywordCharInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordCharInfo(const std::string &chr) : myChar(chr) {}
-	RtfReader::ParserState run(RtfReader &reader, int*) const {
+  RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecParseCharData(myChar.data(), myChar.length(), false);
-		return RtfReader::READ_NORMAL_DATA;
-	}
+    return RtfReader::READ_NORMAL_DATA;
+  }
   
 private:
-	std::string myChar;
+  std::string myChar;
 };
 
 class RtfKeywordDestinationInfo : public RtfKeywordInfo {
 
 public:
-  RtfKeywordDestinationInfo(IDEST dest) : myDest(dest) {}
-	RtfReader::ParserState run(RtfReader &reader, int*) const {
+  RtfKeywordDestinationInfo(Destination dest) : myDest(dest) {}
+  RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecChangeDest(myDest);
-		return RtfReader::READ_NORMAL_DATA;
-	}
+    return RtfReader::READ_NORMAL_DATA;
+  }
   
 private:
-  IDEST myDest;
+  Destination myDest;
 };
 
 class RtfKeywordStyleInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordStyleInfo() {}
-	RtfReader::ParserState run(RtfReader &reader, int*) const {
+  RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecStyleChange();
-		return RtfReader::READ_NORMAL_DATA;
-	}
+    return RtfReader::READ_NORMAL_DATA;
+  }
   
 private:
 };
@@ -170,22 +168,22 @@ class RtfKeywordSpecInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordSpecInfo(IPFN ipfn) : myIpfn(ipfn) {}
-	RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
+  RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
     return reader.ecParseSpecialKeyword(myIpfn, parameter ? *parameter : 0);
-	}
+  }
   
 private:
-	IPFN myIpfn;
+  IPFN myIpfn;
 };
 
 class RtfKeywordPictureInfo : public RtfKeywordInfo {
 
 public:
   RtfKeywordPictureInfo(const std::string &mimeType) : myMimeType(mimeType) {}
-	RtfReader::ParserState run(RtfReader &reader, int*) const {
+  RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecApplyPictPropChange(myMimeType);
-		return RtfReader::READ_NORMAL_DATA;
-	}
+    return RtfReader::READ_NORMAL_DATA;
+  }
   
 private:
   const std::string myMimeType;
@@ -231,51 +229,11 @@ struct pkw {
   { "sbkpage",   sbkPg,    true,    ipropSbk },
   { "ri",            0,    false,   ipropRightInd },
   { "u",             1,    false,   ipropUnderline },
-
-  };
-
-struct dkw {
-	const char *kw;
-	IDEST dest;
-} destKeyWords[] = {
-  { "author",     idestAuthor },
-  { "footnote",   idestFootnote },
-  { "stylesheet", idestStyleSheet },
-  { "info",       idestInfo },
-  { "pict",       idestPict },
-  { "title",      idestTitle },
-  { "buptim",     idestSkip },
-  { "colortbl",   idestSkip },
-  { "comment",    idestSkip },
-  { "creatim",    idestSkip },
-  { "doccomm",    idestSkip },
-  { "fonttbl",    idestSkip },
-  { "footer",     idestSkip },
-  { "footerf",    idestSkip },
-  { "footerl",    idestSkip },
-  { "footerr",    idestSkip },
-  { "ftncn",      idestSkip },
-  { "ftnsep",     idestSkip },
-  { "ftnsepc",    idestSkip },
-  { "header",     idestSkip },
-  { "headerf",    idestSkip },
-  { "headerl",    idestSkip },
-  { "headerr",    idestSkip },
-  { "keywords",   idestSkip },
-  { "operator",   idestSkip },
-  { "printim",    idestSkip },
-  { "private1",   idestSkip },
-  { "revtim",     idestSkip },
-  { "rxe",        idestSkip },
-  { "subject",    idestSkip },
-  { "tc",         idestSkip },
-  { "txe",        idestSkip },
-  { "xe",         idestSkip },
 };
 
 struct skw {
-	const char *kw;
-	IPFN ipfn;
+  const char *kw;
+  IPFN ipfn;
 } specKeyWords[] = {
   { "\x0a",     ipfnParagraph },
   { "\x0d",     ipfnParagraph },
@@ -288,50 +246,52 @@ struct skw {
 };
 
 static const std::string charTag = "char";
+static const std::string destinationTag = "destination";
   
 class RtfKeywordsReader : public ZLXMLReader {
 
 public:
-	RtfKeywordsReader(std::map<std::string, RtfKeywordInfo*> &keywordMap) : myKeywordMap(keywordMap) {
-	}
+  RtfKeywordsReader(std::map<std::string, RtfKeywordInfo*> &keywordMap) : myKeywordMap(keywordMap) {
+  }
 
-	void startElementHandler(const char *tag, const char **attributes) {
-		const char *keyword = attributeValue(attributes, "keyword");
-		if (keyword != 0) {
-			if (charTag == tag) {
-				const char *value = attributeValue(attributes, "value");
-				if (value != 0) {
+  void startElementHandler(const char *tag, const char **attributes) {
+    const char *keyword = attributeValue(attributes, "keyword");
+    const char *value = attributeValue(attributes, "value");
+    if (keyword != 0) {
+      if (charTag == tag) {
+        if (value != 0) {
           myKeywordMap[keyword] = new RtfKeywordCharInfo(value);
-				}
-			}
-		}
-	}
+        }
+      } else if (destinationTag == tag) {
+        if (value != 0) {
+          myKeywordMap[keyword] = new RtfKeywordDestinationInfo((Destination)atoi(value));
+        }
+      }
+    }
+  }
 
 private:
-	std::map<std::string, RtfKeywordInfo*> &myKeywordMap;
+  std::map<std::string, RtfKeywordInfo*> &myKeywordMap;
 };
 
 static void fillKeywordMap() {
   if (myKeywordMap.empty()) {
-	  RtfKeywordsReader(myKeywordMap).readDocument(
-	    ZLFile(
-			  Files::PathPrefix + "formats" + Files::PathDelimiter + "rtf" + Files::PathDelimiter + "keywords.xml"
-		  ).inputStream()
-		);
+    RtfKeywordsReader(myKeywordMap).readDocument(
+      ZLFile(
+        Files::PathPrefix + "formats" + Files::PathDelimiter + "rtf" + Files::PathDelimiter + "keywords.xml"
+      ).inputStream()
+    );
 
     for (unsigned int i = 0; i < sizeof(propKeyWords) / sizeof(struct pkw); i++) {
       const struct pkw &s = propKeyWords[i];
       myKeywordMap[s.kw] = new RtfKeywordPropInfo(s.dflt, s.fPassDflt, s.idx);
     }
-    for (unsigned int i = 0; i < sizeof(destKeyWords) / sizeof(struct dkw); i++) {
-      myKeywordMap[destKeyWords[i].kw] = new RtfKeywordDestinationInfo(destKeyWords[i].dest);
-    }
     for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
       myKeywordMap[specKeyWords[i].kw] = new RtfKeywordSpecInfo(specKeyWords[i].ipfn);
     }
-		myKeywordMap["jpegblip"] = new RtfKeywordPictureInfo("image/jpeg");
-		myKeywordMap["pngblip"] = new RtfKeywordPictureInfo("image/png");
-		myKeywordMap["s"] = new RtfKeywordStyleInfo();
+    myKeywordMap["jpegblip"] = new RtfKeywordPictureInfo("image/jpeg");
+    myKeywordMap["pngblip"] = new RtfKeywordPictureInfo("image/png");
+    myKeywordMap["s"] = new RtfKeywordStyleInfo();
   }
 }
 
@@ -349,7 +309,7 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
   
 //  DPRINT("Aply prop change: %i %i\n", iprop, val);
 
-  if (state.rds == rdsSkip)         // If we're skipping text,
+  if (state.rds == DESTINATION_SKIP)         // If we're skipping text,
     return;          // don't do anything.
 
   switch (rgprop[iprop].prop) {
@@ -367,7 +327,7 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
       break;
     default:
       if (rgprop[iprop].actn != actnSpec) {
-				std::cerr << "parse failed: bad table 0\n";
+        std::cerr << "parse failed: bad table 0\n";
         return;
       }
   }
@@ -383,7 +343,7 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
       ecParseSpecialProperty(iprop);
       return;
     default:
-			std::cerr << "parse failed: bad table 1\n";
+      std::cerr << "parse failed: bad table 1\n";
       return;
   }
   
@@ -406,13 +366,13 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
 
 //char style_attributes[1][256];
 void RtfReader::ecStyleChange() {
-  if (state.rds == rdsStyleSheet) {
-		//std::cerr << "Add style index: " << val << "\n";
+  if (state.rds == DESTINATION_STYLESHEET) {
+    //std::cerr << "Add style index: " << val << "\n";
     
     //sprintf(style_attributes[0], "%i", val);
     startElementHandler(_STYLE_INFO);
   } else /*if (state.rds == rdsContent)*/ {
-		//std::cerr << "Set style index: " << val << "\n";
+    //std::cerr << "Set style index: " << val << "\n";
 
     //sprintf(style_attributes[0], "%i", val);
     startElementHandler(_STYLE_SET);
@@ -444,63 +404,51 @@ void RtfReader::ecParseSpecialProperty(int iprop) {
     case ipropSectd:
       memset(&state.sep, 0, sizeof(state.sep));
       break;
-		default:
-			std::cerr << "parse failed: bad table 2\n";
-			break;
+    default:
+      std::cerr << "parse failed: bad table 2\n";
+      break;
   }
 }
 
 void RtfReader::ecApplyPictPropChange(const std::string &mimeType) {
   startElementHandler(_IMAGE_TYPE);
-	myNextImageMimeType = mimeType;
+  myNextImageMimeType = mimeType;
 } 
 
-//
-// %%Function: ecChangeDest
-//
-// Change to the destination specified by idest.
-// There's usually more to do here than this...
-//
-
-void RtfReader::ecChangeDest(int idest) {
-  if (state.rds == rdsSkip) {
+void RtfReader::ecChangeDest(Destination destination) {
+  if (state.rds == DESTINATION_SKIP) {
     return;
   }
 
-  switch (idest) {
-    case idestInfo:
+  state.rds = destination;
+  switch (destination) {
+    case DESTINATION_INFO:
       DPRINT("title info\n");
-      state.rds = rdsTitleInfo;
       startElementHandler(_TITLE_INFO);
       break;
-    case idestTitle:
+    case DESTINATION_TITLE:
       DPRINT("title\n");
-      state.rds = rdsTitle;
       startElementHandler(_BOOK_TITLE);
       break;
-    case idestAuthor:
+    case DESTINATION_AUTHOR:
       DPRINT("author\n");
-      state.rds = rdsAuthor;
       startElementHandler(_AUTHOR);
       break;
-    case idestPict:
+    case DESTINATION_PICTURE:
       DPRINT("picture\n");
       state.ReadDataAsHex = true;
-      state.rds = rdsImage;
       startElementHandler(_IMAGE);
       break;
-    case idestFootnote:
+    case DESTINATION_FOOTNOTE:
       DPRINT("footnote\n");
-      state.rds = rdsFootnote;
       startElementHandler(_FOOTNOTE);
       break;
-    case idestStyleSheet:
+    case DESTINATION_STYLESHEET:
       DPRINT("style sheet\n");
-      state.rds = rdsStyleSheet;
       startElementHandler(_STYLE_SHEET);
       break;
-    default:
-      state.rds = rdsSkip;        // when in doubt, skip it...
+    case DESTINATION_NONE:
+    case DESTINATION_SKIP:
       break;
   }
 }
@@ -512,33 +460,34 @@ void RtfReader::ecChangeDest(int idest) {
 // If there's any cleanup that needs to be done, do it now.
 //
 
-void RtfReader::ecEndGroupAction(int rds) {
-  switch (rds) {
-    case rdsTitleInfo:
+void RtfReader::ecEndGroupAction(Destination destination) {
+  switch (destination) {
+    case DESTINATION_INFO:
       DPRINT("info end\n");
       endElementHandler(_TITLE_INFO);
       break;
-    case rdsTitle:
+    case DESTINATION_TITLE:
       DPRINT("title end\n");
       endElementHandler(_BOOK_TITLE);
       break;
-    case rdsAuthor:
+    case DESTINATION_AUTHOR:
       DPRINT("author end\n");
       endElementHandler(_AUTHOR);
       break;
-    case rdsImage:
+    case DESTINATION_PICTURE:
       DPRINT("image end\n");
       endElementHandler(_IMAGE);
       break;
-    case rdsFootnote:
+    case DESTINATION_FOOTNOTE:
       DPRINT("footnote end\n");
       endElementHandler(_FOOTNOTE);
       break;
-    case rdsStyleSheet:
+    case DESTINATION_STYLESHEET:
       DPRINT("style sheet end\n");
       endElementHandler(_STYLE_INFO);
       break;
-    default:
+    case DESTINATION_SKIP:
+    case DESTINATION_NONE:
       break;
   }
 }
@@ -551,8 +500,8 @@ void RtfReader::ecEndGroupAction(int rds) {
 static const char *encoding1251 = "windows-1251";
 
 RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
-	ParserState parserState = READ_NORMAL_DATA;
-  if (state.rds == rdsSkip && ipfn != ipfnBin)  // if we're skipping, and it's not
+  ParserState parserState = READ_NORMAL_DATA;
+  if (state.rds == DESTINATION_SKIP && ipfn != ipfnBin)  // if we're skipping, and it's not
     return parserState;            // the \bin keyword, ignore it.
   switch (ipfn) {
     case ipfnParagraph:
@@ -583,9 +532,9 @@ RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
       fSkipDestIfUnk = true;
       break;
     default:
-			std::cerr << "parse failed: bad table 4\n";
+      std::cerr << "parse failed: bad table 4\n";
   }
-	return parserState;
+  return parserState;
 }
 
 int RtfReader::ecRtfParse() {
@@ -594,20 +543,20 @@ int RtfReader::ecRtfParse() {
   std::string keyword;
   std::string parameterString;
   std::string hexString;
-	int imageStartOffset = -1;
+  int imageStartOffset = -1;
 
   while (!is_interrupted) {
     const char *ptr = myStreamBuffer;
     const char *end = myStreamBuffer + myStream->read(myStreamBuffer, rtfStreamBufferSize);
-		if (ptr == end) {
-			break;
-		}
-		const char *dataStart = ptr;
-  	bool readNextChar = true;
-		while (ptr != end) {
+    if (ptr == end) {
+      break;
+    }
+    const char *dataStart = ptr;
+    bool readNextChar = true;
+    while (ptr != end) {
       switch (parserState) {
         case READ_BINARY_DATA:
-					// TODO: optimize
+          // TODO: optimize
           ecParseCharData(ptr, 1);
           myBinaryDataSize--;
           if (myBinaryDataSize == 0) {
@@ -617,25 +566,25 @@ int RtfReader::ecRtfParse() {
         case READ_NORMAL_DATA:
           switch (*ptr) {
             case '{':
-							if (ptr > dataStart) {
-							  ecParseCharData(dataStart, ptr - dataStart);
-							}
-							dataStart = ptr + 1;
+              if (ptr > dataStart) {
+                ecParseCharData(dataStart, ptr - dataStart);
+              }
+              dataStart = ptr + 1;
               myStateStack.push(state);
               state.ReadDataAsHex = false;
               break;
             case '}':
             {
-							if (ptr > dataStart) {
-							  ecParseCharData(dataStart, ptr - dataStart);
-							}
-							dataStart = ptr + 1;
+              if (ptr > dataStart) {
+                ecParseCharData(dataStart, ptr - dataStart);
+              }
+              dataStart = ptr + 1;
 
-							if (imageStartOffset >= 0) {
-			          int imageSize = myStream->offset() + (ptr - end) - imageStartOffset;
-								insertImage(myNextImageMimeType, myFileName, imageStartOffset, imageSize);
-								imageStartOffset = -1;
-							}
+              if (imageStartOffset >= 0) {
+                int imageSize = myStream->offset() + (ptr - end) - imageStartOffset;
+                insertImage(myNextImageMimeType, myFileName, imageStartOffset, imageSize);
+                imageStartOffset = -1;
+              }
 
               if (myStateStack.empty()) {
                 return ecStackUnderflow;
@@ -669,25 +618,25 @@ int RtfReader::ecRtfParse() {
               break;
             }
             case '\\':
-							if (ptr > dataStart) {
-							  ecParseCharData(dataStart, ptr - dataStart);
-							}
-							dataStart = ptr + 1;
+              if (ptr > dataStart) {
+                ecParseCharData(dataStart, ptr - dataStart);
+              }
+              dataStart = ptr + 1;
               keyword.erase();
               parserState = READ_KEYWORD;
               break;
             case 0x0d:
             case 0x0a:      // cr and lf are noise characters...
-							if (ptr > dataStart) {
-							  ecParseCharData(dataStart, ptr - dataStart);
-							}
-							dataStart = ptr + 1;
+              if (ptr > dataStart) {
+                ecParseCharData(dataStart, ptr - dataStart);
+              }
+              dataStart = ptr + 1;
               break;
             default:
               if (state.ReadDataAsHex) {
-								if (imageStartOffset == -1) {
-								  imageStartOffset = myStream->offset() + (ptr - end);
-								}
+                if (imageStartOffset == -1) {
+                  imageStartOffset = myStream->offset() + (ptr - end);
+                }
               }
               break;
           }
@@ -702,32 +651,32 @@ int RtfReader::ecRtfParse() {
           }
           break;
         case READ_KEYWORD:
-					if (!isalpha(*ptr)) {
+          if (!isalpha(*ptr)) {
             if (ptr == dataStart) {
               keyword = *ptr;
               parserState = ecTranslateKeyword(keyword, 0, false);
-							dataStart = ptr + 1;
+              dataStart = ptr + 1;
             } else {
-							keyword.append(dataStart, ptr - dataStart);
+              keyword.append(dataStart, ptr - dataStart);
               if ((*ptr == '-') || isdigit(*ptr)) {
-								dataStart = ptr;
+                dataStart = ptr;
                 parserState = READ_KEYWORD_PARAMETER;
               } else {
                 readNextChar = *ptr == ' ';
                 parserState = ecTranslateKeyword(keyword, 0, false);
-								dataStart = readNextChar ? ptr + 1 : ptr;
+                dataStart = readNextChar ? ptr + 1 : ptr;
               }
             }
-					}
+          }
           break;
         case READ_KEYWORD_PARAMETER:
           if (!isdigit(*ptr)) {
-						parameterString.append(dataStart, ptr - dataStart);
+            parameterString.append(dataStart, ptr - dataStart);
             int param = atoi(parameterString.c_str());
-						parameterString.erase();
+            parameterString.erase();
             readNextChar = *ptr == ' ';
             parserState = ecTranslateKeyword(keyword, param, true);
-						dataStart = readNextChar ? ptr + 1 : ptr;
+            dataStart = readNextChar ? ptr + 1 : ptr;
           }
           break;
       }
@@ -737,20 +686,20 @@ int RtfReader::ecRtfParse() {
         readNextChar = true;
       }
     }
-		if (dataStart < end) {
-			switch (parserState) {
-				case READ_NORMAL_DATA:
-					ecParseCharData(dataStart, end - dataStart);
-				case READ_KEYWORD:
-					keyword.append(dataStart, end - dataStart);
-					break;
-				case READ_KEYWORD_PARAMETER:
-					parameterString.append(dataStart, end - dataStart);
-					break;
-				default:
-					break;
-			}
-		}
+    if (dataStart < end) {
+      switch (parserState) {
+        case READ_NORMAL_DATA:
+          ecParseCharData(dataStart, end - dataStart);
+        case READ_KEYWORD:
+          keyword.append(dataStart, end - dataStart);
+          break;
+        case READ_KEYWORD_PARAMETER:
+          parameterString.append(dataStart, end - dataStart);
+          break;
+        default:
+          break;
+      }
+    }
   }
   
   return (is_interrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
@@ -761,7 +710,7 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
   
   if (it == myKeywordMap.end()) {
     if (fSkipDestIfUnk)     // if this is a new destination
-      state.rds = rdsSkip;      // skip the destination
+      state.rds = DESTINATION_SKIP;      // skip the destination
                   // else just discard it
     fSkipDestIfUnk = false;
 
@@ -771,21 +720,13 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
 
   fSkipDestIfUnk = false;
 
-	return it->second->run(*this, fParam ? &param : 0);
+  return it->second->run(*this, fParam ? &param : 0);
 }
 
 
 void RtfReader::ecParseCharData(const char *data, size_t len, bool convert) {
-  switch (state.rds) {
-    case rdsSkip:
-    default:
-      return;
-    case rdsTitle:
-    case rdsAuthor:
-    case rdsContent:
-    case rdsFootnote:
-    case rdsImage:
-      addCharData(data, len, convert);
+  if (state.rds != DESTINATION_SKIP) {
+    addCharData(data, len, convert);
   }
 }
 
@@ -794,8 +735,8 @@ void RtfReader::interrupt() {
 }
 
 bool RtfReader::readDocument(const std::string &fileName) {
-	myFileName = fileName;
-	myStream = ZLFile(fileName).inputStream();
+  myFileName = fileName;
+  myStream = ZLFile(fileName).inputStream();
   if (myStream.isNull() || !myStream->open()) {
       return false;
   }
@@ -810,13 +751,13 @@ bool RtfReader::readDocument(const std::string &fileName) {
   fSkipDestIfUnk = false;
 
   memset(&state, 0, sizeof(state));
-  state.rds = rdsContent;
+  state.rds = DESTINATION_NONE;
   state.ReadDataAsHex = false;
 
   int ret = ecRtfParse();
   bool code = ret == ecOK;
   if (!code) {
-		std::cerr << "parse failed: " << ret << "\n";
+    std::cerr << "parse failed: " << ret << "\n";
   }
   endDocumentHandler();
 

@@ -33,6 +33,17 @@
 //#define DPRINT(x...) {fprintf(stderr, ## x);}
 #define DPRINT(x...)
 
+enum Destination {
+	DESTINATION_NONE = -1,
+	DESTINATION_SKIP = 0,
+	DESTINATION_INFO = 1,
+	DESTINATION_TITLE = 2,
+	DESTINATION_AUTHOR = 3,
+	DESTINATION_PICTURE = 4,
+	DESTINATION_STYLESHEET = 5,
+	DESTINATION_FOOTNOTE = 6,
+};
+
 typedef struct char_prop
 {
     bool fBold;
@@ -73,9 +84,6 @@ typedef struct doc_prop
     bool fLandscape;            // landscape or portrait??
 } DOP;                  // DOcument Properties
 
-typedef enum { rdsTitleInfo, rdsTitle, rdsAuthor, rdsContent, rdsImage, 
-	       rdsStyleSheet, rdsFootnote, rdsSkip } RDS;              // Rtf Destination State
-
 // property save structure
 struct RtfReaderState
 {
@@ -84,7 +92,7 @@ struct RtfReaderState
     PAP pap;
     SEP sep;
     DOP dop;
-    RDS rds;
+    Destination rds;
 
 		bool ReadDataAsHex;
     
@@ -175,14 +183,14 @@ public:
     
 	void ecParseCharData(const char *data, size_t len, bool convert = true);
 	void ecApplyPictPropChange(const std::string &mimeType);
-	void ecChangeDest(int idest);
+	void ecChangeDest(Destination destiantion);
 	void ecStyleChange();
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
   void ecApplyPropChange(int iprop, int val);
 
 private:
 	void ecParseSpecialProperty(int iprop);
-	void ecEndGroupAction(int rds);
+	void ecEndGroupAction(Destination destiantion);
 
 	ParserState ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 

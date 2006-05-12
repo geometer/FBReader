@@ -158,6 +158,7 @@ void RtfBookReader::startElementHandler(int tag) {
       }
       break;
     case _BOOK_TITLE:
+    case _STYLE_SHEET:
     case _STYLE_INFO:
     case _TITLE_INFO:
     case _AUTHOR:
