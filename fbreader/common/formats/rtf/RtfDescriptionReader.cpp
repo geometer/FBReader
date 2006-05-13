@@ -155,3 +155,6 @@ void RtfDescriptionReader::endElementHandler(int tag) {
 
 void RtfDescriptionReader::insertImage(const std::string&, const std::string&, size_t, size_t) {
 }
+
+void RtfDescriptionReader::setFontProperty(FontProperty, bool) {
+}

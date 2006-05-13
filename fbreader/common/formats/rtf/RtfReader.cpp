@@ -107,8 +107,8 @@ class RtfAlignmentCommand : public RtfCommand {
 public:
   RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {}
   RtfReader::ParserState run(RtfReader &reader, int*) const {
-		//std::cerr << "Alignment = " << myAlignment << "\n";
-		reader.setAlignment(myAlignment);
+    //std::cerr << "Alignment = " << myAlignment << "\n";
+    reader.setAlignment(myAlignment);
     return RtfReader::READ_NORMAL_DATA;
   }
   
@@ -292,19 +292,11 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
   }
   
   if (state.chp.fItalic != oldItalic) {
-    if (state.chp.fItalic) {
-      startElementHandler(_ITALIC);
-    } else {
-      endElementHandler(_ITALIC);
-    }
+    setFontProperty(FONT_ITALIC, state.chp.fItalic);
   }
 
   if (state.chp.fBold != oldBold) {
-    if (state.chp.fBold) {
-      startElementHandler(_BOLD);
-    } else {
-      endElementHandler(_BOLD);
-    }
+    setFontProperty(FONT_BOLD, state.chp.fBold);
   }
 }
 
@@ -336,11 +328,11 @@ void RtfReader::ecParseSpecialProperty(int iprop) {
       break;
     case ipropPlain:
       if (state.chp.fItalic) {
-        endElementHandler(_ITALIC);
+        setFontProperty(FONT_ITALIC, false);
       }
 
       if (state.chp.fBold) {
-        endElementHandler(_BOLD);
+        setFontProperty(FONT_BOLD, false);
       }
     
       memset(&state.chp, 0, sizeof(state.chp));
@@ -541,19 +533,11 @@ int RtfReader::ecRtfParse() {
               myStateStack.pop();
           
               if (state.chp.fItalic != oldItalic) {
-                if (state.chp.fItalic) {
-                  startElementHandler(_ITALIC);
-                } else {
-                  endElementHandler(_ITALIC);
-                }
+                setFontProperty(FONT_ITALIC, state.chp.fItalic);
               }
           
               if (state.chp.fBold != oldBold) {
-                if (state.chp.fBold) {
-                  startElementHandler(_BOLD);
-                } else {
-                  endElementHandler(_BOLD);
-                }
+                setFontProperty(FONT_BOLD, state.chp.fBold);
               }
               
               break;
@@ -686,7 +670,7 @@ bool RtfReader::readDocument(const std::string &fileName) {
 
   myStreamBuffer = new char[rtfStreamBufferSize];
   
-	myIsInterrupted = false;
+  myIsInterrupted = false;
   startDocumentHandler();
 
   fSkipDestIfUnk = false;

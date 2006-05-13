@@ -35,40 +35,40 @@ static const size_t maxBufferSize = 1024;
 
 void RtfBookReader::addCharData(const char *data, size_t len, bool convert) {
   if (state.readState == READ_TEXT) {
-		if (convert || myConverter.isNull()) {
+    if (convert || myConverter.isNull()) {
       outputBuffer.append(data, len);
-			if (outputBuffer.size() >= maxBufferSize) {
-				flushBuffer();
-			}
-		} else {
-			flushBuffer();
+      if (outputBuffer.size() >= maxBufferSize) {
+        flushBuffer();
+      }
+    } else {
+      flushBuffer();
       std::string newString(data, len);
       characterDataHandler(newString);
-		}
+    }
   }
 }
 
 void RtfBookReader::flushBuffer() {
   if (!outputBuffer.empty()) {
     if (state.readState == READ_TEXT) {    
-			if (!myConverter.isNull()) {
+      if (!myConverter.isNull()) {
         static std::string newString;
-     	 	myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
+          myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
         characterDataHandler(newString);
-				newString.erase();
-			} else {
+        newString.erase();
+      } else {
         characterDataHandler(outputBuffer);
-			}
+      }
     }
     outputBuffer.erase();
-	}
+  }
 }
 
 void RtfBookReader::insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) {
   ZLImage *image = new RtfImage(mimeType, fileName, startOffset, size);
 
   std::string id = "InternalImage";
-	ZLStringUtil::appendNumber(id, imageIndex++);
+  ZLStringUtil::appendNumber(id, imageIndex++);
   myBookReader.addImageReference(id);   
   myBookReader.addImage(id, image);
 }
@@ -114,49 +114,6 @@ void RtfBookReader::startElementHandler(int tag) {
       myBookReader.endParagraph();
       myBookReader.beginParagraph();
       break;
-    case _BOLD:
-      if (state.readState != READ_TEXT) {
-        //DPRINT("change style not in text.\n");
-        break;
-      }
-        
-      flushBuffer();
-        
-      state.isBold = true;
-        
-      //DPRINT("add style strong.\n");
-        
-      myBookReader.pushKind(STRONG);
-      myBookReader.addControl(STRONG, true);
-
-      break;        
-    case _ITALIC:
-      if (state.readState != READ_TEXT) {
-        //DPRINT("change style not in text.\n");
-        break;
-      }
-        
-      flushBuffer();
-        
-      state.isItalic = true;
-
-      if (!state.isBold) {        
-        //DPRINT("add style emphasis.\n");
-        
-        myBookReader.pushKind(EMPHASIS);
-        myBookReader.addControl(EMPHASIS, true);
-      } else {
-        //DPRINT("add style emphasis and strong.\n");
-        
-        myBookReader.popKind();
-        myBookReader.addControl(STRONG, false);
-        
-        myBookReader.pushKind(EMPHASIS);
-        myBookReader.addControl(EMPHASIS, true);
-        myBookReader.pushKind(STRONG);
-        myBookReader.addControl(STRONG, true);
-      }
-      break;
     case _BOOK_TITLE:
     case _STYLE_SHEET:
     case _STYLE_INFO:
@@ -182,14 +139,14 @@ void RtfBookReader::startElementHandler(int tag) {
       state.readState = READ_IMAGE;
 
       break;
-		case _IMAGE_TYPE:
-			break;
+    case _IMAGE_TYPE:
+      break;
     case _FOOTNOTE:
     {
       flushBuffer();
 
-  		std::string id;
-			ZLStringUtil::appendNumber(id, footnoteIndex++);
+      std::string id;
+      ZLStringUtil::appendNumber(id, footnoteIndex++);
 
       stack.push_back(state);
       state.id = id;
@@ -218,54 +175,6 @@ void RtfBookReader::startElementHandler(int tag) {
 
 void RtfBookReader::endElementHandler(int tag) {
   switch(tag) {
-    case _BOLD:
-      //DPRINT("bold end.\n");
-
-      if (state.readState != READ_TEXT) {
-        //DPRINT("change style not in text.\n");
-        break;
-      }
-        
-      flushBuffer();
-        
-      state.isBold = false;
-        
-      //DPRINT("remove style strong.\n");
-        
-      myBookReader.addControl(STRONG, false);
-      myBookReader.popKind();
-        
-      break;        
-    case _ITALIC:
-      //DPRINT("italic end.\n");
-        
-      if (state.readState != READ_TEXT) {
-        //DPRINT("change style not in text.\n");
-        break;
-      }
-        
-      flushBuffer();
-        
-      state.isItalic = false;
-
-      if (!state.isBold) {        
-        //DPRINT("remove style emphasis.\n");
-        
-        myBookReader.addControl(EMPHASIS, false);
-        myBookReader.popKind();
-      } else {
-        //DPRINT("remove style strong n emphasis, add strong.\n");
-        
-        myBookReader.addControl(STRONG, false);
-        myBookReader.popKind();
-        myBookReader.addControl(EMPHASIS, false);
-        myBookReader.popKind();
-        
-        myBookReader.pushKind(STRONG);
-        myBookReader.addControl(STRONG, true);
-      }
-        
-      break;
     case _TITLE_INFO:
     case _AUTHOR:
     case _ENCODING:
@@ -298,5 +207,94 @@ void RtfBookReader::endElementHandler(int tag) {
       break;
     default:
       break;
+  }
+}
+
+void RtfBookReader::setFontProperty(FontProperty property, bool start) {
+  if (state.readState != READ_TEXT) {
+    //DPRINT("change style not in text.\n");
+    return;
+  }
+  if (start) {
+    switch (property) {
+      case FONT_BOLD:
+        flushBuffer();
+          
+        state.isBold = true;
+          
+        //DPRINT("add style strong.\n");
+          
+        myBookReader.pushKind(STRONG);
+        myBookReader.addControl(STRONG, true);
+      
+        break;        
+      case FONT_ITALIC:
+        flushBuffer();
+          
+        state.isItalic = true;
+    
+        if (!state.isBold) {        
+          //DPRINT("add style emphasis.\n");
+          
+          myBookReader.pushKind(EMPHASIS);
+          myBookReader.addControl(EMPHASIS, true);
+        } else {
+          //DPRINT("add style emphasis and strong.\n");
+          
+          myBookReader.popKind();
+          myBookReader.addControl(STRONG, false);
+          
+          myBookReader.pushKind(EMPHASIS);
+          myBookReader.addControl(EMPHASIS, true);
+          myBookReader.pushKind(STRONG);
+          myBookReader.addControl(STRONG, true);
+        }
+        break;
+      case FONT_UNDERLINED:
+        break;
+    }
+  } else {
+    switch (property) {
+      case FONT_BOLD:
+        //DPRINT("bold end.\n");
+          
+        flushBuffer();
+          
+        state.isBold = false;
+          
+        //DPRINT("remove style strong.\n");
+          
+        myBookReader.addControl(STRONG, false);
+        myBookReader.popKind();
+          
+        break;        
+      case FONT_ITALIC:
+        //DPRINT("italic end.\n");
+          
+        flushBuffer();
+          
+        state.isItalic = false;
+    
+        if (!state.isBold) {        
+          //DPRINT("remove style emphasis.\n");
+          
+          myBookReader.addControl(EMPHASIS, false);
+          myBookReader.popKind();
+        } else {
+          //DPRINT("remove style strong n emphasis, add strong.\n");
+          
+          myBookReader.addControl(STRONG, false);
+          myBookReader.popKind();
+          myBookReader.addControl(EMPHASIS, false);
+          myBookReader.popKind();
+          
+          myBookReader.pushKind(STRONG);
+          myBookReader.addControl(STRONG, true);
+        }
+          
+        break;
+      case FONT_UNDERLINED:
+        break;
+    }
   }
 }

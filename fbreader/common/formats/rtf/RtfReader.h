@@ -107,10 +107,6 @@ protected:
 		_P,
 		_P_RESET,
 		
-		_ITALIC,
-		_BOLD,
-		_UNDERLINE,
-		
 		_FOOTNOTE,
 		
 		_STYLE_SHEET,
@@ -137,6 +133,12 @@ public:
     READ_KEYWORD,
     READ_KEYWORD_PARAMETER,
   };
+
+	enum FontProperty {
+		FONT_BOLD,
+		FONT_ITALIC,
+		FONT_UNDERLINED
+	};
     
 	void ecParseCharData(const char *data, size_t len, bool convert = true);
 	void ecApplyPictPropChange(const std::string &mimeType);
@@ -146,6 +148,7 @@ public:
   void ecApplyPropChange(int iprop, int val);
 	// TODO: change to pure virtual
 	virtual void setAlignment(AlignmentType) {}
+	virtual void setFontProperty(FontProperty property, bool start) = 0;
 
 private:
 	void ecParseSpecialProperty(int iprop);
