@@ -60,8 +60,8 @@ typedef enum {ipropBold, ipropItalic, ipropUnderline, ipropLeftInd,
         ipropMax } IPROP;
 typedef enum {ppropPng, ppropJpeg } PPROP;
 
-typedef enum {actnSpec, actnByte, actnWord} ACTN;
-typedef enum {propChp, propPap, propSep, propDop} PROPTYPE;
+enum ACTN {actnSpec, actnByte, actnWord};
+enum PROPTYPE {propChp, propPap, propSep, propDop};
 
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
@@ -325,11 +325,6 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
     case propChp:
       pb = (char *) &state.chp;
       break;
-    default:
-      if (rgprop[iprop].actn != actnSpec) {
-        std::cerr << "parse failed: bad table 0\n";
-        return;
-      }
   }
   
   switch (rgprop[iprop].actn) {
@@ -341,9 +336,6 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
       break;
     case actnSpec:
       ecParseSpecialProperty(iprop);
-      return;
-    default:
-      std::cerr << "parse failed: bad table 1\n";
       return;
   }
   
