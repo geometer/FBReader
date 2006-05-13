@@ -54,8 +54,6 @@ typedef struct para_prop
     AlignmentType alignment;
 } PAP;                  // PAragraph Properties
 
-typedef enum {pgDec, pgURom, pgLRom, pgULtr, pgLLtr} PGN;
-
 // property save structure
 struct RtfReaderState
 {
@@ -71,14 +69,14 @@ struct RtfReaderState
 
 
 class ZLInputStream;
-class RtfKeywordInfo;
+class RtfCommand;
 
 class RtfReader {
 
 private:
 	static void RtfReader::fillKeywordMap();
 
-	static std::map<std::string, RtfKeywordInfo*> ourKeywordMap;
+	static std::map<std::string, RtfCommand*> ourKeywordMap;
 
 public:
 	bool readDocument(const std::string &fileName);
@@ -146,6 +144,8 @@ public:
 	void ecStyleChange();
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
   void ecApplyPropChange(int iprop, int val);
+	// TODO: change to pure virtual
+	virtual void setAlignment(AlignmentType) {}
 
 private:
 	void ecParseSpecialProperty(int iprop);

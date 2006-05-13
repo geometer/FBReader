@@ -29,7 +29,7 @@
 #include "../../Files.h"
 #include "RtfReader.h"
 
-std::map<std::string, RtfKeywordInfo*> RtfReader::ourKeywordMap;
+std::map<std::string, RtfCommand*> RtfReader::ourKeywordMap;
 
 static const int rtfStreamBufferSize = 4096;
 
@@ -52,7 +52,7 @@ RtfReader::~RtfReader() {
 
 // What types of properties are there?
 typedef enum {ipropBold, ipropItalic, ipropUnderline,
-        ipropJust, ipropPard, ipropPlain,
+        ipropPard, ipropPlain,
         ipropMax } IPROP;
 typedef enum {ppropPng, ppropJpeg } PPROP;
 
@@ -76,40 +76,50 @@ PROP rgprop [ipropMax] = {
   { actnByte,   propChp,  offsetof(CHP, fBold) },     // ipropBold
   { actnByte,   propChp,  offsetof(CHP, fItalic) },   // ipropItalic
   { actnByte,   propChp,  offsetof(CHP, fUnderline) },  // ipropUnderline
-  { actnWord,   propPap,  offsetof(PAP, alignment) },    // ipropJust
   { actnSpec,   propPap,  0 },              // ipropPard
   { actnSpec,   propChp,  0 },              // ipropPlain
 };
 
-struct RtfKeywordInfo {
+struct RtfCommand {
 
 protected:
-  virtual ~RtfKeywordInfo() {}
+  virtual ~RtfCommand() {}
 
 public:
   virtual RtfReader::ParserState run(RtfReader &reader, int *parameter) const = 0;
 };
 
-class RtfKeywordPropInfo : public RtfKeywordInfo {
+class RtfPropCommand : public RtfCommand {
 
 public:
-  RtfKeywordPropInfo(int defaultParameter, bool alwaysUseDefaultParameter, int index) : myDefaultParameter(defaultParameter), myAlwaysUseDefaultParameter(alwaysUseDefaultParameter), myIndex(index) {}
+  RtfPropCommand(int index) : myIndex(index) {}
   RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
-    reader.ecApplyPropChange(myIndex,
-        (parameter && !myAlwaysUseDefaultParameter) ? *parameter : myDefaultParameter);
+    reader.ecApplyPropChange(myIndex, (parameter != 0) ? *parameter : 1);
     return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
-  int myDefaultParameter;
-  bool myAlwaysUseDefaultParameter;
   int myIndex;
 };
 
-class RtfKeywordCharInfo : public RtfKeywordInfo {
+class RtfAlignmentCommand : public RtfCommand {
 
 public:
-  RtfKeywordCharInfo(const std::string &chr) : myChar(chr) {}
+  RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {}
+  RtfReader::ParserState run(RtfReader &reader, int*) const {
+		//std::cerr << "Alignment = " << myAlignment << "\n";
+		reader.setAlignment(myAlignment);
+    return RtfReader::READ_NORMAL_DATA;
+  }
+  
+private:
+  AlignmentType myAlignment;
+};
+
+class RtfCharCommand : public RtfCommand {
+
+public:
+  RtfCharCommand(const std::string &chr) : myChar(chr) {}
   RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecParseCharData(myChar.data(), myChar.length(), false);
     return RtfReader::READ_NORMAL_DATA;
@@ -119,10 +129,10 @@ private:
   std::string myChar;
 };
 
-class RtfKeywordDestinationInfo : public RtfKeywordInfo {
+class RtfDestinationCommand : public RtfCommand {
 
 public:
-  RtfKeywordDestinationInfo(Destination dest) : myDest(dest) {}
+  RtfDestinationCommand(Destination dest) : myDest(dest) {}
   RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecChangeDest(myDest);
     return RtfReader::READ_NORMAL_DATA;
@@ -132,10 +142,10 @@ private:
   Destination myDest;
 };
 
-class RtfKeywordStyleInfo : public RtfKeywordInfo {
+class RtfStyleCommand : public RtfCommand {
 
 public:
-  RtfKeywordStyleInfo() {}
+  RtfStyleCommand() {}
   RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecStyleChange();
     return RtfReader::READ_NORMAL_DATA;
@@ -144,10 +154,10 @@ public:
 private:
 };
 
-class RtfKeywordSpecInfo : public RtfKeywordInfo {
+class RtfSpecCommand : public RtfCommand {
 
 public:
-  RtfKeywordSpecInfo(IPFN ipfn) : myIpfn(ipfn) {}
+  RtfSpecCommand(IPFN ipfn) : myIpfn(ipfn) {}
   RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
     return reader.ecParseSpecialKeyword(myIpfn, parameter ? *parameter : 0);
   }
@@ -156,10 +166,10 @@ private:
   IPFN myIpfn;
 };
 
-class RtfKeywordPictureInfo : public RtfKeywordInfo {
+class RtfPictureCommand : public RtfCommand {
 
 public:
-  RtfKeywordPictureInfo(const std::string &mimeType) : myMimeType(mimeType) {}
+  RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {}
   RtfReader::ParserState run(RtfReader &reader, int*) const {
     reader.ecApplyPictPropChange(myMimeType);
     return RtfReader::READ_NORMAL_DATA;
@@ -171,17 +181,11 @@ private:
 
 struct pkw {
   char *kw;
-  int  dflt;
-  bool fPassDflt;
   int  idx;
 } propKeyWords[] = {
-  { "b",               1,    false,   ipropBold },
-  { "i",               1,    false,   ipropItalic },
-  { "u",               1,    false,   ipropUnderline },
-  { "qc",   ALIGN_CENTER,    true,    ipropJust },
-  { "ql",     ALIGN_LEFT,    true,    ipropJust },
-  { "qr",    ALIGN_RIGHT,    true,    ipropJust },
-  { "qj",  ALIGN_JUSTIFY,    true,    ipropJust },
+  { "b",   ipropBold },
+  { "i",   ipropItalic },
+  { "u",   ipropUnderline },
 };
 
 struct skw {
@@ -204,7 +208,7 @@ static const std::string destinationTag = "destination";
 class RtfKeywordsReader : public ZLXMLReader {
 
 public:
-  RtfKeywordsReader(std::map<std::string, RtfKeywordInfo*> &keywordMap) : myKeywordMap(keywordMap) {
+  RtfKeywordsReader(std::map<std::string, RtfCommand*> &keywordMap) : myKeywordMap(keywordMap) {
   }
 
   void startElementHandler(const char *tag, const char **attributes) {
@@ -213,18 +217,18 @@ public:
     if (keyword != 0) {
       if (charTag == tag) {
         if (value != 0) {
-          myKeywordMap[keyword] = new RtfKeywordCharInfo(value);
+          myKeywordMap[keyword] = new RtfCharCommand(value);
         }
       } else if (destinationTag == tag) {
         if (value != 0) {
-          myKeywordMap[keyword] = new RtfKeywordDestinationInfo((Destination)atoi(value));
+          myKeywordMap[keyword] = new RtfDestinationCommand((Destination)atoi(value));
         }
       }
     }
   }
 
 private:
-  std::map<std::string, RtfKeywordInfo*> &myKeywordMap;
+  std::map<std::string, RtfCommand*> &myKeywordMap;
 };
 
 void RtfReader::fillKeywordMap() {
@@ -237,14 +241,18 @@ void RtfReader::fillKeywordMap() {
 
     for (unsigned int i = 0; i < sizeof(propKeyWords) / sizeof(struct pkw); i++) {
       const struct pkw &s = propKeyWords[i];
-      ourKeywordMap[s.kw] = new RtfKeywordPropInfo(s.dflt, s.fPassDflt, s.idx);
+      ourKeywordMap[s.kw] = new RtfPropCommand(s.idx);
     }
     for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
-      ourKeywordMap[specKeyWords[i].kw] = new RtfKeywordSpecInfo(specKeyWords[i].ipfn);
+      ourKeywordMap[specKeyWords[i].kw] = new RtfSpecCommand(specKeyWords[i].ipfn);
     }
-    ourKeywordMap["jpegblip"] = new RtfKeywordPictureInfo("image/jpeg");
-    ourKeywordMap["pngblip"] = new RtfKeywordPictureInfo("image/png");
-    ourKeywordMap["s"] = new RtfKeywordStyleInfo();
+    ourKeywordMap["jpegblip"] = new RtfPictureCommand("image/jpeg");
+    ourKeywordMap["pngblip"] = new RtfPictureCommand("image/png");
+    ourKeywordMap["s"] = new RtfStyleCommand();
+    ourKeywordMap["qc"] = new RtfAlignmentCommand(ALIGN_CENTER);
+    ourKeywordMap["ql"] = new RtfAlignmentCommand(ALIGN_LEFT);
+    ourKeywordMap["qr"] = new RtfAlignmentCommand(ALIGN_RIGHT);
+    ourKeywordMap["qj"] = new RtfAlignmentCommand(ALIGN_JUSTIFY);
   }
 }
 
@@ -642,7 +650,7 @@ int RtfReader::ecRtfParse() {
 }
 
 RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-  std::map<std::string, RtfKeywordInfo*>::const_iterator it = ourKeywordMap.find(keyword);
+  std::map<std::string, RtfCommand*>::const_iterator it = ourKeywordMap.find(keyword);
   
   if (it == ourKeywordMap.end()) {
     if (fSkipDestIfUnk)     // if this is a new destination
