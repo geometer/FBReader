@@ -154,7 +154,6 @@ private:
 
 	int ecRtfParse();
 
-	int is_interrupted;	
 	bool fSkipDestIfUnk;
 
 	RtfReaderState state;
@@ -168,6 +167,8 @@ private:
 
 	int myBinaryDataSize;
 	std::string myNextImageMimeType;
+
+	int myIsInterrupted;	
 };
 
 #endif /* __RTFREADER_H__ */

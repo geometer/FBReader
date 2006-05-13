@@ -481,7 +481,7 @@ int RtfReader::ecRtfParse() {
   std::string hexString;
   int imageStartOffset = -1;
 
-  while (!is_interrupted) {
+  while (!myIsInterrupted) {
     const char *ptr = myStreamBuffer;
     const char *end = myStreamBuffer + myStream->read(myStreamBuffer, rtfStreamBufferSize);
     if (ptr == end) {
@@ -638,7 +638,7 @@ int RtfReader::ecRtfParse() {
     }
   }
   
-  return (is_interrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
+  return (myIsInterrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
 }
 
 RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
@@ -667,7 +667,7 @@ void RtfReader::ecParseCharData(const char *data, size_t len, bool convert) {
 }
 
 void RtfReader::interrupt() {
-  is_interrupted = true;
+  myIsInterrupted = true;
 }
 
 bool RtfReader::readDocument(const std::string &fileName) {
@@ -681,7 +681,7 @@ bool RtfReader::readDocument(const std::string &fileName) {
 
   myStreamBuffer = new char[rtfStreamBufferSize];
   
-  is_interrupted = false;
+	myIsInterrupted = false;
   startDocumentHandler();
 
   fSkipDestIfUnk = false;
