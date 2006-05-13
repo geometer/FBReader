@@ -51,10 +51,7 @@ RtfReader::~RtfReader() {
 }
 
 // What types of properties are there?
-typedef enum {ipropBold, ipropItalic, ipropUnderline,
-        ipropPard, ipropPlain,
-        ipropMax } IPROP;
-typedef enum {ppropPng, ppropJpeg } PPROP;
+typedef enum { ipropPard, ipropPlain, ipropMax } IPROP;
 
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
