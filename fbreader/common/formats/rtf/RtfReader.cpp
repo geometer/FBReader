@@ -51,17 +51,14 @@ RtfReader::~RtfReader() {
 }
 
 // What types of properties are there?
-typedef enum {ipropBold, ipropItalic, ipropUnderline, ipropLeftInd,
-        ipropRightInd, ipropFirstInd, ipropCols, ipropPgnX,
-        ipropPgnY, ipropXaPage, ipropYaPage, ipropXaLeft,
-        ipropXaRight, ipropYaTop, ipropYaBottom, ipropPgnStart,
-        ipropSbk, ipropPgnFormat, ipropFacingp, ipropLandscape,
+typedef enum {ipropBold, ipropItalic, ipropUnderline,
+        ipropSbk,
         ipropJust, ipropPard, ipropPlain, ipropSectd,
         ipropMax } IPROP;
 typedef enum {ppropPng, ppropJpeg } PPROP;
 
 enum ACTN {actnSpec, actnByte, actnWord};
-enum PROPTYPE {propChp, propPap, propSep, propDop};
+enum PROPTYPE {propChp, propPap, propSep};
 
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
@@ -80,23 +77,7 @@ PROP rgprop [ipropMax] = {
   { actnByte,   propChp,  offsetof(CHP, fBold) },     // ipropBold
   { actnByte,   propChp,  offsetof(CHP, fItalic) },   // ipropItalic
   { actnByte,   propChp,  offsetof(CHP, fUnderline) },  // ipropUnderline
-  { actnWord,   propPap,  offsetof(PAP, xaLeft) },    // ipropLeftInd
-  { actnWord,   propPap,  offsetof(PAP, xaRight) },   // ipropRightInd
-  { actnWord,   propPap,  offsetof(PAP, xaFirst) },   // ipropFirstInd
-  { actnWord,   propSep,  offsetof(SEP, cCols) },     // ipropCols
-  { actnWord,   propSep,  offsetof(SEP, xaPgn) },     // ipropPgnX
-  { actnWord,   propSep,  offsetof(SEP, yaPgn) },     // ipropPgnY
-  { actnWord,   propDop,  offsetof(DOP, xaPage) },    // ipropXaPage
-  { actnWord,   propDop,  offsetof(DOP, yaPage) },    // ipropYaPage
-  { actnWord,   propDop,  offsetof(DOP, xaLeft) },    // ipropXaLeft
-  { actnWord,   propDop,  offsetof(DOP, xaRight) },   // ipropXaRight
-  { actnWord,   propDop,  offsetof(DOP, yaTop) },     // ipropYaTop
-  { actnWord,   propDop,  offsetof(DOP, yaBottom) },  // ipropYaBottom
-  { actnWord,   propDop,  offsetof(DOP, pgnStart) },  // ipropPgnStart
   { actnWord,   propSep,  offsetof(SEP, sbk) },     // ipropSbk
-  { actnWord,   propSep,  offsetof(SEP, pgnFormat) },   // ipropPgnFormat
-  { actnByte,   propDop,  offsetof(DOP, fFacingp) },  // ipropFacingp
-  { actnByte,   propDop,  offsetof(DOP, fLandscape) },  // ipropLandscape
   { actnWord,   propPap,  offsetof(PAP, just) },    // ipropJust
   { actnSpec,   propPap,  0 },              // ipropPard
   { actnSpec,   propChp,  0 },              // ipropPlain
@@ -198,26 +179,8 @@ struct pkw {
   int  idx;
 } propKeyWords[] = {
   { "b",             1,    false,   ipropBold },
-  { "cols",          1,    false,   ipropCols },
-  { "facingp",       1,    true,    ipropFacingp },
-  { "fi",            0,    false,   ipropFirstInd },
   { "i",             1,    false,   ipropItalic },
-  { "landscape",     1,    true,    ipropLandscape },
-  { "li",            0,    false,   ipropLeftInd },
-  { "margb",      1440,    false,   ipropYaBottom },
-  { "margl",      1800,    false,   ipropXaLeft },
-  { "margr",      1800,    false,   ipropXaRight },
-  { "margt",      1440,    false,   ipropYaTop },
-  { "paperh",    15480,    false,   ipropYaPage },
-  { "paperw",    12240,    false,   ipropXaPage },
-  { "pgndec",    pgDec,    true,    ipropPgnFormat },
-  { "pgnlcltr", pgLLtr,    true,    ipropPgnFormat },
-  { "pgnlcrm",  pgLRom,    true,    ipropPgnFormat },
-  { "pgnstart",      1,    true,    ipropPgnStart },
-  { "pgnucltr", pgULtr,    true,    ipropPgnFormat },
-  { "pgnucrm",  pgURom,    true,    ipropPgnFormat },
-  { "pgnx",          0,    false,   ipropPgnX },
-  { "pgny",          0,    false,   ipropPgnY },
+  { "u",             1,    false,   ipropUnderline },
   { "qc",        justC,    true,    ipropJust },
   { "ql",        justL,    true,    ipropJust },
   { "qr",        justR,    true,    ipropJust },
@@ -227,8 +190,6 @@ struct pkw {
   { "sbknone",  sbkNon,    true,    ipropSbk },
   { "sbkodd",   sbkOdd,    true,    ipropSbk },
   { "sbkpage",   sbkPg,    true,    ipropSbk },
-  { "ri",            0,    false,   ipropRightInd },
-  { "u",             1,    false,   ipropUnderline },
 };
 
 struct skw {
@@ -313,9 +274,6 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
     return;          // don't do anything.
 
   switch (rgprop[iprop].prop) {
-    case propDop:
-      pb = (char *) &state.dop;
-      break;
     case propSep:
       pb = (char *) &state.sep;
       break;

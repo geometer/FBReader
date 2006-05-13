@@ -54,9 +54,6 @@ typedef struct char_prop
 typedef enum {justL, justR, justC, justF } JUST;
 typedef struct para_prop
 {
-    int xaLeft;                 // left indent in twips
-    int xaRight;                // right indent in twips
-    int xaFirst;                // first line indent in twips
     int just;                  // justification
 } PAP;                  // PAragraph Properties
 
@@ -64,25 +61,8 @@ typedef enum {sbkNon, sbkCol, sbkEvn, sbkOdd, sbkPg} SBK;
 typedef enum {pgDec, pgURom, pgLRom, pgULtr, pgLLtr} PGN;
 typedef struct sect_prop
 {
-    int cCols;                  // number of columns
     int sbk;                    // section break type
-    int xaPgn;                  // x position of page number in twips
-    int yaPgn;                  // y position of page number in twips
-    int pgnFormat;              // how the page number is formatted
 } SEP;                  // SEction Properties
-
-typedef struct doc_prop
-{
-    int xaPage;                 // page width in twips
-    int yaPage;                 // page height in twips
-    int xaLeft;                 // left margin in twips
-    int yaTop;                  // top margin in twips
-    int xaRight;                // right margin in twips
-    int yaBottom;               // bottom margin in twips
-    int pgnStart;               // starting page number in twips
-    bool fFacingp;              // facing pages enabled?
-    bool fLandscape;            // landscape or portrait??
-} DOP;                  // DOcument Properties
 
 // property save structure
 struct RtfReaderState
@@ -91,7 +71,6 @@ struct RtfReaderState
     CHP chp;
     PAP pap;
     SEP sep;
-    DOP dop;
     Destination rds;
 
 		bool ReadDataAsHex;
