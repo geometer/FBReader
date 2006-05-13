@@ -92,14 +92,14 @@ public:
 class RtfFontPropertyCommand : public RtfCommand {
 
 public:
-  RtfFontPropertyCommand(int index) : myIndex(index) {}
+  RtfFontPropertyCommand(RtfReader::FontProperty property) : myProperty(property) {}
   RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
-    reader.ecApplyPropChange(myIndex, (parameter != 0) ? *parameter : 1);
+    reader.setFontProperty(myProperty, (parameter == 0) || (*parameter == 1));
     return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
-  int myIndex;
+	RtfReader::FontProperty myProperty;
 };
 
 class RtfAlignmentCommand : public RtfCommand {
@@ -179,15 +179,6 @@ private:
   const std::string myMimeType;
 };
 
-struct pkw {
-  char *kw;
-  int  idx;
-} propKeyWords[] = {
-  { "b",   ipropBold },
-  { "i",   ipropItalic },
-  { "u",   ipropUnderline },
-};
-
 struct skw {
   const char *kw;
   IPFN ipfn;
@@ -239,10 +230,6 @@ void RtfReader::fillKeywordMap() {
       ).inputStream()
     );
 
-    for (unsigned int i = 0; i < sizeof(propKeyWords) / sizeof(struct pkw); i++) {
-      const struct pkw &s = propKeyWords[i];
-      ourKeywordMap[s.kw] = new RtfFontPropertyCommand(s.idx);
-    }
     for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
       ourKeywordMap[specKeyWords[i].kw] = new RtfSpecCommand(specKeyWords[i].ipfn);
     }
@@ -253,6 +240,9 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["ql"] = new RtfAlignmentCommand(ALIGN_LEFT);
     ourKeywordMap["qr"] = new RtfAlignmentCommand(ALIGN_RIGHT);
     ourKeywordMap["qj"] = new RtfAlignmentCommand(ALIGN_JUSTIFY);
+    ourKeywordMap["b"] = new RtfFontPropertyCommand(FONT_BOLD);
+    ourKeywordMap["i"] = new RtfFontPropertyCommand(FONT_ITALIC);
+    ourKeywordMap["u"] = new RtfFontPropertyCommand(FONT_UNDERLINED);
   }
 }
 
