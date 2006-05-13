@@ -52,13 +52,12 @@ RtfReader::~RtfReader() {
 
 // What types of properties are there?
 typedef enum {ipropBold, ipropItalic, ipropUnderline,
-        ipropSbk,
-        ipropJust, ipropPard, ipropPlain, ipropSectd,
+        ipropJust, ipropPard, ipropPlain,
         ipropMax } IPROP;
 typedef enum {ppropPng, ppropJpeg } PPROP;
 
 enum ACTN {actnSpec, actnByte, actnWord};
-enum PROPTYPE {propChp, propPap, propSep};
+enum PROPTYPE {propChp, propPap};
 
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
@@ -77,11 +76,9 @@ PROP rgprop [ipropMax] = {
   { actnByte,   propChp,  offsetof(CHP, fBold) },     // ipropBold
   { actnByte,   propChp,  offsetof(CHP, fItalic) },   // ipropItalic
   { actnByte,   propChp,  offsetof(CHP, fUnderline) },  // ipropUnderline
-  { actnWord,   propSep,  offsetof(SEP, sbk) },     // ipropSbk
   { actnWord,   propPap,  offsetof(PAP, just) },    // ipropJust
   { actnSpec,   propPap,  0 },              // ipropPard
   { actnSpec,   propChp,  0 },              // ipropPlain
-  { actnSpec,   propSep,  0 },              // ipropSectd
 };
 
 struct RtfKeywordInfo {
@@ -185,11 +182,6 @@ struct pkw {
   { "ql",        justL,    true,    ipropJust },
   { "qr",        justR,    true,    ipropJust },
   { "qj",        justF,    true,    ipropJust },
-  { "sbkcol",   sbkCol,    true,    ipropSbk },
-  { "sbkeven",  sbkEvn,    true,    ipropSbk },
-  { "sbknone",  sbkNon,    true,    ipropSbk },
-  { "sbkodd",   sbkOdd,    true,    ipropSbk },
-  { "sbkpage",   sbkPg,    true,    ipropSbk },
 };
 
 struct skw {
@@ -274,9 +266,6 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
     return;          // don't do anything.
 
   switch (rgprop[iprop].prop) {
-    case propSep:
-      pb = (char *) &state.sep;
-      break;
     case propPap:
       pb = (char *) &state.pap;
       break;
@@ -350,9 +339,6 @@ void RtfReader::ecParseSpecialProperty(int iprop) {
       }
     
       memset(&state.chp, 0, sizeof(state.chp));
-      break;
-    case ipropSectd:
-      memset(&state.sep, 0, sizeof(state.sep));
       break;
     default:
       std::cerr << "parse failed: bad table 2\n";

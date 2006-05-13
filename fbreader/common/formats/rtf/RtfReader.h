@@ -57,12 +57,7 @@ typedef struct para_prop
     int just;                  // justification
 } PAP;                  // PAragraph Properties
 
-typedef enum {sbkNon, sbkCol, sbkEvn, sbkOdd, sbkPg} SBK;
 typedef enum {pgDec, pgURom, pgLRom, pgULtr, pgLLtr} PGN;
-typedef struct sect_prop
-{
-    int sbk;                    // section break type
-} SEP;                  // SEction Properties
 
 // property save structure
 struct RtfReaderState
@@ -70,7 +65,6 @@ struct RtfReaderState
 //    struct save *pNext;         // next save
     CHP chp;
     PAP pap;
-    SEP sep;
     Destination rds;
 
 		bool ReadDataAsHex;
