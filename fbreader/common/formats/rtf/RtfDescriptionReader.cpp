@@ -47,11 +47,11 @@ void RtfDescriptionReader::startDocumentHandler()
 
 void RtfDescriptionReader::endDocumentHandler()
 {
-    DPRINT("End doc handler, title: %s, author: %s, encoding: %s\n", 
-	myDescription.title().data(), author.data(), encoding.data());
+    //DPRINT("End doc handler, title: %s, author: %s, encoding: %s\n", 
+	//myDescription.title().data(), author.data(), encoding.data());
 
-    DPRINT("End doc handler, old encoding: %s\n", 
-	myDescription.encoding().data());
+    //DPRINT("End doc handler, old encoding: %s\n", 
+	//myDescription.encoding().data());
 
     if (!title.empty())
     {
@@ -100,16 +100,16 @@ void RtfDescriptionReader::startElementHandler(int tag) {
 		case _BODY:
 			break;
 		case _TITLE_INFO:
-			DPRINT("start title info\n");
+			//DPRINT("start title info\n");
 			flushBuffer();
 			break;
 		case _BOOK_TITLE:
-			DPRINT("start book title\n");
+			//DPRINT("start book title\n");
 			flushBuffer();
 			state = READ_TITLE;
 			break;
 		case _AUTHOR:
-			DPRINT("start author\n");
+			//DPRINT("start author\n");
 			flushBuffer();
 			state = READ_AUTHOR;
 			break;
@@ -127,7 +127,7 @@ void RtfDescriptionReader::endElementHandler(int tag) {
 	switch (tag) {
 		case _TITLE_INFO:
 
-			DPRINT("interrupt\n");
+			//DPRINT("interrupt\n");
 			flushBuffer();
 			interrupt();
 			break;
@@ -147,7 +147,7 @@ void RtfDescriptionReader::endElementHandler(int tag) {
 	
 	if (hasTitle && hasAuthor && hasEncoding)
 	{
-	    DPRINT("interrupt\n");
+	    //DPRINT("interrupt\n");
 	    flushBuffer();
 	    interrupt();
 	}

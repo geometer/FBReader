@@ -41,25 +41,19 @@ bool RtfPlugin::readDescription(const std::string &path, BookDescription &descri
 	ZLFile file(path);
 	shared_ptr<ZLInputStream> stream = file.inputStream();
 
-        DPRINT("readDescription\n");
-	
 	if (stream.isNull()) {
 		return false;
 	}
-        DPRINT("read description for: %s\n", path.data());
 
 	detectEncoding(description, *stream);
 
-	if (!RtfDescriptionReader(description).readDocument(path))
-	{
-            DPRINT("Failed\n");
-	    return false;
+	if (!RtfDescriptionReader(description).readDocument(path)) {
+	  return false;
 	}
 	
 	defaultTitle(description, file.name());
 	defaultLanguage(description);
 	
-        DPRINT("OK\n");
 	return true;
 }
 

@@ -116,7 +116,7 @@ void RtfBookReader::startElementHandler(int tag) {
       break;
     case _BOLD:
       if (state.readState != READ_TEXT) {
-        DPRINT("change style not in text.\n");
+        //DPRINT("change style not in text.\n");
         break;
       }
         
@@ -124,7 +124,7 @@ void RtfBookReader::startElementHandler(int tag) {
         
       state.isBold = true;
         
-      DPRINT("add style strong.\n");
+      //DPRINT("add style strong.\n");
         
       myBookReader.pushKind(STRONG);
       myBookReader.addControl(STRONG, true);
@@ -132,7 +132,7 @@ void RtfBookReader::startElementHandler(int tag) {
       break;        
     case _ITALIC:
       if (state.readState != READ_TEXT) {
-        DPRINT("change style not in text.\n");
+        //DPRINT("change style not in text.\n");
         break;
       }
         
@@ -141,12 +141,12 @@ void RtfBookReader::startElementHandler(int tag) {
       state.isItalic = true;
 
       if (!state.isBold) {        
-        DPRINT("add style emphasis.\n");
+        //DPRINT("add style emphasis.\n");
         
         myBookReader.pushKind(EMPHASIS);
         myBookReader.addControl(EMPHASIS, true);
       } else {
-        DPRINT("add style emphasis and strong.\n");
+        //DPRINT("add style emphasis and strong.\n");
         
         myBookReader.popKind();
         myBookReader.addControl(STRONG, false);
@@ -169,7 +169,7 @@ void RtfBookReader::startElementHandler(int tag) {
       state.style = 0;
       break;
     case _IMAGE:
-      DPRINT("image start.\n");
+      //DPRINT("image start.\n");
     
       flushBuffer();
 
@@ -219,10 +219,10 @@ void RtfBookReader::startElementHandler(int tag) {
 void RtfBookReader::endElementHandler(int tag) {
   switch(tag) {
     case _BOLD:
-      DPRINT("bold end.\n");
+      //DPRINT("bold end.\n");
 
       if (state.readState != READ_TEXT) {
-        DPRINT("change style not in text.\n");
+        //DPRINT("change style not in text.\n");
         break;
       }
         
@@ -230,17 +230,17 @@ void RtfBookReader::endElementHandler(int tag) {
         
       state.isBold = false;
         
-      DPRINT("remove style strong.\n");
+      //DPRINT("remove style strong.\n");
         
       myBookReader.addControl(STRONG, false);
       myBookReader.popKind();
         
       break;        
     case _ITALIC:
-      DPRINT("italic end.\n");
+      //DPRINT("italic end.\n");
         
       if (state.readState != READ_TEXT) {
-        DPRINT("change style not in text.\n");
+        //DPRINT("change style not in text.\n");
         break;
       }
         
@@ -249,12 +249,12 @@ void RtfBookReader::endElementHandler(int tag) {
       state.isItalic = false;
 
       if (!state.isBold) {        
-        DPRINT("remove style emphasis.\n");
+        //DPRINT("remove style emphasis.\n");
         
         myBookReader.addControl(EMPHASIS, false);
         myBookReader.popKind();
       } else {
-        DPRINT("remove style strong n emphasis, add strong.\n");
+        //DPRINT("remove style strong n emphasis, add strong.\n");
         
         myBookReader.addControl(STRONG, false);
         myBookReader.popKind();
@@ -276,11 +276,11 @@ void RtfBookReader::endElementHandler(int tag) {
     case _STYLE_SET:
       break;
     case _IMAGE:
-      DPRINT("image end.\n");
+      //DPRINT("image end.\n");
       state.readState = READ_TEXT;
       break;
     case _FOOTNOTE:
-      DPRINT("footnote end.\n");
+      //DPRINT("footnote end.\n");
         
       flushBuffer();
       myBookReader.endParagraph();

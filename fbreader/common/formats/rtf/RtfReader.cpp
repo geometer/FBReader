@@ -359,28 +359,28 @@ void RtfReader::ecChangeDest(Destination destination) {
   state.rds = destination;
   switch (destination) {
     case DESTINATION_INFO:
-      DPRINT("title info\n");
+      //DPRINT("title info\n");
       startElementHandler(_TITLE_INFO);
       break;
     case DESTINATION_TITLE:
-      DPRINT("title\n");
+      //DPRINT("title\n");
       startElementHandler(_BOOK_TITLE);
       break;
     case DESTINATION_AUTHOR:
-      DPRINT("author\n");
+      //DPRINT("author\n");
       startElementHandler(_AUTHOR);
       break;
     case DESTINATION_PICTURE:
-      DPRINT("picture\n");
+      //DPRINT("picture\n");
       state.ReadDataAsHex = true;
       startElementHandler(_IMAGE);
       break;
     case DESTINATION_FOOTNOTE:
-      DPRINT("footnote\n");
+      //DPRINT("footnote\n");
       startElementHandler(_FOOTNOTE);
       break;
     case DESTINATION_STYLESHEET:
-      DPRINT("style sheet\n");
+      //DPRINT("style sheet\n");
       startElementHandler(_STYLE_SHEET);
       break;
     case DESTINATION_NONE:
@@ -399,27 +399,27 @@ void RtfReader::ecChangeDest(Destination destination) {
 void RtfReader::ecEndGroupAction(Destination destination) {
   switch (destination) {
     case DESTINATION_INFO:
-      DPRINT("info end\n");
+      //DPRINT("info end\n");
       endElementHandler(_TITLE_INFO);
       break;
     case DESTINATION_TITLE:
-      DPRINT("title end\n");
+      //DPRINT("title end\n");
       endElementHandler(_BOOK_TITLE);
       break;
     case DESTINATION_AUTHOR:
-      DPRINT("author end\n");
+      //DPRINT("author end\n");
       endElementHandler(_AUTHOR);
       break;
     case DESTINATION_PICTURE:
-      DPRINT("image end\n");
+      //DPRINT("image end\n");
       endElementHandler(_IMAGE);
       break;
     case DESTINATION_FOOTNOTE:
-      DPRINT("footnote end\n");
+      //DPRINT("footnote end\n");
       endElementHandler(_FOOTNOTE);
       break;
     case DESTINATION_STYLESHEET:
-      DPRINT("style sheet end\n");
+      //DPRINT("style sheet end\n");
       endElementHandler(_STYLE_INFO);
       break;
     case DESTINATION_SKIP:

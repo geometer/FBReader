@@ -28,10 +28,6 @@
 
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLEncodingConverter.h>
-#include <stdio.h>
-//#define DPRINT(x...) {FILE *flog; flog=fopen("/tmp/reader_log", "a+"); fprintf(flog, ## x); fclose(flog);}
-//#define DPRINT(x...) {fprintf(stderr, ## x);}
-#define DPRINT(x...)
 
 enum Destination {
 	DESTINATION_NONE = -1,
@@ -121,29 +117,12 @@ protected:
 		_STYLE_SHEET,
 		_STYLE_INFO,
 		_STYLE_SET,
-//		_SUBTITLE,
-//		_CITE,
-//		_TEXT_AUTHOR,
-//		_DATE,
-//		_SECTION,
-//		_V,
-//		_TITLE,
-//		_POEM,
-
-//		_EPIGRAPH,
-//		_ANNOTATION,
-//		_SUB,
-//		_SUP,
-//		_CODE,
-//		_STRIKETHROUGH,
-
 
 		_IMAGE,
 		_IMAGE_TYPE,
 		_BINARY,
 		
 		_BODY,
-//		_EMPTY_LINE,
 		_TITLE_INFO,
 		_AUTHOR,
 		_BOOK_TITLE,
