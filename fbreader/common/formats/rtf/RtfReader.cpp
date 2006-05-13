@@ -76,7 +76,7 @@ PROP rgprop [ipropMax] = {
   { actnByte,   propChp,  offsetof(CHP, fBold) },     // ipropBold
   { actnByte,   propChp,  offsetof(CHP, fItalic) },   // ipropItalic
   { actnByte,   propChp,  offsetof(CHP, fUnderline) },  // ipropUnderline
-  { actnWord,   propPap,  offsetof(PAP, just) },    // ipropJust
+  { actnWord,   propPap,  offsetof(PAP, alignment) },    // ipropJust
   { actnSpec,   propPap,  0 },              // ipropPard
   { actnSpec,   propChp,  0 },              // ipropPlain
 };
@@ -175,13 +175,13 @@ struct pkw {
   bool fPassDflt;
   int  idx;
 } propKeyWords[] = {
-  { "b",             1,    false,   ipropBold },
-  { "i",             1,    false,   ipropItalic },
-  { "u",             1,    false,   ipropUnderline },
-  { "qc",        justC,    true,    ipropJust },
-  { "ql",        justL,    true,    ipropJust },
-  { "qr",        justR,    true,    ipropJust },
-  { "qj",        justF,    true,    ipropJust },
+  { "b",               1,    false,   ipropBold },
+  { "i",               1,    false,   ipropItalic },
+  { "u",               1,    false,   ipropUnderline },
+  { "qc",   ALIGN_CENTER,    true,    ipropJust },
+  { "ql",     ALIGN_LEFT,    true,    ipropJust },
+  { "qr",    ALIGN_RIGHT,    true,    ipropJust },
+  { "qj",  ALIGN_JUSTIFY,    true,    ipropJust },
 };
 
 struct skw {

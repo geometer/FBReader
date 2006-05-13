@@ -29,6 +29,8 @@
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLEncodingConverter.h>
 
+#include "../../model/AlignmentType.h"
+
 enum Destination {
 	DESTINATION_NONE = -1,
 	DESTINATION_SKIP = 0,
@@ -47,10 +49,9 @@ typedef struct char_prop
     bool fItalic;
 } CHP;                  // CHaracter Properties
 
-typedef enum {justL, justR, justC, justF } JUST;
 typedef struct para_prop
 {
-    int just;                  // justification
+    AlignmentType alignment;
 } PAP;                  // PAragraph Properties
 
 typedef enum {pgDec, pgURom, pgLRom, pgULtr, pgLLtr} PGN;
