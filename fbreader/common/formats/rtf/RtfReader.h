@@ -145,7 +145,7 @@ public:
 	void ecChangeDest(Destination destiantion);
 	void ecStyleChange();
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
-  void ecApplyPropChange(int iprop, int val);
+  void ecApplyPropChange(FontProperty property, bool start);
 	// TODO: change to pure virtual
 	virtual void setAlignment(AlignmentType) {}
 	virtual void setFontProperty(FontProperty property, bool start) = 0;

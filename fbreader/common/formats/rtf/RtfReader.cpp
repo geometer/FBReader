@@ -56,29 +56,10 @@ typedef enum {ipropBold, ipropItalic, ipropUnderline,
         ipropMax } IPROP;
 typedef enum {ppropPng, ppropJpeg } PPROP;
 
-enum ACTN {actnSpec, actnByte};
-enum PROPTYPE {propChp, propPap};
-
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
     ipfnParagraphReset } IPFN;
 
-typedef struct propmod
-{
-  ACTN actn;        // size of value
-  PROPTYPE prop;      // structure containing value
-  int  offset;      // offset of value from base of structure
-} PROP;
-
 // RTF parser tables
-
-// Property descriptions
-PROP rgprop [ipropMax] = {
-  { actnByte,   propChp,  offsetof(CHP, fBold) },     // ipropBold
-  { actnByte,   propChp,  offsetof(CHP, fItalic) },   // ipropItalic
-  { actnByte,   propChp,  offsetof(CHP, fUnderline) },  // ipropUnderline
-  { actnSpec,   propPap,  0 },              // ipropPard
-  { actnSpec,   propChp,  0 },              // ipropPlain
-};
 
 struct RtfCommand {
 
@@ -94,12 +75,12 @@ class RtfFontPropertyCommand : public RtfCommand {
 public:
   RtfFontPropertyCommand(RtfReader::FontProperty property) : myProperty(property) {}
   RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
-    reader.setFontProperty(myProperty, (parameter == 0) || (*parameter == 1));
+    reader.ecApplyPropChange(myProperty, (parameter == 0) || (*parameter == 1));
     return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
-	RtfReader::FontProperty myProperty;
+  RtfReader::FontProperty myProperty;
 };
 
 class RtfAlignmentCommand : public RtfCommand {
@@ -246,47 +227,25 @@ void RtfReader::fillKeywordMap() {
   }
 }
 
-//
-// %%Function: ecApplyPropChange
-//
-// Set the property identified by _iprop_ to the value _val_.
-//
-//
-
-void RtfReader::ecApplyPropChange(int iprop, int val) {
-  char *pb = NULL;
-  bool oldItalic = state.chp.fItalic;
-  bool oldBold = state.chp.fBold;
-  
-//  DPRINT("Aply prop change: %i %i\n", iprop, val);
-
+void RtfReader::ecApplyPropChange(FontProperty property, bool start) {
   if (state.rds == DESTINATION_SKIP)         // If we're skipping text,
     return;          // don't do anything.
 
-  switch (rgprop[iprop].prop) {
-    case propPap:
-      pb = (char *) &state.pap;
+  switch (property) {
+    case FONT_BOLD:
+      if (state.chp.fBold != start) {
+        state.chp.fBold = start;
+        setFontProperty(FONT_BOLD, state.chp.fBold);
+      }
       break;
-    case propChp:
-      pb = (char *) &state.chp;
+    case FONT_ITALIC:
+      if (state.chp.fItalic != start) {
+        state.chp.fItalic = start;
+        setFontProperty(FONT_ITALIC, state.chp.fItalic);
+      }
       break;
-  }
-  
-  switch (rgprop[iprop].actn) {
-    case actnByte:
-      (*(bool *) (pb + rgprop[iprop].offset)) = (val != 0);
+    case FONT_UNDERLINED:
       break;
-    case actnSpec:
-      ecParseSpecialProperty(iprop);
-      return;
-  }
-  
-  if (state.chp.fItalic != oldItalic) {
-    setFontProperty(FONT_ITALIC, state.chp.fItalic);
-  }
-
-  if (state.chp.fBold != oldBold) {
-    setFontProperty(FONT_BOLD, state.chp.fBold);
   }
 }
 
