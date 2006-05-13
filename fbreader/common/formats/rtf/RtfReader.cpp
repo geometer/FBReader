@@ -56,7 +56,7 @@ typedef enum {ipropBold, ipropItalic, ipropUnderline,
         ipropMax } IPROP;
 typedef enum {ppropPng, ppropJpeg } PPROP;
 
-enum ACTN {actnSpec, actnByte, actnWord};
+enum ACTN {actnSpec, actnByte};
 enum PROPTYPE {propChp, propPap};
 
 typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
@@ -89,10 +89,10 @@ public:
   virtual RtfReader::ParserState run(RtfReader &reader, int *parameter) const = 0;
 };
 
-class RtfPropCommand : public RtfCommand {
+class RtfFontPropertyCommand : public RtfCommand {
 
 public:
-  RtfPropCommand(int index) : myIndex(index) {}
+  RtfFontPropertyCommand(int index) : myIndex(index) {}
   RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
     reader.ecApplyPropChange(myIndex, (parameter != 0) ? *parameter : 1);
     return RtfReader::READ_NORMAL_DATA;
@@ -241,7 +241,7 @@ void RtfReader::fillKeywordMap() {
 
     for (unsigned int i = 0; i < sizeof(propKeyWords) / sizeof(struct pkw); i++) {
       const struct pkw &s = propKeyWords[i];
-      ourKeywordMap[s.kw] = new RtfPropCommand(s.idx);
+      ourKeywordMap[s.kw] = new RtfFontPropertyCommand(s.idx);
     }
     for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
       ourKeywordMap[specKeyWords[i].kw] = new RtfSpecCommand(specKeyWords[i].ipfn);
@@ -285,9 +285,6 @@ void RtfReader::ecApplyPropChange(int iprop, int val) {
   switch (rgprop[iprop].actn) {
     case actnByte:
       (*(bool *) (pb + rgprop[iprop].offset)) = (val != 0);
-      break;
-    case actnWord:
-      (*(int *) (pb+rgprop[iprop].offset)) = val;
       break;
     case actnSpec:
       ecParseSpecialProperty(iprop);
