@@ -92,8 +92,6 @@ bool RtfDescriptionReader::characterDataHandler(std::string &str) {
 void RtfDescriptionReader::startElementHandler(int tag) {
 //    DPRINT("start handler: %i\n", tag);
   switch (tag) {
-    case _BODY:
-      break;
     case _TITLE_INFO:
       //DPRINT("start title info\n");
       flushBuffer();

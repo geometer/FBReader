@@ -32,26 +32,26 @@
 #include "../../model/AlignmentType.h"
 
 enum Destination {
-	DESTINATION_NONE,
-	DESTINATION_SKIP,
-	DESTINATION_INFO,
-	DESTINATION_TITLE,
-	DESTINATION_AUTHOR,
-	DESTINATION_PICTURE,
-	DESTINATION_STYLESHEET,
-	DESTINATION_FOOTNOTE,
+  DESTINATION_NONE,
+  DESTINATION_SKIP,
+  DESTINATION_INFO,
+  DESTINATION_TITLE,
+  DESTINATION_AUTHOR,
+  DESTINATION_PICTURE,
+  DESTINATION_STYLESHEET,
+  DESTINATION_FOOTNOTE,
 };
 
 // property save structure
 struct RtfReaderState
 {
     bool Bold;
-		bool Italic;
-		bool Underlined;
+    bool Italic;
+    bool Underlined;
     AlignmentType alignment;
     Destination rds;
 
-		bool ReadDataAsHex;
+    bool ReadDataAsHex;
 };
 
 
@@ -61,94 +61,91 @@ class RtfCommand;
 class RtfReader {
 
 private:
-	static void RtfReader::fillKeywordMap();
+  static void RtfReader::fillKeywordMap();
 
-	static std::map<std::string, RtfCommand*> ourKeywordMap;
-
-public:
-	bool readDocument(const std::string &fileName);
-
-protected:
-	RtfReader(const std::string &encoding);
-	virtual ~RtfReader();
-
-protected:
-	std::string encoding;
-	
-	virtual void startDocumentHandler() = 0;
-	virtual void endDocumentHandler() = 0;
-
-	virtual void startElementHandler(int tag) = 0;
-	virtual void endElementHandler(int tag) = 0;
-
-	virtual bool characterDataHandler(std::string &str) = 0;
-
-	virtual void addCharData(const char *data, size_t len, bool convert) = 0;
-
-	virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
-
-	void interrupt(void);
-	shared_ptr<ZLEncodingConverter> myConverter;
-
-	enum TagCode {
-		_FOOTNOTE,
-		
-		_STYLE_SHEET,
-		_STYLE_INFO,
-		_STYLE_SET,
-
-		_IMAGE,
-		_IMAGE_TYPE,
-		_BINARY,
-		
-		_BODY,
-		_TITLE_INFO,
-		_AUTHOR,
-		_BOOK_TITLE,
-		_ENCODING,
-		_UNKNOWN
-	};
+  static std::map<std::string, RtfCommand*> ourKeywordMap;
 
 public:
-	enum FontProperty {
-		FONT_BOLD,
-		FONT_ITALIC,
-		FONT_UNDERLINED
-	};
+  bool readDocument(const std::string &fileName);
+
+protected:
+  RtfReader(const std::string &encoding);
+  virtual ~RtfReader();
+
+protected:
+  std::string encoding;
+  
+  virtual void startDocumentHandler() = 0;
+  virtual void endDocumentHandler() = 0;
+
+  virtual void startElementHandler(int tag) = 0;
+  virtual void endElementHandler(int tag) = 0;
+
+  virtual bool characterDataHandler(std::string &str) = 0;
+
+  virtual void addCharData(const char *data, size_t len, bool convert) = 0;
+
+  virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
+
+  void interrupt(void);
+  shared_ptr<ZLEncodingConverter> myConverter;
+
+  enum TagCode {
+    _FOOTNOTE,
     
-	void ecParseCharData(const char *data, size_t len, bool convert = true);
-	void ecApplyPictPropChange(const std::string &mimeType);
-	void ecChangeDest(Destination destiantion);
-	void ecStyleChange();
-	void ecParseSpecialKeyword(int ipfn, int param);
+    _STYLE_SHEET,
+    _STYLE_INFO,
+    _STYLE_SET,
+
+    _IMAGE,
+    _IMAGE_TYPE,
+    
+    _TITLE_INFO,
+    _AUTHOR,
+    _BOOK_TITLE,
+    _ENCODING,
+  };
+
+public:
+  enum FontProperty {
+    FONT_BOLD,
+    FONT_ITALIC,
+    FONT_UNDERLINED
+  };
+    
+  void ecParseCharData(const char *data, size_t len, bool convert = true);
+  void ecApplyPictPropChange(const std::string &mimeType);
+  void ecChangeDest(Destination destiantion);
+  void ecStyleChange();
+  void ecParseSpecialKeyword(int ipfn, int param);
   void ecApplyPropChange(FontProperty property, bool start);
-	// TODO: change to pure virtual
-	virtual void setAlignment(AlignmentType) {}
-	virtual void setFontProperty(FontProperty property, bool start) = 0;
-	virtual void newParagraph() = 0;
+  // TODO: change to pure virtual
+  virtual void setAlignment(AlignmentType) {}
+  virtual void setFontProperty(FontProperty property, bool start) = 0;
+  virtual void newParagraph() = 0;
 
 private:
-	void ecEndGroupAction(Destination destiantion);
+  void ecEndGroupAction(Destination destiantion);
 
-	void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
+  void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 
-	int ecRtfParse();
+  int ecRtfParse();
 
-	bool fSkipDestIfUnk;
+  bool fSkipDestIfUnk;
 
-	RtfReaderState state;
+  RtfReaderState state;
 
 private:
-	std::string myFileName;
-	shared_ptr<ZLInputStream> myStream;
-	char *myStreamBuffer;
+  std::string myFileName;
+  shared_ptr<ZLInputStream> myStream;
+  char *myStreamBuffer;
 
-	std::stack<RtfReaderState> myStateStack;
+  std::stack<RtfReaderState> myStateStack;
 
-	int myBinaryDataSize;
-	std::string myNextImageMimeType;
+  int myBinaryDataSize;
+  std::string myNextImageMimeType;
 
-	int myIsInterrupted;	
+  int myIsInterrupted;  
 };
 
 #endif /* __RTFREADER_H__ */
