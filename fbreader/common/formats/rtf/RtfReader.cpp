@@ -47,7 +47,7 @@ RtfReader::RtfReader(const std::string &encoding) {
 RtfReader::~RtfReader() {
 }
 
-typedef enum {ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest } IPFN;
+typedef enum {ipfnCodePage, ipfnSkipDest } IPFN;
 
 struct RtfCommand {
 
@@ -173,10 +173,8 @@ struct skw {
   const char *kw;
   IPFN ipfn;
 } specKeyWords[] = {
-  { "'",        ipfnHex },
   { "*",        ipfnSkipDest },
   { "ansicpg",  ipfnCodePage },
-  { "bin",      ipfnBin },
 };
 
 void RtfReader::fillKeywordMap() {
@@ -185,9 +183,9 @@ void RtfReader::fillKeywordMap() {
       ourKeywordMap[specKeyWords[i].kw] = new RtfSpecCommand(specKeyWords[i].ipfn);
     }
 
-		static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
-		RtfCommand *skipCommand = new RtfDestinationCommand(DESTINATION_NONE);
-		for (const char **i = keywordsToSkip; *i != 0; i++) {
+    static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
+    RtfCommand *skipCommand = new RtfDestinationCommand(DESTINATION_NONE);
+    for (const char **i = keywordsToSkip; *i != 0; i++) {
       ourKeywordMap[*i] = skipCommand;
     }
     ourKeywordMap["info"] = new RtfDestinationCommand(DESTINATION_INFO);
@@ -197,25 +195,25 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["stylesheet"] = new RtfDestinationCommand(DESTINATION_STYLESHEET);
     ourKeywordMap["footnote"] = new RtfDestinationCommand(DESTINATION_FOOTNOTE);
 
-		RtfCommand *newParagraphCommand = new RtfNewParagraphCommand();
+    RtfCommand *newParagraphCommand = new RtfNewParagraphCommand();
     ourKeywordMap["\n"] = newParagraphCommand;
     ourKeywordMap["\r"] = newParagraphCommand;
     ourKeywordMap["par"] = newParagraphCommand;
 
-		ourKeywordMap["\x09"] = new RtfCharCommand("\x09");
-		ourKeywordMap["\\"] = new RtfCharCommand("\\");
-		ourKeywordMap["{"] = new RtfCharCommand("{");
-		ourKeywordMap["}"] = new RtfCharCommand("}");
-		ourKeywordMap["bullet"] = new RtfCharCommand("\xE2\x80\xA2");     // &bullet;
-		ourKeywordMap["endash"] = new RtfCharCommand("\xE2\x80\x93");     // &ndash;
-		ourKeywordMap["emdash"] = new RtfCharCommand("\xE2\x80\x94");     // &mdash;
-		ourKeywordMap["~"] = new RtfCharCommand("\xC0\xA0");              // &nbsp;
-		ourKeywordMap["enspace"] = new RtfCharCommand("\xE2\x80\x82");    // &emsp;
-		ourKeywordMap["emspace"] = new RtfCharCommand("\xE2\x80\x83");    // &ensp;
-		ourKeywordMap["lquote"] = new RtfCharCommand("\xE2\x80\x98");     // &lsquo;
-		ourKeywordMap["rquote"] = new RtfCharCommand("\xE2\x80\x99");     // &rsquo;
-		ourKeywordMap["ldblquote"] = new RtfCharCommand("\xE2\x80\x9C");  // &ldquo;
-		ourKeywordMap["rdblquote"] = new RtfCharCommand("\xE2\x80\x9D");  // &rdquo;
+    ourKeywordMap["\x09"] = new RtfCharCommand("\x09");
+    ourKeywordMap["\\"] = new RtfCharCommand("\\");
+    ourKeywordMap["{"] = new RtfCharCommand("{");
+    ourKeywordMap["}"] = new RtfCharCommand("}");
+    ourKeywordMap["bullet"] = new RtfCharCommand("\xE2\x80\xA2");     // &bullet;
+    ourKeywordMap["endash"] = new RtfCharCommand("\xE2\x80\x93");     // &ndash;
+    ourKeywordMap["emdash"] = new RtfCharCommand("\xE2\x80\x94");     // &mdash;
+    ourKeywordMap["~"] = new RtfCharCommand("\xC0\xA0");              // &nbsp;
+    ourKeywordMap["enspace"] = new RtfCharCommand("\xE2\x80\x82");    // &emsp;
+    ourKeywordMap["emspace"] = new RtfCharCommand("\xE2\x80\x83");    // &ensp;
+    ourKeywordMap["lquote"] = new RtfCharCommand("\xE2\x80\x98");     // &lsquo;
+    ourKeywordMap["rquote"] = new RtfCharCommand("\xE2\x80\x99");     // &rsquo;
+    ourKeywordMap["ldblquote"] = new RtfCharCommand("\xE2\x80\x9C");  // &ldquo;
+    ourKeywordMap["rdblquote"] = new RtfCharCommand("\xE2\x80\x9D");  // &rdquo;
 
     ourKeywordMap["jpegblip"] = new RtfPictureCommand("image/jpeg");
     ourKeywordMap["pngblip"] = new RtfPictureCommand("image/png");
@@ -367,18 +365,9 @@ static const char *encoding1251 = "windows-1251";
 
 RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
   ParserState parserState = READ_NORMAL_DATA;
-  if (state.rds == DESTINATION_SKIP && ipfn != ipfnBin)  // if we're skipping, and it's not
+  if (state.rds == DESTINATION_SKIP)  // if we're skipping, and it's not
     return parserState;            // the \bin keyword, ignore it.
   switch (ipfn) {
-    case ipfnBin:
-      if (param > 0) {
-        parserState = READ_BINARY_DATA;
-        myBinaryDataSize = param;
-      }
-      break;
-    case ipfnHex:
-      parserState = READ_HEX_SYMBOL;
-      break;
     case ipfnCodePage:
       startElementHandler(_ENCODING);
       if ((param == 1251) && (encoding != encoding1251)) {
@@ -503,14 +492,18 @@ int RtfReader::ecRtfParse() {
             hexString.erase();
             ecParseCharData(&ch, 1);
             parserState = READ_NORMAL_DATA;
-						dataStart = ptr + 1;
+            dataStart = ptr + 1;
           }
           break;
         case READ_KEYWORD:
           if (!isalpha(*ptr)) {
-            if (ptr == dataStart) {
-              keyword = *ptr;
-              parserState = ecTranslateKeyword(keyword, 0, false);
+            if ((ptr == dataStart) && (keyword.empty())) {
+              if (*ptr == '\'') {
+								parserState = READ_HEX_SYMBOL;
+              } else {
+                keyword = *ptr;
+                parserState = ecTranslateKeyword(keyword, 0, false);
+              }
               dataStart = ptr + 1;
             } else {
               keyword.append(dataStart, ptr - dataStart);
@@ -531,7 +524,12 @@ int RtfReader::ecRtfParse() {
             int param = atoi(parameterString.c_str());
             parameterString.erase();
             readNextChar = *ptr == ' ';
-            parserState = ecTranslateKeyword(keyword, param, true);
+						if ((keyword == "bin") && (param > 0)) {
+              myBinaryDataSize = param;
+              parserState = READ_BINARY_DATA;
+						} else {
+              parserState = ecTranslateKeyword(keyword, param, true);
+						}
             dataStart = readNextChar ? ptr + 1 : ptr;
           }
           break;
@@ -606,10 +604,10 @@ bool RtfReader::readDocument(const std::string &fileName) {
 
   fSkipDestIfUnk = false;
 
-	state.alignment = ALIGN_UNDEFINED;
-	state.Italic = false;
-	state.Bold = false;
-	state.Underlined = false;
+  state.alignment = ALIGN_UNDEFINED;
+  state.Italic = false;
+  state.Bold = false;
+  state.Underlined = false;
   state.rds = DESTINATION_NONE;
   state.ReadDataAsHex = false;
 
