@@ -215,32 +215,27 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
     //DPRINT("change style not in text.\n");
     return;
   }
-  if (start) {
-    switch (property) {
-      case FONT_BOLD:
-        flushBuffer();
+  flushBuffer();
           
-        state.isBold = true;
-          
-        //DPRINT("add style strong.\n");
-          
+	switch (property) {
+		case FONT_BOLD:
+			state.isBold = start;
+			if (start) {
         myBookReader.pushKind(STRONG);
-        myBookReader.addControl(STRONG, true);
-      
-        break;        
-      case FONT_ITALIC:
-        flushBuffer();
-          
-        state.isItalic = true;
-    
+			} else {
+        myBookReader.popKind();
+			}
+      myBookReader.addControl(STRONG, start);
+		  break;
+		case FONT_ITALIC:
+			state.isItalic = start;
+			if (start) {
         if (!state.isBold) {        
           //DPRINT("add style emphasis.\n");
-          
           myBookReader.pushKind(EMPHASIS);
           myBookReader.addControl(EMPHASIS, true);
         } else {
           //DPRINT("add style emphasis and strong.\n");
-          
           myBookReader.popKind();
           myBookReader.addControl(STRONG, false);
           
@@ -249,40 +244,13 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
           myBookReader.pushKind(STRONG);
           myBookReader.addControl(STRONG, true);
         }
-        break;
-      case FONT_UNDERLINED:
-        break;
-    }
-  } else {
-    switch (property) {
-      case FONT_BOLD:
-        //DPRINT("bold end.\n");
-          
-        flushBuffer();
-          
-        state.isBold = false;
-          
-        //DPRINT("remove style strong.\n");
-          
-        myBookReader.addControl(STRONG, false);
-        myBookReader.popKind();
-          
-        break;        
-      case FONT_ITALIC:
-        //DPRINT("italic end.\n");
-          
-        flushBuffer();
-          
-        state.isItalic = false;
-    
+			} else {
         if (!state.isBold) {        
           //DPRINT("remove style emphasis.\n");
-          
           myBookReader.addControl(EMPHASIS, false);
           myBookReader.popKind();
         } else {
           //DPRINT("remove style strong n emphasis, add strong.\n");
-          
           myBookReader.addControl(STRONG, false);
           myBookReader.popKind();
           myBookReader.addControl(EMPHASIS, false);
@@ -291,10 +259,9 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
           myBookReader.pushKind(STRONG);
           myBookReader.addControl(STRONG, true);
         }
-          
-        break;
-      case FONT_UNDERLINED:
-        break;
-    }
-  }
+			}
+		  break;
+		case FONT_UNDERLINED:
+			break;
+	}
 }

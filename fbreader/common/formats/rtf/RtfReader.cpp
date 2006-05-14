@@ -226,7 +226,7 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["b"] = new RtfFontPropertyCommand(FONT_BOLD);
     ourKeywordMap["i"] = new RtfFontPropertyCommand(FONT_ITALIC);
     ourKeywordMap["u"] = new RtfFontPropertyCommand(FONT_UNDERLINED);
-    ourKeywordMap["pard"] = new RtfFontResetCommand();
+    ourKeywordMap["plain"] = new RtfFontResetCommand();
   }
 }
 
