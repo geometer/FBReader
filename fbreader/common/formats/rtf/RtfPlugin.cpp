@@ -65,7 +65,7 @@ bool RtfPlugin::readModel(const BookDescription &description, BookModel &model) 
 }
 
 const std::string &RtfPlugin::iconName() const {
-  static const std::string ICON_NAME = "rtf";
+  static const std::string ICON_NAME = "unknown";
   return ICON_NAME;
 }
 
