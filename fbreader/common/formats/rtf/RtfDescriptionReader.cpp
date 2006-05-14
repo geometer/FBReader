@@ -23,62 +23,57 @@
 
 #include "RtfDescriptionReader.h"
 
-RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) 
-    : RtfReader(description.encoding()), myDescription(description) {
+RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfReader(description.encoding()), myDescription(description) {
 //    DPRINT("Constructor\n");
-
-    state = READ_NONE;
-    hasTitle = false;
-    hasAuthor = false;
-    hasEncoding = false;
+  state = READ_NONE;
+  hasTitle = false;
+  hasAuthor = false;
+  hasEncoding = false;
 }
 
-void RtfDescriptionReader::startDocumentHandler()
-{
-    state = READ_NONE;
-    hasTitle = false;
-    hasAuthor = false;
-    hasEncoding = false;
+void RtfDescriptionReader::startDocumentHandler() {
+  state = READ_NONE;
+  hasTitle = false;
+  hasAuthor = false;
+  hasEncoding = false;
 
-    title.erase();
-    author.erase();
-    encoding.erase();
+  title.erase();
+  author.erase();
+  encoding.erase();
 }
 
 void RtfDescriptionReader::endDocumentHandler()
 {
-    //DPRINT("End doc handler, title: %s, author: %s, encoding: %s\n", 
-	//myDescription.title().data(), author.data(), encoding.data());
+  //DPRINT("End doc handler, title: %s, author: %s, encoding: %s\n", 
+  //myDescription.title().data(), author.data(), encoding.data());
 
-    //DPRINT("End doc handler, old encoding: %s\n", 
-	//myDescription.encoding().data());
+  //DPRINT("End doc handler, old encoding: %s\n", 
+  //myDescription.encoding().data());
 
-    if (!title.empty())
-    {
-	myDescription.title() = title;
-    }
+  if (!title.empty()) {
+    myDescription.title() = title;
+  }
     
-    myDescription.addAuthor(author, std::string(), std::string());
+  myDescription.addAuthor(author, std::string(), std::string());
     
-    if (!encoding.empty())
-    {
-	myDescription.encoding() = encoding;
-    }
+  if (!encoding.empty()) {
+    myDescription.encoding() = encoding;
+  }
 }
 
 void RtfDescriptionReader::addCharData(const char *data, size_t len, bool convert) {
-	// TODO: use parameter 'convert'
+  // TODO: use parameter 'convert'
   if ((state == READ_TITLE) || (state == READ_AUTHOR)) {
     outputBuffer.append(data, len);
-	}
+  }
 }
 
 void RtfDescriptionReader::flushBuffer() {
   if (!outputBuffer.empty()) {
     std::string newString;
-	  myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.size());
-	  characterDataHandler(newString);
-	  outputBuffer.erase();
+    myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.size());
+    characterDataHandler(newString);
+    outputBuffer.erase();
   }
 }
 
@@ -87,7 +82,7 @@ bool RtfDescriptionReader::characterDataHandler(std::string &str) {
     case READ_TITLE:
       title.append(str);
       return true;
-	  case READ_AUTHOR:
+    case READ_AUTHOR:
       author.append(str);
       return true;
   }
@@ -96,61 +91,57 @@ bool RtfDescriptionReader::characterDataHandler(std::string &str) {
 
 void RtfDescriptionReader::startElementHandler(int tag) {
 //    DPRINT("start handler: %i\n", tag);
-	switch (tag) {
-		case _BODY:
-			break;
-		case _TITLE_INFO:
-			//DPRINT("start title info\n");
-			flushBuffer();
-			break;
-		case _BOOK_TITLE:
-			//DPRINT("start book title\n");
-			flushBuffer();
-			state = READ_TITLE;
-			break;
-		case _AUTHOR:
-			//DPRINT("start author\n");
-			flushBuffer();
-			state = READ_AUTHOR;
-			break;
-		case _ENCODING:
-			hasEncoding = true;
-			break;
-		default:
-			state = READ_NONE;
-			break;
-	}
+  switch (tag) {
+    case _BODY:
+      break;
+    case _TITLE_INFO:
+      //DPRINT("start title info\n");
+      flushBuffer();
+      break;
+    case _BOOK_TITLE:
+      //DPRINT("start book title\n");
+      flushBuffer();
+      state = READ_TITLE;
+      break;
+    case _AUTHOR:
+      //DPRINT("start author\n");
+      flushBuffer();
+      state = READ_AUTHOR;
+      break;
+    case _ENCODING:
+      hasEncoding = true;
+      break;
+    default:
+      state = READ_NONE;
+      break;
+  }
 }
 
 void RtfDescriptionReader::endElementHandler(int tag) {
 //    DPRINT("end handler: %i\n", tag);
-	switch (tag) {
-		case _TITLE_INFO:
-
-			//DPRINT("interrupt\n");
-			flushBuffer();
-			interrupt();
-			break;
-		case _BOOK_TITLE:
-
-			flushBuffer();
-			hasTitle = true;
-			break;
-		case _AUTHOR:
-
-			flushBuffer();
-			hasAuthor = true;
-			break;
-		default:
-			break;
-	}
-	
-	if (hasTitle && hasAuthor && hasEncoding)
-	{
-	    //DPRINT("interrupt\n");
-	    flushBuffer();
-	    interrupt();
-	}
+  switch (tag) {
+    case _TITLE_INFO:
+      //DPRINT("interrupt\n");
+      flushBuffer();
+      interrupt();
+      break;
+    case _BOOK_TITLE:
+      flushBuffer();
+      hasTitle = true;
+      break;
+    case _AUTHOR:
+      flushBuffer();
+      hasAuthor = true;
+      break;
+    default:
+      break;
+  }
+  
+  if (hasTitle && hasAuthor && hasEncoding) {
+    //DPRINT("interrupt\n");
+    flushBuffer();
+    interrupt();
+  }
 }
 
 void RtfDescriptionReader::insertImage(const std::string&, const std::string&, size_t, size_t) {
