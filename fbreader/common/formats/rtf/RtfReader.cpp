@@ -376,7 +376,7 @@ void RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
   }
 }
 
-int RtfReader::ecRtfParse() {
+int RtfReader::parseDocument() {
   enum {
     READ_NORMAL_DATA,
     READ_BINARY_DATA,
@@ -610,7 +610,7 @@ bool RtfReader::readDocument(const std::string &fileName) {
   state.rds = DESTINATION_NONE;
   state.ReadDataAsHex = false;
 
-  int ret = ecRtfParse();
+  int ret = parseDocument();
   bool code = ret == ecOK;
   if (!code) {
     std::cerr << "parse failed: " << ret << "\n";

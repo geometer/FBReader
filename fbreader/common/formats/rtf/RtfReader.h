@@ -129,7 +129,7 @@ private:
 
   void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 
-  int ecRtfParse();
+  int parseDocument();
 
   bool fSkipDestIfUnk;
 
