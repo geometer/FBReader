@@ -52,8 +52,6 @@ struct RtfReaderState
     Destination rds;
 
 		bool ReadDataAsHex;
-    
-    int style;
 };
 
 
@@ -134,7 +132,6 @@ public:
 	void ecStyleChange();
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
   void ecApplyPropChange(FontProperty property, bool start);
-	void resetParagraph();
 	// TODO: change to pure virtual
 	virtual void setAlignment(AlignmentType) {}
 	virtual void setFontProperty(FontProperty property, bool start) = 0;

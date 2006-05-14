@@ -151,12 +151,13 @@ private:
   const std::string myMimeType;
 };
 
-class RtfResetCommand : public RtfCommand {
+class RtfFontResetCommand : public RtfCommand {
 
 public:
-  RtfResetCommand() {}
   RtfReader::ParserState run(RtfReader &reader, int*) const {
-    reader.resetParagraph();
+    reader.ecApplyPropChange(RtfReader::FONT_BOLD, false);
+    reader.ecApplyPropChange(RtfReader::FONT_ITALIC, false);
+    reader.ecApplyPropChange(RtfReader::FONT_UNDERLINED, false);
     return RtfReader::READ_NORMAL_DATA;
   }
 };
@@ -221,10 +222,11 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["ql"] = new RtfAlignmentCommand(ALIGN_LEFT);
     ourKeywordMap["qr"] = new RtfAlignmentCommand(ALIGN_RIGHT);
     ourKeywordMap["qj"] = new RtfAlignmentCommand(ALIGN_JUSTIFY);
+    ourKeywordMap["pard"] = new RtfAlignmentCommand(ALIGN_UNDEFINED);
     ourKeywordMap["b"] = new RtfFontPropertyCommand(FONT_BOLD);
     ourKeywordMap["i"] = new RtfFontPropertyCommand(FONT_ITALIC);
     ourKeywordMap["u"] = new RtfFontPropertyCommand(FONT_UNDERLINED);
-    ourKeywordMap["pard"] = new RtfResetCommand();
+    ourKeywordMap["pard"] = new RtfFontResetCommand();
   }
 }
 
@@ -246,6 +248,10 @@ void RtfReader::ecApplyPropChange(FontProperty property, bool start) {
       }
       break;
     case FONT_UNDERLINED:
+      if (state.Underlined != start) {
+        state.Underlined = start;
+        setFontProperty(FONT_UNDERLINED, state.Underlined);
+      }
       break;
   }
 }
@@ -262,19 +268,6 @@ void RtfReader::ecStyleChange() {
 
     //sprintf(style_attributes[0], "%i", val);
     startElementHandler(_STYLE_SET);
-  }
-}
-
-void RtfReader::resetParagraph() {
-	state.alignment = ALIGN_UNDEFINED;
-	setAlignment(state.alignment);
-  if (state.Italic) {
-    setFontProperty(FONT_ITALIC, false);
-		state.Italic = false;
-  }
-  if (state.Bold) {
-    setFontProperty(FONT_BOLD, false);
-		state.Bold = false;
   }
 }
 
@@ -461,15 +454,18 @@ int RtfReader::ecRtfParse() {
               
               bool oldItalic = state.Italic;
               bool oldBold = state.Bold;
+              bool oldUnderlined = state.Underlined;
               state = myStateStack.top();
               myStateStack.pop();
           
               if (state.Italic != oldItalic) {
                 setFontProperty(FONT_ITALIC, state.Italic);
               }
-          
               if (state.Bold != oldBold) {
                 setFontProperty(FONT_BOLD, state.Bold);
+              }
+              if (state.Underlined != oldUnderlined) {
+                setFontProperty(FONT_UNDERLINED, state.Underlined);
               }
               
               break;
