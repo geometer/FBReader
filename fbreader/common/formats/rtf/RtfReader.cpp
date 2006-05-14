@@ -22,11 +22,8 @@
 #include <iostream>
 #include <cctype>
 
-#include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
-#include <abstract/ZLXMLReader.h>
 
-#include "../../Files.h"
 #include "RtfReader.h"
 
 std::map<std::string, RtfCommand*> RtfReader::ourKeywordMap;
@@ -175,41 +172,24 @@ struct skw {
   { "par",      ipfnParagraph },
 };
 
-static const std::string destinationTag = "destination";
-  
-class RtfKeywordsReader : public ZLXMLReader {
-
-public:
-  RtfKeywordsReader(std::map<std::string, RtfCommand*> &keywordMap) : myKeywordMap(keywordMap) {
-  }
-
-  void startElementHandler(const char *tag, const char **attributes) {
-    const char *keyword = attributeValue(attributes, "keyword");
-    const char *value = attributeValue(attributes, "value");
-    if (keyword != 0) {
-      if (destinationTag == tag) {
-        if (value != 0) {
-          myKeywordMap[keyword] = new RtfDestinationCommand((Destination)atoi(value));
-        }
-      }
-    }
-  }
-
-private:
-  std::map<std::string, RtfCommand*> &myKeywordMap;
-};
-
 void RtfReader::fillKeywordMap() {
   if (ourKeywordMap.empty()) {
-    RtfKeywordsReader(ourKeywordMap).readDocument(
-      ZLFile(
-        Files::PathPrefix + "formats" + Files::PathDelimiter + "rtf" + Files::PathDelimiter + "keywords.xml"
-      ).inputStream()
-    );
-
     for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
       ourKeywordMap[specKeyWords[i].kw] = new RtfSpecCommand(specKeyWords[i].ipfn);
     }
+
+		static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
+		RtfCommand *skipCommand = new RtfDestinationCommand(DESTINATION_NONE);
+		for (const char **i = keywordsToSkip; *i != 0; i++) {
+      ourKeywordMap[*i] = skipCommand;
+    }
+    ourKeywordMap["info"] = new RtfDestinationCommand(DESTINATION_INFO);
+    ourKeywordMap["title"] = new RtfDestinationCommand(DESTINATION_TITLE);
+    ourKeywordMap["author"] = new RtfDestinationCommand(DESTINATION_AUTHOR);
+    ourKeywordMap["pict"] = new RtfDestinationCommand(DESTINATION_PICTURE);
+    ourKeywordMap["stylesheet"] = new RtfDestinationCommand(DESTINATION_STYLESHEET);
+    ourKeywordMap["footnote"] = new RtfDestinationCommand(DESTINATION_FOOTNOTE);
+
 		ourKeywordMap["\x09"] = new RtfCharCommand("\x09");
 		ourKeywordMap["\\"] = new RtfCharCommand("\\");
 		ourKeywordMap["{"] = new RtfCharCommand("{");
@@ -227,12 +207,15 @@ void RtfReader::fillKeywordMap() {
 
     ourKeywordMap["jpegblip"] = new RtfPictureCommand("image/jpeg");
     ourKeywordMap["pngblip"] = new RtfPictureCommand("image/png");
+
     ourKeywordMap["s"] = new RtfStyleCommand();
+
     ourKeywordMap["qc"] = new RtfAlignmentCommand(ALIGN_CENTER);
     ourKeywordMap["ql"] = new RtfAlignmentCommand(ALIGN_LEFT);
     ourKeywordMap["qr"] = new RtfAlignmentCommand(ALIGN_RIGHT);
     ourKeywordMap["qj"] = new RtfAlignmentCommand(ALIGN_JUSTIFY);
     ourKeywordMap["pard"] = new RtfAlignmentCommand(ALIGN_UNDEFINED);
+
     ourKeywordMap["b"] = new RtfFontPropertyCommand(FONT_BOLD);
     ourKeywordMap["i"] = new RtfFontPropertyCommand(FONT_ITALIC);
     ourKeywordMap["u"] = new RtfFontPropertyCommand(FONT_UNDERLINED);
