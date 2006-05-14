@@ -50,6 +50,7 @@ public:
 	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
 
 	void setFontProperty(FontProperty property, bool start);
+	void newParagraph();
 
 protected:
 	struct StyleInfo {

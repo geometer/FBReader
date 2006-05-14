@@ -47,7 +47,7 @@ RtfReader::RtfReader(const std::string &encoding) {
 RtfReader::~RtfReader() {
 }
 
-typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest } IPFN;
+typedef enum {ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest } IPFN;
 
 struct RtfCommand {
 
@@ -56,6 +56,16 @@ protected:
 
 public:
   virtual RtfReader::ParserState run(RtfReader &reader, int *parameter) const = 0;
+};
+
+class RtfNewParagraphCommand : public RtfCommand {
+
+public:
+  RtfNewParagraphCommand() {}
+  RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
+    reader.newParagraph();
+    return RtfReader::READ_NORMAL_DATA;
+  }
 };
 
 class RtfFontPropertyCommand : public RtfCommand {
@@ -163,13 +173,10 @@ struct skw {
   const char *kw;
   IPFN ipfn;
 } specKeyWords[] = {
-  { "\x0a",     ipfnParagraph },
-  { "\x0d",     ipfnParagraph },
   { "'",        ipfnHex },
   { "*",        ipfnSkipDest },
   { "ansicpg",  ipfnCodePage },
   { "bin",      ipfnBin },
-  { "par",      ipfnParagraph },
 };
 
 void RtfReader::fillKeywordMap() {
@@ -189,6 +196,11 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["pict"] = new RtfDestinationCommand(DESTINATION_PICTURE);
     ourKeywordMap["stylesheet"] = new RtfDestinationCommand(DESTINATION_STYLESHEET);
     ourKeywordMap["footnote"] = new RtfDestinationCommand(DESTINATION_FOOTNOTE);
+
+		RtfCommand *newParagraphCommand = new RtfNewParagraphCommand();
+    ourKeywordMap["\n"] = newParagraphCommand;
+    ourKeywordMap["\r"] = newParagraphCommand;
+    ourKeywordMap["par"] = newParagraphCommand;
 
 		ourKeywordMap["\x09"] = new RtfCharCommand("\x09");
 		ourKeywordMap["\\"] = new RtfCharCommand("\\");
@@ -358,9 +370,6 @@ RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
   if (state.rds == DESTINATION_SKIP && ipfn != ipfnBin)  // if we're skipping, and it's not
     return parserState;            // the \bin keyword, ignore it.
   switch (ipfn) {
-    case ipfnParagraph:
-      startElementHandler(_P);
-      break;
     case ipfnBin:
       if (param > 0) {
         parserState = READ_BINARY_DATA;
@@ -494,6 +503,7 @@ int RtfReader::ecRtfParse() {
             hexString.erase();
             ecParseCharData(&ch, 1);
             parserState = READ_NORMAL_DATA;
+						dataStart = ptr + 1;
           }
           break;
         case READ_KEYWORD:

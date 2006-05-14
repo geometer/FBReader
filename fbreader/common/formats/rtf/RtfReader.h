@@ -91,8 +91,6 @@ protected:
 	shared_ptr<ZLEncodingConverter> myConverter;
 
 	enum TagCode {
-		_P,
-		
 		_FOOTNOTE,
 		
 		_STYLE_SHEET,
@@ -135,6 +133,7 @@ public:
 	// TODO: change to pure virtual
 	virtual void setAlignment(AlignmentType) {}
 	virtual void setFontProperty(FontProperty property, bool start) = 0;
+	virtual void newParagraph() = 0;
 
 private:
 	void ecEndGroupAction(Destination destiantion);

@@ -149,3 +149,6 @@ void RtfDescriptionReader::insertImage(const std::string&, const std::string&, s
 
 void RtfDescriptionReader::setFontProperty(FontProperty, bool) {
 }
+
+void RtfDescriptionReader::newParagraph() {
+}

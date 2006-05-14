@@ -109,11 +109,6 @@ void RtfBookReader::endDocumentHandler() {
 
 void RtfBookReader::startElementHandler(int tag) {
   switch(tag) {
-    case _P:
-      flushBuffer();
-      myBookReader.endParagraph();
-      myBookReader.beginParagraph();
-      break;
     case _BOOK_TITLE:
     case _STYLE_SHEET:
     case _STYLE_INFO:
@@ -264,4 +259,10 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
 		case FONT_UNDERLINED:
 			break;
 	}
+}
+
+void RtfBookReader::newParagraph() {
+  flushBuffer();
+  myBookReader.endParagraph();
+  myBookReader.beginParagraph();
 }
