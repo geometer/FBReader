@@ -42,24 +42,13 @@ enum Destination {
 	DESTINATION_FOOTNOTE = 6,
 };
 
-typedef struct char_prop
-{
-    bool fBold;
-    bool fUnderline;
-    bool fItalic;
-} CHP;                  // CHaracter Properties
-
-typedef struct para_prop
-{
-    AlignmentType alignment;
-} PAP;                  // PAragraph Properties
-
 // property save structure
 struct RtfReaderState
 {
-//    struct save *pNext;         // next save
-    CHP chp;
-    PAP pap;
+    bool Bold;
+		bool Italic;
+		bool Underlined;
+    AlignmentType alignment;
     Destination rds;
 
 		bool ReadDataAsHex;
@@ -105,7 +94,6 @@ protected:
 
 	enum TagCode {
 		_P,
-		_P_RESET,
 		
 		_FOOTNOTE,
 		
@@ -146,12 +134,12 @@ public:
 	void ecStyleChange();
 	ParserState ecParseSpecialKeyword(int ipfn, int param);
   void ecApplyPropChange(FontProperty property, bool start);
+	void resetParagraph();
 	// TODO: change to pure virtual
 	virtual void setAlignment(AlignmentType) {}
 	virtual void setFontProperty(FontProperty property, bool start) = 0;
 
 private:
-	void ecParseSpecialProperty(int iprop);
 	void ecEndGroupAction(Destination destiantion);
 
 	ParserState ecTranslateKeyword(const std::string &keyword, int param, bool fParam);

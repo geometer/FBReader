@@ -50,13 +50,7 @@ RtfReader::RtfReader(const std::string &encoding) {
 RtfReader::~RtfReader() {
 }
 
-// What types of properties are there?
-typedef enum { ipropPard, ipropPlain, ipropMax } IPROP;
-
-typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest,
-    ipfnParagraphReset } IPFN;
-
-// RTF parser tables
+typedef enum {ipfnParagraph, ipfnHex, ipfnBin, ipfnCodePage, ipfnSkipDest } IPFN;
 
 struct RtfCommand {
 
@@ -157,6 +151,16 @@ private:
   const std::string myMimeType;
 };
 
+class RtfResetCommand : public RtfCommand {
+
+public:
+  RtfResetCommand() {}
+  RtfReader::ParserState run(RtfReader &reader, int*) const {
+    reader.resetParagraph();
+    return RtfReader::READ_NORMAL_DATA;
+  }
+};
+
 struct skw {
   const char *kw;
   IPFN ipfn;
@@ -168,7 +172,6 @@ struct skw {
   { "ansicpg",  ipfnCodePage },
   { "bin",      ipfnBin },
   { "par",      ipfnParagraph },
-//  {   "pard",   ipfnParagraphReset },
 };
 
 static const std::string charTag = "char";
@@ -221,6 +224,7 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["b"] = new RtfFontPropertyCommand(FONT_BOLD);
     ourKeywordMap["i"] = new RtfFontPropertyCommand(FONT_ITALIC);
     ourKeywordMap["u"] = new RtfFontPropertyCommand(FONT_UNDERLINED);
+    ourKeywordMap["pard"] = new RtfResetCommand();
   }
 }
 
@@ -230,15 +234,15 @@ void RtfReader::ecApplyPropChange(FontProperty property, bool start) {
 
   switch (property) {
     case FONT_BOLD:
-      if (state.chp.fBold != start) {
-        state.chp.fBold = start;
-        setFontProperty(FONT_BOLD, state.chp.fBold);
+      if (state.Bold != start) {
+        state.Bold = start;
+        setFontProperty(FONT_BOLD, state.Bold);
       }
       break;
     case FONT_ITALIC:
-      if (state.chp.fItalic != start) {
-        state.chp.fItalic = start;
-        setFontProperty(FONT_ITALIC, state.chp.fItalic);
+      if (state.Italic != start) {
+        state.Italic = start;
+        setFontProperty(FONT_ITALIC, state.Italic);
       }
       break;
     case FONT_UNDERLINED:
@@ -261,31 +265,16 @@ void RtfReader::ecStyleChange() {
   }
 }
 
-//
-// %%Function: ecParseSpecialProperty
-//
-// Set a property that requires code to evaluate.
-//
-
-void RtfReader::ecParseSpecialProperty(int iprop) {
-  switch (iprop) {
-    case ipropPard:
-      memset(&state.pap, 0, sizeof(state.pap));
-      break;
-    case ipropPlain:
-      if (state.chp.fItalic) {
-        setFontProperty(FONT_ITALIC, false);
-      }
-
-      if (state.chp.fBold) {
-        setFontProperty(FONT_BOLD, false);
-      }
-    
-      memset(&state.chp, 0, sizeof(state.chp));
-      break;
-    default:
-      std::cerr << "parse failed: bad table 2\n";
-      break;
+void RtfReader::resetParagraph() {
+	state.alignment = ALIGN_UNDEFINED;
+	setAlignment(state.alignment);
+  if (state.Italic) {
+    setFontProperty(FONT_ITALIC, false);
+		state.Italic = false;
+  }
+  if (state.Bold) {
+    setFontProperty(FONT_BOLD, false);
+		state.Bold = false;
   }
 }
 
@@ -386,9 +375,6 @@ RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
     case ipfnParagraph:
       startElementHandler(_P);
       break;
-    case ipfnParagraphReset:
-      startElementHandler(_P_RESET);
-      break;
     case ipfnBin:
       if (param > 0) {
         parserState = READ_BINARY_DATA;
@@ -473,17 +459,17 @@ int RtfReader::ecRtfParse() {
                 ecEndGroupAction(state.rds);
               }
               
-              bool oldItalic = state.chp.fItalic;
-              bool oldBold = state.chp.fBold;
+              bool oldItalic = state.Italic;
+              bool oldBold = state.Bold;
               state = myStateStack.top();
               myStateStack.pop();
           
-              if (state.chp.fItalic != oldItalic) {
-                setFontProperty(FONT_ITALIC, state.chp.fItalic);
+              if (state.Italic != oldItalic) {
+                setFontProperty(FONT_ITALIC, state.Italic);
               }
           
-              if (state.chp.fBold != oldBold) {
-                setFontProperty(FONT_BOLD, state.chp.fBold);
+              if (state.Bold != oldBold) {
+                setFontProperty(FONT_BOLD, state.Bold);
               }
               
               break;
@@ -621,7 +607,10 @@ bool RtfReader::readDocument(const std::string &fileName) {
 
   fSkipDestIfUnk = false;
 
-  memset(&state, 0, sizeof(state));
+	state.alignment = ALIGN_UNDEFINED;
+	state.Italic = false;
+	state.Bold = false;
+	state.Underlined = false;
   state.rds = DESTINATION_NONE;
   state.ReadDataAsHex = false;
 
