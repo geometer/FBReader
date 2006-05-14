@@ -81,8 +81,6 @@ protected:
   virtual void startElementHandler(int tag) = 0;
   virtual void endElementHandler(int tag) = 0;
 
-  virtual bool characterDataHandler(std::string &str) = 0;
-
   virtual void addCharData(const char *data, size_t len, bool convert) = 0;
 
   virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
