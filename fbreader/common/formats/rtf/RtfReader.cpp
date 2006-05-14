@@ -55,16 +55,15 @@ protected:
   virtual ~RtfCommand() {}
 
 public:
-  virtual RtfReader::ParserState run(RtfReader &reader, int *parameter) const = 0;
+  virtual void run(RtfReader &reader, int *parameter) const = 0;
 };
 
 class RtfNewParagraphCommand : public RtfCommand {
 
 public:
   RtfNewParagraphCommand() {}
-  RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
+  void run(RtfReader &reader, int *parameter) const {
     reader.newParagraph();
-    return RtfReader::READ_NORMAL_DATA;
   }
 };
 
@@ -72,9 +71,8 @@ class RtfFontPropertyCommand : public RtfCommand {
 
 public:
   RtfFontPropertyCommand(RtfReader::FontProperty property) : myProperty(property) {}
-  RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
+  void run(RtfReader &reader, int *parameter) const {
     reader.ecApplyPropChange(myProperty, (parameter == 0) || (*parameter == 1));
-    return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
@@ -85,10 +83,9 @@ class RtfAlignmentCommand : public RtfCommand {
 
 public:
   RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {}
-  RtfReader::ParserState run(RtfReader &reader, int*) const {
+  void run(RtfReader &reader, int*) const {
     //std::cerr << "Alignment = " << myAlignment << "\n";
     reader.setAlignment(myAlignment);
-    return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
@@ -99,9 +96,8 @@ class RtfCharCommand : public RtfCommand {
 
 public:
   RtfCharCommand(const std::string &chr) : myChar(chr) {}
-  RtfReader::ParserState run(RtfReader &reader, int*) const {
+  void run(RtfReader &reader, int*) const {
     reader.ecParseCharData(myChar.data(), myChar.length(), false);
-    return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
@@ -112,9 +108,8 @@ class RtfDestinationCommand : public RtfCommand {
 
 public:
   RtfDestinationCommand(Destination dest) : myDest(dest) {}
-  RtfReader::ParserState run(RtfReader &reader, int*) const {
+  void run(RtfReader &reader, int*) const {
     reader.ecChangeDest(myDest);
-    return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
@@ -125,9 +120,8 @@ class RtfStyleCommand : public RtfCommand {
 
 public:
   RtfStyleCommand() {}
-  RtfReader::ParserState run(RtfReader &reader, int*) const {
+  void run(RtfReader &reader, int*) const {
     reader.ecStyleChange();
-    return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
@@ -137,8 +131,8 @@ class RtfSpecCommand : public RtfCommand {
 
 public:
   RtfSpecCommand(IPFN ipfn) : myIpfn(ipfn) {}
-  RtfReader::ParserState run(RtfReader &reader, int *parameter) const {
-    return reader.ecParseSpecialKeyword(myIpfn, parameter ? *parameter : 0);
+  void run(RtfReader &reader, int *parameter) const {
+    reader.ecParseSpecialKeyword(myIpfn, parameter ? *parameter : 0);
   }
   
 private:
@@ -149,9 +143,8 @@ class RtfPictureCommand : public RtfCommand {
 
 public:
   RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {}
-  RtfReader::ParserState run(RtfReader &reader, int*) const {
+  void run(RtfReader &reader, int*) const {
     reader.ecApplyPictPropChange(myMimeType);
-    return RtfReader::READ_NORMAL_DATA;
   }
   
 private:
@@ -161,11 +154,10 @@ private:
 class RtfFontResetCommand : public RtfCommand {
 
 public:
-  RtfReader::ParserState run(RtfReader &reader, int*) const {
+  void run(RtfReader &reader, int*) const {
     reader.ecApplyPropChange(RtfReader::FONT_BOLD, false);
     reader.ecApplyPropChange(RtfReader::FONT_ITALIC, false);
     reader.ecApplyPropChange(RtfReader::FONT_UNDERLINED, false);
-    return RtfReader::READ_NORMAL_DATA;
   }
 };
 
@@ -363,10 +355,9 @@ void RtfReader::ecEndGroupAction(Destination destination) {
 //
 static const char *encoding1251 = "windows-1251";
 
-RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
-  ParserState parserState = READ_NORMAL_DATA;
+void RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
   if (state.rds == DESTINATION_SKIP)  // if we're skipping, and it's not
-    return parserState;            // the \bin keyword, ignore it.
+    return;            // the \bin keyword, ignore it.
   switch (ipfn) {
     case ipfnCodePage:
       startElementHandler(_ENCODING);
@@ -383,11 +374,16 @@ RtfReader::ParserState RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
     default:
       std::cerr << "parse failed: bad table 4\n";
   }
-  return parserState;
 }
 
 int RtfReader::ecRtfParse() {
-  ParserState parserState = READ_NORMAL_DATA;
+  enum {
+    READ_NORMAL_DATA,
+    READ_BINARY_DATA,
+    READ_HEX_SYMBOL,
+    READ_KEYWORD,
+    READ_KEYWORD_PARAMETER
+  } parserState = READ_NORMAL_DATA;
 
   std::string keyword;
   std::string parameterString;
@@ -499,10 +495,11 @@ int RtfReader::ecRtfParse() {
           if (!isalpha(*ptr)) {
             if ((ptr == dataStart) && (keyword.empty())) {
               if (*ptr == '\'') {
-								parserState = READ_HEX_SYMBOL;
+                parserState = READ_HEX_SYMBOL;
               } else {
                 keyword = *ptr;
-                parserState = ecTranslateKeyword(keyword, 0, false);
+                ecTranslateKeyword(keyword, 0, false);
+                parserState = READ_NORMAL_DATA;
               }
               dataStart = ptr + 1;
             } else {
@@ -512,7 +509,8 @@ int RtfReader::ecRtfParse() {
                 parserState = READ_KEYWORD_PARAMETER;
               } else {
                 readNextChar = *ptr == ' ';
-                parserState = ecTranslateKeyword(keyword, 0, false);
+                ecTranslateKeyword(keyword, 0, false);
+                parserState = READ_NORMAL_DATA;
                 dataStart = readNextChar ? ptr + 1 : ptr;
               }
             }
@@ -524,12 +522,13 @@ int RtfReader::ecRtfParse() {
             int param = atoi(parameterString.c_str());
             parameterString.erase();
             readNextChar = *ptr == ' ';
-						if ((keyword == "bin") && (param > 0)) {
+            if ((keyword == "bin") && (param > 0)) {
               myBinaryDataSize = param;
               parserState = READ_BINARY_DATA;
-						} else {
-              parserState = ecTranslateKeyword(keyword, param, true);
-						}
+            } else {
+              ecTranslateKeyword(keyword, param, true);
+              parserState = READ_NORMAL_DATA;
+            }
             dataStart = readNextChar ? ptr + 1 : ptr;
           }
           break;
@@ -559,7 +558,7 @@ int RtfReader::ecRtfParse() {
   return (myIsInterrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
 }
 
-RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
+void RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
   std::map<std::string, RtfCommand*>::const_iterator it = ourKeywordMap.find(keyword);
   
   if (it == ourKeywordMap.end()) {
@@ -569,12 +568,12 @@ RtfReader::ParserState RtfReader::ecTranslateKeyword(const std::string &keyword,
     fSkipDestIfUnk = false;
 
 //    DPRINT("unknown keyword\n");    
-    return READ_NORMAL_DATA;
+    return;
   }
 
   fSkipDestIfUnk = false;
 
-  return it->second->run(*this, fParam ? &param : 0);
+  it->second->run(*this, fParam ? &param : 0);
 }
 
 

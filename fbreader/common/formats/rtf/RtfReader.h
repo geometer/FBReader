@@ -110,14 +110,6 @@ protected:
 	};
 
 public:
-  enum ParserState {
-    READ_NORMAL_DATA,
-    READ_BINARY_DATA,
-    READ_HEX_SYMBOL,
-    READ_KEYWORD,
-    READ_KEYWORD_PARAMETER,
-  };
-
 	enum FontProperty {
 		FONT_BOLD,
 		FONT_ITALIC,
@@ -128,7 +120,7 @@ public:
 	void ecApplyPictPropChange(const std::string &mimeType);
 	void ecChangeDest(Destination destiantion);
 	void ecStyleChange();
-	ParserState ecParseSpecialKeyword(int ipfn, int param);
+	void ecParseSpecialKeyword(int ipfn, int param);
   void ecApplyPropChange(FontProperty property, bool start);
 	// TODO: change to pure virtual
 	virtual void setAlignment(AlignmentType) {}
@@ -138,7 +130,7 @@ public:
 private:
 	void ecEndGroupAction(Destination destiantion);
 
-	ParserState ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
+	void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 
 	int ecRtfParse();
 
