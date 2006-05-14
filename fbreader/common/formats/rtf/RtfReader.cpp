@@ -175,7 +175,6 @@ struct skw {
   { "par",      ipfnParagraph },
 };
 
-static const std::string charTag = "char";
 static const std::string destinationTag = "destination";
   
 class RtfKeywordsReader : public ZLXMLReader {
@@ -188,11 +187,7 @@ public:
     const char *keyword = attributeValue(attributes, "keyword");
     const char *value = attributeValue(attributes, "value");
     if (keyword != 0) {
-      if (charTag == tag) {
-        if (value != 0) {
-          myKeywordMap[keyword] = new RtfCharCommand(value);
-        }
-      } else if (destinationTag == tag) {
+      if (destinationTag == tag) {
         if (value != 0) {
           myKeywordMap[keyword] = new RtfDestinationCommand((Destination)atoi(value));
         }
@@ -215,6 +210,21 @@ void RtfReader::fillKeywordMap() {
     for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
       ourKeywordMap[specKeyWords[i].kw] = new RtfSpecCommand(specKeyWords[i].ipfn);
     }
+		ourKeywordMap["\x09"] = new RtfCharCommand("\x09");
+		ourKeywordMap["\\"] = new RtfCharCommand("\\");
+		ourKeywordMap["{"] = new RtfCharCommand("{");
+		ourKeywordMap["}"] = new RtfCharCommand("}");
+		ourKeywordMap["bullet"] = new RtfCharCommand("\xE2\x80\xA2");     // &bullet;
+		ourKeywordMap["endash"] = new RtfCharCommand("\xE2\x80\x93");     // &ndash;
+		ourKeywordMap["emdash"] = new RtfCharCommand("\xE2\x80\x94");     // &mdash;
+		ourKeywordMap["~"] = new RtfCharCommand("\xC0\xA0");              // &nbsp;
+		ourKeywordMap["enspace"] = new RtfCharCommand("\xE2\x80\x82");    // &emsp;
+		ourKeywordMap["emspace"] = new RtfCharCommand("\xE2\x80\x83");    // &ensp;
+		ourKeywordMap["lquote"] = new RtfCharCommand("\xE2\x80\x98");     // &lsquo;
+		ourKeywordMap["rquote"] = new RtfCharCommand("\xE2\x80\x99");     // &rsquo;
+		ourKeywordMap["ldblquote"] = new RtfCharCommand("\xE2\x80\x9C");  // &ldquo;
+		ourKeywordMap["rdblquote"] = new RtfCharCommand("\xE2\x80\x9D");  // &rdquo;
+
     ourKeywordMap["jpegblip"] = new RtfPictureCommand("image/jpeg");
     ourKeywordMap["pngblip"] = new RtfPictureCommand("image/png");
     ourKeywordMap["s"] = new RtfStyleCommand();
