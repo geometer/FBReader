@@ -189,7 +189,7 @@ private:
     void run(RtfReader &reader, int *parameter) const;
   };
 	
-public:
+private:
   void ecParseCharData(const char *data, size_t len, bool convert = true);
   void ecChangeDest(Destination destiantion);
   // TODO: change to pure virtual
@@ -197,7 +197,6 @@ public:
   virtual void setFontProperty(FontProperty property, bool start) = 0;
   virtual void newParagraph() = 0;
 
-private:
   void ecEndGroupAction(Destination destiantion);
 
   void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
