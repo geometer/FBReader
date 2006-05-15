@@ -106,21 +106,52 @@ void RtfReader::RtfDestinationCommand::run(RtfReader &reader, int*) const {
 }
 
 void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
-  reader.ecStyleChange();
+  if (reader.state.rds == DESTINATION_STYLESHEET) {
+    //std::cerr << "Add style index: " << val << "\n";
+    
+    //sprintf(style_attributes[0], "%i", val);
+    reader.startElementHandler(_STYLE_INFO);
+  } else /*if (state.rds == rdsContent)*/ {
+    //std::cerr << "Set style index: " << val << "\n";
+
+    //sprintf(style_attributes[0], "%i", val);
+    reader.startElementHandler(_STYLE_SET);
+  }
 }
 
 RtfReader::RtfSpecCommand::RtfSpecCommand(int ipfn) : myIpfn(ipfn) {
 }
 
+static const char *encoding1251 = "windows-1251";
+
 void RtfReader::RtfSpecCommand::run(RtfReader &reader, int *parameter) const {
-  reader.ecParseSpecialKeyword((IPFN)myIpfn, parameter ? *parameter : 0);
+  switch (myIpfn) {
+    case ipfnCodePage:
+		{
+      reader.startElementHandler(_ENCODING);
+      int param = parameter ? *parameter : 0;
+      if ((param == 1251) && (reader.encoding != encoding1251)) {
+        reader.encoding = encoding1251;
+        reader.myConverter = ZLEncodingConverter::createConverter(reader.encoding);
+      } else {
+        // ???
+      }
+      break;
+		}
+    case ipfnSkipDest:
+      reader.fSkipDestIfUnk = true;
+      break;
+    default:
+      std::cerr << "parse failed: bad table 4\n";
+  }
 }
 
 RtfReader::RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {
 }
 
 void RtfReader::RtfPictureCommand::run(RtfReader &reader, int*) const {
-  reader.ecApplyPictPropChange(myMimeType);
+  reader.startElementHandler(_IMAGE_TYPE);
+  reader.myNextImageMimeType = myMimeType;
 }
 
 void RtfReader::RtfFontResetCommand::run(RtfReader &reader, int*) const {
@@ -202,26 +233,6 @@ void RtfReader::fillKeywordMap() {
   }
 }
 
-//char style_attributes[1][256];
-void RtfReader::ecStyleChange() {
-  if (state.rds == DESTINATION_STYLESHEET) {
-    //std::cerr << "Add style index: " << val << "\n";
-    
-    //sprintf(style_attributes[0], "%i", val);
-    startElementHandler(_STYLE_INFO);
-  } else /*if (state.rds == rdsContent)*/ {
-    //std::cerr << "Set style index: " << val << "\n";
-
-    //sprintf(style_attributes[0], "%i", val);
-    startElementHandler(_STYLE_SET);
-  }
-}
-
-void RtfReader::ecApplyPictPropChange(const std::string &mimeType) {
-  startElementHandler(_IMAGE_TYPE);
-  myNextImageMimeType = mimeType;
-} 
-
 void RtfReader::ecChangeDest(Destination destination) {
   state.rds = destination;
   switch (destination) {
@@ -292,32 +303,6 @@ void RtfReader::ecEndGroupAction(Destination destination) {
     case DESTINATION_SKIP:
     case DESTINATION_NONE:
       break;
-  }
-}
-
-//
-// %%Function: ecParseSpecialKeyword
-//
-// Evaluate an RTF control that needs special processing.
-//
-static const char *encoding1251 = "windows-1251";
-
-void RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
-  switch (ipfn) {
-    case ipfnCodePage:
-      startElementHandler(_ENCODING);
-      if ((param == 1251) && (encoding != encoding1251)) {
-        encoding = encoding1251;
-        myConverter = ZLEncodingConverter::createConverter(encoding);
-      } else {
-        // ???
-      }
-      break;
-    case ipfnSkipDest:
-      fSkipDestIfUnk = true;
-      break;
-    default:
-      std::cerr << "parse failed: bad table 4\n";
   }
 }
 

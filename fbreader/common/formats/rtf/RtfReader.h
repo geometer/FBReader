@@ -191,10 +191,7 @@ private:
 	
 public:
   void ecParseCharData(const char *data, size_t len, bool convert = true);
-  void ecApplyPictPropChange(const std::string &mimeType);
   void ecChangeDest(Destination destiantion);
-  void ecStyleChange();
-  void ecParseSpecialKeyword(int ipfn, int param);
   // TODO: change to pure virtual
   virtual void setAlignment(AlignmentType) {}
   virtual void setFontProperty(FontProperty property, bool start) = 0;
