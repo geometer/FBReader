@@ -89,18 +89,11 @@ protected:
   shared_ptr<ZLEncodingConverter> myConverter;
 
   enum TagCode {
-    _FOOTNOTE,
-    
-    _STYLE_SHEET,
     _STYLE_INFO,
     _STYLE_SET,
 
-    _IMAGE,
     _IMAGE_TYPE,
     
-    _TITLE_INFO,
-    _AUTHOR,
-    _BOOK_TITLE,
     _ENCODING,
   };
 
@@ -193,6 +186,7 @@ private:
   void ecParseCharData(const char *data, size_t len, bool convert = true);
   void ecChangeDest(Destination destiantion);
   // TODO: change to pure virtual
+  virtual void switchDestination(Destination destiantion, bool on) = 0;
   virtual void setAlignment(AlignmentType) {}
   virtual void setFontProperty(FontProperty property, bool start) = 0;
   virtual void newParagraph() = 0;

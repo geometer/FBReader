@@ -64,6 +64,69 @@ void RtfBookReader::flushBuffer() {
   }
 }
 
+void RtfBookReader::switchDestination(Destination destination, bool on) {
+	switch (destination) {
+    case DESTINATION_NONE:
+    case DESTINATION_SKIP:
+      break;
+    case DESTINATION_INFO:
+    case DESTINATION_TITLE:
+    case DESTINATION_AUTHOR:
+    case DESTINATION_STYLESHEET:
+      state.readState = on ? READ_NONE : READ_TEXT;
+      break;
+    case DESTINATION_PICTURE:
+			if (on) {
+        flushBuffer();
+        if (!state.isPrevImage) {
+          myBookReader.endParagraph();
+        }
+        state.isPrevImage = true;
+        state.readState = READ_IMAGE;
+			} else {
+        state.readState = READ_TEXT;
+			}
+      break;
+    case DESTINATION_FOOTNOTE:
+      flushBuffer();
+			if (on) {
+        std::string id;
+        ZLStringUtil::appendNumber(id, footnoteIndex++);
+      
+        stack.push_back(state);
+        state.id = id;
+        state.readState = READ_TEXT;
+        state.isItalic = false;
+        state.isBold = false;
+        state.style = -1;
+        state.isPrevImage = false;
+        
+        myBookReader.addHyperlinkControl(FOOTNOTE, id);        
+        myBookReader.addData(id);
+        myBookReader.addControl(FOOTNOTE, false);
+        
+        myBookReader.setFootnoteTextModel(id);
+        myBookReader.pushKind(REGULAR);
+        myBookReader.beginParagraph();
+        
+        footnoteIndex++;
+			} else {
+        myBookReader.endParagraph();
+        myBookReader.popKind();
+        
+        state = stack.back();
+        stack.pop_back();
+        
+        if (state.id == "") {
+          myBookReader.setMainTextModel();
+        } else {
+          myBookReader.setFootnoteTextModel(state.id);
+        }
+			}
+      break;
+	}
+}
+
 void RtfBookReader::insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) {
   ZLImage *image = new RtfImage(mimeType, fileName, startOffset, size);
 
@@ -109,59 +172,15 @@ void RtfBookReader::endDocumentHandler() {
 
 void RtfBookReader::startElementHandler(int tag) {
   switch(tag) {
-    case _BOOK_TITLE:
-    case _STYLE_SHEET:
     case _STYLE_INFO:
-    case _TITLE_INFO:
-    case _AUTHOR:
     case _ENCODING:
       state.readState = READ_NONE;
       break;
     case _STYLE_SET:
       state.style = 0;
       break;
-    case _IMAGE:
-      //DPRINT("image start.\n");
-    
-      flushBuffer();
-
-      if (!state.isPrevImage) {
-        myBookReader.endParagraph();
-      }
-
-      state.isPrevImage = true;
-        
-      state.readState = READ_IMAGE;
-
-      break;
     case _IMAGE_TYPE:
       break;
-    case _FOOTNOTE:
-    {
-      flushBuffer();
-
-      std::string id;
-      ZLStringUtil::appendNumber(id, footnoteIndex++);
-
-      stack.push_back(state);
-      state.id = id;
-      state.readState = READ_TEXT;
-      state.isItalic = false;
-      state.isBold = false;
-      state.style = -1;
-      state.isPrevImage = false;
-      
-      myBookReader.addHyperlinkControl(FOOTNOTE, id);        
-      myBookReader.addData(id);
-      myBookReader.addControl(FOOTNOTE, false);
-      
-      myBookReader.setFootnoteTextModel(id);
-      myBookReader.pushKind(REGULAR);
-      myBookReader.beginParagraph();
-      
-      footnoteIndex++;
-      break;
-    }
     default:
       state.readState = READ_TEXT;
       break;
@@ -170,35 +189,11 @@ void RtfBookReader::startElementHandler(int tag) {
 
 void RtfBookReader::endElementHandler(int tag) {
   switch(tag) {
-    case _TITLE_INFO:
-    case _AUTHOR:
     case _ENCODING:
-    case _BOOK_TITLE:
     case _STYLE_INFO:
       state.readState = READ_TEXT;
       break;
     case _STYLE_SET:
-      break;
-    case _IMAGE:
-      //DPRINT("image end.\n");
-      state.readState = READ_TEXT;
-      break;
-    case _FOOTNOTE:
-      //DPRINT("footnote end.\n");
-        
-      flushBuffer();
-      myBookReader.endParagraph();
-      myBookReader.popKind();
-      
-      state = stack.back();
-      stack.pop_back();
-      
-      if (state.id == "") {
-        myBookReader.setMainTextModel();
-      } else {
-        myBookReader.setFootnoteTextModel(state.id);
-      }
-      
       break;
     default:
       break;

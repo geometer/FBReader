@@ -92,20 +92,6 @@ bool RtfDescriptionReader::characterDataHandler(std::string &str) {
 void RtfDescriptionReader::startElementHandler(int tag) {
 //    DPRINT("start handler: %i\n", tag);
   switch (tag) {
-    case _TITLE_INFO:
-      //DPRINT("start title info\n");
-      flushBuffer();
-      break;
-    case _BOOK_TITLE:
-      //DPRINT("start book title\n");
-      flushBuffer();
-      state = READ_TITLE;
-      break;
-    case _AUTHOR:
-      //DPRINT("start author\n");
-      flushBuffer();
-      state = READ_AUTHOR;
-      break;
     case _ENCODING:
       hasEncoding = true;
       break;
@@ -116,28 +102,43 @@ void RtfDescriptionReader::startElementHandler(int tag) {
 }
 
 void RtfDescriptionReader::endElementHandler(int tag) {
-//    DPRINT("end handler: %i\n", tag);
-  switch (tag) {
-    case _TITLE_INFO:
-      //DPRINT("interrupt\n");
+}
+
+void RtfDescriptionReader::switchDestination(Destination destiantion, bool on) {
+  switch (destiantion) {
+    case DESTINATION_INFO:
       flushBuffer();
-      interrupt();
+      if (!on) {
+        interrupt();
+      }
       break;
-    case _BOOK_TITLE:
+    case DESTINATION_TITLE:
       flushBuffer();
-      hasTitle = true;
+      if (on) {
+        state = READ_TITLE;
+      } else {
+        hasTitle = true;
+      }
       break;
-    case _AUTHOR:
+    case DESTINATION_AUTHOR:
       flushBuffer();
-      hasAuthor = true;
+      if (on) {
+        state = READ_AUTHOR;
+      } else {
+        hasAuthor = true;
+      }
+      break;
+    case DESTINATION_NONE:
+    case DESTINATION_SKIP:
       break;
     default:
+			if (on) {
+				state = READ_NONE;
+			}
       break;
   }
-  
-  if (hasTitle && hasAuthor && hasEncoding) {
-    //DPRINT("interrupt\n");
-    flushBuffer();
+  if (!on && hasTitle && hasAuthor && hasEncoding) {
+		flushBuffer();
     interrupt();
   }
 }
