@@ -119,31 +119,20 @@ void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
   }
 }
 
-RtfReader::RtfSpecCommand::RtfSpecCommand(int ipfn) : myIpfn(ipfn) {
-}
-
 static const char *encoding1251 = "windows-1251";
 
-void RtfReader::RtfSpecCommand::run(RtfReader &reader, int *parameter) const {
-  switch (myIpfn) {
-    case ipfnCodePage:
-		{
-      reader.startElementHandler(_ENCODING);
-      int param = parameter ? *parameter : 0;
-      if ((param == 1251) && (reader.encoding != encoding1251)) {
-        reader.encoding = encoding1251;
-        reader.myConverter = ZLEncodingConverter::createConverter(reader.encoding);
-      } else {
-        // ???
-      }
-      break;
-		}
-    case ipfnSkipDest:
-      reader.fSkipDestIfUnk = true;
-      break;
-    default:
-      std::cerr << "parse failed: bad table 4\n";
+void RtfReader::RtfCodepageCommand::run(RtfReader &reader, int *parameter) const {
+  reader.startElementHandler(_ENCODING);
+	if (parameter != 0) {
+    if ((*parameter == 1251) && (reader.encoding != encoding1251)) {
+      reader.encoding = encoding1251;
+      reader.myConverter = ZLEncodingConverter::createConverter(reader.encoding);
+    }
   }
+}
+
+void RtfReader::RtfSpecCommand::run(RtfReader &reader, int*) const {
+  reader.fSkipDestIfUnk = true;
 }
 
 RtfReader::RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {
@@ -169,19 +158,10 @@ void RtfReader::RtfFontResetCommand::run(RtfReader &reader, int*) const {
   }
 }
 
-struct skw {
-  const char *kw;
-  IPFN ipfn;
-} specKeyWords[] = {
-  { "*",        ipfnSkipDest },
-  { "ansicpg",  ipfnCodePage },
-};
-
 void RtfReader::fillKeywordMap() {
   if (ourKeywordMap.empty()) {
-    for (unsigned int i = 0; i < sizeof(specKeyWords) / sizeof(struct skw); i++) {
-      ourKeywordMap[specKeyWords[i].kw] = new RtfSpecCommand(specKeyWords[i].ipfn);
-    }
+		ourKeywordMap["*"] = new RtfSpecCommand();
+		ourKeywordMap["ansicpg"] = new RtfCodepageCommand();
 
     static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
     RtfCommand *skipCommand = new RtfDestinationCommand(DESTINATION_NONE);

@@ -167,12 +167,7 @@ private:
   };
 
   class RtfSpecCommand : public RtfCommand {
-  public:
-    RtfSpecCommand(int ipfn);
     void run(RtfReader &reader, int *parameter) const;
-    
-  private:
-    int myIpfn;
   };
 
   class RtfPictureCommand : public RtfCommand {
@@ -185,6 +180,11 @@ private:
   };
 
   class RtfFontResetCommand : public RtfCommand {
+  public:
+    void run(RtfReader &reader, int *parameter) const;
+  };
+	
+  class RtfCodepageCommand : public RtfCommand {
   public:
     void run(RtfReader &reader, int *parameter) const;
   };
