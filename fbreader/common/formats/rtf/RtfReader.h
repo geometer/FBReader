@@ -56,13 +56,13 @@ struct RtfReaderState
 
 
 class ZLInputStream;
-class RtfCommand;
 
 class RtfReader {
 
 private:
   static void RtfReader::fillKeywordMap();
 
+  class RtfCommand;
   static std::map<std::string, RtfCommand*> ourKeywordMap;
 
 public:
@@ -104,19 +104,97 @@ protected:
     _ENCODING,
   };
 
-public:
+protected:
   enum FontProperty {
     FONT_BOLD,
     FONT_ITALIC,
     FONT_UNDERLINED
   };
     
+private:
+  class RtfCommand {
+  protected:
+    virtual ~RtfCommand();
+
+  public:
+    virtual void run(RtfReader &reader, int *parameter) const = 0;
+  };
+
+  class RtfNewParagraphCommand : public RtfCommand {
+  public:
+    void run(RtfReader &reader, int *parameter) const;
+  };
+
+  class RtfFontPropertyCommand : public RtfCommand {
+  public:
+    RtfFontPropertyCommand(FontProperty property);
+    void run(RtfReader &reader, int *parameter) const;
+
+  private:
+    RtfReader::FontProperty myProperty;
+  };
+
+  class RtfAlignmentCommand : public RtfCommand {
+  public:
+    RtfAlignmentCommand(AlignmentType alignment);
+    void run(RtfReader &reader, int *parameter) const;
+  
+  private:
+    AlignmentType myAlignment;
+  };
+
+  class RtfCharCommand : public RtfCommand {
+  public:
+    RtfCharCommand(const std::string &chr);
+    void run(RtfReader &reader, int *parameter) const;
+
+  private:
+    std::string myChar;
+  };
+
+  class RtfDestinationCommand : public RtfCommand {
+  public:
+    RtfDestinationCommand(Destination dest);
+    void run(RtfReader &reader, int *parameter) const;
+
+  private:
+    Destination myDest;
+  };
+
+  class RtfStyleCommand : public RtfCommand {
+  public:
+    void run(RtfReader &reader, int *parameter) const;
+  };
+
+  class RtfSpecCommand : public RtfCommand {
+  public:
+    RtfSpecCommand(int ipfn);
+    void run(RtfReader &reader, int *parameter) const;
+    
+  private:
+    int myIpfn;
+  };
+
+  class RtfPictureCommand : public RtfCommand {
+  public:
+    RtfPictureCommand(const std::string &mimeType);
+    void run(RtfReader &reader, int *parameter) const;
+
+  private:
+    const std::string myMimeType;
+  };
+
+  class RtfFontResetCommand : public RtfCommand {
+  public:
+    void run(RtfReader &reader, int *parameter) const;
+  };
+	
+public:
   void ecParseCharData(const char *data, size_t len, bool convert = true);
   void ecApplyPictPropChange(const std::string &mimeType);
   void ecChangeDest(Destination destiantion);
   void ecStyleChange();
   void ecParseSpecialKeyword(int ipfn, int param);
-  void ecApplyPropChange(FontProperty property, bool start);
   // TODO: change to pure virtual
   virtual void setAlignment(AlignmentType) {}
   virtual void setFontProperty(FontProperty property, bool start) = 0;

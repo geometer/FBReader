@@ -26,7 +26,7 @@
 
 #include "RtfReader.h"
 
-std::map<std::string, RtfCommand*> RtfReader::ourKeywordMap;
+std::map<std::string, RtfReader::RtfCommand*> RtfReader::ourKeywordMap;
 
 static const int rtfStreamBufferSize = 4096;
 
@@ -49,117 +49,94 @@ RtfReader::~RtfReader() {
 
 typedef enum {ipfnCodePage, ipfnSkipDest } IPFN;
 
-struct RtfCommand {
+RtfReader::RtfCommand::~RtfCommand() {
+}
 
-protected:
-  virtual ~RtfCommand() {}
+void RtfReader::RtfNewParagraphCommand::run(RtfReader &reader, int*) const {
+  reader.newParagraph();
+}
 
-public:
-  virtual void run(RtfReader &reader, int *parameter) const = 0;
-};
+RtfReader::RtfFontPropertyCommand::RtfFontPropertyCommand(FontProperty property) : myProperty(property) {
+}
 
-class RtfNewParagraphCommand : public RtfCommand {
-
-public:
-  RtfNewParagraphCommand() {}
-  void run(RtfReader &reader, int *parameter) const {
-    reader.newParagraph();
+void RtfReader::RtfFontPropertyCommand::run(RtfReader &reader, int *parameter) const {
+  bool start = (parameter == 0) || (*parameter != 0);
+  switch (myProperty) {
+    case FONT_BOLD:
+      if (reader.state.Bold != start) {
+        reader.state.Bold = start;
+        reader.setFontProperty(FONT_BOLD, start);
+      }
+      break;
+    case FONT_ITALIC:
+      if (reader.state.Italic != start) {
+        reader.state.Italic = start;
+        reader.setFontProperty(FONT_ITALIC, start);
+      }
+      break;
+    case FONT_UNDERLINED:
+      if (reader.state.Underlined != start) {
+        reader.state.Underlined = start;
+        reader.setFontProperty(FONT_UNDERLINED, start);
+      }
+      break;
   }
-};
+}
 
-class RtfFontPropertyCommand : public RtfCommand {
+RtfReader::RtfAlignmentCommand::RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {
+}
 
-public:
-  RtfFontPropertyCommand(RtfReader::FontProperty property) : myProperty(property) {}
-  void run(RtfReader &reader, int *parameter) const {
-    reader.ecApplyPropChange(myProperty, (parameter == 0) || (*parameter == 1));
+void RtfReader::RtfAlignmentCommand::run(RtfReader &reader, int*) const {
+  //std::cerr << "Alignment = " << myAlignment << "\n";
+  reader.setAlignment(myAlignment);
+}
+
+RtfReader::RtfCharCommand::RtfCharCommand(const std::string &chr) : myChar(chr) {
+}
+
+void RtfReader::RtfCharCommand::run(RtfReader &reader, int*) const {
+  reader.ecParseCharData(myChar.data(), myChar.length(), false);
+}
+
+RtfReader::RtfDestinationCommand::RtfDestinationCommand(Destination dest) : myDest(dest) {
+}
+
+void RtfReader::RtfDestinationCommand::run(RtfReader &reader, int*) const {
+  reader.ecChangeDest(myDest);
+}
+
+void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
+  reader.ecStyleChange();
+}
+
+RtfReader::RtfSpecCommand::RtfSpecCommand(int ipfn) : myIpfn(ipfn) {
+}
+
+void RtfReader::RtfSpecCommand::run(RtfReader &reader, int *parameter) const {
+  reader.ecParseSpecialKeyword((IPFN)myIpfn, parameter ? *parameter : 0);
+}
+
+RtfReader::RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {
+}
+
+void RtfReader::RtfPictureCommand::run(RtfReader &reader, int*) const {
+  reader.ecApplyPictPropChange(myMimeType);
+}
+
+void RtfReader::RtfFontResetCommand::run(RtfReader &reader, int*) const {
+  if (reader.state.Bold) {
+    reader.state.Bold = false;
+    reader.setFontProperty(FONT_BOLD, false);
   }
-  
-private:
-  RtfReader::FontProperty myProperty;
-};
-
-class RtfAlignmentCommand : public RtfCommand {
-
-public:
-  RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {}
-  void run(RtfReader &reader, int*) const {
-    //std::cerr << "Alignment = " << myAlignment << "\n";
-    reader.setAlignment(myAlignment);
+  if (reader.state.Italic) {
+    reader.state.Italic = false;
+    reader.setFontProperty(FONT_ITALIC, false);
   }
-  
-private:
-  AlignmentType myAlignment;
-};
-
-class RtfCharCommand : public RtfCommand {
-
-public:
-  RtfCharCommand(const std::string &chr) : myChar(chr) {}
-  void run(RtfReader &reader, int*) const {
-    reader.ecParseCharData(myChar.data(), myChar.length(), false);
+  if (reader.state.Underlined) {
+    reader.state.Underlined = false;
+    reader.setFontProperty(FONT_UNDERLINED, false);
   }
-  
-private:
-  std::string myChar;
-};
-
-class RtfDestinationCommand : public RtfCommand {
-
-public:
-  RtfDestinationCommand(Destination dest) : myDest(dest) {}
-  void run(RtfReader &reader, int*) const {
-    reader.ecChangeDest(myDest);
-  }
-  
-private:
-  Destination myDest;
-};
-
-class RtfStyleCommand : public RtfCommand {
-
-public:
-  RtfStyleCommand() {}
-  void run(RtfReader &reader, int*) const {
-    reader.ecStyleChange();
-  }
-  
-private:
-};
-
-class RtfSpecCommand : public RtfCommand {
-
-public:
-  RtfSpecCommand(IPFN ipfn) : myIpfn(ipfn) {}
-  void run(RtfReader &reader, int *parameter) const {
-    reader.ecParseSpecialKeyword(myIpfn, parameter ? *parameter : 0);
-  }
-  
-private:
-  IPFN myIpfn;
-};
-
-class RtfPictureCommand : public RtfCommand {
-
-public:
-  RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {}
-  void run(RtfReader &reader, int*) const {
-    reader.ecApplyPictPropChange(myMimeType);
-  }
-  
-private:
-  const std::string myMimeType;
-};
-
-class RtfFontResetCommand : public RtfCommand {
-
-public:
-  void run(RtfReader &reader, int*) const {
-    reader.ecApplyPropChange(RtfReader::FONT_BOLD, false);
-    reader.ecApplyPropChange(RtfReader::FONT_ITALIC, false);
-    reader.ecApplyPropChange(RtfReader::FONT_UNDERLINED, false);
-  }
-};
+}
 
 struct skw {
   const char *kw;
@@ -225,32 +202,6 @@ void RtfReader::fillKeywordMap() {
   }
 }
 
-void RtfReader::ecApplyPropChange(FontProperty property, bool start) {
-  if (state.rds == DESTINATION_SKIP)         // If we're skipping text,
-    return;          // don't do anything.
-
-  switch (property) {
-    case FONT_BOLD:
-      if (state.Bold != start) {
-        state.Bold = start;
-        setFontProperty(FONT_BOLD, state.Bold);
-      }
-      break;
-    case FONT_ITALIC:
-      if (state.Italic != start) {
-        state.Italic = start;
-        setFontProperty(FONT_ITALIC, state.Italic);
-      }
-      break;
-    case FONT_UNDERLINED:
-      if (state.Underlined != start) {
-        state.Underlined = start;
-        setFontProperty(FONT_UNDERLINED, state.Underlined);
-      }
-      break;
-  }
-}
-
 //char style_attributes[1][256];
 void RtfReader::ecStyleChange() {
   if (state.rds == DESTINATION_STYLESHEET) {
@@ -272,10 +223,6 @@ void RtfReader::ecApplyPictPropChange(const std::string &mimeType) {
 } 
 
 void RtfReader::ecChangeDest(Destination destination) {
-  if (state.rds == DESTINATION_SKIP) {
-    return;
-  }
-
   state.rds = destination;
   switch (destination) {
     case DESTINATION_INFO:
@@ -356,8 +303,6 @@ void RtfReader::ecEndGroupAction(Destination destination) {
 static const char *encoding1251 = "windows-1251";
 
 void RtfReader::ecParseSpecialKeyword(int ipfn, int param) {
-  if (state.rds == DESTINATION_SKIP)  // if we're skipping, and it's not
-    return;            // the \bin keyword, ignore it.
   switch (ipfn) {
     case ipfnCodePage:
       startElementHandler(_ENCODING);
@@ -559,6 +504,11 @@ int RtfReader::parseDocument() {
 }
 
 void RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
+	if (state.rds == DESTINATION_SKIP) {
+    fSkipDestIfUnk = false;
+		return;
+	}
+
   std::map<std::string, RtfCommand*>::const_iterator it = ourKeywordMap.find(keyword);
   
   if (it == ourKeywordMap.end()) {
