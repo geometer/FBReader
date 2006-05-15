@@ -151,7 +151,7 @@ private:
     void run(RtfReader &reader, int *parameter) const;
 
   private:
-    Destination myDest;
+    Destination myDestination;
   };
 
   class RtfStyleCommand : public RtfCommand {
@@ -176,22 +176,19 @@ private:
   public:
     void run(RtfReader &reader, int *parameter) const;
   };
-	
+  
   class RtfCodepageCommand : public RtfCommand {
   public:
     void run(RtfReader &reader, int *parameter) const;
   };
-	
+  
 private:
   void ecParseCharData(const char *data, size_t len, bool convert = true);
-  void ecChangeDest(Destination destiantion);
   // TODO: change to pure virtual
   virtual void switchDestination(Destination destiantion, bool on) = 0;
   virtual void setAlignment(AlignmentType) {}
   virtual void setFontProperty(FontProperty property, bool start) = 0;
   virtual void newParagraph() = 0;
-
-  void ecEndGroupAction(Destination destiantion);
 
   void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
 

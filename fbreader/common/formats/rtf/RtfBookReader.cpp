@@ -65,7 +65,7 @@ void RtfBookReader::flushBuffer() {
 }
 
 void RtfBookReader::switchDestination(Destination destination, bool on) {
-	switch (destination) {
+  switch (destination) {
     case DESTINATION_NONE:
     case DESTINATION_SKIP:
       break;
@@ -76,20 +76,20 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
       state.readState = on ? READ_NONE : READ_TEXT;
       break;
     case DESTINATION_PICTURE:
-			if (on) {
+      if (on) {
         flushBuffer();
         if (!state.isPrevImage) {
           myBookReader.endParagraph();
         }
         state.isPrevImage = true;
         state.readState = READ_IMAGE;
-			} else {
+      } else {
         state.readState = READ_TEXT;
-			}
+      }
       break;
     case DESTINATION_FOOTNOTE:
       flushBuffer();
-			if (on) {
+      if (on) {
         std::string id;
         ZLStringUtil::appendNumber(id, footnoteIndex++);
       
@@ -110,7 +110,7 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
         myBookReader.beginParagraph();
         
         footnoteIndex++;
-			} else {
+      } else {
         myBookReader.endParagraph();
         myBookReader.popKind();
         
@@ -122,9 +122,9 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
         } else {
           myBookReader.setFootnoteTextModel(state.id);
         }
-			}
+      }
       break;
-	}
+  }
 }
 
 void RtfBookReader::insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) {
@@ -207,19 +207,19 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
   }
   flushBuffer();
           
-	switch (property) {
-		case FONT_BOLD:
-			state.isBold = start;
-			if (start) {
+  switch (property) {
+    case FONT_BOLD:
+      state.isBold = start;
+      if (start) {
         myBookReader.pushKind(STRONG);
-			} else {
+      } else {
         myBookReader.popKind();
-			}
+      }
       myBookReader.addControl(STRONG, start);
-		  break;
-		case FONT_ITALIC:
-			state.isItalic = start;
-			if (start) {
+      break;
+    case FONT_ITALIC:
+      state.isItalic = start;
+      if (start) {
         if (!state.isBold) {        
           //DPRINT("add style emphasis.\n");
           myBookReader.pushKind(EMPHASIS);
@@ -234,7 +234,7 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
           myBookReader.pushKind(STRONG);
           myBookReader.addControl(STRONG, true);
         }
-			} else {
+      } else {
         if (!state.isBold) {        
           //DPRINT("remove style emphasis.\n");
           myBookReader.addControl(EMPHASIS, false);
@@ -249,11 +249,11 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
           myBookReader.pushKind(STRONG);
           myBookReader.addControl(STRONG, true);
         }
-			}
-		  break;
-		case FONT_UNDERLINED:
-			break;
-	}
+      }
+      break;
+    case FONT_UNDERLINED:
+      break;
+  }
 }
 
 void RtfBookReader::newParagraph() {

@@ -98,11 +98,18 @@ void RtfReader::RtfCharCommand::run(RtfReader &reader, int*) const {
   reader.ecParseCharData(myChar.data(), myChar.length(), false);
 }
 
-RtfReader::RtfDestinationCommand::RtfDestinationCommand(Destination dest) : myDest(dest) {
+RtfReader::RtfDestinationCommand::RtfDestinationCommand(Destination destination) : myDestination(destination) {
 }
 
 void RtfReader::RtfDestinationCommand::run(RtfReader &reader, int*) const {
-  reader.ecChangeDest(myDest);
+  if (reader.state.rds == myDestination) {
+    return;
+  }
+  reader.state.rds = myDestination;
+  if (myDestination == DESTINATION_PICTURE) {
+    reader.state.ReadDataAsHex = true;
+  }
+  reader.switchDestination(myDestination, true);
 }
 
 void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
@@ -123,7 +130,7 @@ static const char *encoding1251 = "windows-1251";
 
 void RtfReader::RtfCodepageCommand::run(RtfReader &reader, int *parameter) const {
   reader.startElementHandler(_ENCODING);
-	if (parameter != 0) {
+  if (parameter != 0) {
     if ((*parameter == 1251) && (reader.encoding != encoding1251)) {
       reader.encoding = encoding1251;
       reader.myConverter = ZLEncodingConverter::createConverter(reader.encoding);
@@ -160,8 +167,8 @@ void RtfReader::RtfFontResetCommand::run(RtfReader &reader, int*) const {
 
 void RtfReader::fillKeywordMap() {
   if (ourKeywordMap.empty()) {
-		ourKeywordMap["*"] = new RtfSpecCommand();
-		ourKeywordMap["ansicpg"] = new RtfCodepageCommand();
+    ourKeywordMap["*"] = new RtfSpecCommand();
+    ourKeywordMap["ansicpg"] = new RtfCodepageCommand();
 
     static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
     RtfCommand *skipCommand = new RtfDestinationCommand(DESTINATION_NONE);
@@ -211,28 +218,6 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["u"] = new RtfFontPropertyCommand(FONT_UNDERLINED);
     ourKeywordMap["plain"] = new RtfFontResetCommand();
   }
-}
-
-void RtfReader::ecChangeDest(Destination destination) {
-	if (state.rds == destination) {
-		return;
-	}
-  state.rds = destination;
-	if (destination == DESTINATION_PICTURE) {
-    state.ReadDataAsHex = true;
-	}
-	switchDestination(destination, true);
-}
-
-//
-// %%Function: ecEndGroupAction
-//
-// The destination specified by rds is coming to a close.
-// If there's any cleanup that needs to be done, do it now.
-//
-
-void RtfReader::ecEndGroupAction(Destination destination) {
-	switchDestination(destination, false);
 }
 
 int RtfReader::parseDocument() {
@@ -295,7 +280,7 @@ int RtfReader::parseDocument() {
               }
               
               if (state.rds != myStateStack.top().rds) {
-                ecEndGroupAction(state.rds);
+                switchDestination(state.rds, false);
               }
               
               bool oldItalic = state.Italic;
@@ -418,10 +403,10 @@ int RtfReader::parseDocument() {
 }
 
 void RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-	if (state.rds == DESTINATION_SKIP) {
+  if (state.rds == DESTINATION_SKIP) {
     fSkipDestIfUnk = false;
-		return;
-	}
+    return;
+  }
 
   std::map<std::string, RtfCommand*>::const_iterator it = ourKeywordMap.find(keyword);
   
