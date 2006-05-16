@@ -178,7 +178,7 @@ private:
   // TODO: change to pure virtual
   virtual void switchDestination(Destination destiantion, bool on) = 0;
   virtual void setAlignment(AlignmentType) {}
-  virtual void setFontProperty(FontProperty property, bool start) = 0;
+  virtual void setFontProperty(FontProperty property) = 0;
   virtual void newParagraph() = 0;
 
   void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
@@ -187,7 +187,8 @@ private:
 
   bool fSkipDestIfUnk;
 
-  RtfReaderState state;
+protected:
+  RtfReaderState myState;
 
 private:
   std::string myFileName;

@@ -136,7 +136,7 @@ void RtfDescriptionReader::switchDestination(Destination destiantion, bool on) {
 void RtfDescriptionReader::insertImage(const std::string&, const std::string&, size_t, size_t) {
 }
 
-void RtfDescriptionReader::setFontProperty(FontProperty, bool) {
+void RtfDescriptionReader::setFontProperty(FontProperty) {
 }
 
 void RtfDescriptionReader::newParagraph() {

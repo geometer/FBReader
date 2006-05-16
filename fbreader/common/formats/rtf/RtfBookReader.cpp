@@ -97,8 +97,6 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
         stack.push_back(state);
         state.id = id;
         state.readState = READ_TEXT;
-        state.isItalic = false;
-        state.isBold = false;
         state.isPrevImage = false;
         
         myBookReader.addHyperlinkControl(FOOTNOTE, id);        
@@ -154,8 +152,6 @@ void RtfBookReader::startDocumentHandler() {
   currentStyleInfo = 0;    
   
   state.readState = READ_NONE;
-  state.isItalic = false;
-  state.isBold = false;
   state.id = "";
   state.isPrevImage = false;
 
@@ -173,7 +169,7 @@ void RtfBookReader::startElementHandler(int) {
   state.readState = READ_NONE;
 }
 
-void RtfBookReader::setFontProperty(FontProperty property, bool start) {
+void RtfBookReader::setFontProperty(FontProperty property) {
   if (state.readState != READ_TEXT) {
     //DPRINT("change style not in text.\n");
     return;
@@ -182,18 +178,16 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
           
   switch (property) {
     case FONT_BOLD:
-      state.isBold = start;
-      if (start) {
+      if (myState.Bold) {
         myBookReader.pushKind(STRONG);
       } else {
         myBookReader.popKind();
       }
-      myBookReader.addControl(STRONG, start);
+      myBookReader.addControl(STRONG, myState.Bold);
       break;
     case FONT_ITALIC:
-      state.isItalic = start;
-      if (start) {
-        if (!state.isBold) {        
+      if (myState.Italic) {
+        if (!myState.Bold) {        
           //DPRINT("add style emphasis.\n");
           myBookReader.pushKind(EMPHASIS);
           myBookReader.addControl(EMPHASIS, true);
@@ -208,7 +202,7 @@ void RtfBookReader::setFontProperty(FontProperty property, bool start) {
           myBookReader.addControl(STRONG, true);
         }
       } else {
-        if (!state.isBold) {        
+        if (!myState.Bold) {        
           //DPRINT("remove style emphasis.\n");
           myBookReader.addControl(EMPHASIS, false);
           myBookReader.popKind();

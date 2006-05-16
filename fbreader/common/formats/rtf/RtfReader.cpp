@@ -64,21 +64,21 @@ void RtfReader::RtfFontPropertyCommand::run(RtfReader &reader, int *parameter) c
   bool start = (parameter == 0) || (*parameter != 0);
   switch (myProperty) {
     case FONT_BOLD:
-      if (reader.state.Bold != start) {
-        reader.state.Bold = start;
-        reader.setFontProperty(FONT_BOLD, start);
+      if (reader.myState.Bold != start) {
+        reader.myState.Bold = start;
+        reader.setFontProperty(FONT_BOLD);
       }
       break;
     case FONT_ITALIC:
-      if (reader.state.Italic != start) {
-        reader.state.Italic = start;
-        reader.setFontProperty(FONT_ITALIC, start);
+      if (reader.myState.Italic != start) {
+        reader.myState.Italic = start;
+        reader.setFontProperty(FONT_ITALIC);
       }
       break;
     case FONT_UNDERLINED:
-      if (reader.state.Underlined != start) {
-        reader.state.Underlined = start;
-        reader.setFontProperty(FONT_UNDERLINED, start);
+      if (reader.myState.Underlined != start) {
+        reader.myState.Underlined = start;
+        reader.setFontProperty(FONT_UNDERLINED);
       }
       break;
   }
@@ -103,22 +103,22 @@ RtfReader::RtfDestinationCommand::RtfDestinationCommand(Destination destination)
 }
 
 void RtfReader::RtfDestinationCommand::run(RtfReader &reader, int*) const {
-  if (reader.state.rds == myDestination) {
+  if (reader.myState.rds == myDestination) {
     return;
   }
-  reader.state.rds = myDestination;
+  reader.myState.rds = myDestination;
   if (myDestination == DESTINATION_PICTURE) {
-    reader.state.ReadDataAsHex = true;
+    reader.myState.ReadDataAsHex = true;
   }
   reader.switchDestination(myDestination, true);
 }
 
 void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
-  if (reader.state.rds == DESTINATION_STYLESHEET) {
+  if (reader.myState.rds == DESTINATION_STYLESHEET) {
     //std::cerr << "Add style index: " << val << "\n";
     
     //sprintf(style_attributes[0], "%i", val);
-  } else /*if (state.rds == rdsContent)*/ {
+  } else /*if (myState.rds == rdsContent)*/ {
     //std::cerr << "Set style index: " << val << "\n";
 
     //sprintf(style_attributes[0], "%i", val);
@@ -149,17 +149,17 @@ void RtfReader::RtfPictureCommand::run(RtfReader &reader, int*) const {
 }
 
 void RtfReader::RtfFontResetCommand::run(RtfReader &reader, int*) const {
-  if (reader.state.Bold) {
-    reader.state.Bold = false;
-    reader.setFontProperty(FONT_BOLD, false);
+  if (reader.myState.Bold) {
+    reader.myState.Bold = false;
+    reader.setFontProperty(FONT_BOLD);
   }
-  if (reader.state.Italic) {
-    reader.state.Italic = false;
-    reader.setFontProperty(FONT_ITALIC, false);
+  if (reader.myState.Italic) {
+    reader.myState.Italic = false;
+    reader.setFontProperty(FONT_ITALIC);
   }
-  if (reader.state.Underlined) {
-    reader.state.Underlined = false;
-    reader.setFontProperty(FONT_UNDERLINED, false);
+  if (reader.myState.Underlined) {
+    reader.myState.Underlined = false;
+    reader.setFontProperty(FONT_UNDERLINED);
   }
 }
 
@@ -257,8 +257,8 @@ int RtfReader::parseDocument() {
                 ecParseCharData(dataStart, ptr - dataStart);
               }
               dataStart = ptr + 1;
-              myStateStack.push(state);
-              state.ReadDataAsHex = false;
+              myStateStack.push(myState);
+              myState.ReadDataAsHex = false;
               break;
             case '}':
             {
@@ -277,24 +277,24 @@ int RtfReader::parseDocument() {
                 return ecStackUnderflow;
               }
               
-              if (state.rds != myStateStack.top().rds) {
-                switchDestination(state.rds, false);
+              if (myState.rds != myStateStack.top().rds) {
+                switchDestination(myState.rds, false);
               }
               
-              bool oldItalic = state.Italic;
-              bool oldBold = state.Bold;
-              bool oldUnderlined = state.Underlined;
-              state = myStateStack.top();
+              bool oldItalic = myState.Italic;
+              bool oldBold = myState.Bold;
+              bool oldUnderlined = myState.Underlined;
+              myState = myStateStack.top();
               myStateStack.pop();
           
-              if (state.Italic != oldItalic) {
-                setFontProperty(FONT_ITALIC, state.Italic);
+              if (myState.Italic != oldItalic) {
+                setFontProperty(FONT_ITALIC);
               }
-              if (state.Bold != oldBold) {
-                setFontProperty(FONT_BOLD, state.Bold);
+              if (myState.Bold != oldBold) {
+                setFontProperty(FONT_BOLD);
               }
-              if (state.Underlined != oldUnderlined) {
-                setFontProperty(FONT_UNDERLINED, state.Underlined);
+              if (myState.Underlined != oldUnderlined) {
+                setFontProperty(FONT_UNDERLINED);
               }
 							// TODO: reset alignment
               
@@ -316,7 +316,7 @@ int RtfReader::parseDocument() {
               dataStart = ptr + 1;
               break;
             default:
-              if (state.ReadDataAsHex) {
+              if (myState.ReadDataAsHex) {
                 if (imageStartOffset == -1) {
                   imageStartOffset = myStream->offset() + (ptr - end);
                 }
@@ -402,7 +402,7 @@ int RtfReader::parseDocument() {
 }
 
 void RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-  if (state.rds == DESTINATION_SKIP) {
+  if (myState.rds == DESTINATION_SKIP) {
     fSkipDestIfUnk = false;
     return;
   }
@@ -411,7 +411,7 @@ void RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool f
   
   if (it == ourKeywordMap.end()) {
     if (fSkipDestIfUnk)     // if this is a new destination
-      state.rds = DESTINATION_SKIP;      // skip the destination
+      myState.rds = DESTINATION_SKIP;      // skip the destination
                   // else just discard it
     fSkipDestIfUnk = false;
 
@@ -426,7 +426,7 @@ void RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool f
 
 
 void RtfReader::ecParseCharData(const char *data, size_t len, bool convert) {
-  if (state.rds != DESTINATION_SKIP) {
+  if (myState.rds != DESTINATION_SKIP) {
     addCharData(data, len, convert);
   }
 }
@@ -451,12 +451,12 @@ bool RtfReader::readDocument(const std::string &fileName) {
 
   fSkipDestIfUnk = false;
 
-  state.alignment = ALIGN_UNDEFINED;
-  state.Italic = false;
-  state.Bold = false;
-  state.Underlined = false;
-  state.rds = DESTINATION_NONE;
-  state.ReadDataAsHex = false;
+  myState.alignment = ALIGN_UNDEFINED;
+  myState.Italic = false;
+  myState.Bold = false;
+  myState.Underlined = false;
+  myState.rds = DESTINATION_NONE;
+  myState.ReadDataAsHex = false;
 
   int ret = parseDocument();
   bool code = ret == ecOK;

@@ -50,7 +50,7 @@ public:
 	void addCharData(const char *data, size_t len, bool convert);
 	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
 
-	void setFontProperty(FontProperty property, bool start);
+	void setFontProperty(FontProperty property);
 	void newParagraph();
 
 protected:
@@ -76,8 +76,6 @@ protected:
 	{
 	    std::string id;
 	    ReadState readState;
-	    bool isItalic;
-	    bool isBold;
     
 	    bool isPrevImage;
 	};
