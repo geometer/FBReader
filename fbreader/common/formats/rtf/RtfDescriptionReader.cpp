@@ -101,9 +101,6 @@ void RtfDescriptionReader::startElementHandler(int tag) {
   }
 }
 
-void RtfDescriptionReader::endElementHandler(int tag) {
-}
-
 void RtfDescriptionReader::switchDestination(Destination destiantion, bool on) {
   switch (destiantion) {
     case DESTINATION_INFO:

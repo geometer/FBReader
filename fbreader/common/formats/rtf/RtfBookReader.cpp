@@ -98,7 +98,6 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
         state.readState = READ_TEXT;
         state.isItalic = false;
         state.isBold = false;
-        state.style = -1;
         state.isPrevImage = false;
         
         myBookReader.addHyperlinkControl(FOOTNOTE, id);        
@@ -157,7 +156,6 @@ void RtfBookReader::startDocumentHandler() {
   state.isItalic = false;
   state.isBold = false;
   state.id = "";
-  state.style = -1;
   state.isPrevImage = false;
 
   myBookReader.setMainTextModel();
@@ -176,26 +174,7 @@ void RtfBookReader::startElementHandler(int tag) {
     case _ENCODING:
       state.readState = READ_NONE;
       break;
-    case _STYLE_SET:
-      state.style = 0;
-      break;
     case _IMAGE_TYPE:
-      break;
-    default:
-      state.readState = READ_TEXT;
-      break;
-  }
-}
-
-void RtfBookReader::endElementHandler(int tag) {
-  switch(tag) {
-    case _ENCODING:
-    case _STYLE_INFO:
-      state.readState = READ_TEXT;
-      break;
-    case _STYLE_SET:
-      break;
-    default:
       break;
   }
 }

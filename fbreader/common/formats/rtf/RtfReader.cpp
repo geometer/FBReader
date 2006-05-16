@@ -122,7 +122,6 @@ void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
     //std::cerr << "Set style index: " << val << "\n";
 
     //sprintf(style_attributes[0], "%i", val);
-    reader.startElementHandler(_STYLE_SET);
   }
 }
 

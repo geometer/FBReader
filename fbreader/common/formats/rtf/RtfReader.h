@@ -79,7 +79,6 @@ protected:
   virtual void endDocumentHandler() = 0;
 
   virtual void startElementHandler(int tag) = 0;
-  virtual void endElementHandler(int tag) = 0;
 
   virtual void addCharData(const char *data, size_t len, bool convert) = 0;
 
@@ -90,10 +89,7 @@ protected:
 
   enum TagCode {
     _STYLE_INFO,
-    _STYLE_SET,
-
     _IMAGE_TYPE,
-    
     _ENCODING,
   };
 

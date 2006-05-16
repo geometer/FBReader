@@ -41,7 +41,6 @@ public:
 	void endDocumentHandler();
 
 	void startElementHandler(int tag);
-	void endElementHandler(int tag);
 
 	bool characterDataHandler(std::string &str);
 	void flushBuffer();
@@ -78,7 +77,6 @@ protected:
 	    ReadState readState;
 	    bool isItalic;
 	    bool isBold;
-	    int style;
     
 	    bool isPrevImage;
 	};

@@ -36,7 +36,6 @@ public:
 	void endDocumentHandler();
 
 	void startElementHandler(int tag);
-	void endElementHandler(int tag);
 	
 	bool characterDataHandler(std::string &str);
 	void flushBuffer();
