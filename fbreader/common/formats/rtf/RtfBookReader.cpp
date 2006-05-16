@@ -159,6 +159,7 @@ void RtfBookReader::startDocumentHandler() {
 void RtfBookReader::endDocumentHandler() {
   flushBuffer();
   myBookReader.endParagraph();
+	stack.clear();
 }
 
 void RtfBookReader::startElementHandler(int) {
