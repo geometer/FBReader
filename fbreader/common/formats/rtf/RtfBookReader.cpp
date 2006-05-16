@@ -115,7 +115,7 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
         state = stack.back();
         stack.pop_back();
         
-        if (state.id == "") {
+        if (stack.empty()) {
           myBookReader.setMainTextModel();
         } else {
           myBookReader.setFootnoteTextModel(state.id);

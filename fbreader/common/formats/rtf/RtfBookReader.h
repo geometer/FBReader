@@ -69,7 +69,6 @@ protected:
 	    READ_NONE,
 	    READ_TEXT,
 	    READ_IMAGE,
-	    READ_STYLE_INFO,
 	};
 	
 	struct RtfBookReaderState
