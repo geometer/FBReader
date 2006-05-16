@@ -89,7 +89,6 @@ protected:
 
   enum TagCode {
     _STYLE_INFO,
-    _IMAGE_TYPE,
     _ENCODING,
   };
 

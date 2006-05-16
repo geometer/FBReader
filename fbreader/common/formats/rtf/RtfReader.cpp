@@ -145,7 +145,6 @@ RtfReader::RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : m
 }
 
 void RtfReader::RtfPictureCommand::run(RtfReader &reader, int*) const {
-  reader.startElementHandler(_IMAGE_TYPE);
   reader.myNextImageMimeType = myMimeType;
 }
 

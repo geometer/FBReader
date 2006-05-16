@@ -168,15 +168,8 @@ void RtfBookReader::endDocumentHandler() {
   myBookReader.endParagraph();
 }
 
-void RtfBookReader::startElementHandler(int tag) {
-  switch(tag) {
-    case _STYLE_INFO:
-    case _ENCODING:
-      state.readState = READ_NONE;
-      break;
-    case _IMAGE_TYPE:
-      break;
-  }
+void RtfBookReader::startElementHandler(int) {
+  state.readState = READ_NONE;
 }
 
 void RtfBookReader::setFontProperty(FontProperty property, bool start) {
