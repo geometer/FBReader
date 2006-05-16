@@ -103,12 +103,12 @@ private:
     virtual void run(RtfReader &reader, int *parameter) const = 0;
   };
 
-  class RtfNewParagraphCommand : public RtfCommand {
+  friend class RtfNewParagraphCommand : public RtfCommand {
   public:
     void run(RtfReader &reader, int *parameter) const;
   };
 
-  class RtfFontPropertyCommand : public RtfCommand {
+  friend class RtfFontPropertyCommand : public RtfCommand {
   public:
     RtfFontPropertyCommand(FontProperty property);
     void run(RtfReader &reader, int *parameter) const;
@@ -117,7 +117,7 @@ private:
     RtfReader::FontProperty myProperty;
   };
 
-  class RtfAlignmentCommand : public RtfCommand {
+  friend class RtfAlignmentCommand : public RtfCommand {
   public:
     RtfAlignmentCommand(AlignmentType alignment);
     void run(RtfReader &reader, int *parameter) const;
@@ -126,7 +126,7 @@ private:
     AlignmentType myAlignment;
   };
 
-  class RtfCharCommand : public RtfCommand {
+  friend class RtfCharCommand : public RtfCommand {
   public:
     RtfCharCommand(const std::string &chr);
     void run(RtfReader &reader, int *parameter) const;
@@ -135,7 +135,7 @@ private:
     std::string myChar;
   };
 
-  class RtfDestinationCommand : public RtfCommand {
+  friend class RtfDestinationCommand : public RtfCommand {
   public:
     RtfDestinationCommand(Destination dest);
     void run(RtfReader &reader, int *parameter) const;
@@ -144,16 +144,16 @@ private:
     Destination myDestination;
   };
 
-  class RtfStyleCommand : public RtfCommand {
+  friend class RtfStyleCommand : public RtfCommand {
   public:
     void run(RtfReader &reader, int *parameter) const;
   };
 
-  class RtfSpecCommand : public RtfCommand {
+  friend class RtfSpecCommand : public RtfCommand {
     void run(RtfReader &reader, int *parameter) const;
   };
 
-  class RtfPictureCommand : public RtfCommand {
+  friend class RtfPictureCommand : public RtfCommand {
   public:
     RtfPictureCommand(const std::string &mimeType);
     void run(RtfReader &reader, int *parameter) const;
@@ -162,12 +162,12 @@ private:
     const std::string myMimeType;
   };
 
-  class RtfFontResetCommand : public RtfCommand {
+  friend class RtfFontResetCommand : public RtfCommand {
   public:
     void run(RtfReader &reader, int *parameter) const;
   };
   
-  class RtfCodepageCommand : public RtfCommand {
+  friend class RtfCodepageCommand : public RtfCommand {
   public:
     void run(RtfReader &reader, int *parameter) const;
   };
