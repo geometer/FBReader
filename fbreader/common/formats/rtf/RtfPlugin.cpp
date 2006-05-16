@@ -29,7 +29,6 @@
 #include "RtfPlugin.h"
 #include "RtfDescriptionReader.h"
 #include "RtfBookReader.h"
-#include "RtfFormat.h"
 #include "../../description/BookDescription.h"
 
 bool RtfPlugin::acceptsFile(const ZLFile &file) const {
@@ -69,6 +68,6 @@ const std::string &RtfPlugin::iconName() const {
   return ICON_NAME;
 }
 
-FormatInfoPage *RtfPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-  return new RtfInfoPage(dialog, fileName, "Styles", true);
+FormatInfoPage *RtfPlugin::createInfoPage(ZLOptionsDialog&, const std::string&) {
+  return 0;
 }
