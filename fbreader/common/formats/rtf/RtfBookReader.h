@@ -54,19 +54,10 @@ public:
   void newParagraph();
 
 private:
-  struct StyleInfo {
-    int id;
-    std::string name;
-  };
-
-  std::vector<StyleInfo> styles;
-  StyleInfo *currentStyleInfo;    
-
   int imageIndex;
   int footnoteIndex;
 
-  struct RtfBookReaderState
-  {
+  struct RtfBookReaderState {
     std::string id;
     bool readText;
     

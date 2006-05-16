@@ -147,8 +147,6 @@ void RtfBookReader::startDocumentHandler() {
   imageIndex = 0;
   footnoteIndex = 1;
 
-  currentStyleInfo = 0;    
-  
   state.readText = false;
   state.id = "";
   state.isPrevImage = false;
