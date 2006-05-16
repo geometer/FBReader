@@ -65,7 +65,7 @@ void RtfBookReader::flushBuffer() {
   }
 }
 
-void RtfBookReader::switchDestination(Destination destination, bool on) {
+void RtfBookReader::switchDestination(DestinationType destination, bool on) {
   switch (destination) {
     case DESTINATION_NONE:
     case DESTINATION_SKIP:
@@ -143,7 +143,7 @@ bool RtfBookReader::characterDataHandler(std::string &str) {
   return true;
 }
 
-void RtfBookReader::startDocumentHandler() {
+bool RtfBookReader::readDocument(const std::string &fileName) {
   imageIndex = 0;
   footnoteIndex = 1;
 
@@ -154,16 +154,17 @@ void RtfBookReader::startDocumentHandler() {
   myBookReader.setMainTextModel();
   myBookReader.pushKind(REGULAR);
   myBookReader.beginParagraph();
-}
 
-void RtfBookReader::endDocumentHandler() {
+	bool code = RtfReader::readDocument(fileName);
+
   flushBuffer();
   myBookReader.endParagraph();
 	stack.clear();
+
+	return code;
 }
 
 void RtfBookReader::startElementHandler(int) {
-  state.readText = false;
 }
 
 void RtfBookReader::setFontProperty(FontProperty property) {

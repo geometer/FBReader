@@ -32,7 +32,7 @@
 
 #include "../../model/AlignmentType.h"
 
-enum Destination {
+enum DestinationType {
   DESTINATION_NONE,
   DESTINATION_SKIP,
   DESTINATION_INFO,
@@ -49,8 +49,8 @@ struct RtfReaderState
     bool Bold;
     bool Italic;
     bool Underlined;
-    AlignmentType alignment;
-    Destination rds;
+    AlignmentType Alignment;
+    DestinationType Destination;
 
     bool ReadDataAsHex;
 };
@@ -67,7 +67,7 @@ private:
   static std::map<std::string, RtfCommand*> ourKeywordMap;
 
 public:
-  bool readDocument(const std::string &fileName);
+  virtual bool readDocument(const std::string &fileName);
 
 protected:
   RtfReader(const std::string &encoding);
@@ -76,9 +76,6 @@ protected:
 protected:
   std::string encoding;
   
-  virtual void startDocumentHandler() = 0;
-  virtual void endDocumentHandler() = 0;
-
   virtual void startElementHandler(int tag) = 0;
 
   virtual void addCharData(const char *data, size_t len, bool convert) = 0;
@@ -138,11 +135,11 @@ private:
 
   friend class RtfDestinationCommand : public RtfCommand {
   public:
-    RtfDestinationCommand(Destination dest);
+    RtfDestinationCommand(DestinationType dest);
     void run(RtfReader &reader, int *parameter) const;
 
   private:
-    Destination myDestination;
+    DestinationType myDestination;
   };
 
   friend class RtfStyleCommand : public RtfCommand {
@@ -150,7 +147,7 @@ private:
     void run(RtfReader &reader, int *parameter) const;
   };
 
-  friend class RtfSpecCommand : public RtfCommand {
+  friend class RtfSpecialCommand : public RtfCommand {
     void run(RtfReader &reader, int *parameter) const;
   };
 
@@ -174,23 +171,23 @@ private:
   };
   
 private:
-  void ecParseCharData(const char *data, size_t len, bool convert = true);
+  virtual void switchDestination(DestinationType destination, bool on) = 0;
   // TODO: change to pure virtual
-  virtual void switchDestination(Destination destiantion, bool on) = 0;
   virtual void setAlignment(AlignmentType) {}
   virtual void setFontProperty(FontProperty property) = 0;
   virtual void newParagraph() = 0;
 
-  void ecTranslateKeyword(const std::string &keyword, int param, bool fParam);
+  void processKeyword(const std::string &keyword, int *parameter = 0);
+  void processCharData(const char *data, size_t len, bool convert = true);
 
-  int parseDocument();
-
-  bool fSkipDestIfUnk;
+  bool parseDocument();
 
 protected:
   RtfReaderState myState;
 
 private:
+  bool mySpecialMode;
+
   std::string myFileName;
   shared_ptr<ZLInputStream> myStream;
   char *myStreamBuffer;

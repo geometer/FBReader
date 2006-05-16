@@ -25,31 +25,15 @@
 #include "RtfDescriptionReader.h"
 
 RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfReader(description.encoding()), myDescription(description) {
-//    DPRINT("Constructor\n");
-  state = READ_NONE;
-  hasTitle = false;
-  hasAuthor = false;
-  hasEncoding = false;
 }
 
-void RtfDescriptionReader::startDocumentHandler() {
+bool RtfDescriptionReader::readDocument(const std::string &fileName) {
   state = READ_NONE;
   hasTitle = false;
   hasAuthor = false;
   hasEncoding = false;
 
-  title.erase();
-  author.erase();
-  encoding.erase();
-}
-
-void RtfDescriptionReader::endDocumentHandler()
-{
-  //DPRINT("End doc handler, title: %s, author: %s, encoding: %s\n", 
-  //myDescription.title().data(), author.data(), encoding.data());
-
-  //DPRINT("End doc handler, old encoding: %s\n", 
-  //myDescription.encoding().data());
+	bool code = RtfReader::readDocument(fileName);
 
   if (!title.empty()) {
     myDescription.title() = title;
@@ -60,6 +44,12 @@ void RtfDescriptionReader::endDocumentHandler()
   if (!encoding.empty()) {
     myDescription.encoding() = encoding;
   }
+
+  title.erase();
+  author.erase();
+  encoding.erase();
+
+	return code;
 }
 
 void RtfDescriptionReader::addCharData(const char *data, size_t len, bool convert) {
@@ -94,8 +84,8 @@ void RtfDescriptionReader::startElementHandler(int) {
   hasEncoding = true;
 }
 
-void RtfDescriptionReader::switchDestination(Destination destiantion, bool on) {
-  switch (destiantion) {
+void RtfDescriptionReader::switchDestination(DestinationType destination, bool on) {
+  switch (destination) {
     case DESTINATION_INFO:
       flushBuffer();
       if (!on) {

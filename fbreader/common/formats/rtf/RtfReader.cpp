@@ -31,12 +31,6 @@ std::map<std::string, RtfReader::RtfCommand*> RtfReader::ourKeywordMap;
 
 static const int rtfStreamBufferSize = 4096;
 
-enum ErrorCode {
-  ecOK,                    // Everything's fine!
-  ecStackUnderflow,        // Unmatched '}'
-  ecUnmatchedBrace,        // RTF ended during an open group.
-};
-
 RtfReader::RtfReader(const std::string &encoding) {
   this->encoding = encoding;
   
@@ -96,17 +90,17 @@ RtfReader::RtfCharCommand::RtfCharCommand(const std::string &chr) : myChar(chr) 
 }
 
 void RtfReader::RtfCharCommand::run(RtfReader &reader, int*) const {
-  reader.ecParseCharData(myChar.data(), myChar.length(), false);
+  reader.processCharData(myChar.data(), myChar.length(), false);
 }
 
-RtfReader::RtfDestinationCommand::RtfDestinationCommand(Destination destination) : myDestination(destination) {
+RtfReader::RtfDestinationCommand::RtfDestinationCommand(DestinationType destination) : myDestination(destination) {
 }
 
 void RtfReader::RtfDestinationCommand::run(RtfReader &reader, int*) const {
-  if (reader.myState.rds == myDestination) {
+  if (reader.myState.Destination == myDestination) {
     return;
   }
-  reader.myState.rds = myDestination;
+  reader.myState.Destination = myDestination;
   if (myDestination == DESTINATION_PICTURE) {
     reader.myState.ReadDataAsHex = true;
   }
@@ -114,11 +108,11 @@ void RtfReader::RtfDestinationCommand::run(RtfReader &reader, int*) const {
 }
 
 void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
-  if (reader.myState.rds == DESTINATION_STYLESHEET) {
+  if (reader.myState.Destination == DESTINATION_STYLESHEET) {
     //std::cerr << "Add style index: " << val << "\n";
     
     //sprintf(style_attributes[0], "%i", val);
-  } else /*if (myState.rds == rdsContent)*/ {
+  } else /*if (myState.Destination == rdsContent)*/ {
     //std::cerr << "Set style index: " << val << "\n";
 
     //sprintf(style_attributes[0], "%i", val);
@@ -137,8 +131,8 @@ void RtfReader::RtfCodepageCommand::run(RtfReader &reader, int *parameter) const
   }
 }
 
-void RtfReader::RtfSpecCommand::run(RtfReader &reader, int*) const {
-  reader.fSkipDestIfUnk = true;
+void RtfReader::RtfSpecialCommand::run(RtfReader &reader, int*) const {
+  reader.mySpecialMode = true;
 }
 
 RtfReader::RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {
@@ -165,7 +159,7 @@ void RtfReader::RtfFontResetCommand::run(RtfReader &reader, int*) const {
 
 void RtfReader::fillKeywordMap() {
   if (ourKeywordMap.empty()) {
-    ourKeywordMap["*"] = new RtfSpecCommand();
+    ourKeywordMap["*"] = new RtfSpecialCommand();
     ourKeywordMap["ansicpg"] = new RtfCodepageCommand();
 
     static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
@@ -218,7 +212,7 @@ void RtfReader::fillKeywordMap() {
   }
 }
 
-int RtfReader::parseDocument() {
+bool RtfReader::parseDocument() {
   enum {
     READ_NORMAL_DATA,
     READ_BINARY_DATA,
@@ -244,7 +238,7 @@ int RtfReader::parseDocument() {
       switch (parserState) {
         case READ_BINARY_DATA:
           // TODO: optimize
-          ecParseCharData(ptr, 1);
+          processCharData(ptr, 1);
           myBinaryDataSize--;
           if (myBinaryDataSize == 0) {
             parserState = READ_NORMAL_DATA;
@@ -254,7 +248,7 @@ int RtfReader::parseDocument() {
           switch (*ptr) {
             case '{':
               if (ptr > dataStart) {
-                ecParseCharData(dataStart, ptr - dataStart);
+                processCharData(dataStart, ptr - dataStart);
               }
               dataStart = ptr + 1;
               myStateStack.push(myState);
@@ -263,7 +257,7 @@ int RtfReader::parseDocument() {
             case '}':
             {
               if (ptr > dataStart) {
-                ecParseCharData(dataStart, ptr - dataStart);
+                processCharData(dataStart, ptr - dataStart);
               }
               dataStart = ptr + 1;
 
@@ -274,11 +268,11 @@ int RtfReader::parseDocument() {
               }
 
               if (myStateStack.empty()) {
-                return ecStackUnderflow;
+                return false;
               }
               
-              if (myState.rds != myStateStack.top().rds) {
-                switchDestination(myState.rds, false);
+              if (myState.Destination != myStateStack.top().Destination) {
+                switchDestination(myState.Destination, false);
               }
               
               bool oldItalic = myState.Italic;
@@ -302,7 +296,7 @@ int RtfReader::parseDocument() {
             }
             case '\\':
               if (ptr > dataStart) {
-                ecParseCharData(dataStart, ptr - dataStart);
+                processCharData(dataStart, ptr - dataStart);
               }
               dataStart = ptr + 1;
               keyword.erase();
@@ -311,7 +305,7 @@ int RtfReader::parseDocument() {
             case 0x0d:
             case 0x0a:      // cr and lf are noise characters...
               if (ptr > dataStart) {
-                ecParseCharData(dataStart, ptr - dataStart);
+                processCharData(dataStart, ptr - dataStart);
               }
               dataStart = ptr + 1;
               break;
@@ -329,7 +323,7 @@ int RtfReader::parseDocument() {
           if (hexString.size() == 2) {
             char ch = strtol(hexString.c_str(), 0, 16); 
             hexString.erase();
-            ecParseCharData(&ch, 1);
+            processCharData(&ch, 1);
             parserState = READ_NORMAL_DATA;
             dataStart = ptr + 1;
           }
@@ -341,7 +335,7 @@ int RtfReader::parseDocument() {
                 parserState = READ_HEX_SYMBOL;
               } else {
                 keyword = *ptr;
-                ecTranslateKeyword(keyword, 0, false);
+                processKeyword(keyword);
                 parserState = READ_NORMAL_DATA;
               }
               dataStart = ptr + 1;
@@ -352,7 +346,7 @@ int RtfReader::parseDocument() {
                 parserState = READ_KEYWORD_PARAMETER;
               } else {
                 readNextChar = *ptr == ' ';
-                ecTranslateKeyword(keyword, 0, false);
+                processKeyword(keyword);
                 parserState = READ_NORMAL_DATA;
                 dataStart = readNextChar ? ptr + 1 : ptr;
               }
@@ -362,14 +356,14 @@ int RtfReader::parseDocument() {
         case READ_KEYWORD_PARAMETER:
           if (!isdigit(*ptr)) {
             parameterString.append(dataStart, ptr - dataStart);
-            int param = atoi(parameterString.c_str());
+            int parameter = atoi(parameterString.c_str());
             parameterString.erase();
             readNextChar = *ptr == ' ';
-            if ((keyword == "bin") && (param > 0)) {
-              myBinaryDataSize = param;
+            if ((keyword == "bin") && (parameter > 0)) {
+              myBinaryDataSize = parameter;
               parserState = READ_BINARY_DATA;
             } else {
-              ecTranslateKeyword(keyword, param, true);
+              processKeyword(keyword, &parameter);
               parserState = READ_NORMAL_DATA;
             }
             dataStart = readNextChar ? ptr + 1 : ptr;
@@ -385,7 +379,7 @@ int RtfReader::parseDocument() {
     if (dataStart < end) {
       switch (parserState) {
         case READ_NORMAL_DATA:
-          ecParseCharData(dataStart, end - dataStart);
+          processCharData(dataStart, end - dataStart);
         case READ_KEYWORD:
           keyword.append(dataStart, end - dataStart);
           break;
@@ -398,35 +392,30 @@ int RtfReader::parseDocument() {
     }
   }
   
-  return (myIsInterrupted || myStateStack.empty()) ? ecOK : ecUnmatchedBrace;
+  return myIsInterrupted || myStateStack.empty();
 }
 
-void RtfReader::ecTranslateKeyword(const std::string &keyword, int param, bool fParam) {
-  if (myState.rds == DESTINATION_SKIP) {
-    fSkipDestIfUnk = false;
+void RtfReader::processKeyword(const std::string &keyword, int *parameter) {
+	bool wasSpecialMode = mySpecialMode;
+	mySpecialMode = false;
+  if (myState.Destination == DESTINATION_SKIP) {
     return;
   }
 
   std::map<std::string, RtfCommand*>::const_iterator it = ourKeywordMap.find(keyword);
   
   if (it == ourKeywordMap.end()) {
-    if (fSkipDestIfUnk)     // if this is a new destination
-      myState.rds = DESTINATION_SKIP;      // skip the destination
-                  // else just discard it
-    fSkipDestIfUnk = false;
-
-//    DPRINT("unknown keyword\n");    
+    if (wasSpecialMode)
+      myState.Destination = DESTINATION_SKIP;
     return;
   }
 
-  fSkipDestIfUnk = false;
-
-  it->second->run(*this, fParam ? &param : 0);
+  it->second->run(*this, parameter);
 }
 
 
-void RtfReader::ecParseCharData(const char *data, size_t len, bool convert) {
-  if (myState.rds != DESTINATION_SKIP) {
+void RtfReader::processCharData(const char *data, size_t len, bool convert) {
+  if (myState.Destination != DESTINATION_SKIP) {
     addCharData(data, len, convert);
   }
 }
@@ -447,23 +436,17 @@ bool RtfReader::readDocument(const std::string &fileName) {
   myStreamBuffer = new char[rtfStreamBufferSize];
   
   myIsInterrupted = false;
-  startDocumentHandler();
 
-  fSkipDestIfUnk = false;
+  mySpecialMode = false;
 
-  myState.alignment = ALIGN_UNDEFINED;
+  myState.Alignment = ALIGN_UNDEFINED;
   myState.Italic = false;
   myState.Bold = false;
   myState.Underlined = false;
-  myState.rds = DESTINATION_NONE;
+  myState.Destination = DESTINATION_NONE;
   myState.ReadDataAsHex = false;
 
-  int ret = parseDocument();
-  bool code = ret == ecOK;
-  if (!code) {
-    std::cerr << "parse failed: " << ret << "\n";
-  }
-  endDocumentHandler();
+  bool code = parseDocument();
 
   while (!myStateStack.empty()) {
     myStateStack.pop();
