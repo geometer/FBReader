@@ -42,8 +42,6 @@ RtfReader::RtfReader(const std::string &encoding) {
 RtfReader::~RtfReader() {
 }
 
-typedef enum {ipfnCodePage, ipfnSkipDest } IPFN;
-
 RtfReader::RtfCommand::~RtfCommand() {
 }
 
@@ -119,15 +117,10 @@ void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
   }
 }
 
-static const char *encoding1251 = "windows-1251";
-
 void RtfReader::RtfCodepageCommand::run(RtfReader &reader, int *parameter) const {
   reader.startElementHandler(0);
   if (parameter != 0) {
-    if ((*parameter == 1251) && (reader.encoding != encoding1251)) {
-      reader.encoding = encoding1251;
-      reader.myConverter = ZLEncodingConverter::createConverter(reader.encoding);
-    }
+    reader.myConverter = ZLEncodingConverter::createConverter(*parameter);
   }
 }
 

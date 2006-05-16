@@ -58,6 +58,11 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 	return new DummyEncodingConverter();
 }
 
+shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(int encoding) {
+	std::map<int,std::string>::const_iterator it = ourEncodingsByCode.find(encoding);
+	return (it == ourEncodingsByCode.end()) ? new DummyEncodingConverter() : createConverter(it->second);
+}
+
 ZLEncodingConverter::ZLEncodingConverter() {
 }
 

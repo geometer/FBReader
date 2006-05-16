@@ -23,6 +23,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include <abstract/shared_ptr.h>
 
@@ -30,6 +31,7 @@ class ZLEncodingConverter {
 
 public:
 	static shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding) XML_SECTION;
+	static shared_ptr<ZLEncodingConverter> createConverter(int encoding) XML_SECTION;
 	static void setEncodingDescriptionPath(const std::string &path) XML_SECTION;
 	static std::string &encodingDescriptionPath() XML_SECTION;
 	static std::vector<std::string> &knownEncodings() XML_SECTION;
@@ -37,6 +39,7 @@ public:
 private:
 	static std::string ourEncodingDescriptionPath;
 	static std::vector<std::string> ourKnownEncodings;
+	static std::map<int,std::string> ourEncodingsByCode;
 
 protected:
 	ZLEncodingConverter() XML_SECTION;

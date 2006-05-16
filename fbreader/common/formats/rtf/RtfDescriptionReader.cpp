@@ -39,6 +39,7 @@ bool RtfDescriptionReader::readDocument(const std::string &fileName) {
     myDescription.title() = title;
   }
     
+	// TODO: set author sort key
   myDescription.addAuthor(author, std::string(), std::string());
     
   if (!encoding.empty()) {
@@ -98,6 +99,7 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
         state = READ_TITLE;
       } else {
         hasTitle = true;
+        state = READ_NONE;
       }
       break;
     case DESTINATION_AUTHOR:
@@ -106,6 +108,7 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
         state = READ_AUTHOR;
       } else {
         hasAuthor = true;
+        state = READ_NONE;
       }
       break;
     case DESTINATION_NONE:
