@@ -35,57 +35,57 @@ class RtfImage;
 class RtfBookReader : public RtfReader {
 
 public:
-	RtfBookReader(BookModel &model, const std::string &encoding);
-	~RtfBookReader();
+  RtfBookReader(BookModel &model, const std::string &encoding);
+  ~RtfBookReader();
 
-	void startDocumentHandler();
-	void endDocumentHandler();
+  void startDocumentHandler();
+  void endDocumentHandler();
 
-	void startElementHandler(int tag);
+  void startElementHandler(int tag);
 
-	bool characterDataHandler(std::string &str);
-	void flushBuffer();
+  bool characterDataHandler(std::string &str);
+  void flushBuffer();
 
   void switchDestination(Destination destiantion, bool on);
-	void addCharData(const char *data, size_t len, bool convert);
-	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
+  void addCharData(const char *data, size_t len, bool convert);
+  void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
 
-	void setFontProperty(FontProperty property);
-	void newParagraph();
-
-protected:
-	struct StyleInfo {
-	    int id;
-	    std::string name;
-	};
-
-	std::vector<StyleInfo> styles;
-	StyleInfo *currentStyleInfo;    
-
-	int imageIndex;
-	int footnoteIndex;
-
-	enum ReadState {
-	    READ_NONE,
-	    READ_TEXT,
-	    READ_IMAGE,
-	};
-	
-	struct RtfBookReaderState
-	{
-	    std::string id;
-	    ReadState readState;
-    
-	    bool isPrevImage;
-	};
-
-	std::vector<RtfBookReaderState> stack;
-	RtfBookReaderState state;
-
-	std::string outputBuffer;
+  void setFontProperty(FontProperty property);
+  void newParagraph();
 
 private:
-	BookReader myBookReader;
+  struct StyleInfo {
+    int id;
+    std::string name;
+  };
+
+  std::vector<StyleInfo> styles;
+  StyleInfo *currentStyleInfo;    
+
+  int imageIndex;
+  int footnoteIndex;
+
+  enum ReadState {
+    READ_NONE,
+    READ_TEXT,
+    READ_IMAGE,
+  };
+  
+  struct RtfBookReaderState
+  {
+    std::string id;
+    ReadState readState;
+    
+    bool isPrevImage;
+  };
+
+  std::vector<RtfBookReaderState> stack;
+  RtfBookReaderState state;
+
+  std::string outputBuffer;
+
+private:
+  BookReader myBookReader;
 };
 
 inline RtfBookReader::~RtfBookReader() {}
