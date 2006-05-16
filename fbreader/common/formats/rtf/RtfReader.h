@@ -87,11 +87,6 @@ protected:
   void interrupt(void);
   shared_ptr<ZLEncodingConverter> myConverter;
 
-  enum TagCode {
-    _STYLE_INFO,
-    _ENCODING,
-  };
-
 protected:
   enum FontProperty {
     FONT_BOLD,

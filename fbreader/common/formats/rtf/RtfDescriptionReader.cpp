@@ -89,16 +89,8 @@ bool RtfDescriptionReader::characterDataHandler(std::string &str) {
   return false;
 }
 
-void RtfDescriptionReader::startElementHandler(int tag) {
-//    DPRINT("start handler: %i\n", tag);
-  switch (tag) {
-    case _ENCODING:
-      hasEncoding = true;
-      break;
-    default:
-      state = READ_NONE;
-      break;
-  }
+void RtfDescriptionReader::startElementHandler(int) {
+  hasEncoding = true;
 }
 
 void RtfDescriptionReader::switchDestination(Destination destiantion, bool on) {

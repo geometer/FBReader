@@ -117,7 +117,6 @@ void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
     //std::cerr << "Add style index: " << val << "\n";
     
     //sprintf(style_attributes[0], "%i", val);
-    reader.startElementHandler(_STYLE_INFO);
   } else /*if (state.rds == rdsContent)*/ {
     //std::cerr << "Set style index: " << val << "\n";
 
@@ -128,7 +127,7 @@ void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
 static const char *encoding1251 = "windows-1251";
 
 void RtfReader::RtfCodepageCommand::run(RtfReader &reader, int *parameter) const {
-  reader.startElementHandler(_ENCODING);
+  reader.startElementHandler(0);
   if (parameter != 0) {
     if ((*parameter == 1251) && (reader.encoding != encoding1251)) {
       reader.encoding = encoding1251;
@@ -296,6 +295,7 @@ int RtfReader::parseDocument() {
               if (state.Underlined != oldUnderlined) {
                 setFontProperty(FONT_UNDERLINED, state.Underlined);
               }
+							// TODO: reset alignment
               
               break;
             }
