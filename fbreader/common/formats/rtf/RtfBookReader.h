@@ -65,16 +65,10 @@ private:
   int imageIndex;
   int footnoteIndex;
 
-  enum ReadState {
-    READ_NONE,
-    READ_TEXT,
-    READ_IMAGE,
-  };
-  
   struct RtfBookReaderState
   {
     std::string id;
-    ReadState readState;
+    bool readText;
     
     bool isPrevImage;
   };

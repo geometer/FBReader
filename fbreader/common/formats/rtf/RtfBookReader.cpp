@@ -35,7 +35,7 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) : Rt
 static const size_t maxBufferSize = 1024;
 
 void RtfBookReader::addCharData(const char *data, size_t len, bool convert) {
-  if (state.readState == READ_TEXT) {
+  if (state.readText) {
     if (convert || myConverter.isNull()) {
       outputBuffer.append(data, len);
       if (outputBuffer.size() >= maxBufferSize) {
@@ -51,7 +51,7 @@ void RtfBookReader::addCharData(const char *data, size_t len, bool convert) {
 
 void RtfBookReader::flushBuffer() {
   if (!outputBuffer.empty()) {
-    if (state.readState == READ_TEXT) {    
+    if (state.readText) {    
       if (!myConverter.isNull()) {
         static std::string newString;
           myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
@@ -74,7 +74,7 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
     case DESTINATION_TITLE:
     case DESTINATION_AUTHOR:
     case DESTINATION_STYLESHEET:
-      state.readState = on ? READ_NONE : READ_TEXT;
+      state.readText = !on;
       break;
     case DESTINATION_PICTURE:
       if (on) {
@@ -83,10 +83,8 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
           myBookReader.endParagraph();
         }
         state.isPrevImage = true;
-        state.readState = READ_IMAGE;
-      } else {
-        state.readState = READ_TEXT;
       }
+      state.readText = !on;
       break;
     case DESTINATION_FOOTNOTE:
       flushBuffer();
@@ -96,7 +94,7 @@ void RtfBookReader::switchDestination(Destination destination, bool on) {
       
         stack.push_back(state);
         state.id = id;
-        state.readState = READ_TEXT;
+        state.readText = true;
         state.isPrevImage = false;
         
         myBookReader.addHyperlinkControl(FOOTNOTE, id);        
@@ -135,7 +133,7 @@ void RtfBookReader::insertImage(const std::string &mimeType, const std::string &
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
-  if (state.readState == READ_TEXT) {
+  if (state.readText) {
     if (state.isPrevImage) {
       myBookReader.beginParagraph();
       state.isPrevImage = false;
@@ -151,7 +149,7 @@ void RtfBookReader::startDocumentHandler() {
 
   currentStyleInfo = 0;    
   
-  state.readState = READ_NONE;
+  state.readText = false;
   state.id = "";
   state.isPrevImage = false;
 
@@ -166,11 +164,11 @@ void RtfBookReader::endDocumentHandler() {
 }
 
 void RtfBookReader::startElementHandler(int) {
-  state.readState = READ_NONE;
+  state.readText = false;
 }
 
 void RtfBookReader::setFontProperty(FontProperty property) {
-  if (state.readState != READ_TEXT) {
+  if (!state.readText) {
     //DPRINT("change style not in text.\n");
     return;
   }
