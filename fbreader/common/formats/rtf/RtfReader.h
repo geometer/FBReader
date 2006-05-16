@@ -83,7 +83,6 @@ protected:
   virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
 
   void interrupt(void);
-  shared_ptr<ZLEncodingConverter> myConverter;
 
 protected:
   enum FontProperty {
@@ -184,6 +183,7 @@ private:
 
 protected:
   RtfReaderState myState;
+  shared_ptr<ZLEncodingConverter> myConverter;
 
 private:
   bool mySpecialMode;
