@@ -64,11 +64,13 @@ public:
 	static const std::vector<std::string> &languageNames();
 
 public:
-	TeXHyphenator() {}
+	TeXHyphenator() : myUseBreakingAlgorithm(false) {}
 	~TeXHyphenator() HYPHENATION_SECTION;
 
 	void load(const std::string &language) HYPHENATION_SECTION;
 	void unload() HYPHENATION_SECTION;
+
+	bool useBreakingAlgorithm() const HYPHENATION_SECTION;
 
 protected:
 	void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const HYPHENATION_SECTION;
@@ -78,6 +80,8 @@ private:
 
 	std::vector<TeXHyphenationPattern*> myPatternTable;
 	std::string myLanguage;
+
+	bool myUseBreakingAlgorithm;
 
 friend class HyphenationReader;
 };

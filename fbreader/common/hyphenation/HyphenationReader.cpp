@@ -29,10 +29,13 @@ void HyphenationReader::characterDataHandler(const char *text, int len) {
 }
 
 static const std::string PATTERN = "pattern";
+static const std::string LINE_BREAKING_ALGORITHM = "lineBreakingAlgorithm";
 
 void HyphenationReader::startElementHandler(const char *tag, const char **) {
 	if (PATTERN == tag) {
 		myReadPattern = true;
+	} else if (LINE_BREAKING_ALGORITHM == tag) {
+		myHyphenator->myUseBreakingAlgorithm = true;
 	}
 }
 

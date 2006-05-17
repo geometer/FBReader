@@ -59,6 +59,8 @@ public:
 
 	HyphenationInfo info(const Word &word) const HYPHENATION_SECTION;
 
+	virtual bool useBreakingAlgorithm() const HYPHENATION_SECTION = 0;
+
 protected:
 	virtual void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const HYPHENATION_SECTION = 0;
 

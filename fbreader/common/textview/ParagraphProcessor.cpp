@@ -27,8 +27,10 @@
 #include "Word.h"
 
 #include "../model/Paragraph.h"
+#include "../hyphenation/Hyphenator.h"
 
 ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
+	myCheckBreakableCharacters = Hyphenator::instance().useBreakingAlgorithm();
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
@@ -142,7 +144,7 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 							}
 						} else if (firstNonSpace == 0) {
 							firstNonSpace = ptr;
-						} else {
+						} else if (myCheckBreakableCharacters) {
 							switch (ZLUnicodeUtil::isBreakable(ch)) {
 								case ZLUnicodeUtil::NO_BREAKABLE:
 									break;

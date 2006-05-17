@@ -84,6 +84,8 @@ private:
 		void addWord(const char *ptr, int offset, int len) VIEW_SECTION;
 
 	private:
+		bool myCheckBreakableCharacters;
+
 		const Paragraph &myParagraph;
 		TextElementVector &myElements;
 

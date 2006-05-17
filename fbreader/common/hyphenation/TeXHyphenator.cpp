@@ -44,6 +44,7 @@ std::vector<std::string> TeXHyphenator::LanguageNames;
 
 static const std::string POSTFIX = ".pattern";
 static const std::string NONE = "none";
+static const std::string UNKNOWN = "unknown";
 static const std::string LANGUAGE = "language";
 
 class LanguageReader : public ZLXMLReader {
@@ -86,7 +87,7 @@ void TeXHyphenator::collectLanguages() {
 			}
 		}
 		LanguageCodes.push_back(NONE);
-		LanguageNames.push_back(NONE);
+		LanguageNames.push_back("unknown");
 	}
 }
 
@@ -222,4 +223,9 @@ void TeXHyphenator::unload() {
 		delete *it;
 	}
 	myPatternTable.clear();
+	myUseBreakingAlgorithm = false;
+}
+
+bool TeXHyphenator::useBreakingAlgorithm() const {
+	return myUseBreakingAlgorithm;
 }
