@@ -66,8 +66,22 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
     case DESTINATION_AUTHOR:
       myDoRead = on;
       if (!on) {
-        // TODO: set sort key
-        myDescription.addAuthor(myBuffer, "", "");
+				int stripIndex = myBuffer.length() - 1;
+				while ((stripIndex >= 0) && (myBuffer[stripIndex] == ' ')) {
+					stripIndex--;
+				}
+				myBuffer = myBuffer.substr(0, stripIndex + 1);
+				int index = myBuffer.rfind(' ');
+				if (index == -1) {
+          myDescription.addAuthor(myBuffer, "", "");
+				} else {
+					std::string lastName = myBuffer.substr(index + 1);
+					while ((index >= 0) && (myBuffer[index] == ' ')) {
+						index--;
+					}
+					std::string firstName = myBuffer.substr(0, index + 1);
+          myDescription.addAuthor(firstName, "", lastName);
+				}
         myBuffer.erase();
       }
       break;
