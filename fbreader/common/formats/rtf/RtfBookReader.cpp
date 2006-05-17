@@ -78,10 +78,9 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
     case DESTINATION_PICTURE:
       if (on) {
         flushBuffer();
-        if (!state.isPrevImage) {
+        if (myBookReader.paragraphIsOpen()) {
           myBookReader.endParagraph();
         }
-        state.isPrevImage = true;
       }
       state.readText = !on;
       break;
@@ -94,7 +93,6 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
         stack.push_back(state);
         state.id = id;
         state.readText = true;
-        state.isPrevImage = false;
         
         myBookReader.addHyperlinkControl(FOOTNOTE, id);        
         myBookReader.addData(id);
@@ -131,9 +129,8 @@ void RtfBookReader::insertImage(const std::string &mimeType, const std::string &
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
   if (state.readText) {
-    if (state.isPrevImage) {
+    if (!myBookReader.paragraphIsOpen()) {
       myBookReader.beginParagraph();
-      state.isPrevImage = false;
     }
     myBookReader.addData(str);
   }
@@ -146,7 +143,6 @@ bool RtfBookReader::readDocument(const std::string &fileName) {
 
   state.readText = false;
   state.id = "";
-  state.isPrevImage = false;
 
   myBookReader.setMainTextModel();
   myBookReader.pushKind(REGULAR);

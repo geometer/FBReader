@@ -56,8 +56,6 @@ private:
   struct RtfBookReaderState {
     std::string id;
     bool readText;
-    
-    bool isPrevImage;
   };
 
   std::vector<RtfBookReaderState> stack;
