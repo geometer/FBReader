@@ -32,30 +32,6 @@
 
 #include "../../model/AlignmentType.h"
 
-enum DestinationType {
-  DESTINATION_NONE,
-  DESTINATION_SKIP,
-  DESTINATION_INFO,
-  DESTINATION_TITLE,
-  DESTINATION_AUTHOR,
-  DESTINATION_PICTURE,
-  DESTINATION_STYLESHEET,
-  DESTINATION_FOOTNOTE,
-};
-
-// property save structure
-struct RtfReaderState
-{
-    bool Bold;
-    bool Italic;
-    bool Underlined;
-    AlignmentType Alignment;
-    DestinationType Destination;
-
-    bool ReadDataAsHex;
-};
-
-
 class ZLInputStream;
 
 class RtfReader {
@@ -63,30 +39,45 @@ class RtfReader {
 private:
   static void RtfReader::fillKeywordMap();
 
-  class RtfCommand;
+private:
+	class RtfCommand;
   static std::map<std::string, RtfCommand*> ourKeywordMap;
-
-public:
-  virtual bool readDocument(const std::string &fileName);
 
 protected:
   RtfReader(const std::string &encoding);
   virtual ~RtfReader();
 
-protected:
-  virtual void addCharData(const char *data, size_t len, bool convert) = 0;
-
-  virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
-
-  void interrupt(void);
+public:
+  virtual bool readDocument(const std::string &fileName);
 
 protected:
+  enum DestinationType {
+    DESTINATION_NONE,
+    DESTINATION_SKIP,
+    DESTINATION_INFO,
+    DESTINATION_TITLE,
+    DESTINATION_AUTHOR,
+    DESTINATION_PICTURE,
+    DESTINATION_STYLESHEET,
+    DESTINATION_FOOTNOTE,
+  };
+
   enum FontProperty {
     FONT_BOLD,
     FONT_ITALIC,
     FONT_UNDERLINED
   };
     
+  virtual void addCharData(const char *data, size_t len, bool convert) = 0;
+  virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
+	virtual void setEncoding(int code) = 0;
+  virtual void switchDestination(DestinationType destination, bool on) = 0;
+  virtual void setAlignment(AlignmentType alignment) = 0;
+  virtual void setFontProperty(FontProperty property) = 0;
+  virtual void newParagraph() = 0;
+
+  void interrupt();
+
 private:
   class RtfCommand {
   protected:
@@ -165,19 +156,21 @@ private:
     void run(RtfReader &reader, int *parameter) const;
   };
   
-private:
-	virtual void setEncoding(int code) = 0;
-  virtual void switchDestination(DestinationType destination, bool on) = 0;
-  virtual void setAlignment(AlignmentType alignment) = 0;
-  virtual void setFontProperty(FontProperty property) = 0;
-  virtual void newParagraph() = 0;
-
+  bool parseDocument();
   void processKeyword(const std::string &keyword, int *parameter = 0);
   void processCharData(const char *data, size_t len, bool convert = true);
 
-  bool parseDocument();
-
 protected:
+  struct RtfReaderState {
+    bool Bold;
+    bool Italic;
+    bool Underlined;
+    AlignmentType Alignment;
+    DestinationType Destination;
+  
+    bool ReadDataAsHex;
+  };
+
   RtfReaderState myState;
   shared_ptr<ZLEncodingConverter> myConverter;
 
