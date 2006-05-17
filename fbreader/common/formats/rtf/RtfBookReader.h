@@ -53,21 +53,20 @@ public:
   void newParagraph();
 
 private:
-  struct RtfBookReaderState {
-    std::string id;
-    bool readText;
-  };
-
-  std::vector<RtfBookReaderState> stack;
-  RtfBookReaderState state;
-
-  std::string outputBuffer;
-
-private:
   BookReader myBookReader;
+
+  std::string myOutputBuffer;
 
   int myImageIndex;
   int myFootnoteIndex;
+
+  struct RtfBookReaderState {
+    std::string Id;
+    bool ReadText;
+  };
+
+  RtfBookReaderState myCurrentState;
+  std::stack<RtfBookReaderState> myStateStack;
 };
 
 inline RtfBookReader::~RtfBookReader() {}

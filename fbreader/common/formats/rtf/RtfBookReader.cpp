@@ -34,10 +34,10 @@ RtfBookReader::RtfBookReader(BookModel &model, const std::string &encoding) : Rt
 static const size_t maxBufferSize = 1024;
 
 void RtfBookReader::addCharData(const char *data, size_t len, bool convert) {
-  if (state.readText) {
+  if (myCurrentState.ReadText) {
     if (convert || myConverter.isNull()) {
-      outputBuffer.append(data, len);
-      if (outputBuffer.size() >= maxBufferSize) {
+      myOutputBuffer.append(data, len);
+      if (myOutputBuffer.size() >= maxBufferSize) {
         flushBuffer();
       }
     } else {
@@ -49,18 +49,18 @@ void RtfBookReader::addCharData(const char *data, size_t len, bool convert) {
 }
 
 void RtfBookReader::flushBuffer() {
-  if (!outputBuffer.empty()) {
-    if (state.readText) {    
+  if (!myOutputBuffer.empty()) {
+    if (myCurrentState.ReadText) {    
       if (!myConverter.isNull()) {
         static std::string newString;
-          myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.length());
+          myConverter->convert(newString, myOutputBuffer.data(), myOutputBuffer.data() + myOutputBuffer.length());
         characterDataHandler(newString);
         newString.erase();
       } else {
-        characterDataHandler(outputBuffer);
+        characterDataHandler(myOutputBuffer);
       }
     }
-    outputBuffer.erase();
+    myOutputBuffer.erase();
   }
 }
 
@@ -73,7 +73,7 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
     case DESTINATION_TITLE:
     case DESTINATION_AUTHOR:
     case DESTINATION_STYLESHEET:
-      state.readText = !on;
+      myCurrentState.ReadText = !on;
       break;
     case DESTINATION_PICTURE:
       if (on) {
@@ -82,7 +82,7 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
           myBookReader.endParagraph();
         }
       }
-      state.readText = !on;
+      myCurrentState.ReadText = !on;
       break;
     case DESTINATION_FOOTNOTE:
       flushBuffer();
@@ -90,9 +90,9 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
         std::string id;
         ZLStringUtil::appendNumber(id, myFootnoteIndex++);
       
-        stack.push_back(state);
-        state.id = id;
-        state.readText = true;
+        myStateStack.push(myCurrentState);
+        myCurrentState.Id = id;
+        myCurrentState.ReadText = true;
         
         myBookReader.addHyperlinkControl(FOOTNOTE, id);        
         myBookReader.addData(id);
@@ -105,13 +105,15 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
         myBookReader.endParagraph();
         myBookReader.popKind();
         
-        state = stack.back();
-        stack.pop_back();
+				if (!myStateStack.empty()) {
+          myCurrentState = myStateStack.top();
+          myStateStack.pop();
+				}
         
-        if (stack.empty()) {
+        if (myStateStack.empty()) {
           myBookReader.setMainTextModel();
         } else {
-          myBookReader.setFootnoteTextModel(state.id);
+          myBookReader.setFootnoteTextModel(myCurrentState.Id);
         }
       }
       break;
@@ -128,7 +130,7 @@ void RtfBookReader::insertImage(const std::string &mimeType, const std::string &
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {
-  if (state.readText) {
+  if (myCurrentState.ReadText) {
     if (!myBookReader.paragraphIsOpen()) {
       myBookReader.beginParagraph();
     }
@@ -141,8 +143,7 @@ bool RtfBookReader::readDocument(const std::string &fileName) {
   myImageIndex = 0;
   myFootnoteIndex = 1;
 
-  state.readText = false;
-  state.id = "";
+  myCurrentState.ReadText = false;
 
   myBookReader.setMainTextModel();
   myBookReader.pushKind(REGULAR);
@@ -152,13 +153,15 @@ bool RtfBookReader::readDocument(const std::string &fileName) {
 
   flushBuffer();
   myBookReader.endParagraph();
-	stack.clear();
+	while (!myStateStack.empty()) {
+	  myStateStack.pop();
+	}
 
 	return code;
 }
 
 void RtfBookReader::setFontProperty(FontProperty property) {
-  if (!state.readText) {
+  if (!myCurrentState.ReadText) {
     //DPRINT("change style not in text.\n");
     return;
   }
