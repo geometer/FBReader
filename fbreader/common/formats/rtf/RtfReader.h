@@ -168,8 +168,7 @@ private:
 private:
 	virtual void setEncoding(int code) = 0;
   virtual void switchDestination(DestinationType destination, bool on) = 0;
-  // TODO: change to pure virtual
-  virtual void setAlignment(AlignmentType) {}
+  virtual void setAlignment(AlignmentType alignment) = 0;
   virtual void setFontProperty(FontProperty property) = 0;
   virtual void newParagraph() = 0;
 

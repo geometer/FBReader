@@ -226,3 +226,6 @@ void RtfBookReader::newParagraph() {
 
 void RtfBookReader::setEncoding(int) {
 }
+
+void RtfBookReader::setAlignment(AlignmentType alignment) {
+}
