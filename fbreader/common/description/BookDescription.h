@@ -83,6 +83,7 @@ public:
 	WritableBookDescription(BookDescription &description) MODEL_SECTION;
 	~WritableBookDescription() MODEL_SECTION;
 	void addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName) MODEL_SECTION;
+	const Author *author() const MODEL_SECTION;
 	std::string &title() MODEL_SECTION;
 	std::string &fileName() MODEL_SECTION;
 	std::string &language() MODEL_SECTION;
@@ -102,6 +103,7 @@ inline const std::string &BookDescription::encoding() const { return myEncoding;
 
 inline WritableBookDescription::WritableBookDescription(BookDescription &description) : myDescription(description) {}
 inline WritableBookDescription::~WritableBookDescription() {}
+inline const Author *WritableBookDescription::author() const { return myDescription.author(); }
 inline std::string &WritableBookDescription::title() { return myDescription.myTitle; }
 inline std::string &WritableBookDescription::fileName() { return myDescription.myFileName; }
 inline std::string &WritableBookDescription::language() { return myDescription.myLanguage; }

@@ -40,8 +40,6 @@ public:
 
   bool readDocument(const std::string &fileName);
 
-  void startElementHandler(int tag);
-
   bool characterDataHandler(std::string &str);
   void flushBuffer();
 

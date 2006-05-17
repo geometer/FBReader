@@ -28,97 +28,55 @@ RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfRe
 }
 
 void RtfDescriptionReader::setEncoding(int code) {
-	if (myDescription.encoding().empty()) {
-		myDescription.encoding() = ZLEncodingConverter::encodingByCode(code);
-		myConverter = ZLEncodingConverter::createConverter(myDescription.encoding());
-	}
+  if (myDescription.encoding().empty()) {
+    myDescription.encoding() = ZLEncodingConverter::encodingByCode(code);
+    myConverter = ZLEncodingConverter::createConverter(myDescription.encoding());
+  }
 }
 
 bool RtfDescriptionReader::readDocument(const std::string &fileName) {
-  state = READ_NONE;
-  hasTitle = false;
-  hasAuthor = false;
-
-	bool code = RtfReader::readDocument(fileName);
-
-  if (!title.empty()) {
-    myDescription.title() = title;
-  }
-    
-	// TODO: set author sort key
-  myDescription.addAuthor(author, std::string(), std::string());
-
-  title.erase();
-  author.erase();
-
-	return code;
+  myDoRead = false;
+  return RtfReader::readDocument(fileName);
 }
 
 void RtfDescriptionReader::addCharData(const char *data, size_t len, bool convert) {
-  // TODO: use parameter 'convert'
-  if ((state == READ_TITLE) || (state == READ_AUTHOR)) {
-    outputBuffer.append(data, len);
+  if (myDoRead) {
+    if (convert) {
+      myConverter->convert(myBuffer, data, data + len);
+    } else {
+      myBuffer.append(data, len);
+    }
   }
-}
-
-void RtfDescriptionReader::flushBuffer() {
-  if (!outputBuffer.empty()) {
-    std::string newString;
-    myConverter->convert(newString, outputBuffer.data(), outputBuffer.data() + outputBuffer.size());
-    characterDataHandler(newString);
-    outputBuffer.erase();
-  }
-}
-
-bool RtfDescriptionReader::characterDataHandler(std::string &str) {
-  switch (state) {
-    case READ_TITLE:
-      title.append(str);
-      return true;
-    case READ_AUTHOR:
-      author.append(str);
-      return true;
-  }
-  return false;
 }
 
 void RtfDescriptionReader::switchDestination(DestinationType destination, bool on) {
   switch (destination) {
     case DESTINATION_INFO:
-      flushBuffer();
       if (!on) {
         interrupt();
       }
       break;
     case DESTINATION_TITLE:
-      flushBuffer();
-      if (on) {
-        state = READ_TITLE;
-      } else {
-        hasTitle = true;
-        state = READ_NONE;
+      myDoRead = on;
+      if (!on) {
+        myDescription.title() = myBuffer;
+        myBuffer.erase();
       }
       break;
     case DESTINATION_AUTHOR:
-      flushBuffer();
-      if (on) {
-        state = READ_AUTHOR;
-      } else {
-        hasAuthor = true;
-        state = READ_NONE;
+      myDoRead = on;
+      if (!on) {
+        // TODO: set sort key
+        myDescription.addAuthor(myBuffer, "", "");
+        myBuffer.erase();
       }
       break;
-    case DESTINATION_NONE:
-    case DESTINATION_SKIP:
-      break;
     default:
-			if (on) {
-				state = READ_NONE;
-			}
       break;
   }
-  if (!on && hasTitle && hasAuthor && !myDescription.encoding().empty()) {
-		flushBuffer();
+  if (!myDescription.title().empty() &&
+      (myDescription.author() != 0) &&
+      !myDescription.encoding().empty()) {
     interrupt();
   }
 }
