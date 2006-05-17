@@ -32,11 +32,7 @@ std::map<std::string, RtfReader::RtfCommand*> RtfReader::ourKeywordMap;
 static const int rtfStreamBufferSize = 4096;
 
 RtfReader::RtfReader(const std::string &encoding) {
-  this->encoding = encoding;
-  
-  if (!encoding.empty()) {
-    myConverter = ZLEncodingConverter::createConverter(encoding);
-  }
+  myConverter = ZLEncodingConverter::createConverter(encoding);
 }
 
 RtfReader::~RtfReader() {
@@ -118,9 +114,8 @@ void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
 }
 
 void RtfReader::RtfCodepageCommand::run(RtfReader &reader, int *parameter) const {
-  reader.startElementHandler(0);
   if (parameter != 0) {
-    reader.myConverter = ZLEncodingConverter::createConverter(*parameter);
+		reader.setEncoding(*parameter);
   }
 }
 

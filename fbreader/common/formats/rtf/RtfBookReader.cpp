@@ -164,9 +164,6 @@ bool RtfBookReader::readDocument(const std::string &fileName) {
 	return code;
 }
 
-void RtfBookReader::startElementHandler(int) {
-}
-
 void RtfBookReader::setFontProperty(FontProperty property) {
   if (!state.readText) {
     //DPRINT("change style not in text.\n");
@@ -225,4 +222,7 @@ void RtfBookReader::newParagraph() {
   flushBuffer();
   myBookReader.endParagraph();
   myBookReader.beginParagraph();
+}
+
+void RtfBookReader::setEncoding(int) {
 }

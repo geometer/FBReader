@@ -74,10 +74,6 @@ protected:
   virtual ~RtfReader();
 
 protected:
-  std::string encoding;
-  
-  virtual void startElementHandler(int tag) = 0;
-
   virtual void addCharData(const char *data, size_t len, bool convert) = 0;
 
   virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
@@ -170,6 +166,7 @@ private:
   };
   
 private:
+	virtual void setEncoding(int code) = 0;
   virtual void switchDestination(DestinationType destination, bool on) = 0;
   // TODO: change to pure virtual
   virtual void setAlignment(AlignmentType) {}

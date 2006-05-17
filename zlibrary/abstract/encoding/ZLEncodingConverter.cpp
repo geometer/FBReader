@@ -58,11 +58,6 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 	return new DummyEncodingConverter();
 }
 
-shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(int encoding) {
-	std::map<int,std::string>::const_iterator it = ourEncodingsByCode.find(encoding);
-	return (it == ourEncodingsByCode.end()) ? new DummyEncodingConverter() : createConverter(it->second);
-}
-
 ZLEncodingConverter::ZLEncodingConverter() {
 }
 
@@ -253,4 +248,10 @@ bool IconvEncodingConverter::fillTable(int *map) {
 		}
 	}
 	return true;
+}
+
+const std::string &ZLEncodingConverter::encodingByCode(int code) {
+	static const std::string EMPTY;
+	std::map<int,std::string>::const_iterator it = ourEncodingsByCode.find(code);
+	return (it != ourEncodingsByCode.end()) ? it->second : EMPTY;
 }

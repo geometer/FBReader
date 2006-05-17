@@ -31,10 +31,10 @@ class ZLEncodingConverter {
 
 public:
 	static shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding) XML_SECTION;
-	static shared_ptr<ZLEncodingConverter> createConverter(int encoding) XML_SECTION;
 	static void setEncodingDescriptionPath(const std::string &path) XML_SECTION;
 	static std::string &encodingDescriptionPath() XML_SECTION;
 	static std::vector<std::string> &knownEncodings() XML_SECTION;
+	static const std::string &encodingByCode(int code);
 
 private:
 	static std::string ourEncodingDescriptionPath;

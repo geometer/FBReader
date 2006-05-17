@@ -27,11 +27,17 @@
 RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfReader(description.encoding()), myDescription(description) {
 }
 
+void RtfDescriptionReader::setEncoding(int code) {
+	if (myDescription.encoding().empty()) {
+		myDescription.encoding() = ZLEncodingConverter::encodingByCode(code);
+		myConverter = ZLEncodingConverter::createConverter(myDescription.encoding());
+	}
+}
+
 bool RtfDescriptionReader::readDocument(const std::string &fileName) {
   state = READ_NONE;
   hasTitle = false;
   hasAuthor = false;
-  hasEncoding = false;
 
 	bool code = RtfReader::readDocument(fileName);
 
@@ -41,14 +47,9 @@ bool RtfDescriptionReader::readDocument(const std::string &fileName) {
     
 	// TODO: set author sort key
   myDescription.addAuthor(author, std::string(), std::string());
-    
-  if (!encoding.empty()) {
-    myDescription.encoding() = encoding;
-  }
 
   title.erase();
   author.erase();
-  encoding.erase();
 
 	return code;
 }
@@ -79,10 +80,6 @@ bool RtfDescriptionReader::characterDataHandler(std::string &str) {
       return true;
   }
   return false;
-}
-
-void RtfDescriptionReader::startElementHandler(int) {
-  hasEncoding = true;
 }
 
 void RtfDescriptionReader::switchDestination(DestinationType destination, bool on) {
@@ -120,7 +117,7 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
 			}
       break;
   }
-  if (!on && hasTitle && hasAuthor && hasEncoding) {
+  if (!on && hasTitle && hasAuthor && !myDescription.encoding().empty()) {
 		flushBuffer();
     interrupt();
   }

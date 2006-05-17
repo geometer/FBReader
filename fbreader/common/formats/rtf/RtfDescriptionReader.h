@@ -41,6 +41,7 @@ public:
 	bool characterDataHandler(std::string &str);
 	void flushBuffer();
 
+	void setEncoding(int code);
   void switchDestination(DestinationType destination, bool on);
 	void addCharData(const char *data, size_t len, bool convert);
 	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
@@ -64,7 +65,6 @@ private:
 
 	bool hasTitle;
 	bool hasAuthor;
-	bool hasEncoding;
 
 	std::string outputBuffer;
 };
