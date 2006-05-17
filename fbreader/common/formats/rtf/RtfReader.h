@@ -72,7 +72,7 @@ protected:
   virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
 	virtual void setEncoding(int code) = 0;
   virtual void switchDestination(DestinationType destination, bool on) = 0;
-  virtual void setAlignment(AlignmentType alignment) = 0;
+  virtual void setAlignment() = 0;
   virtual void setFontProperty(FontProperty property) = 0;
   virtual void newParagraph() = 0;
 

@@ -20,7 +20,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <cctype>
 
 #include <abstract/ZLStringUtil.h>
@@ -90,7 +89,7 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
       flushBuffer();
       if (on) {
         std::string id;
-        ZLStringUtil::appendNumber(id, footnoteIndex++);
+        ZLStringUtil::appendNumber(id, myFootnoteIndex++);
       
         stack.push_back(state);
         state.id = id;
@@ -104,8 +103,6 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
         myBookReader.setFootnoteTextModel(id);
         myBookReader.pushKind(REGULAR);
         myBookReader.beginParagraph();
-        
-        footnoteIndex++;
       } else {
         myBookReader.endParagraph();
         myBookReader.popKind();
@@ -126,8 +123,8 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
 void RtfBookReader::insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) {
   ZLImage *image = new RtfImage(mimeType, fileName, startOffset, size);
 
-  std::string id = "InternalImage";
-  ZLStringUtil::appendNumber(id, imageIndex++);
+  std::string id;
+  ZLStringUtil::appendNumber(id, myImageIndex++);
   myBookReader.addImageReference(id);   
   myBookReader.addImage(id, image);
 }
@@ -144,8 +141,8 @@ bool RtfBookReader::characterDataHandler(std::string &str) {
 }
 
 bool RtfBookReader::readDocument(const std::string &fileName) {
-  imageIndex = 0;
-  footnoteIndex = 1;
+  myImageIndex = 0;
+  myFootnoteIndex = 1;
 
   state.readText = false;
   state.id = "";
@@ -222,10 +219,16 @@ void RtfBookReader::newParagraph() {
   flushBuffer();
   myBookReader.endParagraph();
   myBookReader.beginParagraph();
+	if (myState.Alignment != ALIGN_UNDEFINED) {
+		setAlignment();
+	}
 }
 
 void RtfBookReader::setEncoding(int) {
 }
 
-void RtfBookReader::setAlignment(AlignmentType alignment) {
+void RtfBookReader::setAlignment() {
+	ForcedControlEntry entry;
+	entry.setAlignmentType(myState.Alignment);
+	myBookReader.addControl(entry);
 }

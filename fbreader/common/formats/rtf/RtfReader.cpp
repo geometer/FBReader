@@ -20,7 +20,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <cctype>
 
 #include <abstract/ZLInputStream.h>
@@ -76,8 +75,10 @@ RtfReader::RtfAlignmentCommand::RtfAlignmentCommand(AlignmentType alignment) : m
 }
 
 void RtfReader::RtfAlignmentCommand::run(RtfReader &reader, int*) const {
-  //std::cerr << "Alignment = " << myAlignment << "\n";
-  reader.setAlignment(myAlignment);
+	if (reader.myState.Alignment != myAlignment) {
+		reader.myState.Alignment = myAlignment;
+    reader.setAlignment();
+	}
 }
 
 RtfReader::RtfCharCommand::RtfCharCommand(const std::string &chr) : myChar(chr) {
@@ -168,6 +169,7 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["par"] = newParagraphCommand;
 
     ourKeywordMap["\x09"] = new RtfCharCommand("\x09");
+    ourKeywordMap["_"] = new RtfCharCommand("-");
     ourKeywordMap["\\"] = new RtfCharCommand("\\");
     ourKeywordMap["{"] = new RtfCharCommand("{");
     ourKeywordMap["}"] = new RtfCharCommand("}");
@@ -266,6 +268,7 @@ bool RtfReader::parseDocument() {
               bool oldItalic = myState.Italic;
               bool oldBold = myState.Bold;
               bool oldUnderlined = myState.Underlined;
+              AlignmentType oldAlignment = myState.Alignment;
               myState = myStateStack.top();
               myStateStack.pop();
           
@@ -278,7 +281,9 @@ bool RtfReader::parseDocument() {
               if (myState.Underlined != oldUnderlined) {
                 setFontProperty(FONT_UNDERLINED);
               }
-							// TODO: reset alignment
+              if (myState.Alignment != oldAlignment) {
+                setAlignment();
+              }
               
               break;
             }

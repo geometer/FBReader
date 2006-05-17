@@ -37,7 +37,7 @@ public:
   bool readDocument(const std::string &fileName);
 
   void setEncoding(int code);
-  void setAlignment(AlignmentType alignment);
+  void setAlignment();
   void switchDestination(DestinationType destination, bool on);
   void addCharData(const char *data, size_t len, bool convert);
   void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);

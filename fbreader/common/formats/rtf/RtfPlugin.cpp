@@ -20,7 +20,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <abstract/ZLTime.h>
 
 #include <abstract/ZLStringUtil.h>
@@ -56,10 +55,7 @@ bool RtfPlugin::readDescription(const std::string &path, BookDescription &descri
 }
 
 bool RtfPlugin::readModel(const BookDescription &description, BookModel &model) const {
-  ZLTime start;
-  int ret = RtfBookReader(model, description.encoding()).readDocument(description.fileName());
-  std::cerr << start.millisecondsTo(ZLTime());
-  return ret;
+  return RtfBookReader(model, description.encoding()).readDocument(description.fileName());
 }
 
 const std::string &RtfPlugin::iconName() const {

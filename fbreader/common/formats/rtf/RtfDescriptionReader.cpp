@@ -104,5 +104,5 @@ void RtfDescriptionReader::setFontProperty(FontProperty) {
 void RtfDescriptionReader::newParagraph() {
 }
 
-void RtfDescriptionReader::setAlignment(AlignmentType) {
+void RtfDescriptionReader::setAlignment() {
 }
