@@ -9,7 +9,7 @@ QTINCLUDE = -I $(QTDIR)/include
 UILIBS = -L $(QTDIR)/lib -lqte -lqpe
 CC = $(TOOLSDIR)/gcc
 AR = $(TOOLSDIR)/ar rsu
-LD = $(TOOLSDIR)/g++
+LD = $(TOOLSDIR)/g++ -Xlinker -rpath /opt/QtPalmtop/lib -Xlinker -rpath /usr/lib
 
 CFLAGS = -pipe $(DUMMY_SECTIONS) -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DUSE_ZAURUS_FONTHACK
 DEPGEN = $(CC) -MM
