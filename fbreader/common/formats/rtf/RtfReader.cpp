@@ -26,7 +26,7 @@
 
 #include "RtfReader.h"
 
-std::map<std::string, RtfReader::RtfCommand*> RtfReader::ourKeywordMap;
+std::map<std::string, RtfCommand*> RtfReader::ourKeywordMap;
 
 static const int rtfStreamBufferSize = 4096;
 
@@ -37,73 +37,73 @@ RtfReader::RtfReader(const std::string &encoding) {
 RtfReader::~RtfReader() {
 }
 
-RtfReader::RtfCommand::~RtfCommand() {
+RtfCommand::~RtfCommand() {
 }
 
-void RtfReader::RtfNewParagraphCommand::run(RtfReader &reader, int*) const {
+void RtfNewParagraphCommand::run(RtfReader &reader, int*) const {
   reader.newParagraph();
 }
 
-RtfReader::RtfFontPropertyCommand::RtfFontPropertyCommand(FontProperty property) : myProperty(property) {
+RtfFontPropertyCommand::RtfFontPropertyCommand(RtfReader::FontProperty property) : myProperty(property) {
 }
 
-void RtfReader::RtfFontPropertyCommand::run(RtfReader &reader, int *parameter) const {
+void RtfFontPropertyCommand::run(RtfReader &reader, int *parameter) const {
   bool start = (parameter == 0) || (*parameter != 0);
   switch (myProperty) {
-    case FONT_BOLD:
+		case RtfReader::FONT_BOLD:
       if (reader.myState.Bold != start) {
         reader.myState.Bold = start;
-        reader.setFontProperty(FONT_BOLD);
+        reader.setFontProperty(RtfReader::FONT_BOLD);
       }
       break;
-    case FONT_ITALIC:
+		case RtfReader::FONT_ITALIC:
       if (reader.myState.Italic != start) {
         reader.myState.Italic = start;
-        reader.setFontProperty(FONT_ITALIC);
+        reader.setFontProperty(RtfReader::FONT_ITALIC);
       }
       break;
-    case FONT_UNDERLINED:
+		case RtfReader::FONT_UNDERLINED:
       if (reader.myState.Underlined != start) {
         reader.myState.Underlined = start;
-        reader.setFontProperty(FONT_UNDERLINED);
+        reader.setFontProperty(RtfReader::FONT_UNDERLINED);
       }
       break;
   }
 }
 
-RtfReader::RtfAlignmentCommand::RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {
+RtfAlignmentCommand::RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {
 }
 
-void RtfReader::RtfAlignmentCommand::run(RtfReader &reader, int*) const {
+void RtfAlignmentCommand::run(RtfReader &reader, int*) const {
 	if (reader.myState.Alignment != myAlignment) {
 		reader.myState.Alignment = myAlignment;
     reader.setAlignment();
 	}
 }
 
-RtfReader::RtfCharCommand::RtfCharCommand(const std::string &chr) : myChar(chr) {
+RtfCharCommand::RtfCharCommand(const std::string &chr) : myChar(chr) {
 }
 
-void RtfReader::RtfCharCommand::run(RtfReader &reader, int*) const {
+void RtfCharCommand::run(RtfReader &reader, int*) const {
   reader.processCharData(myChar.data(), myChar.length(), false);
 }
 
-RtfReader::RtfDestinationCommand::RtfDestinationCommand(DestinationType destination) : myDestination(destination) {
+RtfDestinationCommand::RtfDestinationCommand(RtfReader::DestinationType destination) : myDestination(destination) {
 }
 
-void RtfReader::RtfDestinationCommand::run(RtfReader &reader, int*) const {
+void RtfDestinationCommand::run(RtfReader &reader, int*) const {
   if (reader.myState.Destination == myDestination) {
     return;
   }
   reader.myState.Destination = myDestination;
-  if (myDestination == DESTINATION_PICTURE) {
+  if (myDestination == RtfReader::DESTINATION_PICTURE) {
     reader.myState.ReadDataAsHex = true;
   }
   reader.switchDestination(myDestination, true);
 }
 
-void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
-  if (reader.myState.Destination == DESTINATION_STYLESHEET) {
+void RtfStyleCommand::run(RtfReader &reader, int*) const {
+  if (reader.myState.Destination == RtfReader::DESTINATION_STYLESHEET) {
     //std::cerr << "Add style index: " << val << "\n";
     
     //sprintf(style_attributes[0], "%i", val);
@@ -114,35 +114,35 @@ void RtfReader::RtfStyleCommand::run(RtfReader &reader, int*) const {
   }
 }
 
-void RtfReader::RtfCodepageCommand::run(RtfReader &reader, int *parameter) const {
+void RtfCodepageCommand::run(RtfReader &reader, int *parameter) const {
   if (parameter != 0) {
 		reader.setEncoding(*parameter);
   }
 }
 
-void RtfReader::RtfSpecialCommand::run(RtfReader &reader, int*) const {
+void RtfSpecialCommand::run(RtfReader &reader, int*) const {
   reader.mySpecialMode = true;
 }
 
-RtfReader::RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {
+RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {
 }
 
-void RtfReader::RtfPictureCommand::run(RtfReader &reader, int*) const {
+void RtfPictureCommand::run(RtfReader &reader, int*) const {
   reader.myNextImageMimeType = myMimeType;
 }
 
-void RtfReader::RtfFontResetCommand::run(RtfReader &reader, int*) const {
+void RtfFontResetCommand::run(RtfReader &reader, int*) const {
   if (reader.myState.Bold) {
     reader.myState.Bold = false;
-    reader.setFontProperty(FONT_BOLD);
+    reader.setFontProperty(RtfReader::FONT_BOLD);
   }
   if (reader.myState.Italic) {
     reader.myState.Italic = false;
-    reader.setFontProperty(FONT_ITALIC);
+    reader.setFontProperty(RtfReader::FONT_ITALIC);
   }
   if (reader.myState.Underlined) {
     reader.myState.Underlined = false;
-    reader.setFontProperty(FONT_UNDERLINED);
+    reader.setFontProperty(RtfReader::FONT_UNDERLINED);
   }
 }
 
@@ -152,16 +152,16 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["ansicpg"] = new RtfCodepageCommand();
 
     static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
-    RtfCommand *skipCommand = new RtfDestinationCommand(DESTINATION_NONE);
+    RtfCommand *skipCommand = new RtfDestinationCommand(RtfReader::DESTINATION_NONE);
     for (const char **i = keywordsToSkip; *i != 0; i++) {
       ourKeywordMap[*i] = skipCommand;
     }
-    ourKeywordMap["info"] = new RtfDestinationCommand(DESTINATION_INFO);
-    ourKeywordMap["title"] = new RtfDestinationCommand(DESTINATION_TITLE);
-    ourKeywordMap["author"] = new RtfDestinationCommand(DESTINATION_AUTHOR);
-    ourKeywordMap["pict"] = new RtfDestinationCommand(DESTINATION_PICTURE);
-    ourKeywordMap["stylesheet"] = new RtfDestinationCommand(DESTINATION_STYLESHEET);
-    ourKeywordMap["footnote"] = new RtfDestinationCommand(DESTINATION_FOOTNOTE);
+    ourKeywordMap["info"] = new RtfDestinationCommand(RtfReader::DESTINATION_INFO);
+    ourKeywordMap["title"] = new RtfDestinationCommand(RtfReader::DESTINATION_TITLE);
+    ourKeywordMap["author"] = new RtfDestinationCommand(RtfReader::DESTINATION_AUTHOR);
+    ourKeywordMap["pict"] = new RtfDestinationCommand(RtfReader::DESTINATION_PICTURE);
+    ourKeywordMap["stylesheet"] = new RtfDestinationCommand(RtfReader::DESTINATION_STYLESHEET);
+    ourKeywordMap["footnote"] = new RtfDestinationCommand(RtfReader::DESTINATION_FOOTNOTE);
 
     RtfCommand *newParagraphCommand = new RtfNewParagraphCommand();
     ourKeywordMap["\n"] = newParagraphCommand;
@@ -195,9 +195,9 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["qj"] = new RtfAlignmentCommand(ALIGN_JUSTIFY);
     ourKeywordMap["pard"] = new RtfAlignmentCommand(ALIGN_UNDEFINED);
 
-    ourKeywordMap["b"] = new RtfFontPropertyCommand(FONT_BOLD);
-    ourKeywordMap["i"] = new RtfFontPropertyCommand(FONT_ITALIC);
-    ourKeywordMap["u"] = new RtfFontPropertyCommand(FONT_UNDERLINED);
+    ourKeywordMap["b"] = new RtfFontPropertyCommand(RtfReader::FONT_BOLD);
+    ourKeywordMap["i"] = new RtfFontPropertyCommand(RtfReader::FONT_ITALIC);
+    ourKeywordMap["u"] = new RtfFontPropertyCommand(RtfReader::FONT_UNDERLINED);
     ourKeywordMap["plain"] = new RtfFontResetCommand();
   }
 }
@@ -273,13 +273,13 @@ bool RtfReader::parseDocument() {
               myStateStack.pop();
           
               if (myState.Italic != oldItalic) {
-                setFontProperty(FONT_ITALIC);
+                setFontProperty(RtfReader::FONT_ITALIC);
               }
               if (myState.Bold != oldBold) {
-                setFontProperty(FONT_BOLD);
+                setFontProperty(RtfReader::FONT_BOLD);
               }
               if (myState.Underlined != oldUnderlined) {
-                setFontProperty(FONT_UNDERLINED);
+                setFontProperty(RtfReader::FONT_UNDERLINED);
               }
               if (myState.Alignment != oldAlignment) {
                 setAlignment();
@@ -391,7 +391,7 @@ bool RtfReader::parseDocument() {
 void RtfReader::processKeyword(const std::string &keyword, int *parameter) {
 	bool wasSpecialMode = mySpecialMode;
 	mySpecialMode = false;
-  if (myState.Destination == DESTINATION_SKIP) {
+  if (myState.Destination == RtfReader::DESTINATION_SKIP) {
     return;
   }
 
@@ -399,7 +399,7 @@ void RtfReader::processKeyword(const std::string &keyword, int *parameter) {
   
   if (it == ourKeywordMap.end()) {
     if (wasSpecialMode)
-      myState.Destination = DESTINATION_SKIP;
+      myState.Destination = RtfReader::DESTINATION_SKIP;
     return;
   }
 
@@ -408,7 +408,7 @@ void RtfReader::processKeyword(const std::string &keyword, int *parameter) {
 
 
 void RtfReader::processCharData(const char *data, size_t len, bool convert) {
-  if (myState.Destination != DESTINATION_SKIP) {
+  if (myState.Destination != RtfReader::DESTINATION_SKIP) {
     addCharData(data, len, convert);
   }
 }
@@ -436,7 +436,7 @@ bool RtfReader::readDocument(const std::string &fileName) {
   myState.Italic = false;
   myState.Bold = false;
   myState.Underlined = false;
-  myState.Destination = DESTINATION_NONE;
+  myState.Destination = RtfReader::DESTINATION_NONE;
   myState.ReadDataAsHex = false;
 
   bool code = parseDocument();

@@ -33,6 +33,7 @@
 #include "../../model/AlignmentType.h"
 
 class ZLInputStream;
+class RtfCommand;
 
 class RtfReader {
 
@@ -40,7 +41,6 @@ private:
   static void RtfReader::fillKeywordMap();
 
 private:
-	class RtfCommand;
   static std::map<std::string, RtfCommand*> ourKeywordMap;
 
 protected:
@@ -79,83 +79,6 @@ protected:
   void interrupt();
 
 private:
-  class RtfCommand {
-  protected:
-    virtual ~RtfCommand();
-
-  public:
-    virtual void run(RtfReader &reader, int *parameter) const = 0;
-  };
-
-  friend class RtfNewParagraphCommand : public RtfCommand {
-  public:
-    void run(RtfReader &reader, int *parameter) const;
-  };
-
-  friend class RtfFontPropertyCommand : public RtfCommand {
-  public:
-    RtfFontPropertyCommand(FontProperty property);
-    void run(RtfReader &reader, int *parameter) const;
-
-  private:
-    RtfReader::FontProperty myProperty;
-  };
-
-  friend class RtfAlignmentCommand : public RtfCommand {
-  public:
-    RtfAlignmentCommand(AlignmentType alignment);
-    void run(RtfReader &reader, int *parameter) const;
-  
-  private:
-    AlignmentType myAlignment;
-  };
-
-  friend class RtfCharCommand : public RtfCommand {
-  public:
-    RtfCharCommand(const std::string &chr);
-    void run(RtfReader &reader, int *parameter) const;
-
-  private:
-    std::string myChar;
-  };
-
-  friend class RtfDestinationCommand : public RtfCommand {
-  public:
-    RtfDestinationCommand(DestinationType dest);
-    void run(RtfReader &reader, int *parameter) const;
-
-  private:
-    DestinationType myDestination;
-  };
-
-  friend class RtfStyleCommand : public RtfCommand {
-  public:
-    void run(RtfReader &reader, int *parameter) const;
-  };
-
-  friend class RtfSpecialCommand : public RtfCommand {
-    void run(RtfReader &reader, int *parameter) const;
-  };
-
-  friend class RtfPictureCommand : public RtfCommand {
-  public:
-    RtfPictureCommand(const std::string &mimeType);
-    void run(RtfReader &reader, int *parameter) const;
-
-  private:
-    const std::string myMimeType;
-  };
-
-  friend class RtfFontResetCommand : public RtfCommand {
-  public:
-    void run(RtfReader &reader, int *parameter) const;
-  };
-  
-  friend class RtfCodepageCommand : public RtfCommand {
-  public:
-    void run(RtfReader &reader, int *parameter) const;
-  };
-  
   bool parseDocument();
   void processKeyword(const std::string &keyword, int *parameter = 0);
   void processCharData(const char *data, size_t len, bool convert = true);
@@ -187,6 +110,95 @@ private:
   std::string myNextImageMimeType;
 
   int myIsInterrupted;  
+
+friend class RtfNewParagraphCommand;
+friend class RtfFontPropertyCommand;
+friend class RtfAlignmentCommand;
+friend class RtfCharCommand;
+friend class RtfDestinationCommand;
+friend class RtfStyleCommand;
+friend class RtfSpecialCommand;
+friend class RtfPictureCommand;
+friend class RtfFontResetCommand;
+friend class RtfCodepageCommand;
+};
+
+class RtfCommand {
+protected:
+  virtual ~RtfCommand();
+
+public:
+  virtual void run(RtfReader &reader, int *parameter) const = 0;
+};
+
+class RtfNewParagraphCommand : public RtfCommand {
+public:
+  void run(RtfReader &reader, int *parameter) const;
+};
+
+class RtfFontPropertyCommand : public RtfCommand {
+
+public:
+  RtfFontPropertyCommand(RtfReader::FontProperty property);
+  void run(RtfReader &reader, int *parameter) const;
+
+private:
+  RtfReader::FontProperty myProperty;
+};
+
+class RtfAlignmentCommand : public RtfCommand {
+public:
+  RtfAlignmentCommand(AlignmentType alignment);
+  void run(RtfReader &reader, int *parameter) const;
+
+private:
+  AlignmentType myAlignment;
+};
+
+class RtfCharCommand : public RtfCommand {
+public:
+  RtfCharCommand(const std::string &chr);
+  void run(RtfReader &reader, int *parameter) const;
+
+private:
+  std::string myChar;
+};
+
+class RtfDestinationCommand : public RtfCommand {
+public:
+  RtfDestinationCommand(RtfReader::DestinationType dest);
+  void run(RtfReader &reader, int *parameter) const;
+
+private:
+	RtfReader::DestinationType myDestination;
+};
+
+class RtfStyleCommand : public RtfCommand {
+public:
+  void run(RtfReader &reader, int *parameter) const;
+};
+
+class RtfSpecialCommand : public RtfCommand {
+  void run(RtfReader &reader, int *parameter) const;
+};
+
+class RtfPictureCommand : public RtfCommand {
+public:
+  RtfPictureCommand(const std::string &mimeType);
+  void run(RtfReader &reader, int *parameter) const;
+
+private:
+  const std::string myMimeType;
+};
+
+class RtfFontResetCommand : public RtfCommand {
+public:
+  void run(RtfReader &reader, int *parameter) const;
+};
+
+class RtfCodepageCommand : public RtfCommand {
+public:
+  void run(RtfReader &reader, int *parameter) const;
 };
 
 #endif /* __RTFREADER_H__ */
