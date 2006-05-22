@@ -36,7 +36,7 @@ bool OEBPlugin::readDescription(const std::string &path, BookDescription &descri
 }
 
 bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
-  return OEBBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
+  return OEBBookReader(model).readBook(description.fileName());
 }
 
 const std::string &OEBPlugin::iconName() const {

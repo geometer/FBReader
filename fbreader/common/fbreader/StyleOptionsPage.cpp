@@ -28,16 +28,16 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
-static const std::string BOLD = "Bold";
-static const std::string ITALIC = "Italic";
+static const std::string BOLD_STRING = "Bold";
+static const std::string ITALIC_STRING = "Italic";
 
 StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext &context) {
 	myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
 	myComboEntry->addValue(myComboEntry->initialValue());
 
 	TextStyleCollection &collection = TextStyleCollection::instance();
-	const int STYLES_NUMBER = 22;
-	TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, CONTENTS_TABLE_ENTRY, RECENT_BOOK_LIST, LIBRARY_AUTHOR_ENTRY, LIBRARY_BOOK_ENTRY, ANNOTATION, EPIGRAPH, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE, CITE, HYPERLINK, FOOTNOTE, EMPHASIS, STRONG, PREFORMATTED, CODE };
+	const int STYLES_NUMBER = 26;
+	TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, CONTENTS_TABLE_ENTRY, RECENT_BOOK_LIST, LIBRARY_AUTHOR_ENTRY, LIBRARY_BOOK_ENTRY, ANNOTATION, EPIGRAPH, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE, CITE, HYPERLINK, FOOTNOTE, ITALIC, EMPHASIS, BOLD, STRONG, DEFINITION, DEFINITION_DESCRIPTION, PREFORMATTED, CODE };
 	for (int i = 0; i < STYLES_NUMBER; i++) {
 		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
 		if (decoration != 0) {
@@ -52,13 +52,13 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
 
 		registerEntries(dialogTab,
 			new FontFamilyOptionEntry(baseStyle.fontFamilyOption(), context, false),
-			new ZLSimpleBooleanOptionEntry(BOLD, baseStyle.boldOption()),
+			new ZLSimpleBooleanOptionEntry(BOLD_STRING, baseStyle.boldOption()),
 			name
 		);
 
 		registerEntries(dialogTab,
 			new ZLSimpleSpinOptionEntry("Size", baseStyle.fontSizeOption(), 2),
-			new ZLSimpleBooleanOptionEntry(ITALIC, baseStyle.italicOption()),
+			new ZLSimpleBooleanOptionEntry(ITALIC_STRING, baseStyle.italicOption()),
 			name
 		);
 
@@ -75,13 +75,13 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
 
 			registerEntries(dialogTab,
 				new FontFamilyOptionEntry(decoration->fontFamilyOption(), context, true),
-				new ZLSimpleBoolean3OptionEntry(BOLD, decoration->boldOption()),
+				new ZLSimpleBoolean3OptionEntry(BOLD_STRING, decoration->boldOption()),
 				name
 			);
 
 			registerEntries(dialogTab,
 				new ZLSimpleSpinOptionEntry("Size Difference", decoration->fontSizeDeltaOption(), 2),
-				new ZLSimpleBoolean3OptionEntry(ITALIC, decoration->italicOption()),
+				new ZLSimpleBoolean3OptionEntry(ITALIC_STRING, decoration->italicOption()),
 				name
 			);
 

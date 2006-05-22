@@ -22,6 +22,10 @@
 #ifndef __OEBBOOKREADER_H__
 #define __OEBBOOKREADER_H__
 
+#include <map>
+#include <vector>
+#include <string>
+
 #include <abstract/ZLXMLReader.h>
 
 #include "../../bookmodel/BookReader.h"
@@ -31,7 +35,7 @@ class OEBBookReader : public ZLXMLReader {
 public:
 	OEBBookReader(BookModel &model) FORMATS_SECTION;
 	~OEBBookReader() FORMATS_SECTION;
-	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	bool readBook(const std::string &fileName) FORMATS_SECTION;
 
 	void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
 	void endElementHandler(const char *tag) FORMATS_SECTION;
@@ -39,12 +43,19 @@ public:
 
 private:
 	enum ReaderState {
+		READ_NONE,
 		READ_MANIFEST,
-		READ_
+		READ_SPINE,
+		READ_GUIDE
 	};
 
 	BookReader myModelReader;
 	ReaderState myState;
+
+	std::string myFilePrefix;
+	std::map<std::string,std::string> myIdToHref;
+	std::vector<std::string> myHtmlFileNames;
+	std::vector<std::pair<std::string,std::string> > myTOC;
 };
 
 inline OEBBookReader::~OEBBookReader() {}

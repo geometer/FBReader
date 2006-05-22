@@ -49,7 +49,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	if (KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}
-	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)RotationAngleOption.value());
+	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
 	setCentralWidget((QViewWidget*)myViewWidget);
 
 	myFullScreen = false;

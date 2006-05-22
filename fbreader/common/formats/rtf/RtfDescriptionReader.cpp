@@ -36,7 +36,11 @@ void RtfDescriptionReader::setEncoding(int code) {
 
 bool RtfDescriptionReader::readDocument(const std::string &fileName) {
   myDoRead = false;
-  return RtfReader::readDocument(fileName);
+  bool code = RtfReader::readDocument(fileName);
+  if (myDescription.encoding().empty()) {
+    myDescription.encoding() = "us-ascii";
+  }
+  return code;
 }
 
 void RtfDescriptionReader::addCharData(const char *data, size_t len, bool convert) {
