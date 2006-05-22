@@ -50,7 +50,7 @@ void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
 			myState = newState;
 			update(selectedName);
 		} else {
-			newState->handler().accept(*newState);
+			newState->handler().accept(newState->name());
 			exitDialog();
 		}
 	}
@@ -129,10 +129,10 @@ const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 
 ZLTreeStatePtr ZLDirTreeState::change(const ZLTreeNodePtr node) {
 	ZLTreeStatePtr newState;
-	if (!node->isFile() || ZLFile(node->name()).isArchive()) {
-		newState = new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).directory());
-	} else {
+	if (handler().isAcceptable(node->name())) {
 		newState = new ZLFileTreeState(handler(), myDir->itemName(node->name()));
+	} else {
+		newState = new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).directory());
 	}
 	if (newState->exists()) {
 		mySubnodes.clear();
@@ -175,7 +175,7 @@ ZLTreeStatePtr ZLFileTreeState::change(const ZLTreeNodePtr) {
 }
 
 bool ZLFileTreeState::isLeaf() const {
-	return true;
+	return handler().isAcceptable(name());
 }
 
 bool ZLFileTreeState::exists() const {

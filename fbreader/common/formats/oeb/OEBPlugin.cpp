@@ -19,24 +19,52 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLStringUtil.h>
+#include <abstract/ZLDir.h>
 
 #include "OEBPlugin.h"
 #include "OEBDescriptionReader.h"
 #include "OEBBookReader.h"
 #include "../../description/BookDescription.h"
 
+static const std::string OPF = "opf";
+static const std::string OEBZIP = "oebzip";
+
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
-  return file.extension() == "opf";
+  const std::string &extension = file.extension();
+	return (extension == OPF) || (extension == OEBZIP);
+}
+
+std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {
+	ZLFile oebFile = ZLFile(oebFileName);
+  if (oebFile.extension() == OPF) {
+		return oebFileName;
+	}
+
+	shared_ptr<ZLDir> zipDir = oebFile.directory(false);
+	if (zipDir.isNull()) {
+		return "";
+	}
+	std::vector<std::string> fileNames;
+	zipDir->collectFiles(fileNames, false);
+	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); it++) {
+		if (ZLStringUtil::stringEndsWith(*it, ".opf")) {
+			return zipDir->itemName(*it);
+		}
+	}
+	return "";
 }
 
 bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
-  return OEBDescriptionReader(description).readDescription(ZLFile(path).inputStream());
+  return OEBDescriptionReader(description).readDescription(ZLFile(opfFileName(path)).inputStream());
 }
 
 bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
-  return OEBBookReader(model).readBook(description.fileName());
+  return OEBBookReader(model).readBook(opfFileName(description.fileName()));
 }
 
 const std::string &OEBPlugin::iconName() const {

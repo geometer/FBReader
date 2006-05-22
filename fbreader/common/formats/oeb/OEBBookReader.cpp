@@ -80,10 +80,12 @@ void OEBBookReader::endElementHandler(const char *tag) {
 }
 
 bool OEBBookReader::readBook(const std::string &fileName) {
+	std::cerr << "fileName = " << fileName << "\n";
   int index0 = fileName.rfind(':');
   int index1 = fileName.rfind('/');
   myFilePrefix = fileName.substr(0, std::max(index0, index1) + 1);
 
+	std::cerr << "filePrefix = " << myFilePrefix << "\n";
   myIdToHref.clear();
   myHtmlFileNames.clear();
   myTOC.clear();

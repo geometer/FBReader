@@ -41,20 +41,24 @@ const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string
 		return FOLDER_ICON;
 	}
 	ZLFile file(dir.itemName(name));
+	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
+	if (plugin != 0) {
+		std::map<FormatPlugin*,std::string>::const_iterator i = pluginIcons.find(plugin);
+		if (i == pluginIcons.end()) {
+			pluginIcons[plugin] = ImageDirectory + Files::PathDelimiter + plugin->iconName();
+		}
+		return pluginIcons[plugin];
+	}
 	if (file.isArchive()) {
 		return ZIPFOLDER_ICON;
 	}
-	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
-	if (plugin == 0) {
-		return NO_ICON;
-	}
-	std::map<FormatPlugin*,std::string>::const_iterator i = pluginIcons.find(plugin);
-	if (i == pluginIcons.end()) {
-		pluginIcons[plugin] = ImageDirectory + Files::PathDelimiter + plugin->iconName();
-	}
-	return pluginIcons[plugin];
+	return NO_ICON;
 }
 
-void FBFileHandler::accept(const ZLTreeState &state) const {
-	myDescription = BookDescription::create(state.name());
+bool FBFileHandler::isAcceptable(const std::string &name) const {
+	return PluginCollection::instance().plugin(ZLFile(name), false) != 0;
+}
+
+void FBFileHandler::accept(const std::string &name) const {
+	myDescription = BookDescription::create(name);
 }

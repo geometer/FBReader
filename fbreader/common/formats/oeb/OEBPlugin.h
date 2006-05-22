@@ -34,6 +34,9 @@ public:
 	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
 	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;
+
+private:
+	std::string opfFileName(const std::string &oebFileName) const;
 };
 
 inline OEBPlugin::OEBPlugin() {}

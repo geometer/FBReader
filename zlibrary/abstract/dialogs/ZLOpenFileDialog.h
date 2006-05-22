@@ -40,7 +40,8 @@ protected:
 	
 public:
 	virtual const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const DIALOG_SECTION = 0;
-	virtual void accept(const ZLTreeState &state) const DIALOG_SECTION = 0;
+	virtual bool isAcceptable(const std::string &name) const DIALOG_SECTION = 0;
+	virtual void accept(const std::string &name) const DIALOG_SECTION = 0;
 };
 
 class ZLTreeNode {
