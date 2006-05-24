@@ -22,11 +22,14 @@
 #include <iostream>
 
 #include <abstract/ZLFSManager.h>
+#include <abstract/ZLDir.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "XHTMLReader.h"
 
 #include "../../bookmodel/BookReader.h"
+#include "../../Files.h"
 
 std::map<std::string,TagAction*> XHTMLReader::ourTagActions;
 
@@ -264,4 +267,27 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
   if (myModelReader.paragraphIsOpen()) {
     myModelReader.addData(std::string(text,len));
   }
+}
+
+static std::vector<std::string> EXTERNAL_DTDs;
+
+const std::vector<std::string> &XHTMLReader::externalDTDs() const {
+  if (EXTERNAL_DTDs.empty()) {
+    std::string directoryName =
+      Files::PathPrefix + Files::PathDelimiter +
+      "formats" + Files::PathDelimiter + "xhtml";
+    shared_ptr<ZLDir> dtdPath = ZLFile(directoryName).directory();
+    if (!dtdPath.isNull()) {
+      std::vector<std::string> files;
+      dtdPath->collectFiles(files, false);
+      for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
+        if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
+          EXTERNAL_DTDs.push_back(dtdPath->itemName(*it));
+          std::cerr << EXTERNAL_DTDs.back() << "\n";
+        }
+      }
+    }
+  }
+
+  return EXTERNAL_DTDs;
 }

@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 
 #include <abstract/ZLFSManager.h>
@@ -44,6 +43,7 @@ static const std::string ITEMREF = "itemref";
 static const std::string REFERENCE = "reference";
 
 void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
+  // TODO: tag -> lowercase
   if (MANIFEST == tag) {
     myState = READ_MANIFEST;
   } else if (SPINE == tag) {
@@ -61,7 +61,7 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
     if (id != 0) {
       const std::string &fileName = myIdToHref[id];
       if (!fileName.empty()) {
-	myHtmlFileNames.push_back(fileName);
+        myHtmlFileNames.push_back(fileName);
       }
     }
   } else if ((myState == READ_GUIDE) && (REFERENCE == tag)) {
@@ -74,18 +74,17 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 }
 
 void OEBBookReader::endElementHandler(const char *tag) {
+  // TODO: tag -> lowercase
   if ((MANIFEST == tag) || (SPINE == tag) || (GUIDE == tag)) {
     myState = READ_NONE;
   }
 }
 
 bool OEBBookReader::readBook(const std::string &fileName) {
-	std::cerr << "fileName = " << fileName << "\n";
   int index0 = fileName.rfind(':');
   int index1 = fileName.rfind('/');
   myFilePrefix = fileName.substr(0, std::max(index0, index1) + 1);
 
-	std::cerr << "filePrefix = " << myFilePrefix << "\n";
   myIdToHref.clear();
   myHtmlFileNames.clear();
   myTOC.clear();
@@ -103,7 +102,12 @@ bool OEBBookReader::readBook(const std::string &fileName) {
   }
 
   for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); it++) {
-    std::cerr << it->first << " : " << it->second << "\n";
+    int index = myModelReader.model().paragraphNumberById(it->second);
+    if (index != -1) {
+      myModelReader.beginContentsParagraph(index);
+      myModelReader.addContentsData(it->first);
+      myModelReader.endContentsParagraph();
+    }
   }
 
   return true;

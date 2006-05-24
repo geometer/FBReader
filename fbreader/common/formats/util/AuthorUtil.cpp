@@ -19,34 +19,23 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OEBDESCRIPTIONREADER_H__
-#define __OEBDESCRIPTIONREADER_H__
+#include "AuthorUtil.h"
 
-#include <abstract/ZLXMLReader.h>
-
-#include "../../description/BookDescription.h"
-
-class OEBDescriptionReader : public ZLXMLReader {
-
-public:
-  OEBDescriptionReader(BookDescription &description);
-  bool readDescription(shared_ptr<ZLInputStream> stream);
-
-  void startElementHandler(const char *tag, const char **attributes);
-  void endElementHandler(const char *tag);
-  void characterDataHandler(const char *text, int len);
-
-private:
-  WritableBookDescription myDescription;
-
-  bool myReadMetaData;
-  enum {
-    READ_NONE,
-    READ_AUTHOR,
-    READ_TITLE
-  } myReadState;
-
-  std::string myCurrentAuthor;
-};
-
-#endif /* __OEBDESCRIPTIONREADER_H__ */
+void AuthorUtil::addAuthor(WritableBookDescription &description, const std::string &fullName) {
+  int stripIndex = fullName.length() - 1;
+  while ((stripIndex >= 0) && (fullName[stripIndex] == ' ')) {
+    stripIndex--;
+  }
+  std::string strippedName = fullName.substr(0, stripIndex + 1);
+  int index = strippedName.rfind(' ');
+  if (index == -1) {
+    description.addAuthor(strippedName, "", "");
+  } else {
+    std::string lastName = strippedName.substr(index + 1);
+    while ((index >= 0) && (strippedName[index] == ' ')) {
+      index--;
+    }
+    std::string firstName = strippedName.substr(0, index + 1);
+    description.addAuthor(firstName, "", lastName);
+  }
+}

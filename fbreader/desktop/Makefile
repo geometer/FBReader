@@ -16,6 +16,8 @@ install:
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	@install -m 0644 ../share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
+	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/xhtml
+	@install -m 0644 $(wildcard ../share/FBReader/formats/xhtml/*.ent) $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/xhtml
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader
 	@install -m 0644 ../icons/34x28/FBReader.png $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons
 	@install -m 0644 $(wildcard ../icons/34x28/FBReader/*) $(DESTDIR)$(INSTALLDIR)/share/FBReader/icons/FBReader

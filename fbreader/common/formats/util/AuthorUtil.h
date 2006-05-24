@@ -19,34 +19,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OEBDESCRIPTIONREADER_H__
-#define __OEBDESCRIPTIONREADER_H__
+#ifndef __AUTHORUTIL_H__
+#define __AUTHORUTIL_H__
 
-#include <abstract/ZLXMLReader.h>
+#include <string>
 
 #include "../../description/BookDescription.h"
 
-class OEBDescriptionReader : public ZLXMLReader {
+class AuthorUtil {
 
 public:
-  OEBDescriptionReader(BookDescription &description);
-  bool readDescription(shared_ptr<ZLInputStream> stream);
-
-  void startElementHandler(const char *tag, const char **attributes);
-  void endElementHandler(const char *tag);
-  void characterDataHandler(const char *text, int len);
+  static void addAuthor(WritableBookDescription &description, const std::string &fullName);
 
 private:
-  WritableBookDescription myDescription;
-
-  bool myReadMetaData;
-  enum {
-    READ_NONE,
-    READ_AUTHOR,
-    READ_TITLE
-  } myReadState;
-
-  std::string myCurrentAuthor;
+  AuthorUtil();
 };
 
-#endif /* __OEBDESCRIPTIONREADER_H__ */
+#endif /* __AUTHORUTIL_H__ */

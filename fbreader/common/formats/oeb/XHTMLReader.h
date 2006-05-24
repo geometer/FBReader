@@ -53,6 +53,8 @@ public:
   void endElementHandler(const char *tag) FORMATS_SECTION;
   void characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
+  const std::vector<std::string> &externalDTDs() const XML_SECTION;
+
 private:
   BookReader &myModelReader;
 

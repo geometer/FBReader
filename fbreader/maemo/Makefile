@@ -29,6 +29,8 @@ install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(DESTDIR)/usr/share/FBReader/
 	@install -d $(DESTDIR)/usr/share/FBReader/formats/html
 	@install -m 0644 ../share/FBReader/formats/html/html.ent $(DESTDIR)/usr/share/FBReader/formats/html
+	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/xhtml
+	@install -m 0644 $(wildcard ../share/FBReader/formats/xhtml/*.ent) $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/xhtml
 	@install -d $(DESTDIR)/usr/share/FBReader/icons/FBReader
 	@install -m 0644 $(wildcard ../icons/blueset/FBReader/*) $(DESTDIR)/usr/share/FBReader/icons/FBReader
 	@install -d $(DESTDIR)/usr/share/FBReader/encodings

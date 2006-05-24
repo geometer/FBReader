@@ -178,9 +178,12 @@ void BookReader::addImageReference(const std::string &id) {
 	}
 }
 
-void BookReader::beginContentsParagraph() {
+void BookReader::beginContentsParagraph(int referenceNumber) {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
-		myModel.myContentsModel.createParagraphWithReference(myCurrentTextModel->paragraphsNumber());
+		if (referenceNumber == -1) {
+			referenceNumber = myCurrentTextModel->paragraphsNumber();
+		}
+		myModel.myContentsModel.createParagraphWithReference(referenceNumber);
 		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 		myContentsParagraphExists = true;
 	}

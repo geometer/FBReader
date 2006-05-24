@@ -58,7 +58,7 @@ public:
 	void addImageReference(const std::string &id) MODEL_SECTION;
 	void addImage(const std::string &id, ZLImage *image) MODEL_SECTION;
 
-	void beginContentsParagraph() MODEL_SECTION;
+	void beginContentsParagraph(int referenceNumber = -1) MODEL_SECTION;
 	void endContentsParagraph() MODEL_SECTION;
 
 	void addData(const std::string &data) MODEL_SECTION;
