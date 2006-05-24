@@ -57,8 +57,8 @@ public:
 
 private:
   BookReader &myModelReader;
-
   std::string myFileName;
+	bool myPreformatted;
 
   friend class TagAction;
   friend class TagParagraphAction;
@@ -66,6 +66,7 @@ private:
   friend class TagHyperlinkAction;
   friend class TagItemAction;
   friend class TagParagraphWithControlAction;
+  friend class TagPreAction;
 };
 
 #endif /* __XHTMLREADER_H__ */

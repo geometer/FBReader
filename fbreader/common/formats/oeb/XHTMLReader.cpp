@@ -79,6 +79,13 @@ private:
   TextKind myControl;
 };
 
+class TagPreAction : public TagAction {
+
+public:
+  void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+  void doAtEnd(XHTMLReader &reader);
+};
+
 static const std::string HASH = "#";
 
 void TagAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
@@ -156,6 +163,19 @@ void TagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.endParagraph();
 }
 
+void TagPreAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+	reader.myPreformatted = true;
+  reader.myModelReader.beginParagraph();
+  reader.myModelReader.addControl(CODE, true);
+  TagAction::doAtStart(reader, xmlattributes);
+}
+
+void TagPreAction::doAtEnd(XHTMLReader &reader) {
+  reader.myModelReader.addControl(CODE, false);
+  reader.myModelReader.endParagraph();
+	reader.myPreformatted = false;
+}
+
 void XHTMLReader::fillTagTable() {
   if (ourTagActions.empty()) {
     //ourTagActions["html"] = new TagAction();
@@ -216,14 +236,14 @@ void XHTMLReader::fillTagTable() {
     //ourTagActions["q"] = new TagAction();
     //ourTagActions["s"] = new TagAction();
 
-    //ourTagActions["pre"] = new TagAction();
+    ourTagActions["pre"] = new TagPreAction();
     //ourTagActions["big"] = new TagAction();
     //ourTagActions["small"] = new TagAction();
     //ourTagActions["u"] = new TagAction();
 
     //ourTagActions["table"] = new TagAction();
-    //ourTagActions["td"] = new TagAction();
-    //ourTagActions["th"] = new TagAction();
+    ourTagActions["td"] = new TagParagraphAction();
+    ourTagActions["th"] = new TagParagraphAction();
     //ourTagActions["tr"] = new TagAction();
     //ourTagActions["caption"] = new TagAction();
     //ourTagActions["span"] = new TagAction();
@@ -240,6 +260,8 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &nam
   myModelReader.addHyperlinkLabel(myFileName);
 
   shared_ptr<ZLInputStream> stream = ZLFile(pathPrefix + name).inputStream();
+
+	myPreformatted = false;
 
   return readDocument(stream);
 }
@@ -262,9 +284,22 @@ void XHTMLReader::endElementHandler(const char *tag) {
 }
 
 void XHTMLReader::characterDataHandler(const char *text, int len) {
-  if (myModelReader.paragraphIsOpen()) {
-    myModelReader.addData(std::string(text,len));
+	if (myPreformatted) {
+		if ((*text == '\r') || (*text == '\n')) {
+      myModelReader.addControl(CODE, false);
+			myModelReader.endParagraph();
+			myModelReader.beginParagraph();
+      myModelReader.addControl(CODE, true);
+		}
+		// TODO: insert spaces at start of line
+		/*
+		for (; (len > 0) && isspace(*text); text++, len--) {
+			static const std::string NBSP = "\xC0\xA0";
+			myModelReader.addData(NBSP);
+		}
+		*/
   }
+  myModelReader.addData(std::string(text, len));
 }
 
 static std::vector<std::string> EXTERNAL_DTDs;
