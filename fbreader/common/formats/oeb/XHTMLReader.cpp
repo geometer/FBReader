@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLDir.h>
 #include <abstract/ZLInputStream.h>
@@ -248,7 +246,7 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &nam
 
 
 void XHTMLReader::startElementHandler(const char *tag, const char **attributes) {
-  // todo: lowercase
+  // TODO: tag -> lowercase
   TagAction *action = ourTagActions[tag];
   if (action != 0) {
     action->doAtStart(*this, attributes);
@@ -256,7 +254,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 }
 
 void XHTMLReader::endElementHandler(const char *tag) {
-  // todo: lowercase
+  // TODO: tag -> lowercase
   TagAction *action = ourTagActions[tag];
   if (action != 0) {
     action->doAtEnd(*this);
@@ -283,7 +281,6 @@ const std::vector<std::string> &XHTMLReader::externalDTDs() const {
       for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
         if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
           EXTERNAL_DTDs.push_back(dtdPath->itemName(*it));
-          std::cerr << EXTERNAL_DTDs.back() << "\n";
         }
       }
     }
