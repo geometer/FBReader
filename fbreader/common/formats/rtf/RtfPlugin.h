@@ -28,8 +28,6 @@
 class RtfPlugin : public FormatPlugin {
 
 public:
-	RtfPlugin();
-	~RtfPlugin();
 	bool providesMetaInfo() const;
 	bool acceptsFile(const ZLFile &file) const;
 	bool readDescription(const std::string &path, BookDescription &description) const;
@@ -37,9 +35,5 @@ public:
 	const std::string &iconName() const;
 	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 };
-
-inline RtfPlugin::RtfPlugin() {}
-inline RtfPlugin::~RtfPlugin() {}
-inline bool RtfPlugin::providesMetaInfo() const { return false; }
 
 #endif /* __RTFPLUGIN_H__ */

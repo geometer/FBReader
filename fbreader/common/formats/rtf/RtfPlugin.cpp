@@ -31,6 +31,10 @@
 #include "RtfBookReader.h"
 #include "../../description/BookDescription.h"
 
+bool RtfPlugin::providesMetaInfo() const {
+	return false;
+}
+
 bool RtfPlugin::acceptsFile(const ZLFile &file) const {
   const std::string &extension = file.extension();
   return (extension == "rtf");

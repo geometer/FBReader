@@ -26,6 +26,10 @@
 #include "PluckerTextStream.h"
 #include "../../description/BookDescription.h"
 
+bool PluckerPlugin::providesMetaInfo() const {
+	return false;
+}
+
 bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "DataPlkr";
 }

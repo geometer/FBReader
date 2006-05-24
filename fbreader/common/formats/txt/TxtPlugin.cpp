@@ -28,6 +28,13 @@
 #include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
+TxtPlugin::~TxtPlugin() {
+}
+
+bool TxtPlugin::providesMetaInfo() const {
+	return false;
+}
+
 bool TxtPlugin::acceptsFile(const ZLFile &file) const {
 	return (file.extension() == "txt") || (file.extension() == "TXT");
 }

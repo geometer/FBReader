@@ -27,7 +27,6 @@
 class TxtPlugin : public FormatPlugin {
 
 public:
-	TxtPlugin() FORMATS_SECTION;
 	~TxtPlugin() FORMATS_SECTION;
 	bool providesMetaInfo() const FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
@@ -36,9 +35,5 @@ public:
 	const std::string &iconName() const FORMATS_SECTION;
 	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
 };
-
-inline TxtPlugin::TxtPlugin() {}
-inline TxtPlugin::~TxtPlugin() {}
-inline bool TxtPlugin::providesMetaInfo() const { return false; }
 
 #endif /* __TXTPLUGIN_H__ */

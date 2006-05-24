@@ -26,6 +26,9 @@
 #include "PdbPlugin.h"
 #include "../../description/BookDescriptionUtil.h"
 
+PdbPlugin::~PdbPlugin() {
+}
+
 std::string PdbPlugin::fileType(const ZLFile &file) const {
 	const std::string &extension = file.extension();
 	if ((extension != "pdb") && (extension != "PDB") && (extension != "prc") && (extension != "PRC")) {

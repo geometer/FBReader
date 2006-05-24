@@ -41,8 +41,6 @@ protected:
 class PluckerPlugin : public PdbPlugin {
 
 public:
-	PluckerPlugin() FORMATS_SECTION;
-	~PluckerPlugin() FORMATS_SECTION;
 	bool providesMetaInfo() const FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
 	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
@@ -53,8 +51,6 @@ public:
 class SimplePdbPlugin : public PdbPlugin {
 
 public:
-	SimplePdbPlugin() FORMATS_SECTION;
-	~SimplePdbPlugin() FORMATS_SECTION;
 	bool providesMetaInfo() const FORMATS_SECTION;
 	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
 	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
@@ -67,8 +63,6 @@ protected:
 class PalmDocPlugin : public SimplePdbPlugin {
 
 public:
-	PalmDocPlugin() FORMATS_SECTION;
-	~PalmDocPlugin() FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;
 
@@ -79,8 +73,6 @@ protected:
 class ZTXTPlugin : public SimplePdbPlugin {
 
 public:
-	ZTXTPlugin() FORMATS_SECTION;
-	~ZTXTPlugin() FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
 	const std::string &iconName() const FORMATS_SECTION;
 
@@ -89,20 +81,5 @@ protected:
 };
 
 inline PdbPlugin::PdbPlugin() {}
-inline PdbPlugin::~PdbPlugin() {}
-
-inline PluckerPlugin::PluckerPlugin() {}
-inline PluckerPlugin::~PluckerPlugin() {}
-inline bool PluckerPlugin::providesMetaInfo() const { return false; }
-
-inline SimplePdbPlugin::SimplePdbPlugin() {}
-inline SimplePdbPlugin::~SimplePdbPlugin() {}
-inline bool SimplePdbPlugin::providesMetaInfo() const { return false; }
-
-inline PalmDocPlugin::PalmDocPlugin() {}
-inline PalmDocPlugin::~PalmDocPlugin() {}
-
-inline ZTXTPlugin::ZTXTPlugin() {}
-inline ZTXTPlugin::~ZTXTPlugin() {}
 
 #endif /* __PDBPLUGIN_H__ */
