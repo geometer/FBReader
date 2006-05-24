@@ -164,7 +164,7 @@ void TagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
 }
 
 void TagPreAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-	reader.myPreformatted = true;
+  reader.myPreformatted = true;
   reader.myModelReader.beginParagraph();
   reader.myModelReader.addControl(CODE, true);
   TagAction::doAtStart(reader, xmlattributes);
@@ -173,7 +173,7 @@ void TagPreAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
 void TagPreAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.addControl(CODE, false);
   reader.myModelReader.endParagraph();
-	reader.myPreformatted = false;
+  reader.myPreformatted = false;
 }
 
 void XHTMLReader::fillTagTable() {
@@ -261,7 +261,7 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &nam
 
   shared_ptr<ZLInputStream> stream = ZLFile(pathPrefix + name).inputStream();
 
-	myPreformatted = false;
+  myPreformatted = false;
 
   return readDocument(stream);
 }
@@ -284,20 +284,20 @@ void XHTMLReader::endElementHandler(const char *tag) {
 }
 
 void XHTMLReader::characterDataHandler(const char *text, int len) {
-	if (myPreformatted) {
-		if ((*text == '\r') || (*text == '\n')) {
+  if (myPreformatted) {
+    if ((*text == '\r') || (*text == '\n')) {
       myModelReader.addControl(CODE, false);
-			myModelReader.endParagraph();
-			myModelReader.beginParagraph();
+      myModelReader.endParagraph();
+      myModelReader.beginParagraph();
       myModelReader.addControl(CODE, true);
-		}
-		// TODO: insert spaces at start of line
-		/*
-		for (; (len > 0) && isspace(*text); text++, len--) {
-			static const std::string NBSP = "\xC0\xA0";
-			myModelReader.addData(NBSP);
-		}
-		*/
+    }
+    // TODO: insert spaces at start of line
+    /*
+    for (; (len > 0) && isspace(*text); text++, len--) {
+      static const std::string NBSP = "\xC0\xA0";
+      myModelReader.addData(NBSP);
+    }
+    */
   }
   myModelReader.addData(std::string(text, len));
 }
