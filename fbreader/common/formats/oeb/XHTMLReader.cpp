@@ -146,12 +146,19 @@ void TagItemAction::doAtEnd(XHTMLReader &reader) {
 void TagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   const char *fileName = reader.attributeValue(xmlattributes, "data");
   if (fileName != 0) {
+		bool flag = reader.myModelReader.paragraphIsOpen();
+		if (flag) {
+			reader.myModelReader.endParagraph();
+		}
 		if ((strlen(fileName) > 2) && strncmp(fileName, "./", 2) == 0) {
 			fileName +=2;
 		}
     reader.myModelReader.addImageReference(fileName);
     ZLImage *image = new ZLFileImage("image/auto", reader.myPathPrefix + fileName, 0);
     reader.myModelReader.addImage(fileName, image);
+		if (flag) {
+			reader.myModelReader.beginParagraph();
+		}
   }
 }
 
