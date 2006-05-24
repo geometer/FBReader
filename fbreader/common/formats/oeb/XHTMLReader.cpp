@@ -23,10 +23,12 @@
 #include <abstract/ZLDir.h>
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLStringUtil.h>
+#include <abstract/ZLFileImage.h>
 
 #include "XHTMLReader.h"
 
 #include "../../bookmodel/BookReader.h"
+#include "../../bookmodel/BookModel.h"
 #include "../../Files.h"
 
 std::map<std::string,TagAction*> XHTMLReader::ourTagActions;
@@ -42,6 +44,13 @@ public:
 };
 
 class TagRestartParagraphAction : public TagAction {
+
+public:
+  void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+  void doAtEnd(XHTMLReader &reader);
+};
+
+class TagImageAction : public TagAction {
 
 public:
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
@@ -134,6 +143,21 @@ void TagItemAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.endParagraph();
 }
 
+void TagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+  const char *fileName = reader.attributeValue(xmlattributes, "data");
+  if (fileName != 0) {
+		if ((strlen(fileName) > 2) && strncmp(fileName, "./", 2) == 0) {
+			fileName +=2;
+		}
+    reader.myModelReader.addImageReference(fileName);
+    ZLImage *image = new ZLFileImage("image/auto", reader.myPathPrefix + fileName, 0);
+    reader.myModelReader.addImage(fileName, image);
+  }
+}
+
+void TagImageAction::doAtEnd(XHTMLReader&) {
+}
+
 TagControlAction::TagControlAction(TextKind control) : myControl(control) {
 }
 
@@ -164,7 +188,7 @@ TagParagraphWithControlAction::TagParagraphWithControlAction(TextKind control) :
 }
 
 void TagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-  if (myControl == TITLE) {
+  if ((myControl == TITLE) && (reader.myModelReader.model().bookTextModel().paragraphsNumber() > 1)) {
     reader.myModelReader.insertEndOfSectionParagraph();
   }
   reader.myModelReader.beginParagraph();
@@ -232,7 +256,7 @@ void XHTMLReader::fillTagTable() {
 
     ourTagActions["a"] = new TagHyperlinkAction();
     //ourTagActions["img"] = new TagAction();
-    //ourTagActions["object"] = new TagAction();
+    ourTagActions["object"] = new TagImageAction();
 
     //ourTagActions["area"] = new TagAction();
     //ourTagActions["map"] = new TagAction();
@@ -270,6 +294,7 @@ XHTMLReader::XHTMLReader(BookReader &modelReader) : myModelReader(modelReader) {
 bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &name) {
   fillTagTable();
 
+  myPathPrefix = pathPrefix;
   myFileName = name;
   myModelReader.addHyperlinkLabel(myFileName);
 

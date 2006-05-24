@@ -57,6 +57,7 @@ public:
 
 private:
   BookReader &myModelReader;
+  std::string myPathPrefix;
   std::string myFileName;
 	bool myPreformatted;
 
@@ -66,6 +67,7 @@ private:
   friend class TagControlAction;
   friend class TagHyperlinkAction;
   friend class TagItemAction;
+  friend class TagImageAction;
   friend class TagParagraphWithControlAction;
   friend class TagPreAction;
 };
