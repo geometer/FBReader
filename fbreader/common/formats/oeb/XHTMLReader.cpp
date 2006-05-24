@@ -41,6 +41,13 @@ public:
   void doAtEnd(XHTMLReader &reader);
 };
 
+class TagRestartParagraphAction : public TagAction {
+
+public:
+  void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+  void doAtEnd(XHTMLReader &reader);
+};
+
 class TagItemAction : public TagAction {
 
 public:
@@ -104,10 +111,17 @@ void TagParagraphAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.endParagraph();
 }
 
+void TagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+  reader.myModelReader.endParagraph();
+  reader.myModelReader.beginParagraph();
+  TagAction::doAtStart(reader, xmlattributes);
+}
+
+void TagRestartParagraphAction::doAtEnd(XHTMLReader&) {
+}
+
 void TagItemAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-  if (reader.myModelReader.paragraphIsOpen()) {
-    reader.myModelReader.endParagraph();
-  }
+  reader.myModelReader.endParagraph();
   // TODO: increase left indent
   reader.myModelReader.beginParagraph();
   TagAction::doAtStart(reader, xmlattributes);
@@ -179,7 +193,7 @@ void TagPreAction::doAtEnd(XHTMLReader &reader) {
 void XHTMLReader::fillTagTable() {
   if (ourTagActions.empty()) {
     //ourTagActions["html"] = new TagAction();
-    //ourTagActions["body"] = new TagAction();
+    ourTagActions["body"] = new TagParagraphAction();
     //ourTagActions["title"] = new TagAction();
     //ourTagActions["meta"] = new TagAction();
     //ourTagActions["script"] = new TagAction();
@@ -225,9 +239,9 @@ void XHTMLReader::fillTagTable() {
 
     //ourTagActions["base"] = new TagAction();
     //ourTagActions["blockquote"] = new TagAction();
-    //ourTagActions["br"] = new TagAction();
+    ourTagActions["br"] = new TagRestartParagraphAction();
     //ourTagActions["center"] = new TagAction();
-    //ourTagActions["div"] = new TagAction();
+    ourTagActions["div"] = new TagParagraphAction();
     //ourTagActions["dt"] = new TagAction();
     //ourTagActions["head"] = new TagAction();
     //ourTagActions["hr"] = new TagAction();

@@ -62,6 +62,7 @@ private:
 
   friend class TagAction;
   friend class TagParagraphAction;
+  friend class TagRestartParagraphAction;
   friend class TagControlAction;
   friend class TagHyperlinkAction;
   friend class TagItemAction;
