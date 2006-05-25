@@ -108,7 +108,6 @@ ZLBooleanOption FBReader::SearchThisSectionOnlyOption(SEARCH, "ThisSectionOnly",
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 ZLBooleanOption FBReader::KeyboardControlOption("Keyboard", "FullControl", false);
-ZLBooleanOption FBReader::UseDifferentKeyBindingsOption("Keys", "UseDifferentSettings", false);
 
 ZLIntegerOption FBReader::RotationAngleOption("Rotation", ANGLE, ZLViewWidget::DEGREES90);
 ZLIntegerOption FBReader::AngleStateOption(STATE, ANGLE, ZLViewWidget::DEGREES0);
@@ -678,7 +677,7 @@ void FBReader::clearTextCaches() {
 }
 
 void FBReader::doAction(const std::string &key) {
-	ActionCode code = myKeyBindings.getBinding(key);
+	ActionCode code = keyBindings(myViewWidget->rotation()).getBinding(key);
 	if (code != NO_ACTION) {
 		if (isScrollingAction(code) || (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())) {
 			doAction(code);

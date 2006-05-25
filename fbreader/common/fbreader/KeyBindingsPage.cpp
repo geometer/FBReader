@@ -119,13 +119,13 @@ FBReaderKeyOptionEntry::~FBReaderKeyOptionEntry() {
 
 void FBReaderKeyOptionEntry::onAccept() {
 	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes.begin(); it != myChangedCodes.end(); it++) {
-		myFBReader.keyBindings().bindKey(it->first, it->second);
+		myFBReader.keyBindings(ZLViewWidget::DEGREES0).bindKey(it->first, it->second);
 	}
 }
 
 int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {
 	std::map<std::string,ActionCode>::const_iterator it = myChangedCodes.find(key);
-	return myIndexByCode[(it != myChangedCodes.end()) ? it->second : myFBReader.keyBindings().getBinding(key)];
+	return myIndexByCode[(it != myChangedCodes.end()) ? it->second : myFBReader.keyBindings(ZLViewWidget::DEGREES0).getBinding(key)];
 }
 
 void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
@@ -133,6 +133,7 @@ void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
 }
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
+	dialogTab->addOption(new ZLSimpleBooleanOptionEntry("Use different setting for different rotations", fbreader.useDifferentBindings()));
 	if (fbreader.isFullKeyboardControlSupported()) {
 		dialogTab->addOption(new KeyboardControlEntry(fbreader));
 	}

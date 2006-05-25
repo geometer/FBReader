@@ -79,7 +79,7 @@ enum ActionCode {
 class KeyBindings {
 
 public:
-	KeyBindings();
+	KeyBindings(const std::string &optionGroupName);
 	~KeyBindings();
 
 	void bindKey(const std::string &key, ActionCode code);
@@ -90,7 +90,26 @@ private:
 	void readCustomBindings();
 
 private:
+	const std::string myOptionGroupName;
 	std::map<std::string,ActionCode> myBindingsMap;
+
+	friend class FullKeyBindings;
+};
+
+class FullKeyBindings {
+
+public:
+	ZLBooleanOption UseAngleOption;
+
+public:
+	FullKeyBindings();
+	KeyBindings &getBindings(ZLViewWidget::Angle angle);
+
+private:
+	KeyBindings myBindings0;
+	KeyBindings myBindings90;
+	KeyBindings myBindings180;
+	KeyBindings myBindings270;
 };
 
 class FBReader : public ZLApplication {
@@ -139,7 +158,6 @@ public:
 	static ZLStringOption SearchPatternOption;
 
 	static ZLBooleanOption KeyboardControlOption;
-	static ZLBooleanOption UseDifferentKeyBindingsOption;
 
 	static ZLIntegerOption RotationAngleOption;
 	static ZLIntegerOption AngleStateOption;
@@ -193,7 +211,8 @@ public:
 	void repaintView() FB_SECTION;
 	void doAction(ActionCode code) FB_SECTION;
 
-	KeyBindings &keyBindings();
+	ZLBooleanOption &useDifferentBindings();
+	KeyBindings &keyBindings(ZLViewWidget::Angle angle);
 
 private:
 	void openBookInternal(BookDescriptionPtr description) FB_SECTION;
@@ -219,11 +238,15 @@ private:
 	ZLPaintContext *myContext;
 	BookModel *myModel;
 
-	KeyBindings myKeyBindings;
+	FullKeyBindings myKeyBindings;
 };
 
-inline KeyBindings &FBReader::keyBindings() {
-	return myKeyBindings;
+inline ZLBooleanOption &FBReader::useDifferentBindings() {
+	return myKeyBindings.UseAngleOption;
+}
+
+inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle) {
+	return myKeyBindings.getBindings(angle);
 }
 
 #endif /* __FBREADER_H__ */
