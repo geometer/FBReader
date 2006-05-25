@@ -87,6 +87,7 @@ package:
 		-e "s#@DEPENDS@#`dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`#" \
 		-e "s#@SECTION@#user/tools#" \
 		FBReader.control.in > $(TMPDIR)/DEBIAN/control
+	@install FBReader.postinst $(TMPDIR)/DEBIAN/postinst
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 endif
