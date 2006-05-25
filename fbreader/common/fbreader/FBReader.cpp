@@ -473,6 +473,15 @@ void FBReader::doAction(ActionCode code) {
 				restorePreviousMode();
 			}
 			break;
+		case ACTION_OPEN_PREVIOUS_BOOK:
+		{
+			Books books = LastOpenedBooks().books();
+			if (books.size() > 1) {
+				openBook(books[1]);
+				repaintView();
+			}
+			break;
+		}
 	}
 }
 

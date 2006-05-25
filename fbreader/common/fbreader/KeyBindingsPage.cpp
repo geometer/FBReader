@@ -75,6 +75,7 @@ FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOption
 	// switch view
 	addAction(ACTION_SHOW_COLLECTION, "Show Library");
 	addAction(ACTION_SHOW_LAST_BOOKS, "Show Recent Books");
+	addAction(ACTION_OPEN_PREVIOUS_BOOK, "Open Previous Book");
 	addAction(ACTION_SHOW_CONTENTS, "Show Table Of Contents");
 
 	// navigation

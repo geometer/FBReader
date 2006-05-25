@@ -73,6 +73,7 @@ enum ActionCode {
 	ACTION_ROTATE_SCREEN = 27,
 	ACTION_SHOW_LAST_BOOKS = 28,
 	ACTION_QUIT = 29,
+	ACTION_OPEN_PREVIOUS_BOOK = 30,
 };
 
 class KeyBindings {

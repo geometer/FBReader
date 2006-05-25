@@ -27,7 +27,6 @@
 class OEBPlugin : public FormatPlugin {
 
 public:
-	OEBPlugin() FORMATS_SECTION;
 	~OEBPlugin() FORMATS_SECTION;
 	bool providesMetaInfo() const FORMATS_SECTION;
 	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
@@ -38,9 +37,5 @@ public:
 private:
 	std::string opfFileName(const std::string &oebFileName) const;
 };
-
-inline OEBPlugin::OEBPlugin() {}
-inline OEBPlugin::~OEBPlugin() {}
-inline bool OEBPlugin::providesMetaInfo() const { return false; }
 
 #endif /* __OEBPLUGIN_H__ */
