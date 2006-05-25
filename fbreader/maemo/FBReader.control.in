@@ -2,6 +2,7 @@ Package: @PACKAGE@
 Version: @VERSION@
 Architecture: arm
 Depends: @DEPENDS@
+Section: @SECTION@
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Installed-Size: @SIZE@
 Description: e-book reader

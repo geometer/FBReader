@@ -65,25 +65,27 @@ $(SERVICE_FILE): $(SERVICE_FILE).in
 
 ifeq "$(UI_TYPE)" "maemo"
 package:
-	@mkdir $(TMPDIR)
+	@mkdir -p $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
 		-e "s#@DEPENDS@#maemo#" \
+		-e "s#@SECTION@#utils#" \
 		FBReader.control.in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 else
 package:
-	@mkdir $(TMPDIR)
+	@mkdir -p $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
 		-e "s#@DEPENDS@#`dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`#" \
+		-e "s#@SECTION@#user/tools#" \
 		FBReader.control.in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
