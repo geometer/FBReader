@@ -34,11 +34,6 @@ class KeyBindingsPage {
 public:
 	KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
 	~KeyBindingsPage() FB_DIALOG_SECTION;
-
-  void reset();
-
-private:
-	ZLKeyOptionEntry *myKeyEntry;
 };
 
 inline KeyBindingsPage::~KeyBindingsPage() {}

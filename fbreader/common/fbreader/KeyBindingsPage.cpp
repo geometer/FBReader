@@ -42,24 +42,6 @@ void KeyboardControlEntry::onValueChange(bool state) {
 	myFBReader.grabAllKeys(state);
 }
 
-class UseSeparateOptionsEntry : public ZLSimpleBooleanOptionEntry {
-
-public:
-	UseSeparateOptionsEntry(FBReader &fbreader, KeyBindingsPage &page);
-	void onValueChange(bool state);
-
-private:
-	KeyBindingsPage &myPage;
-};
-
-UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, KeyBindingsPage &page) : ZLSimpleBooleanOptionEntry("Use Separate Bindings For Each Orientation", fbreader.useSeparateBindings()), myPage(page) {
-}
-
-void UseSeparateOptionsEntry::onValueChange(bool state) {
-	ZLSimpleBooleanOptionEntry::onValueChange(state);
-	myPage.reset();
-}
-
 class FBReaderKeyOptionEntry : public ZLKeyOptionEntry {
 
 public:
@@ -69,15 +51,23 @@ public:
 	int actionIndex(const std::string &key);
 	void onValueChange(const std::string &key, int index);
 
+	void setOrientation(ZLViewWidget::Angle);
+
 private:
 	void addAction(ActionCode code, const std::string &name);
+	std::map<std::string,ActionCode> &changedCodes();
 
 private:
 	FBReader &myFBReader;
 	std::vector<ActionCode> myCodeByIndex;
 	std::map<ActionCode,int> myIndexByCode;
 
-	std::map<std::string,ActionCode> myChangedCodes;
+	ZLViewWidget::Angle myOrientation;
+
+	std::map<std::string,ActionCode> myChangedCodes0;
+	std::map<std::string,ActionCode> myChangedCodes90;
+	std::map<std::string,ActionCode> myChangedCodes180;
+	std::map<std::string,ActionCode> myChangedCodes270;
 };
 
 void FBReaderKeyOptionEntry::addAction(ActionCode code, const std::string &name) {
@@ -86,7 +76,7 @@ void FBReaderKeyOptionEntry::addAction(ActionCode code, const std::string &name)
 	addActionName(name);
 }
 
-FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOptionEntry("Key settings"), myFBReader(fbreader) {
+FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOptionEntry("Key settings"), myFBReader(fbreader), myOrientation(ZLViewWidget::DEGREES0) {
 	addAction(NO_ACTION, "None");
 
 	// switch view
@@ -129,39 +119,147 @@ FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOption
 	// quit
 	addAction(ACTION_CANCEL, "Cancel");
 	addAction(ACTION_QUIT, "Quit");
+
+	setOrientation(ZLViewWidget::DEGREES0);
+}
+
+void FBReaderKeyOptionEntry::setOrientation(ZLViewWidget::Angle angle) {
+	myOrientation = angle;
+	reset();
+}
+
+std::map<std::string,ActionCode> &FBReaderKeyOptionEntry::changedCodes() {
+	switch (myOrientation) {
+		case ZLViewWidget::DEGREES0:
+		default:
+			return myChangedCodes0;
+		case ZLViewWidget::DEGREES90:
+			return myChangedCodes90;
+		case ZLViewWidget::DEGREES180:
+			return myChangedCodes180;
+		case ZLViewWidget::DEGREES270:
+			return myChangedCodes270;
+	}
 }
 
 FBReaderKeyOptionEntry::~FBReaderKeyOptionEntry() {
 }
 
 void FBReaderKeyOptionEntry::onAccept() {
-	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes.begin(); it != myChangedCodes.end(); it++) {
-		myFBReader.keyBindings(ZLViewWidget::DEGREES0).bindKey(it->first, it->second);
+	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes0.begin(); it != myChangedCodes0.end(); it++) {
+		myFBReader.keyBindings(ZLViewWidget::DEGREES0, true).bindKey(it->first, it->second);
+	}
+	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes90.begin(); it != myChangedCodes90.end(); it++) {
+		myFBReader.keyBindings(ZLViewWidget::DEGREES90, true).bindKey(it->first, it->second);
+	}
+	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes180.begin(); it != myChangedCodes180.end(); it++) {
+		myFBReader.keyBindings(ZLViewWidget::DEGREES180, true).bindKey(it->first, it->second);
+	}
+	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes270.begin(); it != myChangedCodes270.end(); it++) {
+		myFBReader.keyBindings(ZLViewWidget::DEGREES270, true).bindKey(it->first, it->second);
 	}
 }
 
 int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {
-	std::map<std::string,ActionCode>::const_iterator it = myChangedCodes.find(key);
-	return myIndexByCode[(it != myChangedCodes.end()) ? it->second : myFBReader.keyBindings(ZLViewWidget::DEGREES0).getBinding(key)];
+	std::map<std::string,ActionCode>::const_iterator it = changedCodes().find(key);
+	return myIndexByCode[(it != changedCodes().end()) ? it->second : myFBReader.keyBindings(myOrientation, true).getBinding(key)];
 }
 
 void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
-	myChangedCodes[key] = myCodeByIndex[index];
+	changedCodes()[key] = myCodeByIndex[index];
 }
 
-KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) : myKeyEntry(0) {
+class OrientationEntry : public ZLComboOptionEntry {
+
+public:
+	OrientationEntry(FBReaderKeyOptionEntry &keyEntry);
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onValueChange(const std::string&);
+	void onAccept(const std::string&);
+
+private:
+	FBReaderKeyOptionEntry &myKeyEntry;
+};
+
+OrientationEntry::OrientationEntry(FBReaderKeyOptionEntry &keyEntry) : myKeyEntry(keyEntry) {
+}
+
+const std::string &OrientationEntry::name() const {
+	static std::string _name = "Orientation";
+	return _name;
+}
+
+static const std::string ROTATION_0 = "0 Degrees";
+static const std::string ROTATION_90 = "90 Degrees Counterclockwise";
+static const std::string ROTATION_180 = "180 Degrees";
+static const std::string ROTATION_270 = "90 Degrees Clockwise";
+
+const std::string &OrientationEntry::initialValue() const {
+	return ROTATION_0;
+}
+
+const std::vector<std::string> &OrientationEntry::values() const {
+	static std::vector<std::string> _values;
+	if (_values.empty()) {
+		_values.push_back(ROTATION_0);
+		_values.push_back(ROTATION_90);
+		_values.push_back(ROTATION_180);
+		_values.push_back(ROTATION_270);
+	}
+	return _values;
+}
+
+void OrientationEntry::onValueChange(const std::string &value) {
+	if (value == ROTATION_0) {
+		myKeyEntry.setOrientation(ZLViewWidget::DEGREES0);
+	} else if (value == ROTATION_90) {
+		myKeyEntry.setOrientation(ZLViewWidget::DEGREES90);
+	} else if (value == ROTATION_180) {
+		myKeyEntry.setOrientation(ZLViewWidget::DEGREES180);
+	} else if (value == ROTATION_270) {
+		myKeyEntry.setOrientation(ZLViewWidget::DEGREES270);
+	}
+}
+
+void OrientationEntry::onAccept(const std::string&) {
+}
+
+class UseSeparateOptionsEntry : public ZLSimpleBooleanOptionEntry {
+
+public:
+	UseSeparateOptionsEntry(FBReader &fbreader, FBReaderKeyOptionEntry &keyEntry, OrientationEntry &orientationEntry);
+	void onValueChange(bool state);
+
+private:
+	FBReaderKeyOptionEntry &myKeyEntry;
+	OrientationEntry &myOrientationEntry;
+};
+
+UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, FBReaderKeyOptionEntry &keyEntry, OrientationEntry &orientationEntry) : ZLSimpleBooleanOptionEntry("Keybindings Depend On Orientation", fbreader.useSeparateBindings()), myKeyEntry(keyEntry), myOrientationEntry(orientationEntry) {
+}
+
+void UseSeparateOptionsEntry::onValueChange(bool state) {
+	ZLSimpleBooleanOptionEntry::onValueChange(state);
+	myOrientationEntry.setVisible(state);
+	myKeyEntry.reset();
+}
+
+KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
 	if (fbreader.isFullKeyboardControlSupported()) {
 		dialogTab->addOption(new KeyboardControlEntry(fbreader));
 	}
+	FBReaderKeyOptionEntry *keyEntry = new FBReaderKeyOptionEntry(fbreader);
+	ZLBooleanOptionEntry *useSeparateBindingsEntry = 0;
 	if (fbreader.isRotationSupported()) {
-	  dialogTab->addOption(new UseSeparateOptionsEntry(fbreader, *this));
+		OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
+	  useSeparateBindingsEntry = new UseSeparateOptionsEntry(fbreader, *keyEntry, *orientationEntry);
+	  dialogTab->addOption(useSeparateBindingsEntry);
+		dialogTab->addOption(orientationEntry);
 	}
-	myKeyEntry = new FBReaderKeyOptionEntry(fbreader);
-	dialogTab->addOption(myKeyEntry);
-}
-
-void KeyBindingsPage::reset() {
-	if (myKeyEntry != 0) {
-		myKeyEntry->reset();
+	dialogTab->addOption(keyEntry);
+	if (useSeparateBindingsEntry != 0) {
+		useSeparateBindingsEntry->onValueChange(useSeparateBindingsEntry->initialState());
 	}
 }

@@ -103,7 +103,7 @@ public:
 
 public:
 	FullKeyBindings();
-	KeyBindings &getBindings(ZLViewWidget::Angle angle);
+	KeyBindings &getBindings(ZLViewWidget::Angle angle, bool force);
 
 private:
 	KeyBindings myBindings0;
@@ -212,7 +212,7 @@ public:
 	void doAction(ActionCode code) FB_SECTION;
 
 	ZLBooleanOption &useSeparateBindings();
-	KeyBindings &keyBindings(ZLViewWidget::Angle angle);
+	KeyBindings &keyBindings(ZLViewWidget::Angle angle, bool force = false);
 
 private:
 	void openBookInternal(BookDescriptionPtr description) FB_SECTION;
@@ -245,8 +245,8 @@ inline ZLBooleanOption &FBReader::useSeparateBindings() {
 	return myKeyBindings.UseSeparateBindingsOption;
 }
 
-inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle) {
-	return myKeyBindings.getBindings(angle);
+inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle, bool force) {
+	return myKeyBindings.getBindings(angle, force);
 }
 
 #endif /* __FBREADER_H__ */

@@ -56,18 +56,15 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 
 static const std::string KeymapFile = "keymap.xml";
 
-static const std::string KEYS = "Keys";
-
-
-FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(KEYS, "UseSeparateBindings", false), myBindings0(KEYS), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
+FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption("KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
 	myBindings0.readCustomBindings();
 	myBindings90.readCustomBindings();
 	myBindings180.readCustomBindings();
 	myBindings270.readCustomBindings();
 }
 
-KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle) {
-	if (!UseSeparateBindingsOption.value()) {
+KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle, bool force) {
+	if (!force && !UseSeparateBindingsOption.value()) {
 		return myBindings0;
 	}
 	switch (angle) {
