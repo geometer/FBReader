@@ -99,7 +99,7 @@ private:
 class FullKeyBindings {
 
 public:
-	ZLBooleanOption UseAngleOption;
+	ZLBooleanOption UseSeparateBindingsOption;
 
 public:
 	FullKeyBindings();
@@ -211,7 +211,7 @@ public:
 	void repaintView() FB_SECTION;
 	void doAction(ActionCode code) FB_SECTION;
 
-	ZLBooleanOption &useDifferentBindings();
+	ZLBooleanOption &useSeparateBindings();
 	KeyBindings &keyBindings(ZLViewWidget::Angle angle);
 
 private:
@@ -241,8 +241,8 @@ private:
 	FullKeyBindings myKeyBindings;
 };
 
-inline ZLBooleanOption &FBReader::useDifferentBindings() {
-	return myKeyBindings.UseAngleOption;
+inline ZLBooleanOption &FBReader::useSeparateBindings() {
+	return myKeyBindings.UseSeparateBindingsOption;
 }
 
 inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle) {

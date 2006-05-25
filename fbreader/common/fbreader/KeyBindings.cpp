@@ -59,7 +59,7 @@ static const std::string KeymapFile = "keymap.xml";
 static const std::string KEYS = "Keys";
 
 
-FullKeyBindings::FullKeyBindings() : UseAngleOption(KEYS, "UseDifferentSettings", false), myBindings0(KEYS), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
+FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(KEYS, "UseSeparateBindings", false), myBindings0(KEYS), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
 	myBindings0.readCustomBindings();
 	myBindings90.readCustomBindings();
 	myBindings180.readCustomBindings();
@@ -67,7 +67,7 @@ FullKeyBindings::FullKeyBindings() : UseAngleOption(KEYS, "UseDifferentSettings"
 }
 
 KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle) {
-	if (!UseAngleOption.value()) {
+	if (!UseSeparateBindingsOption.value()) {
 		return myBindings0;
 	}
 	switch (angle) {

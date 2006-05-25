@@ -43,6 +43,24 @@ void KeyboardControlEntry::onValueChange(bool state) {
 	myFBReader.grabAllKeys(state);
 }
 
+class UseSeparateOptionsEntry : public ZLSimpleBooleanOptionEntry {
+
+public:
+	UseSeparateOptionsEntry(FBReader &fbreader, KeyBindingsPage &page);
+	void onValueChange(bool state);
+
+private:
+	KeyBindingsPage &myPage;
+};
+
+UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, KeyBindingsPage &page) : ZLSimpleBooleanOptionEntry("Use Separate Bindings For Each Orientation", fbreader.useSeparateBindings()), myPage(page) {
+}
+
+void UseSeparateOptionsEntry::onValueChange(bool state) {
+	ZLSimpleBooleanOptionEntry::onValueChange(state);
+	// TODO: implement
+}
+
 class FBReaderKeyOptionEntry : public ZLKeyOptionEntry {
 
 public:
@@ -133,9 +151,11 @@ void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
 }
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
-	dialogTab->addOption(new ZLSimpleBooleanOptionEntry("Use Separate Bindings For Each Orientation", fbreader.useDifferentBindings()));
 	if (fbreader.isFullKeyboardControlSupported()) {
 		dialogTab->addOption(new KeyboardControlEntry(fbreader));
+	}
+	if (fbreader.isRotationSupported()) {
+	  dialogTab->addOption(new UseSeparateOptionsEntry(fbreader, *this));
 	}
 	dialogTab->addOption(new FBReaderKeyOptionEntry(fbreader));
 }
