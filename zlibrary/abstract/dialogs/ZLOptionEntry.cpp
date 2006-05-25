@@ -71,3 +71,8 @@ static std::string EMPTY_STRING;
 const std::string &ZLSimpleColorOptionEntry::name() const {
 	return EMPTY_STRING;
 }
+
+void ZLKeyOptionEntry::reset() {
+	setVisible(false);
+	setVisible(true);
+}

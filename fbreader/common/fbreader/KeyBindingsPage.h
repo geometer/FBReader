@@ -22,6 +22,8 @@
 #ifndef __KEYBINDINGSPAGE_H__
 #define __KEYBINDINGSPAGE_H__
 
+#include <abstract/ZLOptionEntry.h>
+
 #include "OptionsPage.h"
 
 class FBReader;
@@ -32,6 +34,11 @@ class KeyBindingsPage {
 public:
 	KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
 	~KeyBindingsPage() FB_DIALOG_SECTION;
+
+  void reset();
+
+private:
+	ZLKeyOptionEntry *myKeyEntry;
 };
 
 inline KeyBindingsPage::~KeyBindingsPage() {}

@@ -272,6 +272,7 @@ void KeyOptionView::_hide() {
 	myWidget->hide();
 	myLabel->hide();
 	myComboBox->hide();
+	myCurrentKey.clear();
 }
 
 void KeyOptionView::_onAccept() const {

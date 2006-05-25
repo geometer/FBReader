@@ -242,7 +242,7 @@ public:
 	virtual void onAccept() DIALOG_SECTION = 0;
 	virtual int actionIndex(const std::string &key) DIALOG_SECTION = 0;
 	virtual void onValueChange(const std::string &key, int index) DIALOG_SECTION = 0;
-	//virtual void reset() = 0;
+	void reset() DIALOG_SECTION;
 
 protected:
 	ZLOptionKind kind() const DIALOG_SECTION;

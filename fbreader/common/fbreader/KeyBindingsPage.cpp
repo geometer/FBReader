@@ -20,7 +20,6 @@
  */
 
 #include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLOptionEntry.h>
 
 #include "FBReader.h"
 #include "KeyBindingsPage.h"
@@ -58,7 +57,7 @@ UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, KeyBindings
 
 void UseSeparateOptionsEntry::onValueChange(bool state) {
 	ZLSimpleBooleanOptionEntry::onValueChange(state);
-	// TODO: implement
+	myPage.reset();
 }
 
 class FBReaderKeyOptionEntry : public ZLKeyOptionEntry {
@@ -150,12 +149,19 @@ void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
 	myChangedCodes[key] = myCodeByIndex[index];
 }
 
-KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
+KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) : myKeyEntry(0) {
 	if (fbreader.isFullKeyboardControlSupported()) {
 		dialogTab->addOption(new KeyboardControlEntry(fbreader));
 	}
 	if (fbreader.isRotationSupported()) {
 	  dialogTab->addOption(new UseSeparateOptionsEntry(fbreader, *this));
 	}
-	dialogTab->addOption(new FBReaderKeyOptionEntry(fbreader));
+	myKeyEntry = new FBReaderKeyOptionEntry(fbreader);
+	dialogTab->addOption(myKeyEntry);
+}
+
+void KeyBindingsPage::reset() {
+	if (myKeyEntry != 0) {
+		myKeyEntry->reset();
+	}
 }

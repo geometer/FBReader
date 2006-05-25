@@ -401,6 +401,7 @@ void KeyOptionView::_show() {
 
 void KeyOptionView::_hide() {
 	gtk_widget_hide(myWidget);
+	myCurrentKey.clear();
 }
 
 void KeyOptionView::_onAccept() const {
