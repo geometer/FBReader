@@ -133,7 +133,7 @@ void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
 }
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
-	dialogTab->addOption(new ZLSimpleBooleanOptionEntry("Use different setting for different rotations", fbreader.useDifferentBindings()));
+	dialogTab->addOption(new ZLSimpleBooleanOptionEntry("Use Separate Bindings For Each Orientation", fbreader.useDifferentBindings()));
 	if (fbreader.isFullKeyboardControlSupported()) {
 		dialogTab->addOption(new KeyboardControlEntry(fbreader));
 	}
