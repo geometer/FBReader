@@ -58,6 +58,11 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 static const std::string KeymapFile = "keymap.xml";
 
 KeyBindings::KeyBindings() {
+  readDefaultBindings();
+  readCustomBindings();
+}
+
+void KeyBindings::readDefaultBindings() {
 	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
 	if (!stream.isNull() && stream->open()) {
 		std::map<std::string,ActionCode> keymap;
@@ -67,7 +72,9 @@ KeyBindings::KeyBindings() {
 			bindKey(it->first, it->second);
 		}
 	}
+}
 
+void KeyBindings::readCustomBindings() {
 	int size = ZLIntegerRangeOption(BINDINGS_GROUP, BINDINGS_NUMBER, 0, 256, 0).value();
 	for (int i = 0; i < size; i++) {
 		std::string key = BINDED_KEY;

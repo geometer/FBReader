@@ -108,6 +108,7 @@ ZLBooleanOption FBReader::SearchThisSectionOnlyOption(SEARCH, "ThisSectionOnly",
 ZLStringOption FBReader::SearchPatternOption(SEARCH, "Pattern", std::string());
 
 ZLBooleanOption FBReader::KeyboardControlOption("Keyboard", "FullControl", false);
+ZLBooleanOption FBReader::UseDifferentKeyBindingsOption("Keys", "UseDifferentSettings", false);
 
 ZLIntegerOption FBReader::RotationAngleOption("Rotation", ANGLE, ZLViewWidget::DEGREES90);
 ZLIntegerOption FBReader::AngleStateOption(STATE, ANGLE, ZLViewWidget::DEGREES0);

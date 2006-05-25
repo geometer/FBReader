@@ -86,6 +86,10 @@ public:
 	ActionCode getBinding(const std::string &key);
 
 private:
+	void readDefaultBindings();
+	void readCustomBindings();
+
+private:
 	std::map<std::string,ActionCode> myBindingsMap;
 };
 
@@ -135,6 +139,7 @@ public:
 	static ZLStringOption SearchPatternOption;
 
 	static ZLBooleanOption KeyboardControlOption;
+	static ZLBooleanOption UseDifferentKeyBindingsOption;
 
 	static ZLIntegerOption RotationAngleOption;
 	static ZLIntegerOption AngleStateOption;
