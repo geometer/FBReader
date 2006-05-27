@@ -31,62 +31,50 @@
 #include "../../bookmodel/BookModel.h"
 #include "../../Files.h"
 
-std::map<std::string,TagAction*> XHTMLReader::ourTagActions;
+std::map<std::string,XHTMLTagAction*> XHTMLReader::ourTagActions;
 
-TagAction::~TagAction() {
+XHTMLTagAction::~XHTMLTagAction() {
 }
 
-class TagParagraphAction : public TagAction {
+class XHTMLTagParagraphAction : public XHTMLTagAction {
 
 public:
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
   void doAtEnd(XHTMLReader &reader);
 };
 
-class TagRestartParagraphAction : public TagAction {
+class XHTMLTagRestartParagraphAction : public XHTMLTagAction {
 
 public:
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
   void doAtEnd(XHTMLReader &reader);
 };
 
-class TagImageAction : public TagAction {
+class XHTMLTagImageAction : public XHTMLTagAction {
 
 public:
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
   void doAtEnd(XHTMLReader &reader);
 };
 
-class TagItemAction : public TagAction {
+class XHTMLTagItemAction : public XHTMLTagAction {
 
 public:
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
   void doAtEnd(XHTMLReader &reader);
 };
 
-class TagHyperlinkAction : public TagAction {
+class XHTMLTagHyperlinkAction : public XHTMLTagAction {
 
 public:
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
   void doAtEnd(XHTMLReader &reader);
 };
 
-class TagControlAction : public TagAction {
+class XHTMLTagControlAction : public XHTMLTagAction {
 
 public:
-  TagControlAction(TextKind control);
-
-  void doAtStart(XHTMLReader &reader, const char **xmlattributes);
-  void doAtEnd(XHTMLReader &reader);
-
-private:
-  TextKind myControl;
-};
-
-class TagParagraphWithControlAction : public TagAction {
-
-public:
-  TagParagraphWithControlAction(TextKind control);
+  XHTMLTagControlAction(TextKind control);
 
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
   void doAtEnd(XHTMLReader &reader);
@@ -95,7 +83,19 @@ private:
   TextKind myControl;
 };
 
-class TagPreAction : public TagAction {
+class XHTMLTagParagraphWithControlAction : public XHTMLTagAction {
+
+public:
+  XHTMLTagParagraphWithControlAction(TextKind control);
+
+  void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+  void doAtEnd(XHTMLReader &reader);
+
+private:
+  TextKind myControl;
+};
+
+class XHTMLTagPreAction : public XHTMLTagAction {
 
 public:
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
@@ -104,46 +104,46 @@ public:
 
 static const std::string HASH = "#";
 
-void TagAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   const char *id = reader.attributeValue(xmlattributes, "id");
   if (id != 0) {
     reader.myModelReader.addHyperlinkLabel(reader.myFileName + HASH + id);
   }
 }
 
-void TagParagraphAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagParagraphAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   reader.myModelReader.beginParagraph();
-  TagAction::doAtStart(reader, xmlattributes);
+  XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
-void TagParagraphAction::doAtEnd(XHTMLReader &reader) {
+void XHTMLTagParagraphAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.endParagraph();
 }
 
-void TagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   reader.myModelReader.endParagraph();
   reader.myModelReader.beginParagraph();
-  TagAction::doAtStart(reader, xmlattributes);
+  XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
-void TagRestartParagraphAction::doAtEnd(XHTMLReader&) {
+void XHTMLTagRestartParagraphAction::doAtEnd(XHTMLReader&) {
 }
 
-void TagItemAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagItemAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   reader.myModelReader.endParagraph();
   // TODO: increase left indent
   reader.myModelReader.beginParagraph();
-  TagAction::doAtStart(reader, xmlattributes);
+  XHTMLTagAction::doAtStart(reader, xmlattributes);
   // TODO: replace bullet sign by number inside OL tag
   const std::string bullet = "\xE2\x80\xA2\xC0\xA0";
   reader.myModelReader.addData(bullet);
 }
 
-void TagItemAction::doAtEnd(XHTMLReader &reader) {
+void XHTMLTagItemAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.endParagraph();
 }
 
-void TagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   const char *fileName = reader.attributeValue(xmlattributes, "data");
   if (fileName != 0) {
 		bool flag = reader.myModelReader.paragraphIsOpen();
@@ -162,60 +162,60 @@ void TagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) 
   }
 }
 
-void TagImageAction::doAtEnd(XHTMLReader&) {
+void XHTMLTagImageAction::doAtEnd(XHTMLReader&) {
 }
 
-TagControlAction::TagControlAction(TextKind control) : myControl(control) {
+XHTMLTagControlAction::XHTMLTagControlAction(TextKind control) : myControl(control) {
 }
 
-void TagControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   reader.myModelReader.addControl(myControl, true);
-  TagAction::doAtStart(reader, xmlattributes);
+  XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
-void TagControlAction::doAtEnd(XHTMLReader &reader) {
+void XHTMLTagControlAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.addControl(myControl, false);
 }
 
-void TagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   std::string link;
   const char *href = reader.attributeValue(xmlattributes, "href");
   if (href != 0) {
     link = (*href == '#') ? (reader.myFileName + href) : href;
   }
   reader.myModelReader.addHyperlinkControl(HYPERLINK, link);
-  TagAction::doAtStart(reader, xmlattributes);
+  XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
-void TagHyperlinkAction::doAtEnd(XHTMLReader &reader) {
+void XHTMLTagHyperlinkAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.addControl(HYPERLINK, false);
 }
 
-TagParagraphWithControlAction::TagParagraphWithControlAction(TextKind control) : myControl(control) {
+XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(TextKind control) : myControl(control) {
 }
 
-void TagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   if ((myControl == TITLE) && (reader.myModelReader.model().bookTextModel().paragraphsNumber() > 1)) {
     reader.myModelReader.insertEndOfSectionParagraph();
   }
   reader.myModelReader.beginParagraph();
   reader.myModelReader.addControl(myControl, true);
-  TagAction::doAtStart(reader, xmlattributes);
+  XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
-void TagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
+void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.addControl(myControl, false);
   reader.myModelReader.endParagraph();
 }
 
-void TagPreAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagPreAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
   reader.myPreformatted = true;
   reader.myModelReader.beginParagraph();
   reader.myModelReader.addControl(CODE, true);
-  TagAction::doAtStart(reader, xmlattributes);
+  XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
-void TagPreAction::doAtEnd(XHTMLReader &reader) {
+void XHTMLTagPreAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.addControl(CODE, false);
   reader.myModelReader.endParagraph();
   reader.myPreformatted = false;
@@ -223,75 +223,75 @@ void TagPreAction::doAtEnd(XHTMLReader &reader) {
 
 void XHTMLReader::fillTagTable() {
   if (ourTagActions.empty()) {
-    //ourTagActions["html"] = new TagAction();
-    ourTagActions["body"] = new TagParagraphAction();
-    //ourTagActions["title"] = new TagAction();
-    //ourTagActions["meta"] = new TagAction();
-    //ourTagActions["script"] = new TagAction();
+    //ourTagActions["html"] = new XHTMLTagAction();
+    ourTagActions["body"] = new XHTMLTagParagraphAction();
+    //ourTagActions["title"] = new XHTMLTagAction();
+    //ourTagActions["meta"] = new XHTMLTagAction();
+    //ourTagActions["script"] = new XHTMLTagAction();
 
-    //ourTagActions["font"] = new TagAction();
-    //ourTagActions["style"] = new TagAction();
+    //ourTagActions["font"] = new XHTMLTagAction();
+    //ourTagActions["style"] = new XHTMLTagAction();
 
-    ourTagActions["p"] = new TagParagraphAction();
-    ourTagActions["h1"] = new TagParagraphWithControlAction(TITLE);
-    ourTagActions["h2"] = new TagParagraphWithControlAction(TITLE);
-    ourTagActions["h3"] = new TagParagraphWithControlAction(SUBTITLE);
-    ourTagActions["h4"] = new TagParagraphWithControlAction(SUBTITLE);
-    ourTagActions["h5"] = new TagParagraphWithControlAction(STRONG);
-    ourTagActions["h6"] = new TagParagraphWithControlAction(STRONG);
+    ourTagActions["p"] = new XHTMLTagParagraphAction();
+    ourTagActions["h1"] = new XHTMLTagParagraphWithControlAction(TITLE);
+    ourTagActions["h2"] = new XHTMLTagParagraphWithControlAction(TITLE);
+    ourTagActions["h3"] = new XHTMLTagParagraphWithControlAction(SUBTITLE);
+    ourTagActions["h4"] = new XHTMLTagParagraphWithControlAction(SUBTITLE);
+    ourTagActions["h5"] = new XHTMLTagParagraphWithControlAction(STRONG);
+    ourTagActions["h6"] = new XHTMLTagParagraphWithControlAction(STRONG);
 
-    //ourTagActions["ol"] = new TagAction();
-    //ourTagActions["ul"] = new TagAction();
-    //ourTagActions["dl"] = new TagAction();
-    ourTagActions["li"] = new TagItemAction();
+    //ourTagActions["ol"] = new XHTMLTagAction();
+    //ourTagActions["ul"] = new XHTMLTagAction();
+    //ourTagActions["dl"] = new XHTMLTagAction();
+    ourTagActions["li"] = new XHTMLTagItemAction();
 
-    ourTagActions["strong"] = new TagControlAction(STRONG);
-    ourTagActions["b"] = new TagControlAction(BOLD);
-    ourTagActions["em"] = new TagControlAction(EMPHASIS);
-    ourTagActions["i"] = new TagControlAction(ITALIC);
-    ourTagActions["code"] = new TagControlAction(CODE);
-    ourTagActions["tt"] = new TagControlAction(CODE);
-    ourTagActions["kbd"] = new TagControlAction(CODE);
-    ourTagActions["var"] = new TagControlAction(CODE);
-    ourTagActions["samp"] = new TagControlAction(CODE);
-    ourTagActions["cite"] = new TagControlAction(CITE);
-    ourTagActions["sub"] = new TagControlAction(SUB);
-    ourTagActions["sup"] = new TagControlAction(SUP);
-    ourTagActions["dd"] = new TagControlAction(DEFINITION_DESCRIPTION);
-    ourTagActions["dfn"] = new TagControlAction(DEFINITION);
-    ourTagActions["strike"] = new TagControlAction(STRIKETHROUGH);
+    ourTagActions["strong"] = new XHTMLTagControlAction(STRONG);
+    ourTagActions["b"] = new XHTMLTagControlAction(BOLD);
+    ourTagActions["em"] = new XHTMLTagControlAction(EMPHASIS);
+    ourTagActions["i"] = new XHTMLTagControlAction(ITALIC);
+    ourTagActions["code"] = new XHTMLTagControlAction(CODE);
+    ourTagActions["tt"] = new XHTMLTagControlAction(CODE);
+    ourTagActions["kbd"] = new XHTMLTagControlAction(CODE);
+    ourTagActions["var"] = new XHTMLTagControlAction(CODE);
+    ourTagActions["samp"] = new XHTMLTagControlAction(CODE);
+    ourTagActions["cite"] = new XHTMLTagControlAction(CITE);
+    ourTagActions["sub"] = new XHTMLTagControlAction(SUB);
+    ourTagActions["sup"] = new XHTMLTagControlAction(SUP);
+    ourTagActions["dd"] = new XHTMLTagControlAction(DEFINITION_DESCRIPTION);
+    ourTagActions["dfn"] = new XHTMLTagControlAction(DEFINITION);
+    ourTagActions["strike"] = new XHTMLTagControlAction(STRIKETHROUGH);
 
-    ourTagActions["a"] = new TagHyperlinkAction();
-    //ourTagActions["img"] = new TagAction();
-    ourTagActions["object"] = new TagImageAction();
+    ourTagActions["a"] = new XHTMLTagHyperlinkAction();
+    //ourTagActions["img"] = new XHTMLTagAction();
+    ourTagActions["object"] = new XHTMLTagImageAction();
 
-    //ourTagActions["area"] = new TagAction();
-    //ourTagActions["map"] = new TagAction();
+    //ourTagActions["area"] = new XHTMLTagAction();
+    //ourTagActions["map"] = new XHTMLTagAction();
 
-    //ourTagActions["base"] = new TagAction();
-    //ourTagActions["blockquote"] = new TagAction();
-    ourTagActions["br"] = new TagRestartParagraphAction();
-    //ourTagActions["center"] = new TagAction();
-    ourTagActions["div"] = new TagParagraphAction();
-    //ourTagActions["dt"] = new TagAction();
-    //ourTagActions["head"] = new TagAction();
-    //ourTagActions["hr"] = new TagAction();
-    //ourTagActions["link"] = new TagAction();
-    //ourTagActions["param"] = new TagAction();
-    //ourTagActions["q"] = new TagAction();
-    //ourTagActions["s"] = new TagAction();
+    //ourTagActions["base"] = new XHTMLTagAction();
+    //ourTagActions["blockquote"] = new XHTMLTagAction();
+    ourTagActions["br"] = new XHTMLTagRestartParagraphAction();
+    //ourTagActions["center"] = new XHTMLTagAction();
+    ourTagActions["div"] = new XHTMLTagParagraphAction();
+    //ourTagActions["dt"] = new XHTMLTagAction();
+    //ourTagActions["head"] = new XHTMLTagAction();
+    //ourTagActions["hr"] = new XHTMLTagAction();
+    //ourTagActions["link"] = new XHTMLTagAction();
+    //ourTagActions["param"] = new XHTMLTagAction();
+    //ourTagActions["q"] = new XHTMLTagAction();
+    //ourTagActions["s"] = new XHTMLTagAction();
 
-    ourTagActions["pre"] = new TagPreAction();
-    //ourTagActions["big"] = new TagAction();
-    //ourTagActions["small"] = new TagAction();
-    //ourTagActions["u"] = new TagAction();
+    ourTagActions["pre"] = new XHTMLTagPreAction();
+    //ourTagActions["big"] = new XHTMLTagAction();
+    //ourTagActions["small"] = new XHTMLTagAction();
+    //ourTagActions["u"] = new XHTMLTagAction();
 
-    //ourTagActions["table"] = new TagAction();
-    ourTagActions["td"] = new TagParagraphAction();
-    ourTagActions["th"] = new TagParagraphAction();
-    //ourTagActions["tr"] = new TagAction();
-    //ourTagActions["caption"] = new TagAction();
-    //ourTagActions["span"] = new TagAction();
+    //ourTagActions["table"] = new XHTMLTagAction();
+    ourTagActions["td"] = new XHTMLTagParagraphAction();
+    ourTagActions["th"] = new XHTMLTagParagraphAction();
+    //ourTagActions["tr"] = new XHTMLTagAction();
+    //ourTagActions["caption"] = new XHTMLTagAction();
+    //ourTagActions["span"] = new XHTMLTagAction();
   }
 }
 
@@ -315,7 +315,7 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &nam
 
 void XHTMLReader::startElementHandler(const char *tag, const char **attributes) {
   // TODO: tag -> lowercase
-  TagAction *action = ourTagActions[tag];
+  XHTMLTagAction *action = ourTagActions[tag];
   if (action != 0) {
     action->doAtStart(*this, attributes);
   }
@@ -323,7 +323,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 
 void XHTMLReader::endElementHandler(const char *tag) {
   // TODO: tag -> lowercase
-  TagAction *action = ourTagActions[tag];
+  XHTMLTagAction *action = ourTagActions[tag];
   if (action != 0) {
     action->doAtEnd(*this);
   }

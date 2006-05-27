@@ -19,57 +19,45 @@
  * 02110-1301, USA.
  */
 
-#ifndef __XHTMLREADER_H__
-#define __XHTMLREADER_H__
+#ifndef __FB2DESCRIPTIONREADER_H__
+#define __FB2DESCRIPTIONREADER_H__
 
 #include <string>
-#include <map>
 
 #include <abstract/ZLXMLReader.h>
 
-class BookReader;
-class XHTMLReader;
+#include "../../description/BookDescription.h"
 
-class XHTMLTagAction {
-
-public:
-  virtual ~XHTMLTagAction();
-	
-  virtual void doAtStart(XHTMLReader &reader, const char **xmlattributes);
-  virtual void doAtEnd(XHTMLReader &reader) = 0;
-};
-
-class XHTMLReader : public ZLXMLReader {
-
-private:
-  static std::map<std::string,XHTMLTagAction*> ourTagActions;
-  static void fillTagTable();
+class FB2DescriptionReader : public ZLXMLReader {
 
 public:
-  XHTMLReader(BookReader &modelReader);
-  bool readFile(const std::string &pathPrefix, const std::string &name);
+  FB2DescriptionReader(BookDescription &description) FORMATS_SECTION;
+  ~FB2DescriptionReader() FORMATS_SECTION;
+  bool readDescription(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
   void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
   void endElementHandler(const char *tag) FORMATS_SECTION;
   void characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
-  const std::vector<std::string> &externalDTDs() const XML_SECTION;
-
 private:
-  BookReader &myModelReader;
-  std::string myPathPrefix;
-  std::string myFileName;
-	bool myPreformatted;
+  WritableBookDescription myDescription;
 
-  friend class XHTMLTagAction;
-  friend class XHTMLTagParagraphAction;
-  friend class XHTMLTagRestartParagraphAction;
-  friend class XHTMLTagControlAction;
-  friend class XHTMLTagHyperlinkAction;
-  friend class XHTMLTagItemAction;
-  friend class XHTMLTagImageAction;
-  friend class XHTMLTagParagraphWithControlAction;
-  friend class XHTMLTagPreAction;
+  enum {
+    READ_NONE,
+    READ_TITLE_INFO,
+    READ_TITLE,
+    READ_AUTHOR,
+    READ_AUTHOR_FIRST_NAME,
+    READ_AUTHOR_MIDDLE_NAME,
+    READ_AUTHOR_LAST_NAME,
+    READ_LANGUAGE
+  } myReadState;
+
+  std::string myAuthorFirstName;
+  std::string myAuthorMiddleName;
+  std::string myAuthorLastName;
 };
 
-#endif /* __XHTMLREADER_H__ */
+inline FB2DescriptionReader::~FB2DescriptionReader() {}
+
+#endif /* __FB2DESCRIPTIONREADER_H__ */

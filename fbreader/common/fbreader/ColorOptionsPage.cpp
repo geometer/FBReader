@@ -58,7 +58,7 @@ ColorOptionsPage::ColorOptionsPage(ZLOptionsDialogTab *dialogTab) {
 		myComboEntry->values()[4]
 	);
 	registerEntry(dialogTab,
-		new ZLSimpleColorOptionEntry(TextView::PositionIndicatorColorOption),
+		new ZLSimpleColorOptionEntry(TextView::PositionIndicator::ColorOption),
 		myComboEntry->values()[5]
 	);
 

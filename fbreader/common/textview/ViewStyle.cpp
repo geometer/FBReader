@@ -127,8 +127,8 @@ int TextView::ViewStyle::elementHeight(const TextElement &element) const {
 }
 
 int TextView::ViewStyle::textAreaHeight() const {
-	return TextView::ShowPositionIndicatorOption.value() ?
-		context().height() - PositionIndicatorHeightOption.value() - PositionIndicatorOffsetOption.value() :
+	return TextView::PositionIndicator::ShowOption.value() ?
+		context().height() - PositionIndicator::HeightOption.value() - PositionIndicator::OffsetOption.value() :
 		context().height();
 }
 

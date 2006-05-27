@@ -418,7 +418,7 @@ void FBReader::doAction(ActionCode code) {
 			}
 			break;
 		case ACTION_SHOW_HIDE_POSITION_INDICATOR:
-			TextView::ShowPositionIndicatorOption.setValue(!TextView::ShowPositionIndicatorOption.value());
+			TextView::PositionIndicator::ShowOption.setValue(!TextView::PositionIndicator::ShowOption.value());
 			repaintView();
 			break;
 		case ACTION_TOGGLE_FULLSCREEN:
@@ -479,6 +479,7 @@ void FBReader::doAction(ActionCode code) {
 			if (books.size() > 1) {
 				openBook(books[1]);
 				repaintView();
+				resetWindowCaption();
 			}
 			break;
 		}

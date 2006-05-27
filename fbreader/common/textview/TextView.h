@@ -44,12 +44,6 @@ public:
 	static ZLColorOption TreeLinesColorOption;
 	static ZLBooleanOption AutoHyphenationOption;
 
-	static ZLBooleanOption ShowPositionIndicatorOption;
-	static ZLBooleanOption IsIndicatorSensitiveOption;
-	static ZLColorOption PositionIndicatorColorOption;
-	static ZLIntegerRangeOption PositionIndicatorHeightOption;
-	static ZLIntegerRangeOption PositionIndicatorOffsetOption;
-
 public:
 	enum ScrollingMode {
 		NO_OVERLAPPING,
@@ -58,6 +52,27 @@ public:
 		SCROLL_PERCENTAGE
 	};
 
+public:
+	class PositionIndicator {
+
+	public:
+		PositionIndicator(TextView &textView);
+
+		static ZLBooleanOption ShowOption;
+		static ZLBooleanOption IsSensitiveOption;
+		static ZLColorOption ColorOption;
+		static ZLIntegerRangeOption HeightOption;
+		static ZLIntegerRangeOption OffsetOption;
+
+		void draw();
+		bool onStylusPress(int x, int y);
+
+	private:
+		TextView &myTextView;
+	};
+
+	friend class TextView::PositionIndicator;
+	
 private:
 	class ViewStyle {
 
@@ -242,10 +257,11 @@ private:
 	std::vector<TextElementPosition> myTextElementMap;
 
 	std::vector<size_t> myTextSize;
-
 	std::vector<size_t> myTextBreaks;
 
 	ViewStyle myStyle;
+
+	PositionIndicator myPositionIndicator;
 };
 
 inline TextView::ViewStyle::~ViewStyle() {}

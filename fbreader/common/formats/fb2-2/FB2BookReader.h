@@ -19,57 +19,60 @@
  * 02110-1301, USA.
  */
 
-#ifndef __XHTMLREADER_H__
-#define __XHTMLREADER_H__
-
-#include <string>
-#include <map>
+#ifndef __FB2BOOKREADER_H__
+#define __FB2BOOKREADER_H__
 
 #include <abstract/ZLXMLReader.h>
 
-class BookReader;
-class XHTMLReader;
+#include "../../bookmodel/BookReader.h"
 
-class XHTMLTagAction {
+class BookModel;
+class Base64EncodedImage;
+class FB2BookReader;
+
+class FB2TagAction {
 
 public:
-  virtual ~XHTMLTagAction();
+  virtual ~FB2TagAction();
 	
-  virtual void doAtStart(XHTMLReader &reader, const char **xmlattributes);
-  virtual void doAtEnd(XHTMLReader &reader) = 0;
+  virtual void doAtStart(FB2BookReader &reader, const char **xmlattributes);
+  virtual void doAtEnd(FB2BookReader &reader) = 0;
 };
 
-class XHTMLReader : public ZLXMLReader {
+class FB2BookReader : public ZLXMLReader {
 
 private:
-  static std::map<std::string,XHTMLTagAction*> ourTagActions;
+  static std::map<std::string,FB2TagAction*> ourTagActions;
   static void fillTagTable();
 
 public:
-  XHTMLReader(BookReader &modelReader);
-  bool readFile(const std::string &pathPrefix, const std::string &name);
+  FB2BookReader(BookModel &model) FORMATS_SECTION;
+  ~FB2BookReader() FORMATS_SECTION;
+  bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
 
   void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
   void endElementHandler(const char *tag) FORMATS_SECTION;
   void characterDataHandler(const char *text, int len) FORMATS_SECTION;
 
-  const std::vector<std::string> &externalDTDs() const XML_SECTION;
-
 private:
-  BookReader &myModelReader;
-  std::string myPathPrefix;
-  std::string myFileName;
-	bool myPreformatted;
+  int mySectionDepth;
+  int myBodyCounter;
+  bool myInsidePoem;
+  BookReader myModelReader;
 
-  friend class XHTMLTagAction;
-  friend class XHTMLTagParagraphAction;
-  friend class XHTMLTagRestartParagraphAction;
-  friend class XHTMLTagControlAction;
-  friend class XHTMLTagHyperlinkAction;
-  friend class XHTMLTagItemAction;
-  friend class XHTMLTagImageAction;
-  friend class XHTMLTagParagraphWithControlAction;
-  friend class XHTMLTagPreAction;
+  Base64EncodedImage *myCurrentImage;
+  bool myProcessingImage;
+  std::vector<std::string> myImageBuffer;
+
+  bool mySectionStarted;
+  bool myInsideTitle1;
+
+  friend class FB2TagAction;
+  friend class FB2TagControlAction;
+  friend class FB2TagParagraphWithControlAction;
 };
 
-#endif /* __XHTMLREADER_H__ */
+inline FB2BookReader::~FB2BookReader() {}
+inline FB2TagAction::~FB2TagAction() {}
+
+#endif /* __FB2BOOKREADER_H__ */

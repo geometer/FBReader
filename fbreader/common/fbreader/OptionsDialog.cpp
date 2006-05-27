@@ -163,10 +163,10 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), context);
 
 	ZLOptionsDialogTab *indicatorTab = myDialog->createTab("Indicator");
-	myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", TextView::ShowPositionIndicatorOption);
-	myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicatorHeightOption, 1);
-	myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicatorOffsetOption, 1);
-	myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", TextView::IsIndicatorSensitiveOption);
+	myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", TextView::PositionIndicator::ShowOption);
+	myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicator::HeightOption, 1);
+	myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicator::OffsetOption, 1);
+	myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", TextView::PositionIndicator::IsSensitiveOption);
 	indicatorTab->addOption(myIndicatorPage.ShowIndicatorEntry);
 	indicatorTab->addOption(myIndicatorPage.HeightEntry);
 	indicatorTab->addOption(myIndicatorPage.OffsetEntry);

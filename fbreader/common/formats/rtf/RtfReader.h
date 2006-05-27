@@ -38,7 +38,7 @@ class RtfCommand;
 class RtfReader {
 
 private:
-  static void RtfReader::fillKeywordMap();
+  static void fillKeywordMap();
 
 private:
   static std::map<std::string, RtfCommand*> ourKeywordMap;
