@@ -8,7 +8,8 @@ DEBIAN_PACKAGE = fbreader-$(UI_TYPE)_$(VERSION)-1_i386.deb
 
 TMPDIR = tmp
 
-all:
+all: tarball debpackage
+	@cp $(TARBALL) $(DEBIAN_PACKAGE) ../..
 
 install:
 	@install -d $(DESTDIR)$(INSTALLDIR)/bin
