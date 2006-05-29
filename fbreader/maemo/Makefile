@@ -2,8 +2,9 @@ ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
+ARCH	= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 PACKAGE_NAME = fbreader-$(UI_TYPE)
-PACKAGE_FILE = $(PACKAGE_NAME)_$(VERSION)-1_arm.deb
+PACKAGE_FILE = $(PACKAGE_NAME)_$(VERSION)-1_$(ARCH).deb
 
 ifeq "$(UI_TYPE)" "maemo"
 PREFIX=/var/lib/install
@@ -70,6 +71,7 @@ package:
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
+		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
 		-e "s#@DEPENDS@#maemo#" \
 		-e "s#@SECTION@#utils#" \
@@ -83,6 +85,7 @@ package:
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
+		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
 		-e "s#@DEPENDS@#`dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`#" \
 		-e "s#@SECTION@#user/tools#" \

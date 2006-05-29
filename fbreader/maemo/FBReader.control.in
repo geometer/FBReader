@@ -1,6 +1,6 @@
 Package: @PACKAGE@
 Version: @VERSION@
-Architecture: arm
+Architecture: @ARCH@
 Depends: @DEPENDS@
 Section: @SECTION@
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
