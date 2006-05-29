@@ -26,7 +26,7 @@
 #include "QOpenFileDialog.h"
 #include "QDialogManager.h"
 
-QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->name().c_str())), myNode(node) {
+QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromLocal8Bit(node->name().c_str())), myNode(node) {
 }
 
 QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : QDialog(), ZLDesktopOpenFileDialog(handler) {
@@ -77,7 +77,7 @@ void QOpenFileDialog::resizeEvent(QResizeEvent *event) {
 }
 
 void QOpenFileDialog::update(const std::string &selectedNodeName) {
-	myStateLine->setText(QString::fromUtf8(state()->name().c_str()));
+	myStateLine->setText(QString::fromLocal8Bit(state()->name().c_str()));
 
 	myListView->clear();
 

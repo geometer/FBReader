@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
@@ -123,7 +125,9 @@ GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 }
 
 void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
-	gtk_entry_set_text(myStateLine, state()->name().c_str());
+	char *stateText = g_locale_to_utf8(state()->name().data(), state()->name().length(), 0, 0, 0);
+	gtk_entry_set_text(myStateLine, stateText);
+	g_free(stateText);
 
 	gtk_list_store_clear(myStore);
 	myNodes.clear();
@@ -136,11 +140,13 @@ void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
 		GtkTreeIter iter;
 		gtk_list_store_append(myStore, &iter);
 
+		char *fileName = g_locale_to_utf8((*it)->name().data(), (*it)->name().length(), 0, 0, 0);
 		gtk_list_store_set(myStore, &iter,
 					0, getPixmap(*it),
-					1, (*it)->name().c_str(),
+					1, fileName,
 					2, index,
 					-1);
+		g_free(fileName);
 
 		myNodes.push_back(*it);
 

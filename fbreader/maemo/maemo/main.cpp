@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <locale.h>
 #include <libintl.h>
 #include <gtk/gtk.h>
 
@@ -43,8 +42,6 @@ public:
 };
 
 int main(int argc, char **argv) {
-	gtk_disable_setlocale();
-
 	gtk_init(&argc, &argv);
 
 	ZLUnixFSManager::createInstance();

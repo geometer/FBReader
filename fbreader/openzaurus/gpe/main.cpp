@@ -34,7 +34,6 @@
 #include "../../common/Files.h"
 
 int main(int argc, char **argv) {
-	gtk_disable_setlocale();
   if (!gpe_application_init (&argc, &argv)) {
 		return 1;
 	}
