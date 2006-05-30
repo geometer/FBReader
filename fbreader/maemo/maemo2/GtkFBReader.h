@@ -27,8 +27,7 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
-#include <hildon-widgets/hildon-app.h>
-#include <hildon-widgets/hildon-appview.h>
+#include <hildon-widgets/hildon-program.h>
 #include <libosso.h>
 
 #include "../../common/fbreader/FBReader.h"
@@ -45,7 +44,7 @@ public:
 	~GtkFBReader();
 
 protected:
-	void setWindowCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
+	void setWindowCaption(const std::string &caption) { gtk_window_set_title(GTK_WINDOW(myWindow), caption.c_str()); }
 	void addButton(ActionCode id, const std::string &name);
 	void addButtonSeparator();
 	void setButtonVisible(ActionCode id, bool visible);
@@ -71,8 +70,8 @@ private:
 	void addMenuItem(GtkMenu *menu, const char *label, ActionCode code);
 
 private:
-	HildonApp *myApp;
-	HildonAppView *myAppView;
+	HildonProgram *myProgram;
+	HildonWindow *myWindow;
 	GtkToolbar *myToolbar;
 	GtkMenu *myMenu;
 

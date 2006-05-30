@@ -85,18 +85,18 @@ static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 }
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
-	myApp = HILDON_APP(hildon_app_new());
-	hildon_app_set_title(myApp, "FBReader");
-	hildon_app_set_two_part_title(myApp, FALSE);
+	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
+	g_set_application_name("FBReader");
 
 	osso_initialize("FBReader", "0.0", false, 0);
 
-	myAppView = HILDON_APPVIEW(hildon_appview_new(0));
+	myWindow = hildon_window_new();
 
-	myMenu = GTK_MENU(hildon_appview_get_menu(myAppView));
+	myMenu = GTK_MENU(gtk_menu_new());
 
 	buildMenu();
 
+	hildon_window_set_menu(myWindow, myMenu);
 	gtk_widget_show_all(GTK_WIDGET(myMenu));
 
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
@@ -105,15 +105,15 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 	createToolbar();
 
-	hildon_appview_set_toolbar(myAppView, myToolbar);
+	hildon_window_add_toolbar(myWindow, myToolbar);
 
 	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myAppView), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
-	hildon_app_set_appview(myApp, myAppView);
+	hildon_program_add_window(myProgram, myWindow);
 
-	gtk_widget_show_all(GTK_WIDGET(myApp));
+	gtk_widget_show_all(GTK_WIDGET(myWindow));
 
 	setMode(BOOK_TEXT_MODE);
 
