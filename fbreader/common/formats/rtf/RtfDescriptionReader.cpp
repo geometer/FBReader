@@ -39,7 +39,7 @@ bool RtfDescriptionReader::readDocument(const std::string &fileName) {
   myDoRead = false;
   bool code = RtfReader::readDocument(fileName);
   if (myDescription.encoding().empty()) {
-    myDescription.encoding() = "us-ascii";
+    myDescription.encoding() = "windows-1252";
   }
   return code;
 }

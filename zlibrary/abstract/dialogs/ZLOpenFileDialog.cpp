@@ -129,10 +129,11 @@ const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 
 ZLTreeStatePtr ZLDirTreeState::change(const ZLTreeNodePtr node) {
 	ZLTreeStatePtr newState;
-	if (handler().isAcceptable(node->name())) {
-		newState = new ZLFileTreeState(handler(), myDir->itemName(node->name()));
+	const std::string &fullName = myDir->itemName(node->name());
+	if (handler().isAcceptable(fullName)) {
+		newState = new ZLFileTreeState(handler(), fullName);
 	} else {
-		newState = new ZLDirTreeState(handler(), ZLFile(myDir->itemName(node->name())).directory());
+		newState = new ZLDirTreeState(handler(), ZLFile(fullName).directory());
 	}
 	if (newState->exists()) {
 		mySubnodes.clear();
