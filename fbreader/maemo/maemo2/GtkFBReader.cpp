@@ -90,7 +90,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	osso_initialize("FBReader", "0.0", false, 0);
 
-	myWindow = hildon_window_new();
+	myWindow = HILDON_WINDOW(hildon_window_new());
 
 	myMenu = GTK_MENU(gtk_menu_new());
 
@@ -108,7 +108,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	hildon_window_add_toolbar(myWindow, myToolbar);
 
 	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
-	gtk_container_add(GTK_CONTAINER(myAppView), ((GtkViewWidget*)myViewWidget)->area());
+	gtk_container_add(GTK_CONTAINER(myWindow), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
 	hildon_program_add_window(myProgram, myWindow);
@@ -117,8 +117,8 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	setMode(BOOK_TEXT_MODE);
 
-	gtk_signal_connect(GTK_OBJECT(myApp), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
-	gtk_signal_connect(GTK_OBJECT(myApp), "key_press_event", G_CALLBACK(handleKey), this);
+	gtk_signal_connect(GTK_OBJECT(myWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
+	gtk_signal_connect(GTK_OBJECT(myWindow), "key_press_event", G_CALLBACK(handleKey), this);
 
 	myFullScreen = false;
 }
@@ -196,10 +196,11 @@ void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
 void GtkFBReader::toggleFullscreenSlot() {
 	myFullScreen = !myFullScreen;
 
-	hildon_appview_set_fullscreen(myAppView, myFullScreen);
 	if (myFullScreen) {
+		gtk_window_fullscreen(GTK_WINDOW(myWindow));
 		gtk_widget_hide(GTK_WIDGET(myToolbar));
 	} else if (!myFullScreen) {
+		gtk_window_unfullscreen(GTK_WINDOW(myWindow));
 		gtk_widget_show(GTK_WIDGET(myToolbar));
 	}
 }

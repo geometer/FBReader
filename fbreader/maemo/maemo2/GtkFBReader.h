@@ -63,7 +63,7 @@ public:
 	void handleKeyEventSlot(GdkEventKey*);
 	void quitSlot();
 
-	HildonApp *getMainWindow() const { return myApp; }
+	HildonWindow *getMainWindow() const { return myWindow; }
 
 private:
 	GtkMenu *makeSubmenu(GtkMenu *menu, const char *label);
