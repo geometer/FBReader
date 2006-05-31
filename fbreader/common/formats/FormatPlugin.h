@@ -25,6 +25,10 @@
 #include <string>
 #include <vector>
 
+#include <abstract/ZLOptions.h>
+
+#include "util/EncodingDetector.h"
+
 class BookDescription;
 class BookModel;
 class ZLOptionsDialog;
@@ -35,49 +39,52 @@ class ZLInputStream;
 class FormatInfoPage {
 
 protected:
-	FormatInfoPage() FORMATS_SECTION;
+  FormatInfoPage() FORMATS_SECTION;
 
 public:
-	virtual ~FormatInfoPage() FORMATS_SECTION;
+  virtual ~FormatInfoPage() FORMATS_SECTION;
 };
 
 class FormatPlugin {
 
-protected:
-	FormatPlugin() FORMATS_SECTION;
-	
 public:
-	virtual ~FormatPlugin() FORMATS_SECTION;
-	virtual bool providesMetaInfo() const FORMATS_SECTION = 0;
-	virtual bool acceptsFile(const ZLFile &file) const FORMATS_SECTION = 0;
-	virtual bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION = 0;
-	virtual bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION = 0;
-	virtual const std::string &iconName() const FORMATS_SECTION = 0;
-	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path) FORMATS_SECTION;
+  static ZLIntegerOption DefaultLanguageOption;
+  
+protected:
+  FormatPlugin() FORMATS_SECTION;
+  
+public:
+  virtual ~FormatPlugin() FORMATS_SECTION;
+  virtual bool providesMetaInfo() const FORMATS_SECTION = 0;
+  virtual bool acceptsFile(const ZLFile &file) const FORMATS_SECTION = 0;
+  virtual bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION = 0;
+  virtual bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION = 0;
+  virtual const std::string &iconName() const FORMATS_SECTION = 0;
+  virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path) FORMATS_SECTION;
 
 protected:
-	void detectEncoding(BookDescription &description, ZLInputStream &stream) const;
-	void defaultLanguage(BookDescription &description) const;
-	void defaultTitle(BookDescription &description, const std::string &title) const;
+  void detectEncoding(BookDescription &description, ZLInputStream &stream) const;
+  void defaultLanguage(BookDescription &description) const;
+  void defaultTitle(BookDescription &description, const std::string &title) const;
 };
 
 class PluginCollection {
 
 public:
-	static PluginCollection &instance() FORMATS_SECTION;
-	static void deleteInstance() FORMATS_SECTION;
+  static PluginCollection &instance() FORMATS_SECTION;
+  static void deleteInstance() FORMATS_SECTION;
 
 private:
-	PluginCollection() FORMATS_SECTION;
-	~PluginCollection() FORMATS_SECTION;
-	
+  PluginCollection() FORMATS_SECTION;
+  ~PluginCollection() FORMATS_SECTION;
+  
 public:
-	FormatPlugin *plugin(const ZLFile &file, bool strong) FORMATS_SECTION;
+  FormatPlugin *plugin(const ZLFile &file, bool strong) FORMATS_SECTION;
 
 private:
-	static PluginCollection *ourInstance;
+  static PluginCollection *ourInstance;
 
-	std::vector<FormatPlugin*> myPlugins;
+  std::vector<FormatPlugin*> myPlugins;
 };
 
 inline FormatInfoPage::FormatInfoPage() {}

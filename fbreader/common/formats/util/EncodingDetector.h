@@ -27,12 +27,17 @@ class ZLInputStream;
 class EncodingDetector {
 
 public:
-	EncodingDetector() FORMATS_SECTION;
-	~EncodingDetector() FORMATS_SECTION;
-	static std::string detect(ZLInputStream &stream) FORMATS_SECTION;
-};
+  enum Language {
+    OTHER,
+    RUSSIAN,
+    CHINESE,
+  };
 
-inline EncodingDetector::EncodingDetector() {}
-inline EncodingDetector::~EncodingDetector() {}
+public:
+  static std::string detect(ZLInputStream &stream, Language language);
+
+private:
+  EncodingDetector();
+};
 
 #endif /* __ENCODINGDETECTOR_H__ */

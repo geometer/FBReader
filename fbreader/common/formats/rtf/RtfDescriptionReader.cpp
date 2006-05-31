@@ -29,10 +29,8 @@ RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfRe
 }
 
 void RtfDescriptionReader::setEncoding(int code) {
-  if (myDescription.encoding().empty()) {
-    myDescription.encoding() = ZLEncodingConverter::encodingByCode(code);
-    myConverter = ZLEncodingConverter::createConverter(myDescription.encoding());
-  }
+  myDescription.encoding() = ZLEncodingConverter::encodingByCode(code);
+  myConverter = ZLEncodingConverter::createConverter(myDescription.encoding());
 }
 
 bool RtfDescriptionReader::readDocument(const std::string &fileName) {

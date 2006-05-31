@@ -25,7 +25,6 @@
 #include "TxtPlugin.h"
 #include "TxtBookReader.h"
 #include "PlainTextFormat.h"
-#include "../EncodingDetector.h"
 #include "../../description/BookDescription.h"
 
 TxtPlugin::~TxtPlugin() {

@@ -48,6 +48,8 @@ bool RtfPlugin::readDescription(const std::string &path, BookDescription &descri
     return false;
   }
 
+  detectEncoding(description, *stream);
+
   if (!RtfDescriptionReader(description).readDocument(path)) {
     return false;
   }
