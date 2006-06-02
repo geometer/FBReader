@@ -7,22 +7,22 @@ PACKAGE_NAME = fbreader-$(UI_TYPE)
 PACKAGE_FILE = $(PACKAGE_NAME)_$(VERSION)-1_$(ARCH).deb
 
 ifeq "$(UI_TYPE)" "maemo"
-PREFIX=/var/lib/install
-DBUSDIR=/usr/lib/dbus-1.0/services
+PREFIX = /var/lib/install
+DBUSDIR = /usr/lib/dbus-1.0/services
 else
-PREFIX=
-DBUSDIR=/usr/share/dbus-1/services
+PREFIX =
+DBUSDIR = /usr/share/dbus-1/services
 endif
 
-BINDIR=$(PREFIX)/usr/bin
-TMPDIR=tmp
+BINDIR = $(PREFIX)/usr/bin
+TMPDIR = tmp
 
 all: package
 	@cp $(PACKAGE_FILE) ../..
 
-DESKTOP_FILE=FBReader.desktop
-SERVICE_FILE=FBReader.service
-BACKUP_CONF=FBReader.backup
+DESKTOP_FILE = FBReader.desktop
+SERVICE_FILE = FBReader.service
+BACKUP_CONF = FBReader.backup
 
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(DESTDIR)/usr/bin
@@ -59,10 +59,10 @@ endif
 	@install -m 0644 $(BACKUP_CONF) $(DESTDIR)/etc/osso-backup/applications/FBReader.conf
 
 $(DESKTOP_FILE): $(DESKTOP_FILE).in
-	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
+	@sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
 $(SERVICE_FILE): $(SERVICE_FILE).in
-	sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
+	@sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
 ifeq "$(UI_TYPE)" "maemo"
 package:
