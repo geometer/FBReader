@@ -152,7 +152,7 @@ void RtfReader::fillKeywordMap() {
     ourKeywordMap["ansicpg"] = new RtfCodepageCommand();
 
     static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
-    RtfCommand *skipCommand = new RtfDestinationCommand(RtfReader::DESTINATION_NONE);
+    RtfCommand *skipCommand = new RtfDestinationCommand(RtfReader::DESTINATION_SKIP);
     for (const char **i = keywordsToSkip; *i != 0; i++) {
       ourKeywordMap[*i] = skipCommand;
     }
@@ -263,6 +263,7 @@ bool RtfReader::parseDocument() {
               
               if (myState.Destination != myStateStack.top().Destination) {
                 switchDestination(myState.Destination, false);
+                switchDestination(myStateStack.top().Destination, true);
               }
               
               bool oldItalic = myState.Italic;

@@ -67,8 +67,8 @@ void RtfBookReader::flushBuffer() {
 void RtfBookReader::switchDestination(DestinationType destination, bool on) {
   switch (destination) {
     case DESTINATION_NONE:
-    case DESTINATION_SKIP:
       break;
+    case DESTINATION_SKIP:
     case DESTINATION_INFO:
     case DESTINATION_TITLE:
     case DESTINATION_AUTHOR:
@@ -143,7 +143,7 @@ bool RtfBookReader::readDocument(const std::string &fileName) {
   myImageIndex = 0;
   myFootnoteIndex = 1;
 
-  myCurrentState.ReadText = false;
+  myCurrentState.ReadText = true;
 
   myBookReader.setMainTextModel();
   myBookReader.pushKind(REGULAR);
