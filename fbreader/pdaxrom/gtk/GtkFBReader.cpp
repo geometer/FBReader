@@ -37,9 +37,6 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
-static ZLIntegerRangeOption Width("Options", "Width", 10, 800, 350);
-static ZLIntegerRangeOption Height("Options", "Height", 10, 800, 350);
-
 static bool quitFlag = false;
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
@@ -48,7 +45,6 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	}
 	return true;
 }
-
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->repaintView();
@@ -69,7 +65,13 @@ static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
 	((GtkFBReader*)data)->handleKeyEventSlot(key);
 }
 
-GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
+static const std::string OPTIONS = "Options";
+
+GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
+	FBReader(new GtkPaintContext(), bookToOpen),
+  myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
+  myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350) {
+
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
@@ -87,7 +89,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	myFullScreen = false;
 
-	gtk_window_resize(myMainWindow, Width.value(), Height.value());
+	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
 	setMode(BOOK_TEXT_MODE);
@@ -100,8 +102,8 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 GtkFBReader::~GtkFBReader() {
 	int width, height;
 	gtk_window_get_size(myMainWindow, &width, &height);
-	Width.setValue(width);
-	Height.setValue(height);
+	myWidthOption.setValue(width);
+	myHeightOption.setValue(height);
 
 	delete (GtkViewWidget*)myViewWidget;
 }

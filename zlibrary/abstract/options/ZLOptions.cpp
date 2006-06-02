@@ -32,236 +32,251 @@ ZLOptions::~ZLOptions() {
 }
 
 ZLOptions &ZLOptions::instance() {
-	return *ourInstance;
+  return *ourInstance;
 }
 
 void ZLOptions::deleteInstance() {
-	delete ourInstance;
+  delete ourInstance;
 }
+
+const std::string ZLOption::LOOK_AND_FEEL_CATEGORY = "ui";
+const std::string ZLOption::CONFIG_CATEGORY = "options";
+const std::string ZLOption::STATE_CATEGORY = "state";
 
 void ZLOption::clearGroup(const std::string &group) {
-	ZLOptions::instance().setGroup(group);
-	ZLOptions::instance().clearGroup();
+  ZLOptions::instance().setGroup(group);
+  ZLOptions::instance().clearGroup();
 }
 
-ZLOption::ZLOption(const std::string &group, const std::string &optionName) {
-	myGroup = group;
-	myOptionName = optionName;
-	myIsSynchronized = false;
+ZLOption::ZLOption(const std::string &category, const std::string &group, const std::string &optionName) : myCategory(category), myGroup(group), myOptionName(optionName), myIsSynchronized(false) {
 }
 
 ZLOption::~ZLOption() {
 }
 
-ZLBooleanOption::ZLBooleanOption(const std::string &group, const std::string &optionName, bool defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
+ZLBooleanOption::ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBooleanOption::~ZLBooleanOption() {
 }
 
 bool ZLBooleanOption::value() const {
-	if (!myIsSynchronized) {
-		ZLOptions::instance().setGroup(myGroup);
-		myValue = ZLOptions::instance().booleanValue(myOptionName, myDefaultValue);
-		myIsSynchronized = true;
-	}
-	return myValue;
+  if (!myIsSynchronized) {
+    ZLOptions &options = ZLOptions::instance();
+    options.setGroup(myGroup);
+    options.setCategory(myOptionName, myCategory);
+    myValue = options.booleanValue(myOptionName, myDefaultValue);
+    myIsSynchronized = true;
+  }
+  return myValue;
 }
 
 void ZLBooleanOption::setValue(bool value) {
-	if (myIsSynchronized && (myValue == value)) {
-		return;
-	}
-	myValue = value;
-	myIsSynchronized = true;
-	ZLOptions::instance().setGroup(myGroup);
-	if (myValue == myDefaultValue) {
-		ZLOptions::instance().unsetValue(myOptionName);
-	} else {
-		ZLOptions::instance().setValue(myOptionName, myValue);
-	}
+  if (myIsSynchronized && (myValue == value)) {
+    return;
+  }
+  myValue = value;
+  myIsSynchronized = true;
+  ZLOptions::instance().setGroup(myGroup);
+  if (myValue == myDefaultValue) {
+    ZLOptions::instance().unsetValue(myOptionName);
+  } else {
+    ZLOptions::instance().setValue(myOptionName, myValue, myCategory);
+  }
 }
 
-ZLBoolean3Option::ZLBoolean3Option(const std::string &group, const std::string &optionName, Boolean3 defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
+ZLBoolean3Option::ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBoolean3Option::~ZLBoolean3Option() {
 }
 
 Boolean3 ZLBoolean3Option::value() const {
-	if (!myIsSynchronized) {
-		ZLOptions::instance().setGroup(myGroup);
-		myValue = (Boolean3)ZLOptions::instance().integerValue(myOptionName, myDefaultValue);
-		myIsSynchronized = true;
-	}
-	return myValue;
+  if (!myIsSynchronized) {
+    ZLOptions &options = ZLOptions::instance();
+    options.setGroup(myGroup);
+    options.setCategory(myOptionName, myCategory);
+    myValue = (Boolean3)options.integerValue(myOptionName, myDefaultValue);
+    myIsSynchronized = true;
+  }
+  return myValue;
 }
 
 void ZLBoolean3Option::setValue(Boolean3 value) {
-	if (myIsSynchronized && (myValue == value)) {
-		return;
-	}
-	myValue = value;
-	myIsSynchronized = true;
-	ZLOptions::instance().setGroup(myGroup);
-	if (myValue == myDefaultValue) {
-		ZLOptions::instance().unsetValue(myOptionName);
-	} else {
-		ZLOptions::instance().setValue(myOptionName, (long)myValue);
-	}
+  if (myIsSynchronized && (myValue == value)) {
+    return;
+  }
+  myValue = value;
+  myIsSynchronized = true;
+  ZLOptions::instance().setGroup(myGroup);
+  if (myValue == myDefaultValue) {
+    ZLOptions::instance().unsetValue(myOptionName);
+  } else {
+    ZLOptions::instance().setValue(myOptionName, (long)myValue, myCategory);
+  }
 }
 
-ZLColorOption::ZLColorOption(const std::string &group, const std::string &optionName, ZLColor defaultValue) : ZLOption(group, optionName), myDefaultIntValue(defaultValue.intValue()) {
+ZLColorOption::ZLColorOption(const std::string &category, const std::string &group, const std::string &optionName, ZLColor defaultValue) : ZLOption(category, group, optionName), myDefaultIntValue(defaultValue.intValue()) {
 }
 
 ZLColorOption::~ZLColorOption() {
 }
 
 ZLColor ZLColorOption::value() const {
-	if (!myIsSynchronized) {
-		ZLOptions::instance().setGroup(myGroup);
-		myIntValue = ZLOptions::instance().integerValue(myOptionName, myDefaultIntValue);
-		myIsSynchronized = true;
-	}
-	return ZLColor(myIntValue);
+  if (!myIsSynchronized) {
+    ZLOptions &options = ZLOptions::instance();
+    options.setGroup(myGroup);
+    options.setCategory(myOptionName, myCategory);
+    myIntValue = options.integerValue(myOptionName, myDefaultIntValue);
+    myIsSynchronized = true;
+  }
+  return ZLColor(myIntValue);
 }
 
 void ZLColorOption::setValue(ZLColor value) {
-	if (myIsSynchronized && (myIntValue == value.intValue())) {
-		return;
-	}
-	myIntValue = value.intValue();
-	myIsSynchronized = true;
-	ZLOptions::instance().setGroup(myGroup);
-	if (myIntValue == myDefaultIntValue) {
-		ZLOptions::instance().unsetValue(myOptionName);
-	} else {
-		ZLOptions::instance().setValue(myOptionName, myIntValue);
-	}
+  if (myIsSynchronized && (myIntValue == value.intValue())) {
+    return;
+  }
+  myIntValue = value.intValue();
+  myIsSynchronized = true;
+  ZLOptions::instance().setGroup(myGroup);
+  if (myIntValue == myDefaultIntValue) {
+    ZLOptions::instance().unsetValue(myOptionName);
+  } else {
+    ZLOptions::instance().setValue(myOptionName, myIntValue, myCategory);
+  }
 }
 
-ZLIntegerOption::ZLIntegerOption(const std::string &group, const std::string &optionName, long defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
+ZLIntegerOption::ZLIntegerOption(const std::string &category, const std::string &group, const std::string &optionName, long defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLIntegerOption::~ZLIntegerOption() {
 }
 
 long ZLIntegerOption::value() const {
-	if (!myIsSynchronized) {
-		ZLOptions::instance().setGroup(myGroup);
-		myValue = ZLOptions::instance().integerValue(myOptionName, myDefaultValue);
-		myIsSynchronized = true;
-	}
-	return myValue;
+  if (!myIsSynchronized) {
+    ZLOptions &options = ZLOptions::instance();
+    options.setGroup(myGroup);
+    options.setCategory(myOptionName, myCategory);
+    myValue = options.integerValue(myOptionName, myDefaultValue);
+    myIsSynchronized = true;
+  }
+  return myValue;
 }
 
 void ZLIntegerOption::setValue(long value) {
-	if (myIsSynchronized && (myValue == value)) {
-		return;
-	}
-	myValue = value;
-	myIsSynchronized = true;
-	ZLOptions::instance().setGroup(myGroup);
-	if (myValue == myDefaultValue) {
-		ZLOptions::instance().unsetValue(myOptionName);
-	} else {
-		ZLOptions::instance().setValue(myOptionName, myValue);
-	}
+  if (myIsSynchronized && (myValue == value)) {
+    return;
+  }
+  myValue = value;
+  myIsSynchronized = true;
+  ZLOptions::instance().setGroup(myGroup);
+  if (myValue == myDefaultValue) {
+    ZLOptions::instance().unsetValue(myOptionName);
+  } else {
+    ZLOptions::instance().setValue(myOptionName, myValue, myCategory);
+  }
 }
 
-ZLIntegerRangeOption::ZLIntegerRangeOption(const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue) : ZLOption(group, optionName), myMinValue(minValue), myMaxValue(maxValue), myDefaultValue(defaultValue) {
+ZLIntegerRangeOption::ZLIntegerRangeOption(const std::string &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue) : ZLOption(category, group, optionName), myMinValue(minValue), myMaxValue(maxValue), myDefaultValue(defaultValue) {
 }
 
 ZLIntegerRangeOption::~ZLIntegerRangeOption() {
 }
 
 long ZLIntegerRangeOption::value() const {
-	if (!myIsSynchronized) {
-		ZLOptions::instance().setGroup(myGroup);
-		myValue = ZLOptions::instance().integerValue(myOptionName, myDefaultValue);
-		myValue = std::max(std::min(myMaxValue, myValue), myMinValue);
-		myIsSynchronized = true;
-	}
-	return myValue;
+  if (!myIsSynchronized) {
+    ZLOptions &options = ZLOptions::instance();
+    options.setGroup(myGroup);
+    options.setCategory(myOptionName, myCategory);
+    myValue = options.integerValue(myOptionName, myDefaultValue);
+    myValue = std::max(std::min(myMaxValue, myValue), myMinValue);
+    myIsSynchronized = true;
+  }
+  return myValue;
 }
 
 void ZLIntegerRangeOption::setValue(long value) {
-	value = std::max(std::min(myMaxValue, value), myMinValue);
-	if (myIsSynchronized && (myValue == value)) {
-		return;
-	}
-	myValue = value;
-	myIsSynchronized = true;
-	ZLOptions::instance().setGroup(myGroup);
-	if (myValue == myDefaultValue) {
-		ZLOptions::instance().unsetValue(myOptionName);
-	} else {
-		ZLOptions::instance().setValue(myOptionName, myValue);
-	}
+  value = std::max(std::min(myMaxValue, value), myMinValue);
+  if (myIsSynchronized && (myValue == value)) {
+    return;
+  }
+  myValue = value;
+  myIsSynchronized = true;
+  ZLOptions::instance().setGroup(myGroup);
+  if (myValue == myDefaultValue) {
+    ZLOptions::instance().unsetValue(myOptionName);
+  } else {
+    ZLOptions::instance().setValue(myOptionName, myValue, myCategory);
+  }
 }
 
 long ZLIntegerRangeOption::minValue() const {
-	return myMinValue;
+  return myMinValue;
 }
 
 long ZLIntegerRangeOption::maxValue() const {
-	return myMaxValue;
+  return myMaxValue;
 }
 
-ZLDoubleOption::ZLDoubleOption(const std::string &group, const std::string &optionName, double defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
+ZLDoubleOption::ZLDoubleOption(const std::string &category, const std::string &group, const std::string &optionName, double defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLDoubleOption::~ZLDoubleOption() {
 }
 
 double ZLDoubleOption::value() const {
-	if (!myIsSynchronized) {
-		ZLOptions::instance().setGroup(myGroup);
-		myValue = ZLOptions::instance().doubleValue(myOptionName, myDefaultValue);
-		myIsSynchronized = true;
-	}
-	return myValue;
+  if (!myIsSynchronized) {
+    ZLOptions &options = ZLOptions::instance();
+    options.setGroup(myGroup);
+    options.setCategory(myOptionName, myCategory);
+    myValue = options.doubleValue(myOptionName, myDefaultValue);
+    myIsSynchronized = true;
+  }
+  return myValue;
 }
 
 void ZLDoubleOption::setValue(double value) {
-	if (myIsSynchronized && (myValue == value)) {
-		return;
-	}
-	myValue = value;
-	myIsSynchronized = true;
-	ZLOptions::instance().setGroup(myGroup);
-	if (myValue == myDefaultValue) {
-		ZLOptions::instance().unsetValue(myOptionName);
-	} else {
-		ZLOptions::instance().setValue(myOptionName, myValue);
-	}
+  if (myIsSynchronized && (myValue == value)) {
+    return;
+  }
+  myValue = value;
+  myIsSynchronized = true;
+  ZLOptions::instance().setGroup(myGroup);
+  if (myValue == myDefaultValue) {
+    ZLOptions::instance().unsetValue(myOptionName);
+  } else {
+    ZLOptions::instance().setValue(myOptionName, myValue, myCategory);
+  }
 }
 
-ZLStringOption::ZLStringOption(const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLOption(group, optionName), myDefaultValue(defaultValue) {
+ZLStringOption::ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLStringOption::~ZLStringOption() {
 }
 
 const std::string &ZLStringOption::value() const {
-	if (!myIsSynchronized) {
-		ZLOptions::instance().setGroup(myGroup);
-		myValue = ZLOptions::instance().stringValue(myOptionName, myDefaultValue);
-		myIsSynchronized = true;
-	}
-	return myValue;
+  if (!myIsSynchronized) {
+    ZLOptions &options = ZLOptions::instance();
+    options.setGroup(myGroup);
+    options.setCategory(myOptionName, myCategory);
+    myValue = options.stringValue(myOptionName, myDefaultValue);
+    myIsSynchronized = true;
+  }
+  return myValue;
 }
 
 void ZLStringOption::setValue(const std::string &value) {
-	if (myIsSynchronized && (myValue == value)) {
-		return;
-	}
-	myValue = value;
-	myIsSynchronized = true;
-	ZLOptions::instance().setGroup(myGroup);
-	if (myValue == myDefaultValue) {
-		ZLOptions::instance().unsetValue(myOptionName);
-	} else {
-		ZLOptions::instance().setValue(myOptionName, myValue);
-	}
+  if (myIsSynchronized && (myValue == value)) {
+    return;
+  }
+  myValue = value;
+  myIsSynchronized = true;
+  ZLOptions::instance().setGroup(myGroup);
+  if (myValue == myDefaultValue) {
+    ZLOptions::instance().unsetValue(myOptionName);
+  } else {
+    ZLOptions::instance().setValue(myOptionName, myValue, myCategory);
+  }
 }

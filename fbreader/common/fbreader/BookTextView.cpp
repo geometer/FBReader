@@ -51,21 +51,23 @@ BookTextView::~BookTextView() {
 void BookTextView::setModel(const TextModel *model, const std::string &name) {
 	TextView::setModel(model, name);
 
+	const std::string &group = fileName();
+
 	moveStartCursor(
-		ZLIntegerOption(fileName(), PARAGRAPH_OPTION_NAME, 0).value(),
-		ZLIntegerOption(fileName(), WORD_OPTION_NAME, 0).value(),
-		ZLIntegerOption(fileName(), CHAR_OPTION_NAME, 0).value()
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).value(),
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).value(),
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).value()
 	);
 
 	myPositionStack.clear();
 	myCurrentPointInStack = 0;
 
-	int stackSize = ZLIntegerOption(fileName(), BUFFER_SIZE, 0).value();
+	int stackSize = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, BUFFER_SIZE, 0).value();
 	if (stackSize > 0) {
 		if (stackSize > (int)myMaxStackSize) {
 			stackSize = myMaxStackSize;
 		}
-		int pointInStack = ZLIntegerOption(fileName(), POSITION_IN_BUFFER, 0).value();
+		int pointInStack = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, POSITION_IN_BUFFER, 0).value();
 		if ((pointInStack < 0) || (pointInStack > stackSize)) {
 			pointInStack = stackSize;
 		}
@@ -77,8 +79,8 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 			ZLStringUtil::appendNumber(bufferParagraph, i);
 			ZLStringUtil::appendNumber(bufferWord, i);
 			Position pos;
-			pos.first = ZLIntegerOption(fileName(), bufferParagraph, -1).value();
-			pos.second = ZLIntegerOption(fileName(), bufferWord, -1).value();
+			pos.first = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferParagraph, -1).value();
+			pos.second = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferWord, -1).value();
 			myPositionStack.push_back(pos);
 		}
 	}
@@ -89,19 +91,19 @@ void BookTextView::saveState() {
 	const std::string &group = fileName();
 
 	if (!cursor.isNull()) {
-		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
-		ZLIntegerOption(group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
-		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
-		ZLIntegerOption(group, BUFFER_SIZE, 0).setValue(myPositionStack.size());
-		ZLIntegerOption(group, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, BUFFER_SIZE, 0).setValue(myPositionStack.size());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
 		for (unsigned int i = 0; i < myPositionStack.size(); i++) {
 			std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
 			std::string bufferWord = BUFFER_WORD_PREFIX;
 			ZLStringUtil::appendNumber(bufferParagraph, i);
 			ZLStringUtil::appendNumber(bufferWord, i);
-			ZLIntegerOption(group, bufferParagraph, -1).setValue(myPositionStack[i].first);
-			ZLIntegerOption(group, bufferWord, -1).setValue(myPositionStack[i].second);
+			ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferParagraph, -1).setValue(myPositionStack[i].first);
+			ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferWord, -1).setValue(myPositionStack[i].second);
 		}
 	}
 }

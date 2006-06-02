@@ -20,7 +20,7 @@
 
 #include "ZLOptionsDialog.h"
 
-ZLOptionsDialog::ZLOptionsDialog(const std::string &id) : TabOption(id, "SelectedTab", "") {
+ZLOptionsDialog::ZLOptionsDialog(const std::string &id) : TabOption(ZLOption::LOOK_AND_FEEL_CATEGORY, id, "SelectedTab", "") {
 }
 
 bool ZLOptionsDialog::run(const std::string &tabName) {

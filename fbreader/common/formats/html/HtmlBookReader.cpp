@@ -188,10 +188,10 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
 			addControl(CODE, tag.Start);
 			break;
 		case _B:
-			addControl(STRONG, tag.Start);
+			addControl(BOLD, tag.Start);
 			break;
 		case _I:
-			addControl(EMPHASIS, tag.Start);
+			addControl(ITALIC, tag.Start);
 			break;
 		case _HEAD:
 		case _TITLE:

@@ -56,7 +56,7 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 
 static const std::string KeymapFile = "keymap.xml";
 
-FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption("KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
+FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
 	myBindings0.readCustomBindings();
 	myBindings90.readCustomBindings();
 	myBindings180.readCustomBindings();
@@ -97,15 +97,15 @@ void KeyBindings::readDefaultBindings() {
 }
 
 void KeyBindings::readCustomBindings() {
-	int size = ZLIntegerRangeOption(myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).value();
+	int size = ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).value();
 	for (int i = 0; i < size; i++) {
 		std::string key = BINDED_KEY;
 		ZLStringUtil::appendNumber(key, i);
-		std::string keyValue = ZLStringOption(myOptionGroupName, key, "").value();
+		std::string keyValue = ZLStringOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, key, "").value();
 		if (!keyValue.empty()) {
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, i);
-			int actionValue = ZLIntegerOption(myOptionGroupName, action, -1).value();
+			int actionValue = ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, action, -1).value();
 			if (actionValue != -1) {
 				bindKey(keyValue, (ActionCode)actionValue);
 			}
@@ -131,12 +131,12 @@ KeyBindings::~KeyBindings() {
 			ZLStringUtil::appendNumber(key, counter);
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, counter);
-			ZLStringOption(myOptionGroupName, key, "").setValue(it->first);
-			ZLIntegerOption(myOptionGroupName, action, -1).setValue(it->second);
+			ZLStringOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, key, "").setValue(it->first);
+			ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, action, -1).setValue(it->second);
 			counter++;
 		}
 	}
-	ZLIntegerRangeOption(myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
+	ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
 }
 
 void KeyBindings::bindKey(const std::string &key, ActionCode code) {

@@ -29,12 +29,13 @@ class XMLConfigGroup;
 class XMLConfigReader : public ZLXMLReader {
 
 public:
-	XMLConfigReader(XMLConfig &config);
+	XMLConfigReader(XMLConfig &config, const std::string &category);
 	~XMLConfigReader();
 
 	void startElementHandler(const char *tag, const char **attributes);
 
 private:
+	const std::string &myCategory;
 	XMLConfig &myConfig;
 	XMLConfigGroup *myGroup;
 };

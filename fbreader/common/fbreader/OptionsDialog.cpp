@@ -31,6 +31,8 @@
 #include "KeyBindingsPage.h"
 
 #include "FBReader.h"
+#include "CollectionView.h"
+#include "RecentBooksView.h"
 
 #include "../collection/BookCollection.h"
 #include "../textview/TextView.h"
@@ -64,12 +66,15 @@ void ShowIndicatorEntry::onValueChange(bool value) {
 class RotationTypeEntry : public ZLChoiceOptionEntry {
 
 public:
-  RotationTypeEntry() {}
+  RotationTypeEntry(ZLIntegerOption &angleOption);
   const std::string &name() const;
   const std::string &text(int index) const;
   int choiceNumber() const;
   int initialCheckedIndex() const;
   void onAccept(int index);
+
+private:
+  ZLIntegerOption &myAngleOption;
 };
 
 static const std::string ROTATION_TYPE = "Rotation Type";
@@ -78,6 +83,9 @@ static const std::string ROTATION_90 = "90 Degrees Counterclockwise";
 static const std::string ROTATION_180 = "180 Degrees";
 static const std::string ROTATION_270 = "90 Degrees Clockwise";
 static const std::string ROTATION_USE_4_DIRECTIONS = "Cycle Through All 4 Directions";
+
+RotationTypeEntry::RotationTypeEntry(ZLIntegerOption &angleOption) : myAngleOption(angleOption) {
+}
 
 const std::string &RotationTypeEntry::name() const {
   return ROTATION_TYPE;
@@ -103,7 +111,7 @@ int RotationTypeEntry::choiceNumber() const {
 }
 
 int RotationTypeEntry::initialCheckedIndex() const {
-  switch (FBReader::RotationAngleOption.value()) {
+  switch (myAngleOption.value()) {
     default:
       return 0;
     case ZLViewWidget::DEGREES90:
@@ -133,7 +141,7 @@ void RotationTypeEntry::onAccept(int index) {
       angle = -1;
       break;
   }
-  FBReader::RotationAngleOption.setValue(angle);
+  myAngleOption.setValue(angle);
 }
 
 class DefaultLanguageEntry : public ZLComboOptionEntry {
@@ -155,7 +163,7 @@ static std::string LANGUAGE_CHINESE = "Chinese";
 static std::string LANGUAGE_OTHER = "Other";
 
 const std::string &DefaultLanguageEntry::initialValue() const {
-  switch (FormatPlugin::DefaultLanguageOption.value()) {
+  switch (PluginCollection::instance().DefaultLanguageOption.value()) {
     case EncodingDetector::RUSSIAN:
       return LANGUAGE_RUSSIAN;
     case EncodingDetector::CHINESE:
@@ -182,41 +190,42 @@ void DefaultLanguageEntry::onAccept(const std::string &value) {
   } else if (value == LANGUAGE_CHINESE) {
     language = EncodingDetector::CHINESE;
   }
-  FormatPlugin::DefaultLanguageOption.setValue(language);
+  PluginCollection::instance().DefaultLanguageOption.setValue(language);
 }
 
 OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
   myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
   ZLOptionsDialogTab *generalTab = myDialog->createTab("General");
-  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", FBReader::QuitOnCancelOption));
-  generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", BookCollection::PathOption));
-  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", BookCollection::ScanSubdirsOption));
-  generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", LastOpenedBooks::MaxListSizeOption, 1));
-  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", FBReader::StoreContentsPositionOption));
-  generalTab->addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", FBReader::KeyDelayOption, 50));
+  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
+  generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", fbreader.myCollectionView->collection().PathOption));
+  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", fbreader.myCollectionView->collection().ScanSubdirsOption));
+  generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", fbreader.myRecentBooksView->lastBooks().MaxListSizeOption, 1));
+  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", fbreader.StoreContentsPositionOption));
+  generalTab->addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
   generalTab->addOption(new DefaultLanguageEntry());
 
-  myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"));
+  myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"), fbreader);
 
   ZLOptionsDialogTab *marginTab = myDialog->createTab("Margins");
   marginTab->addOptions(
-    new ZLSimpleSpinOptionEntry("Left Margin", TextStyle::LeftMarginOption, 1),
-    new ZLSimpleSpinOptionEntry("Right Margin", TextStyle::RightMarginOption, 1)
+    new ZLSimpleSpinOptionEntry("Left Margin", TextStyleCollection::instance().baseStyle().LeftMarginOption, 1),
+    new ZLSimpleSpinOptionEntry("Right Margin", TextStyleCollection::instance().baseStyle().RightMarginOption, 1)
   );
   marginTab->addOptions(
-    new ZLSimpleSpinOptionEntry("Top Margin", TextStyle::TopMarginOption, 1),
-    new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyle::BottomMarginOption, 1)
+    new ZLSimpleSpinOptionEntry("Top Margin", TextStyleCollection::instance().baseStyle().TopMarginOption, 1),
+    new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyleCollection::instance().baseStyle().BottomMarginOption, 1)
   );
 
   myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));
   myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), context);
 
   ZLOptionsDialogTab *indicatorTab = myDialog->createTab("Indicator");
-  myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", TextView::PositionIndicator::ShowOption);
-  myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", TextView::PositionIndicator::HeightOption, 1);
-  myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", TextView::PositionIndicator::OffsetOption, 1);
-  myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", TextView::PositionIndicator::IsSensitiveOption);
+  PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+  myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", indicatorStyle.ShowOption);
+  myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
+  myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
+  myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
   indicatorTab->addOption(myIndicatorPage.ShowIndicatorEntry);
   indicatorTab->addOption(myIndicatorPage.HeightEntry);
   indicatorTab->addOption(myIndicatorPage.OffsetEntry);
@@ -225,7 +234,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 
   if (fbreader.isRotationSupported()) {
     ZLOptionsDialogTab *rotationTab = myDialog->createTab("Rotation");
-    rotationTab->addOption(new RotationTypeEntry());
+    rotationTab->addOption(new RotationTypeEntry(fbreader.RotationAngleOption));
   }
 
   myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));

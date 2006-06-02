@@ -29,6 +29,8 @@
 
 #include "PlainTextFormat.h"
 
+#include "../../FBOptions.h"
+
 const std::string OPTION_Initialized = "Initialized";
 const std::string OPTION_BreakType = "BreakType";
 const std::string OPTION_IgnoredIndent = "IgnoredIndent";
@@ -36,11 +38,11 @@ const std::string OPTION_EmptyLinesBeforeNewSection = "EmptyLinesBeforeNewSectio
 const std::string OPTION_CreateContentsTable = "CreateContentsTable";
 
 PlainTextFormat::PlainTextFormat(const std::string &fileName) :
-  InitializedOption(fileName, OPTION_Initialized, false),
-  BreakTypeOption(fileName, OPTION_BreakType, 0),
-  IgnoredIndentOption(fileName, OPTION_IgnoredIndent, 1, 100, 1),
-  EmptyLinesBeforeNewSectionOption(fileName, OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
-  CreateContentsTableOption(fileName, OPTION_CreateContentsTable, false) {
+  InitializedOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_Initialized, false),
+  BreakTypeOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_BreakType, 0),
+  IgnoredIndentOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_IgnoredIndent, 1, 100, 1),
+  EmptyLinesBeforeNewSectionOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
+  CreateContentsTableOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_CreateContentsTable, false) {
 }
 
 PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName, bool showContentsEntry) : myFormat(fileName) {

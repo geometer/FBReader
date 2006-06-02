@@ -26,32 +26,34 @@
 class ZLOptions {
 
 protected:
-	static ZLOptions *ourInstance;
+  static ZLOptions *ourInstance;
 
 protected:
-	ZLOptions() OPTIONS_SECTION;
-	virtual ~ZLOptions() OPTIONS_SECTION;
+  ZLOptions() OPTIONS_SECTION;
+  virtual ~ZLOptions() OPTIONS_SECTION;
 
 public:
-	static ZLOptions &instance() OPTIONS_SECTION;
-	static void deleteInstance() OPTIONS_SECTION;
+  static ZLOptions &instance() OPTIONS_SECTION;
+  static void deleteInstance() OPTIONS_SECTION;
 
-	virtual void setGroup(const std::string &name) OPTIONS_SECTION = 0;
-	virtual void clearGroup() OPTIONS_SECTION = 0;
+  virtual void setGroup(const std::string &name) OPTIONS_SECTION = 0;
+  virtual void clearGroup() OPTIONS_SECTION = 0;
 
-	virtual void unsetValue(const std::string &name) OPTIONS_SECTION = 0;
+  virtual void unsetValue(const std::string &name) OPTIONS_SECTION = 0;
 
-	virtual bool booleanValue(const std::string &name, bool defaultValue) OPTIONS_SECTION = 0;
-	virtual void setValue(const std::string &name, bool value) OPTIONS_SECTION = 0;
+  virtual bool booleanValue(const std::string &name, bool defaultValue) OPTIONS_SECTION = 0;
+  virtual void setValue(const std::string &name, bool value, const std::string &category) OPTIONS_SECTION = 0;
 
-	virtual long integerValue(const std::string &name, long defaultValue) OPTIONS_SECTION = 0;
-	virtual void setValue(const std::string &name, long value) OPTIONS_SECTION = 0;
+  virtual long integerValue(const std::string &name, long defaultValue) OPTIONS_SECTION = 0;
+  virtual void setValue(const std::string &name, long value, const std::string &category) OPTIONS_SECTION = 0;
 
-	virtual double doubleValue(const std::string &name, double defaultValue) OPTIONS_SECTION = 0;
-	virtual void setValue(const std::string &name, double value) OPTIONS_SECTION = 0;
+  virtual double doubleValue(const std::string &name, double defaultValue) OPTIONS_SECTION = 0;
+  virtual void setValue(const std::string &name, double value, const std::string &category) OPTIONS_SECTION = 0;
 
-	virtual std::string stringValue(const std::string &name, const std::string &defaultValue) OPTIONS_SECTION = 0;
-	virtual void setValue(const std::string &name, const std::string &value) OPTIONS_SECTION = 0;
+  virtual std::string stringValue(const std::string &name, const std::string &defaultValue) OPTIONS_SECTION = 0;
+  virtual void setValue(const std::string &name, const std::string &value, const std::string &category) OPTIONS_SECTION = 0;
+
+  virtual void setCategory(const std::string &name, const std::string &category) OPTIONS_SECTION = 0;
 };
 
 #endif /* __ZLOPTIONS_INTERNAL_H__ */

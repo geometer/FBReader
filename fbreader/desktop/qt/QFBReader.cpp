@@ -42,10 +42,15 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-static ZLIntegerRangeOption Width("Options", "Width", 10, 2000, 800);
-static ZLIntegerRangeOption Height("Options", "Height", 10, 2000, 800);
+static const std::string OPTIONS = "Options";
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen), myFullScreen(false), myWasMaximized(false) {
+QFBReader::QFBReader(const std::string& bookToOpen) :
+	FBReader(new QPaintContext(), bookToOpen),
+  myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
+  myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800),
+	myFullScreen(false),
+	myWasMaximized(false) {
+
 	setWFlags(getWFlags() | WStyle_Customize);
 
 	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
@@ -53,14 +58,14 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 
 	createToolbar();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
-	resize(Width.value(), Height.value());
+	resize(myWidthOption.value(), myHeightOption.value());
 	setMode(BOOK_TEXT_MODE);
 }
 
 QFBReader::~QFBReader() {
 	if (!isFullscreen() && !isMaximized()) {
-		Width.setValue(width());
-		Height.setValue(height());
+		myWidthOption.setValue(width());
+		myHeightOption.setValue(height());
 	}
 }
 

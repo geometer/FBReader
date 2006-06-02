@@ -29,39 +29,42 @@
 #include "../../common/fbreader/FBReader.h"
 
 class QFBReader : public QMainWindow, public FBReader { 
-	Q_OBJECT
+  Q_OBJECT
 
 public:
-	static const std::string ImageDirectory;
-	
+  static const std::string ImageDirectory;
+  
 public:
-	QFBReader(const std::string& bookToOpen);
-	~QFBReader();
+  QFBReader(const std::string& bookToOpen);
+  ~QFBReader();
 
 private:
-	void closeEvent(QCloseEvent *event);
-	void keyPressEvent(QKeyEvent *event);
-	void wheelEvent(QWheelEvent *event);
+  void closeEvent(QCloseEvent *event);
+  void keyPressEvent(QKeyEvent *event);
+  void wheelEvent(QWheelEvent *event);
 
 protected:
-	void setWindowCaption(const std::string &caption) { setCaption(QString::fromUtf8(caption.c_str())); }
-	void addButton(ActionCode id, const std::string &name);
-	void addButtonSeparator() {} // TODO: implement
-	void setButtonVisible(ActionCode id, bool visible);
-	void setButtonEnabled(ActionCode id, bool enable);
-	void searchSlot();
-	void toggleFullscreenSlot();
-	bool isFullscreen() const;
-	void quitSlot();
-	bool isRotationSupported() const { return true; }
-	
+  void setWindowCaption(const std::string &caption) { setCaption(QString::fromUtf8(caption.c_str())); }
+  void addButton(ActionCode id, const std::string &name);
+  void addButtonSeparator() {} // TODO: implement
+  void setButtonVisible(ActionCode id, bool visible);
+  void setButtonEnabled(ActionCode id, bool enable);
+  void searchSlot();
+  void toggleFullscreenSlot();
+  bool isFullscreen() const;
+  void quitSlot();
+  bool isRotationSupported() const { return true; }
+  
 private slots:
-	void doActionSlot(int buttonNumber);
-	void emptySlot() {}
+  void doActionSlot(int buttonNumber);
+  void emptySlot() {}
 
 private:
-	bool myFullScreen;
-	bool myWasMaximized;
+  ZLIntegerRangeOption myWidthOption;
+  ZLIntegerRangeOption myHeightOption;
+
+  bool myFullScreen;
+  bool myWasMaximized;
 };
 
 #endif /* __QFBREADER_H__ */

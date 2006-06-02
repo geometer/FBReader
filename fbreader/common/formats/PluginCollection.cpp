@@ -62,7 +62,8 @@ void PluginCollection::deleteInstance() {
 	}
 }
 
-PluginCollection::PluginCollection() {
+PluginCollection::PluginCollection() :
+  DefaultLanguageOption(ZLOption::CONFIG_CATEGORY, "Format", "DefaultLanguage", EncodingDetector::RUSSIAN) {
 }
 
 PluginCollection::~PluginCollection() {

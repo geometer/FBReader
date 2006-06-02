@@ -25,44 +25,46 @@
 
 #include "BookCollection.h"
 
+#include "../FBOptions.h"
+
 const std::string GROUP = "LastOpenedBooks";
 const std::string BOOK = "Book";
 
-ZLIntegerRangeOption LastOpenedBooks::MaxListSizeOption(GROUP, "MaxSize", 1, 100, 10);
+LastOpenedBooks::LastOpenedBooks() :
+  MaxListSizeOption(FBOptions::BOOKS_CATEGORY, GROUP, "MaxSize", 1, 100, 10) {
 
-LastOpenedBooks::LastOpenedBooks() {
-	const int size = MaxListSizeOption.value();
-	for (int i = 0; i < size; i++) {
-		std::string num = BOOK;
-		ZLStringUtil::appendNumber(num, i);
-		std::string name = ZLStringOption(GROUP, num, "").value();
-		if (!name.empty()) {
-			BookDescriptionPtr description = BookDescription::create(name);
-			if (!description.isNull()) {
-				myBooks.push_back(description);
-			}
-		}
-	}
+  const int size = MaxListSizeOption.value();
+  for (int i = 0; i < size; i++) {
+    std::string num = BOOK;
+    ZLStringUtil::appendNumber(num, i);
+    std::string name = ZLStringOption(FBOptions::BOOKS_CATEGORY, GROUP, num, "").value();
+    if (!name.empty()) {
+      BookDescriptionPtr description = BookDescription::create(name);
+      if (!description.isNull()) {
+        myBooks.push_back(description);
+      }
+    }
+  }
 }
 
 LastOpenedBooks::~LastOpenedBooks() {
-	const int size = std::min(MaxListSizeOption.value(), (long)myBooks.size());
-	for (int i = 0; i < size; i++) {
-		std::string num = BOOK;
-		ZLStringUtil::appendNumber(num, i);
-		ZLStringOption(GROUP, num, "").setValue(myBooks[i]->fileName());
-	}
+  const int size = std::min(MaxListSizeOption.value(), (long)myBooks.size());
+  for (int i = 0; i < size; i++) {
+    std::string num = BOOK;
+    ZLStringUtil::appendNumber(num, i);
+    ZLStringOption(FBOptions::BOOKS_CATEGORY, GROUP, num, "").setValue(myBooks[i]->fileName());
+  }
 }
 
 void LastOpenedBooks::addBook(const std::string &fileName) {
-	for (Books::iterator it = myBooks.begin(); it != myBooks.end(); it++) {
-		if ((*it)->fileName() == fileName) {
-			myBooks.erase(it);
-			break;
-		}
-	}
-	BookDescriptionPtr description = BookDescription::create(fileName);
-	if (!description.isNull()) {
-		myBooks.insert(myBooks.begin(), description);
-	}
+  for (Books::iterator it = myBooks.begin(); it != myBooks.end(); it++) {
+    if ((*it)->fileName() == fileName) {
+      myBooks.erase(it);
+      break;
+    }
+  }
+  BookDescriptionPtr description = BookDescription::create(fileName);
+  if (!description.isNull()) {
+    myBooks.insert(myBooks.begin(), description);
+  }
 }

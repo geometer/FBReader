@@ -41,16 +41,18 @@ public:
 	void unsetValue(const std::string &name);
 
 	bool booleanValue(const std::string &name, bool defaultValue);
-	void setValue(const std::string &name, bool value);
+	void setValue(const std::string &name, bool value, const std::string &category);
 
 	long integerValue(const std::string &name, long defaultValue);
-	void setValue(const std::string &name, long value);
+	void setValue(const std::string &name, long value, const std::string &category);
 
 	double doubleValue(const std::string &name, double defaultValue);
-	void setValue(const std::string &name, double value);
+	void setValue(const std::string &name, double value, const std::string &category);
 
 	std::string stringValue(const std::string &name, const std::string &defaultValue);
-	void setValue(const std::string &name, const std::string &value);
+	void setValue(const std::string &name, const std::string &value, const std::string &category);
+
+	void setCategory(const std::string &name, const std::string &category);
 
 private:
 	XMLConfig *myConfig;

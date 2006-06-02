@@ -38,191 +38,191 @@ static const std::string SCROLL_PERCENTAGE = "Scroll Percentage";
 class MainEntry : public ZLComboOptionEntry {
 
 public:
-	MainEntry(ScrollingOptionsPage &page) FB_DIALOG_SECTION;
-	~MainEntry() FB_DIALOG_SECTION;
+  MainEntry(ScrollingOptionsPage &page) FB_DIALOG_SECTION;
+  ~MainEntry() FB_DIALOG_SECTION;
 
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
-	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &text) FB_DIALOG_SECTION;
-	void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
+  const std::string &name() const FB_DIALOG_SECTION;
+  const std::string &initialValue() const FB_DIALOG_SECTION;
+  const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+  void onAccept(const std::string &text) FB_DIALOG_SECTION;
+  void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
 
 private:
-	ScrollingOptionsPage &myPage;
-	std::string myName;
-	std::vector<std::string> myValues;
+  ScrollingOptionsPage &myPage;
+  std::string myName;
+  std::vector<std::string> myValues;
 };
 
 class ScrollingModeEntry : public ZLComboOptionEntry {
 
 private:
-	static const std::string &nameByCode(int code);
-	static TextView::ScrollingMode codeByName(const std::string &name);
-	
+  static const std::string &nameByCode(int code);
+  static TextView::ScrollingMode codeByName(const std::string &name);
+  
 public:
-	ScrollingModeEntry(ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option) FB_DIALOG_SECTION;
-	~ScrollingModeEntry() FB_DIALOG_SECTION;
+  ScrollingModeEntry(ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option) FB_DIALOG_SECTION;
+  ~ScrollingModeEntry() FB_DIALOG_SECTION;
 
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
-	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &text) FB_DIALOG_SECTION;
-	void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
-	void onMadeVisible() FB_DIALOG_SECTION;
+  const std::string &name() const FB_DIALOG_SECTION;
+  const std::string &initialValue() const FB_DIALOG_SECTION;
+  const std::vector<std::string> &values() const FB_DIALOG_SECTION;
+  void onAccept(const std::string &text) FB_DIALOG_SECTION;
+  void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
+  void onMadeVisible() FB_DIALOG_SECTION;
 
 private:
-	ScrollingOptionsPage::ScrollingEntries &myEntries;
-	ZLIntegerOption &myOption;
-	std::string myName;
-	std::vector<std::string> myValues;
-	std::string myCurrentValue;
+  ScrollingOptionsPage::ScrollingEntries &myEntries;
+  ZLIntegerOption &myOption;
+  std::string myName;
+  std::vector<std::string> myValues;
+  std::string myCurrentValue;
 };
 
 MainEntry::MainEntry(ScrollingOptionsPage &page) : myPage(page) {
-	myValues.push_back(LARGE_SCROLLING);
-	myValues.push_back(SMALL_SCROLLING);
-	if (ZLDeviceInfo::isMousePresented()) {
-		myValues.push_back(MOUSE_SCROLLING);
-	}
+  myValues.push_back(LARGE_SCROLLING);
+  myValues.push_back(SMALL_SCROLLING);
+  if (ZLDeviceInfo::isMousePresented()) {
+    myValues.push_back(MOUSE_SCROLLING);
+  }
 }
 
 MainEntry::~MainEntry() {
 }
 
 const std::string &MainEntry::name() const {
-	static const std::string _name = "Options For";
-	return _name;
+  static const std::string _name = "Options For";
+  return _name;
 }
 
 const std::string &MainEntry::initialValue() const {
-	return LARGE_SCROLLING;
+  return LARGE_SCROLLING;
 }
 
 const std::vector<std::string> &MainEntry::values() const {
-	return myValues;
+  return myValues;
 }
 
 void MainEntry::onAccept(const std::string&) {
 }
 
 void MainEntry::onValueChange(const std::string &selectedValue) {
-	myPage.myLargeScrollingEntries.show(selectedValue == LARGE_SCROLLING);
-	myPage.mySmallScrollingEntries.show(selectedValue == SMALL_SCROLLING);
-	if (ZLDeviceInfo::isMousePresented()) {
-		myPage.myMouseScrollingEntries.show(selectedValue == MOUSE_SCROLLING);
-	}
+  myPage.myLargeScrollingEntries.show(selectedValue == LARGE_SCROLLING);
+  myPage.mySmallScrollingEntries.show(selectedValue == SMALL_SCROLLING);
+  if (ZLDeviceInfo::isMousePresented()) {
+    myPage.myMouseScrollingEntries.show(selectedValue == MOUSE_SCROLLING);
+  }
 }
 
 const std::string &ScrollingModeEntry::nameByCode(int code) {
-	switch (code) {
-		case TextView::KEEP_LINES:
-			return KEEP_LINES;
-		case TextView::SCROLL_LINES:
-			return SCROLL_LINES;
-		case TextView::SCROLL_PERCENTAGE:
-			return SCROLL_PERCENTAGE;
-		default:
-			return NO_OVERLAPPING;
-	}
+  switch (code) {
+    case TextView::KEEP_LINES:
+      return KEEP_LINES;
+    case TextView::SCROLL_LINES:
+      return SCROLL_LINES;
+    case TextView::SCROLL_PERCENTAGE:
+      return SCROLL_PERCENTAGE;
+    default:
+      return NO_OVERLAPPING;
+  }
 }
 
 TextView::ScrollingMode ScrollingModeEntry::codeByName(const std::string &name) {
-	if (name == KEEP_LINES) {
-		return TextView::KEEP_LINES;
-	}
-	if (name == SCROLL_LINES) {
-		return TextView::SCROLL_LINES;
-	}
-	if (name == SCROLL_PERCENTAGE) {
-		return TextView::SCROLL_PERCENTAGE;
-	}
-	return TextView::NO_OVERLAPPING;
+  if (name == KEEP_LINES) {
+    return TextView::KEEP_LINES;
+  }
+  if (name == SCROLL_LINES) {
+    return TextView::SCROLL_LINES;
+  }
+  if (name == SCROLL_PERCENTAGE) {
+    return TextView::SCROLL_PERCENTAGE;
+  }
+  return TextView::NO_OVERLAPPING;
 }
 
 ScrollingModeEntry::ScrollingModeEntry(ScrollingOptionsPage::ScrollingEntries &page, ZLIntegerOption &option) : myEntries(page), myOption(option) {
-	myValues.push_back(NO_OVERLAPPING);
-	myValues.push_back(KEEP_LINES);
-	myValues.push_back(SCROLL_LINES);
-	myValues.push_back(SCROLL_PERCENTAGE);
+  myValues.push_back(NO_OVERLAPPING);
+  myValues.push_back(KEEP_LINES);
+  myValues.push_back(SCROLL_LINES);
+  myValues.push_back(SCROLL_PERCENTAGE);
 }
 
 ScrollingModeEntry::~ScrollingModeEntry() {
 }
 
 const std::string &ScrollingModeEntry::name() const {
-	static const std::string _name = "Scrolling Mode";
-	return _name;
+  static const std::string _name = "Scrolling Mode";
+  return _name;
 }
 
 const std::string &ScrollingModeEntry::initialValue() const {
-	return nameByCode(myOption.value());
+  return nameByCode(myOption.value());
 }
 
 const std::vector<std::string> &ScrollingModeEntry::values() const {
-	return myValues;
+  return myValues;
 }
 
 void ScrollingModeEntry::onAccept(const std::string &text) {
-	myOption.setValue(codeByName(text));
+  myOption.setValue(codeByName(text));
 }
 
 void ScrollingModeEntry::onMadeVisible() {
-	onValueChange(myCurrentValue);
+  onValueChange(myCurrentValue);
 }
 
 void ScrollingModeEntry::onValueChange(const std::string &selectedValue) {
-	myCurrentValue = selectedValue;
-	myEntries.myLinesToKeepEntry->setVisible(selectedValue == KEEP_LINES);
-	myEntries.myLinesToScrollEntry->setVisible(selectedValue == SCROLL_LINES);
-	myEntries.myPercentToScrollEntry->setVisible(selectedValue == SCROLL_PERCENTAGE);
+  myCurrentValue = selectedValue;
+  myEntries.myLinesToKeepEntry->setVisible(selectedValue == KEEP_LINES);
+  myEntries.myLinesToScrollEntry->setVisible(selectedValue == SCROLL_LINES);
+  myEntries.myPercentToScrollEntry->setVisible(selectedValue == SCROLL_PERCENTAGE);
 }
 
 void ScrollingOptionsPage::ScrollingEntries::init(FBReader::ScrollingOptions &options) {
-	myDelayEntry = new ZLSimpleSpinOptionEntry("Delay Between Scrollings, msecs", options.DelayOption, 50);
-	myModeEntry = new ScrollingModeEntry(*this, options.ModeOption);
-	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry("Lines To Keep", options.LinesToKeepOption, 1);
-	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry("Lines To Scroll", options.LinesToScrollOption, 1);
-	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry("Percent To Scroll", options.PercentToScrollOption, 5);
-	myModeEntry->onValueChange(myModeEntry->initialValue());
+  myDelayEntry = new ZLSimpleSpinOptionEntry("Delay Between Scrollings, msecs", options.DelayOption, 50);
+  myModeEntry = new ScrollingModeEntry(*this, options.ModeOption);
+  myLinesToKeepEntry = new ZLSimpleSpinOptionEntry("Lines To Keep", options.LinesToKeepOption, 1);
+  myLinesToScrollEntry = new ZLSimpleSpinOptionEntry("Lines To Scroll", options.LinesToScrollOption, 1);
+  myPercentToScrollEntry = new ZLSimpleSpinOptionEntry("Percent To Scroll", options.PercentToScrollOption, 5);
+  myModeEntry->onValueChange(myModeEntry->initialValue());
 }
 
 void ScrollingOptionsPage::ScrollingEntries::connect(ZLOptionsDialogTab *dialogTab) {
-	dialogTab->addOption(myDelayEntry);
-	dialogTab->addOption(myModeEntry);
-	dialogTab->addOption(myLinesToKeepEntry);
-	dialogTab->addOption(myLinesToScrollEntry);
-	dialogTab->addOption(myPercentToScrollEntry);
+  dialogTab->addOption(myDelayEntry);
+  dialogTab->addOption(myModeEntry);
+  dialogTab->addOption(myLinesToKeepEntry);
+  dialogTab->addOption(myLinesToScrollEntry);
+  dialogTab->addOption(myPercentToScrollEntry);
 }
 
 void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
-	if (myDelayEntry != 0) {
-		myDelayEntry->setVisible(visible);
-		myModeEntry->setVisible(visible);
-		if (visible) {
-			((ScrollingModeEntry*)myModeEntry)->onMadeVisible();
-		} else {
-			myLinesToKeepEntry->setVisible(false);
-			myLinesToScrollEntry->setVisible(false);
-			myPercentToScrollEntry->setVisible(false);
-		}
-	}
+  if (myDelayEntry != 0) {
+    myDelayEntry->setVisible(visible);
+    myModeEntry->setVisible(visible);
+    if (visible) {
+      ((ScrollingModeEntry*)myModeEntry)->onMadeVisible();
+    } else {
+      myLinesToKeepEntry->setVisible(false);
+      myLinesToScrollEntry->setVisible(false);
+      myPercentToScrollEntry->setVisible(false);
+    }
+  }
 }
 
-ScrollingOptionsPage::ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab) {
-	ZLComboOptionEntry *mainEntry = new MainEntry(*this);
-	dialogTab->addOption(mainEntry);
+ScrollingOptionsPage::ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab, FBReader &fbreader) {
+  ZLComboOptionEntry *mainEntry = new MainEntry(*this);
+  dialogTab->addOption(mainEntry);
 
-	myLargeScrollingEntries.init(FBReader::LargeScrollingOptions);
-	mySmallScrollingEntries.init(FBReader::SmallScrollingOptions);
-	if (ZLDeviceInfo::isMousePresented()) {
-		myMouseScrollingEntries.init(FBReader::MouseScrollingOptions);
-	}
+  myLargeScrollingEntries.init(fbreader.LargeScrollingOptions);
+  mySmallScrollingEntries.init(fbreader.SmallScrollingOptions);
+  if (ZLDeviceInfo::isMousePresented()) {
+    myMouseScrollingEntries.init(fbreader.MouseScrollingOptions);
+  }
 
-	mainEntry->onValueChange(mainEntry->initialValue());
+  mainEntry->onValueChange(mainEntry->initialValue());
 
-	myLargeScrollingEntries.connect(dialogTab);
-	mySmallScrollingEntries.connect(dialogTab);
-	if (ZLDeviceInfo::isMousePresented()) {
-		myMouseScrollingEntries.connect(dialogTab);
-	}
+  myLargeScrollingEntries.connect(dialogTab);
+  mySmallScrollingEntries.connect(dialogTab);
+  if (ZLDeviceInfo::isMousePresented()) {
+    myMouseScrollingEntries.connect(dialogTab);
+  }
 }

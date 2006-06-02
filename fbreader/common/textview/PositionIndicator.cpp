@@ -22,24 +22,29 @@
 #include <algorithm>
 
 #include "TextView.h"
+#include "TextStyle.h"
 
 static const std::string INDICATOR = "Indicator";
 
-ZLBooleanOption TextView::PositionIndicator::ShowOption(INDICATOR, "Show", true);
-ZLBooleanOption TextView::PositionIndicator::IsSensitiveOption(INDICATOR, "TouchSensitive", true);
-ZLColorOption TextView::PositionIndicator::ColorOption(INDICATOR, "Color", ZLColor(127, 127, 127));
-ZLIntegerRangeOption TextView::PositionIndicator::HeightOption(INDICATOR, "Height", 1, 100, 16);
-ZLIntegerRangeOption TextView::PositionIndicator::OffsetOption(INDICATOR, "Offset", 0, 100, 4);
+PositionIndicatorStyle::PositionIndicatorStyle() :
+  ShowOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Show", true),
+  IsSensitiveOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "TouchSensitive", true),
+  ColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Color", ZLColor(127, 127, 127)),
+  HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Height", 1, 100, 16),
+  OffsetOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Offset", 0, 100, 4) {
+}
 
-TextView::PositionIndicator::PositionIndicator(TextView &textView) : myTextView(textView) {
+TextView::PositionIndicator::PositionIndicator(TextView &textView) :
+  myTextView(textView) {
 }
 
 void TextView::PositionIndicator::draw() {
-  if (ShowOption.value()) {
+  PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+  if (indicatorStyle.ShowOption.value()) {
     ZLPaintContext &context = myTextView.context();
 
     long bottom = context.height();
-    long top = bottom - HeightOption.value() + 1;
+    long top = bottom - indicatorStyle.HeightOption.value() + 1;
     long left = 0;
     long right = context.width() - 1;
 
@@ -64,8 +69,8 @@ void TextView::PositionIndicator::draw() {
         (right - left - 1) / fullTextSize
       );
     }
-    context.setColor(TextStyle::RegularTextColorOption.value());
-    context.setFillColor(ColorOption.value());
+    context.setColor(TextStyleCollection::instance().baseStyle().RegularTextColorOption.value());
+    context.setFillColor(indicatorStyle.ColorOption.value());
     context.fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
     context.drawLine(left, top, right, top);
     context.drawLine(left, bottom, right, bottom);
@@ -75,12 +80,13 @@ void TextView::PositionIndicator::draw() {
 }
 
 bool TextView::PositionIndicator::onStylusPress(int x, int y) {
-  if (!ShowOption.value() || !IsSensitiveOption.value()) {
+  PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+  if (!indicatorStyle.ShowOption.value() || !indicatorStyle.IsSensitiveOption.value()) {
     return false;
   }
 
   long bottom = myTextView.context().height();
-  long top = bottom - HeightOption.value() + 1;
+  long top = bottom - indicatorStyle.HeightOption.value() + 1;
   long left = 0;
   long right = myTextView.context().width() - 1;
 

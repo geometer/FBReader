@@ -30,27 +30,27 @@ ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : TextView
 }
 
 bool ContentsView::onStylusPress(int x, int y) {
-	if (TextView::onStylusPress(x, y)) {
-		return true;
-	}
+  if (TextView::onStylusPress(x, y)) {
+    return true;
+  }
 
-	const ParagraphPosition *position = paragraphByCoordinate(y);
-	if (position == 0) {
-		return false;
-	}
-	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() < paragraphNumber)) {
-		return false;
-	}
-	const ParagraphWithReference *paragraph = (const ParagraphWithReference*)(*model())[paragraphNumber];
-	
-	myReader.textView().gotoParagraph(paragraph->reference());
-	myReader.showBookTextView();
-	return true;
+  const ParagraphPosition *position = paragraphByCoordinate(y);
+  if (position == 0) {
+    return false;
+  }
+  int paragraphNumber = position->ParagraphNumber;
+  if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() < paragraphNumber)) {
+    return false;
+  }
+  const ParagraphWithReference *paragraph = (const ParagraphWithReference*)(*model())[paragraphNumber];
+  
+  myReader.textView().gotoParagraph(paragraph->reference());
+  myReader.showBookTextView();
+  return true;
 }
 
 bool ContentsView::isEmpty() const {
-	return (model() == 0) || (model()->paragraphsNumber() == 0);
+  return (model() == 0) || (model()->paragraphsNumber() == 0);
 }
 
 static const std::string PARAGRAPH_OPTION_NAME = "ContentsParagraph";
@@ -58,42 +58,42 @@ static const std::string WORD_OPTION_NAME = "ContentsWord";
 static const std::string CHAR_OPTION_NAME = "ContentsChar";
 
 void ContentsView::saveState() {
-	const WordCursor &cursor = startCursor();
+  const WordCursor &cursor = startCursor();
 
-	if (!cursor.isNull()) {
-		const std::string &group = fileName();
-		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
-		ZLIntegerOption(group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
-		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
-	}
+  if (!cursor.isNull()) {
+    const std::string &group = fileName();
+    ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
+    ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
+    ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
+  }
 }
 
 void ContentsView::setModel(const TextModel *model, const std::string &name) {
-	TextView::setModel(model, name);
+  TextView::setModel(model, name);
 
-	const std::string &group = fileName();
-	moveStartCursor(
-		ZLIntegerOption(group, PARAGRAPH_OPTION_NAME, 0).value(),
-		ZLIntegerOption(group, WORD_OPTION_NAME, 0).value(),
-		ZLIntegerOption(group, CHAR_OPTION_NAME, 0).value()
-	);
+  const std::string &group = fileName();
+  moveStartCursor(
+    ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).value(),
+    ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).value(),
+    ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).value()
+  );
 }
 
 void ContentsView::gotoReference() {
-	const WordCursor &cursor = myReader.textView().endCursor();
-	if (!cursor.isNull()) {
-		long reference = cursor.paragraphCursor().index();
-		size_t selected = model()->paragraphsNumber() - 1;
-		for (size_t i = 1; i < model()->paragraphsNumber(); i++) {
-			if (((const ParagraphWithReference*)(*model())[i])->reference() >= reference) {
-				selected = i - 1;
-				break;
-			}
-		}
-		selectParagraph(selected);
-		gotoParagraph(selected);
-		if (selected != model()->paragraphsNumber() - 1) {
-			scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
-		}
-	}
+  const WordCursor &cursor = myReader.textView().endCursor();
+  if (!cursor.isNull()) {
+    long reference = cursor.paragraphCursor().index();
+    size_t selected = model()->paragraphsNumber() - 1;
+    for (size_t i = 1; i < model()->paragraphsNumber(); i++) {
+      if (((const ParagraphWithReference*)(*model())[i])->reference() >= reference) {
+        selected = i - 1;
+        break;
+      }
+    }
+    selectParagraph(selected);
+    gotoParagraph(selected);
+    if (selected != model()->paragraphsNumber() - 1) {
+      scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
+    }
+  }
 }

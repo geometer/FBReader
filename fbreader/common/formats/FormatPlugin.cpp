@@ -25,11 +25,9 @@
 
 #include "../description/BookDescription.h"
 
-ZLIntegerOption FormatPlugin::DefaultLanguageOption("Format", "DefaultLanguage", EncodingDetector::RUSSIAN);
-
 void FormatPlugin::detectEncoding(BookDescription &description, ZLInputStream &stream) const {
   if (description.encoding().empty()) {
-    WritableBookDescription(description).encoding() = EncodingDetector::detect(stream, (EncodingDetector::Language)DefaultLanguageOption.value());
+    WritableBookDescription(description).encoding() = EncodingDetector::detect(stream, (EncodingDetector::Language)PluginCollection::instance().DefaultLanguageOption.value());
   }
 }
 

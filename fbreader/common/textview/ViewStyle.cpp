@@ -30,119 +30,120 @@
 #include "TextElement.h"
 
 TextView::ViewStyle::ViewStyle(ZLPaintContext &context) : myContext(context) {
-	setStyle(TextStyleCollection::instance().baseStyle());
-	myWordHeight = -1;
+  setStyle(TextStyleCollection::instance().baseStylePtr());
+  myWordHeight = -1;
 }
 
 void TextView::ViewStyle::reset() {
-	setStyle(TextStyleCollection::instance().baseStyle());
+  setStyle(TextStyleCollection::instance().baseStylePtr());
 }
 
 void TextView::ViewStyle::setStyle(const TextStylePtr style) {
-	if (myStyle != style) {
-		myStyle = style;
-		myWordHeight = -1;
-	}
-	myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
+  if (myStyle != style) {
+    myStyle = style;
+    myWordHeight = -1;
+  }
+  myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
 }
 
 void TextView::ViewStyle::applyControl(const ControlElement &control) {
-	if (control.isStart()) {
-		const TextStyleDecoration *decoration = TextStyleCollection::instance().decoration(control.textKind());
-		if (decoration != 0) {
-			setStyle(decoration->createDecoratedStyle(myStyle));
-		}
-	} else {
-		if (myStyle->isDecorated()) {
-			setStyle(((DecoratedTextStyle&)*myStyle).base());
-		}
-	}
+  if (control.isStart()) {
+    const TextStyleDecoration *decoration = TextStyleCollection::instance().decoration(control.textKind());
+    if (decoration != 0) {
+      setStyle(decoration->createDecoratedStyle(myStyle));
+    }
+  } else {
+    if (myStyle->isDecorated()) {
+      setStyle(((DecoratedTextStyle&)*myStyle).base());
+    }
+  }
 }
 
 void TextView::ViewStyle::applyControl(const ForcedControlElement &control) {
-	setStyle(new ForcedTextStyle(myStyle, control.entry()));
+  setStyle(new ForcedTextStyle(myStyle, control.entry()));
 }
 
 void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {
-	for (WordCursor cursor = begin; !cursor.sameElementAs(end); cursor.nextWord()) {
-		const TextElement &element = cursor.element();
-		if (element.kind() == TextElement::CONTROL_ELEMENT) {
-			applyControl((ControlElement&)element);
-		} else if (element.kind() == TextElement::FORCED_CONTROL_ELEMENT) {
-			applyControl((ForcedControlElement&)element);
-		}
-	}
+  for (WordCursor cursor = begin; !cursor.sameElementAs(end); cursor.nextWord()) {
+    const TextElement &element = cursor.element();
+    if (element.kind() == TextElement::CONTROL_ELEMENT) {
+      applyControl((ControlElement&)element);
+    } else if (element.kind() == TextElement::FORCED_CONTROL_ELEMENT) {
+      applyControl((ForcedControlElement&)element);
+    }
+  }
 }
 
 int TextView::ViewStyle::elementWidth(const TextElement &element, unsigned int charNumber) const {
-	switch (element.kind()) {
-		case TextElement::WORD_ELEMENT:
-			return wordWidth((const Word&)element, charNumber, -1, false);
-		case TextElement::IMAGE_ELEMENT:
-			return context().imageWidth(((const ImageElement&)element).image());
-		case TextElement::INDENT_ELEMENT:
-			return style()->firstLineIndentDelta();
-		case TextElement::HSPACE_ELEMENT:
-			return 0;
-		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-		case TextElement::AFTER_PARAGRAPH_ELEMENT:
-		case TextElement::EMPTY_LINE_ELEMENT:
-			return context().width() + abs(style()->leftIndent()) + abs(style()->rightIndent()) + abs(style()->firstLineIndentDelta()) + 1;
-		case TextElement::TREE_ELEMENT:
-			return context().stringHeight() * 4 / 3;
-		case TextElement::FORCED_CONTROL_ELEMENT:
-		case TextElement::CONTROL_ELEMENT:
-			return 0;
-	}
-	return 0;
+  switch (element.kind()) {
+    case TextElement::WORD_ELEMENT:
+      return wordWidth((const Word&)element, charNumber, -1, false);
+    case TextElement::IMAGE_ELEMENT:
+      return context().imageWidth(((const ImageElement&)element).image());
+    case TextElement::INDENT_ELEMENT:
+      return style()->firstLineIndentDelta();
+    case TextElement::HSPACE_ELEMENT:
+      return 0;
+    case TextElement::BEFORE_PARAGRAPH_ELEMENT:
+    case TextElement::AFTER_PARAGRAPH_ELEMENT:
+    case TextElement::EMPTY_LINE_ELEMENT:
+      return context().width() + abs(style()->leftIndent()) + abs(style()->rightIndent()) + abs(style()->firstLineIndentDelta()) + 1;
+    case TextElement::TREE_ELEMENT:
+      return context().stringHeight() * 4 / 3;
+    case TextElement::FORCED_CONTROL_ELEMENT:
+    case TextElement::CONTROL_ELEMENT:
+      return 0;
+  }
+  return 0;
 }
 
 int TextView::ViewStyle::elementHeight(const TextElement &element) const {
-	switch (element.kind()) {
-		case TextElement::WORD_ELEMENT:
-			if (myWordHeight == -1) {
-				myWordHeight = (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
-			}
-			return myWordHeight;
-		case TextElement::TREE_ELEMENT:
-			return context().stringHeight();
-		case TextElement::IMAGE_ELEMENT:
-		{
-			int shift = std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 3);
-			return std::min(context().imageHeight(((const ImageElement&)element).image()) + shift, textAreaHeight());
-		}
-		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-			return style()->spaceBefore();
-		case TextElement::AFTER_PARAGRAPH_ELEMENT:
-			return style()->spaceAfter();
-		case TextElement::EMPTY_LINE_ELEMENT:
-			return style()->spaceBefore() + context().stringHeight() + style()->spaceAfter();
-		case TextElement::INDENT_ELEMENT:
-		case TextElement::HSPACE_ELEMENT:
-		case TextElement::FORCED_CONTROL_ELEMENT:
-		case TextElement::CONTROL_ELEMENT:
-			return 0;
-	}
-	return 0;
+  switch (element.kind()) {
+    case TextElement::WORD_ELEMENT:
+      if (myWordHeight == -1) {
+        myWordHeight = (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
+      }
+      return myWordHeight;
+    case TextElement::TREE_ELEMENT:
+      return context().stringHeight();
+    case TextElement::IMAGE_ELEMENT:
+    {
+      int shift = std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 3);
+      return std::min(context().imageHeight(((const ImageElement&)element).image()) + shift, textAreaHeight());
+    }
+    case TextElement::BEFORE_PARAGRAPH_ELEMENT:
+      return style()->spaceBefore();
+    case TextElement::AFTER_PARAGRAPH_ELEMENT:
+      return style()->spaceAfter();
+    case TextElement::EMPTY_LINE_ELEMENT:
+      return style()->spaceBefore() + context().stringHeight() + style()->spaceAfter();
+    case TextElement::INDENT_ELEMENT:
+    case TextElement::HSPACE_ELEMENT:
+    case TextElement::FORCED_CONTROL_ELEMENT:
+    case TextElement::CONTROL_ELEMENT:
+      return 0;
+  }
+  return 0;
 }
 
 int TextView::ViewStyle::textAreaHeight() const {
-	return TextView::PositionIndicator::ShowOption.value() ?
-		context().height() - PositionIndicator::HeightOption.value() - PositionIndicator::OffsetOption.value() :
-		context().height();
+  PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+  return indicatorStyle.ShowOption.value() ?
+    context().height() - indicatorStyle.HeightOption.value() - indicatorStyle.OffsetOption.value() :
+    context().height();
 }
 
 int TextView::ViewStyle::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
-	if ((start == 0) && (length == -1)) {
-		return word.width(context());
-	}
-	int startPos = ZLUnicodeUtil::length(word.Data, start);
-	int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
-	if (!addHyphenationSign) {
-		return context().stringWidth(word.Data + startPos, endPos - startPos);
-	}
-	std::string substr;
-	substr.append(word.Data + startPos, endPos - startPos);
-	substr += '-';
-	return context().stringWidth(substr.data(), substr.length());
+  if ((start == 0) && (length == -1)) {
+    return word.width(context());
+  }
+  int startPos = ZLUnicodeUtil::length(word.Data, start);
+  int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
+  if (!addHyphenationSign) {
+    return context().stringWidth(word.Data + startPos, endPos - startPos);
+  }
+  std::string substr;
+  substr.append(word.Data + startPos, endPos - startPos);
+  substr += '-';
+  return context().stringWidth(substr.data(), substr.length());
 }

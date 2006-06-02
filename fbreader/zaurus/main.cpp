@@ -32,8 +32,6 @@
 #include "QFBReader.h"
 #include "../common/Files.h"
 
-void copyConfig();
-
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
 
@@ -41,7 +39,6 @@ int main(int argc, char **argv) {
 	ZLUnixFSManager::createInstance();
 	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	XMLOptions::createInstance("FBReader");
-	copyConfig();
 	QDialogManager::createInstance();
 	QImageManager::createInstance();
 	QDeviceInfo::createInstance();

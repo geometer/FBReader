@@ -36,9 +36,6 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
-static ZLIntegerRangeOption Width("Options", "Width", 10, 2000, 800);
-static ZLIntegerRangeOption Height("Options", "Height", 10, 2000, 800);
-
 static bool quitFlag = false;
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
@@ -71,7 +68,13 @@ static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) 
 	((GtkFBReader*)data)->handleScrollEventSlot(event);
 }
 
-GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
+static const std::string OPTIONS = "Options";
+
+GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
+	FBReader(new GtkPaintContext(), bookToOpen),
+  myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
+  myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
+
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
@@ -88,7 +91,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
-	gtk_window_resize(myMainWindow, Width.value(), Height.value());
+	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
 	setMode(BOOK_TEXT_MODE);
@@ -116,8 +119,8 @@ GtkFBReader::~GtkFBReader() {
 	if (!myFullScreen) {
 		int width, height;
 		gtk_window_get_size(myMainWindow, &width, &height);
-		Width.setValue(width);
-		Height.setValue(height);
+		myWidthOption.setValue(width);
+		myHeightOption.setValue(height);
 	}
 
 	for (std::map<ActionCode,ActionSlotData*>::iterator item = myActions.begin(); item != myActions.end(); ++item) {

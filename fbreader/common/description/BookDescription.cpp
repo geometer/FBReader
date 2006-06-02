@@ -28,12 +28,14 @@
 
 #include "../formats/FormatPlugin.h"
 
+#include "../FBOptions.h"
+
 BookInfo::BookInfo(const std::string &fileName) : 
-	AuthorDisplayNameOption(fileName, "AuthorDisplayName", ""),
-	AuthorSortKeyOption(fileName, "AuthorSortKey", ""),
-	TitleOption(fileName, "Title", ""),
-	LanguageOption(fileName, "Language", "unknown"),
-	EncodingOption(fileName, "Encoding", "") {
+	AuthorDisplayNameOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayName", ""),
+	AuthorSortKeyOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKey", ""),
+	TitleOption(FBOptions::BOOKS_CATEGORY, fileName, "Title", ""),
+	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", "unknown"),
+	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", "") {
 }
 
 void BookInfo::reset() {

@@ -26,9 +26,9 @@
 
 #include "../textview/TextView.h"
 #include "../description/BookDescription.h"
+#include "../collection/BookCollection.h"
 
 class FBReader;
-class BookCollection;
 class TreeModel;
 class PlainTextModel;
 class Paragraph;
@@ -36,26 +36,32 @@ class Paragraph;
 class CollectionView : public TextView {
 
 public:
-	static const std::string DeleteBookImageFile;
-	
+  static const std::string DeleteBookImageFile;
+  
 public:
-	CollectionView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
-	~CollectionView() FB_VIEW_SECTION;
-	const std::string &caption() const FB_VIEW_SECTION;
+  CollectionView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
+  ~CollectionView() FB_VIEW_SECTION;
+  const std::string &caption() const FB_VIEW_SECTION;
 
-	void rebuild() FB_VIEW_SECTION;
-	void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
-	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
+  void rebuild() FB_VIEW_SECTION;
+  void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
+  bool onStylusPress(int x, int y) FB_VIEW_SECTION;
 
-	void paint() FB_VIEW_SECTION;
+  void paint() FB_VIEW_SECTION;
+
+  BookCollection &collection();
 
 private:
-	FBReader &myReader;
-	BookCollection *myCollection;
-	TreeModel *myTreeModel;
-	std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
-	bool myTreeStateIsFrozen;
-	ImageMap myImageMap;
+  FBReader &myReader;
+  BookCollection myCollection;
+  TreeModel *myTreeModel;
+  std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
+  bool myTreeStateIsFrozen;
+  ImageMap myImageMap;
 };
+
+inline BookCollection &CollectionView::collection() {
+  return myCollection;
+}
 
 #endif /* __COLLECTIONVIEW_H__ */

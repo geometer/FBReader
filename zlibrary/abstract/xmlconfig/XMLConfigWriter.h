@@ -32,11 +32,12 @@ class XMLConfig;
 class XMLConfigWriter : public ZLXMLWriter {
 
 public:
-	XMLConfigWriter(XMLConfig &config, ZLOutputStream &stream) : ZLXMLWriter(stream),  myConfig(config) {}
-	void write();
+  XMLConfigWriter(XMLConfig &config, ZLOutputStream &stream, const std::string &category) : ZLXMLWriter(stream), myConfig(config), myCategory(category) {}
+  void write();
 
 private:
-	XMLConfig &myConfig;
+  XMLConfig &myConfig;
+  const std::string &myCategory;
 };
 
 #endif /* __XMLCONFIGWRITER_H__ */

@@ -19,41 +19,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __RECENTBOOKSVIEW_H__
-#define __RECENTBOOKSVIEW_H__
+#ifndef __FBOPTIONS_H__
+#define __FBOPTIONS_H__
 
-#include <map>
+#include <string>
 
-#include "../textview/TextView.h"
-#include "../description/BookDescription.h"
-#include "../collection/BookCollection.h"
-
-class FBReader;
-class PlainTextModel;
-class Paragraph;
-
-class RecentBooksView : public TextView {
+class FBOptions {
 
 public:
-  RecentBooksView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
-  ~RecentBooksView() FB_VIEW_SECTION;
-  const std::string &caption() const FB_VIEW_SECTION;
-
-  void rebuild() FB_VIEW_SECTION;
-  bool onStylusPress(int x, int y) FB_VIEW_SECTION;
-
-  void paint() FB_VIEW_SECTION;
-
-  LastOpenedBooks &lastBooks();
+  static const std::string BOOKS_CATEGORY;
+  static const std::string SEARCH_CATEGORY;
 
 private:
-  FBReader &myReader;
-  LastOpenedBooks myLastBooks;
-  PlainTextModel *myLastBooksModel;
+  FBOptions();
 };
 
-inline LastOpenedBooks &RecentBooksView::lastBooks() {
-  return myLastBooks;
-}
-
-#endif /* __RECENTBOOKSVIEW_H__ */
+#endif /* __FBOPTIONS_H__ */

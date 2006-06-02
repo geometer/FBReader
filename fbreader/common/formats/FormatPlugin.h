@@ -47,9 +47,6 @@ public:
 
 class FormatPlugin {
 
-public:
-  static ZLIntegerOption DefaultLanguageOption;
-  
 protected:
   FormatPlugin() FORMATS_SECTION;
   
@@ -70,6 +67,9 @@ protected:
 
 class PluginCollection {
 
+public:
+  ZLIntegerOption DefaultLanguageOption;
+  
 public:
   static PluginCollection &instance() FORMATS_SECTION;
   static void deleteInstance() FORMATS_SECTION;

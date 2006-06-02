@@ -30,56 +30,56 @@
 static const std::string LIBRARY = "Recent Books";
 
 RecentBooksView::RecentBooksView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
-	myLastBooksModel = 0;
+  myLastBooksModel = 0;
 }
 
 RecentBooksView::~RecentBooksView() {
-	rebuild();
+  rebuild();
 }
 
 const std::string &RecentBooksView::caption() const {
-	return LIBRARY;
+  return LIBRARY;
 }
 
 void RecentBooksView::paint() {
-	if (myLastBooksModel == 0) {
-		myLastBooksModel = new PlainTextModel();
-		const LastOpenedBooks lastBooks;
-		myBooks = lastBooks.books();
-		for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); it++) {
-			myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
-			myLastBooksModel->addControl(RECENT_BOOK_LIST, true);
-			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
-			myLastBooksModel->addText((*it)->author()->displayName() + ". ");
-			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, false);
-			myLastBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
-			myLastBooksModel->addText((*it)->title());
-		}
-		setModel(myLastBooksModel, LIBRARY);
-	}
-	TextView::paint();
+  if (myLastBooksModel == 0) {
+    myLastBooksModel = new PlainTextModel();
+    const Books &books = myLastBooks.books();
+    for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
+      myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
+      myLastBooksModel->addControl(RECENT_BOOK_LIST, true);
+      myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
+      myLastBooksModel->addText((*it)->author()->displayName() + ". ");
+      myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, false);
+      myLastBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
+      myLastBooksModel->addText((*it)->title());
+    }
+    setModel(myLastBooksModel, LIBRARY);
+  }
+  TextView::paint();
 }
 
 void RecentBooksView::rebuild() {
-	setModel(0, LIBRARY);
-	myBooks.clear();
-	if (myLastBooksModel != 0) {
-		delete myLastBooksModel;
-		myLastBooksModel = 0;
-	}
+  setModel(0, LIBRARY);
+  if (myLastBooksModel != 0) {
+    delete myLastBooksModel;
+    myLastBooksModel = 0;
+  }
 }
 
 bool RecentBooksView::onStylusPress(int x, int y) {
-	if (TextView::onStylusPress(x, y)) {
-		return true;
-	}
+  if (TextView::onStylusPress(x, y)) {
+    return true;
+  }
 
-	const ParagraphPosition *position = paragraphByCoordinate(y);
-	if ((position == 0) || (position->ParagraphNumber >= (int)myBooks.size())) {
-		return false;
-	}
+  const Books &books = myLastBooks.books();
 
-	myReader.openBook(myBooks[position->ParagraphNumber]);
-	myReader.showBookTextView();
-	return true;
+  const ParagraphPosition *position = paragraphByCoordinate(y);
+  if ((position == 0) || (position->ParagraphNumber >= (int)books.size())) {
+    return false;
+  }
+
+  myReader.openBook(books[position->ParagraphNumber]);
+  myReader.showBookTextView();
+  return true;
 }

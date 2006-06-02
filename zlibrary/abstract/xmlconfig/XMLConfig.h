@@ -22,32 +22,45 @@
 #define __XMLCONFIG_H__
 
 #include <map>
+#include <set>
 #include <string>
+
+struct XMLConfigValue {
+  XMLConfigValue(const std::string &category, const std::string &value) : Category(category), Value(value) {}
+
+  const std::string &Category;
+  std::string Value;
+};
 
 class XMLConfigGroup {
 
 public:
-	const std::map<std::string,std::string> &values() const { return myValues; }
-	const std::string &getValue(const std::string &name, const std::string &defaultValue) const;
-	void setValue(const std::string &name, const std::string &value) { myValues[name] = value; }
-	void unsetValue(const std::string &name);
+  XMLConfigGroup(std::set<std::string> &categories) : myCategories(categories) {}
+  const std::string &getValue(const std::string &name, const std::string &defaultValue) const;
+  void setValue(const std::string &name, const std::string &value, const std::string &category);
+  void unsetValue(const std::string &name);
+  void setCategory(const std::string &name, const std::string &category);
 
 private:
-	std::map<std::string,std::string> myValues;
+  std::map<std::string,XMLConfigValue> myValues;
+  std::set<std::string> &myCategories;
+
+friend class XMLConfigWriter;
 };
 
 class XMLConfig {
 
 public:
-	XMLConfig(const std::string &name);
-	~XMLConfig();
+  XMLConfig(const std::string &name);
+  ~XMLConfig();
 
-	XMLConfigGroup *getGroup(const std::string &name, bool createUnexisting);
-	void removeGroup(const std::string &name);
+  XMLConfigGroup *getGroup(const std::string &name, bool createUnexisting);
+  void removeGroup(const std::string &name);
 
 private:
-	std::string myName;
-	std::map<std::string,XMLConfigGroup*> myGroups;
+  std::string myName;
+  std::map<std::string,XMLConfigGroup*> myGroups;
+  std::set<std::string> myCategories;
 
 friend class XMLConfigReader;
 friend class XMLConfigWriter;

@@ -131,7 +131,7 @@ private:
 class ZLOpenFileDialog {
 
 public:
-	static ZLStringOption DirectoryOption;
+	ZLStringOption DirectoryOption;
 
 protected:
 	ZLOpenFileDialog(const ZLTreeHandler &handler) DIALOG_SECTION;

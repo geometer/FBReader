@@ -31,9 +31,6 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-ZLColorOption TextView::TreeLinesColorOption("Colors", "TreeLines", ZLColor(127, 127, 127));
-ZLBooleanOption TextView::AutoHyphenationOption("Options", "AutoHyphenation", true);
-
 TextView::TextView(ZLPaintContext &context) : ZLView(context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myPositionIndicator(*this) {
 }
 
@@ -81,7 +78,7 @@ void TextView::paint() {
 
   myParagraphMap.clear();
   myTextElementMap.clear();
-  context().clear(TextStyle::BackgroundColorOption.value());
+  context().clear(TextStyleCollection::instance().baseStyle().BackgroundColorOption.value());
 
   if (empty()) {
     return;
@@ -380,7 +377,7 @@ void TextView::drawString(int x, int y, const char *str, int len, const Word::Wo
         x += context().stringWidth(str + pos, endPos - pos);
       }
       if (markStart < len) {
-        context().setColor(TextStyle::SelectedTextColorOption.value());
+        context().setColor(TextStyleCollection::instance().baseStyle().SelectedTextColorOption.value());
         {
           int endPos = std::min(markStart + markLen, len);
           context().drawString(x, y, str + markStart, endPos - markStart);

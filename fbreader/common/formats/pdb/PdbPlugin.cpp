@@ -25,6 +25,7 @@
 
 #include "PdbPlugin.h"
 #include "../../description/BookDescriptionUtil.h"
+#include "../../FBOptions.h"
 
 PdbPlugin::~PdbPlugin() {
 }
@@ -40,7 +41,7 @@ std::string PdbPlugin::fileType(const ZLFile &file) const {
 	ZLFile baseFile = (index == -1) ? file : ZLFile(fileName.substr(0, index));
 	bool upToDate = BookDescriptionUtil::checkInfo(baseFile);
 
-	ZLStringOption palmTypeOption(file.path(), "PalmType", "");
+	ZLStringOption palmTypeOption(FBOptions::BOOKS_CATEGORY, file.path(), "PalmType", "");
 	std::string palmType = palmTypeOption.value();
 	if (palmType.empty() || !upToDate) {
 		shared_ptr<ZLInputStream> stream = file.inputStream();

@@ -41,212 +41,214 @@ class ZLViewWidget;
 class ZLPaintContext;
 
 enum ActionCode {
-	// please, don't change these numbers
-	// add new action id's at end of this enumeration
-	NO_ACTION = 0,
-	ACTION_SHOW_COLLECTION = 1,
-	ACTION_SHOW_OPTIONS = 2,
-	ACTION_UNDO = 3,
-	ACTION_REDO = 4,
-	ACTION_SHOW_CONTENTS = 5,
-	ACTION_SEARCH = 6,
-	ACTION_FIND_PREVIOUS = 7,
-	ACTION_FIND_NEXT = 8,
-	ACTION_LARGE_SCROLL_FORWARD = 9,
-	ACTION_LARGE_SCROLL_BACKWARD = 10,
-	ACTION_SMALL_SCROLL_FORWARD = 11,
-	ACTION_SMALL_SCROLL_BACKWARD = 12,
-	ACTION_MOUSE_SCROLL_FORWARD = 13,
-	ACTION_MOUSE_SCROLL_BACKWARD = 14,
-	ACTION_SCROLL_TO_HOME = 15,
-	ACTION_SCROLL_TO_START_OF_TEXT = 16,
-	ACTION_SCROLL_TO_END_OF_TEXT = 17,
-	ACTION_CANCEL = 18,
-	ACTION_INCREASE_FONT = 19,
-	ACTION_DECREASE_FONT = 20,
-	ACTION_SHOW_HIDE_POSITION_INDICATOR = 21,
-	ACTION_TOGGLE_FULLSCREEN = 22,
-	ACTION_FULLSCREEN_ON = 23,
-	ACTION_ADD_BOOK = 24,
-	ACTION_SHOW_BOOK_INFO = 25,
-	ACTION_SHOW_HELP = 26,
-	ACTION_ROTATE_SCREEN = 27,
-	ACTION_SHOW_LAST_BOOKS = 28,
-	ACTION_QUIT = 29,
-	ACTION_OPEN_PREVIOUS_BOOK = 30,
+  // please, don't change these numbers
+  // add new action id's at end of this enumeration
+  NO_ACTION = 0,
+  ACTION_SHOW_COLLECTION = 1,
+  ACTION_SHOW_OPTIONS = 2,
+  ACTION_UNDO = 3,
+  ACTION_REDO = 4,
+  ACTION_SHOW_CONTENTS = 5,
+  ACTION_SEARCH = 6,
+  ACTION_FIND_PREVIOUS = 7,
+  ACTION_FIND_NEXT = 8,
+  ACTION_LARGE_SCROLL_FORWARD = 9,
+  ACTION_LARGE_SCROLL_BACKWARD = 10,
+  ACTION_SMALL_SCROLL_FORWARD = 11,
+  ACTION_SMALL_SCROLL_BACKWARD = 12,
+  ACTION_MOUSE_SCROLL_FORWARD = 13,
+  ACTION_MOUSE_SCROLL_BACKWARD = 14,
+  ACTION_SCROLL_TO_HOME = 15,
+  ACTION_SCROLL_TO_START_OF_TEXT = 16,
+  ACTION_SCROLL_TO_END_OF_TEXT = 17,
+  ACTION_CANCEL = 18,
+  ACTION_INCREASE_FONT = 19,
+  ACTION_DECREASE_FONT = 20,
+  ACTION_SHOW_HIDE_POSITION_INDICATOR = 21,
+  ACTION_TOGGLE_FULLSCREEN = 22,
+  ACTION_FULLSCREEN_ON = 23,
+  ACTION_ADD_BOOK = 24,
+  ACTION_SHOW_BOOK_INFO = 25,
+  ACTION_SHOW_HELP = 26,
+  ACTION_ROTATE_SCREEN = 27,
+  ACTION_SHOW_LAST_BOOKS = 28,
+  ACTION_QUIT = 29,
+  ACTION_OPEN_PREVIOUS_BOOK = 30,
 };
 
 class KeyBindings {
 
 public:
-	KeyBindings(const std::string &optionGroupName);
-	~KeyBindings();
+  KeyBindings(const std::string &optionGroupName);
+  ~KeyBindings();
 
-	void bindKey(const std::string &key, ActionCode code);
-	ActionCode getBinding(const std::string &key);
-
-private:
-	void readDefaultBindings();
-	void readCustomBindings();
+  void bindKey(const std::string &key, ActionCode code);
+  ActionCode getBinding(const std::string &key);
 
 private:
-	const std::string myOptionGroupName;
-	std::map<std::string,ActionCode> myBindingsMap;
+  void readDefaultBindings();
+  void readCustomBindings();
 
-	friend class FullKeyBindings;
+private:
+  const std::string myOptionGroupName;
+  std::map<std::string,ActionCode> myBindingsMap;
+
+  friend class FullKeyBindings;
 };
 
 class FullKeyBindings {
 
 public:
-	ZLBooleanOption UseSeparateBindingsOption;
+  ZLBooleanOption UseSeparateBindingsOption;
 
 public:
-	FullKeyBindings();
-	KeyBindings &getBindings(ZLViewWidget::Angle angle, bool force);
+  FullKeyBindings();
+  KeyBindings &getBindings(ZLViewWidget::Angle angle, bool force);
 
 private:
-	KeyBindings myBindings0;
-	KeyBindings myBindings90;
-	KeyBindings myBindings180;
-	KeyBindings myBindings270;
+  KeyBindings myBindings0;
+  KeyBindings myBindings90;
+  KeyBindings myBindings180;
+  KeyBindings myBindings270;
 };
 
 class FBReader : public ZLApplication {
 
 protected:
-	enum ViewMode {
-		UNDEFINED_MODE,
-		BOOK_TEXT_MODE,
-		FOOTNOTE_MODE,
-		CONTENTS_MODE,
-		BOOKMARKS_MODE,
-		BOOK_COLLECTION_MODE,
-		RECENT_BOOKS_MODE,
-	};
+  enum ViewMode {
+    UNDEFINED_MODE,
+    BOOK_TEXT_MODE,
+    FOOTNOTE_MODE,
+    CONTENTS_MODE,
+    BOOKMARKS_MODE,
+    BOOK_COLLECTION_MODE,
+    RECENT_BOOKS_MODE,
+  };
 
 public:
-	struct ScrollingOptions {
-		ScrollingOptions(
-			const std::string &delayGroup, const std::string &delayName, long delayValue,
-			const std::string &modeGroup, const std::string &modeName, long modeValue,
-			const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
-			const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
-			const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
-		) FB_SECTION;
-		
-		ZLIntegerRangeOption DelayOption;
-		ZLIntegerOption ModeOption;
-		ZLIntegerRangeOption LinesToKeepOption;
-		ZLIntegerRangeOption LinesToScrollOption;
-		ZLIntegerRangeOption PercentToScrollOption;
-	};
+  struct ScrollingOptions {
+    ScrollingOptions(
+      const std::string &delayGroup, const std::string &delayName, long delayValue,
+      const std::string &modeGroup, const std::string &modeName, long modeValue,
+      const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
+      const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
+      const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
+    ) FB_SECTION;
+    
+    ZLIntegerRangeOption DelayOption;
+    ZLIntegerOption ModeOption;
+    ZLIntegerRangeOption LinesToKeepOption;
+    ZLIntegerRangeOption LinesToScrollOption;
+    ZLIntegerRangeOption PercentToScrollOption;
+  };
 
 public:
-	static ZLBooleanOption QuitOnCancelOption;
-	static ZLBooleanOption StoreContentsPositionOption;
-	static ZLIntegerRangeOption KeyDelayOption;
+  ZLBooleanOption QuitOnCancelOption;
+  ZLBooleanOption StoreContentsPositionOption;
+  ZLIntegerRangeOption KeyDelayOption;
 
-	static ScrollingOptions LargeScrollingOptions;
-	static ScrollingOptions SmallScrollingOptions;
-	static ScrollingOptions MouseScrollingOptions;
+  ScrollingOptions LargeScrollingOptions;
+  ScrollingOptions SmallScrollingOptions;
+  ScrollingOptions MouseScrollingOptions;
 
-	static ZLBooleanOption SearchBackwardOption;
-	static ZLBooleanOption SearchIgnoreCaseOption;
-	static ZLBooleanOption SearchInWholeTextOption;
-	static ZLBooleanOption SearchThisSectionOnlyOption;
-	static ZLStringOption SearchPatternOption;
+  ZLBooleanOption SearchBackwardOption;
+  ZLBooleanOption SearchIgnoreCaseOption;
+  ZLBooleanOption SearchInWholeTextOption;
+  ZLBooleanOption SearchThisSectionOnlyOption;
+  ZLStringOption SearchPatternOption;
 
-	static ZLBooleanOption KeyboardControlOption;
+  ZLBooleanOption KeyboardControlOption;
 
-	static ZLIntegerOption RotationAngleOption;
-	static ZLIntegerOption AngleStateOption;
-
-protected:
-	FBReader(ZLPaintContext *context, const std::string& bookToOpen = std::string()) FB_SECTION;
-	virtual ~FBReader() FB_SECTION;
-
-	virtual void setMode(ViewMode mode) FB_SECTION;
-	virtual void setWindowCaption(const std::string &caption) FB_SECTION = 0;
-	void createToolbar() FB_SECTION;
-	virtual void addButton(ActionCode id, const std::string &name) FB_SECTION = 0;
-	virtual void addButtonSeparator() FB_SECTION = 0;
-	virtual void setButtonVisible(ActionCode id, bool visible) FB_SECTION = 0;
-	virtual void setButtonEnabled(ActionCode id, bool enable) FB_SECTION = 0;
-	virtual void searchSlot() FB_SECTION = 0;
-	void cancelSlot() FB_SECTION;
-	void fullscreenOnSlot() FB_SECTION;
-	virtual void toggleFullscreenSlot() FB_SECTION = 0;
-	virtual bool isFullscreen() const FB_SECTION = 0;
-	virtual void quitSlot() FB_SECTION = 0;
-
-	virtual void bookInfoSlot() FB_SECTION;
-	virtual void optionsSlot() FB_SECTION;
-	virtual void addBookSlot() FB_SECTION;
-
-	void doAction(const std::string &key) FB_SECTION;
+  ZLIntegerOption RotationAngleOption;
+  ZLIntegerOption AngleStateOption;
 
 protected:
-	BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
-	void resetWindowCaption();
+  FBReader(ZLPaintContext *context, const std::string& bookToOpen = std::string()) FB_SECTION;
+  virtual ~FBReader() FB_SECTION;
+
+  virtual void setMode(ViewMode mode) FB_SECTION;
+  virtual void setWindowCaption(const std::string &caption) FB_SECTION = 0;
+  void createToolbar() FB_SECTION;
+  virtual void addButton(ActionCode id, const std::string &name) FB_SECTION = 0;
+  virtual void addButtonSeparator() FB_SECTION = 0;
+  virtual void setButtonVisible(ActionCode id, bool visible) FB_SECTION = 0;
+  virtual void setButtonEnabled(ActionCode id, bool enable) FB_SECTION = 0;
+  virtual void searchSlot() FB_SECTION = 0;
+  void cancelSlot() FB_SECTION;
+  void fullscreenOnSlot() FB_SECTION;
+  virtual void toggleFullscreenSlot() FB_SECTION = 0;
+  virtual bool isFullscreen() const FB_SECTION = 0;
+  virtual void quitSlot() FB_SECTION = 0;
+
+  virtual void bookInfoSlot() FB_SECTION;
+  virtual void optionsSlot() FB_SECTION;
+  virtual void addBookSlot() FB_SECTION;
+
+  void doAction(const std::string &key) FB_SECTION;
+
+protected:
+  BookDescriptionPtr createDescription(const std::string& fileName) const FB_SECTION;
+  void resetWindowCaption();
 
 private:
-	bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
-	void clearTextCaches() FB_SECTION;
-	void doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
+  bool runBookInfoDialog(const std::string &fileName) FB_SECTION;
+  void clearTextCaches() FB_SECTION;
+  void doScrolling(const ScrollingOptions &options, bool forward) FB_SECTION;
 
-	bool isScrollingAction(ActionCode code) FB_SECTION;
+  bool isScrollingAction(ActionCode code) FB_SECTION;
 
 public:
-	virtual bool isRotationSupported() const FB_SECTION = 0;
-	virtual bool isFullKeyboardControlSupported() const FB_SECTION;
-	virtual void grabAllKeys(bool grab) FB_SECTION;
+  virtual bool isRotationSupported() const FB_SECTION = 0;
+  virtual bool isFullKeyboardControlSupported() const FB_SECTION;
+  virtual void grabAllKeys(bool grab) FB_SECTION;
 
-	void openBook(BookDescriptionPtr description) FB_SECTION;
-	BookTextView &textView() const FB_SECTION;
-	void showBookTextView() FB_SECTION;
-	void tryShowFootnoteView(const std::string &id) FB_SECTION;
-	void restorePreviousMode() FB_SECTION;
-	virtual void enableMenuButtons() FB_SECTION;
-	void repaintView() FB_SECTION;
-	void doAction(ActionCode code) FB_SECTION;
+  void openBook(BookDescriptionPtr description) FB_SECTION;
+  BookTextView &textView() const FB_SECTION;
+  void showBookTextView() FB_SECTION;
+  void tryShowFootnoteView(const std::string &id) FB_SECTION;
+  void restorePreviousMode() FB_SECTION;
+  virtual void enableMenuButtons() FB_SECTION;
+  void repaintView() FB_SECTION;
+  void doAction(ActionCode code) FB_SECTION;
 
-	ZLBooleanOption &useSeparateBindings();
-	KeyBindings &keyBindings(ZLViewWidget::Angle angle, bool force = false);
+  ZLBooleanOption &useSeparateBindings();
+  KeyBindings &keyBindings(ZLViewWidget::Angle angle, bool force = false);
 
 private:
-	void openBookInternal(BookDescriptionPtr description) FB_SECTION;
-	friend class OpenBookRunnable;
-	void rebuildCollectionInternal() FB_SECTION;
-	friend class RebuildCollectionRunnable;
+  void openBookInternal(BookDescriptionPtr description) FB_SECTION;
+  friend class OpenBookRunnable;
+  void rebuildCollectionInternal() FB_SECTION;
+  friend class RebuildCollectionRunnable;
 
 protected:
-	ViewMode myMode;
-	ViewMode myPreviousMode;
-	ZLViewWidget *myViewWidget;
+  ViewMode myMode;
+  ViewMode myPreviousMode;
+  ZLViewWidget *myViewWidget;
 
 private:
-	FootnoteView *myFootnoteView;	
-	BookTextView *myBookTextView;	
-	ContentsView *myContentsView;	
-	CollectionView *myCollectionView;	
-	RecentBooksView *myRecentBooksView;	
+  FootnoteView *myFootnoteView;  
+  BookTextView *myBookTextView;  
+  ContentsView *myContentsView;  
+  CollectionView *myCollectionView;  
+  RecentBooksView *myRecentBooksView;  
 
-	ZLTime myLastScrollingTime;
-	ZLTime myLastKeyActionTime;
+  ZLTime myLastScrollingTime;
+  ZLTime myLastKeyActionTime;
 
-	ZLPaintContext *myContext;
-	BookModel *myModel;
+  ZLPaintContext *myContext;
+  BookModel *myModel;
 
-	FullKeyBindings myKeyBindings;
+  FullKeyBindings myKeyBindings;
+
+  friend class OptionsDialog;
 };
 
 inline ZLBooleanOption &FBReader::useSeparateBindings() {
-	return myKeyBindings.UseSeparateBindingsOption;
+  return myKeyBindings.UseSeparateBindingsOption;
 }
 
 inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle, bool force) {
-	return myKeyBindings.getBindings(angle, force);
+  return myKeyBindings.getBindings(angle, force);
 }
 
 #endif /* __FBREADER_H__ */
