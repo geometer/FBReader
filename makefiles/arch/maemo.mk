@@ -2,7 +2,7 @@ include $(ROOTDIR)/makefiles/arch/dummy.mk
 
 CC = gcc
 AR = ar rsu
-LD = g++
+LD = g++ -Xlinker -rpath /var/lib/install/usr/lib
 
 ifeq "$(UI_TYPE)" "maemo"
 DEPGEN = $(CC) -MM
@@ -21,5 +21,5 @@ UILIBS = -lz -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangox
 endif
 
 EXPATLIBS = -lexpat
-ENCALIBS = /usr/lib/libenca.a
+ENCALIBS = -lenca
 BZIP2LIBS = -lbz2

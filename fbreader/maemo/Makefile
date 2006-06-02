@@ -73,7 +73,7 @@ package:
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
 		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
-		-e "s#@DEPENDS@#maemo#" \
+		-e "s#@DEPENDS@#maemo,libenca0#" \
 		-e "s#@SECTION@#utils#" \
 		FBReader.control.in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
