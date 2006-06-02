@@ -86,7 +86,7 @@ static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
-	g_set_application_name("FBReader");
+	g_set_application_name("");
 
 	osso_initialize("FBReader", "0.0", false, 0);
 
@@ -158,6 +158,7 @@ void GtkFBReader::buildMenu() {
 
 	GtkMenu *librarySubmenu = makeSubmenu(myMenu, "Library");
 	addMenuItem(librarySubmenu, "Open", ACTION_SHOW_COLLECTION);
+	addMenuItem(librarySubmenu, "Open Previous", ACTION_OPEN_PREVIOUS_BOOK);
 	addMenuItem(librarySubmenu, "Recent", ACTION_SHOW_LAST_BOOKS);
 	addMenuItem(librarySubmenu, "Add Book...", ACTION_ADD_BOOK);
 
