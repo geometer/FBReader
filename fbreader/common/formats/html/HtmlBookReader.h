@@ -30,35 +30,37 @@
 class BookModel;
 class PlainTextFormat;
 
-class HtmlBookReader : public HtmlReader, public BookReader {
+class HtmlBookReader : public HtmlReader {
 
 public:
-	HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) FORMATS_SECTION;
-	~HtmlBookReader() FORMATS_SECTION;
+  HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) FORMATS_SECTION;
+  ~HtmlBookReader() FORMATS_SECTION;
 
 protected:
-	void startDocumentHandler() FORMATS_SECTION;
-	void endDocumentHandler() FORMATS_SECTION;
+  void startDocumentHandler() FORMATS_SECTION;
+  void endDocumentHandler() FORMATS_SECTION;
 
-	bool tagHandler(HtmlTag tag) FORMATS_SECTION;
-	bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
-
-private:
-	void addConvertedDataToBuffer(const char *text, int len, bool convert) FORMATS_SECTION;
+  bool tagHandler(HtmlTag tag) FORMATS_SECTION;
+  bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
 
 private:
-	std::string myBaseDirPath;
+  void addConvertedDataToBuffer(const char *text, int len, bool convert) FORMATS_SECTION;
 
-	const PlainTextFormat &myFormat;
-	int myIgnoreDataCounter;
-	bool myIsPreformatted;
-	bool myIsHyperlink;
-	bool myIsStarted;
-	std::stack<int> myListNumStack;
+private:
+  BookReader myBookReader;
 
-	int mySpaceCounter;
-	int myBreakCounter;
-	std::string myConverterBuffer;
+  std::string myBaseDirPath;
+
+  const PlainTextFormat &myFormat;
+  int myIgnoreDataCounter;
+  bool myIsPreformatted;
+  bool myIsHyperlink;
+  bool myIsStarted;
+  std::stack<int> myListNumStack;
+
+  int mySpaceCounter;
+  int myBreakCounter;
+  std::string myConverterBuffer;
 };
 
 inline HtmlBookReader::~HtmlBookReader() {}

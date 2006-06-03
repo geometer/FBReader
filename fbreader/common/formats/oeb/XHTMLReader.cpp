@@ -169,12 +169,14 @@ XHTMLTagControlAction::XHTMLTagControlAction(TextKind control) : myControl(contr
 }
 
 void XHTMLTagControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+  reader.myModelReader.pushKind(myControl);
   reader.myModelReader.addControl(myControl, true);
   XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
 void XHTMLTagControlAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.addControl(myControl, false);
+  reader.myModelReader.popKind();
 }
 
 void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {

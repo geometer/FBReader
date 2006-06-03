@@ -27,20 +27,20 @@
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), BookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
+HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
 }
 
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool convert) {
   if (len > 0) {
     if (convert) {
       myConverter->convert(myConverterBuffer, text, text + len);
-      addData(myConverterBuffer);
-      addContentsData(myConverterBuffer);
+      myBookReader.addData(myConverterBuffer);
+      myBookReader.addContentsData(myConverterBuffer);
       myConverterBuffer.erase();
     } else {
       std::string strText(text, len);
-      addData(strText);
-      addContentsData(strText);
+      myBookReader.addData(strText);
+      myBookReader.addContentsData(strText);
     }
   }
 }
@@ -51,29 +51,29 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
     case _BODY:
       break;
     case _IMAGE:
-      endParagraph();
+      myBookReader.endParagraph();
       for (unsigned int i = 0; i < tag.Attributes.size(); i++) {
         if (tag.Attributes[i].Name == "SRC") {
           std::string fileName = tag.Attributes[i].Value;
-          addImageReference(fileName);
+          myBookReader.addImageReference(fileName);
           ZLImage *image = new ZLFileImage("image/auto", myBaseDirPath + fileName, 0);
-          addImage(fileName, image);
+          myBookReader.addImage(fileName, image);
         }
       }
-      beginParagraph();
+      myBookReader.beginParagraph();
       break;
     // 9. text
     case _EM:
-      addControl(EMPHASIS, tag.Start);
+      myBookReader.addControl(EMPHASIS, tag.Start);
       break;
     case _STRONG:
-      addControl(STRONG, tag.Start);
+      myBookReader.addControl(STRONG, tag.Start);
       break;
     case _DFN:
       //TODO: implement
       break;
     case _CODE:
-      addControl(CODE, tag.Start);
+      myBookReader.addControl(CODE, tag.Start);
       break;
     case _SAMP:
       //TODO: implement
@@ -85,7 +85,7 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
       //TODO: implement
       break;
     case _CITE:
-      addControl(CITE, tag.Start);
+      myBookReader.addControl(CITE, tag.Start);
       break;
     case _ABBR:
       //TODO: implement
@@ -100,35 +100,35 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
       //TODO: implement
       break;
     case _SUB:
-      addControl(SUB, tag.Start);
+      myBookReader.addControl(SUB, tag.Start);
       break;
     case _SUP:
-      addControl(SUP, tag.Start);
+      myBookReader.addControl(SUP, tag.Start);
       break;
     case _DIV:
       if (!tag.Start) {
-        endParagraph();
-        beginParagraph();
+        myBookReader.endParagraph();
+        myBookReader.beginParagraph();
       }
       break;
     case _P:
     case _BR:
-      endParagraph();
-      beginParagraph();
+      myBookReader.endParagraph();
+      myBookReader.beginParagraph();
       break;
     case _PRE:
-      endParagraph();
+      myBookReader.endParagraph();
       myIsPreformatted = tag.Start;
       mySpaceCounter = -1;
       myBreakCounter = 0;
       if (myFormat.breakType() == PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
         if (tag.Start) {
-          pushKind(PREFORMATTED);
+          myBookReader.pushKind(PREFORMATTED);
         } else {
-          popKind();
+          myBookReader.popKind();
         }
       }
-      beginParagraph();
+      myBookReader.beginParagraph();
       break;
     case _INS:
       //TODO: implement
@@ -147,8 +147,8 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
       break;
     case _LI:
       if (tag.Start) {
-        endParagraph();
-        beginParagraph();
+        myBookReader.endParagraph();
+        myBookReader.beginParagraph();
         if (!myListNumStack.empty()) {
           //TODO: add spaces and number/bullet
           addConvertedDataToBuffer("\342\200\242 ", 4, false);
@@ -157,8 +157,8 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
       break;
     case _DT:
       if (tag.Start) {
-        endParagraph();
-        beginParagraph();
+        myBookReader.endParagraph();
+        myBookReader.beginParagraph();
       }
       break;
     case _DL:
@@ -171,42 +171,42 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
     case _H4:
     case _H5:
     case _H6:
-      endParagraph();
+      myBookReader.endParagraph();
       if (tag.Start) {
-        insertEndOfSectionParagraph();
-        enterTitle();
-        beginContentsParagraph();
+        myBookReader.insertEndOfSectionParagraph();
+        myBookReader.enterTitle();
+        myBookReader.beginContentsParagraph();
         switch (tag.Code) {
           case _H1:
-            pushKind(H1);
+            myBookReader.pushKind(H1);
           case _H2:
-            pushKind(H2);
+            myBookReader.pushKind(H2);
           case _H3:
-            pushKind(H3);
+            myBookReader.pushKind(H3);
           case _H4:
-            pushKind(H4);
+            myBookReader.pushKind(H4);
           case _H5:
-            pushKind(H5);
+            myBookReader.pushKind(H5);
           case _H6:
-            pushKind(H6);
+            myBookReader.pushKind(H6);
           default:
             break;
         }
       } else {
-        popKind();
-        endContentsParagraph();
-        exitTitle();
+        myBookReader.popKind();
+        myBookReader.endContentsParagraph();
+        myBookReader.exitTitle();
       }
-      beginParagraph();
+      myBookReader.beginParagraph();
       break;
     case _TT:
-      addControl(CODE, tag.Start);
+      myBookReader.addControl(CODE, tag.Start);
       break;
     case _B:
-      addControl(BOLD, tag.Start);
+      myBookReader.addControl(BOLD, tag.Start);
       break;
     case _I:
-      addControl(ITALIC, tag.Start);
+      myBookReader.addControl(ITALIC, tag.Start);
       break;
     case _HEAD:
     case _TITLE:
@@ -229,17 +229,17 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
       if (tag.Start) {
         for (unsigned int i = 0; i < tag.Attributes.size(); i++) {
           if (tag.Attributes[i].Name == "NAME") {
-            addHyperlinkLabel(tag.Attributes[i].Value);
+            myBookReader.addHyperlinkLabel(tag.Attributes[i].Value);
           } else if (!myIsHyperlink && (tag.Attributes[i].Name == "HREF")) {
             const std::string &value = tag.Attributes[i].Value;
             if (!value.empty() && (value[0] == '#')) {
-              addHyperlinkControl(HYPERLINK, value.substr(1));
+              myBookReader.addHyperlinkControl(HYPERLINK, value.substr(1));
               myIsHyperlink = true;
             }
           }
         }
       } else if (myIsHyperlink) {
-        addControl(HYPERLINK, false);
+        myBookReader.addControl(HYPERLINK, false);
         myIsHyperlink = false;
       }
       break;
@@ -262,10 +262,10 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
               addConvertedDataToBuffer(start, ptr - start, convert);
             } else {
               static const std::string SPACE = " ";
-              addData(SPACE);
+              myBookReader.addData(SPACE);
             }
-            endParagraph();
-            beginParagraph();
+            myBookReader.endParagraph();
+            myBookReader.beginParagraph();
             start = ptr + 1;
           }
         }
@@ -282,8 +282,8 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
             if (mySpaceCounter > myFormat.ignoredIndent()) {
               if (ptr - start > mySpaceCounter) {
                 addConvertedDataToBuffer(start, ptr - start - mySpaceCounter, convert);
-                endParagraph();
-                beginParagraph();
+                myBookReader.endParagraph();
+                myBookReader.beginParagraph();
               }
               start = ptr;
             }
@@ -303,8 +303,8 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
           } else {
             if (myBreakCounter > 1) {
               addConvertedDataToBuffer(start, ptr - start, convert);
-              endParagraph();
-              beginParagraph();
+              myBookReader.endParagraph();
+              myBookReader.beginParagraph();
               start = ptr;
             }
             myBreakCounter = 0;
@@ -328,9 +328,9 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 }
 
 void HtmlBookReader::startDocumentHandler() {
-  setMainTextModel();
-  pushKind(REGULAR);
-  beginParagraph();
+  myBookReader.setMainTextModel();
+  myBookReader.pushKind(REGULAR);
+  myBookReader.beginParagraph();
   myIgnoreDataCounter = 0;
   myIsPreformatted = false;
   myIsHyperlink = false;
@@ -341,5 +341,5 @@ void HtmlBookReader::startDocumentHandler() {
 }
 
 void HtmlBookReader::endDocumentHandler() {
-  endParagraph();
+  myBookReader.endParagraph();
 }
