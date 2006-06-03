@@ -289,17 +289,21 @@ bool FB2BookReader::readBook(shared_ptr<ZLInputStream> stream) {
   return readDocument(stream);
 }
 
+void FB2BookReader::addAction(const std::string &tag, FB2TagAction *action) {
+  ourTagActions.insert(std::pair<std::string,FB2TagAction*>(tag, action));
+}
+
 void FB2BookReader::fillTagTable() {
   if (ourTagActions.empty()) {
-    ourTagActions["sub"] = new FB2TagControlAction(SUB);
-    ourTagActions["sup"] = new FB2TagControlAction(SUP);
-    ourTagActions["code"] = new FB2TagControlAction(CODE);
-    ourTagActions["strikethrough"] = new FB2TagControlAction(STRIKETHROUGH);
-    ourTagActions["strong"] = new FB2TagControlAction(STRONG);
-    ourTagActions["emphasis"] = new FB2TagControlAction(EMPHASIS);
-    ourTagActions["v"] = new FB2TagParagraphWithControlAction(VERSE);
-    ourTagActions["subtitle"] = new FB2TagParagraphWithControlAction(SUBTITLE);
-    ourTagActions["text-author"] = new FB2TagParagraphWithControlAction(AUTHOR);
-    ourTagActions["date"] = new FB2TagParagraphWithControlAction(DATE);
+    addAction("sub",  new FB2TagControlAction(SUB));
+    addAction("sup",  new FB2TagControlAction(SUP));
+    addAction("code",  new FB2TagControlAction(CODE));
+    addAction("strikethrough",  new FB2TagControlAction(STRIKETHROUGH));
+    addAction("strong",  new FB2TagControlAction(STRONG));
+    addAction("emphasis",  new FB2TagControlAction(EMPHASIS));
+    addAction("v",  new FB2TagParagraphWithControlAction(VERSE));
+    addAction("subtitle",  new FB2TagParagraphWithControlAction(SUBTITLE));
+    addAction("text-author",  new FB2TagParagraphWithControlAction(AUTHOR));
+    addAction("date",  new FB2TagParagraphWithControlAction(DATE));
   }
 }

@@ -42,8 +42,10 @@ public:
 class FB2BookReader : public ZLXMLReader {
 
 private:
-  static std::map<std::string,FB2TagAction*> ourTagActions;
+  static void addAction(const std::string &tag, FB2TagAction *action);
   static void fillTagTable();
+
+  static std::map<std::string,FB2TagAction*> ourTagActions;
 
 public:
   FB2BookReader(BookModel &model) FORMATS_SECTION;
