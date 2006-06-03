@@ -104,14 +104,49 @@ void PluckerBookReader::setFont(FontType font, bool start) {
     case FT_REGULAR:
       break;
     case FT_H1:
+      if (start) {
+        enterTitle();
+        pushKind(H1);
+      } else {
+        popKind();
+        exitTitle();
+      }
     case FT_H2:
+      if (start) {
+        enterTitle();
+        pushKind(H2);
+      } else {
+        popKind();
+        exitTitle();
+      }
     case FT_H3:
+      if (start) {
+        enterTitle();
+        pushKind(H3);
+      } else {
+        popKind();
+        exitTitle();
+      }
     case FT_H4:
+      if (start) {
+        enterTitle();
+        pushKind(H4);
+      } else {
+        popKind();
+        exitTitle();
+      }
     case FT_H5:
+      if (start) {
+        enterTitle();
+        pushKind(H5);
+      } else {
+        popKind();
+        exitTitle();
+      }
     case FT_H6:
       if (start) {
         enterTitle();
-        pushKind(SECTION_TITLE);
+        pushKind(H6);
       } else {
         popKind();
         exitTitle();

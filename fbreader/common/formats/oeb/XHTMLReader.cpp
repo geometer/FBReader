@@ -233,12 +233,12 @@ void XHTMLReader::fillTagTable() {
     //ourTagActions["style"] = new XHTMLTagAction();
 
     ourTagActions["p"] = new XHTMLTagParagraphAction();
-    ourTagActions["h1"] = new XHTMLTagParagraphWithControlAction(TITLE);
-    ourTagActions["h2"] = new XHTMLTagParagraphWithControlAction(TITLE);
-    ourTagActions["h3"] = new XHTMLTagParagraphWithControlAction(SUBTITLE);
-    ourTagActions["h4"] = new XHTMLTagParagraphWithControlAction(SUBTITLE);
-    ourTagActions["h5"] = new XHTMLTagParagraphWithControlAction(STRONG);
-    ourTagActions["h6"] = new XHTMLTagParagraphWithControlAction(STRONG);
+    ourTagActions["h1"] = new XHTMLTagParagraphWithControlAction(H1);
+    ourTagActions["h2"] = new XHTMLTagParagraphWithControlAction(H2);
+    ourTagActions["h3"] = new XHTMLTagParagraphWithControlAction(H3);
+    ourTagActions["h4"] = new XHTMLTagParagraphWithControlAction(H4);
+    ourTagActions["h5"] = new XHTMLTagParagraphWithControlAction(H5);
+    ourTagActions["h6"] = new XHTMLTagParagraphWithControlAction(H6);
 
     //ourTagActions["ol"] = new XHTMLTagAction();
     //ourTagActions["ul"] = new XHTMLTagAction();

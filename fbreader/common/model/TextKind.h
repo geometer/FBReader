@@ -56,6 +56,12 @@ enum TextKind {
 	BOLD = 28,
 	DEFINITION = 29,
 	DEFINITION_DESCRIPTION = 30,
+	H1 = 31,
+	H2 = 32,
+	H3 = 33,
+	H4 = 34,
+	H5 = 35,
+	H6 = 36,
 };
 
 #endif /* __TEXTKIND_H__ */
