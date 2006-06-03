@@ -34,7 +34,7 @@ protected:
 
 public:
   virtual ~HtmlTagAction();
-  virtual void run(bool start) = 0;
+  virtual void run(bool start, std::vector<HtmlReader::HtmlAttribute> &attributes) = 0;
 
 protected:
   HtmlBookReader &myReader;
@@ -44,7 +44,7 @@ class HtmlControlTagAction : public HtmlTagAction {
 
 public:
   HtmlControlTagAction(HtmlBookReader &reader, TextKind kind);
-  void run(bool start);
+  void run(bool start, std::vector<HtmlReader::HtmlAttribute> &attributes);
 
 private:
   TextKind myKind;
@@ -54,7 +54,7 @@ class HtmlHeaderTagAction : public HtmlTagAction {
 
 public:
   HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind);
-  void run(bool start);
+  void run(bool start, std::vector<HtmlReader::HtmlAttribute> &attributes);
 
 private:
   TextKind myKind;
@@ -64,7 +64,14 @@ class HtmlIgnoreTagAction : public HtmlTagAction {
 
 public:
   HtmlIgnoreTagAction(HtmlBookReader &reader);
-  void run(bool start);
+  void run(bool start, std::vector<HtmlReader::HtmlAttribute> &attributes);
+};
+
+class HtmlHrefTagAction : public HtmlTagAction {
+
+public:
+  HtmlHrefTagAction(HtmlBookReader &reader);
+  void run(bool start, std::vector<HtmlReader::HtmlAttribute> &attributes);
 };
 
 HtmlTagAction::HtmlTagAction(HtmlBookReader &reader) : myReader(reader) {
@@ -76,29 +83,31 @@ HtmlTagAction::~HtmlTagAction() {
 HtmlControlTagAction::HtmlControlTagAction(HtmlBookReader &reader, TextKind kind) : HtmlTagAction(reader), myKind(kind) {
 }
 
-void HtmlControlTagAction::run(bool start) {
+void HtmlControlTagAction::run(bool start, std::vector<HtmlReader::HtmlAttribute>&) {
   if (start) {
     myReader.myBookReader.pushKind(myKind);
     myReader.myKindList.push_back(myKind);
     myReader.myBookReader.addControl(myKind, true);
   } else {
-    int index;
     std::vector<TextKind> &list = myReader.myKindList;
-    for (index = list.size() - 1; index >= 0; index--) {
-      if (list[index] == myKind) {
-	break;
+    if (!list.empty()) {
+      int index;
+      for (index = list.size() - 1; index >= 0; index--) {
+        if (list[index] == myKind) {
+          break;
+        }
       }
-    }
-    if (index >= 0) {
-      for (int i = list.size() - 1; i >= index; i--) {
-        myReader.myBookReader.addControl(list[i], false);
-        myReader.myBookReader.popKind();
+      if (index >= 0) {
+        for (int i = list.size() - 1; i >= index; i--) {
+          myReader.myBookReader.addControl(list[i], false);
+          myReader.myBookReader.popKind();
+        }
+        for (unsigned int j = index + 1; j < list.size(); j++) {
+          myReader.myBookReader.addControl(list[j], true);
+          myReader.myBookReader.pushKind(list[j]);
+        }
+        list.erase(list.begin() + index);
       }
-      for (int i = index + 1; i < list.size(); i++) {
-        myReader.myBookReader.addControl(list[i], true);
-        myReader.myBookReader.pushKind(list[i]);
-      }
-      list.erase(list.begin() + index);
     }
   }
 }
@@ -106,7 +115,7 @@ void HtmlControlTagAction::run(bool start) {
 HtmlHeaderTagAction::HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind) : HtmlTagAction(reader), myKind(kind) {
 }
 
-void HtmlHeaderTagAction::run(bool start) {
+void HtmlHeaderTagAction::run(bool start, std::vector<HtmlReader::HtmlAttribute>&) {
   myReader.myBookReader.endParagraph();
   if (start) {
     myReader.myBookReader.insertEndOfSectionParagraph();
@@ -124,11 +133,33 @@ void HtmlHeaderTagAction::run(bool start) {
 HtmlIgnoreTagAction::HtmlIgnoreTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
 }
 
-void HtmlIgnoreTagAction::run(bool start) {
+void HtmlIgnoreTagAction::run(bool start, std::vector<HtmlReader::HtmlAttribute>&) {
   if (start) {
     myReader.myIgnoreDataCounter++;
   } else {
     myReader.myIgnoreDataCounter--;
+  }
+}
+  
+HtmlHrefTagAction::HtmlHrefTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
+}
+
+void HtmlHrefTagAction::run(bool start, std::vector<HtmlReader::HtmlAttribute> &attributes) {
+  if (start) {
+    for (unsigned int i = 0; i < attributes.size(); i++) {
+      if (attributes[i].Name == "NAME") {
+        myReader.myBookReader.addHyperlinkLabel(attributes[i].Value);
+      } else if (!myReader.myIsHyperlink && (attributes[i].Name == "HREF")) {
+        const std::string &value = attributes[i].Value;
+        if (!value.empty() && (value[0] == '#')) {
+          myReader.myBookReader.addHyperlinkControl(HYPERLINK, value.substr(1));
+          myReader.myIsHyperlink = true;
+        }
+      }
+    }
+  } else if (myReader.myIsHyperlink) {
+    myReader.myBookReader.addControl(HYPERLINK, false);
+    myReader.myIsHyperlink = false;
   }
 }
   
@@ -153,6 +184,7 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
   myActionMap[_STYLE] = new HtmlIgnoreTagAction(*this);
   myActionMap[_SELECT] = new HtmlIgnoreTagAction(*this);
   myActionMap[_SCRIPT] = new HtmlIgnoreTagAction(*this);
+  myActionMap[_A] = new HtmlHrefTagAction(*this);
   // myActionMap[_DD] =
   // myActionMap[_DL] =
   // myActionMap[_DFN] =
@@ -259,26 +291,8 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
       {
         HtmlTagAction *action = myActionMap[tag.Code];
 	if (action != 0) {
-          action->run(tag.Start);
+          action->run(tag.Start, tag.Attributes);
 	}
-      }
-      break;
-    case _A:
-      if (tag.Start) {
-        for (unsigned int i = 0; i < tag.Attributes.size(); i++) {
-          if (tag.Attributes[i].Name == "NAME") {
-            myBookReader.addHyperlinkLabel(tag.Attributes[i].Value);
-          } else if (!myIsHyperlink && (tag.Attributes[i].Name == "HREF")) {
-            const std::string &value = tag.Attributes[i].Value;
-            if (!value.empty() && (value[0] == '#')) {
-              myBookReader.addHyperlinkControl(HYPERLINK, value.substr(1));
-              myIsHyperlink = true;
-            }
-          }
-        }
-      } else if (myIsHyperlink) {
-        myBookReader.addControl(HYPERLINK, false);
-        myIsHyperlink = false;
       }
       break;
   }

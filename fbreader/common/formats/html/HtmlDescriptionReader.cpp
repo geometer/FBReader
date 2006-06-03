@@ -25,29 +25,29 @@ HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : Htm
 }
 
 void HtmlDescriptionReader::startDocumentHandler() {
-	myReadTitle = false;
+  myReadTitle = false;
 }
 
 void HtmlDescriptionReader::endDocumentHandler() {
-	if (!myDescription.title().empty()) {
-		const char *titleStart = myDescription.title().data();
-		const char *titleEnd = titleStart + myDescription.title().length();
-		std::string newTitle;
-		myConverter->convert(newTitle, titleStart, titleEnd);
-		myDescription.title() = newTitle;
-	}
+  if (!myDescription.title().empty()) {
+    const char *titleStart = myDescription.title().data();
+    const char *titleEnd = titleStart + myDescription.title().length();
+    std::string newTitle;
+    myConverter->convert(newTitle, titleStart, titleEnd);
+    myDescription.title() = newTitle;
+  }
 }
 
 bool HtmlDescriptionReader::tagHandler(HtmlTag tag) {
-	if (tag.Code == _TITLE) {
-		myReadTitle = tag.Start && myDescription.title().empty();
-	}
-	return tag.Code != _BODY;
+  if (tag.Code == _TITLE) {
+    myReadTitle = tag.Start && myDescription.title().empty();
+  }
+  return tag.Code != _BODY;
 }
 
 bool HtmlDescriptionReader::characterDataHandler(const char *text, int len, bool) {
-	if (myReadTitle) {
-		myDescription.title().append(text, len);
-	}
-	return true;
+  if (myReadTitle) {
+    myDescription.title().append(text, len);
+  }
+  return true;
 }

@@ -59,7 +59,7 @@ public:
 		_SELECT,
 	};
 
-protected:
+public:
 	struct HtmlAttribute {
 		std::string Name;
 		std::string Value;
@@ -70,6 +70,7 @@ protected:
 		void setValue(const std::string &value) FORMATS_SECTION;
 	};
 
+protected:
 	struct HtmlTag {
 		TagCode Code;
 		bool Start;

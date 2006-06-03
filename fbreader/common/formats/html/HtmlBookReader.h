@@ -70,6 +70,7 @@ private:
   friend class HtmlControlTagAction;
   friend class HtmlHeaderTagAction;
   friend class HtmlIgnoreTagAction;
+  friend class HtmlHrefTagAction;
 };
 
 #endif /* __HTMLBOOKREADER_H__ */
