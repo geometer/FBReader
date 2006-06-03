@@ -71,6 +71,11 @@ private:
   friend class HtmlHeaderTagAction;
   friend class HtmlIgnoreTagAction;
   friend class HtmlHrefTagAction;
+  friend class HtmlImageTagAction;
+  friend class HtmlBreakTagAction;
+  friend class HtmlPreTagAction;
+  friend class HtmlListTagAction;
+  friend class HtmlListItemTagAction;
 };
 
 #endif /* __HTMLBOOKREADER_H__ */
