@@ -30,6 +30,8 @@
 class BookModel;
 class PlainTextFormat;
 
+class HtmlTagAction;
+
 class HtmlBookReader : public HtmlReader {
 
 public:
@@ -61,8 +63,13 @@ private:
   int mySpaceCounter;
   int myBreakCounter;
   std::string myConverterBuffer;
-};
 
-inline HtmlBookReader::~HtmlBookReader() {}
+  std::map<TagCode,HtmlTagAction*> myActionMap;
+  std::vector<TextKind> myKindList;
+
+  friend class HtmlControlTagAction;
+  friend class HtmlHeaderTagAction;
+  friend class HtmlIgnoreTagAction;
+};
 
 #endif /* __HTMLBOOKREADER_H__ */

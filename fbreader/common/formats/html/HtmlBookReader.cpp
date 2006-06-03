@@ -27,7 +27,151 @@
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
+class HtmlTagAction {
+
+protected:
+  HtmlTagAction(HtmlBookReader &reader);
+
+public:
+  virtual ~HtmlTagAction();
+  virtual void run(bool start) = 0;
+
+protected:
+  HtmlBookReader &myReader;
+};
+
+class HtmlControlTagAction : public HtmlTagAction {
+
+public:
+  HtmlControlTagAction(HtmlBookReader &reader, TextKind kind);
+  void run(bool start);
+
+private:
+  TextKind myKind;
+};
+
+class HtmlHeaderTagAction : public HtmlTagAction {
+
+public:
+  HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind);
+  void run(bool start);
+
+private:
+  TextKind myKind;
+};
+
+class HtmlIgnoreTagAction : public HtmlTagAction {
+
+public:
+  HtmlIgnoreTagAction(HtmlBookReader &reader);
+  void run(bool start);
+};
+
+HtmlTagAction::HtmlTagAction(HtmlBookReader &reader) : myReader(reader) {
+}
+
+HtmlTagAction::~HtmlTagAction() {
+}
+
+HtmlControlTagAction::HtmlControlTagAction(HtmlBookReader &reader, TextKind kind) : HtmlTagAction(reader), myKind(kind) {
+}
+
+void HtmlControlTagAction::run(bool start) {
+  if (start) {
+    myReader.myBookReader.pushKind(myKind);
+    myReader.myKindList.push_back(myKind);
+    myReader.myBookReader.addControl(myKind, true);
+  } else {
+    int index;
+    std::vector<TextKind> &list = myReader.myKindList;
+    for (index = list.size() - 1; index >= 0; index--) {
+      if (list[index] == myKind) {
+	break;
+      }
+    }
+    if (index >= 0) {
+      for (int i = list.size() - 1; i >= index; i--) {
+        myReader.myBookReader.addControl(list[i], false);
+        myReader.myBookReader.popKind();
+      }
+      for (int i = index + 1; i < list.size(); i++) {
+        myReader.myBookReader.addControl(list[i], true);
+        myReader.myBookReader.pushKind(list[i]);
+      }
+      list.erase(list.begin() + index);
+    }
+  }
+}
+  
+HtmlHeaderTagAction::HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind) : HtmlTagAction(reader), myKind(kind) {
+}
+
+void HtmlHeaderTagAction::run(bool start) {
+  myReader.myBookReader.endParagraph();
+  if (start) {
+    myReader.myBookReader.insertEndOfSectionParagraph();
+    myReader.myBookReader.enterTitle();
+    myReader.myBookReader.beginContentsParagraph();
+    myReader.myBookReader.pushKind(myKind);
+  } else {
+    myReader.myBookReader.popKind();
+    myReader.myBookReader.endContentsParagraph();
+    myReader.myBookReader.exitTitle();
+  }
+  myReader.myBookReader.beginParagraph();
+}
+  
+HtmlIgnoreTagAction::HtmlIgnoreTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
+}
+
+void HtmlIgnoreTagAction::run(bool start) {
+  if (start) {
+    myReader.myIgnoreDataCounter++;
+  } else {
+    myReader.myIgnoreDataCounter--;
+  }
+}
+  
 HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
+  myActionMap[_EM] = new HtmlControlTagAction(*this, EMPHASIS);
+  myActionMap[_STRONG] = new HtmlControlTagAction(*this, STRONG);
+  myActionMap[_B] = new HtmlControlTagAction(*this, BOLD);
+  myActionMap[_I] = new HtmlControlTagAction(*this, ITALIC);
+  myActionMap[_TT] = new HtmlControlTagAction(*this, CODE);
+  myActionMap[_CODE] = new HtmlControlTagAction(*this, CODE);
+  myActionMap[_CITE] = new HtmlControlTagAction(*this, CITE);
+  myActionMap[_SUB] = new HtmlControlTagAction(*this, SUB);
+  myActionMap[_SUP] = new HtmlControlTagAction(*this, SUP);
+  myActionMap[_H1] = new HtmlHeaderTagAction(*this, H1);
+  myActionMap[_H2] = new HtmlHeaderTagAction(*this, H2);
+  myActionMap[_H3] = new HtmlHeaderTagAction(*this, H3);
+  myActionMap[_H4] = new HtmlHeaderTagAction(*this, H4);
+  myActionMap[_H5] = new HtmlHeaderTagAction(*this, H5);
+  myActionMap[_H6] = new HtmlHeaderTagAction(*this, H6);
+  myActionMap[_HEAD] = new HtmlIgnoreTagAction(*this);
+  myActionMap[_TITLE] = new HtmlIgnoreTagAction(*this);
+  myActionMap[_STYLE] = new HtmlIgnoreTagAction(*this);
+  myActionMap[_SELECT] = new HtmlIgnoreTagAction(*this);
+  myActionMap[_SCRIPT] = new HtmlIgnoreTagAction(*this);
+  // myActionMap[_DD] =
+  // myActionMap[_DL] =
+  // myActionMap[_DFN] =
+  // myActionMap[_SAMP] =
+  // myActionMap[_KBD] =
+  // myActionMap[_VAR] =
+  // myActionMap[_ABBR] =
+  // myActionMap[_ACRONYM] =
+  // myActionMap[_BLOCKQUOTE] =
+  // myActionMap[_Q] =
+  // myActionMap[_INS] =
+  // myActionMap[_DEL] =
+  // myActionMap[_BODY] =
+}
+
+HtmlBookReader::~HtmlBookReader() {
+  for (std::map<TagCode,HtmlTagAction*>::const_iterator it = myActionMap.begin(); it != myActionMap.end(); it++) {
+    delete it->second;
+  }
 }
 
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool convert) {
@@ -48,8 +192,6 @@ void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool co
 bool HtmlBookReader::tagHandler(HtmlTag tag) {
   myConverter->reset();
   switch (tag.Code) {
-    case _BODY:
-      break;
     case _IMAGE:
       myBookReader.endParagraph();
       for (unsigned int i = 0; i < tag.Attributes.size(); i++) {
@@ -63,48 +205,6 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
       myBookReader.beginParagraph();
       break;
     // 9. text
-    case _EM:
-      myBookReader.addControl(EMPHASIS, tag.Start);
-      break;
-    case _STRONG:
-      myBookReader.addControl(STRONG, tag.Start);
-      break;
-    case _DFN:
-      //TODO: implement
-      break;
-    case _CODE:
-      myBookReader.addControl(CODE, tag.Start);
-      break;
-    case _SAMP:
-      //TODO: implement
-      break;
-    case _KBD:
-      //TODO: implement
-      break;
-    case _VAR:
-      //TODO: implement
-      break;
-    case _CITE:
-      myBookReader.addControl(CITE, tag.Start);
-      break;
-    case _ABBR:
-      //TODO: implement
-      break;
-    case _ACRONYM:
-      //TODO: implement
-      break;
-    case _BLOCKQUOTE:
-      //TODO: implement
-      break;
-    case _Q:
-      //TODO: implement
-      break;
-    case _SUB:
-      myBookReader.addControl(SUB, tag.Start);
-      break;
-    case _SUP:
-      myBookReader.addControl(SUP, tag.Start);
-      break;
     case _DIV:
       if (!tag.Start) {
         myBookReader.endParagraph();
@@ -129,12 +229,6 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
         }
       }
       myBookReader.beginParagraph();
-      break;
-    case _INS:
-      //TODO: implement
-      break;
-    case _DEL:
-      //TODO: implement
       break;
     // 10. lists
     case _UL:
@@ -161,68 +255,12 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
         myBookReader.beginParagraph();
       }
       break;
-    case _DL:
-    case _DD:
-      break;
-    //
-    case _H1:
-    case _H2:
-    case _H3:
-    case _H4:
-    case _H5:
-    case _H6:
-      myBookReader.endParagraph();
-      if (tag.Start) {
-        myBookReader.insertEndOfSectionParagraph();
-        myBookReader.enterTitle();
-        myBookReader.beginContentsParagraph();
-        switch (tag.Code) {
-          case _H1:
-            myBookReader.pushKind(H1);
-          case _H2:
-            myBookReader.pushKind(H2);
-          case _H3:
-            myBookReader.pushKind(H3);
-          case _H4:
-            myBookReader.pushKind(H4);
-          case _H5:
-            myBookReader.pushKind(H5);
-          case _H6:
-            myBookReader.pushKind(H6);
-          default:
-            break;
-        }
-      } else {
-        myBookReader.popKind();
-        myBookReader.endContentsParagraph();
-        myBookReader.exitTitle();
-      }
-      myBookReader.beginParagraph();
-      break;
-    case _TT:
-      myBookReader.addControl(CODE, tag.Start);
-      break;
-    case _B:
-      myBookReader.addControl(BOLD, tag.Start);
-      break;
-    case _I:
-      myBookReader.addControl(ITALIC, tag.Start);
-      break;
-    case _HEAD:
-    case _TITLE:
-    case _STYLE:
-      if (tag.Start) {
-        myIgnoreDataCounter++;
-      } else {
-        myIgnoreDataCounter--;
-      }
-      break;
-    case _SELECT:
-    case _SCRIPT:
-      if (tag.Start) {
-        myIgnoreDataCounter++;
-      } else {
-        myIgnoreDataCounter--;
+    default:
+      {
+        HtmlTagAction *action = myActionMap[tag.Code];
+	if (action != 0) {
+          action->run(tag.Start);
+	}
       }
       break;
     case _A:
@@ -242,8 +280,6 @@ bool HtmlBookReader::tagHandler(HtmlTag tag) {
         myBookReader.addControl(HYPERLINK, false);
         myIsHyperlink = false;
       }
-      break;
-    case _UNKNOWN:
       break;
   }
   return true;
