@@ -171,6 +171,7 @@ void GtkFBReader::buildMenu() {
 
 	GtkMenu *librarySubmenu = makeSubmenu(myMenu, "Library");
 	addMenuItem(librarySubmenu, "Open", ACTION_SHOW_COLLECTION);
+	addMenuItem(librarySubmenu, "Open Previous", ACTION_OPEN_PREVIOUS_BOOK);
 	addMenuItem(librarySubmenu, "Recent", ACTION_SHOW_LAST_BOOKS);
 	addMenuItem(librarySubmenu, "Add Book...", ACTION_ADD_BOOK);
 
