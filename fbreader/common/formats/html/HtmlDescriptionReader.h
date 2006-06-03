@@ -35,7 +35,7 @@ protected:
 	void startDocumentHandler() FORMATS_SECTION;
 	void endDocumentHandler() FORMATS_SECTION;
 
-	bool tagHandler(HtmlTag tag) FORMATS_SECTION;
+	bool tagHandler(const HtmlTag &tag) FORMATS_SECTION;
 	bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
 
 private:

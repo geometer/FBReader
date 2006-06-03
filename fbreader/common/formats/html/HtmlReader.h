@@ -32,82 +32,58 @@ class ZLInputStream;
 class HtmlReader {
 
 public:
-	enum TagCode {
-		_UNKNOWN,
-		_HEAD,
-		_BODY,
-		_TITLE,
-		_H1, _H2, _H3, _H4, _H5, _H6,
-		_DIV,
-		_IMAGE,
-		// 9. text
-		_EM, _STRONG, _DFN, _CODE, _SAMP, _KBD, _VAR, _CITE, _ABBR, _ACRONYM,
-		_BLOCKQUOTE, _Q,
-		_SUB, _SUP,
-		_P, _BR,
-		_PRE,
-		_INS, _DEL,
-		// 10. lists
-		_UL, _OL, _LI,
-		_DL, _DT, _DD,
-		//
-		_TT,
-		_B, _I,
-		_STYLE,
-		_A,
-		_SCRIPT,
-		_SELECT,
-	};
+  struct HtmlAttribute {
+    std::string Name;
+    std::string Value;
+    bool hasValue;
 
-public:
-	struct HtmlAttribute {
-		std::string Name;
-		std::string Value;
-		bool hasValue;
-
-		HtmlAttribute(const std::string &name) FORMATS_SECTION;
-		~HtmlAttribute() FORMATS_SECTION;
-		void setValue(const std::string &value) FORMATS_SECTION;
-	};
+    HtmlAttribute(const std::string &name) FORMATS_SECTION;
+    ~HtmlAttribute() FORMATS_SECTION;
+    void setValue(const std::string &value) FORMATS_SECTION;
+  };
 
 protected:
-	struct HtmlTag {
-		TagCode Code;
-		bool Start;
-		std::vector<HtmlAttribute> Attributes;
+  struct HtmlTag {
+    std::string Name;
+    bool Start;
+    std::vector<HtmlAttribute> Attributes;
 
-		HtmlTag(TagCode code, bool start) FORMATS_SECTION;
-		~HtmlTag() FORMATS_SECTION;
-		void addAttribute(const std::string &name) FORMATS_SECTION;
-		void setLastAttributeValue(const std::string &value) FORMATS_SECTION;
-	};
+    HtmlTag() FORMATS_SECTION;
+    ~HtmlTag() FORMATS_SECTION;
+    void addAttribute(const std::string &name) FORMATS_SECTION;
+    void setLastAttributeValue(const std::string &value) FORMATS_SECTION;
+
+  private:
+    HtmlTag(const HtmlTag&);
+    const HtmlTag &operator= (const HtmlTag&);
+  };
 
 private:
-	static HtmlTag tag(std::string &name) FORMATS_SECTION;
+  static void setTag(HtmlTag &tag, const std::string &fullName) FORMATS_SECTION;
 
 public:
-	void readDocument(ZLInputStream &stream) FORMATS_SECTION;
+  void readDocument(ZLInputStream &stream) FORMATS_SECTION;
 
 protected:
-	HtmlReader(const std::string &encoding) FORMATS_SECTION;
-	virtual ~HtmlReader() FORMATS_SECTION;
+  HtmlReader(const std::string &encoding) FORMATS_SECTION;
+  virtual ~HtmlReader() FORMATS_SECTION;
 
 protected:
-	virtual void startDocumentHandler() FORMATS_SECTION = 0;
-	virtual void endDocumentHandler() FORMATS_SECTION = 0;
+  virtual void startDocumentHandler() FORMATS_SECTION = 0;
+  virtual void endDocumentHandler() FORMATS_SECTION = 0;
 
-	virtual bool tagHandler(HtmlTag tag) FORMATS_SECTION = 0;
-	virtual bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION = 0;
+  virtual bool tagHandler(const HtmlTag &tag) FORMATS_SECTION = 0;
+  virtual bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION = 0;
 
 protected:
-	shared_ptr<ZLEncodingConverter> myConverter;
+  shared_ptr<ZLEncodingConverter> myConverter;
 };
 
 inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), hasValue(false) {}
 inline HtmlReader::HtmlAttribute::~HtmlAttribute() {}
 inline void HtmlReader::HtmlAttribute::setValue(const std::string &value) { Value = value; hasValue = true; }
 
-inline HtmlReader::HtmlTag::HtmlTag(TagCode code, bool start) : Code(code), Start(start) {}
+inline HtmlReader::HtmlTag::HtmlTag() : Start(true) {}
 inline HtmlReader::HtmlTag::~HtmlTag() {}
 inline void HtmlReader::HtmlTag::addAttribute(const std::string &name) { Attributes.push_back(HtmlAttribute(name)); }
 inline void HtmlReader::HtmlTag::setLastAttributeValue(const std::string &value) { if (!Attributes.empty()) Attributes.back().setValue(value); }

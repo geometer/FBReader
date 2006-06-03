@@ -42,7 +42,7 @@ protected:
   void startDocumentHandler() FORMATS_SECTION;
   void endDocumentHandler() FORMATS_SECTION;
 
-  bool tagHandler(HtmlTag tag) FORMATS_SECTION;
+  bool tagHandler(const HtmlTag &tag) FORMATS_SECTION;
   bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
 
 private:
@@ -64,7 +64,7 @@ private:
   int myBreakCounter;
   std::string myConverterBuffer;
 
-  std::map<TagCode,HtmlTagAction*> myActionMap;
+  std::map<std::string,HtmlTagAction*> myActionMap;
   std::vector<TextKind> myKindList;
 
   friend class HtmlControlTagAction;

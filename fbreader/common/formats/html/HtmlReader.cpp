@@ -19,6 +19,7 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
 #include <cctype>
 
 #include <abstract/ZLInputStream.h>
@@ -37,83 +38,24 @@ HtmlReader::HtmlReader(const std::string &encoding) {
 HtmlReader::~HtmlReader() {
 }
 
-static struct {
-  const char *tagName;
-  HtmlReader::TagCode tagCode;
-} HTML_TAGS[] = {
-  { "HEAD", HtmlReader::_HEAD },
-  { "BODY", HtmlReader::_BODY },
-  { "TITLE", HtmlReader::_TITLE },
-  { "H1", HtmlReader::_H1 },
-  { "H2", HtmlReader::_H2 },
-  { "H3", HtmlReader::_H3 },
-  { "H4", HtmlReader::_H4 },
-  { "H5", HtmlReader::_H5 },
-  { "H6", HtmlReader::_H6 },
-  { "DIV", HtmlReader::_DIV },
-  { "IMG", HtmlReader::_IMAGE },
-  // 9. text
-  { "EM", HtmlReader::_EM, },
-  { "STRONG", HtmlReader::_STRONG, },
-  { "DFN", HtmlReader::_DFN, },
-  { "CODE", HtmlReader::_CODE, },
-  { "SAMP", HtmlReader::_SAMP, },
-  { "KBD", HtmlReader::_KBD, },
-  { "VAR", HtmlReader::_VAR, },
-  { "CITE", HtmlReader::_CITE, },
-  { "ABBR", HtmlReader::_ABBR, },
-  { "ACRONYM", HtmlReader::_ACRONYM, },
-  { "BLOCKQUOTE", HtmlReader::_BLOCKQUOTE, },
-  { "Q", HtmlReader::_Q, },
-  { "SUB", HtmlReader::_SUB, },
-  { "SUP", HtmlReader::_SUP, },
-  { "P", HtmlReader::_P, },
-  { "BR", HtmlReader::_BR, },
-  { "PRE", HtmlReader::_PRE, },
-  { "INS", HtmlReader::_INS, },
-  { "DEL", HtmlReader::_DEL, },
-  // 10. lists
-  { "UL", HtmlReader::_UL },
-  { "OL", HtmlReader::_OL },
-  { "LI", HtmlReader::_LI },
-  { "DL", HtmlReader::_DL },
-  { "DT", HtmlReader::_DT },
-  { "DD", HtmlReader::_DD },
-  { "MENU", HtmlReader::_UL },
-  { "DIR", HtmlReader::_UL },
-  //
-  { "TT", HtmlReader::_TT },
-  { "B", HtmlReader::_B },
-  { "I", HtmlReader::_I },
-  { "STYLE", HtmlReader::_STYLE },
-  { "A", HtmlReader::_A },
-  { "SCRIPT", HtmlReader::_SCRIPT },
-  { "SELECT", HtmlReader::_SELECT },
-  { 0, HtmlReader::_UNKNOWN }
-};
+void HtmlReader::setTag(HtmlTag &tag, const std::string &name) {
+  tag.Attributes.clear();
 
-HtmlReader::HtmlTag HtmlReader::tag(std::string &name) {
   if (name.length() == 0) {
-    return HtmlTag(_UNKNOWN, true);
+    tag.Name = name;
+    return;
   }
 
-  bool start = name[0] != '/';
-  if (!start) {
-    name = name.substr(1);
+  tag.Start = name[0] != '/';
+  if (tag.Start) {
+    tag.Name = name;
+  } else {
+    tag.Name = name.substr(1);
   }
 
-  if (name.length() > 10) {
-    return HtmlTag(_UNKNOWN, start);
-  }
-
-  for (unsigned int i = 0; i < name.length(); i++) {
-    name[i] = toupper(name[i]);
-  }
-
-  for (unsigned int i = 0; ; i++) {
-    if ((HTML_TAGS[i].tagName == 0) || HTML_TAGS[i].tagName == name) {
-      return HtmlTag(HTML_TAGS[i].tagCode, start);
-    }
+  const unsigned int len = std::min(tag.Name.length(), (unsigned int)10);
+  for (unsigned int i = 0; i < len; i++) {
+    tag.Name[i] = toupper(tag.Name[i]);
   }
 }
 
@@ -168,7 +110,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
   SpecialType state_special = ST_UNKNOWN;
   std::string currentString;
   int quotationCounter = 0;
-  HtmlTag currentTag(_UNKNOWN, false);
+  HtmlTag currentTag;
   char endOfComment[2] = "\0";
   
   const size_t BUFSIZE = 2048;
@@ -257,9 +199,9 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
           if ((*ptr == '>') || isspace(*ptr)) {
             currentString.append(start, ptr - start);
             start = ptr + 1;
-            currentTag = tag(currentString);
+            setTag(currentTag, currentString);
             currentString.erase();
-            if (currentTag.Code == _UNKNOWN) {
+            if (currentTag.Name == "") {
               state = (*ptr == '>') ? PS_TEXT : PS_SKIPTAG;
             } else {
               if (*ptr == '>') {

@@ -38,11 +38,12 @@ void HtmlDescriptionReader::endDocumentHandler() {
   }
 }
 
-bool HtmlDescriptionReader::tagHandler(HtmlTag tag) {
-  if (tag.Code == _TITLE) {
+bool HtmlDescriptionReader::tagHandler(const HtmlTag &tag) {
+  if (tag.Name == "TITLE") {
     myReadTitle = tag.Start && myDescription.title().empty();
+    return true;
   }
-  return tag.Code != _BODY;
+  return tag.Name != "BODY";
 }
 
 bool HtmlDescriptionReader::characterDataHandler(const char *text, int len, bool) {
