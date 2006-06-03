@@ -146,59 +146,63 @@ void RtfFontResetCommand::run(RtfReader &reader, int*) const {
   }
 }
 
+void RtfReader::addAction(const std::string &tag, RtfCommand *command) {
+  ourKeywordMap.insert(std::pair<std::string,RtfCommand*>(tag, command));
+}
+
 void RtfReader::fillKeywordMap() {
   if (ourKeywordMap.empty()) {
-    ourKeywordMap["*"] = new RtfSpecialCommand();
-    ourKeywordMap["ansicpg"] = new RtfCodepageCommand();
+    addAction("*",  new RtfSpecialCommand());
+    addAction("ansicpg",  new RtfCodepageCommand());
 
     static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
     RtfCommand *skipCommand = new RtfDestinationCommand(RtfReader::DESTINATION_SKIP);
     for (const char **i = keywordsToSkip; *i != 0; i++) {
-      ourKeywordMap[*i] = skipCommand;
+      addAction(*i,  skipCommand);
     }
-    ourKeywordMap["info"] = new RtfDestinationCommand(RtfReader::DESTINATION_INFO);
-    ourKeywordMap["title"] = new RtfDestinationCommand(RtfReader::DESTINATION_TITLE);
-    ourKeywordMap["author"] = new RtfDestinationCommand(RtfReader::DESTINATION_AUTHOR);
-    ourKeywordMap["pict"] = new RtfDestinationCommand(RtfReader::DESTINATION_PICTURE);
-    ourKeywordMap["stylesheet"] = new RtfDestinationCommand(RtfReader::DESTINATION_STYLESHEET);
-    ourKeywordMap["footnote"] = new RtfDestinationCommand(RtfReader::DESTINATION_FOOTNOTE);
+    addAction("info",  new RtfDestinationCommand(RtfReader::DESTINATION_INFO));
+    addAction("title",  new RtfDestinationCommand(RtfReader::DESTINATION_TITLE));
+    addAction("author",  new RtfDestinationCommand(RtfReader::DESTINATION_AUTHOR));
+    addAction("pict",  new RtfDestinationCommand(RtfReader::DESTINATION_PICTURE));
+    addAction("stylesheet",  new RtfDestinationCommand(RtfReader::DESTINATION_STYLESHEET));
+    addAction("footnote",  new RtfDestinationCommand(RtfReader::DESTINATION_FOOTNOTE));
 
     RtfCommand *newParagraphCommand = new RtfNewParagraphCommand();
-    ourKeywordMap["\n"] = newParagraphCommand;
-    ourKeywordMap["\r"] = newParagraphCommand;
-    ourKeywordMap["par"] = newParagraphCommand;
+    addAction("\n",  newParagraphCommand);
+    addAction("\r",  newParagraphCommand);
+    addAction("par",  newParagraphCommand);
 
-    ourKeywordMap["\x09"] = new RtfCharCommand("\x09");
-    ourKeywordMap["_"] = new RtfCharCommand("-");
-    ourKeywordMap["\\"] = new RtfCharCommand("\\");
-    ourKeywordMap["{"] = new RtfCharCommand("{");
-    ourKeywordMap["}"] = new RtfCharCommand("}");
-    ourKeywordMap["bullet"] = new RtfCharCommand("\xE2\x80\xA2");     // &bullet;
-    ourKeywordMap["endash"] = new RtfCharCommand("\xE2\x80\x93");     // &ndash;
-    ourKeywordMap["emdash"] = new RtfCharCommand("\xE2\x80\x94");     // &mdash;
-    ourKeywordMap["~"] = new RtfCharCommand("\xC0\xA0");              // &nbsp;
-    ourKeywordMap["enspace"] = new RtfCharCommand("\xE2\x80\x82");    // &emsp;
-    ourKeywordMap["emspace"] = new RtfCharCommand("\xE2\x80\x83");    // &ensp;
-    ourKeywordMap["lquote"] = new RtfCharCommand("\xE2\x80\x98");     // &lsquo;
-    ourKeywordMap["rquote"] = new RtfCharCommand("\xE2\x80\x99");     // &rsquo;
-    ourKeywordMap["ldblquote"] = new RtfCharCommand("\xE2\x80\x9C");  // &ldquo;
-    ourKeywordMap["rdblquote"] = new RtfCharCommand("\xE2\x80\x9D");  // &rdquo;
+    addAction("\x09",  new RtfCharCommand("\x09"));
+    addAction("_",  new RtfCharCommand("-"));
+    addAction("\\",  new RtfCharCommand("\\"));
+    addAction("{",  new RtfCharCommand("{"));
+    addAction("}",  new RtfCharCommand("}"));
+    addAction("bullet",  new RtfCharCommand("\xE2\x80\xA2"));     // &bullet;
+    addAction("endash",  new RtfCharCommand("\xE2\x80\x93"));     // &ndash;
+    addAction("emdash",  new RtfCharCommand("\xE2\x80\x94"));     // &mdash;
+    addAction("~",  new RtfCharCommand("\xC0\xA0"));              // &nbsp;
+    addAction("enspace",  new RtfCharCommand("\xE2\x80\x82"));    // &emsp;
+    addAction("emspace",  new RtfCharCommand("\xE2\x80\x83"));    // &ensp;
+    addAction("lquote",  new RtfCharCommand("\xE2\x80\x98"));     // &lsquo;
+    addAction("rquote",  new RtfCharCommand("\xE2\x80\x99"));     // &rsquo;
+    addAction("ldblquote",  new RtfCharCommand("\xE2\x80\x9C"));  // &ldquo;
+    addAction("rdblquote",  new RtfCharCommand("\xE2\x80\x9D"));  // &rdquo;
 
-    ourKeywordMap["jpegblip"] = new RtfPictureCommand("image/jpeg");
-    ourKeywordMap["pngblip"] = new RtfPictureCommand("image/png");
+    addAction("jpegblip",  new RtfPictureCommand("image/jpeg"));
+    addAction("pngblip",  new RtfPictureCommand("image/png"));
 
-    ourKeywordMap["s"] = new RtfStyleCommand();
+    addAction("s",  new RtfStyleCommand());
 
-    ourKeywordMap["qc"] = new RtfAlignmentCommand(ALIGN_CENTER);
-    ourKeywordMap["ql"] = new RtfAlignmentCommand(ALIGN_LEFT);
-    ourKeywordMap["qr"] = new RtfAlignmentCommand(ALIGN_RIGHT);
-    ourKeywordMap["qj"] = new RtfAlignmentCommand(ALIGN_JUSTIFY);
-    ourKeywordMap["pard"] = new RtfAlignmentCommand(ALIGN_UNDEFINED);
+    addAction("qc",  new RtfAlignmentCommand(ALIGN_CENTER));
+    addAction("ql",  new RtfAlignmentCommand(ALIGN_LEFT));
+    addAction("qr",  new RtfAlignmentCommand(ALIGN_RIGHT));
+    addAction("qj",  new RtfAlignmentCommand(ALIGN_JUSTIFY));
+    addAction("pard",  new RtfAlignmentCommand(ALIGN_UNDEFINED));
 
-    ourKeywordMap["b"] = new RtfFontPropertyCommand(RtfReader::FONT_BOLD);
-    ourKeywordMap["i"] = new RtfFontPropertyCommand(RtfReader::FONT_ITALIC);
-    ourKeywordMap["u"] = new RtfFontPropertyCommand(RtfReader::FONT_UNDERLINED);
-    ourKeywordMap["plain"] = new RtfFontResetCommand();
+    addAction("b",  new RtfFontPropertyCommand(RtfReader::FONT_BOLD));
+    addAction("i",  new RtfFontPropertyCommand(RtfReader::FONT_ITALIC));
+    addAction("u",  new RtfFontPropertyCommand(RtfReader::FONT_UNDERLINED));
+    addAction("plain",  new RtfFontResetCommand());
   }
 }
 

@@ -46,6 +46,7 @@ protected:
   bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
 
 private:
+  void addAction(const std::string &tag, HtmlTagAction *action);
   void addConvertedDataToBuffer(const char *text, int len, bool convert) FORMATS_SECTION;
 
 private:

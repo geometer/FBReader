@@ -223,77 +223,81 @@ void XHTMLTagPreAction::doAtEnd(XHTMLReader &reader) {
   reader.myPreformatted = false;
 }
 
+void XHTMLReader::addAction(const std::string &tag, XHTMLTagAction *action) {
+  ourTagActions.insert(std::pair<std::string,XHTMLTagAction*>(tag,action));
+}
+
 void XHTMLReader::fillTagTable() {
   if (ourTagActions.empty()) {
-    //ourTagActions["html"] = new XHTMLTagAction();
-    ourTagActions["body"] = new XHTMLTagParagraphAction();
-    //ourTagActions["title"] = new XHTMLTagAction();
-    //ourTagActions["meta"] = new XHTMLTagAction();
-    //ourTagActions["script"] = new XHTMLTagAction();
+    //addAction("html",  new XHTMLTagAction());
+    addAction("body",  new XHTMLTagParagraphAction());
+    //addAction("title",  new XHTMLTagAction());
+    //addAction("meta",  new XHTMLTagAction());
+    //addAction("script",  new XHTMLTagAction());
 
-    //ourTagActions["font"] = new XHTMLTagAction();
-    //ourTagActions["style"] = new XHTMLTagAction();
+    //addAction("font",  new XHTMLTagAction());
+    //addAction("style",  new XHTMLTagAction());
 
-    ourTagActions["p"] = new XHTMLTagParagraphAction();
-    ourTagActions["h1"] = new XHTMLTagParagraphWithControlAction(H1);
-    ourTagActions["h2"] = new XHTMLTagParagraphWithControlAction(H2);
-    ourTagActions["h3"] = new XHTMLTagParagraphWithControlAction(H3);
-    ourTagActions["h4"] = new XHTMLTagParagraphWithControlAction(H4);
-    ourTagActions["h5"] = new XHTMLTagParagraphWithControlAction(H5);
-    ourTagActions["h6"] = new XHTMLTagParagraphWithControlAction(H6);
+    addAction("p",  new XHTMLTagParagraphAction());
+    addAction("h1",  new XHTMLTagParagraphWithControlAction(H1));
+    addAction("h2",  new XHTMLTagParagraphWithControlAction(H2));
+    addAction("h3",  new XHTMLTagParagraphWithControlAction(H3));
+    addAction("h4",  new XHTMLTagParagraphWithControlAction(H4));
+    addAction("h5",  new XHTMLTagParagraphWithControlAction(H5));
+    addAction("h6",  new XHTMLTagParagraphWithControlAction(H6));
 
-    //ourTagActions["ol"] = new XHTMLTagAction();
-    //ourTagActions["ul"] = new XHTMLTagAction();
-    //ourTagActions["dl"] = new XHTMLTagAction();
-    ourTagActions["li"] = new XHTMLTagItemAction();
+    //addAction("ol",  new XHTMLTagAction());
+    //addAction("ul",  new XHTMLTagAction());
+    //addAction("dl",  new XHTMLTagAction());
+    addAction("li",  new XHTMLTagItemAction());
 
-    ourTagActions["strong"] = new XHTMLTagControlAction(STRONG);
-    ourTagActions["b"] = new XHTMLTagControlAction(BOLD);
-    ourTagActions["em"] = new XHTMLTagControlAction(EMPHASIS);
-    ourTagActions["i"] = new XHTMLTagControlAction(ITALIC);
-    ourTagActions["code"] = new XHTMLTagControlAction(CODE);
-    ourTagActions["tt"] = new XHTMLTagControlAction(CODE);
-    ourTagActions["kbd"] = new XHTMLTagControlAction(CODE);
-    ourTagActions["var"] = new XHTMLTagControlAction(CODE);
-    ourTagActions["samp"] = new XHTMLTagControlAction(CODE);
-    ourTagActions["cite"] = new XHTMLTagControlAction(CITE);
-    ourTagActions["sub"] = new XHTMLTagControlAction(SUB);
-    ourTagActions["sup"] = new XHTMLTagControlAction(SUP);
-    ourTagActions["dd"] = new XHTMLTagControlAction(DEFINITION_DESCRIPTION);
-    ourTagActions["dfn"] = new XHTMLTagControlAction(DEFINITION);
-    ourTagActions["strike"] = new XHTMLTagControlAction(STRIKETHROUGH);
+    addAction("strong",  new XHTMLTagControlAction(STRONG));
+    addAction("b",  new XHTMLTagControlAction(BOLD));
+    addAction("em",  new XHTMLTagControlAction(EMPHASIS));
+    addAction("i",  new XHTMLTagControlAction(ITALIC));
+    addAction("code",  new XHTMLTagControlAction(CODE));
+    addAction("tt",  new XHTMLTagControlAction(CODE));
+    addAction("kbd",  new XHTMLTagControlAction(CODE));
+    addAction("var",  new XHTMLTagControlAction(CODE));
+    addAction("samp",  new XHTMLTagControlAction(CODE));
+    addAction("cite",  new XHTMLTagControlAction(CITE));
+    addAction("sub",  new XHTMLTagControlAction(SUB));
+    addAction("sup",  new XHTMLTagControlAction(SUP));
+    addAction("dd",  new XHTMLTagControlAction(DEFINITION_DESCRIPTION));
+    addAction("dfn",  new XHTMLTagControlAction(DEFINITION));
+    addAction("strike",  new XHTMLTagControlAction(STRIKETHROUGH));
 
-    ourTagActions["a"] = new XHTMLTagHyperlinkAction();
-    //ourTagActions["img"] = new XHTMLTagAction();
-    ourTagActions["object"] = new XHTMLTagImageAction();
+    addAction("a",  new XHTMLTagHyperlinkAction());
+    //addAction("img",  new XHTMLTagAction());
+    addAction("object",  new XHTMLTagImageAction());
 
-    //ourTagActions["area"] = new XHTMLTagAction();
-    //ourTagActions["map"] = new XHTMLTagAction();
+    //addAction("area",  new XHTMLTagAction());
+    //addAction("map",  new XHTMLTagAction());
 
-    //ourTagActions["base"] = new XHTMLTagAction();
-    //ourTagActions["blockquote"] = new XHTMLTagAction();
-    ourTagActions["br"] = new XHTMLTagRestartParagraphAction();
-    //ourTagActions["center"] = new XHTMLTagAction();
-    ourTagActions["div"] = new XHTMLTagParagraphAction();
-    //ourTagActions["dt"] = new XHTMLTagAction();
-    //ourTagActions["head"] = new XHTMLTagAction();
-    //ourTagActions["hr"] = new XHTMLTagAction();
-    //ourTagActions["link"] = new XHTMLTagAction();
-    //ourTagActions["param"] = new XHTMLTagAction();
-    //ourTagActions["q"] = new XHTMLTagAction();
-    //ourTagActions["s"] = new XHTMLTagAction();
+    //addAction("base",  new XHTMLTagAction());
+    //addAction("blockquote",  new XHTMLTagAction());
+    addAction("br",  new XHTMLTagRestartParagraphAction());
+    //addAction("center",  new XHTMLTagAction());
+    addAction("div",  new XHTMLTagParagraphAction());
+    //addAction("dt",  new XHTMLTagAction());
+    //addAction("head",  new XHTMLTagAction());
+    //addAction("hr",  new XHTMLTagAction());
+    //addAction("link",  new XHTMLTagAction());
+    //addAction("param",  new XHTMLTagAction());
+    //addAction("q",  new XHTMLTagAction());
+    //addAction("s",  new XHTMLTagAction());
 
-    ourTagActions["pre"] = new XHTMLTagPreAction();
-    //ourTagActions["big"] = new XHTMLTagAction();
-    //ourTagActions["small"] = new XHTMLTagAction();
-    //ourTagActions["u"] = new XHTMLTagAction();
+    addAction("pre",  new XHTMLTagPreAction());
+    //addAction("big",  new XHTMLTagAction());
+    //addAction("small",  new XHTMLTagAction());
+    //addAction("u",  new XHTMLTagAction());
 
-    //ourTagActions["table"] = new XHTMLTagAction();
-    ourTagActions["td"] = new XHTMLTagParagraphAction();
-    ourTagActions["th"] = new XHTMLTagParagraphAction();
-    //ourTagActions["tr"] = new XHTMLTagAction();
-    //ourTagActions["caption"] = new XHTMLTagAction();
-    //ourTagActions["span"] = new XHTMLTagAction();
+    //addAction("table",  new XHTMLTagAction());
+    addAction("td",  new XHTMLTagParagraphAction());
+    addAction("th",  new XHTMLTagParagraphAction());
+    //addAction("tr",  new XHTMLTagAction());
+    //addAction("caption",  new XHTMLTagAction());
+    //addAction("span",  new XHTMLTagAction());
   }
 }
 

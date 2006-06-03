@@ -280,52 +280,56 @@ void HtmlListItemTagAction::run(bool start, const std::vector<HtmlReader::HtmlAt
   }
 }
 
+void HtmlBookReader::addAction(const std::string &tag, HtmlTagAction *action) {
+  myActionMap.insert(std::pair<std::string,HtmlTagAction*>(tag,action));
+}
+
 HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
-  myActionMap["EM"] = new HtmlControlTagAction(*this, EMPHASIS);
-  myActionMap["STRONG"] = new HtmlControlTagAction(*this, STRONG);
-  myActionMap["B"] = new HtmlControlTagAction(*this, BOLD);
-  myActionMap["I"] = new HtmlControlTagAction(*this, ITALIC);
-  myActionMap["TT"] = new HtmlControlTagAction(*this, CODE);
-  myActionMap["CODE"] = new HtmlControlTagAction(*this, CODE);
-  myActionMap["CITE"] = new HtmlControlTagAction(*this, CITE);
-  myActionMap["SUB"] = new HtmlControlTagAction(*this, SUB);
-  myActionMap["SUP"] = new HtmlControlTagAction(*this, SUP);
-  myActionMap["H1"] = new HtmlHeaderTagAction(*this, H1);
-  myActionMap["H2"] = new HtmlHeaderTagAction(*this, H2);
-  myActionMap["H3"] = new HtmlHeaderTagAction(*this, H3);
-  myActionMap["H4"] = new HtmlHeaderTagAction(*this, H4);
-  myActionMap["H5"] = new HtmlHeaderTagAction(*this, H5);
-  myActionMap["H6"] = new HtmlHeaderTagAction(*this, H6);
-  myActionMap["HEAD"] = new HtmlIgnoreTagAction(*this);
-  myActionMap["TITLE"] = new HtmlIgnoreTagAction(*this);
-  myActionMap["STYLE"] = new HtmlIgnoreTagAction(*this);
-  myActionMap["SELECT"] = new HtmlIgnoreTagAction(*this);
-  myActionMap["SCRIPT"] = new HtmlIgnoreTagAction(*this);
-  myActionMap["A"] = new HtmlHrefTagAction(*this);
-  myActionMap["DIV"] = new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END);
-  myActionMap["DT"] = new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START);
-  myActionMap["P"] = new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END);
-  myActionMap["BR"] = new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END);
-  myActionMap["IMG"] = new HtmlImageTagAction(*this);
-  myActionMap["UL"] = new HtmlListTagAction(*this);
-  myActionMap["MENU"] = new HtmlListTagAction(*this);
-  myActionMap["DIR"] = new HtmlListTagAction(*this);
-  myActionMap["OL"] = new HtmlListTagAction(*this);
-  myActionMap["LI"] = new HtmlListItemTagAction(*this);
-  myActionMap["PRE"] = new HtmlPreTagAction(*this);
-  // myActionMap["DD"] =
-  // myActionMap["DL"] =
-  // myActionMap["DFN"] =
-  // myActionMap["SAMP"] =
-  // myActionMap["KBD"] =
-  // myActionMap["VAR"] =
-  // myActionMap["ABBR"] =
-  // myActionMap["ACRONYM"] =
-  // myActionMap["BLOCKQUOTE"] =
-  // myActionMap["Q"] =
-  // myActionMap["INS"] =
-  // myActionMap["DEL"] =
-  // myActionMap["BODY"] =
+  addAction("EM",  new HtmlControlTagAction(*this, EMPHASIS));
+  addAction("STRONG",  new HtmlControlTagAction(*this, STRONG));
+  addAction("B",  new HtmlControlTagAction(*this, BOLD));
+  addAction("I",  new HtmlControlTagAction(*this, ITALIC));
+  addAction("TT",  new HtmlControlTagAction(*this, CODE));
+  addAction("CODE",  new HtmlControlTagAction(*this, CODE));
+  addAction("CITE",  new HtmlControlTagAction(*this, CITE));
+  addAction("SUB",  new HtmlControlTagAction(*this, SUB));
+  addAction("SUP",  new HtmlControlTagAction(*this, SUP));
+  addAction("H1",  new HtmlHeaderTagAction(*this, H1));
+  addAction("H2",  new HtmlHeaderTagAction(*this, H2));
+  addAction("H3",  new HtmlHeaderTagAction(*this, H3));
+  addAction("H4",  new HtmlHeaderTagAction(*this, H4));
+  addAction("H5",  new HtmlHeaderTagAction(*this, H5));
+  addAction("H6",  new HtmlHeaderTagAction(*this, H6));
+  addAction("HEAD",  new HtmlIgnoreTagAction(*this));
+  addAction("TITLE",  new HtmlIgnoreTagAction(*this));
+  addAction("STYLE",  new HtmlIgnoreTagAction(*this));
+  addAction("SELECT",  new HtmlIgnoreTagAction(*this));
+  addAction("SCRIPT",  new HtmlIgnoreTagAction(*this));
+  addAction("A",  new HtmlHrefTagAction(*this));
+  addAction("DIV",  new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END));
+  addAction("DT",  new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START));
+  addAction("P",  new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
+  addAction("BR",  new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
+  addAction("IMG",  new HtmlImageTagAction(*this));
+  addAction("UL",  new HtmlListTagAction(*this));
+  addAction("MENU",  new HtmlListTagAction(*this));
+  addAction("DIR",  new HtmlListTagAction(*this));
+  addAction("OL",  new HtmlListTagAction(*this));
+  addAction("LI",  new HtmlListItemTagAction(*this));
+  addAction("PRE",  new HtmlPreTagAction(*this));
+  // addAction("DD",  0);
+  // addAction("DL",  0);
+  // addAction("DFN",  0);
+  // addAction("SAMP",  0);
+  // addAction("KBD",  0);
+  // addAction("VAR",  0);
+  // addAction("ABBR",  0);
+  // addAction("ACRONYM",  0);
+  // addAction("BLOCKQUOTE",  0);
+  // addAction("Q",  0);
+  // addAction("INS",  0);
+  // addAction("DEL",  0);
+  // addAction("BODY",  0);
 }
 
 HtmlBookReader::~HtmlBookReader() {

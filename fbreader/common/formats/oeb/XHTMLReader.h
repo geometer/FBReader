@@ -43,6 +43,7 @@ class XHTMLReader : public ZLXMLReader {
 
 private:
   static std::map<std::string,XHTMLTagAction*> ourTagActions;
+  static void addAction(const std::string &tag, XHTMLTagAction *action);
   static void fillTagTable();
 
 public:
