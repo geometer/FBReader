@@ -28,7 +28,8 @@
 
 #include <abstract/ZLOptions.h>
 
-class Author;
+#include "Author.h"
+
 class BookDescription;
 typedef shared_ptr<BookDescription> BookDescriptionPtr;
 
@@ -50,20 +51,19 @@ class BookDescription {
 
 public:
 	static BookDescriptionPtr create(const std::string &fileName) MODEL_SECTION;
-	~BookDescription() MODEL_SECTION;
 
 private:
 	BookDescription(const std::string &fileName) MODEL_SECTION;
 
 public:
-	const Author *author() const MODEL_SECTION;
+	const AuthorPtr author() const MODEL_SECTION;
 	const std::string &title() const MODEL_SECTION;
 	const std::string &fileName() const MODEL_SECTION;
 	const std::string &language() const MODEL_SECTION;
 	const std::string &encoding() const MODEL_SECTION;
 
 private:
-	Author *myAuthor;
+	AuthorPtr myAuthor;
 	std::string myTitle;
 	std::string myFileName;
 	std::string myLanguage;
@@ -82,8 +82,9 @@ class WritableBookDescription {
 public:
 	WritableBookDescription(BookDescription &description) MODEL_SECTION;
 	~WritableBookDescription() MODEL_SECTION;
-	void addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName) MODEL_SECTION;
-	const Author *author() const MODEL_SECTION;
+	void addAuthor(const std::string &name) MODEL_SECTION;
+	void addAuthor(const std::string &name, const std::string &sortKey) MODEL_SECTION;
+	const AuthorPtr author() const MODEL_SECTION;
 	std::string &title() MODEL_SECTION;
 	std::string &fileName() MODEL_SECTION;
 	std::string &language() MODEL_SECTION;
@@ -95,7 +96,7 @@ private:
 
 inline BookInfo::~BookInfo() {}
 
-inline const Author *BookDescription::author() const { return myAuthor; }
+inline const AuthorPtr BookDescription::author() const { return myAuthor; }
 inline const std::string &BookDescription::title() const { return myTitle; }
 inline const std::string &BookDescription::fileName() const { return myFileName; }
 inline const std::string &BookDescription::language() const { return myLanguage; }
@@ -103,7 +104,7 @@ inline const std::string &BookDescription::encoding() const { return myEncoding;
 
 inline WritableBookDescription::WritableBookDescription(BookDescription &description) : myDescription(description) {}
 inline WritableBookDescription::~WritableBookDescription() {}
-inline const Author *WritableBookDescription::author() const { return myDescription.author(); }
+inline const AuthorPtr WritableBookDescription::author() const { return myDescription.author(); }
 inline std::string &WritableBookDescription::title() { return myDescription.myTitle; }
 inline std::string &WritableBookDescription::fileName() { return myDescription.myFileName; }
 inline std::string &WritableBookDescription::language() { return myDescription.myLanguage; }

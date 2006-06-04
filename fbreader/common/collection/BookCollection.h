@@ -53,8 +53,8 @@ public:
   ~BookCollection() MODEL_SECTION;
   void rebuild();
 
-  const std::vector<const Author*> &authors() const MODEL_SECTION;
-  const Books &books(const Author *author) const MODEL_SECTION;
+  const std::vector<AuthorPtr > &authors() const MODEL_SECTION;
+  const Books &books(AuthorPtr author) const MODEL_SECTION;
   bool isBookExternal(BookDescriptionPtr description) const MODEL_SECTION;
 
   bool isSynchronized() const MODEL_SECTION;
@@ -64,8 +64,8 @@ private:
   void addDescription(BookDescriptionPtr description) MODEL_SECTION;
 
 private:
-  std::vector<const Author*> myAuthors;
-  std::map<const Author*,Books> myCollection;
+  std::vector<AuthorPtr > myAuthors;
+  std::map<AuthorPtr ,Books> myCollection;
   std::set<BookDescriptionPtr> myExternalBooks;
 
   std::string myPath;
@@ -90,8 +90,8 @@ private:
 inline DescriptionComparator::DescriptionComparator() {}
 inline DescriptionComparator::~DescriptionComparator() {}
 
-inline const std::vector<const Author*> &BookCollection::authors() const { return myAuthors; }
-inline const Books &BookCollection::books(const Author *author) const { return (*myCollection.find(author)).second; }
+inline const std::vector<AuthorPtr > &BookCollection::authors() const { return myAuthors; }
+inline const Books &BookCollection::books(AuthorPtr author) const { return (*myCollection.find(author)).second; }
 inline bool BookCollection::isBookExternal(BookDescriptionPtr description) const { return myExternalBooks.find(description) != myExternalBooks.end(); }
 
 inline const Books &LastOpenedBooks::books() const { return myBooks; }

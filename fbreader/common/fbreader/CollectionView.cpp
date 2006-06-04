@@ -78,8 +78,8 @@ void CollectionView::paint() {
   }
   if (myTreeModel == 0) {
     myTreeModel = new TreeModel();
-    const std::vector<const Author*> &authors = myCollection.authors();
-    for (std::vector<const Author*>::const_iterator it = authors.begin(); it != authors.end(); it++) {
+    const std::vector<AuthorPtr> &authors = myCollection.authors();
+    for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); it++) {
       const Books &books = myCollection.books(*it);
       if (!books.empty()) {
         TreeParagraph *authorParagraph = myTreeModel->createParagraph();

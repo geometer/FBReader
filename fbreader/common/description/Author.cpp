@@ -23,59 +23,7 @@
 
 #include "Author.h"
 
-Author *SingleAuthorWith3Names::createCopy() const {
-	return new SingleAuthorWith3Names(myFirstName, myMiddleName, myLastName);
-}
-
-Author *MultiAuthor::createCopy() const {
-	MultiAuthor *copy = new MultiAuthor();
-	for (std::vector<Author*>::const_iterator it = myAuthors.begin(); it != myAuthors.end(); it++) {
-		copy->addAuthor((*it)->createCopy());
-	}
-	return copy;
-}
-
-const std::string &SingleAuthorWith3Names::displayName() const {
-	if (myDisplayName.empty()) {
-		if (!myFirstName.empty()) {
-			myDisplayName = myFirstName;
-		}
-		if (!myMiddleName.empty()) {
-			if (!myDisplayName.empty()) {
-				myDisplayName += ' ';
-			}
-			myDisplayName += myMiddleName;
-		}
-		if (!myLastName.empty()) {
-			if (!myDisplayName.empty()) {
-				myDisplayName += ' ';
-			}
-			myDisplayName += myLastName;
-		}
-	}
-	if (myDisplayName.empty()) {
-		myDisplayName = "Unknown Author";
-	}
-	return myDisplayName;
-}
-
-const std::string &SingleAuthorWith3Names::sortKey() const {
-	if (mySortKey.empty()) {
-		mySortKey = ZLUnicodeUtil::toLower(myLastName);
-	}
-	if (mySortKey.empty()) {
-		mySortKey = "___";
-	}
-	return mySortKey;
-}
-
-MultiAuthor::~MultiAuthor() {
-	for (std::vector<Author*>::const_iterator it = myAuthors.begin(); it != myAuthors.end(); it++) {
-		delete *it;
-	}
-}
-
-void MultiAuthor::addAuthor(Author *author) {
+void MultiAuthor::addAuthor(AuthorPtr author) {
 	myAuthors.push_back(author);
 	myDisplayName.erase();
 	mySortKey.erase();

@@ -91,7 +91,7 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 			break;
 		case _AUTHOR:
 			if (myReadSomething) {
-				myDescription.addAuthor(myAuthorNames[0], myAuthorNames[1], myAuthorNames[2]);
+				myDescription.addAuthor(myAuthorNames[0] + ' ' + myAuthorNames[1] + ' ' + myAuthorNames[2], myAuthorNames[2]);
 				myAuthorNames[0].erase();
 				myAuthorNames[1].erase();
 				myAuthorNames[2].erase();

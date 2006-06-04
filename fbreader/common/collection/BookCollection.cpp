@@ -100,7 +100,7 @@ void BookCollection::rebuild() {
 
   std::sort(myAuthors.begin(), myAuthors.end(), AuthorComparator());
   DescriptionComparator descriptionComparator;
-  for (std::map<const Author*,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
+  for (std::map<AuthorPtr,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
     std::sort((*it).second.begin(), (*it).second.end(), descriptionComparator);
   }
 }
@@ -152,13 +152,13 @@ void BookCollection::addDescription(BookDescriptionPtr description) {
     return;
   }
 
-  const Author *author = description->author();
+  AuthorPtr author = description->author();
   const std::string &displayName = author->displayName();
   const std::string &sortKey = author->sortKey();
 
-  std::map<const Author*,Books>::iterator it = myCollection.begin();
+  std::map<AuthorPtr,Books>::iterator it = myCollection.begin();
   for (; it != myCollection.end(); it++) {
-    const Author *author1 = (*it).first;
+    AuthorPtr author1 = (*it).first;
     if ((author1->sortKey() == sortKey) && (author1->displayName() == displayName)) {
       break;
     }
@@ -168,7 +168,7 @@ void BookCollection::addDescription(BookDescriptionPtr description) {
   } else {
     Books books;
     books.push_back(description);
-    myCollection.insert(std::pair<const Author*,Books>(author, books));
+    myCollection.insert(std::pair<AuthorPtr,Books>(author, books));
     myAuthors.push_back(author);
   }
 }

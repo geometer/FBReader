@@ -23,7 +23,6 @@
 #include <abstract/ZLInputStream.h>
 
 #include "RtfDescriptionReader.h"
-#include "../util/AuthorUtil.h"
 
 RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfReader(description.encoding()), myDescription(description) {
 }
@@ -69,7 +68,7 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
     case DESTINATION_AUTHOR:
       myDoRead = on;
       if (!on) {
-        AuthorUtil::addAuthor(myDescription, myBuffer);
+        myDescription.addAuthor(myBuffer);
         myBuffer.erase();
       }
       break;

@@ -25,6 +25,11 @@
 #include <string>
 #include <vector>
 
+#include <abstract/shared_ptr.h>
+
+class Author;
+typedef shared_ptr<Author> AuthorPtr;
+
 class Author {
 
 protected:
@@ -32,19 +37,26 @@ protected:
 
 public:
 	virtual ~Author() MODEL_SECTION;
-	virtual Author *createCopy() const MODEL_SECTION = 0;
 	
 	virtual const std::string &displayName() const MODEL_SECTION = 0;
 	virtual const std::string &sortKey() const MODEL_SECTION = 0;
 	virtual bool isSingle() const MODEL_SECTION = 0;
+
+private:
+	Author(const Author&);
+	const Author &operator= (const Author&);
 };
 
-class DummyAuthor : public Author {
+class SingleAuthor : public Author {
 
 public:
-	DummyAuthor() MODEL_SECTION;
-	~DummyAuthor() MODEL_SECTION;
-	Author *createCopy() const MODEL_SECTION;
+	static AuthorPtr create(const std::string &displayName, const std::string &sortKey);
+	static AuthorPtr create();
+				
+private:
+	SingleAuthor(const std::string &displayName, const std::string &sortKey) MODEL_SECTION;
+
+public:
 	const std::string &displayName() const MODEL_SECTION;
 	const std::string &sortKey() const MODEL_SECTION;
 	bool isSingle() const MODEL_SECTION;
@@ -52,55 +64,24 @@ public:
 private:
 	std::string myDisplayName;
 	std::string mySortKey;
-};
-
-class StoredAuthor : public Author {
-
-public:
-	StoredAuthor(const std::string &displayName, const std::string &sortKey) MODEL_SECTION;
-	~StoredAuthor()  MODEL_SECTION;
-	Author *createCopy() const MODEL_SECTION;
-	const std::string &displayName() const MODEL_SECTION;
-	const std::string &sortKey() const MODEL_SECTION;
-	bool isSingle() const MODEL_SECTION;
-
-private:
-	std::string myDisplayName;
-	std::string mySortKey;
-};
-
-class SingleAuthorWith3Names : public Author {
-
-public:
-	SingleAuthorWith3Names(const std::string &firstName, const std::string &middleName, const std::string &lastName) MODEL_SECTION;
-	~SingleAuthorWith3Names() MODEL_SECTION;
-	Author *createCopy() const MODEL_SECTION;
-	const std::string &displayName() const MODEL_SECTION;
-	const std::string &sortKey() const MODEL_SECTION;
-	bool isSingle() const MODEL_SECTION;
-
-private:
-	std::string myFirstName;
-	std::string myMiddleName;
-	std::string myLastName;
-
-	mutable std::string myDisplayName;
-	mutable std::string mySortKey;
 };
 
 class MultiAuthor : public Author {
 
 public:
-	MultiAuthor() MODEL_SECTION;
-	~MultiAuthor()  MODEL_SECTION;
-	Author *createCopy() const MODEL_SECTION;
-	void addAuthor(Author *author)  MODEL_SECTION;
+	static AuthorPtr create(AuthorPtr author);
+				
+private:
+	MultiAuthor(AuthorPtr author) MODEL_SECTION;
+
+public:
+	void addAuthor(AuthorPtr author)  MODEL_SECTION;
 	const std::string &displayName() const MODEL_SECTION;
 	const std::string &sortKey() const MODEL_SECTION;
 	bool isSingle() const MODEL_SECTION;
 
 private:
-	std::vector<Author*> myAuthors;
+	std::vector<AuthorPtr > myAuthors;
 	mutable std::string myDisplayName;
 	mutable std::string mySortKey;
 };
@@ -110,37 +91,25 @@ class AuthorComparator {
 public:
 	AuthorComparator() MODEL_SECTION;
 	~AuthorComparator() MODEL_SECTION;
-	bool operator() (const Author *a1, const Author *a2) MODEL_SECTION;
+	bool operator() (const AuthorPtr a1, const AuthorPtr a2) MODEL_SECTION;
 };
 
 inline Author::Author() {}
 inline Author::~Author() {}
 
-inline DummyAuthor::DummyAuthor() : myDisplayName("Unknown Author"), mySortKey("___") {}
-inline DummyAuthor::~DummyAuthor() {}
-inline Author *DummyAuthor::createCopy() const { return new DummyAuthor(); }
-inline const std::string &DummyAuthor::displayName() const { return myDisplayName; }
-inline const std::string &DummyAuthor::sortKey() const { return mySortKey; }
-inline bool DummyAuthor::isSingle() const { return true; }
+inline AuthorPtr SingleAuthor::create(const std::string &displayName, const std::string &sortKey) { return new SingleAuthor(displayName, sortKey); }
+inline AuthorPtr SingleAuthor::create() { return create("Unknown Author", "___"); }
+inline SingleAuthor::SingleAuthor(const std::string &displayName, const std::string &sortKey) : myDisplayName(displayName), mySortKey(sortKey) {}
+inline const std::string &SingleAuthor::displayName() const { return myDisplayName; }
+inline const std::string &SingleAuthor::sortKey() const { return mySortKey; }
+inline bool SingleAuthor::isSingle() const { return true; }
 
-inline StoredAuthor::StoredAuthor(const std::string &displayName, const std::string &sortKey) : myDisplayName(displayName), mySortKey(sortKey) {}
-inline StoredAuthor::~StoredAuthor() {}
-inline Author *StoredAuthor::createCopy() const { return new StoredAuthor(myDisplayName, mySortKey); }
-inline const std::string &StoredAuthor::displayName() const { return myDisplayName; }
-inline const std::string &StoredAuthor::sortKey() const { return mySortKey; }
-inline bool StoredAuthor::isSingle() const { return true; }
-
-inline SingleAuthorWith3Names::SingleAuthorWith3Names(const std::string &firstName, const std::string &middleName, const std::string &lastName) : myFirstName(firstName), myMiddleName(middleName), myLastName(lastName) {}
-inline SingleAuthorWith3Names::~SingleAuthorWith3Names() {}
-inline bool SingleAuthorWith3Names::isSingle() const { return true; }
-
-inline MultiAuthor::MultiAuthor() {}
+inline AuthorPtr MultiAuthor::create(AuthorPtr author) { return new MultiAuthor(author); }
+inline MultiAuthor::MultiAuthor(AuthorPtr author) { addAuthor(author); }
 inline bool MultiAuthor::isSingle() const { return false; }
 
 inline AuthorComparator::AuthorComparator() {}
 inline AuthorComparator::~AuthorComparator() {}
-inline bool AuthorComparator::operator() (const Author *a1, const Author *a2) { return a1->sortKey() < a2->sortKey(); }
-
-//inline bool operator < (const Author *a1, const Author *a2) { return a1->sortKey() < a2->sortKey(); }
+inline bool AuthorComparator::operator() (const AuthorPtr a1, const AuthorPtr a2) { return a1->sortKey() < a2->sortKey(); }
 
 #endif /* __AUTHOR_H__ */

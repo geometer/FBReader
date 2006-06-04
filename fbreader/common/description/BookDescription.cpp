@@ -21,6 +21,7 @@
 
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLFSManager.h>
+#include <abstract/ZLUnicodeUtil.h>
 
 #include "BookDescription.h"
 #include "BookDescriptionUtil.h"
@@ -76,7 +77,7 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 	if (BookDescriptionUtil::checkInfo(file)) {
 		BookInfo info(fileName);
 		if (info.isFull()) {
-			description->myAuthor = new StoredAuthor(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
+			description->myAuthor = SingleAuthor::create(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
 			description->myTitle = info.TitleOption.value();
 			description->myLanguage = info.LanguageOption.value();
 			description->myEncoding = info.EncodingOption.value();
@@ -100,7 +101,7 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 		description->myTitle = fileName.substr(slashPos + 1, dotPos - slashPos - 1);
 	}
 	if (description->myAuthor == 0) {
-		description->myAuthor = new DummyAuthor();
+		description->myAuthor = SingleAuthor::create();
 	}
 	if (description->myEncoding.empty()) {
 		description->myEncoding = "auto";
@@ -121,22 +122,33 @@ BookDescription::BookDescription(const std::string &fileName) {
 	myAuthor = 0;
 }
 
-BookDescription::~BookDescription() {
-	if (myAuthor != 0) {
-		delete myAuthor;
-	}
+void WritableBookDescription::addAuthor(const std::string &name) {
+  int stripIndex = name.length() - 1;
+  while ((stripIndex >= 0) && (name[stripIndex] == ' ')) {
+    stripIndex--;
+  }
+  std::string strippedName = name.substr(0, stripIndex + 1);
+  int index = strippedName.rfind(' ');
+  if (index == -1) {
+    addAuthor(strippedName, strippedName);
+  } else {
+    std::string lastName = strippedName.substr(index + 1);
+    while ((index >= 0) && (strippedName[index] == ' ')) {
+      index--;
+    }
+    std::string firstName = strippedName.substr(0, index + 1);
+    addAuthor(firstName + ' ' + lastName, lastName);
+  }
 }
 
-void WritableBookDescription::addAuthor(const std::string &firstName, const std::string &middleName, const std::string &lastName) {
-	Author *author = new SingleAuthorWith3Names(firstName, middleName, lastName);
-	if (myDescription.myAuthor == 0) {
+void WritableBookDescription::addAuthor(const std::string &name, const std::string &sortKey) {
+	AuthorPtr author = SingleAuthor::create(name, ZLUnicodeUtil::toLower(sortKey));
+	if (myDescription.myAuthor.isNull()) {
 		myDescription.myAuthor = author;
-	} else if (myDescription.myAuthor->isSingle()) {
-		MultiAuthor *multiAuthor = new MultiAuthor();
-		multiAuthor->addAuthor(myDescription.myAuthor);
-		multiAuthor->addAuthor(author);
-		myDescription.myAuthor = multiAuthor;
 	} else {
-		((MultiAuthor*)myDescription.myAuthor)->addAuthor(author);
+		if (myDescription.myAuthor->isSingle()) {
+		  myDescription.myAuthor = MultiAuthor::create(myDescription.myAuthor);
+		}
+		((MultiAuthor&)*myDescription.myAuthor).addAuthor(author);
 	}
 }

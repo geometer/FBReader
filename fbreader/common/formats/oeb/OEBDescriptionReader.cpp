@@ -22,7 +22,6 @@
 #include <abstract/ZLInputStream.h>
 
 #include "OEBDescriptionReader.h"
-#include "../util/AuthorUtil.h"
 
 OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDescription(description) {
 }
@@ -67,7 +66,7 @@ void OEBDescriptionReader::endElementHandler(const char *tag) {
     interrupt();
   } else {
     if (!myCurrentAuthor.empty()) {
-      AuthorUtil::addAuthor(myDescription, myCurrentAuthor);
+      myDescription.addAuthor(myCurrentAuthor);
       myCurrentAuthor.erase();
     }
     myReadState = READ_NONE;
