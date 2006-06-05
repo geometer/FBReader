@@ -23,6 +23,22 @@
 
 #include "Author.h"
 
+bool MultiAuthor::isSingle() const {
+	return false;
+}
+
+const std::string &SingleAuthor::displayName() const {
+	return myDisplayName;
+}
+
+const std::string &SingleAuthor::sortKey() const {
+	return mySortKey;
+}
+
+bool SingleAuthor::isSingle() const {
+	return true;
+}
+
 void MultiAuthor::addAuthor(AuthorPtr author) {
 	myAuthors.push_back(author);
 	myDisplayName.erase();

@@ -40,13 +40,7 @@ public:
 	
 	virtual const std::string &displayName() const = 0;
 	virtual const std::string &sortKey() const = 0;
-	const std::string &encodedDisplayName() const;
-	const std::string &encodedSortKey() const;
 	virtual bool isSingle() const = 0;
-
-protected:
-	std::string myEncodedDisplayName;
-	std::string myEncodedSortKey;
 
 private:
 	Author(const Author&);
@@ -66,9 +60,6 @@ public:
 	const std::string &displayName() const;
 	const std::string &sortKey() const;
 	bool isSingle() const;
-
-	void setEncodedName(const std::string &name);
-	void setEncodedSortKey(const std::string &key);
 
 private:
 	std::string myDisplayName;
@@ -106,21 +97,12 @@ public:
 inline Author::Author() {}
 inline Author::~Author() {}
 
-inline const std::string &Author::encodedDisplayName() const { return myEncodedDisplayName; }
-inline const std::string &Author::encodedSortKey() const { return myEncodedSortKey; }
-
 inline AuthorPtr SingleAuthor::create(const std::string &displayName, const std::string &sortKey) { return new SingleAuthor(displayName, sortKey); }
 inline AuthorPtr SingleAuthor::create() { return create("Unknown Author", "___"); }
 inline SingleAuthor::SingleAuthor(const std::string &displayName, const std::string &sortKey) : myDisplayName(displayName), mySortKey(sortKey) {}
-inline const std::string &SingleAuthor::displayName() const { return myDisplayName; }
-inline const std::string &SingleAuthor::sortKey() const { return mySortKey; }
-inline bool SingleAuthor::isSingle() const { return true; }
-inline void SingleAuthor::setEncodedName(const std::string &name) { myEncodedDisplayName = name; }
-inline void SingleAuthor::setEncodedSortKey(const std::string &key) { myEncodedSortKey = key; }
 
 inline AuthorPtr MultiAuthor::create(AuthorPtr author) { return new MultiAuthor(author); }
 inline MultiAuthor::MultiAuthor(AuthorPtr author) { addAuthor(author); }
-inline bool MultiAuthor::isSingle() const { return false; }
 
 inline AuthorComparator::AuthorComparator() {}
 inline AuthorComparator::~AuthorComparator() {}

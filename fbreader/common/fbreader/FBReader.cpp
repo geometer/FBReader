@@ -33,8 +33,8 @@
 #include "CollectionView.h"
 #include "RecentBooksView.h"
 #include "OptionsDialog.h"
+#include "InfoDialog.h"
 #include "FBFileHandler.h"
-#include "InfoOptions.h"
 
 #include "../Files.h"
 #include "../FBOptions.h"
@@ -608,33 +608,7 @@ void FBReader::createToolbar() {
 }
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {
-  bool code;
-  {
-    BookInfo info(fileName);
-
-    ZLOptionsDialog *infoDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
-    ZLOptionsDialogTab *infoTab = infoDialog->createTab("Info");
-    infoTab->addOption(new StringInfoEntry("File", fileName));
-    infoTab->addOption(new ZLSimpleStringOptionEntry("Title", info.TitleOption));
-    infoTab->addOption(new ZLSimpleStringOptionEntry("Author (display name)", info.AuthorDisplayNameOption));
-    infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", info.AuthorSortKeyOption));
-    infoTab->addOption(new EncodingEntry("Encoding", info.EncodingOption));
-    infoTab->addOption(new LanguageEntry("Language", info.LanguageOption));
-
-    FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
-    FormatInfoPage *formatPage = 0;
-    if (plugin != 0) {
-      formatPage = plugin->createInfoPage(*infoDialog, fileName);
-    }
-
-    code = infoDialog->run("");
-
-    delete infoDialog;
-    if (formatPage != 0) {
-      delete formatPage;
-    }
-  }
-  if (code) {
+  if (InfoDialog(fileName).dialog().run("")) {
     BookDescriptionPtr newDescription = BookDescription::create(fileName);
     if (!newDescription.isNull()) {
       openBook(newDescription);
@@ -643,8 +617,9 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
     } else {
       // TODO: show information message
     }
+		return true;
   }
-  return code;
+  return false;
 }
 
 BookTextView &FBReader::textView() const {
