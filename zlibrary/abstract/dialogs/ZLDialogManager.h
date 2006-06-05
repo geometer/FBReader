@@ -49,7 +49,7 @@ protected:
 
 public:
 	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const = 0;
-	virtual int questionBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const = 0;
+	virtual int questionBox(const std::string &title, const std::string &message, const std::string &button0 = "", const std::string &button1 = "", const std::string &button2 = "") const = 0;
 	virtual void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const = 0;
 	virtual void wait(ZLRunnable &runnable, const std::string &message) const = 0;
 };

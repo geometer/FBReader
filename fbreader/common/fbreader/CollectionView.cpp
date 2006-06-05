@@ -131,7 +131,7 @@ bool CollectionView::onStylusPress(int x, int y) {
     if (it != myBooksMap.end()) {
       BookDescription &description = *it->second;
       const std::string question = "Remove Book\n\"" + description.title() + "\"\nfrom library?";
-      if (ZLDialogManager::instance().questionBox("Remove Book", question.c_str(), "Yes", "No") == 0) {
+      if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
         BookList().removeFileName(description.fileName());
         myTreeModel->removeParagraph(paragraphNumber);
         rebuildPaintInfo(true);

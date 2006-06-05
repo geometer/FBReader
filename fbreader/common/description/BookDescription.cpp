@@ -31,20 +31,29 @@
 
 #include "../FBOptions.h"
 
+const std::string EMPTY = "";
+const std::string UNKNOWN = "unknown";
+
 BookInfo::BookInfo(const std::string &fileName) : 
-	AuthorDisplayNameOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayName", ""),
-	AuthorSortKeyOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKey", ""),
-	TitleOption(FBOptions::BOOKS_CATEGORY, fileName, "Title", ""),
-	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", "unknown"),
-	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", "") {
+	AuthorDisplayNameOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayName", EMPTY),
+	AuthorSortKeyOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKey", EMPTY),
+	TitleOption(FBOptions::BOOKS_CATEGORY, fileName, "Title", EMPTY),
+	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", UNKNOWN),
+	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY),
+	AuthorDisplayNameEncodedOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayNameEncoded", EMPTY),
+	AuthorSortKeyEncodedOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKeyEncoded", EMPTY),
+	TitleEncodedOption(FBOptions::BOOKS_CATEGORY, fileName, "TitleEncoded", EMPTY) {
 }
 
 void BookInfo::reset() {
-	AuthorDisplayNameOption.setValue("");
-	AuthorSortKeyOption.setValue("");
-	TitleOption.setValue("");
-	LanguageOption.setValue("unknown");
-	EncodingOption.setValue("");
+	AuthorDisplayNameOption.setValue(EMPTY);
+	AuthorSortKeyOption.setValue(EMPTY);
+	TitleOption.setValue(EMPTY);
+	LanguageOption.setValue(UNKNOWN);
+	EncodingOption.setValue(EMPTY);
+	AuthorDisplayNameEncodedOption.setValue(EMPTY);
+	AuthorSortKeyEncodedOption.setValue(EMPTY);
+	TitleEncodedOption.setValue(EMPTY);
 }
 
 bool BookInfo::isFull() const {

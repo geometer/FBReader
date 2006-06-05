@@ -45,6 +45,10 @@ struct BookInfo {
 	ZLStringOption TitleOption;
 	ZLStringOption LanguageOption;
 	ZLStringOption EncodingOption;
+
+	ZLStringOption AuthorDisplayNameEncodedOption;
+	ZLStringOption AuthorSortKeyEncodedOption;
+	ZLStringOption TitleEncodedOption;
 };
 
 class BookDescription {

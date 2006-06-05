@@ -32,20 +32,19 @@ ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, co
 	return new GtkOptionsDialog(id, title, myWindow);
 }
 
-int GtkDialogManager::questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	//GtkDialog *dialog = GTK_DIALOG(gtk_message_dialog_new(myWindow, GTK_DIALOG_MODAL, GTK_MESSAGE_QUESTION, GTK_BUTTONS_NONE, message));
-	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message, 0));
+int GtkDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message.c_str(), 0));
 
-	gtk_window_set_title(GTK_WINDOW(dialog), title);
+	gtk_window_set_title(GTK_WINDOW(dialog), title.c_str());
 
-	if (button0 != 0) {
-		gtk_dialog_add_button(dialog, button0, 0);
+	if (!button0.empty()) {
+		gtk_dialog_add_button(dialog, button0.c_str(), 0);
 	}
-	if (button1 != 0) {
-		gtk_dialog_add_button(dialog, button1, 1);
+	if (!button1.empty()) {
+		gtk_dialog_add_button(dialog, button1.c_str(), 1);
 	}
-	if (button2 != 0) {
-		gtk_dialog_add_button(dialog, button2, 2);
+	if (!button2.empty()) {
+		gtk_dialog_add_button(dialog, button2.c_str(), 2);
 	}
 
 	gint response = gtk_dialog_run(dialog);

@@ -31,8 +31,8 @@ ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, cons
 	return new QOptionsDialog(id, title);
 }
 
-int QDialogManager::questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-	return QMessageBox::question(qApp->mainWidget(), QString::fromUtf8(title), QString::fromUtf8(message), button0, button1, button2);
+int QDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+	return QMessageBox::question(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
 }
 
 void QDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {

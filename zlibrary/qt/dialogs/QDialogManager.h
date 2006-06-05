@@ -33,7 +33,7 @@ private:
 
 public:
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
-	int questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const;
+	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 

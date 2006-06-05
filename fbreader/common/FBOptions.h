@@ -27,11 +27,11 @@
 class FBOptions {
 
 public:
-  static const std::string BOOKS_CATEGORY;
-  static const std::string SEARCH_CATEGORY;
+	static const std::string BOOKS_CATEGORY;
+	static const std::string SEARCH_CATEGORY;
 
 private:
-  FBOptions();
+	FBOptions();
 };
 
 #endif /* __FBOPTIONS_H__ */

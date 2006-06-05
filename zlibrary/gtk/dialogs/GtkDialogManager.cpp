@@ -33,17 +33,17 @@ ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, co
   return new GtkOptionsDialog(id, title);
 }
 
-int GtkDialogManager::questionBox(const char *title, const char *message, const char *button0, const char *button1, const char *button2) const {
-  GtkDialog *dialog = createDialog(title);
+int GtkDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+  GtkDialog *dialog = createDialog(title.c_str());
 
-  if (button0 != 0) {
-    gtk_dialog_add_button(dialog, button0, 0);
+  if (!button0.empty()) {
+    gtk_dialog_add_button(dialog, button0.c_str(), 0);
   }
-  if (button1 != 0) {
-    gtk_dialog_add_button(dialog, button1, 1);
+  if (!button1.empty()) {
+    gtk_dialog_add_button(dialog, button1.c_str(), 1);
   }
-  if (button2 != 0) {
-    gtk_dialog_add_button(dialog, button2, 2);
+  if (!button2.empty()) {
+    gtk_dialog_add_button(dialog, button2.c_str(), 2);
   }
 
   GtkWidget *contents = gtk_hbox_new(FALSE, 10);
@@ -51,7 +51,7 @@ int GtkDialogManager::questionBox(const char *title, const char *message, const 
   GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
   gtk_misc_set_alignment(GTK_MISC(image), 0.5, 0.0);
 
-  GtkWidget *label = gtk_label_new(message);
+  GtkWidget *label = gtk_label_new(message.c_str());
   gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
   gtk_box_pack_start(GTK_BOX(contents), image, FALSE, FALSE, 0);
   gtk_box_pack_start(GTK_BOX(contents), label, TRUE, TRUE, 0);
