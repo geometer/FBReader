@@ -31,8 +31,8 @@ class ZLComboOptionEntry;
 class ScrollingOptionsPage {
 
 public:
-  ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab, FBReader &fbreader) FB_DIALOG_SECTION;
-  ~ScrollingOptionsPage() FB_DIALOG_SECTION;
+  ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab, FBReader &fbreader);
+  ~ScrollingOptionsPage();
 
 private:
 

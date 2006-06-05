@@ -30,17 +30,17 @@
 class ZLBzip2InputStream : public ZLInputStream {
 
 private:
-	ZLBzip2InputStream(shared_ptr<ZLInputStream> base) FS_SECTION;
+	ZLBzip2InputStream(shared_ptr<ZLInputStream> base);
 
 public:
-	~ZLBzip2InputStream() FS_SECTION;
-	bool open() FS_SECTION;
-	size_t read(char *buffer, size_t maxSize) FS_SECTION;
-	void close() FS_SECTION;
+	~ZLBzip2InputStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-	void seek(int offset) FS_SECTION;
-	size_t offset() const FS_SECTION;
-	size_t sizeOfOpened() FS_SECTION;
+	void seek(int offset);
+	size_t offset() const;
+	size_t sizeOfOpened();
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;

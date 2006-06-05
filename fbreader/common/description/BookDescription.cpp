@@ -56,16 +56,6 @@ bool BookInfo::isFull() const {
 }
 
 BookDescriptionPtr BookDescription::create(const std::string &fileName) {
-#ifdef PALM_TEMPORARY
-	if (fileName == "$$TEST") {
-		BookDescription *description = new BookDescription(fileName);
-		description->myAuthor = new DummyAuthor();
-		description->myLanguage = "en";
-		description->myTitle = "Test text";
-		description->myEncoding = "windows-1252";
-		return description;
-	}
-#endif // PALM_TEMPORARY
 	int index = fileName.find(':');
 	ZLFile file((index == -1) ? fileName : fileName.substr(0, index));
 	if (!file.exists()) {

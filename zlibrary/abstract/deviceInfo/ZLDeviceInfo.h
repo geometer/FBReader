@@ -33,23 +33,23 @@ public:
 		SIZE_800x480,
 	};
 
-	static ScreenSize screenSize() UTIL_SECTION;
-	static unsigned int screenWidth() UTIL_SECTION;
-	static unsigned int screenHeight() UTIL_SECTION;
+	static ScreenSize screenSize();
+	static unsigned int screenWidth();
+	static unsigned int screenHeight();
 
-	static bool isKeyboardPresented() UTIL_SECTION;
-	static bool isMousePresented() UTIL_SECTION;
+	static bool isKeyboardPresented();
+	static bool isMousePresented();
 
-	static void deleteInstance() UTIL_SECTION;
+	static void deleteInstance();
 
 protected:
 	static ZLDeviceInfo *ourInstance;
 
-	ZLDeviceInfo() UTIL_SECTION;
-	virtual ~ZLDeviceInfo() UTIL_SECTION;
-	virtual unsigned int screenWidthInternal() const UTIL_SECTION = 0;
-	virtual unsigned int screenHeightInternal() const UTIL_SECTION = 0;
-	virtual bool isKeyboardPresentedInternal() const UTIL_SECTION = 0;
+	ZLDeviceInfo();
+	virtual ~ZLDeviceInfo();
+	virtual unsigned int screenWidthInternal() const = 0;
+	virtual unsigned int screenHeightInternal() const = 0;
+	virtual bool isKeyboardPresentedInternal() const = 0;
 };
 
 inline unsigned int ZLDeviceInfo::screenWidth() { return ourInstance->screenWidthInternal(); }

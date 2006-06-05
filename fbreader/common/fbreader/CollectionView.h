@@ -39,15 +39,15 @@ public:
   static const std::string DeleteBookImageFile;
   
 public:
-  CollectionView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
-  ~CollectionView() FB_VIEW_SECTION;
-  const std::string &caption() const FB_VIEW_SECTION;
+  CollectionView(FBReader &reader, ZLPaintContext &context);
+  ~CollectionView();
+  const std::string &caption() const;
 
-  void rebuild() FB_VIEW_SECTION;
-  void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
-  bool onStylusPress(int x, int y) FB_VIEW_SECTION;
+  void rebuild();
+  void gotoParagraph(int num, bool last = false);
+  bool onStylusPress(int x, int y);
 
-  void paint() FB_VIEW_SECTION;
+  void paint();
 
   BookCollection &collection();
 

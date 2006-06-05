@@ -32,17 +32,17 @@ template<class T> class shared_ptr_storage {
 		T* myPointer;
 
 	public:
-		shared_ptr_storage(T *pointer) UTIL_SECTION;
-		~shared_ptr_storage() UTIL_SECTION;
+		shared_ptr_storage(T *pointer);
+		~shared_ptr_storage();
 
-		T* pointer() const UTIL_SECTION;
-		T& content() const UTIL_SECTION;
+		T* pointer() const;
+		T& content() const;
 
-		void addReference() UTIL_SECTION;
-		void removeReference() UTIL_SECTION;
-		void addWeakReference() UTIL_SECTION;
-		void removeWeakReference() UTIL_SECTION;
-		unsigned int counter() const UTIL_SECTION;
+		void addReference();
+		void removeReference();
+		void addWeakReference();
+		void removeWeakReference();
+		unsigned int counter() const;
 };
 
 template<class T> class weak_ptr;
@@ -53,37 +53,37 @@ template<class T> class shared_ptr {
 	private:
 		shared_ptr_storage<T> *myStorage;
 
-		shared_ptr_storage<T> *newStorage(T *t) UTIL_SECTION;
-		void attachStorage(shared_ptr_storage<T> *storage) UTIL_SECTION;
-		void detachStorage() UTIL_SECTION;
+		shared_ptr_storage<T> *newStorage(T *t);
+		void attachStorage(shared_ptr_storage<T> *storage);
+		void detachStorage();
 
 	public:
-		shared_ptr() UTIL_SECTION;
-		shared_ptr(T *t) UTIL_SECTION;
-		shared_ptr(const shared_ptr<T> &t) UTIL_SECTION;
-		shared_ptr(const weak_ptr<T> &t) UTIL_SECTION;
-		~shared_ptr() UTIL_SECTION;
+		shared_ptr();
+		shared_ptr(T *t);
+		shared_ptr(const shared_ptr<T> &t);
+		shared_ptr(const weak_ptr<T> &t);
+		~shared_ptr();
 
-		const shared_ptr<T> &operator = (T *t) UTIL_SECTION;
-		const shared_ptr<T> &operator = (const shared_ptr<T> &t) UTIL_SECTION;
-		const shared_ptr<T> &operator = (const weak_ptr<T> &t) UTIL_SECTION;
+		const shared_ptr<T> &operator = (T *t);
+		const shared_ptr<T> &operator = (const shared_ptr<T> &t);
+		const shared_ptr<T> &operator = (const weak_ptr<T> &t);
 
-		T* operator -> () const UTIL_SECTION;
-		T& operator * () const UTIL_SECTION;
-		bool isNull() const UTIL_SECTION;
-		void reset() UTIL_SECTION;
-		bool operator == (const weak_ptr<T> &t) const UTIL_SECTION;
-		bool operator != (const weak_ptr<T> &t) const UTIL_SECTION;
-		bool operator < (const weak_ptr<T> &t) const UTIL_SECTION;
-		bool operator > (const weak_ptr<T> &t) const UTIL_SECTION;
-		bool operator <= (const weak_ptr<T> &t) const UTIL_SECTION;
-		bool operator >= (const weak_ptr<T> &t) const UTIL_SECTION;
-		bool operator == (const shared_ptr<T> &t) const UTIL_SECTION;
-		bool operator != (const shared_ptr<T> &t) const UTIL_SECTION;
-		bool operator < (const shared_ptr<T> &t) const UTIL_SECTION;
-		bool operator > (const shared_ptr<T> &t) const UTIL_SECTION;
-		bool operator <= (const shared_ptr<T> &t) const UTIL_SECTION;
-		bool operator >= (const shared_ptr<T> &t) const UTIL_SECTION;
+		T* operator -> () const;
+		T& operator * () const;
+		bool isNull() const;
+		void reset();
+		bool operator == (const weak_ptr<T> &t) const;
+		bool operator != (const weak_ptr<T> &t) const;
+		bool operator < (const weak_ptr<T> &t) const;
+		bool operator > (const weak_ptr<T> &t) const;
+		bool operator <= (const weak_ptr<T> &t) const;
+		bool operator >= (const weak_ptr<T> &t) const;
+		bool operator == (const shared_ptr<T> &t) const;
+		bool operator != (const shared_ptr<T> &t) const;
+		bool operator < (const shared_ptr<T> &t) const;
+		bool operator > (const shared_ptr<T> &t) const;
+		bool operator <= (const shared_ptr<T> &t) const;
+		bool operator >= (const shared_ptr<T> &t) const;
 };
 
 template<class T> class weak_ptr {

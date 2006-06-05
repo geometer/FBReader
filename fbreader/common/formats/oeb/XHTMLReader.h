@@ -50,11 +50,11 @@ public:
   XHTMLReader(BookReader &modelReader);
   bool readFile(const std::string &pathPrefix, const std::string &name);
 
-  void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
-  void endElementHandler(const char *tag) FORMATS_SECTION;
-  void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+  void startElementHandler(const char *tag, const char **attributes);
+  void endElementHandler(const char *tag);
+  void characterDataHandler(const char *text, int len);
 
-  const std::vector<std::string> &externalDTDs() const XML_SECTION;
+  const std::vector<std::string> &externalDTDs() const;
 
 private:
   BookReader &myModelReader;

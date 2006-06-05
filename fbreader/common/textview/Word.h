@@ -35,15 +35,15 @@ public:
 	class WordMark {
 
 	private:
-		WordMark(int start, int length) VIEW_SECTION;
-		void setNext(WordMark *mark) VIEW_SECTION;
-		~WordMark() VIEW_SECTION;
+		WordMark(int start, int length);
+		void setNext(WordMark *mark);
+		~WordMark();
 		friend class Word;
 
 	public:
-		int start() const VIEW_SECTION;
-		int length() const VIEW_SECTION;
-		const WordMark *next() const VIEW_SECTION;
+		int start() const;
+		int length() const;
+		const WordMark *next() const;
 
 	private:
 		int myStart;
@@ -52,16 +52,16 @@ public:
 	};
 
 public:
-	Word(const char *data, unsigned short size, size_t paragraphOffset) VIEW_SECTION;
+	Word(const char *data, unsigned short size, size_t paragraphOffset);
 
 public:
-	~Word() VIEW_SECTION;
-	Kind kind() const VIEW_SECTION;
-	short width(const ZLPaintContext &context) const VIEW_SECTION;
+	~Word();
+	Kind kind() const;
+	short width(const ZLPaintContext &context) const;
 
-	void addMark(int start, int len) VIEW_SECTION;
+	void addMark(int start, int len);
 
-	WordMark *mark() const VIEW_SECTION;
+	WordMark *mark() const;
 
 	const char *Data;
 	const unsigned short Size;
@@ -74,8 +74,8 @@ private:
 	
 private:
 	// assignment and copy constructor are disabled
-	Word(const Word&) VIEW_SECTION;
-	Word &operator = (const Word&) VIEW_SECTION;
+	Word(const Word&);
+	Word &operator = (const Word&);
 };
 
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }

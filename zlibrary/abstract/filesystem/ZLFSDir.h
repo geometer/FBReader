@@ -26,10 +26,10 @@
 class ZLFSDir : public ZLDir {
 	
 protected:
-	ZLFSDir(const std::string &name) FS_SECTION;
+	ZLFSDir(const std::string &name);
 
 public:
-	virtual ~ZLFSDir() FS_SECTION;
+	virtual ~ZLFSDir();
 };
 
 inline ZLFSDir::ZLFSDir(const std::string &name) : ZLDir(name) {}

@@ -30,13 +30,13 @@ class BookModel;
 class DocBookBookReader : public BookReader, public DocBookReader {
 
 public:
-	DocBookBookReader(BookModel &model) FORMATS_SECTION;
-	~DocBookBookReader() FORMATS_SECTION;
-	void readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	DocBookBookReader(BookModel &model);
+	~DocBookBookReader();
+	void readBook(shared_ptr<ZLInputStream> stream);
 
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
 
 private:
 	bool myReadText;

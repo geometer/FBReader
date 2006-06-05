@@ -35,34 +35,34 @@ class ZLInputStream;
 class BookReader {
 
 public:
-	BookReader(BookModel &model) MODEL_SECTION;
-	virtual ~BookReader() MODEL_SECTION;
+	BookReader(BookModel &model);
+	virtual ~BookReader();
 
-	void setMainTextModel() MODEL_SECTION;
-	void setFootnoteTextModel(const std::string &id) MODEL_SECTION;
-	void unsetTextModel() MODEL_SECTION;
+	void setMainTextModel();
+	void setFootnoteTextModel(const std::string &id);
+	void unsetTextModel();
 
-	void insertEndOfSectionParagraph() MODEL_SECTION;
-	void insertEndOfTextParagraph() MODEL_SECTION;
-	void pushKind(TextKind kind) MODEL_SECTION;
-	bool popKind() MODEL_SECTION;
-	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH) MODEL_SECTION;
-	void endParagraph() MODEL_SECTION;
-	bool paragraphIsOpen() const MODEL_SECTION;
-	void addControl(TextKind kind, bool start) MODEL_SECTION;
-	void addControl(const ForcedControlEntry &entry) MODEL_SECTION;
-	void addHyperlinkControl(TextKind kind, const std::string &label) MODEL_SECTION;
-	void addHyperlinkLabel(const std::string &label) MODEL_SECTION;
-	void addHyperlinkLabel(const std::string &label, int paragraphNumber) MODEL_SECTION;
+	void insertEndOfSectionParagraph();
+	void insertEndOfTextParagraph();
+	void pushKind(TextKind kind);
+	bool popKind();
+	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH);
+	void endParagraph();
+	bool paragraphIsOpen() const;
+	void addControl(TextKind kind, bool start);
+	void addControl(const ForcedControlEntry &entry);
+	void addHyperlinkControl(TextKind kind, const std::string &label);
+	void addHyperlinkLabel(const std::string &label);
+	void addHyperlinkLabel(const std::string &label, int paragraphNumber);
 
-	void addImageReference(const std::string &id) MODEL_SECTION;
-	void addImage(const std::string &id, ZLImage *image) MODEL_SECTION;
+	void addImageReference(const std::string &id);
+	void addImage(const std::string &id, ZLImage *image);
 
-	void beginContentsParagraph(int referenceNumber = -1) MODEL_SECTION;
-	void endContentsParagraph() MODEL_SECTION;
+	void beginContentsParagraph(int referenceNumber = -1);
+	void endContentsParagraph();
 
-	void addData(const std::string &data) MODEL_SECTION;
-	void addContentsData(const std::string &data) MODEL_SECTION;
+	void addData(const std::string &data);
+	void addContentsData(const std::string &data);
 
 	void enterTitle() { myInsideTitle = true; }
 	void exitTitle() { myInsideTitle = false; }
@@ -70,7 +70,7 @@ public:
 	const BookModel &model() const { return myModel; }
 
 private:
-	void flushTextBufferToParagraph() MODEL_SECTION;
+	void flushTextBufferToParagraph();
 
 private:
 	BookModel &myModel;

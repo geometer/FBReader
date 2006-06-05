@@ -34,11 +34,11 @@ class BookDescription;
 typedef shared_ptr<BookDescription> BookDescriptionPtr;
 
 struct BookInfo {
-	BookInfo(const std::string &fileName) MODEL_SECTION;
-	~BookInfo() MODEL_SECTION;
+	BookInfo(const std::string &fileName);
+	~BookInfo();
 
-	bool isFull() const MODEL_SECTION;
-	void reset() MODEL_SECTION;
+	bool isFull() const;
+	void reset();
 
 	ZLStringOption AuthorDisplayNameOption;
 	ZLStringOption AuthorSortKeyOption;
@@ -50,17 +50,17 @@ struct BookInfo {
 class BookDescription {
 
 public:
-	static BookDescriptionPtr create(const std::string &fileName) MODEL_SECTION;
+	static BookDescriptionPtr create(const std::string &fileName);
 
 private:
-	BookDescription(const std::string &fileName) MODEL_SECTION;
+	BookDescription(const std::string &fileName);
 
 public:
-	const AuthorPtr author() const MODEL_SECTION;
-	const std::string &title() const MODEL_SECTION;
-	const std::string &fileName() const MODEL_SECTION;
-	const std::string &language() const MODEL_SECTION;
-	const std::string &encoding() const MODEL_SECTION;
+	const AuthorPtr author() const;
+	const std::string &title() const;
+	const std::string &fileName() const;
+	const std::string &language() const;
+	const std::string &encoding() const;
 
 private:
 	AuthorPtr myAuthor;
@@ -73,22 +73,22 @@ friend class WritableBookDescription;
 
 private:
 	// disable copying
-	BookDescription(const BookDescription &description) MODEL_SECTION;
-	const BookDescription &operator = (const BookDescription &description) MODEL_SECTION;
+	BookDescription(const BookDescription &description);
+	const BookDescription &operator = (const BookDescription &description);
 };
 
 class WritableBookDescription {
 
 public:
-	WritableBookDescription(BookDescription &description) MODEL_SECTION;
-	~WritableBookDescription() MODEL_SECTION;
-	void addAuthor(const std::string &name) MODEL_SECTION;
-	void addAuthor(const std::string &name, const std::string &sortKey) MODEL_SECTION;
-	const AuthorPtr author() const MODEL_SECTION;
-	std::string &title() MODEL_SECTION;
-	std::string &fileName() MODEL_SECTION;
-	std::string &language() MODEL_SECTION;
-	std::string &encoding() MODEL_SECTION;
+	WritableBookDescription(BookDescription &description);
+	~WritableBookDescription();
+	void addAuthor(const std::string &name);
+	void addAuthor(const std::string &name, const std::string &sortKey);
+	const AuthorPtr author() const;
+	std::string &title();
+	std::string &fileName();
+	std::string &language();
+	std::string &encoding();
 
 private:
 	BookDescription &myDescription;

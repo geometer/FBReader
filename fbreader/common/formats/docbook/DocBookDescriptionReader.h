@@ -30,13 +30,13 @@
 class DocBookDescriptionReader : public DocBookReader {
 
 public:
-	DocBookDescriptionReader(BookDescription &description) FORMATS_SECTION;
-	~DocBookDescriptionReader() FORMATS_SECTION;
-	bool readDescription(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	DocBookDescriptionReader(BookDescription &description);
+	~DocBookDescriptionReader();
+	bool readDescription(shared_ptr<ZLInputStream> stream);
 
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
 
 private:
 	WritableBookDescription myDescription;

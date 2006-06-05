@@ -27,14 +27,14 @@
 class HtmlPlugin : public FormatPlugin {
 
 public:
-	HtmlPlugin() FORMATS_SECTION;
-	~HtmlPlugin() FORMATS_SECTION;
-	bool providesMetaInfo() const FORMATS_SECTION;
-	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
-	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
-	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
-	const std::string &iconName() const FORMATS_SECTION;
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
+	HtmlPlugin();
+	~HtmlPlugin();
+	bool providesMetaInfo() const;
+	bool acceptsFile(const ZLFile &file) const;
+	bool readDescription(const std::string &path, BookDescription &description) const;
+	bool readModel(const BookDescription &description, BookModel &model) const;
+	const std::string &iconName() const;
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 };
 
 inline HtmlPlugin::HtmlPlugin() {}

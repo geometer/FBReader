@@ -33,14 +33,14 @@ public:
 	};
 
 public:
-	virtual int tag(const char *name) FORMATS_SECTION;
+	virtual int tag(const char *name);
 
-	virtual void startElementHandler(int tag, const char **attributes) FORMATS_SECTION = 0;
-	virtual void endElementHandler(int tag) FORMATS_SECTION = 0;
+	virtual void startElementHandler(int tag, const char **attributes) = 0;
+	virtual void endElementHandler(int tag) = 0;
 
 private:
-	void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(const char *tag) FORMATS_SECTION;
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
 
 public:
 	enum TagCode {
@@ -78,10 +78,10 @@ public:
 	};
 
 protected:
-	FB2Reader() FORMATS_SECTION;
+	FB2Reader();
 	
 public:
-	~FB2Reader() FORMATS_SECTION;
+	~FB2Reader();
 };
 
 inline FB2Reader::FB2Reader() {}

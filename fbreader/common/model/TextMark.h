@@ -28,16 +28,16 @@ struct TextMark {
 	int ParagraphNumber;
 	int Offset, Length;
 
-	TextMark() MODEL_SECTION;
-	TextMark(int paragraphNumber, int offset, int length) MODEL_SECTION;
-	TextMark(const TextMark &mark) MODEL_SECTION;
-	const TextMark &operator = (const TextMark &mark) MODEL_SECTION;
-	~TextMark() MODEL_SECTION;
+	TextMark();
+	TextMark(int paragraphNumber, int offset, int length);
+	TextMark(const TextMark &mark);
+	const TextMark &operator = (const TextMark &mark);
+	~TextMark();
 
-	bool operator < (const TextMark &mark) const MODEL_SECTION;
-	bool operator > (const TextMark &mark) const MODEL_SECTION;
-	bool operator <= (const TextMark &mark) const MODEL_SECTION;
-	bool operator >= (const TextMark &mark) const MODEL_SECTION;
+	bool operator < (const TextMark &mark) const;
+	bool operator > (const TextMark &mark) const;
+	bool operator <= (const TextMark &mark) const;
+	bool operator >= (const TextMark &mark) const;
 };
 
 inline TextMark::TextMark() : ParagraphNumber(-1), Offset(-1), Length(-1) {}

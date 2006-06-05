@@ -27,11 +27,11 @@
 class StringInfoEntry : public ZLStringOptionEntry {
 
 public:
-	StringInfoEntry(const std::string &name, const std::string &value) FB_DIALOG_SECTION;
-	~StringInfoEntry() FB_DIALOG_SECTION;
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &value) FB_DIALOG_SECTION;
+	StringInfoEntry(const std::string &name, const std::string &value);
+	~StringInfoEntry();
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
 
 private:
 	std::string myName;
@@ -41,13 +41,13 @@ private:
 class EncodingEntry : public ZLComboOptionEntry {
 
 public:
-	EncodingEntry(const std::string &name, ZLStringOption &encodingOption) FB_DIALOG_SECTION;
-	~EncodingEntry() FB_DIALOG_SECTION;
+	EncodingEntry(const std::string &name, ZLStringOption &encodingOption);
+	~EncodingEntry();
 
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
-	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &value) FB_DIALOG_SECTION;
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
 
 private:
 	std::string myName;
@@ -57,13 +57,13 @@ private:
 class LanguageEntry : public ZLComboOptionEntry {
 
 public:
-	LanguageEntry(const std::string &name, ZLStringOption &encodingOption) FB_DIALOG_SECTION;
-	~LanguageEntry() FB_DIALOG_SECTION;
+	LanguageEntry(const std::string &name, ZLStringOption &encodingOption);
+	~LanguageEntry();
 
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
-	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	void onAccept(const std::string &value) FB_DIALOG_SECTION;
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
 
 private:
 	std::string myName;

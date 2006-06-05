@@ -27,12 +27,12 @@
 class ZLStringUtil {
 
 private:
-	ZLStringUtil() UTIL_SECTION;
+	ZLStringUtil();
 
 public:
-	static bool stringEndsWith(const std::string &str, const std::string &end) UTIL_SECTION;
-	static void appendNumber(std::string &str, unsigned int n) UTIL_SECTION;
-	static void append(std::string &str, const std::vector<std::string> &buffer) UTIL_SECTION;
+	static bool stringEndsWith(const std::string &str, const std::string &end);
+	static void appendNumber(std::string &str, unsigned int n);
+	static void append(std::string &str, const std::vector<std::string> &buffer);
 };
 
 #endif /* __ZLSTRINGUTIL_H__ */

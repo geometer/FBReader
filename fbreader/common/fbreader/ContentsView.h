@@ -30,19 +30,19 @@ class FBReader;
 class ContentsView : public TextView {
 
 public:
-	ContentsView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
-	~ContentsView() FB_VIEW_SECTION;
-	const std::string &caption() const FB_VIEW_SECTION;
-	void setCaption(const std::string &caption) FB_VIEW_SECTION;
+	ContentsView(FBReader &reader, ZLPaintContext &context);
+	~ContentsView();
+	const std::string &caption() const;
+	void setCaption(const std::string &caption);
 
-	void setModel(const TextModel *model, const std::string &name) FB_VIEW_SECTION;
-	void saveState() FB_VIEW_SECTION;
+	void setModel(const TextModel *model, const std::string &name);
+	void saveState();
 
-	bool isEmpty() const FB_VIEW_SECTION;
+	bool isEmpty() const;
 
-	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
+	bool onStylusPress(int x, int y);
 
-	void gotoReference() FB_VIEW_SECTION;
+	void gotoReference();
 
 private:
 	FBReader &myReader;

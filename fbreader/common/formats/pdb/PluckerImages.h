@@ -30,9 +30,9 @@
 class ZCompressedFileImage : public ZLSingleImage {
 
 public:
-	ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size) IMAGE_SECTION;
-	~ZCompressedFileImage() IMAGE_SECTION;
-	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
+	ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size);
+	~ZCompressedFileImage();
+	const shared_ptr<std::string> stringData() const;
 
 private:
 	std::string myPath;
@@ -43,9 +43,9 @@ private:
 class DocCompressedFileImage : public ZLSingleImage {
 
 public:
-	DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) IMAGE_SECTION;
-	~DocCompressedFileImage() IMAGE_SECTION;
-	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
+	DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize);
+	~DocCompressedFileImage();
+	const shared_ptr<std::string> stringData() const;
 
 private:
 	std::string myPath;
@@ -56,10 +56,10 @@ private:
 class PluckerMultiImage : public ZLMultiImage {
 
 public:
-	PluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap) IMAGE_SECTION;
-	~PluckerMultiImage() IMAGE_SECTION;
+	PluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap);
+	~PluckerMultiImage();
 
-	void addId(const std::string &id) IMAGE_SECTION;
+	void addId(const std::string &id);
 
 	unsigned int rows() const;
 	unsigned int columns() const;

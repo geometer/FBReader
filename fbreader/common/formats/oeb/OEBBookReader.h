@@ -33,13 +33,13 @@
 class OEBBookReader : public ZLXMLReader {
 
 public:
-	OEBBookReader(BookModel &model) FORMATS_SECTION;
-	~OEBBookReader() FORMATS_SECTION;
-	bool readBook(const std::string &fileName) FORMATS_SECTION;
+	OEBBookReader(BookModel &model);
+	~OEBBookReader();
+	bool readBook(const std::string &fileName);
 
-	void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(const char *tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
+	void characterDataHandler(const char *text, int len);
 
 private:
 	enum ReaderState {

@@ -37,9 +37,9 @@ public:
     std::string Value;
     bool hasValue;
 
-    HtmlAttribute(const std::string &name) FORMATS_SECTION;
-    ~HtmlAttribute() FORMATS_SECTION;
-    void setValue(const std::string &value) FORMATS_SECTION;
+    HtmlAttribute(const std::string &name);
+    ~HtmlAttribute();
+    void setValue(const std::string &value);
   };
 
 protected:
@@ -48,10 +48,10 @@ protected:
     bool Start;
     std::vector<HtmlAttribute> Attributes;
 
-    HtmlTag() FORMATS_SECTION;
-    ~HtmlTag() FORMATS_SECTION;
-    void addAttribute(const std::string &name) FORMATS_SECTION;
-    void setLastAttributeValue(const std::string &value) FORMATS_SECTION;
+    HtmlTag();
+    ~HtmlTag();
+    void addAttribute(const std::string &name);
+    void setLastAttributeValue(const std::string &value);
 
   private:
     HtmlTag(const HtmlTag&);
@@ -59,21 +59,21 @@ protected:
   };
 
 private:
-  static void setTag(HtmlTag &tag, const std::string &fullName) FORMATS_SECTION;
+  static void setTag(HtmlTag &tag, const std::string &fullName);
 
 public:
-  void readDocument(ZLInputStream &stream) FORMATS_SECTION;
+  void readDocument(ZLInputStream &stream);
 
 protected:
-  HtmlReader(const std::string &encoding) FORMATS_SECTION;
-  virtual ~HtmlReader() FORMATS_SECTION;
+  HtmlReader(const std::string &encoding);
+  virtual ~HtmlReader();
 
 protected:
-  virtual void startDocumentHandler() FORMATS_SECTION = 0;
-  virtual void endDocumentHandler() FORMATS_SECTION = 0;
+  virtual void startDocumentHandler() = 0;
+  virtual void endDocumentHandler() = 0;
 
-  virtual bool tagHandler(const HtmlTag &tag) FORMATS_SECTION = 0;
-  virtual bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION = 0;
+  virtual bool tagHandler(const HtmlTag &tag) = 0;
+  virtual bool characterDataHandler(const char *text, int len, bool convert) = 0;
 
 protected:
   shared_ptr<ZLEncodingConverter> myConverter;

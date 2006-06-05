@@ -38,14 +38,14 @@ static const std::string SCROLL_PERCENTAGE = "Scroll Percentage";
 class MainEntry : public ZLComboOptionEntry {
 
 public:
-  MainEntry(ScrollingOptionsPage &page) FB_DIALOG_SECTION;
-  ~MainEntry() FB_DIALOG_SECTION;
+  MainEntry(ScrollingOptionsPage &page);
+  ~MainEntry();
 
-  const std::string &name() const FB_DIALOG_SECTION;
-  const std::string &initialValue() const FB_DIALOG_SECTION;
-  const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-  void onAccept(const std::string &text) FB_DIALOG_SECTION;
-  void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
+  const std::string &name() const;
+  const std::string &initialValue() const;
+  const std::vector<std::string> &values() const;
+  void onAccept(const std::string &text);
+  void onValueChange(const std::string &selectedValue);
 
 private:
   ScrollingOptionsPage &myPage;
@@ -60,15 +60,15 @@ private:
   static TextView::ScrollingMode codeByName(const std::string &name);
   
 public:
-  ScrollingModeEntry(ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option) FB_DIALOG_SECTION;
-  ~ScrollingModeEntry() FB_DIALOG_SECTION;
+  ScrollingModeEntry(ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option);
+  ~ScrollingModeEntry();
 
-  const std::string &name() const FB_DIALOG_SECTION;
-  const std::string &initialValue() const FB_DIALOG_SECTION;
-  const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-  void onAccept(const std::string &text) FB_DIALOG_SECTION;
-  void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
-  void onMadeVisible() FB_DIALOG_SECTION;
+  const std::string &name() const;
+  const std::string &initialValue() const;
+  const std::vector<std::string> &values() const;
+  void onAccept(const std::string &text);
+  void onValueChange(const std::string &selectedValue);
+  void onMadeVisible();
 
 private:
   ScrollingOptionsPage::ScrollingEntries &myEntries;

@@ -26,14 +26,14 @@
 class ZLSearchPattern {
 
 public:
-	ZLSearchPattern(const std::string &pattern, bool ignoreCase) UTIL_SECTION;
-	~ZLSearchPattern() UTIL_SECTION;
-	int length() const UTIL_SECTION;
+	ZLSearchPattern(const std::string &pattern, bool ignoreCase);
+	~ZLSearchPattern();
+	int length() const;
 
 private:
-	bool ignoreCase() const UTIL_SECTION;
-	const std::string &lowerCasePattern() const UTIL_SECTION;
-	const std::string &upperCasePattern() const UTIL_SECTION;
+	bool ignoreCase() const;
+	const std::string &lowerCasePattern() const;
+	const std::string &upperCasePattern() const;
 
 private:
 	bool myIgnoreCase;
@@ -46,10 +46,10 @@ friend class ZLSearchUtil;
 class ZLSearchUtil {
 
 private:
-	ZLSearchUtil() UTIL_SECTION;
+	ZLSearchUtil();
 
 public:
-	static int find(const char *text, size_t length, const ZLSearchPattern &pattern, int pos = 0) UTIL_SECTION;
+	static int find(const char *text, size_t length, const ZLSearchPattern &pattern, int pos = 0);
 };
 
 inline ZLSearchPattern::~ZLSearchPattern() {}

@@ -36,9 +36,9 @@ typedef std::vector<BookDescriptionPtr > Books;
 class DescriptionComparator {
 
 public:
-  DescriptionComparator() MODEL_SECTION;
-  ~DescriptionComparator() MODEL_SECTION;
-  bool operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2) MODEL_SECTION;
+  DescriptionComparator();
+  ~DescriptionComparator();
+  bool operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2);
 };
 
 class BookCollection {
@@ -49,19 +49,19 @@ public:
   ZLBooleanOption ScanSubdirsOption;
 
 public:
-  BookCollection() MODEL_SECTION;
-  ~BookCollection() MODEL_SECTION;
+  BookCollection();
+  ~BookCollection();
   void rebuild();
 
-  const std::vector<AuthorPtr > &authors() const MODEL_SECTION;
-  const Books &books(AuthorPtr author) const MODEL_SECTION;
-  bool isBookExternal(BookDescriptionPtr description) const MODEL_SECTION;
+  const std::vector<AuthorPtr > &authors() const;
+  const Books &books(AuthorPtr author) const;
+  bool isBookExternal(BookDescriptionPtr description) const;
 
-  bool isSynchronized() const MODEL_SECTION;
+  bool isSynchronized() const;
   
 private:
-  void collectDirNames(std::set<std::string> &names) MODEL_SECTION;
-  void addDescription(BookDescriptionPtr description) MODEL_SECTION;
+  void collectDirNames(std::set<std::string> &names);
+  void addDescription(BookDescriptionPtr description);
 
 private:
   std::vector<AuthorPtr > myAuthors;
@@ -78,10 +78,10 @@ public:
   ZLIntegerRangeOption MaxListSizeOption;
 
 public:
-  LastOpenedBooks() MODEL_SECTION;
-  ~LastOpenedBooks() MODEL_SECTION;
-  void addBook(const std::string &fileName) MODEL_SECTION;
-  const Books &books() const MODEL_SECTION;
+  LastOpenedBooks();
+  ~LastOpenedBooks();
+  void addBook(const std::string &fileName);
+  const Books &books() const;
 
 private:
   Books myBooks;

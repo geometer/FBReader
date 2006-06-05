@@ -27,25 +27,25 @@
 class ZLDir {
 
 public:
-  ZLDir(const std::string &name) FS_SECTION;
-  virtual ~ZLDir() FS_SECTION;
-  const std::string &name() const FS_SECTION;
-  std::string shortName() const FS_SECTION;
-  std::string parentName() const FS_SECTION;
-  std::string itemName(const std::string &shortName) const FS_SECTION;
+  ZLDir(const std::string &name);
+  virtual ~ZLDir();
+  const std::string &name() const;
+  std::string shortName() const;
+  std::string parentName() const;
+  std::string itemName(const std::string &shortName) const;
 
-  virtual void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION = 0;
-  virtual void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION = 0;
+  virtual void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) = 0;
+  virtual void collectFiles(std::vector<std::string> &names, bool includeSymlinks) = 0;
 
 protected:
-  virtual std::string delimiter() const FS_SECTION = 0;
+  virtual std::string delimiter() const = 0;
   
 private:
   std::string myName;
 
 private:
-  ZLDir(const ZLDir&) FS_SECTION;
-  const ZLDir &operator = (const ZLDir&) FS_SECTION;
+  ZLDir(const ZLDir&);
+  const ZLDir &operator = (const ZLDir&);
 };
 
 #endif /* __ZLDIR_H__ */

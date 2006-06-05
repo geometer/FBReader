@@ -31,17 +31,17 @@ class ZLZDecompressor;
 class ZLZipInputStream : public ZLInputStream {
 
 private:
-	ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) FS_SECTION;
+	ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &name);
 
 public:
-	~ZLZipInputStream() FS_SECTION;
-	bool open() FS_SECTION;
-	size_t read(char *buffer, size_t maxSize) FS_SECTION;
-	void close() FS_SECTION;
+	~ZLZipInputStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-	void seek(int offset) FS_SECTION;
-	size_t offset() const FS_SECTION;
-	size_t sizeOfOpened() FS_SECTION;
+	void seek(int offset);
+	size_t offset() const;
+	size_t sizeOfOpened();
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
@@ -60,17 +60,17 @@ friend class ZLFile;
 class ZLGzipInputStream : public ZLInputStream {
 
 private:
-	ZLGzipInputStream(shared_ptr<ZLInputStream> stream) FS_SECTION;
+	ZLGzipInputStream(shared_ptr<ZLInputStream> stream);
 
 public:
-	~ZLGzipInputStream() FS_SECTION;
-	bool open() FS_SECTION;
-	size_t read(char *buffer, size_t maxSize) FS_SECTION;
-	void close() FS_SECTION;
+	~ZLGzipInputStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-	void seek(int offset) FS_SECTION;
-	size_t offset() const FS_SECTION;
-	size_t sizeOfOpened() FS_SECTION;
+	void seek(int offset);
+	size_t offset() const;
+	size_t sizeOfOpened();
 
 private:
 	shared_ptr<ZLInputStream> myFileStream;
@@ -86,15 +86,15 @@ friend class ZLFile;
 class ZLZipDir : public ZLDir {
 
 private:
-	ZLZipDir(const std::string &name) FS_SECTION;
+	ZLZipDir(const std::string &name);
 
 public:
-	~ZLZipDir() FS_SECTION;
-	void collectSubDirs(std::vector<std::string>&, bool) FS_SECTION;
-	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
+	~ZLZipDir();
+	void collectSubDirs(std::vector<std::string>&, bool);
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
 
 protected:
-	std::string delimiter() const FS_SECTION;
+	std::string delimiter() const;
 
 friend class ZLFile;
 };

@@ -30,13 +30,13 @@
 class FB2DescriptionReader : public FB2Reader {
 
 public:
-	FB2DescriptionReader(BookDescription &description) FORMATS_SECTION;
-	~FB2DescriptionReader() FORMATS_SECTION;
-	bool readDescription(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	FB2DescriptionReader(BookDescription &description);
+	~FB2DescriptionReader();
+	bool readDescription(shared_ptr<ZLInputStream> stream);
 
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
 
 private:
 	WritableBookDescription myDescription;

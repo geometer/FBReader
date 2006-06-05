@@ -35,19 +35,19 @@ class HtmlTagAction;
 class HtmlBookReader : public HtmlReader {
 
 public:
-  HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) FORMATS_SECTION;
-  ~HtmlBookReader() FORMATS_SECTION;
+  HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
+  ~HtmlBookReader();
 
 protected:
-  void startDocumentHandler() FORMATS_SECTION;
-  void endDocumentHandler() FORMATS_SECTION;
+  void startDocumentHandler();
+  void endDocumentHandler();
 
-  bool tagHandler(const HtmlTag &tag) FORMATS_SECTION;
-  bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
+  bool tagHandler(const HtmlTag &tag);
+  bool characterDataHandler(const char *text, int len, bool convert);
 
 private:
   void addAction(const std::string &tag, HtmlTagAction *action);
-  void addConvertedDataToBuffer(const char *text, int len, bool convert) FORMATS_SECTION;
+  void addConvertedDataToBuffer(const char *text, int len, bool convert);
 
 private:
   BookReader myBookReader;

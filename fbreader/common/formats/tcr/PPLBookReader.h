@@ -32,8 +32,8 @@ class BookModel;
 class PPLBookReader {
 
 public:
-	PPLBookReader(BookModel &model, const std::string &encoding) FORMATS_SECTION;
-	~PPLBookReader() FORMATS_SECTION;
+	PPLBookReader(BookModel &model, const std::string &encoding);
+	~PPLBookReader();
 
 	bool readDocument(ZLInputStream &stream);
 

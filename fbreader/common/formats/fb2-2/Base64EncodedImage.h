@@ -29,13 +29,13 @@
 class Base64EncodedImage : public ZLSingleImage {
 
 public:
-	Base64EncodedImage(const std::string &mimeType) IMAGE_SECTION;
-	~Base64EncodedImage() IMAGE_SECTION;
-	void addData(const std::vector<std::string> &text) IMAGE_SECTION;
-	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
+	Base64EncodedImage(const std::string &mimeType);
+	~Base64EncodedImage();
+	void addData(const std::vector<std::string> &text);
+	const shared_ptr<std::string> stringData() const;
 
 private:
-	void decode() const IMAGE_SECTION;
+	void decode() const;
 
 private:
 	mutable std::string myEncodedData;

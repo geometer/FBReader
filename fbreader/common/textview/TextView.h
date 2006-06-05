@@ -67,22 +67,22 @@ private:
   class ViewStyle {
 
   public:
-    ViewStyle(ZLPaintContext &context) VIEW1_SECTION;
-    ~ViewStyle() VIEW1_SECTION;
+    ViewStyle(ZLPaintContext &context);
+    ~ViewStyle();
 
-    void reset() VIEW_SECTION;
-    void setStyle(const TextStylePtr style) VIEW_SECTION;
-    void applyControl(const ControlElement &control) VIEW_SECTION;
-    void applyControl(const ForcedControlElement &control) VIEW_SECTION;
-    void applyControls(const WordCursor &begin, const WordCursor &end) VIEW_SECTION;
+    void reset();
+    void setStyle(const TextStylePtr style);
+    void applyControl(const ControlElement &control);
+    void applyControl(const ForcedControlElement &control);
+    void applyControls(const WordCursor &begin, const WordCursor &end);
 
-    const ZLPaintContext &context() const VIEW_SECTION;
-    const TextStylePtr style() const VIEW_SECTION;
-    int elementWidth(const TextElement &element, unsigned int charNumber) const VIEW_SECTION;
-    int elementHeight(const TextElement &element) const VIEW_SECTION;
-    int textAreaHeight() const VIEW_SECTION;
+    const ZLPaintContext &context() const;
+    const TextStylePtr style() const;
+    int elementWidth(const TextElement &element, unsigned int charNumber) const;
+    int elementHeight(const TextElement &element) const;
+    int textAreaHeight() const;
 
-    int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const VIEW_SECTION;
+    int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
   private:
     TextStylePtr myStyle;
@@ -91,10 +91,10 @@ private:
   };
 
   struct LineInfo {
-    LineInfo(const WordCursor &word, TextStylePtr style) VIEW_SECTION;
-    ~LineInfo() VIEW_SECTION;
+    LineInfo(const WordCursor &word, TextStylePtr style);
+    ~LineInfo();
 
-    bool operator < (const LineInfo &info) const VIEW_SECTION;
+    bool operator < (const LineInfo &info) const;
 
     WordCursor Start;
     WordCursor End;
@@ -109,8 +109,8 @@ protected:
   struct ParagraphPosition {
     int ParagraphNumber;
     int YStart, YEnd;
-    ParagraphPosition(int paragraphNumber, int yStart, int yEnd) VIEW_SECTION;
-    ~ParagraphPosition() VIEW_SECTION;
+    ParagraphPosition(int paragraphNumber, int yStart, int yEnd);
+    ~ParagraphPosition();
 
     struct RangeChecker {
       RangeChecker(int y) : myY(y) {}
@@ -126,8 +126,8 @@ protected:
     int ParagraphNumber, TextElementNumber;
     TextElement::Kind Kind;
     int XStart, XEnd, YStart, YEnd;
-    TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) VIEW_SECTION;
-    ~TextElementPosition() VIEW_SECTION;
+    TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
+    ~TextElementPosition();
 
     struct RangeChecker {
       RangeChecker(int x, int y) : myX(x), myY(y) {}
@@ -142,82 +142,82 @@ protected:
   };
 
 protected:
-  TextView(ZLPaintContext &context) VIEW_SECTION;
-  virtual ~TextView() VIEW_SECTION;
+  TextView(ZLPaintContext &context);
+  virtual ~TextView();
 
 public:
-  void clearCaches() VIEW_SECTION;
+  void clearCaches();
 
-  void scrollPage(bool forward, ScrollingMode mode, unsigned int value) VIEW_SECTION;
-  void scrollToHome() VIEW1_SECTION;
-  void scrollToStartOfText() VIEW1_SECTION;
-  void scrollToEndOfText() VIEW1_SECTION;
+  void scrollPage(bool forward, ScrollingMode mode, unsigned int value);
+  void scrollToHome();
+  void scrollToStartOfText();
+  void scrollToEndOfText();
 
-  void gotoMark(TextMark mark) VIEW1_SECTION;
-  virtual void gotoParagraph(int num, bool last = false) VIEW1_SECTION;
+  void gotoMark(TextMark mark);
+  virtual void gotoParagraph(int num, bool last = false);
 
-  const WordCursor &startCursor() const VIEW_SECTION;
-  const WordCursor &endCursor() const VIEW_SECTION;
+  const WordCursor &startCursor() const;
+  const WordCursor &endCursor() const;
 
-  virtual void setModel(const TextModel *model, const std::string &name) VIEW1_SECTION;
+  virtual void setModel(const TextModel *model, const std::string &name);
 
-  bool hasMultiSectionModel() const VIEW1_SECTION;
-  void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly) VIEW1_SECTION;
-  bool canFindNext() const VIEW1_SECTION;
-  void findNext() VIEW1_SECTION;
-  bool canFindPrevious() const VIEW1_SECTION;
-  void findPrevious() VIEW1_SECTION;
+  bool hasMultiSectionModel() const;
+  void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly);
+  bool canFindNext() const;
+  void findNext();
+  bool canFindPrevious() const;
+  void findPrevious();
 
-  bool onStylusPress(int x, int y) VIEW1_SECTION;
+  bool onStylusPress(int x, int y);
 
 protected:
-  virtual void paint() VIEW_SECTION;
+  virtual void paint();
 
-  const std::string &fileName() const VIEW1_SECTION;
-  const TextModel *model() const VIEW1_SECTION;
+  const std::string &fileName() const;
+  const TextModel *model() const;
 
-  const ParagraphPosition *paragraphByCoordinate(int y) const VIEW1_SECTION;
-  const TextElementPosition *elementByCoordinates(int x, int y) const VIEW1_SECTION;
+  const ParagraphPosition *paragraphByCoordinate(int y) const;
+  const TextElementPosition *elementByCoordinates(int x, int y) const;
 
-  void rebuildPaintInfo(bool strong) VIEW_SECTION;
-  void preparePaintInfo() VIEW_SECTION;
+  void rebuildPaintInfo(bool strong);
+  void preparePaintInfo();
 
-  void setStartCursor(ParagraphCursor *cursor) VIEW1_SECTION;
-  void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW1_SECTION;
-  void moveStartCursor(int paragraphNumber) VIEW1_SECTION;
-  void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) VIEW1_SECTION;
-  void moveEndCursor(int paragraphNumber) VIEW1_SECTION;
+  void setStartCursor(ParagraphCursor *cursor);
+  void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber);
+  void moveStartCursor(int paragraphNumber);
+  void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber);
+  void moveEndCursor(int paragraphNumber);
 
-  bool empty() const VIEW_SECTION;
+  bool empty() const;
 
-  void selectParagraph(int paragraphNumber) VIEW1_SECTION;
+  void selectParagraph(int paragraphNumber);
 
 private:
-  void clear() VIEW_SECTION;
+  void clear();
 
-  LineInfo processTextLine(const WordCursor &start, const WordCursor &end) VIEW_SECTION;
-  void drawTextLine(const LineInfo &info) VIEW_SECTION;
-  void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) VIEW_SECTION;
-  void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) VIEW_SECTION;
-  void drawTreeNode(TreeElement::TreeElementKind kind, int height) VIEW1_SECTION;
+  LineInfo processTextLine(const WordCursor &start, const WordCursor &end);
+  void drawTextLine(const LineInfo &info);
+  void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
+  void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift);
+  void drawTreeNode(TreeElement::TreeElementKind kind, int height);
 
-  bool pageIsEmpty() const VIEW_SECTION;
-  WordCursor findLineFromStart(unsigned int overlappingValue) const VIEW_SECTION;
-  WordCursor findLineFromEnd(unsigned int overlappingValue) const VIEW_SECTION;
-  WordCursor findPercentFromStart(unsigned int percent) const VIEW_SECTION;
+  bool pageIsEmpty() const;
+  WordCursor findLineFromStart(unsigned int overlappingValue) const;
+  WordCursor findLineFromEnd(unsigned int overlappingValue) const;
+  WordCursor findPercentFromStart(unsigned int percent) const;
 
   enum SizeUnit {
     PIXEL_UNIT,
     LINE_UNIT
   };
-  int infoSize(const LineInfo &info, SizeUnit unit) VIEW_SECTION;
-  int paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit) VIEW_SECTION;
-  void skip(WordCursor &paragraph, SizeUnit unit, int size) VIEW_SECTION;
-  WordCursor findStart(const WordCursor &end, SizeUnit unit, int textHeight) VIEW_SECTION;
+  int infoSize(const LineInfo &info, SizeUnit unit);
+  int paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
+  void skip(WordCursor &paragraph, SizeUnit unit, int size);
+  WordCursor findStart(const WordCursor &end, SizeUnit unit, int textHeight);
 
-  WordCursor buildInfos(const WordCursor &start) VIEW_SECTION;
+  WordCursor buildInfos(const WordCursor &start);
 
-  std::vector<size_t>::const_iterator nextBreakIterator() const VIEW_SECTION;
+  std::vector<size_t>::const_iterator nextBreakIterator() const;
 
 private:
   const TextModel *myModel;
@@ -234,9 +234,7 @@ private:
   WordCursor myStartCursor;
   WordCursor myEndCursor;
   std::vector<LineInfo> myLineInfos;
-#ifndef PALM_TEMPORARY
   std::set<LineInfo> myLineInfoCache;
-#endif // PALM_TEMPORARY
 
   ScrollingMode myScrollingMode;
   unsigned int myOverlappingValue;

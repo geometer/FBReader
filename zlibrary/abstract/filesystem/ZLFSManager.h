@@ -41,26 +41,26 @@ protected:
 	};
 
 public:
-	static void deleteInstance() FS_SECTION;
-	static ZLFSManager &instance() FS_SECTION;
+	static void deleteInstance();
+	static ZLFSManager &instance();
 
 protected:
 	static ZLFSManager *ourInstance;
 	
 protected:
-	ZLFSManager() FS_SECTION;
-	virtual ~ZLFSManager() FS_SECTION;
+	ZLFSManager();
+	virtual ~ZLFSManager();
 	
 public:
-	virtual void normalize(std::string &path) const FS_SECTION;
+	virtual void normalize(std::string &path) const;
 
 protected:
-	virtual ZLInputStream *createPlainInputStream(const std::string &path) const FS_SECTION = 0;
-	virtual ZLOutputStream *createOutputStream(const std::string &path) const FS_SECTION = 0;
-	virtual ZLFSDir *createPlainDirectory(const std::string &path) const FS_SECTION = 0;
-	virtual ZLFSDir *createNewDirectory(const std::string &path) const FS_SECTION = 0;
-	virtual FileInfo fileInfo(const std::string &path) const FS_SECTION = 0;
-	virtual bool isZipSupported() const FS_SECTION = 0;
+	virtual ZLInputStream *createPlainInputStream(const std::string &path) const = 0;
+	virtual ZLOutputStream *createOutputStream(const std::string &path) const = 0;
+	virtual ZLFSDir *createPlainDirectory(const std::string &path) const = 0;
+	virtual ZLFSDir *createNewDirectory(const std::string &path) const = 0;
+	virtual FileInfo fileInfo(const std::string &path) const = 0;
+	virtual bool isZipSupported() const = 0;
 
 friend class ZLFile;
 };
@@ -79,28 +79,28 @@ private:
 	};
 	
 public:
-	ZLFile(const std::string &path) FS_SECTION;
-	~ZLFile() FS_SECTION;
+	ZLFile(const std::string &path);
+	~ZLFile();
 
-	bool exists() const FS_SECTION;
-	unsigned long mTime() const FS_SECTION;
-	size_t size() const FS_SECTION;	
+	bool exists() const;
+	unsigned long mTime() const;
+	size_t size() const;	
 
-	bool isCompressed() const FS_SECTION;
-	bool isDirectory() const FS_SECTION;
-	bool isArchive() const FS_SECTION;
+	bool isCompressed() const;
+	bool isDirectory() const;
+	bool isArchive() const;
 
-	const std::string &path() const FS_SECTION;
-	const std::string &fullName() const FS_SECTION;
-	const std::string &name() const FS_SECTION;
-	const std::string &extension() const FS_SECTION;
+	const std::string &path() const;
+	const std::string &fullName() const;
+	const std::string &name() const;
+	const std::string &extension() const;
 
-	shared_ptr<ZLInputStream> inputStream() const FS_SECTION;
-	shared_ptr<ZLOutputStream> outputStream() const FS_SECTION;
-	shared_ptr<ZLDir> directory(bool createUnexisting = false) const FS_SECTION;
+	shared_ptr<ZLInputStream> inputStream() const;
+	shared_ptr<ZLOutputStream> outputStream() const;
+	shared_ptr<ZLDir> directory(bool createUnexisting = false) const;
 
 private:
-	void fillInfo() const FS_SECTION;
+	void fillInfo() const;
 
 private:
 	std::string myPath;

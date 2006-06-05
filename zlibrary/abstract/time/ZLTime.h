@@ -24,11 +24,11 @@
 class ZLTime {
 
 public:
-	ZLTime() UTIL_SECTION;
-	ZLTime(long seconds, long milliseconds) UTIL_SECTION;
-	~ZLTime() UTIL_SECTION;
-	long millisecondsTo(const ZLTime &time) const UTIL_SECTION;
-	long millisecondsFrom(const ZLTime &time) const UTIL_SECTION;
+	ZLTime();
+	ZLTime(long seconds, long milliseconds);
+	~ZLTime();
+	long millisecondsTo(const ZLTime &time) const;
+	long millisecondsFrom(const ZLTime &time) const;
 
 private:
 	long mySeconds;
@@ -40,15 +40,15 @@ friend class ZLTimeManager;
 class ZLTimeManager {
 
 private:
-	static ZLTimeManager &instance() UTIL_SECTION;
+	static ZLTimeManager &instance();
 
 public:
-	static void deleteInstance() UTIL_SECTION;
+	static void deleteInstance();
 	
 protected:
-	ZLTimeManager() UTIL_SECTION;
-	virtual ~ZLTimeManager() UTIL_SECTION;
-	virtual ZLTime currentTime() const UTIL_SECTION = 0;
+	ZLTimeManager();
+	virtual ~ZLTimeManager();
+	virtual ZLTime currentTime() const = 0;
 	
 protected:
 	static ZLTimeManager *ourInstance;

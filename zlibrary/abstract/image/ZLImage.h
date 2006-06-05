@@ -28,23 +28,23 @@
 class ZLImage {
 
 protected:
-	ZLImage() IMAGE_SECTION;
+	ZLImage();
 
 public:
-	virtual ~ZLImage() IMAGE_SECTION;
+	virtual ~ZLImage();
 	virtual bool isSingle() const = 0;
 };
 
 class ZLSingleImage : public ZLImage {
 
 protected:
-	ZLSingleImage(const std::string &mimeType) IMAGE_SECTION;
-	virtual ~ZLSingleImage() IMAGE_SECTION;
+	ZLSingleImage(const std::string &mimeType);
+	virtual ~ZLSingleImage();
 
 public:
 	bool isSingle() const { return true; }
-	const std::string &mimeType() const IMAGE_SECTION;
-	virtual const shared_ptr<std::string> stringData() const IMAGE_SECTION = 0;
+	const std::string &mimeType() const;
+	virtual const shared_ptr<std::string> stringData() const = 0;
 	
 private:
 	std::string myMimeType;
@@ -53,8 +53,8 @@ private:
 class ZLMultiImage : public ZLImage {
 
 protected:
-	ZLMultiImage() IMAGE_SECTION;
-	virtual ~ZLMultiImage() IMAGE_SECTION;
+	ZLMultiImage();
+	virtual ~ZLMultiImage();
 
 public:
 	bool isSingle() const { return false; }

@@ -1,5 +1,3 @@
-include $(ROOTDIR)/makefiles/arch/dummy.mk
-
 QTDIR = /opt/Qtopia/sharp
 TOOLSDIR = /opt/Embedix/tools/arm-linux/bin
 MOC = $(QTDIR)/bin/moc
@@ -11,7 +9,7 @@ CC = $(TOOLSDIR)/gcc
 AR = $(TOOLSDIR)/ar rsu
 LD = $(TOOLSDIR)/g++ -Xlinker -rpath /opt/QtPalmtop/lib -Xlinker -rpath /usr/lib
 
-CFLAGS = -pipe $(DUMMY_SECTIONS) -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DUSE_ZAURUS_FONTHACK
+CFLAGS = -pipe -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DUSE_ZAURUS_FONTHACK
 DEPGEN = $(CC) -MM
 
 EXPATLIBS = -lexpat

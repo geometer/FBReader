@@ -28,15 +28,15 @@
 class HtmlDescriptionReader : public HtmlReader {
 
 public:
-	HtmlDescriptionReader(BookDescription &description) FORMATS_SECTION;
-	~HtmlDescriptionReader() FORMATS_SECTION;
+	HtmlDescriptionReader(BookDescription &description);
+	~HtmlDescriptionReader();
 
 protected:
-	void startDocumentHandler() FORMATS_SECTION;
-	void endDocumentHandler() FORMATS_SECTION;
+	void startDocumentHandler();
+	void endDocumentHandler();
 
-	bool tagHandler(const HtmlTag &tag) FORMATS_SECTION;
-	bool characterDataHandler(const char *text, int len, bool convert) FORMATS_SECTION;
+	bool tagHandler(const HtmlTag &tag);
+	bool characterDataHandler(const char *text, int len, bool convert);
 
 private:
 	bool myReadTitle;

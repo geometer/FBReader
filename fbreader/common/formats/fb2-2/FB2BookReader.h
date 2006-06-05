@@ -48,13 +48,13 @@ private:
   static std::map<std::string,FB2TagAction*> ourTagActions;
 
 public:
-  FB2BookReader(BookModel &model) FORMATS_SECTION;
-  ~FB2BookReader() FORMATS_SECTION;
-  bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+  FB2BookReader(BookModel &model);
+  ~FB2BookReader();
+  bool readBook(shared_ptr<ZLInputStream> stream);
 
-  void startElementHandler(const char *tag, const char **attributes) FORMATS_SECTION;
-  void endElementHandler(const char *tag) FORMATS_SECTION;
-  void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+  void startElementHandler(const char *tag, const char **attributes);
+  void endElementHandler(const char *tag);
+  void characterDataHandler(const char *text, int len);
 
 private:
   int mySectionDepth;

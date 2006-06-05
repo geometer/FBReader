@@ -4,7 +4,7 @@ AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
 LD = $(BASEDIR)/bin/armv5tel-linux-g++
 
 DEPGEN = $(CC) -MM
-CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
+CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
 
 MOC = $(BASEDIR)/bin/moc
 QTINCLUDE = -I $(USRDIR)/qt/include

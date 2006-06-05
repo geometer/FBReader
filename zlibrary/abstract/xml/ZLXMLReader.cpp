@@ -28,11 +28,7 @@
 
 #include "ZLXMLReader.h"
 
-#ifdef USE_OWN_XML_PARSER
-#include "own/ZLXMLReaderInternal.h"
-#else // USE_OWN_XML_PARSER
 #include "expat/ZLXMLReaderInternal.h"
-#endif // USE_OWN_XML_PARSER
 
 void ZLXMLReader::startElementHandler(const char*, const char**) {
 }

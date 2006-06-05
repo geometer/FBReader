@@ -33,18 +33,18 @@ class BookModel;
 class TxtBookReader : public TxtReader, public BookReader {
 
 public:
-	TxtBookReader(BookModel &model, const PlainTextFormat &format, const std::string &encoding) FORMATS_SECTION;
-	~TxtBookReader() FORMATS_SECTION;
+	TxtBookReader(BookModel &model, const PlainTextFormat &format, const std::string &encoding);
+	~TxtBookReader();
 
 protected:
-	void startDocumentHandler() FORMATS_SECTION;
-	void endDocumentHandler() FORMATS_SECTION;
+	void startDocumentHandler();
+	void endDocumentHandler();
 
-	bool characterDataHandler(std::string &str) FORMATS_SECTION;
-	bool newLineHandler() FORMATS_SECTION;
+	bool characterDataHandler(std::string &str);
+	bool newLineHandler();
 
 private:
-	void internalEndParagraph() FORMATS_SECTION;
+	void internalEndParagraph();
 
 private:
 	const PlainTextFormat &myFormat;

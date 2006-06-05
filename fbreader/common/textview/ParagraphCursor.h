@@ -38,8 +38,8 @@ class Paragraph;
 class TextElementVector : public std::vector<TextElement*> {
 
 public:
-	TextElementVector() VIEW_SECTION;
-	~TextElementVector() VIEW_SECTION;
+	TextElementVector();
+	~TextElementVector();
 };
 
 class TextElementPool {
@@ -48,8 +48,8 @@ public:
 	static TextElementPool Pool;
 
 public:
-	TextElementPool() VIEW_SECTION;
-	~TextElementPool() VIEW_SECTION;
+	TextElementPool();
+	~TextElementPool();
 	
 public:
 	TextElement *HSpaceElement;
@@ -58,10 +58,10 @@ public:
 	TextElement *IndentElement;
 	TextElement *EmptyLineElement;
 
-	Word *getWord(const char *data, unsigned short length, size_t paragraphOffset) VIEW_SECTION;
-	void storeWord(Word *word) VIEW_SECTION;
-	ControlElement *getControlElement(shared_ptr<ParagraphEntry> entry) VIEW_SECTION;
-	void storeControlElement(ControlElement *element) VIEW_SECTION;
+	Word *getWord(const char *data, unsigned short length, size_t paragraphOffset);
+	void storeWord(Word *word);
+	ControlElement *getControlElement(shared_ptr<ParagraphEntry> entry);
+	void storeControlElement(ControlElement *element);
 
 private:
 	Allocator<sizeof(Word),64> myWordAllocator;
@@ -74,14 +74,14 @@ private:
 	class ParagraphProcessor {
 
 	public:
-		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements) VIEW_SECTION;
-		~ParagraphProcessor() VIEW_SECTION;
+		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
+		~ParagraphProcessor();
 
-		void fill() VIEW_SECTION;
+		void fill();
 
 	private:
-		void beforeAddWord() VIEW_SECTION;
-		void addWord(const char *ptr, int offset, int len) VIEW_SECTION;
+		void beforeAddWord();
+		void addWord(const char *ptr, int offset, int len);
 
 	private:
 		bool myCheckBreakableCharacters;
@@ -96,39 +96,39 @@ private:
 	};
 
 protected:
-	ParagraphCursor(const TextModel &model, size_t index) VIEW_SECTION;
-	virtual ParagraphCursor *createCursor(size_t index) const VIEW_SECTION = 0;
+	ParagraphCursor(const TextModel &model, size_t index);
+	virtual ParagraphCursor *createCursor(size_t index) const = 0;
 
 public:
-	static ParagraphCursor *createCursor(const TextModel &model) VIEW_SECTION;
-	virtual ~ParagraphCursor() VIEW_SECTION;
+	static ParagraphCursor *createCursor(const TextModel &model);
+	virtual ~ParagraphCursor();
 
-	bool isFirst() const VIEW_SECTION;
-	virtual bool isLast() const VIEW_SECTION = 0;
-	bool isEndOfSection() const VIEW_SECTION;
+	bool isFirst() const;
+	virtual bool isLast() const = 0;
+	bool isEndOfSection() const;
 
-	size_t paragraphLength() const VIEW_SECTION;
-	size_t index() const VIEW_SECTION;
+	size_t paragraphLength() const;
+	size_t index() const;
 
-	virtual shared_ptr<ParagraphCursor> previous() const VIEW_SECTION = 0;
-	virtual shared_ptr<ParagraphCursor> next() const VIEW_SECTION = 0;
-	shared_ptr<ParagraphCursor> cursor(size_t index) const VIEW_SECTION;
+	virtual shared_ptr<ParagraphCursor> previous() const = 0;
+	virtual shared_ptr<ParagraphCursor> next() const = 0;
+	shared_ptr<ParagraphCursor> cursor(size_t index) const;
 
-	const TextElement &operator [] (size_t index) const VIEW_SECTION;
+	const TextElement &operator [] (size_t index) const;
 
 protected:
 
 private:
-	void processControlParagraph(const Paragraph &paragraph) VIEW_SECTION;
+	void processControlParagraph(const Paragraph &paragraph);
 
 protected:
-	void fill() VIEW_SECTION;
-	void clear() VIEW_SECTION;
+	void fill();
+	void clear();
 
 private:
 	/* copy constructor & assignment are disabled */
-	ParagraphCursor(const ParagraphCursor &cursor) VIEW_SECTION;
-	ParagraphCursor &operator = (const ParagraphCursor &) VIEW_SECTION;
+	ParagraphCursor(const ParagraphCursor &cursor);
+	ParagraphCursor &operator = (const ParagraphCursor &);
 	
 protected:
 	const TextModel &myModel;
@@ -141,53 +141,53 @@ friend class WordCursor;
 class ParagraphCursorCache {
 
 public:
-	static void put(const Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor) VIEW_SECTION;
-	static shared_ptr<ParagraphCursor> get(const Paragraph *paragraph) VIEW_SECTION;
+	static void put(const Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor);
+	static shared_ptr<ParagraphCursor> get(const Paragraph *paragraph);
 
-	static void clear() VIEW_SECTION;
-	static void cleanup() VIEW_SECTION;
+	static void clear();
+	static void cleanup();
 
 private:
 	static std::map<const Paragraph*, weak_ptr<ParagraphCursor> > ourCache;
 
 private:
 	// instance creation is disabled
-	ParagraphCursorCache() VIEW_SECTION;
+	ParagraphCursorCache();
 };
 
 class WordCursor {
 
 public:
-	WordCursor() VIEW_SECTION;
-	WordCursor(const WordCursor &cursor) VIEW_SECTION;
-	const WordCursor &operator = (const WordCursor &cursor) VIEW_SECTION;
-	const WordCursor &operator = (ParagraphCursor *paragraphCursor) VIEW_SECTION;
-	~WordCursor() VIEW_SECTION;
+	WordCursor();
+	WordCursor(const WordCursor &cursor);
+	const WordCursor &operator = (const WordCursor &cursor);
+	const WordCursor &operator = (ParagraphCursor *paragraphCursor);
+	~WordCursor();
 
-	bool isNull() const VIEW_SECTION;
-	bool sameElementAs(const WordCursor &cursor) const VIEW_SECTION;
-	bool operator == (const WordCursor &cursor) const VIEW_SECTION;
-	bool operator != (const WordCursor &cursor) const VIEW_SECTION;
-	bool operator < (const WordCursor &cursor) const VIEW_SECTION;
-	bool isStartOfParagraph() const VIEW_SECTION;
-	bool isEndOfParagraph() const VIEW_SECTION;
-	unsigned int wordNumber() const VIEW_SECTION;
-	unsigned int charNumber() const VIEW_SECTION;
-	const TextElement &element() const VIEW_SECTION;
-	TextMark position() const VIEW_SECTION;
-	const ParagraphCursor &paragraphCursor() const VIEW_SECTION;
+	bool isNull() const;
+	bool sameElementAs(const WordCursor &cursor) const;
+	bool operator == (const WordCursor &cursor) const;
+	bool operator != (const WordCursor &cursor) const;
+	bool operator < (const WordCursor &cursor) const;
+	bool isStartOfParagraph() const;
+	bool isEndOfParagraph() const;
+	unsigned int wordNumber() const;
+	unsigned int charNumber() const;
+	const TextElement &element() const;
+	TextMark position() const;
+	const ParagraphCursor &paragraphCursor() const;
 
-	void nextWord() VIEW_SECTION;
-	void previousWord() VIEW_SECTION;
-	bool nextParagraph() VIEW_SECTION;
-	bool previousParagraph() VIEW_SECTION;
-	void moveToParagraphStart() VIEW_SECTION;
-	void moveToParagraphEnd() VIEW_SECTION;
-	void moveToParagraph(int paragraphNumber) VIEW_SECTION;
-	void moveTo(int wordNumber, int charNumber) VIEW_SECTION;
-	void setCharNumber(int charNumber) VIEW_SECTION;
+	void nextWord();
+	void previousWord();
+	bool nextParagraph();
+	bool previousParagraph();
+	void moveToParagraphStart();
+	void moveToParagraphEnd();
+	void moveToParagraph(int paragraphNumber);
+	void moveTo(int wordNumber, int charNumber);
+	void setCharNumber(int charNumber);
 
-	void rebuild() VIEW_SECTION;
+	void rebuild();
 
 private:
 	shared_ptr<ParagraphCursor> myParagraphCursor;
@@ -198,17 +198,17 @@ private:
 class PlainTextParagraphCursor : public ParagraphCursor {
 
 private:
-	PlainTextParagraphCursor(const TextModel &model, size_t index) VIEW_SECTION;
+	PlainTextParagraphCursor(const TextModel &model, size_t index);
 
 protected:
-	ParagraphCursor *createCursor(size_t index) const VIEW_SECTION;
+	ParagraphCursor *createCursor(size_t index) const;
 
 public:
-	~PlainTextParagraphCursor() VIEW_SECTION;
+	~PlainTextParagraphCursor();
 
-	shared_ptr<ParagraphCursor> previous() const VIEW_SECTION;
-	shared_ptr<ParagraphCursor> next() const VIEW_SECTION;
-	bool isLast() const VIEW_SECTION;
+	shared_ptr<ParagraphCursor> previous() const;
+	shared_ptr<ParagraphCursor> next() const;
+	bool isLast() const;
 
 friend class ParagraphCursor;
 };
@@ -216,17 +216,17 @@ friend class ParagraphCursor;
 class TreeParagraphCursor : public ParagraphCursor {
 
 private:
-	TreeParagraphCursor(const TreeModel &model, size_t index) VIEW_SECTION;
+	TreeParagraphCursor(const TreeModel &model, size_t index);
 
 protected:
-	ParagraphCursor *createCursor(size_t index) const VIEW_SECTION;
+	ParagraphCursor *createCursor(size_t index) const;
 
 public:
-	~TreeParagraphCursor() VIEW_SECTION;
+	~TreeParagraphCursor();
 
-	shared_ptr<ParagraphCursor> previous() const VIEW_SECTION;
-	shared_ptr<ParagraphCursor> next() const VIEW_SECTION;
-	bool isLast() const VIEW_SECTION;
+	shared_ptr<ParagraphCursor> previous() const;
+	shared_ptr<ParagraphCursor> next() const;
+	bool isLast() const;
 
 friend class ParagraphCursor;
 };

@@ -29,17 +29,17 @@
 class ZLTarInputStream : public ZLInputStream {
 
 private:
-	ZLTarInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) FS_SECTION;
+	ZLTarInputStream(shared_ptr<ZLInputStream> &base, const std::string &name);
 
 public:
-	~ZLTarInputStream() FS_SECTION;
-	bool open() FS_SECTION;
-	size_t read(char *buffer, size_t maxSize) FS_SECTION;
-	void close() FS_SECTION;
+	~ZLTarInputStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-	void seek(int offset) FS_SECTION;
-	size_t offset() const FS_SECTION;
-	size_t sizeOfOpened() FS_SECTION;
+	void seek(int offset);
+	size_t offset() const;
+	size_t sizeOfOpened();
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
@@ -53,15 +53,15 @@ friend class ZLFile;
 class ZLTarDir : public ZLDir {
 
 private:
-	ZLTarDir(const std::string &path) FS_SECTION;
+	ZLTarDir(const std::string &path);
 
 public:
-	~ZLTarDir() FS_SECTION;
-	void collectSubDirs(std::vector<std::string>&, bool includeSymlinks) FS_SECTION;
-	void collectFiles(std::vector<std::string> &names, bool includeSymlinks) FS_SECTION;
+	~ZLTarDir();
+	void collectSubDirs(std::vector<std::string>&, bool includeSymlinks);
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
 
 protected:
-	std::string delimiter() const FS_SECTION;
+	std::string delimiter() const;
 
 friend class ZLFile;
 };

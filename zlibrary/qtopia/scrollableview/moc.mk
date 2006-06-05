@@ -1,1 +1,0 @@
-SRCMOC = QScrollableView.moc.cpp

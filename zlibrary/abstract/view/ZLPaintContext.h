@@ -41,56 +41,56 @@ public:
 	};
 	
 protected:
-	ZLPaintContext() ZLVIEW_SECTION;
+	ZLPaintContext();
 
 public:
-	virtual ~ZLPaintContext() ZLVIEW_SECTION;
+	virtual ~ZLPaintContext();
 
-	int x() const ZLVIEW_SECTION;
-	int y() const ZLVIEW_SECTION;
+	int x() const;
+	int y() const;
 
-	void moveXTo(int x) ZLVIEW_SECTION;
-	void moveX(int deltaX) ZLVIEW_SECTION;
-	void moveYTo(int y) ZLVIEW_SECTION;
-	void moveY(int deltaY) ZLVIEW_SECTION;
+	void moveXTo(int x);
+	void moveX(int deltaX);
+	void moveYTo(int y);
+	void moveY(int deltaY);
 
-	void setLeftMargin(int margin) ZLVIEW_SECTION;
-	void setRightMargin(int margin) ZLVIEW_SECTION;
-	void setTopMargin(int margin) ZLVIEW_SECTION;
-	void setBottomMargin(int margin) ZLVIEW_SECTION;
+	void setLeftMargin(int margin);
+	void setRightMargin(int margin);
+	void setTopMargin(int margin);
+	void setBottomMargin(int margin);
 
-	int leftMargin() const ZLVIEW_SECTION;
-	int rightMargin() const ZLVIEW_SECTION;
-	int topMargin() const ZLVIEW_SECTION;
-	int bottomMargin() const ZLVIEW_SECTION;
+	int leftMargin() const;
+	int rightMargin() const;
+	int topMargin() const;
+	int bottomMargin() const;
 
-	virtual void clear(ZLColor color) ZLVIEW_SECTION = 0;
+	virtual void clear(ZLColor color) = 0;
 
-	virtual void setFont(const std::string &family, int size, bool bold, bool italic) ZLVIEW_SECTION = 0;
-	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE) ZLVIEW_SECTION = 0;
-	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) ZLVIEW_SECTION = 0;
+	virtual void setFont(const std::string &family, int size, bool bold, bool italic) = 0;
+	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE) = 0;
+	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) = 0;
 
-	virtual int width() const ZLVIEW_SECTION = 0;
-	virtual int height() const ZLVIEW_SECTION = 0;
+	virtual int width() const = 0;
+	virtual int height() const = 0;
 	
-	virtual int stringWidth(const char *str, int len) const ZLVIEW_SECTION = 0;
-	virtual int spaceWidth() const ZLVIEW_SECTION = 0;
-	virtual int stringHeight() const ZLVIEW_SECTION = 0;
-	virtual void drawString(int x, int y, const char *str, int len) ZLVIEW_SECTION = 0;
+	virtual int stringWidth(const char *str, int len) const = 0;
+	virtual int spaceWidth() const = 0;
+	virtual int stringHeight() const = 0;
+	virtual void drawString(int x, int y, const char *str, int len) = 0;
 
-	int imageWidth(const ZLImageData &image) const ZLVIEW_SECTION;
-	int imageHeight(const ZLImageData &image) const ZLVIEW_SECTION;
-	virtual void drawImage(int x, int y, const ZLImageData &image) ZLVIEW_SECTION = 0;
+	int imageWidth(const ZLImageData &image) const;
+	int imageHeight(const ZLImageData &image) const;
+	virtual void drawImage(int x, int y, const ZLImageData &image) = 0;
 
-	virtual void drawLine(int x0, int y0, int x1, int y1) ZLVIEW_SECTION = 0;
-	virtual void fillRectangle(int x0, int y0, int x1, int y1) ZLVIEW_SECTION = 0;
-	virtual void drawFilledCircle(int x, int y, int r) ZLVIEW_SECTION = 0;
+	virtual void drawLine(int x0, int y0, int x1, int y1) = 0;
+	virtual void fillRectangle(int x0, int y0, int x1, int y1) = 0;
+	virtual void drawFilledCircle(int x, int y, int r) = 0;
 
-	const std::vector<std::string> &fontFamilies() const ZLVIEW_SECTION;
-	virtual const std::string realFontFamilyName(std::string &fontFamily) const ZLVIEW_SECTION = 0;
+	const std::vector<std::string> &fontFamilies() const;
+	virtual const std::string realFontFamilyName(std::string &fontFamily) const = 0;
 
 protected:
-	virtual void fillFamiliesList(std::vector<std::string> &families) const ZLVIEW_SECTION = 0;
+	virtual void fillFamiliesList(std::vector<std::string> &families) const = 0;
 
 private:
 	int myX, myY;

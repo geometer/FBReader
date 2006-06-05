@@ -34,14 +34,14 @@ protected:
 	class ComboOptionEntry : public ZLComboOptionEntry {
 
 	public:
-		ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue) FB_DIALOG_SECTION;
-		~ComboOptionEntry() FB_DIALOG_SECTION;
-		const std::string &name() const FB_DIALOG_SECTION;
-		const std::string &initialValue() const FB_DIALOG_SECTION;
-		const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-		void onAccept(const std::string&) FB_DIALOG_SECTION;
-		void onValueChange(const std::string &selectedValue) FB_DIALOG_SECTION;
-		void addValue(const std::string &value) FB_DIALOG_SECTION;
+		ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue);
+		~ComboOptionEntry();
+		const std::string &name() const;
+		const std::string &initialValue() const;
+		const std::vector<std::string> &values() const;
+		void onAccept(const std::string&);
+		void onValueChange(const std::string &selectedValue);
+		void addValue(const std::string &value);
 
 	private:
 		OptionsPage &myPage;
@@ -51,12 +51,12 @@ protected:
 	};
 
 public:
-	OptionsPage() FB_DIALOG_SECTION;
-	virtual ~OptionsPage() FB_DIALOG_SECTION;
+	OptionsPage();
+	virtual ~OptionsPage();
 
 protected:
-	void registerEntry(ZLOptionsDialogTab *tab, ZLOptionEntry *entry, const std::string &name) FB_DIALOG_SECTION;
-	void registerEntries(ZLOptionsDialogTab *tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name) FB_DIALOG_SECTION;
+	void registerEntry(ZLOptionsDialogTab *tab, ZLOptionEntry *entry, const std::string &name);
+	void registerEntries(ZLOptionsDialogTab *tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name);
 	
 protected:
 	ComboOptionEntry *myComboEntry;

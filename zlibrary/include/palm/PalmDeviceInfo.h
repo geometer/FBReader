@@ -1,1 +1,0 @@
-../../palm/deviceInfo/PalmDeviceInfo.h

@@ -26,11 +26,11 @@
 class ZLApplication {
 
 protected:
-	ZLApplication() APPLICATION_SECTION;
-	virtual ~ZLApplication() APPLICATION_SECTION;
+	ZLApplication();
+	virtual ~ZLApplication();
 
 public:
-	virtual void enableMenuButtons() APPLICATION_SECTION = 0;
+	virtual void enableMenuButtons() = 0;
 };
 
 class ZLView;
@@ -47,18 +47,18 @@ public:
 	};
 
 protected:
-	ZLViewWidget(Angle initialAngle) ZLVIEW_SECTION;
-	virtual ~ZLViewWidget() ZLVIEW_SECTION;
+	ZLViewWidget(Angle initialAngle);
+	virtual ~ZLViewWidget();
 
 public:
-	void setView(ZLView *view) ZLVIEW_SECTION;
-	ZLView *view() const ZLVIEW_SECTION;
+	void setView(ZLView *view);
+	ZLView *view() const;
 
-	virtual void trackStylus(bool track) ZLVIEW_SECTION = 0;
-	virtual void repaintView() ZLVIEW_SECTION = 0;
+	virtual void trackStylus(bool track) = 0;
+	virtual void repaintView() = 0;
 
-	void rotate(Angle rotation) ZLVIEW_SECTION;
-	Angle rotation() const ZLVIEW_SECTION;
+	void rotate(Angle rotation);
+	Angle rotation() const;
 
 private:
 	ZLView *myView;
@@ -68,22 +68,22 @@ private:
 class ZLView {
 
 public:
-	ZLView(ZLPaintContext &context) ZLVIEW_SECTION;
-	virtual ~ZLView() ZLVIEW_SECTION;
+	ZLView(ZLPaintContext &context);
+	virtual ~ZLView();
 
-	virtual const std::string &caption() const ZLVIEW_SECTION = 0;
-	virtual void paint() ZLVIEW_SECTION = 0;
-	ZLPaintContext &context() const ZLVIEW_SECTION;
+	virtual const std::string &caption() const = 0;
+	virtual void paint() = 0;
+	ZLPaintContext &context() const;
 
 	/*
 	 * returns true iff stylus event was processed
 	 */
-	virtual bool onStylusPress(int, int) ZLVIEW_SECTION;
-	virtual bool onStylusRelease(int, int) ZLVIEW_SECTION;
-	virtual bool onStylusMove(int, int) ZLVIEW_SECTION;
-	virtual bool onStylusMovePressed(int, int) ZLVIEW_SECTION;
+	virtual bool onStylusPress(int, int);
+	virtual bool onStylusRelease(int, int);
+	virtual bool onStylusMove(int, int);
+	virtual bool onStylusMovePressed(int, int);
 
-	void repaintView() ZLVIEW_SECTION;
+	void repaintView();
 
 private:
 	ZLViewWidget *myWidget;

@@ -28,19 +28,6 @@
 #include "../formats/FormatPlugin.h"
 
 BookModel::BookModel(const BookDescriptionPtr description) : myDescription(description) {
-#ifdef PALM_TEMPORARY
-	if (description->fileName() == "$$TEST") {
-		BookReader reader(*this);
-		reader.setMainTextModel();
-		reader.pushKind(REGULAR);
-		for (int i = 0; i < 200; i++) {
-			reader.beginParagraph();
-			reader.addDataToBuffer("test text number one", 20);
-			reader.endParagraph();
-		}
-		return;
-	}
-#endif // PALM_TEMPORARY
 	ZLFile file(description->fileName());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
 	if (plugin != 0) {

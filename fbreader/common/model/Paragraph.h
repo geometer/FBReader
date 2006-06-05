@@ -48,10 +48,10 @@ public:
 	};
 
 protected:
-	ParagraphEntry() MODEL_SECTION;
+	ParagraphEntry();
 
 public:
-	virtual ~ParagraphEntry() MODEL_SECTION;
+	virtual ~ParagraphEntry();
 
 private: // disable copying
 	ParagraphEntry(const ParagraphEntry &entry);
@@ -61,21 +61,21 @@ private: // disable copying
 class ForcedControlEntry : public ParagraphEntry {
 
 public:
-	ForcedControlEntry() MODEL_SECTION;
-	ForcedControlEntry(char *address) MODEL_SECTION;
-	~ForcedControlEntry() MODEL_SECTION;
+	ForcedControlEntry();
+	ForcedControlEntry(char *address);
+	~ForcedControlEntry();
 
-	bool leftIndentSupported() const MODEL_SECTION;
-	short leftIndent() const MODEL_SECTION;
-	void setLeftIndent(short leftIndent) MODEL_SECTION;
+	bool leftIndentSupported() const;
+	short leftIndent() const;
+	void setLeftIndent(short leftIndent);
 
-	bool rightIndentSupported() const MODEL_SECTION;
-	short rightIndent() const MODEL_SECTION;
-	void setRightIndent(short rightIndent) MODEL_SECTION;
+	bool rightIndentSupported() const;
+	short rightIndent() const;
+	void setRightIndent(short rightIndent);
 
-	bool alignmentTypeSupported() const MODEL_SECTION;
-	AlignmentType alignmentType() const MODEL_SECTION;
-	void setAlignmentType(AlignmentType alignmentType) MODEL_SECTION;
+	bool alignmentTypeSupported() const;
+	AlignmentType alignmentType() const;
+	void setAlignmentType(AlignmentType alignmentType);
 
 	enum {
 		SUPPORT_LEFT_INDENT = 1,
@@ -96,13 +96,13 @@ friend class TextModel;
 class ControlEntry : public ParagraphEntry {
 
 protected:
-	ControlEntry(TextKind kind, bool isStart) MODEL_SECTION;
+	ControlEntry(TextKind kind, bool isStart);
 
 public:
-	virtual ~ControlEntry() MODEL_SECTION;
-	TextKind kind() const MODEL_SECTION;
-	bool isStart() const MODEL_SECTION;
-	virtual bool isHyperlink() const MODEL_SECTION;
+	virtual ~ControlEntry();
+	TextKind kind() const;
+	bool isStart() const;
+	virtual bool isHyperlink() const;
 
 private:
 	TextKind myKind;
@@ -117,9 +117,9 @@ public:
 	static ControlEntryPool Pool;
 	
 public:
-	ControlEntryPool() MODEL_SECTION;
-	~ControlEntryPool() MODEL_SECTION;
-	shared_ptr<ParagraphEntry> controlEntry(TextKind kind, bool isStart) MODEL_SECTION;
+	ControlEntryPool();
+	~ControlEntryPool();
+	shared_ptr<ParagraphEntry> controlEntry(TextKind kind, bool isStart);
 
 private:
 	std::map<TextKind, shared_ptr<ParagraphEntry> > myStartEntries;
@@ -129,10 +129,10 @@ private:
 class HyperlinkControlEntry : public ControlEntry {
 
 public:
-	HyperlinkControlEntry(const char *address) MODEL_SECTION;
-	~HyperlinkControlEntry() MODEL_SECTION;
-	const std::string &label() const MODEL_SECTION;
-	bool isHyperlink() const MODEL_SECTION;
+	HyperlinkControlEntry(const char *address);
+	~HyperlinkControlEntry();
+	const std::string &label() const;
+	bool isHyperlink() const;
 
 private:
 	std::string myLabel;
@@ -141,11 +141,11 @@ private:
 class TextEntry : public ParagraphEntry {
 
 public:
-	TextEntry(const char *address) MODEL_SECTION;
-	~TextEntry() MODEL_SECTION;
+	TextEntry(const char *address);
+	~TextEntry();
 
-	size_t dataLength() const MODEL_SECTION;
-	const char *data() const MODEL_SECTION;
+	size_t dataLength() const;
+	const char *data() const;
  
 private:
 	const char *myAddress;
@@ -154,10 +154,10 @@ private:
 class ImageEntry : public ParagraphEntry {
 
 public:
-	ImageEntry(const std::string &id, const ImageMap *imageMap) MODEL_SECTION;
-	~ImageEntry() MODEL_SECTION;
-	const std::string &id() const MODEL_SECTION;
-	const ZLImage *image() const MODEL_SECTION;
+	ImageEntry(const std::string &id, const ImageMap *imageMap);
+	~ImageEntry();
+	const std::string &id() const;
+	const ZLImage *image() const;
 
 private:
 	std::string myId;
@@ -170,13 +170,13 @@ public:
 	class Iterator {
 
 	public:
-		Iterator(const Paragraph &paragraph) MODEL_SECTION;
-		~Iterator() MODEL_SECTION;
+		Iterator(const Paragraph &paragraph);
+		~Iterator();
 
-		bool isEnd() const MODEL_SECTION;
-		void next() MODEL_SECTION;
-		const shared_ptr<ParagraphEntry> entry() const MODEL_SECTION;
-		ParagraphEntry::Kind entryKind() const MODEL_SECTION;
+		bool isEnd() const;
+		void next();
+		const shared_ptr<ParagraphEntry> entry() const;
+		ParagraphEntry::Kind entryKind() const;
 
 	private:
 		char *myPointer;
@@ -196,18 +196,18 @@ public:
 	};
 
 protected:
-	Paragraph() MODEL_SECTION;
+	Paragraph();
 
 public:
-	virtual ~Paragraph() MODEL_SECTION;
-	virtual Kind kind() const MODEL_SECTION;
+	virtual ~Paragraph();
+	virtual Kind kind() const;
 
-	size_t entryNumber() const MODEL_SECTION;
+	size_t entryNumber() const;
 
-	size_t textLength() const MODEL_SECTION;
+	size_t textLength() const;
 
 private:
-	void addEntry(char *address) MODEL_SECTION;
+	void addEntry(char *address);
 
 private:
 	char *myFirstEntryAddress;
@@ -221,11 +221,11 @@ friend class PlainTextModel;
 class SpecialParagraph : public Paragraph {
 
 private:
-	SpecialParagraph(Kind kind) MODEL_SECTION;
+	SpecialParagraph(Kind kind);
 
 public:
-	~SpecialParagraph() MODEL_SECTION;
-	Kind kind() const MODEL_SECTION;
+	~SpecialParagraph();
+	Kind kind() const;
 
 private:
 	Kind myKind;
@@ -236,11 +236,11 @@ friend class PlainTextModel;
 class ParagraphWithReference : public Paragraph {
 
 private:
-	ParagraphWithReference(long reference) MODEL_SECTION;
+	ParagraphWithReference(long reference);
 
 public:
-	~ParagraphWithReference() MODEL_SECTION;
-	long reference() const MODEL_SECTION;
+	~ParagraphWithReference();
+	long reference() const;
 
 private:
 	const long myReference;
@@ -251,22 +251,22 @@ friend class PlainTextModel;
 class TreeParagraph : public Paragraph {
 
 public:
-	TreeParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
-	~TreeParagraph() MODEL_SECTION;
-	Kind kind() const MODEL_SECTION;
+	TreeParagraph(TreeParagraph *parent = 0);
+	~TreeParagraph();
+	Kind kind() const;
 
-	bool isOpen() const MODEL_SECTION;
-	void open(bool o) MODEL_SECTION;
-	void openTree() MODEL_SECTION;
-	int depth() const MODEL_SECTION;
-	TreeParagraph *parent() MODEL_SECTION;
-	const TreeParagraph *parent() const MODEL_SECTION;
-	const std::vector<TreeParagraph*> &children() const MODEL_SECTION;
+	bool isOpen() const;
+	void open(bool o);
+	void openTree();
+	int depth() const;
+	TreeParagraph *parent();
+	const TreeParagraph *parent() const;
+	const std::vector<TreeParagraph*> &children() const;
 
-	void removeFromParent() MODEL_SECTION;
+	void removeFromParent();
 
 private:
-	void addChild(TreeParagraph *child) MODEL_SECTION;
+	void addChild(TreeParagraph *child);
 
 private:
 	bool myIsOpen;

@@ -36,12 +36,12 @@ struct ZLZipHeader {
 	unsigned short NameLength;
 	unsigned short ExtraLength;
 
-	bool readFrom(ZLInputStream &stream) FS_SECTION;
-	static void skipEntry(ZLInputStream &stream, const ZLZipHeader &header) FS_SECTION;
+	bool readFrom(ZLInputStream &stream);
+	static void skipEntry(ZLInputStream &stream, const ZLZipHeader &header);
 
 private:
-	unsigned short readShort(ZLInputStream &stream) FS_SECTION;
-	unsigned long readLong(ZLInputStream &stream) FS_SECTION;
+	unsigned short readShort(ZLInputStream &stream);
+	unsigned long readLong(ZLInputStream &stream);
 };
 
 #endif /* __ZLZIPHEADER_H__ */

@@ -32,8 +32,8 @@ class ZLOptionsDialogTab;
 class KeyBindingsPage {
 
 public:
-	KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
-	~KeyBindingsPage() FB_DIALOG_SECTION;
+	KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab);
+	~KeyBindingsPage();
 };
 
 inline KeyBindingsPage::~KeyBindingsPage() {}

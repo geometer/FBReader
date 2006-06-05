@@ -30,10 +30,10 @@
 class TextElement {
 
 protected:
-	TextElement() VIEW_SECTION;
+	TextElement();
 
 public:
-	virtual ~TextElement() VIEW_SECTION;
+	virtual ~TextElement();
 
 	enum Kind {
 		WORD_ELEMENT,
@@ -48,21 +48,21 @@ public:
 		EMPTY_LINE_ELEMENT,
 	};
 
-	virtual Kind kind() const VIEW_SECTION = 0;
+	virtual Kind kind() const = 0;
 
 private:
 	// assignment and copy constructor are disabled
-	TextElement(const TextElement&) VIEW_SECTION;
-	TextElement &operator = (const TextElement&) VIEW_SECTION;
+	TextElement(const TextElement&);
+	TextElement &operator = (const TextElement&);
 };
 
 class ImageElement : public TextElement {
 
 public:
-	ImageElement(const shared_ptr<ZLImageData> image) VIEW_SECTION;
-	~ImageElement() VIEW_SECTION;
-	Kind kind() const VIEW_SECTION;
-	const ZLImageData &image() const VIEW_SECTION;
+	ImageElement(const shared_ptr<ZLImageData> image);
+	~ImageElement();
+	Kind kind() const;
+	const ZLImageData &image() const;
 
 private:
 	const shared_ptr<ZLImageData> myImage;
@@ -71,9 +71,9 @@ private:
 class SpecialTextElement : public TextElement {
 
 public:
-	SpecialTextElement(Kind kind) VIEW_SECTION;
-	~SpecialTextElement() VIEW_SECTION;
-	Kind kind() const VIEW_SECTION;
+	SpecialTextElement(Kind kind);
+	~SpecialTextElement();
+	Kind kind() const;
 
 private:
 	Kind myKind;
@@ -82,10 +82,10 @@ private:
 class ForcedControlElement : public TextElement {
 
 public:
-	ForcedControlElement(shared_ptr<ParagraphEntry> entry) VIEW_SECTION;
-	~ForcedControlElement() VIEW_SECTION;
-	Kind kind() const VIEW_SECTION;
-	const ForcedControlEntry &entry() const VIEW_SECTION;
+	ForcedControlElement(shared_ptr<ParagraphEntry> entry);
+	~ForcedControlElement();
+	Kind kind() const;
+	const ForcedControlEntry &entry() const;
 
 private:
 	const shared_ptr<ParagraphEntry> myEntry;
@@ -94,12 +94,12 @@ private:
 class ControlElement : public TextElement {
 
 public:
-	ControlElement(shared_ptr<ParagraphEntry> entry) VIEW_SECTION;
-	~ControlElement() VIEW_SECTION;
-	Kind kind() const VIEW_SECTION;
-	const ControlEntry &entry() const VIEW_SECTION;
-	TextKind textKind() const VIEW_SECTION;
-	bool isStart() const VIEW_SECTION;
+	ControlElement(shared_ptr<ParagraphEntry> entry);
+	~ControlElement();
+	Kind kind() const;
+	const ControlEntry &entry() const;
+	TextKind textKind() const;
+	bool isStart() const;
 
 private:
 	const shared_ptr<ParagraphEntry> myEntry;
@@ -117,10 +117,10 @@ public:
 		TREE_ELEMENT_SKIP,
 	};
 
-	TreeElement(TreeElementKind treeElementKind) VIEW_SECTION;
-	~TreeElement() VIEW_SECTION;
-	Kind kind() const VIEW_SECTION;
-	TreeElementKind treeElementKind() const VIEW_SECTION;
+	TreeElement(TreeElementKind treeElementKind);
+	~TreeElement();
+	Kind kind() const;
+	TreeElementKind treeElementKind() const;
 
 private:
 	TreeElementKind myTreeElementKind;

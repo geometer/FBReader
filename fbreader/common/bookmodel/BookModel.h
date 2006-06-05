@@ -34,19 +34,19 @@ class ZLImage;
 class BookModel {
 
 public:
-	BookModel(const BookDescriptionPtr description) MODEL_SECTION;
-	~BookModel() MODEL_SECTION;
+	BookModel(const BookDescriptionPtr description);
+	~BookModel();
 
-	const std::string &fileName() const MODEL_SECTION;
+	const std::string &fileName() const;
 
-	const TextModel &bookTextModel() const MODEL_SECTION;
-	const TextModel &contentsModel() const MODEL_SECTION;
-	const TextModel *footnoteModel(const std::string &id) const MODEL_SECTION;
+	const TextModel &bookTextModel() const;
+	const TextModel &contentsModel() const;
+	const TextModel *footnoteModel(const std::string &id) const;
 
-	const ImageMap &imageMap() const MODEL_SECTION;
-	int paragraphNumberById(const std::string &id) const MODEL_SECTION;
+	const ImageMap &imageMap() const;
+	int paragraphNumberById(const std::string &id) const;
 
-	const BookDescriptionPtr description() const MODEL_SECTION;
+	const BookDescriptionPtr description() const;
 
 private:
 	const BookDescriptionPtr myDescription;

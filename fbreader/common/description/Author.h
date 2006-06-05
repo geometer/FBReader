@@ -33,14 +33,14 @@ typedef shared_ptr<Author> AuthorPtr;
 class Author {
 
 protected:
-	Author() MODEL_SECTION;
+	Author();
 
 public:
-	virtual ~Author() MODEL_SECTION;
+	virtual ~Author();
 	
-	virtual const std::string &displayName() const MODEL_SECTION = 0;
-	virtual const std::string &sortKey() const MODEL_SECTION = 0;
-	virtual bool isSingle() const MODEL_SECTION = 0;
+	virtual const std::string &displayName() const = 0;
+	virtual const std::string &sortKey() const = 0;
+	virtual bool isSingle() const = 0;
 
 private:
 	Author(const Author&);
@@ -54,12 +54,12 @@ public:
 	static AuthorPtr create();
 				
 private:
-	SingleAuthor(const std::string &displayName, const std::string &sortKey) MODEL_SECTION;
+	SingleAuthor(const std::string &displayName, const std::string &sortKey);
 
 public:
-	const std::string &displayName() const MODEL_SECTION;
-	const std::string &sortKey() const MODEL_SECTION;
-	bool isSingle() const MODEL_SECTION;
+	const std::string &displayName() const;
+	const std::string &sortKey() const;
+	bool isSingle() const;
 
 private:
 	std::string myDisplayName;
@@ -72,13 +72,13 @@ public:
 	static AuthorPtr create(AuthorPtr author);
 				
 private:
-	MultiAuthor(AuthorPtr author) MODEL_SECTION;
+	MultiAuthor(AuthorPtr author);
 
 public:
-	void addAuthor(AuthorPtr author)  MODEL_SECTION;
-	const std::string &displayName() const MODEL_SECTION;
-	const std::string &sortKey() const MODEL_SECTION;
-	bool isSingle() const MODEL_SECTION;
+	void addAuthor(AuthorPtr author) ;
+	const std::string &displayName() const;
+	const std::string &sortKey() const;
+	bool isSingle() const;
 
 private:
 	std::vector<AuthorPtr > myAuthors;
@@ -89,9 +89,9 @@ private:
 class AuthorComparator {
 
 public:
-	AuthorComparator() MODEL_SECTION;
-	~AuthorComparator() MODEL_SECTION;
-	bool operator() (const AuthorPtr a1, const AuthorPtr a2) MODEL_SECTION;
+	AuthorComparator();
+	~AuthorComparator();
+	bool operator() (const AuthorPtr a1, const AuthorPtr a2);
 };
 
 inline Author::Author() {}

@@ -1,7 +1,0 @@
-#ifndef __STACK__
-#define __STACK__
-
-#include <stack1.h>
-
-#endif /* __STACK__ */
-

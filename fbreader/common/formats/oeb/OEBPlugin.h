@@ -27,12 +27,12 @@
 class OEBPlugin : public FormatPlugin {
 
 public:
-	~OEBPlugin() FORMATS_SECTION;
-	bool providesMetaInfo() const FORMATS_SECTION;
-	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
-	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
-	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
-	const std::string &iconName() const FORMATS_SECTION;
+	~OEBPlugin();
+	bool providesMetaInfo() const;
+	bool acceptsFile(const ZLFile &file) const;
+	bool readDescription(const std::string &path, BookDescription &description) const;
+	bool readModel(const BookDescription &description, BookModel &model) const;
+	const std::string &iconName() const;
 
 private:
 	std::string opfFileName(const std::string &oebFileName) const;

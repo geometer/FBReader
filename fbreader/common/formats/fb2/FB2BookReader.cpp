@@ -48,7 +48,6 @@ void FB2BookReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
-static const char *reference(const char **xmlattributes) FORMATS_SECTION;
 static const char *reference(const char **xmlattributes) {
 	while (*xmlattributes != 0) {
 		int len = strlen(*xmlattributes);

@@ -33,14 +33,12 @@
 TextView::LineInfo TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
   LineInfo info(start, myStyle.style());
 
-#ifndef PALM_TEMPORARY
   std::set<LineInfo>::const_iterator it = myLineInfoCache.find(info);
   if (it != myLineInfoCache.end()) {
     const LineInfo &storedInfo = *it;
     myStyle.applyControls(storedInfo.Start, storedInfo.End);
     return storedInfo;
   }
-#endif // PALM_TEMPORARY
 
   TextStylePtr storedStyle = myStyle.style();
 
@@ -155,10 +153,8 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 
   myStyle.setStyle(storedStyle);
 
-#ifndef PALM_TEMPORARY
   if (!info.End.sameElementAs(end) || end.isEndOfParagraph()) {
     myLineInfoCache.insert(info);
   }
-#endif // PALM_TEMPORARY
   return info;
 }

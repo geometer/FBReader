@@ -35,24 +35,24 @@ public:
 	static size_t bufferSize() { return 2048; }
 
 protected:
-  static const char *attributeValue(const char **xmlattributes, const char *name) XML_SECTION;
+  static const char *attributeValue(const char **xmlattributes, const char *name);
 
 protected:
-	ZLXMLReader(const char *encoding = 0) XML_SECTION;
-	virtual ~ZLXMLReader() XML_SECTION;
+	ZLXMLReader(const char *encoding = 0);
+	virtual ~ZLXMLReader();
 
 public:
-	bool readDocument(shared_ptr<ZLInputStream> stream) XML_SECTION;
+	bool readDocument(shared_ptr<ZLInputStream> stream);
 
-	virtual void startElementHandler(const char *tag, const char **attributes) XML_SECTION;
-	virtual void endElementHandler(const char *tag) XML_SECTION;
-	virtual void characterDataHandler(const char *text, int len) XML_SECTION;
-	virtual const std::vector<std::string> &externalDTDs() const XML_SECTION;
+	virtual void startElementHandler(const char *tag, const char **attributes);
+	virtual void endElementHandler(const char *tag);
+	virtual void characterDataHandler(const char *text, int len);
+	virtual const std::vector<std::string> &externalDTDs() const;
 
-	bool isInterrupted() const XML_SECTION;
+	bool isInterrupted() const;
 
 protected:
-	void interrupt() XML_SECTION;
+	void interrupt();
 
 private:
 	bool myInterrupted;

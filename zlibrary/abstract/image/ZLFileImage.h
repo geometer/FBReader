@@ -28,9 +28,9 @@
 class ZLFileImage : public ZLSingleImage {
 
 public:
-	ZLFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size = 0) IMAGE_SECTION;
-	~ZLFileImage() IMAGE_SECTION;
-	const shared_ptr<std::string> stringData() const IMAGE_SECTION;
+	ZLFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size = 0);
+	~ZLFileImage();
+	const shared_ptr<std::string> stringData() const;
 
 private:
 	std::string myPath;

@@ -28,12 +28,12 @@
 class DummyEncodingConverter : public ZLEncodingConverter {
 
 private:
-	DummyEncodingConverter() XML_SECTION;
+	DummyEncodingConverter();
 
 public:
-	~DummyEncodingConverter() XML_SECTION;
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
-	bool fillTable(int *map) XML_SECTION;
+	~DummyEncodingConverter();
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	bool fillTable(int *map);
 
 friend class ZLEncodingConverter;
 };
@@ -41,12 +41,12 @@ friend class ZLEncodingConverter;
 class OneByteEncodingConverter : public ZLEncodingConverter {
 
 private:
-	OneByteEncodingConverter(const std::string &encoding, char **encodingMap) XML_SECTION;
+	OneByteEncodingConverter(const std::string &encoding, char **encodingMap);
 
 public:
-	~OneByteEncodingConverter() XML_SECTION;
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
-	bool fillTable(int *map) XML_SECTION;
+	~OneByteEncodingConverter();
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	bool fillTable(int *map);
 
 private:
 	const std::string myEncoding;
@@ -58,13 +58,13 @@ friend class ZLEncodingConverter;
 class TwoBytesEncodingConverter : public ZLEncodingConverter {
 
 private:
-	TwoBytesEncodingConverter(char **encodingMap) XML_SECTION;
+	TwoBytesEncodingConverter(char **encodingMap);
 
 public:
-	~TwoBytesEncodingConverter() XML_SECTION;
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
-	void reset() XML_SECTION;
-	bool fillTable(int *map) XML_SECTION;
+	~TwoBytesEncodingConverter();
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	void reset();
+	bool fillTable(int *map);
 
 private:
 	char **myEncodingMap;
@@ -78,14 +78,14 @@ friend class ZLEncodingConverter;
 class IconvEncodingConverter : public ZLEncodingConverter {
 
 private:
-	IconvEncodingConverter(const std::string &encoding) XML_SECTION;
+	IconvEncodingConverter(const std::string &encoding);
 
 public:
-	~IconvEncodingConverter() XML_SECTION;
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION;
-	void reset() XML_SECTION;
-	bool isInitialized() const XML_SECTION;
-	bool fillTable(int *map) XML_SECTION;
+	~IconvEncodingConverter();
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	void reset();
+	bool isInitialized() const;
+	bool fillTable(int *map);
 
 private:
 	iconv_t myIConverter;

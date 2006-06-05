@@ -1,5 +1,3 @@
-include $(ROOTDIR)/makefiles/arch/dummy.mk
-
 BASEDIR = /opt/openzaurus-3.5.4/usr/local/arm/oe
 TOOLSDIR = $(BASEDIR)/bin
 INCDIR = $(BASEDIR)/arm-linux/include
@@ -24,5 +22,5 @@ else
 	UILIBS = -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0
 endif
 
-CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG $(DUMMY_SECTIONS) -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
+CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
 DEPGEN = $(CC) -MM

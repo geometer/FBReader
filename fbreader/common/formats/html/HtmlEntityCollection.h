@@ -34,7 +34,7 @@ private:
 	static std::map<std::string,int> ourCollection;
 
 private:
-	HtmlEntityCollection() FORMATS_SECTION;
+	HtmlEntityCollection();
 };
 
 #endif /* __HTMLENTITYCOLLECTION_H__ */

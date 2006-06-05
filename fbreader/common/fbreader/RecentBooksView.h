@@ -35,14 +35,14 @@ class Paragraph;
 class RecentBooksView : public TextView {
 
 public:
-  RecentBooksView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
-  ~RecentBooksView() FB_VIEW_SECTION;
-  const std::string &caption() const FB_VIEW_SECTION;
+  RecentBooksView(FBReader &reader, ZLPaintContext &context);
+  ~RecentBooksView();
+  const std::string &caption() const;
 
-  void rebuild() FB_VIEW_SECTION;
-  bool onStylusPress(int x, int y) FB_VIEW_SECTION;
+  void rebuild();
+  bool onStylusPress(int x, int y);
 
-  void paint() FB_VIEW_SECTION;
+  void paint();
 
   LastOpenedBooks &lastBooks();
 

@@ -1,5 +1,3 @@
-include $(ROOTDIR)/makefiles/arch/dummy.mk
-
 INSTALLDIR = /usr/local
 
 QTDIR = /opt/opie/qt-2.3.10
@@ -17,5 +15,5 @@ EXPATLIBS = -lexpat
 ENCALIBS = -lenca
 BZIP2LIBS = -lbz2
 
-CFLAGS = -pipe -DOPIE_NO_DEBUG -DOPIE_NO_BUILTIN_SHUTDOWN -DUSE_FILE_NOTIFICATION -DOPIE_SOUND_FRAGMENT_SHIFT=16 -DQT_NO_DEBUG $(DUMMY_SECTIONS) -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
+CFLAGS = -pipe -DOPIE_NO_DEBUG -DOPIE_NO_BUILTIN_SHUTDOWN -DUSE_FILE_NOTIFICATION -DOPIE_SOUND_FRAGMENT_SHIFT=16 -DQT_NO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
 DEPGEN = $(CC) -MM

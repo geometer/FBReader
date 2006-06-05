@@ -31,25 +31,25 @@ class FBReader;
 class BookTextView : public TextView {
 
 public:
-	BookTextView(FBReader &reader, ZLPaintContext &context) FB_VIEW_SECTION;
-	~BookTextView() FB_VIEW_SECTION;
-	const std::string &caption() const FB_VIEW_SECTION;
-	void setCaption(const std::string &caption) FB_VIEW_SECTION;
+	BookTextView(FBReader &reader, ZLPaintContext &context);
+	~BookTextView();
+	const std::string &caption() const;
+	void setCaption(const std::string &caption);
 
-	void setModel(const TextModel *model, const std::string &name) FB_VIEW_SECTION;
-	void saveState() FB_VIEW_SECTION;
+	void setModel(const TextModel *model, const std::string &name);
+	void saveState();
 
-	void gotoParagraph(int num, bool last = false) FB_VIEW_SECTION;
-	bool canUndoPageMove() FB_VIEW_SECTION;
-	void undoPageMove() FB_VIEW_SECTION;
-	bool canRedoPageMove() FB_VIEW_SECTION;
-	void redoPageMove() FB_VIEW_SECTION;
+	void gotoParagraph(int num, bool last = false);
+	bool canUndoPageMove();
+	void undoPageMove();
+	bool canRedoPageMove();
+	void redoPageMove();
 
-	bool onStylusPress(int x, int y) FB_VIEW_SECTION;
+	bool onStylusPress(int x, int y);
 
 private:
-	void pushCurrentPositionIntoStack() FB_VIEW_SECTION;
-	void replaceCurrentPositionInStack() FB_VIEW_SECTION;
+	void pushCurrentPositionIntoStack();
+	void replaceCurrentPositionInStack();
 
 private:
 	typedef std::pair<int,int> Position;

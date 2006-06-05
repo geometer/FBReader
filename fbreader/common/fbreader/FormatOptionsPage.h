@@ -29,8 +29,8 @@ class ZLOptionsDialogTab;
 class FormatOptionsPage : public OptionsPage {
 
 public:
-	FormatOptionsPage(ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
-	~FormatOptionsPage() FB_DIALOG_SECTION;
+	FormatOptionsPage(ZLOptionsDialogTab *dialogTab);
+	~FormatOptionsPage();
 };
 
 inline FormatOptionsPage::~FormatOptionsPage() {}

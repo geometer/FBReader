@@ -30,10 +30,10 @@ class ZLFile;
 class BookDescriptionUtil {
 
 public:
-	static bool checkInfo(const ZLFile &file) MODEL_SECTION;
-	static void saveInfo(const ZLFile &file) MODEL_SECTION;
-	static void listZipEntries(const ZLFile &zipFile, std::vector<std::string> &entries) MODEL_SECTION;
-	static void resetZipInfo(const ZLFile &zipFile) MODEL_SECTION;
+	static bool checkInfo(const ZLFile &file);
+	static void saveInfo(const ZLFile &file);
+	static void listZipEntries(const ZLFile &zipFile, std::vector<std::string> &entries);
+	static void resetZipInfo(const ZLFile &zipFile);
 };
 
 #endif /* __BOOKDESCRIPTIONUTIL_H__ */

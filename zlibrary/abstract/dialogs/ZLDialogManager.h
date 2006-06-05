@@ -36,21 +36,21 @@ public:
 class ZLDialogManager {
 
 public:
-	static bool isInitialized() DIALOG_SECTION;
-	static ZLDialogManager &instance() DIALOG_SECTION;
-	static void deleteInstance() DIALOG_SECTION;
+	static bool isInitialized();
+	static ZLDialogManager &instance();
+	static void deleteInstance();
 
 protected:
 	static ZLDialogManager *ourInstance;
 
 protected:
-	ZLDialogManager() DIALOG_SECTION;
-	virtual ~ZLDialogManager() DIALOG_SECTION;
+	ZLDialogManager();
+	virtual ~ZLDialogManager();
 
 public:
-	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const DIALOG_SECTION = 0;
-	virtual int questionBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const DIALOG_SECTION = 0;
-	virtual void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const DIALOG_SECTION = 0;
+	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const = 0;
+	virtual int questionBox(const char *title, const char *message, const char *button0 = 0, const char *button1 = 0, const char *button2 = 0) const = 0;
+	virtual void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const = 0;
 	virtual void wait(ZLRunnable &runnable, const std::string &message) const = 0;
 };
 

@@ -31,18 +31,18 @@ class ZLInputStream;
 class TxtReader {
 
 public:
-	void readDocument(ZLInputStream &stream) FORMATS_SECTION;
+	void readDocument(ZLInputStream &stream);
 
 protected:
-	TxtReader(const std::string &encoding) FORMATS_SECTION;
-	virtual ~TxtReader() FORMATS_SECTION;
+	TxtReader(const std::string &encoding);
+	virtual ~TxtReader();
 
 protected:
-	virtual void startDocumentHandler() FORMATS_SECTION = 0;
-	virtual void endDocumentHandler() FORMATS_SECTION = 0;
+	virtual void startDocumentHandler() = 0;
+	virtual void endDocumentHandler() = 0;
 
-	virtual bool characterDataHandler(std::string &str) FORMATS_SECTION = 0;
-	virtual bool newLineHandler() FORMATS_SECTION = 0;
+	virtual bool characterDataHandler(std::string &str) = 0;
+	virtual bool newLineHandler() = 0;
 
 private:
 	shared_ptr<ZLEncodingConverter> myConverter;

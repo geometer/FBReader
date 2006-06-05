@@ -32,18 +32,14 @@ void TextView::rebuildPaintInfo(bool strong) {
   if (!myStartCursor.isNull()) {
     if (strong) {
       myStartCursor.rebuild();
-#ifndef PALM_TEMPORARY
       myLineInfoCache.clear();
-#endif // PALM_TEMPORARY
     }
     myEndCursor = 0;
     myPaintState = START_IS_KNOWN;
   } else {
     if (strong) {
       myEndCursor.rebuild();
-#ifndef PALM_TEMPORARY
       myLineInfoCache.clear();
-#endif // PALM_TEMPORARY
     }
     myStartCursor = 0;
     myPaintState = END_IS_KNOWN;
@@ -203,9 +199,7 @@ void TextView::preparePaintInfo() {
     return;
   }
 
-#ifndef PALM_TEMPORARY
   myLineInfoCache.insert(myLineInfos.begin(), myLineInfos.end());
-#endif // PALM_TEMPORARY
 
   switch (myPaintState) {
     default:
@@ -285,9 +279,7 @@ void TextView::preparePaintInfo() {
       break;
   }
   myPaintState = READY;
-#ifndef PALM_TEMPORARY
   myLineInfoCache.clear();
-#endif // PALM_TEMPORARY
 }
 
 WordCursor TextView::findStart(const WordCursor &end, SizeUnit unit, int size) {

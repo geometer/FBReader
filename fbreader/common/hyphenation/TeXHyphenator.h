@@ -30,12 +30,12 @@
 class TeXHyphenationPattern {
 
 public:
-	TeXHyphenationPattern(unsigned short *ucs2String, int length) HYPHENATION_SECTION;
-	TeXHyphenationPattern(const std::string &utf8String) HYPHENATION_SECTION;
-	~TeXHyphenationPattern() HYPHENATION_SECTION;
+	TeXHyphenationPattern(unsigned short *ucs2String, int length);
+	TeXHyphenationPattern(const std::string &utf8String);
+	~TeXHyphenationPattern();
 
 	int length() const { return myLength; }
-	void apply(unsigned char *values) const HYPHENATION_SECTION;
+	void apply(unsigned char *values) const;
 
 private:
 	int myLength;
@@ -48,7 +48,7 @@ friend class TeXPatternComparator;
 class TeXPatternComparator {
 
 public:
-	bool operator() (const TeXHyphenationPattern *p1, const TeXHyphenationPattern *p2) const HYPHENATION_SECTION;
+	bool operator() (const TeXHyphenationPattern *p1, const TeXHyphenationPattern *p2) const;
 };
 
 class TeXHyphenator : public Hyphenator {
@@ -65,15 +65,15 @@ public:
 
 public:
 	TeXHyphenator() : myUseBreakingAlgorithm(false) {}
-	~TeXHyphenator() HYPHENATION_SECTION;
+	~TeXHyphenator();
 
-	void load(const std::string &language) HYPHENATION_SECTION;
-	void unload() HYPHENATION_SECTION;
+	void load(const std::string &language);
+	void unload();
 
-	bool useBreakingAlgorithm() const HYPHENATION_SECTION;
+	bool useBreakingAlgorithm() const;
 
 protected:
-	void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const HYPHENATION_SECTION;
+	void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const;
 
 private:
 	typedef std::vector<TeXHyphenationPattern*>::const_iterator PatternIterator;

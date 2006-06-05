@@ -42,7 +42,7 @@ struct PdbHeader {
 	std::string Id;
 	std::vector<unsigned long> Offsets;
 
-	bool read(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	bool read(shared_ptr<ZLInputStream> stream);
 };
 
 #endif /* __PDBREADER_H__ */

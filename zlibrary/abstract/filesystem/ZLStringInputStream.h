@@ -26,15 +26,15 @@
 class ZLStringInputStream : public ZLInputStream {
 
 public:
-	ZLStringInputStream(const std::string &str) FS_SECTION;
-	~ZLStringInputStream() FS_SECTION;
-	bool open() FS_SECTION;
-	size_t read(char *buffer, size_t maxSize) FS_SECTION;
-	void close() FS_SECTION;
+	ZLStringInputStream(const std::string &str);
+	~ZLStringInputStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-	void seek(int offset) FS_SECTION;
-	size_t offset() const FS_SECTION;
-	size_t sizeOfOpened() FS_SECTION;
+	void seek(int offset);
+	size_t offset() const;
+	size_t sizeOfOpened();
 
 private:
 	const std::string &myString;

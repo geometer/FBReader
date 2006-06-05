@@ -130,11 +130,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
     description = BookDescription::create(bookName.value());
 
     if (description.isNull()) {
-#ifndef PALM_TEMPORARY
       description = BookDescription::create(howToStartString);
-#else // PALM_TEMPORARY
-      description = BookDescription::create("$$TEST");
-#endif // PALM_TEMPORARY
     }
   }
   openBook(description);

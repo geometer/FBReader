@@ -43,10 +43,10 @@ struct IndicatorPage {
 class OptionsDialog {
 
 public:
-	OptionsDialog(FBReader &fbreader, ZLPaintContext &context) FB_DIALOG_SECTION;
-	~OptionsDialog() FB_DIALOG_SECTION;
+	OptionsDialog(FBReader &fbreader, ZLPaintContext &context);
+	~OptionsDialog();
 
-	ZLOptionsDialog &dialog() FB_DIALOG_SECTION;
+	ZLOptionsDialog &dialog();
 
 private:
 	ZLOptionsDialog *myDialog;

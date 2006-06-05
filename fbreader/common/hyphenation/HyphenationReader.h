@@ -31,12 +31,12 @@ class TeXHyphenator;
 class HyphenationReader : public ZLXMLReader {
 
 public:
-	HyphenationReader(TeXHyphenator *hyphenator) HYPHENATION_SECTION;
-	~HyphenationReader() HYPHENATION_SECTION;
+	HyphenationReader(TeXHyphenator *hyphenator);
+	~HyphenationReader();
 
-	void startElementHandler(const char *tag, const char **attributes) HYPHENATION_SECTION;
-	void endElementHandler(const char *tag) HYPHENATION_SECTION;
-	void characterDataHandler(const char *text, int len) HYPHENATION_SECTION;
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
+	void characterDataHandler(const char *text, int len);
 
 private:
 	TeXHyphenator *myHyphenator;

@@ -75,14 +75,14 @@ public:
 	};
 
 protected:
-	DocBookReader() FORMATS_SECTION;
+	DocBookReader();
 
 public:
-	~DocBookReader() FORMATS_SECTION;
-	const Tag *tags() const FORMATS_SECTION;
+	~DocBookReader();
+	const Tag *tags() const;
 
 protected:
-	const std::vector<std::string> &externalDTDs() const FORMATS_SECTION;
+	const std::vector<std::string> &externalDTDs() const;
 };
 
 inline DocBookReader::DocBookReader() {}

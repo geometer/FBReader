@@ -35,14 +35,14 @@ private:
 	static std::vector<std::string> ourAllFamiliesPlusBase;
 
 public:
-	FontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context, bool allowBase) FB_DIALOG_SECTION;
-	~FontFamilyOptionEntry() FB_DIALOG_SECTION;
+	FontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context, bool allowBase);
+	~FontFamilyOptionEntry();
 
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
+	const std::string &name() const;
+	const std::vector<std::string> &values() const;
+	const std::string &initialValue() const;
 
-	void onAccept(const std::string &value) FB_DIALOG_SECTION;
+	void onAccept(const std::string &value);
 
 private:
 	ZLStringOption &myOption;
@@ -56,14 +56,14 @@ private:
 	static std::vector<std::string> ourAllValuesPlusBase;
 
 public:
-	LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase) FB_DIALOG_SECTION;
-	~LineSpacingOptionEntry() FB_DIALOG_SECTION;
+	LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase);
+	~LineSpacingOptionEntry();
 
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
+	const std::string &name() const;
+	const std::vector<std::string> &values() const;
+	const std::string &initialValue() const;
 
-	void onAccept(const std::string &value) FB_DIALOG_SECTION;
+	void onAccept(const std::string &value);
 
 private:
 	ZLDoubleOption &myOption;
@@ -73,22 +73,22 @@ private:
 class AlignmentOptionEntry : public ZLComboOptionEntry {
 
 private:
-	static std::vector<std::string> &values4() FB_DIALOG_SECTION;
-	static std::vector<std::string> &values5() FB_DIALOG_SECTION;
+	static std::vector<std::string> &values4();
+	static std::vector<std::string> &values5();
 
 private:
 	static std::vector<std::string> ourValues4;
 	static std::vector<std::string> ourValues5;
 	
 public:
-	AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined) FB_DIALOG_SECTION;
-	~AlignmentOptionEntry() FB_DIALOG_SECTION;
+	AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined);
+	~AlignmentOptionEntry();
 
-	const std::string &name() const FB_DIALOG_SECTION;
-	const std::vector<std::string> &values() const FB_DIALOG_SECTION;
-	const std::string &initialValue() const FB_DIALOG_SECTION;
+	const std::string &name() const;
+	const std::vector<std::string> &values() const;
+	const std::string &initialValue() const;
 
-	void onAccept(const std::string &value) FB_DIALOG_SECTION;
+	void onAccept(const std::string &value);
 
 private:
 	ZLIntegerOption &myOption;

@@ -27,13 +27,13 @@
 class DocBookPlugin : public FormatPlugin {
 
 public:
-	DocBookPlugin() FORMATS_SECTION;
-	~DocBookPlugin() FORMATS_SECTION;
-	bool providesMetaInfo() const FORMATS_SECTION;
-	bool acceptsFile(const std::string &extension) const FORMATS_SECTION;
-	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
-	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
-	const std::string &iconName() const FORMATS_SECTION;
+	DocBookPlugin();
+	~DocBookPlugin();
+	bool providesMetaInfo() const;
+	bool acceptsFile(const std::string &extension) const;
+	bool readDescription(const std::string &path, BookDescription &description) const;
+	bool readModel(const BookDescription &description, BookModel &model) const;
+	const std::string &iconName() const;
 };
 
 inline DocBookPlugin::DocBookPlugin() {}

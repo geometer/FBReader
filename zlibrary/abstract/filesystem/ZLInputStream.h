@@ -26,22 +26,22 @@
 class ZLInputStream {
 
 protected:
-	ZLInputStream() FS_SECTION;
+	ZLInputStream();
 
 public:
-	virtual ~ZLInputStream() FS_SECTION;
-	virtual bool open() FS_SECTION = 0;
-	virtual size_t read(char *buffer, size_t maxSize) FS_SECTION = 0;
-	virtual void close() FS_SECTION = 0;
+	virtual ~ZLInputStream();
+	virtual bool open() = 0;
+	virtual size_t read(char *buffer, size_t maxSize) = 0;
+	virtual void close() = 0;
 
-	virtual void seek(int offset) FS_SECTION = 0;
-	virtual size_t offset() const FS_SECTION = 0;
-	virtual size_t sizeOfOpened() FS_SECTION = 0;
+	virtual void seek(int offset) = 0;
+	virtual size_t offset() const = 0;
+	virtual size_t sizeOfOpened() = 0;
 
 private:
 	// disable copying
-	ZLInputStream(const ZLInputStream&) FS_SECTION;
-	const ZLInputStream &operator = (const ZLInputStream&) FS_SECTION;
+	ZLInputStream(const ZLInputStream&);
+	const ZLInputStream &operator = (const ZLInputStream&);
 };
 
 inline ZLInputStream::ZLInputStream() {}

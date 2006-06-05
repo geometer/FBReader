@@ -29,14 +29,14 @@
 class DummyDescriptionReader {
 
 public:
-	DummyDescriptionReader(BookDescription &description) FORMATS_SECTION;
-	~DummyDescriptionReader() FORMATS_SECTION;
-	bool readDescription(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	DummyDescriptionReader(BookDescription &description);
+	~DummyDescriptionReader();
+	bool readDescription(shared_ptr<ZLInputStream> stream);
 
 	/*
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
 	*/
 
 private:

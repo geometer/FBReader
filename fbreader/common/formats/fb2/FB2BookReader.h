@@ -31,13 +31,13 @@ class Base64EncodedImage;
 class FB2BookReader : public FB2Reader {
 
 public:
-	FB2BookReader(BookModel &model) FORMATS_SECTION;
-	~FB2BookReader() FORMATS_SECTION;
-	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	FB2BookReader(BookModel &model);
+	~FB2BookReader();
+	bool readBook(shared_ptr<ZLInputStream> stream);
 
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
 
 private:
 	int mySectionDepth;

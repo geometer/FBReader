@@ -1,7 +1,0 @@
-#ifndef __SET__
-#define __SET__
-
-#include <set1.h>
-
-#endif /* __SET__ */
-

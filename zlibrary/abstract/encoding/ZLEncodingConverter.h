@@ -30,10 +30,10 @@
 class ZLEncodingConverter {
 
 public:
-	static shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding) XML_SECTION;
-	static void setEncodingDescriptionPath(const std::string &path) XML_SECTION;
-	static std::string &encodingDescriptionPath() XML_SECTION;
-	static std::vector<std::string> &knownEncodings() XML_SECTION;
+	static shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
+	static void setEncodingDescriptionPath(const std::string &path);
+	static std::string &encodingDescriptionPath();
+	static std::vector<std::string> &knownEncodings();
 	static const std::string &encodingByCode(int code);
 
 private:
@@ -42,13 +42,13 @@ private:
 	static std::map<int,std::string> ourEncodingsByCode;
 
 protected:
-	ZLEncodingConverter() XML_SECTION;
+	ZLEncodingConverter();
 
 public:
-	virtual ~ZLEncodingConverter() XML_SECTION;
-	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) XML_SECTION = 0;
-	virtual void reset() XML_SECTION;
-	virtual bool fillTable(int *map) XML_SECTION = 0;
+	virtual ~ZLEncodingConverter();
+	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) = 0;
+	virtual void reset();
+	virtual bool fillTable(int *map) = 0;
 };
 
 inline std::string &ZLEncodingConverter::encodingDescriptionPath() { return ourEncodingDescriptionPath; }

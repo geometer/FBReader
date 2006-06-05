@@ -1,5 +1,3 @@
-include $(ROOTDIR)/makefiles/arch/dummy.mk
-
 INSTALLDIR=/usr/local
 
 CC = gcc
@@ -7,7 +5,7 @@ AR = ar rsu
 LD = g++
 
 DEPGEN = $(CC) -MM
-CFLAGS = -pipe $(DUMMY_SECTIONS) -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DINSTALLDIR=\"$(INSTALLDIR)\"
+CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DINSTALLDIR=\"$(INSTALLDIR)\"
 
 MOC = moc-qt3
 QTINCLUDE = -I /usr/include/qt3

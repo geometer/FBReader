@@ -1,5 +1,3 @@
-include $(ROOTDIR)/makefiles/arch/dummy.mk
-
 BASEDIR = /stuff/build/opensimpad-0.9.0
 
 TOOLSDIR = $(BASEDIR)/cross/arm-linux/bin
@@ -19,5 +17,5 @@ EXPATLIBS = -lexpat
 ENCALIBS = -lenca
 BZIP2LIBS = -lbz2
 
-CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG $(DUMMY_SECTIONS) -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale -mfloat-abi=soft --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
+CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale -mfloat-abi=soft --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
 DEPGEN = $(CC) -MM

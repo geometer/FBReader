@@ -35,31 +35,31 @@
 class TextStyle {
 
 protected:
-  TextStyle() TEXT_STYLE_SECTION;
+  TextStyle();
 
 public:
-  virtual ~TextStyle() TEXT_STYLE_SECTION;
+  virtual ~TextStyle();
 
-  virtual bool isDecorated() const TEXT_STYLE_SECTION = 0;
+  virtual bool isDecorated() const = 0;
 
-  virtual const std::string &fontFamily() const TEXT_STYLE_SECTION = 0;
-  virtual int fontSize() const TEXT_STYLE_SECTION = 0;
+  virtual const std::string &fontFamily() const = 0;
+  virtual int fontSize() const = 0;
 
-  virtual bool bold() const TEXT_STYLE_SECTION = 0;
-  virtual bool italic() const TEXT_STYLE_SECTION = 0;
+  virtual bool bold() const = 0;
+  virtual bool italic() const = 0;
 
-  virtual ZLColor color() const TEXT_STYLE_SECTION = 0;
+  virtual ZLColor color() const = 0;
 
-  virtual int spaceBefore() const TEXT_STYLE_SECTION = 0;
-  virtual int spaceAfter() const TEXT_STYLE_SECTION = 0;
-  virtual int leftIndent() const TEXT_STYLE_SECTION = 0;
-  virtual int rightIndent() const TEXT_STYLE_SECTION = 0;
-  virtual int firstLineIndentDelta() const TEXT_STYLE_SECTION = 0;
-  virtual int verticalShift() const TEXT_STYLE_SECTION = 0;
-  virtual AlignmentType alignment() const TEXT_STYLE_SECTION = 0;
-  virtual double lineSpace() const TEXT_STYLE_SECTION = 0;
+  virtual int spaceBefore() const = 0;
+  virtual int spaceAfter() const = 0;
+  virtual int leftIndent() const = 0;
+  virtual int rightIndent() const = 0;
+  virtual int firstLineIndentDelta() const = 0;
+  virtual int verticalShift() const = 0;
+  virtual AlignmentType alignment() const = 0;
+  virtual double lineSpace() const = 0;
 
-  virtual bool allowHyphenations() const TEXT_STYLE_SECTION = 0;
+  virtual bool allowHyphenations() const = 0;
 };
 
 typedef shared_ptr<TextStyle> TextStylePtr;
@@ -67,30 +67,30 @@ typedef shared_ptr<TextStyle> TextStylePtr;
 class BaseTextStyle : public TextStyle {
 
 public:
-  BaseTextStyle(const std::string &fontFamily, int fontSize) TEXT_STYLE_SECTION;
+  BaseTextStyle(const std::string &fontFamily, int fontSize);
 
-  bool isDecorated() const TEXT_STYLE_SECTION;
+  bool isDecorated() const;
 
-  const std::string &fontFamily() const TEXT_STYLE_SECTION;
+  const std::string &fontFamily() const;
 
-  int fontSize() const TEXT_STYLE_SECTION;
-  bool bold() const TEXT_STYLE_SECTION;
-  bool italic() const TEXT_STYLE_SECTION;
+  int fontSize() const;
+  bool bold() const;
+  bool italic() const;
 
-  ZLColor color() const TEXT_STYLE_SECTION;
+  ZLColor color() const;
 
-  int spaceBefore() const TEXT_STYLE_SECTION;
-  int spaceAfter() const TEXT_STYLE_SECTION;
-  int leftIndent() const TEXT_STYLE_SECTION;
-  int rightIndent() const TEXT_STYLE_SECTION;
-  int firstLineIndentDelta() const TEXT_STYLE_SECTION;
-  int verticalShift() const TEXT_STYLE_SECTION;
+  int spaceBefore() const;
+  int spaceAfter() const;
+  int leftIndent() const;
+  int rightIndent() const;
+  int firstLineIndentDelta() const;
+  int verticalShift() const;
 
-  AlignmentType alignment() const TEXT_STYLE_SECTION;
+  AlignmentType alignment() const;
 
-  double lineSpace() const TEXT_STYLE_SECTION;
+  double lineSpace() const;
 
-  bool allowHyphenations() const TEXT_STYLE_SECTION;
+  bool allowHyphenations() const;
 
 public:
   ZLIntegerRangeOption LeftMarginOption;
@@ -117,17 +117,17 @@ public:
 class TextStyleDecoration {
 
 public:
-  TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations) TEXT_STYLE_SECTION;
-  virtual ~TextStyleDecoration() TEXT_STYLE_SECTION;
+  TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations);
+  virtual ~TextStyleDecoration();
 
-  virtual bool isFullDecoration() const TEXT_STYLE_SECTION;
+  virtual bool isFullDecoration() const;
 
-  virtual TextStylePtr createDecoratedStyle(const TextStylePtr base) const TEXT_STYLE_SECTION;
+  virtual TextStylePtr createDecoratedStyle(const TextStylePtr base) const;
 
-  const std::string &name() const TEXT_STYLE_SECTION;
+  const std::string &name() const;
 
-  bool isHyperlinkStyle() const TEXT_STYLE_SECTION;
-  void setHyperlinkStyle() TEXT_STYLE_SECTION;
+  bool isHyperlinkStyle() const;
+  void setHyperlinkStyle();
 
 public:
   ZLStringOption FontFamilyOption;
@@ -148,12 +148,12 @@ private:
 class FullTextStyleDecoration : public TextStyleDecoration {
 
 public:
-  FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) TEXT_STYLE_SECTION;
-  ~FullTextStyleDecoration() TEXT_STYLE_SECTION;
+  FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
+  ~FullTextStyleDecoration();
 
-  virtual bool isFullDecoration() const TEXT_STYLE_SECTION;
+  virtual bool isFullDecoration() const;
 
-  TextStylePtr createDecoratedStyle(const TextStylePtr base) const TEXT_STYLE_SECTION;
+  TextStylePtr createDecoratedStyle(const TextStylePtr base) const;
 
 public:
   ZLIntegerRangeOption SpaceBeforeOption;
@@ -170,13 +170,13 @@ public:
 class DecoratedTextStyle : public TextStyle {
 
 protected:
-  DecoratedTextStyle(const TextStylePtr base) TEXT_STYLE_SECTION;
+  DecoratedTextStyle(const TextStylePtr base);
 
 public:
-  virtual ~DecoratedTextStyle() TEXT_STYLE_SECTION;
+  virtual ~DecoratedTextStyle();
 
-  bool isDecorated() const TEXT_STYLE_SECTION;
-  const TextStylePtr base() const TEXT_STYLE_SECTION;
+  bool isDecorated() const;
+  const TextStylePtr base() const;
 
 private:
   const TextStylePtr myBase;
@@ -187,27 +187,27 @@ class ForcedControlEntry;
 class ForcedTextStyle : public DecoratedTextStyle {
 
 public:
-  ForcedTextStyle(TextStylePtr base, const ForcedControlEntry &entry) TEXT_STYLE1_SECTION;
-  ~ForcedTextStyle() TEXT_STYLE1_SECTION;
+  ForcedTextStyle(TextStylePtr base, const ForcedControlEntry &entry);
+  ~ForcedTextStyle();
 
-  const std::string &fontFamily() const TEXT_STYLE_SECTION;
-  int fontSize() const TEXT_STYLE_SECTION;
+  const std::string &fontFamily() const;
+  int fontSize() const;
 
-  bool bold() const TEXT_STYLE_SECTION;
-  bool italic() const TEXT_STYLE_SECTION;
+  bool bold() const;
+  bool italic() const;
 
-  ZLColor color() const TEXT_STYLE_SECTION;
+  ZLColor color() const;
 
-  int spaceBefore() const TEXT_STYLE_SECTION;
-  int spaceAfter() const TEXT_STYLE_SECTION;
-  int leftIndent() const TEXT_STYLE_SECTION;
-  int rightIndent() const TEXT_STYLE_SECTION;
-  int firstLineIndentDelta() const TEXT_STYLE_SECTION;
-  int verticalShift() const TEXT_STYLE_SECTION;
-  AlignmentType alignment() const TEXT_STYLE_SECTION;
-  double lineSpace() const TEXT_STYLE_SECTION;
+  int spaceBefore() const;
+  int spaceAfter() const;
+  int leftIndent() const;
+  int rightIndent() const;
+  int firstLineIndentDelta() const;
+  int verticalShift() const;
+  AlignmentType alignment() const;
+  double lineSpace() const;
 
-  bool allowHyphenations() const TEXT_STYLE_SECTION;
+  bool allowHyphenations() const;
 
 private:
   const ForcedControlEntry &myEntry;
@@ -216,29 +216,29 @@ private:
 class PartialDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-  PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration) TEXT_STYLE1_SECTION;
+  PartialDecoratedTextStyle(const TextStylePtr base, const TextStyleDecoration &decoration);
   friend TextStylePtr TextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const;
 
 public:
-  virtual ~PartialDecoratedTextStyle() TEXT_STYLE1_SECTION;
-  const std::string &fontFamily() const TEXT_STYLE_SECTION;
-  int fontSize() const TEXT_STYLE_SECTION;
-  bool bold() const TEXT_STYLE_SECTION;
-  bool italic() const TEXT_STYLE_SECTION;
+  virtual ~PartialDecoratedTextStyle();
+  const std::string &fontFamily() const;
+  int fontSize() const;
+  bool bold() const;
+  bool italic() const;
 
-  ZLColor color() const TEXT_STYLE_SECTION;
+  ZLColor color() const;
 
-  int spaceBefore() const TEXT_STYLE_SECTION;
-  int spaceAfter() const TEXT_STYLE_SECTION;
-  int leftIndent() const TEXT_STYLE_SECTION;
-  int rightIndent() const TEXT_STYLE_SECTION;
-  int firstLineIndentDelta() const TEXT_STYLE_SECTION;
-  int verticalShift() const TEXT_STYLE_SECTION;
+  int spaceBefore() const;
+  int spaceAfter() const;
+  int leftIndent() const;
+  int rightIndent() const;
+  int firstLineIndentDelta() const;
+  int verticalShift() const;
 
-  AlignmentType alignment() const TEXT_STYLE_SECTION;
-  bool allowHyphenations() const TEXT_STYLE_SECTION;
+  AlignmentType alignment() const;
+  bool allowHyphenations() const;
 
-  double lineSpace() const TEXT_STYLE_SECTION;
+  double lineSpace() const;
 
 private:
   const TextStyleDecoration &myDecoration;
@@ -247,29 +247,29 @@ private:
 class FullDecoratedTextStyle : public DecoratedTextStyle {
 
 private:
-  FullDecoratedTextStyle(const TextStylePtr base, const FullTextStyleDecoration &decoration) TEXT_STYLE1_SECTION;
+  FullDecoratedTextStyle(const TextStylePtr base, const FullTextStyleDecoration &decoration);
   friend TextStylePtr FullTextStyleDecoration::createDecoratedStyle(const TextStylePtr base) const;
 
 public:
-  ~FullDecoratedTextStyle() TEXT_STYLE1_SECTION;
-  const std::string &fontFamily() const TEXT_STYLE_SECTION;
-  int fontSize() const TEXT_STYLE_SECTION;
-  bool bold() const TEXT_STYLE_SECTION;
-  bool italic() const TEXT_STYLE_SECTION;
+  ~FullDecoratedTextStyle();
+  const std::string &fontFamily() const;
+  int fontSize() const;
+  bool bold() const;
+  bool italic() const;
 
-  ZLColor color() const TEXT_STYLE_SECTION;
+  ZLColor color() const;
 
-  int spaceBefore() const TEXT_STYLE_SECTION;
-  int spaceAfter() const TEXT_STYLE_SECTION;
-  int leftIndent() const TEXT_STYLE_SECTION;
-  int rightIndent() const TEXT_STYLE_SECTION;
-  int firstLineIndentDelta() const TEXT_STYLE_SECTION;
-  int verticalShift() const TEXT_STYLE_SECTION;
+  int spaceBefore() const;
+  int spaceAfter() const;
+  int leftIndent() const;
+  int rightIndent() const;
+  int firstLineIndentDelta() const;
+  int verticalShift() const;
 
-  AlignmentType alignment() const TEXT_STYLE_SECTION;
-  bool allowHyphenations() const TEXT_STYLE_SECTION;
+  AlignmentType alignment() const;
+  bool allowHyphenations() const;
 
-  double lineSpace() const TEXT_STYLE_SECTION;
+  double lineSpace() const;
 
 private:
   const FullTextStyleDecoration &myDecoration;
@@ -291,17 +291,17 @@ public:
 class TextStyleCollection {
 
 public:
-  static TextStyleCollection &instance() TEXT_STYLE_SECTION;
-  static void deleteInstance() TEXT_STYLE_SECTION;
+  static TextStyleCollection &instance();
+  static void deleteInstance();
 
-  TextStylePtr baseStylePtr() const TEXT_STYLE_SECTION;
-  BaseTextStyle &baseStyle() const TEXT_STYLE_SECTION;
-  TextStyleDecoration *decoration(TextKind kind) const TEXT_STYLE_SECTION;
+  TextStylePtr baseStylePtr() const;
+  BaseTextStyle &baseStyle() const;
+  TextStyleDecoration *decoration(TextKind kind) const;
   PositionIndicatorStyle &indicatorStyle();
 
 private:
-  TextStyleCollection() TEXT_STYLE1_SECTION;
-  ~TextStyleCollection() TEXT_STYLE1_SECTION;
+  TextStyleCollection();
+  ~TextStyleCollection();
 
 private:
   static TextStyleCollection *ourInstance;

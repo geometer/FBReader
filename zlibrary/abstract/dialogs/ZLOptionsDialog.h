@@ -30,25 +30,25 @@ class ZLOptionEntry;
 class ZLOptionsDialogTab {
 
 public:
-	virtual ~ZLOptionsDialogTab() DIALOG_SECTION;
-	virtual void addOption(ZLOptionEntry *option) DIALOG_SECTION = 0;
-	virtual void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) DIALOG_SECTION = 0;
+	virtual ~ZLOptionsDialogTab();
+	virtual void addOption(ZLOptionEntry *option) = 0;
+	virtual void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) = 0;
 };
 
 class ZLOptionsDialog {
 
 protected:
-	ZLOptionsDialog(const std::string &id) DIALOG_SECTION;
+	ZLOptionsDialog(const std::string &id);
 	
 public:
-	virtual ~ZLOptionsDialog() DIALOG_SECTION;
-	virtual ZLOptionsDialogTab *createTab(const std::string &name) DIALOG_SECTION = 0;
-	virtual bool run(const std::string &tabName) DIALOG_SECTION;
+	virtual ~ZLOptionsDialog();
+	virtual ZLOptionsDialogTab *createTab(const std::string &name) = 0;
+	virtual bool run(const std::string &tabName);
 
 protected:
-	virtual const std::string &selectedTabName() const DIALOG_SECTION = 0;
-	virtual void selectTab(const std::string &name) DIALOG_SECTION = 0;
-	virtual bool run() DIALOG_SECTION = 0;
+	virtual const std::string &selectedTabName() const = 0;
+	virtual void selectTab(const std::string &name) = 0;
+	virtual bool run() = 0;
 
 protected:
 	ZLStringOption TabOption;

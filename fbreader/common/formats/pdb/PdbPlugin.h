@@ -29,32 +29,32 @@
 class PdbPlugin : public FormatPlugin {
 
 protected:
-	PdbPlugin() FORMATS_SECTION;
+	PdbPlugin();
 
 public:
-	virtual ~PdbPlugin() FORMATS_SECTION;
+	virtual ~PdbPlugin();
 
 protected:
-	std::string fileType(const ZLFile &file) const FORMATS_SECTION;
+	std::string fileType(const ZLFile &file) const;
 };
 
 class PluckerPlugin : public PdbPlugin {
 
 public:
-	bool providesMetaInfo() const FORMATS_SECTION;
-	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
-	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
-	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
-	const std::string &iconName() const FORMATS_SECTION;
+	bool providesMetaInfo() const;
+	bool acceptsFile(const ZLFile &file) const;
+	bool readDescription(const std::string &path, BookDescription &description) const;
+	bool readModel(const BookDescription &description, BookModel &model) const;
+	const std::string &iconName() const;
 };
 
 class SimplePdbPlugin : public PdbPlugin {
 
 public:
-	bool providesMetaInfo() const FORMATS_SECTION;
-	bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION;
-	bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION;
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) FORMATS_SECTION;
+	bool providesMetaInfo() const;
+	bool readDescription(const std::string &path, BookDescription &description) const;
+	bool readModel(const BookDescription &description, BookModel &model) const;
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 
 protected:
 	virtual shared_ptr<ZLInputStream> createStream(ZLFile &file) const = 0;
@@ -63,8 +63,8 @@ protected:
 class PalmDocPlugin : public SimplePdbPlugin {
 
 public:
-	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
-	const std::string &iconName() const FORMATS_SECTION;
+	bool acceptsFile(const ZLFile &file) const;
+	const std::string &iconName() const;
 
 protected:
 	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
@@ -73,8 +73,8 @@ protected:
 class ZTXTPlugin : public SimplePdbPlugin {
 
 public:
-	bool acceptsFile(const ZLFile &file) const FORMATS_SECTION;
-	const std::string &iconName() const FORMATS_SECTION;
+	bool acceptsFile(const ZLFile &file) const;
+	const std::string &iconName() const;
 
 protected:
 	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;

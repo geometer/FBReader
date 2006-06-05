@@ -31,11 +31,11 @@ public:
   static const std::string STATE_CATEGORY;
 
 public:
-  static void clearGroup(const std::string &group) OPTIONS_SECTION;
+  static void clearGroup(const std::string &group);
   
 public:
-  ZLOption(const std::string &category, const std::string &group, const std::string &optionName) OPTIONS_SECTION;
-  virtual ~ZLOption() OPTIONS_SECTION;
+  ZLOption(const std::string &category, const std::string &group, const std::string &optionName);
+  virtual ~ZLOption();
 
 protected:
   std::string myCategory;
@@ -44,18 +44,18 @@ protected:
   mutable bool myIsSynchronized;
 
 private:
-  ZLOption(const ZLOption&) OPTIONS_SECTION;
-  const ZLOption& operator = (const ZLOption&) OPTIONS_SECTION;
+  ZLOption(const ZLOption&);
+  const ZLOption& operator = (const ZLOption&);
 };
 
 class ZLBooleanOption : public ZLOption {
 
 public:
-  ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue) OPTIONS_SECTION;
-  ~ZLBooleanOption() OPTIONS_SECTION;
+  ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue);
+  ~ZLBooleanOption();
 
-  bool value() const OPTIONS_SECTION;
-  void setValue(bool value) OPTIONS_SECTION;
+  bool value() const;
+  void setValue(bool value);
 
 private:
   mutable bool myValue;
@@ -71,11 +71,11 @@ enum Boolean3 {
 class ZLBoolean3Option : public ZLOption {
 
 public:
-  ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue) OPTIONS_SECTION;
-  ~ZLBoolean3Option() OPTIONS_SECTION;
+  ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue);
+  ~ZLBoolean3Option();
 
-  Boolean3 value() const OPTIONS_SECTION;
-  void setValue(Boolean3 value) OPTIONS_SECTION;
+  Boolean3 value() const;
+  void setValue(Boolean3 value);
 
 private:
   mutable Boolean3 myValue;
@@ -85,11 +85,11 @@ private:
 class ZLIntegerOption : public ZLOption {
 
 public:
-  ZLIntegerOption(const std::string &category, const std::string &group, const std::string &optionName, long defaultValue) OPTIONS_SECTION;
-  ~ZLIntegerOption() OPTIONS_SECTION;
+  ZLIntegerOption(const std::string &category, const std::string &group, const std::string &optionName, long defaultValue);
+  ~ZLIntegerOption();
 
-  long value() const OPTIONS_SECTION;
-  void setValue(long value) OPTIONS_SECTION;
+  long value() const;
+  void setValue(long value);
 
 private:
   mutable long myValue;
@@ -99,13 +99,13 @@ private:
 class ZLIntegerRangeOption : public ZLOption {
 
 public:
-  ZLIntegerRangeOption(const std::string &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue) OPTIONS_SECTION;
-  ~ZLIntegerRangeOption() OPTIONS_SECTION;
+  ZLIntegerRangeOption(const std::string &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue);
+  ~ZLIntegerRangeOption();
 
-  long value() const OPTIONS_SECTION;
-  void setValue(long value) OPTIONS_SECTION;
-  long minValue() const OPTIONS_SECTION;
-  long maxValue() const OPTIONS_SECTION;
+  long value() const;
+  void setValue(long value);
+  long minValue() const;
+  long maxValue() const;
 
 private:
   mutable long myValue;
@@ -119,20 +119,20 @@ struct ZLColor {
   unsigned char Green;
   unsigned char Blue;
 
-  ZLColor(unsigned char r, unsigned char g, unsigned char b) OPTIONS_SECTION;
-  ZLColor(long longValue = 0) OPTIONS_SECTION;
-  ~ZLColor() OPTIONS_SECTION;
-  long intValue() OPTIONS_SECTION;
+  ZLColor(unsigned char r, unsigned char g, unsigned char b);
+  ZLColor(long longValue = 0);
+  ~ZLColor();
+  long intValue();
 };
 
 class ZLColorOption : public ZLOption {
 
 public:
-  ZLColorOption(const std::string &category, const std::string &group, const std::string &optionName, ZLColor defaultValue) OPTIONS_SECTION;
-  ~ZLColorOption() OPTIONS_SECTION;
+  ZLColorOption(const std::string &category, const std::string &group, const std::string &optionName, ZLColor defaultValue);
+  ~ZLColorOption();
 
-  ZLColor value() const OPTIONS_SECTION;
-  void setValue(ZLColor value) OPTIONS_SECTION;
+  ZLColor value() const;
+  void setValue(ZLColor value);
 
 private:
   mutable long myIntValue;
@@ -142,11 +142,11 @@ private:
 class ZLDoubleOption : public ZLOption {
 
 public:
-  ZLDoubleOption(const std::string &category, const std::string &group, const std::string &optionName, double defaultValue) OPTIONS_SECTION;
-  ~ZLDoubleOption() OPTIONS_SECTION;
+  ZLDoubleOption(const std::string &category, const std::string &group, const std::string &optionName, double defaultValue);
+  ~ZLDoubleOption();
 
-  double value() const OPTIONS_SECTION;
-  void setValue(double value) OPTIONS_SECTION;
+  double value() const;
+  void setValue(double value);
 
 private:
   mutable double myValue;
@@ -156,11 +156,11 @@ private:
 class ZLStringOption : public ZLOption {
 
 public:
-  ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue) OPTIONS_SECTION;
-  ~ZLStringOption() OPTIONS_SECTION;
+  ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue);
+  ~ZLStringOption();
 
-  const std::string &value() const OPTIONS_SECTION;
-  void setValue(const std::string &value) OPTIONS_SECTION;
+  const std::string &value() const;
+  void setValue(const std::string &value);
 
 private:
   mutable std::string myValue;

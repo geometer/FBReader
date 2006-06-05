@@ -27,14 +27,14 @@
 class DummyBookReader {
 
 public:
-	DummyBookReader(BookModel &model) FORMATS_SECTION;
-	~DummyBookReader() FORMATS_SECTION;
-	bool readBook(shared_ptr<ZLInputStream> stream) FORMATS_SECTION;
+	DummyBookReader(BookModel &model);
+	~DummyBookReader();
+	bool readBook(shared_ptr<ZLInputStream> stream);
 
 	/*
-	void startElementHandler(int tag, const char **attributes) FORMATS_SECTION;
-	void endElementHandler(int tag) FORMATS_SECTION;
-	void characterDataHandler(const char *text, int len) FORMATS_SECTION;
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
 	*/
 
 private:

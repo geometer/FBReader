@@ -29,8 +29,8 @@ class ZLOptionsDialogTab;
 class ColorOptionsPage : public OptionsPage {
 
 public:
-	ColorOptionsPage(ZLOptionsDialogTab *dialogTab) FB_DIALOG_SECTION;
-	~ColorOptionsPage() FB_DIALOG_SECTION;
+	ColorOptionsPage(ZLOptionsDialogTab *dialogTab);
+	~ColorOptionsPage();
 };
 
 inline ColorOptionsPage::~ColorOptionsPage() {}

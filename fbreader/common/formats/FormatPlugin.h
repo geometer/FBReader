@@ -39,25 +39,25 @@ class ZLInputStream;
 class FormatInfoPage {
 
 protected:
-  FormatInfoPage() FORMATS_SECTION;
+  FormatInfoPage();
 
 public:
-  virtual ~FormatInfoPage() FORMATS_SECTION;
+  virtual ~FormatInfoPage();
 };
 
 class FormatPlugin {
 
 protected:
-  FormatPlugin() FORMATS_SECTION;
+  FormatPlugin();
   
 public:
-  virtual ~FormatPlugin() FORMATS_SECTION;
-  virtual bool providesMetaInfo() const FORMATS_SECTION = 0;
-  virtual bool acceptsFile(const ZLFile &file) const FORMATS_SECTION = 0;
-  virtual bool readDescription(const std::string &path, BookDescription &description) const FORMATS_SECTION = 0;
-  virtual bool readModel(const BookDescription &description, BookModel &model) const FORMATS_SECTION = 0;
-  virtual const std::string &iconName() const FORMATS_SECTION = 0;
-  virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path) FORMATS_SECTION;
+  virtual ~FormatPlugin();
+  virtual bool providesMetaInfo() const = 0;
+  virtual bool acceptsFile(const ZLFile &file) const = 0;
+  virtual bool readDescription(const std::string &path, BookDescription &description) const = 0;
+  virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
+  virtual const std::string &iconName() const = 0;
+  virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
 
 protected:
   void detectEncoding(BookDescription &description, ZLInputStream &stream) const;
@@ -71,15 +71,15 @@ public:
   ZLIntegerOption DefaultLanguageOption;
   
 public:
-  static PluginCollection &instance() FORMATS_SECTION;
-  static void deleteInstance() FORMATS_SECTION;
+  static PluginCollection &instance();
+  static void deleteInstance();
 
 private:
-  PluginCollection() FORMATS_SECTION;
-  ~PluginCollection() FORMATS_SECTION;
+  PluginCollection();
+  ~PluginCollection();
   
 public:
-  FormatPlugin *plugin(const ZLFile &file, bool strong) FORMATS_SECTION;
+  FormatPlugin *plugin(const ZLFile &file, bool strong);
 
 private:
   static PluginCollection *ourInstance;

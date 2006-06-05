@@ -42,33 +42,33 @@ public:
 		TREE_MODEL,
 	};
 
-	TextModel() MODEL_SECTION;
-	virtual ~TextModel() MODEL_SECTION;
-	virtual Kind kind() const MODEL_SECTION = 0;
+	TextModel();
+	virtual ~TextModel();
+	virtual Kind kind() const = 0;
 
-	size_t paragraphsNumber() const MODEL_SECTION;
-	Paragraph *operator[] (size_t index) MODEL_SECTION;
-	const Paragraph *operator[] (size_t index) const MODEL_SECTION;
-	const std::vector<TextMark> &marks() const MODEL_SECTION;
+	size_t paragraphsNumber() const;
+	Paragraph *operator[] (size_t index);
+	const Paragraph *operator[] (size_t index) const;
+	const std::vector<TextMark> &marks() const;
 
-	virtual void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
-	virtual void selectParagraph(size_t index) const MODEL_SECTION;
+	virtual void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
+	virtual void selectParagraph(size_t index) const;
 
-	TextMark firstMark() const MODEL_SECTION;
-	TextMark lastMark() const MODEL_SECTION;
-	TextMark nextMark(TextMark position) const MODEL_SECTION;
-	TextMark previousMark(TextMark position) const MODEL_SECTION;
+	TextMark firstMark() const;
+	TextMark lastMark() const;
+	TextMark nextMark(TextMark position) const;
+	TextMark previousMark(TextMark position) const;
 
-	void addControl(TextKind textKind, bool isStart) MODEL_SECTION;
-	void addControl(const ForcedControlEntry &entry) MODEL_SECTION;
-	void addHyperlinkControl(TextKind textKind, const std::string &label) MODEL_SECTION;
-	void addText(const std::string &text) MODEL_SECTION;
-	void addText(const std::vector<std::string> &text) MODEL_SECTION;
-	void addImage(const std::string &id, const ImageMap &imageMap) MODEL_SECTION;
+	void addControl(TextKind textKind, bool isStart);
+	void addControl(const ForcedControlEntry &entry);
+	void addHyperlinkControl(TextKind textKind, const std::string &label);
+	void addText(const std::string &text);
+	void addText(const std::vector<std::string> &text);
+	void addImage(const std::string &id, const ImageMap &imageMap);
 
 protected:
-	void addParagraphInternal(Paragraph *paragraph) MODEL_SECTION;
-	void removeParagraphInternal(int index) MODEL_SECTION;
+	void addParagraphInternal(Paragraph *paragraph);
+	void removeParagraphInternal(int index);
 	
 private:
 	std::vector<Paragraph*> myParagraphs;
@@ -81,24 +81,24 @@ private:
 class PlainTextModel : public TextModel {
 
 public:
-	Kind kind() const MODEL_SECTION;
-	void createParagraph(Paragraph::Kind kind) MODEL_SECTION;
-	void createParagraphWithReference(long reference) MODEL_SECTION;
+	Kind kind() const;
+	void createParagraph(Paragraph::Kind kind);
+	void createParagraphWithReference(long reference);
 };
 
 class TreeModel : public TextModel {
 
 public:
-	TreeModel() MODEL_SECTION;
-	~TreeModel() MODEL_SECTION;
-	Kind kind() const MODEL_SECTION;
+	TreeModel();
+	~TreeModel();
+	Kind kind() const;
 
-	TreeParagraph *createParagraph(TreeParagraph *parent = 0) MODEL_SECTION;
+	TreeParagraph *createParagraph(TreeParagraph *parent = 0);
 
-	void removeParagraph(int index) MODEL_SECTION;
+	void removeParagraph(int index);
 	
-	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const MODEL_SECTION;
-	void selectParagraph(size_t index) const MODEL_SECTION;
+	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
+	void selectParagraph(size_t index) const;
 
 private:
 	TreeParagraph *myRoot;

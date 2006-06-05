@@ -32,14 +32,14 @@ public:
 	static const std::string ImageDirectory;
 
 public:
-	FBFileHandler() FB_DIALOG_SECTION;
-	~FBFileHandler() FB_DIALOG_SECTION;
+	FBFileHandler();
+	~FBFileHandler();
 
-	const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const FB_DIALOG_SECTION;
-	bool isAcceptable(const std::string &name) const FB_DIALOG_SECTION;
-	void accept(const std::string &name) const FB_DIALOG_SECTION;
+	const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const;
+	bool isAcceptable(const std::string &name) const;
+	void accept(const std::string &name) const;
 
-	BookDescriptionPtr description() const FB_DIALOG_SECTION;
+	BookDescriptionPtr description() const;
 
 private:
 	mutable BookDescriptionPtr myDescription;
