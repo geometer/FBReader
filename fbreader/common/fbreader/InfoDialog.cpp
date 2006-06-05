@@ -22,10 +22,60 @@
 #include <algorithm>
 
 #include <abstract/ZLEncodingConverter.h>
+#include <abstract/ZLDialogManager.h>
+#include <abstract/ZLOptionsDialog.h>
+#include <abstract/ZLOptionEntry.h>
+#include <abstract/ZLFSManager.h>
 
-#include "InfoOptions.h"
+#include "InfoDialog.h"
 
 #include "../hyphenation/TeXHyphenator.h"
+
+class StringInfoEntry : public ZLStringOptionEntry {
+
+public:
+	StringInfoEntry(const std::string &name, const std::string &value);
+	~StringInfoEntry();
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+
+private:
+	std::string myName;
+	std::string myValue;
+};
+
+class EncodingEntry : public ZLComboOptionEntry {
+
+public:
+	EncodingEntry(const std::string &name, ZLStringOption &encodingOption);
+	~EncodingEntry();
+
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+private:
+	std::string myName;
+	ZLStringOption &myEncodingOption;
+};
+
+class LanguageEntry : public ZLComboOptionEntry {
+
+public:
+	LanguageEntry(const std::string &name, ZLStringOption &encodingOption);
+	~LanguageEntry();
+
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+private:
+	std::string myName;
+	ZLStringOption &myLanguageOption;
+};
 
 static std::vector<std::string> AUTO_ENCODING;
 
@@ -104,4 +154,20 @@ void LanguageEntry::onAccept(const std::string &value) {
 	const std::vector<std::string> &names = TeXHyphenator::languageNames();
 	const size_t index = std::find(names.begin(), names.end(), value) - names.begin();
 	myLanguageOption.setValue((index < codes.size()) ? codes[index] : codes.back());
+}
+
+InfoDialog::InfoDialog(const std::string &fileName) : myBookInfo(fileName) {
+	myDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
+	ZLOptionsDialogTab *infoTab = myDialog->createTab("Info");
+	infoTab->addOption(new StringInfoEntry("File", fileName));
+	infoTab->addOption(new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption));
+	infoTab->addOption(new ZLSimpleStringOptionEntry("Author (display name)", myBookInfo.AuthorDisplayNameOption));
+	infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", myBookInfo.AuthorSortKeyOption));
+	infoTab->addOption(new EncodingEntry("Encoding", myBookInfo.EncodingOption));
+	infoTab->addOption(new LanguageEntry("Language", myBookInfo.LanguageOption));
+
+	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
+	if (plugin != 0) {
+		myFormatInfoPage = plugin->createInfoPage(*myDialog, fileName);
+	}
 }
