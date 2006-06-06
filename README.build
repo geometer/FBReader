@@ -10,7 +10,7 @@ gcc compiler for building package for another platform.
 
 FBReader requires
   ** expat -- library for XML parsing. AFAIK, all popular destributions
-     includes package with name like 'expat-dev' or 'libepat-dev'.
+     includes package with name like 'expat-dev' or 'libexpat-dev'.
      If you cannot find expat in your distribution, please visit
      http://expat.sourceforge.net
   ** enca -- encoding detection library (http://trific.ath.cx/software/enca/)
