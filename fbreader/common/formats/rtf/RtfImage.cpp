@@ -53,6 +53,7 @@ void RtfImage::read() const {
 				*myData += (convertXDigit(buffer[j]) << 4) + convertXDigit(buffer[j + 1]);
 			}
 		}
+		delete[] buffer;
 		stream->close();
 	}
 }
