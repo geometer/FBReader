@@ -1,6 +1,6 @@
 #! /bin/sh
 
-if [ "$1" == "configure" -a -x /usr/bin/maemo-select-menu-location ]
+if [ "$1" = "configure" -a -n "$2" -a -x /usr/bin/maemo-select-menu-location ]
 then
 	/usr/bin/maemo-select-menu-location FBReader.desktop
 fi
