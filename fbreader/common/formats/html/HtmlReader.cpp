@@ -53,8 +53,8 @@ void HtmlReader::setTag(HtmlTag &tag, const std::string &name) {
     tag.Name = name.substr(1);
   }
 
-  const unsigned int len = std::min(tag.Name.length(), (unsigned int)10);
-  for (unsigned int i = 0; i < len; i++) {
+  const size_t len = std::min(tag.Name.length(), (size_t)10);
+  for (size_t i = 0; i < len; i++) {
     tag.Name[i] = toupper(tag.Name[i]);
   }
 }

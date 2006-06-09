@@ -313,7 +313,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
   for (char *ptr = start; ptr < end; ptr++) {
     if (*ptr == 0) {
       functionFlag = true;
-      if (ptr != textStart) {
+      if (ptr > textStart) {
         safeBeginParagraph();
         txtBuffer.erase();
         myConverter->convert(txtBuffer, textStart, ptr);
