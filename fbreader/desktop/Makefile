@@ -13,7 +13,7 @@ all: tarball debpackage
 
 install:
 	@install -d $(DESTDIR)$(INSTALLDIR)/bin
-	@install -s ../FBReader $(DESTDIR)$(INSTALLDIR)/bin
+	@install ../FBReader $(DESTDIR)$(INSTALLDIR)/bin
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
 	@install -m 0644 ../share/FBReader/formats/html/html.ent $(DESTDIR)$(INSTALLDIR)/share/FBReader/formats/html
