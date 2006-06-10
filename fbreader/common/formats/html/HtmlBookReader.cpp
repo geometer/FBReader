@@ -334,7 +334,9 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 
 HtmlBookReader::~HtmlBookReader() {
   for (std::map<std::string,HtmlTagAction*>::const_iterator it = myActionMap.begin(); it != myActionMap.end(); it++) {
-    delete it->second;
+		if (it->second != 0) {
+      delete it->second;
+	  }
   }
 }
 
