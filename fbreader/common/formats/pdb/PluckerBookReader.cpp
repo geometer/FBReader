@@ -329,7 +329,8 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
         ptr = end - 1;
       }
       functionFlag = false;
-      textStart = ptr + 1 + myBytesToSkip;
+      ptr += myBytesToSkip;
+      textStart = ptr + 1;
       myBytesToSkip = 0;
     } else {
       if ((unsigned char)*ptr == 0xA0) {
