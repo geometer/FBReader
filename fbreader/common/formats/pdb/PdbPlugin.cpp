@@ -43,7 +43,7 @@ std::string PdbPlugin::fileType(const ZLFile &file) const {
 
 	ZLStringOption palmTypeOption(FBOptions::BOOKS_CATEGORY, file.path(), "PalmType", "");
 	std::string palmType = palmTypeOption.value();
-	if (palmType.empty() || !upToDate) {
+	if ((palmType.length() != 8) || !upToDate) {
 		shared_ptr<ZLInputStream> stream = file.inputStream();
 		if (stream.isNull() || !stream->open()) {
 			return "";
@@ -52,7 +52,7 @@ std::string PdbPlugin::fileType(const ZLFile &file) const {
 		char id[8];
 		stream->read(id, 8);
 		stream->close();
-		palmType.append(id, 8);
+		palmType = std::string(id, 8);
 		if (!upToDate) {
 			BookDescriptionUtil::saveInfo(baseFile);
 		}
