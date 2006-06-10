@@ -48,6 +48,12 @@ CollectionView::~CollectionView() {
   if (myTreeModel != 0) {
     delete myTreeModel;
   }
+
+  for (ImageMap::iterator image = myImageMap.begin(); image != myImageMap.end(); ++image) {
+    if (image->second != 0) {
+      delete image->second;
+    }
+  }
 }
 
 const std::string &CollectionView::caption() const {
