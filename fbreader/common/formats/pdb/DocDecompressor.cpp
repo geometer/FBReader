@@ -23,47 +23,75 @@
 
 #include "DocDecompressor.h"
 
-size_t DocDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t compressedSize, size_t maxUncompressedSize) {
-	unsigned char *sourceBuffer = new unsigned char[compressedSize];
+static unsigned char TOKEN_CODE[256] = {
+	0, 1, 1, 1,    1, 1, 1, 1,    1, 0, 0, 0,    0, 0, 0, 0,
+	0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,
+	0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,
+	0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,
+	0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,
+	0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,
+	0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,
+	0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,    0, 0, 0, 0,
+	3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,
+	3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,
+	3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,
+	3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,    3, 3, 3, 3,
+	2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,
+	2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,
+	2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,
+	2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,    2, 2, 2, 2,
+};
 
-	unsigned int sourceIndex = 0;
-	unsigned int targetIndex = 0;
+size_t DocDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, size_t compressedSize, size_t maxUncompressedSize) {
+	const unsigned char *sourceBuffer = new unsigned char[compressedSize];
+	const unsigned char *sourceBufferEnd = sourceBuffer + compressedSize;
+	const unsigned char *sourcePtr = sourceBuffer;
+
+	unsigned char *targetBufferEnd = (unsigned char*)targetBuffer + maxUncompressedSize;
+	unsigned char *targetPtr = (unsigned char*)targetBuffer;
+
+	unsigned char token;
+	unsigned short copyLength, N;
 
 	if (stream.read((char*)sourceBuffer, compressedSize) == compressedSize) {
-		while ((sourceIndex < compressedSize) && (targetIndex < maxUncompressedSize)) {
-			unsigned int token = sourceBuffer[sourceIndex++];
-			if ((0 < token) && (token < 9)) {
-				if ((sourceIndex + token > compressedSize) || (targetIndex + token > maxUncompressedSize)) {
+		while ((sourcePtr < sourceBufferEnd) && (targetPtr < targetBufferEnd)) {
+			token = *(sourcePtr++);
+			switch (TOKEN_CODE[token]) {
+			  case 0:
+					*(targetPtr++) = token;
 					break;
-				}
-				memcpy(buffer + targetIndex, sourceBuffer + sourceIndex, token);
-				sourceIndex += token;
-				targetIndex += token;
-			} else if (token < 0x80) {
-				buffer[targetIndex++] = token;
-			} else if (0xc0 <= token) {
-				if (targetIndex + 2 > maxUncompressedSize) {
+				case 1:
+					if ((sourcePtr + token > sourceBufferEnd) || (targetPtr + token > targetBufferEnd)) {
+						goto endOfLoop;
+					}
+					memcpy(targetPtr, sourcePtr, token);
+			    sourcePtr += token;
+					targetPtr += token;
 					break;
-				}
-				buffer[targetIndex++] = ' ';
-				buffer[targetIndex++] = token ^ 0x80;
-			} else {
-				if (sourceIndex + 1 > compressedSize) {
+			  case 2:
+					if (targetPtr + 2 > targetBufferEnd) {
+						goto endOfLoop;
+					}
+					*(targetPtr++) = ' ';
+					*(targetPtr++) = token ^ 0x80;
 					break;
-				}
-				token *= 256;
-				token += sourceBuffer[sourceIndex++];
-				int m = (token & 0x3fff) / 8;
-				int n = (token & 7) + 3;
-				if (targetIndex + n > maxUncompressedSize) {
+			  case 3:
+					if (sourcePtr + 1 > sourceBufferEnd) {
+						goto endOfLoop;
+					}
+					N = 256 * token + *(sourcePtr++);
+					copyLength = (N & 7) + 3;
+					if (targetPtr + copyLength > targetBufferEnd) {
+						goto endOfLoop;
+					}
+					memcpy(targetPtr, targetPtr - (N & 0x3fff) / 8, copyLength);
+					targetPtr += copyLength;
 					break;
-				}
-				memcpy(buffer + targetIndex, buffer + targetIndex - m, n);
-				targetIndex += n;
 			}
 		}
 	}
+endOfLoop:
 
 	delete[] sourceBuffer;
-	return targetIndex;
+	return targetPtr - (unsigned char*)targetBuffer;
 }

@@ -25,15 +25,11 @@
 #include "EncodingReader.h"
 
 shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::string &encoding) {
-	if (encoding.empty()) {
+	if (encoding.empty() ||
+			strcasecmp(encoding.c_str(), "UTF-8") ||
+			strcasecmp(encoding.c_str(), "US-ASCII")) {
 		return new DummyEncodingConverter();
 	}
-
-	IconvEncodingConverter *converter = new IconvEncodingConverter(encoding);
-	if (converter->isInitialized()) {
-		return converter;
-	}
-	delete converter;
 
 	const std::vector<std::string> &encodingList = knownEncodings();
 	std::vector<std::string>::const_iterator it;
@@ -53,6 +49,13 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 				return new TwoBytesEncodingConverter(encodingMap);
 			}
 		}
+	}
+
+	IconvEncodingConverter *converter = new IconvEncodingConverter(encoding);
+	if (converter->isInitialized()) {
+		return converter;
+	} else {
+		delete converter;
 	}
 
 	return new DummyEncodingConverter();
@@ -84,28 +87,37 @@ bool DummyEncodingConverter::fillTable(int *map) {
 	return true;
 }
 
-OneByteEncodingConverter::OneByteEncodingConverter(const std::string &encoding, char **encodingMap) : myEncoding(encoding), myEncodingMap(encodingMap) {
+OneByteEncodingConverter::OneByteEncodingConverter(const std::string &encoding, char **encodingMap) : myEncoding(encoding) {
+	myEncodingMap = new char[1024];
+	memset(myEncodingMap, '\0', 1024);
 	for (int i = 0; i < 256; i++) {
-		if (myEncodingMap[i] == 0) {
-			myEncodingMap[i] = new char[2];
-			myEncodingMap[i][0] = i;
-			myEncodingMap[i][1] = '\0';
+		myEncodingMap[4 * i] = i;
+	}
+	if (encodingMap != 0) {
+		for (int i = 0; i < 256; i++) {
+			if (encodingMap[i] != 0) {
+				strcpy(myEncodingMap + 4 * i, encodingMap[i]);
+			}
 		}
 	}
 }
 
 OneByteEncodingConverter::~OneByteEncodingConverter() {
-	for (int i = 0; i < 256; i++) {
-		delete[] myEncodingMap[i];
-	}
 	delete[] myEncodingMap;
 }
 
 void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	dst.reserve(dst.length() + 3 * (srcEnd - srcStart));
+	size_t oldLength = dst.length();
+	dst.append(3 * (srcEnd - srcStart), '\0');
+	char *dstStartPtr = (char*)dst.data() + oldLength;
+	char *dstPtr = dstStartPtr;
+	const char *p;
 	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
-		dst += myEncodingMap[(unsigned char)*ptr];
+		for (p = myEncodingMap + 4 * (unsigned char)*ptr; *p != '\0'; p++) {
+			(*dstPtr++) = *p;
+		}
 	}
+	//dst.erase(dstPtr - dstStartPtr + oldLength);
 }
 
 bool OneByteEncodingConverter::fillTable(int *map) {
@@ -190,8 +202,9 @@ void IconvEncodingConverter::convert(std::string &dst, const char *srcStart, con
 
 	size_t outSize = 3 * inSize;
 	const size_t startOutSize = outSize;
-	char *outBuffer = new char[outSize];
-	char *out = (char*)outBuffer;
+	size_t oldLength = dst.length();
+	dst.append(outSize, '\0');
+	char *out = (char*)dst.data() + oldLength;
 
 iconvlabel:
 	iconv(myIConverter, &in, &inSize, &out, &outSize);
@@ -211,8 +224,7 @@ iconvlabel:
 		inSize = myBuffer.length();
 		goto iconvlabel;
 	}
-	dst.append(outBuffer, startOutSize - outSize);
-	delete[] outBuffer;
+	//dst.erase(oldLength + startOutSize - outSize);
 }
 
 void IconvEncodingConverter::reset() {

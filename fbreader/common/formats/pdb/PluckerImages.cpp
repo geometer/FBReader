@@ -80,4 +80,3 @@ const ZLImage *PluckerMultiImage::subImage(unsigned int row, unsigned int column
 	ImageMap::const_iterator entry = myImageMap.find(myIds[index]);
 	return (entry != myImageMap.end()) ? entry->second : 0;
 }
-

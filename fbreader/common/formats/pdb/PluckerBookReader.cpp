@@ -336,12 +336,12 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
       if ((unsigned char)*ptr == 0xA0) {
         *ptr = 0x20;
       }
-      if (!myParagraphStarted && isspace(*ptr) && (textStart == ptr)) {
+      if (!myParagraphStarted && (textStart == ptr) && isspace(*ptr)) {
         textStart++;
       }
     }
   }
-  if (end != textStart) {
+  if (end > textStart) {
     safeBeginParagraph();
     txtBuffer.erase();
     myConverter->convert(txtBuffer, textStart, end);

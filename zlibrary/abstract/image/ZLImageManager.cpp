@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <algorithm>
 #include <vector>
 
@@ -126,8 +128,11 @@ PalmImageHeader::PalmImageHeader(const std::string &str) {
 void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, ZLImageData &imageData) const {
 	if (imageString.length() >= 16) {
 		PalmImageHeader header(imageString);
-		//std::cerr << "CompressionType = " << (int)header.CompressionType << "\n";
-		//std::cerr << "BitsPerPixel = " << (int)header.BitsPerPixel << "\n";
+		std::cerr << "CompressionType = " << (int)header.CompressionType << "\n";
+		std::cerr << "BitsPerPixel = " << (int)header.BitsPerPixel << "\n";
+		std::cerr << "BytesPerRow = " << (int)header.BytesPerRow << "\n";
+		std::cerr << "Width = " << (int)header.Width << "\n";
+		std::cerr << "Height = " << (int)header.Height << "\n";
 		switch (header.CompressionType) {
 			case 0x00: // scanline
 				//std::cerr << "scanline encoded images are not supported yet\n";
@@ -181,7 +186,8 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 										{
 											unsigned char len = std::min(8, (int)header.Width - j);
 											for (unsigned char k = 0; k < len; k++) {
-												imageData.setGrayPixel((*from_ptr & (1 << k)) ? 0 : 255);
+												//imageData.setGrayPixel(((*from_ptr) & (1 << k)) ? 0 : 255);
+												imageData.setGrayPixel(((*from_ptr) & (128 >> k)) ? 0 : 255);
 												imageData.moveX(1);
 											}
 										}

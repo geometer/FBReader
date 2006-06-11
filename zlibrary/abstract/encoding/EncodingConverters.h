@@ -50,7 +50,7 @@ public:
 
 private:
 	const std::string myEncoding;
-	char **myEncodingMap;
+	char *myEncodingMap;
 
 friend class ZLEncodingConverter;
 };
