@@ -70,6 +70,7 @@ private:
 	shared_ptr<ZLInputStream> myStream;
 	FontType myFont;
 	char *myCharBuffer;
+	std::string myConvertedTextBuffer;
 	bool myParagraphStarted;
 	bool myBufferIsEmpty;
 	ForcedControlEntry *myForcedEntry;

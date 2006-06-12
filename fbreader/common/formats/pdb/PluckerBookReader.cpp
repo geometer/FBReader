@@ -304,8 +304,6 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 
   myParagraphStarted = false;
 
-  std::string txtBuffer;
-
   char *textStart = start;
   bool functionFlag = false;
   for (char *ptr = start; ptr < end; ptr++) {
@@ -313,9 +311,9 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
       functionFlag = true;
       if (ptr > textStart) {
         safeBeginParagraph();
-        txtBuffer.erase();
-        myConverter->convert(txtBuffer, textStart, ptr);
-        addData(txtBuffer);
+        myConvertedTextBuffer.erase();
+        myConverter->convert(myConvertedTextBuffer, textStart, ptr);
+        addData(myConvertedTextBuffer);
         myBufferIsEmpty = false;
       }
     } else if (functionFlag) {
@@ -339,9 +337,9 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
   }
   if (end > textStart) {
     safeBeginParagraph();
-    txtBuffer.erase();
-    myConverter->convert(txtBuffer, textStart, end);
-    addData(txtBuffer);
+    myConvertedTextBuffer.erase();
+    myConverter->convert(myConvertedTextBuffer, textStart, end);
+    addData(myConvertedTextBuffer);
     myBufferIsEmpty = false;
   }
   safeEndParagraph();
