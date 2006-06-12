@@ -39,7 +39,6 @@
 PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), myFilePath(filePath), myFont(FT_REGULAR) {
   myConverter = ZLEncodingConverter::createConverter(encoding);
   myCharBuffer = new char[65535];
-  myBytesToSkip = 0;
   myForcedEntry = 0;
 }
 
@@ -281,7 +280,6 @@ void PluckerBookReader::processTextFunction(char *ptr) {
       safeBeginParagraph();
       addData(std::string(utf8, len));
       myBufferIsEmpty = false;
-      myBytesToSkip = (unsigned char)*(ptr + 1);
       break;
     }
     case 0x85: // TODO: process 4-byte unicode character
@@ -329,9 +327,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
         ptr = end - 1;
       }
       functionFlag = false;
-      ptr += myBytesToSkip;
       textStart = ptr + 1;
-      myBytesToSkip = 0;
     } else {
       if ((unsigned char)*ptr == 0xA0) {
         *ptr = 0x20;
@@ -388,7 +384,6 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 
     unsigned char type;
     myStream->read((char*)&type, 1);
-    //std::cerr << "type = " << (int)type << "\n";
 
     unsigned char flags;
     myStream->read((char*)&flags, 1);

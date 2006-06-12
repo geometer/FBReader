@@ -75,7 +75,6 @@ private:
 	ForcedControlEntry *myForcedEntry;
 	std::vector<std::pair<TextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;
-	int myBytesToSkip;
 	unsigned short myCompressionVersion;
 
 	std::set<std::pair<int, int> > myReferencedParagraphs;
