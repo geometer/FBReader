@@ -26,8 +26,8 @@
 
 shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::string &encoding) {
 	if (encoding.empty() ||
-			strcasecmp(encoding.c_str(), "UTF-8") ||
-			strcasecmp(encoding.c_str(), "US-ASCII")) {
+			(strcasecmp(encoding.c_str(), "UTF-8") == 0) ||
+			(strcasecmp(encoding.c_str(), "US-ASCII") == 0)) {
 		return new DummyEncodingConverter();
 	}
 
