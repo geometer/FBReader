@@ -117,7 +117,7 @@ void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, c
 			(*dstPtr++) = *p;
 		}
 	}
-	//dst.erase(dstPtr - dstStartPtr + oldLength);
+	dst.erase(dstPtr - dstStartPtr + oldLength);
 }
 
 bool OneByteEncodingConverter::fillTable(int *map) {
@@ -224,7 +224,7 @@ iconvlabel:
 		inSize = myBuffer.length();
 		goto iconvlabel;
 	}
-	//dst.erase(oldLength + startOutSize - outSize);
+	dst.erase(oldLength + startOutSize - outSize);
 }
 
 void IconvEncodingConverter::reset() {
