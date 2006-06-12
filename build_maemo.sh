@@ -32,4 +32,4 @@ if [ "$SDK" != "$EXPECTED_SDK" ]; then
   exit 1;
 fi
 
-echo do_build maemo $1
+do_build maemo $1
