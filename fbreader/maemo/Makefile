@@ -2,9 +2,10 @@ ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
+DEBIAN_VERSION = $(VERSION)-1
 ARCH	= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 PACKAGE_NAME = fbreader-$(UI_TYPE)
-PACKAGE_FILE = $(PACKAGE_NAME)_$(VERSION)-1_$(ARCH).deb
+PACKAGE_FILE = $(PACKAGE_NAME)_$(DEBIAN_VERSION)_$(ARCH).deb
 
 ifeq "$(UI_TYPE)" "maemo"
 PREFIX = /var/lib/install
@@ -69,7 +70,7 @@ package:
 	@mkdir -p $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
 	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(VERSION)/" \
+	@sed -e "s/@VERSION@/$(DEBIAN_VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
 		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
@@ -83,7 +84,7 @@ package:
 	@mkdir -p $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
 	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(VERSION)/" \
+	@sed -e "s/@VERSION@/$(DEBIAN_VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
 		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
