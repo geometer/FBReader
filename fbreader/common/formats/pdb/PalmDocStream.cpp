@@ -32,12 +32,9 @@ PalmDocStream::~PalmDocStream() {
 }
 
 bool PalmDocStream::open() {
-	close();
-	if (myBase.isNull() || !myBase->open() || !myHeader.read(myBase)) {
+	if (!PdbStream::open()) {
 		return false;
 	}
-
-	myBase->seek(myHeader.Offsets[0] - myBase->offset());
 
 	unsigned short version;
 	PdbUtil::readUnsignedShort(myBase, version);
@@ -53,10 +50,7 @@ bool PalmDocStream::open() {
 	myBuffer = new char[myMaxRecordSize];
 
 	myRecordIndex = 0;
-	myBufferLength = 0;
-	myBufferOffset = 0;
 
-	myOffset = 0;
 	return true;
 }
 

@@ -180,10 +180,8 @@ bool ZLUnicodeUtil::isLetter(Ucs2Char ch) {
 		(ch == '^') ||
 		// latin1
 		((0xC0 <= ch) && (ch <= 0xFF) && (ch != 0xD7) && (ch != 0xF7)) ||
-		// ligatures OE & oe
-		(ch == 0x152) || (ch == 0x153) ||
-		// &scaron;
-		(ch == 0x160) || (ch == 0x161) ||
+		// extended latin1
+		((0x100 <= ch) && (ch <= 0x178)) ||
 		// cyrillic
 		((0x410 <= ch) && (ch <= 0x44F)) ||
 		// cyrillic YO & yo
@@ -270,14 +268,9 @@ ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::toLower(Ucs2Char ch) {
 		return ch + 0x20;
 	}
 
-	// ligature oe
-	if (ch == 0x152) {
-		return 0x153;
-	}
-
-	// &scaron;
-	if (ch == 0x160) {
-		return 0x161;
+	// extended latin1
+	if ((0x100 <= ch) && (ch <= 0x178)) {
+		return (ch & 0x01) ? ch : (ch + 1);
 	}
 
 	// cyrillic
@@ -320,14 +313,9 @@ ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::toUpper(Ucs2Char ch) {
 		return ch - 0x20;
 	}
 
-	// ligature oe
-	if (ch == 0x153) {
-		return 0x152;
-	}
-
-	// &scaron;
-	if (ch == 0x161) {
-		return 0x160;
+	// extended latin1
+	if ((0x100 <= ch) && (ch <= 0x178)) {
+		return (ch & 0x01) ? (ch - 1) : ch;
 	}
 
 	// cyrillic

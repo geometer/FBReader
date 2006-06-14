@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 

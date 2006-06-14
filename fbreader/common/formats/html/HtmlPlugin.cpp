@@ -41,13 +41,12 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 		return false;
 	}
 
-	detectEncoding(description, *stream);
+	detectEncodingAndLanguage(description, *stream);
 	if (description.encoding().empty()) {
 		return false;
 	}
 	HtmlDescriptionReader(description).readDocument(*stream);
 	defaultTitle(description, file.name());
-	defaultLanguage(description);
 
 	return true;
 }

@@ -32,12 +32,9 @@ ZTXTStream::~ZTXTStream() {
 }
 
 bool ZTXTStream::open() {
-	close();
-	if (myBase.isNull() || !myBase->open() || !myHeader.read(myBase)) {
+	if (!PdbStream::open()) {
 		return false;
 	}
-
-	myBase->seek(myHeader.Offsets[0] - myBase->offset());
 
 	myBase->seek(2);
 	unsigned short records;
@@ -51,10 +48,6 @@ bool ZTXTStream::open() {
 	myBuffer = new char[myMaxRecordSize];
 
 	myRecordIndex = 0;
-	myBufferLength = 0;
-	myBufferOffset = 0;
-
-	myOffset = 0;
 
 	return true;
 }

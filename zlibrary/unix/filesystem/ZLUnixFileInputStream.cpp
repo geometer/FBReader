@@ -39,7 +39,8 @@ size_t ZLUnixFileInputStream::read(char *buffer, size_t maxSize) {
 		return fread(buffer, 1, maxSize, myFile);
 	} else {
 		int pos = ftell(myFile);
-		return fseek(myFile, maxSize, SEEK_CUR) - pos;
+		fseek(myFile, maxSize, SEEK_CUR);
+		return ftell(myFile) - pos;
 	}
 }
 

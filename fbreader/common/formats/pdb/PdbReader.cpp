@@ -40,19 +40,18 @@ void PdbUtil::readUnsignedLong(shared_ptr<ZLInputStream> stream, unsigned long &
 bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 	size_t startOffset = stream->offset();
 
-	char docName[33];
-	stream->read(docName, 32);
-	docName[32] = '\0';
-	DocName = docName;
+	DocName.erase();
+	DocName.append(32, '\0');
+	stream->read((char*)DocName.data(), 32);
 
 	PdbUtil::readUnsignedShort(stream, Flags);
 
 	stream->seek(26);
 	
-	char id[9];
-	stream->read(id, 8);
-	id[8] = '\0';
-	Id = id;
+	Id.erase();
+	Id.append(8, '\0');
+	stream->read((char*)Id.data(), 8);
+
 	stream->seek(8);
 
 	Offsets.clear();
@@ -66,7 +65,6 @@ bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 		Offsets.push_back(recordOffset);
 		stream->seek(4);
 	}
-	stream->seek(2);
 
-	return stream->offset() == startOffset + 80 + 8 * numRecords;
+	return stream->offset() == startOffset + 78 + 8 * numRecords;
 }

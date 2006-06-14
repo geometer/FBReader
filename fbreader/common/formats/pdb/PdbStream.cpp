@@ -30,6 +30,22 @@ PdbStream::PdbStream(ZLFile &file) : myBase(file.inputStream()) {
 PdbStream::~PdbStream() {
 }
 
+bool PdbStream::open() {
+	close();
+	if (myBase.isNull() || !myBase->open() || !myHeader.read(myBase)) {
+		return false;
+	}
+
+	myBase->seek(myHeader.Offsets[0] - myBase->offset());
+
+	myBufferLength = 0;
+	myBufferOffset = 0;
+
+	myOffset = 0;
+
+	return true;
+}
+
 size_t PdbStream::read(char *buffer, size_t maxSize) {
 	size_t realSize = 0;
 	while (realSize < maxSize) {

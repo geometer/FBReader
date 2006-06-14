@@ -38,12 +38,11 @@ bool PluckerPlugin::readDescription(const std::string &path, BookDescription &de
 	ZLFile file(path);
 
 	shared_ptr<ZLInputStream> stream = new PluckerTextStream(file);
-	detectEncoding(description, *stream);
+	detectEncodingAndLanguage(description, *stream);
 	if (description.encoding().empty()) {
 		return false;
 	}
 	defaultTitle(description, file.name());
-	defaultLanguage(description);
 
 	return true;
 }

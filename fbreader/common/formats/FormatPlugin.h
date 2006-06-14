@@ -60,8 +60,7 @@ public:
   virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
 
 protected:
-  void detectEncoding(BookDescription &description, ZLInputStream &stream) const;
-  void defaultLanguage(BookDescription &description) const;
+  void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) const;
   void defaultTitle(BookDescription &description, const std::string &title) const;
 };
 

@@ -31,6 +31,7 @@ public:
     OTHER,
     RUSSIAN,
     CHINESE,
+		CZECH,
   };
 
 public:

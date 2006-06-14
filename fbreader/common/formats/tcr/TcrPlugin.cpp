@@ -39,12 +39,11 @@ bool TcrPlugin::readDescription(const std::string &path, BookDescription &descri
 	ZLFile file(path);
 
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
-	detectEncoding(description, *stream);
+	detectEncodingAndLanguage(description, *stream);
 	if (description.encoding().empty()) {
 		return false;
 	}
 	defaultTitle(description, file.name());
-	defaultLanguage(description);
 
 	return true;
 }

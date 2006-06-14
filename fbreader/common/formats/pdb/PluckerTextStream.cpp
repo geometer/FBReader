@@ -35,12 +35,9 @@ PluckerTextStream::~PluckerTextStream() {
 }
 
 bool PluckerTextStream::open() {
-	close();
-	if (myBase.isNull() || !myBase->open() || !myHeader.read(myBase)) {
+	if (!PdbStream::open()) {
 		return false;
 	}
-
-	myBase->seek(myHeader.Offsets[0] - myBase->offset() + 2);
 
 	PdbUtil::readUnsignedShort(myBase, myCompressionVersion);
 
@@ -48,10 +45,7 @@ bool PluckerTextStream::open() {
 	myFullBuffer = new char[65536];
 
 	myRecordIndex = 0;
-	myBufferLength = 0;
-	myBufferOffset = 0;
 
-	myOffset = 0;
 	return true;
 }
 

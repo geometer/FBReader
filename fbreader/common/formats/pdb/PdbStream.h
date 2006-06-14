@@ -34,6 +34,7 @@ public:
 	PdbStream(ZLFile &file);
 	virtual ~PdbStream();
 	size_t read(char *buffer, size_t maxSize);
+	virtual bool open();
 	virtual void close();
 
 	void seek(int offset);

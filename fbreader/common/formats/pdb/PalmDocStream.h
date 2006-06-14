@@ -22,8 +22,6 @@
 #ifndef __PALMDOCSTREAM_H__
 #define __PALMDOCSTREAM_H__
 
-#include <vector>
-
 #include "PdbStream.h"
 
 class ZLFile;
@@ -40,7 +38,6 @@ protected:
 
 private:
 	bool myIsCompressed;
-	std::vector<size_t> myRecordSizes;
 
 	size_t myMaxRecordIndex;
 	unsigned short myMaxRecordSize;

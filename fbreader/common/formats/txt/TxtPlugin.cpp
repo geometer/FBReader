@@ -45,12 +45,11 @@ bool TxtPlugin::readDescription(const std::string &path, BookDescription &descri
 	if (stream.isNull()) {
 		return false;
 	}
-	detectEncoding(description, *stream);
+	detectEncodingAndLanguage(description, *stream);
 	if (description.encoding().empty()) {
 		return false;
 	}
 	defaultTitle(description, file.name());
-	defaultLanguage(description);
 
 	return true;
 }

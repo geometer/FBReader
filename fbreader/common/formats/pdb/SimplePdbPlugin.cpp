@@ -37,12 +37,11 @@ bool SimplePdbPlugin::readDescription(const std::string &path, BookDescription &
 	ZLFile file(path);
 
 	shared_ptr<ZLInputStream> stream = createStream(file);
-	detectEncoding(description, *stream);
+	detectEncodingAndLanguage(description, *stream);
 	if (description.encoding().empty()) {
 		return false;
 	}
 	defaultTitle(description, file.name());
-	defaultLanguage(description);
 
 	return true;
 }

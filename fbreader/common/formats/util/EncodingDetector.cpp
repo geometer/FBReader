@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <enca.h>
 
 #include <abstract/ZLInputStream.h>
@@ -39,6 +37,9 @@ std::string EncodingDetector::detect(ZLInputStream &stream, Language language) {
         break;
       case CHINESE:
         languageString = "zh";
+        break;
+      case CZECH:
+        languageString = "cs";
         break;
       case OTHER:
         break;

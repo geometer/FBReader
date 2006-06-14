@@ -25,23 +25,32 @@
 
 #include "../description/BookDescription.h"
 
-void FormatPlugin::detectEncoding(BookDescription &description, ZLInputStream &stream) const {
-  if (description.encoding().empty()) {
-    WritableBookDescription(description).encoding() = EncodingDetector::detect(stream, (EncodingDetector::Language)PluginCollection::instance().DefaultLanguageOption.value());
+void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) const {
+	std::string encoding = description.encoding();
+  if (encoding.empty()) {
+		encoding = EncodingDetector::detect(stream, (EncodingDetector::Language)PluginCollection::instance().DefaultLanguageOption.value());
+		if (encoding == "unknown") {
+			encoding = "windows-1252";
+		}
+    WritableBookDescription(description).encoding() = encoding;
   }
-}
 
-void FormatPlugin::defaultLanguage(BookDescription &description) const {
   if (description.language() == "") {
-    if ((description.encoding() == "US-ASCII") ||
-        (description.encoding() == "ISO-8859-1")) {
+    if ((encoding == "US-ASCII") ||
+        (encoding == "ISO-8859-1")) {
       WritableBookDescription(description).language() = "en";
     } else if ((description.encoding() == "KOI8-R") ||
-        (description.encoding() == "windows-1251") ||
-        (description.encoding() == "ISO-8859-5") ||
-        (description.encoding() == "IBM866")) {
+        (encoding == "windows-1251") ||
+        (encoding == "ISO-8859-5") ||
+        (encoding == "IBM866")) {
       WritableBookDescription(description).language() = "ru";
-    }
+    } else if (
+			(PluginCollection::instance().DefaultLanguageOption.value() == EncodingDetector::CZECH) &&
+			((encoding == "windows-1250") ||
+			 (encoding == "ISO-8859-2") ||
+			 (encoding == "IBM852"))) {
+      WritableBookDescription(description).language() = "cs";
+		}
   }
 }
 

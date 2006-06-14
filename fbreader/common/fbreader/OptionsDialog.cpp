@@ -160,6 +160,7 @@ const std::string &DefaultLanguageEntry::name() const {
 
 static std::string LANGUAGE_RUSSIAN = "Russian";
 static std::string LANGUAGE_CHINESE = "Chinese";
+static std::string LANGUAGE_CZECH = "Czech";
 static std::string LANGUAGE_OTHER = "Other";
 
 const std::string &DefaultLanguageEntry::initialValue() const {
@@ -168,6 +169,8 @@ const std::string &DefaultLanguageEntry::initialValue() const {
       return LANGUAGE_RUSSIAN;
     case EncodingDetector::CHINESE:
       return LANGUAGE_CHINESE;
+    case EncodingDetector::CZECH:
+      return LANGUAGE_CZECH;
     default:
       return LANGUAGE_OTHER;
   }
@@ -176,8 +179,9 @@ const std::string &DefaultLanguageEntry::initialValue() const {
 const std::vector<std::string> &DefaultLanguageEntry::values() const {
   static std::vector<std::string> _values;
   if (_values.empty()) {
-    _values.push_back(LANGUAGE_RUSSIAN);
     _values.push_back(LANGUAGE_CHINESE);
+    _values.push_back(LANGUAGE_CZECH);
+    _values.push_back(LANGUAGE_RUSSIAN);
     _values.push_back(LANGUAGE_OTHER);
   }
   return _values;
@@ -189,6 +193,8 @@ void DefaultLanguageEntry::onAccept(const std::string &value) {
     language = EncodingDetector::RUSSIAN;
   } else if (value == LANGUAGE_CHINESE) {
     language = EncodingDetector::CHINESE;
+  } else if (value == LANGUAGE_CZECH) {
+    language = EncodingDetector::CZECH;
   }
   PluginCollection::instance().DefaultLanguageOption.setValue(language);
 }
