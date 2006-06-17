@@ -509,7 +509,7 @@ void FBReader::enableMenuButtons() {
       (RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
       (myViewWidget->rotation() != ZLViewWidget::DEGREES0));
   }
-	refresh();
+	refreshView();
 }
 
 class RebuildCollectionRunnable : public ZLRunnable {

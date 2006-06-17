@@ -109,16 +109,16 @@ public:
 
 protected:
 	ZLApplication();
-  void init();
-	virtual void refresh() = 0;
 
 public:
 	virtual ~ZLApplication();
 
+	void initView(class ZLApplicationView *view);
+	void refreshView();
+
   virtual void setWindowCaption(const std::string &caption) = 0;
 
 	Toolbar &toolbar();
-	virtual void addToolbarItem(Toolbar::ItemPtr item) = 0;
 
 	void setActionVisible(int actionId, bool visible);
 	void setActionEnabled(int actionId, bool enabled);
@@ -127,11 +127,49 @@ public:
 
 private:
 	Toolbar myToolbar;
+	class ZLApplicationView *myView;
 };
 
-inline ZLApplication::ZLApplication() {}
-inline ZLApplication::~ZLApplication() {}
+class ZLApplicationView {
+
+protected:
+	ZLApplicationView();
+
+  void init();
+	virtual void refresh() = 0;
+	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
+
+public:
+	virtual ~ZLApplicationView();
+
+private:
+	ZLApplication *myApplication;
+
+friend void ZLApplication::initView(ZLApplicationView *view);
+friend void ZLApplication::refreshView();
+};
+
+inline ZLApplication::ZLApplication() : myView(0) {}
+inline ZLApplication::~ZLApplication() {
+	if (myView != 0) {
+		//delete myView;
+	}
+}
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
+inline void ZLApplication::initView(ZLApplicationView *view) {
+	myView = view;
+	myView->myApplication = this;
+	myView->init();
+	myView->refresh();
+}
+inline void ZLApplication::refreshView() {
+	if (myView != 0) {
+		myView->refresh();
+	}
+}
+
+inline ZLApplicationView::ZLApplicationView() {}
+inline ZLApplicationView::~ZLApplicationView() {}
 
 inline const ZLApplication::Toolbar::ItemVector &ZLApplication::Toolbar::items() const { return myItems; }
 inline bool ZLApplication::Toolbar::isVisibilityChanged() const { return myVisibilityChanged; }

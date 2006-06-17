@@ -30,7 +30,7 @@
 
 #include "../common/fbreader/FBReader.h"
 
-class QFBReader : public QMainWindow, public FBReader { 
+class QFBReader : public QMainWindow, public FBReader, public ZLApplicationView { 
 	Q_OBJECT
 
 public:

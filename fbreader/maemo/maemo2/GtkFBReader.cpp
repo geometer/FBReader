@@ -103,7 +103,6 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_toolbar_set_show_arrow(myToolbar, false);
 	gtk_toolbar_set_orientation(myToolbar, GTK_ORIENTATION_HORIZONTAL);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
-	init();
 
 	hildon_window_add_toolbar(myWindow, myToolbar);
 

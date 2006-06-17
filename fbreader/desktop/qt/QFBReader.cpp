@@ -56,7 +56,6 @@ QFBReader::QFBReader(const std::string& bookToOpen) :
 	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
 	setCentralWidget((QViewWidget*)myViewWidget);
 
-	init();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 	resize(myWidthOption.value(), myHeightOption.value());
 	setMode(BOOK_TEXT_MODE);

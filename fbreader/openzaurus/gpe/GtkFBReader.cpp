@@ -85,8 +85,6 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
 	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(myToolbar), false, false, 0);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
-	init();
-
 	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
