@@ -85,7 +85,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
 	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(myToolbar), false, false, 0);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
-	createToolbar();
+	init();
 
 	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
@@ -175,44 +175,52 @@ bool GtkFBReader::isFullscreen() const {
 	return myFullScreen;
 }
 
-void GtkFBReader::addButton(ActionCode id, const std::string &name) {
-	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/fbreader/" + name + ".png").c_str());
-	GtkToolItem *button = gtk_tool_item_new();
-	GtkWidget *ebox = gtk_event_box_new();
+void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
+	if (item->isButton()) {
+		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/fbreader/" + buttonItem.iconName() + ".png").c_str());
+		GtkToolItem *button = gtk_tool_item_new();
+		GtkWidget *ebox = gtk_event_box_new();
 
-	gtk_container_add(GTK_CONTAINER(ebox), image);
-	gtk_container_set_border_width(GTK_CONTAINER(button), 1);
-	gtk_container_add(GTK_CONTAINER(button), ebox);
+		gtk_container_add(GTK_CONTAINER(ebox), image);
+		gtk_container_set_border_width(GTK_CONTAINER(button), 1);
+		gtk_container_add(GTK_CONTAINER(button), ebox);
 
-	gtk_tool_item_set_homogeneous(button, false);
-	gtk_tool_item_set_expand(button, false);
+		gtk_tool_item_set_homogeneous(button, false);
+		gtk_tool_item_set_expand(button, false);
 
-	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
-	gtk_toolbar_insert(myToolbar, button, -1);
-	gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
-	myButtons[id] = button;
-}
-
-void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
-	if (visible) {
-		gtk_widget_show(GTK_WIDGET(myButtons[id]));
-	} else {
-		gtk_widget_hide(GTK_WIDGET(myButtons[id]));
+		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
+		gtk_toolbar_insert(myToolbar, button, -1);
+		ActionCode id = (ActionCode)buttonItem.actionId();
+		gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
+		myButtons[item] = button;
 	}
 }
 
-/*
- * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
- * does something strange if WIDGET is already insensitive.
- */
-void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
-	std::map<ActionCode,GtkToolItem*>::const_iterator it = myButtons.find(id);
-	if (it != myButtons.end()) {
-		bool enabled = GTK_WIDGET_STATE(GTK_WIDGET(it->second)) != GTK_STATE_INSENSITIVE;
-		if (enabled != enable) {
-			gtk_widget_set_sensitive(GTK_WIDGET(it->second), enable);
+void GtkFBReader::refresh() {
+	const Toolbar::ItemVector &items = toolbar().items();
+	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			GtkWidget *gtkButton = GTK_WIDGET(myButtons[*it]);
+			if (gtkButton != 0) {
+				const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+				if (button.isVisible()) {
+					gtk_widget_show(gtkButton);
+				} else {
+					gtk_widget_hide(gtkButton);
+				}
+				/*
+				 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
+				 * does something strange if WIDGET is already insensitive.
+				 */
+				bool enabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
+				if (enabled != button.isEnabled()) {
+					gtk_widget_set_sensitive(gtkButton, !enabled);
+				}
+			}
 		}
 	}
+	toolbar().reset();
 }
 
 void GtkFBReader::searchSlot() {

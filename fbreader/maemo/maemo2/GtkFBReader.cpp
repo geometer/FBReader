@@ -103,7 +103,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_toolbar_set_show_arrow(myToolbar, false);
 	gtk_toolbar_set_orientation(myToolbar, GTK_ORIENTATION_HORIZONTAL);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
-	createToolbar();
+	init();
 
 	hildon_window_add_toolbar(myWindow, myToolbar);
 
@@ -218,31 +218,64 @@ void GtkFBReader::quitSlot() {
 	}
 }
 
-void GtkFBReader::addButton(ActionCode id, const std::string &name) {
-	GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/FBReader/" + name + ".png").c_str());
-	GtkToolItem *button = gtk_tool_item_new();
-	GtkWidget *ebox = gtk_event_box_new();
+void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
+	if (item->isButton()) {
+		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str());
+		GtkToolItem *button = gtk_tool_item_new();
+		GtkWidget *ebox = gtk_event_box_new();
 
-	gtk_container_add(GTK_CONTAINER(ebox), image);
-	gtk_container_add(GTK_CONTAINER(button), ebox);
+		gtk_container_add(GTK_CONTAINER(ebox), image);
+		gtk_container_add(GTK_CONTAINER(button), ebox);
 
-	gtk_tool_item_set_homogeneous(button, false);
-	gtk_tool_item_set_expand(button, false);
+		gtk_tool_item_set_homogeneous(button, false);
+		gtk_tool_item_set_expand(button, false);
 
-	GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
-	gtk_toolbar_insert(myToolbar, button, -1);
-	g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
-	myButtons[id] = button;
+		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
+		gtk_toolbar_insert(myToolbar, button, -1);
+		ActionCode id = (ActionCode)buttonItem.actionId();
+		g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
+		myButtons[item] = button;
+	} else {
+		GtkToolItem *space = gtk_separator_tool_item_new();
+		gtk_separator_tool_item_set_draw((GtkSeparatorToolItem*)space, false);
+		gtk_toolbar_insert(myToolbar, space, -1);
+	}
 }
 
-void GtkFBReader::addButtonSeparator() {
-	GtkToolItem *space = gtk_separator_tool_item_new();
-	gtk_separator_tool_item_set_draw((GtkSeparatorToolItem*)space, false);
-	gtk_toolbar_insert(myToolbar, space, -1);
-}
+void GtkFBReader::refresh() {
+	const Toolbar::ItemVector &items = toolbar().items();
+	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
 
-void GtkFBReader::enableMenuButtons() {
-	FBReader::enableMenuButtons();
+			GtkToolItem *gtkButton = myButtons[*it];
+			if (gtkButton != 0) {
+				gtk_tool_item_set_visible_horizontal(gtkButton, button.isVisible());
+				/*
+				 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
+				 * does something strange if WIDGET is already insensitive.
+				 */
+				bool enabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
+				if (enabled != button.isEnabled()) {
+					gtk_widget_set_sensitive(GTK_WIDGET(gtkButton), !enabled);
+				}
+			}
+
+			GtkMenuItem *item = myMenuItems[(ActionCode)button.actionId()];
+			if (item != 0) {
+				if (button.isVisible()) {
+					gtk_widget_show(GTK_WIDGET(item));
+				} else {
+					gtk_widget_hide(GTK_WIDGET(item));
+				}
+				gtk_widget_set_sensitive(GTK_WIDGET(item), button.isEnabled());
+			}
+		}
+	}
+
+	toolbar().reset();
+
 	bool enableSpace = false;
 	int itemNumber = gtk_toolbar_get_n_items(myToolbar);
 	for (int i = 0; i < itemNumber; i++) {
@@ -253,36 +286,6 @@ void GtkFBReader::enableMenuButtons() {
 		} else if (gtk_tool_item_get_visible_horizontal(item)) {
 			enableSpace = true;
 		}
-	}
-}
-
-void GtkFBReader::setButtonVisible(ActionCode id, bool visible) {
-	gtk_tool_item_set_visible_horizontal(myButtons[id], visible);
-	GtkMenuItem *item = myMenuItems[id];
-	if (item != 0) {
-		if (visible) {
-			gtk_widget_show(GTK_WIDGET(item));
-		} else {
-			gtk_widget_hide(GTK_WIDGET(item));
-		}
-	}
-}
-
-/*
- * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
- * does something strange if WIDGET is already insensitive.
- */
-void GtkFBReader::setButtonEnabled(ActionCode id, bool enable) {
-	std::map<ActionCode,GtkToolItem*>::const_iterator it = myButtons.find(id);
-	if (it != myButtons.end()) {
-		bool enabled = GTK_WIDGET_STATE(it->second) != GTK_STATE_INSENSITIVE;
-		if (enabled != enable) {
-			gtk_widget_set_sensitive(GTK_WIDGET(it->second), enable);
-		}
-	}
-	GtkMenuItem *item = myMenuItems[id];
-	if (item != 0) {
-		gtk_widget_set_sensitive(GTK_WIDGET(item), enable);
 	}
 }
 

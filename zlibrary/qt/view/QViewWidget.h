@@ -24,6 +24,7 @@
 #include <qwidget.h>
 
 #include <abstract/ZLView.h>
+#include <abstract/ZLApplication.h>
 
 class QViewWidget : public QWidget, public ZLViewWidget {
 

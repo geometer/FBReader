@@ -46,8 +46,8 @@ static const std::string OPTIONS = "Options";
 
 QFBReader::QFBReader(const std::string& bookToOpen) :
 	FBReader(new QPaintContext(), bookToOpen),
-  myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-  myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800),
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800),
 	myFullScreen(false),
 	myWasMaximized(false) {
 
@@ -56,7 +56,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) :
 	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
 	setCentralWidget((QViewWidget*)myViewWidget);
 
-	createToolbar();
+	init();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 	resize(myWidthOption.value(), myHeightOption.value());
 	setMode(BOOK_TEXT_MODE);
@@ -115,27 +115,35 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void QFBReader::addButton(ActionCode id, const std::string &name) {
-	menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + name + ".png").c_str()), this, SLOT(emptySlot()), 0, id);
-}
-
-void QFBReader::setButtonVisible(ActionCode id, bool visible) {
-	if (menuBar()->findItem(id) != 0) {
-		menuBar()->setItemVisible(id, visible);
+void QFBReader::addToolbarItem(Toolbar::ItemPtr item) {
+	if (item->isButton()) {
+		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
+		menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
+	} else {
+		// TODO: implement
 	}
 }
 
-void QFBReader::setButtonEnabled(ActionCode id, bool enable) {
-	if (menuBar()->findItem(id) != 0) {
-		menuBar()->setItemEnabled(id, enable);
+void QFBReader::refresh() {
+	const Toolbar::ItemVector &items = toolbar().items();
+	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+			int id = button.actionId();
+			if (menuBar()->findItem(id) != 0) {
+				menuBar()->setItemVisible(id, button.isVisible());
+				menuBar()->setItemEnabled(id, button.isEnabled());
+			}
+		}
 	}
+	toolbar().reset();
 }
 
 void QFBReader::searchSlot() {
 	QDialog findDialog(this, 0, true);
 	findDialog.setCaption("Text search");
 	findDialog.setSizeGripEnabled(true);
-    
+
 	QGridLayout *layout = new QGridLayout(&findDialog, -1, 3, 5, 5);
 
 	QLineEdit *wordToSearch = new QLineEdit(&findDialog);

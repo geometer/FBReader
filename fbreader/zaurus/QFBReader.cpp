@@ -45,7 +45,7 @@
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
+QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen, false) {
 	if (KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}
@@ -57,7 +57,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myFullScreen = false;
 	myTitleHeight = -1;
 
-	createToolbar();
+	init();
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 	setMode(BOOK_TEXT_MODE);
 }
@@ -122,14 +122,6 @@ void QFBReader::setMode(ViewMode mode) {
 
 	FBReader::setMode(mode);
 
-	centralWidget()->hide();
-	menuBar()->clear();
-	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); it++) {
-		if (it->IsVisible) {
-			menuBar()->insertItem(*it->Pixmap, this, SLOT(emptySlot()), 0, it->Code);
-		}
-	}
-	centralWidget()->show();
 	enableMenuButtons();
 	fullScreenWorkaround();
 }
@@ -143,26 +135,35 @@ void QFBReader::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void QFBReader::addButton(ActionCode id, const std::string &name) {
-	myButtons.push_back(ButtonInfo());
-	myButtons.back().Code = id;
-	myButtons.back().IsVisible = true;
-	myButtons.back().Pixmap = new QPixmap(Resource::loadPixmap(("FBReader/" + name).c_str()));
+void QFBReader::addToolbarItem(Toolbar::ItemPtr) {
 }
 
-void QFBReader::setButtonEnabled(ActionCode id, bool enable) {
-	if (menuBar()->findItem(id) != 0) {
-		menuBar()->setItemEnabled(id, enable);
+void QFBReader::refresh() {
+	const Toolbar::ItemVector &items = toolbar().items();
+	if (toolbar().isVisibilityChanged()) {
+		centralWidget()->hide();
+		menuBar()->clear();
+		for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+			if ((*it)->isButton()) {
+				Toolbar::ButtonItem &buttonItem = (Toolbar::ButtonItem&)**it;
+				if (buttonItem.isVisible()) {
+					const QPixmap &pixmap = Resource::loadPixmap(("FBReader/" + buttonItem.iconName()).c_str());
+					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, (ActionCode)buttonItem.actionId());
+				}
+			}
+		}
+		centralWidget()->show();
 	}
-}
-
-void QFBReader::setButtonVisible(ActionCode id, bool visible) {
-	for (std::vector<ButtonInfo>::iterator it = myButtons.begin(); it != myButtons.end(); it++) {
-		if (it->Code == id) {
-			it->IsVisible = visible;
-			break;
+	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+			int id = button.actionId();
+			if (menuBar()->findItem(id) != 0) {
+				menuBar()->setItemEnabled(id, button.isEnabled());
+			}
 		}
 	}
+	toolbar().reset();
 }
 
 void QFBReader::searchSlot() {
@@ -216,7 +217,6 @@ void QFBReader::searchSlot() {
 		);
 	}
 	repaintView();
-	enableMenuButtons();
 	fullScreenWorkaround();
 }
 

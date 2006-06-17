@@ -29,6 +29,10 @@
 ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
 }
 
+ContentsView::~ContentsView() {
+	saveState();
+}
+
 bool ContentsView::onStylusPress(int x, int y) {
   if (TextView::onStylusPress(x, y)) {
     return true;

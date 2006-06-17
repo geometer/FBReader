@@ -49,7 +49,6 @@ private:
 	std::string myCaption;
 };
 
-inline ContentsView::~ContentsView() {}
 inline const std::string &ContentsView::caption() const { return myCaption; }
 inline void ContentsView::setCaption(const std::string &caption) { myCaption = caption; }
 

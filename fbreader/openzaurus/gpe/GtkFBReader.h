@@ -44,14 +44,11 @@ public:
 
 protected:
 	void setWindowCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
-	void addButton(ActionCode id, const std::string &name);
-	void addButtonSeparator() {} // TODO: implement
-	void setButtonVisible(ActionCode id, bool visible);
-	void setButtonEnabled(ActionCode id, bool enable);
+	void addToolbarItem(Toolbar::ItemPtr item);
+	void refresh();
 	void searchSlot();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
-	bool isRotationSupported() const { return true; }
 
 	ActionSlotData *getSlotData(ActionCode);
 
@@ -72,7 +69,7 @@ private:
 
 	bool myFullScreen;
 
-	std::map<ActionCode,GtkToolItem*> myButtons;
+	std::map<Toolbar::ItemPtr,GtkToolItem*> myButtons;
 	std::map<ActionCode,ActionSlotData*> myActions;
 };
 

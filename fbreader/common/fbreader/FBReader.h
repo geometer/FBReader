@@ -28,6 +28,7 @@
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLTime.h>
 #include <abstract/ZLView.h>
+#include <abstract/ZLApplication.h>
 
 #include "../description/BookDescription.h"
 
@@ -163,16 +164,11 @@ public:
   ZLIntegerOption AngleStateOption;
 
 protected:
-  FBReader(ZLPaintContext *context, const std::string& bookToOpen = std::string());
+  FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool supportRotation = true);
   virtual ~FBReader();
 
   virtual void setMode(ViewMode mode);
-  virtual void setWindowCaption(const std::string &caption) = 0;
-  void createToolbar();
-  virtual void addButton(ActionCode id, const std::string &name) = 0;
-  virtual void addButtonSeparator() = 0;
-  virtual void setButtonVisible(ActionCode id, bool visible) = 0;
-  virtual void setButtonEnabled(ActionCode id, bool enable) = 0;
+
   virtual void searchSlot() = 0;
   void cancelSlot();
   void fullscreenOnSlot();
@@ -198,7 +194,7 @@ private:
   bool isScrollingAction(ActionCode code);
 
 public:
-  virtual bool isRotationSupported() const = 0;
+  bool isRotationSupported() const;
   virtual bool isFullKeyboardControlSupported() const;
   virtual void grabAllKeys(bool grab);
 
@@ -207,7 +203,7 @@ public:
   void showBookTextView();
   void tryShowFootnoteView(const std::string &id);
   void restorePreviousMode();
-  virtual void enableMenuButtons();
+  void enableMenuButtons();
   void repaintView();
   void doAction(ActionCode code);
 
@@ -240,6 +236,8 @@ private:
 
   FullKeyBindings myKeyBindings;
 
+	bool myIsRotationSupported;
+
   friend class OptionsDialog;
 };
 
@@ -249,6 +247,10 @@ inline ZLBooleanOption &FBReader::useSeparateBindings() {
 
 inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle, bool force) {
   return myKeyBindings.getBindings(angle, force);
+}
+
+inline bool FBReader::isRotationSupported() const {
+	return myIsRotationSupported;
 }
 
 #endif /* __FBREADER_H__ */

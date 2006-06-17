@@ -46,6 +46,7 @@ BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) : TextView
 }
 
 BookTextView::~BookTextView() {
+	saveState();
 }
 
 void BookTextView::setModel(const TextModel *model, const std::string &name) {

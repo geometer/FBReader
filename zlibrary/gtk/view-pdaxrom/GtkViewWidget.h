@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include <abstract/ZLView.h>
+#include <abstract/ZLApplication.h>
 
 class GtkViewWidget : public ZLViewWidget {
 

@@ -45,145 +45,152 @@
 static const std::string OPTIONS = "Options";
 
 QFBReader::QFBReader(const std::string& bookToOpen) :
-  FBReader(new QPaintContext(), bookToOpen),
-  myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
-  myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350) {
+	FBReader(new QPaintContext(), bookToOpen),
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350),
+	myFullScreen(false),
+	myWasMaximized(false) {
 
-  setWFlags(getWFlags() | WStyle_Customize);
+	setWFlags(getWFlags() | WStyle_Customize);
 
-  myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
-  setCentralWidget((QViewWidget*)myViewWidget);
+	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
+	setCentralWidget((QViewWidget*)myViewWidget);
 
-  createToolbar();
-  connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
+	init();
+	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 
-  myFullScreen = false;
-  myWasMaximized = false;
+	resize(myWidthOption.value(), myHeightOption.value());
 
-  resize(myWidthOption.value(), myHeightOption.value());
-
-  setMode(BOOK_TEXT_MODE);
+	setMode(BOOK_TEXT_MODE);
 }
 
 QFBReader::~QFBReader() {
-  if (!isFullscreen()) {
-    myWidthOption.setValue(width());
-    myHeightOption.setValue(height());
-  }
+	if (!isFullscreen()) {
+		myWidthOption.setValue(width());
+		myHeightOption.setValue(height());
+	}
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {
-  doAction(QKeyUtil::keyName(event));
+	doAction(QKeyUtil::keyName(event));
 }
 
 void QFBReader::toggleFullscreenSlot() {
-  myFullScreen = !myFullScreen;
-  if (myFullScreen) {
-    myWasMaximized = isMaximized();
-    menuBar()->hide();
-    showFullScreen();
-  } else {
-    menuBar()->show();
-    showNormal();
-    if (myWasMaximized) {
-      showMaximized();
-    }
-  }
+	myFullScreen = !myFullScreen;
+	if (myFullScreen) {
+		myWasMaximized = isMaximized();
+		menuBar()->hide();
+		showFullScreen();
+	} else {
+		menuBar()->show();
+		showNormal();
+		if (myWasMaximized) {
+			showMaximized();
+		}
+	}
 }
 
 bool QFBReader::isFullscreen() const {
-  return myFullScreen;
+	return myFullScreen;
 }
 
 void QFBReader::quitSlot() {
-  close();
+	close();
 }
 
 void QFBReader::closeEvent(QCloseEvent *event) {
-  if (myMode != BOOK_TEXT_MODE) {
-    restorePreviousMode();
-    event->ignore();
-  } else {
-    event->accept();
-  }
+	if (myMode != BOOK_TEXT_MODE) {
+		restorePreviousMode();
+		event->ignore();
+	} else {
+		event->accept();
+	}
 }
 
-void QFBReader::addButton(ActionCode id, const std::string &name) {
-  menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + name + ".png").c_str()), this, SLOT(emptySlot()), 0, id);
+void QFBReader::addToolbarItem(Toolbar::ItemPtr item) {
+	if (item->isButton()) {
+		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
+		menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
+	} else {
+		// TODO: implement
+	}
 }
 
-void QFBReader::setButtonVisible(ActionCode id, bool visible) {
-  if (menuBar()->findItem(id) != 0) {
-    menuBar()->setItemVisible(id, visible);
-  }
-}
-
-void QFBReader::setButtonEnabled(ActionCode id, bool enable) {
-  if (menuBar()->findItem(id) != 0) {
-    menuBar()->setItemEnabled(id, enable);
-  }
+void QFBReader::refresh() {
+	const Toolbar::ItemVector &items = toolbar().items();
+	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+			int id = button.actionId();
+			if (menuBar()->findItem(id) != 0) {
+				menuBar()->setItemVisible(id, button.isVisible());
+				menuBar()->setItemEnabled(id, button.isEnabled());
+			}
+		}
+	}
+	toolbar().reset();
 }
 
 void QFBReader::searchSlot() {
-  QDialog findDialog(this, 0, true);
-  findDialog.setCaption("Text search");
-  findDialog.setSizeGripEnabled(true);
-    
-  QGridLayout *layout = new QGridLayout(&findDialog, -1, 3, 5, 5);
+	QDialog findDialog(this, 0, true);
+	findDialog.setCaption("Text search");
+	findDialog.setSizeGripEnabled(true);
+		
+	QGridLayout *layout = new QGridLayout(&findDialog, -1, 3, 5, 5);
 
-  QLineEdit *wordToSearch = new QLineEdit(&findDialog);
-  wordToSearch->setMinimumWidth(width() / 3);
-  wordToSearch->setText(QString::fromUtf8(SearchPatternOption.value().c_str()));
-  layout->addMultiCellWidget(wordToSearch, 0, 0, 0, 2);
+	QLineEdit *wordToSearch = new QLineEdit(&findDialog);
+	wordToSearch->setMinimumWidth(width() / 3);
+	wordToSearch->setText(QString::fromUtf8(SearchPatternOption.value().c_str()));
+	layout->addMultiCellWidget(wordToSearch, 0, 0, 0, 2);
 
-  QCheckBox *ignoreCase = new QCheckBox("&Ignore case", &findDialog, 0);
-  ignoreCase->setChecked(SearchIgnoreCaseOption.value());
-  layout->addMultiCellWidget(ignoreCase, 1, 1, 0, 2);
+	QCheckBox *ignoreCase = new QCheckBox("&Ignore case", &findDialog, 0);
+	ignoreCase->setChecked(SearchIgnoreCaseOption.value());
+	layout->addMultiCellWidget(ignoreCase, 1, 1, 0, 2);
 
-  QCheckBox *wholeText = new QCheckBox("In w&hole text", &findDialog, 0);
-  wholeText->setChecked(SearchInWholeTextOption.value());
-  layout->addMultiCellWidget(wholeText, 2, 2, 0, 2);
+	QCheckBox *wholeText = new QCheckBox("In w&hole text", &findDialog, 0);
+	wholeText->setChecked(SearchInWholeTextOption.value());
+	layout->addMultiCellWidget(wholeText, 2, 2, 0, 2);
 
-  QCheckBox *backward = new QCheckBox("&Backward", &findDialog, 0);
-  backward->setChecked(SearchBackwardOption.value());
-  layout->addMultiCellWidget(backward, 3, 3, 0, 2);
+	QCheckBox *backward = new QCheckBox("&Backward", &findDialog, 0);
+	backward->setChecked(SearchBackwardOption.value());
+	layout->addMultiCellWidget(backward, 3, 3, 0, 2);
 
-  QCheckBox *thisSectionOnly = ((TextView*)myViewWidget->view())->hasMultiSectionModel() ?
-    new QCheckBox("&This section only", &findDialog, 0) : 0;
-  if (thisSectionOnly != 0) {
-    thisSectionOnly->setChecked(SearchThisSectionOnlyOption.value());
-    layout->addMultiCellWidget(thisSectionOnly, 4, 4, 0, 2);
-  }
+	QCheckBox *thisSectionOnly = ((TextView*)myViewWidget->view())->hasMultiSectionModel() ?
+		new QCheckBox("&This section only", &findDialog, 0) : 0;
+	if (thisSectionOnly != 0) {
+		thisSectionOnly->setChecked(SearchThisSectionOnlyOption.value());
+		layout->addMultiCellWidget(thisSectionOnly, 4, 4, 0, 2);
+	}
 
-  QPushButton *b = new QPushButton("&Go!", &findDialog);
-  layout->addWidget(b, 5, 1);
-  b->setDefault(true);
-  connect(b, SIGNAL(clicked()), &findDialog, SLOT(accept()));
+	QPushButton *b = new QPushButton("&Go!", &findDialog);
+	layout->addWidget(b, 5, 1);
+	b->setDefault(true);
+	connect(b, SIGNAL(clicked()), &findDialog, SLOT(accept()));
 
-  if (findDialog.exec()) {
-    QString qPattern = wordToSearch->text().stripWhiteSpace();
-    std::string pattern = (const char*)qPattern.utf8();
-    SearchPatternOption.setValue(pattern);
-    SearchIgnoreCaseOption.setValue(ignoreCase->isChecked());
-    SearchInWholeTextOption.setValue(wholeText->isChecked());
-    SearchBackwardOption.setValue(backward->isChecked());
-    if (thisSectionOnly != 0) {
-      SearchThisSectionOnlyOption.setValue(thisSectionOnly->isChecked());
-    }
-    ((TextView*)myViewWidget->view())->search(
-      pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked(), SearchThisSectionOnlyOption.value()
-    );
-  }
+	if (findDialog.exec()) {
+		QString qPattern = wordToSearch->text().stripWhiteSpace();
+		std::string pattern = (const char*)qPattern.utf8();
+		SearchPatternOption.setValue(pattern);
+		SearchIgnoreCaseOption.setValue(ignoreCase->isChecked());
+		SearchInWholeTextOption.setValue(wholeText->isChecked());
+		SearchBackwardOption.setValue(backward->isChecked());
+		if (thisSectionOnly != 0) {
+			SearchThisSectionOnlyOption.setValue(thisSectionOnly->isChecked());
+		}
+		((TextView*)myViewWidget->view())->search(
+			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked(), SearchThisSectionOnlyOption.value()
+		);
+	}
 }
 
 void QFBReader::setWindowCaption(const std::string &caption) {
-  QString qCaption = QString::fromUtf8(caption.c_str());
-  if (qCaption.length() > 60) {
-    qCaption = qCaption.left(57) + "...";
-  }
-  setCaption(qCaption);
+	QString qCaption = QString::fromUtf8(caption.c_str());
+	if (qCaption.length() > 60) {
+		qCaption = qCaption.left(57) + "...";
+	}
+	setCaption(qCaption);
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {
-  doAction((ActionCode)buttonNumber);
+	doAction((ActionCode)buttonNumber);
 }

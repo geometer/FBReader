@@ -23,16 +23,6 @@
 
 #include <string>
 
-class ZLApplication {
-
-protected:
-	ZLApplication();
-	virtual ~ZLApplication();
-
-public:
-	virtual void enableMenuButtons() = 0;
-};
-
 class ZLView;
 class ZLPaintContext;
 
@@ -48,9 +38,9 @@ public:
 
 protected:
 	ZLViewWidget(Angle initialAngle);
-	virtual ~ZLViewWidget();
 
 public:
+	virtual ~ZLViewWidget();
 	void setView(ZLView *view);
 	ZLView *view() const;
 
@@ -91,9 +81,6 @@ private:
 
 friend void ZLViewWidget::setView(ZLView *view);
 };
-
-inline ZLApplication::ZLApplication() {}
-inline ZLApplication::~ZLApplication() {}
 
 inline ZLViewWidget::ZLViewWidget(Angle initialAngle) : myRotation(initialAngle) {}
 inline ZLViewWidget::~ZLViewWidget() {}

@@ -47,16 +47,13 @@ private:
 protected:
 	void setWindowCaption(const std::string &caption);
 	void setMode(ViewMode mode);
-	void addButton(ActionCode id, const std::string &name);
-	void addButtonSeparator() {} // TODO: implement
-	void setButtonEnabled(ActionCode id, bool enable);
-	void setButtonVisible(ActionCode id, bool visible);
+	void addToolbarItem(shared_ptr<Toolbar::Item> item);
+	void refresh();
 	void searchSlot();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 	void quitSlot();
 
-	bool isRotationSupported() const { return false; }
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
@@ -67,13 +64,6 @@ private slots:
 private:
 	bool myFullScreen;
 	bool myCloseFlag;
-	
-	struct ButtonInfo {
-		ActionCode Code;
-		bool IsVisible;
-		QPixmap *Pixmap;
-	};
-	std::vector<ButtonInfo> myButtons;
 };
 
 #endif /* __QFBREADER_H__ */
