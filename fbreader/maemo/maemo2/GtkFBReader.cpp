@@ -219,46 +219,50 @@ void GtkFBReader::quitSlot() {
 }
 
 void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
+	GtkToolItem *gtkItem;
 	if (item->isButton()) {
 		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
 		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str());
-		GtkToolItem *button = gtk_tool_item_new();
+		gtkItem = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 
 		gtk_container_add(GTK_CONTAINER(ebox), image);
-		gtk_container_add(GTK_CONTAINER(button), ebox);
+		gtk_container_add(GTK_CONTAINER(gtkItem), ebox);
 
-		gtk_tool_item_set_homogeneous(button, false);
-		gtk_tool_item_set_expand(button, false);
+		gtk_tool_item_set_homogeneous(gtkItem, false);
+		gtk_tool_item_set_expand(gtkItem, false);
 
-		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
-		gtk_toolbar_insert(myToolbar, button, -1);
+		GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
 		ActionCode id = (ActionCode)buttonItem.actionId();
 		g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
-		myButtons[item] = button;
 	} else {
-		GtkToolItem *space = gtk_separator_tool_item_new();
-		gtk_separator_tool_item_set_draw((GtkSeparatorToolItem*)space, false);
-		gtk_toolbar_insert(myToolbar, space, -1);
+		gtkItem = gtk_separator_tool_item_new();
+		gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
 	}
+	gtk_toolbar_insert(myToolbar, gtkItem, -1);
+	myButtons[item] = gtkItem;
 }
 
 void GtkFBReader::refresh() {
 	const Toolbar::ItemVector &items = toolbar().items();
+	bool enableToolbarSpace = false;
 	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		GtkToolItem *toolItem = myButtons[*it];
 		if ((*it)->isButton()) {
 			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
 
-			GtkToolItem *gtkButton = myButtons[*it];
-			if (gtkButton != 0) {
-				gtk_tool_item_set_visible_horizontal(gtkButton, button.isVisible());
+			if (toolItem != 0) {
+				gtk_tool_item_set_visible_horizontal(toolItem, button.isVisible());
+				if (button.isVisible()) {
+					enableToolbarSpace = true;
+				}
 				/*
 				 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
 				 * does something strange if WIDGET is already insensitive.
 				 */
-				bool enabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
+				bool enabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
 				if (enabled != button.isEnabled()) {
-					gtk_widget_set_sensitive(GTK_WIDGET(gtkButton), !enabled);
+					gtk_widget_set_sensitive(GTK_WIDGET(toolItem), !enabled);
 				}
 			}
 
@@ -271,22 +275,15 @@ void GtkFBReader::refresh() {
 				}
 				gtk_widget_set_sensitive(GTK_WIDGET(item), button.isEnabled());
 			}
+		} else {
+			if (toolItem != 0) {
+				gtk_tool_item_set_visible_horizontal(toolItem, enableToolbarSpace);
+				enableToolbarSpace = false;
+			}
 		}
 	}
 
 	toolbar().reset();
-
-	bool enableSpace = false;
-	int itemNumber = gtk_toolbar_get_n_items(myToolbar);
-	for (int i = 0; i < itemNumber; i++) {
-		GtkToolItem *item = gtk_toolbar_get_nth_item(myToolbar, i);
-		if (GTK_IS_SEPARATOR_TOOL_ITEM(item)) {
-			gtk_tool_item_set_visible_horizontal(item, enableSpace);
-			enableSpace = false;
-		} else if (gtk_tool_item_get_visible_horizontal(item)) {
-			enableSpace = true;
-		}
-	}
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
