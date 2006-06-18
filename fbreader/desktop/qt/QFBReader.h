@@ -28,7 +28,7 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-class QFBReader : public QMainWindow, public FBReader, public ZLApplicationView { 
+class QFBReader : public QMainWindow, public FBReader, public ZLApplicationWindow { 
   Q_OBJECT
 
 public:

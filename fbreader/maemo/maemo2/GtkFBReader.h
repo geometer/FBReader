@@ -34,7 +34,7 @@
 
 struct ActionSlotData;
 
-class GtkFBReader : public FBReader, public ZLApplicationView { 
+class GtkFBReader : public FBReader, public ZLApplicationWindow { 
 
 public:
 	static const std::string ImageDirectory;

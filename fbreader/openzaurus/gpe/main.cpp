@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 	GtkDeviceInfo::createInstance();
 
 	GtkFBReader *reader = new GtkFBReader(argc == 1 ? std::string() : argv[1]);	// MSS: use the first argument that gtk did not consume
-	reader->initView(reader);
+	reader->initWindow(reader);
 
 	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
 
