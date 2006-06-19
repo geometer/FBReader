@@ -70,6 +70,7 @@ private slots:
 private:
 	bool myFullScreen;
 	int myTitleHeight;
+	std::vector<bool> myToolbarMask;
 };
 
 #endif /* __QFBREADER_H__ */

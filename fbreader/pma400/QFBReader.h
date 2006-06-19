@@ -30,7 +30,7 @@
 
 #include "../common/fbreader/FBReader.h"
 
-class QFBReader : public QMainWindow, public FBReader { 
+class QFBReader : public QMainWindow, public FBReader, public ZLApplicationWindow { 
 	Q_OBJECT
 
 public:
@@ -48,16 +48,13 @@ private:
 protected:
 	void setWindowCaption(const std::string &caption);
 	void setMode(ViewMode mode);
-	void addButton(ActionCode id, const std::string &name);
-	void addButtonSeparator() {} // TODO: implement
-	void setButtonEnabled(ActionCode id, bool enable);
-	void setButtonVisible(ActionCode id, bool visible);
+	void addToolbarItem(Toolbar::ItemPtr item);
+	void refresh();
 	void searchSlot();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 	void quitSlot();
 
-	bool isRotationSupported() const { return false; }
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
@@ -68,17 +65,12 @@ protected:
 private slots:
 	void doActionSlot(int buttonNumber);
 	void emptySlot() {}
+	void setDocument(const QString &fileName);
 
 private:
 	bool myFullScreen;
 	int myTitleHeight;
-	
-	struct ButtonInfo {
-		ActionCode Code;
-		bool IsVisible;
-		QPixmap *Pixmap;
-	};
-	std::vector<ButtonInfo> myButtons;
+	std::vector<bool> myToolbarMask;
 };
 
 #endif /* __QFBREADER_H__ */

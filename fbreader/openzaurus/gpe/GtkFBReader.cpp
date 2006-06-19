@@ -203,7 +203,8 @@ void GtkFBReader::refresh() {
 			GtkWidget *gtkButton = GTK_WIDGET(myButtons[*it]);
 			if (gtkButton != 0) {
 				const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
-				if (button.isVisible()) {
+				int id = button.actionId();
+				if (application().isActionVisible(id)) {
 					gtk_widget_show(gtkButton);
 				} else {
 					gtk_widget_hide(gtkButton);
@@ -213,13 +214,12 @@ void GtkFBReader::refresh() {
 				 * does something strange if WIDGET is already insensitive.
 				 */
 				bool enabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
-				if (enabled != button.isEnabled()) {
+				if (enabled != application().isActionEnabled(id)) {
 					gtk_widget_set_sensitive(gtkButton, !enabled);
 				}
 			}
 		}
 	}
-	toolbar().reset();
 }
 
 void GtkFBReader::searchSlot() {

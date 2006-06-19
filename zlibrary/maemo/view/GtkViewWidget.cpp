@@ -153,5 +153,5 @@ void GtkViewWidget::repaintView()	{
 			break;
 	}
 	
-	myApplication->enableMenuButtons();
+	myApplication->refreshWindow();
 }

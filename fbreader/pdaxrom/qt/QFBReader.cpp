@@ -122,12 +122,11 @@ void QFBReader::refresh() {
 			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemVisible(id, button.isVisible());
-				menuBar()->setItemEnabled(id, button.isEnabled());
+				menuBar()->setItemVisible(id, application().isActionVisible(id));
+				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
 			}
 		}
 	}
-	toolbar().reset();
 }
 
 void QFBReader::searchSlot() {

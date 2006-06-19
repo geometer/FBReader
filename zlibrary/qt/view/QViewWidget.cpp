@@ -112,5 +112,5 @@ int QViewWidget::y(const QMouseEvent *event) const {
 
 void QViewWidget::repaintView()	{
 	repaint(false);
-	myApplication->enableMenuButtons();
+	myApplication->refreshWindow();
 }

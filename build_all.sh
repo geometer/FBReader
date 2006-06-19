@@ -16,7 +16,6 @@ do_build openzaurus opie
 do_build openzaurus gpe
 do_build opensimpad-0.9.0 opie
 do_build qvfb opie
-#do_build maemo maemo
 do_build desktop gtk
 do_build desktop qt
 do_build zaurus qtopia
@@ -24,4 +23,4 @@ do_build pdaxrom-1.1.0rc10 gtk
 do_build pdaxrom-1.1.0rc10 qt
 do_build pdaxrom-1.1.0rc11 gtk
 do_build pdaxrom-1.1.0rc11 qt
-#do_build pma400 qtopia
+do_build pma400 qtopia

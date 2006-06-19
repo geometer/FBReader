@@ -129,30 +129,50 @@ void QFBReader::addToolbarItem(shared_ptr<Toolbar::Item>) {
 
 void QFBReader::refresh() {
 	const Toolbar::ItemVector &items = toolbar().items();
-	if (toolbar().isVisibilityChanged()) {
+
+	bool isVisibilityChanged = false;
+	if (myToolbarMask.size() != items.size()) {
+		isVisibilityChanged = true;
+		myToolbarMask.clear();
+		myToolbarMask.assign(items.size(), false);
+	}
+	std::vector<bool>::iterator bt = myToolbarMask.begin();
+	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const Toolbar::ButtonItem &button = (Toolbar::ButtonItem&)**it;
+			if (application().isActionVisible(button.actionId()) != *bt) {
+				*bt = !*bt;
+				isVisibilityChanged = true;
+			}
+			++bt;
+		}
+	}
+	if (isVisibilityChanged) {
+		bt = myToolbarMask.begin();
 		centralWidget()->hide();
 		menuBar()->clear();
 		for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 			if ((*it)->isButton()) {
-				Toolbar::ButtonItem &buttonItem = (Toolbar::ButtonItem&)**it;
-				if (buttonItem.isVisible()) {
-					const QPixmap &pixmap = Resource::loadPixmap(("FBReader/" + buttonItem.iconName()).c_str());
-					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, (ActionCode)buttonItem.actionId());
+				const Toolbar::ButtonItem &button = (Toolbar::ButtonItem&)**it;
+				if (*bt) {
+					const QPixmap &pixmap = Resource::loadPixmap(("FBReader/" + button.iconName()).c_str());
+					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, (ActionCode)button.actionId());
 				}
+				++bt;
 			}
 		}
 		centralWidget()->show();
 	}
+
 	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
 			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemEnabled(id, button.isEnabled());
+				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
 			}
 		}
 	}
-	toolbar().reset();
 }
 
 void QFBReader::searchSlot() {

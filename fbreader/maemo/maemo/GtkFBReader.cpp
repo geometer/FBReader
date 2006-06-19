@@ -262,30 +262,37 @@ void GtkFBReader::refresh() {
 		GtkToolItem *toolItem = myButtons[*it];
 		if ((*it)->isButton()) {
 			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+			int id = button.actionId();
+
+			bool visible = application().isActionVisible(id);
+			bool enabled = application().isActionEnabled(id);
 
 			if (toolItem != 0) {
-				gtk_tool_item_set_visible_horizontal(toolItem, button.isVisible());
-				if (button.isVisible()) {
+				gtk_tool_item_set_visible_horizontal(toolItem, visible);
+				if (visible) {
 					enableToolbarSpace = true;
 				}
 				/*
 				 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
 				 * does something strange if WIDGET is already insensitive.
 				 */
-				bool enabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
-				if (enabled != button.isEnabled()) {
-					gtk_widget_set_sensitive(GTK_WIDGET(toolItem), !enabled);
+				bool alreadyEnabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
+				if (enabled != alreadyEnabled) {
+					gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
 				}
 			}
 
 			GtkMenuItem *item = myMenuItems[(ActionCode)button.actionId()];
 			if (item != 0) {
-				if (button.isVisible()) {
+				if (visible) {
 					gtk_widget_show(GTK_WIDGET(item));
 				} else {
 					gtk_widget_hide(GTK_WIDGET(item));
 				}
-				gtk_widget_set_sensitive(GTK_WIDGET(item), button.isEnabled());
+				bool alreadyEnabled = GTK_WIDGET_STATE(item) != GTK_STATE_INSENSITIVE;
+				if (enabled != alreadyEnabled) {
+					gtk_widget_set_sensitive(GTK_WIDGET(item), enabled);
+				}
 			}
 		} else {
 			if (toolItem != 0) {
@@ -294,8 +301,6 @@ void GtkFBReader::refresh() {
 			}
 		}
 	}
-
-	toolbar().reset();
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {

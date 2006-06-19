@@ -63,6 +63,7 @@ private slots:
 private:
 	bool myFullScreen;
 	bool myCloseFlag;
+	std::vector<bool> myToolbarMask;
 };
 
 #endif /* __QFBREADER_H__ */
