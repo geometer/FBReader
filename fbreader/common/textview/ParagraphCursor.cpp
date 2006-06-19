@@ -297,6 +297,8 @@ void WordCursor::moveTo(int wordNumber, int charNumber) {
 }
 
 const WordCursor &WordCursor::operator = (ParagraphCursor *paragraphCursor) {
+	myWordNumber = 0;
+	myCharNumber = 0;
 	myParagraphCursor = paragraphCursor;
 	moveToParagraphStart();
 	return *this;

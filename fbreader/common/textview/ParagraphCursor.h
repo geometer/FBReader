@@ -252,7 +252,7 @@ inline size_t ParagraphCursor::index() const { return myIndex; }
 inline const TextElement &ParagraphCursor::operator [] (size_t index) const { return *myElements[index]; }
 inline size_t ParagraphCursor::paragraphLength() const { return myElements.size(); }
 
-inline WordCursor::WordCursor() : myCharNumber(0) {}
+inline WordCursor::WordCursor() : myWordNumber(0), myCharNumber(0) {}
 inline WordCursor::WordCursor(const WordCursor &cursor) : myParagraphCursor(cursor.myParagraphCursor), myWordNumber(cursor.myWordNumber), myCharNumber(cursor.myCharNumber) {}
 inline const WordCursor &WordCursor::operator = (const WordCursor &cursor) {
 	myParagraphCursor = cursor.myParagraphCursor;

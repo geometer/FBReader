@@ -93,12 +93,37 @@ void FBReader::SearchAction::run() {
 	((FBReader&)myApplication).searchSlot();
 }
 
+FBReader::FindNextAction::FindNextAction(FBReader &fbreader) : Action(fbreader) {
+}
+
+bool FBReader::FindNextAction::isEnabled() {
+	TextView *textView = (TextView*)((FBReader&)myApplication).myViewWidget->view();
+	return (textView != 0) && textView->canFindNext();
+}
+
+void FBReader::FindNextAction::run() {
+	((TextView*)((FBReader&)myApplication).myViewWidget->view())->findNext();
+}
+
+FBReader::FindPreviousAction::FindPreviousAction(FBReader &fbreader) : Action(fbreader) {
+}
+
+bool FBReader::FindPreviousAction::isEnabled() {
+	TextView *textView = (TextView*)((FBReader&)myApplication).myViewWidget->view();
+	return (textView != 0) && textView->canFindPrevious();
+}
+
+void FBReader::FindPreviousAction::run() {
+	((TextView*)((FBReader&)myApplication).myViewWidget->view())->findPrevious();
+}
+
 FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward) : Action(fbreader), myOptions(options), myForward(forward) {
 }
 
 void FBReader::ScrollingAction::run() {
   int delay = ((FBReader&)myApplication).myLastScrollingTime.millisecondsTo(ZLTime());
-  if ((delay < 0) || (delay >= myOptions.DelayOption.value())) {
+	TextView *textView = (TextView*)((FBReader&)myApplication).myViewWidget->view();
+  if ((textView != 0) && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
     TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
     unsigned int oValue = 0;
     switch (oType) {

@@ -190,6 +190,16 @@ private:
 	};
 	friend class ShowOptionsDialogAction;
 
+	class ShowContentsAction : public Action {
+
+	public:
+		ShowContentsAction(FBReader &fbreader);
+		bool isVisible();
+		bool isEnabled();
+		void run();
+	};
+	friend class ShowContentsAction;
+
 	class UndoAction : public Action {
 
 	public:
@@ -217,6 +227,24 @@ private:
 	};
 	friend class SearchAction;
 	
+	class FindNextAction : public Action {
+
+	public:
+		FindNextAction(FBReader &fbreader);
+		bool isEnabled();
+		void run();
+	};
+	friend class FindNextAction;
+	
+	class FindPreviousAction : public Action {
+
+	public:
+		FindPreviousAction(FBReader &fbreader);
+		bool isEnabled();
+		void run();
+	};
+	friend class FindPreviousAction;
+	
 	class ScrollingAction : public Action {
 
 	public:
@@ -228,6 +256,15 @@ private:
 		const bool myForward;
 	};
 	friend class ScrollingAction;
+	
+	class RotationAction : public Action {
+
+	public:
+		RotationAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class RotationAction;
 	
 	class ChangeFontSizeAction : public Action {
 

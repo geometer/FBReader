@@ -82,7 +82,7 @@ private:
 friend void ZLViewWidget::setView(ZLView *view);
 };
 
-inline ZLViewWidget::ZLViewWidget(Angle initialAngle) : myRotation(initialAngle) {}
+inline ZLViewWidget::ZLViewWidget(Angle initialAngle) : myView(0), myRotation(initialAngle) {}
 inline ZLViewWidget::~ZLViewWidget() {}
 inline ZLView *ZLViewWidget::view() const { return myView; }
 inline void ZLViewWidget::rotate(Angle rotation) { myRotation = rotation; }

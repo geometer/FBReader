@@ -138,6 +138,8 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	addAction(ACTION_UNDO, new UndoAction(*this));
 	addAction(ACTION_REDO, new RedoAction(*this));
 	addAction(ACTION_SEARCH, new SearchAction(*this));
+	addAction(ACTION_FIND_NEXT, new FindNextAction(*this));
+	addAction(ACTION_FIND_PREVIOUS, new FindPreviousAction(*this));
   addAction(ACTION_LARGE_SCROLL_FORWARD, new ScrollingAction(*this, LargeScrollingOptions, true));
   addAction(ACTION_LARGE_SCROLL_BACKWARD, new ScrollingAction(*this, LargeScrollingOptions, false));
   addAction(ACTION_SMALL_SCROLL_FORWARD, new ScrollingAction(*this, SmallScrollingOptions, true));
@@ -342,12 +344,6 @@ void FBReader::doAction(ActionCode code) {
         setMode(CONTENTS_MODE);
       }
       break;
-    case ACTION_FIND_PREVIOUS:
-      ((TextView*)myViewWidget->view())->findPrevious();
-      break;
-    case ACTION_FIND_NEXT:
-      ((TextView*)myViewWidget->view())->findNext();
-      break;
     case ACTION_SCROLL_TO_HOME:
       if (myMode == BOOK_TEXT_MODE) {
         myBookTextView->scrollToHome();
@@ -441,9 +437,6 @@ void FBReader::doAction(ActionCode code) {
 }
 
 void FBReader::enableMenuButtons() {
-  TextView *textView = (TextView*)myViewWidget->view();
-  setActionEnabled(ACTION_FIND_NEXT, textView->canFindNext());
-  setActionEnabled(ACTION_FIND_PREVIOUS, textView->canFindPrevious());
   setActionEnabled(ACTION_SHOW_CONTENTS, !myContentsView->isEmpty());
   if (isRotationSupported()) {
     setActionVisible(ACTION_ROTATE_SCREEN,
