@@ -163,6 +163,17 @@ public:
   ZLIntegerOption RotationAngleOption;
   ZLIntegerOption AngleStateOption;
 
+private:
+	class SearchAction : public Action {
+
+	public:
+		SearchAction(FBReader &fbreader);
+		bool isVisible();
+		bool isEnabled();
+		void run();
+	};
+	friend class SearchAction;
+	
 protected:
   FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool supportRotation = true);
   virtual ~FBReader();

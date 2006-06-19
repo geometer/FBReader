@@ -35,6 +35,10 @@ void ZLApplication::setActionEnabled(int actionId, bool enabled) {
 	toolbar().setActionEnabled(actionId, enabled);
 }
 
+void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
+	myActionMap[actionId] = action;
+}
+
 ZLApplication::Toolbar::Toolbar() : myVisibilityChanged(true) {
 }
 
@@ -65,4 +69,10 @@ void ZLApplication::Toolbar::setActionEnabled(int actionId, bool enabled) {
 	if (it != myItemsById.end()) {
 		((ButtonItem&)*it->second).setEnabled(enabled);
 	}
+}
+
+ZLApplication::Action::Action(ZLApplication &application) : myApplication(application) {
+}
+
+ZLApplication::Action::~Action() {
 }

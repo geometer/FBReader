@@ -136,6 +136,8 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
   }
   openBook(description);
 
+	addAction(ACTION_SEARCH, new SearchAction(*this));
+
   toolbar().addButton(ACTION_SHOW_COLLECTION, "books");
   toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history");
   toolbar().addButton(ACTION_ADD_BOOK, "addbook");
@@ -336,7 +338,28 @@ bool FBReader::isScrollingAction(ActionCode code) {
   }
 }
 
+FBReader::SearchAction::SearchAction(FBReader &fbreader) : Action(fbreader) {
+}
+
+void FBReader::SearchAction::run() {
+	((FBReader&)myApplication).searchSlot();
+}
+
+bool FBReader::SearchAction::isVisible() {
+	return true;
+}
+
+bool FBReader::SearchAction::isEnabled() {
+	return true;
+}
+
 void FBReader::doAction(ActionCode code) {
+	shared_ptr<Action> action = myActionMap[code];
+	if (!action.isNull()) {
+		action->run();
+		return;
+	}
+
   switch (code) {
     case NO_ACTION:
       break;
@@ -367,7 +390,7 @@ void FBReader::doAction(ActionCode code) {
       }
       break;
     case ACTION_SEARCH:
-      searchSlot();
+      //searchSlot();
       break;
     case ACTION_FIND_PREVIOUS:
       ((TextView*)myViewWidget->view())->findPrevious();

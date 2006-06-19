@@ -29,6 +29,22 @@
 class ZLApplication {
 
 public:
+
+	class Action {
+
+	protected:
+		Action(ZLApplication &application);
+
+	public:
+		virtual ~Action();
+		virtual bool isVisible() = 0;
+		virtual bool isEnabled() = 0;
+		virtual void run() = 0;
+
+	protected:
+		ZLApplication &myApplication;
+	};
+
 	class Toolbar {
 
 	public:
@@ -110,6 +126,8 @@ public:
 protected:
 	ZLApplication();
 
+	void addAction(int actionId, shared_ptr<Action> action);
+
 public:
 	virtual ~ZLApplication();
 
@@ -124,6 +142,10 @@ public:
 	void setActionEnabled(int actionId, bool enabled);
 
 	virtual void enableMenuButtons() = 0;
+
+// TODO: change to private
+protected:
+	std::map<int,shared_ptr<Action> > myActionMap;
 
 private:
 	Toolbar myToolbar;
