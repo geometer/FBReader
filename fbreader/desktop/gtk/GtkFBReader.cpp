@@ -196,11 +196,8 @@ void GtkFBReader::refresh() {
 			GtkWidget *gtkButton = myButtons[*it];
 			if (gtkButton != 0) {
 				const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
-				// TODO: move this code to ZLApplication
 				int actionId = button.actionId();
-				shared_ptr<Action> action = myActionMap[actionId];
-				//if (button.isVisible()) {
-				if (!action.isNull() && action->isVisible()) {
+				if (application().isActionVisible(actionId)) {
 					gtk_widget_show(gtkButton);
 				} else {
 					gtk_widget_hide(gtkButton);
@@ -210,15 +207,12 @@ void GtkFBReader::refresh() {
 				 * does something strange if WIDGET is already insensitive.
 				 */
 				bool enabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
-				bool shouldBeEnabled = !action.isNull() && action->isEnabled();
-				//if (enabled != button.isEnabled()) {
-				if (enabled != shouldBeEnabled) {
-					gtk_widget_set_sensitive(gtkButton, shouldBeEnabled);
+				if (enabled != application().isActionEnabled(actionId)) {
+					gtk_widget_set_sensitive(gtkButton, !enabled);
 				}
 			}
 		}
 	}
-	toolbar().reset();
 }
 
 void GtkFBReader::searchSlot() {

@@ -164,7 +164,16 @@ public:
   ZLIntegerOption AngleStateOption;
 
 private:
-	class ShowCollectionAction : public Action {
+	class FBAction : public Action {
+
+	protected:
+		FBAction(FBReader &fbreader);
+
+	protected:
+		FBReader &myFBReader;
+	};
+
+	class ShowCollectionAction : public FBAction {
 
 	public:
 		ShowCollectionAction(FBReader &fbreader);
@@ -173,7 +182,7 @@ private:
 	};
 	friend class ShowCollectionAction;
 
-	class ShowRecentBooksListAction : public Action {
+	class ShowRecentBooksListAction : public FBAction {
 
 	public:
 		ShowRecentBooksListAction(FBReader &fbreader);
@@ -182,7 +191,7 @@ private:
 	};
 	friend class ShowRecentBooksListAction;
 
-	class ShowOptionsDialogAction : public Action {
+	class ShowOptionsDialogAction : public FBAction {
 
 	public:
 		ShowOptionsDialogAction(FBReader &fbreader);
@@ -190,7 +199,7 @@ private:
 	};
 	friend class ShowOptionsDialogAction;
 
-	class ShowContentsAction : public Action {
+	class ShowContentsAction : public FBAction {
 
 	public:
 		ShowContentsAction(FBReader &fbreader);
@@ -200,7 +209,34 @@ private:
 	};
 	friend class ShowContentsAction;
 
-	class UndoAction : public Action {
+	class AddBookAction : public FBAction {
+
+	public:
+		AddBookAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class AddBookAction;
+
+	class ShowBookInfoAction : public FBAction {
+
+	public:
+		ShowBookInfoAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class ShowBookInfoAction;
+
+	class ScrollToHomeAction : public FBAction {
+
+	public:
+		ScrollToHomeAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class ScrollToHomeAction;
+
+	class UndoAction : public FBAction {
 
 	public:
 		UndoAction(FBReader &fbreader);
@@ -209,7 +245,7 @@ private:
 	};
 	friend class UndoAction;
 	
-	class RedoAction : public Action {
+	class RedoAction : public FBAction {
 
 	public:
 		RedoAction(FBReader &fbreader);
@@ -219,7 +255,7 @@ private:
 	};
 	friend class RedoAction;
 	
-	class SearchAction : public Action {
+	class SearchAction : public FBAction {
 
 	public:
 		SearchAction(FBReader &fbreader);
@@ -227,7 +263,7 @@ private:
 	};
 	friend class SearchAction;
 	
-	class FindNextAction : public Action {
+	class FindNextAction : public FBAction {
 
 	public:
 		FindNextAction(FBReader &fbreader);
@@ -236,7 +272,7 @@ private:
 	};
 	friend class FindNextAction;
 	
-	class FindPreviousAction : public Action {
+	class FindPreviousAction : public FBAction {
 
 	public:
 		FindPreviousAction(FBReader &fbreader);
@@ -245,7 +281,7 @@ private:
 	};
 	friend class FindPreviousAction;
 	
-	class ScrollingAction : public Action {
+	class ScrollingAction : public FBAction {
 
 	public:
 		ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward);
@@ -257,7 +293,7 @@ private:
 	};
 	friend class ScrollingAction;
 	
-	class RotationAction : public Action {
+	class RotationAction : public FBAction {
 
 	public:
 		RotationAction(FBReader &fbreader);
@@ -266,7 +302,7 @@ private:
 	};
 	friend class RotationAction;
 	
-	class ChangeFontSizeAction : public Action {
+	class ChangeFontSizeAction : public FBAction {
 
 	public:
 		ChangeFontSizeAction(FBReader &fbreader, int delta);

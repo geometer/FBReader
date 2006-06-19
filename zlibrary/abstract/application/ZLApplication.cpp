@@ -27,23 +27,18 @@ void ZLApplicationWindow::init() {
 	}
 }
 
-void ZLApplication::setActionVisible(int actionId, bool visible) {
-	toolbar().setActionVisible(actionId, visible);
-}
-
-void ZLApplication::setActionEnabled(int actionId, bool enabled) {
-	toolbar().setActionEnabled(actionId, enabled);
-}
-
 void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
 	myActionMap[actionId] = action;
 }
 
-ZLApplication::Toolbar::Toolbar() : myVisibilityChanged(true) {
+bool ZLApplication::isActionVisible(int actionId) const {
+	const std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
+	return (it != myActionMap.end()) && it->second->isVisible();
 }
 
-void ZLApplication::Toolbar::reset() {
-	myVisibilityChanged = false;
+bool ZLApplication::isActionEnabled(int actionId) const {
+	const std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
+	return (it != myActionMap.end()) && it->second->isEnabled();
 }
 
 void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName) {
@@ -54,24 +49,6 @@ void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName
 
 void ZLApplication::Toolbar::addSeparator() {
 	myItems.push_back(new SeparatorItem());
-}
-
-void ZLApplication::Toolbar::setActionVisible(int actionId, bool visible) {
-	std::map<int,ItemPtr>::iterator it = myItemsById.find(actionId);
-	if ((it != myItemsById.end()) && (it->second->isVisible() != visible)) {
-		myVisibilityChanged = true;
-		it->second->setVisible(visible);
-	}
-}
-
-void ZLApplication::Toolbar::setActionEnabled(int actionId, bool enabled) {
-	std::map<int,ItemPtr>::iterator it = myItemsById.find(actionId);
-	if (it != myItemsById.end()) {
-		((ButtonItem&)*it->second).setEnabled(enabled);
-	}
-}
-
-ZLApplication::Action::Action(ZLApplication &application) : myApplication(application) {
 }
 
 ZLApplication::Action::~Action() {

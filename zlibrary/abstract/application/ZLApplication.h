@@ -32,17 +32,11 @@ public:
 
 	class Action {
 
-	protected:
-		Action(ZLApplication &application);
-
 	public:
 		virtual ~Action();
 		virtual bool isVisible();
 		virtual bool isEnabled();
 		virtual void run() = 0;
-
-	protected:
-		ZLApplication &myApplication;
 	};
 
 	class Toolbar {
@@ -54,16 +48,8 @@ public:
 			Item();
 			virtual ~Item();
 
-			bool isVisible() const;
-
 			virtual bool isButton() const = 0;
 			bool isSeparator() const;
-
-		private:
-			void setVisible(bool visible);
-
-		private:
-			bool myIsVisible;
 
 		friend class Toolbar;
 		};
@@ -75,16 +61,10 @@ public:
 
 			bool isButton() const;
 
-			bool isEnabled() const;
-
 			int actionId() const;
 			const std::string &iconName() const;
 
 		private:
-			void setEnabled(bool enabled);
-
-		private:
-			bool myIsEnabled;
 			const int myActionId;
 			const std::string myIconName;
 
@@ -101,24 +81,14 @@ public:
 		typedef shared_ptr<Item> ItemPtr;
 		typedef std::vector<ItemPtr> ItemVector;
 
-		Toolbar();
-
-		bool isVisibilityChanged() const;
-		void reset();
-
 		void addButton(int actionId, const std::string &iconName);
 		void addSeparator();
 
 		const ItemVector &items() const;
 
 	private:
-		void setActionVisible(int actionId, bool visible);
-		void setActionEnabled(int actionId, bool enabled);
-
-	private:
 		ItemVector myItems;
 		std::map<int, ItemPtr> myItemsById;
-		bool myVisibilityChanged;
 
 	friend class ZLApplication;
 	};
@@ -131,15 +101,15 @@ protected:
 public:
 	virtual ~ZLApplication();
 
+	bool isActionVisible(int actionId) const;
+	bool isActionEnabled(int actionId) const;
+
 	void initWindow(class ZLApplicationWindow *view);
 	void refreshWindow();
 
   virtual void setWindowCaption(const std::string &caption) = 0;
 
 	Toolbar &toolbar();
-
-	void setActionVisible(int actionId, bool visible);
-	void setActionEnabled(int actionId, bool enabled);
 
 // TODO: change to private
 protected:
@@ -154,6 +124,8 @@ class ZLApplicationWindow {
 
 protected:
 	ZLApplicationWindow();
+
+	const ZLApplication &application() const;
 
   void init();
 	virtual void refresh() = 0;
@@ -190,19 +162,15 @@ inline void ZLApplication::refreshWindow() {
 
 inline ZLApplicationWindow::ZLApplicationWindow() {}
 inline ZLApplicationWindow::~ZLApplicationWindow() {}
+inline const ZLApplication &ZLApplicationWindow::application() const { return *myApplication; }
 
 inline const ZLApplication::Toolbar::ItemVector &ZLApplication::Toolbar::items() const { return myItems; }
-inline bool ZLApplication::Toolbar::isVisibilityChanged() const { return myVisibilityChanged; }
 
-inline ZLApplication::Toolbar::Item::Item() : myIsVisible(true) {}
+inline ZLApplication::Toolbar::Item::Item() {}
 inline ZLApplication::Toolbar::Item::~Item() {}
-inline bool ZLApplication::Toolbar::Item::isVisible() const { return myIsVisible; }
-inline void ZLApplication::Toolbar::Item::setVisible(bool visible) { myIsVisible = visible; }
 inline bool ZLApplication::Toolbar::Item::isSeparator() const { return !isButton(); }
 
-inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::string &iconName) : myIsEnabled(true), myActionId(actionId), myIconName(iconName) {}
-inline bool ZLApplication::Toolbar::ButtonItem::isEnabled() const { return myIsEnabled; }
-inline void ZLApplication::Toolbar::ButtonItem::setEnabled(bool enabled) { myIsEnabled = enabled; }
+inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::string &iconName) : myActionId(actionId), myIconName(iconName) {}
 inline bool ZLApplication::Toolbar::ButtonItem::isButton() const { return true; }
 inline int ZLApplication::Toolbar::ButtonItem::actionId() const { return myActionId; }
 inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const { return myIconName; }

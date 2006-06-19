@@ -136,11 +136,14 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	addAction(ACTION_SHOW_LAST_BOOKS, new ShowRecentBooksListAction(*this));
 	addAction(ACTION_SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
 	addAction(ACTION_SHOW_CONTENTS, new ShowContentsAction(*this));
+	addAction(ACTION_SHOW_BOOK_INFO, new ShowBookInfoAction(*this));
+	addAction(ACTION_ADD_BOOK, new AddBookAction(*this));
 	addAction(ACTION_UNDO, new UndoAction(*this));
 	addAction(ACTION_REDO, new RedoAction(*this));
 	addAction(ACTION_SEARCH, new SearchAction(*this));
 	addAction(ACTION_FIND_NEXT, new FindNextAction(*this));
 	addAction(ACTION_FIND_PREVIOUS, new FindPreviousAction(*this));
+	addAction(ACTION_SCROLL_TO_HOME, new ScrollToHomeAction(*this));
   addAction(ACTION_LARGE_SCROLL_FORWARD, new ScrollingAction(*this, LargeScrollingOptions, true));
   addAction(ACTION_LARGE_SCROLL_BACKWARD, new ScrollingAction(*this, LargeScrollingOptions, false));
   addAction(ACTION_SMALL_SCROLL_FORWARD, new ScrollingAction(*this, SmallScrollingOptions, true));
@@ -343,11 +346,6 @@ void FBReader::doAction(ActionCode code) {
   switch (code) {
 		default:
       break;
-    case ACTION_SCROLL_TO_HOME:
-      if (myMode == BOOK_TEXT_MODE) {
-        myBookTextView->scrollToHome();
-      }
-      break;
     case ACTION_SCROLL_TO_START_OF_TEXT:
       ((TextView*)myViewWidget->view())->scrollToStartOfText();
       break;
@@ -377,12 +375,6 @@ void FBReader::doAction(ActionCode code) {
       if (!isFullscreen()) {
         toggleFullscreenSlot();
       }
-      break;
-    case ACTION_ADD_BOOK:
-      addBookSlot();
-      break;
-    case ACTION_SHOW_BOOK_INFO:
-      bookInfoSlot();
       break;
     case ACTION_QUIT:
       if (myMode == BOOK_TEXT_MODE) {
@@ -428,30 +420,18 @@ void FBReader::setMode(ViewMode mode) {
 
   switch (myMode) {
     case BOOK_TEXT_MODE:
-      setActionVisible(ACTION_ADD_BOOK, true);
-      setActionVisible(ACTION_SHOW_BOOK_INFO, true);
-      setActionVisible(ACTION_SCROLL_TO_HOME, true);
       myViewWidget->setView(myBookTextView);
       break;
     case CONTENTS_MODE:
-      setActionVisible(ACTION_ADD_BOOK, true);
-      setActionVisible(ACTION_SHOW_BOOK_INFO, true);
-      setActionVisible(ACTION_SCROLL_TO_HOME, false);
       if (!StoreContentsPositionOption.value()) {
         myContentsView->gotoReference();
       }
       myViewWidget->setView(myContentsView);
       break;
     case FOOTNOTE_MODE:
-      setActionVisible(ACTION_ADD_BOOK, false);
-      setActionVisible(ACTION_SHOW_BOOK_INFO, true);
-      setActionVisible(ACTION_SCROLL_TO_HOME, false);
       myViewWidget->setView(myFootnoteView);
       break;
     case BOOK_COLLECTION_MODE:
-      setActionVisible(ACTION_ADD_BOOK, true);
-      setActionVisible(ACTION_SHOW_BOOK_INFO, false);
-      setActionVisible(ACTION_SCROLL_TO_HOME, false);
       {
         RebuildCollectionRunnable runnable(*this);
         ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
@@ -459,9 +439,6 @@ void FBReader::setMode(ViewMode mode) {
       myViewWidget->setView(myCollectionView);
       break;
     case RECENT_BOOKS_MODE:
-      setActionVisible(ACTION_ADD_BOOK, true);
-      setActionVisible(ACTION_SHOW_BOOK_INFO, false);
-      setActionVisible(ACTION_SCROLL_TO_HOME, false);
       myRecentBooksView->rebuild();
       myViewWidget->setView(myRecentBooksView);
       break;
