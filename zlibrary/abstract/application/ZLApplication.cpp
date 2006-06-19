@@ -76,3 +76,11 @@ ZLApplication::Action::Action(ZLApplication &application) : myApplication(applic
 
 ZLApplication::Action::~Action() {
 }
+
+bool ZLApplication::Action::isVisible() {
+	return true;
+}
+
+bool ZLApplication::Action::isEnabled() {
+	return isVisible();
+}

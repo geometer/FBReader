@@ -37,8 +37,8 @@ public:
 
 	public:
 		virtual ~Action();
-		virtual bool isVisible() = 0;
-		virtual bool isEnabled() = 0;
+		virtual bool isVisible();
+		virtual bool isEnabled();
 		virtual void run() = 0;
 
 	protected:

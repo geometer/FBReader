@@ -136,7 +136,10 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
   }
   openBook(description);
 
+	addAction(ACTION_SHOW_COLLECTION, new ShowCollectionAction(*this));
 	addAction(ACTION_SEARCH, new SearchAction(*this));
+	addAction(ACTION_INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
+	addAction(ACTION_DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
 
   toolbar().addButton(ACTION_SHOW_COLLECTION, "books");
   toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history");
@@ -338,6 +341,18 @@ bool FBReader::isScrollingAction(ActionCode code) {
   }
 }
 
+FBReader::ShowCollectionAction::ShowCollectionAction(FBReader &fbreader) : Action(fbreader) {
+}
+
+void FBReader::ShowCollectionAction::run() {
+	((FBReader&)myApplication).setMode(BOOK_COLLECTION_MODE);
+}
+
+bool FBReader::ShowCollectionAction::isVisible() {
+	ViewMode mode = ((FBReader&)myApplication).myMode;
+	return (mode != FOOTNOTE_MODE) && (mode != BOOK_COLLECTION_MODE);
+}
+
 FBReader::SearchAction::SearchAction(FBReader &fbreader) : Action(fbreader) {
 }
 
@@ -345,12 +360,14 @@ void FBReader::SearchAction::run() {
 	((FBReader&)myApplication).searchSlot();
 }
 
-bool FBReader::SearchAction::isVisible() {
-	return true;
+FBReader::ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : Action(fbreader), myDelta(delta) {
 }
 
-bool FBReader::SearchAction::isEnabled() {
-	return true;
+void FBReader::ChangeFontSizeAction::run() {
+	ZLIntegerRangeOption &option = TextStyleCollection::instance().baseStyle().FontSizeOption;
+	option.setValue(option.value() + myDelta);
+	((FBReader&)myApplication).clearTextCaches();
+	((FBReader&)myApplication).repaintView();
 }
 
 void FBReader::doAction(ActionCode code) {
@@ -361,10 +378,7 @@ void FBReader::doAction(ActionCode code) {
 	}
 
   switch (code) {
-    case NO_ACTION:
-      break;
-    case ACTION_SHOW_COLLECTION:
-      setMode(BOOK_COLLECTION_MODE);
+		default:
       break;
     case ACTION_SHOW_LAST_BOOKS:
       setMode(RECENT_BOOKS_MODE);
@@ -388,9 +402,6 @@ void FBReader::doAction(ActionCode code) {
       if (((myMode == BOOK_TEXT_MODE) || (myMode == FOOTNOTE_MODE)) && !myContentsView->isEmpty()) {
         setMode(CONTENTS_MODE);
       }
-      break;
-    case ACTION_SEARCH:
-      //searchSlot();
       break;
     case ACTION_FIND_PREVIOUS:
       ((TextView*)myViewWidget->view())->findPrevious();
@@ -428,24 +439,6 @@ void FBReader::doAction(ActionCode code) {
         toggleFullscreenSlot();
       } else if (QuitOnCancelOption.value()) {
         quitSlot();
-      }
-      break;
-    case ACTION_INCREASE_FONT:
-      {
-        ZLIntegerRangeOption &option =
-          TextStyleCollection::instance().baseStyle().FontSizeOption;
-        option.setValue(option.value() + 2);
-        clearTextCaches();
-        repaintView();
-      }
-      break;
-    case ACTION_DECREASE_FONT:
-      {
-        ZLIntegerRangeOption &option =
-          TextStyleCollection::instance().baseStyle().FontSizeOption;
-        option.setValue(option.value() - 2);
-        clearTextCaches();
-        repaintView();
       }
       break;
     case ACTION_SHOW_HIDE_POSITION_INDICATOR:

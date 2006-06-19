@@ -164,15 +164,33 @@ public:
   ZLIntegerOption AngleStateOption;
 
 private:
+	class ShowCollectionAction : public Action {
+
+	public:
+		ShowCollectionAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class ShowCollectionAction;
+
 	class SearchAction : public Action {
 
 	public:
 		SearchAction(FBReader &fbreader);
-		bool isVisible();
-		bool isEnabled();
 		void run();
 	};
 	friend class SearchAction;
+	
+	class ChangeFontSizeAction : public Action {
+
+	public:
+		ChangeFontSizeAction(FBReader &fbreader, int delta);
+		void run();
+
+	private:
+		const int myDelta;
+	};
+	friend class ChangeFontSizeAction;
 	
 protected:
   FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool supportRotation = true);
