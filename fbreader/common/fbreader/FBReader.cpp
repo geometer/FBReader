@@ -105,6 +105,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
   AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
   myIsRotationSupported(supportRotation) {
 
+	myViewWidget = 0;
   myModel = 0;
   myContext = context;
   myBookTextView = new BookTextView(*this, *myContext);

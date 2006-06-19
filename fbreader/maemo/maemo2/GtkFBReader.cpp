@@ -97,7 +97,6 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	buildMenu();
 	hildon_window_set_menu(myWindow, myMenu);
 
-	initWindow(this);
 	gtk_widget_show_all(GTK_WIDGET(myMenu));
 
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
@@ -105,6 +104,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	gtk_toolbar_set_orientation(myToolbar, GTK_ORIENTATION_HORIZONTAL);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
+	initWindow(this);
 	hildon_window_add_toolbar(myWindow, myToolbar);
 
 	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());

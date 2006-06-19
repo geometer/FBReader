@@ -153,6 +153,9 @@ FBReader::FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader
 }
 
 bool FBReader::FindNextAction::isEnabled() {
+	if (myFBReader.myViewWidget == 0) {
+		return false;
+	}
 	TextView *textView = (TextView*)myFBReader.myViewWidget->view();
 	return (textView != 0) && textView->canFindNext();
 }
@@ -165,6 +168,9 @@ FBReader::FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(
 }
 
 bool FBReader::FindPreviousAction::isEnabled() {
+	if (myFBReader.myViewWidget == 0) {
+		return false;
+	}
 	TextView *textView = (TextView*)myFBReader.myViewWidget->view();
 	return (textView != 0) && textView->canFindPrevious();
 }
@@ -177,6 +183,9 @@ FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOp
 }
 
 void FBReader::ScrollingAction::run() {
+	if (myFBReader.myViewWidget == 0) {
+		return;
+	}
 	int delay = myFBReader.myLastScrollingTime.millisecondsTo(ZLTime());
 	TextView *textView = (TextView*)myFBReader.myViewWidget->view();
 	if ((textView != 0) && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
@@ -221,6 +230,9 @@ bool FBReader::RotationAction::isVisible() {
 }
 
 void FBReader::RotationAction::run() {
+	if (myFBReader.myViewWidget == 0) {
+		return;
+	}
 	int optionValue = myFBReader.RotationAngleOption.value();
 	ZLViewWidget::Angle oldAngle = myFBReader.myViewWidget->rotation();
 	ZLViewWidget::Angle newAngle = ZLViewWidget::DEGREES0;
