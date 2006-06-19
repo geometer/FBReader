@@ -68,11 +68,13 @@ void XMLOptions::setValue(const std::string &name, long value, const std::string
 
 double XMLOptions::doubleValue(const std::string &name, double defaultValue) {
   std::string value = stringValue(name, std::string());
+	setlocale(LC_NUMERIC, "C");
   return (!value.empty()) ? atof(value.c_str()) : defaultValue;
 }
 
 void XMLOptions::setValue(const std::string &name, double value, const std::string &category) {
   char buf[100];
+	setlocale(LC_NUMERIC, "C");
   sprintf(buf, "%f", value);
   setValue(name, std::string(buf), category);
 }
