@@ -121,7 +121,6 @@ void QFBReader::setMode(ViewMode mode) {
 
 	FBReader::setMode(mode);
 
-	enableMenuButtons();
 	fullScreenWorkaround();
 }
 

@@ -46,7 +46,6 @@ private:
 
 protected:
 	void setWindowCaption(const std::string &caption);
-	void setMode(ViewMode mode);
 	void addToolbarItem(shared_ptr<Toolbar::Item> item);
 	void refresh();
 	void searchSlot();

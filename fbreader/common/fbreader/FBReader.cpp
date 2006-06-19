@@ -135,6 +135,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	addAction(ACTION_SHOW_COLLECTION, new ShowCollectionAction(*this));
 	addAction(ACTION_SHOW_LAST_BOOKS, new ShowRecentBooksListAction(*this));
 	addAction(ACTION_SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
+	addAction(ACTION_SHOW_CONTENTS, new ShowContentsAction(*this));
 	addAction(ACTION_UNDO, new UndoAction(*this));
 	addAction(ACTION_REDO, new RedoAction(*this));
 	addAction(ACTION_SEARCH, new SearchAction(*this));
@@ -150,6 +151,9 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	}
 	addAction(ACTION_INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
 	addAction(ACTION_DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
+  if (isRotationSupported()) {
+		addAction(ACTION_ROTATE_SCREEN, new RotationAction(*this));
+  }
 
   toolbar().addButton(ACTION_SHOW_COLLECTION, "books");
   toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history");
@@ -339,11 +343,6 @@ void FBReader::doAction(ActionCode code) {
   switch (code) {
 		default:
       break;
-    case ACTION_SHOW_CONTENTS:
-      if (((myMode == BOOK_TEXT_MODE) || (myMode == FOOTNOTE_MODE)) && !myContentsView->isEmpty()) {
-        setMode(CONTENTS_MODE);
-      }
-      break;
     case ACTION_SCROLL_TO_HOME:
       if (myMode == BOOK_TEXT_MODE) {
         myBookTextView->scrollToHome();
@@ -385,37 +384,6 @@ void FBReader::doAction(ActionCode code) {
     case ACTION_SHOW_BOOK_INFO:
       bookInfoSlot();
       break;
-    case ACTION_SHOW_HELP:
-      break;
-    case ACTION_ROTATE_SCREEN:
-      if (isRotationSupported()) {
-        int optionValue = RotationAngleOption.value();
-        ZLViewWidget::Angle oldAngle = myViewWidget->rotation();
-        ZLViewWidget::Angle newAngle = ZLViewWidget::DEGREES0;
-        if (optionValue == -1) {
-          switch (oldAngle) {
-            case ZLViewWidget::DEGREES0:
-              newAngle = ZLViewWidget::DEGREES90;
-              break;
-            case ZLViewWidget::DEGREES90:
-              newAngle = ZLViewWidget::DEGREES180;
-              break;
-            case ZLViewWidget::DEGREES180:
-              newAngle = ZLViewWidget::DEGREES270;
-              break;
-            case ZLViewWidget::DEGREES270:
-              newAngle = ZLViewWidget::DEGREES0;
-              break;
-          }
-        } else {
-          newAngle = (oldAngle == ZLViewWidget::DEGREES0) ?
-            (ZLViewWidget::Angle)optionValue : ZLViewWidget::DEGREES0;
-        }
-        myViewWidget->rotate(newAngle);
-        AngleStateOption.setValue(newAngle);
-        repaintView();
-      }
-      break;
     case ACTION_QUIT:
       if (myMode == BOOK_TEXT_MODE) {
         quitSlot();
@@ -434,16 +402,6 @@ void FBReader::doAction(ActionCode code) {
       break;
     }
   }
-}
-
-void FBReader::enableMenuButtons() {
-  setActionEnabled(ACTION_SHOW_CONTENTS, !myContentsView->isEmpty());
-  if (isRotationSupported()) {
-    setActionVisible(ACTION_ROTATE_SCREEN,
-      (RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
-      (myViewWidget->rotation() != ZLViewWidget::DEGREES0));
-  }
-	refreshWindow();
 }
 
 class RebuildCollectionRunnable : public ZLRunnable {
@@ -473,14 +431,12 @@ void FBReader::setMode(ViewMode mode) {
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, true);
       setActionVisible(ACTION_SCROLL_TO_HOME, true);
-      setActionVisible(ACTION_SHOW_CONTENTS, true);
       myViewWidget->setView(myBookTextView);
       break;
     case CONTENTS_MODE:
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, true);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_SHOW_CONTENTS, false);
       if (!StoreContentsPositionOption.value()) {
         myContentsView->gotoReference();
       }
@@ -490,14 +446,12 @@ void FBReader::setMode(ViewMode mode) {
       setActionVisible(ACTION_ADD_BOOK, false);
       setActionVisible(ACTION_SHOW_BOOK_INFO, true);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_SHOW_CONTENTS, true);
       myViewWidget->setView(myFootnoteView);
       break;
     case BOOK_COLLECTION_MODE:
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, false);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_SHOW_CONTENTS, false);
       {
         RebuildCollectionRunnable runnable(*this);
         ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
@@ -508,7 +462,6 @@ void FBReader::setMode(ViewMode mode) {
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, false);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_SHOW_CONTENTS, false);
       myRecentBooksView->rebuild();
       myViewWidget->setView(myRecentBooksView);
       break;

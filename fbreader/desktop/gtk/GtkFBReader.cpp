@@ -289,7 +289,7 @@ void GtkFBReader::searchSlot() {
 		);
 	}
 
-	gtk_widget_destroy (GTK_WIDGET(findDialog));
+	gtk_widget_destroy(GTK_WIDGET(findDialog));
 }
 
 // vim:ts=2:sw=2:noet

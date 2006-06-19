@@ -316,7 +316,6 @@ public:
   void showBookTextView();
   void tryShowFootnoteView(const std::string &id);
   void restorePreviousMode();
-  void enableMenuButtons();
   void repaintView();
   void doAction(ActionCode code);
 

@@ -21,6 +21,7 @@
 
 #include "FBReader.h"
 #include "BookTextView.h"
+#include "ContentsView.h"
 
 #include "../textview/TextView.h"
 
@@ -51,20 +52,36 @@ bool FBReader::ShowRecentBooksListAction::isVisible() {
 FBReader::ShowOptionsDialogAction::ShowOptionsDialogAction(FBReader &fbreader) : Action(fbreader) {
 }
 
+FBReader::ShowContentsAction::ShowContentsAction(FBReader &fbreader) : Action(fbreader) {
+}
+
+bool FBReader::ShowContentsAction::isVisible() {
+	ViewMode mode = ((FBReader&)myApplication).myMode;
+	return (mode == BOOK_TEXT_MODE) || (mode == FOOTNOTE_MODE);
+}
+
+bool FBReader::ShowContentsAction::isEnabled() {
+	return isVisible() && !((FBReader&)myApplication).myContentsView->isEmpty();
+}
+
+void FBReader::ShowContentsAction::run() {
+	((FBReader&)myApplication).setMode(CONTENTS_MODE);
+}
+
 FBReader::UndoAction::UndoAction(FBReader &fbreader) : Action(fbreader) {
 }
 
 bool FBReader::UndoAction::isEnabled() {
-  return (((FBReader&)myApplication).myMode != BOOK_TEXT_MODE) ||
+	return (((FBReader&)myApplication).myMode != BOOK_TEXT_MODE) ||
 					((FBReader&)myApplication).myBookTextView->canUndoPageMove();
 }
 
 void FBReader::UndoAction::run() {
-  if (((FBReader&)myApplication).myMode == BOOK_TEXT_MODE) {
-    ((FBReader&)myApplication).myBookTextView->undoPageMove();
-  } else {
-    ((FBReader&)myApplication).restorePreviousMode();
-  }
+	if (((FBReader&)myApplication).myMode == BOOK_TEXT_MODE) {
+		((FBReader&)myApplication).myBookTextView->undoPageMove();
+	} else {
+		((FBReader&)myApplication).restorePreviousMode();
+	}
 }
 
 FBReader::RedoAction::RedoAction(FBReader &fbreader) : Action(fbreader) {
@@ -75,7 +92,7 @@ bool FBReader::RedoAction::isVisible() {
 }
 
 bool FBReader::RedoAction::isEnabled() {
-  return isVisible() && ((FBReader&)myApplication).myBookTextView->canRedoPageMove();
+	return isVisible() && ((FBReader&)myApplication).myBookTextView->canRedoPageMove();
 }
 
 void FBReader::RedoAction::run() {
@@ -121,28 +138,28 @@ FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOp
 }
 
 void FBReader::ScrollingAction::run() {
-  int delay = ((FBReader&)myApplication).myLastScrollingTime.millisecondsTo(ZLTime());
+	int delay = ((FBReader&)myApplication).myLastScrollingTime.millisecondsTo(ZLTime());
 	TextView *textView = (TextView*)((FBReader&)myApplication).myViewWidget->view();
-  if ((textView != 0) && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
-    TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
-    unsigned int oValue = 0;
-    switch (oType) {
-      case TextView::KEEP_LINES:
-        oValue = myOptions.LinesToKeepOption.value();
-        break;
-      case TextView::SCROLL_LINES:
-        oValue = myOptions.LinesToScrollOption.value();
-        break;
-      case TextView::SCROLL_PERCENTAGE:
-        oValue = myOptions.PercentToScrollOption.value();
-        break;
-      default:
-        break;
-    }
-    ((TextView*)((FBReader&)myApplication).myViewWidget->view())->scrollPage(myForward, oType, oValue);
-    ((FBReader&)myApplication).repaintView();
-    ((FBReader&)myApplication).myLastScrollingTime = ZLTime();
-  }
+	if ((textView != 0) && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
+		TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
+		unsigned int oValue = 0;
+		switch (oType) {
+			case TextView::KEEP_LINES:
+				oValue = myOptions.LinesToKeepOption.value();
+				break;
+			case TextView::SCROLL_LINES:
+				oValue = myOptions.LinesToScrollOption.value();
+				break;
+			case TextView::SCROLL_PERCENTAGE:
+				oValue = myOptions.PercentToScrollOption.value();
+				break;
+			default:
+				break;
+		}
+		((TextView*)((FBReader&)myApplication).myViewWidget->view())->scrollPage(myForward, oType, oValue);
+		((FBReader&)myApplication).repaintView();
+		((FBReader&)myApplication).myLastScrollingTime = ZLTime();
+	}
 }
 
 FBReader::ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : Action(fbreader), myDelta(delta) {
@@ -152,5 +169,42 @@ void FBReader::ChangeFontSizeAction::run() {
 	ZLIntegerRangeOption &option = TextStyleCollection::instance().baseStyle().FontSizeOption;
 	option.setValue(option.value() + myDelta);
 	((FBReader&)myApplication).clearTextCaches();
+	((FBReader&)myApplication).repaintView();
+}
+
+FBReader::RotationAction::RotationAction(FBReader &fbreader) : Action(fbreader) {
+}
+
+bool FBReader::RotationAction::isVisible() {
+	return ((FBReader&)myApplication).isRotationSupported() &&
+				 ((((FBReader&)myApplication).RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
+					(((FBReader&)myApplication).myViewWidget->rotation() != ZLViewWidget::DEGREES0));
+}
+
+void FBReader::RotationAction::run() {
+	int optionValue = ((FBReader&)myApplication).RotationAngleOption.value();
+	ZLViewWidget::Angle oldAngle = ((FBReader&)myApplication).myViewWidget->rotation();
+	ZLViewWidget::Angle newAngle = ZLViewWidget::DEGREES0;
+	if (optionValue == -1) {
+		switch (oldAngle) {
+			case ZLViewWidget::DEGREES0:
+				newAngle = ZLViewWidget::DEGREES90;
+				break;
+			case ZLViewWidget::DEGREES90:
+				newAngle = ZLViewWidget::DEGREES180;
+				break;
+			case ZLViewWidget::DEGREES180:
+				newAngle = ZLViewWidget::DEGREES270;
+				break;
+			case ZLViewWidget::DEGREES270:
+				newAngle = ZLViewWidget::DEGREES0;
+				break;
+		}
+	} else {
+		newAngle = (oldAngle == ZLViewWidget::DEGREES0) ?
+			(ZLViewWidget::Angle)optionValue : ZLViewWidget::DEGREES0;
+	}
+	((FBReader&)myApplication).myViewWidget->rotate(newAngle);
+	((FBReader&)myApplication).AngleStateOption.setValue(newAngle);
 	((FBReader&)myApplication).repaintView();
 }

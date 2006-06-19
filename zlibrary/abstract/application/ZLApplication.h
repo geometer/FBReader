@@ -141,8 +141,6 @@ public:
 	void setActionVisible(int actionId, bool visible);
 	void setActionEnabled(int actionId, bool enabled);
 
-	virtual void enableMenuButtons() = 0;
-
 // TODO: change to private
 protected:
 	std::map<int,shared_ptr<Action> > myActionMap;

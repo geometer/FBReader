@@ -105,16 +105,6 @@ void QFBReader::quitSlot() {
   close();
 }
 
-void QFBReader::setMode(ViewMode mode) {
-	if (mode == myMode) {
-		return;
-	}
-
-	FBReader::setMode(mode);
-
-	enableMenuButtons();
-}
-
 void QFBReader::timerEvent(QTimerEvent *) {
 	if (myMode != BOOK_TEXT_MODE) {
 		restorePreviousMode();
@@ -216,7 +206,6 @@ void QFBReader::searchSlot() {
 		);
 	}
 	repaintView();
-	enableMenuButtons();
 }
 
 void QFBReader::setWindowCaption(const std::string &caption) {
