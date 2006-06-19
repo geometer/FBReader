@@ -20,7 +20,7 @@
 
 #include "ZLApplication.h"
 
-void ZLApplicationView::init() {
+void ZLApplicationWindow::init() {
 	const ZLApplication::Toolbar::ItemVector &items = myApplication->toolbar().items();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		addToolbarItem(*it);

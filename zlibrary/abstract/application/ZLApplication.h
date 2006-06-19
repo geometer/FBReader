@@ -113,8 +113,8 @@ protected:
 public:
 	virtual ~ZLApplication();
 
-	void initView(class ZLApplicationView *view);
-	void refreshView();
+	void initWindow(class ZLApplicationWindow *view);
+	void refreshWindow();
 
   virtual void setWindowCaption(const std::string &caption) = 0;
 
@@ -127,49 +127,49 @@ public:
 
 private:
 	Toolbar myToolbar;
-	class ZLApplicationView *myView;
+	class ZLApplicationWindow *myWindow;
 };
 
-class ZLApplicationView {
+class ZLApplicationWindow {
 
 protected:
-	ZLApplicationView();
+	ZLApplicationWindow();
 
   void init();
 	virtual void refresh() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
 
 public:
-	virtual ~ZLApplicationView();
+	virtual ~ZLApplicationWindow();
 
 private:
 	ZLApplication *myApplication;
 
-friend void ZLApplication::initView(ZLApplicationView *view);
-friend void ZLApplication::refreshView();
+friend void ZLApplication::initWindow(ZLApplicationWindow *view);
+friend void ZLApplication::refreshWindow();
 };
 
-inline ZLApplication::ZLApplication() : myView(0) {}
+inline ZLApplication::ZLApplication() : myWindow(0) {}
 inline ZLApplication::~ZLApplication() {
-	if (myView != 0) {
-		//delete myView;
+	if (myWindow != 0) {
+		//delete myWindow;
 	}
 }
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
-inline void ZLApplication::initView(ZLApplicationView *view) {
-	myView = view;
-	myView->myApplication = this;
-	myView->init();
-	myView->refresh();
+inline void ZLApplication::initWindow(ZLApplicationWindow *view) {
+	myWindow = view;
+	myWindow->myApplication = this;
+	myWindow->init();
+	myWindow->refresh();
 }
-inline void ZLApplication::refreshView() {
-	if (myView != 0) {
-		myView->refresh();
+inline void ZLApplication::refreshWindow() {
+	if (myWindow != 0) {
+		myWindow->refresh();
 	}
 }
 
-inline ZLApplicationView::ZLApplicationView() {}
-inline ZLApplicationView::~ZLApplicationView() {}
+inline ZLApplicationWindow::ZLApplicationWindow() {}
+inline ZLApplicationWindow::~ZLApplicationWindow() {}
 
 inline const ZLApplication::Toolbar::ItemVector &ZLApplication::Toolbar::items() const { return myItems; }
 inline bool ZLApplication::Toolbar::isVisibilityChanged() const { return myVisibilityChanged; }
