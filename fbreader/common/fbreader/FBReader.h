@@ -181,6 +181,18 @@ private:
 	};
 	friend class SearchAction;
 	
+	class ScrollingAction : public Action {
+
+	public:
+		ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward);
+		void run();
+
+	private:
+		const ScrollingOptions &myOptions;
+		const bool myForward;
+	};
+	friend class ScrollingAction;
+	
 	class ChangeFontSizeAction : public Action {
 
 	public:

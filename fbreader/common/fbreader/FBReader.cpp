@@ -25,6 +25,7 @@
 #include <abstract/ZLOptionsDialog.h>
 #include <abstract/ZLPaintContext.h>
 #include <abstract/ZLDir.h>
+#include <abstract/ZLDeviceInfo.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -138,6 +139,14 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 
 	addAction(ACTION_SHOW_COLLECTION, new ShowCollectionAction(*this));
 	addAction(ACTION_SEARCH, new SearchAction(*this));
+  addAction(ACTION_LARGE_SCROLL_FORWARD, new ScrollingAction(*this, LargeScrollingOptions, true));
+  addAction(ACTION_LARGE_SCROLL_BACKWARD, new ScrollingAction(*this, LargeScrollingOptions, false));
+  addAction(ACTION_SMALL_SCROLL_FORWARD, new ScrollingAction(*this, SmallScrollingOptions, true));
+  addAction(ACTION_SMALL_SCROLL_BACKWARD, new ScrollingAction(*this, SmallScrollingOptions, false));
+	if (ZLDeviceInfo::isMousePresented()) {
+    addAction(ACTION_MOUSE_SCROLL_FORWARD, new ScrollingAction(*this, MouseScrollingOptions, true));
+    addAction(ACTION_MOUSE_SCROLL_BACKWARD, new ScrollingAction(*this, MouseScrollingOptions, false));
+	}
 	addAction(ACTION_INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
 	addAction(ACTION_DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
 
@@ -303,30 +312,6 @@ void FBReader::addBookSlot() {
   }
 }
 
-void FBReader::doScrolling(const ScrollingOptions &options, bool forward) {
-  int delay = myLastScrollingTime.millisecondsTo(ZLTime());
-  if ((delay < 0) || (delay >= options.DelayOption.value())) {
-    TextView::ScrollingMode oType = (TextView::ScrollingMode)options.ModeOption.value();
-    unsigned int oValue = 0;
-    switch (oType) {
-      case TextView::KEEP_LINES:
-        oValue = options.LinesToKeepOption.value();
-        break;
-      case TextView::SCROLL_LINES:
-        oValue = options.LinesToScrollOption.value();
-        break;
-      case TextView::SCROLL_PERCENTAGE:
-        oValue = options.PercentToScrollOption.value();
-        break;
-      default:
-        break;
-    }
-    ((TextView*)myViewWidget->view())->scrollPage(forward, oType, oValue);
-    repaintView();
-    myLastScrollingTime = ZLTime();
-  }
-}
-
 bool FBReader::isScrollingAction(ActionCode code) {
   switch (code) {
     case ACTION_LARGE_SCROLL_FORWARD:
@@ -358,6 +343,33 @@ FBReader::SearchAction::SearchAction(FBReader &fbreader) : Action(fbreader) {
 
 void FBReader::SearchAction::run() {
 	((FBReader&)myApplication).searchSlot();
+}
+
+FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward) : Action(fbreader), myOptions(options), myForward(forward) {
+}
+
+void FBReader::ScrollingAction::run() {
+  int delay = ((FBReader&)myApplication).myLastScrollingTime.millisecondsTo(ZLTime());
+  if ((delay < 0) || (delay >= myOptions.DelayOption.value())) {
+    TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
+    unsigned int oValue = 0;
+    switch (oType) {
+      case TextView::KEEP_LINES:
+        oValue = myOptions.LinesToKeepOption.value();
+        break;
+      case TextView::SCROLL_LINES:
+        oValue = myOptions.LinesToScrollOption.value();
+        break;
+      case TextView::SCROLL_PERCENTAGE:
+        oValue = myOptions.PercentToScrollOption.value();
+        break;
+      default:
+        break;
+    }
+    ((TextView*)((FBReader&)myApplication).myViewWidget->view())->scrollPage(myForward, oType, oValue);
+    ((FBReader&)myApplication).repaintView();
+    ((FBReader&)myApplication).myLastScrollingTime = ZLTime();
+  }
 }
 
 FBReader::ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : Action(fbreader), myDelta(delta) {
@@ -408,18 +420,6 @@ void FBReader::doAction(ActionCode code) {
       break;
     case ACTION_FIND_NEXT:
       ((TextView*)myViewWidget->view())->findNext();
-      break;
-    case ACTION_LARGE_SCROLL_FORWARD:
-    case ACTION_LARGE_SCROLL_BACKWARD:
-      doScrolling(LargeScrollingOptions, code == ACTION_LARGE_SCROLL_FORWARD);
-      break;
-    case ACTION_SMALL_SCROLL_FORWARD:
-    case ACTION_SMALL_SCROLL_BACKWARD:
-      doScrolling(SmallScrollingOptions, code == ACTION_SMALL_SCROLL_FORWARD);
-      break;
-    case ACTION_MOUSE_SCROLL_FORWARD:
-    case ACTION_MOUSE_SCROLL_BACKWARD:
-      doScrolling(MouseScrollingOptions, code == ACTION_MOUSE_SCROLL_FORWARD);
       break;
     case ACTION_SCROLL_TO_HOME:
       if (myMode == BOOK_TEXT_MODE) {
