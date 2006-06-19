@@ -173,6 +173,42 @@ private:
 	};
 	friend class ShowCollectionAction;
 
+	class ShowRecentBooksListAction : public Action {
+
+	public:
+		ShowRecentBooksListAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class ShowRecentBooksListAction;
+
+	class ShowOptionsDialogAction : public Action {
+
+	public:
+		ShowOptionsDialogAction(FBReader &fbreader);
+		void run();
+	};
+	friend class ShowOptionsDialogAction;
+
+	class UndoAction : public Action {
+
+	public:
+		UndoAction(FBReader &fbreader);
+		bool isEnabled();
+		void run();
+	};
+	friend class UndoAction;
+	
+	class RedoAction : public Action {
+
+	public:
+		RedoAction(FBReader &fbreader);
+		bool isVisible();
+		bool isEnabled();
+		void run();
+	};
+	friend class RedoAction;
+	
 	class SearchAction : public Action {
 
 	public:
@@ -230,7 +266,6 @@ protected:
 private:
   bool runBookInfoDialog(const std::string &fileName);
   void clearTextCaches();
-  void doScrolling(const ScrollingOptions &options, bool forward);
 
   bool isScrollingAction(ActionCode code);
 

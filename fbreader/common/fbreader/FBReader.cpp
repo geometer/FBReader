@@ -21,9 +21,7 @@
 
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLDialogManager.h>
-#include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLPaintContext.h>
 #include <abstract/ZLDir.h>
 #include <abstract/ZLDeviceInfo.h>
 
@@ -39,12 +37,9 @@
 
 #include "../Files.h"
 #include "../FBOptions.h"
-#include "../collection/BookCollection.h"
 #include "../collection/BookList.h"
 #include "../bookmodel/BookModel.h"
 #include "../hyphenation/Hyphenator.h"
-#include "../textview/TextStyle.h"
-#include "../textview/ParagraphCursor.h"
 #include "../formats/FormatPlugin.h"
 
 static const std::string OPTIONS = "Options";
@@ -138,6 +133,10 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
   openBook(description);
 
 	addAction(ACTION_SHOW_COLLECTION, new ShowCollectionAction(*this));
+	addAction(ACTION_SHOW_LAST_BOOKS, new ShowRecentBooksListAction(*this));
+	addAction(ACTION_SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
+	addAction(ACTION_UNDO, new UndoAction(*this));
+	addAction(ACTION_REDO, new RedoAction(*this));
 	addAction(ACTION_SEARCH, new SearchAction(*this));
   addAction(ACTION_LARGE_SCROLL_FORWARD, new ScrollingAction(*this, LargeScrollingOptions, true));
   addAction(ACTION_LARGE_SCROLL_BACKWARD, new ScrollingAction(*this, LargeScrollingOptions, false));
@@ -326,89 +325,17 @@ bool FBReader::isScrollingAction(ActionCode code) {
   }
 }
 
-FBReader::ShowCollectionAction::ShowCollectionAction(FBReader &fbreader) : Action(fbreader) {
-}
-
-void FBReader::ShowCollectionAction::run() {
-	((FBReader&)myApplication).setMode(BOOK_COLLECTION_MODE);
-}
-
-bool FBReader::ShowCollectionAction::isVisible() {
-	ViewMode mode = ((FBReader&)myApplication).myMode;
-	return (mode != FOOTNOTE_MODE) && (mode != BOOK_COLLECTION_MODE);
-}
-
-FBReader::SearchAction::SearchAction(FBReader &fbreader) : Action(fbreader) {
-}
-
-void FBReader::SearchAction::run() {
-	((FBReader&)myApplication).searchSlot();
-}
-
-FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward) : Action(fbreader), myOptions(options), myForward(forward) {
-}
-
-void FBReader::ScrollingAction::run() {
-  int delay = ((FBReader&)myApplication).myLastScrollingTime.millisecondsTo(ZLTime());
-  if ((delay < 0) || (delay >= myOptions.DelayOption.value())) {
-    TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
-    unsigned int oValue = 0;
-    switch (oType) {
-      case TextView::KEEP_LINES:
-        oValue = myOptions.LinesToKeepOption.value();
-        break;
-      case TextView::SCROLL_LINES:
-        oValue = myOptions.LinesToScrollOption.value();
-        break;
-      case TextView::SCROLL_PERCENTAGE:
-        oValue = myOptions.PercentToScrollOption.value();
-        break;
-      default:
-        break;
-    }
-    ((TextView*)((FBReader&)myApplication).myViewWidget->view())->scrollPage(myForward, oType, oValue);
-    ((FBReader&)myApplication).repaintView();
-    ((FBReader&)myApplication).myLastScrollingTime = ZLTime();
-  }
-}
-
-FBReader::ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : Action(fbreader), myDelta(delta) {
-}
-
-void FBReader::ChangeFontSizeAction::run() {
-	ZLIntegerRangeOption &option = TextStyleCollection::instance().baseStyle().FontSizeOption;
-	option.setValue(option.value() + myDelta);
-	((FBReader&)myApplication).clearTextCaches();
-	((FBReader&)myApplication).repaintView();
-}
-
 void FBReader::doAction(ActionCode code) {
 	shared_ptr<Action> action = myActionMap[code];
 	if (!action.isNull()) {
-		action->run();
+		if (action->isEnabled()) {
+			action->run();
+		}
 		return;
 	}
 
   switch (code) {
 		default:
-      break;
-    case ACTION_SHOW_LAST_BOOKS:
-      setMode(RECENT_BOOKS_MODE);
-      break;
-    case ACTION_SHOW_OPTIONS:
-      optionsSlot();
-      break;
-    case ACTION_UNDO:
-      if (myMode == BOOK_TEXT_MODE) {
-        myBookTextView->undoPageMove();
-      } else {
-        restorePreviousMode();
-      }
-      break;
-    case ACTION_REDO:
-      if (myMode == BOOK_TEXT_MODE) {
-        myBookTextView->redoPageMove();
-      }
       break;
     case ACTION_SHOW_CONTENTS:
       if (((myMode == BOOK_TEXT_MODE) || (myMode == FOOTNOTE_MODE)) && !myContentsView->isEmpty()) {
@@ -518,8 +445,6 @@ void FBReader::enableMenuButtons() {
   setActionEnabled(ACTION_FIND_NEXT, textView->canFindNext());
   setActionEnabled(ACTION_FIND_PREVIOUS, textView->canFindPrevious());
   setActionEnabled(ACTION_SHOW_CONTENTS, !myContentsView->isEmpty());
-  setActionEnabled(ACTION_UNDO, (myMode != BOOK_TEXT_MODE) || myBookTextView->canUndoPageMove());
-  setActionEnabled(ACTION_REDO, myBookTextView->canRedoPageMove());
   if (isRotationSupported()) {
     setActionVisible(ACTION_ROTATE_SCREEN,
       (RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
@@ -552,22 +477,16 @@ void FBReader::setMode(ViewMode mode) {
 
   switch (myMode) {
     case BOOK_TEXT_MODE:
-      setActionVisible(ACTION_SHOW_COLLECTION, true);
-      setActionVisible(ACTION_SHOW_LAST_BOOKS, true);
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, true);
       setActionVisible(ACTION_SCROLL_TO_HOME, true);
-      setActionVisible(ACTION_REDO, true);
       setActionVisible(ACTION_SHOW_CONTENTS, true);
       myViewWidget->setView(myBookTextView);
       break;
     case CONTENTS_MODE:
-      setActionVisible(ACTION_SHOW_COLLECTION, true);
-      setActionVisible(ACTION_SHOW_LAST_BOOKS, true);
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, true);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_REDO, false);
       setActionVisible(ACTION_SHOW_CONTENTS, false);
       if (!StoreContentsPositionOption.value()) {
         myContentsView->gotoReference();
@@ -575,22 +494,16 @@ void FBReader::setMode(ViewMode mode) {
       myViewWidget->setView(myContentsView);
       break;
     case FOOTNOTE_MODE:
-      setActionVisible(ACTION_SHOW_COLLECTION, false);
-      setActionVisible(ACTION_SHOW_LAST_BOOKS, false);
       setActionVisible(ACTION_ADD_BOOK, false);
       setActionVisible(ACTION_SHOW_BOOK_INFO, true);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_REDO, false);
       setActionVisible(ACTION_SHOW_CONTENTS, true);
       myViewWidget->setView(myFootnoteView);
       break;
     case BOOK_COLLECTION_MODE:
-      setActionVisible(ACTION_SHOW_COLLECTION, false);
-      setActionVisible(ACTION_SHOW_LAST_BOOKS, false);
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, false);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_REDO, false);
       setActionVisible(ACTION_SHOW_CONTENTS, false);
       {
         RebuildCollectionRunnable runnable(*this);
@@ -599,12 +512,9 @@ void FBReader::setMode(ViewMode mode) {
       myViewWidget->setView(myCollectionView);
       break;
     case RECENT_BOOKS_MODE:
-      setActionVisible(ACTION_SHOW_COLLECTION, true);
-      setActionVisible(ACTION_SHOW_LAST_BOOKS, false);
       setActionVisible(ACTION_ADD_BOOK, true);
       setActionVisible(ACTION_SHOW_BOOK_INFO, false);
       setActionVisible(ACTION_SCROLL_TO_HOME, false);
-      setActionVisible(ACTION_REDO, false);
       setActionVisible(ACTION_SHOW_CONTENTS, false);
       myRecentBooksView->rebuild();
       myViewWidget->setView(myRecentBooksView);
