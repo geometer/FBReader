@@ -110,6 +110,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	buildMenu();
 
+	initWindow(this);
 	gtk_widget_show_all(GTK_WIDGET(myMenu));
 
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());

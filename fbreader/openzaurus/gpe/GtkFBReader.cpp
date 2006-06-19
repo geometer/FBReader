@@ -90,6 +90,7 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
 	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
+	initWindow(this);
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
 	setMode(BOOK_TEXT_MODE);

@@ -95,8 +95,9 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	myMenu = GTK_MENU(gtk_menu_new());
 
 	buildMenu();
-
 	hildon_window_set_menu(myWindow, myMenu);
+
+	initWindow(this);
 	gtk_widget_show_all(GTK_WIDGET(myMenu));
 
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
