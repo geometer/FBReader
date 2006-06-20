@@ -93,6 +93,28 @@ void FBReader::ScrollToHomeAction::run() {
 	myFBReader.myBookTextView->scrollToHome();
 }
 
+FBReader::ScrollToStartOfTextAction::ScrollToStartOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool FBReader::ScrollToStartOfTextAction::isVisible() {
+	return myFBReader.myMode == BOOK_TEXT_MODE;
+}
+
+void FBReader::ScrollToStartOfTextAction::run() {
+	myFBReader.myBookTextView->scrollToStartOfText();
+}
+
+FBReader::ScrollToEndOfTextAction::ScrollToEndOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool FBReader::ScrollToEndOfTextAction::isVisible() {
+	return myFBReader.myMode == BOOK_TEXT_MODE;
+}
+
+void FBReader::ScrollToEndOfTextAction::run() {
+	myFBReader.myBookTextView->scrollToEndOfText();
+}
+
 FBReader::ShowBookInfoAction::ShowBookInfoAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 

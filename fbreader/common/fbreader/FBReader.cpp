@@ -145,6 +145,8 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	addAction(ACTION_FIND_NEXT, new FindNextAction(*this));
 	addAction(ACTION_FIND_PREVIOUS, new FindPreviousAction(*this));
 	addAction(ACTION_SCROLL_TO_HOME, new ScrollToHomeAction(*this));
+	addAction(ACTION_SCROLL_TO_START_OF_TEXT, new ScrollToStartOfTextAction(*this));
+	addAction(ACTION_SCROLL_TO_END_OF_TEXT, new ScrollToEndOfTextAction(*this));
   addAction(ACTION_LARGE_SCROLL_FORWARD, new ScrollingAction(*this, LargeScrollingOptions, true));
   addAction(ACTION_LARGE_SCROLL_BACKWARD, new ScrollingAction(*this, LargeScrollingOptions, false));
   addAction(ACTION_SMALL_SCROLL_FORWARD, new ScrollingAction(*this, SmallScrollingOptions, true));
@@ -347,12 +349,6 @@ void FBReader::doAction(ActionCode code) {
   switch (code) {
 		default:
       break;
-    case ACTION_SCROLL_TO_START_OF_TEXT:
-      ((TextView*)myViewWidget->view())->scrollToStartOfText();
-      break;
-    case ACTION_SCROLL_TO_END_OF_TEXT:
-      ((TextView*)myViewWidget->view())->scrollToEndOfText();
-      break;
     case ACTION_CANCEL:
       if (myMode != BOOK_TEXT_MODE) {
         restorePreviousMode();
@@ -470,7 +466,7 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
   return false;
 }
 
-BookTextView &FBReader::textView() const {
+BookTextView &FBReader::bookTextView() const {
   return *myBookTextView;
 }
 

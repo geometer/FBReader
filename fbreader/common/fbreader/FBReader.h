@@ -236,6 +236,24 @@ private:
 	};
 	friend class ScrollToHomeAction;
 
+	class ScrollToStartOfTextAction : public FBAction {
+
+	public:
+		ScrollToStartOfTextAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class ScrollToStartOfTextAction;
+
+	class ScrollToEndOfTextAction : public FBAction {
+
+	public:
+		ScrollToEndOfTextAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class ScrollToEndOfTextAction;
+
 	class UndoAction : public FBAction {
 
 	public:
@@ -348,7 +366,7 @@ public:
   virtual void grabAllKeys(bool grab);
 
   void openBook(BookDescriptionPtr description);
-  BookTextView &textView() const;
+  BookTextView &bookTextView() const;
   void showBookTextView();
   void tryShowFootnoteView(const std::string &id);
   void restorePreviousMode();
