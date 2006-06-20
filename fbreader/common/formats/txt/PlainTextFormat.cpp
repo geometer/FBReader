@@ -103,13 +103,13 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
   do {
     length = stream.read(buffer, BUFFER_SIZE);
     const char *end = buffer + length;
-    for (const char *ptr = buffer; ptr != end; ptr++) {
-      currentLineLength++;
+    for (const char *ptr = buffer; ptr != end; ++ptr) {
+      ++currentLineLength;
       if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
-        lineCounter++;
+        ++lineCounter;
         if (currentLineIsEmpty) {
-          emptyLineCounter++;
-          currentNumberOfEmptyLines++;
+          ++emptyLineCounter;
+          ++currentNumberOfEmptyLines;
         } else {
           emptyLinesTable[std::min(currentNumberOfEmptyLines, tableSize - 1)]++;
           if (currentLineLength < 51) {
@@ -118,10 +118,10 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
           currentNumberOfEmptyLines = 0;
         }
         if (currentLineIsLikeToLibRuHeader) {
-          libRuHeaderLineCounter++;
+          ++libRuHeaderLineCounter;
         }
         if (currentLineLength < 81) {
-          stringsWithLengthLessThan81Counter++;
+          ++stringsWithLengthLessThan81Counter;
         }
         if (!currentLineIsEmpty) {
           stringIndentTable[std::min(currentLineIndent, tableSize - 1)]++;
@@ -133,7 +133,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
         currentLineIndent = 0;
       } else if (isspace(*ptr)) {
         if (currentLineIsEmpty) {
-          currentLineIndent++;
+          ++currentLineIndent;
         }
       } else {
         currentLineIsEmpty = false;
@@ -151,7 +151,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
   {
     unsigned int indent = 0;
     unsigned int lineWithIndent = 0;
-    for (; indent < tableSize; indent++) {
+    for (; indent < tableSize; ++indent) {
       lineWithIndent += stringIndentTable[indent];
       if (lineWithIndent > 0.1 * nonEmptyLineCounter) {
         break;
@@ -175,7 +175,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
     unsigned int max = 0;
     unsigned index;
     int emptyLinesBeforeNewSection = -1;
-    for (index = 2; index < tableSize; index++) {
+    for (index = 2; index < tableSize; ++index) {
       if (max < emptyLinesBeforeShortStringTable[index]) {
         max = emptyLinesBeforeShortStringTable[index];
         emptyLinesBeforeNewSection = index;
@@ -186,7 +186,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
         emptyLinesTable[index - 1] += emptyLinesTable[index];  
         emptyLinesBeforeShortStringTable[index - 1] += emptyLinesBeforeShortStringTable[index];  
       }
-      for (index = emptyLinesBeforeNewSection; index < tableSize; index++) {
+      for (index = emptyLinesBeforeNewSection; index < tableSize; ++index) {
         if ((emptyLinesBeforeShortStringTable[index] > 2) &&
             (emptyLinesBeforeShortStringTable[index] > 0.7 * emptyLinesTable[index])) {
           break;
@@ -228,7 +228,7 @@ const std::string &BreakTypeOptionEntry::initialValue() const {
 
 const std::vector<std::string> &BreakTypeOptionEntry::values() const {
   if (BREAK_TYPE_VALUES_VECTOR.empty()) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; ++i) {
       BREAK_TYPE_VALUES_VECTOR.push_back(BREAK_TYPE_VALUES[i]);
     }
   }

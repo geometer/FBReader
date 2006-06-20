@@ -71,7 +71,7 @@ void PluckerBookReader::safeBeginParagraph() {
       myParagraphVector->push_back(model().bookTextModel().paragraphsNumber() - 1);
       myParagraphStored = true;
     }
-    for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); it++) {
+    for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); ++it) {
       addControl(it->first, it->second);
     }
     if (myForcedEntry != 0) {
@@ -79,7 +79,7 @@ void PluckerBookReader::safeBeginParagraph() {
     } else {
       addControl(REGULAR, true);
     }
-    for (std::vector<std::string>::const_iterator it = myDelayedHyperlinks.begin(); it != myDelayedHyperlinks.end(); it++) {
+    for (std::vector<std::string>::const_iterator it = myDelayedHyperlinks.begin(); it != myDelayedHyperlinks.end(); ++it) {
       addHyperlinkControl(HYPERLINK, *it);
     }
     myDelayedHyperlinks.clear();
@@ -181,12 +181,12 @@ void PluckerBookReader::changeFont(FontType font) {
 static void listParameters(char *ptr) {
   int argc = ((unsigned char)*ptr) % 8;
   std::cerr << (int)(unsigned char)*ptr << "(";  
-  for (int i = 0; i < argc - 1; i++) {
-    ptr++;
+  for (int i = 0; i < argc - 1; ++i) {
+    ++ptr;
     std::cerr << (int)*ptr << ", ";  
   }
   if (argc > 0) {
-    ptr++;
+    ++ptr;
     std::cerr << (int)*ptr;  
   }
   std::cerr << ")\n";  
@@ -306,7 +306,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 
   char *textStart = start;
   bool functionFlag = false;
-  for (char *ptr = start; ptr < end; ptr++) {
+  for (char *ptr = start; ptr < end; ++ptr) {
     if (*ptr == 0) {
       functionFlag = true;
       if (ptr > textStart) {
@@ -331,7 +331,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
         *ptr = 0x20;
       }
       if (!myParagraphStarted && (textStart == ptr) && isspace(*ptr)) {
-        textStart++;
+        ++textStart;
       }
     }
   }
@@ -354,7 +354,7 @@ void PluckerBookReader::processTextRecord(size_t size, const std::vector<int> &p
   char *start = myCharBuffer;
   char *end = myCharBuffer;
 
-  for (std::vector<int>::const_iterator it = pars.begin(); it != pars.end(); it++) {
+  for (std::vector<int>::const_iterator it = pars.begin(); it != pars.end(); ++it) {
     start = end;
     end = start + *it;
     if (end > myCharBuffer + size) {
@@ -391,7 +391,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
       case 1: // compressed text
       {
         std::vector<int> pars;
-        for (int i = 0; i < paragraphs; i++) {
+        for (int i = 0; i < paragraphs; ++i) {
           unsigned short pSize;
           PdbUtil::readUnsignedShort(myStream, pSize);
           pars.push_back(pSize);
@@ -459,7 +459,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
         PdbUtil::readUnsignedShort(myStream, columns);
         PdbUtil::readUnsignedShort(myStream, rows);
         PluckerMultiImage *image = new PluckerMultiImage(rows, columns, model().imageMap());
-        for (int i = 0; i < size / 2 - 2; i++) {
+        for (int i = 0; i < size / 2 - 2; ++i) {
           unsigned short us;
           PdbUtil::readUnsignedShort(myStream, us);
           image->addId(fromNumber(us));
@@ -489,7 +489,7 @@ bool PluckerBookReader::readDocument() {
   setMainTextModel();
   myFont = FT_REGULAR;
 
-  for (std::vector<unsigned long>::const_iterator it = header.Offsets.begin(); it != header.Offsets.end(); it++) {
+  for (std::vector<unsigned long>::const_iterator it = header.Offsets.begin(); it != header.Offsets.end(); ++it) {
     size_t currentOffset = myStream->offset();
     if (currentOffset > *it) {
       break;
@@ -503,10 +503,10 @@ bool PluckerBookReader::readDocument() {
   }
   myStream->close();
 
-  for (std::set<std::pair<int,int> >::const_iterator it = myReferencedParagraphs.begin(); it != myReferencedParagraphs.end(); it++) {
+  for (std::set<std::pair<int,int> >::const_iterator it = myReferencedParagraphs.begin(); it != myReferencedParagraphs.end(); ++it) {
     std::map<int,std::vector<int> >::const_iterator jt = myParagraphMap.find(it->first);
     if (jt != myParagraphMap.end()) {
-      for (unsigned int k = it->second; k < jt->second.size(); k++) {
+      for (unsigned int k = it->second; k < jt->second.size(); ++k) {
         if (jt->second[k] != -1) {
           addHyperlinkLabel(fromNumber(it->first) + '#' + fromNumber(it->second), jt->second[k]);
           break;

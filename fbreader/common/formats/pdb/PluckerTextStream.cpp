@@ -54,7 +54,7 @@ bool PluckerTextStream::fillBuffer() {
 		if (myRecordIndex + 1 > myHeader.Offsets.size() - 1) {
 			return false;
 		}
-		myRecordIndex++;
+		++myRecordIndex;
 		size_t currentOffset = myHeader.Offsets[myRecordIndex];
 		if (currentOffset < myBase->offset()) {
 			return false;
@@ -97,7 +97,7 @@ void PluckerTextStream::processRecord(size_t recordSize) {
 	myBase->seek(1);
 
 	std::vector<int> pars;
-	for (int i = 0; i < paragraphs; i++) {
+	for (int i = 0; i < paragraphs; ++i) {
 		unsigned short pSize;
 		PdbUtil::readUnsignedShort(myBase, pSize);
 		pars.push_back(pSize);
@@ -122,7 +122,7 @@ void PluckerTextStream::processRecord(size_t recordSize) {
 		char *start = myFullBuffer;
 		char *end = myFullBuffer;
 
-		for (std::vector<int>::const_iterator it = pars.begin(); it != pars.end(); it++) {
+		for (std::vector<int>::const_iterator it = pars.begin(); it != pars.end(); ++it) {
 			start = end;
 			end = start + *it;
 			if (end > myFullBuffer + size) {
@@ -136,7 +136,7 @@ void PluckerTextStream::processRecord(size_t recordSize) {
 void PluckerTextStream::processTextParagraph(char *start, char *end) {
 	char *textStart = start;
 	bool functionFlag = false;
-	for (char *ptr = start; ptr < end; ptr++) {
+	for (char *ptr = start; ptr < end; ++ptr) {
 		if (*ptr == 0) {
 			functionFlag = true;
 			if (ptr != textStart) {
