@@ -34,7 +34,7 @@ LastOpenedBooks::LastOpenedBooks() :
   MaxListSizeOption(FBOptions::BOOKS_CATEGORY, GROUP, "MaxSize", 1, 100, 10) {
 
   const int size = MaxListSizeOption.value();
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < size; ++i) {
     std::string num = BOOK;
     ZLStringUtil::appendNumber(num, i);
     std::string name = ZLStringOption(FBOptions::BOOKS_CATEGORY, GROUP, num, "").value();
@@ -49,7 +49,7 @@ LastOpenedBooks::LastOpenedBooks() :
 
 LastOpenedBooks::~LastOpenedBooks() {
   const int size = std::min(MaxListSizeOption.value(), (long)myBooks.size());
-  for (int i = 0; i < size; i++) {
+  for (int i = 0; i < size; ++i) {
     std::string num = BOOK;
     ZLStringUtil::appendNumber(num, i);
     ZLStringOption(FBOptions::BOOKS_CATEGORY, GROUP, num, "").setValue(myBooks[i]->fileName());
@@ -57,7 +57,7 @@ LastOpenedBooks::~LastOpenedBooks() {
 }
 
 void LastOpenedBooks::addBook(const std::string &fileName) {
-  for (Books::iterator it = myBooks.begin(); it != myBooks.end(); it++) {
+  for (Books::iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
     if ((*it)->fileName() == fileName) {
       myBooks.erase(it);
       break;
