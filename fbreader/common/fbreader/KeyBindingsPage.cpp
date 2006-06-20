@@ -146,16 +146,16 @@ FBReaderKeyOptionEntry::~FBReaderKeyOptionEntry() {
 }
 
 void FBReaderKeyOptionEntry::onAccept() {
-  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes0.begin(); it != myChangedCodes0.end(); it++) {
+  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes0.begin(); it != myChangedCodes0.end(); ++it) {
     myFBReader.keyBindings(ZLViewWidget::DEGREES0, true).bindKey(it->first, it->second);
   }
-  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes90.begin(); it != myChangedCodes90.end(); it++) {
+  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes90.begin(); it != myChangedCodes90.end(); ++it) {
     myFBReader.keyBindings(ZLViewWidget::DEGREES90, true).bindKey(it->first, it->second);
   }
-  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes180.begin(); it != myChangedCodes180.end(); it++) {
+  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes180.begin(); it != myChangedCodes180.end(); ++it) {
     myFBReader.keyBindings(ZLViewWidget::DEGREES180, true).bindKey(it->first, it->second);
   }
-  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes270.begin(); it != myChangedCodes270.end(); it++) {
+  for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes270.begin(); it != myChangedCodes270.end(); ++it) {
     myFBReader.keyBindings(ZLViewWidget::DEGREES270, true).bindKey(it->first, it->second);
   }
 }

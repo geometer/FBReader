@@ -145,7 +145,7 @@ void HtmlControlTagAction::run(bool start, const std::vector<HtmlReader::HtmlAtt
           myReader.myBookReader.addControl(list[i], false);
           myReader.myBookReader.popKind();
         }
-        for (unsigned int j = index + 1; j < list.size(); j++) {
+        for (unsigned int j = index + 1; j < list.size(); ++j) {
           myReader.myBookReader.addControl(list[j], true);
           myReader.myBookReader.pushKind(list[j]);
         }
@@ -178,7 +178,7 @@ HtmlIgnoreTagAction::HtmlIgnoreTagAction(HtmlBookReader &reader) : HtmlTagAction
 
 void HtmlIgnoreTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
   if (start) {
-    myReader.myIgnoreDataCounter++;
+    ++myReader.myIgnoreDataCounter;
   } else {
     myReader.myIgnoreDataCounter--;
   }
@@ -189,7 +189,7 @@ HtmlHrefTagAction::HtmlHrefTagAction(HtmlBookReader &reader) : HtmlTagAction(rea
 
 void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
   if (start) {
-    for (unsigned int i = 0; i < attributes.size(); i++) {
+    for (unsigned int i = 0; i < attributes.size(); ++i) {
       if (attributes[i].Name == "NAME") {
         myReader.myBookReader.addHyperlinkLabel(attributes[i].Value);
       } else if (!myReader.myIsHyperlink && (attributes[i].Name == "HREF")) {
@@ -212,7 +212,7 @@ HtmlImageTagAction::HtmlImageTagAction(HtmlBookReader &reader) : HtmlTagAction(r
 void HtmlImageTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
   if (start) {
     myReader.myBookReader.endParagraph();
-    for (unsigned int i = 0; i < attributes.size(); i++) {
+    for (unsigned int i = 0; i < attributes.size(); ++i) {
       if (attributes[i].Name == "SRC") {
         std::string fileName = attributes[i].Value;
         myReader.myBookReader.addImageReference(fileName);
@@ -333,7 +333,7 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 }
 
 HtmlBookReader::~HtmlBookReader() {
-  for (std::map<std::string,HtmlTagAction*>::const_iterator it = myActionMap.begin(); it != myActionMap.end(); it++) {
+  for (std::map<std::string,HtmlTagAction*>::const_iterator it = myActionMap.begin(); it != myActionMap.end(); ++it) {
 		if (it->second != 0) {
       delete it->second;
 	  }
@@ -373,7 +373,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
     if (myIsPreformatted) {
       int breakType = myFormat.breakType();
       if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
-        for (const char *ptr = text; ptr != end; ptr++) {
+        for (const char *ptr = text; ptr != end; ++ptr) {
           if (*ptr == '\n') {
             if (start < ptr) {
               addConvertedDataToBuffer(start, ptr - start, convert);
@@ -388,12 +388,12 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
         }
         addConvertedDataToBuffer(start, end - start, convert);
       } else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
-        for (const char *ptr = text; ptr != end; ptr++) {
+        for (const char *ptr = text; ptr != end; ++ptr) {
           if (isspace(*ptr)) {
             if (*ptr == '\n') {
               mySpaceCounter = 0;
             } else if (mySpaceCounter >= 0) {
-              mySpaceCounter++;
+              ++mySpaceCounter;
             }
           } else {
             if (mySpaceCounter > myFormat.ignoredIndent()) {
@@ -412,10 +412,10 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
           addConvertedDataToBuffer(start, end - start - mySpaceCounter, convert);
         }
       } else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
-        for (const char *ptr = start; ptr != end; ptr++) {
+        for (const char *ptr = start; ptr != end; ++ptr) {
           if (isspace(*ptr)) {
             if (*ptr == '\n') {
-              myBreakCounter++;
+              ++myBreakCounter;
             }
           } else {
             if (myBreakCounter > 1) {
@@ -431,7 +431,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
       }
     } else {
       if (!myIsStarted) {
-        for (; start != end; start++) {
+        for (; start != end; ++start) {
           if (!isspace(*start)) {
             myIsStarted = true;
             break;
