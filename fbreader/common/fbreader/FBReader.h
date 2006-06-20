@@ -393,7 +393,7 @@ protected:
   virtual void optionsSlot();
   virtual void addBookSlot();
 
-  void doAction(const std::string &key);
+  void doActionByKey(const std::string &key);
 
 protected:
   BookDescriptionPtr createDescription(const std::string& fileName) const;
@@ -416,7 +416,6 @@ public:
   void tryShowFootnoteView(const std::string &id);
   void restorePreviousMode();
   void repaintView();
-  void doAction(ActionCode code);
 
   ZLBooleanOption &useSeparateBindings();
   KeyBindings &keyBindings(ZLViewWidget::Angle angle, bool force = false);

@@ -103,6 +103,7 @@ public:
 
 	bool isActionVisible(int actionId) const;
 	bool isActionEnabled(int actionId) const;
+  void doAction(int actionId);
 
 	void initWindow(class ZLApplicationWindow *view);
 	void refreshWindow();
@@ -111,11 +112,8 @@ public:
 
 	Toolbar &toolbar();
 
-// TODO: change to private
-protected:
-	std::map<int,shared_ptr<Action> > myActionMap;
-
 private:
+	std::map<int,shared_ptr<Action> > myActionMap;
 	Toolbar myToolbar;
 	class ZLApplicationWindow *myWindow;
 };

@@ -71,7 +71,7 @@ QFBReader::~QFBReader() {
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {
-	doAction(QKeyUtil::keyName(event));
+	doActionByKey(QKeyUtil::keyName(event));
 }
 
 void QFBReader::toggleFullscreenSlot() {
@@ -190,5 +190,5 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {
-	doAction((ActionCode)buttonNumber);
+	doAction(buttonNumber);
 }

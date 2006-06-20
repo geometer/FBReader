@@ -41,6 +41,13 @@ bool ZLApplication::isActionEnabled(int actionId) const {
 	return (it != myActionMap.end()) && it->second->isEnabled();
 }
 
+void ZLApplication::doAction(int actionId) {
+	std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
+	if (it != myActionMap.end() && it->second->isEnabled()) {
+		it->second->run();
+	}
+}
+
 void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName) {
 	ItemPtr item = new ButtonItem(actionId, iconName);
 	myItems.push_back(item);

@@ -343,13 +343,6 @@ bool FBReader::isScrollingAction(ActionCode code) {
 	}
 }
 
-void FBReader::doAction(ActionCode code) {
-	shared_ptr<Action> action = myActionMap[code];
-	if (!action.isNull() && action->isEnabled()) {
-		action->run();
-	}
-}
-
 class RebuildCollectionRunnable : public ZLRunnable {
 
 public:
@@ -444,7 +437,7 @@ void FBReader::clearTextCaches() {
 	myRecentBooksView->clearCaches();
 }
 
-void FBReader::doAction(const std::string &key) {
+void FBReader::doActionByKey(const std::string &key) {
 	ActionCode code = keyBindings(myViewWidget->rotation()).getBinding(key);
 	if (code != NO_ACTION) {
 		if (isScrollingAction(code) || (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())) {

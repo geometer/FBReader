@@ -88,7 +88,7 @@ bool QFBReader::isFullscreen() const {
 }
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {
-	doAction(QKeyUtil::keyName(event));
+	doActionByKey(QKeyUtil::keyName(event));
 }
 
 void QFBReader::wheelEvent(QWheelEvent *event) {
@@ -190,7 +190,7 @@ void QFBReader::searchSlot() {
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {
-	doAction((ActionCode)buttonNumber);
+	doAction(buttonNumber);
 }
 
 // vim:ts=2:sw=2:noet

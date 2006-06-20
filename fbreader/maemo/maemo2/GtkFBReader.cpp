@@ -191,7 +191,7 @@ GtkFBReader::~GtkFBReader() {
 }
 
 void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
-	doAction(GtkKeyUtil::keyName(event));
+	doActionByKey(GtkKeyUtil::keyName(event));
 }
 
 void GtkFBReader::toggleFullscreenSlot() {

@@ -66,7 +66,7 @@ QFBReader::~QFBReader() {
 
 void QFBReader::keyPressEvent(QKeyEvent *event) {
 	killTimers();
-	doAction(QKeyUtil::keyName(event));
+	doActionByKey(QKeyUtil::keyName(event));
 }
 
 void QFBReader::focusInEvent(QFocusEvent*) {
@@ -237,7 +237,7 @@ void QFBReader::setWindowCaption(const std::string &caption) {
 }
 
 void QFBReader::doActionSlot(int buttonNumber) {
-	doAction((ActionCode)buttonNumber);
+	doAction(buttonNumber);
 }
 
 bool QFBReader::isFullKeyboardControlSupported() const {
