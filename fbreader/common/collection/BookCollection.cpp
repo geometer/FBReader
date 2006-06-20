@@ -55,7 +55,7 @@ void BookCollection::rebuild() {
   std::set<std::string> dirs;
   collectDirNames(dirs);
 
-  for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); it++) {
+  for (std::set<std::string>::iterator it = dirs.begin(); it != dirs.end(); ++it) {
     std::vector<std::string> files;
     shared_ptr<ZLDir> dir = ZLFile(*it).directory();
     if (dir.isNull()) {
@@ -64,7 +64,7 @@ void BookCollection::rebuild() {
     dir->collectFiles(files, false);
     if (!files.empty()) {
       const std::string dirName = dir->name() + '/';
-      for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); jt++) {
+      for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); ++jt) {
         const std::string fileName = dirName + *jt;
         ZLFile file(fileName);
         if (PluginCollection::instance().plugin(file, true) != 0) {
@@ -76,7 +76,7 @@ void BookCollection::rebuild() {
           }
           std::vector<std::string> zipEntries;
           BookDescriptionUtil::listZipEntries(file, zipEntries);
-          for (std::vector<std::string>::const_iterator zit = zipEntries.begin(); zit != zipEntries.end(); zit++) {
+          for (std::vector<std::string>::const_iterator zit = zipEntries.begin(); zit != zipEntries.end(); ++zit) {
             fileNamesSet.insert(*zit);
           }
         }
@@ -84,13 +84,13 @@ void BookCollection::rebuild() {
     }
   }
 
-  for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); it++) {
+  for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); ++it) {
     addDescription(BookDescription::create(*it));
   }
 
   BookList bookList;
   const std::set<std::string> &bookListSet = bookList.fileNames();
-  for (std::set<std::string>::const_iterator it = bookListSet.begin(); it != bookListSet.end(); it++) {
+  for (std::set<std::string>::const_iterator it = bookListSet.begin(); it != bookListSet.end(); ++it) {
     if (fileNamesSet.find(*it) == fileNamesSet.end()) {
       BookDescriptionPtr description = BookDescription::create(*it);
       addDescription(description);
@@ -100,7 +100,7 @@ void BookCollection::rebuild() {
 
   std::sort(myAuthors.begin(), myAuthors.end(), AuthorComparator());
   DescriptionComparator descriptionComparator;
-  for (std::map<AuthorPtr,Books>::iterator it = myCollection.begin(); it != myCollection.end(); it++) {
+  for (std::map<AuthorPtr,Books>::iterator it = myCollection.begin(); it != myCollection.end(); ++it) {
     std::sort((*it).second.begin(), (*it).second.end(), descriptionComparator);
   }
 }
@@ -134,7 +134,7 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
         if (!dir.isNull()) {
           std::vector<std::string> subdirs;
           dir->collectSubDirs(subdirs, false);
-          for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); it++) {
+          for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); ++it) {
             nameQueue.push(dir->name() + '/' + *it);
           }
         }
@@ -157,7 +157,7 @@ void BookCollection::addDescription(BookDescriptionPtr description) {
   const std::string &sortKey = author->sortKey();
 
   std::map<AuthorPtr,Books>::iterator it = myCollection.begin();
-  for (; it != myCollection.end(); it++) {
+  for (; it != myCollection.end(); ++it) {
     AuthorPtr author1 = (*it).first;
     if ((author1->sortKey() == sortKey) && (author1->displayName() == displayName)) {
       break;

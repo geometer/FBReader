@@ -38,9 +38,9 @@ static void pixbuf_copy_block_rotate(guchar *src, gint src_row_stride, gint x, g
 	guchar *sp;
 	guchar *dp;
 
-	for (i = 0; i < h; i++) {
+	for (i = 0; i < h; ++i) {
 		sp = src + ((i + y) * src_row_stride) + (x * bytes_per_pixel);
-		for (j = 0; j < w; j++) {
+		for (j = 0; j < w; ++j) {
 			if (counter_clockwise) {
 				dp = dest + ((w - j - 1) * dest_row_stride) + (i * bytes_per_pixel);
 			} else {
@@ -61,7 +61,7 @@ static void pixbuf_copy_block(guchar *src, gint src_row_stride, gint w, gint h,
 	guchar *sp;
 	guchar *dp;
 
-	for (i = 0; i < h; i++) {
+	for (i = 0; i < h; ++i) {
 		sp = src + (i * src_row_stride);
 		dp = dest + ((y + i) * dest_row_stride) + (x * bytes_per_pixel);
 		memcpy(dp, sp, w * bytes_per_pixel);
@@ -143,10 +143,10 @@ void rotate180(GdkPixbuf *dest, GdkPixbuf *src, int sw, int sh) {
 
 	const gint a = gdk_pixbuf_get_has_alpha(src) ? 4 : 3;
 
-	for (int i = 0; i < sh; i++) {
+	for (int i = 0; i < sh; ++i) {
 		guchar *s = s_pix;
 		guchar *d = d_pix + (sw - 1) * a;
-		for (int j = 0; j < sw; j++) {
+		for (int j = 0; j < sw; ++j) {
 			memcpy(d, s, a);
 			s += a;
 			d -= a;
