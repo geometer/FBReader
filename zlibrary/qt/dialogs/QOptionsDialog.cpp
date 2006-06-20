@@ -128,13 +128,13 @@ QOptionsDialogTab::~QOptionsDialogTab() {
 
 void QOptionsDialogTab::addOption(ZLOptionEntry *option) {
 	createViewByEntry(option, 0, 12);
-	myRowCounter++;
+	++myRowCounter;
 }
 
 void QOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
 	createViewByEntry(option0, 0, 5);
 	createViewByEntry(option1, 7, 12);
-	myRowCounter++;
+	++myRowCounter;
 }
 
 void QOptionsDialogTab::addItem(QWidget *widget, int row, int fromColumn, int toColumn) {

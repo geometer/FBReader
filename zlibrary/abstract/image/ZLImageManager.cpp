@@ -155,7 +155,7 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 						unsigned char blueBits = imageString[18];
 						const unsigned char *from = (const unsigned char*)imageString.data() + 24;
 
-						for (unsigned short i = 0; i < header.Height; i++) {
+						for (unsigned short i = 0; i < header.Height; ++i) {
 							const unsigned char *from_ptr = from + header.BytesPerRow * i;
 							imageData.setPosition(0, i);
 							for (unsigned short j = 0; j < header.BytesPerRow; j += 2) {
@@ -170,15 +170,15 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 						}
 					} else {
 						const unsigned char *from = (const unsigned char*)imageString.data() + 16;
-						for (unsigned short i = 0; i < header.Height; i++) {
+						for (unsigned short i = 0; i < header.Height; ++i) {
 							const unsigned char *from_ptr = from + header.BytesPerRow * i;
 							imageData.setPosition(0, i);
-							for (int j = 0; j < (int)header.Width; j += 8 / header.BitsPerPixel, from_ptr++) {
+							for (int j = 0; j < (int)header.Width; j += 8 / header.BitsPerPixel, ++from_ptr) {
 								switch (header.BitsPerPixel) {
 									case 1:
 										{
 											unsigned char len = std::min(8, (int)header.Width - j);
-											for (unsigned char k = 0; k < len; k++) {
+											for (unsigned char k = 0; k < len; ++k) {
 												//imageData.setGrayPixel(((*from_ptr) & (1 << k)) ? 0 : 255);
 												imageData.setGrayPixel(((*from_ptr) & (128 >> k)) ? 0 : 255);
 												imageData.moveX(1);
@@ -188,7 +188,7 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 									case 2:
 										{
 											unsigned char len = std::min(4, (int)header.Width - j);
-											for (unsigned char k = 0; k < len; k++) {
+											for (unsigned char k = 0; k < len; ++k) {
 												imageData.setGrayPixel(85 * (3 - (*from_ptr >> (6 - 2 * k)) & 0x3));
 												imageData.moveX(1);
 											}
@@ -237,8 +237,8 @@ void ZLImageManager::convertMultiImage(const ZLMultiImage &multiImage, ZLImageDa
 		int fullWidth = 0;
 		int fullHeight = 0;
 
-		for (unsigned int i = 0; i < rows; i++) {
-			for (unsigned int j = 0; j < columns; j++) {
+		for (unsigned int i = 0; i < rows; ++i) {
+			for (unsigned int j = 0; j < columns; ++j) {
 				const ZLImage *subImage = multiImage.subImage(i, j);
 				if (subImage == 0) {
 					return;
@@ -264,9 +264,9 @@ void ZLImageManager::convertMultiImage(const ZLMultiImage &multiImage, ZLImageDa
 
 		data.init(fullWidth, fullHeight);
 		int vOffset = 0;
-		for (unsigned int i = 0; i < rows; i++) {
+		for (unsigned int i = 0; i < rows; ++i) {
 			int hOffset = 0;
-			for (unsigned int j = 0; j < columns; j++) {
+			for (unsigned int j = 0; j < columns; ++j) {
 				data.copyFrom(*parts[j * rows + i], 0, 0, hOffset, vOffset);
 				hOffset += widths[j];
 			}

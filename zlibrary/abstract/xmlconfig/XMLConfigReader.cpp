@@ -34,7 +34,7 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 
   if (GROUP == tag) {
     bool correct = true;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 2; ++i) {
       if (attributes[i] == 0) {
         correct = false;
         break;
@@ -51,7 +51,7 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
   } else if (OPTION == tag) {
     if (myGroup != 0) {
       bool correct = true;
-      for (int i = 0; i < 4; i++) {
+      for (int i = 0; i < 4; ++i) {
         if (attributes[i] == 0) {
           correct = false;
           break;

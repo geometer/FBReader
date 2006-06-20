@@ -65,7 +65,7 @@ void ChoiceOptionView::_createItem() {
 	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
 	layout->addSpacing(myGroup->fontMetrics().height());
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
 		myButtons[i] = new QRadioButton((QButtonGroup*)layout->parent());
 		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());
 		layout->addWidget(myButtons[i]);
@@ -83,7 +83,7 @@ void ChoiceOptionView::_hide() {
 }
 
 void ChoiceOptionView::_onAccept() const {
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
 		if (myButtons[i]->isChecked()) {
 			((ZLChoiceOptionEntry*)myOption)->onAccept(i);
 			return;
@@ -98,7 +98,7 @@ void ComboOptionView::_createItem() {
 	const std::string &initial = ((ZLComboOptionEntry*)myOption)->initialValue();
 	int selectedIndex = -1;
 	int index = 0;
-	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); it++, index++) {
+	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it, ++index) {
 		myComboBox->insertItem(it->c_str());
 		if (*it == initial) {
 			selectedIndex = index;
@@ -247,7 +247,7 @@ void KeyOptionView::_createItem() {
 	layout->addWidget(myLabel, 1, 0);
 	myComboBox = new QComboBox(myWidget);
 	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
-	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); it++) {
+	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
 		myComboBox->insertItem(it->c_str());
 	}
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChange(int)));

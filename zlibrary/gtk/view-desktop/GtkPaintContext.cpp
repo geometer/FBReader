@@ -157,7 +157,7 @@ void GtkPaintContext::fillFamiliesList(std::vector<std::string> &families) const
 		PangoFontFamily **pangoFamilies;
 		int nFamilies;
 		pango_context_list_families(myContext, &pangoFamilies, &nFamilies);
-		for (int i = 0; i < nFamilies; i++) {
+		for (int i = 0; i < nFamilies; ++i) {
 			families.push_back(pango_font_family_get_name(pangoFamilies[i]));
 		}
 		std::sort(families.begin(), families.end());

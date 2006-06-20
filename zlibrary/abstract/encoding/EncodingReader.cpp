@@ -56,7 +56,7 @@ EncodingIntReader::~EncodingIntReader() {
 
 bool EncodingIntReader::fillTable(int *map) {
 	myMap = map;
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 256; ++i) {
 		myMap[i] = i;
 	}
 	return readDocument(ZLFile(myFilePath).inputStream());
@@ -80,7 +80,7 @@ char **EncodingCharReader::createTable() {
 	myMap = 0;
 	if (!readDocument(ZLFile(myFilePath).inputStream()) && (myMap != 0)) {
 		int length = (myBytesNumber == 1) ? 256 : 32768;
-		for (int i = 0; i < length; i++) {
+		for (int i = 0; i < length; ++i) {
 			if (myMap[i] != 0) {
 				delete[] myMap[i];
 			}

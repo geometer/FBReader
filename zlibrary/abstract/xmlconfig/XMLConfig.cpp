@@ -82,7 +82,7 @@ XMLConfig::XMLConfig(const std::string &name) : myName(name) {
   }
   std::vector<std::string> fileNames;
   configDir->collectFiles(fileNames, true);
-  for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); it++) {
+  for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
     ZLFile configFile(configDir->itemName(*it));
     if (configFile.extension() == "xml") {
       XMLConfigReader(*this, it->substr(0, it->length() - 4)).readDocument(configFile.inputStream());
@@ -94,7 +94,7 @@ XMLConfig::~XMLConfig() {
   shared_ptr<ZLDir> configDir = ZLFile("~/." + myName).directory(true);
 
   if (!configDir.isNull()) {
-    for (std::set<std::string>::const_iterator it = myCategories.begin(); it != myCategories.end(); it++) {
+    for (std::set<std::string>::const_iterator it = myCategories.begin(); it != myCategories.end(); ++it) {
       shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(*it + ".xml")).outputStream();
       if (!stream.isNull() && stream->open()) {
         XMLConfigWriter(*this, *stream, *it).write();
@@ -102,7 +102,7 @@ XMLConfig::~XMLConfig() {
       }
     }
   } // TODO: show error message
-  for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); it++) {
+  for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
     delete it->second;
   }
 }

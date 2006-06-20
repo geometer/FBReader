@@ -68,7 +68,7 @@ void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 	QFontDatabase db;
 	QStringList qFamilies = db.families();
 	bool helveticaFlag = false;
-	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); it++) {
+	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); ++it) {
 		std::string family = (*it).ascii();
 		if (family == HELVETICA) {
 			helveticaFlag = true;

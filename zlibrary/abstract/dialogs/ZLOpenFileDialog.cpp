@@ -113,13 +113,13 @@ const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
     std::vector<std::string> names;
     myDir->collectSubDirs(names, true);
     std::sort(names.begin(), names.end());
-    for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
+    for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
       addSubnode(*it, false);
     }
     names.clear();
     myDir->collectFiles(names, true);
     std::sort(names.begin(), names.end());
-    for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
+    for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
       addSubnode(*it, true);
     }
     myIsUpToDate = true;

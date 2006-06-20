@@ -40,7 +40,7 @@ static const std::string EQUALS_QUOTE = "=\"";
 void ZLXMLWriter::Tag::writeStart(ZLOutputStream &stream) const {
 	stream.write(LANGLE);
 	stream.write(myName);
-	for (unsigned int i = 0; i < myAttributes.size(); i++) {
+	for (unsigned int i = 0; i < myAttributes.size(); ++i) {
 		stream.write(SPACE);
 		stream.write(myAttributes[i].Name);
 		stream.write(EQUALS_QUOTE);
@@ -82,7 +82,7 @@ void ZLXMLWriter::closeTag() {
 	if (myTags.size() > 0) {
 		Tag *tag = myTags.top();
 		myTags.pop();
-		for (unsigned int i = 0; i < myTags.size(); i++) {
+		for (unsigned int i = 0; i < myTags.size(); ++i) {
 			myStream.write(TWO_SPACES);
 		}
 		tag->writeEnd(myStream);
@@ -98,7 +98,7 @@ void ZLXMLWriter::closeAllTags() {
 
 void ZLXMLWriter::flushTagStart() {
 	if (myCurrentTag != 0) {
-		for (unsigned int i = 0; i < myTags.size(); i++) {
+		for (unsigned int i = 0; i < myTags.size(); ++i) {
 			myStream.write(TWO_SPACES);
 		}
 		myCurrentTag->writeStart(myStream);

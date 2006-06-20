@@ -40,11 +40,11 @@ int ZLSearchUtil::find(const char *text, size_t length, const ZLSearchPattern &p
 		const std::string &upper = pattern.upperCasePattern();
 		const char *last = text + length - pattern.lowerCasePattern().length();
 		const char *patternLast = lower.data() + lower.length() - 1;
-		for (const char *i = text + pos; i <= last; i++) {
+		for (const char *i = text + pos; i <= last; ++i) {
 			const char *j0 = lower.data();
 			const char *j1 = upper.data();
 			const char *k = i;
-			for (; j0 <= patternLast; j0++, j1++, k++) {
+			for (; j0 <= patternLast; ++j0, ++j1, ++k) {
 				if ((*j0 != *k) && (*j1 != *k)) {
 					break;
 				}
@@ -61,10 +61,10 @@ int ZLSearchUtil::find(const char *text, size_t length, const ZLSearchPattern &p
 		const std::string &lower = pattern.lowerCasePattern();
 		const char *last = text + length - pattern.lowerCasePattern().length();
 		const char *patternLast = lower.data() + lower.length() - 1;
-		for (const char *i = text + pos; i <= last; i++) {
+		for (const char *i = text + pos; i <= last; ++i) {
 			const char *j0 = lower.data();
 			const char *k = i;
-			for (; j0 <= patternLast; j0++, k++) {
+			for (; j0 <= patternLast; ++j0, ++k) {
 				if (*j0 != *k) {
 					break;
 				}

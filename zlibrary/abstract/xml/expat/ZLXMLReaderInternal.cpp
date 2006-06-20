@@ -83,7 +83,7 @@ void ZLXMLReaderInternal::init() {
 		XML_UseForeignDTD(myParser, XML_TRUE);
 
 		const std::vector<std::string> &dtds = myReader.externalDTDs();
-		for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); it++) {
+		for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); ++it) {
 			parseDTD(myParser, *it);
 		}
 

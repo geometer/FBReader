@@ -72,7 +72,7 @@ void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 	bool helveticaFlag = false;
 #ifdef USE_ZAURUS_FONTHACK
 	std::set<std::string> famSet = ZaurusFontHack::families();
-	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); it++) {
+	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); ++it) {
 		if (*it == HELVETICA) {
 			helveticaFlag = true;
 		}
@@ -81,7 +81,7 @@ void QPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 #else /* USE_ZAURUS_FONTHACK */
 	QFontDatabase db;
 	QStringList qFamilies = db.families();
-	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); it++) {
+	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); ++it) {
 		std::string family = (*it).ascii();
 		if (family == HELVETICA) {
 			helveticaFlag = true;
@@ -98,7 +98,7 @@ const std::string QPaintContext::realFontFamilyName(std::string &fontFamily) con
 #ifdef USE_ZAURUS_FONTHACK
 	std::string family = ZLUnicodeUtil::toLower(fontFamily);
 	std::set<std::string> famSet = ZaurusFontHack::families();
-	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); it++) {
+	for (std::set<std::string>::const_iterator it = famSet.begin(); it != famSet.end(); ++it) {
 		if (*it == family) {
 			return family;
 		}

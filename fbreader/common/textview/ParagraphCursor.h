@@ -286,8 +286,8 @@ inline unsigned int WordCursor::wordNumber() const { return myWordNumber; }
 inline unsigned int WordCursor::charNumber() const { return myCharNumber; }
 inline const ParagraphCursor &WordCursor::paragraphCursor() const { return *myParagraphCursor; }
 
-inline void WordCursor::nextWord() { myWordNumber++; myCharNumber = 0; }
-inline void WordCursor::previousWord() { myWordNumber--; myCharNumber = 0; }
+inline void WordCursor::nextWord() { ++myWordNumber; myCharNumber = 0; }
+inline void WordCursor::previousWord() { --myWordNumber; myCharNumber = 0; }
 
 inline PlainTextParagraphCursor::PlainTextParagraphCursor(const TextModel &model, size_t index) : ParagraphCursor(model, index) {}
 inline PlainTextParagraphCursor::~PlainTextParagraphCursor() {}

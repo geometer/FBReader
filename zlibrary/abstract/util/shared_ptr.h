@@ -220,14 +220,14 @@ inline void shared_ptr_storage<T>::addReference() {
 #ifdef __PTR_DEBUG__
 	std::cerr << "add reference\n";
 #endif /* __PTR_DEBUG__ */
-	myCounter++;
+	++myCounter;
 }
 template<class T>
 inline void shared_ptr_storage<T>::removeReference() {
 #ifdef __PTR_DEBUG__
 	std::cerr << "remove reference\n";
 #endif /* __PTR_DEBUG__ */
-	myCounter--;
+	--myCounter;
 	if (myCounter == 0) {
 		T* ptr = myPointer;
 		myPointer = 0;
@@ -236,11 +236,11 @@ inline void shared_ptr_storage<T>::removeReference() {
 }
 template<class T>
 inline void shared_ptr_storage<T>::addWeakReference() {
-	myWeakCounter++;
+	++myWeakCounter;
 }
 template<class T>
 inline void shared_ptr_storage<T>::removeWeakReference() {
-	myWeakCounter--;
+	--myWeakCounter;
 }
 template<class T>
 inline unsigned int shared_ptr_storage<T>::counter() const {

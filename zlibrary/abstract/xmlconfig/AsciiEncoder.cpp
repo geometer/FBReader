@@ -27,7 +27,7 @@ std::string AsciiEncoder::encode(const std::string &source) {
 	const char *end = start + source.length();
 
 	bool doEncode = false;
-	for (const char *ptr = start; ptr < end; ptr++) {
+	for (const char *ptr = start; ptr < end; ++ptr) {
 		if ((*ptr == '&') || (*ptr == '<') || (*ptr == '>') ||
 				(*ptr == '"') || (*ptr == '\'') || (*ptr == '\\')) {
 			doEncode = true;
@@ -41,7 +41,7 @@ std::string AsciiEncoder::encode(const std::string &source) {
 
 	std::string target;
 	target.reserve(6 * source.length());
-	for (const char *ptr = start; ptr < end; ptr++) {
+	for (const char *ptr = start; ptr < end; ++ptr) {
 		const unsigned char num = *ptr;
 		if (num == '>') {
 			target += "&gt;";
@@ -79,15 +79,15 @@ std::string AsciiEncoder::decode(const std::string &source) {
 	for (const char *ptr = start; ptr < end;) {
 		if (*ptr != '\\') {
 			target += *ptr;
-			ptr++;
+			++ptr;
 		} else {
-			ptr++;
+			++ptr;
 			if (ptr == end) {
 				break;
 			}
 			if (*ptr == '\\') {
 				target += '\\';
-				ptr++;
+				++ptr;
 			} else {
 				if (ptr + 2 >= end) {
 					break;

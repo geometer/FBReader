@@ -33,7 +33,7 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 
 	const std::vector<std::string> &encodingList = knownEncodings();
 	std::vector<std::string>::const_iterator it;
-	for (it = encodingList.begin(); it != encodingList.end(); it++) {
+	for (it = encodingList.begin(); it != encodingList.end(); ++it) {
 		if (strcasecmp(encoding.c_str(), it->c_str()) == 0) {
 			break;
 		}
@@ -81,7 +81,7 @@ void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, con
 }
 
 bool DummyEncodingConverter::fillTable(int *map) {
-	for (int i = 0; i < 255; i++) {
+	for (int i = 0; i < 255; ++i) {
 		map[i] = i;
 	}
 	return true;
@@ -90,11 +90,11 @@ bool DummyEncodingConverter::fillTable(int *map) {
 OneByteEncodingConverter::OneByteEncodingConverter(const std::string &encoding, char **encodingMap) : myEncoding(encoding) {
 	myEncodingMap = new char[1024];
 	memset(myEncodingMap, '\0', 1024);
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 256; ++i) {
 		myEncodingMap[4 * i] = i;
 	}
 	if (encodingMap != 0) {
-		for (int i = 0; i < 256; i++) {
+		for (int i = 0; i < 256; ++i) {
 			if (encodingMap[i] != 0) {
 				strcpy(myEncodingMap + 4 * i, encodingMap[i]);
 			}
@@ -112,8 +112,8 @@ void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, c
 	char *dstStartPtr = (char*)dst.data() + oldLength;
 	char *dstPtr = dstStartPtr;
 	const char *p;
-	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
-		for (p = myEncodingMap + 4 * (unsigned char)*ptr; *p != '\0'; p++) {
+	for (const char *ptr = srcStart; ptr != srcEnd; ++ptr) {
+		for (p = myEncodingMap + 4 * (unsigned char)*ptr; *p != '\0'; ++p) {
 			(*dstPtr++) = *p;
 		}
 	}
@@ -128,7 +128,7 @@ TwoBytesEncodingConverter::TwoBytesEncodingConverter(char **encodingMap) : myEnc
 }
 
 TwoBytesEncodingConverter::~TwoBytesEncodingConverter() {
-	for (int i = 0; i < 32768; i++) {
+	for (int i = 0; i < 32768; ++i) {
 		if (myEncodingMap[i] != 0) {
 			delete[] myEncodingMap[i];
 		}
@@ -147,10 +147,10 @@ void TwoBytesEncodingConverter::convert(std::string &dst, const char *srcStart, 
 		if (utf8 != 0) {
 			dst += utf8;
 		}
-		srcStart++;
+		++srcStart;
 		myLastCharIsNotProcessed = false;
 	}
-	for (const char *ptr = srcStart; ptr != srcEnd; ptr++) {
+	for (const char *ptr = srcStart; ptr != srcEnd; ++ptr) {
 		if (((*ptr) & 0x80) == 0) {
 			dst += *ptr;
 		} else if (ptr + 1 == srcEnd) {
@@ -161,7 +161,7 @@ void TwoBytesEncodingConverter::convert(std::string &dst, const char *srcStart, 
 			if (utf8 != 0) {
 				dst += utf8;
 			}
-			ptr++;
+			++ptr;
 		}
 	}
 }
@@ -244,7 +244,7 @@ bool IconvEncodingConverter::fillTable(int *map) {
 	char outBuffer[3];
 	char *in, *out;
 	size_t inSize, outSize;
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 256; ++i) {
 		in = inBuffer;
 		out = outBuffer;
 		inSize = 1;

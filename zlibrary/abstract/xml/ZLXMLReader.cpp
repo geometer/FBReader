@@ -80,14 +80,14 @@ const std::vector<std::string> &ZLXMLReader::externalDTDs() const {
 const char *ZLXMLReader::attributeValue(const char **xmlattributes, const char *name) {
 	while (*xmlattributes != 0) {
 		bool useNext = strcmp(*xmlattributes, name) == 0;
-		xmlattributes++;
+		++xmlattributes;
 		if (*xmlattributes == 0) {
 			return 0;
 		}
 		if (useNext) {
 			return *xmlattributes;
 		}
-		xmlattributes++;
+		++xmlattributes;
 	}
 	return 0;
 }

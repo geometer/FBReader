@@ -48,7 +48,7 @@ inline Allocator<ObjectSize,PoolSize>::Allocator() {
 
 template<size_t ObjectSize, size_t PoolSize> 
 inline Allocator<ObjectSize,PoolSize>::~Allocator() {
-	for (std::vector<void*>::const_iterator it = myPools.begin(); it != myPools.end(); it++) {
+	for (std::vector<void*>::const_iterator it = myPools.begin(); it != myPools.end(); ++it) {
 		delete[] (char*)*it;
 	}
 }
@@ -58,7 +58,7 @@ inline void Allocator<ObjectSize,PoolSize>::addPool() {
 	char *pool = new char[ObjectSize * PoolSize];
 	myFirstUnused = (void*)pool;
 	myLastUnused = (void*)(pool + ObjectSize * (PoolSize - 1));
-	for (size_t i = 0; i < PoolSize - 1; i++) {
+	for (size_t i = 0; i < PoolSize - 1; ++i) {
 		*(void**)(pool + ObjectSize * i) = pool + ObjectSize * (i + 1);
 	}
 	myPools.push_back(myFirstUnused);

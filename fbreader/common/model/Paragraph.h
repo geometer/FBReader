@@ -316,7 +316,7 @@ inline Paragraph::Paragraph() : myEntryNumber(0) {}
 inline Paragraph::~Paragraph() {}
 inline Paragraph::Kind Paragraph::kind() const { return TEXT_PARAGRAPH; }
 inline size_t Paragraph::entryNumber() const { return myEntryNumber; }
-inline void Paragraph::addEntry(char *address) { if (myEntryNumber == 0) myFirstEntryAddress = address; myEntryNumber++; }
+inline void Paragraph::addEntry(char *address) { if (myEntryNumber == 0) myFirstEntryAddress = address; ++myEntryNumber; }
 
 inline Paragraph::Iterator::Iterator(const Paragraph &paragraph) : myPointer(paragraph.myFirstEntryAddress), myIndex(0), myEndIndex(paragraph.entryNumber()) {}
 inline Paragraph::Iterator::~Iterator() {}

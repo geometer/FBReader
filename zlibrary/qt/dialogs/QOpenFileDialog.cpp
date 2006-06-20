@@ -47,7 +47,7 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLTreeHandler &handl
 }
 
 QOpenFileDialog::~QOpenFileDialog() {
-	for (std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.begin(); it != myPixmaps.end(); it++) {
+	for (std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
 		delete it->second;
 	}
 }
@@ -85,7 +85,7 @@ void QOpenFileDialog::update(const std::string &selectedNodeName) {
 	QListViewItem *selectedItem = 0;
 
 	const std::vector<ZLTreeNodePtr> &subnodes = state()->subnodes();
-	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); it++) {
+	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
 	 	item = new QOpenFileDialogItem(myListView, item, *it);
 		item->setPixmap(0, getPixmap(*it));
 		if ((*it)->name() == selectedNodeName) {

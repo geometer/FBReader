@@ -85,7 +85,7 @@ void ChoiceOptionView::_createItem() {
 	int num = ((ZLChoiceOptionEntry*)myOption)->choiceNumber();
 	myButtons = new GtkRadioButton* [num];
 	GSList *group = 0;
-	for (int i = 0; i < num; i++) {
+	for (int i = 0; i < num; ++i) {
 		myButtons[i] = GTK_RADIO_BUTTON(gtk_radio_button_new_with_label(group, ((ZLChoiceOptionEntry*)myOption)->text(i).c_str()));
 		group = gtk_radio_button_get_group(myButtons[i]);
 		gtk_box_pack_start (myVBox, GTK_WIDGET(myButtons[i]), true, true, 0);
@@ -98,7 +98,7 @@ void ChoiceOptionView::_createItem() {
 void ChoiceOptionView::_show() {
 	gtk_widget_show(GTK_WIDGET(myFrame));
 	gtk_widget_show(GTK_WIDGET(myVBox));
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
 		gtk_widget_show(GTK_WIDGET(myButtons[i]));
 	}
 }
@@ -106,13 +106,13 @@ void ChoiceOptionView::_show() {
 void ChoiceOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myFrame));
 	gtk_widget_hide(GTK_WIDGET(myVBox));
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
 		gtk_widget_hide(GTK_WIDGET(myButtons[i]));
 	}
 }
 
 void ChoiceOptionView::_onAccept() const {
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); i++) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myButtons[i]))) {
 			((ZLChoiceOptionEntry*)myOption)->onAccept(i);
 			return;
@@ -129,7 +129,7 @@ void ComboOptionView::_createItem() {
 	int selectedIndex = -1;
 	int index = 0;
 
-	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); it++, index++) {
+	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it, ++index) {
 		gtk_combo_box_append_text(GTK_COMBO_BOX(myComboBox), it->c_str());
 
 		if (*it == initial) {
@@ -377,7 +377,7 @@ void KeyOptionView::_createItem() {
 	myComboBox = gtk_option_menu_new();
 	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
 	GtkWidget *menu = gtk_menu_new();
-	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); it++) {
+	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
 		GtkWidget *menuItem = gtk_menu_item_new_with_label(it->c_str());
 		gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuItem);
 		gtk_widget_show(menuItem);

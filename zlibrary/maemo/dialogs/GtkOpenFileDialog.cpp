@@ -153,7 +153,7 @@ void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
 
 	const std::vector<ZLTreeNodePtr> &subnodes = state()->subnodes();
 	int index = 0;
-	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); it++, index++) {
+	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it, ++index) {
 		GtkTreeIter iter;
 		gtk_list_store_append(myStore, &iter);
 

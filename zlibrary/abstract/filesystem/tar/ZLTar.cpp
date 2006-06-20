@@ -47,7 +47,7 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 	char fileSizeString[12];
 	stream->read(fileSizeString, 12);
 	Size = 0;
-	for (int i = 0; i < 12; i++) {
+	for (int i = 0; i < 12; ++i) {
 		if (!isdigit(fileSizeString[i])) {
 			break;
 		}

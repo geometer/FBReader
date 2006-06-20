@@ -42,7 +42,7 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	}
 	int last = path.length() - 1;
 	while ((last > 0) && (path[last] == '/')) {
-		last--;
+		--last;
 	}
 	if (last < (int)path.length() - 1) {
 		path = path.substr(0, last + 1);

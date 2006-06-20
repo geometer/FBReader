@@ -22,19 +22,19 @@
 
 int ZLUnicodeUtil::isUtf8String(const char *str, int len) {
 	const char *last = str + len;
-	for (; str < last; str++) {
+	for (; str < last; ++str) {
 		if ((*str & 0x80) != 0) {
 			if ((*str & 0xE0) == 0xC0) {
-				str++;
+				++str;
 				if ((str == last) || (*str & 0xC0) != 0x80) {
 					return false;
 				}
 			} else if ((*str & 0xF0) == 0xE0) {
-				str++;
+				++str;
 				if ((str == last) || (*str & 0xC0) != 0x80) {
 					return false;
 				}
-				str++;
+				++str;
 				if ((str == last) || (*str & 0xC0) != 0x80) {
 					return false;
 				}
@@ -55,13 +55,13 @@ int ZLUnicodeUtil::utf8Length(const char *str, int len) {
 	int counter = 0;
 	while (str < last) {
 		if ((*str & 0x80) == 0) {
-			str++;
+			++str;
 		} else if ((*str & 0x20) == 0) {
 			str += 2;
 		} else {
 			str += 3;
 		}
-		counter++;
+		++counter;
 	}
 	return counter;
 }
@@ -72,9 +72,9 @@ int ZLUnicodeUtil::utf8Length(const std::string &str) {
 
 int ZLUnicodeUtil::length(const char *str, int utf8Length) {
 	const char *ptr = str;
-	for (int i = 0; i < utf8Length; i++) {
+	for (int i = 0; i < utf8Length; ++i) {
 		if ((*ptr & 0x80) == 0) {
-			ptr++;
+			++ptr;
 		} else if ((*ptr & 0x20) == 0) {
 			ptr += 2;
 		} else {
@@ -98,24 +98,24 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const char *from, int length, int
 	for (const char *ptr = from; ptr < last;) {
 		if ((*ptr & 0x80) == 0) {
 			to.push_back(*ptr);
-			ptr++;
+			++ptr;
 		} else if ((*ptr & 0x20) == 0) {
 			Ucs2Char ch = *ptr & 0x1f;
-			ptr++;
+			++ptr;
 			ch <<= 6;
 			ch += *ptr & 0x3f;
 			to.push_back(ch);
-			ptr++;
+			++ptr;
 		} else {
 			Ucs2Char ch = *ptr & 0x0f;
-			ptr++;
+			++ptr;
 			ch <<= 6;
 			ch += *ptr & 0x3f;
-			ptr++;
+			++ptr;
 			ch <<= 6;
 			ch += *ptr & 0x3f;
 			to.push_back(ch);
-			ptr++;
+			++ptr;
 		}
 	}
 }
@@ -165,7 +165,7 @@ void ZLUnicodeUtil::ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLe
 	if (toLength > 0) {
 		to.reserve(toLength);
 	}
-	for (Ucs2String::const_iterator it = from.begin(); it != from.end(); it++) {
+	for (Ucs2String::const_iterator it = from.begin(); it != from.end(); ++it) {
 		to.append(buffer, ucs2ToUtf8(buffer, *it));
 	}
 }
@@ -287,7 +287,7 @@ ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::toLower(Ucs2Char ch) {
 }
 
 void ZLUnicodeUtil::toLower(Ucs2String &str) {
-	for (Ucs2String::iterator it = str.begin(); it != str.end(); it++) {
+	for (Ucs2String::iterator it = str.begin(); it != str.end(); ++it) {
 		*it = toLower(*it);
 	}
 }
@@ -332,7 +332,7 @@ ZLUnicodeUtil::Ucs2Char ZLUnicodeUtil::toUpper(Ucs2Char ch) {
 }
 
 void ZLUnicodeUtil::toUpper(Ucs2String &str) {
-	for (Ucs2String::iterator it = str.begin(); it != str.end(); it++) {
+	for (Ucs2String::iterator it = str.begin(); it != str.end(); ++it) {
 		*it = toUpper(*it);
 	}
 }
