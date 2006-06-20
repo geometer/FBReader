@@ -141,7 +141,7 @@ shared_ptr<ParagraphCursor> TreeParagraphCursor::next() const {
 	if (parent != 0) {
 		size_t index = myIndex + 1;
 		while (((const TreeParagraph*)myModel[index])->parent() != parent) {
-			index++;
+			++index;
 		}
 		return cursor(index);
 	}
@@ -190,7 +190,7 @@ TextMark WordCursor::position() const {
 	size_t paragraphLength = paragraph.paragraphLength();
 	unsigned int wordNumber = myWordNumber;
 	while ((wordNumber != paragraphLength) && (paragraph[wordNumber].kind() != TextElement::WORD_ELEMENT)) {
-		wordNumber++;
+		++wordNumber;
 	}
 	if (wordNumber != paragraphLength) {
 		return TextMark(paragraph.index(), ((Word&)paragraph[wordNumber]).ParagraphOffset, 0);

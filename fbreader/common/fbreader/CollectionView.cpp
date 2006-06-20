@@ -85,13 +85,13 @@ void CollectionView::paint() {
   if (myTreeModel == 0) {
     myTreeModel = new TreeModel();
     const std::vector<AuthorPtr> &authors = myCollection.authors();
-    for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); it++) {
+    for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
       const Books &books = myCollection.books(*it);
       if (!books.empty()) {
         TreeParagraph *authorParagraph = myTreeModel->createParagraph();
         myTreeModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
         myTreeModel->addText((*it)->displayName());
-        for (Books::const_iterator jt = books.begin(); jt != books.end(); jt++) {
+        for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
           TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
           myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
           myTreeModel->addText((*jt)->title());
@@ -172,7 +172,7 @@ bool CollectionView::onStylusPress(int x, int y) {
       int nextParagraphNumber = paragraphNumber + paragraph->children().size() + 1;
       int lastParagraphNumber = endCursor().paragraphCursor().index();
       if (endCursor().isEndOfParagraph()) {
-        lastParagraphNumber++;
+        ++lastParagraphNumber;
       }
       if (lastParagraphNumber < nextParagraphNumber) {
         gotoParagraph(nextParagraphNumber, true);

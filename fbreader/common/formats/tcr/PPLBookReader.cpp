@@ -38,7 +38,7 @@ PPLBookReader::~PPLBookReader() {
 bool PPLBookReader::currentParagraphIsEmpty() const {
 	const char *ptr = myCurrentParagraph.data();
 	const char *end = ptr + myCurrentParagraph.length();
-	for (; ptr < end; ptr++) {
+	for (; ptr < end; ++ptr) {
 		if (!isspace(*ptr)) {
 			return false;
 		}
@@ -50,7 +50,7 @@ void PPLBookReader::addParagraph() {
 	static const std::string END_OF_TEXT = "<* >";
 	if (!myCurrentParagraph.empty()) {
 		if (currentParagraphIsEmpty()) {
-			myEmptyLineCounter++;
+			++myEmptyLineCounter;
 			if (myEmptyLineCounter >= 2) {
 				myModelReader.beginParagraph(Paragraph::EMPTY_LINE_PARAGRAPH);
 				myModelReader.endParagraph();

@@ -45,7 +45,7 @@ void RecentBooksView::paint() {
   if (myLastBooksModel == 0) {
     myLastBooksModel = new PlainTextModel();
     const Books &books = myLastBooks.books();
-    for (Books::const_iterator it = books.begin(); it != books.end(); it++) {
+    for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
       myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
       myLastBooksModel->addControl(RECENT_BOOK_LIST, true);
       myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);

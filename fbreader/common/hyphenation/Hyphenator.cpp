@@ -48,7 +48,7 @@ HyphenationInfo Hyphenator::info(const Word &word) const {
 	isLetter.reserve(word.Length);
 
 	pattern.push_back(' ');
-	for (unsigned int i = 0; i < ucs2Vector.size(); i++) {
+	for (unsigned int i = 0; i < ucs2Vector.size(); ++i) {
 		unsigned short symbol = ucs2Vector[i];
 		bool letter = ZLUnicodeUtil::isLetter(symbol);
 		isLetter.push_back(letter);
@@ -59,7 +59,7 @@ HyphenationInfo Hyphenator::info(const Word &word) const {
 	HyphenationInfo info(word.Length + 2);
 	hyphenate(pattern, info.myMask, word.Length + 2);
 
-	for (int i = 0; i < word.Length + 1; i++) {
+	for (int i = 0; i < word.Length + 1; ++i) {
 		if ((i < 2) || (i > word.Length - 2)) {
 			info.myMask[i] = false;
 		} else if (ucs2Vector[i - 1] == '-') {

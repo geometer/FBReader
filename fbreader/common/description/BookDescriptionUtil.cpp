@@ -52,7 +52,7 @@ void BookDescriptionUtil::listZipEntries(const ZLFile &zipFile, std::vector<std:
 		resetZipInfo(zipFile.path());
 		entriesNumber = ZLIntegerOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), ENTRIES_NUMBER, -1).value();
 	}
-	for (int i = 0; i < entriesNumber; i++) {
+	for (int i = 0; i < entriesNumber; ++i) {
 		std::string optionName = ENTRY;
 		ZLStringUtil::appendNumber(optionName, i);
 		std::string entry = ZLStringOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), optionName, "").value();
@@ -71,14 +71,14 @@ void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 		std::vector<std::string> entries;
 		int counter = 0;
 		zipDir->collectFiles(entries, false);
-		for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); zit++) {
+		for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); ++zit) {
 			if (PluginCollection::instance().plugin(ZLFile(*zit), true) != 0) {
 				std::string optionName = ENTRY;
 				ZLStringUtil::appendNumber(optionName, counter);
 				std::string fullName = zipPrefix + *zit;
 				ZLStringOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), optionName, "").setValue(fullName);
 				BookInfo(fullName).reset();
-				counter++;
+				++counter;
 			}
 		}
 		ZLIntegerOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);

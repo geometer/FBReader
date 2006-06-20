@@ -88,7 +88,7 @@ void ContentsView::gotoReference() {
   if (!cursor.isNull()) {
     long reference = cursor.paragraphCursor().index();
     size_t selected = model()->paragraphsNumber() - 1;
-    for (size_t i = 1; i < model()->paragraphsNumber(); i++) {
+    for (size_t i = 1; i < model()->paragraphsNumber(); ++i) {
       if (((const ParagraphWithReference*)(*model())[i])->reference() >= reference) {
         selected = i - 1;
         break;

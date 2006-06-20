@@ -54,7 +54,7 @@ void HtmlReader::setTag(HtmlTag &tag, const std::string &name) {
   }
 
   const size_t len = std::min(tag.Name.length(), (size_t)10);
-  for (size_t i = 0; i < len; i++) {
+  for (size_t i = 0; i < len; ++i) {
     tag.Name[i] = toupper(tag.Name[i]);
   }
 }
@@ -120,7 +120,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
     length = stream.read(buffer, BUFSIZE);
     char *start = buffer;
     char *endOfBuffer = buffer + length;
-    for (char *ptr = buffer; ptr < endOfBuffer; ptr++) {
+    for (char *ptr = buffer; ptr < endOfBuffer; ++ptr) {
       switch (state) {
         case PS_TEXT:
           if (*ptr == '<') {
@@ -219,7 +219,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
           if ((*ptr == '>') || (*ptr == '=') || isspace(*ptr)) {
             if (ptr != start) {
               currentString.append(start, ptr - start);
-              for (unsigned int i = 0; i < currentString.length(); i++) {
+              for (unsigned int i = 0; i < currentString.length(); ++i) {
                 currentString[i] = toupper(currentString[i]);
               }
               currentTag.addAttribute(currentString);
@@ -239,7 +239,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
         case PS_ATTRIBUTEVALUE:
           if (*ptr == '"') {
             if ((ptr == start) || (quotationCounter > 0)) {
-              quotationCounter++;
+              ++quotationCounter;
             }
           } else if ((quotationCounter != 1) && ((*ptr == '>') || isspace(*ptr))) {
             if (ptr != start) {

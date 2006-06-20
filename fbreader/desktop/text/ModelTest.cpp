@@ -61,7 +61,7 @@ void dumpParagraph(const Paragraph &paragraph) {
 
 void dumpModel(const TextModel &model) {
   const int N = model.paragraphsNumber();
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i < N; ++i) {
     dumpParagraph(*model[i]);
   }
 }

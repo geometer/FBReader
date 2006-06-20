@@ -32,7 +32,7 @@ static std::string SIZE = "Size";
 
 BookList::BookList() {
 	int size = ZLIntegerOption(FBOptions::BOOKS_CATEGORY, GROUP, SIZE, 0).value();
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; ++i) {
 		std::string optionName = BOOK;
 		ZLStringUtil::appendNumber(optionName, i);
 		ZLStringOption bookOption(FBOptions::BOOKS_CATEGORY, GROUP, optionName, "");
@@ -46,7 +46,7 @@ BookList::BookList() {
 BookList::~BookList() {
 	ZLIntegerOption(FBOptions::BOOKS_CATEGORY, GROUP, SIZE, 0).setValue(myFileNames.size());
 	int i = 0;
-	for (std::set<std::string>::const_iterator it = myFileNames.begin(); it != myFileNames.end(); i++, it++) {
+	for (std::set<std::string>::const_iterator it = myFileNames.begin(); it != myFileNames.end(); ++i, ++it) {
 		std::string optionName = BOOK;
 		ZLStringUtil::appendNumber(optionName, i);
 		ZLStringOption(FBOptions::BOOKS_CATEGORY, GROUP, optionName, "").setValue(*it);

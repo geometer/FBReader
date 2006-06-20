@@ -48,7 +48,7 @@ void MultiAuthor::addAuthor(AuthorPtr author) {
 const std::string &MultiAuthor::displayName() const {
 	if (myDisplayName.empty() && !myAuthors.empty()) {
 		myDisplayName = myAuthors.front()->displayName();
-		for (unsigned int i = 1; i < myAuthors.size(); i++) {
+		for (unsigned int i = 1; i < myAuthors.size(); ++i) {
 			myDisplayName += ", ";
 			myDisplayName += myAuthors[i]->displayName();
 		}
@@ -59,7 +59,7 @@ const std::string &MultiAuthor::displayName() const {
 const std::string &MultiAuthor::sortKey() const {
 	if (mySortKey.empty() && !myAuthors.empty()) {
 		mySortKey = myAuthors.front()->sortKey();
-		for (unsigned int i = 1; i < myAuthors.size(); i++) {
+		for (unsigned int i = 1; i < myAuthors.size(); ++i) {
 			const std::string &key = myAuthors[i]->sortKey();
 			if (key < mySortKey) {
 				mySortKey = key;

@@ -47,7 +47,7 @@ bool TcrStream::open() {
 
 	unsigned char entryLength;
 	char entryBuffer[255];
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 256; ++i) {
 		if ((myBase->read((char*)&entryLength, 1) != 1) ||
 				((entryLength > 0) && (myBase->read(entryBuffer, entryLength) != entryLength))) {
 			myBase->close();
@@ -65,7 +65,7 @@ void TcrStream::close() {
 	if (!myBase.isNull()) {
 		myBase->close();
 	}
-	for (int i = 0; i < 256; i++) {
+	for (int i = 0; i < 256; ++i) {
 		myDictionary[i].erase();
 	}
 	myBuffer.erase();

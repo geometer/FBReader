@@ -48,7 +48,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 			myElements.push_back(TextElementPool::Pool.IndentElement);
 		} else if (myParagraph.kind() == Paragraph::TREE_PARAGRAPH) {
 			TreeParagraph &tp = (TreeParagraph&)myParagraph;
-			for (int i = 1; i < tp.depth() - 1; i++) {
+			for (int i = 1; i < tp.depth() - 1; ++i) {
 				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_SKIP));
 			}
 			if (tp.depth() > 1) {
@@ -67,7 +67,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 			}
 		}
 	}
-	myWordCounter++;
+	++myWordCounter;
 }
 
 void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {

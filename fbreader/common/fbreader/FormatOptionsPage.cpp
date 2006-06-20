@@ -34,7 +34,7 @@ FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
   TextStyleCollection &collection = TextStyleCollection::instance();
   const int STYLES_NUMBER = 18;
   TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE };
-  for (int i = 0; i < STYLES_NUMBER; i++) {
+  for (int i = 0; i < STYLES_NUMBER; ++i) {
     const TextStyleDecoration *decoration = collection.decoration(styles[i]);
     if (decoration != 0) {
       myComboEntry->addValue(decoration->name());
@@ -59,7 +59,7 @@ FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
     );
   }
 
-  for (int i = 0; i < STYLES_NUMBER; i++) {
+  for (int i = 0; i < STYLES_NUMBER; ++i) {
     TextStyleDecoration *d = collection.decoration(styles[i]);
     if ((d != 0) && (d->isFullDecoration())) {
       FullTextStyleDecoration *decoration = (FullTextStyleDecoration*)d;

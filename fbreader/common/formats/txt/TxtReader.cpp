@@ -48,7 +48,7 @@ void TxtReader::readDocument(ZLInputStream &stream) {
     length = stream.read(buffer, BUFSIZE);
     char *start = buffer;
     const char *end = buffer + length;
-    for (char *ptr = start; ptr != end; ptr++) {
+    for (char *ptr = start; ptr != end; ++ptr) {
       if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
         if (start != ptr) {
           str.erase();

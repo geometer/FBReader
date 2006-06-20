@@ -76,7 +76,7 @@ const std::vector<std::string> &DocBookReader::externalDTDs() const {
 		if (!dtdPath.isNull()) {
 			std::vector<std::string> files;
 			dtdPath->collectFiles(files, false);
-			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
+			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it) {
 				if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
 					EXTERNAL_DTDs.push_back(dtdPath->name() + "/" + *it);
 				}

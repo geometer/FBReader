@@ -68,7 +68,7 @@ const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 }
 
 void Paragraph::Iterator::next() {
-	myIndex++;
+	++myIndex;
 	myEntry = 0;
 	if (myIndex != myEndIndex) {
 		switch (*myPointer) {
@@ -85,16 +85,16 @@ void Paragraph::Iterator::next() {
 			case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
 				myPointer += 2;
 				while (*myPointer != '\0') {
-					myPointer++;
+					++myPointer;
 				}
-				myPointer++;
+				++myPointer;
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 				myPointer += sizeof(const ImageMap*) + 1;
 				while (*myPointer != '\0') {
-					myPointer++;
+					++myPointer;
 				}
-				myPointer++;
+				++myPointer;
 				break;
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
 				myPointer += 2 * sizeof(short) + 3;

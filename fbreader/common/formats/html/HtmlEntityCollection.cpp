@@ -57,7 +57,7 @@ void CollectionReader::startElementHandler(const char *tag, const char **attribu
 	static const std::string ENTITY = "entity";
 
 	if (ENTITY == tag) {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 4; ++i) {
 			if (attributes[i] == 0) {
 				return;
 			}

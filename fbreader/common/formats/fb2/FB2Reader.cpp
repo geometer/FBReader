@@ -64,7 +64,7 @@ static const FB2Reader::Tag TAGS[] = {
 };
 
 int FB2Reader::tag(const char *name) {
-	for (int i = 0; ; i++) {
+	for (int i = 0; ; ++i) {
 		if ((TAGS[i].tagName == 0) || (strcmp(name, TAGS[i].tagName) == 0)) {
 			return TAGS[i].tagCode;
 		}

@@ -212,7 +212,7 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 
     myDir->collectFiles(names, true);
 
-    for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); it++) {
+    for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
       const std::string& candidateName = myDir->itemName(*it);
       ZLFile candidate = ZLFile(candidateName);
 
@@ -228,7 +228,7 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
     }
 
     if (description.isNull()) {
-      for (std::vector<std::string>::const_iterator it = archives.begin(); it != archives.end(); it++) {
+      for (std::vector<std::string>::const_iterator it = archives.begin(); it != archives.end(); ++it) {
         description = createDescription(*it);
 
         if (!description.isNull()) {

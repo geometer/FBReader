@@ -90,7 +90,7 @@ void KeyBindings::readDefaultBindings() {
 		std::map<std::string,ActionCode> keymap;
 		KeyBindingsReader(keymap).readDocument(stream);
 		stream->close();
-		for (std::map<std::string,ActionCode>::const_iterator it = keymap.begin(); it != keymap.end(); it++) {
+		for (std::map<std::string,ActionCode>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
 			bindKey(it->first, it->second);
 		}
 	}
@@ -98,7 +98,7 @@ void KeyBindings::readDefaultBindings() {
 
 void KeyBindings::readCustomBindings() {
 	int size = ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).value();
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; ++i) {
 		std::string key = BINDED_KEY;
 		ZLStringUtil::appendNumber(key, i);
 		std::string keyValue = ZLStringOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, key, "").value();
@@ -123,7 +123,7 @@ KeyBindings::~KeyBindings() {
 
 	ZLOption::clearGroup(myOptionGroupName);
 	int counter = 0;
-	for (std::map<std::string,ActionCode>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); it++) {
+	for (std::map<std::string,ActionCode>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); ++it) {
 		std::map<std::string,ActionCode>::const_iterator original = keymap.find(it->first);
 		ActionCode defaultAction = (original == keymap.end()) ? NO_ACTION : original->second;
 		if (defaultAction != it->second) {
@@ -133,7 +133,7 @@ KeyBindings::~KeyBindings() {
 			ZLStringUtil::appendNumber(action, counter);
 			ZLStringOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, key, "").setValue(it->first);
 			ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, action, -1).setValue(it->second);
-			counter++;
+			++counter;
 		}
 	}
 	ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);

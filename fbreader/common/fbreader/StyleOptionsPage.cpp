@@ -38,7 +38,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
   TextStyleCollection &collection = TextStyleCollection::instance();
   const int STYLES_NUMBER = 32;
   TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, CONTENTS_TABLE_ENTRY, RECENT_BOOK_LIST, LIBRARY_AUTHOR_ENTRY, LIBRARY_BOOK_ENTRY, ANNOTATION, EPIGRAPH, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE, CITE, HYPERLINK, FOOTNOTE, ITALIC, EMPHASIS, BOLD, STRONG, DEFINITION, DEFINITION_DESCRIPTION, PREFORMATTED, CODE };
-  for (int i = 0; i < STYLES_NUMBER; i++) {
+  for (int i = 0; i < STYLES_NUMBER; ++i) {
     const TextStyleDecoration *decoration = collection.decoration(styles[i]);
     if (decoration != 0) {
       myComboEntry->addValue(decoration->name());
@@ -68,7 +68,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
     );
   }
 
-  for (int i = 0; i < STYLES_NUMBER; i++) {
+  for (int i = 0; i < STYLES_NUMBER; ++i) {
     TextStyleDecoration *decoration = collection.decoration(styles[i]);
     if (decoration != 0) {
       const std::string &name = decoration->name();

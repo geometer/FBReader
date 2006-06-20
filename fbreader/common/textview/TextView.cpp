@@ -64,7 +64,7 @@ void TextView::setModel(const TextModel *model, const std::string &name) {
     size_t size = myModel->paragraphsNumber();
     myTextSize.reserve(size + 1);
     myTextSize.push_back(0);
-    for (size_t i= 0; i < size; i++) {
+    for (size_t i= 0; i < size; ++i) {
       myTextSize.push_back(myTextSize.back() + (*myModel)[i]->textLength());
       if ((*myModel)[i]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) {
         myTextBreaks.push_back(i);

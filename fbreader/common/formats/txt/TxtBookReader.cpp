@@ -38,9 +38,9 @@ void TxtBookReader::internalEndParagraph() {
 bool TxtBookReader::characterDataHandler(std::string &str) {
 	const char *ptr = str.data();
 	const char *end = ptr + str.length();
-	for (; ptr != end; ptr++) {
+	for (; ptr != end; ++ptr) {
 		if (isspace(*ptr)) {
-			mySpaceCounter++;
+			++mySpaceCounter;
 		} else {
 			myLastLineIsEmpty = false;
 			break;
@@ -63,7 +63,7 @@ bool TxtBookReader::newLineHandler() {
 		myLineFeedCounter = 0;
 	}
 	myLastLineIsEmpty = true;
-	myLineFeedCounter++;
+	++myLineFeedCounter;
 	myNewLine = true;
 	mySpaceCounter = 0;
 	bool paragraphBreak =

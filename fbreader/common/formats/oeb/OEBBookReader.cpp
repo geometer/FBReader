@@ -97,11 +97,11 @@ bool OEBBookReader::readBook(const std::string &fileName) {
   myModelReader.setMainTextModel();
   myModelReader.pushKind(REGULAR);
 
-  for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); it++) {
+  for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
     XHTMLReader(myModelReader).readFile(myFilePrefix, *it);
   }
 
-  for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); it++) {
+  for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); ++it) {
     int index = myModelReader.model().paragraphNumberById(it->second);
     if (index != -1) {
       myModelReader.beginContentsParagraph(index);

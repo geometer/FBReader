@@ -59,7 +59,7 @@ bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 	PdbUtil::readUnsignedShort(stream, numRecords);
 	Offsets.reserve(numRecords);
 
-	for (int i = 0; i < numRecords; i++) {
+	for (int i = 0; i < numRecords; ++i) {
 		unsigned long recordOffset;
 		PdbUtil::readUnsignedLong(stream, recordOffset);
 		Offsets.push_back(recordOffset);

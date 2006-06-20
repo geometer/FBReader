@@ -36,10 +36,10 @@ BookModel::BookModel(const BookDescriptionPtr description) : myDescription(descr
 }
 
 BookModel::~BookModel() {
-	for (ImageMap::const_iterator it = myImages.begin(); it != myImages.end(); it++) {
+	for (ImageMap::const_iterator it = myImages.begin(); it != myImages.end(); ++it) {
 		delete (*it).second;
 	}
-	for (std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.begin(); it != myFootnotes.end(); it++) {
+	for (std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.begin(); it != myFootnotes.end(); ++it) {
 		delete (*it).second;
 	}
 }

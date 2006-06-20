@@ -65,13 +65,13 @@ PluginCollection::PluginCollection() :
 }
 
 PluginCollection::~PluginCollection() {
-	for (std::vector<FormatPlugin*>::const_iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
+	for (std::vector<FormatPlugin*>::const_iterator it = myPlugins.begin(); it != myPlugins.end(); ++it) {
 		delete *it;
 	}
 }
 
 FormatPlugin *PluginCollection::plugin(const ZLFile &file, bool strong) {
-	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); it++) {
+	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); ++it) {
 		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(file)) {
 			return *it;
 		}

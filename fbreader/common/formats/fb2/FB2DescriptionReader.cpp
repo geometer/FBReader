@@ -33,7 +33,7 @@ void FB2DescriptionReader::characterDataHandler(const char *text, int len) {
 		} else if (myReadLanguage) {
 			myDescription.language().append(text, len);
 		} else {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 3; ++i) {
 				if (myReadAuthorName[i]) {
 					myAuthorNames[i].append(text, len);
 					break;
@@ -120,7 +120,7 @@ bool FB2DescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
 	myReadTitle = false;
 	myReadAuthor = false;
 	myReadLanguage = false;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; ++i) {
 		myReadAuthorName[i] = false;
 	}
 	return readDocument(stream);

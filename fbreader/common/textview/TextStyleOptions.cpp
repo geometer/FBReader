@@ -61,7 +61,7 @@ void FontFamilyOptionEntry::onAccept(const std::string &value) {
 
 LineSpacingOptionEntry::LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase) : myOption(option), myAllowBase(allowBase) {
 	if (ourAllValuesPlusBase.empty()) {
-		for (int i = 5; i <= 20; i++) {
+		for (int i = 5; i <= 20; ++i) {
 			ourAllValues.push_back(std::string() + (char)(i / 10 + '0') + '.' + (char)(i % 10 + '0'));
 		}
 		ourAllValuesPlusBase.push_back(BASE_STRING);
@@ -78,7 +78,7 @@ const std::string &LineSpacingOptionEntry::initialValue() const {
 	if (value == 0) {
 		return BASE_STRING;
 	}
-	for (int i = 5; i < 20; i++) {
+	for (int i = 5; i < 20; ++i) {
 		if (value <= i) {
 			return ourAllValues[i - 5];
 		}
@@ -90,7 +90,7 @@ void LineSpacingOptionEntry::onAccept(const std::string &value) {
 	if (value == BASE_STRING) {
 		myOption.setValue(0.0);
 	} else {
-		for (int i = 5; i <= 20; i++) {
+		for (int i = 5; i <= 20; ++i) {
 			if (value == ourAllValues[i - 5]) {
 				myOption.setValue(i / 10.0);
 			}
@@ -142,7 +142,7 @@ const std::string &AlignmentOptionEntry::initialValue() const {
 }
 
 void AlignmentOptionEntry::onAccept(const std::string &value) {
-	for (unsigned int i = 0; i < values5().size(); i++) {
+	for (unsigned int i = 0; i < values5().size(); ++i) {
 		if (values5()[i] == value) {
 			myOption.setValue(i);
 			break;

@@ -59,7 +59,7 @@ bool PalmDocStream::fillBuffer() {
 		if (myRecordIndex + 1 > myMaxRecordIndex) {
 			return false;
 		}
-		myRecordIndex++;
+		++myRecordIndex;
 		size_t currentOffset = myHeader.Offsets[myRecordIndex];
 		if (currentOffset < myBase->offset()) {
 			return false;

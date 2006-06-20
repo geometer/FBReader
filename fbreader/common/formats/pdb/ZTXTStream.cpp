@@ -57,7 +57,7 @@ bool ZTXTStream::fillBuffer() {
 		if (myRecordIndex + 1 > myMaxRecordIndex) {
 			return false;
 		}
-		myRecordIndex++;
+		++myRecordIndex;
 		size_t currentOffset = myHeader.Offsets[myRecordIndex];
 		// Hmm, this works on examples from manybooks.net,
 		// but I don't what thi code means :((
