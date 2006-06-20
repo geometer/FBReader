@@ -44,7 +44,6 @@ int main(int argc, char **argv) {
 	QDeviceInfo::createInstance();
 
 	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);
-	reader->initWindow(reader);
 	application.showMainWidget(reader);
 	int code = application.exec();
 	delete reader;

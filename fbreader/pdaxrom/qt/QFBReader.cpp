@@ -60,6 +60,8 @@ QFBReader::QFBReader(const std::string& bookToOpen) :
 
 	resize(myWidthOption.value(), myHeightOption.value());
 
+	initWindow(this);
+
 	setMode(BOOK_TEXT_MODE);
 }
 

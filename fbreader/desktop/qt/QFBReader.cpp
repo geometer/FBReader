@@ -58,6 +58,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) :
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 	resize(myWidthOption.value(), myHeightOption.value());
+	initWindow(this);
 	setMode(BOOK_TEXT_MODE);
 }
 

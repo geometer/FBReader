@@ -58,6 +58,7 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myTitleHeight = -1;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
+	initWindow(this);
 	setMode(BOOK_TEXT_MODE);
 }
 
