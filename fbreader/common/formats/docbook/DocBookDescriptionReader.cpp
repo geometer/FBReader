@@ -26,7 +26,7 @@
 DocBookDescriptionReader::DocBookDescriptionReader(BookDescription &description) : myDescription(description) {
 	myReadTitle = false;
 	myReadAuthor = false;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 3; ++i) {
 		myReadAuthorName[i] = false;
 	}
 	myDescription.language() = "en";
@@ -37,7 +37,7 @@ void DocBookDescriptionReader::characterDataHandler(const char *text, int len) {
 	if (myReadTitle) {
 		myDescription.title().append(text, len);
 	} else {
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 3; ++i) {
 			if (myReadAuthorName[i]) {
 				myAuthorNames[i].append(text, len);
 				break;
@@ -47,7 +47,7 @@ void DocBookDescriptionReader::characterDataHandler(const char *text, int len) {
 }
 
 void DocBookDescriptionReader::startElementHandler(int tag, const char **) {
-	myDepth++;
+	++myDepth;
 	switch (tag) {
 		case _SECT1:
 			myReturnCode = true;
@@ -84,7 +84,7 @@ void DocBookDescriptionReader::startElementHandler(int tag, const char **) {
 }
 
 void DocBookDescriptionReader::endElementHandler(int tag) {
-	myDepth--;
+	--myDepth;
 	switch (tag) {
 		case _TITLE:
 			myReadTitle = false;

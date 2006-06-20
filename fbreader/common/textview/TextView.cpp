@@ -263,7 +263,7 @@ void TextView::drawTextLine(const LineInfo &info) {
           context().moveX(context().spaceWidth() + correction);
           fullCorrection -= correction;
           wordOccured = false;
-          spaceCounter--;
+          --spaceCounter;
         }
         break;
       case TextElement::TREE_ELEMENT:

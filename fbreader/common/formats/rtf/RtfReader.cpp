@@ -157,7 +157,7 @@ void RtfReader::fillKeywordMap() {
 
     static const char *keywordsToSkip[] = {"buptim", "colortbl", "comment", "creatim", "doccomm", "fonttbl", "footer", "footerf", "footerl", "footerr", "ftncn", "ftnsep", "ftnsepc", "header", "headerf", "headerl", "headerr", "keywords", "operator", "printim", "private1", "revtim", "rxe", "subject", "tc", "txe", "xe", 0};
     RtfCommand *skipCommand = new RtfDestinationCommand(RtfReader::DESTINATION_SKIP);
-    for (const char **i = keywordsToSkip; *i != 0; i++) {
+    for (const char **i = keywordsToSkip; *i != 0; ++i) {
       addAction(*i,  skipCommand);
     }
     addAction("info",  new RtfDestinationCommand(RtfReader::DESTINATION_INFO));
@@ -233,7 +233,7 @@ bool RtfReader::parseDocument() {
         case READ_BINARY_DATA:
           // TODO: optimize
           processCharData(ptr, 1);
-          myBinaryDataSize--;
+          --myBinaryDataSize;
           if (myBinaryDataSize == 0) {
             parserState = READ_NORMAL_DATA;
           }
@@ -369,7 +369,7 @@ bool RtfReader::parseDocument() {
           break;
       }
       if (readNextChar) {
-        ptr++;
+        ++ptr;
       } else {
         readNextChar = true;
       }

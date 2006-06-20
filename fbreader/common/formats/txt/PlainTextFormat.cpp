@@ -182,7 +182,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
       }
     }
     if (emptyLinesBeforeNewSection > 0) {
-      for (index = tableSize - 1; index > 0; index--) {
+      for (index = tableSize - 1; index > 0; --index) {
         emptyLinesTable[index - 1] += emptyLinesTable[index];  
         emptyLinesBeforeShortStringTable[index - 1] += emptyLinesBeforeShortStringTable[index];  
       }

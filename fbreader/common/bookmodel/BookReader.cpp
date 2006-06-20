@@ -69,7 +69,7 @@ bool BookReader::popKind() {
 void BookReader::beginParagraph(Paragraph::Kind kind) {
 	if (myCurrentTextModel != 0) {
 		myCurrentTextModel->createParagraph(kind);
-		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); it++) {
+		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); ++it) {
 			myCurrentTextModel->addControl(*it, true);
 		}
 		myTextParagraphExists = true;
@@ -108,7 +108,7 @@ void BookReader::addHyperlinkLabel(const std::string &label) {
 	if (myCurrentTextModel == &myModel.myBookTextModel) {
 		int paragraphNumber = myModel.bookTextModel().paragraphsNumber();
 		if (myTextParagraphExists) {
-			paragraphNumber--;
+			--paragraphNumber;
 		}
 		addHyperlinkLabel(label, paragraphNumber);
 	}

@@ -114,7 +114,7 @@ shared_ptr<ParagraphCursor> TreeParagraphCursor::previous() const {
 			}
 		}
 		while (myModel[index] != lastNotOpen) {
-			index--;
+			--index;
 		}
 	}
 	return cursor(index);

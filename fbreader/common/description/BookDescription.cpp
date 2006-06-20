@@ -124,7 +124,7 @@ BookDescription::BookDescription(const std::string &fileName) {
 void WritableBookDescription::addAuthor(const std::string &name) {
   int stripIndex = name.length() - 1;
   while ((stripIndex >= 0) && (name[stripIndex] == ' ')) {
-    stripIndex--;
+    --stripIndex;
   }
   std::string strippedName = name.substr(0, stripIndex + 1);
   int index = strippedName.rfind(' ');
@@ -133,7 +133,7 @@ void WritableBookDescription::addAuthor(const std::string &name) {
   } else {
     std::string lastName = strippedName.substr(index + 1);
     while ((index >= 0) && (strippedName[index] == ' ')) {
-      index--;
+      --index;
     }
     std::string firstName = strippedName.substr(0, index + 1);
     addAuthor(firstName + ' ' + lastName, lastName);

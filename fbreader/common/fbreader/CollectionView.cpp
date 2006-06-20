@@ -66,7 +66,7 @@ void CollectionView::gotoParagraph(int num, bool last) {
     if (myTreeStateIsFrozen) {
       TreeParagraph *parent = tp->parent();
       while ((num > 0) && (parent != 0) && !parent->isOpen()) {
-        for (num--; ((num > 0) && parent != (*myTreeModel)[num]); num--);
+        for (--num; ((num > 0) && parent != (*myTreeModel)[num]); --num);
         parent = parent->parent();
       }
     } else {
@@ -181,7 +181,7 @@ bool CollectionView::onStylusPress(int x, int y) {
     }
     int firstParagraphNumber = startCursor().paragraphCursor().index();
     if (startCursor().isStartOfParagraph()) {
-      firstParagraphNumber--;
+      --firstParagraphNumber;
     }
     if (firstParagraphNumber >= paragraphNumber) {
       gotoParagraph(paragraphNumber);

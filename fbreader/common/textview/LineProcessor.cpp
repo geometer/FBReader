@@ -75,7 +75,7 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
       case TextElement::HSPACE_ELEMENT:
         if (wordOccured) {
           wordOccured = false;
-          internalSpaceCounter++;
+          ++internalSpaceCounter;
           lastSpaceWidth = myStyle.context().spaceWidth();
           newWidth += lastSpaceWidth;
         }
@@ -124,7 +124,7 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
         HyphenationInfo hyphenationInfo = Hyphenator::instance().info(word);
         int hyphenationPosition = word.Length - 1;
         int subwordWidth = 0;
-        for (; hyphenationPosition > 0; hyphenationPosition--) {
+        for (; hyphenationPosition > 0; --hyphenationPosition) {
           if (hyphenationInfo.isHyphenationPossible(hyphenationPosition)) {
             subwordWidth = myStyle.wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
             if (subwordWidth <= spaceLeft) {
@@ -148,7 +148,7 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 
   if (removeLastSpace) {
     info.Width -= lastSpaceWidth;
-    info.SpaceCounter--;
+    --info.SpaceCounter;
   }
 
   myStyle.setStyle(storedStyle);

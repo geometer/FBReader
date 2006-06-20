@@ -135,7 +135,7 @@ WordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
   std::vector<LineInfo>::const_iterator it;
   for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
     if (it->IsVisible) {
-      overlappingValue--;
+      --overlappingValue;
       if (overlappingValue == 0) {
         break;
       }
@@ -152,7 +152,7 @@ WordCursor TextView::findLineFromEnd(unsigned int overlappingValue) const {
   std::vector<LineInfo>::const_iterator it;
   for (it = myLineInfos.end() - 1; it != myLineInfos.begin(); --it) {
     if (it->IsVisible) {
-      overlappingValue--;
+      --overlappingValue;
       if (overlappingValue == 0) {
         break;
       }

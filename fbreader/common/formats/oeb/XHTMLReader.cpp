@@ -345,7 +345,7 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
     }
     // TODO: insert spaces at start of line
     /*
-    for (; (len > 0) && isspace(*text); text++, len--) {
+    for (; (len > 0) && isspace(*text); ++text, --len) {
       static const std::string NBSP = "\xC0\xA0";
       myModelReader.addData(NBSP);
     }
@@ -365,7 +365,7 @@ const std::vector<std::string> &XHTMLReader::externalDTDs() const {
     if (!dtdPath.isNull()) {
       std::vector<std::string> files;
       dtdPath->collectFiles(files, false);
-      for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); it++) {
+      for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it) {
         if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
           EXTERNAL_DTDs.push_back(dtdPath->itemName(*it));
         }

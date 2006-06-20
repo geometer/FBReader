@@ -52,14 +52,14 @@ static const char *reference(const char **xmlattributes) {
 	while (*xmlattributes != 0) {
 		int len = strlen(*xmlattributes);
 		bool useNext = (len >= 5) && (strcmp((*xmlattributes) + len - 5, ":href") == 0);
-		xmlattributes++;
+		++xmlattributes;
 		if (*xmlattributes == 0) {
 			return 0;
 		}
 		if (useNext) {
 			break;
 		}
-		xmlattributes++;
+		++xmlattributes;
 	}
 	const char *ref = *xmlattributes;
 	return ((ref != 0) && (*ref == '#')) ? ref + 1 : 0;
@@ -109,7 +109,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _SECTION:
 			myModelReader.insertEndOfSectionParagraph();
-			mySectionDepth++;
+			++mySectionDepth;
 			mySectionStarted = true;
 			break;
 		case _TITLE:
@@ -193,7 +193,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			myModelReader.endParagraph();
 			break;
 		case _BODY:
-			myBodyCounter++;
+			++myBodyCounter;
 			if (myBodyCounter == 1) {
 				myModelReader.setMainTextModel();
 			}
@@ -223,7 +223,7 @@ void FB2BookReader::endElementHandler(int tag) {
 			if (myBodyCounter > 1) {
 				myModelReader.unsetTextModel();
 			}
-			mySectionDepth--;
+			--mySectionDepth;
 			mySectionStarted = false;
 			break;
 		case _TITLE:

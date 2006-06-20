@@ -135,13 +135,13 @@ void HtmlControlTagAction::run(bool start, const std::vector<HtmlReader::HtmlAtt
     std::vector<TextKind> &list = myReader.myKindList;
     if (!list.empty()) {
       int index;
-      for (index = list.size() - 1; index >= 0; index--) {
+      for (index = list.size() - 1; index >= 0; --index) {
         if (list[index] == myKind) {
           break;
         }
       }
       if (index >= 0) {
-        for (int i = list.size() - 1; i >= index; i--) {
+        for (int i = list.size() - 1; i >= index; --i) {
           myReader.myBookReader.addControl(list[i], false);
           myReader.myBookReader.popKind();
         }
@@ -180,7 +180,7 @@ void HtmlIgnoreTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttr
   if (start) {
     ++myReader.myIgnoreDataCounter;
   } else {
-    myReader.myIgnoreDataCounter--;
+    --myReader.myIgnoreDataCounter;
   }
 }
 

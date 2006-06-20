@@ -74,7 +74,7 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 		}
 		myCurrentPointInStack = pointInStack;
 
-		for (int i = 0; i < stackSize; i++) {
+		for (int i = 0; i < stackSize; ++i) {
 			std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
 			std::string bufferWord = BUFFER_WORD_PREFIX;
 			ZLStringUtil::appendNumber(bufferParagraph, i);
@@ -98,7 +98,7 @@ void BookTextView::saveState() {
 		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, BUFFER_SIZE, 0).setValue(myPositionStack.size());
 		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
-		for (unsigned int i = 0; i < myPositionStack.size(); i++) {
+		for (unsigned int i = 0; i < myPositionStack.size(); ++i) {
 			std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
 			std::string bufferWord = BUFFER_WORD_PREFIX;
 			ZLStringUtil::appendNumber(bufferParagraph, i);
@@ -118,7 +118,7 @@ void BookTextView::pushCurrentPositionIntoStack() {
 	while (myPositionStack.size() > myMaxStackSize) {
 		myPositionStack.erase(myPositionStack.begin());
 		if (myCurrentPointInStack > 0) {
-			myCurrentPointInStack--;
+			--myCurrentPointInStack;
 		}
 	}
 }
@@ -135,7 +135,7 @@ void BookTextView::gotoParagraph(int num, bool last) {
 			myPositionStack.pop_back();
 		}
 		pushCurrentPositionIntoStack();
-		myCurrentPointInStack++;
+		++myCurrentPointInStack;
 
 		TextView::gotoParagraph(num, last);
 	}
@@ -153,7 +153,7 @@ void BookTextView::undoPageMove() {
 			replaceCurrentPositionInStack();
 		}
 
-		myCurrentPointInStack--;
+		--myCurrentPointInStack;
 		Position &pos = myPositionStack[myCurrentPointInStack];
 		moveStartCursor(pos.first, pos.second, 0);
 
@@ -168,7 +168,7 @@ bool BookTextView::canRedoPageMove() {
 void BookTextView::redoPageMove() {
 	if (canRedoPageMove()) {
 		replaceCurrentPositionInStack();
-		myCurrentPointInStack++;
+		++myCurrentPointInStack;
 		Position &pos = myPositionStack[myCurrentPointInStack];
 		moveStartCursor(pos.first, pos.second, 0);
 
@@ -195,7 +195,7 @@ bool BookTextView::onStylusPress(int x, int y) {
 	bool isHyperlink = false;
 	std::string id;
 	TextKind hyperlinkKind = REGULAR;
-	for (int i = 0; i < position->TextElementNumber; i++) {
+	for (int i = 0; i < position->TextElementNumber; ++i) {
 		const TextElement &element = cursor.element();
 		if (element.kind() == TextElement::CONTROL_ELEMENT) {
 			const ControlEntry &control = ((const ControlElement&)element).entry();
