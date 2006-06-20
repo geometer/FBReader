@@ -160,6 +160,8 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
   if (isRotationSupported()) {
 		addAction(ACTION_ROTATE_SCREEN, new RotationAction(*this));
   }
+	addAction(ACTION_TOGGLE_FULLSCREEN, new FullscreenAction(*this, true));
+	addAction(ACTION_FULLSCREEN_ON, new FullscreenAction(*this, false));
 
   toolbar().addButton(ACTION_SHOW_COLLECTION, "books");
   toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history");
@@ -364,14 +366,6 @@ void FBReader::doAction(ActionCode code) {
         option.setValue(!option.value());
         repaintView();
 		  }
-      break;
-    case ACTION_TOGGLE_FULLSCREEN:
-      toggleFullscreenSlot();
-      break;
-    case ACTION_FULLSCREEN_ON:
-      if (!isFullscreen()) {
-        toggleFullscreenSlot();
-      }
       break;
     case ACTION_QUIT:
       if (myMode == BOOK_TEXT_MODE) {

@@ -320,6 +320,18 @@ private:
 	};
 	friend class RotationAction;
 	
+	class FullscreenAction : public FBAction {
+
+	public:
+		FullscreenAction(FBReader &fbreader, bool toggle);
+		bool isVisible();
+		void run();
+
+	private:
+		bool myIsToggle;
+	};
+	friend class FullscreenAction;
+	
 	class ChangeFontSizeAction : public FBAction {
 
 	public:

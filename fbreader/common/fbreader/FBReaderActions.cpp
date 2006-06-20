@@ -281,3 +281,14 @@ void FBReader::RotationAction::run() {
 	myFBReader.AngleStateOption.setValue(newAngle);
 	myFBReader.repaintView();
 }
+
+FBReader::FullscreenAction::FullscreenAction(FBReader &fbreader, bool toggle) : FBAction(fbreader), myIsToggle(toggle) {
+}
+
+bool FBReader::FullscreenAction::isVisible() {
+	return myIsToggle || !myFBReader.isFullscreen();
+}
+
+void FBReader::FullscreenAction::run() {
+	myFBReader.toggleFullscreenSlot();
+}
