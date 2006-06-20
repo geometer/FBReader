@@ -22,6 +22,7 @@
 #include "FBReader.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
+#include "RecentBooksView.h"
 
 #include "../textview/TextView.h"
 
@@ -291,4 +292,52 @@ bool FBReader::FullscreenAction::isVisible() {
 
 void FBReader::FullscreenAction::run() {
 	myFBReader.toggleFullscreenSlot();
+}
+
+FBReader::OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool FBReader::OpenPreviousBookAction::isVisible() {
+	Books books = myFBReader.myRecentBooksView->lastBooks().books();
+	return books.size() > 1;
+}
+
+void FBReader::OpenPreviousBookAction::run() {
+	Books books = myFBReader.myRecentBooksView->lastBooks().books();
+	myFBReader.openBook(books[1]);
+	myFBReader.repaintView();
+	myFBReader.resetWindowCaption();
+}
+
+FBReader::CancelAction::CancelAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+void FBReader::CancelAction::run() {
+	if (myFBReader.myMode != BOOK_TEXT_MODE) {
+		myFBReader.restorePreviousMode();
+	} else if (myFBReader.isFullscreen()) {
+		myFBReader.toggleFullscreenSlot();
+	} else if (myFBReader.QuitOnCancelOption.value()) {
+		myFBReader.quitSlot();
+	}
+}
+
+FBReader::ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+void FBReader::ToggleIndicatorAction::run() {
+	ZLBooleanOption &option = TextStyleCollection::instance().indicatorStyle().ShowOption;
+	option.setValue(!option.value());
+	myFBReader.repaintView();
+}
+
+FBReader::QuitAction::QuitAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+void FBReader::QuitAction::run() {
+	if (myFBReader.myMode == BOOK_TEXT_MODE) {
+		myFBReader.quitSlot();
+	} else {
+		myFBReader.restorePreviousMode();
+	}
 }

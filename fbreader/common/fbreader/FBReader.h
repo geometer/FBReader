@@ -343,6 +343,39 @@ private:
 	};
 	friend class ChangeFontSizeAction;
 	
+	class CancelAction : public FBAction {
+
+	public:
+		CancelAction(FBReader &fbreader);
+		void run();
+	};
+	friend class CancelAction;
+	
+	class ToggleIndicatorAction : public FBAction {
+
+	public:
+		ToggleIndicatorAction(FBReader &fbreader);
+		void run();
+	};
+	friend class ToggleIndicatorAction;
+	
+	class QuitAction : public FBAction {
+
+	public:
+		QuitAction(FBReader &fbreader);
+		void run();
+	};
+	friend class QuitAction;
+	
+	class OpenPreviousBookAction : public FBAction {
+
+	public:
+		OpenPreviousBookAction(FBReader &fbreader);
+		bool isVisible();
+		void run();
+	};
+	friend class OpenPreviousBookAction;
+	
 protected:
   FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool supportRotation = true);
   virtual ~FBReader();
