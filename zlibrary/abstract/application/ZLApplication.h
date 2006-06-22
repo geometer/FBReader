@@ -88,7 +88,6 @@ public:
 
 	private:
 		ItemVector myItems;
-		std::map<int, ItemPtr> myItemsById;
 
 	friend class ZLApplication;
 	};

@@ -49,9 +49,7 @@ void ZLApplication::doAction(int actionId) {
 }
 
 void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName) {
-	ItemPtr item = new ButtonItem(actionId, iconName);
-	myItems.push_back(item);
-	myItemsById[actionId] = item;
+	myItems.push_back(new ButtonItem(actionId, iconName));
 }
 
 void ZLApplication::Toolbar::addSeparator() {
