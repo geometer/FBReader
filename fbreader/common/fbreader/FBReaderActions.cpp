@@ -176,41 +176,32 @@ FBReader::FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader
 }
 
 bool FBReader::FindNextAction::isEnabled() {
-	if (myFBReader.myViewWidget == 0) {
-		return false;
-	}
-	TextView *textView = (TextView*)myFBReader.myViewWidget->view();
+	TextView *textView = (TextView*)myFBReader.currentView();
 	return (textView != 0) && textView->canFindNext();
 }
 
 void FBReader::FindNextAction::run() {
-	((TextView*)myFBReader.myViewWidget->view())->findNext();
+	((TextView*)myFBReader.currentView())->findNext();
 }
 
 FBReader::FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool FBReader::FindPreviousAction::isEnabled() {
-	if (myFBReader.myViewWidget == 0) {
-		return false;
-	}
-	TextView *textView = (TextView*)myFBReader.myViewWidget->view();
+	TextView *textView = (TextView*)myFBReader.currentView();
 	return (textView != 0) && textView->canFindPrevious();
 }
 
 void FBReader::FindPreviousAction::run() {
-	((TextView*)myFBReader.myViewWidget->view())->findPrevious();
+	((TextView*)myFBReader.currentView())->findPrevious();
 }
 
 FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
 }
 
 void FBReader::ScrollingAction::run() {
-	if (myFBReader.myViewWidget == 0) {
-		return;
-	}
 	int delay = myFBReader.myLastScrollingTime.millisecondsTo(ZLTime());
-	TextView *textView = (TextView*)myFBReader.myViewWidget->view();
+	TextView *textView = (TextView*)myFBReader.currentView();
 	if ((textView != 0) && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
 		TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
 		unsigned int oValue = 0;
@@ -227,7 +218,7 @@ void FBReader::ScrollingAction::run() {
 			default:
 				break;
 		}
-		((TextView*)myFBReader.myViewWidget->view())->scrollPage(myForward, oType, oValue);
+		textView->scrollPage(myForward, oType, oValue);
 		myFBReader.repaintView();
 		myFBReader.myLastScrollingTime = ZLTime();
 	}

@@ -26,6 +26,9 @@
 #include <map>
 #include <abstract/shared_ptr.h>
 
+class ZLView;
+class ZLViewWidget;
+
 class ZLApplication {
 
 public:
@@ -96,6 +99,8 @@ protected:
 	ZLApplication();
 
 	void addAction(int actionId, shared_ptr<Action> action);
+	void setView(ZLView *view);
+	ZLView *currentView();
 
 public:
 	virtual ~ZLApplication();
@@ -110,6 +115,9 @@ public:
   virtual void setWindowCaption(const std::string &caption) = 0;
 
 	Toolbar &toolbar();
+
+protected:
+  ZLViewWidget *myViewWidget;
 
 private:
 	std::map<int,shared_ptr<Action> > myActionMap;
@@ -138,7 +146,7 @@ friend void ZLApplication::initWindow(ZLApplicationWindow *view);
 friend void ZLApplication::refreshWindow();
 };
 
-inline ZLApplication::ZLApplication() : myWindow(0) {}
+inline ZLApplication::ZLApplication() : myViewWidget(0), myWindow(0) {}
 inline ZLApplication::~ZLApplication() {
 	if (myWindow != 0) {
 		//delete myWindow;

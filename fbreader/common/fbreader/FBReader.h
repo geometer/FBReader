@@ -429,7 +429,6 @@ private:
 protected:
   ViewMode myMode;
   ViewMode myPreviousMode;
-  ZLViewWidget *myViewWidget;
 
 private:
   FootnoteView *myFootnoteView;  

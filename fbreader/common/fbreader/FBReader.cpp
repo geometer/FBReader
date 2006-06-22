@@ -105,7 +105,6 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
 	myIsRotationSupported(supportRotation) {
 
-	myViewWidget = 0;
 	myModel = 0;
 	myContext = context;
 	myBookTextView = new BookTextView(*this, *myContext);
@@ -367,27 +366,27 @@ void FBReader::setMode(ViewMode mode) {
 
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
-			myViewWidget->setView(myBookTextView);
+			setView(myBookTextView);
 			break;
 		case CONTENTS_MODE:
 			if (!StoreContentsPositionOption.value()) {
 				myContentsView->gotoReference();
 			}
-			myViewWidget->setView(myContentsView);
+			setView(myContentsView);
 			break;
 		case FOOTNOTE_MODE:
-			myViewWidget->setView(myFootnoteView);
+			setView(myFootnoteView);
 			break;
 		case BOOK_COLLECTION_MODE:
 			{
 				RebuildCollectionRunnable runnable(*this);
 				ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
 			}
-			myViewWidget->setView(myCollectionView);
+			setView(myCollectionView);
 			break;
 		case RECENT_BOOKS_MODE:
 			myRecentBooksView->rebuild();
-			myViewWidget->setView(myRecentBooksView);
+			setView(myRecentBooksView);
 			break;
 		case BOOKMARKS_MODE:
 			break;
@@ -406,7 +405,7 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 		BookDescriptionPtr newDescription = BookDescription::create(fileName);
 		if (!newDescription.isNull()) {
 			openBook(newDescription);
-			setWindowCaption("FBReader - " + myViewWidget->view()->caption());
+			resetWindowCaption();
 			repaintView();
 		} else {
 			// TODO: show information message

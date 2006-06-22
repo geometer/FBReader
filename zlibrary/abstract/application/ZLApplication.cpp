@@ -19,6 +19,7 @@
  */
 
 #include "ZLApplication.h"
+#include "../view/ZLView.h"
 
 void ZLApplicationWindow::init() {
 	const ZLApplication::Toolbar::ItemVector &items = myApplication->toolbar().items();
@@ -29,6 +30,16 @@ void ZLApplicationWindow::init() {
 
 void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
 	myActionMap[actionId] = action;
+}
+
+void ZLApplication::setView(ZLView *view) {
+	if (myViewWidget != 0) {
+		myViewWidget->setView(view);
+	}
+}
+
+ZLView *ZLApplication::currentView() {
+	return (myViewWidget != 0) ? myViewWidget->view() : 0;
 }
 
 bool ZLApplication::isActionVisible(int actionId) const {
