@@ -103,6 +103,9 @@ protected:
 	ZLView *currentView();
 
 public:
+  void repaintView();
+
+public:
 	virtual ~ZLApplication();
 
 	bool isActionVisible(int actionId) const;

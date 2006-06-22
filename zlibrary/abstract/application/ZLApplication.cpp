@@ -42,6 +42,12 @@ ZLView *ZLApplication::currentView() {
 	return (myViewWidget != 0) ? myViewWidget->view() : 0;
 }
 
+void ZLApplication::repaintView() {
+	if (myViewWidget != 0) {
+		myViewWidget->repaintView();
+	}
+}
+
 bool ZLApplication::isActionVisible(int actionId) const {
 	const std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
 	return (it != myActionMap.end()) && it->second->isVisible();

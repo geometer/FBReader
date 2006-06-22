@@ -415,7 +415,6 @@ public:
   void showBookTextView();
   void tryShowFootnoteView(const std::string &id);
   void restorePreviousMode();
-  void repaintView();
 
   ZLBooleanOption &useSeparateBindings();
   KeyBindings &keyBindings(ZLViewWidget::Angle angle, bool force = false);

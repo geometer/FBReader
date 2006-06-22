@@ -298,12 +298,6 @@ void FBReader::tryShowFootnoteView(const std::string &id) {
 	}
 }
 
-void FBReader::repaintView() {
-	if (myViewWidget != 0) {
-		myViewWidget->repaintView();
-	}
-}
-
 void FBReader::bookInfoSlot() {
 	if ((myMode == BOOK_TEXT_MODE) || (myMode == CONTENTS_MODE) || (myMode == FOOTNOTE_MODE)) {
 		runBookInfoDialog(myModel->fileName());
@@ -397,7 +391,11 @@ void FBReader::setMode(ViewMode mode) {
 }
 
 void FBReader::resetWindowCaption() {
-	setWindowCaption("FBReader - " + myViewWidget->view()->caption());
+	if (currentView() == 0) {
+		setWindowCaption("FBReader");
+	} else {
+		setWindowCaption("FBReader - " + currentView()->caption());
+	}
 }
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {
