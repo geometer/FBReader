@@ -103,24 +103,24 @@ protected:
 	ZLView *currentView();
 
 public:
-  void repaintView();
+	void repaintView();
 
 public:
 	virtual ~ZLApplication();
 
 	bool isActionVisible(int actionId) const;
 	bool isActionEnabled(int actionId) const;
-  void doAction(int actionId);
+	void doAction(int actionId);
 
 	void initWindow(class ZLApplicationWindow *view);
 	void refreshWindow();
 
-  virtual void setWindowCaption(const std::string &caption) = 0;
+	virtual void setWindowCaption(const std::string &caption) = 0;
 
 	Toolbar &toolbar();
 
 protected:
-  ZLViewWidget *myViewWidget;
+	ZLViewWidget *myViewWidget;
 
 private:
 	std::map<int,shared_ptr<Action> > myActionMap;
@@ -135,7 +135,7 @@ protected:
 
 	const ZLApplication &application() const;
 
-  void init();
+	void init();
 	virtual void refresh() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
 
@@ -186,3 +186,5 @@ inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const {
 inline bool ZLApplication::Toolbar::SeparatorItem::isButton() const { return false; }
 
 #endif /* __ZLAPPLICATION_H__ */
+
+// vim:noet:ts=2:sw=2
