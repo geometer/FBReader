@@ -232,7 +232,7 @@ void GtkFBReader::searchSlot() {
 
 	GtkWidget *ignoreCase, *wholeText, *backward, *thisSectionOnly = 0;
 
-	bool showThisSectionOnlyOption = ((TextView*)myViewWidget->view())->hasMultiSectionModel();
+	bool showThisSectionOnlyOption = ((TextView*)currentView())->hasMultiSectionModel();
 
 	if (ZLDeviceInfo::isKeyboardPresented()) {
 		ignoreCase = gtk_check_button_new_with_mnemonic("_Ignore case");

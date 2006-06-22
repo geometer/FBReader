@@ -277,6 +277,7 @@ private:
 
 	public:
 		SearchAction(FBReader &fbreader);
+		bool isVisible();
 		void run();
 	};
 	friend class SearchAction;

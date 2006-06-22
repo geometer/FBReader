@@ -168,6 +168,10 @@ void FBReader::ShowOptionsDialogAction::run() {
 FBReader::SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
+bool FBReader::SearchAction::isVisible() {
+	return myFBReader.currentView() != 0;
+}
+
 void FBReader::SearchAction::run() {
 	myFBReader.searchSlot();
 }
@@ -238,15 +242,13 @@ FBReader::RotationAction::RotationAction(FBReader &fbreader) : FBAction(fbreader
 }
 
 bool FBReader::RotationAction::isVisible() {
-	return myFBReader.isRotationSupported() &&
+	return (myFBReader.myViewWidget != 0) &&
+				 myFBReader.isRotationSupported() &&
 				 ((myFBReader.RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
 					(myFBReader.myViewWidget->rotation() != ZLViewWidget::DEGREES0));
 }
 
 void FBReader::RotationAction::run() {
-	if (myFBReader.myViewWidget == 0) {
-		return;
-	}
 	int optionValue = myFBReader.RotationAngleOption.value();
 	ZLViewWidget::Angle oldAngle = myFBReader.myViewWidget->rotation();
 	ZLViewWidget::Angle newAngle = ZLViewWidget::DEGREES0;
