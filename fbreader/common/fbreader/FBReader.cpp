@@ -21,7 +21,9 @@
 
 #include <abstract/ZLFSManager.h>
 #include <abstract/ZLDialogManager.h>
+#include <abstract/ZLDialog.h>
 #include <abstract/ZLOptionsDialog.h>
+#include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLDir.h>
 #include <abstract/ZLDeviceInfo.h>
 
@@ -46,7 +48,6 @@ static const std::string OPTIONS = "Options";
 static const std::string SEARCH = "Search";
 static const std::string STATE = "State";
 static const std::string BOOK = "Book";
-static const std::string ANGLE = "Angle";
 
 const std::string LARGE_SCROLLING = "LargeScrolling";
 const std::string SMALL_SCROLLING = "SmallScrolling";
@@ -71,6 +72,7 @@ FBReader::ScrollingOptions::ScrollingOptions(
 		PercentToScrollOption(ZLOption::CONFIG_CATEGORY, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
 
 FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool supportRotation) :
+	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
 	StoreContentsPositionOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "StoreContentsPosition", false),
 	KeyDelayOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "KeyDelay", 0, 5000, 750),
@@ -101,8 +103,6 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
 	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
 	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, "Keyboard", "FullControl", false),
-	RotationAngleOption(ZLOption::CONFIG_CATEGORY, "Rotation", ANGLE, ZLViewWidget::DEGREES90),
-	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
 	myIsRotationSupported(supportRotation) {
 
 	myModel = 0;
@@ -314,7 +314,7 @@ void FBReader::optionsSlot() {
 
 void FBReader::addBookSlot() {
 	FBFileHandler handler;
-	ZLDialogManager::instance().openFileDialog("FBReader -- Add File To Library", handler);
+	ZLDialogManager::instance().openFileDialog("FBReader - Add File To Library", handler);
 	BookDescriptionPtr description = handler.description();
 	if (!description.isNull() && runBookInfoDialog(description->fileName())) {
 		BookList().addFileName(description->fileName());
@@ -390,14 +390,6 @@ void FBReader::setMode(ViewMode mode) {
 	resetWindowCaption();
 }
 
-void FBReader::resetWindowCaption() {
-	if (currentView() == 0) {
-		setWindowCaption("FBReader");
-	} else {
-		setWindowCaption("FBReader - " + currentView()->caption());
-	}
-}
-
 bool FBReader::runBookInfoDialog(const std::string &fileName) {
 	if (InfoDialog(fileName).dialog().run("")) {
 		BookDescriptionPtr newDescription = BookDescription::create(fileName);
@@ -451,4 +443,36 @@ bool FBReader::isFullKeyboardControlSupported() const {
 void FBReader::grabAllKeys(bool) {
 }
 
-// vim:ts=2:sw=2:noet
+void FBReader::searchSlot() {
+	ZLDialog *searchDialog = ZLDialogManager::instance().createDialog("Text search");
+
+	searchDialog->addOption(new ZLSimpleStringOptionEntry("", SearchPatternOption));
+	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Ignore case", SearchIgnoreCaseOption));
+	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("In w&hole text", SearchInWholeTextOption));
+	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Backward", SearchBackwardOption));
+	if (((TextView*)currentView())->hasMultiSectionModel()) {
+		searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&This section only", SearchThisSectionOnlyOption));
+	}
+	searchDialog->addButton("&Go!");
+
+	if (searchDialog->run()) {
+		searchDialog->acceptValues();
+		std::string pattern = SearchPatternOption.value();
+		while (!pattern.empty() && isspace(pattern[0])) {
+			pattern.erase(0, 1);
+		}
+		while (!pattern.empty() && isspace(pattern[pattern.length() - 1])) {
+			pattern.erase(pattern.length() - 1, 1);
+		}
+		SearchPatternOption.setValue(pattern);
+		((TextView*)currentView())->search(
+			SearchPatternOption.value(),
+			SearchIgnoreCaseOption.value(),
+			SearchInWholeTextOption.value(),
+			SearchBackwardOption.value(),
+			SearchThisSectionOnlyOption.value()
+		);
+	}
+
+	delete searchDialog;
+}

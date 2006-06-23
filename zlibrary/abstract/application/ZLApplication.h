@@ -24,7 +24,9 @@
 #include <string>
 #include <vector>
 #include <map>
+
 #include <abstract/shared_ptr.h>
+#include <abstract/ZLOptions.h>
 
 class ZLView;
 class ZLViewWidget;
@@ -32,6 +34,10 @@ class ZLViewWidget;
 class ZLApplication {
 
 public:
+	ZLIntegerOption RotationAngleOption;
+	ZLIntegerOption AngleStateOption;
+
+protected:
 
 	class Action {
 
@@ -41,6 +47,20 @@ public:
 		virtual bool isEnabled();
 		virtual void run() = 0;
 	};
+
+	class RotationAction : public Action {
+
+	public:
+		RotationAction(ZLApplication &application);
+		bool isVisible();
+		void run();
+
+	private:
+		ZLApplication &myApplication;
+	};
+	friend class RotationAction;
+	
+public:
 
 	class Toolbar {
 
@@ -96,14 +116,21 @@ public:
 	};
 
 protected:
-	ZLApplication();
+	ZLApplication(const std::string &name);
 
 	void addAction(int actionId, shared_ptr<Action> action);
 	void setView(ZLView *view);
 	ZLView *currentView();
 
+	void initWindow(class ZLApplicationWindow *view);
+
+	void resetWindowCaption();
+
 public:
+	// TODO: remove
 	void repaintView();
+	// TODO: remove
+	virtual bool isRotationSupported() const = 0;
 
 public:
 	virtual ~ZLApplication();
@@ -112,12 +139,12 @@ public:
 	bool isActionEnabled(int actionId) const;
 	void doAction(int actionId);
 
-	void initWindow(class ZLApplicationWindow *view);
+	Toolbar &toolbar();
+
 	void refreshWindow();
 
-	virtual void setWindowCaption(const std::string &caption) = 0;
-
-	Toolbar &toolbar();
+private:
+	std::string myName;
 
 protected:
 	ZLViewWidget *myViewWidget;
@@ -138,6 +165,7 @@ protected:
 	void init();
 	virtual void refresh() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
+	virtual void setCaption(const std::string &caption) = 0;
 
 public:
 	virtual ~ZLApplicationWindow();
@@ -145,23 +173,16 @@ public:
 private:
 	ZLApplication *myApplication;
 
-friend void ZLApplication::initWindow(ZLApplicationWindow *view);
-friend void ZLApplication::refreshWindow();
+friend class ZLApplication;
 };
 
-inline ZLApplication::ZLApplication() : myViewWidget(0), myWindow(0) {}
 inline ZLApplication::~ZLApplication() {
 	if (myWindow != 0) {
 		//delete myWindow;
 	}
 }
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
-inline void ZLApplication::initWindow(ZLApplicationWindow *view) {
-	myWindow = view;
-	myWindow->myApplication = this;
-	myWindow->init();
-	myWindow->refresh();
-}
+
 inline void ZLApplication::refreshWindow() {
 	if (myWindow != 0) {
 		myWindow->refresh();

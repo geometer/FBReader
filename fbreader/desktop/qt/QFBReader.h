@@ -44,10 +44,9 @@ private:
   void wheelEvent(QWheelEvent *event);
 
 protected:
-  void setWindowCaption(const std::string &caption) { setCaption(QString::fromUtf8(caption.c_str())); }
+  void setCaption(const std::string &caption) { QMainWindow::setCaption(QString::fromUtf8(caption.c_str())); }
 	void addToolbarItem(Toolbar::ItemPtr item);
 	void refresh();
-  void searchSlot();
   void toggleFullscreenSlot();
   bool isFullscreen() const;
   void quitSlot();

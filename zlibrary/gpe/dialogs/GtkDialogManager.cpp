@@ -20,21 +20,25 @@
 
 #include <gtk/gtk.h>
 
-#include <gdk/gdkkeysyms.h>
-
 #include <abstract/ZLOpenFileDialog.h>
 
 #include "GtkDialogManager.h"
+#include "GtkCommonDialog.h"
 #include "GtkOptionsDialog.h"
 #include "GtkOpenFileDialog.h"
 #include "GtkWaitMessage.h"
+#include "GtkUtil.h"
+
+ZLDialog *GtkDialogManager::createDialog(const std::string &title) const {
+	return new GtkCommonDialog(title);
+}
 
 ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new GtkOptionsDialog(id, title);
 }
 
 int GtkDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	GtkDialog *dialog = createDialog(title.c_str());
+	GtkDialog *dialog = createGtkDialog(title.c_str());
 
 	if (!button0.empty()) {
 		gtk_dialog_add_button(dialog, button0.c_str(), 0);
@@ -70,36 +74,4 @@ void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHand
 void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
 	GtkWaitMessage waitMessage(myWindow, message);
 	runnable.run();
-}
-
-static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (!((GtkDialogManager&)GtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
-		if (key->keyval == GDK_Return) {
-			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-			return true;
-		}
-
-		if (key->keyval == GDK_Escape) {
-			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-GtkDialog *GtkDialogManager::createDialog(const std::string& title) const {
-	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
-
-	gtk_window_set_title(dialog, title.c_str());
-
-	if (myWindow != 0) {
-		gtk_window_set_transient_for(dialog, myWindow);
-	}
-
-	gtk_window_set_modal(dialog, TRUE);
-
-	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), NULL);
-
-	return GTK_DIALOG(dialog);
 }

@@ -33,11 +33,11 @@ class QTabWidget;
 class QOptionView;
 class QGridLayout;
 
-class QOptionsDialogTab : public QWidget, public ZLOptionsDialogTab {
+class QOptionsDialogTab : public QWidget, public ZLDialogContent {
 	Q_OBJECT
 
 public:
-	QOptionsDialogTab(QTabWidget *parent);
+	QOptionsDialogTab(QWidget *parent);
 	~QOptionsDialogTab();
 
 	void addOption(ZLOptionEntry *option);
@@ -64,7 +64,7 @@ class QOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 public:
 	QOptionsDialog(const std::string &id, const std::string &caption);
 	~QOptionsDialog() {}
-	ZLOptionsDialogTab *createTab(const std::string &name);
+	ZLDialogContent &createTab(const std::string &name);
 
 protected:
 	const std::string &selectedTabName() const;

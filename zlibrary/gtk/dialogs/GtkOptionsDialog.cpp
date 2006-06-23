@@ -28,22 +28,19 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "../../abstract/dialogs/ZLOptionEntry.h"
-#include "../../abstract/deviceInfo/ZLDeviceInfo.h"
 
 #include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"
 #include "GtkOptionView.h"
+#include "GtkUtil.h"
 
 GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id) {
-	myDialog = ((GtkDialogManager&)GtkDialogManager::instance()).createDialog(caption);
+	myDialog = createGtkDialog(caption);
 
-	if (ZLDeviceInfo::isKeyboardPresented()) {
-		gtk_dialog_add_button(myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button(myDialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
-	} else {
-		gtk_dialog_add_button(myDialog, "Ok", GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button(myDialog, "Cancel", GTK_RESPONSE_REJECT);
-	}
+	std::string okString = gtkString("&Ok");
+	std::string cancelString = gtkString("&Cancel");
+	gtk_dialog_add_button (myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_add_button (myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
 
@@ -61,7 +58,7 @@ GtkOptionsDialog::~GtkOptionsDialog() {
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
 }
 
-ZLOptionsDialogTab *GtkOptionsDialog::createTab(const std::string &name) {
+ZLDialogContent &GtkOptionsDialog::createTab(const std::string &name) {
 	GtkOptionsDialogTab *tab = new GtkOptionsDialogTab();
 	GtkWidget *label = gtk_label_new(name.c_str());
 
@@ -70,7 +67,7 @@ ZLOptionsDialogTab *GtkOptionsDialog::createTab(const std::string &name) {
 	myTabs.push_back(tab);
 	myTabNames.push_back(name);
 
-	return tab;
+	return *tab;
 }
 
 const std::string &GtkOptionsDialog::selectedTabName() const {

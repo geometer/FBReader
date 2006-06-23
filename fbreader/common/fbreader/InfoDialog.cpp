@@ -158,13 +158,13 @@ void LanguageEntry::onAccept(const std::string &value) {
 
 InfoDialog::InfoDialog(const std::string &fileName) : myBookInfo(fileName) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
-	ZLOptionsDialogTab *infoTab = myDialog->createTab("Info");
-	infoTab->addOption(new StringInfoEntry("File", fileName));
-	infoTab->addOption(new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption));
-	infoTab->addOption(new ZLSimpleStringOptionEntry("Author (display name)", myBookInfo.AuthorDisplayNameOption));
-	infoTab->addOption(new ZLSimpleStringOptionEntry("Author (sort name)", myBookInfo.AuthorSortKeyOption));
-	infoTab->addOption(new EncodingEntry("Encoding", myBookInfo.EncodingOption));
-	infoTab->addOption(new LanguageEntry("Language", myBookInfo.LanguageOption));
+	ZLDialogContent &infoTab = myDialog->createTab("Info");
+	infoTab.addOption(new StringInfoEntry("File", fileName));
+	infoTab.addOption(new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption));
+	infoTab.addOption(new ZLSimpleStringOptionEntry("Author (display name)", myBookInfo.AuthorDisplayNameOption));
+	infoTab.addOption(new ZLSimpleStringOptionEntry("Author (sort name)", myBookInfo.AuthorSortKeyOption));
+	infoTab.addOption(new EncodingEntry("Encoding", myBookInfo.EncodingOption));
+	infoTab.addOption(new LanguageEntry("Language", myBookInfo.LanguageOption));
 
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
 	if (plugin != 0) {

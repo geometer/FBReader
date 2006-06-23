@@ -138,60 +138,6 @@ void QFBReader::refresh() {
 	}
 }
 
-void QFBReader::searchSlot() {
-	QDialog findDialog(this, 0, true);
-	findDialog.setCaption("Text search");
-	findDialog.setSizeGripEnabled(true);
-
-	QGridLayout *layout = new QGridLayout(&findDialog, -1, 3, 5, 5);
-
-	QLineEdit *wordToSearch = new QLineEdit(&findDialog);
-	wordToSearch->setMinimumWidth(width() / 3);
-	wordToSearch->setText(QString::fromUtf8(SearchPatternOption.value().c_str()));
-	layout->addMultiCellWidget(wordToSearch, 0, 0, 0, 2);
-
-	QCheckBox *ignoreCase = new QCheckBox("&Ignore case", &findDialog, 0);
-	ignoreCase->setChecked(SearchIgnoreCaseOption.value());
-	layout->addMultiCellWidget(ignoreCase, 1, 1, 0, 2);
-
-	QCheckBox *wholeText = new QCheckBox("In w&hole text", &findDialog, 0);
-	wholeText->setChecked(SearchInWholeTextOption.value());
-	layout->addMultiCellWidget(wholeText, 2, 2, 0, 2);
-
-	QCheckBox *backward = new QCheckBox("&Backward", &findDialog, 0);
-	backward->setChecked(SearchBackwardOption.value());
-	layout->addMultiCellWidget(backward, 3, 3, 0, 2);
-
-	QCheckBox *thisSectionOnly = ((TextView*)myViewWidget->view())->hasMultiSectionModel() ?
-		new QCheckBox("&This section only", &findDialog, 0) : 0;
-	if (thisSectionOnly != 0) {
-		thisSectionOnly->setChecked(SearchThisSectionOnlyOption.value());
-		layout->addMultiCellWidget(thisSectionOnly, 4, 4, 0, 2);
-	}
-
-	QPushButton *b = new QPushButton("&Go!", &findDialog);
-	layout->addWidget(b, 5, 1);
-	b->setDefault(true);
-	connect(b, SIGNAL(clicked()), &findDialog, SLOT(accept()));
-
-	if (findDialog.exec()) {
-		QString qPattern = wordToSearch->text().stripWhiteSpace();
-		std::string pattern = (const char*)qPattern.utf8();
-		SearchPatternOption.setValue(pattern);
-		SearchIgnoreCaseOption.setValue(ignoreCase->isChecked());
-		SearchInWholeTextOption.setValue(wholeText->isChecked());
-		SearchBackwardOption.setValue(backward->isChecked());
-		if (thisSectionOnly != 0) {
-			SearchThisSectionOnlyOption.setValue(thisSectionOnly->isChecked());
-		}
-		((TextView*)myViewWidget->view())->search(
-			pattern, ignoreCase->isChecked(), wholeText->isChecked(), backward->isChecked(), SearchThisSectionOnlyOption.value()
-		);
-	}
-}
-
 void QFBReader::doActionSlot(int buttonNumber) {
 	doAction(buttonNumber);
 }
-
-// vim:ts=2:sw=2:noet

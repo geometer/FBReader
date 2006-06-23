@@ -43,10 +43,9 @@ public:
 	~GtkFBReader();
 
 protected:
-	void setWindowCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
+	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
 	void addToolbarItem(Toolbar::ItemPtr item);
 	void refresh();
-	void searchSlot();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 

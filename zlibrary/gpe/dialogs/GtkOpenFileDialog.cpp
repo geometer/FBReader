@@ -21,18 +21,17 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "../../abstract/deviceInfo/ZLDeviceInfo.h"
-
 #include "GtkOpenFileDialog.h"
 #include "GtkDialogManager.h"
+#include "GtkUtil.h"
 
-static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn *) {
-	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
+static void activatedHandler(GtkTreeView *view, GtkTreePath*, GtkTreeViewColumn*) {
+	((GtkOpenFileDialog*)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
-static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer self) {
+static gboolean clickHandler(GtkWidget*, GdkEventButton *event, gpointer self) {
 	if (event->button == 1) {
-		((GtkOpenFileDialog *)self)->activatedSlot();
+		((GtkOpenFileDialog*)self)->activatedSlot();
 	}
 
 	return FALSE;
@@ -41,15 +40,12 @@ static gboolean clickHandler(GtkWidget *tree, GdkEventButton *event, gpointer se
 GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLOpenFileDialog(handler) {
 	myExitFlag = false;
 
-	myDialog = ((GtkDialogManager&)GtkDialogManager::instance()).createDialog(caption);
+	myDialog = createGtkDialog(caption);
 
-	if (ZLDeviceInfo::isKeyboardPresented()) {
-		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button (myDialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
-	} else {
-		gtk_dialog_add_button (myDialog, "Ok", GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button (myDialog, "Cancel", GTK_RESPONSE_REJECT);
-	}
+	std::string okString = gtkString("&Ok");
+	std::string cancelString = gtkString("&Cancel");
+	gtk_dialog_add_button (myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_add_button (myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 
 	myStateLine = GTK_ENTRY(gtk_entry_new());
 

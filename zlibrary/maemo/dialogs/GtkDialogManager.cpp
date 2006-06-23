@@ -25,8 +25,13 @@
 #include <abstract/ZLOpenFileDialog.h>
 
 #include "GtkDialogManager.h"
+#include "GtkCommonDialog.h"
 #include "GtkOptionsDialog.h"
 #include "GtkOpenFileDialog.h"
+
+ZLDialog *GtkDialogManager::createDialog(const std::string &title) const {
+	return new GtkCommonDialog(title);
+}
 
 ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new GtkOptionsDialog(id, title, myWindow);
@@ -55,7 +60,7 @@ int GtkDialogManager::questionBox(const std::string &title, const std::string &m
 }
 
 void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
-	GtkOpenFileDialog(title.c_str(), handler, myWindow).runWithSize();
+	GtkOpenFileDialog(title.c_str(), handler).runWithSize();
 }
 
 struct RunnableWithFlag {

@@ -202,23 +202,23 @@ void DefaultLanguageEntry::onAccept(const std::string &value) {
 OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
   myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
-  ZLOptionsDialogTab *generalTab = myDialog->createTab("General");
-  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
-  generalTab->addOption(new ZLSimpleStringOptionEntry("Book Path", fbreader.myCollectionView->collection().PathOption));
-  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", fbreader.myCollectionView->collection().ScanSubdirsOption));
-  generalTab->addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", fbreader.myRecentBooksView->lastBooks().MaxListSizeOption, 1));
-  generalTab->addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", fbreader.StoreContentsPositionOption));
-  generalTab->addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
-  generalTab->addOption(new DefaultLanguageEntry());
+  ZLDialogContent &generalTab = myDialog->createTab("General");
+  generalTab.addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
+  generalTab.addOption(new ZLSimpleStringOptionEntry("Book Path", fbreader.myCollectionView->collection().PathOption));
+  generalTab.addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", fbreader.myCollectionView->collection().ScanSubdirsOption));
+  generalTab.addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", fbreader.myRecentBooksView->lastBooks().MaxListSizeOption, 1));
+  generalTab.addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", fbreader.StoreContentsPositionOption));
+  generalTab.addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
+  generalTab.addOption(new DefaultLanguageEntry());
 
   myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"), fbreader);
 
-  ZLOptionsDialogTab *marginTab = myDialog->createTab("Margins");
-  marginTab->addOptions(
+  ZLDialogContent &marginTab = myDialog->createTab("Margins");
+  marginTab.addOptions(
     new ZLSimpleSpinOptionEntry("Left Margin", TextStyleCollection::instance().baseStyle().LeftMarginOption, 1),
     new ZLSimpleSpinOptionEntry("Right Margin", TextStyleCollection::instance().baseStyle().RightMarginOption, 1)
   );
-  marginTab->addOptions(
+  marginTab.addOptions(
     new ZLSimpleSpinOptionEntry("Top Margin", TextStyleCollection::instance().baseStyle().TopMarginOption, 1),
     new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyleCollection::instance().baseStyle().BottomMarginOption, 1)
   );
@@ -226,21 +226,21 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
   myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));
   myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), context);
 
-  ZLOptionsDialogTab *indicatorTab = myDialog->createTab("Indicator");
+  ZLDialogContent &indicatorTab = myDialog->createTab("Indicator");
   PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
   myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", indicatorStyle.ShowOption);
   myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
   myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
   myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
-  indicatorTab->addOption(myIndicatorPage.ShowIndicatorEntry);
-  indicatorTab->addOption(myIndicatorPage.HeightEntry);
-  indicatorTab->addOption(myIndicatorPage.OffsetEntry);
-  indicatorTab->addOption(myIndicatorPage.EnableNavigationEntry);
+  indicatorTab.addOption(myIndicatorPage.ShowIndicatorEntry);
+  indicatorTab.addOption(myIndicatorPage.HeightEntry);
+  indicatorTab.addOption(myIndicatorPage.OffsetEntry);
+  indicatorTab.addOption(myIndicatorPage.EnableNavigationEntry);
   myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
 
   if (fbreader.isRotationSupported()) {
-    ZLOptionsDialogTab *rotationTab = myDialog->createTab("Rotation");
-    rotationTab->addOption(new RotationTypeEntry(fbreader.RotationAngleOption));
+    ZLDialogContent &rotationTab = myDialog->createTab("Rotation");
+    rotationTab.addOption(new RotationTypeEntry(fbreader.RotationAngleOption));
   }
 
   myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));

@@ -77,6 +77,7 @@ private:
 	std::vector<std::pair<TextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;
 	unsigned short myCompressionVersion;
+	unsigned char myBytesToSkip;
 
 	std::set<std::pair<int, int> > myReferencedParagraphs;
 	std::map<int, std::vector<int> > myParagraphMap;

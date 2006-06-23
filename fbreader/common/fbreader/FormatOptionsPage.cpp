@@ -27,7 +27,7 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
-FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
+FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
   myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
   myComboEntry->addValue(myComboEntry->initialValue());
 
@@ -40,7 +40,7 @@ FormatOptionsPage::FormatOptionsPage(ZLOptionsDialogTab *dialogTab) {
       myComboEntry->addValue(decoration->name());
     }
   }
-  dialogTab->addOption(myComboEntry);
+  dialogTab.addOption(myComboEntry);
 
   {
     const std::string &name = myComboEntry->initialValue();

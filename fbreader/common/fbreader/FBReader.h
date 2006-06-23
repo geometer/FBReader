@@ -160,9 +160,6 @@ public:
 
   ZLBooleanOption KeyboardControlOption;
 
-  ZLIntegerOption RotationAngleOption;
-  ZLIntegerOption AngleStateOption;
-
 private:
 	class FBAction : public Action {
 
@@ -312,15 +309,6 @@ private:
 	};
 	friend class ScrollingAction;
 	
-	class RotationAction : public FBAction {
-
-	public:
-		RotationAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class RotationAction;
-	
 	class FullscreenAction : public FBAction {
 
 	public:
@@ -383,7 +371,7 @@ protected:
 
   virtual void setMode(ViewMode mode);
 
-  virtual void searchSlot() = 0;
+  void searchSlot();
   void cancelSlot();
   void fullscreenOnSlot();
   virtual void toggleFullscreenSlot() = 0;
@@ -398,7 +386,6 @@ protected:
 
 protected:
   BookDescriptionPtr createDescription(const std::string& fileName) const;
-  void resetWindowCaption();
 
 private:
   bool runBookInfoDialog(const std::string &fileName);
@@ -407,6 +394,7 @@ private:
   bool isScrollingAction(ActionCode code);
 
 public:
+	// TODO: remove
   bool isRotationSupported() const;
   virtual bool isFullKeyboardControlSupported() const;
   virtual void grabAllKeys(bool grab);

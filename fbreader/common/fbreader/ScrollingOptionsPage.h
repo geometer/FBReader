@@ -24,14 +24,14 @@
 
 #include "FBReader.h"
 
-class ZLOptionsDialogTab;
+class ZLDialogContent;
 class ZLSpinOptionEntry;
 class ZLComboOptionEntry;
 
 class ScrollingOptionsPage {
 
 public:
-  ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab, FBReader &fbreader);
+  ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader);
   ~ScrollingOptionsPage();
 
 private:
@@ -44,7 +44,7 @@ private:
     ZLSpinOptionEntry *myPercentToScrollEntry;
 
     void init(FBReader::ScrollingOptions &options);
-    void connect(ZLOptionsDialogTab *dialogTab);
+    void connect(ZLDialogContent &dialogTab);
     void show(bool visible);
   };
 

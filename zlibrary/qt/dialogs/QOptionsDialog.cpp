@@ -58,12 +58,12 @@ QOptionsDialog::QOptionsDialog(const std::string &id, const std::string &caption
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
-ZLOptionsDialogTab *QOptionsDialog::createTab(const std::string &name) {
+ZLDialogContent &QOptionsDialog::createTab(const std::string &name) {
 	QOptionsDialogTab *tab = new QOptionsDialogTab(myTabWidget);
 	myTabWidget->insertTab(tab, name.c_str());
 	myTabs.append(tab);
 	myTabNames.push_back(name);
-	return tab;
+	return *tab;
 }
 
 const std::string &QOptionsDialog::selectedTabName() const {
@@ -105,7 +105,7 @@ void QOptionsDialogTab::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
 }
 
-QOptionsDialogTab::QOptionsDialogTab(QTabWidget *parent) : QWidget(parent) {
+QOptionsDialogTab::QOptionsDialogTab(QWidget *parent) : QWidget(parent) {
 	int space = 10;
 	switch (ZLDeviceInfo::screenSize()) {
 		case ZLDeviceInfo::SIZE_DESKTOP:

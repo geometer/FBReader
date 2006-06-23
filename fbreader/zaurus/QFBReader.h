@@ -46,11 +46,10 @@ private:
 	void keyPressEvent(QKeyEvent *event);
 
 protected:
-	void setWindowCaption(const std::string &caption);
+	void setCaption(const std::string &caption);
 	void setMode(ViewMode mode);
 	void addToolbarItem(Toolbar::ItemPtr item);
 	void refresh();
-	void searchSlot();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 	void quitSlot();

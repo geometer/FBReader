@@ -33,43 +33,16 @@
 #include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"
 #include "GtkOptionView.h"
-
-static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (!((GtkDialogManager&)GtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
-		if (key->keyval == GDK_Return) {
-			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-
-			return true;
-		} else if (key->keyval == GDK_Escape) {
-			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-
-			return true;
-		}
-	}
-
-	return false;
-}
+#include "GtkUtil.h"
 
 GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLDesktopOptionsDialog(id) {
-	myDialog = GTK_DIALOG(gtk_dialog_new());
-
-	gtk_window_set_title(GTK_WINDOW(myDialog), caption.c_str());
-
-	if (parent != 0)
-		gtk_window_set_transient_for(GTK_WINDOW(myDialog), parent);
-
-	gtk_window_set_modal(GTK_WINDOW(myDialog), TRUE);
+	myDialog = createGtkDialog(caption);
 	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
 
-	if (ZLDeviceInfo::isKeyboardPresented()) {
-		gtk_dialog_add_button (myDialog, GTK_STOCK_OK, GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button (myDialog, GTK_STOCK_CANCEL, GTK_RESPONSE_REJECT);
-	} else {
-		gtk_dialog_add_button (myDialog, "Ok", GTK_RESPONSE_ACCEPT);
-		gtk_dialog_add_button (myDialog, "Cancel", GTK_RESPONSE_REJECT);
-	}
-
-	gtk_signal_connect(GTK_OBJECT(myDialog), "key_press_event", G_CALLBACK(dialogDefaultKeys), 0);
+	std::string okString = gtkString("&Ok");
+	std::string cancelString = gtkString("&Cancel");
+	gtk_dialog_add_button (myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_add_button (myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
 
@@ -81,22 +54,27 @@ GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &cap
 
 GtkOptionsDialog::~GtkOptionsDialog() {
 	// I do not have to destroy myNotebook as it's a myDialog child
-	for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
+	for (std::vector<GtkOptionsDialogTab*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
 		delete *tab;
+	}
 
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
 }
 
-ZLOptionsDialogTab *GtkOptionsDialog::createTab(const std::string &name) {
+ZLDialogContent &GtkOptionsDialog::createTab(const std::string &name) {
 	GtkOptionsDialogTab *tab = new GtkOptionsDialogTab();
 	GtkWidget *label = gtk_label_new(name.c_str());
 
-	gtk_notebook_append_page(myNotebook, tab->widget(), label);
+	GtkScrolledWindow *scrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
+	gtk_scrolled_window_set_policy(scrolledWindow, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_add_with_viewport(scrolledWindow, tab->widget());
+	gtk_widget_show(GTK_WIDGET(scrolledWindow));
+	gtk_notebook_append_page(myNotebook, GTK_WIDGET(scrolledWindow), label);
 
 	myTabs.push_back(tab);
 	myTabNames.push_back(name);
 
-	return tab;
+	return *tab;
 }
 
 const std::string &GtkOptionsDialog::selectedTabName() const {
@@ -115,7 +93,7 @@ bool GtkOptionsDialog::run() {
 
 	switch (response) {
 		case GTK_RESPONSE_ACCEPT:
-			for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
+			for (std::vector<GtkOptionsDialogTab*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
 				(*tab)->accept();
 			break;
 		case GTK_RESPONSE_REJECT:
@@ -155,14 +133,9 @@ void GtkOptionsDialogTab::accept() {
 }
 
 GtkOptionsDialogTab::GtkOptionsDialogTab() {
-	myScrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
-	gtk_scrolled_window_set_policy(myScrolledWindow, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	myTable = GTK_TABLE(gtk_table_new(0, 12, false));
-	gtk_scrolled_window_add_with_viewport(myScrolledWindow, GTK_WIDGET(myTable));
-
 	myRowCounter = 0;
-
-	gtk_widget_show_all(GTK_WIDGET(myScrolledWindow));
+	myTable = GTK_TABLE(gtk_table_new(0, 12, false));
+	gtk_widget_show_all(GTK_WIDGET(myTable));
 }
 
 GtkOptionsDialogTab::~GtkOptionsDialogTab() {

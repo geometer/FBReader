@@ -39,10 +39,9 @@ public:
 	~GtkFBReader();
 
 protected:
-	void setWindowCaption(const std::string &caption);
+	void setCaption(const std::string &caption);
 	void addToolbarItem(Toolbar::ItemPtr item);
 	void refresh();
-	void searchSlot();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 	void quitSlot();
@@ -53,8 +52,8 @@ public:
 	GtkWindow *getMainWindow() { return myMainWindow; }
 
 private:
-  ZLIntegerRangeOption myWidthOption;
-  ZLIntegerRangeOption myHeightOption;
+	ZLIntegerRangeOption myWidthOption;
+	ZLIntegerRangeOption myHeightOption;
 
 	GtkWindow *myMainWindow;
 	GtkWidget *myToolbar;

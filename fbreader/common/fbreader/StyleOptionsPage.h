@@ -24,13 +24,13 @@
 
 #include "OptionsPage.h"
 
-class ZLOptionsDialogTab;
+class ZLDialogContent;
 class ZLPaintContext;
 
 class StyleOptionsPage : public OptionsPage {
 
 public:
-	StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext &context);
+	StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &context);
 	~StyleOptionsPage();
 };
 

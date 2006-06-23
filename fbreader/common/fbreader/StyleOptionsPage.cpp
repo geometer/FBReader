@@ -31,7 +31,7 @@
 static const std::string BOLD_STRING = "Bold";
 static const std::string ITALIC_STRING = "Italic";
 
-StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext &context) {
+StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &context) {
   myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
   myComboEntry->addValue(myComboEntry->initialValue());
 
@@ -44,7 +44,7 @@ StyleOptionsPage::StyleOptionsPage(ZLOptionsDialogTab *dialogTab, ZLPaintContext
       myComboEntry->addValue(decoration->name());
     }
   }
-  dialogTab->addOption(myComboEntry);
+  dialogTab.addOption(myComboEntry);
 
   {
     const std::string &name = myComboEntry->initialValue();

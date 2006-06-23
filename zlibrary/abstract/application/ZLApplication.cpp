@@ -21,6 +21,25 @@
 #include "ZLApplication.h"
 #include "../view/ZLView.h"
 
+static const std::string ANGLE = "Angle";
+static const std::string STATE = "State";
+
+ZLApplication::ZLApplication(const std::string &name) :
+	RotationAngleOption(ZLOption::CONFIG_CATEGORY, "Rotation", ANGLE, ZLViewWidget::DEGREES90),
+	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
+	myName(name),
+	myViewWidget(0),
+	myWindow(0) {
+}
+
+void ZLApplication::initWindow(ZLApplicationWindow *view) {
+	myWindow = view;
+	myWindow->myApplication = this;
+	myWindow->init();
+	myWindow->refresh();
+	resetWindowCaption();
+}
+
 void ZLApplicationWindow::init() {
 	const ZLApplication::Toolbar::ItemVector &items = myApplication->toolbar().items();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
@@ -62,6 +81,16 @@ void ZLApplication::doAction(int actionId) {
 	std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
 	if (it != myActionMap.end() && it->second->isEnabled()) {
 		it->second->run();
+	}
+}
+
+void ZLApplication::resetWindowCaption() {
+	if (myWindow != 0) {
+		if ((currentView() == 0) || (currentView()->caption().empty())) {
+			myWindow->setCaption(myName);
+		} else {
+			myWindow->setCaption(myName + " - " + currentView()->caption());
+		}
 	}
 }
 

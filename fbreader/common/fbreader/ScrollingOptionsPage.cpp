@@ -186,12 +186,12 @@ void ScrollingOptionsPage::ScrollingEntries::init(FBReader::ScrollingOptions &op
   myModeEntry->onValueChange(myModeEntry->initialValue());
 }
 
-void ScrollingOptionsPage::ScrollingEntries::connect(ZLOptionsDialogTab *dialogTab) {
-  dialogTab->addOption(myDelayEntry);
-  dialogTab->addOption(myModeEntry);
-  dialogTab->addOption(myLinesToKeepEntry);
-  dialogTab->addOption(myLinesToScrollEntry);
-  dialogTab->addOption(myPercentToScrollEntry);
+void ScrollingOptionsPage::ScrollingEntries::connect(ZLDialogContent &dialogTab) {
+  dialogTab.addOption(myDelayEntry);
+  dialogTab.addOption(myModeEntry);
+  dialogTab.addOption(myLinesToKeepEntry);
+  dialogTab.addOption(myLinesToScrollEntry);
+  dialogTab.addOption(myPercentToScrollEntry);
 }
 
 void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
@@ -208,9 +208,9 @@ void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
   }
 }
 
-ScrollingOptionsPage::ScrollingOptionsPage(ZLOptionsDialogTab *dialogTab, FBReader &fbreader) {
+ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader) {
   ZLComboOptionEntry *mainEntry = new MainEntry(*this);
-  dialogTab->addOption(mainEntry);
+  dialogTab.addOption(mainEntry);
 
   myLargeScrollingEntries.init(fbreader.LargeScrollingOptions);
   mySmallScrollingEntries.init(fbreader.SmallScrollingOptions);

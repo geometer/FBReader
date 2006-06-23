@@ -23,17 +23,10 @@
 
 #include <string>
 
+#include <abstract/ZLDialogContent.h>
 #include <abstract/ZLOptions.h>
 
 class ZLOptionEntry;
-
-class ZLOptionsDialogTab {
-
-public:
-	virtual ~ZLOptionsDialogTab();
-	virtual void addOption(ZLOptionEntry *option) = 0;
-	virtual void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) = 0;
-};
 
 class ZLOptionsDialog {
 
@@ -42,7 +35,7 @@ protected:
 	
 public:
 	virtual ~ZLOptionsDialog();
-	virtual ZLOptionsDialogTab *createTab(const std::string &name) = 0;
+	virtual ZLDialogContent &createTab(const std::string &name) = 0;
 	virtual bool run(const std::string &tabName);
 
 protected:
@@ -54,7 +47,6 @@ protected:
 	ZLStringOption TabOption;
 };
 
-inline ZLOptionsDialogTab::~ZLOptionsDialogTab() {}
 inline ZLOptionsDialog::~ZLOptionsDialog() {}
 
 #endif /* __ZLOPTIONSDIALOG_H__ */

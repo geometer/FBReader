@@ -27,12 +27,12 @@
 #include "OptionsPage.h"
 
 class FBReader;
-class ZLOptionsDialogTab;
+class ZLDialogContent;
 
 class KeyBindingsPage {
 
 public:
-	KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab);
+	KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab);
 	~KeyBindingsPage();
 };
 

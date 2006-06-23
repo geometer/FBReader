@@ -280,6 +280,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
       safeBeginParagraph();
       addData(std::string(utf8, len));
       myBufferIsEmpty = false;
+			myBytesToSkip = *(ptr + 1);
       break;
     }
     case 0x85: // TODO: process 4-byte unicode character
@@ -303,6 +304,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
   while (popKind()) {}
 
   myParagraphStarted = false;
+	myBytesToSkip = 0;
 
   char *textStart = start;
   bool functionFlag = false;
@@ -325,6 +327,10 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
         ptr = end - 1;
       }
       functionFlag = false;
+			if (myBytesToSkip > 0) {
+				ptr += myBytesToSkip;
+				myBytesToSkip = 0;
+			}
       textStart = ptr + 1;
     } else {
       if ((unsigned char)*ptr == 0xA0) {

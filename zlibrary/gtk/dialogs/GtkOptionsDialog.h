@@ -31,7 +31,7 @@
 
 class GtkOptionView;
 
-class GtkOptionsDialogTab : public ZLOptionsDialogTab {
+class GtkOptionsDialogTab : public ZLDialogContent {
 
 public:
 	GtkOptionsDialogTab();
@@ -53,7 +53,7 @@ private:
 private:
 	GtkTable *myTable;
 	gint myRowCounter;
-	std::vector<GtkOptionView *> myViews;
+	std::vector<GtkOptionView*> myViews;
 };
 
 class GtkOptionsDialog : public ZLDesktopOptionsDialog {
@@ -61,7 +61,7 @@ class GtkOptionsDialog : public ZLDesktopOptionsDialog {
 public:
 	GtkOptionsDialog(const std::string &id, const std::string &caption);
 	~GtkOptionsDialog();
-	ZLOptionsDialogTab *createTab(const std::string &name);
+	ZLDialogContent &createTab(const std::string &name);
 
 protected:
 	const std::string &selectedTabName() const;
@@ -75,7 +75,7 @@ protected:
 private:
 	GtkDialog *myDialog;
 	GtkNotebook *myNotebook;
-	std::vector<GtkOptionsDialogTab *> myTabs;
+	std::vector<GtkOptionsDialogTab*> myTabs;
 	std::vector<std::string> myTabNames;
 };
 

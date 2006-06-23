@@ -24,12 +24,12 @@
 
 #include "OptionsPage.h"
 
-class ZLOptionsDialogTab;
+class ZLDialogContent;
 
 class FormatOptionsPage : public OptionsPage {
 
 public:
-	FormatOptionsPage(ZLOptionsDialogTab *dialogTab);
+	FormatOptionsPage(ZLDialogContent &dialogTab);
 	~FormatOptionsPage();
 };
 

@@ -33,11 +33,13 @@
 
 #include <hildon-number-editor.h>
 
+#include <abstract/ZLDeviceInfo.h>
 #include <maemo/GtkKeyUtil.h>
 
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"
 #include "GtkDialogManager.h"
+#include "GtkUtil.h"
 
 // FIXME: geometer did some work on arranging the controls, mss will fix it
 // later when the functionality is really working
@@ -55,7 +57,11 @@ void GtkOptionView::_onValueChange(GtkWidget*, gpointer self) {
 }
 
 void BooleanOptionView::_createItem() {
-	myCheckBox = gtk_check_button_new_with_label(myOption->name().c_str());
+	if (ZLDeviceInfo::isKeyboardPresented()) {
+		myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name(), true).c_str());
+	} else {
+		myCheckBox = gtk_check_button_new_with_label(gtkString(myOption->name(), false).c_str());
+	}
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
 	g_signal_connect(myCheckBox, "toggled", G_CALLBACK(_onValueChange), this);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
@@ -208,22 +214,31 @@ void SpinOptionView::_onAccept() const {
 }
 
 void StringOptionView::_createItem() {
-	myLabel = labelWithMyParams(myOption->name().c_str());
 	myLineEdit = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(myLineEdit), ((ZLStringOptionEntry*)myOption)->initialValue().c_str());
 
-	int width = myToColumn - myFromColumn;
-	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4);
-	myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+	if (!myOption->name().empty()) {
+		myLabel = labelWithMyParams(myOption->name().c_str());
+		int width = myToColumn - myFromColumn;
+		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4);
+		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+	} else {
+		myLabel = 0;
+		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
+	}
 }
 
 void StringOptionView::_show() {
-	gtk_widget_show(myLabel);
+	if (myLabel != 0) {
+		gtk_widget_show(myLabel);
+	}
 	gtk_widget_show(myLineEdit);
 }
 
 void StringOptionView::_hide() {
-	gtk_widget_hide(myLabel);
+	if (myLabel != 0) {
+		gtk_widget_hide(myLabel);
+	}
 	gtk_widget_hide(myLineEdit);
 }
 

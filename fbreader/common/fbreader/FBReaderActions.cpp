@@ -238,44 +238,6 @@ void FBReader::ChangeFontSizeAction::run() {
 	myFBReader.repaintView();
 }
 
-FBReader::RotationAction::RotationAction(FBReader &fbreader) : FBAction(fbreader) {
-}
-
-bool FBReader::RotationAction::isVisible() {
-	return (myFBReader.myViewWidget != 0) &&
-				 myFBReader.isRotationSupported() &&
-				 ((myFBReader.RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
-					(myFBReader.myViewWidget->rotation() != ZLViewWidget::DEGREES0));
-}
-
-void FBReader::RotationAction::run() {
-	int optionValue = myFBReader.RotationAngleOption.value();
-	ZLViewWidget::Angle oldAngle = myFBReader.myViewWidget->rotation();
-	ZLViewWidget::Angle newAngle = ZLViewWidget::DEGREES0;
-	if (optionValue == -1) {
-		switch (oldAngle) {
-			case ZLViewWidget::DEGREES0:
-				newAngle = ZLViewWidget::DEGREES90;
-				break;
-			case ZLViewWidget::DEGREES90:
-				newAngle = ZLViewWidget::DEGREES180;
-				break;
-			case ZLViewWidget::DEGREES180:
-				newAngle = ZLViewWidget::DEGREES270;
-				break;
-			case ZLViewWidget::DEGREES270:
-				newAngle = ZLViewWidget::DEGREES0;
-				break;
-		}
-	} else {
-		newAngle = (oldAngle == ZLViewWidget::DEGREES0) ?
-			(ZLViewWidget::Angle)optionValue : ZLViewWidget::DEGREES0;
-	}
-	myFBReader.myViewWidget->rotate(newAngle);
-	myFBReader.AngleStateOption.setValue(newAngle);
-	myFBReader.repaintView();
-}
-
 FBReader::FullscreenAction::FullscreenAction(FBReader &fbreader, bool toggle) : FBAction(fbreader), myIsToggle(toggle) {
 }
 
@@ -291,8 +253,10 @@ FBReader::OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : F
 }
 
 bool FBReader::OpenPreviousBookAction::isVisible() {
-	Books books = myFBReader.myRecentBooksView->lastBooks().books();
-	return books.size() > 1;
+	if ((myFBReader.myMode != BOOK_TEXT_MODE) && (myFBReader.myMode != CONTENTS_MODE)) {
+		return false;
+	}
+	return myFBReader.myRecentBooksView->lastBooks().books().size() > 1;
 }
 
 void FBReader::OpenPreviousBookAction::run() {

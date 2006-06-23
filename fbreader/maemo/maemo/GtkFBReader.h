@@ -45,10 +45,9 @@ public:
 	~GtkFBReader();
 
 protected:
-	void setWindowCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
+	void setCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
 	void addToolbarItem(Toolbar::ItemPtr item);
 	void refresh();
-	void searchSlot();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 

@@ -246,19 +246,19 @@ void UseSeparateOptionsEntry::onValueChange(bool state) {
   myKeyEntry.reset();
 }
 
-KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLOptionsDialogTab *dialogTab) {
+KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
   if (fbreader.isFullKeyboardControlSupported()) {
-    dialogTab->addOption(new KeyboardControlEntry(fbreader));
+    dialogTab.addOption(new KeyboardControlEntry(fbreader));
   }
   FBReaderKeyOptionEntry *keyEntry = new FBReaderKeyOptionEntry(fbreader);
   ZLBooleanOptionEntry *useSeparateBindingsEntry = 0;
   if (fbreader.isRotationSupported()) {
     OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
     useSeparateBindingsEntry = new UseSeparateOptionsEntry(fbreader, *keyEntry, *orientationEntry);
-    dialogTab->addOption(useSeparateBindingsEntry);
-    dialogTab->addOption(orientationEntry);
+    dialogTab.addOption(useSeparateBindingsEntry);
+    dialogTab.addOption(orientationEntry);
   }
-  dialogTab->addOption(keyEntry);
+  dialogTab.addOption(keyEntry);
   if (useSeparateBindingsEntry != 0) {
     useSeparateBindingsEntry->onValueChange(useSeparateBindingsEntry->initialState());
   }

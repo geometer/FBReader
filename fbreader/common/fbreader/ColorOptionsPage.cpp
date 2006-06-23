@@ -26,7 +26,7 @@
 #include "../textview/TextView.h"
 #include "../textview/TextStyle.h"
 
-ColorOptionsPage::ColorOptionsPage(ZLOptionsDialogTab *dialogTab) {
+ColorOptionsPage::ColorOptionsPage(ZLDialogContent &dialogTab) {
   myComboEntry = new ComboOptionEntry(*this, "Color For", "Background");
   myComboEntry->addValue("Background");
   myComboEntry->addValue("Regular Text");
@@ -35,7 +35,7 @@ ColorOptionsPage::ColorOptionsPage(ZLOptionsDialogTab *dialogTab) {
   myComboEntry->addValue("Tree Lines");
   myComboEntry->addValue("Position Indicator");
 
-  dialogTab->addOptions(myComboEntry, 0);
+  dialogTab.addOptions(myComboEntry, 0);
 
   BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
   registerEntry(dialogTab,

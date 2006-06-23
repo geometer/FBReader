@@ -26,7 +26,7 @@
 
 #include <abstract/ZLOptionEntry.h>
 
-class ZLOptionsDialogTab;
+class ZLDialogContent;
 
 class OptionsPage {
 
@@ -55,8 +55,8 @@ public:
 	virtual ~OptionsPage();
 
 protected:
-	void registerEntry(ZLOptionsDialogTab *tab, ZLOptionEntry *entry, const std::string &name);
-	void registerEntries(ZLOptionsDialogTab *tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name);
+	void registerEntry(ZLDialogContent &tab, ZLOptionEntry *entry, const std::string &name);
+	void registerEntries(ZLDialogContent &tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name);
 	
 protected:
 	ComboOptionEntry *myComboEntry;

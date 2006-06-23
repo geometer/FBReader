@@ -26,7 +26,7 @@
 #include <vector>
 #include <map>
 
-#include "../../abstract/dialogs/ZLOpenFileDialog.h"
+#include <abstract/ZLOpenFileDialog.h>
 
 class GtkOpenFileDialog : public ZLOpenFileDialog {
 
@@ -39,10 +39,6 @@ public:
 	void activatedSlot();
 
 protected:
-	void setSize(int width, int height);
-	int width() const;
-	int height() const;
-
 	void exitDialog();
 	void update(const std::string &selectedNodeName);
 

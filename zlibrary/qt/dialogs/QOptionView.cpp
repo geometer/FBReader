@@ -166,22 +166,31 @@ void SpinOptionView::_onAccept() const {
 }
 
 void StringOptionView::_createItem() {
-	myLabel = new QLabel(myOption->name().c_str(), myTab);
 	myLineEdit = new QLineEdit(myTab);
 	myLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
 	myLineEdit->cursorLeft(false, myLineEdit->text().length());
-	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
-	myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+	if (!myOption->name().empty()) {
+		myLabel = new QLabel(myOption->name().c_str(), myTab);
+		int width = myToColumn - myFromColumn + 1;
+		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
+		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+	} else {
+		myLabel = 0;
+		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
+	}
 }
 
 void StringOptionView::_show() {
-	myLabel->show();
+	if (myLabel != 0) {
+		myLabel->show();
+	}
 	myLineEdit->show();
 }
 
 void StringOptionView::_hide() {
-	myLabel->hide();
+	if (myLabel != 0) {
+		myLabel->hide();
+	}
 	myLineEdit->hide();
 }
 

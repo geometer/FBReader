@@ -35,6 +35,7 @@ private:
 	GtkDialogManager() : myWindow(0), myIsKeyboardGrabbed(false) {}
 
 public:
+	ZLDialog *createDialog(const std::string &title) const;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
@@ -45,8 +46,6 @@ public:
 
 	void setMainWindow(GtkWindow *window) { myWindow = window; }
 
-	GtkDialog *createDialog(const std::string& title) const;
-
 	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
 	bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
 
@@ -54,6 +53,11 @@ private:
 	std::string myPixmapPath;
 	GtkWindow *myWindow;
 	bool myIsKeyboardGrabbed;
+
+friend class GtkCommonDialog;
+friend class GtkOptionsDialog;
+friend class GtkOpenFileDialog;
+friend GtkDialog *createGtkDialog(const std::string& title);
 };
 
 #endif /* __GTKDIALOGMANAGER_H__ */

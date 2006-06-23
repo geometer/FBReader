@@ -32,7 +32,7 @@
 
 class GtkOptionView;
 
-class GtkOptionsDialogTab : public ZLOptionsDialogTab {
+class GtkOptionsDialogTab : public ZLDialogContent {
 
 public:
 	GtkOptionsDialogTab();
@@ -43,7 +43,7 @@ public:
 
 	void accept();
 
-	GtkWidget *widget() { return GTK_WIDGET(myScrolledWindow); }
+	GtkWidget *widget() { return GTK_WIDGET(myTable); }
 
 	void addItem(GtkWidget *what, int row, int fromColumn, int toColumn);
 
@@ -52,10 +52,9 @@ private:
 	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
 
 private:
-	GtkScrolledWindow *myScrolledWindow;
 	GtkTable *myTable;
 	gint myRowCounter;
-	std::vector<GtkOptionView *> myViews;
+	std::vector<GtkOptionView*> myViews;
 };
 
 class GtkOptionsDialog : public ZLOptionsDialog {
@@ -63,7 +62,7 @@ class GtkOptionsDialog : public ZLOptionsDialog {
 public:
 	GtkOptionsDialog(const std::string &id, const std::string &caption);
 	~GtkOptionsDialog();
-	ZLOptionsDialogTab *createTab(const std::string &name);
+	ZLDialogContent &createTab(const std::string &name);
 
 protected:
 	const std::string &selectedTabName() const;
@@ -77,7 +76,7 @@ protected:
 private:
 	GtkDialog *myDialog;
 	GtkNotebook *myNotebook;
-	std::vector<GtkOptionsDialogTab *> myTabs;
+	std::vector<GtkOptionsDialogTab*> myTabs;
 	std::vector<std::string> myTabNames;
 };
 

@@ -22,6 +22,7 @@
 #define __GTKDIALOGMANAGER_H__
 
 #include <gtk/gtkwindow.h>
+#include <gtk/gtkdialog.h>
 
 #include <abstract/ZLDialogManager.h>
 
@@ -34,6 +35,7 @@ private:
 	GtkDialogManager() : myIsInitialized(false), myWindow(0), myIsKeyboardGrabbed(false), myIsWaiting(false) {}
 
 public:
+	ZLDialog *createDialog(const std::string &title) const;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
@@ -56,6 +58,8 @@ private:
 	bool myIsKeyboardGrabbed;
 
 	mutable bool myIsWaiting;
+
+friend GtkDialog *createGtkDialog(const std::string& title);
 };
 
 #endif /* __GTKDIALOGMANAGER_H__ */

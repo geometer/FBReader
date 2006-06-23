@@ -23,12 +23,17 @@
 #include <qfiledialog.h>
 
 #include "QDialogManager.h"
+#include "QCommonDialog.h"
 #include "QOptionsDialog.h"
 #include "QOpenFileDialog.h"
 #include "QWaitMessage.h"
 
 ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new QOptionsDialog(id, title);
+}
+
+ZLDialog *QDialogManager::createDialog(const std::string &title) const {
+	return new QCommonDialog(title);
 }
 
 int QDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
