@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ * Copyright (C) 2005, 2006 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,9 +41,14 @@ void ZLApplication::initWindow(ZLApplicationWindow *view) {
 }
 
 void ZLApplicationWindow::init() {
-	const ZLApplication::Toolbar::ItemVector &items = myApplication->toolbar().items();
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+	const ZLApplication::Toolbar::ItemVector &toolbarItems = myApplication->toolbar().items();
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = toolbarItems.begin(); it != toolbarItems.end(); ++it) {
 		addToolbarItem(*it);
+	}
+
+	const ZLApplication::Menubar::ItemVector &menubarItems = myApplication->menubar().items();
+	for (ZLApplication::Menubar::ItemVector::const_iterator it = menubarItems.begin(); it != menubarItems.end(); ++it) {
+		addMenubarItem(*it);
 	}
 }
 
@@ -102,6 +107,24 @@ void ZLApplication::Toolbar::addSeparator() {
 	myItems.push_back(new SeparatorItem());
 }
 
+void ZLApplication::Menu::addItem(const std::string &itemName, int actionId) {
+	ItemPtr item = new Menubar::MenuItem(itemName, actionId);
+	myItems.push_back(item);
+}
+
+void ZLApplication::Menu::addSeparator() {
+	ItemPtr item = new Menubar::SeparatorItem();
+	myItems.push_back(item);
+}
+
+ZLApplication::Menu::Menu &ZLApplication::Menu::addSubmenu(const std::string &menuName) {
+	Menubar::SubMenuItem *submenu = new Menubar::SubMenuItem(menuName);
+	ItemPtr item = submenu;
+	myItems.push_back(item);
+
+	return *submenu;
+}
+
 ZLApplication::Action::~Action() {
 }
 
@@ -112,3 +135,5 @@ bool ZLApplication::Action::isVisible() {
 bool ZLApplication::Action::isEnabled() {
 	return isVisible();
 }
+
+// vim:noet:ts=2:sw=2

@@ -46,13 +46,12 @@ public:
 protected:
 	void setCaption(const std::string &caption) { gtk_window_set_title(GTK_WINDOW(myWindow), caption.c_str()); }
 	void addToolbarItem(Toolbar::ItemPtr item);
+	void addMenubarItem(Menubar::ItemPtr item);
 	void refresh();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
 
 	ActionSlotData *getSlotData(ActionCode);
-
-	void buildMenu();
 
 public:
 	void handleKeyEventSlot(GdkEventKey*);
@@ -61,8 +60,7 @@ public:
 	HildonWindow *getMainWindow() const { return myWindow; }
 
 private:
-	GtkMenu *makeSubmenu(GtkMenu *menu, const char *label);
-	void addMenuItem(GtkMenu *menu, const char *label, ActionCode code);
+	void addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item);
 
 private:
 	HildonProgram *myProgram;

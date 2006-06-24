@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ * Copyright (C) 2005, 2006 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,6 +115,88 @@ public:
 	friend class ZLApplication;
 	};
 
+	class Menu {
+
+	public:
+		class Item {
+
+		public:
+			enum ItemType {
+				MENU_ITEM,
+				SUBMENU_ITEM,
+				SEPARATOR_ITEM
+			};
+
+			virtual ~Item();
+
+			ItemType type() const;
+
+		protected:
+			Item(ItemType type);
+
+		private:
+			ItemType myType;
+		};
+
+		typedef shared_ptr<Item> ItemPtr;
+		typedef std::vector<ItemPtr> ItemVector;
+
+		void addItem(const std::string &itemName, int actionId);
+		void addSeparator();
+		Menu& addSubmenu(const std::string &menuName);
+
+		const ItemVector &items() const;
+
+		virtual ~Menu();
+
+	protected:
+		Menu();
+
+	private:
+		ItemVector myItems;
+
+	friend class ZLApplication;
+	};
+
+	class Menubar : public Menu {
+
+	public:
+		class MenuItem : public Menu::Item {
+
+		public:
+			MenuItem(const std::string &name, int actionId);
+
+			const std::string &name() const;
+			int actionId() const;
+
+		private:
+			const std::string myName;
+			int myActionId;
+		};
+
+		class SubMenuItem : public Menu::Item, public Menu {
+
+		public:
+			SubMenuItem(const std::string &menuName);
+
+			const std::string &menuName() const;
+
+		private:
+			const std::string myMenuName;
+		};
+
+		class SeparatorItem : public Menu::Item {
+
+		public:
+			SeparatorItem();
+		};
+
+	public:
+		Menubar();
+
+	friend class ZLApplication;
+	};
+
 protected:
 	ZLApplication(const std::string &name);
 
@@ -140,6 +222,7 @@ public:
 	void doAction(int actionId);
 
 	Toolbar &toolbar();
+	Menubar &menubar();
 
 	void refreshWindow();
 
@@ -152,6 +235,7 @@ protected:
 private:
 	std::map<int,shared_ptr<Action> > myActionMap;
 	Toolbar myToolbar;
+	Menubar myMenubar;
 	class ZLApplicationWindow *myWindow;
 };
 
@@ -165,6 +249,8 @@ protected:
 	void init();
 	virtual void refresh() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
+	// TODO: replace with abstract method when available for all platforms
+	virtual void addMenubarItem(ZLApplication::Menubar::ItemPtr item) {}
 	virtual void setCaption(const std::string &caption) = 0;
 
 public:
@@ -182,6 +268,7 @@ inline ZLApplication::~ZLApplication() {
 	}
 }
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
+inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }
 
 inline void ZLApplication::refreshWindow() {
 	if (myWindow != 0) {
@@ -205,6 +292,25 @@ inline int ZLApplication::Toolbar::ButtonItem::actionId() const { return myActio
 inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const { return myIconName; }
 
 inline bool ZLApplication::Toolbar::SeparatorItem::isButton() const { return false; }
+
+inline ZLApplication::Menu::Menu() {}
+inline ZLApplication::Menu::~Menu() {}
+inline const ZLApplication::Menu::ItemVector &ZLApplication::Menu::items() const { return myItems; }
+
+inline ZLApplication::Menu::Item::Item(ItemType type): myType(type) {}
+inline ZLApplication::Menu::Item::~Item() {}
+inline ZLApplication::Menu::Item::ItemType ZLApplication::Menubar::Item::type() const { return myType; }
+
+inline ZLApplication::Menubar::Menubar() {}
+
+inline ZLApplication::Menubar::MenuItem::MenuItem(const std::string& name, int actionId): Item(MENU_ITEM), myName(name), myActionId(actionId) {}
+inline const std::string& ZLApplication::Menubar::MenuItem::name() const { return myName; }
+inline int ZLApplication::Menubar::MenuItem::actionId() const { return myActionId; }
+
+inline ZLApplication::Menubar::SubMenuItem::SubMenuItem(const std::string &menuName): Menu::Item(SUBMENU_ITEM), myMenuName(menuName) {}
+inline const std::string &ZLApplication::Menubar::SubMenuItem::menuName() const { return myMenuName; }
+
+inline ZLApplication::Menubar::SeparatorItem::SeparatorItem(void): Item(SEPARATOR_ITEM) {}
 
 #endif /* __ZLAPPLICATION_H__ */
 

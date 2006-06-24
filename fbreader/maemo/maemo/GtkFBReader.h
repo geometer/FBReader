@@ -47,6 +47,7 @@ public:
 protected:
 	void setCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
 	void addToolbarItem(Toolbar::ItemPtr item);
+	void addMenubarItem(Menubar::ItemPtr item);
 	void refresh();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
@@ -62,8 +63,7 @@ public:
 	HildonApp *getMainWindow() const { return myApp; }
 
 private:
-	GtkMenu *makeSubmenu(GtkMenu *menu, const char *label);
-	void addMenuItem(GtkMenu *menu, const char *label, ActionCode code);
+	void addMenubarItem(GtkMenu *menu, Menu::ItemPtr item);
 
 private:
 	HildonApp *myApp;

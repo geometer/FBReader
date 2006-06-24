@@ -94,17 +94,17 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	myMenu = GTK_MENU(gtk_menu_new());
 
-	buildMenu();
-	hildon_window_set_menu(myWindow, myMenu);
-
-	gtk_widget_show_all(GTK_WIDGET(myMenu));
-
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
 	gtk_toolbar_set_show_arrow(myToolbar, false);
 	gtk_toolbar_set_orientation(myToolbar, GTK_ORIENTATION_HORIZONTAL);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
 	initWindow(this);
+
+	hildon_window_set_menu(myWindow, myMenu);
+
+	gtk_widget_show_all(GTK_WIDGET(myMenu));
+
 	hildon_window_add_toolbar(myWindow, myToolbar);
 
 	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
@@ -134,52 +134,42 @@ ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
 	return data;
 }
 
-GtkMenu *GtkFBReader::makeSubmenu(GtkMenu *menu, const char *label) {
-	GtkMenu *submenu = GTK_MENU(gtk_menu_new());
-	GtkMenuItem *item = GTK_MENU_ITEM(gtk_menu_item_new_with_label(label));
+void GtkFBReader::addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item) {
+	GtkWidget *widget = 0;
 
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(item));
-	gtk_menu_item_set_submenu(item, GTK_WIDGET(submenu));
+	switch(item->type()) {
+		case Menubar::Item::SEPARATOR_ITEM:
+			widget = gtk_separator_menu_item_new();
+			break;
 
-	return submenu;
-}
+		case Menubar::Item::MENU_ITEM:
+			{
+				const Menubar::MenuItem &menuItem = (const Menubar::MenuItem&)*item;
+				ActionCode id = (ActionCode)menuItem.actionId();
+				widget = gtk_menu_item_new_with_label(menuItem.name().c_str());
+				g_signal_connect(G_OBJECT(widget), "activate", G_CALLBACK(menuActionSlot), getSlotData(id));
+				myMenuItems[id] = (GtkMenuItem*)widget;
+			}
+			break;
 
-void GtkFBReader::addMenuItem(GtkMenu *menu, const char *label, ActionCode code) {
-	GtkMenuItem *item = GTK_MENU_ITEM(gtk_menu_item_new_with_label(label));
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(item));
-	g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(menuActionSlot), getSlotData(code));
-	myMenuItems[code] = item;
-}
+		case Menubar::Item::SUBMENU_ITEM:
+			{
+				const Menubar::SubMenuItem &subMenuItem = (const Menubar::SubMenuItem&)*item;
+				widget = gtk_menu_item_new_with_label(subMenuItem.menuName().c_str());
+				GtkMenu *subMenu = GTK_MENU(gtk_menu_new());
+				gtk_menu_item_set_submenu(GTK_MENU_ITEM(widget), GTK_WIDGET(subMenu));
 
-void GtkFBReader::buildMenu() {
-	addMenuItem(myMenu, "Book Info...",  ACTION_SHOW_BOOK_INFO);
-	// MSS: this item can actually be disabled if we do not have table of contents
-	addMenuItem(myMenu, "Table Of Contents", ACTION_SHOW_CONTENTS);
+				const Menubar::ItemVector &items = subMenuItem.items();
+				for (Menubar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+					addMenubarItem(subMenu, *it);
+				}
+			}
+			break;
+	}
 
-	GtkMenu *librarySubmenu = makeSubmenu(myMenu, "Library");
-	addMenuItem(librarySubmenu, "Open", ACTION_SHOW_COLLECTION);
-	addMenuItem(librarySubmenu, "Open Previous", ACTION_OPEN_PREVIOUS_BOOK);
-	addMenuItem(librarySubmenu, "Recent", ACTION_SHOW_LAST_BOOKS);
-	addMenuItem(librarySubmenu, "Add Book...", ACTION_ADD_BOOK);
-
-	GtkMenu *findSubmenu = makeSubmenu(myMenu, "Find");
-	addMenuItem(findSubmenu, "Find Text...", ACTION_SEARCH);
-	addMenuItem(findSubmenu, "Find Next", ACTION_FIND_NEXT);
-	addMenuItem(findSubmenu, "Find Previous", ACTION_FIND_PREVIOUS);
-
-	GtkMenu *viewSubmenu = makeSubmenu(myMenu, "View");
-	// MSS: these two actions can have a checkbox next to them
-	addMenuItem(viewSubmenu, "Rotate Screen", ACTION_ROTATE_SCREEN);
-	addMenuItem(viewSubmenu, "Full Screen", ACTION_TOGGLE_FULLSCREEN);
-	addMenuItem(viewSubmenu, "Toggle Indicator", ACTION_SHOW_HIDE_POSITION_INDICATOR);
-
-	// MSS: we do not use it now...
-	// myRecentMenu = gtk_menu_item_new_with_label("Recent");
-	// gtk_menu_shell_append(GTK_MENU_SHELL(myMenu), myRecentMenu);
-	// gtk_widget_set_sensitive(myRecentMenu, FALSE);
-
-	addMenuItem(myMenu, "Preferences...", ACTION_SHOW_OPTIONS);
-	addMenuItem(myMenu, "Close", ACTION_QUIT);
+	if (widget != 0) {
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(widget));
+	}
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -241,6 +231,10 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 	}
 	gtk_toolbar_insert(myToolbar, gtkItem, -1);
 	myButtons[item] = gtkItem;
+}
+
+void GtkFBReader::addMenubarItem(Menubar::ItemPtr item) {
+	addMenubarItem(myMenu, item);
 }
 
 void GtkFBReader::refresh() {

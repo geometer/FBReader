@@ -186,6 +186,35 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	if (isRotationSupported()) {
 		toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
 	}
+
+	menubar().addItem("Book Info...",  ACTION_SHOW_BOOK_INFO);
+	// MSS: this item can actually be disabled if we do not have table of contents
+	menubar().addItem("Table Of Contents", ACTION_SHOW_CONTENTS);
+
+	Menu &librarySubmenu = menubar().addSubmenu("Library");
+	librarySubmenu.addItem("Open", ACTION_SHOW_COLLECTION);
+	librarySubmenu.addItem("Open Previous", ACTION_OPEN_PREVIOUS_BOOK);
+	librarySubmenu.addItem("Recent", ACTION_SHOW_LAST_BOOKS);
+	librarySubmenu.addItem("Add Book...", ACTION_ADD_BOOK);
+
+	Menu &findSubmenu = menubar().addSubmenu("Find");
+	findSubmenu.addItem("Find Text...", ACTION_SEARCH);
+	findSubmenu.addItem("Find Next", ACTION_FIND_NEXT);
+	findSubmenu.addItem("Find Previous", ACTION_FIND_PREVIOUS);
+
+	Menu &viewSubmenu = menubar().addSubmenu("View");
+	// MSS: these three actions can have a checkbox next to them
+	if (isRotationSupported()) {
+		viewSubmenu.addItem("Rotate Screen", ACTION_ROTATE_SCREEN);
+	}
+	viewSubmenu.addItem("Full Screen", ACTION_TOGGLE_FULLSCREEN);
+	viewSubmenu.addItem("Toggle Indicator", ACTION_SHOW_HIDE_POSITION_INDICATOR);
+
+	// MSS: we do not use it now...
+	// myRecentMenu = menubar().addSubmenu("Recent");
+
+	menubar().addItem("Preferences...", ACTION_SHOW_OPTIONS);
+	menubar().addItem("Close", ACTION_QUIT);
 }
 
 FBReader::~FBReader() {
