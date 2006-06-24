@@ -135,7 +135,7 @@ public:
 			Item(ItemType type);
 
 		private:
-			ItemType myType;
+			const ItemType myType;
 		};
 
 		typedef shared_ptr<Item> ItemPtr;
@@ -303,14 +303,14 @@ inline ZLApplication::Menu::Item::ItemType ZLApplication::Menubar::Item::type() 
 
 inline ZLApplication::Menubar::Menubar() {}
 
-inline ZLApplication::Menubar::MenuItem::MenuItem(const std::string& name, int actionId): Item(MENU_ITEM), myName(name), myActionId(actionId) {}
+inline ZLApplication::Menubar::MenuItem::MenuItem(const std::string& name, int actionId) : Item(MENU_ITEM), myName(name), myActionId(actionId) {}
 inline const std::string& ZLApplication::Menubar::MenuItem::name() const { return myName; }
 inline int ZLApplication::Menubar::MenuItem::actionId() const { return myActionId; }
 
-inline ZLApplication::Menubar::SubMenuItem::SubMenuItem(const std::string &menuName): Menu::Item(SUBMENU_ITEM), myMenuName(menuName) {}
+inline ZLApplication::Menubar::SubMenuItem::SubMenuItem(const std::string &menuName) : Menu::Item(SUBMENU_ITEM), myMenuName(menuName) {}
 inline const std::string &ZLApplication::Menubar::SubMenuItem::menuName() const { return myMenuName; }
 
-inline ZLApplication::Menubar::SeparatorItem::SeparatorItem(void): Item(SEPARATOR_ITEM) {}
+inline ZLApplication::Menubar::SeparatorItem::SeparatorItem(void) : Item(SEPARATOR_ITEM) {}
 
 #endif /* __ZLAPPLICATION_H__ */
 
