@@ -33,8 +33,6 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-struct ActionSlotData;
-
 class GtkFBReader : public FBReader, public ZLApplicationWindow { 
 
 public:
@@ -51,19 +49,15 @@ protected:
 	void refresh();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
-
-	ActionSlotData *getSlotData(ActionCode);
-
-	void buildMenu();
+	void quitSlot();
 
 public:
 	void handleKeyEventSlot(GdkEventKey*);
-	void quitSlot();
 
 	HildonApp *getMainWindow() const { return myApp; }
 
 private:
-	void addMenubarItem(GtkMenu *menu, Menu::ItemPtr item);
+	void addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item);
 
 private:
 	HildonApp *myApp;
@@ -74,9 +68,7 @@ private:
 	bool myFullScreen;
 
 	std::map<Toolbar::ItemPtr,GtkToolItem*> myButtons;
-	std::map<ActionCode,GtkMenuItem*> myMenuItems;
-
-	std::map<ActionCode,ActionSlotData*> myActions;
+	std::map<Menubar::ItemPtr,GtkMenuItem*> myMenuItems;
 };
 
 #endif /* __GTKFBREADER_H__ */

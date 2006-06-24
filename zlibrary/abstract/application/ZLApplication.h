@@ -37,7 +37,7 @@ public:
 	ZLIntegerOption RotationAngleOption;
 	ZLIntegerOption AngleStateOption;
 
-protected:
+public:
 
 	class Action {
 
@@ -45,9 +45,13 @@ protected:
 		virtual ~Action();
 		virtual bool isVisible();
 		virtual bool isEnabled();
+		void checkAndRun();
+
+	protected:
 		virtual void run() = 0;
 	};
 
+protected:
 	class RotationAction : public Action {
 
 	public:
@@ -217,6 +221,7 @@ public:
 public:
 	virtual ~ZLApplication();
 
+	shared_ptr<Action> action(int actionId) const;
 	bool isActionVisible(int actionId) const;
 	bool isActionEnabled(int actionId) const;
 	void doAction(int actionId);

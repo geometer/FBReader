@@ -46,31 +46,20 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->repaintView();
 }
 
-struct ActionSlotData {
-	ActionSlotData(GtkFBReader *reader, ActionCode code) { Reader = reader; Code = code; }
-	GtkFBReader *Reader;
-	ActionCode Code;
-};
-
-static void actionSlot(GtkWidget *eventBox, GdkEventButton*, gpointer data) {
-	ActionSlotData *uData = (ActionSlotData*)data;
-	uData->Reader->doAction(uData->Code);
+static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
+	((ZLApplication::Action*)data)->checkAndRun();
 }
 
 static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
 	((GtkFBReader*)data)->handleKeyEventSlot(event);
 }
 
-static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) {
-	((GtkFBReader*)data)->handleScrollEventSlot(event);
-}
-
 static const std::string OPTIONS = "Options";
 
 GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
 	FBReader(new GtkPaintContext(), bookToOpen),
-  myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-  myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -95,22 +84,10 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
-	gtk_signal_connect(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
 
 	myFullScreen = false;
 
 	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/fbreader/FBReader.png").c_str());
-}
-
-ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
-	ActionSlotData *data = myActions[id];
-
-	if (data == NULL) {
-		data = new ActionSlotData(this, id);
-		myActions[id] = data;
-	}
-
-	return data;
 }
 
 GtkFBReader::~GtkFBReader() {
@@ -121,28 +98,11 @@ GtkFBReader::~GtkFBReader() {
 		myHeightOption.setValue(height);
 	}
 
-	for (std::map<ActionCode,ActionSlotData*>::iterator item = myActions.begin(); item != myActions.end(); ++item) {
-		delete item->second;
-	}
-
 	delete (GtkViewWidget*)myViewWidget;
 }
 
 void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
 	doActionByKey(GtkKeyUtil::keyName(event));
-}
-
-void GtkFBReader::handleScrollEventSlot(GdkEventScroll *event) {
-	switch (event->direction) {
-		case GDK_SCROLL_UP:
-			doAction(ACTION_MOUSE_SCROLL_BACKWARD);
-			break;
-		case GDK_SCROLL_DOWN:
-			doAction(ACTION_MOUSE_SCROLL_FORWARD);
-			break;
-		default:
-			break;
-	}
 }
 
 void GtkFBReader::quitSlot() {
@@ -187,8 +147,10 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 		gtk_toolbar_insert(myToolbar, button, -1);
-		ActionCode id = (ActionCode)buttonItem.actionId();
-		gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
+		shared_ptr<ZLApplication::Action> _action = action(buttonItem.actionId());
+		if (!_action.isNull()) {
+			gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*_action);
+		}
 		myButtons[item] = button;
 	}
 }

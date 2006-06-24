@@ -49,15 +49,8 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->repaintView();
 }
 
-struct ActionSlotData {
-	ActionSlotData(GtkFBReader *reader, ActionCode code) { Reader = reader; Code = code; }
-	GtkFBReader *Reader;
-	ActionCode Code;
-};
-
 static void actionSlot(GtkWidget*, gpointer data) {
-	ActionSlotData *uData = (ActionSlotData*)data;
-	uData->Reader->doAction(uData->Code);
+	((ZLApplication::Action*)data)->checkAndRun();
 }
 
 static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
@@ -103,27 +96,12 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
 	myFullScreen = false;
 }
 
-ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
-	ActionSlotData *data = myActions[id];
-
-	if (data == NULL) {
-		data = new ActionSlotData(this, id);
-		myActions[id] = data;
-	}
-
-	return data;
-}
-
 GtkFBReader::~GtkFBReader() {
 	if (!myFullScreen) {
 		int width, height;
 		gtk_window_get_size(myMainWindow, &width, &height);
 		myWidthOption.setValue(width);
 		myHeightOption.setValue(height);
-	}
-
-	for (std::map<ActionCode,ActionSlotData*>::iterator item = myActions.begin(); item != myActions.end(); ++item) {
-		delete item->second;
 	}
 
 	delete myViewWidget;
@@ -181,8 +159,10 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 		gtk_container_add(GTK_CONTAINER(button), image);
 		gtk_container_add(GTK_CONTAINER(myToolbar), button);
-		ActionCode id = (ActionCode)buttonItem.actionId();
-		gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
+		shared_ptr<ZLApplication::Action> _action = action(buttonItem.actionId());
+		if (!_action.isNull()) {
+			gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), &*_action);
+		}
 		myButtons[item] = button;
 	} else {
 		//TODO: implement

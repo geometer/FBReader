@@ -31,8 +31,6 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-struct ActionSlotData;
-
 class GtkFBReader : public FBReader, public ZLApplicationWindow { 
 
 public:
@@ -48,20 +46,16 @@ protected:
 	void refresh();
 	void toggleFullscreenSlot();
 	bool isFullscreen() const;
-
-	ActionSlotData *getSlotData(ActionCode);
+	void quitSlot();
 
 public:
 	void handleKeyEventSlot(GdkEventKey *event);
-	void handleScrollEventSlot(GdkEventScroll *event);
-	// MSS: this is not good, I suppose: the original method is protected, I make it public here...
-	void quitSlot();
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
 
 private:
-  ZLIntegerRangeOption myWidthOption;
-  ZLIntegerRangeOption myHeightOption;
+	ZLIntegerRangeOption myWidthOption;
+	ZLIntegerRangeOption myHeightOption;
 
 	GtkWindow *myMainWindow;
 	GtkToolbar *myToolbar;
@@ -69,7 +63,6 @@ private:
 	bool myFullScreen;
 
 	std::map<Toolbar::ItemPtr,GtkToolItem*> myButtons;
-	std::map<ActionCode,ActionSlotData*> myActions;
 };
 
 #endif /* __GTKFBREADER_H__ */

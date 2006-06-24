@@ -72,20 +72,31 @@ void ZLApplication::repaintView() {
 	}
 }
 
+void ZLApplication::Action::checkAndRun() {
+	if (isEnabled()) {
+		run();
+	}
+}
+
+shared_ptr<ZLApplication::Action> ZLApplication::action(int actionId) const {
+	std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
+	return (it != myActionMap.end()) ? it->second : 0;
+}
+
 bool ZLApplication::isActionVisible(int actionId) const {
-	const std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
-	return (it != myActionMap.end()) && it->second->isVisible();
+	shared_ptr<Action> _action = action(actionId);
+	return !_action.isNull() && _action->isVisible();
 }
 
 bool ZLApplication::isActionEnabled(int actionId) const {
-	const std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
-	return (it != myActionMap.end()) && it->second->isEnabled();
+	shared_ptr<Action> _action = action(actionId);
+	return !_action.isNull() && _action->isEnabled();
 }
 
 void ZLApplication::doAction(int actionId) {
-	std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
-	if (it != myActionMap.end() && it->second->isEnabled()) {
-		it->second->run();
+	shared_ptr<Action> _action = action(actionId);
+	if (!_action.isNull()) {
+		_action->checkAndRun();
 	}
 }
 

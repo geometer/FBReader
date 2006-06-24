@@ -58,23 +58,15 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	}
 }
 
-struct ActionSlotData {
-	ActionSlotData(GtkFBReader *reader, ActionCode code) { Reader = reader; Code = code; }
-	GtkFBReader *Reader;
-	ActionCode Code;
-};
-
 static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
 	if (acceptAction()) {
-		ActionSlotData *uData = (ActionSlotData*)data;
-		uData->Reader->doAction(uData->Code);
+		((ZLApplication::Action*)data)->checkAndRun();
 	}
 }
 
 static void menuActionSlot(GtkWidget *, gpointer data) {
 	if (acceptAction()) {
-		ActionSlotData *uData = (ActionSlotData*)data;
-		uData->Reader->doAction(uData->Code);
+		((ZLApplication::Action*)data)->checkAndRun();
 	}
 }
 
@@ -123,42 +115,31 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	myFullScreen = false;
 }
 
-ActionSlotData *GtkFBReader::getSlotData(ActionCode	id) {
-	ActionSlotData *data = myActions[id];
-
-	if (data == NULL) {
-		data = new ActionSlotData(this, id);
-		myActions[id] = data;
-	}
-
-	return data;
-}
-
 void GtkFBReader::addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item) {
-	GtkWidget *widget = 0;
+	GtkMenuItem *gtkItem = 0;
 
 	switch(item->type()) {
 		case Menubar::Item::SEPARATOR_ITEM:
-			widget = gtk_separator_menu_item_new();
+			gtkItem = GTK_MENU_ITEM(gtk_separator_menu_item_new());
 			break;
 
 		case Menubar::Item::MENU_ITEM:
 			{
 				const Menubar::MenuItem &menuItem = (const Menubar::MenuItem&)*item;
-				ActionCode id = (ActionCode)menuItem.actionId();
-				widget = gtk_menu_item_new_with_label(menuItem.name().c_str());
-				g_signal_connect(G_OBJECT(widget), "activate", G_CALLBACK(menuActionSlot), getSlotData(id));
-				myMenuItems[id] = (GtkMenuItem*)widget;
+				gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(menuItem.name().c_str()));
+				shared_ptr<ZLApplication::Action> _action = action(menuItem.actionId());
+				if (!_action.isNull()) {
+					g_signal_connect(G_OBJECT(gtkItem), "activate", G_CALLBACK(menuActionSlot), &*_action);
+				}
 			}
 			break;
 
 		case Menubar::Item::SUBMENU_ITEM:
 			{
 				const Menubar::SubMenuItem &subMenuItem = (const Menubar::SubMenuItem&)*item;
-				widget = gtk_menu_item_new_with_label(subMenuItem.menuName().c_str());
+				gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(subMenuItem.menuName().c_str()));
 				GtkMenu *subMenu = GTK_MENU(gtk_menu_new());
-				gtk_menu_item_set_submenu(GTK_MENU_ITEM(widget), GTK_WIDGET(subMenu));
-
+				gtk_menu_item_set_submenu(gtkItem, GTK_WIDGET(subMenu));
 				const Menubar::ItemVector &items = subMenuItem.items();
 				for (Menubar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 					addMenubarItem(subMenu, *it);
@@ -167,16 +148,11 @@ void GtkFBReader::addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item) {
 			break;
 	}
 
-	if (widget != 0) {
-		gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(widget));
-	}
+	myMenuItems[item] = gtkItem;
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(gtkItem));
 }
 
 GtkFBReader::~GtkFBReader() {
-	for (std::map<ActionCode,ActionSlotData*>::iterator item = myActions.begin(); item != myActions.end(); ++item) {
-		delete item->second;
-	}
-
 	delete (GtkViewWidget*)myViewWidget;
 }
 
@@ -223,8 +199,10 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 		gtk_tool_item_set_expand(gtkItem, false);
 
 		GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
-		ActionCode id = (ActionCode)buttonItem.actionId();
-		g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), getSlotData(id));
+		shared_ptr<ZLApplication::Action> _action = action(buttonItem.actionId());
+		if (!_action.isNull()) {
+			g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*_action);
+		}
 	} else {
 		gtkItem = gtk_separator_tool_item_new();
 		gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
@@ -263,19 +241,6 @@ void GtkFBReader::refresh() {
 					gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
 				}
 			}
-
-			GtkMenuItem *item = myMenuItems[(ActionCode)button.actionId()];
-			if (item != 0) {
-				if (visible) {
-					gtk_widget_show(GTK_WIDGET(item));
-				} else {
-					gtk_widget_hide(GTK_WIDGET(item));
-				}
-				bool alreadyEnabled = GTK_WIDGET_STATE(item) != GTK_STATE_INSENSITIVE;
-				if (enabled != alreadyEnabled) {
-					gtk_widget_set_sensitive(GTK_WIDGET(item), enabled);
-				}
-			}
 		} else {
 			if (toolItem != 0) {
 				gtk_tool_item_set_visible_horizontal(toolItem, enableToolbarSpace);
@@ -283,4 +248,23 @@ void GtkFBReader::refresh() {
 			}
 		}
 	}
+
+	for (std::map<Menubar::ItemPtr,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
+		Menubar::ItemPtr item = it->first;
+		if (!item.isNull() && item->type() == Menubar::Item::MENU_ITEM) {
+			int id = ((ZLApplication::Menubar::MenuItem&)*item).actionId();
+			GtkWidget *gtkItem = GTK_WIDGET(it->second);
+			if (isActionVisible(id)) {
+				gtk_widget_show(gtkItem);
+			} else {
+				gtk_widget_hide(gtkItem);
+			}
+			bool alreadyEnabled = GTK_WIDGET_STATE(gtkItem) != GTK_STATE_INSENSITIVE;
+			if (isActionEnabled(id) != alreadyEnabled) {
+				gtk_widget_set_sensitive(gtkItem, !alreadyEnabled);
+			}
+		}
+	}
 }
+
+// vim:ts=2:sw=2:noet
