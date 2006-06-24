@@ -57,6 +57,7 @@ protected:
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
+	void searchSlot() { FBReader::searchSlot(); fullScreenWorkaround(); }
 	void bookInfoSlot() { FBReader::bookInfoSlot(); fullScreenWorkaround(); }
 	void optionsSlot() { FBReader::optionsSlot(); fullScreenWorkaround(); }
 	void addBookSlot() { FBReader::addBookSlot(); fullScreenWorkaround(); }

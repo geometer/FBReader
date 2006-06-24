@@ -371,13 +371,13 @@ protected:
 
   virtual void setMode(ViewMode mode);
 
-  void searchSlot();
   void cancelSlot();
   void fullscreenOnSlot();
   virtual void toggleFullscreenSlot() = 0;
   virtual bool isFullscreen() const = 0;
   virtual void quitSlot() = 0;
 
+  virtual void searchSlot();
   virtual void bookInfoSlot();
   virtual void optionsSlot();
   virtual void addBookSlot();
