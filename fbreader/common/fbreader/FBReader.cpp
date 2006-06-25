@@ -71,7 +71,7 @@ FBReader::ScrollingOptions::ScrollingOptions(
 		LinesToScrollOption(ZLOption::CONFIG_CATEGORY, linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
 		PercentToScrollOption(ZLOption::CONFIG_CATEGORY, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
 
-FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool supportRotation) :
+FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
 	StoreContentsPositionOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "StoreContentsPosition", false),
@@ -102,8 +102,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
 	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
-	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, "Keyboard", "FullControl", false),
-	myIsRotationSupported(supportRotation) {
+	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, "Keyboard", "FullControl", false) {
 
 	myModel = 0;
 	myContext = context;
@@ -156,9 +155,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	}
 	addAction(ACTION_INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
 	addAction(ACTION_DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
-	if (isRotationSupported()) {
-		addAction(ACTION_ROTATE_SCREEN, new RotationAction(*this));
-	}
+	addAction(ACTION_ROTATE_SCREEN, new RotationAction(*this));
 	addAction(ACTION_TOGGLE_FULLSCREEN, new FullscreenAction(*this, true));
 	addAction(ACTION_FULLSCREEN_ON, new FullscreenAction(*this, false));
 	addAction(ACTION_CANCEL, new CancelAction(*this));
@@ -183,9 +180,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 	toolbar().addButton(ACTION_FIND_NEXT, "findnext");
 	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev");
 	toolbar().addSeparator();
-	if (isRotationSupported()) {
-		toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
-	}
+	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
 
 	menubar().addItem("Book Info...",  ACTION_SHOW_BOOK_INFO);
 	// MSS: this item can actually be disabled if we do not have table of contents
@@ -204,9 +199,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool 
 
 	Menu &viewSubmenu = menubar().addSubmenu("View");
 	// MSS: these three actions can have a checkbox next to them
-	if (isRotationSupported()) {
-		viewSubmenu.addItem("Rotate Screen", ACTION_ROTATE_SCREEN);
-	}
+	viewSubmenu.addItem("Rotate Screen", ACTION_ROTATE_SCREEN);
 	viewSubmenu.addItem("Full Screen", ACTION_TOGGLE_FULLSCREEN);
 	viewSubmenu.addItem("Toggle Indicator", ACTION_SHOW_HIDE_POSITION_INDICATOR);
 

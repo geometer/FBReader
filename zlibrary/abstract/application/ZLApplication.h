@@ -215,8 +215,6 @@ protected:
 public:
 	// TODO: remove
 	void repaintView();
-	// TODO: remove
-	virtual bool isRotationSupported() const = 0;
 
 public:
 	virtual ~ZLApplication();

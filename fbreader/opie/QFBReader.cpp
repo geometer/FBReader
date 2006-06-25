@@ -45,7 +45,7 @@
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen, false), myCloseFlag(false) {
+QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen), myCloseFlag(false) {
 	if (KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}

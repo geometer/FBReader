@@ -366,7 +366,7 @@ private:
 	friend class OpenPreviousBookAction;
 	
 protected:
-  FBReader(ZLPaintContext *context, const std::string& bookToOpen, bool supportRotation = true);
+  FBReader(ZLPaintContext *context, const std::string& bookToOpen);
   virtual ~FBReader();
 
   virtual void setMode(ViewMode mode);
@@ -394,8 +394,6 @@ private:
   bool isScrollingAction(ActionCode code);
 
 public:
-	// TODO: remove
-  bool isRotationSupported() const;
   virtual bool isFullKeyboardControlSupported() const;
   virtual void grabAllKeys(bool grab);
 
@@ -433,8 +431,6 @@ private:
 
   FullKeyBindings myKeyBindings;
 
-	bool myIsRotationSupported;
-
   friend class OptionsDialog;
 };
 
@@ -444,10 +440,6 @@ inline ZLBooleanOption &FBReader::useSeparateBindings() {
 
 inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle, bool force) {
   return myKeyBindings.getBindings(angle, force);
-}
-
-inline bool FBReader::isRotationSupported() const {
-	return myIsRotationSupported;
 }
 
 #endif /* __FBREADER_H__ */

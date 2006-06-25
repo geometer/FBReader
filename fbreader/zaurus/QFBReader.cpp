@@ -45,12 +45,13 @@
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen, false) {
+QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen) {
 	if (KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}
 	setWFlags(getWFlags() | WStyle_Customize);
 
+	initWindow(this);
 	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
 	setCentralWidget((QViewWidget*)myViewWidget);
 
@@ -58,7 +59,6 @@ QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext
 	myTitleHeight = -1;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
-	initWindow(this);
 	setMode(BOOK_TEXT_MODE);
 }
 
@@ -159,7 +159,9 @@ void QFBReader::refresh() {
 	}
 	if (isVisibilityChanged) {
 		bt = myToolbarMask.begin();
-		centralWidget()->hide();
+		if (centralWidget() != 0) {
+			centralWidget()->hide();
+		}
 		menuBar()->clear();
 		for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 			if ((*it)->isButton()) {
@@ -171,7 +173,9 @@ void QFBReader::refresh() {
 				++bt;
 			}
 		}
-		centralWidget()->show();
+		if (centralWidget() != 0) {
+			centralWidget()->show();
+		}
 	}
 
 	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {

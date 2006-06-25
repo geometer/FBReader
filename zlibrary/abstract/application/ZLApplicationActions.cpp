@@ -26,7 +26,6 @@ ZLApplication::RotationAction::RotationAction(ZLApplication &application) : myAp
 
 bool ZLApplication::RotationAction::isVisible() {
 	return (myApplication.myViewWidget != 0) &&
-				 myApplication.isRotationSupported() &&
 				 ((myApplication.RotationAngleOption.value() != ZLViewWidget::DEGREES0) ||
 					(myApplication.myViewWidget->rotation() != ZLViewWidget::DEGREES0));
 }

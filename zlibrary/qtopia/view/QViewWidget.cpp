@@ -36,11 +36,46 @@ void QViewWidget::trackStylus(bool track) {
 }
 
 void QViewWidget::paintEvent(QPaintEvent*) {
+	switch (rotation()) {
+		default:
+			((QPaintContext&)view()->context()).setSize(width(), height());
+			break;
+		case DEGREES90:
+		case DEGREES270:
+			((QPaintContext&)view()->context()).setSize(height(), width());
+			break;
+	}
+	view()->paint();
+	QPainter realPainter(this);
+	switch (rotation()) {
+		default:
+			realPainter.drawPixmap(0, 0, ((QPaintContext&)view()->context()).pixmap());
+			break;
+		/*
+		case DEGREES90:
+			realPainter.rotate(270);
+			realPainter.drawPixmap(1 - height(), -1, ((QPaintContext&)view()->context()).pixmap());
+			break;
+		case DEGREES180:
+			realPainter.rotate(180);
+			realPainter.drawPixmap(1 - width(), 1 - height(), ((QPaintContext&)view()->context()).pixmap());
+			break;
+		case DEGREES270:
+			realPainter.rotate(90);
+			realPainter.drawPixmap(-1, 1 - width(), ((QPaintContext&)view()->context()).pixmap());
+			break;
+		*/
+	}
+}
+
+/*
+void QViewWidget::paintEvent(QPaintEvent*) {
 	((QPaintContext&)view()->context()).setSize(width(), height());
 	view()->paint();
 	QPainter realPainter(this);
 	realPainter.drawPixmap(0, 0, ((QPaintContext&)view()->context()).pixmap());
 }
+*/
 
 void QViewWidget::mousePressEvent(QMouseEvent *event) {
 	view()->onStylusPress(x(event), y(event));
@@ -64,11 +99,29 @@ void QViewWidget::mouseMoveEvent(QMouseEvent *event) {
 }
 
 int QViewWidget::x(const QMouseEvent *event) const {
-	return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
+	switch (rotation()) {
+		default:
+			return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
+		case DEGREES90:
+			return height() - std::min(std::max(event->y(), 0), height()) - view()->context().rightMargin();
+		case DEGREES180:
+			return width() - std::min(std::max(event->x(), 0), width()) - view()->context().rightMargin();
+		case DEGREES270:
+			return std::min(std::max(event->y(), 0), height()) - view()->context().leftMargin();
+	}
 }
 
 int QViewWidget::y(const QMouseEvent *event) const {
-	return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
+	switch (rotation()) {
+		default:
+			return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
+		case DEGREES90:
+			return std::min(std::max(event->x(), 0), width()) - view()->context().topMargin();
+		case DEGREES180:
+			return height() - std::min(std::max(event->y(), 0), height()) - view()->context().bottomMargin();
+		case DEGREES270:
+			return width() - std::min(std::max(event->x(), 0), width()) - view()->context().bottomMargin();
+	}
 }
 
 void QViewWidget::repaintView()	{
