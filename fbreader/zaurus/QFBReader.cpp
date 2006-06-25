@@ -166,7 +166,7 @@ void QFBReader::refresh() {
 				const Toolbar::ButtonItem &button = (Toolbar::ButtonItem&)**it;
 				if (*bt) {
 					const QPixmap &pixmap = Resource::loadPixmap(("FBReader/" + button.iconName()).c_str());
-					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, (ActionCode)button.actionId());
+					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;
 			}

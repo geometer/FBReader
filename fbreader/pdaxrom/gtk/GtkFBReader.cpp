@@ -49,15 +49,8 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkFBReader*)data)->repaintView();
 }
 
-struct ActionSlotData {
-	ActionSlotData(GtkFBReader *reader, ActionCode code) { Reader = reader; Code = code; }
-	GtkFBReader *Reader;
-	ActionCode Code;
-};
-
 static void actionSlot(GtkWidget*, gpointer data) {
-	ActionSlotData *uData = (ActionSlotData*)data;
-	uData->Reader->doAction(uData->Code);
+	((ZLApplication::Action*)data)->checkAndRun();
 }
 
 static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
@@ -150,8 +143,10 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 		gtk_widget_set_usize(button, w + 6, h + 6);
 
 		gtk_container_add(GTK_CONTAINER(myToolbar), button);
-		ActionCode id = (ActionCode)buttonItem.actionId();
-		gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), new ActionSlotData(this, id));
+		shared_ptr<ZLApplication::Action> _action = action(buttonItem.actionId());
+		if (!_action.isNull()) {
+			gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), &*_action);
+		}
 		myButtons[item] = button;
 	} else {
 		// TODO: implement
