@@ -29,8 +29,6 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-struct ActionSlotData;
-
 class GtkFBReader : public FBReader, public ZLApplicationWindow { 
 
 public:
