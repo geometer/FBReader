@@ -31,6 +31,7 @@
 #include <qtopia/QPaintContext.h>
 
 #include "QFBReader.h"
+#include "../common/fbreader/FBReader.h"
 #include "../common/Files.h"
 
 int main(int argc, char **argv) {

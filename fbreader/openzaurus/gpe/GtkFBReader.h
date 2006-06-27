@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKFBREADER_H__
-#define __GTKFBREADER_H__
+#ifndef __GTKAPPLICATIONWINDOW_H__
+#define __GTKAPPLICATIONWINDOW_H__
 
 #include <map>
 
@@ -29,7 +28,7 @@
 #include <gtk/gtktoolitem.h>
 #include <gtk/gtkwindow.h>
 
-#include "../../common/fbreader/FBReader.h"
+#include <abstract/ZLApplication.h>
 
 class GtkApplicationWindow : public ZLApplicationWindow { 
 
@@ -72,4 +71,4 @@ private:
 	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myButtons;
 };
 
-#endif /* __GTKFBREADER_H__ */
+#endif /* __GTKAPPLICATIONWINDOW_H__ */

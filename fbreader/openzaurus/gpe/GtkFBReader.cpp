@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -22,21 +21,17 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <abstract/ZLUnicodeUtil.h>
 #include <gtk/GtkKeyUtil.h>
 #include <maemo/GtkViewWidget.h>
 
-#include "../../common/description/BookDescription.h"
-#include "../../common/fbreader/BookTextView.h"
-#include "../../common/fbreader/FootnoteView.h"
-#include "../../common/fbreader/ContentsView.h"
-#include "../../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
 static bool quitFlag = false;
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	if (!quitFlag) {
-		((GtkApplicationWindow*)data)->application().doAction(ACTION_QUIT);
+		((GtkApplicationWindow*)data)->application().closeView();
 	}
 	return true;
 }
@@ -79,7 +74,8 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 
 	myFullScreen = false;
 
-	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/fbreader/FBReader.png").c_str());
+	std::string lowerCaseName = ZLUnicodeUtil::toLower(this->application().name());
+	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/" + lowerCaseName + "/" + this->application().name() + ".png").c_str());
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
@@ -126,7 +122,8 @@ bool GtkApplicationWindow::isFullscreen() const {
 void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/fbreader/" + buttonItem.iconName() + ".png").c_str());
+		const std::string lowerCaseName = ZLUnicodeUtil::toLower(application().name());
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + lowerCaseName + "/" + buttonItem.iconName() + ".png").c_str());
 		GtkToolItem *button = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 

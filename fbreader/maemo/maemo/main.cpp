@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <libintl.h>
+//#include <libintl.h>
 #include <gtk/gtk.h>
 
 #include <abstract/ZLEncodingConverter.h>
@@ -33,6 +33,7 @@
 
 #include "GtkFBReader.h"
 #include "../../common/Files.h"
+#include "../../common/fbreader/FBReader.h"
 
 class ConfigSaverRunnable : public ZLRunnable {
 

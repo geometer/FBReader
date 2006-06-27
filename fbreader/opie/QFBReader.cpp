@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -36,11 +35,6 @@
 #include <qtopia/QViewWidget.h>
 #include <qtopia/QKeyUtil.h>
 
-#include "../common/description/BookDescription.h"
-#include "../common/fbreader/BookTextView.h"
-#include "../common/fbreader/FootnoteView.h"
-#include "../common/fbreader/ContentsView.h"
-#include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a), myCloseFlag(false) {
@@ -144,7 +138,7 @@ void QApplicationWindow::refresh() {
 			if ((*it)->isButton()) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap(("FBReader/" + button.iconName()).c_str());
+					const QPixmap &pixmap = Resource::loadPixmap((application().name() + "/" + button.iconName()).c_str());
 					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;

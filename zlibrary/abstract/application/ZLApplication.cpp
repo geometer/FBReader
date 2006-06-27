@@ -21,6 +21,9 @@
 #include "ZLApplication.h"
 #include "../view/ZLView.h"
 
+const std::string ZLApplication::MouseScrollDownKey = "<MouseScrollDown>";
+const std::string ZLApplication::MouseScrollUpKey = "<MouseScrollUp>";
+
 static const std::string ROTATION = "Rotation";
 static const std::string ANGLE = "Angle";
 static const std::string STATE = "State";

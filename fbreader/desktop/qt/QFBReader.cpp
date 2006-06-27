@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -34,11 +33,6 @@
 #include <qt/QViewWidget.h>
 #include <qt/QKeyUtil.h>
 
-#include "../../common/description/BookDescription.h"
-#include "../../common/fbreader/BookTextView.h"
-#include "../../common/fbreader/FootnoteView.h"
-#include "../../common/fbreader/ContentsView.h"
-#include "../../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
 static const std::string OPTIONS = "Options";
@@ -92,9 +86,9 @@ void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
 void QApplicationWindow::wheelEvent(QWheelEvent *event) {
 	if (event->orientation() == Vertical) {
 		if (event->delta() > 0) {
-			application().doAction(ACTION_MOUSE_SCROLL_BACKWARD);
+			application().doActionByKey(ZLApplication::MouseScrollUpKey);
 		} else {
-			application().doAction(ACTION_MOUSE_SCROLL_FORWARD);
+			application().doActionByKey(ZLApplication::MouseScrollDownKey);
 		}
 	}
 }

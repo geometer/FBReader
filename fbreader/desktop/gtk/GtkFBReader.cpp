@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -28,14 +27,13 @@
 #include <gtk/GtkKeyUtil.h>
 #include <gtk-desktop/GtkViewWidget.h>
 
-#include "../../common/fbreader/FBReader.h"
 #include "GtkFBReader.h"
 
 static bool quitFlag = false;
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	if (!quitFlag) {
-		((GtkApplicationWindow*)data)->application().doAction(ACTION_QUIT);
+		((GtkApplicationWindow*)data)->application().closeView();
 	}
 	return true;
 }
@@ -100,10 +98,10 @@ void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
 void GtkApplicationWindow::handleScrollEventSlot(GdkEventScroll *event) {
 	switch (event->direction) {
 		case GDK_SCROLL_UP:
-			application().doAction(ACTION_MOUSE_SCROLL_BACKWARD);
+			application().doActionByKey(ZLApplication::MouseScrollUpKey);
 			break;
 		case GDK_SCROLL_DOWN:
-			application().doAction(ACTION_MOUSE_SCROLL_FORWARD);
+			application().doActionByKey(ZLApplication::MouseScrollDownKey);
 			break;
 		default:
 			break;
@@ -134,7 +132,7 @@ bool GtkApplicationWindow::isFullscreen() const {
 void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + application().name() + "/" + buttonItem.iconName() + ".png").c_str());
 		GtkWidget *button = gtk_button_new();
 		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);

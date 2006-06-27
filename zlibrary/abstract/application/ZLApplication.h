@@ -34,6 +34,10 @@ class ZLViewWidget;
 class ZLApplication {
 
 public:
+	static const std::string MouseScrollUpKey;
+	static const std::string MouseScrollDownKey;
+
+public:
 	ZLIntegerOption RotationAngleOption;
 	ZLIntegerOption AngleStateOption;
 

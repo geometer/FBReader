@@ -1,1 +1,0 @@
-../../qtopia/view/ZaurusFontHack.h

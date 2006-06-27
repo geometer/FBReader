@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKFBREADER_H__
-#define __GTKFBREADER_H__
+#ifndef __GTKAPPLICATIONWINDOW_H__
+#define __GTKAPPLICATIONWINDOW_H__
 
 #include <map>
 
@@ -71,6 +70,6 @@ private:
 	std::map<ZLApplication::Toolbar::ItemPtr,GtkWidget*> myButtons;
 };
 
-#endif /* __GTKFBREADER_H__ */
+#endif /* __GTKAPPLICATIONWINDOW_H__ */
 
 // vim:ts=2:sw=2:noet

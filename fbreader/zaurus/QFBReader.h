@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QFBREADER_H__
-#define __QFBREADER_H__
+#ifndef __QAPPLICATIONWINDOW_H__
+#define __QAPPLICATIONWINDOW_H__
 
 #include <vector>
 #include <map>
@@ -28,7 +27,7 @@
 
 #include <qmainwindow.h>
 
-#include "../common/fbreader/FBReader.h"
+#include <abstract/ZLApplication.h>
 
 class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
@@ -69,4 +68,4 @@ private:
 	int myTitleHeight;
 };
 
-#endif /* __QFBREADER_H__ */
+#endif /* __QAPPLICATIONWINDOW_H__ */

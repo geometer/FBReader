@@ -11,6 +11,8 @@
 	<binding key="&lt;PageUp&gt;" action="10"/>
 	<binding key="&lt;DownArrow&gt;" action="11"/>
 	<binding key="&lt;UpArrow&gt;" action="12"/>
+	<binding key="&lt;MouseScrollDown&gt;" action="13"/>
+	<binding key="&lt;MouseScrollUp&gt;" action="14"/>
 	<binding key="&lt;Ctrl&gt;+&lt;Home&gt;" action="15"/>
 	<binding key="&lt;Home&gt;" action="16"/>
 	<binding key="&lt;End&gt;" action="17"/>

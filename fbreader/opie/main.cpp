@@ -32,6 +32,7 @@
 
 #include "QFBReader.h"
 #include "../common/Files.h"
+#include "../common/fbreader/FBReader.h"
 
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);

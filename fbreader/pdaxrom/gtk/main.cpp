@@ -32,6 +32,7 @@
 
 #include "GtkFBReader.h"
 #include "../../common/Files.h"
+#include "../../common/fbreader/FBReader.h"
 
 int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);

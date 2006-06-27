@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -36,11 +35,6 @@
 #include <qtopia/QViewWidget.h>
 #include <qtopia/QKeyUtil.h>
 
-#include "../common/description/BookDescription.h"
-#include "../common/fbreader/BookTextView.h"
-#include "../common/fbreader/FootnoteView.h"
-#include "../common/fbreader/ContentsView.h"
-#include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {

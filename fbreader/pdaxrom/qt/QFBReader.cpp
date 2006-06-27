@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -34,11 +33,6 @@
 #include <qt/QViewWidget.h>
 #include <qt/QKeyUtil.h>
 
-#include "../../common/description/BookDescription.h"
-#include "../../common/fbreader/BookTextView.h"
-#include "../../common/fbreader/FootnoteView.h"
-#include "../../common/fbreader/ContentsView.h"
-#include "../../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
 static const std::string OPTIONS = "Options";
@@ -105,7 +99,7 @@ void QApplicationWindow::closeEvent(QCloseEvent *event) {
 void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
+		menuBar()->insertItem(QPixmap((ImageDirectory + "/" + application().name() + "/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
 	}
 }
 

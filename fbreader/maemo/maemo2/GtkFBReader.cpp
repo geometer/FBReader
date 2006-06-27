@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -28,11 +27,6 @@
 #include <maemo/GtkKeyUtil.h>
 #include <maemo/GtkDialogManager.h>
 
-#include "../../common/description/BookDescription.h"
-#include "../../common/fbreader/BookTextView.h"
-#include "../../common/fbreader/FootnoteView.h"
-#include "../../common/fbreader/ContentsView.h"
-#include "../../common/fbreader/CollectionView.h"
 #include "GtkFBReader.h"
 
 static bool quitFlag = false;
@@ -46,7 +40,7 @@ static bool acceptAction() {
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	if (acceptAction()) {
-		((GtkApplicationWindow*)data)->application().doAction(ACTION_QUIT);
+		((GtkApplicationWindow*)data)->application().closeView();
 	}
 	return true;
 }
@@ -79,7 +73,7 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLAppli
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
-	osso_initialize("FBReader", "0.0", false, 0);
+	osso_initialize(application().name().c_str(), "0.0", false, 0);
 
 	myWindow = HILDON_WINDOW(hildon_window_new());
 
@@ -176,7 +170,7 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	GtkToolItem *gtkItem;
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + application().name() + "/" + buttonItem.iconName() + ".png").c_str());
 		gtkItem = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 
