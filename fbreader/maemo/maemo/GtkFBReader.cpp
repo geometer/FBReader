@@ -71,10 +71,10 @@ static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 
 GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
 	myApp = HILDON_APP(hildon_app_new());
-	hildon_app_set_title(myApp, application().name().c_str());
+	hildon_app_set_title(myApp, this->application().name().c_str());
 	hildon_app_set_two_part_title(myApp, FALSE);
 
-	osso_initialize(application().name().c_str(), "0.0", true, 0);
+	osso_initialize(this->application().name().c_str(), "0.0", true, 0);
 
 	myAppView = HILDON_APPVIEW(hildon_appview_new(0));
 

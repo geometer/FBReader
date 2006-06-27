@@ -73,7 +73,7 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLAppli
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
-	osso_initialize(application().name().c_str(), "0.0", false, 0);
+	osso_initialize(this->application().name().c_str(), "0.0", false, 0);
 
 	myWindow = HILDON_WINDOW(hildon_window_new());
 
