@@ -24,93 +24,100 @@
 #include <qpainter.h>
 #include <qpixmap.h>
 
-QViewWidget::QViewWidget(QWidget *parent, ZLApplication *application, Angle initialAngle) : QWidget(parent), ZLViewWidget(initialAngle), myApplication(application) {
+QViewWidget::QViewWidgetInternal::QViewWidgetInternal(QWidget *parent, QViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	setBackgroundMode(NoBackground);
 }
 
-void QViewWidget::trackStylus(bool track) {
-	setMouseTracking(track);
+QViewWidget::QViewWidget(QWidget *parent, ZLApplication *application) : ZLViewWidget((ZLViewWidget::Angle)application->AngleStateOption.value()), myApplication(application) {
+	myQWidget = new QViewWidgetInternal(parent, *this);
 }
 
-void QViewWidget::paintEvent(QPaintEvent*) {
-	switch (rotation()) {
+void QViewWidget::trackStylus(bool track) {
+	myQWidget->setMouseTracking(track);
+}
+
+void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
+	QPaintContext &context = (QPaintContext&)myHolder.view()->context();
+	switch (myHolder.rotation()) {
 		default:
-			((QPaintContext&)view()->context()).setSize(width(), height());
+			context.setSize(width(), height());
 			break;
 		case DEGREES90:
 		case DEGREES270:
-			((QPaintContext&)view()->context()).setSize(height(), width());
+			context.setSize(height(), width());
 			break;
 	}
-	view()->paint();
+	myHolder.view()->paint();
 	QPainter realPainter(this);
-	switch (rotation()) {
+	switch (myHolder.rotation()) {
 		default:
-			realPainter.drawPixmap(0, 0, ((QPaintContext&)view()->context()).pixmap());
+			realPainter.drawPixmap(0, 0, context.pixmap());
 			break;
 		case DEGREES90:
 			realPainter.rotate(270);
-			realPainter.drawPixmap(1 - height(), -1, ((QPaintContext&)view()->context()).pixmap());
+			realPainter.drawPixmap(1 - height(), -1, context.pixmap());
 			break;
 		case DEGREES180:
 			realPainter.rotate(180);
-			realPainter.drawPixmap(1 - width(), 1 - height(), ((QPaintContext&)view()->context()).pixmap());
+			realPainter.drawPixmap(1 - width(), 1 - height(), context.pixmap());
 			break;
 		case DEGREES270:
 			realPainter.rotate(90);
-			realPainter.drawPixmap(-1, 1 - width(), ((QPaintContext&)view()->context()).pixmap());
+			realPainter.drawPixmap(-1, 1 - width(), context.pixmap());
 			break;
 	}
 }
 
-void QViewWidget::mousePressEvent(QMouseEvent *event) {
-	view()->onStylusPress(x(event), y(event));
+void QViewWidget::QViewWidgetInternal::mousePressEvent(QMouseEvent *event) {
+	myHolder.view()->onStylusPress(x(event), y(event));
 }
 
-void QViewWidget::mouseReleaseEvent(QMouseEvent *event) {
-	view()->onStylusRelease(x(event), y(event));
+void QViewWidget::QViewWidgetInternal::mouseReleaseEvent(QMouseEvent *event) {
+	myHolder.view()->onStylusRelease(x(event), y(event));
 }
 
-void QViewWidget::mouseMoveEvent(QMouseEvent *event) {
+void QViewWidget::QViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) {
 	switch (event->state()) {
 		case LeftButton:
-			view()->onStylusMovePressed(x(event), y(event));
+			myHolder.view()->onStylusMovePressed(x(event), y(event));
 			break;
 		case NoButton:
-			view()->onStylusMove(x(event), y(event));
+			myHolder.view()->onStylusMove(x(event), y(event));
 			break;
 		default:
 			break;
 	}
 }
 
-int QViewWidget::x(const QMouseEvent *event) const {
-	switch (rotation()) {
+int QViewWidget::QViewWidgetInternal::x(const QMouseEvent *event) const {
+	ZLPaintContext &context = myHolder.view()->context();
+	switch (myHolder.rotation()) {
 		default:
-			return std::min(std::max(event->x(), 0), width()) - view()->context().leftMargin();
+			return std::min(std::max(event->x(), 0), width()) - context.leftMargin();
 		case DEGREES90:
-			return height() - std::min(std::max(event->y(), 0), height()) - view()->context().rightMargin();
+			return height() - std::min(std::max(event->y(), 0), height()) - context.rightMargin();
 		case DEGREES180:
-			return width() - std::min(std::max(event->x(), 0), width()) - view()->context().rightMargin();
+			return width() - std::min(std::max(event->x(), 0), width()) - context.rightMargin();
 		case DEGREES270:
-			return std::min(std::max(event->y(), 0), height()) - view()->context().leftMargin();
+			return std::min(std::max(event->y(), 0), height()) - context.leftMargin();
 	}
 }
 
-int QViewWidget::y(const QMouseEvent *event) const {
-	switch (rotation()) {
+int QViewWidget::QViewWidgetInternal::y(const QMouseEvent *event) const {
+	ZLPaintContext &context = myHolder.view()->context();
+	switch (myHolder.rotation()) {
 		default:
-			return std::min(std::max(event->y(), 0), height()) - view()->context().topMargin();
+			return std::min(std::max(event->y(), 0), height()) - context.topMargin();
 		case DEGREES90:
-			return std::min(std::max(event->x(), 0), width()) - view()->context().topMargin();
+			return std::min(std::max(event->x(), 0), width()) - context.topMargin();
 		case DEGREES180:
-			return height() - std::min(std::max(event->y(), 0), height()) - view()->context().bottomMargin();
+			return height() - std::min(std::max(event->y(), 0), height()) - context.bottomMargin();
 		case DEGREES270:
-			return width() - std::min(std::max(event->x(), 0), width()) - view()->context().bottomMargin();
+			return width() - std::min(std::max(event->x(), 0), width()) - context.bottomMargin();
 	}
 }
 
 void QViewWidget::repaintView()	{
-	repaint(false);
+	myQWidget->repaint(false);
 	myApplication->refreshWindow();
 }

@@ -24,7 +24,6 @@
 
 #include <gtk/GtkKeyUtil.h>
 #include <maemo/GtkViewWidget.h>
-#include <maemo/GtkPaintContext.h>
 
 #include "../../common/description/BookDescription.h"
 #include "../../common/fbreader/BookTextView.h"
@@ -37,13 +36,13 @@ static bool quitFlag = false;
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	if (!quitFlag) {
-		((GtkFBReader*)data)->doAction(ACTION_QUIT);
+		((GtkApplicationWindow*)data)->application().doAction(ACTION_QUIT);
 	}
 	return true;
 }
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkFBReader*)data)->repaintView();
+	((GtkApplicationWindow*)data)->application().repaintView();
 }
 
 static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
@@ -51,35 +50,28 @@ static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
 }
 
 static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
-	((GtkFBReader*)data)->handleKeyEventSlot(event);
+	((GtkApplicationWindow*)data)->handleKeyEventSlot(event);
 }
 
 static const std::string OPTIONS = "Options";
 
-GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
-	FBReader(new GtkPaintContext(), bookToOpen),
+GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
+	ZLApplicationWindow(application),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
-	GtkWidget *vbox = gtk_vbox_new(false, 0);
-	gtk_container_add(GTK_CONTAINER(myMainWindow), vbox);
+	myVBox = gtk_vbox_new(false, 0);
+	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
 
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
-	gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(myToolbar), false, false, 0);
+	gtk_box_pack_start(GTK_BOX(myVBox), GTK_WIDGET(myToolbar), false, false, 0);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
-	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
-	gtk_container_add(GTK_CONTAINER(vbox), ((GtkViewWidget*)myViewWidget)->area());
-	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
-
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
-	initWindow(this);
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
-
-	setMode(BOOK_TEXT_MODE);
 
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
@@ -90,31 +82,31 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) :
 	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/fbreader/FBReader.png").c_str());
 }
 
-GtkFBReader::~GtkFBReader() {
+GtkApplicationWindow::~GtkApplicationWindow() {
 	if (!myFullScreen) {
 		int width, height;
 		gtk_window_get_size(myMainWindow, &width, &height);
 		myWidthOption.setValue(width);
 		myHeightOption.setValue(height);
 	}
-
-	delete (GtkViewWidget*)myViewWidget;
 }
 
-void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
-	doActionByKey(GtkKeyUtil::keyName(event));
+void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
+	application().doActionByKey(GtkKeyUtil::keyName(event));
 }
 
-void GtkFBReader::quitSlot() {
+void GtkApplicationWindow::close() {
 	if (!quitFlag) {
 		quitFlag = true;
-		delete this;
 		gtk_main_quit();
 	}
 }
 
-void GtkFBReader::toggleFullscreenSlot() {
-	myFullScreen = !myFullScreen;
+void GtkApplicationWindow::setFullscreen(bool fullscreen) {
+	if (fullscreen == myFullScreen) {
+		return;
+	}
+	myFullScreen = fullscreen;
 
 	if (myFullScreen) {
 		gtk_window_fullscreen(myMainWindow);
@@ -127,13 +119,13 @@ void GtkFBReader::toggleFullscreenSlot() {
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
 }
 
-bool GtkFBReader::isFullscreen() const {
+bool GtkApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
+void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
-		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
+		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/fbreader/" + buttonItem.iconName() + ".png").c_str());
 		GtkToolItem *button = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
@@ -147,21 +139,22 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 		gtk_toolbar_insert(myToolbar, button, -1);
-		shared_ptr<ZLApplication::Action> _action = action(buttonItem.actionId());
-		if (!_action.isNull()) {
-			gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*_action);
+		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
+		if (!action.isNull()) {
+			gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
 		}
 		myButtons[item] = button;
+		gtk_widget_show_all(GTK_WIDGET(button));
 	}
 }
 
-void GtkFBReader::refresh() {
-	const Toolbar::ItemVector &items = toolbar().items();
-	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+void GtkApplicationWindow::refresh() {
+	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
 			GtkWidget *gtkButton = GTK_WIDGET(myButtons[*it]);
 			if (gtkButton != 0) {
-				const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				int id = button.actionId();
 				if (application().isActionVisible(id)) {
 					gtk_widget_show(gtkButton);
@@ -179,4 +172,19 @@ void GtkFBReader::refresh() {
 			}
 		}
 	}
+}
+
+ZLViewWidget *GtkApplicationWindow::createViewWidget() {
+	GtkViewWidget *viewWidget = new GtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
+	gtk_container_add(GTK_CONTAINER(myVBox), viewWidget->area());
+	gtk_signal_connect_after(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	gtk_widget_show_all(myVBox);
+	return viewWidget;
+}
+
+bool GtkApplicationWindow::isFullKeyboardControlSupported() const {
+	return false;
+}
+
+void GtkApplicationWindow::grabAllKeys(bool) {
 }

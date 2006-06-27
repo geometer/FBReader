@@ -30,37 +30,32 @@
 
 #include "../common/fbreader/FBReader.h"
 
-class QFBReader : public QMainWindow, public FBReader, public ZLApplicationWindow { 
+class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
 
 public:
-	QFBReader(const std::string& bookToOpen);
-	~QFBReader();
-
-	void fullScreenWorkaround();
+	QApplicationWindow(ZLApplication *application);
+	~QApplicationWindow();
 
 private:
-	void focusInEvent(QFocusEvent *event);
-	void resizeEvent(QResizeEvent *event);
-	void closeEvent(QCloseEvent *event);
-	void keyPressEvent(QKeyEvent *event);
-
-protected:
-	void setCaption(const std::string &caption);
-	void setMode(ViewMode mode);
-	void addToolbarItem(Toolbar::ItemPtr item);
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
 	void refresh();
-	void toggleFullscreenSlot();
-	bool isFullscreen() const;
-	void quitSlot();
+	void close();
 
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
-	void searchSlot() { FBReader::searchSlot(); fullScreenWorkaround(); }
-	void bookInfoSlot() { FBReader::bookInfoSlot(); fullScreenWorkaround(); }
-	void optionsSlot() { FBReader::optionsSlot(); fullScreenWorkaround(); }
-	void addBookSlot() { FBReader::addBookSlot(); fullScreenWorkaround(); }
+	void setCaption(const std::string &caption);
+
+	bool isFullscreen() const;
+	void setFullscreen(bool fullscreen);
+	void fullScreenWorkaround();
+
+	void focusInEvent(QFocusEvent *event);
+	void resizeEvent(QResizeEvent *event);
+	void closeEvent(QCloseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 private slots:
 	void doActionSlot(int buttonNumber);
@@ -68,9 +63,10 @@ private slots:
 	void setDocument(const QString &fileName);
 
 private:
+	std::vector<bool> myToolbarMask;
+
 	bool myFullScreen;
 	int myTitleHeight;
-	std::vector<bool> myToolbarMask;
 };
 
 #endif /* __QFBREADER_H__ */

@@ -33,9 +33,7 @@
 
 #include <abstract/ZLOptions.h>
 
-#include <qtopia/FullScreenDialog.h>
 #include <qtopia/QViewWidget.h>
-#include <qtopia/QPaintContext.h>
 #include <qtopia/QKeyUtil.h>
 
 #include "../common/description/BookDescription.h"
@@ -45,41 +43,115 @@
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen, false) {
-	if (KeyboardControlOption.value()) {
+QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
+	if (application().KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}
 	setWFlags(getWFlags() | WStyle_Customize);
-
-	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
-	setCentralWidget((QViewWidget*)myViewWidget);
 
 	myFullScreen = false;
 	myTitleHeight = -1;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
-	initWindow(this);
-	setMode(BOOK_TEXT_MODE);
 }
 
-QFBReader::~QFBReader() {
-	if (KeyboardControlOption.value()) {
+QApplicationWindow::~QApplicationWindow() {
+	if (application().KeyboardControlOption.value()) {
 		grabAllKeys(false);
 	}
 }
 
-void QFBReader::keyPressEvent(QKeyEvent *event) {
-	doActionByKey(QKeyUtil::keyName(event));
+void QApplicationWindow::setCaption(const std::string &caption) {
+	QString qCaption = QString::fromUtf8(caption.c_str());
+	if (qCaption.length() > 60) {
+		qCaption = qCaption.left(57) + "...";
+	}
+	QMainWindow::setCaption(qCaption);
 }
 
-void QFBReader::focusInEvent(QFocusEvent*) {
+bool QApplicationWindow::isFullKeyboardControlSupported() const {
+	return true;
+}
+
+void QApplicationWindow::grabAllKeys(bool grab) {
+	if (grab) {
+		QPEApplication::grabKeyboard();
+	} else {
+		QPEApplication::ungrabKeyboard();
+	}
+}
+
+void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr) {
+}
+
+void QApplicationWindow::refresh() {
+	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
+
+	bool isVisibilityChanged = false;
+	if (myToolbarMask.size() != items.size()) {
+		isVisibilityChanged = true;
+		myToolbarMask.clear();
+		myToolbarMask.assign(items.size(), false);
+	}
+	std::vector<bool>::iterator bt = myToolbarMask.begin();
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+			if (application().isActionVisible(button.actionId()) != *bt) {
+				*bt = !*bt;
+				isVisibilityChanged = true;
+			}
+			++bt;
+		}
+	}
+	if (isVisibilityChanged) {
+		bt = myToolbarMask.begin();
+		if (centralWidget() != 0) {
+			centralWidget()->hide();
+		}
+		menuBar()->clear();
+		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+			if ((*it)->isButton()) {
+				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+				if (*bt) {
+					const QPixmap &pixmap = Resource::loadPixmap((application().name() + '/' + button.iconName()).c_str());
+					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
+				}
+				++bt;
+			}
+		}
+		if (centralWidget() != 0) {
+			centralWidget()->show();
+		}
+	}
+
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+			int id = button.actionId();
+			if (menuBar()->findItem(id) != 0) {
+				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
+			}
+		}
+	}
+}
+
+void QApplicationWindow::doActionSlot(int buttonNumber) {
+	application().doAction(buttonNumber);
+}
+
+void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
+	application().doActionByKey(QKeyUtil::keyName(event));
+}
+
+void QApplicationWindow::focusInEvent(QFocusEvent*) {
 	if (myFullScreen && (size() != qApp->desktop()->size())) {
 		showNormal();
 		showFullScreen();
 	}
 }
 
-void QFBReader::resizeEvent(QResizeEvent*) {
+void QApplicationWindow::resizeEvent(QResizeEvent*) {
 	if (myFullScreen && (size() != qApp->desktop()->size())) {
 		int titleHeight = topData()->normalGeometry.top();
 		if (titleHeight > 0) {
@@ -91,8 +163,11 @@ void QFBReader::resizeEvent(QResizeEvent*) {
 	}
 }
 
-void QFBReader::toggleFullscreenSlot() {
-	myFullScreen = !myFullScreen;
+void QApplicationWindow::setFullscreen(bool fullscreen) {
+	if (fullscreen == myFullScreen) {
+		return;
+	}
+	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		menuBar()->hide();
 		showFullScreen();
@@ -107,85 +182,19 @@ void QFBReader::toggleFullscreenSlot() {
 	}
 }
 
-bool QFBReader::isFullscreen() const {
+bool QApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void QFBReader::quitSlot() {
-  close();
-}
-
-void QFBReader::setMode(ViewMode mode) {
-	if (mode == myMode) {
-		return;
-	}
-
-	FBReader::setMode(mode);
-
-	fullScreenWorkaround();
-}
-
-void QFBReader::closeEvent(QCloseEvent *event) {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-		event->ignore();
-	} else {
+void QApplicationWindow::closeEvent(QCloseEvent *event) {
+	if (application().closeView()) {
 		event->accept();
+	} else {
+		event->ignore();
 	}
 }
 
-void QFBReader::addToolbarItem(Toolbar::ItemPtr) {
-}
-
-void QFBReader::refresh() {
-	const Toolbar::ItemVector &items = toolbar().items();
-
-	bool isVisibilityChanged = false;
-	if (myToolbarMask.size() != items.size()) {
-		isVisibilityChanged = true;
-		myToolbarMask.clear();
-		myToolbarMask.assign(items.size(), false);
-	}
-	std::vector<bool>::iterator bt = myToolbarMask.begin();
-	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
-			const Toolbar::ButtonItem &button = (Toolbar::ButtonItem&)**it;
-			if (application().isActionVisible(button.actionId()) != *bt) {
-				*bt = !*bt;
-				isVisibilityChanged = true;
-			}
-			++bt;
-		}
-	}
-	if (isVisibilityChanged) {
-		bt = myToolbarMask.begin();
-		centralWidget()->hide();
-		menuBar()->clear();
-		for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-			if ((*it)->isButton()) {
-				const Toolbar::ButtonItem &button = (Toolbar::ButtonItem&)**it;
-				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap(("FBReader/" + button.iconName()).c_str());
-					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
-				}
-				++bt;
-			}
-		}
-		centralWidget()->show();
-	}
-
-	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
-			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
-			int id = button.actionId();
-			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
-			}
-		}
-	}
-}
-
-void QFBReader::fullScreenWorkaround() {
+void QApplicationWindow::fullScreenWorkaround() {
 	if (myFullScreen) {
 		reparent(0, WType_TopLevel, QPoint(0,0));
 		reparent(0, WType_TopLevel | WStyle_Customize | WStyle_NoBorderEx, QPoint(0,0));
@@ -193,37 +202,18 @@ void QFBReader::fullScreenWorkaround() {
 	}
 }
 
-void QFBReader::setCaption(const std::string &caption) {
-	QString qCaption = QString::fromUtf8(caption.c_str());
-	if (qCaption.length() > 60) {
-		qCaption = qCaption.left(57) + "...";
-	}
-	QMainWindow::setCaption(qCaption);
+void QApplicationWindow::close() {
+	QMainWindow::close();
 }
 
-void QFBReader::doActionSlot(int buttonNumber) {
-	doAction(buttonNumber);
-}
-
-bool QFBReader::isFullKeyboardControlSupported() const {
-	return true;
-}
-
-void QFBReader::grabAllKeys(bool grab) {
-	if (grab) {
-		QPEApplication::grabKeyboard();
-	} else {
-		QPEApplication::ungrabKeyboard();
-	}
-}
-
-void QFBReader::setDocument(const QString &fileName) {
+void QApplicationWindow::setDocument(const QString &fileName) {
 	if (!fileName.isEmpty()) {
-		BookDescriptionPtr description = createDescription((const char*)fileName.utf8());
-		if (!description.isNull()) {
-			openBook(description);
-			repaintView();
-			resetWindowCaption();
-		}
+		application().openFile((const char*)fileName.utf8());
 	}
+}
+
+ZLViewWidget *QApplicationWindow::createViewWidget() {
+	QViewWidget *viewWidget = new QViewWidget(this, &application());
+	setCentralWidget(viewWidget->widget());
+	return viewWidget;
 }

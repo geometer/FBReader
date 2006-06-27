@@ -33,31 +33,34 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-class GtkFBReader : public FBReader, public ZLApplicationWindow { 
+class GtkApplicationWindow : public ZLApplicationWindow { 
 
 public:
 	static const std::string ImageDirectory;
 
 public:
-	GtkFBReader(const std::string& bookToOpen);
-	~GtkFBReader();
+	GtkApplicationWindow(ZLApplication *application);
+	~GtkApplicationWindow();
 
-protected:
-	void setCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
-	void addToolbarItem(Toolbar::ItemPtr item);
-	void addMenubarItem(Menubar::ItemPtr item);
+private:
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void addMenubarItem(ZLApplication::Menubar::ItemPtr item);
+	void addMenubarItem(GtkMenu *menu, ZLApplication::Menubar::ItemPtr item);
 	void refresh();
-	void toggleFullscreenSlot();
+	void close();
+
+	void setCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
+
 	bool isFullscreen() const;
-	void quitSlot();
+	void setFullscreen(bool fullscreen);
+
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
 
 public:
 	void handleKeyEventSlot(GdkEventKey*);
-
 	HildonApp *getMainWindow() const { return myApp; }
-
-private:
-	void addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item);
 
 private:
 	HildonApp *myApp;
@@ -67,8 +70,8 @@ private:
 
 	bool myFullScreen;
 
-	std::map<Toolbar::ItemPtr,GtkToolItem*> myButtons;
-	std::map<Menubar::ItemPtr,GtkMenuItem*> myMenuItems;
+	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myButtons;
+	std::map<ZLApplication::Menubar::ItemPtr,GtkMenuItem*> myMenuItems;
 };
 
 #endif /* __GTKFBREADER_H__ */

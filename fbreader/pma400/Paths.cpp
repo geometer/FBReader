@@ -20,7 +20,6 @@
  */
 
 #include "../common/Files.h"
-#include "../common/fbreader/FBReader.h"
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
 #include "../common/fbreader/FBFileHandler.h"

@@ -27,24 +27,30 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
-#include "../../common/fbreader/FBReader.h"
+#include <abstract/ZLApplication.h>
 
-class GtkFBReader : public FBReader, public ZLApplicationWindow { 
+class GtkApplicationWindow : public ZLApplicationWindow { 
 
 public:
 	static const std::string ImageDirectory;
 
 public:
-	GtkFBReader(const std::string& bookToOpen);
-	~GtkFBReader();
+	GtkApplicationWindow(ZLApplication *application);
+	~GtkApplicationWindow();
 
-protected:
-	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
-	void addToolbarItem(Toolbar::ItemPtr item);
+private:
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
 	void refresh();
-	void toggleFullscreenSlot();
+	void close();
+
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
+
+	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
+
 	bool isFullscreen() const;
-	void quitSlot();
+	void setFullscreen(bool fullscreen);
 
 public:
 	void handleKeyEventSlot(GdkEventKey *event);
@@ -58,10 +64,11 @@ private:
 
 	GtkWindow *myMainWindow;
 	GtkWidget *myToolbar;
+	GtkWidget *myVBox;
 
 	bool myFullScreen;
 
-	std::map<Toolbar::ItemPtr,GtkWidget*> myButtons;
+	std::map<ZLApplication::Toolbar::ItemPtr,GtkWidget*> myButtons;
 };
 
 #endif /* __GTKFBREADER_H__ */

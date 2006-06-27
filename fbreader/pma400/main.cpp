@@ -28,6 +28,7 @@
 #include <qtopia/QDialogManager.h>
 #include <qt/QImageManager.h>
 #include <qtopia/QDeviceInfo.h>
+#include <qtopia/QPaintContext.h>
 
 #include "QFBReader.h"
 #include "../common/Files.h"
@@ -43,8 +44,9 @@ int main(int argc, char **argv) {
 	QImageManager::createInstance();
 	QDeviceInfo::createInstance();
 
-	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);
-	application.showMainWidget(reader);
+	FBReader *reader = new FBReader(new QPaintContext(), argc == 1 ? std::string() : argv[1]);
+	application.showMainWidget(new QApplicationWindow(reader));
+	reader->initWindow();
 	int code = application.exec();
 	delete reader;
 

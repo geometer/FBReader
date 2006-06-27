@@ -30,6 +30,6 @@ const std::string Files::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
-const std::string QFBReader::ImageDirectory = Files::PathPrefix + "icons";
-const std::string CollectionView::DeleteBookImageFile = QFBReader::ImageDirectory + "/FBReader/remove.png";
+const std::string QApplicationWindow::ImageDirectory = Files::PathPrefix + "icons";
+const std::string CollectionView::DeleteBookImageFile = QApplicationWindow::ImageDirectory + "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

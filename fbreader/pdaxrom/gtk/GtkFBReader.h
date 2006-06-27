@@ -29,22 +29,28 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-class GtkFBReader : public FBReader, public ZLApplicationWindow { 
+class GtkApplicationWindow : public ZLApplicationWindow { 
 
 public:
 	static const std::string ImageDirectory;
 	
 public:
-	GtkFBReader(const std::string& bookToOpen);
-	~GtkFBReader();
+	GtkApplicationWindow(ZLApplication *application);
+	~GtkApplicationWindow();
 
-protected:
-	void setCaption(const std::string &caption);
-	void addToolbarItem(Toolbar::ItemPtr item);
+private:
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
 	void refresh();
-	void toggleFullscreenSlot();
+	void close();
+
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
+
+	void setCaption(const std::string &caption);
+
 	bool isFullscreen() const;
-	void quitSlot();
+	void setFullscreen(bool fullscreen);
 
 public:
 	void handleKeyEventSlot(GdkEventKey*);
@@ -57,8 +63,9 @@ private:
 
 	GtkWindow *myMainWindow;
 	GtkWidget *myToolbar;
+	GtkWidget *myVBox;
 
-	std::map<Toolbar::ItemPtr,GtkWidget*> myButtons;
+	std::map<ZLApplication::Toolbar::ItemPtr,GtkWidget*> myButtons;
 
 	bool myFullScreen;
 };

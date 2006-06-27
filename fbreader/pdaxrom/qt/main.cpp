@@ -28,6 +28,7 @@
 #include <qt/QDialogManager.h>
 #include <qt/QImageManager.h>
 #include <qt/QDeviceInfo.h>
+#include <qt/QPaintContext.h>
 
 #include "QFBReader.h"
 #include "../../common/Files.h"
@@ -40,14 +41,16 @@ int main(int argc, char **argv) {
 	ZLUnixFSManager::createInstance();
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
-	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QFBReader::ImageDirectory);
+	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QApplicationWindow::ImageDirectory);
 	QImageManager::createInstance();
 	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	QDeviceInfo::createInstance();
 
-	QFBReader *reader = new QFBReader(argc == 1 ? std::string() : argv[1]);
-	application.setMainWidget(reader);
-	reader->showMaximized();
+	FBReader *reader = new FBReader(new QPaintContext(), argc == 1 ? std::string() : argv[1]);
+	QApplicationWindow *window = new QApplicationWindow(reader);
+	application.setMainWidget(window);
+	window->showMaximized();
+	reader->initWindow();
 	int code = application.exec();
 	delete reader;
 

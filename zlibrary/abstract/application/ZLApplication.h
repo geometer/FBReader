@@ -37,6 +37,8 @@ public:
 	ZLIntegerOption RotationAngleOption;
 	ZLIntegerOption AngleStateOption;
 
+  ZLBooleanOption KeyboardControlOption;
+
 public:
 
 	class Action {
@@ -63,6 +65,19 @@ protected:
 		ZLApplication &myApplication;
 	};
 	friend class RotationAction;
+	
+	class FullscreenAction : public Action {
+
+	public:
+		FullscreenAction(ZLApplication &application, bool toggle);
+		bool isVisible();
+		void run();
+
+	private:
+		ZLApplication &myApplication;
+		bool myIsToggle;
+	};
+	friend class FullscreenAction;
 	
 public:
 
@@ -208,24 +223,35 @@ protected:
 	void setView(ZLView *view);
 	ZLView *currentView();
 
-	void initWindow(class ZLApplicationWindow *view);
-
+	void setFullscreen(bool fullscreen);
+	bool isFullscreen() const;
 	void resetWindowCaption();
+	void quit();
 
 public:
+	virtual void initWindow();
 	// TODO: remove
 	void repaintView();
+  void grabAllKeys(bool grab);
+	bool isFullKeyboardControlSupported() const;
 
 public:
 	virtual ~ZLApplication();
 
+	const std::string &name() const;
 	shared_ptr<Action> action(int actionId) const;
 	bool isActionVisible(int actionId) const;
 	bool isActionEnabled(int actionId) const;
 	void doAction(int actionId);
+	// TODO: move implementation from FBReader
+  virtual void doActionByKey(const std::string &key) = 0;
+	virtual bool closeView();
+	virtual void openFile(const std::string &fileName);
 
 	Toolbar &toolbar();
 	Menubar &menubar();
+	const Toolbar &toolbar() const;
+	const Menubar &menubar() const;
 
 	void refreshWindow();
 
@@ -240,21 +266,36 @@ private:
 	Toolbar myToolbar;
 	Menubar myMenubar;
 	class ZLApplicationWindow *myWindow;
+
+friend class ZLApplicationWindow;
 };
 
 class ZLApplicationWindow {
 
 protected:
-	ZLApplicationWindow();
+	ZLApplicationWindow(ZLApplication *application);
 
-	const ZLApplication &application() const;
+public:
+	ZLApplication &application() const;
 
+protected:
 	void init();
-	virtual void refresh() = 0;
+	virtual ZLViewWidget *createViewWidget() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
-	// TODO: replace with abstract method when available for all platforms
-	virtual void addMenubarItem(ZLApplication::Menubar::ItemPtr item) {}
+	// TODO: replace with pure virtual method when available for all platforms
+	virtual void addMenubarItem(ZLApplication::Menubar::ItemPtr) {}
+
+	virtual void refresh() = 0;
+
+	virtual void close() = 0;
+
 	virtual void setCaption(const std::string &caption) = 0;
+
+	virtual bool isFullKeyboardControlSupported() const = 0;
+  virtual void grabAllKeys(bool grab) = 0;
+
+	virtual void setFullscreen(bool fullscreen) = 0;
+	virtual bool isFullscreen() const = 0;
 
 public:
 	virtual ~ZLApplicationWindow();
@@ -267,21 +308,44 @@ friend class ZLApplication;
 
 inline ZLApplication::~ZLApplication() {
 	if (myWindow != 0) {
-		//delete myWindow;
+		delete myWindow;
 	}
 }
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
 inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }
+inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }
+inline const ZLApplication::Menubar &ZLApplication::menubar() const { return myMenubar; }
 
 inline void ZLApplication::refreshWindow() {
 	if (myWindow != 0) {
 		myWindow->refresh();
 	}
 }
+inline bool ZLApplication::isFullKeyboardControlSupported() const {
+	return (myWindow != 0) && myWindow->isFullKeyboardControlSupported();
+}
+inline void ZLApplication::grabAllKeys(bool grab) {
+	if (myWindow != 0) {
+		myWindow->grabAllKeys(grab);
+	}
+}
+inline bool ZLApplication::isFullscreen() const {
+	return (myWindow != 0) && myWindow->isFullscreen();
+}
+inline void ZLApplication::setFullscreen(bool fullscreen) {
+	if (myWindow != 0) {
+		myWindow->setFullscreen(fullscreen);
+	}
+}
+inline void ZLApplication::quit() {
+	if (myWindow != 0) {
+		myWindow->close();
+	}
+}
+inline const std::string &ZLApplication::name() const { return myName; }
 
-inline ZLApplicationWindow::ZLApplicationWindow() {}
 inline ZLApplicationWindow::~ZLApplicationWindow() {}
-inline const ZLApplication &ZLApplicationWindow::application() const { return *myApplication; }
+inline ZLApplication &ZLApplicationWindow::application() const { return *myApplication; }
 
 inline const ZLApplication::Toolbar::ItemVector &ZLApplication::Toolbar::items() const { return myItems; }
 

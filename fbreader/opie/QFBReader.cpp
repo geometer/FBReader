@@ -33,9 +33,7 @@
 
 #include <abstract/ZLOptions.h>
 
-#include <qtopia/FullScreenDialog.h>
 #include <qtopia/QViewWidget.h>
-#include <qtopia/QPaintContext.h>
 #include <qtopia/QKeyUtil.h>
 
 #include "../common/description/BookDescription.h"
@@ -45,47 +43,46 @@
 #include "../common/fbreader/CollectionView.h"
 #include "QFBReader.h"
 
-QFBReader::QFBReader(const std::string& bookToOpen) : FBReader(new QPaintContext(), bookToOpen), myCloseFlag(false) {
-	if (KeyboardControlOption.value()) {
+QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a), myCloseFlag(false) {
+	if (application().KeyboardControlOption.value()) {
 		grabAllKeys(true);
 	}
-	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
-	setCentralWidget((QViewWidget*)myViewWidget);
 
 	myFullScreen = false;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
-	initWindow(this);
-	setMode(BOOK_TEXT_MODE);
 }
 
-QFBReader::~QFBReader() {
-	if (KeyboardControlOption.value()) {
+QApplicationWindow::~QApplicationWindow() {
+	if (application().KeyboardControlOption.value()) {
 		grabAllKeys(false);
 	}
 }
 
-void QFBReader::keyPressEvent(QKeyEvent *event) {
+void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
 	killTimers();
-	doActionByKey(QKeyUtil::keyName(event));
+	application().doActionByKey(QKeyUtil::keyName(event));
 }
 
-void QFBReader::focusInEvent(QFocusEvent*) {
+void QApplicationWindow::focusInEvent(QFocusEvent*) {
 	if (myFullScreen && (size() != qApp->desktop()->size())) {
 		showNormal();
 		showFullScreen();
 	}
 }
 
-void QFBReader::resizeEvent(QResizeEvent*) {
+void QApplicationWindow::resizeEvent(QResizeEvent*) {
 	if (myFullScreen && (size() != qApp->desktop()->size())) {
 		showNormal();
 		showFullScreen();
 	}
 }
 
-void QFBReader::toggleFullscreenSlot() {
-	myFullScreen = !myFullScreen;
+void QApplicationWindow::setFullscreen(bool fullscreen) {
+	if (fullscreen == myFullScreen) {
+		return;
+	}
+	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		menuBar()->hide();
 		showNormal();
@@ -97,39 +94,30 @@ void QFBReader::toggleFullscreenSlot() {
 	}
 }
 
-bool QFBReader::isFullscreen() const {
+bool QApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void QFBReader::quitSlot() {
-	myCloseFlag = true;
-  close();
-}
-
-void QFBReader::timerEvent(QTimerEvent *) {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-	} else {
+void QApplicationWindow::timerEvent(QTimerEvent *) {
+	if (application().closeView()) {
 		myCloseFlag = true;
-		close();
 	}
 	killTimers();
 }
 
-void QFBReader::closeEvent(QCloseEvent *event) {
-	if (myCloseFlag) {
+void QApplicationWindow::closeEvent(QCloseEvent *event) {
+	if (application().closeView()) {
 		event->accept();
 	} else {
-		startTimer(50);
 		event->ignore();
 	}
 }
 
-void QFBReader::addToolbarItem(shared_ptr<Toolbar::Item>) {
+void QApplicationWindow::addToolbarItem(shared_ptr<ZLApplication::Toolbar::Item>) {
 }
 
-void QFBReader::refresh() {
-	const Toolbar::ItemVector &items = toolbar().items();
+void QApplicationWindow::refresh() {
+	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 
 	bool isVisibilityChanged = false;
 	if (myToolbarMask.size() != items.size()) {
@@ -138,9 +126,9 @@ void QFBReader::refresh() {
 		myToolbarMask.assign(items.size(), false);
 	}
 	std::vector<bool>::iterator bt = myToolbarMask.begin();
-	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
-			const Toolbar::ButtonItem &button = (Toolbar::ButtonItem&)**it;
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			if (application().isActionVisible(button.actionId()) != *bt) {
 				*bt = !*bt;
 				isVisibilityChanged = true;
@@ -152,9 +140,9 @@ void QFBReader::refresh() {
 		bt = myToolbarMask.begin();
 		centralWidget()->hide();
 		menuBar()->clear();
-		for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 			if ((*it)->isButton()) {
-				const Toolbar::ButtonItem &button = (Toolbar::ButtonItem&)**it;
+				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
 					const QPixmap &pixmap = Resource::loadPixmap(("FBReader/" + button.iconName()).c_str());
 					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
@@ -165,9 +153,9 @@ void QFBReader::refresh() {
 		centralWidget()->show();
 	}
 
-	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
-			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 			if (menuBar()->findItem(id) != 0) {
 				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
@@ -176,7 +164,7 @@ void QFBReader::refresh() {
 	}
 }
 
-void QFBReader::setCaption(const std::string &caption) {
+void QApplicationWindow::setCaption(const std::string &caption) {
 	QString qCaption = QString::fromUtf8(caption.c_str());
 	if (qCaption.length() > 60) {
 		qCaption = qCaption.left(57) + "...";
@@ -184,18 +172,30 @@ void QFBReader::setCaption(const std::string &caption) {
 	QMainWindow::setCaption(qCaption);
 }
 
-void QFBReader::doActionSlot(int buttonNumber) {
-	doAction(buttonNumber);
+void QApplicationWindow::doActionSlot(int buttonNumber) {
+	application().doAction(buttonNumber);
 }
 
-bool QFBReader::isFullKeyboardControlSupported() const {
+bool QApplicationWindow::isFullKeyboardControlSupported() const {
 	return true;
 }
 
-void QFBReader::grabAllKeys(bool grab) {
+void QApplicationWindow::grabAllKeys(bool grab) {
 	if (grab) {
 		QPEApplication::grabKeyboard();
 	} else {
 		QPEApplication::ungrabKeyboard();
 	}
+}
+
+ZLViewWidget *QApplicationWindow::createViewWidget() {
+	QViewWidget *viewWidget = new QViewWidget(this, &application());
+	setCentralWidget(viewWidget->widget());
+	viewWidget->widget()->show();
+	return viewWidget;
+}
+
+void QApplicationWindow::close() {
+	myCloseFlag = true;
+	QMainWindow::close();
 }

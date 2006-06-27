@@ -21,26 +21,42 @@
 #include "ZLApplication.h"
 #include "../view/ZLView.h"
 
+static const std::string ROTATION = "Rotation";
 static const std::string ANGLE = "Angle";
 static const std::string STATE = "State";
+static const std::string KEYBOARD = "Keyboard";
+static const std::string FULL_CONTROL = "FullControl";
 
 ZLApplication::ZLApplication(const std::string &name) :
-	RotationAngleOption(ZLOption::CONFIG_CATEGORY, "Rotation", ANGLE, ZLViewWidget::DEGREES90),
+	RotationAngleOption(ZLOption::CONFIG_CATEGORY, ROTATION, ANGLE, ZLViewWidget::DEGREES90),
 	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
+	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, KEYBOARD, FULL_CONTROL, false),
 	myName(name),
 	myViewWidget(0),
 	myWindow(0) {
 }
 
-void ZLApplication::initWindow(ZLApplicationWindow *view) {
-	myWindow = view;
-	myWindow->myApplication = this;
+void ZLApplication::initWindow() {
 	myWindow->init();
 	myWindow->refresh();
 	resetWindowCaption();
 }
 
+bool ZLApplication::closeView() {
+	quit();
+	return true;
+}
+
+void ZLApplication::openFile(const std::string&) {
+}
+
+ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplication(application) {
+	myApplication->myWindow = this;
+}
+
 void ZLApplicationWindow::init() {
+	myApplication->myViewWidget = createViewWidget();
+
 	const ZLApplication::Toolbar::ItemVector &toolbarItems = myApplication->toolbar().items();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = toolbarItems.begin(); it != toolbarItems.end(); ++it) {
 		addToolbarItem(*it);

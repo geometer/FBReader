@@ -227,7 +227,7 @@ void TextView::preparePaintInfo() {
 
         if (!startCursor.isNull()) {
           WordCursor endCursor = buildInfos(startCursor);
-          if (!pageIsEmpty() && (endCursor != myEndCursor)) {
+          if (!pageIsEmpty() && ((myScrollingMode != KEEP_LINES) || (endCursor != myEndCursor))) {
             myStartCursor = startCursor;
             myEndCursor = endCursor;
             break;

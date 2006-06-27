@@ -28,39 +28,45 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-class QFBReader : public QMainWindow, public FBReader, public ZLApplicationWindow { 
-  Q_OBJECT
+class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
+	Q_OBJECT
 
 public:
   static const std::string ImageDirectory;
   
 public:
-  QFBReader(const std::string& bookToOpen);
-  ~QFBReader();
+	QApplicationWindow(ZLApplication *application);
+	~QApplicationWindow();
 
 private:
-  void closeEvent(QCloseEvent *event);
-  void keyPressEvent(QKeyEvent *event);
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void refresh();
+	void close();
+
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
+
+  void setCaption(const std::string &caption) { QMainWindow::setCaption(QString::fromUtf8(caption.c_str())); }
+
+	bool isFullscreen() const;
+	void setFullscreen(bool fullscreen);
+	void fullScreenWorkaround();
+
+	void closeEvent(QCloseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
   void wheelEvent(QWheelEvent *event);
 
-protected:
-  void setCaption(const std::string &caption) { QMainWindow::setCaption(QString::fromUtf8(caption.c_str())); }
-	void addToolbarItem(Toolbar::ItemPtr item);
-	void refresh();
-  void toggleFullscreenSlot();
-  bool isFullscreen() const;
-  void quitSlot();
-  
 private slots:
-  void doActionSlot(int buttonNumber);
-  void emptySlot() {}
+	void doActionSlot(int buttonNumber);
+	void emptySlot() {}
 
 private:
   ZLIntegerRangeOption myWidthOption;
   ZLIntegerRangeOption myHeightOption;
 
-  bool myFullScreen;
-  bool myWasMaximized;
+	bool myFullScreen;
+	bool myWasMaximized;
 };
 
 #endif /* __QFBREADER_H__ */

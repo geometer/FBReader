@@ -30,6 +30,6 @@ const std::string Files::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "fbreader";
 
-const std::string GtkFBReader::ImageDirectory = "/usr/share/pixmaps";
-const std::string CollectionView::DeleteBookImageFile = GtkFBReader::ImageDirectory + "/fbreader/remove.png";
+const std::string GtkApplicationWindow::ImageDirectory = "/usr/share/pixmaps";
+const std::string CollectionView::DeleteBookImageFile = GtkApplicationWindow::ImageDirectory + "/fbreader/remove.png";
 const std::string BookCollection::DefaultBookPath = "/media/cf/FBooks:~/FBooks";

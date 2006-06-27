@@ -32,7 +32,6 @@
 #include <abstract/ZLOptions.h>
 
 #include <qt/QViewWidget.h>
-#include <qt/QPaintContext.h>
 #include <qt/QKeyUtil.h>
 
 #include "../../common/description/BookDescription.h"
@@ -44,8 +43,8 @@
 
 static const std::string OPTIONS = "Options";
 
-QFBReader::QFBReader(const std::string& bookToOpen) :
-	FBReader(new QPaintContext(), bookToOpen),
+QApplicationWindow::QApplicationWindow(ZLApplication *application) :
+	ZLApplicationWindow(application),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350),
 	myFullScreen(false),
@@ -53,31 +52,27 @@ QFBReader::QFBReader(const std::string& bookToOpen) :
 
 	setWFlags(getWFlags() | WStyle_Customize);
 
-	myViewWidget = new QViewWidget(this, this, (ZLViewWidget::Angle)AngleStateOption.value());
-	setCentralWidget((QViewWidget*)myViewWidget);
-
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 
 	resize(myWidthOption.value(), myHeightOption.value());
-
-	initWindow(this);
-
-	setMode(BOOK_TEXT_MODE);
 }
 
-QFBReader::~QFBReader() {
+QApplicationWindow::~QApplicationWindow() {
 	if (!isFullscreen()) {
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}
 }
 
-void QFBReader::keyPressEvent(QKeyEvent *event) {
-	doActionByKey(QKeyUtil::keyName(event));
+void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
+	application().doActionByKey(QKeyUtil::keyName(event));
 }
 
-void QFBReader::toggleFullscreenSlot() {
-	myFullScreen = !myFullScreen;
+void QApplicationWindow::setFullscreen(bool fullscreen) {
+	if (fullscreen == myFullScreen) {
+		return;
+	}
+	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		myWasMaximized = isMaximized();
 		menuBar()->hide();
@@ -91,37 +86,34 @@ void QFBReader::toggleFullscreenSlot() {
 	}
 }
 
-bool QFBReader::isFullscreen() const {
+bool QApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void QFBReader::quitSlot() {
-	close();
+void QApplicationWindow::close() {
+	QMainWindow::close();
 }
 
-void QFBReader::closeEvent(QCloseEvent *event) {
-	if (myMode != BOOK_TEXT_MODE) {
-		restorePreviousMode();
-		event->ignore();
-	} else {
+void QApplicationWindow::closeEvent(QCloseEvent *event) {
+	if (application().closeView()) {
 		event->accept();
-	}
-}
-
-void QFBReader::addToolbarItem(Toolbar::ItemPtr item) {
-	if (item->isButton()) {
-		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
-		menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
 	} else {
-		// TODO: implement
+		event->ignore();
 	}
 }
 
-void QFBReader::refresh() {
-	const Toolbar::ItemVector &items = toolbar().items();
-	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
+	if (item->isButton()) {
+		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
+		menuBar()->insertItem(QPixmap((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
+	}
+}
+
+void QApplicationWindow::refresh() {
+	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
-			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 			if (menuBar()->findItem(id) != 0) {
 				menuBar()->setItemVisible(id, application().isActionVisible(id));
@@ -131,7 +123,7 @@ void QFBReader::refresh() {
 	}
 }
 
-void QFBReader::setCaption(const std::string &caption) {
+void QApplicationWindow::setCaption(const std::string &caption) {
 	QString qCaption = QString::fromUtf8(caption.c_str());
 	if (qCaption.length() > 60) {
 		qCaption = qCaption.left(57) + "...";
@@ -139,6 +131,20 @@ void QFBReader::setCaption(const std::string &caption) {
 	QMainWindow::setCaption(qCaption);
 }
 
-void QFBReader::doActionSlot(int buttonNumber) {
-	doAction(buttonNumber);
+void QApplicationWindow::doActionSlot(int buttonNumber) {
+	application().doAction(buttonNumber);
+}
+
+bool QApplicationWindow::isFullKeyboardControlSupported() const {
+	return false;
+}
+
+void QApplicationWindow::grabAllKeys(bool) {
+}
+
+ZLViewWidget *QApplicationWindow::createViewWidget() {
+	QViewWidget *viewWidget = new QViewWidget(this, &application());
+	setCentralWidget(viewWidget->widget());
+	viewWidget->widget()->show();
+	return viewWidget;
 }

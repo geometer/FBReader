@@ -26,27 +26,40 @@
 #include <abstract/ZLView.h>
 #include <abstract/ZLApplication.h>
 
-class QViewWidget : public QWidget, public ZLViewWidget {
+class QViewWidget : public ZLViewWidget {
 
+private:
+	class QViewWidgetInternal : public QWidget {
+
+	public:
+		QViewWidgetInternal(QWidget *parent, QViewWidget &holder);
+
+	private:
+		void paintEvent(QPaintEvent *event);
+		void mousePressEvent(QMouseEvent *event);
+		void mouseReleaseEvent(QMouseEvent *event);
+		void mouseMoveEvent(QMouseEvent *event);
+
+		int x(const QMouseEvent *event) const;
+		int y(const QMouseEvent *event) const;
+
+	private:
+		QViewWidget &myHolder;
+	};
+	
 public:
-	QViewWidget(QWidget *parent, ZLApplication *application, Angle initialAngle);
-	~QViewWidget() {}
+	QViewWidget(QWidget *parent, ZLApplication *application);
+	QWidget *widget();
 
+private:
 	void repaintView();
 	void trackStylus(bool track);
 
-protected:
-	void paintEvent(QPaintEvent *event);
-	void mousePressEvent(QMouseEvent *event);
-	void mouseReleaseEvent(QMouseEvent *event);
-	void mouseMoveEvent(QMouseEvent *event);
-
 private:
-	int x(const QMouseEvent *event) const;
-	int y(const QMouseEvent *event) const;
-
-private:
+	QViewWidgetInternal *myQWidget;
 	ZLApplication *myApplication;
 };
+
+inline QWidget *QViewWidget::widget() { return myQWidget; }
 
 #endif /* __QVIEWWIDGET_H__ */

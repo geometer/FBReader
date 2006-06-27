@@ -238,17 +238,6 @@ void FBReader::ChangeFontSizeAction::run() {
 	myFBReader.repaintView();
 }
 
-FBReader::FullscreenAction::FullscreenAction(FBReader &fbreader, bool toggle) : FBAction(fbreader), myIsToggle(toggle) {
-}
-
-bool FBReader::FullscreenAction::isVisible() {
-	return myIsToggle || !myFBReader.isFullscreen();
-}
-
-void FBReader::FullscreenAction::run() {
-	myFBReader.toggleFullscreenSlot();
-}
-
 FBReader::OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
@@ -273,9 +262,9 @@ void FBReader::CancelAction::run() {
 	if (myFBReader.myMode != BOOK_TEXT_MODE) {
 		myFBReader.restorePreviousMode();
 	} else if (myFBReader.isFullscreen()) {
-		myFBReader.toggleFullscreenSlot();
+		myFBReader.setFullscreen(false);
 	} else if (myFBReader.QuitOnCancelOption.value()) {
-		myFBReader.quitSlot();
+		myFBReader.quit();
 	}
 }
 
@@ -292,9 +281,5 @@ FBReader::QuitAction::QuitAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void FBReader::QuitAction::run() {
-	if (myFBReader.myMode == BOOK_TEXT_MODE) {
-		myFBReader.quitSlot();
-	} else {
-		myFBReader.restorePreviousMode();
-	}
+	myFBReader.closeView();
 }

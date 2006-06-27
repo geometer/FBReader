@@ -26,7 +26,6 @@
 
 #include <maemo/GtkViewWidget.h>
 #include <maemo/GtkKeyUtil.h>
-#include <maemo/GtkPaintContext.h>
 #include <maemo/GtkDialogManager.h>
 
 #include "../../common/description/BookDescription.h"
@@ -47,14 +46,14 @@ static bool acceptAction() {
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	if (acceptAction()) {
-		((GtkFBReader*)data)->doAction(ACTION_QUIT);
+		((GtkApplicationWindow*)data)->application().doAction(ACTION_QUIT);
 	}
 	return true;
 }
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	if (acceptAction()) {
-		((GtkFBReader*)data)->repaintView();
+		((GtkApplicationWindow*)data)->application().repaintView();
 	}
 }
 
@@ -72,11 +71,11 @@ static void menuActionSlot(GtkWidget *, gpointer data) {
 
 static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 	if (acceptAction()) {
-		((GtkFBReader*)data)->handleKeyEventSlot(key);
+		((GtkApplicationWindow*)data)->handleKeyEventSlot(key);
 	}
 }
 
-GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintContext(), bookToOpen) {
+GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
@@ -84,30 +83,18 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 
 	myWindow = HILDON_WINDOW(hildon_window_new());
 
-	myMenu = GTK_MENU(gtk_menu_new());
-
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
 	gtk_toolbar_set_show_arrow(myToolbar, false);
 	gtk_toolbar_set_orientation(myToolbar, GTK_ORIENTATION_HORIZONTAL);
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
-	initWindow(this);
-
+	myMenu = GTK_MENU(gtk_menu_new());
 	hildon_window_set_menu(myWindow, myMenu);
-
 	gtk_widget_show_all(GTK_WIDGET(myMenu));
 
 	hildon_window_add_toolbar(myWindow, myToolbar);
-
-	myViewWidget = new GtkViewWidget(this, (ZLViewWidget::Angle)AngleStateOption.value());
-	gtk_container_add(GTK_CONTAINER(myWindow), ((GtkViewWidget*)myViewWidget)->area());
-	gtk_signal_connect_after(GTK_OBJECT(((GtkViewWidget*)myViewWidget)->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
-
 	hildon_program_add_window(myProgram, myWindow);
-
 	gtk_widget_show_all(GTK_WIDGET(myWindow));
-
-	setMode(BOOK_TEXT_MODE);
 
 	gtk_signal_connect(GTK_OBJECT(myWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 	gtk_signal_connect(GTK_OBJECT(myWindow), "key_press_event", G_CALLBACK(handleKey), this);
@@ -115,33 +102,33 @@ GtkFBReader::GtkFBReader(const std::string& bookToOpen) : FBReader(new GtkPaintC
 	myFullScreen = false;
 }
 
-void GtkFBReader::addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item) {
+void GtkApplicationWindow::addMenubarItem(GtkMenu *menu, ZLApplication::Menubar::ItemPtr item) {
 	GtkMenuItem *gtkItem = 0;
 
 	switch(item->type()) {
-		case Menubar::Item::SEPARATOR_ITEM:
+		case ZLApplication::Menubar::Item::SEPARATOR_ITEM:
 			gtkItem = GTK_MENU_ITEM(gtk_separator_menu_item_new());
 			break;
 
-		case Menubar::Item::MENU_ITEM:
+		case ZLApplication::Menubar::Item::MENU_ITEM:
 			{
-				const Menubar::MenuItem &menuItem = (const Menubar::MenuItem&)*item;
+				const ZLApplication::Menubar::MenuItem &menuItem = (const ZLApplication::Menubar::MenuItem&)*item;
 				gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(menuItem.name().c_str()));
-				shared_ptr<ZLApplication::Action> _action = action(menuItem.actionId());
-				if (!_action.isNull()) {
-					g_signal_connect(G_OBJECT(gtkItem), "activate", G_CALLBACK(menuActionSlot), &*_action);
+				shared_ptr<ZLApplication::Action> action = application().action(menuItem.actionId());
+				if (!action.isNull()) {
+					g_signal_connect(G_OBJECT(gtkItem), "activate", G_CALLBACK(menuActionSlot), &*action);
 				}
 			}
 			break;
 
-		case Menubar::Item::SUBMENU_ITEM:
+		case ZLApplication::Menubar::Item::SUBMENU_ITEM:
 			{
-				const Menubar::SubMenuItem &subMenuItem = (const Menubar::SubMenuItem&)*item;
+				const ZLApplication::Menubar::SubMenuItem &subMenuItem = (const ZLApplication::Menubar::SubMenuItem&)*item;
 				gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(subMenuItem.menuName().c_str()));
 				GtkMenu *subMenu = GTK_MENU(gtk_menu_new());
 				gtk_menu_item_set_submenu(gtkItem, GTK_WIDGET(subMenu));
-				const Menubar::ItemVector &items = subMenuItem.items();
-				for (Menubar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+				const ZLApplication::Menubar::ItemVector &items = subMenuItem.items();
+				for (ZLApplication::Menubar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 					addMenubarItem(subMenu, *it);
 				}
 			}
@@ -152,16 +139,18 @@ void GtkFBReader::addMenubarItem(GtkMenu *menu, Menubar::ItemPtr item) {
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(gtkItem));
 }
 
-GtkFBReader::~GtkFBReader() {
-	delete (GtkViewWidget*)myViewWidget;
+GtkApplicationWindow::~GtkApplicationWindow() {
 }
 
-void GtkFBReader::handleKeyEventSlot(GdkEventKey *event) {
-	doActionByKey(GtkKeyUtil::keyName(event));
+void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
+	application().doActionByKey(GtkKeyUtil::keyName(event));
 }
 
-void GtkFBReader::toggleFullscreenSlot() {
-	myFullScreen = !myFullScreen;
+void GtkApplicationWindow::setFullscreen(bool fullscreen) {
+	if (fullscreen == myFullScreen) {
+		return;
+	}
+	myFullScreen = fullscreen;
 
 	if (myFullScreen) {
 		gtk_window_fullscreen(GTK_WINDOW(myWindow));
@@ -172,22 +161,21 @@ void GtkFBReader::toggleFullscreenSlot() {
 	}
 }
 
-bool GtkFBReader::isFullscreen() const {
+bool GtkApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void GtkFBReader::quitSlot() {
+void GtkApplicationWindow::close() {
 	if (!quitFlag) {
 		quitFlag = true;
-		delete this;
 		gtk_main_quit();
 	}
 }
 
-void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
+void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	GtkToolItem *gtkItem;
 	if (item->isButton()) {
-		const Toolbar::ButtonItem &buttonItem = (const Toolbar::ButtonItem&)*item;
+		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/FBReader/" + buttonItem.iconName() + ".png").c_str());
 		gtkItem = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
@@ -199,9 +187,9 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 		gtk_tool_item_set_expand(gtkItem, false);
 
 		GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
-		shared_ptr<ZLApplication::Action> _action = action(buttonItem.actionId());
-		if (!_action.isNull()) {
-			g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*_action);
+		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
+		if (!action.isNull()) {
+			g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
 		}
 	} else {
 		gtkItem = gtk_separator_tool_item_new();
@@ -209,19 +197,20 @@ void GtkFBReader::addToolbarItem(Toolbar::ItemPtr item) {
 	}
 	gtk_toolbar_insert(myToolbar, gtkItem, -1);
 	myButtons[item] = gtkItem;
+	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
-void GtkFBReader::addMenubarItem(Menubar::ItemPtr item) {
+void GtkApplicationWindow::addMenubarItem(ZLApplication::Menubar::ItemPtr item) {
 	addMenubarItem(myMenu, item);
 }
 
-void GtkFBReader::refresh() {
-	const Toolbar::ItemVector &items = toolbar().items();
+void GtkApplicationWindow::refresh() {
+	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	bool enableToolbarSpace = false;
-	for (Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		GtkToolItem *toolItem = myButtons[*it];
 		if ((*it)->isButton()) {
-			const Toolbar::ButtonItem &button = (const Toolbar::ButtonItem&)**it;
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 
 			bool visible = application().isActionVisible(id);
@@ -249,22 +238,37 @@ void GtkFBReader::refresh() {
 		}
 	}
 
-	for (std::map<Menubar::ItemPtr,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
-		Menubar::ItemPtr item = it->first;
-		if (!item.isNull() && item->type() == Menubar::Item::MENU_ITEM) {
+	for (std::map<ZLApplication::Menubar::ItemPtr,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
+		ZLApplication::Menubar::ItemPtr item = it->first;
+		if (!item.isNull() && item->type() == ZLApplication::Menubar::Item::MENU_ITEM) {
 			int id = ((ZLApplication::Menubar::MenuItem&)*item).actionId();
 			GtkWidget *gtkItem = GTK_WIDGET(it->second);
-			if (isActionVisible(id)) {
+			if (application().isActionVisible(id)) {
 				gtk_widget_show(gtkItem);
 			} else {
 				gtk_widget_hide(gtkItem);
 			}
 			bool alreadyEnabled = GTK_WIDGET_STATE(gtkItem) != GTK_STATE_INSENSITIVE;
-			if (isActionEnabled(id) != alreadyEnabled) {
+			if (application().isActionEnabled(id) != alreadyEnabled) {
 				gtk_widget_set_sensitive(gtkItem, !alreadyEnabled);
 			}
 		}
 	}
+}
+
+ZLViewWidget *GtkApplicationWindow::createViewWidget() {
+	GtkViewWidget *viewWidget = new GtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
+	gtk_container_add(GTK_CONTAINER(myWindow), viewWidget->area());
+	gtk_signal_connect_after(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	gtk_widget_show_all(GTK_WIDGET(myWindow));
+	return viewWidget;
+}
+
+bool GtkApplicationWindow::isFullKeyboardControlSupported() const {
+	return false;
+}
+
+void GtkApplicationWindow::grabAllKeys(bool) {
 }
 
 // vim:ts=2:sw=2:noet

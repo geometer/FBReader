@@ -31,22 +31,28 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-class GtkFBReader : public FBReader, public ZLApplicationWindow { 
+class GtkApplicationWindow : public ZLApplicationWindow { 
 
 public:
 	static const std::string ImageDirectory;
 
 public:
-	GtkFBReader(const std::string& bookToOpen);
-	~GtkFBReader();
+	GtkApplicationWindow(ZLApplication *application);
+	~GtkApplicationWindow();
 
 protected:
-	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
-	void addToolbarItem(Toolbar::ItemPtr item);
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
 	void refresh();
-	void toggleFullscreenSlot();
+	void close();
+
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
+
+	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
+
+	void setFullscreen(bool fullscreen);
 	bool isFullscreen() const;
-	void quitSlot();
 
 public:
 	void handleKeyEventSlot(GdkEventKey *event);
@@ -59,12 +65,11 @@ private:
 
 	GtkWindow *myMainWindow;
 	GtkToolbar *myToolbar;
+	GtkWidget *myVBox;
 
 	bool myFullScreen;
 
-	std::map<Toolbar::ItemPtr,GtkToolItem*> myButtons;
+	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myButtons;
 };
 
 #endif /* __GTKFBREADER_H__ */
-
-// vim:ts=2:sw=2:noet

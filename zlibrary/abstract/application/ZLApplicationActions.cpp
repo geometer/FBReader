@@ -57,3 +57,14 @@ void ZLApplication::RotationAction::run() {
 	myApplication.AngleStateOption.setValue(newAngle);
 	myApplication.repaintView();
 }
+
+ZLApplication::FullscreenAction::FullscreenAction(ZLApplication &application, bool toggle) : myApplication(application), myIsToggle(toggle) {
+}
+
+bool ZLApplication::FullscreenAction::isVisible() {
+	return myIsToggle || !myApplication.isFullscreen();
+}
+
+void ZLApplication::FullscreenAction::run() {
+	myApplication.setFullscreen(!myApplication.isFullscreen());
+}

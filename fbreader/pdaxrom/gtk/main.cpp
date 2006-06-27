@@ -28,6 +28,7 @@
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>
 #include <gtk/GtkDeviceInfo.h>
+#include <gtk-pdaxrom/GtkPaintContext.h>
 
 #include "GtkFBReader.h"
 #include "../../common/Files.h"
@@ -42,14 +43,16 @@ int main(int argc, char **argv) {
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
-	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkFBReader::ImageDirectory);
+	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkApplicationWindow::ImageDirectory);
 	GtkDeviceInfo::createInstance();
 
-	GtkFBReader *reader = new GtkFBReader(argc == 1 ? std::string() : argv[1]);
-
-	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(reader->getMainWindow());
-
+	// MSS: use the first argument that gtk did not consume
+	FBReader *reader = new FBReader(new GtkPaintContext(), argc == 1 ? std::string() : argv[1]);
+	GtkApplicationWindow *window = new GtkApplicationWindow(reader);
+	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(window->getMainWindow());
+	reader->initWindow();
 	gtk_main();
+	delete reader;
 
 	GtkDeviceInfo::deleteInstance();
 	GtkImageManager::deleteInstance();

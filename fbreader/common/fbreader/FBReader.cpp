@@ -101,8 +101,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	SearchIgnoreCaseOption(FBOptions::SEARCH_CATEGORY, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
-	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
-	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, "Keyboard", "FullControl", false) {
+	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", "") {
 
 	myModel = 0;
 	myContext = context;
@@ -208,6 +207,11 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 
 	menubar().addItem("Preferences...", ACTION_SHOW_OPTIONS);
 	menubar().addItem("Close", ACTION_QUIT);
+}
+
+void FBReader::initWindow() {
+	ZLApplication::initWindow();
+	setMode(BOOK_TEXT_MODE);
 }
 
 FBReader::~FBReader() {
@@ -414,14 +418,7 @@ void FBReader::setMode(ViewMode mode) {
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {
 	if (InfoDialog(fileName).dialog().run("")) {
-		BookDescriptionPtr newDescription = BookDescription::create(fileName);
-		if (!newDescription.isNull()) {
-			openBook(newDescription);
-			resetWindowCaption();
-			repaintView();
-		} else {
-			// TODO: show information message
-		}
+		openFile(fileName);
 		return true;
 	}
 	return false;
@@ -440,6 +437,25 @@ void FBReader::restorePreviousMode() {
 	myPreviousMode = BOOK_TEXT_MODE;
 }
 
+bool FBReader::closeView() {
+	if (myMode == BOOK_TEXT_MODE) {
+		quit();
+		return true;
+	} else {
+		restorePreviousMode();
+		return false;
+	}
+}
+
+void FBReader::openFile(const std::string &fileName) {
+	BookDescriptionPtr description = BookDescription::create(fileName);
+	if (!description.isNull()) {
+		openBook(description);
+		resetWindowCaption();
+		repaintView();
+	}
+}
+
 void FBReader::clearTextCaches() {
 	myBookTextView->clearCaches();
 	myFootnoteView->clearCaches();
@@ -456,13 +472,6 @@ void FBReader::doActionByKey(const std::string &key) {
 			myLastKeyActionTime = ZLTime();
 		}
 	}
-}
-
-bool FBReader::isFullKeyboardControlSupported() const {
-	return false;
-}
-
-void FBReader::grabAllKeys(bool) {
 }
 
 void FBReader::searchSlot() {

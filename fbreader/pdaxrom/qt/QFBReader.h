@@ -28,28 +28,33 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-class QFBReader : public QMainWindow, public FBReader, public ZLApplicationWindow { 
+class QApplicationWindow : public QMainWindow, public ZLApplicationWindow { 
   Q_OBJECT
 
 public:
   static const std::string ImageDirectory;
   
 public:
-  QFBReader(const std::string& bookToOpen);
-  ~QFBReader();
+  QApplicationWindow(ZLApplication *application);
+  ~QApplicationWindow();
 
 private:
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void refresh();
+	void close();
+
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
+
+	void setCaption(const std::string &caption);
+
+	bool isFullscreen() const;
+	void setFullscreen(bool fullscreen);
+
   void closeEvent(QCloseEvent *event);
   void keyPressEvent(QKeyEvent *event);
 
-protected:
-  void setCaption(const std::string &caption);
-	void addToolbarItem(Toolbar::ItemPtr item);
-	void refresh();
-  void toggleFullscreenSlot();
-  bool isFullscreen() const;
-  void quitSlot();
-  
 private slots:
   void doActionSlot(int buttonNumber);
   void emptySlot() {}
