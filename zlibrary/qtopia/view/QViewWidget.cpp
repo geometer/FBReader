@@ -67,6 +67,10 @@ void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 			realPainter.drawPixmap(0, 0, pixmap);
 			break;
 		case DEGREES90:
+			if ((myRotatedImage != 0) && ((w != myRotatedImage->width()) || (h != myRotatedImage->height()))) {
+				delete myRotatedImage;
+				myRotatedImage = 0;
+			}
 			if (myRotatedImage == 0) {
 				myRotatedImage = new QImage(w, h, 16);
 			}
@@ -110,6 +114,10 @@ void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 			realPainter.drawPixmap(0, 0, pixmap);
 			break;
 		case DEGREES270:
+			if ((myRotatedImage != 0) && ((w != myRotatedImage->width()) || (h != myRotatedImage->height()))) {
+				delete myRotatedImage;
+				myRotatedImage = 0;
+			}
 			if (myRotatedImage == 0) {
 				myRotatedImage = new QImage(w, h, 16);
 			}
