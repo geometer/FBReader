@@ -66,7 +66,7 @@ void Base64EncodedImage::decode() const {
 		}
 		myData->append(triple, 3);
 	}
-	myEncodedData.erase();
+	std::string().swap(myEncodedData);
 }
 
 const shared_ptr<std::string> Base64EncodedImage::stringData() const {
