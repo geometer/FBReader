@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,21 +18,36 @@
  * 02110-1301, USA.
  */
 
-#include <qt/QKeyUtil.h>
+#include <qvbox.h>
+#include <qpushbutton.h>
 
-#include "../../common/Files.h"
-#include "../../common/collection/BookCollection.h"
-#include "../../common/fbreader/CollectionView.h"
-#include "../../common/fbreader/FBFileHandler.h"
-#include "QFBReader.h"
+#include "QCommonDialog.h"
+#include "QOptionsDialog.h"
 
-const std::string QKeyUtil::FilePath = "/usr/share/zlibrary/keynames.xml";
+QCommonDialog::QCommonDialog(const std::string &title) : QDialog(0, 0, true) {
+	setCaption(title.c_str());
 
-const std::string Files::PathPrefix = "/usr/share/FBReader/";
-const std::string Files::PathDelimiter = "/";
+	QVBoxLayout *layout = new QVBoxLayout(this);
+	QWidget *widget = new QVBox(this);
+	layout->add(widget);
+	myTab = new QOptionsDialogTab(widget);
 
-const std::string FBFileHandler::ImageDirectory = "FBReader";
+	myButtonGroup = new QButtonGroup(this);
+	layout->add(myButtonGroup);
+	myButtonLayout = new QGridLayout(myButtonGroup, 1, 0, 8, 8);
+}
 
-const std::string QApplicationWindow::ImageDirectory = "/usr/share/pixmaps";
-const std::string CollectionView::DeleteBookImageFile = QApplicationWindow::ImageDirectory + "/FBReader/remove.png";
-const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:/mnt/cf/FBooks";
+QCommonDialog::~QCommonDialog() {
+}
+
+void QCommonDialog::addButton(const std::string &text) {
+	QPushButton *button = new QPushButton(myButtonGroup);
+	button->setText(text.c_str());
+	myButtonLayout->addWidget(button, 0, 0);
+	connect(button, SIGNAL(clicked()), this, SLOT(accept()));
+}
+
+bool QCommonDialog::run() {
+	((QOptionsDialogTab*)myTab)->close();
+	return exec();
+}

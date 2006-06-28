@@ -30,6 +30,8 @@ install:
 	@install -d $(DESTDIR)$(INSTALLDIR)/share/FBReader/default
 	@install -m 0644 ../data/default/keymap.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/FBReader/default/styles.xml
+	@install -d $(DESTDIR)$(INSTALLDIR)/share/zlibrary
+	@install -m 0644 ../../zlibrary/data/keynames.desktop.xml $(DESTDIR)$(INSTALLDIR)/share/zlibrary/keynames.xml
 
 tarball:
 	@make DESTDIR=$(TMPDIR) install

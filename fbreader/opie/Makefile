@@ -37,6 +37,8 @@ clean: .cleandir
 ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"
 	@cp ../data/default/keymap.opie-opensimpad.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.640x480.xml $(BASEDIR)/share/FBReader/default/styles.xml
+	@mkdir $(BASEDIR)/share/zlibrary
+	@cp ../../zlibrary/data/keynames.opensimpad.xml $(BASEDIR)/share/zlibrary/keynames.xml
 endif
 
 .buildpackage:

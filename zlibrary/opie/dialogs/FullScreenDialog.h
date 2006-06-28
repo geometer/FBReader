@@ -18,30 +18,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QKEYUTIL_H__
-#define __QKEYUTIL_H__
+#ifndef __FULLSCREENDIALOG_H__
+#define __FULLSCREENDIALOG_H__
 
-#include <string>
-#include <map>
+#include <qdialog.h>
 
-class QKeyEvent;
+class FullScreenDialog : public QDialog {
+	Q_OBJECT
 
-class QKeyUtil {
-
-private:
-	static const std::string FilePath;
-	static std::map<int,std::string> ourNames;
-	static std::map<int,std::string> ourModifiers;
+protected:
+	FullScreenDialog(const char *caption); 
+	virtual ~FullScreenDialog(); 
 
 public:
-	static std::string keyName(QKeyEvent *event);
+	int exec();
+
+protected slots:
+	virtual void accept();
+	virtual void reject();
 
 private:
-	static std::string keyName(int key);
-
-private:
-	// instance creation is disabled
-	QKeyUtil();
+	bool myInLoop;
 };
 
-#endif /* __QKEYUTIL_H__ */
+#endif /* __FULLSCREENDIALOG_H__ */

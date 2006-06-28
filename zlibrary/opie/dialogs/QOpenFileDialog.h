@@ -18,54 +18,60 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QAPPLICATIONWINDOW_H__
-#define __QAPPLICATIONWINDOW_H__
+#ifndef __QOPENFILEDIALOG_H__
+#define __QOPENFILEDIALOG_H__
 
-#include <vector>
+#include <string>
 #include <map>
-#include <set>
 
-#include <qmainwindow.h>
+#include <qlistview.h>
 
-#include <abstract/ZLApplication.h>
+#include "FullScreenDialog.h"
+#include <abstract/ZLOpenFileDialog.h>
 
-class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
+class QVBox;
+class QLineEdit;
+
+class QOpenFileDialogItem : public QListViewItem {
+
+public:
+	QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node);
+	ZLTreeNodePtr node() const { return myNode; }
+
+private:
+	ZLTreeNodePtr myNode;
+};
+
+class QOpenFileDialog : public FullScreenDialog, public ZLOpenFileDialog {
 	Q_OBJECT
 
 public:
-	QApplicationWindow(ZLApplication *application);
-	~QApplicationWindow();
+	QOpenFileDialog(const char *caption, const ZLTreeHandler &handler); 
+	~QOpenFileDialog();
+	void run();
 
 private:
-	ZLViewWidget *createViewWidget();
-	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
-	void refresh();
-	void close();
+	QPixmap &getPixmap(const ZLTreeNodePtr node);
 
-	bool isFullKeyboardControlSupported() const;
-	void grabAllKeys(bool grab);
-
-	void setCaption(const std::string &caption);
-
-	bool isFullscreen() const;
-	void setFullscreen(bool fullscreen);
-	void fullScreenWorkaround();
-
-	void focusInEvent(QFocusEvent *event);
+protected:
 	void resizeEvent(QResizeEvent *event);
-	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
 
+	void exitDialog();
+	void update(const std::string &selectedNodeName);
+
 private slots:
-	void doActionSlot(int buttonNumber);
-	void emptySlot() {}
-	void setDocument(const QString &fileName);
+	void accept();
 
 private:
-	std::vector<bool> myToolbarMask;
-
-	bool myFullScreen;
-	int myTitleHeight;
+	QLineEdit *myStateLine;
+	QListView *myListView;
+	QVBox *myMainBox;
+	std::map<std::string,QPixmap*> myPixmaps;
 };
 
-#endif /* __QAPPLICATIONWINDOW_H__ */
+inline void QOpenFileDialog::run() {
+	exec();
+}
+
+#endif /* __QOPENFILEDIALOG_H__ */

@@ -25,10 +25,10 @@
 #include <unix/ZLUnixTime.h>
 #include <unix/ZLUnixFSManager.h>
 #include <abstract/XMLOptions.h>
-#include <qtopia/QDialogManager.h>
+#include <opie/QDialogManager.h>
 #include <qt/QImageManager.h>
 #include <qtopia/QDeviceInfo.h>
-#include <qtopia/QPaintContext.h>
+#include <opie/QPaintContext.h>
 
 #include "QFBReader.h"
 #include "../common/Files.h"

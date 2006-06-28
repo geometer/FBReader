@@ -35,7 +35,6 @@
 
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
-#include "QDialogManager.h"
 
 QOptionsDialog::QOptionsDialog(const std::string &id, const std::string &caption) : FullScreenDialog(caption.c_str()), ZLOptionsDialog(id) {
 	myTabWidget = new QTabWidget(this);
@@ -64,9 +63,7 @@ bool QOptionsDialog::run() {
 	for (QOptionsDialogTab *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
 		tab->close();
 	}
-	bool code = exec();
-	((QDialogManager&)QDialogManager::instance()).fullScreenWorkaround();
-	return code;
+	return exec();
 }
 
 void QOptionsDialog::accept() {

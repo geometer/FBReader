@@ -32,10 +32,10 @@
 
 #include <abstract/ZLOptions.h>
 
-#include <qtopia/QViewWidget.h>
-#include <qtopia/QKeyUtil.h>
+#include <qt/QKeyUtil.h>
 
-#include "QFBReader.h"
+#include "QApplicationWindow.h"
+#include "../view/QViewWidget.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
 	if (application().KeyboardControlOption.value()) {
@@ -45,6 +45,9 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 
 	myFullScreen = false;
 	myTitleHeight = -1;
+
+	myVerticalDelta = -1;
+	myHorizontalDelta = -1;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 }
@@ -145,7 +148,18 @@ void QApplicationWindow::focusInEvent(QFocusEvent*) {
 	}
 }
 
-void QApplicationWindow::resizeEvent(QResizeEvent*) {
+int QApplicationWindow::veritcalAdjustment() {
+	if (myFullScreen || (myVerticalDelta == -1)) {
+		return 0;
+	}
+	return qApp->desktop()->height() - myVerticalDelta - height();
+}
+
+void QApplicationWindow::resizeEvent(QResizeEvent *event) {
+	if ((myVerticalDelta == -1) && !myFullScreen) {
+		myVerticalDelta = qApp->desktop()->height() - event->size().height();
+		myHorizontalDelta = qApp->desktop()->width() - event->size().width();
+	}
 	if (myFullScreen && (size() != qApp->desktop()->size())) {
 		int titleHeight = topData()->normalGeometry.top();
 		if (titleHeight > 0) {

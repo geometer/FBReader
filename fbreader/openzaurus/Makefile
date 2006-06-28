@@ -53,6 +53,8 @@ clean: .cleandir
 	@mkdir $(BASEDIR)/share/FBReader/default
 	@cp ../data/default/keymap.qtopia.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(STYLE).xml $(BASEDIR)/share/FBReader/default/styles.xml
+	@mkdir $(BASEDIR)/share/zlibrary
+	@cp ../../zlibrary/data/keynames.openzaurus.xml $(BASEDIR)/share/zlibrary/keynames.xml
 	@mkdir -p $(APPDIR)
 	@cp $(UI_TYPE)/fbreader.desktop $(APPDIR)
 

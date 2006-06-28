@@ -32,6 +32,8 @@ install:
 	@mkdir share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 share/FBReader/help/HowToStart.fb2
 	@mkdir share/FBReader/default
+	@mkdir share/zlibrary
+	@cp ../../zlibrary/data/keynames.zaurus.xml share/zlibrary/keynames.xml
 	@cp ../data/default/keymap.qtopia.xml share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(RESOLUTION).xml share/FBReader/default/styles.xml
 	@mkdir -p apps/Applications

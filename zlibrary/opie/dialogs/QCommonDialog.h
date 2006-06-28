@@ -18,24 +18,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QKEYUTIL_H__
-#define __QKEYUTIL_H__
+#ifndef __QCOMMONDIALOG_H__
+#define __QCOMMONDIALOG_H__
 
-#include <string>
+#include <qdialog.h>
+#include <qlayout.h>
+#include <qbuttongroup.h>
 
-class QKeyEvent;
+#include <abstract/ZLDialog.h>
 
-class QKeyUtil {
+class QCommonDialog : public QDialog, public ZLDialog {
+	Q_OBJECT
 
 public:
-	static std::string keyName(QKeyEvent *event);
+	QCommonDialog(const std::string &name);
+	~QCommonDialog();
+
+	void addButton(const std::string &text);
+	bool run();
 
 private:
-	static std::string keyName(int key);
-
-private:
-	// instance creation is disabled
-	QKeyUtil();
+	QGridLayout *myButtonLayout;
+	QButtonGroup *myButtonGroup;
 };
 
-#endif /* __QKEYUTIL_H__ */
+#endif /* __QCOMMONDIALOG_H__ */

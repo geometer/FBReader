@@ -260,7 +260,7 @@ public:
 	void refreshWindow();
 
 private:
-	std::string myName;
+	const std::string myName;
 
 protected:
 	ZLViewWidget *myViewWidget;
@@ -310,11 +310,6 @@ private:
 friend class ZLApplication;
 };
 
-inline ZLApplication::~ZLApplication() {
-	if (myWindow != 0) {
-		delete myWindow;
-	}
-}
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
 inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }
 inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }

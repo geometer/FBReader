@@ -39,6 +39,15 @@ ZLApplication::ZLApplication(const std::string &name) :
 	myWindow(0) {
 }
 
+ZLApplication::~ZLApplication() {
+	if (myWindow != 0) {
+		delete myWindow;
+	}
+	if (myViewWidget != 0) {
+		delete myViewWidget;
+	}
+}
+
 void ZLApplication::initWindow() {
 	myWindow->init();
 	myWindow->refresh();

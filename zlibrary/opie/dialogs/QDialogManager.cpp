@@ -26,18 +26,6 @@
 #include "QOptionsDialog.h"
 #include "QOpenFileDialog.h"
 #include "QWaitMessage.h"
-#include "../application/QApplicationWindow.h"
-
-QWidget *QDialogManager::createApplicationWindow(ZLApplication *application) const {
-	myApplicationWindow = new QApplicationWindow(application);
-	return myApplicationWindow;
-}
-
-void QDialogManager::fullScreenWorkaround() const {
-	if (myApplicationWindow != 0) {
-		myApplicationWindow->fullScreenWorkaround();
-	}
-}
 
 ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new QOptionsDialog(id, title);
@@ -48,18 +36,14 @@ ZLDialog *QDialogManager::createDialog(const std::string &title) const {
 }
 
 int QDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	int code = QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
-	fullScreenWorkaround();
-	return code;
+	return QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
 }
 
 void QDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
 	QOpenFileDialog(title.c_str(), handler).run();
-	fullScreenWorkaround();
 }
 
 void QDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
 	QWaitMessage waitMessage(message);
 	runnable.run();
-	fullScreenWorkaround();
 }

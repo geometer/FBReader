@@ -18,24 +18,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QKEYUTIL_H__
-#define __QKEYUTIL_H__
+#include <qapplication.h>
+#include <qwidget.h>
+#include <qlabel.h>
+#include <qlayout.h>
 
-#include <string>
+#include "QWaitMessage.h"
 
-class QKeyEvent;
+QWaitMessage::QWaitMessage(const std::string &message) : QWidget(0, 0, WType_Popup) {
+	resize(1, 1);
+	QHBoxLayout layout(this, 24);
+	QLabel *label = new QLabel(message.c_str(), this);
+	layout.add(label);
 
-class QKeyUtil {
+	qApp->processEvents();
 
-public:
-	static std::string keyName(QKeyEvent *event);
+	QWidget *root = QApplication::desktop();
+	move(root->width() / 2 - width() / 2, root->height() / 2 - height() / 2);
+	show();
+	move(root->width() / 2 - width() / 2, root->height() / 2 - height() / 2);
 
-private:
-	static std::string keyName(int key);
+	qApp->processEvents();
+}
 
-private:
-	// instance creation is disabled
-	QKeyUtil();
-};
-
-#endif /* __QKEYUTIL_H__ */
+QWaitMessage::~QWaitMessage() {
+}

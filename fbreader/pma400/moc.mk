@@ -1,1 +1,0 @@
-SRCMOC = QFBReader.moc.cpp

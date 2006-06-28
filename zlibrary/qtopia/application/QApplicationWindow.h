@@ -36,6 +36,9 @@ public:
 	QApplicationWindow(ZLApplication *application);
 	~QApplicationWindow();
 
+	void fullScreenWorkaround();
+	int veritcalAdjustment();
+
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
@@ -49,7 +52,6 @@ private:
 
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
-	void fullScreenWorkaround();
 
 	void focusInEvent(QFocusEvent *event);
 	void resizeEvent(QResizeEvent *event);
@@ -66,6 +68,9 @@ private:
 
 	bool myFullScreen;
 	int myTitleHeight;
+
+	int myVerticalDelta;
+	int myHorizontalDelta;
 };
 
 #endif /* __QAPPLICATIONWINDOW_H__ */

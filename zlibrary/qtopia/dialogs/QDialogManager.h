@@ -23,20 +23,30 @@
 
 #include <abstract/ZLDialogManager.h>
 
+class ZLApplication;
+class QWidget;
+class QApplicationWindow;
+
 class QDialogManager : public ZLDialogManager {
 
 public:
 	static void createInstance() { ourInstance = new QDialogManager(); }
 
 private:
-	QDialogManager() {}
+	QDialogManager() : myApplicationWindow(0) {}
 
 public:
+	QWidget *createApplicationWindow(ZLApplication *application) const;
 	ZLDialog *createDialog(const std::string &title) const;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
+
+	void fullScreenWorkaround() const;
+
+private:
+	mutable QApplicationWindow *myApplicationWindow;
 };
 
 #endif /* __QDIALOGMANAGER_H__ */

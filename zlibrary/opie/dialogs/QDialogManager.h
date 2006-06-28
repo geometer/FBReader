@@ -18,30 +18,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QKEYUTIL_H__
-#define __QKEYUTIL_H__
+#ifndef __QDIALOGMANAGER_H__
+#define __QDIALOGMANAGER_H__
 
-#include <string>
-#include <map>
+#include <abstract/ZLDialogManager.h>
 
-class QKeyEvent;
-
-class QKeyUtil {
-
-private:
-	static const std::string FilePath;
-	static std::map<int,std::string> ourNames;
-	static std::map<int,std::string> ourModifiers;
+class QDialogManager : public ZLDialogManager {
 
 public:
-	static std::string keyName(QKeyEvent *event);
+	static void createInstance() { ourInstance = new QDialogManager(); }
 
 private:
-	static std::string keyName(int key);
+	QDialogManager() {}
 
-private:
-	// instance creation is disabled
-	QKeyUtil();
+public:
+	ZLDialog *createDialog(const std::string &title) const;
+	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
+	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
+	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
+	void wait(ZLRunnable &runnable, const std::string &message) const;
+
+	void fullScreenWorkaround() const;
 };
 
-#endif /* __QKEYUTIL_H__ */
+#endif /* __QDIALOGMANAGER_H__ */

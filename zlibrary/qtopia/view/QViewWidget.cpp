@@ -27,6 +27,7 @@
 
 #include "QViewWidget.h"
 #include "QPaintContext.h"
+#include "../application/QApplicationWindow.h"
 
 QViewWidget::QViewWidgetInternal::QViewWidgetInternal(QWidget *parent, QViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	setBackgroundMode(NoBackground);
@@ -44,7 +45,7 @@ static QImage *myRotatedImage = 0;
 
 void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 	const int w = width();
-	const int h = height();
+	const int h = height() + ((QApplicationWindow*)parent())->veritcalAdjustment();
 	switch (myHolder.rotation()) {
 		default:
 			((QPaintContext&)myHolder.view()->context()).setSize(w, h);

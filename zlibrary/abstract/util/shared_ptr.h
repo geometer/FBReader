@@ -91,20 +91,8 @@ template<class T> class weak_ptr {
 	private:
 		shared_ptr_storage<T> *myStorage;
 
-		void attachStorage(shared_ptr_storage<T> *storage) {
-			myStorage = storage;
-			if (myStorage != 0) {
-				myStorage->addWeakReference();
-			}
-		}
-		void detachStorage() {
-			if (myStorage != 0) {
-				myStorage->removeWeakReference();
-				if (myStorage->counter() == 0) {
-					delete myStorage;
-				}
-			}
-		}
+		void attachStorage(shared_ptr_storage<T> *storage);
+		void detachStorage();
 
 	public:
 		weak_ptr() {
@@ -381,6 +369,23 @@ inline bool shared_ptr<T>::operator <= (const shared_ptr<T> &t) const {
 template<class T>
 inline bool shared_ptr<T>::operator >= (const shared_ptr<T> &t) const {
 	return !operator < (t);
+}
+
+template<class T>
+inline void weak_ptr<T>::attachStorage(shared_ptr_storage<T> *storage) {
+	myStorage = storage;
+	if (myStorage != 0) {
+		myStorage->addWeakReference();
+	}
+}
+template<class T>
+inline void weak_ptr<T>::detachStorage() {
+	if (myStorage != 0) {
+		myStorage->removeWeakReference();
+		if (myStorage->counter() == 0) {
+			delete myStorage;
+		}
+	}
 }
 
 #endif /* __SHARED_PTR_H__ */

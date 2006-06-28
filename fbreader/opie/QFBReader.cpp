@@ -32,8 +32,8 @@
 
 #include <abstract/ZLOptions.h>
 
-#include <qtopia/QViewWidget.h>
-#include <qtopia/QKeyUtil.h>
+#include <opie/QViewWidget.h>
+#include <qt/QKeyUtil.h>
 
 #include "QFBReader.h"
 

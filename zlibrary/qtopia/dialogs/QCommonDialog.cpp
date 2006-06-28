@@ -23,6 +23,7 @@
 
 #include "QCommonDialog.h"
 #include "QOptionsDialog.h"
+#include "QDialogManager.h"
 
 QCommonDialog::QCommonDialog(const std::string &title) : QDialog(0, 0, true) {
 	setCaption(title.c_str());
@@ -49,5 +50,7 @@ void QCommonDialog::addButton(const std::string &text) {
 
 bool QCommonDialog::run() {
 	((QOptionsDialogTab*)myTab)->close();
-	return exec();
+	bool code = exec();
+	((QDialogManager&)QDialogManager::instance()).fullScreenWorkaround();
+	return code;
 }

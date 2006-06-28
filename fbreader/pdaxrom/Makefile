@@ -38,11 +38,13 @@ install:
 	@cp ../data/default/styles.640x480.xml usr/share/FBReader/default/styles.xml
 	@mkdir -p usr/share/pixmaps/FBReader
 	@cp `find ../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
+	@mkdir -p usr/share/zlibrary
+	@cp ../../zlibrary/data/keynames.pdaxrom.xml usr/share/zlibrary/keynames.xml
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -rf $(BINDIR)/FBReader usr/share/pixmaps usr/share/FBReader $(TDIR)
+	@rm -rf $(BINDIR)/FBReader usr/share/pixmaps usr/share/FBReader usr/share/zlibrary $(TDIR)
 	@if [ -d $(BINDIR) ]; then \
 		rmdir -p $(BINDIR) --ignore-fail-on-non-empty; \
 	fi;

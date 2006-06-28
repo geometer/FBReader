@@ -38,6 +38,8 @@ public:
 
 	void startElementHandler(const char *tag, const char **attributes);
 
+	void readBindings();
+
 private:
 	std::map<std::string,ActionCode> &myKeymap;
 };
@@ -55,6 +57,14 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 }
 
 static const std::string KeymapFile = "keymap.xml";
+
+void KeyBindingsReader::readBindings() {
+	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
+	if (!stream.isNull() && stream->open()) {
+		readDocument(stream);
+		stream->close();
+	}
+}
 
 FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
 	myBindings0.readCustomBindings();
@@ -85,14 +95,10 @@ KeyBindings::KeyBindings(const std::string &optionGroupName) : myOptionGroupName
 }
 
 void KeyBindings::readDefaultBindings() {
-	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
-	if (!stream.isNull() && stream->open()) {
-		std::map<std::string,ActionCode> keymap;
-		KeyBindingsReader(keymap).readDocument(stream);
-		stream->close();
-		for (std::map<std::string,ActionCode>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
-			bindKey(it->first, it->second);
-		}
+	std::map<std::string,ActionCode> keymap;
+	KeyBindingsReader(keymap).readBindings();
+	for (std::map<std::string,ActionCode>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
+		bindKey(it->first, it->second);
 	}
 }
 
@@ -115,11 +121,7 @@ void KeyBindings::readCustomBindings() {
 
 KeyBindings::~KeyBindings() {
 	std::map<std::string,ActionCode> keymap;
-	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
-	if (!stream.isNull() && stream->open()) {
-		KeyBindingsReader(keymap).readDocument(stream);
-		stream->close();
-	}
+	KeyBindingsReader(keymap).readBindings();
 
 	ZLOption::clearGroup(myOptionGroupName);
 	int counter = 0;

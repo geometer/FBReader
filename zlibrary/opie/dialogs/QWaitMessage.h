@@ -18,30 +18,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QKEYUTIL_H__
-#define __QKEYUTIL_H__
+#ifndef __QWAITMESSAGE_H__
+#define __QWAITMESSAGE_H__
 
 #include <string>
-#include <map>
 
-class QKeyEvent;
+#include <qwidget.h>
 
-class QKeyUtil {
-
-private:
-	static const std::string FilePath;
-	static std::map<int,std::string> ourNames;
-	static std::map<int,std::string> ourModifiers;
+class QWaitMessage : public QWidget {
 
 public:
-	static std::string keyName(QKeyEvent *event);
-
-private:
-	static std::string keyName(int key);
-
-private:
-	// instance creation is disabled
-	QKeyUtil();
+	QWaitMessage(const std::string &message);
+	~QWaitMessage();
 };
 
-#endif /* __QKEYUTIL_H__ */
+#endif /* __QWAITMESSAGE_H__ */

@@ -1,0 +1,1 @@
+../../opie/dialogs/QDialogManager.h

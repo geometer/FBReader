@@ -18,24 +18,36 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QKEYUTIL_H__
-#define __QKEYUTIL_H__
+#include "FullScreenDialog.h"
 
-#include <string>
+#include <qapplication.h>
 
-class QKeyEvent;
+FullScreenDialog::FullScreenDialog(const char *caption) : QDialog(qApp->mainWidget(), NULL, true) {
+	setCaption(caption);
+	myInLoop = false;
+}
 
-class QKeyUtil {
+FullScreenDialog::~FullScreenDialog() {
+}
 
-public:
-	static std::string keyName(QKeyEvent *event);
+int FullScreenDialog::exec() {
+	setResult(Rejected);
+	showMaximized();
+	myInLoop = true;
+	qApp->enter_loop();
+	return result();
+}
 
-private:
-	static std::string keyName(int key);
+void FullScreenDialog::accept() {
+	if (myInLoop) {
+		qApp->exit_loop();
+	}
+	QDialog::accept();
+}
 
-private:
-	// instance creation is disabled
-	QKeyUtil();
-};
-
-#endif /* __QKEYUTIL_H__ */
+void FullScreenDialog::reject() {
+	if (myInLoop) {
+		qApp->exit_loop();
+	}
+	QDialog::reject();
+}
