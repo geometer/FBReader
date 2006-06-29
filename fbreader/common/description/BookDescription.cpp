@@ -20,7 +20,7 @@
  */
 
 #include <abstract/ZLOptions.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLUnicodeUtil.h>
 
 #include "BookDescription.h"

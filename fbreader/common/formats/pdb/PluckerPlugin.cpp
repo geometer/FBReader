@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 
 #include "PdbPlugin.h"
 #include "PluckerBookReader.h"

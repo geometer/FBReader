@@ -26,11 +26,11 @@
 #include "QOptionsDialog.h"
 #include "QOpenFileDialog.h"
 #include "QWaitMessage.h"
+
 #include "../application/QApplicationWindow.h"
 
-QWidget *QDialogManager::createApplicationWindow(ZLApplication *application) const {
+void QDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new QApplicationWindow(application);
-	return myApplicationWindow;
 }
 
 void QDialogManager::fullScreenWorkaround() const {

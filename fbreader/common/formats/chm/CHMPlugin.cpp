@@ -22,7 +22,7 @@
 #include <iostream>
 
 #include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLInputStream.h>
 
 #include "CHMPlugin.h"

@@ -1,0 +1,1 @@
+SRCMOC = QApplicationWindow.moc.cpp

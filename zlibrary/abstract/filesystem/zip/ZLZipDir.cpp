@@ -20,7 +20,7 @@
 
 #include "ZLZip.h"
 #include "ZLZipHeader.h"
-#include "../ZLFSManager.h"
+#include "../ZLFile.h"
 
 void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 	shared_ptr<ZLInputStream> stream = ZLFile(name()).inputStream();

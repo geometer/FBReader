@@ -25,7 +25,6 @@
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
 #include "../common/fbreader/FBFileHandler.h"
-#include "QFBReader.h"
 
 const std::string QKeyUtil::FilePath = std::string(INSTALLDIR) + "/opt/QtPalmtop/share/zlibrary/keynames.xml";
 

@@ -27,7 +27,6 @@
 #include <map>
 #include <stack>
 
-#include <abstract/ZLFSManager.h>
 #include <abstract/ZLEncodingConverter.h>
 
 #include "../../model/AlignmentType.h"

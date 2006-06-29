@@ -69,8 +69,8 @@ ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &path) con
 	return new ZLUnixFileOutputStream(path);
 }
 
-ZLFSManager::FileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
-	FileInfo info;
+ZLFileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
+	ZLFileInfo info;
 	struct stat fileStat;
 	info.Exists = stat(path.c_str(), &fileStat) == 0;
 	if (info.Exists) {

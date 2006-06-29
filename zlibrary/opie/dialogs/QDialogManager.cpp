@@ -26,6 +26,11 @@
 #include "QOptionsDialog.h"
 #include "QOpenFileDialog.h"
 #include "QWaitMessage.h"
+#include "../application/QApplicationWindow.h"
+
+void QDialogManager::createApplicationWindow(ZLApplication *application) const {
+	new QApplicationWindow(application);
+}
 
 ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new QOptionsDialog(id, title);

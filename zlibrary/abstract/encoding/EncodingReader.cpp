@@ -22,9 +22,6 @@
 
 #include <abstract/ZLUnicodeUtil.h>
 
-#include "../filesystem/ZLFSManager.h"
-#include "../filesystem/ZLInputStream.h"
-
 #include "EncodingReader.h"
 #include "ZLEncodingConverter.h"
 
@@ -59,7 +56,7 @@ bool EncodingIntReader::fillTable(int *map) {
 	for (int i = 0; i < 256; ++i) {
 		myMap[i] = i;
 	}
-	return readDocument(ZLFile(myFilePath).inputStream());
+	return readDocument(myFilePath);
 }
 
 void EncodingIntReader::startElementHandler(const char *tag, const char **attributes) {
@@ -78,7 +75,7 @@ EncodingCharReader::~EncodingCharReader() {
 
 char **EncodingCharReader::createTable() {
 	myMap = 0;
-	if (!readDocument(ZLFile(myFilePath).inputStream()) && (myMap != 0)) {
+	if (!readDocument(myFilePath) && (myMap != 0)) {
 		int length = (myBytesNumber == 1) ? 256 : 32768;
 		for (int i = 0; i < length; ++i) {
 			if (myMap[i] != 0) {

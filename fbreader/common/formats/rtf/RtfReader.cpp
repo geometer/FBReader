@@ -22,6 +22,7 @@
 
 #include <cctype>
 
+#include <abstract/ZLFile.h>
 #include <abstract/ZLInputStream.h>
 
 #include "RtfReader.h"

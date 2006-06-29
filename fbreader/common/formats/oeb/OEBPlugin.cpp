@@ -19,8 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFSManager.h>
-#include <abstract/ZLInputStream.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLDir.h>
 
@@ -65,7 +64,7 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {
 }
 
 bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
-  return OEBDescriptionReader(description).readDescription(ZLFile(opfFileName(path)).inputStream());
+  return OEBDescriptionReader(description).readDescription(opfFileName(path));
 }
 
 bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {

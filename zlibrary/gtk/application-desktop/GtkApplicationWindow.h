@@ -32,7 +32,7 @@ class GtkApplicationWindow : public ZLApplicationWindow {
 
 public:
 	static const std::string ImageDirectory;
-	
+
 public:
 	GtkApplicationWindow(ZLApplication *application);
 	~GtkApplicationWindow();
@@ -46,13 +46,14 @@ private:
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
-	void setCaption(const std::string &caption);
+	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
 
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
 public:
-	void handleKeyEventSlot(GdkEventKey*);
+	void handleKeyEventSlot(GdkEventKey *event);
+	void handleScrollEventSlot(GdkEventScroll *event);
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
 

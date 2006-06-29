@@ -20,9 +20,8 @@
 
 #include <algorithm>
 
-#include "../filesystem/ZLFSManager.h"
-#include "../filesystem/ZLFSDir.h"
-#include "../filesystem/ZLInputStream.h"
+#include <abstract/ZLFile.h>
+#include <abstract/ZLInputStream.h>
 
 #include "../encoding/EncodingReader.h"
 
@@ -47,6 +46,10 @@ ZLXMLReader::ZLXMLReader(const char *encoding) {
 ZLXMLReader::~ZLXMLReader() {
 	delete[] myParserBuffer;
 	delete myInternalReader;
+}
+
+bool ZLXMLReader::readDocument(const std::string &fileName) {
+	return readDocument(ZLFile(fileName).inputStream());
 }
 
 bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {

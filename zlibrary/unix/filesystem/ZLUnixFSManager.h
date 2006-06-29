@@ -22,6 +22,7 @@
 #define __ZLUNIXFSMANAGER_H__
 
 #include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 
 class ZLUnixFSManager : public ZLFSManager {
 
@@ -39,7 +40,7 @@ protected:
 	ZLOutputStream *createOutputStream(const std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	ZLFSDir *createNewDirectory(const std::string &path) const;
-	FileInfo fileInfo(const std::string &path) const;
+	ZLFileInfo fileInfo(const std::string &path) const;
 	bool isZipSupported() const;
 };
 

@@ -288,6 +288,6 @@ void FB2BookReader::endElementHandler(int tag) {
 	}
 }
 
-bool FB2BookReader::readBook(shared_ptr<ZLInputStream> stream) {
-	return readDocument(stream);
+bool FB2BookReader::readBook(const std::string &fileName) {
+	return readDocument(fileName);
 }

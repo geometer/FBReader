@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 	QDeviceInfo::createInstance();
 
 	FBReader *reader = new FBReader(new QPaintContext(), argc == 1 ? std::string() : argv[1]);
-	application.showMainWidget(((QDialogManager&)QDialogManager::instance()).createApplicationWindow(reader));
+	ZLDialogManager::instance().createApplicationWindow(reader);
 	reader->initWindow();
 	int code = application.exec();
 	delete reader;

@@ -28,7 +28,7 @@
 #include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLImage.h>
 #include <abstract/ZLFileImage.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 
 #include "PdbReader.h"
 #include "PluckerBookReader.h"

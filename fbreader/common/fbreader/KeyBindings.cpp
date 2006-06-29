@@ -21,8 +21,6 @@
 
 #include <abstract/ZLXMLReader.h>
 #include <abstract/ZLStringUtil.h>
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLFSManager.h>
 
 #include "FBReader.h"
 #include "../Files.h"
@@ -59,11 +57,7 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 static const std::string KeymapFile = "keymap.xml";
 
 void KeyBindingsReader::readBindings() {
-	shared_ptr<ZLInputStream> stream = ZLFile(Files::DefaultFilesPathPrefix() + KeymapFile).inputStream();
-	if (!stream.isNull() && stream->open()) {
-		readDocument(stream);
-		stream->close();
-	}
+	readDocument(Files::DefaultFilesPathPrefix() + KeymapFile);
 }
 
 FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {

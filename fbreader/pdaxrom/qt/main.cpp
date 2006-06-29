@@ -29,8 +29,8 @@
 #include <qt/QImageManager.h>
 #include <qt/QDeviceInfo.h>
 #include <qt/QPaintContext.h>
+#include <qt-pdaxrom/QApplicationWindow.h>
 
-#include "QFBReader.h"
 #include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
 
@@ -48,9 +48,7 @@ int main(int argc, char **argv) {
 	QDeviceInfo::createInstance();
 
 	FBReader *reader = new FBReader(new QPaintContext(), argc == 1 ? std::string() : argv[1]);
-	QApplicationWindow *window = new QApplicationWindow(reader);
-	application.setMainWidget(window);
-	window->showMaximized();
+	ZLDialogManager::instance().createApplicationWindow(reader);
 	reader->initWindow();
 	int code = application.exec();
 	delete reader;

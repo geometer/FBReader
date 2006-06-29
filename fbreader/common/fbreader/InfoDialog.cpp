@@ -25,7 +25,7 @@
 #include <abstract/ZLDialogManager.h>
 #include <abstract/ZLOptionsDialog.h>
 #include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 
 #include "InfoDialog.h"
 

@@ -19,9 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLDir.h>
-#include <abstract/ZLInputStream.h>
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFileImage.h>
 
@@ -311,11 +310,9 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &nam
   myFileName = name;
   myModelReader.addHyperlinkLabel(myFileName);
 
-  shared_ptr<ZLInputStream> stream = ZLFile(pathPrefix + name).inputStream();
-
   myPreformatted = false;
 
-  return readDocument(stream);
+  return readDocument(pathPrefix + name);
 }
 
 

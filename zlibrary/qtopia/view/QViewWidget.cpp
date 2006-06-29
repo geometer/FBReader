@@ -49,24 +49,14 @@ void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 	switch (myHolder.rotation()) {
 		default:
 			((QPaintContext&)myHolder.view()->context()).setSize(w, h);
-			break;
-		case DEGREES90:
-		case DEGREES270:
-			((QPaintContext&)myHolder.view()->context()).setSize(h, w);
-			break;
-	}
-	myHolder.view()->paint();
-	QPainter realPainter(this);
-	const QPixmap &pixmap = ((QPaintContext&)myHolder.view()->context()).pixmap();
-	switch (myHolder.rotation()) {
-		default:
 			if (myRotatedImage != 0) {
 				delete myRotatedImage;
 				myRotatedImage = 0;
 			}
-			realPainter.drawPixmap(0, 0, pixmap);
 			break;
 		case DEGREES90:
+		case DEGREES270:
+			((QPaintContext&)myHolder.view()->context()).setSize(h, w);
 			if ((myRotatedImage != 0) && ((w != myRotatedImage->width()) || (h != myRotatedImage->height()))) {
 				delete myRotatedImage;
 				myRotatedImage = 0;
@@ -74,7 +64,16 @@ void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 			if (myRotatedImage == 0) {
 				myRotatedImage = new QImage(w, h, 16);
 			}
-
+			break;
+	}
+	myHolder.view()->paint();
+	QPainter realPainter(this);
+	const QPixmap &pixmap = ((QPaintContext&)myHolder.view()->context()).pixmap();
+	switch (myHolder.rotation()) {
+		default:
+			realPainter.drawPixmap(0, 0, pixmap);
+			break;
+		case DEGREES90:
 			for (int i = 0; i < h; i++) {
 				short *dataFrom = (short*)pixmap.scanLine(h - i - 1);
 				short *dataTo = (short*)myRotatedImage->scanLine(i);
@@ -86,11 +85,6 @@ void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 			break;
 		case DEGREES180:
 			{
-				if (myRotatedImage != 0) {
-					delete myRotatedImage;
-					myRotatedImage = 0;
-				}
-
 				short swap;
 				int i = 0, j = w - 1;
 				for (; i < j; i++, j--) {
@@ -114,14 +108,6 @@ void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 			realPainter.drawPixmap(0, 0, pixmap);
 			break;
 		case DEGREES270:
-			if ((myRotatedImage != 0) && ((w != myRotatedImage->width()) || (h != myRotatedImage->height()))) {
-				delete myRotatedImage;
-				myRotatedImage = 0;
-			}
-			if (myRotatedImage == 0) {
-				myRotatedImage = new QImage(w, h, 16);
-			}
-
 			for (int i = 0; i < h; i++) {
 				memcpy(myRotatedImage->scanLine(i), pixmap.scanLine(i), 2 * w);
 			}

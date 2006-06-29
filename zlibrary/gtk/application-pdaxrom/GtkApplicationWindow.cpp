@@ -21,13 +21,18 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLDialog.h>
+#include <abstract/ZLUnicodeUtil.h>
+#include <abstract/ZLDeviceInfo.h>
 
 #include <gtk/GtkKeyUtil.h>
-#include <gtk-desktop/GtkViewWidget.h>
 
-#include "GtkFBReader.h"
+#include "GtkApplicationWindow.h"
+#include "../../gtk/dialogs/GtkDialogManager.h"
+#include "../../gtk/view-pdaxrom/GtkViewWidget.h"
+
+void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
+	myWindow = (new GtkApplicationWindow(application))->getMainWindow();
+}
 
 static bool quitFlag = false;
 
@@ -46,20 +51,16 @@ static void actionSlot(GtkWidget*, gpointer data) {
 	((ZLApplication::Action*)data)->checkAndRun();
 }
 
-static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
-	((GtkApplicationWindow*)data)->handleKeyEventSlot(event);
-}
-
-static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) {
-	((GtkApplicationWindow*)data)->handleScrollEventSlot(event);
+static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
+	((GtkApplicationWindow*)data)->handleKeyEventSlot(key);
 }
 
 static const std::string OPTIONS = "Options";
 
 GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -69,43 +70,27 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 
 	myToolbar = gtk_toolbar_new();
 	gtk_box_pack_start(GTK_BOX(myVBox), myToolbar, false, false, 0);
-	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_ICONS);
+	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_BOTH);
+
+	myFullScreen = false;
 
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
-	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
-	gtk_signal_connect(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
-
-	myFullScreen = false;
+	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKey), this);
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
-	if (!myFullScreen) {
-		int width, height;
-		gtk_window_get_size(myMainWindow, &width, &height);
-		myWidthOption.setValue(width);
-		myHeightOption.setValue(height);
-	}
+	int width, height;
+	gtk_window_get_size(myMainWindow, &width, &height);
+	myWidthOption.setValue(width);
+	myHeightOption.setValue(height);
 }
 
 void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
 	application().doActionByKey(GtkKeyUtil::keyName(event));
-}
-
-void GtkApplicationWindow::handleScrollEventSlot(GdkEventScroll *event) {
-	switch (event->direction) {
-		case GDK_SCROLL_UP:
-			application().doActionByKey(ZLApplication::MouseScrollUpKey);
-			break;
-		case GDK_SCROLL_DOWN:
-			application().doActionByKey(ZLApplication::MouseScrollDownKey);
-			break;
-		default:
-			break;
-	}
 }
 
 void GtkApplicationWindow::setFullscreen(bool fullscreen) {
@@ -113,16 +98,13 @@ void GtkApplicationWindow::setFullscreen(bool fullscreen) {
 		return;
 	}
 	myFullScreen = fullscreen;
-
 	if (myFullScreen) {
-		gtk_window_fullscreen(myMainWindow);
 		gtk_widget_hide(myToolbar);
-	} else if (!myFullScreen) {
-		gtk_window_unfullscreen(myMainWindow);
+		gtk_window_fullscreen(myMainWindow);
+	} else {
 		gtk_widget_show(myToolbar);
+		gtk_window_unfullscreen(myMainWindow);
 	}
-
-	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
 }
 
 bool GtkApplicationWindow::isFullscreen() const {
@@ -137,13 +119,20 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 		gtk_container_add(GTK_CONTAINER(button), image);
+
+		// toolbar with standard buttons is too wide for zaurus screen
+		GdkImage *gdkImage = GTK_IMAGE(image)->data.image.image;
+		int w = gdkImage->width;
+		int h = gdkImage->height;
+		gtk_widget_set_usize(button, w + 6, h + 6);
+
 		gtk_container_add(GTK_CONTAINER(myToolbar), button);
 		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
 		if (!action.isNull()) {
 			gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), &*action);
 		}
 		myButtons[item] = button;
-		gtk_widget_show_all(button);
+		gtk_widget_show_all(GTK_WIDGET(button));
 	}
 }
 
@@ -170,6 +159,17 @@ void GtkApplicationWindow::refresh() {
 				}
 			}
 		}
+	}
+}
+
+void GtkApplicationWindow::setCaption(const std::string &caption) {
+	int utf8Length = ZLUnicodeUtil::utf8Length(caption);
+	if (utf8Length <= 60) {
+		gtk_window_set_title(myMainWindow, caption.c_str());
+	} else {
+		int len = ZLUnicodeUtil::length(caption, 57);
+		std::string shortCaption = caption.substr(len) + "...";
+		gtk_window_set_title(myMainWindow, shortCaption.c_str());
 	}
 }
 

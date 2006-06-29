@@ -23,22 +23,13 @@
 
 #include <string>
 
-#include <abstract/shared_ptr.h>
+#include <abstract/ZLFileInfo.h>
 
-class ZLDir;
 class ZLFSDir;
 class ZLInputStream;
 class ZLOutputStream;
 
 class ZLFSManager {
-
-protected:
-	struct FileInfo {
-		bool Exists;
-		bool IsDirectory;
-		unsigned long MTime;
-		unsigned long Size;
-	};
 
 public:
 	static void deleteInstance();
@@ -59,57 +50,10 @@ protected:
 	virtual ZLOutputStream *createOutputStream(const std::string &path) const = 0;
 	virtual ZLFSDir *createPlainDirectory(const std::string &path) const = 0;
 	virtual ZLFSDir *createNewDirectory(const std::string &path) const = 0;
-	virtual FileInfo fileInfo(const std::string &path) const = 0;
+	virtual ZLFileInfo fileInfo(const std::string &path) const = 0;
 	virtual bool isZipSupported() const = 0;
 
 friend class ZLFile;
-};
-
-class ZLFile {
-
-private:
-	enum ArchiveType {
-		NONE = 0,
-		GZIP = 0x0001,
-		BZIP2 = 0x0002,
-		COMPRESSED = 0x00ff,
-		ZIP = 0x0100,
-		TAR = 0x0200,
-		ARCHIVE = 0xff00,
-	};
-	
-public:
-	ZLFile(const std::string &path);
-	~ZLFile();
-
-	bool exists() const;
-	unsigned long mTime() const;
-	size_t size() const;	
-
-	bool isCompressed() const;
-	bool isDirectory() const;
-	bool isArchive() const;
-
-	const std::string &path() const;
-	const std::string &fullName() const;
-	const std::string &name() const;
-	const std::string &extension() const;
-
-	shared_ptr<ZLInputStream> inputStream() const;
-	shared_ptr<ZLOutputStream> outputStream() const;
-	shared_ptr<ZLDir> directory(bool createUnexisting = false) const;
-
-private:
-	void fillInfo() const;
-
-private:
-	std::string myPath;
-	std::string myFullName;
-	std::string myName;
-	std::string myExtension;
-	unsigned long myArchiveType;
-	mutable ZLFSManager::FileInfo myInfo;
-	mutable bool myInfoIsFilled;
 };
 
 inline void ZLFSManager::deleteInstance() { delete ourInstance; }
@@ -117,20 +61,5 @@ inline ZLFSManager &ZLFSManager::instance() { return *ourInstance; }
 inline ZLFSManager::ZLFSManager() {}
 inline ZLFSManager::~ZLFSManager() {}
 inline void ZLFSManager::normalize(std::string&) const {}
-
-inline ZLFile::~ZLFile() {}
-
-inline bool ZLFile::exists() const { if (!myInfoIsFilled) fillInfo(); return myInfo.Exists; }
-inline unsigned long ZLFile::mTime() const { if (!myInfoIsFilled) fillInfo(); return myInfo.MTime; }
-inline size_t ZLFile::size() const { if (!myInfoIsFilled) fillInfo(); return myInfo.Size; }
-	
-inline bool ZLFile::isCompressed() const { return myArchiveType & COMPRESSED; }
-inline bool ZLFile::isDirectory() const { if (!myInfoIsFilled) fillInfo(); return myInfo.IsDirectory; }
-inline bool ZLFile::isArchive() const { return myArchiveType & ARCHIVE; }
-
-inline const std::string &ZLFile::path() const { return myPath; }
-inline const std::string &ZLFile::fullName() const { return myFullName; }
-inline const std::string &ZLFile::name() const { return myName; }
-inline const std::string &ZLFile::extension() const { return myExtension; }
 
 #endif /* __ZLFSMANAGER_H__ */

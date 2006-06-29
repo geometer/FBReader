@@ -21,9 +21,6 @@
 
 #include <algorithm>
 
-#include <abstract/ZLFSManager.h>
-#include <abstract/ZLInputStream.h>
-
 #include "OEBBookReader.h"
 #include "XHTMLReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -90,7 +87,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
   myTOC.clear();
   myState = READ_NONE;
 
-  if (!readDocument(ZLFile(fileName).inputStream())) {
+  if (!readDocument(fileName)) {
     return false;
   }
 

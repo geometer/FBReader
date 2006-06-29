@@ -24,7 +24,7 @@
 
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLXMLReader.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLUnicodeUtil.h>
 

@@ -28,6 +28,11 @@
 #include "GtkOpenFileDialog.h"
 #include "GtkWaitMessage.h"
 #include "GtkUtil.h"
+#include "../application/GtkApplicationWindow.h"
+
+void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
+	myWindow = (new GtkApplicationWindow(application))->getMainWindow();
+}
 
 ZLDialog *GtkDialogManager::createDialog(const std::string &title) const {
 	return new GtkCommonDialog(title);

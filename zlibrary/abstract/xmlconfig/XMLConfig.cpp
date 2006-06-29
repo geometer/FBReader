@@ -20,9 +20,9 @@
 
 #include <stack>
 
-#include "../../abstract/filesystem/ZLFSManager.h"
-#include "../../abstract/filesystem/ZLDir.h"
-#include "../../abstract/filesystem/ZLInputStream.h"
+#include <abstract/ZLFile.h>
+#include <abstract/ZLDir.h>
+#include <abstract/ZLInputStream.h>
 
 #include "XMLConfig.h"
 #include "XMLConfigReader.h"

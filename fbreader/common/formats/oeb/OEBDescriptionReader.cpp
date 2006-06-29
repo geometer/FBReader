@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLInputStream.h>
-
 #include "OEBDescriptionReader.h"
 
 OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDescription(description) {
@@ -73,8 +71,8 @@ void OEBDescriptionReader::endElementHandler(const char *tag) {
   }
 }
 
-bool OEBDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
+bool OEBDescriptionReader::readDescription(const std::string &fileName) {
   myReadMetaData = false;
   myReadState = READ_NONE;
-  return readDocument(stream);
+  return readDocument(fileName);
 }

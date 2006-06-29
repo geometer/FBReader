@@ -22,7 +22,7 @@
 
 #include "ZLOpenFileDialog.h"
 
-#include "../filesystem/ZLFSManager.h"
+#include "../filesystem/ZLFile.h"
 #include "../filesystem/ZLDir.h"
 #include "../util/ZLStringUtil.h"
 

@@ -22,12 +22,10 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLDeviceInfo.h>
-
 #include <gtk/GtkKeyUtil.h>
-#include <gtk-pdaxrom/GtkViewWidget.h>
+#include <maemo/GtkViewWidget.h>
 
-#include "GtkFBReader.h"
+#include "GtkApplicationWindow.h"
 
 static bool quitFlag = false;
 
@@ -42,20 +40,20 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkApplicationWindow*)data)->application().repaintView();
 }
 
-static void actionSlot(GtkWidget*, gpointer data) {
+static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
 	((ZLApplication::Action*)data)->checkAndRun();
 }
 
-static void handleKey(GtkWidget *, GdkEventKey *key, gpointer data) {
-	((GtkApplicationWindow*)data)->handleKeyEventSlot(key);
+static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
+	((GtkApplicationWindow*)data)->handleKeyEventSlot(event);
 }
 
 static const std::string OPTIONS = "Options";
 
 GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350) {
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -63,29 +61,41 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 	myVBox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
 
-	myToolbar = gtk_toolbar_new();
-	gtk_box_pack_start(GTK_BOX(myVBox), myToolbar, false, false, 0);
-	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_BOTH);
-
-	myFullScreen = false;
+	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
+	gtk_box_pack_start(GTK_BOX(myVBox), GTK_WIDGET(myToolbar), false, false, 0);
+	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
-	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKey), this);
+	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
+
+	myFullScreen = false;
+
+	std::string lowerCaseName = ZLUnicodeUtil::toLower(this->application().name());
+	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/" + lowerCaseName + "/" + this->application().name() + ".png").c_str());
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
-	int width, height;
-	gtk_window_get_size(myMainWindow, &width, &height);
-	myWidthOption.setValue(width);
-	myHeightOption.setValue(height);
+	if (!myFullScreen) {
+		int width, height;
+		gtk_window_get_size(myMainWindow, &width, &height);
+		myWidthOption.setValue(width);
+		myHeightOption.setValue(height);
+	}
 }
 
 void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
 	application().doActionByKey(GtkKeyUtil::keyName(event));
+}
+
+void GtkApplicationWindow::close() {
+	if (!quitFlag) {
+		quitFlag = true;
+		gtk_main_quit();
+	}
 }
 
 void GtkApplicationWindow::setFullscreen(bool fullscreen) {
@@ -93,13 +103,16 @@ void GtkApplicationWindow::setFullscreen(bool fullscreen) {
 		return;
 	}
 	myFullScreen = fullscreen;
+
 	if (myFullScreen) {
-		gtk_widget_hide(myToolbar);
 		gtk_window_fullscreen(myMainWindow);
-	} else {
-		gtk_widget_show(myToolbar);
+		gtk_widget_hide(GTK_WIDGET(myToolbar));
+	} else if (!myFullScreen) {
 		gtk_window_unfullscreen(myMainWindow);
+		gtk_widget_show(GTK_WIDGET(myToolbar));
 	}
+
+	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
 }
 
 bool GtkApplicationWindow::isFullscreen() const {
@@ -109,22 +122,23 @@ bool GtkApplicationWindow::isFullscreen() const {
 void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + application().name() + "/" + buttonItem.iconName() + ".png").c_str());
-		GtkWidget *button = gtk_button_new();
-		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
+		const std::string lowerCaseName = ZLUnicodeUtil::toLower(application().name());
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + lowerCaseName + "/" + buttonItem.iconName() + ".png").c_str());
+		GtkToolItem *button = gtk_tool_item_new();
+		GtkWidget *ebox = gtk_event_box_new();
+
+		gtk_container_add(GTK_CONTAINER(ebox), image);
+		gtk_container_set_border_width(GTK_CONTAINER(button), 1);
+		gtk_container_add(GTK_CONTAINER(button), ebox);
+
+		gtk_tool_item_set_homogeneous(button, false);
+		gtk_tool_item_set_expand(button, false);
+
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
-		gtk_container_add(GTK_CONTAINER(button), image);
-
-		// toolbar with standard buttons is too wide for zaurus screen
-		GdkImage *gdkImage = GTK_IMAGE(image)->data.image.image;
-		int w = gdkImage->width;
-		int h = gdkImage->height;
-		gtk_widget_set_usize(button, w + 6, h + 6);
-
-		gtk_container_add(GTK_CONTAINER(myToolbar), button);
+		gtk_toolbar_insert(myToolbar, button, -1);
 		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
 		if (!action.isNull()) {
-			gtk_signal_connect(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), &*action);
+			gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
 		}
 		myButtons[item] = button;
 		gtk_widget_show_all(GTK_WIDGET(button));
@@ -135,11 +149,11 @@ void GtkApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
-			GtkWidget *gtkButton = myButtons[*it];
+			GtkWidget *gtkButton = GTK_WIDGET(myButtons[*it]);
 			if (gtkButton != 0) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-				int actionId = button.actionId();
-				if (application().isActionVisible(actionId)) {
+				int id = button.actionId();
+				if (application().isActionVisible(id)) {
 					gtk_widget_show(gtkButton);
 				} else {
 					gtk_widget_hide(gtkButton);
@@ -149,22 +163,11 @@ void GtkApplicationWindow::refresh() {
 				 * does something strange if WIDGET is already insensitive.
 				 */
 				bool enabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
-				if (enabled != application().isActionEnabled(actionId)) {
+				if (enabled != application().isActionEnabled(id)) {
 					gtk_widget_set_sensitive(gtkButton, !enabled);
 				}
 			}
 		}
-	}
-}
-
-void GtkApplicationWindow::setCaption(const std::string &caption) {
-	int utf8Length = ZLUnicodeUtil::utf8Length(caption);
-	if (utf8Length <= 60) {
-		gtk_window_set_title(myMainWindow, caption.c_str());
-	} else {
-		int len = ZLUnicodeUtil::length(caption, 57);
-		std::string shortCaption = caption.substr(len) + "...";
-		gtk_window_set_title(myMainWindow, shortCaption.c_str());
 	}
 }
 
@@ -174,13 +177,6 @@ ZLViewWidget *GtkApplicationWindow::createViewWidget() {
 	gtk_signal_connect_after(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 	gtk_widget_show_all(myVBox);
 	return viewWidget;
-}
-
-void GtkApplicationWindow::close() {
-	if (!quitFlag) {
-		quitFlag = true;
-		gtk_main_quit();
-	}
 }
 
 bool GtkApplicationWindow::isFullKeyboardControlSupported() const {

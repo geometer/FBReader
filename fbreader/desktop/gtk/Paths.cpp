@@ -19,11 +19,12 @@
  * 02110-1301, USA.
  */
 
+#include <gtk-desktop/GtkApplicationWindow.h>
+
 #include "../../common/Files.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
-#include "GtkFBReader.h"
 
 const std::string Files::PathPrefix = std::string(INSTALLDIR) + "/share/FBReader/";
 const std::string Files::PathDelimiter = "/";

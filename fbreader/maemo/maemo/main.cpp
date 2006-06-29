@@ -19,7 +19,6 @@
  * 02110-1301, USA.
  */
 
-//#include <libintl.h>
 #include <gtk/gtk.h>
 
 #include <abstract/ZLEncodingConverter.h>
@@ -30,8 +29,8 @@
 #include <gtk/GtkImageManager.h>
 #include <maemo/GtkDeviceInfo.h>
 #include <maemo/GtkPaintContext.h>
+#include <maemo-maemo/GtkApplicationWindow.h>
 
-#include "GtkFBReader.h"
 #include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
 
@@ -57,8 +56,7 @@ int main(int argc, char **argv) {
 
 	// MSS: use the first argument that gtk did not consume
 	FBReader *reader = new FBReader(new GtkPaintContext(), argc == 1 ? std::string() : argv[1]);
-	GtkApplicationWindow *window = new GtkApplicationWindow(reader);
-	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(GTK_WINDOW(window->getMainWindow()));
+	ZLDialogManager::instance().createApplicationWindow(reader);
 	reader->initWindow();
 	gtk_main();
 	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);

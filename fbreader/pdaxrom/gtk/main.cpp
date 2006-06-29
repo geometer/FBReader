@@ -29,8 +29,8 @@
 #include <gtk/GtkImageManager.h>
 #include <gtk/GtkDeviceInfo.h>
 #include <gtk-pdaxrom/GtkPaintContext.h>
+#include <gtk-pdaxrom/GtkApplicationWindow.h>
 
-#include "GtkFBReader.h"
 #include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
 
@@ -49,8 +49,7 @@ int main(int argc, char **argv) {
 
 	// MSS: use the first argument that gtk did not consume
 	FBReader *reader = new FBReader(new GtkPaintContext(), argc == 1 ? std::string() : argv[1]);
-	GtkApplicationWindow *window = new GtkApplicationWindow(reader);
-	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(window->getMainWindow());
+	ZLDialogManager::instance().createApplicationWindow(reader);
 	reader->initWindow();
 	gtk_main();
 	delete reader;

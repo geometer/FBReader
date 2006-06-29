@@ -22,8 +22,8 @@
 
 #include <algorithm>
 
-#include "../filesystem/ZLFSManager.h"
-#include "../filesystem/ZLInputStream.h"
+#include <abstract/ZLFile.h>
+
 #include "../xml/ZLXMLReader.h"
 
 #include "ZLEncodingConverter.h"
@@ -70,7 +70,7 @@ void ZLEncodingConverter::setEncodingDescriptionPath(const std::string &path) {
 	ourKnownEncodings.clear();
 	ourEncodingDescriptionPath = path;
 	std::vector<std::string> candidates;
-	EncodingListReader(candidates, ourEncodingsByCode).readDocument(ZLFile(ourEncodingDescriptionPath + "/Encodings.list").inputStream());
+	EncodingListReader(candidates, ourEncodingsByCode).readDocument(ourEncodingDescriptionPath + "/Encodings.list");
 	for (std::vector<std::string>::const_iterator it = candidates.begin(); it != candidates.end(); ++it) {
 		iconv_t converter = iconv_open("utf-8", it->c_str());
 		if (converter != (iconv_t)-1) {

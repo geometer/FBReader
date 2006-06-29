@@ -29,7 +29,7 @@
 #include <hildon-widgets/hildon-program.h>
 #include <libosso.h>
 
-#include "../../common/fbreader/FBReader.h"
+#include <abstract/ZLApplication.h>
 
 class GtkApplicationWindow : public ZLApplicationWindow { 
 

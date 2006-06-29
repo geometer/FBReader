@@ -18,48 +18,51 @@
  * 02110-1301, USA.
  */
 
-#include <qapplication.h>
+#include <qpe/qpeapplication.h>
 #include <qpixmap.h>
 #include <qmenubar.h>
+#include <qpe/resource.h>
 
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qdialog.h>
-
-#include <abstract/ZLOptions.h>
-
-#include <qt/QViewWidget.h>
+#include <opie/QViewWidget.h>
 #include <qt/QKeyUtil.h>
 
-#include "QFBReader.h"
+#include "QApplicationWindow.h"
 
-static const std::string OPTIONS = "Options";
+QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a), myCloseFlag(false) {
+	if (application().KeyboardControlOption.value()) {
+		grabAllKeys(true);
+	}
 
-QApplicationWindow::QApplicationWindow(ZLApplication *application) :
-	ZLApplicationWindow(application),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350),
-	myFullScreen(false),
-	myWasMaximized(false) {
-
-	setWFlags(getWFlags() | WStyle_Customize);
+	myFullScreen = false;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 
-	resize(myWidthOption.value(), myHeightOption.value());
+	((QPEApplication*)qApp)->showMainWidget(this);
 }
 
 QApplicationWindow::~QApplicationWindow() {
-	if (!isFullscreen()) {
-		myWidthOption.setValue(width());
-		myHeightOption.setValue(height());
+	if (application().KeyboardControlOption.value()) {
+		grabAllKeys(false);
 	}
 }
 
 void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
+	killTimers();
 	application().doActionByKey(QKeyUtil::keyName(event));
+}
+
+void QApplicationWindow::focusInEvent(QFocusEvent*) {
+	if (myFullScreen && (size() != qApp->desktop()->size())) {
+		showNormal();
+		showFullScreen();
+	}
+}
+
+void QApplicationWindow::resizeEvent(QResizeEvent*) {
+	if (myFullScreen && (size() != qApp->desktop()->size())) {
+		showNormal();
+		showFullScreen();
+	}
 }
 
 void QApplicationWindow::setFullscreen(bool fullscreen) {
@@ -68,15 +71,13 @@ void QApplicationWindow::setFullscreen(bool fullscreen) {
 	}
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
-		myWasMaximized = isMaximized();
 		menuBar()->hide();
+		showNormal();
 		showFullScreen();
 	} else {
 		menuBar()->show();
 		showNormal();
-		if (myWasMaximized) {
-			showMaximized();
-		}
+		showMaximized();
 	}
 }
 
@@ -84,8 +85,11 @@ bool QApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void QApplicationWindow::close() {
-	QMainWindow::close();
+void QApplicationWindow::timerEvent(QTimerEvent *) {
+	if (application().closeView()) {
+		myCloseFlag = true;
+	}
+	killTimers();
 }
 
 void QApplicationWindow::closeEvent(QCloseEvent *event) {
@@ -96,21 +100,51 @@ void QApplicationWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
-	if (item->isButton()) {
-		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		menuBar()->insertItem(QPixmap((ImageDirectory + "/" + application().name() + "/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
-	}
+void QApplicationWindow::addToolbarItem(shared_ptr<ZLApplication::Toolbar::Item>) {
 }
 
 void QApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
+
+	bool isVisibilityChanged = false;
+	if (myToolbarMask.size() != items.size()) {
+		isVisibilityChanged = true;
+		myToolbarMask.clear();
+		myToolbarMask.assign(items.size(), false);
+	}
+	std::vector<bool>::iterator bt = myToolbarMask.begin();
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+			if (application().isActionVisible(button.actionId()) != *bt) {
+				*bt = !*bt;
+				isVisibilityChanged = true;
+			}
+			++bt;
+		}
+	}
+	if (isVisibilityChanged) {
+		bt = myToolbarMask.begin();
+		centralWidget()->hide();
+		menuBar()->clear();
+		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+			if ((*it)->isButton()) {
+				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+				if (*bt) {
+					const QPixmap &pixmap = Resource::loadPixmap((application().name() + "/" + button.iconName()).c_str());
+					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
+				}
+				++bt;
+			}
+		}
+		centralWidget()->show();
+	}
+
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemVisible(id, application().isActionVisible(id));
 				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
 			}
 		}
@@ -130,10 +164,15 @@ void QApplicationWindow::doActionSlot(int buttonNumber) {
 }
 
 bool QApplicationWindow::isFullKeyboardControlSupported() const {
-	return false;
+	return true;
 }
 
-void QApplicationWindow::grabAllKeys(bool) {
+void QApplicationWindow::grabAllKeys(bool grab) {
+	if (grab) {
+		QPEApplication::grabKeyboard();
+	} else {
+		QPEApplication::ungrabKeyboard();
+	}
 }
 
 ZLViewWidget *QApplicationWindow::createViewWidget() {
@@ -141,4 +180,9 @@ ZLViewWidget *QApplicationWindow::createViewWidget() {
 	setCentralWidget(viewWidget->widget());
 	viewWidget->widget()->show();
 	return viewWidget;
+}
+
+void QApplicationWindow::close() {
+	myCloseFlag = true;
+	QMainWindow::close();
 }

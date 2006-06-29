@@ -43,6 +43,7 @@ protected:
 
 public:
 	bool readDocument(shared_ptr<ZLInputStream> stream);
+	bool readDocument(const std::string &fileName);
 
 	virtual void startElementHandler(const char *tag, const char **attributes);
 	virtual void endElementHandler(const char *tag);

@@ -22,7 +22,7 @@
 #include <map>
 
 #include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLDir.h>
 
 #include "FBFileHandler.h"

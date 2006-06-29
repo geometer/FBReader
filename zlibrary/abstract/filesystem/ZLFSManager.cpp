@@ -22,6 +22,7 @@
 
 #include "ZLFSDir.h"
 #include "ZLFSManager.h"
+#include "ZLFile.h"
 #include "ZLOutputStream.h"
 #include "zip/ZLZip.h"
 #include "tar/ZLTar.h"

@@ -22,7 +22,7 @@
 #include <cctype>
 
 #include "ZLTar.h"
-#include "../ZLFSManager.h"
+#include "../ZLFile.h"
 
 struct ZLTarHeader {
 	std::string Name;

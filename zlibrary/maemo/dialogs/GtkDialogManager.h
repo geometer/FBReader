@@ -35,6 +35,8 @@ private:
 	GtkDialogManager() : myIsInitialized(false), myWindow(0), myIsKeyboardGrabbed(false), myIsWaiting(false) {}
 
 public:
+	void createApplicationWindow(ZLApplication *application) const;
+
 	ZLDialog *createDialog(const std::string &title) const;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
@@ -46,15 +48,15 @@ public:
 	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
 	const std::string &getPixmapPath() const { return myPixmapPath; }
 
-	void setMainWindow(GtkWindow *window) { myIsInitialized = true; myWindow = window; }
+	void setMainWindow(GtkWindow *window) const { myIsInitialized = true; myWindow = window; }
 
 	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
 	bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
 
 private:
 	std::string myPixmapPath;
-	bool myIsInitialized;
-	GtkWindow *myWindow;
+	mutable bool myIsInitialized;
+	mutable GtkWindow *myWindow;
 	bool myIsKeyboardGrabbed;
 
 	mutable bool myIsWaiting;

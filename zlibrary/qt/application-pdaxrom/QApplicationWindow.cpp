@@ -22,39 +22,44 @@
 #include <qpixmap.h>
 #include <qmenubar.h>
 
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qdialog.h>
-
-#include <abstract/ZLOptions.h>
-
 #include <qt/QViewWidget.h>
 #include <qt/QKeyUtil.h>
 
-#include "QFBReader.h"
+#include "QApplicationWindow.h"
+#include "../dialogs/QDialogManager.h"
+
+void QDialogManager::createApplicationWindow(ZLApplication *application) const {
+	new QApplicationWindow(application);
+}
 
 static const std::string OPTIONS = "Options";
 
 QApplicationWindow::QApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800),
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350),
 	myFullScreen(false),
 	myWasMaximized(false) {
 
 	setWFlags(getWFlags() | WStyle_Customize);
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
+
 	resize(myWidthOption.value(), myHeightOption.value());
+
+	qApp->setMainWidget(this);
+	showMaximized();
 }
 
 QApplicationWindow::~QApplicationWindow() {
-	if (!isFullscreen() && !isMaximized()) {
+	if (!isFullscreen()) {
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}
+}
+
+void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
+	application().doActionByKey(QKeyUtil::keyName(event));
 }
 
 void QApplicationWindow::setFullscreen(bool fullscreen) {
@@ -79,18 +84,8 @@ bool QApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
-	application().doActionByKey(QKeyUtil::keyName(event));
-}
-
-void QApplicationWindow::wheelEvent(QWheelEvent *event) {
-	if (event->orientation() == Vertical) {
-		if (event->delta() > 0) {
-			application().doActionByKey(ZLApplication::MouseScrollUpKey);
-		} else {
-			application().doActionByKey(ZLApplication::MouseScrollDownKey);
-		}
-	}
+void QApplicationWindow::close() {
+	QMainWindow::close();
 }
 
 void QApplicationWindow::closeEvent(QCloseEvent *event) {
@@ -122,19 +117,16 @@ void QApplicationWindow::refresh() {
 	}
 }
 
+void QApplicationWindow::setCaption(const std::string &caption) {
+	QString qCaption = QString::fromUtf8(caption.c_str());
+	if (qCaption.length() > 60) {
+		qCaption = qCaption.left(57) + "...";
+	}
+	QMainWindow::setCaption(qCaption);
+}
+
 void QApplicationWindow::doActionSlot(int buttonNumber) {
 	application().doAction(buttonNumber);
-}
-
-ZLViewWidget *QApplicationWindow::createViewWidget() {
-	QViewWidget *viewWidget = new QViewWidget(this, &application());
-	setCentralWidget(viewWidget->widget());
-	viewWidget->widget()->show();
-	return viewWidget;
-}
-
-void QApplicationWindow::close() {
-	QMainWindow::close();
 }
 
 bool QApplicationWindow::isFullKeyboardControlSupported() const {
@@ -142,4 +134,11 @@ bool QApplicationWindow::isFullKeyboardControlSupported() const {
 }
 
 void QApplicationWindow::grabAllKeys(bool) {
+}
+
+ZLViewWidget *QApplicationWindow::createViewWidget() {
+	QViewWidget *viewWidget = new QViewWidget(this, &application());
+	setCentralWidget(viewWidget->widget());
+	viewWidget->widget()->show();
+	return viewWidget;
 }

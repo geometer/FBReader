@@ -19,8 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFSManager.h>
-#include <abstract/ZLInputStream.h>
+#include <abstract/ZLFile.h>
 
 #include "FB2Plugin.h"
 #include "FB2DescriptionReader.h"
@@ -32,7 +31,7 @@ bool FB2Plugin::acceptsFile(const ZLFile &file) const {
 }
 
 bool FB2Plugin::readDescription(const std::string &path, BookDescription &description) const {
-	return FB2DescriptionReader(description).readDescription(ZLFile(path).inputStream());
+	return FB2DescriptionReader(description).readDescription(path);
 }
 
 bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) const {
@@ -42,7 +41,7 @@ bool FB2Plugin::readModel(const BookDescription &description, BookModel &model) 
 		BookInfo(description.fileName()).EncodingOption.setValue("auto");
 	}
 
-	return FB2BookReader(model).readBook(ZLFile(description.fileName()).inputStream());
+	return FB2BookReader(model).readBook(description.fileName());
 }
 
 const std::string &FB2Plugin::iconName() const {

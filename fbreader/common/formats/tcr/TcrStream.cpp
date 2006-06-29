@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLZDecompressor.h>
 
 #include "TcrStream.h"

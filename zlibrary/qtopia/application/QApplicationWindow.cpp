@@ -23,19 +23,11 @@
 #include <qmenubar.h>
 #include <qpe/resource.h>
 
-#include <qlayout.h>
-#include <qlineedit.h>
-#include <qcheckbox.h>
-#include <qpushbutton.h>
-#include <qlabel.h>
-#include <qdialog.h>
-
-#include <abstract/ZLOptions.h>
-
 #include <qt/QKeyUtil.h>
 
 #include "QApplicationWindow.h"
 #include "../view/QViewWidget.h"
+#include "../dialogs/QDialogManager.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
 	if (application().KeyboardControlOption.value()) {
@@ -50,6 +42,8 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 	myHorizontalDelta = -1;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
+
+	((QPEApplication*)qApp)->showMainWidget(this);
 }
 
 QApplicationWindow::~QApplicationWindow() {

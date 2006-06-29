@@ -20,12 +20,12 @@
  */
 
 #include <qt/QKeyUtil.h>
+#include <qt-desktop/QApplicationWindow.h>
 
 #include "../../common/Files.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
-#include "QFBReader.h"
 
 const std::string QKeyUtil::FilePath = std::string(INSTALLDIR) + "/share/zlibrary/keynames.xml";
 

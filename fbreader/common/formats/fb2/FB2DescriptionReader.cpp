@@ -124,7 +124,7 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 	}
 }
 
-bool FB2DescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
+bool FB2DescriptionReader::readDescription(const std::string &fileName) {
 	myReadSomething = false;
 	myReadTitle = false;
 	myReadAuthor = false;
@@ -132,5 +132,5 @@ bool FB2DescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
 	for (int i = 0; i < 3; ++i) {
 		myReadAuthorName[i] = false;
 	}
-	return readDocument(stream);
+	return readDocument(fileName);
 }

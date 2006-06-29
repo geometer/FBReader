@@ -23,8 +23,6 @@
 
 #include <qevent.h>
 
-#include <abstract/ZLFSManager.h>
-#include <abstract/ZLInputStream.h>
 #include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLXMLReader.h>
@@ -49,7 +47,7 @@ private:
 
 std::string QKeyUtil::keyName(QKeyEvent *keyEvent) {
 	if (ourNames.empty()) {
-		KeyNamesReader(ourNames, ourModifiers).readDocument(ZLFile(FilePath).inputStream());
+		KeyNamesReader(ourNames, ourModifiers).readDocument(FilePath);
 	}
 
 	QString txt = keyEvent->text();

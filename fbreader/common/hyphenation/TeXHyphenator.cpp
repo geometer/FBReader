@@ -24,9 +24,8 @@
 
 #include <abstract/ZLUnicodeUtil.h>
 #include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 #include <abstract/ZLDir.h>
-#include <abstract/ZLInputStream.h>
 
 #include "TeXHyphenator.h"
 #include "HyphenationReader.h"
@@ -78,7 +77,7 @@ void TeXHyphenator::collectLanguages() {
 				if (ZLStringUtil::stringEndsWith(*it, POSTFIX)) {
 					std::string code = it->substr(0, it->size() - POSTFIX.size());
 					std::string name;
-					LanguageReader(name).readDocument(ZLFile(PatternZip() + ":" + *it).inputStream());
+					LanguageReader(name).readDocument(PatternZip() + ":" + *it);
 					if (!name.empty()) {
 						LanguageCodes.push_back(code);
 						LanguageNames.push_back(name);
@@ -213,7 +212,7 @@ void TeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	HyphenationReader(this).readDocument(ZLFile(PatternZip() + ":" + language + POSTFIX).inputStream());
+	HyphenationReader(this).readDocument(PatternZip() + ":" + language + POSTFIX);
 	
 	std::sort(myPatternTable.begin(), myPatternTable.end(), TeXPatternComparator());
 }

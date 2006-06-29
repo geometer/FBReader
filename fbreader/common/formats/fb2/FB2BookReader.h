@@ -33,7 +33,7 @@ class FB2BookReader : public FB2Reader {
 public:
 	FB2BookReader(BookModel &model);
 	~FB2BookReader();
-	bool readBook(shared_ptr<ZLInputStream> stream);
+	bool readBook(const std::string &fileName);
 
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);

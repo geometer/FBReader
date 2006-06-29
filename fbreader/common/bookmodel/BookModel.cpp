@@ -20,7 +20,7 @@
  */
 
 #include <abstract/ZLImage.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 
 #include "BookModel.h"
 #include "BookReader.h"

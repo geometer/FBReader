@@ -27,7 +27,13 @@
 #include <maemo/GtkKeyUtil.h>
 #include <maemo/GtkDialogManager.h>
 
-#include "GtkFBReader.h"
+#include "GtkApplicationWindow.h"
+#include "../dialogs/GtkDialogManager.h"
+
+void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
+	myWindow = GTK_WINDOW((new GtkApplicationWindow(application))->getMainWindow());
+	myIsInitialized = true;
+}
 
 static bool quitFlag = false;
 

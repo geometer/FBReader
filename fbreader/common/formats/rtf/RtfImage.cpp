@@ -22,7 +22,7 @@
 
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLInputStream.h>
-#include <abstract/ZLFSManager.h>
+#include <abstract/ZLFile.h>
 
 #include "RtfImage.h"
 

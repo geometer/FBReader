@@ -30,7 +30,7 @@ class OEBDescriptionReader : public ZLXMLReader {
 
 public:
   OEBDescriptionReader(BookDescription &description);
-  bool readDescription(shared_ptr<ZLInputStream> stream);
+  bool readDescription(const std::string &fileName);
 
   void startElementHandler(const char *tag, const char **attributes);
   void endElementHandler(const char *tag);
