@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLTime.h>
-
 #include "../dialogs/GtkDialogManager.h"
 #include "GtkViewWidget.h"
 #include "GtkPaintContext.h"
