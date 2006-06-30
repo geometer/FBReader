@@ -39,7 +39,7 @@ install:
 	@mkdir -p usr/share/pixmaps/FBReader
 	@cp `find ../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
 	@mkdir -p usr/share/zlibrary
-	@cp ../../zlibrary/data/keynames.pdaxrom.xml usr/share/zlibrary/keynames.xml
+	@cp ../../zlibrary/data/keynames.pdaxrom-$(UI_TYPE).xml usr/share/zlibrary/keynames.xml
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 

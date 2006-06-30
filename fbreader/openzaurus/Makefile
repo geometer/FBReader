@@ -54,7 +54,7 @@ clean: .cleandir
 	@cp ../data/default/keymap.qtopia.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(STYLE).xml $(BASEDIR)/share/FBReader/default/styles.xml
 	@mkdir $(BASEDIR)/share/zlibrary
-	@cp ../../zlibrary/data/keynames.openzaurus.xml $(BASEDIR)/share/zlibrary/keynames.xml
+	@cp ../../zlibrary/data/keynames.openzaurus-$(UI_TYPE).xml $(BASEDIR)/share/zlibrary/keynames.xml
 	@mkdir -p $(APPDIR)
 	@cp $(UI_TYPE)/fbreader.desktop $(APPDIR)
 

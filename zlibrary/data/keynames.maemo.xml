@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keynames>
+	<key code="0xFF1B" name="&lt;Escape&gt;"/>
+	<key code="0xFF0D" name="&lt;ScrollKey Center&gt;"/>
+	<key code="0xFF51" name="&lt;ScrollKey Left&gt;"/>
+	<key code="0xFF52" name="&lt;ScrollKey Up&gt;"/>
+	<key code="0xFF53" name="&lt;ScrollKey Right&gt;"/>
+	<key code="0xFF54" name="&lt;ScrollKey Down&gt;"/>
+	<key code="0xFFC1" name="&lt;Menu&gt;"/>
+	<key code="0xFFC2" name="&lt;Home&gt;"/>
+	<key code="0xFFC3" name="&lt;FullScreen&gt;"/>
+	<key code="0xFFC4" name="&lt;ZoomKey +&gt;"/>
+	<key code="0xFFC5" name="&lt;ZoomKey -&gt;"/>
+</keynames>

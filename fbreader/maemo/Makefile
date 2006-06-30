@@ -10,10 +10,16 @@ PACKAGE_FILE = $(PACKAGE_NAME)_$(DEBIAN_VERSION)_$(ARCH).deb
 ifeq "$(UI_TYPE)" "maemo"
 PREFIX = /var/lib/install
 DBUSDIR = /usr/lib/dbus-1.0/services
+DEPENDS = maemo,libenca0
+MENUDIR = $(DESTDIR)/etc/others-menu/extra_applications
 else
 PREFIX =
 DBUSDIR = /usr/share/dbus-1/services
+DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
+MENUDIR = $(DESTDIR)/etc/others-menu
 endif
+SHARE_ZLIBRARY = $(DESTDIR)/usr/share/zlibrary
+SHARE_FBREADER = $(DESTDIR)/usr/share/FBReader
 
 BINDIR = $(PREFIX)/usr/bin
 TMPDIR = tmp
@@ -28,32 +34,29 @@ BACKUP_CONF = FBReader.backup
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(DESTDIR)/usr/bin
 	@install -s ../FBReader $(DESTDIR)/usr/bin
-	@install -d $(DESTDIR)/usr/share/FBReader/
-	@install -d $(DESTDIR)/usr/share/FBReader/formats/html
-	@install -m 0644 ../share/FBReader/formats/html/html.ent $(DESTDIR)/usr/share/FBReader/formats/html
-	@install -d $(DESTDIR)$(INSTALLDIR)/usr/share/FBReader/formats/xhtml
-	@install -m 0644 $(wildcard ../share/FBReader/formats/xhtml/*.ent) $(DESTDIR)$(INSTALLDIR)/usr/share/FBReader/formats/xhtml
-	@install -d $(DESTDIR)/usr/share/FBReader/icons/FBReader
-	@install -m 0644 $(wildcard ../icons/blueset/FBReader/*) $(DESTDIR)/usr/share/FBReader/icons/FBReader
+	@install -d $(SHARE_ZLIBRARY)
+	@install -m 0644 $(ROOTDIR)/zlibrary/data/keynames.maemo.xml $(SHARE_ZLIBRARY)/keynames.xml
+	@install -d $(SHARE_FBREADER)
+	@install -d $(SHARE_FBREADER)/formats/html
+	@install -m 0644 ../share/FBReader/formats/html/html.ent $(SHARE_FBREADER)/formats/html
+	@install -d $(SHARE_FBREADER)/formats/xhtml
+	@install -m 0644 $(wildcard ../share/FBReader/formats/xhtml/*.ent) $(SHARE_FBREADER)/formats/xhtml
+	@install -d $(SHARE_FBREADER)/icons/FBReader
+	@install -m 0644 $(wildcard ../icons/blueset/FBReader/*) $(SHARE_FBREADER)/icons/FBReader
 	@install -d $(DESTDIR)/usr/share/FBReader/encodings
-	@install -m 0644 $(filter-out %/Big5,$(wildcard ../share/FBReader/encodings/*)) $(DESTDIR)/usr/share/FBReader/encodings
-	@install -m 0644 $(wildcard ../share/FBReader/*.zip) $(DESTDIR)/usr/share/FBReader
+	@install -m 0644 $(filter-out %/Big5,$(wildcard ../share/FBReader/encodings/*)) $(SHARE_FBREADER)/encodings
+	@install -m 0644 $(wildcard ../share/FBReader/*.zip) $(SHARE_FBREADER)
 	@install -d $(DESTDIR)/usr/share/FBReader/help
-	@install -m 0644 ../data/help/HowToStart.blueish.fb2 $(DESTDIR)/usr/share/FBReader/help/HowToStart.fb2
+	@install -m 0644 ../data/help/HowToStart.blueish.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2
 	@install -d $(DESTDIR)/usr/share/FBReader/default
-	@install -m 0644 ../data/default/keymap.maemo.xml $(DESTDIR)/usr/share/FBReader/default/keymap.xml
-	@install -m 0644 ../data/default/styles.maemo.xml $(DESTDIR)/usr/share/FBReader/default/styles.xml
+	@install -m 0644 ../data/default/keymap.maemo.xml $(SHARE_FBREADER)/default/keymap.xml
+	@install -m 0644 ../data/default/styles.maemo.xml $(SHARE_FBREADER)/default/styles.xml
 	@install -d $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	@install -m 0644 ../icons/blueset/FBReader.png $(DESTDIR)/usr/share/icons/hicolor/26x26/apps
 	@install -d $(DESTDIR)/usr/share/applications/hildon
 	@install -m 0644 $(DESKTOP_FILE) $(DESTDIR)/usr/share/applications/hildon
-ifeq "$(UI_TYPE)" "maemo"
-	@install -d $(DESTDIR)/etc/others-menu/extra_applications
-	@cd $(DESTDIR)/etc/others-menu/extra_applications; ln -sf ../../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
-else
-	@install -d $(DESTDIR)/etc/others-menu
-	@cd $(DESTDIR)/etc/others-menu; ln -sf ../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
-endif
+	@install -d $(MENUDIR)
+	@cd $(MENUDIR); ln -sf ../../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
 	@install -d $(DESTDIR)$(DBUSDIR)
 	@install -m 0644 $(SERVICE_FILE) $(DESTDIR)$(DBUSDIR)
 	@install -d $(DESTDIR)/etc/osso-backup/applications
@@ -65,7 +68,6 @@ $(DESKTOP_FILE): $(DESKTOP_FILE).in
 $(SERVICE_FILE): $(SERVICE_FILE).in
 	@sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
-ifeq "$(UI_TYPE)" "maemo"
 package:
 	@mkdir -p $(TMPDIR)
 	make DESTDIR=$(PWD)/$(TMPDIR) install
@@ -74,27 +76,14 @@ package:
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
 		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
-		-e "s#@DEPENDS@#maemo,libenca0#" \
+		-e "s#@DEPENDS@#$(DEPENDS)#" \
 		-e "s#@SECTION@#utils#" \
 		FBReader.control.in > $(TMPDIR)/DEBIAN/control
-	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
-	@rm -rf $(TMPDIR)
-else
-package:
-	@mkdir -p $(TMPDIR)
-	make DESTDIR=$(PWD)/$(TMPDIR) install
-	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(DEBIAN_VERSION)/" \
-		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
-		-e "s#@ARCH@#$(ARCH)#" \
-		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
-		-e "s#@DEPENDS@#`dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`#" \
-		-e "s#@SECTION@#user/tools#" \
-		FBReader.control.in > $(TMPDIR)/DEBIAN/control
+ifeq "$(UI_TYPE)" "maemo2"
 	@install FBReader.postinst $(TMPDIR)/DEBIAN/postinst
+endif
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
-endif
 
 clean:
 	$(RM) $(DESKTOP_FILE) $(SERVICE_FILE) *.deb
