@@ -39,6 +39,8 @@ public:
 	void repaintView();
 	void trackStylus(bool track);
 
+	void onFingerTap(int h, int y);
+
 private:
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
@@ -49,6 +51,7 @@ private:
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;
+	int myButtonPressHandlerId;
 };
 
 #endif /* __GTKVIEWWIDGET_H__ */
