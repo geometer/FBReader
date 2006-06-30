@@ -12,11 +12,13 @@ PREFIX = /var/lib/install
 DBUSDIR = /usr/lib/dbus-1.0/services
 DEPENDS = maemo,libenca0
 MENUDIR = $(DESTDIR)/etc/others-menu/extra_applications
+SECTION = utils
 else
 PREFIX =
 DBUSDIR = /usr/share/dbus-1/services
 DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
 MENUDIR = $(DESTDIR)/etc/others-menu
+SECTION = user/tools
 endif
 SHARE_ZLIBRARY = $(DESTDIR)/usr/share/zlibrary
 SHARE_FBREADER = $(DESTDIR)/usr/share/FBReader
@@ -77,7 +79,7 @@ package:
 		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
 		-e "s#@DEPENDS@#$(DEPENDS)#" \
-		-e "s#@SECTION@#utils#" \
+		-e "s#@SECTION@#$(SECTION)#" \
 		FBReader.control.in > $(TMPDIR)/DEBIAN/control
 ifeq "$(UI_TYPE)" "maemo2"
 	@install FBReader.postinst $(TMPDIR)/DEBIAN/postinst

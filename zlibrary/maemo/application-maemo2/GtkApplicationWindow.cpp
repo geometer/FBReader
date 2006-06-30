@@ -137,6 +137,7 @@ void GtkApplicationWindow::addMenubarItem(GtkMenu *menu, ZLApplication::Menubar:
 
 	myMenuItems[item] = gtkItem;
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(gtkItem));
+	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
