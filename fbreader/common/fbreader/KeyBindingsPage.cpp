@@ -160,7 +160,7 @@ void FBReaderKeyOptionEntry::onAccept() {
 
 int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {
 	std::map<std::string,ActionCode>::const_iterator it = changedCodes().find(key);
-	return myIndexByCode[(it != changedCodes().end()) ? it->second : myFBReader.keyBindings(myOrientation, true).getBinding(key)];
+	return myIndexByCode[(it != changedCodes().end()) ? it->second : (ActionCode)myFBReader.keyBindings(myOrientation, true).getBinding(key)];
 }
 
 void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {

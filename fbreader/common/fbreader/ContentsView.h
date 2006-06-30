@@ -22,12 +22,10 @@
 #ifndef __CONTENTSVIEW_H__
 #define __CONTENTSVIEW_H__
 
-#include "../textview/TextView.h"
+#include "FBView.h"
 #include "../textview/ParagraphCursor.h"
 
-class FBReader;
-
-class ContentsView : public TextView {
+class ContentsView : public FBView {
 
 public:
 	ContentsView(FBReader &reader, ZLPaintContext &context);
@@ -45,7 +43,6 @@ public:
 	void gotoReference();
 
 private:
-	FBReader &myReader;
 	std::string myCaption;
 };
 

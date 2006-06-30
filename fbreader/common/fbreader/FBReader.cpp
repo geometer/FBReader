@@ -52,6 +52,7 @@ static const std::string BOOK = "Book";
 const std::string LARGE_SCROLLING = "LargeScrolling";
 const std::string SMALL_SCROLLING = "SmallScrolling";
 const std::string MOUSE_SCROLLING = "MouseScrolling";
+const std::string FINGER_TAP_SCROLLING = "FingerTapScrolling";
 
 const std::string DELAY = "ScrollingDelay";
 const std::string MODE = "Mode";
@@ -97,6 +98,13 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 		MOUSE_SCROLLING, LINES_TO_SCROLL, 1,
 		MOUSE_SCROLLING, PERCENT_TO_SCROLL, 50
 	),
+	FingerTapScrollingOptions(
+		FINGER_TAP_SCROLLING, DELAY, 0,
+		FINGER_TAP_SCROLLING, MODE, TextView::NO_OVERLAPPING,
+		FINGER_TAP_SCROLLING, LINES_TO_KEEP, 1,
+		FINGER_TAP_SCROLLING, LINES_TO_SCROLL, 1,
+		FINGER_TAP_SCROLLING, PERCENT_TO_SCROLL, 50
+	),
 	SearchBackwardOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Backward", false),
 	SearchIgnoreCaseOption(FBOptions::SEARCH_CATEGORY, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),
@@ -106,7 +114,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	myModel = 0;
 	myContext = context;
 	myBookTextView = new BookTextView(*this, *myContext);
-	myFootnoteView = new FootnoteView(*myContext);
+	myFootnoteView = new FootnoteView(*this, *myContext);
 	myContentsView = new ContentsView(*this, *myContext);
 	myCollectionView = new CollectionView(*this, *myContext);
 	myRecentBooksView = new RecentBooksView(*this, *myContext);
@@ -148,10 +156,10 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	addAction(ACTION_LARGE_SCROLL_BACKWARD, new ScrollingAction(*this, LargeScrollingOptions, false));
 	addAction(ACTION_SMALL_SCROLL_FORWARD, new ScrollingAction(*this, SmallScrollingOptions, true));
 	addAction(ACTION_SMALL_SCROLL_BACKWARD, new ScrollingAction(*this, SmallScrollingOptions, false));
-	if (ZLDeviceInfo::isMousePresented()) {
-		addAction(ACTION_MOUSE_SCROLL_FORWARD, new ScrollingAction(*this, MouseScrollingOptions, true));
-		addAction(ACTION_MOUSE_SCROLL_BACKWARD, new ScrollingAction(*this, MouseScrollingOptions, false));
-	}
+	addAction(ACTION_MOUSE_SCROLL_FORWARD, new ScrollingAction(*this, MouseScrollingOptions, true));
+	addAction(ACTION_MOUSE_SCROLL_BACKWARD, new ScrollingAction(*this, MouseScrollingOptions, false));
+	addAction(ACTION_FINGER_TAP_SCROLL_FORWARD, new ScrollingAction(*this, FingerTapScrollingOptions, true));
+	addAction(ACTION_FINGER_TAP_SCROLL_BACKWARD, new ScrollingAction(*this, FingerTapScrollingOptions, false));
 	addAction(ACTION_INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
 	addAction(ACTION_DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
 	addAction(ACTION_ROTATE_SCREEN, new RotationAction(*this));
@@ -348,7 +356,7 @@ void FBReader::addBookSlot() {
 	}
 }
 
-bool FBReader::isScrollingAction(ActionCode code) {
+bool FBReader::isScrollingAction(int code) {
 	switch (code) {
 		case ACTION_LARGE_SCROLL_FORWARD:
 		case ACTION_LARGE_SCROLL_BACKWARD:
@@ -356,6 +364,8 @@ bool FBReader::isScrollingAction(ActionCode code) {
 		case ACTION_SMALL_SCROLL_BACKWARD:
 		case ACTION_MOUSE_SCROLL_FORWARD:
 		case ACTION_MOUSE_SCROLL_BACKWARD:
+		case ACTION_FINGER_TAP_SCROLL_FORWARD:
+		case ACTION_FINGER_TAP_SCROLL_BACKWARD:
 			return true;
 		default:
 			return false;
@@ -465,8 +475,8 @@ void FBReader::clearTextCaches() {
 }
 
 void FBReader::doActionByKey(const std::string &key) {
-	ActionCode code = keyBindings(myViewWidget->rotation()).getBinding(key);
-	if (code != NO_ACTION) {
+	int code = keyBindings(myViewWidget->rotation()).getBinding(key);
+	if (code != 0) {
 		if (isScrollingAction(code) || (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())) {
 			doAction(code);
 			myLastKeyActionTime = ZLTime();

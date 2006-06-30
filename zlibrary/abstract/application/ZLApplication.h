@@ -238,6 +238,7 @@ public:
 	void repaintView();
   void grabAllKeys(bool grab);
 	bool isFullKeyboardControlSupported() const;
+	bool isFingerTapEventSupported() const;
 
 public:
 	virtual ~ZLApplication();
@@ -298,6 +299,8 @@ protected:
 	virtual bool isFullKeyboardControlSupported() const = 0;
   virtual void grabAllKeys(bool grab) = 0;
 
+	virtual bool isFingerTapEventSupported() const = 0;
+
 	virtual void setFullscreen(bool fullscreen) = 0;
 	virtual bool isFullscreen() const = 0;
 
@@ -322,6 +325,9 @@ inline void ZLApplication::refreshWindow() {
 }
 inline bool ZLApplication::isFullKeyboardControlSupported() const {
 	return (myWindow != 0) && myWindow->isFullKeyboardControlSupported();
+}
+inline bool ZLApplication::isFingerTapEventSupported() const {
+	return (myWindow != 0) && myWindow->isFingerTapEventSupported();
 }
 inline void ZLApplication::grabAllKeys(bool grab) {
 	if (myWindow != 0) {

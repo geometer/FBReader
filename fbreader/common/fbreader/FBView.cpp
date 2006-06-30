@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,38 +19,14 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKVIEWWIDGET_H__
-#define __GTKVIEWWIDGET_H__
+#include "FBView.h"
+#include "FBReader.h"
 
-#include <gtk/gtk.h>
-
-#include <abstract/ZLView.h>
-#include <abstract/ZLApplication.h>
-
-class GtkViewWidget : public ZLViewWidget {
-
-public:
-	GtkViewWidget(ZLApplication *application, Angle initialAngle);
-	~GtkViewWidget();
-
-	GtkWidget *area() { return myArea; }
-	int width() const;
-	int height() const;
-
-	void repaintView();
-	void trackStylus(bool track);
-
-private:
-	void cleanOriginalPixbuf();
-	void cleanRotatedPixbuf();
-
-private:
-	ZLApplication *myApplication;
-	GtkWidget *myArea;
-	GdkPixbuf *myOriginalPixbuf;
-	GdkPixbuf *myRotatedPixbuf;
-	GdkImage *myImage;
-	int myButtonPressHandlerId;
-};
-
-#endif /* __GTKVIEWWIDGET_H__ */
+bool FBView::onFingerTap(int, int y) {
+	if (2 * y < myReader.myContext->height()) {
+		myReader.doAction(ACTION_FINGER_TAP_SCROLL_BACKWARD);
+	} else {
+		myReader.doAction(ACTION_FINGER_TAP_SCROLL_FORWARD);
+	}
+	return true;
+}

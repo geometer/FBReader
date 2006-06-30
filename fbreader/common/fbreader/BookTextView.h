@@ -24,11 +24,9 @@
 
 #include <deque>
 
-#include "../textview/TextView.h"
+#include "FBView.h"
 
-class FBReader;
-
-class BookTextView : public TextView {
+class BookTextView : public FBView {
 
 public:
 	BookTextView(FBReader &reader, ZLPaintContext &context);
@@ -58,7 +56,6 @@ private:
 	unsigned int myCurrentPointInStack;
 	unsigned int myMaxStackSize;
 
-	FBReader &myReader;
 	std::string myCaption;
 };
 

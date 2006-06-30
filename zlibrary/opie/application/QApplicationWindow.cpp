@@ -179,3 +179,7 @@ void QApplicationWindow::close() {
 	myCloseFlag = true;
 	QMainWindow::close();
 }
+
+bool QApplicationWindow::isFingerTapEventSupported() const {
+	return false;
+}

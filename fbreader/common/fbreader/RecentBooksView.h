@@ -24,15 +24,14 @@
 
 #include <map>
 
-#include "../textview/TextView.h"
+#include "FBView.h"
 #include "../description/BookDescription.h"
 #include "../collection/BookCollection.h"
 
-class FBReader;
 class PlainTextModel;
 class Paragraph;
 
-class RecentBooksView : public TextView {
+class RecentBooksView : public FBView {
 
 public:
   RecentBooksView(FBReader &reader, ZLPaintContext &context);
@@ -47,7 +46,6 @@ public:
   LastOpenedBooks &lastBooks();
 
 private:
-  FBReader &myReader;
   LastOpenedBooks myLastBooks;
   PlainTextModel *myLastBooksModel;
 };

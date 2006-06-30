@@ -46,6 +46,8 @@ private:
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
+	bool isFingerTapEventSupported() const;
+
 	void setCaption(const std::string &caption);
 
 	bool isFullscreen() const;

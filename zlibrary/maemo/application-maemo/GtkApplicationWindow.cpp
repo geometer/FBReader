@@ -276,5 +276,8 @@ bool GtkApplicationWindow::isFullKeyboardControlSupported() const {
 void GtkApplicationWindow::grabAllKeys(bool) {
 }
 
+bool GtkApplicationWindow::isFingerTapEventSupported() const {
+	return true;
+}
 
 // vim:ts=2:sw=2:noet

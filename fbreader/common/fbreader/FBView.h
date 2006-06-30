@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,38 +19,24 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKVIEWWIDGET_H__
-#define __GTKVIEWWIDGET_H__
+#ifndef __FBVIEW_H__
+#define __FBVIEW_H__
 
-#include <gtk/gtk.h>
+#include "../textview/TextView.h"
 
-#include <abstract/ZLView.h>
-#include <abstract/ZLApplication.h>
+class FBReader;
 
-class GtkViewWidget : public ZLViewWidget {
+class FBView : public TextView {
 
 public:
-	GtkViewWidget(ZLApplication *application, Angle initialAngle);
-	~GtkViewWidget();
+	FBView(FBReader &reader, ZLPaintContext &context);
 
-	GtkWidget *area() { return myArea; }
-	int width() const;
-	int height() const;
+	bool onFingerTap(int x, int y);
 
-	void repaintView();
-	void trackStylus(bool track);
-
-private:
-	void cleanOriginalPixbuf();
-	void cleanRotatedPixbuf();
-
-private:
-	ZLApplication *myApplication;
-	GtkWidget *myArea;
-	GdkPixbuf *myOriginalPixbuf;
-	GdkPixbuf *myRotatedPixbuf;
-	GdkImage *myImage;
-	int myButtonPressHandlerId;
+protected:
+	FBReader &myReader;
 };
 
-#endif /* __GTKVIEWWIDGET_H__ */
+inline FBView::FBView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {}
+
+#endif /* __FBVIEW_H__ */

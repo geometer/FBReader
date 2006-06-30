@@ -29,6 +29,7 @@
 static const std::string LARGE_SCROLLING = "Large Scrollings";
 static const std::string SMALL_SCROLLING = "Small Scrollings";
 static const std::string MOUSE_SCROLLING = "Mouse Scrollings";
+static const std::string FINGER_TAP_SCROLLING = "Finger Tap Scrollings";
 
 static const std::string NO_OVERLAPPING = "No Overlapping";
 static const std::string KEEP_LINES = "Keep Lines";
@@ -38,8 +39,7 @@ static const std::string SCROLL_PERCENTAGE = "Scroll Percentage";
 class MainEntry : public ZLComboOptionEntry {
 
 public:
-  MainEntry(ScrollingOptionsPage &page);
-  ~MainEntry();
+  MainEntry(FBReader &fbreader, ScrollingOptionsPage &page);
 
   const std::string &name() const;
   const std::string &initialValue() const;
@@ -48,6 +48,7 @@ public:
   void onValueChange(const std::string &selectedValue);
 
 private:
+	FBReader &myFBReader;
   ScrollingOptionsPage &myPage;
   std::string myName;
   std::vector<std::string> myValues;
@@ -78,15 +79,15 @@ private:
   std::string myCurrentValue;
 };
 
-MainEntry::MainEntry(ScrollingOptionsPage &page) : myPage(page) {
+MainEntry::MainEntry(FBReader &fbreader, ScrollingOptionsPage &page) : myFBReader(fbreader), myPage(page) {
   myValues.push_back(LARGE_SCROLLING);
   myValues.push_back(SMALL_SCROLLING);
   if (ZLDeviceInfo::isMousePresented()) {
     myValues.push_back(MOUSE_SCROLLING);
   }
-}
-
-MainEntry::~MainEntry() {
+  if (myFBReader.isFingerTapEventSupported()) {
+    myValues.push_back(FINGER_TAP_SCROLLING);
+  }
 }
 
 const std::string &MainEntry::name() const {
@@ -110,6 +111,9 @@ void MainEntry::onValueChange(const std::string &selectedValue) {
   myPage.mySmallScrollingEntries.show(selectedValue == SMALL_SCROLLING);
   if (ZLDeviceInfo::isMousePresented()) {
     myPage.myMouseScrollingEntries.show(selectedValue == MOUSE_SCROLLING);
+  }
+  if (myFBReader.isFingerTapEventSupported()) {
+    myPage.myFingerTapScrollingEntries.show(selectedValue == FINGER_TAP_SCROLLING);
   }
 }
 
@@ -209,13 +213,16 @@ void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
 }
 
 ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader) {
-  ZLComboOptionEntry *mainEntry = new MainEntry(*this);
+  ZLComboOptionEntry *mainEntry = new MainEntry(fbreader, *this);
   dialogTab.addOption(mainEntry);
 
   myLargeScrollingEntries.init(fbreader.LargeScrollingOptions);
   mySmallScrollingEntries.init(fbreader.SmallScrollingOptions);
   if (ZLDeviceInfo::isMousePresented()) {
     myMouseScrollingEntries.init(fbreader.MouseScrollingOptions);
+  }
+  if (fbreader.isFingerTapEventSupported()) {
+    myFingerTapScrollingEntries.init(fbreader.FingerTapScrollingOptions);
   }
 
   mainEntry->onValueChange(mainEntry->initialValue());
@@ -224,5 +231,8 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
   mySmallScrollingEntries.connect(dialogTab);
   if (ZLDeviceInfo::isMousePresented()) {
     myMouseScrollingEntries.connect(dialogTab);
+  }
+  if (fbreader.isFingerTapEventSupported()) {
+    myFingerTapScrollingEntries.connect(dialogTab);
   }
 }

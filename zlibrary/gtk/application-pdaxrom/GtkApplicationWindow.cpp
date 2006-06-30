@@ -194,3 +194,7 @@ bool GtkApplicationWindow::isFullKeyboardControlSupported() const {
 
 void GtkApplicationWindow::grabAllKeys(bool) {
 }
+
+bool GtkApplicationWindow::isFingerTapEventSupported() const {
+	return false;
+}

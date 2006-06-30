@@ -41,6 +41,42 @@ class RecentBooksView;
 class ZLViewWidget;
 class ZLPaintContext;
 
+class KeyBindings {
+
+public:
+	KeyBindings(const std::string &optionGroupName);
+	~KeyBindings();
+
+	void bindKey(const std::string &key, int code);
+	int getBinding(const std::string &key);
+
+private:
+	void readDefaultBindings();
+	void readCustomBindings();
+
+private:
+	const std::string myOptionGroupName;
+	std::map<std::string,int> myBindingsMap;
+
+	friend class FullKeyBindings;
+};
+
+class FullKeyBindings {
+
+public:
+	ZLBooleanOption UseSeparateBindingsOption;
+
+public:
+	FullKeyBindings();
+	KeyBindings &getBindings(ZLViewWidget::Angle angle, bool force);
+
+private:
+	KeyBindings myBindings0;
+	KeyBindings myBindings90;
+	KeyBindings myBindings180;
+	KeyBindings myBindings270;
+};
+
 enum ActionCode {
 	// please, don't change these numbers
 	// add new action id's at end of this enumeration
@@ -75,42 +111,8 @@ enum ActionCode {
 	ACTION_SHOW_LAST_BOOKS = 28,
 	ACTION_QUIT = 29,
 	ACTION_OPEN_PREVIOUS_BOOK = 30,
-};
-
-class KeyBindings {
-
-public:
-	KeyBindings(const std::string &optionGroupName);
-	~KeyBindings();
-
-	void bindKey(const std::string &key, ActionCode code);
-	ActionCode getBinding(const std::string &key);
-
-private:
-	void readDefaultBindings();
-	void readCustomBindings();
-
-private:
-	const std::string myOptionGroupName;
-	std::map<std::string,ActionCode> myBindingsMap;
-
-	friend class FullKeyBindings;
-};
-
-class FullKeyBindings {
-
-public:
-	ZLBooleanOption UseSeparateBindingsOption;
-
-public:
-	FullKeyBindings();
-	KeyBindings &getBindings(ZLViewWidget::Angle angle, bool force);
-
-private:
-	KeyBindings myBindings0;
-	KeyBindings myBindings90;
-	KeyBindings myBindings180;
-	KeyBindings myBindings270;
+	ACTION_FINGER_TAP_SCROLL_FORWARD = 31,
+	ACTION_FINGER_TAP_SCROLL_BACKWARD = 32,
 };
 
 class FBReader : public ZLApplication {
@@ -151,6 +153,7 @@ public:
 	ScrollingOptions LargeScrollingOptions;
 	ScrollingOptions SmallScrollingOptions;
 	ScrollingOptions MouseScrollingOptions;
+	ScrollingOptions FingerTapScrollingOptions;
 
 	ZLBooleanOption SearchBackwardOption;
 	ZLBooleanOption SearchIgnoreCaseOption;
@@ -371,7 +374,7 @@ private:
 	bool runBookInfoDialog(const std::string &fileName);
 	void clearTextCaches();
 
-	bool isScrollingAction(ActionCode code);
+	bool isScrollingAction(int code);
 
 	void restorePreviousMode();
 
@@ -411,6 +414,7 @@ private:
 	FullKeyBindings myKeyBindings;
 
 friend class OptionsDialog;
+friend class FBView;
 };
 
 inline ZLBooleanOption &FBReader::useSeparateBindings() {

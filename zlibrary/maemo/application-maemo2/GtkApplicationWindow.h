@@ -56,6 +56,8 @@ private:
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
+	bool isFingerTapEventSupported() const;
+
 public:
 	void handleKeyEventSlot(GdkEventKey*);
 	HildonWindow *getMainWindow() const { return myWindow; }

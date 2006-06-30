@@ -48,6 +48,8 @@ protected:
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
+	bool isFingerTapEventSupported() const;
+
 	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
 
 	void setFullscreen(bool fullscreen);

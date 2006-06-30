@@ -38,36 +38,24 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 		default:
 			x = (int)event->x - view->context().leftMargin(),
 			y = (int)event->y - view->context().topMargin();
-			h = view->context().height();
 			break;
 		case ZLViewWidget::DEGREES90:
 			x = viewWidget->height() - (int)event->y - view->context().rightMargin(),
 			y = (int)event->x - view->context().topMargin();
-			h = view->context().width();
 			break;
 		case ZLViewWidget::DEGREES180:
 			x = viewWidget->width() - (int)event->x - view->context().rightMargin(),
 			y = viewWidget->height() - (int)event->y - view->context().bottomMargin();
-			h = view->context().height();
 			break;
 		case ZLViewWidget::DEGREES270:
 			x = (int)event->y - view->context().leftMargin();
 			y = viewWidget->width() - (int)event->x - view->context().bottomMargin();
-			h = view->context().width();
 			break;
 	}
 	if (event->button == 1) {
 		view->onStylusPress(x, y);
 	} else if (event->button == 8) {
-		viewWidget->onFingerTap(h, y);
-	}
-}
-
-void GtkViewWidget::onFingerTap(int h, int y) {
-	if (2 * y < h) {
-		myApplication->doAction(10);
-	} else {
-		myApplication->doAction(9);
+		view->onFingerTap(x, y);
 	}
 }
 

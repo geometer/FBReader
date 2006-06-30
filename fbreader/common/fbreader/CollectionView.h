@@ -24,16 +24,15 @@
 
 #include <map>
 
-#include "../textview/TextView.h"
+#include "FBView.h"
 #include "../description/BookDescription.h"
 #include "../collection/BookCollection.h"
 
-class FBReader;
 class TreeModel;
 class PlainTextModel;
 class Paragraph;
 
-class CollectionView : public TextView {
+class CollectionView : public FBView {
 
 public:
   static const std::string DeleteBookImageFile;
@@ -52,7 +51,6 @@ public:
   BookCollection &collection();
 
 private:
-  FBReader &myReader;
   BookCollection myCollection;
   TreeModel *myTreeModel;
   std::map<Paragraph*,BookDescriptionPtr> myBooksMap;

@@ -66,12 +66,13 @@ public:
 	ZLPaintContext &context() const;
 
 	/*
-	 * returns true iff stylus event was processed
+	 * returns true iff stylus/finger event was processed
 	 */
-	virtual bool onStylusPress(int, int);
-	virtual bool onStylusRelease(int, int);
-	virtual bool onStylusMove(int, int);
-	virtual bool onStylusMovePressed(int, int);
+	virtual bool onStylusPress(int x, int y);
+	virtual bool onStylusRelease(int x, int y);
+	virtual bool onStylusMove(int x, int y);
+	virtual bool onStylusMovePressed(int x, int y);
+	virtual bool onFingerTap(int x, int y);
 
 	void repaintView();
 
@@ -93,5 +94,6 @@ inline bool ZLView::onStylusPress(int, int) { return false; }
 inline bool ZLView::onStylusRelease(int, int) { return false; }
 inline bool ZLView::onStylusMove(int, int) { return false; }
 inline bool ZLView::onStylusMovePressed(int, int) { return false; }
+inline bool ZLView::onFingerTap(int, int) { return false; }
 
 #endif /* __ZLVIEW_H__ */

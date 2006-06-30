@@ -32,14 +32,14 @@ static const std::string BINDED_ACTION = "Action";
 class KeyBindingsReader : public ZLXMLReader {
 
 public:
-	KeyBindingsReader(std::map<std::string,ActionCode> &keymap) : myKeymap(keymap) {}
+	KeyBindingsReader(std::map<std::string,int> &keymap) : myKeymap(keymap) {}
 
 	void startElementHandler(const char *tag, const char **attributes);
 
 	void readBindings();
 
 private:
-	std::map<std::string,ActionCode> &myKeymap;
+	std::map<std::string,int> &myKeymap;
 };
 
 void KeyBindingsReader::startElementHandler(const char *tag, const char **attributes) {
@@ -49,7 +49,7 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 		const char *key = attributeValue(attributes, "key");
 		const char *action = attributeValue(attributes, "action");
 		if ((key != 0) && (action != 0)) {
-			myKeymap[key] = (ActionCode)atoi(action);
+			myKeymap[key] = atoi(action);
 		}
 	}
 }
@@ -89,9 +89,9 @@ KeyBindings::KeyBindings(const std::string &optionGroupName) : myOptionGroupName
 }
 
 void KeyBindings::readDefaultBindings() {
-	std::map<std::string,ActionCode> keymap;
+	std::map<std::string,int> keymap;
 	KeyBindingsReader(keymap).readBindings();
-	for (std::map<std::string,ActionCode>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
+	for (std::map<std::string,int>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
 		bindKey(it->first, it->second);
 	}
 }
@@ -107,21 +107,21 @@ void KeyBindings::readCustomBindings() {
 			ZLStringUtil::appendNumber(action, i);
 			int actionValue = ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, action, -1).value();
 			if (actionValue != -1) {
-				bindKey(keyValue, (ActionCode)actionValue);
+				bindKey(keyValue, actionValue);
 			}
 		}
 	}
 }
 
 KeyBindings::~KeyBindings() {
-	std::map<std::string,ActionCode> keymap;
+	std::map<std::string,int> keymap;
 	KeyBindingsReader(keymap).readBindings();
 
 	ZLOption::clearGroup(myOptionGroupName);
 	int counter = 0;
-	for (std::map<std::string,ActionCode>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); ++it) {
-		std::map<std::string,ActionCode>::const_iterator original = keymap.find(it->first);
-		ActionCode defaultAction = (original == keymap.end()) ? NO_ACTION : original->second;
+	for (std::map<std::string,int>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); ++it) {
+		std::map<std::string,int>::const_iterator original = keymap.find(it->first);
+		int defaultAction = (original == keymap.end()) ? 0 : original->second;
 		if (defaultAction != it->second) {
 			std::string key = BINDED_KEY;
 			ZLStringUtil::appendNumber(key, counter);
@@ -135,11 +135,11 @@ KeyBindings::~KeyBindings() {
 	ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
 }
 
-void KeyBindings::bindKey(const std::string &key, ActionCode code) {
+void KeyBindings::bindKey(const std::string &key, int code) {
 	myBindingsMap[key] = code;
 }
 
-ActionCode KeyBindings::getBinding(const std::string &key) {
-	std::map<std::string,ActionCode>::const_iterator it = myBindingsMap.find(key);
-	return (it != myBindingsMap.end()) ? it->second : NO_ACTION;
+int KeyBindings::getBinding(const std::string &key) {
+	std::map<std::string,int>::const_iterator it = myBindingsMap.find(key);
+	return (it != myBindingsMap.end()) ? it->second : 0;
 }

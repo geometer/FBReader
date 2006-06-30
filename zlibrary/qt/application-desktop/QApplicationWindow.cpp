@@ -143,3 +143,7 @@ bool QApplicationWindow::isFullKeyboardControlSupported() const {
 
 void QApplicationWindow::grabAllKeys(bool) {
 }
+
+bool QApplicationWindow::isFingerTapEventSupported() const {
+	return false;
+}

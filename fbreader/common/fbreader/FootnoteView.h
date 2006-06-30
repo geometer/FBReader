@@ -22,13 +22,12 @@
 #ifndef __FOOTNOTEVIEW_H__
 #define __FOOTNOTEVIEW_H__
 
-#include "../textview/TextView.h"
+#include "FBView.h"
 
-class FootnoteView : public TextView {
+class FootnoteView : public FBView {
 
 public:
-	FootnoteView(ZLPaintContext &context);
-	~FootnoteView();
+	FootnoteView(FBReader &reader, ZLPaintContext &context);
 	const std::string &caption() const;
 	void setCaption(const std::string &caption);
 
@@ -36,8 +35,7 @@ private:
 	std::string myCaption;
 };
 
-inline FootnoteView::FootnoteView(ZLPaintContext &context) : TextView(context) {}
-inline FootnoteView::~FootnoteView() {}
+inline FootnoteView::FootnoteView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {}
 inline const std::string &FootnoteView::caption() const { return myCaption; }
 inline void FootnoteView::setCaption(const std::string &caption) { myCaption = caption; }
 

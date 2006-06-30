@@ -40,7 +40,7 @@ static const std::string POSITION_IN_BUFFER = "PositionInBuffer";
 static const char * const BUFFER_PARAGRAPH_PREFIX = "Paragraph_";
 static const char * const BUFFER_WORD_PREFIX = "Word_";
 
-BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
+BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
 	myCurrentPointInStack = 0;
 	myMaxStackSize = 20;
 }

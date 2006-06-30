@@ -142,3 +142,7 @@ ZLViewWidget *QApplicationWindow::createViewWidget() {
 	viewWidget->widget()->show();
 	return viewWidget;
 }
+
+bool QApplicationWindow::isFingerTapEventSupported() const {
+	return false;
+}

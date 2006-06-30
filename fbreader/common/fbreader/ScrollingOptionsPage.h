@@ -32,7 +32,6 @@ class ScrollingOptionsPage {
 
 public:
   ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader);
-  ~ScrollingOptionsPage();
 
 private:
 
@@ -51,11 +50,10 @@ private:
   ScrollingEntries myLargeScrollingEntries;
   ScrollingEntries mySmallScrollingEntries;
   ScrollingEntries myMouseScrollingEntries;
+  ScrollingEntries myFingerTapScrollingEntries;
 
 friend class MainEntry;
 friend class ScrollingModeEntry;
 };
-
-inline ScrollingOptionsPage::~ScrollingOptionsPage() {}
 
 #endif /* __SCROLLINGOPTIONSPAGE_H__ */

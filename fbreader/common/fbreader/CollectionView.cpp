@@ -38,7 +38,7 @@
 static const std::string LIBRARY = "Library";
 static const std::string deleteImageId = "deleteImage";
 
-CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {
+CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
   myTreeModel = 0;
   myTreeStateIsFrozen = false;
   myImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
