@@ -41,6 +41,9 @@ ZLApplication::ZLApplication(const std::string &name) :
 
 ZLApplication::~ZLApplication() {
 	if (myWindow != 0) {
+		if (KeyboardControlOption.value()) {
+			grabAllKeys(false);
+		}
 		delete myWindow;
 	}
 	if (myViewWidget != 0) {
@@ -49,6 +52,9 @@ ZLApplication::~ZLApplication() {
 }
 
 void ZLApplication::initWindow() {
+	if (KeyboardControlOption.value()) {
+		grabAllKeys(true);
+	}
 	myWindow->init();
 	myWindow->refresh();
 	resetWindowCaption();

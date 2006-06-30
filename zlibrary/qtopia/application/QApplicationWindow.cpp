@@ -30,9 +30,6 @@
 #include "../dialogs/QDialogManager.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
-	if (application().KeyboardControlOption.value()) {
-		grabAllKeys(true);
-	}
 	setWFlags(getWFlags() | WStyle_Customize);
 
 	myFullScreen = false;
@@ -47,9 +44,6 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 }
 
 QApplicationWindow::~QApplicationWindow() {
-	if (application().KeyboardControlOption.value()) {
-		grabAllKeys(false);
-	}
 }
 
 void QApplicationWindow::setCaption(const std::string &caption) {

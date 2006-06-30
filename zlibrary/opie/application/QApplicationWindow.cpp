@@ -29,10 +29,6 @@
 #include "QApplicationWindow.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a), myCloseFlag(false) {
-	if (application().KeyboardControlOption.value()) {
-		grabAllKeys(true);
-	}
-
 	myFullScreen = false;
 
 	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
@@ -41,9 +37,6 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 }
 
 QApplicationWindow::~QApplicationWindow() {
-	if (application().KeyboardControlOption.value()) {
-		grabAllKeys(false);
-	}
 }
 
 void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
