@@ -22,11 +22,14 @@
 #include "FBView.h"
 #include "FBReader.h"
 
+FBView::FBView(FBReader &reader, ZLPaintContext &context) : TextView(reader, context) {
+}
+
 bool FBView::onFingerTap(int, int y) {
-	if (2 * y < myReader.myContext->height()) {
-		myReader.doAction(ACTION_FINGER_TAP_SCROLL_BACKWARD);
+	if (2 * y < fbreader().myContext->height()) {
+		fbreader().doAction(ACTION_FINGER_TAP_SCROLL_BACKWARD);
 	} else {
-		myReader.doAction(ACTION_FINGER_TAP_SCROLL_FORWARD);
+		fbreader().doAction(ACTION_FINGER_TAP_SCROLL_FORWARD);
 	}
 	return true;
 }

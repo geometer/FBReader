@@ -19,8 +19,9 @@
  */
 
 #include "ZLView.h"
+#include "../application/ZLApplication.h"
 
-ZLView::ZLView(ZLPaintContext &context) : myContext(context) {
+ZLView::ZLView(ZLApplication &application, ZLPaintContext &context) : myApplication(application), myContext(context) {
 }
 
 ZLView::~ZLView() {
@@ -28,12 +29,9 @@ ZLView::~ZLView() {
 
 void ZLViewWidget::setView(ZLView *view) {
 	myView = view;
-	myView->myWidget = this;
 	repaintView();
 }
 
 void ZLView::repaintView() {
-	if (myWidget != 0) {
-		myWidget->repaintView();
-	}
+	myApplication.refreshWindow();
 }

@@ -160,6 +160,4 @@ void GtkViewWidget::repaintView()	{
 											0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
 			break;
 	}
-	
-	myApplication->refreshWindow();
 }

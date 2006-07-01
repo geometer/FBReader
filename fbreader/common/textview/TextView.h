@@ -142,7 +142,7 @@ protected:
 	};
 
 protected:
-	TextView(ZLPaintContext &context);
+	TextView(ZLApplication &application, ZLPaintContext &context);
 	virtual ~TextView();
 
 public:

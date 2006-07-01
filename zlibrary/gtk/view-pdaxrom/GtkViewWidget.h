@@ -36,10 +36,10 @@ public:
 	int width() const;
 	int height() const;
 
-	void repaintView();
-	void trackStylus(bool track);
-
 private:
+	void trackStylus(bool track);
+	void repaintView();
+
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
 

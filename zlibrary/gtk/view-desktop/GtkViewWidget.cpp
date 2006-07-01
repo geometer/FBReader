@@ -79,5 +79,4 @@ void GtkViewWidget::repaintView()	{
 	gtkContext.setRotation(rotation());
 	view()->paint();
 	gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, w, h);
-	myApplication->refreshWindow();
 }

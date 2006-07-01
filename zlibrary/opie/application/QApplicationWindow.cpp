@@ -24,9 +24,9 @@
 #include <qpe/resource.h>
 
 #include <opie/QViewWidget.h>
-#include <qt/QKeyUtil.h>
 
 #include "QApplicationWindow.h"
+#include "../../qt/util/QKeyUtil.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a), myCloseFlag(false) {
 	myFullScreen = false;

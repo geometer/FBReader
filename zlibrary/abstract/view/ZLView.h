@@ -23,8 +23,37 @@
 
 #include <string>
 
-class ZLView;
 class ZLPaintContext;
+class ZLApplication;
+
+class ZLView {
+
+public:
+	ZLView(ZLApplication &application, ZLPaintContext &context);
+	virtual ~ZLView();
+
+	virtual const std::string &caption() const = 0;
+	virtual void paint() = 0;
+	ZLPaintContext &context() const;
+
+	/*
+	 * returns true iff stylus/finger event was processed
+	 */
+	virtual bool onStylusPress(int x, int y);
+	virtual bool onStylusRelease(int x, int y);
+	virtual bool onStylusMove(int x, int y);
+	virtual bool onStylusMovePressed(int x, int y);
+	virtual bool onFingerTap(int x, int y);
+
+	void repaintView();
+
+protected:
+	ZLApplication &application();
+
+private:
+	ZLApplication &myApplication;
+	ZLPaintContext &myContext;
+};
 
 class ZLViewWidget {
 
@@ -45,42 +74,18 @@ public:
 	ZLView *view() const;
 
 	virtual void trackStylus(bool track) = 0;
-	virtual void repaintView() = 0;
 
 	void rotate(Angle rotation);
 	Angle rotation() const;
 
+protected:
+	virtual void repaintView() = 0;
+
 private:
 	ZLView *myView;
 	Angle myRotation;
-};
 
-class ZLView {
-
-public:
-	ZLView(ZLPaintContext &context);
-	virtual ~ZLView();
-
-	virtual const std::string &caption() const = 0;
-	virtual void paint() = 0;
-	ZLPaintContext &context() const;
-
-	/*
-	 * returns true iff stylus/finger event was processed
-	 */
-	virtual bool onStylusPress(int x, int y);
-	virtual bool onStylusRelease(int x, int y);
-	virtual bool onStylusMove(int x, int y);
-	virtual bool onStylusMovePressed(int x, int y);
-	virtual bool onFingerTap(int x, int y);
-
-	void repaintView();
-
-private:
-	ZLViewWidget *myWidget;
-	ZLPaintContext &myContext;
-
-friend void ZLViewWidget::setView(ZLView *view);
+friend class ZLApplication;
 };
 
 inline ZLViewWidget::ZLViewWidget(Angle initialAngle) : myView(0), myRotation(initialAngle) {}
@@ -95,5 +100,6 @@ inline bool ZLView::onStylusRelease(int, int) { return false; }
 inline bool ZLView::onStylusMove(int, int) { return false; }
 inline bool ZLView::onStylusMovePressed(int, int) { return false; }
 inline bool ZLView::onFingerTap(int, int) { return false; }
+inline ZLApplication &ZLView::application() { return myApplication; }
 
 #endif /* __ZLVIEW_H__ */

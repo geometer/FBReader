@@ -6,13 +6,13 @@ TARGET = libzlibrary.a
 
 SUBDIRS_ALL = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/deviceInfo abstract/application abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem unix/time
 QTSUBDIRS_ALL = qtopia/application qtopia/dialogs qtopia/deviceInfo qtopia/view qt/dialogs qt/deviceInfo qt/view qt/image qt/util opie/view opie/dialogs opie/application qt/application-desktop qt/application-pdaxrom
-GTKSUBDIRS_ALL = gtk/dialogs gtk/deviceInfo gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/deviceInfo maemo/view maemo/util gpe/dialogs gtk/application-desktop gtk/application-pdaxrom maemo/application-maemo maemo/application-maemo2
+GTKSUBDIRS_ALL = gtk/dialogs gtk/deviceInfo gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/deviceInfo maemo/view gpe/dialogs gtk/application-desktop gtk/application-pdaxrom maemo/application-maemo maemo/application-maemo2 gpe/application
 
 SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig desktop/dialogs abstract/deviceInfo abstract/application abstract/view unix/filesystem unix/time
 
 ifeq "$(UI_TYPE)" "qt"
 	QTSUBDIRS = qt/dialogs qt/deviceInfo qt/view qt/image qt/util
-ifeq "$(UI_TYPE)" "desktop"
+ifeq "$(TARGET_ARCH)" "desktop"
 	QTSUBDIRS += qt/application-desktop
 else
 	QTSUBDIRS += qt/application-pdaxrom
@@ -21,7 +21,7 @@ endif
 
 ifeq "$(UI_TYPE)" "gtk"
 	GTKSUBDIRS = gtk/dialogs gtk/deviceInfo gtk/image gtk/util
-ifeq "$(UI_TYPE)" "desktop"
+ifeq "$(TARGET_ARCH)" "desktop"
 	GTKSUBDIRS += gtk/view-desktop gtk/application-desktop
 else
 	GTKSUBDIRS += gtk/view-pdaxrom gtk/application-pdaxrom
@@ -44,7 +44,7 @@ ifeq "$(UI_TYPE)" "qtopia"
 endif
 
 ifeq "$(UI_TYPE)" "$(findstring $(UI_TYPE), maemo maemo2)"
-	GTKSUBDIRS = maemo/dialogs maemo/deviceInfo maemo/view gtk/image maemo/util maemo/application-$(UI_TYPE)
+	GTKSUBDIRS = maemo/dialogs maemo/deviceInfo maemo/view gtk/image gtk/util maemo/application-$(UI_TYPE)
 endif
 
 .objects:

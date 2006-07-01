@@ -24,7 +24,7 @@
 #include <abstract/ZLOptionEntry.h>
 #include <abstract/ZLDialog.h>
 
-#include <gtk/GtkKeyUtil.h>
+#include "../util/GtkKeyUtil.h"
 
 #include "GtkApplicationWindow.h"
 #include "../../gtk/dialogs/GtkDialogManager.h"
@@ -44,7 +44,7 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 }
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkApplicationWindow*)data)->application().repaintView();
+	((GtkApplicationWindow*)data)->application().refreshWindow();
 }
 
 static void actionSlot(GtkWidget*, gpointer data) {

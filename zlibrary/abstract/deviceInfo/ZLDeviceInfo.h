@@ -34,13 +34,15 @@ public:
 	};
 
 	static ScreenSize screenSize();
-	static unsigned int screenWidth();
-	static unsigned int screenHeight();
 
 	static bool isKeyboardPresented();
 	static bool isMousePresented();
 
 	static void deleteInstance();
+
+private:
+	static unsigned int screenWidth();
+	static unsigned int screenHeight();
 
 protected:
 	static ZLDeviceInfo *ourInstance;

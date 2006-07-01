@@ -22,7 +22,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <abstract/ZLUnicodeUtil.h>
-#include <gtk/GtkKeyUtil.h>
+#include "../../gtk/util/GtkKeyUtil.h"
 #include <maemo/GtkViewWidget.h>
 
 #include "GtkApplicationWindow.h"
@@ -37,7 +37,7 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 }
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
-	((GtkApplicationWindow*)data)->application().repaintView();
+	((GtkApplicationWindow*)data)->application().refreshWindow();
 }
 
 static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {

@@ -32,7 +32,7 @@
 #include <qlayout.h>
 
 #include <abstract/ZLStringUtil.h>
-#include <qt/QKeyUtil.h>
+#include "../util/QKeyUtil.h"
 
 #include "QOptionView.h"
 #include "QOptionsDialog.h"

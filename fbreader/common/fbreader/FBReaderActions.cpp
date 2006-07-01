@@ -223,7 +223,7 @@ void FBReader::ScrollingAction::run() {
 				break;
 		}
 		textView->scrollPage(myForward, oType, oValue);
-		myFBReader.repaintView();
+		myFBReader.refreshWindow();
 		myFBReader.myLastScrollingTime = ZLTime();
 	}
 }
@@ -235,7 +235,7 @@ void FBReader::ChangeFontSizeAction::run() {
 	ZLIntegerRangeOption &option = TextStyleCollection::instance().baseStyle().FontSizeOption;
 	option.setValue(option.value() + myDelta);
 	myFBReader.clearTextCaches();
-	myFBReader.repaintView();
+	myFBReader.refreshWindow();
 }
 
 FBReader::OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -251,7 +251,7 @@ bool FBReader::OpenPreviousBookAction::isVisible() {
 void FBReader::OpenPreviousBookAction::run() {
 	Books books = myFBReader.myRecentBooksView->lastBooks().books();
 	myFBReader.openBook(books[1]);
-	myFBReader.repaintView();
+	myFBReader.refreshWindow();
 	myFBReader.resetWindowCaption();
 }
 
@@ -274,7 +274,7 @@ FBReader::ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBA
 void FBReader::ToggleIndicatorAction::run() {
 	ZLBooleanOption &option = TextStyleCollection::instance().indicatorStyle().ShowOption;
 	option.setValue(!option.value());
-	myFBReader.repaintView();
+	myFBReader.refreshWindow();
 }
 
 FBReader::QuitAction::QuitAction(FBReader &fbreader) : FBAction(fbreader) {

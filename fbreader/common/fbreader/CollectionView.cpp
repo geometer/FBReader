@@ -191,8 +191,8 @@ bool CollectionView::onStylusPress(int x, int y) {
   } else {
     std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
     if (it != myBooksMap.end()) {
-      myReader.openBook(it->second);
-      myReader.showBookTextView();
+      fbreader().openBook(it->second);
+      fbreader().showBookTextView();
     }
   }
 

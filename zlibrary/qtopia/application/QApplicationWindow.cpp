@@ -23,11 +23,10 @@
 #include <qmenubar.h>
 #include <qpe/resource.h>
 
-#include <qt/QKeyUtil.h>
-
 #include "QApplicationWindow.h"
 #include "../view/QViewWidget.h"
 #include "../dialogs/QDialogManager.h"
+#include "../../qt/util/QKeyUtil.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
 	setWFlags(getWFlags() | WStyle_Customize);

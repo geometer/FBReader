@@ -34,9 +34,9 @@ public:
 	bool onFingerTap(int x, int y);
 
 protected:
-	FBReader &myReader;
+	FBReader &fbreader();
 };
 
-inline FBView::FBView(FBReader &reader, ZLPaintContext &context) : TextView(context), myReader(reader) {}
+inline FBReader &FBView::fbreader() { return (FBReader&)application(); }
 
 #endif /* __FBVIEW_H__ */

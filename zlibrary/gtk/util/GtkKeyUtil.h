@@ -21,20 +21,14 @@
 #ifndef __GTKKEYUTIL_H__
 #define __GTKKEYUTIL_H__
 
-#include <string>
 #include <gdk/gdkevents.h>
 
-class GtkKeyUtil {
+#include "../../abstract/util/ZLKeyUtil.h"
+
+class GtkKeyUtil : ZLKeyUtil {
 
 public:
 	static std::string keyName(GdkEventKey *event);
-
-private:
-	static std::string keyName(int key);
-
-private:
-	// instance creation is disabled
-	GtkKeyUtil();
 };
 
 #endif /* __GTKKEYUTIL_H__ */

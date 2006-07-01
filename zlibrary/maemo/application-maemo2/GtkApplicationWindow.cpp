@@ -21,10 +21,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <abstract/ZLDeviceInfo.h>
-
 #include <maemo/GtkViewWidget.h>
-#include <maemo/GtkKeyUtil.h>
+#include "../../gtk/util/GtkKeyUtil.h"
 #include <maemo/GtkDialogManager.h>
 
 #include "GtkApplicationWindow.h"
@@ -53,7 +51,7 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	if (acceptAction()) {
-		((GtkApplicationWindow*)data)->application().repaintView();
+		((GtkApplicationWindow*)data)->application().refreshWindow();
 	}
 }
 

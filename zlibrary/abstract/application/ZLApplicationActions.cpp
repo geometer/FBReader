@@ -55,7 +55,7 @@ void ZLApplication::RotationAction::run() {
 	}
 	myApplication.myViewWidget->rotate(newAngle);
 	myApplication.AngleStateOption.setValue(newAngle);
-	myApplication.repaintView();
+	myApplication.refreshWindow();
 }
 
 ZLApplication::FullscreenAction::FullscreenAction(ZLApplication &application, bool toggle) : myApplication(application), myIsToggle(toggle) {

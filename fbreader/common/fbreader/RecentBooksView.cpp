@@ -79,7 +79,7 @@ bool RecentBooksView::onStylusPress(int x, int y) {
     return false;
   }
 
-  myReader.openBook(books[position->ParagraphNumber]);
-  myReader.showBookTextView();
+  fbreader().openBook(books[position->ParagraphNumber]);
+  fbreader().showBookTextView();
   return true;
 }

@@ -18,23 +18,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKKEYUTIL_H__
-#define __GTKKEYUTIL_H__
+#ifndef __ZLKEYUTIL_H__
+#define __ZLKEYUTIL_H__
 
 #include <string>
-#include <gdk/gdkevents.h>
+#include <map>
 
-class GtkKeyUtil {
-
-public:
-	static std::string keyName(GdkEventKey *event);
+class ZLKeyUtil {
 
 private:
-	static std::string keyName(int key);
+	static const std::string FilePath;
+
+	static bool ourInitialized;
+	static std::map<int,std::string> ourNames;
+	static std::map<int,std::string> ourModifiers;
+
+protected:
+	static std::string keyName(int unicode, int key, int modifiersMask);
 
 private:
 	// instance creation is disabled
-	GtkKeyUtil();
+	ZLKeyUtil();
+
+friend class KeyNamesReader;
 };
 
-#endif /* __GTKKEYUTIL_H__ */
+#endif /* __ZLKEYUTIL_H__ */

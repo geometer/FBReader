@@ -233,15 +233,13 @@ protected:
 	void quit();
 
 public:
-	virtual void initWindow();
-	// TODO: remove
-	void repaintView();
-  void grabAllKeys(bool grab);
-	bool isFullKeyboardControlSupported() const;
-	bool isFingerTapEventSupported() const;
-
-public:
 	virtual ~ZLApplication();
+	virtual void initWindow();
+
+	bool isFullKeyboardControlSupported() const;
+  void grabAllKeys(bool grab);
+
+	bool isFingerTapEventSupported() const;
 
 	const std::string &name() const;
 	shared_ptr<Action> action(int actionId) const;
@@ -318,11 +316,6 @@ inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }
 inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }
 inline const ZLApplication::Menubar &ZLApplication::menubar() const { return myMenubar; }
 
-inline void ZLApplication::refreshWindow() {
-	if (myWindow != 0) {
-		myWindow->refresh();
-	}
-}
 inline bool ZLApplication::isFullKeyboardControlSupported() const {
 	return (myWindow != 0) && myWindow->isFullKeyboardControlSupported();
 }

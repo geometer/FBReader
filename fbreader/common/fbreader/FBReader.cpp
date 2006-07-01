@@ -220,6 +220,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 void FBReader::initWindow() {
 	ZLApplication::initWindow();
 	setMode(BOOK_TEXT_MODE);
+	refreshWindow();
 }
 
 FBReader::~FBReader() {
@@ -321,7 +322,7 @@ void FBReader::tryShowFootnoteView(const std::string &id) {
 		int linkedParagraphNumber = myModel->paragraphNumberById(id);
 		if (linkedParagraphNumber >= 0) {
 			myBookTextView->gotoParagraph(linkedParagraphNumber);
-			repaintView();
+			refreshWindow();
 		} else {
 			const TextModel *footnoteModel = myModel->footnoteModel(id);
 			if (footnoteModel != 0) {
@@ -343,7 +344,7 @@ void FBReader::optionsSlot() {
 	optionsDialog.dialog().run("");
 	grabAllKeys(KeyboardControlOption.value());
 	clearTextCaches();
-	repaintView();
+	refreshWindow();
 }
 
 void FBReader::addBookSlot() {
@@ -462,7 +463,7 @@ void FBReader::openFile(const std::string &fileName) {
 	if (!description.isNull()) {
 		openBook(description);
 		resetWindowCaption();
-		repaintView();
+		refreshWindow();
 	}
 }
 

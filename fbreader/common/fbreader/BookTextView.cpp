@@ -211,7 +211,7 @@ bool BookTextView::onStylusPress(int x, int y) {
 	}
 
 	if (isHyperlink) {
-		myReader.tryShowFootnoteView(id);
+		fbreader().tryShowFootnoteView(id);
 	}
 	return isHyperlink;
 }

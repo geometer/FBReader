@@ -34,7 +34,7 @@
 #include <hildon-number-editor.h>
 
 #include <abstract/ZLDeviceInfo.h>
-#include <maemo/GtkKeyUtil.h>
+#include "../../gtk/util/GtkKeyUtil.h"
 
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"

@@ -21,27 +21,14 @@
 #ifndef __QKEYUTIL_H__
 #define __QKEYUTIL_H__
 
-#include <string>
-#include <map>
+#include "../../abstract/util/ZLKeyUtil.h"
 
 class QKeyEvent;
 
-class QKeyUtil {
-
-private:
-	static const std::string FilePath;
-	static std::map<int,std::string> ourNames;
-	static std::map<int,std::string> ourModifiers;
+class QKeyUtil : public ZLKeyUtil {
 
 public:
 	static std::string keyName(QKeyEvent *event);
-
-private:
-	static std::string keyName(int key);
-
-private:
-	// instance creation is disabled
-	QKeyUtil();
 };
 
 #endif /* __QKEYUTIL_H__ */

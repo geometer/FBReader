@@ -19,14 +19,14 @@
  * 02110-1301, USA.
  */
 
-#include <qt/QKeyUtil.h>
+#include <abstract/ZLKeyUtil.h>
 
 #include "../common/Files.h"
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
 #include "../common/fbreader/FBFileHandler.h"
 
-const std::string QKeyUtil::FilePath = "/opt/QtPalmtop/share/zlibrary/keynames.xml";
+const std::string ZLKeyUtil::FilePath = "/opt/QtPalmtop/share/zlibrary/keynames.xml";
 
 const std::string Files::PathPrefix = "/opt/QtPalmtop/share/FBReader/";
 const std::string Files::PathDelimiter = "/";

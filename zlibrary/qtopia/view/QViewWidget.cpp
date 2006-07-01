@@ -165,5 +165,4 @@ int QViewWidget::QViewWidgetInternal::y(const QMouseEvent *event) const {
 
 void QViewWidget::repaintView()	{
 	myQWidget->repaint(false);
-	myApplication->refreshWindow();
 }

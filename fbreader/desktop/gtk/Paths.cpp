@@ -19,12 +19,15 @@
  * 02110-1301, USA.
  */
 
+#include <abstract/ZLKeyUtil.h>
 #include <gtk-desktop/GtkApplicationWindow.h>
 
 #include "../../common/Files.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
+
+const std::string ZLKeyUtil::FilePath = std::string(INSTALLDIR) + "/share/zlibrary/keynames.xml";
 
 const std::string Files::PathPrefix = std::string(INSTALLDIR) + "/share/FBReader/";
 const std::string Files::PathDelimiter = "/";

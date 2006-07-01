@@ -48,8 +48,8 @@ bool ContentsView::onStylusPress(int x, int y) {
   }
   const ParagraphWithReference *paragraph = (const ParagraphWithReference*)(*model())[paragraphNumber];
   
-  myReader.bookTextView().gotoParagraph(paragraph->reference());
-  myReader.showBookTextView();
+  fbreader().bookTextView().gotoParagraph(paragraph->reference());
+  fbreader().showBookTextView();
   return true;
 }
 
@@ -84,7 +84,7 @@ void ContentsView::setModel(const TextModel *model, const std::string &name) {
 }
 
 void ContentsView::gotoReference() {
-  const WordCursor &cursor = myReader.bookTextView().endCursor();
+  const WordCursor &cursor = fbreader().bookTextView().endCursor();
   if (!cursor.isNull()) {
     long reference = cursor.paragraphCursor().index();
     size_t selected = model()->paragraphsNumber() - 1;

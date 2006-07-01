@@ -56,7 +56,6 @@ void ZLApplication::initWindow() {
 		grabAllKeys(true);
 	}
 	myWindow->init();
-	myWindow->refresh();
 	resetWindowCaption();
 }
 
@@ -100,9 +99,12 @@ ZLView *ZLApplication::currentView() {
 	return (myViewWidget != 0) ? myViewWidget->view() : 0;
 }
 
-void ZLApplication::repaintView() {
+void ZLApplication::refreshWindow() {
 	if (myViewWidget != 0) {
 		myViewWidget->repaintView();
+	}
+	if (myWindow != 0) {
+		myWindow->refresh();
 	}
 }
 
