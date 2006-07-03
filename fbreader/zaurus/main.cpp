@@ -21,7 +21,6 @@
 
 #include <qpe/qpeapplication.h>
 
-#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixTime.h>
 #include <unix/ZLUnixFSManager.h>
 #include <abstract/XMLOptions.h>
@@ -31,14 +30,12 @@
 #include <qtopia/QPaintContext.h>
 
 #include "../common/fbreader/FBReader.h"
-#include "../common/Files.h"
 
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
 
 	ZLUnixTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
-	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QImageManager::createInstance();

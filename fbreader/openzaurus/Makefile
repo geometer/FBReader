@@ -42,6 +42,9 @@ clean: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
 	@mkdir -p $(BASEDIR)/bin
+	@mkdir -p $(BASEDIR)/share/zlibrary
+	@cp ../../zlibrary/data/keynames.openzaurus-$(UI_TYPE).xml $(BASEDIR)/share/zlibrary/keynames.xml
+	@cp -r ../../zlibrary/data/encodings $(BASEDIR)/share/zlibrary
 	@cp ../FBReader $(BASEDIR)/bin
 	@mkdir -p $(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader.png $(PICSDIR)
@@ -51,10 +54,8 @@ clean: .cleandir
 	@mkdir $(BASEDIR)/share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
 	@mkdir $(BASEDIR)/share/FBReader/default
-	@cp ../data/default/keymap.qtopia.xml $(BASEDIR)/share/FBReader/default/keymap.xml
+	@cp ../data/default/keymap.zaurus.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(STYLE).xml $(BASEDIR)/share/FBReader/default/styles.xml
-	@mkdir $(BASEDIR)/share/zlibrary
-	@cp ../../zlibrary/data/keynames.openzaurus-$(UI_TYPE).xml $(BASEDIR)/share/zlibrary/keynames.xml
 	@mkdir -p $(APPDIR)
 	@cp $(UI_TYPE)/fbreader.desktop $(APPDIR)
 

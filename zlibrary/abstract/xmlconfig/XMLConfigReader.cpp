@@ -29,37 +29,27 @@ XMLConfigReader::~XMLConfigReader() {
 }
 
 void XMLConfigReader::startElementHandler(const char *tag, const char **attributes) {
-  static const std::string GROUP = "group";
-  static const std::string OPTION = "option";
+	static const std::string GROUP = "group";
+	static const std::string OPTION = "option";
+	static const char *NAME = "name";
+	static const char *VALUE = "value";
+	static const char *CATEGORY = "category";
 
-  if (GROUP == tag) {
-    bool correct = true;
-    for (int i = 0; i < 2; ++i) {
-      if (attributes[i] == 0) {
-        correct = false;
-        break;
-      }
-    }
-    if (correct && (strcmp(attributes[0], "name") == 0)) {
-      const std::string groupName = AsciiEncoder::decode(attributes[1]);
-      myGroup = myConfig.myGroups[groupName];
-      if (myGroup == 0) {
-        myGroup = new XMLConfigGroup(myConfig.myCategories);
-        myConfig.myGroups[groupName] = myGroup; 
-      }
-    }
-  } else if (OPTION == tag) {
-    if (myGroup != 0) {
-      bool correct = true;
-      for (int i = 0; i < 4; ++i) {
-        if (attributes[i] == 0) {
-          correct = false;
-          break;
-        }
-      }
-      if (correct && (strcmp(attributes[0], "name") == 0) && (strcmp(attributes[2], "value") == 0)) {
-         myGroup->setValue(AsciiEncoder::decode(attributes[1]), AsciiEncoder::decode(attributes[3]), myCategory); 
-      }
-    }
-  }
+	const char *name = attributeValue(attributes, NAME);
+	if (name == 0) {
+		return;
+	}
+	if (GROUP == tag) {
+		myGroup = myConfig.getGroup(AsciiEncoder::decode(name), true);
+	} else if ((myGroup != 0) && (OPTION == tag)) {
+		const char *value = attributeValue(attributes, VALUE);
+		const char *category = attributeValue(attributes, CATEGORY);
+		if (value != 0) {
+			myGroup->setValue(
+				AsciiEncoder::decode(name),
+				AsciiEncoder::decode(value),
+				(category != 0) ? category : myCategory
+			);
+		}
+	}
 }

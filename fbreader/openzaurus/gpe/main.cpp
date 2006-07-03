@@ -22,7 +22,6 @@
 #include <gtk/gtk.h>
 #include <gpe/init.h>
 
-#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <abstract/XMLOptions.h>
@@ -45,7 +44,6 @@ int main(int argc, char **argv) {
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkApplicationWindow::ImageDirectory);
-	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	XMLOptions::createInstance("FBReader");
 	GtkDeviceInfo::createInstance();
 

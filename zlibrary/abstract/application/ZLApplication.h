@@ -34,6 +34,15 @@ class ZLViewWidget;
 class ZLApplication {
 
 public:
+	static const std::string BaseDirectory;
+	static const std::string PathDelimiter;
+	static const std::string ZLibraryDirectory();
+	static const std::string &ApplicationDirectory();
+
+private:
+	static std::string ourApplicationDirectory;
+
+public:
 	static const std::string MouseScrollUpKey;
 	static const std::string MouseScrollDownKey;
 
@@ -376,6 +385,8 @@ inline ZLApplication::Menubar::SubMenuItem::SubMenuItem(const std::string &menuN
 inline const std::string &ZLApplication::Menubar::SubMenuItem::menuName() const { return myMenuName; }
 
 inline ZLApplication::Menubar::SeparatorItem::SeparatorItem(void) : Item(SEPARATOR_ITEM) {}
+
+inline const std::string &ZLApplication::ApplicationDirectory() { return ourApplicationDirectory; }
 
 #endif /* __ZLAPPLICATION_H__ */
 

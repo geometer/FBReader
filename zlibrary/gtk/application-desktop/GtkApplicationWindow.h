@@ -31,9 +31,6 @@
 class GtkApplicationWindow : public ZLApplicationWindow { 
 
 public:
-	static const std::string ImageDirectory;
-
-public:
 	GtkApplicationWindow(ZLApplication *application);
 	~GtkApplicationWindow();
 

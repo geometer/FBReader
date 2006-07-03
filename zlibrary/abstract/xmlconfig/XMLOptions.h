@@ -28,10 +28,10 @@ class XMLConfig;
 class XMLOptions : public ZLOptions {
 
 public:
-	static void createInstance(const char *name) { ourInstance = new XMLOptions(name); }
+	static void createInstance(const std::string &name, const std::string homeDirectory = "~") { ourInstance = new XMLOptions(name, homeDirectory); }
 
 private:
-	XMLOptions(const std::string &name);
+	XMLOptions(const std::string &name, const std::string &homeDirectory);
 	~XMLOptions();
 
 public:

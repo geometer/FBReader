@@ -25,8 +25,8 @@
 #include "XMLOptions.h"
 #include "XMLConfig.h"
 
-XMLOptions::XMLOptions(const std::string &name) {
-  myConfig = new XMLConfig(name);
+XMLOptions::XMLOptions(const std::string &name, const std::string &homeDirectory) {
+  myConfig = new XMLConfig(name, homeDirectory);
 }
 
 XMLOptions::~XMLOptions() {

@@ -21,7 +21,6 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <abstract/XMLOptions.h>
@@ -31,19 +30,20 @@
 #include <gtk-desktop/GtkPaintContext.h>
 #include <gtk-desktop/GtkApplicationWindow.h>
 
-#include "../../common/Files.h"
+#include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBReader.h"
+
+const std::string ImageDirectory = ZLApplication::BaseDirectory + ZLApplication::PathDelimiter + "FBReader" + ZLApplication::PathDelimiter + "icons";
+const std::string CollectionView::DeleteBookImageFile = ImageDirectory + "/FBReader/remove.png";
 
 int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);
 
-	ZLUnixFSManager::createInstance();
-
 	ZLUnixTimeManager::createInstance();
+	ZLUnixFSManager::createInstance();
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
-	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkApplicationWindow::ImageDirectory);
-	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
+	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(ImageDirectory);
 	XMLOptions::createInstance("FBReader");
 	GtkDeviceInfo::createInstance();
 
@@ -55,9 +55,9 @@ int main(int argc, char **argv) {
 	delete reader;
 
 	GtkDeviceInfo::deleteInstance();
+	XMLOptions::deleteInstance();
 	GtkImageManager::deleteInstance();
 	GtkDialogManager::deleteInstance();
-	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLUnixTimeManager::deleteInstance();
 

@@ -19,8 +19,9 @@
  * 02110-1301, USA.
  */
 
+#include <abstract/ZLApplication.h>
 #include "Files.h"
 
 const std::string Files::DefaultFilesPathPrefix() {
-	return PathPrefix + "default" + PathDelimiter;
+	return ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "default" + ZLApplication::PathDelimiter;
 }

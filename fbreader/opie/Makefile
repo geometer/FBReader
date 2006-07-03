@@ -23,6 +23,9 @@ clean: .cleandir
 	@mkdir -p $(DEBDIR)
 	@mkdir -p $(BASEDIR)/bin
 	@mkdir -p $(BASEDIR)/apps/Applications
+	@mkdir -p $(BASEDIR)/share/zlibrary
+	@cp ../../zlibrary/data/keynames.opensimpad.xml $(BASEDIR)/share/zlibrary/keynames.xml
+	@cp -r ../../zlibrary/data/encodings $(BASEDIR)/share/zlibrary
 	@mkdir -p $(BASEDIR)/pics/fbreader
 	@sed "s/VERSION/$(version)/" control.in > $(DEBDIR)/control
 	@cp ../FBReader $(BASEDIR)/bin
@@ -37,8 +40,6 @@ clean: .cleandir
 ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"
 	@cp ../data/default/keymap.opie-opensimpad.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.640x480.xml $(BASEDIR)/share/FBReader/default/styles.xml
-	@mkdir $(BASEDIR)/share/zlibrary
-	@cp ../../zlibrary/data/keynames.opensimpad.xml $(BASEDIR)/share/zlibrary/keynames.xml
 endif
 
 .buildpackage:

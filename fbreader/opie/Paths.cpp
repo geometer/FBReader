@@ -19,19 +19,16 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLKeyUtil.h>
+#include <abstract/ZLApplication.h>
 
-#include "../common/Files.h"
 #include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
 #include "../common/fbreader/FBFileHandler.h"
 
-const std::string ZLKeyUtil::FilePath = std::string(INSTALLDIR) + "/opt/QtPalmtop/share/zlibrary/keynames.xml";
-
-const std::string Files::PathPrefix = std::string(INSTALLDIR) + "/opt/QtPalmtop/share/FBReader/";
-const std::string Files::PathDelimiter = "/";
+const std::string ZLApplication::BaseDirectory = std::string(INSTALLDIR) + "/opt/QtPalmtop/share";
+const std::string ZLApplication::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "fbreader";
 
-const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics/fbreader/remove.png";
+const std::string CollectionView::DeleteBookImageFile = std::string(INSTALLDIR) + "/opt/QtPalmtop/pics/fbreader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

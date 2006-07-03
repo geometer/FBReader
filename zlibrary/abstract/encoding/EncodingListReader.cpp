@@ -28,7 +28,6 @@
 
 #include "ZLEncodingConverter.h"
 
-std::string ZLEncodingConverter::ourEncodingDescriptionPath;
 std::vector<std::string> ZLEncodingConverter::ourKnownEncodings;
 std::map<int,std::string> ZLEncodingConverter::ourEncodingsByCode;
 
@@ -66,23 +65,24 @@ void EncodingListReader::startElementHandler(const char *tag, const char **attri
 	}
 }
 
-void ZLEncodingConverter::setEncodingDescriptionPath(const std::string &path) {
-	ourKnownEncodings.clear();
-	ourEncodingDescriptionPath = path;
-	std::vector<std::string> candidates;
-	EncodingListReader(candidates, ourEncodingsByCode).readDocument(ourEncodingDescriptionPath + "/Encodings.list");
-	for (std::vector<std::string>::const_iterator it = candidates.begin(); it != candidates.end(); ++it) {
-		iconv_t converter = iconv_open("utf-8", it->c_str());
-		if (converter != (iconv_t)-1) {
-			iconv_close(converter);
-			ourKnownEncodings.push_back(*it);
-		} else if (ZLFile(ourEncodingDescriptionPath + '/' + *it).exists()) {
-			ourKnownEncodings.push_back(*it);
-		}
-	}
+std::vector<std::string> &ZLEncodingConverter::knownEncodings() {
 	if (ourKnownEncodings.empty()) {
-		ourKnownEncodings.push_back("US-ASCII");
-		ourKnownEncodings.push_back("UTF-8");
+		std::vector<std::string> candidates;
+		EncodingListReader(candidates, ourEncodingsByCode).readDocument(encodingDescriptionPath() + "/Encodings.list");
+		for (std::vector<std::string>::const_iterator it = candidates.begin(); it != candidates.end(); ++it) {
+			iconv_t converter = iconv_open("utf-8", it->c_str());
+			if (converter != (iconv_t)-1) {
+				iconv_close(converter);
+				ourKnownEncodings.push_back(*it);
+			} else if (ZLFile(encodingDescriptionPath() + '/' + *it).exists()) {
+				ourKnownEncodings.push_back(*it);
+			}
+		}
+		if (ourKnownEncodings.empty()) {
+			ourKnownEncodings.push_back("US-ASCII");
+			ourKnownEncodings.push_back("UTF-8");
+		}
+		std::sort(ourKnownEncodings.begin(), ourKnownEncodings.end());
 	}
-	std::sort(ourKnownEncodings.begin(), ourKnownEncodings.end());
+	return ourKnownEncodings;
 }

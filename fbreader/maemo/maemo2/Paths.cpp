@@ -19,21 +19,18 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLKeyUtil.h>
+#include <abstract/ZLApplication.h>
 #include <maemo-maemo2/GtkApplicationWindow.h>
 
-#include "../../common/Files.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
-const std::string ZLKeyUtil::FilePath = "/usr/share/zlibrary/keynames.xml";
-
-const std::string Files::PathPrefix = "/usr/share/FBReader/";
-const std::string Files::PathDelimiter = "/";
+const std::string ZLApplication::BaseDirectory = "/usr/share";
+const std::string ZLApplication::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
-const std::string GtkApplicationWindow::ImageDirectory = Files::PathPrefix + "icons";
+const std::string GtkApplicationWindow::ImageDirectory = ZLApplication::BaseDirectory + ZLApplication::PathDelimiter + "FBReader" + ZLApplication::PathDelimiter + "icons";
 const std::string CollectionView::DeleteBookImageFile = GtkApplicationWindow::ImageDirectory + "/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/MyDocs/Books:/media/mmc1/Books";

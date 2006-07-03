@@ -21,7 +21,6 @@
 
 #include <qapplication.h>
 
-#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <abstract/XMLOptions.h>
@@ -31,7 +30,6 @@
 #include <qt-desktop/QApplicationWindow.h>
 #include <qt/QPaintContext.h>
 
-#include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
 
 int main(int argc, char **argv) {
@@ -43,7 +41,6 @@ int main(int argc, char **argv) {
 	QDialogManager::createInstance();
 	QImageManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QApplicationWindow::ImageDirectory);
-	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	QDeviceInfo::createInstance();
 
 	FBReader *reader = new FBReader(new QPaintContext(), argc == 1 ? std::string() : argv[1]);

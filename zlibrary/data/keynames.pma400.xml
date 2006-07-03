@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keynames>
+	<key code="0x1012" name="&lt;Left&gt;"/>
+	<key code="0x1013" name="&lt;Up&gt;"/>
+	<key code="0x1014" name="&lt;Right&gt;"/>
+	<key code="0x1015" name="&lt;Down&gt;"/>
+	<key code="0x1004" name="&lt;Play/Stop&gt;"/>
+	<key code="0x1033" name="&lt;Cancel&gt;"/>
+	<key code="0x1032" name="&lt;Home&gt;"/>
+	<key code="0x1030" name="&lt;A&gt;"/>
+</keynames>

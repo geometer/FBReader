@@ -24,10 +24,13 @@ install:
 	@ln -sf .. bin
 	@ln -sf ../icons/18x15 pics
 	@cp -r ../share .
+	@mkdir share/zlibrary
+	@cp ../../zlibrary/data/keynames.pma400.xml share/zlibrary/keynames.xml
+	@cp -r ../../zlibrary/data/encodings share/zlibrary
 	@mkdir share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.240x320.fb2 share/FBReader/help/HowToStart.fb2
 	@mkdir share/FBReader/default
-	@cp ../data/default/keymap.qtopia.xml share/FBReader/default/keymap.xml
+	@cp ../data/default/keymap.pma400.xml share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.240x320.xml share/FBReader/default/styles.xml
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)

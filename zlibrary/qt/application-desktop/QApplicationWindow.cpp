@@ -22,10 +22,9 @@
 #include <qpixmap.h>
 #include <qmenubar.h>
 
-#include <qt/QViewWidget.h>
-
 #include "QApplicationWindow.h"
 #include "../dialogs/QDialogManager.h"
+#include "../view/QViewWidget.h"
 #include "../util/QKeyUtil.h"
 
 void QDialogManager::createApplicationWindow(ZLApplication *application) const {

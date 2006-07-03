@@ -19,10 +19,15 @@
  */
 
 #include <abstract/ZLUnicodeUtil.h>
+#include <abstract/ZLApplication.h>
 
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
 #include "EncodingReader.h"
+
+std::string ZLEncodingConverter::encodingDescriptionPath() {
+	return ZLApplication::ZLibraryDirectory() + ZLApplication::PathDelimiter + "encodings";
+}
 
 shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::string &encoding) {
 	if (encoding.empty() ||

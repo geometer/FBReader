@@ -37,6 +37,8 @@ install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(DESTDIR)/usr/bin
 	@install -s ../FBReader $(DESTDIR)/usr/bin
 	@install -d $(SHARE_ZLIBRARY)
+	@install -d $(SHARE_ZLIBRARY)/encodings
+	@install -m 0644 $(filter-out %/Big5,$(wildcard ../../zlibrary/data/encodings/*)) $(SHARE_ZLIBRARY)/encodings
 	@install -m 0644 $(ROOTDIR)/zlibrary/data/keynames.maemo.xml $(SHARE_ZLIBRARY)/keynames.xml
 	@install -d $(SHARE_FBREADER)
 	@install -d $(SHARE_FBREADER)/formats/html
@@ -45,8 +47,6 @@ install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -m 0644 $(wildcard ../share/FBReader/formats/xhtml/*.ent) $(SHARE_FBREADER)/formats/xhtml
 	@install -d $(SHARE_FBREADER)/icons/FBReader
 	@install -m 0644 $(wildcard ../icons/blueset/FBReader/*) $(SHARE_FBREADER)/icons/FBReader
-	@install -d $(DESTDIR)/usr/share/FBReader/encodings
-	@install -m 0644 $(filter-out %/Big5,$(wildcard ../share/FBReader/encodings/*)) $(SHARE_FBREADER)/encodings
 	@install -m 0644 $(wildcard ../share/FBReader/*.zip) $(SHARE_FBREADER)
 	@install -d $(DESTDIR)/usr/share/FBReader/help
 	@install -m 0644 ../data/help/HowToStart.blueish.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2

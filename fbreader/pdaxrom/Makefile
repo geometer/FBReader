@@ -29,6 +29,9 @@ install:
 
 .tmpdir:
 	@mkdir -p $(BINDIR)
+	@mkdir -p usr/share/zlibrary
+	@cp ../../zlibrary/data/keynames.pdaxrom-$(UI_TYPE).xml usr/share/zlibrary/keynames.xml
+	@cp -r ../../zlibrary/data/encodings usr/share/zlibrary
 	@cp ../FBReader $(BINDIR)
 	@cp -r ../share/FBReader usr/share
 	@mkdir -p usr/share/FBReader/help
@@ -38,8 +41,6 @@ install:
 	@cp ../data/default/styles.640x480.xml usr/share/FBReader/default/styles.xml
 	@mkdir -p usr/share/pixmaps/FBReader
 	@cp `find ../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
-	@mkdir -p usr/share/zlibrary
-	@cp ../../zlibrary/data/keynames.pdaxrom-$(UI_TYPE).xml usr/share/zlibrary/keynames.xml
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 

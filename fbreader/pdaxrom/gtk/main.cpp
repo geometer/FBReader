@@ -21,7 +21,6 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <abstract/XMLOptions.h>
@@ -39,8 +38,6 @@ int main(int argc, char **argv) {
 
 	ZLUnixTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
-	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
-
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();

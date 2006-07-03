@@ -51,13 +51,19 @@ friend class XMLConfigWriter;
 class XMLConfig {
 
 public:
-  XMLConfig(const std::string &name);
+  XMLConfig(const std::string &name, const std::string &homeDirectory);
   ~XMLConfig();
 
   XMLConfigGroup *getGroup(const std::string &name, bool createUnexisting);
   void removeGroup(const std::string &name);
 
 private:
+	void load();
+	void saveAll();
+	void saveChanges();
+
+private:
+  std::string myHomeDirectory;
   std::string myName;
   std::map<std::string,XMLConfigGroup*> myGroups;
   std::set<std::string> myCategories;

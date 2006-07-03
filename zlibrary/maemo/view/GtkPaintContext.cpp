@@ -132,7 +132,7 @@ const std::string GtkPaintContext::realFontFamilyName(std::string &fontFamily) c
 	if (myContext == 0) {
 		return fontFamily;
 	}
-	if ((fontFamily == "Sans") || (fontFamily == "Serif")) {
+	if ((fontFamily == "Sans") || (fontFamily == "Serif") || (fontFamily == "Monospace")) {
 		return fontFamily;
 	}
 	PangoFontDescription *description = pango_font_description_new();

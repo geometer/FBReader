@@ -25,6 +25,7 @@
 #include <abstract/ZLXMLReader.h>
 
 #include "ZLKeyUtil.h"
+#include "../application/ZLApplication.h"
 
 bool ZLKeyUtil::ourInitialized = false;
 std::map<int,std::string> ZLKeyUtil::ourNames;
@@ -53,7 +54,7 @@ void KeyNamesReader::startElementHandler(const char *tag, const char **attribute
 
 std::string ZLKeyUtil::keyName(int unicode, int key, int modifiersMask) {
 	if (!ourInitialized) {
-		KeyNamesReader().readDocument(FilePath);
+		KeyNamesReader().readDocument(ZLApplication::ZLibraryDirectory() + ZLApplication::PathDelimiter + "keynames.xml");
 		ourInitialized = true;
 	}
 

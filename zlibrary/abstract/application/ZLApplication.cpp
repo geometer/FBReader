@@ -21,6 +21,8 @@
 #include "ZLApplication.h"
 #include "../view/ZLView.h"
 
+std::string ZLApplication::ourApplicationDirectory;
+
 const std::string ZLApplication::MouseScrollDownKey = "<MouseScrollDown>";
 const std::string ZLApplication::MouseScrollUpKey = "<MouseScrollUp>";
 
@@ -37,6 +39,7 @@ ZLApplication::ZLApplication(const std::string &name) :
 	myName(name),
 	myViewWidget(0),
 	myWindow(0) {
+	ourApplicationDirectory = BaseDirectory + PathDelimiter + myName;
 }
 
 ZLApplication::~ZLApplication() {
@@ -183,4 +186,6 @@ bool ZLApplication::Action::isEnabled() {
 	return isVisible();
 }
 
-// vim:noet:ts=2:sw=2
+const std::string ZLApplication::ZLibraryDirectory() {
+	return BaseDirectory + PathDelimiter + "zlibrary";
+}

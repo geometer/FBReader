@@ -29,27 +29,27 @@ const std::string OPTION = "option";
 const std::string VALUE = "value";
 
 void XMLConfigWriter::write() {
-  addTag(CONFIG, false);
-  for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myConfig.myGroups.begin(); it != myConfig.myGroups.end(); ++it) {
-    const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
-    if (!values.empty()) {
-      bool emptyFlag = true;
-      for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
-	if (jt->second.Category == myCategory) {
-          if (emptyFlag) { 
-            addTag(GROUP, false);
-            addAttribute(NAME, AsciiEncoder::encode(it->first));
-	    emptyFlag = false;
-	  }
-          addTag(OPTION, true);
-          addAttribute(NAME, AsciiEncoder::encode(jt->first));
-          addAttribute(VALUE, AsciiEncoder::encode(jt->second.Value));
+	addTag(CONFIG, false);
+	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myConfig.myGroups.begin(); it != myConfig.myGroups.end(); ++it) {
+		const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
+		if (!values.empty()) {
+			bool emptyFlag = true;
+			for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
+				if (jt->second.Category == myCategory) {
+					if (emptyFlag) { 
+						addTag(GROUP, false);
+						addAttribute(NAME, AsciiEncoder::encode(it->first));
+						emptyFlag = false;
+					}
+					addTag(OPTION, true);
+					addAttribute(NAME, AsciiEncoder::encode(jt->first));
+					addAttribute(VALUE, AsciiEncoder::encode(jt->second.Value));
+				}
+			}
+			if (!emptyFlag) {
+				closeTag();
+			}
+		}
 	}
-      }
-      if (!emptyFlag) {
-        closeTag();
-      }
-    }
-  }
-  closeTag();
+	closeTag();
 }

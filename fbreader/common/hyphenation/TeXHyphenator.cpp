@@ -26,6 +26,7 @@
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFile.h>
 #include <abstract/ZLDir.h>
+#include <abstract/ZLApplication.h>
 
 #include "TeXHyphenator.h"
 #include "HyphenationReader.h"
@@ -63,7 +64,7 @@ private:
 };
 
 const std::string TeXHyphenator::PatternZip() {
-	return Files::PathPrefix + "hyphenationPatterns.zip";
+	return ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "hyphenationPatterns.zip";
 }
 
 void TeXHyphenator::collectLanguages() {

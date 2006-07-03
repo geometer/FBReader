@@ -19,18 +19,15 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLKeyUtil.h>
+#include <abstract/ZLApplication.h>
 #include <gpe/GtkApplicationWindow.h>
 
-#include "../../common/Files.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
-const std::string ZLKeyUtil::FilePath = "/usr/share/zlibrary/keynames.xml";
-
-const std::string Files::PathPrefix = "/usr/share/FBReader/";
-const std::string Files::PathDelimiter = "/";
+const std::string ZLApplication::BaseDirectory = "/usr/share";
+const std::string ZLApplication::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "fbreader";
 

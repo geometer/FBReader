@@ -31,12 +31,12 @@
 #include <gtk/gtkframe.h>
 
 #include <abstract/ZLDeviceInfo.h>
-#include <gtk/GtkKeyUtil.h>
 
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"
 #include "GtkDialogManager.h"
 #include "GtkUtil.h"
+#include "../util/GtkKeyUtil.h"
 
 static GtkWidget *labelWithMyParams(const char *text) {
 	GtkWidget *label = gtk_label_new(text);

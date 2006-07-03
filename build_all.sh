@@ -1,6 +1,15 @@
 #!/bin/sh
 
+if [ "$1" == "rebuild" ]; then
+	FAILED_ONLY=yes
+fi
+
 do_build() {
+	LOG_FILE=$1\($2\).log
+	if [ "$FAILED_ONLY" == "yes" -a ! -f $LOG_FILE ]; then
+		echo "Skipping $1 ($2)"
+		return;
+	fi
 	echo -n "Building $1 ($2) ...";
 	make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
 	if ! make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release package 1> $1\($2\).log 2>&1; then

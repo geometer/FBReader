@@ -23,6 +23,7 @@
 #include <abstract/ZLDir.h>
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFileImage.h>
+#include <abstract/ZLApplication.h>
 
 #include "XHTMLReader.h"
 
@@ -356,8 +357,8 @@ static std::vector<std::string> EXTERNAL_DTDs;
 const std::vector<std::string> &XHTMLReader::externalDTDs() const {
   if (EXTERNAL_DTDs.empty()) {
     std::string directoryName =
-      Files::PathPrefix + Files::PathDelimiter +
-      "formats" + Files::PathDelimiter + "xhtml";
+      ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter +
+      "formats" + ZLApplication::PathDelimiter + "xhtml";
     shared_ptr<ZLDir> dtdPath = ZLFile(directoryName).directory();
     if (!dtdPath.isNull()) {
       std::vector<std::string> files;

@@ -31,13 +31,11 @@ class ZLEncodingConverter {
 
 public:
 	static shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
-	static void setEncodingDescriptionPath(const std::string &path);
-	static std::string &encodingDescriptionPath();
+	static std::string encodingDescriptionPath();
 	static std::vector<std::string> &knownEncodings();
 	static const std::string &encodingByCode(int code);
 
 private:
-	static std::string ourEncodingDescriptionPath;
 	static std::vector<std::string> ourKnownEncodings;
 	static std::map<int,std::string> ourEncodingsByCode;
 
@@ -50,8 +48,5 @@ public:
 	virtual void reset();
 	virtual bool fillTable(int *map) = 0;
 };
-
-inline std::string &ZLEncodingConverter::encodingDescriptionPath() { return ourEncodingDescriptionPath; }
-inline std::vector<std::string> &ZLEncodingConverter::knownEncodings() { return ourKnownEncodings; }
 
 #endif /* __ZLENCODINGCONVERTER_H__ */

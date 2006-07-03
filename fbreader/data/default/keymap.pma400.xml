@@ -1,0 +1,8 @@
+<keymap>
+	<binding key="&lt;Left&gt;" action="3"/>
+	<binding key="&lt;Right&gt;" action="4"/>
+	<binding key="&lt;Down&gt;" action="9"/>
+	<binding key="&lt;Up&gt;" action="10"/>
+	<binding key="&lt;Cancel&gt;" action="18"/>
+	<binding key="&lt;Play/Stop&gt;" action="22"/>
+</keymap>

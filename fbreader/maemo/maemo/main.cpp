@@ -21,7 +21,6 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLEncodingConverter.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <abstract/XMLOptions.h>
@@ -31,7 +30,6 @@
 #include <maemo/GtkPaintContext.h>
 #include <maemo-maemo/GtkApplicationWindow.h>
 
-#include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
 
 class ConfigSaverRunnable : public ZLRunnable {
@@ -47,7 +45,6 @@ int main(int argc, char **argv) {
 
 	ZLUnixFSManager::createInstance();
 	ZLUnixTimeManager::createInstance();
-	ZLEncodingConverter::setEncodingDescriptionPath(Files::PathPrefix + "encodings");
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();

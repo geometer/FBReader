@@ -27,9 +27,6 @@
 class Files {
 
 public:
-	static const std::string PathPrefix;
-	static const std::string PathDelimiter;
-
 	static const std::string DefaultFilesPathPrefix();
 
 private:

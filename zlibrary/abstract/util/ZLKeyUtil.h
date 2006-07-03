@@ -27,8 +27,6 @@
 class ZLKeyUtil {
 
 private:
-	static const std::string FilePath;
-
 	static bool ourInitialized;
 	static std::map<int,std::string> ourNames;
 	static std::map<int,std::string> ourModifiers;
