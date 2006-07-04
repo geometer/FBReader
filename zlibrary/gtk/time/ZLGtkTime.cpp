@@ -18,15 +18,25 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXTIME_H__
-#define __ZLUNIXTIME_H__
+#include <glib.h>
 
-#include <abstract/ZLTime.h>
+#include "ZLGtkTime.h"
 
-class ZLUnixTimeManager : public ZLTimeManager {
+static bool taskFunction(gpointer *data) {
+	((ZLRunnable*)data)->run();
+	return true;
+}
 
-public:
-	ZLTime currentTime() const;
-};
+void ZLGtkTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
+	if ((interval > 0) && !task.isNull()) {
+		myHandlers[task] = g_timeout_add(interval, (GSourceFunc)taskFunction, &*task);
+	}
+}
 
-#endif /* __ZLUNIXTIME_H__ */
+void ZLGtkTimeManager::removeTask(shared_ptr<ZLRunnable> task) {
+	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myHandlers.find(task);
+	if (it != myHandlers.end()) {
+		g_source_remove(it->second);
+		myHandlers.erase(it);
+	}
+}

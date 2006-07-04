@@ -1,5 +1,5 @@
 include $(ROOTDIR)/makefiles/config.mk
-include moc.mk
+-include moc.mk
 
 INCLUDE = $(QTINCLUDE) $(ZINCLUDE) $(EXTERNALINCLUDE)
 

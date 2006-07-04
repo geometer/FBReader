@@ -18,6 +18,10 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
+#include <abstract/ZLTime.h>
+
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"
 
@@ -72,13 +76,34 @@ bool XMLConfigGroup::unsetValue(const std::string &name) {
 	return false;
 }
 
+class ConfigSaveTask : public ZLRunnable {
+
+public:
+	ConfigSaveTask(XMLConfig &config);
+
+private:
+	void run();
+
+private:
+	XMLConfig &myConfig;
+};
+
+ConfigSaveTask::ConfigSaveTask(XMLConfig &config) : myConfig(config) {
+}
+
+void ConfigSaveTask::run() {
+	myConfig.saveDelta();
+}
+
 XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) : myHomeDirectory(homeDirectory), myName(name), myDelta(0) {
 	load();
 	myDelta = new XMLConfigDelta(myCategories);
+	mySaver = new ConfigSaveTask(*this);
+	ZLTimeManager::instance().addTask(mySaver, 10000);
 }
 
 XMLConfig::~XMLConfig() {
-	saveDelta();
+	ZLTimeManager::instance().removeTask(mySaver);
 	saveAll();
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;

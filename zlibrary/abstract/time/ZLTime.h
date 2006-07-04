@@ -21,6 +21,9 @@
 #ifndef __ZLTIME_H__
 #define __ZLTIME_H__
 
+#include <abstract/shared_ptr.h>
+#include <abstract/ZLRunnable.h>
+
 class ZLTime {
 
 public:
@@ -39,11 +42,11 @@ friend class ZLTimeManager;
 
 class ZLTimeManager {
 
-private:
-	static ZLTimeManager &instance();
-
 public:
+	static ZLTimeManager &instance();
 	static void deleteInstance();
+	virtual void addTask(shared_ptr<ZLRunnable> task, int interval) = 0;
+	virtual void removeTask(shared_ptr<ZLRunnable> task) = 0;
 	
 protected:
 	ZLTimeManager();

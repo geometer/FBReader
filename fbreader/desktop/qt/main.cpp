@@ -22,7 +22,7 @@
 #include <qapplication.h>
 
 #include <unix/ZLUnixFSManager.h>
-#include <unix/ZLUnixTime.h>
+#include <qt/ZLQtTime.h>
 #include <abstract/XMLOptions.h>
 #include <qt/QDialogManager.h>
 #include <qt/QImageManager.h>
@@ -35,7 +35,7 @@
 int main(int argc, char **argv) {
 	QApplication application(argc, argv);
 
-	ZLUnixTimeManager::createInstance();
+	ZLQtTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
 	QDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
-	ZLUnixTimeManager::deleteInstance();
+	ZLQtTimeManager::deleteInstance();
 
 	return code;
 }

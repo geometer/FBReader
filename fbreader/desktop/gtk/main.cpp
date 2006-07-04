@@ -23,7 +23,7 @@
 
 #include <abstract/ZLApplication.h>
 #include <unix/ZLUnixFSManager.h>
-#include <unix/ZLUnixTime.h>
+#include <gtk/ZLGtkTime.h>
 #include <abstract/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>
@@ -43,7 +43,7 @@ const std::string CollectionView::DeleteBookImageFile = ImageDirectory + "/FBRea
 int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);
 
-	ZLUnixTimeManager::createInstance();
+	ZLGtkTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 	GtkImageManager::deleteInstance();
 	GtkDialogManager::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
-	ZLUnixTimeManager::deleteInstance();
+	ZLGtkTimeManager::deleteInstance();
 
 	return 0;
 }

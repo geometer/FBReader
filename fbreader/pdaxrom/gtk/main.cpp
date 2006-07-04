@@ -22,7 +22,7 @@
 #include <gtk/gtk.h>
 
 #include <unix/ZLUnixFSManager.h>
-#include <unix/ZLUnixTime.h>
+#include <gtk/ZLGtkTime.h>
 #include <abstract/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>
@@ -36,7 +36,7 @@
 int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);
 
-	ZLUnixTimeManager::createInstance();
+	ZLGtkTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
 	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 	GtkDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
-	ZLUnixTimeManager::deleteInstance();
+	ZLGtkTimeManager::deleteInstance();
 
 	return 0;
 }

@@ -18,15 +18,14 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXTIME_H__
-#define __ZLUNIXTIME_H__
+#ifndef __ZLRUNNABLE_H__
+#define __ZLRUNNABLE_H__
 
-#include <abstract/ZLTime.h>
-
-class ZLUnixTimeManager : public ZLTimeManager {
+class ZLRunnable {
 
 public:
-	ZLTime currentTime() const;
+	virtual ~ZLRunnable() {}
+	virtual void run() = 0;
 };
 
-#endif /* __ZLUNIXTIME_H__ */
+#endif /* __ZLRUNNABLE_H__ */

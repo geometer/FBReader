@@ -23,7 +23,7 @@
 #include <gpe/init.h>
 
 #include <unix/ZLUnixFSManager.h>
-#include <unix/ZLUnixTime.h>
+#include <gtk/ZLGtkTime.h>
 #include <abstract/XMLOptions.h>
 #include <gpe/GtkDialogManager.h>
 #include <gpe/GtkApplicationWindow.h>
@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 	}
 
 	ZLUnixFSManager::createInstance();
-	ZLUnixTimeManager::createInstance();
+	ZLGtkTimeManager::createInstance();
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkApplicationWindow::ImageDirectory);
@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 	GtkDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
-	ZLUnixTimeManager::deleteInstance();
+	ZLGtkTimeManager::deleteInstance();
 
 	return 0;
 }

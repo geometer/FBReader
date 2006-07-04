@@ -18,15 +18,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXTIME_H__
-#define __ZLUNIXTIME_H__
+#ifndef __ZLQTTIME_H__
+#define __ZLQTTIME_H__
 
-#include <abstract/ZLTime.h>
+#include <unix/ZLUnixTime.h>
 
-class ZLUnixTimeManager : public ZLTimeManager {
+class ZLQtTimeManager : public ZLUnixTimeManager {
 
 public:
-	ZLTime currentTime() const;
+	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
+
+	void addTask(shared_ptr<ZLRunnable> task, int interval);
+	void removeTask(shared_ptr<ZLRunnable> task);
 };
 
-#endif /* __ZLUNIXTIME_H__ */
+#endif /* __ZLQTTIME_H__ */

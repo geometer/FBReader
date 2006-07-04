@@ -21,7 +21,7 @@
 
 #include <qpe/qpeapplication.h>
 
-#include <unix/ZLUnixTime.h>
+#include <qt/ZLQtTime.h>
 #include <unix/ZLUnixFSManager.h>
 #include <abstract/XMLOptions.h>
 #include <qtopia/QDialogManager.h>
@@ -34,7 +34,7 @@
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);
 
-	ZLUnixTimeManager::createInstance();
+	ZLQtTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
 	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
 	QDialogManager::deleteInstance();
 	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
-	ZLUnixTimeManager::deleteInstance();
+	ZLQtTimeManager::deleteInstance();
 
 	return code;
 }

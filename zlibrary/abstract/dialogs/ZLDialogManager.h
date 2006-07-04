@@ -23,17 +23,12 @@
 
 #include <string>
 
+#include <abstract/ZLRunnable.h>
+
 class ZLDialog;
 class ZLOptionsDialog;
 class ZLTreeHandler;
 class ZLApplication;
-
-class ZLRunnable {
-
-public:
-	virtual ~ZLRunnable() {}
-	virtual void run() = 0;
-};
 
 class ZLDialogManager {
 

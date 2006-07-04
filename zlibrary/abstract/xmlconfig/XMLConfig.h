@@ -25,6 +25,9 @@
 #include <set>
 #include <string>
 
+#include <abstract/shared_ptr.h>
+#include <abstract/ZLRunnable.h>
+
 #include "XMLConfigValue.h"
 
 class XMLConfigGroup {
@@ -64,6 +67,8 @@ private:
 private:
 	void load();
 	void saveAll();
+
+public:
 	void saveDelta();
 
 private:
@@ -72,6 +77,8 @@ private:
 	std::map<std::string,XMLConfigGroup*> myGroups;
 	std::set<std::string> myCategories;
 	class XMLConfigDelta *myDelta;
+
+	shared_ptr<ZLRunnable> mySaver;
 
 friend class XMLConfigWriter;
 friend class XMLConfigReader;
