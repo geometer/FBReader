@@ -33,6 +33,7 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 	static const std::string OPTION = "option";
 	static const char *NAME = "name";
 	static const char *VALUE = "value";
+	static const char *CATEGORY = "category";
 
 	const char *name = attributeValue(attributes, NAME);
 	if (name == 0) {
@@ -42,8 +43,15 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 		myGroup = myConfig.getGroup(AsciiEncoder::decode(name), true);
 	} else if ((myGroup != 0) && (OPTION == tag)) {
 		const char *value = attributeValue(attributes, VALUE);
+		const char *category = attributeValue(attributes, CATEGORY);
 		if (value != 0) {
-			myGroup->setValue(AsciiEncoder::decode(name), AsciiEncoder::decode(value), myCategory);
+			myGroup->setValue(
+				AsciiEncoder::decode(name),
+				AsciiEncoder::decode(value),
+				(category == 0) ? myCategory : category
+			);
+		} else {
+			myGroup->unsetValue(AsciiEncoder::decode(name));
 		}
 	}
 }

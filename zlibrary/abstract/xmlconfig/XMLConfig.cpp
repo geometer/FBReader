@@ -18,16 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include <stack>
-
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDir.h>
-#include <abstract/ZLInputStream.h>
-
 #include "XMLConfig.h"
-#include "XMLConfigReader.h"
-#include "XMLConfigWriter.h"
-#include "AsciiEncoder.h"
+#include "XMLConfigDelta.h"
 
 const std::string &XMLConfigGroup::getValue(const std::string &name, const std::string &defaultValue) const {
 	std::map<std::string,XMLConfigValue>::const_iterator it = myValues.find(name);
@@ -75,14 +67,19 @@ void XMLConfigGroup::unsetValue(const std::string &name) {
 	}
 }
 
-XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) : myHomeDirectory(homeDirectory), myName(name) {
+XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) : myHomeDirectory(homeDirectory), myName(name), myDelta(0) {
 	load();
+	myDelta = new XMLConfigDelta(myCategories);
 }
 
 XMLConfig::~XMLConfig() {
+	saveDelta();
 	saveAll();
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
+	}
+	if (myDelta != 0) {
+		delete myDelta;
 	}
 }
 
@@ -99,43 +96,15 @@ XMLConfigGroup *XMLConfig::getGroup(const std::string &name, bool createUnexisti
 	return 0;
 }
 
+XMLConfigGroup *XMLConfig::getGroup(const std::string &name) const {
+	std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.find(name);
+	return (it != myGroups.end()) ? it-> second : 0;
+}
+
 void XMLConfig::removeGroup(const std::string &name) {
 	std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.find(name);
 	if (it != myGroups.end()) {
 		delete it->second;
 		myGroups.erase(it);
 	}
-}
-
-void XMLConfig::load() {
-	shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(false);
-	if (configDir.isNull()) {
-		return;
-	}
-	std::vector<std::string> fileNames;
-	configDir->collectFiles(fileNames, true);
-	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
-		ZLFile configFile(configDir->itemName(*it));
-		if (configFile.extension() == "xml") {
-			XMLConfigReader(*this, it->substr(0, it->length() - 4)).readDocument(configFile.inputStream());
-		}
-	}
-	//XMLConfigReader(*this, "unknown").readDocument(configDir->itemName("config.changes"));
-}
-
-void XMLConfig::saveAll() {
-	shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(true);
-
-	if (!configDir.isNull()) {
-		for (std::set<std::string>::const_iterator it = myCategories.begin(); it != myCategories.end(); ++it) {
-			shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(*it + ".xml")).outputStream();
-			if (!stream.isNull() && stream->open()) {
-				XMLConfigWriter(*this, *stream, *it).write();
-				stream->close();
-			}
-		}
-	} // TODO: show error message if config was not saved
-}
-
-void XMLConfig::saveChanges() {
 }

@@ -26,69 +26,65 @@
 #include "XMLConfig.h"
 
 XMLOptions::XMLOptions(const std::string &name, const std::string &homeDirectory) {
-  myConfig = new XMLConfig(name, homeDirectory);
+	myConfig = new XMLConfig(name, homeDirectory);
 }
 
 XMLOptions::~XMLOptions() {
-  delete myConfig;
+	delete myConfig;
 }
 
 void XMLOptions::setGroup(const std::string &name){
-  myGroupName = name;
+	myGroupName = name;
 }
 
 void XMLOptions::clearGroup() {
-  myConfig->removeGroup(myGroupName);
+	myConfig->removeGroup(myGroupName);
 }
 
 void XMLOptions::unsetValue(const std::string &name) {
-  XMLConfigGroup *group = myConfig->getGroup(myGroupName, false);
-  if (group != 0) {
-    group->unsetValue(name);
-  }
+	myConfig->unsetValue(myGroupName, name);
 }
 
 bool XMLOptions::booleanValue(const std::string &name, bool defaultValue) {
-  return stringValue(name, defaultValue ? "true" : "false") == "true";
+	return stringValue(name, defaultValue ? "true" : "false") == "true";
 }
 
 void XMLOptions::setValue(const std::string &name, bool value, const std::string &category) {
-  setValue(name, std::string(value ? "true" : "false"), category);
+	setValue(name, std::string(value ? "true" : "false"), category);
 }
 
 long XMLOptions::integerValue(const std::string &name, long defaultValue) {
-  std::string value = stringValue(name, std::string());
-  return (!value.empty()) ? atoi(value.c_str()) : defaultValue;
+	std::string value = stringValue(name, std::string());
+	return (!value.empty()) ? atoi(value.c_str()) : defaultValue;
 }
 
 void XMLOptions::setValue(const std::string &name, long value, const std::string &category) {
-  char buf[100];
-  sprintf(buf, "%ld", value);
-  setValue(name, std::string(buf), category);
+	char buf[100];
+	sprintf(buf, "%ld", value);
+	setValue(name, std::string(buf), category);
 }
 
 double XMLOptions::doubleValue(const std::string &name, double defaultValue) {
-  std::string value = stringValue(name, std::string());
+	std::string value = stringValue(name, std::string());
 	setlocale(LC_NUMERIC, "C");
-  return (!value.empty()) ? atof(value.c_str()) : defaultValue;
+	return (!value.empty()) ? atof(value.c_str()) : defaultValue;
 }
 
 void XMLOptions::setValue(const std::string &name, double value, const std::string &category) {
-  char buf[100];
+	char buf[100];
 	setlocale(LC_NUMERIC, "C");
-  sprintf(buf, "%f", value);
-  setValue(name, std::string(buf), category);
+	sprintf(buf, "%f", value);
+	setValue(name, std::string(buf), category);
 }
 
 std::string XMLOptions::stringValue(const std::string &name, const std::string &defaultValue) {
-  XMLConfigGroup *group = myConfig->getGroup(myGroupName, false);
-  return (group != 0) ? group->getValue(name, defaultValue) : defaultValue;
+	return myConfig->getValue(myGroupName, name, defaultValue);
 }
 
 void XMLOptions::setValue(const std::string &name, const std::string &value, const std::string &category) {
-  myConfig->getGroup(myGroupName, true)->setValue(name, value, category);
+	myConfig->setValue(myGroupName, name, value, category);
 }
 
 void XMLOptions::setCategory(const std::string &name, const std::string &category) {
-  myConfig->getGroup(myGroupName, true)->setCategory(name, category);
+	myConfig->setCategory(myGroupName, name, category);
 }

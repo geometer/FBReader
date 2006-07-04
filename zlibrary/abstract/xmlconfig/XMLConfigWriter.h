@@ -21,8 +21,6 @@
 #ifndef __XMLCONFIGWRITER_H__
 #define __XMLCONFIGWRITER_H__
 
-#include <stack>
-#include <vector>
 #include <string>
 
 #include <abstract/ZLXMLWriter.h>
