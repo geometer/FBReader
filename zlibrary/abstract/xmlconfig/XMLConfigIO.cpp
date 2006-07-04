@@ -66,7 +66,12 @@ void XMLConfig::saveAll() {
 }
 
 void XMLConfig::saveDelta() {
-	if (myDelta != 0) {
+	if ((myDelta == 0) || (myDelta->myIsUpToDate)) {
+		return;
+	}
+	if (myDelta->myChangesCounter >= 500) {
+		saveAll();
+	} else {
 		shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(true);
 		shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(CHANGES_FILE)).outputStream();
 		if (!stream.isNull() && stream->open()) {
@@ -74,4 +79,5 @@ void XMLConfig::saveDelta() {
 			stream->close();
 		}
 	}
+	myDelta->myIsUpToDate = true;
 }

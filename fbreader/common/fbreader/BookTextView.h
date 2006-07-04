@@ -49,6 +49,8 @@ private:
 	void pushCurrentPositionIntoStack();
 	void replaceCurrentPositionInStack();
 
+	void preparePaintInfo();
+
 private:
 	typedef std::pair<int,int> Position;
 	typedef std::deque<Position> PositionStack;
@@ -61,5 +63,9 @@ private:
 
 inline const std::string &BookTextView::caption() const { return myCaption; }
 inline void BookTextView::setCaption(const std::string &caption) { myCaption = caption; }
+inline void BookTextView::preparePaintInfo() {
+	TextView::preparePaintInfo();
+	saveState();
+}
 
 #endif /* __BOOKTEXTVIEW_H__ */

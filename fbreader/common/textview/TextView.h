@@ -180,7 +180,7 @@ protected:
 	const TextElementPosition *elementByCoordinates(int x, int y) const;
 
 	void rebuildPaintInfo(bool strong);
-	void preparePaintInfo();
+	virtual void preparePaintInfo();
 
 	void setStartCursor(ParagraphCursor *cursor);
 	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber);

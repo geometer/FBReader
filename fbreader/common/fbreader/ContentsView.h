@@ -30,17 +30,18 @@ class ContentsView : public FBView {
 public:
 	ContentsView(FBReader &reader, ZLPaintContext &context);
 	~ContentsView();
-	const std::string &caption() const;
-	void setCaption(const std::string &caption);
-
-	void setModel(const TextModel *model, const std::string &name);
-	void saveState();
 
 	bool isEmpty() const;
+	void gotoReference();
+	void saveState();
+	const std::string &caption() const;
+	void setCaption(const std::string &caption);
+	void setModel(const TextModel *model, const std::string &name);
 
+private:
 	bool onStylusPress(int x, int y);
 
-	void gotoReference();
+	preparePaintInfo();
 
 private:
 	std::string myCaption;
@@ -48,5 +49,9 @@ private:
 
 inline const std::string &ContentsView::caption() const { return myCaption; }
 inline void ContentsView::setCaption(const std::string &caption) { myCaption = caption; }
+inline void BookTextView::preparePaintInfo() {
+	TextView::preparePaintInfo();
+	saveState();
+}
 
 #endif /* __CONTENTSVIEW_H__ */

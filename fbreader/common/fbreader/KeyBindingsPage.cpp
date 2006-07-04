@@ -70,6 +70,8 @@ private:
 	std::map<std::string,ActionCode> myChangedCodes90;
 	std::map<std::string,ActionCode> myChangedCodes180;
 	std::map<std::string,ActionCode> myChangedCodes270;
+
+	bool myIsChanged;
 };
 
 void FBReaderKeyOptionEntry::addAction(ActionCode code, const std::string &name) {
@@ -78,7 +80,7 @@ void FBReaderKeyOptionEntry::addAction(ActionCode code, const std::string &name)
 	addActionName(name);
 }
 
-FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOptionEntry("Key settings"), myFBReader(fbreader), myOrientation(ZLViewWidget::DEGREES0) {
+FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOptionEntry("Key settings"), myFBReader(fbreader), myOrientation(ZLViewWidget::DEGREES0), myIsChanged(false) {
 	addAction(NO_ACTION, "None");
 
 	// switch view
@@ -159,10 +161,12 @@ void FBReaderKeyOptionEntry::onAcceptPart(ZLViewWidget::Angle angle) {
 }
 
 void FBReaderKeyOptionEntry::onAccept() {
-	onAcceptPart(ZLViewWidget::DEGREES0);
-	onAcceptPart(ZLViewWidget::DEGREES90);
-	onAcceptPart(ZLViewWidget::DEGREES180);
-	onAcceptPart(ZLViewWidget::DEGREES270);
+	if (myIsChanged) {
+		onAcceptPart(ZLViewWidget::DEGREES0);
+		onAcceptPart(ZLViewWidget::DEGREES90);
+		onAcceptPart(ZLViewWidget::DEGREES180);
+		onAcceptPart(ZLViewWidget::DEGREES270);
+	}
 }
 
 int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {
@@ -172,6 +176,7 @@ int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {
 
 void FBReaderKeyOptionEntry::onValueChange(const std::string &key, int index) {
 	changedCodes()[key] = myCodeByIndex[index];
+	myIsChanged = true;
 }
 
 class OrientationEntry : public ZLComboOptionEntry {

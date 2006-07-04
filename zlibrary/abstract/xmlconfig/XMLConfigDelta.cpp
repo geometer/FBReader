@@ -20,16 +20,19 @@
 
 #include "XMLConfigDelta.h"
 
-void XMLConfigDeltaGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
+bool XMLConfigDeltaGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
 	std::set<std::string>::iterator it = myRemovedNames.find(name);
+	bool updateNewOption = true;
 	if (it != myRemovedNames.end()) {
+		updateNewOption = false;
 		myRemovedNames.erase(it);
 	}
 	std::map<std::string,XMLConfigValue>::iterator jt = myValues.find(name);
 	if (jt != myValues.end()) {
+		updateNewOption = false;
 		if (jt->second.Category == category) {
 			jt->second.Value = value;
-			return;
+			return updateNewOption;
 		} else {
 			myValues.erase(jt);
 		}
@@ -39,14 +42,18 @@ void XMLConfigDeltaGroup::setValue(const std::string &name, const std::string &v
 		kt = myCategories.insert(category).first;
 	}
 	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*kt, value)));
+	return updateNewOption;
 }
 
-void XMLConfigDeltaGroup::unsetValue(const std::string &name) {
+bool XMLConfigDeltaGroup::unsetValue(const std::string &name) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
+	bool updateNewOption = true;
 	if (it != myValues.end()) {
+		updateNewOption = false;
 		myValues.erase(it);
 	}
 	myRemovedNames.insert(name);
+	return updateNewOption;
 }
 
 void XMLConfigDelta::clear() {
@@ -54,6 +61,7 @@ void XMLConfigDelta::clear() {
 		delete it->second;
 	}
 	myGroups.clear();
+	myChangesCounter = 0;
 }
 
 XMLConfigDelta::~XMLConfigDelta() {

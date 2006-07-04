@@ -31,8 +31,8 @@ class XMLConfigDeltaGroup {
 
 public:
 	XMLConfigDeltaGroup(std::set<std::string> &categories) : myCategories(categories) {}
-	void setValue(const std::string &name, const std::string &value, const std::string &category);
-	void unsetValue(const std::string &name);
+	bool setValue(const std::string &name, const std::string &value, const std::string &category);
+	bool unsetValue(const std::string &name);
 	void setCategory(const std::string &name, const std::string &category);
 
 private:
@@ -46,7 +46,7 @@ friend class XMLConfigDeltaWriter;
 class XMLConfigDelta {
 
 public:
-	XMLConfigDelta(std::set<std::string> &categories) : myCategories(categories) {}
+	XMLConfigDelta(std::set<std::string> &categories);
 	~XMLConfigDelta();
 	XMLConfigDeltaGroup *getGroup(const std::string &name);
 	void clear();
@@ -59,15 +59,28 @@ private:
 	std::map<std::string,XMLConfigDeltaGroup*> myGroups;
 	std::set<std::string> &myCategories;
 
+	int myChangesCounter;
+	bool myIsUpToDate;
+
 friend class XMLConfigDeltaWriter;
+friend class XMLConfig;
 };
 
+inline XMLConfigDelta::XMLConfigDelta(std::set<std::string> &categories) : myCategories(categories), myChangesCounter(0), myIsUpToDate(true) {
+}
+
 inline void XMLConfigDelta::setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) {
-	getGroup(group)->setValue(name, value, category);
+	if (getGroup(group)->setValue(name, value, category)) {
+		++myChangesCounter;
+	}
+	myIsUpToDate = false;
 }
 
 inline void XMLConfigDelta::unsetValue(const std::string &group, const std::string &name) {
-	getGroup(group)->unsetValue(name);
+	if (getGroup(group)->unsetValue(name)) {
+		++myChangesCounter;
+	}
+	myIsUpToDate = false;
 }
 
 #endif /* __XMLCONFIGDELTA_H__ */
