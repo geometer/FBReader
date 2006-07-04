@@ -51,8 +51,11 @@ public:
 	int getBinding(const std::string &key);
 
 private:
-	void readDefaultBindings();
-	void readCustomBindings();
+	void loadDefaultBindings();
+	void loadCustomBindings();
+
+public:
+	void saveCustomBindings();
 
 private:
 	const std::string myOptionGroupName;

@@ -54,8 +54,10 @@ public:
 	void setOrientation(ZLViewWidget::Angle);
 
 private:
+	void onAcceptPart(ZLViewWidget::Angle);
 	void addAction(ActionCode code, const std::string &name);
 	std::map<std::string,ActionCode> &changedCodes();
+	std::map<std::string,ActionCode> &changedCodes(ZLViewWidget::Angle angle);
 
 private:
 	FBReader &myFBReader;
@@ -127,7 +129,11 @@ void FBReaderKeyOptionEntry::setOrientation(ZLViewWidget::Angle angle) {
 }
 
 std::map<std::string,ActionCode> &FBReaderKeyOptionEntry::changedCodes() {
-	switch (myOrientation) {
+	return changedCodes(myOrientation);
+}
+
+std::map<std::string,ActionCode> &FBReaderKeyOptionEntry::changedCodes(ZLViewWidget::Angle angle) {
+	switch (angle) {
 		case ZLViewWidget::DEGREES0:
 		default:
 			return myChangedCodes0;
@@ -143,19 +149,20 @@ std::map<std::string,ActionCode> &FBReaderKeyOptionEntry::changedCodes() {
 FBReaderKeyOptionEntry::~FBReaderKeyOptionEntry() {
 }
 
+void FBReaderKeyOptionEntry::onAcceptPart(ZLViewWidget::Angle angle) {
+	KeyBindings &bindings = myFBReader.keyBindings(angle, true);
+	std::map<std::string,ActionCode> &codes = changedCodes(angle);
+	for (std::map<std::string,ActionCode>::const_iterator it = codes.begin(); it != codes.end(); ++it) {
+		bindings.bindKey(it->first, it->second);
+	}
+	bindings.saveCustomBindings();
+}
+
 void FBReaderKeyOptionEntry::onAccept() {
-	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes0.begin(); it != myChangedCodes0.end(); ++it) {
-		myFBReader.keyBindings(ZLViewWidget::DEGREES0, true).bindKey(it->first, it->second);
-	}
-	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes90.begin(); it != myChangedCodes90.end(); ++it) {
-		myFBReader.keyBindings(ZLViewWidget::DEGREES90, true).bindKey(it->first, it->second);
-	}
-	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes180.begin(); it != myChangedCodes180.end(); ++it) {
-		myFBReader.keyBindings(ZLViewWidget::DEGREES180, true).bindKey(it->first, it->second);
-	}
-	for (std::map<std::string,ActionCode>::const_iterator it = myChangedCodes270.begin(); it != myChangedCodes270.end(); ++it) {
-		myFBReader.keyBindings(ZLViewWidget::DEGREES270, true).bindKey(it->first, it->second);
-	}
+	onAcceptPart(ZLViewWidget::DEGREES0);
+	onAcceptPart(ZLViewWidget::DEGREES90);
+	onAcceptPart(ZLViewWidget::DEGREES180);
+	onAcceptPart(ZLViewWidget::DEGREES270);
 }
 
 int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {

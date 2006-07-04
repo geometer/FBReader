@@ -61,10 +61,10 @@ void KeyBindingsReader::readBindings() {
 }
 
 FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
-	myBindings0.readCustomBindings();
-	myBindings90.readCustomBindings();
-	myBindings180.readCustomBindings();
-	myBindings270.readCustomBindings();
+	myBindings0.loadCustomBindings();
+	myBindings90.loadCustomBindings();
+	myBindings180.loadCustomBindings();
+	myBindings270.loadCustomBindings();
 }
 
 KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle, bool force) {
@@ -85,10 +85,10 @@ KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle, bool force)
 }
 
 KeyBindings::KeyBindings(const std::string &optionGroupName) : myOptionGroupName(optionGroupName) {
-  readDefaultBindings();
+  loadDefaultBindings();
 }
 
-void KeyBindings::readDefaultBindings() {
+void KeyBindings::loadDefaultBindings() {
 	std::map<std::string,int> keymap;
 	KeyBindingsReader(keymap).readBindings();
 	for (std::map<std::string,int>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
@@ -96,7 +96,7 @@ void KeyBindings::readDefaultBindings() {
 	}
 }
 
-void KeyBindings::readCustomBindings() {
+void KeyBindings::loadCustomBindings() {
 	int size = ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).value();
 	for (int i = 0; i < size; ++i) {
 		std::string key = BINDED_KEY;
@@ -113,7 +113,7 @@ void KeyBindings::readCustomBindings() {
 	}
 }
 
-KeyBindings::~KeyBindings() {
+void KeyBindings::saveCustomBindings() {
 	std::map<std::string,int> keymap;
 	KeyBindingsReader(keymap).readBindings();
 
@@ -133,6 +133,10 @@ KeyBindings::~KeyBindings() {
 		}
 	}
 	ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
+}
+
+KeyBindings::~KeyBindings() {
+	saveCustomBindings();
 }
 
 void KeyBindings::bindKey(const std::string &key, int code) {
