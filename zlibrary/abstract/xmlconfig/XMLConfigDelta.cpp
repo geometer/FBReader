@@ -20,6 +20,23 @@
 
 #include "XMLConfigDelta.h"
 
+void XMLConfigDeltaGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
+	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
+	if (it != myValues.end()) {
+		if (it->second.Category == category) {
+			it->second.Value = value;
+			return;
+		} else {
+			myValues.erase(it);
+		}
+	}
+	std::set<std::string>::iterator jt = myCategories.find(category);
+	if (jt == myCategories.end()) {
+		jt = myCategories.insert(category).first;
+	}
+	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
+}
+
 void XMLConfigDelta::clear() {
 	for (std::map<std::string,XMLConfigDeltaGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
@@ -29,4 +46,14 @@ void XMLConfigDelta::clear() {
 
 XMLConfigDelta::~XMLConfigDelta() {
 	clear();
+}
+
+XMLConfigDeltaGroup *XMLConfigDelta::getGroup(const std::string &name) {
+	std::map<std::string,XMLConfigDeltaGroup*>::const_iterator it = myGroups.find(name);
+	if (it != myGroups.end()) {
+		return it-> second;
+	}
+	XMLConfigDeltaGroup *group = new XMLConfigDeltaGroup(myCategories);
+	myGroups.insert(std::pair<std::string,XMLConfigDeltaGroup*>(name, group));
+	return group;
 }

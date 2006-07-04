@@ -32,7 +32,7 @@ class XMLConfigGroup {
 public:
 	XMLConfigGroup(std::set<std::string> &categories) : myCategories(categories) {}
 	const std::string &getValue(const std::string &name, const std::string &defaultValue) const;
-	void setValue(const std::string &name, const std::string &value, const std::string &category);
+	bool setValue(const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &name);
 	void setCategory(const std::string &name, const std::string &category);
 
@@ -80,10 +80,6 @@ friend class XMLConfigReader;
 inline const std::string &XMLConfig::getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const {
 	XMLConfigGroup *configGroup = getGroup(group);
 	return (configGroup != 0) ? configGroup->getValue(name, defaultValue) : defaultValue;
-}
-
-inline void XMLConfig::setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) {
-	getGroup(group, true)->setValue(name, value, category);
 }
 
 inline void XMLConfig::unsetValue(const std::string &group, const std::string &name) {

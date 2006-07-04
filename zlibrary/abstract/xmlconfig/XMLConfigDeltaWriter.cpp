@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include "XMLConfigWriter.h"
-#include "XMLConfig.h"
+#include "XMLConfigDeltaWriter.h"
+#include "XMLConfigDelta.h"
 #include "AsciiEncoder.h"
 
 const std::string CONFIG = "config";
@@ -27,24 +27,25 @@ const std::string GROUP = "group";
 const std::string NAME = "name";
 const std::string OPTION = "option";
 const std::string VALUE = "value";
+const std::string CATEGORY = "category";
 
-void XMLConfigWriter::write() {
+void XMLConfigDeltaWriter::write() {
 	addTag(CONFIG, false);
-	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myConfig.myGroups.begin(); it != myConfig.myGroups.end(); ++it) {
+	const std::map<std::string,XMLConfigDeltaGroup*> &groups = myConfigDelta.myGroups;
+	for (std::map<std::string,XMLConfigDeltaGroup*>::const_iterator it = groups.begin(); it != groups.end(); ++it) {
 		const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
 		if (!values.empty()) {
 			bool emptyFlag = true;
 			for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
-				if (jt->second.Category == myCategory) {
-					if (emptyFlag) { 
-						addTag(GROUP, false);
-						addAttribute(NAME, AsciiEncoder::encode(it->first));
-						emptyFlag = false;
-					}
-					addTag(OPTION, true);
-					addAttribute(NAME, AsciiEncoder::encode(jt->first));
-					addAttribute(VALUE, AsciiEncoder::encode(jt->second.Value));
+				if (emptyFlag) { 
+					addTag(GROUP, false);
+					addAttribute(NAME, AsciiEncoder::encode(it->first));
+					emptyFlag = false;
 				}
+				addTag(OPTION, true);
+				addAttribute(NAME, AsciiEncoder::encode(jt->first));
+				addAttribute(VALUE, AsciiEncoder::encode(jt->second.Value));
+				addAttribute(CATEGORY, jt->second.Category);
 			}
 			if (!emptyFlag) {
 				closeTag();

@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include "XMLConfigDeltaWriter.h"
-#include "XMLConfigDelta.h"
+#include "XMLConfigWriter.h"
+#include "XMLConfig.h"
 #include "AsciiEncoder.h"
 
 const std::string CONFIG = "config";
@@ -28,8 +28,7 @@ const std::string NAME = "name";
 const std::string OPTION = "option";
 const std::string VALUE = "value";
 
-void XMLConfigDeltaWriter::write() {
-				/*
+void XMLConfigWriter::write() {
 	addTag(CONFIG, false);
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myConfig.myGroups.begin(); it != myConfig.myGroups.end(); ++it) {
 		const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
@@ -53,5 +52,4 @@ void XMLConfigDeltaWriter::write() {
 		}
 	}
 	closeTag();
-	*/
 }

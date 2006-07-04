@@ -28,6 +28,8 @@
 #include "XMLConfigValue.h"
 
 class XMLConfigDeltaGroup {
+
+public:
   XMLConfigDeltaGroup(std::set<std::string> &categories) : myCategories(categories) {}
   void setValue(const std::string &name, const std::string &value, const std::string &category);
   void unsetValue(const std::string &name);
@@ -37,6 +39,8 @@ private:
   std::map<std::string,XMLConfigValue> myValues;
   std::set<std::string> myRemovedNames;
   std::set<std::string> &myCategories;
+
+friend class XMLConfigDeltaWriter;
 };
 
 class XMLConfigDelta {
@@ -54,6 +58,12 @@ public:
 private:
   std::map<std::string,XMLConfigDeltaGroup*> myGroups;
   std::set<std::string> &myCategories;
+
+friend class XMLConfigDeltaWriter;
 };
+
+inline void XMLConfigDelta::setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) {
+	getGroup(group)->setValue(name, value, category);
+}
 
 #endif /* __XMLCONFIGDELTA_H__ */

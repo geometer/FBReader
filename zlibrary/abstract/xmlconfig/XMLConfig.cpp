@@ -26,24 +26,26 @@ const std::string &XMLConfigGroup::getValue(const std::string &name, const std::
 	return (it != myValues.end()) ? it->second.Value : defaultValue;
 }
 
-void XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
+bool XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
-	bool insertFlag = true;
 	if (it != myValues.end()) {
 		if (it->second.Category == category) {
-			it->second.Value = value;
-			insertFlag = false;
+			if (it->second.Value != value) {
+				it->second.Value = value;
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			myValues.erase(it);
 		}
 	}
-	if (insertFlag) {
-		std::set<std::string>::iterator jt = myCategories.find(category);
-		if (jt == myCategories.end()) {
-			jt = myCategories.insert(category).first;
-		}
-		myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
+	std::set<std::string>::iterator jt = myCategories.find(category);
+	if (jt == myCategories.end()) {
+		jt = myCategories.insert(category).first;
 	}
+	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
+	return true;
 }
 
 void XMLConfigGroup::setCategory(const std::string &name, const std::string &category) {
@@ -106,5 +108,11 @@ void XMLConfig::removeGroup(const std::string &name) {
 	if (it != myGroups.end()) {
 		delete it->second;
 		myGroups.erase(it);
+	}
+}
+
+void XMLConfig::setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) {
+	if (getGroup(group, true)->setValue(name, value, category) && (myDelta != 0)) {
+		myDelta->setValue(group, name, value, category);
 	}
 }
