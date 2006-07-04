@@ -22,7 +22,7 @@
 #include <gtk/gtk.h>
 
 #include <unix/ZLUnixFSManager.h>
-#include <gtk/ZLGtkTime.h>
+#include <maemo/ZLGtkTime.h>
 #include <abstract/XMLOptions.h>
 #include <maemo/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>

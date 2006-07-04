@@ -18,29 +18,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTTIME_H__
-#define __ZLQTTIME_H__
+#include <glib.h>
 
-#include <map>
+#include "ZLGtkTime.h"
+#include "../dialogs/GtkDialogManager.h"
 
-#include <qobject.h>
+static bool taskFunction(gpointer *data) {
+	if (!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting()) {
+		((ZLRunnable*)data)->run();
+	}
+	return true;
+}
 
-#include <unix/ZLUnixTime.h>
+void ZLGtkTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
+	if ((interval > 0) && !task.isNull()) {
+		myHandlers[task] = g_timeout_add(interval, (GSourceFunc)taskFunction, &*task);
+	}
+}
 
-class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
-
-public:
-	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
-
-	void addTask(shared_ptr<ZLRunnable> task, int interval);
-	void removeTask(shared_ptr<ZLRunnable> task);
-
-private:
-	void timerEvent(QTimerEvent *event);
-
-private:
-	std::map<shared_ptr<ZLRunnable>,int> myTimers;
-	std::map<int,shared_ptr<ZLRunnable> > myTasks;
-};
-
-#endif /* __ZLQTTIME_H__ */
+void ZLGtkTimeManager::removeTask(shared_ptr<ZLRunnable> task) {
+	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myHandlers.find(task);
+	if (it != myHandlers.end()) {
+		g_source_remove(it->second);
+		myHandlers.erase(it);
+	}
+}

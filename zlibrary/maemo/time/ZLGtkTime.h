@@ -18,29 +18,23 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTTIME_H__
-#define __ZLQTTIME_H__
+#ifndef __ZLGTKTIME_H__
+#define __ZLGTKTIME_H__
 
 #include <map>
 
-#include <qobject.h>
-
 #include <unix/ZLUnixTime.h>
 
-class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
+class ZLGtkTimeManager : public ZLUnixTimeManager {
 
 public:
-	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
+	static void createInstance() { ourInstance = new ZLGtkTimeManager(); }
 
 	void addTask(shared_ptr<ZLRunnable> task, int interval);
 	void removeTask(shared_ptr<ZLRunnable> task);
 
 private:
-	void timerEvent(QTimerEvent *event);
-
-private:
-	std::map<shared_ptr<ZLRunnable>,int> myTimers;
-	std::map<int,shared_ptr<ZLRunnable> > myTasks;
+	std::map<shared_ptr<ZLRunnable>,int> myHandlers;
 };
 
-#endif /* __ZLQTTIME_H__ */
+#endif /* __ZLGTKTIME_H__ */

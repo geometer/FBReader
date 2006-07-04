@@ -21,4 +21,22 @@
 #include "ZLQtTime.h"
 
 void ZLQtTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
+	if ((interval > 0) && !task.isNull()) {
+		int id = startTimer(interval);
+		myTimers[task] = id;
+		myTasks[id] = task;
+	}
+}
+
+void ZLQtTimeManager::removeTask(shared_ptr<ZLRunnable> task) {
+	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myTimers.find(task);
+	if (it != myTimers.end()) {
+		killTimer(it->second);
+		myTasks.erase(myTasks.find(it->second));
+		myTimers.erase(it);
+	}
+}
+
+void ZLQtTimeManager::timerEvent(QTimerEvent *event) {
+	myTasks[event->timerId()]->run();
 }
