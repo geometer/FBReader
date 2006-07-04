@@ -34,22 +34,21 @@ void XMLConfigDeltaWriter::write() {
 	const std::map<std::string,XMLConfigDeltaGroup*> &groups = myConfigDelta.myGroups;
 	for (std::map<std::string,XMLConfigDeltaGroup*>::const_iterator it = groups.begin(); it != groups.end(); ++it) {
 		const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
-		if (!values.empty()) {
-			bool emptyFlag = true;
+		const std::set<std::string> &removed = it->second->myRemovedNames;
+		if (!values.empty() || !removed.empty()) {
+			addTag(GROUP, false);
+			addAttribute(NAME, AsciiEncoder::encode(it->first));
 			for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
-				if (emptyFlag) { 
-					addTag(GROUP, false);
-					addAttribute(NAME, AsciiEncoder::encode(it->first));
-					emptyFlag = false;
-				}
 				addTag(OPTION, true);
 				addAttribute(NAME, AsciiEncoder::encode(jt->first));
 				addAttribute(VALUE, AsciiEncoder::encode(jt->second.Value));
 				addAttribute(CATEGORY, jt->second.Category);
 			}
-			if (!emptyFlag) {
-				closeTag();
+			for (std::set<std::string>::const_iterator kt = removed.begin(); kt != removed.end(); ++kt) {
+				addTag(OPTION, true);
+				addAttribute(NAME, AsciiEncoder::encode(*kt));
 			}
+			closeTag();
 		}
 	}
 	closeTag();

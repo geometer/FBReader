@@ -48,10 +48,10 @@ bool XMLConfigGroup::setValue(const std::string &name, const std::string &value,
 	return true;
 }
 
-void XMLConfigGroup::setCategory(const std::string &name, const std::string &category) {
+bool XMLConfigGroup::setCategory(const std::string &name, const std::string &category) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it == myValues.end() || (it->second.Category == category)) {
-		return;
+		return false;
 	}
 	std::string value = it->second.Value;
 	myValues.erase(it);
@@ -60,13 +60,16 @@ void XMLConfigGroup::setCategory(const std::string &name, const std::string &cat
 		jt = myCategories.insert(category).first;
 	}
 	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
+	return true;
 }
 
-void XMLConfigGroup::unsetValue(const std::string &name) {
+bool XMLConfigGroup::unsetValue(const std::string &name) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it != myValues.end()) {
 		myValues.erase(it);
+		return true;
 	}
+	return false;
 }
 
 XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) : myHomeDirectory(homeDirectory), myName(name), myDelta(0) {
@@ -106,6 +109,12 @@ XMLConfigGroup *XMLConfig::getGroup(const std::string &name) const {
 void XMLConfig::removeGroup(const std::string &name) {
 	std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.find(name);
 	if (it != myGroups.end()) {
+		if (myDelta != 0) {
+			const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
+			for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
+				myDelta->unsetValue(name, jt->first);
+			}
+		}
 		delete it->second;
 		myGroups.erase(it);
 	}
@@ -114,5 +123,12 @@ void XMLConfig::removeGroup(const std::string &name) {
 void XMLConfig::setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) {
 	if (getGroup(group, true)->setValue(name, value, category) && (myDelta != 0)) {
 		myDelta->setValue(group, name, value, category);
+	}
+}
+
+void XMLConfig::unsetValue(const std::string &group, const std::string &name) {
+	XMLConfigGroup *configGroup = getGroup(group, false);
+	if ((configGroup != 0) && configGroup->unsetValue(name) && (myDelta != 0)) {
+		myDelta->unsetValue(group, name);
 	}
 }

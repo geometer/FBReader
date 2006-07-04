@@ -21,20 +21,32 @@
 #include "XMLConfigDelta.h"
 
 void XMLConfigDeltaGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
-	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
-	if (it != myValues.end()) {
-		if (it->second.Category == category) {
-			it->second.Value = value;
+	std::set<std::string>::iterator it = myRemovedNames.find(name);
+	if (it != myRemovedNames.end()) {
+		myRemovedNames.erase(it);
+	}
+	std::map<std::string,XMLConfigValue>::iterator jt = myValues.find(name);
+	if (jt != myValues.end()) {
+		if (jt->second.Category == category) {
+			jt->second.Value = value;
 			return;
 		} else {
-			myValues.erase(it);
+			myValues.erase(jt);
 		}
 	}
-	std::set<std::string>::iterator jt = myCategories.find(category);
-	if (jt == myCategories.end()) {
-		jt = myCategories.insert(category).first;
+	std::set<std::string>::iterator kt = myCategories.find(category);
+	if (kt == myCategories.end()) {
+		kt = myCategories.insert(category).first;
 	}
-	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
+	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*kt, value)));
+}
+
+void XMLConfigDeltaGroup::unsetValue(const std::string &name) {
+	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
+	if (it != myValues.end()) {
+		myValues.erase(it);
+	}
+	myRemovedNames.insert(name);
 }
 
 void XMLConfigDelta::clear() {

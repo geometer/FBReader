@@ -30,15 +30,15 @@
 class XMLConfigDeltaGroup {
 
 public:
-  XMLConfigDeltaGroup(std::set<std::string> &categories) : myCategories(categories) {}
-  void setValue(const std::string &name, const std::string &value, const std::string &category);
-  void unsetValue(const std::string &name);
-  void setCategory(const std::string &name, const std::string &category);
+	XMLConfigDeltaGroup(std::set<std::string> &categories) : myCategories(categories) {}
+	void setValue(const std::string &name, const std::string &value, const std::string &category);
+	void unsetValue(const std::string &name);
+	void setCategory(const std::string &name, const std::string &category);
 
 private:
-  std::map<std::string,XMLConfigValue> myValues;
-  std::set<std::string> myRemovedNames;
-  std::set<std::string> &myCategories;
+	std::map<std::string,XMLConfigValue> myValues;
+	std::set<std::string> myRemovedNames;
+	std::set<std::string> &myCategories;
 
 friend class XMLConfigDeltaWriter;
 };
@@ -46,9 +46,9 @@ friend class XMLConfigDeltaWriter;
 class XMLConfigDelta {
 
 public:
-  XMLConfigDelta(std::set<std::string> &categories) : myCategories(categories) {}
+	XMLConfigDelta(std::set<std::string> &categories) : myCategories(categories) {}
 	~XMLConfigDelta();
-  XMLConfigDeltaGroup *getGroup(const std::string &name);
+	XMLConfigDeltaGroup *getGroup(const std::string &name);
 	void clear();
 
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
@@ -56,14 +56,18 @@ public:
 	void setCategory(const std::string &group, const std::string &name, const std::string &category);
 
 private:
-  std::map<std::string,XMLConfigDeltaGroup*> myGroups;
-  std::set<std::string> &myCategories;
+	std::map<std::string,XMLConfigDeltaGroup*> myGroups;
+	std::set<std::string> &myCategories;
 
 friend class XMLConfigDeltaWriter;
 };
 
 inline void XMLConfigDelta::setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) {
 	getGroup(group)->setValue(name, value, category);
+}
+
+inline void XMLConfigDelta::unsetValue(const std::string &group, const std::string &name) {
+	getGroup(group)->unsetValue(name);
 }
 
 #endif /* __XMLCONFIGDELTA_H__ */
