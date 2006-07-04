@@ -41,7 +41,7 @@ public:
 private:
 	bool onStylusPress(int x, int y);
 
-	preparePaintInfo();
+	void preparePaintInfo();
 
 private:
 	std::string myCaption;
@@ -49,7 +49,7 @@ private:
 
 inline const std::string &ContentsView::caption() const { return myCaption; }
 inline void ContentsView::setCaption(const std::string &caption) { myCaption = caption; }
-inline void BookTextView::preparePaintInfo() {
+inline void ContentsView::preparePaintInfo() {
 	TextView::preparePaintInfo();
 	saveState();
 }
