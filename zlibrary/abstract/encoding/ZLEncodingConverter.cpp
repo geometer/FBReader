@@ -96,7 +96,7 @@ OneByteEncodingConverter::OneByteEncodingConverter(const std::string &encoding, 
 	myEncodingMap = new char[1024];
 	memset(myEncodingMap, '\0', 1024);
 	for (int i = 0; i < 256; ++i) {
-		myEncodingMap[4 * i] = i;
+		ZLUnicodeUtil::ucs2ToUtf8(myEncodingMap + 4 * i, i);
 	}
 	if (encodingMap != 0) {
 		for (int i = 0; i < 256; ++i) {
@@ -119,7 +119,7 @@ void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, c
 	const char *p;
 	for (const char *ptr = srcStart; ptr != srcEnd; ++ptr) {
 		for (p = myEncodingMap + 4 * (unsigned char)*ptr; *p != '\0'; ++p) {
-			(*dstPtr++) = *p;
+			*(dstPtr++) = *p;
 		}
 	}
 	dst.erase(dstPtr - dstStartPtr + oldLength);

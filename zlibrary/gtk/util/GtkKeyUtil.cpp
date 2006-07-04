@@ -24,34 +24,10 @@
 #include <gdk/gdkkeys.h>
 
 #include <abstract/ZLUnicodeUtil.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "GtkKeyUtil.h"
 
 std::string GtkKeyUtil::keyName(GdkEventKey *event) {
 	return ZLKeyUtil::keyName(gdk_keyval_to_unicode(event->keyval), event->keyval, event->state);
 }
-
-	/*
-std::string GtkKeyUtil::keyName(int keyval) {
-	ZLUnicodeUtil::Ucs2Char chr = gdk_keyval_to_unicode(keyval);
-	if (((chr < 128) && isprint(chr) && !isspace(chr)) || ZLUnicodeUtil::isLetter(chr)) {
-		char buf[3];
-		std::string name;
-		name.append(buf, ZLUnicodeUtil::ucs2ToUtf8(buf, ZLUnicodeUtil::toUpper(chr)));
-		return name;
-	} else {
-		switch (keyval) {
-			case GDK_Home:
-			case ' ':
-				return "Space";
-			case GDK_Caps_Lock:
-				return "CapsLock";
-			case GDK_Num_Lock:
-				return "NumLock";
-			case GDK_Scroll_Lock:
-				return "ScrollLock";
-		}
-	}
-	return "";
-}
-	*/

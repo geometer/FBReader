@@ -21,6 +21,7 @@
 
 #include <gtk/gtk.h>
 
+#include <abstract/ZLApplication.h>
 #include <unix/ZLUnixFSManager.h>
 #include <unix/ZLUnixTime.h>
 #include <abstract/XMLOptions.h>
@@ -32,6 +33,9 @@
 
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBReader.h"
+
+const std::string ZLApplication::BaseDirectory = std::string(INSTALLDIR) + "/share";
+const std::string ZLApplication::PathDelimiter = "/";
 
 const std::string ImageDirectory = ZLApplication::BaseDirectory + ZLApplication::PathDelimiter + "FBReader" + ZLApplication::PathDelimiter + "icons";
 const std::string CollectionView::DeleteBookImageFile = ImageDirectory + "/FBReader/remove.png";

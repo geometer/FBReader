@@ -19,13 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLApplication.h>
-
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/FBFileHandler.h"
-
-const std::string ZLApplication::BaseDirectory = std::string(INSTALLDIR) + "/share";
-const std::string ZLApplication::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
