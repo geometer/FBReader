@@ -22,17 +22,14 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <abstract/ZLUnicodeUtil.h>
+#include "../../maemo/view/GtkViewWidget.h"
 #include "../../gtk/util/GtkKeyUtil.h"
-#include <maemo/GtkViewWidget.h>
+#include "../../gtk/util/GtkSignalUtil.h"
 
 #include "GtkApplicationWindow.h"
 
-static bool quitFlag = false;
-
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	if (!quitFlag) {
-		((GtkApplicationWindow*)data)->application().closeView();
-	}
+	((GtkApplicationWindow*)data)->application().closeView();
 	return true;
 }
 
@@ -48,6 +45,10 @@ static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
 	((GtkApplicationWindow*)data)->handleKeyEventSlot(event);
 }
 
+static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
+	((GtkViewWidget*)data)->onMousePressed(event);
+}
+
 static const std::string OPTIONS = "Options";
 
 GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
@@ -56,7 +57,7 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_signal_connect(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
 	myVBox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
@@ -70,7 +71,7 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
 
-	gtk_signal_connect(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
 
 	myFullScreen = false;
 
@@ -92,10 +93,8 @@ void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
 }
 
 void GtkApplicationWindow::close() {
-	if (!quitFlag) {
-		quitFlag = true;
-		gtk_main_quit();
-	}
+	GtkSignalUtil::removeAllSignals();
+	gtk_main_quit();
 }
 
 void GtkApplicationWindow::setFullscreen(bool fullscreen) {
@@ -138,7 +137,7 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 		gtk_toolbar_insert(myToolbar, button, -1);
 		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
 		if (!action.isNull()) {
-			gtk_signal_connect(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
+			GtkSignalUtil::connectSignal(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
 		}
 		myButtons[item] = button;
 		gtk_widget_show_all(GTK_WIDGET(button));
@@ -174,7 +173,8 @@ void GtkApplicationWindow::refresh() {
 ZLViewWidget *GtkApplicationWindow::createViewWidget() {
 	GtkViewWidget *viewWidget = new GtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myVBox), viewWidget->area());
-	gtk_signal_connect_after(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
 	gtk_widget_show_all(myVBox);
 	return viewWidget;
 }

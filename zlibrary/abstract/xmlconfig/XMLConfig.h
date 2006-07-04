@@ -68,7 +68,6 @@ private:
   std::map<std::string,XMLConfigGroup*> myGroups;
   std::set<std::string> myCategories;
 
-friend class XMLConfigReader;
 friend class XMLConfigWriter;
 };
 

@@ -21,8 +21,9 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <maemo/GtkViewWidget.h>
+#include "../view/GtkViewWidget.h"
 #include "../../gtk/util/GtkKeyUtil.h"
+#include "../../gtk/util/GtkSignalUtil.h"
 #include <maemo/GtkDialogManager.h>
 
 #include "GtkApplicationWindow.h"
@@ -33,11 +34,8 @@ void GtkDialogManager::createApplicationWindow(ZLApplication *application) const
 	myIsInitialized = true;
 }
 
-static bool quitFlag = false;
-
 static bool acceptAction() {
 	return
-		!quitFlag &&
 		GtkDialogManager::isInitialized() &&
 		!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting();
 }
@@ -73,6 +71,12 @@ static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 	}
 }
 
+static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
+	if (acceptAction()) {
+		((GtkViewWidget*)data)->onMousePressed(event);
+	}
+}
+
 GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
 	myApp = HILDON_APP(hildon_app_new());
 	hildon_app_set_title(myApp, this->application().name().c_str());
@@ -97,8 +101,8 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLAppli
 
 	gtk_widget_show_all(GTK_WIDGET(myApp));
 
-	gtk_signal_connect(GTK_OBJECT(myApp), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
-	gtk_signal_connect(GTK_OBJECT(myApp), "key_press_event", G_CALLBACK(handleKey), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myApp), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myApp), "key_press_event", GTK_SIGNAL_FUNC(handleKey), this);
 
 	myFullScreen = false;
 }
@@ -117,7 +121,7 @@ void GtkApplicationWindow::addMenubarItem(GtkMenu *menu, ZLApplication::Menubar:
 				gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(menuItem.name().c_str()));
 				shared_ptr<ZLApplication::Action> action = application().action(menuItem.actionId());
 				if (!action.isNull()) {
-					g_signal_connect(G_OBJECT(gtkItem), "activate", G_CALLBACK(menuActionSlot), &*action);
+					GtkSignalUtil::connectSignal(GTK_OBJECT(gtkItem), "activate", GTK_SIGNAL_FUNC(menuActionSlot), &*action);
 				}
 			}
 			break;
@@ -143,6 +147,7 @@ void GtkApplicationWindow::addMenubarItem(GtkMenu *menu, ZLApplication::Menubar:
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
+	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);
 }
 
 void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
@@ -168,10 +173,8 @@ bool GtkApplicationWindow::isFullscreen() const {
 }
 
 void GtkApplicationWindow::close() {
-	if (!quitFlag) {
-		quitFlag = true;
-		gtk_main_quit();
-	}
+	GtkSignalUtil::removeAllSignals();
+	gtk_main_quit();
 }
 
 void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
@@ -191,7 +194,7 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 		GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
 		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
 		if (!action.isNull()) {
-			g_signal_connect(G_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
+			GtkSignalUtil::connectSignal(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
 		}
 	} else {
 		gtkItem = gtk_separator_tool_item_new();
@@ -262,7 +265,8 @@ ZLViewWidget *GtkApplicationWindow::createViewWidget() {
 
 	GtkViewWidget *viewWidget = new GtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myAppView), viewWidget->area());
-	gtk_signal_connect_after(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
 	gtk_widget_show_all(GTK_WIDGET(myAppView));
 	return viewWidget;
 }

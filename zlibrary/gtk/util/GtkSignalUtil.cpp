@@ -18,39 +18,17 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKVIEWWIDGET_H__
-#define __GTKVIEWWIDGET_H__
+#include "GtkSignalUtil.h"
 
-#include <gtk/gtk.h>
+std::vector<std::pair<GtkObject*,int> > GtkSignalUtil::ourConnectedSignals;
 
-#include <abstract/ZLView.h>
-#include <abstract/ZLApplication.h>
+void GtkSignalUtil::connectSignal(GtkObject *object, const char *name, GtkSignalFunc function, void *data) {
+	int handlerId = gtk_signal_connect(object, name, function, data);
+	ourConnectedSignals.push_back(std::pair<GtkObject*,int>(object, handlerId));
+}
 
-class GtkViewWidget : public ZLViewWidget {
-
-public:
-	GtkViewWidget(ZLApplication *application, Angle initialAngle);
-	~GtkViewWidget();
-
-	int width() const;
-	int height() const;
-
-	GtkWidget *area() { return myArea; }
-	void onMousePressed(GdkEventButton *event);
-
-private:
-	void trackStylus(bool track);
-	void repaintView();
-
-	void cleanOriginalPixbuf();
-	void cleanRotatedPixbuf();
-
-private:
-	ZLApplication *myApplication;
-	GtkWidget *myArea;
-	GdkPixbuf *myOriginalPixbuf;
-	GdkPixbuf *myRotatedPixbuf;
-	GdkImage *myImage;
-};
-
-#endif /* __GTKVIEWWIDGET_H__ */
+void GtkSignalUtil::removeAllSignals() {
+	for (std::vector<std::pair<GtkObject*,int> >::const_iterator it = ourConnectedSignals.begin(); it != ourConnectedSignals.end(); ++it) {
+		gtk_signal_disconnect(it->first, it->second);
+	}
+}

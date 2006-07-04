@@ -55,7 +55,6 @@ private:
 
 public:
 	void handleKeyEventSlot(GdkEventKey *event);
-
 	GtkWindow *getMainWindow() { return myMainWindow; }
 
 private:

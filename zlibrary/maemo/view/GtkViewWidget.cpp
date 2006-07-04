@@ -23,37 +23,36 @@
 #include "GtkPaintContext.h"
 #include "gdk-pixbuf-hack.h"
 
-static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
+void GtkViewWidget::onMousePressed(GdkEventButton *event) {
 	if (GtkDialogManager::isInitialized() &&
 			((GtkDialogManager&)GtkDialogManager::instance()).isWaiting()) {
 		return;
 	}
 
-	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
-	ZLView *view = viewWidget->view();
-	int x, y, h;
-	switch (viewWidget->rotation()) {
+	ZLPaintContext &context = view()->context();
+	int x, y;
+	switch (rotation()) {
 		default:
-			x = (int)event->x - view->context().leftMargin(),
-			y = (int)event->y - view->context().topMargin();
+			x = (int)event->x - context.leftMargin(),
+			y = (int)event->y - context.topMargin();
 			break;
 		case ZLViewWidget::DEGREES90:
-			x = viewWidget->height() - (int)event->y - view->context().rightMargin(),
-			y = (int)event->x - view->context().topMargin();
+			x = height() - (int)event->y - context.rightMargin(),
+			y = (int)event->x - context.topMargin();
 			break;
 		case ZLViewWidget::DEGREES180:
-			x = viewWidget->width() - (int)event->x - view->context().rightMargin(),
-			y = viewWidget->height() - (int)event->y - view->context().bottomMargin();
+			x = width() - (int)event->x - context.rightMargin(),
+			y = height() - (int)event->y - context.bottomMargin();
 			break;
 		case ZLViewWidget::DEGREES270:
-			x = (int)event->y - view->context().leftMargin();
-			y = viewWidget->width() - (int)event->x - view->context().bottomMargin();
+			x = (int)event->y - context.leftMargin();
+			y = width() - (int)event->x - context.bottomMargin();
 			break;
 	}
 	if (event->button == 1) {
-		view->onStylusPress(x, y);
+		view()->onStylusPress(x, y);
 	} else if (event->button == 8) {
-		view->onFingerTap(x, y);
+		view()->onFingerTap(x, y);
 	}
 }
 
@@ -72,11 +71,9 @@ GtkViewWidget::GtkViewWidget(ZLApplication *application, Angle initialAngle) : Z
 	myRotatedPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
-	myButtonPressHandlerId = gtk_signal_connect(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
 }
 
 GtkViewWidget::~GtkViewWidget() {
-	gtk_signal_disconnect(GTK_OBJECT(myArea), myButtonPressHandlerId);
 	cleanOriginalPixbuf();
 	cleanRotatedPixbuf();
 }

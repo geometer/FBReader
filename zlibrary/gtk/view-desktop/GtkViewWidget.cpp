@@ -20,6 +20,7 @@
 
 #include "GtkViewWidget.h"
 #include "GtkPaintContext.h"
+#include "../util/GtkSignalUtil.h"
 
 #include "gdk-pixbuf-hack.h"
 
@@ -61,7 +62,7 @@ GtkViewWidget::GtkViewWidget(ZLApplication *application, Angle initialAngle) : Z
 	myArea = gtk_drawing_area_new();
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
-	gtk_signal_connect(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
 }
 
 GtkViewWidget::~GtkViewWidget() {

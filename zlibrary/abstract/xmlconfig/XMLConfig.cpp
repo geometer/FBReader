@@ -120,7 +120,7 @@ void XMLConfig::load() {
 			XMLConfigReader(*this, it->substr(0, it->length() - 4)).readDocument(configFile.inputStream());
 		}
 	}
-	XMLConfigReader(*this, "unknown").readDocument(configDir->itemName("config.changes"));
+	//XMLConfigReader(*this, "unknown").readDocument(configDir->itemName("config.changes"));
 }
 
 void XMLConfig::saveAll() {

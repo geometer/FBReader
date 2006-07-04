@@ -18,39 +18,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKVIEWWIDGET_H__
-#define __GTKVIEWWIDGET_H__
+#ifndef __GTKSIGNALUTIL_H__
+#define __GTKSIGNALUTIL_H__
+
+#include <vector>
+#include <map>
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLView.h>
-#include <abstract/ZLApplication.h>
-
-class GtkViewWidget : public ZLViewWidget {
+class GtkSignalUtil {
 
 public:
-	GtkViewWidget(ZLApplication *application, Angle initialAngle);
-	~GtkViewWidget();
-
-	int width() const;
-	int height() const;
-
-	GtkWidget *area() { return myArea; }
-	void onMousePressed(GdkEventButton *event);
+	static void connectSignal(GtkObject *object, const char *name, GtkSignalFunc function, void *data);
+	static void removeAllSignals();
 
 private:
-	void trackStylus(bool track);
-	void repaintView();
-
-	void cleanOriginalPixbuf();
-	void cleanRotatedPixbuf();
+	static std::vector<std::pair<GtkObject*,int> > ourConnectedSignals;
 
 private:
-	ZLApplication *myApplication;
-	GtkWidget *myArea;
-	GdkPixbuf *myOriginalPixbuf;
-	GdkPixbuf *myRotatedPixbuf;
-	GdkImage *myImage;
+	GtkSignalUtil();
 };
 
-#endif /* __GTKVIEWWIDGET_H__ */
+#endif /* __GTKSIGNALUTIL_H__ */
+
+// vim:ts=2:sw=2:noet

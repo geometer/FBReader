@@ -56,7 +56,6 @@ int main(int argc, char **argv) {
 	ZLDialogManager::instance().createApplicationWindow(reader);
 	reader->initWindow();
 	gtk_main();
-	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);
 	delete reader;
 
 	GtkDeviceInfo::deleteInstance();
