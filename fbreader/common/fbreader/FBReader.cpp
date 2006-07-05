@@ -231,8 +231,6 @@ FBReader::~FBReader() {
 	delete myCollectionView;
 	delete myRecentBooksView;
 	if (myModel != 0) {
-		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, std::string());
-		bookName.setValue(myModel->fileName());
 		delete myModel;
 	}
 	TextStyleCollection::deleteInstance();
@@ -305,6 +303,7 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 			delete myModel;
 		}
 		myModel = new BookModel(description);
+		ZLStringOption(ZLOption::STATE_CATEGORY, STATE, BOOK, std::string()).setValue(myModel->fileName());
 		Hyphenator::instance().load(description->language());
 		myBookTextView->setModel(&myModel->bookTextModel(), description->fileName());
 		myBookTextView->setCaption(description->title());

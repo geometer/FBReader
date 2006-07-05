@@ -133,6 +133,9 @@ void rotate180(GdkPixbuf *buffer) {
 		return;
 
 	const gint width = gdk_pixbuf_get_width(buffer);
+	if (width <= 1) {
+		return;
+	}
 	const gint height = gdk_pixbuf_get_height(buffer);
 	const gint brs = gdk_pixbuf_get_rowstride(buffer);
 	guchar *s_pix = gdk_pixbuf_get_pixels(buffer);

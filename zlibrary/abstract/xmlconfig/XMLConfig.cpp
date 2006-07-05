@@ -104,6 +104,7 @@ XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) 
 
 XMLConfig::~XMLConfig() {
 	ZLTimeManager::instance().removeTask(mySaver);
+	saveDelta();
 	saveAll();
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;

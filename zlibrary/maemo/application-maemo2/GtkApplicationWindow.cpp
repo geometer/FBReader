@@ -65,10 +65,11 @@ static void menuActionSlot(GtkWidget *, gpointer data) {
 	}
 }
 
-static void handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
+static bool handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 	if (acceptAction()) {
 		((GtkApplicationWindow*)data)->handleKeyEventSlot(key);
 	}
+	return false;
 }
 
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
