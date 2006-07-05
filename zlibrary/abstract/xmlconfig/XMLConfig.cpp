@@ -92,7 +92,11 @@ ConfigSaveTask::ConfigSaveTask(XMLConfig &config) : myConfig(config) {
 }
 
 void ConfigSaveTask::run() {
-	myConfig.saveDelta();
+	if (myConfig.changesCounter() >= 500) {
+		myConfig.saveAll();
+	} else {
+		myConfig.saveDelta();
+	}
 }
 
 XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) : myHomeDirectory(homeDirectory), myName(name), myDelta(0) {
@@ -104,7 +108,6 @@ XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) 
 
 XMLConfig::~XMLConfig() {
 	ZLTimeManager::instance().removeTask(mySaver);
-	saveDelta();
 	saveAll();
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
@@ -157,4 +160,8 @@ void XMLConfig::unsetValue(const std::string &group, const std::string &name) {
 	if ((configGroup != 0) && configGroup->unsetValue(name) && (myDelta != 0)) {
 		myDelta->unsetValue(group, name);
 	}
+}
+
+int XMLConfig::changesCounter() const {
+	return (myDelta != 0) ? myDelta->myChangesCounter : 0;
 }

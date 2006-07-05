@@ -28,6 +28,7 @@ static bool taskFunction(gpointer *data) {
 }
 
 void ZLGtkTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
+	removeTask(task);
 	if ((interval > 0) && !task.isNull()) {
 		myHandlers[task] = g_timeout_add(interval, (GSourceFunc)taskFunction, &*task);
 	}

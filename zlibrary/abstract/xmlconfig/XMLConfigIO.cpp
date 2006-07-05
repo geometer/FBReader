@@ -48,6 +48,8 @@ void XMLConfig::load() {
 }
 
 void XMLConfig::saveAll() {
+	saveDelta();
+
 	shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(true);
 
 	if (!configDir.isNull()) {
@@ -69,15 +71,11 @@ void XMLConfig::saveDelta() {
 	if ((myDelta == 0) || (myDelta->myIsUpToDate)) {
 		return;
 	}
-	if (myDelta->myChangesCounter >= 500) {
-		saveAll();
-	} else {
-		shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(true);
-		shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(CHANGES_FILE)).outputStream();
-		if (!stream.isNull() && stream->open()) {
-			XMLConfigDeltaWriter(*myDelta, *stream).write();
-			stream->close();
-		}
+	shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(true);
+	shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(CHANGES_FILE)).outputStream();
+	if (!stream.isNull() && stream->open()) {
+		XMLConfigDeltaWriter(*myDelta, *stream).write();
+		stream->close();
 	}
 	myDelta->myIsUpToDate = true;
 }

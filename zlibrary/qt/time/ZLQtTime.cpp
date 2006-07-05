@@ -21,6 +21,7 @@
 #include "ZLQtTime.h"
 
 void ZLQtTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
+	removeTask(task);
 	if ((interval > 0) && !task.isNull()) {
 		int id = startTimer(interval);
 		myTimers[task] = id;

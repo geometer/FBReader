@@ -67,9 +67,9 @@ private:
 private:
 	void load();
 	void saveAll();
-
-public:
 	void saveDelta();
+
+	int changesCounter() const;
 
 private:
 	std::string myHomeDirectory;
@@ -82,6 +82,7 @@ private:
 
 friend class XMLConfigWriter;
 friend class XMLConfigReader;
+friend class ConfigSaveTask;
 };
 
 inline const std::string &XMLConfig::getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const {
