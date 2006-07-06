@@ -1,1 +1,1 @@
-SRCMOC = QApplicationWindow.moc.cpp
+SRCMOC = QApplicationWindow.moc.cpp QtMenuAction.moc.cpp

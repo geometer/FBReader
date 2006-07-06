@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,16 +18,25 @@
  * 02110-1301, USA.
  */
 
+#ifndef __QTMENUACTION_H__
+#define __QTMENUACTION_H__
+
+#include <qaction.h>
+
 #include <abstract/ZLApplication.h>
 
-#include "../common/collection/BookCollection.h"
-#include "../common/fbreader/CollectionView.h"
-#include "../common/fbreader/FBFileHandler.h"
+class QtMenuAction : public QAction {
+	Q_OBJECT
 
-const std::string ZLApplication::BaseDirectory = "/opt/QtPalmtop/share";
-const std::string ZLApplication::PathDelimiter = "/";
+public:
+	QtMenuAction(ZLApplication &application, const ZLApplication::Menubar::PlainItem &item);
 
-const std::string FBFileHandler::ImageDirectory = "FBReader";
+private slots:
+	void doSlot();
 
-const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics144/FBReader/remove.png";
-const std::string BookCollection::DefaultBookPath = "~/Documents/Books:~/Documents/FBooks";
+private:
+	ZLApplication &myApplication;
+	int myActionId;
+};
+
+#endif /* __QTMENUACTION_H__ */

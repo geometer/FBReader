@@ -92,7 +92,7 @@ void GtkViewWidget::trackStylus(bool track) {
 	// TODO: implement
 }
 
-void GtkViewWidget::repaintView()	{
+void GtkViewWidget::repaint()	{
 	GtkPaintContext &gtkContext = (GtkPaintContext&)view()->context();
 	Angle angle = rotation();
 	bool isRotated = (angle == DEGREES90) || (angle == DEGREES270);

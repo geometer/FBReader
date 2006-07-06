@@ -52,6 +52,9 @@ public:
 
   ZLBooleanOption KeyboardControlOption;
 
+	ZLBooleanOption ConfigAutoSavingOption;
+	ZLIntegerRangeOption ConfigAutoSaveTimeoutOption;
+
 public:
 
 	class Action {
@@ -154,13 +157,13 @@ public:
 
 		public:
 			enum ItemType {
-				MENU_ITEM,
-				SUBMENU_ITEM,
-				SEPARATOR_ITEM
+				ITEM,
+				SUBMENU,
+				SEPARATOR
 			};
-
+			
+		public:
 			virtual ~Item();
-
 			ItemType type() const;
 
 		protected:
@@ -193,10 +196,10 @@ public:
 	class Menubar : public Menu {
 
 	public:
-		class MenuItem : public Menu::Item {
+		class PlainItem : public Menu::Item {
 
 		public:
-			MenuItem(const std::string &name, int actionId);
+			PlainItem(const std::string &name, int actionId);
 
 			const std::string &name() const;
 			int actionId() const;
@@ -206,10 +209,10 @@ public:
 			int myActionId;
 		};
 
-		class SubMenuItem : public Menu::Item, public Menu {
+		class Submenu : public Menu::Item, public Menu {
 
 		public:
-			SubMenuItem(const std::string &menuName);
+			Submenu(const std::string &menuName);
 
 			const std::string &menuName() const;
 
@@ -217,16 +220,29 @@ public:
 			const std::string myMenuName;
 		};
 
-		class SeparatorItem : public Menu::Item {
+		class Separator : public Menu::Item {
 
 		public:
-			SeparatorItem();
+			Separator();
 		};
 
 	public:
 		Menubar();
 
 	friend class ZLApplication;
+	};
+
+	class MenuVisitor {
+
+	public:
+		virtual ~MenuVisitor();
+		void processMenu(ZLApplication::Menu &menu);
+
+	protected:
+		virtual void processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu) = 0;
+		virtual void processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu) = 0;
+		virtual void processItem(ZLApplication::Menubar::PlainItem &item) = 0;
+		virtual void processSepartor(ZLApplication::Menubar::Separator &separator) = 0;
 	};
 
 protected:
@@ -261,8 +277,9 @@ public:
 	virtual void openFile(const std::string &fileName);
 
 	Toolbar &toolbar();
-	Menubar &menubar();
 	const Toolbar &toolbar() const;
+
+	Menubar &menubar();
 	const Menubar &menubar() const;
 
 	void refreshWindow();
@@ -292,10 +309,10 @@ public:
 
 protected:
 	void init();
+	// TODO: change to pure virtual
+	virtual void initMenu() {}
 	virtual ZLViewWidget *createViewWidget() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
-	// TODO: replace with pure virtual method when available for all platforms
-	virtual void addMenubarItem(ZLApplication::Menubar::ItemPtr) {}
 
 	virtual void refresh() = 0;
 
@@ -377,16 +394,18 @@ inline ZLApplication::Menu::Item::ItemType ZLApplication::Menubar::Item::type() 
 
 inline ZLApplication::Menubar::Menubar() {}
 
-inline ZLApplication::Menubar::MenuItem::MenuItem(const std::string& name, int actionId) : Item(MENU_ITEM), myName(name), myActionId(actionId) {}
-inline const std::string& ZLApplication::Menubar::MenuItem::name() const { return myName; }
-inline int ZLApplication::Menubar::MenuItem::actionId() const { return myActionId; }
+inline ZLApplication::Menubar::PlainItem::PlainItem(const std::string& name, int actionId) : Item(ITEM), myName(name), myActionId(actionId) {}
+inline const std::string& ZLApplication::Menubar::PlainItem::name() const { return myName; }
+inline int ZLApplication::Menubar::PlainItem::actionId() const { return myActionId; }
 
-inline ZLApplication::Menubar::SubMenuItem::SubMenuItem(const std::string &menuName) : Menu::Item(SUBMENU_ITEM), myMenuName(menuName) {}
-inline const std::string &ZLApplication::Menubar::SubMenuItem::menuName() const { return myMenuName; }
+inline ZLApplication::Menubar::Submenu::Submenu(const std::string &menuName) : Menu::Item(SUBMENU), myMenuName(menuName) {}
+inline const std::string &ZLApplication::Menubar::Submenu::menuName() const { return myMenuName; }
 
-inline ZLApplication::Menubar::SeparatorItem::SeparatorItem(void) : Item(SEPARATOR_ITEM) {}
+inline ZLApplication::Menubar::Separator::Separator(void) : Item(SEPARATOR) {}
 
 inline const std::string &ZLApplication::ApplicationDirectory() { return ourApplicationDirectory; }
+
+inline ZLApplication::MenuVisitor::~MenuVisitor() {}
 
 #endif /* __ZLAPPLICATION_H__ */
 

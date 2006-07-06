@@ -31,15 +31,23 @@ static const std::string ANGLE = "Angle";
 static const std::string STATE = "State";
 static const std::string KEYBOARD = "Keyboard";
 static const std::string FULL_CONTROL = "FullControl";
+static const std::string CONFIG = "Config";
+static const std::string AUTO_SAVE = "AutoSave";
+static const std::string TIMEOUT = "Timeout";
 
 ZLApplication::ZLApplication(const std::string &name) :
 	RotationAngleOption(ZLOption::CONFIG_CATEGORY, ROTATION, ANGLE, ZLViewWidget::DEGREES90),
 	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
 	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, KEYBOARD, FULL_CONTROL, false),
+	ConfigAutoSavingOption(ZLOption::CONFIG_CATEGORY, CONFIG, AUTO_SAVE, true),
+	ConfigAutoSaveTimeoutOption(ZLOption::CONFIG_CATEGORY, CONFIG, TIMEOUT, 1, 6000, 10),
 	myName(name),
 	myViewWidget(0),
 	myWindow(0) {
 	ourApplicationDirectory = BaseDirectory + PathDelimiter + myName;
+	if (ConfigAutoSavingOption.value()) {
+		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
+	}
 }
 
 ZLApplication::~ZLApplication() {
@@ -82,10 +90,7 @@ void ZLApplicationWindow::init() {
 		addToolbarItem(*it);
 	}
 
-	const ZLApplication::Menubar::ItemVector &menubarItems = myApplication->menubar().items();
-	for (ZLApplication::Menubar::ItemVector::const_iterator it = menubarItems.begin(); it != menubarItems.end(); ++it) {
-		addMenubarItem(*it);
-	}
+	initMenu();
 }
 
 void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
@@ -95,6 +100,7 @@ void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
 void ZLApplication::setView(ZLView *view) {
 	if (myViewWidget != 0) {
 		myViewWidget->setView(view);
+		refreshWindow();
 	}
 }
 
@@ -104,7 +110,7 @@ ZLView *ZLApplication::currentView() {
 
 void ZLApplication::refreshWindow() {
 	if (myViewWidget != 0) {
-		myViewWidget->repaintView();
+		myViewWidget->repaint();
 	}
 	if (myWindow != 0) {
 		myWindow->refresh();
@@ -158,20 +164,16 @@ void ZLApplication::Toolbar::addSeparator() {
 }
 
 void ZLApplication::Menu::addItem(const std::string &itemName, int actionId) {
-	ItemPtr item = new Menubar::MenuItem(itemName, actionId);
-	myItems.push_back(item);
+	myItems.push_back(new Menubar::PlainItem(itemName, actionId));
 }
 
 void ZLApplication::Menu::addSeparator() {
-	ItemPtr item = new Menubar::SeparatorItem();
-	myItems.push_back(item);
+	myItems.push_back(new Menubar::Separator());
 }
 
 ZLApplication::Menu::Menu &ZLApplication::Menu::addSubmenu(const std::string &menuName) {
-	Menubar::SubMenuItem *submenu = new Menubar::SubMenuItem(menuName);
-	ItemPtr item = submenu;
-	myItems.push_back(item);
-
+	Menubar::Submenu *submenu = new Menubar::Submenu(menuName);
+	myItems.push_back(submenu);
 	return *submenu;
 }
 
@@ -188,4 +190,26 @@ bool ZLApplication::Action::isEnabled() {
 
 const std::string ZLApplication::ZLibraryDirectory() {
 	return BaseDirectory + PathDelimiter + "zlibrary";
+}
+
+void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {
+	const ZLApplication::Menu::ItemVector &items = menu.items();
+	for (ZLApplication::Menu::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		switch ((*it)->type()) {
+			case ZLApplication::Menu::Item::ITEM:
+				processItem((ZLApplication::Menubar::PlainItem&)**it);
+				break;
+			case ZLApplication::Menu::Item::SUBMENU:
+			{
+				ZLApplication::Menubar::Submenu &submenu = (ZLApplication::Menubar::Submenu&)**it;
+				processSubmenuBeforeItems(submenu);
+				processMenu(submenu);
+				processSubmenuAfterItems(submenu);
+				break;
+			}
+			case ZLApplication::Menu::Item::SEPARATOR:
+				processSepartor((ZLApplication::Menubar::Separator&)**it);
+				break;
+		}							
+	}
 }

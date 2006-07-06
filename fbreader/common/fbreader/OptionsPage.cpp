@@ -24,7 +24,7 @@
 
 #include "OptionsPage.h"
 
-void OptionsPage::ComboOptionEntry::onValueChange(const std::string &selectedValue) {
+void ComboOptionEntry::onValueChange(const std::string &selectedValue) {
 	for (std::map<ZLOptionEntry*,std::string>::const_iterator it = myPage.myEntries.begin(); it != myPage.myEntries.end(); ++it) {
 		it->first->setVisible(it->second == selectedValue);
 	}

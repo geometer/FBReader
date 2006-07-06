@@ -40,7 +40,7 @@ public:
 
 private:
 	void trackStylus(bool track);
-	void repaintView();
+	void repaint();
 
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();

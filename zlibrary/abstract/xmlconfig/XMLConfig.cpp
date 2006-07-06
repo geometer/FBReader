@@ -103,7 +103,6 @@ XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) 
 	load();
 	myDelta = new XMLConfigDelta(myCategories);
 	mySaver = new ConfigSaveTask(*this);
-	ZLTimeManager::instance().addTask(mySaver, 10000);
 }
 
 XMLConfig::~XMLConfig() {
@@ -164,4 +163,8 @@ void XMLConfig::unsetValue(const std::string &group, const std::string &name) {
 
 int XMLConfig::changesCounter() const {
 	return (myDelta != 0) ? myDelta->myChangesCounter : 0;
+}
+
+void XMLConfig::startAutoSave(int seconds) {
+	ZLTimeManager::instance().addTask(mySaver, 1000 * seconds);
 }

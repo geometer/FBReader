@@ -37,7 +37,7 @@ public:
 	int height() const;
 
 private:
-	void repaintView();
+	void repaint();
 	void trackStylus(bool track);
 
 private:

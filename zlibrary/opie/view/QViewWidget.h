@@ -52,7 +52,7 @@ public:
 	QWidget *widget();
 
 private:
-	void repaintView();
+	void repaint();
 	void trackStylus(bool track);
 
 private:

@@ -48,6 +48,10 @@ void ZLOption::clearGroup(const std::string &group) {
   ZLOptions::instance().clearGroup();
 }
 
+void ZLOption::startAutoSave(int seconds) {
+	ZLOptions::instance().startAutoSave(seconds);
+}
+
 ZLOption::ZLOption(const std::string &category, const std::string &group, const std::string &optionName) : myCategory(category), myGroup(group), myOptionName(optionName), myIsSynchronized(false) {
 }
 

@@ -20,13 +20,27 @@
 
 #include <qpe/qpeapplication.h>
 #include <qpixmap.h>
-#include <qmenubar.h>
+#include <qpe/qpemenubar.h>
 #include <qpe/resource.h>
 
 #include "QApplicationWindow.h"
+#include "QtMenuAction.h"
 #include "../view/QViewWidget.h"
 #include "../dialogs/QDialogManager.h"
 #include "../../qt/util/QKeyUtil.h"
+
+class MyMenuBar : public QPEMenuBar {
+
+public:
+	MyMenuBar(QWidget *parent) : QPEMenuBar(parent) {}
+
+private:
+	void keyPressEvent(QKeyEvent *event) {
+		if (event->key() == Key_Escape) {
+			QPEMenuBar::keyPressEvent(event);
+		}
+	}
+};
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
 	setWFlags(getWFlags() | WStyle_Customize);
@@ -37,7 +51,10 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 	myVerticalDelta = -1;
 	myHorizontalDelta = -1;
 
-	connect(menuBar(), SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
+	myToolBar = new MyMenuBar(this);
+	myMenu = new QPopupMenu(myToolBar);
+
+	connect(myToolBar, SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
 
 	((QPEApplication*)qApp)->showMainWidget(this);
 }
@@ -68,6 +85,65 @@ void QApplicationWindow::grabAllKeys(bool grab) {
 void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr) {
 }
 
+void QApplicationWindow::initMenu() {
+}
+
+QApplicationWindow::MenuMaskCalculator::MenuMaskCalculator(QApplicationWindow &window) : myWindow(window), myFirstTime(myWindow.myMenuMask.empty()), myShouldBeUpdated(myFirstTime), myCounter(0) {
+}
+
+void QApplicationWindow::MenuMaskCalculator::processSubmenuBeforeItems(ZLApplication::Menubar::Submenu&) {
+}
+
+void QApplicationWindow::MenuMaskCalculator::processSubmenuAfterItems(ZLApplication::Menubar::Submenu&) {
+}
+
+void QApplicationWindow::MenuMaskCalculator::processSepartor(ZLApplication::Menubar::Separator&) {
+}
+
+void QApplicationWindow::MenuMaskCalculator::processItem(ZLApplication::Menubar::PlainItem &item) {
+	bool visible = myWindow.application().isActionVisible(item.actionId());
+	if (myFirstTime) {
+		myWindow.myMenuMask.push_back(visible);
+	} else {
+		if (myWindow.myMenuMask[myCounter] != visible) {
+			myWindow.myMenuMask[myCounter] = visible;
+			myShouldBeUpdated = true;
+		}
+		++myCounter;
+	}
+}
+
+QApplicationWindow::MenuUpdater::MenuUpdater(QApplicationWindow &window) : myWindow(window), myCounter(0) {
+	myMenuStack.push(myWindow.myMenu);
+}
+
+void QApplicationWindow::MenuUpdater::processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu) {
+	QPopupMenu *qmenu = new QPopupMenu(myMenuStack.top());
+	myMenuStack.top()->insertItem(submenu.menuName().c_str(), qmenu);
+	myMenuStack.push(qmenu);
+}
+
+void QApplicationWindow::MenuUpdater::processSubmenuAfterItems(ZLApplication::Menubar::Submenu&) {
+	myMenuStack.pop();
+}
+
+void QApplicationWindow::MenuUpdater::processItem(ZLApplication::Menubar::PlainItem &item) {
+	if (myWindow.myMenuMask[myCounter++]) {
+		const int id = item.actionId();
+		QtMenuAction *action = myWindow.myMenuMap[id];
+		if (action == 0) {
+			action = new QtMenuAction(myWindow.application(), item);
+			myWindow.myMenuMap[id] = action;
+		}
+		action->addTo(myMenuStack.top());
+		action->setEnabled(myWindow.application().isActionEnabled(id));
+	}
+}
+
+void QApplicationWindow::MenuUpdater::processSepartor(ZLApplication::Menubar::Separator&) {
+	myMenuStack.top()->insertSeparator();
+}
+
 void QApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 
@@ -93,17 +169,18 @@ void QApplicationWindow::refresh() {
 		if (centralWidget() != 0) {
 			centralWidget()->hide();
 		}
-		menuBar()->clear();
+		myToolBar->clear();
 		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 			if ((*it)->isButton()) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
 					const QPixmap &pixmap = Resource::loadPixmap((application().name() + '/' + button.iconName()).c_str());
-					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
+					myToolBar->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;
 			}
 		}
+		myToolBar->insertItem(QString::null, myMenu, -1, 0);
 		if (centralWidget() != 0) {
 			centralWidget()->show();
 		}
@@ -113,9 +190,20 @@ void QApplicationWindow::refresh() {
 		if ((*it)->isButton()) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
-			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
+			if (myToolBar->findItem(id) != 0) {
+				myToolBar->setItemEnabled(id, application().isActionEnabled(id));
 			}
+		}
+	}
+
+	MenuMaskCalculator calculator(*this);
+	calculator.processMenu(application().menubar());
+	if (calculator.shouldBeUpdated()) {
+		myMenu->clear();
+		MenuUpdater(*this).processMenu(application().menubar());
+	} else {
+		for (std::map<int,QtMenuAction*>::iterator it = myMenuMap.begin(); it != myMenuMap.end(); ++it) {
+			it->second->setEnabled(application().isActionEnabled(it->first));
 		}
 	}
 }
@@ -164,10 +252,10 @@ void QApplicationWindow::setFullscreen(bool fullscreen) {
 	}
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
-		menuBar()->hide();
+		myToolBar->hide();
 		showFullScreen();
 	} else {
-		menuBar()->show();
+		myToolBar->show();
 		showNormal();
 		if (myTitleHeight > 0) {
 			move(1, myTitleHeight);
@@ -215,4 +303,12 @@ ZLViewWidget *QApplicationWindow::createViewWidget() {
 
 bool QApplicationWindow::isFingerTapEventSupported() const {
 	return false;
+}
+
+QtMenuAction::QtMenuAction(ZLApplication &application, const ZLApplication::Menubar::PlainItem &item) : QAction(item.name().c_str(), 0, 0, 0), myApplication(application), myActionId(item.actionId()) {
+	connect(this, SIGNAL(activated()), this, SLOT(doSlot()));
+}
+
+void QtMenuAction::doSlot() {
+	myApplication.doAction(myActionId);
 }

@@ -31,9 +31,6 @@ class StyleOptionsPage : public OptionsPage {
 
 public:
 	StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &context);
-	~StyleOptionsPage();
 };
-
-inline StyleOptionsPage::~StyleOptionsPage() {}
 
 #endif /* __STYLEOPTIONSPAGE_H__ */

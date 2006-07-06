@@ -19,16 +19,18 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLApplication.h>
+#ifndef __CONFIGPAGE_H__
+#define __CONFIGPAGE_H__
 
-#include "../common/collection/BookCollection.h"
-#include "../common/fbreader/CollectionView.h"
-#include "../common/fbreader/FBFileHandler.h"
+#include <abstract/ZLOptionEntry.h>
 
-const std::string ZLApplication::BaseDirectory = "/opt/QtPalmtop/share";
-const std::string ZLApplication::PathDelimiter = "/";
+class FBReader;
+class ZLDialogContent;
 
-const std::string FBFileHandler::ImageDirectory = "FBReader";
+class ConfigPage {
 
-const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics144/FBReader/remove.png";
-const std::string BookCollection::DefaultBookPath = "~/Documents/Books:~/Documents/FBooks";
+public:
+	ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab);
+};
+
+#endif /* __CONFIGPAGE_H__ */

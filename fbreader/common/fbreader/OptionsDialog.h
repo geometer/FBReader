@@ -28,6 +28,7 @@ class ZLOptionsDialog;
 class OptionsPage;
 class ScrollingOptionsPage;
 class KeyBindingsPage;
+class ConfigPage;
 class ZLPaintContext;
 
 class ZLBooleanOptionEntry;
@@ -56,6 +57,7 @@ private:
 	OptionsPage *myColorPage;
 	KeyBindingsPage *myKeyBindingsPage;
 	IndicatorPage myIndicatorPage;
+	ConfigPage *myConfigPage;
 };
 
 inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }

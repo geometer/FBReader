@@ -29,6 +29,7 @@
 #include "StyleOptionsPage.h"
 #include "ColorOptionsPage.h"
 #include "KeyBindingsPage.h"
+#include "ConfigPage.h"
 
 #include "FBReader.h"
 #include "CollectionView.h"
@@ -243,13 +244,15 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 
   myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
   myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
+	myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 }
 
 OptionsDialog::~OptionsDialog() {
-  delete myScrollingPage;
-  delete myFormatPage;
-  delete myStylePage;
-  delete myColorPage;
+  delete myConfigPage;
   delete myKeyBindingsPage;
+  delete myColorPage;
+  delete myStylePage;
+  delete myFormatPage;
+  delete myScrollingPage;
   delete myDialog;
 }

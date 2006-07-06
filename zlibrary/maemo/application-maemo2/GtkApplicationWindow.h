@@ -22,6 +22,7 @@
 #define __GTKAPPLICATIONWINDOW_H__
 
 #include <map>
+#include <stack>
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
@@ -43,8 +44,22 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
-	void addMenubarItem(ZLApplication::Menubar::ItemPtr item);
-	void addMenubarItem(GtkMenu *menu, ZLApplication::Menubar::ItemPtr item);
+	class MenuBuilder : public ZLApplication::MenuVisitor {
+
+	public:
+		MenuBuilder(GtkApplicationWindow &window);
+
+	private:
+		void processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu);
+		void processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu);
+		void processItem(ZLApplication::Menubar::PlainItem &item);
+		void processSepartor(ZLApplication::Menubar::Separator &separator);
+
+	private:
+		GtkApplicationWindow &myWindow;
+		std::stack<GtkMenu*> myMenuStack;
+	};
+	void initMenu();
 	void refresh();
 	void close();
 
@@ -71,7 +86,9 @@ private:
 	bool myFullScreen;
 
 	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myButtons;
-	std::map<ZLApplication::Menubar::ItemPtr,GtkMenuItem*> myMenuItems;
+	std::map<int,GtkMenuItem*> myMenuItems;
+
+friend class MenuBuilder;
 };
 
 #endif /* __GTKAPPLICATIONWINDOW_H__ */

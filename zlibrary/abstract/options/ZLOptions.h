@@ -32,6 +32,7 @@ public:
 
 public:
   static void clearGroup(const std::string &group);
+	static void startAutoSave(int seconds);
   
 public:
   ZLOption(const std::string &category, const std::string &group, const std::string &optionName);

@@ -29,7 +29,6 @@ ZLView::~ZLView() {
 
 void ZLViewWidget::setView(ZLView *view) {
 	myView = view;
-	repaintView();
 }
 
 void ZLView::repaintView() {

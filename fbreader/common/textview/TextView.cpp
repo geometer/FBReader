@@ -325,6 +325,7 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
 							(backward ? myModel->previousMark(position) : myModel->nextMark(position)));
+		repaintView();
 	}
 }
 

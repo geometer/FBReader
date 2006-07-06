@@ -72,7 +72,7 @@ void GtkViewWidget::trackStylus(bool track) {
 	// TODO: implement
 }
 
-void GtkViewWidget::repaintView()	{
+void GtkViewWidget::repaint()	{
 	GtkPaintContext &gtkContext = (GtkPaintContext&)view()->context();
 	const int w = myArea->allocation.width;
 	const int h = myArea->allocation.height;

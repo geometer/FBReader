@@ -60,6 +60,8 @@ public:
 	void unsetValue(const std::string &group, const std::string &name);
 	void setCategory(const std::string &group, const std::string &name, const std::string &category);
 
+	void startAutoSave(int seconds);
+
 private:
 	XMLConfigGroup *getGroup(const std::string &name) const;
 	XMLConfigGroup *getGroup(const std::string &name, bool createUnexisting);

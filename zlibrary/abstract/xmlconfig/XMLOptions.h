@@ -54,6 +54,8 @@ public:
 
 	void setCategory(const std::string &name, const std::string &category);
 
+	void startAutoSave(int seconds);
+
 private:
 	XMLConfig *myConfig;
 	std::string myGroupName;

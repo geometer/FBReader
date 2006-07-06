@@ -24,10 +24,15 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <stack>
 
 #include <qmainwindow.h>
 
 #include <abstract/ZLApplication.h>
+
+class QMenuBar;
+class QPopupMenu;
+class QtMenuAction;
 
 class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
@@ -41,7 +46,45 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
+
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void initMenu();
+	class MenuMaskCalculator : public ZLApplication::MenuVisitor {
+
+	public:
+		MenuMaskCalculator(QApplicationWindow &window);
+		bool shouldBeUpdated();
+
+	private:
+		void processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu);
+		void processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu);
+		void processItem(ZLApplication::Menubar::PlainItem &item);
+		void processSepartor(ZLApplication::Menubar::Separator &separator);
+
+	private:
+		QApplicationWindow &myWindow;
+		bool myFirstTime;
+		bool myShouldBeUpdated;
+		int myCounter;
+	};
+	class MenuUpdater : public ZLApplication::MenuVisitor {
+
+	public:
+		MenuUpdater(QApplicationWindow &window);
+
+	private:
+		void processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu);
+		void processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu);
+		void processItem(ZLApplication::Menubar::PlainItem &item);
+		void processSepartor(ZLApplication::Menubar::Separator &separator);
+
+	private:
+		QApplicationWindow &myWindow;
+		std::stack<QPopupMenu*> myMenuStack;
+		int myCounter;
+	};
+	void updateMenu();
+
 	void refresh();
 	void close();
 
@@ -67,12 +110,22 @@ private slots:
 
 private:
 	std::vector<bool> myToolbarMask;
+	std::vector<bool> myMenuMask;
+	std::map<int,QtMenuAction*> myMenuMap;
 
 	bool myFullScreen;
 	int myTitleHeight;
 
 	int myVerticalDelta;
 	int myHorizontalDelta;
+
+	QMenuBar *myToolBar;
+	QPopupMenu *myMenu;
+
+friend class MenuMaskCalculator;
+friend class MenuUpdater;
 };
+
+inline bool QApplicationWindow::MenuMaskCalculator::shouldBeUpdated() { return myShouldBeUpdated; }
 
 #endif /* __QAPPLICATIONWINDOW_H__ */

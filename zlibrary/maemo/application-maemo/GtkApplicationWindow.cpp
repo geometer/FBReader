@@ -108,47 +108,47 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLAppli
 	myFullScreen = false;
 }
 
-void GtkApplicationWindow::addMenubarItem(GtkMenu *menu, ZLApplication::Menubar::ItemPtr item) {
-	GtkMenuItem *gtkItem = 0;
+GtkApplicationWindow::~GtkApplicationWindow() {
+	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);
+}
 
-	switch(item->type()) {
-		case ZLApplication::Menubar::Item::SEPARATOR_ITEM:
-			gtkItem = GTK_MENU_ITEM(gtk_separator_menu_item_new());
-			break;
+void GtkApplicationWindow::initMenu() {
+	MenuBuilder(*this).processMenu(application().menubar());
+}
 
-		case ZLApplication::Menubar::Item::MENU_ITEM:
-			{
-				const ZLApplication::Menubar::MenuItem &menuItem = (const ZLApplication::Menubar::MenuItem&)*item;
-				gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(menuItem.name().c_str()));
-				shared_ptr<ZLApplication::Action> action = application().action(menuItem.actionId());
-				if (!action.isNull()) {
-					GtkSignalUtil::connectSignal(GTK_OBJECT(gtkItem), "activate", GTK_SIGNAL_FUNC(menuActionSlot), &*action);
-				}
-			}
-			break;
+GtkApplicationWindow::MenuBuilder::MenuBuilder(GtkApplicationWindow &window) : myWindow(window) {
+	myMenuStack.push(myWindow.myMenu);
+}
 
-		case ZLApplication::Menubar::Item::SUBMENU_ITEM:
-			{
-				const ZLApplication::Menubar::SubMenuItem &subMenuItem = (const ZLApplication::Menubar::SubMenuItem&)*item;
-				gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(subMenuItem.menuName().c_str()));
-				GtkMenu *subMenu = GTK_MENU(gtk_menu_new());
-				gtk_menu_item_set_submenu(gtkItem, GTK_WIDGET(subMenu));
+void GtkApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu) {
+	GtkMenuItem *gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(submenu.menuName().c_str()));
+	GtkMenu *gtkSubmenu = GTK_MENU(gtk_menu_new());
+	gtk_menu_item_set_submenu(gtkItem, GTK_WIDGET(gtkSubmenu));
+	gtk_menu_shell_append(GTK_MENU_SHELL(myMenuStack.top()), GTK_WIDGET(gtkItem));
+	gtk_widget_show_all(GTK_WIDGET(gtkItem));
+	myMenuStack.push(gtkSubmenu);
+}
 
-				const ZLApplication::Menubar::ItemVector &items = subMenuItem.items();
-				for (ZLApplication::Menubar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-					addMenubarItem(subMenu, *it);
-				}
-			}
-			break;
+void GtkApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu) {
+	myMenuStack.pop();
+}
+
+void GtkApplicationWindow::MenuBuilder::processItem(ZLApplication::Menubar::PlainItem &item) {
+	GtkMenuItem *gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(item.name().c_str()));
+	const int id = item.actionId();
+	shared_ptr<ZLApplication::Action> action = myWindow.application().action(id);
+	if (!action.isNull()) {
+		GtkSignalUtil::connectSignal(GTK_OBJECT(gtkItem), "activate", GTK_SIGNAL_FUNC(menuActionSlot), &*action);
 	}
-
-	myMenuItems[item] = gtkItem;
-	gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(gtkItem));
+	myWindow.myMenuItems[id] = gtkItem;
+	gtk_menu_shell_append(GTK_MENU_SHELL(myMenuStack.top()), GTK_WIDGET(gtkItem));
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
-GtkApplicationWindow::~GtkApplicationWindow() {
-	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);
+void GtkApplicationWindow::MenuBuilder::processSepartor(ZLApplication::Menubar::Separator&) {
+	GtkMenuItem *gtkItem = GTK_MENU_ITEM(gtk_separator_menu_item_new());
+	gtk_menu_shell_append(GTK_MENU_SHELL(myMenuStack.top()), GTK_WIDGET(gtkItem));
+	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
 void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
@@ -206,10 +206,6 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
-void GtkApplicationWindow::addMenubarItem(ZLApplication::Menubar::ItemPtr item) {
-	addMenubarItem(myMenu, item);
-}
-
 void GtkApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	bool enableToolbarSpace = false;
@@ -244,20 +240,17 @@ void GtkApplicationWindow::refresh() {
 		}
 	}
 
-	for (std::map<ZLApplication::Menubar::ItemPtr,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
-		ZLApplication::Menubar::ItemPtr item = it->first;
-		if (!item.isNull() && item->type() == ZLApplication::Menubar::Item::MENU_ITEM) {
-			int id = ((ZLApplication::Menubar::MenuItem&)*item).actionId();
-			GtkWidget *gtkItem = GTK_WIDGET(it->second);
-			if (application().isActionVisible(id)) {
-				gtk_widget_show(gtkItem);
-			} else {
-				gtk_widget_hide(gtkItem);
-			}
-			bool alreadyEnabled = GTK_WIDGET_STATE(gtkItem) != GTK_STATE_INSENSITIVE;
-			if (application().isActionEnabled(id) != alreadyEnabled) {
-				gtk_widget_set_sensitive(gtkItem, !alreadyEnabled);
-			}
+	for (std::map<int,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
+		int id = it->first;
+		GtkWidget *gtkItem = GTK_WIDGET(it->second);
+		if (application().isActionVisible(id)) {
+			gtk_widget_show(gtkItem);
+		} else {
+			gtk_widget_hide(gtkItem);
+		}
+		bool alreadyEnabled = GTK_WIDGET_STATE(gtkItem) != GTK_STATE_INSENSITIVE;
+		if (application().isActionEnabled(id) != alreadyEnabled) {
+			gtk_widget_set_sensitive(gtkItem, !alreadyEnabled);
 		}
 	}
 }

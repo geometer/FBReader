@@ -168,6 +168,6 @@ int QViewWidget::QViewWidgetInternal::y(const QMouseEvent *event) const {
 	}
 }
 
-void QViewWidget::repaintView()	{
+void QViewWidget::repaint()	{
 	myQWidget->repaint(false);
 }

@@ -79,7 +79,7 @@ public:
 	Angle rotation() const;
 
 protected:
-	virtual void repaintView() = 0;
+	virtual void repaint() = 0;
 
 private:
 	ZLView *myView;
