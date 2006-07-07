@@ -75,8 +75,8 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 
 	myFullScreen = false;
 
-	std::string lowerCaseName = ZLUnicodeUtil::toLower(this->application().name());
-	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/" + lowerCaseName + "/" + this->application().name() + ".png").c_str());
+	std::string lowerCaseName = ZLUnicodeUtil::toLower(ZLApplication::ApplicationName());
+	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/" + lowerCaseName + "/" + ZLApplication::ApplicationName() + ".png").c_str());
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
@@ -121,7 +121,7 @@ bool GtkApplicationWindow::isFullscreen() const {
 void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		const std::string lowerCaseName = ZLUnicodeUtil::toLower(application().name());
+		const std::string lowerCaseName = ZLUnicodeUtil::toLower(ZLApplication::ApplicationName());
 		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + lowerCaseName + "/" + buttonItem.iconName() + ".png").c_str());
 		GtkToolItem *button = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();

@@ -37,9 +37,11 @@ bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookD
   return d1->title() < d2->title();
 }
 
+const std::string OPTIONS = "Options";
+
 BookCollection::BookCollection() :
-  PathOption(ZLOption::CONFIG_CATEGORY, "Options", "BookPath", DefaultBookPath),
-  ScanSubdirsOption(ZLOption::CONFIG_CATEGORY, "Options", "ScanSubdirs", false) {
+  PathOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "BookPath", ""),
+  ScanSubdirsOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "ScanSubdirs", false) {
 }
 
 void BookCollection::rebuild() {

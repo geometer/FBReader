@@ -52,21 +52,6 @@ bool XMLConfigGroup::setValue(const std::string &name, const std::string &value,
 	return true;
 }
 
-bool XMLConfigGroup::setCategory(const std::string &name, const std::string &category) {
-	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
-	if (it == myValues.end() || (it->second.Category == category)) {
-		return false;
-	}
-	std::string value = it->second.Value;
-	myValues.erase(it);
-	std::set<std::string>::iterator jt = myCategories.find(category);
-	if (jt == myCategories.end()) {
-		jt = myCategories.insert(category).first;
-	}
-	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
-	return true;
-}
-
 bool XMLConfigGroup::unsetValue(const std::string &name) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it != myValues.end()) {
@@ -99,9 +84,8 @@ void ConfigSaveTask::run() {
 	}
 }
 
-XMLConfig::XMLConfig(const std::string &name, const std::string &homeDirectory) : myHomeDirectory(homeDirectory), myName(name), myDelta(0) {
+XMLConfig::XMLConfig() : myDelta(0) {
 	load();
-	myDelta = new XMLConfigDelta(myCategories);
 	mySaver = new ConfigSaveTask(*this);
 }
 

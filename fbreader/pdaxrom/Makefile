@@ -37,6 +37,7 @@ install:
 	@mkdir -p usr/share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.640x480.fb2 usr/share/FBReader/help/HowToStart.fb2
 	@mkdir -p usr/share/FBReader/default
+	@cp ../data/default/config.pdaxrom.xml usr/share/FBReader/default/config.xml
 	@cp ../data/default/keymap.pdaxrom.xml usr/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.640x480.xml usr/share/FBReader/default/styles.xml
 	@mkdir -p usr/share/pixmaps/FBReader

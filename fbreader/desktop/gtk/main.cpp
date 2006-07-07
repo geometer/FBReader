@@ -21,10 +21,8 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLApplication.h>
 #include <unix/ZLUnixFSManager.h>
 #include <gtk/ZLGtkTime.h>
-#include <abstract/XMLOptions.h>
 #include <gtk/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>
 #include <gtk/GtkDeviceInfo.h>
@@ -34,10 +32,7 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBReader.h"
 
-const std::string ZLApplication::BaseDirectory = std::string(INSTALLDIR) + "/share";
-const std::string ZLApplication::PathDelimiter = "/";
-
-const std::string ImageDirectory = ZLApplication::BaseDirectory + ZLApplication::PathDelimiter + "FBReader" + ZLApplication::PathDelimiter + "icons";
+const std::string ImageDirectory = std::string(INSTALLDIR) + "/share/FBReader/icons";
 const std::string CollectionView::DeleteBookImageFile = ImageDirectory + "/FBReader/remove.png";
 
 int main(int argc, char **argv) {
@@ -48,7 +43,6 @@ int main(int argc, char **argv) {
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(ImageDirectory);
-	XMLOptions::createInstance("FBReader");
 	GtkDeviceInfo::createInstance();
 
 	// MSS: use the first argument that gtk did not consume
@@ -59,7 +53,6 @@ int main(int argc, char **argv) {
 	delete reader;
 
 	GtkDeviceInfo::deleteInstance();
-	XMLOptions::deleteInstance();
 	GtkImageManager::deleteInstance();
 	GtkDialogManager::deleteInstance();
 	ZLUnixFSManager::deleteInstance();

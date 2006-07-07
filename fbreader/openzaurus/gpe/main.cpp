@@ -24,7 +24,6 @@
 
 #include <unix/ZLUnixFSManager.h>
 #include <gtk/ZLGtkTime.h>
-#include <abstract/XMLOptions.h>
 #include <gpe/GtkDialogManager.h>
 #include <gpe/GtkApplicationWindow.h>
 #include <gtk/GtkImageManager.h>
@@ -44,7 +43,6 @@ int main(int argc, char **argv) {
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkApplicationWindow::ImageDirectory);
-	XMLOptions::createInstance("FBReader");
 	GtkDeviceInfo::createInstance();
 
 	// MSS: use the first argument that gtk did not consume
@@ -57,7 +55,6 @@ int main(int argc, char **argv) {
 	GtkDeviceInfo::deleteInstance();
 	GtkImageManager::deleteInstance();
 	GtkDialogManager::deleteInstance();
-	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLGtkTimeManager::deleteInstance();
 

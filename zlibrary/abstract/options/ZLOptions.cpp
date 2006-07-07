@@ -68,7 +68,6 @@ bool ZLBooleanOption::value() const {
   if (!myIsSynchronized) {
     ZLOptions &options = ZLOptions::instance();
     options.setGroup(myGroup);
-    options.setCategory(myOptionName, myCategory);
     myValue = options.booleanValue(myOptionName, myDefaultValue);
     myIsSynchronized = true;
   }
@@ -99,7 +98,6 @@ Boolean3 ZLBoolean3Option::value() const {
   if (!myIsSynchronized) {
     ZLOptions &options = ZLOptions::instance();
     options.setGroup(myGroup);
-    options.setCategory(myOptionName, myCategory);
     myValue = (Boolean3)options.integerValue(myOptionName, myDefaultValue);
     myIsSynchronized = true;
   }
@@ -130,7 +128,6 @@ ZLColor ZLColorOption::value() const {
   if (!myIsSynchronized) {
     ZLOptions &options = ZLOptions::instance();
     options.setGroup(myGroup);
-    options.setCategory(myOptionName, myCategory);
     myIntValue = options.integerValue(myOptionName, myDefaultIntValue);
     myIsSynchronized = true;
   }
@@ -161,7 +158,6 @@ long ZLIntegerOption::value() const {
   if (!myIsSynchronized) {
     ZLOptions &options = ZLOptions::instance();
     options.setGroup(myGroup);
-    options.setCategory(myOptionName, myCategory);
     myValue = options.integerValue(myOptionName, myDefaultValue);
     myIsSynchronized = true;
   }
@@ -192,7 +188,6 @@ long ZLIntegerRangeOption::value() const {
   if (!myIsSynchronized) {
     ZLOptions &options = ZLOptions::instance();
     options.setGroup(myGroup);
-    options.setCategory(myOptionName, myCategory);
     myValue = options.integerValue(myOptionName, myDefaultValue);
     myValue = std::max(std::min(myMaxValue, myValue), myMinValue);
     myIsSynchronized = true;
@@ -233,7 +228,6 @@ double ZLDoubleOption::value() const {
   if (!myIsSynchronized) {
     ZLOptions &options = ZLOptions::instance();
     options.setGroup(myGroup);
-    options.setCategory(myOptionName, myCategory);
     myValue = options.doubleValue(myOptionName, myDefaultValue);
     myIsSynchronized = true;
   }
@@ -264,7 +258,6 @@ const std::string &ZLStringOption::value() const {
   if (!myIsSynchronized) {
     ZLOptions &options = ZLOptions::instance();
     options.setGroup(myGroup);
-    options.setCategory(myOptionName, myCategory);
     myValue = options.stringValue(myOptionName, myDefaultValue);
     myIsSynchronized = true;
   }

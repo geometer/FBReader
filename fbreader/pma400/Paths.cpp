@@ -21,14 +21,13 @@
 
 #include <abstract/ZLApplication.h>
 
-#include "../common/collection/BookCollection.h"
 #include "../common/fbreader/CollectionView.h"
 #include "../common/fbreader/FBFileHandler.h"
 
-const std::string ZLApplication::BaseDirectory = "/opt/QtPalmtop/share";
-const std::string ZLApplication::PathDelimiter = "/";
+const std::string ZLApplicationBase::BaseDirectory = "/opt/QtPalmtop/share";
+const std::string ZLApplicationBase::PathDelimiter = "/";
+const std::string ZLApplicationBase::HomeDirectory = "~/Documents";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string CollectionView::DeleteBookImageFile = "/opt/QtPalmtop/pics144/FBReader/remove.png";
-const std::string BookCollection::DefaultBookPath = "~/Documents/Books:~/Documents/FBooks";

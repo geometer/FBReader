@@ -22,15 +22,14 @@
 #include <abstract/ZLApplication.h>
 #include <qt-desktop/QApplicationWindow.h>
 
-#include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
-const std::string ZLApplication::BaseDirectory = std::string(INSTALLDIR) + "/share";
-const std::string ZLApplication::PathDelimiter = "/";
+const std::string ZLApplicationBase::BaseDirectory = std::string(INSTALLDIR) + "/share";
+const std::string ZLApplicationBase::PathDelimiter = "/";
+const std::string ZLApplicationBase::HomeDirectory = "~";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string QApplicationWindow::ImageDirectory = ZLApplication::BaseDirectory + ZLApplication::PathDelimiter + "FBReader" + ZLApplication::PathDelimiter + "icons";
 const std::string CollectionView::DeleteBookImageFile = QApplicationWindow::ImageDirectory + "/FBReader/remove.png";
-const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";

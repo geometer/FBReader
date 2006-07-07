@@ -23,7 +23,6 @@
 
 #include <unix/ZLUnixFSManager.h>
 #include <qt/ZLQtTime.h>
-#include <abstract/XMLOptions.h>
 #include <qt/QDialogManager.h>
 #include <qt/QImageManager.h>
 #include <qt/QDeviceInfo.h>
@@ -37,7 +36,6 @@ int main(int argc, char **argv) {
 
 	ZLQtTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
-	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QImageManager::createInstance();
 	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QApplicationWindow::ImageDirectory);
@@ -52,7 +50,6 @@ int main(int argc, char **argv) {
 	QDeviceInfo::deleteInstance();
 	QImageManager::deleteInstance();
 	QDialogManager::deleteInstance();
-	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLQtTimeManager::deleteInstance();
 

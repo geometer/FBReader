@@ -62,6 +62,7 @@ void XMLConfigDelta::clear() {
 	}
 	myGroups.clear();
 	myChangesCounter = 0;
+	myCategories.clear();
 	myIsUpToDate = true;
 }
 

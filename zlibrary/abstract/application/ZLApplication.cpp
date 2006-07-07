@@ -21,8 +21,6 @@
 #include "ZLApplication.h"
 #include "../view/ZLView.h"
 
-std::string ZLApplication::ourApplicationDirectory;
-
 const std::string ZLApplication::MouseScrollDownKey = "<MouseScrollDown>";
 const std::string ZLApplication::MouseScrollUpKey = "<MouseScrollUp>";
 
@@ -35,16 +33,14 @@ static const std::string CONFIG = "Config";
 static const std::string AUTO_SAVE = "AutoSave";
 static const std::string TIMEOUT = "Timeout";
 
-ZLApplication::ZLApplication(const std::string &name) :
+ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	RotationAngleOption(ZLOption::CONFIG_CATEGORY, ROTATION, ANGLE, ZLViewWidget::DEGREES90),
 	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
 	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, KEYBOARD, FULL_CONTROL, false),
 	ConfigAutoSavingOption(ZLOption::CONFIG_CATEGORY, CONFIG, AUTO_SAVE, true),
 	ConfigAutoSaveTimeoutOption(ZLOption::CONFIG_CATEGORY, CONFIG, TIMEOUT, 1, 6000, 10),
-	myName(name),
 	myViewWidget(0),
 	myWindow(0) {
-	ourApplicationDirectory = BaseDirectory + PathDelimiter + myName;
 	if (ConfigAutoSavingOption.value()) {
 		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
 	}
@@ -148,9 +144,9 @@ void ZLApplication::doAction(int actionId) {
 void ZLApplication::resetWindowCaption() {
 	if (myWindow != 0) {
 		if ((currentView() == 0) || (currentView()->caption().empty())) {
-			myWindow->setCaption(myName);
+			myWindow->setCaption(ApplicationName());
 		} else {
-			myWindow->setCaption(myName + " - " + currentView()->caption());
+			myWindow->setCaption(ApplicationName() + " - " + currentView()->caption());
 		}
 	}
 }
@@ -186,10 +182,6 @@ bool ZLApplication::Action::isVisible() {
 
 bool ZLApplication::Action::isEnabled() {
 	return isVisible();
-}
-
-const std::string ZLApplication::ZLibraryDirectory() {
-	return BaseDirectory + PathDelimiter + "zlibrary";
 }
 
 void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {

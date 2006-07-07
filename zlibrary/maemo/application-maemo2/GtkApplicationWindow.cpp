@@ -82,7 +82,7 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLAppli
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
-	osso_initialize(this->application().name().c_str(), "0.0", false, 0);
+	osso_initialize(ZLApplication::ApplicationName().c_str(), "0.0", false, 0);
 
 	myWindow = HILDON_WINDOW(hildon_window_new());
 
@@ -180,7 +180,7 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	GtkToolItem *gtkItem;
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + application().name() + "/" + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + ZLApplication::ApplicationName() + "/" + buttonItem.iconName() + ".png").c_str());
 		gtkItem = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 

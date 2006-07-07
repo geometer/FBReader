@@ -28,10 +28,10 @@ class XMLConfig;
 class XMLOptions : public ZLOptions {
 
 public:
-	static void createInstance(const std::string &name, const std::string homeDirectory = "~") { ourInstance = new XMLOptions(name, homeDirectory); }
+	static void createInstance() { ourInstance = new XMLOptions(); }
 
 private:
-	XMLOptions(const std::string &name, const std::string &homeDirectory);
+	XMLOptions();
 	~XMLOptions();
 
 public:
@@ -51,8 +51,6 @@ public:
 
 	std::string stringValue(const std::string &name, const std::string &defaultValue);
 	void setValue(const std::string &name, const std::string &value, const std::string &category);
-
-	void setCategory(const std::string &name, const std::string &category);
 
 	void startAutoSave(int seconds);
 

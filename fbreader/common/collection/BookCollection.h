@@ -44,7 +44,6 @@ public:
 class BookCollection {
 
 public:
-  static const std::string DefaultBookPath;
   ZLStringOption PathOption;
   ZLBooleanOption ScanSubdirsOption;
 

@@ -124,7 +124,7 @@ void QApplicationWindow::refresh() {
 			if ((*it)->isButton()) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap((application().name() + "/" + button.iconName()).c_str());
+					const QPixmap &pixmap = Resource::loadPixmap((ZLApplication::ApplicationName() + "/" + button.iconName()).c_str());
 					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;

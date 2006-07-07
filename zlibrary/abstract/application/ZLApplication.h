@@ -31,16 +31,25 @@
 class ZLView;
 class ZLViewWidget;
 
-class ZLApplication {
+class ZLApplicationBase {
 
 public:
 	static const std::string BaseDirectory;
+	static const std::string HomeDirectory;
 	static const std::string PathDelimiter;
+	static const std::string &ApplicationName();
 	static const std::string ZLibraryDirectory();
-	static const std::string &ApplicationDirectory();
+	static const std::string ApplicationDirectory();
 
 private:
-	static std::string ourApplicationDirectory;
+	static std::string ourApplicationName;
+
+protected:
+	ZLApplicationBase(const std::string &name);
+	~ZLApplicationBase();
+};
+
+class ZLApplication : public ZLApplicationBase {
 
 public:
 	static const std::string MouseScrollUpKey;
@@ -266,7 +275,6 @@ public:
 
 	bool isFingerTapEventSupported() const;
 
-	const std::string &name() const;
 	shared_ptr<Action> action(int actionId) const;
 	bool isActionVisible(int actionId) const;
 	bool isActionEnabled(int actionId) const;
@@ -283,9 +291,6 @@ public:
 	const Menubar &menubar() const;
 
 	void refreshWindow();
-
-private:
-	const std::string myName;
 
 protected:
 	ZLViewWidget *myViewWidget;
@@ -366,8 +371,6 @@ inline void ZLApplication::quit() {
 		myWindow->close();
 	}
 }
-inline const std::string &ZLApplication::name() const { return myName; }
-
 inline ZLApplicationWindow::~ZLApplicationWindow() {}
 inline ZLApplication &ZLApplicationWindow::application() const { return *myApplication; }
 
@@ -402,8 +405,6 @@ inline ZLApplication::Menubar::Submenu::Submenu(const std::string &menuName) : M
 inline const std::string &ZLApplication::Menubar::Submenu::menuName() const { return myMenuName; }
 
 inline ZLApplication::Menubar::Separator::Separator(void) : Item(SEPARATOR) {}
-
-inline const std::string &ZLApplication::ApplicationDirectory() { return ourApplicationDirectory; }
 
 inline ZLApplication::MenuVisitor::~MenuVisitor() {}
 

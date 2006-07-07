@@ -37,7 +37,6 @@ public:
 	const std::string &getValue(const std::string &name, const std::string &defaultValue) const;
 	bool setValue(const std::string &name, const std::string &value, const std::string &category);
 	bool unsetValue(const std::string &name);
-	bool setCategory(const std::string &name, const std::string &category);
 
 private:
 	std::map<std::string,XMLConfigValue> myValues;
@@ -50,7 +49,7 @@ friend class XMLConfig;
 class XMLConfig {
 
 public:
-	XMLConfig(const std::string &name, const std::string &homeDirectory);
+	XMLConfig();
 	~XMLConfig();
 
 	void removeGroup(const std::string &name);
@@ -58,7 +57,6 @@ public:
 	const std::string &getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
-	void setCategory(const std::string &group, const std::string &name, const std::string &category);
 
 	void startAutoSave(int seconds);
 
@@ -74,8 +72,6 @@ private:
 	int changesCounter() const;
 
 private:
-	std::string myHomeDirectory;
-	std::string myName;
 	std::map<std::string,XMLConfigGroup*> myGroups;
 	std::set<std::string> myCategories;
 	class XMLConfigDelta *myDelta;
@@ -90,10 +86,6 @@ friend class ConfigSaveTask;
 inline const std::string &XMLConfig::getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const {
 	XMLConfigGroup *configGroup = getGroup(group);
 	return (configGroup != 0) ? configGroup->getValue(name, defaultValue) : defaultValue;
-}
-
-inline void XMLConfig::setCategory(const std::string &group, const std::string &name, const std::string &category) {
-	getGroup(group, true)->setCategory(name, category);
 }
 
 #endif /* __XMLCONFIG_H__ */

@@ -23,7 +23,6 @@
 
 #include <unix/ZLUnixFSManager.h>
 #include <maemo/ZLGtkTime.h>
-#include <abstract/XMLOptions.h>
 #include <maemo/GtkDialogManager.h>
 #include <gtk/GtkImageManager.h>
 #include <maemo/GtkDeviceInfo.h>
@@ -32,20 +31,11 @@
 
 #include "../../common/fbreader/FBReader.h"
 
-class ConfigSaverRunnable : public ZLRunnable {
-
-public:
-	void run() {
-		XMLOptions::deleteInstance();
-	}
-};
-
 int main(int argc, char **argv) {
 	gtk_init(&argc, &argv);
 
 	ZLUnixFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
-	XMLOptions::createInstance("FBReader");
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
 	((GtkDialogManager&)GtkDialogManager::instance()).setPixmapPath(GtkApplicationWindow::ImageDirectory);
@@ -60,8 +50,6 @@ int main(int argc, char **argv) {
 
 	GtkDeviceInfo::deleteInstance();
 	GtkImageManager::deleteInstance();
-	ConfigSaverRunnable configSaver;
-	GtkDialogManager::instance().wait(configSaver, "Saving config...");
 	GtkDialogManager::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLGtkTimeManager::deleteInstance();

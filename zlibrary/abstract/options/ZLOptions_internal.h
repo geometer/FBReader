@@ -53,8 +53,6 @@ public:
   virtual std::string stringValue(const std::string &name, const std::string &defaultValue) = 0;
   virtual void setValue(const std::string &name, const std::string &value, const std::string &category) = 0;
 
-  virtual void setCategory(const std::string &name, const std::string &category) = 0;
-
 	virtual void startAutoSave(int seconds) = 0;
 };
 

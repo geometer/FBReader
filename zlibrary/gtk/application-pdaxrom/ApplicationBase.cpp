@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -20,17 +19,7 @@
  */
 
 #include <abstract/ZLApplication.h>
-#include <maemo-maemo2/GtkApplicationWindow.h>
-
-#include "../../common/collection/BookCollection.h"
-#include "../../common/fbreader/CollectionView.h"
-#include "../../common/fbreader/FBFileHandler.h"
 
 const std::string ZLApplicationBase::BaseDirectory = "/usr/share";
-const std::string ZLApplicationBase::PathDelimiter = "/";
 const std::string ZLApplicationBase::HomeDirectory = "~";
-
-const std::string FBFileHandler::ImageDirectory = "FBReader";
-
-const std::string GtkApplicationWindow::ImageDirectory = ZLApplication::BaseDirectory + ZLApplication::PathDelimiter + "FBReader" + ZLApplication::PathDelimiter + "icons";
-const std::string CollectionView::DeleteBookImageFile = GtkApplicationWindow::ImageDirectory + "/FBReader/remove.png";
+const std::string ZLApplicationBase::PathDelimiter = "/";

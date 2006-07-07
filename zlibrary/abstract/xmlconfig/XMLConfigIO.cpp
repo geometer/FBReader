@@ -21,6 +21,7 @@
 #include <abstract/ZLFile.h>
 #include <abstract/ZLDir.h>
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLApplication.h>
 
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"
@@ -32,7 +33,8 @@ static const std::string UNKNOWN_CATEGORY = "unknown";
 static const std::string CHANGES_FILE = "config.changes";
 
 void XMLConfig::load() {
-	shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(false);
+	XMLConfigReader(*this, "").readDocument(ZLApplicationBase::ApplicationDirectory() + ZLApplicationBase::PathDelimiter + "default" + ZLApplicationBase::PathDelimiter + "config.xml");
+	shared_ptr<ZLDir> configDir = ZLFile(ZLApplicationBase::HomeDirectory + ZLApplicationBase::PathDelimiter + "." + ZLApplicationBase::ApplicationName()).directory(false);
 	if (configDir.isNull()) {
 		return;
 	}
@@ -41,8 +43,11 @@ void XMLConfig::load() {
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
 		ZLFile configFile(configDir->itemName(*it));
 		if (configFile.extension() == "xml") {
-			XMLConfigReader(*this, it->substr(0, it->length() - 4)).readDocument(configFile.inputStream());
+			XMLConfigReader(*this, configFile.name()).readDocument(configFile.inputStream());
 		}
+	}
+	if (myDelta == 0) {
+		myDelta = new XMLConfigDelta();
 	}
 	XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(configDir->itemName(CHANGES_FILE));
 }
@@ -50,14 +55,17 @@ void XMLConfig::load() {
 void XMLConfig::saveAll() {
 	saveDelta();
 
-	shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(true);
+	shared_ptr<ZLDir> configDir = ZLFile(ZLApplicationBase::HomeDirectory + ZLApplicationBase::PathDelimiter + "." + ZLApplicationBase::ApplicationName()).directory(true);
 
 	if (!configDir.isNull()) {
-		for (std::set<std::string>::const_iterator it = myCategories.begin(); it != myCategories.end(); ++it) {
-			shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(*it + ".xml")).outputStream();
-			if (!stream.isNull() && stream->open()) {
-				XMLConfigWriter(*this, *stream, *it).write();
-				stream->close();
+		std::set<std::string> &categories = myDelta->myCategories;
+		for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
+			if (!it->empty()) {
+				shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(*it + ".xml")).outputStream();
+				if (!stream.isNull() && stream->open()) {
+					XMLConfigWriter(*this, *stream, *it).write();
+					stream->close();
+				}
 			}
 		}
 	} // TODO: show error message if config was not saved
@@ -71,7 +79,7 @@ void XMLConfig::saveDelta() {
 	if ((myDelta == 0) || (myDelta->myIsUpToDate)) {
 		return;
 	}
-	shared_ptr<ZLDir> configDir = ZLFile(myHomeDirectory + "/." + myName).directory(true);
+	shared_ptr<ZLDir> configDir = ZLFile(ZLApplicationBase::HomeDirectory + ZLApplicationBase::PathDelimiter + "." + ZLApplicationBase::ApplicationName()).directory(true);
 	shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(CHANGES_FILE)).outputStream();
 	if (!stream.isNull() && stream->open()) {
 		XMLConfigDeltaWriter(*myDelta, *stream).write();

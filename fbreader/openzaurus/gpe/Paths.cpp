@@ -22,15 +22,14 @@
 #include <abstract/ZLApplication.h>
 #include <gpe/GtkApplicationWindow.h>
 
-#include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
-const std::string ZLApplication::BaseDirectory = "/usr/share";
-const std::string ZLApplication::PathDelimiter = "/";
+const std::string ZLApplicationBase::BaseDirectory = "/usr/share";
+const std::string ZLApplicationBase::PathDelimiter = "/";
+const std::string ZLApplicationBase::HomeDirectory = "~";
 
 const std::string FBFileHandler::ImageDirectory = "fbreader";
 
 const std::string GtkApplicationWindow::ImageDirectory = "/usr/share/pixmaps";
 const std::string CollectionView::DeleteBookImageFile = GtkApplicationWindow::ImageDirectory + "/fbreader/remove.png";
-const std::string BookCollection::DefaultBookPath = "/media/cf/FBooks:~/FBooks";

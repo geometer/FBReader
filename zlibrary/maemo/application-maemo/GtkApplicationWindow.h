@@ -22,6 +22,7 @@
 #define __GTKAPPLICATIONWINDOW_H__
 
 #include <map>
+#include <stack>
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>

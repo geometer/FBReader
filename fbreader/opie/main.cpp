@@ -23,7 +23,6 @@
 
 #include <qt/ZLQtTime.h>
 #include <unix/ZLUnixFSManager.h>
-#include <abstract/XMLOptions.h>
 #include <opie/QDialogManager.h>
 #include <qt/QImageManager.h>
 #include <qtopia/QDeviceInfo.h>
@@ -37,7 +36,6 @@ int main(int argc, char **argv) {
 
 	ZLQtTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
-	XMLOptions::createInstance("FBReader");
 	QDialogManager::createInstance();
 	QImageManager::createInstance();
 	QDeviceInfo::createInstance();
@@ -51,7 +49,6 @@ int main(int argc, char **argv) {
 	QDeviceInfo::deleteInstance();
 	QImageManager::deleteInstance();
 	QDialogManager::deleteInstance();
-	XMLOptions::deleteInstance();
 	ZLUnixFSManager::deleteInstance();
 	ZLQtTimeManager::deleteInstance();
 

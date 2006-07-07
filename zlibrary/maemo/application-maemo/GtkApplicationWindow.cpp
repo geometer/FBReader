@@ -80,10 +80,10 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 
 GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
 	myApp = HILDON_APP(hildon_app_new());
-	hildon_app_set_title(myApp, this->application().name().c_str());
+	hildon_app_set_title(myApp, ZLApplication::ApplicationName().c_str());
 	hildon_app_set_two_part_title(myApp, FALSE);
 
-	osso_initialize(this->application().name().c_str(), "0.0", true, 0);
+	osso_initialize(ZLApplication::ApplicationName().c_str(), "0.0", true, 0);
 
 	myAppView = HILDON_APPVIEW(hildon_appview_new(0));
 
@@ -182,7 +182,7 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	GtkToolItem *gtkItem;
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + application().name() + "/" + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + ZLApplication::ApplicationName() + "/" + buttonItem.iconName() + ".png").c_str());
 		gtkItem = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 

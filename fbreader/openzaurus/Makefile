@@ -54,6 +54,7 @@ clean: .cleandir
 	@mkdir $(BASEDIR)/share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
 	@mkdir $(BASEDIR)/share/FBReader/default
+	@cp ../data/default/config.openzaurus.xml $(BASEDIR)/share/FBReader/default/config.xml
 	@cp ../data/default/keymap.zaurus.xml $(BASEDIR)/share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(STYLE).xml $(BASEDIR)/share/FBReader/default/styles.xml
 	@mkdir -p $(APPDIR)

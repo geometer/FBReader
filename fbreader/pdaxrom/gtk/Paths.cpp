@@ -19,18 +19,12 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLApplication.h>
 #include <gtk-pdaxrom/GtkApplicationWindow.h>
 
-#include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
-
-const std::string ZLApplication::BaseDirectory = "/usr/share";
-const std::string ZLApplication::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 
 const std::string GtkApplicationWindow::ImageDirectory = "/usr/share/pixmaps";
 const std::string CollectionView::DeleteBookImageFile = GtkApplicationWindow::ImageDirectory + "/FBReader/remove.png";
-const std::string BookCollection::DefaultBookPath = "/mnt/card/FBooks:/mnt/cf/FBooks";

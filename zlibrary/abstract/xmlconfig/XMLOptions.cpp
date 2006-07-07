@@ -25,8 +25,8 @@
 #include "XMLOptions.h"
 #include "XMLConfig.h"
 
-XMLOptions::XMLOptions(const std::string &name, const std::string &homeDirectory) {
-	myConfig = new XMLConfig(name, homeDirectory);
+XMLOptions::XMLOptions() {
+	myConfig = new XMLConfig();
 }
 
 XMLOptions::~XMLOptions() {
@@ -83,10 +83,6 @@ std::string XMLOptions::stringValue(const std::string &name, const std::string &
 
 void XMLOptions::setValue(const std::string &name, const std::string &value, const std::string &category) {
 	myConfig->setValue(myGroupName, name, value, category);
-}
-
-void XMLOptions::setCategory(const std::string &name, const std::string &category) {
-	myConfig->setCategory(myGroupName, name, category);
 }
 
 void XMLOptions::startAutoSave(int seconds) {

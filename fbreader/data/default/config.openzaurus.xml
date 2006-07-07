@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <group name="Options">
+    <option name="BookPath" value="/media/cf/FBooks:~/FBooks"/>
+  </group>
+</config>

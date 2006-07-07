@@ -19,9 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
-
-const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";
