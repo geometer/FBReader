@@ -61,10 +61,6 @@ void KeyBindingsReader::readBindings() {
 }
 
 FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
-	myBindings0.loadCustomBindings();
-	myBindings90.loadCustomBindings();
-	myBindings180.loadCustomBindings();
-	myBindings270.loadCustomBindings();
 }
 
 KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle, bool force) {
@@ -86,6 +82,8 @@ KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle, bool force)
 
 KeyBindings::KeyBindings(const std::string &optionGroupName) : myOptionGroupName(optionGroupName) {
   loadDefaultBindings();
+  loadCustomBindings();
+	myChanged = false;
 }
 
 void KeyBindings::loadDefaultBindings() {
@@ -114,6 +112,9 @@ void KeyBindings::loadCustomBindings() {
 }
 
 void KeyBindings::saveCustomBindings() {
+	if (!myChanged) {
+		return;
+	}
 	std::map<std::string,int> keymap;
 	KeyBindingsReader(keymap).readBindings();
 
@@ -141,6 +142,7 @@ KeyBindings::~KeyBindings() {
 
 void KeyBindings::bindKey(const std::string &key, int code) {
 	myBindingsMap[key] = code;
+	myChanged = true;
 }
 
 int KeyBindings::getBinding(const std::string &key) {

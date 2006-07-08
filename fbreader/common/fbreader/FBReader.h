@@ -60,8 +60,9 @@ public:
 private:
 	const std::string myOptionGroupName;
 	std::map<std::string,int> myBindingsMap;
+	bool myChanged;
 
-	friend class FullKeyBindings;
+friend class FullKeyBindings;
 };
 
 class FullKeyBindings {

@@ -8,6 +8,7 @@
 	<key code="0xFF54" name="&lt;ScrollKey Down&gt;"/>
 	<key code="0xFFC1" name="&lt;Menu&gt;"/>
 	<key code="0xFFC2" name="&lt;Home&gt;"/>
+	<key code="0xFF62" name="&lt;Power&gt;"/>
 	<key code="0xFFC3" name="&lt;FullScreen&gt;"/>
 	<key code="0xFFC4" name="&lt;ZoomKey +&gt;"/>
 	<key code="0xFFC5" name="&lt;ZoomKey -&gt;"/>
