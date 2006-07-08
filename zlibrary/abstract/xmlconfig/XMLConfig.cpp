@@ -52,13 +52,11 @@ bool XMLConfigGroup::setValue(const std::string &name, const std::string &value,
 	return true;
 }
 
-bool XMLConfigGroup::unsetValue(const std::string &name) {
+void XMLConfigGroup::unsetValue(const std::string &name) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it != myValues.end()) {
 		myValues.erase(it);
-		return true;
 	}
-	return false;
 }
 
 class ConfigSaveTask : public ZLRunnable {
@@ -125,6 +123,7 @@ void XMLConfig::removeGroup(const std::string &name) {
 			const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
 			for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
 				myDelta->unsetValue(name, jt->first);
+				myDelta->addCategory(jt->second.Category);
 			}
 		}
 		delete it->second;
@@ -140,8 +139,16 @@ void XMLConfig::setValue(const std::string &group, const std::string &name, cons
 
 void XMLConfig::unsetValue(const std::string &group, const std::string &name) {
 	XMLConfigGroup *configGroup = getGroup(group, false);
-	if ((configGroup != 0) && configGroup->unsetValue(name) && (myDelta != 0)) {
-		myDelta->unsetValue(group, name);
+	if (configGroup == 0) {
+		return;
+	}
+	std::map<std::string,XMLConfigValue>::iterator it = configGroup->myValues.find(name);
+	if (it != configGroup->myValues.end()) {
+		if (myDelta != 0) {
+			myDelta->addCategory(it->second.Category);
+			myDelta->unsetValue(group, name);
+		}
+		configGroup->myValues.erase(it);
 	}
 }
 

@@ -50,10 +50,11 @@ public:
 	XMLConfigDeltaGroup *getGroup(const std::string &name);
 	void clear();
 
+private:
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
+	void addCategory(const std::string &category);
 
-private:
 	std::map<std::string,XMLConfigDeltaGroup*> myGroups;
 	std::set<std::string> myCategories;
 

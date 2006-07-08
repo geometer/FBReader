@@ -20,6 +20,12 @@
 
 #include "XMLConfigDelta.h"
 
+void XMLConfigDelta::addCategory(const std::string &category) {
+	if (myCategories.find(category) == myCategories.end()) {
+		myCategories.insert(category);
+	}
+}
+
 bool XMLConfigDeltaGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
 	std::set<std::string>::iterator it = myRemovedNames.find(name);
 	bool updateNewOption = true;
