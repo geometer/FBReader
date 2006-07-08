@@ -135,3 +135,12 @@ void ZLFile::fillInfo() const {
   }
   myInfoIsFilled = true;
 }
+
+bool ZLFile::remove() const {
+	if (ZLFSManager::instance().removeFile(myPath)) {
+		myInfoIsFilled = false;
+		return true;
+	} else {
+		return false;
+	}
+}

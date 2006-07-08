@@ -19,6 +19,7 @@
  */
 
 #include <sys/stat.h>
+#include <unistd.h>
 
 #include <abstract/ZLStringUtil.h>
 
@@ -79,4 +80,8 @@ ZLFileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
 		info.IsDirectory = S_ISDIR(fileStat.st_mode);
 	}
 	return info;
+}
+
+bool ZLUnixFSManager::removeFile(const std::string &path) const {
+	return unlink(path.c_str()) == 0;
 }

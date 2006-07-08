@@ -52,6 +52,7 @@ protected:
 	virtual ZLFSDir *createNewDirectory(const std::string &path) const = 0;
 	virtual ZLFileInfo fileInfo(const std::string &path) const = 0;
 	virtual bool isZipSupported() const = 0;
+	virtual bool removeFile(const std::string &path) const = 0;
 
 friend class ZLFile;
 };

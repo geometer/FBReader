@@ -72,7 +72,7 @@ void XMLConfig::saveAll() {
 	if (myDelta != 0) {
 		myDelta->clear();
 	}
-	// TODO: remove CHANGES_FILE
+	ZLFile(ZLApplicationBase::HomeDirectory + ZLApplicationBase::PathDelimiter + "." + ZLApplicationBase::ApplicationName() + ZLApplicationBase::PathDelimiter + CHANGES_FILE).remove();
 }
 
 void XMLConfig::saveDelta() {

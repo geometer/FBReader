@@ -42,6 +42,7 @@ protected:
 	ZLFSDir *createNewDirectory(const std::string &path) const;
 	ZLFileInfo fileInfo(const std::string &path) const;
 	bool isZipSupported() const;
+	bool removeFile(const std::string &path) const;
 };
 
 #endif /* __ZLUNIXFSMANAGER_H__ */

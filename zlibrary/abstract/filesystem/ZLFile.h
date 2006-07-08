@@ -55,6 +55,8 @@ public:
 	bool isDirectory() const;
 	bool isArchive() const;
 
+	bool remove() const;
+
 	const std::string &path() const;
 	const std::string &fullName() const;
 	const std::string &name() const;
