@@ -32,9 +32,11 @@ public:
 	GtkViewWidget(ZLApplication *application, Angle initialAngle);
 	~GtkViewWidget();
 
-	GtkWidget *area() { return myArea; }
 	int width() const;
 	int height() const;
+
+	GtkWidget *area() { return myArea; }
+	void onMousePressed(GdkEventButton *event);
 
 private:
 	void trackStylus(bool track);

@@ -49,7 +49,6 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 	myTitleHeight = -1;
 
 	myVerticalDelta = -1;
-	myHorizontalDelta = -1;
 
 	myToolBar = new MyMenuBar(this);
 	myMenu = new QPopupMenu(myToolBar);
@@ -221,6 +220,7 @@ void QApplicationWindow::focusInEvent(QFocusEvent*) {
 		showNormal();
 		showFullScreen();
 	}
+	fullScreenWorkaround();
 }
 
 int QApplicationWindow::veritcalAdjustment() {
@@ -231,9 +231,16 @@ int QApplicationWindow::veritcalAdjustment() {
 }
 
 void QApplicationWindow::resizeEvent(QResizeEvent *event) {
+	if (event->size().width() != qApp->desktop()->width()) {
+		QSize oldSize = event->size();
+		QSize newSize = oldSize;
+		newSize.setWidth(qApp->desktop()->width());
+		QResizeEvent newEvent(newSize, oldSize);
+		QApplication::sendEvent(this, &newEvent);
+		return;
+	}
 	if ((myVerticalDelta == -1) && !myFullScreen) {
 		myVerticalDelta = qApp->desktop()->height() - event->size().height();
-		myHorizontalDelta = qApp->desktop()->width() - event->size().width();
 	}
 	if (myFullScreen && (size() != qApp->desktop()->size())) {
 		int titleHeight = topData()->normalGeometry.top();
@@ -262,6 +269,7 @@ void QApplicationWindow::setFullscreen(bool fullscreen) {
 			myTitleHeight = -1;
 		}
 		setWFlags(getWFlags() | WStyle_Customize);
+		showMaximized();
 	}
 }
 

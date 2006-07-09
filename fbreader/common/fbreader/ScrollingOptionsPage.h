@@ -42,7 +42,7 @@ private:
     ZLSpinOptionEntry *myLinesToScrollEntry;
     ZLSpinOptionEntry *myPercentToScrollEntry;
 
-    void init(FBReader::ScrollingOptions &options);
+    void init(FBReader &fbreader, FBReader::ScrollingOptions &options);
     void connect(ZLDialogContent &dialogTab);
     void show(bool visible);
   };
@@ -52,7 +52,7 @@ private:
   ScrollingEntries myMouseScrollingEntries;
   ScrollingEntries myFingerTapScrollingEntries;
 
-friend class MainEntry;
+friend class ScrollingTypeEntry;
 friend class ScrollingModeEntry;
 };
 

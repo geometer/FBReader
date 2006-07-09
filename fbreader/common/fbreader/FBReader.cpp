@@ -105,6 +105,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 		FINGER_TAP_SCROLLING, LINES_TO_SCROLL, 1,
 		FINGER_TAP_SCROLLING, PERCENT_TO_SCROLL, 50
 	),
+	EnableFingerScrollingOption(ZLOption::CONFIG_CATEGORY, FINGER_TAP_SCROLLING, "Enabled", true),
 	SearchBackwardOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Backward", false),
 	SearchIgnoreCaseOption(FBOptions::SEARCH_CATEGORY, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),

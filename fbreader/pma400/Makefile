@@ -7,12 +7,12 @@ TDIR = __ipk
 DATADIR = $(TDIR)/data
 CTRLDIR = $(TDIR)/control
 
-FILE = $(wildcard *.control)
-PACKAGENAME = $(patsubst %.control,%,$(FILE))
+CONTROLFILE = $(wildcard *.control)
+PACKAGENAME = $(patsubst %.control,%,$(CONTROLFILE))
 
 version = $(shell cat ../VERSION)
-depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
-files = $(shell sed -n -e "s/^Files://p" $(FILE))
+depends = $(shell sed -n -e "s/^Depends: *//p" $(CONTROLFILE))
+files = $(shell sed -n -e "s/^Files://p" $(CONTROLFILE))
 package = $(PACKAGENAME)_$(version)_pma400_$(ARCH)
 
 all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
@@ -30,6 +30,7 @@ install:
 	@mkdir share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.240x320.fb2 share/FBReader/help/HowToStart.fb2
 	@mkdir share/FBReader/default
+	@cp ../data/default/config.pma400.xml share/FBReader/default/config.xml
 	@cp ../data/default/keymap.pma400.xml share/FBReader/default/keymap.xml
 	@cp ../data/default/styles.240x320.xml share/FBReader/default/styles.xml
 	@rm -rf $(TDIR)
@@ -65,7 +66,7 @@ $(CTRLDIR)/control:
 	@echo "Filename: ./$(package).ipk" >> $@
 	@echo "Version: $(version)" >> $@
 	@echo "Depends: $(depends)" >> $@
-	@egrep -v "^(Files|Version|Depends):" $(FILE) >> $@
+	@egrep -v "^(Files|Version|Depends):" $(CONTROLFILE) >> $@
 
 package:
 	@echo -n "Packaging..."

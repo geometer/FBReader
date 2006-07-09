@@ -203,6 +203,12 @@ void FBReader::FindPreviousAction::run() {
 FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
 }
 
+bool FBReader::ScrollingAction::isEnabled() {
+	return
+		(&myOptions != &myFBReader.FingerTapScrollingOptions) ||
+		myFBReader.EnableFingerScrollingOption.value();
+}
+
 void FBReader::ScrollingAction::run() {
 	int delay = myFBReader.myLastScrollingTime.millisecondsTo(ZLTime());
 	TextView *textView = (TextView*)myFBReader.currentView();

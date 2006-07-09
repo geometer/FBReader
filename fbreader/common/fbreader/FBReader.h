@@ -158,6 +158,7 @@ public:
 	ScrollingOptions SmallScrollingOptions;
 	ScrollingOptions MouseScrollingOptions;
 	ScrollingOptions FingerTapScrollingOptions;
+	ZLBooleanOption EnableFingerScrollingOption;
 
 	ZLBooleanOption SearchBackwardOption;
 	ZLBooleanOption SearchIgnoreCaseOption;
@@ -306,6 +307,7 @@ private:
 
 	public:
 		ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward);
+		bool isEnabled();
 		void run();
 
 	private:

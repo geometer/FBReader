@@ -117,7 +117,6 @@ private:
 	int myTitleHeight;
 
 	int myVerticalDelta;
-	int myHorizontalDelta;
 
 	QMenuBar *myToolBar;
 	QPopupMenu *myMenu;

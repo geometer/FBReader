@@ -18,36 +18,37 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLTime.h>
-
 #include "../util/GtkSignalUtil.h"
 #include "GtkViewWidget.h"
 #include "GtkPaintContext.h"
 #include "gdk-pixbuf-hack.h"
 
 static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
-	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
-	ZLView *view = viewWidget->view();
+	((GtkViewWidget*)data)->onMousePressed(event);
+}
+
+void GtkViewWidget::onMousePressed(GdkEventButton *event) {
+	ZLPaintContext &context = view()->context();
 	int x, y;
-	switch (viewWidget->rotation()) {
+	switch (rotation()) {
 		default:
-			x = (int)event->x - view->context().leftMargin(),
-			y = (int)event->y - view->context().topMargin();
+			x = (int)event->x - context.leftMargin(),
+			y = (int)event->y - context.topMargin();
 			break;
 		case ZLViewWidget::DEGREES90:
-			x = viewWidget->height() - (int)event->y - view->context().rightMargin(),
-			y = (int)event->x - view->context().topMargin();
+			x = height() - (int)event->y - context.rightMargin(),
+			y = (int)event->x - context.topMargin();
 			break;
 		case ZLViewWidget::DEGREES180:
-			x = viewWidget->width() - (int)event->x - view->context().rightMargin(),
-			y = viewWidget->height() - (int)event->y - view->context().bottomMargin();
+			x = width() - (int)event->x - context.rightMargin(),
+			y = height() - (int)event->y - context.bottomMargin();
 			break;
 		case ZLViewWidget::DEGREES270:
-			x = (int)event->y - view->context().leftMargin();
-			y = viewWidget->width() - (int)event->x - view->context().bottomMargin();
+			x = (int)event->y - context.leftMargin();
+			y = width() - (int)event->x - context.bottomMargin();
 			break;
 	}
-	view->onStylusPress(x, y);
+	view()->onStylusPress(x, y);
 }
 
 int GtkViewWidget::width() const {
