@@ -46,11 +46,7 @@ void GtkViewWidget::onMousePressed(GdkEventButton *event) {
 	ZLPaintContext &context = view()->context();
 	x -= context.leftMargin();
 	y -= context.topMargin();
-	if (event->button == 1) {
-		view()->onStylusPress(x, y);
-	} else if (event->button == 8) {
-		view()->onFingerTap(x, y);
-	}
+	view()->onStylusPress(x, y);
 }
 
 int GtkViewWidget::width() const {

@@ -90,31 +90,45 @@ void QViewWidget::QViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) {
 }
 
 int QViewWidget::QViewWidgetInternal::x(const QMouseEvent *event) const {
-	ZLPaintContext &context = myHolder.view()->context();
+	const int maxX = width() - 1;
+	const int maxY = height() - 1;
+	int logicalX;
 	switch (myHolder.rotation()) {
 		default:
-			return std::min(std::max(event->x(), 0), width()) - context.leftMargin();
+			logicalX = std::min(std::max(event->x(), 0), maxX);
+			break;
 		case DEGREES90:
-			return height() - std::min(std::max(event->y(), 0), height()) - context.rightMargin();
+			logicalX = maxY - std::min(std::max(event->y(), 0), maxY);
+			break;
 		case DEGREES180:
-			return width() - std::min(std::max(event->x(), 0), width()) - context.rightMargin();
+			logicalX = maxX - std::min(std::max(event->x(), 0), maxX);
+			break;
 		case DEGREES270:
-			return std::min(std::max(event->y(), 0), height()) - context.leftMargin();
+			logicalX = std::min(std::max(event->y(), 0), maxY);
+			break;
 	}
+	return logicalX - myHolder.view()->context().leftMargin();
 }
 
 int QViewWidget::QViewWidgetInternal::y(const QMouseEvent *event) const {
-	ZLPaintContext &context = myHolder.view()->context();
+	const int maxX = width() - 1;
+	const int maxY = height() - 1;
+	int logicalY;
 	switch (myHolder.rotation()) {
 		default:
-			return std::min(std::max(event->y(), 0), height()) - context.topMargin();
+			logicalY = std::min(std::max(event->y(), 0), maxY);
+			break;
 		case DEGREES90:
-			return std::min(std::max(event->x(), 0), width()) - context.topMargin();
+			logicalY = std::min(std::max(event->x(), 0), maxX);
+			break;
 		case DEGREES180:
-			return height() - std::min(std::max(event->y(), 0), height()) - context.bottomMargin();
+			logicalY = maxY - std::min(std::max(event->y(), 0), maxY);
+			break;
 		case DEGREES270:
-			return width() - std::min(std::max(event->x(), 0), width()) - context.bottomMargin();
+			logicalY = maxX - std::min(std::max(event->x(), 0), maxX);
+			break;
 	}
+	return logicalY - myHolder.view()->context().topMargin();
 }
 
 void QViewWidget::repaint()	{

@@ -22,7 +22,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <abstract/ZLUnicodeUtil.h>
-#include "../../maemo/view/GtkViewWidget.h"
+#include "../view/GtkViewWidget.h"
 #include "../../gtk/util/GtkKeyUtil.h"
 #include "../../gtk/util/GtkSignalUtil.h"
 

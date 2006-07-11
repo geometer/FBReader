@@ -30,22 +30,25 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	int x, y;
 	switch (viewWidget->rotation()) {
 		default:
-			x = (int)event->x - view->context().leftMargin(),
-			y = (int)event->y - view->context().topMargin();
+			x = (int)event->x;
+			y = (int)event->y;
 			break;
 		case ZLViewWidget::DEGREES90:
-			x = viewWidget->height() - (int)event->y - view->context().rightMargin(),
-			y = (int)event->x - view->context().topMargin();
+			x = viewWidget->height() - (int)event->y;
+			y = (int)event->x;
 			break;
 		case ZLViewWidget::DEGREES180:
-			x = viewWidget->width() - (int)event->x - view->context().rightMargin(),
-			y = viewWidget->height() - (int)event->y - view->context().bottomMargin();
+			x = viewWidget->width() - (int)event->x;
+			y = viewWidget->height() - (int)event->y;
 			break;
 		case ZLViewWidget::DEGREES270:
-			x = (int)event->y - view->context().leftMargin();
-			y = viewWidget->width() - (int)event->x - view->context().bottomMargin();
+			x = (int)event->y;
+			y = viewWidget->width() - (int)event->x;
 			break;
 	}
+	ZLPaintContext &context = view->context();
+	x -= context.leftMargin();
+	y -= context.topMargin();
 	view->onStylusPress(x, y);
 }
 

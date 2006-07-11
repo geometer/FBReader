@@ -28,7 +28,7 @@
 #include <gpe/GtkApplicationWindow.h>
 #include <gtk/GtkImageManager.h>
 #include <gtk/GtkDeviceInfo.h>
-#include <maemo/GtkPaintContext.h>
+#include <gpe/GtkPaintContext.h>
 
 #include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
