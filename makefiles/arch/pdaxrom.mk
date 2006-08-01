@@ -4,7 +4,7 @@ AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
 LD = $(BASEDIR)/bin/armv5tel-linux-g++
 
 DEPGEN = $(CC) -MM
-CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W
+CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 
 MOC = $(BASEDIR)/bin/moc
 QTINCLUDE = -I $(USRDIR)/qt/include
@@ -13,8 +13,8 @@ INCDIR = $(USRDIR)/include
 GTKINCLUDE = -I$(INCDIR)/libxml2 -I$(INCDIR)/libglade-2.0 -I$(INCDIR)/gtk-2.0 -I$(USRDIR)/lib/gtk-2.0/include -I$(USRDIR)/X11R6/include -I$(INCDIR)/atk-1.0 -I$(INCDIR)/pango-1.0 -I$(INCDIR)/freetype2 -I$(INCDIR)/glib-2.0 -I$(USRDIR)/lib/glib-2.0/include
 
 EXPATLIBS = -lexpat
-#ENCALIBS = -L $(USRDIR)/lib -lenca
-ENCALIBS = $(USRDIR)/lib/libenca.so.0
+ENCALIBS = -L $(USRDIR)/lib -lenca
+#ENCALIBS = $(USRDIR)/lib/libenca.so.0
 BZIP2LIBS = -lbz2
 
 ifeq "$(UI_TYPE)" "qt"

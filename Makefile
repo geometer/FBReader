@@ -2,16 +2,17 @@ ROOTDIR = $(PWD)
 
 include makefiles/platforms.mk
 
-LIBDIR = zlibrary
+LIBDIRS = zlibrary zldictionary
 APPDIR = fbreader
 
-.lib:
-	cd $(LIBDIR); make
-
-.app:
-	cd $(APPDIR); make
-
-all: .lib .app
+all:
+	@for dir in $(LIBDIRS) $(APPDIR); do \
+		cd $$dir; \
+		if ! $(MAKE); then \
+			exit 1; \
+		fi; \
+		cd $(ROOTDIR); \
+	done;
 
 install: all
 	cd $(APPDIR); make install
@@ -20,8 +21,9 @@ package: all
 	cd $(APPDIR); make package
 
 clean:
-	cd $(LIBDIR); make clean
-	cd $(APPDIR); make clean
+	@for dir in $(LIBDIRS) $(APPDIR); do \
+		cd $$dir; make clean; cd $(ROOTDIR); \
+	done
 
 distclean: clean
 	rm -vf *.tgz *.ipk *.deb *.prc *.log

@@ -41,11 +41,14 @@ clean: .cleandir
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
-	@mkdir -p $(BASEDIR)/bin
 	@mkdir -p $(BASEDIR)/share/zlibrary
 	@cp ../../zlibrary/data/keynames.openzaurus-$(UI_TYPE).xml $(BASEDIR)/share/zlibrary/keynames.xml
 	@cp -r ../../zlibrary/data/encodings $(BASEDIR)/share/zlibrary
+	@mkdir -p $(BASEDIR)/bin
 	@cp ../FBReader $(BASEDIR)/bin
+	@mkdir -p $(BASEDIR)/lib
+	@cp ../../zlibrary/libzlibrary.so $(BASEDIR)/lib
+	@cp ../../zldictionary/libzldictionary.so $(BASEDIR)/lib
 	@mkdir -p $(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader.png $(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(PICSDIR)

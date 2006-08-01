@@ -15,7 +15,7 @@ FBReader requires
      http://expat.sourceforge.net
   ** enca -- encoding detection library (http://trific.ath.cx/software/enca/)
   ** UI library -- this depends on your target platform. For desktop,
-       Qt library, version >= 3.0
+       Qt library, version 3.*
      OR
        GTK+ library, version >= 2.4 
      should be installed.

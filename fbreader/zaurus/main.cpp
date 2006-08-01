@@ -27,6 +27,7 @@
 #include <qt/QImageManager.h>
 #include <qtopia/QDeviceInfo.h>
 #include <qtopia/QPaintContext.h>
+#include <qtopia/ZLQtDictionary.h>
 
 #include "../common/fbreader/FBReader.h"
 
@@ -38,6 +39,7 @@ int main(int argc, char **argv) {
 	QDialogManager::createInstance();
 	QImageManager::createInstance();
 	QDeviceInfo::createInstance();
+	ZLQtDictionary::createInstance();
 
 	FBReader *reader = new FBReader(new QPaintContext(), argc == 1 ? std::string() : argv[1]);
 	ZLDialogManager::instance().createApplicationWindow(reader);
@@ -45,6 +47,7 @@ int main(int argc, char **argv) {
 	int code = application.exec();
 	delete reader;
 
+	ZLQtDictionary::deleteInstance();
 	QDeviceInfo::deleteInstance();
 	QImageManager::deleteInstance();
 	QDialogManager::deleteInstance();

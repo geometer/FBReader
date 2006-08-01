@@ -281,7 +281,12 @@ void TextView::drawTextLine(const LineInfo &info) {
 		if (width > 0) {
 			int height = myStyle.elementHeight(element);
 			if (height > 0) {
-				myTextElementMap.push_back(TextElementPosition(paragraphNumber, pos.wordNumber(), kind, x, x + width - 1, y - height + 1, y));
+				myTextElementMap.push_back(
+					TextElementPosition(
+						paragraphNumber, pos.wordNumber(), kind,
+						x, x + width - 1, y - height + 1, y
+					)
+				);
 			}
 		}
 	}
@@ -292,7 +297,18 @@ void TextView::drawTextLine(const LineInfo &info) {
 			context().setColor(myStyle.style()->color());
 			ZLUnicodeUtil::Ucs2String ucs2string;
 			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
-			drawWord(context().x(), context().y() - myStyle.style()->verticalShift(), word, 0, len, ucs2string[len - 1] != '-');
+			const bool addHyphenationSign = ucs2string[len - 1] != '-';
+			const int x = context().x(); 
+			const int y = context().y(); 
+			drawWord(x, y - myStyle.style()->verticalShift(), word, 0, len, addHyphenationSign);
+			const int width = myStyle.wordWidth(word, 0, len, addHyphenationSign);
+			const int height = myStyle.elementHeight(word);
+			myTextElementMap.push_back(
+				TextElementPosition(
+					paragraphNumber, info.End.wordNumber(), TextElement::WORD_ELEMENT,
+					x, x + width - 1, y - height + 1, y
+				)
+			);
 		}
 	}
 }

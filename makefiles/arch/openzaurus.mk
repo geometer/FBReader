@@ -23,4 +23,4 @@ else
 endif
 
 CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
-DEPGEN = $(CC) -MM
+LDFLAGS = -Wl,-rpath,/opt/QtPalmtop/lib

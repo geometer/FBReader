@@ -1,4 +1,4 @@
-Files: bin/FBReader share apps pics/FBReader.png pics/FBReader/*.png
+Files: bin lib share apps pics
 Priority: optional
 Section: qpe/applications
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>

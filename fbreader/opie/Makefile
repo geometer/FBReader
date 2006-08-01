@@ -22,13 +22,16 @@ clean: .cleandir
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
 	@mkdir -p $(BASEDIR)/bin
+	@cp ../FBReader $(BASEDIR)/bin
+	@mkdir -p $(BASEDIR)/lib
+	@cp ../../zlibrary/libzlibrary.so $(BASEDIR)/lib
+	@cp ../../zldictionary/libzldictionary.so $(BASEDIR)/lib
 	@mkdir -p $(BASEDIR)/apps/Applications
 	@mkdir -p $(BASEDIR)/share/zlibrary
 	@cp ../../zlibrary/data/keynames.opensimpad.xml $(BASEDIR)/share/zlibrary/keynames.xml
 	@cp -r ../../zlibrary/data/encodings $(BASEDIR)/share/zlibrary
 	@mkdir -p $(BASEDIR)/pics/fbreader
 	@sed "s/VERSION/$(version)/" control.in > $(DEBDIR)/control
-	@cp ../FBReader $(BASEDIR)/bin
 	@cp fbreader.desktop $(BASEDIR)/apps/Applications
 	@cp ../icons/22x18/FBReader.png $(BASEDIR)/pics/fbreader
 	@cp ../icons/22x18/FBReader/*.png $(BASEDIR)/pics/fbreader

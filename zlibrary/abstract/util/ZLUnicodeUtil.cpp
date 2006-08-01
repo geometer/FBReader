@@ -173,7 +173,7 @@ void ZLUnicodeUtil::ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLe
 bool ZLUnicodeUtil::isLetter(Ucs2Char ch) {
 	return
 		(('a' <= ch) && (ch <= 'z')) ||
-		(('Z' <= ch) && (ch <= 'Z')) ||
+		(('A' <= ch) && (ch <= 'Z')) ||
 		// ' is "letter" (in French, for example)
 		(ch == '\'') ||
 		// ^ is "letter" (in Esperanto)

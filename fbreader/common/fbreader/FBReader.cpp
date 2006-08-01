@@ -110,7 +110,8 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	SearchIgnoreCaseOption(FBOptions::SEARCH_CATEGORY, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
-	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", "") {
+	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
+	EnableDictionaryIntegrationOption(ZLOption::CONFIG_CATEGORY, "Dictionary", "Enabled", true) {
 
 	myModel = 0;
 	myContext = context;

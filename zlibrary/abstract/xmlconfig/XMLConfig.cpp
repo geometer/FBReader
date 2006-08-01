@@ -30,10 +30,10 @@ const std::string &XMLConfigGroup::getValue(const std::string &name, const std::
 	return (it != myValues.end()) ? it->second.Value : defaultValue;
 }
 
-bool XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
+bool XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category, bool changeCategory) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it != myValues.end()) {
-		if (it->second.Category == category) {
+		if (!changeCategory || (it->second.Category == category)) {
 			if (it->second.Value != value) {
 				it->second.Value = value;
 				return true;

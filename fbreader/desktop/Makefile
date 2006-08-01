@@ -19,6 +19,9 @@ install:
 	@install -m 0644 ../../zlibrary/data/keynames.desktop-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/keynames.xml
 	@install -d $(SHARE_ZLIBRARY)/encodings
 	@install -m 0644 $(wildcard ../../zlibrary/data/encodings/*) $(SHARE_ZLIBRARY)/encodings
+	@install -d $(DESTDIR)$(INSTALLDIR)/lib
+	@install ../../zlibrary/libzlibrary.so $(DESTDIR)$(INSTALLDIR)/lib
+	@install ../../zldictionary/libzldictionary.so $(DESTDIR)$(INSTALLDIR)/lib
 	@install -d $(DESTDIR)$(INSTALLDIR)/bin
 	@install ../FBReader $(DESTDIR)$(INSTALLDIR)/bin
 	@install -d $(SHARE_FBREADER)

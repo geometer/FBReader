@@ -36,6 +36,9 @@ BACKUP_CONF = FBReader.backup
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(DESTDIR)/usr/bin
 	@install -s ../FBReader $(DESTDIR)/usr/bin
+	@install -d $(DESTDIR)/usr/lib
+	@install -s ../../zlibrary/libzlibrary.so $(DESTDIR)/usr/lib
+	@install -s ../../zldictionary/libzldictionary.so $(DESTDIR)/usr/lib
 	@install -d $(SHARE_ZLIBRARY)
 	@install -d $(SHARE_ZLIBRARY)/encodings
 	@install -m 0644 $(filter-out %/Big5,$(wildcard ../../zlibrary/data/encodings/*)) $(SHARE_ZLIBRARY)/encodings

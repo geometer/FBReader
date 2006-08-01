@@ -48,7 +48,8 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 			myGroup->setValue(
 				AsciiEncoder::decode(name),
 				AsciiEncoder::decode(value),
-				(category == 0) ? myCategory : category
+				(category == 0) ? myCategory : category,
+				false
 			);
 		} else {
 			myGroup->unsetValue(AsciiEncoder::decode(name));

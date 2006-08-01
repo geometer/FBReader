@@ -2,13 +2,13 @@ ROOTDIR = $(PWD)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-TARGET = libzlibrary.a
+TARGET = libzlibrary.so
 
 SUBDIRS_ALL = abstract/runnable abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/deviceInfo abstract/application abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem unix/time
 QTSUBDIRS_ALL = qt/time qtopia/application qtopia/dialogs qtopia/deviceInfo qtopia/view qt/dialogs qt/deviceInfo qt/view qt/image qt/util opie/view opie/dialogs opie/application qt/application-desktop qt/application-pdaxrom
 GTKSUBDIRS_ALL = gtk/time gtk/dialogs gtk/deviceInfo gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/deviceInfo maemo/view gpe/dialogs gpe/view gtk/application-desktop gtk/application-pdaxrom maemo/application-maemo maemo/application-maemo2 gpe/application
 
-SUBDIRS = abstract/runnable abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig desktop/dialogs abstract/deviceInfo abstract/application abstract/view unix/filesystem unix/time
+SUBDIRS = abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig desktop/dialogs abstract/deviceInfo abstract/application abstract/view unix/filesystem unix/time
 
 ifeq "$(UI_TYPE)" "qt"
 	QTSUBDIRS = qt/time qt/dialogs qt/deviceInfo qt/view qt/image qt/util
@@ -50,21 +50,21 @@ endif
 .objects:
 	@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \
-			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
 	done;
 	@for subdir in $(QTSUBDIRS); do \
 		if [ -d $$subdir ]; then \
-			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
 	done;
 	@for subdir in $(GTKSUBDIRS); do \
 		if [ -d $$subdir ]; then \
-			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
@@ -73,7 +73,8 @@ endif
 $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
-	@$(AR) $(TARGET) `find . -name *.o`
+#	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
 	@echo " OK"
 
 install: $(TARGET)
@@ -81,17 +82,17 @@ install: $(TARGET)
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \
 		if [ -d $$subdir ]; then \
-			$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
+			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 		fi; \
 	done;
 	@for subdir in $(QTSUBDIRS_ALL); do \
 		if [ -d $$subdir ]; then \
-			$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk clean; \
+			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk clean; \
 		fi; \
 	done;
 	@for subdir in $(GTKSUBDIRS_ALL); do \
 		if [ -d $$subdir ]; then \
-			$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
+			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
 		fi; \
 	done;
 	@$(RM) $(TARGET)

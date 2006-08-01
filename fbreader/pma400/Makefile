@@ -21,8 +21,12 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 install:
 
 .tmpdir:
-	@ln -sf .. bin
-	@ln -sf ../icons/18x15 pics
+	@mkdir bin
+	@cp ../FBReader bin
+	@mkdir lib
+	@cp ../../zlibrary/libzlibrary.so lib
+	@cp ../../zldictionary/libzldictionary.so lib
+	@cp -r ../icons/18x15 pics
 	@cp -r ../share .
 	@mkdir share/zlibrary
 	@cp ../../zlibrary/data/keynames.pma400.xml share/zlibrary/keynames.xml
@@ -37,8 +41,7 @@ install:
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -f bin pics
-	@rm -rf share $(TDIR)
+	@rm -rf bin lib pics share $(TDIR)
 
 .copyfiles:
 	@for f in $(files); do \

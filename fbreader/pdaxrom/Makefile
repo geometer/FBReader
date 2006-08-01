@@ -16,6 +16,7 @@ BINDIR = usr/bin
 else
 BINDIR = usr/lib/qt/bin
 endif
+LIBDIR = usr/lib
 
 version = $(shell cat ../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
@@ -28,11 +29,14 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control $(package) .rmtmpdir
 install:
 
 .tmpdir:
-	@mkdir -p $(BINDIR)
 	@mkdir -p usr/share/zlibrary
 	@cp ../../zlibrary/data/keynames.pdaxrom-$(UI_TYPE).xml usr/share/zlibrary/keynames.xml
 	@cp -r ../../zlibrary/data/encodings usr/share/zlibrary
+	@mkdir -p $(BINDIR)
 	@cp ../FBReader $(BINDIR)
+	@mkdir -p $(LIBDIR)
+	@cp ../../zlibrary/libzlibrary.so $(LIBDIR)
+	@cp ../../zldictionary/libzldictionary.so $(LIBDIR)
 	@cp -r ../share/FBReader usr/share
 	@mkdir -p usr/share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.640x480.fb2 usr/share/FBReader/help/HowToStart.fb2

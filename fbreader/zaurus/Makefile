@@ -1,3 +1,6 @@
+ROOTDIR = $(PWD)/../..
+include $(ROOTDIR)/makefiles/platforms.mk
+
 DEB_VERSION = 2.0
 
 ARCH = arm
@@ -25,9 +28,13 @@ ipk: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 install:
 
 .tmpdir:
-	@ln -sf .. bin
-	@ln -sf ../icons/34x28 pics144
-	@ln -sf ../icons/18x15 pics
+	@mkdir bin
+	@cp ../FBReader bin
+	@mkdir lib
+	@cp ../../zlibrary/libzlibrary.so lib
+	@cp ../../zldictionary/libzldictionary.so lib
+	@cp -r ../icons/34x28 pics144
+	@cp -r ../icons/18x15 pics
 	@cp -r ../share .
 	@mkdir share/zlibrary
 	@cp ../../zlibrary/data/keynames.zaurus.xml share/zlibrary/keynames.xml
@@ -44,8 +51,7 @@ install:
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -f bin pics pics144
-	@rm -rf apps share $(TDIR)
+	@rm -rf bin lib pics pics144 apps share $(TDIR)
 
 .copyfiles:
 	@for f in $(files); do \

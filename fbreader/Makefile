@@ -4,7 +4,7 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-LIBS = $(UILIBS) -lm -L$(ZDIR) -lzlibrary $(EXPATLIBS) $(ENCALIBS) $(BZIP2LIBS)
+LIBS = $(UILIBS) -lm -L$(ROOTDIR)/zlibrary -lzlibrary -L$(ROOTDIR)/zldictionary -lzldictionary $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
 
 TARGET = FBReader
 
@@ -44,7 +44,7 @@ all:
 		fi; \
 	done;
 	@echo -n "Linking $(TARGET) ..."
-	@$(LD) $(LDFLAGS) -o $(TARGET) `find common -name *.o` $(TARGET_ARCH)/$(UI_TYPE)/*.o $(LIBS)
+	$(LD) $(LDFLAGS) -o $(TARGET) `find common -name *.o` $(TARGET_ARCH)/$(UI_TYPE)/*.o $(LIBS)
 	@echo " OK"
 
 install: all .really-install

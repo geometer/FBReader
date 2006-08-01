@@ -4,8 +4,8 @@ CC = gcc
 AR = ar rsu
 LD = g++
 
-DEPGEN = $(CC) -MM
 CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DINSTALLDIR=\"$(INSTALLDIR)\"
+LDFLAGS = -Wl,-rpath,$(INSTALLDIR)/lib
 
 MOC = moc-qt3
 QTINCLUDE = -I /usr/include/qt3

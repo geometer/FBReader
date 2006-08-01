@@ -35,7 +35,7 @@ class XMLConfigGroup {
 public:
 	XMLConfigGroup(std::set<std::string> &categories) : myCategories(categories) {}
 	const std::string &getValue(const std::string &name, const std::string &defaultValue) const;
-	bool setValue(const std::string &name, const std::string &value, const std::string &category);
+	bool setValue(const std::string &name, const std::string &value, const std::string &category, bool changeCategory = true);
 	void unsetValue(const std::string &name);
 
 private:

@@ -1,0 +1,64 @@
+ROOTDIR = $(PWD)/..
+MAKEFILESDIR = $(ROOTDIR)/makefiles
+include $(MAKEFILESDIR)/config.mk
+
+TARGET = libzldictionary.so
+
+SUBDIRS_ALL = abstract
+QTSUBDIRS_ALL = qtopia
+GTKSUBDIRS_ALL = 
+
+SUBDIRS = abstract
+
+ifeq "$(UI_TYPE)" "qtopia"
+	QTSUBDIRS = qtopia
+endif
+
+.objects:
+	@for subdir in $(SUBDIRS); do \
+		if [ -d $$subdir ]; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
+				exit 1; \
+			fi; \
+		fi; \
+	done;
+	@for subdir in $(QTSUBDIRS); do \
+		if [ -d $$subdir ]; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk; then \
+				exit 1; \
+			fi; \
+		fi; \
+	done;
+	@for subdir in $(GTKSUBDIRS); do \
+		if [ -d $$subdir ]; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk; then \
+				exit 1; \
+			fi; \
+		fi; \
+	done;
+
+$(TARGET): .objects
+	@echo -n "Creating $@ ..."
+	@$(RM_QUIET) $(TARGET)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
+	@echo " OK"
+
+install: $(TARGET)
+
+clean:
+	@for subdir in $(SUBDIRS_ALL); do \
+		if [ -d $$subdir ]; then \
+			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
+		fi; \
+	done;
+	@for subdir in $(QTSUBDIRS_ALL); do \
+		if [ -d $$subdir ]; then \
+			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk clean; \
+		fi; \
+	done;
+	@for subdir in $(GTKSUBDIRS_ALL); do \
+		if [ -d $$subdir ]; then \
+			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
+		fi; \
+	done;
+	@$(RM) $(TARGET)
