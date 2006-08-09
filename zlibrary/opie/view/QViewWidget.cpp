@@ -55,69 +55,29 @@ void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 			break;
 	}
 	myHolder.view()->paint();
-	QPainter realPainter(this);
-	const QPixmap &pixmap = ((QPaintContext&)myHolder.view()->context()).pixmap();
+
+	int angle = 0;
 	switch (myHolder.rotation()) {
 		default:
-			if (myRotatedImage != 0) {
-				delete myRotatedImage;
-				myRotatedImage = 0;
-			}
-			realPainter.drawPixmap(0, 0, pixmap);
 			break;
 		case DEGREES90:
-			if (myRotatedImage == 0) {
-				myRotatedImage = new QImage(w, h, 16);
-			}
-
-			for (int i = 0; i < h; i++) {
-				short *dataFrom = (short*)pixmap.scanLine(h - i - 1);
-				short *dataTo = (short*)myRotatedImage->scanLine(i);
-				for (int j = 0; j < w; j++) {
-					dataTo[w - j - 1] = dataFrom[j];
-				}
-			}
-			realPainter.drawImage(0, 0, *myRotatedImage);
+			angle = 270;
 			break;
 		case DEGREES180:
-			{
-				if (myRotatedImage != 0) {
-					delete myRotatedImage;
-					myRotatedImage = 0;
-				}
-
-				short swap;
-				int i = 0, j = w - 1;
-				for (; i < j; i++, j--) {
-					short *data0 = (short*)pixmap.scanLine(i);
-					short *data1 = (short*)pixmap.scanLine(j);
-					for (int k = 0; k < h; k++) {
-						swap = data0[k];
-						data0[k] = data1[h - k - 1];
-						data1[h - k - 1] = swap;
-					}
-				}
-				if (i == j) {
-					short *data = (short*)pixmap.scanLine(i);
-					for (int k = 0; k < h / 2; k++) {
-						swap = data[k];
-						data[k] = data[h - k - 1];
-						data[h - k - 1] = swap;
-					}
-				}
-			}
-			realPainter.drawPixmap(0, 0, pixmap);
+			angle = 180;
 			break;
 		case DEGREES270:
-			if (myRotatedImage == 0) {
-				myRotatedImage = new QImage(w, h, 16);
-			}
-
-			for (int i = 0; i < h; i++) {
-				memcpy(myRotatedImage->scanLine(i), pixmap.scanLine(i), 2 * w);
-			}
-			realPainter.drawImage(0, 0, *myRotatedImage);
+			angle = 90;
 			break;
+	}
+	const QPixmap &pixmap = ((QPaintContext&)myHolder.view()->context()).pixmap();
+	QPainter painter(this);
+	if (angle == 0) {
+		painter.drawPixmap(0, 0, pixmap);
+	} else {
+		QWMatrix matrix;
+		matrix.rotate(angle);
+		painter.drawPixmap(0, 0, pixmap.xForm(matrix));
 	}
 }
 
