@@ -50,10 +50,7 @@ install:
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -rf $(BINDIR)/FBReader usr/share/pixmaps usr/share/FBReader usr/share/zlibrary $(TDIR)
-	@if [ -d $(BINDIR) ]; then \
-		rmdir -p $(BINDIR) --ignore-fail-on-non-empty; \
-	fi;
+	@rm -rf $(BINDIR) $(LIBDIR) usr/share/pixmaps usr/share/FBReader usr/share/zlibrary $(TDIR)
 
 .copyfiles:
 	@for f in $(files); do \
