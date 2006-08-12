@@ -53,8 +53,13 @@ public:
 class XHTMLTagImageAction : public XHTMLTagAction {
 
 public:
+	XHTMLTagImageAction(const std::string &nameAttribute);
+
   void doAtStart(XHTMLReader &reader, const char **xmlattributes);
   void doAtEnd(XHTMLReader &reader);
+
+private:
+	const std::string myNameAttribute;
 };
 
 class XHTMLTagItemAction : public XHTMLTagAction {
@@ -143,8 +148,11 @@ void XHTMLTagItemAction::doAtEnd(XHTMLReader &reader) {
   reader.myModelReader.endParagraph();
 }
 
+XHTMLTagImageAction::XHTMLTagImageAction(const std::string &nameAttribute) : myNameAttribute(nameAttribute) {
+}
+
 void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-  const char *fileName = reader.attributeValue(xmlattributes, "data");
+  const char *fileName = reader.attributeValue(xmlattributes, myNameAttribute);
   if (fileName != 0) {
 		bool flag = reader.myModelReader.paragraphIsOpen();
 		if (flag) {
@@ -268,8 +276,9 @@ void XHTMLReader::fillTagTable() {
     addAction("strike",  new XHTMLTagControlAction(STRIKETHROUGH));
 
     addAction("a",  new XHTMLTagHyperlinkAction());
-    //addAction("img",  new XHTMLTagAction());
-    addAction("object",  new XHTMLTagImageAction());
+
+    addAction("img",  new XHTMLTagImageAction("src"));
+    addAction("object",  new XHTMLTagImageAction("data"));
 
     //addAction("area",  new XHTMLTagAction());
     //addAction("map",  new XHTMLTagAction());

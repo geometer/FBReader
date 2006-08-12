@@ -36,6 +36,7 @@ public:
 
 protected:
   static const char *attributeValue(const char **xmlattributes, const char *name);
+  static const char *attributeValue(const char **xmlattributes, const std::string &name);
 
 protected:
 	ZLXMLReader(const char *encoding = 0);
