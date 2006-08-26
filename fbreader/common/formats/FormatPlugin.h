@@ -60,8 +60,8 @@ public:
   virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
 
 protected:
-  void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) const;
-  void defaultTitle(BookDescription &description, const std::string &title) const;
+  static void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream);
+  static void defaultTitle(BookDescription &description, const std::string &title);
 };
 
 class PluginCollection {

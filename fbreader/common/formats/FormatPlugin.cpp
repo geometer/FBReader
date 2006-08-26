@@ -25,7 +25,7 @@
 
 #include "../description/BookDescription.h"
 
-void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) const {
+void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) {
 	std::string encoding = description.encoding();
   if (encoding.empty()) {
 		encoding = EncodingDetector::detect(stream, (EncodingDetector::Language)PluginCollection::instance().DefaultLanguageOption.value());
@@ -54,7 +54,7 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
   }
 }
 
-void FormatPlugin::defaultTitle(BookDescription &description, const std::string &title) const {
+void FormatPlugin::defaultTitle(BookDescription &description, const std::string &title) {
   if (description.title().empty()) {
     WritableBookDescription(description).title() = title;
   }
