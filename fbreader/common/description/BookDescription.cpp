@@ -141,7 +141,9 @@ void WritableBookDescription::addAuthor(const std::string &name) {
 }
 
 void WritableBookDescription::addAuthor(const std::string &name, const std::string &sortKey) {
-	AuthorPtr author = SingleAuthor::create(name, ZLUnicodeUtil::toLower(sortKey));
+	AuthorPtr author = SingleAuthor::create(name,
+		ZLUnicodeUtil::toLower(sortKey.empty() ? name.substr(name.rfind(' ') + 1) : sortKey)
+	);
 	if (myDescription.myAuthor.isNull()) {
 		myDescription.myAuthor = author;
 	} else {

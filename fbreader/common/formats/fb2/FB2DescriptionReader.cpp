@@ -20,6 +20,7 @@
  */
 
 #include <abstract/ZLInputStream.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "FB2DescriptionReader.h"
 
@@ -91,6 +92,9 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 			break;
 		case _AUTHOR:
 			if (myReadSomething) {
+				ZLStringUtil::stripWhiteSpaces(myAuthorNames[0]);
+				ZLStringUtil::stripWhiteSpaces(myAuthorNames[1]);
+				ZLStringUtil::stripWhiteSpaces(myAuthorNames[2]);
 				std::string fullName = myAuthorNames[0];
 				if (!fullName.empty() && !myAuthorNames[1].empty()) {
 					fullName += ' ';
