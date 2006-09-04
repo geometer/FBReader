@@ -45,10 +45,6 @@ struct BookInfo {
 	ZLStringOption TitleOption;
 	ZLStringOption LanguageOption;
 	ZLStringOption EncodingOption;
-
-	ZLStringOption AuthorDisplayNameEncodedOption;
-	ZLStringOption AuthorSortKeyEncodedOption;
-	ZLStringOption TitleEncodedOption;
 };
 
 class BookDescription {
@@ -86,8 +82,7 @@ class WritableBookDescription {
 public:
 	WritableBookDescription(BookDescription &description);
 	~WritableBookDescription();
-	void addAuthor(const std::string &name);
-	void addAuthor(const std::string &name, const std::string &sortKey);
+	void addAuthor(const std::string &name, const std::string &sortKey = "");
 	const AuthorPtr author() const;
 	std::string &title();
 	std::string &fileName();

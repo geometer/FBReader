@@ -22,6 +22,7 @@
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLFile.h>
 #include <abstract/ZLUnicodeUtil.h>
+#include <abstract/ZLStringUtil.h>
 
 #include "BookDescription.h"
 #include "BookDescriptionUtil.h"
@@ -39,10 +40,7 @@ BookInfo::BookInfo(const std::string &fileName) :
 	AuthorSortKeyOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKey", EMPTY),
 	TitleOption(FBOptions::BOOKS_CATEGORY, fileName, "Title", EMPTY),
 	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", UNKNOWN),
-	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY),
-	AuthorDisplayNameEncodedOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayNameEncoded", EMPTY),
-	AuthorSortKeyEncodedOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKeyEncoded", EMPTY),
-	TitleEncodedOption(FBOptions::BOOKS_CATEGORY, fileName, "TitleEncoded", EMPTY) {
+	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY) {
 }
 
 void BookInfo::reset() {
@@ -51,9 +49,6 @@ void BookInfo::reset() {
 	TitleOption.setValue(EMPTY);
 	LanguageOption.setValue(UNKNOWN);
 	EncodingOption.setValue(EMPTY);
-	AuthorDisplayNameEncodedOption.setValue(EMPTY);
-	AuthorSortKeyEncodedOption.setValue(EMPTY);
-	TitleEncodedOption.setValue(EMPTY);
 }
 
 bool BookInfo::isFull() const {
@@ -121,29 +116,28 @@ BookDescription::BookDescription(const std::string &fileName) {
 	myAuthor = 0;
 }
 
-void WritableBookDescription::addAuthor(const std::string &name) {
-  int stripIndex = name.length() - 1;
-  while ((stripIndex >= 0) && (name[stripIndex] == ' ')) {
-    --stripIndex;
-  }
-  std::string strippedName = name.substr(0, stripIndex + 1);
-  int index = strippedName.rfind(' ');
-  if (index == -1) {
-    addAuthor(strippedName, strippedName);
-  } else {
-    std::string lastName = strippedName.substr(index + 1);
-    while ((index >= 0) && (strippedName[index] == ' ')) {
-      --index;
-    }
-    std::string firstName = strippedName.substr(0, index + 1);
-    addAuthor(firstName + ' ' + lastName, lastName);
-  }
-}
-
 void WritableBookDescription::addAuthor(const std::string &name, const std::string &sortKey) {
-	AuthorPtr author = SingleAuthor::create(name,
-		ZLUnicodeUtil::toLower(sortKey.empty() ? name.substr(name.rfind(' ') + 1) : sortKey)
-	);
+	std::string strippedName = name;
+	ZLStringUtil::stripWhiteSpaces(strippedName);
+	if (strippedName.empty()) {
+		return;
+	}
+
+	std::string strippedKey = ZLUnicodeUtil::toLower(sortKey);
+	ZLStringUtil::stripWhiteSpaces(strippedKey);
+	if (strippedKey.empty()) {
+    int index = strippedName.rfind(' ');
+    if (index == -1) {
+      strippedKey = strippedName;
+    } else {
+      strippedKey = strippedName.substr(index + 1);
+      while ((index >= 0) && (strippedName[index] == ' ')) {
+        --index;
+      }
+      strippedName = strippedName.substr(0, index + 1) + ' ' + strippedKey;
+    }
+	}
+	AuthorPtr author = SingleAuthor::create(strippedName, strippedKey);
 	if (myDescription.myAuthor.isNull()) {
 		myDescription.myAuthor = author;
 	} else {
