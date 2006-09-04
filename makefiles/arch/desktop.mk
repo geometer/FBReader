@@ -4,7 +4,7 @@ CC = gcc
 AR = ar rsu
 LD = g++
 
-CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DINSTALLDIR=\"$(INSTALLDIR)\" -DLIBICONV_PLUG
+CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DINSTALLDIR=\"$(INSTALLDIR)\" -DLIBICONV_PLUG
 LDFLAGS = -Wl,-rpath,$(INSTALLDIR)/lib
 
 MOC = moc-qt3
