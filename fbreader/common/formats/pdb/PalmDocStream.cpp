@@ -38,6 +38,9 @@ bool PalmDocStream::open() {
 
 	unsigned short version;
 	PdbUtil::readUnsignedShort(myBase, version);
+	if ((version != 1) && (version != 2)) {
+		return false;
+	}
 	myIsCompressed = (version == 2);
 	myBase->seek(6);
 	unsigned short records;

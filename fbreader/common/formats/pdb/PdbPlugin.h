@@ -70,6 +70,16 @@ protected:
 	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
 };
 
+class MobipocketPlugin : public SimplePdbPlugin {
+
+public:
+	bool acceptsFile(const ZLFile &file) const;
+	const std::string &iconName() const;
+
+protected:
+	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
+};
+
 class ZTXTPlugin : public SimplePdbPlugin {
 
 public:
