@@ -62,7 +62,7 @@ private:
   static void setTag(HtmlTag &tag, const std::string &fullName);
 
 public:
-  void readDocument(ZLInputStream &stream);
+  virtual void readDocument(ZLInputStream &stream);
 
 protected:
   HtmlReader(const std::string &encoding);

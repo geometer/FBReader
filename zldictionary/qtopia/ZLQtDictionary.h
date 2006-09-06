@@ -31,6 +31,7 @@ public:
 private:
 	ZLQtDictionary();
 	void openInDictionary(const std::string &word) const;
+	bool isDictionaryEnabled() const;
 };
 
 #endif /* __ZLQTDICTIONARY_H__ */

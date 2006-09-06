@@ -59,3 +59,8 @@ void FormatPlugin::defaultTitle(BookDescription &description, const std::string 
     WritableBookDescription(description).title() = title;
   }
 }
+
+const std::string &FormatPlugin::tryOpen(const std::string &path) const {
+	static const std::string EMPTY = "";
+	return EMPTY;
+}

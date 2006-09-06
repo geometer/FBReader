@@ -38,6 +38,7 @@ protected:
 
 public:
 	virtual void openInDictionary(const std::string &word) const;
+	virtual bool isDictionaryEnabled() const;
 };
 
 #endif /* __ZLDICTIONARY_H__ */

@@ -23,6 +23,8 @@
 #include <abstract/ZLOptionsDialog.h>
 #include <abstract/ZLPaintContext.h>
 
+#include <abstract/ZLDictionary.h>
+
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"
 #include "ScrollingOptionsPage.h"
@@ -246,8 +248,10 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
   myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
 	myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 
-  ZLDialogContent &dictionaryTab = myDialog->createTab("Dictionary");
-	dictionaryTab.addOption(new ZLSimpleBooleanOptionEntry("Enable Integration With Dictionary", fbreader.EnableDictionaryIntegrationOption));
+	if (ZLDictionary::instance().isDictionaryEnabled()) {
+    ZLDialogContent &dictionaryTab = myDialog->createTab("Dictionary");
+		dictionaryTab.addOption(new ZLSimpleBooleanOptionEntry("Enable Integration With Dictionary", fbreader.EnableDictionaryIntegrationOption));
+	}
 }
 
 OptionsDialog::~OptionsDialog() {

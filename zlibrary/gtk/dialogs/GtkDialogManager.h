@@ -21,6 +21,8 @@
 #ifndef __GTKDIALOGMANAGER_H__
 #define __GTKDIALOGMANAGER_H__
 
+#include <stack>
+
 #include <gtk/gtkwindow.h>
 #include <gtk/gtkdialog.h>
 
@@ -39,7 +41,7 @@ public:
 
 	ZLDialog *createDialog(const std::string &title) const;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
-	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
+	int infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 
@@ -52,9 +54,11 @@ public:
 private:
 	std::string myPixmapPath;
 	mutable GtkWindow *myWindow;
+	mutable std::stack<GtkWindow*> myDialogs;
 	bool myIsKeyboardGrabbed;
 
 friend GtkDialog *createGtkDialog(const std::string& title);
+friend void destroyGtkDialog(GtkDialog *dialog);
 };
 
 #endif /* __GTKDIALOGMANAGER_H__ */

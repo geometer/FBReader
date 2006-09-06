@@ -52,12 +52,15 @@ protected:
   
 public:
   virtual ~FormatPlugin();
+
   virtual bool providesMetaInfo() const = 0;
   virtual bool acceptsFile(const ZLFile &file) const = 0;
-  virtual bool readDescription(const std::string &path, BookDescription &description) const = 0;
-  virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
   virtual const std::string &iconName() const = 0;
   virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
+
+	virtual const std::string &tryOpen(const std::string &path) const;
+  virtual bool readDescription(const std::string &path, BookDescription &description) const = 0;
+  virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
 
 protected:
   static void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream);

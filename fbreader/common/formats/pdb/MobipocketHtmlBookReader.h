@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,34 +19,22 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLSTRINGINPUTSTREAM_H__
-#define __ZLSTRINGINPUTSTREAM_H__
+#ifndef __MOBIPOCKETHTMLBOOKREADER_H__
+#define __MOBIPOCKETHTMLBOOKREADER_H__
 
-#include "ZLInputStream.h"
+#include "../html/HtmlBookReader.h"
 
-class ZLStringInputStream : public ZLInputStream {
+class MobipocketHtmlBookReader : public HtmlBookReader {
 
 public:
-	ZLStringInputStream(const std::string &str);
-	~ZLStringInputStream();
-	bool open();
-	size_t read(char *buffer, size_t maxSize);
-	void close();
-
-	void seek(int offset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+  MobipocketHtmlBookReader(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
+  void readDocument(ZLInputStream &stream);
 
 private:
-	const std::string &myString;
-	size_t myPosition;
+	int myImageCounter;
+	const std::string myFileName;
+
+friend class MobipocketHtmlImageTagAction;
 };
 
-inline ZLStringInputStream::ZLStringInputStream(const std::string &str) : myString(str) {}
-inline ZLStringInputStream::~ZLStringInputStream() {}
-inline bool ZLStringInputStream::open() { myPosition = 0; return true; }
-inline void ZLStringInputStream::close() {}
-inline void ZLStringInputStream::seek(int offset) { myPosition += offset; }
-inline size_t ZLStringInputStream::offset() const { return myPosition; }
-
-#endif /* __ZSTRINGLINPUTSTREAM_H__ */
+#endif /* __MOBIPOCKETHTMLBOOKREADER_H__ */

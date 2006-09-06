@@ -39,21 +39,25 @@ public:
   ~HtmlBookReader();
 
 protected:
+  void addAction(const std::string &tag, HtmlTagAction *action);
+
+private:
   void startDocumentHandler();
   void endDocumentHandler();
 
   bool tagHandler(const HtmlTag &tag);
-  bool characterDataHandler(const char *text, int len, bool convert);
 
 private:
-  void addAction(const std::string &tag, HtmlTagAction *action);
+  bool characterDataHandler(const char *text, int len, bool convert);
   void addConvertedDataToBuffer(const char *text, int len, bool convert);
 
 private:
+protected:
   BookReader myBookReader;
 
   std::string myBaseDirPath;
 
+private:
   const PlainTextFormat &myFormat;
   int myIgnoreDataCounter;
   bool myIsPreformatted;
@@ -68,6 +72,7 @@ private:
   std::map<std::string,HtmlTagAction*> myActionMap;
   std::vector<TextKind> myKindList;
 
+  friend class HtmlTagAction;
   friend class HtmlControlTagAction;
   friend class HtmlHeaderTagAction;
   friend class HtmlIgnoreTagAction;
@@ -78,5 +83,23 @@ private:
   friend class HtmlListTagAction;
   friend class HtmlListItemTagAction;
 };
+
+class HtmlTagAction {
+
+protected:
+  HtmlTagAction(HtmlBookReader &reader);
+
+public:
+  virtual ~HtmlTagAction();
+  virtual void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) = 0;
+
+protected:
+  BookReader &bookReader();
+
+protected:
+  HtmlBookReader &myReader;
+};
+
+inline BookReader &HtmlTagAction::bookReader() { return myReader.myBookReader; }
 
 #endif /* __HTMLBOOKREADER_H__ */

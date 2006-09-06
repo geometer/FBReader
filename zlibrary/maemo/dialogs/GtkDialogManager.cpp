@@ -37,7 +37,7 @@ ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, co
 	return new GtkOptionsDialog(id, title, myWindow);
 }
 
-int GtkDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+int GtkDialogManager::infoBox(const InfoBoxType, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
 	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message.c_str(), 0));
 
 	gtk_window_set_title(GTK_WINDOW(dialog), title.c_str());

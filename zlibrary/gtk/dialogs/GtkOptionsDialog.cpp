@@ -55,7 +55,7 @@ GtkOptionsDialog::~GtkOptionsDialog() {
 	for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
 		delete *tab;
 
-	gtk_widget_destroy(GTK_WIDGET(myDialog));
+	destroyGtkDialog(myDialog);
 }
 
 ZLDialogContent &GtkOptionsDialog::createTab(const std::string &name) {

@@ -29,5 +29,6 @@ std::string gtkString(const std::string &str, bool useMnemonics);
 std::string gtkString(const std::string &str);
 
 GtkDialog *createGtkDialog(const std::string& title);
+void destroyGtkDialog(GtkDialog *dialog);
 
 #endif /* __GTKSTRINGUTIL_H__ */

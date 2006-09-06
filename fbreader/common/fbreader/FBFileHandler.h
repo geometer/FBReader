@@ -37,7 +37,7 @@ public:
 
 	const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const;
 	bool isAcceptable(const std::string &name) const;
-	void accept(const std::string &name) const;
+	const std::string accept(const std::string &name) const;
 
 	BookDescriptionPtr description() const;
 

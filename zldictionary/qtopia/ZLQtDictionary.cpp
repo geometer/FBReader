@@ -33,3 +33,7 @@ void ZLQtDictionary::openInDictionary(const std::string &word) const {
 	QCopEnvelope env("QPE/Application/zbedic", "find(QString)");
 	env << QString::fromUtf8(word.c_str());
 }
+
+bool ZLQtDictionary::isDictionaryEnabled() const {
+	return true;
+}

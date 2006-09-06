@@ -37,7 +37,7 @@ ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, co
 	return new GtkOptionsDialog(id, title);
 }
 
-int GtkDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+int GtkDialogManager::infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
 	GtkDialog *dialog = createGtkDialog(title.c_str());
 
 	if (!button0.empty()) {
@@ -52,7 +52,21 @@ int GtkDialogManager::questionBox(const std::string &title, const std::string &m
 
 	GtkWidget *contents = gtk_hbox_new(FALSE, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(contents), 10);
-	GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_DIALOG_QUESTION, GTK_ICON_SIZE_DIALOG);
+
+	const char *iconName;
+	switch (type) {
+		default:
+		case INFORMATION_TYPE:
+			iconName = GTK_STOCK_DIALOG_INFO;
+			break;
+		case ERROR_TYPE:
+			iconName = GTK_STOCK_DIALOG_ERROR;
+			break;
+		case QUESTION_TYPE:
+			iconName = GTK_STOCK_DIALOG_QUESTION;
+			break;
+	}		
+	GtkWidget *image = gtk_image_new_from_stock(iconName, GTK_ICON_SIZE_DIALOG);
 	gtk_misc_set_alignment(GTK_MISC(image), 0.5, 0.0);
 
 	GtkWidget *label = gtk_label_new(message.c_str());
@@ -62,7 +76,7 @@ int GtkDialogManager::questionBox(const std::string &title, const std::string &m
 	gtk_box_pack_start(GTK_BOX(dialog->vbox), contents, TRUE, TRUE, 0);
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	gint response = gtk_dialog_run(dialog);
-	gtk_widget_destroy(GTK_WIDGET(dialog));
+	destroyGtkDialog(dialog);
 
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
@@ -72,6 +86,6 @@ void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHand
 }
 
 void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	GtkWaitMessage waitMessage(myWindow, message);
+	GtkWaitMessage waitMessage(!myDialogs.empty() ? myDialogs.top() : myWindow, message);
 	runnable.run();
 }

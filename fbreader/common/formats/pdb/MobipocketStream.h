@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,16 +19,31 @@
  * 02110-1301, USA.
  */
 
-#include <algorithm>
-#include "ZLStringInputStream.h"
+#ifndef __MOBIPOCKETSTREAM_H__
+#define __MOBIPOCKETSTREAM_H__
 
-size_t ZLStringInputStream::read(char *buffer, size_t maxSize) {
-	size_t size = std::min(myString.length() - myPosition, maxSize);
-	strncpy(buffer, myString.data() + myPosition, size);
-	myPosition += size;
-	return size;
-}
+#include "PalmDocStream.h"
 
-size_t ZLStringInputStream::sizeOfOpened() {
-	return myString.length();
-}
+class ZLFile;
+
+class MobipocketStream : public PalmDocStream {
+
+public:
+	MobipocketStream(ZLFile &file);
+	bool open();
+
+	const std::string &error() const;
+
+	std::pair<int,int> imageLocation(int index);
+
+private:
+	int myBaseSize;
+	enum {
+		ERROR_NONE,
+		ERROR_UNKNOWN,
+		ERROR_COMPRESSION,
+		ERROR_ENCRIPTION,
+	} myErrorCode;
+};
+
+#endif /* __MOBIPOCKETSTREAM_H__ */

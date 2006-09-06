@@ -36,7 +36,7 @@ public:
 protected:
 	bool fillBuffer();
 
-private:
+protected:
 	bool myIsCompressed;
 
 	size_t myMaxRecordIndex;

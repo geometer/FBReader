@@ -58,6 +58,7 @@ public:
 
 protected:
 	virtual shared_ptr<ZLInputStream> createStream(ZLFile &file) const = 0;
+	virtual void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
 };
 
 class PalmDocPlugin : public SimplePdbPlugin {
@@ -75,6 +76,9 @@ class MobipocketPlugin : public SimplePdbPlugin {
 public:
 	bool acceptsFile(const ZLFile &file) const;
 	const std::string &iconName() const;
+
+	const std::string &tryOpen(const std::string &path) const;
+	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
 
 protected:
 	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;

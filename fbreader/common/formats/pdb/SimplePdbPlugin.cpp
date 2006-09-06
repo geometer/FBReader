@@ -56,12 +56,16 @@ bool SimplePdbPlugin::readModel(const BookDescription &description, BookModel &m
 		detector.detect(*stream, format);
 	}
 
-	if (TextFormatDetector().isHtml(*stream)) {
-		HtmlBookReader("", model, format, description.encoding()).readDocument(*stream);
-	} else {
-		TxtBookReader(model, format, description.encoding()).readDocument(*stream);
-	}
+	readDocumentInternal(description.fileName(), model, format, description.encoding(), *stream);
 	return true;
+}
+
+void SimplePdbPlugin::readDocumentInternal(const std::string&, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
+	if (TextFormatDetector().isHtml(stream)) {
+		HtmlBookReader("", model, format, encoding).readDocument(stream);
+	} else {
+		TxtBookReader(model, format, encoding).readDocument(stream);
+	}
 }
 
 FormatInfoPage *SimplePdbPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {

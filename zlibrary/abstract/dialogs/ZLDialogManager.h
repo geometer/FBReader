@@ -49,8 +49,15 @@ public:
 
 	virtual ZLDialog *createDialog(const std::string &title) const = 0;
 	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const = 0;
-	virtual int questionBox(const std::string &title, const std::string &message, const std::string &button0 = "", const std::string &button1 = "", const std::string &button2 = "") const = 0;
 	virtual void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const = 0;
+
+	enum InfoBoxType {
+		INFORMATION_TYPE,
+		ERROR_TYPE,
+		QUESTION_TYPE,
+	};
+	virtual int infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0 = "", const std::string &button1 = "", const std::string &button2 = "") const = 0;
+
 	virtual void wait(ZLRunnable &runnable, const std::string &message) const = 0;
 };
 

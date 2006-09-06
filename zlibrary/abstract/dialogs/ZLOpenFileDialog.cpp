@@ -18,8 +18,10 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
 #include <algorithm>
 
+#include "ZLDialogManager.h"
 #include "ZLOpenFileDialog.h"
 
 #include "../filesystem/ZLFile.h"
@@ -50,8 +52,12 @@ void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
       myState = newState;
       update(selectedName);
     } else {
-      newState->handler().accept(newState->name());
-      exitDialog();
+      const std::string message = newState->handler().accept(newState->name());
+      if (!message.empty()) {
+      	ZLDialogManager::instance().infoBox(ZLDialogManager::ERROR_TYPE, "Error", message, "Ok");
+      } else {
+        exitDialog();
+      }
     }
   }
 }

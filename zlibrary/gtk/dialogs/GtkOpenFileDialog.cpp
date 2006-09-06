@@ -103,7 +103,7 @@ GtkOpenFileDialog::~GtkOpenFileDialog(void) {
 		}
 	}
 
-	gtk_widget_destroy(GTK_WIDGET(myDialog));
+	destroyGtkDialog(myDialog);
 }
 
 GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {

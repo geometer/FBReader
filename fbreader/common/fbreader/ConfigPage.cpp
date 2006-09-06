@@ -34,7 +34,7 @@ private:
 	ZLOptionEntry &myTimeoutEntry;
 };
 
-EnableAutoSavingEntry::EnableAutoSavingEntry(ZLBooleanOption &option, ZLOptionEntry &timeoutEntry) : ZLSimpleBooleanOptionEntry("Save state automatically", option), myTimeoutEntry(timeoutEntry) {
+EnableAutoSavingEntry::EnableAutoSavingEntry(ZLBooleanOption &option, ZLOptionEntry &timeoutEntry) : ZLSimpleBooleanOptionEntry("Save State Automatically", option), myTimeoutEntry(timeoutEntry) {
 }
 
 class TimeoutEntry : public ZLSimpleSpinOptionEntry {
@@ -48,7 +48,7 @@ void EnableAutoSavingEntry::onValueChange(bool state) {
 	myTimeoutEntry.setVisible(state);
 }
 
-TimeoutEntry::TimeoutEntry(ZLIntegerRangeOption &option) : ZLSimpleSpinOptionEntry("Timeout between savings, seconds", option, 5) {
+TimeoutEntry::TimeoutEntry(ZLIntegerRangeOption &option) : ZLSimpleSpinOptionEntry("Timeout Between Savings, Seconds", option, 5) {
 }
 
 void TimeoutEntry::onAccept(int value) {

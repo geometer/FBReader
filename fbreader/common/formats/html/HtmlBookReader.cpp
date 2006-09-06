@@ -27,19 +27,6 @@
 #include "HtmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-class HtmlTagAction {
-
-protected:
-  HtmlTagAction(HtmlBookReader &reader);
-
-public:
-  virtual ~HtmlTagAction();
-  virtual void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) = 0;
-
-protected:
-  HtmlBookReader &myReader;
-};
-
 class HtmlControlTagAction : public HtmlTagAction {
 
 public:
@@ -127,30 +114,30 @@ HtmlControlTagAction::HtmlControlTagAction(HtmlBookReader &reader, TextKind kind
 }
 
 void HtmlControlTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
+  std::vector<TextKind> &list = myReader.myKindList;
+  int index;
+  for (index = list.size() - 1; index >= 0; --index) {
+    if (list[index] == myKind) {
+      break;
+    }
+  }
   if (start) {
-    myReader.myBookReader.pushKind(myKind);
-    myReader.myKindList.push_back(myKind);
-    myReader.myBookReader.addControl(myKind, true);
+    if (index == -1) {
+      bookReader().pushKind(myKind);
+      myReader.myKindList.push_back(myKind);
+      bookReader().addControl(myKind, true);
+    }
   } else {
-    std::vector<TextKind> &list = myReader.myKindList;
-    if (!list.empty()) {
-      int index;
-      for (index = list.size() - 1; index >= 0; --index) {
-        if (list[index] == myKind) {
-          break;
-        }
+    if (index >= 0) {
+      for (int i = list.size() - 1; i >= index; --i) {
+        bookReader().addControl(list[i], false);
+        bookReader().popKind();
       }
-      if (index >= 0) {
-        for (int i = list.size() - 1; i >= index; --i) {
-          myReader.myBookReader.addControl(list[i], false);
-          myReader.myBookReader.popKind();
-        }
-        for (unsigned int j = index + 1; j < list.size(); ++j) {
-          myReader.myBookReader.addControl(list[j], true);
-          myReader.myBookReader.pushKind(list[j]);
-        }
-        list.erase(list.begin() + index);
+      for (unsigned int j = index + 1; j < list.size(); ++j) {
+        bookReader().addControl(list[j], true);
+        bookReader().pushKind(list[j]);
       }
+      list.erase(list.begin() + index);
     }
   }
 }
@@ -159,18 +146,18 @@ HtmlHeaderTagAction::HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind) 
 }
 
 void HtmlHeaderTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
-  myReader.myBookReader.endParagraph();
+  bookReader().endParagraph();
   if (start) {
-    myReader.myBookReader.insertEndOfSectionParagraph();
-    myReader.myBookReader.enterTitle();
-    myReader.myBookReader.beginContentsParagraph();
-    myReader.myBookReader.pushKind(myKind);
+    bookReader().insertEndOfSectionParagraph();
+    bookReader().enterTitle();
+    bookReader().beginContentsParagraph();
+    bookReader().pushKind(myKind);
   } else {
-    myReader.myBookReader.popKind();
-    myReader.myBookReader.endContentsParagraph();
-    myReader.myBookReader.exitTitle();
+    bookReader().popKind();
+    bookReader().endContentsParagraph();
+    bookReader().exitTitle();
   }
-  myReader.myBookReader.beginParagraph();
+  bookReader().beginParagraph();
 }
 
 HtmlIgnoreTagAction::HtmlIgnoreTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
@@ -191,17 +178,17 @@ void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttrib
   if (start) {
     for (unsigned int i = 0; i < attributes.size(); ++i) {
       if (attributes[i].Name == "NAME") {
-        myReader.myBookReader.addHyperlinkLabel(attributes[i].Value);
+        bookReader().addHyperlinkLabel(attributes[i].Value);
       } else if (!myReader.myIsHyperlink && (attributes[i].Name == "HREF")) {
         const std::string &value = attributes[i].Value;
         if (!value.empty() && (value[0] == '#')) {
-          myReader.myBookReader.addHyperlinkControl(HYPERLINK, value.substr(1));
+          bookReader().addHyperlinkControl(HYPERLINK, value.substr(1));
           myReader.myIsHyperlink = true;
         }
       }
     }
   } else if (myReader.myIsHyperlink) {
-    myReader.myBookReader.addControl(HYPERLINK, false);
+    bookReader().addControl(HYPERLINK, false);
     myReader.myIsHyperlink = false;
   }
 }
@@ -211,18 +198,18 @@ HtmlImageTagAction::HtmlImageTagAction(HtmlBookReader &reader) : HtmlTagAction(r
 
 void HtmlImageTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
   if (start) {
-    myReader.myBookReader.endParagraph();
+    bookReader().endParagraph();
     for (unsigned int i = 0; i < attributes.size(); ++i) {
       if (attributes[i].Name == "SRC") {
         std::string fileName = attributes[i].Value;
-        myReader.myBookReader.addImageReference(fileName);
-        myReader.myBookReader.addImage(fileName,
+        bookReader().addImageReference(fileName);
+        bookReader().addImage(fileName,
           new ZLFileImage("image/auto", myReader.myBaseDirPath + fileName, 0)
         );
         break;
       }
     }
-    myReader.myBookReader.beginParagraph();
+    bookReader().beginParagraph();
   }
 }
 
@@ -232,8 +219,8 @@ HtmlBreakTagAction::HtmlBreakTagAction(HtmlBookReader &reader, BreakType breakTy
 void HtmlBreakTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
   if ((start && (myBreakType & BREAK_AT_START)) ||
       (!start && (myBreakType & BREAK_AT_END))) {
-    myReader.myBookReader.endParagraph();
-    myReader.myBookReader.beginParagraph();
+    bookReader().endParagraph();
+    bookReader().beginParagraph();
   }
 }
 
@@ -241,18 +228,18 @@ HtmlPreTagAction::HtmlPreTagAction(HtmlBookReader &reader) : HtmlTagAction(reade
 }
 
 void HtmlPreTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
-  myReader.myBookReader.endParagraph();
+  bookReader().endParagraph();
   myReader.myIsPreformatted = start;
   myReader.mySpaceCounter = -1;
   myReader.myBreakCounter = 0;
   if (myReader.myFormat.breakType() == PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
     if (start) {
-      myReader.myBookReader.pushKind(PREFORMATTED);
+      bookReader().pushKind(PREFORMATTED);
     } else {
-      myReader.myBookReader.popKind();
+      bookReader().popKind();
     }
   }
-  myReader.myBookReader.beginParagraph();
+  bookReader().beginParagraph();
 }
 
 HtmlListTagAction::HtmlListTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
@@ -271,8 +258,8 @@ HtmlListItemTagAction::HtmlListItemTagAction(HtmlBookReader &reader) : HtmlTagAc
 
 void HtmlListItemTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
   if (start) {
-    myReader.myBookReader.endParagraph();
-    myReader.myBookReader.beginParagraph();
+    bookReader().endParagraph();
+    bookReader().beginParagraph();
     if (!myReader.myListNumStack.empty()) {
       //TODO: add spaces and number/bullet
       myReader.addConvertedDataToBuffer("\342\200\242 ", 4, false);
@@ -281,7 +268,14 @@ void HtmlListItemTagAction::run(bool start, const std::vector<HtmlReader::HtmlAt
 }
 
 void HtmlBookReader::addAction(const std::string &tag, HtmlTagAction *action) {
-  myActionMap.insert(std::pair<std::string,HtmlTagAction*>(tag,action));
+  std::map<std::string,HtmlTagAction*>::iterator it = myActionMap.find(tag);
+  if (it != myActionMap.end()) {
+    if (it->second != 0) {
+      delete it->second;
+    }
+    myActionMap.erase(it);
+  }
+   myActionMap.insert(std::pair<std::string,HtmlTagAction*>(tag, action));
 }
 
 HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
@@ -334,9 +328,9 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 
 HtmlBookReader::~HtmlBookReader() {
   for (std::map<std::string,HtmlTagAction*>::const_iterator it = myActionMap.begin(); it != myActionMap.end(); ++it) {
-		if (it->second != 0) {
+    if (it->second != 0) {
       delete it->second;
-	  }
+    }
   }
 }
 

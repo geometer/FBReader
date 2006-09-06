@@ -27,20 +27,20 @@
 #include "GtkDialogManager.h"
 
 std::string gtkString(const std::string &str, bool useMnemonics) {
-	int index = str.find('&');
-	if (index == -1) {
-		return str;
-	}
-	std::string result = str;
-	result.erase(index, 1);
-	if (useMnemonics) {
-		result.insert(index, "_");
-	}
-	return result;
+  int index = str.find('&');
+  if (index == -1) {
+    return str;
+  }
+  std::string result = str;
+  result.erase(index, 1);
+  if (useMnemonics) {
+    result.insert(index, "_");
+  }
+  return result;
 }
 
 std::string gtkString(const std::string &str) {
-	return gtkString(str, ZLDeviceInfo::isKeyboardPresented());
+  return gtkString(str, ZLDeviceInfo::isKeyboardPresented());
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
@@ -62,13 +62,23 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 GtkDialog *createGtkDialog(const std::string& title) {
   GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
   gtk_window_set_title(dialog, title.c_str());
-	
-	GtkWindow *window = ((GtkDialogManager&)GtkDialogManager::instance()).myWindow;
+  
+  GtkDialogManager &manager = (GtkDialogManager&)GtkDialogManager::instance();
+
+  GtkWindow *window = !manager.myDialogs.empty() ? manager.myDialogs.top() : manager.myWindow;
   if (window != 0) {
     gtk_window_set_transient_for(dialog, window);
   }
   gtk_window_set_modal(dialog, TRUE);
   gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), NULL);
 
+  ((GtkDialogManager&)GtkDialogManager::instance()).myDialogs.push(dialog);
   return GTK_DIALOG(dialog);
+}
+
+void destroyGtkDialog(GtkDialog *dialog) {
+  if (!((GtkDialogManager&)GtkDialogManager::instance()).myDialogs.empty()) {
+    ((GtkDialogManager&)GtkDialogManager::instance()).myDialogs.pop();
+  }
+  gtk_widget_destroy(GTK_WIDGET(dialog));
 }

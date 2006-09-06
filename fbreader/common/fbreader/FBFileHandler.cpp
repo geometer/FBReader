@@ -60,6 +60,13 @@ bool FBFileHandler::isAcceptable(const std::string &name) const {
 	return PluginCollection::instance().plugin(ZLFile(name), false) != 0;
 }
 
-void FBFileHandler::accept(const std::string &name) const {
+const std::string FBFileHandler::accept(const std::string &name) const {
+	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(name), false);
+	const std::string message = (plugin == 0) ? "Unknown Problem" : plugin->tryOpen(name);
+	if (!message.empty()) {
+		return "Couldn't Open:\n" + message;
+	}
+
 	myDescription = BookDescription::create(name);
+	return "";
 }

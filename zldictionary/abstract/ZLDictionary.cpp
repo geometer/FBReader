@@ -44,3 +44,7 @@ ZLDictionary::~ZLDictionary() {
 
 void ZLDictionary::openInDictionary(const std::string&) const {
 }
+
+bool ZLDictionary::isDictionaryEnabled() const {
+	return false;
+}
