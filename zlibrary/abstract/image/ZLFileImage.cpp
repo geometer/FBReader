@@ -32,7 +32,7 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 		if (mySize == 0) {
 			mySize = stream->sizeOfOpened();
 		}
-		stream->seek(myOffset);
+		stream->seek(myOffset, false);
 		char *buffer = new char[mySize];
 		stream->read(buffer, mySize);
 		imageData->append(buffer, mySize);

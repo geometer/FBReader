@@ -56,13 +56,13 @@ bool ZLGzipInputStream::open() {
 	const unsigned char FCOMMENT = 1 << 4;
 	unsigned char flg;
 	myFileStream->read((char*)&flg, 1);
-	myFileStream->seek(6);
+	myFileStream->seek(6, false);
 	if (flg & FEXTRA) {
 		unsigned char b0, b1;
 		myFileStream->read((char*)&b0, 1);
 		myFileStream->read((char*)&b1, 1);
 		unsigned short xlen = ((unsigned short)b1) << 8 + b0;
-		myFileStream->seek(xlen);
+		myFileStream->seek(xlen, false);
 	}
 	if (flg & FNAME) {
 		unsigned char b;
@@ -77,7 +77,7 @@ bool ZLGzipInputStream::open() {
 		} while (b != 0);
 	}
 	if (flg & FHCRC) {
-		myFileStream->seek(2);
+		myFileStream->seek(2, false);
 	}
 
 	myDecompressor = new ZLZDecompressor(myFileSize - myFileStream->offset() - 8);
@@ -97,12 +97,19 @@ void ZLGzipInputStream::close() {
 	myFileStream->close();
 }
 
-void ZLGzipInputStream::seek(int offset) {
-	if (offset > 0) {
-		read(0, offset);
-	} else if (offset < 0) {
-		// TODO: implement
-	}
+void ZLGzipInputStream::seek(int offset, bool absoluteOffset) {
+  if (absoluteOffset) {
+    offset -= this->offset();
+  }
+  if (offset > 0) {
+    read(0, offset);
+  } else if (offset < 0) {
+    offset += this->offset();
+		open();
+    if (offset >= 0) {
+      read(0, offset);
+    }
+  }
 }
 
 size_t ZLGzipInputStream::offset() const {

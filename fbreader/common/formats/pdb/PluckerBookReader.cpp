@@ -376,15 +376,15 @@ void PluckerBookReader::processTextRecord(size_t size, const std::vector<int> &p
 
 void PluckerBookReader::readRecord(size_t recordSize) {
   unsigned short uid;
-  PdbUtil::readUnsignedShort(myStream, uid);
+  PdbUtil::readUnsignedShort(*myStream, uid);
   if (uid == 1) {
-    PdbUtil::readUnsignedShort(myStream, myCompressionVersion);
+    PdbUtil::readUnsignedShort(*myStream, myCompressionVersion);
   } else {
     unsigned short paragraphs;
-    PdbUtil::readUnsignedShort(myStream, paragraphs);
+    PdbUtil::readUnsignedShort(*myStream, paragraphs);
 
     unsigned short size;
-    PdbUtil::readUnsignedShort(myStream, size);
+    PdbUtil::readUnsignedShort(*myStream, size);
 
     unsigned char type;
     myStream->read((char*)&type, 1);
@@ -399,9 +399,9 @@ void PluckerBookReader::readRecord(size_t recordSize) {
         std::vector<int> pars;
         for (int i = 0; i < paragraphs; ++i) {
           unsigned short pSize;
-          PdbUtil::readUnsignedShort(myStream, pSize);
+          PdbUtil::readUnsignedShort(*myStream, pSize);
           pars.push_back(pSize);
-          myStream->seek(2);
+          myStream->seek(2, false);
         }
 
         bool doProcess = false;
@@ -411,7 +411,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
           doProcess =
             DocDecompressor().decompress(*myStream, myCharBuffer, recordSize - 8 - 4 * paragraphs, size) == size;
         } else if (myCompressionVersion == 2) {
-          myStream->seek(2);
+          myStream->seek(2, false);
           doProcess =
             ZLZDecompressor(recordSize - 10 - 4 * paragraphs).
               decompress(*myStream, myCharBuffer, size) == size;
@@ -447,7 +447,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
         break;
       case 10:
         unsigned short typeCode;
-        PdbUtil::readUnsignedShort(myStream, typeCode);
+        PdbUtil::readUnsignedShort(*myStream, typeCode);
         //std::cerr << "type = " << (int)type << "; ";
         //std::cerr << "typeCode = " << typeCode << "\n";
         break;
@@ -462,12 +462,12 @@ void PluckerBookReader::readRecord(size_t recordSize) {
       {
         unsigned short columns;
         unsigned short rows;
-        PdbUtil::readUnsignedShort(myStream, columns);
-        PdbUtil::readUnsignedShort(myStream, rows);
+        PdbUtil::readUnsignedShort(*myStream, columns);
+        PdbUtil::readUnsignedShort(*myStream, rows);
         PluckerMultiImage *image = new PluckerMultiImage(rows, columns, model().imageMap());
         for (int i = 0; i < size / 2 - 2; ++i) {
           unsigned short us;
-          PdbUtil::readUnsignedShort(myStream, us);
+          PdbUtil::readUnsignedShort(*myStream, us);
           image->addId(fromNumber(us));
         }
         addImage(fromNumber(uid), image);
@@ -500,7 +500,7 @@ bool PluckerBookReader::readDocument() {
     if (currentOffset > *it) {
       break;
     }
-    myStream->seek(*it - currentOffset);
+    myStream->seek(*it - currentOffset, false);
     if (myStream->offset() != *it) {
       break;
     }

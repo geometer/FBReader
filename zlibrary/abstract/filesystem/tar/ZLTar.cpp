@@ -43,7 +43,7 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 	fileName[100] = '\0';
 	Name = fileName;
   
-	stream->seek(24);
+	stream->seek(24, false);
 	char fileSizeString[12];
 	stream->read(fileSizeString, 12);
 	Size = 0;
@@ -55,13 +55,13 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 		Size += fileSizeString[i] - '0';
 	}
   
-	stream->seek(20);
+	stream->seek(20, false);
 	char linkFlag;
 	stream->read(&linkFlag, 1);
   
 	IsRegularFile = (linkFlag == '\0') || (linkFlag == '0');
   
-	stream->seek(355);
+	stream->seek(355, false);
 
 	return stream->offset() == startOffset + 512;
 }
@@ -86,7 +86,7 @@ bool ZLTarInputStream::open() {
 			myCompressedFileSize = header.Size;
 			return true;
 		}
-		myBaseStream->seek((header.Size + 0x1ff) & -0x200);
+		myBaseStream->seek((header.Size + 0x1ff) & -0x200, false);
 	}
 	myBaseStream->close();
 	return false;
@@ -103,12 +103,19 @@ void ZLTarInputStream::close() {
 	myBaseStream->close();
 }
 
-void ZLTarInputStream::seek(int offset) {
-	if (offset > 0) {
-		read(0, offset);
-	} else if (offset < 0) {
-		// TODO: implement
-	}
+void ZLTarInputStream::seek(int offset, bool absoluteOffset) {
+  if (absoluteOffset) {
+    offset -= this->offset();
+  }
+  if (offset > 0) {
+    read(0, offset);
+  } else if (offset < 0) {
+    offset += this->offset();
+		open();
+    if (offset >= 0) {
+      read(0, offset);
+    }
+  }
 }
 
 size_t ZLTarInputStream::offset() const {
@@ -128,7 +135,7 @@ void ZLTarDir::collectFiles(std::vector<std::string> &names, bool) {
 			if (header.IsRegularFile) {
 				names.push_back(header.Name);
 			}
-			stream->seek((header.Size + 0x1ff) & -0x200);
+			stream->seek((header.Size + 0x1ff) & -0x200, false);
 		}
 		stream->close();
 	}

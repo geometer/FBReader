@@ -40,13 +40,13 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 
 void ZLZipHeader::skipEntry(ZLInputStream &stream, const ZLZipHeader &header) {
 	if (header.Flags & 0x08) {
-		stream.seek(header.ExtraLength);
+		stream.seek(header.ExtraLength, false);
 		ZLZDecompressor decompressor((size_t)-1);
 		while (decompressor.decompress(stream, 0, 2048) == 2048) {
 		}
-		stream.seek(16);
+		stream.seek(16, false);
 	} else {
-		stream.seek(header.ExtraLength + header.CompressedSize);
+		stream.seek(header.ExtraLength + header.CompressedSize, false);
 	}
 }
 

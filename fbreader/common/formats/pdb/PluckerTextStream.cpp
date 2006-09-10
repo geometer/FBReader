@@ -39,7 +39,7 @@ bool PluckerTextStream::open() {
 		return false;
 	}
 
-	PdbUtil::readUnsignedShort(myBase, myCompressionVersion);
+	PdbUtil::readUnsignedShort(*myBase, myCompressionVersion);
 
 	myBuffer = new char[65536];
 	myFullBuffer = new char[65536];
@@ -59,7 +59,7 @@ bool PluckerTextStream::fillBuffer() {
 		if (currentOffset < myBase->offset()) {
 			return false;
 		}
-		myBase->seek(currentOffset - myBase->offset());
+		myBase->seek(currentOffset, true);
 		size_t nextOffset =
 			(myRecordIndex + 1 < myHeader.Offsets.size()) ?
 				myHeader.Offsets[myRecordIndex + 1] : myBase->sizeOfOpened();
@@ -80,13 +80,13 @@ void PluckerTextStream::close() {
 }
 
 void PluckerTextStream::processRecord(size_t recordSize) {
-	myBase->seek(2);
+	myBase->seek(2, false);
 
 	unsigned short paragraphs;
-	PdbUtil::readUnsignedShort(myBase, paragraphs);
+	PdbUtil::readUnsignedShort(*myBase, paragraphs);
 
 	unsigned short size;
-	PdbUtil::readUnsignedShort(myBase, size);
+	PdbUtil::readUnsignedShort(*myBase, size);
 
 	unsigned char type;
 	myBase->read((char*)&type, 1);
@@ -94,14 +94,14 @@ void PluckerTextStream::processRecord(size_t recordSize) {
 		return;
 	}
 
-	myBase->seek(1);
+	myBase->seek(1, false);
 
 	std::vector<int> pars;
 	for (int i = 0; i < paragraphs; ++i) {
 		unsigned short pSize;
-		PdbUtil::readUnsignedShort(myBase, pSize);
+		PdbUtil::readUnsignedShort(*myBase, pSize);
 		pars.push_back(pSize);
-		myBase->seek(2);
+		myBase->seek(2, false);
 	}
 
 	bool doProcess = false;
@@ -111,7 +111,7 @@ void PluckerTextStream::processRecord(size_t recordSize) {
 		doProcess =
 			DocDecompressor().decompress(*myBase, myFullBuffer, recordSize - 8 - 4 * paragraphs, size) == size;
 	} else if (myCompressionVersion == 2) {
-		myBase->seek(2);
+		myBase->seek(2, false);
 		doProcess =
 			ZLZDecompressor(recordSize - 10 - 4 * paragraphs).decompress(*myBase, myFullBuffer, size) == size;
 	}

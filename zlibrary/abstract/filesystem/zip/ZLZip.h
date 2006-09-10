@@ -39,7 +39,7 @@ public:
 	size_t read(char *buffer, size_t maxSize);
 	void close();
 
-	void seek(int offset);
+	void seek(int offset, bool absoluteOffset);
 	size_t offset() const;
 	size_t sizeOfOpened();
 
@@ -68,7 +68,7 @@ public:
 	size_t read(char *buffer, size_t maxSize);
 	void close();
 
-	void seek(int offset);
+	void seek(int offset, bool absoluteOffset);
 	size_t offset() const;
 	size_t sizeOfOpened();
 

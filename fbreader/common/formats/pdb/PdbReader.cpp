@@ -25,16 +25,16 @@
 #include "../../bookmodel/BookModel.h"
 #include "../../bookmodel/BookReader.h"
 
-void PdbUtil::readUnsignedShort(shared_ptr<ZLInputStream> stream, unsigned short &N) {
-	stream->read((char*)&N + 1, 1);
-	stream->read((char*)&N, 1);
+void PdbUtil::readUnsignedShort(ZLInputStream &stream, unsigned short &N) {
+	stream.read((char*)&N + 1, 1);
+	stream.read((char*)&N, 1);
 }
 
-void PdbUtil::readUnsignedLong(shared_ptr<ZLInputStream> stream, unsigned long &N) {
-	stream->read((char*)&N + 3, 1);
-	stream->read((char*)&N + 2, 1);
-	stream->read((char*)&N + 1, 1);
-	stream->read((char*)&N, 1);
+void PdbUtil::readUnsignedLong(ZLInputStream &stream, unsigned long &N) {
+	stream.read((char*)&N + 3, 1);
+	stream.read((char*)&N + 2, 1);
+	stream.read((char*)&N + 1, 1);
+	stream.read((char*)&N, 1);
 }
 
 bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
@@ -44,26 +44,26 @@ bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 	DocName.append(32, '\0');
 	stream->read((char*)DocName.data(), 32);
 
-	PdbUtil::readUnsignedShort(stream, Flags);
+	PdbUtil::readUnsignedShort(*stream, Flags);
 
-	stream->seek(26);
+	stream->seek(26, false);
 	
 	Id.erase();
 	Id.append(8, '\0');
 	stream->read((char*)Id.data(), 8);
 
-	stream->seek(8);
+	stream->seek(8, false);
 
 	Offsets.clear();
 	unsigned short numRecords;
-	PdbUtil::readUnsignedShort(stream, numRecords);
+	PdbUtil::readUnsignedShort(*stream, numRecords);
 	Offsets.reserve(numRecords);
 
 	for (int i = 0; i < numRecords; ++i) {
 		unsigned long recordOffset;
-		PdbUtil::readUnsignedLong(stream, recordOffset);
+		PdbUtil::readUnsignedLong(*stream, recordOffset);
 		Offsets.push_back(recordOffset);
-		stream->seek(4);
+		stream->seek(4, false);
 	}
 
 	return stream->offset() == startOffset + 78 + 8 * numRecords;

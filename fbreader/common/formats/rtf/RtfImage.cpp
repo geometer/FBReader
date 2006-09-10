@@ -41,7 +41,7 @@ void RtfImage::read() const {
 	if (!stream.isNull() && stream->open()) {
 		myData = new std::string();
 		myData->reserve(myLength / 2);
-		stream->seek(myStartOffset);
+		stream->seek(myStartOffset, false);
 		const size_t bufferSize = 1024;
 		char *buffer = new char[bufferSize];
 		for (unsigned int i = 0; i < myLength; i += bufferSize) {

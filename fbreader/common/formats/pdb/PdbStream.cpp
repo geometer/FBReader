@@ -36,7 +36,7 @@ bool PdbStream::open() {
 		return false;
 	}
 
-	myBase->seek(myHeader.Offsets[0] - myBase->offset());
+	myBase->seek(myHeader.Offsets[0], true);
 
 	myBufferLength = 0;
 	myBufferOffset = 0;
@@ -76,12 +76,19 @@ void PdbStream::close() {
 	}
 }
 
-void PdbStream::seek(int offset) {
-	if (offset > 0) {
-		read(0, offset);
-	} else if (offset < 0) {
-		// TODO: implement
-	}
+void PdbStream::seek(int offset, bool absoluteOffset) {
+  if (absoluteOffset) {
+    offset -= this->offset();
+  }
+  if (offset > 0) {
+    read(0, offset);
+  } else if (offset < 0) {
+    offset += this->offset();
+		open();
+    if (offset >= 0) {
+      read(0, offset);
+    }
+  }
 }
 
 size_t PdbStream::offset() const {

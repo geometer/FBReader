@@ -101,12 +101,19 @@ size_t TcrStream::read(char *buffer, size_t maxSize) {
 	return size;
 }
 
-void TcrStream::seek(int offset) {
-	if (offset > 0) {
-		read(0, offset);
-	} else if (offset < 0) {
-		// TODO: implement
-	}
+void TcrStream::seek(int offset, bool absoluteOffset) {
+  if (absoluteOffset) {
+    offset -= this->offset();
+  }
+  if (offset > 0) {
+    read(0, offset);
+  } else if (offset < 0) {
+    offset += this->offset();
+		open();
+    if (offset >= 0) {
+      read(0, offset);
+    }
+  }
 }
 
 size_t TcrStream::offset() const {

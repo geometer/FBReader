@@ -37,23 +37,23 @@ bool MobipocketStream::open() {
 	myBaseSize = myBase->sizeOfOpened();
 
   unsigned short version;
-  PdbUtil::readUnsignedShort(myBase, version);
+  PdbUtil::readUnsignedShort(*myBase, version);
   if ((version != 1) && (version != 2)) {
 		myErrorCode = ERROR_COMPRESSION;
     return false;
   }
   myIsCompressed = (version == 2);
-  myBase->seek(6);
+  myBase->seek(6, false);
   unsigned short records;
-  PdbUtil::readUnsignedShort(myBase, records);
+  PdbUtil::readUnsignedShort(*myBase, records);
   myMaxRecordIndex = std::min(records, (unsigned short)(myHeader.Offsets.size() - 1));
-  PdbUtil::readUnsignedShort(myBase, myMaxRecordSize);
+  PdbUtil::readUnsignedShort(*myBase, myMaxRecordSize);
   if (myMaxRecordSize == 0) {
 		myErrorCode = ERROR_UNKNOWN;
     return false;
   }
   unsigned short reserved2;
-  PdbUtil::readUnsignedShort(myBase, reserved2);
+  PdbUtil::readUnsignedShort(*myBase, reserved2);
   if (reserved2 != 0) {
 		myErrorCode = ERROR_ENCRIPTION;
     return false;

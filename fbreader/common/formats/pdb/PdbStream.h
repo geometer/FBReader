@@ -37,7 +37,7 @@ public:
 	virtual bool open();
 	virtual void close();
 
-	void seek(int offset);
+	void seek(int offset, bool absoluteOffset);
 	size_t offset() const;
 	size_t sizeOfOpened();
 

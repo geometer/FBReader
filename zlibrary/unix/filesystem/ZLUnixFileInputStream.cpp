@@ -61,3 +61,11 @@ size_t ZLUnixFileInputStream::sizeOfOpened() {
 	fseek(myFile, pos, SEEK_SET);
 	return size;
 }
+
+void ZLUnixFileInputStream::seek(int offset, bool absoluteOffset) {
+  fseek(myFile, offset, absoluteOffset ? SEEK_SET : SEEK_CUR);
+}
+
+size_t ZLUnixFileInputStream::offset() const {
+  return ftell(myFile);
+}

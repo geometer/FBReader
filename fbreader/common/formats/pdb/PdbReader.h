@@ -32,8 +32,8 @@ class BookModel;
 class PdbUtil {
 
 public:
-	static void readUnsignedShort(shared_ptr<ZLInputStream> stream, unsigned short &N);
-	static void readUnsignedLong(shared_ptr<ZLInputStream> stream, unsigned long &N);
+	static void readUnsignedShort(ZLInputStream &stream, unsigned short &N);
+	static void readUnsignedLong(ZLInputStream &stream, unsigned long &N);
 };
 
 struct PdbHeader {

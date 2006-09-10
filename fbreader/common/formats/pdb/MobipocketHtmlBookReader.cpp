@@ -94,7 +94,7 @@ void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
   if (!fileStream.isNull() && fileStream->open()) {
 		char bu[2];
     std::pair<int,int> firstImageLocation = ((MobipocketStream&)stream).imageLocation(1);
-		fileStream->seek(firstImageLocation.first);
+		fileStream->seek(firstImageLocation.first, false);
     while ((firstImageLocation.first > 0) && (firstImageLocation.second > 0)) {
 			if (firstImageLocation.second > 2) {
 				fileStream->read(bu, 2);
@@ -102,9 +102,9 @@ void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
 					found = true;
 					break;
 				}
-				fileStream->seek(firstImageLocation.second - 2);
+				fileStream->seek(firstImageLocation.second - 2, false);
 			} else {
-				fileStream->seek(firstImageLocation.second);
+				fileStream->seek(firstImageLocation.second, false);
 			}
 			index++;
     	firstImageLocation = ((MobipocketStream&)stream).imageLocation(index + 1);

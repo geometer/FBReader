@@ -97,7 +97,7 @@ bool PPLBookReader::readDocument(ZLInputStream &stream) {
 	myEmptyLineCounter = 0;
 
 	// "PPL\r\n"
-	stream.seek(5);
+	stream.seek(5, false);
 
 	size_t size;
 	do {

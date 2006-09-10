@@ -36,12 +36,12 @@ bool ZTXTStream::open() {
 		return false;
 	}
 
-	myBase->seek(2);
+	myBase->seek(2, false);
 	unsigned short records;
-	PdbUtil::readUnsignedShort(myBase, records);
+	PdbUtil::readUnsignedShort(*myBase, records);
 	myMaxRecordIndex = std::min(records, (unsigned short)(myHeader.Offsets.size() - 1));
-	myBase->seek(4);
-	PdbUtil::readUnsignedShort(myBase, myMaxRecordSize);
+	myBase->seek(4, false);
+	PdbUtil::readUnsignedShort(*myBase, myMaxRecordSize);
 	if (myMaxRecordSize == 0) {
 		return false;
 	}
@@ -67,7 +67,7 @@ bool ZTXTStream::fillBuffer() {
 		if (currentOffset < myBase->offset()) {
 			return false;
 		}
-		myBase->seek(currentOffset - myBase->offset());
+		myBase->seek(currentOffset, true);
 		size_t nextOffset =
 			(myRecordIndex + 1 < myHeader.Offsets.size()) ?
 				myHeader.Offsets[myRecordIndex + 1] : myBase->sizeOfOpened();

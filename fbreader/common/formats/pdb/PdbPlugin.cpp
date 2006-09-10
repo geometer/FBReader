@@ -48,7 +48,7 @@ std::string PdbPlugin::fileType(const ZLFile &file) const {
 		if (stream.isNull() || !stream->open()) {
 			return "";
 		}
-		stream->seek(60);
+		stream->seek(60, false);
 		char id[8];
 		stream->read(id, 8);
 		stream->close();
