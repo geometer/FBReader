@@ -20,6 +20,7 @@
  */
 
 #include <iostream>
+#include <map>
 
 #include <abstract/ZLStringUtil.h>
 #include <abstract/ZLFile.h>
@@ -77,6 +78,9 @@ bool CHMPlugin::acceptsFile(const ZLFile &file) const {
 bool CHMPlugin::readDescription(const std::string &/*path*/, BookDescription &/*description*/) const {
   return true;
 }
+
+static std::map<std::string,std::pair<int,int> > Section0;
+static std::map<std::string,std::pair<int,int> > Section1;
 
 bool CHMPlugin::readModel(const BookDescription &description, BookModel &/*model*/) const {
   shared_ptr<ZLInputStream> stream = ZLFile(description.fileName()).inputStream();
@@ -163,51 +167,56 @@ bool CHMPlugin::readModel(const BookDescription &description, BookModel &/*model
     stream->seek(36, false);
     // header section 1 end
 
-		size_t nextOffset = stream->offset();
+    size_t nextOffset = stream->offset();
     for (unsigned long i = 0; i < dirChunkNumber; ++i) {
-			nextOffset += 4096;
+      nextOffset += 4096;
       std::string header = readString(*stream, 4);
       std::cerr << i << ": " << header << "\n";
       if (header == "PMGL") {
-        unsigned long quickRefAreaSize = readUnsignedDWord(*stream);
+        unsigned long quickRefAreaSize = readUnsignedDWord(*stream) % 4096;
 				std::cerr << "quickRefAreaSize = " << quickRefAreaSize << "\n";
-				stream->seek(12, false);
-				size_t startOffset = stream->offset();
-				size_t oldOffset = startOffset;
-				while (startOffset < nextOffset - quickRefAreaSize) {
-					int nameLength = readEncodedInteger(*stream);
-					std::string name = readString(*stream, nameLength);
-					int contentSection = readEncodedInteger(*stream);
-					int offset = readEncodedInteger(*stream);
-					int length = readEncodedInteger(*stream);
-					std::cerr << name << " : " << contentSection << " : " << offset << " : " << length << "\n";
-					startOffset = stream->offset();
-					if (oldOffset == startOffset) {
-						break;
+        stream->seek(12, false);
+        size_t startOffset = stream->offset();
+        size_t oldOffset = startOffset;
+        while (startOffset < nextOffset - quickRefAreaSize) {
+          int nameLength = readEncodedInteger(*stream);
+          std::string name = readString(*stream, nameLength);
+          int contentSection = readEncodedInteger(*stream);
+          int offset = readEncodedInteger(*stream);
+          int length = readEncodedInteger(*stream);
+					if (contentSection == 0) {
+						Section0[name] = std::pair<int,int>(offset, length);
+					} else if (contentSection == 1) {
+						Section1[name] = std::pair<int,int>(offset, length);
 					}
-					oldOffset = startOffset;
-				}
+          //std::cerr << name << " : " << contentSection << " : " << offset << " : " << length << "\n";
+          startOffset = stream->offset();
+          if (oldOffset == startOffset) {
+            break;
+          }
+          oldOffset = startOffset;
+        }
       } else if (header == "PMGI") {
+        unsigned long quickRefAreaSize = readUnsignedDWord(*stream);
+        size_t startOffset = stream->offset();
+        size_t oldOffset = startOffset;
+        while (startOffset < nextOffset - quickRefAreaSize) {
+          int nameLength = readEncodedInteger(*stream);
+          std::string name = readString(*stream, nameLength);
+          int chunkNumber = readEncodedInteger(*stream);
+          //std::cerr << name << " : " << chunkNumber << "\n";
+          startOffset = stream->offset();
+          if (oldOffset == startOffset) {
+            break;
+          }
+          oldOffset = startOffset;
+        }
       }
       stream->seek(nextOffset, true);
-			if (stream->offset() != nextOffset) {
-				break;
-			}
+      if (stream->offset() != nextOffset) {
+        break;
+      }
     }
-    
-    /*
-    std::cerr << (long)readUnsignedDWord(*stream) << " : ";
-    std::cerr << (long)readUnsignedDWord(*stream) << " : ";
-    std::cerr << (long)readUnsignedDWord(*stream) << " : ";
-    std::cerr << (long)readUnsignedDWord(*stream) << "\n";
-    */
-
-    /*
-    int N = 1 + 1 << density;
-    for (int i = 0; i < N + 1; i++) {
-      std::cerr << readUnsignedWord(*stream) << "\n";
-    }
-    */
 
     stream->close();
   }
