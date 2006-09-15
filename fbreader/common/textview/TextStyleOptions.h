@@ -95,14 +95,4 @@ private:
 	bool myAllowUndefined;
 };
 
-inline FontFamilyOptionEntry::~FontFamilyOptionEntry() {}
-inline const std::vector<std::string> &FontFamilyOptionEntry::values() const { return myAllowBase ? ourAllFamiliesPlusBase : ourAllFamilies; }
-
-inline LineSpacingOptionEntry::~LineSpacingOptionEntry() {}
-inline const std::vector<std::string> &LineSpacingOptionEntry::values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
-
-inline AlignmentOptionEntry::AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined) : myOption(option), myAllowUndefined(allowUndefined) {}
-inline AlignmentOptionEntry::~AlignmentOptionEntry() {}
-inline const std::vector<std::string> &AlignmentOptionEntry::values() const { return myAllowUndefined ? values5() : values4(); }
-
 #endif /* __TEXTSTYLEOPTIONS_H__ */

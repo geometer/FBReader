@@ -2,7 +2,8 @@ ROOTDIR = $(PWD)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-TARGET = libzldictionary.so
+TARGET = libzldictionary.so.0
+TARGET_SHORTNAME = libzldictionary.so
 
 SUBDIRS_ALL = abstract
 QTSUBDIRS_ALL = qtopia
@@ -41,9 +42,12 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
+	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 	@echo " OK"
 
 install: $(TARGET)
+	@install -d $(DESTDIR)$(LIBDIR)
+	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \
@@ -61,4 +65,4 @@ clean:
 			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
 		fi; \
 	done;
-	@$(RM) $(TARGET)
+	@$(RM) $(TARGET) $(TARGET_SHORTNAME)

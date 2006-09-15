@@ -1,12 +1,15 @@
 INSTALLDIR = /usr/local
+BINDIR=$(INSTALLDIR)/bin
+LIBDIR=$(INSTALLDIR)/lib
+SHAREDIR=$(INSTALLDIR)/share
 
-QTDIR = /opt/opie/qt-2.3.10
-OPIEDIR = /opt/opie/opie
-MOC = $(QTDIR)/bin/moc
+QTPATH = /opt/opie/qt-2.3.10
+OPIEPATH = /opt/opie/opie
+MOC = $(QTPATH)/bin/moc
 RM = rm -rvf
 RM_QUIET = rm -rf
-QTINCLUDE = -I $(QTDIR)/include -I $(OPIEDIR)/include
-UILIBS = -L $(QTDIR)/lib -lqte -L $(OPIEDIR)/lib -lqpe
+QTINCLUDE = -I $(QTPATH)/include -I $(OPIEPATH)/include
+UILIBS = -L $(QTPATH)/lib -lqte -L $(OPIEPATH)/lib -lqpe
 CC = gcc
 AR = ar rsu
 LD = g++

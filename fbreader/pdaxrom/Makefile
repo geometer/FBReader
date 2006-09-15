@@ -1,5 +1,5 @@
 ROOTDIR = $(PWD)/../..
-include $(ROOTDIR)/makefiles/platforms.mk
+include $(ROOTDIR)/makefiles/config.mk
 
 DEB_VERSION = 2.0
 
@@ -11,32 +11,25 @@ CTRLDIR = $(TDIR)/control
 PACKAGENAME = FBReader-$(UI_TYPE)
 FILE = $(PACKAGENAME).control
 
-ifeq "$(UI_TYPE)" "gtk"
-BINDIR = usr/bin
-else
-BINDIR = usr/lib/qt/bin
-endif
-LIBDIR = usr/lib
-
 version = $(shell cat ../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
 files = $(shell sed -n -e "s/^Files://p" $(FILE))
 package = $(PACKAGENAME)_$(version)_$(TARGET_ARCH)_armv5tel.ipk
 
 all: .tmpdir .copyfiles $(CTRLDIR)/control $(package) .rmtmpdir
-	@cp $(package) ../..
+	@mv $(package) ../..
 
 install:
 
 .tmpdir:
-	@mkdir -p usr/share/zlibrary
-	@cp ../../zlibrary/data/keynames.pdaxrom-$(UI_TYPE).xml usr/share/zlibrary/keynames.xml
-	@cp -r ../../zlibrary/data/encodings usr/share/zlibrary
-	@mkdir -p $(BINDIR)
-	@cp ../FBReader $(BINDIR)
-	@mkdir -p $(LIBDIR)
-	@cp ../../zlibrary/libzlibrary.so $(LIBDIR)
-	@cp ../../zldictionary/libzldictionary.so $(LIBDIR)
+	@mkdir -p usr
+	@mkdir -p usr/apps/Office/FBReader
+	@cp data/apps/Office/FBReader/AppRun usr/apps/Office/FBReader
+	@cp data/apps/Office/FBReader/AppInfo.xml usr/apps/Office/FBReader
+	@mkdir -p usr/share/applications
+	@cp data/share/applications/FBReader.desktop usr/share/applications
+	@mkdir -p .$(BINDIR)
+	@cp ../FBReader .$(BINDIR)
 	@cp -r ../share/FBReader usr/share
 	@mkdir -p usr/share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.640x480.fb2 usr/share/FBReader/help/HowToStart.fb2
@@ -50,7 +43,7 @@ install:
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -rf $(BINDIR) $(LIBDIR) usr/share/pixmaps usr/share/FBReader usr/share/zlibrary $(TDIR)
+	@rm -rf usr $(TDIR)
 
 .copyfiles:
 	@for f in $(files); do \
@@ -70,8 +63,9 @@ install:
   		fi; \
   	done; \
   done;
+	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
 
-$(CTRLDIR)/control:
+$(CTRLDIR)/control: $(FILE)
 	@echo "Package: $(PACKAGENAME)" > $@
 	@echo "Version: $(version)" >> $@
 	@echo "Depends: $(depends)" >> $@

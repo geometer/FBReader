@@ -1,15 +1,15 @@
 ROOTDIR = $(PWD)/../..
-include $(ROOTDIR)/makefiles/platforms.mk
+include $(ROOTDIR)/makefiles/config.mk
+
+DESTDIR = $(PWD)/data
 
 ifeq "$(UI_TYPE)" "opie"
-	BASEDIR = data/opt/QtPalmtop
-	PICSDIR = $(BASEDIR)/pics/fbreader
-	APPDIR = $(BASEDIR)/apps/Applications
+	PICSDIR = $(INSTALLDIR)/pics/fbreader
+	APPDIR = $(INSTALLDIR)/apps/Applications
 	STYLE = $(RESOLUTION)
 else # UI_TYPE == gpe
-	BASEDIR = data/usr
-	PICSDIR = $(BASEDIR)/share/pixmaps/fbreader
-	APPDIR = $(BASEDIR)/share/applications
+	PICSDIR = $(SHAREDIR)/pixmaps/fbreader
+	APPDIR = $(SHAREDIR)/applications
 	STYLE = gpe$(RESOLUTION)
 endif
 
@@ -41,27 +41,22 @@ clean: .cleandir
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
-	@mkdir -p $(BASEDIR)/share/zlibrary
-	@cp ../../zlibrary/data/keynames.openzaurus-$(UI_TYPE).xml $(BASEDIR)/share/zlibrary/keynames.xml
-	@cp -r ../../zlibrary/data/encodings $(BASEDIR)/share/zlibrary
-	@mkdir -p $(BASEDIR)/bin
-	@cp ../FBReader $(BASEDIR)/bin
-	@mkdir -p $(BASEDIR)/lib
-	@cp ../../zlibrary/libzlibrary.so $(BASEDIR)/lib
-	@cp ../../zldictionary/libzldictionary.so $(BASEDIR)/lib
-	@mkdir -p $(PICSDIR)
-	@cp ../icons/$(ICONSIZE)/FBReader.png $(PICSDIR)
-	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(PICSDIR)
-	@cp -r ../share  $(BASEDIR)
-	@rm -rf `find $(BASEDIR)/share -name ".svn"`
-	@mkdir $(BASEDIR)/share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
-	@mkdir $(BASEDIR)/share/FBReader/default
-	@cp ../data/default/config.openzaurus.xml $(BASEDIR)/share/FBReader/default/config.xml
-	@cp ../data/default/keymap.zaurus.xml $(BASEDIR)/share/FBReader/default/keymap.xml
-	@cp ../data/default/styles.$(STYLE).xml $(BASEDIR)/share/FBReader/default/styles.xml
-	@mkdir -p $(APPDIR)
-	@cp $(UI_TYPE)/fbreader.desktop $(APPDIR)
+	@cd ../..; make DESTDIR=$(DESTDIR) install
+	@mkdir -p $(DESTDIR)$(BINDIR)
+	@cp ../FBReader $(DESTDIR)$(BINDIR)
+	@mkdir -p $(DESTDIR)$(PICSDIR)
+	@cp ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
+	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(DESTDIR)$(PICSDIR)
+	@cp -r ../share $(DESTDIR)$(INSTALLDIR)
+	@rm -rf `find $(DESTDIR)$(SHAREDIR) -name ".svn"`
+	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/help
+	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
+	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/default
+	@cp ../data/default/config.openzaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
+	@cp ../data/default/keymap.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
+	@cp ../data/default/styles.$(STYLE).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
+	@mkdir -p $(DESTDIR)$(APPDIR)
+	@cp $(UI_TYPE)/fbreader.desktop $(DESTDIR)$(APPDIR)
 
 .buildpackage:
 	@dpkg -b data $(package)

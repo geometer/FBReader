@@ -1,3 +1,6 @@
+ROOTDIR = $(PWD)/../..
+include $(ROOTDIR)/makefiles/config.mk
+
 DEB_VERSION = 2.0
 
 ARCH = arm
@@ -16,21 +19,15 @@ files = $(shell sed -n -e "s/^Files://p" $(CONTROLFILE))
 package = $(PACKAGENAME)_$(version)_pma400_$(ARCH)
 
 all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
-	@cp $(package).ipk ../..
+	@mv $(package).ipk ../..
 
 install:
 
 .tmpdir:
 	@mkdir bin
 	@cp ../FBReader bin
-	@mkdir lib
-	@cp ../../zlibrary/libzlibrary.so lib
-	@cp ../../zldictionary/libzldictionary.so lib
 	@cp -r ../icons/18x15 pics
 	@cp -r ../share .
-	@mkdir share/zlibrary
-	@cp ../../zlibrary/data/keynames.pma400.xml share/zlibrary/keynames.xml
-	@cp -r ../../zlibrary/data/encodings share/zlibrary
 	@mkdir share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.240x320.fb2 share/FBReader/help/HowToStart.fb2
 	@mkdir share/FBReader/default
@@ -61,6 +58,7 @@ install:
   		fi; \
   	done; \
   done;
+	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
 
 $(CTRLDIR)/control:
 	@echo "Package: $(PACKAGENAME)" > $@

@@ -1,8 +1,8 @@
 ROOTDIR = $(PWD)/../..
-include $(ROOTDIR)/makefiles/platforms.mk
+include $(ROOTDIR)/makefiles/config.mk
 
-BASEDIR = data/opt/QtPalmtop
-DEBDIR = data/DEBIAN
+DESTDIR = $(PWD)/data
+DEBDIR = $(DESTDIR)/DEBIAN
 
 version = $(shell cat ../VERSION)
 package = fbreader-opie_$(version)_$(TARGET_ARCH)_arm.ipk
@@ -21,29 +21,24 @@ clean: .cleandir
 
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
-	@mkdir -p $(BASEDIR)/bin
-	@cp ../FBReader $(BASEDIR)/bin
-	@mkdir -p $(BASEDIR)/lib
-	@cp ../../zlibrary/libzlibrary.so $(BASEDIR)/lib
-	@cp ../../zldictionary/libzldictionary.so $(BASEDIR)/lib
-	@mkdir -p $(BASEDIR)/apps/Applications
-	@mkdir -p $(BASEDIR)/share/zlibrary
-	@cp ../../zlibrary/data/keynames.opensimpad.xml $(BASEDIR)/share/zlibrary/keynames.xml
-	@cp -r ../../zlibrary/data/encodings $(BASEDIR)/share/zlibrary
-	@mkdir -p $(BASEDIR)/pics/fbreader
+	@mkdir -p $(DESTDIR)$(BINDIR)
+	@cp ../FBReader $(DESTDIR)$(BINDIR)
+	@cd ../..; make DESTDIR=$(DESTDIR) install
+	@mkdir -p $(DESTDIR)$(INSTALLDIR)/apps/Applications
+	@mkdir -p $(DESTDIR)$(INSTALLDIR)/pics/fbreader
 	@sed "s/VERSION/$(version)/" control.in > $(DEBDIR)/control
-	@cp fbreader.desktop $(BASEDIR)/apps/Applications
-	@cp ../icons/22x18/FBReader.png $(BASEDIR)/pics/fbreader
-	@cp ../icons/22x18/FBReader/*.png $(BASEDIR)/pics/fbreader
-	@cp -r ../share  $(BASEDIR)
-	@rm -rf `find $(BASEDIR)/share -name ".svn"`
-	@mkdir $(BASEDIR)/share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.640x480.fb2 $(BASEDIR)/share/FBReader/help/HowToStart.fb2
-	@mkdir $(BASEDIR)/share/FBReader/default
+	@cp fbreader.desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications
+	@cp ../icons/22x18/FBReader.png $(DESTDIR)$(INSTALLDIR)/pics/fbreader
+	@cp ../icons/22x18/FBReader/*.png $(DESTDIR)$(INSTALLDIR)/pics/fbreader
+	@cp -r ../share $(DESTDIR)$(INSTALLDIR)
+	@rm -rf `find $(DESTDIR)$(SHAREDIR) -name ".svn"`
+	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/help
+	@cp ../data/help/HowToStart.brownish.640x480.fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
+	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/default
 ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"
-	@cp ../data/default/config.opie.xml $(BASEDIR)/share/FBReader/default/config.xml
-	@cp ../data/default/keymap.opie-opensimpad.xml $(BASEDIR)/share/FBReader/default/keymap.xml
-	@cp ../data/default/styles.640x480.xml $(BASEDIR)/share/FBReader/default/styles.xml
+	@cp ../data/default/config.opie.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
+	@cp ../data/default/keymap.opie-opensimpad.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
+	@cp ../data/default/styles.640x480.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
 endif
 
 .buildpackage:

@@ -46,6 +46,11 @@ FontFamilyOptionEntry::FontFamilyOptionEntry(ZLStringOption &option, const ZLPai
 	}
 }
 
+FontFamilyOptionEntry::~FontFamilyOptionEntry() {
+}
+
+const std::vector<std::string> &FontFamilyOptionEntry::values() const { return myAllowBase ? ourAllFamiliesPlusBase : ourAllFamilies; }
+
 const std::string &FontFamilyOptionEntry::name() const {
 	return FAMILY_STRING;
 }
@@ -68,6 +73,11 @@ LineSpacingOptionEntry::LineSpacingOptionEntry(ZLDoubleOption &option, bool allo
 		ourAllValuesPlusBase.insert(ourAllValuesPlusBase.end(), ourAllValues.begin(), ourAllValues.end());
 	}
 }
+
+LineSpacingOptionEntry::~LineSpacingOptionEntry() {
+}
+
+const std::vector<std::string> &LineSpacingOptionEntry::values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
 
 const std::string &LineSpacingOptionEntry::name() const {
 	return LINE_SPACING_STRING;
@@ -128,6 +138,14 @@ std::vector<std::string> &AlignmentOptionEntry::values5() {
 }
 
 static std::string ALIGNMENT_STRING = "Alignment";
+
+AlignmentOptionEntry::AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined) : myOption(option), myAllowUndefined(allowUndefined) {
+}
+
+AlignmentOptionEntry::~AlignmentOptionEntry() {
+}
+
+const std::vector<std::string> &AlignmentOptionEntry::values() const { return myAllowUndefined ? values5() : values4(); }
 
 const std::string &AlignmentOptionEntry::name() const {
 	return ALIGNMENT_STRING;

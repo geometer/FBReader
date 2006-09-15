@@ -4,7 +4,7 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-LIBS = $(UILIBS) -lm -L$(ROOTDIR)/zlibrary -lzlibrary -L$(ROOTDIR)/zldictionary -lzldictionary $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
+LIBS = $(UILIBS) -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) -L$(ROOTDIR)/zldictionary -lzldictionary $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
 
 TARGET = FBReader
 

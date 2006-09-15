@@ -1,26 +1,34 @@
-USRDIR = $(BASEDIR)/armv5tel-cacko-linux
-CC = $(BASEDIR)/bin/armv5tel-linux-gcc -I $(BASEDIR)/include
-AR = $(BASEDIR)/bin/armv5tel-linux-ar rsu
-LD = $(BASEDIR)/bin/armv5tel-linux-g++
+INSTALLDIR = /usr
+ifeq "$(UI_TYPE)" "qt"
+	BINDIR = /usr/lib/qt/bin
+else # UI_TYPE == gtk
+	BINDIR = /usr/bin
+endif
+LIBDIR=$(INSTALLDIR)/lib
+SHAREDIR=$(INSTALLDIR)/share
+
+USRPATH = $(BASEPATH)/armv5tel-cacko-linux
+CC = $(BASEPATH)/bin/armv5tel-linux-gcc -I $(BASEPATH)/include
+AR = $(BASEPATH)/bin/armv5tel-linux-ar rsu
+LD = $(BASEPATH)/bin/armv5tel-linux-g++
 
 DEPGEN = $(CC) -MM
 CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 
-MOC = $(BASEDIR)/bin/moc
-QTINCLUDE = -I $(USRDIR)/qt/include
+MOC = $(BASEPATH)/bin/moc
+QTINCLUDE = -I $(USRPATH)/qt/include
 
-INCDIR = $(USRDIR)/include
-GTKINCLUDE = -I$(INCDIR)/libxml2 -I$(INCDIR)/libglade-2.0 -I$(INCDIR)/gtk-2.0 -I$(USRDIR)/lib/gtk-2.0/include -I$(USRDIR)/X11R6/include -I$(INCDIR)/atk-1.0 -I$(INCDIR)/pango-1.0 -I$(INCDIR)/freetype2 -I$(INCDIR)/glib-2.0 -I$(USRDIR)/lib/glib-2.0/include
+INCPATH = $(USRPATH)/include
+GTKINCLUDE = -I$(INCPATH)/libxml2 -I$(INCPATH)/libglade-2.0 -I$(INCPATH)/gtk-2.0 -I$(USRPATH)/lib/gtk-2.0/include -I$(USRPATH)/X11R6/include -I$(INCPATH)/atk-1.0 -I$(INCPATH)/pango-1.0 -I$(INCPATH)/freetype2 -I$(INCPATH)/glib-2.0 -I$(USRPATH)/lib/glib-2.0/include
 
 EXPATLIBS = -lexpat
-ENCALIBS = -L $(USRDIR)/lib -lenca
-#ENCALIBS = $(USRDIR)/lib/libenca.so.0
+ENCALIBS = -L $(USRPATH)/lib -lenca
 BZIP2LIBS = -lbz2
 
 ifeq "$(UI_TYPE)" "qt"
-	UILIBS = -L $(USRDIR)/qt/lib -lqt-mt -L $(USRDIR)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
+	UILIBS = -L $(USRPATH)/qt/lib -lqt-mt -L $(USRPATH)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
 else
-	UILIBS = -L $(USRDIR)/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -L $(USRDIR)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
+	UILIBS = -L $(USRPATH)/lib -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -L $(USRPATH)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
 endif
 
 RM = rm -rvf

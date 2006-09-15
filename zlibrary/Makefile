@@ -2,7 +2,8 @@ ROOTDIR = $(PWD)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-TARGET = libzlibrary.so
+TARGET = libzlibrary-$(UI_TYPE).so.0
+TARGET_SHORTNAME = libzlibrary-$(UI_TYPE).so
 
 SUBDIRS_ALL = abstract/runnable abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/deviceInfo abstract/application abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem unix/time
 QTSUBDIRS_ALL = qt/time qtopia/application qtopia/dialogs qtopia/deviceInfo qtopia/view qt/dialogs qt/deviceInfo qt/view qt/image qt/util opie/view opie/dialogs opie/application qt/application-desktop qt/application-pdaxrom
@@ -74,10 +75,24 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 #	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
+	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 	@echo " OK"
 
+SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
+
+ENCODING_FILES = $(wildcard data/encodings/*)
+ifeq "$(TARGET_ARCH)" "maemo"
+  ENCODING_FILES = $(filter-out %/Big5,$(wildcard data/encodings/*))
+endif
+
 install: $(TARGET)
+	@install -d $(SHARE_ZLIBRARY)
+	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/keynames.xml
+	@install -d $(SHARE_ZLIBRARY)/encodings
+	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
+	@install -d $(DESTDIR)$(LIBDIR)
+	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \
@@ -95,4 +110,4 @@ clean:
 			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
 		fi; \
 	done;
-	@$(RM) $(TARGET)
+	@$(RM) *.so *.so.*

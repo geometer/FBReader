@@ -1,5 +1,5 @@
 ROOTDIR = $(PWD)/../..
-include $(ROOTDIR)/makefiles/platforms.mk
+include $(ROOTDIR)/makefiles/config.mk
 
 DEB_VERSION = 2.0
 
@@ -23,22 +23,16 @@ all:
 	@RESOLUTION=640x480 $(MAKE) ipk
 
 ipk: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
-	@cp $(package).ipk ../..
+	@mv $(package).ipk ../..
 
 install:
 
 .tmpdir:
 	@mkdir bin
 	@cp ../FBReader bin
-	@mkdir lib
-	@cp ../../zlibrary/libzlibrary.so lib
-	@cp ../../zldictionary/libzldictionary.so lib
 	@cp -r ../icons/34x28 pics144
 	@cp -r ../icons/18x15 pics
 	@cp -r ../share .
-	@mkdir share/zlibrary
-	@cp ../../zlibrary/data/keynames.zaurus.xml share/zlibrary/keynames.xml
-	@cp -r ../../zlibrary/data/encodings share/zlibrary
 	@mkdir share/FBReader/help
 	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 share/FBReader/help/HowToStart.fb2
 	@mkdir share/FBReader/default
@@ -71,6 +65,7 @@ install:
   		fi; \
   	done; \
   done;
+	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
 
 $(CTRLDIR)/control:
 	@echo "Package: $(PACKAGENAME)" > $@

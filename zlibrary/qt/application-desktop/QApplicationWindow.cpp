@@ -59,6 +59,7 @@ QApplicationWindow::QApplicationWindow(ZLApplication *application) :
   resize(myWidthOption.value(), myHeightOption.value());
 
   qApp->setMainWidget(this);
+	menuBar()->hide();
   show();
 }
 
@@ -81,10 +82,10 @@ void QApplicationWindow::setFullscreen(bool fullscreen) {
   myFullScreen = fullscreen;
   if (myFullScreen) {
     myWasMaximized = isMaximized();
-    menuBar()->hide();
+    myToolBar->hide();
     showFullScreen();
   } else {
-    menuBar()->show();
+    myToolBar->show();
     showNormal();
     if (myWasMaximized) {
       showMaximized();
@@ -137,13 +138,9 @@ void QApplicationWindow::refresh() {
   for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
     if ((*it)->isButton()) {
       const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-      int id = button.actionId();
-      if (menuBar()->findItem(id) != 0) {
-        menuBar()->setItemVisible(id, application().isActionVisible(id));
-        menuBar()->setItemEnabled(id, application().isActionEnabled(id));
-      }
       QAction *action = myActions[*it];
       if (action != 0) {
+        int id = button.actionId();
         action->setEnabled(application().isActionEnabled(id));
         action->setVisible(application().isActionVisible(id));
       }

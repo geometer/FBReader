@@ -1,21 +1,26 @@
-BASEDIR = /stuff/build/opensimpad-0.9.0
+INSTALLDIR=/opt/QtPalmtop
+BINDIR=$(INSTALLDIR)/bin
+LIBDIR=$(INSTALLDIR)/lib
+SHAREDIR=$(INSTALLDIR)/share
 
-TOOLSDIR = $(BASEDIR)/cross/arm-linux/bin
-OEDIR = $(BASEDIR)/staging/arm-linux
-QTDIR = $(BASEDIR)/staging/arm-linux/qt2
+BASEPATH = /stuff/build/opensimpad-0.9.0
 
-MOC = $(BASEDIR)/staging/i686-linux/bin/moc
+TOOLSPATH = $(BASEPATH)/cross/arm-linux/bin
+OEPATH = $(BASEPATH)/staging/arm-linux
+QTPATH = $(BASEPATH)/staging/arm-linux/qt2
+
+MOC = $(BASEPATH)/staging/i686-linux/bin/moc
 RM = rm -rvf
 RM_QUIET = rm -rf
-QTINCLUDE = -I $(QTDIR)/include
-UILIBS = -L $(QTDIR)/lib -lqte -L $(OEDIR)/lib -lqpe -ljpeg -lpng12 -lz -lts
-CC = $(TOOLSDIR)/gcc -I $(OEDIR)/include
-AR = $(TOOLSDIR)/ar rsu
-LD = $(TOOLSDIR)/g++
+QTINCLUDE = -I $(QTPATH)/include
+UILIBS = -L $(QTPATH)/lib -lqte -L $(OEPATH)/lib -lqpe -ljpeg -lpng12 -lz -lts
+CC = $(TOOLSPATH)/gcc -I $(OEPATH)/include
+AR = $(TOOLSPATH)/ar rsu
+LD = $(TOOLSPATH)/g++
 
 EXPATLIBS = -lexpat
 ENCALIBS = -lenca
 BZIP2LIBS = -lbz2
 
 CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale -mfloat-abi=soft --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
-LDFLAGS = -Wl,-rpath,/opt/QtPalmtop/lib
+LDFLAGS = -Wl,-rpath,$(LIBDIR)
