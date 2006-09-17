@@ -13,63 +13,42 @@ FILE = $(PACKAGENAME).control
 
 version = $(shell cat ../VERSION)
 depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
-files = $(shell sed -n -e "s/^Files://p" $(FILE))
 package = $(PACKAGENAME)_$(version)_$(TARGET_ARCH)_armv5tel.ipk
 
 all: .tmpdir .copyfiles $(CTRLDIR)/control $(package) .rmtmpdir
 	@mv $(package) ../..
 
 install:
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/help
+	@install -m 0644 ../data/help/HowToStart.brownish.640x480.fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/default
+	@install -m 0644 ../data/default/config.pdaxrom.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
+	@install -m 0644 ../data/default/keymap.pdaxrom.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
+	@install -m 0644 ../data/default/styles.640x480.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
+	@install -d $(DESTDIR)$(SHAREDIR)/pixmaps/FBReader
+	@install -m 0644 ../icons/34x28/FBReader.png $(DESTDIR)$(SHAREDIR)/pixmaps/FBReader
+	@install -m 0644 $(wildcard ../icons/34x28/FBReader/*.png) $(DESTDIR)$(SHAREDIR)/pixmaps/FBReader
+	@install -d $(DESTDIR)/$(INSTALLDIR)/apps/Office/FBReader
+	@install -m 0644 data/apps/Office/FBReader/AppRun $(DESTDIR)$(INSTALLDIR)/apps/Office/FBReader
+	@install -m 0644 data/apps/Office/FBReader/AppInfo.xml $(DESTDIR)$(INSTALLDIR)/apps/Office/FBReader
+	@install -d $(DESTDIR)/$(SHAREDIR)/applications
+	@install -m 0644 data/share/applications/FBReader.desktop $(DESTDIR)/$(SHAREDIR)/applications
 
 .tmpdir:
-	@mkdir -p usr
-	@mkdir -p usr/apps/Office/FBReader
-	@cp data/apps/Office/FBReader/AppRun usr/apps/Office/FBReader
-	@cp data/apps/Office/FBReader/AppInfo.xml usr/apps/Office/FBReader
-	@mkdir -p usr/share/applications
-	@cp data/share/applications/FBReader.desktop usr/share/applications
-	@mkdir -p .$(BINDIR)
-	@cp ../FBReader .$(BINDIR)
-	@cp -r ../share/FBReader usr/share
-	@mkdir -p usr/share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.640x480.fb2 usr/share/FBReader/help/HowToStart.fb2
-	@mkdir -p usr/share/FBReader/default
-	@cp ../data/default/config.pdaxrom.xml usr/share/FBReader/default/config.xml
-	@cp ../data/default/keymap.pdaxrom.xml usr/share/FBReader/default/keymap.xml
-	@cp ../data/default/styles.640x480.xml usr/share/FBReader/default/styles.xml
-	@mkdir -p usr/share/pixmaps/FBReader
-	@cp `find ../icons/34x28 -name "*.png"` usr/share/pixmaps/FBReader
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -rf usr $(TDIR)
+	@rm -rf $(TDIR)
 
 .copyfiles:
-	@for f in $(files); do \
-		if [ -d $f ]; then \
-			ffiles=`find $$f -type f -o -type b -o -type c -o -type l | grep -v .svn`; \
-  	else \
-  		ffiles=$$f; \
-  	fi; \
-  	for ff in $$ffiles; do \
-  		if [ -f $$ff -o -b $$ff -o -c $$ff ]; then \
-				fdir=$(DATADIR)/`dirname $$ff`; \
-				mkdir -p $$fdir; \
-				cp $$ff $$fdir; \
-			else \
-  			echo >&2 "No such file: $$ff"; \
-				exit 1; \
-  		fi; \
-  	done; \
-  done;
 	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
 
 $(CTRLDIR)/control: $(FILE)
 	@echo "Package: $(PACKAGENAME)" > $@
 	@echo "Version: $(version)" >> $@
 	@echo "Depends: $(depends)" >> $@
-	@egrep -v "^(Files|Depends):" $(FILE) >> $@
+	@egrep -v "^(Depends):" $(FILE) >> $@
 
 $(package):
 	@echo -n "Packaging..."

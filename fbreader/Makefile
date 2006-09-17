@@ -4,7 +4,7 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-LIBS = $(UILIBS) -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) -L$(ROOTDIR)/zldictionary -lzldictionary $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
+LIBS = $(UILIBS) -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) -L$(ROOTDIR)/zldictionary -lzldictionary-$(UI_TYPE) $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
 
 TARGET = FBReader
 
@@ -50,6 +50,14 @@ all:
 install: all .really-install
 
 .really-install:
+	@install -d $(DESTDIR)$(BINDIR)
+	@install $(TARGET) $(DESTDIR)$(BINDIR)
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader
+	@install -m 0644 $(wildcard share/FBReader/hyphenationPatterns.zip) $(DESTDIR)$(SHAREDIR)/FBReader
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/formats/html
+	@install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(SHAREDIR)/FBReader/formats/html
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/formats/xhtml
+	@install -m 0644 $(wildcard share/FBReader/formats/xhtml/*.ent) $(DESTDIR)$(SHAREDIR)/FBReader/formats/xhtml
 	@cd $(TARGET_ARCH); make install 
 
 package:

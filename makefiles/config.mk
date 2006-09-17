@@ -1,7 +1,7 @@
 include $(ROOTDIR)/makefiles/platforms.mk
 
-MAKE = ROOTDIR=$(ROOTDIR) make
-LIBMAKE = BUILD_SHARED_LIBRARY=yes $(MAKE)
+MAKE = make ROOTDIR=$(ROOTDIR)
+LIBMAKE = $(MAKE) BUILD_SHARED_LIBRARY=yes
 
 include $(ROOTDIR)/makefiles/arch/$(TARGET_ARCH).mk
 

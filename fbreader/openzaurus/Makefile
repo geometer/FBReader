@@ -42,14 +42,10 @@ clean: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
 	@cd ../..; make DESTDIR=$(DESTDIR) install
-	@mkdir -p $(DESTDIR)$(BINDIR)
-	@cp ../FBReader $(DESTDIR)$(BINDIR)
 	@mkdir -p $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(DESTDIR)$(PICSDIR)
-	@cp -r ../share $(DESTDIR)$(INSTALLDIR)
-	@rm -rf `find $(DESTDIR)$(SHAREDIR) -name ".svn"`
-	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/help
+	@mkdir -p $(DESTDIR)$(SHAREDIR)/FBReader/help
 	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
 	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/default
 	@cp ../data/default/config.openzaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml

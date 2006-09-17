@@ -21,8 +21,6 @@ clean: .cleandir
 
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
-	@mkdir -p $(DESTDIR)$(BINDIR)
-	@cp ../FBReader $(DESTDIR)$(BINDIR)
 	@cd ../..; make DESTDIR=$(DESTDIR) install
 	@mkdir -p $(DESTDIR)$(INSTALLDIR)/apps/Applications
 	@mkdir -p $(DESTDIR)$(INSTALLDIR)/pics/fbreader
@@ -30,9 +28,7 @@ clean: .cleandir
 	@cp fbreader.desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications
 	@cp ../icons/22x18/FBReader.png $(DESTDIR)$(INSTALLDIR)/pics/fbreader
 	@cp ../icons/22x18/FBReader/*.png $(DESTDIR)$(INSTALLDIR)/pics/fbreader
-	@cp -r ../share $(DESTDIR)$(INSTALLDIR)
-	@rm -rf `find $(DESTDIR)$(SHAREDIR) -name ".svn"`
-	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/help
+	@mkdir -p $(DESTDIR)$(SHAREDIR)/FBReader/help
 	@cp ../data/help/HowToStart.brownish.640x480.fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
 	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/default
 ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"

@@ -11,72 +11,49 @@ DATADIR = $(TDIR)/data
 CTRLDIR = $(TDIR)/control
 
 PACKAGENAME = FBReader
-CONTROLFILE = $(PACKAGENAME).$(RESOLUTION).control
+CONTROLFILE = $(PACKAGENAME).control
 
 version = $(shell cat ../VERSION)
-depends = $(shell sed -n -e "s/^Depends: *//p" $(CONTROLFILE))
-files = $(shell sed -n -e "s/^Files://p" $(CONTROLFILE))
+depends = expat,libenca,libbz2
 package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
 
 all:
-	@RESOLUTION=240x320 $(MAKE) ipk
-	@RESOLUTION=640x480 $(MAKE) ipk
+	@$(MAKE) RESOLUTION=240x320 .ipk
+	@$(MAKE) RESOLUTION=640x480 .ipk
+	@mv *.ipk ../..
 
-ipk: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
-	@mv $(package).ipk ../..
+ifeq "$(RESOLUTION)" "240x320"
+  PICS_FROM = 18x15
+  PICS_TO = pics
+else # RESOLUTION == 640x480
+  PICS_FROM = 34x28
+  PICS_TO = pics144
+endif
 
 install:
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/help
+	@install -m 0644 ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/default
+	@install -m 0644 ../data/default/config.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
+	@install -m 0644 ../data/default/keymap.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
+	@install -m 0644 ../data/default/styles.$(RESOLUTION).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
+	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
+	@install -m 0644 ../icons/$(PICS_FROM)/FBReader.png $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
+	@install -m 0644 $(wildcard ../icons/$(PICS_FROM)/FBReader/*.png) $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
+	@install -d $(DESTDIR)$(INSTALLDIR)/apps/Applications
+	@install -m 0644 FBReader.$(RESOLUTION).desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications/FBReader.desktop
 
-.tmpdir:
-	@mkdir bin
-	@cp ../FBReader bin
-	@cp -r ../icons/34x28 pics144
-	@cp -r ../icons/18x15 pics
-	@cp -r ../share .
-	@mkdir share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 share/FBReader/help/HowToStart.fb2
-	@mkdir share/FBReader/default
-	@cp ../data/default/config.zaurus.xml share/FBReader/default/config.xml
-	@cp ../data/default/keymap.zaurus.xml share/FBReader/default/keymap.xml
-	@cp ../data/default/styles.$(RESOLUTION).xml share/FBReader/default/styles.xml
-	@mkdir -p apps/Applications
-	@cp FBReader.$(RESOLUTION).desktop apps/Applications/FBReader.desktop
+.ipk:
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
-
-.rmtmpdir:
-	@rm -rf bin lib pics pics144 apps share $(TDIR)
-
-.copyfiles:
-	@for f in $(files); do \
-		if [ -d $f ]; then \
-			ffiles=`find $$f -type f -o -type b -o -type c -o -type l | grep -v .svn`; \
-  	else \
-  		ffiles=$$f; \
-  	fi; \
-  	for ff in $$ffiles; do \
-  		if [ -f $$ff -o -b $$ff -o -c $$ff ]; then \
-				fdir=$(DATADIR)/opt/QtPalmtop/`dirname $$ff`; \
-				mkdir -p $$fdir; \
-				cp $$ff $$fdir; \
-			else \
-  			echo >&2 "No such file: $$ff"; \
-				exit 1; \
-  		fi; \
-  	done; \
-  done;
 	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
-
-$(CTRLDIR)/control:
-	@echo "Package: $(PACKAGENAME)" > $@
-	@echo -n "Installed-Size: " >> $@
-	@du -b -s $(DATADIR) | sed -e 's/[	 ].*//' >> $@
-	@echo "Filename: ./$(package).ipk" >> $@
-	@echo "Version: $(version)" >> $@
-	@echo "Depends: $(depends)" >> $@
-	@egrep -v "^(Files|Version|Depends):" $(CONTROLFILE) >> $@
-
-package:
+	@echo "Package: $(PACKAGENAME)" > $(CTRLDIR)/control
+	@echo -n "Installed-Size: " >> $(CTRLDIR)/control
+	@du -b -s $(DATADIR) | sed -e 's/[	 ].*//' >> $(CTRLDIR)/control
+	@echo "Filename: ./$(package).ipk" >> $(CTRLDIR)/control
+	@echo "Version: $(version)" >> $(CTRLDIR)/control
+	@echo "Depends: $(depends)" >> $(CTRLDIR)/control
+	@cat $(CONTROLFILE) >> $(CTRLDIR)/control
 	@echo -n "Packaging..."
 	@echo "$(DEB_VERSION)" > $(TDIR)/debian-binary
 	@tar czf $(TDIR)/control.tar.gz -C $(CTRLDIR) .
@@ -84,6 +61,8 @@ package:
 	@rm -rf $(CTRLDIR) $(DATADIR)
 	@tar czf $(package).ipk -C $(TDIR) ./debian-binary ./control.tar.gz ./data.tar.gz
 	@echo " OK"
+	@rm -rf $(TDIR)
 
-clean: .rmtmpdir
+clean:
+	@rm -rf $(TDIR)
 	@rm -vf *.ipk

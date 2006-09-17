@@ -2,8 +2,8 @@ ROOTDIR = $(PWD)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-TARGET = libzldictionary.so.0
-TARGET_SHORTNAME = libzldictionary.so
+TARGET = libzldictionary-$(UI_TYPE).so.0
+TARGET_SHORTNAME = libzldictionary-$(UI_TYPE).so
 
 SUBDIRS_ALL = abstract
 QTSUBDIRS_ALL = qtopia

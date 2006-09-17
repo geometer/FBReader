@@ -14,50 +14,31 @@ CONTROLFILE = $(wildcard *.control)
 PACKAGENAME = $(patsubst %.control,%,$(CONTROLFILE))
 
 version = $(shell cat ../VERSION)
-depends = $(shell sed -n -e "s/^Depends: *//p" $(CONTROLFILE))
-files = $(shell sed -n -e "s/^Files://p" $(CONTROLFILE))
+depends = expat,libenca,libbz2
 package = $(PACKAGENAME)_$(version)_pma400_$(ARCH)
 
 all: .tmpdir .copyfiles $(CTRLDIR)/control package .rmtmpdir
 	@mv $(package).ipk ../..
 
 install:
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/help
+	@install -m 0644 ../data/help/HowToStart.brownish.240x320.fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
+	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/default
+	@install -m 0644 ../data/default/config.pma400.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
+	@install -m 0644 ../data/default/keymap.pma400.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
+	@install -m 0644 ../data/default/styles.240x320.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
+	@install -d $(DESTDIR)$(INSTALLDIR)/pics
+	@install -m 0644 ../icons/18x15/FBReader.png $(DESTDIR)$(INSTALLDIR)/pics
+	@install -m 0644 $(wildcard ../icons/18x15/FBReader/*.png) $(DESTDIR)$(INSTALLDIR)/pics
 
 .tmpdir:
-	@mkdir bin
-	@cp ../FBReader bin
-	@cp -r ../icons/18x15 pics
-	@cp -r ../share .
-	@mkdir share/FBReader/help
-	@cp ../data/help/HowToStart.brownish.240x320.fb2 share/FBReader/help/HowToStart.fb2
-	@mkdir share/FBReader/default
-	@cp ../data/default/config.pma400.xml share/FBReader/default/config.xml
-	@cp ../data/default/keymap.pma400.xml share/FBReader/default/keymap.xml
-	@cp ../data/default/styles.240x320.xml share/FBReader/default/styles.xml
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
 
 .rmtmpdir:
-	@rm -rf bin lib pics share $(TDIR)
+	@rm -rf $(TDIR)
 
 .copyfiles:
-	@for f in $(files); do \
-		if [ -d $f ]; then \
-			ffiles=`find $$f -type f -o -type b -o -type c -o -type l | grep -v .svn`; \
-  	else \
-  		ffiles=$$f; \
-  	fi; \
-  	for ff in $$ffiles; do \
-  		if [ -f $$ff -o -b $$ff -o -c $$ff ]; then \
-				fdir=$(DATADIR)/opt/QtPalmtop/`dirname $$ff`; \
-				mkdir -p $$fdir; \
-				cp $$ff $$fdir; \
-			else \
-  			echo >&2 "No such file: $$ff"; \
-				exit 1; \
-  		fi; \
-  	done; \
-  done;
 	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
 
 $(CTRLDIR)/control:
@@ -67,7 +48,7 @@ $(CTRLDIR)/control:
 	@echo "Filename: ./$(package).ipk" >> $@
 	@echo "Version: $(version)" >> $@
 	@echo "Depends: $(depends)" >> $@
-	@egrep -v "^(Files|Version|Depends):" $(CONTROLFILE) >> $@
+	@cat $(CONTROLFILE) >> $@
 
 package:
 	@echo -n "Packaging..."

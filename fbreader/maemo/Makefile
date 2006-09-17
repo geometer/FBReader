@@ -32,16 +32,8 @@ SERVICE_FILE = FBReader.service
 BACKUP_CONF = FBReader.backup
 
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
-	@install -d $(DESTDIR)$(BINDIR)
-	@install -s ../FBReader $(DESTDIR)$(BINDIR)
-	@install -d $(SHARE_FBREADER)
-	@install -d $(SHARE_FBREADER)/formats/html
-	@install -m 0644 ../share/FBReader/formats/html/html.ent $(SHARE_FBREADER)/formats/html
-	@install -d $(SHARE_FBREADER)/formats/xhtml
-	@install -m 0644 $(wildcard ../share/FBReader/formats/xhtml/*.ent) $(SHARE_FBREADER)/formats/xhtml
 	@install -d $(SHARE_FBREADER)/icons/FBReader
 	@install -m 0644 $(wildcard ../icons/blueset/FBReader/*) $(SHARE_FBREADER)/icons/FBReader
-	@install -m 0644 $(wildcard ../share/FBReader/*.zip) $(SHARE_FBREADER)
 	@install -d $(SHARE_FBREADER)/help
 	@install -m 0644 ../data/help/HowToStart.blueish.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2
 	@install -d $(SHARE_FBREADER)/default

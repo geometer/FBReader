@@ -14,17 +14,9 @@ all: tarball debpackage
 	@cp $(TARBALL) $(DEBIAN_PACKAGE) ../..
 
 install:
-	@install -d $(DESTDIR)$(BINDIR)
-	@install ../FBReader $(DESTDIR)$(BINDIR)
-	@install -d $(SHARE_FBREADER)
-	@install -d $(SHARE_FBREADER)/formats/html
-	@install -m 0644 ../share/FBReader/formats/html/html.ent $(SHARE_FBREADER)/formats/html
-	@install -d $(SHARE_FBREADER)/formats/xhtml
-	@install -m 0644 $(wildcard ../share/FBReader/formats/xhtml/*.ent) $(SHARE_FBREADER)/formats/xhtml
 	@install -d $(SHARE_FBREADER)/icons/FBReader
 	@install -m 0644 ../icons/34x28/FBReader.png $(SHARE_FBREADER)/icons
 	@install -m 0644 $(wildcard ../icons/34x28/FBReader/*) $(SHARE_FBREADER)/icons/FBReader
-	@install -m 0644 $(wildcard ../share/FBReader/*.zip) $(SHARE_FBREADER)
 	@install -d $(SHARE_FBREADER)/help
 	@install -m 0644 ../data/help/HowToStart.brownish.640x480.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2
 	@install -d $(SHARE_FBREADER)/default
