@@ -192,7 +192,6 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
 
 	menubar().addItem("Book Info...",  ACTION_SHOW_BOOK_INFO);
-	// MSS: this item can actually be disabled if we do not have table of contents
 	menubar().addItem("Table Of Contents", ACTION_SHOW_CONTENTS);
 
 	Menu &librarySubmenu = menubar().addSubmenu("Library");
@@ -211,9 +210,6 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	viewSubmenu.addItem("Rotate Screen", ACTION_ROTATE_SCREEN);
 	viewSubmenu.addItem("Full Screen", ACTION_TOGGLE_FULLSCREEN);
 	viewSubmenu.addItem("Toggle Indicator", ACTION_SHOW_HIDE_POSITION_INDICATOR);
-
-	// MSS: we do not use it now...
-	// myRecentMenu = menubar().addSubmenu("Recent");
 
 	menubar().addItem("Preferences...", ACTION_SHOW_OPTIONS);
 	menubar().addItem("Close", ACTION_QUIT);

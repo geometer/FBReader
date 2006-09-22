@@ -26,6 +26,7 @@
 #include <gtk/gtkframe.h>
 #include <gtk/gtkradiobutton.h>
 #include <gtk/gtkbox.h>
+#include <gtk/gtkcombobox.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -164,7 +165,8 @@ private:
 	void onValueChange(void);
 	
 private:
-	GtkWidget *myLabel, *myComboBox;
+	GtkWidget *myLabel;
+	GtkComboBox *myComboBox;
 };
 
 class ColorOptionView : public GtkOptionView {
@@ -208,7 +210,8 @@ private:
 	void onValueChange();
 
 private:
-	GtkWidget *myWidget, *myKeyButton, *myLabel, *myComboBox;
+	GtkWidget *myWidget, *myKeyButton, *myLabel;
+	GtkComboBox *myComboBox;
 	std::string myCurrentKey;
 };
 

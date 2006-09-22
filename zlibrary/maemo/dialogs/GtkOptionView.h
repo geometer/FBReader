@@ -26,6 +26,7 @@
 #include <gtk/gtkvbox.h>
 #include <gtk/gtkframe.h>
 #include <gtk/gtkrange.h>
+#include <gtk/gtkcombobox.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -164,7 +165,8 @@ private:
 	void onValueChange(void);
 	
 private:
-	GtkWidget *myLabel, *myComboBox;
+	GtkWidget *myLabel;
+	GtkComboBox *myComboBox;
 };
 
 class ColorOptionView : public GtkOptionView {
@@ -218,10 +220,11 @@ private:
 	void onValueChange();
 
 public:
-	GtkWidget *comboBox() const { return myComboBox; }
+	GtkWidget *comboBox() const { return GTK_WIDGET(myComboBox); }
 
 private:
-	GtkWidget *myWidget, *myKeyButton, *myLabel, *myComboBox;
+	GtkWidget *myWidget, *myKeyButton, *myLabel;
+	GtkComboBox *myComboBox;
 	std::string myCurrentKey;
 };
 
