@@ -37,6 +37,7 @@ public:
 private:
 	const std::string &myCategory;
 	XMLConfig &myConfig;
+	std::string myGroupName;
 	XMLConfigGroup *myGroup;
 };
 

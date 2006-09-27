@@ -20,6 +20,7 @@
 
 #include "XMLConfigReader.h"
 #include "XMLConfig.h"
+#include "XMLConfigDelta.h"
 #include "AsciiEncoder.h"
 
 XMLConfigReader::XMLConfigReader(XMLConfig &config, const std::string &category) : myCategory(category), myConfig(config), myGroup(0) {
@@ -40,7 +41,8 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 		return;
 	}
 	if (GROUP == tag) {
-		myGroup = myConfig.getGroup(AsciiEncoder::decode(name), true);
+		myGroupName = AsciiEncoder::decode(name);
+		myGroup = myConfig.getGroup(myGroupName, true);
 	} else if ((myGroup != 0) && (OPTION == tag)) {
 		const char *value = attributeValue(attributes, VALUE);
 		const char *category = attributeValue(attributes, CATEGORY);
@@ -53,6 +55,14 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 			);
 		} else {
 			myGroup->unsetValue(AsciiEncoder::decode(name));
+		}
+		if (myConfig.myDelta != 0) {
+		  myConfig.myDelta->setValue(
+				myGroupName,
+				AsciiEncoder::decode(name),
+				AsciiEncoder::decode(value),
+				(category == 0) ? myCategory : category
+			);
 		}
 	}
 }

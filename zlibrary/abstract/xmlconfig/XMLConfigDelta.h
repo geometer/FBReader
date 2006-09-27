@@ -61,6 +61,7 @@ private:
 	int myChangesCounter;
 	bool myIsUpToDate;
 
+friend class XMLConfigReader;
 friend class XMLConfigDeltaWriter;
 friend class XMLConfig;
 };

@@ -30,6 +30,7 @@ struct ZLTarHeader {
 	bool IsRegularFile;
 
 	bool read(shared_ptr<ZLInputStream> stream);
+	void erase();
 };
 
 bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
@@ -41,7 +42,9 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 		return false;
 	}
 	fileName[100] = '\0';
-	Name = fileName;
+	if (Name.empty()) {
+	  Name = fileName;
+  }
   
 	stream->seek(24, false);
 	char fileSizeString[12];
@@ -60,10 +63,23 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 	stream->read(&linkFlag, 1);
   
 	IsRegularFile = (linkFlag == '\0') || (linkFlag == '0');
-  
-	stream->seek(355, false);
 
-	return stream->offset() == startOffset + 512;
+	stream->seek(355, false);
+	
+	if (((linkFlag == 'L') || (linkFlag == 'K')) && (Name == "././@LongLink") && (Size < 10240)) {
+		Name.erase();
+		Name.append(Size - 1, '\0');
+	  stream->read(const_cast<char*>(Name.data()), Size - 1);
+		const int skip = 512 - (Size & 0x1ff);
+		stream->seek(skip + 1, false);
+		return (stream->offset() == startOffset + Size + skip + 512) && read(stream);
+	} else {
+	  return stream->offset() == startOffset + 512;
+	}
+}
+
+void ZLTarHeader::erase() {
+	Name.erase();
 }
 
 ZLTarInputStream::ZLTarInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) : myBaseStream(base), myCompressedFileName(name) {
@@ -87,6 +103,7 @@ bool ZLTarInputStream::open() {
 			return true;
 		}
 		myBaseStream->seek((header.Size + 0x1ff) & -0x200, false);
+		header.erase();
 	}
 	myBaseStream->close();
 	return false;
@@ -136,6 +153,7 @@ void ZLTarDir::collectFiles(std::vector<std::string> &names, bool) {
 				names.push_back(header.Name);
 			}
 			stream->seek((header.Size + 0x1ff) & -0x200, false);
+		  header.erase();
 		}
 		stream->close();
 	}

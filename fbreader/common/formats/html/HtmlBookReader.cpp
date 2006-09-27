@@ -196,12 +196,29 @@ void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttrib
 HtmlImageTagAction::HtmlImageTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
 }
 
+static std::string decodeURL(const std::string &encoded) {
+  std::string decoded;
+  const int len = encoded.length();
+  decoded.reserve(len);
+  for (int i = 0; i < len; i++) {
+    if ((encoded[i] == '%') && (i < len - 2)) {
+      const char *end = encoded.data() + i + 3;
+      char **endp = const_cast<char**>(&end);
+      decoded += (char)strtol(encoded.data() + i + 1, endp, 16);
+      i += 2;
+    } else {
+      decoded += encoded[i];
+    }
+  }
+  return decoded;
+}
+
 void HtmlImageTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
   if (start) {
     bookReader().endParagraph();
     for (unsigned int i = 0; i < attributes.size(); ++i) {
       if (attributes[i].Name == "SRC") {
-        std::string fileName = attributes[i].Value;
+        std::string fileName = decodeURL(attributes[i].Value);
         bookReader().addImageReference(fileName);
         bookReader().addImage(fileName,
           new ZLFileImage("image/auto", myReader.myBaseDirPath + fileName, 0)

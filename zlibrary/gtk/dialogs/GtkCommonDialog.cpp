@@ -31,7 +31,7 @@ GtkCommonDialog::GtkCommonDialog(const std::string &name) {
 }
 
 GtkCommonDialog::~GtkCommonDialog() {
-	gtk_widget_destroy(GTK_WIDGET(myDialog));
+	destroyGtkDialog(myDialog);
 }
 
 void GtkCommonDialog::addButton(const std::string &text) {
