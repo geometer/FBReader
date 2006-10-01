@@ -39,7 +39,8 @@ install:
 	@install -m 0644 ../data/default/styles.$(RESOLUTION).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
 	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
 	@install -m 0644 ../icons/$(PICS_FROM)/FBReader.png $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
-	@install -m 0644 $(wildcard ../icons/$(PICS_FROM)/FBReader/*.png) $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
+	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)/FBReader
+	@install -m 0644 $(wildcard ../icons/$(PICS_FROM)/FBReader/*.png) $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)/FBReader
 	@install -d $(DESTDIR)$(INSTALLDIR)/apps/Applications
 	@install -m 0644 FBReader.$(RESOLUTION).desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications/FBReader.desktop
 

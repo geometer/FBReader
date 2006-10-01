@@ -2,7 +2,7 @@ ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
-DEBIAN_VERSION = $(VERSION)-1
+DEBIAN_VERSION = $(VERSION)-2
 ARCH	= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 PACKAGE_NAME = fbreader-$(UI_TYPE)
 PACKAGE_FILE = $(PACKAGE_NAME)_$(DEBIAN_VERSION)_$(ARCH).deb
@@ -30,6 +30,7 @@ all: package
 DESKTOP_FILE = FBReader.desktop
 SERVICE_FILE = FBReader.service
 BACKUP_CONF = FBReader.backup
+SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(SHARE_FBREADER)/icons/FBReader

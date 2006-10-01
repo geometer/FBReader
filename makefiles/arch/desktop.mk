@@ -21,12 +21,12 @@ LDFLAGS = -Wl,-rpath,$(LIBDIR)
 MOC = moc-qt3
 QTINCLUDE = -I /usr/include/qt3
 
-GTKINCLUDE = $(shell pkg-config --cflags gtk+-2.0)
+GTKINCLUDE = $(shell pkg-config --cflags gtk+-2.0 libpng x11 xft)
 
 ifeq "$(UI_TYPE)" "qt"
 	UILIBS = -lqt-mt
 else
-	UILIBS = $(shell pkg-config --libs gtk+-2.0)
+	UILIBS = $(shell pkg-config --libs gtk+-2.0) -lpng -ljpeg
 endif
 
 EXPATLIBS = -lexpat
