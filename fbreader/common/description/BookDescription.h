@@ -43,8 +43,15 @@ struct BookInfo {
 	ZLStringOption AuthorDisplayNameOption;
 	ZLStringOption AuthorSortKeyOption;
 	ZLStringOption TitleOption;
+	ZLStringOption SequenceNameOption;
+	ZLIntegerRangeOption NumberInSequenceOption;
 	ZLStringOption LanguageOption;
 	ZLStringOption EncodingOption;
+
+// This option is used to fix problem with missing sequence-related options
+// in config in versions < 0.7.4k
+// It makes no sense if old fbreader was never used on your device.
+	ZLBooleanOption IsSequenceDefinedOption;
 };
 
 class BookDescription {
@@ -58,6 +65,8 @@ private:
 public:
 	const AuthorPtr author() const;
 	const std::string &title() const;
+	const std::string &sequenceName() const;
+	int numberInSequence() const;
 	const std::string &fileName() const;
 	const std::string &language() const;
 	const std::string &encoding() const;
@@ -65,6 +74,8 @@ public:
 private:
 	AuthorPtr myAuthor;
 	std::string myTitle;
+	std::string mySequenceName;
+	int myNumberInSequence;
 	std::string myFileName;
 	std::string myLanguage;
 	std::string myEncoding;
@@ -85,6 +96,8 @@ public:
 	void addAuthor(const std::string &name, const std::string &sortKey = "");
 	const AuthorPtr author() const;
 	std::string &title();
+	std::string &sequenceName();
+	int &numberInSequence();
 	std::string &fileName();
 	std::string &language();
 	std::string &encoding();
@@ -97,6 +110,8 @@ inline BookInfo::~BookInfo() {}
 
 inline const AuthorPtr BookDescription::author() const { return myAuthor; }
 inline const std::string &BookDescription::title() const { return myTitle; }
+inline const std::string &BookDescription::sequenceName() const { return mySequenceName; }
+inline int BookDescription::numberInSequence() const { return myNumberInSequence; }
 inline const std::string &BookDescription::fileName() const { return myFileName; }
 inline const std::string &BookDescription::language() const { return myLanguage; }
 inline const std::string &BookDescription::encoding() const { return myEncoding; }
@@ -105,6 +120,8 @@ inline WritableBookDescription::WritableBookDescription(BookDescription &descrip
 inline WritableBookDescription::~WritableBookDescription() {}
 inline const AuthorPtr WritableBookDescription::author() const { return myDescription.author(); }
 inline std::string &WritableBookDescription::title() { return myDescription.myTitle; }
+inline std::string &WritableBookDescription::sequenceName() { return myDescription.mySequenceName; }
+inline int &WritableBookDescription::numberInSequence() { return myDescription.myNumberInSequence; }
 inline std::string &WritableBookDescription::fileName() { return myDescription.myFileName; }
 inline std::string &WritableBookDescription::language() { return myDescription.myLanguage; }
 inline std::string &WritableBookDescription::encoding() { return myDescription.myEncoding; }

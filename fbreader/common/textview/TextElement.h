@@ -93,9 +93,11 @@ private:
 
 class ControlElement : public TextElement {
 
-public:
+private:
 	ControlElement(shared_ptr<ParagraphEntry> entry);
 	~ControlElement();
+
+public:
 	Kind kind() const;
 	const ControlEntry &entry() const;
 	TextKind textKind() const;
@@ -103,27 +105,37 @@ public:
 
 private:
 	const shared_ptr<ParagraphEntry> myEntry;
+
+friend class TextElementPool;
 };
 
 class TreeElement : public TextElement {
 
 public:
 	enum TreeElementKind {
+		TREE_ELEMENT_TOPLEVEL_OPEN_NODE,
+		TREE_ELEMENT_TOPLEVEL_CLOSED_NODE,
 		TREE_ELEMENT_OPEN_NODE,
 		TREE_ELEMENT_CLOSED_NODE,
 		TREE_ELEMENT_LEAF,
 		TREE_ELEMENT_TOP_RIGHT_LINE,
 		TREE_ELEMENT_TOP_BOTTOM_RIGHT_LINE,
+		TREE_ELEMENT_VERTICAL_LINE,
 		TREE_ELEMENT_SKIP,
 	};
 
+private:
 	TreeElement(TreeElementKind treeElementKind);
 	~TreeElement();
+
+public:
 	Kind kind() const;
 	TreeElementKind treeElementKind() const;
 
 private:
 	TreeElementKind myTreeElementKind;
+
+friend class TextElementPool;
 };
 
 inline TextElement::TextElement() {}

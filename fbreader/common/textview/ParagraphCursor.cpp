@@ -40,10 +40,10 @@ TextElementVector::~TextElementVector() {
 				TextElementPool::Pool.storeControlElement((ControlElement*)*it);
 				break;
 			case TextElement::IMAGE_ELEMENT:
-			case TextElement::TREE_ELEMENT:
 			case TextElement::FORCED_CONTROL_ELEMENT:
 				delete *it;
 				break;
+			case TextElement::TREE_ELEMENT:
 			case TextElement::INDENT_ELEMENT:
 			case TextElement::HSPACE_ELEMENT:
 			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
@@ -68,6 +68,18 @@ TextElementPool::~TextElementPool() {
 	delete AfterParagraphElement;
 	delete IndentElement;
 	delete EmptyLineElement;
+	for (std::map<TreeElement::TreeElementKind, TreeElement*>::iterator it = myTreeElementMap.begin(); it != myTreeElementMap.end(); ++it) {
+	  delete it->second;
+	}
+}
+
+TreeElement *TextElementPool::getTreeElement(TreeElement::TreeElementKind kind) {
+  TreeElement *te = myTreeElementMap[kind];
+	if (te == 0) {
+	  te = new TreeElement(kind);
+		myTreeElementMap[kind] = te;
+	}
+	return te;
 }
 
 ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {

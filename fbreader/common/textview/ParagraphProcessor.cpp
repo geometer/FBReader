@@ -48,22 +48,39 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 			myElements.push_back(TextElementPool::Pool.IndentElement);
 		} else if (myParagraph.kind() == Paragraph::TREE_PARAGRAPH) {
 			TreeParagraph &tp = (TreeParagraph&)myParagraph;
-			for (int i = 1; i < tp.depth() - 1; ++i) {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_SKIP));
-			}
-			if (tp.depth() > 1) {
-				TreeElement::TreeElementKind tek =
-					(tp.parent()->children().back() == &tp) ?
-						TreeElement::TREE_ELEMENT_TOP_RIGHT_LINE :
-						TreeElement::TREE_ELEMENT_TOP_BOTTOM_RIGHT_LINE;
-				myElements.push_back(new TreeElement(tek));
-			}
+
+			std::vector<TreeElement::TreeElementKind> kinds;
+			kinds.reserve(tp.depth() + 1);
+
 			if (tp.children().empty()) {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_LEAF));
+				kinds.push_back(TreeElement::TREE_ELEMENT_LEAF);
 			} else if (tp.isOpen()) {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_OPEN_NODE));
+				kinds.push_back((tp.depth() == 1) ? TreeElement::TREE_ELEMENT_TOPLEVEL_OPEN_NODE : TreeElement::TREE_ELEMENT_OPEN_NODE);
 			} else {
-				myElements.push_back(new TreeElement(TreeElement::TREE_ELEMENT_CLOSED_NODE));
+				kinds.push_back((tp.depth() == 1) ? TreeElement::TREE_ELEMENT_TOPLEVEL_CLOSED_NODE : TreeElement::TREE_ELEMENT_CLOSED_NODE);
+			}
+
+			if (tp.depth() > 1) {
+				const TreeParagraph *current = tp.parent();
+				kinds.push_back(
+					(current->children().back() == &tp) ?
+					TreeElement::TREE_ELEMENT_TOP_RIGHT_LINE :
+					TreeElement::TREE_ELEMENT_TOP_BOTTOM_RIGHT_LINE
+				);
+				const TreeParagraph *parent;
+				for (int i = 1; i < tp.depth() - 1; ++i) {
+					parent = current->parent();
+					kinds.push_back(
+					  (current == parent->children().back()) ?
+						TreeElement::TREE_ELEMENT_SKIP :
+						TreeElement::TREE_ELEMENT_VERTICAL_LINE
+					);
+					current = parent;
+				}
+			}
+
+			for (std::vector<TreeElement::TreeElementKind>::reverse_iterator it = kinds.rbegin(); it != kinds.rend(); ++it) {
+				myElements.push_back(TextElementPool::Pool.getTreeElement(*it));
 			}
 		}
 	}

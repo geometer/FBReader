@@ -44,7 +44,7 @@ void FB2DescriptionReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
-void FB2DescriptionReader::startElementHandler(int tag, const char **) {
+void FB2DescriptionReader::startElementHandler(int tag, const char **attributes) {
 	switch (tag) {
 		case _BODY:
 			myReturnCode = true;
@@ -75,6 +75,22 @@ void FB2DescriptionReader::startElementHandler(int tag, const char **) {
 		case _LAST_NAME:
 			if (myReadAuthor) {
 				myReadAuthorName[2] = true;
+			}
+			break;
+		case _SEQUENCE:
+			// We are don't interested in sequences
+			// which appear in publisher tag of document info
+		  if (myReadSomething) {
+        const char *name = attributeValue(attributes, "name");
+				if (name != 0) {
+				  const char *number = attributeValue(attributes, "number");
+					if (number != 0) {
+						std::string sequenceName = name;
+						ZLStringUtil::stripWhiteSpaces(sequenceName);
+					  myDescription.sequenceName() = sequenceName;
+						myDescription.numberInSequence() = atoi(number);
+					}
+				}
 			}
 			break;
 		default:

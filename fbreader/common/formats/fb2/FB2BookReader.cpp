@@ -27,6 +27,8 @@
 #include "../../model/Paragraph.h"
 
 FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
+	myInsideCoverpage = false;
+	myParagraphsBeforeBodyNumber = (size_t)-1;
 	myInsidePoem = false;
 	mySectionDepth = 0;
 	myBodyCounter = 0;
@@ -141,6 +143,12 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			}
 			myModelReader.pushKind(ANNOTATION);
 			break;
+		case _COVERPAGE:
+			if (myBodyCounter == 0) {
+			  myInsideCoverpage = true;
+				myModelReader.setMainTextModel();
+			}
+			break;
 		case _SUB:
 			myModelReader.addControl(SUB, true);
 			break;
@@ -173,7 +181,13 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		{
 			const char *ref = reference(xmlattributes);
 			if (ref != 0) {
-				myModelReader.addImageReference(ref);
+				if ((myCoverImageReference != ref) ||
+			      (myParagraphsBeforeBodyNumber != myModelReader.model().bookTextModel().paragraphsNumber())) {
+				  myModelReader.addImageReference(ref);
+				}
+				if (myInsideCoverpage) {
+				  myCoverImageReference = ref;
+				}
 			}
 			break;
 		}
@@ -194,6 +208,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _BODY:
 			++myBodyCounter;
+			myParagraphsBeforeBodyNumber = myModelReader.model().bookTextModel().paragraphsNumber();
 			if (myBodyCounter == 1) {
 				myModelReader.setMainTextModel();
 			}
@@ -246,6 +261,13 @@ void FB2BookReader::endElementHandler(int tag) {
 		case _ANNOTATION:
 			myModelReader.popKind();
 			if (myBodyCounter == 0) {
+				myModelReader.insertEndOfSectionParagraph();
+				myModelReader.unsetTextModel();
+			}
+			break;
+		case _COVERPAGE:
+			if (myBodyCounter == 0) {
+			  myInsideCoverpage = false;
 				myModelReader.insertEndOfSectionParagraph();
 				myModelReader.unsetTextModel();
 			}

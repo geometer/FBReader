@@ -22,6 +22,7 @@
 #include <abstract/ZLFile.h>
 #include <abstract/ZLInputStream.h>
 #include <abstract/ZLOptions.h>
+#include <abstract/ZLUnicodeUtil.h>
 
 #include "PdbPlugin.h"
 #include "../../description/BookDescriptionUtil.h"
@@ -31,8 +32,8 @@ PdbPlugin::~PdbPlugin() {
 }
 
 std::string PdbPlugin::fileType(const ZLFile &file) const {
-	const std::string &extension = file.extension();
-	if ((extension != "pdb") && (extension != "PDB") && (extension != "prc") && (extension != "PRC")) {
+	const std::string extension = ZLUnicodeUtil::toLower(file.extension());
+	if ((extension != "prc") && (extension != "pdb") && (extension != "mobi")) {
 		return "";
 	}
 

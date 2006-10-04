@@ -32,21 +32,26 @@
 
 #include "../FBOptions.h"
 
-const std::string EMPTY = "";
-const std::string UNKNOWN = "unknown";
+static const std::string EMPTY = "";
+static const std::string UNKNOWN = "unknown";
 
 BookInfo::BookInfo(const std::string &fileName) : 
 	AuthorDisplayNameOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayName", EMPTY),
 	AuthorSortKeyOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKey", EMPTY),
 	TitleOption(FBOptions::BOOKS_CATEGORY, fileName, "Title", EMPTY),
+	SequenceNameOption(FBOptions::BOOKS_CATEGORY, fileName, "Sequence", EMPTY),
+	NumberInSequenceOption(FBOptions::BOOKS_CATEGORY, fileName, "Number in seq", 0, 100, 0),
 	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", UNKNOWN),
-	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY) {
+	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY),
+	IsSequenceDefinedOption(FBOptions::BOOKS_CATEGORY, fileName, "SequenceDefined", ZLFile(fileName).extension() != "fb2") {
 }
 
 void BookInfo::reset() {
 	AuthorDisplayNameOption.setValue(EMPTY);
 	AuthorSortKeyOption.setValue(EMPTY);
 	TitleOption.setValue(EMPTY);
+	SequenceNameOption.setValue(EMPTY);
+	NumberInSequenceOption.setValue(0);
 	LanguageOption.setValue(UNKNOWN);
 	EncodingOption.setValue(EMPTY);
 }
@@ -56,7 +61,8 @@ bool BookInfo::isFull() const {
 		!AuthorDisplayNameOption.value().empty() &&
 		!AuthorSortKeyOption.value().empty() &&
 		!TitleOption.value().empty() &&
-		!EncodingOption.value().empty();
+		!EncodingOption.value().empty() &&
+		IsSequenceDefinedOption.value();
 }
 
 BookDescriptionPtr BookDescription::create(const std::string &fileName) {
@@ -73,6 +79,8 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 		if (info.isFull()) {
 			description->myAuthor = SingleAuthor::create(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
 			description->myTitle = info.TitleOption.value();
+			description->mySequenceName = info.SequenceNameOption.value();
+			description->myNumberInSequence = info.NumberInSequenceOption.value();
 			description->myLanguage = info.LanguageOption.value();
 			description->myEncoding = info.EncodingOption.value();
 			return description;
@@ -105,8 +113,11 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 		info.AuthorDisplayNameOption.setValue(description->myAuthor->displayName());
 		info.AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
 		info.TitleOption.setValue(description->myTitle);
+		info.SequenceNameOption.setValue(description->mySequenceName);
+		info.NumberInSequenceOption.setValue(description->myNumberInSequence);
 		info.LanguageOption.setValue(description->myLanguage);
 		info.EncodingOption.setValue(description->myEncoding);
+		info.IsSequenceDefinedOption.setValue(true);
 	}
 	return description;
 }

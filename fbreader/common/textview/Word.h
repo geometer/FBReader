@@ -51,11 +51,11 @@ public:
 		WordMark *myNext;
 	};
 
-public:
+private:
 	Word(const char *data, unsigned short size, size_t paragraphOffset);
+	~Word();
 
 public:
-	~Word();
 	Kind kind() const;
 	short width(const ZLPaintContext &context) const;
 
@@ -76,6 +76,8 @@ private:
 	// assignment and copy constructor are disabled
 	Word(const Word&);
 	Word &operator = (const Word&);
+
+friend class TextElementPool;
 };
 
 inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }

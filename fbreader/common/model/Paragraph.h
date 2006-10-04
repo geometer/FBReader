@@ -262,6 +262,7 @@ public:
 	TreeParagraph *parent();
 	const TreeParagraph *parent() const;
 	const std::vector<TreeParagraph*> &children() const;
+	int fullSize() const;
 
 	void removeFromParent();
 

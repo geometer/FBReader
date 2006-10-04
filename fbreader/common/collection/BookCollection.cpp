@@ -34,10 +34,24 @@
 #include "../formats/FormatPlugin.h"
 
 bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2) {
-  return d1->title() < d2->title();
+  const std::string &sequenceName1 = d1->sequenceName();
+  const std::string &sequenceName2 = d2->sequenceName();
+	if (sequenceName1.empty() && sequenceName2.empty()) {
+    return d1->title() < d2->title();
+	}
+	if (sequenceName1.empty()) {
+	  return d1->title() < sequenceName2;
+	}
+	if (sequenceName2.empty()) {
+	  return sequenceName1 <= d2->title();
+	}
+	if (sequenceName1 != sequenceName2) {
+	  return sequenceName1 < sequenceName2;
+	}
+	return d1->numberInSequence() < d2->numberInSequence();
 }
 
-const std::string OPTIONS = "Options";
+static const std::string OPTIONS = "Options";
 
 BookCollection::BookCollection() :
   PathOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "BookPath", ""),

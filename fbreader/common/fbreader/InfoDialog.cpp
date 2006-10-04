@@ -97,19 +97,19 @@ const std::string &StringInfoEntry::initialValue() const {
 void StringInfoEntry::onAccept(const std::string&) {
 }
 
+static const std::string AUTO = "auto";
+
 EncodingEntry::EncodingEntry(const std::string &name, ZLStringOption &encodingOption) : myName(name), myEncodingOption(encodingOption) {
-	if (initialValue() == "auto") {
-		setActive(false);
-	}
+	setActive(initialValue() != AUTO);
 }
 
 EncodingEntry::~EncodingEntry() {
 }
 
 const std::vector<std::string> &EncodingEntry::values() const {
-	if (initialValue() == "auto") {
+	if (initialValue() == AUTO) {
 		if (AUTO_ENCODING.empty()) {
-			AUTO_ENCODING.push_back("auto");
+			AUTO_ENCODING.push_back(AUTO);
 		}
 		return AUTO_ENCODING;
 	}
@@ -158,13 +158,18 @@ void LanguageEntry::onAccept(const std::string &value) {
 
 InfoDialog::InfoDialog(const std::string &fileName) : myBookInfo(fileName) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
-	ZLDialogContent &infoTab = myDialog->createTab("Info");
-	infoTab.addOption(new StringInfoEntry("File", fileName));
-	infoTab.addOption(new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption));
-	infoTab.addOption(new ZLSimpleStringOptionEntry("Author (display name)", myBookInfo.AuthorDisplayNameOption));
-	infoTab.addOption(new ZLSimpleStringOptionEntry("Author (sort name)", myBookInfo.AuthorSortKeyOption));
-	infoTab.addOption(new EncodingEntry("Encoding", myBookInfo.EncodingOption));
-	infoTab.addOption(new LanguageEntry("Language", myBookInfo.LanguageOption));
+
+	ZLDialogContent &commonTab = myDialog->createTab("Common");
+	commonTab.addOption(new StringInfoEntry("File", fileName));
+	commonTab.addOption(new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption));
+	commonTab.addOption(new ZLSimpleStringOptionEntry("Author (display name)", myBookInfo.AuthorDisplayNameOption));
+	commonTab.addOption(new ZLSimpleStringOptionEntry("Author (sort name)", myBookInfo.AuthorSortKeyOption));
+	commonTab.addOption(new EncodingEntry("Encoding", myBookInfo.EncodingOption));
+	commonTab.addOption(new LanguageEntry("Language", myBookInfo.LanguageOption));
+
+	ZLDialogContent &sequenceTab = myDialog->createTab("Sequence");
+	sequenceTab.addOption(new ZLSimpleStringOptionEntry("Sequence Name", myBookInfo.SequenceNameOption));
+	sequenceTab.addOption(new ZLSimpleSpinOptionEntry("Number In Sequence", myBookInfo.NumberInSequenceOption, 1));
 
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
 	if (plugin != 0) {

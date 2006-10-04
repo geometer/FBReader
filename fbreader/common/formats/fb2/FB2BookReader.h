@@ -42,6 +42,9 @@ public:
 private:
 	int mySectionDepth;
 	int myBodyCounter;
+	bool myInsideCoverpage;
+	size_t myParagraphsBeforeBodyNumber;
+	std::string myCoverImageReference;
 	bool myInsidePoem;
 	BookReader myModelReader;
 

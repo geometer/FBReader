@@ -85,14 +85,31 @@ void CollectionView::paint() {
   if (myTreeModel == 0) {
     myTreeModel = new TreeModel();
     const std::vector<AuthorPtr> &authors = myCollection.authors();
+    std::string currentSequenceName;
+    TreeParagraph *sequenceParagraph;
     for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
       const Books &books = myCollection.books(*it);
       if (!books.empty()) {
+        currentSequenceName.erase();
+        sequenceParagraph = 0;
+
         TreeParagraph *authorParagraph = myTreeModel->createParagraph();
         myTreeModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
         myTreeModel->addText((*it)->displayName());
         for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
-          TreeParagraph *bookParagraph = myTreeModel->createParagraph(authorParagraph);
+          const std::string &sequenceName = (*jt)->sequenceName();
+          if (sequenceName.empty()) {
+            currentSequenceName.erase();
+            sequenceParagraph = 0;
+          } else if (sequenceName != currentSequenceName) {
+            currentSequenceName = sequenceName;
+            sequenceParagraph = myTreeModel->createParagraph(authorParagraph);
+						myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
+						myTreeModel->addText(sequenceName);
+          }
+          TreeParagraph *bookParagraph = myTreeModel->createParagraph(
+            (sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
+          );
           myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
           myTreeModel->addText((*jt)->title());
           if (myCollection.isBookExternal(*jt)) {
@@ -168,8 +185,7 @@ bool CollectionView::onStylusPress(int x, int y) {
     rebuildPaintInfo(true);
     preparePaintInfo();
     if (paragraph->isOpen()) {
-      // TODO: correct next paragraph number calculation for multi-level trees
-      int nextParagraphNumber = paragraphNumber + paragraph->children().size() + 1;
+      int nextParagraphNumber = paragraphNumber + paragraph->fullSize();
       int lastParagraphNumber = endCursor().paragraphCursor().index();
       if (endCursor().isEndOfParagraph()) {
         ++lastParagraphNumber;

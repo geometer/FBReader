@@ -74,6 +74,8 @@ public:
 		_FIRST_NAME,
 		_MIDDLE_NAME,
 		_LAST_NAME,
+		_COVERPAGE,
+		_SEQUENCE,
 		_UNKNOWN
 	};
 

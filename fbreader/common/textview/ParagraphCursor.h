@@ -30,9 +30,9 @@
 #include <abstract/allocator.h>
 
 #include "../model/TextModel.h"
+#include "TextElement.h"
 #include "Word.h"
 
-class TextElement;
 class Paragraph;
 
 class TextElementVector : public std::vector<TextElement*> {
@@ -62,10 +62,12 @@ public:
 	void storeWord(Word *word);
 	ControlElement *getControlElement(shared_ptr<ParagraphEntry> entry);
 	void storeControlElement(ControlElement *element);
+	TreeElement *getTreeElement(TreeElement::TreeElementKind kind);
 
 private:
 	Allocator<sizeof(Word),64> myWordAllocator;
 	Allocator<sizeof(ControlElement),32> myControlAllocator;
+	std::map<TreeElement::TreeElementKind,TreeElement*> myTreeElementMap;
 };
 
 class ParagraphCursor {
