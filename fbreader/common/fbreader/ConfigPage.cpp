@@ -53,6 +53,7 @@ TimeoutEntry::TimeoutEntry(ZLIntegerRangeOption &option) : ZLSimpleSpinOptionEnt
 
 void TimeoutEntry::onAccept(int value) {
 	ZLOption::startAutoSave(isVisible() ? value : 0);
+	ZLSimpleSpinOptionEntry::onAccept(value);
 }
 
 ConfigPage::ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
