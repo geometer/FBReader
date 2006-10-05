@@ -170,6 +170,7 @@ InfoDialog::InfoDialog(const std::string &fileName) : myBookInfo(fileName) {
 	ZLDialogContent &sequenceTab = myDialog->createTab("Series");
 	sequenceTab.addOption(new ZLSimpleStringOptionEntry("Series Title", myBookInfo.SequenceNameOption));
 	sequenceTab.addOption(new ZLSimpleSpinOptionEntry("Book Number", myBookInfo.NumberInSequenceOption, 1));
+	sequenceTab.addOption(new ZLOrderOptionEntry());
 
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
 	if (plugin != 0) {

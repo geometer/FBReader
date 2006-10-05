@@ -32,6 +32,7 @@ class QButtonGroup;
 class QLabel;
 class QSpinBox;
 class QCheckBox;
+class QListBox;
 class QLineEdit;
 class QPushButton;
 class QRadioButton;
@@ -225,6 +226,25 @@ private:
 	QWidget *myWidget;
 	QSlider *myRSlider, *myGSlider, *myBSlider;
 	QLabel *myColorBar;
+};
+
+class OrderOptionView : public QObject, public QOptionView {
+
+Q_OBJECT
+
+public:
+	OrderOptionView(ZLOrderOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
+
+protected:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _onAccept() const;
+
+private:
+	QWidget *myWidget;
+	QListBox *myListBox;
+	QPushButton *myUpButton, *myDownButton;
 };
 
 #endif /* __QOPTIONVIEW_H__ */

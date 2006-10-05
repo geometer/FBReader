@@ -168,6 +168,9 @@ void QOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int fromColumn,
 		case KEY:
 			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
+		case ORDER:
+			view = new OrderOptionView((ZLOrderOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case UNKNOWN:
 			view = (QOptionView*)((ZLUserDefinedOptionEntry*)option)->createView();
 			view->setPosition(this, myRowCounter, fromColumn, toColumn);

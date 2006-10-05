@@ -30,6 +30,7 @@
 #include <qlineedit.h>
 #include <qslider.h>
 #include <qlayout.h>
+#include <qlistbox.h>
 
 #include <abstract/ZLStringUtil.h>
 #include "../util/QKeyUtil.h"
@@ -331,4 +332,41 @@ void ColorOptionView::onSliderMove(int) {
 
 void ColorOptionView::_onAccept() const {
 	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
+}
+
+void OrderOptionView::_createItem() {
+	myWidget = new QWidget(myTab);
+	QGridLayout *layout = new QGridLayout(myWidget, 2, 2, 0, 10);
+	myListBox = new QListBox(myWidget);
+	layout->addMultiCellWidget(myListBox, 0, 1, 0, 0);
+	myUpButton = new QPushButton(myWidget);
+	myUpButton->setText("Up");
+	myDownButton = new QPushButton(myWidget);
+	myDownButton->setText("Down");
+	layout->addWidget(myUpButton, 0, 1);
+	layout->addWidget(myDownButton, 1, 1);
+	myListBox->insertItem("X");
+	myListBox->insertItem("Y");
+	myListBox->insertItem("Z");
+	myListBox->insertItem("T");
+	myListBox->insertItem("U");
+	myListBox->insertItem("V");
+	myListBox->insertItem("V");
+	myListBox->insertItem("V");
+	myListBox->insertItem("V");
+	myListBox->insertItem("V");
+	myListBox->insertItem("V");
+
+	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+}
+
+void OrderOptionView::_show() {
+	myWidget->show();
+}
+
+void OrderOptionView::_hide() {
+	myWidget->hide();
+}
+
+void OrderOptionView::_onAccept() const {
 }

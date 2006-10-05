@@ -34,6 +34,7 @@ enum ZLOptionKind {
 	COMBO,
 	COLOR,
 	KEY,
+	ORDER,
 	UNKNOWN,
 };
 
@@ -232,6 +233,19 @@ public:
 	virtual void onAccept(ZLColor color) = 0;
 };
 
+class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
+
+public:
+	ZLSimpleColorOptionEntry(ZLColorOption &option);
+	virtual ~ZLSimpleColorOptionEntry();
+	const std::string &name() const;
+	const ZLColor color() const;
+	void onAccept(ZLColor color);
+
+private:
+	ZLColorOption &myOption; 
+};
+
 class ZLKeyOptionEntry : public ZLOptionEntry {
 
 public:
@@ -253,17 +267,17 @@ private:
 	std::vector<std::string> myActionNames;
 };
 
-class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
+class ZLOrderOptionEntry : public ZLOptionEntry {
 
 public:
-	ZLSimpleColorOptionEntry(ZLColorOption &option);
-	virtual ~ZLSimpleColorOptionEntry();
+	ZLOrderOptionEntry();
+
+protected:
+	ZLOptionKind kind() const;
 	const std::string &name() const;
-	const ZLColor color() const;
-	void onAccept(ZLColor color);
 
 private:
-	ZLColorOption &myOption; 
+	std::string myName;
 };
 
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
@@ -338,5 +352,9 @@ inline void ZLKeyOptionEntry::addActionName(const std::string &actionName) { myA
 inline const std::vector<std::string> &ZLKeyOptionEntry::actionNames() const { return myActionNames; }
 inline ZLOptionKind ZLKeyOptionEntry::kind() const { return KEY; }
 inline const std::string &ZLKeyOptionEntry::name() const { return myName; }
+
+inline ZLOrderOptionEntry::ZLOrderOptionEntry() {}
+inline ZLOptionKind ZLOrderOptionEntry::kind() const { return ORDER; }
+inline const std::string &ZLOrderOptionEntry::name() const { return myName; }
 
 #endif /* __ZLOPTIONENTRY_H__ */
