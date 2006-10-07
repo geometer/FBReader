@@ -271,6 +271,7 @@ class ZLOrderOptionEntry : public ZLOptionEntry {
 
 public:
 	ZLOrderOptionEntry();
+	std::vector<std::string> &values();
 
 protected:
 	ZLOptionKind kind() const;
@@ -278,6 +279,7 @@ protected:
 
 private:
 	std::string myName;
+	std::vector<std::string> myValues;
 };
 
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
@@ -356,5 +358,6 @@ inline const std::string &ZLKeyOptionEntry::name() const { return myName; }
 inline ZLOrderOptionEntry::ZLOrderOptionEntry() {}
 inline ZLOptionKind ZLOrderOptionEntry::kind() const { return ORDER; }
 inline const std::string &ZLOrderOptionEntry::name() const { return myName; }
+inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues; }
 
 #endif /* __ZLOPTIONENTRY_H__ */

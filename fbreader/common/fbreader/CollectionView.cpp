@@ -37,10 +37,12 @@
 
 static const std::string LIBRARY = "Library";
 static const std::string deleteImageId = "deleteImage";
+//static const std::string orderImageId = "orderImage";
 
 CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
   myTreeModel = 0;
   myTreeStateIsFrozen = false;
+  //myImageMap[orderImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
   myImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
 }
 
@@ -106,6 +108,8 @@ void CollectionView::paint() {
             sequenceParagraph = myTreeModel->createParagraph(authorParagraph);
 						myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
 						myTreeModel->addText(sequenceName);
+            //myTreeModel->addText(" ");
+            //myTreeModel->addImage(orderImageId, myImageMap);
           }
           TreeParagraph *bookParagraph = myTreeModel->createParagraph(
             (sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
@@ -149,6 +153,12 @@ bool CollectionView::onStylusPress(int x, int y) {
     if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() <= paragraphNumber)) {
       return false;
     }
+		/*
+		WordCursor cursor;
+		cursor.moveToParagraph(imagePosition->ParagraphNumber);
+		cursor.moveTo(imagePosition->TextElementNumber, 0);
+		TextElement &element = cursor.element();
+		*/
     TreeParagraph *paragraph = (TreeParagraph*)(*myTreeModel)[paragraphNumber];
     std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
     if (it != myBooksMap.end()) {

@@ -167,10 +167,18 @@ InfoDialog::InfoDialog(const std::string &fileName) : myBookInfo(fileName) {
 	commonTab.addOption(new EncodingEntry("Encoding", myBookInfo.EncodingOption));
 	commonTab.addOption(new LanguageEntry("Language", myBookInfo.LanguageOption));
 
-	ZLDialogContent &sequenceTab = myDialog->createTab("Series");
-	sequenceTab.addOption(new ZLSimpleStringOptionEntry("Series Title", myBookInfo.SequenceNameOption));
-	sequenceTab.addOption(new ZLSimpleSpinOptionEntry("Book Number", myBookInfo.NumberInSequenceOption, 1));
-	sequenceTab.addOption(new ZLOrderOptionEntry());
+	ZLDialogContent &seriesTab = myDialog->createTab("Series");
+	seriesTab.addOption(new ZLSimpleStringOptionEntry("Series Title", myBookInfo.SequenceNameOption));
+	seriesTab.addOption(new ZLSimpleSpinOptionEntry("Book Number", myBookInfo.NumberInSequenceOption, 1));
+	/*
+	ZLOrderOptionEntry *orderEntry = new ZLOrderOptionEntry();
+  orderEntry->values().push_back("First");
+  orderEntry->values().push_back("Second");
+  orderEntry->values().push_back("Third");
+  orderEntry->values().push_back("Fourth");
+  orderEntry->values().push_back("Fifth");
+	sequenceTab.addOption(orderEntry);
+	*/
 
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
 	if (plugin != 0) {

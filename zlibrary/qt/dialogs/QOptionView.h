@@ -241,6 +241,11 @@ protected:
 	void _hide();
 	void _onAccept() const;
 
+private slots:
+  void onChangeSelection();
+  void onUpButtonPressed();
+  void onDownButtonPressed();
+
 private:
 	QWidget *myWidget;
 	QListBox *myListBox;

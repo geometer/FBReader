@@ -46,23 +46,28 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 	} else if ((myGroup != 0) && (OPTION == tag)) {
 		const char *value = attributeValue(attributes, VALUE);
 		const char *category = attributeValue(attributes, CATEGORY);
+		const std::string decodedName = AsciiEncoder::decode(name);
 		if (value != 0) {
+		  const std::string decodedValue = AsciiEncoder::decode(value);
 			myGroup->setValue(
-				AsciiEncoder::decode(name),
-				AsciiEncoder::decode(value),
+				decodedName,
+				decodedValue,
 				(category == 0) ? myCategory : category,
 				false
 			);
+			if (myConfig.myDelta != 0) {
+			  myConfig.myDelta->setValue(
+					myGroupName,
+					decodedName,
+				  decodedValue,
+					(category == 0) ? myCategory : category
+				);
+			}
 		} else {
-			myGroup->unsetValue(AsciiEncoder::decode(name));
-		}
-		if (myConfig.myDelta != 0) {
-		  myConfig.myDelta->setValue(
-				myGroupName,
-				AsciiEncoder::decode(name),
-				AsciiEncoder::decode(value),
-				(category == 0) ? myCategory : category
-			);
+			myGroup->unsetValue(decodedName);
+			if (myConfig.myDelta != 0) {
+			  myConfig.myDelta->unsetValue(myGroupName, decodedName);
+			}
 		}
 	}
 }
