@@ -60,7 +60,7 @@ void RtfImage::read() const {
 
 const shared_ptr<std::string> RtfImage::stringData() const {
 	if (myData.isNull()) {
-    read();
+		read();
 	}
 	return myData;
 }

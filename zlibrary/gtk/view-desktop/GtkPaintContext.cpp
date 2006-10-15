@@ -289,7 +289,7 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 			const int w = (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
 			const int h = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
 			const int ascent = (pango_font_metrics_get_ascent(pango_font_get_metrics(myAnalysis.font, 0)) + PANGO_SCALE / 2) / PANGO_SCALE;
-    
+
 			if (myWordPixmap != 0) {
 				if ((gdk_pixbuf_get_width(myWordPixbuf) < w) ||
 						(gdk_pixbuf_get_width(myRotatedWordPixbuf) < w) ||
@@ -325,7 +325,7 @@ void GtkPaintContext::drawString(int x, int y, const char *str, int len) {
 			const int w = (logicalRectangle.width + PANGO_SCALE / 2) / PANGO_SCALE;
 			const int h = (logicalRectangle.height + PANGO_SCALE / 2) / PANGO_SCALE;
 			const int ascent = (pango_font_metrics_get_ascent(pango_font_get_metrics(myAnalysis.font, 0)) + PANGO_SCALE / 2) / PANGO_SCALE;
-    
+
 			if (myWordPixmap != 0) {
 				if ((gdk_pixbuf_get_width(myWordPixbuf) < w) ||
 						(gdk_pixbuf_get_width(myRotatedWordPixbuf) < h) ||

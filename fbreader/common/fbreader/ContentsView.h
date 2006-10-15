@@ -22,10 +22,10 @@
 #ifndef __CONTENTSVIEW_H__
 #define __CONTENTSVIEW_H__
 
-#include "FBView.h"
+#include "TreeView.h"
 #include "../textview/ParagraphCursor.h"
 
-class ContentsView : public FBView {
+class ContentsView : public TreeView {
 
 public:
 	ContentsView(FBReader &reader, ZLPaintContext &context);

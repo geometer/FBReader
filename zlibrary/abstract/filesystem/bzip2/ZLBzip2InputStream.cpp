@@ -89,11 +89,11 @@ void ZLBzip2InputStream::close() {
 }
 
 void ZLBzip2InputStream::seek(int offset, bool absoluteOffset) {
-  if (absoluteOffset) {
-    offset -= this->offset();
-  }
+	if (absoluteOffset) {
+		offset -= this->offset();
+	}
 	if (offset < 0) {
-    offset += this->offset();
+		offset += this->offset();
 		open();
 	}
 	if (offset > 0) {

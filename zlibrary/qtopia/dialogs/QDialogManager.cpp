@@ -49,16 +49,16 @@ ZLDialog *QDialogManager::createDialog(const std::string &title) const {
 
 int QDialogManager::infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
 	int code = 0;
-  switch (type) {
-    default:
-    case INFORMATION_TYPE:
-    case QUESTION_TYPE:
-      code = QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
+	switch (type) {
+		default:
+		case INFORMATION_TYPE:
+		case QUESTION_TYPE:
+			code = QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
 			break;
-    case ERROR_TYPE:
-      code = QMessageBox::critical(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
+		case ERROR_TYPE:
+			code = QMessageBox::critical(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
 			break;
-  }
+	}
 	fullScreenWorkaround();
 	return code;
 }

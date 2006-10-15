@@ -37,79 +37,79 @@ class RtfCommand;
 class RtfReader {
 
 private:
-  static void fillKeywordMap();
-  static void addAction(const std::string &tag, RtfCommand *command);
+	static void fillKeywordMap();
+	static void addAction(const std::string &tag, RtfCommand *command);
 
 private:
-  static std::map<std::string, RtfCommand*> ourKeywordMap;
+	static std::map<std::string, RtfCommand*> ourKeywordMap;
 
 protected:
-  RtfReader(const std::string &encoding);
-  virtual ~RtfReader();
+	RtfReader(const std::string &encoding);
+	virtual ~RtfReader();
 
 public:
-  virtual bool readDocument(const std::string &fileName);
+	virtual bool readDocument(const std::string &fileName);
 
 protected:
-  enum DestinationType {
-    DESTINATION_NONE,
-    DESTINATION_SKIP,
-    DESTINATION_INFO,
-    DESTINATION_TITLE,
-    DESTINATION_AUTHOR,
-    DESTINATION_PICTURE,
-    DESTINATION_STYLESHEET,
-    DESTINATION_FOOTNOTE,
-  };
+	enum DestinationType {
+		DESTINATION_NONE,
+		DESTINATION_SKIP,
+		DESTINATION_INFO,
+		DESTINATION_TITLE,
+		DESTINATION_AUTHOR,
+		DESTINATION_PICTURE,
+		DESTINATION_STYLESHEET,
+		DESTINATION_FOOTNOTE,
+	};
 
-  enum FontProperty {
-    FONT_BOLD,
-    FONT_ITALIC,
-    FONT_UNDERLINED
-  };
-    
-  virtual void addCharData(const char *data, size_t len, bool convert) = 0;
-  virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
+	enum FontProperty {
+		FONT_BOLD,
+		FONT_ITALIC,
+		FONT_UNDERLINED
+	};
+		
+	virtual void addCharData(const char *data, size_t len, bool convert) = 0;
+	virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
 	virtual void setEncoding(int code) = 0;
-  virtual void switchDestination(DestinationType destination, bool on) = 0;
-  virtual void setAlignment() = 0;
-  virtual void setFontProperty(FontProperty property) = 0;
-  virtual void newParagraph() = 0;
+	virtual void switchDestination(DestinationType destination, bool on) = 0;
+	virtual void setAlignment() = 0;
+	virtual void setFontProperty(FontProperty property) = 0;
+	virtual void newParagraph() = 0;
 
-  void interrupt();
+	void interrupt();
 
 private:
-  bool parseDocument();
-  void processKeyword(const std::string &keyword, int *parameter = 0);
-  void processCharData(const char *data, size_t len, bool convert = true);
+	bool parseDocument();
+	void processKeyword(const std::string &keyword, int *parameter = 0);
+	void processCharData(const char *data, size_t len, bool convert = true);
 
 protected:
-  struct RtfReaderState {
-    bool Bold;
-    bool Italic;
-    bool Underlined;
-    AlignmentType Alignment;
-    DestinationType Destination;
-  
-    bool ReadDataAsHex;
-  };
+	struct RtfReaderState {
+		bool Bold;
+		bool Italic;
+		bool Underlined;
+		AlignmentType Alignment;
+		DestinationType Destination;
+	
+		bool ReadDataAsHex;
+	};
 
-  RtfReaderState myState;
-  shared_ptr<ZLEncodingConverter> myConverter;
+	RtfReaderState myState;
+	shared_ptr<ZLEncodingConverter> myConverter;
 
 private:
-  bool mySpecialMode;
+	bool mySpecialMode;
 
-  std::string myFileName;
-  shared_ptr<ZLInputStream> myStream;
-  char *myStreamBuffer;
+	std::string myFileName;
+	shared_ptr<ZLInputStream> myStream;
+	char *myStreamBuffer;
 
-  std::stack<RtfReaderState> myStateStack;
+	std::stack<RtfReaderState> myStateStack;
 
-  int myBinaryDataSize;
-  std::string myNextImageMimeType;
+	int myBinaryDataSize;
+	std::string myNextImageMimeType;
 
-  int myIsInterrupted;  
+	int myIsInterrupted;	
 
 friend class RtfNewParagraphCommand;
 friend class RtfFontPropertyCommand;
@@ -125,49 +125,49 @@ friend class RtfCodepageCommand;
 
 class RtfCommand {
 protected:
-  virtual ~RtfCommand();
+	virtual ~RtfCommand();
 
 public:
-  virtual void run(RtfReader &reader, int *parameter) const = 0;
+	virtual void run(RtfReader &reader, int *parameter) const = 0;
 };
 
 class RtfNewParagraphCommand : public RtfCommand {
 public:
-  void run(RtfReader &reader, int *parameter) const;
+	void run(RtfReader &reader, int *parameter) const;
 };
 
 class RtfFontPropertyCommand : public RtfCommand {
 
 public:
-  RtfFontPropertyCommand(RtfReader::FontProperty property);
-  void run(RtfReader &reader, int *parameter) const;
+	RtfFontPropertyCommand(RtfReader::FontProperty property);
+	void run(RtfReader &reader, int *parameter) const;
 
 private:
-  RtfReader::FontProperty myProperty;
+	RtfReader::FontProperty myProperty;
 };
 
 class RtfAlignmentCommand : public RtfCommand {
 public:
-  RtfAlignmentCommand(AlignmentType alignment);
-  void run(RtfReader &reader, int *parameter) const;
+	RtfAlignmentCommand(AlignmentType alignment);
+	void run(RtfReader &reader, int *parameter) const;
 
 private:
-  AlignmentType myAlignment;
+	AlignmentType myAlignment;
 };
 
 class RtfCharCommand : public RtfCommand {
 public:
-  RtfCharCommand(const std::string &chr);
-  void run(RtfReader &reader, int *parameter) const;
+	RtfCharCommand(const std::string &chr);
+	void run(RtfReader &reader, int *parameter) const;
 
 private:
-  std::string myChar;
+	std::string myChar;
 };
 
 class RtfDestinationCommand : public RtfCommand {
 public:
-  RtfDestinationCommand(RtfReader::DestinationType dest);
-  void run(RtfReader &reader, int *parameter) const;
+	RtfDestinationCommand(RtfReader::DestinationType dest);
+	void run(RtfReader &reader, int *parameter) const;
 
 private:
 	RtfReader::DestinationType myDestination;
@@ -175,30 +175,30 @@ private:
 
 class RtfStyleCommand : public RtfCommand {
 public:
-  void run(RtfReader &reader, int *parameter) const;
+	void run(RtfReader &reader, int *parameter) const;
 };
 
 class RtfSpecialCommand : public RtfCommand {
-  void run(RtfReader &reader, int *parameter) const;
+	void run(RtfReader &reader, int *parameter) const;
 };
 
 class RtfPictureCommand : public RtfCommand {
 public:
-  RtfPictureCommand(const std::string &mimeType);
-  void run(RtfReader &reader, int *parameter) const;
+	RtfPictureCommand(const std::string &mimeType);
+	void run(RtfReader &reader, int *parameter) const;
 
 private:
-  const std::string myMimeType;
+	const std::string myMimeType;
 };
 
 class RtfFontResetCommand : public RtfCommand {
 public:
-  void run(RtfReader &reader, int *parameter) const;
+	void run(RtfReader &reader, int *parameter) const;
 };
 
 class RtfCodepageCommand : public RtfCommand {
 public:
-  void run(RtfReader &reader, int *parameter) const;
+	void run(RtfReader &reader, int *parameter) const;
 };
 
 #endif /* __RTFREADER_H__ */

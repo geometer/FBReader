@@ -19,26 +19,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGDETECTOR_H__
-#define __ENCODINGDETECTOR_H__
+#ifndef __TREEVIEW_H__
+#define __TREEVIEW_H__
 
-class ZLInputStream;
+#include <map>
 
-class EncodingDetector {
+#include "FBView.h"
 
-public:
-	enum Language {
-		OTHER,
-		RUSSIAN,
-		CHINESE,
-		CZECH,
-	};
+class TreeModel;
+class PlainTextModel;
+class Paragraph;
+
+class TreeView : public FBView {
 
 public:
-	static std::string detect(ZLInputStream &stream, Language language);
+	TreeView(FBReader &reader, ZLPaintContext &context);
+
+	void gotoParagraph(int num, bool last = false);
+	bool onStylusPress(int x, int y);
 
 private:
-	EncodingDetector();
+	bool myTreeStateIsFrozen;
 };
 
-#endif /* __ENCODINGDETECTOR_H__ */
+#endif /* __TREEVIEW_H__ */

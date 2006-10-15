@@ -25,9 +25,9 @@
 
 BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
+	myLastTOCParagraphIsEmpty = false;
 
 	myTextParagraphExists = false;
-	myContentsParagraphExists = false;
 
 	myInsideTitle = false;
 	mySectionContainsRegularContents = false;
@@ -128,7 +128,7 @@ void BookReader::addData(const std::string &data) {
 }
 
 void BookReader::addContentsData(const std::string &data) {
-	if (!data.empty() && myContentsParagraphExists) {
+	if (!data.empty() && !myTOCStack.empty()) {
 		myContentsBuffer.push_back(data);
 	}
 }
@@ -183,20 +183,34 @@ void BookReader::beginContentsParagraph(int referenceNumber) {
 		if (referenceNumber == -1) {
 			referenceNumber = myCurrentTextModel->paragraphsNumber();
 		}
-		myModel.myContentsModel.createParagraphWithReference(referenceNumber);
+		TreeParagraph *peek = myTOCStack.empty() ? 0 : myTOCStack.top();
+		if (!myContentsBuffer.empty()) {
+			myModel.myContentsModel.addText(myContentsBuffer);
+			myContentsBuffer.clear();
+			myLastTOCParagraphIsEmpty = false;
+		}
+		if (myLastTOCParagraphIsEmpty) {
+			myModel.myContentsModel.addText("...");
+		}
+		TreeParagraph *para = myModel.myContentsModel.createParagraph(peek);
 		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
-		myContentsParagraphExists = true;
+		myModel.myContentsModel.setReference(para, referenceNumber);
+		myTOCStack.push(para);
+		myLastTOCParagraphIsEmpty = true;
 	}
 }
 
 void BookReader::endContentsParagraph() {
-	if (myContentsParagraphExists) {
+	if (!myTOCStack.empty()) {
 		if (!myContentsBuffer.empty()) {
 			myModel.myContentsModel.addText(myContentsBuffer);
 			myContentsBuffer.clear();
-		} else {
-			myModel.myContentsModel.addText("...");
+			myLastTOCParagraphIsEmpty = false;
 		}
-		myContentsParagraphExists = false;
+		if (myLastTOCParagraphIsEmpty) {
+			myModel.myContentsModel.addText("...");
+			myLastTOCParagraphIsEmpty = false;
+		}
+		myTOCStack.pop();
 	}
 }

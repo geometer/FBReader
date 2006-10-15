@@ -39,13 +39,13 @@ bool OEBPlugin::providesMetaInfo() const {
 }
 
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
-  const std::string &extension = file.extension();
+	const std::string &extension = file.extension();
 	return (extension == OPF) || (extension == OEBZIP);
 }
 
 std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {
 	ZLFile oebFile = ZLFile(oebFileName);
-  if (oebFile.extension() == OPF) {
+	if (oebFile.extension() == OPF) {
 		return oebFileName;
 	}
 
@@ -64,14 +64,14 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {
 }
 
 bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
-  return OEBDescriptionReader(description).readDescription(opfFileName(path));
+	return OEBDescriptionReader(description).readDescription(opfFileName(path));
 }
 
 bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
-  return OEBBookReader(model).readBook(opfFileName(description.fileName()));
+	return OEBBookReader(model).readBook(opfFileName(description.fileName()));
 }
 
 const std::string &OEBPlugin::iconName() const {
-  static const std::string ICON_NAME = "oeb";
-  return ICON_NAME;
+	static const std::string ICON_NAME = "oeb";
+	return ICON_NAME;
 }

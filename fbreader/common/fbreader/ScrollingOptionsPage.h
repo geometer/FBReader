@@ -31,26 +31,26 @@ class ZLComboOptionEntry;
 class ScrollingOptionsPage {
 
 public:
-  ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader);
+	ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader);
 
 private:
 
-  struct ScrollingEntries {
-    ZLSpinOptionEntry *myDelayEntry;
-    ZLComboOptionEntry *myModeEntry;
-    ZLSpinOptionEntry *myLinesToKeepEntry;
-    ZLSpinOptionEntry *myLinesToScrollEntry;
-    ZLSpinOptionEntry *myPercentToScrollEntry;
+	struct ScrollingEntries {
+		ZLSpinOptionEntry *myDelayEntry;
+		ZLComboOptionEntry *myModeEntry;
+		ZLSpinOptionEntry *myLinesToKeepEntry;
+		ZLSpinOptionEntry *myLinesToScrollEntry;
+		ZLSpinOptionEntry *myPercentToScrollEntry;
 
-    void init(FBReader &fbreader, FBReader::ScrollingOptions &options);
-    void connect(ZLDialogContent &dialogTab);
-    void show(bool visible);
-  };
+		void init(FBReader &fbreader, FBReader::ScrollingOptions &options);
+		void connect(ZLDialogContent &dialogTab);
+		void show(bool visible);
+	};
 
-  ScrollingEntries myLargeScrollingEntries;
-  ScrollingEntries mySmallScrollingEntries;
-  ScrollingEntries myMouseScrollingEntries;
-  ScrollingEntries myFingerTapScrollingEntries;
+	ScrollingEntries myLargeScrollingEntries;
+	ScrollingEntries mySmallScrollingEntries;
+	ScrollingEntries myMouseScrollingEntries;
+	ScrollingEntries myFingerTapScrollingEntries;
 
 friend class ScrollingTypeEntry;
 friend class ScrollingModeEntry;

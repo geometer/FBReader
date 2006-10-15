@@ -29,53 +29,53 @@ MobipocketStream::MobipocketStream(ZLFile &file) : PalmDocStream(file), myErrorC
 bool MobipocketStream::open() {
 	myErrorCode = ERROR_NONE;
 
-  if (!PdbStream::open()) {
+	if (!PdbStream::open()) {
 		myErrorCode = ERROR_UNKNOWN;
-    return false;
-  }
+		return false;
+	}
 
 	myBaseSize = myBase->sizeOfOpened();
 
-  unsigned short version;
-  PdbUtil::readUnsignedShort(*myBase, version);
-  if ((version != 1) && (version != 2)) {
+	unsigned short version;
+	PdbUtil::readUnsignedShort(*myBase, version);
+	if ((version != 1) && (version != 2)) {
 		myErrorCode = ERROR_COMPRESSION;
-    return false;
-  }
-  myIsCompressed = (version == 2);
-  myBase->seek(6, false);
-  unsigned short records;
-  PdbUtil::readUnsignedShort(*myBase, records);
-  myMaxRecordIndex = std::min(records, (unsigned short)(myHeader.Offsets.size() - 1));
-  PdbUtil::readUnsignedShort(*myBase, myMaxRecordSize);
-  if (myMaxRecordSize == 0) {
+		return false;
+	}
+	myIsCompressed = (version == 2);
+	myBase->seek(6, false);
+	unsigned short records;
+	PdbUtil::readUnsignedShort(*myBase, records);
+	myMaxRecordIndex = std::min(records, (unsigned short)(myHeader.Offsets.size() - 1));
+	PdbUtil::readUnsignedShort(*myBase, myMaxRecordSize);
+	if (myMaxRecordSize == 0) {
 		myErrorCode = ERROR_UNKNOWN;
-    return false;
-  }
-  unsigned short reserved2;
-  PdbUtil::readUnsignedShort(*myBase, reserved2);
-  if (reserved2 != 0) {
+		return false;
+	}
+	unsigned short reserved2;
+	PdbUtil::readUnsignedShort(*myBase, reserved2);
+	if (reserved2 != 0) {
 		myErrorCode = ERROR_ENCRIPTION;
-    return false;
-  }
-  myBuffer = new char[myMaxRecordSize];
+		return false;
+	}
+	myBuffer = new char[myMaxRecordSize];
 
-  myRecordIndex = 0;
+	myRecordIndex = 0;
 
-  return true;
+	return true;
 }
 
 std::pair<int,int> MobipocketStream::imageLocation(int index) {
-  index += myMaxRecordIndex + 1;
-  int recordNumber = myHeader.Offsets.size();
-  if (index > recordNumber - 1) {
-    return std::pair<int,int>(-1, -1);
-  } else {
-    int start = myHeader.Offsets[index];
-    int end = (index < recordNumber - 1) ?
-      myHeader.Offsets[index + 1] : myBaseSize;
-    return std::pair<int,int>(start, end - start);
-  }
+	index += myMaxRecordIndex + 1;
+	int recordNumber = myHeader.Offsets.size();
+	if (index > recordNumber - 1) {
+		return std::pair<int,int>(-1, -1);
+	} else {
+		int start = myHeader.Offsets[index];
+		int end = (index < recordNumber - 1) ?
+			myHeader.Offsets[index + 1] : myBaseSize;
+		return std::pair<int,int>(start, end - start);
+	}
 }
 
 const std::string &MobipocketStream::error() const {

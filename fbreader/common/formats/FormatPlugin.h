@@ -39,54 +39,54 @@ class ZLInputStream;
 class FormatInfoPage {
 
 protected:
-  FormatInfoPage();
+	FormatInfoPage();
 
 public:
-  virtual ~FormatInfoPage();
+	virtual ~FormatInfoPage();
 };
 
 class FormatPlugin {
 
 protected:
-  FormatPlugin();
-  
+	FormatPlugin();
+	
 public:
-  virtual ~FormatPlugin();
+	virtual ~FormatPlugin();
 
-  virtual bool providesMetaInfo() const = 0;
-  virtual bool acceptsFile(const ZLFile &file) const = 0;
-  virtual const std::string &iconName() const = 0;
-  virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
+	virtual bool providesMetaInfo() const = 0;
+	virtual bool acceptsFile(const ZLFile &file) const = 0;
+	virtual const std::string &iconName() const = 0;
+	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
 
 	virtual const std::string &tryOpen(const std::string &path) const;
-  virtual bool readDescription(const std::string &path, BookDescription &description) const = 0;
-  virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
+	virtual bool readDescription(const std::string &path, BookDescription &description) const = 0;
+	virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
 
 protected:
-  static void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream);
-  static void defaultTitle(BookDescription &description, const std::string &title);
+	static void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream);
+	static void defaultTitle(BookDescription &description, const std::string &title);
 };
 
 class PluginCollection {
 
 public:
-  ZLIntegerOption DefaultLanguageOption;
-  
+	ZLIntegerOption DefaultLanguageOption;
+	
 public:
-  static PluginCollection &instance();
-  static void deleteInstance();
+	static PluginCollection &instance();
+	static void deleteInstance();
 
 private:
-  PluginCollection();
-  ~PluginCollection();
-  
+	PluginCollection();
+	~PluginCollection();
+	
 public:
-  FormatPlugin *plugin(const ZLFile &file, bool strong);
+	FormatPlugin *plugin(const ZLFile &file, bool strong);
 
 private:
-  static PluginCollection *ourInstance;
+	static PluginCollection *ourInstance;
 
-  std::vector<FormatPlugin*> myPlugins;
+	std::vector<FormatPlugin*> myPlugins;
 };
 
 inline FormatInfoPage::FormatInfoPage() {}

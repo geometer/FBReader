@@ -39,7 +39,7 @@ public:
 
 private:
 	std::vector<std::string> &myKnownEncodings;
-  std::map<int,std::string> &myEncodingsByCode;
+	std::map<int,std::string> &myEncodingsByCode;
 };
 
 EncodingListReader::EncodingListReader(std::vector<std::string> &knownEncodings, std::map<int,std::string> &encodingsByCode) : myKnownEncodings(knownEncodings), myEncodingsByCode(encodingsByCode) {
@@ -53,7 +53,7 @@ void EncodingListReader::startElementHandler(const char *tag, const char **attri
 	if (ENCODING == tag) {
 		const char *name = attributeValue(attributes, NAME.c_str());
 		if (name != 0) {
-		  myKnownEncodings.push_back(name);
+			myKnownEncodings.push_back(name);
 			const char *codeString = attributeValue(attributes, CODE.c_str());
 			if (codeString != 0) {
 				int code = atoi(codeString);
@@ -61,7 +61,7 @@ void EncodingListReader::startElementHandler(const char *tag, const char **attri
 					myEncodingsByCode[code] = name;
 				}
 			}
-	  }
+		}
 	}
 }
 

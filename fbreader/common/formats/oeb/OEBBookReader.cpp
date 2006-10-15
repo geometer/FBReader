@@ -40,72 +40,72 @@ static const std::string ITEMREF = "itemref";
 static const std::string REFERENCE = "reference";
 
 void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
-  // TODO: tag -> lowercase
-  if (MANIFEST == tag) {
-    myState = READ_MANIFEST;
-  } else if (SPINE == tag) {
-    myState = READ_SPINE;
-  } else if (GUIDE == tag) {
-    myState = READ_GUIDE;
-  } else if ((myState == READ_MANIFEST) && (ITEM == tag)) {
-    const char *id = attributeValue(xmlattributes, "id");
-    const char *href = attributeValue(xmlattributes, "href");
-    if ((id != 0) && (href != 0)) {
-      myIdToHref[id] = href;
-    }
-  } else if ((myState == READ_SPINE) && (ITEMREF == tag)) {
-    const char *id = attributeValue(xmlattributes, "idref");
-    if (id != 0) {
-      const std::string &fileName = myIdToHref[id];
-      if (!fileName.empty()) {
-        myHtmlFileNames.push_back(fileName);
-      }
-    }
-  } else if ((myState == READ_GUIDE) && (REFERENCE == tag)) {
-    const char *title = attributeValue(xmlattributes, "title");
-    const char *href = attributeValue(xmlattributes, "href");
-    if ((title != 0) && (href != 0)) {
-      myTOC.push_back(std::pair<std::string,std::string>(title, href));
-    }
-  }
+	// TODO: tag -> lowercase
+	if (MANIFEST == tag) {
+		myState = READ_MANIFEST;
+	} else if (SPINE == tag) {
+		myState = READ_SPINE;
+	} else if (GUIDE == tag) {
+		myState = READ_GUIDE;
+	} else if ((myState == READ_MANIFEST) && (ITEM == tag)) {
+		const char *id = attributeValue(xmlattributes, "id");
+		const char *href = attributeValue(xmlattributes, "href");
+		if ((id != 0) && (href != 0)) {
+			myIdToHref[id] = href;
+		}
+	} else if ((myState == READ_SPINE) && (ITEMREF == tag)) {
+		const char *id = attributeValue(xmlattributes, "idref");
+		if (id != 0) {
+			const std::string &fileName = myIdToHref[id];
+			if (!fileName.empty()) {
+				myHtmlFileNames.push_back(fileName);
+			}
+		}
+	} else if ((myState == READ_GUIDE) && (REFERENCE == tag)) {
+		const char *title = attributeValue(xmlattributes, "title");
+		const char *href = attributeValue(xmlattributes, "href");
+		if ((title != 0) && (href != 0)) {
+			myTOC.push_back(std::pair<std::string,std::string>(title, href));
+		}
+	}
 }
 
 void OEBBookReader::endElementHandler(const char *tag) {
-  // TODO: tag -> lowercase
-  if ((MANIFEST == tag) || (SPINE == tag) || (GUIDE == tag)) {
-    myState = READ_NONE;
-  }
+	// TODO: tag -> lowercase
+	if ((MANIFEST == tag) || (SPINE == tag) || (GUIDE == tag)) {
+		myState = READ_NONE;
+	}
 }
 
 bool OEBBookReader::readBook(const std::string &fileName) {
-  int index0 = fileName.rfind(':');
-  int index1 = fileName.rfind('/');
-  myFilePrefix = fileName.substr(0, std::max(index0, index1) + 1);
+	int index0 = fileName.rfind(':');
+	int index1 = fileName.rfind('/');
+	myFilePrefix = fileName.substr(0, std::max(index0, index1) + 1);
 
-  myIdToHref.clear();
-  myHtmlFileNames.clear();
-  myTOC.clear();
-  myState = READ_NONE;
+	myIdToHref.clear();
+	myHtmlFileNames.clear();
+	myTOC.clear();
+	myState = READ_NONE;
 
-  if (!readDocument(fileName)) {
-    return false;
-  }
+	if (!readDocument(fileName)) {
+		return false;
+	}
 
-  myModelReader.setMainTextModel();
-  myModelReader.pushKind(REGULAR);
+	myModelReader.setMainTextModel();
+	myModelReader.pushKind(REGULAR);
 
-  for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
-    XHTMLReader(myModelReader).readFile(myFilePrefix, *it);
-  }
+	for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
+		XHTMLReader(myModelReader).readFile(myFilePrefix, *it);
+	}
 
-  for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); ++it) {
-    int index = myModelReader.model().paragraphNumberById(it->second);
-    if (index != -1) {
-      myModelReader.beginContentsParagraph(index);
-      myModelReader.addContentsData(it->first);
-      myModelReader.endContentsParagraph();
-    }
-  }
+	for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); ++it) {
+		int index = myModelReader.model().paragraphNumberById(it->second);
+		if (index != -1) {
+			myModelReader.beginContentsParagraph(index);
+			myModelReader.addContentsData(it->first);
+			myModelReader.endContentsParagraph();
+		}
+	}
 
-  return true;
+	return true;
 }

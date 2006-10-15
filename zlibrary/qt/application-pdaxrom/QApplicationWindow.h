@@ -28,14 +28,14 @@
 #include <abstract/ZLApplication.h>
 
 class QApplicationWindow : public QMainWindow, public ZLApplicationWindow { 
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  static const std::string ImageDirectory;
-  
+	static const std::string ImageDirectory;
+	
 public:
-  QApplicationWindow(ZLApplication *application);
-  ~QApplicationWindow();
+	QApplicationWindow(ZLApplication *application);
+	~QApplicationWindow();
 
 private:
 	ZLViewWidget *createViewWidget();
@@ -53,19 +53,19 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
-  void closeEvent(QCloseEvent *event);
-  void keyPressEvent(QKeyEvent *event);
+	void closeEvent(QCloseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 private slots:
-  void doActionSlot(int buttonNumber);
-  void emptySlot() {}
+	void doActionSlot(int buttonNumber);
+	void emptySlot() {}
 
 private:
-  ZLIntegerRangeOption myWidthOption;
-  ZLIntegerRangeOption myHeightOption;
+	ZLIntegerRangeOption myWidthOption;
+	ZLIntegerRangeOption myHeightOption;
 
-  bool myFullScreen;
-  bool myWasMaximized;
+	bool myFullScreen;
+	bool myWasMaximized;
 };
 
 #endif /* __QAPPLICATIONWINDOW_H__ */

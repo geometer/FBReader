@@ -33,44 +33,44 @@ class XHTMLReader;
 class XHTMLTagAction {
 
 public:
-  virtual ~XHTMLTagAction();
+	virtual ~XHTMLTagAction();
 	
-  virtual void doAtStart(XHTMLReader &reader, const char **xmlattributes);
-  virtual void doAtEnd(XHTMLReader &reader) = 0;
+	virtual void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+	virtual void doAtEnd(XHTMLReader &reader) = 0;
 };
 
 class XHTMLReader : public ZLXMLReader {
 
 private:
-  static std::map<std::string,XHTMLTagAction*> ourTagActions;
-  static void addAction(const std::string &tag, XHTMLTagAction *action);
-  static void fillTagTable();
+	static std::map<std::string,XHTMLTagAction*> ourTagActions;
+	static void addAction(const std::string &tag, XHTMLTagAction *action);
+	static void fillTagTable();
 
 public:
-  XHTMLReader(BookReader &modelReader);
-  bool readFile(const std::string &pathPrefix, const std::string &name);
+	XHTMLReader(BookReader &modelReader);
+	bool readFile(const std::string &pathPrefix, const std::string &name);
 
-  void startElementHandler(const char *tag, const char **attributes);
-  void endElementHandler(const char *tag);
-  void characterDataHandler(const char *text, int len);
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
+	void characterDataHandler(const char *text, int len);
 
-  const std::vector<std::string> &externalDTDs() const;
+	const std::vector<std::string> &externalDTDs() const;
 
 private:
-  BookReader &myModelReader;
-  std::string myPathPrefix;
-  std::string myFileName;
+	BookReader &myModelReader;
+	std::string myPathPrefix;
+	std::string myFileName;
 	bool myPreformatted;
 
-  friend class XHTMLTagAction;
-  friend class XHTMLTagParagraphAction;
-  friend class XHTMLTagRestartParagraphAction;
-  friend class XHTMLTagControlAction;
-  friend class XHTMLTagHyperlinkAction;
-  friend class XHTMLTagItemAction;
-  friend class XHTMLTagImageAction;
-  friend class XHTMLTagParagraphWithControlAction;
-  friend class XHTMLTagPreAction;
+	friend class XHTMLTagAction;
+	friend class XHTMLTagParagraphAction;
+	friend class XHTMLTagRestartParagraphAction;
+	friend class XHTMLTagControlAction;
+	friend class XHTMLTagHyperlinkAction;
+	friend class XHTMLTagItemAction;
+	friend class XHTMLTagImageAction;
+	friend class XHTMLTagParagraphWithControlAction;
+	friend class XHTMLTagPreAction;
 };
 
 #endif /* __XHTMLREADER_H__ */

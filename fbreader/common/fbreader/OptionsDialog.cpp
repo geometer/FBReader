@@ -46,12 +46,12 @@
 class ShowIndicatorEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-  ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option);
-  ~ShowIndicatorEntry();
-  void onValueChange(bool value);
+	ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option);
+	~ShowIndicatorEntry();
+	void onValueChange(bool value);
 
 private:
-  IndicatorPage &myPage;
+	IndicatorPage &myPage;
 };
 
 ShowIndicatorEntry::ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {
@@ -61,23 +61,23 @@ ShowIndicatorEntry::~ShowIndicatorEntry() {
 }
 
 void ShowIndicatorEntry::onValueChange(bool value) {
-  myPage.HeightEntry->setVisible(value);
-  myPage.OffsetEntry->setVisible(value);
-  myPage.EnableNavigationEntry->setVisible(value);
+	myPage.HeightEntry->setVisible(value);
+	myPage.OffsetEntry->setVisible(value);
+	myPage.EnableNavigationEntry->setVisible(value);
 }
 
 class RotationTypeEntry : public ZLChoiceOptionEntry {
 
 public:
-  RotationTypeEntry(ZLIntegerOption &angleOption);
-  const std::string &name() const;
-  const std::string &text(int index) const;
-  int choiceNumber() const;
-  int initialCheckedIndex() const;
-  void onAccept(int index);
+	RotationTypeEntry(ZLIntegerOption &angleOption);
+	const std::string &name() const;
+	const std::string &text(int index) const;
+	int choiceNumber() const;
+	int initialCheckedIndex() const;
+	void onAccept(int index);
 
 private:
-  ZLIntegerOption &myAngleOption;
+	ZLIntegerOption &myAngleOption;
 };
 
 static const std::string ROTATION_TYPE = "Rotation Type";
@@ -91,74 +91,74 @@ RotationTypeEntry::RotationTypeEntry(ZLIntegerOption &angleOption) : myAngleOpti
 }
 
 const std::string &RotationTypeEntry::name() const {
-  return ROTATION_TYPE;
+	return ROTATION_TYPE;
 }
 
 const std::string &RotationTypeEntry::text(int index) const {
-  switch (index) {
-    case 1:
-      return ROTATION_90;
-    case 2:
-      return ROTATION_180;
-    case 3:
-      return ROTATION_270;
-    case 4:
-      return ROTATION_USE_4_DIRECTIONS;
-    default:
-      return ROTATION_0;
-  }
+	switch (index) {
+		case 1:
+			return ROTATION_90;
+		case 2:
+			return ROTATION_180;
+		case 3:
+			return ROTATION_270;
+		case 4:
+			return ROTATION_USE_4_DIRECTIONS;
+		default:
+			return ROTATION_0;
+	}
 }
 
 int RotationTypeEntry::choiceNumber() const {
-  return 5;
+	return 5;
 }
 
 int RotationTypeEntry::initialCheckedIndex() const {
-  switch (myAngleOption.value()) {
-    default:
-      return 0;
-    case ZLViewWidget::DEGREES90:
-      return 1;
-    case ZLViewWidget::DEGREES180:
-      return 2;
-    case ZLViewWidget::DEGREES270:
-      return 3;
-    case -1:
-      return 4;
-  }
+	switch (myAngleOption.value()) {
+		default:
+			return 0;
+		case ZLViewWidget::DEGREES90:
+			return 1;
+		case ZLViewWidget::DEGREES180:
+			return 2;
+		case ZLViewWidget::DEGREES270:
+			return 3;
+		case -1:
+			return 4;
+	}
 }
 
 void RotationTypeEntry::onAccept(int index) {
-  int angle = ZLViewWidget::DEGREES0;
-  switch (index) {
-    case 1:
-      angle = ZLViewWidget::DEGREES90;
-      break;
-    case 2:
-      angle = ZLViewWidget::DEGREES180;
-      break;
-    case 3:
-      angle = ZLViewWidget::DEGREES270;
-      break;
-    case 4:
-      angle = -1;
-      break;
-  }
-  myAngleOption.setValue(angle);
+	int angle = ZLViewWidget::DEGREES0;
+	switch (index) {
+		case 1:
+			angle = ZLViewWidget::DEGREES90;
+			break;
+		case 2:
+			angle = ZLViewWidget::DEGREES180;
+			break;
+		case 3:
+			angle = ZLViewWidget::DEGREES270;
+			break;
+		case 4:
+			angle = -1;
+			break;
+	}
+	myAngleOption.setValue(angle);
 }
 
 class DefaultLanguageEntry : public ZLComboOptionEntry {
 
 public:
-  const std::string &name() const;
-  const std::string &initialValue() const;
-  const std::vector<std::string> &values() const;
-  void onAccept(const std::string &value);
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
 };
 
 const std::string &DefaultLanguageEntry::name() const {
-  static const std::string _name = "Language For Encoding Detection";
-  return _name;
+	static const std::string _name = "Language For Encoding Detection";
+	return _name;
 }
 
 static std::string LANGUAGE_RUSSIAN = "Russian";
@@ -167,99 +167,99 @@ static std::string LANGUAGE_CZECH = "Czech";
 static std::string LANGUAGE_OTHER = "Other";
 
 const std::string &DefaultLanguageEntry::initialValue() const {
-  switch (PluginCollection::instance().DefaultLanguageOption.value()) {
-    case EncodingDetector::RUSSIAN:
-      return LANGUAGE_RUSSIAN;
-    case EncodingDetector::CHINESE:
-      return LANGUAGE_CHINESE;
-    case EncodingDetector::CZECH:
-      return LANGUAGE_CZECH;
-    default:
-      return LANGUAGE_OTHER;
-  }
+	switch (PluginCollection::instance().DefaultLanguageOption.value()) {
+		case EncodingDetector::RUSSIAN:
+			return LANGUAGE_RUSSIAN;
+		case EncodingDetector::CHINESE:
+			return LANGUAGE_CHINESE;
+		case EncodingDetector::CZECH:
+			return LANGUAGE_CZECH;
+		default:
+			return LANGUAGE_OTHER;
+	}
 }
 
 const std::vector<std::string> &DefaultLanguageEntry::values() const {
-  static std::vector<std::string> _values;
-  if (_values.empty()) {
-    _values.push_back(LANGUAGE_CHINESE);
-    _values.push_back(LANGUAGE_CZECH);
-    _values.push_back(LANGUAGE_RUSSIAN);
-    _values.push_back(LANGUAGE_OTHER);
-  }
-  return _values;
+	static std::vector<std::string> _values;
+	if (_values.empty()) {
+		_values.push_back(LANGUAGE_CHINESE);
+		_values.push_back(LANGUAGE_CZECH);
+		_values.push_back(LANGUAGE_RUSSIAN);
+		_values.push_back(LANGUAGE_OTHER);
+	}
+	return _values;
 }
 
 void DefaultLanguageEntry::onAccept(const std::string &value) {
-  EncodingDetector::Language language = EncodingDetector::OTHER;
-  if (value == LANGUAGE_RUSSIAN) {
-    language = EncodingDetector::RUSSIAN;
-  } else if (value == LANGUAGE_CHINESE) {
-    language = EncodingDetector::CHINESE;
-  } else if (value == LANGUAGE_CZECH) {
-    language = EncodingDetector::CZECH;
-  }
-  PluginCollection::instance().DefaultLanguageOption.setValue(language);
+	EncodingDetector::Language language = EncodingDetector::OTHER;
+	if (value == LANGUAGE_RUSSIAN) {
+		language = EncodingDetector::RUSSIAN;
+	} else if (value == LANGUAGE_CHINESE) {
+		language = EncodingDetector::CHINESE;
+	} else if (value == LANGUAGE_CZECH) {
+		language = EncodingDetector::CZECH;
+	}
+	PluginCollection::instance().DefaultLanguageOption.setValue(language);
 }
 
 OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
-  myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
+	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
-  ZLDialogContent &generalTab = myDialog->createTab("General");
-  generalTab.addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
-  generalTab.addOption(new ZLSimpleStringOptionEntry("Book Path", fbreader.myCollectionView->collection().PathOption));
-  generalTab.addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", fbreader.myCollectionView->collection().ScanSubdirsOption));
-  generalTab.addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", fbreader.myRecentBooksView->lastBooks().MaxListSizeOption, 1));
-  generalTab.addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", fbreader.StoreContentsPositionOption));
-  generalTab.addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
-  generalTab.addOption(new DefaultLanguageEntry());
+	ZLDialogContent &generalTab = myDialog->createTab("General");
+	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
+	generalTab.addOption(new ZLSimpleStringOptionEntry("Book Path", fbreader.myCollectionView->collection().PathOption));
+	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", fbreader.myCollectionView->collection().ScanSubdirsOption));
+	generalTab.addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", fbreader.myRecentBooksView->lastBooks().MaxListSizeOption, 1));
+	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", fbreader.StoreContentsPositionOption));
+	generalTab.addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
+	generalTab.addOption(new DefaultLanguageEntry());
 
-  myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"), fbreader);
+	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"), fbreader);
 
-  ZLDialogContent &marginTab = myDialog->createTab("Margins");
-  marginTab.addOptions(
-    new ZLSimpleSpinOptionEntry("Left Margin", TextStyleCollection::instance().baseStyle().LeftMarginOption, 1),
-    new ZLSimpleSpinOptionEntry("Right Margin", TextStyleCollection::instance().baseStyle().RightMarginOption, 1)
-  );
-  marginTab.addOptions(
-    new ZLSimpleSpinOptionEntry("Top Margin", TextStyleCollection::instance().baseStyle().TopMarginOption, 1),
-    new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyleCollection::instance().baseStyle().BottomMarginOption, 1)
-  );
+	ZLDialogContent &marginTab = myDialog->createTab("Margins");
+	marginTab.addOptions(
+		new ZLSimpleSpinOptionEntry("Left Margin", TextStyleCollection::instance().baseStyle().LeftMarginOption, 1),
+		new ZLSimpleSpinOptionEntry("Right Margin", TextStyleCollection::instance().baseStyle().RightMarginOption, 1)
+	);
+	marginTab.addOptions(
+		new ZLSimpleSpinOptionEntry("Top Margin", TextStyleCollection::instance().baseStyle().TopMarginOption, 1),
+		new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyleCollection::instance().baseStyle().BottomMarginOption, 1)
+	);
 
-  myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));
-  myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), context);
+	myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));
+	myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), context);
 
-  ZLDialogContent &indicatorTab = myDialog->createTab("Indicator");
-  PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
-  myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", indicatorStyle.ShowOption);
-  myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
-  myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
-  myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
-  indicatorTab.addOption(myIndicatorPage.ShowIndicatorEntry);
-  indicatorTab.addOption(myIndicatorPage.HeightEntry);
-  indicatorTab.addOption(myIndicatorPage.OffsetEntry);
-  indicatorTab.addOption(myIndicatorPage.EnableNavigationEntry);
-  myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
+	ZLDialogContent &indicatorTab = myDialog->createTab("Indicator");
+	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+	myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", indicatorStyle.ShowOption);
+	myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
+	myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
+	myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
+	indicatorTab.addOption(myIndicatorPage.ShowIndicatorEntry);
+	indicatorTab.addOption(myIndicatorPage.HeightEntry);
+	indicatorTab.addOption(myIndicatorPage.OffsetEntry);
+	indicatorTab.addOption(myIndicatorPage.EnableNavigationEntry);
+	myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
 
-  ZLDialogContent &rotationTab = myDialog->createTab("Rotation");
-  rotationTab.addOption(new RotationTypeEntry(fbreader.RotationAngleOption));
+	ZLDialogContent &rotationTab = myDialog->createTab("Rotation");
+	rotationTab.addOption(new RotationTypeEntry(fbreader.RotationAngleOption));
 
-  myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
-  myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
+	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
+	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
 	myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 
 	if (ZLDictionary::instance().isDictionaryEnabled()) {
-    ZLDialogContent &dictionaryTab = myDialog->createTab("Dictionary");
+		ZLDialogContent &dictionaryTab = myDialog->createTab("Dictionary");
 		dictionaryTab.addOption(new ZLSimpleBooleanOptionEntry("Enable Integration With Dictionary", fbreader.EnableDictionaryIntegrationOption));
 	}
 }
 
 OptionsDialog::~OptionsDialog() {
-  delete myConfigPage;
-  delete myKeyBindingsPage;
-  delete myColorPage;
-  delete myStylePage;
-  delete myFormatPage;
-  delete myScrollingPage;
-  delete myDialog;
+	delete myConfigPage;
+	delete myKeyBindingsPage;
+	delete myColorPage;
+	delete myStylePage;
+	delete myFormatPage;
+	delete myScrollingPage;
+	delete myDialog;
 }

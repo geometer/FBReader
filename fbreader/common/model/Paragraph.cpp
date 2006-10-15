@@ -156,9 +156,9 @@ void TreeParagraph::removeFromParent() {
 }
 
 int TreeParagraph::fullSize() const {
-  int size = 1;
+	int size = 1;
 	for (std::vector<TreeParagraph*>::const_iterator it = myChildren.begin(); it != myChildren.end(); ++it) {
-	  size += (*it)->fullSize();
+		size += (*it)->fullSize();
 	}
 	return size;
 }

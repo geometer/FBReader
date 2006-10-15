@@ -81,8 +81,8 @@ KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle, bool force)
 }
 
 KeyBindings::KeyBindings(const std::string &optionGroupName) : myOptionGroupName(optionGroupName) {
-  loadDefaultBindings();
-  loadCustomBindings();
+	loadDefaultBindings();
+	loadCustomBindings();
 	myChanged = false;
 }
 

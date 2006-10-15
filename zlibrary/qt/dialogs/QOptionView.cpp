@@ -335,34 +335,34 @@ void ColorOptionView::_onAccept() const {
 }
 
 void OrderOptionView::onChangeSelection() {
-  QListBoxItem *selected = myListBox->selectedItem();
+	QListBoxItem *selected = myListBox->selectedItem();
 	myUpButton->setEnabled((selected != 0) && (selected->prev() != 0));
 	myDownButton->setEnabled((selected != 0) && (selected->next() != 0));
 }
 
 void OrderOptionView::onUpButtonPressed() {
-  QListBoxItem *selected = myListBox->selectedItem();
+	QListBoxItem *selected = myListBox->selectedItem();
 	if ((selected == 0) || (selected->prev() == 0)) {
-	  return;
+		return;
 	}
 	int index = myListBox->index(selected);
 	const QString s0 = myListBox->text(index - 1);
 	const QString s1 = myListBox->text(index);
-  myListBox->changeItem(s0, index);
-  myListBox->changeItem(s1, index - 1);
+	myListBox->changeItem(s0, index);
+	myListBox->changeItem(s1, index - 1);
 	myListBox->setSelected(index - 1, true);
 }
 
 void OrderOptionView::onDownButtonPressed() {
-  QListBoxItem *selected = myListBox->selectedItem();
+	QListBoxItem *selected = myListBox->selectedItem();
 	if ((selected == 0) || (selected->next() == 0)) {
-	  return;
+		return;
 	}
 	int index = myListBox->index(selected);
 	const QString s0 = myListBox->text(index);
 	const QString s1 = myListBox->text(index + 1);
-  myListBox->changeItem(s0, index + 1);
-  myListBox->changeItem(s1, index);
+	myListBox->changeItem(s0, index + 1);
+	myListBox->changeItem(s1, index);
 	myListBox->setSelected(index + 1, true);
 }
 
@@ -375,7 +375,7 @@ void OrderOptionView::_createItem() {
 	connect(myListBox, SIGNAL(selectionChanged()), this, SLOT(onChangeSelection()));
 	layout->addMultiCellWidget(myListBox, 0, 1, 0, 0);
 
-  myUpButton = new QPushButton(myWidget);
+	myUpButton = new QPushButton(myWidget);
 	myUpButton->setText("Up");
 	layout->addWidget(myUpButton, 0, 1);
 	connect(myUpButton, SIGNAL(pressed()), this, SLOT(onUpButtonPressed()));
@@ -385,11 +385,11 @@ void OrderOptionView::_createItem() {
 	layout->addWidget(myDownButton, 1, 1);
 	connect(myDownButton, SIGNAL(pressed()), this, SLOT(onDownButtonPressed()));
 
-  const std::vector<std::string> &values = ((ZLOrderOptionEntry&)*myOption).values();
+	const std::vector<std::string> &values = ((ZLOrderOptionEntry&)*myOption).values();
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it) {
-	  myListBox->insertItem(QString::fromUtf8(it->c_str()));
+		myListBox->insertItem(QString::fromUtf8(it->c_str()));
 	}
-  myListBox->setSelected(0, true);
+	myListBox->setSelected(0, true);
 
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
@@ -403,10 +403,10 @@ void OrderOptionView::_hide() {
 }
 
 void OrderOptionView::_onAccept() const {
-  std::vector<std::string> &values = ((ZLOrderOptionEntry&)*myOption).values();
+	std::vector<std::string> &values = ((ZLOrderOptionEntry&)*myOption).values();
 	values.clear();
 	const int size = myListBox->numRows();
 	for (int i = 0; i < size; ++i) {
-	  values.push_back((const char*)myListBox->text(i).utf8());
+		values.push_back((const char*)myListBox->text(i).utf8());
 	}
 }

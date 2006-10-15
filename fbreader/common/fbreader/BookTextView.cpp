@@ -56,7 +56,7 @@ void BookTextView::setModel(const TextModel *model, const std::string &name) {
 
 	const std::string &group = fileName();
 
-	moveStartCursor(
+	gotoPosition(
 		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).value(),
 		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).value(),
 		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).value()
@@ -157,7 +157,7 @@ void BookTextView::undoPageMove() {
 
 		--myCurrentPointInStack;
 		Position &pos = myPositionStack[myCurrentPointInStack];
-		moveStartCursor(pos.first, pos.second, 0);
+		gotoPosition(pos.first, pos.second, 0);
 
 		repaintView();
 	}
@@ -172,7 +172,7 @@ void BookTextView::redoPageMove() {
 		replaceCurrentPositionInStack();
 		++myCurrentPointInStack;
 		Position &pos = myPositionStack[myCurrentPointInStack];
-		moveStartCursor(pos.first, pos.second, 0);
+		gotoPosition(pos.first, pos.second, 0);
 
 		if (myCurrentPointInStack + 1 == myPositionStack.size()) {
 			myPositionStack.pop_back();
@@ -218,7 +218,7 @@ bool BookTextView::onStylusPress(int x, int y) {
 	}
 	
 	if (fbreader().EnableDictionaryIntegrationOption.value() &&
-		  (position->Kind == TextElement::WORD_ELEMENT)) {
+			(position->Kind == TextElement::WORD_ELEMENT)) {
 		const Word &word = (Word&)cursor.element();
 		ZLUnicodeUtil::Ucs2String ucs2;
 		ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);

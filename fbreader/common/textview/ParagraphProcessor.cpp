@@ -47,13 +47,14 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 		if (myParagraph.kind() == Paragraph::TEXT_PARAGRAPH) {
 			myElements.push_back(TextElementPool::Pool.IndentElement);
 		} else if (myParagraph.kind() == Paragraph::TREE_PARAGRAPH) {
+			myElements.push_back(TextElementPool::Pool.IndentElement);
 			TreeParagraph &tp = (TreeParagraph&)myParagraph;
 
 			std::vector<TreeElement::TreeElementKind> kinds;
 			kinds.reserve(tp.depth() + 1);
 
 			if (tp.children().empty()) {
-				kinds.push_back(TreeElement::TREE_ELEMENT_LEAF);
+				kinds.push_back((tp.depth() == 1) ? TreeElement::TREE_ELEMENT_SKIP : TreeElement::TREE_ELEMENT_LEAF);
 			} else if (tp.isOpen()) {
 				kinds.push_back((tp.depth() == 1) ? TreeElement::TREE_ELEMENT_TOPLEVEL_OPEN_NODE : TreeElement::TREE_ELEMENT_OPEN_NODE);
 			} else {
@@ -71,7 +72,7 @@ void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
 				for (int i = 1; i < tp.depth() - 1; ++i) {
 					parent = current->parent();
 					kinds.push_back(
-					  (current == parent->children().back()) ?
+						(current == parent->children().back()) ?
 						TreeElement::TREE_ELEMENT_SKIP :
 						TreeElement::TREE_ELEMENT_VERTICAL_LINE
 					);

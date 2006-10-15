@@ -155,6 +155,7 @@ public:
 
 	void gotoMark(TextMark mark);
 	virtual void gotoParagraph(int num, bool last = false);
+	void gotoPosition(int paragraphNumber, int wordNumber, int charNumber);
 
 	const WordCursor &startCursor() const;
 	const WordCursor &endCursor() const;
@@ -183,16 +184,15 @@ protected:
 	virtual void preparePaintInfo();
 
 	void setStartCursor(ParagraphCursor *cursor);
-	void moveStartCursor(int paragraphNumber, int wordNumber, int charNumber);
-	void moveStartCursor(int paragraphNumber);
-	void moveEndCursor(int paragraphNumber, int wordNumber, int charNumber);
-	void moveEndCursor(int paragraphNumber);
 
 	bool empty() const;
 
 	void selectParagraph(int paragraphNumber);
 
 private:
+	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
+	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
+
 	void clear();
 
 	LineInfo processTextLine(const WordCursor &start, const WordCursor &end);

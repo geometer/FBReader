@@ -35,7 +35,7 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myCurrentImage = 0;
 	myProcessingImage = false;
 	mySectionStarted = false;
-	myInsideTitle1 = false;
+	myInsideTitle = false;
 }
 
 void FB2BookReader::characterDataHandler(const char *text, int len) {
@@ -45,7 +45,9 @@ void FB2BookReader::characterDataHandler(const char *text, int len) {
 			myImageBuffer.push_back(str);
 		} else {
 			myModelReader.addData(str);
-			myModelReader.addContentsData(str);
+			if (myInsideTitle) {
+				myModelReader.addContentsData(str);
+			}
 		}
 	}
 }
@@ -79,12 +81,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	switch (tag) {
 		case _P:
 			if (mySectionStarted) {
-				myModelReader.beginContentsParagraph();
-				if (!myInsideTitle1) {
-					myModelReader.endContentsParagraph();
-				}
 				mySectionStarted = false;
-			} else if (myInsideTitle1) {
+			} else if (myInsideTitle) {
 				static const std::string SPACE = " ";
 				myModelReader.addContentsData(SPACE);
 			}
@@ -110,9 +108,12 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			myModelReader.pushKind(CITE);
 			break;
 		case _SECTION:
-			myModelReader.insertEndOfSectionParagraph();
-			++mySectionDepth;
-			mySectionStarted = true;
+			if (myBodyCounter == 1) {
+				myModelReader.insertEndOfSectionParagraph();
+				++mySectionDepth;
+				myModelReader.beginContentsParagraph();
+				mySectionStarted = true;
+			}
 			break;
 		case _TITLE:
 			if (myInsidePoem) {
@@ -123,7 +124,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			} else {
 				myModelReader.pushKind(SECTION_TITLE);
 				myModelReader.enterTitle();
-				myInsideTitle1 = true;
+				myInsideTitle = true;
 			}
 			break;
 		case _POEM:
@@ -145,7 +146,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _COVERPAGE:
 			if (myBodyCounter == 0) {
-			  myInsideCoverpage = true;
+				myInsideCoverpage = true;
 				myModelReader.setMainTextModel();
 			}
 			break;
@@ -182,11 +183,11 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			const char *ref = reference(xmlattributes);
 			if (ref != 0) {
 				if ((myCoverImageReference != ref) ||
-			      (myParagraphsBeforeBodyNumber != myModelReader.model().bookTextModel().paragraphsNumber())) {
-				  myModelReader.addImageReference(ref);
+						(myParagraphsBeforeBodyNumber != myModelReader.model().bookTextModel().paragraphsNumber())) {
+					myModelReader.addImageReference(ref);
 				}
 				if (myInsideCoverpage) {
-				  myCoverImageReference = ref;
+					myCoverImageReference = ref;
 				}
 			}
 			break;
@@ -238,14 +239,16 @@ void FB2BookReader::endElementHandler(int tag) {
 			if (myBodyCounter > 1) {
 				myModelReader.unsetTextModel();
 			}
-			--mySectionDepth;
-			mySectionStarted = false;
+			if (myBodyCounter == 1) {
+				myModelReader.endContentsParagraph();
+				--mySectionDepth;
+				mySectionStarted = false;
+			}
 			break;
 		case _TITLE:
 			myModelReader.exitTitle();
 			myModelReader.popKind();
-			myModelReader.endContentsParagraph();
-			myInsideTitle1 = false;
+			myInsideTitle = false;
 			break;
 		case _POEM:
 			myInsidePoem = false;
@@ -267,7 +270,7 @@ void FB2BookReader::endElementHandler(int tag) {
 			break;
 		case _COVERPAGE:
 			if (myBodyCounter == 0) {
-			  myInsideCoverpage = false;
+				myInsideCoverpage = false;
 				myModelReader.insertEndOfSectionParagraph();
 				myModelReader.unsetTextModel();
 			}

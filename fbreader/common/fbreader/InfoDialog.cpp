@@ -172,11 +172,11 @@ InfoDialog::InfoDialog(const std::string &fileName) : myBookInfo(fileName) {
 	seriesTab.addOption(new ZLSimpleSpinOptionEntry("Book Number", myBookInfo.NumberInSequenceOption, 1));
 	/*
 	ZLOrderOptionEntry *orderEntry = new ZLOrderOptionEntry();
-  orderEntry->values().push_back("First");
-  orderEntry->values().push_back("Second");
-  orderEntry->values().push_back("Third");
-  orderEntry->values().push_back("Fourth");
-  orderEntry->values().push_back("Fifth");
+	orderEntry->values().push_back("First");
+	orderEntry->values().push_back("Second");
+	orderEntry->values().push_back("Third");
+	orderEntry->values().push_back("Fourth");
+	orderEntry->values().push_back("Fifth");
 	sequenceTab.addOption(orderEntry);
 	*/
 

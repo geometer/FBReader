@@ -32,51 +32,51 @@ class ZLInputStream;
 class HtmlReader {
 
 public:
-  struct HtmlAttribute {
-    std::string Name;
-    std::string Value;
-    bool hasValue;
+	struct HtmlAttribute {
+		std::string Name;
+		std::string Value;
+		bool hasValue;
 
-    HtmlAttribute(const std::string &name);
-    ~HtmlAttribute();
-    void setValue(const std::string &value);
-  };
+		HtmlAttribute(const std::string &name);
+		~HtmlAttribute();
+		void setValue(const std::string &value);
+	};
 
 protected:
-  struct HtmlTag {
-    std::string Name;
-    bool Start;
-    std::vector<HtmlAttribute> Attributes;
+	struct HtmlTag {
+		std::string Name;
+		bool Start;
+		std::vector<HtmlAttribute> Attributes;
 
-    HtmlTag();
-    ~HtmlTag();
-    void addAttribute(const std::string &name);
-    void setLastAttributeValue(const std::string &value);
+		HtmlTag();
+		~HtmlTag();
+		void addAttribute(const std::string &name);
+		void setLastAttributeValue(const std::string &value);
 
-  private:
-    HtmlTag(const HtmlTag&);
-    const HtmlTag &operator= (const HtmlTag&);
-  };
+	private:
+		HtmlTag(const HtmlTag&);
+		const HtmlTag &operator= (const HtmlTag&);
+	};
 
 private:
-  static void setTag(HtmlTag &tag, const std::string &fullName);
+	static void setTag(HtmlTag &tag, const std::string &fullName);
 
 public:
-  virtual void readDocument(ZLInputStream &stream);
+	virtual void readDocument(ZLInputStream &stream);
 
 protected:
-  HtmlReader(const std::string &encoding);
-  virtual ~HtmlReader();
+	HtmlReader(const std::string &encoding);
+	virtual ~HtmlReader();
 
 protected:
-  virtual void startDocumentHandler() = 0;
-  virtual void endDocumentHandler() = 0;
+	virtual void startDocumentHandler() = 0;
+	virtual void endDocumentHandler() = 0;
 
-  virtual bool tagHandler(const HtmlTag &tag) = 0;
-  virtual bool characterDataHandler(const char *text, int len, bool convert) = 0;
+	virtual bool tagHandler(const HtmlTag &tag) = 0;
+	virtual bool characterDataHandler(const char *text, int len, bool convert) = 0;
 
 protected:
-  shared_ptr<ZLEncodingConverter> myConverter;
+	shared_ptr<ZLEncodingConverter> myConverter;
 };
 
 inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), hasValue(false) {}

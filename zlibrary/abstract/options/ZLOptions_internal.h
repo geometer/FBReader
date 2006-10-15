@@ -26,32 +26,32 @@
 class ZLOptions {
 
 protected:
-  static ZLOptions *ourInstance;
+	static ZLOptions *ourInstance;
 
 protected:
-  ZLOptions();
-  virtual ~ZLOptions();
+	ZLOptions();
+	virtual ~ZLOptions();
 
 public:
-  static ZLOptions &instance();
-  static void deleteInstance();
+	static ZLOptions &instance();
+	static void deleteInstance();
 
-  virtual void setGroup(const std::string &name) = 0;
-  virtual void clearGroup() = 0;
+	virtual void setGroup(const std::string &name) = 0;
+	virtual void clearGroup() = 0;
 
-  virtual void unsetValue(const std::string &name) = 0;
+	virtual void unsetValue(const std::string &name) = 0;
 
-  virtual bool booleanValue(const std::string &name, bool defaultValue) = 0;
-  virtual void setValue(const std::string &name, bool value, const std::string &category) = 0;
+	virtual bool booleanValue(const std::string &name, bool defaultValue) = 0;
+	virtual void setValue(const std::string &name, bool value, const std::string &category) = 0;
 
-  virtual long integerValue(const std::string &name, long defaultValue) = 0;
-  virtual void setValue(const std::string &name, long value, const std::string &category) = 0;
+	virtual long integerValue(const std::string &name, long defaultValue) = 0;
+	virtual void setValue(const std::string &name, long value, const std::string &category) = 0;
 
-  virtual double doubleValue(const std::string &name, double defaultValue) = 0;
-  virtual void setValue(const std::string &name, double value, const std::string &category) = 0;
+	virtual double doubleValue(const std::string &name, double defaultValue) = 0;
+	virtual void setValue(const std::string &name, double value, const std::string &category) = 0;
 
-  virtual std::string stringValue(const std::string &name, const std::string &defaultValue) = 0;
-  virtual void setValue(const std::string &name, const std::string &value, const std::string &category) = 0;
+	virtual std::string stringValue(const std::string &name, const std::string &defaultValue) = 0;
+	virtual void setValue(const std::string &name, const std::string &value, const std::string &category) = 0;
 
 	virtual void startAutoSave(int seconds) = 0;
 };

@@ -30,49 +30,49 @@ static const std::string AUTHOR_TAG = "dc:Creator";
 static const std::string AUTHOR_ROLE = "aut";
 
 void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
-  switch (myReadState) {
-    case READ_NONE:
-      break;
-    case READ_AUTHOR:
-      myCurrentAuthor.append(text, len);
-      break;
-    case READ_TITLE:
-      myDescription.title().append(text, len);
-      break;
-  }
+	switch (myReadState) {
+		case READ_NONE:
+			break;
+		case READ_AUTHOR:
+			myCurrentAuthor.append(text, len);
+			break;
+		case READ_TITLE:
+			myDescription.title().append(text, len);
+			break;
+	}
 }
 
 void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
-  // TODO: tag -> lowercase
-  if (METADATA == tag) {
-    myReadMetaData = true;
-  } else if (myReadMetaData) {
-    if (TITLE == tag) {
-      myReadState = READ_TITLE;
-    } else if (AUTHOR_TAG == tag) {
-      const char *role = attributeValue(attributes, "role");
-      if ((role != 0) && (AUTHOR_ROLE == role)) {
-        myReadState = READ_AUTHOR;
-      }
-    }
-  }
+	// TODO: tag -> lowercase
+	if (METADATA == tag) {
+		myReadMetaData = true;
+	} else if (myReadMetaData) {
+		if (TITLE == tag) {
+			myReadState = READ_TITLE;
+		} else if (AUTHOR_TAG == tag) {
+			const char *role = attributeValue(attributes, "role");
+			if ((role != 0) && (AUTHOR_ROLE == role)) {
+				myReadState = READ_AUTHOR;
+			}
+		}
+	}
 }
 
 void OEBDescriptionReader::endElementHandler(const char *tag) {
-  // TODO: tag -> lowercase
-  if (METADATA == tag) {
-    interrupt();
-  } else {
-    if (!myCurrentAuthor.empty()) {
-      myDescription.addAuthor(myCurrentAuthor);
-      myCurrentAuthor.erase();
-    }
-    myReadState = READ_NONE;
-  }
+	// TODO: tag -> lowercase
+	if (METADATA == tag) {
+		interrupt();
+	} else {
+		if (!myCurrentAuthor.empty()) {
+			myDescription.addAuthor(myCurrentAuthor);
+			myCurrentAuthor.erase();
+		}
+		myReadState = READ_NONE;
+	}
 }
 
 bool OEBDescriptionReader::readDescription(const std::string &fileName) {
-  myReadMetaData = false;
-  myReadState = READ_NONE;
-  return readDocument(fileName);
+	myReadMetaData = false;
+	myReadState = READ_NONE;
+	return readDocument(fileName);
 }

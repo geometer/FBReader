@@ -59,7 +59,7 @@ public:
 	ZLIntegerOption RotationAngleOption;
 	ZLIntegerOption AngleStateOption;
 
-  ZLBooleanOption KeyboardControlOption;
+	ZLBooleanOption KeyboardControlOption;
 
 	ZLBooleanOption ConfigAutoSavingOption;
 	ZLIntegerRangeOption ConfigAutoSaveTimeoutOption;
@@ -271,7 +271,7 @@ public:
 	virtual void initWindow();
 
 	bool isFullKeyboardControlSupported() const;
-  void grabAllKeys(bool grab);
+	void grabAllKeys(bool grab);
 
 	bool isFingerTapEventSupported() const;
 
@@ -280,7 +280,7 @@ public:
 	bool isActionEnabled(int actionId) const;
 	void doAction(int actionId);
 	// TODO: move implementation from FBReader
-  virtual void doActionByKey(const std::string &key) = 0;
+	virtual void doActionByKey(const std::string &key) = 0;
 	virtual bool closeView();
 	virtual void openFile(const std::string &fileName);
 
@@ -326,7 +326,7 @@ protected:
 	virtual void setCaption(const std::string &caption) = 0;
 
 	virtual bool isFullKeyboardControlSupported() const = 0;
-  virtual void grabAllKeys(bool grab) = 0;
+	virtual void grabAllKeys(bool grab) = 0;
 
 	virtual bool isFingerTapEventSupported() const = 0;
 

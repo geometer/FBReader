@@ -35,69 +35,69 @@ class HtmlTagAction;
 class HtmlBookReader : public HtmlReader {
 
 public:
-  HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
-  ~HtmlBookReader();
+	HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
+	~HtmlBookReader();
 
 protected:
-  void addAction(const std::string &tag, HtmlTagAction *action);
+	void addAction(const std::string &tag, HtmlTagAction *action);
 
 private:
-  void startDocumentHandler();
-  void endDocumentHandler();
+	void startDocumentHandler();
+	void endDocumentHandler();
 
-  bool tagHandler(const HtmlTag &tag);
+	bool tagHandler(const HtmlTag &tag);
 
 private:
-  bool characterDataHandler(const char *text, int len, bool convert);
-  void addConvertedDataToBuffer(const char *text, int len, bool convert);
+	bool characterDataHandler(const char *text, int len, bool convert);
+	void addConvertedDataToBuffer(const char *text, int len, bool convert);
 
 private:
 protected:
-  BookReader myBookReader;
+	BookReader myBookReader;
 
-  std::string myBaseDirPath;
+	std::string myBaseDirPath;
 
 private:
-  const PlainTextFormat &myFormat;
-  int myIgnoreDataCounter;
-  bool myIsPreformatted;
-  bool myIsHyperlink;
-  bool myIsStarted;
-  std::stack<int> myListNumStack;
+	const PlainTextFormat &myFormat;
+	int myIgnoreDataCounter;
+	bool myIsPreformatted;
+	bool myIsHyperlink;
+	bool myIsStarted;
+	std::stack<int> myListNumStack;
 
-  int mySpaceCounter;
-  int myBreakCounter;
-  std::string myConverterBuffer;
+	int mySpaceCounter;
+	int myBreakCounter;
+	std::string myConverterBuffer;
 
-  std::map<std::string,HtmlTagAction*> myActionMap;
-  std::vector<TextKind> myKindList;
+	std::map<std::string,HtmlTagAction*> myActionMap;
+	std::vector<TextKind> myKindList;
 
-  friend class HtmlTagAction;
-  friend class HtmlControlTagAction;
-  friend class HtmlHeaderTagAction;
-  friend class HtmlIgnoreTagAction;
-  friend class HtmlHrefTagAction;
-  friend class HtmlImageTagAction;
-  friend class HtmlBreakTagAction;
-  friend class HtmlPreTagAction;
-  friend class HtmlListTagAction;
-  friend class HtmlListItemTagAction;
+	friend class HtmlTagAction;
+	friend class HtmlControlTagAction;
+	friend class HtmlHeaderTagAction;
+	friend class HtmlIgnoreTagAction;
+	friend class HtmlHrefTagAction;
+	friend class HtmlImageTagAction;
+	friend class HtmlBreakTagAction;
+	friend class HtmlPreTagAction;
+	friend class HtmlListTagAction;
+	friend class HtmlListItemTagAction;
 };
 
 class HtmlTagAction {
 
 protected:
-  HtmlTagAction(HtmlBookReader &reader);
+	HtmlTagAction(HtmlBookReader &reader);
 
 public:
-  virtual ~HtmlTagAction();
-  virtual void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) = 0;
+	virtual ~HtmlTagAction();
+	virtual void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) = 0;
 
 protected:
-  BookReader &bookReader();
+	BookReader &bookReader();
 
 protected:
-  HtmlBookReader &myReader;
+	HtmlBookReader &myReader;
 };
 
 inline BookReader &HtmlTagAction::bookReader() { return myReader.myBookReader; }

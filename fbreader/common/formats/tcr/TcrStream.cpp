@@ -76,7 +76,7 @@ size_t TcrStream::read(char *buffer, size_t maxSize) {
 	if (myBuffer.length() > 0) {
 		size += std::min(maxSize, myBuffer.length());
 		if (buffer != 0) {
-		  strncpy(buffer, myBuffer.data(), size);
+			strncpy(buffer, myBuffer.data(), size);
 		}
 		myBuffer.erase(0, size);
 	}
@@ -102,18 +102,18 @@ size_t TcrStream::read(char *buffer, size_t maxSize) {
 }
 
 void TcrStream::seek(int offset, bool absoluteOffset) {
-  if (absoluteOffset) {
-    offset -= this->offset();
-  }
-  if (offset > 0) {
-    read(0, offset);
-  } else if (offset < 0) {
-    offset += this->offset();
+	if (absoluteOffset) {
+		offset -= this->offset();
+	}
+	if (offset > 0) {
+		read(0, offset);
+	} else if (offset < 0) {
+		offset += this->offset();
 		open();
-    if (offset >= 0) {
-      read(0, offset);
-    }
-  }
+		if (offset >= 0) {
+			read(0, offset);
+		}
+	}
 }
 
 size_t TcrStream::offset() const {

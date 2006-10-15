@@ -27,41 +27,41 @@
 #include "../textview/TextStyle.h"
 
 ColorOptionsPage::ColorOptionsPage(ZLDialogContent &dialogTab) {
-  myComboEntry = new ComboOptionEntry(*this, "Color For", "Background");
-  myComboEntry->addValue("Background");
-  myComboEntry->addValue("Regular Text");
-  myComboEntry->addValue("Hyperlink Text");
-  myComboEntry->addValue("Selected Text");
-  myComboEntry->addValue("Tree Lines");
-  myComboEntry->addValue("Position Indicator");
+	myComboEntry = new ComboOptionEntry(*this, "Color For", "Background");
+	myComboEntry->addValue("Background");
+	myComboEntry->addValue("Regular Text");
+	myComboEntry->addValue("Hyperlink Text");
+	myComboEntry->addValue("Selected Text");
+	myComboEntry->addValue("Tree Lines");
+	myComboEntry->addValue("Position Indicator");
 
-  dialogTab.addOptions(myComboEntry, 0);
+	dialogTab.addOptions(myComboEntry, 0);
 
-  BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
-  registerEntry(dialogTab,
-    new ZLSimpleColorOptionEntry(baseStyle.BackgroundColorOption),
-    myComboEntry->values()[0]
-  );
-  registerEntry(dialogTab,
-    new ZLSimpleColorOptionEntry(baseStyle.RegularTextColorOption),
-    myComboEntry->values()[1]
-  );
-  registerEntry(dialogTab,
-    new ZLSimpleColorOptionEntry(baseStyle.HyperlinkTextColorOption),
-    myComboEntry->values()[2]
-  );
-  registerEntry(dialogTab,
-    new ZLSimpleColorOptionEntry(baseStyle.SelectedTextColorOption),
-    myComboEntry->values()[3]
-  );
-  registerEntry(dialogTab,
-    new ZLSimpleColorOptionEntry(baseStyle.TreeLinesColorOption),
-    myComboEntry->values()[4]
-  );
-  registerEntry(dialogTab,
-    new ZLSimpleColorOptionEntry(TextStyleCollection::instance().indicatorStyle().ColorOption),
-    myComboEntry->values()[5]
-  );
+	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
+	registerEntry(dialogTab,
+		new ZLSimpleColorOptionEntry(baseStyle.BackgroundColorOption),
+		myComboEntry->values()[0]
+	);
+	registerEntry(dialogTab,
+		new ZLSimpleColorOptionEntry(baseStyle.RegularTextColorOption),
+		myComboEntry->values()[1]
+	);
+	registerEntry(dialogTab,
+		new ZLSimpleColorOptionEntry(baseStyle.HyperlinkTextColorOption),
+		myComboEntry->values()[2]
+	);
+	registerEntry(dialogTab,
+		new ZLSimpleColorOptionEntry(baseStyle.SelectedTextColorOption),
+		myComboEntry->values()[3]
+	);
+	registerEntry(dialogTab,
+		new ZLSimpleColorOptionEntry(baseStyle.TreeLinesColorOption),
+		myComboEntry->values()[4]
+	);
+	registerEntry(dialogTab,
+		new ZLSimpleColorOptionEntry(TextStyleCollection::instance().indicatorStyle().ColorOption),
+		myComboEntry->values()[5]
+	);
 
-  myComboEntry->onValueChange(myComboEntry->initialValue());
+	myComboEntry->onValueChange(myComboEntry->initialValue());
 }

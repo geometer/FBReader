@@ -28,58 +28,58 @@ RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfRe
 }
 
 void RtfDescriptionReader::setEncoding(int code) {
-  myDescription.encoding() = ZLEncodingConverter::encodingByCode(code);
-  myConverter = ZLEncodingConverter::createConverter(myDescription.encoding());
+	myDescription.encoding() = ZLEncodingConverter::encodingByCode(code);
+	myConverter = ZLEncodingConverter::createConverter(myDescription.encoding());
 }
 
 bool RtfDescriptionReader::readDocument(const std::string &fileName) {
-  myDoRead = false;
-  bool code = RtfReader::readDocument(fileName);
-  if (myDescription.encoding().empty()) {
-    myDescription.encoding() = "windows-1252";
-  }
-  return code;
+	myDoRead = false;
+	bool code = RtfReader::readDocument(fileName);
+	if (myDescription.encoding().empty()) {
+		myDescription.encoding() = "windows-1252";
+	}
+	return code;
 }
 
 void RtfDescriptionReader::addCharData(const char *data, size_t len, bool convert) {
-  if (myDoRead) {
-    if (convert) {
-      myConverter->convert(myBuffer, data, data + len);
-    } else {
-      myBuffer.append(data, len);
-    }
-  }
+	if (myDoRead) {
+		if (convert) {
+			myConverter->convert(myBuffer, data, data + len);
+		} else {
+			myBuffer.append(data, len);
+		}
+	}
 }
 
 void RtfDescriptionReader::switchDestination(DestinationType destination, bool on) {
-  switch (destination) {
-    case DESTINATION_INFO:
-      if (!on) {
-        interrupt();
-      }
-      break;
-    case DESTINATION_TITLE:
-      myDoRead = on;
-      if (!on) {
-        myDescription.title() = myBuffer;
-        myBuffer.erase();
-      }
-      break;
-    case DESTINATION_AUTHOR:
-      myDoRead = on;
-      if (!on) {
-        myDescription.addAuthor(myBuffer);
-        myBuffer.erase();
-      }
-      break;
-    default:
-      break;
-  }
-  if (!myDescription.title().empty() &&
-      (myDescription.author() != 0) &&
-      !myDescription.encoding().empty()) {
-    interrupt();
-  }
+	switch (destination) {
+		case DESTINATION_INFO:
+			if (!on) {
+				interrupt();
+			}
+			break;
+		case DESTINATION_TITLE:
+			myDoRead = on;
+			if (!on) {
+				myDescription.title() = myBuffer;
+				myBuffer.erase();
+			}
+			break;
+		case DESTINATION_AUTHOR:
+			myDoRead = on;
+			if (!on) {
+				myDescription.addAuthor(myBuffer);
+				myBuffer.erase();
+			}
+			break;
+		default:
+			break;
+	}
+	if (!myDescription.title().empty() &&
+			(myDescription.author() != 0) &&
+			!myDescription.encoding().empty()) {
+		interrupt();
+	}
 }
 
 void RtfDescriptionReader::insertImage(const std::string&, const std::string&, size_t, size_t) {

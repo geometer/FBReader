@@ -29,24 +29,24 @@
 class OEBDescriptionReader : public ZLXMLReader {
 
 public:
-  OEBDescriptionReader(BookDescription &description);
-  bool readDescription(const std::string &fileName);
+	OEBDescriptionReader(BookDescription &description);
+	bool readDescription(const std::string &fileName);
 
-  void startElementHandler(const char *tag, const char **attributes);
-  void endElementHandler(const char *tag);
-  void characterDataHandler(const char *text, int len);
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
+	void characterDataHandler(const char *text, int len);
 
 private:
-  WritableBookDescription myDescription;
+	WritableBookDescription myDescription;
 
-  bool myReadMetaData;
-  enum {
-    READ_NONE,
-    READ_AUTHOR,
-    READ_TITLE
-  } myReadState;
+	bool myReadMetaData;
+	enum {
+		READ_NONE,
+		READ_AUTHOR,
+		READ_TITLE
+	} myReadState;
 
-  std::string myCurrentAuthor;
+	std::string myCurrentAuthor;
 };
 
 #endif /* __OEBDESCRIPTIONREADER_H__ */

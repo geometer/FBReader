@@ -36,54 +36,54 @@ typedef std::vector<BookDescriptionPtr > Books;
 class DescriptionComparator {
 
 public:
-  DescriptionComparator();
-  ~DescriptionComparator();
-  bool operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2);
+	DescriptionComparator();
+	~DescriptionComparator();
+	bool operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2);
 };
 
 class BookCollection {
 
 public:
-  ZLStringOption PathOption;
-  ZLBooleanOption ScanSubdirsOption;
+	ZLStringOption PathOption;
+	ZLBooleanOption ScanSubdirsOption;
 
 public:
-  BookCollection();
-  ~BookCollection();
-  void rebuild();
+	BookCollection();
+	~BookCollection();
+	void rebuild();
 
-  const std::vector<AuthorPtr > &authors() const;
-  const Books &books(AuthorPtr author) const;
-  bool isBookExternal(BookDescriptionPtr description) const;
+	const std::vector<AuthorPtr > &authors() const;
+	const Books &books(AuthorPtr author) const;
+	bool isBookExternal(BookDescriptionPtr description) const;
 
-  bool isSynchronized() const;
-  
+	bool isSynchronized() const;
+	
 private:
-  void collectDirNames(std::set<std::string> &names);
-  void addDescription(BookDescriptionPtr description);
+	void collectDirNames(std::set<std::string> &names);
+	void addDescription(BookDescriptionPtr description);
 
 private:
-  std::vector<AuthorPtr > myAuthors;
-  std::map<AuthorPtr ,Books> myCollection;
-  std::set<BookDescriptionPtr> myExternalBooks;
+	std::vector<AuthorPtr > myAuthors;
+	std::map<AuthorPtr ,Books> myCollection;
+	std::set<BookDescriptionPtr> myExternalBooks;
 
-  std::string myPath;
-  bool myScanSubdirs;
+	std::string myPath;
+	bool myScanSubdirs;
 };
 
 class LastOpenedBooks {
 
 public:
-  ZLIntegerRangeOption MaxListSizeOption;
+	ZLIntegerRangeOption MaxListSizeOption;
 
 public:
-  LastOpenedBooks();
-  ~LastOpenedBooks();
-  void addBook(const std::string &fileName);
-  const Books &books() const;
+	LastOpenedBooks();
+	~LastOpenedBooks();
+	void addBook(const std::string &fileName);
+	const Books &books() const;
 
 private:
-  Books myBooks;
+	Books myBooks;
 };
 
 inline DescriptionComparator::DescriptionComparator() {}

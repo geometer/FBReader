@@ -83,7 +83,6 @@ class PlainTextModel : public TextModel {
 public:
 	Kind kind() const;
 	void createParagraph(Paragraph::Kind kind);
-	void createParagraphWithReference(long reference);
 };
 
 class TreeModel : public TextModel {

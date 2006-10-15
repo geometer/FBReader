@@ -31,6 +31,16 @@
 
 class ZLImage;
 
+class ContentsModel : public TreeModel {
+
+public:
+	void setReference(const TreeParagraph *paragraph, int reference);
+	int reference(const TreeParagraph *paragraph) const;
+
+private:
+	std::map<const TreeParagraph*,int> myReferenceByParagraph;
+};
+
 class BookModel {
 
 public:
@@ -51,7 +61,7 @@ public:
 private:
 	const BookDescriptionPtr myDescription;
 	PlainTextModel myBookTextModel;
-	PlainTextModel myContentsModel;
+	ContentsModel myContentsModel;
 	ImageMap myImages;
 	std::map<std::string,PlainTextModel*> myFootnotes;
 	std::map<std::string,int> myInternalHyperlinks;

@@ -39,188 +39,134 @@ static const std::string LIBRARY = "Library";
 static const std::string deleteImageId = "deleteImage";
 //static const std::string orderImageId = "orderImage";
 
-CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
-  myTreeModel = 0;
-  myTreeStateIsFrozen = false;
-  //myImageMap[orderImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
-  myImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
+CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : TreeView(reader, context) {
+	myTreeModel = 0;
+	//myImageMap[orderImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
+	myImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
 }
 
 CollectionView::~CollectionView() {
-  if (myTreeModel != 0) {
-    delete myTreeModel;
-  }
+	if (myTreeModel != 0) {
+		delete myTreeModel;
+	}
 
-  for (ImageMap::iterator image = myImageMap.begin(); image != myImageMap.end(); ++image) {
-    if (image->second != 0) {
-      delete image->second;
-    }
-  }
+	for (ImageMap::iterator image = myImageMap.begin(); image != myImageMap.end(); ++image) {
+		if (image->second != 0) {
+			delete image->second;
+		}
+	}
 }
 
 const std::string &CollectionView::caption() const {
-  return LIBRARY;
-}
-
-void CollectionView::gotoParagraph(int num, bool last) {
-  if ((num >= 0) && (num < (int)myTreeModel->paragraphsNumber())) {
-    TreeParagraph *tp = (TreeParagraph*)(*myTreeModel)[num];
-    if (myTreeStateIsFrozen) {
-      TreeParagraph *parent = tp->parent();
-      while ((num > 0) && (parent != 0) && !parent->isOpen()) {
-        for (--num; ((num > 0) && parent != (*myTreeModel)[num]); --num);
-        parent = parent->parent();
-      }
-    } else {
-      tp->openTree();
-      rebuildPaintInfo(true);
-    }
-  }
-  
-  TextView::gotoParagraph(num, last);
+	return LIBRARY;
 }
 
 void CollectionView::paint() {
-  if (!myCollection.isSynchronized()) {
-    rebuild();
-  }
-  if (myTreeModel == 0) {
-    myTreeModel = new TreeModel();
-    const std::vector<AuthorPtr> &authors = myCollection.authors();
-    std::string currentSequenceName;
-    TreeParagraph *sequenceParagraph;
-    for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-      const Books &books = myCollection.books(*it);
-      if (!books.empty()) {
-        currentSequenceName.erase();
-        sequenceParagraph = 0;
+	if (!myCollection.isSynchronized()) {
+		rebuild();
+	}
+	if (myTreeModel == 0) {
+		myTreeModel = new TreeModel();
+		const std::vector<AuthorPtr> &authors = myCollection.authors();
+		std::string currentSequenceName;
+		TreeParagraph *sequenceParagraph;
+		for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
+			const Books &books = myCollection.books(*it);
+			if (!books.empty()) {
+				currentSequenceName.erase();
+				sequenceParagraph = 0;
 
-        TreeParagraph *authorParagraph = myTreeModel->createParagraph();
-        myTreeModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
-        myTreeModel->addText((*it)->displayName());
-        for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
-          const std::string &sequenceName = (*jt)->sequenceName();
-          if (sequenceName.empty()) {
-            currentSequenceName.erase();
-            sequenceParagraph = 0;
-          } else if (sequenceName != currentSequenceName) {
-            currentSequenceName = sequenceName;
-            sequenceParagraph = myTreeModel->createParagraph(authorParagraph);
+				TreeParagraph *authorParagraph = myTreeModel->createParagraph();
+				myTreeModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
+				myTreeModel->addText((*it)->displayName());
+				for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
+					const std::string &sequenceName = (*jt)->sequenceName();
+					if (sequenceName.empty()) {
+						currentSequenceName.erase();
+						sequenceParagraph = 0;
+					} else if (sequenceName != currentSequenceName) {
+						currentSequenceName = sequenceName;
+						sequenceParagraph = myTreeModel->createParagraph(authorParagraph);
 						myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
 						myTreeModel->addText(sequenceName);
-            //myTreeModel->addText(" ");
-            //myTreeModel->addImage(orderImageId, myImageMap);
-          }
-          TreeParagraph *bookParagraph = myTreeModel->createParagraph(
-            (sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
-          );
-          myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
-          myTreeModel->addText((*jt)->title());
-          if (myCollection.isBookExternal(*jt)) {
-            myTreeModel->addText(" ");
-            myTreeModel->addImage(deleteImageId, myImageMap);
-          }
-          myBooksMap[bookParagraph] = *jt;
-        }
-      }
-    }
-    setModel(myTreeModel, LIBRARY);
-  }
-  TextView::paint();
+						//myTreeModel->addText(" ");
+						//myTreeModel->addImage(orderImageId, myImageMap);
+					}
+					TreeParagraph *bookParagraph = myTreeModel->createParagraph(
+						(sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
+					);
+					myTreeModel->addControl(LIBRARY_BOOK_ENTRY, true);
+					myTreeModel->addText((*jt)->title());
+					if (myCollection.isBookExternal(*jt)) {
+						myTreeModel->addText(" ");
+						myTreeModel->addImage(deleteImageId, myImageMap);
+					}
+					myBooksMap[bookParagraph] = *jt;
+				}
+			}
+		}
+		setModel(myTreeModel, LIBRARY);
+	}
+	TextView::paint();
 }
 
 void CollectionView::rebuild() {
-  setModel(0, LIBRARY);
-  myBooksMap.clear();
-  if (myTreeModel != 0) {
-    delete myTreeModel;
-    myTreeModel = 0;
-  }
-  myCollection.rebuild();
+	setModel(0, LIBRARY);
+	myBooksMap.clear();
+	if (myTreeModel != 0) {
+		delete myTreeModel;
+		myTreeModel = 0;
+	}
+	myCollection.rebuild();
 }
 
 bool CollectionView::onStylusPress(int x, int y) {
-  myTreeStateIsFrozen = true;
-  bool processedByParent = TextView::onStylusPress(x, y);
-  myTreeStateIsFrozen = false;
-  if (processedByParent) {
-    return true;
-  }
+	if (TreeView::onStylusPress(x, y)) {
+		return true;
+	}
 
-  const TextElementPosition *imagePosition = elementByCoordinates(x, y);
-  if ((imagePosition != 0) && (imagePosition->Kind == TextElement::IMAGE_ELEMENT)) {
-    int paragraphNumber = imagePosition->ParagraphNumber;
-    if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() <= paragraphNumber)) {
-      return false;
-    }
+	const TextElementPosition *imagePosition = elementByCoordinates(x, y);
+	if ((imagePosition != 0) && (imagePosition->Kind == TextElement::IMAGE_ELEMENT)) {
+		int paragraphNumber = imagePosition->ParagraphNumber;
+		if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() <= paragraphNumber)) {
+			return false;
+		}
 		/*
 		WordCursor cursor;
 		cursor.moveToParagraph(imagePosition->ParagraphNumber);
 		cursor.moveTo(imagePosition->TextElementNumber, 0);
 		TextElement &element = cursor.element();
 		*/
-    TreeParagraph *paragraph = (TreeParagraph*)(*myTreeModel)[paragraphNumber];
-    std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
-    if (it != myBooksMap.end()) {
-      BookDescription &description = *it->second;
-      const std::string question = "Remove Book\n\"" + description.title() + "\"\nfrom library?";
-      if (ZLDialogManager::instance().infoBox(ZLDialogManager::INFORMATION_TYPE, "Remove Book", question, "Yes", "No") == 0) {
-        BookList().removeFileName(description.fileName());
-        myTreeModel->removeParagraph(paragraphNumber);
-        rebuildPaintInfo(true);
-        repaintView();
-      }
-    }
-    return true;
-  }
+		TreeParagraph *paragraph = (TreeParagraph*)(*myTreeModel)[paragraphNumber];
+		std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
+		if (it != myBooksMap.end()) {
+			BookDescription &description = *it->second;
+			const std::string question = "Remove Book\n\"" + description.title() + "\"\nfrom library?";
+			if (ZLDialogManager::instance().infoBox(ZLDialogManager::INFORMATION_TYPE, "Remove Book", question, "Yes", "No") == 0) {
+				BookList().removeFileName(description.fileName());
+				myTreeModel->removeParagraph(paragraphNumber);
+				rebuildPaintInfo(true);
+				repaintView();
+			}
+		}
+		return true;
+	}
 
-  const ParagraphPosition *position = paragraphByCoordinate(y);
-  if (position == 0) {
-    return false;
-  }
+	const ParagraphPosition *position = paragraphByCoordinate(y);
+	if (position == 0) {
+		return false;
+	}
 
-  int paragraphNumber = position->ParagraphNumber;
-  if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() <= paragraphNumber)) {
-    return false;
-  }
+	int paragraphNumber = position->ParagraphNumber;
+	if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() <= paragraphNumber)) {
+		return false;
+	}
 
-  TreeParagraph *paragraph = (TreeParagraph*)(*myTreeModel)[paragraphNumber];
-  if (!paragraph->children().empty()) {
-    const TextElementPosition *elementPosition = elementByCoordinates(x, y);
-    if ((elementPosition == 0) || (elementPosition->Kind != TextElement::TREE_ELEMENT)) {
-      return false;
-    }
+	std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find((*myTreeModel)[paragraphNumber]);
+	if (it != myBooksMap.end()) {
+		fbreader().openBook(it->second);
+		fbreader().showBookTextView();
+	}
 
-    paragraph->open(!paragraph->isOpen());
-    rebuildPaintInfo(true);
-    preparePaintInfo();
-    if (paragraph->isOpen()) {
-      int nextParagraphNumber = paragraphNumber + paragraph->fullSize();
-      int lastParagraphNumber = endCursor().paragraphCursor().index();
-      if (endCursor().isEndOfParagraph()) {
-        ++lastParagraphNumber;
-      }
-      if (lastParagraphNumber < nextParagraphNumber) {
-        gotoParagraph(nextParagraphNumber, true);
-        preparePaintInfo();
-      }
-    }
-    int firstParagraphNumber = startCursor().paragraphCursor().index();
-    if (startCursor().isStartOfParagraph()) {
-      --firstParagraphNumber;
-    }
-    if (firstParagraphNumber >= paragraphNumber) {
-      gotoParagraph(paragraphNumber);
-      preparePaintInfo();
-    }
-    repaintView();
-  } else {
-    std::map<Paragraph*,BookDescriptionPtr>::iterator it = myBooksMap.find(paragraph);
-    if (it != myBooksMap.end()) {
-      fbreader().openBook(it->second);
-      fbreader().showBookTextView();
-    }
-  }
-
-  return true;
+	return true;
 }

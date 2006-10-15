@@ -34,24 +34,24 @@ class Paragraph;
 class RecentBooksView : public FBView {
 
 public:
-  RecentBooksView(FBReader &reader, ZLPaintContext &context);
-  ~RecentBooksView();
-  const std::string &caption() const;
+	RecentBooksView(FBReader &reader, ZLPaintContext &context);
+	~RecentBooksView();
+	const std::string &caption() const;
 
-  void rebuild();
-  bool onStylusPress(int x, int y);
+	void rebuild();
+	bool onStylusPress(int x, int y);
 
-  void paint();
+	void paint();
 
-  LastOpenedBooks &lastBooks();
+	LastOpenedBooks &lastBooks();
 
 private:
-  LastOpenedBooks myLastBooks;
-  PlainTextModel *myLastBooksModel;
+	LastOpenedBooks myLastBooks;
+	PlainTextModel *myLastBooksModel;
 };
 
 inline LastOpenedBooks &RecentBooksView::lastBooks() {
-  return myLastBooks;
+	return myLastBooks;
 }
 
 #endif /* __RECENTBOOKSVIEW_H__ */

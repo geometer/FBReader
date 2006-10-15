@@ -57,3 +57,12 @@ const TextModel *BookModel::footnoteModel(const std::string &id) const {
 	std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.find(id);
 	return (it != myFootnotes.end()) ? (*it).second : 0;
 }
+
+void ContentsModel::setReference(const TreeParagraph *paragraph, int reference) {
+	myReferenceByParagraph[paragraph] = reference;
+}
+
+int ContentsModel::reference(const TreeParagraph *paragraph) const {
+	std::map<const TreeParagraph*,int>::const_iterator it = myReferenceByParagraph.find(paragraph);
+	return (it != myReferenceByParagraph.end()) ? it->second : -1;
+}

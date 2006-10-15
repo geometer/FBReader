@@ -233,21 +233,6 @@ private:
 friend class PlainTextModel;
 };
 
-class ParagraphWithReference : public Paragraph {
-
-private:
-	ParagraphWithReference(long reference);
-
-public:
-	~ParagraphWithReference();
-	long reference() const;
-
-private:
-	const long myReference;
-
-friend class PlainTextModel;
-};
-
 class TreeParagraph : public Paragraph {
 
 public:
@@ -327,10 +312,6 @@ inline ParagraphEntry::Kind Paragraph::Iterator::entryKind() const { return (Par
 inline SpecialParagraph::SpecialParagraph(Kind kind) : myKind(kind) {}
 inline SpecialParagraph::~SpecialParagraph() {}
 inline Paragraph::Kind SpecialParagraph::kind() const { return myKind; }
-
-inline ParagraphWithReference::ParagraphWithReference(long reference) : myReference(reference) {}
-inline ParagraphWithReference::~ParagraphWithReference() {}
-inline long ParagraphWithReference::reference() const { return myReference; }
 
 inline TreeParagraph::~TreeParagraph() {}
 inline Paragraph::Kind TreeParagraph::kind() const { return TREE_PARAGRAPH; }

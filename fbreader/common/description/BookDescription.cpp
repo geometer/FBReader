@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <abstract/ZLOptions.h>
 #include <abstract/ZLFile.h>
 #include <abstract/ZLUnicodeUtil.h>
@@ -125,6 +127,7 @@ BookDescriptionPtr BookDescription::create(const std::string &fileName) {
 BookDescription::BookDescription(const std::string &fileName) {
 	myFileName = fileName;
 	myAuthor = 0;
+	myNumberInSequence = 0;
 }
 
 void WritableBookDescription::addAuthor(const std::string &name, const std::string &sortKey) {
@@ -134,26 +137,26 @@ void WritableBookDescription::addAuthor(const std::string &name, const std::stri
 		return;
 	}
 
-	std::string strippedKey = ZLUnicodeUtil::toLower(sortKey);
+	std::string strippedKey = sortKey;
 	ZLStringUtil::stripWhiteSpaces(strippedKey);
 	if (strippedKey.empty()) {
-    int index = strippedName.rfind(' ');
-    if (index == -1) {
-      strippedKey = strippedName;
-    } else {
-      strippedKey = strippedName.substr(index + 1);
-      while ((index >= 0) && (strippedName[index] == ' ')) {
-        --index;
-      }
-      strippedName = strippedName.substr(0, index + 1) + ' ' + strippedKey;
-    }
+		int index = strippedName.rfind(' ');
+		if (index == -1) {
+			strippedKey = strippedName;
+		} else {
+			strippedKey = strippedName.substr(index + 1);
+			while ((index >= 0) && (strippedName[index] == ' ')) {
+				--index;
+			}
+			strippedName = strippedName.substr(0, index + 1) + ' ' + strippedKey;
+		}
 	}
-	AuthorPtr author = SingleAuthor::create(strippedName, strippedKey);
+	AuthorPtr author = SingleAuthor::create(strippedName, ZLUnicodeUtil::toLower(strippedKey));
 	if (myDescription.myAuthor.isNull()) {
 		myDescription.myAuthor = author;
 	} else {
 		if (myDescription.myAuthor->isSingle()) {
-		  myDescription.myAuthor = MultiAuthor::create(myDescription.myAuthor);
+			myDescription.myAuthor = MultiAuthor::create(myDescription.myAuthor);
 		}
 		((MultiAuthor&)*myDescription.myAuthor).addAuthor(author);
 	}

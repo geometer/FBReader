@@ -62,8 +62,8 @@ static void parseDTD(XML_Parser parser, const std::string &fileName) {
 			length = entityStream->read(buffer, BUFSIZE);
 			if (XML_Parse(entityParser, buffer, length, 0) == XML_STATUS_ERROR) {
 				break;
-      }
-    } while (length == BUFSIZE);
+			}
+		} while (length == BUFSIZE);
 	}
 	XML_ParserFree(entityParser);
 }
@@ -91,7 +91,7 @@ void ZLXMLReaderInternal::init() {
 		XML_SetStartElementHandler(myParser, fStartElementHandler);
 		XML_SetEndElementHandler(myParser, fEndElementHandler);
 		XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
-    XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, NULL);
+		XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, NULL);
 	}
 }
 

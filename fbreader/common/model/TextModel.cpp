@@ -151,11 +151,6 @@ void PlainTextModel::createParagraph(Paragraph::Kind kind) {
 	addParagraphInternal(paragraph);
 }
 
-void PlainTextModel::createParagraphWithReference(long reference) {
-	ParagraphWithReference *paragraph = new ParagraphWithReference(reference);
-	addParagraphInternal(paragraph);
-}
-
 void TextModel::addText(const std::string &text) {
 	size_t len = text.length();
 	if ((myLastEntryStart != 0) && (*myLastEntryStart == ParagraphEntry::TEXT_ENTRY)) {

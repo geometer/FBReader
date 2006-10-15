@@ -31,25 +31,25 @@
 class RtfDescriptionReader : public RtfReader {
 
 public:
-  RtfDescriptionReader(BookDescription &description);
-  ~RtfDescriptionReader();
+	RtfDescriptionReader(BookDescription &description);
+	~RtfDescriptionReader();
 
-  bool readDocument(const std::string &fileName);
+	bool readDocument(const std::string &fileName);
 
-  void setEncoding(int code);
-  void setAlignment();
-  void switchDestination(DestinationType destination, bool on);
-  void addCharData(const char *data, size_t len, bool convert);
-  void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
+	void setEncoding(int code);
+	void setAlignment();
+	void switchDestination(DestinationType destination, bool on);
+	void addCharData(const char *data, size_t len, bool convert);
+	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
 
-  void setFontProperty(FontProperty property);
-  void newParagraph();
+	void setFontProperty(FontProperty property);
+	void newParagraph();
 
 private:
-  WritableBookDescription myDescription;
+	WritableBookDescription myDescription;
 
-  bool myDoRead;
-  std::string myBuffer;
+	bool myDoRead;
+	std::string myBuffer;
 };
 
 inline RtfDescriptionReader::~RtfDescriptionReader() {}

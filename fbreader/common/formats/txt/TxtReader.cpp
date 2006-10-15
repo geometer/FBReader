@@ -26,54 +26,54 @@
 #include "TxtReader.h"
 
 TxtReader::TxtReader(const std::string &encoding) {
-  myConverter = ZLEncodingConverter::createConverter(encoding);
+	myConverter = ZLEncodingConverter::createConverter(encoding);
 }
 
 TxtReader::~TxtReader() {
 }
 
 void TxtReader::readDocument(ZLInputStream &stream) {
-  if (!stream.open()) {
-    return;
-  }
+	if (!stream.open()) {
+		return;
+	}
 
-  startDocumentHandler();
+	startDocumentHandler();
 
-  const size_t BUFSIZE = 2048;
-  char *buffer = new char[BUFSIZE];
-  std::string str;
-  size_t length;
-  char previous = 0;
-  do {
-    length = stream.read(buffer, BUFSIZE);
-    char *start = buffer;
-    const char *end = buffer + length;
-    for (char *ptr = start; ptr != end; ++ptr) {
-      if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
-        if (start != ptr) {
-          str.erase();
-          myConverter->convert(str, start, ptr);
-          characterDataHandler(str);
-        }
-        start = ptr + 1;
-        newLineHandler();
-        previous = *ptr;
-      } else if (isspace(*ptr)) {
-        previous = *ptr;
-        *ptr = ' ';
-      } else {
-        previous = *ptr;
-      }
-    }
-    if (start != end) {
-      str.erase();
-      myConverter->convert(str, start, end);
-      characterDataHandler(str);
-    }
-  } while (length == BUFSIZE);
-  delete[] buffer;
+	const size_t BUFSIZE = 2048;
+	char *buffer = new char[BUFSIZE];
+	std::string str;
+	size_t length;
+	char previous = 0;
+	do {
+		length = stream.read(buffer, BUFSIZE);
+		char *start = buffer;
+		const char *end = buffer + length;
+		for (char *ptr = start; ptr != end; ++ptr) {
+			if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
+				if (start != ptr) {
+					str.erase();
+					myConverter->convert(str, start, ptr);
+					characterDataHandler(str);
+				}
+				start = ptr + 1;
+				newLineHandler();
+				previous = *ptr;
+			} else if (isspace(*ptr)) {
+				previous = *ptr;
+				*ptr = ' ';
+			} else {
+				previous = *ptr;
+			}
+		}
+		if (start != end) {
+			str.erase();
+			myConverter->convert(str, start, end);
+			characterDataHandler(str);
+		}
+	} while (length == BUFSIZE);
+	delete[] buffer;
 
-  endDocumentHandler();
+	endDocumentHandler();
 
-  stream.close();
+	stream.close();
 }

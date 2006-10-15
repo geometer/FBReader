@@ -43,9 +43,9 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 	}
 	fileName[100] = '\0';
 	if (Name.empty()) {
-	  Name = fileName;
-  }
-  
+		Name = fileName;
+	}
+	
 	stream->seek(24, false);
 	char fileSizeString[12];
 	stream->read(fileSizeString, 12);
@@ -57,11 +57,11 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 		Size *= 8;
 		Size += fileSizeString[i] - '0';
 	}
-  
+	
 	stream->seek(20, false);
 	char linkFlag;
 	stream->read(&linkFlag, 1);
-  
+	
 	IsRegularFile = (linkFlag == '\0') || (linkFlag == '0');
 
 	stream->seek(355, false);
@@ -69,12 +69,12 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 	if (((linkFlag == 'L') || (linkFlag == 'K')) && (Name == "././@LongLink") && (Size < 10240)) {
 		Name.erase();
 		Name.append(Size - 1, '\0');
-	  stream->read(const_cast<char*>(Name.data()), Size - 1);
+		stream->read(const_cast<char*>(Name.data()), Size - 1);
 		const int skip = 512 - (Size & 0x1ff);
 		stream->seek(skip + 1, false);
 		return (stream->offset() == startOffset + Size + skip + 512) && read(stream);
 	} else {
-	  return stream->offset() == startOffset + 512;
+		return stream->offset() == startOffset + 512;
 	}
 }
 
@@ -121,18 +121,18 @@ void ZLTarInputStream::close() {
 }
 
 void ZLTarInputStream::seek(int offset, bool absoluteOffset) {
-  if (absoluteOffset) {
-    offset -= this->offset();
-  }
-  if (offset > 0) {
-    read(0, offset);
-  } else if (offset < 0) {
-    offset += this->offset();
+	if (absoluteOffset) {
+		offset -= this->offset();
+	}
+	if (offset > 0) {
+		read(0, offset);
+	} else if (offset < 0) {
+		offset += this->offset();
 		open();
-    if (offset >= 0) {
-      read(0, offset);
-    }
-  }
+		if (offset >= 0) {
+			read(0, offset);
+		}
+	}
 }
 
 size_t ZLTarInputStream::offset() const {
@@ -153,7 +153,7 @@ void ZLTarDir::collectFiles(std::vector<std::string> &names, bool) {
 				names.push_back(header.Name);
 			}
 			stream->seek((header.Size + 0x1ff) & -0x200, false);
-		  header.erase();
+			header.erase();
 		}
 		stream->close();
 	}

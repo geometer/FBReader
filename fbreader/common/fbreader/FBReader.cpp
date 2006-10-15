@@ -191,7 +191,7 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	toolbar().addSeparator();
 	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
 
-	menubar().addItem("Book Info...",  ACTION_SHOW_BOOK_INFO);
+	menubar().addItem("Book Info...",	ACTION_SHOW_BOOK_INFO);
 	menubar().addItem("Table Of Contents", ACTION_SHOW_CONTENTS);
 
 	Menu &librarySubmenu = menubar().addSubmenu("Library");

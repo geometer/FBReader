@@ -242,9 +242,9 @@ protected:
 	void _onAccept() const;
 
 private slots:
-  void onChangeSelection();
-  void onUpButtonPressed();
-  void onDownButtonPressed();
+	void onChangeSelection();
+	void onUpButtonPressed();
+	void onDownButtonPressed();
 
 private:
 	QWidget *myWidget;

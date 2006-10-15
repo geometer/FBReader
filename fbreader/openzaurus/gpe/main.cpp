@@ -34,7 +34,7 @@
 #include "../../common/fbreader/FBReader.h"
 
 int main(int argc, char **argv) {
-  if (!gpe_application_init (&argc, &argv)) {
+	if (!gpe_application_init (&argc, &argv)) {
 		return 1;
 	}
 

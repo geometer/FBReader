@@ -53,7 +53,7 @@ private:
 	std::vector<std::string> myImageBuffer;
 
 	bool mySectionStarted;
-	bool myInsideTitle1;
+	bool myInsideTitle;
 };
 
 inline FB2BookReader::~FB2BookReader() {}

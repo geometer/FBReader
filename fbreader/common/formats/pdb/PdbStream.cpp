@@ -77,18 +77,18 @@ void PdbStream::close() {
 }
 
 void PdbStream::seek(int offset, bool absoluteOffset) {
-  if (absoluteOffset) {
-    offset -= this->offset();
-  }
-  if (offset > 0) {
-    read(0, offset);
-  } else if (offset < 0) {
-    offset += this->offset();
+	if (absoluteOffset) {
+		offset -= this->offset();
+	}
+	if (offset > 0) {
+		read(0, offset);
+	} else if (offset < 0) {
+		offset += this->offset();
 		open();
-    if (offset >= 0) {
-      read(0, offset);
-    }
-  }
+		if (offset >= 0) {
+			read(0, offset);
+		}
+	}
 }
 
 size_t PdbStream::offset() const {

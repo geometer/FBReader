@@ -72,8 +72,7 @@ bool TextFormatDetector::isPPL(ZLInputStream &stream) const {
 	}
 
 	char buffer[5]; 
-	bool result =
-	  (stream.read(buffer, 5) == 5) && (strncmp(buffer, "PPL\r\n", 5) == 0);
+	bool result = (stream.read(buffer, 5) == 5) && (strncmp(buffer, "PPL\r\n", 5) == 0);
 	stream.close();
 	return result;
 }

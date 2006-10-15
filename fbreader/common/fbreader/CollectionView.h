@@ -24,7 +24,7 @@
 
 #include <map>
 
-#include "FBView.h"
+#include "TreeView.h"
 #include "../description/BookDescription.h"
 #include "../collection/BookCollection.h"
 
@@ -32,34 +32,33 @@ class TreeModel;
 class PlainTextModel;
 class Paragraph;
 
-class CollectionView : public FBView {
+class CollectionView : public TreeView {
 
 public:
-  static const std::string DeleteBookImageFile;
-  
+	static const std::string DeleteBookImageFile;
+	
 public:
-  CollectionView(FBReader &reader, ZLPaintContext &context);
-  ~CollectionView();
-  const std::string &caption() const;
+	CollectionView(FBReader &reader, ZLPaintContext &context);
+	~CollectionView();
+	const std::string &caption() const;
 
-  void rebuild();
-  void gotoParagraph(int num, bool last = false);
-  bool onStylusPress(int x, int y);
+	void rebuild();
+	bool onStylusPress(int x, int y);
 
-  void paint();
+	void paint();
 
-  BookCollection &collection();
+	BookCollection &collection();
 
 private:
-  BookCollection myCollection;
-  TreeModel *myTreeModel;
-  std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
-  bool myTreeStateIsFrozen;
-  ImageMap myImageMap;
+	BookCollection myCollection;
+	TreeModel *myTreeModel;
+	std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
+	bool myTreeStateIsFrozen;
+	ImageMap myImageMap;
 };
 
 inline BookCollection &CollectionView::collection() {
-  return myCollection;
+	return myCollection;
 }
 
 #endif /* __COLLECTIONVIEW_H__ */

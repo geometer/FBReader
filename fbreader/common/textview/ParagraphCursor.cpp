@@ -69,14 +69,14 @@ TextElementPool::~TextElementPool() {
 	delete IndentElement;
 	delete EmptyLineElement;
 	for (std::map<TreeElement::TreeElementKind, TreeElement*>::iterator it = myTreeElementMap.begin(); it != myTreeElementMap.end(); ++it) {
-	  delete it->second;
+		delete it->second;
 	}
 }
 
 TreeElement *TextElementPool::getTreeElement(TreeElement::TreeElementKind kind) {
-  TreeElement *te = myTreeElementMap[kind];
+	TreeElement *te = myTreeElementMap[kind];
 	if (te == 0) {
-	  te = new TreeElement(kind);
+		te = new TreeElement(kind);
 		myTreeElementMap[kind] = te;
 	}
 	return te;
@@ -296,14 +296,19 @@ void WordCursor::setCharNumber(int charNumber) {
 
 void WordCursor::moveTo(int wordNumber, int charNumber) {
 	if (!isNull()) {
-		wordNumber = std::max(0, wordNumber);
-		int size = myParagraphCursor->paragraphLength();
-		if (wordNumber > size) {
-			myWordNumber = size;
+		if ((wordNumber == 0) && (charNumber == 0)) {
+			myWordNumber = 0;
 			myCharNumber = 0;
 		} else {
-			myWordNumber = wordNumber;
-			setCharNumber(charNumber);
+			wordNumber = std::max(0, wordNumber);
+			int size = myParagraphCursor->paragraphLength();
+			if (wordNumber > size) {
+				myWordNumber = size;
+				myCharNumber = 0;
+			} else {
+				myWordNumber = wordNumber;
+				setCharNumber(charNumber);
+			}
 		}
 	}
 }

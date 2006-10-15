@@ -29,57 +29,57 @@
 #include <abstract/ZLApplication.h>
 
 class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  static const std::string ImageDirectory;
-  
+	static const std::string ImageDirectory;
+	
 public:
-  QApplicationWindow(ZLApplication *application);
-  ~QApplicationWindow();
+	QApplicationWindow(ZLApplication *application);
+	~QApplicationWindow();
 
 private:
-  ZLViewWidget *createViewWidget();
-  void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
-  void refresh();
-  void close();
+	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void refresh();
+	void close();
 
-  bool isFullKeyboardControlSupported() const;
-  void grabAllKeys(bool grab);
+	bool isFullKeyboardControlSupported() const;
+	void grabAllKeys(bool grab);
 
-  bool isFingerTapEventSupported() const;
+	bool isFingerTapEventSupported() const;
 
-  void setCaption(const std::string &caption) { QMainWindow::setCaption(QString::fromUtf8(caption.c_str())); }
+	void setCaption(const std::string &caption) { QMainWindow::setCaption(QString::fromUtf8(caption.c_str())); }
 
-  bool isFullscreen() const;
-  void setFullscreen(bool fullscreen);
-  void fullScreenWorkaround();
+	bool isFullscreen() const;
+	void setFullscreen(bool fullscreen);
+	void fullScreenWorkaround();
 
-  void closeEvent(QCloseEvent *event);
-  void keyPressEvent(QKeyEvent *event);
-  void wheelEvent(QWheelEvent *event);
+	void closeEvent(QCloseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
+	void wheelEvent(QWheelEvent *event);
 
 private:
-  class QToolBar *myToolBar;
+	class QToolBar *myToolBar;
 
 	friend class ToolBarAction;
 	std::map<ZLApplication::Toolbar::ItemPtr, class ToolBarAction*> myActions;
 
-  ZLIntegerRangeOption myWidthOption;
-  ZLIntegerRangeOption myHeightOption;
+	ZLIntegerRangeOption myWidthOption;
+	ZLIntegerRangeOption myHeightOption;
 
-  bool myFullScreen;
-  bool myWasMaximized;
+	bool myFullScreen;
+	bool myWasMaximized;
 };
 
 class ToolBarAction : public QAction {
-  Q_OBJECT
+	Q_OBJECT
 
 public:
-  ToolBarAction(QApplicationWindow *parent, const ZLApplication::Toolbar::ButtonItem &item);
+	ToolBarAction(QApplicationWindow *parent, const ZLApplication::Toolbar::ButtonItem &item);
 
 private slots:
-  void onActivated();
+	void onActivated();
 
 private:
 	const ZLApplication::Toolbar::ButtonItem &myItem;

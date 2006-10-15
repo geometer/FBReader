@@ -36,38 +36,38 @@ bool RtfPlugin::providesMetaInfo() const {
 }
 
 bool RtfPlugin::acceptsFile(const ZLFile &file) const {
-  const std::string &extension = file.extension();
-  return (extension == "rtf");
+	const std::string &extension = file.extension();
+	return (extension == "rtf");
 }
 
 bool RtfPlugin::readDescription(const std::string &path, BookDescription &description) const {
-  ZLFile file(path);
-  shared_ptr<ZLInputStream> stream = file.inputStream();
+	ZLFile file(path);
+	shared_ptr<ZLInputStream> stream = file.inputStream();
 
-  if (stream.isNull()) {
-    return false;
-  }
+	if (stream.isNull()) {
+		return false;
+	}
 
-  detectEncodingAndLanguage(description, *stream);
+	detectEncodingAndLanguage(description, *stream);
 
-  if (!RtfDescriptionReader(description).readDocument(path)) {
-    return false;
-  }
-  
-  defaultTitle(description, file.name());
-  
-  return true;
+	if (!RtfDescriptionReader(description).readDocument(path)) {
+		return false;
+	}
+	
+	defaultTitle(description, file.name());
+	
+	return true;
 }
 
 bool RtfPlugin::readModel(const BookDescription &description, BookModel &model) const {
-  return RtfBookReader(model, description.encoding()).readDocument(description.fileName());
+	return RtfBookReader(model, description.encoding()).readDocument(description.fileName());
 }
 
 const std::string &RtfPlugin::iconName() const {
-  static const std::string ICON_NAME = "rtf";
-  return ICON_NAME;
+	static const std::string ICON_NAME = "rtf";
+	return ICON_NAME;
 }
 
 FormatInfoPage *RtfPlugin::createInfoPage(ZLOptionsDialog&, const std::string&) {
-  return 0;
+	return 0;
 }

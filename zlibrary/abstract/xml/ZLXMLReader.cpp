@@ -66,8 +66,8 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 		length = stream->read(myParserBuffer, bufferSize());
 		if (!myInternalReader->parseBuffer(myParserBuffer, length)) {
 			break;
-    }
-  } while ((length == bufferSize()) && !myInterrupted);
+		}
+	} while ((length == bufferSize()) && !myInterrupted);
 
 	stream->close();
 

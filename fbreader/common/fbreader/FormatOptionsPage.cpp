@@ -28,68 +28,68 @@
 #include "../textview/TextStyleOptions.h"
 
 FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
-  myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
-  myComboEntry->addValue(myComboEntry->initialValue());
+	myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
+	myComboEntry->addValue(myComboEntry->initialValue());
 
-  TextStyleCollection &collection = TextStyleCollection::instance();
-  const int STYLES_NUMBER = 18;
-  TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE };
-  for (int i = 0; i < STYLES_NUMBER; ++i) {
-    const TextStyleDecoration *decoration = collection.decoration(styles[i]);
-    if (decoration != 0) {
-      myComboEntry->addValue(decoration->name());
-    }
-  }
-  dialogTab.addOption(myComboEntry);
+	TextStyleCollection &collection = TextStyleCollection::instance();
+	const int STYLES_NUMBER = 18;
+	TextKind styles[STYLES_NUMBER] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE };
+	for (int i = 0; i < STYLES_NUMBER; ++i) {
+		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
+		if (decoration != 0) {
+			myComboEntry->addValue(decoration->name());
+		}
+	}
+	dialogTab.addOption(myComboEntry);
 
-  {
-    const std::string &name = myComboEntry->initialValue();
-    BaseTextStyle &baseStyle = collection.baseStyle();
+	{
+		const std::string &name = myComboEntry->initialValue();
+		BaseTextStyle &baseStyle = collection.baseStyle();
 
-    registerEntries(dialogTab,
-      new LineSpacingOptionEntry(baseStyle.LineSpaceOption, false),
-      0,//new ZLSimpleSpinOptionEntry("First Line Indent", baseStyle.firstLineIndentDeltaOption(), -300, 300, 1),
-      name
-    );
+		registerEntries(dialogTab,
+			new LineSpacingOptionEntry(baseStyle.LineSpaceOption, false),
+			0,//new ZLSimpleSpinOptionEntry("First Line Indent", baseStyle.firstLineIndentDeltaOption(), -300, 300, 1),
+			name
+		);
 
-    registerEntries(dialogTab,
-      new AlignmentOptionEntry(baseStyle.AlignmentOption, false),
-      0,
-      name
-    );
-  }
+		registerEntries(dialogTab,
+			new AlignmentOptionEntry(baseStyle.AlignmentOption, false),
+			0,
+			name
+		);
+	}
 
-  for (int i = 0; i < STYLES_NUMBER; ++i) {
-    TextStyleDecoration *d = collection.decoration(styles[i]);
-    if ((d != 0) && (d->isFullDecoration())) {
-      FullTextStyleDecoration *decoration = (FullTextStyleDecoration*)d;
-      const std::string &name = decoration->name();
-      
-      registerEntries(dialogTab,
-        new ZLSimpleSpinOptionEntry("Space Before", decoration->SpaceBeforeOption, 1),
-        new ZLSimpleSpinOptionEntry("Left Indent", decoration->LeftIndentOption, 1),
-        name
-      );
-      
-      registerEntries(dialogTab,
-        new ZLSimpleSpinOptionEntry("Space After", decoration->SpaceAfterOption, 1),
-        new ZLSimpleSpinOptionEntry("Right Indent", decoration->RightIndentOption, 1),
-        name
-      );
-      
-      registerEntries(dialogTab,
-        new LineSpacingOptionEntry(decoration->LineSpaceOption, true),
-        new ZLSimpleSpinOptionEntry("First Line Indent", decoration->FirstLineIndentDeltaOption, 1),
-        name
-      );
+	for (int i = 0; i < STYLES_NUMBER; ++i) {
+		TextStyleDecoration *d = collection.decoration(styles[i]);
+		if ((d != 0) && (d->isFullDecoration())) {
+			FullTextStyleDecoration *decoration = (FullTextStyleDecoration*)d;
+			const std::string &name = decoration->name();
+			
+			registerEntries(dialogTab,
+				new ZLSimpleSpinOptionEntry("Space Before", decoration->SpaceBeforeOption, 1),
+				new ZLSimpleSpinOptionEntry("Left Indent", decoration->LeftIndentOption, 1),
+				name
+			);
+			
+			registerEntries(dialogTab,
+				new ZLSimpleSpinOptionEntry("Space After", decoration->SpaceAfterOption, 1),
+				new ZLSimpleSpinOptionEntry("Right Indent", decoration->RightIndentOption, 1),
+				name
+			);
+			
+			registerEntries(dialogTab,
+				new LineSpacingOptionEntry(decoration->LineSpaceOption, true),
+				new ZLSimpleSpinOptionEntry("First Line Indent", decoration->FirstLineIndentDeltaOption, 1),
+				name
+			);
 
-      registerEntries(dialogTab,
-        new AlignmentOptionEntry(decoration->AlignmentOption, true),
-        0,
-        name
-      );
-    }
-  }
+			registerEntries(dialogTab,
+				new AlignmentOptionEntry(decoration->AlignmentOption, true),
+				0,
+				name
+			);
+		}
+	}
 
-  myComboEntry->onValueChange(myComboEntry->initialValue());
+	myComboEntry->onValueChange(myComboEntry->initialValue());
 }

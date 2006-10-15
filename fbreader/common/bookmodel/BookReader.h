@@ -23,6 +23,7 @@
 #define __BOOKREADER_H__
 
 #include <vector>
+#include <stack>
 #include <string>
 
 #include "../model/TextKind.h"
@@ -79,7 +80,8 @@ private:
 	std::vector<TextKind> myKindStack;
 
 	bool myTextParagraphExists;
-	bool myContentsParagraphExists;
+	std::stack<TreeParagraph*> myTOCStack;
+	bool myLastTOCParagraphIsEmpty;
 
 	bool mySectionContainsRegularContents;
 	bool myInsideTitle;

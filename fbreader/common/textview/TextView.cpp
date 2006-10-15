@@ -203,6 +203,13 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
+void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber) {
+	gotoParagraph(paragraphNumber, false);
+	if ((int)startCursor().paragraphCursor().index() == paragraphNumber) {
+		moveStartCursor(paragraphNumber, wordNumber, charNumber);
+	}
+}
+
 void TextView::drawTextLine(const LineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
 	context().moveXTo(info.StartStyle->leftIndent());

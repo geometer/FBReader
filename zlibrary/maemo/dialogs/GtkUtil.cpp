@@ -60,15 +60,15 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 }
 
 GtkDialog *createGtkDialog(const std::string& title) {
-  GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
-  gtk_window_set_title(dialog, title.c_str());
+	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
+	gtk_window_set_title(dialog, title.c_str());
 	
 	GtkWindow *window = ((GtkDialogManager&)GtkDialogManager::instance()).myWindow;
-  if (window != 0) {
-    gtk_window_set_transient_for(dialog, window);
-  }
-  gtk_window_set_modal(dialog, TRUE);
-  gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), 0);
+	if (window != 0) {
+		gtk_window_set_transient_for(dialog, window);
+	}
+	gtk_window_set_modal(dialog, TRUE);
+	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), 0);
 
-  return GTK_DIALOG(dialog);
+	return GTK_DIALOG(dialog);
 }

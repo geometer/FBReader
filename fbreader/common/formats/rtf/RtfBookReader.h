@@ -35,38 +35,38 @@ class RtfImage;
 class RtfBookReader : public RtfReader {
 
 public:
-  RtfBookReader(BookModel &model, const std::string &encoding);
-  ~RtfBookReader();
+	RtfBookReader(BookModel &model, const std::string &encoding);
+	~RtfBookReader();
 
-  bool readDocument(const std::string &fileName);
+	bool readDocument(const std::string &fileName);
 
-  bool characterDataHandler(std::string &str);
-  void flushBuffer();
+	bool characterDataHandler(std::string &str);
+	void flushBuffer();
 
 	void setEncoding(int code);
-  void setAlignment();
-  void switchDestination(DestinationType destination, bool on);
-  void addCharData(const char *data, size_t len, bool convert);
-  void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
+	void setAlignment();
+	void switchDestination(DestinationType destination, bool on);
+	void addCharData(const char *data, size_t len, bool convert);
+	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
 
-  void setFontProperty(FontProperty property);
-  void newParagraph();
+	void setFontProperty(FontProperty property);
+	void newParagraph();
 
 private:
-  BookReader myBookReader;
+	BookReader myBookReader;
 
-  std::string myOutputBuffer;
+	std::string myOutputBuffer;
 
-  int myImageIndex;
-  int myFootnoteIndex;
+	int myImageIndex;
+	int myFootnoteIndex;
 
-  struct RtfBookReaderState {
-    std::string Id;
-    bool ReadText;
-  };
+	struct RtfBookReaderState {
+		std::string Id;
+		bool ReadText;
+	};
 
-  RtfBookReaderState myCurrentState;
-  std::stack<RtfBookReaderState> myStateStack;
+	RtfBookReaderState myCurrentState;
+	std::stack<RtfBookReaderState> myStateStack;
 };
 
 inline RtfBookReader::~RtfBookReader() {}

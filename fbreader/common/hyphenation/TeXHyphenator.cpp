@@ -115,7 +115,7 @@ TeXHyphenationPattern::TeXHyphenationPattern(const std::string &utf8String) {
 
 	const int len = ucs2String.size();
 	for (int i = 0; i < len; ++i) {
-	  if ((ucs2String[i] < '0') || (ucs2String[i] > '9')) {
+		if ((ucs2String[i] < '0') || (ucs2String[i] > '9')) {
 			++myLength;
 		}
 	}
@@ -125,7 +125,7 @@ TeXHyphenationPattern::TeXHyphenationPattern(const std::string &utf8String) {
 
 	myValues[0] = 0;
 	for (int j = 0, k = 0; j < len; ++j) {
-	  if ((ucs2String[j] >= '0') && (ucs2String[j] <= '9')) {
+		if ((ucs2String[j] >= '0') && (ucs2String[j] <= '9')) {
 			myValues[k] = ucs2String[j] - '0';
 		} else {
 			mySymbols[k] = ucs2String[j];

@@ -27,37 +27,37 @@
 
 void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) {
 	std::string encoding = description.encoding();
-  if (encoding.empty()) {
+	if (encoding.empty()) {
 		encoding = EncodingDetector::detect(stream, (EncodingDetector::Language)PluginCollection::instance().DefaultLanguageOption.value());
 		if (encoding == "unknown") {
 			encoding = "windows-1252";
 		}
-    WritableBookDescription(description).encoding() = encoding;
-  }
+		WritableBookDescription(description).encoding() = encoding;
+	}
 
-  if (description.language() == "") {
-    if ((encoding == "US-ASCII") ||
-        (encoding == "ISO-8859-1")) {
-      WritableBookDescription(description).language() = "en";
-    } else if ((description.encoding() == "KOI8-R") ||
-        (encoding == "windows-1251") ||
-        (encoding == "ISO-8859-5") ||
-        (encoding == "IBM866")) {
-      WritableBookDescription(description).language() = "ru";
-    } else if (
+	if (description.language() == "") {
+		if ((encoding == "US-ASCII") ||
+				(encoding == "ISO-8859-1")) {
+			WritableBookDescription(description).language() = "en";
+		} else if ((description.encoding() == "KOI8-R") ||
+				(encoding == "windows-1251") ||
+				(encoding == "ISO-8859-5") ||
+				(encoding == "IBM866")) {
+			WritableBookDescription(description).language() = "ru";
+		} else if (
 			(PluginCollection::instance().DefaultLanguageOption.value() == EncodingDetector::CZECH) &&
 			((encoding == "windows-1250") ||
 			 (encoding == "ISO-8859-2") ||
 			 (encoding == "IBM852"))) {
-      WritableBookDescription(description).language() = "cs";
+			WritableBookDescription(description).language() = "cs";
 		}
-  }
+	}
 }
 
 void FormatPlugin::defaultTitle(BookDescription &description, const std::string &title) {
-  if (description.title().empty()) {
-    WritableBookDescription(description).title() = title;
-  }
+	if (description.title().empty()) {
+		WritableBookDescription(description).title() = title;
+	}
 }
 
 const std::string &FormatPlugin::tryOpen(const std::string &path) const {

@@ -26,146 +26,146 @@
 class ZLOption {
 
 public:
-  static const std::string LOOK_AND_FEEL_CATEGORY;
-  static const std::string CONFIG_CATEGORY;
-  static const std::string STATE_CATEGORY;
+	static const std::string LOOK_AND_FEEL_CATEGORY;
+	static const std::string CONFIG_CATEGORY;
+	static const std::string STATE_CATEGORY;
 
 public:
-  static void clearGroup(const std::string &group);
+	static void clearGroup(const std::string &group);
 	static void startAutoSave(int seconds);
-  
+	
 public:
-  ZLOption(const std::string &category, const std::string &group, const std::string &optionName);
-  virtual ~ZLOption();
+	ZLOption(const std::string &category, const std::string &group, const std::string &optionName);
+	virtual ~ZLOption();
 
 protected:
-  std::string myCategory;
-  std::string myGroup;
-  std::string myOptionName;
-  mutable bool myIsSynchronized;
+	std::string myCategory;
+	std::string myGroup;
+	std::string myOptionName;
+	mutable bool myIsSynchronized;
 
 private:
-  ZLOption(const ZLOption&);
-  const ZLOption& operator = (const ZLOption&);
+	ZLOption(const ZLOption&);
+	const ZLOption& operator = (const ZLOption&);
 };
 
 class ZLBooleanOption : public ZLOption {
 
 public:
-  ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue);
-  ~ZLBooleanOption();
+	ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue);
+	~ZLBooleanOption();
 
-  bool value() const;
-  void setValue(bool value);
+	bool value() const;
+	void setValue(bool value);
 
 private:
-  mutable bool myValue;
-  const bool myDefaultValue;
+	mutable bool myValue;
+	const bool myDefaultValue;
 };
 
 enum Boolean3 {
-  B3_FALSE = 0,
-  B3_TRUE = 1,
-  B3_UNDEFINED = 2
+	B3_FALSE = 0,
+	B3_TRUE = 1,
+	B3_UNDEFINED = 2
 };
 
 class ZLBoolean3Option : public ZLOption {
 
 public:
-  ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue);
-  ~ZLBoolean3Option();
+	ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue);
+	~ZLBoolean3Option();
 
-  Boolean3 value() const;
-  void setValue(Boolean3 value);
+	Boolean3 value() const;
+	void setValue(Boolean3 value);
 
 private:
-  mutable Boolean3 myValue;
-  const Boolean3 myDefaultValue;
+	mutable Boolean3 myValue;
+	const Boolean3 myDefaultValue;
 };
 
 class ZLIntegerOption : public ZLOption {
 
 public:
-  ZLIntegerOption(const std::string &category, const std::string &group, const std::string &optionName, long defaultValue);
-  ~ZLIntegerOption();
+	ZLIntegerOption(const std::string &category, const std::string &group, const std::string &optionName, long defaultValue);
+	~ZLIntegerOption();
 
-  long value() const;
-  void setValue(long value);
+	long value() const;
+	void setValue(long value);
 
 private:
-  mutable long myValue;
-  const long myDefaultValue;
+	mutable long myValue;
+	const long myDefaultValue;
 };
 
 class ZLIntegerRangeOption : public ZLOption {
 
 public:
-  ZLIntegerRangeOption(const std::string &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue);
-  ~ZLIntegerRangeOption();
+	ZLIntegerRangeOption(const std::string &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue);
+	~ZLIntegerRangeOption();
 
-  long value() const;
-  void setValue(long value);
-  long minValue() const;
-  long maxValue() const;
+	long value() const;
+	void setValue(long value);
+	long minValue() const;
+	long maxValue() const;
 
 private:
-  mutable long myValue;
-  const long myMinValue;
-  const long myMaxValue;
-  const long myDefaultValue;
+	mutable long myValue;
+	const long myMinValue;
+	const long myMaxValue;
+	const long myDefaultValue;
 };
 
 struct ZLColor {
-  unsigned char Red;
-  unsigned char Green;
-  unsigned char Blue;
+	unsigned char Red;
+	unsigned char Green;
+	unsigned char Blue;
 
-  ZLColor(unsigned char r, unsigned char g, unsigned char b);
-  ZLColor(long longValue = 0);
-  ~ZLColor();
-  long intValue();
+	ZLColor(unsigned char r, unsigned char g, unsigned char b);
+	ZLColor(long longValue = 0);
+	~ZLColor();
+	long intValue();
 };
 
 class ZLColorOption : public ZLOption {
 
 public:
-  ZLColorOption(const std::string &category, const std::string &group, const std::string &optionName, ZLColor defaultValue);
-  ~ZLColorOption();
+	ZLColorOption(const std::string &category, const std::string &group, const std::string &optionName, ZLColor defaultValue);
+	~ZLColorOption();
 
-  ZLColor value() const;
-  void setValue(ZLColor value);
+	ZLColor value() const;
+	void setValue(ZLColor value);
 
 private:
-  mutable long myIntValue;
-  const long myDefaultIntValue;
+	mutable long myIntValue;
+	const long myDefaultIntValue;
 };
 
 class ZLDoubleOption : public ZLOption {
 
 public:
-  ZLDoubleOption(const std::string &category, const std::string &group, const std::string &optionName, double defaultValue);
-  ~ZLDoubleOption();
+	ZLDoubleOption(const std::string &category, const std::string &group, const std::string &optionName, double defaultValue);
+	~ZLDoubleOption();
 
-  double value() const;
-  void setValue(double value);
+	double value() const;
+	void setValue(double value);
 
 private:
-  mutable double myValue;
-  const double myDefaultValue;
+	mutable double myValue;
+	const double myDefaultValue;
 };
 
 class ZLStringOption : public ZLOption {
 
 public:
-  ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue);
-  ~ZLStringOption();
+	ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue);
+	~ZLStringOption();
 
-  const std::string &value() const;
-  void setValue(const std::string &value);
+	const std::string &value() const;
+	void setValue(const std::string &value);
 
 private:
-  mutable std::string myValue;
-  const std::string myDefaultValue;
+	mutable std::string myValue;
+	const std::string myDefaultValue;
 };
 
 inline ZLColor::ZLColor(unsigned char r, unsigned char g, unsigned char b) : Red(r), Green(g), Blue(b) {}

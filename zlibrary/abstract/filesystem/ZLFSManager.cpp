@@ -31,109 +31,109 @@
 ZLFSManager *ZLFSManager::ourInstance = 0;
 
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
-  ZLFSManager::instance().normalize(myPath);
-  int index = myPath.rfind(':');
-  if (index == -1) {
-    index = myPath.rfind('/');
-  }
-  myFullName = myPath.substr(index + 1);
-  myName = myFullName;
+	ZLFSManager::instance().normalize(myPath);
+	int index = myPath.rfind(':');
+	if (index == -1) {
+		index = myPath.rfind('/');
+	}
+	myFullName = myPath.substr(index + 1);
+	myName = myFullName;
 
-  myArchiveType = NONE;
+	myArchiveType = NONE;
 
-  if (ZLStringUtil::stringEndsWith(myName, ".gz")) {
-    myName = myName.substr(0, myName.length() - 3);
-    myArchiveType |= GZIP;
-  }
-  if (ZLStringUtil::stringEndsWith(myName, ".bz2")) {
-    myName = myName.substr(0, myName.length() - 4);
-    myArchiveType |= BZIP2;
-  }
-  if (ZLStringUtil::stringEndsWith(myName, ".zip") ||
-      ZLStringUtil::stringEndsWith(myName, ".oebzip") ) {
-    myArchiveType |= ZIP;
-  } else if (ZLStringUtil::stringEndsWith(myName, ".tar")) {
-    myArchiveType |= TAR;
-  } else if (ZLStringUtil::stringEndsWith(myName, ".tgz") ||
-             ZLStringUtil::stringEndsWith(myName, ".ipk")) {
-    myArchiveType |= TAR | GZIP;
-    myName = myName.substr(0, myName.length() - 2) + "ar";
-  }
+	if (ZLStringUtil::stringEndsWith(myName, ".gz")) {
+		myName = myName.substr(0, myName.length() - 3);
+		myArchiveType |= GZIP;
+	}
+	if (ZLStringUtil::stringEndsWith(myName, ".bz2")) {
+		myName = myName.substr(0, myName.length() - 4);
+		myArchiveType |= BZIP2;
+	}
+	if (ZLStringUtil::stringEndsWith(myName, ".zip") ||
+			ZLStringUtil::stringEndsWith(myName, ".oebzip") ) {
+		myArchiveType |= ZIP;
+	} else if (ZLStringUtil::stringEndsWith(myName, ".tar")) {
+		myArchiveType |= TAR;
+	} else if (ZLStringUtil::stringEndsWith(myName, ".tgz") ||
+						 ZLStringUtil::stringEndsWith(myName, ".ipk")) {
+		myArchiveType |= TAR | GZIP;
+		myName = myName.substr(0, myName.length() - 2) + "ar";
+	}
 
-  index = myName.rfind('.');
-  if (index > 0) {
-    myExtension = myName.substr(index + 1);
-    myName = myName.substr(0, index);
-  }
+	index = myName.rfind('.');
+	if (index > 0) {
+		myExtension = myName.substr(index + 1);
+		myName = myName.substr(0, index);
+	}
 }
 
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
-  if (isDirectory()) {
-    return 0;
-  }
+	if (isDirectory()) {
+		return 0;
+	}
 
-  ZLInputStream *stream = 0;
-  
-  size_t index = myPath.rfind(':');
-  if (index == (size_t)-1) {
-    stream = ZLFSManager::instance().createPlainInputStream(myPath);
-  } else {
-    ZLFile baseFile(myPath.substr(0, index));
-    if (baseFile.myArchiveType & ZIP) {
-      if (ZLFSManager::instance().isZipSupported()) {
-        shared_ptr<ZLInputStream> base = baseFile.inputStream();
-        stream = base.isNull() ? 0 : new ZLZipInputStream(base, myPath.substr(index + 1));
-      }
-    } else if (baseFile.myArchiveType & TAR) {
-      shared_ptr<ZLInputStream> base = baseFile.inputStream();
-      stream = base.isNull() ? 0 : new ZLTarInputStream(base, myPath.substr(index + 1));
-    }
-  }
+	ZLInputStream *stream = 0;
+	
+	size_t index = myPath.rfind(':');
+	if (index == (size_t)-1) {
+		stream = ZLFSManager::instance().createPlainInputStream(myPath);
+	} else {
+		ZLFile baseFile(myPath.substr(0, index));
+		if (baseFile.myArchiveType & ZIP) {
+			if (ZLFSManager::instance().isZipSupported()) {
+				shared_ptr<ZLInputStream> base = baseFile.inputStream();
+				stream = base.isNull() ? 0 : new ZLZipInputStream(base, myPath.substr(index + 1));
+			}
+		} else if (baseFile.myArchiveType & TAR) {
+			shared_ptr<ZLInputStream> base = baseFile.inputStream();
+			stream = base.isNull() ? 0 : new ZLTarInputStream(base, myPath.substr(index + 1));
+		}
+	}
 
-  if ((myArchiveType & GZIP) && (stream != 0)) {
-    return ZLFSManager::instance().isZipSupported() ? new ZLGzipInputStream(stream) : 0;
-  }
-  if ((myArchiveType & BZIP2) && (stream != 0)) {
-    return new ZLBzip2InputStream(stream);
-  }
-  return stream;
+	if ((myArchiveType & GZIP) && (stream != 0)) {
+		return ZLFSManager::instance().isZipSupported() ? new ZLGzipInputStream(stream) : 0;
+	}
+	if ((myArchiveType & BZIP2) && (stream != 0)) {
+		return new ZLBzip2InputStream(stream);
+	}
+	return stream;
 }
 
 shared_ptr<ZLOutputStream> ZLFile::outputStream() const {
-  if (isCompressed()) {
-    return 0;
-  }
-  if (myPath.find(':') != (size_t)-1) {
-    return 0;
-  }
-  return ZLFSManager::instance().createOutputStream(myPath);
+	if (isCompressed()) {
+		return 0;
+	}
+	if (myPath.find(':') != (size_t)-1) {
+		return 0;
+	}
+	return ZLFSManager::instance().createOutputStream(myPath);
 }
 
 shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
-  if (exists()) {
-    if (isDirectory()) {
-      return ZLFSManager::instance().createPlainDirectory(myPath);
-    } else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {
-      return new ZLZipDir(myPath);
-    } else if (myArchiveType & TAR) {
-      return new ZLTarDir(myPath);
-    }
-  } else if (createUnexisting) {
-    myInfoIsFilled = false;
-    return ZLFSManager::instance().createNewDirectory(myPath);
-  }
-  return 0;
+	if (exists()) {
+		if (isDirectory()) {
+			return ZLFSManager::instance().createPlainDirectory(myPath);
+		} else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {
+			return new ZLZipDir(myPath);
+		} else if (myArchiveType & TAR) {
+			return new ZLTarDir(myPath);
+		}
+	} else if (createUnexisting) {
+		myInfoIsFilled = false;
+		return ZLFSManager::instance().createNewDirectory(myPath);
+	}
+	return 0;
 }
 
 void ZLFile::fillInfo() const {
-  size_t index = myPath.find(':');
-  if (index == (size_t)-1) {
-    myInfo = ZLFSManager::instance().fileInfo(myPath);
-  } else {
-    myInfo = ZLFSManager::instance().fileInfo(myPath.substr(index));
-    myInfo.IsDirectory = false;
-  }
-  myInfoIsFilled = true;
+	size_t index = myPath.find(':');
+	if (index == (size_t)-1) {
+		myInfo = ZLFSManager::instance().fileInfo(myPath);
+	} else {
+		myInfo = ZLFSManager::instance().fileInfo(myPath.substr(index));
+		myInfo.IsDirectory = false;
+	}
+	myInfoIsFilled = true;
 }
 
 bool ZLFile::remove() const {
