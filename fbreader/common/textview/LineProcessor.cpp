@@ -30,19 +30,53 @@
 
 #include "../hyphenation/Hyphenator.h"
 
-TextView::LineInfo TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
-	LineInfo info(start, myStyle.style());
+TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
+	LineInfoPtr infoPtr = new LineInfo(start, myStyle.style());
+	LineInfo &info = *infoPtr;
 
-	std::set<LineInfo>::const_iterator it = myLineInfoCache.find(info);
+	std::set<LineInfoPtr>::const_iterator it = myLineInfoCache.find(infoPtr);
 	if (it != myLineInfoCache.end()) {
-		const LineInfo &storedInfo = *it;
-		myStyle.applyControls(storedInfo.Start, storedInfo.End);
+		const LineInfoPtr &storedInfo = *it;
+		myStyle.applyControls(storedInfo->Start, storedInfo->End);
 		return storedInfo;
+	}
+
+	WordCursor current = start;
+	const ParagraphCursor &paragraph = current.paragraphCursor();
+
+	const bool isFirstLine = current.isStartOfParagraph();
+	if (isFirstLine) {
+		TextElement::Kind elementKind = paragraph[current.wordNumber()].kind();
+		while ((elementKind == TextElement::CONTROL_ELEMENT) ||
+					 (elementKind == TextElement::FORCED_CONTROL_ELEMENT)) {
+			const TextElement &element = paragraph[current.wordNumber()];
+			switch (elementKind) {
+				case TextElement::CONTROL_ELEMENT:
+					myStyle.applyControl((const ControlElement&)element);
+					break;
+				case TextElement::FORCED_CONTROL_ELEMENT:
+					myStyle.applyControl((const ForcedControlElement&)element);
+					break;
+				default:
+					break;
+			}
+			current.nextWord();
+			if (current.sameElementAs(end)) {
+				break;
+			}
+			elementKind = paragraph[current.wordNumber()].kind();
+		}
+		info.StartStyle = myStyle.style();
+		info.RealStart = current;
 	}
 
 	TextStylePtr storedStyle = myStyle.style();
 
-	info.Width = myStyle.style()->leftIndent();
+	info.LeftIndent = myStyle.style()->leftIndent();
+	if (isFirstLine) {
+		info.LeftIndent += myStyle.style()->firstLineIndentDelta();
+	}
+	info.Width = info.LeftIndent;
 	int newWidth = info.Width;
 	int newHeight = info.Height;
 	int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
@@ -52,8 +86,6 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 	int internalSpaceCounter = 0;
 	int removeLastSpace = false;
 
-	WordCursor current = start;
-	const ParagraphCursor &paragraph = current.paragraphCursor();
 	TextElement::Kind elementKind = paragraph[current.wordNumber()].kind();
 
 	do {
@@ -153,8 +185,16 @@ TextView::LineInfo TextView::processTextLine(const WordCursor &start, const Word
 
 	myStyle.setStyle(storedStyle);
 
-	if (!info.End.sameElementAs(end) || end.isEndOfParagraph()) {
-		myLineInfoCache.insert(info);
+	if (isFirstLine) {
+		info.Height += info.StartStyle->spaceBefore();
 	}
-	return info;
+	if (info.End.isEndOfParagraph()) {
+		info.VSpaceAfter = myStyle.style()->spaceAfter();
+	}
+
+	if (!info.End.sameElementAs(end) || end.isEndOfParagraph()) {
+		myLineInfoCache.insert(infoPtr);
+	}
+
+	return infoPtr;
 }

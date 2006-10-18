@@ -65,4 +65,4 @@ clean:
 			$(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk clean; \
 		fi; \
 	done;
-	@$(RM) $(TARGET) $(TARGET_SHORTNAME)
+	@$(RM) *.so *.so.*

@@ -84,8 +84,8 @@ void TextView::paint() {
 		return;
 	}
 	context().moveYTo(0);
-	for (std::vector<LineInfo>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
-		drawTextLine(*it);
+	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+		drawTextLine(**it);
 	}
 
 	myPositionIndicator.draw();
@@ -212,12 +212,16 @@ void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber)
 
 void TextView::drawTextLine(const LineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
-	context().moveXTo(info.StartStyle->leftIndent());
+	context().moveXTo(info.LeftIndent);
 	int y = context().y();
 	myParagraphMap.push_back(
-		ParagraphPosition(info.Start.paragraphCursor().index(), y + 1, y + info.Height)
+		ParagraphPosition(info.RealStart.paragraphCursor().index(), y + 1, y + info.Height)
 	);
 	context().moveY(info.Height);
+	int maxY = myStyle.textAreaHeight();
+	if (context().y() > maxY) {
+	  context().moveYTo(maxY);
+	}
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
@@ -240,9 +244,9 @@ void TextView::drawTextLine(const LineInfo &info) {
 			break;
 	}
 
-	const ParagraphCursor &paragraph = info.Start.paragraphCursor();
+	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 	int paragraphNumber = paragraph.index();
-	for (WordCursor pos = info.Start; !pos.sameElementAs(info.End); pos.nextWord()) {
+	for (WordCursor pos = info.RealStart; !pos.sameElementAs(info.End); pos.nextWord()) {
 		const TextElement &element = paragraph[pos.wordNumber()];
 		TextElement::Kind kind = element.kind();
 		int x = context().x();
@@ -318,6 +322,7 @@ void TextView::drawTextLine(const LineInfo &info) {
 			);
 		}
 	}
+	context().moveY(info.VSpaceAfter);
 }
 
 bool TextView::hasMultiSectionModel() const {

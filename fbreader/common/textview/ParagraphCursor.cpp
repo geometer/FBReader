@@ -58,7 +58,6 @@ TextElementPool::TextElementPool() {
 	HSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
 	BeforeParagraphElement = new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT);
 	AfterParagraphElement = new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT);
-	IndentElement = new SpecialTextElement(TextElement::INDENT_ELEMENT);
 	EmptyLineElement = new SpecialTextElement(TextElement::EMPTY_LINE_ELEMENT);
 }
 
@@ -66,7 +65,6 @@ TextElementPool::~TextElementPool() {
 	delete HSpaceElement;
 	delete BeforeParagraphElement;
 	delete AfterParagraphElement;
-	delete IndentElement;
 	delete EmptyLineElement;
 	for (std::map<TreeElement::TreeElementKind, TreeElement*>::iterator it = myTreeElementMap.begin(); it != myTreeElementMap.end(); ++it) {
 		delete it->second;
@@ -220,12 +218,11 @@ void ParagraphCursor::fill() {
 	const Paragraph &paragraph = *myModel[myIndex];
 	switch (paragraph.kind()) {
 		case Paragraph::TEXT_PARAGRAPH:
-		case Paragraph::TREE_PARAGRAPH:
-		{
-			ParagraphProcessor processor(paragraph, myModel.marks(), index(), myElements);
-			processor.fill();
+			ParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			break;
-		}
+		case Paragraph::TREE_PARAGRAPH:
+			TreeParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+			break;
 		case Paragraph::EMPTY_LINE_PARAGRAPH:
 		{
 			processControlParagraph(paragraph);

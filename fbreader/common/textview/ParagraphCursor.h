@@ -55,7 +55,6 @@ public:
 	TextElement *HSpaceElement;
 	TextElement *BeforeParagraphElement;
 	TextElement *AfterParagraphElement;
-	TextElement *IndentElement;
 	TextElement *EmptyLineElement;
 
 	Word *getWord(const char *data, unsigned short length, size_t paragraphOffset);
@@ -77,17 +76,19 @@ private:
 
 	public:
 		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
-		~ParagraphProcessor();
+		virtual ~ParagraphProcessor();
 
 		void fill();
 
 	private:
 		void beforeAddWord();
+		virtual void buildStartOfParagraph();
 		void addWord(const char *ptr, int offset, int len);
 
 	private:
 		bool myCheckBreakableCharacters;
 
+	protected:
 		const Paragraph &myParagraph;
 		TextElementVector &myElements;
 
@@ -95,6 +96,15 @@ private:
 		std::vector<TextMark>::const_iterator myLastMark;
 		int myWordCounter;
 		int myOffset;
+	};
+
+	class TreeParagraphProcessor : public ParagraphProcessor {
+
+	public:
+		TreeParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
+
+	private:
+	  void buildStartOfParagraph();
 	};
 
 protected:
@@ -129,8 +139,8 @@ protected:
 
 private:
 	/* copy constructor & assignment are disabled */
-	ParagraphCursor(const ParagraphCursor &cursor);
-	ParagraphCursor &operator = (const ParagraphCursor &);
+	ParagraphCursor(const ParagraphCursor&);
+	ParagraphCursor &operator = (const ParagraphCursor&);
 	
 protected:
 	const TextModel &myModel;

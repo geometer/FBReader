@@ -94,15 +94,29 @@ private:
 		LineInfo(const WordCursor &word, TextStylePtr style);
 		~LineInfo();
 
-		bool operator < (const LineInfo &info) const;
-
 		WordCursor Start;
+		WordCursor RealStart;
 		WordCursor End;
 		bool IsVisible;
+		int LeftIndent;
 		int Width;
 		int Height;
+		int VSpaceAfter;
 		int SpaceCounter;
 		TextStylePtr StartStyle;
+
+	private:
+		/* copy constructor & assignment are disabled */
+		LineInfo(const LineInfo&);
+		LineInfo &operator = (const LineInfo&);
+	};
+
+	class LineInfoPtr : public shared_ptr<LineInfo> {
+
+	public:
+		LineInfoPtr(LineInfo *ptr);
+
+		bool operator < (const LineInfoPtr &info) const;
 	};
 
 protected:
@@ -195,7 +209,7 @@ private:
 
 	void clear();
 
-	LineInfo processTextLine(const WordCursor &start, const WordCursor &end);
+	LineInfoPtr processTextLine(const WordCursor &start, const WordCursor &end);
 	void drawTextLine(const LineInfo &info);
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift);
@@ -233,8 +247,8 @@ private:
 	} myPaintState;
 	WordCursor myStartCursor;
 	WordCursor myEndCursor;
-	std::vector<LineInfo> myLineInfos;
-	std::set<LineInfo> myLineInfoCache;
+	std::vector<LineInfoPtr> myLineInfos;
+	std::set<LineInfoPtr> myLineInfoCache;
 
 	ScrollingMode myScrollingMode;
 	unsigned int myOverlappingValue;
@@ -256,9 +270,11 @@ inline TextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
-inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), End(word), IsVisible(false), Width(0), Height(0), SpaceCounter(0), StartStyle(style) {}
+inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
 inline TextView::LineInfo::~LineInfo() {}
-inline bool TextView::LineInfo::operator < (const LineInfo &info) const { return Start < info.Start; }
+
+inline TextView::LineInfoPtr::LineInfoPtr(LineInfo *ptr) : shared_ptr<LineInfo>(ptr) {}
+inline bool TextView::LineInfoPtr::operator < (const LineInfoPtr &info) const { return (*this)->Start < info->Start; }
 
 inline TextView::ParagraphPosition::ParagraphPosition(int paragraphNumber, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), YStart(yStart), YEnd(yEnd) {}
 inline TextView::ParagraphPosition::~ParagraphPosition() {}
