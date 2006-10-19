@@ -31,7 +31,7 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myPositionIndicator(*this) {
+TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myPositionIndicator(*this), myTreeStateIsFrozen(false) {
 }
 
 TextView::~TextView() {
@@ -46,6 +46,7 @@ void TextView::clear() {
 
 	myParagraphMap.clear();
 	myTextElementMap.clear();
+	myTreeNodeMap.clear();
 	myTextSize.clear();
 	myTextBreaks.clear();
 
@@ -78,6 +79,7 @@ void TextView::paint() {
 
 	myParagraphMap.clear();
 	myTextElementMap.clear();
+	myTreeNodeMap.clear();
 	context().clear(TextStyleCollection::instance().baseStyle().BackgroundColorOption.value());
 
 	if (empty()) {
@@ -192,6 +194,26 @@ void TextView::gotoMark(TextMark mark) {
 }
 
 void TextView::gotoParagraph(int num, bool last) {
+	if ((myModel != 0) && (myModel->kind() == TextModel::TREE_MODEL)) {
+		if ((num >= 0) && (num < (int)myModel->paragraphsNumber())) {
+			TreeParagraph *tp = (TreeParagraph*)(*myModel)[num];
+			if (myTreeStateIsFrozen) {
+				int corrected = num;
+				TreeParagraph *parent = tp->parent();
+				while ((corrected > 0) && (parent != 0) && !parent->isOpen()) {
+					for (--corrected; ((corrected > 0) && parent != (*myModel)[corrected]); --corrected);
+					parent = parent->parent();
+				}
+				if (last && (corrected != num)) {
+					++corrected;
+				}
+				num = corrected;
+			} else {
+				tp->openTree();
+				rebuildPaintInfo(true);
+			}
+		}
+	}
 	if (last) {
 		if ((num > 0) && (num <= (int)myModel->paragraphsNumber())) {
 			moveEndCursor(num);
@@ -212,7 +234,6 @@ void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber)
 
 void TextView::drawTextLine(const LineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
-	context().moveXTo(info.LeftIndent);
 	int y = context().y();
 	myParagraphMap.push_back(
 		ParagraphPosition(info.RealStart.paragraphCursor().index(), y + 1, y + info.Height)
@@ -226,6 +247,12 @@ void TextView::drawTextLine(const LineInfo &info) {
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
 	bool wordOccured = false;
+
+	context().moveXTo(0);
+	if (!info.NodeInfo.isNull()) {
+		drawTreeLines(*info.NodeInfo, info.Height, info.VSpaceAfter);
+	}
+	context().moveX(info.LeftIndent);
 
 	switch (myStyle.style()->alignment()) {
 		case ALIGN_RIGHT:
@@ -276,9 +303,6 @@ void TextView::drawTextLine(const LineInfo &info) {
 					wordOccured = false;
 					--spaceCounter;
 				}
-				break;
-			case TextElement::TREE_ELEMENT:
-				drawTreeNode(((const TreeElement&)element).treeElementKind(), info.Height);
 				break;
 			case TextElement::INDENT_ELEMENT:
 			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
@@ -378,7 +402,51 @@ void TextView::findPrevious() {
 }
 
 bool TextView::onStylusPress(int x, int y) {
-	return myPositionIndicator.onStylusPress(x, y);
+  if (myModel == 0) {
+	  return false;
+	}
+
+	myTreeStateIsFrozen = true;
+	bool indicatorAnswer = myPositionIndicator.onStylusPress(x, y);
+	myTreeStateIsFrozen = false;
+	if (indicatorAnswer || (myModel->kind() != TextModel::TREE_MODEL)) {
+		return indicatorAnswer;
+	}
+
+	std::vector<TreeNodePosition>::const_iterator it =
+		std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), TreeNodePosition::RangeChecker(x, y));
+	if (it == myTreeNodeMap.end()) {
+		return false;
+	}
+
+	int paragraphNumber = it->ParagraphNumber;
+	TreeParagraph *paragraph = (TreeParagraph*)(*myModel)[paragraphNumber];
+
+	paragraph->open(!paragraph->isOpen());
+	rebuildPaintInfo(true);
+	preparePaintInfo();
+	if (paragraph->isOpen()) {
+		int nextParagraphNumber = paragraphNumber + paragraph->fullSize();
+		int lastParagraphNumber = endCursor().paragraphCursor().index();
+		if (endCursor().isEndOfParagraph()) {
+			++lastParagraphNumber;
+		}
+		if (lastParagraphNumber < nextParagraphNumber) {
+			gotoParagraph(nextParagraphNumber, true);
+			preparePaintInfo();
+		}
+	}
+	int firstParagraphNumber = startCursor().paragraphCursor().index();
+	if (startCursor().isStartOfParagraph()) {
+		--firstParagraphNumber;
+	}
+	if (firstParagraphNumber >= paragraphNumber) {
+		gotoParagraph(paragraphNumber);
+		preparePaintInfo();
+	}
+	repaintView();
+
+	return true;
 }
 
 void TextView::drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) {

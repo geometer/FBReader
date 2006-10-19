@@ -88,8 +88,6 @@ int TextView::ViewStyle::elementWidth(const TextElement &element, unsigned int c
 		case TextElement::AFTER_PARAGRAPH_ELEMENT:
 		case TextElement::EMPTY_LINE_ELEMENT:
 			return context().width() + abs(style()->leftIndent()) + abs(style()->rightIndent()) + abs(style()->firstLineIndentDelta()) + 1;
-		case TextElement::TREE_ELEMENT:
-			return context().stringHeight() * 4 / 3;
 		case TextElement::FORCED_CONTROL_ELEMENT:
 		case TextElement::CONTROL_ELEMENT:
 			return 0;
@@ -104,20 +102,16 @@ int TextView::ViewStyle::elementHeight(const TextElement &element) const {
 				myWordHeight = (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
 			}
 			return myWordHeight;
-		case TextElement::TREE_ELEMENT:
-			return context().stringHeight();
 		case TextElement::IMAGE_ELEMENT:
-		{
-			int shift = std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 3);
-			return context().imageHeight(((const ImageElement&)element).image()) + shift;
-			//return std::min(context().imageHeight(((const ImageElement&)element).image()) + shift, textAreaHeight());
-		}
+			return
+				context().imageHeight(((const ImageElement&)element).image()) +
+				std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 3);
 		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-			return style()->spaceBefore();
+			return - style()->spaceAfter();
 		case TextElement::AFTER_PARAGRAPH_ELEMENT:
-			return style()->spaceAfter();
+			return - style()->spaceBefore();
 		case TextElement::EMPTY_LINE_ELEMENT:
-			return style()->spaceBefore() + context().stringHeight() + style()->spaceAfter();
+			return context().stringHeight();
 		case TextElement::INDENT_ELEMENT:
 		case TextElement::HSPACE_ELEMENT:
 		case TextElement::FORCED_CONTROL_ELEMENT:

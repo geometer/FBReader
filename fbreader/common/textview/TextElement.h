@@ -40,7 +40,6 @@ public:
 		IMAGE_ELEMENT,
 		CONTROL_ELEMENT,
 		FORCED_CONTROL_ELEMENT,
-		TREE_ELEMENT,
 		INDENT_ELEMENT,
 		HSPACE_ELEMENT,
 		BEFORE_PARAGRAPH_ELEMENT,
@@ -109,35 +108,6 @@ private:
 friend class TextElementPool;
 };
 
-class TreeElement : public TextElement {
-
-public:
-	enum TreeElementKind {
-		TREE_ELEMENT_TOPLEVEL_OPEN_NODE,
-		TREE_ELEMENT_TOPLEVEL_CLOSED_NODE,
-		TREE_ELEMENT_OPEN_NODE,
-		TREE_ELEMENT_CLOSED_NODE,
-		TREE_ELEMENT_LEAF,
-		TREE_ELEMENT_TOP_RIGHT_LINE,
-		TREE_ELEMENT_TOP_BOTTOM_RIGHT_LINE,
-		TREE_ELEMENT_VERTICAL_LINE,
-		TREE_ELEMENT_SKIP,
-	};
-
-private:
-	TreeElement(TreeElementKind treeElementKind);
-	~TreeElement();
-
-public:
-	Kind kind() const;
-	TreeElementKind treeElementKind() const;
-
-private:
-	TreeElementKind myTreeElementKind;
-
-friend class TextElementPool;
-};
-
 inline TextElement::TextElement() {}
 inline TextElement::~TextElement() {}
 
@@ -161,10 +131,5 @@ inline TextElement::Kind ControlElement::kind() const { return CONTROL_ELEMENT; 
 inline const ControlEntry &ControlElement::entry() const { return (const ControlEntry&)*myEntry; }
 inline TextKind ControlElement::textKind() const { return entry().kind(); }
 inline bool ControlElement::isStart() const { return entry().isStart(); }
-
-inline TreeElement::TreeElement(TreeElementKind treeElementKind) : myTreeElementKind(treeElementKind) {}
-inline TreeElement::~TreeElement() {}
-inline TextElement::Kind TreeElement::kind() const { return TREE_ELEMENT; };
-inline TreeElement::TreeElementKind TreeElement::treeElementKind() const { return myTreeElementKind; }
 
 #endif /* __TEXTELEMENT_H__ */

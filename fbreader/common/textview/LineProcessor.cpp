@@ -42,14 +42,35 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 	}
 
 	WordCursor current = start;
-	const ParagraphCursor &paragraph = current.paragraphCursor();
-
+	const ParagraphCursor &paragraphCursor = current.paragraphCursor();
 	const bool isFirstLine = current.isStartOfParagraph();
+
+	if (paragraphCursor.paragraph().kind() == Paragraph::TREE_PARAGRAPH) {
+		info.NodeInfo = new TreeNodeInfo();
+		TreeNodeInfo &nodeInfo = *info.NodeInfo;
+		const TreeParagraph &treeParagraph = (const TreeParagraph&)paragraphCursor.paragraph();
+		nodeInfo.IsLeaf = treeParagraph.children().empty();
+		nodeInfo.IsOpen = treeParagraph.isOpen();
+		nodeInfo.IsFirstLine = isFirstLine;
+		nodeInfo.ParagraphNumber = paragraphCursor.index();
+
+		nodeInfo.VerticalLinesStack.reserve(treeParagraph.depth() - 1);
+		if (treeParagraph.depth() > 1) {
+			const TreeParagraph *current = treeParagraph.parent();
+			nodeInfo.VerticalLinesStack.push_back(current->children().back() != &treeParagraph);
+			for (int i = 1; i < treeParagraph.depth() - 1; ++i) {
+				const TreeParagraph *parent = current->parent();
+				nodeInfo.VerticalLinesStack.push_back(current != parent->children().back());
+				current = parent;
+			}
+		}
+	}
+
 	if (isFirstLine) {
-		TextElement::Kind elementKind = paragraph[current.wordNumber()].kind();
+		TextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
 		while ((elementKind == TextElement::CONTROL_ELEMENT) ||
 					 (elementKind == TextElement::FORCED_CONTROL_ELEMENT)) {
-			const TextElement &element = paragraph[current.wordNumber()];
+			const TextElement &element = paragraphCursor[current.wordNumber()];
 			switch (elementKind) {
 				case TextElement::CONTROL_ELEMENT:
 					myStyle.applyControl((const ControlElement&)element);
@@ -64,7 +85,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 			if (current.sameElementAs(end)) {
 				break;
 			}
-			elementKind = paragraph[current.wordNumber()].kind();
+			elementKind = paragraphCursor[current.wordNumber()].kind();
 		}
 		info.StartStyle = myStyle.style();
 		info.RealStart = current;
@@ -76,7 +97,16 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 	if (isFirstLine) {
 		info.LeftIndent += myStyle.style()->firstLineIndentDelta();
 	}
+	if (!info.NodeInfo.isNull()) {
+		info.LeftIndent += myStyle.context().stringHeight() / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
+	}
 	info.Width = info.LeftIndent;
+
+	if (info.RealStart.sameElementAs(end)) {
+	  info.End = info.RealStart;
+		return infoPtr;
+	}
+
 	int newWidth = info.Width;
 	int newHeight = info.Height;
 	int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
@@ -86,10 +116,10 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 	int internalSpaceCounter = 0;
 	int removeLastSpace = false;
 
-	TextElement::Kind elementKind = paragraph[current.wordNumber()].kind();
+	TextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
 
 	do {
-		const TextElement &element = paragraph[current.wordNumber()];
+		const TextElement &element = paragraphCursor[current.wordNumber()];
 		newWidth += myStyle.elementWidth(element, current.charNumber());
 		newHeight = std::max(newHeight, myStyle.elementHeight(element));
 		switch (elementKind) {
@@ -113,7 +143,6 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 				}
 				break;
 			case TextElement::EMPTY_LINE_ELEMENT:
-			case TextElement::TREE_ELEMENT:
 				isVisible = true;
 			default:
 				break;
@@ -127,7 +156,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 		current.nextWord();
 		bool allowBreak = current.sameElementAs(end);
 		if (!allowBreak) {
-			elementKind = paragraph[current.wordNumber()].kind();
+			elementKind = paragraphCursor[current.wordNumber()].kind();
 			allowBreak =
 				((elementKind != TextElement::WORD_ELEMENT) || (previousKind == TextElement::WORD_ELEMENT)) &&
 				(elementKind != TextElement::IMAGE_ELEMENT) &&
@@ -144,7 +173,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 		}
 	} while (!current.sameElementAs(end));
 
-	const TextElement &element = paragraph[current.wordNumber()];
+	const TextElement &element = paragraphCursor[current.wordNumber()];
 	if (TextStyleCollection::instance().baseStyle().AutoHyphenationOption.value() && myStyle.style()->allowHyphenations()) {
 		if (!current.sameElementAs(end) && (element.kind() == TextElement::WORD_ELEMENT)) {
 			newWidth -= myStyle.elementWidth(element, current.charNumber());

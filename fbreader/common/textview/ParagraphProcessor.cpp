@@ -34,25 +34,10 @@ ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragra
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
-	myWordCounter = 0;
 	myOffset = 0;
 }
 
-ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
-}
-
-ParagraphCursor::TreeParagraphProcessor::TreeParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements) : ParagraphProcessor(paragraph, marks, index, elements) {
-}
-
-void ParagraphCursor::ParagraphProcessor::beforeAddWord() {
-	if (myWordCounter == 0) {
-		buildStartOfParagraph();
-	}
-	++myWordCounter;
-}
-
 void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {
-	beforeAddWord();
 	Word *word = TextElementPool::Pool.getWord(ptr, len, offset);
 	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		TextMark mark = *mit;
@@ -75,7 +60,6 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
-				beforeAddWord();
 				const ZLImage *image = ((ImageEntry&)*it.entry()).image();
 				if (image != 0) {
 					shared_ptr<ZLImageData> data = ZLImageManager::instance().imageData(*image);
@@ -147,46 +131,5 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				break;
 			}
 		}
-	}
-}
-
-void ParagraphCursor::ParagraphProcessor::buildStartOfParagraph() {
-}
-
-void ParagraphCursor::TreeParagraphProcessor::buildStartOfParagraph() {
-	TreeParagraph &tp = (TreeParagraph&)myParagraph;
-
-	std::vector<TreeElement::TreeElementKind> kinds;
-	kinds.reserve(tp.depth() + 1);
-
-	if (tp.children().empty()) {
-		kinds.push_back((tp.depth() == 1) ? TreeElement::TREE_ELEMENT_SKIP : TreeElement::TREE_ELEMENT_LEAF);
-	} else if (tp.isOpen()) {
-		kinds.push_back((tp.depth() == 1) ? TreeElement::TREE_ELEMENT_TOPLEVEL_OPEN_NODE : TreeElement::TREE_ELEMENT_OPEN_NODE);
-	} else {
-		kinds.push_back((tp.depth() == 1) ? TreeElement::TREE_ELEMENT_TOPLEVEL_CLOSED_NODE : TreeElement::TREE_ELEMENT_CLOSED_NODE);
-	}
-
-	if (tp.depth() > 1) {
-		const TreeParagraph *current = tp.parent();
-		kinds.push_back(
-			(current->children().back() == &tp) ?
-			TreeElement::TREE_ELEMENT_TOP_RIGHT_LINE :
-			TreeElement::TREE_ELEMENT_TOP_BOTTOM_RIGHT_LINE
-		);
-		const TreeParagraph *parent;
-		for (int i = 1; i < tp.depth() - 1; ++i) {
-			parent = current->parent();
-			kinds.push_back(
-				(current == parent->children().back()) ?
-				TreeElement::TREE_ELEMENT_SKIP :
-				TreeElement::TREE_ELEMENT_VERTICAL_LINE
-			);
-			current = parent;
-		}
-	}
-
-	for (std::vector<TreeElement::TreeElementKind>::reverse_iterator it = kinds.rbegin(); it != kinds.rend(); ++it) {
-		myElements.push_back(TextElementPool::Pool.getTreeElement(*it));
 	}
 }

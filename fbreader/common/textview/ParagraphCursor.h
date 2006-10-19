@@ -61,12 +61,10 @@ public:
 	void storeWord(Word *word);
 	ControlElement *getControlElement(shared_ptr<ParagraphEntry> entry);
 	void storeControlElement(ControlElement *element);
-	TreeElement *getTreeElement(TreeElement::TreeElementKind kind);
 
 private:
 	Allocator<sizeof(Word),64> myWordAllocator;
 	Allocator<sizeof(ControlElement),32> myControlAllocator;
-	std::map<TreeElement::TreeElementKind,TreeElement*> myTreeElementMap;
 };
 
 class ParagraphCursor {
@@ -76,13 +74,10 @@ private:
 
 	public:
 		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
-		virtual ~ParagraphProcessor();
 
 		void fill();
 
 	private:
-		void beforeAddWord();
-		virtual void buildStartOfParagraph();
 		void addWord(const char *ptr, int offset, int len);
 
 	private:
@@ -94,17 +89,7 @@ private:
 
 		std::vector<TextMark>::const_iterator myFirstMark;
 		std::vector<TextMark>::const_iterator myLastMark;
-		int myWordCounter;
 		int myOffset;
-	};
-
-	class TreeParagraphProcessor : public ParagraphProcessor {
-
-	public:
-		TreeParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
-
-	private:
-	  void buildStartOfParagraph();
 	};
 
 protected:
@@ -127,8 +112,7 @@ public:
 	shared_ptr<ParagraphCursor> cursor(size_t index) const;
 
 	const TextElement &operator [] (size_t index) const;
-
-protected:
+	const Paragraph &paragraph() const;
 
 private:
 	void processControlParagraph(const Paragraph &paragraph);
@@ -262,6 +246,7 @@ inline void TextElementPool::storeControlElement(ControlElement *element) {
 
 inline size_t ParagraphCursor::index() const { return myIndex; }
 inline const TextElement &ParagraphCursor::operator [] (size_t index) const { return *myElements[index]; }
+inline const Paragraph &ParagraphCursor::paragraph() const { return *myModel[myIndex]; }
 inline size_t ParagraphCursor::paragraphLength() const { return myElements.size(); }
 
 inline WordCursor::WordCursor() : myWordNumber(0), myCharNumber(0) {}

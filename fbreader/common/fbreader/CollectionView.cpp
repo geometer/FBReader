@@ -39,7 +39,7 @@ static const std::string LIBRARY = "Library";
 static const std::string deleteImageId = "deleteImage";
 //static const std::string orderImageId = "orderImage";
 
-CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : TreeView(reader, context) {
+CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
 	myTreeModel = 0;
 	//myImageMap[orderImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
 	myImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
@@ -121,7 +121,7 @@ void CollectionView::rebuild() {
 }
 
 bool CollectionView::onStylusPress(int x, int y) {
-	if (TreeView::onStylusPress(x, y)) {
+	if (FBView::onStylusPress(x, y)) {
 		return true;
 	}
 

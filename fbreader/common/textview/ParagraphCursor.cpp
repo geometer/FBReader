@@ -43,7 +43,6 @@ TextElementVector::~TextElementVector() {
 			case TextElement::FORCED_CONTROL_ELEMENT:
 				delete *it;
 				break;
-			case TextElement::TREE_ELEMENT:
 			case TextElement::INDENT_ELEMENT:
 			case TextElement::HSPACE_ELEMENT:
 			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
@@ -66,18 +65,6 @@ TextElementPool::~TextElementPool() {
 	delete BeforeParagraphElement;
 	delete AfterParagraphElement;
 	delete EmptyLineElement;
-	for (std::map<TreeElement::TreeElementKind, TreeElement*>::iterator it = myTreeElementMap.begin(); it != myTreeElementMap.end(); ++it) {
-		delete it->second;
-	}
-}
-
-TreeElement *TextElementPool::getTreeElement(TreeElement::TreeElementKind kind) {
-	TreeElement *te = myTreeElementMap[kind];
-	if (te == 0) {
-		te = new TreeElement(kind);
-		myTreeElementMap[kind] = te;
-	}
-	return te;
 }
 
 ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
@@ -218,29 +205,21 @@ void ParagraphCursor::fill() {
 	const Paragraph &paragraph = *myModel[myIndex];
 	switch (paragraph.kind()) {
 		case Paragraph::TEXT_PARAGRAPH:
+		case Paragraph::TREE_PARAGRAPH:
 			ParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			break;
-		case Paragraph::TREE_PARAGRAPH:
-			TreeParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
-			break;
 		case Paragraph::EMPTY_LINE_PARAGRAPH:
-		{
 			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.EmptyLineElement);
 			break;
-		}
 		case Paragraph::BEFORE_SKIP_PARAGRAPH:
-		{
 			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.BeforeParagraphElement);
 			break;
-		}
 		case Paragraph::AFTER_SKIP_PARAGRAPH:
-		{
 			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.AfterParagraphElement);
 			break;
-		}
 		case Paragraph::END_OF_SECTION_PARAGRAPH:
 		case Paragraph::END_OF_TEXT_PARAGRAPH:
 			break;
@@ -286,7 +265,9 @@ void WordCursor::setCharNumber(int charNumber) {
 	if (charNumber > 0) {
 		const TextElement &element = (*myParagraphCursor)[myWordNumber];
 		if (element.kind() == TextElement::WORD_ELEMENT) {
-			myCharNumber = std::min(charNumber, (int)((const Word&)element).Length - 1);
+			if (charNumber < (int)((const Word&)element).Length - 1) {
+				myCharNumber = charNumber;
+			}
 		}
 	}
 }
@@ -299,8 +280,8 @@ void WordCursor::moveTo(int wordNumber, int charNumber) {
 		} else {
 			wordNumber = std::max(0, wordNumber);
 			int size = myParagraphCursor->paragraphLength();
-			if (wordNumber > size) {
-				myWordNumber = size;
+			if (wordNumber > size - 1) {
+				myWordNumber = size - 1;
 				myCharNumber = 0;
 			} else {
 				myWordNumber = wordNumber;

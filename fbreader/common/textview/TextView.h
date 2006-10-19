@@ -90,6 +90,14 @@ private:
 		mutable int myWordHeight;
 	};
 
+	struct TreeNodeInfo {
+		bool IsLeaf;
+		bool IsOpen;
+		bool IsFirstLine;
+		int ParagraphNumber;
+		std::vector<bool> VerticalLinesStack;
+	};
+
 	struct LineInfo {
 		LineInfo(const WordCursor &word, TextStylePtr style);
 		~LineInfo();
@@ -104,6 +112,7 @@ private:
 		int VSpaceAfter;
 		int SpaceCounter;
 		TextStylePtr StartStyle;
+		shared_ptr<TreeNodeInfo> NodeInfo;
 
 	private:
 		/* copy constructor & assignment are disabled */
@@ -124,7 +133,6 @@ protected:
 		int ParagraphNumber;
 		int YStart, YEnd;
 		ParagraphPosition(int paragraphNumber, int yStart, int yEnd);
-		~ParagraphPosition();
 
 		struct RangeChecker {
 			RangeChecker(int y) : myY(y) {}
@@ -141,11 +149,27 @@ protected:
 		TextElement::Kind Kind;
 		int XStart, XEnd, YStart, YEnd;
 		TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
-		~TextElementPosition();
 
 		struct RangeChecker {
 			RangeChecker(int x, int y) : myX(x), myY(y) {}
 			bool operator()(const TextElementPosition &position) const {
+				return
+					(myX >= position.XStart) && (myX <= position.XEnd) &&
+					(myY >= position.YStart) && (myY <= position.YEnd);
+			}
+
+			int myX, myY;
+		};
+	};
+
+	struct TreeNodePosition {
+		int ParagraphNumber;
+		int XStart, XEnd, YStart, YEnd;
+		TreeNodePosition(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd);
+
+		struct RangeChecker {
+			RangeChecker(int x, int y) : myX(x), myY(y) {}
+			bool operator()(const TreeNodePosition &position) const {
 				return
 					(myX >= position.XStart) && (myX <= position.XEnd) &&
 					(myY >= position.YStart) && (myY <= position.YEnd);
@@ -213,7 +237,7 @@ private:
 	void drawTextLine(const LineInfo &info);
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift);
-	void drawTreeNode(TreeElement::TreeElementKind kind, int height);
+	void drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
 	WordCursor findLineFromStart(unsigned int overlappingValue) const;
@@ -257,6 +281,7 @@ private:
 
 	std::vector<ParagraphPosition> myParagraphMap;
 	std::vector<TextElementPosition> myTextElementMap;
+	std::vector<TreeNodePosition> myTreeNodeMap;
 
 	std::vector<size_t> myTextSize;
 	std::vector<size_t> myTextBreaks;
@@ -264,6 +289,8 @@ private:
 	ViewStyle myStyle;
 
 	PositionIndicator myPositionIndicator;
+
+	bool myTreeStateIsFrozen;
 };
 
 inline TextView::ViewStyle::~ViewStyle() {}
@@ -277,10 +304,10 @@ inline TextView::LineInfoPtr::LineInfoPtr(LineInfo *ptr) : shared_ptr<LineInfo>(
 inline bool TextView::LineInfoPtr::operator < (const LineInfoPtr &info) const { return (*this)->Start < info->Start; }
 
 inline TextView::ParagraphPosition::ParagraphPosition(int paragraphNumber, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), YStart(yStart), YEnd(yEnd) {}
-inline TextView::ParagraphPosition::~ParagraphPosition() {}
 
 inline TextView::TextElementPosition::TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), Kind(kind), XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
-inline TextView::TextElementPosition::~TextElementPosition() {}
+
+inline TextView::TreeNodePosition::TreeNodePosition(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 
 inline bool TextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const WordCursor &TextView::startCursor() const { return myStartCursor; }
@@ -288,7 +315,7 @@ inline const WordCursor &TextView::endCursor() const { return myEndCursor; }
 inline const std::string &TextView::fileName() const { return myFileName; }
 inline const TextModel *TextView::model() const { return myModel; }
 inline int TextView::infoSize(const LineInfo &info, SizeUnit unit) {
-	return (unit == PIXEL_UNIT) ? info.Height : (info.IsVisible ? 1 : 0);
+	return (unit == PIXEL_UNIT) ? (info.Height + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
 }
 
 #endif /* __TEXTVIEW_H__ */

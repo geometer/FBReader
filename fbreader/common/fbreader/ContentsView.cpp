@@ -26,7 +26,7 @@
 #include "../bookmodel/BookModel.h"
 #include "../model/Paragraph.h"
 
-ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : TreeView(reader, context) {
+ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
 }
 
 ContentsView::~ContentsView() {
@@ -34,7 +34,7 @@ ContentsView::~ContentsView() {
 }
 
 bool ContentsView::onStylusPress(int x, int y) {
-	if (TreeView::onStylusPress(x, y)) {
+	if (FBView::onStylusPress(x, y)) {
 		return true;
 	}
 

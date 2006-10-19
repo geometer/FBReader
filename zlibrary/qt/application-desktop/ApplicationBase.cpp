@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,27 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TREEVIEW_H__
-#define __TREEVIEW_H__
+#include <abstract/ZLApplication.h>
 
-#include <map>
-
-#include "FBView.h"
-
-class TreeModel;
-class PlainTextModel;
-class Paragraph;
-
-class TreeView : public FBView {
-
-public:
-	TreeView(FBReader &reader, ZLPaintContext &context);
-
-	void gotoParagraph(int num, bool last = false);
-	bool onStylusPress(int x, int y);
-
-private:
-	bool myTreeStateIsFrozen;
-};
-
-#endif /* __TREEVIEW_H__ */
+const std::string ZLApplicationBase::BaseDirectory = std::string(INSTALLDIR) + "/share";
+const std::string ZLApplicationBase::HomeDirectory = "~";
+const std::string ZLApplicationBase::PathDelimiter = "/";

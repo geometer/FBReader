@@ -24,7 +24,7 @@
 
 #include <map>
 
-#include "TreeView.h"
+#include "FBView.h"
 #include "../description/BookDescription.h"
 #include "../collection/BookCollection.h"
 
@@ -32,7 +32,7 @@ class TreeModel;
 class PlainTextModel;
 class Paragraph;
 
-class CollectionView : public TreeView {
+class CollectionView : public FBView {
 
 public:
 	static const std::string DeleteBookImageFile;
