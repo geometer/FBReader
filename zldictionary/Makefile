@@ -45,7 +45,7 @@ $(TARGET): .objects
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 	@echo " OK"
 
-install: $(TARGET)
+do_install:
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 

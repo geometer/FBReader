@@ -14,13 +14,15 @@ all:
 		cd $(ROOTDIR); \
 	done;
 
-install: all
+install: all do_install
+
+do_install:
 	@for dir in $(LIBDIRS) $(APPDIR); do \
 		cd $$dir; make $@; cd $(ROOTDIR); \
 	done
 
 package: all
-	cd $(APPDIR); make package
+	@cd $(APPDIR); make package
 
 clean:
 	@for dir in $(LIBDIRS) $(APPDIR); do \

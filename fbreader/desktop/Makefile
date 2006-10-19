@@ -25,12 +25,12 @@ install:
 	@install -m 0644 ../data/default/styles.desktop.xml $(SHARE_FBREADER)/default/styles.xml
 
 tarball:
-	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) install
+	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@fakeroot tar czf $(TARBALL) -C $(TMPDIR) .
 	@$(RM_QUIET) $(TMPDIR)
 
 debpackage:
-	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) install
+	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed "s/VERSION/$(VERSION)/" debian/control-$(UI_TYPE).in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg -b $(TMPDIR) $(DEBIAN_PACKAGE)

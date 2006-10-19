@@ -86,7 +86,7 @@ ifeq "$(TARGET_ARCH)" "maemo"
   ENCODING_FILES = $(filter-out %/Big5,$(wildcard data/encodings/*))
 endif
 
-install: $(TARGET)
+do_install:
 	@install -d $(SHARE_ZLIBRARY)
 	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/keynames.xml
 	@install -d $(SHARE_ZLIBRARY)/encodings

@@ -47,9 +47,7 @@ all:
 	$(LD) $(LDFLAGS) -o $(TARGET) `find common -name *.o` $(TARGET_ARCH)/$(UI_TYPE)/*.o $(LIBS)
 	@echo " OK"
 
-install: all .really-install
-
-.really-install:
+do_install:
 	@install -d $(DESTDIR)$(BINDIR)
 	@install $(TARGET) $(DESTDIR)$(BINDIR)
 	@install -d $(DESTDIR)$(SHAREDIR)/FBReader
