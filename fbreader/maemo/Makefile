@@ -60,8 +60,7 @@ $(SERVICE_FILE): $(SERVICE_FILE).in
 
 package:
 	@mkdir -p $(TMPDIR)
-	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) install
-	@make DESTDIR=$(PWD)/$(TMPDIR) install
+	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(DEBIAN_VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \

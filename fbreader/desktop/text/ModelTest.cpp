@@ -8,13 +8,9 @@
 #include "../../common/bookmodel/BookModel.h"
 #include "../../common/bookmodel/BookReader.h"
 
-#include "../../common/Files.h"
 #include "../../common/collection/BookCollection.h"
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
-
-const std::string Files::PathPrefix = std::string(INSTALLDIR) + "/share/FBReader/";
-const std::string Files::PathDelimiter = "/";
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
 

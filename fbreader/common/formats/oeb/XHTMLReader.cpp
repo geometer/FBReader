@@ -29,7 +29,6 @@
 
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
-#include "../../Files.h"
 
 std::map<std::string,XHTMLTagAction*> XHTMLReader::ourTagActions;
 

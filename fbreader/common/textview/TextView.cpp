@@ -227,7 +227,8 @@ void TextView::gotoParagraph(int num, bool last) {
 
 void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber) {
 	gotoParagraph(paragraphNumber, false);
-	if ((int)startCursor().paragraphCursor().index() == paragraphNumber) {
+	if (!myStartCursor.isNull() && 
+			((int)myStartCursor.paragraphCursor().index() == paragraphNumber)) {
 		moveStartCursor(paragraphNumber, wordNumber, charNumber);
 	}
 }

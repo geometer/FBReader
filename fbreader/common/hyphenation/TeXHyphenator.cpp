@@ -30,7 +30,6 @@
 
 #include "TeXHyphenator.h"
 #include "HyphenationReader.h"
-#include "../Files.h"
 
 Hyphenator &Hyphenator::instance() {
 	if (ourInstance == 0) {

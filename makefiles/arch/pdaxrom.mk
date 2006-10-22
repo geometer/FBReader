@@ -1,11 +1,7 @@
 INSTALLDIR = /usr
 ifeq "$(UI_TYPE)" "qt"
 	BINDIR = /usr/lib/qt/bin
-else # UI_TYPE == gtk
-	BINDIR = /usr/bin
 endif
-LIBDIR=$(INSTALLDIR)/lib
-SHAREDIR=$(INSTALLDIR)/share
 
 USRPATH = $(BASEPATH)/armv5tel-cacko-linux
 CC = $(BASEPATH)/bin/armv5tel-linux-gcc -I $(BASEPATH)/include

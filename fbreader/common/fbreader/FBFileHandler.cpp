@@ -27,7 +27,6 @@
 #include <abstract/ZLApplication.h>
 
 #include "FBFileHandler.h"
-#include "../Files.h"
 #include "../formats/FormatPlugin.h"
 
 const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const {

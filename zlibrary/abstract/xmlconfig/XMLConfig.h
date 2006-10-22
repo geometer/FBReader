@@ -68,6 +68,7 @@ private:
 	void load();
 	void saveAll();
 	void saveDelta();
+	std::string configDirName() const;
 
 	int changesCounter() const;
 

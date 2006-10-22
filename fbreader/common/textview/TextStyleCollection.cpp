@@ -19,10 +19,10 @@
  * 02110-1301, USA.
  */
 
+#include <abstract/ZLApplication.h>
 #include <abstract/ZLXMLReader.h>
 
 #include "TextStyle.h"
-#include "../Files.h"
 
 TextStyleCollection *TextStyleCollection::ourInstance = NULL;
 
@@ -135,7 +135,7 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 
 TextStyleCollection::TextStyleCollection() :
 	myBaseStyle(0) {
-	StyleReader(*this).readDocument(Files::DefaultFilesPathPrefix() + "styles.xml");
+	StyleReader(*this).readDocument(ZLApplication::DefaultFilesPathPrefix() + "styles.xml");
 	if (myBaseStyle.isNull()) {
 		myBaseStyle = new BaseTextStyle("", 20);
 	}

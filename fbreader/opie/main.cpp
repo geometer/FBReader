@@ -28,7 +28,6 @@
 #include <qtopia/QDeviceInfo.h>
 #include <opie/QPaintContext.h>
 
-#include "../common/Files.h"
 #include "../common/fbreader/FBReader.h"
 
 int main(int argc, char **argv) {

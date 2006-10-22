@@ -29,7 +29,6 @@
 #include <gtk-pdaxrom/GtkPaintContext.h>
 #include <gtk-pdaxrom/GtkApplicationWindow.h>
 
-#include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
 
 int main(int argc, char **argv) {

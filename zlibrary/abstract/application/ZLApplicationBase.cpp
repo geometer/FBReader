@@ -24,6 +24,10 @@
 
 #include "../xmlconfig/XMLOptions.h"
 
+const std::string ZLApplicationBase::BaseDirectory = std::string(BASEDIR);
+const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
+const std::string ZLApplicationBase::PathDelimiter = "/";
+
 std::string ZLApplicationBase::ourApplicationName;
 
 class ConfigSaverRunnable : public ZLRunnable {
@@ -54,4 +58,8 @@ const std::string ZLApplicationBase::ApplicationDirectory() {
 
 const std::string ZLApplicationBase::ZLibraryDirectory() {
 	return BaseDirectory + PathDelimiter + "zlibrary";
+}
+
+const std::string ZLApplicationBase::DefaultFilesPathPrefix() {
+	return ApplicationDirectory() + PathDelimiter + "default" + PathDelimiter;
 }

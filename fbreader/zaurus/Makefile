@@ -47,7 +47,7 @@ install:
 .ipk:
 	@rm -rf $(TDIR)
 	@mkdir -p $(DATADIR) $(CTRLDIR)
-	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
+	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) do_install
 	@echo "Package: $(PACKAGENAME)" > $(CTRLDIR)/control
 	@echo -n "Installed-Size: " >> $(CTRLDIR)/control
 	@du -b -s $(DATADIR) | sed -e 's/[	 ].*//' >> $(CTRLDIR)/control

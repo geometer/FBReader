@@ -19,17 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLApplication.h>
-#include <qt-pdaxrom/QApplicationWindow.h>
-
-#include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
-const std::string ZLApplicationBase::BaseDirectory = "/usr/share";
-const std::string ZLApplicationBase::PathDelimiter = "/";
-const std::string ZLApplicationBase::HomeDirectory = "~";
-
 const std::string FBFileHandler::ImageDirectory = "FBReader";
-
-const std::string QApplicationWindow::ImageDirectory = "/usr/share/pixmaps";
-const std::string CollectionView::DeleteBookImageFile = QApplicationWindow::ImageDirectory + "/FBReader/remove.png";

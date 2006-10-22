@@ -19,13 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLApplication.h>
-#include <qt-desktop/QApplicationWindow.h>
-
-#include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
 const std::string FBFileHandler::ImageDirectory = "FBReader";
-
-const std::string QApplicationWindow::ImageDirectory = std::string(INSTALLDIR) + "/share/FBReader/icons";
-const std::string CollectionView::DeleteBookImageFile = QApplicationWindow::ImageDirectory + "/FBReader/remove.png";

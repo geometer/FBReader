@@ -29,7 +29,6 @@
 #include <qtopia/QPaintContext.h>
 
 #include "../common/fbreader/FBReader.h"
-#include "../common/Files.h"
 
 int main(int argc, char **argv) {
 	QPEApplication application(argc, argv);

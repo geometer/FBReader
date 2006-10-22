@@ -23,7 +23,6 @@
 #include <abstract/ZLStringUtil.h>
 
 #include "FBReader.h"
-#include "../Files.h"
 
 static const std::string BINDINGS_NUMBER = "Number";
 static const std::string BINDED_KEY = "Key";
@@ -57,7 +56,7 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 static const std::string KeymapFile = "keymap.xml";
 
 void KeyBindingsReader::readBindings() {
-	readDocument(Files::DefaultFilesPathPrefix() + KeymapFile);
+	readDocument(ZLApplication::DefaultFilesPathPrefix() + KeymapFile);
 }
 
 FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {

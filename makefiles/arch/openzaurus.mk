@@ -3,9 +3,6 @@ ifeq "$(UI_TYPE)" "opie"
 else # UI_TYPE == gpe
 	INSTALLDIR = /usr
 endif
-BINDIR=$(INSTALLDIR)/bin
-LIBDIR=$(INSTALLDIR)/lib
-SHAREDIR=$(INSTALLDIR)/share
 
 BASEPATH = /opt/openzaurus-3.5.4/usr/local/arm/oe
 TOOLSPATH = $(BASEPATH)/bin
@@ -31,5 +28,5 @@ else
 	UILIBS = -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0
 endif
 
-CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DINSTALLDIR=\"$(INSTALLDIR)\" -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
+CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
 LDFLAGS = -Wl,-rpath,$(LIBDIR)

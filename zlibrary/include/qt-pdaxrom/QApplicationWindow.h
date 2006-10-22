@@ -1,1 +1,0 @@
-../../qt/application-pdaxrom/QApplicationWindow.h

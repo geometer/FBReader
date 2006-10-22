@@ -32,7 +32,7 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBReader.h"
 
-const std::string ImageDirectory = std::string(INSTALLDIR) + "/share/FBReader/icons";
+const std::string ImageDirectory = std::string(BASEDIR) + "/FBReader/icons";
 const std::string CollectionView::DeleteBookImageFile = ImageDirectory + "/FBReader/remove.png";
 
 int main(int argc, char **argv) {

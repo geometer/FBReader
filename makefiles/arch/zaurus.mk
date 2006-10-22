@@ -1,7 +1,4 @@
-INSTALLDIR=/opt/QtPalmtop
-BINDIR=$(INSTALLDIR)/bin
-LIBDIR=$(INSTALLDIR)/lib
-SHAREDIR=$(INSTALLDIR)/share
+INSTALLDIR = /opt/QtPalmtop
 
 QTPATH = /opt/Qtopia/sharp
 TOOLSPATH = /opt/Embedix/tools/arm-linux/bin

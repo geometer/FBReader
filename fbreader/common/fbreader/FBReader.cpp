@@ -37,7 +37,6 @@
 #include "InfoDialog.h"
 #include "FBFileHandler.h"
 
-#include "../Files.h"
 #include "../FBOptions.h"
 #include "../bookmodel/BookModel.h"
 #include "../collection/BookList.h"

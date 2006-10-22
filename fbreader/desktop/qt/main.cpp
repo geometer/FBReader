@@ -26,10 +26,13 @@
 #include <qt/QDialogManager.h>
 #include <qt/QImageManager.h>
 #include <qt/QDeviceInfo.h>
-#include <qt-desktop/QApplicationWindow.h>
 #include <qt/QPaintContext.h>
 
 #include "../../common/fbreader/FBReader.h"
+#include "../../common/fbreader/CollectionView.h"
+
+const std::string ImageDirectory = std::string(BASEDIR) + "/FBReader/icons";
+const std::string CollectionView::DeleteBookImageFile = ImageDirectory + "/FBReader/remove.png";
 
 int main(int argc, char **argv) {
 	QApplication application(argc, argv);
@@ -38,7 +41,7 @@ int main(int argc, char **argv) {
 	ZLUnixFSManager::createInstance();
 	QDialogManager::createInstance();
 	QImageManager::createInstance();
-	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QApplicationWindow::ImageDirectory);
+	((QDialogManager&)QDialogManager::instance()).setPixmapPath(ImageDirectory);
 	QDeviceInfo::createInstance();
 
 	FBReader *reader = new FBReader(new QPaintContext(), argc == 1 ? std::string() : argv[1]);

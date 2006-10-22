@@ -40,6 +40,7 @@ public:
 	static const std::string &ApplicationName();
 	static const std::string ZLibraryDirectory();
 	static const std::string ApplicationDirectory();
+	static const std::string DefaultFilesPathPrefix();
 
 private:
 	static std::string ourApplicationName;

@@ -31,9 +31,6 @@ class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
 
 public:
-	static const std::string ImageDirectory;
-	
-public:
 	QApplicationWindow(ZLApplication *application);
 	~QApplicationWindow();
 

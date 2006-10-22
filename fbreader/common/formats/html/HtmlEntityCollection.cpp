@@ -25,7 +25,6 @@
 #include <abstract/ZLApplication.h>
 
 #include "HtmlEntityCollection.h"
-#include "../../Files.h"
 
 class CollectionReader : public ZLXMLReader {
 

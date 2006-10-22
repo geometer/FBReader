@@ -30,7 +30,6 @@
 #include <gtk/GtkDeviceInfo.h>
 #include <gpe/GtkPaintContext.h>
 
-#include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
 
 int main(int argc, char **argv) {

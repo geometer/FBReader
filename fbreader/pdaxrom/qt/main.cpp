@@ -27,10 +27,12 @@
 #include <qt/QImageManager.h>
 #include <qt/QDeviceInfo.h>
 #include <qt/QPaintContext.h>
-#include <qt-pdaxrom/QApplicationWindow.h>
 
-#include "../../common/Files.h"
 #include "../../common/fbreader/FBReader.h"
+#include "../../common/fbreader/CollectionView.h"
+
+const std::string ImageDirectory = "/usr/share/pixmaps";
+const std::string CollectionView::DeleteBookImageFile = ImageDirectory + "/FBReader/remove.png";
 
 int main(int argc, char **argv) {
 	QApplication application(argc, argv);
@@ -39,7 +41,7 @@ int main(int argc, char **argv) {
 	ZLQtTimeManager::createInstance();
 	ZLUnixFSManager::createInstance();
 	QDialogManager::createInstance();
-	((QDialogManager&)QDialogManager::instance()).setPixmapPath(QApplicationWindow::ImageDirectory);
+	((QDialogManager&)QDialogManager::instance()).setPixmapPath(ImageDirectory);
 	QImageManager::createInstance();
 	QDeviceInfo::createInstance();
 

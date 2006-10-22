@@ -122,6 +122,7 @@ void QApplicationWindow::closeEvent(QCloseEvent *event) {
 void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
+		static const std::string ImageDirectory = ((QDialogManager&)ZLDialogManager::instance()).getPixmapPath();
 		QPixmap icon((ImageDirectory + "/" + ZLApplication::ApplicationName() + "/" + buttonItem.iconName() + ".png").c_str());
 		ToolBarAction *action = new ToolBarAction(this, buttonItem);
 		action->setIconSet(QIconSet(icon));

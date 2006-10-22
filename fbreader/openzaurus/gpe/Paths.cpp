@@ -25,10 +25,6 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
-const std::string ZLApplicationBase::BaseDirectory = "/usr/share";
-const std::string ZLApplicationBase::PathDelimiter = "/";
-const std::string ZLApplicationBase::HomeDirectory = "~";
-
 const std::string FBFileHandler::ImageDirectory = "fbreader";
 
 const std::string GtkApplicationWindow::ImageDirectory = "/usr/share/pixmaps";
