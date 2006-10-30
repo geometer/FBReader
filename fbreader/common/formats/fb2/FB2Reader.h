@@ -22,7 +22,7 @@
 #ifndef __FB2READER_H__
 #define __FB2READER_H__
 
-#include <abstract/ZLXMLReader.h>
+#include <ZLXMLReader.h>
 
 class FB2Reader : public ZLXMLReader {
 

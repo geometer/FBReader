@@ -18,7 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLStringUtil.h>
+#include <ZLStringUtil.h>
 
 #include "ZLFSDir.h"
 #include "ZLFSManager.h"
@@ -29,6 +29,13 @@
 #include "bzip2/ZLBzip2InputStream.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
+
+void ZLFSManager::deleteInstance() {
+	if (ourInstance != 0) {
+		delete ourInstance;
+		ourInstance = 0;
+	}
+}
 
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);

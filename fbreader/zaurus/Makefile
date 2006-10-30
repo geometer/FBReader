@@ -13,22 +13,22 @@ CTRLDIR = $(TDIR)/control
 PACKAGENAME = FBReader
 CONTROLFILE = $(PACKAGENAME).control
 
+ifeq "$(UI_TYPE)" "qtopia-240x320"
+  RESOLUTION = 240x320
+  PICS_FROM = 18x15
+  PICS_TO = pics
+else # UI_TYPE == qtopia-640x480
+  RESOLUTION = 640x480
+  PICS_FROM = 34x28
+  PICS_TO = pics144
+endif
+
 version = $(shell cat ../VERSION)
 depends = expat,libenca,libbz2
 package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
 
-all:
-	@$(MAKE) RESOLUTION=240x320 .ipk
-	@$(MAKE) RESOLUTION=640x480 .ipk
+all: .ipk
 	@mv *.ipk ../..
-
-ifeq "$(RESOLUTION)" "240x320"
-  PICS_FROM = 18x15
-  PICS_TO = pics
-else # RESOLUTION == 640x480
-  PICS_FROM = 34x28
-  PICS_TO = pics144
-endif
 
 install:
 	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/help

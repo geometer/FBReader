@@ -1,4 +1,9 @@
 INSTALLDIR = /opt/QtPalmtop
+ifeq "$(UI_TYPE)" "qtopia-240x320"
+  IMAGEDIR = $(INSTALLDIR)/pics
+else # UI_TYPE == qtopia-640x480
+  IMAGEDIR = $(INSTALLDIR)/pics144
+endif
 
 QTPATH = /opt/Qtopia/sharp
 TOOLSPATH = /opt/Embedix/tools/arm-linux/bin

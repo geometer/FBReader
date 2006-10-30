@@ -29,7 +29,7 @@
 #include <gtk/gtkscrolledwindow.h>
 
 // Hmm, desktop? // TODO: check
-#include <desktop/ZLDesktopOptionsDialog.h>
+#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
 class GtkOptionView;
 

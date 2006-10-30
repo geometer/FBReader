@@ -25,7 +25,7 @@
 #include <vector>
 #include <map>
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 class ZLEncodingConverter {
 

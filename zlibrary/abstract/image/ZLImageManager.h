@@ -21,7 +21,7 @@
 #ifndef __ZLIMAGEMANAGER_H__
 #define __ZLIMAGEMANAGER_H__
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 class ZLImage;
 class ZLMultiImage;
@@ -74,6 +74,5 @@ private:
 inline void ZLImageData::setGrayPixel(unsigned char c) { setPixel(c, c, c); }
 
 inline const ZLImageManager &ZLImageManager::instance() { return *ourInstance; }
-inline void ZLImageManager::deleteInstance() { delete ourInstance; }
 
 #endif /* __IMAGEMANAGER_H__ */

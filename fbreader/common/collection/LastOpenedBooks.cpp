@@ -21,8 +21,8 @@
 
 #include <algorithm>
 
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLOptions.h>
+#include <ZLStringUtil.h>
+#include <ZLOptions.h>
 
 #include "BookCollection.h"
 

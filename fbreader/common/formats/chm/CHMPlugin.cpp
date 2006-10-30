@@ -22,9 +22,9 @@
 #include <iostream>
 #include <map>
 
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFile.h>
-#include <abstract/ZLInputStream.h>
+#include <ZLStringUtil.h>
+#include <ZLFile.h>
+#include <ZLInputStream.h>
 
 #include "CHMPlugin.h"
 //#include "CHMDescriptionReader.h"

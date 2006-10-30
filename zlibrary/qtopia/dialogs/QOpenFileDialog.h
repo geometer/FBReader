@@ -27,7 +27,7 @@
 #include <qlistview.h>
 
 #include "FullScreenDialog.h"
-#include <abstract/ZLOpenFileDialog.h>
+#include <ZLOpenFileDialog.h>
 
 class QVBox;
 class QLineEdit;

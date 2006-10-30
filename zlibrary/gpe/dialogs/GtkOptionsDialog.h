@@ -28,7 +28,7 @@
 #include <gtk/gtktable.h>
 #include <gtk/gtkscrolledwindow.h>
 
-#include <abstract/ZLOptionsDialog.h>
+#include <ZLOptionsDialog.h>
 
 class GtkOptionView;
 

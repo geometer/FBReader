@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <abstract/ZLImage.h>
+#include <ZLImage.h>
 
 class ZLFileImage : public ZLSingleImage {
 

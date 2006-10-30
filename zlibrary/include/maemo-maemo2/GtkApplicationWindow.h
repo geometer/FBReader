@@ -1,1 +1,0 @@
-../../maemo/application-maemo2/GtkApplicationWindow.h

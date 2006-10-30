@@ -27,7 +27,7 @@
 
 #include <qmainwindow.h>
 
-#include <abstract/ZLApplication.h>
+#include <ZLApplication.h>
 
 class QApplicationWindow : public QMainWindow, public ZLApplicationWindow { 
 	Q_OBJECT
@@ -46,6 +46,8 @@ private:
 	void grabAllKeys(bool grab);
 
 	bool isFingerTapEventSupported() const;
+	bool isMousePresented() const;
+	bool isKeyboardPresented() const;
 
 	void setCaption(const std::string &caption);
 

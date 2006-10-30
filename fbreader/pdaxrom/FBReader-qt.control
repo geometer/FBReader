@@ -2,6 +2,6 @@ Priority: optional
 Section: Office
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Architecture: armv5tel
-Depends: qt-mt,expat,libenca
+Depends: qt-mt,expat,libenca,bzip2
 License: GPLv2
 Description: E-book reader.

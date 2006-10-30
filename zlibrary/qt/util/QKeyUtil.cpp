@@ -22,7 +22,7 @@
 
 #include <qevent.h>
 
-#include <abstract/ZLUnicodeUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "QKeyUtil.h"
 

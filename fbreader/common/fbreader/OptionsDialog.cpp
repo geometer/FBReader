@@ -19,11 +19,11 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLDialogManager.h>
-#include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLPaintContext.h>
+#include <ZLDialogManager.h>
+#include <ZLOptionsDialog.h>
+#include <ZLPaintContext.h>
 
-#include <abstract/ZLDictionary.h>
+#include <ZLDictionary.h>
 
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"

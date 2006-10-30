@@ -20,14 +20,13 @@
 
 #include <algorithm>
 
+#include <qapplication.h>
 #include <qtabwidget.h>
-
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
 
-#include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLDeviceInfo.h>
+#include <ZLOptionEntry.h>
 
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
@@ -106,16 +105,8 @@ void QOptionsDialogTab::close() {
 }
 
 QOptionsDialogTab::QOptionsDialogTab(QWidget *parent) : QWidget(parent) {
-	int space = 10;
-	switch (ZLDeviceInfo::screenSize()) {
-		case ZLDeviceInfo::SIZE_DESKTOP:
-		case ZLDeviceInfo::SIZE_640x480:
-			space = 10;
-			break;
-		default:
-			space = 3;
-			break;
-	}
+	const long displaySize = qApp->desktop()->height() * (long)qApp->desktop()->width();
+	const int space = (displaySize < 640 * 480) ? 3 : 10;
 	myLayout = new QGridLayout(this, -1, 13, space, space);
 	myRowCounter = 0;
 }

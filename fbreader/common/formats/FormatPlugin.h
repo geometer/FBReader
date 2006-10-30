@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include <abstract/ZLOptions.h>
+#include <ZLOptions.h>
 
 #include "util/EncodingDetector.h"
 

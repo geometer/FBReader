@@ -24,7 +24,7 @@
 #include <vector>
 #include <string>
 
-#include <abstract/ZLOptions.h>
+#include <ZLOptions.h>
 
 enum ZLOptionKind {
 	CHOICE,

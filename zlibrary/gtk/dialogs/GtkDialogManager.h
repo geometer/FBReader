@@ -26,7 +26,7 @@
 #include <gtk/gtkwindow.h>
 #include <gtk/gtkdialog.h>
 
-#include <abstract/ZLDialogManager.h>
+#include <ZLDialogManager.h>
 
 class GtkDialogManager : public ZLDialogManager {
 
@@ -45,14 +45,10 @@ public:
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 
-	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
-	const std::string &getPixmapPath() const { return myPixmapPath; }
-
 	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
 	bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
 
 private:
-	std::string myPixmapPath;
 	mutable GtkWindow *myWindow;
 	mutable std::stack<GtkWindow*> myDialogs;
 	bool myIsKeyboardGrabbed;

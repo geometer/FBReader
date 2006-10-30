@@ -1,6 +1,7 @@
 ifeq "$(INSTALLDIR)" ""
   INSTALLDIR=/usr/local
 endif
+IMAGEDIR = $(INSTALLDIR)/share/%APPLICATION_NAME%/icons
 
 CC = gcc
 AR = ar rsu

@@ -25,7 +25,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <pango/pango.h>
 
-#include <abstract/ZLPaintContext.h>
+#include <ZLPaintContext.h>
 
 class GtkPaintContext : public ZLPaintContext {
 

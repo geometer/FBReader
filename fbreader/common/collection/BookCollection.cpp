@@ -22,9 +22,9 @@
 #include <queue>
 #include <algorithm>
 
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDir.h>
+#include <ZLStringUtil.h>
+#include <ZLFile.h>
+#include <ZLDir.h>
 
 #include "BookCollection.h"
 #include "BookList.h"

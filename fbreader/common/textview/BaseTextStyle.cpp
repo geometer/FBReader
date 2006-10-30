@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLOptions.h>
+#include <ZLOptions.h>
 
 #include "TextStyle.h"
 

@@ -76,6 +76,6 @@ endif
 	@rm -rf $(TMPDIR)
 
 clean:
-	$(RM) $(DESKTOP_FILE) $(SERVICE_FILE) *.deb
+	@$(RM) $(DESKTOP_FILE) $(SERVICE_FILE) *.deb
 
 # vim:ts=8:sw=8:noet

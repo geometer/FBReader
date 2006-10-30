@@ -22,7 +22,7 @@
 #include <cctype>
 #include <algorithm>
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 #include "TextFormatDetector.h"
 

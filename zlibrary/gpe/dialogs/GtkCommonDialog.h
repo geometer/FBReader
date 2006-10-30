@@ -23,7 +23,7 @@
 
 #include <gtk/gtkdialog.h>
 
-#include <abstract/ZLDialog.h>
+#include <ZLDialog.h>
 
 class GtkCommonDialog : public ZLDialog {
 

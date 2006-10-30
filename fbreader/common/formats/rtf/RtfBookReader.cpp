@@ -22,7 +22,7 @@
 
 #include <cctype>
 
-#include <abstract/ZLStringUtil.h>
+#include <ZLStringUtil.h>
 
 #include "RtfBookReader.h"
 #include "../../bookmodel/BookModel.h"

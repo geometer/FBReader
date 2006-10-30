@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLXMLReader.h>
-#include <abstract/ZLStringUtil.h>
+#include <ZLXMLReader.h>
+#include <ZLStringUtil.h>
 
 #include "FBReader.h"
 

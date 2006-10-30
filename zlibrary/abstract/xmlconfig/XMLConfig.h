@@ -25,8 +25,8 @@
 #include <set>
 #include <string>
 
-#include <abstract/shared_ptr.h>
-#include <abstract/ZLRunnable.h>
+#include <shared_ptr.h>
+#include <ZLRunnable.h>
 
 #include "XMLConfigValue.h"
 

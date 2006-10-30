@@ -26,8 +26,8 @@
 #include <map>
 #include <string>
 
-#include <abstract/shared_ptr.h>
-#include <abstract/allocator.h>
+#include <shared_ptr.h>
+#include <allocator.h>
 
 #include "../model/TextModel.h"
 #include "TextElement.h"

@@ -40,8 +40,6 @@ void QViewWidget::trackStylus(bool track) {
 	myQWidget->setMouseTracking(track);
 }
 
-static QImage *myRotatedImage = 0;
-
 void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 	const int w = width();
 	const int h = height();

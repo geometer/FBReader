@@ -25,10 +25,10 @@
 #include <string>
 #include <map>
 
-#include <abstract/ZLOptions.h>
-#include <abstract/ZLTime.h>
-#include <abstract/ZLView.h>
-#include <abstract/ZLApplication.h>
+#include <ZLOptions.h>
+#include <ZLTime.h>
+#include <ZLView.h>
+#include <ZLApplication.h>
 
 #include "../description/BookDescription.h"
 
@@ -39,7 +39,6 @@ class ContentsView;
 class CollectionView;
 class RecentBooksView;
 class ZLViewWidget;
-class ZLPaintContext;
 
 class KeyBindings {
 
@@ -363,7 +362,7 @@ private:
 	friend class OpenPreviousBookAction;
 	
 public:
-	FBReader(ZLPaintContext *context, const std::string& bookToOpen);
+	FBReader(const std::string& bookToOpen);
 	~FBReader();
 	void initWindow();
 
@@ -416,7 +415,6 @@ private:
 	ZLTime myLastScrollingTime;
 	ZLTime myLastKeyActionTime;
 
-	ZLPaintContext *myContext;
 	BookModel *myModel;
 
 	FullKeyBindings myKeyBindings;

@@ -26,7 +26,7 @@ FBView::FBView(FBReader &reader, ZLPaintContext &context) : TextView(reader, con
 }
 
 bool FBView::onFingerTap(int, int y) {
-	if (2 * y < fbreader().myContext->height()) {
+	if (2 * y < fbreader().context().height()) {
 		fbreader().doAction(ACTION_FINGER_TAP_SCROLL_BACKWARD);
 	} else {
 		fbreader().doAction(ACTION_FINGER_TAP_SCROLL_FORWARD);

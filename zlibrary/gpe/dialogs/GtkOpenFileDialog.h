@@ -26,7 +26,7 @@
 #include <vector>
 #include <map>
 
-#include <abstract/ZLOpenFileDialog.h>
+#include <ZLOpenFileDialog.h>
 
 class GtkOpenFileDialog : public ZLOpenFileDialog {
 

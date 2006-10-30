@@ -21,7 +21,7 @@
 #ifndef __ZLUNIXTIME_H__
 #define __ZLUNIXTIME_H__
 
-#include <abstract/ZLTime.h>
+#include <ZLTime.h>
 
 class ZLUnixTimeManager : public ZLTimeManager {
 

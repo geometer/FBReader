@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLStringUtil.h>
+#include <ZLInputStream.h>
+#include <ZLStringUtil.h>
 
 #include "FB2DescriptionReader.h"
 

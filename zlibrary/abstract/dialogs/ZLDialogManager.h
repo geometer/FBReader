@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <abstract/ZLRunnable.h>
+#include <ZLRunnable.h>
 
 class ZLDialog;
 class ZLOptionsDialog;

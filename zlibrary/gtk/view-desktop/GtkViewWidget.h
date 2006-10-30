@@ -23,8 +23,8 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLView.h>
-#include <abstract/ZLApplication.h>
+#include <ZLView.h>
+#include <ZLApplication.h>
 
 class GtkViewWidget : public ZLViewWidget {
 

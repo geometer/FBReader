@@ -19,13 +19,12 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDialogManager.h>
-#include <abstract/ZLDialog.h>
-#include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLDir.h>
-#include <abstract/ZLDeviceInfo.h>
+#include <ZLFile.h>
+#include <ZLDialogManager.h>
+#include <ZLDialog.h>
+#include <ZLOptionsDialog.h>
+#include <ZLOptionEntry.h>
+#include <ZLDir.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -71,7 +70,7 @@ FBReader::ScrollingOptions::ScrollingOptions(
 		LinesToScrollOption(ZLOption::CONFIG_CATEGORY, linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
 		PercentToScrollOption(ZLOption::CONFIG_CATEGORY, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
 
-FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
+FBReader::FBReader(const std::string& bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
 	StoreContentsPositionOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "StoreContentsPosition", false),
@@ -113,12 +112,11 @@ FBReader::FBReader(ZLPaintContext *context, const std::string& bookToOpen) :
 	EnableDictionaryIntegrationOption(ZLOption::CONFIG_CATEGORY, "Dictionary", "Enabled", true) {
 
 	myModel = 0;
-	myContext = context;
-	myBookTextView = new BookTextView(*this, *myContext);
-	myFootnoteView = new FootnoteView(*this, *myContext);
-	myContentsView = new ContentsView(*this, *myContext);
-	myCollectionView = new CollectionView(*this, *myContext);
-	myRecentBooksView = new RecentBooksView(*this, *myContext);
+	myBookTextView = new BookTextView(*this, context());
+	myFootnoteView = new FootnoteView(*this, context());
+	myContentsView = new ContentsView(*this, context());
+	myCollectionView = new CollectionView(*this, context());
+	myRecentBooksView = new RecentBooksView(*this, context());
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 
@@ -221,7 +219,6 @@ void FBReader::initWindow() {
 }
 
 FBReader::~FBReader() {
-	delete myContext;
 	delete myBookTextView;
 	delete myFootnoteView;
 	delete myContentsView;
@@ -336,7 +333,7 @@ void FBReader::bookInfoSlot() {
 }
 
 void FBReader::optionsSlot() {
-	OptionsDialog optionsDialog(*this, *myContext);
+	OptionsDialog optionsDialog(*this, context());
 	optionsDialog.dialog().run("");
 	grabAllKeys(KeyboardControlOption.value());
 	clearTextCaches();

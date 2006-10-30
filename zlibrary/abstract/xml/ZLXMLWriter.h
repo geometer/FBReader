@@ -25,7 +25,7 @@
 #include <vector>
 #include <string>
 
-#include <abstract/ZLOutputStream.h>
+#include <ZLOutputStream.h>
 
 class ZLXMLWriter {
 

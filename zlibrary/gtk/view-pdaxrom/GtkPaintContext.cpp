@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLImage.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLImage.h>
 
 #include "GtkPaintContext.h"
 #include "../image/GtkImageManager.h"

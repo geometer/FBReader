@@ -21,7 +21,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "../../abstract/deviceInfo/ZLDeviceInfo.h"
+#include <ZLApplication.h>
 
 #include "GtkOpenFileDialog.h"
 #include "GtkDialogManager.h"
@@ -110,7 +110,7 @@ GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,GdkPixbuf*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		GdkPixbuf *pixmap = gdk_pixbuf_new_from_file((((GtkDialogManager&)GtkDialogManager::instance()).getPixmapPath() + "/" + pixmapName + ".png").c_str(), 0);
+		GdkPixbuf *pixmap = gdk_pixbuf_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + pixmapName + ".png").c_str(), 0);
 		myPixmaps[pixmapName] = pixmap;
 		return pixmap;
 	} else {

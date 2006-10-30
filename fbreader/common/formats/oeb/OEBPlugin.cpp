@@ -19,9 +19,9 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLDir.h>
+#include <ZLFile.h>
+#include <ZLStringUtil.h>
+#include <ZLDir.h>
 
 #include "OEBPlugin.h"
 #include "OEBDescriptionReader.h"

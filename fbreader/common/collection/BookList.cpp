@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLOptions.h>
-#include <abstract/ZLStringUtil.h>
+#include <ZLOptions.h>
+#include <ZLStringUtil.h>
 
 #include "BookList.h"
 

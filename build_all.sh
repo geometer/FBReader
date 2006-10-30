@@ -27,7 +27,8 @@ do_build opensimpad-0.9.0 opie
 do_build qvfb opie
 do_build desktop gtk
 do_build desktop qt
-do_build zaurus qtopia
+do_build zaurus qtopia-240x320
+do_build zaurus qtopia-640x480
 do_build pdaxrom-1.1.0rc10 gtk
 do_build pdaxrom-1.1.0rc10 qt
 do_build pdaxrom-1.1.0rc11 gtk

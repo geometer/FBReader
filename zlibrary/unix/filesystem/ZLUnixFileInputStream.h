@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 class ZLUnixFileInputStream : public ZLInputStream {
 

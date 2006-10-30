@@ -31,8 +31,10 @@ bool ZLDialogManager::isInitialized() {
 }
 
 void ZLDialogManager::deleteInstance() {
-	delete ourInstance;
-	ourInstance = 0;
+	if (ourInstance != 0) {
+		delete ourInstance;
+		ourInstance = 0;
+	}
 }
 
 ZLDialogManager::ZLDialogManager() {

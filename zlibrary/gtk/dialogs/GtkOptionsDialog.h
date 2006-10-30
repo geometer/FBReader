@@ -27,7 +27,7 @@
 #include <gtk/gtknotebook.h>
 #include <gtk/gtktable.h>
 
-#include <desktop/ZLDesktopOptionsDialog.h>
+#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
 class GtkOptionView;
 

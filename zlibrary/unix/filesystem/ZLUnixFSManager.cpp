@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include <abstract/ZLStringUtil.h>
+#include <ZLStringUtil.h>
 
 #include "ZLUnixFSManager.h"
 #include "ZLUnixFSDir.h"

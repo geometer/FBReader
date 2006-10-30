@@ -39,12 +39,6 @@ public:
 	int infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
 	void openFileDialog(const std::string &title, const ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
-
-	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
-	const std::string &getPixmapPath() const { return myPixmapPath; }
-
-private:
-	std::string myPixmapPath;
 };
 
 #endif /* __QDIALOGMANAGER_H__ */

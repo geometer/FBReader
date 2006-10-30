@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <abstract/ZLOptionsDialog.h>
+#include <ZLOptionsDialog.h>
 
 class ZLDesktopOptionsDialog : public ZLOptionsDialog {
 

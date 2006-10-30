@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLZDecompressor.h>
+#include <ZLFile.h>
+#include <ZLZDecompressor.h>
 
 #include "ZTXTStream.h"
 

@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-#include <abstract/ZLUnicodeUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "TextView.h"
 #include "ParagraphCursor.h"

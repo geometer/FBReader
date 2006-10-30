@@ -22,7 +22,7 @@
 #ifndef __KEYBINDINGSPAGE_H__
 #define __KEYBINDINGSPAGE_H__
 
-#include <abstract/ZLOptionEntry.h>
+#include <ZLOptionEntry.h>
 
 class FBReader;
 class ZLDialogContent;

@@ -23,6 +23,8 @@
 #include <qheader.h>
 #include <qpixmap.h>
 
+#include <ZLApplication.h>
+
 #include "QOpenFileDialog.h"
 #include "QDialogManager.h"
 
@@ -56,7 +58,7 @@ QPixmap &QOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		QPixmap *pixmap = new QPixmap((((QDialogManager&)QDialogManager::instance()).getPixmapPath() + "/" + pixmapName + ".png").c_str());
+		QPixmap *pixmap = new QPixmap((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + pixmapName + ".png").c_str());
 		myPixmaps[pixmapName] = pixmap;
 		return *pixmap;
 	} else {

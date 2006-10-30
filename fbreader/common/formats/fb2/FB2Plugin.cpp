@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFile.h>
+#include <ZLFile.h>
 
 #include "FB2Plugin.h"
 #include "FB2DescriptionReader.h"

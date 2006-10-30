@@ -21,8 +21,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLDeviceInfo.h>
+#include <ZLUnicodeUtil.h>
 
 #include "../util/GtkKeyUtil.h"
 #include "../util/GtkSignalUtil.h"
@@ -111,7 +110,8 @@ bool GtkApplicationWindow::isFullscreen() const {
 void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + ZLApplication::ApplicationName() + "/" + buttonItem.iconName() + ".png").c_str());
+		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
+		GtkWidget *image = gtk_image_new_from_file((imagePrefix + buttonItem.iconName() + ".png").c_str());
 		GtkWidget *button = gtk_button_new();
 		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
@@ -192,4 +192,12 @@ void GtkApplicationWindow::grabAllKeys(bool) {
 
 bool GtkApplicationWindow::isFingerTapEventSupported() const {
 	return false;
+}
+
+bool GtkApplicationWindow::isMousePresented() const {
+	return false;
+}
+
+bool GtkApplicationWindow::isKeyboardPresented() const {
+	return true;
 }

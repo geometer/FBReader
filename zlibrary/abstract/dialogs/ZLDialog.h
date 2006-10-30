@@ -22,7 +22,7 @@
 #define __ZLDIALOG_H__
 
 #include <string>
-#include <abstract/ZLDialogContent.h>
+#include <ZLDialogContent.h>
 
 class ZLDialog {
 

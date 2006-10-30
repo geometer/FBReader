@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include <abstract/ZLEncodingConverter.h>
-#include <abstract/XMLOptions.h>
+#include <ZLEncodingConverter.h>
+#include <XMLOptions.h>
 #include <unix/ZLUnixFSManager.h>
 
 #include "../../common/model/Paragraph.h"
@@ -12,9 +12,6 @@
 #include "../../common/fbreader/CollectionView.h"
 #include "../../common/fbreader/FBFileHandler.h"
 
-const std::string FBFileHandler::ImageDirectory = "FBReader";
-
-const std::string CollectionView::DeleteBookImageFile = Files::PathPrefix + "icons/FBReader/remove.png";
 const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";
 
 void dumpParagraph(const Paragraph &paragraph) {

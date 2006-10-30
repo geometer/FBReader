@@ -26,7 +26,7 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
-#include <abstract/ZLApplication.h>
+#include <ZLApplication.h>
 
 class GtkApplicationWindow : public ZLApplicationWindow { 
 
@@ -44,6 +44,8 @@ private:
 	void grabAllKeys(bool grab);
 
 	bool isFingerTapEventSupported() const;
+	bool isMousePresented() const;
+	bool isKeyboardPresented() const;
 
 	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
 

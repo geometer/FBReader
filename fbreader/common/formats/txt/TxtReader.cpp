@@ -21,7 +21,7 @@
 
 #include <cctype>
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 #include "TxtReader.h"
 

@@ -25,11 +25,12 @@
 #include <vector>
 #include <map>
 
-#include <abstract/shared_ptr.h>
-#include <abstract/ZLOptions.h>
+#include <shared_ptr.h>
+#include <ZLOptions.h>
 
 class ZLView;
 class ZLViewWidget;
+class ZLPaintContext;
 
 class ZLApplicationBase {
 
@@ -38,16 +39,23 @@ public:
 	static const std::string HomeDirectory;
 	static const std::string PathDelimiter;
 	static const std::string &ApplicationName();
+	static const std::string &ImageDirectory();
+	static const std::string &ApplicationSubdirectory();
 	static const std::string ZLibraryDirectory();
 	static const std::string ApplicationDirectory();
 	static const std::string DefaultFilesPathPrefix();
 
 private:
+	static std::string ourImageDirectory;
 	static std::string ourApplicationName;
+	static std::string ourApplicationSubdirectoryName;
 
 protected:
 	ZLApplicationBase(const std::string &name);
 	~ZLApplicationBase();
+
+private:
+	void replaceRegExps(std::string &str);
 };
 
 class ZLApplication : public ZLApplicationBase {
@@ -259,6 +267,7 @@ protected:
 	ZLApplication(const std::string &name);
 
 	void addAction(int actionId, shared_ptr<Action> action);
+
 	void setView(ZLView *view);
 	ZLView *currentView();
 
@@ -271,10 +280,14 @@ public:
 	virtual ~ZLApplication();
 	virtual void initWindow();
 
+	ZLPaintContext &context();
+
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
 
 	bool isFingerTapEventSupported() const;
+	bool isMousePresented() const;
+	bool isKeyboardPresented() const;
 
 	shared_ptr<Action> action(int actionId) const;
 	bool isActionVisible(int actionId) const;
@@ -300,6 +313,7 @@ private:
 	std::map<int,shared_ptr<Action> > myActionMap;
 	Toolbar myToolbar;
 	Menubar myMenubar;
+	ZLPaintContext *myContext;
 	class ZLApplicationWindow *myWindow;
 
 friend class ZLApplicationWindow;
@@ -330,6 +344,8 @@ protected:
 	virtual void grabAllKeys(bool grab) = 0;
 
 	virtual bool isFingerTapEventSupported() const = 0;
+	virtual bool isMousePresented() const = 0;
+	virtual bool isKeyboardPresented() const = 0;
 
 	virtual void setFullscreen(bool fullscreen) = 0;
 	virtual bool isFullscreen() const = 0;
@@ -343,16 +359,31 @@ private:
 friend class ZLApplication;
 };
 
+
+inline const std::string &ZLApplicationBase::ApplicationName() { return ourApplicationName; }
+inline const std::string &ZLApplicationBase::ImageDirectory() { return ourImageDirectory; }
+inline const std::string &ZLApplicationBase::ApplicationSubdirectory() { return ourApplicationSubdirectoryName; }
+
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
 inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }
 inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }
 inline const ZLApplication::Menubar &ZLApplication::menubar() const { return myMenubar; }
+
+inline ZLPaintContext &ZLApplication::context() {
+	return *myContext;
+}
 
 inline bool ZLApplication::isFullKeyboardControlSupported() const {
 	return (myWindow != 0) && myWindow->isFullKeyboardControlSupported();
 }
 inline bool ZLApplication::isFingerTapEventSupported() const {
 	return (myWindow != 0) && myWindow->isFingerTapEventSupported();
+}
+inline bool ZLApplication::isMousePresented() const {
+	return (myWindow != 0) && myWindow->isMousePresented();
+}
+inline bool ZLApplication::isKeyboardPresented() const {
+	return (myWindow != 0) && myWindow->isKeyboardPresented();
 }
 inline void ZLApplication::grabAllKeys(bool grab) {
 	if (myWindow != 0) {

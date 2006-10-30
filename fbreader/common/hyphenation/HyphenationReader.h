@@ -24,7 +24,7 @@
 
 #include <string>
 
-#include <abstract/ZLXMLReader.h>
+#include <ZLXMLReader.h>
 
 class TeXHyphenator;
 

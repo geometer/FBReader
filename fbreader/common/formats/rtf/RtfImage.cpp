@@ -20,9 +20,9 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLFile.h>
+#include <ZLStringUtil.h>
+#include <ZLInputStream.h>
+#include <ZLFile.h>
 
 #include "RtfImage.h"
 

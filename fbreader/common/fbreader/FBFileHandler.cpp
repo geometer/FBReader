@@ -21,38 +21,39 @@
 
 #include <map>
 
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDir.h>
-#include <abstract/ZLApplication.h>
+#include <ZLStringUtil.h>
+#include <ZLFile.h>
+#include <ZLDir.h>
+#include <ZLApplication.h>
 
 #include "FBFileHandler.h"
 #include "../formats/FormatPlugin.h"
 
 const std::string &FBFileHandler::pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const {
-	static const std::string FOLDER_ICON = ImageDirectory + ZLApplication::PathDelimiter + "folder";
-	static const std::string ZIPFOLDER_ICON = ImageDirectory + ZLApplication::PathDelimiter + "zipfolder";
-	static const std::string NO_ICON = "";
+	static const std::string prefix = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter;
+	static const std::string FolderIcon = prefix + "folder";
+	static const std::string ZipFolderIcon = prefix + "zipfolder";
+	static const std::string NoIcon = "";
 	static std::map<FormatPlugin*,std::string> pluginIcons;
 	if (name.length() == 0) {
-		return NO_ICON;
+		return NoIcon;
 	}
 	if (!isFile) {
-		return FOLDER_ICON;
+		return FolderIcon;
 	}
 	ZLFile file(dir.itemName(name));
 	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
 	if (plugin != 0) {
 		std::map<FormatPlugin*,std::string>::const_iterator i = pluginIcons.find(plugin);
 		if (i == pluginIcons.end()) {
-			pluginIcons[plugin] = ImageDirectory + ZLApplication::PathDelimiter + plugin->iconName();
+			pluginIcons[plugin] = prefix + plugin->iconName();
 		}
 		return pluginIcons[plugin];
 	}
 	if (file.isArchive()) {
-		return ZIPFOLDER_ICON;
+		return ZipFolderIcon;
 	}
-	return NO_ICON;
+	return NoIcon;
 }
 
 bool FBFileHandler::isAcceptable(const std::string &name) const {

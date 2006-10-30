@@ -21,7 +21,7 @@
 
 #include <cctype>
 
-#include <abstract/ZLFileImage.h>
+#include <ZLFileImage.h>
 
 #include "../txt/PlainTextFormat.h"
 #include "HtmlBookReader.h"

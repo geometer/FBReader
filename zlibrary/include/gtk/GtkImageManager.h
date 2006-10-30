@@ -1,1 +1,0 @@
-../../gtk/image/GtkImageManager.h

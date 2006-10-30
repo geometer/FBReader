@@ -23,12 +23,12 @@
 #include <vector>
 #include <cctype>
 
-#include <abstract/ZLZDecompressor.h>
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLImage.h>
-#include <abstract/ZLFileImage.h>
-#include <abstract/ZLFile.h>
+#include <ZLZDecompressor.h>
+#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLImage.h>
+#include <ZLFileImage.h>
+#include <ZLFile.h>
 
 #include "PdbReader.h"
 #include "PluckerBookReader.h"

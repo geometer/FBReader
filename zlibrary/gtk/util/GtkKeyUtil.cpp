@@ -23,8 +23,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkkeys.h>
 
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
 
 #include "GtkKeyUtil.h"
 

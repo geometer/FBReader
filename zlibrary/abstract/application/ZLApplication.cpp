@@ -19,7 +19,9 @@
  */
 
 #include "ZLApplication.h"
+#include "../library/ZLibrary.h"
 #include "../view/ZLView.h"
+#include "../view/ZLPaintContext.h"
 
 const std::string ZLApplication::MouseScrollDownKey = "<MouseScrollDown>";
 const std::string ZLApplication::MouseScrollUpKey = "<MouseScrollUp>";
@@ -41,6 +43,7 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	ConfigAutoSaveTimeoutOption(ZLOption::CONFIG_CATEGORY, CONFIG, TIMEOUT, 1, 6000, 10),
 	myViewWidget(0),
 	myWindow(0) {
+	myContext = ZLibrary::createContext();
 	if (ConfigAutoSavingOption.value()) {
 		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
 	}
@@ -56,6 +59,7 @@ ZLApplication::~ZLApplication() {
 	if (myViewWidget != 0) {
 		delete myViewWidget;
 	}
+	delete myContext;
 }
 
 void ZLApplication::initWindow() {

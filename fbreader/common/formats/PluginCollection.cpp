@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLStringUtil.h>
+#include <ZLStringUtil.h>
 
 #include "FormatPlugin.h"
 

@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLUnicodeUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "Hyphenator.h"
 

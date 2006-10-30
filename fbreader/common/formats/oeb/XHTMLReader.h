@@ -25,7 +25,7 @@
 #include <string>
 #include <map>
 
-#include <abstract/ZLXMLReader.h>
+#include <ZLXMLReader.h>
 
 class BookReader;
 class XHTMLReader;

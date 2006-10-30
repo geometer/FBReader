@@ -1,4 +1,6 @@
 INSTALLDIR=/opt/QtPalmtop
+IMAGEDIR = $(INSTALLDIR)/pics
+APPLICATIONSUBDIR = "%application_name%"
 
 BASEPATH = /stuff/build/opensimpad-0.9.0
 

@@ -21,8 +21,8 @@
 #ifndef __ZLTIME_H__
 #define __ZLTIME_H__
 
-#include <abstract/shared_ptr.h>
-#include <abstract/ZLRunnable.h>
+#include <shared_ptr.h>
+#include <ZLRunnable.h>
 
 class ZLTime {
 

@@ -22,7 +22,7 @@
 #ifndef __ZTXTSTREAM_H__
 #define __ZTXTSTREAM_H__
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 #include "PdbStream.h"
 

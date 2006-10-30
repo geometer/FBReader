@@ -21,7 +21,7 @@
 #ifndef __ZLZIP_H__
 #define __ZLZIP_H__
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 #include "../ZLInputStream.h"
 #include "../ZLDir.h"

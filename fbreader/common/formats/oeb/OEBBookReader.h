@@ -26,7 +26,7 @@
 #include <vector>
 #include <string>
 
-#include <abstract/ZLXMLReader.h>
+#include <ZLXMLReader.h>
 
 #include "../../bookmodel/BookReader.h"
 

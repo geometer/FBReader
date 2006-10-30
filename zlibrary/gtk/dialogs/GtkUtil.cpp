@@ -21,8 +21,6 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <abstract/ZLDeviceInfo.h>
-
 #include "GtkUtil.h"
 #include "GtkDialogManager.h"
 
@@ -40,7 +38,8 @@ std::string gtkString(const std::string &str, bool useMnemonics) {
 }
 
 std::string gtkString(const std::string &str) {
-	return gtkString(str, ZLDeviceInfo::isKeyboardPresented());
+	//return gtkString(str, ZLApplication::isKeyboardPresented());
+	return gtkString(str, true);
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {

@@ -22,7 +22,7 @@
 #ifndef __PDBSTREAM_H__
 #define __PDBSTREAM_H__
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 #include "PdbReader.h"
 

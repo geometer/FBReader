@@ -23,8 +23,8 @@
 
 #include <string>
 
-#include <abstract/ZLDialogContent.h>
-#include <abstract/ZLOptions.h>
+#include <ZLDialogContent.h>
+#include <ZLOptions.h>
 
 class ZLOptionEntry;
 

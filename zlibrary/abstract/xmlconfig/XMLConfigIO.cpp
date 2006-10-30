@@ -18,10 +18,10 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDir.h>
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLApplication.h>
+#include <ZLFile.h>
+#include <ZLDir.h>
+#include <ZLInputStream.h>
+#include <ZLApplication.h>
 
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"

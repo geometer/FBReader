@@ -21,9 +21,9 @@
 
 #include <algorithm>
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLFileImage.h>
-#include <abstract/ZLStringUtil.h>
+#include <ZLFile.h>
+#include <ZLFileImage.h>
+#include <ZLStringUtil.h>
 
 #include "MobipocketHtmlBookReader.h"
 #include "MobipocketStream.h"

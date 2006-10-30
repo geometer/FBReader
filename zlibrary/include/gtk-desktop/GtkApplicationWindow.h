@@ -1,1 +1,0 @@
-../../gtk/application-desktop/GtkApplicationWindow.h

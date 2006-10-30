@@ -1,1 +1,0 @@
-../../qt/deviceInfo/QDeviceInfo.h

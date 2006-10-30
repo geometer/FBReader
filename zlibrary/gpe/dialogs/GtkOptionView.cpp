@@ -30,8 +30,6 @@
 #include <gtk/gtkhscale.h>
 #include <gtk/gtkframe.h>
 
-#include <abstract/ZLDeviceInfo.h>
-
 #include "GtkOptionView.h"
 #include "GtkOptionsDialog.h"
 #include "GtkDialogManager.h"
@@ -51,11 +49,14 @@ void GtkOptionView::_onValueChange(GtkWidget*, gpointer self) {
 }
 
 void BooleanOptionView::_createItem() {
-	if (ZLDeviceInfo::isKeyboardPresented()) {
+	/*
+	if (ZLApplication::isKeyboardPresented()) {
 		myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name(), true).c_str());
 	} else {
 		myCheckBox = gtk_check_button_new_with_label(gtkString(myOption->name(), false).c_str());
 	}
+	*/
+	myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name()).c_str());
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
 	g_signal_connect(myCheckBox, "toggled", G_CALLBACK(_onValueChange), this);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);

@@ -24,9 +24,9 @@
 
 #include <string>
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
-#include <abstract/ZLOptions.h>
+#include <ZLOptions.h>
 
 #include "Author.h"
 

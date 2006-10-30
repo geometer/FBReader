@@ -1,4 +1,6 @@
 INSTALLDIR = /usr/local
+IMAGEDIR = $(INSTALLDIR)/pics
+APPLICATIONSUBDIR = "%application_name%"
 
 QTPATH = /opt/opie/qt-2.3.10
 OPIEPATH = /opt/opie/opie

@@ -19,11 +19,11 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDir.h>
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFileImage.h>
-#include <abstract/ZLApplication.h>
+#include <ZLFile.h>
+#include <ZLDir.h>
+#include <ZLStringUtil.h>
+#include <ZLFileImage.h>
+#include <ZLApplication.h>
 
 #include "XHTMLReader.h"
 

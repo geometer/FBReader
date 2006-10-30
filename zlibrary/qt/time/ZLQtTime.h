@@ -25,7 +25,7 @@
 
 #include <qobject.h>
 
-#include <unix/ZLUnixTime.h>
+#include "../../unix/time/ZLUnixTime.h"
 
 class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
 

@@ -20,7 +20,7 @@
 
 #include <gtk/gtk.h>
 
-#include <abstract/ZLOpenFileDialog.h>
+#include <ZLOpenFileDialog.h>
 
 #include "GtkDialogManager.h"
 #include "GtkCommonDialog.h"

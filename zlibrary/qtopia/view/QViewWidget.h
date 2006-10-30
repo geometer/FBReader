@@ -23,8 +23,8 @@
 
 #include <qwidget.h>
 
-#include <abstract/ZLView.h>
-#include <abstract/ZLApplication.h>
+#include <ZLView.h>
+#include <ZLApplication.h>
 
 class QViewWidget : public ZLViewWidget {
 

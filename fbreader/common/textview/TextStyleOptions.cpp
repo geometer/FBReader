@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLPaintContext.h>
+#include <ZLPaintContext.h>
 
 #include "TextStyleOptions.h"
 #include "TextStyle.h"

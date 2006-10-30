@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 #include "DocBookDescriptionReader.h"
 

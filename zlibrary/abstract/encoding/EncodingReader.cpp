@@ -20,7 +20,7 @@
 
 #include <stdlib.h>
 
-#include <abstract/ZLUnicodeUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "EncodingReader.h"
 #include "ZLEncodingConverter.h"

@@ -26,8 +26,8 @@
 #include <set>
 #include <string>
 
-#include <abstract/ZLOptions.h>
-#include <abstract/ZLView.h>
+#include <ZLOptions.h>
+#include <ZLView.h>
 
 #include "TextElement.h"
 #include "Word.h"

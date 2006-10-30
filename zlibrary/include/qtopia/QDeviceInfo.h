@@ -1,1 +1,0 @@
-../../qtopia/deviceInfo/QDeviceInfo.h

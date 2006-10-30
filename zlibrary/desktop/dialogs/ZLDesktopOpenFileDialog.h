@@ -21,8 +21,8 @@
 #ifndef __ZLDESKTOPOPENFILEDIALOG_H__
 #define __ZLDESKTOPOPENFILEDIALOG_H__
 
-#include <abstract/ZLOpenFileDialog.h>
-#include <abstract/ZLOptions.h>
+#include <ZLOpenFileDialog.h>
+#include <ZLOptions.h>
 
 class ZLDesktopOpenFileDialog : public ZLOpenFileDialog {
 

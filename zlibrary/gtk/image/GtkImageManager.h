@@ -24,8 +24,8 @@
 #include <map>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
-#include <abstract/ZLImageManager.h>
-#include <abstract/ZLImage.h>
+#include <ZLImageManager.h>
+#include <ZLImage.h>
 
 class GtkImageData : public ZLImageData {
 

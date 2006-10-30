@@ -45,7 +45,10 @@ ZLTimeManager &ZLTimeManager::instance() {
 }
 
 void ZLTimeManager::deleteInstance() {
-	delete ourInstance;
+	if (ourInstance != 0) {
+		delete ourInstance;
+		ourInstance = 0;
+	}
 }
 
 ZLTimeManager::ZLTimeManager() {

@@ -31,12 +31,9 @@
 #include <hildon-widgets/hildon-appview.h>
 #include <libosso.h>
 
-#include <abstract/ZLApplication.h>
+#include <ZLApplication.h>
 
 class GtkApplicationWindow : public ZLApplicationWindow { 
-
-public:
-	static const std::string ImageDirectory;
 
 public:
 	GtkApplicationWindow(ZLApplication *application);
@@ -73,6 +70,8 @@ private:
 	void grabAllKeys(bool grab);
 
 	bool isFingerTapEventSupported() const;
+	bool isMousePresented() const;
+	bool isKeyboardPresented() const;
 
 public:
 	void handleKeyEventSlot(GdkEventKey*);

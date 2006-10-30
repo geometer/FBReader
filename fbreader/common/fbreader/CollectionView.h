@@ -35,9 +35,6 @@ class Paragraph;
 class CollectionView : public FBView {
 
 public:
-	static const std::string DeleteBookImageFile;
-	
-public:
 	CollectionView(FBReader &reader, ZLPaintContext &context);
 	~CollectionView();
 	const std::string &caption() const;

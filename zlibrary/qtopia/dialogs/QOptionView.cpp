@@ -31,7 +31,7 @@
 #include <qslider.h>
 #include <qlayout.h>
 
-#include <abstract/ZLStringUtil.h>
+#include <ZLStringUtil.h>
 #include "../../qt/util/QKeyUtil.h"
 
 #include "QOptionView.h"

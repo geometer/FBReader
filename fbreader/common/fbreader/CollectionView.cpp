@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFileImage.h>
-#include <abstract/ZLDialogManager.h>
+#include <ZLFileImage.h>
+#include <ZLDialogManager.h>
 
 #include "CollectionView.h"
 #include "FBReader.h"
@@ -42,7 +42,7 @@ static const std::string deleteImageId = "deleteImage";
 CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
 	myTreeModel = 0;
 	//myImageMap[orderImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
-	myImageMap[deleteImageId] = new ZLFileImage("image/png", DeleteBookImageFile, 0);
+	myImageMap[deleteImageId] = new ZLFileImage("image/png", ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter + "remove.png", 0);
 }
 
 CollectionView::~CollectionView() {

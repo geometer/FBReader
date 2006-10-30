@@ -22,8 +22,8 @@
 #ifndef __PPLBOOKREADER_H__
 #define __PPLBOOKREADER_H__
 
-#include <abstract/shared_ptr.h>
-#include <abstract/ZLEncodingConverter.h>
+#include <shared_ptr.h>
+#include <ZLEncodingConverter.h>
 #include "../../bookmodel/BookReader.h"
 
 class ZLInputStream;

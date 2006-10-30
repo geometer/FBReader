@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLApplication.h>
-#include <abstract/ZLXMLReader.h>
+#include <ZLApplication.h>
+#include <ZLXMLReader.h>
 
 #include "TextStyle.h"
 

@@ -20,7 +20,7 @@
 
 #include <iostream>
 
-#include <abstract/ZLTime.h>
+#include <ZLTime.h>
 
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"

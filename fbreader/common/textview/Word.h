@@ -25,7 +25,7 @@
 #include <vector>
 #include <string>
 
-#include <abstract/ZLPaintContext.h>
+#include <ZLPaintContext.h>
 
 #include "TextElement.h"
 

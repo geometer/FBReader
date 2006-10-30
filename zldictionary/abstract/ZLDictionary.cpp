@@ -23,9 +23,6 @@
 ZLDictionary *ZLDictionary::ourInstance = 0;
 
 ZLDictionary &ZLDictionary::instance() {
-	if (ourInstance == 0) {
-		ourInstance = new ZLDictionary();
-	}
 	return *ourInstance;
 }
 
@@ -40,11 +37,4 @@ ZLDictionary::ZLDictionary() {
 }
 
 ZLDictionary::~ZLDictionary() {
-}
-
-void ZLDictionary::openInDictionary(const std::string&) const {
-}
-
-bool ZLDictionary::isDictionaryEnabled() const {
-	return false;
 }

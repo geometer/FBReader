@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-#include <abstract/ZLPaintContext.h>
+#include <ZLPaintContext.h>
 
 #include "TextView.h"
 

@@ -21,7 +21,7 @@
 
 #include <enca.h>
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 #include "EncodingDetector.h"
 

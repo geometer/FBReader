@@ -25,7 +25,7 @@
 
 #include <vector>
 
-#include <abstract/ZLImage.h>
+#include <ZLImage.h>
 
 class RtfImage : public ZLSingleImage {
 

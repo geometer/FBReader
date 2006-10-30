@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 class ZLImage {
 

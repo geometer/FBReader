@@ -26,6 +26,13 @@
 
 ZLImageManager *ZLImageManager::ourInstance = 0;
 
+void ZLImageManager::deleteInstance() {
+	if (ourInstance != 0) {
+		delete ourInstance;
+		ourInstance = 0;
+	}
+}
+
 struct Color {
 	unsigned char Red;
 	unsigned char Green;

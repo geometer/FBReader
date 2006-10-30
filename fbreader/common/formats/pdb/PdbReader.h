@@ -24,8 +24,8 @@
 
 #include <vector>
 
-#include <abstract/shared_ptr.h>
-#include <abstract/ZLInputStream.h>
+#include <shared_ptr.h>
+#include <ZLInputStream.h>
 
 class BookModel;
 

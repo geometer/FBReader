@@ -22,7 +22,7 @@
 #ifndef __DOCBOOKREADER_H__
 #define __DOCBOOKREADER_H__
 
-#include <abstract/ZLXMLReader.h>
+#include <ZLXMLReader.h>
 
 class DocBookReader : public ZLXMLReader {
 

@@ -22,9 +22,9 @@
 #ifndef __PLAINTEXTFORMAT_H__
 #define __PLAINTEXTFORMAT_H__
 
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLOptions.h>
-#include <abstract/ZLOptionEntry.h>
+#include <ZLInputStream.h>
+#include <ZLOptions.h>
+#include <ZLOptionEntry.h>
 
 #include "../FormatPlugin.h"
 

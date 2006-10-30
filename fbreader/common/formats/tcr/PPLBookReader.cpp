@@ -22,7 +22,7 @@
 #include <cctype>
 
 #include "PPLBookReader.h"
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 static const size_t BUFFER_SIZE = 2048;
 

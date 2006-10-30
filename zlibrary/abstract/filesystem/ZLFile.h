@@ -23,8 +23,8 @@
 
 #include <string>
 
-#include <abstract/shared_ptr.h>
-#include <abstract/ZLFileInfo.h>
+#include <shared_ptr.h>
+#include <ZLFileInfo.h>
 
 class ZLDir;
 class ZLInputStream;

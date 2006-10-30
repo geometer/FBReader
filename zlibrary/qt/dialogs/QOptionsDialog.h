@@ -27,7 +27,7 @@
 #include <qdialog.h>
 #include <qptrlist.h>
 
-#include <desktop/ZLDesktopOptionsDialog.h>
+#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
 class QTabWidget;
 class QOptionView;

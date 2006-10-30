@@ -33,7 +33,8 @@ Before building FBReader, you should check (and may be edit) 2 files:
      Possible pairs for TARGET_ARCH + UI_TYPE are:
         TARGET_ARCH = desktop               UI_TYPE = gtk
         TARGET_ARCH = desktop               UI_TYPE = qt
-        TARGET_ARCH = zaurus                UI_TYPE = qtopia
+        TARGET_ARCH = zaurus                UI_TYPE = qtopia-240x320
+        TARGET_ARCH = zaurus                UI_TYPE = qtopia-640x480
         TARGET_ARCH = openzaurus            UI_TYPE = opie
         TARGET_ARCH = openzaurus            UI_TYPE = gpe
         TARGET_ARCH = pdaxrom-1.1.0rc10     UI_TYPE = gtk

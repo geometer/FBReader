@@ -22,7 +22,7 @@
 #ifndef __PDBPLUGIN_H__
 #define __PDBPLUGIN_H__
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 #include "../FormatPlugin.h"
 

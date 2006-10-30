@@ -21,7 +21,7 @@
 #ifndef __QDIALOGMANAGER_H__
 #define __QDIALOGMANAGER_H__
 
-#include <abstract/ZLDialogManager.h>
+#include <ZLDialogManager.h>
 
 class ZLApplication;
 class QApplicationWindow;

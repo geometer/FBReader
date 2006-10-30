@@ -24,10 +24,9 @@
 #include "../view/GtkViewWidget.h"
 #include "../../gtk/util/GtkKeyUtil.h"
 #include "../../gtk/util/GtkSignalUtil.h"
-#include <maemo/GtkDialogManager.h>
+#include "../dialogs/GtkDialogManager.h"
 
 #include "GtkApplicationWindow.h"
-#include "../dialogs/GtkDialogManager.h"
 
 void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myWindow = GTK_WINDOW((new GtkApplicationWindow(application))->getMainWindow());
@@ -182,7 +181,7 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	GtkToolItem *gtkItem;
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + ZLApplication::ApplicationName() + "/" + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter + buttonItem.iconName() + ".png").c_str());
 		gtkItem = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 
@@ -276,4 +275,10 @@ bool GtkApplicationWindow::isFingerTapEventSupported() const {
 	return false;
 }
 
-// vim:ts=2:sw=2:noet
+bool GtkApplicationWindow::isMousePresented() const {
+	return false;
+}
+
+bool GtkApplicationWindow::isKeyboardPresented() const {
+	return false;
+}

@@ -20,8 +20,8 @@
 
 #include <algorithm>
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLInputStream.h>
+#include <ZLFile.h>
+#include <ZLInputStream.h>
 
 #include "../encoding/EncodingReader.h"
 

@@ -22,7 +22,7 @@
 #ifndef __TCRSTREAM_H__
 #define __TCRSTREAM_H__
 
-#include <abstract/ZLInputStream.h>
+#include <ZLInputStream.h>
 
 class ZLFile;
 

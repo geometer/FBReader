@@ -19,9 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLDeviceInfo.h>
+#include <ZLOptionsDialog.h>
+#include <ZLOptionEntry.h>
 
 #include "ScrollingOptionsPage.h"
 #include "../textview/TextView.h"
@@ -84,7 +83,7 @@ private:
 ScrollingTypeEntry::ScrollingTypeEntry(FBReader &fbreader, ScrollingOptionsPage &page) : myFBReader(fbreader), myPage(page) {
 	myValues.push_back(LARGE_SCROLLING);
 	myValues.push_back(SMALL_SCROLLING);
-	if (ZLDeviceInfo::isMousePresented()) {
+	if (myFBReader.isMousePresented()) {
 		myValues.push_back(MOUSE_SCROLLING);
 	}
 	if (myFBReader.isFingerTapEventSupported()) {
@@ -111,7 +110,7 @@ void ScrollingTypeEntry::onAccept(const std::string&) {
 void ScrollingTypeEntry::onValueChange(const std::string &selectedValue) {
 	myPage.myLargeScrollingEntries.show(selectedValue == LARGE_SCROLLING);
 	myPage.mySmallScrollingEntries.show(selectedValue == SMALL_SCROLLING);
-	if (ZLDeviceInfo::isMousePresented()) {
+	if (myFBReader.isMousePresented()) {
 		myPage.myMouseScrollingEntries.show(selectedValue == MOUSE_SCROLLING);
 	}
 	if (myFBReader.isFingerTapEventSupported()) {
@@ -229,7 +228,7 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 
 	myLargeScrollingEntries.init(fbreader, fbreader.LargeScrollingOptions);
 	mySmallScrollingEntries.init(fbreader, fbreader.SmallScrollingOptions);
-	if (ZLDeviceInfo::isMousePresented()) {
+	if (fbreader.isMousePresented()) {
 		myMouseScrollingEntries.init(fbreader, fbreader.MouseScrollingOptions);
 	}
 	if (fbreader.isFingerTapEventSupported()) {
@@ -240,7 +239,7 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 
 	myLargeScrollingEntries.connect(dialogTab);
 	mySmallScrollingEntries.connect(dialogTab);
-	if (ZLDeviceInfo::isMousePresented()) {
+	if (fbreader.isMousePresented()) {
 		myMouseScrollingEntries.connect(dialogTab);
 	}
 	if (fbreader.isFingerTapEventSupported()) {

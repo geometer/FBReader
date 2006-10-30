@@ -20,6 +20,8 @@
 
 #include <qpe/qcopenvelope_qws.h>
 
+#include <ZLFile.h>
+
 #include "ZLQtDictionary.h"
 
 void ZLQtDictionary::createInstance() {
@@ -35,5 +37,6 @@ void ZLQtDictionary::openInDictionary(const std::string &word) const {
 }
 
 bool ZLQtDictionary::isDictionaryEnabled() const {
-	return true;
+	static bool answer = ZLFile("/opt/QtPalmtop/bin/zbedic").exists();
+	return answer;
 }

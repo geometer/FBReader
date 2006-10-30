@@ -28,7 +28,6 @@
 #include <gdk/gdkkeysyms.h>
 
 #include "../../abstract/dialogs/ZLOptionEntry.h"
-#include "../../abstract/deviceInfo/ZLDeviceInfo.h"
 
 #include "GtkDialogManager.h"
 #include "GtkOptionsDialog.h"

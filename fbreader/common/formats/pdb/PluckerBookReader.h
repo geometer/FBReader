@@ -25,7 +25,7 @@
 #include <set>
 #include <map>
 
-#include <abstract/ZLEncodingConverter.h>
+#include <ZLEncodingConverter.h>
 
 #include "../../bookmodel/BookReader.h"
 

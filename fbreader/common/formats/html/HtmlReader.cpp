@@ -22,11 +22,11 @@
 #include <algorithm>
 #include <cctype>
 
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLXMLReader.h>
-#include <abstract/ZLFile.h>
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLUnicodeUtil.h>
+#include <ZLInputStream.h>
+#include <ZLXMLReader.h>
+#include <ZLFile.h>
+#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "HtmlReader.h"
 #include "HtmlEntityCollection.h"

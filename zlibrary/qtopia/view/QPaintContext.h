@@ -21,7 +21,7 @@
 #ifndef __QPAINTCONTEXT_H__
 #define __QPAINTCONTEXT_H__
 
-#include <abstract/ZLPaintContext.h>
+#include <ZLPaintContext.h>
 
 class QPainter;
 class QPixmap;

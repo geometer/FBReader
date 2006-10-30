@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 class Author;
 typedef shared_ptr<Author> AuthorPtr;

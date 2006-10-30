@@ -22,14 +22,11 @@
 #ifndef __FBFILEHANDLER_H__
 #define __FBFILEHANDLER_H__
 
-#include <abstract/ZLOpenFileDialog.h>
+#include <ZLOpenFileDialog.h>
 
 #include "../description/BookDescription.h"
 
 class FBFileHandler : public ZLTreeHandler {
-
-public:
-	static const std::string ImageDirectory;
 
 public:
 	FBFileHandler();

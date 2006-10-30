@@ -1,1 +1,0 @@
-../../qt/dialogs/QDialogManager.h

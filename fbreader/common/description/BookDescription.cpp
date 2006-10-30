@@ -21,10 +21,10 @@
 
 #include <iostream>
 
-#include <abstract/ZLOptions.h>
-#include <abstract/ZLFile.h>
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLStringUtil.h>
+#include <ZLOptions.h>
+#include <ZLFile.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
 
 #include "BookDescription.h"
 #include "BookDescriptionUtil.h"

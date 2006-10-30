@@ -1,4 +1,5 @@
 INSTALLDIR = /opt/QtPalmtop
+IMAGEDIR = $(INSTALLDIR)/pics
 HOMEDIR = ~/Documents
 
 QTPATH = /opt/Qtopia/sharp

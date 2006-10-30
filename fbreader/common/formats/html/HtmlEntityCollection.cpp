@@ -21,8 +21,8 @@
 
 #include <cctype>
 
-#include <abstract/ZLXMLReader.h>
-#include <abstract/ZLApplication.h>
+#include <ZLXMLReader.h>
+#include <ZLApplication.h>
 
 #include "HtmlEntityCollection.h"
 

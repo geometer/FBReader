@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLImage.h>
-#include <abstract/ZLFile.h>
+#include <ZLImage.h>
+#include <ZLFile.h>
 
 #include "BookModel.h"
 #include "BookReader.h"

@@ -21,7 +21,7 @@
 #ifndef __XMLCONFIGDELTAWRITER_H__
 #define __XMLCONFIGDELTAWRITER_H__
 
-#include <abstract/ZLXMLWriter.h>
+#include <ZLXMLWriter.h>
 
 class XMLConfigDelta;
 

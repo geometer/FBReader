@@ -19,7 +19,7 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLOptionsDialog.h>
+#include <ZLOptionsDialog.h>
 
 #include "FBReader.h"
 #include "ConfigPage.h"

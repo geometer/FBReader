@@ -1,1 +1,0 @@
-../../qt/image/QImageManager.h

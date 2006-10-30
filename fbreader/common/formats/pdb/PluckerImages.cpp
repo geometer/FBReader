@@ -19,10 +19,10 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLFile.h>
-#include <abstract/ZLInputStream.h>
-#include <abstract/ZLZDecompressor.h>
-#include <abstract/ZLStringUtil.h>
+#include <ZLFile.h>
+#include <ZLInputStream.h>
+#include <ZLZDecompressor.h>
+#include <ZLStringUtil.h>
 
 #include "PluckerImages.h"
 #include "DocDecompressor.h"

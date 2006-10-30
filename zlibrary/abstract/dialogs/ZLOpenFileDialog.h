@@ -23,8 +23,8 @@
 
 #include <vector>
 
-#include <abstract/shared_ptr.h>
-#include <abstract/ZLOptions.h>
+#include <shared_ptr.h>
+#include <ZLOptions.h>
 
 class ZLDir;
 class ZLTreeState;

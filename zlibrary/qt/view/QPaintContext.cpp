@@ -24,7 +24,7 @@
 #include <qfontdatabase.h>
 #include <qimage.h>
 
-#include <abstract/ZLImage.h>
+#include <ZLImage.h>
 
 #include "QPaintContext.h"
 #include "../image/QImageManager.h"

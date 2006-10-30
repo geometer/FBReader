@@ -20,9 +20,9 @@
 
 #include <cctype>
 
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLXMLReader.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
+#include <ZLXMLReader.h>
 
 #include "ZLKeyUtil.h"
 #include "../application/ZLApplication.h"

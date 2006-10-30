@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-#include <abstract/ZLSearchUtil.h>
+#include <ZLSearchUtil.h>
 
 #include "TextModel.h"
 #include "Paragraph.h"

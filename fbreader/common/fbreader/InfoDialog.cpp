@@ -21,11 +21,11 @@
 
 #include <algorithm>
 
-#include <abstract/ZLEncodingConverter.h>
-#include <abstract/ZLDialogManager.h>
-#include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLFile.h>
+#include <ZLEncodingConverter.h>
+#include <ZLDialogManager.h>
+#include <ZLOptionsDialog.h>
+#include <ZLOptionEntry.h>
+#include <ZLFile.h>
 
 #include "InfoDialog.h"
 

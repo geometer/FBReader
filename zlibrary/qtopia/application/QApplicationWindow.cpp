@@ -313,6 +313,15 @@ bool QApplicationWindow::isFingerTapEventSupported() const {
 	return false;
 }
 
+bool QApplicationWindow::isMousePresented() const {
+	return false;
+}
+
+bool QApplicationWindow::isKeyboardPresented() const {
+	// TODO: implement
+	return true;
+}
+
 QtMenuAction::QtMenuAction(ZLApplication &application, const ZLApplication::Menubar::PlainItem &item) : QAction(item.name().c_str(), 0, 0, 0), myApplication(application), myActionId(item.actionId()) {
 	connect(this, SIGNAL(activated()), this, SLOT(doSlot()));
 }

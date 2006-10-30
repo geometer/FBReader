@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLApplication.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLApplication.h>
 
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"

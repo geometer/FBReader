@@ -22,7 +22,7 @@
 #ifndef __CONFIGPAGE_H__
 #define __CONFIGPAGE_H__
 
-#include <abstract/ZLOptionEntry.h>
+#include <ZLOptionEntry.h>
 
 class FBReader;
 class ZLDialogContent;

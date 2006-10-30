@@ -18,7 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLDialogManager.h>
+#include <ZLDialogManager.h>
+#include <ZLUnicodeUtil.h>
 
 #include "ZLApplication.h"
 
@@ -29,6 +30,8 @@ const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
 const std::string ZLApplicationBase::PathDelimiter = "/";
 
 std::string ZLApplicationBase::ourApplicationName;
+std::string ZLApplicationBase::ourImageDirectory;
+std::string ZLApplicationBase::ourApplicationSubdirectoryName;
 
 class ConfigSaverRunnable : public ZLRunnable {
 
@@ -38,18 +41,32 @@ public:
 	}
 };
 
+void ZLApplicationBase::replaceRegExps(std::string &str) {
+	static const std::string NAME_PATTERN = "%APPLICATION_NAME%";
+	static const std::string LOWERCASENAME_PATTERN = "%application_name%";
+	int index = -1;
+	while ((index = str.find(NAME_PATTERN)) != -1) {
+	  str.erase(index, NAME_PATTERN.length());
+		str.insert(index, ourApplicationName);
+	}
+	while ((index = str.find(LOWERCASENAME_PATTERN)) != -1) {
+	  str.erase(index, LOWERCASENAME_PATTERN.length());
+		str.insert(index, ZLUnicodeUtil::toLower(ourApplicationName));
+	}
+}
+
 ZLApplicationBase::ZLApplicationBase(const std::string &name) {
 	ourApplicationName = name;
+	ourImageDirectory = IMAGEDIR;
+	replaceRegExps(ourImageDirectory);
+	ourApplicationSubdirectoryName = APPLICATIONSUBDIR;
+	replaceRegExps(ourApplicationSubdirectoryName);
 	XMLOptions::createInstance();
 }
 
 ZLApplicationBase::~ZLApplicationBase() {
 	ConfigSaverRunnable configSaver;
 	ZLDialogManager::instance().wait(configSaver, "Saving config...");
-}
-
-const std::string &ZLApplicationBase::ApplicationName() {
-	return ourApplicationName;
 }
 
 const std::string ZLApplicationBase::ApplicationDirectory() {

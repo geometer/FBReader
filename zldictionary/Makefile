@@ -5,14 +5,16 @@ include $(MAKEFILESDIR)/config.mk
 TARGET = libzldictionary-$(UI_TYPE).so.0
 TARGET_SHORTNAME = libzldictionary-$(UI_TYPE).so
 
-SUBDIRS_ALL = abstract
+SUBDIRS_ALL = abstract dummy
 QTSUBDIRS_ALL = qtopia
 GTKSUBDIRS_ALL = 
 
 SUBDIRS = abstract
 
-ifeq "$(UI_TYPE)" "qtopia"
+ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <qtopia-240x320> <qtopia-640x480>)"
 	QTSUBDIRS = qtopia
+else
+	SUBDIRS += dummy
 endif
 
 .objects:

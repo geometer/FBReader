@@ -24,7 +24,7 @@
 
 #include <string>
 
-#include <abstract/ZLOptionEntry.h>
+#include <ZLOptionEntry.h>
 
 class ZLPaintContext;
 

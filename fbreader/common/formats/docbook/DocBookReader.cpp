@@ -19,9 +19,9 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDir.h>
+#include <ZLStringUtil.h>
+#include <ZLFile.h>
+#include <ZLDir.h>
 
 #include "DocBookReader.h"
 

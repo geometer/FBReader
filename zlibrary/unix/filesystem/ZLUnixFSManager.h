@@ -21,8 +21,8 @@
 #ifndef __ZLUNIXFSMANAGER_H__
 #define __ZLUNIXFSMANAGER_H__
 
-#include <abstract/ZLFSManager.h>
-#include <abstract/ZLFile.h>
+#include <ZLFSManager.h>
+#include <ZLFile.h>
 
 class ZLUnixFSManager : public ZLFSManager {
 

@@ -98,8 +98,8 @@ void QApplicationWindow::closeEvent(QCloseEvent *event) {
 void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		static const std::string ImageDirectory = ((QDialogManager&)ZLDialogManager::instance()).getPixmapPath();
-		menuBar()->insertItem(QPixmap((ImageDirectory + "/" + ZLApplication::ApplicationName() + "/" + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
+		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
+		menuBar()->insertItem(QPixmap((imagePrefix + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
 	}
 }
 
@@ -145,4 +145,12 @@ ZLViewWidget *QApplicationWindow::createViewWidget() {
 
 bool QApplicationWindow::isFingerTapEventSupported() const {
 	return false;
+}
+
+bool QApplicationWindow::isMousePresented() const {
+	return false;
+}
+
+bool QApplicationWindow::isKeyboardPresented() const {
+	return true;
 }

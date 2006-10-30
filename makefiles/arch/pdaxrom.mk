@@ -1,7 +1,8 @@
 INSTALLDIR = /usr
 ifeq "$(UI_TYPE)" "qt"
-	BINDIR = /usr/lib/qt/bin
+  BINDIR = /usr/lib/qt/bin
 endif
+IMAGEDIR = /usr/share/pixmaps
 
 USRPATH = $(BASEPATH)/armv5tel-cacko-linux
 CC = $(BASEPATH)/bin/armv5tel-linux-gcc -I $(BASEPATH)/include

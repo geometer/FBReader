@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <abstract/ZLXMLWriter.h>
+#include <ZLXMLWriter.h>
 
 class XMLConfig;
 

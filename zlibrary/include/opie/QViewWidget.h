@@ -1,1 +1,0 @@
-../../opie/view/QViewWidget.h

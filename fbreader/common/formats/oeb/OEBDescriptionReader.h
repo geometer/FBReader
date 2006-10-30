@@ -22,7 +22,7 @@
 #ifndef __OEBDESCRIPTIONREADER_H__
 #define __OEBDESCRIPTIONREADER_H__
 
-#include <abstract/ZLXMLReader.h>
+#include <ZLXMLReader.h>
 
 #include "../../description/BookDescription.h"
 

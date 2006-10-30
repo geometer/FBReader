@@ -24,7 +24,7 @@
 
 #include <string>
 
-#include <abstract/ZLImage.h>
+#include <ZLImage.h>
 #include "../../bookmodel/BookModel.h"
 
 class ZCompressedFileImage : public ZLSingleImage {

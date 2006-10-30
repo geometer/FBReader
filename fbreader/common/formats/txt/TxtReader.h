@@ -24,7 +24,7 @@
 
 #include <string>
 
-#include <abstract/ZLEncodingConverter.h>
+#include <ZLEncodingConverter.h>
 
 class ZLInputStream;
 

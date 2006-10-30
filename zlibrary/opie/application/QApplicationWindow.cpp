@@ -23,10 +23,10 @@
 #include <qmenubar.h>
 #include <qpe/resource.h>
 
-#include <abstract/ZLUnicodeUtil.h>
-#include <opie/QViewWidget.h>
+#include <ZLUnicodeUtil.h>
 
 #include "QApplicationWindow.h"
+#include "../view/QViewWidget.h"
 #include "../../qt/util/QKeyUtil.h"
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a), myCloseFlag(false) {
@@ -125,7 +125,7 @@ void QApplicationWindow::refresh() {
 			if ((*it)->isButton()) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + "/" + button.iconName()).c_str());
+					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + ZLApplication::PathDelimiter + button.iconName()).c_str());
 					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;
@@ -183,4 +183,13 @@ void QApplicationWindow::close() {
 
 bool QApplicationWindow::isFingerTapEventSupported() const {
 	return false;
+}
+
+bool QApplicationWindow::isMousePresented() const {
+	return false;
+}
+
+bool QApplicationWindow::isKeyboardPresented() const {
+	// TODO: implement
+	return true;
 }

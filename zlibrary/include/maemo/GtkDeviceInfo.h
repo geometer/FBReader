@@ -1,1 +1,0 @@
-../../maemo/deviceInfo/GtkDeviceInfo.h

@@ -26,7 +26,7 @@
 #include <vector>
 #include <string>
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 #include "TextKind.h"
 #include "AlignmentType.h"

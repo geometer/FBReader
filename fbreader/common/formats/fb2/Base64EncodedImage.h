@@ -24,7 +24,7 @@
 
 #include <vector>
 
-#include <abstract/ZLImage.h>
+#include <ZLImage.h>
 
 class Base64EncodedImage : public ZLSingleImage {
 

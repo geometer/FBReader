@@ -25,7 +25,7 @@
 #include <qlayout.h>
 #include <qbuttongroup.h>
 
-#include <abstract/ZLDialog.h>
+#include <ZLDialog.h>
 
 class QCommonDialog : public QDialog, public ZLDialog {
 	Q_OBJECT

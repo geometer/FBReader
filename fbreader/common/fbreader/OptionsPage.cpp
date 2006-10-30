@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLOptionEntry.h>
+#include <ZLOptionsDialog.h>
+#include <ZLOptionEntry.h>
 
 #include "OptionsPage.h"
 

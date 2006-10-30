@@ -23,7 +23,7 @@
 
 #include "bzlib.h"
 
-#include <abstract/shared_ptr.h>
+#include <shared_ptr.h>
 
 #include "../ZLInputStream.h"
 

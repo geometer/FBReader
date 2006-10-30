@@ -22,10 +22,10 @@
 #include <cctype>
 #include <algorithm>
 
-#include <abstract/ZLOptions.h>
-#include <abstract/ZLOptionsDialog.h>
-#include <abstract/ZLOptionEntry.h>
-#include <abstract/ZLFile.h>
+#include <ZLOptions.h>
+#include <ZLOptionsDialog.h>
+#include <ZLOptionEntry.h>
+#include <ZLFile.h>
 
 #include "PlainTextFormat.h"
 

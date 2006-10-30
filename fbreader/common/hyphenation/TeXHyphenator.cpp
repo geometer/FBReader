@@ -22,11 +22,11 @@
 #include <algorithm>
 #include <vector>
 
-#include <abstract/ZLUnicodeUtil.h>
-#include <abstract/ZLStringUtil.h>
-#include <abstract/ZLFile.h>
-#include <abstract/ZLDir.h>
-#include <abstract/ZLApplication.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
+#include <ZLFile.h>
+#include <ZLDir.h>
+#include <ZLApplication.h>
 
 #include "TeXHyphenator.h"
 #include "HyphenationReader.h"

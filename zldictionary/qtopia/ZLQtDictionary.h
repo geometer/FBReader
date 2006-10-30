@@ -21,7 +21,7 @@
 #ifndef __ZLQTDICTIONARY_H__
 #define __ZLQTDICTIONARY_H__
 
-#include <abstract/ZLDictionary.h>
+#include <ZLDictionary.h>
 
 class ZLQtDictionary : public ZLDictionary {
 

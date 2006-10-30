@@ -24,8 +24,8 @@
 #include <vector>
 #include <string>
 
-#include <abstract/ZLOptions.h>
-#include <abstract/ZLImageManager.h>
+#include <ZLOptions.h>
+#include <ZLImageManager.h>
 
 class ZLPaintContext {
 

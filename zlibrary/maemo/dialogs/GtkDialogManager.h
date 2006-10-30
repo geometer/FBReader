@@ -24,7 +24,7 @@
 #include <gtk/gtkwindow.h>
 #include <gtk/gtkdialog.h>
 
-#include <abstract/ZLDialogManager.h>
+#include <ZLDialogManager.h>
 
 class GtkDialogManager : public ZLDialogManager {
 
@@ -45,16 +45,12 @@ public:
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 	bool isWaiting() const { return myIsWaiting; }
 
-	void setPixmapPath(const std::string &pixmapPath) { myPixmapPath = pixmapPath; }
-	const std::string &getPixmapPath() const { return myPixmapPath; }
-
 	void setMainWindow(GtkWindow *window) const { myIsInitialized = true; myWindow = window; }
 
 	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
 	bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
 
 private:
-	std::string myPixmapPath;
 	mutable bool myIsInitialized;
 	mutable GtkWindow *myWindow;
 	bool myIsKeyboardGrabbed;

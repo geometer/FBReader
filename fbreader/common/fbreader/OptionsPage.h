@@ -24,7 +24,7 @@
 
 #include <map>
 
-#include <abstract/ZLOptionEntry.h>
+#include <ZLOptionEntry.h>
 
 class ZLDialogContent;
 

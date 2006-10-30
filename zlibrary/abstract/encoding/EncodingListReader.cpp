@@ -22,7 +22,7 @@
 
 #include <algorithm>
 
-#include <abstract/ZLFile.h>
+#include <ZLFile.h>
 
 #include "../xml/ZLXMLReader.h"
 

@@ -22,7 +22,7 @@
 #ifndef __TEXTELEMENT_H__
 #define __TEXTELEMENT_H__
 
-#include <abstract/ZLImageManager.h>
+#include <ZLImageManager.h>
 
 #include "../model/TextKind.h"
 #include "../model/Paragraph.h"

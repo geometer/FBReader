@@ -27,7 +27,7 @@
 #include <set>
 #include <map>
 
-#include <abstract/ZLOptions.h>
+#include <ZLOptions.h>
 
 #include "../description/BookDescription.h"
 
@@ -63,8 +63,8 @@ private:
 	void addDescription(BookDescriptionPtr description);
 
 private:
-	std::vector<AuthorPtr > myAuthors;
-	std::map<AuthorPtr ,Books> myCollection;
+	std::vector<AuthorPtr> myAuthors;
+	std::map<AuthorPtr,Books> myCollection;
 	std::set<BookDescriptionPtr> myExternalBooks;
 
 	std::string myPath;

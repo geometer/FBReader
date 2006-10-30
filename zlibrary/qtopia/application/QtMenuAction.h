@@ -23,7 +23,7 @@
 
 #include <qaction.h>
 
-#include <abstract/ZLApplication.h>
+#include <ZLApplication.h>
 
 class QtMenuAction : public QAction {
 	Q_OBJECT

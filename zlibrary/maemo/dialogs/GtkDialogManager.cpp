@@ -22,7 +22,7 @@
 #include <hildon-widgets/gtk-infoprint.h>
 #include <hildon-note.h>
 
-#include <abstract/ZLOpenFileDialog.h>
+#include <ZLOpenFileDialog.h>
 
 #include "GtkDialogManager.h"
 #include "GtkCommonDialog.h"

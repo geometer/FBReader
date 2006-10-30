@@ -23,7 +23,7 @@
 
 #include <string>
 
-#include <abstract/ZLFileInfo.h>
+#include <ZLFileInfo.h>
 
 class ZLFSDir;
 class ZLInputStream;
@@ -57,7 +57,6 @@ protected:
 friend class ZLFile;
 };
 
-inline void ZLFSManager::deleteInstance() { delete ourInstance; }
 inline ZLFSManager &ZLFSManager::instance() { return *ourInstance; }
 inline ZLFSManager::ZLFSManager() {}
 inline ZLFSManager::~ZLFSManager() {}

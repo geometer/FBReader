@@ -21,7 +21,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <abstract/ZLUnicodeUtil.h>
+#include <ZLUnicodeUtil.h>
 #include "../view/GtkViewWidget.h"
 #include "../../gtk/util/GtkKeyUtil.h"
 #include "../../gtk/util/GtkSignalUtil.h"
@@ -76,7 +76,7 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 	myFullScreen = false;
 
 	std::string lowerCaseName = ZLUnicodeUtil::toLower(ZLApplication::ApplicationName());
-	gtk_window_set_icon_name(myMainWindow, (ImageDirectory + "/" + lowerCaseName + "/" + ZLApplication::ApplicationName() + ".png").c_str());
+	gtk_window_set_icon_name(myMainWindow, (ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + lowerCaseName + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ".png").c_str());
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
@@ -122,7 +122,7 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		const std::string lowerCaseName = ZLUnicodeUtil::toLower(ZLApplication::ApplicationName());
-		GtkWidget *image = gtk_image_new_from_file((ImageDirectory + "/" + lowerCaseName + "/" + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + lowerCaseName + ZLApplication::PathDelimiter + buttonItem.iconName() + ".png").c_str());
 		GtkToolItem *button = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 
@@ -188,4 +188,13 @@ void GtkApplicationWindow::grabAllKeys(bool) {
 
 bool GtkApplicationWindow::isFingerTapEventSupported() const {
 	return false;
+}
+
+bool GtkApplicationWindow::isMousePresented() const {
+	return false;
+}
+
+bool GtkApplicationWindow::isKeyboardPresented() const {
+	// TODO: implement
+	return true;
 }
