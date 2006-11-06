@@ -298,18 +298,28 @@ GtkApplicationWindow::ToolbarButton::ToolbarButton(ZLApplication::Toolbar::Butto
 	const int width = gdk_pixbuf_get_width(filePixbuf);
 	const int height = gdk_pixbuf_get_height(filePixbuf);
 	const int border = 4;
+	const int line = 2;
 	const GdkColorspace colorspace = gdk_pixbuf_get_colorspace(filePixbuf);
 	const bool hasAlpha = gdk_pixbuf_get_has_alpha(filePixbuf);
 	const int bitsPerSample = gdk_pixbuf_get_bits_per_sample(filePixbuf);
 
-	GdkPixbuf *buttonPixbuf = gdk_pixbuf_new(colorspace, hasAlpha, bitsPerSample, width + 2 * border, height + 2 * border);
+	const int w = width + 2 * border;
+	const int h = height + 2 * border;
+	GdkPixbuf *buttonPixbuf = gdk_pixbuf_new(colorspace, hasAlpha, bitsPerSample, w, h);
 	gdk_pixbuf_fill(buttonPixbuf, 0);
 	gdk_pixbuf_copy_area(filePixbuf, 0, 0, width, height, buttonPixbuf, border, border);
 	myCurrentImage = GTK_IMAGE(gtk_image_new_from_pixbuf(buttonPixbuf));
 	myReleasedImage = GTK_IMAGE(gtk_image_new_from_pixbuf(buttonPixbuf));
 
-	GdkPixbuf *pressedButtonPixbuf = gdk_pixbuf_new(colorspace, hasAlpha, bitsPerSample, width + 2 * border, height + 2 * border);
-	gdk_pixbuf_fill(pressedButtonPixbuf, 0x00007FFF);
+	GdkPixbuf *pressedButtonPixbuf = gdk_pixbuf_copy(buttonPixbuf);
+	GdkPixbuf *top = gdk_pixbuf_new_subpixbuf(pressedButtonPixbuf, 0, 0, w, line);
+	GdkPixbuf *bottom = gdk_pixbuf_new_subpixbuf(pressedButtonPixbuf, 0, h - line, w, line);
+	GdkPixbuf *left = gdk_pixbuf_new_subpixbuf(pressedButtonPixbuf, 0, 0, line, h);
+	GdkPixbuf *right = gdk_pixbuf_new_subpixbuf(pressedButtonPixbuf, w - line, 0, line, h);
+	gdk_pixbuf_fill(top, 0x00007FFF);
+	gdk_pixbuf_fill(bottom, 0x00007FFF);
+	gdk_pixbuf_fill(left, 0x00007FFF);
+	gdk_pixbuf_fill(right, 0x00007FFF);
 	gdk_pixbuf_copy_area(filePixbuf, 0, 0, width, height, pressedButtonPixbuf, border, border);
 	myPressedImage = GTK_IMAGE(gtk_image_new_from_pixbuf(pressedButtonPixbuf));
 
