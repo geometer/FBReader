@@ -514,16 +514,18 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 
 	for (std::map<std::string,RecordInfo>::const_iterator it = myRecords.begin(); it != myRecords.end(); ++it) {
 		const std::string &name = it->first;
-		std::cerr << "[ FILE: " << name << " ]\n";
-		shared_ptr<ZLInputStream> fileStream = inputStream(stream, name);
-		if (fileStream.isNull() || !fileStream->open()) {
-			std::cerr << "creation failed\n";
-		} else {
-			int size = fileStream->sizeOfOpened();
-			std::string fileData;
-			fileData.append(size, '\0');
-			fileStream->read((char*)fileData.data(), size);
-			std::cerr << fileData;
+		if (ZLStringUtil::stringEndsWith(name, ".hhc")) {
+			std::cerr << "[ FILE: " << name << " ]\n";
+			shared_ptr<ZLInputStream> fileStream = inputStream(stream, name);
+			if (fileStream.isNull() || !fileStream->open()) {
+				std::cerr << "creation failed\n";
+			} else {
+				int size = fileStream->sizeOfOpened();
+				std::string fileData;
+				fileData.append(size, '\0');
+				fileStream->read((char*)fileData.data(), size);
+				std::cerr << fileData;
+			}
 		}
 	}
 	return true;
