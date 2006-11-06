@@ -95,11 +95,6 @@ inline void ZLViewWidget::rotate(Angle rotation) { myRotation = rotation; }
 inline ZLViewWidget::Angle ZLViewWidget::rotation() const { return myRotation; }
 
 inline ZLPaintContext &ZLView::context() const { return myContext; }
-inline bool ZLView::onStylusPress(int, int) { return false; }
-inline bool ZLView::onStylusRelease(int, int) { return false; }
-inline bool ZLView::onStylusMove(int, int) { return false; }
-inline bool ZLView::onStylusMovePressed(int, int) { return false; }
-inline bool ZLView::onFingerTap(int, int) { return false; }
 inline ZLApplication &ZLView::application() { return myApplication; }
 
 #endif /* __ZLVIEW_H__ */

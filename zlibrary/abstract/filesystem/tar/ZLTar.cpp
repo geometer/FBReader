@@ -122,17 +122,13 @@ void ZLTarInputStream::close() {
 
 void ZLTarInputStream::seek(int offset, bool absoluteOffset) {
 	if (absoluteOffset) {
-		offset -= this->offset();
+		offset -= myOffset;
 	}
-	if (offset > 0) {
-		read(0, offset);
-	} else if (offset < 0) {
-		offset += this->offset();
-		open();
-		if (offset >= 0) {
-			read(0, offset);
-		}
+	if ((size_t)-offset > myOffset) {
+		offset = -myOffset;
 	}
+	myBaseStream->seek(offset, false);
+	myOffset += offset;
 }
 
 size_t ZLTarInputStream::offset() const {

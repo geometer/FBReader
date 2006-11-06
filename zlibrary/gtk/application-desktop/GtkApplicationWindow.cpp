@@ -44,8 +44,8 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	((GtkApplicationWindow*)data)->application().refreshWindow();
 }
 
-static void actionSlot(GtkWidget*, gpointer data) {
-	((ZLApplication::Action*)data)->checkAndRun();
+static void onButtonClicked(GtkWidget *button, gpointer data) {
+	((GtkApplicationWindow*)data)->onGtkButtonPress(button);
 }
 
 static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
@@ -61,7 +61,8 @@ static const std::string OPTIONS = "Options";
 GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800),
+	myFullScreen(false) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	GtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -80,8 +81,6 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) :
 
 	GtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
 	GtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
-
-	myFullScreen = false;
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
@@ -91,6 +90,8 @@ GtkApplicationWindow::~GtkApplicationWindow() {
 		myWidthOption.setValue(width);
 		myHeightOption.setValue(height);
 	}
+	myButtonToWidget.clear();
+	myWidgetToButton.clear();
 }
 
 void GtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
@@ -108,6 +109,18 @@ void GtkApplicationWindow::handleScrollEventSlot(GdkEventScroll *event) {
 		default:
 			break;
 	}
+}
+
+void GtkApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+	GtkToggleButton *gtkButton = GTK_TOGGLE_BUTTON(myButtonToWidget[&(ZLApplication::Toolbar::Item&)button]);
+	const bool isPressed = button.isPressed();
+	if (gtk_toggle_button_get_active(gtkButton) != isPressed) {
+		gtk_toggle_button_set_active(gtkButton, isPressed);
+	}
+}
+
+void GtkApplicationWindow::onGtkButtonPress(GtkWidget *gtkButton) {
+	onButtonPress((ZLApplication::Toolbar::ButtonItem&)*myWidgetToButton[gtkButton]);
 }
 
 void GtkApplicationWindow::setFullscreen(bool fullscreen) {
@@ -136,16 +149,14 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
 		GtkWidget *image = gtk_image_new_from_file((imagePrefix + buttonItem.iconName() + ".png").c_str());
-		GtkWidget *button = gtk_button_new();
+		GtkWidget *button = buttonItem.isToggleButton() ? gtk_toggle_button_new() : gtk_button_new();
 		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 		gtk_container_add(GTK_CONTAINER(button), image);
 		gtk_container_add(GTK_CONTAINER(myToolbar), button);
-		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
-		if (!action.isNull()) {
-			GtkSignalUtil::connectSignal(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(actionSlot), &*action);
-		}
-		myButtons[item] = button;
+		GtkSignalUtil::connectSignal(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(onButtonClicked), this);
+		myButtonToWidget[&*item] = button;
+		myWidgetToButton[button] = item;
 		gtk_widget_show_all(button);
 	}
 }
@@ -154,7 +165,7 @@ void GtkApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
-			GtkWidget *gtkButton = myButtons[*it];
+			GtkWidget *gtkButton = myButtonToWidget[&**it];
 			if (gtkButton != 0) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				int actionId = button.actionId();

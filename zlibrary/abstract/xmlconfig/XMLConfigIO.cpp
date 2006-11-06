@@ -29,7 +29,8 @@
 #include "XMLConfigWriter.h"
 #include "XMLConfigDeltaWriter.h"
 
-static const std::string UNKNOWN_CATEGORY = "unknown";
+const std::string XMLConfig::UNKNOWN_CATEGORY = ".unknown.";
+
 static const std::string CHANGES_FILE = "config.changes";
 
 std::string XMLConfig::configDirName() const {

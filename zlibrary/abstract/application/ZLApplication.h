@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <set>
 
 #include <shared_ptr.h>
 #include <ZLOptions.h>
@@ -130,6 +131,8 @@ public:
 		friend class Toolbar;
 		};
 	
+		class ButtonGroup;
+
 		class ButtonItem : public Item {
 
 		public:
@@ -140,13 +143,39 @@ public:
 			int actionId() const;
 			const std::string &iconName() const;
 
+			shared_ptr<ButtonGroup> buttonGroup() const;
+			bool isToggleButton() const;
+			void press();
+			bool isPressed() const;
+
+		private:
+			void setButtonGroup(shared_ptr<ButtonGroup>);
+
 		private:
 			const int myActionId;
 			const std::string myIconName;
+			shared_ptr<ButtonGroup> myButtonGroup;
 
 		friend class Toolbar;
 		};
 	
+		class ButtonGroup {
+
+		private:
+			ButtonGroup();
+			void press(const ButtonItem *item);
+			const ButtonItem *pressedItem() const;
+			const std::set<const ButtonItem*> &items() const;
+
+		private:
+			std::set<const ButtonItem*> myItems;
+			const ButtonItem *myPressedItem;
+
+		friend class ButtonItem;
+		friend class Toolbar;
+		friend class ZLApplicationWindow;
+		};
+
 		class SeparatorItem : public Item {
 
 		public:
@@ -157,7 +186,8 @@ public:
 		typedef shared_ptr<Item> ItemPtr;
 		typedef std::vector<ItemPtr> ItemVector;
 
-		void addButton(int actionId, const std::string &iconName);
+		void addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group = 0);
+		shared_ptr<ButtonGroup> createButtonGroup();
 		void addSeparator();
 
 		const ItemVector &items() const;
@@ -288,6 +318,7 @@ public:
 	bool isFingerTapEventSupported() const;
 	bool isMousePresented() const;
 	bool isKeyboardPresented() const;
+	void trackStylus(bool track);
 
 	shared_ptr<Action> action(int actionId) const;
 	bool isActionVisible(int actionId) const;
@@ -331,6 +362,11 @@ protected:
 	void init();
 	// TODO: change to pure virtual
 	virtual void initMenu() {}
+
+	void onButtonPress(ZLApplication::Toolbar::ButtonItem &button);
+	// TODO: change to pure virtual
+	virtual void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem&) {}
+
 	virtual ZLViewWidget *createViewWidget() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
 
@@ -355,6 +391,7 @@ public:
 
 private:
 	ZLApplication *myApplication;
+	bool myToggleButtonLock;
 
 friend class ZLApplication;
 };
@@ -416,8 +453,30 @@ inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::s
 inline bool ZLApplication::Toolbar::ButtonItem::isButton() const { return true; }
 inline int ZLApplication::Toolbar::ButtonItem::actionId() const { return myActionId; }
 inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const { return myIconName; }
+inline void ZLApplication::Toolbar::ButtonItem::setButtonGroup(shared_ptr<ButtonGroup> group) {
+	if (!myButtonGroup.isNull()) {
+		myButtonGroup->myItems.erase(this);
+	}
+	myButtonGroup = group;
+	if (!myButtonGroup.isNull()) {
+		myButtonGroup->myItems.insert(this);
+	}
+}
+inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::ButtonItem::buttonGroup() const { return myButtonGroup; }
+inline bool ZLApplication::Toolbar::ButtonItem::isToggleButton() const { return !myButtonGroup.isNull(); }
+inline void ZLApplication::Toolbar::ButtonItem::press() { if (isToggleButton()) { myButtonGroup->press(this); } }
+inline bool ZLApplication::Toolbar::ButtonItem::isPressed() const { return isToggleButton() && (this == myButtonGroup->pressedItem()); }
+
+inline ZLApplication::Toolbar::ButtonGroup::ButtonGroup() {}
+inline void ZLApplication::Toolbar::ButtonGroup::press(const ButtonItem *item) { myPressedItem = item; }
+inline const ZLApplication::Toolbar::ButtonItem *ZLApplication::Toolbar::ButtonGroup::pressedItem() const { return myPressedItem; }
+inline const std::set<const ZLApplication::Toolbar::ButtonItem*> &ZLApplication::Toolbar::ButtonGroup::items() const { return myItems; }
 
 inline bool ZLApplication::Toolbar::SeparatorItem::isButton() const { return false; }
+
+inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::createButtonGroup() {
+	return new ButtonGroup();
+}
 
 inline ZLApplication::Menu::Menu() {}
 inline ZLApplication::Menu::~Menu() {}

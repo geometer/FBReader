@@ -98,7 +98,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 		info.LeftIndent += myStyle.style()->firstLineIndentDelta();
 	}
 	if (!info.NodeInfo.isNull()) {
-		info.LeftIndent += myStyle.context().stringHeight() / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
+		info.LeftIndent += (myStyle.context().stringHeight() + 2) / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
 	}
 	info.Width = info.LeftIndent;
 

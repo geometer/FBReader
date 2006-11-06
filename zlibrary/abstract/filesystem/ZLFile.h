@@ -32,7 +32,7 @@ class ZLOutputStream;
 
 class ZLFile {
 
-private:
+public:
 	enum ArchiveType {
 		NONE = 0,
 		GZIP = 0x0001,
@@ -51,6 +51,7 @@ public:
 	unsigned long mTime() const;
 	size_t size() const;	
 
+	void forceArchiveType(ArchiveType type);
 	bool isCompressed() const;
 	bool isDirectory() const;
 	bool isArchive() const;
@@ -74,7 +75,7 @@ private:
 	std::string myFullName;
 	std::string myName;
 	std::string myExtension;
-	unsigned long myArchiveType;
+	ArchiveType myArchiveType;
 	mutable ZLFileInfo myInfo;
 	mutable bool myInfoIsFilled;
 };

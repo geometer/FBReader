@@ -49,6 +49,7 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {
 		return oebFileName;
 	}
 
+	oebFile.forceArchiveType(ZLFile::ZIP);
 	shared_ptr<ZLDir> zipDir = oebFile.directory(false);
 	if (zipDir.isNull()) {
 		return "";

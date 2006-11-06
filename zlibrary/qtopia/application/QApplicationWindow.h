@@ -33,6 +33,7 @@
 class QMenuBar;
 class QPopupMenu;
 class QtMenuAction;
+class QPixmap;
 
 class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
@@ -105,6 +106,27 @@ private:
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
 
+	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+
+	class ToolBarButton {
+
+	public:	
+		ToolBarButton(ZLApplication::Toolbar::ButtonItem &button);
+		~ToolBarButton();
+
+		ZLApplication::Toolbar::ButtonItem &button();
+		QPixmap &pixmap();
+
+		bool isPressed() const;
+		void toggle();
+
+	private:
+		ZLApplication::Toolbar::ButtonItem &myButton;
+		QPixmap *myReleasedPixmap;
+		QPixmap *myPressedPixmap;
+		bool myIsPressed;
+	};
+
 private slots:
 	void doActionSlot(int buttonNumber);
 	void emptySlot() {}
@@ -114,6 +136,7 @@ private:
 	std::vector<bool> myToolbarMask;
 	std::vector<bool> myMenuMask;
 	std::map<int,QtMenuAction*> myMenuMap;
+	std::map<int,ToolBarButton*> myToolBarButtons;
 
 	bool myFullScreen;
 	int myTitleHeight;

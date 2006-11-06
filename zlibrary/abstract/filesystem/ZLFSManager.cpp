@@ -19,6 +19,7 @@
  */
 
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "ZLFSDir.h"
 #include "ZLFSManager.h"
@@ -46,25 +47,33 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	myFullName = myPath.substr(index + 1);
 	myName = myFullName;
 
-	myArchiveType = NONE;
+	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::instance().myForcedFiles;
+	std::map<std::string,ArchiveType>::iterator it = forcedFiles.find(myPath);
+	if (it != forcedFiles.end()) {
+		myArchiveType = it->second;
+	} else {
+		myArchiveType = NONE;
+		std::string lowerCaseName = ZLUnicodeUtil::toLower(myName);
 
-	if (ZLStringUtil::stringEndsWith(myName, ".gz")) {
-		myName = myName.substr(0, myName.length() - 3);
-		myArchiveType |= GZIP;
-	}
-	if (ZLStringUtil::stringEndsWith(myName, ".bz2")) {
-		myName = myName.substr(0, myName.length() - 4);
-		myArchiveType |= BZIP2;
-	}
-	if (ZLStringUtil::stringEndsWith(myName, ".zip") ||
-			ZLStringUtil::stringEndsWith(myName, ".oebzip") ) {
-		myArchiveType |= ZIP;
-	} else if (ZLStringUtil::stringEndsWith(myName, ".tar")) {
-		myArchiveType |= TAR;
-	} else if (ZLStringUtil::stringEndsWith(myName, ".tgz") ||
-						 ZLStringUtil::stringEndsWith(myName, ".ipk")) {
-		myArchiveType |= TAR | GZIP;
-		myName = myName.substr(0, myName.length() - 2) + "ar";
+		if (ZLStringUtil::stringEndsWith(lowerCaseName, ".gz")) {
+			myName = myName.substr(0, myName.length() - 3);
+			lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 3);
+			myArchiveType = (ArchiveType)(myArchiveType | GZIP);
+		}
+		if (ZLStringUtil::stringEndsWith(lowerCaseName, ".bz2")) {
+			myName = myName.substr(0, myName.length() - 4);
+			lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 4);
+			myArchiveType = (ArchiveType)(myArchiveType | BZIP2);
+		}
+		if (ZLStringUtil::stringEndsWith(lowerCaseName, ".zip")) {
+			myArchiveType = (ArchiveType)(myArchiveType | ZIP);
+		} else if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tar")) {
+			myArchiveType = (ArchiveType)(myArchiveType | TAR);
+		} else if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz") ||
+							 ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
+			//myName = myName.substr(0, myName.length() - 3) + "tar";
+			myArchiveType = (ArchiveType)(myArchiveType | TAR | GZIP);
+		}
 	}
 
 	index = myName.rfind('.');
@@ -149,5 +158,12 @@ bool ZLFile::remove() const {
 		return true;
 	} else {
 		return false;
+	}
+}
+
+void ZLFile::forceArchiveType(ArchiveType type) {
+	if (myArchiveType != type) {
+		myArchiveType = type;
+		ZLFSManager::instance().myForcedFiles[myPath] = myArchiveType;
 	}
 }

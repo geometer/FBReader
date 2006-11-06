@@ -23,33 +23,70 @@
 #include "GtkPaintContext.h"
 #include "gdk-pixbuf-hack.h"
 
-void GtkViewWidget::onMousePressed(GdkEventButton *event) {
-	int x, y;
+void GtkViewWidget::updateCoordinates(int &x, int &y) {
 	switch (rotation()) {
 		default:
-			x = (int)event->x;
-			y = (int)event->y;
 			break;
 		case ZLViewWidget::DEGREES90:
-			x = height() - (int)event->y;
-			y = (int)event->x;
+		{
+			int tmp = x;
+			x = height() - y;
+			y = tmp;
 			break;
+		}
 		case ZLViewWidget::DEGREES180:
-			x = width() - (int)event->x;
-			y = height() - (int)event->y;
+			x = width() - x;
+			y = height() - y;
 			break;
 		case ZLViewWidget::DEGREES270:
-			x = (int)event->y;
-			y = width() - (int)event->x;
+		{
+			int tmp = x;
+			x = y;
+			y = width() - x;
 			break;
+		}
 	}
 	ZLPaintContext &context = view()->context();
 	x -= context.leftMargin();
 	y -= context.topMargin();
+}
+
+void GtkViewWidget::onMousePressed(GdkEventButton *event) {
+	int x = (int)event->x;
+	int y = (int)event->y;
+	updateCoordinates(x, y);
 	if (event->button == 1) {
+		view()->onStylusMove(x, y);
 		view()->onStylusPress(x, y);
 	} else if (event->button == 8) {
 		view()->onFingerTap(x, y);
+	}
+}
+
+void GtkViewWidget::onMouseReleased(GdkEventButton *event) {
+	if (event->button == 1) {
+		int x = (int)event->x;
+		int y = (int)event->y;
+		updateCoordinates(x, y);
+		view()->onStylusRelease(x, y);
+	}
+}
+
+void GtkViewWidget::onMouseMoved(GdkEventMotion *event) {
+	int x, y;
+	GdkModifierType state;
+	if (event->is_hint) {
+		gdk_window_get_pointer(event->window, &x, &y, &state);
+	} else {
+		x = (int)event->x;
+		y = (int)event->y;
+		state = (GdkModifierType)event->state;
+	}
+	updateCoordinates(x, y);
+	if (state == 0) {
+		view()->onStylusMove(x, y);
+	} else {
+		view()->onStylusMovePressed(x, y);
 	}
 }
 
@@ -67,7 +104,7 @@ GtkViewWidget::GtkViewWidget(ZLApplication *application, Angle initialAngle) : Z
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
-	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
+	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
 }
 
 GtkViewWidget::~GtkViewWidget() {

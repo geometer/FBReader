@@ -37,6 +37,8 @@ public:
 
 	GtkWidget *area() { return myArea; }
 	void onMousePressed(GdkEventButton *event);
+	void onMouseReleased(GdkEventButton *event);
+	void onMouseMoved(GdkEventMotion *event);
 
 private:
 	void trackStylus(bool track);
@@ -44,6 +46,7 @@ private:
 
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
+	void updateCoordinates(int &x, int &y);
 
 private:
 	ZLApplication *myApplication;

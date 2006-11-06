@@ -34,3 +34,23 @@ void ZLViewWidget::setView(ZLView *view) {
 void ZLView::repaintView() {
 	myApplication.refreshWindow();
 }
+
+bool ZLView::onStylusPress(int, int) {
+	return false;
+}
+
+bool ZLView::onStylusRelease(int, int) {
+	return false;
+}
+
+bool ZLView::onStylusMove(int, int) {
+	return false;
+}
+
+bool ZLView::onStylusMovePressed(int, int) {
+	return false;
+}
+
+bool ZLView::onFingerTap(int, int) {
+	return false;
+}

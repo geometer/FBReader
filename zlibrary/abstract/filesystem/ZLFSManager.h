@@ -22,8 +22,10 @@
 #define __ZLFSMANAGER_H__
 
 #include <string>
+#include <map>
 
 #include <ZLFileInfo.h>
+#include <ZLFile.h>
 
 class ZLFSDir;
 class ZLInputStream;
@@ -53,6 +55,9 @@ protected:
 	virtual ZLFileInfo fileInfo(const std::string &path) const = 0;
 	virtual bool isZipSupported() const = 0;
 	virtual bool removeFile(const std::string &path) const = 0;
+
+private:
+	std::map<std::string,ZLFile::ArchiveType> myForcedFiles;
 
 friend class ZLFile;
 };

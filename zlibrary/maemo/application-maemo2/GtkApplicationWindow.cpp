@@ -52,13 +52,7 @@ static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	}
 }
 
-static void actionSlot(GtkWidget*, GdkEventButton*, gpointer data) {
-	if (acceptAction()) {
-		((ZLApplication::Action*)data)->checkAndRun();
-	}
-}
-
-static void menuActionSlot(GtkWidget *, gpointer data) {
+static void menuActionSlot(GtkWidget*, gpointer data) {
 	if (acceptAction()) {
 		((ZLApplication::Action*)data)->checkAndRun();
 	}
@@ -77,7 +71,19 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	}
 }
 
-GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
+static void mouseReleased(GtkWidget*, GdkEventButton *event, gpointer data) {
+	if (acceptAction()) {
+		((GtkViewWidget*)data)->onMouseReleased(event);
+	}
+}
+
+static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
+	if (acceptAction()) {
+		((GtkViewWidget*)data)->onMouseMoved(event);
+	}
+}
+
+GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application), myFullScreen(false) {
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
@@ -100,12 +106,13 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLAppli
 
 	GtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 	GtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "key_press_event", GTK_SIGNAL_FUNC(handleKey), this);
-
-	myFullScreen = false;
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
 	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);
+	for (std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*>::iterator it = myToolbarButtons.begin(); it != myToolbarButtons.end(); ++it) {
+		delete it->second;
+	}
 }
 
 void GtkApplicationWindow::initMenu() {
@@ -125,7 +132,7 @@ void GtkApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLApplication:
 	myMenuStack.push(gtkSubmenu);
 }
 
-void GtkApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu) {
+void GtkApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLApplication::Menubar::Submenu&) {
 	myMenuStack.pop();
 }
 
@@ -178,28 +185,17 @@ void GtkApplicationWindow::close() {
 void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	GtkToolItem *gtkItem;
 	if (item->isButton()) {
-		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter + buttonItem.iconName() + ".png").c_str());
-		gtkItem = gtk_tool_item_new();
-		GtkWidget *ebox = gtk_event_box_new();
+		ZLApplication::Toolbar::ButtonItem &buttonItem = (ZLApplication::Toolbar::ButtonItem&)*item;
 
-		gtk_container_add(GTK_CONTAINER(ebox), image);
-		gtk_container_add(GTK_CONTAINER(gtkItem), ebox);
-
-		gtk_tool_item_set_homogeneous(gtkItem, false);
-		gtk_tool_item_set_expand(gtkItem, false);
-
-		GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
-		shared_ptr<ZLApplication::Action> action = application().action(buttonItem.actionId());
-		if (!action.isNull()) {
-			GtkSignalUtil::connectSignal(GTK_OBJECT(ebox), "button_press_event", GTK_SIGNAL_FUNC(actionSlot), &*action);
-		}
+		ToolbarButton *toolbarButton = new ToolbarButton(buttonItem, *this);
+		gtkItem = toolbarButton->toolItem();
+		myToolbarButtons[&buttonItem] = toolbarButton;
 	} else {
 		gtkItem = gtk_separator_tool_item_new();
 		gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
 	}
 	gtk_toolbar_insert(myToolbar, gtkItem, -1);
-	myButtons[item] = gtkItem;
+	myToolItems[item] = gtkItem;
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
@@ -207,7 +203,7 @@ void GtkApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	bool enableToolbarSpace = false;
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		GtkToolItem *toolItem = myButtons[*it];
+		GtkToolItem *toolItem = myToolItems[*it];
 		if ((*it)->isButton()) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
@@ -257,6 +253,8 @@ ZLViewWidget *GtkApplicationWindow::createViewWidget() {
 	gtk_container_add(GTK_CONTAINER(myWindow), viewWidget->area());
 	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), viewWidget);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), viewWidget);
 	gtk_widget_show_all(GTK_WIDGET(myWindow));
 	return viewWidget;
 }
@@ -278,4 +276,73 @@ bool GtkApplicationWindow::isMousePresented() const {
 
 bool GtkApplicationWindow::isKeyboardPresented() const {
 	return false;
+}
+
+static void onGtkButtonPress(GtkWidget*, GdkEventButton*, gpointer data) {
+	if (acceptAction()) {
+		((GtkApplicationWindow::ToolbarButton*)data)->press(true);
+	}
+}
+
+static void onGtkButtonRelease(GtkWidget*, GdkEventButton*, gpointer data) {
+	if (acceptAction()) {
+		((GtkApplicationWindow::ToolbarButton*)data)->press(false);
+	}
+}
+
+GtkApplicationWindow::ToolbarButton::ToolbarButton(ZLApplication::Toolbar::ButtonItem &buttonItem, GtkApplicationWindow &window) : myButtonItem(buttonItem), myWindow(window) {
+	myAction = myWindow.application().action(buttonItem.actionId());
+
+	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
+
+	const int width = gdk_pixbuf_get_width(filePixbuf);
+	const int height = gdk_pixbuf_get_height(filePixbuf);
+	const int border = 4;
+	const GdkColorspace colorspace = gdk_pixbuf_get_colorspace(filePixbuf);
+	const bool hasAlpha = gdk_pixbuf_get_has_alpha(filePixbuf);
+	const int bitsPerSample = gdk_pixbuf_get_bits_per_sample(filePixbuf);
+
+	GdkPixbuf *buttonPixbuf = gdk_pixbuf_new(colorspace, hasAlpha, bitsPerSample, width + 2 * border, height + 2 * border);
+	gdk_pixbuf_fill(buttonPixbuf, 0);
+	gdk_pixbuf_copy_area(filePixbuf, 0, 0, width, height, buttonPixbuf, border, border);
+	myCurrentImage = GTK_IMAGE(gtk_image_new_from_pixbuf(buttonPixbuf));
+	myReleasedImage = GTK_IMAGE(gtk_image_new_from_pixbuf(buttonPixbuf));
+
+	GdkPixbuf *pressedButtonPixbuf = gdk_pixbuf_new(colorspace, hasAlpha, bitsPerSample, width + 2 * border, height + 2 * border);
+	gdk_pixbuf_fill(pressedButtonPixbuf, 0x00007FFF);
+	gdk_pixbuf_copy_area(filePixbuf, 0, 0, width, height, pressedButtonPixbuf, border, border);
+	myPressedImage = GTK_IMAGE(gtk_image_new_from_pixbuf(pressedButtonPixbuf));
+
+	gdk_pixbuf_unref(filePixbuf);
+	gdk_pixbuf_unref(buttonPixbuf);
+	gdk_pixbuf_unref(pressedButtonPixbuf);
+
+	myEventBox = gtk_event_box_new();
+	gtk_container_add(GTK_CONTAINER(myEventBox), GTK_WIDGET(myCurrentImage));
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myEventBox), "button_press_event", GTK_SIGNAL_FUNC(onGtkButtonPress), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myEventBox), "button_release_event", GTK_SIGNAL_FUNC(onGtkButtonRelease), this);
+
+	myToolItem = gtk_tool_item_new();
+	gtk_container_add(GTK_CONTAINER(myToolItem), myEventBox);
+	gtk_tool_item_set_homogeneous(myToolItem, false);
+	gtk_tool_item_set_expand(myToolItem, false);
+	GTK_WIDGET_UNSET_FLAGS(myToolItem, GTK_CAN_FOCUS);
+}
+
+void GtkApplicationWindow::ToolbarButton::forcePress(bool state) {
+	gtk_image_set_from_pixbuf(myCurrentImage, gtk_image_get_pixbuf(state ? myPressedImage : myReleasedImage));
+}
+
+void GtkApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+	myToolbarButtons[&button]->forcePress(button.isPressed());
+}
+
+void GtkApplicationWindow::ToolbarButton::press(bool state) {
+	if (!myButtonItem.isToggleButton()) {
+		forcePress(state);
+		if (state) {
+			return;
+		}
+	}
+	myWindow.onButtonPress(myButtonItem);
 }

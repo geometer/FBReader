@@ -52,9 +52,12 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
+	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+
 public:
 	void handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);
+	void onGtkButtonPress(GtkWidget *gtkButton);
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
 
@@ -66,7 +69,8 @@ private:
 	GtkWidget *myToolbar;
 	GtkWidget *myVBox;
 
-	std::map<ZLApplication::Toolbar::ItemPtr,GtkWidget*> myButtons;
+	std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
+	std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
 
 	bool myFullScreen;
 };

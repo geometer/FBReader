@@ -186,13 +186,13 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 }
 
 void GtkPaintContext::setColor(ZLColor color, LineStyle style) {
-	// TODO: use style
 	::setColor(myTextGC, color);
+	gdk_gc_set_line_attributes(myTextGC, 1, (style == SOLID_LINE) ? GDK_LINE_SOLID : GDK_LINE_ON_OFF_DASH, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
 }
 
 void GtkPaintContext::setFillColor(ZLColor color, FillStyle style) {
-	// TODO: use style
 	::setColor(myFillGC, color);
+	gdk_gc_set_fill(myFillGC, (style == SOLID_FILL) ? GDK_SOLID : GDK_TILED);
 }
 
 int GtkPaintContext::stringWidth(const char *str, int len) const {

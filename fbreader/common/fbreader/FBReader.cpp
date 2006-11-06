@@ -21,8 +21,8 @@
 
 #include <ZLFile.h>
 #include <ZLDialogManager.h>
-#include <ZLDialog.h>
 #include <ZLOptionsDialog.h>
+#include <ZLDialog.h>
 #include <ZLOptionEntry.h>
 #include <ZLDir.h>
 

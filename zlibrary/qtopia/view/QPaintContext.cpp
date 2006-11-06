@@ -165,7 +165,7 @@ void QPaintContext::setColor(ZLColor color, LineStyle style) {
 void QPaintContext::setFillColor(ZLColor color, FillStyle style) {
 	myPainter->setBrush(QBrush(
 		QColor(color.Red, color.Green, color.Blue),
-		(style == SOLID_FILL) ? QPainter::SolidPattern : QPainter::Dense4Pattern
+		(style == SOLID_FILL) ? QPainter::SolidPattern : QPainter::NoBrush
 	));
 }
 

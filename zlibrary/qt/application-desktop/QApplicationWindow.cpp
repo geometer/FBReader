@@ -18,12 +18,11 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <qapplication.h>
 #include <qpixmap.h>
 #include <qmenubar.h>
 #include <qaction.h>
+#include <qlayout.h>
 
 #include "QApplicationWindow.h"
 #include "../dialogs/QDialogManager.h"
@@ -36,12 +35,23 @@ void QDialogManager::createApplicationWindow(ZLApplication *application) const {
 
 static const std::string OPTIONS = "Options";
 
-ToolBarAction::ToolBarAction(QApplicationWindow *parent, const ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
+ToolBarAction::ToolBarAction(QApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
+	static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
+	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
+	setIconSet(QIconSet(icon));
+	QSize size = icon.size();
+	QIconSet::setIconSize(QIconSet::Large, size);
+	QIconSet::setIconSize(QIconSet::Small, size);
+	setToggleAction(item.isToggleButton());
 	connect(this, SIGNAL(activated()), this, SLOT(onActivated()));
 }
 
 void ToolBarAction::onActivated() {
-	((QApplicationWindow*)parent())->application().doAction(myItem.actionId());
+	((QApplicationWindow*)parent())->onButtonPress(myItem);
+}
+
+void QApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+	myActions[&button]->setOn(button.isPressed());
 }
 
 QApplicationWindow::QApplicationWindow(ZLApplication *application) :
@@ -54,6 +64,8 @@ QApplicationWindow::QApplicationWindow(ZLApplication *application) :
 	setWFlags(getWFlags() | WStyle_Customize);
 
 	myToolBar = new QToolBar(this);
+	myToolBar->boxLayout()->setMargin(5);
+	myToolBar->boxLayout()->setSpacing(3);
 	setToolBarsMovable(false);
 
 	resize(myWidthOption.value(), myHeightOption.value());
@@ -68,7 +80,7 @@ QApplicationWindow::~QApplicationWindow() {
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}
-	for (std::map<ZLApplication::Toolbar::ItemPtr, class ToolBarAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
+	for (std::map<const ZLApplication::Toolbar::Item*, class ToolBarAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
 		if (it->second != 0) {
 			delete it->second;
 		}
@@ -121,16 +133,12 @@ void QApplicationWindow::closeEvent(QCloseEvent *event) {
 
 void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
-		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
-		QPixmap icon((imagePrefix + buttonItem.iconName() + ".png").c_str());
+		ZLApplication::Toolbar::ButtonItem &buttonItem = (ZLApplication::Toolbar::ButtonItem&)*item;
 		ToolBarAction *action = new ToolBarAction(this, buttonItem);
-		action->setIconSet(QIconSet(icon));
-		QSize size = icon.size();
-		QIconSet::setIconSize(QIconSet::Large, size);
-		QIconSet::setIconSize(QIconSet::Small, size);
 		action->addTo(myToolBar);
-		myActions[item] = action;
+		myActions[&*item] = action;
+	} else {
+		//myToolBar->addSeparator();
 	}
 }
 
@@ -139,7 +147,7 @@ void QApplicationWindow::refresh() {
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			QAction *action = myActions[*it];
+			QAction *action = myActions[&**it];
 			if (action != 0) {
 				int id = button.actionId();
 				action->setEnabled(application().isActionEnabled(id));

@@ -31,19 +31,16 @@
 #include "../FBOptions.h"
 
 static const std::string SIZE = "Size";
-static const std::string MTIME = "MTime";
 static const std::string ENTRY = "Entry";
 static const std::string ENTRIES_NUMBER = "EntriesNumber";
 
 bool BookDescriptionUtil::checkInfo(const ZLFile &file) {
 	return
-		(ZLIntegerOption(FBOptions::BOOKS_CATEGORY, file.path(), SIZE, -1).value() == (int)file.size()) &&
-		(ZLIntegerOption(FBOptions::BOOKS_CATEGORY, file.path(), MTIME, -1).value() == (int)file.mTime());
+		(ZLIntegerOption(FBOptions::BOOKS_CATEGORY, file.path(), SIZE, -1).value() == (int)file.size());
 }
 
 void BookDescriptionUtil::saveInfo(const ZLFile &file) {
 	ZLIntegerOption(FBOptions::BOOKS_CATEGORY, file.path(), SIZE, -1).setValue(file.size());
-	ZLIntegerOption(FBOptions::BOOKS_CATEGORY, file.path(), MTIME, -1).setValue(file.mTime());
 }
 
 void BookDescriptionUtil::listZipEntries(const ZLFile &zipFile, std::vector<std::string> &entries) {

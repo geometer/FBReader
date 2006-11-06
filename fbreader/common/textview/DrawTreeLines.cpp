@@ -31,7 +31,7 @@ void TextView::drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAft
 	int x = context().x();
 	int y = context().y();
 
-	const int qstep = context().stringHeight() / 3;
+	const int qstep = (context().stringHeight() + 2) / 3;
 
 	const std::vector<bool> &Stack = info.VerticalLinesStack;
 	const int depth = Stack.size();

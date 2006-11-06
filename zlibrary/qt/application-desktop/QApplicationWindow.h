@@ -58,11 +58,13 @@ private:
 	void keyPressEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
+	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+
 private:
 	class QToolBar *myToolBar;
 
-	friend class ToolBarAction;
-	std::map<ZLApplication::Toolbar::ItemPtr, class ToolBarAction*> myActions;
+friend class ToolBarAction;
+	std::map<const ZLApplication::Toolbar::Item*, class ToolBarAction*> myActions;
 
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
@@ -75,13 +77,13 @@ class ToolBarAction : public QAction {
 	Q_OBJECT
 
 public:
-	ToolBarAction(QApplicationWindow *parent, const ZLApplication::Toolbar::ButtonItem &item);
+	ToolBarAction(QApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item);
 
 private slots:
 	void onActivated();
 
 private:
-	const ZLApplication::Toolbar::ButtonItem &myItem;
+	ZLApplication::Toolbar::ButtonItem &myItem;
 };
 
 

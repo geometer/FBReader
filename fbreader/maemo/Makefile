@@ -20,7 +20,6 @@ DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
 MENUDIR = $(DESTDIR)/etc/others-menu
 SECTION = user/tools
 endif
-SHARE_FBREADER = $(SHAREDIR)/FBReader
 
 TMPDIR = tmp
 

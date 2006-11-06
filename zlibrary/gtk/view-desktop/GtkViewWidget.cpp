@@ -24,32 +24,67 @@
 
 #include "gdk-pixbuf-hack.h"
 
-static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
-	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
-	ZLView *view = viewWidget->view();
-	int x, y;
+static void updatePoint(GtkViewWidget *viewWidget, int &x, int &y) {
 	switch (viewWidget->rotation()) {
 		default:
-			x = (int)event->x;
-			y = (int)event->y;
 			break;
 		case ZLViewWidget::DEGREES90:
-			x = viewWidget->height() - (int)event->y;
-			y = (int)event->x;
+		{
+			int tmp = x;
+			x = viewWidget->height() - y;
+			y = tmp;
 			break;
+		}
 		case ZLViewWidget::DEGREES180:
-			x = viewWidget->width() - (int)event->x;
-			y = viewWidget->height() - (int)event->y;
+			x = viewWidget->width() - x;
+			y = viewWidget->height() - y;
 			break;
 		case ZLViewWidget::DEGREES270:
-			x = (int)event->y;
-			y = viewWidget->width() - (int)event->x;
+		{
+			int tmp = x;
+			x = y;
+			y = viewWidget->width() - tmp;
 			break;
+		}
 	}
-	ZLPaintContext &context = view->context();
+	ZLPaintContext &context = viewWidget->view()->context();
 	x -= context.leftMargin();
 	y -= context.topMargin();
-	view->onStylusPress(x, y);
+}
+
+static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
+	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
+	int x = (int)event->x;
+	int y = (int)event->y;
+	updatePoint(viewWidget, x, y);
+	viewWidget->view()->onStylusPress(x, y);
+}
+
+static void mouseReleased(GtkWidget*, GdkEventButton *event, gpointer data) {
+	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
+	int x = (int)event->x;
+	int y = (int)event->y;
+	updatePoint(viewWidget, x, y);
+	viewWidget->view()->onStylusRelease(x, y);
+}
+
+static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
+	GtkViewWidget *viewWidget = (GtkViewWidget*)data;
+	int x, y;
+	GdkModifierType state;
+	if (event->is_hint) {
+		gdk_window_get_pointer(event->window, &x, &y, &state);
+	} else {
+		x = (int)event->x;
+		y = (int)event->y;
+		state = (GdkModifierType)event->state;
+	}
+	updatePoint(viewWidget, x, y);
+	if (state == 0) {
+		viewWidget->view()->onStylusMove(x, y);
+	} else {
+		viewWidget->view()->onStylusMovePressed(x, y);
+	}
 }
 
 int GtkViewWidget::width() const {
@@ -64,8 +99,10 @@ GtkViewWidget::GtkViewWidget(ZLApplication *application, Angle initialAngle) : Z
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
 	gtk_widget_set_double_buffered(myArea, false);
-	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK);
+	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
 	GtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), this);
+	GtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), this);
 }
 
 GtkViewWidget::~GtkViewWidget() {

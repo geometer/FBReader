@@ -18,8 +18,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLTime.h>
 
 #include "XMLConfig.h"
@@ -30,10 +28,10 @@ const std::string &XMLConfigGroup::getValue(const std::string &name, const std::
 	return (it != myValues.end()) ? it->second.Value : defaultValue;
 }
 
-bool XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category, bool changeCategory) {
+bool XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it != myValues.end()) {
-		if (!changeCategory || (it->second.Category == category)) {
+		if ((category == it->second.Category) || (category == XMLConfig::UNKNOWN_CATEGORY)) {
 			if (it->second.Value != value) {
 				it->second.Value = value;
 				return true;

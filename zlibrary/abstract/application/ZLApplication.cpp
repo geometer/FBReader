@@ -78,7 +78,7 @@ bool ZLApplication::closeView() {
 void ZLApplication::openFile(const std::string&) {
 }
 
-ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplication(application) {
+ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplication(application), myToggleButtonLock(false) {
 	myApplication->myWindow = this;
 }
 
@@ -91,6 +91,29 @@ void ZLApplicationWindow::init() {
 	}
 
 	initMenu();
+}
+
+void ZLApplicationWindow::onButtonPress(ZLApplication::Toolbar::ButtonItem &button) {
+	if (myToggleButtonLock) {
+		return;
+	}
+	if (button.isToggleButton()) {
+		myToggleButtonLock = true;
+		if (button.isPressed()) {
+			setToggleButtonState(button);
+			myToggleButtonLock = false;
+			return;
+		} else {
+			button.press();
+			shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
+			const std::set<const ZLApplication::Toolbar::ButtonItem*> &items = group->items();
+			for (std::set<const ZLApplication::Toolbar::ButtonItem*>::const_iterator it = items.begin(); it != items.end(); ++it) {
+				setToggleButtonState(**it);
+			}
+		}
+		myToggleButtonLock = false;
+	}
+	application().doAction(button.actionId());
 }
 
 void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
@@ -109,11 +132,11 @@ ZLView *ZLApplication::currentView() {
 }
 
 void ZLApplication::refreshWindow() {
-	if (myViewWidget != 0) {
-		myViewWidget->repaint();
-	}
 	if (myWindow != 0) {
 		myWindow->refresh();
+	}
+	if (myViewWidget != 0) {
+		myViewWidget->repaint();
 	}
 }
 
@@ -155,8 +178,10 @@ void ZLApplication::resetWindowCaption() {
 	}
 }
 
-void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName) {
-	myItems.push_back(new ButtonItem(actionId, iconName));
+void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group) {
+	ButtonItem *button = new ButtonItem(actionId, iconName);
+	myItems.push_back(button);
+	button->setButtonGroup(group);
 }
 
 void ZLApplication::Toolbar::addSeparator() {
@@ -207,5 +232,11 @@ void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {
 				processSepartor((ZLApplication::Menubar::Separator&)**it);
 				break;
 		}							
+	}
+}
+
+void ZLApplication::trackStylus(bool track) {
+	if (myViewWidget != 0) {
+		myViewWidget->trackStylus(track);
 	}
 }

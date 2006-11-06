@@ -20,6 +20,7 @@
 
 #include <qpe/qpeapplication.h>
 #include <qpixmap.h>
+#include <qpainter.h>
 #include <qpe/qpemenubar.h>
 #include <qpe/resource.h>
 
@@ -42,6 +43,51 @@ private:
 	}
 };
 
+QApplicationWindow::ToolBarButton::ToolBarButton(ZLApplication::Toolbar::ButtonItem &button) : myButton(button), myReleasedPixmap(0), myPressedPixmap(0), myIsPressed(button.isPressed()) {
+}
+
+QApplicationWindow::ToolBarButton::~ToolBarButton() {
+	if (myReleasedPixmap != 0) {
+		delete myReleasedPixmap;
+	}
+	if (myPressedPixmap != 0) {
+		delete myPressedPixmap;
+	}
+}
+
+ZLApplication::Toolbar::ButtonItem &QApplicationWindow::ToolBarButton::button() {
+	return myButton;
+}
+
+QPixmap &QApplicationWindow::ToolBarButton::pixmap() {
+	if (myReleasedPixmap == 0) {
+		myReleasedPixmap = new QPixmap(Resource::loadPixmap((ZLApplication::ApplicationName() + '/' + myButton.iconName()).c_str()));
+	}
+	if (myButton.isPressed()) {
+		if (myPressedPixmap == 0) {
+			const int w = myReleasedPixmap->width();
+			const int h = myReleasedPixmap->height();
+			myPressedPixmap = new QPixmap(w, h);		
+			myPressedPixmap->fill(Qt::white);
+			QPainter painter(myPressedPixmap);
+			painter.drawPixmap(0, 0, *myReleasedPixmap);
+			painter.setPen(Qt::black);
+			painter.drawRect(0, 0, w, h);
+		}
+		return *myPressedPixmap;
+	} else {
+		return *myReleasedPixmap;
+	}
+}
+
+bool QApplicationWindow::ToolBarButton::isPressed() const {
+	return myIsPressed;
+}
+
+void QApplicationWindow::ToolBarButton::toggle() {
+	myIsPressed = !myIsPressed;
+}
+
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
 	setWFlags(getWFlags() | WStyle_Customize);
 
@@ -59,6 +105,9 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 }
 
 QApplicationWindow::~QApplicationWindow() {
+	for (std::map<int,ToolBarButton*>::iterator it = myToolBarButtons.begin(); it != myToolBarButtons.end(); ++it) {
+		delete it->second;
+	}
 }
 
 void QApplicationWindow::setCaption(const std::string &caption) {
@@ -171,10 +220,15 @@ void QApplicationWindow::refresh() {
 		myToolBar->clear();
 		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 			if ((*it)->isButton()) {
-				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+				ZLApplication::Toolbar::ButtonItem &button = (ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap((ZLApplication::ApplicationName() + '/' + button.iconName()).c_str());
-					myToolBar->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
+					const int actionId = button.actionId();
+					ToolBarButton *tbButton = myToolBarButtons[actionId];
+					if (tbButton == 0) {
+						tbButton = new ToolBarButton(button);
+						myToolBarButtons[actionId] = tbButton;
+					}
+					myToolBar->insertItem(tbButton->pixmap(), this, SLOT(emptySlot()), 0, actionId);
 				}
 				++bt;
 			}
@@ -208,7 +262,10 @@ void QApplicationWindow::refresh() {
 }
 
 void QApplicationWindow::doActionSlot(int buttonNumber) {
-	application().doAction(buttonNumber);
+	ToolBarButton *tbButton = myToolBarButtons[buttonNumber];
+	if (tbButton != 0) {
+		onButtonPress(tbButton->button());
+	}
 }
 
 void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
@@ -328,4 +385,13 @@ QtMenuAction::QtMenuAction(ZLApplication &application, const ZLApplication::Menu
 
 void QtMenuAction::doSlot() {
 	myApplication.doAction(myActionId);
+}
+
+void QApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+	const int actionId = button.actionId();
+	ToolBarButton *tbButton = myToolBarButtons[actionId];
+	if ((tbButton != 0) && (tbButton->isPressed() != button.isPressed())) {
+		myToolBar->changeItem(actionId, tbButton->pixmap());
+		tbButton->toggle();
+	}
 }

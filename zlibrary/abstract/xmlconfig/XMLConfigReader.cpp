@@ -52,8 +52,7 @@ void XMLConfigReader::startElementHandler(const char *tag, const char **attribut
 			myGroup->setValue(
 				decodedName,
 				decodedValue,
-				(category == 0) ? myCategory : category,
-				false
+				(category == 0) ? myCategory : category
 			);
 			if (myConfig.myDelta != 0) {
 				myConfig.myDelta->setValue(
