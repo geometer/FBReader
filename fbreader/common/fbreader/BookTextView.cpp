@@ -45,6 +45,7 @@ static const char * const BUFFER_WORD_PREFIX = "Word_";
 BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
 	myCurrentPointInStack = 0;
 	myMaxStackSize = 20;
+	myLockUndoStackChanges = false;
 }
 
 BookTextView::~BookTextView() {
@@ -133,11 +134,13 @@ void BookTextView::replaceCurrentPositionInStack() {
 
 void BookTextView::gotoParagraph(int num, bool last) {
 	if (!empty()) {
-		while (myPositionStack.size() > myCurrentPointInStack) {
-			myPositionStack.pop_back();
+		if (!myLockUndoStackChanges) {
+			while (myPositionStack.size() > myCurrentPointInStack) {
+				myPositionStack.pop_back();
+			}
+			pushCurrentPositionIntoStack();
+			++myCurrentPointInStack;
 		}
-		pushCurrentPositionIntoStack();
-		++myCurrentPointInStack;
 
 		TextView::gotoParagraph(num, last);
 	}
@@ -157,7 +160,9 @@ void BookTextView::undoPageMove() {
 
 		--myCurrentPointInStack;
 		Position &pos = myPositionStack[myCurrentPointInStack];
+		myLockUndoStackChanges = true;
 		gotoPosition(pos.first, pos.second, 0);
+		myLockUndoStackChanges = false;
 
 		repaintView();
 	}
@@ -172,7 +177,9 @@ void BookTextView::redoPageMove() {
 		replaceCurrentPositionInStack();
 		++myCurrentPointInStack;
 		Position &pos = myPositionStack[myCurrentPointInStack];
+		myLockUndoStackChanges = true;
 		gotoPosition(pos.first, pos.second, 0);
+		myLockUndoStackChanges = false;
 
 		if (myCurrentPointInStack + 1 == myPositionStack.size()) {
 			myPositionStack.pop_back();

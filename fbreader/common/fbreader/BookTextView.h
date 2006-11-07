@@ -59,6 +59,7 @@ private:
 	unsigned int myMaxStackSize;
 
 	std::string myCaption;
+	bool myLockUndoStackChanges;
 };
 
 inline const std::string &BookTextView::caption() const { return myCaption; }

@@ -208,7 +208,7 @@ size_t CHMInputStream::do_read(char *buffer, size_t maxSize) {
 			myOutDataOffset = 0;
 			const size_t compressedSize = end - start;
 
-			myInData.clear();
+			myInData.erase();
 			myInData.append(compressedSize, '\0');
 			myBase.seek(mySectionInfo.Offset + start, true);
 			myBase.read((char*)myInData.data(), compressedSize);

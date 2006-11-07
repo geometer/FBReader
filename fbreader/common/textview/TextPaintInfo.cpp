@@ -308,7 +308,7 @@ WordCursor TextView::buildInfos(const WordCursor &start) {
 			}
 			++counter;
 		}
-	} while (cursor.isEndOfParagraph() && cursor.nextParagraph() && !cursor.paragraphCursor().isEndOfSection());
+	} while (cursor.isEndOfParagraph() && cursor.nextParagraph() && !cursor.paragraphCursor().isEndOfSection() && (textAreaHeight >= 0));
 
 	return cursor;
 }
