@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,10 +19,41 @@
  * 02110-1301, USA.
  */
 
-#include <ZLFile.h>
+#ifndef __HHCREADER_H__
+#define __HHCREADER_H__
 
-#include "ZLFileImage.h"
+#include <vector>
 
-shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
-	return ZLFile(myPath).inputStream();
-}
+#include "../html/HtmlReader.h"
+#include "../../bookmodel/BookModel.h"
+#include "../../bookmodel/BookReader.h"
+
+class CHMReferenceCollection;
+
+class HHCReader : public HtmlReader {
+
+public:
+	HHCReader(CHMReferenceCollection &collection, BookModel &model, const std::string &encoding);
+	~HHCReader();
+
+	void setReferences();
+
+private:
+	void startDocumentHandler();
+	void endDocumentHandler();
+
+	bool tagHandler(const HtmlTag &tag);
+	bool characterDataHandler(const char*, int, bool);
+
+private:
+	CHMReferenceCollection &myReferenceCollection;
+
+	std::string myText;
+	std::string myReference;
+
+	BookReader myBookReader;
+
+	std::vector<std::string> myReferenceVector;
+};
+
+#endif /* __HHCREADER_H__ */

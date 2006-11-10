@@ -40,29 +40,35 @@ public:
 
 protected:
 	void addAction(const std::string &tag, HtmlTagAction *action);
+	void setBuildTableOfContent(bool build);
 
 private:
 	void startDocumentHandler();
+protected:
 	void endDocumentHandler();
 
+private:
 	bool tagHandler(const HtmlTag &tag);
 
 private:
 	bool characterDataHandler(const char *text, int len, bool convert);
 	void addConvertedDataToBuffer(const char *text, int len, bool convert);
 
-private:
 protected:
 	BookReader myBookReader;
-
 	std::string myBaseDirPath;
 
 private:
 	const PlainTextFormat &myFormat;
 	int myIgnoreDataCounter;
 	bool myIsPreformatted;
+
+protected:
 	bool myIsHyperlink;
+
+private:
 	bool myIsStarted;
+	bool myBuildTableOfContent;
 	std::stack<int> myListNumStack;
 
 	int mySpaceCounter;

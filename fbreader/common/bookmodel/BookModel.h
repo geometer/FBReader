@@ -50,7 +50,7 @@ public:
 	const std::string &fileName() const;
 
 	const TextModel &bookTextModel() const;
-	const TextModel &contentsModel() const;
+	const ContentsModel &contentsModel() const;
 	const TextModel *footnoteModel(const std::string &id) const;
 
 	const ImageMap &imageMap() const;
@@ -70,7 +70,7 @@ friend class BookReader;
 };
 
 inline const TextModel &BookModel::bookTextModel() const { return myBookTextModel; }
-inline const TextModel &BookModel::contentsModel() const { return myContentsModel; }
+inline const ContentsModel &BookModel::contentsModel() const { return myContentsModel; }
 inline const ImageMap &BookModel::imageMap() const { return myImages; }
 inline const BookDescriptionPtr BookModel::description() const { return myDescription; }
 

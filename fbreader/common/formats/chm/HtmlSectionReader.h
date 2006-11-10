@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,10 +19,31 @@
  * 02110-1301, USA.
  */
 
-#include <ZLFile.h>
+#ifndef __HTMLSECTIONREADER_H__
+#define __HTMLSECTIONREADER_H__
 
-#include "ZLFileImage.h"
+#include "../html/HtmlBookReader.h"
+#include "CHMFile.h"
 
-shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
-	return ZLFile(myPath).inputStream();
-}
+class CHMReferenceCollection;
+
+class HtmlSectionReader : public HtmlBookReader {
+
+public:
+	HtmlSectionReader(BookModel &model, const PlainTextFormat &format, const std::string &encoding, shared_ptr<CHMFileInfo> info, CHMReferenceCollection &collection);
+	void setSectionName(const std::string &sectionName);
+
+private:
+	void endDocumentHandler();
+
+private:
+	shared_ptr<CHMFileInfo> myInfo;
+	CHMReferenceCollection &myReferenceCollection;
+	std::string myCurrentSectionName;
+
+friend class HtmlSectionTagAction;
+friend class HtmlSectionHrefTagAction;
+friend class HtmlSectionImageTagAction;
+};
+
+#endif /* __HTMLSECTIONREADER_H__ */

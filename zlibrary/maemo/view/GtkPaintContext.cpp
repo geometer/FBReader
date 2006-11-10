@@ -190,7 +190,7 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 
 void GtkPaintContext::setColor(ZLColor color, LineStyle style) {
 	::setColor(myTextGC, color);
-	gdk_gc_set_line_attributes(myTextGC, 1, (style == SOLID_LINE) ? GDK_LINE_SOLID : GDK_LINE_ON_OFF_DASH, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
+	//gdk_gc_set_line_attributes(myTextGC, 1, (style == SOLID_LINE) ? GDK_LINE_SOLID : GDK_LINE_ON_OFF_DASH, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
 }
 
 void GtkPaintContext::setFillColor(ZLColor color, FillStyle style) {

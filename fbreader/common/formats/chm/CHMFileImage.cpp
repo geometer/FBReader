@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -20,8 +21,15 @@
 
 #include <ZLFile.h>
 
-#include "ZLFileImage.h"
+#include "CHMFileImage.h"
 
-shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
-	return ZLFile(myPath).inputStream();
+CHMFileImage::CHMFileImage(shared_ptr<CHMFileInfo> info, const std::string &entry) : ZLStreamImage("image/auto", 0, 0), myInfo(info), myEntry(entry) {
+}
+
+shared_ptr<ZLInputStream> CHMFileImage::inputStream() const {
+	shared_ptr<ZLInputStream> baseStream = ZLFile(myInfo->fileName()).inputStream();
+	if (baseStream.isNull() || !baseStream->open()) {
+		return 0;
+	}
+	return myInfo->entryStream(baseStream, myEntry);
 }

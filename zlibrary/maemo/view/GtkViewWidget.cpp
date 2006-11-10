@@ -42,7 +42,7 @@ void GtkViewWidget::updateCoordinates(int &x, int &y) {
 		{
 			int tmp = x;
 			x = y;
-			y = width() - x;
+			y = width() - tmp;
 			break;
 		}
 	}

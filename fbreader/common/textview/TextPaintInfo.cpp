@@ -275,6 +275,19 @@ WordCursor TextView::findStart(const WordCursor &end, SizeUnit unit, int size) {
 		size -= paragraphSize(start, false, unit);
 	}
 	skip(start, unit, -size);
+
+	if (unit != LINE_UNIT) {
+		bool sameStart = start == end;
+		if (!sameStart && start.isEndOfParagraph() && end.isStartOfParagraph()) {
+			WordCursor startCopy = start;
+			startCopy.nextParagraph();
+			sameStart = startCopy == end;
+		}
+		if (sameStart) {
+			start = findStart(end, LINE_UNIT, 1);
+		}
+	}
+
 	return start;
 }
 

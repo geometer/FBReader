@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,23 +19,34 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLFILEIMAGE_H__
-#define __ZLFILEIMAGE_H__
+#ifndef __CHMREFERENCECOLLECTION_H__
+#define __CHMREFERENCECOLLECTION_H__
 
-#include "ZLStreamImage.h"
+#include <string>
+#include <set>
+#include <queue>
 
-class ZLFileImage : public ZLStreamImage {
+class CHMReferenceCollection {
 
 public:
-	ZLFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size = 0);
+	static std::string CHMReferenceCollection::fullReference(const std::string &prefix, const std::string &reference);
+
+public:
+	CHMReferenceCollection();
+	const std::string &addReference(const std::string &reference, bool doConvert);
+	bool containsNonProcessedReferences() const;
+	const std::string nextReference();
+	void setPrefix(const std::string &fileName);
+	const std::string &prefix() const;
 
 private:
-	shared_ptr<ZLInputStream> inputStream() const;
+	std::string myPrefix;
+	std::set<std::string> myReferences;
+	std::queue<std::string> myReferenceQueue;
 
 private:
-	std::string myPath;
+	CHMReferenceCollection(const CHMReferenceCollection&);
+	const CHMReferenceCollection &operator = (const CHMReferenceCollection&);
 };
 
-inline ZLFileImage::ZLFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size) : ZLStreamImage(mimeType, offset, size), myPath(path) {}
-
-#endif /* __ZLFILEIMAGE_H__ */
+#endif /* __CHMREFERENCECOLLECTION_H__ */

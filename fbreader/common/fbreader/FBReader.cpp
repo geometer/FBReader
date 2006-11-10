@@ -74,7 +74,7 @@ FBReader::FBReader(const std::string& bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
 	StoreContentsPositionOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "StoreContentsPosition", false),
-	KeyDelayOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "KeyDelay", 0, 5000, 750),
+	KeyDelayOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "KeyDelay", 0, 5000, 250),
 	LargeScrollingOptions(
 		OPTIONS, DELAY, 250,
 		LARGE_SCROLLING, MODE, TextView::NO_OVERLAPPING,

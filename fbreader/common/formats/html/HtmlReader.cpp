@@ -31,6 +31,23 @@
 #include "HtmlReader.h"
 #include "HtmlEntityCollection.h"
 
+std::string HtmlReader::decodeURL(const std::string &encoded) {
+	std::string decoded;
+	const int len = encoded.length();
+	decoded.reserve(len);
+	for (int i = 0; i < len; i++) {
+		if ((encoded[i] == '%') && (i < len - 2)) {
+			const char *end = encoded.data() + i + 3;
+			char **endp = const_cast<char**>(&end);
+			decoded += (char)strtol(encoded.data() + i + 1, endp, 16);
+			i += 2;
+		} else {
+			decoded += encoded[i];
+		}
+	}
+	return decoded;
+}
+
 HtmlReader::HtmlReader(const std::string &encoding) {
 	myConverter = ZLEncodingConverter::createConverter(encoding);
 }
@@ -241,7 +258,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						if ((ptr == start) || (quotationCounter > 0)) {
 							++quotationCounter;
 						}
-					} else if ((quotationCounter != 1) && ((*ptr == '>') || isspace(*ptr))) {
+					} else if ((quotationCounter != 1) && ((*ptr == '/') || (*ptr == '>') || isspace(*ptr))) {
 						if (ptr != start) {
 							currentString.append(start, ptr - start);
 							if (currentString[0] == '"') {

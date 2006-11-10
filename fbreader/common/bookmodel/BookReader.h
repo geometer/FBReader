@@ -61,6 +61,7 @@ public:
 
 	void beginContentsParagraph(int referenceNumber = -1);
 	void endContentsParagraph();
+	void setReference(size_t contentsParagraphNumber, int referenceNumber);
 
 	void addData(const std::string &data);
 	void addContentsData(const std::string &data);
@@ -69,6 +70,8 @@ public:
 	void exitTitle() { myInsideTitle = false; }
 
 	const BookModel &model() const { return myModel; }
+
+	void reset();
 
 private:
 	void flushTextBufferToParagraph();

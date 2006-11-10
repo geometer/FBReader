@@ -14,6 +14,7 @@ FBReader requires
      If you cannot find expat in your distribution, please visit
      http://expat.sourceforge.net
   ** enca -- encoding detection library (http://trific.ath.cx/software/enca/)
+	** libz and libbz2 -- libraries for zip and bzip2 (de)compression
   ** UI library -- this depends on your target platform. For desktop,
        Qt library, version 3.*
      OR

@@ -214,3 +214,14 @@ void BookReader::endContentsParagraph() {
 		myTOCStack.pop();
 	}
 }
+
+void BookReader::setReference(size_t contentsParagraphNumber, int referenceNumber) {
+	if (contentsParagraphNumber >= myModel.myContentsModel.paragraphsNumber()) {
+		return;
+	}
+	myModel.myContentsModel.setReference(((TreeParagraph*)myModel.myContentsModel[contentsParagraphNumber]), referenceNumber);
+}
+
+void BookReader::reset() {
+	myKindStack.clear();
+}

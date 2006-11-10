@@ -32,6 +32,9 @@ class ZLInputStream;
 class HtmlReader {
 
 public:
+	static std::string decodeURL(const std::string &encodedURL);
+
+public:
 	struct HtmlAttribute {
 		std::string Name;
 		std::string Value;

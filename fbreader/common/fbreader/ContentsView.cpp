@@ -105,8 +105,6 @@ void ContentsView::gotoReference() {
 		}
 		selectParagraph(selected);
 		gotoParagraph(selected);
-		if (selected != model()->paragraphsNumber() - 1) {
-			scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
-		}
+		scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
 	}
 }

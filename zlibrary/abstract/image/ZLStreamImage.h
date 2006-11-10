@@ -18,10 +18,28 @@
  * 02110-1301, USA.
  */
 
-#include <ZLFile.h>
+#ifndef __ZLSTREAMIMAGE_H__
+#define __ZLSTREAMIMAGE_H__
 
-#include "ZLFileImage.h"
+#include <string>
 
-shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
-	return ZLFile(myPath).inputStream();
-}
+#include <ZLImage.h>
+#include <ZLInputStream.h>
+
+class ZLStreamImage : public ZLSingleImage {
+
+public:
+	ZLStreamImage(const std::string &mimeType, size_t offset, size_t size = 0);
+	const shared_ptr<std::string> stringData() const;
+
+private:
+	virtual shared_ptr<ZLInputStream> inputStream() const = 0;
+
+private:
+	size_t myOffset;
+	mutable size_t mySize;
+};
+
+inline ZLStreamImage::ZLStreamImage(const std::string &mimeType, size_t offset, size_t size) : ZLSingleImage(mimeType), myOffset(offset), mySize(size) {}
+
+#endif /* __ZLSTREAMIMAGE_H__ */

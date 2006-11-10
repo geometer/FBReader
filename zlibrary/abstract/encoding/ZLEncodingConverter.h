@@ -45,6 +45,7 @@ protected:
 public:
 	virtual ~ZLEncodingConverter();
 	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) = 0;
+	void convert(std::string &dst, const std::string &src);
 	virtual void reset();
 	virtual bool fillTable(int *map) = 0;
 };

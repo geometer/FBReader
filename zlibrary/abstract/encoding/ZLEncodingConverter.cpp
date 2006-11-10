@@ -272,3 +272,7 @@ const std::string &ZLEncodingConverter::encodingByCode(int code) {
 	std::map<int,std::string>::const_iterator it = ourEncodingsByCode.find(code);
 	return (it != ourEncodingsByCode.end()) ? it->second : EMPTY;
 }
+
+void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {
+	convert(dst, src.data(), src.data() + src.length());
+}

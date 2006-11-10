@@ -150,11 +150,15 @@ void HtmlHeaderTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttr
 	if (start) {
 		bookReader().insertEndOfSectionParagraph();
 		bookReader().enterTitle();
-		bookReader().beginContentsParagraph();
+		if (myReader.myBuildTableOfContent) {
+			bookReader().beginContentsParagraph();
+		}
 		bookReader().pushKind(myKind);
 	} else {
 		bookReader().popKind();
-		bookReader().endContentsParagraph();
+		if (myReader.myBuildTableOfContent) {
+			bookReader().endContentsParagraph();
+		}
 		bookReader().exitTitle();
 	}
 	bookReader().beginParagraph();
@@ -196,29 +200,12 @@ void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttrib
 HtmlImageTagAction::HtmlImageTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
 }
 
-static std::string decodeURL(const std::string &encoded) {
-	std::string decoded;
-	const int len = encoded.length();
-	decoded.reserve(len);
-	for (int i = 0; i < len; i++) {
-		if ((encoded[i] == '%') && (i < len - 2)) {
-			const char *end = encoded.data() + i + 3;
-			char **endp = const_cast<char**>(&end);
-			decoded += (char)strtol(encoded.data() + i + 1, endp, 16);
-			i += 2;
-		} else {
-			decoded += encoded[i];
-		}
-	}
-	return decoded;
-}
-
 void HtmlImageTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
 	if (start) {
 		bookReader().endParagraph();
 		for (unsigned int i = 0; i < attributes.size(); ++i) {
 			if (attributes[i].Name == "SRC") {
-				std::string fileName = decodeURL(attributes[i].Value);
+				std::string fileName = HtmlReader::decodeURL(attributes[i].Value);
 				bookReader().addImageReference(fileName);
 				bookReader().addImage(fileName,
 					new ZLFileImage("image/auto", myReader.myBaseDirPath + fileName, 0)
@@ -292,55 +279,59 @@ void HtmlBookReader::addAction(const std::string &tag, HtmlTagAction *action) {
 		}
 		myActionMap.erase(it);
 	}
-	 myActionMap.insert(std::pair<std::string,HtmlTagAction*>(tag, action));
+	myActionMap.insert(std::pair<std::string,HtmlTagAction*>(tag, action));
 }
 
-HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format) {
-	addAction("EM",	new HtmlControlTagAction(*this, EMPHASIS));
-	addAction("STRONG",	new HtmlControlTagAction(*this, STRONG));
-	addAction("B",	new HtmlControlTagAction(*this, BOLD));
-	addAction("I",	new HtmlControlTagAction(*this, ITALIC));
-	addAction("TT",	new HtmlControlTagAction(*this, CODE));
-	addAction("CODE",	new HtmlControlTagAction(*this, CODE));
-	addAction("CITE",	new HtmlControlTagAction(*this, CITE));
-	addAction("SUB",	new HtmlControlTagAction(*this, SUB));
-	addAction("SUP",	new HtmlControlTagAction(*this, SUP));
-	addAction("H1",	new HtmlHeaderTagAction(*this, H1));
-	addAction("H2",	new HtmlHeaderTagAction(*this, H2));
-	addAction("H3",	new HtmlHeaderTagAction(*this, H3));
-	addAction("H4",	new HtmlHeaderTagAction(*this, H4));
-	addAction("H5",	new HtmlHeaderTagAction(*this, H5));
-	addAction("H6",	new HtmlHeaderTagAction(*this, H6));
-	addAction("HEAD",	new HtmlIgnoreTagAction(*this));
-	addAction("TITLE",	new HtmlIgnoreTagAction(*this));
-	addAction("STYLE",	new HtmlIgnoreTagAction(*this));
-	addAction("SELECT",	new HtmlIgnoreTagAction(*this));
-	addAction("SCRIPT",	new HtmlIgnoreTagAction(*this));
-	addAction("A",	new HtmlHrefTagAction(*this));
-	addAction("DIV",	new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END));
-	addAction("DT",	new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START));
-	addAction("P",	new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
-	addAction("BR",	new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
-	addAction("IMG",	new HtmlImageTagAction(*this));
-	addAction("UL",	new HtmlListTagAction(*this));
-	addAction("MENU",	new HtmlListTagAction(*this));
-	addAction("DIR",	new HtmlListTagAction(*this));
-	addAction("OL",	new HtmlListTagAction(*this));
-	addAction("LI",	new HtmlListItemTagAction(*this));
-	addAction("PRE",	new HtmlPreTagAction(*this));
-	// addAction("DD",	0);
-	// addAction("DL",	0);
-	// addAction("DFN",	0);
-	// addAction("SAMP",	0);
-	// addAction("KBD",	0);
-	// addAction("VAR",	0);
-	// addAction("ABBR",	0);
-	// addAction("ACRONYM",	0);
-	// addAction("BLOCKQUOTE",	0);
-	// addAction("Q",	0);
-	// addAction("INS",	0);
-	// addAction("DEL",	0);
-	// addAction("BODY",	0);
+void HtmlBookReader::setBuildTableOfContent(bool build) {
+	myBuildTableOfContent = build;
+}
+
+HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format), myBuildTableOfContent(true) {
+	addAction("EM", new HtmlControlTagAction(*this, EMPHASIS));
+	addAction("STRONG", new HtmlControlTagAction(*this, STRONG));
+	addAction("B", new HtmlControlTagAction(*this, BOLD));
+	addAction("I", new HtmlControlTagAction(*this, ITALIC));
+	addAction("TT", new HtmlControlTagAction(*this, CODE));
+	addAction("CODE", new HtmlControlTagAction(*this, CODE));
+	addAction("CITE", new HtmlControlTagAction(*this, CITE));
+	addAction("SUB", new HtmlControlTagAction(*this, SUB));
+	addAction("SUP", new HtmlControlTagAction(*this, SUP));
+	addAction("H1", new HtmlHeaderTagAction(*this, H1));
+	addAction("H2", new HtmlHeaderTagAction(*this, H2));
+	addAction("H3", new HtmlHeaderTagAction(*this, H3));
+	addAction("H4", new HtmlHeaderTagAction(*this, H4));
+	addAction("H5", new HtmlHeaderTagAction(*this, H5));
+	addAction("H6", new HtmlHeaderTagAction(*this, H6));
+	addAction("HEAD", new HtmlIgnoreTagAction(*this));
+	addAction("TITLE", new HtmlIgnoreTagAction(*this));
+	addAction("STYLE", new HtmlIgnoreTagAction(*this));
+	addAction("SELECT", new HtmlIgnoreTagAction(*this));
+	addAction("SCRIPT", new HtmlIgnoreTagAction(*this));
+	addAction("A", new HtmlHrefTagAction(*this));
+	addAction("DIV", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END));
+	addAction("DT", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START));
+	addAction("P", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
+	addAction("BR", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
+	addAction("IMG", new HtmlImageTagAction(*this));
+	addAction("UL", new HtmlListTagAction(*this));
+	addAction("MENU", new HtmlListTagAction(*this));
+	addAction("DIR", new HtmlListTagAction(*this));
+	addAction("OL", new HtmlListTagAction(*this));
+	addAction("LI", new HtmlListItemTagAction(*this));
+	addAction("PRE", new HtmlPreTagAction(*this));
+	// addAction("DD", 0);
+	// addAction("DL", 0);
+	// addAction("DFN", 0);
+	// addAction("SAMP", 0);
+	// addAction("KBD", 0);
+	// addAction("VAR", 0);
+	// addAction("ABBR", 0);
+	// addAction("ACRONYM", 0);
+	// addAction("BLOCKQUOTE", 0);
+	// addAction("Q", 0);
+	// addAction("INS", 0);
+	// addAction("DEL", 0);
+	// addAction("BODY", 0);
 }
 
 HtmlBookReader::~HtmlBookReader() {
@@ -456,6 +447,13 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 }
 
 void HtmlBookReader::startDocumentHandler() {
+	while (!myListNumStack.empty()) {
+		myListNumStack.pop();
+	}
+	myConverterBuffer.erase();
+	myKindList.clear();
+
+	myBookReader.reset();
 	myBookReader.setMainTextModel();
 	myBookReader.pushKind(REGULAR);
 	myBookReader.beginParagraph();
