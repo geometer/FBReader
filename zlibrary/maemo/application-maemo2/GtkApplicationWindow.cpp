@@ -199,39 +199,23 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
-void GtkApplicationWindow::refresh() {
-	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
-	bool enableToolbarSpace = false;
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		GtkToolItem *toolItem = myToolItems[*it];
-		if ((*it)->isButton()) {
-			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			int id = button.actionId();
-
-			bool visible = application().isActionVisible(id);
-			bool enabled = application().isActionEnabled(id);
-
-			if (toolItem != 0) {
-				gtk_tool_item_set_visible_horizontal(toolItem, visible);
-				if (visible) {
-					enableToolbarSpace = true;
-				}
-				/*
-				 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
-				 * does something strange if WIDGET is already insensitive.
-				 */
-				bool alreadyEnabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
-				if (enabled != alreadyEnabled) {
-					gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
-				}
-			}
-		} else {
-			if (toolItem != 0) {
-				gtk_tool_item_set_visible_horizontal(toolItem, enableToolbarSpace);
-				enableToolbarSpace = false;
-			}
+void GtkApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
+	GtkToolItem *toolItem = myToolItems[item];
+	if (toolItem != 0) {
+		gtk_tool_item_set_visible_horizontal(toolItem, visible);
+		/*
+		 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
+		 * does something strange if WIDGET is already insensitive.
+		 */
+		bool alreadyEnabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
+		if (enabled != alreadyEnabled) {
+			gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
 		}
 	}
+}
+
+void GtkApplicationWindow::refresh() {
+	ZLApplicationWindow::refresh();
 
 	for (std::map<int,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
 		int id = it->first;

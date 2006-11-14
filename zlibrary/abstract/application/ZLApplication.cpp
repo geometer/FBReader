@@ -106,7 +106,7 @@ void ZLApplicationWindow::onButtonPress(ZLApplication::Toolbar::ButtonItem &butt
 		} else {
 			button.press();
 			shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
-			const std::set<const ZLApplication::Toolbar::ButtonItem*> &items = group->items();
+			const std::set<const ZLApplication::Toolbar::ButtonItem*> &items = group->Items;
 			for (std::set<const ZLApplication::Toolbar::ButtonItem*>::const_iterator it = items.begin(); it != items.end(); ++it) {
 				setToggleButtonState(**it);
 			}
@@ -238,5 +238,52 @@ void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {
 void ZLApplication::trackStylus(bool track) {
 	if (myViewWidget != 0) {
 		myViewWidget->trackStylus(track);
+	}
+}
+
+void ZLApplicationWindow::refresh() {
+	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
+	bool enableToolbarSpace = false;
+	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		if ((*it)->isButton()) {
+			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+			int id = button.actionId();
+    
+			const bool visible = application().isActionVisible(id);
+			const bool enabled = application().isActionEnabled(id);
+    
+			if (visible) {
+				enableToolbarSpace = true;
+			}
+			if (!enabled && button.isPressed()) {
+				shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
+				group->press(0);
+				application().doAction(group->UnselectAllButtonsActionId);
+				myToggleButtonLock = true;
+				setToggleButtonState(button);
+				myToggleButtonLock = false;
+			}
+			setToolbarItemState(*it, visible, enabled);
+		} else {
+			setToolbarItemState(*it, enableToolbarSpace, true);
+			enableToolbarSpace = false;
+		}
+	}
+}
+
+ZLApplication::Toolbar::ButtonGroup::ButtonGroup(int unselectAllButtonsActionId) : UnselectAllButtonsActionId(unselectAllButtonsActionId), PressedItem(0) {
+}
+
+void ZLApplication::Toolbar::ButtonGroup::press(const ButtonItem *item) {
+	PressedItem = item;
+}
+
+void ZLApplication::Toolbar::ButtonItem::setButtonGroup(shared_ptr<ButtonGroup> group) {
+	if (!myButtonGroup.isNull()) {
+		myButtonGroup->Items.erase(this);
+	}
+	myButtonGroup = group;
+	if (!myButtonGroup.isNull()) {
+		myButtonGroup->Items.insert(this);
 	}
 }

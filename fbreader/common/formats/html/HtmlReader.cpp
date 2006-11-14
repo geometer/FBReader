@@ -85,6 +85,7 @@ enum ParseState {
 	PS_SKIPTAG,
 	PS_COMMENT,
 	PS_SPECIAL,
+	PS_SPECIAL_IN_ATTRIBUTEVALUE,
 };
 
 enum SpecialType {
@@ -126,6 +127,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 	ParseState state = PS_TEXT;
 	SpecialType state_special = ST_UNKNOWN;
 	std::string currentString;
+	std::string specialString;
 	int quotationCounter = 0;
 	HtmlTag currentTag;
 	char endOfComment[2] = "\0";
@@ -157,6 +159,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					}
 					break;
 				case PS_SPECIAL:
+				case PS_SPECIAL_IN_ATTRIBUTEVALUE:
 					if (state_special == ST_UNKNOWN) {
 						if (*ptr == '#') {
 							state_special = ST_NUM;
@@ -177,22 +180,30 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						}
 					} else {
 						if (*ptr == ';') {
-							currentString.append(start, ptr - start);
-							int number = specialSymbolNumber(state_special, currentString);
+							specialString.append(start, ptr - start);
+							int number = specialSymbolNumber(state_special, specialString);
 							if (number != 0) {
 								char buffer[4];
 								int len = ZLUnicodeUtil::ucs2ToUtf8(buffer, number);
-								characterDataHandler(buffer, len, false);
+								if (state == PS_SPECIAL) {
+									characterDataHandler(buffer, len, false);
+								} else {
+									currentString.append(buffer, len);
+								}
 							} else {
-								currentString = "&" + currentString + ";";
-								characterDataHandler(currentString.c_str(), currentString.length(), false);
+								specialString = "&" + specialString + ";";
+								if (state == PS_SPECIAL) {
+									characterDataHandler(specialString.c_str(), specialString.length(), false);
+								} else {
+									currentString += specialString;
+								}
 							}
-							currentString.erase();
+							specialString.erase();
 							start = ptr + 1;
 							state = PS_TEXT;
 						} else if (!allowSymbol(state_special, *ptr)) {
 							start = ptr;
-							state = PS_TEXT;
+							state = (state == PS_SPECIAL) ? PS_TEXT : PS_ATTRIBUTEVALUE;
 						}
 					}
 					break;
@@ -258,6 +269,10 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						if ((ptr == start) || (quotationCounter > 0)) {
 							++quotationCounter;
 						}
+					} else if (*ptr == '&') {
+						currentString.append(start, ptr - start);
+						start = ptr + 1;
+						state = PS_SPECIAL_IN_ATTRIBUTEVALUE;
 					} else if ((quotationCounter != 1) && ((*ptr == '/') || (*ptr == '>') || isspace(*ptr))) {
 						if (ptr != start) {
 							currentString.append(start, ptr - start);
@@ -297,8 +312,11 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 				case PS_TAGNAME:
 				case PS_ATTRIBUTENAME:
 				case PS_ATTRIBUTEVALUE:
-				case PS_SPECIAL:
 					currentString.append(start, endOfBuffer - start);
+					break;
+				case PS_SPECIAL:
+				case PS_SPECIAL_IN_ATTRIBUTEVALUE:
+					specialString.append(start, endOfBuffer - start);
 					break;
 				case PS_TAGSTART:
 				case PS_SKIPTAG:

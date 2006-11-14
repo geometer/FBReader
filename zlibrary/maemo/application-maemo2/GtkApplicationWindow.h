@@ -74,6 +74,7 @@ private:
 	bool isKeyboardPresented() const;
 
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 
 public:
 	void handleKeyEventSlot(GdkEventKey*);

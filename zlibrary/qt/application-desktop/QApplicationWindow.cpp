@@ -142,19 +142,16 @@ void QApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	}
 }
 
-void QApplicationWindow::refresh() {
-	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
-			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			QAction *action = myActions[&**it];
-			if (action != 0) {
-				int id = button.actionId();
-				action->setEnabled(application().isActionEnabled(id));
-				action->setVisible(application().isActionVisible(id));
-			}
-		}
+void QApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
+	QAction *action = myActions[&*item];
+	if (action != 0) {
+		action->setEnabled(enabled);
+		action->setVisible(visible);
 	}
+}
+
+void QApplicationWindow::refresh() {
+	ZLApplicationWindow::refresh();
 }
 
 ZLViewWidget *QApplicationWindow::createViewWidget() {

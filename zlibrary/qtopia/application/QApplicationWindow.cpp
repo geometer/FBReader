@@ -33,7 +33,10 @@
 class MyMenuBar : public QPEMenuBar {
 
 public:
-	MyMenuBar(QWidget *parent) : QPEMenuBar(parent) {}
+	MyMenuBar(QWidget *parent) : QPEMenuBar(parent), myIndex(-1) {}
+	~MyMenuBar();
+	void setItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
 
 private:
 	void keyPressEvent(QKeyEvent *event) {
@@ -41,12 +44,18 @@ private:
 			QPEMenuBar::keyPressEvent(event);
 		}
 	}
+
+private:
+	std::map<int,ToolBarButton*> myButtons;
+
+public:
+	int myIndex;
 };
 
-QApplicationWindow::ToolBarButton::ToolBarButton(ZLApplication::Toolbar::ButtonItem &button) : myButton(button), myReleasedPixmap(0), myPressedPixmap(0), myIsPressed(button.isPressed()) {
+ToolBarButton::ToolBarButton(QApplicationWindow &window, ZLApplication::Toolbar::ButtonItem &button) : myWindow(window), myButton(button), myReleasedPixmap(0), myPressedPixmap(0), myIsPressed(button.isPressed()) {
 }
 
-QApplicationWindow::ToolBarButton::~ToolBarButton() {
+ToolBarButton::~ToolBarButton() {
 	if (myReleasedPixmap != 0) {
 		delete myReleasedPixmap;
 	}
@@ -55,11 +64,7 @@ QApplicationWindow::ToolBarButton::~ToolBarButton() {
 	}
 }
 
-ZLApplication::Toolbar::ButtonItem &QApplicationWindow::ToolBarButton::button() {
-	return myButton;
-}
-
-QPixmap &QApplicationWindow::ToolBarButton::pixmap() {
+QPixmap &ToolBarButton::pixmap() {
 	if (myReleasedPixmap == 0) {
 		myReleasedPixmap = new QPixmap(Resource::loadPixmap((ZLApplication::ApplicationName() + '/' + myButton.iconName()).c_str()));
 	}
@@ -80,12 +85,12 @@ QPixmap &QApplicationWindow::ToolBarButton::pixmap() {
 	}
 }
 
-bool QApplicationWindow::ToolBarButton::isPressed() const {
-	return myIsPressed;
-}
-
-void QApplicationWindow::ToolBarButton::toggle() {
-	myIsPressed = !myIsPressed;
+bool ToolBarButton::toggle() {
+	if (myIsPressed != myButton.isPressed()) {
+		myIsPressed = !myIsPressed;
+		return true;
+	}
+	return false;
 }
 
 QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
@@ -98,14 +103,13 @@ QApplicationWindow::QApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a
 
 	myToolBar = new MyMenuBar(this);
 	myMenu = new QPopupMenu(myToolBar);
-
-	connect(myToolBar, SIGNAL(activated(int)), this, SLOT(doActionSlot(int)));
+	myToolBar->insertItem(QString::null, myMenu, -1, 0);
 
 	((QPEApplication*)qApp)->showMainWidget(this);
 }
 
-QApplicationWindow::~QApplicationWindow() {
-	for (std::map<int,ToolBarButton*>::iterator it = myToolBarButtons.begin(); it != myToolBarButtons.end(); ++it) {
+MyMenuBar::~MyMenuBar() {
+	for (std::map<int,ToolBarButton*>::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		delete it->second;
 	}
 }
@@ -192,61 +196,38 @@ void QApplicationWindow::MenuUpdater::processSepartor(ZLApplication::Menubar::Se
 	myMenuStack.top()->insertSeparator();
 }
 
-void QApplicationWindow::refresh() {
-	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
-
-	bool isVisibilityChanged = false;
-	if (myToolbarMask.size() != items.size()) {
-		isVisibilityChanged = true;
-		myToolbarMask.clear();
-		myToolbarMask.assign(items.size(), false);
-	}
-	std::vector<bool>::iterator bt = myToolbarMask.begin();
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
-			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			if (application().isActionVisible(button.actionId()) != *bt) {
-				*bt = !*bt;
-				isVisibilityChanged = true;
-			}
-			++bt;
-		}
-	}
-	if (isVisibilityChanged) {
-		bt = myToolbarMask.begin();
-		if (centralWidget() != 0) {
-			centralWidget()->hide();
-		}
-		myToolBar->clear();
-		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-			if ((*it)->isButton()) {
-				ZLApplication::Toolbar::ButtonItem &button = (ZLApplication::Toolbar::ButtonItem&)**it;
-				if (*bt) {
-					const int actionId = button.actionId();
-					ToolBarButton *tbButton = myToolBarButtons[actionId];
-					if (tbButton == 0) {
-						tbButton = new ToolBarButton(button);
-						myToolBarButtons[actionId] = tbButton;
-					}
-					myToolBar->insertItem(tbButton->pixmap(), this, SLOT(emptySlot()), 0, actionId);
+void MyMenuBar::setItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
+	if (item->isButton()) {
+		ZLApplication::Toolbar::ButtonItem &button = (ZLApplication::Toolbar::ButtonItem&)*item;
+		int id = button.actionId();
+		if (visible) {
+			if (idAt(myIndex) != id) {
+				ToolBarButton *tbButton = myButtons[id];
+				if (tbButton == 0) {
+					tbButton = new ToolBarButton(*(QApplicationWindow*)parent(), button);
+					myButtons[id] = tbButton;
 				}
-				++bt;
+				insertItem(tbButton->pixmap(), tbButton, SLOT(doActionSlot()), 0, id, myIndex);
 			}
-		}
-		myToolBar->insertItem(QString::null, myMenu, -1, 0);
-		if (centralWidget() != 0) {
-			centralWidget()->show();
+			setItemEnabled(id, enabled);
+			++myIndex;
+		} else {
+			if (idAt(myIndex) == id) {
+				removeItem(id);
+			}
 		}
 	}
+}
 
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
-			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			int id = button.actionId();
-			if (myToolBar->findItem(id) != 0) {
-				myToolBar->setItemEnabled(id, application().isActionEnabled(id));
-			}
-		}
+void QApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
+	((MyMenuBar*)myToolBar)->setItemState(item, visible, enabled);
+}
+
+void QApplicationWindow::refresh() {
+	if (((MyMenuBar*)myToolBar)->myIndex == -1) {
+		((MyMenuBar*)myToolBar)->myIndex = 1;
+		ZLApplicationWindow::refresh();
+		((MyMenuBar*)myToolBar)->myIndex = -1;
 	}
 
 	MenuMaskCalculator calculator(*this);
@@ -261,11 +242,8 @@ void QApplicationWindow::refresh() {
 	}
 }
 
-void QApplicationWindow::doActionSlot(int buttonNumber) {
-	ToolBarButton *tbButton = myToolBarButtons[buttonNumber];
-	if (tbButton != 0) {
-		onButtonPress(tbButton->button());
-	}
+void ToolBarButton::doActionSlot() {
+	myWindow.onButtonPress(myButton);
 }
 
 void QApplicationWindow::keyPressEvent(QKeyEvent *event) {
@@ -387,11 +365,14 @@ void QtMenuAction::doSlot() {
 	myApplication.doAction(myActionId);
 }
 
-void QApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+void MyMenuBar::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
 	const int actionId = button.actionId();
-	ToolBarButton *tbButton = myToolBarButtons[actionId];
-	if ((tbButton != 0) && (tbButton->isPressed() != button.isPressed())) {
-		myToolBar->changeItem(actionId, tbButton->pixmap());
-		tbButton->toggle();
+	ToolBarButton *tbButton = myButtons[actionId];
+	if ((tbButton != 0) && (tbButton->toggle())) {
+		changeItem(actionId, tbButton->pixmap());
 	}
+}
+
+void QApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+	((MyMenuBar*)myToolBar)->setToggleButtonState(button);
 }

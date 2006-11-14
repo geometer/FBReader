@@ -161,30 +161,27 @@ void GtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) 
 	}
 }
 
-void GtkApplicationWindow::refresh() {
-	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
-			GtkWidget *gtkButton = myButtonToWidget[&**it];
-			if (gtkButton != 0) {
-				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-				int actionId = button.actionId();
-				if (application().isActionVisible(actionId)) {
-					gtk_widget_show(gtkButton);
-				} else {
-					gtk_widget_hide(gtkButton);
-				}
-				/*
-				 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
-				 * does something strange if WIDGET is already insensitive.
-				 */
-				bool enabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
-				if (enabled != application().isActionEnabled(actionId)) {
-					gtk_widget_set_sensitive(gtkButton, !enabled);
-				}
-			}
+void GtkApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
+	GtkWidget *gtkButton = myButtonToWidget[&*item];
+	if (gtkButton != 0) {
+		if (visible) {
+			gtk_widget_show(gtkButton);
+		} else {
+			gtk_widget_hide(gtkButton);
+		}
+		/*
+		 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
+		 * does something strange if WIDGET is already insensitive.
+		 */
+		bool alreadyEnabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
+		if (enabled != alreadyEnabled) {
+			gtk_widget_set_sensitive(gtkButton, enabled);
 		}
 	}
+}
+
+void GtkApplicationWindow::refresh() {
+	ZLApplicationWindow::refresh();
 }
 
 ZLViewWidget *GtkApplicationWindow::createViewWidget() {

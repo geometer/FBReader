@@ -39,7 +39,7 @@ BaseTextStyle::BaseTextStyle(const std::string &fontFamily, int fontSize) :
 	TreeLinesColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "TreeLines", ZLColor(127, 127, 127)),
 	AutoHyphenationOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "AutoHyphenation", true),
 	FontFamilyOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:fontFamily", fontFamily),
-	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:fontSize", 0, 32, fontSize),
+	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:fontSize", 0, 72, fontSize),
 	BoldOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:bold", false),
 	ItalicOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:italic", false),
 	AlignmentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:alignment", ALIGN_JUSTIFY),

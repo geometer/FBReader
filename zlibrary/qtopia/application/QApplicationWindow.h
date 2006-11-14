@@ -40,7 +40,6 @@ class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 
 public:
 	QApplicationWindow(ZLApplication *application);
-	~QApplicationWindow();
 
 	void fullScreenWorkaround();
 	int veritcalAdjustment();
@@ -107,36 +106,15 @@ private:
 	void keyPressEvent(QKeyEvent *event);
 
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
-
-	class ToolBarButton {
-
-	public:	
-		ToolBarButton(ZLApplication::Toolbar::ButtonItem &button);
-		~ToolBarButton();
-
-		ZLApplication::Toolbar::ButtonItem &button();
-		QPixmap &pixmap();
-
-		bool isPressed() const;
-		void toggle();
-
-	private:
-		ZLApplication::Toolbar::ButtonItem &myButton;
-		QPixmap *myReleasedPixmap;
-		QPixmap *myPressedPixmap;
-		bool myIsPressed;
-	};
+	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 
 private slots:
-	void doActionSlot(int buttonNumber);
-	void emptySlot() {}
 	void setDocument(const QString &fileName);
 
 private:
 	std::vector<bool> myToolbarMask;
 	std::vector<bool> myMenuMask;
 	std::map<int,QtMenuAction*> myMenuMap;
-	std::map<int,ToolBarButton*> myToolBarButtons;
 
 	bool myFullScreen;
 	int myTitleHeight;
@@ -148,6 +126,29 @@ private:
 
 friend class MenuMaskCalculator;
 friend class MenuUpdater;
+friend class ToolBarButton;
+};
+
+class ToolBarButton : public QObject {
+	Q_OBJECT
+
+public:	
+	ToolBarButton(QApplicationWindow &window, ZLApplication::Toolbar::ButtonItem &button);
+	~ToolBarButton();
+
+	QPixmap &pixmap();
+
+	bool toggle();
+
+public slots:
+	void doActionSlot();
+
+private:
+	QApplicationWindow &myWindow;
+	ZLApplication::Toolbar::ButtonItem &myButton;
+	QPixmap *myReleasedPixmap;
+	QPixmap *myPressedPixmap;
+	bool myIsPressed;
 };
 
 inline bool QApplicationWindow::MenuMaskCalculator::shouldBeUpdated() { return myShouldBeUpdated; }

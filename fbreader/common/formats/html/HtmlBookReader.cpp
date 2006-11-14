@@ -148,9 +148,9 @@ HtmlHeaderTagAction::HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind) 
 void HtmlHeaderTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
 	bookReader().endParagraph();
 	if (start) {
-		bookReader().insertEndOfSectionParagraph();
-		bookReader().enterTitle();
 		if (myReader.myBuildTableOfContent) {
+			bookReader().insertEndOfSectionParagraph();
+			bookReader().enterTitle();
 			bookReader().beginContentsParagraph();
 		}
 		bookReader().pushKind(myKind);
@@ -158,8 +158,8 @@ void HtmlHeaderTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttr
 		bookReader().popKind();
 		if (myReader.myBuildTableOfContent) {
 			bookReader().endContentsParagraph();
+			bookReader().exitTitle();
 		}
-		bookReader().exitTitle();
 	}
 	bookReader().beginParagraph();
 }
@@ -308,6 +308,7 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 	addAction("SELECT", new HtmlIgnoreTagAction(*this));
 	addAction("SCRIPT", new HtmlIgnoreTagAction(*this));
 	addAction("A", new HtmlHrefTagAction(*this));
+	addAction("TR", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END));
 	addAction("DIV", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END));
 	addAction("DT", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START));
 	addAction("P", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));

@@ -59,6 +59,7 @@ private:
 	void wheelEvent(QWheelEvent *event);
 
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 
 private:
 	class QToolBar *myToolBar;

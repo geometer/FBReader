@@ -159,17 +159,16 @@ public:
 		friend class Toolbar;
 		};
 	
-		class ButtonGroup {
+		struct ButtonGroup {
 
 		private:
-			ButtonGroup();
+			ButtonGroup(int unselectAllButtonsActionId);
 			void press(const ButtonItem *item);
-			const ButtonItem *pressedItem() const;
-			const std::set<const ButtonItem*> &items() const;
 
 		private:
-			std::set<const ButtonItem*> myItems;
-			const ButtonItem *myPressedItem;
+			const int UnselectAllButtonsActionId;
+			std::set<const ButtonItem*> Items;
+			const ButtonItem *PressedItem;
 
 		friend class ButtonItem;
 		friend class Toolbar;
@@ -187,7 +186,7 @@ public:
 		typedef std::vector<ItemPtr> ItemVector;
 
 		void addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group = 0);
-		shared_ptr<ButtonGroup> createButtonGroup();
+		shared_ptr<ButtonGroup> createButtonGroup(int unselectAllButtonsActionId);
 		void addSeparator();
 
 		const ItemVector &items() const;
@@ -366,11 +365,14 @@ protected:
 	void onButtonPress(ZLApplication::Toolbar::ButtonItem &button);
 	// TODO: change to pure virtual
 	virtual void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem&) {}
+	// TODO: change to pure virtual
+	virtual void setToolbarItemState(ZLApplication::Toolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
 
 	virtual ZLViewWidget *createViewWidget() = 0;
 	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
 
-	virtual void refresh() = 0;
+	// TODO: change to non-virtual (?)
+	virtual void refresh();
 
 	virtual void close() = 0;
 
@@ -453,29 +455,15 @@ inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::s
 inline bool ZLApplication::Toolbar::ButtonItem::isButton() const { return true; }
 inline int ZLApplication::Toolbar::ButtonItem::actionId() const { return myActionId; }
 inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const { return myIconName; }
-inline void ZLApplication::Toolbar::ButtonItem::setButtonGroup(shared_ptr<ButtonGroup> group) {
-	if (!myButtonGroup.isNull()) {
-		myButtonGroup->myItems.erase(this);
-	}
-	myButtonGroup = group;
-	if (!myButtonGroup.isNull()) {
-		myButtonGroup->myItems.insert(this);
-	}
-}
 inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::ButtonItem::buttonGroup() const { return myButtonGroup; }
 inline bool ZLApplication::Toolbar::ButtonItem::isToggleButton() const { return !myButtonGroup.isNull(); }
 inline void ZLApplication::Toolbar::ButtonItem::press() { if (isToggleButton()) { myButtonGroup->press(this); } }
-inline bool ZLApplication::Toolbar::ButtonItem::isPressed() const { return isToggleButton() && (this == myButtonGroup->pressedItem()); }
-
-inline ZLApplication::Toolbar::ButtonGroup::ButtonGroup() {}
-inline void ZLApplication::Toolbar::ButtonGroup::press(const ButtonItem *item) { myPressedItem = item; }
-inline const ZLApplication::Toolbar::ButtonItem *ZLApplication::Toolbar::ButtonGroup::pressedItem() const { return myPressedItem; }
-inline const std::set<const ZLApplication::Toolbar::ButtonItem*> &ZLApplication::Toolbar::ButtonGroup::items() const { return myItems; }
+inline bool ZLApplication::Toolbar::ButtonItem::isPressed() const { return isToggleButton() && (this == myButtonGroup->PressedItem); }
 
 inline bool ZLApplication::Toolbar::SeparatorItem::isButton() const { return false; }
 
-inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::createButtonGroup() {
-	return new ButtonGroup();
+inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::createButtonGroup(int unselectAllButtonsActionId) {
+	return new ButtonGroup(unselectAllButtonsActionId);
 }
 
 inline ZLApplication::Menu::Menu() {}
