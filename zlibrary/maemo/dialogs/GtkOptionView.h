@@ -27,6 +27,7 @@
 #include <gtk/gtkframe.h>
 #include <gtk/gtkrange.h>
 #include <gtk/gtkcombobox.h>
+#include <hildon-controlbar.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -188,17 +189,13 @@ protected:
 	void _onAccept() const;
 
 private:
-//	void onChangeColor();
-
-//	static void _onChangeColor(GtkWidget *, gpointer);
 	void onSliderMove();
 
 	static void _onSliderMove(GtkRange *, gpointer);
 
 private:
 	GtkWidget *myWidget, *myDrawingArea;
-//	GtkWidget *myColorSelectionDialog;
-	GtkWidget *myRSlider, *myGSlider, *myBSlider;
+	HildonControlbar *myRSlider, *myGSlider, *myBSlider;
 	GdkColor myColor;
 };
 

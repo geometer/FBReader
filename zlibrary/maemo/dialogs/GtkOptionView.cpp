@@ -245,15 +245,14 @@ void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept(gtk_entry_get_text(GTK_ENTRY(myLineEdit)));
 }
 
+static const int COLOR_STEPS_NUMBER = 32;
+
 void ColorOptionView::_createItem() {
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
 
 	myDrawingArea = gtk_drawing_area_new();
 
 	gtk_widget_set_size_request(GTK_WIDGET(myDrawingArea), 60, 20);
-//	myWidget = gtk_button_new();
-//	gtk_container_add(GTK_CONTAINER(myWidget), myDrawingArea);
-//	g_signal_connect(G_OBJECT(myWidget), "clicked", G_CALLBACK(_onChangeColor), this);
 	myWidget = gtk_table_new(3, 4, false);
 
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
@@ -262,24 +261,24 @@ void ColorOptionView::_createItem() {
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 3, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
-	myRSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myRSlider), false);
-	gtk_range_set_value(GTK_RANGE(myRSlider), color.Red);
+	myRSlider = HILDON_CONTROLBAR(hildon_controlbar_new());
+	hildon_controlbar_set_range(myRSlider, 0, COLOR_STEPS_NUMBER);
+	hildon_controlbar_set_value(myRSlider, (int)color.Red * COLOR_STEPS_NUMBER / 255);
 	g_signal_connect(G_OBJECT(myRSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
 
-	myGSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myGSlider), false);
-	gtk_range_set_value(GTK_RANGE(myGSlider), color.Green);
+	myGSlider = HILDON_CONTROLBAR(hildon_controlbar_new());
+	hildon_controlbar_set_range(myGSlider, 0, COLOR_STEPS_NUMBER);
+	hildon_controlbar_set_value(myGSlider, (int)color.Green * COLOR_STEPS_NUMBER / 255);
 	g_signal_connect(G_OBJECT(myGSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
 
-	myBSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myBSlider), false);
-	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
+	myBSlider = HILDON_CONTROLBAR(hildon_controlbar_new());
+	hildon_controlbar_set_range(myBSlider, 0, COLOR_STEPS_NUMBER);
+	hildon_controlbar_set_value(myBSlider, (int)color.Blue * COLOR_STEPS_NUMBER / 255);
 	g_signal_connect(G_OBJECT(myBSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
 
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myRSlider, 1, 2, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myGSlider, 1, 2, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myBSlider, 1, 2, 3, 4);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myRSlider), 1, 2, 1, 2);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myGSlider), 1, 2, 2, 3);
+	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myBSlider), 1, 2, 3, 4);
 
 	myColor.red = color.Red * 65535 / 255;
 	myColor.blue = color.Blue * 65535 / 255;
@@ -309,46 +308,24 @@ void ColorOptionView::_hide() {
 	gtk_widget_hide(myWidget);
 }
 
-#if 0
-void ColorOptionView::_onChangeColor(GtkWidget *, gpointer self) {
-	((ColorOptionView *)self)->onChangeColor();
-}
-
-void ColorOptionView::onChangeColor() {
-	if (myColorSelectionDialog == NULL)
-		myColorSelectionDialog = gtk_color_selection_dialog_new("Select Color");
-
-	GtkColorSelection *colorSelection = GTK_COLOR_SELECTION(GTK_COLOR_SELECTION_DIALOG(myColorSelectionDialog)->colorsel);
-
-	gtk_color_selection_set_previous_color(colorSelection, &myColor);
-	gtk_color_selection_set_current_color(colorSelection, &myColor);
-	gtk_color_selection_set_has_palette(colorSelection, TRUE);
-
-	gint response = gtk_dialog_run(GTK_DIALOG(myColorSelectionDialog));
-
-	if (response == GTK_RESPONSE_OK) {
-		gtk_color_selection_get_current_color(colorSelection, &myColor);
-		gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
-	}
-
-	gtk_widget_hide(myColorSelectionDialog);
-}
-#endif
-
 void ColorOptionView::_onSliderMove(GtkRange *, gpointer self) {
 	((ColorOptionView *)self)->onSliderMove();
 }
 
 void ColorOptionView::onSliderMove() {
-	myColor.red = (int)(gtk_range_get_value(GTK_RANGE(myRSlider)) * 65535 / 255);
-	myColor.blue = (int)(gtk_range_get_value(GTK_RANGE(myBSlider)) * 65535 / 255);
-	myColor.green = (int)(gtk_range_get_value(GTK_RANGE(myGSlider)) * 65535 / 255);
+	myColor.red = hildon_controlbar_get_value(myRSlider) * 65535 / COLOR_STEPS_NUMBER;
+	myColor.green = hildon_controlbar_get_value(myGSlider) * 65535 / COLOR_STEPS_NUMBER;
+	myColor.blue = hildon_controlbar_get_value(myBSlider) * 65535 / COLOR_STEPS_NUMBER;
 
 	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
 }
 
 void ColorOptionView::_onAccept() const {
-	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(myColor.red / 256, myColor.green / 256, myColor.blue / 256));
+	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(
+		myColor.red * 255 / 65535,
+		myColor.green * 255 / 65535,
+		myColor.blue * 255 / 65535
+	));
 }
 
 static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {
