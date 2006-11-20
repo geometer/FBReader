@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,20 +19,51 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLDUMMYDICTIONARY_H__
-#define __ZLDUMMYDICTIONARY_H__
+#ifndef __DICTIONARY_H__
+#define __DICTIONARY_H__
 
-#include <ZLDictionary.h>
+#include <string>
+#include <map>
+#include <vector>
 
-class ZLDummyDictionary : public ZLDictionary {
+#include <ZLOptions.h>
+#include <ZLMessage.h>
+
+class Dictionary;
+
+class DictionaryCollection {
 
 public:
-	static void createInstance();
+	DictionaryCollection();
+	~DictionaryCollection();
+
+	const std::vector<std::string> &names() const;
+	const Dictionary *dictionary(const std::string &name) const;
+
+public:
+	mutable ZLStringOption CurrentNameOption;
 
 private:
-	ZLDummyDictionary();
-	void openInDictionary(const std::string &word) const;
-	bool isDictionaryEnabled() const;
+	std::vector<std::string> myNames;
+	std::map<std::string, Dictionary*> myDictionaries;
+
+friend class DictionaryCollectionBuilder;
 };
 
-#endif /* __ZLDUMMYDICTIONARY_H__ */
+class Dictionary {
+
+private:
+	Dictionary(shared_ptr<ZLCommunicator> communicator);
+
+public:
+	void openInDictionary(const std::string &word) const;
+
+private:
+	shared_ptr<ZLCommunicator> myCommunicator;
+	ZLCommunicationManager::Data myShowWordData;
+
+friend class DictionaryCollection;
+friend class DictionaryCollectionBuilder;
+};
+
+#endif /* __DICTIONARY_H__ */

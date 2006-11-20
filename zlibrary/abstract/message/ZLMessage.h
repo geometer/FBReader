@@ -18,27 +18,53 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLDICTIONARY_H__
-#define __ZLDICTIONARY_H__
+#ifndef __ZLMESSAGE_H__
+#define __ZLMESSAGE_H__
 
+#include <shared_ptr.h>
+#include <map>
 #include <string>
 
-class ZLDictionary {
+class ZLCommunicator;
+class ZLMessageSender;
+
+class ZLCommunicationManager {
 
 public:
-	static ZLDictionary &instance();
+	static ZLCommunicationManager &instance();
 	static void deleteInstance();
 
-protected:
-	static ZLDictionary *ourInstance;
-
-protected:
-	ZLDictionary();
-	virtual ~ZLDictionary();
-
 public:
-	virtual void openInDictionary(const std::string &word) const = 0;
-	virtual bool isDictionaryEnabled() const = 0;
+	typedef std::map<std::string,std::string> Data;
+
+	virtual shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile) = 0;
+
+protected:
+	ZLCommunicationManager();
+	virtual ~ZLCommunicationManager();
+
+protected:
+	static ZLCommunicationManager *ourInstance;
+
+private:
+	ZLCommunicationManager(const ZLCommunicationManager&);
+	const ZLCommunicationManager &operator = (const ZLCommunicationManager&);
 };
 
-#endif /* __ZLDICTIONARY_H__ */
+class ZLCommunicator {
+
+public:
+	virtual ~ZLCommunicator();
+
+	virtual shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data) = 0;
+};
+
+class ZLMessageSender {
+
+public:
+	virtual ~ZLMessageSender();
+
+	virtual void sendStringMessage(const std::string &message) = 0;
+};
+
+#endif /* __ZLMESSAGE_H__ */

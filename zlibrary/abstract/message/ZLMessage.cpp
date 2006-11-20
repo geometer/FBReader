@@ -18,9 +18,38 @@
  * 02110-1301, USA.
  */
 
-#include <ZLDictionaryLibrary.h>
-#include "ZLDummyDictionary.h"
+#include "ZLMessage.h"
 
-void ZLDictionaryLibrary::init() {
-	ZLDummyDictionary::createInstance();
+class ZLDummyCommunicationManager : public ZLCommunicationManager {
+
+public:
+	shared_ptr<ZLCommunicator> createCommunicator(const std::string&, const std::string&) { return 0; }
+};
+
+ZLCommunicationManager *ZLCommunicationManager::ourInstance = 0;
+
+ZLCommunicationManager &ZLCommunicationManager::instance() {
+	if (ourInstance == 0) {
+		ourInstance = new ZLDummyCommunicationManager();
+	}
+	return *ourInstance;
+}
+
+void ZLCommunicationManager::deleteInstance() {
+	if (ourInstance != 0) {
+		delete ourInstance;
+	}
+	ourInstance = 0;
+}
+
+ZLCommunicationManager::ZLCommunicationManager() {
+}
+
+ZLCommunicationManager::~ZLCommunicationManager() {
+}
+
+ZLCommunicator::~ZLCommunicator() {
+}
+
+ZLMessageSender::~ZLMessageSender() {
 }

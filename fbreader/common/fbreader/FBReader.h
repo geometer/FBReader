@@ -31,6 +31,7 @@
 #include <ZLApplication.h>
 
 #include "../description/BookDescription.h"
+#include "../dictionary/Dictionary.h"
 
 class BookModel;
 class BookTextView;
@@ -391,6 +392,7 @@ private:
 public:
 	ZLBooleanOption &useSeparateBindings();
 	KeyBindings &keyBindings(ZLViewWidget::Angle angle, bool force = false);
+	const DictionaryCollection &dictionaryCollection() const;
 
 	void tryShowFootnoteView(const std::string &id);
 	BookTextView &bookTextView() const;
@@ -419,6 +421,8 @@ private:
 
 	FullKeyBindings myKeyBindings;
 
+	DictionaryCollection myDictionaryCollection;
+
 friend class OptionsDialog;
 friend class FBView;
 };
@@ -429,6 +433,10 @@ inline ZLBooleanOption &FBReader::useSeparateBindings() {
 
 inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle, bool force) {
 	return myKeyBindings.getBindings(angle, force);
+}
+
+inline const DictionaryCollection &FBReader::dictionaryCollection() const {
+	return myDictionaryCollection;
 }
 
 #endif /* __FBREADER_H__ */

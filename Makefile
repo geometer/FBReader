@@ -2,7 +2,7 @@ ROOTDIR = $(PWD)
 
 include makefiles/platforms.mk
 
-LIBDIRS = zlibrary zldictionary
+LIBDIRS = zlibrary
 APPDIR = fbreader
 
 all:

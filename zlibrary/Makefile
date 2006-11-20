@@ -5,11 +5,11 @@ include $(MAKEFILESDIR)/config.mk
 TARGET = libzlibrary-$(UI_TYPE).so.0
 TARGET_SHORTNAME = libzlibrary-$(UI_TYPE).so
 
-SUBDIRS_ALL = abstract/library abstract/runnable abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/application abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem unix/time
-QTSUBDIRS_ALL = qt/time qtopia/application qtopia/dialogs qtopia/view qt/dialogs qt/view qt/image qt/util opie/view opie/dialogs opie/application qt/application-desktop qt/application-pdaxrom opie/library qt/library-desktop qt/library-pdaxrom qtopia/library
+SUBDIRS_ALL = abstract/library abstract/message abstract/runnable abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/application abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem unix/time
+QTSUBDIRS_ALL = qt/time qtopia/message qtopia/application qtopia/dialogs qtopia/view qt/dialogs qt/view qt/image qt/util opie/view opie/dialogs opie/application qt/application-desktop qt/application-pdaxrom opie/library qt/library-desktop qt/library-pdaxrom qtopia/library
 GTKSUBDIRS_ALL = gtk/time gtk/dialogs gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/view gpe/dialogs gpe/view gtk/application-desktop gtk/application-pdaxrom maemo/application-maemo maemo/application-maemo2 gpe/application maemo/library gtk/library-desktop gtk/library-pdaxrom gpe/library
 
-SUBDIRS = abstract/library abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig abstract/application abstract/view unix/filesystem unix/time
+SUBDIRS = abstract/library abstract/message abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig abstract/application abstract/view unix/filesystem unix/time
 
 ifeq "$(UI_TYPE)" "qt"
   SUBDIRS += desktop/dialogs
@@ -40,7 +40,7 @@ ifeq "$(UI_TYPE)" "opie"
 endif
 
 ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <qtopia> <qtopia-240x320> <qtopia-640x480>)"
-  QTSUBDIRS = qtopia/library qt/time qtopia/application qtopia/dialogs qtopia/view qt/util qt/image
+  QTSUBDIRS = qtopia/message qtopia/library qt/time qtopia/application qtopia/dialogs qtopia/view qt/util qt/image
 endif
 
 ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo> <maemo2>)"

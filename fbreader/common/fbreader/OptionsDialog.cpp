@@ -23,8 +23,6 @@
 #include <ZLOptionsDialog.h>
 #include <ZLPaintContext.h>
 
-#include <ZLDictionary.h>
-
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"
 #include "ScrollingOptionsPage.h"
@@ -38,6 +36,7 @@
 #include "RecentBooksView.h"
 
 #include "../collection/BookCollection.h"
+#include "../dictionary/Dictionary.h"
 #include "../textview/TextView.h"
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
@@ -202,6 +201,45 @@ void DefaultLanguageEntry::onAccept(const std::string &value) {
 	PluginCollection::instance().DefaultLanguageOption.setValue(language);
 }
 
+class DictionaryEntry : public ZLComboOptionEntry {
+
+public:
+	DictionaryEntry(const DictionaryCollection &collection);
+
+private:
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onValueChange(const std::string&);
+	void onAccept(const std::string &value);
+
+private:
+	const DictionaryCollection &myCollection;
+};
+
+DictionaryEntry::DictionaryEntry(const DictionaryCollection &collection) : myCollection(collection) {
+}
+
+const std::string &DictionaryEntry::initialValue() const {
+	return myCollection.CurrentNameOption.value();
+}
+
+const std::string &DictionaryEntry::name() const {
+	static const std::string _name = "Integrate With";
+	return _name;
+}
+
+const std::vector<std::string> &DictionaryEntry::values() const {
+	return myCollection.names();
+}
+
+void DictionaryEntry::onValueChange(const std::string&) {
+}
+
+void DictionaryEntry::onAccept(const std::string &value) {
+	myCollection.CurrentNameOption.setValue(value);
+}
+
 OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
@@ -248,9 +286,15 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
 	myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 
-	if (ZLDictionary::instance().isDictionaryEnabled()) {
+	const std::vector<std::string> &dictionaryNames = fbreader.dictionaryCollection().names();
+	if (!dictionaryNames.empty()) {
 		ZLDialogContent &dictionaryTab = myDialog->createTab("Dictionary");
-		dictionaryTab.addOption(new ZLSimpleBooleanOptionEntry("Enable Integration With Dictionary", fbreader.EnableDictionaryIntegrationOption));
+		const std::string optionName = "Enable Integration With " +
+			((dictionaryNames.size() == 1) ? dictionaryNames[0] : "Dictionary");
+		dictionaryTab.addOption(new ZLSimpleBooleanOptionEntry(optionName, fbreader.EnableDictionaryIntegrationOption));
+		if (dictionaryNames.size() > 1) {
+			dictionaryTab.addOption(new DictionaryEntry(fbreader.dictionaryCollection()));
+		}
 	}
 }
 

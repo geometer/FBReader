@@ -23,7 +23,6 @@
 #include <ZLDialogManager.h>
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
-#include <ZLDictionary.h>
 
 #include "BookTextView.h"
 #include "FBReader.h"
@@ -33,6 +32,8 @@
 
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
+
+#include "../dictionary/Dictionary.h"
 
 static const std::string PARAGRAPH_OPTION_NAME = "Paragraph";
 static const std::string WORD_OPTION_NAME = "Word";
@@ -226,8 +227,9 @@ bool BookTextView::onStylusPress(int x, int y) {
 	
 	if (fbreader().EnableDictionaryIntegrationOption.value() &&
 			(position->Kind == TextElement::WORD_ELEMENT)) {
-		ZLDictionary &dictionary = ZLDictionary::instance();
-		if (dictionary.isDictionaryEnabled()) {
+		const DictionaryCollection &collection = fbreader().dictionaryCollection();
+		const Dictionary *dictionary = collection.dictionary(collection.CurrentNameOption.value());
+		if (dictionary != 0) {
 			const Word &word = (Word&)cursor.element();
 			ZLUnicodeUtil::Ucs2String ucs2;
 			ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);
@@ -245,7 +247,7 @@ bool BookTextView::onStylusPress(int x, int y) {
     
 				std::string txt;
 				ZLUnicodeUtil::ucs2ToUtf8(txt, ucs2);
-				dictionary.openInDictionary(txt);
+				dictionary->openInDictionary(txt);
 				return true;
 			}
 		}

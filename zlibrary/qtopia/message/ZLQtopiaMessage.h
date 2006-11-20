@@ -18,25 +18,43 @@
  * 02110-1301, USA.
  */
 
-#include <qpe/qcopenvelope_qws.h>
+#ifndef __ZLQTOPIAMESSAGE_H__
+#define __ZLQTOPIAMESSAGE_H__
 
-#include <ZLFile.h>
+#include <qstring.h>
 
-#include "ZLQtDictionary.h"
+#include <ZLMessage.h>
 
-void ZLQtDictionary::createInstance() {
-	ourInstance = new ZLQtDictionary();
-}
+class ZLQtopiaCommunicationManager : public ZLCommunicationManager {
 
-ZLQtDictionary::ZLQtDictionary() {
-}
+public:
+	static void createInstance();
 
-void ZLQtDictionary::openInDictionary(const std::string &word) const {
-	QCopEnvelope env("QPE/Application/zbedic", "find(QString)");
-	env << QString::fromUtf8(word.c_str());
-}
+	shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile);
 
-bool ZLQtDictionary::isDictionaryEnabled() const {
-	static bool answer = ZLFile("/opt/QtPalmtop/bin/zbedic").exists();
-	return answer;
-}
+private:
+	ZLQtopiaCommunicationManager();
+};
+
+class ZLQCopCommunicator : public ZLCommunicator {
+
+public:
+	shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data);
+};
+
+class ZLQCopMessageSender : public ZLMessageSender {
+
+private:
+	ZLQCopMessageSender(const std::string &channel, const std::string &method);
+
+public:
+	void sendStringMessage(const std::string &message);
+
+private:
+	const QCString myChannel;
+	const QCString myMethod;
+
+friend class ZLQCopCommunicator;
+};
+
+#endif /* __ZLQTOPIAMESSAGE_H__ */

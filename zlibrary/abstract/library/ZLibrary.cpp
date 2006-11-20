@@ -22,11 +22,13 @@
 #include <ZLTime.h>
 #include <ZLDialogManager.h>
 #include <ZLImageManager.h>
+#include <ZLMessage.h>
 
 #include "../../abstract/library/ZLibrary.h"
 
 void ZLibrary::shutdown() {
 	ZLImageManager::deleteInstance();
+	ZLCommunicationManager::deleteInstance();
 	ZLDialogManager::deleteInstance();
 	ZLFSManager::deleteInstance();
 	ZLTimeManager::deleteInstance();

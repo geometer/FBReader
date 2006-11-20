@@ -20,15 +20,12 @@
  */
 
 #include <ZLibrary.h>
-#include <ZLDictionaryLibrary.h>
 
 #include "FBReader.h"
 
 int main(int argc, char **argv) {
 	ZLibrary::init(argc, argv);
-	ZLDictionaryLibrary::init();
 	ZLibrary::run(new FBReader(argc == 1 ? std::string() : argv[1]));
-	ZLDictionaryLibrary::shutdown();
 	ZLibrary::shutdown();
 	return 0;
 }

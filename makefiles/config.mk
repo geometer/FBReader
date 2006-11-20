@@ -41,4 +41,4 @@ ifeq "$(TARGET_STATUS)" "profile"
 	CFLAGS += -O3 -g -pg
 endif
 
-ZINCLUDE = -I $(ROOTDIR)/zlibrary/include -I $(ROOTDIR)/zldictionary/include
+ZINCLUDE = -I $(ROOTDIR)/zlibrary/include

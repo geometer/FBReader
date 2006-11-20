@@ -4,14 +4,14 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-LIBS = $(UILIBS) -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) -L$(ROOTDIR)/zldictionary -lzldictionary-$(UI_TYPE) $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
+LIBS = $(UILIBS) -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) $(ENCALIBS) $(EXPATLIBS) $(BZIP2LIBS)
 
 TARGET = FBReader
 
-ALL_SUBDIRS = common common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/pdb common/formats/txt common/formats/tcr common/formats/chm common/formats/oeb common/formats/rtf common/formats/dummy common/formats/util common/textview common/hyphenation common/fbreader desktop pdaxrom
+ALL_SUBDIRS = common common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/docbook common/formats/html common/formats/pdb common/formats/txt common/formats/tcr common/formats/chm common/formats/oeb common/formats/rtf common/formats/dummy common/formats/util common/textview common/hyphenation common/dictionary common/fbreader desktop pdaxrom
 ALL_ARCHSUBDIRS = desktop pdaxrom opie zaurus maemo openzaurus pma400
 
-SUBDIRS = common common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/formats/tcr common/formats/chm common/formats/oeb common/formats/rtf common/formats/util common/textview common/hyphenation common/fbreader
+SUBDIRS = common common/model common/description common/collection common/bookmodel common/formats common/formats/fb2 common/formats/html common/formats/pdb common/formats/txt common/formats/tcr common/formats/chm common/formats/oeb common/formats/rtf common/formats/util common/textview common/hyphenation common/dictionary common/fbreader
 
 all:
 	@for subdir in $(SUBDIRS); do \
