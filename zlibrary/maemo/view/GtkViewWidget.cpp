@@ -55,10 +55,11 @@ void GtkViewWidget::onMousePressed(GdkEventButton *event) {
 	int x = (int)event->x;
 	int y = (int)event->y;
 	updateCoordinates(x, y);
-	if (event->button == 1) {
+	if ((event->button == 1) && ((event->state & GDK_MOD4_MASK) == 0)) {
 		view()->onStylusMove(x, y);
 		view()->onStylusPress(x, y);
-	} else if (event->button == 8) {
+	} else if ((event->button == 8) ||
+						 ((event->button == 1) && ((event->state & GDK_MOD4_MASK) == GDK_MOD4_MASK))) {
 		view()->onFingerTap(x, y);
 	}
 }
