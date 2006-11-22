@@ -58,8 +58,7 @@ void GtkViewWidget::onMousePressed(GdkEventButton *event) {
 	if ((event->button == 1) && ((event->state & GDK_MOD4_MASK) == 0)) {
 		view()->onStylusMove(x, y);
 		view()->onStylusPress(x, y);
-	} else if ((event->button == 8) ||
-						 ((event->button == 1) && ((event->state & GDK_MOD4_MASK) == GDK_MOD4_MASK))) {
+	} else if ((event->button == 1) || (event->button == 8)) {
 		view()->onFingerTap(x, y);
 	}
 }
