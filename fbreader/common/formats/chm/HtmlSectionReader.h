@@ -34,6 +34,7 @@ public:
 	void setSectionName(const std::string &sectionName);
 
 private:
+	void startDocumentHandler();
 	void endDocumentHandler();
 
 private:

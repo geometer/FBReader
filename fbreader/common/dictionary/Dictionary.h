@@ -26,6 +26,7 @@
 #include <map>
 #include <vector>
 
+#include <shared_ptr.h>
 #include <ZLOptions.h>
 #include <ZLMessage.h>
 
@@ -35,17 +36,17 @@ class DictionaryCollection {
 
 public:
 	DictionaryCollection();
-	~DictionaryCollection();
 
 	const std::vector<std::string> &names() const;
-	const Dictionary *dictionary(const std::string &name) const;
+	shared_ptr<Dictionary> currentDictionary() const;
 
 public:
+	mutable ZLBooleanOption EnableIntegrationOption;
 	mutable ZLStringOption CurrentNameOption;
 
 private:
 	std::vector<std::string> myNames;
-	std::map<std::string, Dictionary*> myDictionaries;
+	std::map<std::string, shared_ptr<Dictionary> > myDictionaries;
 
 friend class DictionaryCollectionBuilder;
 };

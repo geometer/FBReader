@@ -167,7 +167,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 							state_special = ST_NAME;
 						} else {
 							start = ptr;
-							state = PS_TEXT;
+							state = (state == PS_SPECIAL) ? PS_TEXT : PS_ATTRIBUTEVALUE;
 						}
 					} else if (state_special == ST_NUM) {
 						if (*ptr == 'x') {
@@ -176,7 +176,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 							state_special = ST_DEC;
 						} else {
 							start = ptr;
-							state = PS_TEXT;
+							state = (state == PS_SPECIAL) ? PS_TEXT : PS_ATTRIBUTEVALUE;
 						}
 					} else {
 						if (*ptr == ';') {
@@ -200,7 +200,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 							}
 							specialString.erase();
 							start = ptr + 1;
-							state = PS_TEXT;
+							state = (state == PS_SPECIAL) ? PS_TEXT : PS_ATTRIBUTEVALUE;
 						} else if (!allowSymbol(state_special, *ptr)) {
 							start = ptr;
 							state = (state == PS_SPECIAL) ? PS_TEXT : PS_ATTRIBUTEVALUE;
@@ -245,7 +245,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					break;
 				case PS_ATTRIBUTENAME:
 					if ((*ptr == '>') || (*ptr == '=') || isspace(*ptr)) {
-						if (ptr != start) {
+						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
 							for (unsigned int i = 0; i < currentString.length(); ++i) {
 								currentString[i] = toupper(currentString[i]);
@@ -266,15 +266,16 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					break;
 				case PS_ATTRIBUTEVALUE:
 					if (*ptr == '"') {
-						if ((ptr == start) || (quotationCounter > 0)) {
+						if (((ptr == start) && currentString.empty()) || (quotationCounter > 0)) {
 							++quotationCounter;
 						}
 					} else if (*ptr == '&') {
 						currentString.append(start, ptr - start);
 						start = ptr + 1;
 						state = PS_SPECIAL_IN_ATTRIBUTEVALUE;
+						state_special = ST_UNKNOWN;
 					} else if ((quotationCounter != 1) && ((*ptr == '/') || (*ptr == '>') || isspace(*ptr))) {
-						if (ptr != start) {
+						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
 							if (currentString[0] == '"') {
 								currentString = currentString.substr(1, currentString.length() - 2);

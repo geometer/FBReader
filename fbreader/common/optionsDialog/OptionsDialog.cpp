@@ -31,9 +31,9 @@
 #include "KeyBindingsPage.h"
 #include "ConfigPage.h"
 
-#include "FBReader.h"
-#include "CollectionView.h"
-#include "RecentBooksView.h"
+#include "../fbreader/FBReader.h"
+#include "../fbreader/CollectionView.h"
+#include "../fbreader/RecentBooksView.h"
 
 #include "../collection/BookCollection.h"
 #include "../dictionary/Dictionary.h"
@@ -217,6 +217,18 @@ private:
 	const DictionaryCollection &myCollection;
 };
 
+class EnableDictionaryEntry : public ZLSimpleBooleanOptionEntry {
+
+public:
+	EnableDictionaryEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *comboEntry);
+
+private:
+	void onValueChange(bool state);
+
+private:
+	ZLOptionEntry *myComboEntry;
+};
+
 DictionaryEntry::DictionaryEntry(const DictionaryCollection &collection) : myCollection(collection) {
 }
 
@@ -238,6 +250,16 @@ void DictionaryEntry::onValueChange(const std::string&) {
 
 void DictionaryEntry::onAccept(const std::string &value) {
 	myCollection.CurrentNameOption.setValue(value);
+}
+
+EnableDictionaryEntry::EnableDictionaryEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *comboEntry) : ZLSimpleBooleanOptionEntry(name, option), myComboEntry(comboEntry) {
+	onValueChange(initialState());
+}
+
+void EnableDictionaryEntry::onValueChange(bool state) {
+	if (myComboEntry != 0) {
+		myComboEntry->setVisible(state);
+	}
 }
 
 OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
@@ -286,14 +308,17 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
 	myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 
-	const std::vector<std::string> &dictionaryNames = fbreader.dictionaryCollection().names();
+	const DictionaryCollection &collection = fbreader.dictionaryCollection();
+	const std::vector<std::string> &dictionaryNames = collection.names();
 	if (!dictionaryNames.empty()) {
 		ZLDialogContent &dictionaryTab = myDialog->createTab("Dictionary");
+		ZLOptionEntry *dictionaryChoiceEntry =
+			(dictionaryNames.size() > 1) ? new DictionaryEntry(collection) : 0;
 		const std::string optionName = "Enable Integration With " +
 			((dictionaryNames.size() == 1) ? dictionaryNames[0] : "Dictionary");
-		dictionaryTab.addOption(new ZLSimpleBooleanOptionEntry(optionName, fbreader.EnableDictionaryIntegrationOption));
-		if (dictionaryNames.size() > 1) {
-			dictionaryTab.addOption(new DictionaryEntry(fbreader.dictionaryCollection()));
+		dictionaryTab.addOption(new EnableDictionaryEntry(optionName, collection.EnableIntegrationOption, dictionaryChoiceEntry));
+		if (dictionaryChoiceEntry != 0) {
+			dictionaryTab.addOption(dictionaryChoiceEntry);
 		}
 	}
 }

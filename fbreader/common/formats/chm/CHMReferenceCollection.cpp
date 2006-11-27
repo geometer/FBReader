@@ -23,7 +23,20 @@
 
 std::string CHMReferenceCollection::fullReference(const std::string &prefix, const std::string &reference) {
 	const int index = reference.rfind("::");
-	return (index == -1) ? prefix + reference : reference.substr(index + 2);
+	if (index != -1) {
+		return reference.substr(index + 2);
+	}
+	
+	int counter = 0;
+	while (reference.substr(counter * 3, 3) == "../") {
+		++counter;
+	}
+
+	int slashIndex = prefix.length() - 1;
+	for (int i = 0; (i < counter) && (slashIndex > 0); ++i) {
+		slashIndex = prefix.rfind('/', slashIndex - 1);
+	}
+	return prefix.substr(0, slashIndex + 1) + reference.substr(counter * 3);
 }
 
 CHMReferenceCollection::CHMReferenceCollection() : myPrefix("/") {

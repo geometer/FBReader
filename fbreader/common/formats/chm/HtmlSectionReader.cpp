@@ -47,12 +47,17 @@ public:
 HtmlSectionReader::HtmlSectionReader(BookModel &model, const PlainTextFormat &format, const std::string &encoding, shared_ptr<CHMFileInfo> info, CHMReferenceCollection &collection) : HtmlBookReader("", model, format, encoding), myInfo(info), myReferenceCollection(collection) {
 	addAction("IMG", new HtmlSectionImageTagAction(*this));
 	addAction("A", new HtmlSectionHrefTagAction(*this));
+	//addAction("PRE", 0);
 	setBuildTableOfContent(false);
 }
 
 void HtmlSectionReader::setSectionName(const std::string &sectionName) {
 	myReferenceCollection.setPrefix(sectionName);
 	myCurrentSectionName = sectionName;
+}
+
+void HtmlSectionReader::startDocumentHandler() {
+	HtmlBookReader::startDocumentHandler();
 	myBookReader.addHyperlinkLabel(myCurrentSectionName);
 }
 

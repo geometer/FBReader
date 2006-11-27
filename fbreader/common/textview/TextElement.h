@@ -42,6 +42,7 @@ public:
 		FORCED_CONTROL_ELEMENT,
 		INDENT_ELEMENT,
 		HSPACE_ELEMENT,
+		FIXED_HSPACE_ELEMENT,
 		BEFORE_PARAGRAPH_ELEMENT,
 		AFTER_PARAGRAPH_ELEMENT,
 		EMPTY_LINE_ELEMENT,
@@ -90,6 +91,17 @@ private:
 	const shared_ptr<ParagraphEntry> myEntry;
 };
 
+class FixedHSpaceElement : public TextElement {
+
+public:
+	FixedHSpaceElement(unsigned char length);
+	Kind kind() const;
+	unsigned char length() const;
+
+private:
+	const unsigned char myLength;
+};
+
 class ControlElement : public TextElement {
 
 private:
@@ -131,5 +143,9 @@ inline TextElement::Kind ControlElement::kind() const { return CONTROL_ELEMENT; 
 inline const ControlEntry &ControlElement::entry() const { return (const ControlEntry&)*myEntry; }
 inline TextKind ControlElement::textKind() const { return entry().kind(); }
 inline bool ControlElement::isStart() const { return entry().isStart(); }
+
+inline FixedHSpaceElement::FixedHSpaceElement(unsigned char length) : myLength(length) {}
+inline TextElement::Kind FixedHSpaceElement::kind() const { return FIXED_HSPACE_ELEMENT; }
+inline unsigned char FixedHSpaceElement::length() const { return myLength; }
 
 #endif /* __TEXTELEMENT_H__ */

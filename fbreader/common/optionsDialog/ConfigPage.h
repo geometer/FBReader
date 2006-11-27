@@ -22,8 +22,6 @@
 #ifndef __CONFIGPAGE_H__
 #define __CONFIGPAGE_H__
 
-#include <ZLOptionEntry.h>
-
 class FBReader;
 class ZLDialogContent;
 

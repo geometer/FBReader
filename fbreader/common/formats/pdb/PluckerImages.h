@@ -31,7 +31,6 @@ class ZCompressedFileImage : public ZLSingleImage {
 
 public:
 	ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size);
-	~ZCompressedFileImage();
 	const shared_ptr<std::string> stringData() const;
 
 private:
@@ -44,7 +43,6 @@ class DocCompressedFileImage : public ZLSingleImage {
 
 public:
 	DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize);
-	~DocCompressedFileImage();
 	const shared_ptr<std::string> stringData() const;
 
 private:
@@ -57,7 +55,6 @@ class PluckerMultiImage : public ZLMultiImage {
 
 public:
 	PluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap);
-	~PluckerMultiImage();
 
 	void addId(const std::string &id);
 
@@ -72,13 +69,10 @@ private:
 };
 
 inline ZCompressedFileImage::ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
-inline ZCompressedFileImage::~ZCompressedFileImage() {}
 
 inline DocCompressedFileImage::DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
-inline DocCompressedFileImage::~DocCompressedFileImage() {}
 
 inline PluckerMultiImage::PluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap) : myRows(rows), myColumns(columns), myImageMap(imageMap) {}
-inline PluckerMultiImage::~PluckerMultiImage() {}
 inline void PluckerMultiImage::addId(const std::string &id) { myIds.push_back(id); }
 inline unsigned int PluckerMultiImage::rows() const { return myRows; }
 inline unsigned int PluckerMultiImage::columns() const { return myColumns; }

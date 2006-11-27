@@ -167,7 +167,7 @@ size_t CHMInputStream::sizeOfOpened() {
 }
 
 shared_ptr<ZLInputStream> CHMFileInfo::entryStream(shared_ptr<ZLInputStream> base, const std::string &name) const {
-	std::map<std::string,RecordInfo>::const_iterator it = myRecords.find(name);
+	RecordMap::const_iterator it = myRecords.find(name);
 	if (it == myRecords.end()) {
 		return 0;
 	}
@@ -194,7 +194,7 @@ CHMFileInfo::CHMFileInfo(const std::string &fileName) : myFileName(fileName) {
 }
 
 bool CHMFileInfo::moveToEntry(ZLInputStream &stream, const std::string &entryName) {
-	std::map<std::string,RecordInfo>::const_iterator it = myRecords.find(entryName);
+	RecordMap::const_iterator it = myRecords.find(entryName);
 	if (it == myRecords.end()) {
 		return false;
 	}
@@ -334,7 +334,7 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 
 	{
 		for (unsigned int i = 1; i < mySectionNames.size(); ++i) {
-			std::map<std::string,RecordInfo>::const_iterator it =
+			RecordMap::const_iterator it =
 				myRecords.find("::DataSpace/Storage/" + mySectionNames[i] + "/Content");
 			if (it == myRecords.end()) {
 				return false;
@@ -431,21 +431,35 @@ CHMFileInfo::FileNames CHMFileInfo::sectionNames(shared_ptr<ZLInputStream> base)
 	FileNames names;
 	shared_ptr<ZLInputStream> stringsStream = entryStream(base, "/#STRINGS");
 	if (!stringsStream.isNull() && stringsStream->open()) {
-		readNTString(*stringsStream);	
-		readNTString(*stringsStream);	
-		readNTString(*stringsStream);	
-		std::string argument = readNTString(*stringsStream);
-		if (ZLStringUtil::stringEndsWith(argument, ".hhc")) {
-			names.TOC = argument;
-			argument = readNTString(*stringsStream);
+		std::vector<std::string> fileNames;
+		int tocIndex = -1;
+		int indexIndex = -1;
+		for (int i = 0; i < 12; ++i) {
+			std::string argument = readNTString(*stringsStream);
+			if ((tocIndex == -1) && ZLStringUtil::stringEndsWith(argument, ".hhc")) {
+				tocIndex = i;
+				names.TOC = argument;
+			}
+			if ((indexIndex == -1) && ZLStringUtil::stringEndsWith(argument, ".hhk")) {
+				indexIndex = i;
+				names.Index = argument;
+			}
+			fileNames.push_back(argument);
 		}
-		if (ZLStringUtil::stringEndsWith(argument, ".hhk")) {
-			names.Index = argument;
-			argument = readNTString(*stringsStream);
+		int startIndex = std::max(3, std::max(tocIndex, indexIndex) + 1);
+		if (startIndex < 11) {
+			names.Start = fileNames[startIndex];
+			names.Home = fileNames[startIndex + 1];
 		}
-		names.Start = argument;
-		names.Home = readNTString(*stringsStream);
 		stringsStream->close();
+	}
+	if (names.TOC.empty()) {
+		for (RecordMap::const_iterator it = myRecords.begin(); it != myRecords.end(); ++it) {
+			if (ZLStringUtil::stringEndsWith(it->first, ".hhc")) {
+				names.TOC = it->first;
+				break;
+			}
+		}
 	}
 
 	return names;

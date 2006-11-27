@@ -65,6 +65,8 @@ private:
 	void safeBeginParagraph();
 	void safeEndParagraph();
 
+	void processHeader(FontType font, bool start);
+
 private:
 	std::string myFilePath;
 	shared_ptr<ZLInputStream> myStream;

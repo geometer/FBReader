@@ -54,6 +54,9 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
 				myElements.push_back(new ForcedControlElement(it.entry()));
 				break;
+			case ParagraphEntry::FIXED_HSPACE_ENTRY:
+				myElements.push_back(new FixedHSpaceElement(((FixedHSpaceEntry&)*it.entry()).length()));
+				break;
 			case ParagraphEntry::CONTROL_ENTRY:
 			case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
 				myElements.push_back(TextElementPool::Pool.getControlElement(it.entry()));

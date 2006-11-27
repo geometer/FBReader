@@ -55,6 +55,7 @@ public:
 	void addHyperlinkControl(TextKind kind, const std::string &label);
 	void addHyperlinkLabel(const std::string &label);
 	void addHyperlinkLabel(const std::string &label, int paragraphNumber);
+	void addFixedHSpace(unsigned char length);
 
 	void addImageReference(const std::string &id);
 	void addImage(const std::string &id, ZLImage *image);

@@ -39,7 +39,7 @@ const std::string OPTION_CreateContentsTable = "CreateContentsTable";
 
 PlainTextFormat::PlainTextFormat(const std::string &fileName) :
 	InitializedOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_Initialized, false),
-	BreakTypeOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_BreakType, 0),
+	BreakTypeOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_BreakType, 1),
 	IgnoredIndentOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_IgnoredIndent, 1, 100, 1),
 	EmptyLinesBeforeNewSectionOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
 	CreateContentsTableOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_CreateContentsTable, false) {

@@ -309,6 +309,7 @@ void TextView::drawTextLine(const LineInfo &info) {
 			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
 			case TextElement::AFTER_PARAGRAPH_ELEMENT:
 			case TextElement::EMPTY_LINE_ELEMENT:
+			case TextElement::FIXED_HSPACE_ELEMENT:
 				break;
 		}
 

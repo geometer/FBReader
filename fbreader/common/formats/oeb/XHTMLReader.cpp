@@ -349,15 +349,17 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
 			myModelReader.beginParagraph();
 			myModelReader.addControl(CODE, true);
 		}
-		// TODO: insert spaces at start of line
-		/*
-		for (; (len > 0) && isspace(*text); ++text, --len) {
-			static const std::string NBSP = "\xC0\xA0";
-			myModelReader.addData(NBSP);
+		int spaceCounter = 0;
+		while ((spaceCounter < len) && isspace(*text)) {
+			++spaceCounter;
 		}
-		*/
+		myModelReader.addFixedHSpace(spaceCounter);
+		text += spaceCounter;
+		len -= spaceCounter;
 	}
-	myModelReader.addData(std::string(text, len));
+	if (len > 0) {
+		myModelReader.addData(std::string(text, len));
+	}
 }
 
 static std::vector<std::string> EXTERNAL_DTDs;

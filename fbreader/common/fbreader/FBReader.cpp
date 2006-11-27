@@ -32,11 +32,11 @@
 #include "ContentsView.h"
 #include "CollectionView.h"
 #include "RecentBooksView.h"
-#include "OptionsDialog.h"
 #include "InfoDialog.h"
 #include "FBFileHandler.h"
 
 #include "../FBOptions.h"
+#include "../optionsDialog/OptionsDialog.h"
 #include "../bookmodel/BookModel.h"
 #include "../collection/BookList.h"
 #include "../hyphenation/Hyphenator.h"
@@ -108,8 +108,7 @@ FBReader::FBReader(const std::string& bookToOpen) :
 	SearchIgnoreCaseOption(FBOptions::SEARCH_CATEGORY, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
-	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
-	EnableDictionaryIntegrationOption(ZLOption::CONFIG_CATEGORY, "Dictionary", "Enabled", true) {
+	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", "") {
 
 	myModel = 0;
 	myBookTextView = new BookTextView(*this, context());

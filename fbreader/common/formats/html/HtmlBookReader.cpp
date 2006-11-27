@@ -378,6 +378,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 			if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
 				for (const char *ptr = text; ptr != end; ++ptr) {
 					if (*ptr == '\n') {
+						mySpaceCounter = 0;
 						if (start < ptr) {
 							addConvertedDataToBuffer(start, ptr - start, convert);
 						} else {
@@ -387,6 +388,13 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 						myBookReader.endParagraph();
 						myBookReader.beginParagraph();
 						start = ptr + 1;
+					} else if (mySpaceCounter >= 0) {
+						if (isspace(*ptr)) {
+							++mySpaceCounter;
+						} else {
+							myBookReader.addFixedHSpace(mySpaceCounter);
+							mySpaceCounter = -1;
+						}
 					}
 				}
 				addConvertedDataToBuffer(start, end - start, convert);

@@ -19,12 +19,15 @@
  * 02110-1301, USA.
  */
 
+//#include <iostream>
+
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 
 #include "CHMPlugin.h"
 #include "CHMFile.h"
+#include "CHMFileImage.h"
 #include "CHMReferenceCollection.h"
 #include "HHCReader.h"
 #include "../txt/PlainTextFormat.h"
@@ -106,23 +109,45 @@ bool CHMPlugin::readModel(const BookDescription &description, BookModel &model) 
 		hhcReader.readDocument(*tocStream);
 	}
 
+	/*
+	if (!tocStream.isNull() && tocStream->open()) {
+		std::string buf;
+		buf.append(tocStream->sizeOfOpened(), '\0');
+		tocStream->read((char*)buf.data(), buf.length());
+		std::cerr << "[ " << names.TOC << " ]\n" << buf << "\n";
+	}
+	*/
+
 	int contentCounter = 0;
 	PlainTextFormat format(description.fileName());
 	HtmlSectionReader reader(model, format, description.encoding(), info, referenceCollection);
 	while (referenceCollection.containsNonProcessedReferences()) {
 		const std::string fileName = referenceCollection.nextReference();
-		shared_ptr<ZLInputStream> entryStream = info->entryStream(stream, fileName);
-		if (!entryStream.isNull() && entryStream->open()) {
-			/*
-			std::string buf;
-			buf.append(entryStream->sizeOfOpened(), '\0');
-			entryStream->read((char*)buf.data(), buf.length());
-			std::cerr << "[ " << fileName << " ]\n" << buf << "\n";
-			entryStream->open();
-			*/
-			reader.setSectionName(fileName);
-			reader.readDocument(*entryStream);
-			++contentCounter;
+		if (ZLStringUtil::stringEndsWith(fileName, ".jpg") ||
+		    ZLStringUtil::stringEndsWith(fileName, ".gif")) {
+			BookReader bookReader(model);
+			bookReader.setMainTextModel();
+			bookReader.addHyperlinkLabel(fileName);
+			bookReader.pushKind(REGULAR);
+			bookReader.beginParagraph();
+			bookReader.addImageReference(fileName);
+			bookReader.addImage(fileName, new CHMFileImage(info, fileName));
+			bookReader.endParagraph();
+			bookReader.insertEndOfTextParagraph();
+		} else {
+			shared_ptr<ZLInputStream> entryStream = info->entryStream(stream, fileName);
+			if (!entryStream.isNull() && entryStream->open()) {
+				/*
+				std::string buf;
+				buf.append(entryStream->sizeOfOpened(), '\0');
+				entryStream->read((char*)buf.data(), buf.length());
+				std::cerr << "[ " << fileName << " ]\n" << buf << "\n";
+				entryStream->open();
+				*/
+				reader.setSectionName(fileName);
+				reader.readDocument(*entryStream);
+				++contentCounter;
+			}
 		}
 	}
 	if (contentCounter == 0) {

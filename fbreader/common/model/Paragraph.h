@@ -45,6 +45,7 @@ public:
 		CONTROL_ENTRY = 3,
 		HYPERLINK_CONTROL_ENTRY = 4,
 		FORCED_CONTROL_ENTRY = 5,
+		FIXED_HSPACE_ENTRY = 6,
 	};
 
 protected:
@@ -109,6 +110,16 @@ private:
 	bool myStart;
 
 friend class ControlEntryPool;
+};
+
+class FixedHSpaceEntry : public ParagraphEntry {
+
+public:
+	FixedHSpaceEntry(unsigned char length);
+	unsigned char length() const;
+
+private:
+	const unsigned char myLength;
 };
 
 class ControlEntryPool {
@@ -281,6 +292,9 @@ inline ControlEntry::~ControlEntry() {}
 inline TextKind ControlEntry::kind() const { return myKind; }
 inline bool ControlEntry::isStart() const { return myStart; }
 inline bool ControlEntry::isHyperlink() const { return false; }
+
+inline FixedHSpaceEntry::FixedHSpaceEntry(unsigned char length) : myLength(length) {}
+inline unsigned char FixedHSpaceEntry::length() const { return myLength; }
 
 inline ControlEntryPool::ControlEntryPool() {}
 inline ControlEntryPool::~ControlEntryPool() {}

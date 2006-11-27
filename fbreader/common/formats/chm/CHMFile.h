@@ -65,7 +65,8 @@ private:
 		size_t Length;
 	};
 
-	std::map<std::string,RecordInfo> myRecords;
+	typedef std::map<std::string,RecordInfo> RecordMap;
+	RecordMap myRecords;
 	std::vector<std::string> mySectionNames;
 
 	struct SectionInfo {

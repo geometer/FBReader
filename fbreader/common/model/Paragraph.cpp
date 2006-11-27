@@ -62,6 +62,9 @@ const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
 				myEntry = new ForcedControlEntry(myPointer + 1);
 				break;
+			case ParagraphEntry::FIXED_HSPACE_ENTRY:
+				myEntry = new FixedHSpaceEntry((unsigned char)*(myPointer + 1));
+				break;
 		}
 	}
 	return myEntry;
@@ -98,6 +101,9 @@ void Paragraph::Iterator::next() {
 				break;
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
 				myPointer += 2 * sizeof(short) + 3;
+				break;
+			case ParagraphEntry::FIXED_HSPACE_ENTRY:
+				myPointer += 2;
 				break;
 		}
 		if (*myPointer == 0) {

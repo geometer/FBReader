@@ -19,10 +19,12 @@
  * 02110-1301, USA.
  */
 
+#include <ZLOptionEntry.h>
 #include <ZLOptionsDialog.h>
 
-#include "FBReader.h"
 #include "ConfigPage.h"
+
+#include "../fbreader/FBReader.h"
 
 class EnableAutoSavingEntry : public ZLSimpleBooleanOptionEntry {
 

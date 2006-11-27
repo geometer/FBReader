@@ -91,6 +91,8 @@ int TextView::ViewStyle::elementWidth(const TextElement &element, unsigned int c
 		case TextElement::FORCED_CONTROL_ELEMENT:
 		case TextElement::CONTROL_ELEMENT:
 			return 0;
+		case TextElement::FIXED_HSPACE_ELEMENT:
+			return context().spaceWidth() * ((const FixedHSpaceElement&)element).length();
 	}
 	return 0;
 }
@@ -116,6 +118,7 @@ int TextView::ViewStyle::elementHeight(const TextElement &element) const {
 		case TextElement::HSPACE_ELEMENT:
 		case TextElement::FORCED_CONTROL_ELEMENT:
 		case TextElement::CONTROL_ELEMENT:
+		case TextElement::FIXED_HSPACE_ELEMENT:
 			return 0;
 	}
 	return 0;

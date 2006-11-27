@@ -225,11 +225,9 @@ bool BookTextView::onStylusPress(int x, int y) {
 		return true;
 	}
 	
-	if (fbreader().EnableDictionaryIntegrationOption.value() &&
-			(position->Kind == TextElement::WORD_ELEMENT)) {
-		const DictionaryCollection &collection = fbreader().dictionaryCollection();
-		const Dictionary *dictionary = collection.dictionary(collection.CurrentNameOption.value());
-		if (dictionary != 0) {
+	if (position->Kind == TextElement::WORD_ELEMENT) {
+		shared_ptr<Dictionary> dictionary = fbreader().dictionaryCollection().currentDictionary();
+		if (!dictionary.isNull()) {
 			const Word &word = (Word&)cursor.element();
 			ZLUnicodeUtil::Ucs2String ucs2;
 			ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);

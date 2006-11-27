@@ -41,6 +41,7 @@ TextElementVector::~TextElementVector() {
 				break;
 			case TextElement::IMAGE_ELEMENT:
 			case TextElement::FORCED_CONTROL_ELEMENT:
+			case TextElement::FIXED_HSPACE_ELEMENT:
 				delete *it;
 				break;
 			case TextElement::INDENT_ELEMENT:

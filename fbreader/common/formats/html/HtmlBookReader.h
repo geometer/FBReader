@@ -42,9 +42,8 @@ protected:
 	void addAction(const std::string &tag, HtmlTagAction *action);
 	void setBuildTableOfContent(bool build);
 
-private:
-	void startDocumentHandler();
 protected:
+	void startDocumentHandler();
 	void endDocumentHandler();
 
 private:

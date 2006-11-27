@@ -22,7 +22,7 @@
 #ifndef __SCROLLINGOPTIONSPAGE_H__
 #define __SCROLLINGOPTIONSPAGE_H__
 
-#include "FBReader.h"
+#include "../fbreader/FBReader.h"
 
 class ZLDialogContent;
 class ZLSpinOptionEntry;

@@ -65,6 +65,7 @@ public:
 	void addText(const std::string &text);
 	void addText(const std::vector<std::string> &text);
 	void addImage(const std::string &id, const ImageMap &imageMap);
+	void addFixedHSpace(unsigned char length);
 
 protected:
 	void addParagraphInternal(Paragraph *paragraph);

@@ -35,7 +35,7 @@ private:
 
 private:
 	DictionaryCollection &myCollection;
-	Dictionary *myCurrentDictionary;
+	shared_ptr<Dictionary> myCurrentDictionary;
 };
 
 static const std::string DICTIONARY = "dictionary";
@@ -61,7 +61,7 @@ void DictionaryCollectionBuilder::startElementHandler(const char *tag, const cha
 				myCollection.myDictionaries[sName] = myCurrentDictionary;
 			}
 		}
-	} else if ((myCurrentDictionary != 0) && (SHOW_WORD_COMMAND == tag)) {
+	} else if (!myCurrentDictionary.isNull() && (SHOW_WORD_COMMAND == tag)) {
 		for (const char **it = attributes; (*it != 0) && (*(it + 1) != 0); it += 2) {
 			myCurrentDictionary->myShowWordData[*it] = *(it + 1);
 		}
@@ -74,7 +74,11 @@ void DictionaryCollectionBuilder::endElementHandler(const char *tag) {
 	}
 }
 
-DictionaryCollection::DictionaryCollection() : CurrentNameOption(ZLOption::CONFIG_CATEGORY, "Dictionary", "Name", "") {
+static const std::string DICTIONARY_GROUP = "Dictionary";
+
+DictionaryCollection::DictionaryCollection() :
+	EnableIntegrationOption(ZLOption::CONFIG_CATEGORY, DICTIONARY_GROUP, "Enabled", true),
+	CurrentNameOption(ZLOption::CONFIG_CATEGORY, DICTIONARY_GROUP, "Name", "") {
 	DictionaryCollectionBuilder builder(*this);
 	builder.readDocument(ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "dictionary-integration.xml");
 	if (!myNames.empty() && (myDictionaries.find(CurrentNameOption.value()) == myDictionaries.end())) {
@@ -82,18 +86,15 @@ DictionaryCollection::DictionaryCollection() : CurrentNameOption(ZLOption::CONFI
 	}
 }
 
-DictionaryCollection::~DictionaryCollection() {
-	for (std::map<std::string,Dictionary*>::const_iterator it = myDictionaries.begin(); it != myDictionaries.end(); ++it) {
-		delete it->second;
-	}
-}
-
 const std::vector<std::string> &DictionaryCollection::names() const {
 	return myNames;
 }
 
-const Dictionary *DictionaryCollection::dictionary(const std::string &name) const {
-	std::map<std::string,Dictionary*>::const_iterator it = myDictionaries.find(name);
+shared_ptr<Dictionary> DictionaryCollection::currentDictionary() const {
+	if (!EnableIntegrationOption.value()) {
+		return 0;
+	}
+	std::map<std::string,shared_ptr<Dictionary> >::const_iterator it = myDictionaries.find(CurrentNameOption.value());
 	return (it != myDictionaries.end()) ? it->second : 0;
 }
 

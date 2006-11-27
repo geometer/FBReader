@@ -21,8 +21,9 @@
 
 #include <ZLOptionsDialog.h>
 
-#include "FBReader.h"
 #include "KeyBindingsPage.h"
+
+#include "../fbreader/FBReader.h"
 
 class KeyboardControlEntry : public ZLSimpleBooleanOptionEntry {
 

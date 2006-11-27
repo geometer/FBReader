@@ -52,7 +52,7 @@ GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &cap
 
 GtkOptionsDialog::~GtkOptionsDialog() {
 	// I do not have to destroy myNotebook as it's a myDialog child
-	for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
+	for (std::vector<GtkOptionsDialogTab*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
 		delete *tab;
 
 	destroyGtkDialog(myDialog);

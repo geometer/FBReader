@@ -201,6 +201,13 @@ void TextModel::addText(const std::vector<std::string> &text) {
 	}
 }
 
+void TextModel::addFixedHSpace(unsigned char length) {
+	myLastEntryStart = myAllocator.allocate(2);
+	*myLastEntryStart = ParagraphEntry::FIXED_HSPACE_ENTRY;
+	*(myLastEntryStart + 1) = length;
+	myParagraphs.back()->addEntry(myLastEntryStart);
+}
+
 void TextModel::addControl(TextKind textKind, bool isStart) {
 	myLastEntryStart = myAllocator.allocate(2);
 	*myLastEntryStart = ParagraphEntry::CONTROL_ENTRY;

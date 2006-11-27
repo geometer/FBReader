@@ -98,58 +98,49 @@ void PluckerBookReader::safeEndParagraph() {
 	}
 }
 
+void PluckerBookReader::processHeader(FontType font, bool start) {
+	if (start) {
+		enterTitle();
+		TextKind kind;
+		switch (font) {
+			case FT_H1:
+				kind = H1;
+				break;
+			case FT_H2:
+				kind = H2;
+				break;
+			case FT_H3:
+				kind = H3;
+				break;
+			case FT_H4:
+				kind = H4;
+				break;
+			case FT_H5:
+				kind = H5;
+				break;
+			case FT_H6:
+			default:
+				kind = H6;
+				break;
+		}
+		pushKind(kind);
+	} else {
+		popKind();
+		exitTitle();
+	}
+};
+
 void PluckerBookReader::setFont(FontType font, bool start) {
 	switch (font) {
 		case FT_REGULAR:
 			break;
 		case FT_H1:
-			if (start) {
-				enterTitle();
-				pushKind(H1);
-			} else {
-				popKind();
-				exitTitle();
-			}
 		case FT_H2:
-			if (start) {
-				enterTitle();
-				pushKind(H2);
-			} else {
-				popKind();
-				exitTitle();
-			}
 		case FT_H3:
-			if (start) {
-				enterTitle();
-				pushKind(H3);
-			} else {
-				popKind();
-				exitTitle();
-			}
 		case FT_H4:
-			if (start) {
-				enterTitle();
-				pushKind(H4);
-			} else {
-				popKind();
-				exitTitle();
-			}
 		case FT_H5:
-			if (start) {
-				enterTitle();
-				pushKind(H5);
-			} else {
-				popKind();
-				exitTitle();
-			}
 		case FT_H6:
-			if (start) {
-				enterTitle();
-				pushKind(H6);
-			} else {
-				popKind();
-				exitTitle();
-			}
+			processHeader(font, start);
 			break;
 		case FT_BOLD:
 			safeAddControl(BOLD, start);
@@ -295,6 +286,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 		case 0x97: // TODO: process table
 			break;
 		default: // this should be impossible
+			//std::cerr << "Oops... function #" << (int)(unsigned char)*ptr << "\n";
 			break;
 	}
 }
@@ -320,7 +312,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 			}
 		} else if (functionFlag) {
 			int paramCounter = ((unsigned char)*ptr) % 8;
-			if (end - ptr > paramCounter + 1) {
+			if (end - ptr > paramCounter) {
 				processTextFunction(ptr);
 				ptr += paramCounter;
 			} else {

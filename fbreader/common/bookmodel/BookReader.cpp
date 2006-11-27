@@ -90,6 +90,12 @@ void BookReader::addControl(TextKind kind, bool start) {
 	}
 }
 
+void BookReader::addFixedHSpace(unsigned char length) {
+	if (myTextParagraphExists) {
+		myCurrentTextModel->addFixedHSpace(length);
+	}
+}
+
 void BookReader::addControl(const ForcedControlEntry &entry) {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();

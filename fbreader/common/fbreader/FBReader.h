@@ -166,8 +166,6 @@ public:
 	ZLBooleanOption SearchThisSectionOnlyOption;
 	ZLStringOption SearchPatternOption;
 
-	ZLBooleanOption EnableDictionaryIntegrationOption;
-
 private:
 	class FBAction : public Action {
 
