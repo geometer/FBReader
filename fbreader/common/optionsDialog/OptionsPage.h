@@ -38,7 +38,7 @@ public:
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string&);
-	void onValueChange(const std::string &selectedValue);
+	void onValueSelected(const std::string &selectedValue);
 	void addValue(const std::string &value);
 
 protected:

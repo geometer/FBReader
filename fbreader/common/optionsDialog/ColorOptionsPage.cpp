@@ -60,5 +60,5 @@ ColorOptionsPage::ColorOptionsPage(ZLDialogContent &dialogTab) {
 		registerEntry(dialogTab, *it, (*it)->KeyName);
 	}
 
-	myComboEntry->onValueChange(myComboEntry->initialValue());
+	myComboEntry->onValueSelected(myComboEntry->initialValue());
 }

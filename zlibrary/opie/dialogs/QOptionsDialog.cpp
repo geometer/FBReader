@@ -21,22 +21,28 @@
 #include <algorithm>
 
 #include <qapplication.h>
-#include <qtabwidget.h>
 #include <qhbox.h>
 #include <qvbox.h>
 #include <qlayout.h>
 #include <qlabel.h>
 #include <qcheckbox.h>
 #include <qspinbox.h>
-#include <qlabel.h>
 
 #include <ZLOptionEntry.h>
 
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
 
+MyQTabWidget::MyQTabWidget(QWidget *parent) : QTabWidget(parent) {
+}
+
+void MyQTabWidget::resizeEvent(QResizeEvent *event) {
+	QTabWidget::resizeEvent(event);
+	emit resized(event->size());
+}
+
 QOptionsDialog::QOptionsDialog(const std::string &id, const std::string &caption) : FullScreenDialog(caption.c_str()), ZLOptionsDialog(id) {
-	myTabWidget = new QTabWidget(this);
+	myTabWidget = new MyQTabWidget(this);
 }
 
 ZLDialogContent &QOptionsDialog::createTab(const std::string &name) {
@@ -94,7 +100,7 @@ void QOptionsDialogTab::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
 }
 
-QOptionsDialogTab::QOptionsDialogTab(QWidget *parent) : QWidget(parent) {
+QOptionsDialogTab::QOptionsDialogTab(QWidget *parent) : QWidget(parent), myParentWidget(parent) {
 	const long displaySize = qApp->desktop()->height() * (long)qApp->desktop()->width();
 	const int space = (displaySize < 640 * 480) ? 3 : 10;
 	myLayout = new QGridLayout(this, -1, 13, space, space);
@@ -150,14 +156,14 @@ void QOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int fromColumn,
 		case KEY:
 			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case UNKNOWN:
-			view = (QOptionView*)((ZLUserDefinedOptionEntry*)option)->createView();
-			view->setPosition(this, myRowCounter, fromColumn, toColumn);
-			break;
 	}
 
 	if (view != 0) {
 		view->setVisible(option->isVisible());
 		myViews.append(view);
 	}
+}
+
+QWidget *QOptionsDialogTab::parentWidget() {
+	return myParentWidget;
 }

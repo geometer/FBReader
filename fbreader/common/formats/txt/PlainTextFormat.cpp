@@ -60,14 +60,14 @@ PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string 
 	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry("Ignore Indent Less Than", myFormat.IgnoredIndentOption, 1);
 	tab.addOption(breakEntry);
 	tab.addOption(myIgnoredIndentEntry);
-	breakEntry->onValueChange(breakEntry->initialValue());
+	breakEntry->onValueSelected(breakEntry->initialValue());
 
 	if (showContentsEntry) {
 		CreateContentsTableOptionEntry *contentsTableEntry = new CreateContentsTableOptionEntry(*this, "Build Contents Table", myFormat.CreateContentsTableOption);
 		myEmptyLinesBeforeNewSectionEntry = new ZLSimpleSpinOptionEntry("Empty Lines Before New Section", myFormat.EmptyLinesBeforeNewSectionOption, 1);
 		tab.addOption(contentsTableEntry);
 		tab.addOption(myEmptyLinesBeforeNewSectionEntry);
-		contentsTableEntry->onValueChange(contentsTableEntry->initialState());
+		contentsTableEntry->onStateChanged(contentsTableEntry->initialState());
 	}
 }
 
@@ -245,7 +245,7 @@ void BreakTypeOptionEntry::onAccept(const std::string &value) {
 	}
 }
 
-void BreakTypeOptionEntry::onValueChange(const std::string &selectedValue) {
+void BreakTypeOptionEntry::onValueSelected(const std::string &selectedValue) {
 	myPage.myIgnoredIndentEntry->setVisible(selectedValue == BREAK_TYPE_VALUES[2]);
 }
 
@@ -255,6 +255,6 @@ CreateContentsTableOptionEntry::CreateContentsTableOptionEntry(PlainTextInfoPage
 CreateContentsTableOptionEntry::~CreateContentsTableOptionEntry() {
 }
 
-void CreateContentsTableOptionEntry::onValueChange(bool value) {
-	myPage.myEmptyLinesBeforeNewSectionEntry->setVisible(value);
+void CreateContentsTableOptionEntry::onStateChanged(bool state) {
+	myPage.myEmptyLinesBeforeNewSectionEntry->setVisible(state);
 }

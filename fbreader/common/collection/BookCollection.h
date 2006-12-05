@@ -31,7 +31,7 @@
 
 #include "../description/BookDescription.h"
 
-typedef std::vector<BookDescriptionPtr > Books;
+typedef std::vector<BookDescriptionPtr> Books;
 
 class DescriptionComparator {
 
@@ -50,25 +50,30 @@ public:
 public:
 	BookCollection();
 	~BookCollection();
-	void rebuild();
 
-	const std::vector<AuthorPtr > &authors() const;
+	const std::vector<AuthorPtr> &authors() const;
 	const Books &books(AuthorPtr author) const;
 	bool isBookExternal(BookDescriptionPtr description) const;
 
-	bool isSynchronized() const;
+	void rebuild(bool strong);
 	
 private:
-	void collectDirNames(std::set<std::string> &names);
-	void addDescription(BookDescriptionPtr description);
+	void synchronize() const;
+
+	void collectDirNames(std::set<std::string> &names) const;
+	void collectBookFileNames(std::set<std::string> &bookFileNames) const;
+
+	void addDescription(BookDescriptionPtr description) const;
 
 private:
-	std::vector<AuthorPtr> myAuthors;
-	std::map<AuthorPtr,Books> myCollection;
-	std::set<BookDescriptionPtr> myExternalBooks;
+	mutable std::vector<AuthorPtr> myAuthors;
+	mutable std::map<AuthorPtr,Books> myCollection;
+	mutable std::set<BookDescriptionPtr> myExternalBooks;
 
-	std::string myPath;
-	bool myScanSubdirs;
+	mutable std::string myPath;
+	mutable bool myScanSubdirs;
+	mutable bool myDoStrongRebuild;
+	mutable bool myDoWeakRebuild;
 };
 
 class LastOpenedBooks {
@@ -89,9 +94,20 @@ private:
 inline DescriptionComparator::DescriptionComparator() {}
 inline DescriptionComparator::~DescriptionComparator() {}
 
-inline const std::vector<AuthorPtr > &BookCollection::authors() const { return myAuthors; }
-inline const Books &BookCollection::books(AuthorPtr author) const { return (*myCollection.find(author)).second; }
-inline bool BookCollection::isBookExternal(BookDescriptionPtr description) const { return myExternalBooks.find(description) != myExternalBooks.end(); }
+inline const std::vector<AuthorPtr > &BookCollection::authors() const {
+	synchronize();
+	return myAuthors;
+}
+
+inline const Books &BookCollection::books(AuthorPtr author) const {
+	synchronize();
+	return (*myCollection.find(author)).second;
+}
+
+inline bool BookCollection::isBookExternal(BookDescriptionPtr description) const {
+	synchronize();
+	return myExternalBooks.find(description) != myExternalBooks.end();
+}
 
 inline const Books &LastOpenedBooks::books() const { return myBooks; }
 

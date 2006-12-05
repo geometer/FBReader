@@ -39,19 +39,20 @@ public:
 	~CollectionView();
 	const std::string &caption() const;
 
-	void rebuild();
 	bool onStylusPress(int x, int y);
 
 	void paint();
+	void updateModel();
+
+	void selectBook(BookDescriptionPtr book);
 
 	BookCollection &collection();
 
 private:
 	BookCollection myCollection;
-	TreeModel *myTreeModel;
-	std::map<Paragraph*,BookDescriptionPtr> myBooksMap;
+	class CollectionModel *myCollectionModel;
 	bool myTreeStateIsFrozen;
-	ImageMap myImageMap;
+	bool myUpdateModel;
 };
 
 inline BookCollection &CollectionView::collection() {

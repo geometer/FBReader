@@ -378,6 +378,7 @@ private:
 	BookDescriptionPtr createDescription(const std::string& fileName) const;
 
 	bool runBookInfoDialog(const std::string &fileName);
+
 	void clearTextCaches();
 
 	bool isScrollingAction(int code);

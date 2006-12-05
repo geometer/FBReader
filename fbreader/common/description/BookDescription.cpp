@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLOptions.h>
 #include <ZLFile.h>
 #include <ZLUnicodeUtil.h>
@@ -33,6 +31,8 @@
 #include "../formats/FormatPlugin.h"
 
 #include "../FBOptions.h"
+
+std::map<std::string,BookDescriptionPtr> BookDescription::ourDescriptions;
 
 static const std::string EMPTY = "";
 static const std::string UNKNOWN = "unknown";
@@ -67,16 +67,20 @@ bool BookInfo::isFull() const {
 		IsSequenceDefinedOption.value();
 }
 
-BookDescriptionPtr BookDescription::create(const std::string &fileName) {
+BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, bool checkFile) {
 	int index = fileName.find(':');
 	ZLFile file((index == -1) ? fileName : fileName.substr(0, index));
-	if (!file.exists()) {
+	if (checkFile && !file.exists()) {
 		return 0;
 	}
 
-	BookDescriptionPtr description = new BookDescription(fileName);
+	BookDescriptionPtr description = ourDescriptions[fileName];
+	if (description.isNull()) {
+		description = new BookDescription(fileName);
+		ourDescriptions[fileName] = description;
+	}
 
-	if (BookDescriptionUtil::checkInfo(file)) {
+	if (!checkFile || BookDescriptionUtil::checkInfo(file)) {
 		BookInfo info(fileName);
 		if (info.isFull()) {
 			description->myAuthor = SingleAuthor::create(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());

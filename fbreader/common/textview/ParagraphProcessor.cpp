@@ -63,11 +63,12 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
-				const ZLImage *image = ((ImageEntry&)*it.entry()).image();
+				ImageEntry &imageEntry = (ImageEntry&)*it.entry();
+				const ZLImage *image = imageEntry.image();
 				if (image != 0) {
 					shared_ptr<ZLImageData> data = ZLImageManager::instance().imageData(*image);
 					if (!data.isNull()) {
-						myElements.push_back(new ImageElement(data));
+						myElements.push_back(new ImageElement(imageEntry.id(), data));
 					}
 				}
 				break;

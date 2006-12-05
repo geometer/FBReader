@@ -4,6 +4,7 @@ ifeq "$(UI_TYPE)" "qt"
 endif
 IMAGEDIR = /usr/share/pixmaps
 
+BASEPATH = /opt/cross/arm/3.4.4-xscale-softvfp
 USRPATH = $(BASEPATH)/armv5tel-cacko-linux
 CC = $(BASEPATH)/bin/armv5tel-linux-gcc -I $(BASEPATH)/include
 AR = $(BASEPATH)/bin/armv5tel-linux-ar rsu

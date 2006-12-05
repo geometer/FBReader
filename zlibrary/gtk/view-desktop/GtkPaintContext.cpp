@@ -26,15 +26,18 @@
 
 #include "gdk-pixbuf-hack.h"
 
+static bool setColor(GdkColor &gdkColor, const ZLColor &zlColor) {
+	gdkColor.red = zlColor.Red * (65535 / 255);
+	gdkColor.green = zlColor.Green * (65535 / 255);
+	gdkColor.blue = zlColor.Blue * (65535 / 255);
+	GdkColormap *colormap = gdk_colormap_get_system();
+	return gdk_colormap_alloc_color(colormap, &gdkColor, false, false);
+}
+
 static void setColor(GdkGC *gc, const ZLColor &zlColor) {
 	if (gc != 0) {
-		// TODO: check, if using of local variable is correct in this situation
 		GdkColor gdkColor;
-		gdkColor.red = zlColor.Red * 257;
-		gdkColor.green = zlColor.Green * 257;
-		gdkColor.blue = zlColor.Blue * 257;
-		GdkColormap *colormap = gdk_colormap_get_system();
-		if (gdk_colormap_alloc_color(colormap, &gdkColor, false, false)) {
+		if (setColor(gdkColor, zlColor)) {
 			gdk_gc_set_foreground(gc, &gdkColor);
 		}
 	}
@@ -57,6 +60,8 @@ GtkPaintContext::GtkPaintContext() {
 	myTextGC = 0;
 	myFillGC = 0;
 	myBackGC = 0;
+
+	myTilePixmap = 0;
 
 	myStringHeight = -1;
 	mySpaceWidth = -1;
@@ -225,12 +230,30 @@ void GtkPaintContext::setFont(const std::string &family, int size, bool bold, bo
 
 void GtkPaintContext::setColor(ZLColor color, LineStyle style) {
 	::setColor(myTextGC, color);
-	//gdk_gc_set_line_attributes(myTextGC, 1, (style == SOLID_LINE) ? GDK_LINE_SOLID : GDK_LINE_ON_OFF_DASH, GDK_CAP_NOT_LAST, GDK_JOIN_MITER);
+	gdk_gc_set_line_attributes(myTextGC, 0, (style == SOLID_LINE) ? GDK_LINE_SOLID : GDK_LINE_ON_OFF_DASH, (GdkCapStyle)1, (GdkJoinStyle)1);
 }
 
 void GtkPaintContext::setFillColor(ZLColor color, FillStyle style) {
-	::setColor(myFillGC, color);
-	gdk_gc_set_fill(myFillGC, (style == SOLID_FILL) ? GDK_SOLID : GDK_TILED);
+	if (style == SOLID_FILL) {
+		::setColor(myFillGC, color);
+		gdk_gc_set_fill(myFillGC, GDK_SOLID);
+	} else {
+		gdk_gc_set_fill(myFillGC, GDK_TILED);
+		if (myPixmap != 0) {
+			if (myTilePixmap != 0) {
+				gdk_pixmap_unref(myTilePixmap);
+			}
+			static GdkColor fgColor;
+			::setColor(fgColor, color);
+			static GdkColor bgColor;
+			::setColor(bgColor, myBackColor);
+			static char data[] = { 0x0C, 0x0C, 0x03, 0x03 };
+			myTilePixmap = gdk_pixmap_create_from_data(
+				myPixmap, data, 4, 4, gdk_drawable_get_depth(myPixmap), &fgColor, &bgColor
+			);
+			gdk_gc_set_tile(myFillGC, myTilePixmap);
+		}
+	}
 }
 
 int GtkPaintContext::stringWidth(const char *str, int len) const {
@@ -458,10 +481,12 @@ void GtkPaintContext::drawFilledCircle(int x, int y, int r) {
 	y += topMargin();
 	rotatePoint(x, y);
 
-	gdk_draw_arc(myPixmap, myTextGC, true, x - r, y - r, 2 * r + 1, 2 * r + 1, 0, 360 * 64);
+	gdk_draw_arc(myPixmap, myFillGC, true, x - r, y - r, 2 * r + 1, 2 * r + 1, 0, 360 * 64);
+	gdk_draw_arc(myPixmap, myTextGC, false, x - r, y - r, 2 * r + 1, 2 * r + 1, 0, 360 * 64);
 }
 
 void GtkPaintContext::clear(ZLColor color) {
+	myBackColor = color;
 	if (myPixmap != NULL) {
 		::setColor(myBackGC, color);
 		gdk_draw_rectangle(myPixmap, myBackGC, true, 0, 0, myWidth, myHeight);

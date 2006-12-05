@@ -39,11 +39,10 @@ class QComboBox;
 class QSlider;
 class QWidget;
 
-class QOptionView : public OptionView {
+class QOptionView : public ZLOptionView {
 
 protected:
-	QOptionView(ZLOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : OptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
-	QOptionView(ZLOptionEntry *option) : OptionView(option), myInitialized(false) {}
+	QOptionView(ZLOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
 
 public:
 	virtual ~QOptionView() {}
@@ -117,16 +116,18 @@ protected:
 	void _onAccept() const;
 
 private slots:
-	void onValueChange(bool) const;
+	void onStateChanged(bool) const;
 
 private:
 	QCheckBox *myCheckBox;
 };
 
-class StringOptionView : public QOptionView {
+class StringOptionView : public QObject, public QOptionView {
+
+Q_OBJECT
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
+	StringOptionView(ZLStringOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
 
 protected:
 	void _createItem();
@@ -134,6 +135,10 @@ protected:
 	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
+	void reset();
+
+private slots:
+	void onValueEdited(const QString &value);
 
 private:
 	QLabel *myLabel;
@@ -161,7 +166,7 @@ class ComboOptionView : public QObject, public QOptionView {
 Q_OBJECT
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
+	ComboOptionView(ZLComboOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
 
 protected:
 	void _createItem();
@@ -169,9 +174,12 @@ protected:
 	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
+	void reset();
 
 private slots:
-	void onValueChange(int);
+	void onValueSelected(int);
+	void onValueEdited(const QString &value);
+	void onTabResized(const QSize &size);
 	
 private:
 	QLabel *myLabel;
@@ -193,7 +201,7 @@ protected:
 	void _onAccept() const;
 
 private slots:
-	void onValueChange(int);
+	void onValueChanged(int);
 
 private:
 	QWidget *myWidget;

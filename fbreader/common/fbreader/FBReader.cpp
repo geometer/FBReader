@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <queue>
+
 #include <ZLFile.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
@@ -32,7 +34,7 @@
 #include "ContentsView.h"
 #include "CollectionView.h"
 #include "RecentBooksView.h"
-#include "InfoDialog.h"
+#include "BookInfoDialog.h"
 #include "FBFileHandler.h"
 
 #include "../FBOptions.h"
@@ -128,10 +130,10 @@ FBReader::FBReader(const std::string& bookToOpen) :
 	if (description.isNull()) {
 		std::string howToStartString = ApplicationDirectory() + PathDelimiter + "help" + PathDelimiter + "HowToStart.fb2";
 		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, howToStartString);
-		description = BookDescription::create(bookName.value());
+		description = BookDescription::getDescription(bookName.value());
 
 		if (description.isNull()) {
-			description = BookDescription::create(howToStartString);
+			description = BookDescription::getDescription(howToStartString);
 		}
 	}
 	openBook(description);
@@ -232,44 +234,40 @@ FBReader::~FBReader() {
 }
 
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {
-	BookDescriptionPtr description;
-	ZLFile aBook = ZLFile(fileName);
+	ZLFile bookFile = ZLFile(fileName);
 
-	if (aBook.isArchive()) {
-		shared_ptr<ZLDir> myDir = aBook.directory();
-		std::vector<std::string> names, archives;
-
-		myDir->collectFiles(names, true);
-
-		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
-			const std::string& candidateName = myDir->itemName(*it);
-			ZLFile candidate = ZLFile(candidateName);
-
-			if (candidate.isArchive()) {
-				archives.push_back(candidateName);
-			} else if (!candidate.isDirectory()) {
-				description = BookDescription::create(candidateName);
-
-				if (!description.isNull()) {
-					break;
-				}
-			}
-		}
-
-		if (description.isNull()) {
-			for (std::vector<std::string>::const_iterator it = archives.begin(); it != archives.end(); ++it) {
-				description = createDescription(*it);
-
-				if (!description.isNull()) {
-					break;
-				}
-			}
-		}
-	} else if (!aBook.isDirectory()) {
-		description = BookDescription::create(fileName);
+	if (!bookFile.isArchive()) {
+		return BookDescription::getDescription(fileName);
 	}
 
-	return description;
+	std::queue<std::string> archiveNames;
+	archiveNames.push(fileName);
+
+	std::vector<std::string> items;
+
+	while (!archiveNames.empty()) {
+		shared_ptr<ZLDir> archiveDir = ZLFile(archiveNames.front()).directory();
+		archiveNames.pop();
+		if (archiveDir.isNull()) {
+			continue;
+		}
+		archiveDir->collectFiles(items, true);
+		for (std::vector<std::string>::const_iterator it = items.begin(); it != items.end(); ++it) {
+			const std::string fileName = archiveDir->itemName(*it);
+			ZLFile subFile(fileName);
+			if (subFile.isArchive()) {
+				archiveNames.push(fileName);
+			} else if (!subFile.isDirectory()) {
+				BookDescriptionPtr description = BookDescription::getDescription(fileName);
+				if (!description.isNull()) {
+					return description;
+				}
+			}
+		}
+		items.clear();
+	}
+
+	return 0;
 }
 
 class OpenBookRunnable : public ZLRunnable {
@@ -376,7 +374,8 @@ private:
 };
 
 void FBReader::rebuildCollectionInternal() {
-	myCollectionView->rebuild();
+	myCollectionView->updateModel();
+	myCollectionView->collection().authors();
 }
 
 void FBReader::setMode(ViewMode mode) {
@@ -405,6 +404,9 @@ void FBReader::setMode(ViewMode mode) {
 				RebuildCollectionRunnable runnable(*this);
 				ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
 			}
+			if (myModel != 0) {
+				myCollectionView->selectBook(myModel->description());
+			}
 			setView(myCollectionView);
 			break;
 		case RECENT_BOOKS_MODE:
@@ -420,8 +422,10 @@ void FBReader::setMode(ViewMode mode) {
 }
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {
-	if (InfoDialog(fileName).dialog().run("")) {
+	BookCollection &collection = myCollectionView->collection();
+	if (BookInfoDialog(collection, fileName).dialog().run("")) {
 		openFile(fileName);
+		collection.rebuild(false);
 		return true;
 	}
 	return false;
@@ -451,7 +455,7 @@ bool FBReader::closeView() {
 }
 
 void FBReader::openFile(const std::string &fileName) {
-	BookDescriptionPtr description = BookDescription::create(fileName);
+	BookDescriptionPtr description = BookDescription::getDescription(fileName);
 	if (!description.isNull()) {
 		openBook(description);
 		resetWindowCaption();

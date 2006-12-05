@@ -27,17 +27,17 @@
 #include <gtk/gtkradiobutton.h>
 #include <gtk/gtkbox.h>
 #include <gtk/gtkcombobox.h>
+#include <gtk/gtkentry.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 
 class GtkOptionsDialogTab;
 
-class GtkOptionView : public OptionView {
+class GtkOptionView : public ZLOptionView {
 
 protected:
-	GtkOptionView(ZLOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : OptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
-	GtkOptionView(ZLOptionEntry *option) : OptionView(option), myInitialized(false) {}
+	GtkOptionView(ZLOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
 
 public:
 	virtual ~GtkOptionView() {}
@@ -69,8 +69,8 @@ protected:
 	// TODO: replace by pure virtual method
 	virtual void _setActive(bool active) {}
 	virtual void _onAccept() const = 0;
-	static void _onValueChange (GtkWidget*, gpointer self);
-	virtual void onValueChange() {}
+	static void _onValueChanged(GtkWidget*, gpointer self);
+	virtual void onValueChanged() {}
 
 protected:
 	GtkOptionsDialogTab *myTab;
@@ -112,7 +112,7 @@ protected:
 	void _onAccept() const;
 
 private:
-	void onValueChange(void);
+	void onValueChanged();
 
 private:
 	GtkWidget *myCheckBox;
@@ -121,17 +121,20 @@ private:
 class StringOptionView : public GtkOptionView {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	StringOptionView(ZLStringOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
+	void reset();
+	void onValueChanged();
 
 private:
-	GtkWidget *myLabel, *myLineEdit;
+	GtkWidget *myLabel;
+	GtkEntry *myLineEdit;
 };
 
 class SpinOptionView : public GtkOptionView {
@@ -152,28 +155,28 @@ private:
 class ComboOptionView : public GtkOptionView {
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	ComboOptionView(ZLComboOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
-
-private:
-	void onValueChange(void);
+	void reset();
+	void onValueChanged();
 	
 private:
 	GtkWidget *myLabel;
 	GtkComboBox *myComboBox;
+	int mySelectedIndex;
+	int myListSize;
 };
 
 class ColorOptionView : public GtkOptionView {
 
 public:
 	ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
-	virtual ~ColorOptionView(void) {}
 
 protected:
 	void _createItem();
@@ -196,18 +199,15 @@ class KeyOptionView : public GtkOptionView {
 
 public:
 	KeyOptionView(ZLKeyOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
-	virtual ~KeyOptionView(void) {}
 
 	void setKey(const std::string &key);
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
 	void _onAccept() const;
-
-private:
-	void onValueChange();
+	void onValueChanged();
 
 private:
 	GtkWidget *myWidget, *myKeyButton, *myLabel;

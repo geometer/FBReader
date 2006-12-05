@@ -35,18 +35,20 @@ enum ZLOptionKind {
 	COLOR,
 	KEY,
 	ORDER,
-	UNKNOWN,
 };
 
 class ZLOptionEntry;
+class ZLStringOptionEntry;
 
-class OptionView {
+class ZLOptionView {
 
 public:
-	OptionView(ZLOptionEntry *option);
-	virtual ~OptionView();
+	ZLOptionView(ZLOptionEntry *option);
+	virtual ~ZLOptionView();
 	virtual void setVisible(bool visible) = 0;
 	virtual void setActive(bool active) = 0;
+	// TODO: change to pure virtual
+	virtual void reset() {}
 
 protected:
 	ZLOptionEntry *myOption;
@@ -60,7 +62,8 @@ public:
 	virtual ZLOptionKind kind() const = 0;
 	virtual const std::string &name() const = 0;
 
-	void setView(OptionView *view);
+	void setView(ZLOptionView *view);
+	void resetView();
 
 	void setVisible(bool visible);
 	bool isVisible() const;
@@ -69,20 +72,9 @@ public:
 	bool isActive() const;
 
 private:
-	OptionView *myView;
+	ZLOptionView *myView;
 	bool myIsVisible;
 	bool myIsActive;
-};
-
-class ZLUserDefinedOptionEntry : public ZLOptionEntry {
-
-protected:
-	ZLUserDefinedOptionEntry();
-
-public:
-	virtual ~ZLUserDefinedOptionEntry();
-	ZLOptionKind kind() const;
-	virtual OptionView *createView() = 0;
 };
 
 class ZLChoiceOptionEntry : public ZLOptionEntry {
@@ -111,6 +103,7 @@ public:
 
 	virtual const std::string &initialValue() const = 0;
 	virtual void onAccept(const std::string &value) = 0;
+	virtual void onValueEdited(const std::string&);
 };
 
 class ZLSimpleStringOptionEntry : public ZLStringOptionEntry {
@@ -137,7 +130,7 @@ public:
 	ZLOptionKind kind() const;
 
 	virtual bool initialState() const = 0;
-	virtual void onValueChange(bool state);
+	virtual void onStateChanged(bool state);
 	virtual void onAccept(bool state) = 0;
 };
 
@@ -192,7 +185,7 @@ private:
 class ZLComboOptionEntry : public ZLOptionEntry {
 
 protected:
-	ZLComboOptionEntry();
+	ZLComboOptionEntry(bool editable = false);
 
 public:
 	virtual ~ZLComboOptionEntry();
@@ -200,8 +193,14 @@ public:
 
 	virtual const std::string &initialValue() const = 0;
 	virtual const std::vector<std::string> &values() const = 0;
-	virtual void onValueChange(const std::string&);
+	virtual void onValueSelected(const std::string&);
+	virtual void onValueEdited(const std::string&);
 	virtual void onAccept(const std::string &value) = 0;
+
+	bool isEditable() const;
+
+private:
+	const bool myEditable; 
 };
 
 class ZLSimpleBoolean3OptionEntry : public ZLComboOptionEntry {
@@ -255,7 +254,7 @@ public:
 	const std::vector<std::string> &actionNames() const;
 	virtual void onAccept() = 0;
 	virtual int actionIndex(const std::string &key) = 0;
-	virtual void onValueChange(const std::string &key, int index) = 0;
+	virtual void onValueChanged(const std::string &key, int index) = 0;
 	void reset();
 
 protected:
@@ -284,13 +283,14 @@ private:
 
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 inline ZLOptionEntry::~ZLOptionEntry() {}
-inline void ZLOptionEntry::setView(OptionView *view) { myView = view; }
+inline void ZLOptionEntry::setView(ZLOptionView *view) { myView = view; }
+inline void ZLOptionEntry::resetView() {
+	if (myView != 0) {
+		myView->reset();
+	}
+}
 inline bool ZLOptionEntry::isVisible() const { return myIsVisible; }
 inline bool ZLOptionEntry::isActive() const { return myIsActive; }
-
-inline ZLUserDefinedOptionEntry::ZLUserDefinedOptionEntry() {}
-inline ZLUserDefinedOptionEntry::~ZLUserDefinedOptionEntry() {}
-inline ZLOptionKind ZLUserDefinedOptionEntry::kind() const { return UNKNOWN; }
 
 inline ZLChoiceOptionEntry::ZLChoiceOptionEntry() {}
 inline ZLChoiceOptionEntry::~ZLChoiceOptionEntry() {}
@@ -299,6 +299,7 @@ inline ZLOptionKind ZLChoiceOptionEntry::kind() const { return CHOICE; }
 inline ZLStringOptionEntry::ZLStringOptionEntry() {}
 inline ZLStringOptionEntry::~ZLStringOptionEntry() {}
 inline ZLOptionKind ZLStringOptionEntry::kind() const { return STRING; }
+inline void ZLStringOptionEntry::onValueEdited(const std::string&) {}
 
 inline ZLSimpleStringOptionEntry::ZLSimpleStringOptionEntry(const std::string &name, ZLStringOption &option) : myName(name), myOption(option) {}
 inline ZLSimpleStringOptionEntry::~ZLSimpleStringOptionEntry() {}
@@ -309,7 +310,7 @@ inline void ZLSimpleStringOptionEntry::onAccept(const std::string &value) { myOp
 inline ZLBooleanOptionEntry::ZLBooleanOptionEntry() {}
 inline ZLBooleanOptionEntry::~ZLBooleanOptionEntry() {}
 inline ZLOptionKind ZLBooleanOptionEntry::kind() const { return BOOLEAN; }
-inline void ZLBooleanOptionEntry::onValueChange(bool) {}
+inline void ZLBooleanOptionEntry::onStateChanged(bool) {}
 
 inline ZLSimpleBooleanOptionEntry::ZLSimpleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option) : myName(name), myOption(option) {}
 inline ZLSimpleBooleanOptionEntry::~ZLSimpleBooleanOptionEntry() {}
@@ -330,10 +331,12 @@ inline int ZLSimpleSpinOptionEntry::maxValue() const { return myOption.maxValue(
 inline int ZLSimpleSpinOptionEntry::step() const { return myStep; }
 inline void ZLSimpleSpinOptionEntry::onAccept(int value) { myOption.setValue(value); }
 
-inline ZLComboOptionEntry::ZLComboOptionEntry() {}
+inline ZLComboOptionEntry::ZLComboOptionEntry(bool editable) : myEditable(editable) {}
 inline ZLComboOptionEntry::~ZLComboOptionEntry() {}
 inline ZLOptionKind ZLComboOptionEntry::kind() const { return COMBO; }
-inline void ZLComboOptionEntry::onValueChange(const std::string&) {}
+inline void ZLComboOptionEntry::onValueSelected(const std::string&) {}
+inline void ZLComboOptionEntry::onValueEdited(const std::string&) {}
+inline bool ZLComboOptionEntry::isEditable() const { return myEditable; }
 
 inline ZLSimpleBoolean3OptionEntry::ZLSimpleBoolean3OptionEntry(const std::string &name, ZLBoolean3Option &option) : myName(name), myOption(option) {}
 inline ZLSimpleBoolean3OptionEntry::~ZLSimpleBoolean3OptionEntry() {}

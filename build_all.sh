@@ -29,8 +29,6 @@ do_build desktop gtk
 do_build desktop qt
 do_build zaurus qtopia-240x320
 do_build zaurus qtopia-640x480
-do_build pdaxrom-1.1.0rc10 gtk
-do_build pdaxrom-1.1.0rc10 qt
-do_build pdaxrom-1.1.0rc11 gtk
-do_build pdaxrom-1.1.0rc11 qt
+do_build pdaxrom gtk
+do_build pdaxrom qt
 do_build pma400 qtopia

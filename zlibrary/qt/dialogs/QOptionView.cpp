@@ -42,7 +42,7 @@ void BooleanOptionView::_createItem() {
 	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab);
 	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
-	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onValueChange(bool)));
+	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
 }
 
 void BooleanOptionView::_show() {
@@ -57,8 +57,8 @@ void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
 }
 
-void BooleanOptionView::onValueChange(bool state) const {
-	((ZLBooleanOptionEntry*)myOption)->onValueChange(state);
+void BooleanOptionView::onStateChanged(bool state) const {
+	((ZLBooleanOptionEntry*)myOption)->onStateChanged(state);
 }
 
 void ChoiceOptionView::_createItem() {
@@ -93,25 +93,50 @@ void ChoiceOptionView::_onAccept() const {
 }
 
 void ComboOptionView::_createItem() {
+	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
 	myLabel = new QLabel(myOption->name().c_str(), myTab);
 	myComboBox = new QComboBox(myTab);
-	const std::vector<std::string> &values = ((ZLComboOptionEntry*)myOption)->values();
-	const std::string &initial = ((ZLComboOptionEntry*)myOption)->initialValue();
+	myComboBox->setEditable(comboOption.isEditable());
+
+	connect(myTab->parentWidget(), SIGNAL(resized(const QSize&)), this, SLOT(onTabResized(const QSize&)));
+	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueSelected(int)));
+	connect(myComboBox, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
+
+	int width = myToColumn - myFromColumn + 1;
+	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 2 - 1);
+	myTab->addItem(myComboBox, myRow, myToColumn - width / 2 + 1, myToColumn);
+
+	reset();
+}
+
+void ComboOptionView::reset() {
+	if (myComboBox == 0) {
+		return;
+	}
+
+	const int count = myComboBox->count();
+	for (int i = 0; i < count; ++i) {
+		myComboBox->removeItem(0);
+	}
+
+	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
+	const std::vector<std::string> &values = comboOption.values();
+	const std::string &initial = comboOption.initialValue();
 	int selectedIndex = -1;
 	int index = 0;
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it, ++index) {
-		myComboBox->insertItem(it->c_str());
+		myComboBox->insertItem(QString::fromUtf8(it->c_str()));
 		if (*it == initial) {
 			selectedIndex = index;
 		}
 	}
-	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChange(int)));
 	if (selectedIndex >= 0) {
 		myComboBox->setCurrentItem(selectedIndex);
 	}
-	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 2 - 1);
-	myTab->addItem(myComboBox, myRow, myToColumn - width / 2 + 1, myToColumn);
+}
+
+void ComboOptionView::onTabResized(const QSize &size) {
+	myComboBox->setMaximumWidth(size.width() / 2 - 30);
 }
 
 void ComboOptionView::_show() {
@@ -129,14 +154,18 @@ void ComboOptionView::_setActive(bool active) {
 }
 
 void ComboOptionView::_onAccept() const {
-	((ZLComboOptionEntry*)myOption)->onAccept(myComboBox->currentText().ascii());
+	((ZLComboOptionEntry*)myOption)->onAccept((const char*)myComboBox->currentText().utf8());
 }
 
-void ComboOptionView::onValueChange(int index) {
+void ComboOptionView::onValueSelected(int index) {
 	ZLComboOptionEntry *o = (ZLComboOptionEntry*)myOption;
 	if ((index >= 0) && (index < (int)o->values().size())) {
-		o->onValueChange(o->values()[index]);
+		o->onValueSelected(o->values()[index]);
 	}
+}
+
+void ComboOptionView::onValueEdited(const QString &value) {
+	((ZLComboOptionEntry*)myOption)->onValueEdited((const char*)value.utf8());
 }
 
 void SpinOptionView::_createItem() {
@@ -168,8 +197,7 @@ void SpinOptionView::_onAccept() const {
 
 void StringOptionView::_createItem() {
 	myLineEdit = new QLineEdit(myTab);
-	myLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
-	myLineEdit->cursorLeft(false, myLineEdit->text().length());
+	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 	if (!myOption->name().empty()) {
 		myLabel = new QLabel(myOption->name().c_str(), myTab);
 		int width = myToColumn - myFromColumn + 1;
@@ -179,6 +207,7 @@ void StringOptionView::_createItem() {
 		myLabel = 0;
 		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
 	}
+	reset();
 }
 
 void StringOptionView::_show() {
@@ -201,6 +230,18 @@ void StringOptionView::_setActive(bool active) {
 
 void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept((const char*)myLineEdit->text().utf8());
+}
+
+void StringOptionView::reset() {
+	if (myLineEdit == 0) {
+		return;
+	}
+	myLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
+	myLineEdit->cursorLeft(false, myLineEdit->text().length());
+}
+
+void StringOptionView::onValueEdited(const QString &value) {
+	((ZLStringOptionEntry*)myOption)->onValueEdited((const char*)value.utf8());
 }
 
 class KeyButton : public QPushButton {
@@ -260,7 +301,7 @@ void KeyOptionView::_createItem() {
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
 		myComboBox->insertItem(it->c_str());
 	}
-	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChange(int)));
+	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChanged(int)));
 	layout->addWidget(myComboBox, 1, 1);
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
@@ -289,9 +330,9 @@ void KeyOptionView::_onAccept() const {
 	((ZLKeyOptionEntry*)myOption)->onAccept();
 }
 
-void KeyOptionView::onValueChange(int index) {
+void KeyOptionView::onValueChanged(int index) {
 	if (!myCurrentKey.empty()) {
-		((ZLKeyOptionEntry*)myOption)->onValueChange(myCurrentKey, index);
+		((ZLKeyOptionEntry*)myOption)->onValueChanged(myCurrentKey, index);
 	}
 }
 

@@ -92,7 +92,7 @@ public:
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
-	void onValueChange(const std::string &selectedValue);
+	void onValueSelected(const std::string &selectedValue);
 
 private:
 	PlainTextInfoPage &myPage;
@@ -105,7 +105,7 @@ class CreateContentsTableOptionEntry : public ZLSimpleBooleanOptionEntry {
 public:
 	CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, ZLBooleanOption &option);
 	~CreateContentsTableOptionEntry();
-	void onValueChange(bool value);
+	void onStateChanged(bool state);
 
 private:
 	PlainTextInfoPage &myPage;

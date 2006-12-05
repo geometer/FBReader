@@ -30,7 +30,7 @@ class EnableAutoSavingEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
 	EnableAutoSavingEntry(ZLBooleanOption &option, ZLOptionEntry &timeoutEntry);
-	void onValueChange(bool state);
+	void onStateChanged(bool state);
 
 private:
 	ZLOptionEntry &myTimeoutEntry;
@@ -46,7 +46,7 @@ public:
 	void onAccept(int value);
 };
 
-void EnableAutoSavingEntry::onValueChange(bool state) {
+void EnableAutoSavingEntry::onStateChanged(bool state) {
 	myTimeoutEntry.setVisible(state);
 }
 
@@ -63,5 +63,5 @@ ConfigPage::ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
 	ZLBooleanOptionEntry *enableEntry = new EnableAutoSavingEntry(fbreader.ConfigAutoSavingOption, *timeoutEntry);
 	dialogTab.addOption(enableEntry);
 	dialogTab.addOption(timeoutEntry);
-	enableEntry->onValueChange(enableEntry->initialState());
+	enableEntry->onStateChanged(enableEntry->initialState());
 }

@@ -19,29 +19,49 @@
  * 02110-1301, USA.
  */
 
-#ifndef __INFODIALOG_H__
-#define __INFODIALOG_H__
+#ifndef __BOOKINFODIALOG_H__
+#define __BOOKINFODIALOG_H__
 
 #include <string>
 
+#include <ZLOptionEntry.h>
+
+#include "../collection/BookCollection.h"
 #include "../description/BookDescription.h"
 #include "../formats/FormatPlugin.h"
 
 class ZLOptionsDialog;
+class AuthorDisplayNameEntry;
+class AuthorSortKeyEntry;
+class SeriesTitleEntry;
 
-class InfoDialog {
+class BookInfoDialog {
 
 public:
-	InfoDialog(const std::string &fileName);
+	BookInfoDialog(const BookCollection &collection, const std::string &fileName);
 
 	ZLOptionsDialog &dialog();
 
 private:
 	shared_ptr<ZLOptionsDialog> myDialog;
+	const BookCollection &myCollection;
 	BookInfo myBookInfo;
 	shared_ptr<FormatInfoPage> myFormatInfoPage;
+
+	ZLStringOptionEntry *myFileNameEntry;
+	ZLStringOptionEntry *myBookTitleEntry;
+	AuthorDisplayNameEntry *myAuthorDisplayNameEntry;
+	AuthorSortKeyEntry *myAuthorSortKeyEntry;
+	ZLComboOptionEntry *myEncodingEntry;
+	ZLComboOptionEntry *myLanguageEntry;
+	SeriesTitleEntry *mySeriesTitleEntry;
+	ZLSpinOptionEntry *myBookNumberEntry;
+
+friend class AuthorDisplayNameEntry;
+friend class AuthorSortKeyEntry;
+friend class SeriesTitleEntry;
 };
 
-inline ZLOptionsDialog &InfoDialog::dialog() { return *myDialog; }
+inline ZLOptionsDialog &BookInfoDialog::dialog() { return *myDialog; }
 
-#endif /* __INFODIALOG_H__ */
+#endif /* __BOOKINFODIALOG_H__ */

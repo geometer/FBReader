@@ -59,12 +59,14 @@ private:
 class ImageElement : public TextElement {
 
 public:
-	ImageElement(const shared_ptr<ZLImageData> image);
+	ImageElement(const std::string &id, const shared_ptr<ZLImageData> image);
 	~ImageElement();
 	Kind kind() const;
 	const ZLImageData &image() const;
+	const std::string &id() const;
 
 private:
+	const std::string myId;
 	const shared_ptr<ZLImageData> myImage;
 };
 
@@ -123,10 +125,11 @@ friend class TextElementPool;
 inline TextElement::TextElement() {}
 inline TextElement::~TextElement() {}
 
-inline ImageElement::ImageElement(const shared_ptr<ZLImageData> image) : myImage(image) {}
+inline ImageElement::ImageElement(const std::string &id, const shared_ptr<ZLImageData> image) : myId(id), myImage(image) {}
 inline ImageElement::~ImageElement() {}
 inline TextElement::Kind ImageElement::kind() const { return IMAGE_ELEMENT; };
 inline const ZLImageData &ImageElement::image() const { return *myImage; }
+inline const std::string &ImageElement::id() const { return myId; }
 
 inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
 inline SpecialTextElement::~SpecialTextElement() {}

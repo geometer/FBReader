@@ -38,10 +38,8 @@ Before building FBReader, you should check (and may be edit) 2 files:
         TARGET_ARCH = zaurus                UI_TYPE = qtopia-640x480
         TARGET_ARCH = openzaurus            UI_TYPE = opie
         TARGET_ARCH = openzaurus            UI_TYPE = gpe
-        TARGET_ARCH = pdaxrom-1.1.0rc10     UI_TYPE = gtk
-        TARGET_ARCH = pdaxrom-1.1.0rc10     UI_TYPE = qt
-        TARGET_ARCH = pdaxrom-1.1.0rc11     UI_TYPE = gtk
-        TARGET_ARCH = pdaxrom-1.1.0rc11     UI_TYPE = qt
+        TARGET_ARCH = pdaxrom               UI_TYPE = gtk
+        TARGET_ARCH = pdaxrom               UI_TYPE = qt
         TARGET_ARCH = opensimpad-0.9.0      UI_TYPE = opie
         TARGET_ARCH = maemo                 UI_TYPE = maemo
         TARGET_ARCH = maemo                 UI_TYPE = maemo2

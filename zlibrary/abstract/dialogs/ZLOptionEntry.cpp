@@ -20,11 +20,11 @@
 
 #include "ZLOptionEntry.h"
 
-OptionView::OptionView(ZLOptionEntry *option) : myOption(option) {
+ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
 	myOption->setView(this);
 }
 
-OptionView::~OptionView() {
+ZLOptionView::~ZLOptionView() {
 	delete myOption;
 }
 

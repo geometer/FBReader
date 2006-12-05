@@ -198,10 +198,6 @@ void GtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int 
 		case KEY:
 			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
-		case UNKNOWN:
-			view = (GtkOptionView*)((ZLUserDefinedOptionEntry*)option)->createView();
-			view->setPosition(this, row, fromColumn, toColumn);
-			break;
 	}
 
 	if (view != 0) {

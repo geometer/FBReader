@@ -77,7 +77,10 @@ private:
 
 	GdkGC *myTextGC;
 	GdkGC *myFillGC;
+	ZLColor myBackColor;
 	GdkGC *myBackGC;
+
+	GdkPixmap *myTilePixmap;
 
 	std::vector<std::string> myFontFamilies;
 

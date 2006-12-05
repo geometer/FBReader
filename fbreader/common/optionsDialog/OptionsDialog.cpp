@@ -47,7 +47,7 @@ class ShowIndicatorEntry : public ZLSimpleBooleanOptionEntry {
 public:
 	ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option);
 	~ShowIndicatorEntry();
-	void onValueChange(bool value);
+	void onStateChanged(bool state);
 
 private:
 	IndicatorPage &myPage;
@@ -59,10 +59,10 @@ ShowIndicatorEntry::ShowIndicatorEntry(IndicatorPage &page, const std::string &n
 ShowIndicatorEntry::~ShowIndicatorEntry() {
 }
 
-void ShowIndicatorEntry::onValueChange(bool value) {
-	myPage.HeightEntry->setVisible(value);
-	myPage.OffsetEntry->setVisible(value);
-	myPage.EnableNavigationEntry->setVisible(value);
+void ShowIndicatorEntry::onStateChanged(bool state) {
+	myPage.HeightEntry->setVisible(state);
+	myPage.OffsetEntry->setVisible(state);
+	myPage.EnableNavigationEntry->setVisible(state);
 }
 
 class RotationTypeEntry : public ZLChoiceOptionEntry {
@@ -210,7 +210,6 @@ private:
 	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
-	void onValueChange(const std::string&);
 	void onAccept(const std::string &value);
 
 private:
@@ -223,7 +222,7 @@ public:
 	EnableDictionaryEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *comboEntry);
 
 private:
-	void onValueChange(bool state);
+	void onStateChanged(bool state);
 
 private:
 	ZLOptionEntry *myComboEntry;
@@ -245,18 +244,15 @@ const std::vector<std::string> &DictionaryEntry::values() const {
 	return myCollection.names();
 }
 
-void DictionaryEntry::onValueChange(const std::string&) {
-}
-
 void DictionaryEntry::onAccept(const std::string &value) {
 	myCollection.CurrentNameOption.setValue(value);
 }
 
 EnableDictionaryEntry::EnableDictionaryEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *comboEntry) : ZLSimpleBooleanOptionEntry(name, option), myComboEntry(comboEntry) {
-	onValueChange(initialState());
+	onStateChanged(initialState());
 }
 
-void EnableDictionaryEntry::onValueChange(bool state) {
+void EnableDictionaryEntry::onStateChanged(bool state) {
 	if (myComboEntry != 0) {
 		myComboEntry->setVisible(state);
 	}
@@ -299,7 +295,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	indicatorTab.addOption(myIndicatorPage.HeightEntry);
 	indicatorTab.addOption(myIndicatorPage.OffsetEntry);
 	indicatorTab.addOption(myIndicatorPage.EnableNavigationEntry);
-	myIndicatorPage.ShowIndicatorEntry->onValueChange(myIndicatorPage.ShowIndicatorEntry->initialState());
+	myIndicatorPage.ShowIndicatorEntry->onStateChanged(myIndicatorPage.ShowIndicatorEntry->initialState());
 
 	ZLDialogContent &rotationTab = myDialog->createTab("Rotation");
 	rotationTab.addOption(new RotationTypeEntry(fbreader.RotationAngleOption));

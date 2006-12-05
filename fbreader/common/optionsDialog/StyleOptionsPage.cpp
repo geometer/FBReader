@@ -93,5 +93,5 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 		}
 	}
 
-	myComboEntry->onValueChange(myComboEntry->initialValue());
+	myComboEntry->onValueSelected(myComboEntry->initialValue());
 }

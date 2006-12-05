@@ -31,10 +31,18 @@
 #include "QOptionsDialog.h"
 #include "QOptionView.h"
 
+MyQTabWidget::MyQTabWidget(QWidget *parent) : QTabWidget(parent) {
+}
+
+void MyQTabWidget::resizeEvent(QResizeEvent *event) {
+	QTabWidget::resizeEvent(event);
+	emit resized(event->size());
+}
+
 QOptionsDialog::QOptionsDialog(const std::string &id, const std::string &caption) : QDialog(0, caption.c_str(), true), ZLDesktopOptionsDialog(id) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
-	myTabWidget = new QTabWidget(this);
+	myTabWidget = new MyQTabWidget(this);
 	layout->add(myTabWidget);
 
 	QButtonGroup *group = new QButtonGroup(this);
@@ -77,21 +85,21 @@ void QOptionsDialog::selectTab(const std::string &name) {
 }
 
 bool QOptionsDialog::run() {
-	for (QOptionsDialogTab *tab = myTabs.first(); tab != NULL; tab = myTabs.next()) {
+	for (QOptionsDialogTab *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
 		tab->close();
 	}
 	return exec() == QDialog::Accepted;
 }
 
 void QOptionsDialog::accept() {
-	for (QOptionsDialogTab *tab = myTabs.first(); tab != NULL; tab = myTabs.next()) {
+	for (QOptionsDialogTab *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
 		tab->accept();
 	}
 	QDialog::accept();
 }
 
 void QOptionsDialogTab::accept() {
-	for (QOptionView *view = myViews.first(); view != NULL; view = myViews.next()) {
+	for (QOptionView *view = myViews.first(); view != 0; view = myViews.next()) {
 		view->onAccept();
 	}
 }
@@ -104,7 +112,7 @@ void QOptionsDialogTab::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
 }
 
-QOptionsDialogTab::QOptionsDialogTab(QWidget *parent) : QWidget(parent) {
+QOptionsDialogTab::QOptionsDialogTab(QWidget *parent) : QWidget(parent), myParentWidget(parent) {
 	const long displaySize = qApp->desktop()->height() * (long)qApp->desktop()->width();
 	const int space = (displaySize < 640 * 480) ? 3 : 10;
 	myLayout = new QGridLayout(this, -1, 13, space, space);
@@ -112,7 +120,7 @@ QOptionsDialogTab::QOptionsDialogTab(QWidget *parent) : QWidget(parent) {
 }
 
 QOptionsDialogTab::~QOptionsDialogTab() {
-	for (QOptionView *view = myViews.first(); view != NULL; view = myViews.next()) {
+	for (QOptionView *view = myViews.first(); view != 0; view = myViews.next()) {
 		delete view;
 	}
 }
@@ -162,14 +170,14 @@ void QOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int fromColumn,
 		case ORDER:
 			view = new OrderOptionView((ZLOrderOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case UNKNOWN:
-			view = (QOptionView*)((ZLUserDefinedOptionEntry*)option)->createView();
-			view->setPosition(this, myRowCounter, fromColumn, toColumn);
-			break;
 	}
 
 	if (view != 0) {
 		view->setVisible(option->isVisible());
 		myViews.append(view);
 	}
+}
+
+QWidget *QOptionsDialogTab::parentWidget() {
+	return myParentWidget;
 }

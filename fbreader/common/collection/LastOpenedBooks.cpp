@@ -38,7 +38,7 @@ LastOpenedBooks::LastOpenedBooks() :
 		ZLStringUtil::appendNumber(num, i);
 		std::string name = ZLStringOption(ZLOption::STATE_CATEGORY, GROUP, num, "").value();
 		if (!name.empty()) {
-			BookDescriptionPtr description = BookDescription::create(name);
+			BookDescriptionPtr description = BookDescription::getDescription(name);
 			if (!description.isNull()) {
 				myBooks.push_back(description);
 			}
@@ -62,7 +62,7 @@ void LastOpenedBooks::addBook(const std::string &fileName) {
 			break;
 		}
 	}
-	BookDescriptionPtr description = BookDescription::create(fileName);
+	BookDescriptionPtr description = BookDescription::getDescription(fileName);
 	if (!description.isNull()) {
 		myBooks.insert(myBooks.begin(), description);
 	}

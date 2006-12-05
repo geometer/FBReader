@@ -24,12 +24,12 @@
 #include <vector>
 
 #include <qwidget.h>
+#include <qtabwidget.h>
 #include <qdialog.h>
 #include <qptrlist.h>
 
 #include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
-class QTabWidget;
 class QOptionView;
 class QGridLayout;
 
@@ -48,14 +48,17 @@ public:
 	void close();
 	void accept();
 
+	QWidget *parentWidget();
+
 private:
 	void createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn);
 
 private:
 	QGridLayout *myLayout;
 	int myRowCounter;
+	QWidget *myParentWidget;
 
-	QPtrList<QOptionView> myViews;
+	QList<QOptionView> myViews;
 };
 
 class QOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
@@ -84,6 +87,17 @@ private:
 
 	QList<QOptionsDialogTab> myTabs;
 	std::vector<std::string> myTabNames;
+};
+
+class MyQTabWidget : public QTabWidget {
+	Q_OBJECT
+
+public:
+	MyQTabWidget(QWidget *parent);
+	void resizeEvent(QResizeEvent *event);
+
+signals:
+	void resized(const QSize &size);
 };
 
 #endif /* __QOPTIONSDIALOG_H__ */

@@ -91,5 +91,5 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 		}
 	}
 
-	myComboEntry->onValueChange(myComboEntry->initialValue());
+	myComboEntry->onValueSelected(myComboEntry->initialValue());
 }

@@ -23,6 +23,7 @@
 #define __BOOKDESCRIPTION_H__
 
 #include <string>
+#include <map>
 
 #include <shared_ptr.h>
 
@@ -57,7 +58,10 @@ struct BookInfo {
 class BookDescription {
 
 public:
-	static BookDescriptionPtr create(const std::string &fileName);
+	static BookDescriptionPtr getDescription(const std::string &fileName, bool checkFile = true);
+
+private:
+	static std::map<std::string,BookDescriptionPtr> ourDescriptions;
 
 private:
 	BookDescription(const std::string &fileName);

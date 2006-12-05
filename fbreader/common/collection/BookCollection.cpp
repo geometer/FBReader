@@ -55,19 +55,20 @@ static const std::string OPTIONS = "Options";
 
 BookCollection::BookCollection() :
 	PathOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "BookPath", ""),
-	ScanSubdirsOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "ScanSubdirs", false) {
+	ScanSubdirsOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "ScanSubdirs", false),
+	myDoStrongRebuild(true),
+	myDoWeakRebuild(false) {
 }
 
-void BookCollection::rebuild() {
-	myPath = PathOption.value();
-	myScanSubdirs = ScanSubdirsOption.value();
+void BookCollection::rebuild(bool strong) {
+	if (strong) {
+		myDoStrongRebuild = true;
+	} else {
+		myDoWeakRebuild = true;
+	}
+}
 
-	myAuthors.clear();
-	myCollection.clear();
-	myExternalBooks.clear();
-
-	std::set<std::string> fileNamesSet;
-
+void BookCollection::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 	std::set<std::string> dirs;
 	collectDirNames(dirs);
 
@@ -84,7 +85,7 @@ void BookCollection::rebuild() {
 				const std::string fileName = dirName + *jt;
 				ZLFile file(fileName);
 				if (PluginCollection::instance().plugin(file, true) != 0) {
-					fileNamesSet.insert(fileName);
+					bookFileNames.insert(fileName);
 				} else if (file.extension() == "zip") {
 					if (!BookDescriptionUtil::checkInfo(file)) {
 						BookDescriptionUtil::resetZipInfo(file);
@@ -93,24 +94,63 @@ void BookCollection::rebuild() {
 					std::vector<std::string> zipEntries;
 					BookDescriptionUtil::listZipEntries(file, zipEntries);
 					for (std::vector<std::string>::const_iterator zit = zipEntries.begin(); zit != zipEntries.end(); ++zit) {
-						fileNamesSet.insert(*zit);
+						bookFileNames.insert(*zit);
 					}
 				}
 			}
 		}
 	}
+}
 
-	for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); ++it) {
-		addDescription(BookDescription::create(*it));
+void BookCollection::synchronize() const {
+	bool doStrongRebuild =
+		myDoStrongRebuild ||
+		(myScanSubdirs != ScanSubdirsOption.value()) ||
+		(myPath != PathOption.value());
+
+	if (!doStrongRebuild && !myDoWeakRebuild) {
+		return;
 	}
 
-	BookList bookList;
-	const std::set<std::string> &bookListSet = bookList.fileNames();
-	for (std::set<std::string>::const_iterator it = bookListSet.begin(); it != bookListSet.end(); ++it) {
-		if (fileNamesSet.find(*it) == fileNamesSet.end()) {
-			BookDescriptionPtr description = BookDescription::create(*it);
-			addDescription(description);
-			myExternalBooks.insert(description);
+	myPath = PathOption.value();
+	myScanSubdirs = ScanSubdirsOption.value();
+	myDoWeakRebuild = false;
+	myDoStrongRebuild = false;
+
+	if (doStrongRebuild) {
+		myAuthors.clear();
+		myCollection.clear();
+		myExternalBooks.clear();
+
+		std::set<std::string> fileNamesSet;
+		collectBookFileNames(fileNamesSet);
+		for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); ++it) {
+			addDescription(BookDescription::getDescription(*it));
+		}
+
+		BookList bookList;
+		const std::set<std::string> &bookListSet = bookList.fileNames();
+		for (std::set<std::string>::const_iterator it = bookListSet.begin(); it != bookListSet.end(); ++it) {
+			if (fileNamesSet.find(*it) == fileNamesSet.end()) {
+				BookDescriptionPtr description = BookDescription::getDescription(*it);
+				if (!description.isNull()) {
+					addDescription(description);
+					myExternalBooks.insert(description);
+				}
+			}
+		}
+	} else {
+		std::vector<std::string> fileNames;
+		for (std::map<AuthorPtr,Books>::const_iterator it = myCollection.begin(); it != myCollection.end(); ++it) {
+			const Books &books = it->second;
+			for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
+				fileNames.push_back((*jt)->fileName());
+			}
+		}
+		myCollection.clear();
+		myAuthors.clear();
+		for (std::vector<std::string>::iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
+			addDescription(BookDescription::getDescription(*it, false));
 		}
 	}
 
@@ -121,13 +161,7 @@ void BookCollection::rebuild() {
 	}
 }
 
-bool BookCollection::isSynchronized() const {
-	return
-		(myScanSubdirs == ScanSubdirsOption.value()) &&
-		(myPath == PathOption.value());
-}
-
-void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
+void BookCollection::collectDirNames(std::set<std::string> &nameSet) const {
 	std::queue<std::string> nameQueue;
 
 	std::string path = myPath;
@@ -163,7 +197,7 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) {
 BookCollection::~BookCollection() {
 }
 
-void BookCollection::addDescription(BookDescriptionPtr description) {
+void BookCollection::addDescription(BookDescriptionPtr description) const {
 	if (description.isNull()) {
 		return;
 	}

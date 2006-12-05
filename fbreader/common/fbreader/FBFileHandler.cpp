@@ -67,6 +67,6 @@ const std::string FBFileHandler::accept(const std::string &name) const {
 		return "Couldn't Open:\n" + message;
 	}
 
-	myDescription = BookDescription::create(name);
+	myDescription = BookDescription::getDescription(name);
 	return "";
 }

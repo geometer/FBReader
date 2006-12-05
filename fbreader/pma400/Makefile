@@ -31,6 +31,8 @@ install:
 	@install -m 0644 ../icons/18x15/FBReader.png $(DESTDIR)$(INSTALLDIR)/pics
 	@install -d $(DESTDIR)$(INSTALLDIR)/pics/FBReader
 	@install -m 0644 $(wildcard ../icons/18x15/FBReader/*.png) $(DESTDIR)$(INSTALLDIR)/pics/FBReader
+	@install -d $(DESTDIR)$(INSTALLDIR)/apps/Applications
+	@install -m 0644 FBReader.desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications/FBReader.desktop
 
 .tmpdir:
 	@rm -rf $(TDIR)

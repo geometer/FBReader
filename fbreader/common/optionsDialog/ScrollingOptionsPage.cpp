@@ -45,7 +45,7 @@ public:
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &text);
-	void onValueChange(const std::string &selectedValue);
+	void onValueSelected(const std::string &selectedValue);
 
 private:
 	FBReader &myFBReader;
@@ -67,7 +67,7 @@ public:
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &text);
-	void onValueChange(const std::string &selectedValue);
+	void onValueSelected(const std::string &selectedValue);
 	void onMadeVisible();
 
 private:
@@ -107,7 +107,7 @@ const std::vector<std::string> &ScrollingTypeEntry::values() const {
 void ScrollingTypeEntry::onAccept(const std::string&) {
 }
 
-void ScrollingTypeEntry::onValueChange(const std::string &selectedValue) {
+void ScrollingTypeEntry::onValueSelected(const std::string &selectedValue) {
 	myPage.myLargeScrollingEntries.show(selectedValue == LARGE_SCROLLING);
 	myPage.mySmallScrollingEntries.show(selectedValue == SMALL_SCROLLING);
 	if (myFBReader.isMousePresented()) {
@@ -180,10 +180,10 @@ void ScrollingModeEntry::onAccept(const std::string &text) {
 }
 
 void ScrollingModeEntry::onMadeVisible() {
-	onValueChange(myCurrentValue);
+	onValueSelected(myCurrentValue);
 }
 
-void ScrollingModeEntry::onValueChange(const std::string &selectedValue) {
+void ScrollingModeEntry::onValueSelected(const std::string &selectedValue) {
 	myCurrentValue = selectedValue;
 	myEntries.myDelayEntry->setVisible(selectedValue != DISABLE);
 	myEntries.myLinesToKeepEntry->setVisible(selectedValue == KEEP_LINES);
@@ -197,7 +197,7 @@ void ScrollingOptionsPage::ScrollingEntries::init(FBReader &fbreader, FBReader::
 	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry("Lines To Keep", options.LinesToKeepOption, 1);
 	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry("Lines To Scroll", options.LinesToScrollOption, 1);
 	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry("Percent To Scroll", options.PercentToScrollOption, 5);
-	myModeEntry->onValueChange(myModeEntry->initialValue());
+	myModeEntry->onValueSelected(myModeEntry->initialValue());
 }
 
 void ScrollingOptionsPage::ScrollingEntries::connect(ZLDialogContent &dialogTab) {
@@ -235,7 +235,7 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 		myFingerTapScrollingEntries.init(fbreader, fbreader.FingerTapScrollingOptions);
 	}
 
-	mainEntry->onValueChange(mainEntry->initialValue());
+	mainEntry->onValueSelected(mainEntry->initialValue());
 
 	myLargeScrollingEntries.connect(dialogTab);
 	mySmallScrollingEntries.connect(dialogTab);
