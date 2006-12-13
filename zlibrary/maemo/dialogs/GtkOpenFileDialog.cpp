@@ -39,15 +39,16 @@ static gboolean clickHandler(GtkWidget *, GdkEventButton *event, gpointer self) 
 	return FALSE;
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLDesktopOpenFileDialog(handler) {
+GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLOpenFileDialog(handler) {
 	myExitFlag = false;
 
 	myDialog = createGtkDialog(caption);
+	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
 
 	std::string okString = gtkString("&Ok");
 	std::string cancelString = gtkString("&Cancel");
-	gtk_dialog_add_button (myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
-	gtk_dialog_add_button (myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
+	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 
 	myStateLine = GTK_ENTRY(gtk_entry_new());
 

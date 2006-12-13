@@ -24,8 +24,11 @@
 
 #include "OptionsPage.h"
 
-void ComboOptionEntry::onValueSelected(const std::string &selectedValue) {
-	for (std::map<ZLOptionEntry*,std::string>::const_iterator it = myPage.myEntries.begin(); it != myPage.myEntries.end(); ++it) {
+void ComboOptionEntry::onValueSelected(int index) {
+	const std::string &selectedValue = values()[index];
+	const std::map<ZLOptionEntry*,std::string> &entries = myPage.myEntries;
+	int count = 0;
+	for (std::map<ZLOptionEntry*,std::string>::const_iterator it = entries.begin(); it != entries.end(); ++it, ++count) {
 		it->first->setVisible(it->second == selectedValue);
 	}
 }

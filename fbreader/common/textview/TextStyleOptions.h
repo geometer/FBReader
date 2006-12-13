@@ -25,28 +25,22 @@
 #include <string>
 
 #include <ZLOptionEntry.h>
+#include <optionEntries/ZLFontFamilyOptionEntry.h>
 
 class ZLPaintContext;
 
-class FontFamilyOptionEntry : public ZLComboOptionEntry {
+class FontFamilyWithBaseOptionEntry : public ZLFontFamilyOptionEntry {
 
 private:
 	static std::vector<std::string> ourAllFamilies;
-	static std::vector<std::string> ourAllFamiliesPlusBase;
 
 public:
-	FontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context, bool allowBase);
-	~FontFamilyOptionEntry();
+	FontFamilyWithBaseOptionEntry(const std::string &name, ZLStringOption &option, const ZLPaintContext &context);
 
-	const std::string &name() const;
 	const std::vector<std::string> &values() const;
 	const std::string &initialValue() const;
 
 	void onAccept(const std::string &value);
-
-private:
-	ZLStringOption &myOption;
-	bool myAllowBase;
 };
 
 class LineSpacingOptionEntry : public ZLComboOptionEntry {

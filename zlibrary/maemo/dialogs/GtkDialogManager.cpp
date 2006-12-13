@@ -60,7 +60,7 @@ int GtkDialogManager::infoBox(const InfoBoxType, const std::string &title, const
 }
 
 void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
-	GtkOpenFileDialog(title.c_str(), handler).runWithSize();
+	GtkOpenFileDialog(title.c_str(), handler).run();
 }
 
 struct RunnableWithFlag {

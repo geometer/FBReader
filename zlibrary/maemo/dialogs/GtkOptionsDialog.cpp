@@ -34,7 +34,7 @@
 #include "GtkOptionView.h"
 #include "GtkUtil.h"
 
-GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLDesktopOptionsDialog(id) {
+GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent) : ZLOptionsDialog(id) {
 	myDialog = createGtkDialog(caption);
 	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
 

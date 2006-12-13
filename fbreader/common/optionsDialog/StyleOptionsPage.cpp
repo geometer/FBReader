@@ -22,6 +22,8 @@
 #include <ZLOptionsDialog.h>
 #include <ZLPaintContext.h>
 
+#include <optionEntries/ZLSimpleOptionEntry.h>
+
 #include "StyleOptionsPage.h"
 
 #include "../textview/TextView.h"
@@ -30,6 +32,7 @@
 
 static const std::string BOLD_STRING = "Bold";
 static const std::string ITALIC_STRING = "Italic";
+static const std::string FAMILY_STRING = "Family";
 
 StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &context) {
 	myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
@@ -51,7 +54,7 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 		BaseTextStyle &baseStyle = collection.baseStyle();
 
 		registerEntries(dialogTab,
-			new FontFamilyOptionEntry(baseStyle.FontFamilyOption, context, false),
+			new ZLFontFamilyOptionEntry(FAMILY_STRING, baseStyle.FontFamilyOption, context),
 			new ZLSimpleBooleanOptionEntry(BOLD_STRING, baseStyle.BoldOption),
 			name
 		);
@@ -74,7 +77,7 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 			const std::string &name = decoration->name();
 
 			registerEntries(dialogTab,
-				new FontFamilyOptionEntry(decoration->FontFamilyOption, context, true),
+				new FontFamilyWithBaseOptionEntry(FAMILY_STRING, decoration->FontFamilyOption, context),
 				new ZLSimpleBoolean3OptionEntry(BOLD_STRING, decoration->BoldOption),
 				name
 			);
@@ -93,5 +96,5 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 		}
 	}
 
-	myComboEntry->onValueSelected(myComboEntry->initialValue());
+	myComboEntry->onValueSelected(0);
 }

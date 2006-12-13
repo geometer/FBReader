@@ -25,17 +25,19 @@
 
 #include <ZLApplication.h>
 
+class QApplicationWindow;
+
 class QtMenuAction : public QAction {
 	Q_OBJECT
 
 public:
-	QtMenuAction(ZLApplication &application, const ZLApplication::Menubar::PlainItem &item);
+	QtMenuAction(QApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item);
 
 private slots:
 	void doSlot();
 
 private:
-	ZLApplication &myApplication;
+	QApplicationWindow &myWindow;
 	int myActionId;
 };
 

@@ -20,6 +20,8 @@
 
 #include <algorithm>
 
+#include <ZLApplication.h>
+
 #include "ZLDialogManager.h"
 #include "ZLOpenFileDialog.h"
 
@@ -27,14 +29,12 @@
 #include "../filesystem/ZLDir.h"
 #include "../util/ZLStringUtil.h"
 
-static const std::string DefaultDirectory = "~";
-
 ZLOpenFileDialog::ZLOpenFileDialog(const ZLTreeHandler &handler) :
-	DirectoryOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenFileDialog", "Directory", DefaultDirectory) {
+	DirectoryOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenFileDialog", "Directory", ZLApplication::HomeDirectory) {
 	
 	shared_ptr<ZLDir> dir = ZLFile(DirectoryOption.value()).directory();
 	if (dir.isNull()) {
-		dir = ZLFile(DefaultDirectory).directory();
+		dir = ZLFile(ZLApplication::HomeDirectory).directory();
 	}
 	myState = new ZLDirTreeState(handler, dir);
 }

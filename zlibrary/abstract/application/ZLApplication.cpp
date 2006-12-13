@@ -123,6 +123,7 @@ void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
 void ZLApplication::setView(ZLView *view) {
 	if (myViewWidget != 0) {
 		myViewWidget->setView(view);
+		resetWindowCaption();
 		refreshWindow();
 	}
 }

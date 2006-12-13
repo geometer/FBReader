@@ -178,7 +178,7 @@ protected:
 	void reset();
 
 private slots:
-	void onValueSelected(int);
+	void onValueSelected(int index);
 	void onValueEdited(const QString &value);
 	void onTabResized(const QSize &size);
 	
@@ -219,13 +219,14 @@ class ColorOptionView : public QObject, public QOptionView {
 Q_OBJECT
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
+	ColorOptionView(ZLColorOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
 	void _onAccept() const;
+	void reset();
 
 private slots:
 	void onSliderMove(int);

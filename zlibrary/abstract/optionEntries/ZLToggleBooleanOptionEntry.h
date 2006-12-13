@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,20 +18,23 @@
  * 02110-1301, USA.
  */
 
-#ifndef __COLOROPTIONSPAGE_H__
-#define __COLOROPTIONSPAGE_H__
+#ifndef __ZLTOGGLEBOOLEANOPTIONENTRY_H__
+#define __ZLTOGGLEBOOLEANOPTIONENTRY_H__
 
-#include "OptionsPage.h"
+#include <optionEntries/ZLSimpleOptionEntry.h>
 
-class ZLDialogContent;
-
-class ColorOptionsPage : public OptionsPage {
+class ZLToggleBooleanOptionEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	ColorOptionsPage(ZLDialogContent &dialogTab);
-	~ColorOptionsPage();
+	typedef std::vector<ZLOptionEntry*> Entries;
+	ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *slave0, ZLOptionEntry *slave1 = 0, ZLOptionEntry *slave2 = 0);
+	ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, const Entries &slaveEntries);
+
+private:
+	void onStateChanged(bool state);
+
+private:
+	Entries mySlaveEntries;
 };
 
-inline ColorOptionsPage::~ColorOptionsPage() {}
-
-#endif /* __COLOROPTIONSPAGE_H__ */
+#endif /* __ZLTOGGLEBOOLEANOPTIONENTRY_H__ */

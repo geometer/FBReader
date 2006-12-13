@@ -60,7 +60,7 @@ PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string 
 	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry("Ignore Indent Less Than", myFormat.IgnoredIndentOption, 1);
 	tab.addOption(breakEntry);
 	tab.addOption(myIgnoredIndentEntry);
-	breakEntry->onValueSelected(breakEntry->initialValue());
+	breakEntry->onValueSelected(breakEntry->initialIndex());
 
 	if (showContentsEntry) {
 		CreateContentsTableOptionEntry *contentsTableEntry = new CreateContentsTableOptionEntry(*this, "Build Contents Table", myFormat.CreateContentsTableOption);
@@ -211,42 +211,45 @@ const std::string &BreakTypeOptionEntry::name() const {
 	return myName;
 }
 
-static std::string BREAK_TYPE_VALUES[3] = { "New Line", "Empty Line", "Line With Indent"};
 static std::vector<std::string> BREAK_TYPE_VALUES_VECTOR;
 
-const std::string &BreakTypeOptionEntry::initialValue() const {
+int BreakTypeOptionEntry::initialIndex() const {
 	switch (myBreakTypeOption.value()) {
 		case PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE:
-			return BREAK_TYPE_VALUES[0];
+			return 0;
 		case PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE:
-			return BREAK_TYPE_VALUES[1];
+			return 1;
 		case PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE | PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT:
 		default:
-			return BREAK_TYPE_VALUES[2];
+			return 2;
 	}
+}
+
+const std::string &BreakTypeOptionEntry::initialValue() const {
+	return values()[initialIndex()];
 }
 
 const std::vector<std::string> &BreakTypeOptionEntry::values() const {
 	if (BREAK_TYPE_VALUES_VECTOR.empty()) {
-		for (int i = 0; i < 3; ++i) {
-			BREAK_TYPE_VALUES_VECTOR.push_back(BREAK_TYPE_VALUES[i]);
-		}
+		BREAK_TYPE_VALUES_VECTOR.push_back("New Line");
+		BREAK_TYPE_VALUES_VECTOR.push_back("Empty Line");
+		BREAK_TYPE_VALUES_VECTOR.push_back("Line With Indent");
 	}
 	return BREAK_TYPE_VALUES_VECTOR;
 }
 
 void BreakTypeOptionEntry::onAccept(const std::string &value) {
-	if (value == BREAK_TYPE_VALUES[0]) {
+	if (value == values()[0]) {
 		myBreakTypeOption.setValue(PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE);
-	} else if (value == BREAK_TYPE_VALUES[1]) {
+	} else if (value == values()[1]) {
 		myBreakTypeOption.setValue(PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE);
-	} else if (value == BREAK_TYPE_VALUES[2]) {
+	} else if (value == values()[2]) {
 		myBreakTypeOption.setValue(PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE | PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT);
 	}
 }
 
-void BreakTypeOptionEntry::onValueSelected(const std::string &selectedValue) {
-	myPage.myIgnoredIndentEntry->setVisible(selectedValue == BREAK_TYPE_VALUES[2]);
+void BreakTypeOptionEntry::onValueSelected(int index) {
+	myPage.myIgnoredIndentEntry->setVisible(index == 2);
 }
 
 CreateContentsTableOptionEntry::CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {

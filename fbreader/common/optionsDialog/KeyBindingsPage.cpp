@@ -21,6 +21,8 @@
 
 #include <ZLOptionsDialog.h>
 
+#include <optionEntries/ZLSimpleOptionEntry.h>
+
 #include "KeyBindingsPage.h"
 
 #include "../fbreader/FBReader.h"
@@ -187,8 +189,8 @@ public:
 	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
-	void onValueSelected(const std::string&);
-	void onAccept(const std::string&);
+	void onValueSelected(int index);
+	void onAccept(const std::string &value);
 
 private:
 	FBReaderKeyOptionEntry &myKeyEntry;
@@ -222,7 +224,8 @@ const std::vector<std::string> &OrientationEntry::values() const {
 	return _values;
 }
 
-void OrientationEntry::onValueSelected(const std::string &value) {
+void OrientationEntry::onValueSelected(int index) {
+	const std::string &value = values()[index];
 	if (value == ROTATION_0) {
 		myKeyEntry.setOrientation(ZLViewWidget::DEGREES0);
 	} else if (value == ROTATION_90) {

@@ -25,9 +25,6 @@ static const std::string OPTION_GROUP_NAME = "OpenFileDialog";
 ZLDesktopOpenFileDialog::ZLDesktopOpenFileDialog(const ZLTreeHandler &handler) : ZLOpenFileDialog(handler), WidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Width", 10, 2000, 400), HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Height", 10, 2000, 300) {
 }
 
-ZLDesktopOpenFileDialog::~ZLDesktopOpenFileDialog() {
-}
-
 void ZLDesktopOpenFileDialog::runWithSize() {
 	setSize(WidthOption.value(), HeightOption.value());
 	run();

@@ -187,12 +187,12 @@ void ComboOptionView::reset() {
 
 void ComboOptionView::onValueChanged() {
 	int index = gtk_combo_box_get_active(myComboBox);
-	std::string text = gtk_combo_box_get_active_text(myComboBox);
 	ZLComboOptionEntry& o = *(ZLComboOptionEntry*)myOption;
 	if ((index != mySelectedIndex) && (index >= 0) && (index < (int)o.values().size())) {
 		mySelectedIndex = index;
-  	o.onValueSelected(text);
+  	o.onValueSelected(mySelectedIndex);
 	} else {
+		std::string text = gtk_combo_box_get_active_text(myComboBox);
   	o.onValueEdited(text);
 	}
 }
@@ -279,8 +279,6 @@ void StringOptionView::_onAccept() const {
 static const int COLOR_STEPS_NUMBER = 32;
 
 void ColorOptionView::_createItem() {
-	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
-
 	myDrawingArea = gtk_drawing_area_new();
 
 	gtk_widget_set_size_request(GTK_WIDGET(myDrawingArea), 60, 20);
@@ -291,6 +289,8 @@ void ColorOptionView::_createItem() {
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 3, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+
+	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
 
 	myRSlider = HILDON_CONTROLBAR(hildon_controlbar_new());
 	hildon_controlbar_set_range(myRSlider, 0, COLOR_STEPS_NUMBER);
@@ -311,15 +311,13 @@ void ColorOptionView::_createItem() {
 	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myGSlider), 1, 2, 2, 3);
 	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myBSlider), 1, 2, 3, 4);
 
-	myColor.red = color.Red * 65535 / 255;
-	myColor.blue = color.Blue * 65535 / 255;
-	myColor.green = color.Green * 65535 / 255;
-
-	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
-
 	GtkWidget *frame = gtk_frame_new(NULL);
 
 	gtk_container_add(GTK_CONTAINER(frame), myDrawingArea);
+	myColor.red = color.Red * 65535 / 255;
+	myColor.blue = color.Blue * 65535 / 255;
+	myColor.green = color.Green * 65535 / 255;
+	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
 
 	gtk_table_attach(GTK_TABLE(myWidget), frame, 2, 3, 1, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
@@ -330,6 +328,33 @@ void ColorOptionView::_createItem() {
 
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
+
+void ColorOptionView::reset() {
+	if (myDrawingArea == 0) {
+		return;
+	}
+
+	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
+
+	colorEntry.onReset(ZLColor(
+		myColor.red * 255 / 65535,
+		myColor.green * 255 / 65535,
+		myColor.blue * 255 / 65535
+	));
+
+	const ZLColor &color = colorEntry.color();
+
+	hildon_controlbar_set_value(myRSlider, (int)color.Red * COLOR_STEPS_NUMBER / 255);
+	hildon_controlbar_set_value(myGSlider, (int)color.Green * COLOR_STEPS_NUMBER / 255);
+	hildon_controlbar_set_value(myBSlider, (int)color.Blue * COLOR_STEPS_NUMBER / 255);
+
+	myColor.red = color.Red * 65535 / 255;
+	myColor.blue = color.Blue * 65535 / 255;
+	myColor.green = color.Green * 65535 / 255;
+
+	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
+}
+
 
 void ColorOptionView::_show() {
 	gtk_widget_show(myWidget);

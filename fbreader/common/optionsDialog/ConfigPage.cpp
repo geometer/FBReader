@@ -22,22 +22,11 @@
 #include <ZLOptionEntry.h>
 #include <ZLOptionsDialog.h>
 
+#include <optionEntries/ZLToggleBooleanOptionEntry.h>
+
 #include "ConfigPage.h"
 
 #include "../fbreader/FBReader.h"
-
-class EnableAutoSavingEntry : public ZLSimpleBooleanOptionEntry {
-
-public:
-	EnableAutoSavingEntry(ZLBooleanOption &option, ZLOptionEntry &timeoutEntry);
-	void onStateChanged(bool state);
-
-private:
-	ZLOptionEntry &myTimeoutEntry;
-};
-
-EnableAutoSavingEntry::EnableAutoSavingEntry(ZLBooleanOption &option, ZLOptionEntry &timeoutEntry) : ZLSimpleBooleanOptionEntry("Save State Automatically", option), myTimeoutEntry(timeoutEntry) {
-}
 
 class TimeoutEntry : public ZLSimpleSpinOptionEntry {
 
@@ -45,10 +34,6 @@ public:
 	TimeoutEntry(ZLIntegerRangeOption &option);
 	void onAccept(int value);
 };
-
-void EnableAutoSavingEntry::onStateChanged(bool state) {
-	myTimeoutEntry.setVisible(state);
-}
 
 TimeoutEntry::TimeoutEntry(ZLIntegerRangeOption &option) : ZLSimpleSpinOptionEntry("Timeout Between Savings, Seconds", option, 5) {
 }
@@ -60,7 +45,7 @@ void TimeoutEntry::onAccept(int value) {
 
 ConfigPage::ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
 	ZLOptionEntry *timeoutEntry = new TimeoutEntry(fbreader.ConfigAutoSaveTimeoutOption);
-	ZLBooleanOptionEntry *enableEntry = new EnableAutoSavingEntry(fbreader.ConfigAutoSavingOption, *timeoutEntry);
+	ZLBooleanOptionEntry *enableEntry = new ZLToggleBooleanOptionEntry("Save State Automatically", fbreader.ConfigAutoSavingOption, timeoutEntry);
 	dialogTab.addOption(enableEntry);
 	dialogTab.addOption(timeoutEntry);
 	enableEntry->onStateChanged(enableEntry->initialState());

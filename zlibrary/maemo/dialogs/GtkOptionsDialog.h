@@ -28,8 +28,7 @@
 #include <gtk/gtktable.h>
 #include <gtk/gtkscrolledwindow.h>
 
-// Hmm, desktop? // TODO: check
-#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include "../../abstract/dialogs/ZLOptionsDialog.h"
 
 class GtkOptionView;
 
@@ -58,7 +57,7 @@ private:
 	std::vector<GtkOptionView *> myViews;
 };
 
-class GtkOptionsDialog : public ZLDesktopOptionsDialog {
+class GtkOptionsDialog : public ZLOptionsDialog {
 
 public:
 	GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent);

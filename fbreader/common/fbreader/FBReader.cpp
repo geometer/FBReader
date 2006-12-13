@@ -25,8 +25,9 @@
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLDialog.h>
-#include <ZLOptionEntry.h>
 #include <ZLDir.h>
+
+#include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include "FBReader.h"
 #include "BookTextView.h"
@@ -418,7 +419,6 @@ void FBReader::setMode(ViewMode mode) {
 		case UNDEFINED_MODE:
 			break;
 	}
-	resetWindowCaption();
 }
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {

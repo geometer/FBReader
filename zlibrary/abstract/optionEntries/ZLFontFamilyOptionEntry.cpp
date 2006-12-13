@@ -18,42 +18,29 @@
  * 02110-1301, USA.
  */
 
-#include "ZLOptionEntry.h"
+#include <ZLPaintContext.h>
 
-ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
-	myOption->setView(this);
-}
+#include "ZLFontFamilyOptionEntry.h"
 
-ZLOptionView::~ZLOptionView() {
-	delete myOption;
-}
-
-void ZLOptionEntry::setVisible(bool visible) {
-	myIsVisible = visible;
-	if (myView != 0) {
-		myView->setVisible(visible);
+ZLFontFamilyOptionEntry::ZLFontFamilyOptionEntry(const std::string &name, ZLStringOption &option, const ZLPaintContext &context) : myName(name), myOption(option), myContext(context) {
+	std::string value = option.value();
+	if (!value.empty()) {
+		option.setValue(myContext.realFontFamilyName(value));
 	}
 }
 
-void ZLOptionEntry::setActive(bool active) {
-	myIsActive = active;
-	if (myView != 0) {
-		myView->setActive(active);
-	}
+const std::vector<std::string> &ZLFontFamilyOptionEntry::values() const {
+	return myContext.fontFamilies();
 }
 
-void ZLKeyOptionEntry::reset() {
-	setVisible(false);
-	setVisible(true);
+const std::string &ZLFontFamilyOptionEntry::name() const {
+	return myName;
 }
 
-void ZLComboOptionEntry::onStringValueSelected(const std::string &value) {
-	const std::vector<std::string> valuesVector = values();
-	int index = 0;
-	for (std::vector<std::string>::const_iterator it = valuesVector.begin(); it != valuesVector.end(); ++it, ++index) {
-		if (value == *it) {
-			onValueSelected(index);
-			break;
-		}
-	}
+const std::string &ZLFontFamilyOptionEntry::initialValue() const {
+	return myOption.value();
+}
+
+void ZLFontFamilyOptionEntry::onAccept(const std::string &value) {
+	myOption.setValue(value);
 }

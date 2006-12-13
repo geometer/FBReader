@@ -24,7 +24,7 @@
 
 #include <ZLInputStream.h>
 #include <ZLOptions.h>
-#include <ZLOptionEntry.h>
+#include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include "../FormatPlugin.h"
 
@@ -89,10 +89,11 @@ public:
 	~BreakTypeOptionEntry();
 
 	const std::string &name() const;
+	int initialIndex() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
-	void onValueSelected(const std::string &selectedValue);
+	void onValueSelected(int index);
 
 private:
 	PlainTextInfoPage &myPage;

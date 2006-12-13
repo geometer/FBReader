@@ -18,42 +18,19 @@
  * 02110-1301, USA.
  */
 
-#include "ZLOptionEntry.h"
+#include "ZLToggleBooleanOptionEntry.h"
 
-ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
-	myOption->setView(this);
+ZLToggleBooleanOptionEntry::ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, const Entries &slaveEntries) : ZLSimpleBooleanOptionEntry(name, option), mySlaveEntries(slaveEntries) {
 }
 
-ZLOptionView::~ZLOptionView() {
-	delete myOption;
+ZLToggleBooleanOptionEntry::ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *slave0, ZLOptionEntry *slave1, ZLOptionEntry *slave2) : ZLSimpleBooleanOptionEntry(name, option) {
+	if (slave0 != 0) mySlaveEntries.push_back(slave0);
+	if (slave1 != 0) mySlaveEntries.push_back(slave1);
+	if (slave2 != 0) mySlaveEntries.push_back(slave2);
 }
 
-void ZLOptionEntry::setVisible(bool visible) {
-	myIsVisible = visible;
-	if (myView != 0) {
-		myView->setVisible(visible);
-	}
-}
-
-void ZLOptionEntry::setActive(bool active) {
-	myIsActive = active;
-	if (myView != 0) {
-		myView->setActive(active);
-	}
-}
-
-void ZLKeyOptionEntry::reset() {
-	setVisible(false);
-	setVisible(true);
-}
-
-void ZLComboOptionEntry::onStringValueSelected(const std::string &value) {
-	const std::vector<std::string> valuesVector = values();
-	int index = 0;
-	for (std::vector<std::string>::const_iterator it = valuesVector.begin(); it != valuesVector.end(); ++it, ++index) {
-		if (value == *it) {
-			onValueSelected(index);
-			break;
-		}
+void ZLToggleBooleanOptionEntry::onStateChanged(bool state) {
+	for (Entries::const_iterator it = mySlaveEntries.begin(); it != mySlaveEntries.end(); ++it) {
+		(*it)->setVisible(state);
 	}
 }

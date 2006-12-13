@@ -27,23 +27,13 @@
 #include <ZLOptionEntry.h>
 #include <ZLFile.h>
 
+#include <optionEntries/ZLStringInfoEntry.h>
+#include <optionEntries/ZLSimpleOptionEntry.h>
+
 #include "BookInfoDialog.h"
 
 #include "../description/Author.h"
 #include "../hyphenation/TeXHyphenator.h"
-
-class StringInfoEntry : public ZLStringOptionEntry {
-
-public:
-	StringInfoEntry(const std::string &name, const std::string &value);
-	const std::string &name() const;
-	const std::string &initialValue() const;
-	void onAccept(const std::string &value);
-
-private:
-	std::string myName;
-	std::string myValue;
-};
 
 class AuthorSortKeyEntry : public ZLStringOptionEntry {
 
@@ -67,7 +57,7 @@ public:
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
-	void onValueSelected(const std::string &value);
+	void onValueSelected(int index);
 
 private:
 	BookInfoDialog &myInfoDialog;
@@ -117,7 +107,7 @@ public:
 	void onAccept(const std::string &value);
 
 	void onValueEdited(const std::string &value);
-	void onValueSelected(const std::string &value);
+	void onValueSelected(int index);
 
 private:
 	BookInfoDialog &myInfoDialog;
@@ -126,21 +116,6 @@ private:
 };
 
 static std::vector<std::string> AUTO_ENCODING;
-
-StringInfoEntry::StringInfoEntry(const std::string &name, const std::string &value) : myName(name), myValue(value) {
-	setActive(false);
-}
-
-const std::string &StringInfoEntry::name() const {
-	return myName;
-}
-
-const std::string &StringInfoEntry::initialValue() const {
-	return myValue;
-}
-
-void StringInfoEntry::onAccept(const std::string&) {
-}
 
 AuthorDisplayNameEntry::AuthorDisplayNameEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
 }
@@ -177,14 +152,9 @@ void AuthorDisplayNameEntry::onAccept(const std::string &value) {
 	myInfoDialog.myBookInfo.AuthorDisplayNameOption.setValue(value);
 }
 
-void AuthorDisplayNameEntry::onValueSelected(const std::string &value) {
+void AuthorDisplayNameEntry::onValueSelected(int index) {
 	const std::vector<AuthorPtr> &authors = myInfoDialog.myCollection.authors();
-	for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-		if (value == (*it)->displayName()) {
-			myCurrentAuthor = *it;
-			break;
-		}
-	}
+	myCurrentAuthor = authors[index];
 	myInfoDialog.myAuthorSortKeyEntry->resetView();
 	myInfoDialog.mySeriesTitleEntry->resetView();
 }
@@ -313,8 +283,8 @@ void SeriesTitleEntry::onAccept(const std::string &value) {
 	myInfoDialog.myBookInfo.SequenceNameOption.setValue(value);
 }
 
-void SeriesTitleEntry::onValueSelected(const std::string &value) {
-	myInfoDialog.myBookNumberEntry->setVisible(!value.empty());
+void SeriesTitleEntry::onValueSelected(int index) {
+	myInfoDialog.myBookNumberEntry->setVisible(index != 0);
 }
 
 void SeriesTitleEntry::onValueEdited(const std::string &value) {
@@ -324,7 +294,7 @@ void SeriesTitleEntry::onValueEdited(const std::string &value) {
 BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::string &fileName) : myCollection(collection), myBookInfo(fileName) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
 
-	myFileNameEntry = new StringInfoEntry("File", fileName);
+	myFileNameEntry = new ZLStringInfoEntry("File", fileName);
 	myBookTitleEntry = new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption);
 	myAuthorDisplayNameEntry = new AuthorDisplayNameEntry(*this);
 	myAuthorSortKeyEntry = new AuthorSortKeyEntry(*this);

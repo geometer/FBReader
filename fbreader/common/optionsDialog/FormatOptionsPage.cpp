@@ -21,6 +21,8 @@
 
 #include <ZLOptionsDialog.h>
 
+#include <optionEntries/ZLSimpleOptionEntry.h>
+
 #include "FormatOptionsPage.h"
 
 #include "../textview/TextView.h"
@@ -91,5 +93,5 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 		}
 	}
 
-	myComboEntry->onValueSelected(myComboEntry->initialValue());
+	myComboEntry->onValueSelected(0);
 }

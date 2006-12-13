@@ -160,7 +160,7 @@ void ComboOptionView::_onAccept() const {
 void ComboOptionView::onValueSelected(int index) {
 	ZLComboOptionEntry *o = (ZLComboOptionEntry*)myOption;
 	if ((index >= 0) && (index < (int)o->values().size())) {
-		o->onValueSelected(o->values()[index]);
+		o->onValueSelected(index);
 	}
 }
 
@@ -357,6 +357,19 @@ void ColorOptionView::_createItem() {
 	myColorBar->setFrameStyle(QFrame::Panel | QFrame::Plain);
 	layout->addMultiCellWidget(myColorBar, 0, 2, 2, 2);
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+}
+
+void ColorOptionView::reset() {
+	if (myWidget == 0) {
+		return;
+	}
+	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
+	colorEntry.onReset(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
+	const ZLColor &color = colorEntry.color();
+	myRSlider->setValue(color.Red);
+	myGSlider->setValue(color.Green);
+	myBSlider->setValue(color.Blue);
+	myColorBar->setBackgroundColor(QColor(color.Red, color.Green, color.Blue));
 }
 
 void ColorOptionView::_show() {

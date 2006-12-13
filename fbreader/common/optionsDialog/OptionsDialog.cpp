@@ -23,11 +23,13 @@
 #include <ZLOptionsDialog.h>
 #include <ZLPaintContext.h>
 
+#include <optionEntries/ZLToggleBooleanOptionEntry.h>
+#include <optionEntries/ZLColorOptionBuilder.h>
+
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"
 #include "ScrollingOptionsPage.h"
 #include "StyleOptionsPage.h"
-#include "ColorOptionsPage.h"
 #include "KeyBindingsPage.h"
 #include "ConfigPage.h"
 
@@ -41,29 +43,6 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 #include "../formats/FormatPlugin.h"
-
-class ShowIndicatorEntry : public ZLSimpleBooleanOptionEntry {
-
-public:
-	ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option);
-	~ShowIndicatorEntry();
-	void onStateChanged(bool state);
-
-private:
-	IndicatorPage &myPage;
-};
-
-ShowIndicatorEntry::ShowIndicatorEntry(IndicatorPage &page, const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myPage(page) {
-}
-
-ShowIndicatorEntry::~ShowIndicatorEntry() {
-}
-
-void ShowIndicatorEntry::onStateChanged(bool state) {
-	myPage.HeightEntry->setVisible(state);
-	myPage.OffsetEntry->setVisible(state);
-	myPage.EnableNavigationEntry->setVisible(state);
-}
 
 class RotationTypeEntry : public ZLChoiceOptionEntry {
 
@@ -287,20 +266,33 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 
 	ZLDialogContent &indicatorTab = myDialog->createTab("Indicator");
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
-	myIndicatorPage.ShowIndicatorEntry = new ShowIndicatorEntry(myIndicatorPage, "Show Position Indicator", indicatorStyle.ShowOption);
-	myIndicatorPage.HeightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
-	myIndicatorPage.OffsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
-	myIndicatorPage.EnableNavigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
-	indicatorTab.addOption(myIndicatorPage.ShowIndicatorEntry);
-	indicatorTab.addOption(myIndicatorPage.HeightEntry);
-	indicatorTab.addOption(myIndicatorPage.OffsetEntry);
-	indicatorTab.addOption(myIndicatorPage.EnableNavigationEntry);
-	myIndicatorPage.ShowIndicatorEntry->onStateChanged(myIndicatorPage.ShowIndicatorEntry->initialState());
+	ZLOptionEntry *heightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
+	ZLOptionEntry *offsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
+	ZLOptionEntry *navigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
+	ZLBooleanOptionEntry *showIndicatorEntry = new ZLToggleBooleanOptionEntry("Show Position Indicator", indicatorStyle.ShowOption, heightEntry, offsetEntry, navigationEntry);
+	indicatorTab.addOption(showIndicatorEntry);
+	indicatorTab.addOption(heightEntry);
+	indicatorTab.addOption(offsetEntry);
+	indicatorTab.addOption(navigationEntry);
+	showIndicatorEntry->onStateChanged(showIndicatorEntry->initialState());
 
 	ZLDialogContent &rotationTab = myDialog->createTab("Rotation");
 	rotationTab.addOption(new RotationTypeEntry(fbreader.RotationAngleOption));
 
-	myColorPage = new ColorOptionsPage(myDialog->createTab("Colors"));
+	ZLDialogContent &colorsTab = myDialog->createTab("Colors");
+	ZLColorOptionBuilder builder;
+	static const std::string BACKGROUND = "Background";
+	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
+	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
+	builder.addOption("Regular Text", baseStyle.RegularTextColorOption);
+	builder.addOption("Hyperlink Text", baseStyle.HyperlinkTextColorOption);
+	builder.addOption("Selected Text", baseStyle.SelectedTextColorOption);
+	builder.addOption("Tree Lines", baseStyle.TreeLinesColorOption);
+	builder.addOption("Position Indicator", TextStyleCollection::instance().indicatorStyle().ColorOption);
+	builder.setInitial(BACKGROUND);
+	colorsTab.addOption(builder.comboEntry());
+	colorsTab.addOption(builder.colorEntry());
+
 	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
 	myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 
@@ -322,7 +314,6 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 OptionsDialog::~OptionsDialog() {
 	delete myConfigPage;
 	delete myKeyBindingsPage;
-	delete myColorPage;
 	delete myStylePage;
 	delete myFormatPage;
 	delete myScrollingPage;

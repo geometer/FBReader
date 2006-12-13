@@ -28,7 +28,6 @@ class ZLDesktopOpenFileDialog : public ZLOpenFileDialog {
 
 protected:
 	ZLDesktopOpenFileDialog(const ZLTreeHandler &handler);
-	virtual ~ZLDesktopOpenFileDialog();
 
 public:
 	void runWithSize();

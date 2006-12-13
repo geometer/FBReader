@@ -83,11 +83,7 @@ void GtkViewWidget::onMouseMoved(GdkEventMotion *event) {
 		state = (GdkModifierType)event->state;
 	}
 	updateCoordinates(x, y);
-	if (state == 0) {
-		view()->onStylusMove(x, y);
-	} else {
-		view()->onStylusMovePressed(x, y);
-	}
+	view()->onStylusMovePressed(x, y);
 }
 
 int GtkViewWidget::width() const {

@@ -18,42 +18,25 @@
  * 02110-1301, USA.
  */
 
-#include "ZLOptionEntry.h"
+#ifndef __ZLSTRINGINFOENTRY_H__
+#define __ZLSTRINGINFOENTRY_H__
 
-ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
-	myOption->setView(this);
-}
+#include <string>
 
-ZLOptionView::~ZLOptionView() {
-	delete myOption;
-}
+#include <ZLOptionEntry.h>
 
-void ZLOptionEntry::setVisible(bool visible) {
-	myIsVisible = visible;
-	if (myView != 0) {
-		myView->setVisible(visible);
-	}
-}
+class ZLStringInfoEntry : public ZLStringOptionEntry {
 
-void ZLOptionEntry::setActive(bool active) {
-	myIsActive = active;
-	if (myView != 0) {
-		myView->setActive(active);
-	}
-}
+public:
+	ZLStringInfoEntry(const std::string &name, const std::string &value);
+	ZLStringInfoEntry(const std::string &name, int value);
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
 
-void ZLKeyOptionEntry::reset() {
-	setVisible(false);
-	setVisible(true);
-}
+private:
+	std::string myName;
+	std::string myValue;
+};
 
-void ZLComboOptionEntry::onStringValueSelected(const std::string &value) {
-	const std::vector<std::string> valuesVector = values();
-	int index = 0;
-	for (std::vector<std::string>::const_iterator it = valuesVector.begin(); it != valuesVector.end(); ++it, ++index) {
-		if (value == *it) {
-			onValueSelected(index);
-			break;
-		}
-	}
-}
+#endif /* __ZLSTRINGINFOENTRY_H__ */

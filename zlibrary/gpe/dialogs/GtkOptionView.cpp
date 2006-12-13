@@ -184,12 +184,12 @@ void ComboOptionView::reset() {
 
 void ComboOptionView::onValueChanged() {
 	int index = gtk_combo_box_get_active(myComboBox);
-	std::string text = gtk_combo_box_get_active_text(myComboBox);
 	ZLComboOptionEntry& o = *(ZLComboOptionEntry*)myOption;
 	if ((index != mySelectedIndex) && (index >= 0) && (index < (int)o.values().size())) {
 		mySelectedIndex = index;
-  	o.onValueSelected(text);
+  	o.onValueSelected(mySelectedIndex);
 	} else {
+		std::string text = gtk_combo_box_get_active_text(myComboBox);
   	o.onValueEdited(text);
 	}
 }
@@ -326,6 +326,32 @@ void ColorOptionView::_createItem() {
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
 
+void ColorOptionView::reset() {
+	if (myDrawingArea == 0) {
+		return;
+	}
+
+	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
+
+	colorEntry.onReset(ZLColor(
+		myColor.red * 255 / 65535,
+		myColor.green * 255 / 65535,
+		myColor.blue * 255 / 65535
+	));
+
+	const ZLColor &color = colorEntry.color();
+
+	gtk_range_set_value(GTK_RANGE(myRSlider), color.Red);
+	gtk_range_set_value(GTK_RANGE(myGSlider), color.Green);
+	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
+
+	myColor.red = color.Red * 65535 / 255;
+	myColor.blue = color.Blue * 65535 / 255;
+	myColor.green = color.Green * 65535 / 255;
+
+	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
+}
+
 void ColorOptionView::_show() {
 	gtk_widget_show(myWidget);
 }
@@ -347,7 +373,11 @@ void ColorOptionView::onSliderMove() {
 }
 
 void ColorOptionView::_onAccept() const {
-	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(myColor.red / 256, myColor.green / 256, myColor.blue / 256));
+	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(
+		myColor.red * 255 / 65535,
+		myColor.green * 255 / 65535,
+		myColor.blue * 255 / 65535
+	));
 }
 
 static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {

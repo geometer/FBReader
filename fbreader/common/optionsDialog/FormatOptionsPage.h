@@ -30,9 +30,6 @@ class FormatOptionsPage : public OptionsPage {
 
 public:
 	FormatOptionsPage(ZLDialogContent &dialogTab);
-	~FormatOptionsPage();
 };
-
-inline FormatOptionsPage::~FormatOptionsPage() {}
 
 #endif /* __FORMATOPTIONSPAGE_H__ */

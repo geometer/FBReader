@@ -177,17 +177,16 @@ private:
 class ColorOptionView : public GtkOptionView {
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
 	void _onAccept() const;
+	void reset();
 
-private:
 	void onSliderMove();
-
 	static void _onSliderMove(GtkRange *, gpointer);
 
 private:

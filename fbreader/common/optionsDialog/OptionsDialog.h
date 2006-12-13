@@ -34,13 +34,6 @@ class ZLPaintContext;
 class ZLBooleanOptionEntry;
 class ZLSpinOptionEntry;
 
-struct IndicatorPage {
-	ZLBooleanOptionEntry *ShowIndicatorEntry;
-	ZLSpinOptionEntry *HeightEntry;
-	ZLSpinOptionEntry *OffsetEntry;
-	ZLBooleanOptionEntry *EnableNavigationEntry;
-};
-
 class OptionsDialog {
 
 public:
@@ -54,9 +47,7 @@ private:
 	ScrollingOptionsPage *myScrollingPage;
 	OptionsPage *myFormatPage;
 	OptionsPage *myStylePage;
-	OptionsPage *myColorPage;
 	KeyBindingsPage *myKeyBindingsPage;
-	IndicatorPage myIndicatorPage;
 	ConfigPage *myConfigPage;
 };
 

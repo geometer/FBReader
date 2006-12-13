@@ -24,44 +24,34 @@
 #include "TextStyleOptions.h"
 #include "TextStyle.h"
 
-static std::string FAMILY_STRING = "Family";
-static std::string LINE_SPACING_STRING = "Line Spacing";
-static std::string BASE_STRING = "<base>";
+static const std::string LINE_SPACING_STRING = "Line Spacing";
+static const std::string BASE_STRING = "<base>";
 
-std::vector<std::string> FontFamilyOptionEntry::ourAllFamilies;
-std::vector<std::string> FontFamilyOptionEntry::ourAllFamiliesPlusBase;
+std::vector<std::string> FontFamilyWithBaseOptionEntry::ourAllFamilies;
 
 std::vector<std::string> LineSpacingOptionEntry::ourAllValues;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValuesPlusBase;
 
-FontFamilyOptionEntry::FontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context, bool allowBase) : myOption(option), myAllowBase(allowBase) {
-	if (ourAllFamiliesPlusBase.empty()) {
-		ourAllFamilies = context.fontFamilies();
-		ourAllFamiliesPlusBase.push_back(BASE_STRING);
-		ourAllFamiliesPlusBase.insert(ourAllFamiliesPlusBase.end(), ourAllFamilies.begin(), ourAllFamilies.end());
+FontFamilyWithBaseOptionEntry::FontFamilyWithBaseOptionEntry(const std::string &name, ZLStringOption &option, const ZLPaintContext &context) : ZLFontFamilyOptionEntry(name, option, context) {
+}
+
+const std::vector<std::string> &FontFamilyWithBaseOptionEntry::values() const {
+	if (ourAllFamilies.empty()) {
+		const std::vector<std::string> &families = ZLFontFamilyOptionEntry::values();
+		ourAllFamilies.reserve(families.size() + 1);
+		ourAllFamilies.push_back(BASE_STRING);
+		ourAllFamilies.insert(ourAllFamilies.end(), families.begin(), families.end());
 	}
-	std::string value = option.value();
-	if (!value.empty()) {
-		option.setValue(context.realFontFamilyName(value));
-	}
+	return ourAllFamilies;
 }
 
-FontFamilyOptionEntry::~FontFamilyOptionEntry() {
-}
-
-const std::vector<std::string> &FontFamilyOptionEntry::values() const { return myAllowBase ? ourAllFamiliesPlusBase : ourAllFamilies; }
-
-const std::string &FontFamilyOptionEntry::name() const {
-	return FAMILY_STRING;
-}
-
-const std::string &FontFamilyOptionEntry::initialValue() const {
-	const std::string &value = myOption.value();
+const std::string &FontFamilyWithBaseOptionEntry::initialValue() const {
+	const std::string &value = ZLFontFamilyOptionEntry::initialValue();
 	return value.empty() ? BASE_STRING : value;
 }
 
-void FontFamilyOptionEntry::onAccept(const std::string &value) {
-	myOption.setValue((value == BASE_STRING) ? std::string() : value);
+void FontFamilyWithBaseOptionEntry::onAccept(const std::string &value) {
+	ZLFontFamilyOptionEntry::onAccept((value == BASE_STRING) ? std::string() : value);
 }
 
 LineSpacingOptionEntry::LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase) : myOption(option), myAllowBase(allowBase) {

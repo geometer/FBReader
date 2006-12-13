@@ -184,7 +184,7 @@ void QApplicationWindow::MenuUpdater::processItem(ZLApplication::Menubar::PlainI
 		const int id = item.actionId();
 		QtMenuAction *action = myWindow.myMenuMap[id];
 		if (action == 0) {
-			action = new QtMenuAction(myWindow.application(), item);
+			action = new QtMenuAction(myWindow, item);
 			myWindow.myMenuMap[id] = action;
 		}
 		action->addTo(myMenuStack.top());
@@ -357,12 +357,13 @@ bool QApplicationWindow::isKeyboardPresented() const {
 	return true;
 }
 
-QtMenuAction::QtMenuAction(ZLApplication &application, const ZLApplication::Menubar::PlainItem &item) : QAction(item.name().c_str(), 0, 0, 0), myApplication(application), myActionId(item.actionId()) {
+QtMenuAction::QtMenuAction(QApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item) : QAction(item.name().c_str(), 0, 0, 0), myWindow(window), myActionId(item.actionId()) {
 	connect(this, SIGNAL(activated()), this, SLOT(doSlot()));
 }
 
 void QtMenuAction::doSlot() {
-	myApplication.doAction(myActionId);
+	myWindow.application().doAction(myActionId);
+	myWindow.setFocus();
 }
 
 void MyMenuBar::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
