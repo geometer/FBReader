@@ -21,10 +21,6 @@
 #ifndef __SHARED_PTR_H__
 #define __SHARED_PTR_H__
 
-#ifdef __PTR_DEBUG__
-#include <iostream>
-#endif /* __PTR_DEBUG__ */
-
 template<class T> class shared_ptr_storage {
 	private:
 		unsigned int myCounter;
@@ -95,89 +91,31 @@ template<class T> class weak_ptr {
 		void detachStorage();
 
 	public:
-		weak_ptr() {
-			myStorage = 0;
-		}
-		weak_ptr(const shared_ptr<T> &t) {
-			attachStorage(t.myStorage);
-		}
-		weak_ptr(const weak_ptr<T> &t) {
-			if (!t.isNull()) {
-				attachStorage(t.myStorage);
-			} else {
-				attachStorage(0);
-			}
-		}
-		~weak_ptr() {
-			detachStorage();
-		}
+		weak_ptr();
+		weak_ptr(const shared_ptr<T> &t);
+		weak_ptr(const weak_ptr<T> &t);
+		~weak_ptr();
 
-		const weak_ptr<T> &operator = (const weak_ptr<T> &t) {
-			if (&t != this) {
-				detachStorage();
-				if (!t.isNull()) {
-					attachStorage(t.myStorage);
-				} else {
-					attachStorage(0);
-				}
-			}
-			return *this;
-		}
-		const weak_ptr<T> &operator = (const shared_ptr<T> &t) {
-			detachStorage();
-			attachStorage(t.myStorage);
-			return *this;
-		}
+		const weak_ptr<T> &operator = (const weak_ptr<T> &t);
+		const weak_ptr<T> &operator = (const shared_ptr<T> &t);
 
-		T* operator -> () const {
-			return (myStorage == 0) ? 0 : myStorage->pointer();
-		}
-		T& operator * () const {
-			return myStorage->content();
-		}
-		bool isNull() const {
-			return (myStorage == 0) || (myStorage->pointer() == 0);
-		}
-		void reset() {
-			detachStorage();
-			attachStorage(0);
-		}
-		bool operator == (const weak_ptr<T> &t) const {
-			return operator -> () == t.operator -> ();
-		}
-		bool operator != (const weak_ptr<T> &t) const {
-			return !operator == (t);
-		}
-		bool operator < (const weak_ptr<T> &t) const {
-			return operator -> () < t.operator -> ();
-		}
-		bool operator > (const weak_ptr<T> &t) const {
-			return t.operator < (*this);
-		}
-		bool operator <= (const weak_ptr<T> &t) const {
-			return !t.operator < (*this);
-		}
-		bool operator >= (const weak_ptr<T> &t) const {
-			return !operator < (t);
-		}
-		bool operator == (const shared_ptr<T> &t) const {
-			return operator -> () == t.operator -> ();
-		}
-		bool operator != (const shared_ptr<T> &t) const {
-			return !operator == (t);
-		}
-		bool operator < (const shared_ptr<T> &t) const {
-			return operator -> () < t.operator -> ();
-		}
-		bool operator > (const shared_ptr<T> &t) const {
-			return t.operator < (*this);
-		}
-		bool operator <= (const shared_ptr<T> &t) const {
-			return !t.operator < (*this);
-		}
-		bool operator >= (const shared_ptr<T> &t) const {
-			return !operator < (t);
-		}
+		T* operator -> () const;
+		T& operator * () const;
+		bool isNull() const;
+		void reset();
+
+		bool operator == (const weak_ptr<T> &t) const;
+		bool operator != (const weak_ptr<T> &t) const;
+		bool operator < (const weak_ptr<T> &t) const;
+		bool operator > (const weak_ptr<T> &t) const;
+		bool operator <= (const weak_ptr<T> &t) const;
+		bool operator >= (const weak_ptr<T> &t) const;
+		bool operator == (const shared_ptr<T> &t) const;
+		bool operator != (const shared_ptr<T> &t) const;
+		bool operator < (const shared_ptr<T> &t) const;
+		bool operator > (const shared_ptr<T> &t) const;
+		bool operator <= (const shared_ptr<T> &t) const;
+		bool operator >= (const shared_ptr<T> &t) const;
 };
 
 template<class T>
@@ -185,15 +123,9 @@ inline shared_ptr_storage<T>::shared_ptr_storage(T *pointer) {
 	myPointer = pointer;
 	myCounter = 0;
 	myWeakCounter = 0;
-#ifdef __PTR_DEBUG__
-	std::cerr << "new storage " << ((myPointer == 0) ? "0" : "not 0") << "\n";
-#endif /* __PTR_DEBUG__ */
 }
 template<class T>
 inline shared_ptr_storage<T>::~shared_ptr_storage() {
-#ifdef __PTR_DEBUG__
-	std::cerr << "delete storage " << ((myPointer == 0) ? "0" : "not 0") << "\n";
-#endif /* __PTR_DEBUG__ */
 }
 template<class T>
 inline T* shared_ptr_storage<T>::pointer() const {
@@ -205,16 +137,10 @@ inline T& shared_ptr_storage<T>::content() const {
 }
 template<class T>
 inline void shared_ptr_storage<T>::addReference() {
-#ifdef __PTR_DEBUG__
-	std::cerr << "add reference\n";
-#endif /* __PTR_DEBUG__ */
 	++myCounter;
 }
 template<class T>
 inline void shared_ptr_storage<T>::removeReference() {
-#ifdef __PTR_DEBUG__
-	std::cerr << "remove reference\n";
-#endif /* __PTR_DEBUG__ */
 	--myCounter;
 	if (myCounter == 0) {
 		T* ptr = myPointer;
@@ -249,9 +175,11 @@ inline void shared_ptr<T>::attachStorage(shared_ptr_storage<T> *storage) {
 template<class T>
 inline void shared_ptr<T>::detachStorage() {
 	if (myStorage != 0) {
-		myStorage->removeReference();
-		if (myStorage->counter() == 0) {
+		if (myStorage->counter() == 1) {
+			myStorage->removeReference();
 			delete myStorage;
+		} else {
+			myStorage->removeReference();
 		}
 	}
 }
@@ -386,6 +314,112 @@ inline void weak_ptr<T>::detachStorage() {
 			delete myStorage;
 		}
 	}
+}
+
+template<class T>
+inline weak_ptr<T>::weak_ptr() {
+	myStorage = 0;
+}
+template<class T>
+inline weak_ptr<T>::weak_ptr(const shared_ptr<T> &t) {
+	attachStorage(t.myStorage);
+}
+template<class T>
+inline weak_ptr<T>::weak_ptr(const weak_ptr<T> &t) {
+	if (!t.isNull()) {
+		attachStorage(t.myStorage);
+	} else {
+		attachStorage(0);
+	}
+}
+template<class T>
+inline weak_ptr<T>::~weak_ptr() {
+	detachStorage();
+}
+
+template<class T>
+inline const weak_ptr<T> &weak_ptr<T>::operator = (const weak_ptr<T> &t) {
+	if (&t != this) {
+		detachStorage();
+		if (!t.isNull()) {
+			attachStorage(t.myStorage);
+		} else {
+			attachStorage(0);
+		}
+	}
+	return *this;
+}
+template<class T>
+inline const weak_ptr<T> &weak_ptr<T>::operator = (const shared_ptr<T> &t) {
+	detachStorage();
+	attachStorage(t.myStorage);
+	return *this;
+}
+
+template<class T>
+inline T* weak_ptr<T>::operator -> () const {
+	return (myStorage == 0) ? 0 : myStorage->pointer();
+}
+template<class T>
+inline T& weak_ptr<T>::operator * () const {
+	return myStorage->content();
+}
+template<class T>
+inline bool weak_ptr<T>::isNull() const {
+	return (myStorage == 0) || (myStorage->pointer() == 0);
+}
+template<class T>
+inline void weak_ptr<T>::reset() {
+	detachStorage();
+	attachStorage(0);
+}
+template<class T>
+inline bool weak_ptr<T>::operator == (const weak_ptr<T> &t) const {
+	return operator -> () == t.operator -> ();
+}
+template<class T>
+inline bool weak_ptr<T>::operator != (const weak_ptr<T> &t) const {
+	return !operator == (t);
+}
+template<class T>
+inline bool weak_ptr<T>::operator < (const weak_ptr<T> &t) const {
+	return operator -> () < t.operator -> ();
+}
+template<class T>
+inline bool weak_ptr<T>::operator > (const weak_ptr<T> &t) const {
+	return t.operator < (*this);
+}
+template<class T>
+inline bool weak_ptr<T>::operator <= (const weak_ptr<T> &t) const {
+	return !t.operator < (*this);
+}
+template<class T>
+inline bool weak_ptr<T>::operator >= (const weak_ptr<T> &t) const {
+	return !operator < (t);
+}
+template<class T>
+inline bool weak_ptr<T>::operator == (const shared_ptr<T> &t) const {
+	return operator -> () == t.operator -> ();
+}
+template<class T>
+inline bool weak_ptr<T>::operator != (const shared_ptr<T> &t) const {
+	return !operator == (t);
+}
+template<class T>
+inline bool weak_ptr<T>::operator < (const shared_ptr<T> &t) const {
+	return operator -> () < t.operator -> ();
+}
+template<class T>
+inline bool weak_ptr<T>::operator > (const shared_ptr<T> &t) const {
+	return t.operator < (*this);
+}
+template<class T>
+inline bool weak_ptr<T>::operator <= (const shared_ptr<T> &t) const {
+	return !t.operator < (*this);
+}
+template<class T>
+inline bool weak_ptr<T>::operator >= (const shared_ptr<T> &t) const {
+	return !operator < (t);
 }
 
 #endif /* __SHARED_PTR_H__ */
