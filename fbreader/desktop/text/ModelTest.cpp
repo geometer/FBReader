@@ -4,13 +4,13 @@
 #include <XMLOptions.h>
 #include <unix/ZLUnixFSManager.h>
 
-#include "../../common/model/Paragraph.h"
-#include "../../common/bookmodel/BookModel.h"
-#include "../../common/bookmodel/BookReader.h"
+#include "../../src/model/Paragraph.h"
+#include "../../src/bookmodel/BookModel.h"
+#include "../../src/bookmodel/BookReader.h"
 
-#include "../../common/collection/BookCollection.h"
-#include "../../common/fbreader/CollectionView.h"
-#include "../../common/fbreader/FBFileHandler.h"
+#include "../../src/collection/BookCollection.h"
+#include "../../src/fbreader/CollectionView.h"
+#include "../../src/fbreader/FBFileHandler.h"
 
 const std::string BookCollection::DefaultBookPath = "~/FBooks:~/Books";
 
