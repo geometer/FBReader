@@ -28,10 +28,12 @@
 
 #include <shared_ptr.h>
 #include <ZLOptions.h>
+#include <ZLTime.h>
 
 class ZLView;
 class ZLViewWidget;
 class ZLPaintContext;
+class ZLKeyBindings;
 
 class ZLApplicationBase {
 
@@ -74,6 +76,8 @@ public:
 	ZLBooleanOption ConfigAutoSavingOption;
 	ZLIntegerRangeOption ConfigAutoSaveTimeoutOption;
 
+	ZLIntegerRangeOption KeyDelayOption;
+
 public:
 
 	class Action {
@@ -83,6 +87,7 @@ public:
 		virtual bool isVisible();
 		virtual bool isEnabled();
 		void checkAndRun();
+		virtual bool useKeyDelay() const;
 
 	protected:
 		virtual void run() = 0;
@@ -323,8 +328,10 @@ public:
 	bool isActionVisible(int actionId) const;
 	bool isActionEnabled(int actionId) const;
 	void doAction(int actionId);
-	// TODO: move implementation from FBReader
-	virtual void doActionByKey(const std::string &key) = 0;
+
+	virtual ZLKeyBindings &keyBindings() = 0;	
+	void doActionByKey(const std::string &key);
+
 	virtual bool closeView();
 	virtual void openFile(const std::string &fileName);
 
@@ -345,6 +352,7 @@ private:
 	Menubar myMenubar;
 	ZLPaintContext *myContext;
 	class ZLApplicationWindow *myWindow;
+	ZLTime myLastKeyActionTime;
 
 friend class ZLApplicationWindow;
 };

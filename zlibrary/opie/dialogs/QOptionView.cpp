@@ -297,6 +297,15 @@ void KeyOptionView::_createItem() {
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
 
+void KeyOptionView::reset() {
+	if (myWidget == 0) {
+		return;
+	}
+	myCurrentKey.erase();
+	myLabel->hide();
+	myComboBox->hide();
+}
+
 void KeyOptionView::_show() {
 	myWidget->show();
 	myKeyButton->show();

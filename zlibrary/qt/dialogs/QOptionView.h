@@ -192,14 +192,15 @@ class KeyOptionView : public QObject, public QOptionView {
 Q_OBJECT
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
+	KeyOptionView(ZLKeyOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 	virtual ~KeyOptionView() {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
 	void _onAccept() const;
+	void reset();
 
 private slots:
 	void onValueChanged(int);

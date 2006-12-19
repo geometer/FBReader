@@ -197,7 +197,7 @@ private:
 class KeyOptionView : public GtkOptionView {
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	KeyOptionView(ZLKeyOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 
 	void setKey(const std::string &key);
 
@@ -207,6 +207,7 @@ private:
 	void _hide();
 	void _onAccept() const;
 	void onValueChanged();
+	void reset();
 
 private:
 	GtkWidget *myWidget, *myKeyButton, *myLabel;

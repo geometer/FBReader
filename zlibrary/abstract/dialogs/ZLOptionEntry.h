@@ -174,7 +174,6 @@ public:
 	virtual void onAccept() = 0;
 	virtual int actionIndex(const std::string &key) = 0;
 	virtual void onValueChanged(const std::string &key, int index) = 0;
-	void reset();
 
 protected:
 	ZLOptionKind kind() const;

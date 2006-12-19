@@ -209,6 +209,10 @@ bool FBReader::ScrollingAction::isEnabled() {
 		myFBReader.EnableFingerScrollingOption.value();
 }
 
+bool FBReader::ScrollingAction::useKeyDelay() const {
+	return false;
+}
+
 void FBReader::ScrollingAction::run() {
 	int delay = myFBReader.myLastScrollingTime.millisecondsTo(ZLTime());
 	TextView *textView = (TextView*)myFBReader.currentView();

@@ -19,6 +19,7 @@
  */
 
 #include "ZLApplication.h"
+#include "ZLKeyBindings.h"
 #include "../library/ZLibrary.h"
 #include "../view/ZLView.h"
 #include "../view/ZLPaintContext.h"
@@ -41,6 +42,7 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, KEYBOARD, FULL_CONTROL, false),
 	ConfigAutoSavingOption(ZLOption::CONFIG_CATEGORY, CONFIG, AUTO_SAVE, true),
 	ConfigAutoSaveTimeoutOption(ZLOption::CONFIG_CATEGORY, CONFIG, TIMEOUT, 1, 6000, 10),
+	KeyDelayOption(ZLOption::CONFIG_CATEGORY, "Options", "KeyDelay", 0, 5000, 250),
 	myViewWidget(0),
 	myWindow(0) {
 	myContext = ZLibrary::createContext();
@@ -153,8 +155,8 @@ shared_ptr<ZLApplication::Action> ZLApplication::action(int actionId) const {
 }
 
 bool ZLApplication::isActionVisible(int actionId) const {
-	shared_ptr<Action> _action = action(actionId);
-	return !_action.isNull() && _action->isVisible();
+	shared_ptr<Action> a = action(actionId);
+	return !a.isNull() && a->isVisible();
 }
 
 bool ZLApplication::isActionEnabled(int actionId) const {
@@ -212,6 +214,10 @@ bool ZLApplication::Action::isVisible() {
 
 bool ZLApplication::Action::isEnabled() {
 	return isVisible();
+}
+
+bool ZLApplication::Action::useKeyDelay() const {
+	return true;
 }
 
 void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {
@@ -286,5 +292,15 @@ void ZLApplication::Toolbar::ButtonItem::setButtonGroup(shared_ptr<ButtonGroup> 
 	myButtonGroup = group;
 	if (!myButtonGroup.isNull()) {
 		myButtonGroup->Items.insert(this);
+	}
+}
+
+void ZLApplication::doActionByKey(const std::string &key) {
+	shared_ptr<Action> a = action(keyBindings().getBinding(key));
+	if (!a.isNull() &&
+			(!a->useKeyDelay() ||
+			 (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value()))) {
+		a->checkAndRun();
+		myLastKeyActionTime = ZLTime();
 	}
 }

@@ -129,7 +129,7 @@ Q_OBJECT
 public:
 	StringOptionView(ZLStringOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
@@ -168,7 +168,7 @@ Q_OBJECT
 public:
 	ComboOptionView(ZLComboOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
@@ -191,14 +191,14 @@ class KeyOptionView : public QObject, public QOptionView {
 Q_OBJECT
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn) {}
-	virtual ~KeyOptionView() {}
+	KeyOptionView(ZLKeyOptionEntry *option, QOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : QOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 
-protected:
+private:
 	void _createItem();
 	void _show();
 	void _hide();
 	void _onAccept() const;
+	void reset();
 
 private slots:
 	void onValueChanged(int);

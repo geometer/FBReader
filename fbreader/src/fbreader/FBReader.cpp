@@ -77,7 +77,6 @@ FBReader::FBReader(const std::string& bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
 	StoreContentsPositionOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "StoreContentsPosition", false),
-	KeyDelayOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "KeyDelay", 0, 5000, 250),
 	LargeScrollingOptions(
 		OPTIONS, DELAY, 250,
 		LARGE_SCROLLING, MODE, TextView::NO_OVERLAPPING,
@@ -111,7 +110,12 @@ FBReader::FBReader(const std::string& bookToOpen) :
 	SearchIgnoreCaseOption(FBOptions::SEARCH_CATEGORY, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
-	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", "") {
+	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
+	UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false),
+	myBindings0("Keys"),
+	myBindings90("Keys90"),
+	myBindings180("Keys180"),
+	myBindings270("Keys270") {
 
 	myModel = 0;
 	myBookTextView = new BookTextView(*this, context());
@@ -348,22 +352,6 @@ void FBReader::addBookSlot() {
 	}
 }
 
-bool FBReader::isScrollingAction(int code) {
-	switch (code) {
-		case ACTION_LARGE_SCROLL_FORWARD:
-		case ACTION_LARGE_SCROLL_BACKWARD:
-		case ACTION_SMALL_SCROLL_FORWARD:
-		case ACTION_SMALL_SCROLL_BACKWARD:
-		case ACTION_MOUSE_SCROLL_FORWARD:
-		case ACTION_MOUSE_SCROLL_BACKWARD:
-		case ACTION_FINGER_TAP_SCROLL_FORWARD:
-		case ACTION_FINGER_TAP_SCROLL_BACKWARD:
-			return true;
-		default:
-			return false;
-	}
-}
-
 class RebuildCollectionRunnable : public ZLRunnable {
 
 public:
@@ -471,16 +459,6 @@ void FBReader::clearTextCaches() {
 	myRecentBooksView->clearCaches();
 }
 
-void FBReader::doActionByKey(const std::string &key) {
-	int code = keyBindings(myViewWidget->rotation()).getBinding(key);
-	if (code != 0) {
-		if (isScrollingAction(code) || (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value())) {
-			doAction(code);
-			myLastKeyActionTime = ZLTime();
-		}
-	}
-}
-
 void FBReader::searchSlot() {
 	ZLDialog *searchDialog = ZLDialogManager::instance().createDialog("Text search");
 
@@ -513,4 +491,23 @@ void FBReader::searchSlot() {
 	}
 
 	delete searchDialog;
+}
+
+ZLKeyBindings &FBReader::keyBindings() {
+	return UseSeparateBindingsOption.value() ?
+		keyBindings(myViewWidget->rotation()) : myBindings0;
+}
+
+ZLKeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle) {
+	switch (angle) {
+		case ZLViewWidget::DEGREES0:
+		default:
+			return myBindings0;
+		case ZLViewWidget::DEGREES90:
+			return myBindings90;
+		case ZLViewWidget::DEGREES180:
+			return myBindings180;
+		case ZLViewWidget::DEGREES270:
+			return myBindings270;
+	}
 }

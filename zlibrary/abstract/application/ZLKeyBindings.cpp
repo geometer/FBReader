@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -21,17 +20,17 @@
 
 #include <ZLXMLReader.h>
 #include <ZLStringUtil.h>
-
-#include "FBReader.h"
+#include <ZLApplication.h>
+#include <ZLKeyBindings.h>
 
 static const std::string BINDINGS_NUMBER = "Number";
 static const std::string BINDED_KEY = "Key";
 static const std::string BINDED_ACTION = "Action";
 
-class KeyBindingsReader : public ZLXMLReader {
+class ZLKeyBindingsReader : public ZLXMLReader {
 
 public:
-	KeyBindingsReader(std::map<std::string,int> &keymap) : myKeymap(keymap) {}
+	ZLKeyBindingsReader(std::map<std::string,int> &keymap) : myKeymap(keymap) {}
 
 	void startElementHandler(const char *tag, const char **attributes);
 
@@ -41,7 +40,7 @@ private:
 	std::map<std::string,int> &myKeymap;
 };
 
-void KeyBindingsReader::startElementHandler(const char *tag, const char **attributes) {
+void ZLKeyBindingsReader::startElementHandler(const char *tag, const char **attributes) {
 	static const std::string BINDING = "binding";
 
 	if (BINDING == tag) {
@@ -55,54 +54,34 @@ void KeyBindingsReader::startElementHandler(const char *tag, const char **attrib
 
 static const std::string KeymapFile = "keymap.xml";
 
-void KeyBindingsReader::readBindings() {
+void ZLKeyBindingsReader::readBindings() {
 	readDocument(ZLApplication::DefaultFilesPathPrefix() + KeymapFile);
 }
 
-FullKeyBindings::FullKeyBindings() : UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false), myBindings0("Keys"), myBindings90("Keys90"), myBindings180("Keys180"), myBindings270("Keys270") {
-}
-
-KeyBindings &FullKeyBindings::getBindings(ZLViewWidget::Angle angle, bool force) {
-	if (!force && !UseSeparateBindingsOption.value()) {
-		return myBindings0;
-	}
-	switch (angle) {
-		case ZLViewWidget::DEGREES0:
-		default:
-			return myBindings0;
-		case ZLViewWidget::DEGREES90:
-			return myBindings90;
-		case ZLViewWidget::DEGREES180:
-			return myBindings180;
-		case ZLViewWidget::DEGREES270:
-			return myBindings270;
-	}
-}
-
-KeyBindings::KeyBindings(const std::string &optionGroupName) : myOptionGroupName(optionGroupName) {
+ZLKeyBindings::ZLKeyBindings(const std::string &name) : myName(name) {
 	loadDefaultBindings();
 	loadCustomBindings();
-	myChanged = false;
+	myIsChanged = false;
 }
 
-void KeyBindings::loadDefaultBindings() {
+void ZLKeyBindings::loadDefaultBindings() {
 	std::map<std::string,int> keymap;
-	KeyBindingsReader(keymap).readBindings();
+	ZLKeyBindingsReader(keymap).readBindings();
 	for (std::map<std::string,int>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
 		bindKey(it->first, it->second);
 	}
 }
 
-void KeyBindings::loadCustomBindings() {
-	int size = ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).value();
+void ZLKeyBindings::loadCustomBindings() {
+	int size = ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myName, BINDINGS_NUMBER, 0, 256, 0).value();
 	for (int i = 0; i < size; ++i) {
 		std::string key = BINDED_KEY;
 		ZLStringUtil::appendNumber(key, i);
-		std::string keyValue = ZLStringOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, key, "").value();
+		std::string keyValue = ZLStringOption(ZLOption::CONFIG_CATEGORY, myName, key, "").value();
 		if (!keyValue.empty()) {
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, i);
-			int actionValue = ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, action, -1).value();
+			int actionValue = ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myName, action, -1).value();
 			if (actionValue != -1) {
 				bindKey(keyValue, actionValue);
 			}
@@ -110,14 +89,14 @@ void KeyBindings::loadCustomBindings() {
 	}
 }
 
-void KeyBindings::saveCustomBindings() {
-	if (!myChanged) {
+void ZLKeyBindings::saveCustomBindings() {
+	if (!myIsChanged) {
 		return;
 	}
 	std::map<std::string,int> keymap;
-	KeyBindingsReader(keymap).readBindings();
+	ZLKeyBindingsReader(keymap).readBindings();
 
-	ZLOption::clearGroup(myOptionGroupName);
+	ZLOption::clearGroup(myName);
 	int counter = 0;
 	for (std::map<std::string,int>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); ++it) {
 		std::map<std::string,int>::const_iterator original = keymap.find(it->first);
@@ -127,24 +106,24 @@ void KeyBindings::saveCustomBindings() {
 			ZLStringUtil::appendNumber(key, counter);
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, counter);
-			ZLStringOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, key, "").setValue(it->first);
-			ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, action, -1).setValue(it->second);
+			ZLStringOption(ZLOption::CONFIG_CATEGORY, myName, key, "").setValue(it->first);
+			ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myName, action, -1).setValue(it->second);
 			++counter;
 		}
 	}
-	ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myOptionGroupName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
+	ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
 }
 
-KeyBindings::~KeyBindings() {
+ZLKeyBindings::~ZLKeyBindings() {
 	saveCustomBindings();
 }
 
-void KeyBindings::bindKey(const std::string &key, int code) {
+void ZLKeyBindings::bindKey(const std::string &key, int code) {
 	myBindingsMap[key] = code;
-	myChanged = true;
+	myIsChanged = true;
 }
 
-int KeyBindings::getBinding(const std::string &key) {
+int ZLKeyBindings::getBinding(const std::string &key) {
 	std::map<std::string,int>::const_iterator it = myBindingsMap.find(key);
 	return (it != myBindingsMap.end()) ? it->second : 0;
 }

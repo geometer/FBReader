@@ -18,37 +18,41 @@
  * 02110-1301, USA.
  */
 
-#include "ZLOptionEntry.h"
+#ifndef __ZLSIMPLEKEYOPTIONENTRY_H__
+#define __ZLSIMPLEKEYOPTIONENTRY_H__
 
-ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
-	myOption->setView(this);
-}
+#include <map>
+#include <vector>
 
-ZLOptionView::~ZLOptionView() {
-	delete myOption;
-}
+#include <ZLOptionEntry.h>
 
-void ZLOptionEntry::setVisible(bool visible) {
-	myIsVisible = visible;
-	if (myView != 0) {
-		myView->setVisible(visible);
-	}
-}
+class ZLKeyBindings;
 
-void ZLOptionEntry::setActive(bool active) {
-	myIsActive = active;
-	if (myView != 0) {
-		myView->setActive(active);
-	}
-}
+class ZLSimpleKeyOptionEntry : public ZLKeyOptionEntry {
 
-void ZLComboOptionEntry::onStringValueSelected(const std::string &value) {
-	const std::vector<std::string> valuesVector = values();
-	int index = 0;
-	for (std::vector<std::string>::const_iterator it = valuesVector.begin(); it != valuesVector.end(); ++it, ++index) {
-		if (value == *it) {
-			onValueSelected(index);
-			break;
-		}
-	}
-}
+public:
+	class CodeIndexBimap {
+
+	public:
+		void insert(int code);
+		int indexByCode(int code) const;
+		int codeByIndex(int index) const;
+
+	private:
+		std::vector<int> CodeByIndex;
+		std::map<int,int> IndexByCode;
+	};
+
+public:
+	ZLSimpleKeyOptionEntry(ZLKeyBindings &bindings);
+	void onAccept();
+	int actionIndex(const std::string &key);
+	void onValueChanged(const std::string &key, int index);
+	virtual const CodeIndexBimap &codeIndexBimap() const = 0;
+
+private:
+	ZLKeyBindings &myBindings;
+	std::map<std::string,int> myChangedCodes;
+};
+
+#endif /* __ZLSIMPLEKEYOPTIONENTRY_H__ */

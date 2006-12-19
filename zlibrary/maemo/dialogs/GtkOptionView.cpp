@@ -456,6 +456,15 @@ void KeyOptionView::setKey(const std::string &key) {
 	}
 }
 
+void KeyOptionView::reset() {
+	if (myWidget == 0) {
+		return;
+	}
+	myCurrentKey.erase();
+	gtk_widget_hide(myLabel);
+	gtk_widget_hide(GTK_WIDGET(myComboBox));
+}
+
 void KeyOptionView::_show() {
 	gtk_widget_show(myWidget);
 	gtk_widget_show(myKeyButton);

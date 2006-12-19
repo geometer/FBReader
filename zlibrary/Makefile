@@ -2,7 +2,9 @@ ROOTDIR = $(PWD)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-TARGET = libzlibrary-$(UI_TYPE).so.0
+VERSION = $(shell cat VERSION)
+
+TARGET = libzlibrary-$(UI_TYPE).so.$(VERSION)
 TARGET_SHORTNAME = libzlibrary-$(UI_TYPE).so
 
 SUBDIRS_ALL = abstract/library abstract/message abstract/runnable abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/optionEntries abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/application abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem unix/time

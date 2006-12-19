@@ -29,6 +29,7 @@
 #include <ZLTime.h>
 #include <ZLView.h>
 #include <ZLApplication.h>
+#include <ZLKeyBindings.h>
 
 #include "../description/BookDescription.h"
 #include "../dictionary/Dictionary.h"
@@ -40,46 +41,6 @@ class ContentsView;
 class CollectionView;
 class RecentBooksView;
 class ZLViewWidget;
-
-class KeyBindings {
-
-public:
-	KeyBindings(const std::string &optionGroupName);
-	~KeyBindings();
-
-	void bindKey(const std::string &key, int code);
-	int getBinding(const std::string &key);
-
-private:
-	void loadDefaultBindings();
-	void loadCustomBindings();
-
-public:
-	void saveCustomBindings();
-
-private:
-	const std::string myOptionGroupName;
-	std::map<std::string,int> myBindingsMap;
-	bool myChanged;
-
-friend class FullKeyBindings;
-};
-
-class FullKeyBindings {
-
-public:
-	ZLBooleanOption UseSeparateBindingsOption;
-
-public:
-	FullKeyBindings();
-	KeyBindings &getBindings(ZLViewWidget::Angle angle, bool force);
-
-private:
-	KeyBindings myBindings0;
-	KeyBindings myBindings90;
-	KeyBindings myBindings180;
-	KeyBindings myBindings270;
-};
 
 enum ActionCode {
 	// please, don't change these numbers
@@ -152,7 +113,6 @@ public:
 public:
 	ZLBooleanOption QuitOnCancelOption;
 	ZLBooleanOption StoreContentsPositionOption;
-	ZLIntegerRangeOption KeyDelayOption;
 
 	ScrollingOptions LargeScrollingOptions;
 	ScrollingOptions SmallScrollingOptions;
@@ -165,6 +125,8 @@ public:
 	ZLBooleanOption SearchInWholeTextOption;
 	ZLBooleanOption SearchThisSectionOnlyOption;
 	ZLStringOption SearchPatternOption;
+
+	ZLBooleanOption UseSeparateBindingsOption;
 
 private:
 	class FBAction : public Action {
@@ -308,6 +270,7 @@ private:
 	public:
 		ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward);
 		bool isEnabled();
+		bool useKeyDelay() const;
 		void run();
 
 	private:
@@ -373,15 +336,11 @@ private:
 	void optionsSlot();
 	void addBookSlot();
 
-	void doActionByKey(const std::string &key);
-
 	BookDescriptionPtr createDescription(const std::string& fileName) const;
 
 	bool runBookInfoDialog(const std::string &fileName);
 
 	void clearTextCaches();
-
-	bool isScrollingAction(int code);
 
 	void restorePreviousMode();
 
@@ -389,8 +348,8 @@ private:
 	void openFile(const std::string &fileName);
 
 public:
-	ZLBooleanOption &useSeparateBindings();
-	KeyBindings &keyBindings(ZLViewWidget::Angle angle, bool force = false);
+	ZLKeyBindings &keyBindings();
+	ZLKeyBindings &keyBindings(ZLViewWidget::Angle angle);
 	const DictionaryCollection &dictionaryCollection() const;
 
 	void tryShowFootnoteView(const std::string &id);
@@ -414,25 +373,19 @@ private:
 	RecentBooksView *myRecentBooksView;	
 
 	ZLTime myLastScrollingTime;
-	ZLTime myLastKeyActionTime;
 
 	BookModel *myModel;
 
-	FullKeyBindings myKeyBindings;
+	ZLKeyBindings myBindings0;
+	ZLKeyBindings myBindings90;
+	ZLKeyBindings myBindings180;
+	ZLKeyBindings myBindings270;
 
 	DictionaryCollection myDictionaryCollection;
 
 friend class OptionsDialog;
 friend class FBView;
 };
-
-inline ZLBooleanOption &FBReader::useSeparateBindings() {
-	return myKeyBindings.UseSeparateBindingsOption;
-}
-
-inline KeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle, bool force) {
-	return myKeyBindings.getBindings(angle, force);
-}
 
 inline const DictionaryCollection &FBReader::dictionaryCollection() const {
 	return myDictionaryCollection;

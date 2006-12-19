@@ -32,7 +32,7 @@ public:
 	void onAccept(const std::string &value);
 
 private:
-	std::string myName;
+	const std::string myName;
 	ZLStringOption &myOption;
 };
 
@@ -45,7 +45,7 @@ public:
 	void onAccept(bool state);
 
 private:
-	std::string myName;
+	const std::string myName;
 	ZLBooleanOption &myOption;
 };
 
@@ -61,7 +61,7 @@ public:
 	void onAccept(int value);
 
 private:
-	std::string myName;
+	const std::string myName;
 	ZLIntegerRangeOption &myOption;
 	int myStep;
 };
@@ -77,19 +77,20 @@ public:
 
 private:
 	static std::vector<std::string> ourValues;
-	std::string myName;
+	const std::string myName;
 	ZLBoolean3Option &myOption;
 };
 
 class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
 
 public:
-	ZLSimpleColorOptionEntry(ZLColorOption &option);
+	ZLSimpleColorOptionEntry(const std::string &name, ZLColorOption &option);
 	const std::string &name() const;
 	const ZLColor color() const;
 	void onAccept(ZLColor color);
 
 private:
+	const std::string myName;
 	ZLColorOption &myOption; 
 };
 

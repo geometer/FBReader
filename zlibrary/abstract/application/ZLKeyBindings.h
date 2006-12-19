@@ -18,37 +18,32 @@
  * 02110-1301, USA.
  */
 
-#include "ZLOptionEntry.h"
+#ifndef __ZLKEYBINDINGS_H__
+#define __ZLKEYBINDINGS_H__
 
-ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
-	myOption->setView(this);
-}
+#include <map>
+#include <string>
 
-ZLOptionView::~ZLOptionView() {
-	delete myOption;
-}
+class ZLKeyBindings {
 
-void ZLOptionEntry::setVisible(bool visible) {
-	myIsVisible = visible;
-	if (myView != 0) {
-		myView->setVisible(visible);
-	}
-}
+public:
+	ZLKeyBindings(const std::string &name);
+	~ZLKeyBindings();
 
-void ZLOptionEntry::setActive(bool active) {
-	myIsActive = active;
-	if (myView != 0) {
-		myView->setActive(active);
-	}
-}
+	void bindKey(const std::string &key, int code);
+	int getBinding(const std::string &key);
 
-void ZLComboOptionEntry::onStringValueSelected(const std::string &value) {
-	const std::vector<std::string> valuesVector = values();
-	int index = 0;
-	for (std::vector<std::string>::const_iterator it = valuesVector.begin(); it != valuesVector.end(); ++it, ++index) {
-		if (value == *it) {
-			onValueSelected(index);
-			break;
-		}
-	}
-}
+private:
+	void loadDefaultBindings();
+	void loadCustomBindings();
+
+public:
+	void saveCustomBindings();
+
+private:
+	const std::string myName;
+	std::map<std::string,int> myBindingsMap;
+	bool myIsChanged;
+};
+
+#endif /* __KEYBINDINGS_H__ */

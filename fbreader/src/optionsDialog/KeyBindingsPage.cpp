@@ -22,6 +22,7 @@
 #include <ZLOptionsDialog.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
+#include <optionEntries/ZLSimpleKeyOptionEntry.h>
 
 #include "KeyBindingsPage.h"
 
@@ -45,11 +46,27 @@ void KeyboardControlEntry::onStateChanged(bool state) {
 	myFBReader.grabAllKeys(state);
 }
 
-class FBReaderKeyOptionEntry : public ZLKeyOptionEntry {
+class SingleKeyOptionEntry : public ZLSimpleKeyOptionEntry {
 
 public:
-	FBReaderKeyOptionEntry(FBReader &fbreader);
-	~FBReaderKeyOptionEntry();
+	SingleKeyOptionEntry(const CodeIndexBimap &bimap, ZLKeyBindings &bindings);
+	const CodeIndexBimap &codeIndexBimap() const;
+
+private:
+	const CodeIndexBimap &myBimap;
+};
+
+SingleKeyOptionEntry::SingleKeyOptionEntry(const CodeIndexBimap &bimap, ZLKeyBindings &bindings) : ZLSimpleKeyOptionEntry(bindings), myBimap(bimap) {
+}
+
+const ZLSimpleKeyOptionEntry::CodeIndexBimap &SingleKeyOptionEntry::codeIndexBimap() const {
+	return myBimap;
+}
+
+class MultiKeyOptionEntry : public ZLKeyOptionEntry {
+
+public:
+	MultiKeyOptionEntry(FBReader &fbreader);
 	void onAccept();
 	int actionIndex(const std::string &key);
 	void onValueChanged(const std::string &key, int index);
@@ -57,33 +74,30 @@ public:
 	void setOrientation(ZLViewWidget::Angle);
 
 private:
-	void onAcceptPart(ZLViewWidget::Angle);
-	void addAction(ActionCode code, const std::string &name);
-	std::map<std::string,ActionCode> &changedCodes();
-	std::map<std::string,ActionCode> &changedCodes(ZLViewWidget::Angle angle);
+	void addAction(int code, const std::string &name);
 
 private:
-	FBReader &myFBReader;
-	std::vector<ActionCode> myCodeByIndex;
-	std::map<ActionCode,int> myIndexByCode;
+	ZLSimpleKeyOptionEntry::CodeIndexBimap myBimap;
 
-	ZLViewWidget::Angle myOrientation;
-
-	std::map<std::string,ActionCode> myChangedCodes0;
-	std::map<std::string,ActionCode> myChangedCodes90;
-	std::map<std::string,ActionCode> myChangedCodes180;
-	std::map<std::string,ActionCode> myChangedCodes270;
-
-	bool myIsChanged;
+	SingleKeyOptionEntry myEntry0;
+	SingleKeyOptionEntry myEntry90;
+	SingleKeyOptionEntry myEntry180;
+	SingleKeyOptionEntry myEntry270;
+	SingleKeyOptionEntry *myCurrentEntry;
 };
 
-void FBReaderKeyOptionEntry::addAction(ActionCode code, const std::string &name) {
-	myIndexByCode[code] = myCodeByIndex.size();
-	myCodeByIndex.push_back(code);
+void MultiKeyOptionEntry::addAction(int code, const std::string &name) {
+	myBimap.insert(code);
 	addActionName(name);
 }
 
-FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOptionEntry("Key settings"), myFBReader(fbreader), myOrientation(ZLViewWidget::DEGREES0), myIsChanged(false) {
+MultiKeyOptionEntry::MultiKeyOptionEntry(FBReader &fbreader) :
+	ZLKeyOptionEntry("Key settings"),
+	myEntry0(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES0)),
+	myEntry90(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES90)),
+	myEntry180(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES180)),
+	myEntry270(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES270)),
+	myCurrentEntry(&myEntry0) {
 	addAction(NO_ACTION, "None");
 
 	// switch view
@@ -124,68 +138,45 @@ FBReaderKeyOptionEntry::FBReaderKeyOptionEntry(FBReader &fbreader) : ZLKeyOption
 	// quit
 	addAction(ACTION_CANCEL, "Cancel");
 	addAction(ACTION_QUIT, "Quit");
-
-	setOrientation(ZLViewWidget::DEGREES0);
 }
 
-void FBReaderKeyOptionEntry::setOrientation(ZLViewWidget::Angle angle) {
-	myOrientation = angle;
-	reset();
-}
-
-std::map<std::string,ActionCode> &FBReaderKeyOptionEntry::changedCodes() {
-	return changedCodes(myOrientation);
-}
-
-std::map<std::string,ActionCode> &FBReaderKeyOptionEntry::changedCodes(ZLViewWidget::Angle angle) {
+void MultiKeyOptionEntry::setOrientation(ZLViewWidget::Angle angle) {
 	switch (angle) {
 		case ZLViewWidget::DEGREES0:
-		default:
-			return myChangedCodes0;
+			myCurrentEntry = &myEntry0;
+			break;
 		case ZLViewWidget::DEGREES90:
-			return myChangedCodes90;
+			myCurrentEntry = &myEntry90;
+			break;
 		case ZLViewWidget::DEGREES180:
-			return myChangedCodes180;
+			myCurrentEntry = &myEntry180;
+			break;
 		case ZLViewWidget::DEGREES270:
-			return myChangedCodes270;
+			myCurrentEntry = &myEntry270;
+			break;
 	}
+	resetView();
 }
 
-FBReaderKeyOptionEntry::~FBReaderKeyOptionEntry() {
+void MultiKeyOptionEntry::onAccept() {
+	myEntry0.onAccept();
+	myEntry90.onAccept();
+	myEntry180.onAccept();
+	myEntry270.onAccept();
 }
 
-void FBReaderKeyOptionEntry::onAcceptPart(ZLViewWidget::Angle angle) {
-	KeyBindings &bindings = myFBReader.keyBindings(angle, true);
-	std::map<std::string,ActionCode> &codes = changedCodes(angle);
-	for (std::map<std::string,ActionCode>::const_iterator it = codes.begin(); it != codes.end(); ++it) {
-		bindings.bindKey(it->first, it->second);
-	}
-	bindings.saveCustomBindings();
+int MultiKeyOptionEntry::actionIndex(const std::string &key) {
+	return myCurrentEntry->actionIndex(key);
 }
 
-void FBReaderKeyOptionEntry::onAccept() {
-	if (myIsChanged) {
-		onAcceptPart(ZLViewWidget::DEGREES0);
-		onAcceptPart(ZLViewWidget::DEGREES90);
-		onAcceptPart(ZLViewWidget::DEGREES180);
-		onAcceptPart(ZLViewWidget::DEGREES270);
-	}
-}
-
-int FBReaderKeyOptionEntry::actionIndex(const std::string &key) {
-	std::map<std::string,ActionCode>::const_iterator it = changedCodes().find(key);
-	return myIndexByCode[(it != changedCodes().end()) ? it->second : (ActionCode)myFBReader.keyBindings(myOrientation, true).getBinding(key)];
-}
-
-void FBReaderKeyOptionEntry::onValueChanged(const std::string &key, int index) {
-	changedCodes()[key] = myCodeByIndex[index];
-	myIsChanged = true;
+void MultiKeyOptionEntry::onValueChanged(const std::string &key, int index) {
+	myCurrentEntry->onValueChanged(key, index);
 }
 
 class OrientationEntry : public ZLComboOptionEntry {
 
 public:
-	OrientationEntry(FBReaderKeyOptionEntry &keyEntry);
+	OrientationEntry(MultiKeyOptionEntry &keyEntry);
 	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -193,10 +184,10 @@ public:
 	void onAccept(const std::string &value);
 
 private:
-	FBReaderKeyOptionEntry &myKeyEntry;
+	MultiKeyOptionEntry &myKeyEntry;
 };
 
-OrientationEntry::OrientationEntry(FBReaderKeyOptionEntry &keyEntry) : myKeyEntry(keyEntry) {
+OrientationEntry::OrientationEntry(MultiKeyOptionEntry &keyEntry) : myKeyEntry(keyEntry) {
 }
 
 const std::string &OrientationEntry::name() const {
@@ -204,37 +195,29 @@ const std::string &OrientationEntry::name() const {
 	return _name;
 }
 
-static const std::string ROTATION_0 = "0 Degrees";
-static const std::string ROTATION_90 = "90 Degrees Counterclockwise";
-static const std::string ROTATION_180 = "180 Degrees";
-static const std::string ROTATION_270 = "90 Degrees Clockwise";
-
 const std::string &OrientationEntry::initialValue() const {
-	return ROTATION_0;
+	return values()[0];
 }
 
 const std::vector<std::string> &OrientationEntry::values() const {
 	static std::vector<std::string> _values;
 	if (_values.empty()) {
-		_values.push_back(ROTATION_0);
-		_values.push_back(ROTATION_90);
-		_values.push_back(ROTATION_180);
-		_values.push_back(ROTATION_270);
+		_values.push_back("0 Degrees");
+		_values.push_back("90 Degrees Counterclockwise");
+		_values.push_back("180 Degrees");
+		_values.push_back("90 Degrees Clockwise");
 	}
 	return _values;
 }
 
 void OrientationEntry::onValueSelected(int index) {
-	const std::string &value = values()[index];
-	if (value == ROTATION_0) {
-		myKeyEntry.setOrientation(ZLViewWidget::DEGREES0);
-	} else if (value == ROTATION_90) {
-		myKeyEntry.setOrientation(ZLViewWidget::DEGREES90);
-	} else if (value == ROTATION_180) {
-		myKeyEntry.setOrientation(ZLViewWidget::DEGREES180);
-	} else if (value == ROTATION_270) {
-		myKeyEntry.setOrientation(ZLViewWidget::DEGREES270);
-	}
+	static ZLViewWidget::Angle angles[] = {
+		ZLViewWidget::DEGREES0,
+		ZLViewWidget::DEGREES90,
+		ZLViewWidget::DEGREES180,
+		ZLViewWidget::DEGREES270
+	};
+	myKeyEntry.setOrientation(angles[index]);
 }
 
 void OrientationEntry::onAccept(const std::string&) {
@@ -243,28 +226,28 @@ void OrientationEntry::onAccept(const std::string&) {
 class UseSeparateOptionsEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	UseSeparateOptionsEntry(FBReader &fbreader, FBReaderKeyOptionEntry &keyEntry, OrientationEntry &orientationEntry);
+	UseSeparateOptionsEntry(FBReader &fbreader, ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry);
 	void onStateChanged(bool state);
 
 private:
-	FBReaderKeyOptionEntry &myKeyEntry;
+	ZLOptionEntry &myKeyEntry;
 	OrientationEntry &myOrientationEntry;
 };
 
-UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, FBReaderKeyOptionEntry &keyEntry, OrientationEntry &orientationEntry) : ZLSimpleBooleanOptionEntry("Keybindings Depend On Orientation", fbreader.useSeparateBindings()), myKeyEntry(keyEntry), myOrientationEntry(orientationEntry) {
+UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry) : ZLSimpleBooleanOptionEntry("Keybindings Depend On Orientation", fbreader.UseSeparateBindingsOption), myKeyEntry(keyEntry), myOrientationEntry(orientationEntry) {
 }
 
 void UseSeparateOptionsEntry::onStateChanged(bool state) {
 	ZLSimpleBooleanOptionEntry::onStateChanged(state);
 	myOrientationEntry.setVisible(state);
-	myKeyEntry.reset();
+	myKeyEntry.resetView();
 }
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
 	if (fbreader.isFullKeyboardControlSupported()) {
 		dialogTab.addOption(new KeyboardControlEntry(fbreader));
 	}
-	FBReaderKeyOptionEntry *keyEntry = new FBReaderKeyOptionEntry(fbreader);
+	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(fbreader);
 	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
 	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(fbreader, *keyEntry, *orientationEntry);
 	dialogTab.addOption(useSeparateBindingsEntry);
