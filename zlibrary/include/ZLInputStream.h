@@ -1,1 +1,1 @@
-../abstract/filesystem/ZLInputStream.h
+../src/abstract/filesystem/ZLInputStream.h

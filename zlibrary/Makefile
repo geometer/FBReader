@@ -7,46 +7,46 @@ VERSION = $(shell cat VERSION)
 TARGET = libzlibrary-$(UI_TYPE).so.$(VERSION)
 TARGET_SHORTNAME = libzlibrary-$(UI_TYPE).so
 
-SUBDIRS_ALL = abstract/library abstract/message abstract/runnable abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/optionEntries abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/application abstract/view abstract/image abstract/xmlconfig desktop/dialogs unix/filesystem unix/time
-QTSUBDIRS_ALL = qt/time qtopia/message qtopia/application qtopia/dialogs qtopia/view qt/dialogs qt/view qt/image qt/util opie/view opie/dialogs opie/application qt/application-desktop qt/application-pdaxrom opie/library qt/library-desktop qt/library-pdaxrom qtopia/library
-GTKSUBDIRS_ALL = gtk/time gtk/dialogs gtk/view-desktop gtk/view-pdaxrom gtk/image gtk/util maemo/dialogs maemo/view gpe/dialogs gpe/view gtk/application-desktop gtk/application-pdaxrom maemo/application-maemo maemo/application-maemo2 gpe/application maemo/library gtk/library-desktop gtk/library-pdaxrom gpe/library
+SUBDIRS_ALL = src/abstract/library src/abstract/message src/abstract/runnable src/abstract/time src/abstract/dialogs src/abstract/filesystem src/abstract/filesystem/zip src/abstract/filesystem/bzip2 src/abstract/filesystem/tar src/abstract/options src/abstract/optionEntries src/abstract/util src/abstract/xml src/abstract/xml/expat src/abstract/encoding src/abstract/application src/abstract/view src/abstract/image src/abstract/xmlconfig src/desktop/dialogs src/unix/filesystem src/unix/time
+QTSUBDIRS_ALL = src/qt/time src/qtopia/message src/qtopia/application src/qtopia/dialogs src/qtopia/view src/qt/dialogs src/qt/view src/qt/image src/qt/util src/opie/view src/opie/dialogs src/opie/application src/qt/application-desktop src/qt/application-pdaxrom src/opie/library src/qt/library-desktop src/qt/library-pdaxrom src/qtopia/library
+GTKSUBDIRS_ALL = src/gtk/time src/gtk/dialogs src/gtk/view-desktop src/gtk/view-pdaxrom src/gtk/image src/gtk/util src/maemo/dialogs src/maemo/view src/gpe/dialogs src/gpe/view src/gtk/application-desktop src/gtk/application-pdaxrom src/maemo/application-maemo src/maemo/application-maemo2 src/gpe/application src/maemo/library src/gtk/library-desktop src/gtk/library-pdaxrom src/gpe/library
 
-SUBDIRS = abstract/library abstract/message abstract/time abstract/dialogs abstract/filesystem abstract/filesystem/zip abstract/filesystem/bzip2 abstract/filesystem/tar abstract/options abstract/optionEntries abstract/util abstract/xml abstract/xml/expat abstract/encoding abstract/image abstract/xmlconfig abstract/application abstract/view unix/filesystem unix/time
+SUBDIRS = src/abstract/library src/abstract/message src/abstract/time src/abstract/dialogs src/abstract/filesystem src/abstract/filesystem/zip src/abstract/filesystem/bzip2 src/abstract/filesystem/tar src/abstract/options src/abstract/optionEntries src/abstract/util src/abstract/xml src/abstract/xml/expat src/abstract/encoding src/abstract/image src/abstract/xmlconfig src/abstract/application src/abstract/view src/unix/filesystem src/unix/time
 
 ifeq "$(UI_TYPE)" "qt"
-  SUBDIRS += desktop/dialogs
-  QTSUBDIRS = qt/time qt/dialogs qt/view qt/image qt/util
+  SUBDIRS += src/desktop/dialogs
+  QTSUBDIRS = src/qt/time src/qt/dialogs src/qt/view src/qt/image src/qt/util
 ifeq "$(TARGET_ARCH)" "desktop"
-  QTSUBDIRS += qt/library-desktop qt/application-desktop
-else                             
-  QTSUBDIRS += qt/library-pdaxrom qt/application-pdaxrom
+  QTSUBDIRS += src/qt/library-desktop src/qt/application-desktop
+else
+  QTSUBDIRS += src/qt/library-pdaxrom src/qt/application-pdaxrom
 endif
 endif
 
 ifeq "$(UI_TYPE)" "gtk"
-  SUBDIRS += desktop/dialogs
-  GTKSUBDIRS = gtk/time gtk/dialogs gtk/image gtk/util
+  SUBDIRS += src/desktop/dialogs
+  GTKSUBDIRS = src/gtk/time src/gtk/dialogs src/gtk/image src/gtk/util
 ifeq "$(TARGET_ARCH)" "desktop"
-  GTKSUBDIRS += gtk/library-desktop gtk/view-desktop gtk/application-desktop
+  GTKSUBDIRS += src/gtk/library-desktop src/gtk/view-desktop src/gtk/application-desktop
 else
-  GTKSUBDIRS += gtk/library-pdaxrom gtk/view-pdaxrom gtk/application-pdaxrom
+  GTKSUBDIRS += src/gtk/library-pdaxrom src/gtk/view-pdaxrom src/gtk/application-pdaxrom
 endif
 endif
 
 ifeq "$(UI_TYPE)" "gpe"
-  GTKSUBDIRS = gpe/library gtk/time gpe/dialogs gpe/application gtk/image gtk/util gpe/view
+  GTKSUBDIRS = src/gpe/library src/gtk/time src/gpe/dialogs src/gpe/application src/gtk/image src/gtk/util src/gpe/view
 endif
 
 ifeq "$(UI_TYPE)" "opie"
-  QTSUBDIRS = opie/library qt/time opie/dialogs opie/application opie/view qt/image qt/util
+  QTSUBDIRS = src/opie/library src/qt/time src/opie/dialogs src/opie/application src/opie/view src/qt/image src/qt/util
 endif
 
 ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <qtopia> <qtopia-240x320> <qtopia-640x480>)"
-  QTSUBDIRS = qtopia/message qtopia/library qt/time qtopia/application qtopia/dialogs qtopia/view qt/util qt/image
+  QTSUBDIRS = src/qtopia/message src/qtopia/library src/qt/time src/qtopia/application src/qtopia/dialogs src/qtopia/view src/qt/util src/qt/image
 endif
 
 ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo> <maemo2>)"
-  GTKSUBDIRS = gtk/time maemo/dialogs maemo/view gtk/image gtk/util maemo/application-$(UI_TYPE) maemo/library
+  GTKSUBDIRS = src/gtk/time src/maemo/dialogs src/maemo/view src/gtk/image src/gtk/util src/maemo/application-$(UI_TYPE) src/maemo/library
 endif
 
 .objects:
@@ -94,6 +94,11 @@ do_install:
 	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
+
+package:
+	@if [ -d $(TARGET_ARCH) ]; then \
+		cd $(TARGET_ARCH); $(MAKE); \
+	fi;
 
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \

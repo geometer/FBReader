@@ -1,1 +1,1 @@
-../abstract/dialogs/ZLDialogContent.h
+../src/abstract/dialogs/ZLDialogContent.h

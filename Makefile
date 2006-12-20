@@ -2,31 +2,41 @@ ROOTDIR = $(PWD)
 
 include makefiles/platforms.mk
 
-LIBDIRS = zlibrary
-APPDIR = fbreader
+LIBDIR = zlibrary
+APPDIRS = fbreader GeometricCalculator
 
 all:
-	@for dir in $(LIBDIRS) $(APPDIR); do \
-		cd $$dir; \
-		if ! $(MAKE); then \
-			exit 1; \
+	@for dir in $(LIBDIR) $(APPDIRS); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; \
+			if ! $(MAKE); then \
+				exit 1; \
+			fi; \
+			cd $(ROOTDIR); \
 		fi; \
-		cd $(ROOTDIR); \
 	done;
 
 install: all do_install
 
 do_install:
-	@for dir in $(LIBDIRS) $(APPDIR); do \
-		cd $$dir; make $@; cd $(ROOTDIR); \
+	@for dir in $(LIBDIR) $(APPDIRS); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; make $@; cd $(ROOTDIR); \
+		fi; \
 	done
 
-package: all
-	@cd $(APPDIR); make package
+packages: all
+	@for dir in $(LIBDIR) $(APPDIRS); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; make package; cd $(ROOTDIR); \
+		fi; \
+	done
 
 clean:
-	@for dir in $(LIBDIRS) $(APPDIR); do \
-		cd $$dir; make $@; cd $(ROOTDIR); \
+	@for dir in $(LIBDIR) $(APPDIRS); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; make $@; cd $(ROOTDIR); \
+		fi; \
 	done
 
 distclean: clean

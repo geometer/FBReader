@@ -1,14 +1,11 @@
 ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-DEB_VERSION = 2.0
-
 ARCH = arm
 
-TDIR = __ipk
-
-DATADIR = $(TDIR)/data
-CTRLDIR = $(TDIR)/control
+TMPDIR = tmp
+DESTDIR = $(TMPDIR)/data
+CTRLDIR = $(TMPDIR)/control
 
 PACKAGENAME = FBReader
 CONTROLFILE = $(PACKAGENAME).control
@@ -24,7 +21,7 @@ else # UI_TYPE == qtopia-640x480
 endif
 
 version = $(shell cat ../VERSION)
-depends = expat,libenca,libbz2
+depends = libzlibrary,libenca
 package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
 
 all: .ipk
@@ -46,25 +43,25 @@ install:
 	@install -m 0644 FBReader.$(RESOLUTION).desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications/FBReader.desktop
 
 .ipk:
-	@rm -rf $(TDIR)
-	@mkdir -p $(DATADIR) $(CTRLDIR)
-	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) do_install
+	@rm -rf $(TMPDIR)
+	@mkdir -p $(DESTDIR) $(CTRLDIR)
+	@cd ..; make DESTDIR=$(PWD)/$(DESTDIR) do_install
 	@echo "Package: $(PACKAGENAME)" > $(CTRLDIR)/control
 	@echo -n "Installed-Size: " >> $(CTRLDIR)/control
-	@du -b -s $(DATADIR) | sed -e 's/[	 ].*//' >> $(CTRLDIR)/control
+	@du -b -s $(DESTDIR) | sed -e 's/[	 ].*//' >> $(CTRLDIR)/control
 	@echo "Filename: ./$(package).ipk" >> $(CTRLDIR)/control
 	@echo "Version: $(version)" >> $(CTRLDIR)/control
 	@echo "Depends: $(depends)" >> $(CTRLDIR)/control
 	@cat $(CONTROLFILE) >> $(CTRLDIR)/control
 	@echo -n "Packaging..."
-	@echo "$(DEB_VERSION)" > $(TDIR)/debian-binary
-	@tar czf $(TDIR)/control.tar.gz -C $(CTRLDIR) .
-	@tar czf $(TDIR)/data.tar.gz -C $(DATADIR) .
-	@rm -rf $(CTRLDIR) $(DATADIR)
-	@tar czf $(package).ipk -C $(TDIR) ./debian-binary ./control.tar.gz ./data.tar.gz
+	@echo "2.0" > $(TMPDIR)/debian-binary
+	@tar czf $(TMPDIR)/control.tar.gz -C $(CTRLDIR) .
+	@tar czf $(TMPDIR)/data.tar.gz -C $(DESTDIR) .
+	@rm -rf $(CTRLDIR) $(DESTDIR)
+	@tar czf $(package).ipk -C $(TMPDIR) ./debian-binary ./control.tar.gz ./data.tar.gz
 	@echo " OK"
-	@rm -rf $(TDIR)
+	@rm -rf $(TMPDIR)
 
 clean:
-	@rm -rf $(TDIR)
+	@rm -rf $(TMPDIR)
 	@rm -vf *.ipk

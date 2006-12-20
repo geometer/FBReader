@@ -42,7 +42,7 @@ install:
 	@rm -rf $(TDIR)
 
 .copyfiles:
-	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) install
+	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) do_install
 
 $(CTRLDIR)/control: $(FILE)
 	@echo "Package: $(PACKAGENAME)" > $@
