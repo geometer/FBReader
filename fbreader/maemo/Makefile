@@ -10,13 +10,13 @@ PACKAGE_FILE = $(PACKAGE_NAME)_$(DEBIAN_VERSION)_$(ARCH).deb
 ifeq "$(UI_TYPE)" "maemo"
 PREFIX = /var/lib/install
 DBUSDIR = /usr/lib/dbus-1.0/services
-DEPENDS = maemo,libenca0
+DEPENDS = maemo,libenca0,libzlibrary-maemo
 MENUDIR = $(DESTDIR)/etc/others-menu/extra_applications
 SECTION = utils
 else
 PREFIX =
 DBUSDIR = /usr/share/dbus-1/services
-DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
+DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`, libzlibrary-maemo2 (>= `cat $(ROOTDIR)/zlibrary/VERSION`)
 MENUDIR = $(DESTDIR)/etc/others-menu
 SECTION = user/tools
 endif
@@ -24,7 +24,7 @@ endif
 TMPDIR = tmp
 
 all: package
-	@cp $(PACKAGE_FILE) ../..
+	@mv $(PACKAGE_FILE) ../..
 
 DESKTOP_FILE = FBReader.desktop
 SERVICE_FILE = FBReader.service
@@ -59,7 +59,7 @@ $(SERVICE_FILE): $(SERVICE_FILE).in
 
 package:
 	@mkdir -p $(TMPDIR)
-	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
+	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(DEBIAN_VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
@@ -76,5 +76,3 @@ endif
 
 clean:
 	@$(RM) $(DESKTOP_FILE) $(SERVICE_FILE) *.deb
-
-# vim:ts=8:sw=8:noet
