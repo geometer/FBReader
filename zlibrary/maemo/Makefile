@@ -26,14 +26,16 @@ all: package
 package:
 	@cd ..; DESTDIR=$(PWD)/$(DESTDIR) $(MAKE) do_install
 	@mkdir -p $(DESTDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(DEBIAN_VERSION)/" \
+	@sed -e "s/@DEBIANVERSION@/$(DEBIAN_VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
 		-e "s#@ARCH@#$(ARCH)#" \
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
 		-e "s#@DEPENDS@#$(DEPENDS)#" \
 		-e "s#@SECTION@#$(SECTION)#" \
 		control.in > $(TMPDIR)/DEBIAN/control
-	@install -m 644 shlibs $(TMPDIR)/DEBIAN
+	@sed -e "s/@DEBIANVERSION@/$(DEBIAN_VERSION)/" \
+		-e "s#@VERSION@#$(VERSION)#" \
+		shlibs.in > $(TMPDIR)/DEBIAN/shlibs
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 

@@ -1,5 +1,5 @@
 Package: @PACKAGE@
-Version: @VERSION@
+Version: @DEBIANVERSION@
 Architecture: @ARCH@
 Depends: @DEPENDS@
 Section: @SECTION@
