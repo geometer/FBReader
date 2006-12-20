@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="A triangle with 3 altitudes">
+  <object id="0" persistent="true">
+    <data name="A" type="IndependentPoint" x="29" y="189"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="B" type="IndependentPoint" x="174" y="54"/>
+  </object>
+  <object id="2" persistent="true">
+    <data name="C" type="IndependentPoint" x="156" y="166"/>
+  </object>
+  <object id="3" persistent="true">
+    <data end="2" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="4" persistent="true">
+    <data end="2" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="5" persistent="true">
+    <data end="0" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="6">
+    <data line="4" name="" point="0" type="PointOnPerpendicular"/>
+  </object>
+  <object id="7" persistent="true">
+    <data end="6" kind="0" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="8" persistent="true">
+    <data line0="7" line1="4" name="B1" type="LinesCrossing"/>
+  </object>
+  <object id="9">
+    <data line="3" name="" point="1" type="PointOnPerpendicular"/>
+  </object>
+  <object id="10" persistent="true">
+    <data end="9" kind="0" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="11" persistent="true">
+    <data line0="10" line1="3" name="A1" type="LinesCrossing"/>
+  </object>
+  <object id="12">
+    <data line="5" name="" point="2" type="PointOnPerpendicular"/>
+  </object>
+  <object id="13" persistent="true">
+    <data end="12" kind="0" start="2" type="LineByTwoPoints"/>
+  </object>
+  <object id="14" persistent="true">
+    <data line0="13" line1="5" name="C1" type="LinesCrossing"/>
+  </object>
+  <object id="15" persistent="true">
+    <data line0="13" line1="10" name="O" type="LinesCrossing"/>
+  </object>
+</scene>

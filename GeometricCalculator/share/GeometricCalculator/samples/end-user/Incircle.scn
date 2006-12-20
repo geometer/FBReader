@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="Вписанная окружность треугольника">
+  <object id="0" persistent="true">
+    <data name="A" type="IndependentPoint" x="106" y="228"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="B" type="IndependentPoint" x="293" y="48"/>
+  </object>
+  <object id="2" persistent="true">
+    <data name="C" type="IndependentPoint" x="434" y="227"/>
+  </object>
+  <object id="3" persistent="true">
+    <data end="1" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="4" persistent="true">
+    <data end="2" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="5" persistent="true">
+    <data end="2" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="6">
+    <data center="2" point="1" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="7">
+    <data circle="6" first="false" line="5" name="P4" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="8">
+    <data alpha="0.500" fixed="true" name="P5" point0="1" point1="7" type="PointOnTheLine"/>
+  </object>
+  <object id="9">
+    <data end="8" kind="1" start="2" type="LineByTwoPoints"/>
+  </object>
+  <object id="10">
+    <data center="0" point="1" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="11">
+    <data circle="10" first="true" line="5" name="P4" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="12">
+    <data alpha="0.500" fixed="true" name="P5" point0="1" point1="11" type="PointOnTheLine"/>
+  </object>
+  <object id="13">
+    <data end="12" kind="1" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="14" persistent="true">
+    <data line0="9" line1="13" name="O" type="LinesCrossing"/>
+  </object>
+  <object id="15">
+    <data line="3" name="" point="14" type="PointOnPerpendicular"/>
+  </object>
+  <object id="16">
+    <data end="15" kind="0" start="14" type="LineByTwoPoints"/>
+  </object>
+  <object id="17">
+    <data line0="3" line1="16" name="P5" type="LinesCrossing"/>
+  </object>
+  <object id="18" persistent="true">
+    <data center="14" point="17" type="CircleByCenterAndPoint"/>
+  </object>
+</scene>

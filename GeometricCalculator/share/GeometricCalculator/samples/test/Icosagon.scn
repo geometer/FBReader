@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+  <object id="0" persistent="true">
+    <data name="P1" type="IndependentPoint" x="56" y="192"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="P2" type="IndependentPoint" x="143" y="192"/>
+  </object>
+  <object id="2">
+    <data center="1" point="0" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="3">
+    <data center="0" point="1" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="4">
+    <data alpha="0.500" fixed="true" name="P3" point0="0" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="5">
+    <data end="1" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="6">
+    <data line="5" name="" point="4" type="PointOnPerpendicular"/>
+  </object>
+  <object id="7">
+    <data end="6" kind="0" start="4" type="LineByTwoPoints"/>
+  </object>
+  <object id="8">
+    <data center="4" point="1" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="9">
+    <data circle="8" first="false" line="7" name="P4" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="10">
+    <data center="9" point="4" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="11">
+    <data circle="10" first="false" line="7" name="P5" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="12">
+    <data end="11" kind="0" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="13">
+    <data center="11" point="9" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="14">
+    <data circle="13" first="true" line="12" name="P6" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="15">
+    <data center="0" point="14" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="16" persistent="true">
+    <data circle0="2" circle1="15" first="true" name="P3" type="CirclesCrossing"/>
+  </object>
+  <object id="17" persistent="true">
+    <data circle="15" first="false" line="7" name="P4" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="18">
+    <data center="17" point="16" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="19" persistent="true">
+    <data circle0="18" circle1="3" first="true" name="P5" type="CirclesCrossing"/>
+  </object>
+  <object id="20">
+    <data line="5" name="" point="17" type="PointOnPerpendicular"/>
+  </object>
+  <object id="21">
+    <data end="20" kind="0" start="17" type="LineByTwoPoints"/>
+  </object>
+  <object id="22">
+    <data end="0" kind="2" start="19" type="LineByTwoPoints"/>
+  </object>
+  <object id="23">
+    <data line="22" name="" point="16" type="PointOnPerpendicular"/>
+  </object>
+  <object id="24">
+    <data end="23" kind="0" start="16" type="LineByTwoPoints"/>
+  </object>
+  <object id="25">
+    <data line0="21" line1="24" name="P8" type="LinesCrossing"/>
+  </object>
+  <object id="26">
+    <data center="25" point="1" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="27" persistent="true">
+    <data circle="26" first="true" line="21" name="P9" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="28" persistent="true">
+    <data circle="26" first="true" line="24" name="P10" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="29">
+    <data end="25" kind="1" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="30" persistent="true">
+    <data circle="26" first="true" line="29" name="P11" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="31">
+    <data end="25" kind="1" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="32" persistent="true">
+    <data circle="26" first="true" line="31" name="P12" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="33">
+    <data end="25" kind="1" start="19" type="LineByTwoPoints"/>
+  </object>
+  <object id="34" persistent="true">
+    <data circle="26" first="true" line="33" name="P13" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="35">
+    <data end="17" kind="2" start="30" type="LineByTwoPoints"/>
+  </object>
+  <object id="36">
+    <data line="35" name="" point="25" type="PointOnPerpendicular"/>
+  </object>
+  <object id="37">
+    <data end="36" kind="0" start="25" type="LineByTwoPoints"/>
+  </object>
+  <object id="38" persistent="true">
+    <data circle="26" first="false" line="37" name="P14" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="39">
+    <data end="1" kind="2" start="27" type="LineByTwoPoints"/>
+  </object>
+  <object id="40">
+    <data line="39" name="" point="25" type="PointOnPerpendicular"/>
+  </object>
+  <object id="41">
+    <data end="40" kind="0" start="25" type="LineByTwoPoints"/>
+  </object>
+  <object id="42" persistent="true">
+    <data circle="26" first="true" line="41" name="P15" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="43">
+    <data end="34" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="44">
+    <data line="43" name="" point="25" type="PointOnPerpendicular"/>
+  </object>
+  <object id="45">
+    <data end="44" kind="0" start="25" type="LineByTwoPoints"/>
+  </object>
+  <object id="46" persistent="true">
+    <data circle="26" first="true" line="45" name="P16" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="47">
+    <data end="16" kind="2" start="34" type="LineByTwoPoints"/>
+  </object>
+  <object id="48">
+    <data line="47" name="" point="25" type="PointOnPerpendicular"/>
+  </object>
+  <object id="49">
+    <data end="48" kind="0" start="25" type="LineByTwoPoints"/>
+  </object>
+  <object id="50" persistent="true">
+    <data circle="26" first="true" line="49" name="P17" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="51">
+    <data end="30" kind="2" start="16" type="LineByTwoPoints"/>
+  </object>
+  <object id="52">
+    <data line="51" name="" point="25" type="PointOnPerpendicular"/>
+  </object>
+  <object id="53">
+    <data end="52" kind="0" start="25" type="LineByTwoPoints"/>
+  </object>
+  <object id="54" persistent="true">
+    <data circle="26" first="true" line="53" name="P18" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="55" persistent="true">
+    <data circle="26" first="true" line="37" name="P19" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="56" persistent="true">
+    <data circle="26" first="false" line="41" name="P20" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="57" persistent="true">
+    <data circle="26" first="false" line="45" name="P21" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="58" persistent="true">
+    <data circle="26" first="false" line="49" name="P22" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="59" persistent="true">
+    <data circle="26" first="false" line="53" name="P23" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="60" persistent="true">
+    <data end="27" kind="2" start="38" type="LineByTwoPoints"/>
+  </object>
+  <object id="61" persistent="true">
+    <data end="42" kind="2" start="27" type="LineByTwoPoints"/>
+  </object>
+  <object id="62" persistent="true">
+    <data end="1" kind="2" start="42" type="LineByTwoPoints"/>
+  </object>
+  <object id="63" persistent="true">
+    <data end="46" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="64" persistent="true">
+    <data end="34" kind="2" start="46" type="LineByTwoPoints"/>
+  </object>
+  <object id="65" persistent="true">
+    <data end="50" kind="2" start="34" type="LineByTwoPoints"/>
+  </object>
+  <object id="66" persistent="true">
+    <data end="16" kind="2" start="50" type="LineByTwoPoints"/>
+  </object>
+  <object id="67" persistent="true">
+    <data end="54" kind="2" start="16" type="LineByTwoPoints"/>
+  </object>
+  <object id="68" persistent="true">
+    <data end="30" kind="2" start="54" type="LineByTwoPoints"/>
+  </object>
+  <object id="69" persistent="true">
+    <data end="55" kind="2" start="30" type="LineByTwoPoints"/>
+  </object>
+  <object id="70" persistent="true">
+    <data end="17" kind="2" start="55" type="LineByTwoPoints"/>
+  </object>
+  <object id="71" persistent="true">
+    <data end="56" kind="2" start="17" type="LineByTwoPoints"/>
+  </object>
+  <object id="72" persistent="true">
+    <data end="32" kind="2" start="56" type="LineByTwoPoints"/>
+  </object>
+  <object id="73" persistent="true">
+    <data end="57" kind="2" start="32" type="LineByTwoPoints"/>
+  </object>
+  <object id="74" persistent="true">
+    <data end="19" kind="2" start="57" type="LineByTwoPoints"/>
+  </object>
+  <object id="75" persistent="true">
+    <data end="58" kind="2" start="19" type="LineByTwoPoints"/>
+  </object>
+  <object id="76" persistent="true">
+    <data end="28" kind="2" start="58" type="LineByTwoPoints"/>
+  </object>
+  <object id="77" persistent="true">
+    <data end="59" kind="2" start="28" type="LineByTwoPoints"/>
+  </object>
+  <object id="78" persistent="true">
+    <data end="0" kind="2" start="59" type="LineByTwoPoints"/>
+  </object>
+  <object id="79" persistent="true">
+    <data end="38" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+</scene>

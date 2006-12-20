@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+  <object id="0" persistent="true">
+    <data name="P1" type="IndependentPoint" x="57" y="189"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="P2" type="IndependentPoint" x="94" y="112"/>
+  </object>
+  <object id="2" persistent="true">
+    <data name="P3" type="IndependentPoint" x="165" y="127"/>
+  </object>
+  <object id="3" persistent="true">
+    <data end="1" kind="1" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="4" persistent="true">
+    <data end="2" kind="1" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="5">
+    <data center="0" point="2" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="6">
+    <data circle="5" first="true" line="3" name="P4" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="7">
+    <data alpha="0.500" fixed="true" name="P5" point0="6" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="8" persistent="true">
+    <data end="7" kind="1" start="0" type="LineByTwoPoints"/>
+  </object>
+</scene>

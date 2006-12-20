@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+  <object id="0" persistent="true">
+    <data name="P1" type="IndependentPoint" x="10" y="229"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="P2" type="IndependentPoint" x="229" y="229"/>
+  </object>
+  <object id="2" persistent="true">
+    <data alpha="0.500" fixed="true" name="P3" point0="0" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="3" persistent="true">
+    <data end="1" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="4" persistent="true">
+    <data alpha="0.500" fixed="true" line="3" name="P4" point0="0" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="5" persistent="true">
+    <data alpha="0.500" fixed="true" line="3" name="P5" point0="2" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="6" persistent="true">
+    <data alpha="0.500" fixed="true" line="3" name="P6" point0="0" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="7" persistent="true">
+    <data alpha="0.500" fixed="true" line="3" name="P7" point0="4" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="8" persistent="true">
+    <data alpha="0.500" fixed="true" line="3" name="P8" point0="2" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="9" persistent="true">
+    <data alpha="0.500" fixed="true" line="3" name="P9" point0="5" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="10">
+    <data center="0" point="1" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="11">
+    <data line="3" name="" point="0" type="PointOnPerpendicular"/>
+  </object>
+  <object id="12">
+    <data end="11" kind="0" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="13" persistent="true">
+    <data circle="10" first="false" line="12" name="P10" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="14" persistent="true">
+    <data alpha="0.500" fixed="true" name="P11" point0="0" point1="13" type="PointOnTheLine"/>
+  </object>
+  <object id="15" persistent="true">
+    <data end="13" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="16" persistent="true">
+    <data first="13" name="P12" second="0" third="1" type="FourthParallelogramPoint"/>
+  </object>
+  <object id="17" persistent="true">
+    <data end="16" kind="2" start="13" type="LineByTwoPoints"/>
+  </object>
+  <object id="18" persistent="true">
+    <data alpha="0.500" fixed="true" line="17" name="P13" point0="13" point1="16" type="PointOnTheLine"/>
+  </object>
+  <object id="19" persistent="true">
+    <data alpha="0.500" fixed="true" name="P14" point0="16" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="20" persistent="true">
+    <data end="1" kind="2" start="16" type="LineByTwoPoints"/>
+  </object>
+  <object id="21" persistent="true">
+    <data alpha="0.500" fixed="true" line="20" name="P15" point0="19" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="22" persistent="true">
+    <data alpha="0.500" fixed="true" line="20" name="P16" point0="21" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="23" persistent="true">
+    <data alpha="0.500" fixed="true" line="20" name="P17" point0="19" point1="21" type="PointOnTheLine"/>
+  </object>
+  <object id="24" persistent="true">
+    <data alpha="0.500" fixed="true" line="20" name="P18" point0="16" point1="19" type="PointOnTheLine"/>
+  </object>
+  <object id="25" persistent="true">
+    <data alpha="0.500" fixed="true" line="20" name="P19" point0="16" point1="24" type="PointOnTheLine"/>
+  </object>
+  <object id="26" persistent="true">
+    <data alpha="0.500" fixed="true" line="20" name="P20" point0="24" point1="19" type="PointOnTheLine"/>
+  </object>
+  <object id="27" persistent="true">
+    <data alpha="0.500" fixed="true" line="17" name="P21" point0="13" point1="18" type="PointOnTheLine"/>
+  </object>
+  <object id="28" persistent="true">
+    <data alpha="0.500" fixed="true" line="17" name="P22" point0="18" point1="16" type="PointOnTheLine"/>
+  </object>
+  <object id="29" persistent="true">
+    <data alpha="0.500" fixed="true" line="17" name="P23" point0="28" point1="16" type="PointOnTheLine"/>
+  </object>
+  <object id="30" persistent="true">
+    <data alpha="0.500" fixed="true" line="17" name="P24" point0="18" point1="28" type="PointOnTheLine"/>
+  </object>
+  <object id="31" persistent="true">
+    <data alpha="0.500" fixed="true" line="17" name="P25" point0="27" point1="18" type="PointOnTheLine"/>
+  </object>
+  <object id="32" persistent="true">
+    <data alpha="0.500" fixed="true" line="17" name="P26" point0="13" point1="27" type="PointOnTheLine"/>
+  </object>
+  <object id="33" persistent="true">
+    <data alpha="0.500" fixed="true" line="15" name="P27" point0="13" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="34" persistent="true">
+    <data alpha="0.500" fixed="true" line="15" name="P28" point0="13" point1="33" type="PointOnTheLine"/>
+  </object>
+  <object id="35" persistent="true">
+    <data alpha="0.500" fixed="true" line="15" name="P29" point0="33" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="36" persistent="true">
+    <data alpha="0.500" fixed="true" line="15" name="P30" point0="14" point1="0" type="PointOnTheLine"/>
+  </object>
+  <object id="37" persistent="true">
+    <data alpha="0.500" fixed="true" line="15" name="P31" point0="14" point1="36" type="PointOnTheLine"/>
+  </object>
+  <object id="38" persistent="true">
+    <data alpha="0.500" fixed="true" line="15" name="P32" point0="36" point1="0" type="PointOnTheLine"/>
+  </object>
+  <object id="39" persistent="true">
+    <data end="6" kind="2" start="32" type="LineByTwoPoints"/>
+  </object>
+  <object id="40" persistent="true">
+    <data end="4" kind="2" start="27" type="LineByTwoPoints"/>
+  </object>
+  <object id="41" persistent="true">
+    <data end="7" kind="2" start="31" type="LineByTwoPoints"/>
+  </object>
+  <object id="42" persistent="true">
+    <data end="2" kind="2" start="18" type="LineByTwoPoints"/>
+  </object>
+  <object id="43" persistent="true">
+    <data end="8" kind="2" start="30" type="LineByTwoPoints"/>
+  </object>
+  <object id="44" persistent="true">
+    <data end="5" kind="2" start="28" type="LineByTwoPoints"/>
+  </object>
+  <object id="45" persistent="true">
+    <data end="9" kind="2" start="29" type="LineByTwoPoints"/>
+  </object>
+  <object id="46" persistent="true">
+    <data end="22" kind="2" start="38" type="LineByTwoPoints"/>
+  </object>
+  <object id="47" persistent="true">
+    <data end="21" kind="2" start="36" type="LineByTwoPoints"/>
+  </object>
+  <object id="48" persistent="true">
+    <data end="23" kind="2" start="37" type="LineByTwoPoints"/>
+  </object>
+  <object id="49" persistent="true">
+    <data end="19" kind="2" start="14" type="LineByTwoPoints"/>
+  </object>
+  <object id="50" persistent="true">
+    <data end="26" kind="2" start="35" type="LineByTwoPoints"/>
+  </object>
+  <object id="51" persistent="true">
+    <data end="24" kind="2" start="33" type="LineByTwoPoints"/>
+  </object>
+  <object id="52" persistent="true">
+    <data end="25" kind="2" start="34" type="LineByTwoPoints"/>
+  </object>
+  <object id="53" persistent="true">
+    <data line0="39" line1="46" name="P33" type="LinesCrossing"/>
+  </object>
+  <object id="54" persistent="true">
+    <data line0="39" line1="47" name="P34" type="LinesCrossing"/>
+  </object>
+  <object id="55" persistent="true">
+    <data line0="48" line1="39" name="P35" type="LinesCrossing"/>
+  </object>
+  <object id="56" persistent="true">
+    <data line0="39" line1="49" name="P36" type="LinesCrossing"/>
+  </object>
+  <object id="57" persistent="true">
+    <data line0="39" line1="50" name="P37" type="LinesCrossing"/>
+  </object>
+  <object id="58" persistent="true">
+    <data line0="51" line1="39" name="P38" type="LinesCrossing"/>
+  </object>
+  <object id="59" persistent="true">
+    <data line0="52" line1="39" name="P39" type="LinesCrossing"/>
+  </object>
+  <object id="60" persistent="true">
+    <data line0="40" line1="52" name="P40" type="LinesCrossing"/>
+  </object>
+  <object id="61" persistent="true">
+    <data line0="40" line1="51" name="P41" type="LinesCrossing"/>
+  </object>
+  <object id="62" persistent="true">
+    <data line0="40" line1="50" name="P42" type="LinesCrossing"/>
+  </object>
+  <object id="63" persistent="true">
+    <data line0="40" line1="49" name="P43" type="LinesCrossing"/>
+  </object>
+  <object id="64" persistent="true">
+    <data line0="40" line1="48" name="P44" type="LinesCrossing"/>
+  </object>
+  <object id="65" persistent="true">
+    <data line0="40" line1="47" name="P45" type="LinesCrossing"/>
+  </object>
+  <object id="66" persistent="true">
+    <data line0="40" line1="46" name="P46" type="LinesCrossing"/>
+  </object>
+  <object id="67" persistent="true">
+    <data line0="46" line1="41" name="P47" type="LinesCrossing"/>
+  </object>
+  <object id="68" persistent="true">
+    <data line0="41" line1="47" name="P48" type="LinesCrossing"/>
+  </object>
+  <object id="69" persistent="true">
+    <data line0="41" line1="48" name="P49" type="LinesCrossing"/>
+  </object>
+  <object id="70" persistent="true">
+    <data line0="41" line1="49" name="P50" type="LinesCrossing"/>
+  </object>
+  <object id="71" persistent="true">
+    <data line0="41" line1="50" name="P51" type="LinesCrossing"/>
+  </object>
+  <object id="72" persistent="true">
+    <data line0="41" line1="51" name="P52" type="LinesCrossing"/>
+  </object>
+  <object id="73" persistent="true">
+    <data line0="52" line1="41" name="P53" type="LinesCrossing"/>
+  </object>
+  <object id="74" persistent="true">
+    <data line0="42" line1="52" name="P54" type="LinesCrossing"/>
+  </object>
+  <object id="75" persistent="true">
+    <data line0="42" line1="51" name="P55" type="LinesCrossing"/>
+  </object>
+  <object id="76" persistent="true">
+    <data line0="42" line1="50" name="P56" type="LinesCrossing"/>
+  </object>
+  <object id="77" persistent="true">
+    <data line0="42" line1="49" name="P57" type="LinesCrossing"/>
+  </object>
+  <object id="78" persistent="true">
+    <data line0="42" line1="48" name="P58" type="LinesCrossing"/>
+  </object>
+  <object id="79" persistent="true">
+    <data line0="42" line1="47" name="P59" type="LinesCrossing"/>
+  </object>
+  <object id="80" persistent="true">
+    <data line0="42" line1="46" name="P60" type="LinesCrossing"/>
+  </object>
+  <object id="81" persistent="true">
+    <data line0="46" line1="43" name="P61" type="LinesCrossing"/>
+  </object>
+  <object id="82" persistent="true">
+    <data line0="46" line1="44" name="P62" type="LinesCrossing"/>
+  </object>
+  <object id="83" persistent="true">
+    <data line0="45" line1="46" name="P63" type="LinesCrossing"/>
+  </object>
+  <object id="84" persistent="true">
+    <data line0="47" line1="45" name="P64" type="LinesCrossing"/>
+  </object>
+  <object id="85" persistent="true">
+    <data line0="44" line1="47" name="P65" type="LinesCrossing"/>
+  </object>
+  <object id="86" persistent="true">
+    <data line0="43" line1="47" name="P66" type="LinesCrossing"/>
+  </object>
+  <object id="87" persistent="true">
+    <data line0="43" line1="48" name="P67" type="LinesCrossing"/>
+  </object>
+  <object id="88" persistent="true">
+    <data line0="44" line1="48" name="P68" type="LinesCrossing"/>
+  </object>
+  <object id="89" persistent="true">
+    <data line0="48" line1="45" name="P69" type="LinesCrossing"/>
+  </object>
+  <object id="90" persistent="true">
+    <data line0="49" line1="43" name="P70" type="LinesCrossing"/>
+  </object>
+  <object id="91" persistent="true">
+    <data line0="49" line1="44" name="P71" type="LinesCrossing"/>
+  </object>
+  <object id="92" persistent="true">
+    <data line0="49" line1="45" name="P72" type="LinesCrossing"/>
+  </object>
+  <object id="93" persistent="true">
+    <data line0="45" line1="50" name="P73" type="LinesCrossing"/>
+  </object>
+  <object id="94" persistent="true">
+    <data line0="44" line1="50" name="P74" type="LinesCrossing"/>
+  </object>
+  <object id="95" persistent="true">
+    <data line0="50" line1="43" name="P75" type="LinesCrossing"/>
+  </object>
+  <object id="96" persistent="true">
+    <data line0="51" line1="43" name="P76" type="LinesCrossing"/>
+  </object>
+  <object id="97" persistent="true">
+    <data line0="44" line1="51" name="P77" type="LinesCrossing"/>
+  </object>
+  <object id="98" persistent="true">
+    <data line0="45" line1="51" name="P78" type="LinesCrossing"/>
+  </object>
+  <object id="99" persistent="true">
+    <data line0="52" line1="45" name="P79" type="LinesCrossing"/>
+  </object>
+  <object id="100" persistent="true">
+    <data line0="44" line1="52" name="P80" type="LinesCrossing"/>
+  </object>
+  <object id="101" persistent="true">
+    <data line0="43" line1="52" name="P81" type="LinesCrossing"/>
+  </object>
+</scene>

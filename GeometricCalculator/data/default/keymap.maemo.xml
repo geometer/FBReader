@@ -1,0 +1,4 @@
+<keymap>
+	<binding key="&lt;ZoomKey +&gt;" action="21"/>
+	<binding key="&lt;ZoomKey -&gt;" action="22"/>
+</keymap>

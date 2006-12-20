@@ -1,0 +1,13 @@
+Package: @PACKAGE@
+Version: @VERSION@
+Architecture: @ARCH@
+Depends: @DEPENDS@
+Section: @SECTION@
+Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Installed-Size: @SIZE@
+Description: Dynamic geometry program
+ Text 0
+ .
+ Text 1
+ .
+ Home page: http://only.mawhrin.net/GeometricCalculator/

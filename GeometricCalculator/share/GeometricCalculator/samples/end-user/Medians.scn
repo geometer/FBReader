@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="A triangle with 3 medians">
+  <object id="0" persistent="true">
+    <data name="A" type="IndependentPoint" x="35" y="181"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="B" type="IndependentPoint" x="114" y="49"/>
+  </object>
+  <object id="2" persistent="true">
+    <data name="C" type="IndependentPoint" x="208" y="190"/>
+  </object>
+  <object id="3" persistent="true">
+    <data end="2" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="4" persistent="true">
+    <data end="2" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="5" persistent="true">
+    <data end="0" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="6" persistent="true">
+    <data alpha="0.500" fixed="true" line="4" name="A1" point0="1" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="7" persistent="true">
+    <data alpha="0.500" fixed="true" line="3" name="B1" point0="0" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="8" persistent="true">
+    <data alpha="0.500" fixed="true" line="5" name="C1" point0="1" point1="0" type="PointOnTheLine"/>
+  </object>
+  <object id="9" persistent="true">
+    <data end="7" kind="2" start="1" type="LineByTwoPoints"/>
+  </object>
+  <object id="10" persistent="true">
+    <data end="6" kind="2" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="11" persistent="true">
+    <data end="2" kind="2" start="8" type="LineByTwoPoints"/>
+  </object>
+  <object id="12" persistent="true">
+    <data line0="11" line1="10" name="O" type="LinesCrossing"/>
+  </object>
+</scene>

@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene>
+  <object id="0" persistent="true">
+    <data name="P1" type="IndependentPoint" x="13" y="226"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="P2" type="IndependentPoint" x="221" y="221"/>
+  </object>
+  <object id="2" persistent="true">
+    <data name="P3" type="IndependentPoint" x="127" y="25"/>
+  </object>
+  <object id="3" persistent="true">
+    <data alpha="0.500" fixed="true" name="P4" point0="0" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="4" persistent="true">
+    <data alpha="0.500" fixed="true" name="P5" point0="0" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="5" persistent="true">
+    <data alpha="0.500" fixed="true" name="P6" point0="2" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="6" persistent="true">
+    <data alpha="0.500" fixed="true" name="P7" point0="0" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="7" persistent="true">
+    <data alpha="0.500" fixed="true" name="P8" point0="0" point1="3" type="PointOnTheLine"/>
+  </object>
+  <object id="8" persistent="true">
+    <data alpha="0.500" fixed="true" name="P9" point0="3" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="9" persistent="true">
+    <data alpha="0.500" fixed="true" name="P10" point0="4" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="10" persistent="true">
+    <data alpha="0.500" fixed="true" name="P11" point0="3" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="11" persistent="true">
+    <data alpha="0.500" fixed="true" name="P12" point0="2" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="12" persistent="true">
+    <data alpha="0.500" fixed="true" name="P13" point0="3" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="13" persistent="true">
+    <data alpha="0.500" fixed="true" name="P14" point0="5" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="14" persistent="true">
+    <data alpha="0.500" fixed="true" name="P15" point0="4" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="15" persistent="true">
+    <data alpha="0.500" fixed="true" name="P16" point0="0" point1="7" type="PointOnTheLine"/>
+  </object>
+  <object id="16" persistent="true">
+    <data alpha="0.500" fixed="true" name="P17" point0="7" point1="6" type="PointOnTheLine"/>
+  </object>
+  <object id="17" persistent="true">
+    <data alpha="0.500" fixed="true" name="P18" point0="0" point1="6" type="PointOnTheLine"/>
+  </object>
+  <object id="18" persistent="true">
+    <data alpha="0.500" fixed="true" name="P19" point0="6" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="19" persistent="true">
+    <data alpha="0.500" fixed="true" name="P20" point0="8" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="20" persistent="true">
+    <data alpha="0.500" fixed="true" name="P21" point0="6" point1="8" type="PointOnTheLine"/>
+  </object>
+  <object id="21" persistent="true">
+    <data alpha="0.500" fixed="true" name="P22" point0="7" point1="8" type="PointOnTheLine"/>
+  </object>
+  <object id="22" persistent="true">
+    <data alpha="0.500" fixed="true" name="P23" point0="8" point1="9" type="PointOnTheLine"/>
+  </object>
+  <object id="23" persistent="true">
+    <data alpha="0.500" fixed="true" name="P24" point0="9" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="24" persistent="true">
+    <data alpha="0.500" fixed="true" name="P25" point0="4" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="25" persistent="true">
+    <data alpha="0.500" fixed="true" name="P26" point0="9" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="26" persistent="true">
+    <data alpha="0.500" fixed="true" name="P27" point0="9" point1="13" type="PointOnTheLine"/>
+  </object>
+  <object id="27" persistent="true">
+    <data alpha="0.500" fixed="true" name="P28" point0="13" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="28" persistent="true">
+    <data alpha="0.500" fixed="true" name="P29" point0="14" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="29" persistent="true">
+    <data alpha="0.500" fixed="true" name="P30" point0="13" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="30" persistent="true">
+    <data alpha="0.500" fixed="true" name="P31" point0="7" point1="3" type="PointOnTheLine"/>
+  </object>
+  <object id="31" persistent="true">
+    <data alpha="0.500" fixed="true" name="P32" point0="3" point1="8" type="PointOnTheLine"/>
+  </object>
+  <object id="32" persistent="true">
+    <data alpha="0.500" fixed="true" name="P33" point0="3" point1="10" type="PointOnTheLine"/>
+  </object>
+  <object id="33" persistent="true">
+    <data alpha="0.500" fixed="true" name="P34" point0="10" point1="8" type="PointOnTheLine"/>
+  </object>
+  <object id="34" persistent="true">
+    <data alpha="0.500" fixed="true" name="P35" point0="10" point1="9" type="PointOnTheLine"/>
+  </object>
+  <object id="35" persistent="true">
+    <data alpha="0.500" fixed="true" name="P36" point0="10" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="36" persistent="true">
+    <data alpha="0.500" fixed="true" name="P37" point0="5" point1="9" type="PointOnTheLine"/>
+  </object>
+  <object id="37" persistent="true">
+    <data alpha="0.500" fixed="true" name="P38" point0="5" point1="13" type="PointOnTheLine"/>
+  </object>
+  <object id="38" persistent="true">
+    <data alpha="0.500" fixed="true" name="P39" point0="3" point1="12" type="PointOnTheLine"/>
+  </object>
+  <object id="39" persistent="true">
+    <data alpha="0.500" fixed="true" name="P40" point0="12" point1="10" type="PointOnTheLine"/>
+  </object>
+  <object id="40" persistent="true">
+    <data alpha="0.500" fixed="true" name="P41" point0="12" point1="11" type="PointOnTheLine"/>
+  </object>
+  <object id="41" persistent="true">
+    <data alpha="0.500" fixed="true" name="P42" point0="11" point1="10" type="PointOnTheLine"/>
+  </object>
+  <object id="42" persistent="true">
+    <data alpha="0.500" fixed="true" name="P43" point0="11" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="43" persistent="true">
+    <data alpha="0.500" fixed="true" name="P44" point0="12" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="44" persistent="true">
+    <data alpha="0.500" fixed="true" name="P45" point0="2" point1="11" type="PointOnTheLine"/>
+  </object>
+  <object id="45" persistent="true">
+    <data alpha="0.500" fixed="true" name="P46" point0="0" point1="15" type="PointOnTheLine"/>
+  </object>
+  <object id="46" persistent="true">
+    <data alpha="0.500" fixed="true" name="P47" point0="15" point1="17" type="PointOnTheLine"/>
+  </object>
+  <object id="47" persistent="true">
+    <data alpha="0.500" fixed="true" name="P48" point0="0" point1="17" type="PointOnTheLine"/>
+  </object>
+  <object id="48" persistent="true">
+    <data alpha="0.500" fixed="true" name="P49" point0="17" point1="6" type="PointOnTheLine"/>
+  </object>
+  <object id="49" persistent="true">
+    <data alpha="0.500" fixed="true" name="P50" point0="6" point1="18" type="PointOnTheLine"/>
+  </object>
+  <object id="50" persistent="true">
+    <data alpha="0.500" fixed="true" name="P51" point0="18" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="51" persistent="true">
+    <data alpha="0.500" fixed="true" name="P52" point0="15" point1="16" type="PointOnTheLine"/>
+  </object>
+  <object id="52" persistent="true">
+    <data alpha="0.500" fixed="true" name="P53" point0="17" point1="16" type="PointOnTheLine"/>
+  </object>
+  <object id="53" persistent="true">
+    <data alpha="0.500" fixed="true" name="P54" point0="16" point1="6" type="PointOnTheLine"/>
+  </object>
+  <object id="54" persistent="true">
+    <data alpha="0.500" fixed="true" name="P55" point0="16" point1="20" type="PointOnTheLine"/>
+  </object>
+  <object id="55" persistent="true">
+    <data alpha="0.500" fixed="true" name="P56" point0="20" point1="6" type="PointOnTheLine"/>
+  </object>
+  <object id="56" persistent="true">
+    <data alpha="0.500" fixed="true" name="P57" point0="20" point1="18" type="PointOnTheLine"/>
+  </object>
+  <object id="57" persistent="true">
+    <data alpha="0.500" fixed="true" name="P58" point0="20" point1="19" type="PointOnTheLine"/>
+  </object>
+  <object id="58" persistent="true">
+    <data alpha="0.500" fixed="true" name="P59" point0="19" point1="18" type="PointOnTheLine"/>
+  </object>
+  <object id="59" persistent="true">
+    <data alpha="0.500" fixed="true" name="P60" point0="19" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="60" persistent="true">
+    <data alpha="0.500" fixed="true" name="P61" point0="19" point1="23" type="PointOnTheLine"/>
+  </object>
+  <object id="61" persistent="true">
+    <data alpha="0.500" fixed="true" name="P62" point0="23" point1="4" type="PointOnTheLine"/>
+  </object>
+  <object id="62" persistent="true">
+    <data alpha="0.500" fixed="true" name="P63" point0="4" point1="24" type="PointOnTheLine"/>
+  </object>
+  <object id="63" persistent="true">
+    <data alpha="0.500" fixed="true" name="P64" point0="23" point1="24" type="PointOnTheLine"/>
+  </object>
+  <object id="64" persistent="true">
+    <data alpha="0.500" fixed="true" name="P65" point0="23" point1="25" type="PointOnTheLine"/>
+  </object>
+  <object id="65" persistent="true">
+    <data alpha="0.500" fixed="true" name="P66" point0="25" point1="24" type="PointOnTheLine"/>
+  </object>
+  <object id="66" persistent="true">
+    <data alpha="0.500" fixed="true" name="P67" point0="24" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="67" persistent="true">
+    <data alpha="0.500" fixed="true" name="P68" point0="25" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="68" persistent="true">
+    <data alpha="0.500" fixed="true" name="P69" point0="25" point1="27" type="PointOnTheLine"/>
+  </object>
+  <object id="69" persistent="true">
+    <data alpha="0.500" fixed="true" name="P70" point0="27" point1="14" type="PointOnTheLine"/>
+  </object>
+  <object id="70" persistent="true">
+    <data alpha="0.500" fixed="true" name="P71" point0="14" point1="28" type="PointOnTheLine"/>
+  </object>
+  <object id="71" persistent="true">
+    <data alpha="0.500" fixed="true" name="P72" point0="27" point1="28" type="PointOnTheLine"/>
+  </object>
+  <object id="72" persistent="true">
+    <data alpha="0.500" fixed="true" name="P73" point0="27" point1="29" type="PointOnTheLine"/>
+  </object>
+  <object id="73" persistent="true">
+    <data alpha="0.500" fixed="true" name="P74" point0="29" point1="28" type="PointOnTheLine"/>
+  </object>
+  <object id="74" persistent="true">
+    <data alpha="0.500" fixed="true" name="P75" point0="28" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="75" persistent="true">
+    <data alpha="0.500" fixed="true" name="P76" point0="29" point1="1" type="PointOnTheLine"/>
+  </object>
+  <object id="76" persistent="true">
+    <data alpha="0.500" fixed="true" name="P77" point0="15" point1="7" type="PointOnTheLine"/>
+  </object>
+  <object id="77" persistent="true">
+    <data alpha="0.500" fixed="true" name="P78" point0="7" point1="16" type="PointOnTheLine"/>
+  </object>
+  <object id="78" persistent="true">
+    <data alpha="0.500" fixed="true" name="P79" point0="7" point1="21" type="PointOnTheLine"/>
+  </object>
+  <object id="79" persistent="true">
+    <data alpha="0.500" fixed="true" name="P80" point0="16" point1="21" type="PointOnTheLine"/>
+  </object>
+  <object id="80" persistent="true">
+    <data alpha="0.500" fixed="true" name="P81" point0="21" point1="20" type="PointOnTheLine"/>
+  </object>
+  <object id="81" persistent="true">
+    <data alpha="0.500" fixed="true" name="P82" point0="21" point1="8" type="PointOnTheLine"/>
+  </object>
+  <object id="82" persistent="true">
+    <data alpha="0.500" fixed="true" name="P83" point0="8" point1="20" type="PointOnTheLine"/>
+  </object>
+  <object id="83" persistent="true">
+    <data alpha="0.500" fixed="true" name="P84" point0="8" point1="19" type="PointOnTheLine"/>
+  </object>
+  <object id="84" persistent="true">
+    <data alpha="0.500" fixed="true" name="P85" point0="8" point1="22" type="PointOnTheLine"/>
+  </object>
+  <object id="85" persistent="true">
+    <data alpha="0.500" fixed="true" name="P86" point0="22" point1="19" type="PointOnTheLine"/>
+  </object>
+  <object id="86" persistent="true">
+    <data alpha="0.500" fixed="true" name="P87" point0="22" point1="23" type="PointOnTheLine"/>
+  </object>
+  <object id="87" persistent="true">
+    <data alpha="0.500" fixed="true" name="P88" point0="22" point1="9" type="PointOnTheLine"/>
+  </object>
+  <object id="88" persistent="true">
+    <data alpha="0.500" fixed="true" name="P89" point0="9" point1="23" type="PointOnTheLine"/>
+  </object>
+  <object id="89" persistent="true">
+    <data alpha="0.500" fixed="true" name="P90" point0="9" point1="25" type="PointOnTheLine"/>
+  </object>
+  <object id="90" persistent="true">
+    <data alpha="0.500" fixed="true" name="P91" point0="9" point1="26" type="PointOnTheLine"/>
+  </object>
+  <object id="91" persistent="true">
+    <data alpha="0.500" fixed="true" name="P92" point0="26" point1="25" type="PointOnTheLine"/>
+  </object>
+  <object id="92" persistent="true">
+    <data alpha="0.500" fixed="true" name="P93" point0="26" point1="27" type="PointOnTheLine"/>
+  </object>
+  <object id="93" persistent="true">
+    <data alpha="0.500" fixed="true" name="P94" point0="26" point1="13" type="PointOnTheLine"/>
+  </object>
+  <object id="94" persistent="true">
+    <data alpha="0.500" fixed="true" name="P95" point0="13" point1="27" type="PointOnTheLine"/>
+  </object>
+  <object id="95" persistent="true">
+    <data alpha="0.500" fixed="true" name="P96" point0="13" point1="29" type="PointOnTheLine"/>
+  </object>
+  <object id="96" persistent="true">
+    <data alpha="0.500" fixed="true" name="P97" point0="7" point1="30" type="PointOnTheLine"/>
+  </object>
+  <object id="97" persistent="true">
+    <data alpha="0.500" fixed="true" name="P98" point0="30" point1="21" type="PointOnTheLine"/>
+  </object>
+  <object id="98" persistent="true">
+    <data alpha="0.500" fixed="true" name="P99" point0="30" point1="31" type="PointOnTheLine"/>
+  </object>
+  <object id="99" persistent="true">
+    <data alpha="0.500" fixed="true" name="P100" point0="31" point1="21" type="PointOnTheLine"/>
+  </object>
+  <object id="100" persistent="true">
+    <data alpha="0.500" fixed="true" name="P101" point0="31" point1="8" type="PointOnTheLine"/>
+  </object>
+  <object id="101" persistent="true">
+    <data alpha="0.500" fixed="true" name="P102" point0="31" point1="33" type="PointOnTheLine"/>
+  </object>
+  <object id="102" persistent="true">
+    <data alpha="0.500" fixed="true" name="P103" point0="33" point1="8" type="PointOnTheLine"/>
+  </object>
+  <object id="103" persistent="true">
+    <data alpha="0.500" fixed="true" name="P104" point0="33" point1="22" type="PointOnTheLine"/>
+  </object>
+  <object id="104" persistent="true">
+    <data alpha="0.500" fixed="true" name="P105" point0="33" point1="34" type="PointOnTheLine"/>
+  </object>
+  <object id="105" persistent="true">
+    <data alpha="0.500" fixed="true" name="P106" point0="34" point1="22" type="PointOnTheLine"/>
+  </object>
+  <object id="106" persistent="true">
+    <data alpha="0.500" fixed="true" name="P107" point0="34" point1="9" type="PointOnTheLine"/>
+  </object>
+  <object id="107" persistent="true">
+    <data alpha="0.500" fixed="true" name="P108" point0="34" point1="36" type="PointOnTheLine"/>
+  </object>
+  <object id="108" persistent="true">
+    <data alpha="0.500" fixed="true" name="P109" point0="36" point1="9" type="PointOnTheLine"/>
+  </object>
+  <object id="109" persistent="true">
+    <data alpha="0.500" fixed="true" name="P110" point0="36" point1="26" type="PointOnTheLine"/>
+  </object>
+  <object id="110" persistent="true">
+    <data alpha="0.500" fixed="true" name="P111" point0="36" point1="37" type="PointOnTheLine"/>
+  </object>
+  <object id="111" persistent="true">
+    <data alpha="0.500" fixed="true" name="P112" point0="37" point1="26" type="PointOnTheLine"/>
+  </object>
+  <object id="112" persistent="true">
+    <data alpha="0.500" fixed="true" name="P113" point0="37" point1="13" type="PointOnTheLine"/>
+  </object>
+  <object id="113" persistent="true">
+    <data alpha="0.500" fixed="true" name="P114" point0="30" point1="3" type="PointOnTheLine"/>
+  </object>
+  <object id="114" persistent="true">
+    <data alpha="0.500" fixed="true" name="P115" point0="3" point1="31" type="PointOnTheLine"/>
+  </object>
+  <object id="115" persistent="true">
+    <data alpha="0.500" fixed="true" name="P116" point0="3" point1="32" type="PointOnTheLine"/>
+  </object>
+  <object id="116" persistent="true">
+    <data alpha="0.500" fixed="true" name="P117" point0="32" point1="31" type="PointOnTheLine"/>
+  </object>
+  <object id="117" persistent="true">
+    <data alpha="0.500" fixed="true" name="P118" point0="32" point1="33" type="PointOnTheLine"/>
+  </object>
+  <object id="118" persistent="true">
+    <data alpha="0.500" fixed="true" name="P119" point0="32" point1="10" type="PointOnTheLine"/>
+  </object>
+  <object id="119" persistent="true">
+    <data alpha="0.500" fixed="true" name="P120" point0="10" point1="33" type="PointOnTheLine"/>
+  </object>
+  <object id="120" persistent="true">
+    <data alpha="0.500" fixed="true" name="P121" point0="10" point1="34" type="PointOnTheLine"/>
+  </object>
+  <object id="121" persistent="true">
+    <data alpha="0.500" fixed="true" name="P122" point0="10" point1="35" type="PointOnTheLine"/>
+  </object>
+  <object id="122" persistent="true">
+    <data alpha="0.500" fixed="true" name="P123" point0="35" point1="34" type="PointOnTheLine"/>
+  </object>
+  <object id="123" persistent="true">
+    <data alpha="0.500" fixed="true" name="P124" point0="35" point1="36" type="PointOnTheLine"/>
+  </object>
+  <object id="124" persistent="true">
+    <data alpha="0.500" fixed="true" name="P125" point0="35" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="125" persistent="true">
+    <data alpha="0.500" fixed="true" name="P126" point0="5" point1="36" type="PointOnTheLine"/>
+  </object>
+  <object id="126" persistent="true">
+    <data alpha="0.500" fixed="true" name="P127" point0="5" point1="37" type="PointOnTheLine"/>
+  </object>
+  <object id="127" persistent="true">
+    <data alpha="0.500" fixed="true" name="P128" point0="38" point1="3" type="PointOnTheLine"/>
+  </object>
+  <object id="128" persistent="true">
+    <data alpha="0.500" fixed="true" name="P129" point0="38" point1="32" type="PointOnTheLine"/>
+  </object>
+  <object id="129" persistent="true">
+    <data alpha="0.500" fixed="true" name="P130" point0="38" point1="39" type="PointOnTheLine"/>
+  </object>
+  <object id="130" persistent="true">
+    <data alpha="0.500" fixed="true" name="P131" point0="39" point1="32" type="PointOnTheLine"/>
+  </object>
+  <object id="131" persistent="true">
+    <data alpha="0.500" fixed="true" name="P132" point0="39" point1="10" type="PointOnTheLine"/>
+  </object>
+  <object id="132" persistent="true">
+    <data alpha="0.500" fixed="true" name="P133" point0="39" point1="41" type="PointOnTheLine"/>
+  </object>
+  <object id="133" persistent="true">
+    <data alpha="0.500" fixed="true" name="P134" point0="41" point1="10" type="PointOnTheLine"/>
+  </object>
+  <object id="134" persistent="true">
+    <data alpha="0.500" fixed="true" name="P135" point0="41" point1="35" type="PointOnTheLine"/>
+  </object>
+  <object id="135" persistent="true">
+    <data alpha="0.500" fixed="true" name="P136" point0="41" point1="42" type="PointOnTheLine"/>
+  </object>
+  <object id="136" persistent="true">
+    <data alpha="0.500" fixed="true" name="P137" point0="42" point1="35" type="PointOnTheLine"/>
+  </object>
+  <object id="137" persistent="true">
+    <data alpha="0.500" fixed="true" name="P138" point0="42" point1="5" type="PointOnTheLine"/>
+  </object>
+  <object id="138" persistent="true">
+    <data alpha="0.500" fixed="true" name="P139" point0="12" point1="38" type="PointOnTheLine"/>
+  </object>
+  <object id="139" persistent="true">
+    <data alpha="0.500" fixed="true" name="P140" point0="12" point1="39" type="PointOnTheLine"/>
+  </object>
+  <object id="140" persistent="true">
+    <data alpha="0.500" fixed="true" name="P141" point0="12" point1="40" type="PointOnTheLine"/>
+  </object>
+  <object id="141" persistent="true">
+    <data alpha="0.500" fixed="true" name="P142" point0="40" point1="39" type="PointOnTheLine"/>
+  </object>
+  <object id="142" persistent="true">
+    <data alpha="0.500" fixed="true" name="P143" point0="40" point1="41" type="PointOnTheLine"/>
+  </object>
+  <object id="143" persistent="true">
+    <data alpha="0.500" fixed="true" name="P144" point0="40" point1="11" type="PointOnTheLine"/>
+  </object>
+  <object id="144" persistent="true">
+    <data alpha="0.500" fixed="true" name="P145" point0="11" point1="41" type="PointOnTheLine"/>
+  </object>
+  <object id="145" persistent="true">
+    <data alpha="0.500" fixed="true" name="P146" point0="11" point1="42" type="PointOnTheLine"/>
+  </object>
+  <object id="146" persistent="true">
+    <data alpha="0.500" fixed="true" name="P147" point0="43" point1="12" type="PointOnTheLine"/>
+  </object>
+  <object id="147" persistent="true">
+    <data alpha="0.500" fixed="true" name="P148" point0="43" point1="44" type="PointOnTheLine"/>
+  </object>
+  <object id="148" persistent="true">
+    <data alpha="0.500" fixed="true" name="P149" point0="43" point1="40" type="PointOnTheLine"/>
+  </object>
+  <object id="149" persistent="true">
+    <data alpha="0.500" fixed="true" name="P150" point0="44" point1="40" type="PointOnTheLine"/>
+  </object>
+  <object id="150" persistent="true">
+    <data alpha="0.500" fixed="true" name="P151" point0="44" point1="11" type="PointOnTheLine"/>
+  </object>
+  <object id="151" persistent="true">
+    <data alpha="0.500" fixed="true" name="P152" point0="43" point1="2" type="PointOnTheLine"/>
+  </object>
+  <object id="152" persistent="true">
+    <data alpha="0.500" fixed="true" name="P153" point0="2" point1="44" type="PointOnTheLine"/>
+  </object>
+</scene>

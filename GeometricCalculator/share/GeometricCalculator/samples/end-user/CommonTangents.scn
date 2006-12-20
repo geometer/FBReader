@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scene name="Общие касательные к 2 окружностям">
+  <object id="0" persistent="true">
+    <data name="A" type="IndependentPoint" x="178" y="205"/>
+  </object>
+  <object id="1" persistent="true">
+    <data name="B" type="IndependentPoint" x="424" y="207"/>
+  </object>
+  <object id="2" persistent="true">
+    <data name="A1" type="IndependentPoint" x="224" y="185"/>
+  </object>
+  <object id="3" persistent="true">
+    <data name="B1" type="IndependentPoint" x="503" y="154"/>
+  </object>
+  <object id="4" persistent="true">
+    <data center="0" point="2" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="5" persistent="true">
+    <data center="1" point="3" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="6">
+    <data end="1" kind="0" start="0" type="LineByTwoPoints"/>
+  </object>
+  <object id="7">
+    <data end="1" kind="0" start="3" type="LineByTwoPoints"/>
+  </object>
+  <object id="8">
+    <data base="4" center="3" type="CircleCopy"/>
+  </object>
+  <object id="9">
+    <data circle="8" first="true" line="7" name="P5" type="LineAndCircleCrossing"/>
+  </object>
+  <object id="10">
+    <data first="3" name="" second="9" third="0" type="FourthParallelogramPoint"/>
+  </object>
+  <object id="11">
+    <data end="10" kind="0" start="3" type="LineByTwoPoints"/>
+  </object>
+  <object id="12">
+    <data line0="11" line1="6" name="P6" type="LinesCrossing"/>
+  </object>
+  <object id="13">
+    <data alpha="0.500" fixed="true" line="6" name="P7" point0="12" point1="0" type="PointOnTheLine"/>
+  </object>
+  <object id="14">
+    <data center="13" point="12" type="CircleByCenterAndPoint"/>
+  </object>
+  <object id="15">
+    <data circle0="14" circle1="4" first="true" name="P9" type="CirclesCrossing"/>
+  </object>
+  <object id="16" persistent="true">
+    <data end="15" kind="0" start="12" type="LineByTwoPoints"/>
+  </object>
+  <object id="17">
+    <data circle0="4" circle1="14" first="true" name="P8" type="CirclesCrossing"/>
+  </object>
+  <object id="18" persistent="true">
+    <data end="17" kind="0" start="12" type="LineByTwoPoints"/>
+  </object>
+</scene>

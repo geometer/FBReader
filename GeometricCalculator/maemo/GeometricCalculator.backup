@@ -1,0 +1,5 @@
+<backup-configuration>
+  <locations>
+    <location type="dir" category="settings">$HOME/.GeometricCalculator</location>
+  </locations>
+</backup-configuration>

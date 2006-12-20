@@ -1,0 +1,8 @@
+[Desktop Entry]
+Comment=Dynamic Geometry Software
+Exec=GeometricCalculator
+Icon=GeometricCalculator
+Type=Application
+Name=Geometric Calculator
+Display=640x480/144dpi,480x640/144dpi
+HidePrivilege=1

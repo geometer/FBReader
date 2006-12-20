@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <group name="Point">
+    <option name="FontFamily" value="Arial"/>
+    <option name="FontSize" value="16"/>
+  </group>
+</config>
