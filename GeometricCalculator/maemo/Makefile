@@ -16,7 +16,7 @@ SECTION = utils
 else
 PREFIX =
 DBUSDIR = /usr/share/dbus-1/services
-DEPENDS = `dpkg-shlibdeps -O ../GeometricCalculator | sed -e 's/shlibs:Depends=//'`, libzlibrary-maemo2 (>= `cat $(ROOTDIR)/zlibrary/VERSION`)
+DEPENDS = `dpkg-shlibdeps -O ../GeometricCalculator | sed -e 's/shlibs:Depends=//'`
 MENUDIR = $(DESTDIR)/etc/others-menu
 SECTION = user/tools
 endif

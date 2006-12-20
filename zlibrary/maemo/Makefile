@@ -10,7 +10,7 @@ PACKAGE_FILE = $(PACKAGE_NAME)_$(DEBIAN_VERSION)_$(ARCH).deb
 ifeq "$(UI_TYPE)" "maemo"
 PREFIX = /var/lib/install
 DEPENDS = maemo
-SECTION = utils
+SECTION = libs
 else
 PREFIX =
 DEPENDS = `dpkg-shlibdeps -O ../libzlibrary-$(UI_TYPE).so | sed -e 's/shlibs:Depends=//'`
@@ -33,6 +33,7 @@ package:
 		-e "s#@DEPENDS@#$(DEPENDS)#" \
 		-e "s#@SECTION@#$(SECTION)#" \
 		control.in > $(TMPDIR)/DEBIAN/control
+	@install -m 644 shlibs $(TMPDIR)/DEBIAN
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 
