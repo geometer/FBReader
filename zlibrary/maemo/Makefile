@@ -32,7 +32,7 @@ package:
 		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
 		-e "s#@DEPENDS@#$(DEPENDS)#" \
 		-e "s#@SECTION@#$(SECTION)#" \
-		libzlibrary.control.in > $(TMPDIR)/DEBIAN/control
+		control.in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 
