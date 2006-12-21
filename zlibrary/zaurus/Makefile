@@ -7,18 +7,12 @@ TMPDIR = tmp
 DESTDIR = $(TMPDIR)/data
 CTRLDIR = $(TMPDIR)/control
 
-PACKAGENAME = libzlibrary
-CONTROLFILE = $(PACKAGENAME).control
-
-ifeq "$(UI_TYPE)" "qtopia-240x320"
-  RESOLUTION = 240x320
-else # UI_TYPE == qtopia-640x480
-  RESOLUTION = 640x480
-endif
+PACKAGENAME = libzlibrary-$(UI_TYPE)
+CONTROLFILE = control
 
 version = $(shell cat ../VERSION)
 depends = expat,libbz2
-package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
+package = $(PACKAGENAME)_$(version)_$(ARCH)
 
 all: .ipk
 	@mv *.ipk ../..

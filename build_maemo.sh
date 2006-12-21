@@ -3,7 +3,7 @@
 do_build() {
 	echo -n "Building $1 ($2) ...";
 	make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
-	if ! make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release package 1> $1\($2\).log 2>&1; then
+	if ! make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release packages 1> $1\($2\).log 2>&1; then
 		echo " failure";
 	else
 		echo " OK"

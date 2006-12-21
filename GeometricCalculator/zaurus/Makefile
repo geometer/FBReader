@@ -14,7 +14,7 @@ RESOLUTION = 640x480
 PICS_TO = pics144
 
 version = $(shell cat ../VERSION)
-depends = libzlibrary
+depends = libzlibrary-$(UI_TYPE)
 package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
 
 all: package

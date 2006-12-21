@@ -21,7 +21,7 @@ else # UI_TYPE == qtopia-640x480
 endif
 
 version = $(shell cat ../VERSION)
-depends = libzlibrary,libenca
+depends = libzlibrary-$(UI_TYPE),libenca
 package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
 
 all: .ipk
