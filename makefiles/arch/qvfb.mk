@@ -1,4 +1,4 @@
-INSTALLDIR = /usr/local
+INSTALLDIR = /opt/opie/opie
 IMAGEDIR = $(INSTALLDIR)/pics
 APPLICATIONSUBDIR = "%application_name%"
 
