@@ -350,7 +350,7 @@ void DiagramView::drawCircle(const CirclePtr circle, DrawMode drawMode) {
 	double y = center.y;
 	double radius = circle->radius();
 
-	addDrawableObject(new DrawableCircle(zoomed((int)(x + .5)), zoomed((int)(y + .5)), radius, color, solid), level);
+	addDrawableObject(new DrawableCircle(zoomed((int)(x + .5)), zoomed((int)(y + .5)), zoomed(radius), color, solid), level);
 }
 
 void DiagramView::drawRuler(const ValuePtr ruler) {
@@ -414,6 +414,10 @@ void DiagramView::addDrawableObject(DrawableObject *object, int level) {
 }
 
 int DiagramView::zoomed(int coordinate) const {
+	return coordinate * ZoomOption.value() / 100;
+}
+
+double DiagramView::zoomed(double coordinate) const {
 	return coordinate * ZoomOption.value() / 100;
 }
 

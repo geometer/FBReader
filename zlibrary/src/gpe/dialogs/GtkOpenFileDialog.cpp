@@ -137,7 +137,7 @@ void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
 		GtkTreeIter iter;
 		gtk_list_store_append(myStore, &iter);
 
-		char *fileName = g_locale_to_utf8((*it)->name().data(), (*it)->name().length(), 0, 0, 0);
+		char *fileName = g_locale_to_utf8((*it)->displayName().data(), (*it)->displayName().length(), 0, 0, 0);
 		gtk_list_store_set(myStore, &iter,
 					0, getPixmap(*it),
 					1, fileName,
@@ -147,7 +147,7 @@ void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
 
 		myNodes.push_back(*it);
 
-		if ((*it)->name() == selectedNodeName) {
+		if ((*it)->id() == selectedNodeName) {
 			selectedItem = gtk_tree_iter_copy(&iter);
 		}
 	}

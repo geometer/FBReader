@@ -61,26 +61,15 @@ void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
 	}
 }
 
-ZLTreeNode::ZLTreeNode(const std::string &name, bool isFile, const std::string &pixmapName) : myName(name), myIsFile(isFile), myPixmapName(pixmapName) {
+ZLTreeNode::ZLTreeNode(const std::string &id, const std::string &displayName, const std::string &pixmapName, bool isFolder) : myId(id), myDisplayName(displayName), myPixmapName(pixmapName), myIsFolder(isFolder) {
 }
 
-ZLTreeNode::~ZLTreeNode() {
-}
-
-const std::string &ZLTreeNode::name() const {
-	return myName;
-}
-
-const std::string &ZLTreeNode::pixmapName() const {
-	return myPixmapName;
-}
-
-bool ZLTreeNode::isFile() const {
-	return myIsFile;
+bool ZLTreeNode::isFolder() const {
+	return myIsFolder;
 }
 
 std::string ZLTreeNode::relativeName(const ZLTreeStatePtr state) const {
-	return (myName == "..") ? state->shortName() : "..";
+	return (myId == "..") ? state->shortName() : "..";
 }
 
 ZLTreeState::ZLTreeState(const ZLTreeHandler &handler) : myHandler(handler) {
@@ -90,9 +79,6 @@ ZLTreeState::~ZLTreeState() {
 }
 
 ZLDirTreeState::ZLDirTreeState(const ZLTreeHandler &handler, shared_ptr<ZLDir> dir) : ZLTreeState(handler), myDir(dir), myIsUpToDate(false) {
-}
-
-ZLDirTreeState::~ZLDirTreeState() {
 }
 
 const std::string &ZLDirTreeState::name() const {
@@ -106,7 +92,7 @@ const std::string ZLDirTreeState::shortName() const {
 void ZLDirTreeState::addSubnode(const std::string &name, bool isFile) const {
 	const std::string &pixmapName = handler().pixmapName(*myDir, name, isFile);
 	if (!pixmapName.empty()) {
-		mySubnodes.push_back(new ZLTreeNode(name, isFile, pixmapName));
+		mySubnodes.push_back(new ZLTreeNode(name, name, pixmapName, !isFile));
 	}
 }
 
@@ -134,7 +120,7 @@ const std::vector<ZLTreeNodePtr> &ZLDirTreeState::subnodes() const {
 
 ZLTreeStatePtr ZLDirTreeState::change(const ZLTreeNodePtr node) {
 	ZLTreeStatePtr newState;
-	const std::string &fullName = myDir->itemName(node->name());
+	const std::string &fullName = myDir->itemName(node->id());
 	if (handler().isAcceptable(fullName)) {
 		newState = new ZLFileTreeState(handler(), fullName);
 	} else {
@@ -157,9 +143,6 @@ bool ZLDirTreeState::exists() const {
 }
 
 ZLFileTreeState::ZLFileTreeState(const ZLTreeHandler &handler, const std::string &name) : ZLTreeState(handler), myFileName(name) {
-}
-
-ZLFileTreeState::~ZLFileTreeState() {
 }
 
 const std::string &ZLFileTreeState::name() const {

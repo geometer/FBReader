@@ -28,7 +28,7 @@
 #include "QOpenFileDialog.h"
 #include "QDialogManager.h"
 
-QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromLocal8Bit(node->name().c_str())), myNode(node) {
+QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromLocal8Bit(node->displayName().c_str())), myNode(node) {
 }
 
 QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : QDialog(), ZLDesktopOpenFileDialog(handler) {
@@ -90,7 +90,7 @@ void QOpenFileDialog::update(const std::string &selectedNodeName) {
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
 	 	item = new QOpenFileDialogItem(myListView, item, *it);
 		item->setPixmap(0, getPixmap(*it));
-		if ((*it)->name() == selectedNodeName) {
+		if ((*it)->id() == selectedNodeName) {
 			selectedItem = item;
 		}
 	}

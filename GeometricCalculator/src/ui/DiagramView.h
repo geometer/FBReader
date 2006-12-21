@@ -79,6 +79,7 @@ private:
 	void reset();
 
 	int zoomed(int coordinate) const;
+	double zoomed(double coordinate) const;
 	int unzoomed(int coordinate) const;
 
 private:

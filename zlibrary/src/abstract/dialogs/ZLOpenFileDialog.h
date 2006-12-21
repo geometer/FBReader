@@ -47,18 +47,19 @@ public:
 class ZLTreeNode {
 
 public:
-	ZLTreeNode(const std::string &name, bool isFile, const std::string &pixmapName);
-	~ZLTreeNode();
+	ZLTreeNode(const std::string &id, const std::string &displayName, const std::string &pixmapName, bool isFolder);
 
-	const std::string &name() const;
+	const std::string &id() const;
+	const std::string &displayName() const;
 	const std::string &pixmapName() const;
-	bool isFile() const;
+	bool isFolder() const;
 	std::string relativeName(const ZLTreeStatePtr state) const;
 
 private:
-	std::string myName;
-	bool myIsFile;
+	std::string myId;
+	std::string myDisplayName;
 	std::string myPixmapName;
+	bool myIsFolder;
 };
 
 class ZLTreeState {
@@ -87,7 +88,6 @@ class ZLDirTreeState : public ZLTreeState {
 
 public:
 	ZLDirTreeState(const ZLTreeHandler &handler, shared_ptr<ZLDir> dir);
-	~ZLDirTreeState();
 
 	ZLTreeStatePtr change(const ZLTreeNodePtr node);
 
@@ -111,7 +111,6 @@ class ZLFileTreeState : public ZLTreeState {
 
 public:
 	ZLFileTreeState(const ZLTreeHandler &handler, const std::string &name);
-	~ZLFileTreeState();
 
 	ZLTreeStatePtr change(const ZLTreeNodePtr node);
 
@@ -149,6 +148,10 @@ protected:
 private:
 	ZLTreeStatePtr myState;
 };
+
+inline const std::string &ZLTreeNode::id() const { return myId; }
+inline const std::string &ZLTreeNode::displayName() const { return myDisplayName; }
+inline const std::string &ZLTreeNode::pixmapName() const { return myPixmapName; }
 
 inline ZLTreeHandler::ZLTreeHandler() {}
 inline ZLTreeHandler::~ZLTreeHandler() {}
