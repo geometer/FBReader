@@ -40,8 +40,8 @@ FBFileHandler::~FBFileHandler() {
 	DirectoryOption.setValue(myDir->name());
 }
 
-void FBFileHandler::changeFolder(const std::string &nodeId) {
-	shared_ptr<ZLDir> dir = ZLFile(myDir->itemName(nodeId)).directory();
+void FBFileHandler::changeFolder(const ZLTreeNode &node) {
+	shared_ptr<ZLDir> dir = ZLFile(myDir->itemName(node.id())).directory();
 	if (!dir.isNull()) {
 		myDir = dir;
 		myIsUpToDate = false;
@@ -113,8 +113,8 @@ std::string FBFileHandler::relativeId(const ZLTreeNode &node) const {
 	return (node.id() == "..") ? myDir->shortName() : "..";
 }
 
-const std::string FBFileHandler::accept(const std::string &nodeId) const {
-	const std::string name = myDir->itemName(nodeId);
+const std::string FBFileHandler::accept(const ZLTreeNode &node) const {
+	const std::string name = myDir->itemName(node.id());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(name), false);
 	const std::string message = (plugin == 0) ? "Unknown File Format" : plugin->tryOpen(name);
 	if (!message.empty()) {

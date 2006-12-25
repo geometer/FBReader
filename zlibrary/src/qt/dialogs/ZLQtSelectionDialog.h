@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQSELECTIONDIALOG_H__
-#define __ZLQSELECTIONDIALOG_H__
+#ifndef __ZLQTSELECTIONDIALOG_H__
+#define __ZLQTSELECTIONDIALOG_H__
 
 #include <string>
 #include <map>
@@ -32,22 +32,22 @@
 class QVBox;
 class QLineEdit;
 
-class ZLQSelectionDialogItem : public QListViewItem {
+class ZLQtSelectionDialogItem : public QListViewItem {
 
 public:
-	ZLQSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node);
+	ZLQtSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node);
 	ZLTreeNodePtr node() const { return myNode; }
 
 private:
 	ZLTreeNodePtr myNode;
 };
 
-class ZLQSelectionDialog : public QDialog, public ZLDesktopSelectionDialog {
+class ZLQtSelectionDialog : public QDialog, public ZLDesktopSelectionDialog {
 	Q_OBJECT
 
 public:
-	ZLQSelectionDialog(const char *caption, ZLTreeHandler &handler); 
-	~ZLQSelectionDialog();
+	ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler); 
+	~ZLQtSelectionDialog();
 	void run();
 
 private:
@@ -74,8 +74,8 @@ private:
 	std::map<std::string,QPixmap*> myPixmaps;
 };
 
-inline void ZLQSelectionDialog::run() {
+inline void ZLQtSelectionDialog::run() {
 	QDialog::exec();
 }
 
-#endif /* __ZLQSELECTIONDIALOG_H__ */
+#endif /* __ZLQTSELECTIONDIALOG_H__ */

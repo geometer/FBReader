@@ -1,1 +1,1 @@
-SRCMOC = QCommonDialog.moc.cpp QOptionsDialog.moc.cpp QOptionView.moc.cpp ZLQSelectionDialog.moc.cpp
+SRCMOC = QCommonDialog.moc.cpp QOptionsDialog.moc.cpp QOptionView.moc.cpp ZLQtSelectionDialog.moc.cpp

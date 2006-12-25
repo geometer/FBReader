@@ -40,10 +40,10 @@ public:
 private:
 	bool isWriteable() const;
 
-	const std::string accept(const std::string &nodeId) const;
+	const std::string accept(const ZLTreeNode &node) const;
 
 	const std::string stateDisplayName() const;
-	void changeFolder(const std::string &nodeId);
+	void changeFolder(const ZLTreeNode &node);
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
 	std::string relativeId(const ZLTreeNode &node) const;
 

@@ -25,13 +25,13 @@
 
 #include <ZLApplication.h>
 
-#include "ZLQSelectionDialog.h"
+#include "ZLQtSelectionDialog.h"
 #include "QDialogManager.h"
 
-ZLQSelectionDialogItem::ZLQSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
+ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
 }
 
-ZLQSelectionDialog::ZLQSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(), ZLDesktopSelectionDialog(handler) {
+ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(), ZLDesktopSelectionDialog(handler) {
 	setCaption(caption);
 
 	myMainBox = new QVBox(this);
@@ -49,13 +49,13 @@ ZLQSelectionDialog::ZLQSelectionDialog(const char *caption, ZLTreeHandler &handl
 	update("");
 }
 
-ZLQSelectionDialog::~ZLQSelectionDialog() {
+ZLQtSelectionDialog::~ZLQtSelectionDialog() {
 	for (std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
 		delete it->second;
 	}
 }
 
-QPixmap &ZLQSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
+QPixmap &ZLQtSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
@@ -67,19 +67,19 @@ QPixmap &ZLQSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	}
 }
 
-void ZLQSelectionDialog::keyPressEvent(QKeyEvent *event) {
+void ZLQtSelectionDialog::keyPressEvent(QKeyEvent *event) {
 	if ((event != 0) && (event->key() == Key_Escape)) {
 		reject();
 	}
 }
 
-void ZLQSelectionDialog::resizeEvent(QResizeEvent *event) {
+void ZLQtSelectionDialog::resizeEvent(QResizeEvent *event) {
 	if (event != 0) {
 		myMainBox->resize(event->size());
 	}
 }
 
-void ZLQSelectionDialog::update(const std::string &selectedNodeId) {
+void ZLQtSelectionDialog::update(const std::string &selectedNodeId) {
 	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
 
 	myListView->clear();
@@ -91,7 +91,7 @@ void ZLQSelectionDialog::update(const std::string &selectedNodeId) {
 		QListViewItem *selectedItem = 0;
 
 		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
-		 	item = new ZLQSelectionDialogItem(myListView, item, *it);
+		 	item = new ZLQtSelectionDialogItem(myListView, item, *it);
 			item->setPixmap(0, getPixmap(*it));
 			if ((*it)->id() == selectedNodeId) {
 				selectedItem = item;
@@ -110,10 +110,10 @@ void ZLQSelectionDialog::update(const std::string &selectedNodeId) {
 	}
 }
 
-void ZLQSelectionDialog::exitDialog() {
+void ZLQtSelectionDialog::exitDialog() {
 	QDialog::accept();
 }
 
-void ZLQSelectionDialog::accept() {
-	runNode(((ZLQSelectionDialogItem*)myListView->currentItem())->node());
+void ZLQtSelectionDialog::accept() {
+	runNode(((ZLQtSelectionDialogItem*)myListView->currentItem())->node());
 }

@@ -162,7 +162,7 @@ void GeometricCalculator::open(const std::string &fileName) {
 }
 
 void GeometricCalculator::save() {
-	GCSaveSceneHandler handler;
+	GCSaveSceneHandler handler(myView->document()->scene()->name());
 	ZLDialogManager::instance().selectionDialog("Save Scene", handler);
 	//open(handler.fileName());
 }

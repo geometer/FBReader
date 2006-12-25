@@ -25,7 +25,7 @@
 #include "QDialogManager.h"
 #include "QCommonDialog.h"
 #include "QOptionsDialog.h"
-#include "ZLQSelectionDialog.h"
+#include "ZLQtSelectionDialog.h"
 #include "QWaitMessage.h"
 
 ZLOptionsDialog *QDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
@@ -49,7 +49,7 @@ int QDialogManager::infoBox(const InfoBoxType type, const std::string &title, co
 }
 
 void QDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	ZLQSelectionDialog(title.c_str(), handler).runWithSize();
+	ZLQtSelectionDialog(title.c_str(), handler).runWithSize();
 }
 
 void QDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {

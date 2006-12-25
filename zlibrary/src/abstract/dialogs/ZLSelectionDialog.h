@@ -38,10 +38,10 @@ protected:
 public:
 	virtual bool isWriteable() const = 0;
 
-	virtual const std::string accept(const std::string &name) const = 0;
+	virtual const std::string accept(const ZLTreeNode &node) const = 0;
 
 	virtual const std::string stateDisplayName() const = 0;
-	virtual void changeFolder(const std::string &nodeId) = 0;
+	virtual void changeFolder(const ZLTreeNode &node) = 0;
 	virtual const std::vector<ZLTreeNodePtr> &subnodes() const = 0;
 	virtual std::string relativeId(const ZLTreeNode &node) const = 0;
 };
