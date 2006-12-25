@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKOPTIONSDIALOG_H__
-#define __GTKOPTIONSDIALOG_H__
+#ifndef __ZLGTKOPTIONSDIALOG_H__
+#define __ZLGTKOPTIONSDIALOG_H__
 
 #include <vector>
 
@@ -29,13 +29,13 @@
 
 #include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
-class GtkOptionView;
+class ZLGtkOptionView;
 
-class GtkOptionsDialogTab : public ZLDialogContent {
+class ZLGtkOptionsDialogTab : public ZLDialogContent {
 
 public:
-	GtkOptionsDialogTab();
-	~GtkOptionsDialogTab();
+	ZLGtkOptionsDialogTab();
+	~ZLGtkOptionsDialogTab();
 
 	void addOption(ZLOptionEntry *option);
 	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
@@ -53,14 +53,14 @@ private:
 private:
 	GtkTable *myTable;
 	gint myRowCounter;
-	std::vector<GtkOptionView*> myViews;
+	std::vector<ZLGtkOptionView*> myViews;
 };
 
-class GtkOptionsDialog : public ZLDesktopOptionsDialog {
+class ZLGtkOptionsDialog : public ZLDesktopOptionsDialog {
 
 public:
-	GtkOptionsDialog(const std::string &id, const std::string &caption);
-	~GtkOptionsDialog();
+	ZLGtkOptionsDialog(const std::string &id, const std::string &caption);
+	~ZLGtkOptionsDialog();
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:
@@ -75,10 +75,8 @@ protected:
 private:
 	GtkDialog *myDialog;
 	GtkNotebook *myNotebook;
-	std::vector<GtkOptionsDialogTab*> myTabs;
+	std::vector<ZLGtkOptionsDialogTab*> myTabs;
 	std::vector<std::string> myTabNames;
 };
 
-// vim:ts=2:sw=2:noet
-
-#endif /* __GTKOPTIONSDIALOG_H__ */
+#endif /* __ZLGTKOPTIONSDIALOG_H__ */

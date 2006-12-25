@@ -18,21 +18,46 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKWAITMESSAGE_H__
-#define __GTKWAITMESSAGE_H__
+#ifndef __ZLGTKSELECTIONDIALOG_H__
+#define __ZLGTKSELECTIONDIALOG_H__
 
-#include <string>
+#include <gtk/gtk.h>
 
-#include <gtk/gtkwidget.h>
+#include <vector>
+#include <map>
 
-class GtkWaitMessage {
+#include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
+
+class ZLGtkSelectionDialog : public ZLDesktopSelectionDialog {
 
 public:
-	GtkWaitMessage(GtkWindow *parent, const std::string &message);
-	~GtkWaitMessage();
+	ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler); 
+	~ZLGtkSelectionDialog(); 
+
+	void run();
+
+	void activatedSlot();
+
+protected:
+	void setSize(int width, int height);
+	int width() const;
+	int height() const;
+
+	void exitDialog();
+	void update(const std::string &selectedNodeName);
 
 private:
-	GtkWindow *myParent, *myWindow;
+	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);
+
+private:
+	bool myExitFlag;
+	GtkDialog *myDialog;
+	GtkListStore *myStore;
+	GtkTreeView *myView;
+	GtkEntry *myStateLine;
+
+	std::map<std::string,GdkPixbuf*> myPixmaps;
+	std::vector<ZLTreeNodePtr> myNodes;
 };
 
-#endif /* __GTKWAITMESSAGE_H__ */
+#endif /* __ZLGTKSELECTIONDIALOG_H__ */

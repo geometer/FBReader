@@ -149,7 +149,7 @@ void GeometricCalculator::open() {
 	*/
 
 	GCOpenSceneHandler handler;
-	ZLDialogManager::instance().openFileDialog("Open Scene", handler);
+	ZLDialogManager::instance().selectionDialog("Open Scene", handler);
 	open(handler.fileName());
 }
 
@@ -163,7 +163,7 @@ void GeometricCalculator::open(const std::string &fileName) {
 
 void GeometricCalculator::save() {
 	GCSaveSceneHandler handler;
-	ZLDialogManager::instance().openFileDialog("Save Scene", handler);
+	ZLDialogManager::instance().selectionDialog("Save Scene", handler);
 	//open(handler.fileName());
 }
 

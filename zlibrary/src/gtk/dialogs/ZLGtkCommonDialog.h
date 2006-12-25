@@ -18,28 +18,24 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLDESKTOPOPENFILEDIALOG_H__
-#define __ZLDESKTOPOPENFILEDIALOG_H__
+#ifndef __ZLGTKCOMMONDIALOG_H__
+#define __ZLGTKCOMMONDIALOG_H__
 
-#include <ZLOpenFileDialog.h>
-#include <ZLOptions.h>
+#include <gtk/gtkdialog.h>
 
-class ZLDesktopOpenFileDialog : public ZLOpenFileDialog {
+#include <ZLDialog.h>
 
-protected:
-	ZLDesktopOpenFileDialog(ZLTreeHandler &handler);
+class ZLGtkCommonDialog : public ZLDialog {
 
 public:
-	void runWithSize();
+	ZLGtkCommonDialog(const std::string &name);
+	~ZLGtkCommonDialog();
 
-protected:
-	virtual void setSize(int width, int height) = 0;
-	virtual int width() const = 0;
-	virtual int height() const = 0;
+	void addButton(const std::string &text);
+	bool run();
 
 private:
-	ZLIntegerRangeOption WidthOption;
-	ZLIntegerRangeOption HeightOption;
+	GtkDialog *myDialog;
 };
 
-#endif /* __ZLDESKTOPOPENFILEDIALOG_H__ */
+#endif /* __ZLGTKCOMMONDIALOG_H__ */

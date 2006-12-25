@@ -25,12 +25,12 @@
 
 #include "../util/GtkKeyUtil.h"
 #include "../util/GtkSignalUtil.h"
-#include "../dialogs/GtkDialogManager.h"
+#include "../dialogs/ZLGtkDialogManager.h"
 #include "../view-pdaxrom/GtkViewWidget.h"
 
 #include "GtkApplicationWindow.h"
 
-void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
+void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myWindow = (new GtkApplicationWindow(application))->getMainWindow();
 }
 

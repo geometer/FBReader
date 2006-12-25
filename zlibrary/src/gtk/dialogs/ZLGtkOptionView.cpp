@@ -31,10 +31,10 @@
 #include <gtk/gtkframe.h>
 #include <gtk/gtkcomboboxentry.h>
 
-#include "GtkOptionView.h"
-#include "GtkOptionsDialog.h"
-#include "GtkDialogManager.h"
-#include "GtkUtil.h"
+#include "ZLGtkOptionView.h"
+#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkDialogManager.h"
+#include "ZLGtkUtil.h"
 #include "../util/GtkKeyUtil.h"
 
 static GtkWidget *labelWithMyParams(const char *text) {
@@ -45,8 +45,8 @@ static GtkWidget *labelWithMyParams(const char *text) {
 	return label;
 }
 
-void GtkOptionView::_onValueChanged(GtkWidget*, gpointer self) {
-	((GtkOptionView*)self)->onValueChanged();
+void ZLGtkOptionView::_onValueChanged(GtkWidget*, gpointer self) {
+	((ZLGtkOptionView*)self)->onValueChanged();
 }
 
 void BooleanOptionView::_createItem() {
@@ -383,12 +383,12 @@ void ColorOptionView::_onAccept() const {
 static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {
 	gtk_button_set_label(GTK_BUTTON(button), "Press key to set action");
 	gdk_keyboard_grab(button->window, true, GDK_CURRENT_TIME);
-	((GtkDialogManager&)GtkDialogManager::instance()).grabKeyboard(true);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(true);
 }
 
 static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer) {
 	gtk_button_set_label(GTK_BUTTON(button), "Press this button to select key");
-	((GtkDialogManager&)GtkDialogManager::instance()).grabKeyboard(false);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(false);
 	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
 }
 

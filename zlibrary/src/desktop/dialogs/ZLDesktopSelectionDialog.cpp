@@ -18,48 +18,16 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKOPENFILEDIALOG_H__
-#define __GTKOPENFILEDIALOG_H__
+#include "ZLDesktopSelectionDialog.h"
 
-#include <gtk/gtk.h>
+static const std::string OPTION_GROUP_NAME = "OpenFileDialog";
 
-#include <vector>
-#include <map>
+ZLDesktopSelectionDialog::ZLDesktopSelectionDialog(ZLTreeHandler &handler) : ZLSelectionDialog(handler), WidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Width", 10, 2000, 400), HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Height", 10, 2000, 300) {
+}
 
-#include "../../desktop/dialogs/ZLDesktopOpenFileDialog.h"
-
-class GtkOpenFileDialog : public ZLDesktopOpenFileDialog {
-
-public:
-	GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler); 
-	~GtkOpenFileDialog(); 
-
-	void run();
-
-	void activatedSlot();
-
-protected:
-	void setSize(int width, int height);
-	int width() const;
-	int height() const;
-
-	void exitDialog();
-	void update(const std::string &selectedNodeName);
-
-private:
-	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);
-
-private:
-	bool myExitFlag;
-	GtkDialog *myDialog;
-	GtkListStore *myStore;
-	GtkTreeView *myView;
-	GtkEntry *myStateLine;
-
-	std::map<std::string,GdkPixbuf*> myPixmaps;
-	std::vector<ZLTreeNodePtr> myNodes;
-};
-
-#endif
-
-// vim:ts=2:sw=2:noet
+void ZLDesktopSelectionDialog::runWithSize() {
+	setSize(WidthOption.value(), HeightOption.value());
+	run();
+	WidthOption.setValue(width());
+	HeightOption.setValue(height());
+}

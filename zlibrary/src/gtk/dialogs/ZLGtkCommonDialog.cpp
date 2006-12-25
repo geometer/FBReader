@@ -18,24 +18,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKCOMMONDIALOG_H__
-#define __GTKCOMMONDIALOG_H__
+#include <gtk/gtkbox.h>
 
-#include <gtk/gtkdialog.h>
+#include "ZLGtkCommonDialog.h"
+#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkDialogManager.h"
+#include "ZLGtkUtil.h"
 
-#include <ZLDialog.h>
+ZLGtkCommonDialog::ZLGtkCommonDialog(const std::string &name) {
+	myTab = new ZLGtkOptionsDialogTab();
+	myDialog = createGtkDialog(name.c_str());
+}
 
-class GtkCommonDialog : public ZLDialog {
+ZLGtkCommonDialog::~ZLGtkCommonDialog() {
+	destroyGtkDialog(myDialog);
+}
 
-public:
-	GtkCommonDialog(const std::string &name);
-	~GtkCommonDialog();
+void ZLGtkCommonDialog::addButton(const std::string &text) {
+	std::string buttonText = gtkString(text);
+	gtk_dialog_add_button(myDialog, buttonText.c_str(), GTK_RESPONSE_ACCEPT);
+}
 
-	void addButton(const std::string &text);
-	bool run();
-
-private:
-	GtkDialog *myDialog;
-};
-
-#endif /* __GTKCOMMONDIALOG_H__ */
+bool ZLGtkCommonDialog::run() {
+	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((ZLGtkOptionsDialogTab*)myTab)->widget()), true, true, 0);
+	gtk_widget_show_all(GTK_WIDGET(myDialog));
+	return gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT;
+}

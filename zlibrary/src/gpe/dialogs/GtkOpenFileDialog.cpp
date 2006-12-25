@@ -127,39 +127,42 @@ void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
 	gtk_list_store_clear(myStore);
 	myNodes.clear();
 
-	GtkTreeIter *selectedItem = 0;
-
 	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
-	int index = 0;
-	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it, ++index) {
-		GtkTreeIter iter;
-		gtk_list_store_append(myStore, &iter);
 
-		gtk_list_store_set(myStore, &iter,
-					0, getPixmap(*it),
-					1, (*it)->displayName().c_str(),
-					2, index,
-					-1);
+	if (subnodes.size() > 0) {
+		GtkTreeIter *selectedItem = 0;
 
-		myNodes.push_back(*it);
+		int index = 0;
+		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it, ++index) {
+			GtkTreeIter iter;
+			gtk_list_store_append(myStore, &iter);
 
-		if ((*it)->id() == selectedNodeName) {
-			selectedItem = gtk_tree_iter_copy(&iter);
+			gtk_list_store_set(myStore, &iter,
+						0, getPixmap(*it),
+						1, (*it)->displayName().c_str(),
+						2, index,
+						-1);
+
+			myNodes.push_back(*it);
+
+			if ((*it)->id() == selectedNodeName) {
+				selectedItem = gtk_tree_iter_copy(&iter);
+			}
 		}
-	}
 
-	GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
+		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 
-	if (selectedItem == 0) {
-		GtkTreeIter iter;
-		gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
-		gtk_tree_selection_select_iter(selection, &iter);
-	} else {
-		gtk_tree_selection_select_iter(selection, selectedItem);
-		GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), selectedItem);
-		gtk_tree_view_scroll_to_cell(myView, path, 0, FALSE, 0, 0);
-		gtk_tree_path_free(path);
-		gtk_tree_iter_free(selectedItem);
+		if (selectedItem == 0) {
+			GtkTreeIter iter;
+			gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
+			gtk_tree_selection_select_iter(selection, &iter);
+		} else {
+			gtk_tree_selection_select_iter(selection, selectedItem);
+			GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), selectedItem);
+			gtk_tree_view_scroll_to_cell(myView, path, 0, FALSE, 0, 0);
+			gtk_tree_path_free(path);
+			gtk_tree_iter_free(selectedItem);
+		}
 	}
 }
 

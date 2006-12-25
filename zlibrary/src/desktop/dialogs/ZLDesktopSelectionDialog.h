@@ -18,16 +18,28 @@
  * 02110-1301, USA.
  */
 
-#include "ZLDesktopOpenFileDialog.h"
+#ifndef __ZLDESKTOPSELECTIONDIALOG_H__
+#define __ZLDESKTOPSELECTIONDIALOG_H__
 
-static const std::string OPTION_GROUP_NAME = "OpenFileDialog";
+#include <ZLSelectionDialog.h>
+#include <ZLOptions.h>
 
-ZLDesktopOpenFileDialog::ZLDesktopOpenFileDialog(ZLTreeHandler &handler) : ZLOpenFileDialog(handler), WidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Width", 10, 2000, 400), HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Height", 10, 2000, 300) {
-}
+class ZLDesktopSelectionDialog : public ZLSelectionDialog {
 
-void ZLDesktopOpenFileDialog::runWithSize() {
-	setSize(WidthOption.value(), HeightOption.value());
-	run();
-	WidthOption.setValue(width());
-	HeightOption.setValue(height());
-}
+protected:
+	ZLDesktopSelectionDialog(ZLTreeHandler &handler);
+
+public:
+	void runWithSize();
+
+protected:
+	virtual void setSize(int width, int height) = 0;
+	virtual int width() const = 0;
+	virtual int height() const = 0;
+
+private:
+	ZLIntegerRangeOption WidthOption;
+	ZLIntegerRangeOption HeightOption;
+};
+
+#endif /* __ZLDESKTOPSELECTIONDIALOG_H__ */

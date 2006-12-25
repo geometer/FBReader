@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKOPTIONVIEW_H__
-#define __GTKOPTIONVIEW_H__
+#ifndef __ZLGTKOPTIONVIEW_H__
+#define __ZLGTKOPTIONVIEW_H__
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkrange.h>
@@ -32,16 +32,16 @@
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 
-class GtkOptionsDialogTab;
+class ZLGtkOptionsDialogTab;
 
-class GtkOptionView : public ZLOptionView {
+class ZLGtkOptionView : public ZLOptionView {
 
 protected:
-	GtkOptionView(ZLOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
+	ZLGtkOptionView(ZLOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
 
 public:
-	virtual ~GtkOptionView() {}
-	void setPosition(GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) {
+	virtual ~ZLGtkOptionView() {}
+	void setPosition(ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) {
 		myTab = tab;
 		myRow = row;
 		myFromColumn = fromColumn;
@@ -73,17 +73,17 @@ protected:
 	virtual void onValueChanged() {}
 
 protected:
-	GtkOptionsDialogTab *myTab;
+	ZLGtkOptionsDialogTab *myTab;
 	int myRow, myFromColumn, myToColumn;
 
 private:
 	bool myInitialized;
 };
 
-class ChoiceOptionView : public GtkOptionView {
+class ChoiceOptionView : public ZLGtkOptionView {
 
 public:
-	ChoiceOptionView(ZLChoiceOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {
+	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {
 		myFrame = 0;
 	}
 	~ChoiceOptionView() { if (myFrame != 0) delete[] myButtons; }
@@ -100,10 +100,10 @@ private:
 	GtkRadioButton **myButtons;
 };
 
-class BooleanOptionView : public GtkOptionView {
+class BooleanOptionView : public ZLGtkOptionView {
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(ZLBooleanOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -118,10 +118,10 @@ private:
 	GtkWidget *myCheckBox;
 };
 
-class StringOptionView : public GtkOptionView {
+class StringOptionView : public ZLGtkOptionView {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
+	StringOptionView(ZLStringOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
 
 private:
 	void _createItem();
@@ -137,10 +137,10 @@ private:
 	GtkEntry *myLineEdit;
 };
 
-class SpinOptionView : public GtkOptionView {
+class SpinOptionView : public ZLGtkOptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(ZLSpinOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -152,10 +152,10 @@ private:
 	GtkWidget *myLabel, *mySpinBox;
 };
 
-class ComboOptionView : public GtkOptionView {
+class ComboOptionView : public ZLGtkOptionView {
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
+	ComboOptionView(ZLComboOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
 
 private:
 	void _createItem();
@@ -173,10 +173,10 @@ private:
 	int myListSize;
 };
 
-class ColorOptionView : public GtkOptionView {
+class ColorOptionView : public ZLGtkOptionView {
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
+	ColorOptionView(ZLColorOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
 
 private:
 	void _createItem();
@@ -194,10 +194,10 @@ private:
 	GdkColor myColor;
 };
 
-class KeyOptionView : public GtkOptionView {
+class KeyOptionView : public ZLGtkOptionView {
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, GtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : GtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(ZLKeyOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 
 	void setKey(const std::string &key);
 
@@ -215,6 +215,6 @@ private:
 	std::string myCurrentKey;
 };
 
-#endif /* __GTKOPTIONVIEW_H__ */
+#endif /* __ZLGTKOPTIONVIEW_H__ */
 
 // vim:ts=2:sw=2:noet

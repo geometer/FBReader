@@ -28,10 +28,10 @@
 #include "../util/GtkSignalUtil.h"
 
 #include "GtkApplicationWindow.h"
-#include "../../gtk/dialogs/GtkDialogManager.h"
-#include "../../gtk/view-desktop/GtkViewWidget.h"
+#include "../dialogs/ZLGtkDialogManager.h"
+#include "../view-desktop/GtkViewWidget.h"
 
-void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
+void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myWindow = (new GtkApplicationWindow(application))->getMainWindow();
 }
 

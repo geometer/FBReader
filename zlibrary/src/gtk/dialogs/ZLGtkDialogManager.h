@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKDIALOGMANAGER_H__
-#define __GTKDIALOGMANAGER_H__
+#ifndef __ZLGTKDIALOGMANAGER_H__
+#define __ZLGTKDIALOGMANAGER_H__
 
 #include <stack>
 
@@ -28,13 +28,13 @@
 
 #include <ZLDialogManager.h>
 
-class GtkDialogManager : public ZLDialogManager {
+class ZLGtkDialogManager : public ZLDialogManager {
 
 public:
-	static void createInstance() { ourInstance = new GtkDialogManager(); }
+	static void createInstance() { ourInstance = new ZLGtkDialogManager(); }
 
 private:
-	GtkDialogManager() : myWindow(0), myIsKeyboardGrabbed(false) {}
+	ZLGtkDialogManager() : myWindow(0), myIsKeyboardGrabbed(false) {}
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -42,7 +42,7 @@ public:
 	ZLDialog *createDialog(const std::string &title) const;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
-	void openFileDialog(const std::string &title, ZLTreeHandler &handler) const;
+	void selectionDialog(const std::string &title, ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 
 	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
@@ -57,4 +57,4 @@ friend GtkDialog *createGtkDialog(const std::string& title);
 friend void destroyGtkDialog(GtkDialog *dialog);
 };
 
-#endif /* __GTKDIALOGMANAGER_H__ */
+#endif /* __ZLGTKDIALOGMANAGER_H__ */

@@ -124,3 +124,7 @@ const std::string FBFileHandler::accept(const std::string &nodeId) const {
 	myDescription = BookDescription::getDescription(name);
 	return "";
 }
+
+bool FBFileHandler::isWriteable() const {
+	return false;
+}

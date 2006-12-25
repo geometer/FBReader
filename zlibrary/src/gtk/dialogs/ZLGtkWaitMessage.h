@@ -18,17 +18,21 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKSTRINGUTIL_H__
-#define __GTKSTRINGUTIL_H__
+#ifndef __ZLGTKWAITMESSAGE_H__
+#define __ZLGTKWAITMESSAGE_H__
 
 #include <string>
 
-#include <gtk/gtkdialog.h>
+#include <gtk/gtkwidget.h>
 
-std::string gtkString(const std::string &str, bool useMnemonics);
-std::string gtkString(const std::string &str);
+class ZLGtkWaitMessage {
 
-GtkDialog *createGtkDialog(const std::string& title);
-void destroyGtkDialog(GtkDialog *dialog);
+public:
+	ZLGtkWaitMessage(GtkWindow *parent, const std::string &message);
+	~ZLGtkWaitMessage();
 
-#endif /* __GTKSTRINGUTIL_H__ */
+private:
+	GtkWindow *myParent, *myWindow;
+};
+
+#endif /* __ZLGTKWAITMESSAGE_H__ */

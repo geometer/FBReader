@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLSELECTDIALOG_H__
-#define __ZLSELECTDIALOG_H__
+#ifndef __ZLSELECTIONDIALOG_H__
+#define __ZLSELECTIONDIALOG_H__
 
 #include <vector>
 #include <string>
@@ -63,11 +63,11 @@ private:
 	bool myIsFolder;
 };
 
-class ZLSelectDialog {
+class ZLSelectionDialog {
 
 protected:
-	ZLSelectDialog(ZLTreeHandler &handler);
-	virtual ~ZLSelectDialog();
+	ZLSelectionDialog(ZLTreeHandler &handler);
+	virtual ~ZLSelectionDialog();
 
 public:
 	virtual void run() = 0;
@@ -86,6 +86,6 @@ inline const std::string &ZLTreeNode::id() const { return myId; }
 inline const std::string &ZLTreeNode::displayName() const { return myDisplayName; }
 inline const std::string &ZLTreeNode::pixmapName() const { return myPixmapName; }
 
-inline const ZLTreeHandler &ZLSelectDialog::handler() const { return myHandler; }
+inline const ZLTreeHandler &ZLSelectionDialog::handler() const { return myHandler; }
 
-#endif /* __ZLSELECTDIALOG_H__ */
+#endif /* __ZLSELECTIONDIALOG_H__ */

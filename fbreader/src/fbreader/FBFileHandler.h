@@ -22,7 +22,7 @@
 #ifndef __FBFILEHANDLER_H__
 #define __FBFILEHANDLER_H__
 
-#include <ZLOpenFileDialog.h>
+#include <ZLSelectionDialog.h>
 
 #include "../description/BookDescription.h"
 
@@ -38,6 +38,8 @@ public:
 	BookDescriptionPtr description() const;
 
 private:
+	bool isWriteable() const;
+
 	const std::string accept(const std::string &nodeId) const;
 
 	const std::string stateDisplayName() const;

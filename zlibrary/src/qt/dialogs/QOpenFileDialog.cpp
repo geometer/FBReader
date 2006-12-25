@@ -84,24 +84,27 @@ void QOpenFileDialog::update(const std::string &selectedNodeId) {
 
 	myListView->clear();
 
-	QListViewItem *item = 0;
-	QListViewItem *selectedItem = 0;
-
 	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
-	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
-	 	item = new QOpenFileDialogItem(myListView, item, *it);
-		item->setPixmap(0, getPixmap(*it));
-		if ((*it)->id() == selectedNodeId) {
-			selectedItem = item;
-		}
-	}
 
-	if (selectedItem == 0) {
-		selectedItem = myListView->firstChild();
-	}
-	myListView->setSelected(selectedItem, true);
-	if (selectedItem != myListView->firstChild()) {
-		myListView->ensureItemVisible(selectedItem);
+	if (subnodes.size() > 0) {
+		QListViewItem *item = 0;
+		QListViewItem *selectedItem = 0;
+
+		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
+		 	item = new QOpenFileDialogItem(myListView, item, *it);
+			item->setPixmap(0, getPixmap(*it));
+			if ((*it)->id() == selectedNodeId) {
+				selectedItem = item;
+			}
+		}
+
+		if (selectedItem == 0) {
+			selectedItem = myListView->firstChild();
+		}
+		myListView->setSelected(selectedItem, true);
+		if (selectedItem != myListView->firstChild()) {
+			myListView->ensureItemVisible(selectedItem);
+		}
 	}
 }
 

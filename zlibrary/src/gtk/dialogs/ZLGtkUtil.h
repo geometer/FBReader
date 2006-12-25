@@ -18,29 +18,17 @@
  * 02110-1301, USA.
  */
 
-#include <gtk/gtkbox.h>
+#ifndef __ZLGTKUTIL_H__
+#define __ZLGTKUTIL_H__
 
-#include "GtkCommonDialog.h"
-#include "GtkOptionsDialog.h"
-#include "GtkDialogManager.h"
-#include "GtkUtil.h"
+#include <string>
 
-GtkCommonDialog::GtkCommonDialog(const std::string &name) {
-	myTab = new GtkOptionsDialogTab();
-	myDialog = createGtkDialog(name.c_str());
-}
+#include <gtk/gtkdialog.h>
 
-GtkCommonDialog::~GtkCommonDialog() {
-	destroyGtkDialog(myDialog);
-}
+std::string gtkString(const std::string &str, bool useMnemonics);
+std::string gtkString(const std::string &str);
 
-void GtkCommonDialog::addButton(const std::string &text) {
-	std::string buttonText = gtkString(text);
-	gtk_dialog_add_button(myDialog, buttonText.c_str(), GTK_RESPONSE_ACCEPT);
-}
+GtkDialog *createGtkDialog(const std::string& title);
+void destroyGtkDialog(GtkDialog *dialog);
 
-bool GtkCommonDialog::run() {
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((GtkOptionsDialogTab*)myTab)->widget()), true, true, 0);
-	gtk_widget_show_all(GTK_WIDGET(myDialog));
-	return gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT;
-}
+#endif /* __ZLGTKUTIL_H__ */
