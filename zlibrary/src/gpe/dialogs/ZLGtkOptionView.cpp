@@ -383,12 +383,12 @@ void ColorOptionView::_onAccept() const {
 static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {
 	gtk_button_set_label(GTK_BUTTON(button), "Press key to set action");
 	gdk_keyboard_grab(button->window, true, GDK_CURRENT_TIME);
-	((GtkDialogManager&)GtkDialogManager::instance()).grabKeyboard(true);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(true);
 }
 
 static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer) {
 	gtk_button_set_label(GTK_BUTTON(button), "Press this button to select key");
-	((GtkDialogManager&)GtkDialogManager::instance()).grabKeyboard(false);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(false);
 	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
 }
 

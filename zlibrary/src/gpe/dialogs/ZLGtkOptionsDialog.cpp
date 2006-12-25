@@ -29,12 +29,11 @@
 
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 
-#include "GtkDialogManager.h"
-#include "GtkOptionsDialog.h"
-#include "GtkOptionView.h"
-#include "GtkUtil.h"
+#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkOptionView.h"
+#include "ZLGtkUtil.h"
 
-GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &caption) : ZLOptionsDialog(id) {
+ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string &caption) : ZLOptionsDialog(id) {
 	myDialog = createGtkDialog(caption);
 
 	std::string okString = gtkString("&Ok");
@@ -52,17 +51,17 @@ GtkOptionsDialog::GtkOptionsDialog(const std::string &id, const std::string &cap
 	gtk_window_resize(GTK_WINDOW(myDialog), 1000, 1000);
 }
 
-GtkOptionsDialog::~GtkOptionsDialog() {
+ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 	// I do not have to destroy myNotebook as it's a myDialog child
-	for (std::vector<GtkOptionsDialogTab*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
+	for (std::vector<ZLGtkOptionsDialogTab*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
 		delete *tab;
 	}
 
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
 }
 
-ZLDialogContent &GtkOptionsDialog::createTab(const std::string &name) {
-	GtkOptionsDialogTab *tab = new GtkOptionsDialogTab();
+ZLDialogContent &ZLGtkOptionsDialog::createTab(const std::string &name) {
+	ZLGtkOptionsDialogTab *tab = new ZLGtkOptionsDialogTab();
 	GtkWidget *label = gtk_label_new(name.c_str());
 
 	GtkScrolledWindow *scrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
@@ -77,23 +76,23 @@ ZLDialogContent &GtkOptionsDialog::createTab(const std::string &name) {
 	return *tab;
 }
 
-const std::string &GtkOptionsDialog::selectedTabName() const {
+const std::string &ZLGtkOptionsDialog::selectedTabName() const {
 	return myTabNames[gtk_notebook_get_current_page(myNotebook)];
 }
 
-void GtkOptionsDialog::selectTab(const std::string &name) {
+void ZLGtkOptionsDialog::selectTab(const std::string &name) {
 	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
 	if (it != myTabNames.end()) {
 		gtk_notebook_set_current_page(myNotebook, it - myTabNames.begin());
 	}
 }
 
-bool GtkOptionsDialog::run() {
+bool ZLGtkOptionsDialog::run() {
 	gint response = gtk_dialog_run(myDialog);
 
 	switch (response) {
 		case GTK_RESPONSE_ACCEPT:
-			for (std::vector<GtkOptionsDialogTab *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
+			for (std::vector<ZLGtkOptionsDialogTab *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
 				(*tab)->accept();
 			break;
 		case GTK_RESPONSE_REJECT:
@@ -105,26 +104,26 @@ bool GtkOptionsDialog::run() {
 	return response == GTK_RESPONSE_ACCEPT;
 }
 
-void GtkOptionsDialogTab::accept() {
-	for (std::vector<GtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {
+void ZLGtkOptionsDialogTab::accept() {
+	for (std::vector<ZLGtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {
 		(*view)->onAccept();
 	}
 }
 
-GtkOptionsDialogTab::GtkOptionsDialogTab() {
+ZLGtkOptionsDialogTab::ZLGtkOptionsDialogTab() {
 	myRowCounter = 0;
 	myTable = GTK_TABLE(gtk_table_new(0, 12, false));
 	gtk_widget_show_all(GTK_WIDGET(myTable));
 }
 
-GtkOptionsDialogTab::~GtkOptionsDialogTab() {
+ZLGtkOptionsDialogTab::~ZLGtkOptionsDialogTab() {
 	// We must not delete the widget, it's destroyed when the parent widget is destroyed
-	for (std::vector<GtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {
+	for (std::vector<ZLGtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {
 		delete *view;
 	}
 }
 
-int GtkOptionsDialogTab::addRow() {
+int ZLGtkOptionsDialogTab::addRow() {
 	int row = myRowCounter++;
 
 	gtk_table_resize(myTable, myRowCounter, 2);
@@ -132,29 +131,29 @@ int GtkOptionsDialogTab::addRow() {
 	return row;
 }
 
-void GtkOptionsDialogTab::addItem(GtkWidget *what, int row, int fromColumn, int toColumn) {
+void ZLGtkOptionsDialogTab::addItem(GtkWidget *what, int row, int fromColumn, int toColumn) {
 	gtk_table_attach(myTable, what, fromColumn, toColumn, row, row + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
 }
 
-void GtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
+void ZLGtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
 	int row = addRow();
 
 	createViewByEntry(option, row, 0, 12);
 }
 
-void GtkOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
+void ZLGtkOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
 	int row = addRow();
 
 	createViewByEntry(option0, row, 0, 6);
 	createViewByEntry(option1, row, 6, 12);
 }
 
-void GtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn) {
+void ZLGtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn) {
 	if (option == 0) {
 		return;
 	}
 
-	GtkOptionView *view = 0;
+	ZLGtkOptionView *view = 0;
 
 	switch (option->kind()) {
 		case BOOLEAN:
