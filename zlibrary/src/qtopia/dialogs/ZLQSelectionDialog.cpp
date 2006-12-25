@@ -113,6 +113,6 @@ void ZLQSelectionDialog::accept() {
 	runNode(((ZLQSelectionDialogItem*)myListView->currentItem())->node());
 }
 
-inline void ZLQSelectionDialog::run() {
+void ZLQSelectionDialog::run() {
 	exec();
 }

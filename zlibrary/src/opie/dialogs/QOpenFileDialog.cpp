@@ -28,7 +28,7 @@
 QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
 }
 
-QOpenFileDialog::QOpenFileDialog(const char *caption, ZLTreeHandler &handler) : FullScreenDialog(caption), ZLOpenFileDialog(handler) {
+QOpenFileDialog::QOpenFileDialog(const char *caption, ZLTreeHandler &handler) : FullScreenDialog(caption), ZLSelectionDialog(handler) {
 	myMainBox = new QVBox(this);
 
 	myStateLine = new QLineEdit(myMainBox);

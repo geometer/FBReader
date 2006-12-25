@@ -26,7 +26,7 @@
 #include "ZLGtkUtil.h"
 
 ZLGtkCommonDialog::ZLGtkCommonDialog(const std::string &name) {
-	myTab = new GtkOptionsDialogTab();
+	myTab = new ZLGtkOptionsDialogTab();
 	myDialog = createGtkDialog(name.c_str());
 }
 
@@ -40,7 +40,7 @@ void ZLGtkCommonDialog::addButton(const std::string &text) {
 }
 
 bool ZLGtkCommonDialog::run() {
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((GtkOptionsDialogTab*)myTab)->widget()), true, true, 0);
+	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((ZLGtkOptionsDialogTab*)myTab)->widget()), true, true, 0);
 	gtk_widget_show_all(GTK_WIDGET(myDialog));
 	return gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT;
 }

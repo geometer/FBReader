@@ -37,7 +37,7 @@ public:
 	ZLDialog *createDialog(const std::string &title) const;
 	ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const;
 	int infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
-	void openFileDialog(const std::string &title, ZLTreeHandler &handler) const;
+	void selectionDialog(const std::string &title, ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 
 	void fullScreenWorkaround() const;

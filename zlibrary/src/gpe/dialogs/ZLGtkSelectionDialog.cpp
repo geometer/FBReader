@@ -23,23 +23,22 @@
 
 #include <ZLApplication.h>
 
-#include "GtkOpenFileDialog.h"
-#include "GtkDialogManager.h"
-#include "GtkUtil.h"
+#include "ZLGtkSelectionDialog.h"
+#include "ZLGtkUtil.h"
 
 static void activatedHandler(GtkTreeView *view, GtkTreePath*, GtkTreeViewColumn*) {
-	((GtkOpenFileDialog*)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
+	((ZLGtkSelectionDialog*)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
 static gboolean clickHandler(GtkWidget*, GdkEventButton *event, gpointer self) {
 	if (event->button == 1) {
-		((GtkOpenFileDialog*)self)->activatedSlot();
+		((ZLGtkSelectionDialog*)self)->activatedSlot();
 	}
 
 	return false;
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler) : ZLOpenFileDialog(handler) {
+ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler) : ZLSelectionDialog(handler) {
 	myExitFlag = false;
 
 	myDialog = createGtkDialog(caption);
@@ -99,7 +98,7 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler
 	gtk_window_resize(GTK_WINDOW(myDialog), 1000, 1000);
 }
 
-GtkOpenFileDialog::~GtkOpenFileDialog() {
+ZLGtkSelectionDialog::~ZLGtkSelectionDialog() {
 	for(std::map<std::string,GdkPixbuf*>::iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
 		if (it->second != 0) {
 			g_object_unref(G_OBJECT(it->second));
@@ -109,7 +108,7 @@ GtkOpenFileDialog::~GtkOpenFileDialog() {
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
 }
 
-GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
+GdkPixbuf *ZLGtkSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,GdkPixbuf*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
@@ -121,7 +120,7 @@ GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 	}
 }
 
-void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
+void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 	gtk_entry_set_text(myStateLine, handler().stateDisplayName().c_str());
 
 	gtk_list_store_clear(myStore);
@@ -168,7 +167,7 @@ void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
 	}
 }
 
-void GtkOpenFileDialog::run() {
+void ZLGtkSelectionDialog::run() {
 	while (gtk_dialog_run(myDialog) == GTK_RESPONSE_ACCEPT) {
 		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 		GtkTreeModel *dummy;
@@ -185,10 +184,10 @@ void GtkOpenFileDialog::run() {
 	}
 }
 
-void GtkOpenFileDialog::exitDialog() {
+void ZLGtkSelectionDialog::exitDialog() {
 	myExitFlag = true;
 }
 
-void GtkOpenFileDialog::activatedSlot() {
+void ZLGtkSelectionDialog::activatedSlot() {
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
 }

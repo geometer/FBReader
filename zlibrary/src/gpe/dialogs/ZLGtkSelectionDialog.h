@@ -18,21 +18,21 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKOPENFILEDIALOG_H__
-#define __GTKOPENFILEDIALOG_H__
+#ifndef __ZLGTKSELECTIONDIALOG_H__
+#define __ZLGTKSELECTIONDIALOG_H__
 
 #include <gtk/gtk.h>
 
 #include <vector>
 #include <map>
 
-#include <ZLOpenFileDialog.h>
+#include <ZLSelectionDialog.h>
 
-class GtkOpenFileDialog : public ZLOpenFileDialog {
+class ZLGtkSelectionDialog : public ZLSelectionDialog {
 
 public:
-	GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler); 
-	~GtkOpenFileDialog(); 
+	ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler); 
+	~ZLGtkSelectionDialog(); 
 
 	void run();
 
@@ -56,6 +56,4 @@ private:
 	std::vector<ZLTreeNodePtr> myNodes;
 };
 
-#endif
-
-// vim:ts=2:sw=2:noet
+#endif /* __ZLGTKSELECTIONDIALOG_H__ */

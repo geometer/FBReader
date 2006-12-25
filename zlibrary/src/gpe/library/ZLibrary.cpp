@@ -26,7 +26,7 @@
 
 #include "../../gtk/filesystem/ZLGtkFSManager.h"
 #include "../../gtk/time/ZLGtkTime.h"
-#include "../dialogs/GtkDialogManager.h"
+#include "../dialogs/ZLGtkDialogManager.h"
 #include "../../gtk/image/GtkImageManager.h"
 #include "../view/GtkPaintContext.h"
 
@@ -35,7 +35,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
-	GtkDialogManager::createInstance();
+	ZLGtkDialogManager::createInstance();
 	GtkImageManager::createInstance();
 }
 

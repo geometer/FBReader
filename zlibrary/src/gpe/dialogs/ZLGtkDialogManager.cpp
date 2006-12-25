@@ -20,29 +20,29 @@
 
 #include <gtk/gtk.h>
 
-#include <ZLOpenFileDialog.h>
+#include <ZLSelectionDialog.h>
 
-#include "GtkDialogManager.h"
-#include "GtkCommonDialog.h"
-#include "GtkOptionsDialog.h"
-#include "GtkOpenFileDialog.h"
-#include "GtkWaitMessage.h"
-#include "GtkUtil.h"
+#include "ZLGtkDialogManager.h"
+#include "ZLGtkCommonDialog.h"
+#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkSelectionDialog.h"
+#include "ZLGtkWaitMessage.h"
+#include "ZLGtkUtil.h"
 #include "../application/GtkApplicationWindow.h"
 
-void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
+void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myWindow = (new GtkApplicationWindow(application))->getMainWindow();
 }
 
-ZLDialog *GtkDialogManager::createDialog(const std::string &title) const {
-	return new GtkCommonDialog(title);
+ZLDialog *ZLGtkDialogManager::createDialog(const std::string &title) const {
+	return new ZLGtkCommonDialog(title);
 }
 
-ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new GtkOptionsDialog(id, title);
+ZLOptionsDialog *ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
+	return new ZLGtkOptionsDialog(id, title);
 }
 
-int GtkDialogManager::infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+int ZLGtkDialogManager::infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
 	GtkDialog *dialog = createGtkDialog(title.c_str());
 
 	if (!button0.empty()) {
@@ -85,11 +85,11 @@ int GtkDialogManager::infoBox(const InfoBoxType type, const std::string &title, 
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-void GtkDialogManager::openFileDialog(const std::string &title, ZLTreeHandler &handler) const {
-	GtkOpenFileDialog(title.c_str(), handler).run();
+void ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	ZLGtkSelectionDialog(title.c_str(), handler).run();
 }
 
-void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	GtkWaitMessage waitMessage(myWindow, message);
+void ZLGtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
+	ZLGtkWaitMessage waitMessage(myWindow, message);
 	runnable.run();
 }
