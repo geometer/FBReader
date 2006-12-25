@@ -109,8 +109,8 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 	return mySubnodes;
 }
 
-std::string FBFileHandler::relativeId(const std::string &nodeId) const {
-	return (nodeId == "..") ? myDir->shortName() : "..";
+std::string FBFileHandler::relativeId(const ZLTreeNode &node) const {
+	return (node.id() == "..") ? myDir->shortName() : "..";
 }
 
 const std::string FBFileHandler::accept(const std::string &nodeId) const {

@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKSTRINGUTIL_H__
-#define __GTKSTRINGUTIL_H__
+#ifndef __ZLGTKUTIL_H__
+#define __ZLGTKUTIL_H__
 
 #include <string>
 
@@ -30,4 +30,4 @@ std::string gtkString(const std::string &str);
 
 GtkDialog *createGtkDialog(const std::string& title);
 
-#endif /* __GTKSTRINGUTIL_H__ */
+#endif /* __ZLGTKUTIL_H__ */

@@ -24,19 +24,19 @@
 #include "../view/GtkViewWidget.h"
 #include "../../gtk/util/GtkKeyUtil.h"
 #include "../../gtk/util/GtkSignalUtil.h"
-#include "../dialogs/GtkDialogManager.h"
+#include "../dialogs/ZLGtkDialogManager.h"
 
 #include "GtkApplicationWindow.h"
 
-void GtkDialogManager::createApplicationWindow(ZLApplication *application) const {
+void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myWindow = GTK_WINDOW((new GtkApplicationWindow(application))->getMainWindow());
 	myIsInitialized = true;
 }
 
 static bool acceptAction() {
 	return
-		GtkDialogManager::isInitialized() &&
-		!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting();
+		ZLGtkDialogManager::isInitialized() &&
+		!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isWaiting();
 }
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
@@ -109,7 +109,7 @@ GtkApplicationWindow::GtkApplicationWindow(ZLApplication *application) : ZLAppli
 }
 
 GtkApplicationWindow::~GtkApplicationWindow() {
-	((GtkDialogManager&)GtkDialogManager::instance()).setMainWindow(0);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).setMainWindow(0);
 	for (std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*>::iterator it = myToolbarButtons.begin(); it != myToolbarButtons.end(); ++it) {
 		delete it->second;
 	}

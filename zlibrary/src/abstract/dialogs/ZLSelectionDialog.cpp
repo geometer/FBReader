@@ -35,9 +35,11 @@ ZLSelectionDialog::~ZLSelectionDialog() {
 
 void ZLSelectionDialog::runNode(const ZLTreeNodePtr node) {
 	const std::string &nodeId = node->id();
-	const std::string selectedName = myHandler.relativeId(nodeId);
+	const std::string selectedName = myHandler.relativeId(*node);
 	if (node->isFolder()) {
 		myHandler.changeFolder(nodeId);
+		update(selectedName);
+	} else if (myHandler.isWriteable()) {
 		update(selectedName);
 	} else {
 		const std::string message = myHandler.accept(nodeId);

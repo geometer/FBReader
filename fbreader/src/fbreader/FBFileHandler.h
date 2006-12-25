@@ -45,7 +45,7 @@ private:
 	const std::string stateDisplayName() const;
 	void changeFolder(const std::string &nodeId);
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	std::string relativeId(const std::string &nodeId) const;
+	std::string relativeId(const ZLTreeNode &node) const;
 
 private:
 	shared_ptr<ZLDir> myDir;

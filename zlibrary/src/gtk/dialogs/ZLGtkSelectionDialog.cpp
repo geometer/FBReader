@@ -98,7 +98,7 @@ ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &h
 	gtk_widget_grab_focus(GTK_WIDGET(myView));
 }
 
-ZLGtkSelectionDialog::~ZLGtkSelectionDialog(void) {
+ZLGtkSelectionDialog::~ZLGtkSelectionDialog() {
 	for(std::map<std::string,GdkPixbuf*>::iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
 		if (it->second != 0) {
 			g_object_unref(G_OBJECT(it->second));
@@ -152,9 +152,11 @@ void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 
 		if (selectedItem == 0) {
-			GtkTreeIter iter;
-			gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
-			gtk_tree_selection_select_iter(selection, &iter);
+			if (!handler().isWriteable()) {
+				GtkTreeIter iter;
+				gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
+				gtk_tree_selection_select_iter(selection, &iter);
+			}
 		} else {
 			gtk_tree_selection_select_iter(selection, selectedItem);
 			GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), selectedItem);

@@ -18,29 +18,46 @@
  * 02110-1301, USA.
  */
 
-#include <gtk/gtkbox.h>
+#ifndef __ZLGTKOPENFILEDIALOG_H__
+#define __ZLGTKOPENFILEDIALOG_H__
 
-#include "GtkCommonDialog.h"
-#include "GtkOptionsDialog.h"
-#include "GtkDialogManager.h"
-#include "GtkUtil.h"
+#include <gtk/gtk.h>
 
-GtkCommonDialog::GtkCommonDialog(const std::string &name) {
-	myTab = new GtkOptionsDialogTab();
-	myDialog = createGtkDialog(name);
-}
+#include <vector>
+#include <map>
 
-GtkCommonDialog::~GtkCommonDialog() {
-	gtk_widget_destroy(GTK_WIDGET(myDialog));
-}
+#include "../../abstract/dialogs/ZLSelectionDialog.h"
 
-void GtkCommonDialog::addButton(const std::string &text) {
-	std::string buttonText = gtkString(text);
-	gtk_dialog_add_button(myDialog, buttonText.c_str(), GTK_RESPONSE_ACCEPT);
-}
+class ZLGtkSelectionDialog : public ZLSelectionDialog {
 
-bool GtkCommonDialog::run() {
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((GtkOptionsDialogTab*)myTab)->widget()), true, true, 0);
-	gtk_widget_show_all(GTK_WIDGET(myDialog));
-	return gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT;
-}
+public:
+	ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler); 
+	~ZLGtkSelectionDialog(); 
+
+	void run();
+
+	void activatedSlot();
+
+protected:
+	void setSize(int width, int height);
+	int width() const;
+	int height() const;
+
+	void exitDialog();
+	void update(const std::string &selectedNodeName);
+
+private:
+	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);
+
+private:
+	bool myExitFlag;
+	GtkDialog *myDialog;
+	GtkListStore *myStore;
+	GtkTreeView *myView;
+	GtkEntry *myStateLine;
+
+	std::map<std::string,GdkPixbuf*> myPixmaps;
+	std::vector<ZLTreeNodePtr> myNodes;
+};
+
+#endif /* __ZLGTKOPENFILEDIALOG_H__ */

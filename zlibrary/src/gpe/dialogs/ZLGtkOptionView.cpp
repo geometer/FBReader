@@ -31,10 +31,10 @@
 #include <gtk/gtkframe.h>
 #include <gtk/gtkcomboboxentry.h>
 
-#include "GtkOptionView.h"
-#include "GtkOptionsDialog.h"
-#include "GtkDialogManager.h"
-#include "GtkUtil.h"
+#include "ZLGtkOptionView.h"
+#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkDialogManager.h"
+#include "ZLGtkUtil.h"
 #include "../../gtk/util/GtkKeyUtil.h"
 
 static GtkWidget *labelWithMyParams(const char *text) {
@@ -45,8 +45,8 @@ static GtkWidget *labelWithMyParams(const char *text) {
 	return label;
 }
 
-void GtkOptionView::_onValueChanged(GtkWidget*, gpointer self) {
-	((GtkOptionView*)self)->onValueChanged();
+void ZLGtkOptionView::_onValueChanged(GtkWidget*, gpointer self) {
+	((ZLGtkOptionView*)self)->onValueChanged();
 }
 
 void BooleanOptionView::_createItem() {

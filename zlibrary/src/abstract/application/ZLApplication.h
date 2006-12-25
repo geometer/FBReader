@@ -491,7 +491,7 @@ inline int ZLApplication::Menubar::PlainItem::actionId() const { return myAction
 inline ZLApplication::Menubar::Submenu::Submenu(const std::string &menuName) : Menu::Item(SUBMENU), myMenuName(menuName) {}
 inline const std::string &ZLApplication::Menubar::Submenu::menuName() const { return myMenuName; }
 
-inline ZLApplication::Menubar::Separator::Separator(void) : Item(SEPARATOR) {}
+inline ZLApplication::Menubar::Separator::Separator() : Item(SEPARATOR) {}
 
 inline ZLApplication::MenuVisitor::~MenuVisitor() {}
 

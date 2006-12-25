@@ -32,7 +32,7 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, ZLTreeHandler &handler) : 
 	myMainBox = new QVBox(this);
 
 	myStateLine = new QLineEdit(myMainBox);
-	myStateLine->setEnabled(false);
+	myStateLine->setEnabled(this->handler().isWriteable());
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("");
 	myListView->header()->hide();
@@ -93,12 +93,14 @@ void QOpenFileDialog::update(const std::string &selectedNodeName) {
 			}
 		}
 
-		if (selectedItem == 0) {
+		if ((selectedItem == 0) && !handler().isWriteable()) {
 			selectedItem = myListView->firstChild();
 		}
-		myListView->setSelected(selectedItem, true);
-		if (selectedItem != myListView->firstChild()) {
-			myListView->ensureItemVisible(selectedItem);
+		if (selectedItem != 0) {
+			myListView->setSelected(selectedItem, true);
+			if (selectedItem != myListView->firstChild()) {
+				myListView->ensureItemVisible(selectedItem);
+			}
 		}
 	}
 }

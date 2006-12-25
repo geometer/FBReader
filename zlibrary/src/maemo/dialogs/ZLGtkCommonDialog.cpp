@@ -18,16 +18,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKSTRINGUTIL_H__
-#define __GTKSTRINGUTIL_H__
+#include <gtk/gtkbox.h>
 
-#include <string>
+#include "ZLGtkCommonDialog.h"
+#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkDialogManager.h"
+#include "ZLGtkUtil.h"
 
-#include <gtk/gtkdialog.h>
+ZLGtkCommonDialog::ZLGtkCommonDialog(const std::string &name) {
+	myTab = new ZLGtkOptionsDialogTab();
+	myDialog = createGtkDialog(name);
+}
 
-std::string gtkString(const std::string &str, bool useMnemonics);
-std::string gtkString(const std::string &str);
+ZLGtkCommonDialog::~ZLGtkCommonDialog() {
+	gtk_widget_destroy(GTK_WIDGET(myDialog));
+}
 
-GtkDialog *createGtkDialog(const std::string& title);
+void ZLGtkCommonDialog::addButton(const std::string &text) {
+	std::string buttonText = gtkString(text);
+	gtk_dialog_add_button(myDialog, buttonText.c_str(), GTK_RESPONSE_ACCEPT);
+}
 
-#endif /* __GTKSTRINGUTIL_H__ */
+bool ZLGtkCommonDialog::run() {
+	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((ZLGtkOptionsDialogTab*)myTab)->widget()), true, true, 0);
+	gtk_widget_show_all(GTK_WIDGET(myDialog));
+	return gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT;
+}

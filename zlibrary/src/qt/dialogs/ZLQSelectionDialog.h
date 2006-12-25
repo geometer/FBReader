@@ -18,36 +18,36 @@
  * 02110-1301, USA.
  */
 
-#ifndef __QOPENFILEDIALOG_H__
-#define __QOPENFILEDIALOG_H__
+#ifndef __ZLQSELECTIONDIALOG_H__
+#define __ZLQSELECTIONDIALOG_H__
 
 #include <string>
 #include <map>
 
+#include <qdialog.h>
 #include <qlistview.h>
 
-#include "FullScreenDialog.h"
-#include <ZLOpenFileDialog.h>
+#include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 class QVBox;
 class QLineEdit;
 
-class QOpenFileDialogItem : public QListViewItem {
+class ZLQSelectionDialogItem : public QListViewItem {
 
 public:
-	QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node);
+	ZLQSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node);
 	ZLTreeNodePtr node() const { return myNode; }
 
 private:
 	ZLTreeNodePtr myNode;
 };
 
-class QOpenFileDialog : public FullScreenDialog, public ZLOpenFileDialog {
+class ZLQSelectionDialog : public QDialog, public ZLDesktopSelectionDialog {
 	Q_OBJECT
 
 public:
-	QOpenFileDialog(const char *caption, ZLTreeHandler &handler); 
-	~QOpenFileDialog();
+	ZLQSelectionDialog(const char *caption, ZLTreeHandler &handler); 
+	~ZLQSelectionDialog();
 	void run();
 
 private:
@@ -56,6 +56,10 @@ private:
 protected:
 	void resizeEvent(QResizeEvent *event);
 	void keyPressEvent(QKeyEvent *event);
+
+	void setSize(int width, int height) { QDialog::resize(width, height); }
+	int width() const { return QDialog::width(); }
+	int height() const { return QDialog::height(); }
 
 	void exitDialog();
 	void update(const std::string &selectedNodeName);
@@ -70,8 +74,8 @@ private:
 	std::map<std::string,QPixmap*> myPixmaps;
 };
 
-inline void QOpenFileDialog::run() {
-	exec();
+inline void ZLQSelectionDialog::run() {
+	QDialog::exec();
 }
 
-#endif /* __QOPENFILEDIALOG_H__ */
+#endif /* __ZLQSELECTIONDIALOG_H__ */

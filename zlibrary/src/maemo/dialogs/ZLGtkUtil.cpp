@@ -21,8 +21,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include "GtkUtil.h"
-#include "GtkDialogManager.h"
+#include "ZLGtkUtil.h"
+#include "ZLGtkDialogManager.h"
 
 std::string gtkString(const std::string &str, bool useMnemonics) {
 	int index = str.find('&');
@@ -39,18 +39,18 @@ std::string gtkString(const std::string &str, bool useMnemonics) {
 
 std::string gtkString(const std::string &str) {
 	//return gtkString(str, ZLApplication::isKeyboardPresented());
-	return gtkString(str, true);
+	return gtkString(str, false);
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (!((GtkDialogManager&)GtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
+	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
 		if (key->keyval == GDK_Return) {
 			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-			return true;
-		}
 
-		if (key->keyval == GDK_Escape) {
+			return true;
+		} else if (key->keyval == GDK_Escape) {
 			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
+
 			return true;
 		}
 	}
@@ -62,12 +62,12 @@ GtkDialog *createGtkDialog(const std::string& title) {
 	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
 	gtk_window_set_title(dialog, title.c_str());
 	
-	GtkWindow *window = ((GtkDialogManager&)GtkDialogManager::instance()).myWindow;
+	GtkWindow *window = ((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myWindow;
 	if (window != 0) {
 		gtk_window_set_transient_for(dialog, window);
 	}
 	gtk_window_set_modal(dialog, TRUE);
-	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), NULL);
+	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), 0);
 
 	return GTK_DIALOG(dialog);
 }

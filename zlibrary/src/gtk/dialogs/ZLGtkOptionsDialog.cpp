@@ -141,7 +141,7 @@ ZLGtkOptionsDialogTab::~ZLGtkOptionsDialogTab() {
 	}
 }
 
-int ZLGtkOptionsDialogTab::addRow(void) {
+int ZLGtkOptionsDialogTab::addRow() {
 	int row = myRowCounter++;
 
 	gtk_table_resize(myTable, myRowCounter, 2);

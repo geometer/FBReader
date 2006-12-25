@@ -23,23 +23,22 @@
 
 #include <ZLApplication.h>
 
-#include "GtkOpenFileDialog.h"
-#include "GtkDialogManager.h"
-#include "GtkUtil.h"
+#include "ZLGtkSelectionDialog.h"
+#include "ZLGtkUtil.h"
 
 static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn *) {
-	((GtkOpenFileDialog *)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
+	((ZLGtkSelectionDialog*)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
 static gboolean clickHandler(GtkWidget *, GdkEventButton *event, gpointer self) {
 	if (event->button == 1) {
-		((GtkOpenFileDialog *)self)->activatedSlot();
+		((ZLGtkSelectionDialog*)self)->activatedSlot();
 	}
 
 	return false;
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler) : ZLOpenFileDialog(handler) {
+ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler) : ZLSelectionDialog(handler) {
 	myExitFlag = false;
 
 	myDialog = createGtkDialog(caption);
@@ -52,8 +51,8 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler
 
 	myStateLine = GTK_ENTRY(gtk_entry_new());
 
-	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), false);
-	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), false);
+	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), this->handler().isWriteable());
+	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), this->handler().isWriteable());
 
 	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myStateLine), false, false, 2);
 
@@ -99,7 +98,7 @@ GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler
 	gtk_widget_grab_focus(GTK_WIDGET(myView));
 }
 
-GtkOpenFileDialog::~GtkOpenFileDialog(void) {
+ZLGtkSelectionDialog::~ZLGtkSelectionDialog() {
 	for(std::map<std::string,GdkPixbuf*>::iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
 		g_object_unref(G_OBJECT(it->second));
 	}
@@ -107,7 +106,7 @@ GtkOpenFileDialog::~GtkOpenFileDialog(void) {
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
 }
 
-GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
+GdkPixbuf *ZLGtkSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,GdkPixbuf*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
@@ -119,7 +118,7 @@ GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 	}
 }
 
-void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
+void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 	gtk_entry_set_text(myStateLine, handler().stateDisplayName().c_str());
 
 	gtk_list_store_clear(myStore);
@@ -151,20 +150,22 @@ void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
 		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 
 		if (selectedItem == 0) {
-			GtkTreeIter iter;
-			gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
-			selectedItem = gtk_tree_iter_copy(&iter);
+			if (!handler().isWriteable()) {
+				GtkTreeIter iter;
+				gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
+				gtk_tree_selection_select_iter(selection, &iter);
+			}
+		} else {
+			gtk_tree_selection_select_iter(selection, selectedItem);
+			GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), selectedItem);
+			gtk_tree_view_scroll_to_cell(myView, path, 0, false, 0, 0);
+			gtk_tree_path_free(path);
+			gtk_tree_iter_free(selectedItem);
 		}
-
-		gtk_tree_selection_select_iter(selection, selectedItem);
-		GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), selectedItem);
-		gtk_tree_view_scroll_to_cell(myView, path, 0, false, 0, 0);
-		gtk_tree_path_free(path);
-		gtk_tree_iter_free(selectedItem);
 	}
 }
 
-void GtkOpenFileDialog::run() {
+void ZLGtkSelectionDialog::run() {
 	while (gtk_dialog_run(myDialog) == GTK_RESPONSE_ACCEPT) {
 		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 		GtkTreeModel *dummy;
@@ -181,25 +182,25 @@ void GtkOpenFileDialog::run() {
 	}
 }
 
-void GtkOpenFileDialog::exitDialog() {
+void ZLGtkSelectionDialog::exitDialog() {
 	myExitFlag = true;
 }
 
-void GtkOpenFileDialog::activatedSlot() {
+void ZLGtkSelectionDialog::activatedSlot() {
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
 }
 
-void GtkOpenFileDialog::setSize(int width, int height) {
+void ZLGtkSelectionDialog::setSize(int width, int height) {
 	gtk_window_resize(GTK_WINDOW(myDialog), width, height);
 }
 
-int GtkOpenFileDialog::width() const {
+int ZLGtkSelectionDialog::width() const {
 	int _width;
 	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, 0);
 	return _width;
 }
 
-int GtkOpenFileDialog::height() const {
+int ZLGtkSelectionDialog::height() const {
 	int _height;
 	gtk_window_get_size(GTK_WINDOW(myDialog), 0, &_height);
 	return _height;

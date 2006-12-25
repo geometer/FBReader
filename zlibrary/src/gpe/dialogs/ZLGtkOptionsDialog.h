@@ -28,7 +28,7 @@
 #include <gtk/gtktable.h>
 #include <gtk/gtkscrolledwindow.h>
 
-#include "../../abstract/dialogs/ZLOptionsDialog.h"
+#include <ZLOptionsDialog.h>
 
 class GtkOptionView;
 
@@ -48,19 +48,19 @@ public:
 	void addItem(GtkWidget *what, int row, int fromColumn, int toColumn);
 
 private:
-	int addRow(void);
+	int addRow();
 	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
 
 private:
 	GtkTable *myTable;
 	gint myRowCounter;
-	std::vector<GtkOptionView *> myViews;
+	std::vector<GtkOptionView*> myViews;
 };
 
 class GtkOptionsDialog : public ZLOptionsDialog {
 
 public:
-	GtkOptionsDialog(const std::string &id, const std::string &caption, GtkWindow *parent);
+	GtkOptionsDialog(const std::string &id, const std::string &caption);
 	~GtkOptionsDialog();
 	ZLDialogContent &createTab(const std::string &name);
 

@@ -18,18 +18,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GTKCOMMONDIALOG_H__
-#define __GTKCOMMONDIALOG_H__
+#ifndef __ZLGTKCOMMONDIALOG_H__
+#define __ZLGTKCOMMONDIALOG_H__
 
 #include <gtk/gtkdialog.h>
 
 #include <ZLDialog.h>
 
-class GtkCommonDialog : public ZLDialog {
+class ZLGtkCommonDialog : public ZLDialog {
 
 public:
-	GtkCommonDialog(const std::string &name);
-	~GtkCommonDialog();
+	ZLGtkCommonDialog(const std::string &name);
+	~ZLGtkCommonDialog();
 
 	void addButton(const std::string &text);
 	bool run();
@@ -38,4 +38,4 @@ private:
 	GtkDialog *myDialog;
 };
 
-#endif /* __GTKCOMMONDIALOG_H__ */
+#endif /* __ZLGTKCOMMONDIALOG_H__ */

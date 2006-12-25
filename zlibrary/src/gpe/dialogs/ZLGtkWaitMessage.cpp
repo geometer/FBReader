@@ -22,9 +22,9 @@
 #include <gtk/gtklabel.h>
 #include <gdk/gdkcursor.h>
 
-#include "GtkWaitMessage.h"
+#include "ZLGtkWaitMessage.h"
 
-GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : myParent(parent) {
+ZLGtkWaitMessage::ZLGtkWaitMessage(GtkWindow *parent, const std::string& message) : myParent(parent) {
 	while (gtk_events_pending()) {
 		gtk_main_iteration();
 	}
@@ -67,7 +67,7 @@ GtkWaitMessage::GtkWaitMessage(GtkWindow *parent, const std::string& message) : 
 	}
 }
 
-GtkWaitMessage::~GtkWaitMessage() {
+ZLGtkWaitMessage::~ZLGtkWaitMessage() {
 	if (myParent != 0) {
 		gdk_window_set_cursor(GTK_WIDGET(myParent)->window, 0);
 	}

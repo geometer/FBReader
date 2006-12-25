@@ -124,7 +124,7 @@ GtkOptionsDialogTab::~GtkOptionsDialogTab() {
 	}
 }
 
-int GtkOptionsDialogTab::addRow(void) {
+int GtkOptionsDialogTab::addRow() {
 	int row = myRowCounter++;
 
 	gtk_table_resize(myTable, myRowCounter, 2);

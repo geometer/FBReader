@@ -25,19 +25,19 @@
 
 #include <ZLApplication.h>
 
-#include "QOpenFileDialog.h"
+#include "ZLQSelectionDialog.h"
 #include "QDialogManager.h"
 
-QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
+ZLQSelectionDialogItem::ZLQSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
 }
 
-QOpenFileDialog::QOpenFileDialog(const char *caption, ZLTreeHandler &handler) : QDialog(), ZLDesktopOpenFileDialog(handler) {
+ZLQSelectionDialog::ZLQSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(), ZLDesktopSelectionDialog(handler) {
 	setCaption(caption);
 
 	myMainBox = new QVBox(this);
 
 	myStateLine = new QLineEdit(myMainBox);
-	myStateLine->setEnabled(false);
+	myStateLine->setEnabled(this->handler().isWriteable());
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("");
 	myListView->header()->hide();
@@ -49,13 +49,13 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, ZLTreeHandler &handler) : 
 	update("");
 }
 
-QOpenFileDialog::~QOpenFileDialog() {
+ZLQSelectionDialog::~ZLQSelectionDialog() {
 	for (std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
 		delete it->second;
 	}
 }
 
-QPixmap &QOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
+QPixmap &ZLQSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
@@ -67,19 +67,19 @@ QPixmap &QOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 	}
 }
 
-void QOpenFileDialog::keyPressEvent(QKeyEvent *event) {
+void ZLQSelectionDialog::keyPressEvent(QKeyEvent *event) {
 	if ((event != 0) && (event->key() == Key_Escape)) {
 		reject();
 	}
 }
 
-void QOpenFileDialog::resizeEvent(QResizeEvent *event) {
+void ZLQSelectionDialog::resizeEvent(QResizeEvent *event) {
 	if (event != 0) {
 		myMainBox->resize(event->size());
 	}
 }
 
-void QOpenFileDialog::update(const std::string &selectedNodeId) {
+void ZLQSelectionDialog::update(const std::string &selectedNodeId) {
 	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
 
 	myListView->clear();
@@ -91,27 +91,29 @@ void QOpenFileDialog::update(const std::string &selectedNodeId) {
 		QListViewItem *selectedItem = 0;
 
 		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
-		 	item = new QOpenFileDialogItem(myListView, item, *it);
+		 	item = new ZLQSelectionDialogItem(myListView, item, *it);
 			item->setPixmap(0, getPixmap(*it));
 			if ((*it)->id() == selectedNodeId) {
 				selectedItem = item;
 			}
 		}
 
-		if (selectedItem == 0) {
+		if ((selectedItem == 0) && !handler().isWriteable()) {
 			selectedItem = myListView->firstChild();
 		}
-		myListView->setSelected(selectedItem, true);
-		if (selectedItem != myListView->firstChild()) {
-			myListView->ensureItemVisible(selectedItem);
+		if (selectedItem != 0) {
+			myListView->setSelected(selectedItem, true);
+			if (selectedItem != myListView->firstChild()) {
+				myListView->ensureItemVisible(selectedItem);
+			}
 		}
 	}
 }
 
-void QOpenFileDialog::exitDialog() {
+void ZLQSelectionDialog::exitDialog() {
 	QDialog::accept();
 }
 
-void QOpenFileDialog::accept() {
-	runNode(((QOpenFileDialogItem*)myListView->currentItem())->node());
+void ZLQSelectionDialog::accept() {
+	runNode(((ZLQSelectionDialogItem*)myListView->currentItem())->node());
 }

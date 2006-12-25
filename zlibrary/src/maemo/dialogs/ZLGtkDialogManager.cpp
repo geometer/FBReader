@@ -22,22 +22,20 @@
 #include <hildon-widgets/gtk-infoprint.h>
 #include <hildon-note.h>
 
-#include <ZLOpenFileDialog.h>
+#include "ZLGtkDialogManager.h"
+#include "ZLGtkCommonDialog.h"
+#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkSelectionDialog.h"
 
-#include "GtkDialogManager.h"
-#include "GtkCommonDialog.h"
-#include "GtkOptionsDialog.h"
-#include "GtkOpenFileDialog.h"
-
-ZLDialog *GtkDialogManager::createDialog(const std::string &title) const {
-	return new GtkCommonDialog(title);
+ZLDialog *ZLGtkDialogManager::createDialog(const std::string &title) const {
+	return new ZLGtkCommonDialog(title);
 }
 
-ZLOptionsDialog *GtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new GtkOptionsDialog(id, title, myWindow);
+ZLOptionsDialog *ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
+	return new ZLGtkOptionsDialog(id, title, myWindow);
 }
 
-int GtkDialogManager::infoBox(const InfoBoxType, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+int ZLGtkDialogManager::infoBox(const InfoBoxType, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
 	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message.c_str(), 0));
 
 	gtk_window_set_title(GTK_WINDOW(dialog), title.c_str());
@@ -59,8 +57,8 @@ int GtkDialogManager::infoBox(const InfoBoxType, const std::string &title, const
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-void GtkDialogManager::openFileDialog(const std::string &title, ZLTreeHandler &handler) const {
-	GtkOpenFileDialog(title.c_str(), handler).run();
+void ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	ZLGtkSelectionDialog(title.c_str(), handler).run();
 }
 
 struct RunnableWithFlag {
@@ -76,7 +74,7 @@ static void *runRunnable(void *data) {
 	return 0;
 }
 
-void GtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
+void ZLGtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
 	if (!myIsInitialized || myIsWaiting) {
 		runnable.run();
 	} else {

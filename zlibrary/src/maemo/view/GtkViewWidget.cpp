@@ -18,7 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include "../dialogs/GtkDialogManager.h"
+#include "../dialogs/ZLGtkDialogManager.h"
 #include "GtkViewWidget.h"
 #include "GtkPaintContext.h"
 #include "gdk-pixbuf-hack.h"

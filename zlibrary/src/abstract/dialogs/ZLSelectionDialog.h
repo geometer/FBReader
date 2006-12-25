@@ -43,7 +43,7 @@ public:
 	virtual const std::string stateDisplayName() const = 0;
 	virtual void changeFolder(const std::string &nodeId) = 0;
 	virtual const std::vector<ZLTreeNodePtr> &subnodes() const = 0;
-	virtual std::string relativeId(const std::string &nodeId) const = 0;
+	virtual std::string relativeId(const ZLTreeNode &node) const = 0;
 };
 
 class ZLTreeNode {

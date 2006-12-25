@@ -47,7 +47,7 @@ public:
 	void addItem(GtkWidget *what, int row, int fromColumn, int toColumn);
 
 private:
-	int addRow(void);
+	int addRow();
 	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
 
 private:
