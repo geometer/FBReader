@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLOPENFILEDIALOG_H__
-#define __ZLOPENFILEDIALOG_H__
+#ifndef __ZLSELECTDIALOG_H__
+#define __ZLSELECTDIALOG_H__
 
 #include <vector>
 #include <string>
@@ -36,6 +36,8 @@ protected:
 	virtual ~ZLTreeHandler();
 	
 public:
+	virtual bool isWriteable() const = 0;
+
 	virtual const std::string accept(const std::string &name) const = 0;
 
 	virtual const std::string stateDisplayName() const = 0;
@@ -61,11 +63,11 @@ private:
 	bool myIsFolder;
 };
 
-class ZLOpenFileDialog {
+class ZLSelectDialog {
 
 protected:
-	ZLOpenFileDialog(ZLTreeHandler &handler);
-	virtual ~ZLOpenFileDialog();
+	ZLSelectDialog(ZLTreeHandler &handler);
+	virtual ~ZLSelectDialog();
 
 public:
 	virtual void run() = 0;
@@ -84,6 +86,6 @@ inline const std::string &ZLTreeNode::id() const { return myId; }
 inline const std::string &ZLTreeNode::displayName() const { return myDisplayName; }
 inline const std::string &ZLTreeNode::pixmapName() const { return myPixmapName; }
 
-inline const ZLTreeHandler &ZLOpenFileDialog::handler() const { return myHandler; }
+inline const ZLTreeHandler &ZLSelectDialog::handler() const { return myHandler; }
 
-#endif /* __ZLOPENFILEDIALOG_H__ */
+#endif /* __ZLSELECTDIALOG_H__ */

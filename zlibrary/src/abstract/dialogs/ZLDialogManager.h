@@ -49,7 +49,7 @@ public:
 
 	virtual ZLDialog *createDialog(const std::string &title) const = 0;
 	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const = 0;
-	virtual void openFileDialog(const std::string &title, ZLTreeHandler &handler) const = 0;
+	virtual void selectDialog(const std::string &title, ZLTreeHandler &handler) const = 0;
 
 	enum InfoBoxType {
 		INFORMATION_TYPE,

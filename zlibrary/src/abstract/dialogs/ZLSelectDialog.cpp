@@ -19,7 +19,7 @@
  */
 
 #include "ZLDialogManager.h"
-#include "ZLOpenFileDialog.h"
+#include "ZLSelectDialog.h"
 
 ZLTreeHandler::ZLTreeHandler() {
 }
@@ -27,13 +27,13 @@ ZLTreeHandler::ZLTreeHandler() {
 ZLTreeHandler::~ZLTreeHandler() {
 }
 
-ZLOpenFileDialog::ZLOpenFileDialog(ZLTreeHandler &handler) : myHandler(handler) {
+ZLSelectDialog::ZLSelectDialog(ZLTreeHandler &handler) : myHandler(handler) {
 }
 
-ZLOpenFileDialog::~ZLOpenFileDialog() {
+ZLSelectDialog::~ZLSelectDialog() {
 }
 
-void ZLOpenFileDialog::runNode(const ZLTreeNodePtr node) {
+void ZLSelectDialog::runNode(const ZLTreeNodePtr node) {
 	const std::string &nodeId = node->id();
 	const std::string selectedName = myHandler.relativeId(nodeId);
 	if (node->isFolder()) {
