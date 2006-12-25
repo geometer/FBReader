@@ -85,7 +85,7 @@ int GtkDialogManager::infoBox(const InfoBoxType type, const std::string &title, 
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-void GtkDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
+void GtkDialogManager::openFileDialog(const std::string &title, ZLTreeHandler &handler) const {
 	GtkOpenFileDialog(title.c_str(), handler).run();
 }
 

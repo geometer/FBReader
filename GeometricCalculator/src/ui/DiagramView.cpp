@@ -74,7 +74,7 @@ DiagramView::DrawMode DiagramView::getDrawMode(const ObjectPtr object) const {
 		return SELECTED;
 	}
 
-	if ((!myCurrentMode.isNull()) && !myCurrentMode->isObjectSelectable(object)) {
+	if (!myCurrentMode.isNull() && !myCurrentMode->isObjectSelectable(object)) {
 		return UNAVAILABLE;
 	}
 

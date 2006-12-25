@@ -51,7 +51,7 @@ int QDialogManager::infoBox(const InfoBoxType type, const std::string &title, co
 	}
 }
 
-void QDialogManager::openFileDialog(const std::string &title, const ZLTreeHandler &handler) const {
+void QDialogManager::openFileDialog(const std::string &title, ZLTreeHandler &handler) const {
 	QOpenFileDialog(title.c_str(), handler).run();
 }
 

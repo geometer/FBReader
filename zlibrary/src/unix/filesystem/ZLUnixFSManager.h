@@ -26,16 +26,8 @@
 
 class ZLUnixFSManager : public ZLFSManager {
 
-public:
-	static void createInstance() { ourInstance = new ZLUnixFSManager(); }
-	
-private:
-	ZLUnixFSManager() {}
-	
-public:
-	void normalize(std::string &path) const;
-
 protected:
+	void normalize(std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;

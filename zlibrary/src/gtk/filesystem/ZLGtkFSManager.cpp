@@ -18,34 +18,13 @@
  * 02110-1301, USA.
  */
 
-#include <qapplication.h>
+#include <gtk/gtk.h>
 
-#include <ZLApplication.h>
-#include <ZLibrary.h>
+#include "ZLGtkFSManager.h"
 
-#include "../../qt/filesystem/ZLQtFSManager.h"
-#include "../time/ZLQtTime.h"
-#include "../dialogs/QDialogManager.h"
-#include "../image/QImageManager.h"
-#include "../view/QPaintContext.h"
-
-void ZLibrary::init(int &argc, char **&argv) {
-	new QApplication(argc, argv);
-	qApp->addLibraryPath("/usr/lib/qt/plugins");
-
-	ZLQtTimeManager::createInstance();
-	ZLQtFSManager::createInstance();
-	QDialogManager::createInstance();
-	QImageManager::createInstance();
-}
-
-ZLPaintContext *ZLibrary::createContext() {
-	return new QPaintContext();
-}
-
-void ZLibrary::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
-	application->initWindow();
-	qApp->exec();
-	delete application;
+std::string ZLGtkFSManager::convertFilenameToUtf8(const std::string &name) const {
+	char *gtkString = g_locale_to_utf8(name.data(), name.length(), 0, 0, 0);
+	std::string convertedName = gtkString;
+	g_free(gtkString);
+	return convertedName;
 }

@@ -55,6 +55,7 @@ protected:
 	virtual ZLFileInfo fileInfo(const std::string &path) const = 0;
 	virtual bool isZipSupported() const = 0;
 	virtual bool removeFile(const std::string &path) const = 0;
+	virtual std::string convertFilenameToUtf8(const std::string &name) const = 0;
 
 private:
 	std::map<std::string,ZLFile::ArchiveType> myForcedFiles;

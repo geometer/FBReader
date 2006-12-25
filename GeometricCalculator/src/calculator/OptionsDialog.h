@@ -9,7 +9,7 @@ class ZLOptionsDialog;
 class ShowOptionsDialogAction : public ZLApplication::Action {
 
 public:
-	ShowOptionsDialogAction(GeometricCalculator &window);
+	ShowOptionsDialogAction(GeometricCalculator &calculator);
 	void run();
 
 private:
@@ -20,7 +20,7 @@ private:
 	void createKeysTab(ZLOptionsDialog &dialog);	
 
 private:
-	GeometricCalculator &myWindow;
+	GeometricCalculator &myCalculator;
 };
 
 #endif /* __OPTIONSDIALOG_H__ */

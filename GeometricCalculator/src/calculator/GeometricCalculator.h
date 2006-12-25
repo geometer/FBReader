@@ -52,22 +52,33 @@ private:
 	class OpenSceneAction : public Action {
 
 	public:
-		OpenSceneAction(GeometricCalculator &window);
+		OpenSceneAction(GeometricCalculator &calculator);
 		void run();
 
 	private:
-		GeometricCalculator &myWindow;
+		GeometricCalculator &myCalculator;
+	};
+
+	class SaveSceneAction : public Action {
+
+	public:
+		SaveSceneAction(GeometricCalculator &calculator);
+		bool isEnabled();
+		void run();
+
+	private:
+		GeometricCalculator &myCalculator;
 	};
 
 	class NewSceneAction : public Action {
 
 	public:
-		NewSceneAction(GeometricCalculator &window);
+		NewSceneAction(GeometricCalculator &calculator);
 		bool isEnabled();
 		void run();
 
 	private:
-		GeometricCalculator &myWindow;
+		GeometricCalculator &myCalculator;
 	};
 
 public:
@@ -79,23 +90,20 @@ public:
 
 private:
 	const std::string defaultSceneFileName() const;
-	void createMenu();
 
-	bool saveIfChanged();
-	bool save(const char *fileName);
+	//bool saveIfChanged();
+	//bool save(const char *fileName);
 
 private:
 	void newScene();
 	void open();
 	void open(const std::string &fileName);
-	bool save();
-	bool saveAs();
+	void save();
+	//bool saveAs();
 
-	void setMode();
+	//void help();
 
-	void help();
-
-	void showFilePopup();
+	//void showFilePopup();
 
 private:
   DiagramView *myView;	
@@ -104,6 +112,7 @@ private:
 friend class ShowOptionsDialogAction;
 friend class ShowInfoDialogAction;
 friend class OpenSceneAction;
+friend class SaveSceneAction;
 friend class NewSceneAction;
 friend class QuitAction;
 };

@@ -9,14 +9,14 @@ class ZLOptionsDialog;
 class ShowInfoDialogAction : public ZLApplication::Action {
 
 public:
-	ShowInfoDialogAction(GeometricCalculator &window);
+	ShowInfoDialogAction(GeometricCalculator &calculator);
 	void run();
 
 private:
 	void createInfoTab(ZLOptionsDialog &dialog);	
 
 private:
-	GeometricCalculator &myWindow;
+	GeometricCalculator &myCalculator;
 };
 
 #endif /* __SCENEINFODIALOG_H__ */

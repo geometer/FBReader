@@ -13,7 +13,7 @@
 
 #include "../ui/DiagramView.h"
 
-ShowOptionsDialogAction::ShowOptionsDialogAction(GeometricCalculator &window) : myWindow(window) {
+ShowOptionsDialogAction::ShowOptionsDialogAction(GeometricCalculator &calculator) : myCalculator(calculator) {
 }
 
 void ShowOptionsDialogAction::run() {
@@ -28,20 +28,20 @@ void ShowOptionsDialogAction::run() {
 	dialog->run("");
 	delete dialog;
 
-	myWindow.refreshWindow();
+	myCalculator.refreshWindow();
 }
 
 void ShowOptionsDialogAction::createViewTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &viewTab = dialog.createTab("View");
 
-	DiagramView &view = *myWindow.myView;
+	DiagramView &view = *myCalculator.myView;
 	viewTab.addOption(new ZLSimpleSpinOptionEntry("Zoom, %", view.ZoomOption, 10));
 }
 
 void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &drawingTab = dialog.createTab("Drawing");
 
-	DiagramView &view = *myWindow.myView;
+	DiagramView &view = *myCalculator.myView;
 	drawingTab.addOption(new ZLSimpleBooleanOptionEntry("Connect New Lines To Existing Points Only", view.ExistingPointsOnlyOption));
 	drawingTab.addOption(new ZLSimpleBooleanOptionEntry("Draw Segment For Middle Point", view.CreateSegmentForMiddlePointOption));
 }
@@ -49,7 +49,7 @@ void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
 void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &pointTab = dialog.createTab("Points");
 
-	DiagramView &view = *myWindow.myView;
+	DiagramView &view = *myCalculator.myView;
 	pointTab.addOption(new ZLSimpleSpinOptionEntry("Point Radius", view.PointRadiusOption, 1));
 	ZLOptionEntry *fontFamilyEntry = new ZLFontFamilyOptionEntry("Font Family", view.PointFontFamilyOption, view.context());
 	ZLOptionEntry *fontSizeEntry = new ZLSimpleSpinOptionEntry("Font Size", view.PointFontSizeOption, 2);
@@ -63,7 +63,7 @@ void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
 void ShowOptionsDialogAction::createColorsTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &colorsTab = dialog.createTab("Colors");
 
-	DiagramView &view = *myWindow.myView;
+	DiagramView &view = *myCalculator.myView;
 
 	ZLColorOptionBuilder builder;
 	static const std::string BACKGROUND = "Background";
@@ -95,6 +95,7 @@ KeyOptionEntry::KeyOptionEntry(ZLKeyBindings &bindings) : ZLSimpleKeyOptionEntry
 
 	addAction(ACTION_NEW_SCENE, "Empty Scene");
 	addAction(ACTION_OPEN_SCENE, "Open Scene");
+	addAction(ACTION_SAVE_SCENE, "Save Scene");
 	//addAction(MODE_ADD_POINT, "");
 	//addAction(MODE_ADD_POINT_ON_THE_LINE, "");
 	//addAction(MODE_ADD_MIDDLE_POINT, "");
@@ -127,5 +128,5 @@ void KeyOptionEntry::addAction(int code, const std::string &name) {
 
 void ShowOptionsDialogAction::createKeysTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &keysTab = dialog.createTab("Keys");
-	keysTab.addOption(new KeyOptionEntry(myWindow.keyBindings()));
+	keysTab.addOption(new KeyOptionEntry(myCalculator.keyBindings()));
 }

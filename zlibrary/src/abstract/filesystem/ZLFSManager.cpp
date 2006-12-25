@@ -146,7 +146,7 @@ void ZLFile::fillInfo() const {
 	if (index == (size_t)-1) {
 		myInfo = ZLFSManager::instance().fileInfo(myPath);
 	} else {
-		myInfo = ZLFSManager::instance().fileInfo(myPath.substr(index));
+		myInfo = ZLFSManager::instance().fileInfo(myPath.substr(0, index));
 		myInfo.IsDirectory = false;
 	}
 	myInfoIsFilled = true;

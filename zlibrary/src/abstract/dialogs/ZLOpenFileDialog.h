@@ -22,13 +22,10 @@
 #define __ZLOPENFILEDIALOG_H__
 
 #include <vector>
+#include <string>
 
 #include <shared_ptr.h>
-#include <ZLOptions.h>
 
-class ZLDir;
-class ZLTreeState;
-typedef shared_ptr<ZLTreeState> ZLTreeStatePtr;
 class ZLTreeNode;
 typedef shared_ptr<ZLTreeNode> ZLTreeNodePtr;
 
@@ -39,9 +36,12 @@ protected:
 	virtual ~ZLTreeHandler();
 	
 public:
-	virtual const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const = 0;
-	virtual bool isAcceptable(const std::string &name) const = 0;
 	virtual const std::string accept(const std::string &name) const = 0;
+
+	virtual const std::string stateDisplayName() const = 0;
+	virtual void changeFolder(const std::string &nodeId) = 0;
+	virtual const std::vector<ZLTreeNodePtr> &subnodes() const = 0;
+	virtual std::string relativeId(const std::string &nodeId) const = 0;
 };
 
 class ZLTreeNode {
@@ -53,7 +53,6 @@ public:
 	const std::string &displayName() const;
 	const std::string &pixmapName() const;
 	bool isFolder() const;
-	std::string relativeName(const ZLTreeStatePtr state) const;
 
 private:
 	std::string myId;
@@ -62,78 +61,10 @@ private:
 	bool myIsFolder;
 };
 
-class ZLTreeState {
-
-protected:
-	ZLTreeState(const ZLTreeHandler &handler);
-
-public:
-	virtual ~ZLTreeState();
-
-	virtual ZLTreeStatePtr change(const ZLTreeNodePtr node) = 0;
-
-	virtual const std::vector<ZLTreeNodePtr> &subnodes() const = 0;
-	virtual const std::string &name() const = 0;
-	virtual const std::string shortName() const = 0;
-	virtual bool isLeaf() const = 0;
-	virtual bool exists() const = 0;
-
-	const ZLTreeHandler &handler() const;
-
-private:
-	const ZLTreeHandler &myHandler;
-};
-
-class ZLDirTreeState : public ZLTreeState {
-
-public:
-	ZLDirTreeState(const ZLTreeHandler &handler, shared_ptr<ZLDir> dir);
-
-	ZLTreeStatePtr change(const ZLTreeNodePtr node);
-
-	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	const std::string &name() const;
-	const std::string shortName() const;
-	bool isLeaf() const;
-	bool exists() const;
-
-private:
-	void fill() const;
-	void addSubnode(const std::string &name, bool isFile) const;
-
-private:
-	shared_ptr<ZLDir> myDir;
-	mutable bool myIsUpToDate;
-	mutable std::vector<ZLTreeNodePtr> mySubnodes;
-};
-
-class ZLFileTreeState : public ZLTreeState {
-
-public:
-	ZLFileTreeState(const ZLTreeHandler &handler, const std::string &name);
-
-	ZLTreeStatePtr change(const ZLTreeNodePtr node);
-
-	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	const std::string &name() const;
-	const std::string shortName() const;
-	bool isLeaf() const;
-	bool exists() const;
-
-private:
-	void fill() const;
-
-private:
-	std::string myFileName;
-};
-
 class ZLOpenFileDialog {
 
-public:
-	ZLStringOption DirectoryOption;
-
 protected:
-	ZLOpenFileDialog(const ZLTreeHandler &handler);
+	ZLOpenFileDialog(ZLTreeHandler &handler);
 	virtual ~ZLOpenFileDialog();
 
 public:
@@ -142,21 +73,17 @@ public:
 protected:
 	void runNode(const ZLTreeNodePtr node);
 	virtual void exitDialog() = 0;
-	virtual void update(const std::string &selectedNodeName) = 0;
-	const ZLTreeStatePtr state() const;
+	virtual void update(const std::string &selectedNodeId) = 0;
+	const ZLTreeHandler &handler() const;
 
 private:
-	ZLTreeStatePtr myState;
+	ZLTreeHandler &myHandler;
 };
 
 inline const std::string &ZLTreeNode::id() const { return myId; }
 inline const std::string &ZLTreeNode::displayName() const { return myDisplayName; }
 inline const std::string &ZLTreeNode::pixmapName() const { return myPixmapName; }
 
-inline ZLTreeHandler::ZLTreeHandler() {}
-inline ZLTreeHandler::~ZLTreeHandler() {}
-inline const ZLTreeHandler &ZLTreeState::handler() const { return myHandler; }
-
-inline const ZLTreeStatePtr ZLOpenFileDialog::state() const { return myState; }
+inline const ZLTreeHandler &ZLOpenFileDialog::handler() const { return myHandler; }
 
 #endif /* __ZLOPENFILEDIALOG_H__ */

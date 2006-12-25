@@ -23,13 +23,15 @@ all:
 
 install: all do_install
 
+GC_SHAREDIR = $(DESTDIR)$(SHAREDIR)/$(TARGET)
+
 do_install:
 	@install -d $(DESTDIR)$(BINDIR)
 	@install $(TARGET) $(DESTDIR)$(BINDIR)
-	@install -d $(DESTDIR)$(SHAREDIR)/$(TARGET)
-	@install -d $(DESTDIR)$(SHAREDIR)/$(TARGET)/default
-	@install -m 0644 data/default/config.$(TARGET_ARCH).xml $(DESTDIR)$(SHAREDIR)/$(TARGET)/default/config.xml
-	@install -m 0644 data/default/keymap.$(TARGET_ARCH).xml $(DESTDIR)$(SHAREDIR)/$(TARGET)/default/keymap.xml
+	@install -d $(GC_SHAREDIR)/default
+	@install -m 0644 data/default/config.$(TARGET_ARCH).xml $(GC_SHAREDIR)/default/config.xml
+	@install -m 0644 data/default/keymap.$(TARGET_ARCH).xml $(GC_SHAREDIR)/default/keymap.xml
+	@install -m 0644 share/samples.tar $(GC_SHAREDIR)
 
 package:
 	@if [ -d $(TARGET_ARCH) ]; then \

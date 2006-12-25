@@ -12,7 +12,7 @@
 #include "../model/Scene.h"
 #include "../model/ObjectUtil.h"
 
-ShowInfoDialogAction::ShowInfoDialogAction(GeometricCalculator &window) : myWindow(window) {
+ShowInfoDialogAction::ShowInfoDialogAction(GeometricCalculator &calculator) : myCalculator(calculator) {
 }
 
 void ShowInfoDialogAction::run() {
@@ -23,8 +23,8 @@ void ShowInfoDialogAction::run() {
 	dialog->run("");
 	delete dialog;
 
-	myWindow.resetWindowCaption();
-	myWindow.refreshWindow();
+	myCalculator.resetWindowCaption();
+	myCalculator.refreshWindow();
 }
 
 class SceneNameEntry : public ZLStringOptionEntry {
@@ -60,7 +60,7 @@ void SceneNameEntry::onAccept(const std::string &value) {
 void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &infoTab = dialog.createTab("Info");
 
-	Scene &scene = *myWindow.myView->document()->scene();
+	Scene &scene = *myCalculator.myView->document()->scene();
 	const std::list<ObjectPtr> &objects = scene.objects();
 
 	infoTab.addOption(new SceneNameEntry(scene));

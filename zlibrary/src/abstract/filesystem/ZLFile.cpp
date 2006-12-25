@@ -18,34 +18,21 @@
  * 02110-1301, USA.
  */
 
-#include <qapplication.h>
+#include "ZLFile.h"
+#include "ZLFSManager.h"
 
-#include <ZLApplication.h>
-#include <ZLibrary.h>
-
-#include "../../qt/filesystem/ZLQtFSManager.h"
-#include "../time/ZLQtTime.h"
-#include "../dialogs/QDialogManager.h"
-#include "../image/QImageManager.h"
-#include "../view/QPaintContext.h"
-
-void ZLibrary::init(int &argc, char **&argv) {
-	new QApplication(argc, argv);
-	qApp->addLibraryPath("/usr/lib/qt/plugins");
-
-	ZLQtTimeManager::createInstance();
-	ZLQtFSManager::createInstance();
-	QDialogManager::createInstance();
-	QImageManager::createInstance();
+std::string ZLFile::utf8Path() const {
+	return ZLFSManager::instance().convertFilenameToUtf8(myPath);
 }
 
-ZLPaintContext *ZLibrary::createContext() {
-	return new QPaintContext();
+std::string ZLFile::utf8FullName() const {
+	return ZLFSManager::instance().convertFilenameToUtf8(myFullName);
 }
 
-void ZLibrary::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
-	application->initWindow();
-	qApp->exec();
-	delete application;
+std::string ZLFile::utf8Name() const {
+	return ZLFSManager::instance().convertFilenameToUtf8(myName);
+}
+
+std::string ZLFile::utf8Extension() const {
+	return ZLFSManager::instance().convertFilenameToUtf8(myExtension);
 }

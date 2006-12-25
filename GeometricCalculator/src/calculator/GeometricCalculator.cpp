@@ -2,9 +2,10 @@
 #include <ZLFile.h>
 #include <ZLOutputStream.h>
 
-#include "GCFileHandler.h"
 #include "GeometricCalculator.h"
 #include "GeometricCalculatorActions.h"
+#include "GCOpenSceneHandler.h"
+#include "GCSaveSceneHandler.h"
 #include "OptionsDialog.h"
 #include "SceneInfoDialog.h"
 #include "ActionCode.h"
@@ -24,8 +25,6 @@
 #include "../io/SceneReader.h"
 #include "../io/SceneWriter.h"
 #include "../model/Scene.h"
-
-//#include "FileDialog.h"
 
 const std::string GeometricCalculator::defaultSceneFileName() const {
 	return HomeDirectory + PathDelimiter + "." + ApplicationName() + PathDelimiter + "current.scn";
@@ -54,6 +53,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	addAction(ACTION_SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
 	addAction(ACTION_NEW_SCENE, new NewSceneAction(*this));
 	addAction(ACTION_OPEN_SCENE, new OpenSceneAction(*this));
+	addAction(ACTION_SAVE_SCENE, new SaveSceneAction(*this));
 	addAction(ACTION_QUIT, new QuitAction(*this));
 	addAction(ACTION_ZOOM_IN, new ZoomAction(*myView, 1.2));
 	addAction(ACTION_ZOOM_OUT, new ZoomAction(*myView, 1 / 1.2));
@@ -81,6 +81,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 
 	menubar().addItem("Empty Scene", ACTION_NEW_SCENE);
 	menubar().addItem("Open Scene...", ACTION_OPEN_SCENE);
+	menubar().addItem("Save Scene...", ACTION_SAVE_SCENE);
 	menubar().addSeparator();
 	Menu &viewSubmenu = menubar().addSubmenu("View");
 	viewSubmenu.addItem("Zoom In", ACTION_ZOOM_IN);
@@ -109,47 +110,12 @@ GeometricCalculator::~GeometricCalculator() {
 	delete myView;
 }
 
-void GeometricCalculator::createMenu() {
 	/*
-	QPopupMenu *fileMenu = new QPopupMenu(this);
-	QAccel *accelerator = new QAccel(this);
-	menuBar()->insertItem("&File", fileMenu);
-	accelerator->connectItem(accelerator->insertItem(Key_F), this, SLOT(showFilePopup()));
-
-	fileMenu->insertItem("&New", this, SLOT(newScene()), Key_N);
-	fileMenu->insertItem("&Open...", this, SLOT(open()), Key_O);
-	fileMenu->insertItem("&Save", this, SLOT(save()), Key_S);
-	fileMenu->insertItem("Save &as...", this, SLOT(saveAs()), Key_A);
-	fileMenu->insertSeparator();
-	fileMenu->insertItem( "E&xit", this, SLOT(close()), Key_X);
-
-	menuBar()->insertItem("O&ptions", this, SLOT(options()));
-	accelerator->connectItem(accelerator->insertItem(Key_P), this, SLOT(options()));
-	menuBar()->insertItem("&Help", this, SLOT(help()));
-	accelerator->connectItem(accelerator->insertItem(Key_H), this, SLOT(help()));
-	*/
-}
-
-void GeometricCalculator::setMode() {
-	/*
-	int buttonNumber = myModeGroup->count();
-	for (int i = 0; i < buttonNumber; i++) {
-		QButton *selectedButton = myModeGroup->find(i);
-		QButton::ToggleState state = selectedButton->state();
-		if (state == 2) {
-			myView->setEditMode(myModeVector[i]);
-			break;
-		}
-	}
-	*/
-}
-
 bool GeometricCalculator::saveIfChanged() {
 	if (myView->document()->isSaved()) {
 		return true;
 	}
 
-	/*
 	int answer = QMessageBox::warning(NULL, "Unsaved scene", "Save current scene?", QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
 
   if ((answer == 0) || (answer == QMessageBox::Cancel)) {
@@ -158,14 +124,16 @@ bool GeometricCalculator::saveIfChanged() {
   if (answer == QMessageBox::Yes) {
 		return saveAs();
 	}
-	*/
 	return true;
 }
+	*/
 
 void GeometricCalculator::newScene() {
+	/*
 	if (!saveIfChanged()) {
 		return;
 	}
+	*/
 
 	myView->document()->setScene(new Scene());
 	resetWindowCaption();
@@ -174,11 +142,13 @@ void GeometricCalculator::newScene() {
 }
 
 void GeometricCalculator::open() {
+	/*
 	if (!saveIfChanged()) {
 		return;
 	}
+	*/
 
-	GCFileHandler handler;
+	GCOpenSceneHandler handler;
 	ZLDialogManager::instance().openFileDialog("Open Scene", handler);
 	open(handler.fileName());
 }
@@ -189,23 +159,15 @@ void GeometricCalculator::open(const std::string &fileName) {
 		resetWindowCaption();
 		myView->repaintView();
 	}
-
-	/*
-	QFile f(fileName.c_str());
-	if (!f.open(IO_ReadOnly)) {
-		QMessageBox::warning(NULL, "File error", "Cannot open file");
-		return;
-	}
-
-	QTextStream textStream(&f);
-	QTSceneReader reader(textStream);
-	shared_ptr<Scene> scene = reader.read();
-	myView->document()->setScene(scene);
-	myView->repaintView();
-	f.close();
-	*/
 }
 
+void GeometricCalculator::save() {
+	GCSaveSceneHandler handler;
+	ZLDialogManager::instance().openFileDialog("Save Scene", handler);
+	//open(handler.fileName());
+}
+
+/*
 bool GeometricCalculator::save(const char *fileName) {
 	shared_ptr<ZLOutputStream> stream = ZLFile(fileName).outputStream();
 	if (stream.isNull() || !stream->open()) {
@@ -219,20 +181,10 @@ bool GeometricCalculator::save(const char *fileName) {
 	stream->close();
 	return true;
 }
+*/
 
-bool GeometricCalculator::save() {
-	/*
-	if (myFileName == QString::null) {
-		return saveAs();
-	}
-
-	return save(myFileName.ascii());
-	*/
-	return true;
-}
-
+/*
 bool GeometricCalculator::saveAs() {
-	/*
 	QString fileName = FileDialog::getSaveFileName("Save Scene As", "/mnt/card/samples", "*.scn");
 	if (fileName == QString::null) {
 		return false;
@@ -261,9 +213,9 @@ bool GeometricCalculator::saveAs() {
 	} else {
 		return false;
 	}
-	*/
 	return false;
 }
+*/
 
 /*
 void GeometricCalculator::closeEvent(QCloseEvent *event) {
@@ -275,6 +227,7 @@ void GeometricCalculator::closeEvent(QCloseEvent *event) {
 }
 */
 
+/*
 void GeometricCalculator::help() {
 	//QMessageBox::information(NULL, "About", "Geometric Calculator, version 0.1.0", QMessageBox::Ok);
 }
@@ -282,6 +235,7 @@ void GeometricCalculator::help() {
 void GeometricCalculator::showFilePopup() {
 	//menuBar()->activateItemAt(0);
 }
+*/
 
 ZLKeyBindings &GeometricCalculator::keyBindings() {
 	return myBindings;

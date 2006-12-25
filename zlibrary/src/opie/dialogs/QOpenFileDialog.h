@@ -46,7 +46,7 @@ class QOpenFileDialog : public FullScreenDialog, public ZLOpenFileDialog {
 	Q_OBJECT
 
 public:
-	QOpenFileDialog(const char *caption, const ZLTreeHandler &handler); 
+	QOpenFileDialog(const char *caption, ZLTreeHandler &handler); 
 	~QOpenFileDialog();
 	void run();
 

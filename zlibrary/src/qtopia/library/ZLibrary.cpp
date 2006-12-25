@@ -23,7 +23,7 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../../unix/filesystem/ZLUnixFSManager.h"
+#include "../../qt/filesystem/ZLQtFSManager.h"
 #include "../../qt/time/ZLQtTime.h"
 #include "../dialogs/QDialogManager.h"
 #include "../../qt/image/QImageManager.h"
@@ -34,7 +34,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	new QPEApplication(argc, argv);
 
 	ZLQtTimeManager::createInstance();
-	ZLUnixFSManager::createInstance();
+	ZLQtFSManager::createInstance();
 	QDialogManager::createInstance();
 	ZLQtopiaCommunicationManager::createInstance();
 	QImageManager::createInstance();

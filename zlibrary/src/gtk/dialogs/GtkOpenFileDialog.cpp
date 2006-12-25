@@ -39,7 +39,7 @@ static gboolean clickHandler(GtkWidget*, GdkEventButton *event, gpointer self) {
 	return FALSE;
 }
 
-GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : ZLDesktopOpenFileDialog(handler) {
+GtkOpenFileDialog::GtkOpenFileDialog(const char *caption, ZLTreeHandler &handler) : ZLDesktopOpenFileDialog(handler) {
 	myExitFlag = false;
 
 	myDialog = createGtkDialog(caption);
@@ -121,28 +121,24 @@ GdkPixbuf *GtkOpenFileDialog::getPixmap(const ZLTreeNodePtr node) {
 }
 
 void GtkOpenFileDialog::update(const std::string &selectedNodeName) {
-	char *stateText = g_locale_to_utf8(state()->name().data(), state()->name().length(), 0, 0, 0);
-	gtk_entry_set_text(myStateLine, stateText);
-	g_free(stateText);
+	gtk_entry_set_text(myStateLine, handler().stateDisplayName().c_str());
 
 	gtk_list_store_clear(myStore);
 	myNodes.clear();
 
 	GtkTreeIter *selectedItem = 0;
 
-	const std::vector<ZLTreeNodePtr> &subnodes = state()->subnodes();
+	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
 	int index = 0;
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it, ++index) {
 		GtkTreeIter iter;
 		gtk_list_store_append(myStore, &iter);
 
-		char *fileName = g_locale_to_utf8((*it)->displayName().data(), (*it)->displayName().length(), 0, 0, 0);
 		gtk_list_store_set(myStore, &iter,
 					0, getPixmap(*it),
-					1, fileName,
+					1, (*it)->displayName().c_str(),
 					2, index,
 					-1);
-		g_free(fileName);
 
 		myNodes.push_back(*it);
 

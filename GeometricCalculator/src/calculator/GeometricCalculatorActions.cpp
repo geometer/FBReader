@@ -63,20 +63,32 @@ void GeometricCalculator::RedoAction::run() {
 	myView.repaintView();
 }
 
-GeometricCalculator::NewSceneAction::NewSceneAction(GeometricCalculator &window) : myWindow(window) {
+GeometricCalculator::NewSceneAction::NewSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
 }
 
 bool GeometricCalculator::NewSceneAction::isEnabled() {
-	return !myWindow.myView->document()->scene()->isEmpty();
+	return !myCalculator.myView->document()->scene()->isEmpty();
 }
 
 void GeometricCalculator::NewSceneAction::run() {
-	myWindow.newScene();
+	myCalculator.newScene();
 }
 
-GeometricCalculator::OpenSceneAction::OpenSceneAction(GeometricCalculator &window) : myWindow(window) {
+GeometricCalculator::OpenSceneAction::OpenSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
 }
 
 void GeometricCalculator::OpenSceneAction::run() {
-	myWindow.open();
+	myCalculator.open();
+}
+
+GeometricCalculator::SaveSceneAction::SaveSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
+}
+
+void GeometricCalculator::SaveSceneAction::run() {
+	myCalculator.save();
+}
+
+bool GeometricCalculator::SaveSceneAction::isEnabled() {
+	// TODO: implement or remove
+	return true;
 }

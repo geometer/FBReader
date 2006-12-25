@@ -46,7 +46,7 @@ class QOpenFileDialog : public QDialog, public ZLDesktopOpenFileDialog {
 	Q_OBJECT
 
 public:
-	QOpenFileDialog(const char *caption, const ZLTreeHandler &handler); 
+	QOpenFileDialog(const char *caption, ZLTreeHandler &handler); 
 	~QOpenFileDialog();
 	void run();
 

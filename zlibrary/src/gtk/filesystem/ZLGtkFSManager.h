@@ -18,34 +18,21 @@
  * 02110-1301, USA.
  */
 
-#include <qapplication.h>
+#ifndef __ZLGTKFSMANAGER_H__
+#define __ZLGTKFSMANAGER_H__
 
-#include <ZLApplication.h>
-#include <ZLibrary.h>
+#include "../../unix/filesystem/ZLUnixFSManager.h"
 
-#include "../../qt/filesystem/ZLQtFSManager.h"
-#include "../time/ZLQtTime.h"
-#include "../dialogs/QDialogManager.h"
-#include "../image/QImageManager.h"
-#include "../view/QPaintContext.h"
+class ZLGtkFSManager : public ZLUnixFSManager {
 
-void ZLibrary::init(int &argc, char **&argv) {
-	new QApplication(argc, argv);
-	qApp->addLibraryPath("/usr/lib/qt/plugins");
+public:
+	static void createInstance() { ourInstance = new ZLGtkFSManager(); }
+	
+private:
+	ZLGtkFSManager() {}
+	
+protected:
+	std::string convertFilenameToUtf8(const std::string &name) const;
+};
 
-	ZLQtTimeManager::createInstance();
-	ZLQtFSManager::createInstance();
-	QDialogManager::createInstance();
-	QImageManager::createInstance();
-}
-
-ZLPaintContext *ZLibrary::createContext() {
-	return new QPaintContext();
-}
-
-void ZLibrary::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
-	application->initWindow();
-	qApp->exec();
-	delete application;
-}
+#endif /* __ZLGTKFSMANAGER_H__ */

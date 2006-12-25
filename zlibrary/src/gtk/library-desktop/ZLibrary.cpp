@@ -23,7 +23,7 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../../unix/filesystem/ZLUnixFSManager.h"
+#include "../../gtk/filesystem/ZLGtkFSManager.h"
 #include "../time/ZLGtkTime.h"
 #include "../dialogs/GtkDialogManager.h"
 #include "../image/GtkImageManager.h"
@@ -32,7 +32,7 @@
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
 
-	ZLUnixFSManager::createInstance();
+	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	GtkDialogManager::createInstance();
 	GtkImageManager::createInstance();

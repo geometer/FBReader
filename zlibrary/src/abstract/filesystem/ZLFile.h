@@ -63,6 +63,11 @@ public:
 	const std::string &name() const;
 	const std::string &extension() const;
 
+	std::string utf8Path() const;
+	std::string utf8FullName() const;
+	std::string utf8Name() const;
+	std::string utf8Extension() const;
+
 	shared_ptr<ZLInputStream> inputStream() const;
 	shared_ptr<ZLOutputStream> outputStream() const;
 	shared_ptr<ZLDir> directory(bool createUnexisting = false) const;

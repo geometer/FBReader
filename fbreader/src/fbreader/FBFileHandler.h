@@ -29,21 +29,30 @@
 class FBFileHandler : public ZLTreeHandler {
 
 public:
+	ZLStringOption DirectoryOption;
+
+public:
 	FBFileHandler();
 	~FBFileHandler();
-
-	const std::string &pixmapName(const ZLDir &dir, const std::string &name, bool isFile) const;
-	bool isAcceptable(const std::string &name) const;
-	const std::string accept(const std::string &name) const;
 
 	BookDescriptionPtr description() const;
 
 private:
+	const std::string accept(const std::string &nodeId) const;
+
+	const std::string stateDisplayName() const;
+	void changeFolder(const std::string &nodeId);
+	const std::vector<ZLTreeNodePtr> &subnodes() const;
+	std::string relativeId(const std::string &nodeId) const;
+
+private:
+	shared_ptr<ZLDir> myDir;
+	mutable bool myIsUpToDate;
+	mutable std::vector<ZLTreeNodePtr> mySubnodes;
+
 	mutable BookDescriptionPtr myDescription;
 };
 
-inline FBFileHandler::FBFileHandler() : myDescription(0) {}
-inline FBFileHandler::~FBFileHandler() {}
 inline BookDescriptionPtr FBFileHandler::description() const { return myDescription; }
 
 #endif /* __FBFILEHANDLER_H__ */

@@ -25,10 +25,10 @@
 
 #include "QOpenFileDialog.h"
 
-QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromLocal8Bit(node->displayName().c_str())), myNode(node) {
+QOpenFileDialogItem::QOpenFileDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
 }
 
-QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLTreeHandler &handler) : FullScreenDialog(caption), ZLOpenFileDialog(handler) {
+QOpenFileDialog::QOpenFileDialog(const char *caption, ZLTreeHandler &handler) : FullScreenDialog(caption), ZLOpenFileDialog(handler) {
 	myMainBox = new QVBox(this);
 
 	myStateLine = new QLineEdit(myMainBox);
@@ -36,6 +36,7 @@ QOpenFileDialog::QOpenFileDialog(const char *caption, const ZLTreeHandler &handl
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("");
 	myListView->header()->hide();
+	myListView->setSorting(-1, true);
 
  	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(accept()));
  	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));
@@ -74,14 +75,14 @@ void QOpenFileDialog::resizeEvent(QResizeEvent *event) {
 }
 
 void QOpenFileDialog::update(const std::string &selectedNodeName) {
-	myStateLine->setText(QString::fromLocal8Bit(state()->name().c_str()));
+	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
 
 	myListView->clear();
 
 	QListViewItem *item = 0;
 	QListViewItem *selectedItem = 0;
 
-	const std::vector<ZLTreeNodePtr> &subnodes = state()->subnodes();
+	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
 	 	item = new QOpenFileDialogItem(myListView, item, *it);
 		item->setPixmap(0, getPixmap(*it));
