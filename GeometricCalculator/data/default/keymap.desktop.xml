@@ -1,8 +1,8 @@
 <keymap>
 	<binding key="&lt;I&gt;" action="16"/>
-	<binding key="&lt;O&gt;" action="17"/>
+	<binding key="&lt;P&gt;" action="17"/>
 	<binding key="&lt;S&gt;" action="23"/>
-	<binding key="&lt;A&gt;" action="19"/>
+	<binding key="&lt;O&gt;" action="19"/>
 	<binding key="&lt;E&gt;" action="18"/>
 	<binding key="&lt;Esc&gt;" action="20"/>
 	<binding key="&lt;+&gt;" action="21"/>

@@ -36,14 +36,29 @@ protected:
 	virtual ~ZLTreeHandler();
 	
 public:
-	virtual bool isWriteable() const = 0;
-
-	virtual const std::string accept(const ZLTreeNode &node) const = 0;
+	virtual bool isOpenHandler() const = 0;
 
 	virtual const std::string stateDisplayName() const = 0;
 	virtual void changeFolder(const ZLTreeNode &node) = 0;
 	virtual const std::vector<ZLTreeNodePtr> &subnodes() const = 0;
 	virtual std::string relativeId(const ZLTreeNode &node) const = 0;
+};
+
+class ZLTreeOpenHandler : public ZLTreeHandler {
+
+public:
+	virtual bool isOpenHandler() const { return true; }
+
+	virtual bool accept(const ZLTreeNode &node) const = 0;
+};
+
+class ZLTreeSaveHandler : public ZLTreeHandler {
+
+public:
+	virtual bool isOpenHandler() const { return false; }
+
+	virtual void processNode(const ZLTreeNode &node) const = 0;
+	virtual bool accept(const std::string &state) const = 0;
 };
 
 class ZLTreeNode {
@@ -70,10 +85,11 @@ protected:
 	virtual ~ZLSelectionDialog();
 
 public:
-	virtual void run() = 0;
+	virtual bool run() = 0;
 
 protected:
 	void runNode(const ZLTreeNodePtr node);
+	void runState(const std::string &state);
 	virtual void exitDialog() = 0;
 	virtual void update(const std::string &selectedNodeId) = 0;
 	const ZLTreeHandler &handler() const;

@@ -48,7 +48,7 @@ class ZLQtSelectionDialog : public QDialog, public ZLDesktopSelectionDialog {
 public:
 	ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler); 
 	~ZLQtSelectionDialog();
-	void run();
+	bool run();
 
 private:
 	QPixmap &getPixmap(const ZLTreeNodePtr node);
@@ -65,6 +65,7 @@ protected:
 	void update(const std::string &selectedNodeName);
 
 private slots:
+	void runNodeSlot();
 	void accept();
 
 private:
@@ -73,9 +74,5 @@ private:
 	QVBox *myMainBox;
 	std::map<std::string,QPixmap*> myPixmaps;
 };
-
-inline void ZLQtSelectionDialog::run() {
-	QDialog::exec();
-}
 
 #endif /* __ZLQTSELECTIONDIALOG_H__ */

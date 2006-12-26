@@ -38,13 +38,19 @@ void ZLSelectionDialog::runNode(const ZLTreeNodePtr node) {
 	if (node->isFolder()) {
 		myHandler.changeFolder(*node);
 		update(selectedName);
+	} else if (myHandler.isOpenHandler()) {
+		if (((ZLTreeOpenHandler&)myHandler).accept(*node)) {
+			exitDialog();
+		}
 	} else {
-		const std::string message = myHandler.accept(*node);
-		if (!message.empty()) {
-			ZLDialogManager::instance().infoBox(ZLDialogManager::ERROR_TYPE, "Error", message, "Ok");
-		} else if (myHandler.isWriteable()) {
-			update(selectedName);
-		} else {
+		((ZLTreeSaveHandler&)myHandler).processNode(*node);
+		update(selectedName);
+	}
+}
+
+void ZLSelectionDialog::runState(const std::string &state) {
+	if (!myHandler.isOpenHandler()) {
+		if (((ZLTreeSaveHandler&)myHandler).accept(state)) {
 			exitDialog();
 		}
 	}

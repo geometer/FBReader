@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include <ZLDialogManager.h>
 #include <ZLFile.h>
 #include <ZLOutputStream.h>
@@ -149,8 +151,9 @@ void GeometricCalculator::open() {
 	*/
 
 	GCOpenSceneHandler handler;
-	ZLDialogManager::instance().selectionDialog("Open Scene", handler);
-	open(handler.fileName());
+	if (ZLDialogManager::instance().selectionDialog("Open Scene", handler)) {
+		open(handler.fileName());
+	}
 }
 
 void GeometricCalculator::open(const std::string &fileName) {
@@ -163,8 +166,9 @@ void GeometricCalculator::open(const std::string &fileName) {
 
 void GeometricCalculator::save() {
 	GCSaveSceneHandler handler(myView->document()->scene()->name());
-	ZLDialogManager::instance().selectionDialog("Save Scene", handler);
-	//open(handler.fileName());
+	if (ZLDialogManager::instance().selectionDialog("Save Scene", handler)) {
+		std::cerr << handler.sceneName();
+	}
 }
 
 /*
@@ -230,10 +234,6 @@ void GeometricCalculator::closeEvent(QCloseEvent *event) {
 /*
 void GeometricCalculator::help() {
 	//QMessageBox::information(NULL, "About", "Geometric Calculator, version 0.1.0", QMessageBox::Ok);
-}
-
-void GeometricCalculator::showFilePopup() {
-	//menuBar()->activateItemAt(0);
 }
 */
 

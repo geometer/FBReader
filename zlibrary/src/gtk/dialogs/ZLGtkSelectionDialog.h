@@ -34,7 +34,7 @@ public:
 	ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler); 
 	~ZLGtkSelectionDialog(); 
 
-	void run();
+	bool run();
 
 	void activatedSlot();
 
@@ -51,6 +51,7 @@ private:
 
 private:
 	bool myExitFlag;
+	bool myNodeSelected;
 	GtkDialog *myDialog;
 	GtkListStore *myStore;
 	GtkTreeView *myView;

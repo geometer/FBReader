@@ -79,8 +79,8 @@ int ZLGtkDialogManager::infoBox(const InfoBoxType type, const std::string &title
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-void ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	ZLGtkSelectionDialog(title.c_str(), handler).runWithSize();
+bool ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	return ZLGtkSelectionDialog(title.c_str(), handler).runWithSize();
 }
 
 void ZLGtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {

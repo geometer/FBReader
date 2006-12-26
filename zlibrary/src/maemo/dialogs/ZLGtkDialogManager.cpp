@@ -57,8 +57,8 @@ int ZLGtkDialogManager::infoBox(const InfoBoxType, const std::string &title, con
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-void ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	ZLGtkSelectionDialog(title.c_str(), handler).run();
+bool ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	return ZLGtkSelectionDialog(title.c_str(), handler).run();
 }
 
 struct RunnableWithFlag {

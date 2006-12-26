@@ -24,7 +24,7 @@
 #include "QDialogManager.h"
 #include "QCommonDialog.h"
 #include "QOptionsDialog.h"
-#include "QOpenFileDialog.h"
+#include "ZLQtSelectionDialog.h"
 #include "QWaitMessage.h"
 #include "../application/QApplicationWindow.h"
 
@@ -51,8 +51,8 @@ int QDialogManager::infoBox(const InfoBoxType type, const std::string &title, co
 	}
 }
 
-void QDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	QOpenFileDialog(title.c_str(), handler).run();
+bool QDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	return ZLQtSelectionDialog(title.c_str(), handler).run();
 }
 
 void QDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {

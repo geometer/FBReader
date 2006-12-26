@@ -26,11 +26,11 @@
 #include "ZLGtkSelectionDialog.h"
 #include "ZLGtkUtil.h"
 
-static void activatedHandler(GtkTreeView *view, GtkTreePath *, GtkTreeViewColumn *) {
+static void activatedHandler(GtkTreeView *view, GtkTreePath*, GtkTreeViewColumn*) {
 	((ZLGtkSelectionDialog*)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
 }
 
-static gboolean clickHandler(GtkWidget *, GdkEventButton *event, gpointer self) {
+static gboolean clickHandler(GtkWidget*, GdkEventButton *event, gpointer self) {
 	if (event->button == 1) {
 		((ZLGtkSelectionDialog*)self)->activatedSlot();
 	}
@@ -40,6 +40,7 @@ static gboolean clickHandler(GtkWidget *, GdkEventButton *event, gpointer self) 
 
 ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler) : ZLSelectionDialog(handler) {
 	myExitFlag = false;
+	myNodeSelected = false;
 
 	myDialog = createGtkDialog(caption);
 	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
@@ -51,8 +52,8 @@ ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &h
 
 	myStateLine = GTK_ENTRY(gtk_entry_new());
 
-	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), this->handler().isWriteable());
-	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), this->handler().isWriteable());
+	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), !this->handler().isOpenHandler());
+	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), !this->handler().isOpenHandler());
 
 	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myStateLine), false, false, 2);
 
@@ -100,7 +101,9 @@ ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &h
 
 ZLGtkSelectionDialog::~ZLGtkSelectionDialog() {
 	for(std::map<std::string,GdkPixbuf*>::iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
-		g_object_unref(G_OBJECT(it->second));
+		if (it->second != 0) {
+			g_object_unref(G_OBJECT(it->second));
+		}
 	}
 
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
@@ -124,11 +127,11 @@ void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 	gtk_list_store_clear(myStore);
 	myNodes.clear();
 
-
 	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
 	
 	if (subnodes.size() > 0) {
 		GtkTreeIter *selectedItem = 0;
+
 		int index = 0;
 		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it, ++index) {
 			GtkTreeIter iter;
@@ -150,7 +153,7 @@ void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 
 		if (selectedItem == 0) {
-			if (!handler().isWriteable()) {
+			if (handler().isOpenHandler()) {
 				GtkTreeIter iter;
 				gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
 				gtk_tree_selection_select_iter(selection, &iter);
@@ -165,21 +168,26 @@ void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 	}
 }
 
-void ZLGtkSelectionDialog::run() {
+bool ZLGtkSelectionDialog::run() {
 	while (gtk_dialog_run(myDialog) == GTK_RESPONSE_ACCEPT) {
-		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
-		GtkTreeModel *dummy;
-		GtkTreeIter iter;
-
-		if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
-			int index;
-			gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 2, &index, -1);
-			runNode(myNodes[index]);
-			if (myExitFlag) {
-				break;
+		if (myNodeSelected || handler().isOpenHandler()) {
+			GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
+			GtkTreeModel *dummy;
+			GtkTreeIter iter;
+			if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
+				int index;
+				gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 2, &index, -1);
+				runNode(myNodes[index]);
 			}
+			myNodeSelected = false;
+		} else {
+			runState(gtk_entry_get_text(myStateLine));	
+		}
+		if (myExitFlag) {
+			return true;
 		}
 	}
+	return false;
 }
 
 void ZLGtkSelectionDialog::exitDialog() {
@@ -187,23 +195,6 @@ void ZLGtkSelectionDialog::exitDialog() {
 }
 
 void ZLGtkSelectionDialog::activatedSlot() {
+	myNodeSelected = true;
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
 }
-
-void ZLGtkSelectionDialog::setSize(int width, int height) {
-	gtk_window_resize(GTK_WINDOW(myDialog), width, height);
-}
-
-int ZLGtkSelectionDialog::width() const {
-	int _width;
-	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, 0);
-	return _width;
-}
-
-int ZLGtkSelectionDialog::height() const {
-	int _height;
-	gtk_window_get_size(GTK_WINDOW(myDialog), 0, &_height);
-	return _height;
-}
-
-// vim:ts=2:sw=2:noet

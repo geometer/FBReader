@@ -48,8 +48,8 @@ int QDialogManager::infoBox(const InfoBoxType type, const std::string &title, co
 	}
 }
 
-void QDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	ZLQtSelectionDialog(title.c_str(), handler).runWithSize();
+bool QDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	return ZLQtSelectionDialog(title.c_str(), handler).runWithSize();
 }
 
 void QDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {

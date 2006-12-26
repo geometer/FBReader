@@ -18,15 +18,15 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKOPENFILEDIALOG_H__
-#define __ZLGTKOPENFILEDIALOG_H__
+#ifndef __ZLGTKSELECTIONDIALOG_H__
+#define __ZLGTKSELECTIONDIALOG_H__
 
 #include <gtk/gtk.h>
 
 #include <vector>
 #include <map>
 
-#include "../../abstract/dialogs/ZLSelectionDialog.h"
+#include <ZLSelectionDialog.h>
 
 class ZLGtkSelectionDialog : public ZLSelectionDialog {
 
@@ -34,15 +34,11 @@ public:
 	ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler); 
 	~ZLGtkSelectionDialog(); 
 
-	void run();
+	bool run();
 
 	void activatedSlot();
 
 protected:
-	void setSize(int width, int height);
-	int width() const;
-	int height() const;
-
 	void exitDialog();
 	void update(const std::string &selectedNodeName);
 
@@ -51,6 +47,7 @@ private:
 
 private:
 	bool myExitFlag;
+	bool myNodeSelected;
 	GtkDialog *myDialog;
 	GtkListStore *myStore;
 	GtkTreeView *myView;
@@ -60,4 +57,4 @@ private:
 	std::vector<ZLTreeNodePtr> myNodes;
 };
 
-#endif /* __ZLGTKOPENFILEDIALOG_H__ */
+#endif /* __ZLGTKSELECTIONDIALOG_H__ */

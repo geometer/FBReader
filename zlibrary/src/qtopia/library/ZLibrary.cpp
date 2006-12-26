@@ -25,7 +25,7 @@
 
 #include "../../qt/filesystem/ZLQtFSManager.h"
 #include "../../qt/time/ZLQtTime.h"
-#include "../dialogs/QDialogManager.h"
+#include "../dialogs/ZLQtDialogManager.h"
 #include "../../qt/image/QImageManager.h"
 #include "../view/QPaintContext.h"
 #include "../message/ZLQtopiaMessage.h"
@@ -35,7 +35,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
-	QDialogManager::createInstance();
+	ZLQtDialogManager::createInstance();
 	ZLQtopiaCommunicationManager::createInstance();
 	QImageManager::createInstance();
 }

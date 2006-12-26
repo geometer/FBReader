@@ -27,7 +27,7 @@
 
 #include <ZLApplication.h>
 
-class QApplicationWindow : public QMainWindow, public ZLApplicationWindow { 
+class QApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
 
 public:

@@ -26,7 +26,7 @@
 
 #include "../description/BookDescription.h"
 
-class FBFileHandler : public ZLTreeHandler {
+class FBFileHandler : public ZLTreeOpenHandler {
 
 public:
 	ZLStringOption DirectoryOption;
@@ -38,9 +38,7 @@ public:
 	BookDescriptionPtr description() const;
 
 private:
-	bool isWriteable() const;
-
-	const std::string accept(const ZLTreeNode &node) const;
+	bool accept(const ZLTreeNode &node) const;
 
 	const std::string stateDisplayName() const;
 	void changeFolder(const ZLTreeNode &node);

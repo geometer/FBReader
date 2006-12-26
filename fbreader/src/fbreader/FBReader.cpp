@@ -344,11 +344,12 @@ void FBReader::optionsSlot() {
 
 void FBReader::addBookSlot() {
 	FBFileHandler handler;
-	ZLDialogManager::instance().selectionDialog("FBReader - Add File To Library", handler);
-	BookDescriptionPtr description = handler.description();
-	if (!description.isNull() && runBookInfoDialog(description->fileName())) {
-		BookList().addFileName(description->fileName());
-		setMode(BOOK_TEXT_MODE);
+	if (ZLDialogManager::instance().selectionDialog("FBReader - Add File To Library", handler)) {
+		BookDescriptionPtr description = handler.description();
+		if (!description.isNull() && runBookInfoDialog(description->fileName())) {
+			BookList().addFileName(description->fileName());
+			setMode(BOOK_TEXT_MODE);
+		}
 	}
 }
 

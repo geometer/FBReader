@@ -26,8 +26,8 @@
 #include "../../gtk/filesystem/ZLGtkFSManager.h"
 #include "../time/ZLGtkTime.h"
 #include "../dialogs/ZLGtkDialogManager.h"
-#include "../image/GtkImageManager.h"
-#include "../view-desktop/GtkPaintContext.h"
+#include "../image/ZLGtkImageManager.h"
+#include "../view-desktop/ZLGtkPaintContext.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
@@ -35,11 +35,11 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();
-	GtkImageManager::createInstance();
+	ZLGtkImageManager::createInstance();
 }
 
 ZLPaintContext *ZLibrary::createContext() {
-	return new GtkPaintContext();
+	return new ZLGtkPaintContext();
 }
 
 void ZLibrary::run(ZLApplication *application) {

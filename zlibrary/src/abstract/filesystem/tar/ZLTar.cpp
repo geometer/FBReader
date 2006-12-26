@@ -45,8 +45,9 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 	if (Name.empty()) {
 		Name = fileName;
 	}
-	
+
 	stream->seek(24, false);
+	
 	char fileSizeString[12];
 	stream->read(fileSizeString, 12);
 	Size = 0;
@@ -124,9 +125,7 @@ void ZLTarInputStream::seek(int offset, bool absoluteOffset) {
 	if (absoluteOffset) {
 		offset -= myOffset;
 	}
-	if ((size_t)-offset > myOffset) {
-		offset = -myOffset;
-	}
+	offset = std::max(offset, -(int)myOffset);
 	myBaseStream->seek(offset, false);
 	myOffset += offset;
 }

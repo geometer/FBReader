@@ -30,7 +30,7 @@ protected:
 	ZLDesktopSelectionDialog(ZLTreeHandler &handler);
 
 public:
-	void runWithSize();
+	bool runWithSize();
 
 protected:
 	virtual void setSize(int width, int height) = 0;

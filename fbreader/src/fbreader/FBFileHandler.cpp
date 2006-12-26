@@ -24,6 +24,7 @@
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLApplication.h>
+#include <ZLDialogManager.h>
 
 #include "FBFileHandler.h"
 #include "../formats/FormatPlugin.h"
@@ -113,18 +114,17 @@ std::string FBFileHandler::relativeId(const ZLTreeNode &node) const {
 	return (node.id() == "..") ? myDir->shortName() : "..";
 }
 
-const std::string FBFileHandler::accept(const ZLTreeNode &node) const {
+bool FBFileHandler::accept(const ZLTreeNode &node) const {
 	const std::string name = myDir->itemName(node.id());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(name), false);
 	const std::string message = (plugin == 0) ? "Unknown File Format" : plugin->tryOpen(name);
 	if (!message.empty()) {
-		return "Couldn't Open:\n" + message;
+		ZLDialogManager::instance().infoBox(
+			ZLDialogManager::ERROR_TYPE, "Error", "Couldn't Open:\n" + message, "Ok"
+		);
+		return false;
 	}
 
 	myDescription = BookDescription::getDescription(name);
-	return "";
-}
-
-bool FBFileHandler::isWriteable() const {
-	return false;
+	return true;
 }

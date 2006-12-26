@@ -32,7 +32,7 @@
 
 #include <hildon-number-editor.h>
 
-#include "../../gtk/util/GtkKeyUtil.h"
+#include "../../gtk/util/ZLGtkKeyUtil.h"
 
 #include "ZLGtkOptionView.h"
 #include "ZLGtkOptionsDialog.h"
@@ -397,7 +397,7 @@ static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer
 }
 
 static bool key_view_key_press_event(GtkWidget*, GdkEventKey *event, gpointer data) {
-	((KeyOptionView*)data)->setKey(GtkKeyUtil::keyName(event));
+	((KeyOptionView*)data)->setKey(ZLGtkKeyUtil::keyName(event));
 	gtk_widget_grab_focus(((KeyOptionView*)data)->comboBox());
 	return true;
 }

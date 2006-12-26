@@ -183,3 +183,7 @@ bool QApplicationWindow::isMousePresented() const {
 bool QApplicationWindow::isKeyboardPresented() const {
 	return true;
 }
+
+void QApplicationWindow::setCaption(const std::string &caption) {
+	QMainWindow::setCaption(QString::fromUtf8(caption.c_str()));
+}

@@ -28,10 +28,10 @@
 #include "ZLGtkSelectionDialog.h"
 #include "ZLGtkWaitMessage.h"
 #include "ZLGtkUtil.h"
-#include "../application/GtkApplicationWindow.h"
+#include "../application/ZLGtkApplicationWindow.h"
 
 void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) const {
-	myWindow = (new GtkApplicationWindow(application))->getMainWindow();
+	myWindow = (new ZLGtkApplicationWindow(application))->getMainWindow();
 }
 
 ZLDialog *ZLGtkDialogManager::createDialog(const std::string &title) const {
@@ -85,8 +85,8 @@ int ZLGtkDialogManager::infoBox(const InfoBoxType type, const std::string &title
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-void ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	ZLGtkSelectionDialog(title.c_str(), handler).run();
+bool ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	return ZLGtkSelectionDialog(title.c_str(), handler).run();
 }
 
 void ZLGtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {

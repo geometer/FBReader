@@ -40,18 +40,19 @@ static gboolean clickHandler(GtkWidget*, GdkEventButton *event, gpointer self) {
 
 ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler) : ZLSelectionDialog(handler) {
 	myExitFlag = false;
+	myNodeSelected = false;
 
 	myDialog = createGtkDialog(caption);
 
 	std::string okString = gtkString("&Ok");
 	std::string cancelString = gtkString("&Cancel");
-	gtk_dialog_add_button (myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
-	gtk_dialog_add_button (myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
+	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 
 	myStateLine = GTK_ENTRY(gtk_entry_new());
 
-	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), this->handler().isWriteable());
-	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), this->handler().isWriteable());
+	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), !this->handler().isOpenHandler());
+	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), !this->handler().isOpenHandler());
 
 	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myStateLine), false, false, 2);
 
@@ -152,7 +153,7 @@ void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
 
 		if (selectedItem == 0) {
-			if (!handler().isWriteable()) {
+			if (handler().isOpenHandler()) {
 				GtkTreeIter iter;
 				gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
 				gtk_tree_selection_select_iter(selection, &iter);
@@ -167,21 +168,27 @@ void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
 	}
 }
 
-void ZLGtkSelectionDialog::run() {
+bool ZLGtkSelectionDialog::run() {
 	while (gtk_dialog_run(myDialog) == GTK_RESPONSE_ACCEPT) {
-		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
-		GtkTreeModel *dummy;
-		GtkTreeIter iter;
+		if (myNodeSelected || handler().isOpenHandler()) {
+			GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
+			GtkTreeModel *dummy;
+			GtkTreeIter iter;
 
-		if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
-			int index;
-			gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 2, &index, -1);
-			runNode(myNodes[index]);
-			if (myExitFlag) {
-				break;
+			if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
+				int index;
+				gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 2, &index, -1);
+				runNode(myNodes[index]);
 			}
+			myNodeSelected = false;
+		} else {
+			runState(gtk_entry_get_text(myStateLine));	
+		}
+		if (myExitFlag) {
+			return true;
 		}
 	}
+	return false;
 }
 
 void ZLGtkSelectionDialog::exitDialog() {
@@ -189,5 +196,6 @@ void ZLGtkSelectionDialog::exitDialog() {
 }
 
 void ZLGtkSelectionDialog::activatedSlot() {
+	myNodeSelected = true;
 	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
 }

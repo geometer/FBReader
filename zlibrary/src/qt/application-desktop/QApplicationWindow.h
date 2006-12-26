@@ -48,11 +48,10 @@ private:
 	bool isMousePresented() const;
 	bool isKeyboardPresented() const;
 
-	void setCaption(const std::string &caption) { QMainWindow::setCaption(QString::fromUtf8(caption.c_str())); }
+	void setCaption(const std::string &caption);
 
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
-	void fullScreenWorkaround();
 
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);

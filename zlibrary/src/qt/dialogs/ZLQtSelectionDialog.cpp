@@ -22,6 +22,9 @@
 #include <qlineedit.h>
 #include <qheader.h>
 #include <qpixmap.h>
+#include <qlayout.h>
+#include <qpushbutton.h>
+#include <qbuttongroup.h>
 
 #include <ZLApplication.h>
 
@@ -37,14 +40,33 @@ ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &han
 	myMainBox = new QVBox(this);
 
 	myStateLine = new QLineEdit(myMainBox);
-	myStateLine->setEnabled(this->handler().isWriteable());
+	myStateLine->setEnabled(!this->handler().isOpenHandler());
 	myListView = new QListView(myMainBox);
 	myListView->addColumn("");
 	myListView->header()->hide();
 	myListView->setSorting(-1, true);
 
- 	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(accept()));
+	QButtonGroup *group = new QButtonGroup(myMainBox);
+	QGridLayout *buttonLayout = new QGridLayout(group, 1, 5, 8, 0);
+	buttonLayout->setColStretch(0, 3);
+	buttonLayout->setColStretch(1, 0);
+	buttonLayout->setColStretch(2, 1);
+	buttonLayout->setColStretch(3, 0);
+	buttonLayout->setColStretch(4, 3);
+
+	QPushButton *okButton = new QPushButton(group);
+	okButton->setText("OK");
+	buttonLayout->addWidget(okButton, 0, 1);
+	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+
+	QPushButton *cancelButton = new QPushButton(group);
+	cancelButton->setText("Cancel");
+	buttonLayout->addWidget(cancelButton, 0, 3);
+	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+
+ 	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(runNodeSlot()));
  	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));
+ 	connect(myStateLine, SIGNAL(returnPressed()), this, SLOT(accept()));
 
 	update("");
 }
@@ -98,7 +120,7 @@ void ZLQtSelectionDialog::update(const std::string &selectedNodeId) {
 			}
 		}
 
-		if ((selectedItem == 0) && !handler().isWriteable()) {
+		if ((selectedItem == 0) && handler().isOpenHandler()) {
 			selectedItem = myListView->firstChild();
 		}
 		if (selectedItem != 0) {
@@ -114,6 +136,18 @@ void ZLQtSelectionDialog::exitDialog() {
 	QDialog::accept();
 }
 
-void ZLQtSelectionDialog::accept() {
+void ZLQtSelectionDialog::runNodeSlot() {
 	runNode(((ZLQtSelectionDialogItem*)myListView->currentItem())->node());
+}
+
+void ZLQtSelectionDialog::accept() {
+	if (handler().isOpenHandler()) {
+		runNode(((ZLQtSelectionDialogItem*)myListView->currentItem())->node());
+	} else {
+		runState((const char*)myStateLine->text().utf8());
+	}
+}
+
+bool ZLQtSelectionDialog::run() {
+	return QDialog::exec() == Accepted;
 }

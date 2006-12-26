@@ -25,9 +25,10 @@ static const std::string OPTION_GROUP_NAME = "OpenFileDialog";
 ZLDesktopSelectionDialog::ZLDesktopSelectionDialog(ZLTreeHandler &handler) : ZLSelectionDialog(handler), WidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Width", 10, 2000, 400), HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTION_GROUP_NAME, "Height", 10, 2000, 300) {
 }
 
-void ZLDesktopSelectionDialog::runWithSize() {
+bool ZLDesktopSelectionDialog::runWithSize() {
 	setSize(WidthOption.value(), HeightOption.value());
-	run();
+	bool result = run();
 	WidthOption.setValue(width());
 	HeightOption.setValue(height());
+	return result;
 }

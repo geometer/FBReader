@@ -27,7 +27,7 @@
 
 #include "QViewWidget.h"
 #include "QPaintContext.h"
-#include "../application/QApplicationWindow.h"
+#include "../application/ZLQtApplicationWindow.h"
 
 QViewWidget::QViewWidgetInternal::QViewWidgetInternal(QWidget *parent, QViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	setBackgroundMode(NoBackground);
@@ -43,7 +43,7 @@ void QViewWidget::trackStylus(bool track) {
 
 void QViewWidget::QViewWidgetInternal::paintEvent(QPaintEvent*) {
 	const int w = width();
-	const int h = height() + ((QApplicationWindow*)parent())->veritcalAdjustment();
+	const int h = height() + ((ZLQtApplicationWindow*)parent())->veritcalAdjustment();
 	switch (myHolder.rotation()) {
 		default:
 			((QPaintContext&)myHolder.view()->context()).setSize(w, h);
@@ -103,7 +103,7 @@ void QViewWidget::QViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) {
 
 int QViewWidget::QViewWidgetInternal::x(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
-	const int maxY = height() + ((QApplicationWindow*)parent())->veritcalAdjustment() - 1;
+	const int maxY = height() + ((ZLQtApplicationWindow*)parent())->veritcalAdjustment() - 1;
 	int logicalX;
 	switch (myHolder.rotation()) {
 		default:
@@ -124,7 +124,7 @@ int QViewWidget::QViewWidgetInternal::x(const QMouseEvent *event) const {
 
 int QViewWidget::QViewWidgetInternal::y(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
-	const int maxY = height() + ((QApplicationWindow*)parent())->veritcalAdjustment() - 1;
+	const int maxY = height() + ((ZLQtApplicationWindow*)parent())->veritcalAdjustment() - 1;
 	int logicalY;
 	switch (myHolder.rotation()) {
 		default:
