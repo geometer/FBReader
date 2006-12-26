@@ -44,7 +44,7 @@ void ZLSelectionDialog::runNode(const ZLTreeNodePtr node) {
 		}
 	} else {
 		((ZLTreeSaveHandler&)myHandler).processNode(*node);
-		update(selectedName);
+		updateStateLine();
 	}
 }
 

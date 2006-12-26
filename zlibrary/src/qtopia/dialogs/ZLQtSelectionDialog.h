@@ -58,6 +58,7 @@ protected:
 	void keyPressEvent(QKeyEvent *event);
 
 	void exitDialog();
+	void updateStateLine();
 	void update(const std::string &selectedNodeName);
 
 private slots:

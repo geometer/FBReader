@@ -101,8 +101,12 @@ void ZLQtSelectionDialog::resizeEvent(QResizeEvent *event) {
 	}
 }
 
-void ZLQtSelectionDialog::update(const std::string &selectedNodeId) {
+void ZLQtSelectionDialog::updateStateLine() {
 	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
+}
+
+void ZLQtSelectionDialog::update(const std::string &selectedNodeId) {
+	updateStateLine();
 
 	myListView->clear();
 

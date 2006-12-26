@@ -40,6 +40,7 @@ public:
 
 protected:
 	void exitDialog();
+	void updateStateLine();
 	void update(const std::string &selectedNodeName);
 
 private:

@@ -62,6 +62,7 @@ protected:
 	int height() const { return QDialog::height(); }
 
 	void exitDialog();
+	void updateStateLine();
 	void update(const std::string &selectedNodeName);
 
 private slots:

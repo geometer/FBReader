@@ -121,8 +121,12 @@ GdkPixbuf *ZLGtkSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	}
 }
 
-void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
+void ZLGtkSelectionDialog::updateStateLine() {
 	gtk_entry_set_text(myStateLine, handler().stateDisplayName().c_str());
+}
+
+void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
+	updateStateLine();
 
 	gtk_list_store_clear(myStore);
 	myNodes.clear();

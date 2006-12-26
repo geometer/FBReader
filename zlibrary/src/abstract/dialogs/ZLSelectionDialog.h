@@ -91,6 +91,7 @@ protected:
 	void runNode(const ZLTreeNodePtr node);
 	void runState(const std::string &state);
 	virtual void exitDialog() = 0;
+	virtual void updateStateLine() = 0;
 	virtual void update(const std::string &selectedNodeId) = 0;
 	const ZLTreeHandler &handler() const;
 
