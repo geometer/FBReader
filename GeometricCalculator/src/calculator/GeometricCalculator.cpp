@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <ZLDialogManager.h>
 #include <ZLFile.h>
 #include <ZLOutputStream.h>
@@ -28,8 +26,16 @@
 #include "../io/SceneWriter.h"
 #include "../model/Scene.h"
 
+std::string GeometricCalculator::ConfigDirectory() {
+	return HomeDirectory + PathDelimiter + "." + ApplicationName();
+}
+
+std::string GeometricCalculator::UserCreatedSceneDirectory() {
+	return ConfigDirectory() + PathDelimiter + "scenes";
+}
+
 const std::string GeometricCalculator::defaultSceneFileName() const {
-	return HomeDirectory + PathDelimiter + "." + ApplicationName() + PathDelimiter + "current.scn";
+	return ConfigDirectory() + PathDelimiter + "current.scn";
 }
 
 GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplication("GeometricCalculator"), myBindings("Keys") {
@@ -106,7 +112,8 @@ void GeometricCalculator::initWindow() {
 GeometricCalculator::~GeometricCalculator() {
 	shared_ptr<ZLOutputStream> stream = ZLFile(defaultSceneFileName()).outputStream();
 	if (!stream.isNull() && stream->open()) {
-		SceneWriter(*stream).write(*myView->document()->scene());
+		const Scene &scene = *myView->document()->scene();
+		SceneWriter(*stream).write(scene, scene.name());
 		stream->close();
 	}
 	delete myView;
@@ -167,7 +174,15 @@ void GeometricCalculator::open(const std::string &fileName) {
 void GeometricCalculator::save() {
 	GCSaveSceneHandler handler(myView->document()->scene()->name());
 	if (ZLDialogManager::instance().selectionDialog("Save Scene", handler)) {
-		std::cerr << handler.sceneName();
+		save(handler.fileName(), handler.sceneName());
+	}
+}
+
+void GeometricCalculator::save(const std::string &fileName, const std::string &sceneName) {
+	shared_ptr<ZLOutputStream> stream = ZLFile(fileName).outputStream();
+	if (!stream.isNull() && stream->open()) {
+		SceneWriter(*stream).write(*myView->document()->scene(), sceneName);
+		stream->close();
 	}
 }
 

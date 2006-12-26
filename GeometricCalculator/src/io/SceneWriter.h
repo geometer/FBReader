@@ -11,7 +11,7 @@ class SceneWriter : public ZLXMLWriter {
 public:
 	SceneWriter(ZLOutputStream &textStream);
 
-	void write(const Scene &scene);
+	void write(const Scene &scene, const std::string &sceneName);
 };
 
 #endif /* __SCENEWRITER_H__ */

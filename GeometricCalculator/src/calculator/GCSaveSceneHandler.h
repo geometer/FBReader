@@ -21,6 +21,10 @@
 #ifndef __GCSAVESCENEHANDLER_H__
 #define __GCSAVESCENEHANDLER_H__
 
+#include <map>
+#include <set>
+#include <vector>
+
 #include <ZLSelectionDialog.h>
 #include <ZLOptions.h>
 
@@ -29,7 +33,8 @@ class GCSaveSceneHandler : public ZLTreeSaveHandler {
 public:
 	GCSaveSceneHandler(const std::string &sceneName);
 
-	const std::string &sceneName() const;
+	const std::string sceneName() const;
+	const std::string fileName() const;
 
 private:
 	bool accept(const std::string &state) const;
@@ -40,15 +45,13 @@ private:
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
 	std::string relativeId(const ZLTreeNode &node) const;
 
-	shared_ptr<ZLDir> currentDirectory() const;
-
 private:
 	mutable std::string mySceneName;
 
 	mutable bool myIsUpToDate;
 	mutable std::vector<ZLTreeNodePtr> mySubnodes;
+	mutable std::map<std::string,std::string> myFileNameBySceneName;
+	mutable std::set<std::string> myFileNames;
 };
-
-inline const std::string &GCSaveSceneHandler::sceneName() const { return mySceneName; }
 
 #endif /* __GCSAVESCENEHANDLER_H__ */

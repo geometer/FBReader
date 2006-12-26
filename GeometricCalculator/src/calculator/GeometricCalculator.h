@@ -14,6 +14,10 @@ class EditMode;
 
 class GeometricCalculator : public ZLApplication { 
 
+public:
+	static std::string ConfigDirectory();
+	static std::string UserCreatedSceneDirectory();
+
 private:
 	class UndoAction : public Action {
 
@@ -92,14 +96,13 @@ private:
 	const std::string defaultSceneFileName() const;
 
 	//bool saveIfChanged();
-	//bool save(const char *fileName);
 
 private:
 	void newScene();
 	void open();
 	void open(const std::string &fileName);
 	void save();
-	//bool saveAs();
+	void save(const std::string &fileName, const std::string &sceneName);
 
 	//void help();
 

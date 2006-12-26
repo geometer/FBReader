@@ -21,25 +21,19 @@
 
 #include <map>
 
+#include <ZLStringUtil.h>
 #include <ZLApplication.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
 
+#include "GeometricCalculator.h"
 #include "GCSaveSceneHandler.h"
 #include "../io/SceneNameReader.h"
 
 GCSaveSceneHandler::GCSaveSceneHandler(const std::string &sceneName) : mySceneName(sceneName), myIsUpToDate(false) {
 }
 
-shared_ptr<ZLDir> GCSaveSceneHandler::currentDirectory() const {
-	static const std::string home = ZLApplication::HomeDirectory + ZLApplication::PathDelimiter + "." + ZLApplication::ApplicationName();
-	ZLFile(home).directory(true);
-	return ZLFile(home + ZLApplication::PathDelimiter + "scenes").directory(true);
-}
-
 void GCSaveSceneHandler::changeFolder(const ZLTreeNode&) {
-	mySubnodes.clear();
-	myIsUpToDate = false;
 }
 
 const std::string GCSaveSceneHandler::stateDisplayName() const {
@@ -52,14 +46,18 @@ const std::vector<ZLTreeNodePtr> &GCSaveSceneHandler::subnodes() const {
 	static const std::string SceneIcon = Prefix + "scene_file";
 
 	if (!myIsUpToDate) {
-		std::vector<std::string> names;
-		shared_ptr<ZLDir> dir = currentDirectory();
+		myIsUpToDate = true;
+		ZLFile(GeometricCalculator::ConfigDirectory()).directory(true);
+		shared_ptr<ZLDir> dir = ZLFile(GeometricCalculator::UserCreatedSceneDirectory()).directory(true);
 		if (!dir.isNull()) {
+			std::vector<std::string> names;
 			dir->collectFiles(names, true);
 			std::map<std::string,ZLTreeNodePtr> nodeMap;
 			for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
 				if (ZLFile(*it).extension() == "scn") {
-					std::string displayName = SceneNameReader().readSceneName(ZLFile(dir->itemName(*it)));
+					const std::string displayName = SceneNameReader().readSceneName(ZLFile(dir->itemName(*it)));
+					myFileNameBySceneName[displayName] = *it;
+					myFileNames.insert(*it);
 					ZLTreeNodePtr node = new ZLTreeNode(*it, displayName, SceneIcon, false);
 					nodeMap.insert(std::pair<std::string,ZLTreeNodePtr>(displayName, node));
 				}
@@ -68,7 +66,6 @@ const std::vector<ZLTreeNodePtr> &GCSaveSceneHandler::subnodes() const {
 				mySubnodes.push_back(jt->second);
 			}
 		}
-		myIsUpToDate = true;
 	}
 	return mySubnodes;
 }
@@ -87,4 +84,26 @@ bool GCSaveSceneHandler::accept(const std::string &state) const {
 	}
 	mySceneName = state;
 	return true;
+}
+
+const std::string GCSaveSceneHandler::sceneName() const {
+	return mySceneName;
+}
+
+const std::string GCSaveSceneHandler::fileName() const {
+	std::string shortName;
+	std::map<std::string,std::string>::const_iterator it = myFileNameBySceneName.find(sceneName());
+	if (it != myFileNameBySceneName.end()) {
+		shortName = it->second;
+	} else {
+		for (int i = 0; i < 10000; ++i) {
+			shortName = "scene";
+			ZLStringUtil::appendNumber(shortName, i);
+			shortName += ".scn";
+			if (myFileNames.find(shortName) == myFileNames.end()) {
+				break;
+			}
+		}
+	}
+	return GeometricCalculator::UserCreatedSceneDirectory() + ZLApplication::PathDelimiter + shortName;
 }

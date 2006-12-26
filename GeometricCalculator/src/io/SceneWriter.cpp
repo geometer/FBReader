@@ -8,7 +8,7 @@
 SceneWriter::SceneWriter(ZLOutputStream &textStream) : ZLXMLWriter(textStream) {
 }
 
-void SceneWriter::write(const Scene &scene) {
+void SceneWriter::write(const Scene &scene, const std::string &sceneName) {
 	std::set<ObjectPtr> persistentObjects;
 	const std::list<ObjectPtr> &objects = scene.objects();
 	persistentObjects.insert(objects.begin(), objects.end());
@@ -17,7 +17,7 @@ void SceneWriter::write(const Scene &scene) {
 	ObjectEnumerator enumerator;
 
 	addTag("scene", false);
-	addAttribute("name", scene.name());
+	addAttribute("name", sceneName);
 	for (std::list<ObjectPtr>::const_iterator jt = closure.begin(); jt != closure.end(); jt++) {
 		enumerator.addObject(*jt);
 		addTag("object", false);
