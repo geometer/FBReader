@@ -1,5 +1,8 @@
+#include <ZLDialogManager.h>
+
 #include "GeometricCalculatorActions.h"
 #include "GeometricCalculator.h"
+#include "GCRemoveSceneHandler.h"
 
 #include "../document/Document.h"
 #include "../ui/DiagramView.h"
@@ -28,67 +31,70 @@ bool ZoomAction::isEnabled() {
 	}
 }
 
-GeometricCalculator::SetModeAction::SetModeAction(DiagramView &view, shared_ptr<EditMode> editMode) : myView(view), myEditMode(editMode) {
+SetModeAction::SetModeAction(DiagramView &view, shared_ptr<EditMode> editMode) : myView(view), myEditMode(editMode) {
 }
 
-bool GeometricCalculator::SetModeAction::isEnabled() {
+bool SetModeAction::isEnabled() {
 	return myEditMode.isNull() || myEditMode->isAvailable();
 }
 
-void GeometricCalculator::SetModeAction::run() {
+void SetModeAction::run() {
 	myView.setEditMode(myEditMode);
 }
 
-GeometricCalculator::UndoAction::UndoAction(DiagramView &view) : myView(view) {
+UndoAction::UndoAction(DiagramView &view) : myView(view) {
 }
 
-bool GeometricCalculator::UndoAction::isEnabled() {
+bool UndoAction::isEnabled() {
 	return myView.document()->isUndoAvailable();
 }
 
-void GeometricCalculator::UndoAction::run() {
+void UndoAction::run() {
 	myView.document()->undo();
 	myView.repaintView();
 }
 
-GeometricCalculator::RedoAction::RedoAction(DiagramView &view) : myView(view) {
+RedoAction::RedoAction(DiagramView &view) : myView(view) {
 }
 
-bool GeometricCalculator::RedoAction::isEnabled() {
+bool RedoAction::isEnabled() {
 	return myView.document()->isRedoAvailable();
 }
 
-void GeometricCalculator::RedoAction::run() {
+void RedoAction::run() {
 	myView.document()->redo();
 	myView.repaintView();
 }
 
-GeometricCalculator::NewSceneAction::NewSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
+NewSceneAction::NewSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
 }
 
-bool GeometricCalculator::NewSceneAction::isEnabled() {
+bool NewSceneAction::isEnabled() {
 	return !myCalculator.myView->document()->scene()->isEmpty();
 }
 
-void GeometricCalculator::NewSceneAction::run() {
+void NewSceneAction::run() {
 	myCalculator.newScene();
 }
 
-GeometricCalculator::OpenSceneAction::OpenSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
+OpenSceneAction::OpenSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
 }
 
-void GeometricCalculator::OpenSceneAction::run() {
+void OpenSceneAction::run() {
 	myCalculator.open();
 }
 
-GeometricCalculator::SaveSceneAction::SaveSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
+SaveSceneAction::SaveSceneAction(GeometricCalculator &calculator) : myCalculator(calculator) {
 }
 
-void GeometricCalculator::SaveSceneAction::run() {
+void SaveSceneAction::run() {
 	myCalculator.save();
 }
 
-bool GeometricCalculator::SaveSceneAction::isEnabled() {
-	// TODO: implement or remove
-	return true;
+RemoveScenesAction::RemoveScenesAction() {
+}
+
+void RemoveScenesAction::run() {
+	GCRemoveSceneHandler handler;
+	ZLDialogManager::instance().selectionDialog("Remove Scenes", handler);
 }

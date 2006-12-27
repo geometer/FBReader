@@ -47,7 +47,8 @@ bool ZLBzip2InputStream::open() {
 	myBaseAvailableSize = myBaseStream->sizeOfOpened();
 	myBzStream.avail_in = 0;
 	myBzStream.total_in_lo32 = myBaseAvailableSize;
-	myBzStream.total_in_hi32 = myBaseAvailableSize >> 32;
+	//myBzStream.total_in_hi32 = myBaseAvailableSize >> 32;
+	myBzStream.total_in_hi32 = 0;
 	myBaseBuffer = new char[BUFFER_SIZE];
 	myTrashBuffer = new char[BUFFER_SIZE];
 	myOffset = 0;

@@ -30,10 +30,6 @@ std::string GeometricCalculator::ConfigDirectory() {
 	return HomeDirectory + PathDelimiter + "." + ApplicationName();
 }
 
-std::string GeometricCalculator::UserCreatedSceneDirectory() {
-	return ConfigDirectory() + PathDelimiter + "scenes";
-}
-
 const std::string GeometricCalculator::defaultSceneFileName() const {
 	return ConfigDirectory() + PathDelimiter + "current.scn";
 }
@@ -62,6 +58,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	addAction(ACTION_NEW_SCENE, new NewSceneAction(*this));
 	addAction(ACTION_OPEN_SCENE, new OpenSceneAction(*this));
 	addAction(ACTION_SAVE_SCENE, new SaveSceneAction(*this));
+	addAction(ACTION_REMOVE_SCENES, new RemoveScenesAction());
 	addAction(ACTION_QUIT, new QuitAction(*this));
 	addAction(ACTION_ZOOM_IN, new ZoomAction(*myView, 1.2));
 	addAction(ACTION_ZOOM_OUT, new ZoomAction(*myView, 1 / 1.2));
@@ -90,6 +87,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	menubar().addItem("Empty Scene", ACTION_NEW_SCENE);
 	menubar().addItem("Open Scene...", ACTION_OPEN_SCENE);
 	menubar().addItem("Save Scene...", ACTION_SAVE_SCENE);
+	menubar().addItem("Remove Scenes...", ACTION_REMOVE_SCENES);
 	menubar().addSeparator();
 	Menu &viewSubmenu = menubar().addSubmenu("View");
 	viewSubmenu.addItem("Zoom In", ACTION_ZOOM_IN);

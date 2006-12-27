@@ -25,8 +25,9 @@
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
+#include "../../abstract/dialogs/ZLOptionView.h"
 
-class ZLQtOptionsDialogTab;
+class ZLQtDialogContent;
 
 class QButtonGroup;
 class QLabel;
@@ -42,11 +43,11 @@ class QWidget;
 class ZLQtOptionView : public ZLOptionView {
 
 protected:
-	ZLQtOptionView(ZLOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
+	ZLQtOptionView(ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
 
 public:
 	virtual ~ZLQtOptionView() {}
-	void setPosition(ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) {
+	void setPosition(ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) {
 		myTab = tab;
 		myRow = row;
 		myFromColumn = fromColumn;
@@ -76,7 +77,7 @@ protected:
 	virtual void _onAccept() const = 0;
 
 protected:
-	ZLQtOptionsDialogTab *myTab;
+	ZLQtDialogContent *myTab;
 	int myRow, myFromColumn, myToColumn;
 
 private:
@@ -86,7 +87,7 @@ private:
 class ChoiceOptionView : public ZLQtOptionView {
 
 public:
-	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {
+	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {
 		myButtons = 0;
 	}
 	~ChoiceOptionView() { if (myButtons != 0) delete[] myButtons; }
@@ -107,7 +108,7 @@ class BooleanOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(ZLBooleanOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -127,7 +128,7 @@ class StringOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
+	StringOptionView(ZLStringOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
 
 private:
 	void _createItem();
@@ -148,7 +149,7 @@ private:
 class SpinOptionView : public ZLQtOptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(ZLSpinOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -166,7 +167,7 @@ class ComboOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
+	ComboOptionView(ZLComboOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
 
 private:
 	void _createItem();
@@ -191,7 +192,7 @@ class KeyOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 
 private:
 	void _createItem();
@@ -218,7 +219,7 @@ class ColorOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, ZLQtOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
+	ColorOptionView(ZLColorOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
 
 private:
 	void _createItem();

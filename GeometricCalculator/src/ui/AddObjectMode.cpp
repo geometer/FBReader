@@ -17,7 +17,7 @@ bool AddObjectMode::isAvailable() const {
 	const std::list<ObjectPtr> &objects = document()->scene()->objects();
 	int pointCounter = 0;
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {
-		if ((*it)->rtti() == Point::RTTI) {
+		if ((*it)->rtti() == Object::POINT) {
 			if (view().ExistingPointsOnlyOption.value()) {
 				pointCounter++;
 				if (pointCounter == 2) {
@@ -33,10 +33,10 @@ bool AddObjectMode::isAvailable() const {
 
 bool AddObjectMode::isObjectSelectable(ObjectPtr object) const {
 	if (mySelectedPoint.isNull()) {
-		return object->rtti() == Point::RTTI;
+		return object->rtti() == Object::POINT;
 	} else {
 		if (view().ExistingPointsOnlyOption.value()) {
-			return (object != mySelectedPoint) && (object->rtti() == Point::RTTI);
+			return (object != mySelectedPoint) && (object->rtti() == Object::POINT);
 		} else {
 			return (object != mySelectedPoint) && (object != mySelectedObject0);
 		}

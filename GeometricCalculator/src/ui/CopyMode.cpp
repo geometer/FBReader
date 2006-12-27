@@ -12,12 +12,12 @@ bool CopyMode::isAvailable() const {
 	bool lineFlag = false, pointFlag = false;
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {
 		int rtti = (*it)->rtti();
-		if (rtti == Point::RTTI) {
+		if (rtti == Object::POINT) {
 			if (lineFlag) {
 				return true;
 			}
 			pointFlag = true;
-		} else if ((rtti == Line::RTTI) || (rtti == Circle::RTTI)) {
+		} else if ((rtti == Object::LINE) || (rtti == Object::CIRCLE)) {
 			if (view().ExistingPointsOnlyOption.value()) {
 				if (pointFlag) {
 					return true;
@@ -34,12 +34,12 @@ bool CopyMode::isAvailable() const {
 bool CopyMode::isObjectSelectable(ObjectPtr object) const {
 	if (myNewObject.isNull()) {
 		int rtti = object->rtti();
-		return (rtti == Line::RTTI) || (rtti == Circle::RTTI);
+		return (rtti == Object::LINE) || (rtti == Object::CIRCLE);
 	} else {
 	  if (object == mySelectedObject0) {
 			return false;
 		}
-		if (view().ExistingPointsOnlyOption.value() && (object->rtti() != Point::RTTI)) {
+		if (view().ExistingPointsOnlyOption.value() && (object->rtti() != Object::POINT)) {
 			return false;
 		}
 		LinePtr line = mySelectedObject;

@@ -60,13 +60,11 @@ uint Scene::maxUsedPointNumber() {
 }
 
 void Scene::add(const ObjectPtr object) {
-	if (object->rtti() == Point::RTTI) {
-		PointPtr point = object;
-		if (point->name().empty()) {
-			std::string name = "P";
-			ZLStringUtil::appendNumber(name, maxUsedPointNumber() + 1);
-			point->setName(name);
-		}
+	PointPtr point = object;
+	if (!point.isNull() && point->name().empty()) {
+		std::string name = "P";
+		ZLStringUtil::appendNumber(name, maxUsedPointNumber() + 1);
+		point->setName(name);
 	}
 	myObjects.push_back(object);
 }

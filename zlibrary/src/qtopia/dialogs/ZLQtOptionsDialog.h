@@ -27,42 +27,12 @@
 #include <qtabwidget.h>
 #include <qlist.h>
 
-#include "../../abstract/dialogs/ZLOptionsDialog.h"
+#include <ZLOptionsDialog.h>
 
-#include "FullScreenDialog.h"
+#include "ZLFullScreenDialog.h"
+#include "ZLQtDialogContent.h"
 
-class ZLQtOptionView;
-class QGridLayout;
-
-class ZLQtOptionsDialogTab : public QWidget, public ZLDialogContent {
-	Q_OBJECT
-
-public:
-	ZLQtOptionsDialogTab(QWidget *parent);
-	~ZLQtOptionsDialogTab();
-
-	void addOption(ZLOptionEntry *option);
-	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
-
-	void addItem(QWidget *widget, int row, int fromColumn, int toColumn);
-
-	void close();
-	void accept();
-
-	QWidget *parentWidget();
-
-private:
-	void createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn);
-
-private:
-	QGridLayout *myLayout;
-	int myRowCounter;
-	QWidget *myParentWidget;
-
-	QList<ZLQtOptionView> myViews;
-};
-
-class ZLQtOptionsDialog : public FullScreenDialog, public ZLOptionsDialog {
+class ZLQtOptionsDialog : public ZLFullScreenDialog, public ZLOptionsDialog {
 	Q_OBJECT
 
 public:
@@ -84,7 +54,7 @@ private slots:
 private:
 	QTabWidget *myTabWidget;
 
-	QList<ZLQtOptionsDialogTab> myTabs;
+	QList<ZLQtDialogContent> myTabs;
 	std::vector<std::string> myTabNames;
 };
 

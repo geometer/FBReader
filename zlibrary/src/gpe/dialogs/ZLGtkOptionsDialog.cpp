@@ -18,19 +18,12 @@
  * 02110-1301, USA.
  */
 
-#include <algorithm>
-
-#include <gtk/gtkstock.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkbox.h>
-#include <gtk/gtksignal.h>
-
-#include <gdk/gdkkeysyms.h>
-
-#include "../../abstract/dialogs/ZLOptionEntry.h"
+#include <gtk/gtkscrolledwindow.h>
 
 #include "ZLGtkOptionsDialog.h"
-#include "ZLGtkOptionView.h"
+#include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
 ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string &caption) : ZLOptionsDialog(id) {
@@ -53,7 +46,7 @@ ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string 
 
 ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 	// I do not have to destroy myNotebook as it's a myDialog child
-	for (std::vector<ZLGtkOptionsDialogTab*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
+	for (std::vector<ZLGtkDialogContent*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
 		delete *tab;
 	}
 
@@ -61,7 +54,7 @@ ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 }
 
 ZLDialogContent &ZLGtkOptionsDialog::createTab(const std::string &name) {
-	ZLGtkOptionsDialogTab *tab = new ZLGtkOptionsDialogTab();
+	ZLGtkDialogContent *tab = new ZLGtkDialogContent();
 	GtkWidget *label = gtk_label_new(name.c_str());
 
 	GtkScrolledWindow *scrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
@@ -92,7 +85,7 @@ bool ZLGtkOptionsDialog::run() {
 
 	switch (response) {
 		case GTK_RESPONSE_ACCEPT:
-			for (std::vector<ZLGtkOptionsDialogTab *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
+			for (std::vector<ZLGtkDialogContent *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
 				(*tab)->accept();
 			break;
 		case GTK_RESPONSE_REJECT:
@@ -103,86 +96,3 @@ bool ZLGtkOptionsDialog::run() {
 
 	return response == GTK_RESPONSE_ACCEPT;
 }
-
-void ZLGtkOptionsDialogTab::accept() {
-	for (std::vector<ZLGtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {
-		(*view)->onAccept();
-	}
-}
-
-ZLGtkOptionsDialogTab::ZLGtkOptionsDialogTab() {
-	myRowCounter = 0;
-	myTable = GTK_TABLE(gtk_table_new(0, 12, false));
-	gtk_widget_show_all(GTK_WIDGET(myTable));
-}
-
-ZLGtkOptionsDialogTab::~ZLGtkOptionsDialogTab() {
-	// We must not delete the widget, it's destroyed when the parent widget is destroyed
-	for (std::vector<ZLGtkOptionView *>::iterator view = myViews.begin(); view != myViews.end(); ++view) {
-		delete *view;
-	}
-}
-
-int ZLGtkOptionsDialogTab::addRow() {
-	int row = myRowCounter++;
-
-	gtk_table_resize(myTable, myRowCounter, 2);
-
-	return row;
-}
-
-void ZLGtkOptionsDialogTab::addItem(GtkWidget *what, int row, int fromColumn, int toColumn) {
-	gtk_table_attach(myTable, what, fromColumn, toColumn, row, row + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
-}
-
-void ZLGtkOptionsDialogTab::addOption(ZLOptionEntry *option) {
-	int row = addRow();
-
-	createViewByEntry(option, row, 0, 12);
-}
-
-void ZLGtkOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
-	int row = addRow();
-
-	createViewByEntry(option0, row, 0, 6);
-	createViewByEntry(option1, row, 6, 12);
-}
-
-void ZLGtkOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn) {
-	if (option == 0) {
-		return;
-	}
-
-	ZLGtkOptionView *view = 0;
-
-	switch (option->kind()) {
-		case BOOLEAN:
-			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case STRING:
-			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case CHOICE:
-			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case SPIN:
-			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case COMBO:
-			view = new ComboOptionView((ZLComboOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case COLOR:
-			view = new ColorOptionView((ZLColorOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case KEY:
-			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-	}
-
-	if (view != 0) {
-		view->setVisible(option->isVisible());
-		myViews.push_back(view);
-	}
-}
-
-// vim:ts=2:sw=2:noet

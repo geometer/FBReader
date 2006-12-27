@@ -16,7 +16,7 @@ bool AddMiddlePointMode::isAvailable() const {
 	const std::list<ObjectPtr> &objects = document()->scene()->objects();
 	int pointCounter = 0;
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {
-		if ((*it)->rtti() == Point::RTTI) {
+		if ((*it)->rtti() == Object::POINT) {
 			pointCounter++;
 			if (pointCounter == 2) {
 				return true;
@@ -27,7 +27,7 @@ bool AddMiddlePointMode::isAvailable() const {
 }
 
 bool AddMiddlePointMode::isObjectSelectable(ObjectPtr object) const {
-	return (object->rtti() == Point::RTTI) && (object != mySelectedPoint);
+	return (object->rtti() == Object::POINT) && (object != mySelectedPoint);
 }
 
 void AddMiddlePointMode::onMousePress(int x, int y) {

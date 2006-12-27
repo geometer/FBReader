@@ -9,7 +9,7 @@ SceneDecorator::SceneDecorator(shared_ptr<Scene> &scene) {
 shared_ptr<Scene> SceneDecorator::restore() {
 	shared_ptr<Scene> scene = new Scene();
 	for (std::list<ObjectPtr>::const_iterator it = myObjects.begin(); it != myObjects.end(); it++) {
-		if ((*it)->rtti() == Point::RTTI) {
+		if ((*it)->rtti() == Object::POINT) {
 			scene->add(((PointDecorator&)**it).restore());
 		} else {
 			scene->add(*it);
@@ -34,9 +34,9 @@ std::list<ObjectPtr>::iterator SceneDecorator::find(ObjectPtr object) {
 	if (object.isNull()) {
 		return myObjects.end();
 	}
-	if (object->rtti() == Point::RTTI) {
+	if (object->rtti() == Object::POINT) {
 		for (std::list<ObjectPtr>::iterator it = myObjects.begin(); it != myObjects.end(); it++) {
-			if ((*it)->rtti() == Point::RTTI) {
+			if ((*it)->rtti() == Object::POINT) {
 				if (((PointDecorator&)**it).stored() == object) {
 					return it;
 				}
@@ -51,9 +51,9 @@ std::list<ObjectPtr>::const_iterator SceneDecorator::const_find(ObjectPtr object
 	if (object.isNull()) {
 		return myObjects.end();
 	}
-	if (object->rtti() == Point::RTTI) {
+	if (object->rtti() == Object::POINT) {
 		for (std::list<ObjectPtr>::const_iterator it = myObjects.begin(); it != myObjects.end(); it++) {
-			if ((*it)->rtti() == Point::RTTI) {
+			if ((*it)->rtti() == Object::POINT) {
 				if (((PointDecorator&)**it).stored() == object) {
 					return it;
 				}

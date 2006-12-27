@@ -37,21 +37,7 @@ enum ZLOptionKind {
 	ORDER,
 };
 
-class ZLOptionEntry;
-
-class ZLOptionView {
-
-public:
-	ZLOptionView(ZLOptionEntry *option);
-	virtual ~ZLOptionView();
-	virtual void setVisible(bool visible) = 0;
-	virtual void setActive(bool active) = 0;
-	// TODO: change to pure virtual
-	virtual void reset() {}
-
-protected:
-	ZLOptionEntry *myOption;
-};
+class ZLOptionView;
 
 class ZLOptionEntry {
 
@@ -202,11 +188,6 @@ private:
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 inline ZLOptionEntry::~ZLOptionEntry() {}
 inline void ZLOptionEntry::setView(ZLOptionView *view) { myView = view; }
-inline void ZLOptionEntry::resetView() {
-	if (myView != 0) {
-		myView->reset();
-	}
-}
 inline bool ZLOptionEntry::isVisible() const { return myIsVisible; }
 inline bool ZLOptionEntry::isActive() const { return myIsActive; }
 

@@ -10,8 +10,7 @@ class Circle : public Object {
 		virtual ~Circle() {}
 
 	public:
-		static const int RTTI;
-		int rtti() const;
+		Type rtti() const;
 
 		virtual const Coordinates center() const = 0;
 		virtual double radius() const = 0;

@@ -22,7 +22,17 @@ struct Coordinates {
 	Coordinates(const Coordinates &c) { this->x = c.x; this->y = c.y; this->isReal = c.isReal; }
 };
 
+
+
 class Object {
+
+public:
+	enum Type {
+		POINT = 1,
+		LINE = 2,
+		CIRCLE = 3,
+	};
+
 public:
 	static const std::string TYPE_KEY;
 
@@ -30,7 +40,7 @@ public:
 
 	virtual void saveInfo(ObjectInfoMap &info) const = 0;
 
-	virtual int rtti() const = 0;
+	virtual Type rtti() const = 0;
 
 	virtual bool isReal() const;
 

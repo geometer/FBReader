@@ -21,3 +21,7 @@ double Circle::distance(const Coordinates coords) const {
 double Circle::distance(PointPtr point) const {
 	return Object::distance(point);
 }
+
+Object::Type Circle::rtti() const {
+	return CIRCLE;
+}

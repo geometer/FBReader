@@ -1,1 +1,1 @@
-SRCMOC = QApplicationWindow.moc.cpp
+SRCMOC = ZLQtApplicationWindow.moc.cpp

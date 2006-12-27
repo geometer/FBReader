@@ -231,7 +231,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 			BookDescriptionPtr book = myCollectionModel->bookByParagraphNumber(imagePosition->ParagraphNumber);
 			if (!book.isNull()) {
 				const std::string question = "Remove Book\n\"" + book->title() + "\"\nfrom library?";
-				if (ZLDialogManager::instance().infoBox(ZLDialogManager::INFORMATION_TYPE, "Remove Book", question, "Yes", "No") == 0) {
+				if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
 					BookList().removeFileName(book->fileName());
 					myCollectionModel->removeParagraph(imagePosition->ParagraphNumber);
 					rebuildPaintInfo(true);

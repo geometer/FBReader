@@ -29,7 +29,7 @@
 #include <ZLApplication.h>
 
 #include "ZLQtSelectionDialog.h"
-#include "QDialogManager.h"
+#include "ZLQtDialogManager.h"
 
 ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
 }
@@ -141,12 +141,15 @@ void ZLQtSelectionDialog::exitDialog() {
 }
 
 void ZLQtSelectionDialog::runNodeSlot() {
-	runNode(((ZLQtSelectionDialogItem*)myListView->currentItem())->node());
+	QListViewItem *item = myListView->currentItem();
+	if (item != 0) {
+		runNode(((ZLQtSelectionDialogItem*)item)->node());
+	}
 }
 
 void ZLQtSelectionDialog::accept() {
 	if (handler().isOpenHandler()) {
-		runNode(((ZLQtSelectionDialogItem*)myListView->currentItem())->node());
+		runNodeSlot();
 	} else {
 		runState((const char*)myStateLine->text().utf8());
 	}

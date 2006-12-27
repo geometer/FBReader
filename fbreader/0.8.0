@@ -17,6 +17,7 @@ fbreader as document handler in maemo fileviewer
 вызов по ссылкам внешних программ
 интеграция с каким-нибудь словарем в maemo
 многократный перенос (оч. длинное слово)
+возможность посмотреть HowToStart в любой момент
 chm
 	как же все-таки искать .hhc?
 оптимизировать seek() в архивах
@@ -29,7 +30,6 @@ info dialog icon in contents tree
   for books
 	for authors
 	for series
-maemo: information box (replace '?' icon by 'i')
 about dialog
 openbook
 odt

@@ -22,7 +22,7 @@
 #include <qmessagebox.h>
 
 #include "ZLQtDialogManager.h"
-#include "ZLQtCommonDialog.h"
+#include "ZLQtDialog.h"
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtWaitMessage.h"
@@ -44,21 +44,21 @@ ZLOptionsDialog *ZLQtDialogManager::createOptionsDialog(const std::string &id, c
 }
 
 ZLDialog *ZLQtDialogManager::createDialog(const std::string &title) const {
-	return new ZLQtCommonDialog(title);
+	return new ZLQtDialog(title);
 }
 
-int ZLQtDialogManager::infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	int code = 0;
-	switch (type) {
-		default:
-		case INFORMATION_TYPE:
-		case QUESTION_TYPE:
-			code = QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
-			break;
-		case ERROR_TYPE:
-			code = QMessageBox::critical(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
-			break;
-	}
+void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
+	QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+	fullScreenWorkaround();
+}
+
+void ZLQtDialogManager::errorBox(const std::string &title, const std::string &message) const {
+	QMessageBox::critical(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+	fullScreenWorkaround();
+}
+
+int ZLQtDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+	int code = QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
 	fullScreenWorkaround();
 	return code;
 }

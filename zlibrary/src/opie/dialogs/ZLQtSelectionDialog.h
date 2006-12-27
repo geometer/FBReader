@@ -26,7 +26,7 @@
 
 #include <qlistview.h>
 
-#include "FullScreenDialog.h"
+#include "ZLFullScreenDialog.h"
 #include <ZLSelectionDialog.h>
 
 class QVBox;
@@ -42,7 +42,7 @@ private:
 	ZLTreeNodePtr myNode;
 };
 
-class ZLQtSelectionDialog : public FullScreenDialog, public ZLSelectionDialog {
+class ZLQtSelectionDialog : public ZLFullScreenDialog, public ZLSelectionDialog {
 	Q_OBJECT
 
 public:

@@ -34,6 +34,10 @@ ZLSelectionDialog::~ZLSelectionDialog() {
 }
 
 void ZLSelectionDialog::runNode(const ZLTreeNodePtr node) {
+	if (node.isNull()) {
+		return;
+	}
+
 	const std::string selectedName = myHandler.relativeId(*node);
 	if (node->isFolder()) {
 		myHandler.changeFolder(*node);
@@ -41,6 +45,9 @@ void ZLSelectionDialog::runNode(const ZLTreeNodePtr node) {
 	} else if (myHandler.isOpenHandler()) {
 		if (((ZLTreeOpenHandler&)myHandler).accept(*node)) {
 			exitDialog();
+		} else {
+			// TODO: hmm...
+			update(selectedName);
 		}
 	} else {
 		((ZLTreeSaveHandler&)myHandler).processNode(*node);

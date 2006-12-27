@@ -26,8 +26,8 @@
 #include "../../qt/filesystem/ZLQtFSManager.h"
 #include "../../qt/time/ZLQtTime.h"
 #include "../dialogs/ZLQtDialogManager.h"
-#include "../../qt/image/QImageManager.h"
-#include "../view/QPaintContext.h"
+#include "../../qt/image/ZLQtImageManager.h"
+#include "../view/ZLQtPaintContext.h"
 #include "../message/ZLQtopiaMessage.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
@@ -37,11 +37,11 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLQtFSManager::createInstance();
 	ZLQtDialogManager::createInstance();
 	ZLQtopiaCommunicationManager::createInstance();
-	QImageManager::createInstance();
+	ZLQtImageManager::createInstance();
 }
 
 ZLPaintContext *ZLibrary::createContext() {
-	return new QPaintContext();
+	return new ZLQtPaintContext();
 }
 
 void ZLibrary::run(ZLApplication *application) {

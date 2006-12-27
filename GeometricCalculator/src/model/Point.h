@@ -28,8 +28,7 @@ class Point : public Object {
 
 		Point(const std::string &name = "");
 
-		static const int RTTI;
-		int rtti() const;
+		Type rtti() const;
 
 		void setName(const std::string &name);
 		const std::string &name() const;

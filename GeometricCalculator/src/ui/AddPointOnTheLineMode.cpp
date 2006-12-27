@@ -10,7 +10,7 @@ AddPointOnTheLineMode::AddPointOnTheLineMode(DiagramView &view) : AddPointBaseMo
 bool AddPointOnTheLineMode::isAvailable() const {
 	const std::list<ObjectPtr> &objects = document()->scene()->objects();
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {
-		if ((*it)->rtti() == Line::RTTI) {
+		if ((*it)->rtti() == Object::LINE) {
 			return true;
 		}
 	}
@@ -19,10 +19,10 @@ bool AddPointOnTheLineMode::isAvailable() const {
 
 bool AddPointOnTheLineMode::isObjectSelectable(ObjectPtr object) const {
 	if (mySelectedObject0.isNull()) {
-		return object->rtti() == Line::RTTI;
+		return object->rtti() == Object::LINE;
 	} else {
 		return mySelectedObject1.isNull() && (object != mySelectedObject0) &&
-			((object->rtti() == Line::RTTI) || (object->rtti() == Circle::RTTI));
+			((object->rtti() == Object::LINE) || (object->rtti() == Object::CIRCLE));
 	}
 }
 

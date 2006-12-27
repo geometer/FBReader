@@ -12,7 +12,7 @@ void MovePointMode::release() {
 bool MovePointMode::isAvailable() const {
 	const std::list<ObjectPtr> &objects = document()->scene()->objects();
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {
-		if ((*it)->rtti() == Point::RTTI) {
+		if ((*it)->rtti() == Object::POINT) {
 			return true;
 		}
 	}

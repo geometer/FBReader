@@ -17,7 +17,7 @@ bool RulerMode::isAvailable() const {
 	const std::list<ObjectPtr> &objects = document()->scene()->objects();
 	int pointCounter = 0;
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {
-		if ((*it)->rtti() == Point::RTTI) {
+		if ((*it)->rtti() == Object::POINT) {
 			pointCounter++;
 		}
 		if (pointCounter == 2) {
@@ -28,7 +28,7 @@ bool RulerMode::isAvailable() const {
 }
 
 bool RulerMode::isObjectSelectable(ObjectPtr object) const {
-	return (object->rtti() == Point::RTTI) && (object != mySelectedPoint0);
+	return (object->rtti() == Object::POINT) && (object != mySelectedPoint0);
 }
 
 void RulerMode::onMousePress(int x, int y) {

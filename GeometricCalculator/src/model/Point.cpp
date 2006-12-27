@@ -68,3 +68,7 @@ double Point::distance(const Coordinates coords) const {
 double Point::distance(PointPtr point) const {
 	return Object::distance(point);
 }
+
+Object::Type Point::rtti() const {
+	return POINT;
+}

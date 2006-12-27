@@ -20,18 +20,7 @@
 
 #include <algorithm>
 
-#include <qapplication.h>
-#include <qhbox.h>
-#include <qvbox.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qspinbox.h>
-
-#include <ZLOptionEntry.h>
-
 #include "ZLQtOptionsDialog.h"
-#include "ZLQtOptionView.h"
 #include "ZLQtDialogManager.h"
 
 MyQTabWidget::MyQTabWidget(QWidget *parent) : QTabWidget(parent) {
@@ -42,12 +31,12 @@ void MyQTabWidget::resizeEvent(QResizeEvent *event) {
 	emit resized(event->size());
 }
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption) : FullScreenDialog(caption.c_str()), ZLOptionsDialog(id) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption) : ZLFullScreenDialog(caption.c_str()), ZLOptionsDialog(id) {
 	myTabWidget = new MyQTabWidget(this);
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
-	ZLQtOptionsDialogTab *tab = new ZLQtOptionsDialogTab(myTabWidget);
+	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget);
 	myTabWidget->insertTab(tab, name.c_str());
 	myTabs.append(tab);
 	myTabNames.push_back(name);
@@ -66,7 +55,7 @@ void ZLQtOptionsDialog::selectTab(const std::string &name) {
 }
 
 bool ZLQtOptionsDialog::run() {
-	for (ZLQtOptionsDialogTab *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
+	for (ZLQtDialogContent *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
 		tab->close();
 	}
 	bool code = exec();
@@ -75,16 +64,10 @@ bool ZLQtOptionsDialog::run() {
 }
 
 void ZLQtOptionsDialog::accept() {
-	for (ZLQtOptionsDialogTab *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
+	for (ZLQtDialogContent *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
 		tab->accept();
 	}
-	FullScreenDialog::accept();
-}
-
-void ZLQtOptionsDialogTab::accept() {
-	for (ZLQtOptionView *view = myViews.first(); view != 0; view = myViews.next()) {
-		view->onAccept();
-	}
+	ZLFullScreenDialog::accept();
 }
 
 void ZLQtOptionsDialog::resizeEvent(QResizeEvent *) {
@@ -95,78 +78,6 @@ void ZLQtOptionsDialog::keyPressEvent(QKeyEvent *event) {
 	if (event->key() == Key_Return) {
 		accept();
 	} else {
-		FullScreenDialog::keyPressEvent(event);
+		ZLFullScreenDialog::keyPressEvent(event);
 	}
-}
-
-void ZLQtOptionsDialogTab::close() {
-	myLayout->setRowStretch(myRowCounter, 10);
-}
-
-ZLQtOptionsDialogTab::ZLQtOptionsDialogTab(QWidget *parent) : QWidget(parent), myParentWidget(parent) {
-	const long displaySize = qApp->desktop()->height() * (long)qApp->desktop()->width();
-	const int space = (displaySize < 640 * 480) ? 3 : 10;
-	myLayout = new QGridLayout(this, -1, 13, space, space);
-	myRowCounter = 0;
-}
-
-ZLQtOptionsDialogTab::~ZLQtOptionsDialogTab() {
-	for (ZLQtOptionView *view = myViews.first(); view != 0; view = myViews.next()) {
-		delete view;
-	}
-}
-
-void ZLQtOptionsDialogTab::addOption(ZLOptionEntry *option) {
-	createViewByEntry(option, 0, 12);
-	++myRowCounter;
-}
-
-void ZLQtOptionsDialogTab::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
-	createViewByEntry(option0, 0, 5);
-	createViewByEntry(option1, 7, 12);
-	++myRowCounter;
-}
-
-void ZLQtOptionsDialogTab::addItem(QWidget *widget, int row, int fromColumn, int toColumn) {
-	myLayout->addMultiCellWidget(widget, row, row, fromColumn, toColumn);
-}
-
-void ZLQtOptionsDialogTab::createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn) {
-	if (option == 0) {
-		return;
-	}
-
-	ZLQtOptionView *view = 0;
-	switch (option->kind()) {
-		case BOOLEAN:
-			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case STRING:
-			view = new StringOptionView((ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case CHOICE:
-			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case SPIN:
-			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case COMBO:
-			view = new ComboOptionView((ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case COLOR:
-			view = new ColorOptionView((ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case KEY:
-			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-	}
-
-	if (view != 0) {
-		view->setVisible(option->isVisible());
-		myViews.append(view);
-	}
-}
-
-QWidget *ZLQtOptionsDialogTab::parentWidget() {
-	return myParentWidget;
 }

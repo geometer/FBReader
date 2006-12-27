@@ -21,8 +21,7 @@ class Line : public Object {
 		virtual ~Line() {}
 
 	public:
-		static const int RTTI;
-		int rtti() const;
+		Type rtti() const;
 
 		virtual const PointPtr point(LineEnd end) const = 0;
 		virtual const std::list<PointWeakPtr> &points() const;

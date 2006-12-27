@@ -10,80 +10,12 @@
 
 class DiagramView;
 
-class EditMode;
-
 class GeometricCalculator : public ZLApplication { 
 
 public:
 	static std::string ConfigDirectory();
-	static std::string UserCreatedSceneDirectory();
 
 private:
-	class UndoAction : public Action {
-
-	public:
-		UndoAction(DiagramView &view);
-		bool isEnabled();
-		void run();
-
-	private:
-		DiagramView &myView;
-	};
-
-	class RedoAction : public Action {
-
-	public:
-		RedoAction(DiagramView &view);
-		bool isEnabled();
-		void run();
-
-	private:
-		DiagramView &myView;
-	};
-
-	class SetModeAction : public Action {
-
-	public:
-		SetModeAction(DiagramView &view, shared_ptr<EditMode> editMode);
-		bool isEnabled();
-		void run();
-
-	private:
-		DiagramView &myView;
-		shared_ptr<EditMode> myEditMode;
-	};
-
-	class OpenSceneAction : public Action {
-
-	public:
-		OpenSceneAction(GeometricCalculator &calculator);
-		void run();
-
-	private:
-		GeometricCalculator &myCalculator;
-	};
-
-	class SaveSceneAction : public Action {
-
-	public:
-		SaveSceneAction(GeometricCalculator &calculator);
-		bool isEnabled();
-		void run();
-
-	private:
-		GeometricCalculator &myCalculator;
-	};
-
-	class NewSceneAction : public Action {
-
-	public:
-		NewSceneAction(GeometricCalculator &calculator);
-		bool isEnabled();
-		void run();
-
-	private:
-		GeometricCalculator &myCalculator;
-	};
 
 public:
 	GeometricCalculator(const std::string &fileName);
@@ -105,8 +37,6 @@ private:
 	void save(const std::string &fileName, const std::string &sceneName);
 
 	//void help();
-
-	//void showFilePopup();
 
 private:
   DiagramView *myView;	

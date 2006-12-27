@@ -27,7 +27,7 @@ const PointPtr &PointPtr::operator = (const PointWeakPtr &ptr) {
 }
 
 const PointPtr &PointPtr::operator = (const ObjectPtr &ptr) {
-	if (!ptr.isNull() && ptr->rtti() == Point::RTTI) {
+	if (!ptr.isNull() && ptr->rtti() == Object::POINT) {
 		ObjectPtr::operator = (ptr);
 	} else {
 		ObjectPtr::operator = (0);

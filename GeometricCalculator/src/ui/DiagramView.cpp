@@ -125,10 +125,10 @@ void DiagramView::drawObject(const ObjectPtr object) {
 	if (!object->isReal()) {
 		return;
 	}
-	if (object->rtti() == Point::RTTI) {
+	if (object->rtti() == Object::POINT) {
 		PointPtr point = object;
 		drawPoint(point, getDrawMode(object));
-	} else if (object->rtti() == Line::RTTI) {
+	} else if (object->rtti() == Object::LINE) {
 		LinePtr line = object;
 		LineCoordsPtr coords = new LineCoords(line, context().width(), context().height());
 		drawLine(coords, getDrawMode(object));
@@ -200,7 +200,7 @@ void DiagramView::drawObject(const ObjectPtr object) {
 				drawLine(coords, drawMode);
 			}
 		}
-	} else if (object->rtti() == Circle::RTTI) {
+	} else if (object->rtti() == Object::CIRCLE) {
 		CirclePtr circle = object;
 		drawCircle(circle, getDrawMode(object));
 	}

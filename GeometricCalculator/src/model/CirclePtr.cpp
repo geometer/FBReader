@@ -20,7 +20,7 @@ const CirclePtr &CirclePtr::operator = (const CirclePtr &ptr) {
 }
 
 const CirclePtr &CirclePtr::operator = (const ObjectPtr &ptr) {
-	if (!ptr.isNull() && ptr->rtti() == Circle::RTTI) {
+	if (!ptr.isNull() && ptr->rtti() == Object::CIRCLE) {
 		ObjectPtr::operator = (ptr);
 	} else {
 		ObjectPtr::operator = (NULL);

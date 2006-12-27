@@ -13,7 +13,7 @@ PointPtr BaseAddMode::getPoint(ObjectPtr object0, ObjectPtr object1, int x, int 
 
 	int rtti0 = object0->rtti();
 
-	if (rtti0 == Point::RTTI) {
+	if (rtti0 == Object::POINT) {
 		return object0;
 	}
 
@@ -23,10 +23,10 @@ PointPtr BaseAddMode::getPoint(ObjectPtr object0, ObjectPtr object1, int x, int 
 
 	if (object1.isNull()) {
 		PointPtr point;
-		if (rtti0 == Line::RTTI) {
+		if (rtti0 == Object::LINE) {
 			LinePtr line = object0;
 			point = PointOnTheLine::create(line->point(START), line->point(END), line, 0);
-		} else if (rtti0 == Circle::RTTI) {
+		} else if (rtti0 == Object::CIRCLE) {
 			point = PointOnTheCircle::create(object0, 0);
 		}
 		point->moveTo(x, y);
@@ -34,15 +34,15 @@ PointPtr BaseAddMode::getPoint(ObjectPtr object0, ObjectPtr object1, int x, int 
 	}
 
 	PointPtr point0, point1;
-	if (rtti0 == Line::RTTI) {
-		if (object1->rtti() == Line::RTTI) {
+	if (rtti0 == Object::LINE) {
+		if (object1->rtti() == Object::LINE) {
 			return LinesCrossing::create(object0, object1);
 		} else {
 			point0 = LineAndCircleCrossing::create(object0, object1, true);
 			point1 = LineAndCircleCrossing::create(object0, object1, false);
 		}
 	} else {
-		if (object1->rtti() == Line::RTTI) {
+		if (object1->rtti() == Object::LINE) {
 			point0 = LineAndCircleCrossing::create(object1, object0, true);
 			point1 = LineAndCircleCrossing::create(object1, object0, false);
 		} else {
@@ -60,7 +60,7 @@ PointPtr BaseAddMode::getPoint(int x, int y, bool createNewPoint) {
 	unselect(mySelectedObject0); mySelectedObject0.reset();
 	unselect(mySelectedObject1); mySelectedObject1.reset();
 	mySelectedObject0 = closestObject(x, y);
-	if (!mySelectedObject0.isNull() && (mySelectedObject0->rtti() != Point::RTTI)) {
+	if (!mySelectedObject0.isNull() && (mySelectedObject0->rtti() != Object::POINT)) {
 		mySelectedObject1 = closestObject(x, y);
 	}
 	PointPtr point = getPoint(mySelectedObject0, mySelectedObject1, x, y, createNewPoint);

@@ -26,6 +26,7 @@ enum ActionCode {
 	ACTION_ZOOM_IN = 21,
 	ACTION_ZOOM_OUT = 22,
 	ACTION_SAVE_SCENE = 23,
+	ACTION_REMOVE_SCENES = 24,
 };
 
 #endif /* __ACTIONCODE_H__ */

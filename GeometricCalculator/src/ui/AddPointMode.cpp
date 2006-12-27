@@ -13,7 +13,7 @@ bool AddPointMode::isAvailable() const {
 
 bool AddPointMode::isObjectSelectable(ObjectPtr object) const {
 	return mySelectedObject1.isNull() && (object != mySelectedObject0) &&
-		((object->rtti() == Line::RTTI) || (object->rtti() == Circle::RTTI));
+		((object->rtti() == Object::LINE) || (object->rtti() == Object::CIRCLE));
 }
 
 void AddPointMode::onMouseMove(int x, int y) {

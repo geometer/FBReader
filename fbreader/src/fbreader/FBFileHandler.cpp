@@ -119,9 +119,7 @@ bool FBFileHandler::accept(const ZLTreeNode &node) const {
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(name), false);
 	const std::string message = (plugin == 0) ? "Unknown File Format" : plugin->tryOpen(name);
 	if (!message.empty()) {
-		ZLDialogManager::instance().infoBox(
-			ZLDialogManager::ERROR_TYPE, "Error", "Couldn't Open:\n" + message, "Ok"
-		);
+		ZLDialogManager::instance().errorBox("Error", "Couldn't Open:\n" + message);
 		return false;
 	}
 

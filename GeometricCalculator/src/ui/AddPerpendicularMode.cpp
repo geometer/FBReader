@@ -25,12 +25,12 @@ bool AddPerpendicularMode::isAvailable() const {
 	const std::list<ObjectPtr> &objects = document()->scene()->objects();
 	bool lineFlag = false, pointFlag = false;
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {
-		if ((*it)->rtti() == Point::RTTI) {
+		if ((*it)->rtti() == Object::POINT) {
 			if (lineFlag) {
 				return true;
 			}
 			pointFlag = true;
-		} else if ((*it)->rtti() == Line::RTTI) {
+		} else if ((*it)->rtti() == Object::LINE) {
 			if (view().ExistingPointsOnlyOption.value()) {
 				if (pointFlag) {
 					return true;
@@ -46,9 +46,9 @@ bool AddPerpendicularMode::isAvailable() const {
 
 bool AddPerpendicularMode::isObjectSelectable(ObjectPtr object) const {
 	if (myMousePoint.isNull()) {
-		return object->rtti() == Line::RTTI;
+		return object->rtti() == Object::LINE;
 	} else {
-		if (view().ExistingPointsOnlyOption.value() && (object->rtti() != Point::RTTI)) {
+		if (view().ExistingPointsOnlyOption.value() && (object->rtti() != Object::POINT)) {
 			return false;
 		}
 		return object != mySelectedObject0;

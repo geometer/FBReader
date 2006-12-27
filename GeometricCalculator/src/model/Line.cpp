@@ -70,3 +70,7 @@ double Line::distance(const Coordinates coords) const {
 double Line::distance(const PointPtr point) const {
 	return Object::distance(point);
 }
+
+Object::Type Line::rtti() const {
+	return LINE;
+}

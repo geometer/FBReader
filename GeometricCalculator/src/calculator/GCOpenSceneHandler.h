@@ -24,7 +24,9 @@
 #include <ZLSelectionDialog.h>
 #include <ZLOptions.h>
 
-class GCOpenSceneHandler : public ZLTreeOpenHandler {
+#include "GCSceneHandler.h"
+
+class GCOpenSceneHandler : public ZLTreeOpenHandler, private GCSceneHandler {
 
 public:
 	ZLStringOption FolderOption;
@@ -45,12 +47,7 @@ private:
 	shared_ptr<ZLDir> currentDirectory() const;
 
 private:
-	mutable bool myIsUpToDate;
-	mutable std::vector<ZLTreeNodePtr> mySubnodes;
-
 	mutable std::string myFileName;
 };
-
-inline const std::string &GCOpenSceneHandler::fileName() const { return myFileName; }
 
 #endif /* __GCOPENSCENEHANDLER_H__ */

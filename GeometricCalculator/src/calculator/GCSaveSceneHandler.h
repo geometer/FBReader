@@ -23,12 +23,12 @@
 
 #include <map>
 #include <set>
-#include <vector>
 
 #include <ZLSelectionDialog.h>
-#include <ZLOptions.h>
 
-class GCSaveSceneHandler : public ZLTreeSaveHandler {
+#include "GCSceneHandler.h"
+
+class GCSaveSceneHandler : public ZLTreeSaveHandler, private GCSceneHandler {
 
 public:
 	GCSaveSceneHandler(const std::string &sceneName);
@@ -48,8 +48,6 @@ private:
 private:
 	mutable std::string mySceneName;
 
-	mutable bool myIsUpToDate;
-	mutable std::vector<ZLTreeNodePtr> mySubnodes;
 	mutable std::map<std::string,std::string> myFileNameBySceneName;
 	mutable std::set<std::string> myFileNames;
 };

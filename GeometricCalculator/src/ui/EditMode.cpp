@@ -47,9 +47,9 @@ ObjectPtr EditMode::closestObject(double x, double y) {
 			continue;
 		}
 		int rtti = (*it)->rtti();
-		double distanceCandidate = (rtti == Line::RTTI) ? distanceToLine(*it, x, y) : (*it)->distance(x, y);
+		double distanceCandidate = (rtti == Object::LINE) ? distanceToLine(*it, x, y) : (*it)->distance(x, y);
 
-		if (rtti == Point::RTTI) {
+		if (rtti == Object::POINT) {
 			if (distanceCandidate < maxPointDistance) {
 				point = *it;
 				maxPointDistance = distanceCandidate;

@@ -18,21 +18,10 @@
  * 02110-1301, USA.
  */
 
-#include <gtk/gtksignal.h>
-#include <gtk/gtkcheckbutton.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkmenu.h>
-#include <gtk/gtkradiomenuitem.h>
-#include <gtk/gtkhbox.h>
-#include <gtk/gtkvbox.h>
-#include <gtk/gtkspinbutton.h>
-#include <gtk/gtkdrawingarea.h>
-#include <gtk/gtkhscale.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtkcomboboxentry.h>
+#include <gtk/gtk.h>
 
 #include "ZLGtkOptionView.h"
-#include "ZLGtkOptionsDialog.h"
+#include "ZLGtkDialogContent.h"
 #include "ZLGtkDialogManager.h"
 #include "ZLGtkUtil.h"
 #include "../util/ZLGtkKeyUtil.h"

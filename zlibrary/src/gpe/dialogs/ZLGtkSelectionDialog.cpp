@@ -182,7 +182,9 @@ bool ZLGtkSelectionDialog::run() {
 			if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
 				int index;
 				gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 2, &index, -1);
-				runNode(myNodes[index]);
+				if ((index >= 0) && (index < myNodes.size())) {
+					runNode(myNodes[index]);
+				}
 			}
 			myNodeSelected = false;
 		} else {

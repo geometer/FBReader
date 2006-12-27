@@ -27,7 +27,7 @@ const LinePtr &LinePtr::operator = (const LineWeakPtr &ptr) {
 }
 
 const LinePtr &LinePtr::operator = (const ObjectPtr &ptr) {
-	if (!ptr.isNull() && ptr->rtti() == Line::RTTI) {
+	if (!ptr.isNull() && ptr->rtti() == Object::LINE) {
 		ObjectPtr::operator = (ptr);
 	} else {
 		ObjectPtr::operator = (NULL);

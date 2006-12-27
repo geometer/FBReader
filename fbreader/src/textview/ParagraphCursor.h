@@ -158,7 +158,6 @@ public:
 	WordCursor(const WordCursor &cursor);
 	const WordCursor &operator = (const WordCursor &cursor);
 	const WordCursor &operator = (ParagraphCursor *paragraphCursor);
-	~WordCursor();
 
 	bool isNull() const;
 	bool sameElementAs(const WordCursor &cursor) const;
@@ -257,7 +256,6 @@ inline const WordCursor &WordCursor::operator = (const WordCursor &cursor) {
 	myCharNumber = cursor.myCharNumber;
 	return *this;
 }
-inline WordCursor::~WordCursor() {}
 
 inline bool WordCursor::isNull() const { return myParagraphCursor.isNull(); }
 inline bool WordCursor::sameElementAs(const WordCursor &cursor) const {

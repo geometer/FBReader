@@ -23,22 +23,32 @@
 #include <hildon-note.h>
 
 #include "ZLGtkDialogManager.h"
-#include "ZLGtkCommonDialog.h"
+#include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkSelectionDialog.h"
 
 ZLDialog *ZLGtkDialogManager::createDialog(const std::string &title) const {
-	return new ZLGtkCommonDialog(title);
+	return new ZLGtkDialog(title);
 }
 
 ZLOptionsDialog *ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new ZLGtkOptionsDialog(id, title, myWindow);
 }
 
-int ZLGtkDialogManager::infoBox(const InfoBoxType, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message.c_str(), 0));
+void ZLGtkDialogManager::informationBox(const std::string&, const std::string &message) const {
+	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_information(myWindow, message.c_str()));
+	gtk_dialog_run(dialog);
+	gtk_widget_destroy(GTK_WIDGET(dialog));
+}
 
-	gtk_window_set_title(GTK_WINDOW(dialog), title.c_str());
+void ZLGtkDialogManager::errorBox(const std::string&, const std::string &message) const {
+	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_information_with_icon_name(myWindow, message.c_str(), GTK_STOCK_DIALOG_ERROR));
+	gtk_dialog_run(dialog);
+	gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+int ZLGtkDialogManager::questionBox(const std::string&, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message.c_str(), 0));
 
 	if (!button0.empty()) {
 		gtk_dialog_add_button(dialog, button0.c_str(), 0);

@@ -32,17 +32,18 @@
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
+#include "../../abstract/dialogs/ZLOptionView.h"
 
-class ZLGtkOptionsDialogTab;
+class ZLGtkDialogContent;
 
 class ZLGtkOptionView : public ZLOptionView {
 
 protected:
-	ZLGtkOptionView(ZLOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
+	ZLGtkOptionView(ZLOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
 
 public:
 	virtual ~ZLGtkOptionView() {}
-	void setPosition(ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) {
+	void setPosition(ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) {
 		myTab = tab;
 		myRow = row;
 		myFromColumn = fromColumn;
@@ -74,7 +75,7 @@ protected:
 	virtual void onValueChanged() {}
 
 protected:
-	ZLGtkOptionsDialogTab *myTab;
+	ZLGtkDialogContent *myTab;
 	int myRow, myFromColumn, myToColumn;
 
 private:
@@ -84,7 +85,7 @@ private:
 class ChoiceOptionView : public ZLGtkOptionView {
 
 public:
-	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {
+	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {
 		myFrame = 0;
 	}
 	~ChoiceOptionView() { if (myFrame != 0) delete[] myButtons; }
@@ -104,7 +105,7 @@ private:
 class BooleanOptionView : public ZLGtkOptionView {
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(ZLBooleanOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -122,7 +123,7 @@ private:
 class StringOptionView : public ZLGtkOptionView {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
+	StringOptionView(ZLStringOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
 
 private:
 	void _createItem();
@@ -141,7 +142,7 @@ private:
 class SpinOptionView : public ZLGtkOptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(ZLSpinOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -156,7 +157,7 @@ private:
 class ComboOptionView : public ZLGtkOptionView {
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
+	ComboOptionView(ZLComboOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
 
 private:
 	void _createItem();
@@ -177,7 +178,7 @@ private:
 class ColorOptionView : public ZLGtkOptionView {
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
+	ColorOptionView(ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
 
 private:
 	void _createItem();
@@ -198,7 +199,7 @@ private:
 class KeyOptionView : public ZLGtkOptionView {
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, ZLGtkOptionsDialogTab *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 
 	void setKey(const std::string &key);
 

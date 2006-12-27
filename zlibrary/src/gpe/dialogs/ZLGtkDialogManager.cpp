@@ -23,7 +23,7 @@
 #include <ZLSelectionDialog.h>
 
 #include "ZLGtkDialogManager.h"
-#include "ZLGtkCommonDialog.h"
+#include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkSelectionDialog.h"
 #include "ZLGtkWaitMessage.h"
@@ -35,14 +35,26 @@ void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) con
 }
 
 ZLDialog *ZLGtkDialogManager::createDialog(const std::string &title) const {
-	return new ZLGtkCommonDialog(title);
+	return new ZLGtkDialog(title);
 }
 
 ZLOptionsDialog *ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new ZLGtkOptionsDialog(id, title);
 }
 
-int ZLGtkDialogManager::infoBox(const InfoBoxType type, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+void ZLGtkDialogManager::informationBox(const std::string &title, const std::string &message) const {
+	internalBox(GTK_STOCK_DIALOG_INFO, title, message, gtkString("&Ok"));
+}
+
+void ZLGtkDialogManager::errorBox(const std::string &title, const std::string &message) const {
+	internalBox(GTK_STOCK_DIALOG_ERROR, title, message, gtkString("&Ok"));
+}
+
+int ZLGtkDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+	return internalBox(GTK_STOCK_DIALOG_QUESTION, title, message, button0, button1, button2);
+}
+
+int ZLGtkDialogManager::internalBox(const gchar *icon, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
 	GtkDialog *dialog = createGtkDialog(title.c_str());
 
 	if (!button0.empty()) {
@@ -55,29 +67,17 @@ int ZLGtkDialogManager::infoBox(const InfoBoxType type, const std::string &title
 		gtk_dialog_add_button(dialog, button2.c_str(), 2);
 	}
 
-	GtkWidget *contents = gtk_hbox_new(FALSE, 10);
+	GtkWidget *contents = gtk_hbox_new(false, 10);
 	gtk_container_set_border_width(GTK_CONTAINER(contents), 10);
-	const char *iconName;
-	switch (type) {
-		default:
-		case INFORMATION_TYPE:
-			iconName = GTK_STOCK_DIALOG_INFO;
-			break;
-		case ERROR_TYPE:
-			iconName = GTK_STOCK_DIALOG_ERROR;
-			break;
-		case QUESTION_TYPE:
-			iconName = GTK_STOCK_DIALOG_QUESTION;
-			break;
-	}		
-	GtkWidget *image = gtk_image_new_from_stock(iconName, GTK_ICON_SIZE_DIALOG);
+
+	GtkWidget *image = gtk_image_new_from_stock(icon, GTK_ICON_SIZE_DIALOG);
 	gtk_misc_set_alignment(GTK_MISC(image), 0.5, 0.0);
 
 	GtkWidget *label = gtk_label_new(message.c_str());
-	gtk_label_set_line_wrap(GTK_LABEL(label), TRUE);
-	gtk_box_pack_start(GTK_BOX(contents), image, FALSE, FALSE, 0);
-	gtk_box_pack_start(GTK_BOX(contents), label, TRUE, TRUE, 0);
-	gtk_box_pack_start(GTK_BOX(dialog->vbox), contents, TRUE, TRUE, 0);
+	gtk_label_set_line_wrap(GTK_LABEL(label), true);
+	gtk_box_pack_start(GTK_BOX(contents), image, false, false, 0);
+	gtk_box_pack_start(GTK_BOX(contents), label, true, true, 0);
+	gtk_box_pack_start(GTK_BOX(dialog->vbox), contents, true, true, 0);
 	gtk_widget_show_all(GTK_WIDGET(dialog));
 	gint response = gtk_dialog_run(dialog);
 	gtk_widget_destroy(GTK_WIDGET(dialog));

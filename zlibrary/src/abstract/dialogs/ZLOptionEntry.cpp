@@ -19,6 +19,7 @@
  */
 
 #include "ZLOptionEntry.h"
+#include "ZLOptionView.h"
 
 ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
 	myOption->setView(this);
@@ -26,6 +27,12 @@ ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
 
 ZLOptionView::~ZLOptionView() {
 	delete myOption;
+}
+
+void ZLOptionEntry::resetView() {
+	if (myView != 0) {
+		myView->reset();
+	}
 }
 
 void ZLOptionEntry::setVisible(bool visible) {

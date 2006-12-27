@@ -25,36 +25,10 @@
 
 #include <gtk/gtkdialog.h>
 #include <gtk/gtknotebook.h>
-#include <gtk/gtktable.h>
 
 #include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
-class ZLGtkOptionView;
-
-class ZLGtkOptionsDialogTab : public ZLDialogContent {
-
-public:
-	ZLGtkOptionsDialogTab();
-	~ZLGtkOptionsDialogTab();
-
-	void addOption(ZLOptionEntry *option);
-	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
-
-	void accept();
-
-	GtkWidget *widget() { return GTK_WIDGET(myTable); }
-
-	void addItem(GtkWidget *what, int row, int fromColumn, int toColumn);
-
-private:
-	int addRow();
-	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
-
-private:
-	GtkTable *myTable;
-	gint myRowCounter;
-	std::vector<ZLGtkOptionView*> myViews;
-};
+class ZLGtkDialogContent;
 
 class ZLGtkOptionsDialog : public ZLDesktopOptionsDialog {
 
@@ -75,7 +49,7 @@ protected:
 private:
 	GtkDialog *myDialog;
 	GtkNotebook *myNotebook;
-	std::vector<ZLGtkOptionsDialogTab*> myTabs;
+	std::vector<ZLGtkDialogContent*> myTabs;
 	std::vector<std::string> myTabNames;
 };
 

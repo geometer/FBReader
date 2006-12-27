@@ -26,8 +26,8 @@
 
 #include "ZLQtApplicationWindow.h"
 #include "ZLQtMenuAction.h"
-#include "../view/QViewWidget.h"
-#include "../../qt/util/QKeyUtil.h"
+#include "../view/ZLQtViewWidget.h"
+#include "../../qt/util/ZLQtKeyUtil.h"
 
 class MyMenuBar : public QPEMenuBar {
 
@@ -246,7 +246,7 @@ void ToolBarButton::doActionSlot() {
 }
 
 void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
-	application().doActionByKey(QKeyUtil::keyName(event));
+	application().doActionByKey(ZLQtKeyUtil::keyName(event));
 }
 
 void ZLQtApplicationWindow::focusInEvent(QFocusEvent*) {
@@ -338,7 +338,7 @@ void ZLQtApplicationWindow::setDocument(const QString &fileName) {
 }
 
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
-	QViewWidget *viewWidget = new QViewWidget(this, &application());
+	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
 	setCentralWidget(viewWidget->widget());
 	return viewWidget;
 }

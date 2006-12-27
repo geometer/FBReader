@@ -25,21 +25,21 @@
 
 #include "../../qt/filesystem/ZLQtFSManager.h"
 #include "../../qt/time/ZLQtTime.h"
-#include "../dialogs/QDialogManager.h"
-#include "../../qt/image/QImageManager.h"
-#include "../view/QPaintContext.h"
+#include "../dialogs/ZLQtDialogManager.h"
+#include "../../qt/image/ZLQtImageManager.h"
+#include "../view/ZLQtPaintContext.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QPEApplication(argc, argv);
 
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
-	QDialogManager::createInstance();
-	QImageManager::createInstance();
+	ZLQtDialogManager::createInstance();
+	ZLQtImageManager::createInstance();
 }
 
 ZLPaintContext *ZLibrary::createContext() {
-	return new QPaintContext();
+	return new ZLQtPaintContext();
 }
 
 void ZLibrary::run(ZLApplication *application) {
