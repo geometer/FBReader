@@ -31,7 +31,8 @@ do_install:
 	@install -d $(GC_SHAREDIR)/default
 	@install -m 0644 data/default/config.$(TARGET_ARCH).xml $(GC_SHAREDIR)/default/config.xml
 	@install -m 0644 data/default/keymap.$(TARGET_ARCH).xml $(GC_SHAREDIR)/default/keymap.xml
-	@install -m 0644 share/samples.tar $(GC_SHAREDIR)
+	@install -d $(GC_SHAREDIR)/samples
+	@install -m 0644 share/samples/*.tar $(GC_SHAREDIR)/samples
 
 package:
 	@if [ -d $(TARGET_ARCH) ]; then \

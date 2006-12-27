@@ -50,6 +50,8 @@ private:
 
 	mutable std::map<std::string,std::string> myFileNameBySceneName;
 	mutable std::set<std::string> myFileNames;
+
+	mutable bool myIsUpToDate;
 };
 
 #endif /* __GCSAVESCENEHANDLER_H__ */

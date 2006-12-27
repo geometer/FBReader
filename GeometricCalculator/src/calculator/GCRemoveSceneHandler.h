@@ -37,6 +37,9 @@ private:
 	void changeFolder(const ZLTreeNode &node);
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
 	std::string relativeId(const ZLTreeNode &node) const;
+
+private:
+	mutable bool myIsUpToDate;
 };
 
 #endif /* __GCREMOVESCENEHANDLER_H__ */

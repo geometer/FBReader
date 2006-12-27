@@ -48,6 +48,9 @@ private:
 
 private:
 	mutable std::string myFileName;
+	mutable bool myIsUpToDate;
+
+	std::string myStateDisplayName;
 };
 
 #endif /* __GCOPENSCENEHANDLER_H__ */

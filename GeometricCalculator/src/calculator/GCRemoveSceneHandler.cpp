@@ -26,7 +26,7 @@
 #include "GeometricCalculator.h"
 #include "GCRemoveSceneHandler.h"
 
-GCRemoveSceneHandler::GCRemoveSceneHandler() {
+GCRemoveSceneHandler::GCRemoveSceneHandler() : myIsUpToDate(false) {
 }
 
 void GCRemoveSceneHandler::changeFolder(const ZLTreeNode&) {
@@ -37,8 +37,9 @@ const std::string GCRemoveSceneHandler::stateDisplayName() const {
 }
 
 const std::vector<ZLTreeNodePtr> &GCRemoveSceneHandler::subnodes() const {
-	if (!isUpToDate()) {
-		collectSubnodes("", UserDirectory(false));
+	if (!myIsUpToDate) {
+		collectScenes(UserDirectory(false));
+		myIsUpToDate = true;
 	}
 	return GCSceneHandler::subnodes();
 }
@@ -55,6 +56,7 @@ bool GCRemoveSceneHandler::accept(const ZLTreeNode &node) const {
 			ZLDialogManager::instance().errorBox(title, "Couldn't Remove Scene");
 		} else {
 			resetSubnodesList();
+			myIsUpToDate = false;
 		}
 	}
 	return false;

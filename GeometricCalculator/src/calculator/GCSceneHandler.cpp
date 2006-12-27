@@ -28,12 +28,13 @@
 #include "GCSceneHandler.h"
 #include "GeometricCalculator.h"
 #include "../io/SceneNameReader.h"
+#include "../io/SceneSetNameReader.h"
 
-const std::string GCSceneHandler::SamplesFolderName = "Samples";
+const std::string GCSceneHandler::AllScenesFolderName = "All Scenes";
 const std::string GCSceneHandler::UserFolderName = "User Created";
 
 shared_ptr<ZLDir> GCSceneHandler::SamplesDirectory() {
-	return ZLFile(ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "samples.tar").directory();
+	return ZLFile(ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "samples").directory();
 }
 
 const std::string GCSceneHandler::UserDirectoryName() {
@@ -48,22 +49,19 @@ shared_ptr<ZLDir> GCSceneHandler::UserDirectory(bool create) {
 	return ZLFile(UserDirectoryName()).directory(create);
 }
 
-GCSceneHandler::GCSceneHandler() : myIsUpToDate(false) {
+GCSceneHandler::GCSceneHandler() {
 }
 
-void GCSceneHandler::collectSubnodes(const std::string &folderName, shared_ptr<ZLDir> dir) const {
-	if (myIsUpToDate) {
-		return;
-	}
+void GCSceneHandler::addFolderSubnode(const std::string &id, const std::string &displayName) const {
+	static const std::string FolderIcon = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter + "folder";
+
+	mySubnodes.push_back(new ZLTreeNode(id, displayName, FolderIcon, true));
+}
+
+void GCSceneHandler::collectScenes(shared_ptr<ZLDir> dir) const {
+	static const std::string SceneIcon = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter + "scene_file";
 
 	if (!dir.isNull()) {
-		static const std::string Prefix = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter;
-		static const std::string SceneIcon = Prefix + "scene_file";
-
-		if (!folderName.empty()) {
-			static const std::string FolderIcon = Prefix + "folder";
-			mySubnodes.push_back(new ZLTreeNode(folderName, folderName, FolderIcon, true));
-		}
 		std::vector<std::string> names;
 		dir->collectFiles(names, true);
 		std::map<std::string,ZLTreeNodePtr> nodeMap;
@@ -78,7 +76,30 @@ void GCSceneHandler::collectSubnodes(const std::string &folderName, shared_ptr<Z
 			mySubnodes.push_back(jt->second);
 		}
 	}
-	myIsUpToDate = true;
+}
+
+void GCSceneHandler::collectSceneArchives(shared_ptr<ZLDir> dir) const {
+	static const std::string FolderIcon = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter + "folder";
+
+	if (!dir.isNull()) {
+		std::vector<std::string> names;
+		dir->collectFiles(names, true);
+		std::map<std::string,ZLTreeNodePtr> nodeMap;
+		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
+			if (ZLFile(*it).extension() == "tar") {
+				const std::string archiveName = dir->itemName(*it);
+				ZLFile archiveFile(archiveName);
+				std::string displayName = SceneSetNameReader().readSetName(archiveFile);
+				if (!displayName.empty()) {
+					ZLTreeNodePtr node = new ZLTreeNode(archiveName, displayName, FolderIcon, true);
+					nodeMap.insert(std::pair<std::string,ZLTreeNodePtr>(displayName, node));
+				}
+			}
+		}
+		for (std::map<std::string,ZLTreeNodePtr>::const_iterator jt = nodeMap.begin(); jt != nodeMap.end(); ++jt) {
+			mySubnodes.push_back(jt->second);
+		}
+	}
 }
 
 const std::vector<ZLTreeNodePtr> &GCSceneHandler::subnodes() const {
@@ -87,9 +108,4 @@ const std::vector<ZLTreeNodePtr> &GCSceneHandler::subnodes() const {
 
 void GCSceneHandler::resetSubnodesList() const {
 	mySubnodes.clear();
-	myIsUpToDate = false;
-}
-
-bool GCSceneHandler::isUpToDate() const {
-	return myIsUpToDate;
 }

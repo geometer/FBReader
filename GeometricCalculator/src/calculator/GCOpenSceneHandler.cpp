@@ -25,37 +25,57 @@
 
 #include "GCOpenSceneHandler.h"
 #include "GeometricCalculator.h"
+#include "../io/SceneSetNameReader.h"
 
 GCOpenSceneHandler::GCOpenSceneHandler() :
-	FolderOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenSceneDialog", "Folder", SamplesFolderName) {
+	FolderOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenSceneDialog", "Folder", AllScenesFolderName), myIsUpToDate(false) {
+	const std::string &value = FolderOption.value();
+	if ((value == AllScenesFolderName) || (value == UserFolderName)) {
+		myStateDisplayName = value;
+	} else {
+		myStateDisplayName = SceneSetNameReader().readSetName(ZLFile(value));
+		if (myStateDisplayName.empty()) {
+			myStateDisplayName = AllScenesFolderName;
+			FolderOption.setValue(AllScenesFolderName);
+		}
+	}
 }
 
 shared_ptr<ZLDir> GCOpenSceneHandler::currentDirectory() const {
-	if (stateDisplayName() == SamplesFolderName) {
-		return SamplesDirectory();
-	} else {
+	const std::string &value = FolderOption.value();
+	if (value == UserFolderName) {
 		return UserDirectory(false);
+	} else {
+		return ZLFile(value).directory(false);
 	}
 }
 
 void GCOpenSceneHandler::changeFolder(const ZLTreeNode &node) {
 	FolderOption.setValue(node.id());
 	resetSubnodesList();
+	myIsUpToDate = false;
 }
 
 const std::string GCOpenSceneHandler::stateDisplayName() const {
-	return FolderOption.value();
+	return myStateDisplayName;
 }
 
 const std::vector<ZLTreeNodePtr> &GCOpenSceneHandler::subnodes() const {
-	if (!isUpToDate()) {
-		collectSubnodes((stateDisplayName() == SamplesFolderName) ? UserFolderName : SamplesFolderName, currentDirectory());
+	if (!myIsUpToDate) {
+		if (FolderOption.value() == AllScenesFolderName) {
+			addFolderSubnode(UserFolderName, UserFolderName);
+			collectSceneArchives(SamplesDirectory());
+		} else {
+			addFolderSubnode(AllScenesFolderName, "..");
+			collectScenes(currentDirectory());
+		}
+		myIsUpToDate = true;
 	}
 	return GCSceneHandler::subnodes();
 }
 
 std::string GCOpenSceneHandler::relativeId(const ZLTreeNode &node) const {
-	return (node.id() == SamplesFolderName) ? UserFolderName : SamplesFolderName;
+	return (node.id() == AllScenesFolderName) ? FolderOption.value() : "..";
 }
 
 

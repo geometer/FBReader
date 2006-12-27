@@ -28,7 +28,7 @@ class ZLDir;
 class GCSceneHandler {
 
 protected:
-	static const std::string SamplesFolderName;
+	static const std::string AllScenesFolderName;
 	static const std::string UserFolderName;
 
 	static shared_ptr<ZLDir> SamplesDirectory();
@@ -38,13 +38,13 @@ protected:
 protected:
 	GCSceneHandler();
 
-	void collectSubnodes(const std::string &folderName, shared_ptr<ZLDir> dir) const;
 	void resetSubnodesList() const;
+	void addFolderSubnode(const std::string &id, const std::string &displayName) const;
+	void collectScenes(shared_ptr<ZLDir> dir) const;
+	void collectSceneArchives(shared_ptr<ZLDir> dir) const;
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	bool isUpToDate() const;
 
 private:
-	mutable bool myIsUpToDate;
 	mutable std::vector<ZLTreeNodePtr> mySubnodes;
 };
 

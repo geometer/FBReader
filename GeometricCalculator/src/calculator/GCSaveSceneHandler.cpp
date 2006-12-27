@@ -28,7 +28,7 @@
 #include "GeometricCalculator.h"
 #include "GCSaveSceneHandler.h"
 
-GCSaveSceneHandler::GCSaveSceneHandler(const std::string &sceneName) : mySceneName(sceneName) {
+GCSaveSceneHandler::GCSaveSceneHandler(const std::string &sceneName) : mySceneName(sceneName), myIsUpToDate(false) {
 }
 
 void GCSaveSceneHandler::changeFolder(const ZLTreeNode&) {
@@ -39,13 +39,14 @@ const std::string GCSaveSceneHandler::stateDisplayName() const {
 }
 
 const std::vector<ZLTreeNodePtr> &GCSaveSceneHandler::subnodes() const {
-	if (!isUpToDate()) {
-		collectSubnodes("", UserDirectory(true));
+	if (!myIsUpToDate) {
+		collectScenes(UserDirectory(true));
 		const std::vector<ZLTreeNodePtr> &nodes = GCSceneHandler::subnodes();
 		for (std::vector<ZLTreeNodePtr>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
 			myFileNames.insert((*it)->id());
 			myFileNameBySceneName[(*it)->displayName()] = (*it)->id();
 		}
+		myIsUpToDate = true;
 	}
 	return GCSceneHandler::subnodes();
 }
