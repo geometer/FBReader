@@ -37,13 +37,13 @@ public:
 	const std::string fileName() const;
 
 private:
-	bool accept(const std::string &state) const;
-	void processNode(const ZLTreeNode &node) const;
+	bool accept(const std::string &state);
+	void processNode(const ZLTreeNode &node);
 
 	const std::string stateDisplayName() const;
 	void changeFolder(const ZLTreeNode &node);
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	std::string relativeId(const ZLTreeNode &node) const;
+	int selectedIndex() const;
 
 private:
 	mutable std::string mySceneName;

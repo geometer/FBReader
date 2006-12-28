@@ -31,15 +31,17 @@ public:
 	GCRemoveSceneHandler();
 
 private:
-	bool accept(const ZLTreeNode &node) const;
+	bool accept(const ZLTreeNode &node);
 
 	const std::string stateDisplayName() const;
 	void changeFolder(const ZLTreeNode &node);
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	std::string relativeId(const ZLTreeNode &node) const;
+	int selectedIndex() const;
 
 private:
 	mutable bool myIsUpToDate;
+
+	int mySelectedIndex;
 };
 
 #endif /* __GCREMOVESCENEHANDLER_H__ */

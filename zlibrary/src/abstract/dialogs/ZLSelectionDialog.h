@@ -31,6 +31,15 @@ typedef shared_ptr<ZLTreeNode> ZLTreeNodePtr;
 
 class ZLTreeHandler {
 
+public:
+	enum UpdateType {
+		UPDATE_NONE = 0,
+		UPDATE_STATE = 1,
+		UPDATE_LIST = 2,
+		UPDATE_SELECTION = 4,
+		UPDATE_ALL = UPDATE_STATE | UPDATE_LIST | UPDATE_SELECTION
+	};
+
 protected:
 	ZLTreeHandler();
 	virtual ~ZLTreeHandler();
@@ -38,10 +47,19 @@ protected:
 public:
 	virtual bool isOpenHandler() const = 0;
 
+	UpdateType updateInfo() const;
+	void resetUpdateInfo();
 	virtual const std::string stateDisplayName() const = 0;
-	virtual void changeFolder(const ZLTreeNode &node) = 0;
 	virtual const std::vector<ZLTreeNodePtr> &subnodes() const = 0;
-	virtual std::string relativeId(const ZLTreeNode &node) const = 0;
+	virtual int selectedIndex() const = 0;
+	
+	virtual void changeFolder(const ZLTreeNode &node) = 0;
+
+protected:
+	void addUpdateInfo(UpdateType info);
+
+private:
+	UpdateType myUpdateInfo;
 };
 
 class ZLTreeOpenHandler : public ZLTreeHandler {
@@ -49,7 +67,7 @@ class ZLTreeOpenHandler : public ZLTreeHandler {
 public:
 	virtual bool isOpenHandler() const { return true; }
 
-	virtual bool accept(const ZLTreeNode &node) const = 0;
+	virtual bool accept(const ZLTreeNode &node) = 0;
 };
 
 class ZLTreeSaveHandler : public ZLTreeHandler {
@@ -57,8 +75,8 @@ class ZLTreeSaveHandler : public ZLTreeHandler {
 public:
 	virtual bool isOpenHandler() const { return false; }
 
-	virtual void processNode(const ZLTreeNode &node) const = 0;
-	virtual bool accept(const std::string &state) const = 0;
+	virtual void processNode(const ZLTreeNode &node) = 0;
+	virtual bool accept(const std::string &state) = 0;
 };
 
 class ZLTreeNode {
@@ -88,16 +106,24 @@ public:
 	virtual bool run() = 0;
 
 protected:
+	const ZLTreeHandler &handler() const;
 	void runNode(const ZLTreeNodePtr node);
 	void runState(const std::string &state);
 	virtual void exitDialog() = 0;
+
 	virtual void updateStateLine() = 0;
-	virtual void update(const std::string &selectedNodeId) = 0;
-	const ZLTreeHandler &handler() const;
+	virtual void updateList() = 0;
+	virtual void updateSelection() = 0;
+
+	virtual void update();
 
 private:
 	ZLTreeHandler &myHandler;
 };
+
+inline ZLTreeHandler::UpdateType ZLTreeHandler::updateInfo() const { return myUpdateInfo; }
+inline void ZLTreeHandler::addUpdateInfo(UpdateType info) { myUpdateInfo = (UpdateType)(myUpdateInfo | info); }
+inline void ZLTreeHandler::resetUpdateInfo() { myUpdateInfo = UPDATE_NONE; }
 
 inline const std::string &ZLTreeNode::id() const { return myId; }
 inline const std::string &ZLTreeNode::displayName() const { return myDisplayName; }

@@ -68,7 +68,7 @@ ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &han
  	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));
  	connect(myStateLine, SIGNAL(returnPressed()), this, SLOT(accept()));
 
-	update("");
+	ZLSelectionDialog::update();
 }
 
 ZLQtSelectionDialog::~ZLQtSelectionDialog() {
@@ -105,34 +105,39 @@ void ZLQtSelectionDialog::updateStateLine() {
 	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
 }
 
-void ZLQtSelectionDialog::update(const std::string &selectedNodeId) {
-	updateStateLine();
-
+void ZLQtSelectionDialog::updateList() {
 	myListView->clear();
 
 	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
 
 	if (subnodes.size() > 0) {
 		QListViewItem *item = 0;
-		QListViewItem *selectedItem = 0;
 
 		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
 		 	item = new ZLQtSelectionDialogItem(myListView, item, *it);
 			item->setPixmap(0, getPixmap(*it));
-			if ((*it)->id() == selectedNodeId) {
-				selectedItem = item;
-			}
 		}
+	}
+}
 
-		if ((selectedItem == 0) && handler().isOpenHandler()) {
-			selectedItem = myListView->firstChild();
+void ZLQtSelectionDialog::updateSelection() {
+	int index = handler().selectedIndex();
+	if ((index < 0) || (index >= myListView->childCount())) {
+		if (handler().isOpenHandler()) {
+			index = 0;
+		} else {
+			return;
 		}
-		if (selectedItem != 0) {
-			myListView->setSelected(selectedItem, true);
-			if (selectedItem != myListView->firstChild()) {
-				myListView->ensureItemVisible(selectedItem);
-			}
-		}
+	}
+
+	QListViewItem *item = myListView->firstChild();
+	while (index > 0) {
+		item = item->nextSibling();
+		--index;
+	}
+	myListView->setSelected(item, true);
+	if (item != myListView->firstChild()) {
+		myListView->ensureItemVisible(item);
 	}
 }
 

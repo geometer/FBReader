@@ -21,7 +21,7 @@
 #include "ZLDialogManager.h"
 #include "ZLSelectionDialog.h"
 
-ZLTreeHandler::ZLTreeHandler() {
+ZLTreeHandler::ZLTreeHandler() : myUpdateInfo(UPDATE_ALL) {
 }
 
 ZLTreeHandler::~ZLTreeHandler() {
@@ -33,25 +33,37 @@ ZLSelectionDialog::ZLSelectionDialog(ZLTreeHandler &handler) : myHandler(handler
 ZLSelectionDialog::~ZLSelectionDialog() {
 }
 
+void ZLSelectionDialog::update() {
+	ZLTreeHandler::UpdateType info = handler().updateInfo();
+	if (info & ZLTreeHandler::UPDATE_STATE) {
+		updateStateLine();
+	}
+	if (info & ZLTreeHandler::UPDATE_LIST) {
+		updateList();
+	}
+	if (info & ZLTreeHandler::UPDATE_SELECTION) {
+		updateSelection();
+	}
+	myHandler.resetUpdateInfo();
+}
+
 void ZLSelectionDialog::runNode(const ZLTreeNodePtr node) {
 	if (node.isNull()) {
 		return;
 	}
 
-	const std::string selectedId = myHandler.relativeId(*node);
 	if (node->isFolder()) {
 		myHandler.changeFolder(*node);
-		update(selectedId);
+		update();
 	} else if (myHandler.isOpenHandler()) {
 		if (((ZLTreeOpenHandler&)myHandler).accept(*node)) {
 			exitDialog();
 		} else {
-			// TODO: hmm...
-			update(selectedId);
+			update();
 		}
 	} else {
 		((ZLTreeSaveHandler&)myHandler).processNode(*node);
-		updateStateLine();
+		update();
 	}
 }
 

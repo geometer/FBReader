@@ -26,7 +26,7 @@
 #include "GeometricCalculator.h"
 #include "GCRemoveSceneHandler.h"
 
-GCRemoveSceneHandler::GCRemoveSceneHandler() : myIsUpToDate(false) {
+GCRemoveSceneHandler::GCRemoveSceneHandler() : myIsUpToDate(false), mySelectedIndex(0) {
 }
 
 void GCRemoveSceneHandler::changeFolder(const ZLTreeNode&) {
@@ -44,19 +44,30 @@ const std::vector<ZLTreeNodePtr> &GCRemoveSceneHandler::subnodes() const {
 	return GCSceneHandler::subnodes();
 }
 
-std::string GCRemoveSceneHandler::relativeId(const ZLTreeNode &node) const {
-	return node.id();
+int GCRemoveSceneHandler::selectedIndex() const {
+	return mySelectedIndex;
 }
 
-
-bool GCRemoveSceneHandler::accept(const ZLTreeNode &node) const {
+bool GCRemoveSceneHandler::accept(const ZLTreeNode &node) {
 	static const std::string title = "Remove Scene";
+	mySelectedIndex = 0;
+	const std::string &nodeId = node.id();
+	const std::vector<ZLTreeNodePtr> &subnodes = this->subnodes();
+	for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
+		if ((*it)->id() == nodeId) {
+			break;
+		}
+		++mySelectedIndex;
+	}
 	if (ZLDialogManager::instance().questionBox(title, "Remove Scene \"" + node.displayName() + "\"?", "Yes", "No") == 0) {
 		if (!ZLFile(UserDirectoryName() + ZLApplication::PathDelimiter + node.id()).remove()) {
 			ZLDialogManager::instance().errorBox(title, "Couldn't Remove Scene");
 		} else {
 			resetSubnodesList();
 			myIsUpToDate = false;
+			--mySelectedIndex;
+			addUpdateInfo(UPDATE_LIST);
+			addUpdateInfo(UPDATE_SELECTION);
 		}
 	}
 	return false;

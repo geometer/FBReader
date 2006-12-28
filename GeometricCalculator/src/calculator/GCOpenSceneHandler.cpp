@@ -28,7 +28,7 @@
 #include "../io/SceneSetNameReader.h"
 
 GCOpenSceneHandler::GCOpenSceneHandler() :
-	FolderOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenSceneDialog", "Folder", AllScenesFolderName), myIsUpToDate(false) {
+	FolderOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenSceneDialog", "Folder", AllScenesFolderName), myIsUpToDate(false), mySelectedIndex(0) {
 	const std::string &value = FolderOption.value();
 	if ((value == AllScenesFolderName) || (value == UserFolderName)) {
 		myStateDisplayName = value;
@@ -51,9 +51,26 @@ shared_ptr<ZLDir> GCOpenSceneHandler::currentDirectory() const {
 }
 
 void GCOpenSceneHandler::changeFolder(const ZLTreeNode &node) {
+	const std::string selectedId = FolderOption.value();
 	FolderOption.setValue(node.id());
 	resetSubnodesList();
 	myIsUpToDate = false;
+	mySelectedIndex = 0;
+	if (node.id() == AllScenesFolderName) {
+		int index = 0;
+		const std::vector<ZLTreeNodePtr> &subnodes = this->subnodes();
+		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
+			if ((*it)->id() == selectedId) {
+				mySelectedIndex = index;
+				break;
+			}
+			++index;
+		}
+		myStateDisplayName = AllScenesFolderName;
+	} else {
+		myStateDisplayName = node.displayName();
+	}
+	addUpdateInfo(UPDATE_ALL);
 }
 
 const std::string GCOpenSceneHandler::stateDisplayName() const {
@@ -74,12 +91,11 @@ const std::vector<ZLTreeNodePtr> &GCOpenSceneHandler::subnodes() const {
 	return GCSceneHandler::subnodes();
 }
 
-std::string GCOpenSceneHandler::relativeId(const ZLTreeNode &node) const {
-	return (node.id() == AllScenesFolderName) ? FolderOption.value() : "..";
+int GCOpenSceneHandler::selectedIndex() const {
+	return mySelectedIndex;
 }
 
-
-bool GCOpenSceneHandler::accept(const ZLTreeNode &node) const {
+bool GCOpenSceneHandler::accept(const ZLTreeNode &node) {
 	shared_ptr<ZLDir> dir = currentDirectory();
 	myFileName = (dir.isNull()) ? node.id() : dir->itemName(node.id());
 	return true;

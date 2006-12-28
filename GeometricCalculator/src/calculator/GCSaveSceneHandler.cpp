@@ -51,15 +51,16 @@ const std::vector<ZLTreeNodePtr> &GCSaveSceneHandler::subnodes() const {
 	return GCSceneHandler::subnodes();
 }
 
-std::string GCSaveSceneHandler::relativeId(const ZLTreeNode &node) const {
-	return node.id();
+int GCSaveSceneHandler::selectedIndex() const {
+	return -1;
 }
 
-void GCSaveSceneHandler::processNode(const ZLTreeNode &node) const {
+void GCSaveSceneHandler::processNode(const ZLTreeNode &node) {
 	mySceneName = node.displayName();
+	addUpdateInfo(UPDATE_STATE);
 }
 
-bool GCSaveSceneHandler::accept(const std::string &state) const {
+bool GCSaveSceneHandler::accept(const std::string &state) {
 	if (state.empty()) {
 		return false;
 	}

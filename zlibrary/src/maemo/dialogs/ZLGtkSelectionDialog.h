@@ -41,7 +41,8 @@ public:
 protected:
 	void exitDialog();
 	void updateStateLine();
-	void update(const std::string &selectedNodeName);
+	void updateList();
+	void updateSelection();
 
 private:
 	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);
@@ -55,7 +56,6 @@ private:
 	GtkEntry *myStateLine;
 
 	std::map<std::string,GdkPixbuf*> myPixmaps;
-	std::vector<ZLTreeNodePtr> myNodes;
 };
 
 #endif /* __ZLGTKSELECTIONDIALOG_H__ */

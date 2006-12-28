@@ -38,12 +38,13 @@ public:
 	BookDescriptionPtr description() const;
 
 private:
-	bool accept(const ZLTreeNode &node) const;
+	bool accept(const ZLTreeNode &node);
+	void changeFolder(const ZLTreeNode &node);
 
 	const std::string stateDisplayName() const;
-	void changeFolder(const ZLTreeNode &node);
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	std::string relativeId(const ZLTreeNode &node) const;
+	int selectedIndex() const;
+	//std::string relativeId(const ZLTreeNode &node) const;
 
 private:
 	shared_ptr<ZLDir> myDir;
@@ -51,6 +52,8 @@ private:
 	mutable std::vector<ZLTreeNodePtr> mySubnodes;
 
 	mutable BookDescriptionPtr myDescription;
+
+	int mySelectedIndex;
 };
 
 inline BookDescriptionPtr FBFileHandler::description() const { return myDescription; }

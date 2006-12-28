@@ -94,9 +94,9 @@ ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &h
 	gtk_box_pack_start(GTK_BOX(myDialog->vbox), scrolledWindow, true, true, 2);
 	gtk_widget_show_all(scrolledWindow);
 
-	update("");
-
 	gtk_widget_grab_focus(GTK_WIDGET(myView));
+
+	update();
 }
 
 ZLGtkSelectionDialog::~ZLGtkSelectionDialog() {
@@ -125,51 +125,51 @@ void ZLGtkSelectionDialog::updateStateLine() {
 	gtk_entry_set_text(myStateLine, handler().stateDisplayName().c_str());
 }
 
-void ZLGtkSelectionDialog::update(const std::string &selectedNodeName) {
-	updateStateLine();
-
+void ZLGtkSelectionDialog::updateList() {
 	gtk_list_store_clear(myStore);
-	myNodes.clear();
 
+	const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
+	if (nodes.empty()) {
+		return;
+	}
 
-	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
+	int index = 0;
+	for (std::vector<ZLTreeNodePtr>::const_iterator it = nodes.begin(); it != nodes.end(); ++it, ++index) {
+		GtkTreeIter iter;
+		gtk_list_store_append(myStore, &iter);
+		gtk_list_store_set(myStore, &iter,
+					0, getPixmap(*it),
+					1, (*it)->displayName().c_str(),
+					2, index,
+					-1);
+	}
+}
 
-	if (subnodes.size() > 0) {
-		GtkTreeIter *selectedItem = 0;
-		int index = 0;
-		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it, ++index) {
-			GtkTreeIter iter;
-			gtk_list_store_append(myStore, &iter);
+void ZLGtkSelectionDialog::updateSelection() {
+	const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
+	if (nodes.empty()) {
+		return;
+	}
 
-			gtk_list_store_set(myStore, &iter,
-						0, getPixmap(*it),
-						1, (*it)->displayName().c_str(),
-						2, index,
-						-1);
-
-			myNodes.push_back(*it);
-
-			if ((*it)->id() == selectedNodeName) {
-				selectedItem = gtk_tree_iter_copy(&iter);
-			}
-		}
-
-		GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
-
-		if (selectedItem == 0) {
-			if (handler().isOpenHandler()) {
-				GtkTreeIter iter;
-				gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
-				gtk_tree_selection_select_iter(selection, &iter);
-			}
+	int index = handler().selectedIndex();
+	if ((index < 0) || (index >= (int)nodes.size())) {
+		if (handler().isOpenHandler()) {
+			index = 0;
 		} else {
-			gtk_tree_selection_select_iter(selection, selectedItem);
-			GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), selectedItem);
-			gtk_tree_view_scroll_to_cell(myView, path, 0, false, 0, 0);
-			gtk_tree_path_free(path);
-			gtk_tree_iter_free(selectedItem);
+			return;
 		}
 	}
+	GtkTreeIter iter;
+	gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
+	while (index > 0) {
+		gtk_tree_model_iter_next(GTK_TREE_MODEL(myStore), &iter);
+		--index;
+	}
+	GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);
+	gtk_tree_selection_select_iter(selection, &iter);
+	GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), &iter);
+	gtk_tree_view_scroll_to_cell(myView, path, 0, false, 0, 0);
+	gtk_tree_path_free(path);
 }
 
 bool ZLGtkSelectionDialog::run() {
@@ -182,8 +182,9 @@ bool ZLGtkSelectionDialog::run() {
 			if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
 				int index;
 				gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 2, &index, -1);
-				if ((index >= 0) && (index < myNodes.size())) {
-					runNode(myNodes[index]);
+				const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
+				if ((index >= 0) && (index < (int)nodes.size())) {
+					runNode(nodes[index]);
 				}
 			}
 			myNodeSelected = false;

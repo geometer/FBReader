@@ -59,7 +59,8 @@ protected:
 
 	void exitDialog();
 	void updateStateLine();
-	void update(const std::string &selectedNodeName);
+	void updateList();
+	void updateSelection();
 
 private slots:
 	void runNodeSlot();

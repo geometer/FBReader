@@ -30,7 +30,7 @@
 #include "../formats/FormatPlugin.h"
 
 FBFileHandler::FBFileHandler() :
-	DirectoryOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenFileDialog", "Directory", ZLApplication::HomeDirectory), myIsUpToDate(false) {
+	DirectoryOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenFileDialog", "Directory", ZLApplication::HomeDirectory), myIsUpToDate(false), mySelectedIndex(0) {
 	myDir = ZLFile(DirectoryOption.value()).directory();
 	if (myDir.isNull()) {
 		myDir = ZLFile(ZLApplication::HomeDirectory).directory();
@@ -41,12 +41,32 @@ FBFileHandler::~FBFileHandler() {
 	DirectoryOption.setValue(myDir->name());
 }
 
+/*
+std::string FBFileHandler::relativeId(const ZLTreeNode &node) const {
+	return (node.id() == "..") ? myDir->shortName() : "..";
+}
+*/
+
 void FBFileHandler::changeFolder(const ZLTreeNode &node) {
 	shared_ptr<ZLDir> dir = ZLFile(myDir->itemName(node.id())).directory();
 	if (!dir.isNull()) {
+		const std::string selectedId = myDir->shortName();
 		myDir = dir;
 		myIsUpToDate = false;
 		mySubnodes.clear();
+		mySelectedIndex = 0;
+		if (node.id() == "..") {
+			int index = 0;
+			const std::vector<ZLTreeNodePtr> &subnodes = this->subnodes();
+			for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
+				if ((*it)->id() == selectedId) {
+					mySelectedIndex = index;
+					break;
+				}
+				++index;
+			}
+		}
+		addUpdateInfo(UPDATE_ALL);
 	}
 }
 
@@ -110,11 +130,11 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 	return mySubnodes;
 }
 
-std::string FBFileHandler::relativeId(const ZLTreeNode &node) const {
-	return (node.id() == "..") ? myDir->shortName() : "..";
+int FBFileHandler::selectedIndex() const {
+	return mySelectedIndex;
 }
 
-bool FBFileHandler::accept(const ZLTreeNode &node) const {
+bool FBFileHandler::accept(const ZLTreeNode &node) {
 	const std::string name = myDir->itemName(node.id());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(name), false);
 	const std::string message = (plugin == 0) ? "Unknown File Format" : plugin->tryOpen(name);
