@@ -59,9 +59,15 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &c
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 }
 
+ZLQtOptionsDialog::~ZLQtOptionsDialog() {
+	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		delete *it;
+	}
+}
+
 ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
 	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget);
-	myTabWidget->insertTab(tab, name.c_str());
+	myTabWidget->insertTab(tab->widget(), name.c_str());
 	myTabs.push_back(tab);
 	myTabNames.push_back(name);
 	return *tab;

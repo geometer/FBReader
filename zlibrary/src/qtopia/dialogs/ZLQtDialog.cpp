@@ -18,8 +18,11 @@
  * 02110-1301, USA.
  */
 
+#include <qdialog.h>
 #include <qvbox.h>
 #include <qpushbutton.h>
+#include <qbuttongroup.h>
+#include <qlayout.h>
 
 #include "ZLQtDialog.h"
 #include "ZLQtDialogContent.h"

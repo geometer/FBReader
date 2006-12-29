@@ -36,7 +36,7 @@ class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 
 public:
 	ZLQtOptionsDialog(const std::string &id, const std::string &caption);
-	~ZLQtOptionsDialog() {}
+	~ZLQtOptionsDialog();
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:

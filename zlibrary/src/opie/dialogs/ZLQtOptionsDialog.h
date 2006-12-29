@@ -25,7 +25,6 @@
 
 #include <qwidget.h>
 #include <qtabwidget.h>
-#include <qlist.h>
 
 #include <ZLOptionsDialog.h>
 
@@ -37,7 +36,7 @@ class ZLQtOptionsDialog : public ZLFullScreenDialog, public ZLOptionsDialog {
 
 public:
 	ZLQtOptionsDialog(const std::string &id, const std::string &caption);
-	~ZLQtOptionsDialog() {}
+	~ZLQtOptionsDialog();
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:
@@ -54,7 +53,7 @@ private slots:
 private:
 	QTabWidget *myTabWidget;
 
-	QList<ZLQtDialogContent> myTabs;
+	std::vector<ZLQtDialogContent*> myTabs;
 	std::vector<std::string> myTabNames;
 };
 

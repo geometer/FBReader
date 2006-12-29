@@ -39,7 +39,7 @@
 #include "ZLQtDialogContent.h"
 
 void BooleanOptionView::_createItem() {
-	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab);
+	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab->widget());
 	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
@@ -62,7 +62,7 @@ void BooleanOptionView::onStateChanged(bool state) const {
 }
 
 void ChoiceOptionView::_createItem() {
-	myGroup = new QButtonGroup(myOption->name().c_str(), myTab);
+	myGroup = new QButtonGroup(myOption->name().c_str(), myTab->widget());
 	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
 	layout->addSpacing(myGroup->fontMetrics().height());
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
@@ -94,8 +94,8 @@ void ChoiceOptionView::_onAccept() const {
 
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
-	myLabel = new QLabel(myOption->name().c_str(), myTab);
-	myComboBox = new QComboBox(myTab);
+	myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
+	myComboBox = new QComboBox(myTab->widget());
 	myComboBox->setEditable(comboOption.isEditable());
 
 	connect(myTab->parentWidget(), SIGNAL(resized(const QSize&)), this, SLOT(onTabResized(const QSize&)));
@@ -169,11 +169,11 @@ void ComboOptionView::onValueEdited(const QString &value) {
 }
 
 void SpinOptionView::_createItem() {
-	myLabel = new QLabel(myOption->name().c_str(), myTab);
+	myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
 	mySpinBox = new QSpinBox(
 		((ZLSpinOptionEntry*)myOption)->minValue(),
 		((ZLSpinOptionEntry*)myOption)->maxValue(),
-		((ZLSpinOptionEntry*)myOption)->step(), myTab
+		((ZLSpinOptionEntry*)myOption)->step(), myTab->widget()
 	);
 	mySpinBox->setValue(((ZLSpinOptionEntry*)myOption)->initialValue());
 	int width = myToColumn - myFromColumn + 1;
@@ -196,10 +196,10 @@ void SpinOptionView::_onAccept() const {
 }
 
 void StringOptionView::_createItem() {
-	myLineEdit = new QLineEdit(myTab);
+	myLineEdit = new QLineEdit(myTab->widget());
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 	if (!myOption->name().empty()) {
-		myLabel = new QLabel(myOption->name().c_str(), myTab);
+		myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
 		int width = myToColumn - myFromColumn + 1;
 		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
 		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
@@ -289,7 +289,7 @@ void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
 }
 
 void KeyOptionView::_createItem() {
-	myWidget = new QWidget(myTab);
+	myWidget = new QWidget(myTab->widget());
 	QGridLayout *layout = new QGridLayout(myWidget, 2, 2, 0, 10);
 	myKeyButton = new KeyButton(*this);
 	layout->addMultiCellWidget(myKeyButton, 0, 0, 0, 1);
@@ -346,7 +346,7 @@ void KeyOptionView::onValueChanged(int index) {
 }
 
 void ColorOptionView::_createItem() {
-	myWidget = new QWidget(myTab);
+	myWidget = new QWidget(myTab->widget());
 	QGridLayout *layout = new QGridLayout(myWidget, 3, 3, 0, 10);
 	layout->addWidget(new QLabel("Red", myWidget), 0, 0);
 	layout->addWidget(new QLabel("Green", myWidget), 1, 0);
@@ -430,7 +430,7 @@ void OrderOptionView::onDownButtonPressed() {
 }
 
 void OrderOptionView::_createItem() {
-	myWidget = new QWidget(myTab);
+	myWidget = new QWidget(myTab->widget());
 	QGridLayout *layout = new QGridLayout(myWidget, 2, 2, 0, 10);
 
 	myListBox = new QListBox(myWidget);

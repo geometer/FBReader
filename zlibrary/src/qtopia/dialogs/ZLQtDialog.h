@@ -22,13 +22,13 @@
 #define __ZLQTDIALOG_H__
 
 #include <qdialog.h>
-#include <qlayout.h>
-#include <qbuttongroup.h>
 
 #include <ZLDialog.h>
 
+class QGridLayout;
+class QButtonGroup;
+
 class ZLQtDialog : public QDialog, public ZLDialog {
-	Q_OBJECT
 
 public:
 	ZLQtDialog(const std::string &name);

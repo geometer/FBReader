@@ -8,7 +8,7 @@ LIBS = $(UILIBS) -lm -L../zlibrary -lzlibrary-$(UI_TYPE) $(EXPATLIBS) $(ENCALIBS
 
 TARGET = GeometricCalculator
 
-SUBDIRS = src/document src/io src/model src/modelDecorator src/options src/polynom src/translator src/ui src/calculator
+SUBDIRS = src/document src/io src/model src/modelDecorator src/polynom src/translator src/ui src/calculator
 ARCHSUBDIRS = zaurus maemo
 
 all:

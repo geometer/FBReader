@@ -25,10 +25,10 @@
 
 #include <ZLDialogContent.h>
 
+class QWidget;
 class QGridLayout;
 
-class ZLQtDialogContent : public QWidget, public ZLDialogContent {
-	Q_OBJECT
+class ZLQtDialogContent : public ZLDialogContent {
 
 public:
 	ZLQtDialogContent(QWidget *parent);
@@ -41,12 +41,14 @@ public:
 
 	void close();
 
+	QWidget *widget();
 	QWidget *parentWidget();
 
 private:
 	void createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn);
 
 private:
+	QWidget *myWidget;
 	QGridLayout *myLayout;
 	int myRowCounter;
 	QWidget *myParentWidget;

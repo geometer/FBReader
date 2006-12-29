@@ -28,10 +28,11 @@ void ZLQtDialogContent::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
 }
 
-ZLQtDialogContent::ZLQtDialogContent(QWidget *parent) : QWidget(parent), myParentWidget(parent) {
+ZLQtDialogContent::ZLQtDialogContent(QWidget *parent) : myParentWidget(parent) {
+	myWidget = new QWidget(parent);
 	const long displaySize = qApp->desktop()->height() * (long)qApp->desktop()->width();
 	const int space = (displaySize < 640 * 480) ? 3 : 10;
-	myLayout = new QGridLayout(this, -1, 13, space, space);
+	myLayout = new QGridLayout(myWidget, -1, 13, space, space);
 	myRowCounter = 0;
 }
 
@@ -87,6 +88,10 @@ void ZLQtDialogContent::createViewByEntry(ZLOptionEntry *option, int fromColumn,
 		view->setVisible(option->isVisible());
 		addView(view);
 	}
+}
+
+QWidget *ZLQtDialogContent::widget() {
+	return myWidget;
 }
 
 QWidget *ZLQtDialogContent::parentWidget() {

@@ -28,7 +28,6 @@
 #include <ZLDialog.h>
 
 class ZLQtDialog : public QDialog, public ZLDialog {
-	Q_OBJECT
 
 public:
 	ZLQtDialog(const std::string &name);

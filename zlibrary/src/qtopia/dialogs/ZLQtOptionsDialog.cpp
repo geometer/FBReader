@@ -35,10 +35,16 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &c
 	myTabWidget = new MyQTabWidget(this);
 }
 
+ZLQtOptionsDialog::~ZLQtOptionsDialog() {
+	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		delete *it;
+	}
+}
+
 ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
 	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget);
-	myTabWidget->insertTab(tab, name.c_str());
-	myTabs.append(tab);
+	myTabWidget->insertTab(tab->widget(), name.c_str());
+	myTabs.push_back(tab);
 	myTabNames.push_back(name);
 	return *tab;
 }
@@ -55,8 +61,8 @@ void ZLQtOptionsDialog::selectTab(const std::string &name) {
 }
 
 bool ZLQtOptionsDialog::run() {
-	for (ZLQtDialogContent *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
-		tab->close();
+	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		(*it)->close();
 	}
 	bool code = exec();
 	((ZLQtDialogManager&)ZLQtDialogManager::instance()).fullScreenWorkaround();
@@ -64,8 +70,8 @@ bool ZLQtOptionsDialog::run() {
 }
 
 void ZLQtOptionsDialog::accept() {
-	for (ZLQtDialogContent *tab = myTabs.first(); tab != 0; tab = myTabs.next()) {
-		tab->accept();
+	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		(*it)->accept();
 	}
 	ZLFullScreenDialog::accept();
 }
