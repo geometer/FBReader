@@ -96,9 +96,14 @@ void ZLQtSelectionDialog::updateList() {
 
 void ZLQtSelectionDialog::selectItem(int index) {
 	QListViewItem *item = myListView->firstChild();
-	while (index > 0) {
+	if (item == 0) {
+		return;
+	}
+	for (; index > 0; --index) {
 		item = item->nextSibling();
-		--index;
+		if (item == 0) {
+			return;
+		}
 	}
 	myListView->setSelected(item, true);
 	if (item != myListView->firstChild()) {

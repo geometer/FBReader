@@ -147,9 +147,13 @@ void ZLGtkSelectionDialog::updateList() {
 
 void ZLGtkSelectionDialog::selectItem(int index) {
 	GtkTreeIter iter;
-	gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter);
+	if (!gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter)) {
+		return;
+	}
 	while (index > 0) {
-		gtk_tree_model_iter_next(GTK_TREE_MODEL(myStore), &iter);
+		if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(myStore), &iter)) {
+			return;
+		}
 		--index;
 	}
 	GtkTreeSelection *selection = gtk_tree_view_get_selection(myView);

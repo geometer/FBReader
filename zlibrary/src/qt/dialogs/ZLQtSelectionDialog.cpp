@@ -101,7 +101,7 @@ void ZLQtSelectionDialog::resizeEvent(QResizeEvent *event) {
 	}
 }
 
-void ZLQtSelectionDialog::selectItem(int index) {
+void ZLQtSelectionDialog::updateStateLine() {
 	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
 }
 
@@ -120,20 +120,16 @@ void ZLQtSelectionDialog::updateList() {
 	}
 }
 
-void ZLQtSelectionDialog::updateSelection() {
-	int index = handler().selectedIndex();
-	if ((index < 0) || (index >= myListView->childCount())) {
-		if (handler().isOpenHandler()) {
-			index = 0;
-		} else {
+void ZLQtSelectionDialog::selectItem(int index) {
+	QListViewItem *item = myListView->firstChild();
+	if (item == 0) {
+		return;
+	}
+	for (; index > 0; --index) {
+		item = item->nextSibling();
+		if (item == 0) {
 			return;
 		}
-	}
-
-	QListViewItem *item = myListView->firstChild();
-	while (index > 0) {
-		item = item->nextSibling();
-		--index;
 	}
 	myListView->setSelected(item, true);
 	if (item != myListView->firstChild()) {
