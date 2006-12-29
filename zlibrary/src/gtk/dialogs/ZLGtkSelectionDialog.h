@@ -46,7 +46,7 @@ protected:
 	void exitDialog();
 	void updateStateLine();
 	void updateList();
-	void updateSelection();
+	void selectItem(int index);
 
 private:
 	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);

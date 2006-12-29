@@ -28,16 +28,27 @@ class ZLOptionView {
 public:
 	ZLOptionView(ZLOptionEntry *option);
 	virtual ~ZLOptionView();
-	virtual void setVisible(bool visible) = 0;
-	virtual void setActive(bool active) = 0;
+
 	// TODO: change to pure virtual
 	virtual void reset() {}
 
-	// TODO: change to non-virtual
-	virtual void onAccept() const = 0;
+	void setVisible(bool visible);
+	void setActive(bool active);
+	void onAccept() const;
+
+protected:
+	virtual void _createItem() = 0;
+	virtual void _hide() = 0;
+	virtual void _show() = 0;
+	// TODO: replace by pure virtual method
+	virtual void _setActive(bool active) {}
+	virtual void _onAccept() const = 0;
 
 protected:
 	ZLOptionEntry *myOption;
+
+private:
+	bool myInitialized;
 };
 
 #endif /* __ZLOPTIONVIEW_H__ */

@@ -21,14 +21,6 @@
 #include "ZLOptionEntry.h"
 #include "ZLOptionView.h"
 
-ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option) {
-	myOption->setView(this);
-}
-
-ZLOptionView::~ZLOptionView() {
-	delete myOption;
-}
-
 void ZLOptionEntry::resetView() {
 	if (myView != 0) {
 		myView->reset();

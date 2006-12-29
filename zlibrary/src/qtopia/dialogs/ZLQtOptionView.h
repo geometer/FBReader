@@ -43,10 +43,9 @@ class QWidget;
 class ZLQtOptionView : public ZLOptionView {
 
 protected:
-	ZLQtOptionView(ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn), myInitialized(false) {}
+	ZLQtOptionView(ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
 
 public:
-	virtual ~ZLQtOptionView() {}
 	void setPosition(ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) {
 		myTab = tab;
 		myRow = row;
@@ -54,34 +53,9 @@ public:
 		myToColumn = toColumn;
 	}
 
-	void setVisible(bool visible) {
-		if (visible) {
-			if (!myInitialized) _createItem(); myInitialized = true; setActive(myOption->isActive()); _show();
-		} else {
-			if (myInitialized) _hide();
-		}
-	}
-	void setActive(bool active) {
-		if (myInitialized) {
-			_setActive(active);
-		}
-	}
-	void onAccept() const { if (myInitialized) _onAccept(); }
-
-protected:
-	virtual void _createItem() = 0;
-	virtual void _hide() = 0;
-	virtual void _show() = 0;
-	// TODO: replace by pure virtual method
-	virtual void _setActive(bool active) {}
-	virtual void _onAccept() const = 0;
-
 protected:
 	ZLQtDialogContent *myTab;
 	int myRow, myFromColumn, myToColumn;
-
-private:
-	bool myInitialized;
 };
 
 class ChoiceOptionView : public ZLQtOptionView {

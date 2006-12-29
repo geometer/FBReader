@@ -18,20 +18,6 @@
  * 02110-1301, USA.
  */
 
-/*
-#include <algorithm>
-
-#include <qapplication.h>
-#include <qhbox.h>
-#include <qvbox.h>
-#include <qlayout.h>
-#include <qlabel.h>
-#include <qcheckbox.h>
-#include <qspinbox.h>
-
-#include <ZLOptionEntry.h>
-*/
-
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 

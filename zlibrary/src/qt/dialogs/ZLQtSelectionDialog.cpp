@@ -101,7 +101,7 @@ void ZLQtSelectionDialog::resizeEvent(QResizeEvent *event) {
 	}
 }
 
-void ZLQtSelectionDialog::updateStateLine() {
+void ZLQtSelectionDialog::selectItem(int index) {
 	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
 }
 

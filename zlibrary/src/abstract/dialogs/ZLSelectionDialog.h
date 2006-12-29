@@ -113,9 +113,12 @@ protected:
 
 	virtual void updateStateLine() = 0;
 	virtual void updateList() = 0;
-	virtual void updateSelection() = 0;
+	virtual void selectItem(int index) = 0;
 
 	virtual void update();
+
+private:
+	virtual void updateSelection();
 
 private:
 	ZLTreeHandler &myHandler;

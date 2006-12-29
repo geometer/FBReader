@@ -27,7 +27,7 @@
 #include <qtabwidget.h>
 #include <qlist.h>
 
-#include "../../abstract/dialogs/ZLOptionsDialog.h"
+#include <ZLOptionsDialog.h>
 
 #include "ZLFullScreenDialog.h"
 #include "ZLQtDialogContent.h"

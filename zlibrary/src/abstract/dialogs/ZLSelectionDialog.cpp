@@ -47,6 +47,23 @@ void ZLSelectionDialog::update() {
 	myHandler.resetUpdateInfo();
 }
 
+void ZLSelectionDialog::updateSelection() {
+	const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
+	if (nodes.empty()) {
+		return;
+	}
+
+	int index = handler().selectedIndex();
+	if ((index < 0) || (index >= (int)nodes.size())) {
+		if (handler().isOpenHandler()) {
+			index = 0;
+		} else {
+			return;
+		}
+	}
+	selectItem(index);
+}
+
 void ZLSelectionDialog::runNode(const ZLTreeNodePtr node) {
 	if (node.isNull()) {
 		return;
