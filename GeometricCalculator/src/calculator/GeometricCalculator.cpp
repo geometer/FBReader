@@ -12,16 +12,7 @@
 
 #include "../document/Document.h"
 #include "../ui/DiagramView.h"
-#include "../ui/AddPointMode.h"
-#include "../ui/AddPointOnTheLineMode.h"
-#include "../ui/AddLineMode.h"
-#include "../ui/EraseMode.h"
-#include "../ui/MovePointMode.h"
-#include "../ui/AddPerpendicularMode.h"
-#include "../ui/AddMiddlePointMode.h"
-#include "../ui/AddCircleMode.h"
-#include "../ui/CopyMode.h"
-#include "../ui/RulerMode.h"
+#include "../ui/AllEditModes.h"
 #include "../io/SceneReader.h"
 #include "../io/SceneWriter.h"
 #include "../model/Scene.h"
@@ -50,6 +41,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	addAction(MODE_ADD_RULER, new SetModeAction(*myView, new RulerMode(*myView)));
 	addAction(MODE_MOVE_POINT, new SetModeAction(*myView, new MovePointMode(*myView)));
 	addAction(MODE_DELETE, new SetModeAction(*myView, new EraseMode(*myView)));
+	addAction(MODE_EDIT_OBJECT, new SetModeAction(*myView, new EditObjectPropertiesMode(*myView)));
 	addAction(MODE_NO_ACTION, new SetModeAction(*myView, 0));
 	addAction(ACTION_UNDO, new UndoAction(*myView));
 	addAction(ACTION_REDO, new RedoAction(*myView));
@@ -64,6 +56,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	addAction(ACTION_ZOOM_OUT, new ZoomAction(*myView, 1 / 1.2));
 
 	shared_ptr<Toolbar::ButtonGroup> group = toolbar().createButtonGroup(MODE_NO_ACTION);
+	toolbar().addButton(MODE_EDIT_OBJECT, "arrow", group);
 	toolbar().addButton(MODE_ADD_POINT, "point", group);
 	toolbar().addButton(MODE_ADD_POINT_ON_THE_LINE, "pointontheline", group);
 	toolbar().addButton(MODE_ADD_MIDDLE_POINT, "middlepoint", group);

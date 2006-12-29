@@ -29,11 +29,11 @@
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtWaitMessage.h"
 
-ZLOptionsDialog *ZLQtDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
+shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new ZLQtOptionsDialog(id, title);
 }
 
-ZLDialog *ZLQtDialogManager::createDialog(const std::string &title) const {
+shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const std::string &title) const {
 	return new ZLQtDialog(title);
 }
 

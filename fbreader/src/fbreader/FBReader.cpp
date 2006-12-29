@@ -461,7 +461,7 @@ void FBReader::clearTextCaches() {
 }
 
 void FBReader::searchSlot() {
-	ZLDialog *searchDialog = ZLDialogManager::instance().createDialog("Text search");
+	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::instance().createDialog("Text search");
 
 	searchDialog->addOption(new ZLSimpleStringOptionEntry("", SearchPatternOption));
 	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Ignore case", SearchIgnoreCaseOption));
@@ -470,7 +470,7 @@ void FBReader::searchSlot() {
 	if (((TextView*)currentView())->hasMultiSectionModel()) {
 		searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&This section only", SearchThisSectionOnlyOption));
 	}
-	searchDialog->addButton("&Go!");
+	searchDialog->addButton("&Go!", true);
 
 	if (searchDialog->run()) {
 		searchDialog->acceptValues();
@@ -490,8 +490,6 @@ void FBReader::searchSlot() {
 			SearchThisSectionOnlyOption.value()
 		);
 	}
-
-	delete searchDialog;
 }
 
 ZLKeyBindings &FBReader::keyBindings() {

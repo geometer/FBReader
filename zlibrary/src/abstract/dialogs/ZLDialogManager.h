@@ -23,6 +23,7 @@
 
 #include <string>
 
+#include <shared_ptr.h>
 #include <ZLRunnable.h>
 
 class ZLDialog;
@@ -47,8 +48,8 @@ protected:
 public:
 	virtual void createApplicationWindow(ZLApplication *application) const = 0;
 
-	virtual ZLDialog *createDialog(const std::string &title) const = 0;
-	virtual ZLOptionsDialog *createOptionsDialog(const std::string &id, const std::string &title) const = 0;
+	virtual shared_ptr<ZLDialog> createDialog(const std::string &title) const = 0;
+	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const std::string &id, const std::string &title) const = 0;
 	virtual bool selectionDialog(const std::string &title, ZLTreeHandler &handler) const = 0;
 
 	virtual void informationBox(const std::string &title, const std::string &message) const = 0;

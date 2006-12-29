@@ -34,12 +34,13 @@ public:
 	ZLQtDialog(const std::string &name);
 	~ZLQtDialog();
 
-	void addButton(const std::string &text);
+	void addButton(const std::string &text, bool accept);
 	bool run();
 
 private:
 	QGridLayout *myButtonLayout;
 	QButtonGroup *myButtonGroup;
+	int myButtonNumber;
 };
 
 #endif /* __ZLQTDIALOG_H__ */

@@ -34,11 +34,11 @@ void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) con
 	myWindow = (new ZLGtkApplicationWindow(application))->getMainWindow();
 }
 
-ZLDialog *ZLGtkDialogManager::createDialog(const std::string &title) const {
+shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const std::string &title) const {
 	return new ZLGtkDialog(title);
 }
 
-ZLOptionsDialog *ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
+shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	return new ZLGtkOptionsDialog(id, title);
 }
 

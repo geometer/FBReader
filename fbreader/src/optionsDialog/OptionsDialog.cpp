@@ -317,5 +317,4 @@ OptionsDialog::~OptionsDialog() {
 	delete myStylePage;
 	delete myFormatPage;
 	delete myScrollingPage;
-	delete myDialog;
 }

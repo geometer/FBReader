@@ -22,6 +22,8 @@
 #ifndef __OPTIONSDIALOG_H__
 #define __OPTIONSDIALOG_H__
 
+#include <shared_ptr.h>
+
 class FBReader;
 
 class ZLOptionsDialog;
@@ -43,7 +45,7 @@ public:
 	ZLOptionsDialog &dialog();
 
 private:
-	ZLOptionsDialog *myDialog;
+	shared_ptr<ZLOptionsDialog> myDialog;
 	ScrollingOptionsPage *myScrollingPage;
 	OptionsPage *myFormatPage;
 	OptionsPage *myStylePage;

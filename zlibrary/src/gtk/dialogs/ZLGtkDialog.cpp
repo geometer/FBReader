@@ -33,9 +33,9 @@ ZLGtkDialog::~ZLGtkDialog() {
 	destroyGtkDialog(myDialog);
 }
 
-void ZLGtkDialog::addButton(const std::string &text) {
+void ZLGtkDialog::addButton(const std::string &text, bool accept) {
 	std::string buttonText = gtkString(text);
-	gtk_dialog_add_button(myDialog, buttonText.c_str(), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_add_button(myDialog, buttonText.c_str(), accept ? GTK_RESPONSE_ACCEPT : GTK_RESPONSE_REJECT);
 }
 
 bool ZLGtkDialog::run() {

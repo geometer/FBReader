@@ -31,7 +31,7 @@ public:
 	ZLGtkDialog(const std::string &name);
 	~ZLGtkDialog();
 
-	void addButton(const std::string &text);
+	void addButton(const std::string &text, bool accept);
 	bool run();
 
 private:

@@ -17,7 +17,7 @@ ShowOptionsDialogAction::ShowOptionsDialogAction(GeometricCalculator &calculator
 }
 
 void ShowOptionsDialogAction::run() {
-	ZLOptionsDialog *dialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", ZLApplication::ApplicationName() + " - Options");
+	shared_ptr<ZLOptionsDialog> dialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", ZLApplication::ApplicationName() + " - Options");
 
 	createViewTab(*dialog);
 	createDrawingTab(*dialog);
@@ -26,7 +26,6 @@ void ShowOptionsDialogAction::run() {
 	createKeysTab(*dialog);
 
 	dialog->run("");
-	delete dialog;
 
 	myCalculator.refreshWindow();
 }
@@ -108,6 +107,7 @@ KeyOptionEntry::KeyOptionEntry(ZLKeyBindings &bindings) : ZLSimpleKeyOptionEntry
 	//addAction(MODE_ADD_RULER, "");
 	//addAction(MODE_MOVE_POINT, "");
 	//addAction(MODE_DELETE, "");
+	//addAction(MODE_EDIT_OBJECT, "");
 	addAction(ACTION_SHOW_INFO, "Show Scene Info Dialog");
 	addAction(ACTION_SHOW_OPTIONS, "Show Options Dialog");
 	addAction(ACTION_UNDO, "Undo");

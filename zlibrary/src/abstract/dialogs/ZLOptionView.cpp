@@ -18,29 +18,38 @@
  * 02110-1301, USA.
  */
 
-#include <gtk/gtkbox.h>
+#include "ZLOptionView.h"
+#include "ZLOptionEntry.h"
 
-#include "ZLGtkDialog.h"
-#include "ZLGtkDialogContent.h"
-#include "ZLGtkDialogManager.h"
-#include "ZLGtkUtil.h"
-
-ZLGtkDialog::ZLGtkDialog(const std::string &name) {
-	myTab = new ZLGtkDialogContent();
-	myDialog = createGtkDialog(name);
+ZLOptionView::ZLOptionView(ZLOptionEntry *option) : myOption(option), myInitialized(false) {
+	myOption->setView(this);
 }
 
-ZLGtkDialog::~ZLGtkDialog() {
-	gtk_widget_destroy(GTK_WIDGET(myDialog));
+ZLOptionView::~ZLOptionView() {
+	delete myOption;
 }
 
-void ZLGtkDialog::addButton(const std::string &text, bool accept) {
-	std::string buttonText = gtkString(text);
-	gtk_dialog_add_button(myDialog, buttonText.c_str(), accept ? GTK_RESPONSE_ACCEPT : GTK_RESPONSE_REJECT);
+void ZLOptionView::setVisible(bool visible) {
+	if (visible) {
+		if (!myInitialized) {
+			_createItem();
+			myInitialized = true;
+		}
+		setActive(myOption->isActive());
+		_show();
+	} else {
+		if (myInitialized) _hide();
+	}
 }
 
-bool ZLGtkDialog::run() {
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((ZLGtkDialogContent*)myTab)->widget()), true, true, 0);
-	gtk_widget_show_all(GTK_WIDGET(myDialog));
-	return gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT;
+void ZLOptionView::setActive(bool active) {
+	if (myInitialized) {
+		_setActive(active);
+	}
+}
+
+void ZLOptionView::onAccept() const {
+	if (myInitialized) {
+		_onAccept();
+	}
 }

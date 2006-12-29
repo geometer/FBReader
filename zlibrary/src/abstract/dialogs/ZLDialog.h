@@ -32,7 +32,7 @@ protected:
 public:
 	virtual ~ZLDialog();
 
-	virtual void addButton(const std::string &text) = 0;
+	virtual void addButton(const std::string &text, bool accept) = 0;
 	void addOption(ZLOptionEntry *entry);
 
 	// TODO: change return type to int (or std::string?)

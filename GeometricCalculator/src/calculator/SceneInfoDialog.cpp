@@ -16,12 +16,11 @@ ShowInfoDialogAction::ShowInfoDialogAction(GeometricCalculator &calculator) : my
 }
 
 void ShowInfoDialogAction::run() {
-	ZLOptionsDialog *dialog = ZLDialogManager::instance().createOptionsDialog("SceneInfoDialog", "Scene Info");
+	shared_ptr<ZLOptionsDialog> dialog = ZLDialogManager::instance().createOptionsDialog("SceneInfoDialog", "Scene Info");
 
 	createInfoTab(*dialog);
 
 	dialog->run("");
-	delete dialog;
 
 	myCalculator.resetWindowCaption();
 	myCalculator.refreshWindow();
