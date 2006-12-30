@@ -57,6 +57,7 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	int x = (int)event->x;
 	int y = (int)event->y;
 	updatePoint(viewWidget, x, y);
+	viewWidget->view()->onStylusMove(x, y);
 	viewWidget->view()->onStylusPress(x, y);
 }
 

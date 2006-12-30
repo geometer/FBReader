@@ -37,7 +37,7 @@ void PointNameEntry::onAccept(const std::string &value) {
 	myPoint.setName(value);
 }
 
-EditObjectPropertiesMode::EditObjectPropertiesMode(DiagramView &view) : EditMode(view) {
+EditObjectPropertiesMode::EditObjectPropertiesMode(DiagramView &view) : EditMode(view), myDialogRuns(false) {
 }
 
 void EditObjectPropertiesMode::release() {
@@ -62,19 +62,36 @@ void EditObjectPropertiesMode::onMousePress(int, int) {
 			propertiesDialog->addOption(new PointNameEntry(*point));
 			propertiesDialog->addButton("&Ok", true);
 			propertiesDialog->addButton("&Cancel", false);
+			myDialogRuns = true;
 			if (propertiesDialog->run()) {
 				propertiesDialog->acceptValues();
-				repaintView();
 			}
+			myDialogRuns = false;
 		}
+		unselect(mySelectedObject);
+		mySelectedObject.reset();
+		repaintView();
 	}
 }
 
 void EditObjectPropertiesMode::onMouseRelease(int, int) {
-	unselect(mySelectedObject);
-	mySelectedObject.reset();
+	if (!mySelectedObject.isNull() && !myDialogRuns) {
+		unselect(mySelectedObject);
+		mySelectedObject.reset();
+		repaintView();
+	}
 }
 
 void EditObjectPropertiesMode::onMouseMove(int x, int y) {
+	bool doRepaint = isSelected(mySelectedObject);
+	unselect(mySelectedObject);
+	mySelectedObject.reset();
 	mySelectedObject = closestObject(x, y);
+	if (!mySelectedObject.isNull()) {
+		doRepaint = true;
+		select(mySelectedObject);
+	}
+	if (doRepaint) {
+		repaintView();
+	}
 }

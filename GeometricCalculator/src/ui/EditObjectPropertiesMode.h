@@ -20,6 +20,7 @@ public:
 
 private:
 	ObjectPtr mySelectedObject;
+	bool myDialogRuns;
 };
 
 #endif /* __EDITOBJECTPROPERTIESMODE_H__ */
