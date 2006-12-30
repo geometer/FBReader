@@ -119,7 +119,7 @@ GeometricCalculator::~GeometricCalculator() {
 }
 
 bool GeometricCalculator::saveIfChanged() {
-	if (myView->document()->isSaved() && !myView->document()->scene()->isEmpty()) {
+	if (myView->document()->isSaved() || myView->document()->scene()->isEmpty()) {
 		return true;
 	}
 
@@ -178,6 +178,7 @@ void GeometricCalculator::save(const std::string &fileName, const std::string &s
 	if (!stream.isNull() && stream->open()) {
 		SceneWriter(*stream).write(*myView->document()->scene(), sceneName);
 		stream->close();
+		myView->document()->setSaved(true);
 	}
 }
 
