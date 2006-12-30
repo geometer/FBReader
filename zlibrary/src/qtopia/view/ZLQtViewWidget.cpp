@@ -81,6 +81,7 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
 }
 
 void ZLQtViewWidget::ZLQtViewWidgetInternal::mousePressEvent(QMouseEvent *event) {
+	myHolder.view()->onStylusMove(x(event), y(event));
 	myHolder.view()->onStylusPress(x(event), y(event));
 }
 

@@ -45,6 +45,7 @@ void ZLGtkViewWidget::onMousePressed(GdkEventButton *event) {
 	ZLPaintContext &context = view()->context();
 	x -= context.leftMargin();
 	y -= context.topMargin();
+	view()->onStylusMove(x, y);
 	view()->onStylusPress(x, y);
 }
 
