@@ -35,7 +35,7 @@ void Document::setScene(shared_ptr<Scene> scene) {
 	myUndoBuffer.clear();
 	myDistanceToStoredScene = 0;
 
-	setSaved();
+	setSaved(true);
 }
 
 const shared_ptr<Scene> Document::scene() const {
@@ -46,8 +46,8 @@ bool Document::isSaved() const {
 	return myOriginalSceneIsReachable && (myDistanceToOriginalScene == 0);
 }
 
-void Document::setSaved() {
-	myOriginalSceneIsReachable = true;
+void Document::setSaved(bool saved) {
+	myOriginalSceneIsReachable = saved;
 	myDistanceToOriginalScene = 0;
 }
 

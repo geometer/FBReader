@@ -92,7 +92,7 @@ private:
 KeyOptionEntry::KeyOptionEntry(ZLKeyBindings &bindings) : ZLSimpleKeyOptionEntry(bindings) {
 	addAction(NO_ACTION, "None");
 
-	addAction(ACTION_NEW_SCENE, "Empty Scene");
+	addAction(ACTION_NEW_SCENE, "New Empty Scene");
 	addAction(ACTION_OPEN_SCENE, "Open Scene");
 	addAction(ACTION_SAVE_SCENE, "Save Scene");
 	//addAction(MODE_ADD_POINT, "");

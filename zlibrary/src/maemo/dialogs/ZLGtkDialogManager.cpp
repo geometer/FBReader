@@ -26,6 +26,7 @@
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkSelectionDialog.h"
+#include "ZLGtkUtil.h"
 
 shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const std::string &title) const {
 	return new ZLGtkDialog(title);
@@ -51,13 +52,13 @@ int ZLGtkDialogManager::questionBox(const std::string&, const std::string &messa
 	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message.c_str(), 0));
 
 	if (!button0.empty()) {
-		gtk_dialog_add_button(dialog, button0.c_str(), 0);
+		gtk_dialog_add_button(dialog, gtkString(button0).c_str(), 0);
 	}
 	if (!button1.empty()) {
-		gtk_dialog_add_button(dialog, button1.c_str(), 1);
+		gtk_dialog_add_button(dialog, gtkString(button1).c_str(), 1);
 	}
 	if (!button2.empty()) {
-		gtk_dialog_add_button(dialog, button2.c_str(), 2);
+		gtk_dialog_add_button(dialog, gtkString(button2).c_str(), 2);
 	}
 
 	gint response = gtk_dialog_run(dialog);

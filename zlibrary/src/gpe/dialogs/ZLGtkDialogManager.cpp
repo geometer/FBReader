@@ -58,13 +58,13 @@ int ZLGtkDialogManager::internalBox(const gchar *icon, const std::string &title,
 	GtkDialog *dialog = createGtkDialog(title.c_str());
 
 	if (!button0.empty()) {
-		gtk_dialog_add_button(dialog, button0.c_str(), 0);
+		gtk_dialog_add_button(dialog, gtkString(button0).c_str(), 0);
 	}
 	if (!button1.empty()) {
-		gtk_dialog_add_button(dialog, button1.c_str(), 1);
+		gtk_dialog_add_button(dialog, gtkString(button1).c_str(), 1);
 	}
 	if (!button2.empty()) {
-		gtk_dialog_add_button(dialog, button2.c_str(), 2);
+		gtk_dialog_add_button(dialog, gtkString(button2).c_str(), 2);
 	}
 
 	GtkWidget *contents = gtk_hbox_new(false, 10);

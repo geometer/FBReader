@@ -27,13 +27,12 @@ public:
 private:
 	const std::string defaultSceneFileName() const;
 
-	//bool saveIfChanged();
-
 private:
+	bool saveIfChanged();
 	void newScene();
 	void open();
 	void open(const std::string &fileName);
-	void save();
+	bool save();
 	void save(const std::string &fileName, const std::string &sceneName);
 
 	//void help();

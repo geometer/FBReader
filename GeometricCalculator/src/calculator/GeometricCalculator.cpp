@@ -27,7 +27,13 @@ const std::string GeometricCalculator::defaultSceneFileName() const {
 
 GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplication("GeometricCalculator"), myBindings("Keys") {
 	myView = new DiagramView(*this, context());
-	myView->document()->setScene(SceneReader().readScene(defaultSceneFileName()));
+	shared_ptr<Scene> savedScene = SceneReader().readScene(defaultSceneFileName());
+	if (!savedScene.isNull()) {
+		myView->document()->setScene(savedScene);
+		if (!savedScene->isEmpty()) {
+			myView->document()->setSaved(false);
+		}
+	}
 
 	addAction(MODE_ADD_POINT, new SetModeAction(*myView, new AddPointMode(*myView)));
 	addAction(MODE_ADD_POINT_ON_THE_LINE, new SetModeAction(*myView, new AddPointOnTheLineMode(*myView)));
@@ -77,7 +83,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	toolbar().addButton(ACTION_UNDO, "undo");
 	toolbar().addButton(ACTION_REDO, "redo");
 
-	menubar().addItem("Empty Scene", ACTION_NEW_SCENE);
+	menubar().addItem("New Empty Scene", ACTION_NEW_SCENE);
 	menubar().addItem("Open Scene...", ACTION_OPEN_SCENE);
 	menubar().addItem("Save Scene...", ACTION_SAVE_SCENE);
 	menubar().addItem("Remove Scenes...", ACTION_REMOVE_SCENES);
@@ -91,7 +97,9 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	menubar().addSeparator();
 	menubar().addItem("Close", ACTION_QUIT);
 
-	open(fileName);
+	if (!fileName.empty() && saveIfChanged()) {
+		open(fileName);
+	}
 }
 
 void GeometricCalculator::initWindow() {
@@ -110,30 +118,26 @@ GeometricCalculator::~GeometricCalculator() {
 	delete myView;
 }
 
-	/*
 bool GeometricCalculator::saveIfChanged() {
 	if (myView->document()->isSaved()) {
 		return true;
 	}
 
-	int answer = QMessageBox::warning(NULL, "Unsaved scene", "Save current scene?", QMessageBox::Yes, QMessageBox::No, QMessageBox::Cancel);
+	int answer = ZLDialogManager::instance().questionBox("Unsaved Scene", "Save current scene?", "&Yes", "&No", "&Cancel");
 
-  if ((answer == 0) || (answer == QMessageBox::Cancel)) {
-		return false;
+  if (answer == 0) { // answer is "Yes"
+		return save();
 	}
-  if (answer == QMessageBox::Yes) {
-		return saveAs();
+  if (answer == 1) { // answer is "No"
+		return true;
 	}
-	return true;
+	return false;
 }
-	*/
 
 void GeometricCalculator::newScene() {
-	/*
 	if (!saveIfChanged()) {
 		return;
 	}
-	*/
 
 	myView->document()->setScene(new Scene());
 	resetWindowCaption();
@@ -142,11 +146,9 @@ void GeometricCalculator::newScene() {
 }
 
 void GeometricCalculator::open() {
-	/*
 	if (!saveIfChanged()) {
 		return;
 	}
-	*/
 
 	GCOpenSceneHandler handler;
 	if (ZLDialogManager::instance().selectionDialog("Open Scene", handler)) {
@@ -162,11 +164,13 @@ void GeometricCalculator::open(const std::string &fileName) {
 	}
 }
 
-void GeometricCalculator::save() {
+bool GeometricCalculator::save() {
 	GCSaveSceneHandler handler(myView->document()->scene()->name());
 	if (ZLDialogManager::instance().selectionDialog("Save Scene", handler)) {
 		save(handler.fileName(), handler.sceneName());
+		return true;
 	}
+	return false;
 }
 
 void GeometricCalculator::save(const std::string &fileName, const std::string &sceneName) {
@@ -176,72 +180,6 @@ void GeometricCalculator::save(const std::string &fileName, const std::string &s
 		stream->close();
 	}
 }
-
-/*
-bool GeometricCalculator::save(const char *fileName) {
-	shared_ptr<ZLOutputStream> stream = ZLFile(fileName).outputStream();
-	if (stream.isNull() || !stream->open()) {
-		//QMessageBox::warning(NULL, "File error", "Cannot open file");
-		return false;
-	}
-
-	SceneWriter writer(*stream);
-	writer.write(*myView->document()->scene());
-	myView->document()->setSaved();
-	stream->close();
-	return true;
-}
-*/
-
-/*
-bool GeometricCalculator::saveAs() {
-	QString fileName = FileDialog::getSaveFileName("Save Scene As", "/mnt/card/samples", "*.scn");
-	if (fileName == QString::null) {
-		return false;
-	}
-
-	bool hasExtension = fileName.length() >= 4;
-	if (hasExtension) {	
-		QString ext = fileName;
-		ext.remove(0, fileName.length() - 4);
-		hasExtension = ext == ".scn";
-	}
-	if (!hasExtension) {
-		fileName += ".scn";
-	}
-
-	QFile file(fileName);
-	if (file.exists()) {
-		int answer = QMessageBox::warning(NULL, "File already exists", "Overwrite file?", QMessageBox::Yes, QMessageBox::No);
-		if (answer != QMessageBox::Yes) {
-			return false;
-		}
-	}
-
-	if (save(fileName.ascii())) {
-		return true;
-	} else {
-		return false;
-	}
-	return false;
-}
-*/
-
-/*
-void GeometricCalculator::closeEvent(QCloseEvent *event) {
-	if (saveIfChanged()) {
-		event->accept();
-	} else {
-		event->ignore();
-	}
-}
-*/
-
-/*
-void GeometricCalculator::help() {
-	//QMessageBox::information(NULL, "About", "Geometric Calculator, version 0.1.0", QMessageBox::Ok);
-}
-*/
 
 ZLKeyBindings &GeometricCalculator::keyBindings() {
 	return myBindings;
