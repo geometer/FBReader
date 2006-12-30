@@ -119,7 +119,7 @@ GeometricCalculator::~GeometricCalculator() {
 }
 
 bool GeometricCalculator::saveIfChanged() {
-	if (myView->document()->isSaved()) {
+	if (myView->document()->isSaved() && !myView->document()->scene()->isEmpty()) {
 		return true;
 	}
 
