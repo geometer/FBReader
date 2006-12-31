@@ -8,16 +8,18 @@ shared_ptr<Scene> SceneReader::readScene(const std::string &fileName) {
 	myScene = new Scene();
 	myId = -1;
 	myEnumerator.clear();
+	myReadDescription = false;
 	readDocument(fileName);
 	return myScene;
 }
 
-void SceneReader::startElementHandler(const char *tag, const char **attributes) {
-	static const std::string SCENE = "scene";
-	static const std::string OBJECT = "object";
-	static const std::string DATA = "data";
-	static const std::string TRUE = "true";
+static const std::string SCENE = "scene";
+static const std::string OBJECT = "object";
+static const std::string DATA = "data";
+static const std::string TRUE = "true";
+static const std::string DESCRIPTION = "description";
 
+void SceneReader::startElementHandler(const char *tag, const char **attributes) {
 	if (SCENE == tag) {
 		const char *name = attributeValue(attributes, "name");
 		if (name != 0) {
@@ -43,6 +45,22 @@ void SceneReader::startElementHandler(const char *tag, const char **attributes) 
 			}
 			myId = -1;
 		}
+	} else if (DESCRIPTION == tag) {
+		myReadDescription = true;
+	}
+}
+
+void SceneReader::endElementHandler(const char *tag) {
+	if (DESCRIPTION == tag) {
+		myReadDescription = false;
+	}
+}
+
+void SceneReader::characterDataHandler(const char *text, int len) {
+	if (myReadDescription && (len > 0)) {
+		std::string description = myScene->description();
+		description.append(text, len);
+		myScene->setDescription(description);
 	}
 }
 

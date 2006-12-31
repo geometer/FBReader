@@ -15,6 +15,9 @@ public:
 	void setName(const std::string &name);
 	const std::string &name() const;
 
+	void setDescription(const std::string &description);
+	const std::string &description() const;
+
 	bool isEmpty() const;
 
 	const std::list<ObjectPtr> &objects() const;
@@ -39,6 +42,7 @@ protected:
 
 private:
 	std::string myName;
+	std::string myDescription;
 
 private:
 	Scene(const Scene&);

@@ -27,9 +27,17 @@ void ZLXMLWriter::Tag::addAttribute(const std::string &name, const std::string &
 	myAttributes.push_back(Attribute(name, value));
 }
 
+void ZLXMLWriter::Tag::addData(const std::string &data) {
+	if (!data.empty()) {
+		myData += data;
+		mySingle = false;
+	}
+}
+
 static const std::string XML_BANNER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 static const std::string LANGLE = "<";
 static const std::string LANGLE_SLASH = "</";
+static const std::string RANGLE = ">";
 static const std::string RANGLE_EOL = ">\n";
 static const std::string SLASH = "/";
 static const std::string SPACE = " ";
@@ -50,7 +58,12 @@ void ZLXMLWriter::Tag::writeStart(ZLOutputStream &stream) const {
 	if (mySingle) {
 		stream.write(SLASH);
 	}
-	stream.write(RANGLE_EOL);
+	if (myData.empty()) {
+		stream.write(RANGLE_EOL);
+	} else {
+		stream.write(RANGLE);
+		stream.write(myData);
+	}
 }
 
 void ZLXMLWriter::Tag::writeEnd(ZLOutputStream &stream) const {
@@ -77,13 +90,21 @@ void ZLXMLWriter::addAttribute(const std::string &name, const std::string &value
 	}
 }
 
+void ZLXMLWriter::addData(const std::string &data) {
+	if (myCurrentTag != 0) {
+		myCurrentTag->addData(data);
+	}
+}
+
 void ZLXMLWriter::closeTag() {
 	flushTagStart();
 	if (myTags.size() > 0) {
 		Tag *tag = myTags.top();
 		myTags.pop();
-		for (unsigned int i = 0; i < myTags.size(); ++i) {
-			myStream.write(TWO_SPACES);
+		if (tag->isDataEmpty()) {
+			for (unsigned int i = 0; i < myTags.size(); ++i) {
+				myStream.write(TWO_SPACES);
+			}
 		}
 		tag->writeEnd(myStream);
 		delete tag;

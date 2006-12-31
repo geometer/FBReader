@@ -266,6 +266,51 @@ void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept(gtk_entry_get_text(myLineEdit));
 }
 
+void MultilineOptionView::_createItem() {
+	myTextBuffer = GTK_TEXT_BUFFER(gtk_text_buffer_new(0));
+	g_signal_connect(myTextBuffer, "changed", G_CALLBACK(_onValueChanged), this);
+	myTextView = GTK_TEXT_VIEW(gtk_text_view_new_with_buffer(myTextBuffer));
+	myTab->addItem(GTK_WIDGET(myTextView), myRow, myFromColumn, myToColumn);
+	reset();
+}
+
+void MultilineOptionView::reset() {
+	if (myTextBuffer == 0) {
+		return;
+	}
+
+	const std::string &value = ((ZLMultilineOptionEntry*)myOption)->initialValue();
+	gtk_text_buffer_set_text(myTextBuffer, value.data(), value.length());
+}
+
+void MultilineOptionView::onValueChanged() {
+	GtkTextIter start, end;
+	gtk_text_buffer_get_bounds(myTextBuffer, &start, &end);
+	gchar *value = gtk_text_buffer_get_text(myTextBuffer, &start, &end, true);
+	((ZLMultilineOptionEntry*)myOption)->onValueEdited(value);
+	g_free(value);
+}
+
+void MultilineOptionView::_show() {
+	gtk_widget_show(GTK_WIDGET(myTextView));
+}
+
+void MultilineOptionView::_hide() {
+	gtk_widget_hide(GTK_WIDGET(myTextView));
+}
+
+void MultilineOptionView::_setActive(bool active) {
+	gtk_text_view_set_editable(myTextView, active);
+}
+
+void MultilineOptionView::_onAccept() const {
+	GtkTextIter start, end;
+	gtk_text_buffer_get_bounds(myTextBuffer, &start, &end);
+	gchar *value = gtk_text_buffer_get_text(myTextBuffer, &start, &end, true);
+	((ZLMultilineOptionEntry*)myOption)->onAccept(value);
+	g_free(value);
+}
+
 static const int COLOR_STEPS_NUMBER = 32;
 
 void ColorOptionView::_createItem() {

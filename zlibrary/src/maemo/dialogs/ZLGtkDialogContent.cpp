@@ -70,6 +70,9 @@ void ZLGtkDialogContent::createViewByEntry(ZLOptionEntry *option, int row, int f
 		case STRING:
 			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
+		case MULTILINE:
+			view = new MultilineOptionView((ZLMultilineOptionEntry*)option, this, row, fromColumn, toColumn);
+			break;
 		case CHOICE:
 			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;

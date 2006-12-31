@@ -18,6 +18,11 @@ void SceneWriter::write(const Scene &scene, const std::string &sceneName) {
 
 	addTag("scene", false);
 	addAttribute("name", sceneName);
+	if (!scene.description().empty()) {
+		addTag("description", false);
+		addData(scene.description());
+		closeTag();
+	}
 	for (std::list<ObjectPtr>::const_iterator jt = closure.begin(); jt != closure.end(); jt++) {
 		enumerator.addObject(*jt);
 		addTag("object", false);

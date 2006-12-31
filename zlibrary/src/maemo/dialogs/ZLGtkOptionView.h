@@ -28,6 +28,7 @@
 #include <gtk/gtkbox.h>
 #include <gtk/gtkcombobox.h>
 #include <gtk/gtkentry.h>
+#include <gtk/gtktextview.h>
 #include <hildon-controlbar.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
@@ -114,6 +115,25 @@ private:
 private:
 	GtkWidget *myLabel;
 	GtkEntry *myLineEdit;
+};
+
+class MultilineOptionView : public ZLGtkOptionView {
+
+public:
+	MultilineOptionView(ZLMultilineOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myTextBuffer(0), myTextView(0) {}
+
+private:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _setActive(bool active);
+	void _onAccept() const;
+	void reset();
+	void onValueChanged();
+
+private:
+	GtkTextBuffer *myTextBuffer;
+	GtkTextView *myTextView;
 };
 
 class SpinOptionView : public ZLGtkOptionView {

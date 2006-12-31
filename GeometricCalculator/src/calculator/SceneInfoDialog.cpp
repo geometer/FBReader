@@ -19,6 +19,7 @@ void ShowInfoDialogAction::run() {
 	shared_ptr<ZLOptionsDialog> dialog = ZLDialogManager::instance().createOptionsDialog("SceneInfoDialog", "Scene Info");
 
 	createInfoTab(*dialog);
+	createDescriptionTab(*dialog);
 
 	dialog->run("");
 
@@ -65,4 +66,42 @@ void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
 	infoTab.addOption(new SceneNameEntry(scene));
 	infoTab.addOption(new ZLStringInfoEntry("Object Number", ObjectUtil::orderedClosure(objects).size()));
 	infoTab.addOption(new ZLStringInfoEntry("Visible Object Number", objects.size()));
+}
+
+class DescriptionEntry : public ZLMultilineOptionEntry {
+
+public:
+	DescriptionEntry(Scene &scene);
+
+private:
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+
+private:
+	Scene &myScene;
+};
+
+DescriptionEntry::DescriptionEntry(Scene &scene) : myScene(scene) {
+}
+
+const std::string &DescriptionEntry::name() const {
+	static const std::string EMPTY;
+	return EMPTY;
+}
+
+const std::string &DescriptionEntry::initialValue() const {
+	return myScene.description();
+}
+
+void DescriptionEntry::onAccept(const std::string &value) {
+	myScene.setDescription(value);
+}
+
+void ShowInfoDialogAction::createDescriptionTab(ZLOptionsDialog &dialog) {
+	ZLDialogContent &infoTab = dialog.createTab("Description");
+
+	Scene &scene = *myCalculator.myView->document()->scene();
+
+	infoTab.addOption(new DescriptionEntry(scene));
 }

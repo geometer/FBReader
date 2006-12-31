@@ -35,6 +35,7 @@ enum ZLOptionKind {
 	COLOR,
 	KEY,
 	ORDER,
+	MULTILINE,
 };
 
 class ZLOptionView;
@@ -76,17 +77,30 @@ public:
 	virtual void onAccept(int index) = 0;
 };
 
-class ZLStringOptionEntry : public ZLOptionEntry {
+class ZLTextOptionEntry : public ZLOptionEntry {
+
+public:
+	virtual const std::string &initialValue() const = 0;
+	virtual void onAccept(const std::string &value) = 0;
+	virtual void onValueEdited(const std::string&);
+};
+
+class ZLStringOptionEntry : public ZLTextOptionEntry {
 
 protected:
 	ZLStringOptionEntry();
 
 public:
 	ZLOptionKind kind() const;
+};
 
-	virtual const std::string &initialValue() const = 0;
-	virtual void onAccept(const std::string &value) = 0;
-	virtual void onValueEdited(const std::string&);
+class ZLMultilineOptionEntry : public ZLTextOptionEntry {
+
+protected:
+	ZLMultilineOptionEntry();
+
+public:
+	ZLOptionKind kind() const;
 };
 
 class ZLBooleanOptionEntry : public ZLOptionEntry {
@@ -194,9 +208,13 @@ inline bool ZLOptionEntry::isActive() const { return myIsActive; }
 inline ZLChoiceOptionEntry::ZLChoiceOptionEntry() {}
 inline ZLOptionKind ZLChoiceOptionEntry::kind() const { return CHOICE; }
 
+inline void ZLTextOptionEntry::onValueEdited(const std::string&) {}
+
 inline ZLStringOptionEntry::ZLStringOptionEntry() {}
 inline ZLOptionKind ZLStringOptionEntry::kind() const { return STRING; }
-inline void ZLStringOptionEntry::onValueEdited(const std::string&) {}
+
+inline ZLMultilineOptionEntry::ZLMultilineOptionEntry() {}
+inline ZLOptionKind ZLMultilineOptionEntry::kind() const { return MULTILINE; }
 
 inline ZLBooleanOptionEntry::ZLBooleanOptionEntry() {}
 inline ZLOptionKind ZLBooleanOptionEntry::kind() const { return BOOLEAN; }

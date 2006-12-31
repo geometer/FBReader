@@ -12,6 +12,14 @@ const std::string &Scene::name() const {
 	return myName;
 }
 
+void Scene::setDescription(const std::string &description) {
+	myDescription = description;
+}
+
+const std::string &Scene::description() const {
+	return myDescription;
+}
+
 bool Scene::isEmpty() const {
 	return myObjects.empty() && myValues.empty();
 }

@@ -44,13 +44,16 @@ private:
 		Tag(const std::string &name, bool single);
 		~Tag();
 		void addAttribute(const std::string &name, const std::string &value);
+		void addData(const std::string &data);
 		bool isSingle() const;
+		bool isDataEmpty() const;
 
 		void writeStart(ZLOutputStream &stream) const;
 		void writeEnd(ZLOutputStream &stream) const;
 		
 	private:
 		std::string myName;
+		std::string myData;
 		bool mySingle;
 		std::vector<Attribute> myAttributes;
 	};
@@ -61,6 +64,7 @@ protected:
 
 	void addTag(const std::string &name, bool single);
 	void addAttribute(const std::string &name, const std::string &value);
+	void addData(const std::string &data);
 	void closeTag();
 	void closeAllTags();
 
@@ -77,6 +81,7 @@ inline ZLXMLWriter::Attribute::Attribute(const std::string &name, const std::str
 inline ZLXMLWriter::Attribute::~Attribute() {}
 
 inline bool ZLXMLWriter::Tag::isSingle() const { return mySingle; }
+inline bool ZLXMLWriter::Tag::isDataEmpty() const { return myData.empty(); }
 inline ZLXMLWriter::Tag::~Tag() {}
 
 inline ZLXMLWriter::~ZLXMLWriter() {}

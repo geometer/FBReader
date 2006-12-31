@@ -14,6 +14,7 @@ public:
 
 private:
 	void createInfoTab(ZLOptionsDialog &dialog);	
+	void createDescriptionTab(ZLOptionsDialog &dialog);	
 
 private:
 	GeometricCalculator &myCalculator;
