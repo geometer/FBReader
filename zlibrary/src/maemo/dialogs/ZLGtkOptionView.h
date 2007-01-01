@@ -21,15 +21,9 @@
 #ifndef __ZLGTKOPTIONVIEW_H__
 #define __ZLGTKOPTIONVIEW_H__
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtkrange.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtkbox.h>
-#include <gtk/gtkcombobox.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtktextview.h>
+#include <gtk/gtk.h>
 #include <hildon-controlbar.h>
+#include <hildon-number-editor.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -95,7 +89,7 @@ private:
 	void onValueChanged();
 
 private:
-	GtkWidget *myCheckBox;
+	GtkCheckButton *myCheckBox;
 };
 
 class StringOptionView : public ZLGtkOptionView {
@@ -113,7 +107,7 @@ private:
 	void onValueChanged();
 
 private:
-	GtkWidget *myLabel;
+	GtkLabel *myLabel;
 	GtkEntry *myLineEdit;
 };
 
@@ -148,7 +142,8 @@ protected:
 	void _onAccept() const;
 
 private:
-	GtkWidget *myLabel, *mySpinBox;
+	GtkLabel *myLabel;
+	HildonNumberEditor *mySpinBox;
 };
 
 class ComboOptionView : public ZLGtkOptionView {
@@ -166,7 +161,7 @@ private:
 	void onValueChanged();
 	
 private:
-	GtkWidget *myLabel;
+	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	int mySelectedIndex;
 	int myListSize;
@@ -212,7 +207,8 @@ public:
 	GtkWidget *comboBox() const { return GTK_WIDGET(myComboBox); }
 
 private:
-	GtkWidget *myWidget, *myKeyButton, *myLabel;
+	GtkWidget *myWidget, *myKeyButton;
+	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	std::string myCurrentKey;
 };
