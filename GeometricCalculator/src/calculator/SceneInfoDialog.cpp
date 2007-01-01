@@ -30,7 +30,7 @@ void ShowInfoDialogAction::run() {
 class SceneNameEntry : public ZLStringOptionEntry {
 
 public:
-	SceneNameEntry(Scene &scene);
+	SceneNameEntry(Document &document);
 
 private:
 	const std::string &name() const;
@@ -38,10 +38,10 @@ private:
 	void onAccept(const std::string &value);
 
 private:
-	Scene &myScene;
+	Document &myDocument;
 };
 
-SceneNameEntry::SceneNameEntry(Scene &scene) : myScene(scene) {
+SceneNameEntry::SceneNameEntry(Document &document) : myDocument(document) {
 }
 
 const std::string &SceneNameEntry::name() const {
@@ -50,20 +50,20 @@ const std::string &SceneNameEntry::name() const {
 }
 
 const std::string &SceneNameEntry::initialValue() const {
-	return myScene.name();
+	return myDocument.scene()->name();
 }
 
 void SceneNameEntry::onAccept(const std::string &value) {
-	myScene.setName(value);
+	myDocument.setSceneName(value);
 }
 
 void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &infoTab = dialog.createTab("Info");
 
-	Scene &scene = *myCalculator.myView->document()->scene();
-	const std::list<ObjectPtr> &objects = scene.objects();
+	Document &document = *myCalculator.myView->document();
+	const std::list<ObjectPtr> &objects = document.scene()->objects();
 
-	infoTab.addOption(new SceneNameEntry(scene));
+	infoTab.addOption(new SceneNameEntry(document));
 	infoTab.addOption(new ZLStringInfoEntry("Object Number", ObjectUtil::orderedClosure(objects).size()));
 	infoTab.addOption(new ZLStringInfoEntry("Visible Object Number", objects.size()));
 }
@@ -71,7 +71,7 @@ void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
 class DescriptionEntry : public ZLMultilineOptionEntry {
 
 public:
-	DescriptionEntry(Scene &scene);
+	DescriptionEntry(Document &document);
 
 private:
 	const std::string &name() const;
@@ -79,10 +79,10 @@ private:
 	void onAccept(const std::string &value);
 
 private:
-	Scene &myScene;
+	Document &myDocument;
 };
 
-DescriptionEntry::DescriptionEntry(Scene &scene) : myScene(scene) {
+DescriptionEntry::DescriptionEntry(Document &document) : myDocument(document) {
 }
 
 const std::string &DescriptionEntry::name() const {
@@ -91,17 +91,15 @@ const std::string &DescriptionEntry::name() const {
 }
 
 const std::string &DescriptionEntry::initialValue() const {
-	return myScene.description();
+	return myDocument.scene()->description();
 }
 
 void DescriptionEntry::onAccept(const std::string &value) {
-	myScene.setDescription(value);
+	myDocument.setSceneDescription(value);
 }
 
 void ShowInfoDialogAction::createDescriptionTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &infoTab = dialog.createTab("Description");
 
-	Scene &scene = *myCalculator.myView->document()->scene();
-
-	infoTab.addOption(new DescriptionEntry(scene));
+	infoTab.addOption(new DescriptionEntry(*myCalculator.myView->document()));
 }

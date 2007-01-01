@@ -26,6 +26,8 @@ public:
 	void setScene(shared_ptr<Scene> scene);
 	bool isSaved() const;
 	void setSaved(bool saved);
+	void setSceneName(const std::string &name);
+	void setSceneDescription(const std::string &description);
 
 	void add(ObjectPtr object);
 	void addTemporary(ObjectPtr object);

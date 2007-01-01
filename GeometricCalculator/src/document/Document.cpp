@@ -48,7 +48,23 @@ bool Document::isSaved() const {
 
 void Document::setSaved(bool saved) {
 	myOriginalSceneIsReachable = saved;
-	myDistanceToOriginalScene = 0;
+	if (saved) {
+		myDistanceToOriginalScene = 0;
+	}
+}
+
+void Document::setSceneName(const std::string &name) {
+	if (name != myScene->name()) {
+		myScene->setName(name);
+		setSaved(false);
+	}
+}
+
+void Document::setSceneDescription(const std::string &description) {
+	if (description != myScene->description()) {
+		myScene->setDescription(description);
+		setSaved(false);
+	}
 }
 
 bool Document::isTemporary(const ObjectPtr object) const {
@@ -168,8 +184,10 @@ bool Document::isRedoAvailable() {
 void Document::undo() {
 	if (isUndoAvailable()) {
 		const std::string name = myScene->name();
+		const std::string description = myScene->description();
 		myScene = ((SceneDecorator*)&*myStoredScene)->restore();
 		myScene->setName(name);
+		myScene->setDescription(description);
 		myDistanceToStoredScene--;
 		myDistanceToOriginalScene--;
 		std::vector<const Command*>::const_iterator it = myUndoBuffer.begin();
