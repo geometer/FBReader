@@ -38,8 +38,8 @@ ObjectPtr EditMode::closestObject(double x, double y) {
 	PointPtr point;
 	ObjectPtr line;
 
-	double maxPointDistance = 11;
-	double maxLineDistance = 11;
+	double maxPointDistance = myView.unzoomed(11.0);
+	double maxLineDistance = myView.unzoomed(11.0);
 
   const std::list<ObjectPtr> &objects = document()->scene()->objects();
 	for (std::list<ObjectPtr>::const_iterator it = objects.begin(); it != objects.end(); it++) {

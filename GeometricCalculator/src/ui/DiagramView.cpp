@@ -130,7 +130,7 @@ void DiagramView::drawObject(const ObjectPtr object) {
 		drawPoint(point, getDrawMode(object));
 	} else if (object->rtti() == Object::LINE) {
 		LinePtr line = object;
-		LineCoordsPtr coords = new LineCoords(line, context().width(), context().height());
+		LineCoordsPtr coords = new LineCoords(line, unzoomed(context().width()), unzoomed(context().height()));
 		drawLine(coords, getDrawMode(object));
 		if (line->kind() == LINE) {
 			return;
@@ -346,11 +346,8 @@ void DiagramView::drawCircle(const CirclePtr circle, DrawMode drawMode) {
 	}
 
 	const Coordinates center = circle->center();
-	double x = center.x;
-	double y = center.y;
-	double radius = circle->radius();
 
-	addDrawableObject(new DrawableCircle(zoomed((int)(x + .5)), zoomed((int)(y + .5)), zoomed(radius), color, solid), level);
+	addDrawableObject(new DrawableCircle(zoomed(center.x), zoomed(center.y), zoomed(circle->radius()), color, solid), level);
 }
 
 void DiagramView::drawRuler(const ValuePtr ruler) {
@@ -422,5 +419,9 @@ double DiagramView::zoomed(double coordinate) const {
 }
 
 int DiagramView::unzoomed(int coordinate) const {
+	return coordinate * 100 / ZoomOption.value();
+}
+
+double DiagramView::unzoomed(double coordinate) const {
 	return coordinate * 100 / ZoomOption.value();
 }

@@ -53,11 +53,11 @@ private:
 class DrawableCircle : public DrawableObject {
 
 public:
-	DrawableCircle(int x, int y, double radius, const ZLColor &color, bool solid);
+	DrawableCircle(double x, double y, double radius, const ZLColor &color, bool solid);
 	void draw(ZLPaintContext &context);
 
 private:
-	const int myCenterX, myCenterY;
+	const double myCenterX, myCenterY;
 	const double myRadius;
 	const ZLColor myColor;
 	const bool mySolid;

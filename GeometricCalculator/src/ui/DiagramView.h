@@ -81,6 +81,7 @@ private:
 	int zoomed(int coordinate) const;
 	double zoomed(double coordinate) const;
 	int unzoomed(int coordinate) const;
+	double unzoomed(double coordinate) const;
 
 private:
 	std::vector<DrawableObject*> myDrawableObjects[DRAWABLE_LEVELS_NUMBER];

@@ -31,7 +31,7 @@ void DrawableLine::draw(ZLPaintContext &context) {
 	context.drawLine(myX0, myY0, myX1, myY1);
 }
 
-DrawableCircle::DrawableCircle(int x, int y, double radius, const ZLColor &color, bool solid) : myCenterX(x), myCenterY(y), myRadius(radius), myColor(color), mySolid(solid) {
+DrawableCircle::DrawableCircle(double x, double y, double radius, const ZLColor &color, bool solid) : myCenterX(x), myCenterY(y), myRadius(radius), myColor(color), mySolid(solid) {
 }
 
 const uint MAX_POINT_NUMBER = 50;
