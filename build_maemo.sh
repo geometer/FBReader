@@ -20,7 +20,7 @@ fi
 
 SDK=`ls /targets/links/scratchbox.config -l | sed -e "s/.\\+\\/\\(.\\+\\)\\.config$/\\1/"`
 
-if [ $1 == "maemo" ]; then
+if [ $1 = "maemo" ]; then
   EXPECTED_SDK=SDK_ARM
 else
   EXPECTED_SDK=SDK_ARMEL

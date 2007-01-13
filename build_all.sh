@@ -1,12 +1,12 @@
 #!/bin/sh
 
-if [ "$1" == "rebuild" ]; then
+if [ "$1" = "rebuild" ]; then
 	FAILED_ONLY=yes
 fi
 
 do_build() {
 	LOG_FILE=$1\($2\).log
-	if [ "$FAILED_ONLY" == "yes" -a ! -f $LOG_FILE ]; then
+	if [ "$FAILED_ONLY" = "yes" -a ! -f $LOG_FILE ]; then
 		echo "Skipping $1 ($2)"
 		return;
 	fi
