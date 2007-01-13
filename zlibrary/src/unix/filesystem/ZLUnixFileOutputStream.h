@@ -21,8 +21,6 @@
 #ifndef __ZLUNIXFILEOUTPUTSTREAM_H__
 #define __ZLUNIXFILEOUTPUTSTREAM_H__
 
-#include <stdio.h>
-
 #include "../../abstract/filesystem/ZLOutputStream.h"
 
 class ZLUnixFileOutputStream : public ZLOutputStream {
@@ -38,7 +36,7 @@ private:
 	std::string myName;
 	std::string myTemporaryName;
 	bool myHasErrors;
-	FILE *myFile;
+	int myFileDescriptor;
 };
 
 #endif /* __ZLUNIXFILEOUTPUTSTREAM_H__ */

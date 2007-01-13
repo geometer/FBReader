@@ -22,8 +22,7 @@
 
 #include "ZLUnixFileOutputStream.h"
 
-ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name) {
-	myFile = 0;
+ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFileDescriptor(-1) {
 }
 
 ZLUnixFileOutputStream::~ZLUnixFileOutputStream() {
@@ -33,29 +32,23 @@ ZLUnixFileOutputStream::~ZLUnixFileOutputStream() {
 bool ZLUnixFileOutputStream::open() {
 	close();
 
-	char *tmpl = new char[myName.length() + 8];
-	strcpy(tmpl, myName.c_str());
-	strcpy(tmpl + myName.length(), ".XXXXXX");
-	if (mkstemp(tmpl) != -1) {
-		myTemporaryName = tmpl;
-		myFile = fopen(myTemporaryName.c_str(), "wb");
-		myHasErrors = false;
-	}
+	myTemporaryName = myName + ".XXXXXX" + '\0';
+	myFileDescriptor = ::mkstemp((char*)myTemporaryName.data());
+	myHasErrors = myFileDescriptor == -1;
 
-	delete[] tmpl;
-	return myFile != 0;
+	return !myHasErrors;
 }
 
 void ZLUnixFileOutputStream::write(const std::string &str) {
-	if (fwrite(str.data(), 1, str.length(), myFile) != str.length()) {
+	if (::write(myFileDescriptor, str.data(), str.length()) != (ssize_t)str.length()) {
 		myHasErrors = true;
 	}
 }
 
 void ZLUnixFileOutputStream::close() {
-	if (myFile != 0) {
-		fclose(myFile);
-		myFile = 0;
+	if (myFileDescriptor != -1) {
+		::close(myFileDescriptor);
+		myFileDescriptor = -1;
 		if (!myHasErrors) {
 			rename(myTemporaryName.c_str(), myName.c_str());
 		}
