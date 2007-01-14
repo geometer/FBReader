@@ -60,6 +60,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	addAction(ACTION_QUIT, new QuitAction(*this));
 	addAction(ACTION_ZOOM_IN, new ZoomAction(*myView, 1.2));
 	addAction(ACTION_ZOOM_OUT, new ZoomAction(*myView, 1 / 1.2));
+	addAction(ACTION_SET_DEFAULT_ZOOM, new SetZoomAction(*myView, 100));
 
 	shared_ptr<Toolbar::ButtonGroup> group = toolbar().createButtonGroup(MODE_NO_ACTION);
 	toolbar().addButton(MODE_EDIT_OBJECT, "arrow", group);
@@ -90,6 +91,7 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	menubar().addSeparator();
 	Menu &viewSubmenu = menubar().addSubmenu("View");
 	viewSubmenu.addItem("Zoom In", ACTION_ZOOM_IN);
+	viewSubmenu.addItem("100%", ACTION_SET_DEFAULT_ZOOM);
 	viewSubmenu.addItem("Zoom Out", ACTION_ZOOM_OUT);
 	menubar().addSeparator();
 	menubar().addItem("Scene Info...", ACTION_SHOW_INFO);

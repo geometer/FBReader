@@ -199,7 +199,7 @@ FBReader::FBReader(const std::string& bookToOpen) :
 
 	Menu &librarySubmenu = menubar().addSubmenu("Library");
 	librarySubmenu.addItem("Open", ACTION_SHOW_COLLECTION);
-	librarySubmenu.addItem("Open Previous", ACTION_OPEN_PREVIOUS_BOOK);
+	librarySubmenu.addItem("Previous Book", ACTION_OPEN_PREVIOUS_BOOK);
 	librarySubmenu.addItem("Recent", ACTION_SHOW_LAST_BOOKS);
 	librarySubmenu.addItem("Add Book...", ACTION_ADD_BOOK);
 

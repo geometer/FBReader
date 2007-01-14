@@ -114,6 +114,7 @@ KeyOptionEntry::KeyOptionEntry(ZLKeyBindings &bindings) : ZLSimpleKeyOptionEntry
 	addAction(ACTION_REDO, "Redo");
 	addAction(ACTION_ZOOM_IN, "Zoom In");
 	addAction(ACTION_ZOOM_OUT, "Zoom Out");
+	addAction(ACTION_SET_DEFAULT_ZOOM, "Zoom 100%");
 	addAction(ACTION_QUIT, "Quit");
 }
 

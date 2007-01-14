@@ -26,6 +26,18 @@ private:
 	const double myCoefficient;
 };
 
+class SetZoomAction : public ZLApplication::Action {
+
+public:
+	SetZoomAction(DiagramView &view, int value);
+	void run();
+	bool isEnabled();
+
+private:
+	DiagramView &myView;
+	const int myValue;
+};
+
 class UndoAction : public ZLApplication::Action {
 
 public:

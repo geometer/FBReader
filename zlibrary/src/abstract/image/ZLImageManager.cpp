@@ -157,20 +157,23 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 					imageData.init(header.Width, header.Height);
 
 					if (header.BitsPerPixel == 16) {
-						unsigned char redBits = imageString[16];
-						unsigned char greenBits = imageString[17];
-						unsigned char blueBits = imageString[18];
-						const unsigned char *from = (const unsigned char*)imageString.data() + 24;
+						const unsigned char redBits = imageString[16];
+						const unsigned char greenBits = imageString[17];
+						const unsigned char blueBits = imageString[18];
+						const unsigned short redMask = (1 << redBits) - 1;
+						const unsigned short greenMask = (1 << greenBits) - 1;
+						const unsigned short blueMask = (1 << blueBits) - 1;
 
+						const unsigned char *from_ptr = (const unsigned char*)imageString.data() + 24;
 						for (unsigned short i = 0; i < header.Height; ++i) {
-							const unsigned char *from_ptr = from + header.BytesPerRow * i;
+							const unsigned char *to_ptr = from_ptr + header.BytesPerRow;
 							imageData.setPosition(0, i);
-							for (unsigned short j = 0; j < header.BytesPerRow; j += 2) {
+							for (; from_ptr < to_ptr; from_ptr += 2) {
 								unsigned short color = 256 * *from_ptr + *(from_ptr + 1);
 								imageData.setPixel(
-									color >> (16 - redBits),
-									(color >> blueBits) & ((1 << greenBits) - 1),
-									((1 << blueBits) - 1)
+									(color >> (16 - redBits)) * 255 / redMask,
+									((color >> blueBits) & greenMask) * 255 / greenMask,
+									(color & blueMask) * 255 / blueMask
 								);
 								imageData.moveX(1);
 							}
@@ -186,7 +189,6 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 										{
 											unsigned char len = std::min(8, (int)header.Width - j);
 											for (unsigned char k = 0; k < len; ++k) {
-												//imageData.setGrayPixel(((*from_ptr) & (1 << k)) ? 0 : 255);
 												imageData.setGrayPixel(((*from_ptr) & (128 >> k)) ? 0 : 255);
 												imageData.moveX(1);
 											}

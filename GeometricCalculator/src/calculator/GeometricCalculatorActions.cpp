@@ -31,6 +31,18 @@ bool ZoomAction::isEnabled() {
 	}
 }
 
+SetZoomAction::SetZoomAction(DiagramView &view, int value) : myView(view), myValue(value) {
+}
+
+void SetZoomAction::run() {
+	myView.ZoomOption.setValue(myValue);
+	myView.repaintView();
+}
+
+bool SetZoomAction::isEnabled() {
+	return myView.ZoomOption.value() != myValue;
+}
+
 SetModeAction::SetModeAction(DiagramView &view, shared_ptr<EditMode> editMode) : myView(view), myEditMode(editMode) {
 }
 
