@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -125,6 +125,7 @@ FBReader::FBReader(const std::string& bookToOpen) :
 	myRecentBooksView = new RecentBooksView(*this, context());
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
+	setMode(BOOK_TEXT_MODE);
 
 	BookDescriptionPtr description;
 
@@ -218,18 +219,7 @@ FBReader::FBReader(const std::string& bookToOpen) :
 	menubar().addItem("Close", ACTION_QUIT);
 }
 
-void FBReader::initWindow() {
-	ZLApplication::initWindow();
-	setMode(BOOK_TEXT_MODE);
-	refreshWindow();
-}
-
 FBReader::~FBReader() {
-	delete myBookTextView;
-	delete myFootnoteView;
-	delete myContentsView;
-	delete myCollectionView;
-	delete myRecentBooksView;
 	if (myModel != 0) {
 		delete myModel;
 	}
@@ -293,22 +283,29 @@ void FBReader::openBook(BookDescriptionPtr description) {
 
 void FBReader::openBookInternal(BookDescriptionPtr description) {
 	if (!description.isNull()) {
-		myBookTextView->saveState();
-		myContentsView->saveState();
+		BookTextView &bookTextView = (BookTextView&)*myBookTextView;
+		ContentsView &contentsView = (ContentsView&)*myContentsView;
+		FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
+		RecentBooksView &recentBooksView = (RecentBooksView&)*myRecentBooksView;
+
+		bookTextView.saveState();
+		bookTextView.setModel(0, "");
+		contentsView.saveState();
+		contentsView.setModel(0, "");
 		if (myModel != 0) {
 			delete myModel;
 		}
 		myModel = new BookModel(description);
 		ZLStringOption(ZLOption::STATE_CATEGORY, STATE, BOOK, std::string()).setValue(myModel->fileName());
 		Hyphenator::instance().load(description->language());
-		myBookTextView->setModel(&myModel->bookTextModel(), description->fileName());
-		myBookTextView->setCaption(description->title());
-		myFootnoteView->setModel(0, std::string());
-		myFootnoteView->setCaption(description->title());
-		myContentsView->setModel(&myModel->contentsModel(), description->fileName());
-		myContentsView->setCaption(description->title());
+		bookTextView.setModel(myModel->bookTextModel(), description->fileName());
+		bookTextView.setCaption(description->title());
+		footnoteView.setModel(0, std::string());
+		footnoteView.setCaption(description->title());
+		contentsView.setModel(myModel->contentsModel(), description->fileName());
+		contentsView.setCaption(description->title());
 
-		myRecentBooksView->lastBooks().addBook(description->fileName());
+		recentBooksView.lastBooks().addBook(description->fileName());
 	}
 }
 
@@ -316,12 +313,12 @@ void FBReader::tryShowFootnoteView(const std::string &id) {
 	if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
 		int linkedParagraphNumber = myModel->paragraphNumberById(id);
 		if (linkedParagraphNumber >= 0) {
-			myBookTextView->gotoParagraph(linkedParagraphNumber);
+			bookTextView().gotoParagraph(linkedParagraphNumber);
 			refreshWindow();
 		} else {
-			const TextModel *footnoteModel = myModel->footnoteModel(id);
-			if (footnoteModel != 0) {
-				myFootnoteView->setModel(footnoteModel, std::string());
+			const shared_ptr<TextModel> footnoteModel = myModel->footnoteModel(id);
+			if (!footnoteModel.isNull()) {
+				((FootnoteView&)*myFootnoteView).setModel(footnoteModel, std::string());
 				setMode(FOOTNOTE_MODE);
 			}
 		}
@@ -364,8 +361,9 @@ private:
 };
 
 void FBReader::rebuildCollectionInternal() {
-	myCollectionView->updateModel();
-	myCollectionView->collection().authors();
+	CollectionView &collectionView = (CollectionView&)*myCollectionView;
+	collectionView.updateModel();
+	collectionView.collection().authors();
 }
 
 void FBReader::setMode(ViewMode mode) {
@@ -382,7 +380,7 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case CONTENTS_MODE:
 			if (!StoreContentsPositionOption.value()) {
-				myContentsView->gotoReference();
+				((ContentsView&)*myContentsView).gotoReference();
 			}
 			setView(myContentsView);
 			break;
@@ -395,12 +393,12 @@ void FBReader::setMode(ViewMode mode) {
 				ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
 			}
 			if (myModel != 0) {
-				myCollectionView->selectBook(myModel->description());
+				((CollectionView&)*myCollectionView).selectBook(myModel->description());
 			}
 			setView(myCollectionView);
 			break;
 		case RECENT_BOOKS_MODE:
-			myRecentBooksView->rebuild();
+			((RecentBooksView&)*myRecentBooksView).rebuild();
 			setView(myRecentBooksView);
 			break;
 		case BOOKMARKS_MODE:
@@ -411,7 +409,7 @@ void FBReader::setMode(ViewMode mode) {
 }
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {
-	BookCollection &collection = myCollectionView->collection();
+	BookCollection &collection = ((CollectionView&)*myCollectionView).collection();
 	if (BookInfoDialog(collection, fileName).dialog().run("")) {
 		openFile(fileName);
 		collection.rebuild(false);
@@ -421,7 +419,7 @@ bool FBReader::runBookInfoDialog(const std::string &fileName) {
 }
 
 BookTextView &FBReader::bookTextView() const {
-	return *myBookTextView;
+	return (BookTextView&)*myBookTextView;
 }
 
 void FBReader::showBookTextView() {
@@ -453,11 +451,11 @@ void FBReader::openFile(const std::string &fileName) {
 }
 
 void FBReader::clearTextCaches() {
-	myBookTextView->clearCaches();
-	myFootnoteView->clearCaches();
-	myContentsView->clearCaches();
-	myCollectionView->clearCaches();
-	myRecentBooksView->clearCaches();
+	((TextView&)*myBookTextView).clearCaches();
+	((TextView&)*myFootnoteView).clearCaches();
+	((TextView&)*myContentsView).clearCaches();
+	((TextView&)*myCollectionView).clearCaches();
+	((TextView&)*myRecentBooksView).clearCaches();
 }
 
 void FBReader::searchSlot() {
@@ -467,7 +465,7 @@ void FBReader::searchSlot() {
 	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Ignore case", SearchIgnoreCaseOption));
 	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("In w&hole text", SearchInWholeTextOption));
 	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Backward", SearchBackwardOption));
-	if (((TextView*)currentView())->hasMultiSectionModel()) {
+	if (((TextView&)*currentView()).hasMultiSectionModel()) {
 		searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&This section only", SearchThisSectionOnlyOption));
 	}
 	searchDialog->addButton("&Go!", true);
@@ -482,7 +480,7 @@ void FBReader::searchSlot() {
 			pattern.erase(pattern.length() - 1, 1);
 		}
 		SearchPatternOption.setValue(pattern);
-		((TextView*)currentView())->search(
+		((TextView&)*currentView()).search(
 			SearchPatternOption.value(),
 			SearchIgnoreCaseOption.value(),
 			SearchInWholeTextOption.value(),

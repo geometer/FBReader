@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,10 +56,6 @@ ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
 
 ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
 	return (mkdir(path.c_str(), 0x1FF) == 0) ? new ZLUnixFSDir(path) : 0;
-}
-
-bool ZLUnixFSManager::isZipSupported() const {
-	return true;
 }
 
 ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) const {

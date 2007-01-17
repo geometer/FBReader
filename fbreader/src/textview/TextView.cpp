@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,7 +31,7 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myModel(0), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myPositionIndicator(*this), myTreeStateIsFrozen(false) {
+TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myPositionIndicator(*this), myTreeStateIsFrozen(false) {
 }
 
 TextView::~TextView() {
@@ -53,12 +53,12 @@ void TextView::clear() {
 	ParagraphCursorCache::clear();
 }
 
-void TextView::setModel(const TextModel *model, const std::string &name) {
+void TextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
 	clear();
 
 	myModel = model;
 
-	if ((myModel != 0) && (myModel->paragraphsNumber() != 0)) {
+	if (!myModel.isNull() && (myModel->paragraphsNumber() != 0)) {
 		setStartCursor(ParagraphCursor::createCursor(*myModel));
 
 		myFileName = name;
@@ -136,7 +136,7 @@ void TextView::scrollToStartOfText() {
 }
 
 void TextView::scrollToEndOfText() {
-	if (endCursor().isNull() || (myModel == 0)) {
+	if (endCursor().isNull() || myModel.isNull()) {
 		return;
 	}
 
@@ -194,7 +194,11 @@ void TextView::gotoMark(TextMark mark) {
 }
 
 void TextView::gotoParagraph(int num, bool last) {
-	if ((myModel != 0) && (myModel->kind() == TextModel::TREE_MODEL)) {
+	if (myModel.isNull()) {
+		return;
+	}
+
+	if (myModel->kind() == TextModel::TREE_MODEL) {
 		if ((num >= 0) && (num < (int)myModel->paragraphsNumber())) {
 			TreeParagraph *tp = (TreeParagraph*)(*myModel)[num];
 			if (myTreeStateIsFrozen) {
@@ -214,6 +218,7 @@ void TextView::gotoParagraph(int num, bool last) {
 			}
 		}
 	}
+
 	if (last) {
 		if ((num > 0) && (num <= (int)myModel->paragraphsNumber())) {
 			moveEndCursor(num);
@@ -404,7 +409,7 @@ void TextView::findPrevious() {
 }
 
 bool TextView::onStylusPress(int x, int y) {
-  if (myModel == 0) {
+  if (myModel.isNull()) {
 	  return false;
 	}
 

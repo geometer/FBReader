@@ -1,7 +1,6 @@
 /*
- * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -1,3 +1,23 @@
+/*
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include <math.h>
 
 #include <ZLOptions.h>
@@ -228,7 +248,7 @@ void DiagramView::drawPoint(const PointPtr point, DrawMode drawMode) {
 	const int y = (int)(coords.y + .5);
 	const std::string &name = point->name();
 
-	int level;
+	DrawableObjectLevel level;
 	ZLColor color;
 	bool solid = true;
 
@@ -236,24 +256,24 @@ void DiagramView::drawPoint(const PointPtr point, DrawMode drawMode) {
 		case REGULAR:
 		case REGULAR_AUX:
 			color = ActiveColorOption.value();
-			level = 50;
+			level = ACTIVE_POINT_LEVEL;
 			break;
 		case UNAVAILABLE:
 		case UNAVAILABLE_AUX:
 			color = InactiveColorOption.value();
-			level = 45;
+			level = INACTIVE_POINT_LEVEL;
 			break;
 		case SELECTED:
 		case SELECTED_AUX:
 		case PREREGULAR:
 			color = SelectedColorOption.value();
-			level = 65;
+			level = SELECTED_POINT_LEVEL;
 			break;
 		case TEMPORARY:
 		default:
 			color = SelectedColorOption.value();
 			solid = false;
-			level = 60;
+			level = TEMPORARY_POINT_LEVEL;
 			break;
 	}
 	const int radius = PointRadiusOption.value();
@@ -264,40 +284,40 @@ void DiagramView::drawPoint(const PointPtr point, DrawMode drawMode) {
 }
 
 void DiagramView::drawLine(const LineCoordsPtr line, DrawMode drawMode) {
-	int level;
+	DrawableObjectLevel level;
 	ZLColor color;
 	bool solid = true;
 
 	switch (drawMode) {
 		case REGULAR:
 			color = ActiveColorOption.value();
-			level = 30;
+			level = ACTIVE_LINE_LEVEL;
 			break;
 		case REGULAR_AUX:
 			color = ActiveColorOption.value();
 			solid = false;
-			level = 25;
+			level = ACTIVE_AUXILARY_LINE_LEVEL;
 			break;
 		case UNAVAILABLE:
 			color = InactiveColorOption.value();
-			level = 35;
+			level = INACTIVE_LINE_LEVEL;
 			break;
 		case UNAVAILABLE_AUX:
 			color = InactiveColorOption.value();
 			solid = false;
-			level = 35;
+			level = INACTIVE_LINE_LEVEL;
 			break;
 		case SELECTED:
 		case PREREGULAR:
 			color = SelectedColorOption.value();
-			level = 40;
+			level = SELECTED_LINE_LEVEL;
 			break;
 		case SELECTED_AUX:
 		case TEMPORARY:
 		default:
 			color = SelectedColorOption.value();
 			solid = false;
-			level = 40;
+			level = SELECTED_LINE_LEVEL;
 			break;
 	}
 	addDrawableObject(new DrawableLine(
@@ -310,38 +330,38 @@ void DiagramView::drawLine(const LineCoordsPtr line, DrawMode drawMode) {
 void DiagramView::drawCircle(const CirclePtr circle, DrawMode drawMode) {
 	ZLColor color;
 	bool solid = true;
-	int level = 25;
+	DrawableObjectLevel level;
 
 	switch (drawMode) {
 		case REGULAR:
 			color = ActiveColorOption.value();
-			level = 30;
+			level = ACTIVE_LINE_LEVEL;
 			break;
 		case REGULAR_AUX:
 			color = ActiveColorOption.value();
 			solid = false;
-			level = 25;
+			level = ACTIVE_AUXILARY_LINE_LEVEL;
 			break;
 		case UNAVAILABLE:
 			color = InactiveColorOption.value();
-			level = 35;
+			level = INACTIVE_LINE_LEVEL;
 			break;
 		case UNAVAILABLE_AUX:
 			color = InactiveColorOption.value();
 			solid = false;
-			level = 35;
+			level = INACTIVE_LINE_LEVEL;
 			break;
 		case SELECTED:
 		case PREREGULAR:
 			color = SelectedColorOption.value();
-			level = 40;
+			level = SELECTED_LINE_LEVEL;
 			break;
 		case SELECTED_AUX:
 		case TEMPORARY:
 		default:
 			color = SelectedColorOption.value();
 			solid = false;
-			level = 40;
+			level = SELECTED_LINE_LEVEL;
 			break;
 	}
 
@@ -360,7 +380,7 @@ void DiagramView::drawRuler(const ValuePtr ruler) {
 		zoomed((int)(end.x + .5)),
 		zoomed((int)(end.y + .5)),
 		RulerColorOption.value(), true),
-	42);
+	RULER_LEVEL);
 }
 
 void DiagramView::paint() {
@@ -368,14 +388,14 @@ void DiagramView::paint() {
 
 	context().clear(BackgroundColorOption.value());
 
-	for (int i = 0; i < DRAWABLE_LEVELS_NUMBER; i++) {
-		std::vector<DrawableObject*> &objects = myDrawableObjects[i];
-		for (std::vector<DrawableObject*>::iterator it = objects.begin(); it != objects.end(); it++) {
+	for (DrawableObjectMap::const_iterator it = myDrawableObjects.begin(); it != myDrawableObjects.end(); ++it) {
+		const std::vector<DrawableObject*> &objects = it->second;
+		for (std::vector<DrawableObject*>::const_iterator it = objects.begin(); it != objects.end(); it++) {
 			(*it)->draw(context());
 			delete *it;
 		}
-		objects.clear();
 	}
+	myDrawableObjects.clear();
 }
 
 bool DiagramView::onStylusPress(int x, int y) {
@@ -406,8 +426,8 @@ bool DiagramView::onStylusMovePressed(int x, int y) {
 	return true;
 }
 
-void DiagramView::addDrawableObject(DrawableObject *object, int level) {
-	myDrawableObjects[std::min(std::max(level, 0), DRAWABLE_LEVELS_NUMBER - 1)].push_back(object);
+void DiagramView::addDrawableObject(DrawableObject *object, DrawableObjectLevel level) {
+	myDrawableObjects[level].push_back(object);
 }
 
 int DiagramView::zoomed(int coordinate) const {

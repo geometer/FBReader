@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -20,6 +20,8 @@
  */
 
 #include <algorithm>
+
+#include <ZLImage.h>
 
 #include "Paragraph.h"
 #include "RowMemoryAllocator.h"
@@ -135,9 +137,9 @@ size_t Paragraph::textLength() const {
 	return len;
 }
 
-const ZLImage *ImageEntry::image() const {
-	ImageMap::const_iterator i = myMap->find(myId);
-	return (i != myMap->end()) ? (*i).second : 0;
+shared_ptr<const ZLImage> ImageEntry::image() const {
+	ImageMap::const_iterator it = myMap->find(myId);
+	return (it != myMap->end()) ? (*it).second : 0;
 }
 
 TreeParagraph::TreeParagraph(TreeParagraph *parent) : myIsOpen(false), myParent(parent) {

@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -326,7 +326,6 @@ private:
 public:
 	FBReader(const std::string& bookToOpen);
 	~FBReader();
-	void initWindow();
 
 private:
 	void setMode(ViewMode mode);
@@ -366,11 +365,11 @@ private:
 	ViewMode myMode;
 	ViewMode myPreviousMode;
 
-	FootnoteView *myFootnoteView;	
-	BookTextView *myBookTextView;	
-	ContentsView *myContentsView;	
-	CollectionView *myCollectionView;	
-	RecentBooksView *myRecentBooksView;	
+	shared_ptr<ZLView> myFootnoteView;	
+	shared_ptr<ZLView> myBookTextView;	
+	shared_ptr<ZLView> myContentsView;	
+	shared_ptr<ZLView> myCollectionView;	
+	shared_ptr<ZLView> myRecentBooksView;	
 
 	ZLTime myLastScrollingTime;
 

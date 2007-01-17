@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@ ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, 
 	setBackgroundMode(NoBackground);
 }
 
-ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application) : ZLViewWidget((ZLViewWidget::Angle)application->AngleStateOption.value()), myApplication(application) {
+ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLQtApplicationWindow &applicationWindow) : ZLViewWidget((ZLViewWidget::Angle)applicationWindow.application().AngleStateOption.value()), myApplicationWindow(applicationWindow) {
 	myQWidget = new ZLQtViewWidgetInternal(parent, *this);
 }
 
@@ -43,7 +43,7 @@ void ZLQtViewWidget::trackStylus(bool track) {
 
 void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
 	const int w = width();
-	const int h = height() + ((ZLQtApplicationWindow*)parent())->veritcalAdjustment();
+	const int h = height() + myHolder.myApplicationWindow.verticalAdjustment();
 	switch (myHolder.rotation()) {
 		default:
 			((ZLQtPaintContext&)myHolder.view()->context()).setSize(w, h);
@@ -104,7 +104,7 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) 
 
 int ZLQtViewWidget::ZLQtViewWidgetInternal::x(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
-	const int maxY = height() + ((ZLQtApplicationWindow*)parent())->veritcalAdjustment() - 1;
+	const int maxY = height() + myHolder.myApplicationWindow.verticalAdjustment() - 1;
 	int logicalX;
 	switch (myHolder.rotation()) {
 		default:
@@ -125,7 +125,7 @@ int ZLQtViewWidget::ZLQtViewWidgetInternal::x(const QMouseEvent *event) const {
 
 int ZLQtViewWidget::ZLQtViewWidgetInternal::y(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
-	const int maxY = height() + ((ZLQtApplicationWindow*)parent())->veritcalAdjustment() - 1;
+	const int maxY = height() + myHolder.myApplicationWindow.verticalAdjustment() - 1;
 	int logicalY;
 	switch (myHolder.rotation()) {
 		default:

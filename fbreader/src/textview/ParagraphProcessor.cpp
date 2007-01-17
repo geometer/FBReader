@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,7 @@
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
+#include <ZLImage.h>
 
 #include "ParagraphCursor.h"
 #include "Word.h"
@@ -64,8 +65,8 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
 				ImageEntry &imageEntry = (ImageEntry&)*it.entry();
-				const ZLImage *image = imageEntry.image();
-				if (image != 0) {
+				shared_ptr<const ZLImage> image = imageEntry.image();
+				if (!image.isNull()) {
 					shared_ptr<ZLImageData> data = ZLImageManager::instance().imageData(*image);
 					if (!data.isNull()) {
 						myElements.push_back(new ImageElement(imageEntry.id(), data));

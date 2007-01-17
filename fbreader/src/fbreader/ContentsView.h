@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ public:
 	void saveState();
 	const std::string &caption() const;
 	void setCaption(const std::string &caption);
-	void setModel(const TextModel *model, const std::string &name);
+	void setModel(shared_ptr<TextModel> model, const std::string &name);
 
 private:
 	bool onStylusPress(int x, int y);

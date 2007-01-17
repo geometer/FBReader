@@ -1,3 +1,23 @@
+/*
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include <math.h>
 
 #include "DrawableObject.h"
@@ -34,14 +54,14 @@ void DrawableLine::draw(ZLPaintContext &context) {
 DrawableCircle::DrawableCircle(double x, double y, double radius, const ZLColor &color, bool solid) : myCenterX(x), myCenterY(y), myRadius(radius), myColor(color), mySolid(solid) {
 }
 
-const uint MAX_POINT_NUMBER = 50;
+const unsigned int MAX_POINT_NUMBER = 50;
 static bool SIN_CALCULATED = false;
 static double SIN[MAX_POINT_NUMBER + 1];
 static double COS[MAX_POINT_NUMBER + 1];
 
 void DrawableCircle::draw(ZLPaintContext &context) {
 	if (!SIN_CALCULATED) {
-		for (uint i = 0; i <= MAX_POINT_NUMBER; i++) {
+		for (unsigned int i = 0; i <= MAX_POINT_NUMBER; i++) {
 			double angle = 2 * 3.1415926536 * i / MAX_POINT_NUMBER;
 			SIN[i] = sin(angle);
 			COS[i] = cos(angle);
@@ -50,7 +70,7 @@ void DrawableCircle::draw(ZLPaintContext &context) {
 	}
 
 	context.setColor(myColor, mySolid ? ZLPaintContext::SOLID_LINE : ZLPaintContext::DASH_LINE);
-	for (uint i = 0; i < MAX_POINT_NUMBER; i++) {
+	for (unsigned int i = 0; i < MAX_POINT_NUMBER; i++) {
 		context.drawLine((int)(myCenterX + SIN[i] * myRadius + .5), (int)(myCenterY + COS[i] * myRadius + .5),
 										 (int)(myCenterX + SIN[i + 1] * myRadius + .5), (int)(myCenterY + COS[i + 1] * myRadius + .5));
 	}

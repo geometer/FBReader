@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Version=1.0
 Type=Application
-Name=GeometricCalculator
+Name=Geometric Calculator
 Exec=/usr/bin/GeometricCalculator
 Icon=GeometricCalculator
 X-Window-Icon=GeometricCalculator

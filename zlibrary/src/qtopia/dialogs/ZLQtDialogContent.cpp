@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -66,6 +66,9 @@ void ZLQtDialogContent::createViewByEntry(ZLOptionEntry *option, int fromColumn,
 			break;
 		case STRING:
 			view = new StringOptionView((ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
+		case MULTILINE:
+			view = new MultilineOptionView((ZLMultilineOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case CHOICE:
 			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);

@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -161,8 +161,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 			fileName +=2;
 		}
 		reader.myModelReader.addImageReference(fileName);
-		ZLImage *image = new ZLFileImage("image/auto", reader.myPathPrefix + fileName, 0);
-		reader.myModelReader.addImage(fileName, image);
+		reader.myModelReader.addImage(fileName, new ZLFileImage("image/auto", reader.myPathPrefix + fileName, 0));
 		if (flag) {
 			reader.myModelReader.beginParagraph();
 		}
@@ -204,7 +203,7 @@ XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(TextKind 
 }
 
 void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-	if ((myControl == TITLE) && (reader.myModelReader.model().bookTextModel().paragraphsNumber() > 1)) {
+	if ((myControl == TITLE) && (reader.myModelReader.model().bookTextModel()->paragraphsNumber() > 1)) {
 		reader.myModelReader.insertEndOfSectionParagraph();
 	}
 	reader.myModelReader.beginParagraph();

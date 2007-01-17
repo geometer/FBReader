@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -19,11 +19,10 @@
  */
 
 #include <unistd.h>
-#include <stdio.h>
 
 #include "ZLUnixFileOutputStream.h"
 
-ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFileDescriptor(-1) {
+ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFile(0) {
 }
 
 ZLUnixFileOutputStream::~ZLUnixFileOutputStream() {
@@ -34,22 +33,26 @@ bool ZLUnixFileOutputStream::open() {
 	close();
 
 	myTemporaryName = myName + ".XXXXXX" + '\0';
-	myFileDescriptor = ::mkstemp((char*)myTemporaryName.data());
-	myHasErrors = myFileDescriptor == -1;
+	int fileDescriptor = ::mkstemp((char*)myTemporaryName.data());
+	if (fileDescriptor == -1) {
+		return false;
+	}
+	::close(fileDescriptor);
 
-	return !myHasErrors;
+	myFile = fopen(myTemporaryName.c_str(), "w");
+	return myFile != 0;
 }
 
 void ZLUnixFileOutputStream::write(const std::string &str) {
-	if (::write(myFileDescriptor, str.data(), str.length()) != (ssize_t)str.length()) {
+	if (::fwrite(str.data(), 1, str.length(), myFile) != (ssize_t)str.length()) {
 		myHasErrors = true;
 	}
 }
 
 void ZLUnixFileOutputStream::close() {
-	if (myFileDescriptor != -1) {
-		::close(myFileDescriptor);
-		myFileDescriptor = -1;
+	if (myFile != 0) {
+		::fclose(myFile);
+		myFile = 0;
 		if (!myHasErrors) {
 			rename(myTemporaryName.c_str(), myName.c_str());
 		}

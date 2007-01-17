@@ -1,3 +1,23 @@
+/*
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
@@ -60,7 +80,7 @@ void SceneNameEntry::onAccept(const std::string &value) {
 void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &infoTab = dialog.createTab("Info");
 
-	Document &document = *myCalculator.myView->document();
+	Document &document = myCalculator.document();
 	const std::list<ObjectPtr> &objects = document.scene()->objects();
 
 	infoTab.addOption(new SceneNameEntry(document));
@@ -101,5 +121,5 @@ void DescriptionEntry::onAccept(const std::string &value) {
 void ShowInfoDialogAction::createDescriptionTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &infoTab = dialog.createTab("Description");
 
-	infoTab.addOption(new DescriptionEntry(*myCalculator.myView->document()));
+	infoTab.addOption(new DescriptionEntry(myCalculator.document()));
 }

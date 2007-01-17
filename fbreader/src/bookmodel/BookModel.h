@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -49,9 +49,9 @@ public:
 
 	const std::string &fileName() const;
 
-	const TextModel &bookTextModel() const;
-	const ContentsModel &contentsModel() const;
-	const TextModel *footnoteModel(const std::string &id) const;
+	shared_ptr<TextModel> bookTextModel() const;
+	shared_ptr<TextModel> contentsModel() const;
+	shared_ptr<TextModel> footnoteModel(const std::string &id) const;
 
 	const ImageMap &imageMap() const;
 	int paragraphNumberById(const std::string &id) const;
@@ -60,17 +60,17 @@ public:
 
 private:
 	const BookDescriptionPtr myDescription;
-	PlainTextModel myBookTextModel;
-	ContentsModel myContentsModel;
+	shared_ptr<TextModel> myBookTextModel;
+	shared_ptr<TextModel> myContentsModel;
 	ImageMap myImages;
-	std::map<std::string,PlainTextModel*> myFootnotes;
+	std::map<std::string,shared_ptr<TextModel> > myFootnotes;
 	std::map<std::string,int> myInternalHyperlinks;
 
 friend class BookReader;
 };
 
-inline const TextModel &BookModel::bookTextModel() const { return myBookTextModel; }
-inline const ContentsModel &BookModel::contentsModel() const { return myContentsModel; }
+inline shared_ptr<TextModel> BookModel::bookTextModel() const { return myBookTextModel; }
+inline shared_ptr<TextModel> BookModel::contentsModel() const { return myContentsModel; }
 inline const ImageMap &BookModel::imageMap() const { return myImages; }
 inline const BookDescriptionPtr BookModel::description() const { return myDescription; }
 

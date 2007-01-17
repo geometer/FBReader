@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -31,6 +31,7 @@
 class TreeModel;
 class PlainTextModel;
 class Paragraph;
+class CollectionModel;
 
 class CollectionView : public FBView {
 
@@ -49,8 +50,10 @@ public:
 	BookCollection &collection();
 
 private:
+	CollectionModel &collectionModel();
+
+private:
 	BookCollection myCollection;
-	class CollectionModel *myCollectionModel;
 	bool myTreeStateIsFrozen;
 	bool myUpdateModel;
 };

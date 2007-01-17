@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -183,7 +183,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			const char *ref = reference(xmlattributes);
 			if (ref != 0) {
 				if ((myCoverImageReference != ref) ||
-						(myParagraphsBeforeBodyNumber != myModelReader.model().bookTextModel().paragraphsNumber())) {
+						(myParagraphsBeforeBodyNumber != myModelReader.model().bookTextModel()->paragraphsNumber())) {
 					myModelReader.addImageReference(ref);
 				}
 				if (myInsideCoverpage) {
@@ -209,7 +209,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _BODY:
 			++myBodyCounter;
-			myParagraphsBeforeBodyNumber = myModelReader.model().bookTextModel().paragraphsNumber();
+			myParagraphsBeforeBodyNumber = myModelReader.model().bookTextModel()->paragraphsNumber();
 			if (myBodyCounter == 1) {
 				myModelReader.setMainTextModel();
 			}

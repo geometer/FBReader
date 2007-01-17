@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -47,10 +47,10 @@ bool ContentsView::onStylusPress(int x, int y) {
 		return false;
 	}
 
-	const ContentsModel *contentsModel = (const ContentsModel*)model();
-	const TreeParagraph *paragraph = (const TreeParagraph*)(*contentsModel)[paragraphNumber];
+	const ContentsModel &contentsModel = (const ContentsModel&)*model();
+	const TreeParagraph *paragraph = (const TreeParagraph*)contentsModel[paragraphNumber];
 	
-	int reference = contentsModel->reference(paragraph);
+	int reference = contentsModel.reference(paragraph);
 
 	if (reference != -1) {
 		fbreader().bookTextView().gotoParagraph(reference);
@@ -79,7 +79,7 @@ void ContentsView::saveState() {
 	}
 }
 
-void ContentsView::setModel(const TextModel *model, const std::string &name) {
+void ContentsView::setModel(shared_ptr<TextModel> model, const std::string &name) {
 	TextView::setModel(model, name);
 
 	const std::string &group = fileName();
@@ -95,7 +95,7 @@ void ContentsView::gotoReference() {
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
 		size_t length = model()->paragraphsNumber();
-		const ContentsModel &contentsModel = *(const ContentsModel*)model();
+		const ContentsModel &contentsModel = (const ContentsModel&)*model();
 		size_t selected =	length - 1;
 		for (size_t i = 1; i < length; ++i) {
 			if (contentsModel.reference(((const TreeParagraph*)contentsModel[i])) >= reference) {

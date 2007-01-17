@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -28,6 +28,8 @@
 #include "../formats/FormatPlugin.h"
 
 BookModel::BookModel(const BookDescriptionPtr description) : myDescription(description) {
+	myBookTextModel = new PlainTextModel();
+	myContentsModel = new ContentsModel();
 	ZLFile file(description->fileName());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
 	if (plugin != 0) {
@@ -36,12 +38,6 @@ BookModel::BookModel(const BookDescriptionPtr description) : myDescription(descr
 }
 
 BookModel::~BookModel() {
-	for (ImageMap::const_iterator it = myImages.begin(); it != myImages.end(); ++it) {
-		delete (*it).second;
-	}
-	for (std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.begin(); it != myFootnotes.end(); ++it) {
-		delete (*it).second;
-	}
 }
 
 const std::string &BookModel::fileName() const {
@@ -53,8 +49,8 @@ int BookModel::paragraphNumberById(const std::string &id) const {
 	return (it != myInternalHyperlinks.end()) ? (*it).second : -1;
 }
 
-const TextModel *BookModel::footnoteModel(const std::string &id) const {
-	std::map<std::string,PlainTextModel*>::const_iterator it = myFootnotes.find(id);
+shared_ptr<TextModel> BookModel::footnoteModel(const std::string &id) const {
+	std::map<std::string,shared_ptr<TextModel> >::const_iterator it = myFootnotes.find(id);
 	return (it != myFootnotes.end()) ? (*it).second : 0;
 }
 

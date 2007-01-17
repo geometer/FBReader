@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,6 +27,7 @@
 #include <qradiobutton.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
+#include <qmultilineedit.h>
 #include <qlineedit.h>
 #include <qslider.h>
 #include <qlayout.h>
@@ -233,6 +234,44 @@ void StringOptionView::reset() {
 
 void StringOptionView::onValueEdited(const QString &value) {
 	((ZLStringOptionEntry*)myOption)->onValueEdited((const char*)value.utf8());
+}
+
+void MultilineOptionView::_createItem() {
+	myMultiLineEdit = new QMultiLineEdit(myTab->widget());
+	myMultiLineEdit->setWordWrap(QMultiLineEdit::WidgetWidth);
+	myMultiLineEdit->setWrapPolicy(QMultiLineEdit::AtWhiteSpace);
+	connect(myMultiLineEdit, SIGNAL(textChanged()), this, SLOT(onValueEdited()));
+	myTab->addItem(myMultiLineEdit, myRow, myFromColumn, myToColumn);
+	reset();
+}
+
+void MultilineOptionView::_show() {
+	myMultiLineEdit->show();
+}
+
+void MultilineOptionView::_hide() {
+	myMultiLineEdit->hide();
+}
+
+void MultilineOptionView::_setActive(bool active) {
+	myMultiLineEdit->setReadOnly(!active);
+}
+
+void MultilineOptionView::_onAccept() const {
+	((ZLMultilineOptionEntry*)myOption)->onAccept((const char*)myMultiLineEdit->text().utf8());
+}
+
+void MultilineOptionView::reset() {
+	if (myMultiLineEdit == 0) {
+		return;
+	}
+
+	myMultiLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
+	//myMultiLineEdit->home();
+}
+
+void MultilineOptionView::onValueEdited() {
+	((ZLMultilineOptionEntry*)myOption)->onValueEdited((const char*)myMultiLineEdit->text().utf8());
 }
 
 class KeyButton : public QPushButton {

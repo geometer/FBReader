@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +60,7 @@ public:
 	bool isSingle() const { return false; }
 	virtual unsigned int rows() const = 0;
 	virtual unsigned int columns() const = 0;
-	virtual const ZLImage *subImage(unsigned int row, unsigned int column) const = 0;
+	virtual shared_ptr<const ZLImage> subImage(unsigned int row, unsigned int column) const = 0;
 };
 
 inline ZLImage::ZLImage() {}

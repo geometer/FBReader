@@ -1,3 +1,23 @@
+/*
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include <ZLStringUtil.h>
 
 #include "Scene.h"
@@ -36,12 +56,12 @@ bool Scene::isPersistent(const ObjectPtr object) const {
 	return const_find(object) != myObjects.end();
 }
 
-static uint parsePointName(const std::string &name) {
+static unsigned int parsePointName(const std::string &name) {
 	if ((name.length() < 2) || (name[0] != 'P')) {
 		return 0;
 	}
 
-	uint num = 0;
+	unsigned int num = 0;
 
 	for (size_t i = 1; i < name.length(); i++) {
 		if ((name[i] < '0') || (name[i] > '9')) {
@@ -53,12 +73,12 @@ static uint parsePointName(const std::string &name) {
 	return num;
 }
 
-uint Scene::maxUsedPointNumber() {
-	uint maxUsedNumber = 0;
+unsigned int Scene::maxUsedPointNumber() {
+	unsigned int maxUsedNumber = 0;
 	for (std::list<ObjectPtr>::iterator it = myObjects.begin(); it != myObjects.end(); it++) {
 		PointPtr ptr = *it;
 		if (!ptr.isNull()) {
-			uint number = parsePointName(ptr->name());
+			unsigned int number = parsePointName(ptr->name());
 			if (number > maxUsedNumber) {
 				maxUsedNumber = number;
 			}

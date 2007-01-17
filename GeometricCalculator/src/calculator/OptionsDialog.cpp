@@ -1,3 +1,23 @@
+/*
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
@@ -33,14 +53,14 @@ void ShowOptionsDialogAction::run() {
 void ShowOptionsDialogAction::createViewTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &viewTab = dialog.createTab("View");
 
-	DiagramView &view = *myCalculator.myView;
+	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 	viewTab.addOption(new ZLSimpleSpinOptionEntry("Zoom, %", view.ZoomOption, 10));
 }
 
 void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &drawingTab = dialog.createTab("Drawing");
 
-	DiagramView &view = *myCalculator.myView;
+	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 	drawingTab.addOption(new ZLSimpleBooleanOptionEntry("Connect New Lines To Existing Points Only", view.ExistingPointsOnlyOption));
 	drawingTab.addOption(new ZLSimpleBooleanOptionEntry("Draw Segment For Middle Point", view.CreateSegmentForMiddlePointOption));
 }
@@ -48,7 +68,7 @@ void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
 void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &pointTab = dialog.createTab("Points");
 
-	DiagramView &view = *myCalculator.myView;
+	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 	pointTab.addOption(new ZLSimpleSpinOptionEntry("Point Radius", view.PointRadiusOption, 1));
 	ZLOptionEntry *fontFamilyEntry = new ZLFontFamilyOptionEntry("Font Family", view.PointFontFamilyOption, view.context());
 	ZLOptionEntry *fontSizeEntry = new ZLSimpleSpinOptionEntry("Font Size", view.PointFontSizeOption, 2);
@@ -62,7 +82,7 @@ void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
 void ShowOptionsDialogAction::createColorsTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &colorsTab = dialog.createTab("Colors");
 
-	DiagramView &view = *myCalculator.myView;
+	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 
 	ZLColorOptionBuilder builder;
 	static const std::string BACKGROUND = "Background";

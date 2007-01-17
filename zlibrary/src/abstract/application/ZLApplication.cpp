@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005, 2006 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -69,7 +69,7 @@ void ZLApplication::initWindow() {
 		grabAllKeys(true);
 	}
 	myWindow->init();
-	resetWindowCaption();
+	setView(myInitialView);
 }
 
 bool ZLApplication::closeView() {
@@ -122,15 +122,21 @@ void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
 	myActionMap[actionId] = action;
 }
 
-void ZLApplication::setView(ZLView *view) {
+void ZLApplication::setView(shared_ptr<ZLView> view) {
+	if (view.isNull()) {
+		return;
+	}
+
 	if (myViewWidget != 0) {
 		myViewWidget->setView(view);
 		resetWindowCaption();
 		refreshWindow();
+	} else {
+		myInitialView = view;
 	}
 }
 
-ZLView *ZLApplication::currentView() {
+shared_ptr<ZLView> ZLApplication::currentView() const {
 	return (myViewWidget != 0) ? myViewWidget->view() : 0;
 }
 

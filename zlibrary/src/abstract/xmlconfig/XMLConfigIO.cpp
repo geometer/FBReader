@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -67,6 +67,7 @@ void XMLConfig::saveAll() {
 			std::set<std::string> &categories = myDelta->myCategories;
 			for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
 				if (!it->empty()) {
+	ZLTime t;
 					shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(*it + ".xml")).outputStream();
 					if (!stream.isNull() && stream->open()) {
 						XMLConfigWriter(*this, *stream, *it).write();

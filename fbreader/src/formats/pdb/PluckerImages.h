@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -60,7 +60,7 @@ public:
 
 	unsigned int rows() const;
 	unsigned int columns() const;
-	const ZLImage *subImage(unsigned int row, unsigned int column) const;
+	shared_ptr<const ZLImage> subImage(unsigned int row, unsigned int column) const;
 
 private:
 	unsigned int myRows, myColumns;

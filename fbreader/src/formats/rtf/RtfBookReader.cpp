@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  * Copyright (C) 2006 Vladimir Sorokin <s_v_d_2000@mail.ru>
  *
@@ -121,12 +121,10 @@ void RtfBookReader::switchDestination(DestinationType destination, bool on) {
 }
 
 void RtfBookReader::insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) {
-	ZLImage *image = new RtfImage(mimeType, fileName, startOffset, size);
-
 	std::string id;
 	ZLStringUtil::appendNumber(id, myImageIndex++);
 	myBookReader.addImageReference(id);	 
-	myBookReader.addImage(id, image);
+	myBookReader.addImage(id, new RtfImage(mimeType, fileName, startOffset, size));
 }
 
 bool RtfBookReader::characterDataHandler(std::string &str) {

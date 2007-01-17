@@ -3,7 +3,7 @@ ROOTDIR = $(PWD)
 include makefiles/platforms.mk
 
 LIBDIR = zlibrary
-APPDIRS = fbreader GeometricCalculator
+APPDIRS = fbreader GeometricCalculator SampleApplications/0
 
 all:
 	@for dir in $(LIBDIR) $(APPDIRS); do \

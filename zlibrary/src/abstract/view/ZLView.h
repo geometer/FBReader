@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -22,6 +22,8 @@
 #define __ZLVIEW_H__
 
 #include <string>
+
+#include <shared_ptr.h>
 
 class ZLPaintContext;
 class ZLApplication;
@@ -70,8 +72,8 @@ protected:
 
 public:
 	virtual ~ZLViewWidget();
-	void setView(ZLView *view);
-	ZLView *view() const;
+	void setView(shared_ptr<ZLView> view);
+	shared_ptr<ZLView> view() const;
 
 	virtual void trackStylus(bool track) = 0;
 
@@ -82,7 +84,7 @@ protected:
 	virtual void repaint() = 0;
 
 private:
-	ZLView *myView;
+	shared_ptr<ZLView> myView;
 	Angle myRotation;
 
 friend class ZLApplication;
@@ -90,7 +92,7 @@ friend class ZLApplication;
 
 inline ZLViewWidget::ZLViewWidget(Angle initialAngle) : myView(0), myRotation(initialAngle) {}
 inline ZLViewWidget::~ZLViewWidget() {}
-inline ZLView *ZLViewWidget::view() const { return myView; }
+inline shared_ptr<ZLView> ZLViewWidget::view() const { return myView; }
 inline void ZLViewWidget::rotate(Angle rotation) { myRotation = rotation; }
 inline ZLViewWidget::Angle ZLViewWidget::rotation() const { return myRotation; }
 

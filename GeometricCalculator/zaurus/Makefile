@@ -7,15 +7,14 @@ TMPDIR = tmp
 DESTDIR = $(TMPDIR)/data
 CTRLDIR = $(TMPDIR)/control
 
-PACKAGENAME = GeometricCalculator
-CONTROLFILE = $(PACKAGENAME).control
+TARGET = GeometricCalculator
 
 RESOLUTION = 640x480
 PICS_TO = pics144
 
 version = $(shell cat ../VERSION)
 depends = libzlibrary-$(UI_TYPE)
-package = $(PACKAGENAME)_$(version)_$(RESOLUTION)_$(ARCH)
+package = $(TARGET)_$(version)_$(RESOLUTION)_$(ARCH)
 
 all: package
 	@mv *.ipk ../..
@@ -25,17 +24,17 @@ package:
 	@mkdir -p $(CTRLDIR)
 	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
 	@install -m 0644 ../icons/640x480/GeometricCalculator.png $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
-	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)/GeometricCalculator
-	@install -m 0644 $(wildcard ../icons/640x480/GeometricCalculator/*.png) $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)/GeometricCalculator
+	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)/$(TARGET)
+	@install -m 0644 $(wildcard ../icons/640x480/$(TARGET)/*.png) $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)/$(TARGET)
 	@install -d $(DESTDIR)$(INSTALLDIR)/apps/Applications
-	@install -m 0644 GeometricCalculator.desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications
-	@echo "Package: $(PACKAGENAME)" > $(CTRLDIR)/control
+	@install -m 0644 desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications/$(TARGET).desktop
+	@echo "Package: $(TARGET)" > $(CTRLDIR)/control
 	@echo -n "Installed-Size: " >> $(CTRLDIR)/control
 	@du -b -s $(DESTDIR) | sed -e 's/[	 ].*//' >> $(CTRLDIR)/control
 	@echo "Filename: ./$(package).ipk" >> $(CTRLDIR)/control
 	@echo "Version: $(version)" >> $(CTRLDIR)/control
 	@echo "Depends: $(depends)" >> $(CTRLDIR)/control
-	@cat $(CONTROLFILE) >> $(CTRLDIR)/control
+	@cat control >> $(CTRLDIR)/control
 	@echo -n "Packaging..."
 	@echo "2.0" > $(TMPDIR)/debian-binary
 	@tar czf $(TMPDIR)/control.tar.gz -C $(CTRLDIR) .

@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -33,7 +33,7 @@
 
 class BookDescription;
 class ZLImage;
-typedef std::map<std::string,ZLImage*> ImageMap;
+typedef std::map<std::string,shared_ptr<const ZLImage> > ImageMap;
 class RowMemoryAllocator;
 
 class ParagraphEntry {
@@ -168,7 +168,7 @@ public:
 	ImageEntry(const std::string &id, const ImageMap *imageMap);
 	~ImageEntry();
 	const std::string &id() const;
-	const ZLImage *image() const;
+	shared_ptr<const ZLImage> image() const;
 
 private:
 	std::string myId;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -248,8 +248,8 @@ void ZLImageManager::convertMultiImage(const ZLMultiImage &multiImage, ZLImageDa
 
 		for (unsigned int i = 0; i < rows; ++i) {
 			for (unsigned int j = 0; j < columns; ++j) {
-				const ZLImage *subImage = multiImage.subImage(i, j);
-				if (subImage == 0) {
+				shared_ptr<const ZLImage> subImage = multiImage.subImage(i, j);
+				if (subImage.isNull()) {
 					return;
 				}
 				shared_ptr<ZLImageData> data = imageData(*subImage);

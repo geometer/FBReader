@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -26,6 +26,8 @@
 #include <ZLView.h>
 #include <ZLApplication.h>
 
+class ZLQtApplicationWindow;
+
 class ZLQtViewWidget : public ZLViewWidget {
 
 private:
@@ -48,7 +50,7 @@ private:
 	};
 	
 public:
-	ZLQtViewWidget(QWidget *parent, ZLApplication *application);
+	ZLQtViewWidget(QWidget *parent, ZLQtApplicationWindow &applicationWindow);
 	QWidget *widget();
 
 private:
@@ -57,7 +59,9 @@ private:
 
 private:
 	ZLQtViewWidgetInternal *myQWidget;
-	ZLApplication *myApplication;
+	ZLQtApplicationWindow &myApplicationWindow;
+
+friend class ZLQtViewWidgetInternal;
 };
 
 inline QWidget *ZLQtViewWidget::widget() { return myQWidget; }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -27,7 +27,7 @@ ZLView::ZLView(ZLApplication &application, ZLPaintContext &context) : myApplicat
 ZLView::~ZLView() {
 }
 
-void ZLViewWidget::setView(ZLView *view) {
+void ZLViewWidget::setView(shared_ptr<ZLView> view) {
 	myView = view;
 }
 

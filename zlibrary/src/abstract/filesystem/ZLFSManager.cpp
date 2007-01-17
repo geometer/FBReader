@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -95,22 +95,23 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 		stream = ZLFSManager::instance().createPlainInputStream(myPath);
 	} else {
 		ZLFile baseFile(myPath.substr(0, index));
-		if (baseFile.myArchiveType & ZIP) {
-			if (ZLFSManager::instance().isZipSupported()) {
-				shared_ptr<ZLInputStream> base = baseFile.inputStream();
-				stream = base.isNull() ? 0 : new ZLZipInputStream(base, myPath.substr(index + 1));
+		shared_ptr<ZLInputStream> base = baseFile.inputStream();
+		if (!base.isNull()) {
+			if (baseFile.myArchiveType & ZIP) {
+				stream = new ZLZipInputStream(base, myPath.substr(index + 1));
+			} else if (baseFile.myArchiveType & TAR) {
+				stream = new ZLTarInputStream(base, myPath.substr(index + 1));
 			}
-		} else if (baseFile.myArchiveType & TAR) {
-			shared_ptr<ZLInputStream> base = baseFile.inputStream();
-			stream = base.isNull() ? 0 : new ZLTarInputStream(base, myPath.substr(index + 1));
 		}
 	}
 
-	if ((myArchiveType & GZIP) && (stream != 0)) {
-		return ZLFSManager::instance().isZipSupported() ? new ZLGzipInputStream(stream) : 0;
-	}
-	if ((myArchiveType & BZIP2) && (stream != 0)) {
-		return new ZLBzip2InputStream(stream);
+	if (stream != 0) {
+		if (myArchiveType & GZIP) {
+			return new ZLGzipInputStream(stream);
+		}
+		if (myArchiveType & BZIP2) {
+			return new ZLBzip2InputStream(stream);
+		}
 	}
 	return stream;
 }
@@ -129,7 +130,7 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 	if (exists()) {
 		if (isDirectory()) {
 			return ZLFSManager::instance().createPlainDirectory(myPath);
-		} else if ((myArchiveType & ZIP) && ZLFSManager::instance().isZipSupported()) {
+		} else if (myArchiveType & ZIP) {
 			return new ZLZipDir(myPath);
 		} else if (myArchiveType & TAR) {
 			return new ZLTarDir(myPath);

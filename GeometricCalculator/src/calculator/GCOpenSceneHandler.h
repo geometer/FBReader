@@ -1,6 +1,6 @@
 /*
- * Geometric Calculator -- dynamic geometry software
- * Copyright (C) 2003-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

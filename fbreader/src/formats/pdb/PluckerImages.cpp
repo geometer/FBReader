@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -72,7 +72,7 @@ const shared_ptr<std::string> DocCompressedFileImage::stringData() const {
 	return imageData;
 }
 
-const ZLImage *PluckerMultiImage::subImage(unsigned int row, unsigned int column) const {
+shared_ptr<const ZLImage> PluckerMultiImage::subImage(unsigned int row, unsigned int column) const {
 	unsigned int index = row * myColumns + column;
 	if (index >= myIds.size()) {
 		return 0;

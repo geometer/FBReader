@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 #include "../model/Paragraph.h"
 
 class BookModel;
+class TextModel;
 class PlainTextModel;
 class ZLInputStream;
 
@@ -58,7 +59,7 @@ public:
 	void addFixedHSpace(unsigned char length);
 
 	void addImageReference(const std::string &id);
-	void addImage(const std::string &id, ZLImage *image);
+	void addImage(const std::string &id, shared_ptr<const ZLImage> image);
 
 	void beginContentsParagraph(int referenceNumber = -1);
 	void endContentsParagraph();
@@ -75,11 +76,12 @@ public:
 	void reset();
 
 private:
+	void insertEndParagraph(Paragraph::Kind kind);
 	void flushTextBufferToParagraph();
 
 private:
 	BookModel &myModel;
-	PlainTextModel *myCurrentTextModel;
+	shared_ptr<TextModel> myCurrentTextModel;
 
 	std::vector<TextKind> myKindStack;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -21,6 +21,8 @@
 #ifndef __ZLUNIXFILEOUTPUTSTREAM_H__
 #define __ZLUNIXFILEOUTPUTSTREAM_H__
 
+#include <stdio.h>
+
 #include "../../abstract/filesystem/ZLOutputStream.h"
 
 class ZLUnixFileOutputStream : public ZLOutputStream {
@@ -36,7 +38,8 @@ private:
 	std::string myName;
 	std::string myTemporaryName;
 	bool myHasErrors;
-	int myFileDescriptor;
+	FILE *myFile;
+	//int myFileDescriptor;
 };
 
 #endif /* __ZLUNIXFILEOUTPUTSTREAM_H__ */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -32,7 +32,7 @@
 class MyMenuBar : public QPEMenuBar {
 
 public:
-	MyMenuBar(QWidget *parent) : QPEMenuBar(parent), myIndex(-1) {}
+	MyMenuBar(QWidget *parent, ZLQtApplicationWindow &window) : QPEMenuBar(parent), myWindow(window), myIndex(-1) {}
 	~MyMenuBar();
 	void setItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
@@ -46,6 +46,7 @@ private:
 
 private:
 	std::map<int,ToolBarButton*> myButtons;
+	ZLQtApplicationWindow &myWindow;
 
 public:
 	int myIndex;
@@ -93,18 +94,19 @@ bool ToolBarButton::toggle() {
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
-	setWFlags(getWFlags() | WStyle_Customize);
+	myMainWindow = new MyMainWindow(this);
 
 	myFullScreen = false;
 	myTitleHeight = -1;
 
 	myVerticalDelta = -1;
 
-	myToolBar = new MyMenuBar(this);
+	myToolBar = new MyMenuBar(myMainWindow, *this);
 	myMenu = new QPopupMenu(myToolBar);
 	myToolBar->insertItem(QString::null, myMenu, -1, 0);
 
-	((QPEApplication*)qApp)->showMainWidget(this);
+	((QPEApplication*)qApp)->showMainWidget(myMainWindow);
+	myMainWindow->setWFlags(myMainWindow->getWFlags() | QObject::WStyle_Customize);
 }
 
 MyMenuBar::~MyMenuBar() {
@@ -118,7 +120,7 @@ void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 	if (qCaption.length() > 60) {
 		qCaption = qCaption.left(57) + "...";
 	}
-	QMainWindow::setCaption(qCaption);
+	myMainWindow->setCaption(qCaption);
 }
 
 bool ZLQtApplicationWindow::isFullKeyboardControlSupported() const {
@@ -203,7 +205,7 @@ void MyMenuBar::setItemState(ZLApplication::Toolbar::ItemPtr item, bool visible,
 			if (idAt(myIndex) != id) {
 				ToolBarButton *tbButton = myButtons[id];
 				if (tbButton == 0) {
-					tbButton = new ToolBarButton(*(ZLQtApplicationWindow*)parent(), button);
+					tbButton = new ToolBarButton(myWindow, button);
 					myButtons[id] = tbButton;
 				}
 				insertItem(tbButton->pixmap(), tbButton, SLOT(doActionSlot()), 0, id, myIndex);
@@ -245,26 +247,28 @@ void ToolBarButton::doActionSlot() {
 	myWindow.onButtonPress(myButton);
 }
 
-void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
-	application().doActionByKey(ZLQtKeyUtil::keyName(event));
+void MyMainWindow::keyPressEvent(QKeyEvent *event) {
+	myApplicationWindow->application().doActionByKey(ZLQtKeyUtil::keyName(event));
 }
 
-void ZLQtApplicationWindow::focusInEvent(QFocusEvent*) {
-	if (myFullScreen && (size() != qApp->desktop()->size())) {
-		showNormal();
-		showFullScreen();
+void MyMainWindow::focusInEvent(QFocusEvent*) {
+	if (myApplicationWindow != 0) {
+		if (myApplicationWindow->myFullScreen && (size() != qApp->desktop()->size())) {
+			showNormal();
+			showFullScreen();
+		}
+		myApplicationWindow->fullScreenWorkaround();
 	}
-	fullScreenWorkaround();
 }
 
-int ZLQtApplicationWindow::veritcalAdjustment() {
+int ZLQtApplicationWindow::verticalAdjustment() {
 	if (myFullScreen || (myVerticalDelta == -1)) {
 		return 0;
 	}
-	return qApp->desktop()->height() - myVerticalDelta - height();
+	return qApp->desktop()->height() - myVerticalDelta - myMainWindow->height();
 }
 
-void ZLQtApplicationWindow::resizeEvent(QResizeEvent *event) {
+void MyMainWindow::resizeEvent(QResizeEvent *event) {
 	if (event->size().width() != qApp->desktop()->width()) {
 		QSize oldSize = event->size();
 		QSize newSize = oldSize;
@@ -273,13 +277,13 @@ void ZLQtApplicationWindow::resizeEvent(QResizeEvent *event) {
 		QApplication::sendEvent(this, &newEvent);
 		return;
 	}
-	if ((myVerticalDelta == -1) && !myFullScreen) {
-		myVerticalDelta = qApp->desktop()->height() - event->size().height();
+	if ((myApplicationWindow->myVerticalDelta == -1) && !myApplicationWindow->myFullScreen) {
+		myApplicationWindow->myVerticalDelta = qApp->desktop()->height() - event->size().height();
 	}
-	if (myFullScreen && (size() != qApp->desktop()->size())) {
+	if (myApplicationWindow->myFullScreen && (size() != qApp->desktop()->size())) {
 		int titleHeight = topData()->normalGeometry.top();
 		if (titleHeight > 0) {
-			myTitleHeight = titleHeight;
+			myApplicationWindow->myTitleHeight = titleHeight;
 		}
 		topData()->normalGeometry = QRect(0, 0, -1, -1);
 		showNormal();
@@ -294,16 +298,16 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		myToolBar->hide();
-		showFullScreen();
+		myMainWindow->showFullScreen();
 	} else {
 		myToolBar->show();
-		showNormal();
+		myMainWindow->showNormal();
 		if (myTitleHeight > 0) {
-			move(1, myTitleHeight);
+			myMainWindow->move(1, myTitleHeight);
 			myTitleHeight = -1;
 		}
-		setWFlags(getWFlags() | WStyle_Customize);
-		showMaximized();
+		myMainWindow->setWFlags(myMainWindow->getWFlags() | QObject::WStyle_Customize);
+		myMainWindow->showMaximized();
 	}
 }
 
@@ -311,35 +315,39 @@ bool ZLQtApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
-	if (application().closeView()) {
-		event->accept();
-	} else {
-		event->ignore();
+void MyMainWindow::closeEvent(QCloseEvent *event) {
+	if (myApplicationWindow != 0) {
+		if (myApplicationWindow->application().closeView()) {
+			delete &myApplicationWindow->application();
+			myApplicationWindow = 0;
+			event->accept();
+		} else {
+			event->ignore();
+		}
 	}
 }
 
 void ZLQtApplicationWindow::fullScreenWorkaround() {
 	if (myFullScreen) {
-		reparent(0, WType_TopLevel, QPoint(0,0));
-		reparent(0, WType_TopLevel | WStyle_Customize | WStyle_NoBorderEx, QPoint(0,0));
-		show();
+		myMainWindow->reparent(0, QObject::WType_TopLevel, QPoint(0,0));
+		myMainWindow->reparent(0, QObject::WType_TopLevel | QObject::WStyle_Customize | QObject::WStyle_NoBorderEx, QPoint(0,0));
+		myMainWindow->show();
 	}
 }
 
 void ZLQtApplicationWindow::close() {
-	QMainWindow::close();
+	myMainWindow->close();
 }
 
-void ZLQtApplicationWindow::setDocument(const QString &fileName) {
+void MyMainWindow::setDocument(const QString &fileName) {
 	if (!fileName.isEmpty()) {
-		application().openFile((const char*)fileName.utf8());
+		myApplicationWindow->application().openFile((const char*)fileName.utf8());
 	}
 }
 
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
-	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
-	setCentralWidget(viewWidget->widget());
+	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(myMainWindow, *this);
+	myMainWindow->setCentralWidget(viewWidget->widget());
 	return viewWidget;
 }
 
@@ -362,7 +370,7 @@ ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLApplicatio
 
 void ZLQtMenuAction::doSlot() {
 	myWindow.application().doAction(myActionId);
-	myWindow.setFocus();
+	myWindow.myMainWindow->setFocus();
 }
 
 void MyMenuBar::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005, 2006 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -302,8 +302,8 @@ protected:
 
 	void addAction(int actionId, shared_ptr<Action> action);
 
-	void setView(ZLView *view);
-	ZLView *currentView();
+	void setView(shared_ptr<ZLView> view);
+	shared_ptr<ZLView> currentView() const;
 
 	void setFullscreen(bool fullscreen);
 	bool isFullscreen() const;
@@ -347,6 +347,7 @@ protected:
 	ZLViewWidget *myViewWidget;
 
 private:
+	shared_ptr<ZLView> myInitialView;
 	std::map<int,shared_ptr<Action> > myActionMap;
 	Toolbar myToolbar;
 	Menubar myMenubar;

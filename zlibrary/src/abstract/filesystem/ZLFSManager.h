@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -53,7 +53,6 @@ protected:
 	virtual ZLFSDir *createPlainDirectory(const std::string &path) const = 0;
 	virtual ZLFSDir *createNewDirectory(const std::string &path) const = 0;
 	virtual ZLFileInfo fileInfo(const std::string &path) const = 0;
-	virtual bool isZipSupported() const = 0;
 	virtual bool removeFile(const std::string &path) const = 0;
 	virtual std::string convertFilenameToUtf8(const std::string &name) const = 0;
 

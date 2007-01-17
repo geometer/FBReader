@@ -1,8 +1,29 @@
+/*
+ * Geometric Calculator -- interactive geometry program
+ * Copyright (C) 2003-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #ifndef __DIAGRAMVIEW_H__
 #define __DIAGRAMVIEW_H__
 
 #include <vector>
 #include <set>
+#include <map>
 
 #include <ZLView.h>
 #include <ZLPaintContext.h>
@@ -16,8 +37,6 @@ class PointPtr;
 class CirclePtr;
 class DrawableObject;
 class EditMode;
-
-const int DRAWABLE_LEVELS_NUMBER = 100;
 
 class DiagramView : public ZLView {
 
@@ -63,12 +82,24 @@ private:
 		PREREGULAR
 	};
 
+	enum DrawableObjectLevel {
+		ACTIVE_AUXILARY_LINE_LEVEL = 25,
+		ACTIVE_LINE_LEVEL = 30,
+		INACTIVE_LINE_LEVEL = 35,
+		SELECTED_LINE_LEVEL = 40,
+		RULER_LEVEL = 42,
+		INACTIVE_POINT_LEVEL = 45,
+		ACTIVE_POINT_LEVEL = 50,
+		TEMPORARY_POINT_LEVEL = 60,
+		SELECTED_POINT_LEVEL = 65,
+	};
+
 	void drawPoint(const PointPtr point, DrawMode drawMode);
 	void drawLine(const LineCoordsPtr line, DrawMode drawMode);
 	void drawCircle(const CirclePtr circle, DrawMode drawMode);
 	void drawRuler(const ValuePtr ruler);
 
-	void addDrawableObject(DrawableObject *object, int level);
+	void addDrawableObject(DrawableObject *object, DrawableObjectLevel level);
 
 private:
 	DrawMode getDrawMode(const ObjectPtr object) const;
@@ -84,7 +115,8 @@ private:
 	double unzoomed(double coordinate) const;
 
 private:
-	std::vector<DrawableObject*> myDrawableObjects[DRAWABLE_LEVELS_NUMBER];
+	typedef std::map<DrawableObjectLevel,std::vector<DrawableObject*> > DrawableObjectMap;
+	DrawableObjectMap myDrawableObjects;
 	shared_ptr<EditMode> myCurrentMode;
 	Document *myDocument;
 	std::set<ObjectPtr> mySelected;

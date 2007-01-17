@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005, 2006 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -25,14 +25,6 @@
 
 #include "../xmlconfig/XMLOptions.h"
 
-const std::string ZLApplicationBase::BaseDirectory = std::string(BASEDIR);
-const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
-const std::string ZLApplicationBase::PathDelimiter = "/";
-
-std::string ZLApplicationBase::ourApplicationName;
-std::string ZLApplicationBase::ourImageDirectory;
-std::string ZLApplicationBase::ourApplicationSubdirectoryName;
-
 class ConfigSaverRunnable : public ZLRunnable {
 
 public:
@@ -40,6 +32,14 @@ public:
 		XMLOptions::deleteInstance();
 	}
 };
+
+const std::string ZLApplicationBase::BaseDirectory = std::string(BASEDIR);
+const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
+const std::string ZLApplicationBase::PathDelimiter = "/";
+
+std::string ZLApplicationBase::ourApplicationName;
+std::string ZLApplicationBase::ourImageDirectory;
+std::string ZLApplicationBase::ourApplicationSubdirectoryName;
 
 void ZLApplicationBase::replaceRegExps(std::string &str) {
 	static const std::string NAME_PATTERN = "%APPLICATION_NAME%";

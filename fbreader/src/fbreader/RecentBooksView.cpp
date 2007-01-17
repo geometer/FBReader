@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,7 +30,6 @@
 static const std::string LIBRARY = "Recent Books";
 
 RecentBooksView::RecentBooksView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
-	myLastBooksModel = 0;
 }
 
 RecentBooksView::~RecentBooksView() {
@@ -42,29 +41,25 @@ const std::string &RecentBooksView::caption() const {
 }
 
 void RecentBooksView::paint() {
-	if (myLastBooksModel == 0) {
-		myLastBooksModel = new PlainTextModel();
+	if (model().isNull()) {
+		PlainTextModel *recentBooksModel = new PlainTextModel();
 		const Books &books = myLastBooks.books();
 		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
-			myLastBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
-			myLastBooksModel->addControl(RECENT_BOOK_LIST, true);
-			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
-			myLastBooksModel->addText((*it)->author()->displayName() + ". ");
-			myLastBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, false);
-			myLastBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
-			myLastBooksModel->addText((*it)->title());
+			recentBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
+			recentBooksModel->addControl(RECENT_BOOK_LIST, true);
+			recentBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
+			recentBooksModel->addText((*it)->author()->displayName() + ". ");
+			recentBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, false);
+			recentBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
+			recentBooksModel->addText((*it)->title());
 		}
-		setModel(myLastBooksModel, LIBRARY);
+		setModel(recentBooksModel, LIBRARY);
 	}
 	TextView::paint();
 }
 
 void RecentBooksView::rebuild() {
 	setModel(0, LIBRARY);
-	if (myLastBooksModel != 0) {
-		delete myLastBooksModel;
-		myLastBooksModel = 0;
-	}
 }
 
 bool RecentBooksView::onStylusPress(int x, int y) {

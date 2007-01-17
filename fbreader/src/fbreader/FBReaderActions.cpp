@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -65,7 +65,7 @@ bool FBReader::ShowContentsAction::isVisible() {
 }
 
 bool FBReader::ShowContentsAction::isEnabled() {
-	return isVisible() && !myFBReader.myContentsView->isEmpty();
+	return isVisible() && !((ContentsView&)*myFBReader.myContentsView).isEmpty();
 }
 
 void FBReader::ShowContentsAction::run() {
@@ -91,7 +91,7 @@ bool FBReader::ScrollToHomeAction::isVisible() {
 }
 
 void FBReader::ScrollToHomeAction::run() {
-	myFBReader.myBookTextView->scrollToHome();
+	myFBReader.bookTextView().scrollToHome();
 }
 
 FBReader::ScrollToStartOfTextAction::ScrollToStartOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -102,7 +102,7 @@ bool FBReader::ScrollToStartOfTextAction::isVisible() {
 }
 
 void FBReader::ScrollToStartOfTextAction::run() {
-	myFBReader.myBookTextView->scrollToStartOfText();
+	myFBReader.bookTextView().scrollToStartOfText();
 }
 
 FBReader::ScrollToEndOfTextAction::ScrollToEndOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -113,7 +113,7 @@ bool FBReader::ScrollToEndOfTextAction::isVisible() {
 }
 
 void FBReader::ScrollToEndOfTextAction::run() {
-	myFBReader.myBookTextView->scrollToEndOfText();
+	myFBReader.bookTextView().scrollToEndOfText();
 }
 
 FBReader::ShowBookInfoAction::ShowBookInfoAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -135,12 +135,12 @@ FBReader::UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {
 
 bool FBReader::UndoAction::isEnabled() {
 	return (myFBReader.myMode != BOOK_TEXT_MODE) ||
-					myFBReader.myBookTextView->canUndoPageMove();
+					myFBReader.bookTextView().canUndoPageMove();
 }
 
 void FBReader::UndoAction::run() {
 	if (myFBReader.myMode == BOOK_TEXT_MODE) {
-		myFBReader.myBookTextView->undoPageMove();
+		myFBReader.bookTextView().undoPageMove();
 	} else {
 		myFBReader.restorePreviousMode();
 	}
@@ -154,11 +154,11 @@ bool FBReader::RedoAction::isVisible() {
 }
 
 bool FBReader::RedoAction::isEnabled() {
-	return isVisible() && myFBReader.myBookTextView->canRedoPageMove();
+	return isVisible() && myFBReader.bookTextView().canRedoPageMove();
 }
 
 void FBReader::RedoAction::run() {
-	myFBReader.myBookTextView->redoPageMove();
+	myFBReader.bookTextView().redoPageMove();
 }
 
 void FBReader::ShowOptionsDialogAction::run() {
@@ -180,24 +180,24 @@ FBReader::FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader
 }
 
 bool FBReader::FindNextAction::isEnabled() {
-	TextView *textView = (TextView*)myFBReader.currentView();
-	return (textView != 0) && textView->canFindNext();
+	shared_ptr<ZLView> view = myFBReader.currentView();
+	return (!view.isNull()) && ((TextView&)*view).canFindNext();
 }
 
 void FBReader::FindNextAction::run() {
-	((TextView*)myFBReader.currentView())->findNext();
+	((TextView&)*myFBReader.currentView()).findNext();
 }
 
 FBReader::FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool FBReader::FindPreviousAction::isEnabled() {
-	TextView *textView = (TextView*)myFBReader.currentView();
-	return (textView != 0) && textView->canFindPrevious();
+	shared_ptr<ZLView> view = myFBReader.currentView();
+	return (!view.isNull()) && ((TextView&)*view).canFindPrevious();
 }
 
 void FBReader::FindPreviousAction::run() {
-	((TextView*)myFBReader.currentView())->findPrevious();
+	((TextView&)*myFBReader.currentView()).findPrevious();
 }
 
 FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
@@ -215,8 +215,8 @@ bool FBReader::ScrollingAction::useKeyDelay() const {
 
 void FBReader::ScrollingAction::run() {
 	int delay = myFBReader.myLastScrollingTime.millisecondsTo(ZLTime());
-	TextView *textView = (TextView*)myFBReader.currentView();
-	if ((textView != 0) && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
+	shared_ptr<ZLView> view = myFBReader.currentView();
+	if (!view.isNull() && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
 		TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
 		unsigned int oValue = 0;
 		switch (oType) {
@@ -232,7 +232,7 @@ void FBReader::ScrollingAction::run() {
 			default:
 				break;
 		}
-		textView->scrollPage(myForward, oType, oValue);
+		((TextView&)*view).scrollPage(myForward, oType, oValue);
 		myFBReader.refreshWindow();
 		myFBReader.myLastScrollingTime = ZLTime();
 	}
@@ -255,11 +255,11 @@ bool FBReader::OpenPreviousBookAction::isVisible() {
 	if ((myFBReader.myMode != BOOK_TEXT_MODE) && (myFBReader.myMode != CONTENTS_MODE)) {
 		return false;
 	}
-	return myFBReader.myRecentBooksView->lastBooks().books().size() > 1;
+	return ((RecentBooksView&)*myFBReader.myRecentBooksView).lastBooks().books().size() > 1;
 }
 
 void FBReader::OpenPreviousBookAction::run() {
-	Books books = myFBReader.myRecentBooksView->lastBooks().books();
+	Books books = ((RecentBooksView&)*myFBReader.myRecentBooksView).lastBooks().books();
 	myFBReader.openBook(books[1]);
 	myFBReader.refreshWindow();
 	myFBReader.resetWindowCaption();

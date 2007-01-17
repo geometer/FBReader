@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -68,7 +68,7 @@ void PluckerBookReader::safeBeginParagraph() {
 		myBufferIsEmpty = true;
 		beginParagraph();
 		if (!myParagraphStored) {
-			myParagraphVector->push_back(model().bookTextModel().paragraphsNumber() - 1);
+			myParagraphVector->push_back(model().bookTextModel()->paragraphsNumber() - 1);
 			myParagraphStored = true;
 		}
 		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); ++it) {

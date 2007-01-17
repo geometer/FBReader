@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -77,11 +77,6 @@ CollectionModel::CollectionModel(BookCollection &collection) : TreeModel(), myCo
 }
 
 CollectionModel::~CollectionModel() {
-	for (ImageMap::iterator image = myImageMap.begin(); image != myImageMap.end(); ++image) {
-		if (image->second != 0) {
-			delete image->second;
-		}
-	}
 }
 
 BookDescriptionPtr CollectionModel::bookByParagraphNumber(int num) {
@@ -156,13 +151,11 @@ void CollectionModel::insertImage(const std::string &id) {
 }
 
 CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context), myUpdateModel(true) {
-	myCollectionModel = new CollectionModel(myCollection);
-	setModel(myCollectionModel, LIBRARY);
+	setModel(new CollectionModel(myCollection), LIBRARY);
 }
 
 CollectionView::~CollectionView() {
 	setModel(0, LIBRARY);
-	delete myCollectionModel;
 }
 
 void CollectionView::updateModel() {
@@ -176,13 +169,13 @@ const std::string &CollectionView::caption() const {
 
 void CollectionView::selectBook(BookDescriptionPtr book) {
 	if (myUpdateModel) {
+		shared_ptr<TextModel> oldModel = model();
 		setModel(0, LIBRARY);
-		myCollectionModel->update();
-		setModel(myCollectionModel, LIBRARY);
-		//clearCaches();
+		((CollectionModel&)*oldModel).update();
+		setModel(oldModel, LIBRARY);
 		myUpdateModel = false;
 	}
-	int toSelect = myCollectionModel->paragraphNumberByBook(book);
+	int toSelect = collectionModel().paragraphNumberByBook(book);
 	if (toSelect >= 0) {
 		selectParagraph(toSelect);
 		gotoParagraph(toSelect);
@@ -192,10 +185,10 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 
 void CollectionView::paint() {
 	if (myUpdateModel) {
+		shared_ptr<TextModel> oldModel = model();
 		setModel(0, LIBRARY);
-		myCollectionModel->update();
-		setModel(myCollectionModel, LIBRARY);
-		//clearCaches();
+		((CollectionModel&)*oldModel).update();
+		setModel(oldModel, LIBRARY);
 		myUpdateModel = false;
 	}
 	TextView::paint();
@@ -218,7 +211,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 		const ImageElement &imageElement = (ImageElement&)element;
 
 		if (imageElement.id() == BOOK_INFO_IMAGE_ID) {
-			BookDescriptionPtr book = myCollectionModel->bookByParagraphNumber(imagePosition->ParagraphNumber);
+			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imagePosition->ParagraphNumber);
 			if (!book.isNull()) {
 				if (BookInfoDialog(myCollection, book->fileName()).dialog().run("")) {
 					myCollection.rebuild(false);
@@ -228,12 +221,12 @@ bool CollectionView::onStylusPress(int x, int y) {
 				}
 			}
 		} else if (imageElement.id() == DELETE_IMAGE_ID) {
-			BookDescriptionPtr book = myCollectionModel->bookByParagraphNumber(imagePosition->ParagraphNumber);
+			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imagePosition->ParagraphNumber);
 			if (!book.isNull()) {
 				const std::string question = "Remove Book\n\"" + book->title() + "\"\nfrom library?";
 				if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
 					BookList().removeFileName(book->fileName());
-					myCollectionModel->removeParagraph(imagePosition->ParagraphNumber);
+					collectionModel().removeParagraph(imagePosition->ParagraphNumber);
 					rebuildPaintInfo(true);
 					repaintView();
 				}
@@ -247,11 +240,15 @@ bool CollectionView::onStylusPress(int x, int y) {
 		return false;
 	}
 
-	BookDescriptionPtr book = myCollectionModel->bookByParagraphNumber(position->ParagraphNumber);
+	BookDescriptionPtr book = collectionModel().bookByParagraphNumber(position->ParagraphNumber);
 	if (!book.isNull()) {
 		fbreader().openBook(book);
 		fbreader().showBookTextView();
 	}
 
 	return true;
+}
+
+CollectionModel &CollectionView::collectionModel() {
+	return (CollectionModel&)*model();
 }

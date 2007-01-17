@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -35,14 +35,35 @@ class QPopupMenu;
 class ZLQtMenuAction;
 class QPixmap;
 
-class ZLQtApplicationWindow : public QMainWindow, public ZLApplicationWindow {
+class ZLQtApplicationWindow;
+
+class MyMainWindow : public QMainWindow {
 	Q_OBJECT
+
+public:
+	MyMainWindow(ZLQtApplicationWindow *applicationWindow) : QMainWindow(), myApplicationWindow(applicationWindow) {}
+	WFlags getWFlags() { return QMainWindow::getWFlags(); }
+	void setWFlags(WFlags flags) { QMainWindow::setWFlags(flags); }
+
+	void focusInEvent(QFocusEvent *event);
+	void resizeEvent(QResizeEvent *event);
+	void closeEvent(QCloseEvent *event);
+	void keyPressEvent(QKeyEvent *event);
+
+private slots:
+	void setDocument(const QString &fileName);
+
+private:
+	ZLQtApplicationWindow *myApplicationWindow;
+};
+
+class ZLQtApplicationWindow : public ZLApplicationWindow {
 
 public:
 	ZLQtApplicationWindow(ZLApplication *application);
 
 	void fullScreenWorkaround();
-	int veritcalAdjustment();
+	int verticalAdjustment();
 
 private:
 	ZLViewWidget *createViewWidget();
@@ -100,16 +121,8 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
-	void focusInEvent(QFocusEvent *event);
-	void resizeEvent(QResizeEvent *event);
-	void closeEvent(QCloseEvent *event);
-	void keyPressEvent(QKeyEvent *event);
-
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
 	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
-
-private slots:
-	void setDocument(const QString &fileName);
 
 private:
 	std::vector<bool> myToolbarMask;
@@ -121,12 +134,15 @@ private:
 
 	int myVerticalDelta;
 
+	class MyMainWindow *myMainWindow;
 	QMenuBar *myToolBar;
 	QPopupMenu *myMenu;
 
+friend class MyMainWindow;
 friend class MenuMaskCalculator;
 friend class MenuUpdater;
 friend class ToolBarButton;
+friend class ZLQtMenuAction;
 };
 
 class ToolBarButton : public QObject {

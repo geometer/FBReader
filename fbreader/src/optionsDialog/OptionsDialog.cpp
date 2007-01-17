@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -242,9 +242,11 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 
 	ZLDialogContent &generalTab = myDialog->createTab("General");
 	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
-	generalTab.addOption(new ZLSimpleStringOptionEntry("Book Path", fbreader.myCollectionView->collection().PathOption));
-	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", fbreader.myCollectionView->collection().ScanSubdirsOption));
-	generalTab.addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", fbreader.myRecentBooksView->lastBooks().MaxListSizeOption, 1));
+	CollectionView &collectionView = (CollectionView&)*fbreader.myCollectionView;
+	generalTab.addOption(new ZLSimpleStringOptionEntry("Book Path", collectionView.collection().PathOption));
+	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", collectionView.collection().ScanSubdirsOption));
+	RecentBooksView &recentBooksView = (RecentBooksView&)*fbreader.myRecentBooksView;
+	generalTab.addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", recentBooksView.lastBooks().MaxListSizeOption, 1));
 	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", fbreader.StoreContentsPositionOption));
 	generalTab.addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
 	generalTab.addOption(new DefaultLanguageEntry());

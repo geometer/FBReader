@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -198,7 +198,7 @@ public:
 	const WordCursor &startCursor() const;
 	const WordCursor &endCursor() const;
 
-	virtual void setModel(const TextModel *model, const std::string &name);
+	virtual void setModel(shared_ptr<TextModel> model, const std::string &name);
 
 	bool hasMultiSectionModel() const;
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly);
@@ -213,7 +213,7 @@ protected:
 	virtual void paint();
 
 	const std::string &fileName() const;
-	const TextModel *model() const;
+	const shared_ptr<TextModel> model() const;
 
 	const ParagraphPosition *paragraphByCoordinate(int y) const;
 	const TextElementPosition *elementByCoordinates(int x, int y) const;
@@ -258,7 +258,7 @@ private:
 	std::vector<size_t>::const_iterator nextBreakIterator() const;
 
 private:
-	const TextModel *myModel;
+	shared_ptr<TextModel> myModel;
 	std::string myFileName;
 
 	enum {
@@ -313,7 +313,7 @@ inline bool TextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const WordCursor &TextView::startCursor() const { return myStartCursor; }
 inline const WordCursor &TextView::endCursor() const { return myEndCursor; }
 inline const std::string &TextView::fileName() const { return myFileName; }
-inline const TextModel *TextView::model() const { return myModel; }
+inline const shared_ptr<TextModel> TextView::model() const { return myModel; }
 inline int TextView::infoSize(const LineInfo &info, SizeUnit unit) {
 	return (unit == PIXEL_UNIT) ? (info.Height + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
 }

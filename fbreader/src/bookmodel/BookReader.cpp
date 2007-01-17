@@ -1,6 +1,6 @@
 /*
  * FBReader -- electronic book reader
- * Copyright (C) 2004-2006 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301, USA.
  */
+
+#include <ZLImage.h>
 
 #include "BookReader.h"
 #include "BookModel.h"
@@ -37,16 +39,16 @@ BookReader::~BookReader() {
 }
 
 void BookReader::setMainTextModel() {
-	myCurrentTextModel = &myModel.myBookTextModel;
+	myCurrentTextModel = myModel.myBookTextModel;
 }
 
 void BookReader::setFootnoteTextModel(const std::string &id) {
-	std::map<std::string,PlainTextModel*>::iterator it = myModel.myFootnotes.find(id);
+	std::map<std::string,shared_ptr<TextModel> >::iterator it = myModel.myFootnotes.find(id);
 	if (it != myModel.myFootnotes.end()) {
 		myCurrentTextModel = (*it).second;
 	} else {
 		myCurrentTextModel = new PlainTextModel();
-		myModel.myFootnotes.insert(std::pair<std::string,PlainTextModel*>(id, myCurrentTextModel));
+		myModel.myFootnotes.insert(std::pair<std::string,shared_ptr<TextModel> >(id, myCurrentTextModel));
 	}
 }
 
@@ -68,7 +70,7 @@ bool BookReader::popKind() {
 
 void BookReader::beginParagraph(Paragraph::Kind kind) {
 	if (myCurrentTextModel != 0) {
-		myCurrentTextModel->createParagraph(kind);
+		((PlainTextModel&)*myCurrentTextModel).createParagraph(kind);
 		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); ++it) {
 			myCurrentTextModel->addControl(*it, true);
 		}
@@ -111,8 +113,8 @@ void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 }
 
 void BookReader::addHyperlinkLabel(const std::string &label) {
-	if (myCurrentTextModel == &myModel.myBookTextModel) {
-		int paragraphNumber = myModel.bookTextModel().paragraphsNumber();
+	if (myCurrentTextModel == myModel.myBookTextModel) {
+		int paragraphNumber = myModel.bookTextModel()->paragraphsNumber();
 		if (myTextParagraphExists) {
 			--paragraphNumber;
 		}
@@ -144,28 +146,26 @@ void BookReader::flushTextBufferToParagraph() {
 	myBuffer.clear();
 }
 
-void BookReader::addImage(const std::string &id, ZLImage *image) {
-	myModel.myImages.insert(std::pair<std::string,ZLImage*>(id, image));
+void BookReader::addImage(const std::string &id, shared_ptr<const ZLImage> image) {
+	myModel.myImages[id] = image;
+}
+
+void BookReader::insertEndParagraph(Paragraph::Kind kind) {
+	if ((myCurrentTextModel != 0) && mySectionContainsRegularContents) {
+		size_t size = myCurrentTextModel->paragraphsNumber();
+		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != kind)) {
+			((PlainTextModel&)*myCurrentTextModel).createParagraph(kind);
+			mySectionContainsRegularContents = false;
+		}
+	}
 }
 
 void BookReader::insertEndOfSectionParagraph() {
-	if ((myCurrentTextModel != 0) && mySectionContainsRegularContents) {
-		size_t size = myCurrentTextModel->paragraphsNumber();
-		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != Paragraph::END_OF_SECTION_PARAGRAPH)) {
-			myCurrentTextModel->createParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
-			mySectionContainsRegularContents = false;
-		}
-	}
+	insertEndParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
 }
 
 void BookReader::insertEndOfTextParagraph() {
-	if ((myCurrentTextModel != 0) && mySectionContainsRegularContents) {
-		size_t size = myCurrentTextModel->paragraphsNumber();
-		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != Paragraph::END_OF_TEXT_PARAGRAPH)) {
-			myCurrentTextModel->createParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
-			mySectionContainsRegularContents = false;
-		}
-	}
+	insertEndParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
 }
 
 void BookReader::addImageReference(const std::string &id) {
@@ -185,22 +185,23 @@ void BookReader::addImageReference(const std::string &id) {
 }
 
 void BookReader::beginContentsParagraph(int referenceNumber) {
-	if (myCurrentTextModel == &myModel.myBookTextModel) {
+	if (myCurrentTextModel == myModel.myBookTextModel) {
+		ContentsModel &contentsModel = (ContentsModel&)*myModel.myContentsModel;
 		if (referenceNumber == -1) {
 			referenceNumber = myCurrentTextModel->paragraphsNumber();
 		}
 		TreeParagraph *peek = myTOCStack.empty() ? 0 : myTOCStack.top();
 		if (!myContentsBuffer.empty()) {
-			myModel.myContentsModel.addText(myContentsBuffer);
+			contentsModel.addText(myContentsBuffer);
 			myContentsBuffer.clear();
 			myLastTOCParagraphIsEmpty = false;
 		}
 		if (myLastTOCParagraphIsEmpty) {
-			myModel.myContentsModel.addText("...");
+			contentsModel.addText("...");
 		}
-		TreeParagraph *para = myModel.myContentsModel.createParagraph(peek);
-		myModel.myContentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
-		myModel.myContentsModel.setReference(para, referenceNumber);
+		TreeParagraph *para = contentsModel.createParagraph(peek);
+		contentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
+		contentsModel.setReference(para, referenceNumber);
 		myTOCStack.push(para);
 		myLastTOCParagraphIsEmpty = true;
 	}
@@ -208,13 +209,14 @@ void BookReader::beginContentsParagraph(int referenceNumber) {
 
 void BookReader::endContentsParagraph() {
 	if (!myTOCStack.empty()) {
+		ContentsModel &contentsModel = (ContentsModel&)*myModel.myContentsModel;
 		if (!myContentsBuffer.empty()) {
-			myModel.myContentsModel.addText(myContentsBuffer);
+			contentsModel.addText(myContentsBuffer);
 			myContentsBuffer.clear();
 			myLastTOCParagraphIsEmpty = false;
 		}
 		if (myLastTOCParagraphIsEmpty) {
-			myModel.myContentsModel.addText("...");
+			contentsModel.addText("...");
 			myLastTOCParagraphIsEmpty = false;
 		}
 		myTOCStack.pop();
@@ -222,10 +224,11 @@ void BookReader::endContentsParagraph() {
 }
 
 void BookReader::setReference(size_t contentsParagraphNumber, int referenceNumber) {
-	if (contentsParagraphNumber >= myModel.myContentsModel.paragraphsNumber()) {
+	ContentsModel &contentsModel = (ContentsModel&)*myModel.myContentsModel;
+	if (contentsParagraphNumber >= contentsModel.paragraphsNumber()) {
 		return;
 	}
-	myModel.myContentsModel.setReference(((TreeParagraph*)myModel.myContentsModel[contentsParagraphNumber]), referenceNumber);
+	contentsModel.setReference((const TreeParagraph*)contentsModel[contentsParagraphNumber], referenceNumber);
 }
 
 void BookReader::reset() {
