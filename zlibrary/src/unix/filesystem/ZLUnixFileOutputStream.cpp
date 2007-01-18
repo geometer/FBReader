@@ -19,6 +19,7 @@
  */
 
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "ZLUnixFileOutputStream.h"
 
@@ -33,11 +34,9 @@ bool ZLUnixFileOutputStream::open() {
 	close();
 
 	myTemporaryName = myName + ".XXXXXX" + '\0';
-	int fileDescriptor = ::mkstemp((char*)myTemporaryName.data());
-	if (fileDescriptor == -1) {
+	if (::mktemp((char*)myTemporaryName.data()) == 0) {
 		return false;
 	}
-	::close(fileDescriptor);
 
 	myFile = fopen(myTemporaryName.c_str(), "w");
 	return myFile != 0;
