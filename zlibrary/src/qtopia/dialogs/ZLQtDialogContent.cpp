@@ -61,28 +61,28 @@ void ZLQtDialogContent::createViewByEntry(ZLOptionEntry *option, int fromColumn,
 
 	ZLQtOptionView *view = 0;
 	switch (option->kind()) {
-		case BOOLEAN:
+		case ZLOptionEntry::BOOLEAN:
 			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case STRING:
+		case ZLOptionEntry::STRING:
 			view = new StringOptionView((ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case MULTILINE:
+		case ZLOptionEntry::MULTILINE:
 			view = new MultilineOptionView((ZLMultilineOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case CHOICE:
+		case ZLOptionEntry::CHOICE:
 			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case SPIN:
+		case ZLOptionEntry::SPIN:
 			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case COMBO:
+		case ZLOptionEntry::COMBO:
 			view = new ComboOptionView((ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case COLOR:
+		case ZLOptionEntry::COLOR:
 			view = new ColorOptionView((ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
-		case KEY:
+		case ZLOptionEntry::KEY:
 			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 	}

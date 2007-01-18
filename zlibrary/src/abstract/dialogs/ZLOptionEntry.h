@@ -26,21 +26,22 @@
 
 #include <ZLOptions.h>
 
-enum ZLOptionKind {
-	CHOICE,
-	BOOLEAN,
-	STRING,
-	SPIN,
-	COMBO,
-	COLOR,
-	KEY,
-	ORDER,
-	MULTILINE,
-};
-
 class ZLOptionView;
 
 class ZLOptionEntry {
+
+public:
+	enum ZLOptionKind {
+		CHOICE,
+		BOOLEAN,
+		STRING,
+		SPIN,
+		COMBO,
+		COLOR,
+		KEY,
+		ORDER,
+		MULTILINE,
+	};
 
 public:
 	ZLOptionEntry();
@@ -206,41 +207,41 @@ inline bool ZLOptionEntry::isVisible() const { return myIsVisible; }
 inline bool ZLOptionEntry::isActive() const { return myIsActive; }
 
 inline ZLChoiceOptionEntry::ZLChoiceOptionEntry() {}
-inline ZLOptionKind ZLChoiceOptionEntry::kind() const { return CHOICE; }
+inline ZLOptionEntry::ZLOptionKind ZLChoiceOptionEntry::kind() const { return CHOICE; }
 
 inline void ZLTextOptionEntry::onValueEdited(const std::string&) {}
 
 inline ZLStringOptionEntry::ZLStringOptionEntry() {}
-inline ZLOptionKind ZLStringOptionEntry::kind() const { return STRING; }
+inline ZLOptionEntry::ZLOptionKind ZLStringOptionEntry::kind() const { return STRING; }
 
 inline ZLMultilineOptionEntry::ZLMultilineOptionEntry() {}
-inline ZLOptionKind ZLMultilineOptionEntry::kind() const { return MULTILINE; }
+inline ZLOptionEntry::ZLOptionKind ZLMultilineOptionEntry::kind() const { return MULTILINE; }
 
 inline ZLBooleanOptionEntry::ZLBooleanOptionEntry() {}
-inline ZLOptionKind ZLBooleanOptionEntry::kind() const { return BOOLEAN; }
+inline ZLOptionEntry::ZLOptionKind ZLBooleanOptionEntry::kind() const { return BOOLEAN; }
 inline void ZLBooleanOptionEntry::onStateChanged(bool) {}
 
 inline ZLSpinOptionEntry::ZLSpinOptionEntry() {}
-inline ZLOptionKind ZLSpinOptionEntry::kind() const { return SPIN; }
+inline ZLOptionEntry::ZLOptionKind ZLSpinOptionEntry::kind() const { return SPIN; }
 
 inline ZLComboOptionEntry::ZLComboOptionEntry(bool editable) : myEditable(editable) {}
-inline ZLOptionKind ZLComboOptionEntry::kind() const { return COMBO; }
+inline ZLOptionEntry::ZLOptionKind ZLComboOptionEntry::kind() const { return COMBO; }
 inline void ZLComboOptionEntry::onValueSelected(int) {}
 inline void ZLComboOptionEntry::onValueEdited(const std::string&) {}
 inline bool ZLComboOptionEntry::isEditable() const { return myEditable; }
 
 inline ZLColorOptionEntry::ZLColorOptionEntry() {}
-inline ZLOptionKind ZLColorOptionEntry::kind() const { return COLOR; }
+inline ZLOptionEntry::ZLOptionKind ZLColorOptionEntry::kind() const { return COLOR; }
 inline void ZLColorOptionEntry::onReset(ZLColor) {}
 
 inline ZLKeyOptionEntry::ZLKeyOptionEntry(const std::string &name) : myName(name) {}
 inline void ZLKeyOptionEntry::addActionName(const std::string &actionName) { myActionNames.push_back(actionName); }
 inline const std::vector<std::string> &ZLKeyOptionEntry::actionNames() const { return myActionNames; }
-inline ZLOptionKind ZLKeyOptionEntry::kind() const { return KEY; }
+inline ZLOptionEntry::ZLOptionKind ZLKeyOptionEntry::kind() const { return KEY; }
 inline const std::string &ZLKeyOptionEntry::name() const { return myName; }
 
 inline ZLOrderOptionEntry::ZLOrderOptionEntry() {}
-inline ZLOptionKind ZLOrderOptionEntry::kind() const { return ORDER; }
+inline ZLOptionEntry::ZLOptionKind ZLOrderOptionEntry::kind() const { return ORDER; }
 inline const std::string &ZLOrderOptionEntry::name() const { return myName; }
 inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues; }
 

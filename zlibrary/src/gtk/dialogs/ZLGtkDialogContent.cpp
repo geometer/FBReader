@@ -67,25 +67,25 @@ void ZLGtkDialogContent::createViewByEntry(ZLOptionEntry *option, int row, int f
 	ZLGtkOptionView *view = 0;
 
 	switch (option->kind()) {
-		case BOOLEAN:
+		case ZLOptionEntry::BOOLEAN:
 			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
-		case STRING:
+		case ZLOptionEntry::STRING:
 			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
-		case CHOICE:
+		case ZLOptionEntry::CHOICE:
 			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
-		case SPIN:
+		case ZLOptionEntry::SPIN:
 			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
-		case COMBO:
+		case ZLOptionEntry::COMBO:
 			view = new ComboOptionView((ZLComboOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
-		case COLOR:
+		case ZLOptionEntry::COLOR:
 			view = new ColorOptionView((ZLColorOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
-		case KEY:
+		case ZLOptionEntry::KEY:
 			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 	}
