@@ -1,11 +1,50 @@
+*** 0.7.9
+
 DONE 16-bit images in plucker files
 
-CollectionModel.update()
+Khmer
+Chinese
+проценты на индикаторе
+часы на индикаторе
+
+mobipocket: где начинаются картинки?
+  ответить на письмо роберту м. (послать файл)
+кодировки: корейская, вьетнамская
+иконка для пакета в pool
+openbook
+вызов по ссылкам внешних программ
 tree-*.png
 	18x15
 	22x18
 	34x28
 	blueset
+
+==============================================================================
+
+*** 0.8.0
+
+win32 version
+многократный перенос (оч. длинное слово)
+info dialog icon in contents tree
+  for books
+	for authors
+	for series
+возможность посмотреть HowToStart в любой момент
+
+==============================================================================
+
+*** после 0.8.0
+
+pocketpc version
+chm
+	как же все-таки искать .hhc?
+open collection view at the same place and with the same set of opened elements
+оптимизировать seek() в архивах
+	DONE tar
+	zip
+	gzip
+	bzip2
+CollectionModel.update()
 OrderOptionEntry
 	qt
 	qtopia
@@ -14,26 +53,8 @@ OrderOptionEntry
 	gpe
 	maemo
 ссылки под картинками в html и картинки в отдельных параграфах
-иконка для пакета в pool
 fbreader as document handler in maemo fileviewer
-вызов по ссылкам внешних программ
-интеграция с каким-нибудь словарем в maemo
-многократный перенос (оч. длинное слово)
-возможность посмотреть HowToStart в любой момент
-chm
-	как же все-таки искать .hhc?
-оптимизировать seek() в архивах
-	DONE tar
-	zip
-	gzip
-	bzip2
-open collection view at the same place and with the same set of opened elements
-info dialog icon in contents tree
-  for books
-	for authors
-	for series
 about dialog
-openbook
 odt
 multihtml
 multichm
@@ -41,7 +62,5 @@ image scaling
 txt (письмо от Антона Фарыгина)
 мягкие переносы
 options dialog -- создавать меньше объектов
-mobipocket: где начинаются картинки?
-  ответить на письмо роберту м. (послать файл)
-кодировки: корейская, вьетнамская
+интеграция с каким-нибудь словарем в maemo
 хитрый контрол для кодировок
