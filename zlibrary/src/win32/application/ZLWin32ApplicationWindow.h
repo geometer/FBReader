@@ -22,6 +22,8 @@
 
 //#include <map>
 
+#include <windows.h>
+
 #include <ZLApplication.h>
 
 class ZLWin32ApplicationWindow : public ZLApplicationWindow { 
@@ -58,12 +60,15 @@ public:
 	void onGtkButtonPress(GtkWidget *gtkButton);
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
+*/
 
 private:
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
 
-	GtkWindow *myMainWindow;
+	HWND myMainWindow;
+
+/*
 	GtkWidget *myToolbar;
 	GtkWidget *myVBox;
 

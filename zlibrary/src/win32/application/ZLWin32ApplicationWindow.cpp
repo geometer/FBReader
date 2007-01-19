@@ -82,12 +82,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	return 0;
 }
 
-//static const std::string OPTIONS = "Options";
+static const std::string OPTIONS = "Options";
 
 ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
-	ZLApplicationWindow(application) {
-	//myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	//myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800),
+	ZLApplicationWindow(application),
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 600),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
 	//myFullScreen(false) {
 
 /*
@@ -109,24 +109,18 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
 	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
 */
-	int nCmdShow = 10;
-	HINSTANCE hInstance = GetModuleHandle(0);
-
-	HWND hMainHwnd;
-	char szClassName[] = "MyClass";
-
 	WNDCLASSEX wc;
 	wc.cbSize = sizeof(wc);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = WndProc;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
-	wc.hInstance = hInstance;
+	wc.hInstance = GetModuleHandle(0);
 	wc.hIcon = LoadIcon(0, IDI_APPLICATION);
 	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
-	wc.lpszClassName = szClassName;
+	wc.lpszClassName = ZLApplication::ApplicationName().c_str();
 	wc.hIconSm = LoadIcon(0, IDI_APPLICATION);
 
 	if (!RegisterClassEx(&wc)) {
@@ -134,13 +128,11 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 		//return 0;
 	}
 
-	hMainHwnd = CreateWindow(szClassName, "Hello Application", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, (HWND)0, (HMENU)0, hInstance, 0);
-	if (hMainHwnd == 0) {
-		//std::cerr << "cannot create main window\n";
-		//return 0;
-	}
+	myMainWindow = CreateWindow(wc.lpszClassName, ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myHeightOption.value(), myWidthOption.value(), (HWND)0, (HMENU)0, wc.hInstance, 0);
+	// TODO: What to do if myMainWindow == 0?
 
-	ShowWindow(hMainHwnd, nCmdShow);
+	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
+	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
 }
 
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
