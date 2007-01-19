@@ -65,6 +65,8 @@ public:
 	void fullScreenWorkaround();
 	int verticalAdjustment();
 
+	QMainWindow *mainWindow();
+
 private:
 	ZLViewWidget *createViewWidget();
 

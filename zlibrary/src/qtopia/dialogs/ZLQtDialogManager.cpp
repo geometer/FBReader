@@ -48,17 +48,17 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const std::string &title) c
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+	QMessageBox::information(myApplicationWindow->mainWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
 	fullScreenWorkaround();
 }
 
 void ZLQtDialogManager::errorBox(const std::string &title, const std::string &message) const {
-	QMessageBox::critical(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+	QMessageBox::critical(myApplicationWindow->mainWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
 	fullScreenWorkaround();
 }
 
 int ZLQtDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	int code = QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
+	int code = QMessageBox::information(myApplicationWindow->mainWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
 	fullScreenWorkaround();
 	return code;
 }

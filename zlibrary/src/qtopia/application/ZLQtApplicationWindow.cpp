@@ -384,3 +384,7 @@ void MyMenuBar::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &b
 void ZLQtApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
 	((MyMenuBar*)myToolBar)->setToggleButtonState(button);
 }
+
+QMainWindow *ZLQtApplicationWindow::mainWindow() {
+	return myMainWindow;
+}
