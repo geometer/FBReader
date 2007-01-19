@@ -21,6 +21,7 @@ do_build() {
 	make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
 }
 
+do_build win32 win32
 do_build openzaurus opie
 do_build openzaurus gpe
 do_build opensimpad-0.9.0 opie

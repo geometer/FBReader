@@ -24,6 +24,10 @@
 
 #include "ZLUnixFSDir.h"
 
+#ifdef _WIN32
+#define lstat stat
+#endif
+
 void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {

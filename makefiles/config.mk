@@ -1,10 +1,12 @@
 include $(ROOTDIR)/makefiles/platforms.mk
 
 MAKE = make ROOTDIR=$(ROOTDIR)
-LIBMAKE = $(MAKE) BUILD_SHARED_LIBRARY=yes
 
 include $(ROOTDIR)/makefiles/arch/$(TARGET_ARCH).mk
 
+ifeq "$(BUILD_SHARED_LIBRARY)" ""
+  BUILD_SHARED_LIBRARY = yes
+endif
 ifeq "$(BINDIR)" ""
   BINDIR = $(INSTALLDIR)/bin
 endif
@@ -25,10 +27,6 @@ ifeq "$(APPLICATIONSUBDIR)" ""
 endif
 
 CFLAGS += -DINSTALLDIR=\"$(INSTALLDIR)\" -DBASEDIR=\"$(BASEDIR)\" -DHOMEDIR=\"$(HOMEDIR)\" -DIMAGEDIR=\"$(IMAGEDIR)\" -DAPPLICATIONSUBDIR=\"$(APPLICATIONSUBDIR)\"
-
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	CFLAGS += -fPIC
-endif
 
 ifeq "$(TARGET_STATUS)" "release"
 	CFLAGS += -O3

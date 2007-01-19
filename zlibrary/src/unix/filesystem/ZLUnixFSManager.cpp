@@ -29,6 +29,9 @@
 #include "ZLUnixFileOutputStream.h"
 
 void ZLUnixFSManager::normalize(std::string &path) const {
+#ifdef _WIN32
+	return;
+#else
 	static std::string HomeDir = getenv("HOME");
 	static std::string PwdDir = getenv("PWD");
 
@@ -48,6 +51,7 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	if (last < (int)path.length() - 1) {
 		path = path.substr(0, last + 1);
 	}
+#endif
 }
 
 ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
@@ -55,7 +59,11 @@ ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
 }
 
 ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
+#ifdef _WIN32
+	return (mkdir(path.c_str()) == 0) ? new ZLUnixFSDir(path) : 0;
+#else
 	return (mkdir(path.c_str(), 0x1FF) == 0) ? new ZLUnixFSDir(path) : 0;
+#endif
 }
 
 ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) const {
