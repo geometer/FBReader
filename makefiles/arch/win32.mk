@@ -12,11 +12,11 @@ LD = i586-mingw32msvc-g++
 CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -I /home/geometer/win32/my/include
 LDFLAGS = -L /home/geometer/win32/my/lib
 # LDFLAGS = -Wl,-rpath,$(LIBDIR)
-# 
+
 UILIBS = -lgdi32
 EXPATLIBS = -lexpat -lz -liconv
-# ENCALIBS = -lenca
+ENCALIBS = -lenca
 BZIP2LIBS = -lbz2
-# 
+
 RM = rm -rvf
 RM_QUIET = rm -rf
