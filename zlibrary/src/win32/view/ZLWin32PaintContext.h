@@ -63,6 +63,10 @@ private:
 	HWND myWindow;
 	PAINTSTRUCT myPaintStructure;
 
+	ZLColor myCurrentColor;
+	LineStyle myCurrentLineStyle;
+	COLORREF myCurrentColorref;
+
 	HBRUSH myBackgroundBrush;
 	HBRUSH myFillBrush;
 

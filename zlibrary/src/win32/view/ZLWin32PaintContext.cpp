@@ -21,7 +21,7 @@
 
 #include "ZLWin32PaintContext.h"
 
-ZLWin32PaintContext::ZLWin32PaintContext() : myBackgroundBrush(0), myFillBrush(0) {
+ZLWin32PaintContext::ZLWin32PaintContext() : myCurrentLineStyle((LineStyle)-1), myBackgroundBrush(0), myFillBrush(0) {
 	/*
 	myPainter = new QPainter();
 	myPixmap = NULL;
@@ -152,15 +152,12 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 }
 
 void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
-	// TODO: dont' change pen if color/style coincides with current ones
-	DeleteObject(SelectObject(myDisplayContext, CreatePen((style == ZLPaintContext::SOLID_LINE) ? PS_SOLID : PS_DASH, 1, RGB(color.Red, color.Green, color.Blue))));
-	/*
-	myPainter->setPen(QPen(
-		QColor(color.Red, color.Green, color.Blue),
-		1,
-		(style == SOLID_LINE) ? QPainter::SolidLine : QPainter::DashLine
-	));
-	*/
+	if ((color != myCurrentColor) || (style != myCurrentLineStyle)) {
+		myCurrentColor = color;
+		myCurrentLineStyle = style;
+		myCurrentColorref = RGB(color.Red, color.Green, color.Blue);
+		DeleteObject(SelectObject(myDisplayContext, CreatePen((style == ZLPaintContext::SOLID_LINE) ? PS_SOLID : PS_DASH, 1, myCurrentColorref)));
+	}
 }
 
 void ZLWin32PaintContext::setFillColor(ZLColor color, FillStyle style) {
@@ -231,6 +228,8 @@ void ZLWin32PaintContext::drawLine(int x0, int y0, int x1, int y1) {
 	*/
 	MoveToEx(myDisplayContext, x0, y0, 0);
 	LineTo(myDisplayContext, x1, y1);
+	SetPixel(myDisplayContext, x0, y0, myCurrentColorref);
+	SetPixel(myDisplayContext, x1, y1, myCurrentColorref);
 }
 
 void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
