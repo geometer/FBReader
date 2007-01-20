@@ -20,6 +20,8 @@
 #ifndef __ZLWIN32PAINTCONTEXT_H__
 #define __ZLWIN32PAINTCONTEXT_H__
 
+#include <windows.h>
+
 #include <ZLPaintContext.h>
 
 class ZLWin32PaintContext : public ZLPaintContext {
@@ -53,7 +55,17 @@ public:
 	void fillRectangle(int x0, int y0, int x1, int y1);
 	void drawFilledCircle(int x, int y, int r);
 
+	void beginPaint(HWND window);
+	void endPaint();
+
 private:
+	HDC myDisplayContext;
+	HWND myWindow;
+	PAINTSTRUCT myPaintStructure;
+
+	HBRUSH myBackgroundBrush;
+	HBRUSH myFillBrush;
+
 	/*
 	QPainter *myPainter;
 	QPixmap *myPixmap;

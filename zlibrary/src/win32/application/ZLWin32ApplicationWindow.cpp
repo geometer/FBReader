@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <windows.h>
+#include <iostream>
 
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
@@ -27,7 +27,7 @@
 
 #include "ZLWin32ApplicationWindow.h"
 #include "../dialogs/ZLWin32DialogManager.h"
-//#include "../view-desktop/ZLWin32ViewWidget.h"
+#include "../view/ZLWin32ViewWidget.h"
 
 void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) const {
 	//myWindow = (new ZLWin32ApplicationWindow(application))->getMainWindow();
@@ -57,17 +57,13 @@ static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) 
 }
 */
 
-LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	HDC hDC;
-	PAINTSTRUCT ps;
-	RECT rect;
+static ZLWin32ViewWidget *VIEW_WIDGET;
 
+LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 		case WM_PAINT:
-			hDC = BeginPaint(hWnd, &ps);
-			GetClientRect(hWnd, &rect);
-			DrawText(hDC, "Hello, World!", -1, &rect, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
-			EndPaint(hWnd, &ps);
+			std::cerr << "WM_PAINT received\n";
+			VIEW_WIDGET->doPaint();
 			break;
 		case WM_CLOSE:
 			DestroyWindow(hWnd);
@@ -86,8 +82,8 @@ static const std::string OPTIONS = "Options";
 
 ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 600),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 800) {
+	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600) {
 	//myFullScreen(false) {
 
 /*
@@ -128,7 +124,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 		//return 0;
 	}
 
-	myMainWindow = CreateWindow(wc.lpszClassName, ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myHeightOption.value(), myWidthOption.value(), (HWND)0, (HMENU)0, wc.hInstance, 0);
+	myMainWindow = CreateWindow(wc.lpszClassName, ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, wc.hInstance, 0);
 	// TODO: What to do if myMainWindow == 0?
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
@@ -256,7 +252,9 @@ ZLViewWidget *ZLWin32ApplicationWindow::createViewWidget() {
 	gtk_widget_show_all(myVBox);
 	return viewWidget;
 	*/
-	return 0;
+	myWin32ViewWidget = new ZLWin32ViewWidget(application(), myMainWindow);
+	VIEW_WIDGET = myWin32ViewWidget;
+	return myWin32ViewWidget;
 }
 
 void ZLWin32ApplicationWindow::close() {

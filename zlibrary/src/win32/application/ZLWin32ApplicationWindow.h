@@ -26,7 +26,12 @@
 
 #include <ZLApplication.h>
 
+class ZLWin32ViewWidget;
+
 class ZLWin32ApplicationWindow : public ZLApplicationWindow { 
+
+public:
+	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 public:
 	ZLWin32ApplicationWindow(ZLApplication *application);
@@ -68,6 +73,7 @@ private:
 
 	HWND myMainWindow;
 
+	ZLWin32ViewWidget *myWin32ViewWidget;
 /*
 	GtkWidget *myToolbar;
 	GtkWidget *myVBox;

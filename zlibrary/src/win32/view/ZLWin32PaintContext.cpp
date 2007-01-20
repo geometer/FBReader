@@ -21,7 +21,7 @@
 
 #include "ZLWin32PaintContext.h"
 
-ZLWin32PaintContext::ZLWin32PaintContext() {
+ZLWin32PaintContext::ZLWin32PaintContext() : myBackgroundBrush(0), myFillBrush(0) {
 	/*
 	myPainter = new QPainter();
 	myPixmap = NULL;
@@ -31,6 +31,12 @@ ZLWin32PaintContext::ZLWin32PaintContext() {
 }
 
 ZLWin32PaintContext::~ZLWin32PaintContext() {
+	if (myBackgroundBrush != 0) {
+		DeleteObject(myBackgroundBrush);
+	}
+	if (myFillBrush != 0) {
+		DeleteObject(myFillBrush);
+	}
 	/*
 	if (myPixmap != NULL) {
 		myPainter->end();
@@ -38,6 +44,19 @@ ZLWin32PaintContext::~ZLWin32PaintContext() {
 	}
 	delete myPainter;
 	*/
+}
+
+//#include <stdlib.h>
+
+void ZLWin32PaintContext::beginPaint(HWND window) {
+	myWindow = window;
+	// TODO: don't clear background before painting
+	myDisplayContext = BeginPaint(myWindow, &myPaintStructure);
+	//_sleep(5000);
+}
+
+void ZLWin32PaintContext::endPaint() {
+	EndPaint(myWindow, &myPaintStructure);
 }
 
 void ZLWin32PaintContext::setSize(int w, int h) {
@@ -133,6 +152,8 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 }
 
 void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
+	// TODO: dont' change pen if color/style coincides with current ones
+	DeleteObject(SelectObject(myDisplayContext, CreatePen((style == ZLPaintContext::SOLID_LINE) ? PS_SOLID : PS_DASH, 1, RGB(color.Red, color.Green, color.Blue))));
 	/*
 	myPainter->setPen(QPen(
 		QColor(color.Red, color.Green, color.Blue),
@@ -143,6 +164,15 @@ void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
 }
 
 void ZLWin32PaintContext::setFillColor(ZLColor color, FillStyle style) {
+	// TODO: use style
+	if (myFillBrush != 0) {
+		DeleteObject(myFillBrush);
+	}
+	COLORREF colorref = RGB(color.Red, color.Green, color.Blue);
+	myFillBrush =
+		(style == SOLID_FILL) ?
+			CreateSolidBrush(colorref) :
+			CreateHatchBrush(HS_DIAGCROSS, colorref);
 	/*
 	myPainter->setBrush(QBrush(
 		QColor(color.Red, color.Green, color.Blue),
@@ -190,19 +220,20 @@ void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
 }
 
 void ZLWin32PaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	/*
 	x0 += leftMargin();
 	x1 += leftMargin();
 	y0 += topMargin();
 	y1 += topMargin();
+	/*
 	myPainter->drawPoint(x0, y0);
 	myPainter->drawLine(x0, y0, x1, y1);
 	myPainter->drawPoint(x1, y1);
 	*/
+	MoveToEx(myDisplayContext, x0, y0, 0);
+	LineTo(myDisplayContext, x1, y1);
 }
 
 void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
-	/*
 	if (x1 < x0) {
 		int tmp = x1;
 		x1 = x0;
@@ -213,6 +244,13 @@ void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 		y1 = y0;
 		y0 = tmp;
 	}
+	RECT rectangle;
+	rectangle.left = x0;
+	rectangle.right = x1 + 1;
+	rectangle.top = y0;
+	rectangle.bottom = y1 + 1;
+	FillRect(myDisplayContext, &rectangle, myFillBrush);
+	/*
 	myPainter->fillRect(x0 + leftMargin(), y0 + topMargin(),
 											x1 - x0 + 1, y1 - y0 + 1,
 											myPainter->brush());
@@ -220,19 +258,23 @@ void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 }
 
 void ZLWin32PaintContext::drawFilledCircle(int x, int y, int r) {
-	/*
 	x += leftMargin();
 	y += topMargin();
-	myPainter->drawEllipse(x - r, y - r, 2 * r + 1, 2 * r + 1);
-	*/
+	HBRUSH oldBrush = (HBRUSH)SelectObject(myDisplayContext, myFillBrush);
+	Ellipse(myDisplayContext, x - r, y - r, x + r, y + r);
+	SelectObject(myDisplayContext, oldBrush);
 }
 
 void ZLWin32PaintContext::clear(ZLColor color) {
-	/*
-	if (myPixmap != NULL) {
-		myPixmap->fill(QColor(color.Red, color.Green, color.Blue));
+	// TODO: don't change brush if color equals oldcolor
+	// TODO: set default background color instead of FillRect
+	if (myBackgroundBrush != 0) {
+		DeleteObject(myBackgroundBrush);
 	}
-	*/
+	myBackgroundBrush = CreateSolidBrush(RGB(color.Red, color.Green, color.Blue));
+	RECT rectangle;
+	GetClientRect(myWindow, &rectangle);
+	FillRect(myDisplayContext, &rectangle, myBackgroundBrush);
 }
 
 int ZLWin32PaintContext::width() const {
