@@ -55,6 +55,10 @@ protected:
 private:
 	ZLApplication &myApplication;
 	ZLPaintContext &myContext;
+
+private:
+	ZLView(const ZLView&);
+	const ZLView &operator=(const ZLView&);
 };
 
 class ZLViewWidget {

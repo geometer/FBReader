@@ -21,15 +21,15 @@
 #ifndef __ZLWIN32VIEWWIDGET_H__
 #define __ZLWIN32VIEWWIDGET_H__
 
-#include <windows.h>
-
 #include <ZLView.h>
 #include <ZLApplication.h>
+
+#include "../application/ZLWin32ApplicationWindow.h"
 
 class ZLWin32ViewWidget : public ZLViewWidget {
 
 public:
-	ZLWin32ViewWidget(ZLApplication &application, HWND window);
+	ZLWin32ViewWidget(ZLWin32ApplicationWindow &window);
 
 private:
 	void repaint();
@@ -38,8 +38,7 @@ private:
 	void doPaint();
 
 private:
-	ZLApplication &myApplication;
-	HWND myWindow;
+	ZLWin32ApplicationWindow &myWindow;
 
 friend class ZLWin32ApplicationWindow;
 };

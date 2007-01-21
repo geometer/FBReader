@@ -13,7 +13,7 @@ CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -I /home/geometer
 LDFLAGS = -mwindows -L /home/geometer/win32/my/lib
 # LDFLAGS = -Wl,-rpath,$(LIBDIR)
 
-UILIBS = -lgdi32
+UILIBS = -lgdi32 -lcomctl32
 EXPATLIBS = -lexpat -lz -liconv
 ENCALIBS = -lenca
 BZIP2LIBS = -lbz2

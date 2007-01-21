@@ -20,9 +20,10 @@
 #ifndef __ZLWIN32APPLICATIONWINDOW_H__
 #define __ZLWIN32APPLICATIONWINDOW_H__
 
-//#include <map>
+#include <vector>
 
 #include <windows.h>
+#include <commctrl.h>
 
 #include <ZLApplication.h>
 
@@ -55,10 +56,16 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
-/*
-	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+	void init();
+
+	//void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
 	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 
+public:
+	HWND mainWindow() const;
+	int topOffset() const;
+
+/*
 public:
 	void handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);
@@ -72,8 +79,12 @@ private:
 	ZLIntegerRangeOption myHeightOption;
 
 	HWND myMainWindow;
+	//HMENU myToolbar;
+	HWND myToolbar;
 
 	ZLWin32ViewWidget *myWin32ViewWidget;
+
+	std::vector<TBBUTTON> myTBButtons;
 /*
 	GtkWidget *myToolbar;
 	GtkWidget *myVBox;

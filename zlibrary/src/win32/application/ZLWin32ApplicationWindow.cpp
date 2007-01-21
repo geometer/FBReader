@@ -58,24 +58,26 @@ static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) 
 */
 
 static ZLWin32ViewWidget *VIEW_WIDGET;
+static ZLWin32ApplicationWindow *APPLICATION_WINDOW;
 
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 		case WM_PAINT:
 			std::cerr << "WM_PAINT received\n";
 			VIEW_WIDGET->doPaint();
-			break;
+			return 0;
 		case WM_CLOSE:
 			DestroyWindow(hWnd);
-			break;
+			return 0;
 		case WM_DESTROY:
 			PostQuitMessage(0);
-			break;
+			return 0;
+		case WM_COMMAND:
+			APPLICATION_WINDOW->application().doAction(LOWORD(wParam));
+			return 0;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
-
-	return 0;
 }
 
 static const std::string OPTIONS = "Options";
@@ -83,11 +85,13 @@ static const std::string OPTIONS = "Options";
 ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600) {
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
+	myToolbar(0) {
 	//myFullScreen(false) {
+	
+	APPLICATION_WINDOW = this;
 
 /*
-	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
 	myVBox = gtk_vbox_new(false, 0);
@@ -112,26 +116,32 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetModuleHandle(0);
-	wc.hIcon = LoadIcon(0, IDI_APPLICATION);
+	wc.hIcon = LoadIcon(wc.hInstance, TEXT("MAIN_ICON"));
 	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
 	wc.lpszClassName = ZLApplication::ApplicationName().c_str();
-	wc.hIconSm = LoadIcon(0, IDI_APPLICATION);
+	wc.hIconSm = LoadIcon(wc.hInstance, TEXT("MAIN_ICON_SMALL"));
 
-	if (!RegisterClassEx(&wc)) {
-		//std::cerr << "cannot register class\n";
-		//return 0;
-	}
+	RegisterClassEx(&wc);
 
 	myMainWindow = CreateWindow(wc.lpszClassName, ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, wc.hInstance, 0);
-	// TODO: What to do if myMainWindow == 0?
+}
+
+void ZLWin32ApplicationWindow::init() {
+	ZLApplicationWindow::init();
+
+	const int toolbarSize = myTBButtons.size();
+	if (toolbarSize > 0) {
+  	myToolbar = CreateToolbarEx(myMainWindow, WS_CHILD | WS_VISIBLE, 1002, 4, GetModuleHandle(0), 1001, (TBBUTTON*)&myTBButtons.front(), toolbarSize, 0, 0, 0, 0, sizeof(TBBUTTON));
+	}
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
 }
 
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
+	//DestroyMenu(myToolbar);
 /*
 	if (!myFullScreen) {
 		int width, height;
@@ -200,9 +210,60 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 }
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
-	/*
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
+		TBBUTTON button;
+		button.iBitmap = 0;
+		button.idCommand = buttonItem.actionId();
+		button.fsState = TBSTATE_ENABLED;
+		button.fsStyle = TBSTYLE_BUTTON;
+		button.dwData = 0;
+		button.iString = 0;
+		myTBButtons.push_back(button);
+	} else {
+		// TODO: implement
+	}
+//	myToolbar = CreateMenu();
+//	{
+//		MENUITEMINFO menuItem;
+//		menuItem.cbSize = sizeof(menuItem);
+//		menuItem.fMask = MIIM_TYPE | MIIM_STATE;
+//		menuItem.fType = MFT_BITMAP;
+//		menuItem.fState = MFS_ENABLED;
+//		//menuItem.wID =
+//		//menuItem.hSubMenu =
+//		//menuItem.hbmpChecked =
+//		//menuItem.hbmpUnhecked =
+//		//menuItem.dwItemData =
+//		HBITMAP icon = LoadBitmap(wc.hInstance, TEXT("ICON0"));
+//		HBITMAP icon_mask = LoadBitmap(wc.hInstance, TEXT("ICON0_MASK"));
+//		HDC icon_dc = CreateCompatibleDC(0);
+//		HDC icon_mask_dc = CreateCompatibleDC(0);
+//
+//		HBITMAP icon1 = LoadBitmap(wc.hInstance, TEXT("ICON0"));
+//		//HBITMAP icon1 = CreateBitmap(64, 64, 1, 1, 0);
+//		SelectBitmap(icon_dc, icon1);
+//
+//		SelectBitmap(icon_mask_dc, icon_mask);
+//		BitBlt(icon_dc, 0, 0, 32, 32, icon_mask_dc, 0, 0, SRCAND);
+//		/*
+//		SelectBitmap(icon_mask_dc, icon);
+//		BitBlt(icon_dc, 0, 0, 32, 32, icon_mask_dc, 0, 0, SRCPAINT);
+//		*/
+//		
+//		DeleteDC(icon_dc);
+//		DeleteDC(icon_mask_dc);
+//
+//		menuItem.dwTypeData = (LPTSTR)icon1;
+//		//(LPTSTR)LoadBitmap(wc.hInstance, TEXT("ICON0"));
+//		//menuItem.dwTypeData = (LPTSTR)LoadBitmap(wc.hInstance, TEXT("ICON0"));
+//		//menuItem.cch = 6;
+//		InsertMenuItem(myToolbar, 0, true, &menuItem);
+//	}
+//	SetMenu(myMainWindow, myToolbar);
+
+
+	/*
 		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
 		GtkWidget *image = gtk_image_new_from_file((imagePrefix + buttonItem.iconName() + ".png").c_str());
 		GtkWidget *button = buttonItem.isToggleButton() ? gtk_toggle_button_new() : gtk_button_new();
@@ -218,8 +279,13 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 	*/
 }
 
-/*
 void ZLWin32ApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
+	if (item->isButton()) {
+		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
+		LPARAM state = (visible ? 0 : TBSTATE_HIDDEN) | (enabled ? TBSTATE_ENABLED : 0);
+		SendMessage(myToolbar, TB_SETSTATE, (WPARAM)buttonItem.actionId(), state);
+	}
+	/*
 	GtkWidget *gtkButton = myButtonToWidget[&*item];
 	if (gtkButton != 0) {
 		if (visible) {
@@ -236,8 +302,8 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemP
 			gtk_widget_set_sensitive(gtkButton, enabled);
 		}
 	}
+	*/
 }
-*/
 
 void ZLWin32ApplicationWindow::refresh() {
 	ZLApplicationWindow::refresh();
@@ -252,7 +318,7 @@ ZLViewWidget *ZLWin32ApplicationWindow::createViewWidget() {
 	gtk_widget_show_all(myVBox);
 	return viewWidget;
 	*/
-	myWin32ViewWidget = new ZLWin32ViewWidget(application(), myMainWindow);
+	myWin32ViewWidget = new ZLWin32ViewWidget(*this);
 	VIEW_WIDGET = myWin32ViewWidget;
 	return myWin32ViewWidget;
 }
@@ -283,4 +349,17 @@ bool ZLWin32ApplicationWindow::isKeyboardPresented() const {
 
 void ZLWin32ApplicationWindow::setCaption(const std::string &caption) {
 	//gtk_window_set_title (myMainWindow, caption.c_str ());
+}
+
+HWND ZLWin32ApplicationWindow::mainWindow() const {
+	return myMainWindow;
+}
+
+int ZLWin32ApplicationWindow::topOffset() const {
+	if (myToolbar != 0) {
+		RECT toolbarRectangle;
+		GetClientRect(myToolbar, &toolbarRectangle);
+		return toolbarRectangle.bottom - toolbarRectangle.top + 2;
+	}
+	return 0;
 }

@@ -367,7 +367,7 @@ public:
 	ZLApplication &application() const;
 
 protected:
-	void init();
+	virtual void init();
 	// TODO: change to pure virtual
 	virtual void initMenu() {}
 

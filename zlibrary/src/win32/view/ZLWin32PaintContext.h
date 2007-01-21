@@ -24,6 +24,8 @@
 
 #include <ZLPaintContext.h>
 
+class ZLWin32ApplicationWindow;
+
 class ZLWin32PaintContext : public ZLPaintContext {
 
 public:
@@ -55,19 +57,25 @@ public:
 	void fillRectangle(int x0, int y0, int x1, int y1);
 	void drawFilledCircle(int x, int y, int r);
 
-	void beginPaint(HWND window);
+	void beginPaint(ZLWin32ApplicationWindow &window);
 	void endPaint();
+
+private:
+	void adjustPoint(int &x, int &y) const;
 
 private:
 	HDC myDisplayContext;
 	HWND myWindow;
+	int myTopOffset;
 	PAINTSTRUCT myPaintStructure;
 
-	ZLColor myCurrentColor;
-	LineStyle myCurrentLineStyle;
-	COLORREF myCurrentColorref;
+	ZLColor myColor;
+	LineStyle myLineStyle;
+	COLORREF myColorref;
 
+	ZLColor myBackgroundColor;
 	HBRUSH myBackgroundBrush;
+
 	HBRUSH myFillBrush;
 
 	/*

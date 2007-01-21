@@ -1,0 +1,8 @@
+[Desktop Entry]
+Comment=ZLibrary Sample Application
+Exec=SampleApplication
+Icon=SampleApplication
+Type=Application
+Name=Sample Application
+Display=640x480/144dpi,480x640/144dpi
+HidePrivilege=1

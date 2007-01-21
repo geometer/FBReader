@@ -18,19 +18,20 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include "ZLWin32ViewWidget.h"
 #include "ZLWin32PaintContext.h"
 
-ZLWin32ViewWidget::ZLWin32ViewWidget(ZLApplication &application, HWND window) : ZLViewWidget((ZLViewWidget::Angle)application.AngleStateOption.value()), myApplication(application), myWindow(window) {
+ZLWin32ViewWidget::ZLWin32ViewWidget(ZLWin32ApplicationWindow &window) : ZLViewWidget((ZLViewWidget::Angle)window.application().AngleStateOption.value()), myWindow(window) {
 }
 
 void ZLWin32ViewWidget::trackStylus(bool track) {
 }
 
 void ZLWin32ViewWidget::repaint()	{
-	InvalidateRect(myWindow, 0, false);
+	RECT rectangle;
+	GetClientRect(myWindow.mainWindow(), &rectangle);
+	rectangle.top += myWindow.topOffset();
+	InvalidateRect(myWindow.mainWindow(), &rectangle, false);
 }
 
 void ZLWin32ViewWidget::doPaint()	{
