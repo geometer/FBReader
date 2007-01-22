@@ -18,6 +18,7 @@
  */
 
 #include <ZLImage.h>
+#include <ZLUnicodeUtil.h>
 
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
@@ -121,6 +122,7 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 	if (myWindow == 0) {
 		return;
 	}
+	// TODO: optimize
 	LOGFONT logicalFont;
 	memset(&logicalFont, 0, sizeof(LOGFONT));
 	logicalFont.lfHeight = size;
@@ -131,46 +133,12 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 	logicalFont.lfFaceName[len] = '\0';
 	HFONT font = CreateFontIndirect(&logicalFont);
 	DeleteObject(SelectObject(myDisplayContext, font));
-	/*
-	if (myPainter->device() == 0) {
-		myFontIsStored = true;
-		myStoredFamily = family;
-		myStoredSize = size;
-		myStoredBold = bold;
-		myStoredItalic= italic;
-	} else {
-		QFont font = myPainter->font();
-		bool fontChanged = false;
-
-		if (font.family() != family.c_str()) {
-			font.setFamily(family.c_str());
-			fontChanged = true;
-		}
-
-		if (font.pointSize() != size) {
-			font.setPointSize(size);
-			fontChanged = true;
-		}
-
-		if ((font.weight() != (bold ? QFont::Bold : QFont::Normal))) {
-			font.setWeight(bold ? QFont::Bold : QFont::Normal);
-			fontChanged = true;
-		}
-
-		if (font.italic() != italic) {
-			font.setItalic(italic);
-			fontChanged = true;
-		}
-
-		if (fontChanged) {
-			myPainter->setFont(font);
-			mySpaceWidth = -1;
-		}
-	}
-	*/
 }
 
 void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
+	if (myWindow == 0) {
+		return;
+	}
 	if ((color != myColor) || (style != myLineStyle)) {
 		myColor = color;
 		myLineStyle = style;
@@ -223,11 +191,15 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 		return;
 	}
 	adjustPoint(x, y);
-	TextOut(myDisplayContext, x, y, str, len);
-	/*
-	QString qStr = QString::fromUtf8(str, len);
-	myPainter->drawText(x + leftMargin(), y + topMargin(), qStr);
-	*/
+	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
+	if (utf8len == len) {
+		TextOut(myDisplayContext, x, y, str, len);
+	} else {
+		// TODO: optimize (?)
+		ZLUnicodeUtil::Ucs2String ucs2Str(utf8len);
+		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len, utf8len);
+		TextOutW(myDisplayContext, x, y, (const WCHAR*)&ucs2Str.front(), utf8len);
+	}
 }
 
 void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
