@@ -180,10 +180,13 @@ int ZLWin32PaintContext::spaceWidth() const {
 }
 
 int ZLWin32PaintContext::stringHeight() const {
-	/*
-	return myPainter->font().pointSize() + 2;
-	*/
-	return 20;
+	if (myWindow == 0) {
+		return 0;
+	}
+	// TODO: optimize
+	TEXTMETRIC metric;
+	GetTextMetrics(myDisplayContext, &metric);
+	return metric.tmHeight;
 }
 
 void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
@@ -191,6 +194,7 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 		return;
 	}
 	adjustPoint(x, y);
+	y -= stringHeight();
 	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
 	if (utf8len == len) {
 		TextOut(myDisplayContext, x, y, str, len);
