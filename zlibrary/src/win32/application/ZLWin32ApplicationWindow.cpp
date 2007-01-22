@@ -63,7 +63,7 @@ static ZLWin32ApplicationWindow *APPLICATION_WINDOW;
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 		case WM_PAINT:
-			std::cerr << "WM_PAINT received\n";
+			//std::cerr << "WM_PAINT received\n";
 			VIEW_WIDGET->doPaint();
 			return 0;
 		case WM_CLOSE:
@@ -73,7 +73,7 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			PostQuitMessage(0);
 			return 0;
 		case WM_COMMAND:
-			APPLICATION_WINDOW->application().doAction(LOWORD(wParam));
+			APPLICATION_WINDOW->onToolbarButtonPress(LOWORD(wParam));
 			return 0;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -96,10 +96,6 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 	myVBox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
-
-	myToolbar = gtk_toolbar_new();
-	gtk_box_pack_start(GTK_BOX(myVBox), myToolbar, false, false, 0);
-	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_ICONS);
 
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
@@ -126,14 +122,18 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	RegisterClassEx(&wc);
 
 	myMainWindow = CreateWindow(wc.lpszClassName, ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, wc.hInstance, 0);
+
+	INITCOMMONCONTROLSEX icex;
+	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	icex.dwICC = ICC_BAR_CLASSES;
+	InitCommonControlsEx(&icex);
 }
 
 void ZLWin32ApplicationWindow::init() {
 	ZLApplicationWindow::init();
 
-	const int toolbarSize = myTBButtons.size();
-	if (toolbarSize > 0) {
-  	myToolbar = CreateToolbarEx(myMainWindow, WS_CHILD | WS_VISIBLE, 1002, 4, GetModuleHandle(0), 1001, (TBBUTTON*)&myTBButtons.front(), toolbarSize, 0, 0, 0, 0, sizeof(TBBUTTON));
+	if (myToolbar != 0) {
+		ShowWindow(myToolbar, SW_SHOW);
 	}
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
@@ -171,19 +171,15 @@ void ZLWin32ApplicationWindow::handleScrollEventSlot(GdkEventScroll *event) {
 			break;
 	}
 }
+*/
 
 void ZLWin32ApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
-	GtkToggleButton *gtkButton = GTK_TOGGLE_BUTTON(myButtonToWidget[&(ZLApplication::Toolbar::Item&)button]);
-	const bool isPressed = button.isPressed();
-	if (gtk_toggle_button_get_active(gtkButton) != isPressed) {
-		gtk_toggle_button_set_active(gtkButton, isPressed);
-	}
+	PostMessage(myToolbar, TB_CHECKBUTTON, button.actionId(), button.isPressed());
 }
 
-void ZLWin32ApplicationWindow::onGtkButtonPress(GtkWidget *gtkButton) {
-	onButtonPress((ZLApplication::Toolbar::ButtonItem&)*myWidgetToButton[gtkButton]);
+void ZLWin32ApplicationWindow::onToolbarButtonPress(int actionCode) {
+	onButtonPress((ZLApplication::Toolbar::ButtonItem&)*myButtonByActionCode[actionCode]);
 }
-*/
 
 void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 	/*
@@ -210,99 +206,51 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 }
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
+	if (myToolbar == 0) {
+  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_CHILD | WS_DLGFRAME | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)0, 0, 0);
+		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(24, 24));
+		SendMessage(myToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(36, 36));
+	}
+
 	if (item->isButton()) {
+		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
+
+		TBADDBITMAP addBitmap;
+		addBitmap.hInst = GetModuleHandle(0);
+		addBitmap.nID = 101 + buttonCounter;
+		SendMessage(myToolbar, TB_ADDBITMAP, 1, (LPARAM)&addBitmap);
+
 		TBBUTTON button;
-		button.iBitmap = 0;
-		button.idCommand = buttonItem.actionId();
+		button.iBitmap = buttonCounter;
 		button.fsState = TBSTATE_ENABLED;
-		button.fsStyle = TBSTYLE_BUTTON;
+		button.fsStyle = buttonItem.isToggleButton() ? TBSTYLE_CHECK : TBSTYLE_BUTTON;
+		button.idCommand = buttonItem.actionId();
+		myButtonByActionCode[button.idCommand] = item;
 		button.dwData = 0;
 		button.iString = 0;
-		myTBButtons.push_back(button);
+		SendMessage(myToolbar, TB_ADDBUTTONS, 1, (LPARAM)&button);
+
+		++buttonCounter;
 	} else {
-		// TODO: implement
+		TBBUTTON separator;
+		separator.iBitmap = 6;
+		separator.fsState = TBSTATE_ENABLED;
+		separator.fsStyle = TBSTYLE_SEP;
+		SendMessage(myToolbar, TB_ADDBUTTONS, 1, (LPARAM)&separator);
 	}
-//	myToolbar = CreateMenu();
-//	{
-//		MENUITEMINFO menuItem;
-//		menuItem.cbSize = sizeof(menuItem);
-//		menuItem.fMask = MIIM_TYPE | MIIM_STATE;
-//		menuItem.fType = MFT_BITMAP;
-//		menuItem.fState = MFS_ENABLED;
-//		//menuItem.wID =
-//		//menuItem.hSubMenu =
-//		//menuItem.hbmpChecked =
-//		//menuItem.hbmpUnhecked =
-//		//menuItem.dwItemData =
-//		HBITMAP icon = LoadBitmap(wc.hInstance, TEXT("ICON0"));
-//		HBITMAP icon_mask = LoadBitmap(wc.hInstance, TEXT("ICON0_MASK"));
-//		HDC icon_dc = CreateCompatibleDC(0);
-//		HDC icon_mask_dc = CreateCompatibleDC(0);
-//
-//		HBITMAP icon1 = LoadBitmap(wc.hInstance, TEXT("ICON0"));
-//		//HBITMAP icon1 = CreateBitmap(64, 64, 1, 1, 0);
-//		SelectBitmap(icon_dc, icon1);
-//
-//		SelectBitmap(icon_mask_dc, icon_mask);
-//		BitBlt(icon_dc, 0, 0, 32, 32, icon_mask_dc, 0, 0, SRCAND);
-//		/*
-//		SelectBitmap(icon_mask_dc, icon);
-//		BitBlt(icon_dc, 0, 0, 32, 32, icon_mask_dc, 0, 0, SRCPAINT);
-//		*/
-//		
-//		DeleteDC(icon_dc);
-//		DeleteDC(icon_mask_dc);
-//
-//		menuItem.dwTypeData = (LPTSTR)icon1;
-//		//(LPTSTR)LoadBitmap(wc.hInstance, TEXT("ICON0"));
-//		//menuItem.dwTypeData = (LPTSTR)LoadBitmap(wc.hInstance, TEXT("ICON0"));
-//		//menuItem.cch = 6;
-//		InsertMenuItem(myToolbar, 0, true, &menuItem);
-//	}
-//	SetMenu(myMainWindow, myToolbar);
-
-
-	/*
-		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
-		GtkWidget *image = gtk_image_new_from_file((imagePrefix + buttonItem.iconName() + ".png").c_str());
-		GtkWidget *button = buttonItem.isToggleButton() ? gtk_toggle_button_new() : gtk_button_new();
-		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
-		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
-		gtk_container_add(GTK_CONTAINER(button), image);
-		gtk_container_add(GTK_CONTAINER(myToolbar), button);
-		ZLWin32SignalUtil::connectSignal(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(onButtonClicked), this);
-		myButtonToWidget[&*item] = button;
-		myWidgetToButton[button] = item;
-		gtk_widget_show_all(button);
-	}
-	*/
 }
 
 void ZLWin32ApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		LPARAM state = (visible ? 0 : TBSTATE_HIDDEN) | (enabled ? TBSTATE_ENABLED : 0);
-		SendMessage(myToolbar, TB_SETSTATE, (WPARAM)buttonItem.actionId(), state);
-	}
-	/*
-	GtkWidget *gtkButton = myButtonToWidget[&*item];
-	if (gtkButton != 0) {
-		if (visible) {
-			gtk_widget_show(gtkButton);
-		} else {
-			gtk_widget_hide(gtkButton);
-		}
-		/ *
-		 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
-		 * does something strange if WIDGET is already insensitive.
-		 * /
-		bool alreadyEnabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
-		if (enabled != alreadyEnabled) {
-			gtk_widget_set_sensitive(gtkButton, enabled);
+		PostMessage(myToolbar, TB_SETSTATE, (WPARAM)buttonItem.actionId(), state);
+		if (buttonItem.isToggleButton()) {
+			setToggleButtonState(buttonItem);
 		}
 	}
-	*/
 }
 
 void ZLWin32ApplicationWindow::refresh() {
@@ -358,8 +306,8 @@ HWND ZLWin32ApplicationWindow::mainWindow() const {
 int ZLWin32ApplicationWindow::topOffset() const {
 	if (myToolbar != 0) {
 		RECT toolbarRectangle;
-		GetClientRect(myToolbar, &toolbarRectangle);
-		return toolbarRectangle.bottom - toolbarRectangle.top + 2;
+		GetWindowRect(myToolbar, &toolbarRectangle);
+		return toolbarRectangle.bottom - toolbarRectangle.top + 1;
 	}
 	return 0;
 }

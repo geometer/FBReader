@@ -118,6 +118,19 @@ const std::string ZLWin32PaintContext::realFontFamilyName(std::string &fontFamil
 }
 
 void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
+	if (myWindow == 0) {
+		return;
+	}
+	LOGFONT logicalFont;
+	memset(&logicalFont, 0, sizeof(LOGFONT));
+	logicalFont.lfHeight = size;
+	logicalFont.lfWeight = bold ? 700 : 400;
+	logicalFont.lfItalic = italic;
+	const int len = std::min((int)family.size(), LF_FACESIZE - 1);
+	strncpy(logicalFont.lfFaceName, family.data(), len);
+	logicalFont.lfFaceName[len] = '\0';
+	HFONT font = CreateFontIndirect(&logicalFont);
+	DeleteObject(SelectObject(myDisplayContext, font));
 	/*
 	if (myPainter->device() == 0) {
 		myFontIsStored = true;
@@ -206,6 +219,11 @@ int ZLWin32PaintContext::stringHeight() const {
 }
 
 void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
+	if (myWindow == 0) {
+		return;
+	}
+	adjustPoint(x, y);
+	TextOut(myDisplayContext, x, y, str, len);
 	/*
 	QString qStr = QString::fromUtf8(str, len);
 	myPainter->drawText(x + leftMargin(), y + topMargin(), qStr);
@@ -291,6 +309,7 @@ void ZLWin32PaintContext::clear(ZLColor color) {
 	}
 	RECT rectangle;
 	GetClientRect(myWindow, &rectangle);
+	rectangle.top += myTopOffset;
 	FillRect(myDisplayContext, &rectangle, myBackgroundBrush);
 	SetBkColor(myDisplayContext, RGB(color.Red, color.Green, color.Blue));
 }

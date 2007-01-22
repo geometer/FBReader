@@ -8,6 +8,12 @@
 class SampleApplicationView : public ZLView {
 
 public:
+	enum Mode {
+		GEOMETRIC,
+		TEXT,
+	};
+
+public:
 	SampleApplicationView(ZLApplication &application, ZLPaintContext &context);
 
 	const std::string &caption() const;
@@ -15,8 +21,10 @@ public:
 
 private:
 	int myZoom;
+	Mode myMode;
 
 friend class ZoomAction;
+friend class SetModeAction;
 };
 
 class SampleApplication : public ZLApplication { 
@@ -42,6 +50,18 @@ public:
 private:
 	SampleApplicationView &myView;
 	const bool myIncrease;
+};
+
+class SetModeAction : public ZLApplication::Action {
+
+public:
+	SetModeAction(SampleApplicationView &view, SampleApplicationView::Mode mode);
+
+	void run();
+
+private:
+	SampleApplicationView &myView;
+	const SampleApplicationView::Mode myMode;
 };
 
 #endif /* __SAMPLEAPPLICATION_H__ */

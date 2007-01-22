@@ -20,7 +20,7 @@
 #ifndef __ZLWIN32APPLICATIONWINDOW_H__
 #define __ZLWIN32APPLICATIONWINDOW_H__
 
-#include <vector>
+#include <map>
 
 #include <windows.h>
 #include <commctrl.h>
@@ -58,18 +58,18 @@ private:
 
 	void init();
 
-	//void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
 	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 
 public:
 	HWND mainWindow() const;
 	int topOffset() const;
 
-/*
 public:
+	void onToolbarButtonPress(int index);
+/*
 	void handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);
-	void onGtkButtonPress(GtkWidget *gtkButton);
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
 */
@@ -84,7 +84,7 @@ private:
 
 	ZLWin32ViewWidget *myWin32ViewWidget;
 
-	std::vector<TBBUTTON> myTBButtons;
+	std::map<int,ZLApplication::Toolbar::ItemPtr> myButtonByActionCode;
 /*
 	GtkWidget *myToolbar;
 	GtkWidget *myVBox;
