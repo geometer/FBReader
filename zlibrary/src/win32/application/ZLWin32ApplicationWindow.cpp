@@ -57,20 +57,21 @@ static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) 
 }
 */
 
-static ZLWin32ViewWidget *VIEW_WIDGET;
-static ZLWin32ApplicationWindow *APPLICATION_WINDOW;
-static HWND TOOLBAR = 0;
+ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	if (ourApplicationWindow == 0) {
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+	}
+
 	switch (uMsg) {
 		case WM_SIZE:
-			if (TOOLBAR != 0) {
-				MoveWindow(TOOLBAR, 0, 0, LOWORD(lParam), 33, true);
+			if (ourApplicationWindow->myToolbar != 0) {
+				MoveWindow(ourApplicationWindow->myToolbar, 0, 0, LOWORD(lParam), 33, true);
 			}
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_PAINT:
-			//std::cerr << "WM_PAINT received\n";
-			VIEW_WIDGET->doPaint();
+			ourApplicationWindow->myWin32ViewWidget->doPaint();
 			return 0;
 		case WM_CLOSE:
 			DestroyWindow(hWnd);
@@ -79,7 +80,7 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			PostQuitMessage(0);
 			return 0;
 		case WM_COMMAND:
-			APPLICATION_WINDOW->onToolbarButtonPress(LOWORD(wParam));
+			ourApplicationWindow->onToolbarButtonPress(LOWORD(wParam));
 			return 0;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -94,8 +95,11 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myToolbar(0) {
 	//myFullScreen(false) {
-	
-	APPLICATION_WINDOW = this;
+
+	INITCOMMONCONTROLSEX icex;
+	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	icex.dwICC = ICC_BAR_CLASSES;
+	InitCommonControlsEx(&icex);
 
 /*
 	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -128,26 +132,19 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	RegisterClassEx(&wc);
 
 	myMainWindow = CreateWindow(wc.lpszClassName, ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, wc.hInstance, 0);
-
-	INITCOMMONCONTROLSEX icex;
-	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-	icex.dwICC = ICC_BAR_CLASSES;
-	InitCommonControlsEx(&icex);
+	
+	ourApplicationWindow = this;
 }
 
 void ZLWin32ApplicationWindow::init() {
 	ZLApplicationWindow::init();
-
-	if (myToolbar != 0) {
-		ShowWindow(myToolbar, SW_SHOW);
-	}
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
 }
 
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
-	//DestroyMenu(myToolbar);
+	ourApplicationWindow = 0;
 /*
 	if (!myFullScreen) {
 		int width, height;
@@ -155,8 +152,6 @@ ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 		myWidthOption.setValue(width);
 		myHeightOption.setValue(height);
 	}
-	myButtonToWidget.clear();
-	myWidgetToButton.clear();
 */
 }
 
@@ -213,8 +208,7 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (myToolbar == 0) {
-  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_CHILD | CCS_NORESIZE | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)0, 0, 0);
-		TOOLBAR = myToolbar;
+  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | CCS_NORESIZE | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)0, 0, 0);
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(24, 24));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
@@ -274,7 +268,6 @@ ZLViewWidget *ZLWin32ApplicationWindow::createViewWidget() {
 	return viewWidget;
 	*/
 	myWin32ViewWidget = new ZLWin32ViewWidget(*this);
-	VIEW_WIDGET = myWin32ViewWidget;
 	return myWin32ViewWidget;
 }
 

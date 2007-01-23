@@ -31,8 +31,9 @@ class ZLWin32ViewWidget;
 
 class ZLWin32ApplicationWindow : public ZLApplicationWindow { 
 
-public:
+private:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static ZLWin32ApplicationWindow *ourApplicationWindow;
 
 public:
 	ZLWin32ApplicationWindow(ZLApplication *application);
@@ -70,8 +71,6 @@ public:
 /*
 	void handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);
-
-	GtkWindow *getMainWindow() { return myMainWindow; }
 */
 
 private:
@@ -79,21 +78,12 @@ private:
 	ZLIntegerRangeOption myHeightOption;
 
 	HWND myMainWindow;
-	//HMENU myToolbar;
 	HWND myToolbar;
 
 	ZLWin32ViewWidget *myWin32ViewWidget;
 
 	std::map<int,ZLApplication::Toolbar::ItemPtr> myButtonByActionCode;
-/*
-	GtkWidget *myToolbar;
-	GtkWidget *myVBox;
-
-	std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
-	std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
-
-	bool myFullScreen;
-*/
+	//bool myFullScreen;
 };
 
 #endif /* __ZLWIN32APPLICATIONWINDOW_H__ */
