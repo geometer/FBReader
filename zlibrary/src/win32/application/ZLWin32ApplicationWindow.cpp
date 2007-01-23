@@ -59,9 +59,15 @@ static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) 
 
 static ZLWin32ViewWidget *VIEW_WIDGET;
 static ZLWin32ApplicationWindow *APPLICATION_WINDOW;
+static HWND TOOLBAR = 0;
 
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
+		case WM_SIZE:
+			if (TOOLBAR != 0) {
+				MoveWindow(TOOLBAR, 0, 0, LOWORD(lParam), 33, true);
+			}
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_PAINT:
 			//std::cerr << "WM_PAINT received\n";
 			VIEW_WIDGET->doPaint();
@@ -207,10 +213,11 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (myToolbar == 0) {
-  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_CHILD | WS_DLGFRAME | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)0, 0, 0);
+  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_CHILD | CCS_NORESIZE | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)0, 0, 0);
+		TOOLBAR = myToolbar;
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(24, 24));
-		SendMessage(myToolbar, TB_SETBUTTONSIZE, 0, MAKELONG(36, 36));
+		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
 	}
 
 	if (item->isButton()) {

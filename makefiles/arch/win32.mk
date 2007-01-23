@@ -9,7 +9,7 @@ CC = i586-mingw32msvc-gcc
 AR = i586-mingw32msvc-ar rsu
 LD = i586-mingw32msvc-g++
 
-CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -I /home/geometer/win32/my/include -D_WIN32_IE=0x0600
+CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -I /home/geometer/win32/my/include -D_WIN32_IE=0x0400
 LDFLAGS = -mwindows -L /home/geometer/win32/my/lib
 # LDFLAGS = -Wl,-rpath,$(LIBDIR)
 
