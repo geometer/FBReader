@@ -78,6 +78,8 @@ private:
 
 	HBRUSH myFillBrush;
 
+	int myWidth;
+	int myHeight;
 	/*
 	QPainter *myPainter;
 	QPixmap *myPixmap;

@@ -35,6 +35,9 @@ private:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static ZLWin32ApplicationWindow *ourApplicationWindow;
 
+	static int x(WPARAM lParam);
+	static int y(WPARAM lParam);
+
 public:
 	ZLWin32ApplicationWindow(ZLApplication *application);
 	~ZLWin32ApplicationWindow();

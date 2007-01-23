@@ -59,12 +59,33 @@ static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) 
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
+int ZLWin32ApplicationWindow::x(WPARAM lParam) {
+	return LOWORD(lParam);
+}
+
+int ZLWin32ApplicationWindow::y(WPARAM lParam) {
+	return HIWORD(lParam) - ourApplicationWindow->topOffset();
+}
+
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	if (ourApplicationWindow == 0) {
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
 
 	switch (uMsg) {
+		case WM_LBUTTONDOWN:
+			ourApplicationWindow->myWin32ViewWidget->view()->onStylusPress(x(lParam), y(lParam));
+			return 0;
+		case WM_LBUTTONUP:
+			ourApplicationWindow->myWin32ViewWidget->view()->onStylusRelease(x(lParam), y(lParam));
+			return 0;
+		case WM_MOUSEMOVE:
+			if (wParam & MK_LBUTTON) {
+				ourApplicationWindow->myWin32ViewWidget->view()->onStylusMovePressed(x(lParam), y(lParam));
+			} else {
+				ourApplicationWindow->myWin32ViewWidget->view()->onStylusMove(x(lParam), y(lParam));
+			}
+			return 0;
 		case WM_SIZE:
 			if (ourApplicationWindow->myToolbar != 0) {
 				MoveWindow(ourApplicationWindow->myToolbar, 0, 0, LOWORD(lParam), 33, true);

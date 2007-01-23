@@ -23,7 +23,7 @@
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32PaintContext::ZLWin32PaintContext() : myLineStyle((LineStyle)-1), myBackgroundBrush(0), myFillBrush(0) {
+ZLWin32PaintContext::ZLWin32PaintContext() : myWindow(0), myLineStyle((LineStyle)-1), myBackgroundBrush(0), myFillBrush(0), myWidth(0), myHeight(0) {
 	/*
 	myPainter = new QPainter();
 	myPixmap = NULL;
@@ -54,6 +54,10 @@ void ZLWin32PaintContext::beginPaint(ZLWin32ApplicationWindow &window) {
 	if (myWindow == 0) {
 		myWindow = window.mainWindow();
 		myTopOffset = window.topOffset();
+		RECT rectangle;
+		GetClientRect(myWindow, &rectangle);
+		myWidth = rectangle.right - rectangle.left + 1;
+		myHeight = rectangle.bottom - rectangle.top + 1 - myTopOffset;
 		myDisplayContext = BeginPaint(myWindow, &myPaintStructure);
 		//_sleep(5000);
 	}
@@ -63,27 +67,12 @@ void ZLWin32PaintContext::endPaint() {
 	if (myWindow != 0) {
 		EndPaint(myWindow, &myPaintStructure);
 		myWindow = 0;
+		myWidth = 0;
+		myHeight = 0;
 	}
 }
 
-void ZLWin32PaintContext::setSize(int w, int h) {
-	/*
-	if (myPixmap != NULL) {
-		if ((myPixmap->width() != w) || (myPixmap->height() != h)) {
-			myPainter->end();
-			delete myPixmap;
-			myPixmap = NULL;
-		}
-	}
-	if ((myPixmap == NULL) && (w > 0) && (h > 0)) {
-		myPixmap = new QPixmap(w, h);
-		myPainter->begin(myPixmap);
-		if (myFontIsStored) {
-			myFontIsStored = false;
-			setFont(myStoredFamily, myStoredSize, myStoredBold, myStoredItalic);
-		}
-	}
-	*/
+void ZLWin32PaintContext::setSize(int /*w*/, int /*h*/) {
 }
 
 void ZLWin32PaintContext::fillFamiliesList(std::vector<std::string> &families) const {
@@ -291,21 +280,9 @@ void ZLWin32PaintContext::clear(ZLColor color) {
 }
 
 int ZLWin32PaintContext::width() const {
-	/*
-	if (myPixmap == NULL) {
-		return 0;
-	}
-	return myPixmap->width() - leftMargin() - rightMargin();
-	*/
-	return 200;
+	return myWidth;
 }
 
 int ZLWin32PaintContext::height() const {
-	/*
-	if (myPixmap == NULL) {
-		return 0;
-	}
-	return myPixmap->height() - bottomMargin() - topMargin();
-	*/
-	return 200;
+	return myHeight;
 }
