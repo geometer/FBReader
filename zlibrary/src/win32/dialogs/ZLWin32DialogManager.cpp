@@ -18,8 +18,8 @@
  */
 
 #include "ZLWin32DialogManager.h"
-/*
 #include "ZLWin32Dialog.h"
+/*
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32SelectionDialog.h"
 #include "ZLWin32WaitMessage.h"
@@ -29,8 +29,7 @@
 #include <ZLSelectionDialog.h>
 
 shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const std::string &title) const {
-	//return new ZLWin32Dialog(title);
-	return 0;
+	return new ZLWin32Dialog(title);
 }
 
 shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {

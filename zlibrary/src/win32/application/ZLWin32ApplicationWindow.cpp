@@ -68,11 +68,11 @@ int ZLWin32ApplicationWindow::y(WPARAM lParam) {
 }
 
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	if (ourApplicationWindow == 0) {
-		return DefWindowProc(hWnd, uMsg, wParam, lParam);
-	}
-
 	switch (uMsg) {
+		case WM_CREATE:
+			ourApplicationWindow->myMainWindow = hWnd;
+			ourApplicationWindow->ZLApplicationWindow::init();
+			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_LBUTTONDOWN:
 			ourApplicationWindow->myWin32ViewWidget->view()->onStylusPress(x(lParam), y(lParam));
 			return 0;
@@ -88,7 +88,7 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			return 0;
 		case WM_SIZE:
 			if (ourApplicationWindow->myToolbar != 0) {
-				MoveWindow(ourApplicationWindow->myToolbar, 0, 0, LOWORD(lParam), 33, true);
+				SendMessage(ourApplicationWindow->myToolbar, TB_AUTOSIZE, 0, 0);
 			}
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_PAINT:
@@ -152,13 +152,13 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 	RegisterClassEx(&wc);
 
-	myMainWindow = CreateWindow(wc.lpszClassName, ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, wc.hInstance, 0);
-	
 	ourApplicationWindow = this;
 }
 
 void ZLWin32ApplicationWindow::init() {
-	ZLApplicationWindow::init();
+	//ZLApplicationWindow::init();
+
+	myMainWindow = CreateWindow(ZLApplication::ApplicationName().c_str(), ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
@@ -229,12 +229,14 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (myToolbar == 0) {
-  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | CCS_NORESIZE | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)0, 0, 0);
+  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(24, 24));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
 	}
 
+	TBBUTTON button;
+	button.fsState = TBSTATE_ENABLED;
 	if (item->isButton()) {
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
@@ -244,24 +246,19 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		addBitmap.nID = 101 + buttonCounter;
 		SendMessage(myToolbar, TB_ADDBITMAP, 1, (LPARAM)&addBitmap);
 
-		TBBUTTON button;
 		button.iBitmap = buttonCounter;
-		button.fsState = TBSTATE_ENABLED;
 		button.fsStyle = buttonItem.isToggleButton() ? TBSTYLE_CHECK : TBSTYLE_BUTTON;
 		button.idCommand = buttonItem.actionId();
 		myButtonByActionCode[button.idCommand] = item;
 		button.dwData = 0;
 		button.iString = 0;
-		SendMessage(myToolbar, TB_ADDBUTTONS, 1, (LPARAM)&button);
 
 		++buttonCounter;
 	} else {
-		TBBUTTON separator;
-		separator.iBitmap = 6;
-		separator.fsState = TBSTATE_ENABLED;
-		separator.fsStyle = TBSTYLE_SEP;
-		SendMessage(myToolbar, TB_ADDBUTTONS, 1, (LPARAM)&separator);
+		button.iBitmap = 6;
+		button.fsStyle = TBSTYLE_SEP;
 	}
+	SendMessage(myToolbar, TB_ADDBUTTONS, 1, (LPARAM)&button);
 }
 
 void ZLWin32ApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
