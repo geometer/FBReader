@@ -29,8 +29,8 @@
 #include "ZLUnixFileOutputStream.h"
 
 static std::string getPwdDir() {
-	char pwd[128];
-	return (getcwd(pwd, 127) != 0) ? pwd : "";
+	char pwd[256];
+	return (getcwd(pwd, 255) != 0) ? pwd : "";
 }
 
 static std::string getHomeDir() {
