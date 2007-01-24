@@ -20,6 +20,10 @@
 #ifndef __ZLWIN32DIALOG_H__
 #define __ZLWIN32DIALOG_H__
 
+#include <string>
+#include <vector>
+#include <map>
+
 #include <windows.h>
 
 #include <ZLDialog.h>
@@ -34,7 +38,9 @@ public:
 	bool run();
 
 private:
-	/*Win32Dialog *myDialog;*/
+	typedef std::pair<std::string,bool> ButtonInfo;
+	const std::string myTitle;
+	std::vector<ButtonInfo> myButtons;
 };
 
 #endif /* __ZLWIN32DIALOG_H__ */
