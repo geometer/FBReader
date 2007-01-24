@@ -125,8 +125,8 @@ struct ZLColor {
 	~ZLColor();
 	long intValue();
 
-	bool operator == (const ZLColor &color);
-	bool operator != (const ZLColor &color);
+	bool operator == (const ZLColor &color) const;
+	bool operator != (const ZLColor &color) const;
 };
 
 class ZLColorOption : public ZLOption {
@@ -175,7 +175,7 @@ inline ZLColor::ZLColor(unsigned char r, unsigned char g, unsigned char b) : Red
 inline ZLColor::ZLColor(long longValue) : Red(longValue >> 16), Green((longValue >> 8) & 0xFF), Blue(longValue & 0xFF) {}
 inline ZLColor::~ZLColor() {}
 inline long ZLColor::intValue() { return (((long)Red) << 16) + (((long)Green) << 8) + Blue; }
-inline bool ZLColor::operator == (const ZLColor &color) { return (Red == color.Red) && (Green == color.Green) && (Blue == color.Blue); }
-inline bool ZLColor::operator != (const ZLColor &color) { return !operator==(color); }
+inline bool ZLColor::operator == (const ZLColor &color) const { return (Red == color.Red) && (Green == color.Green) && (Blue == color.Blue); }
+inline bool ZLColor::operator != (const ZLColor &color) const { return !operator==(color); }
 
 #endif /* __ZLOPTIONS_H__ */

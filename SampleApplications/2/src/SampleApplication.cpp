@@ -11,9 +11,9 @@ const std::string &SampleApplicationView::caption() const {
 }
 
 void SampleApplicationView::paint() {
-	context().clear(ZLColor(255, 255, 127));
 	switch (myMode) {
 		case GEOMETRIC:
+			context().clear(ZLColor(255, 255, 127));
 			context().setColor(ZLColor(0, 0, 255));
 			context().drawLine(myZoom, myZoom, myZoom, 4 * myZoom);
 			context().drawLine(5 * myZoom / 2, myZoom, 5 * myZoom / 2, 4 * myZoom);
@@ -34,6 +34,7 @@ void SampleApplicationView::paint() {
 			context().drawFilledCircle(5 * myZoom / 2, 5 * myZoom / 2, 3 * myZoom / 4);
 			break;
 		case TEXT:
+			context().clear(ZLColor(191, 255, 255));
 			context().setColor(ZLColor(0, 0, 255));
 			std::string str = "HELLO";
 			std::string str1 = "ПРИВЕТ";

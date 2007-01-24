@@ -69,7 +69,7 @@ private:
 	int myTopOffset;
 	PAINTSTRUCT myPaintStructure;
 
-	ZLColor myColor;
+	bool myColorIsUpToDate;
 	LineStyle myLineStyle;
 	COLORREF myColorref;
 
@@ -92,5 +92,24 @@ private:
 	bool myStoredItalic;	
 	*/
 };
+
+inline bool operator == (const ZLColor &color, const COLORREF &colorref) {
+	return
+		(color.Red == (unsigned char)colorref) &&
+		(color.Green == (unsigned char)(colorref >> 8)) &&
+		(color.Blue == (unsigned char)(colorref >> 16));
+}
+
+inline bool operator != (const ZLColor &color, const COLORREF &colorref) {
+	return !(color == colorref);
+}
+
+inline bool operator == (const COLORREF &colorref, const ZLColor &color) {
+	return color == colorref;
+}
+
+inline bool operator != (const COLORREF &colorref, const ZLColor &color) {
+	return !(colorref == color);
+}
 
 #endif /* __ZLWIN32PAINTCONTEXT_H__ */

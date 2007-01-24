@@ -23,7 +23,7 @@
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32PaintContext::ZLWin32PaintContext() : myWindow(0), myLineStyle((LineStyle)-1), myBackgroundBrush(0), myFillBrush(0), myWidth(0), myHeight(0) {
+ZLWin32PaintContext::ZLWin32PaintContext() : myWindow(0), myBackgroundBrush(0), myFillBrush(0), myWidth(0), myHeight(0) {
 	/*
 	myPainter = new QPainter();
 	myPixmap = NULL;
@@ -53,6 +53,7 @@ ZLWin32PaintContext::~ZLWin32PaintContext() {
 void ZLWin32PaintContext::beginPaint(ZLWin32ApplicationWindow &window) {
 	if (myWindow == 0) {
 		myWindow = window.mainWindow();
+		myColorIsUpToDate = false;
 		myTopOffset = window.topOffset();
 		RECT rectangle;
 		GetClientRect(myWindow, &rectangle);
@@ -128,10 +129,11 @@ void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
 	if (myWindow == 0) {
 		return;
 	}
-	if ((color != myColor) || (style != myLineStyle)) {
-		myColor = color;
+	if (!myColorIsUpToDate || (color != myColorref) || (style != myLineStyle)) {
+		myColorIsUpToDate = false;
 		myLineStyle = style;
 		myColorref = RGB(color.Red, color.Green, color.Blue);
+		SetTextColor(myDisplayContext, myColorref);
 		DeleteObject(SelectObject(myDisplayContext, CreatePen((style == ZLPaintContext::SOLID_LINE) ? PS_SOLID : PS_DASH, 1, myColorref)));
 	}
 }
