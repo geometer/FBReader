@@ -23,6 +23,8 @@
 
 #include <string>
 
+#include <ZLColor.h>
+
 class ZLOption {
 
 public:
@@ -115,20 +117,6 @@ private:
 	const long myDefaultValue;
 };
 
-struct ZLColor {
-	unsigned char Red;
-	unsigned char Green;
-	unsigned char Blue;
-
-	ZLColor(unsigned char r, unsigned char g, unsigned char b);
-	ZLColor(long longValue = 0);
-	~ZLColor();
-	long intValue();
-
-	bool operator == (const ZLColor &color) const;
-	bool operator != (const ZLColor &color) const;
-};
-
 class ZLColorOption : public ZLOption {
 
 public:
@@ -170,12 +158,5 @@ private:
 	mutable std::string myValue;
 	const std::string myDefaultValue;
 };
-
-inline ZLColor::ZLColor(unsigned char r, unsigned char g, unsigned char b) : Red(r), Green(g), Blue(b) {}
-inline ZLColor::ZLColor(long longValue) : Red(longValue >> 16), Green((longValue >> 8) & 0xFF), Blue(longValue & 0xFF) {}
-inline ZLColor::~ZLColor() {}
-inline long ZLColor::intValue() { return (((long)Red) << 16) + (((long)Green) << 8) + Blue; }
-inline bool ZLColor::operator == (const ZLColor &color) const { return (Red == color.Red) && (Green == color.Green) && (Blue == color.Blue); }
-inline bool ZLColor::operator != (const ZLColor &color) const { return !operator==(color); }
 
 #endif /* __ZLOPTIONS_H__ */
