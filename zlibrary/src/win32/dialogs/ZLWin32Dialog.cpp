@@ -19,14 +19,17 @@
 
 #include "ZLWin32Dialog.h"
 #include "ZLWin32DialogContent.h"
+#include "../application/ZLWin32ApplicationWindow.h"
 //#include "ZLWin32Util.h"
 
-ZLWin32Dialog::ZLWin32Dialog(const std::string &name) : myTitle(name) {
+ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name) : myWindow(window), myTitle(name) {
+	myWindow->blockMouseEvents(true);
 	myTab = new ZLWin32DialogContent();
 	//myDialog = createWin32Dialog(name.c_str());
 }
 
 ZLWin32Dialog::~ZLWin32Dialog() {
+	myWindow->blockMouseEvents(false);
 	//destroyWin32Dialog(myDialog);
 }
 
@@ -41,8 +44,10 @@ static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARA
 		case WM_COMMAND:
 			switch (wParam) {
 				case IDOK:
-				case IDCANCEL:
 					EndDialog(hDialog, true);
+					return true;
+				case IDCANCEL:
+					EndDialog(hDialog, false);
 					return true;
 			}
 	}
@@ -107,10 +112,11 @@ bool ZLWin32Dialog::run() {
 	for (int i = 0; i < buttonNumber; ++i) {
 		DWORD style = (i == 0) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 		style = style | WS_VISIBLE | WS_CHILD | WS_TABSTOP;
+		//style = style | WS_CHILD | WS_TABSTOP;
 		DlgItemTemplate(p, style, 20 + 60 * i, 80, 40, 20, IDOK, (LPSTR)"button", (LPSTR)myButtons[i].first.c_str());
 	}
 
-	int code = DialogBoxIndirect(GetModuleHandle(0), (DLGTEMPLATE*)pTemplate, 0, DialogProc);
+	int code = DialogBoxIndirect(GetModuleHandle(0), (DLGTEMPLATE*)pTemplate, myWindow->mainWindow(), DialogProc);
 	LocalFree(LocalHandle(pTemplate));
 	return code;
 }

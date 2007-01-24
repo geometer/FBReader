@@ -29,11 +29,6 @@
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
 
-void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) const {
-	//myWindow = (new ZLWin32ApplicationWindow(application))->getMainWindow();
-	new ZLWin32ApplicationWindow(application);
-}
-
 /*
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	((ZLWin32ApplicationWindow*)data)->application().closeView();
@@ -74,16 +69,23 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			ourApplicationWindow->ZLApplicationWindow::init();
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_LBUTTONDOWN:
-			ourApplicationWindow->myWin32ViewWidget->view()->onStylusPress(x(lParam), y(lParam));
+			if (!ourApplicationWindow->myBlockMouseEvents) {
+				ourApplicationWindow->myWin32ViewWidget->view()->onStylusPress(x(lParam), y(lParam));
+			}
 			return 0;
 		case WM_LBUTTONUP:
-			ourApplicationWindow->myWin32ViewWidget->view()->onStylusRelease(x(lParam), y(lParam));
+			if (!ourApplicationWindow->myBlockMouseEvents) {
+				ourApplicationWindow->myWin32ViewWidget->view()->onStylusRelease(x(lParam), y(lParam));
+			}
 			return 0;
 		case WM_MOUSEMOVE:
-			if (wParam & MK_LBUTTON) {
-				ourApplicationWindow->myWin32ViewWidget->view()->onStylusMovePressed(x(lParam), y(lParam));
-			} else {
-				ourApplicationWindow->myWin32ViewWidget->view()->onStylusMove(x(lParam), y(lParam));
+			if (!ourApplicationWindow->myBlockMouseEvents) {
+				shared_ptr<ZLView> view = ourApplicationWindow->myWin32ViewWidget->view();
+				if (wParam & MK_LBUTTON) {
+					view->onStylusMovePressed(x(lParam), y(lParam));
+				} else {
+					view->onStylusMove(x(lParam), y(lParam));
+				}
 			}
 			return 0;
 		case WM_SIZE:
@@ -229,7 +231,7 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (myToolbar == 0) {
-  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
+  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(24, 24));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
@@ -328,4 +330,8 @@ int ZLWin32ApplicationWindow::topOffset() const {
 		return toolbarRectangle.bottom - toolbarRectangle.top + 1;
 	}
 	return 0;
+}
+
+void ZLWin32ApplicationWindow::blockMouseEvents(bool block) {
+	myBlockMouseEvents = block;
 }

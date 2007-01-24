@@ -68,6 +68,7 @@ private:
 public:
 	HWND mainWindow() const;
 	int topOffset() const;
+	void blockMouseEvents(bool block);
 
 public:
 	void onToolbarButtonPress(int index);
@@ -87,6 +88,8 @@ private:
 
 	std::map<int,ZLApplication::Toolbar::ItemPtr> myButtonByActionCode;
 	//bool myFullScreen;
+
+	bool myBlockMouseEvents;
 };
 
 #endif /* __ZLWIN32APPLICATIONWINDOW_H__ */

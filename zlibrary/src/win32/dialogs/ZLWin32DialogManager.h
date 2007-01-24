@@ -20,7 +20,11 @@
 #ifndef __ZLWIN32DIALOGMANAGER_H__
 #define __ZLWIN32DIALOGMANAGER_H__
 
+#include <windows.h>
+
 #include <ZLDialogManager.h>
+
+class ZLWin32ApplicationWindow;
 
 class ZLWin32DialogManager : public ZLDialogManager {
 
@@ -28,7 +32,7 @@ public:
 	static void createInstance() { ourInstance = new ZLWin32DialogManager(); }
 
 private:
-	ZLWin32DialogManager() {}
+	ZLWin32DialogManager() : myApplicationWindow(0) {}
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -43,6 +47,9 @@ public:
 
 	//void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }
 	//bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
+
+private:
+	mutable ZLWin32ApplicationWindow *myApplicationWindow;
 };
 
 #endif /* __ZLWIN32DIALOGMANAGER_H__ */

@@ -28,16 +28,19 @@
 
 #include <ZLDialog.h>
 
+class ZLWin32ApplicationWindow;
+
 class ZLWin32Dialog : public ZLDialog {
 
 public:
-	ZLWin32Dialog(const std::string &name);
+	ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name);
 	~ZLWin32Dialog();
 
 	void addButton(const std::string &text, bool accept);
 	bool run();
 
 private:
+	ZLWin32ApplicationWindow *myWindow;
 	typedef std::pair<std::string,bool> ButtonInfo;
 	const std::string myTitle;
 	std::vector<ButtonInfo> myButtons;

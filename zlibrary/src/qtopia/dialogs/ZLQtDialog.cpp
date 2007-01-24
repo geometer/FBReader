@@ -28,7 +28,7 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtDialogManager.h"
 
-ZLQtDialog::ZLQtDialog(const std::string &title) : QDialog(0, 0, true), myButtonNumber(0) {
+ZLQtDialog::ZLQtDialog(QWidget *parent, const std::string &title) : QDialog(parent, 0, true), myButtonNumber(0) {
 	setCaption(title.c_str());
 
 	QVBoxLayout *layout = new QVBoxLayout(this);

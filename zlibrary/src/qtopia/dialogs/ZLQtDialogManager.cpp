@@ -44,7 +44,7 @@ shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const std::st
 }
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const std::string &title) const {
-	return new ZLQtDialog(title);
+	return new ZLQtDialog(myApplicationWindow->mainWindow(), title);
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
