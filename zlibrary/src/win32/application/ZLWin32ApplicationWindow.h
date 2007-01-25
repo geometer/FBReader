@@ -71,6 +71,7 @@ public:
 	void blockMouseEvents(bool block);
 
 private:
+	HBITMAP maskBitmap(HBITMAP original);
 	HBITMAP grayBitmap(HBITMAP original);
 	HBITMAP ditheredBitmap(HBITMAP original);
 
