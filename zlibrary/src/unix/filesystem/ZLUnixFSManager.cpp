@@ -42,6 +42,7 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
 
+#ifndef _WIN32
 	if (path.empty()) {
 		path = PwdDir;
 	} else if (path[0] == '~') {
@@ -58,6 +59,7 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	if (last < (int)path.length() - 1) {
 		path = path.substr(0, last + 1);
 	}
+#endif
 }
 
 ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {

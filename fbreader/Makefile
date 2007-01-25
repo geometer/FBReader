@@ -13,15 +13,27 @@ ALL_ARCHSUBDIRS = desktop pdaxrom opie zaurus maemo openzaurus pma400
 
 SUBDIRS = src src/model src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/util src/textview src/hyphenation src/dictionary src/optionsDialog src/fbreader
 
-all:
+all: resources
 	@for subdir in $(SUBDIRS); do \
 		if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 			exit 1; \
 		fi; \
 	done;
 	@echo -n "Linking $(TARGET) ..."
-	$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` $(LIBS)
+	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` $(LIBS)
 	@echo " OK"
+
+resources:
+ifneq "$(RESOURCE_COMPILER)" ""
+	@echo -n "Creating resource object..."
+	@echo "ApplicationName ICON icons/win32/$(TARGET).ico" > $(TARGET).rc
+	@for file in icons/win32/$(TARGET)/*.bmp; do \
+	   echo `basename $$file .bmp` BITMAP $$file >> $(TARGET).rc; \
+	 done
+	@$(RESOURCE_COMPILER) $(TARGET).rc -o src/$(TARGET)_rc.o
+	@$(RM_QUIET) $(TARGET).rc
+	@echo " OK"
+endif
 
 do_install:
 	@install -d $(DESTDIR)$(BINDIR)

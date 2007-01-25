@@ -166,7 +166,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetModuleHandle(0);
-	wc.hIcon = LoadIcon(wc.hInstance, TEXT("MAIN_ICON"));
+	wc.hIcon = LoadIcon(wc.hInstance, TEXT("ApplicationIcon"));
 	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
@@ -179,9 +179,8 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 }
 
 void ZLWin32ApplicationWindow::init() {
-	//ZLApplicationWindow::init();
-
-	myMainWindow = CreateWindow(ZLApplication::ApplicationName().c_str(), ZLApplication::ApplicationName().c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
+	const std::string aName = ZLApplication::ApplicationName();
+	myMainWindow = CreateWindow(aName.c_str(), aName.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
@@ -303,9 +302,9 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(24, 24));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
-		SendMessage(myToolbar, TB_SETIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR | ILC_MASK, 0, 100));
-		SendMessage(myToolbar, TB_SETHOTIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR | ILC_MASK, 0, 100));
-		SendMessage(myToolbar, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR | ILC_MASK, 0, 100));
+		SendMessage(myToolbar, TB_SETIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR8 | ILC_MASK, 0, 100));
+		SendMessage(myToolbar, TB_SETHOTIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR8 | ILC_MASK, 0, 100));
+		SendMessage(myToolbar, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR8 | ILC_MASK, 0, 100));
 	}
 
 	TBBUTTON button;
@@ -321,6 +320,8 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		SendMessage(myToolbar, TB_ADDBITMAP, 1, (LPARAM)&addBitmap);
 		*/
 		HBITMAP bitmap = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
+		//static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
+		//HBITMAP bitmap = (HBITMAP)LoadImage(0, (imagePrefix + buttonItem.iconName() + ".bmp").c_str(), IMAGE_BITMAP, 24, 24, LR_LOADFROMFILE);
 		HBITMAP mask = maskBitmap(bitmap);
 		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETIMAGELIST, 0, 0), bitmap, mask);
 		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETHOTIMAGELIST, 0, 0), ditheredBitmap(bitmap), mask);
