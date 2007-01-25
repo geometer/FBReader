@@ -32,8 +32,6 @@ public:
 	ZLWin32PaintContext();
 	~ZLWin32PaintContext();
 
-	void setSize(int w, int h);
-
 	int width() const;
 	int height() const;
 
@@ -58,21 +56,16 @@ public:
 	void drawFilledCircle(int x, int y, int r);
 
 	void beginPaint(ZLWin32ApplicationWindow &window);
-	void endPaint();
+	void endPaint(ZLWin32ApplicationWindow &window);
 
 private:
 	void adjustPoint(int &x, int &y) const;
 
 private:
-	HWND myWindow;
-	int myWidth;
-	int myHeight;
-	int myTopOffset;
-
 	HDC myDisplayContext;
 	HBITMAP myBufferBitmap;
-	int myBufferWidth;
-	int myBufferHeight;
+	int myWidth;
+	int myHeight;
 
 	bool myColorIsUpToDate;
 	LineStyle myLineStyle;
@@ -83,11 +76,9 @@ private:
 
 	HBRUSH myFillBrush;
 
-	/*
-	QPainter *myPainter;
-	QPixmap *myPixmap;
 	mutable int mySpaceWidth;
 
+	/*
 	bool myFontIsStored;
 	std::string myStoredFamily;
 	int myStoredSize;

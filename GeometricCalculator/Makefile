@@ -11,7 +11,7 @@ TARGET = GeometricCalculator
 SUBDIRS = src/document src/io src/model src/modelDecorator src/polynom src/translator src/ui src/calculator
 ARCHSUBDIRS = zaurus maemo
 
-all: resources
+all: .resources
 	@for subdir in $(SUBDIRS); do \
 		if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 			exit 1; \
@@ -20,18 +20,6 @@ all: resources
 	@echo -n "Linking $(TARGET) ..."
 	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` $(LIBS)
 	@echo " OK"
-
-resources:
-ifneq "$(RESOURCE_COMPILER)" ""
-	@echo -n "Creating resource object..."
-	@echo "ApplicationName ICON icons/win32/$(TARGET).ico" > $(TARGET).rc
-	@for file in icons/win32/$(TARGET)/*.bmp; do \
-	   echo `basename $$file .bmp` BITMAP $$file >> $(TARGET).rc; \
-	 done
-	@$(RESOURCE_COMPILER) $(TARGET).rc -o src/$(TARGET)_rc.o
-	@$(RM_QUIET) $(TARGET).rc
-	@echo " OK"
-endif
 
 install: all do_install
 

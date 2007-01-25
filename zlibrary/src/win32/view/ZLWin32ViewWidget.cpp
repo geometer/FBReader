@@ -38,5 +38,5 @@ void ZLWin32ViewWidget::doPaint()	{
 	ZLWin32PaintContext &win32Context = (ZLWin32PaintContext&)view()->context();
 	win32Context.beginPaint(myWindow);
 	view()->paint();
-	win32Context.endPaint();
+	win32Context.endPaint(myWindow);
 }

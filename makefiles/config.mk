@@ -40,3 +40,7 @@ ifeq "$(TARGET_STATUS)" "profile"
 endif
 
 ZINCLUDE = -I $(ROOTDIR)/zlibrary/include
+
+ifneq "$(BUILD_RESOURCE_OBJECT)" "yes"
+.resources:
+endif

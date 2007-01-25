@@ -19,3 +19,17 @@ BZIP2LIBS = -lbz2
 
 RM = rm -rvf
 RM_QUIET = rm -rf
+
+BUILD_RESOURCE_OBJECT = yes
+
+.resources:
+	@echo -n "Creating resource object..."
+	@echo "ApplicationName ICON icons/win32/$(TARGET).ico" > $(TARGET).rc
+	@if [ -d icons/win32/$(TARGET) ]; then \
+		for file in icons/win32/$(TARGET)/*.bmp; do \
+			echo `basename $$file .bmp` BITMAP $$file >> $(TARGET).rc; \
+		done; \
+	fi
+	@$(RESOURCE_COMPILER) $(TARGET).rc -o src/$(TARGET)_rc.o
+	@$(RM_QUIET) $(TARGET).rc
+	@echo " OK"

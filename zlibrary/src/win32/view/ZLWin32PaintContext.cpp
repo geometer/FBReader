@@ -23,13 +23,7 @@
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32PaintContext::ZLWin32PaintContext() : myWindow(0), myWidth(0), myHeight(0), myBufferBitmap(0), myBackgroundBrush(0), myFillBrush(0) {
-	/*
-	myPainter = new QPainter();
-	myPixmap = NULL;
-	mySpaceWidth = -1;
-	myFontIsStored = false;
-	*/
+ZLWin32PaintContext::ZLWin32PaintContext() : myDisplayContext(0), myWidth(0), myHeight(0), myBufferBitmap(0), myBackgroundBrush(0), myFillBrush(0), mySpaceWidth(-1) {
 }
 
 ZLWin32PaintContext::~ZLWin32PaintContext() {
@@ -46,43 +40,33 @@ ZLWin32PaintContext::~ZLWin32PaintContext() {
 }
 
 void ZLWin32PaintContext::beginPaint(ZLWin32ApplicationWindow &window) {
-	if (myWindow == 0) {
-		myWindow = window.mainWindow();
-		myTopOffset = window.topOffset();
-		RECT rectangle;
-		GetClientRect(myWindow, &rectangle);
-		myWidth = rectangle.right - rectangle.left + 1;
-		myHeight = rectangle.bottom - rectangle.top + 1 - myTopOffset;
-		if (myBufferBitmap != 0) {
-			if ((myBufferWidth != myWidth) || (myBufferHeight != myHeight)) {
-				DeleteObject(myBufferBitmap);
-				DeleteDC(myDisplayContext);
-				myBufferBitmap = 0;
-				myColorIsUpToDate = false;
-			}
+	RECT rectangle;
+	GetClientRect(window.mainWindow(), &rectangle);
+	const int width = rectangle.right - rectangle.left + 1;
+	const int heigth = rectangle.bottom - rectangle.top + 1 - window.topOffset();
+	if (myBufferBitmap != 0) {
+		if ((myWidth != width) || (myHeight != heigth)) {
+			DeleteObject(myBufferBitmap);
+			DeleteDC(myDisplayContext);
+			myBufferBitmap = 0;
+			myColorIsUpToDate = false;
 		}
-		if (myBufferBitmap == 0) {
-			myBufferWidth = myWidth;
-			myBufferHeight = myHeight;
-			HDC dc = GetDC(myWindow);
-			myDisplayContext = CreateCompatibleDC(dc);
-			myBufferBitmap = CreateCompatibleBitmap(dc, myBufferWidth, myBufferHeight);
-			SelectObject(myDisplayContext, myBufferBitmap);
-		}
+	}
+	if (myBufferBitmap == 0) {
+		myWidth = width;
+		myHeight = heigth;
+		HDC dc = GetDC(window.mainWindow());
+		myDisplayContext = CreateCompatibleDC(dc);
+		myBufferBitmap = CreateCompatibleBitmap(dc, myWidth, myHeight);
+		SelectObject(myDisplayContext, myBufferBitmap);
 	}
 }
 
-void ZLWin32PaintContext::endPaint() {
-	if (myWindow != 0) {
-		PAINTSTRUCT paintStructure;
-		HDC dc = BeginPaint(myWindow, &paintStructure);
-		BitBlt(dc, 0, myTopOffset, myWidth, myHeight, myDisplayContext, 0, 0, SRCCOPY);
-		EndPaint(myWindow, &paintStructure);
-		myWindow = 0;
-	}
-}
-
-void ZLWin32PaintContext::setSize(int /*w*/, int /*h*/) {
+void ZLWin32PaintContext::endPaint(ZLWin32ApplicationWindow &window) {
+	PAINTSTRUCT paintStructure;
+	HDC dc = BeginPaint(window.mainWindow(), &paintStructure);
+	BitBlt(dc, 0, window.topOffset(), myWidth, myHeight, myDisplayContext, 0, 0, SRCCOPY);
+	EndPaint(window.mainWindow(), &paintStructure);
 }
 
 void ZLWin32PaintContext::fillFamiliesList(std::vector<std::string> &families) const {
@@ -118,7 +102,7 @@ const std::string ZLWin32PaintContext::realFontFamilyName(std::string &fontFamil
 }
 
 void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 	// TODO: optimize
@@ -132,10 +116,11 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 	logicalFont.lfFaceName[len] = '\0';
 	HFONT font = CreateFontIndirect(&logicalFont);
 	DeleteObject(SelectObject(myDisplayContext, font));
+	mySpaceWidth = -1;
 }
 
 void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 	if (!myColorIsUpToDate || (color != myColor) || (style != myLineStyle)) {
@@ -148,7 +133,7 @@ void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
 }
 
 void ZLWin32PaintContext::setFillColor(ZLColor color, FillStyle style) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 	// TODO: optimize (don't create new brush, if color and style are not changed)
@@ -163,24 +148,28 @@ void ZLWin32PaintContext::setFillColor(ZLColor color, FillStyle style) {
 }
 
 int ZLWin32PaintContext::stringWidth(const char *str, int len) const {
-	/*
-	return myPainter->fontMetrics().width(QString::fromUtf8(str, len));
-	*/
-	return 20 * len;
+	if (myDisplayContext == 0) {
+		return 0;
+	}
+	int charWidth;
+	int fullWidth;
+	for (int i = 0; i < len; ++i) {
+		if (GetCharWidth(myDisplayContext, str[i], str[i], &charWidth)) {
+			fullWidth += charWidth;
+		}
+	}
+	return fullWidth;
 }
 
 int ZLWin32PaintContext::spaceWidth() const {
-	/*
 	if (mySpaceWidth == -1) {
-		mySpaceWidth = myPainter->fontMetrics().width(" ");
+		GetCharWidth(myDisplayContext, ' ', ' ', &mySpaceWidth);
 	}
 	return mySpaceWidth;
-	*/
-	return 20;
 }
 
 int ZLWin32PaintContext::stringHeight() const {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return 0;
 	}
 	// TODO: optimize
@@ -190,7 +179,7 @@ int ZLWin32PaintContext::stringHeight() const {
 }
 
 void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 	adjustPoint(x, y);
@@ -219,7 +208,7 @@ void ZLWin32PaintContext::adjustPoint(int &x, int &y) const {
 }
 
 void ZLWin32PaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 
@@ -233,7 +222,7 @@ void ZLWin32PaintContext::drawLine(int x0, int y0, int x1, int y1) {
 }
 
 void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 
@@ -259,7 +248,7 @@ void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 }
 
 void ZLWin32PaintContext::drawFilledCircle(int x, int y, int r) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 
@@ -271,7 +260,7 @@ void ZLWin32PaintContext::drawFilledCircle(int x, int y, int r) {
 }
 
 void ZLWin32PaintContext::clear(ZLColor color) {
-	if (myWindow == 0) {
+	if (myDisplayContext == 0) {
 		return;
 	}
 	if ((myBackgroundBrush == 0) || (color != myBackgroundColor)) {
@@ -280,19 +269,20 @@ void ZLWin32PaintContext::clear(ZLColor color) {
 		}
 		myBackgroundColor = RGB(color.Red, color.Green, color.Blue);
 		myBackgroundBrush = CreateSolidBrush(myBackgroundColor);
-		// TODO: set background brush
-		//SetWindowLong(myWindow, GCL_HBRBACKGROUND, (LONG)myBackgroundBrush);
 	}
 	RECT rectangle;
-	GetClientRect(myWindow, &rectangle);
+	rectangle.top = 0;
+	rectangle.bottom = myHeight - 1;
+	rectangle.left = 0;
+	rectangle.right = myWidth - 1;
 	FillRect(myDisplayContext, &rectangle, myBackgroundBrush);
 	SetBkMode(myDisplayContext, TRANSPARENT);
 }
 
 int ZLWin32PaintContext::width() const {
-	return myWidth;
+	return myWidth - leftMargin() - rightMargin();
 }
 
 int ZLWin32PaintContext::height() const {
-	return myHeight;
+	return myHeight - topMargin() - bottomMargin();
 }
