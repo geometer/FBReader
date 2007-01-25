@@ -30,6 +30,11 @@ class ZLWin32ViewWidget : public ZLViewWidget {
 public:
 	ZLWin32ViewWidget(ZLWin32ApplicationWindow &window);
 
+	void onMousePress(int x, int y);
+	void onMouseRelease(int x, int y);
+	void onMouseMove(int x, int y);
+	void onMouseMovePressed(int x, int y);
+
 private:
 	void repaint();
 	void trackStylus(bool track);

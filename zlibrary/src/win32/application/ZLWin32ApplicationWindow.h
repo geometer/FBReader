@@ -95,6 +95,7 @@ private:
 	//bool myFullScreen;
 
 	bool myBlockMouseEvents;
+	int myKeyboardModifierMask;
 };
 
 #endif /* __ZLWIN32APPLICATIONWINDOW_H__ */

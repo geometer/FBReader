@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keynames>
 	<key code="0xFF1B" name="&lt;Esc&gt;"/>
-	<key code="27" name="&lt;Esc&gt;"/>
+	<key code="0x1B" name="&lt;Esc&gt;"/>
 	<key code="0xFF09" name="&lt;Tab&gt;"/>
 	<key code="0xFF08" name="&lt;BackSpace&gt;"/>
 	<key code="0xFF0D" name="&lt;Return&gt;"/>
-	<key code="13" name="&lt;Return&gt;"/>
+	<key code="0xD" name="&lt;Return&gt;"/>
 	<key code="0xFF63" name="&lt;Insert&gt;"/>
 	<key code="0xFFFF" name="&lt;Delete&gt;"/>
 	<key code="0xFF13" name="&lt;Pause&gt;"/>

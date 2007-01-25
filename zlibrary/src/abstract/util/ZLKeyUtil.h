@@ -31,7 +31,7 @@ private:
 	static std::map<int,std::string> ourNames;
 	static std::map<int,std::string> ourModifiers;
 
-protected:
+public:
 	static std::string keyName(int unicode, int key, int modifiersMask);
 
 private:

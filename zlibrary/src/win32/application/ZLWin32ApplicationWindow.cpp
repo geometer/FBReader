@@ -23,9 +23,7 @@
 #include <ZLDialog.h>
 #include <ZLPaintContext.h>
 
-//#include "../util/ZLWin32KeyUtil.h"
-//#include "../util/ZLWin32SignalUtil.h"
-
+#include "../../abstract/util/ZLKeyUtil.h"
 #include "ZLWin32ApplicationWindow.h"
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
@@ -74,12 +72,12 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 				if (ourApplicationWindow->myWin32ViewWidget->myMouseCaptured) {
 					SetCapture(ourApplicationWindow->myMainWindow);
 				}
-				ourApplicationWindow->myWin32ViewWidget->view()->onStylusPress(x(lParam), y(lParam));
+				ourApplicationWindow->myWin32ViewWidget->onMousePress(x(lParam), y(lParam));
 			}
 			return 0;
 		case WM_LBUTTONUP:
 			if (!ourApplicationWindow->myBlockMouseEvents) {
-				ourApplicationWindow->myWin32ViewWidget->view()->onStylusRelease(x(lParam), y(lParam));
+				ourApplicationWindow->myWin32ViewWidget->onMouseRelease(x(lParam), y(lParam));
 			}
 			if (ourApplicationWindow->myMainWindow == GetCapture()) {
 				ReleaseCapture();
@@ -87,24 +85,28 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			return 0;
 		case WM_MOUSEMOVE:
 			if (!ourApplicationWindow->myBlockMouseEvents) {
-				ZLView &view = *ourApplicationWindow->myWin32ViewWidget->view();
 				if (wParam & MK_LBUTTON) {
-					short xCoordinate = x(lParam);
-					short yCoordinate = y(lParam);
-					if (xCoordinate < 0) {
-						xCoordinate = 0;
-					} else if (xCoordinate >= view.context().width()) {
-						xCoordinate = view.context().width() - 1;
-					}
-					if (yCoordinate < 0) {
-						yCoordinate = 0;
-					} else if (yCoordinate >= view.context().height()) {
-						yCoordinate = view.context().height() - 1;
-					}
-					view.onStylusMovePressed(xCoordinate, yCoordinate);
+					ourApplicationWindow->myWin32ViewWidget->onMouseMovePressed(x(lParam), y(lParam));
 				} else {
-					view.onStylusMove(x(lParam), y(lParam));
+					ourApplicationWindow->myWin32ViewWidget->onMouseMove(x(lParam), y(lParam));
 				}
+			}
+			return 0;
+		case WM_KEYDOWN:
+			if (wParam == 0x11) {
+				ourApplicationWindow->myKeyboardModifierMask |= 0x2;
+			} else if (wParam == 0x12) {
+				ourApplicationWindow->myKeyboardModifierMask |= 0x4;
+			} else {
+				ourApplicationWindow->application().doActionByKey(ZLKeyUtil::keyName(wParam, wParam, ourApplicationWindow->myKeyboardModifierMask));
+				//std::cerr << ZLKeyUtil::keyName(wParam, wParam, ourApplicationWindow->myKeyboardModifierMask);
+			}
+			return 0;
+		case WM_KEYUP:
+			if (wParam == 0x11) {
+				ourApplicationWindow->myKeyboardModifierMask &= ~0x2;
+			} else if (wParam == 0x12) {
+				ourApplicationWindow->myKeyboardModifierMask &= ~0x4;
 			}
 			return 0;
 		case WM_SIZE:
@@ -138,7 +140,8 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myToolbar(0),
-	myBlockMouseEvents(false) {
+	myBlockMouseEvents(false),
+	myKeyboardModifierMask(0) {
 	//myFullScreen(false) {
 
 	INITCOMMONCONTROLSEX icex;
