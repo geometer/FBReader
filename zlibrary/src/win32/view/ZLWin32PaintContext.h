@@ -64,10 +64,15 @@ private:
 	void adjustPoint(int &x, int &y) const;
 
 private:
-	HDC myDisplayContext;
 	HWND myWindow;
+	int myWidth;
+	int myHeight;
 	int myTopOffset;
-	PAINTSTRUCT myPaintStructure;
+
+	HDC myDisplayContext;
+	HBITMAP myBufferBitmap;
+	int myBufferWidth;
+	int myBufferHeight;
 
 	bool myColorIsUpToDate;
 	LineStyle myLineStyle;
@@ -78,8 +83,6 @@ private:
 
 	HBRUSH myFillBrush;
 
-	int myWidth;
-	int myHeight;
 	/*
 	QPainter *myPainter;
 	QPixmap *myPixmap;

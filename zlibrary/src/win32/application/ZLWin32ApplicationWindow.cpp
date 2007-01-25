@@ -93,6 +93,8 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 				SendMessage(ourApplicationWindow->myToolbar, TB_AUTOSIZE, 0, 0);
 			}
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		case WM_ERASEBKGND:
+			return 0;
 		case WM_PAINT:
 			ourApplicationWindow->myWin32ViewWidget->doPaint();
 			return 0;
@@ -327,7 +329,11 @@ int ZLWin32ApplicationWindow::topOffset() const {
 	if (myToolbar != 0) {
 		RECT toolbarRectangle;
 		GetWindowRect(myToolbar, &toolbarRectangle);
-		return toolbarRectangle.bottom - toolbarRectangle.top + 1;
+		POINT p;
+		p.x = toolbarRectangle.right;
+		p.y = toolbarRectangle.bottom;
+		ScreenToClient(myMainWindow, &p);
+		return p.y;
 	}
 	return 0;
 }
