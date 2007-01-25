@@ -23,7 +23,7 @@
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32PaintContext::ZLWin32PaintContext() : myDisplayContext(0), myWidth(0), myHeight(0), myBufferBitmap(0), myBackgroundBrush(0), myFillBrush(0), mySpaceWidth(-1) {
+ZLWin32PaintContext::ZLWin32PaintContext() : myDisplayContext(0), myBufferBitmap(0), myWidth(0), myHeight(0), myBackgroundBrush(0), myFillBrush(0), mySpaceWidth(-1) {
 }
 
 ZLWin32PaintContext::~ZLWin32PaintContext() {
@@ -116,6 +116,8 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 	logicalFont.lfFaceName[len] = '\0';
 	HFONT font = CreateFontIndirect(&logicalFont);
 	DeleteObject(SelectObject(myDisplayContext, font));
+
+	GetTextMetrics(myDisplayContext, &myTextMetric);
 	mySpaceWidth = -1;
 }
 
@@ -151,11 +153,20 @@ int ZLWin32PaintContext::stringWidth(const char *str, int len) const {
 	if (myDisplayContext == 0) {
 		return 0;
 	}
-	int charWidth;
-	int fullWidth;
-	for (int i = 0; i < len; ++i) {
-		if (GetCharWidth(myDisplayContext, str[i], str[i], &charWidth)) {
-			fullWidth += charWidth;
+	int fullWidth = 0;
+	if (myTextMetric.tmPitchAndFamily & TMPF_TRUETYPE) {
+		ABC charABC;
+		for (int i = 0; i < len; ++i) {
+			if (GetCharABCWidths(myDisplayContext, str[i], str[i], &charABC)) {
+				fullWidth += charABC.abcA + charABC.abcB + charABC.abcC;
+			}
+		}
+	} else {
+		int charWidth;
+		for (int i = 0; i < len; ++i) {
+			if (GetCharWidth(myDisplayContext, str[i], str[i], &charWidth)) {
+				fullWidth += charWidth;
+			}
 		}
 	}
 	return fullWidth;
@@ -169,13 +180,7 @@ int ZLWin32PaintContext::spaceWidth() const {
 }
 
 int ZLWin32PaintContext::stringHeight() const {
-	if (myDisplayContext == 0) {
-		return 0;
-	}
-	// TODO: optimize
-	TEXTMETRIC metric;
-	GetTextMetrics(myDisplayContext, &metric);
-	return metric.tmHeight;
+	return myTextMetric.tmHeight;
 }
 
 void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {

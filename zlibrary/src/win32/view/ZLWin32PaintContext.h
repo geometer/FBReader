@@ -78,6 +78,7 @@ private:
 
 	mutable int mySpaceWidth;
 
+	TEXTMETRIC myTextMetric;
 	/*
 	bool myFontIsStored;
 	std::string myStoredFamily;
