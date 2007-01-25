@@ -138,12 +138,12 @@ void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
 	if (myWindow == 0) {
 		return;
 	}
-	if (!myColorIsUpToDate || (color != myColorref) || (style != myLineStyle)) {
+	if (!myColorIsUpToDate || (color != myColor) || (style != myLineStyle)) {
 		myColorIsUpToDate = false;
 		myLineStyle = style;
-		myColorref = RGB(color.Red, color.Green, color.Blue);
-		SetTextColor(myDisplayContext, myColorref);
-		DeleteObject(SelectObject(myDisplayContext, CreatePen((style == ZLPaintContext::SOLID_LINE) ? PS_SOLID : PS_DASH, 1, myColorref)));
+		myColor = RGB(color.Red, color.Green, color.Blue);
+		SetTextColor(myDisplayContext, myColor);
+		DeleteObject(SelectObject(myDisplayContext, CreatePen((style == ZLPaintContext::SOLID_LINE) ? PS_SOLID : PS_DASH, 1, myColor)));
 	}
 }
 
@@ -228,8 +228,8 @@ void ZLWin32PaintContext::drawLine(int x0, int y0, int x1, int y1) {
 
 	MoveToEx(myDisplayContext, x0, y0, 0);
 	LineTo(myDisplayContext, x1, y1);
-	SetPixel(myDisplayContext, x0, y0, myColorref);
-	SetPixel(myDisplayContext, x1, y1, myColorref);
+	SetPixel(myDisplayContext, x0, y0, myColor);
+	SetPixel(myDisplayContext, x1, y1, myColor);
 }
 
 void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
@@ -278,15 +278,15 @@ void ZLWin32PaintContext::clear(ZLColor color) {
 		if (myBackgroundBrush != 0) {
 			DeleteObject(myBackgroundBrush);
 		}
-		myBackgroundColor = color;
-		myBackgroundBrush = CreateSolidBrush(RGB(color.Red, color.Green, color.Blue));
+		myBackgroundColor = RGB(color.Red, color.Green, color.Blue);
+		myBackgroundBrush = CreateSolidBrush(myBackgroundColor);
 		// TODO: set background brush
 		//SetWindowLong(myWindow, GCL_HBRBACKGROUND, (LONG)myBackgroundBrush);
 	}
 	RECT rectangle;
 	GetClientRect(myWindow, &rectangle);
 	FillRect(myDisplayContext, &rectangle, myBackgroundBrush);
-	SetBkColor(myDisplayContext, RGB(color.Red, color.Green, color.Blue));
+	SetBkMode(myDisplayContext, TRANSPARENT);
 }
 
 int ZLWin32PaintContext::width() const {

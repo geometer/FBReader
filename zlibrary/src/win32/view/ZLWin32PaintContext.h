@@ -76,9 +76,9 @@ private:
 
 	bool myColorIsUpToDate;
 	LineStyle myLineStyle;
-	COLORREF myColorref;
+	COLORREF myColor;
 
-	ZLColor myBackgroundColor;
+	COLORREF myBackgroundColor;
 	HBRUSH myBackgroundBrush;
 
 	HBRUSH myFillBrush;
