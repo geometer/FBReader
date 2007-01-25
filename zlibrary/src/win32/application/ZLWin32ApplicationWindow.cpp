@@ -250,21 +250,29 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 	return false;
 }
 
-static void grayBitmap(HBITMAP bitmap) {
-	unsigned char bits[3 * 24 * 24];
-	GetBitmapBits(bitmap, 3 * 24 * 24, bits);
-	for (int i = 0; i < 3 * 24 * 24; i += 3) {
-		if ((bits[i] != 0xC0) || (bits[i + 1] != 0xC0) || (bits[i + 2] != 0xC0)) {
-			bits[i] = 0x80;
-			bits[i + 1] = 0x80;
-			bits[i + 2] = 0x80;
+HBITMAP ZLWin32ApplicationWindow::grayBitmap(HBITMAP original) {
+	HDC toolbarDC = GetDC(myToolbar);
+	HDC srcDC = CreateCompatibleDC(toolbarDC);
+	HDC dstDC = CreateCompatibleDC(toolbarDC);
+	HBITMAP gray = CreateCompatibleBitmap(toolbarDC, 24, 24);
+	SelectObject(srcDC, original);
+	SelectObject(dstDC, gray);
+	static const COLORREF transparent = RGB(0xC0, 0xC0, 0xC0);
+	static const COLORREF dark = RGB(0x80, 0x80, 0x80);
+	for (int i = 0; i < 24; ++i) {
+		for (int j = 0; j < 24; ++j) {
+			COLORREF pixel = GetPixel(srcDC, i, j);
+			SetPixel(dstDC, i, j, (pixel == transparent) ? transparent : dark);
 		}
 	}
-	SetBitmapBits(bitmap, 3 * 24 * 24, bits);
+	DeleteDC(dstDC);
+	DeleteDC(srcDC);
+	ReleaseDC(myToolbar, toolbarDC);
+	return gray;
 }
 
-static void ditherBitmap(HBITMAP bitmap) {
-	bitmap = bitmap;
+HBITMAP ZLWin32ApplicationWindow::ditheredBitmap(HBITMAP original) {
+	return original;
 }
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
@@ -292,12 +300,8 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		*/
 		HBITMAP bitmap = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
 		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETIMAGELIST, 0, 0), bitmap, 0);
-		HBITMAP dithered = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
-		ditherBitmap(dithered);
-		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETHOTIMAGELIST, 0, 0), dithered, 0);
-		HBITMAP gray = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
-		grayBitmap(gray);
-		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETDISABLEDIMAGELIST, 0, 0), gray, 0);
+		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETHOTIMAGELIST, 0, 0), ditheredBitmap(bitmap), 0);
+		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETDISABLEDIMAGELIST, 0, 0), grayBitmap(bitmap), 0);
 
 		button.iBitmap = buttonCounter;
 		button.fsStyle = buttonItem.isToggleButton() ? TBSTYLE_CHECK : TBSTYLE_BUTTON;

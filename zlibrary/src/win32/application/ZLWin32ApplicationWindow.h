@@ -70,6 +70,10 @@ public:
 	int topOffset() const;
 	void blockMouseEvents(bool block);
 
+private:
+	HBITMAP grayBitmap(HBITMAP original);
+	HBITMAP ditheredBitmap(HBITMAP original);
+
 public:
 	void onToolbarButtonPress(int index);
 /*
