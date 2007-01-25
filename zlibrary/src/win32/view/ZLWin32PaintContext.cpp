@@ -79,8 +79,6 @@ void ZLWin32PaintContext::endPaint() {
 		BitBlt(dc, 0, myTopOffset, myWidth, myHeight, myDisplayContext, 0, 0, SRCCOPY);
 		EndPaint(myWindow, &paintStructure);
 		myWindow = 0;
-		myWidth = 0;
-		myHeight = 0;
 	}
 }
 

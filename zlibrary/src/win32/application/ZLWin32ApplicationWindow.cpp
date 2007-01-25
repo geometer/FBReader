@@ -21,6 +21,7 @@
 
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
+#include <ZLPaintContext.h>
 
 //#include "../util/ZLWin32KeyUtil.h"
 //#include "../util/ZLWin32SignalUtil.h"
@@ -70,6 +71,9 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_LBUTTONDOWN:
 			if (!ourApplicationWindow->myBlockMouseEvents) {
+				if (ourApplicationWindow->myWin32ViewWidget->myMouseCaptured) {
+					SetCapture(ourApplicationWindow->myMainWindow);
+				}
 				ourApplicationWindow->myWin32ViewWidget->view()->onStylusPress(x(lParam), y(lParam));
 			}
 			return 0;
@@ -77,14 +81,29 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			if (!ourApplicationWindow->myBlockMouseEvents) {
 				ourApplicationWindow->myWin32ViewWidget->view()->onStylusRelease(x(lParam), y(lParam));
 			}
+			if (ourApplicationWindow->myMainWindow == GetCapture()) {
+				ReleaseCapture();
+			}
 			return 0;
 		case WM_MOUSEMOVE:
 			if (!ourApplicationWindow->myBlockMouseEvents) {
-				shared_ptr<ZLView> view = ourApplicationWindow->myWin32ViewWidget->view();
+				ZLView &view = *ourApplicationWindow->myWin32ViewWidget->view();
 				if (wParam & MK_LBUTTON) {
-					view->onStylusMovePressed(x(lParam), y(lParam));
+					short xCoordinate = x(lParam);
+					short yCoordinate = y(lParam);
+					if (xCoordinate < 0) {
+						xCoordinate = 0;
+					} else if (xCoordinate >= view.context().width()) {
+						xCoordinate = view.context().width() - 1;
+					}
+					if (yCoordinate < 0) {
+						yCoordinate = 0;
+					} else if (yCoordinate >= view.context().height()) {
+						yCoordinate = view.context().height() - 1;
+					}
+					view.onStylusMovePressed(xCoordinate, yCoordinate);
 				} else {
-					view->onStylusMove(x(lParam), y(lParam));
+					view.onStylusMove(x(lParam), y(lParam));
 				}
 			}
 			return 0;

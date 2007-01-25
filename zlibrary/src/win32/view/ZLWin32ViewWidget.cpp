@@ -20,10 +20,11 @@
 #include "ZLWin32ViewWidget.h"
 #include "ZLWin32PaintContext.h"
 
-ZLWin32ViewWidget::ZLWin32ViewWidget(ZLWin32ApplicationWindow &window) : ZLViewWidget((ZLViewWidget::Angle)window.application().AngleStateOption.value()), myWindow(window) {
+ZLWin32ViewWidget::ZLWin32ViewWidget(ZLWin32ApplicationWindow &window) : ZLViewWidget((ZLViewWidget::Angle)window.application().AngleStateOption.value()), myWindow(window), myMouseCaptured(false) {
 }
 
 void ZLWin32ViewWidget::trackStylus(bool track) {
+	myMouseCaptured = track;
 }
 
 void ZLWin32ViewWidget::repaint()	{

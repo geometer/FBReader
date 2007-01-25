@@ -38,6 +38,7 @@ private:
 
 private:
 	ZLWin32ApplicationWindow &myWindow;
+	bool myMouseCaptured;
 
 friend class ZLWin32ApplicationWindow;
 };
