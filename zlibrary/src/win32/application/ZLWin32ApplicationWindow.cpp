@@ -171,7 +171,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
 	wc.lpszClassName = ZLApplication::ApplicationName().c_str();
-	wc.hIconSm = LoadIcon(wc.hInstance, TEXT("MAIN_ICON_SMALL"));
+	wc.hIconSm = wc.hIcon;
 
 	RegisterClassEx(&wc);
 
@@ -250,12 +250,32 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 	return false;
 }
 
+static void grayBitmap(HBITMAP bitmap) {
+	unsigned char bits[3 * 24 * 24];
+	GetBitmapBits(bitmap, 3 * 24 * 24, bits);
+	for (int i = 0; i < 3 * 24 * 24; i += 3) {
+		if ((bits[i] != 0xC0) || (bits[i + 1] != 0xC0) || (bits[i + 2] != 0xC0)) {
+			bits[i] = 0x80;
+			bits[i + 1] = 0x80;
+			bits[i + 2] = 0x80;
+		}
+	}
+	SetBitmapBits(bitmap, 3 * 24 * 24, bits);
+}
+
+static void ditherBitmap(HBITMAP bitmap) {
+	bitmap = bitmap;
+}
+
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (myToolbar == 0) {
   	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(24, 24));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
+		SendMessage(myToolbar, TB_SETIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR, 0, 100));
+		SendMessage(myToolbar, TB_SETHOTIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR, 0, 100));
+		SendMessage(myToolbar, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)ImageList_Create(24, 24, ILC_COLOR, 0, 100));
 	}
 
 	TBBUTTON button;
@@ -264,10 +284,20 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 
+		/*
 		TBADDBITMAP addBitmap;
 		addBitmap.hInst = GetModuleHandle(0);
 		addBitmap.nID = 101 + buttonCounter;
 		SendMessage(myToolbar, TB_ADDBITMAP, 1, (LPARAM)&addBitmap);
+		*/
+		HBITMAP bitmap = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
+		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETIMAGELIST, 0, 0), bitmap, 0);
+		HBITMAP dithered = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
+		ditherBitmap(dithered);
+		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETHOTIMAGELIST, 0, 0), dithered, 0);
+		HBITMAP gray = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
+		grayBitmap(gray);
+		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETDISABLEDIMAGELIST, 0, 0), gray, 0);
 
 		button.iBitmap = buttonCounter;
 		button.fsStyle = buttonItem.isToggleButton() ? TBSTYLE_CHECK : TBSTYLE_BUTTON;
