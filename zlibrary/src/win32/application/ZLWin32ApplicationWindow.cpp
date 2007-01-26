@@ -201,12 +201,21 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 	}
 	myFullScreen = fullscreen;
 
+	int style = GetWindowLong(myMainWindow, GWL_STYLE);
+	static WINDOWPLACEMENT mainPlacement;
+	static WINDOWPLACEMENT toolbarPlacement;
 	if (myFullScreen) {
+		GetWindowPlacement(myMainWindow, &mainPlacement);
+		GetWindowPlacement(myToolbar, &toolbarPlacement);
 		ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
 		ShowWindow(myToolbar, SW_HIDE);
+		SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
 	} else {
-		ShowWindow(myToolbar, SW_SHOWNORMAL);
-		ShowWindow(myMainWindow, SW_SHOWNORMAL);
+		SetWindowLong(myMainWindow, GWL_STYLE, style | WS_CAPTION);
+		SetWindowPlacement(myMainWindow, &mainPlacement);
+		SetWindowPlacement(myToolbar, &toolbarPlacement);
+		//ShowWindow(myToolbar, SW_SHOWNORMAL);
+		//ShowWindow(myMainWindow, SW_SHOWNORMAL);
 	}
 }
 
