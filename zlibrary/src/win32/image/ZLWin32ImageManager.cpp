@@ -88,7 +88,6 @@ shared_ptr<ZLImageData> ZLWin32ImageManager::createData() const {
 }
 
 void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
-	data.init(100, 100);
 	/*
 	GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
 	GError *error = 0;

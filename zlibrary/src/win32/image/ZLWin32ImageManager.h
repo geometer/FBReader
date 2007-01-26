@@ -49,13 +49,8 @@ private:
 	HBITMAP myBitmap;
 	unsigned int myWidth;
 	unsigned int myHeight;
-/*
-	guchar *myImageData;
-	int myRowStride;
-	guchar *myPosition;
 
 friend class ZLWin32ImageManager;
-*/
 };
 
 class ZLWin32ImageManager : public ZLImageManager {

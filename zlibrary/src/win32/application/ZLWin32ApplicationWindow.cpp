@@ -62,62 +62,74 @@ int ZLWin32ApplicationWindow::y(WPARAM lParam) {
 }
 
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	return ourApplicationWindow->mainLoopCallback(hWnd, uMsg, wParam, lParam);
+}
+
+LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 		case WM_CREATE:
-			ourApplicationWindow->myMainWindow = hWnd;
-			ourApplicationWindow->ZLApplicationWindow::init();
+			myMainWindow = hWnd;
+			ZLApplicationWindow::init();
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_LBUTTONDOWN:
-			if (!ourApplicationWindow->myBlockMouseEvents) {
-				if (ourApplicationWindow->myWin32ViewWidget->myMouseCaptured) {
-					SetCapture(ourApplicationWindow->myMainWindow);
+			if (!myBlockMouseEvents) {
+				if (myWin32ViewWidget->myMouseCaptured) {
+					SetCapture(myMainWindow);
 				}
-				ourApplicationWindow->myWin32ViewWidget->onMousePress(x(lParam), y(lParam));
+				myWin32ViewWidget->onMousePress(x(lParam), y(lParam));
 			}
 			return 0;
 		case WM_LBUTTONUP:
-			if (!ourApplicationWindow->myBlockMouseEvents) {
-				ourApplicationWindow->myWin32ViewWidget->onMouseRelease(x(lParam), y(lParam));
+			if (!myBlockMouseEvents) {
+				myWin32ViewWidget->onMouseRelease(x(lParam), y(lParam));
 			}
-			if (ourApplicationWindow->myMainWindow == GetCapture()) {
+			if (myMainWindow == GetCapture()) {
 				ReleaseCapture();
 			}
 			return 0;
 		case WM_MOUSEMOVE:
-			if (!ourApplicationWindow->myBlockMouseEvents) {
+			if (!myBlockMouseEvents) {
 				if (wParam & MK_LBUTTON) {
-					ourApplicationWindow->myWin32ViewWidget->onMouseMovePressed(x(lParam), y(lParam));
+					myWin32ViewWidget->onMouseMovePressed(x(lParam), y(lParam));
 				} else {
-					ourApplicationWindow->myWin32ViewWidget->onMouseMove(x(lParam), y(lParam));
+					myWin32ViewWidget->onMouseMove(x(lParam), y(lParam));
 				}
+			}
+			return 0;
+		case WM_MOUSEWHEEL:
+			if (!myBlockMouseEvents) {
+				application().doActionByKey(
+					((short)HIWORD(wParam) > 0) ?
+						ZLApplication::MouseScrollUpKey :
+						ZLApplication::MouseScrollDownKey
+				);
 			}
 			return 0;
 		case WM_KEYDOWN:
 			if (wParam == 0x11) {
-				ourApplicationWindow->myKeyboardModifierMask |= 0x2;
+				myKeyboardModifierMask |= 0x2;
 			} else if (wParam == 0x12) {
-				ourApplicationWindow->myKeyboardModifierMask |= 0x4;
+				myKeyboardModifierMask |= 0x4;
 			} else {
-				ourApplicationWindow->application().doActionByKey(ZLKeyUtil::keyName(wParam, wParam, ourApplicationWindow->myKeyboardModifierMask));
-				//std::cerr << ZLKeyUtil::keyName(wParam, wParam, ourApplicationWindow->myKeyboardModifierMask);
+				application().doActionByKey(ZLKeyUtil::keyName(wParam, wParam, myKeyboardModifierMask));
 			}
 			return 0;
 		case WM_KEYUP:
 			if (wParam == 0x11) {
-				ourApplicationWindow->myKeyboardModifierMask &= ~0x2;
+				myKeyboardModifierMask &= ~0x2;
 			} else if (wParam == 0x12) {
-				ourApplicationWindow->myKeyboardModifierMask &= ~0x4;
+				myKeyboardModifierMask &= ~0x4;
 			}
 			return 0;
 		case WM_SIZE:
-			if (ourApplicationWindow->myToolbar != 0) {
-				SendMessage(ourApplicationWindow->myToolbar, TB_AUTOSIZE, 0, 0);
+			if (myToolbar != 0) {
+				SendMessage(myToolbar, TB_AUTOSIZE, 0, 0);
 			}
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		case WM_ERASEBKGND:
 			return 0;
 		case WM_PAINT:
-			ourApplicationWindow->myWin32ViewWidget->doPaint();
+			myWin32ViewWidget->doPaint();
 			return 0;
 		case WM_CLOSE:
 			DestroyWindow(hWnd);
@@ -126,7 +138,7 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 			PostQuitMessage(0);
 			return 0;
 		case WM_COMMAND:
-			ourApplicationWindow->onToolbarButtonPress(LOWORD(wParam));
+			onToolbarButtonPress(LOWORD(wParam));
 			return 0;
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);

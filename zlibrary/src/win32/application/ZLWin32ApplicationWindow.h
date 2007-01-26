@@ -75,6 +75,8 @@ private:
 	HBITMAP grayBitmap(HBITMAP original);
 	HBITMAP ditheredBitmap(HBITMAP original);
 
+	LRESULT mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 public:
 	void onToolbarButtonPress(int index);
 /*

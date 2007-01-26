@@ -8,7 +8,7 @@ LIBS = -lm -L../zlibrary -lzlibrary-$(UI_TYPE) $(EXPATLIBS) $(ENCALIBS) $(BZIP2L
 
 TARGET = GeometricCalculator
 
-SUBDIRS = src/document src/io src/model src/modelDecorator src/polynom src/translator src/ui src/calculator
+SUBDIRS = src src/document src/io src/model src/modelDecorator src/polynom src/translator src/ui src/calculator
 ARCHSUBDIRS = zaurus maemo
 
 all: .resources
