@@ -317,15 +317,12 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 
-		/*
-		TBADDBITMAP addBitmap;
-		addBitmap.hInst = GetModuleHandle(0);
-		addBitmap.nID = 101 + buttonCounter;
-		SendMessage(myToolbar, TB_ADDBITMAP, 1, (LPARAM)&addBitmap);
-		*/
 		HBITMAP bitmap = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
-		//static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
-		//HBITMAP bitmap = (HBITMAP)LoadImage(0, (imagePrefix + buttonItem.iconName() + ".bmp").c_str(), IMAGE_BITMAP, 24, 24, LR_LOADFROMFILE);
+		if (bitmap == 0) {
+			HDC dc = GetDC(myToolbar);
+			bitmap = CreateCompatibleBitmap(dc, 24, 24);
+			ReleaseDC(myToolbar, dc);
+		}
 		HBITMAP mask = maskBitmap(bitmap);
 		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETIMAGELIST, 0, 0), bitmap, mask);
 		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETHOTIMAGELIST, 0, 0), ditheredBitmap(bitmap), mask);

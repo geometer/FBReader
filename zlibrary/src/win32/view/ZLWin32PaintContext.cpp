@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLImage.h>
 #include <ZLUnicodeUtil.h>
 
@@ -153,23 +155,17 @@ int ZLWin32PaintContext::stringWidth(const char *str, int len) const {
 	if (myDisplayContext == 0) {
 		return 0;
 	}
-	int fullWidth = 0;
-	if (myTextMetric.tmPitchAndFamily & TMPF_TRUETYPE) {
-		ABC charABC;
-		for (int i = 0; i < len; ++i) {
-			if (GetCharABCWidths(myDisplayContext, str[i], str[i], &charABC)) {
-				fullWidth += charABC.abcA + charABC.abcB + charABC.abcC;
-			}
-		}
+	SIZE size;
+	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
+	if (utf8len == len) {
+		GetTextExtentPointA(myDisplayContext, str, len, &size);
 	} else {
-		int charWidth;
-		for (int i = 0; i < len; ++i) {
-			if (GetCharWidth(myDisplayContext, str[i], str[i], &charWidth)) {
-				fullWidth += charWidth;
-			}
-		}
+		static ZLUnicodeUtil::Ucs2String ucs2Str;
+		ucs2Str.clear();
+		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len, utf8len);
+		GetTextExtentPointW(myDisplayContext, (const WCHAR*)&ucs2Str.front(), utf8len, &size);
 	}
-	return fullWidth;
+	return size.cx;
 }
 
 int ZLWin32PaintContext::spaceWidth() const {
@@ -191,10 +187,10 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 	y -= stringHeight();
 	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
 	if (utf8len == len) {
-		TextOut(myDisplayContext, x, y, str, len);
+		TextOutA(myDisplayContext, x, y, str, len);
 	} else {
-		// TODO: optimize (?)
-		ZLUnicodeUtil::Ucs2String ucs2Str(utf8len);
+		static ZLUnicodeUtil::Ucs2String ucs2Str;
+		ucs2Str.clear();
 		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len, utf8len);
 		TextOutW(myDisplayContext, x, y, (const WCHAR*)&ucs2Str.front(), utf8len);
 	}
