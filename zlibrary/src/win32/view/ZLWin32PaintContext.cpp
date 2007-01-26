@@ -204,7 +204,7 @@ void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
 		//SelectObject(dc, bitmap);
 		std::cerr << image.width() << "X" << image.height() << "\n";
 		setFillColor(ZLColor(0, 0, 0), HALF_FILL);
-		fillRectangle(x, x + image.width() - 1, y, y + image.height() - 1);
+		fillRectangle(x, y, x + image.width() - 1, y - image.height() + 1);
 		//BitBlt(myDisplayContext, x, y, image.width(), image.height(), dc, 0, 0, SRCCOPY);
 		//DeleteDC(dc);
 	}
