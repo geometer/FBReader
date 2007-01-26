@@ -24,7 +24,7 @@ BUILD_RESOURCE_OBJECT = yes
 
 .resources:
 	@echo -n "Creating resource object..."
-	@echo "ApplicationName ICON icons/win32/$(TARGET).ico" > $(TARGET).rc
+	@echo "ApplicationIcon ICON icons/win32/$(TARGET).ico" > $(TARGET).rc
 	@if [ -d icons/win32/$(TARGET) ]; then \
 		for file in icons/win32/$(TARGET)/*.bmp; do \
 			echo `basename $$file .bmp` BITMAP $$file >> $(TARGET).rc; \

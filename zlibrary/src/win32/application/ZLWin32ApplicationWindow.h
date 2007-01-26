@@ -94,10 +94,11 @@ private:
 	ZLWin32ViewWidget *myWin32ViewWidget;
 
 	std::map<int,ZLApplication::Toolbar::ItemPtr> myButtonByActionCode;
-	//bool myFullScreen;
 
 	bool myBlockMouseEvents;
 	int myKeyboardModifierMask;
+
+	bool myFullScreen;
 };
 
 #endif /* __ZLWIN32APPLICATIONWINDOW_H__ */

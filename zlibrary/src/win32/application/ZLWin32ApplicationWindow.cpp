@@ -33,22 +33,6 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	((ZLWin32ApplicationWindow*)data)->application().closeView();
 	return true;
 }
-
-static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
-	((ZLWin32ApplicationWindow*)data)->application().refreshWindow();
-}
-
-static void onButtonClicked(GtkWidget *button, gpointer data) {
-	((ZLWin32ApplicationWindow*)data)->onGtkButtonPress(button);
-}
-
-static void handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
-	((ZLWin32ApplicationWindow*)data)->handleKeyEventSlot(event);
-}
-
-static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) {
-	((ZLWin32ApplicationWindow*)data)->handleScrollEventSlot(event);
-}
 */
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
@@ -153,8 +137,8 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myToolbar(0),
 	myBlockMouseEvents(false),
-	myKeyboardModifierMask(0) {
-	//myFullScreen(false) {
+	myKeyboardModifierMask(0),
+	myFullScreen(false) {
 
 	INITCOMMONCONTROLSEX icex;
 	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -163,17 +147,6 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 /*
 	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
-
-	myVBox = gtk_vbox_new(false, 0);
-	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
-
-	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
-	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
-
-	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
-
-	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "key_press_event", G_CALLBACK(handleKeyEvent), this);
-	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
 */
 	WNDCLASSEX wc;
 	wc.cbSize = sizeof(wc);
@@ -214,25 +187,6 @@ ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 */
 }
 
-/*
-void ZLWin32ApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
-	application().doActionByKey(ZLWin32KeyUtil::keyName(event));
-}
-
-void ZLWin32ApplicationWindow::handleScrollEventSlot(GdkEventScroll *event) {
-	switch (event->direction) {
-		case GDK_SCROLL_UP:
-			application().doActionByKey(ZLApplication::MouseScrollUpKey);
-			break;
-		case GDK_SCROLL_DOWN:
-			application().doActionByKey(ZLApplication::MouseScrollDownKey);
-			break;
-		default:
-			break;
-	}
-}
-*/
-
 void ZLWin32ApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
 	PostMessage(myToolbar, TB_CHECKBUTTON, button.actionId(), button.isPressed());
 }
@@ -242,27 +196,22 @@ void ZLWin32ApplicationWindow::onToolbarButtonPress(int actionCode) {
 }
 
 void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
-	/*
 	if (fullscreen == myFullScreen) {
 		return;
 	}
 	myFullScreen = fullscreen;
 
 	if (myFullScreen) {
-		gtk_window_fullscreen(myMainWindow);
-		gtk_widget_hide(myToolbar);
-	} else if (!myFullScreen) {
-		gtk_window_unfullscreen(myMainWindow);
-		gtk_widget_show(myToolbar);
+		ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
+		ShowWindow(myToolbar, SW_HIDE);
+	} else {
+		ShowWindow(myToolbar, SW_SHOWNORMAL);
+		ShowWindow(myMainWindow, SW_SHOWNORMAL);
 	}
-
-	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
-	*/
 }
 
 bool ZLWin32ApplicationWindow::isFullscreen() const {
-	//return myFullScreen;
-	return false;
+	return myFullScreen;
 }
 
 HBITMAP ZLWin32ApplicationWindow::maskBitmap(HBITMAP original) {
@@ -371,14 +320,6 @@ void ZLWin32ApplicationWindow::refresh() {
 }
 
 ZLViewWidget *ZLWin32ApplicationWindow::createViewWidget() {
-	/*
-	ZLWin32ViewWidget *viewWidget = new ZLWin32ViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
-	gtk_container_add(GTK_CONTAINER(myVBox), viewWidget->area());
-	// Was gtk_signal_connect_after(). Why?
-	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
-	gtk_widget_show_all(myVBox);
-	return viewWidget;
-	*/
 	myWin32ViewWidget = new ZLWin32ViewWidget(*this);
 	return myWin32ViewWidget;
 }
@@ -416,7 +357,7 @@ HWND ZLWin32ApplicationWindow::mainWindow() const {
 }
 
 int ZLWin32ApplicationWindow::topOffset() const {
-	if (myToolbar != 0) {
+	if ((myToolbar != 0) && (!myFullScreen)) {
 		RECT toolbarRectangle;
 		GetWindowRect(myToolbar, &toolbarRectangle);
 		POINT p;

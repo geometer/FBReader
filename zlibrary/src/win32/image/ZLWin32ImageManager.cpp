@@ -22,7 +22,7 @@
 
 #include "ZLWin32ImageManager.h"
 
-ZLWin32ImageData::ZLWin32ImageData() : myBitmap(0) {
+ZLWin32ImageData::ZLWin32ImageData() : myBitmap(0), myWidth(0), myHeight(0) {
 }
 
 ZLWin32ImageData::~ZLWin32ImageData() {

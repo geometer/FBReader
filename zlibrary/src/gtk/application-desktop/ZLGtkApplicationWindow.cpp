@@ -132,7 +132,7 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 	if (myFullScreen) {
 		gtk_window_fullscreen(myMainWindow);
 		gtk_widget_hide(myToolbar);
-	} else if (!myFullScreen) {
+	} else {
 		gtk_window_unfullscreen(myMainWindow);
 		gtk_widget_show(myToolbar);
 	}
