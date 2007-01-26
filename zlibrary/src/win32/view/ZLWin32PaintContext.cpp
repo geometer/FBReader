@@ -24,6 +24,7 @@
 
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
+#include "../image/ZLWin32ImageManager.h"
 
 ZLWin32PaintContext::ZLWin32PaintContext() : myDisplayContext(0), myBufferBitmap(0), myWidth(0), myHeight(0), myBackgroundBrush(0), myFillBrush(0), mySpaceWidth(-1) {
 }
@@ -45,9 +46,9 @@ void ZLWin32PaintContext::beginPaint(ZLWin32ApplicationWindow &window) {
 	RECT rectangle;
 	GetClientRect(window.mainWindow(), &rectangle);
 	const int width = rectangle.right - rectangle.left + 1;
-	const int heigth = rectangle.bottom - rectangle.top + 1 - window.topOffset();
+	const int height = rectangle.bottom - rectangle.top + 1 - window.topOffset();
 	if (myBufferBitmap != 0) {
-		if ((myWidth != width) || (myHeight != heigth)) {
+		if ((myWidth != width) || (myHeight != height)) {
 			DeleteObject(myBufferBitmap);
 			DeleteDC(myDisplayContext);
 			myBufferBitmap = 0;
@@ -56,7 +57,7 @@ void ZLWin32PaintContext::beginPaint(ZLWin32ApplicationWindow &window) {
 	}
 	if (myBufferBitmap == 0) {
 		myWidth = width;
-		myHeight = heigth;
+		myHeight = height;
 		HDC dc = GetDC(window.mainWindow());
 		myDisplayContext = CreateCompatibleDC(dc);
 		myBufferBitmap = CreateCompatibleBitmap(dc, myWidth, myHeight);
@@ -197,10 +198,16 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 }
 
 void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	/*
-	const QImage &qImage = (ZLWin32ImageData&)image;
-	myPainter->drawImage(x + leftMargin(), y + topMargin() - qImage.height(), qImage);
-	*/
+	HBITMAP bitmap = ((ZLWin32ImageData&)image).bitmap();
+	if (bitmap != 0) {
+		//HDC dc = CreateCompatibleDC(myDisplayContext);
+		//SelectObject(dc, bitmap);
+		std::cerr << image.width() << "X" << image.height() << "\n";
+		setFillColor(ZLColor(0, 0, 0), HALF_FILL);
+		fillRectangle(x, x + image.width() - 1, y, y + image.height() - 1);
+		//BitBlt(myDisplayContext, x, y, image.width(), image.height(), dc, 0, 0, SRCCOPY);
+		//DeleteDC(dc);
+	}
 }
 
 void ZLWin32PaintContext::adjustPoint(int &x, int &y) const {
