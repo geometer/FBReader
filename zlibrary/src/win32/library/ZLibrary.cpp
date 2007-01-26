@@ -25,9 +25,7 @@
 #include "../filesystem/ZLWin32FSManager.h"
 #include "../time/ZLWin32Time.h"
 #include "../dialogs/ZLWin32DialogManager.h"
-/*
-#include "../../gtk/image/ZLGtkImageManager.h"
-*/
+#include "../image/ZLWin32ImageManager.h"
 #include "../view/ZLWin32PaintContext.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
@@ -36,9 +34,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLWin32FSManager::createInstance();
 	ZLWin32TimeManager::createInstance();
 	ZLWin32DialogManager::createInstance();
-	/*
-	ZLGtkImageManager::createInstance();
-	*/
+	ZLWin32ImageManager::createInstance();
 }
 
 ZLPaintContext *ZLibrary::createContext() {

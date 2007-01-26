@@ -21,6 +21,8 @@
 #ifndef __ZLIMAGEMANAGER_H__
 #define __ZLIMAGEMANAGER_H__
 
+#include <string>
+
 #include <shared_ptr.h>
 
 class ZLImage;

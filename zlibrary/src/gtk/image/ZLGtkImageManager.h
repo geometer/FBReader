@@ -21,7 +21,6 @@
 #ifndef __ZLGTKIMAGEMANAGER_H__
 #define __ZLGTKIMAGEMANAGER_H__
 
-#include <map>
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <ZLImageManager.h>
