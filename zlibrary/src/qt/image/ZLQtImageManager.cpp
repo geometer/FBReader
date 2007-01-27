@@ -43,8 +43,8 @@ void ZLQtImageData::setPixel(unsigned char r, unsigned char g, unsigned char b) 
 	QImage::setPixel(myX, myY, qRgb(r, g, b));
 }
 
-void ZLQtImageData::copyFrom(const ZLImageData &source, unsigned int sourceX, unsigned int sourceY, unsigned int targetX, unsigned int targetY) {
-	bitBlt(this, targetX, targetY, (const ZLQtImageData*)&source, sourceX, sourceY);
+void ZLQtImageData::copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY) {
+	bitBlt(this, targetX, targetY, (const ZLQtImageData*)&source, 0, 0);
 }
 
 shared_ptr<ZLImageData> ZLQtImageManager::createData() const {

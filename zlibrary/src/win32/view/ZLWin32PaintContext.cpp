@@ -42,11 +42,7 @@ ZLWin32PaintContext::~ZLWin32PaintContext() {
 	}
 }
 
-void ZLWin32PaintContext::beginPaint(ZLWin32ApplicationWindow &window) {
-	RECT rectangle;
-	GetClientRect(window.mainWindow(), &rectangle);
-	const int width = rectangle.right - rectangle.left + 1;
-	const int height = rectangle.bottom - rectangle.top + 1 - window.topOffset();
+void ZLWin32PaintContext::updateInfo(HWND window, int width, int height) {
 	if (myBufferBitmap != 0) {
 		if ((myWidth != width) || (myHeight != height)) {
 			DeleteObject(myBufferBitmap);
@@ -55,21 +51,16 @@ void ZLWin32PaintContext::beginPaint(ZLWin32ApplicationWindow &window) {
 			myColorIsUpToDate = false;
 		}
 	}
+
 	if (myBufferBitmap == 0) {
 		myWidth = width;
 		myHeight = height;
-		HDC dc = GetDC(window.mainWindow());
+		HDC dc = GetDC(window);
 		myDisplayContext = CreateCompatibleDC(dc);
 		myBufferBitmap = CreateCompatibleBitmap(dc, myWidth, myHeight);
+		ReleaseDC(window, dc);
 		SelectObject(myDisplayContext, myBufferBitmap);
 	}
-}
-
-void ZLWin32PaintContext::endPaint(ZLWin32ApplicationWindow &window) {
-	PAINTSTRUCT paintStructure;
-	HDC dc = BeginPaint(window.mainWindow(), &paintStructure);
-	BitBlt(dc, 0, window.topOffset(), myWidth, myHeight, myDisplayContext, 0, 0, SRCCOPY);
-	EndPaint(window.mainWindow(), &paintStructure);
 }
 
 void ZLWin32PaintContext::fillFamiliesList(std::vector<std::string> &families) const {
@@ -201,13 +192,14 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	HBITMAP bitmap = ((ZLWin32ImageData&)image).bitmap();
 	if (bitmap != 0) {
-		//HDC dc = CreateCompatibleDC(myDisplayContext);
-		//SelectObject(dc, bitmap);
-		std::cerr << image.width() << "X" << image.height() << "\n";
-		setFillColor(ZLColor(0, 0, 0), HALF_FILL);
-		fillRectangle(x, y, x + image.width() - 1, y - image.height() + 1);
-		//BitBlt(myDisplayContext, x, y, image.width(), image.height(), dc, 0, 0, SRCCOPY);
-		//DeleteDC(dc);
+		HDC dc = CreateCompatibleDC(myDisplayContext);
+		SelectObject(dc, bitmap);
+		//std::cerr << image.width() << "X" << image.height() << "\n";
+		//setFillColor(ZLColor(0, 0, 0), HALF_FILL);
+		//fillRectangle(x, y, x + image.width() - 1, y - image.height() + 1);
+		const int height = image.height();
+		BitBlt(myDisplayContext, x, y - height, image.width(), height, dc, 0, 0, SRCCOPY);
+		DeleteDC(dc);
 	}
 }
 
@@ -294,4 +286,8 @@ int ZLWin32PaintContext::width() const {
 
 int ZLWin32PaintContext::height() const {
 	return myHeight - topMargin() - bottomMargin();
+}
+
+HDC ZLWin32PaintContext::displayContext() const {
+	return myDisplayContext;
 }

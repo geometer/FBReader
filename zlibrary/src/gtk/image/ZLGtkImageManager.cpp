@@ -54,10 +54,10 @@ void ZLGtkImageData::setPixel(unsigned char r, unsigned char g, unsigned char b)
 	myPosition[2] = b;
 }
 
-void ZLGtkImageData::copyFrom(const ZLImageData &source, unsigned int sourceX, unsigned int sourceY, unsigned int targetX, unsigned int targetY) {
+void ZLGtkImageData::copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY) {
 	gdk_pixbuf_copy_area(
 		((const ZLGtkImageData&)source).myPixbuf,
-		sourceX, sourceY,
+		0, 0,
 		source.width(), source.height(),
 		myPixbuf,
 		targetX, targetY

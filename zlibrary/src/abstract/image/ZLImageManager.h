@@ -46,7 +46,7 @@ public:
 	virtual void setPixel(unsigned char r, unsigned char g, unsigned char b) = 0;
 	void setGrayPixel(unsigned char c);
 
-	virtual void copyFrom(const ZLImageData &source, unsigned int sourceX, unsigned int sourceY, unsigned int targetX, unsigned int targetY) = 0;
+	virtual void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY) = 0;
 };
 
 class ZLImageManager {

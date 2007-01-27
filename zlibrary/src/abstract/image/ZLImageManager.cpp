@@ -276,7 +276,7 @@ void ZLImageManager::convertMultiImage(const ZLMultiImage &multiImage, ZLImageDa
 		for (unsigned int i = 0; i < rows; ++i) {
 			int hOffset = 0;
 			for (unsigned int j = 0; j < columns; ++j) {
-				data.copyFrom(*parts[j * rows + i], 0, 0, hOffset, vOffset);
+				data.copyFrom(*parts[j * rows + i], hOffset, vOffset);
 				hOffset += widths[j];
 			}
 			vOffset += heights[i];

@@ -22,13 +22,56 @@
 
 #include "ZLWin32ImageManager.h"
 
-ZLWin32ImageData::ZLWin32ImageData() : myBitmap(0), myWidth(0), myHeight(0) {
+ZLWin32ImageData::ZLWin32ImageData() : myMode(MODE_NULL), myWidth(0), myHeight(0), myBitmap(0), myArray(0) {
 }
 
 ZLWin32ImageData::~ZLWin32ImageData() {
-	if (myBitmap != 0) {
-		DeleteBitmap(myBitmap);
+	setMode(MODE_NULL);
+}
+
+void ZLWin32ImageData::setMode(Mode mode) const {
+	if (mode == myMode) {
+		return;
 	}
+	switch (mode) {
+		case MODE_NULL:
+		case MODE_SIZE:
+			if (myBitmap != 0) {
+				DeleteBitmap(myBitmap);
+				myBitmap = 0;
+			}
+			if (myArray != 0) {
+				delete[] myArray;
+				myArray = 0;
+			}
+			break;
+		case MODE_BITMAP:
+			if (myMode != MODE_ARRAY) {
+				return;
+			}
+			myBitmap = CreateBitmap(myWidth, myHeight, 1, 24, myArray);
+			delete[] myArray;
+			myArray = 0;
+			break;
+		case MODE_ARRAY:
+			switch (myMode) {
+				case MODE_SIZE:
+					myArray = new BYTE[myBytesPerLine * myHeight];
+					myPixelPointer = myArray;
+					break;
+				case MODE_ARRAY:
+					myArray = new BYTE[myBytesPerLine * myHeight];
+					myPixelPointer = myArray;
+					GetBitmapBits(myBitmap, myBytesPerLine * myHeight, myArray);
+					DeleteBitmap(myBitmap);
+					myBitmap = 0;
+					break;
+				default:
+					return;
+			}
+			break;
+	}
+	myMode = mode;
 }
 
 unsigned int ZLWin32ImageData::width() const {
@@ -40,46 +83,60 @@ unsigned int ZLWin32ImageData::height() const {
 }
 
 void ZLWin32ImageData::init(unsigned int width, unsigned int height) {
+	setMode(MODE_SIZE);
 	myWidth = width;
 	myHeight = height;
-	char *ptr = new char[10 * myWidth * myHeight];
-	memset(ptr, 0, 10 * myWidth * myHeight);
-	myBitmap = CreateBitmap(myWidth, myHeight, 3, 8, ptr);
+	myBytesPerLine = (3 * width + 1) >> 1 << 1;
 }
 
 void ZLWin32ImageData::setPosition(unsigned int x, unsigned int y) {
-	//myPosition = myImageData + 3 * x + myRowStride * y;
+	if (myMode != MODE_ARRAY) {
+		setMode(MODE_ARRAY);
+	}
+	myPixelPointer = myArray + myBytesPerLine * y + 3 * x;
 }
 
 void ZLWin32ImageData::moveX(int delta) {
-	//myPosition += 3 * delta;
+	if (myMode != MODE_ARRAY) {
+		setMode(MODE_ARRAY);
+	}
+	myPixelPointer += 3 * delta;
 }
 
 void ZLWin32ImageData::moveY(int delta) {
-	//myPosition += myRowStride * delta;
+	if (myMode != MODE_ARRAY) {
+		setMode(MODE_ARRAY);
+	}
+	myPixelPointer += myBytesPerLine * delta;
 }
 
 void ZLWin32ImageData::setPixel(unsigned char r, unsigned char g, unsigned char b) {
-	/*
-	myPosition[0] = r;
-	myPosition[1] = g;
-	myPosition[2] = b;
-	*/
+	if (myMode == MODE_ARRAY) {
+		myPixelPointer[0] = b;
+		myPixelPointer[1] = g;
+		myPixelPointer[2] = r;
+	}
 }
 
-void ZLWin32ImageData::copyFrom(const ZLImageData &source, unsigned int sourceX, unsigned int sourceY, unsigned int targetX, unsigned int targetY) {
-	/*
-	gdk_pixbuf_copy_area(
-		((const ZLWin32ImageData&)source).myPixbuf,
-		sourceX, sourceY,
-		source.width(), source.height(),
-		myPixbuf,
-		targetX, targetY
-	);
-	*/
+void ZLWin32ImageData::copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY) {
+	setMode(MODE_ARRAY);
+	if (myMode != MODE_ARRAY) {
+		return;
+	}
+	ZLWin32ImageData &win32source = (ZLWin32ImageData&)source;
+	win32source.setMode(MODE_ARRAY);
+	if (win32source.myMode != MODE_ARRAY) {
+		return;
+	}
+	int height = source.height();
+	int bytes = source.width() * 3;
+	for (int i = 0; i < height; ++i) {
+		memcpy(myArray + (targetY + i) * myBytesPerLine + targetX * 3, win32source.myArray + i * win32source.myBytesPerLine, bytes);
+	}
 }
 
 HBITMAP ZLWin32ImageData::bitmap() const {
+	setMode(MODE_BITMAP);
 	return myBitmap;
 }
 

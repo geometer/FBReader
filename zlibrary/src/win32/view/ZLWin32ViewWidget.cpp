@@ -36,9 +36,20 @@ void ZLWin32ViewWidget::repaint()	{
 
 void ZLWin32ViewWidget::doPaint()	{
 	ZLWin32PaintContext &win32Context = (ZLWin32PaintContext&)view()->context();
-	win32Context.beginPaint(myWindow);
+	HWND window = myWindow.mainWindow();
+	int offset = myWindow.topOffset();
+
+	RECT rectangle;
+	GetClientRect(window, &rectangle);
+	const int width = rectangle.right - rectangle.left + 1;
+	const int height = rectangle.bottom - rectangle.top + 1 - offset;
+
+	win32Context.updateInfo(window, width, height);
 	view()->paint();
-	win32Context.endPaint(myWindow);
+	PAINTSTRUCT paintStructure;
+	HDC dc = BeginPaint(window, &paintStructure);
+	BitBlt(dc, 0, offset, width, height, win32Context.displayContext(), 0, 0, SRCCOPY);
+	EndPaint(window, &paintStructure);
 }
 
 void ZLWin32ViewWidget::onMousePress(int x, int y) {

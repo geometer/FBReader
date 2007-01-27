@@ -41,7 +41,7 @@ public:
 	void moveY(int delta);
 	void setPixel(unsigned char r, unsigned char g, unsigned char b);
 
-	void copyFrom(const ZLImageData &source, unsigned int sourceX, unsigned int sourceY, unsigned int targetX, unsigned int targetY);
+	void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY);
 
 	GdkPixbuf *pixbuf() const { return myPixbuf; }
 

@@ -55,8 +55,9 @@ public:
 	void fillRectangle(int x0, int y0, int x1, int y1);
 	void drawFilledCircle(int x, int y, int r);
 
-	void beginPaint(ZLWin32ApplicationWindow &window);
-	void endPaint(ZLWin32ApplicationWindow &window);
+	void updateInfo(HWND window, int width, int height);
+
+	HDC displayContext() const;
 
 private:
 	void adjustPoint(int &x, int &y) const;

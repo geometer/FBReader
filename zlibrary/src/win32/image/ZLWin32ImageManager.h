@@ -41,14 +41,31 @@ public:
 	void moveY(int delta);
 	void setPixel(unsigned char r, unsigned char g, unsigned char b);
 
-	void copyFrom(const ZLImageData &source, unsigned int sourceX, unsigned int sourceY, unsigned int targetX, unsigned int targetY);
+	void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY);
 
 	HBITMAP bitmap() const;
 
 private:
-	HBITMAP myBitmap;
+	enum Mode {
+		MODE_NULL,
+		MODE_SIZE,
+		MODE_BITMAP,
+		MODE_ARRAY,
+	};
+
+	void setMode(Mode mode) const;
+
+private:
+	mutable Mode myMode;
+
 	unsigned int myWidth;
 	unsigned int myHeight;
+	unsigned int myBytesPerLine;
+
+	mutable HBITMAP myBitmap;
+
+	mutable BYTE *myArray;
+	mutable BYTE *myPixelPointer;
 
 friend class ZLWin32ImageManager;
 };
