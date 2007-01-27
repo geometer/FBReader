@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLImage.h>
 #include <ZLUnicodeUtil.h>
 
@@ -190,16 +188,15 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 }
 
 void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	HBITMAP bitmap = ((ZLWin32ImageData&)image).bitmap();
-	if (bitmap != 0) {
-		HDC dc = CreateCompatibleDC(myDisplayContext);
-		SelectObject(dc, bitmap);
-		//std::cerr << image.width() << "X" << image.height() << "\n";
-		//setFillColor(ZLColor(0, 0, 0), HALF_FILL);
-		//fillRectangle(x, y, x + image.width() - 1, y - image.height() + 1);
+	ZLWin32ImageData &win32Image = (ZLWin32ImageData&)image;
+	const BYTE *pixels = win32Image.pixels();
+	if (pixels != 0) {
+		const int width = image.width();
 		const int height = image.height();
-		BitBlt(myDisplayContext, x, y - height, image.width(), height, dc, 0, 0, SRCCOPY);
-		DeleteDC(dc);
+		StretchDIBits(myDisplayContext,
+			x, y - height, width, height,
+			0, 0, width, height,
+			pixels, &win32Image.info(), DIB_RGB_COLORS, SRCCOPY);
 	}
 }
 

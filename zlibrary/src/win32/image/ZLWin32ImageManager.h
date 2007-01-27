@@ -43,29 +43,18 @@ public:
 
 	void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY);
 
-	HBITMAP bitmap() const;
+	const BYTE *pixels() const;
+	const BITMAPINFO &info() const;
 
 private:
-	enum Mode {
-		MODE_NULL,
-		MODE_SIZE,
-		MODE_BITMAP,
-		MODE_ARRAY,
-	};
-
-	void setMode(Mode mode) const;
-
-private:
-	mutable Mode myMode;
-
 	unsigned int myWidth;
 	unsigned int myHeight;
 	unsigned int myBytesPerLine;
 
-	mutable HBITMAP myBitmap;
+	BYTE *myArray;
+	BYTE *myPixelPointer;
 
-	mutable BYTE *myArray;
-	mutable BYTE *myPixelPointer;
+	BITMAPINFO myInfo;
 
 friend class ZLWin32ImageManager;
 };
