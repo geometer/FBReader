@@ -13,6 +13,11 @@ TMPDIR = tmp
 SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
 DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
+ifeq "$(UI_TYPE)" "gtk"
+  CONFLICTS = qt
+else
+  CONFLICTS = gtk
+endif
 
 all: tarball debpackage
 	@cp $(TARBALL) $(DEBIAN_PACKAGE) ../..
@@ -42,8 +47,8 @@ debpackage:
 	@sed -e "s/@VERSION@/$(VERSION)/" \
 		-e "s#@UI_TYPE@#$(UI_TYPE)#" \
 		-e "s#@DEPENDS@#$(DEPENDS)#" \
+		-e "s#@CONFLICTS@#$(CONFLICTS)#" \
 		debian/control.in > $(TMPDIR)/DEBIAN/control
-	@cat $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg -b $(TMPDIR) $(DEBIAN_PACKAGE)
 	@$(RM_QUIET) $(TMPDIR)
 
