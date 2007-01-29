@@ -1,6 +1,8 @@
 ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
+TARGET = FBReader
+
 VERSION = $(shell cat ../VERSION)
 
 TARBALL = fbreader-$(UI_TYPE)-$(VERSION).tgz
@@ -10,13 +12,18 @@ TMPDIR = tmp
 
 SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
+DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
+
 all: tarball debpackage
 	@cp $(TARBALL) $(DEBIAN_PACKAGE) ../..
 
 install:
-	@install -d $(SHARE_FBREADER)/icons/FBReader
-	@install -m 0644 ../icons/34x28/FBReader.png $(SHARE_FBREADER)/icons
-	@install -m 0644 $(wildcard ../icons/34x28/FBReader/*) $(SHARE_FBREADER)/icons/FBReader
+	@install -d $(DESTDIR)/usr/share/applications
+	@install -m 0644 desktop $(DESTDIR)/usr/share/applications/$(TARGET).desktop
+	@install -d $(DESTDIR)$(IMAGEDIR)
+	@install -m 0644 ../icons/34x28/FBReader.png $(DESTDIR)$(IMAGEDIR)
+	@install -d $(DESTDIR)$(IMAGEDIR)/FBReader
+	@install -m 0644 $(wildcard ../icons/34x28/FBReader/*) $(DESTDIR)$(IMAGEDIR)/FBReader
 	@install -d $(SHARE_FBREADER)/help
 	@install -m 0644 ../data/help/HowToStart.brownish.640x480.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2
 	@install -d $(SHARE_FBREADER)/default
@@ -25,14 +32,18 @@ install:
 	@install -m 0644 ../data/default/styles.desktop.xml $(SHARE_FBREADER)/default/styles.xml
 
 tarball:
-	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
+	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@fakeroot tar czf $(TARBALL) -C $(TMPDIR) .
 	@$(RM_QUIET) $(TMPDIR)
 
 debpackage:
-	@cd ../..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
+	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed "s/VERSION/$(VERSION)/" debian/control-$(UI_TYPE).in > $(TMPDIR)/DEBIAN/control
+	@sed -e "s/@VERSION@/$(VERSION)/" \
+		-e "s#@UI_TYPE@#$(UI_TYPE)#" \
+		-e "s#@DEPENDS@#$(DEPENDS)#" \
+		debian/control.in > $(TMPDIR)/DEBIAN/control
+	@cat $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg -b $(TMPDIR) $(DEBIAN_PACKAGE)
 	@$(RM_QUIET) $(TMPDIR)
 
