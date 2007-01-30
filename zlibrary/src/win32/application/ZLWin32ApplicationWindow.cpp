@@ -29,13 +29,6 @@
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
 
-/*
-static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	((ZLWin32ApplicationWindow*)data)->application().closeView();
-	return true;
-}
-*/
-
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
 int ZLWin32ApplicationWindow::x(WPARAM lParam) {
@@ -123,7 +116,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 				myWidthOption.setValue(rectangle.right - rectangle.left + 1);
 				myHeightOption.setValue(rectangle.bottom - rectangle.top + 1);
 			}
-			DestroyWindow(hWnd);
+			application().closeView();
 			return 0;
 		case WM_DESTROY:
 			PostQuitMessage(0);
@@ -333,8 +326,7 @@ ZLViewWidget *ZLWin32ApplicationWindow::createViewWidget() {
 }
 
 void ZLWin32ApplicationWindow::close() {
-	//ZLWin32SignalUtil::removeAllSignals();
-	//gtk_main_quit();
+	DestroyWindow(myMainWindow);
 }
 
 bool ZLWin32ApplicationWindow::isFullKeyboardControlSupported() const {
