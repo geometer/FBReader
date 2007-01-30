@@ -20,13 +20,12 @@
 #include "ZLWin32DialogManager.h"
 #include "ZLWin32Dialog.h"
 #include "../application/ZLWin32ApplicationWindow.h"
-/*
 #include "ZLWin32OptionsDialog.h"
+/*
 #include "ZLWin32SelectionDialog.h"
 #include "ZLWin32WaitMessage.h"
 */
 #include <ZLDialog.h>
-#include <ZLOptionsDialog.h>
 #include <ZLSelectionDialog.h>
 
 void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) const {
@@ -38,9 +37,7 @@ shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const std::string &title
 }
 
 shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	//return new ZLWin32OptionsDialog(id, title);
-	errorBox("Fatal Error", "Not Implemented Yet");
-	return 0;
+	return new ZLWin32OptionsDialog(myApplicationWindow->mainWindow(), id, title);
 }
 
 void ZLWin32DialogManager::informationBox(const std::string &title, const std::string &message) const {
@@ -59,7 +56,7 @@ int ZLWin32DialogManager::questionBox(const std::string &title, const std::strin
 }
 
 bool ZLWin32DialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	errorBox("Fatal Error", "Not Implemented Yet");
+	errorBox("Not Implemented Error", "Not Implemented Yet");
 	//return ZLWin32SelectionDialog(title.c_str(), handler).runWithSize();
 	return false;
 }

@@ -56,15 +56,6 @@ static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARA
 	return false;
 }
 
-class ZLWin32DialogElement {
-
-protected:
-	static int allocateString(WORD *p, const std::string &text);
-
-protected:
-	ZLWin32DialogElement();
-};
-
 ZLWin32DialogElement::ZLWin32DialogElement() {
 }
 
@@ -75,22 +66,6 @@ int ZLWin32DialogElement::allocateString(WORD *p, const std::string &text) {
 	memcpy(p, &ucs2Str.front(), 2 * ucs2Str.size());
 	return ucs2Str.size();
 }
-
-class ZLWin32DialogControl : public ZLWin32DialogElement {
-
-public:
-	ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text);
-	void allocate(WORD *p) const;
-	int allocationSize() const;
-
-private:
-	DWORD myStyle;
-	int myX, myY;
-	int myWidth, myHeight;
-	WORD myId;
-	std::string myClassName;
-	std::string myText;
-};
 
 ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style), myX(x), myY(y), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
 }
@@ -117,28 +92,6 @@ void ZLWin32DialogControl::allocate(WORD *p) const {
 	*p++ = 0;
 }
 
-class ZLWin32DialogPanel : public ZLWin32DialogElement {
-
-public:
-	ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text);
-	~ZLWin32DialogPanel();
-	WORD *allocate() const;
-	void addControl(ZLWin32DialogControl &control);
-
-private:
-	int allocationSize() const;
-
-private:
-	DWORD myStyle;
-	int myX, myY;
-	int myWidth, myHeight;
-	std::string myText;
-
-	std::vector<ZLWin32DialogControl> myControls;
-
-	mutable WORD *myAddress;
-};
-
 ZLWin32DialogPanel::ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text) : myStyle(style), myX(x), myY(y), myWidth(width), myHeight(height), myText(text), myAddress(0) {
 }
 
@@ -148,7 +101,7 @@ ZLWin32DialogPanel::~ZLWin32DialogPanel() {
 	}
 }
 
-WORD *ZLWin32DialogPanel::allocate() const {
+DLGTEMPLATE *ZLWin32DialogPanel::allocate() const {
 	if (myAddress != 0) {
 		delete[] myAddress;
 	}
@@ -176,7 +129,7 @@ WORD *ZLWin32DialogPanel::allocate() const {
 		p += it->allocationSize();
 	}
 
-	return myAddress;
+	return (DLGTEMPLATE*)myAddress;
 }
 
 int ZLWin32DialogPanel::allocationSize() const {
@@ -221,5 +174,5 @@ bool ZLWin32Dialog::run() {
 		panel.addControl(control);
 	}
 
-	return DialogBoxIndirect(GetModuleHandle(0), (DLGTEMPLATE*)panel.allocate(), myWindow->mainWindow(), DialogProc);
+	return DialogBoxIndirect(GetModuleHandle(0), panel.allocate(), myWindow->mainWindow(), DialogProc);
 }

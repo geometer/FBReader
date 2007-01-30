@@ -49,7 +49,7 @@ ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo> <maemo2>)"
 endif
 
 ifeq "$(UI_TYPE)" "win32"
-  SUBDIRS += src/win32/library src/win32/view src/win32/filesystem src/win32/time src/win32/dialogs src/win32/application src/win32/image
+  SUBDIRS += src/desktop/dialogs src/win32/library src/win32/view src/win32/filesystem src/win32/time src/win32/dialogs src/win32/application src/win32/image
 else
   SUBDIRS += src/unix/filesystem
 endif
