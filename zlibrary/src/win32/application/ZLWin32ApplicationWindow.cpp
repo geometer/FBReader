@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
+//#include <iostream>
 
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
@@ -116,6 +116,12 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			myWin32ViewWidget->doPaint();
 			return 0;
 		case WM_CLOSE:
+			if (!myFullScreen) {
+				RECT rectangle;
+				GetWindowRect(myMainWindow, &rectangle);
+				myWidthOption.setValue(rectangle.right - rectangle.left + 1);
+				myHeightOption.setValue(rectangle.bottom - rectangle.top + 1);
+			}
 			DestroyWindow(hWnd);
 			return 0;
 		case WM_DESTROY:
@@ -177,14 +183,6 @@ void ZLWin32ApplicationWindow::init() {
 
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 	ourApplicationWindow = 0;
-/*
-	if (!myFullScreen) {
-		int width, height;
-		gtk_window_get_size(myMainWindow, &width, &height);
-		myWidthOption.setValue(width);
-		myHeightOption.setValue(height);
-	}
-*/
 }
 
 void ZLWin32ApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
