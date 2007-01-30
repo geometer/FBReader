@@ -18,18 +18,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXFSDIR_H__
-#define __ZLUNIXFSDIR_H__
+#ifndef __ZLPOSIXFILEINPUTSTREAM_H__
+#define __ZLPOSIXFILEINPUTSTREAM_H__
 
-#include "../../posix/filesystem/ZLPosixFSDir.h"
+#include <stdio.h>
 
-class ZLUnixFSDir : public ZLPosixFSDir {
+#include <ZLInputStream.h>
+
+class ZLPosixFileInputStream : public ZLInputStream {
 
 public:
-	ZLUnixFSDir(const std::string &name) : ZLPosixFSDir(name) {}
+	ZLPosixFileInputStream(const std::string &name);
+	~ZLPosixFileInputStream();
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-protected:
-	void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const;
+	void seek(int offset, bool absoluteOffset);
+	size_t offset() const;
+	size_t sizeOfOpened();
+
+private:
+	std::string myName;
+	FILE *myFile;
 };
 
-#endif /* __ZLUNIXFSDIR_H__ */
+#endif /* __ZLPOSIXFILEINPUTSTREAM_H__ */

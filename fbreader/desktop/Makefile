@@ -37,11 +37,13 @@ install:
 	@install -m 0644 ../data/default/styles.desktop.xml $(SHARE_FBREADER)/default/styles.xml
 
 tarball:
+	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@fakeroot tar czf $(TARBALL) -C $(TMPDIR) .
 	@$(RM_QUIET) $(TMPDIR)
 
 debpackage:
+	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(VERSION)/" \

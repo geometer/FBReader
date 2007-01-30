@@ -18,18 +18,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXFSDIR_H__
-#define __ZLUNIXFSDIR_H__
+#ifndef __ZLPOSIXFSMANAGER_H__
+#define __ZLPOSIXFSMANAGER_H__
 
-#include "../../posix/filesystem/ZLPosixFSDir.h"
+#include <ZLFSManager.h>
+#include <ZLFile.h>
 
-class ZLUnixFSDir : public ZLPosixFSDir {
-
-public:
-	ZLUnixFSDir(const std::string &name) : ZLPosixFSDir(name) {}
+class ZLPosixFSManager : public ZLFSManager {
 
 protected:
-	void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const;
+	ZLInputStream *createPlainInputStream(const std::string &path) const;
+	ZLOutputStream *createOutputStream(const std::string &path) const;
+	ZLFileInfo fileInfo(const std::string &path) const;
+	bool removeFile(const std::string &path) const;
 };
 
-#endif /* __ZLUNIXFSDIR_H__ */
+#endif /* __ZLPOSIXFSMANAGER_H__ */

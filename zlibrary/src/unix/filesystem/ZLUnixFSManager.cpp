@@ -25,12 +25,10 @@
 
 #include "ZLUnixFSManager.h"
 #include "ZLUnixFSDir.h"
-#include "ZLUnixFileInputStream.h"
-#include "ZLUnixFileOutputStream.h"
 
 static std::string getPwdDir() {
-	char pwd[256];
-	return (getcwd(pwd, 255) != 0) ? pwd : "";
+	char *pwd = getenv("PWD");
+	return (pwd != 0) ? pwd : "";
 }
 
 static std::string getHomeDir() {
@@ -42,7 +40,6 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
 
-#ifndef _WIN32
 	if (path.empty()) {
 		path = PwdDir;
 	} else if (path[0] == '~') {
@@ -59,7 +56,6 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	if (last < (int)path.length() - 1) {
 		path = path.substr(0, last + 1);
 	}
-#endif
 }
 
 ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
@@ -67,33 +63,9 @@ ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
 }
 
 ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
-#ifdef _WIN32
-	return (mkdir(path.c_str()) == 0) ? new ZLUnixFSDir(path) : 0;
-#else
 	return (mkdir(path.c_str(), 0x1FF) == 0) ? new ZLUnixFSDir(path) : 0;
-#endif
 }
 
-ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) const {
-	return new ZLUnixFileInputStream(path);
-}
-
-ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &path) const {
-	return new ZLUnixFileOutputStream(path);
-}
-
-ZLFileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
-	ZLFileInfo info;
-	struct stat fileStat;
-	info.Exists = stat(path.c_str(), &fileStat) == 0;
-	if (info.Exists) {
-		info.Size = fileStat.st_size;
-		info.MTime = fileStat.st_mtime;
-		info.IsDirectory = S_ISDIR(fileStat.st_mode);
-	}
-	return info;
-}
-
-bool ZLUnixFSManager::removeFile(const std::string &path) const {
-	return unlink(path.c_str()) == 0;
+int ZLUnixFSManager::findArchivePathDelimiter(const std::string &path) const {
+	return path.rfind(':');
 }

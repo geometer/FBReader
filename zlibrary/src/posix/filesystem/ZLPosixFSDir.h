@@ -18,42 +18,24 @@
  * 02110-1301, USA.
  */
 
-#include <unistd.h>
-#include <stdlib.h>
+#ifndef __ZLPOSIXFSDIR_H__
+#define __ZLPOSIXFSDIR_H__
 
-#include "ZLUnixFileOutputStream.h"
+#include "../../abstract/filesystem/ZLFSDir.h"
 
-ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFile(0) {
-}
+#include <sys/stat.h>
 
-ZLUnixFileOutputStream::~ZLUnixFileOutputStream() {
-	close();
-}
+class ZLPosixFSDir : public ZLFSDir {
 
-bool ZLUnixFileOutputStream::open() {
-	close();
+public:
+	ZLPosixFSDir(const std::string &name) : ZLFSDir(name) {}
 
-	myTemporaryName = myName + ".XXXXXX" + '\0';
-	if (::mktemp((char*)myTemporaryName.data()) == 0) {
-		return false;
-	}
+	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
 
-	myFile = fopen(myTemporaryName.c_str(), "w");
-	return myFile != 0;
-}
+protected:
+	std::string delimiter() const { return "/"; }
+	virtual void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const = 0;
+};
 
-void ZLUnixFileOutputStream::write(const std::string &str) {
-	if (::fwrite(str.data(), 1, str.length(), myFile) != (ssize_t)str.length()) {
-		myHasErrors = true;
-	}
-}
-
-void ZLUnixFileOutputStream::close() {
-	if (myFile != 0) {
-		::fclose(myFile);
-		myFile = 0;
-		if (!myHasErrors) {
-			rename(myTemporaryName.c_str(), myName.c_str());
-		}
-	}
-}
+#endif /* __ZLPOSIXFSDIR_H__ */

@@ -18,28 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXFILEOUTPUTSTREAM_H__
-#define __ZLUNIXFILEOUTPUTSTREAM_H__
+#include "ZLWin32FSDir.h"
 
-#include <stdio.h>
-
-#include "../../abstract/filesystem/ZLOutputStream.h"
-
-class ZLUnixFileOutputStream : public ZLOutputStream {
-
-public:
-	ZLUnixFileOutputStream(const std::string &name);
-	~ZLUnixFileOutputStream();
-	bool open();
-	void write(const std::string &str);
-	void close();
-
-private:
-	std::string myName;
-	std::string myTemporaryName;
-	bool myHasErrors;
-	FILE *myFile;
-	//int myFileDescriptor;
-};
-
-#endif /* __ZLUNIXFILEOUTPUTSTREAM_H__ */
+void ZLWin32FSDir::getStat(const std::string fullName, bool /*includeSymlinks*/, struct stat &fileInfo) const {
+	stat(fullName.c_str(), &fileInfo);
+}

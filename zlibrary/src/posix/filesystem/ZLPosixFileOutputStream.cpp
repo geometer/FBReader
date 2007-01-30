@@ -18,29 +18,42 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXFILEINPUTSTREAM_H__
-#define __ZLUNIXFILEINPUTSTREAM_H__
+#include <unistd.h>
+#include <stdlib.h>
 
-#include <stdio.h>
+#include "ZLPosixFileOutputStream.h"
 
-#include <ZLInputStream.h>
+ZLPosixFileOutputStream::ZLPosixFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFile(0) {
+}
 
-class ZLUnixFileInputStream : public ZLInputStream {
+ZLPosixFileOutputStream::~ZLPosixFileOutputStream() {
+	close();
+}
 
-public:
-	ZLUnixFileInputStream(const std::string &name);
-	~ZLUnixFileInputStream();
-	bool open();
-	size_t read(char *buffer, size_t maxSize);
-	void close();
+bool ZLPosixFileOutputStream::open() {
+	close();
 
-	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+	myTemporaryName = myName + ".XXXXXX" + '\0';
+	if (::mktemp((char*)myTemporaryName.data()) == 0) {
+		return false;
+	}
 
-private:
-	std::string myName;
-	FILE *myFile;
-};
+	myFile = fopen(myTemporaryName.c_str(), "w");
+	return myFile != 0;
+}
 
-#endif /* __ZLUNIXFILEINPUTSTREAM_H__ */
+void ZLPosixFileOutputStream::write(const std::string &str) {
+	if (::fwrite(str.data(), 1, str.length(), myFile) != (ssize_t)str.length()) {
+		myHasErrors = true;
+	}
+}
+
+void ZLPosixFileOutputStream::close() {
+	if (myFile != 0) {
+		::fclose(myFile);
+		myFile = 0;
+		if (!myHasErrors) {
+			rename(myTemporaryName.c_str(), myName.c_str());
+		}
+	}
+}

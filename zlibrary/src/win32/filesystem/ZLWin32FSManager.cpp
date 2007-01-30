@@ -17,7 +17,52 @@
  * 02110-1301, USA.
  */
 
+#include <unistd.h>
+
 #include "ZLWin32FSManager.h"
+#include "ZLWin32FSDir.h"
+
+static std::string getPwdDir() {
+	char pwd[2048];
+	return (getcwd(pwd, 2047) != 0) ? pwd : "";
+}
+
+static std::string getHomeDir() {
+	char *home = getenv("USERPROFILE");
+	return (home != 0) ? home : "";
+}
+
+void ZLWin32FSManager::normalize(std::string &path) const {
+	static std::string HomeDir = getHomeDir();
+	static std::string PwdDir = getPwdDir();
+	static std::string APPattern = "%APPLICATION_PATH%";
+	static std::string AP;
+	if (AP.empty()) {
+		AP = _pgmptr;
+		int index = AP.rfind('\\');
+		if (index != -1) {
+			AP = AP.substr(0, index);
+		}
+	}
+
+	if (path.empty()) {
+		path = PwdDir;
+	} else if (path[0] == '~') {
+		path = HomeDir + path.substr(1);
+	} else if (path.substr(0, APPattern.length()) == APPattern) {
+		path = AP + path.substr(APPattern.length());
+	} else if ((path.length() > 1) && (path[1] != ':')) {
+		path = PwdDir + "\\" + path;
+	}
+}
+
+ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
+	return new ZLWin32FSDir(path);
+}
+
+ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
+	return (mkdir(path.c_str()) == 0) ? new ZLWin32FSDir(path) : 0;
+}
 
 std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) const {
 	/*
@@ -27,4 +72,9 @@ std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) con
 	return convertedName;
 	*/
 	return name;
+}
+
+int ZLWin32FSManager::findArchivePathDelimiter(const std::string &path) const {
+	int index = path.rfind(':');
+	return (index == 1) ? -1 : index;
 }

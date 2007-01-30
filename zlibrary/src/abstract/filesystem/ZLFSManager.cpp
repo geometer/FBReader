@@ -40,11 +40,13 @@ void ZLFSManager::deleteInstance() {
 
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
-	int index = myPath.rfind(':');
-	if (index == -1) {
-		index = myPath.rfind('/');
+	{
+		int index = ZLFSManager::instance().findArchivePathDelimiter(myPath);
+		if (index == -1) {
+			index = myPath.rfind('/');
+		}
+		myFullName = myPath.substr(index + 1);
 	}
-	myFullName = myPath.substr(index + 1);
 	myName = myFullName;
 
 	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::instance().myForcedFiles;
@@ -76,7 +78,7 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 		}
 	}
 
-	index = myName.rfind('.');
+	int index = myName.rfind('.');
 	if (index > 0) {
 		myExtension = myName.substr(index + 1);
 		myName = myName.substr(0, index);
@@ -90,8 +92,8 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 
 	ZLInputStream *stream = 0;
 	
-	size_t index = myPath.rfind(':');
-	if (index == (size_t)-1) {
+	int index = ZLFSManager::instance().findArchivePathDelimiter(myPath);
+	if (index == -1) {
 		stream = ZLFSManager::instance().createPlainInputStream(myPath);
 	} else {
 		ZLFile baseFile(myPath.substr(0, index));
@@ -120,7 +122,7 @@ shared_ptr<ZLOutputStream> ZLFile::outputStream() const {
 	if (isCompressed()) {
 		return 0;
 	}
-	if (myPath.find(':') != (size_t)-1) {
+	if (ZLFSManager::instance().findArchivePathDelimiter(myPath) != -1) {
 		return 0;
 	}
 	return ZLFSManager::instance().createOutputStream(myPath);
@@ -143,8 +145,8 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 }
 
 void ZLFile::fillInfo() const {
-	size_t index = myPath.find(':');
-	if (index == (size_t)-1) {
+	int index = ZLFSManager::instance().findArchivePathDelimiter(myPath);
+	if (index == -1) {
 		myInfo = ZLFSManager::instance().fileInfo(myPath);
 	} else {
 		myInfo = ZLFSManager::instance().fileInfo(myPath.substr(0, index));

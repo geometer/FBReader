@@ -18,66 +18,12 @@
  * 02110-1301, USA.
  */
 
-#include <sys/stat.h>
-#include <dirent.h>
-#include <stdio.h>
-
 #include "ZLUnixFSDir.h"
 
-#ifdef _WIN32
-#define lstat stat
-#endif
-
-void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
-	DIR *dir = opendir(name().c_str());
-	if (dir != 0) {
-		const std::string namePrefix = name() + "/";
-		const dirent *file;
-		struct stat fileInfo;
-		std::string shortName;
-		std::string fullName;
-		while ((file = readdir(dir)) != 0) {
-			shortName = file->d_name;
-			if ((shortName == ".") || (shortName == "..")) {
-				continue;
-			}
-			fullName = namePrefix + shortName;
-			if (includeSymlinks) {
-				stat(fullName.c_str(), &fileInfo);
-			} else {
-				lstat(fullName.c_str(), &fileInfo);
-			}
-			if (S_ISDIR(fileInfo.st_mode)) {
-				names.push_back(shortName);
-			}
-		}
-		closedir(dir);
-	}
-}
-
-void ZLUnixFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
-	DIR *dir = opendir(name().c_str());
-	if (dir != 0) {
-		const std::string namePrefix = name() + "/";
-		const dirent *file;
-		struct stat fileInfo;
-		std::string shortName;
-		std::string fullName;
-		while ((file = readdir(dir)) != 0) {
-			shortName = file->d_name;
-			if ((shortName == ".") || (shortName == "..")) {
-				continue;
-			}
-			fullName = namePrefix + shortName;
-			if (includeSymlinks) {
-				stat(fullName.c_str(), &fileInfo);
-			} else {
-				lstat(fullName.c_str(), &fileInfo);
-			}
-			if (S_ISREG(fileInfo.st_mode)) {
-				names.push_back(shortName);
-			}
-		}
-		closedir(dir);
+void ZLUnixFSDir::getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const {
+	if (includeSymlinks) {
+		stat(fullName.c_str(), &fileInfo);
+	} else {
+		lstat(fullName.c_str(), &fileInfo);
 	}
 }

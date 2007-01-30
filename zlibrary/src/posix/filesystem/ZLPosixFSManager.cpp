@@ -18,18 +18,35 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXFSDIR_H__
-#define __ZLUNIXFSDIR_H__
+#include <sys/stat.h>
+#include <unistd.h>
 
-#include "../../posix/filesystem/ZLPosixFSDir.h"
+#include <ZLStringUtil.h>
 
-class ZLUnixFSDir : public ZLPosixFSDir {
+#include "ZLPosixFSManager.h"
+#include "ZLPosixFileInputStream.h"
+#include "ZLPosixFileOutputStream.h"
 
-public:
-	ZLUnixFSDir(const std::string &name) : ZLPosixFSDir(name) {}
+ZLInputStream *ZLPosixFSManager::createPlainInputStream(const std::string &path) const {
+	return new ZLPosixFileInputStream(path);
+}
 
-protected:
-	void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const;
-};
+ZLOutputStream *ZLPosixFSManager::createOutputStream(const std::string &path) const {
+	return new ZLPosixFileOutputStream(path);
+}
 
-#endif /* __ZLUNIXFSDIR_H__ */
+ZLFileInfo ZLPosixFSManager::fileInfo(const std::string &path) const {
+	ZLFileInfo info;
+	struct stat fileStat;
+	info.Exists = stat(path.c_str(), &fileStat) == 0;
+	if (info.Exists) {
+		info.Size = fileStat.st_size;
+		info.MTime = fileStat.st_mtime;
+		info.IsDirectory = S_ISDIR(fileStat.st_mode);
+	}
+	return info;
+}
+
+bool ZLPosixFSManager::removeFile(const std::string &path) const {
+	return unlink(path.c_str()) == 0;
+}

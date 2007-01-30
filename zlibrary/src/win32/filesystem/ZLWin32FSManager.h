@@ -20,9 +20,9 @@
 #ifndef __ZLWIN32FSMANAGER_H__
 #define __ZLWIN32FSMANAGER_H__
 
-#include "../../unix/filesystem/ZLUnixFSManager.h"
+#include "../../posix/filesystem/ZLPosixFSManager.h"
 
-class ZLWin32FSManager : public ZLUnixFSManager {
+class ZLWin32FSManager : public ZLPosixFSManager {
 
 public:
 	static void createInstance() { ourInstance = new ZLWin32FSManager(); }
@@ -31,7 +31,12 @@ private:
 	ZLWin32FSManager() {}
 	
 protected:
+	void normalize(std::string &path) const;
+	ZLFSDir *createPlainDirectory(const std::string &path) const;
+	ZLFSDir *createNewDirectory(const std::string &path) const;
+
 	std::string convertFilenameToUtf8(const std::string &name) const;
+	int findArchivePathDelimiter(const std::string &path) const;
 };
 
 #endif /* __ZLWIN32FSMANAGER_H__ */

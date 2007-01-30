@@ -18,18 +18,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLUNIXFSDIR_H__
-#define __ZLUNIXFSDIR_H__
+#ifndef __ZLWIN32FSDIR_H__
+#define __ZLWIN32FSDIR_H__
 
 #include "../../posix/filesystem/ZLPosixFSDir.h"
 
-class ZLUnixFSDir : public ZLPosixFSDir {
+class ZLWin32FSDir : public ZLPosixFSDir {
 
 public:
-	ZLUnixFSDir(const std::string &name) : ZLPosixFSDir(name) {}
+	ZLWin32FSDir(const std::string &name) : ZLPosixFSDir(name) {}
 
 protected:
 	void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const;
 };
 
-#endif /* __ZLUNIXFSDIR_H__ */
+#endif /* __ZLWIN32FSDIR_H__ */
