@@ -56,45 +56,32 @@ static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARA
 	return false;
 }
 
-static LPWORD lpwAlign(LPWORD p) {
-	ULONG ul = (ULONG)p;
-	ul += 3;
-	ul >>= 2;
-	ul <<= 2;
-	return (LPWORD)ul; 
+class ZLWin32DialogElement {
+
+protected:
+	static int allocateString(WORD *p, const std::string &text);
+
+protected:
+	ZLWin32DialogElement();
+};
+
+ZLWin32DialogElement::ZLWin32DialogElement() {
 }
 
-static int nCopyAnsiToWideChar(LPWORD lpWCStr, LPSTR lpAnsiln) {
-	int cchAnsi = lstrlen(lpAnsiln);
-	return MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, lpAnsiln, cchAnsi, (LPWSTR)lpWCStr, cchAnsi) + 1;
+int ZLWin32DialogElement::allocateString(WORD *p, const std::string &text) {
+	ZLUnicodeUtil::Ucs2String ucs2Str;
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, text.data(), text.length());
+	ucs2Str.push_back(0);
+	memcpy(p, &ucs2Str.front(), 2 * ucs2Str.size());
+	return ucs2Str.size();
 }
 
-static void DlgTemplate(PWORD &p, DWORD style, int items, int x, int y, int cx, int cy, LPSTR txt) {
-	*p++ = LOWORD(style);
-	*p++ = HIWORD(style);
-	*p++ = 0;
-	*p++ = 0;
-	*p++ = items;
-	*p++ = x;
-	*p++ = y;
-	*p++ = cx;
-	*p++ = cy;
-	*p++ = 0;
-	*p++ = 0;
-	int nchar = nCopyAnsiToWideChar(p, TEXT(txt));
-	p += nchar;
-	p = lpwAlign((LPWORD)p);
-}
-
-class ZLWin32DialogControl {
+class ZLWin32DialogControl : public ZLWin32DialogElement {
 
 public:
 	ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text);
-	int allocate(WORD *p);
-	int allocationSize();
-
-private:
-	int allocateString(WORD *p, const std::string &text);
+	void allocate(WORD *p) const;
+	int allocationSize() const;
 
 private:
 	DWORD myStyle;
@@ -108,45 +95,104 @@ private:
 ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style), myX(x), myY(y), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
 }
 
-int ZLWin32DialogControl::allocateString(WORD *p, const std::string &text) {
-	ZLUnicodeUtil::Ucs2String ucs2Str;
-	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, text.data(), text.length());
-	ucs2Str.push_back(0);
-	memcpy(p, &ucs2Str.front(), 2 * ucs2Str.size());
-	return ucs2Str.size();
+int ZLWin32DialogControl::allocationSize() const {
+	int size = 12 + ZLUnicodeUtil::utf8Length(myClassName) + ZLUnicodeUtil::utf8Length(myText);
+	return size + size % 2;
 }
 
-int ZLWin32DialogControl::allocationSize() {
-	int size = 10 + ZLUnicodeUtil::utf8Length(myClassName) + ZLUnicodeUtil::utf8Length(myText);
-	return (size + 1) >> 1 << 1;
-}
-
-int ZLWin32DialogControl::allocate(WORD *p) {
-	WORD *ptr = p;
-
-	*ptr++ = LOWORD(myStyle);
-	*ptr++ = HIWORD(myStyle);
-	*ptr++ = 0;
-	*ptr++ = 0;
-	*ptr++ = myX;
-	*ptr++ = myY;
-	*ptr++ = myWidth;
-	*ptr++ = myHeight;
-	*ptr++ = myId;
+void ZLWin32DialogControl::allocate(WORD *p) const {
+	*p++ = LOWORD(myStyle);
+	*p++ = HIWORD(myStyle);
+	*p++ = 0;
+	*p++ = 0;
+	*p++ = myX;
+	*p++ = myY;
+	*p++ = myWidth;
+	*p++ = myHeight;
+	*p++ = myId;
 	
-	ptr += allocateString(ptr, myClassName);
-	ptr += allocateString(ptr, myText);
+	p += allocateString(p, myClassName);
+	p += allocateString(p, myText);
 
-	*ptr++ = 0;
+	*p++ = 0;
+}
 
-	return (ptr - p + 1) >> 1 << 1;
+class ZLWin32DialogPanel : public ZLWin32DialogElement {
+
+public:
+	ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text);
+	~ZLWin32DialogPanel();
+	WORD *allocate() const;
+	void addControl(ZLWin32DialogControl &control);
+
+private:
+	int allocationSize() const;
+
+private:
+	DWORD myStyle;
+	int myX, myY;
+	int myWidth, myHeight;
+	std::string myText;
+
+	std::vector<ZLWin32DialogControl> myControls;
+
+	mutable WORD *myAddress;
+};
+
+ZLWin32DialogPanel::ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text) : myStyle(style), myX(x), myY(y), myWidth(width), myHeight(height), myText(text), myAddress(0) {
+}
+
+ZLWin32DialogPanel::~ZLWin32DialogPanel() {
+	if (myAddress != 0) {
+		delete[] myAddress;
+	}
+}
+
+WORD *ZLWin32DialogPanel::allocate() const {
+	if (myAddress != 0) {
+		delete[] myAddress;
+	}
+	myAddress = new WORD[allocationSize()];
+
+	WORD *p = myAddress;
+	*p++ = LOWORD(myStyle);
+	*p++ = HIWORD(myStyle);
+	*p++ = 0;
+	*p++ = 0;
+	*p++ = myControls.size();
+	*p++ = myX;
+	*p++ = myY;
+	*p++ = myWidth;
+	*p++ = myHeight;
+	*p++ = 0;
+	*p++ = 0;
+	p += allocateString(p, myText);
+	if ((p - myAddress) % 2 == 1) {
+		p++;
+	}
+
+	for (std::vector<ZLWin32DialogControl>::const_iterator it = myControls.begin(); it != myControls.end(); ++it) {
+		it->allocate(p);
+		p += it->allocationSize();
+	}
+
+	return myAddress;
+}
+
+int ZLWin32DialogPanel::allocationSize() const {
+	int size = 12 + ZLUnicodeUtil::utf8Length(myText);
+	size += size % 2;
+	for (std::vector<ZLWin32DialogControl>::const_iterator it = myControls.begin(); it != myControls.end(); ++it) {
+		size += it->allocationSize();
+	}
+	return size;
+}
+
+void ZLWin32DialogPanel::addControl(ZLWin32DialogControl &control) {
+	myControls.push_back(control);
 }
 
 bool ZLWin32Dialog::run() {
-	// TODO: free memory
-	WORD *pTemplate = (PWORD)LocalAlloc(LPTR, 2000);
-	WORD *p = pTemplate;
-
 	int cxChar, cyChar;
 	{
 		TEXTMETRIC metric;
@@ -167,16 +213,13 @@ bool ZLWin32Dialog::run() {
 	cyChar *= 8;
 	cyChar /= dlgYUnit;
 
-	const int buttonNumber = myButtons.size();
-	DlgTemplate(p, DS_3DLOOK | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, buttonNumber, 20, 20, 20 + 60 * buttonNumber, 120, (char*)myTitle.c_str());
-	for (int i = 0; i < buttonNumber; ++i) {
-		DWORD style = (i == 0) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
+	ZLWin32DialogPanel panel(DS_3DLOOK | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 20 + 60 * myButtons.size(), 120, myTitle);
+	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 		style = style | WS_VISIBLE | WS_CHILD | WS_TABSTOP;
-		ZLWin32DialogControl control(style, 20 + 60 * i, 80, 40, cyChar * 3 / 2, IDOK, "button", myButtons[i].first);
-		p += control.allocate(p);
+		ZLWin32DialogControl control(style, 20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, IDOK, "button", it->first);
+		panel.addControl(control);
 	}
 
-	int code = DialogBoxIndirect(GetModuleHandle(0), (DLGTEMPLATE*)pTemplate, myWindow->mainWindow(), DialogProc);
-	LocalFree(LocalHandle(pTemplate));
-	return code;
+	return DialogBoxIndirect(GetModuleHandle(0), (DLGTEMPLATE*)panel.allocate(), myWindow->mainWindow(), DialogProc);
 }
