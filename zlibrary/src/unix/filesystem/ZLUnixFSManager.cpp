@@ -55,6 +55,18 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	if (last < (int)path.length() - 1) {
 		path = path.substr(0, last + 1);
 	}
+
+	int index;
+	while ((index = path.find("/..")) != -1) {
+		int prevIndex = path.rfind('/', index - 1);
+		if (prevIndex == -1) {
+			break;
+		}
+		path.erase(prevIndex, index + 3 - prevIndex);
+	}
+	while ((index = path.find("/./")) != -1) {
+		path.erase(index, 2);
+	}
 }
 
 ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
