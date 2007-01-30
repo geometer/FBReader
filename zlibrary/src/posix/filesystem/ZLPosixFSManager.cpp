@@ -24,8 +24,13 @@
 #include <ZLStringUtil.h>
 
 #include "ZLPosixFSManager.h"
+#include "ZLPosixFSDir.h"
 #include "ZLPosixFileInputStream.h"
 #include "ZLPosixFileOutputStream.h"
+
+ZLFSDir *ZLPosixFSManager::createPlainDirectory(const std::string &path) const {
+	return new ZLPosixFSDir(path);
+}
 
 ZLInputStream *ZLPosixFSManager::createPlainInputStream(const std::string &path) const {
 	return new ZLPosixFileInputStream(path);

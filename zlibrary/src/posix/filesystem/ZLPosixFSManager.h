@@ -27,6 +27,7 @@
 class ZLPosixFSManager : public ZLFSManager {
 
 protected:
+	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;
 	ZLFileInfo fileInfo(const std::string &path) const;
@@ -34,6 +35,7 @@ protected:
 
 public:
 	virtual void moveFile(const std::string &oldName, const std::string &newName) = 0;
+	virtual void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const = 0;
 };
 
 #endif /* __ZLPOSIXFSMANAGER_H__ */

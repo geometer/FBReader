@@ -30,6 +30,8 @@ protected:
 
 public:
 	virtual ~ZLFSDir();
+
+	std::string delimiter() const;
 };
 
 inline ZLFSDir::ZLFSDir(const std::string &name) : ZLDir(name) {}

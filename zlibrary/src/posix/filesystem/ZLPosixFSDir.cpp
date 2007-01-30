@@ -22,6 +22,7 @@
 #include <stdio.h>
 
 #include "ZLPosixFSDir.h"
+#include "ZLPosixFSManager.h"
 
 void ZLPosixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
@@ -35,7 +36,7 @@ void ZLPosixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeS
 			if ((shortName == ".") || (shortName == "..")) {
 				continue;
 			}
-			getStat(namePrefix + shortName, includeSymlinks, fileInfo);
+			((ZLPosixFSManager&)ZLFSManager::instance()).getStat(namePrefix + shortName, includeSymlinks, fileInfo);
 			if (S_ISDIR(fileInfo.st_mode)) {
 				names.push_back(shortName);
 			}
@@ -56,7 +57,7 @@ void ZLPosixFSDir::collectFiles(std::vector<std::string> &names, bool includeSym
 			if ((shortName == ".") || (shortName == "..")) {
 				continue;
 			}
-			getStat(namePrefix + shortName, includeSymlinks, fileInfo);
+			((ZLPosixFSManager&)ZLFSManager::instance()).getStat(namePrefix + shortName, includeSymlinks, fileInfo);
 			if (S_ISREG(fileInfo.st_mode)) {
 				names.push_back(shortName);
 			}

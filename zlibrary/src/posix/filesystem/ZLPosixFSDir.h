@@ -32,9 +32,6 @@ public:
 
 	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
-
-protected:
-	virtual void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const = 0;
 };
 
 #endif /* __ZLPOSIXFSDIR_H__ */

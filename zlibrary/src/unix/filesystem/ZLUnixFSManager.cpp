@@ -24,7 +24,6 @@
 #include <ZLStringUtil.h>
 
 #include "ZLUnixFSManager.h"
-#include "ZLUnixFSDir.h"
 
 static std::string getPwdDir() {
 	char *pwd = getenv("PWD");
@@ -58,12 +57,8 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	}
 }
 
-ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
-	return new ZLUnixFSDir(path);
-}
-
 ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
-	return (mkdir(path.c_str(), 0x1FF) == 0) ? new ZLUnixFSDir(path) : 0;
+	return (mkdir(path.c_str(), 0x1FF) == 0) ? createPlainDirectory(path) : 0;
 }
 
 int ZLUnixFSManager::findArchivePathDelimiter(const std::string &path) const {
@@ -72,4 +67,12 @@ int ZLUnixFSManager::findArchivePathDelimiter(const std::string &path) const {
 
 void ZLUnixFSManager::moveFile(const std::string &oldName, const std::string &newName) {
 	rename(oldName.c_str(), newName.c_str());
+}
+
+void ZLUnixFSManager::getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const {
+	if (includeSymlinks) {
+		stat(fullName.c_str(), &fileInfo);
+	} else {
+		lstat(fullName.c_str(), &fileInfo);
+	}
 }

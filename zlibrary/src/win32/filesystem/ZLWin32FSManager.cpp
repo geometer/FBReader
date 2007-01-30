@@ -18,9 +18,9 @@
  */
 
 #include <unistd.h>
+#include <sys/stat.h>
 
 #include "ZLWin32FSManager.h"
-#include "ZLWin32FSDir.h"
 
 static std::string getPwdDir() {
 	char pwd[2048];
@@ -70,12 +70,8 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 	}
 }
 
-ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
-	return new ZLWin32FSDir(path);
-}
-
 ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
-	return (mkdir(path.c_str()) == 0) ? new ZLWin32FSDir(path) : 0;
+	return (mkdir(path.c_str()) == 0) ? createPlainDirectory(path) : 0;
 }
 
 std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) const {
@@ -96,4 +92,8 @@ int ZLWin32FSManager::findArchivePathDelimiter(const std::string &path) const {
 void ZLWin32FSManager::moveFile(const std::string &oldName, const std::string &newName) {
 	remove(newName.c_str());
 	rename(oldName.c_str(), newName.c_str());
+}
+
+void ZLWin32FSManager::getStat(const std::string fullName, bool /*includeSymlinks*/, struct stat &fileInfo) const {
+	stat(fullName.c_str(), &fileInfo);
 }
