@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLUnicodeUtil.h>
+
 #include "ZLWin32Dialog.h"
 #include "ZLWin32DialogContent.h"
 #include "../application/ZLWin32ApplicationWindow.h"
@@ -84,24 +86,61 @@ static void DlgTemplate(PWORD &p, DWORD style, int items, int x, int y, int cx, 
 	p = lpwAlign((LPWORD)p);
 }
 
-static void DlgItemTemplate(PWORD &p, DWORD style, int x, int y, int cx, int cy, WORD id, LPSTR classname, LPSTR txt) {
-	*p++ = LOWORD(style);
-	*p++ = HIWORD(style);
-	*p++ = 0;
-	*p++ = 0;
-	*p++ = x;
-	*p++ = y;
-	*p++ = cx;
-	*p++ = cy;
-	*p++ = id;
-	int nchar = nCopyAnsiToWideChar(p, TEXT(classname));
-	p += nchar;
-	nchar = nCopyAnsiToWideChar(p, TEXT(txt));
-	p += nchar;
-	*p++ = 0;
-	p = lpwAlign((LPWORD)p);
+class ZLWin32DialogControl {
+
+public:
+	ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text);
+	int allocate(WORD *p);
+	int allocationSize();
+
+private:
+	int allocateString(WORD *p, const std::string &text);
+
+private:
+	DWORD myStyle;
+	int myX, myY;
+	int myWidth, myHeight;
+	WORD myId;
+	std::string myClassName;
+	std::string myText;
+};
+
+ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style), myX(x), myY(y), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
 }
 
+int ZLWin32DialogControl::allocateString(WORD *p, const std::string &text) {
+	ZLUnicodeUtil::Ucs2String ucs2Str;
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, text.data(), text.length());
+	ucs2Str.push_back(0);
+	memcpy(p, &ucs2Str.front(), 2 * ucs2Str.size());
+	return ucs2Str.size();
+}
+
+int ZLWin32DialogControl::allocationSize() {
+	int size = 10 + ZLUnicodeUtil::utf8Length(myClassName) + ZLUnicodeUtil::utf8Length(myText);
+	return (size + 1) >> 1 << 1;
+}
+
+int ZLWin32DialogControl::allocate(WORD *p) {
+	WORD *ptr = p;
+
+	*ptr++ = LOWORD(myStyle);
+	*ptr++ = HIWORD(myStyle);
+	*ptr++ = 0;
+	*ptr++ = 0;
+	*ptr++ = myX;
+	*ptr++ = myY;
+	*ptr++ = myWidth;
+	*ptr++ = myHeight;
+	*ptr++ = myId;
+	
+	ptr += allocateString(ptr, myClassName);
+	ptr += allocateString(ptr, myText);
+
+	*ptr++ = 0;
+
+	return (ptr - p + 1) >> 1 << 1;
+}
 
 bool ZLWin32Dialog::run() {
 	// TODO: free memory
@@ -133,7 +172,8 @@ bool ZLWin32Dialog::run() {
 	for (int i = 0; i < buttonNumber; ++i) {
 		DWORD style = (i == 0) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 		style = style | WS_VISIBLE | WS_CHILD | WS_TABSTOP;
-		DlgItemTemplate(p, style, 20 + 60 * i, 80, 40, cyChar * 3 / 2, IDOK, (LPSTR)"button", (LPSTR)myButtons[i].first.c_str());
+		ZLWin32DialogControl control(style, 20 + 60 * i, 80, 40, cyChar * 3 / 2, IDOK, "button", myButtons[i].first);
+		p += control.allocate(p);
 	}
 
 	int code = DialogBoxIndirect(GetModuleHandle(0), (DLGTEMPLATE*)pTemplate, myWindow->mainWindow(), DialogProc);

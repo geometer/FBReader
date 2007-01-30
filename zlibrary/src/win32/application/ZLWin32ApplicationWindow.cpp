@@ -350,7 +350,7 @@ bool ZLWin32ApplicationWindow::isKeyboardPresented() const {
 
 void ZLWin32ApplicationWindow::setCaption(const std::string &caption) {
 	ZLUnicodeUtil::Ucs2String ucs2Str;
-	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, caption.data(), caption.length(), -1);
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, caption.data(), caption.length());
 	ucs2Str.push_back(0);
 	SetWindowTextW(myMainWindow, (const WCHAR*)&ucs2Str.front());
 }
