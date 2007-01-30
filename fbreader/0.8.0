@@ -16,11 +16,6 @@ mobipocket: где начинаются картинки?
 иконка для пакета в pool
 openbook
 вызов по ссылкам внешних программ
-tree-*.png
-	18x15
-	22x18
-	34x28
-	blueset
 кнопка End в plucker
 дефолтное название для текстовых файлов
 
@@ -49,12 +44,17 @@ info dialog icon in contents tree
   for books
 	for authors
 	for series
-возможность посмотреть HowToStart в любой момент
 
 ==============================================================================
 
 *** после 0.8.0
 
+tree-*.png
+	18x15
+	22x18
+	34x28
+	blueset
+возможность посмотреть HowToStart в любой момент
 pocketpc version
 chm
 	как же все-таки искать .hhc?
