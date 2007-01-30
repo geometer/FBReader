@@ -165,7 +165,7 @@ void ZLFile::forceArchiveType(ArchiveType type) {
 std::string ZLFile::physicalFilePath() const {
 	std::string path = myPath;
 	int index;
-	while ((index = ZLFSManager::instance().findArchivePathDelimiter(myPath)) != -1) {
+	while ((index = ZLFSManager::instance().findArchivePathDelimiter(path)) != -1) {
 		path = path.substr(0, index);
 	}
 	return path;

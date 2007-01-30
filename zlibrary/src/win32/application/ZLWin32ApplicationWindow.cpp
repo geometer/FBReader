@@ -22,6 +22,7 @@
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
 #include <ZLPaintContext.h>
+#include <ZLUnicodeUtil.h>
 
 #include "../../abstract/util/ZLKeyUtil.h"
 #include "ZLWin32ApplicationWindow.h"
@@ -356,7 +357,10 @@ bool ZLWin32ApplicationWindow::isKeyboardPresented() const {
 }
 
 void ZLWin32ApplicationWindow::setCaption(const std::string &caption) {
-	//gtk_window_set_title (myMainWindow, caption.c_str ());
+	ZLUnicodeUtil::Ucs2String ucs2Str;
+	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, caption.data(), caption.length(), -1);
+	ucs2Str.push_back(0);
+	SetWindowTextW(myMainWindow, (const WCHAR*)&ucs2Str.front());
 }
 
 HWND ZLWin32ApplicationWindow::mainWindow() const {

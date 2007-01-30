@@ -228,8 +228,6 @@ FBReader::~FBReader() {
 	Hyphenator::deleteInstance();
 }
 
-#include <iostream>
-
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {
 	ZLFile bookFile = ZLFile(fileName);
 
