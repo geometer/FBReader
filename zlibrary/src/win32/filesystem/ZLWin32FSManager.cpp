@@ -54,6 +54,19 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 	} else if ((path.length() > 1) && (path[1] != ':')) {
 		path = PwdDir + "\\" + path;
 	}
+	
+	int index;
+	while ((index = path.find('/')) != -1) {
+		path[index] = '\\';
+	}
+	while ((index = path.find("\\..")) != -1) {
+		int prevIndex = path.rfind('\\', index - 1);
+		if (prevIndex == -1) {
+			break;
+		}
+		path.erase(prevIndex, index + 3 - prevIndex);
+		break;
+	}
 }
 
 ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
@@ -77,4 +90,9 @@ std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) con
 int ZLWin32FSManager::findArchivePathDelimiter(const std::string &path) const {
 	int index = path.rfind(':');
 	return (index == 1) ? -1 : index;
+}
+
+void ZLWin32FSManager::moveFile(const std::string &oldName, const std::string &newName) {
+	remove(newName.c_str());
+	rename(oldName.c_str(), newName.c_str());
 }

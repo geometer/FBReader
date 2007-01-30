@@ -34,7 +34,6 @@ public:
 	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
 
 protected:
-	std::string delimiter() const { return "/"; }
 	virtual void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const = 0;
 };
 

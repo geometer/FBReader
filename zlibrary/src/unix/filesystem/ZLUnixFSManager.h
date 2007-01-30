@@ -31,6 +31,8 @@ protected:
 	ZLFSDir *createNewDirectory(const std::string &path) const;
 
 	int findArchivePathDelimiter(const std::string &path) const;
+
+	void moveFile(const std::string &oldName, const std::string &newName);
 };
 
 #endif /* __ZLUNIXFSMANAGER_H__ */

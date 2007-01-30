@@ -37,6 +37,8 @@ protected:
 
 	std::string convertFilenameToUtf8(const std::string &name) const;
 	int findArchivePathDelimiter(const std::string &path) const;
+
+	void moveFile(const std::string &oldName, const std::string &newName);
 };
 
 #endif /* __ZLWIN32FSMANAGER_H__ */

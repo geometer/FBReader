@@ -50,8 +50,8 @@ void ZLibrary::run(ZLApplication *application) {
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
-	/*
 	delete application;
+	/*
 	pthread_exit(0);
 	*/
 }

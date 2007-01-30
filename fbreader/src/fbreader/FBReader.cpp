@@ -73,7 +73,7 @@ FBReader::ScrollingOptions::ScrollingOptions(
 		LinesToScrollOption(ZLOption::CONFIG_CATEGORY, linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
 		PercentToScrollOption(ZLOption::CONFIG_CATEGORY, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
 
-FBReader::FBReader(const std::string& bookToOpen) :
+FBReader::FBReader(const std::string &bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
 	StoreContentsPositionOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "StoreContentsPosition", false),
@@ -228,15 +228,17 @@ FBReader::~FBReader() {
 	Hyphenator::deleteInstance();
 }
 
+#include <iostream>
+
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {
 	ZLFile bookFile = ZLFile(fileName);
 
 	if (!bookFile.isArchive()) {
-		return BookDescription::getDescription(fileName);
+		return BookDescription::getDescription(bookFile.path());
 	}
 
 	std::queue<std::string> archiveNames;
-	archiveNames.push(fileName);
+	archiveNames.push(bookFile.path());
 
 	std::vector<std::string> items;
 
@@ -248,12 +250,12 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 		}
 		archiveDir->collectFiles(items, true);
 		for (std::vector<std::string>::const_iterator it = items.begin(); it != items.end(); ++it) {
-			const std::string fileName = archiveDir->itemName(*it);
-			ZLFile subFile(fileName);
+			const std::string itemName = archiveDir->itemName(*it);
+			ZLFile subFile(itemName);
 			if (subFile.isArchive()) {
-				archiveNames.push(fileName);
+				archiveNames.push(itemName);
 			} else if (!subFile.isDirectory()) {
-				BookDescriptionPtr description = BookDescription::getDescription(fileName);
+				BookDescriptionPtr description = BookDescription::getDescription(itemName);
 				if (!description.isNull()) {
 					return description;
 				}

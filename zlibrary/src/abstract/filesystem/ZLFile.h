@@ -63,6 +63,8 @@ public:
 	const std::string &name() const;
 	const std::string &extension() const;
 
+	std::string physicalFilePath() const;
+
 	std::string utf8Path() const;
 	std::string utf8FullName() const;
 	std::string utf8Name() const;

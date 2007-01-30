@@ -30,6 +30,7 @@ public:
 
 protected:
 	void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const;
+	std::string delimiter() const { return "/"; }
 };
 
 #endif /* __ZLUNIXFSDIR_H__ */

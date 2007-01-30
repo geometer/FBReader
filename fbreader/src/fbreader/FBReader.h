@@ -324,7 +324,7 @@ private:
 	friend class OpenPreviousBookAction;
 	
 public:
-	FBReader(const std::string& bookToOpen);
+	FBReader(const std::string &bookToOpen);
 	~FBReader();
 
 private:
@@ -335,7 +335,7 @@ private:
 	void optionsSlot();
 	void addBookSlot();
 
-	BookDescriptionPtr createDescription(const std::string& fileName) const;
+	BookDescriptionPtr createDescription(const std::string &fileName) const;
 
 	bool runBookInfoDialog(const std::string &fileName);
 

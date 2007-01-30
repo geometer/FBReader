@@ -68,8 +68,8 @@ bool BookInfo::isFull() const {
 }
 
 BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, bool checkFile) {
-	int index = fileName.find(':');
-	ZLFile file((index == -1) ? fileName : fileName.substr(0, index));
+	const std::string physicalFileName = ZLFile(fileName).physicalFilePath();
+	ZLFile file(physicalFileName);
 	if (checkFile && !file.exists()) {
 		return 0;
 	}
@@ -92,7 +92,7 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 			return description;
 		}
 	} else {
-		if (index != -1) {
+		if (physicalFileName != fileName) {
 			BookDescriptionUtil::resetZipInfo(file);
 		}
 		BookDescriptionUtil::saveInfo(file);

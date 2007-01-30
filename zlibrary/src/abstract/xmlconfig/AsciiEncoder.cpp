@@ -54,7 +54,7 @@ std::string AsciiEncoder::encode(const std::string &source) {
 		} else if (num == '"') {
 			target += "&quot;";
 		} else if (num == '\\') {
-			target += "\\";
+			target += "\\\\";
 		} else if (num < 0x7F) {
 			target += num;
 		} else {

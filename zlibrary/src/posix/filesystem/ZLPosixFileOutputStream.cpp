@@ -22,6 +22,7 @@
 #include <stdlib.h>
 
 #include "ZLPosixFileOutputStream.h"
+#include "ZLPosixFSManager.h"
 
 ZLPosixFileOutputStream::ZLPosixFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFile(0) {
 }
@@ -43,7 +44,7 @@ bool ZLPosixFileOutputStream::open() {
 }
 
 void ZLPosixFileOutputStream::write(const std::string &str) {
-	if (::fwrite(str.data(), 1, str.length(), myFile) != (ssize_t)str.length()) {
+	if (::fwrite(str.data(), 1, str.length(), myFile) != (size_t)str.length()) {
 		myHasErrors = true;
 	}
 }
@@ -53,7 +54,7 @@ void ZLPosixFileOutputStream::close() {
 		::fclose(myFile);
 		myFile = 0;
 		if (!myHasErrors) {
-			rename(myTemporaryName.c_str(), myName.c_str());
+			((ZLPosixFSManager&)ZLFSManager::instance()).moveFile(myTemporaryName, myName);
 		}
 	}
 }

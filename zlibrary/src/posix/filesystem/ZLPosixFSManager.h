@@ -31,6 +31,9 @@ protected:
 	ZLOutputStream *createOutputStream(const std::string &path) const;
 	ZLFileInfo fileInfo(const std::string &path) const;
 	bool removeFile(const std::string &path) const;
+
+public:
+	virtual void moveFile(const std::string &oldName, const std::string &newName) = 0;
 };
 
 #endif /* __ZLPOSIXFSMANAGER_H__ */

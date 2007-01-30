@@ -26,7 +26,7 @@
 void ZLPosixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
-		const std::string namePrefix = name() + "/";
+		const std::string namePrefix = name() + delimiter();
 		const dirent *file;
 		struct stat fileInfo;
 		std::string shortName;
@@ -47,7 +47,7 @@ void ZLPosixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeS
 void ZLPosixFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(name().c_str());
 	if (dir != 0) {
-		const std::string namePrefix = name() + "/";
+		const std::string namePrefix = name() + delimiter();
 		const dirent *file;
 		struct stat fileInfo;
 		std::string shortName;

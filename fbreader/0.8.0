@@ -27,8 +27,6 @@ tree-*.png
 *** win32 version
 
 диалоги
-файловая система
-место для складывания default-файлов ("share")
 установщик
 конфиг в registry (?)
 expat -> msxml (?)

@@ -69,3 +69,7 @@ ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
 int ZLUnixFSManager::findArchivePathDelimiter(const std::string &path) const {
 	return path.rfind(':');
 }
+
+void ZLUnixFSManager::moveFile(const std::string &oldName, const std::string &newName) {
+	rename(oldName.c_str(), newName.c_str());
+}
