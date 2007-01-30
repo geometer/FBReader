@@ -104,16 +104,36 @@ static void DlgItemTemplate(PWORD &p, DWORD style, int x, int y, int cx, int cy,
 
 
 bool ZLWin32Dialog::run() {
+	// TODO: free memory
 	WORD *pTemplate = (PWORD)LocalAlloc(LPTR, 2000);
 	WORD *p = pTemplate;
+
+	int cxChar, cyChar;
+	{
+		TEXTMETRIC metric;
+		HDC hdc = GetDC(myWindow->mainWindow());
+		GetTextMetrics(hdc, &metric);
+		ReleaseDC(myWindow->mainWindow(), hdc);
+		cxChar = metric.tmAveCharWidth + 1;
+		cyChar = metric.tmHeight + metric.tmExternalLeading;
+	}
+	int dlgXUnit, dlgYUnit;
+	{
+		DWORD dlgUnit = GetDialogBaseUnits();
+		dlgXUnit = LOWORD(dlgUnit);
+		dlgYUnit = HIWORD(dlgUnit);
+	}
+	cxChar *= 4;
+	cxChar /= dlgXUnit;
+	cyChar *= 8;
+	cyChar /= dlgYUnit;
 
 	const int buttonNumber = myButtons.size();
 	DlgTemplate(p, DS_3DLOOK | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, buttonNumber, 20, 20, 20 + 60 * buttonNumber, 120, (char*)myTitle.c_str());
 	for (int i = 0; i < buttonNumber; ++i) {
 		DWORD style = (i == 0) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 		style = style | WS_VISIBLE | WS_CHILD | WS_TABSTOP;
-		//style = style | WS_CHILD | WS_TABSTOP;
-		DlgItemTemplate(p, style, 20 + 60 * i, 80, 40, 20, IDOK, (LPSTR)"button", (LPSTR)myButtons[i].first.c_str());
+		DlgItemTemplate(p, style, 20 + 60 * i, 80, 40, cyChar * 3 / 2, IDOK, (LPSTR)"button", (LPSTR)myButtons[i].first.c_str());
 	}
 
 	int code = DialogBoxIndirect(GetModuleHandle(0), (DLGTEMPLATE*)pTemplate, myWindow->mainWindow(), DialogProc);

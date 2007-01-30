@@ -39,15 +39,18 @@ shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const std::string &title
 
 shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
 	//return new ZLWin32OptionsDialog(id, title);
+	errorBox("Fatal Error", "Not Implemented Yet");
 	return 0;
 }
 
 void ZLWin32DialogManager::informationBox(const std::string &title, const std::string &message) const {
-	//internalBox(GTK_STOCK_DIALOG_INFO, title, message, gtkString("&Ok"));
+	// TODO: use utf8 strings
+	MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONINFORMATION | MB_OK);
 }
 
 void ZLWin32DialogManager::errorBox(const std::string &title, const std::string &message) const {
-	//internalBox(GTK_STOCK_DIALOG_ERROR, title, message, gtkString("&Ok"));
+	// TODO: use utf8 strings
+	MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONERROR | MB_OK);
 }
 
 int ZLWin32DialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
@@ -56,6 +59,7 @@ int ZLWin32DialogManager::questionBox(const std::string &title, const std::strin
 }
 
 bool ZLWin32DialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
+	errorBox("Fatal Error", "Not Implemented Yet");
 	//return ZLWin32SelectionDialog(title.c_str(), handler).runWithSize();
 	return false;
 }
