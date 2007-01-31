@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLWIN32DIALOGCONTROL_H__
-#define __ZLWIN32DIALOGCONTROL_H__
+#ifndef __ZLWIN32DIALOGELEMENT_H__
+#define __ZLWIN32DIALOGELEMENT_H__
 
 #include <vector>
 #include <string>
@@ -36,19 +36,64 @@ private:
 	ZLWin32DialogUtil();
 };
 
-class ZLWin32DialogControl {
+class ZLWin32DialogElement {
+
+protected:
+	ZLWin32DialogElement();
+
+public:
+	virtual ~ZLWin32DialogElement();
+
+	virtual void allocate(WORD *p) const = 0;
+	virtual int allocationSize() const = 0;
+	virtual void setVisible(bool visible) = 0;
+	virtual int controlNumber() const = 0;
+
+private:
+	ZLWin32DialogElement(const ZLWin32DialogElement&);
+	const ZLWin32DialogElement &operator = (const ZLWin32DialogElement&);
+};
+
+typedef shared_ptr<ZLWin32DialogElement> ZLWin32DialogElementPtr;
+typedef std::vector<ZLWin32DialogElementPtr> ZLWin32DialogElementList;
+
+class ZLWin32DialogBox : public ZLWin32DialogElement {
+
+public:
+	ZLWin32DialogBox();
+	void addElement(ZLWin32DialogElementPtr element);
+
+	void allocate(WORD *p) const;
+	int allocationSize() const;
+	void setVisible(bool visible);
+	int controlNumber() const;
+
+private:
+	ZLWin32DialogElementList myElements;
+};
+
+class ZLWin32DialogHBox : public ZLWin32DialogBox {
+
+public:
+	ZLWin32DialogHBox();
+};
+
+class ZLWin32DialogVBox : public ZLWin32DialogBox {
+
+public:
+	ZLWin32DialogVBox();
+};
+
+class ZLWin32DialogControl : public ZLWin32DialogElement {
 
 protected:
 	ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text);
 
-public:
-	virtual ~ZLWin32DialogControl();
-
-	void setVisible(bool visible);
-
 private:
 	void allocate(WORD *p) const;
 	int allocationSize() const;
+	void setVisible(bool visible);
+	int controlNumber() const;
 
 private:
 	DWORD myStyle;
@@ -57,12 +102,6 @@ private:
 	WORD myId;
 	const std::string &myClassName;
 	std::string myText;
-
-friend class ZLWin32DialogPanel;
-
-private:
-	ZLWin32DialogControl(const ZLWin32DialogControl&);
-	const ZLWin32DialogControl &operator = (const ZLWin32DialogControl&);
 };
 
 class ZLWin32PushButton : public ZLWin32DialogControl {
@@ -89,10 +128,7 @@ public:
 	ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text);
 	~ZLWin32DialogPanel();
 	DLGTEMPLATE *dialogTemplate() const;
-	void addControl(shared_ptr<ZLWin32DialogControl> control);
-
-private:
-	int allocationSize() const;
+	void setElement(ZLWin32DialogElementPtr element);
 
 private:
 	DWORD myStyle;
@@ -100,14 +136,9 @@ private:
 	int myWidth, myHeight;
 	std::string myText;
 
-	typedef std::vector<shared_ptr<ZLWin32DialogControl> > ControlList;
-	ControlList myControls;
+	ZLWin32DialogElementPtr myElement;
 
 	mutable WORD *myAddress;
-
-private:
-	ZLWin32DialogPanel(const ZLWin32DialogPanel&);
-	const ZLWin32DialogPanel &operator = (const ZLWin32DialogPanel&);
 };
 
-#endif /* __ZLWIN32DIALOGCONTROL_H__ */
+#endif /* __ZLWIN32DIALOGELEMENT_H__ */

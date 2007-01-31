@@ -18,7 +18,7 @@
  */
 
 #include "ZLWin32DialogContent.h"
-#include "ZLWin32DialogControl.h"
+#include "ZLWin32DialogElement.h"
 //#include "ZLWin32OptionView.h"
 
 ZLWin32DialogContent::ZLWin32DialogContent() {

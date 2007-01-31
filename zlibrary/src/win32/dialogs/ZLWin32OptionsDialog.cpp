@@ -22,7 +22,7 @@
 
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32DialogContent.h"
-#include "ZLWin32DialogControl.h"
+#include "ZLWin32DialogElement.h"
 //#include "ZLWin32Util.h"
 
 ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id), myMainWindow(mainWindow), myCaption(caption) {

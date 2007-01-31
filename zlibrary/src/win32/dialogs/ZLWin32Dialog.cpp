@@ -19,7 +19,7 @@
 
 #include "ZLWin32Dialog.h"
 #include "ZLWin32DialogContent.h"
-#include "ZLWin32DialogControl.h"
+#include "ZLWin32DialogElement.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
 ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name) : myWindow(window), myTitle(name) {
@@ -67,16 +67,24 @@ bool ZLWin32Dialog::run() {
 	}
 
 	ZLWin32DialogPanel panel(DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 20 + 60 * myButtons.size(), 120, myTitle);
-	shared_ptr<ZLWin32DialogControl> control = new ZLWin32LineEditor(20, 30, 70, cyChar * 3 / 2, 10001, "My Editor");
+	ZLWin32DialogVBox *panelBox = new ZLWin32DialogVBox();
+	panel.setElement(panelBox);
+
+	ZLWin32DialogVBox *contentBox = new ZLWin32DialogVBox();
+	ZLWin32DialogHBox *buttonBox = new ZLWin32DialogHBox();
+	panelBox->addElement(contentBox);
+	panelBox->addElement(buttonBox);
+
+	ZLWin32DialogElementPtr control = new ZLWin32LineEditor(20, 30, 70, cyChar * 3 / 2, 10001, "My Editor");
 	control->setVisible(true);
-	panel.addControl(control);
+	contentBox->addElement(control);
 	control = new ZLWin32CheckBox(20, 55, 70, cyChar * 3 / 2, 10001, "My Checkbox");
 	control->setVisible(true);
-	panel.addControl(control);
+	contentBox->addElement(control);
 	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
-		shared_ptr<ZLWin32DialogControl> control = new ZLWin32PushButton(20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
+		control = new ZLWin32PushButton(20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
 		control->setVisible(true);
-		panel.addControl(control);
+		buttonBox->addElement(control);
 	}
 
 	return DialogBoxIndirect(GetModuleHandle(0), panel.dialogTemplate(), myWindow->mainWindow(), DialogProc);
