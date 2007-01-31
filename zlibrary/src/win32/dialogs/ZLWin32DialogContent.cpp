@@ -64,8 +64,7 @@ void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *opt
 	//createViewByEntry(option1, row, 2, 4);
 }
 
-void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn) {
-	/*
+void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int row, ZLWin32OptionView::HorizontalLocation location) {
 	if (option == 0) {
 		return;
 	}
@@ -74,25 +73,31 @@ void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int row, int
 
 	switch (option->kind()) {
 		case ZLOptionEntry::BOOLEAN:
-			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
+			//view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, row, location);
 			break;
 		case ZLOptionEntry::STRING:
-			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, location);
 			break;
 		case ZLOptionEntry::CHOICE:
-			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
+			//view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, row, location);
 			break;
 		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, row, fromColumn, toColumn);
+			//view = new SpinOptionView((ZLSpinOptionEntry*)option, this, row, location);
 			break;
 		case ZLOptionEntry::COMBO:
-			view = new ComboOptionView((ZLComboOptionEntry*)option, this, row, fromColumn, toColumn);
+			//view = new ComboOptionView((ZLComboOptionEntry*)option, this, row, location);
 			break;
 		case ZLOptionEntry::COLOR:
-			view = new ColorOptionView((ZLColorOptionEntry*)option, this, row, fromColumn, toColumn);
+			//view = new ColorOptionView((ZLColorOptionEntry*)option, this, row, location);
 			break;
 		case ZLOptionEntry::KEY:
-			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, row, fromColumn, toColumn);
+			//view = new KeyOptionView((ZLKeyOptionEntry*)option, this, row, location);
+			break;
+		case ZLOptionEntry::ORDER:
+			// TODO: implement
+			break;
+		case ZLOptionEntry::MULTILINE:
+			// TODO: implement
 			break;
 	}
 
@@ -100,5 +105,4 @@ void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int row, int
 		view->setVisible(option->isVisible());
 		addView(view);
 	}
-	*/
 }

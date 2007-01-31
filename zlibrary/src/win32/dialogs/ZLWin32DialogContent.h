@@ -24,6 +24,8 @@
 
 #include <ZLDialogContent.h>
 
+#include "ZLWin32OptionView.h"
+
 class ZLWin32DialogPanel;
 
 class ZLWin32DialogContent : public ZLDialogContent {
@@ -41,7 +43,7 @@ public:
 
 private:
 	int addRow();
-	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
+	void createViewByEntry(ZLOptionEntry *option, int row, ZLWin32OptionView::HorizontalLocation location);
 
 private:
 	shared_ptr<ZLWin32DialogPanel> myPanel;

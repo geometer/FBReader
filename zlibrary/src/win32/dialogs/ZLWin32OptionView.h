@@ -38,17 +38,16 @@ class ZLWin32DialogContent;
 
 class ZLWin32OptionView : public ZLOptionView {
 
-protected:
-	ZLWin32OptionView(ZLOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
-
 public:
-	void setPosition(ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) {
-		myTab = tab;
-		myRow = row;
-		myFromColumn = fromColumn;
-		myToColumn = toColumn;
-	}
-	
+	enum HorizontalLocation {
+		LEFT,
+		RIGHT,
+		FULL_STRING
+	};
+
+protected:
+	ZLWin32OptionView(ZLOptionEntry *option, ZLWin32DialogContent *tab, int row, HorizontalLocation location) : ZLOptionView(option), myTab(tab), myRow(row), myHorizontalLocation(location) {}
+
 protected:
 	//static void _onValueChanged(Win32Widget*, gpointer self);
 	// TODO: replace by pure virtual method (?)
@@ -56,7 +55,8 @@ protected:
 
 protected:
 	ZLWin32DialogContent *myTab;
-	int myRow, myFromColumn, myToColumn;
+	int myRow;
+	HorizontalLocation myHorizontalLocation;
 };
 
 /*
@@ -79,11 +79,12 @@ private:
 	Win32Box *myVBox;
 	Win32RadioButton **myButtons;
 };
+*/
 
 class BooleanOptionView : public ZLWin32OptionView {
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab, int row, HorizontalLocation location) : ZLWin32OptionView(option, tab, row, location) {}
 
 protected:
 	void _createItem();
@@ -92,17 +93,16 @@ protected:
 	void _onAccept() const;
 
 private:
-	void onValueChanged();
+	//void onValueChanged();
 
 private:
-	Win32Widget *myCheckBox;
+	//Win32Widget *myCheckBox;
 };
-*/
 
 class StringOptionView : public ZLWin32OptionView {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn) {}
+	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab, int row, HorizontalLocation location) : ZLWin32OptionView(option, tab, row, location) {}
 
 private:
 	void _createItem();

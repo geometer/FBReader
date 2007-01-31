@@ -67,11 +67,20 @@ private:
 
 class ZLWin32PushButton : public ZLWin32DialogControl {
 
-private:
-	static const std::string ClassName;
-	
 public:
 	ZLWin32PushButton(int x, int y, int width, int height, WORD id, const std::string &text);
+};
+
+class ZLWin32CheckBox : public ZLWin32DialogControl {
+
+public:
+	ZLWin32CheckBox(int x, int y, int width, int height, WORD id, const std::string &text);
+};
+
+class ZLWin32LineEditor : public ZLWin32DialogControl {
+
+public:
+	ZLWin32LineEditor(int x, int y, int width, int height, WORD id, const std::string &text);
 };
 
 class ZLWin32DialogPanel {

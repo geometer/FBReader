@@ -61,21 +61,18 @@ bool ZLWin32Dialog::run() {
 		HDC hdc = GetDC(myWindow->mainWindow());
 		GetTextMetrics(hdc, &metric);
 		ReleaseDC(myWindow->mainWindow(), hdc);
-		cxChar = metric.tmAveCharWidth + 1;
-		cyChar = metric.tmHeight + metric.tmExternalLeading;
-	}
-	int dlgXUnit, dlgYUnit;
-	{
 		DWORD dlgUnit = GetDialogBaseUnits();
-		dlgXUnit = LOWORD(dlgUnit);
-		dlgYUnit = HIWORD(dlgUnit);
+		cxChar = (metric.tmAveCharWidth + 1) * 4 / LOWORD(dlgUnit);
+		cyChar = (metric.tmHeight + metric.tmExternalLeading) * 8 / HIWORD(dlgUnit);
 	}
-	cxChar *= 4;
-	cxChar /= dlgXUnit;
-	cyChar *= 8;
-	cyChar /= dlgYUnit;
 
 	ZLWin32DialogPanel panel(DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 20 + 60 * myButtons.size(), 120, myTitle);
+	shared_ptr<ZLWin32DialogControl> control = new ZLWin32LineEditor(20, 30, 70, cyChar * 3 / 2, 10001, "My Editor");
+	control->setVisible(true);
+	panel.addControl(control);
+	control = new ZLWin32CheckBox(20, 55, 70, cyChar * 3 / 2, 10001, "My Checkbox");
+	control->setVisible(true);
+	panel.addControl(control);
 	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		shared_ptr<ZLWin32DialogControl> control = new ZLWin32PushButton(20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
 		control->setVisible(true);

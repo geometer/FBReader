@@ -19,8 +19,15 @@
 
 #include "ZLWin32DialogControl.h"
 
-const std::string ZLWin32PushButton::ClassName = "button";
+const std::string CLASS_BUTTON = "button";
+const std::string CLASS_EDIT = "edit";
 
-ZLWin32PushButton::ZLWin32PushButton(int x, int y, int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_PUSHBUTTON, x, y, width, height, id, ClassName, text) {
+ZLWin32PushButton::ZLWin32PushButton(int x, int y, int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_PUSHBUTTON, x, y, width, height, id, CLASS_BUTTON, text) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
+}
+
+ZLWin32CheckBox::ZLWin32CheckBox(int x, int y, int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_CHECKBOX, x, y, width, height, id, CLASS_BUTTON, text) {
+}
+
+ZLWin32LineEditor::ZLWin32LineEditor(int x, int y, int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(WS_BORDER, x, y, width, height, id, CLASS_EDIT, text) {
 }
