@@ -75,11 +75,10 @@ bool ZLWin32Dialog::run() {
 	cyChar *= 8;
 	cyChar /= dlgYUnit;
 
-	ZLWin32DialogPanel panel(DS_3DLOOK | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 20 + 60 * myButtons.size(), 120, myTitle);
+	ZLWin32DialogPanel panel(DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 20 + 60 * myButtons.size(), 120, myTitle);
 	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
-		DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
-		style = style | WS_VISIBLE | WS_CHILD | WS_TABSTOP;
-		shared_ptr<ZLWin32DialogControl> control = new ZLWin32DialogControl(style, 20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, "button", it->first);
+		shared_ptr<ZLWin32DialogControl> control = new ZLWin32PushButton(20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
+		control->setVisible(true);
 		panel.addControl(control);
 	}
 

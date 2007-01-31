@@ -27,13 +27,24 @@
 
 #include <shared_ptr.h>
 
-class ZLWin32DialogControl {
-
-private:
-	static int allocateString(WORD *p, const std::string &text);
+class ZLWin32DialogUtil {
 
 public:
+	static int allocateString(WORD *p, const std::string &text);
+
+private:
+	ZLWin32DialogUtil();
+};
+
+class ZLWin32DialogControl {
+
+protected:
 	ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text);
+
+public:
+	virtual ~ZLWin32DialogControl();
+
+	void setVisible(bool visible);
 
 private:
 	void allocate(WORD *p) const;
@@ -44,7 +55,7 @@ private:
 	int myX, myY;
 	int myWidth, myHeight;
 	WORD myId;
-	std::string myClassName;
+	const std::string &myClassName;
 	std::string myText;
 
 friend class ZLWin32DialogPanel;
@@ -52,6 +63,15 @@ friend class ZLWin32DialogPanel;
 private:
 	ZLWin32DialogControl(const ZLWin32DialogControl&);
 	const ZLWin32DialogControl &operator = (const ZLWin32DialogControl&);
+};
+
+class ZLWin32PushButton : public ZLWin32DialogControl {
+
+private:
+	static const std::string ClassName;
+	
+public:
+	ZLWin32PushButton(int x, int y, int width, int height, WORD id, const std::string &text);
 };
 
 class ZLWin32DialogPanel {

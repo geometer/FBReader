@@ -21,7 +21,7 @@
 
 #include "ZLWin32DialogControl.h"
 
-int ZLWin32DialogControl::allocateString(WORD *p, const std::string &text) {
+int ZLWin32DialogUtil::allocateString(WORD *p, const std::string &text) {
 	ZLUnicodeUtil::Ucs2String ucs2Str;
 	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, text.data(), text.length());
 	ucs2Str.push_back(0);
@@ -29,7 +29,19 @@ int ZLWin32DialogControl::allocateString(WORD *p, const std::string &text) {
 	return ucs2Str.size();
 }
 
-ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style), myX(x), myY(y), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
+ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(x), myY(y), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
+}
+
+ZLWin32DialogControl::~ZLWin32DialogControl() {
+}
+
+void ZLWin32DialogControl::setVisible(bool visible) {
+	// TODO: update initialized control
+	if (visible) {
+		myStyle |= WS_VISIBLE;
+	} else {
+		myStyle &= ~WS_VISIBLE;
+	}
 }
 
 int ZLWin32DialogControl::allocationSize() const {
@@ -48,8 +60,8 @@ void ZLWin32DialogControl::allocate(WORD *p) const {
 	*p++ = myHeight;
 	*p++ = myId;
 	
-	p += allocateString(p, myClassName);
-	p += allocateString(p, myText);
+	p += ZLWin32DialogUtil::allocateString(p, myClassName);
+	p += ZLWin32DialogUtil::allocateString(p, myText);
 
 	*p++ = 0;
 }
@@ -81,7 +93,7 @@ DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() const {
 	*p++ = myHeight;
 	*p++ = 0;
 	*p++ = 0;
-	p += ZLWin32DialogControl::allocateString(p, myText);
+	p += ZLWin32DialogUtil::allocateString(p, myText);
 	if ((p - myAddress) % 2 == 1) {
 		p++;
 	}
