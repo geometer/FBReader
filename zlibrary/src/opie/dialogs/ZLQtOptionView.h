@@ -45,14 +45,6 @@ class ZLQtOptionView : public ZLOptionView {
 protected:
 	ZLQtOptionView(ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
 
-public:
-	void setPosition(ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) {
-		myTab = tab;
-		myRow = row;
-		myFromColumn = fromColumn;
-		myToColumn = toColumn;
-	}
-
 protected:
 	ZLQtDialogContent *myTab;
 	int myRow, myFromColumn, myToColumn;

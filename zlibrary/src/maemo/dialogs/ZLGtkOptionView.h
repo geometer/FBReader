@@ -36,14 +36,6 @@ class ZLGtkOptionView : public ZLOptionView {
 protected:
 	ZLGtkOptionView(ZLOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
 
-public:
-	void setPosition(ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) {
-		myTab = tab;
-		myRow = row;
-		myFromColumn = fromColumn;
-		myToColumn = toColumn;
-	}
-	
 protected:
 	static void _onValueChanged(GtkWidget*, gpointer self);
 	// TODO: replace by pure virtual method (?)
