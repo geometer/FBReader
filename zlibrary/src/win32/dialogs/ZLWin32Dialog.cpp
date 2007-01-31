@@ -75,14 +75,14 @@ bool ZLWin32Dialog::run() {
 	panelBox->addElement(contentBox);
 	panelBox->addElement(buttonBox);
 
-	ZLWin32DialogElementPtr control = new ZLWin32LineEditor(20, 30, 70, cyChar * 3 / 2, 10001, "My Editor");
+	ZLWin32DialogElementPtr control = new ZLWin32LineEditor(70, cyChar * 3 / 2, 10001, "My Editor");
 	control->setVisible(true);
 	contentBox->addElement(control);
-	control = new ZLWin32CheckBox(20, 55, 70, cyChar * 3 / 2, 10001, "My Checkbox");
+	control = new ZLWin32CheckBox(70, cyChar * 3 / 2, 10001, "My Checkbox");
 	control->setVisible(true);
 	contentBox->addElement(control);
 	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
-		control = new ZLWin32PushButton(20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
+		control = new ZLWin32PushButton(40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
 		control->setVisible(true);
 		buttonBox->addElement(control);
 	}

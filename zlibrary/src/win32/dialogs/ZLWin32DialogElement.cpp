@@ -44,10 +44,13 @@ ZLWin32DialogPanel::~ZLWin32DialogPanel() {
 	}
 }
 
-DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() const {
+DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() {
 	if (myAddress != 0) {
 		delete[] myAddress;
 	}
+
+	myElement->minimumSize(myWidth, myHeight);
+	myElement->setPosition(0, 0, myWidth, myHeight);
 
 	int size = 12 + ZLUnicodeUtil::utf8Length(myText) + myElement->allocationSize();
 	size += size % 2;

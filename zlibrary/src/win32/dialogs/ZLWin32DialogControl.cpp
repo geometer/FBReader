@@ -24,7 +24,7 @@
 const std::string CLASS_BUTTON = "button";
 const std::string CLASS_EDIT = "edit";
 
-ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(x), myY(y), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
+ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(0), myY(0), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
 }
 
 void ZLWin32DialogControl::setVisible(bool visible) {
@@ -62,12 +62,24 @@ int ZLWin32DialogControl::controlNumber() const {
 	return 1;
 }
 
-ZLWin32PushButton::ZLWin32PushButton(int x, int y, int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_PUSHBUTTON, x, y, width, height, id, CLASS_BUTTON, text) {
+void ZLWin32DialogControl::minimumSize(int &x, int &y) const {
+	x = myWidth;
+	y = myHeight;
+}
+
+void ZLWin32DialogControl::setPosition(int x, int y, int width, int height) {
+	myX = x;
+	myY = y;
+	myWidth = width;
+	myHeight = height;
+}
+
+ZLWin32PushButton::ZLWin32PushButton(int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_PUSHBUTTON, width, height, id, CLASS_BUTTON, text) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
 
-ZLWin32CheckBox::ZLWin32CheckBox(int x, int y, int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_CHECKBOX, x, y, width, height, id, CLASS_BUTTON, text) {
+ZLWin32CheckBox::ZLWin32CheckBox(int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_CHECKBOX, width, height, id, CLASS_BUTTON, text) {
 }
 
-ZLWin32LineEditor::ZLWin32LineEditor(int x, int y, int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(WS_BORDER, x, y, width, height, id, CLASS_EDIT, text) {
+ZLWin32LineEditor::ZLWin32LineEditor(int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(WS_BORDER, width, height, id, CLASS_EDIT, text) {
 }
