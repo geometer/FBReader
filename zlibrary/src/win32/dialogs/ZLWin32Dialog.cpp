@@ -71,9 +71,10 @@ bool ZLWin32Dialog::run() {
 	panel.setElement(panelBox);
 
 	ZLWin32DialogVBox *contentBox = new ZLWin32DialogVBox();
-	ZLWin32DialogHBox *buttonBox = new ZLWin32DialogHBox();
 	panelBox->addElement(contentBox);
-	panelBox->addElement(buttonBox);
+	contentBox->setHomogeneous(true);
+	contentBox->setSpacing(cyChar / 2);
+	contentBox->setMargins(cyChar / 2, 0, cyChar / 2, cyChar / 2);
 
 	ZLWin32DialogElementPtr control = new ZLWin32LineEditor(70, cyChar * 3 / 2, 10001, "My Editor");
 	control->setVisible(true);
@@ -81,6 +82,12 @@ bool ZLWin32Dialog::run() {
 	control = new ZLWin32CheckBox(70, cyChar * 3 / 2, 10001, "My Checkbox");
 	control->setVisible(true);
 	contentBox->addElement(control);
+
+	ZLWin32DialogHBox *buttonBox = new ZLWin32DialogHBox();
+	panelBox->addElement(buttonBox);
+	buttonBox->setHomogeneous(true);
+	buttonBox->setSpacing(10);
+	buttonBox->setMargins(cyChar / 2, cyChar, cyChar / 2, cyChar / 2);
 	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		control = new ZLWin32PushButton(40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
 		control->setVisible(true);
