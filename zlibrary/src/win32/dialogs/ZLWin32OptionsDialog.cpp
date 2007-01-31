@@ -68,7 +68,8 @@ ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
 
 const std::string &ZLWin32OptionsDialog::selectedTabName() const {
 	//return myTabNames[gtk_notebook_get_current_page(myNotebook)];
-	return "";
+	// TODO: !!!
+	return myTabNames[0];
 }
 
 void ZLWin32OptionsDialog::selectTab(const std::string &name) {
@@ -87,12 +88,12 @@ static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARA
 
 bool ZLWin32OptionsDialog::run() {
 	PROPSHEETPAGE *pages = new PROPSHEETPAGE[myTabs.size()];
-	for (int i = 0; i < myTabs.size(); ++i) {
+	for (size_t i = 0; i < myTabs.size(); ++i) {
 		pages[i].dwSize = sizeof(pages[i]);
 		pages[i].dwFlags = PSP_DLGINDIRECT;
 		pages[i].hInstance = 0;
 		ZLWin32DialogPanel *panel = new ZLWin32DialogPanel(DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 120, 120, myTabNames[i]);
-		pages[i].pResource = panel->allocate(); // TODO: !!!
+		pages[i].pResource = panel->dialogTemplate();
 		pages[i].hIcon = 0;
 	 	pages[i].pszTitle = 0; // TODO: !!!
 		pages[i].pfnDlgProc = DialogProc; // TODO: !!!

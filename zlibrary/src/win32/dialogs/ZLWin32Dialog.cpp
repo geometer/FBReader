@@ -50,16 +50,15 @@ static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARA
 					return true;
 				case IDCANCEL:
 					EndDialog(hDialog, false);
-					return true;
+					//SendMessage(GetDlgItem(hDialog, IDCANCEL), WM_SETTEXT, 0, (LPARAM)"Test");
+					//SetWindowPos(GetDlgItem(hDialog, IDCANCEL), 0, 20, 20, 70, 30, 0);
+					return false;
 			}
 	}
 	return false;
 }
 
-ZLWin32DialogElement::ZLWin32DialogElement() {
-}
-
-int ZLWin32DialogElement::allocateString(WORD *p, const std::string &text) {
+int ZLWin32DialogControl::allocateString(WORD *p, const std::string &text) {
 	ZLUnicodeUtil::Ucs2String ucs2Str;
 	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, text.data(), text.length());
 	ucs2Str.push_back(0);
@@ -101,7 +100,7 @@ ZLWin32DialogPanel::~ZLWin32DialogPanel() {
 	}
 }
 
-DLGTEMPLATE *ZLWin32DialogPanel::allocate() const {
+DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() const {
 	if (myAddress != 0) {
 		delete[] myAddress;
 	}
@@ -119,14 +118,14 @@ DLGTEMPLATE *ZLWin32DialogPanel::allocate() const {
 	*p++ = myHeight;
 	*p++ = 0;
 	*p++ = 0;
-	p += allocateString(p, myText);
+	p += ZLWin32DialogControl::allocateString(p, myText);
 	if ((p - myAddress) % 2 == 1) {
 		p++;
 	}
 
-	for (std::vector<ZLWin32DialogControl>::const_iterator it = myControls.begin(); it != myControls.end(); ++it) {
-		it->allocate(p);
-		p += it->allocationSize();
+	for (ControlList::const_iterator it = myControls.begin(); it != myControls.end(); ++it) {
+		(*it)->allocate(p);
+		p += (*it)->allocationSize();
 	}
 
 	return (DLGTEMPLATE*)myAddress;
@@ -135,14 +134,16 @@ DLGTEMPLATE *ZLWin32DialogPanel::allocate() const {
 int ZLWin32DialogPanel::allocationSize() const {
 	int size = 12 + ZLUnicodeUtil::utf8Length(myText);
 	size += size % 2;
-	for (std::vector<ZLWin32DialogControl>::const_iterator it = myControls.begin(); it != myControls.end(); ++it) {
-		size += it->allocationSize();
+	for (ControlList::const_iterator it = myControls.begin(); it != myControls.end(); ++it) {
+		size += (*it)->allocationSize();
 	}
 	return size;
 }
 
-void ZLWin32DialogPanel::addControl(ZLWin32DialogControl &control) {
-	myControls.push_back(control);
+void ZLWin32DialogPanel::addControl(shared_ptr<ZLWin32DialogControl> control) {
+	if (!control.isNull()) {
+		myControls.push_back(control);
+	}
 }
 
 bool ZLWin32Dialog::run() {
@@ -170,9 +171,9 @@ bool ZLWin32Dialog::run() {
 	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 		style = style | WS_VISIBLE | WS_CHILD | WS_TABSTOP;
-		ZLWin32DialogControl control(style, 20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, IDOK, "button", it->first);
+		shared_ptr<ZLWin32DialogControl> control = new ZLWin32DialogControl(style, 20 + 60 * (it - myButtons.begin()), 80, 40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, "button", it->first);
 		panel.addControl(control);
 	}
 
-	return DialogBoxIndirect(GetModuleHandle(0), panel.allocate(), myWindow->mainWindow(), DialogProc);
+	return DialogBoxIndirect(GetModuleHandle(0), panel.dialogTemplate(), myWindow->mainWindow(), DialogProc);
 }
