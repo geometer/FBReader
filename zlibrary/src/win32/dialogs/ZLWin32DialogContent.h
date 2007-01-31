@@ -20,65 +20,11 @@
 #ifndef __ZLWIN32DIALOGCONTENT_H__
 #define __ZLWIN32DIALOGCONTENT_H__
 
-#include <windows.h>
-
 #include <shared_ptr.h>
 
-#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include <ZLDialogContent.h>
 
-class ZLWin32DialogControl {
-
-private:
-	static int allocateString(WORD *p, const std::string &text);
-
-public:
-	ZLWin32DialogControl(DWORD style, int x, int y, int width, int height, WORD id, const std::string &className, const std::string &text);
-
-private:
-	void allocate(WORD *p) const;
-	int allocationSize() const;
-
-private:
-	DWORD myStyle;
-	int myX, myY;
-	int myWidth, myHeight;
-	WORD myId;
-	std::string myClassName;
-	std::string myText;
-
-friend class ZLWin32DialogPanel;
-
-private:
-	ZLWin32DialogControl(const ZLWin32DialogControl&);
-	const ZLWin32DialogControl &operator = (const ZLWin32DialogControl&);
-};
-
-class ZLWin32DialogPanel {
-
-public:
-	ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text);
-	~ZLWin32DialogPanel();
-	DLGTEMPLATE *dialogTemplate() const;
-	void addControl(shared_ptr<ZLWin32DialogControl> control);
-
-private:
-	int allocationSize() const;
-
-private:
-	DWORD myStyle;
-	int myX, myY;
-	int myWidth, myHeight;
-	std::string myText;
-
-	typedef std::vector<shared_ptr<ZLWin32DialogControl> > ControlList;
-	ControlList myControls;
-
-	mutable WORD *myAddress;
-
-private:
-	ZLWin32DialogPanel(const ZLWin32DialogPanel&);
-	const ZLWin32DialogPanel &operator = (const ZLWin32DialogPanel&);
-};
+class ZLWin32DialogPanel;
 
 class ZLWin32DialogContent : public ZLDialogContent {
 
