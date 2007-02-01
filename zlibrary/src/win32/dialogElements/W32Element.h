@@ -165,4 +165,13 @@ public:
 	const std::string &className() const;
 };
 
+class W32SpinBox : public W32Control {
+
+public:
+	W32SpinBox(const std::string &text);
+	void setDimensions(Size charDimension);
+
+	const std::string &className() const;
+};
+
 #endif /* __W32ELEMENT_H__ */

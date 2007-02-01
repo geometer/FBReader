@@ -23,6 +23,7 @@
 
 const std::string CLASS_BUTTON = "button";
 const std::string CLASS_EDIT = "edit";
+const std::string CLASS_SPINBOX = "msctls_updown32";
 
 W32Control::W32Control(DWORD style, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(0), myY(0), myText(text) {
 }
@@ -112,4 +113,16 @@ void W32LineEditor::setDimensions(Size charDimension) {
 
 const std::string &W32LineEditor::className() const {
 	return CLASS_EDIT;
+}
+
+W32SpinBox::W32SpinBox(const std::string &text) : W32Control(WS_BORDER, text) {
+}
+
+void W32SpinBox::setDimensions(Size charDimension) {
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Height = charDimension.Height * 3 / 2;
+}
+
+const std::string &W32SpinBox::className() const {
+	return CLASS_SPINBOX;
 }

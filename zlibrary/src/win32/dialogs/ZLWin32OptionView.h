@@ -101,19 +101,19 @@ private:
 	//Win32Entry *myLineEdit;
 };
 
-/*
 class SpinOptionView : public ZLWin32OptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab);
 
 protected:
 	void _onAccept() const;
 
 private:
-	Win32Widget *myLabel, *mySpinBox;
+	//Win32Widget *myLabel, *mySpinBox;
 };
 
+/*
 class ComboOptionView : public ZLWin32OptionView {
 
 public:

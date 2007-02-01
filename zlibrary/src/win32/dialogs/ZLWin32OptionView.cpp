@@ -185,7 +185,13 @@ void ComboOptionView::onValueChanged() {
   	o.onValueEdited(text);
 	}
 }
+*/
 
+SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+	myElement = new W32SpinBox("10");
+}
+
+/*
 void SpinOptionView::_createItem() {
 	ZLSpinOptionEntry *tempo = (ZLSpinOptionEntry*)myOption;
 
@@ -199,21 +205,11 @@ void SpinOptionView::_createItem() {
 	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
 	myTab->addItem(mySpinBox, myRow, midColumn, myToColumn);
 }
-
-void SpinOptionView::_show() {
-	gtk_widget_show(myLabel);
-	gtk_widget_show(mySpinBox);
-}
-
-void SpinOptionView::_hide() {
-	gtk_widget_hide(myLabel);
-	gtk_widget_hide(mySpinBox);
-}
+*/
 
 void SpinOptionView::_onAccept() const {
-	((ZLSpinOptionEntry*)myOption)->onAccept((int)gtk_spin_button_get_value(GTK_SPIN_BUTTON(mySpinBox)));
+	//((ZLSpinOptionEntry*)myOption)->onAccept((int)gtk_spin_button_get_value(GTK_SPIN_BUTTON(mySpinBox)));
 }
-*/
 
 StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
 	myElement = new W32LineEditor(option->initialValue());

@@ -84,7 +84,7 @@ void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option) {
 			//view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::SPIN:
-			//view = new SpinOptionView((ZLSpinOptionEntry*)option, this);
+			view = new SpinOptionView((ZLSpinOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::COMBO:
 			//view = new ComboOptionView((ZLComboOptionEntry*)option, this);
