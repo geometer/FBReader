@@ -117,7 +117,7 @@ public:
 class W32Control : public W32Element {
 
 protected:
-	W32Control(DWORD style, WORD id, const std::string &className, const std::string &text);
+	W32Control(DWORD style, WORD id, const std::string &text);
 
 private:
 	void allocate(WORD *p) const;
@@ -127,11 +127,12 @@ private:
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
 
+	virtual const std::string &className() const = 0;
+
 private:
 	DWORD myStyle;
 	int myX, myY;
 	WORD myId;
-	const std::string &myClassName;
 
 protected:
 	Size mySize;
@@ -143,6 +144,8 @@ class W32PushButton : public W32Control {
 public:
 	W32PushButton(WORD id, const std::string &text);
 	void setDimensions(Size charDimension);
+
+	const std::string &className() const;
 };
 
 class W32CheckBox : public W32Control {
@@ -150,6 +153,8 @@ class W32CheckBox : public W32Control {
 public:
 	W32CheckBox(WORD id, const std::string &text);
 	void setDimensions(Size charDimension);
+
+	const std::string &className() const;
 };
 
 class W32LineEditor : public W32Control {
@@ -157,6 +162,8 @@ class W32LineEditor : public W32Control {
 public:
 	W32LineEditor(WORD id, const std::string &text);
 	void setDimensions(Size charDimension);
+
+	const std::string &className() const;
 };
 
 class W32Panel {

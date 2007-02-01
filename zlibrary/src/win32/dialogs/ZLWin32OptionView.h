@@ -39,6 +39,10 @@ protected:
 	// TODO: replace by pure virtual method (?)
 	virtual void onValueChanged() {}
 
+	void _createItem();
+	void _show();
+	void _hide();
+
 public:
 	W32ElementPtr element() const { return myElement; }
 
@@ -57,9 +61,6 @@ public:
 	~ChoiceOptionView() { if (myFrame != 0) delete[] myButtons; }
 
 protected:
-	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 
 private:
@@ -75,9 +76,6 @@ public:
 	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab);
 
 protected:
-	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 
 private:
@@ -93,9 +91,6 @@ public:
 	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab);
 
 private:
-	void _createItem();
-	void _show();
-	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
@@ -113,9 +108,6 @@ public:
 	SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn) {}
 
 protected:
-	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 
 private:
@@ -128,9 +120,6 @@ public:
 	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
 
 private:
-	void _createItem();
-	void _show();
-	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
@@ -149,9 +138,6 @@ public:
 	ColorOptionView(ZLColorOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
 
 private:
-	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 	void reset();
 
@@ -172,9 +158,6 @@ public:
 	void setKey(const std::string &key);
 
 private:
-	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 	void onValueChanged();
 	void reset();

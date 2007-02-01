@@ -39,6 +39,17 @@ void ZLWin32OptionView::_onValueChanged(Win32Widget*, gpointer self) {
 }
 */
 
+void ZLWin32OptionView::_createItem() {
+}
+
+void ZLWin32OptionView::_show() {
+	myElement->setVisible(true);
+}
+
+void ZLWin32OptionView::_hide() {
+	myElement->setVisible(false);
+}
+
 BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
 	myElement = new W32CheckBox(2001, myOption->name());
 	/*
@@ -47,19 +58,6 @@ BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32Dialog
 	g_signal_connect(myCheckBox, "toggled", G_CALLBACK(_onValueChanged), this);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
 	*/
-}
-
-void BooleanOptionView::_createItem() {
-}
-
-void BooleanOptionView::_show() {
-	myElement->setVisible(true);
-	//gtk_widget_show(myCheckBox);
-}
-
-void BooleanOptionView::_hide() {
-	myElement->setVisible(false);
-	//gtk_widget_hide(myCheckBox);
 }
 
 void BooleanOptionView::_onAccept() const {
@@ -237,9 +235,6 @@ StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogCon
 */
 }
 
-void StringOptionView::_createItem() {
-}
-
 void StringOptionView::reset() {
 /*
 	if (myLineEdit == 0) {
@@ -252,14 +247,6 @@ void StringOptionView::reset() {
 
 void StringOptionView::onValueChanged() {
 	//((ZLStringOptionEntry*)myOption)->onValueEdited(gtk_entry_get_text(myLineEdit));
-}
-
-void StringOptionView::_show() {
-	myElement->setVisible(true);
-}
-
-void StringOptionView::_hide() {
-	myElement->setVisible(false);
 }
 
 void StringOptionView::_setActive(bool active) {
