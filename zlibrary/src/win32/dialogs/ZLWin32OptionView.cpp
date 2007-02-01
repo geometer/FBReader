@@ -19,6 +19,8 @@
 
 //#include <gtk/gtk.h>
 
+#include <ZLStringUtil.h>
+
 #include "ZLWin32OptionView.h"
 #include "ZLWin32DialogContent.h"
 #include "ZLWin32DialogManager.h"
@@ -188,7 +190,9 @@ void ComboOptionView::onValueChanged() {
 */
 
 SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	myElement = new W32SpinBox("10");
+	std::string number;
+	ZLStringUtil::appendNumber(number, option->initialValue());
+	myElement = new W32SpinBox(number);
 }
 
 /*

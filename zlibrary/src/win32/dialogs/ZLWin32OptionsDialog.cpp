@@ -23,8 +23,6 @@
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32DialogContent.h"
 
-#include "../w32widgets/W32DialogPanel.h"
-
 ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow), myCaption(caption) {
 /*
 	myDialog = createWin32Dialog(caption);
@@ -84,18 +82,34 @@ void ZLWin32OptionsDialog::selectTab(const std::string &name) {
 
 bool ZLWin32OptionsDialog::run() {
 	PROPSHEETPAGE *pages = new PROPSHEETPAGE[myTabs.size()];
+	short maxPanelWidth = 0;
 	for (size_t i = 0; i < myTabs.size(); ++i) {
+		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
+		panel->setElement(myTabs[i]->content());
+		W32Box &box = (W32Box&)*myTabs[i]->content();
+		const int charHeight = panel->charDimension().Height;
+		box.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+		box.setSpacing(charHeight / 2);
+		panel->calculateSize();
+		maxPanelWidth = std::max(maxPanelWidth, panel->size().Width);
+		myPanels.push_back(panel);
+	}
+	for (size_t i = 0; i < myTabs.size(); ++i) {
+		W32DialogPanel &panel = *myPanels[i];
+		W32Element::Size size = panel.size();
+		size.Width = maxPanelWidth;
+		panel.setSize(size);
+	}
+	for (size_t i = 0; i < myTabs.size(); ++i) {
+		W32DialogPanel &panel = *myPanels[i];
 		pages[i].dwSize = sizeof(pages[i]);
 		pages[i].dwFlags = PSP_DLGINDIRECT;
 		pages[i].hInstance = 0;
-		// TODO: !!!
-		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
-		panel->setElement(myTabs[i]->content());
-		pages[i].pResource = panel->dialogTemplate();
+		pages[i].pResource = panel.dialogTemplate();
 		pages[i].hIcon = 0;
-	 	pages[i].pszTitle = 0; // TODO: !!!
+	 	pages[i].pszTitle = 0;
 		pages[i].pfnDlgProc = W32DialogPanel::StaticCallback;
-		pages[i].lParam = (LPARAM)panel;
+		pages[i].lParam = (LPARAM)&panel;
 		pages[i].pfnCallback = 0;
 		pages[i].pcRefParent = 0;
 	}

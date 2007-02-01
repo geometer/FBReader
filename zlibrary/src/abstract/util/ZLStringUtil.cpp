@@ -33,15 +33,21 @@ bool ZLStringUtil::stringEndsWith(const std::string &str, const std::string &end
 }
 
 void ZLStringUtil::appendNumber(std::string &str, unsigned int n) {
-	int len = 1;
-	unsigned int base = 10;
-	for (; base <= n; base *= 10) {
-		++len;
+	int len;
+	if (n > 0) {
+		len = 0;
+		for (unsigned int copy = n; copy > 0; copy /= 10) {
+			len++;
+		}
+	} else {
+		len = 1;
 	}
-	str.reserve(str.length() + len);
-	for (base /= 10; base > 0; base /= 10) {
-		str += (char)(n / base + '0');
-		n %= base;
+	
+	str.append(len, '\0');
+	char *ptr = (char*)str.data() + str.length() - 1;
+	for (int i = 0; i < len; ++i) {
+		*ptr-- = '0' + n % 10;
+		n /= 10;
 	}
 }
 

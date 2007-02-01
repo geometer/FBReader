@@ -69,6 +69,8 @@ void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *opt
 	ZLWin32OptionView *view1 = createViewByEntry(option1);
 	if ((view0 != 0) || (view1 != 0)) {
 		W32HBox *box = new W32HBox();
+		// TODO: !!!
+		box->setSpacing(10);
 		box->setHomogeneous(true);
 		myContentBox->addElement(box);
 		if (view0 != 0) {

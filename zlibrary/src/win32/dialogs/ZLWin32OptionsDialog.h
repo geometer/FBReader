@@ -24,7 +24,10 @@
 
 #include <windows.h>
 
+#include <shared_ptr.h>
 #include <ZLOptionsDialog.h>
+
+#include "../w32widgets/W32DialogPanel.h"
 
 class ZLWin32DialogContent;
 
@@ -48,6 +51,7 @@ private:
 	//Win32Dialog *myDialog;
 	//Win32Notebook *myNotebook;
 	std::vector<ZLWin32DialogContent*> myTabs;
+	std::vector<shared_ptr<W32DialogPanel> > myPanels;
 	std::vector<std::string> myTabNames;
 };
 

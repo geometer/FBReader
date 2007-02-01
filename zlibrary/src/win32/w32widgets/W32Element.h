@@ -122,7 +122,6 @@ class W32Control : public W32Element {
 protected:
 	W32Control(DWORD style, const std::string &text);
 
-private:
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	void setVisible(bool visible);
@@ -170,15 +169,15 @@ public:
 	const std::string &className() const;
 };
 
-class W32SpinBox : public W32Control {
+class W32SpinBox : public W32LineEditor {
 
 public:
 	W32SpinBox(const std::string &text);
 	void setDimensions(Size charDimension);
 
-	const std::string &className() const;
-
 	void allocate(WORD *&p, short &id) const;
+	int allocationSize() const;
+	int controlNumber() const;
 };
 
 #endif /* __W32ELEMENT_H__ */

@@ -41,6 +41,9 @@ public:
 	DLGTEMPLATE *dialogTemplate();
 	void setElement(W32ElementPtr element);
 	W32Element::Size charDimension() const;
+	void calculateSize();
+	W32Element::Size size() const;
+	void setSize(W32Element::Size size);
 
 private:
 	void init(HWND dialogWindow);

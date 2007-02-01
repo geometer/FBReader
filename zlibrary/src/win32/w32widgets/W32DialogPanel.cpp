@@ -49,13 +49,27 @@ void W32DialogPanel::init(HWND dialogWindow) {
 	ourPanels[myDialogWindow] = this;	
 }
 
+void W32DialogPanel::calculateSize() {
+	myElement->setDimensions(myCharDimension);
+	mySize = myElement->minimumSize();
+}
+
+W32Element::Size W32DialogPanel::size() const {
+	return mySize;
+}
+
+void W32DialogPanel::setSize(W32Element::Size size) {
+	mySize = size;
+}
+
 DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	if (myAddress != 0) {
 		delete[] myAddress;
 	}
 
-	myElement->setDimensions(myCharDimension);
-	mySize = myElement->minimumSize();
+	if ((mySize.Width == 0) && (mySize.Height == 0)) {
+		calculateSize();
+	}
 	myElement->setPosition(0, 0, mySize);
 
 	int size = 12 + ZLUnicodeUtil::utf8Length(myCaption) + myElement->allocationSize();
@@ -115,7 +129,7 @@ bool W32DialogPanel::Callback(UINT message, WPARAM wParam, LPARAM lParam) {
 					EndDialog(myDialogWindow, wParam == IDOK);
 					return true;
 				default:
-					std::cerr << LOWORD(wParam) << " : " << lParam << " : " << message << "\n";
+					//std::cerr << LOWORD(wParam) << " : " << lParam << " : " << message << "\n";
 					return false;
 			}
 	}

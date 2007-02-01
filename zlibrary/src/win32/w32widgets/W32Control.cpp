@@ -122,7 +122,8 @@ const std::string &W32LineEditor::className() const {
 	return CLASS_EDIT;
 }
 
-W32SpinBox::W32SpinBox(const std::string &text) : W32Control(WS_BORDER | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS, text) {
+W32SpinBox::W32SpinBox(const std::string &text) : W32LineEditor(text) {
+	myStyle |= ES_NUMBER;
 }
 
 void W32SpinBox::setDimensions(Size charDimension) {
@@ -130,30 +131,10 @@ void W32SpinBox::setDimensions(Size charDimension) {
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
-const std::string &W32SpinBox::className() const {
-	return CLASS_SPINBOX;
-}
-
 void W32SpinBox::allocate(WORD *&p, short &id) const {
+	W32LineEditor::allocate(p, id);
+
 	WORD *start = p;
-
-	*p++ = LOWORD(myStyle);
-	*p++ = HIWORD(myStyle);
-	*p++ = 0;
-	*p++ = 0;
-	*p++ = myX;
-	*p++ = myY;
-	*p++ = mySize.Width;
-	*p++ = mySize.Height;
-	*p++ = id;
-	
-	allocateString(p, "edit");
-	allocateString(p, myText);
-
-	*p++ = 0;
-	if ((p - start) % 2 == 1) {
-		p++;
-	}
 
 	DWORD style = UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS;
 	if (myStyle & WS_VISIBLE) {
@@ -167,13 +148,21 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 	*p++ = myY;
 	*p++ = mySize.Width;
 	*p++ = mySize.Height;
-	*p++ = id++;
+	*p++ = 0;
 	
-	allocateString(p, className());
-	allocateString(p, "");
-
+	allocateString(p, CLASS_SPINBOX);
+	*p++ = 0;
 	*p++ = 0;
 	if ((p - start) % 2 == 1) {
 		p++;
 	}
+}
+
+int W32SpinBox::allocationSize() const {
+	int size = W32LineEditor::allocationSize() + 12 + ZLUnicodeUtil::utf8Length(CLASS_SPINBOX);
+	return size + size % 2;
+}
+
+int W32SpinBox::controlNumber() const {
+	return 2;
 }
