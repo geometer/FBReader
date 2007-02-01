@@ -53,5 +53,5 @@ void ZLWin32Dialog::addButton(const std::string &text, bool accept) {
 }
 
 bool ZLWin32Dialog::run() {
-	return DialogBoxIndirect(GetModuleHandle(0), myPanel.dialogTemplate(), myWindow->mainWindow(), W32Panel::DialogProc);
+	return DialogBoxIndirectParam(GetModuleHandle(0), myPanel.dialogTemplate(), myWindow->mainWindow(), W32DialogPanel::StaticCallback, (LPARAM)&myPanel);
 }

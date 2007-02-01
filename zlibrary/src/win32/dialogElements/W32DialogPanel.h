@@ -17,38 +17,44 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLWIN32OPTIONSDIALOG_H__
-#define __ZLWIN32OPTIONSDIALOG_H__
+#ifndef __W32DIALOGPANEL_H__
+#define __W32DIALOGPANEL_H__
 
-#include <vector>
+#include <map>
+#include <string>
 
 #include <windows.h>
 
-#include <ZLOptionsDialog.h>
+#include "W32Element.h"
 
-class ZLWin32DialogContent;
-
-class ZLWin32OptionsDialog : public ZLOptionsDialog {
+class W32DialogPanel {
 
 public:
-	ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption);
-	~ZLWin32OptionsDialog();
-	ZLDialogContent &createTab(const std::string &name);
-
-protected:
-	const std::string &selectedTabName() const;
-	void selectTab(const std::string &name);
-	bool run();
+	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
-	HWND myMainWindow;
+	static std::map<HWND,W32DialogPanel*> ourPanels;
 
+public:
+	W32DialogPanel(HWND mainWindow, const std::string &caption);
+	~W32DialogPanel();
+	DLGTEMPLATE *dialogTemplate();
+	void setElement(W32ElementPtr element);
+	W32Element::Size charDimension() const;
+
+private:
+	void init(HWND dialogWindow);
+	bool Callback(UINT message, WPARAM wParam, LPARAM lParam);
+
+private:
+	W32Element::Size myCharDimension;
+	W32Element::Size mySize;
 	std::string myCaption;
 
-	//Win32Dialog *myDialog;
-	//Win32Notebook *myNotebook;
-	std::vector<ZLWin32DialogContent*> myTabs;
-	std::vector<std::string> myTabNames;
+	W32ElementPtr myElement;
+
+	mutable WORD *myAddress;
+	HWND myDialogWindow;
 };
 
-#endif /* __ZLWIN32OPTIONSDIALOG_H__ */
+#endif /* __W32DIALOGPANEL_H__ */

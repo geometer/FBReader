@@ -23,7 +23,9 @@
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32DialogContent.h"
 
-ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id), myMainWindow(mainWindow), myCaption(caption) {
+#include "../dialogElements/W32DialogPanel.h"
+
+ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow), myCaption(caption) {
 /*
 	myDialog = createWin32Dialog(caption);
 
@@ -86,20 +88,21 @@ bool ZLWin32OptionsDialog::run() {
 		pages[i].dwSize = sizeof(pages[i]);
 		pages[i].dwFlags = PSP_DLGINDIRECT;
 		pages[i].hInstance = 0;
-		W32Panel *panel = new W32Panel(myMainWindow, myTabNames[i]);
+		// TODO: !!!
+		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
 		panel->setElement(myTabs[i]->content());
 		pages[i].pResource = panel->dialogTemplate();
 		pages[i].hIcon = 0;
 	 	pages[i].pszTitle = 0; // TODO: !!!
-		pages[i].pfnDlgProc = W32Panel::DialogProc; // TODO: !!!
-		pages[i].lParam = 0;
+		pages[i].pfnDlgProc = W32DialogPanel::StaticCallback;
+		pages[i].lParam = (LPARAM)panel;
 		pages[i].pfnCallback = 0;
 		pages[i].pcRefParent = 0;
 	}
 
 	PROPSHEETHEADER header;
 	header.dwSize = sizeof(header);
-	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW;
+	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
 	header.hwndParent = myMainWindow;
 	header.hInstance = 0;
 	header.hIcon = 0;
@@ -127,30 +130,4 @@ bool ZLWin32OptionsDialog::run() {
 	return response == GTK_RESPONSE_ACCEPT;
 	*/
 	return false;
-}
-
-void ZLWin32OptionsDialog::setSize(int width, int height) {
-	//gtk_window_resize(GTK_WINDOW(myDialog), width, height);
-}
-
-int ZLWin32OptionsDialog::width() const {
-	/*
-	int _width, _height;
-
-	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
-
-	return _width;
-	*/
-	return 200;
-}
-
-int ZLWin32OptionsDialog::height() const {
-/*
-	int _width, _height;
-
-	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, &_height);
-
-	return _height;
-*/
-	return 200;
 }

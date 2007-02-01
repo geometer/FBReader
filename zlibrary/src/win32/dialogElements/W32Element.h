@@ -30,7 +30,7 @@
 class W32Element {
 
 public:
-	static int allocateString(WORD *p, const std::string &text);
+	static void allocateString(WORD *&p, const std::string &text);
 
 public:
 	struct Size {
@@ -163,28 +163,6 @@ public:
 	void setDimensions(Size charDimension);
 
 	const std::string &className() const;
-};
-
-class W32Panel {
-
-public:
-	static BOOL CALLBACK W32Panel::DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
-
-public:
-	W32Panel(HWND mainWindow, const std::string &caption);
-	~W32Panel();
-	DLGTEMPLATE *dialogTemplate();
-	void setElement(W32ElementPtr element);
-	W32Element::Size charDimension() const;
-
-private:
-	W32Element::Size myCharDimension;
-	W32Element::Size mySize;
-	std::string myCaption;
-
-	W32ElementPtr myElement;
-
-	mutable WORD *myAddress;
 };
 
 #endif /* __W32ELEMENT_H__ */

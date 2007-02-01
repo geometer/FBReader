@@ -24,7 +24,7 @@
 
 #include <ZLDialog.h>
 
-#include "../dialogElements/W32Element.h"
+#include "../dialogElements/W32DialogPanel.h"
 
 class ZLWin32ApplicationWindow;
 
@@ -40,7 +40,7 @@ public:
 private:
 	ZLWin32ApplicationWindow *myWindow;
 	const std::string myTitle;
-	W32Panel myPanel;
+	W32DialogPanel myPanel;
 	W32HBox *myButtonBox;
 };
 

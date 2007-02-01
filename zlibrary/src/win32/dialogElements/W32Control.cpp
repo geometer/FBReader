@@ -54,8 +54,8 @@ void W32Control::allocate(WORD *&p, short &id) const {
 	*p++ = mySize.Height;
 	*p++ = id++;
 	
-	p += allocateString(p, className());
-	p += allocateString(p, myText);
+	allocateString(p, className());
+	allocateString(p, myText);
 
 	*p++ = 0;
 	if ((p - start) % 2 == 1) {
