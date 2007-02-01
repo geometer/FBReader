@@ -38,6 +38,15 @@ private:
 
 class ZLWin32DialogElement {
 
+public:
+	struct Size {
+		short Width;
+		short Height;
+
+		Size() : Width(0), Height(0) {}
+		Size(short w, short h) : Width(w), Height(h) {}
+	};
+
 protected:
 	ZLWin32DialogElement();
 
@@ -48,8 +57,9 @@ public:
 	virtual int allocationSize() const = 0;
 	virtual void setVisible(bool visible) = 0;
 	virtual int controlNumber() const = 0;
-	virtual void minimumSize(int &x, int &y) const = 0;
-	virtual void setPosition(int x, int y, int width, int height) = 0;
+	virtual Size minimumSize() const = 0;
+	virtual void setPosition(int x, int y, Size size) = 0;
+	virtual void setDimensions(Size charDimension) = 0;
 
 private:
 	ZLWin32DialogElement(const ZLWin32DialogElement&);
@@ -81,6 +91,7 @@ protected:
 	int leftMargin() const { return myLeftMargin; }
 	int rightMargin() const { return myRightMargin; }
 	int spacing() const { return mySpacing; }
+	void setDimensions(Size charDimension);
 
 protected:
 	ZLWin32DialogElementList myElements;
@@ -96,8 +107,8 @@ class ZLWin32DialogHBox : public ZLWin32DialogBox {
 public:
 	ZLWin32DialogHBox();
 
-	void minimumSize(int &x, int &y) const;
-	void setPosition(int x, int y, int width, int height);
+	Size minimumSize() const;
+	void setPosition(int x, int y, Size size);
 };
 
 class ZLWin32DialogVBox : public ZLWin32DialogBox {
@@ -105,63 +116,68 @@ class ZLWin32DialogVBox : public ZLWin32DialogBox {
 public:
 	ZLWin32DialogVBox();
 
-	void minimumSize(int &x, int &y) const;
-	void setPosition(int x, int y, int width, int height);
+	Size minimumSize() const;
+	void setPosition(int x, int y, Size size);
 };
 
 class ZLWin32DialogControl : public ZLWin32DialogElement {
 
 protected:
-	ZLWin32DialogControl(DWORD style, int width, int height, WORD id, const std::string &className, const std::string &text);
+	ZLWin32DialogControl(DWORD style, WORD id, const std::string &className, const std::string &text);
 
 private:
 	void allocate(WORD *p) const;
 	int allocationSize() const;
 	void setVisible(bool visible);
 	int controlNumber() const;
-	void minimumSize(int &x, int &y) const;
-	void setPosition(int x, int y, int width, int height);
+	Size minimumSize() const;
+	void setPosition(int x, int y, Size size);
 
 private:
 	DWORD myStyle;
 	int myX, myY;
-	int myWidth, myHeight;
 	WORD myId;
 	const std::string &myClassName;
+
+protected:
+	Size mySize;
 	std::string myText;
 };
 
 class ZLWin32PushButton : public ZLWin32DialogControl {
 
 public:
-	ZLWin32PushButton(int width, int height, WORD id, const std::string &text);
+	ZLWin32PushButton(WORD id, const std::string &text);
+	void setDimensions(Size charDimension);
 };
 
 class ZLWin32CheckBox : public ZLWin32DialogControl {
 
 public:
-	ZLWin32CheckBox(int width, int height, WORD id, const std::string &text);
+	ZLWin32CheckBox(WORD id, const std::string &text);
+	void setDimensions(Size charDimension);
 };
 
 class ZLWin32LineEditor : public ZLWin32DialogControl {
 
 public:
-	ZLWin32LineEditor(int width, int height, WORD id, const std::string &text);
+	ZLWin32LineEditor(WORD id, const std::string &text);
+	void setDimensions(Size charDimension);
 };
 
 class ZLWin32DialogPanel {
 
 public:
-	ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text);
+	ZLWin32DialogPanel(HWND mainWindow, const std::string &caption);
 	~ZLWin32DialogPanel();
 	DLGTEMPLATE *dialogTemplate();
 	void setElement(ZLWin32DialogElementPtr element);
+	ZLWin32DialogElement::Size charDimension() const;
 
 private:
-	DWORD myStyle;
-	int myX, myY;
-	int myWidth, myHeight;
-	std::string myText;
+	ZLWin32DialogElement::Size myCharDimension;
+	ZLWin32DialogElement::Size mySize;
+	std::string myCaption;
 
 	ZLWin32DialogElementPtr myElement;
 

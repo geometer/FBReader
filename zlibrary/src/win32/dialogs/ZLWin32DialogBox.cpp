@@ -72,37 +72,41 @@ void ZLWin32DialogBox::setSpacing(int spacing) {
 	mySpacing = spacing;
 }
 
+void ZLWin32DialogBox::setDimensions(Size charDimension) {
+	for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		(*it)->setDimensions(charDimension);
+	}
+}
+
 ZLWin32DialogHBox::ZLWin32DialogHBox() {
 }
 
-void ZLWin32DialogHBox::minimumSize(int &x, int &y) const {
+ZLWin32DialogElement::Size ZLWin32DialogHBox::minimumSize() const {
 	if (myElements.empty()) {
-		x = leftMargin() + rightMargin();
-		y = topMargin() + bottomMargin();
-		return;
+		return Size(leftMargin() + rightMargin(), topMargin() + bottomMargin());
 	}
 
-	x = 0; y = 0;
-	int elementX, elementY;
+	Size size;
 	if (homogeneous()) {
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->minimumSize(elementX, elementY);	
-			x = std::max(x, elementX);
-			y = std::max(y, elementY);
+			Size elementSize = (*it)->minimumSize();
+			size.Width = std::max(size.Width, elementSize.Width);
+			size.Height = std::max(size.Height, elementSize.Height);
 		}
-		x *= myElements.size();
+		size.Width *= myElements.size();
 	} else {
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->minimumSize(elementX, elementY);	
-			x += elementX;
-			y = std::max(y, elementY);
+			Size elementSize = (*it)->minimumSize();
+			size.Width += elementSize.Width;
+			size.Height = std::max(size.Height, elementSize.Height);
 		}
 	}
-	x += leftMargin() + rightMargin() + spacing() * (myElements.size() - 1);
-	y += topMargin() + bottomMargin();
+	size.Width += leftMargin() + rightMargin() + spacing() * (myElements.size() - 1);
+	size.Height += topMargin() + bottomMargin();
+	return size;
 }
 
-void ZLWin32DialogHBox::setPosition(int x, int y, int width, int height) {
+void ZLWin32DialogHBox::setPosition(int x, int y, Size size) {
 	if (myElements.empty()) {
 		return;
 	}
@@ -110,20 +114,23 @@ void ZLWin32DialogHBox::setPosition(int x, int y, int width, int height) {
 	x += leftMargin();
 	y += topMargin();
 	if (homogeneous()) {
-		const int elementWidth = (width - leftMargin() - rightMargin() - spacing() * (myElements.size() - 1)) / myElements.size();
-		const int elementHeight = height - topMargin() - bottomMargin();
+		const Size elementSize(
+			(size.Width - leftMargin() - rightMargin() - spacing() * (myElements.size() - 1)) / myElements.size(),
+			size.Height - topMargin() - bottomMargin()
+		);
+		const short deltaX = elementSize.Width + spacing();
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->setPosition(x, y, elementWidth, elementHeight);
-			x += elementWidth + spacing();
+			(*it)->setPosition(x, y, elementSize);
+			x += deltaX;
 		}
 	} else {
-		int elementWidth;
-		const int elementHeight = height - topMargin() - bottomMargin();
-		int minimumHeight;
+		const int elementHeight = size.Height - topMargin() - bottomMargin();
+		Size elementSize;
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->minimumSize(elementWidth, minimumHeight);
-			(*it)->setPosition(x, y, elementWidth, elementHeight);
-			x += elementWidth + spacing();
+			Size elementSize = (*it)->minimumSize();
+			elementSize.Height = elementHeight;
+			(*it)->setPosition(x, y, elementSize);
+			x += elementSize.Width + spacing();
 		}
 	}
 }
@@ -131,34 +138,32 @@ void ZLWin32DialogHBox::setPosition(int x, int y, int width, int height) {
 ZLWin32DialogVBox::ZLWin32DialogVBox() {
 }
 
-void ZLWin32DialogVBox::minimumSize(int &x, int &y) const {
+ZLWin32DialogElement::Size ZLWin32DialogVBox::minimumSize() const {
 	if (myElements.empty()) {
-		x = leftMargin() + rightMargin();
-		y = topMargin() + bottomMargin();
-		return;
+		return Size(leftMargin() + rightMargin(), topMargin() + bottomMargin());
 	}
 
-	x = 0; y = 0;
-	int elementX, elementY;
+	Size size;
 	if (homogeneous()) {
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->minimumSize(elementX, elementY);	
-			x = std::max(x, elementX);
-			y = std::max(y, elementY);
+			Size elementSize = (*it)->minimumSize();	
+			size.Width = std::max(size.Width, elementSize.Width);
+			size.Height = std::max(size.Height, elementSize.Height);
 		}
-		y *= myElements.size();
+		size.Height *= myElements.size();
 	} else {
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->minimumSize(elementX, elementY);	
-			x = std::max(x, elementX);
-			y += elementY;
+			Size elementSize = (*it)->minimumSize();	
+			size.Width = std::max(size.Width, elementSize.Width);
+			size.Height += elementSize.Height;
 		}
 	}
-	x += leftMargin() + rightMargin();
-	y += topMargin() + bottomMargin() + spacing() * (myElements.size() - 1);
+	size.Width += leftMargin() + rightMargin();
+	size.Height += topMargin() + bottomMargin() + spacing() * (myElements.size() - 1);
+	return size;
 }
 
-void ZLWin32DialogVBox::setPosition(int x, int y, int width, int height) {
+void ZLWin32DialogVBox::setPosition(int x, int y, Size size) {
 	if (myElements.empty()) {
 		return;
 	}
@@ -166,20 +171,22 @@ void ZLWin32DialogVBox::setPosition(int x, int y, int width, int height) {
 	x += leftMargin();
 	y += topMargin();
 	if (homogeneous()) {
-		const int elementWidth = width - leftMargin() - rightMargin();
-		const int elementHeight = (height - topMargin() - bottomMargin() - spacing() * (myElements.size() - 1)) / myElements.size();
+		const Size elementSize(
+			size.Width - leftMargin() - rightMargin(),
+			(size.Height - topMargin() - bottomMargin() - spacing() * (myElements.size() - 1)) / myElements.size()
+		);
+		const short deltaY = elementSize.Height + spacing();
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->setPosition(x, y, elementWidth, elementHeight);
-			y += elementHeight + spacing();
+			(*it)->setPosition(x, y, elementSize);
+			y += deltaY;
 		}
 	} else {
-		const int elementWidth = width - leftMargin() - rightMargin();
-		int elementHeight;
-		int minimumWidth;
+		const short elementWidth = size.Width - leftMargin() - rightMargin();
 		for (ZLWin32DialogElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->minimumSize(minimumWidth, elementHeight);
-			(*it)->setPosition(x, y, elementWidth, elementHeight);
-			y += elementHeight + spacing();
+			Size elementSize = (*it)->minimumSize();
+			elementSize.Width = elementWidth;
+			(*it)->setPosition(x, y, elementSize);
+			y += elementSize.Height + spacing();
 		}
 	}
 }

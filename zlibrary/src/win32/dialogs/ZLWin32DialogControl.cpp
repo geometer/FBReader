@@ -24,7 +24,7 @@
 const std::string CLASS_BUTTON = "button";
 const std::string CLASS_EDIT = "edit";
 
-ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, int width, int height, WORD id, const std::string &className, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(0), myY(0), myWidth(width), myHeight(height), myId(id), myClassName(className), myText(text) {
+ZLWin32DialogControl::ZLWin32DialogControl(DWORD style, WORD id, const std::string &className, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(0), myY(0), myId(id), myClassName(className), myText(text) {
 }
 
 void ZLWin32DialogControl::setVisible(bool visible) {
@@ -48,8 +48,8 @@ void ZLWin32DialogControl::allocate(WORD *p) const {
 	*p++ = 0;
 	*p++ = myX;
 	*p++ = myY;
-	*p++ = myWidth;
-	*p++ = myHeight;
+	*p++ = mySize.Width;
+	*p++ = mySize.Height;
 	*p++ = myId;
 	
 	p += ZLWin32DialogUtil::allocateString(p, myClassName);
@@ -62,24 +62,37 @@ int ZLWin32DialogControl::controlNumber() const {
 	return 1;
 }
 
-void ZLWin32DialogControl::minimumSize(int &x, int &y) const {
-	x = myWidth;
-	y = myHeight;
+ZLWin32DialogElement::Size ZLWin32DialogControl::minimumSize() const {
+	return mySize;
 }
 
-void ZLWin32DialogControl::setPosition(int x, int y, int width, int height) {
+void ZLWin32DialogControl::setPosition(int x, int y, Size size) {
 	myX = x;
 	myY = y;
-	myWidth = width;
-	myHeight = height;
+	mySize = size;
 }
 
-ZLWin32PushButton::ZLWin32PushButton(int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_PUSHBUTTON, width, height, id, CLASS_BUTTON, text) {
+ZLWin32PushButton::ZLWin32PushButton(WORD id, const std::string &text) : ZLWin32DialogControl(BS_PUSHBUTTON, id, CLASS_BUTTON, text) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
 
-ZLWin32CheckBox::ZLWin32CheckBox(int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(BS_CHECKBOX, width, height, id, CLASS_BUTTON, text) {
+void ZLWin32PushButton::setDimensions(Size charDimension) {
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Height = charDimension.Height * 3 / 2;
 }
 
-ZLWin32LineEditor::ZLWin32LineEditor(int width, int height, WORD id, const std::string &text) : ZLWin32DialogControl(WS_BORDER, width, height, id, CLASS_EDIT, text) {
+ZLWin32CheckBox::ZLWin32CheckBox(WORD id, const std::string &text) : ZLWin32DialogControl(BS_CHECKBOX, id, CLASS_BUTTON, text) {
+}
+
+void ZLWin32CheckBox::setDimensions(Size charDimension) {
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Height = charDimension.Height * 3 / 2;
+}
+
+ZLWin32LineEditor::ZLWin32LineEditor(WORD id, const std::string &text) : ZLWin32DialogControl(WS_BORDER, id, CLASS_EDIT, text) {
+}
+
+void ZLWin32LineEditor::setDimensions(Size charDimension) {
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Height = charDimension.Height * 3 / 2;
 }

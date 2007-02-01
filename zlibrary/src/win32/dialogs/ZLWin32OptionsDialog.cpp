@@ -93,8 +93,8 @@ bool ZLWin32OptionsDialog::run() {
 		pages[i].dwSize = sizeof(pages[i]);
 		pages[i].dwFlags = PSP_DLGINDIRECT;
 		pages[i].hInstance = 0;
-		ZLWin32DialogPanel *panel = new ZLWin32DialogPanel(DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 120, 120, myTabNames[i]);
-		panel->setElement(new ZLWin32DialogVBox());
+		ZLWin32DialogPanel *panel = new ZLWin32DialogPanel(myMainWindow, myTabNames[i]);
+		panel->setElement(myTabs[i]->content());
 		pages[i].pResource = panel->dialogTemplate();
 		pages[i].hIcon = 0;
 	 	pages[i].pszTitle = 0; // TODO: !!!

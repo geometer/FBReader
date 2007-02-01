@@ -24,17 +24,34 @@
 
 ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name) : myWindow(window), myTitle(name) {
 	myWindow->blockMouseEvents(true);
-	myTab = new ZLWin32DialogContent();
-	//myDialog = createWin32Dialog(name.c_str());
+	myPanel = new ZLWin32DialogPanel(myWindow->mainWindow(), myTitle);
+	const short charHeight = myPanel->charDimension().Height;
+
+	ZLWin32DialogVBox *panelBox = new ZLWin32DialogVBox();
+	myPanel->setElement(panelBox);
+
+	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
+	myTab = contentTab;
+	ZLWin32DialogElementPtr contentBox = contentTab->content();
+	panelBox->addElement(contentBox);
+	((ZLWin32DialogBox&)*contentBox).setSpacing(charHeight / 2);
+	((ZLWin32DialogBox&)*contentBox).setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+
+	myButtonBox = new ZLWin32DialogHBox();
+	panelBox->addElement(myButtonBox);
+	myButtonBox->setHomogeneous(true);
+	myButtonBox->setSpacing(charHeight / 2);
+	myButtonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 }
 
 ZLWin32Dialog::~ZLWin32Dialog() {
 	myWindow->blockMouseEvents(false);
-	//destroyWin32Dialog(myDialog);
 }
 
 void ZLWin32Dialog::addButton(const std::string &text, bool accept) {
-	myButtons.push_back(ButtonInfo(text, accept));
+	ZLWin32DialogElementPtr button = new ZLWin32PushButton(accept ? IDOK : IDCANCEL, text);
+	button->setVisible(true);
+	myButtonBox->addElement(button);
 }
 
 static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
@@ -42,57 +59,14 @@ static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARA
 		case WM_COMMAND:
 			switch (wParam) {
 				case IDOK:
-					EndDialog(hDialog, true);
-					return true;
 				case IDCANCEL:
-					EndDialog(hDialog, false);
-					//SendMessage(GetDlgItem(hDialog, IDCANCEL), WM_SETTEXT, 0, (LPARAM)"Test");
-					//SetWindowPos(GetDlgItem(hDialog, IDCANCEL), 0, 20, 20, 70, 30, 0);
-					return false;
+					EndDialog(hDialog, wParam == IDOK);
+					return true;
 			}
 	}
 	return false;
 }
 
 bool ZLWin32Dialog::run() {
-	int cxChar, cyChar;
-	{
-		TEXTMETRIC metric;
-		HDC hdc = GetDC(myWindow->mainWindow());
-		GetTextMetrics(hdc, &metric);
-		ReleaseDC(myWindow->mainWindow(), hdc);
-		DWORD dlgUnit = GetDialogBaseUnits();
-		cxChar = (metric.tmAveCharWidth + 1) * 4 / LOWORD(dlgUnit);
-		cyChar = (metric.tmHeight + metric.tmExternalLeading) * 8 / HIWORD(dlgUnit);
-	}
-
-	ZLWin32DialogPanel panel(DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION, 20, 20, 20 + 60 * myButtons.size(), 120, myTitle);
-	ZLWin32DialogVBox *panelBox = new ZLWin32DialogVBox();
-	panel.setElement(panelBox);
-
-	ZLWin32DialogVBox *contentBox = new ZLWin32DialogVBox();
-	panelBox->addElement(contentBox);
-	contentBox->setHomogeneous(true);
-	contentBox->setSpacing(cyChar / 2);
-	contentBox->setMargins(cyChar / 2, 0, cyChar / 2, cyChar / 2);
-
-	ZLWin32DialogElementPtr control = new ZLWin32LineEditor(70, cyChar * 3 / 2, 10001, "My Editor");
-	control->setVisible(true);
-	contentBox->addElement(control);
-	control = new ZLWin32CheckBox(70, cyChar * 3 / 2, 10001, "My Checkbox");
-	control->setVisible(true);
-	contentBox->addElement(control);
-
-	ZLWin32DialogHBox *buttonBox = new ZLWin32DialogHBox();
-	panelBox->addElement(buttonBox);
-	buttonBox->setHomogeneous(true);
-	buttonBox->setSpacing(10);
-	buttonBox->setMargins(cyChar / 2, cyChar, cyChar / 2, cyChar / 2);
-	for (std::vector<ButtonInfo>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
-		control = new ZLWin32PushButton(40, cyChar * 3 / 2, it->second ? IDOK : IDCANCEL, it->first);
-		control->setVisible(true);
-		buttonBox->addElement(control);
-	}
-
-	return DialogBoxIndirect(GetModuleHandle(0), panel.dialogTemplate(), myWindow->mainWindow(), DialogProc);
+	return DialogBoxIndirect(GetModuleHandle(0), myPanel->dialogTemplate(), myWindow->mainWindow(), DialogProc);
 }

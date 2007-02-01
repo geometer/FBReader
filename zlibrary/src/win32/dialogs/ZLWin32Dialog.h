@@ -24,11 +24,12 @@
 #include <vector>
 #include <map>
 
-#include <windows.h>
-
+#include <shared_ptr.h>
 #include <ZLDialog.h>
 
 class ZLWin32ApplicationWindow;
+class ZLWin32DialogPanel;
+class ZLWin32DialogHBox;
 
 class ZLWin32Dialog : public ZLDialog {
 
@@ -41,9 +42,9 @@ public:
 
 private:
 	ZLWin32ApplicationWindow *myWindow;
-	typedef std::pair<std::string,bool> ButtonInfo;
 	const std::string myTitle;
-	std::vector<ButtonInfo> myButtons;
+	shared_ptr<ZLWin32DialogPanel> myPanel;
+	ZLWin32DialogHBox *myButtonBox;
 };
 
 #endif /* __ZLWIN32DIALOG_H__ */

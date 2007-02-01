@@ -35,7 +35,14 @@ int ZLWin32DialogUtil::allocateString(WORD *p, const std::string &text) {
 	return ucs2Str.size();
 }
 
-ZLWin32DialogPanel::ZLWin32DialogPanel(DWORD style, int x, int y, int width, int height, const std::string &text) : myStyle(style), myX(x), myY(y), myWidth(width), myHeight(height), myText(text), myAddress(0) {
+ZLWin32DialogPanel::ZLWin32DialogPanel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0) {
+	TEXTMETRIC metric;
+	HDC hdc = GetDC(mainWindow);
+	GetTextMetrics(hdc, &metric);
+	ReleaseDC(mainWindow, hdc);
+	DWORD dlgUnit = GetDialogBaseUnits();
+	myCharDimension.Width = (metric.tmAveCharWidth + 1) * 4 / LOWORD(dlgUnit);
+	myCharDimension.Height = (metric.tmHeight + metric.tmExternalLeading) * 8 / HIWORD(dlgUnit);
 }
 
 ZLWin32DialogPanel::~ZLWin32DialogPanel() {
@@ -49,26 +56,28 @@ DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() {
 		delete[] myAddress;
 	}
 
-	myElement->minimumSize(myWidth, myHeight);
-	myElement->setPosition(0, 0, myWidth, myHeight);
+	myElement->setDimensions(myCharDimension);
+	mySize = myElement->minimumSize();
+	myElement->setPosition(0, 0, mySize);
 
-	int size = 12 + ZLUnicodeUtil::utf8Length(myText) + myElement->allocationSize();
+	int size = 12 + ZLUnicodeUtil::utf8Length(myCaption) + myElement->allocationSize();
 	size += size % 2;
 	myAddress = new WORD[size];
 
 	WORD *p = myAddress;
-	*p++ = LOWORD(myStyle);
-	*p++ = HIWORD(myStyle);
+	const DWORD style = DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION;
+	*p++ = LOWORD(style);
+	*p++ = HIWORD(style);
 	*p++ = 0;
 	*p++ = 0;
 	*p++ = myElement->controlNumber();
-	*p++ = myX;
-	*p++ = myY;
-	*p++ = myWidth;
-	*p++ = myHeight;
+	*p++ = 0; // X
+	*p++ = 0; // Y
+	*p++ = mySize.Width;
+	*p++ = mySize.Height;
 	*p++ = 0;
 	*p++ = 0;
-	p += ZLWin32DialogUtil::allocateString(p, myText);
+	p += ZLWin32DialogUtil::allocateString(p, myCaption);
 	if ((p - myAddress) % 2 == 1) {
 		p++;
 	}
@@ -79,4 +88,8 @@ DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() {
 
 void ZLWin32DialogPanel::setElement(ZLWin32DialogElementPtr element) {
 	myElement = element;
+}
+
+ZLWin32DialogElement::Size ZLWin32DialogPanel::charDimension() const {
+	return myCharDimension;
 }
