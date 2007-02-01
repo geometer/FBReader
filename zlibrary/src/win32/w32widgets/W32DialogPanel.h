@@ -24,6 +24,7 @@
 #include <string>
 
 #include <windows.h>
+#include <prsht.h>
 
 #include "W32Element.h"
 
@@ -31,6 +32,8 @@ class W32DialogPanel {
 
 public:
 	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
+	static BOOL CALLBACK PSStaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
+	//static UINT CALLBACK PSProcedure(HWND h);
 
 private:
 	static std::map<HWND,W32DialogPanel*> ourPanels;

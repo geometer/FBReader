@@ -36,6 +36,14 @@ void W32Box::allocate(WORD *&p, short &id) const {
 	}
 }
 
+void W32Box::init(HWND parent, short &id) {
+	/*
+	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		(*it)->init(parent, id);
+	}
+	*/
+}
+
 int W32Box::allocationSize() const {
 	int size = 0;
 	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {

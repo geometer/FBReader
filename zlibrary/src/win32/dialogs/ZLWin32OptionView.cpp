@@ -190,9 +190,7 @@ void ComboOptionView::onValueChanged() {
 */
 
 SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	std::string number;
-	ZLStringUtil::appendNumber(number, option->initialValue());
-	myElement = new W32SpinBox(number);
+	myElement = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
 }
 
 /*

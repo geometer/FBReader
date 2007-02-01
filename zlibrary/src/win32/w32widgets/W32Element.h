@@ -55,6 +55,7 @@ public:
 	virtual Size minimumSize() const = 0;
 	virtual void setPosition(int x, int y, Size size) = 0;
 	virtual void setDimensions(Size charDimension) = 0;
+	virtual void init(HWND parent, short &id) = 0;
 
 private:
 	W32Element(const W32Element&);
@@ -88,6 +89,8 @@ protected:
 	int rightMargin() const { return myRightMargin; }
 	int spacing() const { return mySpacing; }
 	void setDimensions(Size charDimension);
+	void init(HWND parent, short &id);
+
 	int visibleElementsNumber() const;
 
 protected:
@@ -129,17 +132,17 @@ protected:
 	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
+	void init(HWND parent, short &id);
 
 	virtual const std::string &className() const = 0;
 
-private:
 protected:
 	DWORD myStyle;
 	int myX, myY;
-
-protected:
 	Size mySize;
 	std::string myText;
+
+	HWND myWindow;
 };
 
 class W32PushButton : public W32Control {
@@ -172,12 +175,16 @@ public:
 class W32SpinBox : public W32LineEditor {
 
 public:
-	W32SpinBox(const std::string &text);
+	W32SpinBox(WORD min, WORD max, WORD initial);
 	void setDimensions(Size charDimension);
 
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	int controlNumber() const;
+	void init(HWND parent, short &id);
+
+private:
+	WORD myMin, myMax, myInitial;
 };
 
 #endif /* __W32ELEMENT_H__ */

@@ -28,7 +28,7 @@ const std::string CLASS_BUTTON = "button";
 const std::string CLASS_EDIT = "edit";
 const std::string CLASS_SPINBOX = "msctls_updown32";
 
-W32Control::W32Control(DWORD style, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(0), myY(0), myText(text) {
+W32Control::W32Control(DWORD style, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(1), myY(1), mySize(Size(1, 1)), myText(text), myWindow(0) {
 }
 
 void W32Control::setVisible(bool visible) {
@@ -69,6 +69,10 @@ void W32Control::allocate(WORD *&p, short &id) const {
 	if ((p - start) % 2 == 1) {
 		p++;
 	}
+}
+
+void W32Control::init(HWND parent, short &id) {
+	//myWindow = GetDlgItem(parent, id++);
 }
 
 int W32Control::controlNumber() const {
@@ -122,7 +126,7 @@ const std::string &W32LineEditor::className() const {
 	return CLASS_EDIT;
 }
 
-W32SpinBox::W32SpinBox(const std::string &text) : W32LineEditor(text) {
+W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32LineEditor(""), myMin(min), myMax(max), myInitial(initial) {
 	myStyle |= ES_NUMBER;
 }
 
@@ -148,7 +152,7 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 	*p++ = myY;
 	*p++ = mySize.Width;
 	*p++ = mySize.Height;
-	*p++ = 0;
+	*p++ = id - 1;
 	
 	allocateString(p, CLASS_SPINBOX);
 	*p++ = 0;
@@ -156,6 +160,12 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 	if ((p - start) % 2 == 1) {
 		p++;
 	}
+}
+
+void W32SpinBox::init(HWND parent, short &id) {
+	W32Control::init(parent, id);
+	//SendMessage(myWindow, UDM_SETRANGE, 0, MAKELONG(myMax, myMin));
+	//SendMessage(myWindow, UDM_SETPOS, 0, MAKELONG(myInitial, 0));
 }
 
 int W32SpinBox::allocationSize() const {

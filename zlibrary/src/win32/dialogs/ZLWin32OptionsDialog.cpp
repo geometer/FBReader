@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <windows.h>
 #include <prsht.h>
 
@@ -81,10 +83,10 @@ void ZLWin32OptionsDialog::selectTab(const std::string &name) {
 }
 
 bool ZLWin32OptionsDialog::run() {
-	PROPSHEETPAGE *pages = new PROPSHEETPAGE[myTabs.size()];
 	short maxPanelWidth = 0;
 	for (size_t i = 0; i < myTabs.size(); ++i) {
 		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
+		//std::cerr << "panel = " << panel << "\n";
 		panel->setElement(myTabs[i]->content());
 		W32Box &box = (W32Box&)*myTabs[i]->content();
 		const int charHeight = panel->charDimension().Height;
@@ -100,6 +102,7 @@ bool ZLWin32OptionsDialog::run() {
 		size.Width = maxPanelWidth;
 		panel.setSize(size);
 	}
+	PROPSHEETPAGE *pages = new PROPSHEETPAGE[myTabs.size()];
 	for (size_t i = 0; i < myTabs.size(); ++i) {
 		W32DialogPanel &panel = *myPanels[i];
 		pages[i].dwSize = sizeof(pages[i]);
@@ -108,8 +111,9 @@ bool ZLWin32OptionsDialog::run() {
 		pages[i].pResource = panel.dialogTemplate();
 		pages[i].hIcon = 0;
 	 	pages[i].pszTitle = 0;
-		pages[i].pfnDlgProc = W32DialogPanel::StaticCallback;
-		pages[i].lParam = (LPARAM)&panel;
+		pages[i].pfnDlgProc = W32DialogPanel::PSStaticCallback; // TODO: !!!
+		pages[i].lParam = (LPARAM)&panel; // TODO: !!!
+		//std::cerr << "lParam = " << (W32DialogPanel*)pages[i].lParam << "\n";
 		pages[i].pfnCallback = 0;
 		pages[i].pcRefParent = 0;
 	}

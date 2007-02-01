@@ -23,6 +23,8 @@
 
 #include "W32DialogPanel.h"
 
+static const int FirstControlId = 2001;
+
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
 
 W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0), myDialogWindow(0) {
@@ -47,6 +49,9 @@ W32DialogPanel::~W32DialogPanel() {
 void W32DialogPanel::init(HWND dialogWindow) {
 	myDialogWindow = dialogWindow;
 	ourPanels[myDialogWindow] = this;	
+	short id = FirstControlId;
+	//std::cerr << &*myElement << "\n";
+	//myElement->init(dialogWindow, id);
 }
 
 void W32DialogPanel::calculateSize() {
@@ -94,7 +99,7 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 		p++;
 	}
 
-	short id = 2000;
+	short id = FirstControlId;
 	myElement->allocate(p, id);
 
 	return (DLGTEMPLATE*)myAddress;
@@ -102,6 +107,7 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 
 void W32DialogPanel::setElement(W32ElementPtr element) {
 	myElement = element;
+	//std::cerr << &*myElement << "\n";
 }
 
 W32Element::Size W32DialogPanel::charDimension() const {
@@ -110,6 +116,7 @@ W32Element::Size W32DialogPanel::charDimension() const {
 
 BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
 	if (message == WM_INITDIALOG) {
+		//std::cerr << "lParam2 = " << (W32DialogPanel*)lParam << "\n";
 		((W32DialogPanel*)lParam)->init(hDialog);
 		return true;
 	}
@@ -118,6 +125,23 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 		return panel->Callback(message, wParam, lParam);
 	}
 	return false;
+}
+
+BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
+	//std::cerr << wParam << " : " << lParam << " : " << message << "\n";
+	return false;
+	/*
+	if (message == WM_INITDIALOG) {
+		std::cerr << "lParam2 = " << (W32DialogPanel*)lParam << "\n";
+		((W32DialogPanel*)lParam)->init(hDialog);
+		return true;
+	}
+	W32DialogPanel *panel = ourPanels[hDialog];
+	if (panel != 0) {
+		return panel->Callback(message, wParam, lParam);
+	}
+	return false;
+	*/
 }
 
 bool W32DialogPanel::Callback(UINT message, WPARAM wParam, LPARAM lParam) {
