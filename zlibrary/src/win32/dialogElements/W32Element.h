@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLWIN32DIALOGELEMENT_H__
-#define __ZLWIN32DIALOGELEMENT_H__
+#ifndef __W32ELEMENT_H__
+#define __W32ELEMENT_H__
 
 #include <vector>
 #include <string>
@@ -27,16 +27,10 @@
 
 #include <shared_ptr.h>
 
-class ZLWin32DialogUtil {
+class W32Element {
 
 public:
 	static int allocateString(WORD *p, const std::string &text);
-
-private:
-	ZLWin32DialogUtil();
-};
-
-class ZLWin32DialogElement {
 
 public:
 	struct Size {
@@ -48,10 +42,10 @@ public:
 	};
 
 protected:
-	ZLWin32DialogElement();
+	W32Element();
 
 public:
-	virtual ~ZLWin32DialogElement();
+	virtual ~W32Element();
 
 	virtual void allocate(WORD *p) const = 0;
 	virtual int allocationSize() const = 0;
@@ -62,18 +56,18 @@ public:
 	virtual void setDimensions(Size charDimension) = 0;
 
 private:
-	ZLWin32DialogElement(const ZLWin32DialogElement&);
-	const ZLWin32DialogElement &operator = (const ZLWin32DialogElement&);
+	W32Element(const W32Element&);
+	const W32Element &operator = (const W32Element&);
 };
 
-typedef shared_ptr<ZLWin32DialogElement> ZLWin32DialogElementPtr;
-typedef std::vector<ZLWin32DialogElementPtr> ZLWin32DialogElementList;
+typedef shared_ptr<W32Element> W32ElementPtr;
+typedef std::vector<W32ElementPtr> W32ElementList;
 
-class ZLWin32DialogBox : public ZLWin32DialogElement {
+class W32Box : public W32Element {
 
 public:
-	ZLWin32DialogBox();
-	void addElement(ZLWin32DialogElementPtr element);
+	W32Box();
+	void addElement(W32ElementPtr element);
 
 	void allocate(WORD *p) const;
 	int allocationSize() const;
@@ -94,7 +88,7 @@ protected:
 	void setDimensions(Size charDimension);
 
 protected:
-	ZLWin32DialogElementList myElements;
+	W32ElementList myElements;
 
 private:
 	bool myHomogeneous;
@@ -102,28 +96,28 @@ private:
 	int mySpacing;
 };
 
-class ZLWin32DialogHBox : public ZLWin32DialogBox {
+class W32HBox : public W32Box {
 
 public:
-	ZLWin32DialogHBox();
+	W32HBox();
 
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
 };
 
-class ZLWin32DialogVBox : public ZLWin32DialogBox {
+class W32VBox : public W32Box {
 
 public:
-	ZLWin32DialogVBox();
+	W32VBox();
 
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
 };
 
-class ZLWin32DialogControl : public ZLWin32DialogElement {
+class W32Control : public W32Element {
 
 protected:
-	ZLWin32DialogControl(DWORD style, WORD id, const std::string &className, const std::string &text);
+	W32Control(DWORD style, WORD id, const std::string &className, const std::string &text);
 
 private:
 	void allocate(WORD *p) const;
@@ -144,44 +138,44 @@ protected:
 	std::string myText;
 };
 
-class ZLWin32PushButton : public ZLWin32DialogControl {
+class W32PushButton : public W32Control {
 
 public:
-	ZLWin32PushButton(WORD id, const std::string &text);
+	W32PushButton(WORD id, const std::string &text);
 	void setDimensions(Size charDimension);
 };
 
-class ZLWin32CheckBox : public ZLWin32DialogControl {
+class W32CheckBox : public W32Control {
 
 public:
-	ZLWin32CheckBox(WORD id, const std::string &text);
+	W32CheckBox(WORD id, const std::string &text);
 	void setDimensions(Size charDimension);
 };
 
-class ZLWin32LineEditor : public ZLWin32DialogControl {
+class W32LineEditor : public W32Control {
 
 public:
-	ZLWin32LineEditor(WORD id, const std::string &text);
+	W32LineEditor(WORD id, const std::string &text);
 	void setDimensions(Size charDimension);
 };
 
-class ZLWin32DialogPanel {
+class W32Panel {
 
 public:
-	ZLWin32DialogPanel(HWND mainWindow, const std::string &caption);
-	~ZLWin32DialogPanel();
+	W32Panel(HWND mainWindow, const std::string &caption);
+	~W32Panel();
 	DLGTEMPLATE *dialogTemplate();
-	void setElement(ZLWin32DialogElementPtr element);
-	ZLWin32DialogElement::Size charDimension() const;
+	void setElement(W32ElementPtr element);
+	W32Element::Size charDimension() const;
 
 private:
-	ZLWin32DialogElement::Size myCharDimension;
-	ZLWin32DialogElement::Size mySize;
+	W32Element::Size myCharDimension;
+	W32Element::Size mySize;
 	std::string myCaption;
 
-	ZLWin32DialogElementPtr myElement;
+	W32ElementPtr myElement;
 
 	mutable WORD *myAddress;
 };
 
-#endif /* __ZLWIN32DIALOGELEMENT_H__ */
+#endif /* __W32ELEMENT_H__ */

@@ -24,8 +24,9 @@
 
 #include <ZLDialogContent.h>
 
+#include "../dialogElements/W32Element.h"
+
 #include "ZLWin32OptionView.h"
-#include "ZLWin32DialogElement.h"
 
 class ZLWin32DialogContent : public ZLDialogContent {
 
@@ -40,15 +41,15 @@ public:
 
 	//void addItem(Win32Widget *what, int row, int fromColumn, int toColumn);
 
-	ZLWin32DialogElementPtr content() const;
+	W32ElementPtr content() const;
 
 private:
 	int addRow();
 	void createViewByEntry(ZLOptionEntry *option, int row, ZLWin32OptionView::HorizontalLocation location);
 
 private:
-	ZLWin32DialogVBox *myContentBox;
-	ZLWin32DialogElementPtr myContentBoxAsElementPtr;
+	W32VBox *myContentBox;
+	W32ElementPtr myContentBoxAsElementPtr;
 };
 
 #endif /* __ZLWIN32DIALOGCONTENT_H__ */

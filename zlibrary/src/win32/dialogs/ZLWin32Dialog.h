@@ -21,15 +21,12 @@
 #define __ZLWIN32DIALOG_H__
 
 #include <string>
-#include <vector>
-#include <map>
 
-#include <shared_ptr.h>
 #include <ZLDialog.h>
 
+#include "../dialogElements/W32Element.h"
+
 class ZLWin32ApplicationWindow;
-class ZLWin32DialogPanel;
-class ZLWin32DialogHBox;
 
 class ZLWin32Dialog : public ZLDialog {
 
@@ -43,8 +40,8 @@ public:
 private:
 	ZLWin32ApplicationWindow *myWindow;
 	const std::string myTitle;
-	shared_ptr<ZLWin32DialogPanel> myPanel;
-	ZLWin32DialogHBox *myButtonBox;
+	W32Panel myPanel;
+	W32HBox *myButtonBox;
 };
 
 #endif /* __ZLWIN32DIALOG_H__ */

@@ -22,8 +22,6 @@
 
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32DialogContent.h"
-#include "ZLWin32DialogElement.h"
-//#include "ZLWin32Util.h"
 
 ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLDesktopOptionsDialog(id), myMainWindow(mainWindow), myCaption(caption) {
 /*
@@ -93,7 +91,7 @@ bool ZLWin32OptionsDialog::run() {
 		pages[i].dwSize = sizeof(pages[i]);
 		pages[i].dwFlags = PSP_DLGINDIRECT;
 		pages[i].hInstance = 0;
-		ZLWin32DialogPanel *panel = new ZLWin32DialogPanel(myMainWindow, myTabNames[i]);
+		W32Panel *panel = new W32Panel(myMainWindow, myTabNames[i]);
 		panel->setElement(myTabs[i]->content());
 		pages[i].pResource = panel->dialogTemplate();
 		pages[i].hIcon = 0;

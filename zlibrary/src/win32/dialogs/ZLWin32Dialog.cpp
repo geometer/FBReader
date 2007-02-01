@@ -19,25 +19,23 @@
 
 #include "ZLWin32Dialog.h"
 #include "ZLWin32DialogContent.h"
-#include "ZLWin32DialogElement.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name) : myWindow(window), myTitle(name) {
+ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name) : myWindow(window), myTitle(name), myPanel(myWindow->mainWindow(), myTitle) {
 	myWindow->blockMouseEvents(true);
-	myPanel = new ZLWin32DialogPanel(myWindow->mainWindow(), myTitle);
-	const short charHeight = myPanel->charDimension().Height;
+	const short charHeight = myPanel.charDimension().Height;
 
-	ZLWin32DialogVBox *panelBox = new ZLWin32DialogVBox();
-	myPanel->setElement(panelBox);
+	W32VBox *panelBox = new W32VBox();
+	myPanel.setElement(panelBox);
 
 	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
 	myTab = contentTab;
-	ZLWin32DialogElementPtr contentBox = contentTab->content();
+	W32ElementPtr contentBox = contentTab->content();
 	panelBox->addElement(contentBox);
-	((ZLWin32DialogBox&)*contentBox).setSpacing(charHeight / 2);
-	((ZLWin32DialogBox&)*contentBox).setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+	((W32Box&)*contentBox).setSpacing(charHeight / 2);
+	((W32Box&)*contentBox).setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 
-	myButtonBox = new ZLWin32DialogHBox();
+	myButtonBox = new W32HBox();
 	panelBox->addElement(myButtonBox);
 	myButtonBox->setHomogeneous(true);
 	myButtonBox->setSpacing(charHeight / 2);
@@ -49,7 +47,7 @@ ZLWin32Dialog::~ZLWin32Dialog() {
 }
 
 void ZLWin32Dialog::addButton(const std::string &text, bool accept) {
-	ZLWin32DialogElementPtr button = new ZLWin32PushButton(accept ? IDOK : IDCANCEL, text);
+	W32ElementPtr button = new W32PushButton(accept ? IDOK : IDCANCEL, text);
 	button->setVisible(true);
 	myButtonBox->addElement(button);
 }
@@ -68,5 +66,5 @@ static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARA
 }
 
 bool ZLWin32Dialog::run() {
-	return DialogBoxIndirect(GetModuleHandle(0), myPanel->dialogTemplate(), myWindow->mainWindow(), DialogProc);
+	return DialogBoxIndirect(GetModuleHandle(0), myPanel.dialogTemplate(), myWindow->mainWindow(), DialogProc);
 }

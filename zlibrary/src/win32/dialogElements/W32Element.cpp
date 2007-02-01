@@ -19,15 +19,15 @@
 
 #include <ZLUnicodeUtil.h>
 
-#include "ZLWin32DialogElement.h"
+#include "W32Element.h"
 
-ZLWin32DialogElement::ZLWin32DialogElement() {
+W32Element::W32Element() {
 }
 
-ZLWin32DialogElement::~ZLWin32DialogElement() {
+W32Element::~W32Element() {
 }
 
-int ZLWin32DialogUtil::allocateString(WORD *p, const std::string &text) {
+int W32Element::allocateString(WORD *p, const std::string &text) {
 	ZLUnicodeUtil::Ucs2String ucs2Str;
 	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, text.data(), text.length());
 	ucs2Str.push_back(0);
@@ -35,7 +35,7 @@ int ZLWin32DialogUtil::allocateString(WORD *p, const std::string &text) {
 	return ucs2Str.size();
 }
 
-ZLWin32DialogPanel::ZLWin32DialogPanel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0) {
+W32Panel::W32Panel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0) {
 	TEXTMETRIC metric;
 	HDC hdc = GetDC(mainWindow);
 	GetTextMetrics(hdc, &metric);
@@ -45,13 +45,13 @@ ZLWin32DialogPanel::ZLWin32DialogPanel(HWND mainWindow, const std::string &capti
 	myCharDimension.Height = (metric.tmHeight + metric.tmExternalLeading) * 8 / HIWORD(dlgUnit);
 }
 
-ZLWin32DialogPanel::~ZLWin32DialogPanel() {
+W32Panel::~W32Panel() {
 	if (myAddress != 0) {
 		delete[] myAddress;
 	}
 }
 
-DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() {
+DLGTEMPLATE *W32Panel::dialogTemplate() {
 	if (myAddress != 0) {
 		delete[] myAddress;
 	}
@@ -77,7 +77,7 @@ DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() {
 	*p++ = mySize.Height;
 	*p++ = 0;
 	*p++ = 0;
-	p += ZLWin32DialogUtil::allocateString(p, myCaption);
+	p += W32Element::allocateString(p, myCaption);
 	if ((p - myAddress) % 2 == 1) {
 		p++;
 	}
@@ -86,10 +86,10 @@ DLGTEMPLATE *ZLWin32DialogPanel::dialogTemplate() {
 	return (DLGTEMPLATE*)myAddress;
 }
 
-void ZLWin32DialogPanel::setElement(ZLWin32DialogElementPtr element) {
+void W32Panel::setElement(W32ElementPtr element) {
 	myElement = element;
 }
 
-ZLWin32DialogElement::Size ZLWin32DialogPanel::charDimension() const {
+W32Element::Size W32Panel::charDimension() const {
 	return myCharDimension;
 }

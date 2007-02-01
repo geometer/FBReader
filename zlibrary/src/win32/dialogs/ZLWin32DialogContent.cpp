@@ -21,32 +21,22 @@
 //#include "ZLWin32OptionView.h"
 
 ZLWin32DialogContent::ZLWin32DialogContent() {
-	myContentBox = new ZLWin32DialogVBox();
+	myContentBox = new W32VBox();
 	myContentBoxAsElementPtr = myContentBox;
 	myContentBox->setHomogeneous(true);
 
-	ZLWin32DialogElementPtr control = new ZLWin32LineEditor(10001, "My Editor");
+	W32ElementPtr control = new W32LineEditor(10001, "My Editor");
 	control->setVisible(true);
 	myContentBox->addElement(control);
-	control = new ZLWin32CheckBox(10001, "My Checkbox");
+	control = new W32CheckBox(10001, "My Checkbox");
 	control->setVisible(true);
 	myContentBox->addElement(control);
-
-	/*
-	myTable = GTK_TABLE(gtk_table_new(0, 4, false));
-	gtk_container_set_border_width(GTK_CONTAINER(myTable), 2);
-
-	myRowCounter = 0;
-
-	gtk_widget_show(GTK_WIDGET(myTable));
-	*/
 }
 
 ZLWin32DialogContent::~ZLWin32DialogContent() {
-	// We must not delete the widget, it's destroyed when the parent widget is destroyed
 }
 
-ZLWin32DialogElementPtr ZLWin32DialogContent::content() const {
+W32ElementPtr ZLWin32DialogContent::content() const {
 	return myContentBoxAsElementPtr;
 }
 
