@@ -37,33 +37,38 @@ static Win32Widget *labelWithMyParams(const char *text) {
 void ZLWin32OptionView::_onValueChanged(Win32Widget*, gpointer self) {
 	((ZLWin32OptionView*)self)->onValueChanged();
 }
+*/
 
-void BooleanOptionView::_createItem() {
-	/ *
-	if (ZLApplication::isKeyboardPresented()) {
-		myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name(), true).c_str());
-	} else {
-		myCheckBox = gtk_check_button_new_with_label(gtkString(myOption->name(), false).c_str());
-	}
-	* /
+BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+	myElement = new W32CheckBox(2001, myOption->name());
+	/*
 	myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name()).c_str());
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
 	g_signal_connect(myCheckBox, "toggled", G_CALLBACK(_onValueChanged), this);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
+	*/
+}
+
+void BooleanOptionView::_createItem() {
 }
 
 void BooleanOptionView::_show() {
-	gtk_widget_show(myCheckBox);
+	myElement->setVisible(true);
+	//gtk_widget_show(myCheckBox);
 }
 
 void BooleanOptionView::_hide() {
-	gtk_widget_hide(myCheckBox);
+	myElement->setVisible(false);
+	//gtk_widget_hide(myCheckBox);
 }
 
 void BooleanOptionView::_onAccept() const {
+	/*
 	((ZLBooleanOptionEntry*)myOption)->onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
+	*/
 }
 
+/*
 void BooleanOptionView::onValueChanged() {
 	((ZLBooleanOptionEntry*)myOption)->onStateChanged(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
@@ -212,7 +217,8 @@ void SpinOptionView::_onAccept() const {
 }
 */
 
-void StringOptionView::_createItem() {
+StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+	myElement = new W32LineEditor(2001, option->initialValue());
 /*
 	myLineEdit = GTK_ENTRY(gtk_entry_new());
 	g_signal_connect(myLineEdit, "changed", G_CALLBACK(_onValueChanged), this);
@@ -231,6 +237,9 @@ void StringOptionView::_createItem() {
 */
 }
 
+void StringOptionView::_createItem() {
+}
+
 void StringOptionView::reset() {
 /*
 	if (myLineEdit == 0) {
@@ -246,21 +255,11 @@ void StringOptionView::onValueChanged() {
 }
 
 void StringOptionView::_show() {
-/*
-	if (myLabel != 0) {
-		gtk_widget_show(myLabel);
-	}
-	gtk_widget_show(GTK_WIDGET(myLineEdit));
-*/
+	myElement->setVisible(true);
 }
 
 void StringOptionView::_hide() {
-/*
-	if (myLabel != 0) {
-		gtk_widget_hide(myLabel);
-	}
-	gtk_widget_hide(GTK_WIDGET(myLineEdit));
-*/
+	myElement->setVisible(false);
 }
 
 void StringOptionView::_setActive(bool active) {

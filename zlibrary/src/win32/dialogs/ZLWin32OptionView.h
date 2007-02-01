@@ -20,43 +20,31 @@
 #ifndef __ZLWIN32OPTIONVIEW_H__
 #define __ZLWIN32OPTIONVIEW_H__
 
-/*
-#include <gtk/gtkwidget.h>
-#include <gtk/gtkrange.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtkbox.h>
-#include <gtk/gtkcombobox.h>
-#include <gtk/gtkentry.h>
-*/
-
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 #include "../../abstract/dialogs/ZLOptionView.h"
+
+#include "../dialogElements/W32Element.h"
 
 class ZLWin32DialogContent;
 
 class ZLWin32OptionView : public ZLOptionView {
 
-public:
-	enum HorizontalLocation {
-		LEFT,
-		RIGHT,
-		FULL_STRING
-	};
-
 protected:
-	ZLWin32OptionView(ZLOptionEntry *option, ZLWin32DialogContent *tab, int row, HorizontalLocation location) : ZLOptionView(option), myTab(tab), myRow(row), myHorizontalLocation(location) {}
+	ZLWin32OptionView(ZLOptionEntry *option, ZLWin32DialogContent *tab) : ZLOptionView(option), myTab(tab) {
+	}
 
 protected:
 	//static void _onValueChanged(Win32Widget*, gpointer self);
 	// TODO: replace by pure virtual method (?)
 	virtual void onValueChanged() {}
 
+public:
+	W32ElementPtr element() const { return myElement; }
+
 protected:
 	ZLWin32DialogContent *myTab;
-	int myRow;
-	HorizontalLocation myHorizontalLocation;
+	W32ElementPtr myElement;
 };
 
 /*
@@ -84,7 +72,7 @@ private:
 class BooleanOptionView : public ZLWin32OptionView {
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab, int row, HorizontalLocation location) : ZLWin32OptionView(option, tab, row, location) {}
+	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab);
 
 protected:
 	void _createItem();
@@ -102,7 +90,7 @@ private:
 class StringOptionView : public ZLWin32OptionView {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab, int row, HorizontalLocation location) : ZLWin32OptionView(option, tab, row, location) {}
+	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab);
 
 private:
 	void _createItem();
