@@ -40,6 +40,10 @@ void W32Control::setVisible(bool visible) {
 	}
 }
 
+bool W32Control::isVisible() const {
+	return myStyle & WS_VISIBLE;
+}
+
 int W32Control::allocationSize() const {
 	int size = 12 + ZLUnicodeUtil::utf8Length(className()) + ZLUnicodeUtil::utf8Length(myText);
 	return size + size % 2;
@@ -118,7 +122,7 @@ const std::string &W32LineEditor::className() const {
 	return CLASS_EDIT;
 }
 
-W32SpinBox::W32SpinBox(const std::string &text) : W32Control(WS_BORDER, text) {
+W32SpinBox::W32SpinBox(const std::string &text) : W32Control(WS_BORDER | UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS, text) {
 }
 
 void W32SpinBox::setDimensions(Size charDimension) {
@@ -173,4 +177,3 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 		p++;
 	}
 }
-

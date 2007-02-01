@@ -45,7 +45,7 @@ public:
 
 private:
 	int addRow();
-	void createViewByEntry(ZLOptionEntry *option);
+	ZLWin32OptionView *createViewByEntry(ZLOptionEntry *option);
 
 private:
 	W32VBox *myContentBox;

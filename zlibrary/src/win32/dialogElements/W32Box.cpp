@@ -48,6 +48,25 @@ void W32Box::setVisible(bool visible) {
 	// TODO: implement
 }
 
+bool W32Box::isVisible() const {
+	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		if ((*it)->isVisible()) {
+			return true;
+		}
+	}
+	return false;
+}
+
+int W32Box::visibleElementsNumber() const {
+	int counter = 0;
+	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		if ((*it)->isVisible()) {
+			++counter;
+		}
+	}
+	return counter;
+}
+
 int W32Box::controlNumber() const {
 	int number = 0;
 	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
@@ -86,27 +105,30 @@ W32Element::Size W32HBox::minimumSize() const {
 	}
 
 	Size size;
-	if (homogeneous()) {
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	int elementCounter = 0;
+	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		if ((*it)->isVisible()) {
 			Size elementSize = (*it)->minimumSize();
-			size.Width = std::max(size.Width, elementSize.Width);
+			if (homogeneous()) {
+				size.Width = std::max(size.Width, elementSize.Width);
+			} else {
+				size.Width += elementSize.Width;
+			}
 			size.Height = std::max(size.Height, elementSize.Height);
-		}
-		size.Width *= myElements.size();
-	} else {
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			Size elementSize = (*it)->minimumSize();
-			size.Width += elementSize.Width;
-			size.Height = std::max(size.Height, elementSize.Height);
+			++elementCounter;
 		}
 	}
-	size.Width += leftMargin() + rightMargin() + spacing() * (myElements.size() - 1);
+	if (homogeneous()) {
+		size.Width *= elementCounter;
+	}
+	size.Width += leftMargin() + rightMargin() + spacing() * (elementCounter - 1);
 	size.Height += topMargin() + bottomMargin();
 	return size;
 }
 
 void W32HBox::setPosition(int x, int y, Size size) {
-	if (myElements.empty()) {
+	int elementCounter = visibleElementsNumber();
+	if (elementCounter == 0) {
 		return;
 	}
 
@@ -114,22 +136,26 @@ void W32HBox::setPosition(int x, int y, Size size) {
 	y += topMargin();
 	if (homogeneous()) {
 		const Size elementSize(
-			(size.Width - leftMargin() - rightMargin() - spacing() * (myElements.size() - 1)) / myElements.size(),
+			(size.Width - leftMargin() - rightMargin() - spacing() * (elementCounter - 1)) / elementCounter,
 			size.Height - topMargin() - bottomMargin()
 		);
 		const short deltaX = elementSize.Width + spacing();
 		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->setPosition(x, y, elementSize);
-			x += deltaX;
+			if ((*it)->isVisible()) {
+				(*it)->setPosition(x, y, elementSize);
+				x += deltaX;
+			}
 		}
 	} else {
 		const int elementHeight = size.Height - topMargin() - bottomMargin();
 		Size elementSize;
 		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			Size elementSize = (*it)->minimumSize();
-			elementSize.Height = elementHeight;
-			(*it)->setPosition(x, y, elementSize);
-			x += elementSize.Width + spacing();
+			if ((*it)->isVisible()) {
+				Size elementSize = (*it)->minimumSize();
+				elementSize.Height = elementHeight;
+				(*it)->setPosition(x, y, elementSize);
+				x += elementSize.Width + spacing();
+			}
 		}
 	}
 }
@@ -143,27 +169,30 @@ W32Element::Size W32VBox::minimumSize() const {
 	}
 
 	Size size;
-	if (homogeneous()) {
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	int elementCounter = 0;
+	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		if ((*it)->isVisible()) {
 			Size elementSize = (*it)->minimumSize();	
 			size.Width = std::max(size.Width, elementSize.Width);
-			size.Height = std::max(size.Height, elementSize.Height);
-		}
-		size.Height *= myElements.size();
-	} else {
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			Size elementSize = (*it)->minimumSize();	
-			size.Width = std::max(size.Width, elementSize.Width);
-			size.Height += elementSize.Height;
+			if (homogeneous()) {
+				size.Height = std::max(size.Height, elementSize.Height);
+			} else {
+				size.Height += elementSize.Height;
+			}
+			++elementCounter;
 		}
 	}
+	if (homogeneous()) {
+		size.Height *= elementCounter;
+	}
 	size.Width += leftMargin() + rightMargin();
-	size.Height += topMargin() + bottomMargin() + spacing() * (myElements.size() - 1);
+	size.Height += topMargin() + bottomMargin() + spacing() * (elementCounter - 1);
 	return size;
 }
 
 void W32VBox::setPosition(int x, int y, Size size) {
-	if (myElements.empty()) {
+	int elementCounter = visibleElementsNumber();
+	if (elementCounter == 0) {
 		return;
 	}
 
@@ -172,20 +201,24 @@ void W32VBox::setPosition(int x, int y, Size size) {
 	if (homogeneous()) {
 		const Size elementSize(
 			size.Width - leftMargin() - rightMargin(),
-			(size.Height - topMargin() - bottomMargin() - spacing() * (myElements.size() - 1)) / myElements.size()
+			(size.Height - topMargin() - bottomMargin() - spacing() * (elementCounter - 1)) / elementCounter
 		);
 		const short deltaY = elementSize.Height + spacing();
 		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			(*it)->setPosition(x, y, elementSize);
-			y += deltaY;
+			if ((*it)->isVisible()) {
+				(*it)->setPosition(x, y, elementSize);
+				y += deltaY;
+			}
 		}
 	} else {
 		const short elementWidth = size.Width - leftMargin() - rightMargin();
 		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-			Size elementSize = (*it)->minimumSize();
-			elementSize.Width = elementWidth;
-			(*it)->setPosition(x, y, elementSize);
-			y += elementSize.Height + spacing();
+			if ((*it)->isVisible()) {
+				Size elementSize = (*it)->minimumSize();
+				elementSize.Width = elementWidth;
+				(*it)->setPosition(x, y, elementSize);
+				y += elementSize.Height + spacing();
+			}
 		}
 	}
 }

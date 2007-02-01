@@ -50,6 +50,7 @@ public:
 	virtual void allocate(WORD *&p, short &id) const = 0;
 	virtual int allocationSize() const = 0;
 	virtual void setVisible(bool visible) = 0;
+	virtual bool isVisible() const = 0;
 	virtual int controlNumber() const = 0;
 	virtual Size minimumSize() const = 0;
 	virtual void setPosition(int x, int y, Size size) = 0;
@@ -72,6 +73,7 @@ public:
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	void setVisible(bool visible);
+	bool isVisible() const;
 	int controlNumber() const;
 
 	void setHomogeneous(bool homogeneous);
@@ -86,6 +88,7 @@ protected:
 	int rightMargin() const { return myRightMargin; }
 	int spacing() const { return mySpacing; }
 	void setDimensions(Size charDimension);
+	int visibleElementsNumber() const;
 
 protected:
 	W32ElementList myElements;
@@ -123,6 +126,7 @@ private:
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	void setVisible(bool visible);
+	bool isVisible() const;
 	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);

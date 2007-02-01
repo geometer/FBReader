@@ -58,17 +58,35 @@ int ZLWin32DialogContent::addRow() {
 //}
 
 void ZLWin32DialogContent::addOption(ZLOptionEntry *option) {
-	createViewByEntry(option);
+	ZLWin32OptionView *view = createViewByEntry(option);
+	if (view != 0) {
+		myContentBox->addElement(view->element());
+	}
 }
 
 void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
-	createViewByEntry(option0);
-	createViewByEntry(option1);
+	ZLWin32OptionView *view0 = createViewByEntry(option0);
+	ZLWin32OptionView *view1 = createViewByEntry(option1);
+	if ((view0 != 0) || (view1 != 0)) {
+		W32HBox *box = new W32HBox();
+		box->setHomogeneous(true);
+		myContentBox->addElement(box);
+		if (view0 != 0) {
+			box->addElement(view0->element());
+		} else {
+			// TODO: add dummy element
+		}
+		if (view1 != 0) {
+			box->addElement(view1->element());
+		} else {
+			// TODO: add dummy element
+		}
+	}
 }
 
-void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option) {
+ZLWin32OptionView *ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option) {
 	if (option == 0) {
-		return;
+		return 0;
 	}
 
 	ZLWin32OptionView *view = 0;
@@ -106,6 +124,6 @@ void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option) {
 	if (view != 0) {
 		view->setVisible(option->isVisible());
 		addView(view);
-		myContentBox->addElement(view->element());
 	}
+	return view;
 }
