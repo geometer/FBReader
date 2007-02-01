@@ -115,7 +115,7 @@ bool W32DialogPanel::Callback(UINT message, WPARAM wParam, LPARAM lParam) {
 					EndDialog(myDialogWindow, wParam == IDOK);
 					return true;
 				default:
-					std::cerr << wParam << " : " << lParam << " : " << message << "\n";
+					std::cerr << LOWORD(wParam) << " : " << lParam << " : " << message << "\n";
 					return false;
 			}
 	}

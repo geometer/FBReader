@@ -130,6 +130,7 @@ private:
 	virtual const std::string &className() const = 0;
 
 private:
+protected:
 	DWORD myStyle;
 	int myX, myY;
 
@@ -172,6 +173,8 @@ public:
 	void setDimensions(Size charDimension);
 
 	const std::string &className() const;
+
+	void allocate(WORD *&p, short &id) const;
 };
 
 #endif /* __W32ELEMENT_H__ */

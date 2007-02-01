@@ -19,6 +19,9 @@
 
 #include <ZLUnicodeUtil.h>
 
+#include <windows.h>
+#include <commctrl.h>
+
 #include "W32Element.h"
 
 const std::string CLASS_BUTTON = "button";
@@ -126,3 +129,48 @@ void W32SpinBox::setDimensions(Size charDimension) {
 const std::string &W32SpinBox::className() const {
 	return CLASS_SPINBOX;
 }
+
+void W32SpinBox::allocate(WORD *&p, short &id) const {
+	WORD *start = p;
+
+	*p++ = LOWORD(myStyle);
+	*p++ = HIWORD(myStyle);
+	*p++ = 0;
+	*p++ = 0;
+	*p++ = myX;
+	*p++ = myY;
+	*p++ = mySize.Width;
+	*p++ = mySize.Height;
+	*p++ = id;
+	
+	allocateString(p, "edit");
+	allocateString(p, myText);
+
+	*p++ = 0;
+	if ((p - start) % 2 == 1) {
+		p++;
+	}
+
+	DWORD style = UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS;
+	if (myStyle & WS_VISIBLE) {
+		style |= WS_VISIBLE;
+	}
+	*p++ = LOWORD(style);
+	*p++ = HIWORD(style);
+	*p++ = 0;
+	*p++ = 0;
+	*p++ = myX;
+	*p++ = myY;
+	*p++ = mySize.Width;
+	*p++ = mySize.Height;
+	*p++ = id++;
+	
+	allocateString(p, className());
+	allocateString(p, "");
+
+	*p++ = 0;
+	if ((p - start) % 2 == 1) {
+		p++;
+	}
+}
+
