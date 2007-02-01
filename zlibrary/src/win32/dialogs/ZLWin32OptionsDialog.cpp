@@ -80,11 +80,6 @@ void ZLWin32OptionsDialog::selectTab(const std::string &name) {
 	*/
 }
 
-static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
-	return false;
-}
-
-
 bool ZLWin32OptionsDialog::run() {
 	PROPSHEETPAGE *pages = new PROPSHEETPAGE[myTabs.size()];
 	for (size_t i = 0; i < myTabs.size(); ++i) {
@@ -96,7 +91,7 @@ bool ZLWin32OptionsDialog::run() {
 		pages[i].pResource = panel->dialogTemplate();
 		pages[i].hIcon = 0;
 	 	pages[i].pszTitle = 0; // TODO: !!!
-		pages[i].pfnDlgProc = DialogProc; // TODO: !!!
+		pages[i].pfnDlgProc = W32Panel::DialogProc; // TODO: !!!
 		pages[i].lParam = 0;
 		pages[i].pfnCallback = 0;
 		pages[i].pcRefParent = 0;

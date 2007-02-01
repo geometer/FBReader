@@ -51,7 +51,7 @@ void ZLWin32OptionView::_hide() {
 }
 
 BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	myElement = new W32CheckBox(2001, myOption->name());
+	myElement = new W32CheckBox(myOption->name());
 	/*
 	myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name()).c_str());
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
@@ -216,7 +216,7 @@ void SpinOptionView::_onAccept() const {
 */
 
 StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	myElement = new W32LineEditor(2001, option->initialValue());
+	myElement = new W32LineEditor(option->initialValue());
 /*
 	myLineEdit = GTK_ENTRY(gtk_entry_new());
 	g_signal_connect(myLineEdit, "changed", G_CALLBACK(_onValueChanged), this);

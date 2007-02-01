@@ -47,24 +47,11 @@ ZLWin32Dialog::~ZLWin32Dialog() {
 }
 
 void ZLWin32Dialog::addButton(const std::string &text, bool accept) {
-	W32ElementPtr button = new W32PushButton(accept ? IDOK : IDCANCEL, text);
+	W32ElementPtr button = new W32PushButton(text);
 	button->setVisible(true);
 	myButtonBox->addElement(button);
 }
 
-static BOOL CALLBACK DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (message) {
-		case WM_COMMAND:
-			switch (wParam) {
-				case IDOK:
-				case IDCANCEL:
-					EndDialog(hDialog, wParam == IDOK);
-					return true;
-			}
-	}
-	return false;
-}
-
 bool ZLWin32Dialog::run() {
-	return DialogBoxIndirect(GetModuleHandle(0), myPanel.dialogTemplate(), myWindow->mainWindow(), DialogProc);
+	return DialogBoxIndirect(GetModuleHandle(0), myPanel.dialogTemplate(), myWindow->mainWindow(), W32Panel::DialogProc);
 }

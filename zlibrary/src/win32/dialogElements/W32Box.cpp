@@ -30,10 +30,9 @@ void W32Box::addElement(W32ElementPtr element) {
 	}
 }
 
-void W32Box::allocate(WORD *p) const {
+void W32Box::allocate(WORD *&p, short &id) const {
 	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-		(*it)->allocate(p);
-		p += (*it)->allocationSize();
+		(*it)->allocate(p, id);
 	}
 }
 

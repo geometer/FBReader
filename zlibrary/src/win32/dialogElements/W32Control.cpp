@@ -24,7 +24,7 @@
 const std::string CLASS_BUTTON = "button";
 const std::string CLASS_EDIT = "edit";
 
-W32Control::W32Control(DWORD style, WORD id, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(0), myY(0), myId(id), myText(text) {
+W32Control::W32Control(DWORD style, const std::string &text) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(0), myY(0), myText(text) {
 }
 
 void W32Control::setVisible(bool visible) {
@@ -41,7 +41,9 @@ int W32Control::allocationSize() const {
 	return size + size % 2;
 }
 
-void W32Control::allocate(WORD *p) const {
+void W32Control::allocate(WORD *&p, short &id) const {
+	WORD *start = p;
+
 	*p++ = LOWORD(myStyle);
 	*p++ = HIWORD(myStyle);
 	*p++ = 0;
@@ -50,12 +52,15 @@ void W32Control::allocate(WORD *p) const {
 	*p++ = myY;
 	*p++ = mySize.Width;
 	*p++ = mySize.Height;
-	*p++ = myId;
+	*p++ = id++;
 	
 	p += allocateString(p, className());
 	p += allocateString(p, myText);
 
 	*p++ = 0;
+	if ((p - start) % 2 == 1) {
+		p++;
+	}
 }
 
 int W32Control::controlNumber() const {
@@ -72,7 +77,7 @@ void W32Control::setPosition(int x, int y, Size size) {
 	mySize = size;
 }
 
-W32PushButton::W32PushButton(WORD id, const std::string &text) : W32Control(BS_PUSHBUTTON, id, text) {
+W32PushButton::W32PushButton(const std::string &text) : W32Control(BS_PUSHBUTTON, text) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
 
@@ -85,7 +90,7 @@ const std::string &W32PushButton::className() const {
 	return CLASS_BUTTON;
 }
 
-W32CheckBox::W32CheckBox(WORD id, const std::string &text) : W32Control(BS_CHECKBOX, id, text) {
+W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_CHECKBOX, text) {
 }
 
 void W32CheckBox::setDimensions(Size charDimension) {
@@ -97,7 +102,7 @@ const std::string &W32CheckBox::className() const {
 	return CLASS_BUTTON;
 }
 
-W32LineEditor::W32LineEditor(WORD id, const std::string &text) : W32Control(WS_BORDER, id, text) {
+W32LineEditor::W32LineEditor(const std::string &text) : W32Control(WS_BORDER, text) {
 }
 
 void W32LineEditor::setDimensions(Size charDimension) {

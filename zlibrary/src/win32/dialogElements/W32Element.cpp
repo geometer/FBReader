@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLUnicodeUtil.h>
 
 #include "W32Element.h"
@@ -81,7 +83,9 @@ DLGTEMPLATE *W32Panel::dialogTemplate() {
 	if ((p - myAddress) % 2 == 1) {
 		p++;
 	}
-	myElement->allocate(p);
+
+	short id = 2000;
+	myElement->allocate(p, id);
 
 	return (DLGTEMPLATE*)myAddress;
 }
@@ -92,4 +96,20 @@ void W32Panel::setElement(W32ElementPtr element) {
 
 W32Element::Size W32Panel::charDimension() const {
 	return myCharDimension;
+}
+
+BOOL CALLBACK W32Panel::DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
+	switch (message) {
+		case WM_COMMAND:
+			switch (wParam) {
+				case IDOK:
+				case IDCANCEL:
+					EndDialog(hDialog, wParam == IDOK);
+					return true;
+				default:
+					std::cerr << wParam << " : " << lParam << " : " << message << "\n";
+					return false;
+			}
+	}
+	return false;
 }

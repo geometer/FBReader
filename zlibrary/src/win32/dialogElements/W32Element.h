@@ -47,7 +47,7 @@ protected:
 public:
 	virtual ~W32Element();
 
-	virtual void allocate(WORD *p) const = 0;
+	virtual void allocate(WORD *&p, short &id) const = 0;
 	virtual int allocationSize() const = 0;
 	virtual void setVisible(bool visible) = 0;
 	virtual int controlNumber() const = 0;
@@ -69,7 +69,7 @@ public:
 	W32Box();
 	void addElement(W32ElementPtr element);
 
-	void allocate(WORD *p) const;
+	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	void setVisible(bool visible);
 	int controlNumber() const;
@@ -117,10 +117,10 @@ public:
 class W32Control : public W32Element {
 
 protected:
-	W32Control(DWORD style, WORD id, const std::string &text);
+	W32Control(DWORD style, const std::string &text);
 
 private:
-	void allocate(WORD *p) const;
+	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	void setVisible(bool visible);
 	int controlNumber() const;
@@ -132,7 +132,6 @@ private:
 private:
 	DWORD myStyle;
 	int myX, myY;
-	WORD myId;
 
 protected:
 	Size mySize;
@@ -142,7 +141,7 @@ protected:
 class W32PushButton : public W32Control {
 
 public:
-	W32PushButton(WORD id, const std::string &text);
+	W32PushButton(const std::string &text);
 	void setDimensions(Size charDimension);
 
 	const std::string &className() const;
@@ -151,7 +150,7 @@ public:
 class W32CheckBox : public W32Control {
 
 public:
-	W32CheckBox(WORD id, const std::string &text);
+	W32CheckBox(const std::string &text);
 	void setDimensions(Size charDimension);
 
 	const std::string &className() const;
@@ -160,13 +159,16 @@ public:
 class W32LineEditor : public W32Control {
 
 public:
-	W32LineEditor(WORD id, const std::string &text);
+	W32LineEditor(const std::string &text);
 	void setDimensions(Size charDimension);
 
 	const std::string &className() const;
 };
 
 class W32Panel {
+
+public:
+	static BOOL CALLBACK W32Panel::DialogProc(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
 	W32Panel(HWND mainWindow, const std::string &caption);
