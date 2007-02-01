@@ -24,6 +24,7 @@ openbook
 *** win32 version
 
 диалоги
+target 'install' в Makefile
 установщик
 конфиг в registry (?)
 expat -> msxml (?)
