@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <windows.h>
 #include <prsht.h>
 
@@ -26,31 +24,12 @@
 #include "ZLWin32DialogContent.h"
 
 ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow), myCaption(caption) {
-/*
-	myDialog = createWin32Dialog(caption);
-
-	std::string okString = gtkString("&Ok");
-	std::string cancelString = gtkString("&Cancel");
-	gtk_dialog_add_button (myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
-	gtk_dialog_add_button (myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
-
-	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
-
-	gtk_container_set_border_width(GTK_CONTAINER(myNotebook), 8);
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myNotebook), TRUE, TRUE, 0);
-
-	gtk_widget_show(GTK_WIDGET(myNotebook));
-*/
 }
 
 ZLWin32OptionsDialog::~ZLWin32OptionsDialog() {
 	for (std::vector<ZLWin32DialogContent*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
 		delete *tab;
 	}
-
-/*
-	destroyWin32Dialog(myDialog);
-*/
 }
 
 ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
@@ -86,7 +65,6 @@ bool ZLWin32OptionsDialog::run() {
 	short maxPanelWidth = 0;
 	for (size_t i = 0; i < myTabs.size(); ++i) {
 		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
-		//std::cerr << "panel = " << panel << "\n";
 		panel->setElement(myTabs[i]->content());
 		W32Box &box = (W32Box&)*myTabs[i]->content();
 		const int charHeight = panel->charDimension().Height;
@@ -111,9 +89,8 @@ bool ZLWin32OptionsDialog::run() {
 		pages[i].pResource = panel.dialogTemplate();
 		pages[i].hIcon = 0;
 	 	pages[i].pszTitle = 0;
-		pages[i].pfnDlgProc = W32DialogPanel::PSStaticCallback; // TODO: !!!
-		pages[i].lParam = (LPARAM)&panel; // TODO: !!!
-		//std::cerr << "lParam = " << (W32DialogPanel*)pages[i].lParam << "\n";
+		pages[i].pfnDlgProc = W32DialogPanel::PSStaticCallback;
+		pages[i].lParam = (LPARAM)&panel;
 		pages[i].pfnCallback = 0;
 		pages[i].pcRefParent = 0;
 	}

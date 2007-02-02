@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
+//#include <iostream>
 
 #include <ZLUnicodeUtil.h>
 
@@ -50,8 +50,7 @@ void W32DialogPanel::init(HWND dialogWindow) {
 	myDialogWindow = dialogWindow;
 	ourPanels[myDialogWindow] = this;	
 	short id = FirstControlId;
-	//std::cerr << &*myElement << "\n";
-	//myElement->init(dialogWindow, id);
+	myElement->init(dialogWindow, id);
 }
 
 void W32DialogPanel::calculateSize() {
@@ -107,7 +106,6 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 
 void W32DialogPanel::setElement(W32ElementPtr element) {
 	myElement = element;
-	//std::cerr << &*myElement << "\n";
 }
 
 W32Element::Size W32DialogPanel::charDimension() const {
@@ -116,7 +114,6 @@ W32Element::Size W32DialogPanel::charDimension() const {
 
 BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
 	if (message == WM_INITDIALOG) {
-		//std::cerr << "lParam2 = " << (W32DialogPanel*)lParam << "\n";
 		((W32DialogPanel*)lParam)->init(hDialog);
 		return true;
 	}
@@ -128,12 +125,8 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 }
 
 BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
-	//std::cerr << wParam << " : " << lParam << " : " << message << "\n";
-	return false;
-	/*
 	if (message == WM_INITDIALOG) {
-		std::cerr << "lParam2 = " << (W32DialogPanel*)lParam << "\n";
-		((W32DialogPanel*)lParam)->init(hDialog);
+		((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hDialog);
 		return true;
 	}
 	W32DialogPanel *panel = ourPanels[hDialog];
@@ -141,7 +134,6 @@ BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARA
 		return panel->Callback(message, wParam, lParam);
 	}
 	return false;
-	*/
 }
 
 bool W32DialogPanel::Callback(UINT message, WPARAM wParam, LPARAM lParam) {

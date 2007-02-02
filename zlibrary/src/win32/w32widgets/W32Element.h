@@ -185,6 +185,7 @@ public:
 
 private:
 	WORD myMin, myMax, myInitial;
+	HWND myControlWindow;
 };
 
 #endif /* __W32ELEMENT_H__ */
