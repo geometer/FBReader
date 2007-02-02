@@ -195,7 +195,12 @@ SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *
 	if (name.empty()) {
 		myElement = spinBox;
 	} else {
-		myElement = new W32HPair(new W32Label(name), spinBox, 67, 30);
+		W32HBox *box = new W32HBox();
+		box->setSpacing(10);
+		box->addElement(new W32Label(name));
+		box->addElement(spinBox);
+		myElement = box;
+		//myElement = new W32HPair(new W32Label(name), spinBox, 67, 30);
 	}
 }
 
@@ -225,7 +230,12 @@ StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogCon
 	if (name.empty()) {
 		myElement = lineEditor;
 	} else {
-		myElement = new W32HPair(new W32Label(name), lineEditor, 20, 77);
+		W32HBox *box = new W32HBox();
+		box->setSpacing(10);
+		box->addElement(new W32Label(name));
+		box->addElement(lineEditor);
+		myElement = box;
+		//myElement = new W32HPair(new W32Label(name), lineEditor, 20, 77);
 	}
 /*
 	myLineEdit = GTK_ENTRY(gtk_entry_new());

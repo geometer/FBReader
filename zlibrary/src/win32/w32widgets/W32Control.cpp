@@ -17,19 +17,23 @@
  * 02110-1301, USA.
  */
 
-#include <ZLUnicodeUtil.h>
+//#include <iostream>
 
 #include <windows.h>
 #include <commctrl.h>
 
+#include <ZLUnicodeUtil.h>
+
 #include "W32Element.h"
 
-const WORD CLASS_BUTTON = 0x0080;
-const WORD CLASS_EDIT = 0x0081;
-const WORD CLASS_STATIC = 0x0082;
-const WORD CLASS_LISTBOX = 0x0083;
-const WORD CLASS_SCROLLBAR = 0x0084;
-const WORD CLASS_COMBOBOX = 0x0085;
+static const WORD CLASS_BUTTON = 0x0080;
+static const WORD CLASS_EDIT = 0x0081;
+static const WORD CLASS_STATIC = 0x0082;
+static const WORD CLASS_LISTBOX = 0x0083;
+static const WORD CLASS_SCROLLBAR = 0x0084;
+static const WORD CLASS_COMBOBOX = 0x0085;
+
+static HFONT controlFont = 0;
 
 static void setText(HWND hWnd, const std::string &text) {
 	ZLUnicodeUtil::Ucs2String str;
@@ -77,6 +81,25 @@ void W32Control::allocate(WORD *&p, short &id) const {
 
 void W32Control::init(HWND parent, short &id) {
 	myWindow = GetDlgItem(parent, id++);
+	if (controlFont == 0) {
+		LOGFONT logicalFont;
+		logicalFont.lfHeight = 15;
+		logicalFont.lfWidth = 0;
+		logicalFont.lfEscapement = 0;
+		logicalFont.lfOrientation = 0;
+		logicalFont.lfWeight = FW_NORMAL;
+		logicalFont.lfItalic = false;
+		logicalFont.lfUnderline = false;
+		logicalFont.lfStrikeOut = false;
+		logicalFont.lfCharSet = DEFAULT_CHARSET;
+		logicalFont.lfOutPrecision = 0;
+		logicalFont.lfClipPrecision = 0;
+		logicalFont.lfQuality = 0;
+		logicalFont.lfPitchAndFamily = 0;
+		strcpy(logicalFont.lfFaceName, "Sans Serif");
+		controlFont = CreateFontIndirect(&logicalFont);
+	}
+	//SendMessage(myWindow, WM_SETFONT, (WPARAM)controlFont, 0);
 }
 
 int W32Control::controlNumber() const {

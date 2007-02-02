@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <windows.h>
 #include <prsht.h>
 
@@ -61,6 +63,27 @@ void ZLWin32OptionsDialog::selectTab(const std::string &name) {
 	*/
 }
 
+int CALLBACK PropSheetProc(HWND hDialog, UINT message, LPARAM lParam) {
+	/*
+	if (message == PSCB_PRECREATE) {
+		std::cerr << (void*)lParam << "\n";
+		DLGTEMPLATE &dlg = *(DLGTEMPLATE*)lParam;
+		std::cerr << dlg.style << " : " << dlg.dwExtendedStyle << "\n";
+		std::cerr << dlg.x << " : " << dlg.y << " : " << dlg.cx << "x" << dlg.cy << "\n";
+	}
+	*/
+	/*
+	if (message == PSCB_INITIALIZED) {
+		std::cerr << hDialog << "\n";
+		char buffer[100];
+		SetWindowPos(hDialog, 0, 0, 0, 500, 500, 0);
+		GetWindowText(hDialog, buffer, 99);
+		std::cerr << buffer << "\n";
+	}
+	*/
+	return 0;
+}
+
 bool ZLWin32OptionsDialog::run() {
 	short maxPanelWidth = 0;
 	for (size_t i = 0; i < myTabs.size(); ++i) {
@@ -97,7 +120,7 @@ bool ZLWin32OptionsDialog::run() {
 
 	PROPSHEETHEADER header;
 	header.dwSize = sizeof(header);
-	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
+	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP | PSH_USECALLBACK;
 	header.hwndParent = myMainWindow;
 	header.hInstance = 0;
 	header.hIcon = 0;
@@ -105,7 +128,7 @@ bool ZLWin32OptionsDialog::run() {
 	header.nPages = myTabs.size();
 	header.nStartPage = 0; // TODO: !!!
 	header.ppsp = pages;
-	header.pfnCallback = 0; // TODO: !!!
+	header.pfnCallback = PropSheetProc; // TODO: !!!
 
 	PropertySheet(&header);
 	/*

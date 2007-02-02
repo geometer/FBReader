@@ -24,6 +24,17 @@ openbook
 *** win32 version
 
 диалоги
+  table layout
+	реакция на нажатие в SpinBox
+	перераскладка при необходимости
+	шрифты в диалогах
+	размер options dialog
+	enable/diable для контролов
+	show/hide для контролов
+	ChoiceOptionView
+	ComboOptionView
+	ColorOptionView
+	KeyOptionView
 target 'install' в Makefile
 установщик
 конфиг в registry (?)

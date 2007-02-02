@@ -89,7 +89,7 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	*p++ = myElement->controlNumber();
 	*p++ = 0; // X
 	*p++ = 0; // Y
-	*p++ = mySize.Width;
+	*p++ = mySize.Width + 100;
 	*p++ = mySize.Height;
 	*p++ = 0;
 	*p++ = 0;
