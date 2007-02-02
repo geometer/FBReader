@@ -190,7 +190,13 @@ void ComboOptionView::onValueChanged() {
 */
 
 SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	myElement = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
+	W32SpinBox *spinBox = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
+	const std::string &name = option->name();
+	if (name.empty()) {
+		myElement = spinBox;
+	} else {
+		myElement = new W32HPair(new W32Label(name), spinBox, 76, 20);
+	}
 }
 
 /*

@@ -65,6 +65,27 @@ private:
 typedef shared_ptr<W32Element> W32ElementPtr;
 typedef std::vector<W32ElementPtr> W32ElementList;
 
+class W32HPair : public W32Element {
+
+public:
+	W32HPair(W32ElementPtr left, W32ElementPtr right, short leftPartPercent, short rightPartPercent);
+
+	void allocate(WORD *&p, short &id) const;
+	int allocationSize() const;
+	void setVisible(bool visible);
+	bool isVisible() const;
+	int controlNumber() const;
+	Size minimumSize() const;
+	void setPosition(int x, int y, Size size);
+
+	void setDimensions(Size charDimension);
+	void init(HWND parent, short &id);
+
+private:
+	W32ElementPtr myLeft, myRight;
+	short myLeftPartPercent, myRightPartPercent;
+};
+
 class W32Box : public W32Element {
 
 public:
@@ -150,6 +171,19 @@ class W32PushButton : public W32Control {
 
 public:
 	W32PushButton(const std::string &text);
+	void setDimensions(Size charDimension);
+
+	WORD classId() const;
+	void init(HWND parent, short &id);
+
+private:
+	std::string myText;
+};
+
+class W32Label : public W32Control {
+
+public:
+	W32Label(const std::string &text);
 	void setDimensions(Size charDimension);
 
 	WORD classId() const;

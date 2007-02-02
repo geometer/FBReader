@@ -51,7 +51,9 @@ int W32Box::allocationSize() const {
 }
 
 void W32Box::setVisible(bool visible) {
-	// TODO: implement
+	for (W32ElementList::iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		(*it)->setVisible(visible);
+	}
 }
 
 bool W32Box::isVisible() const {

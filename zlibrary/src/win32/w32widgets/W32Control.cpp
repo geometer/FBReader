@@ -38,7 +38,7 @@ static void setText(HWND hWnd, const std::string &text) {
 	SetWindowTextW(hWnd, (WCHAR*)&str.front());
 }
 
-W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD | WS_TABSTOP), myX(1), myY(1), mySize(Size(1, 1)), myWindow(0) {
+W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myWindow(0) {
 }
 
 void W32Control::setVisible(bool visible) {
@@ -93,7 +93,7 @@ void W32Control::setPosition(int x, int y, Size size) {
 	mySize = size;
 }
 
-W32PushButton::W32PushButton(const std::string &text) : W32Control(BS_PUSHBUTTON), myText(text) {
+W32PushButton::W32PushButton(const std::string &text) : W32Control(BS_PUSHBUTTON | WS_TABSTOP), myText(text) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
 
@@ -111,7 +111,24 @@ void W32PushButton::init(HWND parent, short &id) {
 	::setText(myWindow, myText);
 }
 
-W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_CHECKBOX), myText(text) {
+W32Label::W32Label(const std::string &text) : W32Control(SS_LEFT), myText(text) {
+}
+
+void W32Label::setDimensions(Size charDimension) {
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Height = charDimension.Height * 3 / 2;
+}
+
+WORD W32Label::classId() const {
+	return CLASS_STATIC;
+}
+
+void W32Label::init(HWND parent, short &id) {
+	W32Control::init(parent, id);
+	::setText(myWindow, myText);
+}
+
+W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_CHECKBOX | WS_TABSTOP), myText(text) {
 }
 
 void W32CheckBox::setDimensions(Size charDimension) {
@@ -128,7 +145,7 @@ void W32CheckBox::init(HWND parent, short &id) {
 	::setText(myWindow, myText);
 }
 
-W32AbstractEditor::W32AbstractEditor(DWORD style) : W32Control(style | WS_BORDER) {
+W32AbstractEditor::W32AbstractEditor(DWORD style) : W32Control(style | WS_BORDER | WS_TABSTOP) {
 }
 
 WORD W32AbstractEditor::classId() const {
@@ -156,7 +173,7 @@ W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_
 }
 
 void W32SpinBox::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * 3;
+	mySize.Width = charDimension.Width * 6;
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 

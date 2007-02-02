@@ -101,7 +101,7 @@ bool ZLWin32OptionsDialog::run() {
 	header.hwndParent = myMainWindow;
 	header.hInstance = 0;
 	header.hIcon = 0;
-	header.pszCaption = TEXT(myCaption.c_str());
+	header.pszCaption = myCaption.c_str();
 	header.nPages = myTabs.size();
 	header.nStartPage = 0; // TODO: !!!
 	header.ppsp = pages;

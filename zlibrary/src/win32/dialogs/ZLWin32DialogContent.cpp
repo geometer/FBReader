@@ -68,21 +68,14 @@ void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *opt
 	ZLWin32OptionView *view0 = createViewByEntry(option0);
 	ZLWin32OptionView *view1 = createViewByEntry(option1);
 	if ((view0 != 0) || (view1 != 0)) {
-		W32HBox *box = new W32HBox();
-		// TODO: !!!
-		box->setSpacing(10);
-		box->setHomogeneous(true);
-		myContentBox->addElement(box);
+		W32ElementPtr element0, element1;
 		if (view0 != 0) {
-			box->addElement(view0->element());
-		} else {
-			// TODO: add dummy element
+			element0 = view0->element();
 		}
 		if (view1 != 0) {
-			box->addElement(view1->element());
-		} else {
-			// TODO: add dummy element
+			element1 = view1->element();
 		}
+		myContentBox->addElement(new W32HPair(element0, element1, 47, 47));
 	}
 }
 
