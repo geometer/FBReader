@@ -123,7 +123,7 @@ public:
 class W32Control : public W32Element {
 
 protected:
-	W32Control(DWORD style, const std::string &text);
+	W32Control(DWORD style);
 
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
@@ -134,13 +134,14 @@ protected:
 	void setPosition(int x, int y, Size size);
 	void init(HWND parent, short &id);
 
-	virtual const std::string &className() const = 0;
+	virtual WORD classId() const = 0;
+
+private:
+	DWORD myStyle;
 
 protected:
-	DWORD myStyle;
 	int myX, myY;
 	Size mySize;
-	std::string myText;
 
 	HWND myWindow;
 };
@@ -151,7 +152,11 @@ public:
 	W32PushButton(const std::string &text);
 	void setDimensions(Size charDimension);
 
-	const std::string &className() const;
+	WORD classId() const;
+	void init(HWND parent, short &id);
+
+private:
+	std::string myText;
 };
 
 class W32CheckBox : public W32Control {
@@ -160,19 +165,35 @@ public:
 	W32CheckBox(const std::string &text);
 	void setDimensions(Size charDimension);
 
-	const std::string &className() const;
+	WORD classId() const;
+	void init(HWND parent, short &id);
+
+private:
+	std::string myText;
 };
 
-class W32LineEditor : public W32Control {
+class W32AbstractEditor : public W32Control {
+
+public:
+	W32AbstractEditor(DWORD style = 0);
+
+	WORD classId() const;
+	void init(HWND parent, short &id);
+};
+
+class W32LineEditor : public W32AbstractEditor {
 
 public:
 	W32LineEditor(const std::string &text);
 	void setDimensions(Size charDimension);
 
-	const std::string &className() const;
+	void init(HWND parent, short &id);
+
+private:
+	std::string myText;
 };
 
-class W32SpinBox : public W32LineEditor {
+class W32SpinBox : public W32AbstractEditor {
 
 public:
 	W32SpinBox(WORD min, WORD max, WORD initial);
