@@ -65,15 +65,23 @@ void ZLWin32OptionsDialog::selectTab(const std::string &name) {
 
 int CALLBACK PropSheetProc(HWND hDialog, UINT message, LPARAM lParam) {
 	/*
+	if (message == PSCB_BUTTONPRESSED) {
+		if (lParam == PSBTN_OK) {
+			std::cerr << "ACCEPT\n";
+		}
+	}
+	*/
+	/*
 	if (message == PSCB_PRECREATE) {
 		std::cerr << (void*)lParam << "\n";
 		DLGTEMPLATE &dlg = *(DLGTEMPLATE*)lParam;
 		std::cerr << dlg.style << " : " << dlg.dwExtendedStyle << "\n";
 		std::cerr << dlg.x << " : " << dlg.y << " : " << dlg.cx << "x" << dlg.cy << "\n";
 	}
-	*/
-	/*
 	if (message == PSCB_INITIALIZED) {
+		RECT rectanlge;
+		GetWindowRect(hDialog, &rectanlge);
+		//std::cerr << "dlg = " << rectanlge.right - rectanlge.left + 1 << "x" << rectanlge.bottom - rectanlge.top + 1 << "\n";
 		std::cerr << hDialog << "\n";
 		char buffer[100];
 		SetWindowPos(hDialog, 0, 0, 0, 500, 500, 0);
@@ -130,22 +138,11 @@ bool ZLWin32OptionsDialog::run() {
 	header.ppsp = pages;
 	header.pfnCallback = PropSheetProc; // TODO: !!!
 
-	PropertySheet(&header);
-	/*
-	gint response = gtk_dialog_run(myDialog);
-
-	switch (response) {
-		case GTK_RESPONSE_ACCEPT:
-			for (std::vector<ZLWin32DialogContent*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
-				(*tab)->accept();
-			break;
-		case GTK_RESPONSE_REJECT:
-			break;
+	bool result = PropertySheet(&header) == 1;
+	if (result) {
+		for (std::vector<ZLWin32DialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+			(*it)->accept();
+		}
 	}
-
-	gtk_widget_hide(GTK_WIDGET(myDialog));
-
-	return response == GTK_RESPONSE_ACCEPT;
-	*/
-	return false;
+	return result;
 }

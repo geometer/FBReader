@@ -53,19 +53,13 @@ void ZLWin32OptionView::_hide() {
 }
 
 BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	myElement = new W32CheckBox(myOption->name());
-	/*
-	myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name()).c_str());
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
-	g_signal_connect(myCheckBox, "toggled", G_CALLBACK(_onValueChanged), this);
-	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
-	*/
+	myCheckBox = new W32CheckBox(myOption->name());
+	myCheckBox->setChecked(option->initialState());
+	myElement = myCheckBox;
 }
 
 void BooleanOptionView::_onAccept() const {
-	/*
-	((ZLBooleanOptionEntry*)myOption)->onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
-	*/
+	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
 }
 
 /*
@@ -225,15 +219,15 @@ void SpinOptionView::_onAccept() const {
 }
 
 StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	W32LineEditor *lineEditor = new W32LineEditor(option->initialValue());
+	myLineEditor = new W32LineEditor(option->initialValue());
 	const std::string &name = option->name();
 	if (name.empty()) {
-		myElement = lineEditor;
+		myElement = myLineEditor;
 	} else {
 		W32HBox *box = new W32HBox();
 		box->setSpacing(10);
 		box->addElement(new W32Label(name));
-		box->addElement(lineEditor);
+		box->addElement(myLineEditor);
 		myElement = box;
 		//myElement = new W32HPair(new W32Label(name), lineEditor, 20, 77);
 	}
@@ -270,7 +264,7 @@ void StringOptionView::onValueChanged() {
 }
 
 void StringOptionView::_setActive(bool active) {
-	//gtk_entry_set_editable(myLineEdit, active);
+	myLineEditor->setEnabled(active);
 }
 
 void StringOptionView::_onAccept() const {

@@ -21,6 +21,19 @@
 
 #include "W32Element.h"
 
+W32ControlCollection::W32ControlCollection(int startId) : myCurrentId(startId) {
+}
+
+short W32ControlCollection::addControl(W32Control *control) {
+	myControlByIdMap[myCurrentId] = control;
+	return myCurrentId++;
+}
+
+W32Control *W32ControlCollection::operator[] (short id) {
+	std::map<short,W32Control*>::iterator it = myControlByIdMap.find(id);
+	return (it != myControlByIdMap.end()) ? it->second : 0;
+}
+
 W32Element::W32Element() {
 }
 

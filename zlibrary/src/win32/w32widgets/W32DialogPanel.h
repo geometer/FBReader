@@ -60,6 +60,8 @@ private:
 
 	mutable WORD *myAddress;
 	HWND myDialogWindow;
+
+	W32ControlCollection myCollection;
 };
 
 #endif /* __W32DIALOGPANEL_H__ */

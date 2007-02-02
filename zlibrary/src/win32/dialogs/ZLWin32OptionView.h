@@ -82,7 +82,7 @@ private:
 	//void onValueChanged();
 
 private:
-	//Win32Widget *myCheckBox;
+	W32CheckBox *myCheckBox;
 };
 
 class StringOptionView : public ZLWin32OptionView {
@@ -98,7 +98,7 @@ private:
 
 private:
 	//Win32Widget *myLabel;
-	//Win32Entry *myLineEdit;
+	W32LineEditor *myLineEditor;
 };
 
 class SpinOptionView : public ZLWin32OptionView {

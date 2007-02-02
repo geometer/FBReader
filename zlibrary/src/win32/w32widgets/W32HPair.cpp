@@ -123,11 +123,11 @@ void W32HPair::setDimensions(Size charDimension) {
 	}
 }
 
-void W32HPair::init(HWND parent, short &id) {
+void W32HPair::init(HWND parent, W32ControlCollection &collection) {
 	if (!myLeft.isNull()) {
-		myLeft->init(parent, id);
+		myLeft->init(parent, collection);
 	}
 	if (!myRight.isNull()) {
-		myRight->init(parent, id);
+		myRight->init(parent, collection);
 	}
 }

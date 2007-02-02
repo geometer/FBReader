@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-//#include <iostream>
+#include <iostream>
 
 #include <windows.h>
 #include <commctrl.h>
@@ -79,8 +79,8 @@ void W32Control::allocate(WORD *&p, short &id) const {
 	*p++ = 0;
 }
 
-void W32Control::init(HWND parent, short &id) {
-	myWindow = GetDlgItem(parent, id++);
+void W32Control::init(HWND parent, W32ControlCollection &collection) {
+	myWindow = GetDlgItem(parent, collection.addControl(this));
 	if (controlFont == 0) {
 		LOGFONT logicalFont;
 		logicalFont.lfHeight = 15;
@@ -116,6 +116,9 @@ void W32Control::setPosition(int x, int y, Size size) {
 	mySize = size;
 }
 
+void W32Control::callback(DWORD, LPARAM) {
+}
+
 W32PushButton::W32PushButton(const std::string &text) : W32Control(BS_PUSHBUTTON | WS_TABSTOP), myText(text) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
@@ -129,8 +132,8 @@ WORD W32PushButton::classId() const {
 	return CLASS_BUTTON;
 }
 
-void W32PushButton::init(HWND parent, short &id) {
-	W32Control::init(parent, id);
+void W32PushButton::init(HWND parent, W32ControlCollection &collection) {
+	W32Control::init(parent, collection);
 	::setText(myWindow, myText);
 }
 
@@ -151,12 +154,12 @@ WORD W32Label::classId() const {
 	return CLASS_STATIC;
 }
 
-void W32Label::init(HWND parent, short &id) {
-	W32Control::init(parent, id);
+void W32Label::init(HWND parent, W32ControlCollection &collection) {
+	W32Control::init(parent, collection);
 	::setText(myWindow, myText);
 }
 
-W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_CHECKBOX | WS_TABSTOP), myText(text) {
+W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_AUTOCHECKBOX | WS_TABSTOP), myText(text), myChecked(false) {
 }
 
 void W32CheckBox::setDimensions(Size charDimension) {
@@ -168,23 +171,40 @@ WORD W32CheckBox::classId() const {
 	return CLASS_BUTTON;
 }
 
-void W32CheckBox::init(HWND parent, short &id) {
-	W32Control::init(parent, id);
+void W32CheckBox::init(HWND parent, W32ControlCollection &collection) {
+	W32Control::init(parent, collection);
 	::setText(myWindow, myText);
+	setChecked(myChecked);
 }
 
-W32AbstractEditor::W32AbstractEditor(DWORD style) : W32Control(style | WS_BORDER | WS_TABSTOP) {
+void W32CheckBox::setChecked(bool checked) {
+	myChecked = checked;
+	if (myWindow != 0) {
+		SendMessage(myWindow, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0);
+	}
+}
+
+bool W32CheckBox::isChecked() const {
+	return myChecked;
+}
+
+void W32CheckBox::callback(DWORD hiWParam, LPARAM lParam) {
+	myChecked = SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED;
+}
+
+W32AbstractEditor::W32AbstractEditor(DWORD style) : W32Control(style | WS_BORDER | WS_TABSTOP | ES_NOHIDESEL) {
 }
 
 WORD W32AbstractEditor::classId() const {
 	return CLASS_EDIT;
 }
 
-void W32AbstractEditor::init(HWND parent, short &id) {
-	W32Control::init(parent, id);
+void W32AbstractEditor::init(HWND parent, W32ControlCollection &collection) {
+	W32Control::init(parent, collection);
 }
 
-W32LineEditor::W32LineEditor(const std::string &text) : myText(text) {
+W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myText(text) {
+	setEnabled(true);
 }
 
 void W32LineEditor::setDimensions(Size charDimension) {
@@ -192,9 +212,21 @@ void W32LineEditor::setDimensions(Size charDimension) {
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
-void W32LineEditor::init(HWND parent, short &id) {
-	W32AbstractEditor::init(parent, id);
+void W32LineEditor::init(HWND parent, W32ControlCollection &collection) {
+	W32AbstractEditor::init(parent, collection);
 	::setText(myWindow, myText);
+}
+
+void W32LineEditor::setEnabled(bool enabled) {
+	if (enabled) {
+		myStyle &= ~ES_READONLY;
+	} else {
+		myStyle |= ES_READONLY;
+	}
+	if (myWindow != 0) {
+		// TODO: check
+		SetWindowLong(myWindow, GWL_STYLE, myStyle);
+	}
 }
 
 W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_NUMBER), myMin(min), myMax(max), myInitial(initial) {
@@ -235,9 +267,9 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 	}
 }
 
-void W32SpinBox::init(HWND parent, short &id) {
-	W32AbstractEditor::init(parent, id);
-	myControlWindow = GetDlgItem(parent, id++);
+void W32SpinBox::init(HWND parent, W32ControlCollection &collection) {
+	W32AbstractEditor::init(parent, collection);
+	myControlWindow = GetDlgItem(parent, collection.addControl(this));
 	SendMessage(myControlWindow, UDM_SETRANGE, 0, MAKELONG(myMax, myMin));
 	SendMessage(myControlWindow, UDM_SETPOS, 0, MAKELONG(myInitial, 0));
 }

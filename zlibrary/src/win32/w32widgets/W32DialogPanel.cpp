@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-//#include <iostream>
+#include <iostream>
 
 #include <ZLUnicodeUtil.h>
 
@@ -27,7 +27,7 @@ static const int FirstControlId = 2001;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
 
-W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0), myDialogWindow(0) {
+W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0), myDialogWindow(0), myCollection(FirstControlId) {
 	TEXTMETRIC metric;
 	HDC hdc = GetDC(mainWindow);
 	GetTextMetrics(hdc, &metric);
@@ -49,8 +49,7 @@ W32DialogPanel::~W32DialogPanel() {
 void W32DialogPanel::init(HWND dialogWindow) {
 	myDialogWindow = dialogWindow;
 	ourPanels[myDialogWindow] = this;	
-	short id = FirstControlId;
-	myElement->init(dialogWindow, id);
+	myElement->init(dialogWindow, myCollection);
 }
 
 void W32DialogPanel::calculateSize() {
@@ -89,8 +88,10 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	*p++ = myElement->controlNumber();
 	*p++ = 0; // X
 	*p++ = 0; // Y
-	*p++ = mySize.Width + 100;
-	*p++ = mySize.Height;
+	*p++ = mySize.Width + 120; // TODO: !!!
+	*p++ = mySize.Height + 40; // TODO: !!!
+	DWORD dlgUnit = GetDialogBaseUnits();
+	//std::cerr << "page = " << mySize.Width * LOWORD(dlgUnit) / 4 << "x" << mySize.Height * HIWORD(dlgUnit) / 8 << "\n";
 	*p++ = 0;
 	*p++ = 0;
 	W32Element::allocateString(p, myCaption);
@@ -126,7 +127,11 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 
 BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
 	if (message == WM_INITDIALOG) {
-		((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hDialog);
+		PROPSHEETPAGE &page = *(PROPSHEETPAGE*)lParam;
+		RECT rectanlge;
+		GetWindowRect(hDialog, &rectanlge);
+		//std::cerr << "wnd = " << rectanlge.right - rectanlge.left + 1 << "x" << rectanlge.bottom - rectanlge.top + 1 << "\n";
+		((W32DialogPanel*)page.lParam)->init(hDialog);
 		return true;
 	}
 	W32DialogPanel *panel = ourPanels[hDialog];
@@ -145,8 +150,11 @@ bool W32DialogPanel::Callback(UINT message, WPARAM wParam, LPARAM lParam) {
 					EndDialog(myDialogWindow, wParam == IDOK);
 					return true;
 				default:
-					//std::cerr << LOWORD(wParam) << " : " << lParam << " : " << message << "\n";
-					return false;
+					W32Control *control = myCollection[LOWORD(wParam)];
+					if (control != 0) {
+						control->callback(HIWORD(wParam), lParam);
+						return true;
+					}
 			}
 	}
 	return false;

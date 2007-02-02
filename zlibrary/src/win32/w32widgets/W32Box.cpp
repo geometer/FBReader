@@ -36,9 +36,9 @@ void W32Box::allocate(WORD *&p, short &id) const {
 	}
 }
 
-void W32Box::init(HWND parent, short &id) {
+void W32Box::init(HWND parent, W32ControlCollection &collection) {
 	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-		(*it)->init(parent, id);
+		(*it)->init(parent, collection);
 	}
 }
 

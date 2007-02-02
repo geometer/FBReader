@@ -21,11 +21,26 @@
 #define __W32ELEMENT_H__
 
 #include <vector>
+#include <map>
 #include <string>
 
 #include <windows.h>
 
 #include <shared_ptr.h>
+
+class W32Control;
+
+class W32ControlCollection {
+
+public:
+	W32ControlCollection(int startId);
+	short addControl(W32Control *control);	
+	W32Control *operator[] (short id);
+
+private:
+	short myCurrentId;
+	std::map<short,W32Control*> myControlByIdMap;
+};
 
 class W32Element {
 
@@ -55,7 +70,7 @@ public:
 	virtual Size minimumSize() const = 0;
 	virtual void setPosition(int x, int y, Size size) = 0;
 	virtual void setDimensions(Size charDimension) = 0;
-	virtual void init(HWND parent, short &id) = 0;
+	virtual void init(HWND parent, W32ControlCollection &collection) = 0;
 
 private:
 	W32Element(const W32Element&);
@@ -79,7 +94,7 @@ public:
 	void setPosition(int x, int y, Size size);
 
 	void setDimensions(Size charDimension);
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
 
 private:
 	W32ElementPtr myLeft, myRight;
@@ -110,7 +125,7 @@ protected:
 	int rightMargin() const { return myRightMargin; }
 	int spacing() const { return mySpacing; }
 	void setDimensions(Size charDimension);
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
 
 	int visibleElementsNumber() const;
 
@@ -153,14 +168,15 @@ protected:
 	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
 
 	virtual WORD classId() const = 0;
 
-private:
-	DWORD myStyle;
+public:
+	virtual void callback(DWORD hiWParam, LPARAM lParam);
 
 protected:
+	DWORD myStyle;
 	int myX, myY;
 	Size mySize;
 
@@ -174,7 +190,7 @@ public:
 	void setDimensions(Size charDimension);
 
 	WORD classId() const;
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
 
 private:
 	std::string myText;
@@ -188,7 +204,7 @@ public:
 
 	WORD classId() const;
 	void setPosition(int x, int y, Size size);
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
 
 private:
 	std::string myText;
@@ -202,19 +218,25 @@ public:
 	void setDimensions(Size charDimension);
 
 	WORD classId() const;
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
+
+	void setChecked(bool checked);
+	bool isChecked() const;
+
+	void callback(DWORD hiWParam, LPARAM lParam);
 
 private:
 	std::string myText;
+	bool myChecked;
 };
 
 class W32AbstractEditor : public W32Control {
 
 public:
-	W32AbstractEditor(DWORD style = 0);
+	W32AbstractEditor(DWORD style);
 
 	WORD classId() const;
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
 };
 
 class W32LineEditor : public W32AbstractEditor {
@@ -223,7 +245,9 @@ public:
 	W32LineEditor(const std::string &text);
 	void setDimensions(Size charDimension);
 
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
+
+	void setEnabled(bool enabled);
 
 private:
 	std::string myText;
@@ -238,7 +262,7 @@ public:
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	int controlNumber() const;
-	void init(HWND parent, short &id);
+	void init(HWND parent, W32ControlCollection &collection);
 
 private:
 	WORD myMin, myMax, myInitial;
