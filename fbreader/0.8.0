@@ -31,6 +31,7 @@ openbook
 	размер options dialog
 	enable/diable для контролов
 	show/hide для контролов
+	получение значений из контролов
 	ChoiceOptionView
 	ComboOptionView
 	ColorOptionView

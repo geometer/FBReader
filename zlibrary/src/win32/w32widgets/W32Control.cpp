@@ -188,7 +188,7 @@ W32LineEditor::W32LineEditor(const std::string &text) : myText(text) {
 }
 
 void W32LineEditor::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * std::min(ZLUnicodeUtil::utf8Length(myText) + 3, 25);
+	mySize.Width = charDimension.Width * std::max(std::min(ZLUnicodeUtil::utf8Length(myText) + 3, 25), 10);
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
