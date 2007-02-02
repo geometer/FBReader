@@ -111,12 +111,17 @@ void W32PushButton::init(HWND parent, short &id) {
 	::setText(myWindow, myText);
 }
 
-W32Label::W32Label(const std::string &text) : W32Control(SS_LEFT), myText(text) {
+W32Label::W32Label(const std::string &text) : W32Control(SS_RIGHT), myText(text), myVShift(0) {
 }
 
 void W32Label::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 1);
 	mySize.Height = charDimension.Height * 3 / 2;
+	myVShift = charDimension.Height / 4;
+}
+
+void W32Label::setPosition(int x, int y, Size size) {
+	W32Control::setPosition(x, y + myVShift, Size(size.Width, size.Height - myVShift));
 }
 
 WORD W32Label::classId() const {
@@ -132,7 +137,7 @@ W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_CHECKBOX | WS_
 }
 
 void W32CheckBox::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 1);
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
@@ -160,7 +165,7 @@ W32LineEditor::W32LineEditor(const std::string &text) : myText(text) {
 }
 
 void W32LineEditor::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
+	mySize.Width = charDimension.Width * std::min(ZLUnicodeUtil::utf8Length(myText) + 3, 25);
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
@@ -173,7 +178,7 @@ W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_
 }
 
 void W32SpinBox::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * 6;
+	mySize.Width = charDimension.Width * 9;
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 

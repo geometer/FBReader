@@ -187,10 +187,12 @@ public:
 	void setDimensions(Size charDimension);
 
 	WORD classId() const;
+	void setPosition(int x, int y, Size size);
 	void init(HWND parent, short &id);
 
 private:
 	std::string myText;
+	int myVShift;
 };
 
 class W32CheckBox : public W32Control {

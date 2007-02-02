@@ -195,7 +195,7 @@ SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *
 	if (name.empty()) {
 		myElement = spinBox;
 	} else {
-		myElement = new W32HPair(new W32Label(name), spinBox, 76, 20);
+		myElement = new W32HPair(new W32Label(name), spinBox, 67, 30);
 	}
 }
 
@@ -220,7 +220,13 @@ void SpinOptionView::_onAccept() const {
 }
 
 StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	myElement = new W32LineEditor(option->initialValue());
+	W32LineEditor *lineEditor = new W32LineEditor(option->initialValue());
+	const std::string &name = option->name();
+	if (name.empty()) {
+		myElement = lineEditor;
+	} else {
+		myElement = new W32HPair(new W32Label(name), lineEditor, 20, 77);
+	}
 /*
 	myLineEdit = GTK_ENTRY(gtk_entry_new());
 	g_signal_connect(myLineEdit, "changed", G_CALLBACK(_onValueChanged), this);
