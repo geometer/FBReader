@@ -118,6 +118,11 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 		((W32DialogPanel*)lParam)->init(hDialog);
 		return true;
 	}
+	if ((message == WM_COMMAND) && ((wParam == IDOK) || (wParam == IDCANCEL))) {
+		EndDialog(hDialog, wParam == IDOK);
+		return true;
+	}
+
 	W32DialogPanel *panel = ourPanels[hDialog];
 	if (panel != 0) {
 		return panel->Callback(message, wParam, lParam);
@@ -127,11 +132,7 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 
 BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
 	if (message == WM_INITDIALOG) {
-		PROPSHEETPAGE &page = *(PROPSHEETPAGE*)lParam;
-		RECT rectanlge;
-		GetWindowRect(hDialog, &rectanlge);
-		//std::cerr << "wnd = " << rectanlge.right - rectanlge.left + 1 << "x" << rectanlge.bottom - rectanlge.top + 1 << "\n";
-		((W32DialogPanel*)page.lParam)->init(hDialog);
+		((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hDialog);
 		return true;
 	}
 	W32DialogPanel *panel = ourPanels[hDialog];
@@ -142,20 +143,10 @@ BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARA
 }
 
 bool W32DialogPanel::Callback(UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (message) {
-		case WM_COMMAND:
-			switch (wParam) {
-				case IDOK:
-				case IDCANCEL:
-					EndDialog(myDialogWindow, wParam == IDOK);
-					return true;
-				default:
-					W32Control *control = myCollection[LOWORD(wParam)];
-					if (control != 0) {
-						control->callback(HIWORD(wParam), lParam);
-						return true;
-					}
-			}
+	W32Control *control = myCollection[LOWORD(wParam)];
+	if (control != 0) {
+		control->callback(message, HIWORD(wParam), lParam);
+		return true;
 	}
 	return false;
 }

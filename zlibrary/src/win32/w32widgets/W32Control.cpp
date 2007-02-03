@@ -33,6 +33,8 @@ static const WORD CLASS_LISTBOX = 0x0083;
 static const WORD CLASS_SCROLLBAR = 0x0084;
 static const WORD CLASS_COMBOBOX = 0x0085;
 
+static const WCHAR CLASSNAME_SPINNER[] = UPDOWN_CLASSW;
+
 static HFONT controlFont = 0;
 
 static void setText(HWND hWnd, const std::string &text) {
@@ -116,7 +118,7 @@ void W32Control::setPosition(int x, int y, Size size) {
 	mySize = size;
 }
 
-void W32Control::callback(DWORD, LPARAM) {
+void W32Control::callback(UINT, DWORD, LPARAM) {
 }
 
 W32PushButton::W32PushButton(const std::string &text) : W32Control(BS_PUSHBUTTON | WS_TABSTOP), myText(text) {
@@ -174,13 +176,15 @@ WORD W32CheckBox::classId() const {
 void W32CheckBox::init(HWND parent, W32ControlCollection &collection) {
 	W32Control::init(parent, collection);
 	::setText(myWindow, myText);
-	setChecked(myChecked);
+	SendMessage(myWindow, BM_SETCHECK, myChecked ? BST_CHECKED : BST_UNCHECKED, 0);
 }
 
 void W32CheckBox::setChecked(bool checked) {
-	myChecked = checked;
-	if (myWindow != 0) {
-		SendMessage(myWindow, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0);
+	if (checked != myChecked) {
+		myChecked = checked;
+		if (myWindow != 0) {
+			SendMessage(myWindow, BM_SETCHECK, myChecked ? BST_CHECKED : BST_UNCHECKED, 0);
+		}
 	}
 }
 
@@ -188,7 +192,8 @@ bool W32CheckBox::isChecked() const {
 	return myChecked;
 }
 
-void W32CheckBox::callback(DWORD hiWParam, LPARAM lParam) {
+void W32CheckBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+	std::cerr << "CheckBox: " << message << " : " << hiWParam << " : " << lParam << "\n";
 	myChecked = SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED;
 }
 
@@ -205,6 +210,13 @@ void W32AbstractEditor::init(HWND parent, W32ControlCollection &collection) {
 
 W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myText(text) {
 	setEnabled(true);
+}
+
+void W32LineEditor::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+	std::cerr << "LineEditor: " << message << " : " << hiWParam << " : " << lParam << "\n";
+	if (hiWParam == EN_CHANGE) {
+		// get text from myWindow
+	}
 }
 
 void W32LineEditor::setDimensions(Size charDimension) {
@@ -256,8 +268,8 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 	*p++ = mySize.Height;
 	*p++ = id++;
 	
-	static const int classNameLength = lstrlenW(UPDOWN_CLASSW);
-	memcpy(p, UPDOWN_CLASSW, classNameLength * 2);
+	static const int classNameLength = lstrlenW(CLASSNAME_SPINNER);
+	memcpy(p, CLASSNAME_SPINNER, classNameLength * 2);
 	p += classNameLength;
 	*p++ = 0;
 	*p++ = 0;
@@ -275,11 +287,11 @@ void W32SpinBox::init(HWND parent, W32ControlCollection &collection) {
 }
 
 int W32SpinBox::allocationSize() const {
-	static int const classNameLength = lstrlenW(UPDOWN_CLASSW);
+	static int const classNameLength = lstrlenW(CLASSNAME_SPINNER);
 	int size = W32AbstractEditor::allocationSize() + 12 + classNameLength;
 	return size + size % 2;
 }
 
 int W32SpinBox::controlNumber() const {
-	return 2;
+	return W32AbstractEditor::controlNumber() + 1;
 }

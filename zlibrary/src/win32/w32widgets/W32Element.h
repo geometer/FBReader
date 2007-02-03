@@ -173,7 +173,7 @@ protected:
 	virtual WORD classId() const = 0;
 
 public:
-	virtual void callback(DWORD hiWParam, LPARAM lParam);
+	virtual void callback(UINT message, DWORD hiWParam, LPARAM lParam);
 
 protected:
 	DWORD myStyle;
@@ -223,7 +223,7 @@ public:
 	void setChecked(bool checked);
 	bool isChecked() const;
 
-	void callback(DWORD hiWParam, LPARAM lParam);
+	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
 
 private:
 	std::string myText;
@@ -248,6 +248,8 @@ public:
 	void init(HWND parent, W32ControlCollection &collection);
 
 	void setEnabled(bool enabled);
+
+	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
 
 private:
 	std::string myText;
