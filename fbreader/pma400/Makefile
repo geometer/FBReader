@@ -42,8 +42,8 @@ install:
 	@rm -rf $(TDIR)
 
 .copyfiles:
-	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(TMPDIR) do_install
-	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
+	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(DATADIR) do_install
+	@cd ..; make DESTDIR=$(PWD)/$(DATADIR) do_install
 
 $(CTRLDIR)/control:
 	@echo "Package: $(PACKAGENAME)" > $@

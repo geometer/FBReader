@@ -1,0 +1,15 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=E-book reader
+Name[ru]=Чтение электронных книг
+GenericName=E-book reader
+GenericName[ru]=Чтение электронных книг
+Comment=E-book reader
+Comment[ru]=Чтение электронных книг
+TryExec=FBReader
+Exec=FBReader %U
+StartupNotify=true
+Terminal=false
+Type=Application
+Icon=FBReader.png
+Categories=Application;Office;Viewer;

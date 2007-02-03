@@ -21,8 +21,8 @@ clean: .cleandir
 
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
-	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(TMPDIR) do_install
-	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
+	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(DESTDIR) do_install
+	@cd ..; make DESTDIR=$(PWD)/$(DESTDIR) do_install
 	@mkdir -p $(DESTDIR)$(INSTALLDIR)/apps/Applications
 	@mkdir -p $(DESTDIR)$(INSTALLDIR)/pics/fbreader
 	@sed "s/VERSION/$(version)/" control.in > $(DEBDIR)/control
