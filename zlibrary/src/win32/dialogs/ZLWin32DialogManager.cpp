@@ -42,12 +42,12 @@ shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std:
 
 void ZLWin32DialogManager::informationBox(const std::string &title, const std::string &message) const {
 	// TODO: use utf8 strings
-	MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONINFORMATION | MB_OK);
+	//MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONINFORMATION | MB_OK);
 }
 
 void ZLWin32DialogManager::errorBox(const std::string &title, const std::string &message) const {
 	// TODO: use utf8 strings
-	MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONERROR | MB_OK);
+	//MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONERROR | MB_OK);
 }
 
 int ZLWin32DialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {

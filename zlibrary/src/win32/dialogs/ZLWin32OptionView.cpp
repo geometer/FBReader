@@ -260,7 +260,12 @@ void StringOptionView::reset() {
 }
 
 void StringOptionView::onValueChanged() {
-	//((ZLStringOptionEntry*)myOption)->onValueEdited(gtk_entry_get_text(myLineEdit));
+	/*
+	ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited(myLineEditor->text());
+	}
+	*/
 }
 
 void StringOptionView::_setActive(bool active) {
@@ -268,7 +273,7 @@ void StringOptionView::_setActive(bool active) {
 }
 
 void StringOptionView::_onAccept() const {
-	//((ZLStringOptionEntry*)myOption)->onAccept(gtk_entry_get_text(myLineEdit));
+	((ZLStringOptionEntry*)myOption)->onAccept(myLineEditor->text());
 }
 
 /*

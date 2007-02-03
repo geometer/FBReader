@@ -106,6 +106,7 @@ public:
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 
+	bool useOnValueEdited() const;
 	void onValueEdited(const std::string &value);
 	void onValueSelected(int index);
 
@@ -285,6 +286,10 @@ void SeriesTitleEntry::onAccept(const std::string &value) {
 
 void SeriesTitleEntry::onValueSelected(int index) {
 	myInfoDialog.myBookNumberEntry->setVisible(index != 0);
+}
+
+bool SeriesTitleEntry::useOnValueEdited() const {
+	return true;
 }
 
 void SeriesTitleEntry::onValueEdited(const std::string &value) {

@@ -26,6 +26,7 @@
 #include <commctrl.h>
 
 #include <ZLApplication.h>
+#include <ZLUnicodeUtil.h>
 
 class ZLWin32ViewWidget;
 
@@ -87,6 +88,8 @@ public:
 private:
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
+
+	ZLUnicodeUtil::Ucs2String myClassName;
 
 	HWND myMainWindow;
 	HWND myToolbar;

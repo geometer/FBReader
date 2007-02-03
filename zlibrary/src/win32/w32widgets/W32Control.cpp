@@ -22,9 +22,8 @@
 #include <windows.h>
 #include <commctrl.h>
 
-#include <ZLUnicodeUtil.h>
-
 #include "W32Element.h"
+#include "../util/ZLWin32WCHARUtil.h"
 
 static const WORD CLASS_BUTTON = 0x0080;
 static const WORD CLASS_EDIT = 0x0081;
@@ -36,13 +35,6 @@ static const WORD CLASS_COMBOBOX = 0x0085;
 static const WCHAR CLASSNAME_SPINNER[] = UPDOWN_CLASSW;
 
 static HFONT controlFont = 0;
-
-static void setText(HWND hWnd, const std::string &text) {
-	ZLUnicodeUtil::Ucs2String str;
-	ZLUnicodeUtil::utf8ToUcs2(str, text.data(), text.length());
-	str.push_back(0);
-	SetWindowTextW(hWnd, (WCHAR*)&str.front());
-}
 
 W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myWindow(0) {
 }
@@ -98,7 +90,7 @@ void W32Control::init(HWND parent, W32ControlCollection &collection) {
 		logicalFont.lfClipPrecision = 0;
 		logicalFont.lfQuality = 0;
 		logicalFont.lfPitchAndFamily = 0;
-		strcpy(logicalFont.lfFaceName, "Sans Serif");
+		//strcpy(logicalFont.lfFaceName, "Sans Serif");
 		controlFont = CreateFontIndirect(&logicalFont);
 	}
 	//SendMessage(myWindow, WM_SETFONT, (WPARAM)controlFont, 0);
@@ -136,7 +128,7 @@ WORD W32PushButton::classId() const {
 
 void W32PushButton::init(HWND parent, W32ControlCollection &collection) {
 	W32Control::init(parent, collection);
-	::setText(myWindow, myText);
+	::setWindowText(myWindow, myText);
 }
 
 W32Label::W32Label(const std::string &text) : W32Control(SS_RIGHT), myText(text), myVShift(0) {
@@ -158,7 +150,7 @@ WORD W32Label::classId() const {
 
 void W32Label::init(HWND parent, W32ControlCollection &collection) {
 	W32Control::init(parent, collection);
-	::setText(myWindow, myText);
+	::setWindowText(myWindow, myText);
 }
 
 W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_AUTOCHECKBOX | WS_TABSTOP), myText(text), myChecked(false) {
@@ -175,7 +167,7 @@ WORD W32CheckBox::classId() const {
 
 void W32CheckBox::init(HWND parent, W32ControlCollection &collection) {
 	W32Control::init(parent, collection);
-	::setText(myWindow, myText);
+	::setWindowText(myWindow, myText);
 	SendMessage(myWindow, BM_SETCHECK, myChecked ? BST_CHECKED : BST_UNCHECKED, 0);
 }
 
@@ -193,7 +185,7 @@ bool W32CheckBox::isChecked() const {
 }
 
 void W32CheckBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
-	std::cerr << "CheckBox: " << message << " : " << hiWParam << " : " << lParam << "\n";
+	//std::cerr << "CheckBox: " << message << " : " << hiWParam << " : " << lParam << "\n";
 	myChecked = SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED;
 }
 
@@ -208,25 +200,40 @@ void W32AbstractEditor::init(HWND parent, W32ControlCollection &collection) {
 	W32Control::init(parent, collection);
 }
 
-W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myText(text) {
+W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myBlocked(true) {
+	::createNTWCHARString(myBuffer, text);
 	setEnabled(true);
 }
 
 void W32LineEditor::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
-	std::cerr << "LineEditor: " << message << " : " << hiWParam << " : " << lParam << "\n";
-	if (hiWParam == EN_CHANGE) {
-		// get text from myWindow
+	if ((hiWParam == EN_CHANGE) && !myBlocked) {
+		const int length = SendMessage(myWindow, EM_LINELENGTH, 0, 0);
+		myBuffer.clear();
+		myBuffer.insert(myBuffer.end(), length + 1, 0);
+		if (length > 0) {
+			myBuffer[0] = length + 1;
+			SendMessage(myWindow, EM_GETLINE, 0, (LPARAM)&myBuffer.front());
+		}
 	}
 }
 
+std::string W32LineEditor::text() const {
+	ZLUnicodeUtil::Ucs2String buffer = myBuffer;
+	buffer.pop_back();
+	std::string txt;
+	ZLUnicodeUtil::ucs2ToUtf8(txt, buffer);
+	return txt;
+}
+
 void W32LineEditor::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * std::max(std::min(ZLUnicodeUtil::utf8Length(myText) + 3, 25), 10);
+	mySize.Width = charDimension.Width * std::max(std::min((int)myBuffer.size() + 3, 25), 10);
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
 void W32LineEditor::init(HWND parent, W32ControlCollection &collection) {
 	W32AbstractEditor::init(parent, collection);
-	::setText(myWindow, myText);
+	SetWindowTextW(myWindow, ::wchar(myBuffer));
+	myBlocked = false;
 }
 
 void W32LineEditor::setEnabled(bool enabled) {

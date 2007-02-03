@@ -165,7 +165,10 @@ void ComboOptionView::onValueSelected(int index) {
 }
 
 void ComboOptionView::onValueEdited(const QString &value) {
-	((ZLComboOptionEntry*)myOption)->onValueEdited((const char*)value.utf8());
+	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited((const char*)value.utf8());
+	}
 }
 
 void SpinOptionView::_createItem() {
@@ -233,7 +236,10 @@ void StringOptionView::reset() {
 }
 
 void StringOptionView::onValueEdited(const QString &value) {
-	((ZLStringOptionEntry*)myOption)->onValueEdited((const char*)value.utf8());
+	ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited((const char*)value.utf8());
+	}
 }
 
 void MultilineOptionView::_createItem() {
@@ -271,7 +277,10 @@ void MultilineOptionView::reset() {
 }
 
 void MultilineOptionView::onValueEdited() {
-	((ZLMultilineOptionEntry*)myOption)->onValueEdited((const char*)myMultiLineEdit->text().utf8());
+	ZLMultilineOptionEntry &o = (ZLMultilineOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited((const char*)myMultiLineEdit->text().utf8());
+	}
 }
 
 class KeyButton : public QPushButton {

@@ -41,7 +41,8 @@ clean: .cleandir
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
-	@cd ../..; make DESTDIR=$(DESTDIR) install
+	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(TMPDIR) do_install
+	@cd ..; make DESTDIR=$(PWD)/$(TMPDIR) do_install
 	@mkdir -p $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(DESTDIR)$(PICSDIR)

@@ -175,7 +175,7 @@ void ComboOptionView::onValueChanged() {
 	if ((index != mySelectedIndex) && (index >= 0) && (index < (int)o.values().size())) {
 		mySelectedIndex = index;
   	o.onValueSelected(mySelectedIndex);
-	} else {
+	} else if (o.useOnValueEdited()) {
 		std::string text = gtk_combo_box_get_active_text(myComboBox);
   	o.onValueEdited(text);
 	}
@@ -235,7 +235,10 @@ void StringOptionView::reset() {
 }
 
 void StringOptionView::onValueChanged() {
-	((ZLStringOptionEntry*)myOption)->onValueEdited(gtk_entry_get_text(myLineEdit));
+	ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited(gtk_entry_get_text(myLineEdit));
+	}
 }
 
 void StringOptionView::_show() {
@@ -279,11 +282,14 @@ void MultilineOptionView::reset() {
 }
 
 void MultilineOptionView::onValueChanged() {
-	GtkTextIter start, end;
-	gtk_text_buffer_get_bounds(myTextBuffer, &start, &end);
-	gchar *value = gtk_text_buffer_get_text(myTextBuffer, &start, &end, true);
-	((ZLMultilineOptionEntry*)myOption)->onValueEdited(value);
-	g_free(value);
+	ZLMultilineOptionEntry &o = (ZLMultilineOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		GtkTextIter start, end;
+		gtk_text_buffer_get_bounds(myTextBuffer, &start, &end);
+		gchar *value = gtk_text_buffer_get_text(myTextBuffer, &start, &end, true);
+		o.onValueEdited(value);
+		g_free(value);
+	}
 }
 
 void MultilineOptionView::_show() {

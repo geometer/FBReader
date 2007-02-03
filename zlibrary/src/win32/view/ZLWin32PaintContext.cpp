@@ -23,6 +23,7 @@
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 #include "../image/ZLWin32ImageManager.h"
+#include "../util/ZLWin32WCHARUtil.h"
 
 ZLWin32PaintContext::ZLWin32PaintContext() : myDisplayContext(0), myBufferBitmap(0), myWidth(0), myHeight(0), myBackgroundBrush(0), myFillBrush(0), mySpaceWidth(-1) {
 }
@@ -103,9 +104,11 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 	logicalFont.lfHeight = size;
 	logicalFont.lfWeight = bold ? FW_BOLD : FW_REGULAR;
 	logicalFont.lfItalic = italic;
-	const int len = std::min((int)family.size(), LF_FACESIZE - 1);
-	strncpy(logicalFont.lfFaceName, family.data(), len);
-	logicalFont.lfFaceName[len] = '\0';
+	const int len = std::min((int)family.length(), LF_FACESIZE - 1);
+	ZLUnicodeUtil::Ucs2String str;
+	ZLUnicodeUtil::utf8ToUcs2(str, family.data(), len);
+	str.push_back(0);
+	memcpy(logicalFont.lfFaceName, ::wchar(str), 2 * str.size());
 	HFONT font = CreateFontIndirect(&logicalFont);
 	DeleteObject(SelectObject(myDisplayContext, font));
 
@@ -153,7 +156,7 @@ int ZLWin32PaintContext::stringWidth(const char *str, int len) const {
 		static ZLUnicodeUtil::Ucs2String ucs2Str;
 		ucs2Str.clear();
 		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len, utf8len);
-		GetTextExtentPointW(myDisplayContext, (const WCHAR*)&ucs2Str.front(), utf8len, &size);
+		GetTextExtentPointW(myDisplayContext, ::wchar(ucs2Str), utf8len, &size);
 	}
 	return size.cx;
 }
@@ -183,7 +186,7 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 		static ZLUnicodeUtil::Ucs2String ucs2Str;
 		ucs2Str.clear();
 		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len, utf8len);
-		TextOutW(myDisplayContext, x, y, (const WCHAR*)&ucs2Str.front(), utf8len);
+		TextOutW(myDisplayContext, x, y, ::wchar(ucs2Str), utf8len);
 	}
 }
 

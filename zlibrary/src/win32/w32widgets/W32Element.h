@@ -27,6 +27,7 @@
 #include <windows.h>
 
 #include <shared_ptr.h>
+#include <ZLUnicodeUtil.h>
 
 class W32Control;
 
@@ -251,8 +252,11 @@ public:
 
 	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
 
+	std::string text() const;
+
 private:
-	std::string myText;
+	ZLUnicodeUtil::Ucs2String myBuffer;
+	bool myBlocked;
 };
 
 class W32SpinBox : public W32AbstractEditor {

@@ -24,8 +24,10 @@
 
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32DialogContent.h"
+#include "../util/ZLWin32WCHARUtil.h"
 
-ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow), myCaption(caption) {
+ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow) {
+	::createNTWCHARString(myCaption, caption);
 }
 
 ZLWin32OptionsDialog::~ZLWin32OptionsDialog() {
@@ -132,7 +134,7 @@ bool ZLWin32OptionsDialog::run() {
 	header.hwndParent = myMainWindow;
 	header.hInstance = 0;
 	header.hIcon = 0;
-	header.pszCaption = myCaption.c_str();
+	header.pszCaption = ::wchar(myCaption);
 	header.nPages = myTabs.size();
 	header.nStartPage = 0; // TODO: !!!
 	header.ppsp = pages;

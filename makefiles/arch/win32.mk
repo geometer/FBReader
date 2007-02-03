@@ -10,7 +10,7 @@ AR = i586-mingw32msvc-ar rsu
 LD = i586-mingw32msvc-g++
 RESOURCE_COMPILER = i586-mingw32msvc-windres
 
-CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -I /home/geometer/win32/my/include -D_WIN32_IE=0x0500
+CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -I /home/geometer/win32/my/include -DUNICODE -D_WIN32_IE=0x0500
 LDFLAGS = -mwindows -L /home/geometer/win32/my/lib
 # LDFLAGS = -Wl,-rpath,$(LIBDIR)
 

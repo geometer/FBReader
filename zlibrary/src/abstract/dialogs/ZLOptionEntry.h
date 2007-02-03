@@ -83,6 +83,7 @@ class ZLTextOptionEntry : public ZLOptionEntry {
 public:
 	virtual const std::string &initialValue() const = 0;
 	virtual void onAccept(const std::string &value) = 0;
+	virtual bool useOnValueEdited() const;
 	virtual void onValueEdited(const std::string&);
 };
 
@@ -144,6 +145,7 @@ public:
 	virtual const std::vector<std::string> &values() const = 0;
 	virtual void onValueSelected(int index);
 	void onStringValueSelected(const std::string &value);
+	virtual bool useOnValueEdited() const;
 	virtual void onValueEdited(const std::string &value);
 	virtual void onAccept(const std::string &value) = 0;
 
@@ -209,6 +211,7 @@ inline bool ZLOptionEntry::isActive() const { return myIsActive; }
 inline ZLChoiceOptionEntry::ZLChoiceOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLChoiceOptionEntry::kind() const { return CHOICE; }
 
+inline bool ZLTextOptionEntry::useOnValueEdited() const { return false; }
 inline void ZLTextOptionEntry::onValueEdited(const std::string&) {}
 
 inline ZLStringOptionEntry::ZLStringOptionEntry() {}
@@ -227,6 +230,7 @@ inline ZLOptionEntry::ZLOptionKind ZLSpinOptionEntry::kind() const { return SPIN
 inline ZLComboOptionEntry::ZLComboOptionEntry(bool editable) : myEditable(editable) {}
 inline ZLOptionEntry::ZLOptionKind ZLComboOptionEntry::kind() const { return COMBO; }
 inline void ZLComboOptionEntry::onValueSelected(int) {}
+inline bool ZLComboOptionEntry::useOnValueEdited() const { return false; }
 inline void ZLComboOptionEntry::onValueEdited(const std::string&) {}
 inline bool ZLComboOptionEntry::isEditable() const { return myEditable; }
 

@@ -26,6 +26,7 @@
 
 #include <shared_ptr.h>
 #include <ZLOptionsDialog.h>
+#include <ZLUnicodeUtil.h>
 
 #include "../w32widgets/W32DialogPanel.h"
 
@@ -46,7 +47,7 @@ protected:
 private:
 	HWND myMainWindow;
 
-	std::string myCaption;
+	ZLUnicodeUtil::Ucs2String myCaption;
 
 	//Win32Dialog *myDialog;
 	//Win32Notebook *myNotebook;

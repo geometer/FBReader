@@ -17,33 +17,26 @@
  * 02110-1301, USA.
  */
 
+#ifndef __ZLWIN32WCHARUTIL_H__
+#define __ZLWIN32WCHARUTIL_H__
+
+#include <windows.h>
+
 #include <ZLUnicodeUtil.h>
 
-#include "W32Element.h"
-#include "../util/ZLWin32WCHARUtil.h"
-
-W32ControlCollection::W32ControlCollection(int startId) : myCurrentId(startId) {
+inline const WCHAR *wchar(const ZLUnicodeUtil::Ucs2String &str) {
+	return (const WCHAR*)&str.front();
 }
 
-short W32ControlCollection::addControl(W32Control *control) {
-	myControlByIdMap[myCurrentId] = control;
-	return myCurrentId++;
+inline const ZLUnicodeUtil::Ucs2String &createNTWCHARString(ZLUnicodeUtil::Ucs2String &str, const std::string &utf8) {
+	ZLUnicodeUtil::utf8ToUcs2(str, utf8.data(), utf8.length());
+	str.push_back(0);
+	return str;
 }
 
-W32Control *W32ControlCollection::operator[] (short id) {
-	std::map<short,W32Control*>::iterator it = myControlByIdMap.find(id);
-	return (it != myControlByIdMap.end()) ? it->second : 0;
+inline void setWindowText(HWND window, const std::string &text) {
+	ZLUnicodeUtil::Ucs2String str;
+	SetWindowTextW(window, ::wchar(::createNTWCHARString(str, text)));
 }
 
-W32Element::W32Element() {
-}
-
-W32Element::~W32Element() {
-}
-
-void W32Element::allocateString(WORD *&p, const std::string &text) {
-	ZLUnicodeUtil::Ucs2String ucs2Str;
-	::createNTWCHARString(ucs2Str, text);
-	memcpy(p, ::wchar(ucs2Str), 2 * ucs2Str.size());
-	p += ucs2Str.size();
-}
+#endif /* __ZLWIN32WCHARUTIL_H__ */

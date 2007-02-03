@@ -22,12 +22,12 @@
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
 #include <ZLPaintContext.h>
-#include <ZLUnicodeUtil.h>
 
 #include "../../abstract/util/ZLKeyUtil.h"
 #include "ZLWin32ApplicationWindow.h"
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
+#include "../util/ZLWin32WCHARUtil.h"
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
@@ -159,7 +159,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
-	wc.lpszClassName = ZLApplication::ApplicationName().c_str();
+	wc.lpszClassName = ::wchar(::createNTWCHARString(myClassName, ZLApplication::ApplicationName()));
 	wc.hIconSm = wc.hIcon;
 
 	RegisterClassEx(&wc);
@@ -168,8 +168,8 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 }
 
 void ZLWin32ApplicationWindow::init() {
-	const std::string aName = ZLApplication::ApplicationName();
-	myMainWindow = CreateWindow(aName.c_str(), aName.c_str(), WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
+	const WCHAR *aName = ::wchar(myClassName);
+	myMainWindow = CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
@@ -279,7 +279,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 
-		HBITMAP bitmap = LoadBitmap(GetModuleHandle(0), buttonItem.iconName().c_str());
+		HBITMAP bitmap = LoadBitmapA(GetModuleHandle(0), buttonItem.iconName().c_str());
 		if (bitmap == 0) {
 			HDC dc = GetDC(myToolbar);
 			bitmap = CreateCompatibleBitmap(dc, 24, 24);
@@ -349,10 +349,7 @@ bool ZLWin32ApplicationWindow::isKeyboardPresented() const {
 }
 
 void ZLWin32ApplicationWindow::setCaption(const std::string &caption) {
-	ZLUnicodeUtil::Ucs2String ucs2Str;
-	ZLUnicodeUtil::utf8ToUcs2(ucs2Str, caption.data(), caption.length());
-	ucs2Str.push_back(0);
-	SetWindowTextW(myMainWindow, (const WCHAR*)&ucs2Str.front());
+	::setWindowText(myMainWindow, caption);
 }
 
 HWND ZLWin32ApplicationWindow::mainWindow() const {

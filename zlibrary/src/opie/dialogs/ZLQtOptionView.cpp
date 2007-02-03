@@ -164,7 +164,10 @@ void ComboOptionView::onValueSelected(int index) {
 }
 
 void ComboOptionView::onValueEdited(const QString &value) {
-	((ZLComboOptionEntry*)myOption)->onValueEdited((const char*)value.utf8());
+	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited((const char*)value.utf8());
+	}
 }
 
 void SpinOptionView::_createItem() {
@@ -232,7 +235,10 @@ void StringOptionView::reset() {
 }
 
 void StringOptionView::onValueEdited(const QString &value) {
-	((ZLStringOptionEntry*)myOption)->onValueEdited((const char*)value.utf8());
+	ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited((const char*)value.utf8());
+	}
 }
 
 class KeyButton : public QPushButton {
