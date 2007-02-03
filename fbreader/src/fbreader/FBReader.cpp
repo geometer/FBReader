@@ -26,6 +26,7 @@
 #include <ZLOptionsDialog.h>
 #include <ZLDialog.h>
 #include <ZLDir.h>
+#include <ZLStringUtil.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
@@ -473,12 +474,7 @@ void FBReader::searchSlot() {
 	if (searchDialog->run()) {
 		searchDialog->acceptValues();
 		std::string pattern = SearchPatternOption.value();
-		while (!pattern.empty() && isspace(pattern[0])) {
-			pattern.erase(0, 1);
-		}
-		while (!pattern.empty() && isspace(pattern[pattern.length() - 1])) {
-			pattern.erase(pattern.length() - 1, 1);
-		}
+		ZLStringUtil::stripWhiteSpaces(pattern);
 		SearchPatternOption.setValue(pattern);
 		((TextView&)*currentView()).search(
 			SearchPatternOption.value(),

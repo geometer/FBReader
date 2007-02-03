@@ -50,7 +50,7 @@ bool TextFormatDetector::isHtml(ZLInputStream &stream) const {
 		}
 		size_t index;
 		for (index = 0; skipFlag && (index < size); ++index) {
-			if (!isspace(buffer[index])) {
+			if (!isspace((unsigned char)buffer[index])) {
 				skipFlag = false;
 				break;
 			}

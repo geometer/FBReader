@@ -349,7 +349,7 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
 			myModelReader.addControl(CODE, true);
 		}
 		int spaceCounter = 0;
-		while ((spaceCounter < len) && isspace(*text)) {
+		while ((spaceCounter < len) && isspace((unsigned char)*text)) {
 			++spaceCounter;
 		}
 		myModelReader.addFixedHSpace(spaceCounter);

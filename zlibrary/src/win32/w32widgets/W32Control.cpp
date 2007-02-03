@@ -218,10 +218,10 @@ void W32LineEditor::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
 }
 
 std::string W32LineEditor::text() const {
-	ZLUnicodeUtil::Ucs2String buffer = myBuffer;
-	buffer.pop_back();
+	ZLUnicodeUtil::Ucs2String copy = myBuffer;
+	copy.pop_back();
 	std::string txt;
-	ZLUnicodeUtil::ucs2ToUtf8(txt, buffer);
+	ZLUnicodeUtil::ucs2ToUtf8(txt, copy);
 	return txt;
 }
 

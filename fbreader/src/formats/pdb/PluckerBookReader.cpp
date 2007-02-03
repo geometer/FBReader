@@ -328,7 +328,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 			if ((unsigned char)*ptr == 0xA0) {
 				*ptr = 0x20;
 			}
-			if (!myParagraphStarted && (textStart == ptr) && isspace(*ptr)) {
+			if (!myParagraphStarted && (textStart == ptr) && isspace((unsigned char)*ptr)) {
 				++textStart;
 			}
 		}

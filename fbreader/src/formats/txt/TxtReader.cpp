@@ -58,7 +58,7 @@ void TxtReader::readDocument(ZLInputStream &stream) {
 				start = ptr + 1;
 				newLineHandler();
 				previous = *ptr;
-			} else if (isspace(*ptr)) {
+			} else if (isspace((unsigned char)*ptr)) {
 				previous = *ptr;
 				*ptr = ' ';
 			} else {

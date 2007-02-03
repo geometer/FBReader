@@ -389,7 +389,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 						myBookReader.beginParagraph();
 						start = ptr + 1;
 					} else if (mySpaceCounter >= 0) {
-						if (isspace(*ptr)) {
+						if (isspace((unsigned char)*ptr)) {
 							++mySpaceCounter;
 						} else {
 							myBookReader.addFixedHSpace(mySpaceCounter);
@@ -400,7 +400,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 				addConvertedDataToBuffer(start, end - start, convert);
 			} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
 				for (const char *ptr = text; ptr != end; ++ptr) {
-					if (isspace(*ptr)) {
+					if (isspace((unsigned char)*ptr)) {
 						if (*ptr == '\n') {
 							mySpaceCounter = 0;
 						} else if (mySpaceCounter >= 0) {
@@ -424,7 +424,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 				}
 			} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
 				for (const char *ptr = start; ptr != end; ++ptr) {
-					if (isspace(*ptr)) {
+					if (isspace((unsigned char)*ptr)) {
 						if (*ptr == '\n') {
 							++myBreakCounter;
 						}
@@ -443,7 +443,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, int len, bool conver
 		} else {
 			if (!myIsStarted) {
 				for (; start != end; ++start) {
-					if (!isspace(*start)) {
+					if (!isspace((unsigned char)*start)) {
 						myIsStarted = true;
 						break;
 					}

@@ -131,7 +131,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 				currentLineIsEmpty = true;
 				currentLineLength = 0;
 				currentLineIndent = 0;
-			} else if (isspace(*ptr)) {
+			} else if (isspace((unsigned char)*ptr)) {
 				if (currentLineIsEmpty) {
 					++currentLineIndent;
 				}

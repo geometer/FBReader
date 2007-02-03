@@ -39,7 +39,7 @@ bool PPLBookReader::currentParagraphIsEmpty() const {
 	const char *ptr = myCurrentParagraph.data();
 	const char *end = ptr + myCurrentParagraph.length();
 	for (; ptr < end; ++ptr) {
-		if (!isspace(*ptr)) {
+		if (!isspace((unsigned char)*ptr)) {
 			return false;
 		}
 	}

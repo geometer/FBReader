@@ -224,7 +224,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					}
 					break;
 				case PS_TAGNAME:
-					if ((*ptr == '>') || isspace(*ptr)) {
+					if ((*ptr == '>') || isspace((unsigned char)*ptr)) {
 						currentString.append(start, ptr - start);
 						start = ptr + 1;
 						setTag(currentTag, currentString);
@@ -244,7 +244,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					}
 					break;
 				case PS_ATTRIBUTENAME:
-					if ((*ptr == '>') || (*ptr == '=') || isspace(*ptr)) {
+					if ((*ptr == '>') || (*ptr == '=') || isspace((unsigned char)*ptr)) {
 						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
 							for (unsigned int i = 0; i < currentString.length(); ++i) {
@@ -274,7 +274,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						start = ptr + 1;
 						state = PS_SPECIAL_IN_ATTRIBUTEVALUE;
 						state_special = ST_UNKNOWN;
-					} else if ((quotationCounter != 1) && ((*ptr == '/') || (*ptr == '>') || isspace(*ptr))) {
+					} else if ((quotationCounter != 1) && ((*ptr == '/') || (*ptr == '>') || isspace((unsigned char)*ptr))) {
 						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
 							if (currentString[0] == '"') {

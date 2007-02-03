@@ -65,14 +65,14 @@ void ZLStringUtil::append(std::string &str, const std::vector<std::string> &text
 void ZLStringUtil::stripWhiteSpaces(std::string &str) {
 	size_t counter = 0;
 	size_t length = str.length();
-	while ((counter < length) && isspace(str[counter])) {
+	while ((counter < length) && isspace((unsigned char)str[counter])) {
 		counter++;
 	}
 	str.erase(0, counter);
 	length -= counter;
 
 	size_t r_counter = length;
-	while ((r_counter > 0) && isspace(str[r_counter - 1])) {
+	while ((r_counter > 0) && isspace((unsigned char)str[r_counter - 1])) {
 		r_counter--;
 	}
 	str.erase(r_counter, length - r_counter);
