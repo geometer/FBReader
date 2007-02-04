@@ -32,10 +32,7 @@
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
 	{
-		int index = ZLFSManager::instance().findArchivePathDelimiter(myPath);
-		if (index == -1) {
-			index = myPath.rfind('/');
-		}
+		int index = ZLFSManager::instance().findLastPathDelimiter(myPath);
 		myFullName = myPath.substr(index + 1);
 	}
 	myName = myFullName;

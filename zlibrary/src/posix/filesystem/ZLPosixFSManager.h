@@ -33,6 +33,8 @@ protected:
 	ZLFileInfo fileInfo(const std::string &path) const;
 	bool removeFile(const std::string &path) const;
 
+	int findLastPathDelimiter(const std::string &path) const;
+
 public:
 	virtual void moveFile(const std::string &oldName, const std::string &newName) = 0;
 	virtual void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const = 0;

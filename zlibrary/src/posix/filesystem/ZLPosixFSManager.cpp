@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <ZLApplication.h>
 #include <ZLStringUtil.h>
 
 #include "ZLPosixFSManager.h"
@@ -54,4 +55,12 @@ ZLFileInfo ZLPosixFSManager::fileInfo(const std::string &path) const {
 
 bool ZLPosixFSManager::removeFile(const std::string &path) const {
 	return unlink(path.c_str()) == 0;
+}
+
+int ZLPosixFSManager::findLastPathDelimiter(const std::string &path) const {
+	int index = findArchivePathDelimiter(path);
+	if (index == -1) {
+		index = path.rfind(ZLApplication::PathDelimiter);
+	}
+	return index;
 }

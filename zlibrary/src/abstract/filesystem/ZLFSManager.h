@@ -57,6 +57,7 @@ protected:
 	virtual std::string convertFilenameToUtf8(const std::string &name) const = 0;
 
 	virtual int findArchivePathDelimiter(const std::string &path) const = 0;
+	virtual int findLastPathDelimiter(const std::string &path) const = 0;
 
 private:
 	std::map<std::string,ZLFile::ArchiveType> myForcedFiles;
