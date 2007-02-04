@@ -110,7 +110,7 @@ protected:
 	void _onAccept() const;
 
 private:
-	//Win32Widget *myLabel, *mySpinBox;
+	W32SpinBox *mySpinBox;
 };
 
 /*

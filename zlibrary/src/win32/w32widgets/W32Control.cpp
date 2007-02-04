@@ -248,7 +248,7 @@ void W32LineEditor::setEnabled(bool enabled) {
 	}
 }
 
-W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_NUMBER), myMin(min), myMax(max), myInitial(initial) {
+W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_NUMBER), myMin(min), myMax(max), myValue(initial) {
 }
 
 void W32SpinBox::setDimensions(Size charDimension) {
@@ -290,7 +290,7 @@ void W32SpinBox::init(HWND parent, W32ControlCollection &collection) {
 	W32AbstractEditor::init(parent, collection);
 	myControlWindow = GetDlgItem(parent, collection.addControl(this));
 	SendMessage(myControlWindow, UDM_SETRANGE, 0, MAKELONG(myMax, myMin));
-	SendMessage(myControlWindow, UDM_SETPOS, 0, MAKELONG(myInitial, 0));
+	SendMessage(myControlWindow, UDM_SETPOS, 0, MAKELONG(myValue, 0));
 }
 
 int W32SpinBox::allocationSize() const {
@@ -301,4 +301,14 @@ int W32SpinBox::allocationSize() const {
 
 int W32SpinBox::controlNumber() const {
 	return W32AbstractEditor::controlNumber() + 1;
+}
+
+void W32SpinBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+	if (hiWParam == EN_CHANGE) {
+		myValue = SendMessage(myControlWindow, UDM_GETPOS, 0, 0);
+	}
+}
+
+unsigned short W32SpinBox::value() const {
+	return myValue;
 }

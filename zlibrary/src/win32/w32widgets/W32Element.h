@@ -270,8 +270,12 @@ public:
 	int controlNumber() const;
 	void init(HWND parent, W32ControlCollection &collection);
 
+	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
+
+	unsigned short value() const;
+
 private:
-	WORD myMin, myMax, myInitial;
+	WORD myMin, myMax, myValue;
 	HWND myControlWindow;
 };
 

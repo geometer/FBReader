@@ -184,17 +184,17 @@ void ComboOptionView::onValueChanged() {
 */
 
 SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
-	W32SpinBox *spinBox = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
+	mySpinBox = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
 	const std::string &name = option->name();
 	if (name.empty()) {
-		myElement = spinBox;
+		myElement = mySpinBox;
 	} else {
 		W32HBox *box = new W32HBox();
 		box->setSpacing(10);
 		box->addElement(new W32Label(name));
-		box->addElement(spinBox);
+		box->addElement(mySpinBox);
 		myElement = box;
-		//myElement = new W32HPair(new W32Label(name), spinBox, 67, 30);
+		//myElement = new W32HPair(new W32Label(name), mySpinBox, 67, 30);
 	}
 }
 
@@ -215,7 +215,7 @@ void SpinOptionView::_createItem() {
 */
 
 void SpinOptionView::_onAccept() const {
-	//((ZLSpinOptionEntry*)myOption)->onAccept((int)gtk_spin_button_get_value(GTK_SPIN_BUTTON(mySpinBox)));
+	((ZLSpinOptionEntry*)myOption)->onAccept(mySpinBox->value());
 }
 
 StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
