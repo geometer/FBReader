@@ -49,7 +49,7 @@ public:
 
 private:
 	void init(HWND dialogWindow);
-	bool Callback(UINT message, WPARAM wParam, LPARAM lParam);
+	bool Callback(WPARAM wParam);
 
 private:
 	W32Element::Size myCharDimension;

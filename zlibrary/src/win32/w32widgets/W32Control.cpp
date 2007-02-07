@@ -110,7 +110,7 @@ void W32Control::setPosition(int x, int y, Size size) {
 	mySize = size;
 }
 
-void W32Control::callback(UINT, DWORD, LPARAM) {
+void W32Control::callback(DWORD) {
 }
 
 W32PushButton::W32PushButton(const std::string &text) : W32Control(BS_PUSHBUTTON | WS_TABSTOP), myText(text) {
@@ -184,7 +184,7 @@ bool W32CheckBox::isChecked() const {
 	return myChecked;
 }
 
-void W32CheckBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+void W32CheckBox::callback(DWORD) {
 	myChecked = SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED;
 }
 
@@ -222,7 +222,7 @@ static std::string getTextFromBuffer(const ZLUnicodeUtil::Ucs2String &buffer) {
 	return txt;
 }
 
-void W32LineEditor::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+void W32LineEditor::callback(DWORD hiWParam) {
 	if ((hiWParam == EN_CHANGE) && !myBlocked) {
 		getEditorString(myWindow, myBuffer);
 	}
@@ -310,7 +310,7 @@ int W32SpinBox::controlNumber() const {
 	return W32AbstractEditor::controlNumber() + 1;
 }
 
-void W32SpinBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+void W32SpinBox::callback(DWORD hiWParam) {
 	if (hiWParam == EN_CHANGE) {
 		myValue = SendMessage(myControlWindow, UDM_GETPOS, 0, 0);
 	}
@@ -383,7 +383,7 @@ void W32ComboBox::setEditable(bool editable) {
 	}
 }
 
-void W32ComboBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+void W32ComboBox::callback(DWORD hiWParam) {
 	if (hiWParam == CBN_SELCHANGE) {
 		const int index = SendMessage(myWindow, CB_GETCURSEL, 0, 0);
 		const int length = SendMessage(myWindow, CB_GETLBTEXTLEN, index, 0);

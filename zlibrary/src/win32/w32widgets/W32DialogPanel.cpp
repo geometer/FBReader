@@ -117,15 +117,16 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 	if (message == WM_INITDIALOG) {
 		((W32DialogPanel*)lParam)->init(hDialog);
 		return true;
-	}
-	if ((message == WM_COMMAND) && ((wParam == IDOK) || (wParam == IDCANCEL))) {
-		EndDialog(hDialog, wParam == IDOK);
-		return true;
-	}
+	} else if (message == WM_COMMAND) {
+		if ((wParam == IDOK) || (wParam == IDCANCEL)) {
+			EndDialog(hDialog, wParam == IDOK);
+			return true;
+		}
 
-	W32DialogPanel *panel = ourPanels[hDialog];
-	if (panel != 0) {
-		return panel->Callback(message, wParam, lParam);
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			return panel->Callback(wParam);
+		}
 	}
 	return false;
 }
@@ -134,18 +135,19 @@ BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARA
 	if (message == WM_INITDIALOG) {
 		((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hDialog);
 		return true;
-	}
-	W32DialogPanel *panel = ourPanels[hDialog];
-	if (panel != 0) {
-		return panel->Callback(message, wParam, lParam);
+	} else if (message == WM_COMMAND) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			return panel->Callback(wParam);
+		}
 	}
 	return false;
 }
 
-bool W32DialogPanel::Callback(UINT message, WPARAM wParam, LPARAM lParam) {
+bool W32DialogPanel::Callback(WPARAM wParam) {
 	W32Control *control = myCollection[LOWORD(wParam)];
 	if (control != 0) {
-		control->callback(message, HIWORD(wParam), lParam);
+		control->callback(HIWORD(wParam));
 		return true;
 	}
 	return false;

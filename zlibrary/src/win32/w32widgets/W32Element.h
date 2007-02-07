@@ -174,7 +174,7 @@ protected:
 	virtual WORD classId() const = 0;
 
 public:
-	virtual void callback(UINT message, DWORD hiWParam, LPARAM lParam);
+	virtual void callback(DWORD hiWParam);
 
 protected:
 	DWORD myStyle;
@@ -224,7 +224,7 @@ public:
 	void setChecked(bool checked);
 	bool isChecked() const;
 
-	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
+	void callback(DWORD hiWParam);
 
 private:
 	std::string myText;
@@ -250,7 +250,7 @@ public:
 
 	void setEnabled(bool enabled);
 
-	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
+	void callback(DWORD hiWParam);
 
 	std::string text() const;
 
@@ -270,7 +270,7 @@ public:
 	int controlNumber() const;
 	void init(HWND parent, W32ControlCollection &collection);
 
-	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
+	void callback(DWORD hiWParam);
 
 	unsigned short value() const;
 
@@ -292,7 +292,7 @@ public:
 	void setEnabled(bool enabled);
 	void setEditable(bool editable);
 
-	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
+	void callback(DWORD hiWParam);
 
 	std::string text() const;
 
