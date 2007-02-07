@@ -100,7 +100,7 @@ ZLWin32OptionView *ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option
 			view = new SpinOptionView((ZLSpinOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::COMBO:
-			//view = new ComboOptionView((ZLComboOptionEntry*)option, this);
+			view = new ComboOptionView((ZLComboOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::COLOR:
 			//view = new ColorOptionView((ZLColorOptionEntry*)option, this);

@@ -56,17 +56,15 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 	}
 	
 	int index;
-	/*
-	while ((index = path.find('/')) != -1) {
-		path[index] = '\\';
-	}
-	*/
 	while ((index = path.find("\\..")) != -1) {
 		int prevIndex = path.rfind('\\', index - 1);
 		if (prevIndex == -1) {
 			break;
 		}
 		path.erase(prevIndex, index + 3 - prevIndex);
+	}
+	while ((index = path.find("\\\\")) != -1) {
+		path.erase(index, 1);
 	}
 }
 

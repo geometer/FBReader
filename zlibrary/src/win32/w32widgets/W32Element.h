@@ -279,4 +279,29 @@ private:
 	HWND myControlWindow;
 };
 
+class W32ComboBox : public W32Control {
+
+public:
+	W32ComboBox(const std::vector<std::string> &list, int initialIndex);
+	void setDimensions(Size charDimension);
+
+	void allocate(WORD *&p, short &id) const;
+	WORD classId() const;
+	void init(HWND parent, W32ControlCollection &collection);
+
+	void setEnabled(bool enabled);
+	void setEditable(bool editable);
+
+	void callback(UINT message, DWORD hiWParam, LPARAM lParam);
+
+	std::string text() const;
+
+private:
+	const std::vector<std::string> &myList;
+	int myIndex;
+
+	ZLUnicodeUtil::Ucs2String myBuffer;
+	HWND myEditorWindow;
+};
+
 #endif /* __W32ELEMENT_H__ */

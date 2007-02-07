@@ -141,11 +141,11 @@ shared_ptr<ZLView> ZLApplication::currentView() const {
 }
 
 void ZLApplication::refreshWindow() {
-	if (myWindow != 0) {
-		myWindow->refresh();
-	}
 	if (myViewWidget != 0) {
 		myViewWidget->repaint();
+	}
+	if (myWindow != 0) {
+		myWindow->refresh();
 	}
 }
 

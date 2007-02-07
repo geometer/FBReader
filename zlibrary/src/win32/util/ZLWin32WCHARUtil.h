@@ -29,6 +29,7 @@ inline const WCHAR *wchar(const ZLUnicodeUtil::Ucs2String &str) {
 }
 
 inline const ZLUnicodeUtil::Ucs2String &createNTWCHARString(ZLUnicodeUtil::Ucs2String &str, const std::string &utf8) {
+	str.clear();
 	ZLUnicodeUtil::utf8ToUcs2(str, utf8.data(), utf8.length());
 	str.push_back(0);
 	return str;

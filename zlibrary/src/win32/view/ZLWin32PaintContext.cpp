@@ -62,22 +62,23 @@ void ZLWin32PaintContext::updateInfo(HWND window, int width, int height) {
 	}
 }
 
+static int CALLBACK enumFamiliesProc(const LOGFONTA *lf, const TEXTMETRICA*, DWORD, LPARAM param) {
+	((std::set<std::string>*)param)->insert(lf->lfFaceName);
+	return 1;
+}
+
 void ZLWin32PaintContext::fillFamiliesList(std::vector<std::string> &families) const {
-	/*
-	QFontDatabase db;
-	QStringList qFamilies = db.families();
-	bool helveticaFlag = false;
-	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); ++it) {
-		std::string family = (*it).ascii();
-		if (family == HELVETICA) {
-			helveticaFlag = true;
-		}
-		families.push_back(family);
+	std::set<std::string> familiesSet;
+	LOGFONTA font;
+	font.lfCharSet = DEFAULT_CHARSET;
+	font.lfFaceName[0] = '\0';
+	font.lfPitchAndFamily = 0;
+	HDC dc = GetDC(0);
+	EnumFontFamiliesExA(dc, &font, enumFamiliesProc, (LPARAM)&familiesSet, 0);
+	ReleaseDC(0, dc);
+	for (std::set<std::string>::const_iterator it = familiesSet.begin(); it != familiesSet.end(); ++it) {
+		families.push_back(*it);
 	}
-	if (!helveticaFlag) {
-		families.push_back(HELVETICA);
-	}
-	*/
 }
 
 const std::string ZLWin32PaintContext::realFontFamilyName(std::string &fontFamily) const {

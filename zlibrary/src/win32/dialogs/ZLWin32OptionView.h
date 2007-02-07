@@ -113,25 +113,22 @@ private:
 	W32SpinBox *mySpinBox;
 };
 
-/*
 class ComboOptionView : public ZLWin32OptionView {
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
+	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab);
 
 private:
-	void _setActive(bool active);
+	//void _setActive(bool active);
 	void _onAccept() const;
-	void reset();
-	void onValueChanged();
+	//void reset();
+	//void onValueChanged();
 	
 private:
-	Win32Widget *myLabel;
-	Win32ComboBox *myComboBox;
-	int mySelectedIndex;
-	int myListSize;
+	W32ComboBox *myComboBox;
 };
 
+/*
 class ColorOptionView : public ZLWin32OptionView {
 
 public:

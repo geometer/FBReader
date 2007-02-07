@@ -185,7 +185,6 @@ bool W32CheckBox::isChecked() const {
 }
 
 void W32CheckBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
-	//std::cerr << "CheckBox: " << message << " : " << hiWParam << " : " << lParam << "\n";
 	myChecked = SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED;
 }
 
@@ -205,24 +204,32 @@ W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUT
 	setEnabled(true);
 }
 
-void W32LineEditor::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
-	if ((hiWParam == EN_CHANGE) && !myBlocked) {
-		const int length = SendMessage(myWindow, EM_LINELENGTH, 0, 0);
-		myBuffer.clear();
-		myBuffer.insert(myBuffer.end(), length + 1, 0);
-		if (length > 0) {
-			myBuffer[0] = length + 1;
-			SendMessage(myWindow, EM_GETLINE, 0, (LPARAM)&myBuffer.front());
-		}
+static void getEditorString(HWND editor, ZLUnicodeUtil::Ucs2String &buffer) {
+	const int length = SendMessage(editor, EM_LINELENGTH, 0, 0);
+	buffer.clear();
+	buffer.insert(buffer.end(), length + 1, 0);
+	if (length > 0) {
+		buffer[0] = length + 1;
+		SendMessage(editor, EM_GETLINE, 0, (LPARAM)&buffer.front());
 	}
 }
 
-std::string W32LineEditor::text() const {
-	ZLUnicodeUtil::Ucs2String copy = myBuffer;
+static std::string getTextFromBuffer(const ZLUnicodeUtil::Ucs2String &buffer) {
+	ZLUnicodeUtil::Ucs2String copy = buffer;
 	copy.pop_back();
 	std::string txt;
 	ZLUnicodeUtil::ucs2ToUtf8(txt, copy);
 	return txt;
+}
+
+void W32LineEditor::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+	if ((hiWParam == EN_CHANGE) && !myBlocked) {
+		getEditorString(myWindow, myBuffer);
+	}
+}
+
+std::string W32LineEditor::text() const {
+	return getTextFromBuffer(myBuffer);
 }
 
 void W32LineEditor::setDimensions(Size charDimension) {
@@ -311,4 +318,90 @@ void W32SpinBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
 
 unsigned short W32SpinBox::value() const {
 	return myValue;
+}
+
+W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32Control(WS_VSCROLL | CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex), myEditorWindow(0) {
+	::createNTWCHARString(myBuffer, list[initialIndex]);
+}
+
+void W32ComboBox::allocate(WORD *&p, short &id) const {
+	*p++ = LOWORD(myStyle);
+	*p++ = HIWORD(myStyle);
+	*p++ = 0;
+	*p++ = 0;
+	*p++ = myX;
+	*p++ = myY;
+	*p++ = mySize.Width;
+	*p++ = mySize.Height * myList.size();
+	*p++ = id++;
+	*p++ = 0xFFFF;
+	*p++ = classId();
+	*p++ = 0;
+	*p++ = 0;
+	*p++ = 0;
+}
+
+void W32ComboBox::setDimensions(Size charDimension) {
+	// TODO: implement
+	int len = 0;
+	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
+		len = std::max(ZLUnicodeUtil::utf8Length(*it), len);
+	}
+	len += 3;
+	len = std::min(len, 28);
+	mySize.Width = charDimension.Width * len;
+	mySize.Height = charDimension.Height * 3 / 2;
+}
+
+WORD W32ComboBox::classId() const {
+	return CLASS_COMBOBOX;
+}
+
+void W32ComboBox::init(HWND parent, W32ControlCollection &collection) {
+	// TODO: implement
+	W32Control::init(parent, collection);
+	ZLUnicodeUtil::Ucs2String buffer;
+	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
+		SendMessage(myWindow, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
+	}
+	SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
+}
+
+void W32ComboBox::setEnabled(bool enabled) {
+	// TODO: implement
+}
+
+void W32ComboBox::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~CBS_SIMPLE;
+	} else {
+		myStyle |= CBS_SIMPLE;
+	}
+	if (myWindow != 0) {
+		// TODO: check
+		SetWindowLong(myWindow, GWL_STYLE, myStyle);
+	}
+}
+
+void W32ComboBox::callback(UINT message, DWORD hiWParam, LPARAM lParam) {
+	if (hiWParam == CBN_SELCHANGE) {
+		const int index = SendMessage(myWindow, CB_GETCURSEL, 0, 0);
+		const int length = SendMessage(myWindow, CB_GETLBTEXTLEN, index, 0);
+		myBuffer.clear();
+		myBuffer.insert(myBuffer.end(), length + 1, 0);
+		if (length > 0) {
+			SendMessage(myWindow, CB_GETLBTEXT, index, (LPARAM)&myBuffer.front());
+		}
+	} else if (hiWParam == CBN_EDITCHANGE) {
+		if (myEditorWindow == 0) {
+			COMBOBOXINFO info;
+			GetComboBoxInfo(myWindow, &info);
+			myEditorWindow = info.hwndItem;
+		}
+		getEditorString(myEditorWindow, myBuffer);
+	}
+}
+
+std::string W32ComboBox::text() const {
+	return getTextFromBuffer(myBuffer);
 }

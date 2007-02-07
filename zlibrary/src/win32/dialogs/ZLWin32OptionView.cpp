@@ -110,7 +110,34 @@ void ChoiceOptionView::_onAccept() const {
 		}
 	}
 }
+*/
 
+ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+	const std::vector<std::string> &values = option->values();
+	const std::string &initialValue = option->initialValue();
+	int index = 0;
+	for (int i = 0; i < values.size(); ++i) {
+		if (values[i] == initialValue) {
+			index = i;
+			break;
+		}
+	}
+	myComboBox = new W32ComboBox(values, index);
+	myComboBox->setEditable(option->isEditable());
+	const std::string &name = option->name();
+	if (name.empty()) {
+		myElement = myComboBox;
+	} else {
+		W32HBox *box = new W32HBox();
+		box->setSpacing(10);
+		box->addElement(new W32Label(name));
+		box->addElement(myComboBox);
+		myElement = box;
+		//myElement = new W32HPair(new W32Label(name), myComboBox, 67, 30);
+	}
+}
+
+/*
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOptionEntry = *(ZLComboOptionEntry*)myOption;
 	myLabel = labelWithMyParams(myOption->name().c_str());
@@ -140,11 +167,13 @@ void ComboOptionView::_hide() {
 void ComboOptionView::_setActive(bool active) {
 	gtk_widget_set_sensitive(GTK_WIDGET(myComboBox), active);
 }
+*/
 
 void ComboOptionView::_onAccept() const {
-	((ZLComboOptionEntry*)myOption)->onAccept(gtk_combo_box_get_active_text(myComboBox));
+	((ZLComboOptionEntry*)myOption)->onAccept(myComboBox->text());
 }
 
+/*
 void ComboOptionView::reset() {
 	if (myComboBox == 0) {
 		return;

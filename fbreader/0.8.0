@@ -30,7 +30,6 @@ openbook
 	enable/disable для контролов
 	show/hide для контролов
 	ChoiceOptionView
-	ComboOptionView
 	ColorOptionView
 	KeyOptionView
 selection dialog
