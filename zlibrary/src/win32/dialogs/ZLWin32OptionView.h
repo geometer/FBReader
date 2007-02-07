@@ -119,7 +119,7 @@ public:
 	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab);
 
 private:
-	//void _setActive(bool active);
+	void _setActive(bool active);
 	void _onAccept() const;
 	//void reset();
 	//void onValueChanged();

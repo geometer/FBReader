@@ -36,7 +36,20 @@ static const WCHAR CLASSNAME_SPINNER[] = UPDOWN_CLASSW;
 
 static HFONT controlFont = 0;
 
-W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myWindow(0) {
+W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myWindow(0) {
+}
+
+void W32Control::setEnabled(bool enabled) {
+	if (myEnabled != enabled) {
+		myEnabled = enabled;
+		if (myWindow != 0) {
+			EnableWindow(myWindow, myEnabled);
+		}
+	}
+}
+
+bool W32Control::isEnabled() const {
+	return myEnabled;
 }
 
 void W32Control::setVisible(bool visible) {
@@ -75,6 +88,9 @@ void W32Control::allocate(WORD *&p, short &id) const {
 
 void W32Control::init(HWND parent, W32ControlCollection &collection) {
 	myWindow = GetDlgItem(parent, collection.addControl(this));
+	if (!myEnabled) {
+		EnableWindow(myWindow, false);
+	}
 	if (controlFont == 0) {
 		LOGFONT logicalFont;
 		logicalFont.lfHeight = 15;
@@ -201,7 +217,6 @@ void W32AbstractEditor::init(HWND parent, W32ControlCollection &collection) {
 
 W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myBlocked(true) {
 	::createNTWCHARString(myBuffer, text);
-	setEnabled(true);
 }
 
 static void getEditorString(HWND editor, ZLUnicodeUtil::Ucs2String &buffer) {
@@ -243,8 +258,8 @@ void W32LineEditor::init(HWND parent, W32ControlCollection &collection) {
 	myBlocked = false;
 }
 
-void W32LineEditor::setEnabled(bool enabled) {
-	if (enabled) {
+void W32LineEditor::setEditable(bool editable) {
+	if (editable) {
 		myStyle &= ~ES_READONLY;
 	} else {
 		myStyle |= ES_READONLY;
@@ -365,10 +380,6 @@ void W32ComboBox::init(HWND parent, W32ControlCollection &collection) {
 		SendMessage(myWindow, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
 	}
 	SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
-}
-
-void W32ComboBox::setEnabled(bool enabled) {
-	// TODO: implement
 }
 
 void W32ComboBox::setEditable(bool editable) {

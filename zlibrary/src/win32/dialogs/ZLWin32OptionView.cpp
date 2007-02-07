@@ -116,7 +116,7 @@ ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogConten
 	const std::vector<std::string> &values = option->values();
 	const std::string &initialValue = option->initialValue();
 	int index = 0;
-	for (int i = 0; i < values.size(); ++i) {
+	for (size_t i = 0; i < values.size(); ++i) {
 		if (values[i] == initialValue) {
 			index = i;
 			break;
@@ -163,11 +163,11 @@ void ComboOptionView::_hide() {
 	gtk_widget_hide(myLabel);
 	gtk_widget_hide(GTK_WIDGET(myComboBox));
 }
+*/
 
 void ComboOptionView::_setActive(bool active) {
-	gtk_widget_set_sensitive(GTK_WIDGET(myComboBox), active);
+	myComboBox->setEnabled(active);
 }
-*/
 
 void ComboOptionView::_onAccept() const {
 	((ZLComboOptionEntry*)myOption)->onAccept(myComboBox->text());
@@ -298,7 +298,7 @@ void StringOptionView::onValueChanged() {
 }
 
 void StringOptionView::_setActive(bool active) {
-	myLineEditor->setEnabled(active);
+	myLineEditor->setEditable(active);
 }
 
 void StringOptionView::_onAccept() const {

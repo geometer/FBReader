@@ -164,8 +164,6 @@ protected:
 
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
-	void setVisible(bool visible);
-	bool isVisible() const;
 	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
@@ -174,12 +172,20 @@ protected:
 	virtual WORD classId() const = 0;
 
 public:
+	void setEnabled(bool enabled);
+	bool isEnabled() const;
+	void setVisible(bool visible);
+	bool isVisible() const;
+
+public:
 	virtual void callback(DWORD hiWParam);
 
 protected:
 	DWORD myStyle;
 	int myX, myY;
 	Size mySize;
+
+	bool myEnabled;
 
 	HWND myWindow;
 };
@@ -245,10 +251,9 @@ class W32LineEditor : public W32AbstractEditor {
 public:
 	W32LineEditor(const std::string &text);
 	void setDimensions(Size charDimension);
-
 	void init(HWND parent, W32ControlCollection &collection);
 
-	void setEnabled(bool enabled);
+	void setEditable(bool editable);
 
 	void callback(DWORD hiWParam);
 
@@ -289,7 +294,6 @@ public:
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection &collection);
 
-	void setEnabled(bool enabled);
 	void setEditable(bool editable);
 
 	void callback(DWORD hiWParam);
