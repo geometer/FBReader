@@ -27,7 +27,6 @@ openbook
 	перераскладка при необходимости
 	шрифты в диалогах
 	размер options dialog
-	show/hide для контролов
 	ChoiceOptionView
 	ColorOptionView
 	KeyOptionView

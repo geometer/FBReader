@@ -70,7 +70,7 @@ private:
 };
 */
 
-class BooleanOptionView : public ZLWin32OptionView {
+class BooleanOptionView : public ZLWin32OptionView, public W32ControlListener {
 
 public:
 	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab);
@@ -79,7 +79,7 @@ protected:
 	void _onAccept() const;
 
 private:
-	//void onValueChanged();
+	void onEvent(const std::string &event);
 
 private:
 	W32CheckBox *myCheckBox;

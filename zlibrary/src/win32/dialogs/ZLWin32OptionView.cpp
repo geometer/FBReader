@@ -55,6 +55,7 @@ void ZLWin32OptionView::_hide() {
 BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
 	myCheckBox = new W32CheckBox(myOption->name());
 	myCheckBox->setChecked(option->initialState());
+	myCheckBox->setListener(this);
 	myElement = myCheckBox;
 }
 
@@ -62,12 +63,13 @@ void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
 }
 
-/*
-void BooleanOptionView::onValueChanged() {
-	((ZLBooleanOptionEntry*)myOption)->onStateChanged(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
+void BooleanOptionView::onEvent(const std::string &event) {
+	if (event == W32CheckBox::STATE_CHANGED_EVENT) {
+		((ZLBooleanOptionEntry*)myOption)->onStateChanged(myCheckBox->isChecked());
+	}
 }
 
-
+/*
 void ChoiceOptionView::_createItem() {
 	myFrame = GTK_FRAME(gtk_frame_new(myOption->name().c_str()));
 	myVBox = GTK_BOX(gtk_vbox_new(true, 10));

@@ -29,6 +29,16 @@
 
 #include "W32Element.h"
 
+class W32ControlListener {
+
+protected:
+	W32ControlListener();
+
+public:
+	virtual ~W32ControlListener();
+	virtual void onEvent(const std::string &event) = 0;
+};
+
 class W32Control : public W32Element {
 
 protected:
@@ -43,11 +53,15 @@ protected:
 
 	virtual WORD classId() const = 0;
 
+	void fireEvent(const std::string &event) const;
+
 public:
 	void setEnabled(bool enabled);
 	bool isEnabled() const;
-	void setVisible(bool visible);
+	virtual void setVisible(bool visible);
 	bool isVisible() const;
+
+	void setListener(W32ControlListener *listener);
 
 public:
 	virtual void callback(DWORD hiWParam);
@@ -60,6 +74,8 @@ protected:
 	bool myEnabled;
 
 	HWND myWindow;
+
+	W32ControlListener *myListener;
 };
 
 class W32PushButton : public W32Control {
@@ -91,6 +107,9 @@ private:
 };
 
 class W32CheckBox : public W32Control {
+
+public:
+	static const std::string STATE_CHANGED_EVENT;
 
 public:
 	W32CheckBox(const std::string &text);
@@ -146,6 +165,8 @@ public:
 	int allocationSize() const;
 	int controlNumber() const;
 	void init(HWND parent, W32ControlCollection &collection);
+
+	void setVisible(bool visible);
 
 	void callback(DWORD hiWParam);
 

@@ -37,7 +37,13 @@ static const WCHAR CLASSNAME_SPINNER[] = UPDOWN_CLASSW;
 
 static HFONT controlFont = 0;
 
-W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myWindow(0) {
+W32ControlListener::W32ControlListener() {
+}
+
+W32ControlListener::~W32ControlListener() {
+}
+
+W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myWindow(0), myListener(0) {
 }
 
 void W32Control::setEnabled(bool enabled) {
@@ -61,8 +67,7 @@ void W32Control::setVisible(bool visible) {
 			myStyle &= ~WS_VISIBLE;
 		}
 		if (myWindow != 0) {
-			// TODO: check
-			SetWindowLong(myWindow, GWL_STYLE, myStyle);
+			ShowWindow(myWindow, visible ? SW_SHOW : SW_HIDE);
 		}
 	}
 }
@@ -122,6 +127,16 @@ int W32Control::controlNumber() const {
 	return 1;
 }
 
+void W32Control::setListener(W32ControlListener *listener) {
+	myListener = listener;
+}
+
+void W32Control::fireEvent(const std::string &event) const {
+	if (myListener != 0) {
+		myListener->onEvent(event);
+	}
+}
+
 W32Element::Size W32Control::minimumSize() const {
 	return mySize;
 }
@@ -175,6 +190,8 @@ void W32Label::init(HWND parent, W32ControlCollection &collection) {
 	::setWindowText(myWindow, myText);
 }
 
+const std::string W32CheckBox::STATE_CHANGED_EVENT = "CheckBox: state changed";
+
 W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_AUTOCHECKBOX | WS_TABSTOP), myText(text), myChecked(false) {
 }
 
@@ -199,6 +216,7 @@ void W32CheckBox::setChecked(bool checked) {
 		if (myWindow != 0) {
 			SendMessage(myWindow, BM_SETCHECK, myChecked ? BST_CHECKED : BST_UNCHECKED, 0);
 		}
+		fireEvent(STATE_CHANGED_EVENT);
 	}
 }
 
@@ -207,7 +225,10 @@ bool W32CheckBox::isChecked() const {
 }
 
 void W32CheckBox::callback(DWORD) {
-	myChecked = SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED;
+	if (myChecked != (SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED)) {
+		myChecked = !myChecked;
+		fireEvent(STATE_CHANGED_EVENT);
+	}
 }
 
 W32AbstractEditor::W32AbstractEditor(DWORD style) : W32Control(style | WS_BORDER | WS_TABSTOP | ES_NOHIDESEL) {
@@ -329,6 +350,14 @@ int W32SpinBox::allocationSize() const {
 
 int W32SpinBox::controlNumber() const {
 	return W32AbstractEditor::controlNumber() + 1;
+}
+
+void W32SpinBox::setVisible(bool visible) {
+	const bool change = visible != isVisible();
+	W32Control::setVisible(visible);
+	if (change && (myControlWindow != 0)) {
+		ShowWindow(myControlWindow, visible ? SW_SHOW : SW_HIDE);
+	}
 }
 
 void W32SpinBox::callback(DWORD hiWParam) {
