@@ -27,6 +27,7 @@
 #include <prsht.h>
 
 #include "W32Element.h"
+#include "W32ControlCollection.h"
 
 class W32DialogPanel {
 

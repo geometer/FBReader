@@ -17,10 +17,23 @@
  * 02110-1301, USA.
  */
 
-#include "W32Element.h"
+#ifndef __W32CONTROLCOLLECTION_H__
+#define __W32CONTROLCOLLECTION_H__
 
-W32Element::W32Element() {
-}
+#include <map>
 
-W32Element::~W32Element() {
-}
+class W32Control;
+
+class W32ControlCollection {
+
+public:
+	W32ControlCollection(int startId);
+	short addControl(W32Control *control);	
+	W32Control *operator[] (short id);
+
+private:
+	short myCurrentId;
+	std::map<short,W32Control*> myControlByIdMap;
+};
+
+#endif /* __W32CONTROLCOLLECTION_H__ */

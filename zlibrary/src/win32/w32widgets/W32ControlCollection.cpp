@@ -17,10 +17,17 @@
  * 02110-1301, USA.
  */
 
-#include "W32Element.h"
+#include "W32ControlCollection.h"
 
-W32Element::W32Element() {
+W32ControlCollection::W32ControlCollection(int startId) : myCurrentId(startId) {
 }
 
-W32Element::~W32Element() {
+short W32ControlCollection::addControl(W32Control *control) {
+	myControlByIdMap[myCurrentId] = control;
+	return myCurrentId++;
+}
+
+W32Control *W32ControlCollection::operator[] (short id) {
+	std::map<short,W32Control*>::iterator it = myControlByIdMap.find(id);
+	return (it != myControlByIdMap.end()) ? it->second : 0;
 }

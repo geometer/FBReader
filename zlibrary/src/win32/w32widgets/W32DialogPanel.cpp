@@ -22,10 +22,19 @@
 #include <ZLUnicodeUtil.h>
 
 #include "W32DialogPanel.h"
+#include "W32Control.h"
+#include "../util/ZLWin32WCHARUtil.h"
 
 static const int FirstControlId = 2001;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
+
+static void allocateString(WORD *&p, const std::string &text) {
+	ZLUnicodeUtil::Ucs2String ucs2Str;
+	::createNTWCHARString(ucs2Str, text);
+	memcpy(p, ::wchar(ucs2Str), 2 * ucs2Str.size());
+	p += ucs2Str.size();
+}
 
 W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0), myDialogWindow(0), myCollection(FirstControlId) {
 	TEXTMETRIC metric;
@@ -94,7 +103,7 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	//std::cerr << "page = " << mySize.Width * LOWORD(dlgUnit) / 4 << "x" << mySize.Height * HIWORD(dlgUnit) / 8 << "\n";
 	*p++ = 0;
 	*p++ = 0;
-	W32Element::allocateString(p, myCaption);
+	allocateString(p, myCaption);
 	if ((p - myAddress) % 2 == 1) {
 		p++;
 	}

@@ -22,7 +22,8 @@
 #include <windows.h>
 #include <commctrl.h>
 
-#include "W32Element.h"
+#include "W32Control.h"
+#include "W32ControlCollection.h"
 #include "../util/ZLWin32WCHARUtil.h"
 
 static const WORD CLASS_BUTTON = 0x0080;
@@ -53,11 +54,16 @@ bool W32Control::isEnabled() const {
 }
 
 void W32Control::setVisible(bool visible) {
-	// TODO: update initialized control
-	if (visible) {
-		myStyle |= WS_VISIBLE;
-	} else {
-		myStyle &= ~WS_VISIBLE;
+	if (visible != ((myStyle & WS_VISIBLE) == WS_VISIBLE)) {
+		if (visible) {
+			myStyle |= WS_VISIBLE;
+		} else {
+			myStyle &= ~WS_VISIBLE;
+		}
+		if (myWindow != 0) {
+			// TODO: check
+			SetWindowLong(myWindow, GWL_STYLE, myStyle);
+		}
 	}
 }
 

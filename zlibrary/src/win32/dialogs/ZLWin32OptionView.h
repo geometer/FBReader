@@ -24,7 +24,7 @@
 #include "../../abstract/dialogs/ZLOptionEntry.h"
 #include "../../abstract/dialogs/ZLOptionView.h"
 
-#include "../w32widgets/W32Element.h"
+#include "../w32widgets/W32Control.h"
 
 class ZLWin32DialogContent;
 
