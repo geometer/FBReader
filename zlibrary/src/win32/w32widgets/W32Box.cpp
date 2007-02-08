@@ -19,45 +19,45 @@
 
 #include <algorithm>
 
-#include "W32Element.h"
+#include "W32Container.h"
 
 W32Box::W32Box() : myHomogeneous(false), myTopMargin(0), myBottomMargin(0), myLeftMargin(0), myRightMargin(0), mySpacing(0) {
 }
 
-void W32Box::addElement(W32ElementPtr element) {
+void W32Box::addElement(W32WidgetPtr element) {
 	if (!element.isNull()) {
 		myElements.push_back(element);
 	}
 }
 
 void W32Box::allocate(WORD *&p, short &id) const {
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		(*it)->allocate(p, id);
 	}
 }
 
 void W32Box::init(HWND parent, W32ControlCollection *collection) {
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		(*it)->init(parent, collection);
 	}
 }
 
 int W32Box::allocationSize() const {
 	int size = 0;
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		size += (*it)->allocationSize();
 	}
 	return size;
 }
 
 void W32Box::setVisible(bool visible) {
-	for (W32ElementList::iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		(*it)->setVisible(visible);
 	}
 }
 
 bool W32Box::isVisible() const {
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		if ((*it)->isVisible()) {
 			return true;
 		}
@@ -67,7 +67,7 @@ bool W32Box::isVisible() const {
 
 int W32Box::visibleElementsNumber() const {
 	int counter = 0;
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		if ((*it)->isVisible()) {
 			++counter;
 		}
@@ -77,7 +77,7 @@ int W32Box::visibleElementsNumber() const {
 
 int W32Box::controlNumber() const {
 	int number = 0;
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		number += (*it)->controlNumber();
 	}
 	return number;
@@ -99,7 +99,7 @@ void W32Box::setSpacing(int spacing) {
 }
 
 void W32Box::setDimensions(Size charDimension) {
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		(*it)->setDimensions(charDimension);
 	}
 }
@@ -107,14 +107,14 @@ void W32Box::setDimensions(Size charDimension) {
 W32HBox::W32HBox() {
 }
 
-W32Element::Size W32HBox::minimumSize() const {
+W32Widget::Size W32HBox::minimumSize() const {
 	if (myElements.empty()) {
 		return Size(leftMargin() + rightMargin(), topMargin() + bottomMargin());
 	}
 
 	Size size;
 	int elementCounter = 0;
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		if ((*it)->isVisible()) {
 			Size elementSize = (*it)->minimumSize();
 			if (homogeneous()) {
@@ -148,7 +148,7 @@ void W32HBox::setPosition(int x, int y, Size size) {
 			size.Height - topMargin() - bottomMargin()
 		);
 		const short deltaX = elementSize.Width + spacing();
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 			if ((*it)->isVisible()) {
 				(*it)->setPosition(x, y, elementSize);
 				x += deltaX;
@@ -157,7 +157,7 @@ void W32HBox::setPosition(int x, int y, Size size) {
 	} else {
 		const int elementHeight = size.Height - topMargin() - bottomMargin();
 		Size elementSize;
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 			if ((*it)->isVisible()) {
 				Size elementSize = (*it)->minimumSize();
 				elementSize.Height = elementHeight;
@@ -171,14 +171,14 @@ void W32HBox::setPosition(int x, int y, Size size) {
 W32VBox::W32VBox() {
 }
 
-W32Element::Size W32VBox::minimumSize() const {
+W32Widget::Size W32VBox::minimumSize() const {
 	if (myElements.empty()) {
 		return Size(leftMargin() + rightMargin(), topMargin() + bottomMargin());
 	}
 
 	Size size;
 	int elementCounter = 0;
-	for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 		if ((*it)->isVisible()) {
 			Size elementSize = (*it)->minimumSize();	
 			size.Width = std::max(size.Width, elementSize.Width);
@@ -212,7 +212,7 @@ void W32VBox::setPosition(int x, int y, Size size) {
 			(size.Height - topMargin() - bottomMargin() - spacing() * (elementCounter - 1)) / elementCounter
 		);
 		const short deltaY = elementSize.Height + spacing();
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 			if ((*it)->isVisible()) {
 				(*it)->setPosition(x, y, elementSize);
 				y += deltaY;
@@ -220,7 +220,7 @@ void W32VBox::setPosition(int x, int y, Size size) {
 		}
 	} else {
 		const short elementWidth = size.Width - leftMargin() - rightMargin();
-		for (W32ElementList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+		for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 			if ((*it)->isVisible()) {
 				Size elementSize = (*it)->minimumSize();
 				elementSize.Width = elementWidth;

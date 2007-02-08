@@ -27,10 +27,10 @@
 
 #include <ZLUnicodeUtil.h>
 
-#include "W32Element.h"
+#include "W32Widget.h"
 #include "W32Event.h"
 
-class W32Control : public W32Element, public W32EventSender {
+class W32Control : public W32Widget, public W32EventSender {
 
 protected:
 	W32Control(DWORD style);

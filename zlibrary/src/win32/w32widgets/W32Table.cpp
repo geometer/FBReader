@@ -19,7 +19,7 @@
 
 #include <iostream>
 
-#include "W32Element.h"
+#include "W32Container.h"
 
 W32Table::W32Table() : myTopMargin(0), myBottomMargin(0), myLeftMargin(0), myRightMargin(0), myVerticalSpacing(0), myHorizontalSpacing(0) {
 }
@@ -36,22 +36,22 @@ void W32Table::setSpacings(int vertical, int horizontal) {
 	myHorizontalSpacing = horizontal;
 }
 
-void W32Table::setElement(W32ElementPtr element, int row, int column) {
+void W32Table::setElement(W32WidgetPtr element, int row, int column) {
 	if (!element.isNull()) {
 		if (row >= (int)myRows.size()) {
-			myRows.insert(myRows.end(), row - myRows.size() + 1, W32ElementList());
+			myRows.insert(myRows.end(), row - myRows.size() + 1, W32WidgetList());
 		}
-		W32ElementList &rowList = myRows[row];
+		W32WidgetList &rowList = myRows[row];
 		if (column >= (int)rowList.size()) {
-			rowList.insert(rowList.end(), column - rowList.size() + 1, W32ElementPtr());
+			rowList.insert(rowList.end(), column - rowList.size() + 1, W32WidgetPtr());
 		}
 		rowList[column] = element;
 	}
 }
 
 void W32Table::allocate(WORD *&p, short &id) const {
-	for (std::vector<W32ElementList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
-		for (W32ElementList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+	for (std::vector<W32WidgetList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		for (W32WidgetList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 			if (!jt->isNull()) {
 				(*jt)->allocate(p, id);
 			}
@@ -61,8 +61,8 @@ void W32Table::allocate(WORD *&p, short &id) const {
 
 int W32Table::allocationSize() const {
 	int size = 0;
-	for (std::vector<W32ElementList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
-		for (W32ElementList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+	for (std::vector<W32WidgetList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		for (W32WidgetList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 			if (!jt->isNull()) {
 				size += (*jt)->allocationSize();
 			}
@@ -82,8 +82,8 @@ bool W32Table::isVisible() const {
 
 int W32Table::controlNumber() const {
 	int counter = 0;
-	for (std::vector<W32ElementList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
-		for (W32ElementList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+	for (std::vector<W32WidgetList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		for (W32WidgetList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 			if (!jt->isNull()) {
 				counter += (*jt)->controlNumber();
 			}
@@ -94,12 +94,12 @@ int W32Table::controlNumber() const {
 
 void W32Table::calculateSizes(std::vector<short> &widths, std::vector<short> &heights) const {
 	//std::cerr << "calculateSizes...";
-	for (std::vector<W32ElementList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+	for (std::vector<W32WidgetList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
 		short currentHeight = 0;
 		if (it->size() > widths.size()) {
 			widths.insert(widths.end(), it->size() - widths.size(), 0);
 		}
-		for (W32ElementList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+		for (W32WidgetList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 			if (!jt->isNull() && (*jt)->isVisible()) {
 				Size elementSize = (*jt)->minimumSize();
 				currentHeight = std::max(currentHeight, elementSize.Height);
@@ -123,7 +123,7 @@ void W32Table::calculateSizes(std::vector<short> &widths, std::vector<short> &he
 	*/
 }
 
-W32Element::Size W32Table::minimumSize() const {
+W32Widget::Size W32Table::minimumSize() const {
 	std::vector<short> widths, heights;
 	calculateSizes(widths, heights);
 
@@ -208,11 +208,11 @@ void W32Table::setPosition(int x, int y, Size size) {
 	*/
 
 	int ey = y + myTopMargin;
-	for (std::vector<W32ElementList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+	for (std::vector<W32WidgetList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
 		short h = heights[it - myRows.begin()];
 		if (h > 0) {
 			int ex = x + myLeftMargin;
-			for (W32ElementList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+			for (W32WidgetList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 				short w = widths[jt - it->begin()];
 				if (w > 0) {
 					if (!jt->isNull() && (*jt)->isVisible()) {
@@ -227,8 +227,8 @@ void W32Table::setPosition(int x, int y, Size size) {
 }
 
 void W32Table::setDimensions(Size charDimension) {
-	for (std::vector<W32ElementList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
-		for (W32ElementList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+	for (std::vector<W32WidgetList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		for (W32WidgetList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 			if (!jt->isNull()) {
 				(*jt)->setDimensions(charDimension);
 			}
@@ -237,8 +237,8 @@ void W32Table::setDimensions(Size charDimension) {
 }
 
 void W32Table::init(HWND parent, W32ControlCollection *collection) {
-	for (std::vector<W32ElementList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
-		for (W32ElementList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+	for (std::vector<W32WidgetList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		for (W32WidgetList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 			if (!jt->isNull()) {
 				(*jt)->init(parent, collection);
 			}

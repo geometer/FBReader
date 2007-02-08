@@ -26,7 +26,7 @@ ZLWin32DialogContent::ZLWin32DialogContent() : myRowCounter(0) {
 	//myContentBox->setHomogeneous(true);
 
 	/*
-	W32ElementPtr control = new W32LineEditor(10001, "My Editor");
+	W32WidgetPtr control = new W32LineEditor(10001, "My Editor");
 	control->setVisible(true);
 	myContentBox->addElement(control);
 	control = new W32CheckBox(10001, "My Checkbox");
@@ -38,7 +38,7 @@ ZLWin32DialogContent::ZLWin32DialogContent() : myRowCounter(0) {
 ZLWin32DialogContent::~ZLWin32DialogContent() {
 }
 
-W32ElementPtr ZLWin32DialogContent::content() const {
+W32WidgetPtr ZLWin32DialogContent::content() const {
 	return myContentTableAsElementPtr;
 }
 
@@ -69,7 +69,7 @@ void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *opt
 	ZLWin32OptionView *view0 = createViewByEntry(option0);
 	ZLWin32OptionView *view1 = createViewByEntry(option1);
 	if ((view0 != 0) || (view1 != 0)) {
-		W32ElementPtr element0, element1;
+		W32WidgetPtr element0, element1;
 		if (view0 != 0) {
 			//element0 = view0->element();
 			myContentTable->setElement(view0->element(), myRowCounter, 0);

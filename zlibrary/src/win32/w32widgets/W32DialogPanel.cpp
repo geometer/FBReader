@@ -69,11 +69,11 @@ void W32DialogPanel::calculateSize() {
 	mySize = myElement->minimumSize();
 }
 
-W32Element::Size W32DialogPanel::size() const {
+W32Widget::Size W32DialogPanel::size() const {
 	return mySize;
 }
 
-void W32DialogPanel::setSize(W32Element::Size size) {
+void W32DialogPanel::setSize(W32Widget::Size size) {
 	mySize = size;
 }
 
@@ -117,11 +117,11 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	return (DLGTEMPLATE*)myAddress;
 }
 
-void W32DialogPanel::setElement(W32ElementPtr element) {
+void W32DialogPanel::setElement(W32WidgetPtr element) {
 	myElement = element;
 }
 
-W32Element::Size W32DialogPanel::charDimension() const {
+W32Widget::Size W32DialogPanel::charDimension() const {
 	return myCharDimension;
 }
 

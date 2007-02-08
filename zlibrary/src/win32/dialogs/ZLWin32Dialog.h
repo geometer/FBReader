@@ -25,6 +25,7 @@
 #include <ZLDialog.h>
 
 #include "../w32widgets/W32DialogPanel.h"
+#include "../w32widgets/W32Container.h"
 
 class ZLWin32ApplicationWindow;
 

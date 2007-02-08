@@ -17,59 +17,21 @@
  * 02110-1301, USA.
  */
 
-#ifndef __W32ELEMENT_H__
-#define __W32ELEMENT_H__
+#ifndef __W32CONTAINER_H__
+#define __W32CONTAINER_H__
 
-#include <vector>
 #include <map>
 #include <string>
 
-#include <windows.h>
-
 #include <shared_ptr.h>
 
-class W32ControlCollection;
+#include "W32Widget.h"
 
-class W32Element {
-
-public:
-	struct Size {
-		short Width;
-		short Height;
-
-		Size() : Width(0), Height(0) {}
-		Size(short w, short h) : Width(w), Height(h) {}
-	};
-
-protected:
-	W32Element();
-
-public:
-	virtual ~W32Element();
-
-	virtual void allocate(WORD *&p, short &id) const = 0;
-	virtual int allocationSize() const = 0;
-	virtual void setVisible(bool visible) = 0;
-	virtual bool isVisible() const = 0;
-	virtual int controlNumber() const = 0;
-	virtual Size minimumSize() const = 0;
-	virtual void setPosition(int x, int y, Size size) = 0;
-	virtual void setDimensions(Size charDimension) = 0;
-	virtual void init(HWND parent, W32ControlCollection *collection) = 0;
-
-private:
-	W32Element(const W32Element&);
-	const W32Element &operator = (const W32Element&);
-};
-
-typedef shared_ptr<W32Element> W32ElementPtr;
-typedef std::vector<W32ElementPtr> W32ElementList;
-
-class W32Box : public W32Element {
+class W32Box : public W32Widget {
 
 public:
 	W32Box();
-	void addElement(W32ElementPtr element);
+	void addElement(W32WidgetPtr element);
 
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
@@ -94,7 +56,7 @@ protected:
 	int visibleElementsNumber() const;
 
 protected:
-	W32ElementList myElements;
+	W32WidgetList myElements;
 
 private:
 	bool myHomogeneous;
@@ -120,11 +82,11 @@ public:
 	void setPosition(int x, int y, Size size);
 };
 
-class W32Table : public W32Element {
+class W32Table : public W32Widget {
 	
 public:
 	W32Table();
-	void setElement(W32ElementPtr element, int row, int column);
+	void setElement(W32WidgetPtr element, int row, int column);
 
 	void setMargins(int top, int bottom, int left, int right);
 	void setSpacings(int vertical, int horizontal);
@@ -143,9 +105,9 @@ private:
 	void init(HWND parent, W32ControlCollection *collection);
 
 private:
-	std::vector<W32ElementList> myRows;
+	std::vector<W32WidgetList> myRows;
 	int myTopMargin, myBottomMargin, myLeftMargin, myRightMargin;
 	int myVerticalSpacing, myHorizontalSpacing;
 };
 
-#endif /* __W32ELEMENT_H__ */
+#endif /* __W32CONTAINER_H__ */

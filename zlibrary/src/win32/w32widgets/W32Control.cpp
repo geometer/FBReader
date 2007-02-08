@@ -145,7 +145,7 @@ int W32Control::controlNumber() const {
 	return 1;
 }
 
-W32Element::Size W32Control::minimumSize() const {
+W32Widget::Size W32Control::minimumSize() const {
 	return mySize;
 }
 

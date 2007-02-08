@@ -17,10 +17,10 @@
  * 02110-1301, USA.
  */
 
-#include "W32Element.h"
+#include "W32Widget.h"
 
-W32Element::W32Element() {
+W32Widget::W32Widget() {
 }
 
-W32Element::~W32Element() {
+W32Widget::~W32Widget() {
 }

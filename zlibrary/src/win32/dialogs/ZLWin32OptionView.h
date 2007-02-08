@@ -44,11 +44,11 @@ protected:
 	void _hide();
 
 public:
-	W32ElementPtr element() const { return myElement; }
+	W32WidgetPtr element() const { return myElement; }
 
 protected:
 	ZLWin32DialogContent *myTab;
-	W32ElementPtr myElement;
+	W32WidgetPtr myElement;
 };
 
 /*

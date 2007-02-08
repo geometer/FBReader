@@ -24,7 +24,7 @@
 
 #include <ZLDialogContent.h>
 
-#include "../w32widgets/W32Element.h"
+#include "../w32widgets/W32Container.h"
 
 #include "ZLWin32OptionView.h"
 
@@ -41,7 +41,7 @@ public:
 
 	//void addItem(Win32Widget *what, int row, int fromColumn, int toColumn);
 
-	W32ElementPtr content() const;
+	W32WidgetPtr content() const;
 
 private:
 	//int addRow();
@@ -49,7 +49,7 @@ private:
 
 private:
 	W32Table *myContentTable;
-	W32ElementPtr myContentTableAsElementPtr;
+	W32WidgetPtr myContentTableAsElementPtr;
 	int myRowCounter;
 };
 

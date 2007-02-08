@@ -112,7 +112,7 @@ bool ZLWin32OptionsDialog::run() {
 	}
 	for (size_t i = 0; i < myTabs.size(); ++i) {
 		W32DialogPanel &panel = *myPanels[i];
-		W32Element::Size size = panel.size();
+		W32Widget::Size size = panel.size();
 		size.Width = maxPanelWidth;
 		panel.setSize(size);
 	}

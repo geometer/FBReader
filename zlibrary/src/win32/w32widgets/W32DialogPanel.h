@@ -26,7 +26,7 @@
 #include <windows.h>
 #include <prsht.h>
 
-#include "W32Element.h"
+#include "W32Widget.h"
 #include "W32Event.h"
 #include "W32ControlCollection.h"
 
@@ -46,11 +46,11 @@ public:
 	W32DialogPanel(HWND mainWindow, const std::string &caption);
 	~W32DialogPanel();
 	DLGTEMPLATE *dialogTemplate();
-	void setElement(W32ElementPtr element);
-	W32Element::Size charDimension() const;
+	void setElement(W32WidgetPtr element);
+	W32Widget::Size charDimension() const;
 	void calculateSize();
-	W32Element::Size size() const;
-	void setSize(W32Element::Size size);
+	W32Widget::Size size() const;
+	void setSize(W32Widget::Size size);
 	const std::string &caption() const;
 
 private:
@@ -60,11 +60,11 @@ private:
 	void layout();
 
 private:
-	W32Element::Size myCharDimension;
-	W32Element::Size mySize;
+	W32Widget::Size myCharDimension;
+	W32Widget::Size mySize;
 	std::string myCaption;
 
-	W32ElementPtr myElement;
+	W32WidgetPtr myElement;
 
 	mutable WORD *myAddress;
 	HWND myDialogWindow;

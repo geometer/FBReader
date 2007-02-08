@@ -30,7 +30,7 @@ ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string
 
 	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
 	myTab = contentTab;
-	W32ElementPtr table = contentTab->content();
+	W32WidgetPtr table = contentTab->content();
 	panelBox->addElement(table);
 	((W32Table&)*table).setSpacings(charHeight / 2, charHeight);
 	((W32Table&)*table).setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
@@ -47,7 +47,7 @@ ZLWin32Dialog::~ZLWin32Dialog() {
 }
 
 void ZLWin32Dialog::addButton(const std::string &text, bool accept) {
-	W32ElementPtr button = new W32PushButton(text);
+	W32WidgetPtr button = new W32PushButton(text);
 	button->setVisible(true);
 	myButtonBox->addElement(button);
 }
