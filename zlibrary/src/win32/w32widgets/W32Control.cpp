@@ -344,10 +344,15 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 }
 
 void W32SpinBox::setPosition(int x, int y, Size size) {
-	// TODO: implement
-	W32Control::setPosition(x, y, size);
-	if (myControlWindow != 0) {
-		//SetWindowPos(myControlWindow, 0, myX * 2, myY * 2, 0, 0, SWP_NOSIZE);
+	myX = x;
+	myY = y;
+	mySize = size;
+	if (myWindow != 0) {
+		RECT controlRectangle;
+		GetWindowRect(myControlWindow, &controlRectangle);
+		const short crWidth = controlRectangle.right - controlRectangle.left;
+		SetWindowPos(myWindow, 0, x * 2, y * 2, size.Width * 2 - crWidth, size.Height * 2, 0);
+		SetWindowPos(myControlWindow, 0, (x + size.Width) * 2 - crWidth, y * 2, 0, 0, SWP_NOSIZE);
 	}
 }
 
@@ -408,7 +413,6 @@ void W32ComboBox::allocate(WORD *&p, short &id) const {
 }
 
 void W32ComboBox::setDimensions(Size charDimension) {
-	// TODO: implement
 	int len = 0;
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 		len = std::max(ZLUnicodeUtil::utf8Length(*it), len);
