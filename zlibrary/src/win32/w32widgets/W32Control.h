@@ -141,6 +141,9 @@ public:
 class W32LineEditor : public W32AbstractEditor {
 
 public:
+	static const std::string VALUE_EDITED_EVENT;
+
+public:
 	W32LineEditor(const std::string &text);
 	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
@@ -180,6 +183,10 @@ private:
 };
 
 class W32ComboBox : public W32Control {
+
+public:
+	static const std::string SELECTION_CHANGED_EVENT;
+	static const std::string VALUE_EDITED_EVENT;
 
 public:
 	W32ComboBox(const std::vector<std::string> &list, int initialIndex);

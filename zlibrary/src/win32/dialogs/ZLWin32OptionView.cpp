@@ -126,6 +126,7 @@ ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogConten
 	}
 	myComboBox = new W32ComboBox(values, index);
 	myComboBox->setEditable(option->isEditable());
+	myComboBox->setListener(this);
 	const std::string &name = option->name();
 	if (name.empty()) {
 		myElement = myComboBox;
@@ -200,19 +201,28 @@ void ComboOptionView::reset() {
 		gtk_combo_box_set_active(myComboBox, mySelectedIndex);
 	}
 }
+*/
 
-void ComboOptionView::onValueChanged() {
-	int index = gtk_combo_box_get_active(myComboBox);
-	ZLComboOptionEntry& o = *(ZLComboOptionEntry*)myOption;
-	if ((index != mySelectedIndex) && (index >= 0) && (index < (int)o.values().size())) {
-		mySelectedIndex = index;
-  	o.onValueSelected(mySelectedIndex);
-	} else {
-		std::string text = gtk_combo_box_get_active_text(myComboBox);
-  	o.onValueEdited(text);
+void ComboOptionView::onEvent(const std::string &event) {
+	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
+	if (event == W32ComboBox::VALUE_EDITED_EVENT) {
+		if (o.useOnValueEdited()) {
+			o.onValueEdited(myComboBox->text());
+		}
+	} else if (event == W32ComboBox::SELECTION_CHANGED_EVENT) {
+		const std::string text = myComboBox->text();
+		size_t index;
+		const std::vector<std::string> &values = o.values();
+		for (index = 0; index < values.size(); ++index) {
+			if (values[index] == text) {
+				break;
+			}
+		}
+		if (index < values.size()) {
+  		o.onValueSelected(index);
+		}
 	}
 }
-*/
 
 SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
 	mySpinBox = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
@@ -251,6 +261,7 @@ void SpinOptionView::_onAccept() const {
 
 StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
 	myLineEditor = new W32LineEditor(option->initialValue());
+	myLineEditor->setListener(this);
 	const std::string &name = option->name();
 	if (name.empty()) {
 		myElement = myLineEditor;
@@ -290,13 +301,13 @@ void StringOptionView::reset() {
 */
 }
 
-void StringOptionView::onValueChanged() {
-	/*
-	ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
-	if (o.useOnValueEdited()) {
-		o.onValueEdited(myLineEditor->text());
+void StringOptionView::onEvent(const std::string &event) {
+	if (event == W32LineEditor::VALUE_EDITED_EVENT) {
+		ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
+		if (o.useOnValueEdited()) {
+			o.onValueEdited(myLineEditor->text());
+		}
 	}
-	*/
 }
 
 void StringOptionView::_setActive(bool active) {

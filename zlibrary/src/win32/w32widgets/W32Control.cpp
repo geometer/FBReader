@@ -250,6 +250,8 @@ void W32AbstractEditor::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 }
 
+const std::string W32LineEditor::VALUE_EDITED_EVENT = "LineEditor: value edited";
+
 W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myBlocked(true) {
 	::createNTWCHARString(myBuffer, text);
 }
@@ -275,6 +277,7 @@ static std::string getTextFromBuffer(const ZLUnicodeUtil::Ucs2String &buffer) {
 void W32LineEditor::callback(DWORD hiWParam) {
 	if ((hiWParam == EN_CHANGE) && !myBlocked) {
 		getEditorString(myWindow, myBuffer);
+		fireEvent(VALUE_EDITED_EVENT);
 	}
 }
 
@@ -391,6 +394,9 @@ unsigned short W32SpinBox::value() const {
 	return myValue;
 }
 
+const std::string W32ComboBox::SELECTION_CHANGED_EVENT = "ComboBox: selection changed";
+const std::string W32ComboBox::VALUE_EDITED_EVENT = "ComboBox: value edited";
+
 W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32Control(WS_VSCROLL | CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex), myEditorWindow(0) {
 	::createNTWCHARString(myBuffer, list[initialIndex]);
 }
@@ -413,7 +419,7 @@ void W32ComboBox::allocate(WORD *&p, short &id) const {
 }
 
 void W32ComboBox::setDimensions(Size charDimension) {
-	int len = 0;
+	int len = 10;
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 		len = std::max(ZLUnicodeUtil::utf8Length(*it), len);
 	}
@@ -457,6 +463,7 @@ void W32ComboBox::callback(DWORD hiWParam) {
 		if (length > 0) {
 			SendMessage(myWindow, CB_GETLBTEXT, index, (LPARAM)&myBuffer.front());
 		}
+		fireEvent(SELECTION_CHANGED_EVENT);
 	} else if (hiWParam == CBN_EDITCHANGE) {
 		if (myEditorWindow == 0) {
 			COMBOBOXINFO info;
@@ -464,6 +471,7 @@ void W32ComboBox::callback(DWORD hiWParam) {
 			myEditorWindow = info.hwndItem;
 		}
 		getEditorString(myEditorWindow, myBuffer);
+		fireEvent(VALUE_EDITED_EVENT);
 	}
 }
 
