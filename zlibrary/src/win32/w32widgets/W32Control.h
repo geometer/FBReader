@@ -28,18 +28,9 @@
 #include <ZLUnicodeUtil.h>
 
 #include "W32Element.h"
+#include "W32Event.h"
 
-class W32ControlListener {
-
-protected:
-	W32ControlListener();
-
-public:
-	virtual ~W32ControlListener();
-	virtual void onEvent(const std::string &event) = 0;
-};
-
-class W32Control : public W32Element {
+class W32Control : public W32Element, public W32EventSender {
 
 protected:
 	W32Control(DWORD style);
@@ -53,15 +44,11 @@ protected:
 
 	virtual WORD classId() const = 0;
 
-	void fireEvent(const std::string &event) const;
-
 public:
 	void setEnabled(bool enabled);
 	bool isEnabled() const;
 	virtual void setVisible(bool visible);
 	bool isVisible() const;
-
-	void setListener(W32ControlListener *listener);
 
 public:
 	virtual void callback(DWORD hiWParam);
@@ -75,8 +62,6 @@ protected:
 
 	W32ControlCollection *myOwner;
 	HWND myWindow;
-
-	W32ControlListener *myListener;
 };
 
 class W32PushButton : public W32Control {

@@ -30,7 +30,6 @@ openbook
 	  добавлять при необходимости scrollbar'ы
 	шрифты в диалогах
 	размер options dialog
-	options dialog: сохранять имя активного таба
 	ChoiceOptionView
 	ColorOptionView
 	KeyOptionView

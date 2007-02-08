@@ -63,7 +63,7 @@ void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
 }
 
-void BooleanOptionView::onEvent(const std::string &event) {
+void BooleanOptionView::onEvent(const std::string &event, W32EventSender&) {
 	if (event == W32CheckBox::STATE_CHANGED_EVENT) {
 		((ZLBooleanOptionEntry*)myOption)->onStateChanged(myCheckBox->isChecked());
 	}
@@ -203,7 +203,7 @@ void ComboOptionView::reset() {
 }
 */
 
-void ComboOptionView::onEvent(const std::string &event) {
+void ComboOptionView::onEvent(const std::string &event, W32EventSender&) {
 	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
 	if (event == W32ComboBox::VALUE_EDITED_EVENT) {
 		if (o.useOnValueEdited()) {
@@ -301,7 +301,7 @@ void StringOptionView::reset() {
 */
 }
 
-void StringOptionView::onEvent(const std::string &event) {
+void StringOptionView::onEvent(const std::string &event, W32EventSender&) {
 	if (event == W32LineEditor::VALUE_EDITED_EVENT) {
 		ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
 		if (o.useOnValueEdited()) {

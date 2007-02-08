@@ -26,7 +26,7 @@
 #include "ZLWin32DialogContent.h"
 #include "../util/ZLWin32WCHARUtil.h"
 
-ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow) {
+ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow), myTabIndex(0) {
 	::createNTWCHARString(myCaption, caption);
 }
 
@@ -51,18 +51,20 @@ ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
 }
 
 const std::string &ZLWin32OptionsDialog::selectedTabName() const {
-	//return myTabNames[gtk_notebook_get_current_page(myNotebook)];
-	// TODO: !!!
-	return myTabNames[0];
+	return myTabNames[myTabIndex];
 }
 
 void ZLWin32OptionsDialog::selectTab(const std::string &name) {
-	/*
 	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
 	if (it != myTabNames.end()) {
-		gtk_notebook_set_current_page(myNotebook, it - myTabNames.begin());
+		myTabIndex = it - myTabNames.begin();
 	}
-	*/
+}
+
+void ZLWin32OptionsDialog::onEvent(const std::string &event, W32EventSender &sender) {
+	if (event == W32DialogPanel::SELECTED_EVENT) {
+		selectTab(((W32DialogPanel&)sender).caption());
+	}
 }
 
 int CALLBACK PropSheetProc(HWND hDialog, UINT message, LPARAM lParam) {
@@ -98,6 +100,7 @@ bool ZLWin32OptionsDialog::run() {
 	short maxPanelWidth = 0;
 	for (size_t i = 0; i < myTabs.size(); ++i) {
 		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
+		panel->setListener(this);
 		panel->setElement(myTabs[i]->content());
 		W32Box &box = (W32Box&)*myTabs[i]->content();
 		const int charHeight = panel->charDimension().Height;
@@ -136,7 +139,7 @@ bool ZLWin32OptionsDialog::run() {
 	header.hIcon = 0;
 	header.pszCaption = ::wchar(myCaption);
 	header.nPages = myTabs.size();
-	header.nStartPage = 0; // TODO: !!!
+	header.nStartPage = myTabIndex;
 	header.ppsp = pages;
 	header.pfnCallback = PropSheetProc; // TODO: !!!
 

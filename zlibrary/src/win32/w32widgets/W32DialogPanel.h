@@ -27,9 +27,13 @@
 #include <prsht.h>
 
 #include "W32Element.h"
+#include "W32Event.h"
 #include "W32ControlCollection.h"
 
-class W32DialogPanel : public W32ControlCollection {
+class W32DialogPanel : public W32ControlCollection, public W32EventSender {
+
+public:
+	static const std::string SELECTED_EVENT;
 
 public:
 	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
@@ -47,6 +51,7 @@ public:
 	void calculateSize();
 	W32Element::Size size() const;
 	void setSize(W32Element::Size size);
+	const std::string &caption() const;
 
 private:
 	void init(HWND dialogWindow);

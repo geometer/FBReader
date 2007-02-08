@@ -70,7 +70,7 @@ private:
 };
 */
 
-class BooleanOptionView : public ZLWin32OptionView, public W32ControlListener {
+class BooleanOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
 	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab);
@@ -79,13 +79,13 @@ protected:
 	void _onAccept() const;
 
 private:
-	void onEvent(const std::string &event);
+	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
 	W32CheckBox *myCheckBox;
 };
 
-class StringOptionView : public ZLWin32OptionView, public W32ControlListener {
+class StringOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
 	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab);
@@ -96,7 +96,7 @@ private:
 	void reset();
 
 private:
-	void onEvent(const std::string &event);
+	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
 	//Win32Widget *myLabel;
@@ -115,7 +115,7 @@ private:
 	W32SpinBox *mySpinBox;
 };
 
-class ComboOptionView : public ZLWin32OptionView, public W32ControlListener {
+class ComboOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
 	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab);
@@ -126,7 +126,7 @@ private:
 	//void reset();
 	
 private:
-	void onEvent(const std::string &event);
+	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
 	W32ComboBox *myComboBox;

@@ -37,13 +37,26 @@ static const WCHAR CLASSNAME_SPINNER[] = UPDOWN_CLASSW;
 
 static HFONT controlFont = 0;
 
-W32ControlListener::W32ControlListener() {
+W32Listener::W32Listener() {
 }
 
-W32ControlListener::~W32ControlListener() {
+W32Listener::~W32Listener() {
 }
 
-W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myOwner(0), myWindow(0), myListener(0) {
+W32EventSender::W32EventSender() : myListener(0) {
+}
+
+void W32EventSender::setListener(W32Listener *listener) {
+	myListener = listener;
+}
+
+void W32EventSender::fireEvent(const std::string &event) {
+	if (myListener != 0) {
+		myListener->onEvent(event, *this);
+	}
+}
+
+W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myOwner(0), myWindow(0) {
 }
 
 void W32Control::setEnabled(bool enabled) {
@@ -130,16 +143,6 @@ void W32Control::init(HWND parent, W32ControlCollection *collection) {
 
 int W32Control::controlNumber() const {
 	return 1;
-}
-
-void W32Control::setListener(W32ControlListener *listener) {
-	myListener = listener;
-}
-
-void W32Control::fireEvent(const std::string &event) const {
-	if (myListener != 0) {
-		myListener->onEvent(event);
-	}
 }
 
 W32Element::Size W32Control::minimumSize() const {

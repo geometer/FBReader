@@ -32,7 +32,7 @@
 
 class ZLWin32DialogContent;
 
-class ZLWin32OptionsDialog : public ZLOptionsDialog {
+class ZLWin32OptionsDialog : public ZLOptionsDialog, public W32Listener {
 
 public:
 	ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption);
@@ -45,6 +45,9 @@ protected:
 	bool run();
 
 private:
+	void onEvent(const std::string &event, W32EventSender &sender);
+
+private:
 	HWND myMainWindow;
 
 	ZLUnicodeUtil::Ucs2String myCaption;
@@ -54,6 +57,8 @@ private:
 	std::vector<ZLWin32DialogContent*> myTabs;
 	std::vector<shared_ptr<W32DialogPanel> > myPanels;
 	std::vector<std::string> myTabNames;
+
+	int myTabIndex;
 };
 
 #endif /* __ZLWIN32OPTIONSDIALOG_H__ */
