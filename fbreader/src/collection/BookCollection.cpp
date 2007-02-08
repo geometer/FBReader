@@ -80,9 +80,8 @@ void BookCollection::collectBookFileNames(std::set<std::string> &bookFileNames) 
 		}
 		dir->collectFiles(files, false);
 		if (!files.empty()) {
-			const std::string dirName = dir->name() + '/';
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); ++jt) {
-				const std::string fileName = dirName + *jt;
+				const std::string fileName = dir->itemName(*jt);
 				ZLFile file(fileName);
 				if (PluginCollection::instance().plugin(file, true) != 0) {
 					bookFileNames.insert(fileName);
@@ -185,7 +184,7 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) const {
 					std::vector<std::string> subdirs;
 					dir->collectSubDirs(subdirs, false);
 					for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); ++it) {
-						nameQueue.push(dir->name() + '/' + *it);
+						nameQueue.push(dir->itemName(*it));
 					}
 				}
 			}

@@ -81,7 +81,7 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 	static std::map<FormatPlugin*,std::string> PluginIcons;
 
 	if (!myIsUpToDate) {
-		if (myDir->name() != "/") {
+		if (myDir->name() != ZLApplication::PathDelimiter) {
 			mySubnodes.push_back(new ZLTreeNode("..", "..", FolderIcon, true));
 		}
 
