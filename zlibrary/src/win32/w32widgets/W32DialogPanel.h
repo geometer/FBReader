@@ -29,7 +29,7 @@
 #include "W32Element.h"
 #include "W32ControlCollection.h"
 
-class W32DialogPanel {
+class W32DialogPanel : public W32ControlCollection {
 
 public:
 	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
@@ -51,6 +51,8 @@ public:
 private:
 	void init(HWND dialogWindow);
 	bool Callback(WPARAM wParam);
+	void invalidate();
+	void layout();
 
 private:
 	W32Element::Size myCharDimension;
@@ -61,8 +63,7 @@ private:
 
 	mutable WORD *myAddress;
 	HWND myDialogWindow;
-
-	W32ControlCollection myCollection;
+	bool myDoLayout;
 };
 
 #endif /* __W32DIALOGPANEL_H__ */

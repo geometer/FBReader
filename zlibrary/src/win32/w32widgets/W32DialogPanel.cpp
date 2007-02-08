@@ -26,6 +26,7 @@
 #include "../util/ZLWin32WCHARUtil.h"
 
 static const int FirstControlId = 2001;
+static const UINT MESSAGE_LAYOUT = WM_USER + 10000;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
 
@@ -36,7 +37,7 @@ static void allocateString(WORD *&p, const std::string &text) {
 	p += ucs2Str.size();
 }
 
-W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : myCaption(caption), myAddress(0), myDialogWindow(0), myCollection(FirstControlId) {
+W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myCaption(caption), myAddress(0), myDialogWindow(0) {
 	TEXTMETRIC metric;
 	HDC hdc = GetDC(mainWindow);
 	GetTextMetrics(hdc, &metric);
@@ -58,7 +59,7 @@ W32DialogPanel::~W32DialogPanel() {
 void W32DialogPanel::init(HWND dialogWindow) {
 	myDialogWindow = dialogWindow;
 	ourPanels[myDialogWindow] = this;	
-	myElement->init(dialogWindow, myCollection);
+	myElement->init(dialogWindow, this);
 }
 
 void W32DialogPanel::calculateSize() {
@@ -136,6 +137,12 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 		if (panel != 0) {
 			return panel->Callback(wParam);
 		}
+	} else if (message == MESSAGE_LAYOUT) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			panel->layout();
+			return true;
+		}
 	}
 	return false;
 }
@@ -149,15 +156,39 @@ BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARA
 		if (panel != 0) {
 			return panel->Callback(wParam);
 		}
+	} else if (message == MESSAGE_LAYOUT) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			panel->layout();
+			return true;
+		}
 	}
 	return false;
 }
 
 bool W32DialogPanel::Callback(WPARAM wParam) {
-	W32Control *control = myCollection[LOWORD(wParam)];
+	W32Control *control = (*this)[LOWORD(wParam)];
 	if (control != 0) {
 		control->callback(HIWORD(wParam));
 		return true;
 	}
 	return false;
+}
+
+void W32DialogPanel::invalidate() {
+	if (myDialogWindow != 0) {
+		PostMessage(myDialogWindow, MESSAGE_LAYOUT, 0, 0);
+		myDoLayout = true;
+	}
+}
+
+void W32DialogPanel::layout() {
+	if (myDoLayout) {
+		const short oldWidth = mySize.Width;
+		calculateSize();
+		mySize.Width = std::max(mySize.Width, oldWidth);
+		// TODO: add scrollbars (?)
+		myElement->setPosition(0, 0, mySize);
+		myDoLayout = false;
+	}
 }

@@ -26,10 +26,14 @@ class W32Control;
 
 class W32ControlCollection {
 
-public:
+protected:
 	W32ControlCollection(int startId);
-	short addControl(W32Control *control);	
+	virtual ~W32ControlCollection();
 	W32Control *operator[] (short id);
+
+public:
+	short addControl(W32Control *control);	
+	virtual void invalidate() = 0;
 
 private:
 	short myCurrentId;

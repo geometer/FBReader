@@ -55,7 +55,7 @@ public:
 	virtual Size minimumSize() const = 0;
 	virtual void setPosition(int x, int y, Size size) = 0;
 	virtual void setDimensions(Size charDimension) = 0;
-	virtual void init(HWND parent, W32ControlCollection &collection) = 0;
+	virtual void init(HWND parent, W32ControlCollection *collection) = 0;
 
 private:
 	W32Element(const W32Element&);
@@ -79,7 +79,7 @@ public:
 	void setPosition(int x, int y, Size size);
 
 	void setDimensions(Size charDimension);
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 private:
 	W32ElementPtr myLeft, myRight;
@@ -110,7 +110,7 @@ protected:
 	int rightMargin() const { return myRightMargin; }
 	int spacing() const { return mySpacing; }
 	void setDimensions(Size charDimension);
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 	int visibleElementsNumber() const;
 

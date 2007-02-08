@@ -25,8 +25,12 @@ openbook
 диалоги
   table layout
 	перераскладка при необходимости
+		разобраться с размерами
+		relayout spinbox'а
+	  добавлять при необходимости scrollbar'ы
 	шрифты в диалогах
 	размер options dialog
+	options dialog: сохранять имя активного таба
 	ChoiceOptionView
 	ColorOptionView
 	KeyOptionView

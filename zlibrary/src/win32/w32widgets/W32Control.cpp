@@ -43,7 +43,7 @@ W32ControlListener::W32ControlListener() {
 W32ControlListener::~W32ControlListener() {
 }
 
-W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myWindow(0), myListener(0) {
+W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myOwner(0), myWindow(0), myListener(0) {
 }
 
 void W32Control::setEnabled(bool enabled) {
@@ -69,11 +69,14 @@ void W32Control::setVisible(bool visible) {
 		if (myWindow != 0) {
 			ShowWindow(myWindow, visible ? SW_SHOW : SW_HIDE);
 		}
+		if (myOwner != 0) {
+			myOwner->invalidate();
+		}
 	}
 }
 
 bool W32Control::isVisible() const {
-	return myStyle & WS_VISIBLE;
+	return (myStyle & WS_VISIBLE) == WS_VISIBLE;
 }
 
 int W32Control::allocationSize() const {
@@ -97,8 +100,9 @@ void W32Control::allocate(WORD *&p, short &id) const {
 	*p++ = 0;
 }
 
-void W32Control::init(HWND parent, W32ControlCollection &collection) {
-	myWindow = GetDlgItem(parent, collection.addControl(this));
+void W32Control::init(HWND parent, W32ControlCollection *collection) {
+	myOwner = collection;
+	myWindow = GetDlgItem(parent, collection->addControl(this));
 	if (!myEnabled) {
 		EnableWindow(myWindow, false);
 	}
@@ -145,6 +149,10 @@ void W32Control::setPosition(int x, int y, Size size) {
 	myX = x;
 	myY = y;
 	mySize = size;
+	if (myWindow != 0) {
+		// TODO: why multiplier 2?
+		SetWindowPos(myWindow, 0, x * 2, y * 2, size.Width * 2, size.Height * 2, 0);
+	}
 }
 
 void W32Control::callback(DWORD) {
@@ -163,7 +171,7 @@ WORD W32PushButton::classId() const {
 	return CLASS_BUTTON;
 }
 
-void W32PushButton::init(HWND parent, W32ControlCollection &collection) {
+void W32PushButton::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 	::setWindowText(myWindow, myText);
 }
@@ -185,7 +193,7 @@ WORD W32Label::classId() const {
 	return CLASS_STATIC;
 }
 
-void W32Label::init(HWND parent, W32ControlCollection &collection) {
+void W32Label::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 	::setWindowText(myWindow, myText);
 }
@@ -204,7 +212,7 @@ WORD W32CheckBox::classId() const {
 	return CLASS_BUTTON;
 }
 
-void W32CheckBox::init(HWND parent, W32ControlCollection &collection) {
+void W32CheckBox::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 	::setWindowText(myWindow, myText);
 	SendMessage(myWindow, BM_SETCHECK, myChecked ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -238,7 +246,7 @@ WORD W32AbstractEditor::classId() const {
 	return CLASS_EDIT;
 }
 
-void W32AbstractEditor::init(HWND parent, W32ControlCollection &collection) {
+void W32AbstractEditor::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 }
 
@@ -279,7 +287,7 @@ void W32LineEditor::setDimensions(Size charDimension) {
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
-void W32LineEditor::init(HWND parent, W32ControlCollection &collection) {
+void W32LineEditor::init(HWND parent, W32ControlCollection *collection) {
 	W32AbstractEditor::init(parent, collection);
 	SetWindowTextW(myWindow, ::wchar(myBuffer));
 	myBlocked = false;
@@ -335,9 +343,17 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 	}
 }
 
-void W32SpinBox::init(HWND parent, W32ControlCollection &collection) {
+void W32SpinBox::setPosition(int x, int y, Size size) {
+	// TODO: implement
+	W32Control::setPosition(x, y, size);
+	if (myControlWindow != 0) {
+		//SetWindowPos(myControlWindow, 0, myX * 2, myY * 2, 0, 0, SWP_NOSIZE);
+	}
+}
+
+void W32SpinBox::init(HWND parent, W32ControlCollection *collection) {
 	W32AbstractEditor::init(parent, collection);
-	myControlWindow = GetDlgItem(parent, collection.addControl(this));
+	myControlWindow = GetDlgItem(parent, collection->addControl(this));
 	SendMessage(myControlWindow, UDM_SETRANGE, 0, MAKELONG(myMax, myMin));
 	SendMessage(myControlWindow, UDM_SETPOS, 0, MAKELONG(myValue, 0));
 }
@@ -407,8 +423,7 @@ WORD W32ComboBox::classId() const {
 	return CLASS_COMBOBOX;
 }
 
-void W32ComboBox::init(HWND parent, W32ControlCollection &collection) {
-	// TODO: implement
+void W32ComboBox::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 	ZLUnicodeUtil::Ucs2String buffer;
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {

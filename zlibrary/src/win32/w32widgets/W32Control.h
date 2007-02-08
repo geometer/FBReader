@@ -49,7 +49,7 @@ protected:
 	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 	virtual WORD classId() const = 0;
 
@@ -73,6 +73,7 @@ protected:
 
 	bool myEnabled;
 
+	W32ControlCollection *myOwner;
 	HWND myWindow;
 
 	W32ControlListener *myListener;
@@ -85,7 +86,7 @@ public:
 	void setDimensions(Size charDimension);
 
 	WORD classId() const;
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 private:
 	std::string myText;
@@ -99,7 +100,7 @@ public:
 
 	WORD classId() const;
 	void setPosition(int x, int y, Size size);
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 private:
 	std::string myText;
@@ -116,7 +117,7 @@ public:
 	void setDimensions(Size charDimension);
 
 	WORD classId() const;
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 	void setChecked(bool checked);
 	bool isChecked() const;
@@ -134,7 +135,7 @@ public:
 	W32AbstractEditor(DWORD style);
 
 	WORD classId() const;
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 };
 
 class W32LineEditor : public W32AbstractEditor {
@@ -142,7 +143,7 @@ class W32LineEditor : public W32AbstractEditor {
 public:
 	W32LineEditor(const std::string &text);
 	void setDimensions(Size charDimension);
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 	void setEditable(bool editable);
 
@@ -164,7 +165,8 @@ public:
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	int controlNumber() const;
-	void init(HWND parent, W32ControlCollection &collection);
+	void setPosition(int x, int y, Size size);
+	void init(HWND parent, W32ControlCollection *collection);
 
 	void setVisible(bool visible);
 
@@ -185,7 +187,7 @@ public:
 
 	void allocate(WORD *&p, short &id) const;
 	WORD classId() const;
-	void init(HWND parent, W32ControlCollection &collection);
+	void init(HWND parent, W32ControlCollection *collection);
 
 	void setEditable(bool editable);
 
