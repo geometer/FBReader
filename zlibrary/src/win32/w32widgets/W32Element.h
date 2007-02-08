@@ -65,27 +65,6 @@ private:
 typedef shared_ptr<W32Element> W32ElementPtr;
 typedef std::vector<W32ElementPtr> W32ElementList;
 
-class W32HPair : public W32Element {
-
-public:
-	W32HPair(W32ElementPtr left, W32ElementPtr right, short leftPartPercent, short rightPartPercent);
-
-	void allocate(WORD *&p, short &id) const;
-	int allocationSize() const;
-	void setVisible(bool visible);
-	bool isVisible() const;
-	int controlNumber() const;
-	Size minimumSize() const;
-	void setPosition(int x, int y, Size size);
-
-	void setDimensions(Size charDimension);
-	void init(HWND parent, W32ControlCollection *collection);
-
-private:
-	W32ElementPtr myLeft, myRight;
-	short myLeftPartPercent, myRightPartPercent;
-};
-
 class W32Box : public W32Element {
 
 public:
@@ -139,6 +118,34 @@ public:
 
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
+};
+
+class W32Table : public W32Element {
+	
+public:
+	W32Table();
+	void setElement(W32ElementPtr element, int row, int column);
+
+	void setMargins(int top, int bottom, int left, int right);
+	void setSpacings(int vertical, int horizontal);
+
+private:
+	void calculateSizes(std::vector<short> &widths, std::vector<short> &heights) const;
+
+	void allocate(WORD *&p, short &id) const;
+	int allocationSize() const;
+	void setVisible(bool visible);
+	bool isVisible() const;
+	int controlNumber() const;
+	Size minimumSize() const;
+	void setPosition(int x, int y, Size size);
+	void setDimensions(Size charDimension);
+	void init(HWND parent, W32ControlCollection *collection);
+
+private:
+	std::vector<W32ElementList> myRows;
+	int myTopMargin, myBottomMargin, myLeftMargin, myRightMargin;
+	int myVerticalSpacing, myHorizontalSpacing;
 };
 
 #endif /* __W32ELEMENT_H__ */

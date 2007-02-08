@@ -102,10 +102,10 @@ bool ZLWin32OptionsDialog::run() {
 		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
 		panel->setListener(this);
 		panel->setElement(myTabs[i]->content());
-		W32Box &box = (W32Box&)*myTabs[i]->content();
+		W32Table &table = (W32Table&)*myTabs[i]->content();
 		const int charHeight = panel->charDimension().Height;
-		box.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-		box.setSpacing(charHeight / 2);
+		table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+		table.setSpacings(charHeight / 2, charHeight);
 		panel->calculateSize();
 		maxPanelWidth = std::max(maxPanelWidth, panel->size().Width);
 		myPanels.push_back(panel);

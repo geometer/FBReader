@@ -44,12 +44,13 @@ public:
 	W32ElementPtr content() const;
 
 private:
-	int addRow();
+	//int addRow();
 	ZLWin32OptionView *createViewByEntry(ZLOptionEntry *option);
 
 private:
-	W32VBox *myContentBox;
-	W32ElementPtr myContentBoxAsElementPtr;
+	W32Table *myContentTable;
+	W32ElementPtr myContentTableAsElementPtr;
+	int myRowCounter;
 };
 
 #endif /* __ZLWIN32DIALOGCONTENT_H__ */

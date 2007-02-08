@@ -20,10 +20,10 @@
 #include "ZLWin32DialogContent.h"
 //#include "ZLWin32OptionView.h"
 
-ZLWin32DialogContent::ZLWin32DialogContent() {
-	myContentBox = new W32VBox();
-	myContentBoxAsElementPtr = myContentBox;
-	myContentBox->setHomogeneous(true);
+ZLWin32DialogContent::ZLWin32DialogContent() : myRowCounter(0) {
+	myContentTable = new W32Table();
+	myContentTableAsElementPtr = myContentTable;
+	//myContentBox->setHomogeneous(true);
 
 	/*
 	W32ElementPtr control = new W32LineEditor(10001, "My Editor");
@@ -39,19 +39,19 @@ ZLWin32DialogContent::~ZLWin32DialogContent() {
 }
 
 W32ElementPtr ZLWin32DialogContent::content() const {
-	return myContentBoxAsElementPtr;
+	return myContentTableAsElementPtr;
 }
 
-int ZLWin32DialogContent::addRow() {
 	/*
+int ZLWin32DialogContent::addRow() {
 	int row = myRowCounter++;
 
 	gtk_table_resize(myTable, myRowCounter, 2);
 
 	return row;
-	*/
 	return 0;
 }
+	*/
 
 //void ZLWin32DialogContent::addItem(Win32Widget *what, int row, int fromColumn, int toColumn) {
 	//gtk_table_attach(myTable, what, fromColumn, toColumn, row, row + 1, (Win32AttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
@@ -60,7 +60,8 @@ int ZLWin32DialogContent::addRow() {
 void ZLWin32DialogContent::addOption(ZLOptionEntry *option) {
 	ZLWin32OptionView *view = createViewByEntry(option);
 	if (view != 0) {
-		myContentBox->addElement(view->element());
+		myContentTable->setElement(view->element(), myRowCounter, 0);
+		++myRowCounter;
 	}
 }
 
@@ -70,12 +71,15 @@ void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *opt
 	if ((view0 != 0) || (view1 != 0)) {
 		W32ElementPtr element0, element1;
 		if (view0 != 0) {
-			element0 = view0->element();
+			//element0 = view0->element();
+			myContentTable->setElement(view0->element(), myRowCounter, 0);
 		}
 		if (view1 != 0) {
-			element1 = view1->element();
+			//element1 = view1->element();
+			myContentTable->setElement(view1->element(), myRowCounter, 1);
 		}
-		myContentBox->addElement(new W32HPair(element0, element1, 47, 47));
+		//myContentBox->addElement(new W32HPair(element0, element1, 47, 47));
+		++myRowCounter;
 	}
 }
 
