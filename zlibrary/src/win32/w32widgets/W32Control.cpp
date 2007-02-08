@@ -121,7 +121,8 @@ void W32Control::init(HWND parent, W32ControlCollection *collection) {
 		logicalFont.lfClipPrecision = 0;
 		logicalFont.lfQuality = 0;
 		logicalFont.lfPitchAndFamily = 0;
-		//strcpy(logicalFont.lfFaceName, "Sans Serif");
+		ZLUnicodeUtil::Ucs2String str;
+		memcpy(logicalFont.lfFaceName, ::wchar(::createNTWCHARString(str, "Sans Serif")), str.size() * 2);
 		controlFont = CreateFontIndirect(&logicalFont);
 	}
 	//SendMessage(myWindow, WM_SETFONT, (WPARAM)controlFont, 0);
@@ -397,25 +398,8 @@ unsigned short W32SpinBox::value() const {
 const std::string W32ComboBox::SELECTION_CHANGED_EVENT = "ComboBox: selection changed";
 const std::string W32ComboBox::VALUE_EDITED_EVENT = "ComboBox: value edited";
 
-W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32Control(WS_VSCROLL | CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex), myEditorWindow(0) {
+W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32Control(CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex), myEditorWindow(0) {
 	::createNTWCHARString(myBuffer, list[initialIndex]);
-}
-
-void W32ComboBox::allocate(WORD *&p, short &id) const {
-	*p++ = LOWORD(myStyle);
-	*p++ = HIWORD(myStyle);
-	*p++ = 0;
-	*p++ = 0;
-	*p++ = myX;
-	*p++ = myY;
-	*p++ = mySize.Width;
-	*p++ = mySize.Height * myList.size();
-	*p++ = id++;
-	*p++ = 0xFFFF;
-	*p++ = classId();
-	*p++ = 0;
-	*p++ = 0;
-	*p++ = 0;
 }
 
 void W32ComboBox::setDimensions(Size charDimension) {
@@ -440,6 +424,7 @@ void W32ComboBox::init(HWND parent, W32ControlCollection *collection) {
 		SendMessage(myWindow, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
 	}
 	SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
+	SendMessage(myWindow, CB_SETMINVISIBLE, std::min((int)myList.size(), 7), 0);
 }
 
 void W32ComboBox::setEditable(bool editable) {

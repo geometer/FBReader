@@ -192,7 +192,6 @@ public:
 	W32ComboBox(const std::vector<std::string> &list, int initialIndex);
 	void setDimensions(Size charDimension);
 
-	void allocate(WORD *&p, short &id) const;
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
 
