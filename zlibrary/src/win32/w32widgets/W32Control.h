@@ -198,4 +198,16 @@ private:
 	HWND myEditorWindow;
 };
 
+class W32RadioButton : public W32Control {
+
+public:
+	W32RadioButton(const std::string &text);
+};
+
+class W32RadioButtonGroup : public W32Control {
+
+public:
+	W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts);
+};
+
 #endif /* __W32CONTROL_H__ */

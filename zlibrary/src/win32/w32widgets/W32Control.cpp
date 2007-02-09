@@ -35,8 +35,6 @@ static const WORD CLASS_COMBOBOX = 0x0085;
 
 static const WCHAR CLASSNAME_SPINNER[] = UPDOWN_CLASSW;
 
-static HFONT controlFont = 0;
-
 W32Listener::W32Listener() {
 }
 
@@ -119,6 +117,8 @@ void W32Control::init(HWND parent, W32ControlCollection *collection) {
 	if (!myEnabled) {
 		EnableWindow(myWindow, false);
 	}
+	/*
+	static HFONT controlFont = 0;
 	if (controlFont == 0) {
 		LOGFONT logicalFont;
 		logicalFont.lfHeight = 15;
@@ -138,7 +138,8 @@ void W32Control::init(HWND parent, W32ControlCollection *collection) {
 		memcpy(logicalFont.lfFaceName, ::wchar(::createNTWCHARString(str, "Sans Serif")), str.size() * 2);
 		controlFont = CreateFontIndirect(&logicalFont);
 	}
-	//SendMessage(myWindow, WM_SETFONT, (WPARAM)controlFont, 0);
+	SendMessage(myWindow, WM_SETFONT, (WPARAM)controlFont, 0);
+	*/
 }
 
 int W32Control::controlNumber() const {
