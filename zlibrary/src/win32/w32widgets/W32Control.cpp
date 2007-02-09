@@ -333,7 +333,7 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 
 	WORD *start = p;
 
-	DWORD style = UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS;
+	DWORD style = UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS;
 	if (isVisible()) {
 		style |= WS_VISIBLE;
 	}
@@ -341,7 +341,7 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 	*p++ = HIWORD(style);
 	*p++ = 0;
 	*p++ = 0;
-	*p++ = myX;
+	*p++ = myX + mySize.Width;
 	*p++ = myY;
 	*p++ = mySize.Width;
 	*p++ = mySize.Height;
@@ -359,21 +359,20 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 }
 
 void W32SpinBox::setPosition(int x, int y, Size size) {
-	myX = x;
-	myY = y;
-	mySize = size;
-	if (myWindow != 0) {
-		RECT controlRectangle;
-		GetWindowRect(myControlWindow, &controlRectangle);
-		const short crWidth = controlRectangle.right - controlRectangle.left;
-		SetWindowPos(myWindow, 0, x * 2, y * 2, size.Width * 2 - crWidth, size.Height * 2, 0);
-		SetWindowPos(myControlWindow, 0, (x + size.Width) * 2 - crWidth, y * 2, 0, 0, SWP_NOSIZE);
+	W32Control::setPosition(x, y, size);
+	if (myControlWindow != 0) {
+		SetWindowPos(myControlWindow, 0, (x + size.Width) * 2, y * 2, size.Width * 2, size.Height * 2, 0);
+		SendMessage(myControlWindow, UDM_SETBUDDY, (WPARAM)myWindow, 0);
+		if ((myStyle & WS_VISIBLE) == WS_VISIBLE) {
+			ShowWindow(myControlWindow, SW_SHOW);
+		}
 	}
 }
 
 void W32SpinBox::init(HWND parent, W32ControlCollection *collection) {
 	W32AbstractEditor::init(parent, collection);
 	myControlWindow = GetDlgItem(parent, collection->addControl(this));
+	SendMessage(myControlWindow, UDM_SETBUDDY, (WPARAM)myWindow, 0);
 	SendMessage(myControlWindow, UDM_SETRANGE, 0, MAKELONG(myMax, myMin));
 	SendMessage(myControlWindow, UDM_SETPOS, 0, MAKELONG(myValue, 0));
 }
@@ -389,9 +388,8 @@ int W32SpinBox::controlNumber() const {
 }
 
 void W32SpinBox::setVisible(bool visible) {
-	const bool change = visible != isVisible();
 	W32Control::setVisible(visible);
-	if (change && (myControlWindow != 0)) {
+	if (myControlWindow != 0) {
 		ShowWindow(myControlWindow, visible ? SW_SHOW : SW_HIDE);
 	}
 }
