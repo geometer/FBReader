@@ -22,6 +22,7 @@
 
 #include <map>
 #include <string>
+#include <list>
 
 #include <shared_ptr.h>
 
@@ -86,7 +87,7 @@ class W32Table : public W32Widget {
 	
 public:
 	W32Table();
-	void setElement(W32WidgetPtr element, int row, int column);
+	void setElement(W32WidgetPtr element, int row, int fromColumn, int toColumn);
 
 	void setMargins(int top, int bottom, int left, int right);
 	void setSpacings(int vertical, int horizontal);
@@ -105,7 +106,14 @@ private:
 	void init(HWND parent, W32ControlCollection *collection);
 
 private:
-	std::vector<W32WidgetList> myRows;
+	struct CellInfo {
+		CellInfo(int xFrom, int xTo, W32WidgetPtr widget) : XFrom(xFrom), XTo(xTo), Widget(widget) {}
+		int XFrom, XTo;
+		W32WidgetPtr Widget;
+	};
+	typedef std::list<CellInfo> RowList;
+
+	std::vector<RowList> myRows;
 	int myTopMargin, myBottomMargin, myLeftMargin, myRightMargin;
 	int myVerticalSpacing, myHorizontalSpacing;
 };

@@ -25,30 +25,18 @@
 #include "../../abstract/dialogs/ZLOptionView.h"
 
 #include "../w32widgets/W32Control.h"
+#include "../w32widgets/W32Container.h"
 
 class ZLWin32DialogContent;
 
 class ZLWin32OptionView : public ZLOptionView {
 
 protected:
-	ZLWin32OptionView(ZLOptionEntry *option, ZLWin32DialogContent *tab) : ZLOptionView(option), myTab(tab) {
+	ZLWin32OptionView(ZLOptionEntry *option) : ZLOptionView(option) {
 	}
 
 protected:
-	//static void _onValueChanged(Win32Widget*, gpointer self);
-	// TODO: replace by pure virtual method (?)
-	virtual void onValueChanged() {}
-
 	void _createItem();
-	void _show();
-	void _hide();
-
-public:
-	W32WidgetPtr element() const { return myElement; }
-
-protected:
-	ZLWin32DialogContent *myTab;
-	W32WidgetPtr myElement;
 };
 
 /*
@@ -73,10 +61,12 @@ private:
 class BooleanOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab);
+	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
 	void _onAccept() const;
+	void _show();
+	void _hide();
 
 private:
 	void onEvent(const std::string &event, W32EventSender &sender);
@@ -88,48 +78,56 @@ private:
 class StringOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab);
+	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 private:
 	void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
+	void _show();
+	void _hide();
 
 private:
 	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
-	//Win32Widget *myLabel;
 	W32LineEditor *myLineEditor;
+	W32Label *myLabel;
 };
 
 class SpinOptionView : public ZLWin32OptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab);
+	SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
 	void _onAccept() const;
+	void _show();
+	void _hide();
 
 private:
 	W32SpinBox *mySpinBox;
+	W32Label *myLabel;
 };
 
 class ComboOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab);
+	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 private:
 	void _setActive(bool active);
 	void _onAccept() const;
 	//void reset();
+	void _show();
+	void _hide();
 	
 private:
 	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
 	W32ComboBox *myComboBox;
+	W32Label *myLabel;
 };
 
 /*

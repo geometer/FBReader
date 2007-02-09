@@ -58,59 +58,48 @@ int ZLWin32DialogContent::addRow() {
 //}
 
 void ZLWin32DialogContent::addOption(ZLOptionEntry *option) {
-	ZLWin32OptionView *view = createViewByEntry(option);
-	if (view != 0) {
-		myContentTable->setElement(view->element(), myRowCounter, 0);
-		++myRowCounter;
-	}
+	createViewByEntry(option, 0, 11);
+	++myRowCounter;
 }
 
 void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
-	ZLWin32OptionView *view0 = createViewByEntry(option0);
-	ZLWin32OptionView *view1 = createViewByEntry(option1);
-	if ((view0 != 0) || (view1 != 0)) {
-		W32WidgetPtr element0, element1;
-		if (view0 != 0) {
-			//element0 = view0->element();
-			myContentTable->setElement(view0->element(), myRowCounter, 0);
-		}
-		if (view1 != 0) {
-			//element1 = view1->element();
-			myContentTable->setElement(view1->element(), myRowCounter, 1);
-		}
-		//myContentBox->addElement(new W32HPair(element0, element1, 47, 47));
-		++myRowCounter;
-	}
+	createViewByEntry(option0, 0, 5);
+	createViewByEntry(option1, 6, 11);
+	++myRowCounter;
 }
 
-ZLWin32OptionView *ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option) {
+void ZLWin32DialogContent::insertWidget(W32WidgetPtr widget, int from, int to) {
+	myContentTable->setElement(widget, myRowCounter, from, to);
+}
+
+void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int from, int to) {
 	if (option == 0) {
-		return 0;
+		return;
 	}
 
 	ZLWin32OptionView *view = 0;
 
 	switch (option->kind()) {
 		case ZLOptionEntry::BOOLEAN:
-			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this);
+			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::STRING:
-			view = new StringOptionView((ZLStringOptionEntry*)option, this);
+			view = new StringOptionView((ZLStringOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::CHOICE:
-			//view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this);
+			//view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView((ZLSpinOptionEntry*)option, this);
+			view = new SpinOptionView((ZLSpinOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::COMBO:
-			view = new ComboOptionView((ZLComboOptionEntry*)option, this);
+			view = new ComboOptionView((ZLComboOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::COLOR:
-			//view = new ColorOptionView((ZLColorOptionEntry*)option, this);
+			//view = new ColorOptionView((ZLColorOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::KEY:
-			//view = new KeyOptionView((ZLKeyOptionEntry*)option, this);
+			//view = new KeyOptionView((ZLKeyOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::ORDER:
 			// TODO: implement
@@ -124,5 +113,4 @@ ZLWin32OptionView *ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option
 		view->setVisible(option->isVisible());
 		addView(view);
 	}
-	return view;
 }

@@ -17,46 +17,18 @@
  * 02110-1301, USA.
  */
 
-//#include <gtk/gtk.h>
-
-#include <ZLStringUtil.h>
-
 #include "ZLWin32OptionView.h"
 #include "ZLWin32DialogContent.h"
 #include "ZLWin32DialogManager.h"
-//#include "ZLWin32Util.h"
-//#include "../util/ZLWin32KeyUtil.h"
-
-/*
-static Win32Widget *labelWithMyParams(const char *text) {
-	Win32Widget *label = gtk_label_new(text);
-
-	gtk_label_set_justify(GTK_LABEL(label), GTK_JUSTIFY_RIGHT);
-
-	return label;
-}
-
-void ZLWin32OptionView::_onValueChanged(Win32Widget*, gpointer self) {
-	((ZLWin32OptionView*)self)->onValueChanged();
-}
-*/
 
 void ZLWin32OptionView::_createItem() {
 }
 
-void ZLWin32OptionView::_show() {
-	myElement->setVisible(true);
-}
-
-void ZLWin32OptionView::_hide() {
-	myElement->setVisible(false);
-}
-
-BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	myCheckBox = new W32CheckBox(myOption->name());
 	myCheckBox->setChecked(option->initialState());
 	myCheckBox->setListener(this);
-	myElement = myCheckBox;
+	tab.insertWidget(myCheckBox, from, to);
 }
 
 void BooleanOptionView::_onAccept() const {
@@ -67,6 +39,14 @@ void BooleanOptionView::onEvent(const std::string &event, W32EventSender&) {
 	if (event == W32CheckBox::STATE_CHANGED_EVENT) {
 		((ZLBooleanOptionEntry*)myOption)->onStateChanged(myCheckBox->isChecked());
 	}
+}
+
+void BooleanOptionView::_show() {
+	myCheckBox->setVisible(true);
+}
+
+void BooleanOptionView::_hide() {
+	myCheckBox->setVisible(false);
 }
 
 /*
@@ -114,7 +94,7 @@ void ChoiceOptionView::_onAccept() const {
 }
 */
 
-ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	const std::vector<std::string> &values = option->values();
 	const std::string &initialValue = option->initialValue();
 	int index = 0;
@@ -129,14 +109,26 @@ ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogConten
 	myComboBox->setListener(this);
 	const std::string &name = option->name();
 	if (name.empty()) {
-		myElement = myComboBox;
+		myLabel = 0;
+		tab.insertWidget(myComboBox, from, to);
 	} else {
-		W32HBox *box = new W32HBox();
-		box->setSpacing(10);
-		box->addElement(new W32Label(name));
-		box->addElement(myComboBox);
-		myElement = box;
-		//myElement = new W32HPair(new W32Label(name), myComboBox, 67, 30);
+		myLabel = new W32Label(name);
+		tab.insertWidget(myLabel, from, (from + to) / 2);
+		tab.insertWidget(myComboBox, (from + to) / 2 + 1, to);
+	}
+}
+
+void ComboOptionView::_show() {
+	myComboBox->setVisible(true);
+	if (myLabel != 0) {
+		myLabel->setVisible(true);
+	}
+}
+
+void ComboOptionView::_hide() {
+	myComboBox->setVisible(false);
+	if (myLabel != 0) {
+		myLabel->setVisible(false);
 	}
 }
 
@@ -155,16 +147,6 @@ void ComboOptionView::_createItem() {
 	myTab->addItem(GTK_WIDGET(myComboBox), myRow, midColumn, myToColumn);
 
 	reset();
-}
-
-void ComboOptionView::_show() {
-	gtk_widget_show(myLabel);
-	gtk_widget_show(GTK_WIDGET(myComboBox));
-}
-
-void ComboOptionView::_hide() {
-	gtk_widget_hide(myLabel);
-	gtk_widget_hide(GTK_WIDGET(myComboBox));
 }
 */
 
@@ -224,18 +206,16 @@ void ComboOptionView::onEvent(const std::string &event, W32EventSender&) {
 	}
 }
 
-SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	mySpinBox = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
 	const std::string &name = option->name();
 	if (name.empty()) {
-		myElement = mySpinBox;
+		myLabel = 0;
+		tab.insertWidget(mySpinBox, from, to);
 	} else {
-		W32HBox *box = new W32HBox();
-		box->setSpacing(10);
-		box->addElement(new W32Label(name));
-		box->addElement(mySpinBox);
-		myElement = box;
-		//myElement = new W32HPair(new W32Label(name), mySpinBox, 67, 30);
+		myLabel = new W32Label(name);
+		tab.insertWidget(myLabel, from, (from + to) / 2);
+		tab.insertWidget(mySpinBox, (from + to) / 2 + 1, to);
 	}
 }
 
@@ -259,36 +239,32 @@ void SpinOptionView::_onAccept() const {
 	((ZLSpinOptionEntry*)myOption)->onAccept(mySpinBox->value());
 }
 
-StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent *tab) : ZLWin32OptionView(option, tab) {
+void SpinOptionView::_show() {
+	mySpinBox->setVisible(true);
+	if (myLabel != 0) {
+		myLabel->setVisible(true);
+	}
+}
+
+void SpinOptionView::_hide() {
+	mySpinBox->setVisible(false);
+	if (myLabel != 0) {
+		myLabel->setVisible(false);
+	}
+}
+
+StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	myLineEditor = new W32LineEditor(option->initialValue());
 	myLineEditor->setListener(this);
 	const std::string &name = option->name();
 	if (name.empty()) {
-		myElement = myLineEditor;
-	} else {
-		W32HBox *box = new W32HBox();
-		box->setSpacing(10);
-		box->addElement(new W32Label(name));
-		box->addElement(myLineEditor);
-		myElement = box;
-		//myElement = new W32HPair(new W32Label(name), lineEditor, 20, 77);
-	}
-/*
-	myLineEdit = GTK_ENTRY(gtk_entry_new());
-	g_signal_connect(myLineEdit, "changed", G_CALLBACK(_onValueChanged), this);
-
-	if (!myOption->name().empty()) {
-		myLabel = labelWithMyParams(myOption->name().c_str());
-		int midColumn = (myFromColumn + myToColumn) / 2;
-		myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
-		myTab->addItem(GTK_WIDGET(myLineEdit), myRow, midColumn, myToColumn);
-	} else {
 		myLabel = 0;
-		myTab->addItem(GTK_WIDGET(myLineEdit), myRow, myFromColumn, myToColumn);
+		tab.insertWidget(myLineEditor, from, to);
+	} else {
+		myLabel = new W32Label(name);
+		tab.insertWidget(myLabel, from, (from + to) / 2);
+		tab.insertWidget(myLineEditor, (from + to) / 2 + 1, to);
 	}
-
-	reset();
-*/
 }
 
 void StringOptionView::reset() {
@@ -299,6 +275,20 @@ void StringOptionView::reset() {
 
 	gtk_entry_set_text(myLineEdit, ((ZLStringOptionEntry*)myOption)->initialValue().c_str());
 */
+}
+
+void StringOptionView::_show() {
+	myLineEditor->setVisible(true);
+	if (myLabel != 0) {
+		myLabel->setVisible(true);
+	}
+}
+
+void StringOptionView::_hide() {
+	myLineEditor->setVisible(false);
+	if (myLabel != 0) {
+		myLabel->setVisible(false);
+	}
 }
 
 void StringOptionView::onEvent(const std::string &event, W32EventSender&) {

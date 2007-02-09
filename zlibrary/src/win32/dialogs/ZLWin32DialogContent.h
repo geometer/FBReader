@@ -43,9 +43,10 @@ public:
 
 	W32WidgetPtr content() const;
 
+	void insertWidget(W32WidgetPtr widget, int from, int to);
+
 private:
-	//int addRow();
-	ZLWin32OptionView *createViewByEntry(ZLOptionEntry *option);
+	void createViewByEntry(ZLOptionEntry *option, int from, int to);
 
 private:
 	W32Table *myContentTable;
