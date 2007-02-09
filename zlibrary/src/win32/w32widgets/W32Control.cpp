@@ -450,6 +450,15 @@ void W32ComboBox::setEditable(bool editable) {
 	}
 }
 
+HWND W32ComboBox::editorWindow() {
+	if (myEditorWindow == 0) {
+		COMBOBOXINFO info;
+		GetComboBoxInfo(myWindow, &info);
+		myEditorWindow = info.hwndItem;
+	}
+	return myEditorWindow;
+}
+
 void W32ComboBox::callback(DWORD hiWParam) {
 	if (hiWParam == CBN_SELCHANGE) {
 		const int index = SendMessage(myWindow, CB_GETCURSEL, 0, 0);
@@ -461,12 +470,7 @@ void W32ComboBox::callback(DWORD hiWParam) {
 		}
 		fireEvent(SELECTION_CHANGED_EVENT);
 	} else if (hiWParam == CBN_EDITCHANGE) {
-		if (myEditorWindow == 0) {
-			COMBOBOXINFO info;
-			GetComboBoxInfo(myWindow, &info);
-			myEditorWindow = info.hwndItem;
-		}
-		getEditorString(myEditorWindow, myBuffer);
+		getEditorString(editorWindow(), myBuffer);
 		fireEvent(VALUE_EDITED_EVENT);
 	}
 }
@@ -476,9 +480,20 @@ std::string W32ComboBox::text() const {
 }
 
 void W32ComboBox::setList(const std::vector<std::string> &list) {
-	// TODO: implement;
+	myList = list;
+	if (myWindow != 0) {
+		SendMessage(myWindow, CB_RESETCONTENT, 0, 0);
+		ZLUnicodeUtil::Ucs2String buffer;
+		for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
+			SendMessage(myWindow, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
+		}
+		SendMessage(myWindow, CB_SETMINVISIBLE, std::min((int)myList.size(), 7), 0);
+	}
 }
 
 void W32ComboBox::setSelection(int index) {
-	// TODO: implement;
+	myIndex = index;
+	if (myWindow != 0) {
+		SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
+	}
 }

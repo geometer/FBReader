@@ -191,6 +191,9 @@ public:
 	void setSelection(int index);
 
 private:
+	HWND editorWindow();
+
+private:
 	std::vector<std::string> myList;
 	int myIndex;
 
