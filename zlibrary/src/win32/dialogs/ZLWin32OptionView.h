@@ -118,7 +118,7 @@ public:
 private:
 	void _setActive(bool active);
 	void _onAccept() const;
-	//void reset();
+	void reset();
 	void _show();
 	void _hide();
 	

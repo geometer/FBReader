@@ -137,6 +137,7 @@ public:
 
 	void callback(DWORD hiWParam);
 
+	void setText(const std::string &text);
 	std::string text() const;
 
 private:
@@ -186,8 +187,11 @@ public:
 
 	std::string text() const;
 
+	void setList(const std::vector<std::string> &list);
+	void setSelection(int index);
+
 private:
-	const std::vector<std::string> &myList;
+	std::vector<std::string> myList;
 	int myIndex;
 
 	ZLUnicodeUtil::Ucs2String myBuffer;

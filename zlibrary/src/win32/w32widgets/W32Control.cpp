@@ -254,12 +254,6 @@ void W32AbstractEditor::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 }
 
-const std::string W32LineEditor::VALUE_EDITED_EVENT = "LineEditor: value edited";
-
-W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myBlocked(true) {
-	::createNTWCHARString(myBuffer, text);
-}
-
 static void getEditorString(HWND editor, ZLUnicodeUtil::Ucs2String &buffer) {
 	const int length = SendMessage(editor, EM_LINELENGTH, 0, 0);
 	buffer.clear();
@@ -278,10 +272,23 @@ static std::string getTextFromBuffer(const ZLUnicodeUtil::Ucs2String &buffer) {
 	return txt;
 }
 
+const std::string W32LineEditor::VALUE_EDITED_EVENT = "LineEditor: value edited";
+
+W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myBlocked(true) {
+	::createNTWCHARString(myBuffer, text);
+}
+
 void W32LineEditor::callback(DWORD hiWParam) {
 	if ((hiWParam == EN_CHANGE) && !myBlocked) {
 		getEditorString(myWindow, myBuffer);
 		fireEvent(VALUE_EDITED_EVENT);
+	}
+}
+
+void W32LineEditor::setText(const std::string &text) {
+	::createNTWCHARString(myBuffer, text);
+	if (myWindow != 0) {
+		SetWindowTextW(myWindow, ::wchar(myBuffer));
 	}
 }
 
@@ -465,4 +472,12 @@ void W32ComboBox::callback(DWORD hiWParam) {
 
 std::string W32ComboBox::text() const {
 	return getTextFromBuffer(myBuffer);
+}
+
+void W32ComboBox::setList(const std::vector<std::string> &list) {
+	// TODO: implement;
+}
+
+void W32ComboBox::setSelection(int index) {
+	// TODO: implement;
 }

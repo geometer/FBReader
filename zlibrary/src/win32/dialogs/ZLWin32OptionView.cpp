@@ -132,24 +132,6 @@ void ComboOptionView::_hide() {
 	}
 }
 
-/*
-void ComboOptionView::_createItem() {
-	const ZLComboOptionEntry &comboOptionEntry = *(ZLComboOptionEntry*)myOption;
-	myLabel = labelWithMyParams(myOption->name().c_str());
-	myComboBox = comboOptionEntry.isEditable() ?
-		GTK_COMBO_BOX(gtk_combo_box_entry_new_text()) : 
-		GTK_COMBO_BOX(gtk_combo_box_new_text());
-
-	g_signal_connect(GTK_WIDGET(myComboBox), "changed", G_CALLBACK(_onValueChanged), this);
-
-	int midColumn = (myFromColumn + myToColumn) / 2;
-	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
-	myTab->addItem(GTK_WIDGET(myComboBox), myRow, midColumn, myToColumn);
-
-	reset();
-}
-*/
-
 void ComboOptionView::_setActive(bool active) {
 	myComboBox->setEnabled(active);
 }
@@ -158,32 +140,20 @@ void ComboOptionView::_onAccept() const {
 	((ZLComboOptionEntry*)myOption)->onAccept(myComboBox->text());
 }
 
-/*
 void ComboOptionView::reset() {
-	if (myComboBox == 0) {
-		return;
-	}
-
-	for (; myListSize > 0; --myListSize) {
-		gtk_combo_box_remove_text(myComboBox, 0);
-	}
-	const ZLComboOptionEntry &comboOptionEntry = *(ZLComboOptionEntry*)myOption;
-	const std::vector<std::string> &values = comboOptionEntry.values();
-	const std::string &initial = comboOptionEntry.initialValue();
-	myListSize = values.size();
-	mySelectedIndex = -1;
+	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
+	const std::vector<std::string> &values = o.values();
+	const std::string &initialValue = o.initialValue();
 	int index = 0;
-	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it, ++index) {
-		if (*it == initial) {
-			mySelectedIndex = index;
+	for (size_t i = 0; i < values.size(); ++i) {
+		if (values[i] == initialValue) {
+			index = i;
+			break;
 		}
-		gtk_combo_box_append_text(myComboBox, it->c_str());
 	}
-	if (mySelectedIndex >= 0) {
-		gtk_combo_box_set_active(myComboBox, mySelectedIndex);
-	}
+	myComboBox->setList(values);
+	myComboBox->setSelection(index);
 }
-*/
 
 void ComboOptionView::onEvent(const std::string &event, W32EventSender&) {
 	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
@@ -268,13 +238,7 @@ StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogCon
 }
 
 void StringOptionView::reset() {
-/*
-	if (myLineEdit == 0) {
-		return;
-	}
-
-	gtk_entry_set_text(myLineEdit, ((ZLStringOptionEntry*)myOption)->initialValue().c_str());
-*/
+	myLineEditor->setText(((ZLStringOptionEntry*)myOption)->initialValue());
 }
 
 void StringOptionView::_show() {
