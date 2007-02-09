@@ -71,7 +71,7 @@ bool W32Control::isEnabled() const {
 }
 
 void W32Control::setVisible(bool visible) {
-	if (visible != ((myStyle & WS_VISIBLE) == WS_VISIBLE)) {
+	if (visible != isVisible()) {
 		if (visible) {
 			myStyle |= WS_VISIBLE;
 		} else {
@@ -363,7 +363,7 @@ void W32SpinBox::setPosition(int x, int y, Size size) {
 	if (myControlWindow != 0) {
 		SetWindowPos(myControlWindow, 0, (x + size.Width) * 2, y * 2, size.Width * 2, size.Height * 2, 0);
 		SendMessage(myControlWindow, UDM_SETBUDDY, (WPARAM)myWindow, 0);
-		if ((myStyle & WS_VISIBLE) == WS_VISIBLE) {
+		if (isVisible()) {
 			ShowWindow(myControlWindow, SW_SHOW);
 		}
 	}
@@ -493,5 +493,93 @@ void W32ComboBox::setSelection(int index) {
 	myIndex = index;
 	if (myWindow != 0) {
 		SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
+	}
+}
+
+W32RadioButton::W32RadioButton(const std::string &text) : W32Control(BS_AUTORADIOBUTTON | WS_TABSTOP), myText(text) {
+}
+
+WORD W32RadioButton::classId() const {
+	return CLASS_BUTTON;
+}
+
+void W32RadioButton::setDimensions(Size charDimension) {
+	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 2);
+	mySize.Height = charDimension.Height * 3 / 2;
+}
+
+void W32RadioButton::init(HWND parent, W32ControlCollection *collection) {
+	W32Control::init(parent, collection);
+	::setWindowText(myWindow, myText);
+}
+
+W32RadioButtonGroup::W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts) : W32Control(BS_GROUPBOX), myCaption(caption) {
+	myButtons.reserve(buttonTexts.size());
+	for (std::vector<std::string>::const_iterator it = buttonTexts.begin(); it != buttonTexts.end(); ++it) {
+		myButtons.push_back(new W32RadioButton(*it));
+	}
+}
+
+WORD W32RadioButtonGroup::classId() const {
+	return CLASS_BUTTON;
+}
+
+void W32RadioButtonGroup::allocate(WORD *&p, short &id) const {
+	W32Control::allocate(p, id);
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		(*it)->allocate(p, id);
+	}
+}
+
+int W32RadioButtonGroup::allocationSize() const {
+	int size = W32Control::allocationSize();
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		size += (*it)->allocationSize();
+	}
+	return size;
+}
+
+void W32RadioButtonGroup::setVisible(bool visible) {
+	W32Control::setVisible(visible);
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		(*it)->setVisible(visible);
+	}
+}
+
+int W32RadioButtonGroup::controlNumber() const {
+	int counter = W32Control::controlNumber();
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		counter += (*it)->controlNumber();
+	}
+	return counter;
+}
+
+void W32RadioButtonGroup::setPosition(int x, int y, Size size) {
+	W32Control::setPosition(x, y, size);
+	const short deltaY = size.Height / (myButtons.size() + 1);
+	size.Width -= 2 * myLeftMargin;
+	size.Height = deltaY;
+	for (W32WidgetList::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		y += deltaY;
+		(*it)->setPosition(x + myLeftMargin, y, size)	;
+	}
+}
+
+void W32RadioButtonGroup::setDimensions(Size charDimension) {
+	mySize.Width = 0;
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		(*it)->setDimensions(charDimension);
+		mySize.Width = std::max(mySize.Width, (*it)->minimumSize().Width);
+	}
+	mySize.Width += 4 * charDimension.Width;
+	mySize.Height = (3 * myButtons.size() + 4) * charDimension.Height / 2;
+	myLeftMargin = 2 * charDimension.Width;
+}
+
+void W32RadioButtonGroup::init(HWND parent, W32ControlCollection *collection) {
+	W32Control::init(parent, collection);
+	::setWindowText(myWindow, myCaption);
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		(*it)->init(parent, collection);
 	}
 }

@@ -205,12 +205,36 @@ class W32RadioButton : public W32Control {
 
 public:
 	W32RadioButton(const std::string &text);
+	WORD classId() const;
+
+private:
+	void setDimensions(Size charDimension);
+	void init(HWND parent, W32ControlCollection *collection);
+
+private:
+	std::string myText;
 };
 
 class W32RadioButtonGroup : public W32Control {
 
 public:
 	W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts);
+	WORD classId() const;
+
+	void setVisible(bool visible);
+
+private:
+	void allocate(WORD *&p, short &id) const;
+	int allocationSize() const;
+	int controlNumber() const;
+	void setPosition(int x, int y, Size size);
+	void setDimensions(Size charDimension);
+	void init(HWND parent, W32ControlCollection *collection);
+
+private:
+	std::string myCaption;
+	W32WidgetList myButtons;
+	int myLeftMargin;
 };
 
 #endif /* __W32CONTROL_H__ */

@@ -39,24 +39,22 @@ protected:
 	void _createItem();
 };
 
-/*
 class ChoiceOptionView : public ZLWin32OptionView {
 
 public:
-	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn) {
-		myFrame = 0;
-	}
-	~ChoiceOptionView() { if (myFrame != 0) delete[] myButtons; }
+	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
 	void _onAccept() const;
+	void _show();
+	void _hide();
 
 private:
-	Win32Frame *myFrame;
-	Win32Box *myVBox;
-	Win32RadioButton **myButtons;
+	//void onEvent(const std::string &event, W32EventSender &sender);
+
+private:
+	W32RadioButtonGroup *myButtonGroup;
 };
-*/
 
 class BooleanOptionView : public ZLWin32OptionView, public W32Listener {
 

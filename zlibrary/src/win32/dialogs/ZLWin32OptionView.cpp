@@ -49,6 +49,17 @@ void BooleanOptionView::_hide() {
 	myCheckBox->setVisible(false);
 }
 
+ChoiceOptionView::ChoiceOptionView(ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+	std::vector<std::string> names;
+	int num = option->choiceNumber();
+	names.reserve(num);
+	for (int i = 0; i < num; ++i) {
+		names.push_back(option->text(i));
+	}
+	myButtonGroup = new W32RadioButtonGroup(myOption->name(), names);
+	tab.insertWidget(myButtonGroup, from, to);
+}
+
 /*
 void ChoiceOptionView::_createItem() {
 	myFrame = GTK_FRAME(gtk_frame_new(myOption->name().c_str()));
@@ -67,32 +78,19 @@ void ChoiceOptionView::_createItem() {
 	gtk_container_add(GTK_CONTAINER(myFrame), GTK_WIDGET(myVBox));
 	myTab->addItem(GTK_WIDGET(myFrame), myRow, myFromColumn, myToColumn);
 }
+*/
 
 void ChoiceOptionView::_show() {
-	gtk_widget_show(GTK_WIDGET(myFrame));
-	gtk_widget_show(GTK_WIDGET(myVBox));
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
-		gtk_widget_show(GTK_WIDGET(myButtons[i]));
-	}
+	myButtonGroup->setVisible(true);
 }
 
 void ChoiceOptionView::_hide() {
-	gtk_widget_hide(GTK_WIDGET(myFrame));
-	gtk_widget_hide(GTK_WIDGET(myVBox));
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
-		gtk_widget_hide(GTK_WIDGET(myButtons[i]));
-	}
+	myButtonGroup->setVisible(false);
 }
 
 void ChoiceOptionView::_onAccept() const {
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
-		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myButtons[i]))) {
-			((ZLChoiceOptionEntry*)myOption)->onAccept(i);
-			return;
-		}
-	}
+	// TODO: implement
 }
-*/
 
 ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	const std::vector<std::string> &values = option->values();
