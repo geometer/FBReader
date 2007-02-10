@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <windows.h>
 #include <commctrl.h>
 
@@ -595,9 +593,7 @@ void W32RadioButtonGroup::init(HWND parent, W32ControlCollection *collection) {
 	::setWindowText(myWindow, myCaption);
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		(*it)->init(parent, collection);
-		if (it == myButtons.begin() + myCheckedIndex) {
-			((W32RadioButton&)**it).setChecked(true);
-		}
+		((W32RadioButton&)**it).setChecked(it == myButtons.begin() + myCheckedIndex);
 	}
 }
 
