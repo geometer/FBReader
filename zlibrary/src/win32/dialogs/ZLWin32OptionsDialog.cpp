@@ -101,8 +101,8 @@ bool ZLWin32OptionsDialog::run() {
 	for (size_t i = 0; i < myTabs.size(); ++i) {
 		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
 		panel->setListener(this);
-		panel->setElement(myTabs[i]->content());
-		W32Table &table = (W32Table&)*myTabs[i]->content();
+		panel->setElement(myTabs[i]->contentPtr());
+		W32Table &table = myTabs[i]->contentTable();
 		const int charHeight = panel->charDimension().Height;
 		table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 		table.setSpacings(charHeight / 2, charHeight);

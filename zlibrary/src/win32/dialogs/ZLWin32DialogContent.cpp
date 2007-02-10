@@ -22,40 +22,18 @@
 
 ZLWin32DialogContent::ZLWin32DialogContent() : myRowCounter(0) {
 	myContentTable = new W32Table();
-	myContentTableAsElementPtr = myContentTable;
-	//myContentBox->setHomogeneous(true);
-
-	/*
-	W32WidgetPtr control = new W32LineEditor(10001, "My Editor");
-	control->setVisible(true);
-	myContentBox->addElement(control);
-	control = new W32CheckBox(10001, "My Checkbox");
-	control->setVisible(true);
-	myContentBox->addElement(control);
-	*/
 }
 
 ZLWin32DialogContent::~ZLWin32DialogContent() {
 }
 
-W32WidgetPtr ZLWin32DialogContent::content() const {
-	return myContentTableAsElementPtr;
+W32WidgetPtr ZLWin32DialogContent::contentPtr() const {
+	return myContentTable;
 }
 
-	/*
-int ZLWin32DialogContent::addRow() {
-	int row = myRowCounter++;
-
-	gtk_table_resize(myTable, myRowCounter, 2);
-
-	return row;
-	return 0;
+W32Table &ZLWin32DialogContent::contentTable() const {
+	return (W32Table&)*myContentTable;
 }
-	*/
-
-//void ZLWin32DialogContent::addItem(Win32Widget *what, int row, int fromColumn, int toColumn) {
-	//gtk_table_attach(myTable, what, fromColumn, toColumn, row, row + 1, (Win32AttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
-//}
 
 void ZLWin32DialogContent::addOption(ZLOptionEntry *option) {
 	createViewByEntry(option, 0, 11);
@@ -69,7 +47,7 @@ void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *opt
 }
 
 void ZLWin32DialogContent::insertWidget(W32WidgetPtr widget, int from, int to) {
-	myContentTable->setElement(widget, myRowCounter, from, to);
+	contentTable().setElement(widget, myRowCounter, from, to);
 }
 
 void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int from, int to) {

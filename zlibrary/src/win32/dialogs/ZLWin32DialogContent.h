@@ -37,11 +37,8 @@ public:
 	void addOption(ZLOptionEntry *option);
 	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
 
-	//Win32Widget *widget() { return WIN32_WIDGET(myTable); }
-
-	//void addItem(Win32Widget *what, int row, int fromColumn, int toColumn);
-
-	W32WidgetPtr content() const;
+	W32WidgetPtr contentPtr() const;
+	W32Table &contentTable() const;
 
 	void insertWidget(W32WidgetPtr widget, int from, int to);
 
@@ -49,8 +46,7 @@ private:
 	void createViewByEntry(ZLOptionEntry *option, int from, int to);
 
 private:
-	W32Table *myContentTable;
-	W32WidgetPtr myContentTableAsElementPtr;
+	W32WidgetPtr myContentTable;
 	int myRowCounter;
 };
 
