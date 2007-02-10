@@ -30,7 +30,6 @@ openbook
 	  добавлять при необходимости scrollbar'ы
 	шрифты в диалогах (одинаковый шрифт в автоматически и вручную созданных частях диалогов)
 	размер options dialog
-	ChoiceOptionView
 	ColorOptionView
 	KeyOptionView
 selection dialog
@@ -51,6 +50,7 @@ iconv -> internal converter (?)
 разделитель пути в BookPath
 название "корневого каталога" в ZLDir
 переход между дисками в файловой системе
+прятать кнопку rotate на тулбаре, когда поворот запрещен (Rotation Type = disablaed)
 
 ==============================================================================
 

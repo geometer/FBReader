@@ -201,29 +201,39 @@ private:
 	HWND myEditorWindow;
 };
 
+class W32RadioButtonGroup;
+
 class W32RadioButton : public W32Control {
 
 public:
-	W32RadioButton(const std::string &text);
+	W32RadioButton(W32RadioButtonGroup &group, const std::string &text);
 	WORD classId() const;
 
 private:
 	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
+	void callback(DWORD hiWParam);
+
+	void setChecked(bool checked);
 
 private:
+	W32RadioButtonGroup &myGroup;
 	std::string myText;
+
+friend class W32RadioButtonGroup;
 };
 
 class W32RadioButtonGroup : public W32Control {
 
 public:
 	W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts);
-	WORD classId() const;
 
 	void setVisible(bool visible);
+	void setChecked(int index);
+	int checkedIndex() const;
 
 private:
+	WORD classId() const;
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	int controlNumber() const;
@@ -231,10 +241,16 @@ private:
 	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
 
+	void setChecked(W32RadioButton &button);
+
 private:
 	std::string myCaption;
 	W32WidgetList myButtons;
+	int myCheckedIndex;
+
 	int myLeftMargin;
+
+friend class W32RadioButton;
 };
 
 #endif /* __W32CONTROL_H__ */

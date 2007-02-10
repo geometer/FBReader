@@ -496,7 +496,7 @@ void W32ComboBox::setSelection(int index) {
 	}
 }
 
-W32RadioButton::W32RadioButton(const std::string &text) : W32Control(BS_AUTORADIOBUTTON | WS_TABSTOP), myText(text) {
+W32RadioButton::W32RadioButton(W32RadioButtonGroup &group, const std::string &text) : W32Control(BS_RADIOBUTTON | WS_TABSTOP), myGroup(group), myText(text) {
 }
 
 WORD W32RadioButton::classId() const {
@@ -513,10 +513,24 @@ void W32RadioButton::init(HWND parent, W32ControlCollection *collection) {
 	::setWindowText(myWindow, myText);
 }
 
-W32RadioButtonGroup::W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts) : W32Control(BS_GROUPBOX), myCaption(caption) {
+void W32RadioButton::callback(DWORD hiWParam) {
+	if (hiWParam == BN_CLICKED) {
+		if (SendMessage(myWindow, BM_GETCHECK, 0, 0) != BST_CHECKED) {
+			myGroup.setChecked(*this);
+		}
+	}
+}
+
+void W32RadioButton::setChecked(bool checked) {
+	if (myWindow != 0) {
+		SendMessage(myWindow, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0);
+	}
+}
+
+W32RadioButtonGroup::W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts) : W32Control(BS_GROUPBOX), myCaption(caption), myCheckedIndex(-1) {
 	myButtons.reserve(buttonTexts.size());
 	for (std::vector<std::string>::const_iterator it = buttonTexts.begin(); it != buttonTexts.end(); ++it) {
-		myButtons.push_back(new W32RadioButton(*it));
+		myButtons.push_back(new W32RadioButton(*this, *it));
 	}
 }
 
@@ -581,5 +595,33 @@ void W32RadioButtonGroup::init(HWND parent, W32ControlCollection *collection) {
 	::setWindowText(myWindow, myCaption);
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		(*it)->init(parent, collection);
+		if (it == myButtons.begin() + myCheckedIndex) {
+			((W32RadioButton&)**it).setChecked(true);
+		}
 	}
+}
+
+void W32RadioButtonGroup::setChecked(W32RadioButton &button) {
+	myCheckedIndex = -1;
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		W32RadioButton &rb = (W32RadioButton&)**it;
+		if (&rb == &button) {
+			rb.setChecked(true);
+			myCheckedIndex = it - myButtons.begin();
+		} else {
+			rb.setChecked(false);
+		}
+	}
+}
+
+void W32RadioButtonGroup::setChecked(int index) {
+	myCheckedIndex = index;
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		W32RadioButton &rb = (W32RadioButton&)**it;
+		rb.setChecked(it == myButtons.begin() + index);
+	}
+}
+
+int W32RadioButtonGroup::checkedIndex() const {
+	return myCheckedIndex;
 }

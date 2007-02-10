@@ -57,28 +57,9 @@ ChoiceOptionView::ChoiceOptionView(ZLChoiceOptionEntry *option, ZLWin32DialogCon
 		names.push_back(option->text(i));
 	}
 	myButtonGroup = new W32RadioButtonGroup(myOption->name(), names);
+	myButtonGroup->setChecked(option->initialCheckedIndex());
 	tab.insertWidget(myButtonGroup, from, to);
 }
-
-/*
-void ChoiceOptionView::_createItem() {
-	myFrame = GTK_FRAME(gtk_frame_new(myOption->name().c_str()));
-	myVBox = GTK_BOX(gtk_vbox_new(true, 10));
-	gtk_container_set_border_width(GTK_CONTAINER(myVBox), 5);
-
-	int num = ((ZLChoiceOptionEntry*)myOption)->choiceNumber();
-	myButtons = new Win32RadioButton* [num];
-	GSList *group = 0;
-	for (int i = 0; i < num; ++i) {
-		myButtons[i] = GTK_RADIO_BUTTON(gtk_radio_button_new_with_label(group, ((ZLChoiceOptionEntry*)myOption)->text(i).c_str()));
-		group = gtk_radio_button_get_group(myButtons[i]);
-		gtk_box_pack_start (myVBox, GTK_WIDGET(myButtons[i]), true, true, 0);
-	}
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]), true);
-	gtk_container_add(GTK_CONTAINER(myFrame), GTK_WIDGET(myVBox));
-	myTab->addItem(GTK_WIDGET(myFrame), myRow, myFromColumn, myToColumn);
-}
-*/
 
 void ChoiceOptionView::_show() {
 	myButtonGroup->setVisible(true);
@@ -89,7 +70,7 @@ void ChoiceOptionView::_hide() {
 }
 
 void ChoiceOptionView::_onAccept() const {
-	// TODO: implement
+	((ZLChoiceOptionEntry*)myOption)->onAccept(myButtonGroup->checkedIndex());
 }
 
 ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
