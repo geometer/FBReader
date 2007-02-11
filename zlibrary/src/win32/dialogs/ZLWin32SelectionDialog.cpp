@@ -23,6 +23,7 @@
 
 #include "../w32widgets/W32Container.h"
 #include "../w32widgets/W32Control.h"
+#include "../w32widgets/W32TreeView.h"
 
 #include "../application/ZLWin32ApplicationWindow.h"
 
@@ -44,6 +45,9 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
+	W32TreeView *treeView = new W32TreeView();
+	treeView->setVisible(true);
+	panelBox->addElement(treeView);
 	/*
 	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
 	myTab = contentTab;
@@ -51,15 +55,17 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	W32Table &table = contentTab->contentTable();
 	*/
 
-	//const short charHeight = myPanel.charDimension().Height;
+	const short charHeight = myPanel.charDimension().Height;
+	panelBox->setSpacing(charHeight / 2);
+	panelBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 	//table.setSpacings(charHeight / 2, charHeight);
 	//table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 
 	W32HBox *buttonBox = new W32HBox();
 	panelBox->addElement(buttonBox);
 	buttonBox->setHomogeneous(true);
-	//myButtonBox->setSpacing(charHeight / 2);
-	//myButtonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+	buttonBox->setSpacing(charHeight / 2);
+	buttonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 	buttonBox->addElement(new W32PushButton("&Ok", W32PushButton::OK_BUTTON));
 	buttonBox->addElement(new W32PushButton("&Cancel", W32PushButton::CANCEL_BUTTON));
 	buttonBox->setVisible(true);

@@ -35,14 +35,9 @@ class W32Control : public W32Widget, public W32EventSender {
 protected:
 	W32Control(DWORD style);
 
-	void allocate(WORD *&p, short &id) const;
-	int allocationSize() const;
-	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
 	void init(HWND parent, W32ControlCollection *collection);
-
-	virtual WORD classId() const = 0;
 
 public:
 	void setEnabled(bool enabled);
@@ -64,7 +59,18 @@ protected:
 	HWND myWindow;
 };
 
-class W32PushButton : public W32Control {
+class W32StandardControl : public W32Control {
+
+protected:
+	W32StandardControl(DWORD style);
+
+	int controlNumber() const;
+	void allocate(WORD *&p, short &id) const;
+	int allocationSize() const;
+	virtual WORD classId() const = 0;
+};
+
+class W32PushButton : public W32StandardControl {
 
 public:
 	enum ButtonType {
@@ -86,7 +92,7 @@ private:
 	ButtonType myType;
 };
 
-class W32Label : public W32Control {
+class W32Label : public W32StandardControl {
 
 public:
 	W32Label(const std::string &text);
@@ -101,7 +107,7 @@ private:
 	int myVShift;
 };
 
-class W32CheckBox : public W32Control {
+class W32CheckBox : public W32StandardControl {
 
 public:
 	static const std::string STATE_CHANGED_EVENT;
@@ -123,7 +129,7 @@ private:
 	bool myChecked;
 };
 
-class W32AbstractEditor : public W32Control {
+class W32AbstractEditor : public W32StandardControl {
 
 public:
 	W32AbstractEditor(DWORD style);
@@ -177,7 +183,7 @@ private:
 	HWND myControlWindow;
 };
 
-class W32ComboBox : public W32Control {
+class W32ComboBox : public W32StandardControl {
 
 public:
 	static const std::string SELECTION_CHANGED_EVENT;
@@ -212,7 +218,7 @@ private:
 
 class W32RadioButtonGroup;
 
-class W32RadioButton : public W32Control {
+class W32RadioButton : public W32StandardControl {
 
 public:
 	W32RadioButton(W32RadioButtonGroup &group, const std::string &text);
@@ -232,7 +238,7 @@ private:
 friend class W32RadioButtonGroup;
 };
 
-class W32RadioButtonGroup : public W32Control {
+class W32RadioButtonGroup : public W32StandardControl {
 
 public:
 	W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts);

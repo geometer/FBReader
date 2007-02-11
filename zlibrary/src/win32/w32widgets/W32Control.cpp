@@ -88,11 +88,26 @@ bool W32Control::isVisible() const {
 	return (myStyle & WS_VISIBLE) == WS_VISIBLE;
 }
 
-int W32Control::allocationSize() const {
+void W32Control::init(HWND parent, W32ControlCollection *collection) {
+	myOwner = collection;
+	myWindow = GetDlgItem(parent, collection->addControl(this));
+	if (!myEnabled) {
+		EnableWindow(myWindow, false);
+	}
+}
+
+W32StandardControl::W32StandardControl(DWORD style) : W32Control(style) {
+}
+
+int W32StandardControl::controlNumber() const {
+	return 1;
+}
+
+int W32StandardControl::allocationSize() const {
 	return 14;
 }
 
-void W32Control::allocate(WORD *&p, short &id) const {
+void W32StandardControl::allocate(WORD *&p, short &id) const {
 	*p++ = LOWORD(myStyle);
 	*p++ = HIWORD(myStyle);
 	*p++ = 0;
@@ -107,18 +122,6 @@ void W32Control::allocate(WORD *&p, short &id) const {
 	*p++ = 0;
 	*p++ = 0;
 	*p++ = 0;
-}
-
-void W32Control::init(HWND parent, W32ControlCollection *collection) {
-	myOwner = collection;
-	myWindow = GetDlgItem(parent, collection->addControl(this));
-	if (!myEnabled) {
-		EnableWindow(myWindow, false);
-	}
-}
-
-int W32Control::controlNumber() const {
-	return 1;
 }
 
 W32Widget::Size W32Control::minimumSize() const {
@@ -138,7 +141,7 @@ void W32Control::setPosition(int x, int y, Size size) {
 void W32Control::callback(DWORD) {
 }
 
-W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32Control(BS_PUSHBUTTON | WS_TABSTOP), myText(text), myType(type) {
+W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32StandardControl(BS_PUSHBUTTON | WS_TABSTOP), myText(text), myType(type) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
 
@@ -149,10 +152,10 @@ void W32PushButton::setDimensions(Size charDimension) {
 
 void W32PushButton::allocate(WORD *&p, short &id) const {
 	if (myType == NORMAL_BUTTON) {
-		W32Control::allocate(p, id);
+		W32StandardControl::allocate(p, id);
 	} else {
 		short specialId = (myType == OK_BUTTON) ? IDOK : IDCANCEL;
-		W32Control::allocate(p, specialId);
+		W32StandardControl::allocate(p, specialId);
 	}
 }
 
@@ -175,7 +178,7 @@ void W32PushButton::init(HWND parent, W32ControlCollection *collection) {
 	::setWindowText(myWindow, myText);
 }
 
-W32Label::W32Label(const std::string &text) : W32Control(SS_RIGHT), myText(text), myVShift(0) {
+W32Label::W32Label(const std::string &text) : W32StandardControl(SS_RIGHT), myText(text), myVShift(0) {
 }
 
 void W32Label::setDimensions(Size charDimension) {
@@ -185,7 +188,7 @@ void W32Label::setDimensions(Size charDimension) {
 }
 
 void W32Label::setPosition(int x, int y, Size size) {
-	W32Control::setPosition(x, y + myVShift, Size(size.Width, size.Height - myVShift));
+	W32StandardControl::setPosition(x, y + myVShift, Size(size.Width, size.Height - myVShift));
 }
 
 WORD W32Label::classId() const {
@@ -193,13 +196,13 @@ WORD W32Label::classId() const {
 }
 
 void W32Label::init(HWND parent, W32ControlCollection *collection) {
-	W32Control::init(parent, collection);
+	W32StandardControl::init(parent, collection);
 	::setWindowText(myWindow, myText);
 }
 
 const std::string W32CheckBox::STATE_CHANGED_EVENT = "CheckBox: state changed";
 
-W32CheckBox::W32CheckBox(const std::string &text) : W32Control(BS_AUTOCHECKBOX | WS_TABSTOP), myText(text), myChecked(false) {
+W32CheckBox::W32CheckBox(const std::string &text) : W32StandardControl(BS_AUTOCHECKBOX | WS_TABSTOP), myText(text), myChecked(false) {
 }
 
 void W32CheckBox::setDimensions(Size charDimension) {
@@ -212,7 +215,7 @@ WORD W32CheckBox::classId() const {
 }
 
 void W32CheckBox::init(HWND parent, W32ControlCollection *collection) {
-	W32Control::init(parent, collection);
+	W32StandardControl::init(parent, collection);
 	::setWindowText(myWindow, myText);
 	SendMessage(myWindow, BM_SETCHECK, myChecked ? BST_CHECKED : BST_UNCHECKED, 0);
 }
@@ -238,7 +241,7 @@ void W32CheckBox::callback(DWORD) {
 	}
 }
 
-W32AbstractEditor::W32AbstractEditor(DWORD style) : W32Control(style | WS_BORDER | WS_TABSTOP | ES_NOHIDESEL) {
+W32AbstractEditor::W32AbstractEditor(DWORD style) : W32StandardControl(style | WS_BORDER | WS_TABSTOP | ES_NOHIDESEL) {
 }
 
 WORD W32AbstractEditor::classId() const {
@@ -246,7 +249,7 @@ WORD W32AbstractEditor::classId() const {
 }
 
 void W32AbstractEditor::init(HWND parent, W32ControlCollection *collection) {
-	W32Control::init(parent, collection);
+	W32StandardControl::init(parent, collection);
 }
 
 static void getEditorString(HWND editor, ZLUnicodeUtil::Ucs2String &buffer) {
@@ -353,7 +356,7 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 }
 
 void W32SpinBox::setPosition(int x, int y, Size size) {
-	W32Control::setPosition(x, y, size);
+	W32StandardControl::setPosition(x, y, size);
 	if (myControlWindow != 0) {
 		SetWindowPos(myControlWindow, 0, (x + size.Width) * 2, y * 2, size.Width * 2, size.Height * 2, 0);
 		SendMessage(myControlWindow, UDM_SETBUDDY, (WPARAM)myWindow, 0);
@@ -382,7 +385,7 @@ int W32SpinBox::controlNumber() const {
 }
 
 void W32SpinBox::setVisible(bool visible) {
-	W32Control::setVisible(visible);
+	W32StandardControl::setVisible(visible);
 	if (myControlWindow != 0) {
 		ShowWindow(myControlWindow, visible ? SW_SHOW : SW_HIDE);
 	}
@@ -401,7 +404,7 @@ unsigned short W32SpinBox::value() const {
 const std::string W32ComboBox::SELECTION_CHANGED_EVENT = "ComboBox: selection changed";
 const std::string W32ComboBox::VALUE_EDITED_EVENT = "ComboBox: value edited";
 
-W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32Control(CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex), myEditorWindow(0) {
+W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32StandardControl(CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex), myEditorWindow(0) {
 	::createNTWCHARString(myBuffer, list[initialIndex]);
 }
 
@@ -421,7 +424,7 @@ WORD W32ComboBox::classId() const {
 }
 
 void W32ComboBox::init(HWND parent, W32ControlCollection *collection) {
-	W32Control::init(parent, collection);
+	W32StandardControl::init(parent, collection);
 	ZLUnicodeUtil::Ucs2String buffer;
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 		SendMessage(myWindow, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
@@ -490,7 +493,7 @@ void W32ComboBox::setSelection(int index) {
 	}
 }
 
-W32RadioButton::W32RadioButton(W32RadioButtonGroup &group, const std::string &text) : W32Control(BS_RADIOBUTTON | WS_TABSTOP), myGroup(group), myText(text) {
+W32RadioButton::W32RadioButton(W32RadioButtonGroup &group, const std::string &text) : W32StandardControl(BS_RADIOBUTTON | WS_TABSTOP), myGroup(group), myText(text) {
 }
 
 WORD W32RadioButton::classId() const {
@@ -503,7 +506,7 @@ void W32RadioButton::setDimensions(Size charDimension) {
 }
 
 void W32RadioButton::init(HWND parent, W32ControlCollection *collection) {
-	W32Control::init(parent, collection);
+	W32StandardControl::init(parent, collection);
 	::setWindowText(myWindow, myText);
 }
 
@@ -521,7 +524,7 @@ void W32RadioButton::setChecked(bool checked) {
 	}
 }
 
-W32RadioButtonGroup::W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts) : W32Control(BS_GROUPBOX), myCaption(caption), myCheckedIndex(-1) {
+W32RadioButtonGroup::W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts) : W32StandardControl(BS_GROUPBOX), myCaption(caption), myCheckedIndex(-1) {
 	myButtons.reserve(buttonTexts.size());
 	for (std::vector<std::string>::const_iterator it = buttonTexts.begin(); it != buttonTexts.end(); ++it) {
 		myButtons.push_back(new W32RadioButton(*this, *it));
@@ -533,14 +536,14 @@ WORD W32RadioButtonGroup::classId() const {
 }
 
 void W32RadioButtonGroup::allocate(WORD *&p, short &id) const {
-	W32Control::allocate(p, id);
+	W32StandardControl::allocate(p, id);
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		(*it)->allocate(p, id);
 	}
 }
 
 int W32RadioButtonGroup::allocationSize() const {
-	int size = W32Control::allocationSize();
+	int size = W32StandardControl::allocationSize();
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		size += (*it)->allocationSize();
 	}
@@ -548,14 +551,14 @@ int W32RadioButtonGroup::allocationSize() const {
 }
 
 void W32RadioButtonGroup::setVisible(bool visible) {
-	W32Control::setVisible(visible);
+	W32StandardControl::setVisible(visible);
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		(*it)->setVisible(visible);
 	}
 }
 
 int W32RadioButtonGroup::controlNumber() const {
-	int counter = W32Control::controlNumber();
+	int counter = W32StandardControl::controlNumber();
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		counter += (*it)->controlNumber();
 	}
@@ -563,7 +566,7 @@ int W32RadioButtonGroup::controlNumber() const {
 }
 
 void W32RadioButtonGroup::setPosition(int x, int y, Size size) {
-	W32Control::setPosition(x, y, size);
+	W32StandardControl::setPosition(x, y, size);
 	const short deltaY = size.Height / (myButtons.size() + 1);
 	size.Width -= 2 * myLeftMargin;
 	size.Height = deltaY;
@@ -585,7 +588,7 @@ void W32RadioButtonGroup::setDimensions(Size charDimension) {
 }
 
 void W32RadioButtonGroup::init(HWND parent, W32ControlCollection *collection) {
-	W32Control::init(parent, collection);
+	W32StandardControl::init(parent, collection);
 	::setWindowText(myWindow, myCaption);
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		(*it)->init(parent, collection);
