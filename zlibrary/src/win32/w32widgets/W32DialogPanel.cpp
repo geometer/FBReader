@@ -23,14 +23,13 @@
 
 #include "W32DialogPanel.h"
 #include "W32Control.h"
-#include "../util/ZLWin32WCHARUtil.h"
+#include "W32WCHARUtil.h"
 
 static const int FirstControlId = 2001;
-static const UINT MESSAGE_LAYOUT = WM_USER + 10000;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
-
 const std::string W32DialogPanel::SELECTED_EVENT = "Dialog Panel: Selected";
+const UINT W32DialogPanel::LAYOUT_MESSAGE = WM_USER + 10000;
 
 static void allocateString(WORD *&p, const std::string &text) {
 	ZLUnicodeUtil::Ucs2String ucs2Str;
@@ -39,7 +38,7 @@ static void allocateString(WORD *&p, const std::string &text) {
 	p += ucs2Str.size();
 }
 
-W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myCaption(caption), myAddress(0), myDialogWindow(0) {
+W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myMainWindow(mainWindow), myCaption(caption), myAddress(0), myDialogWindow(0) {
 	TEXTMETRIC metric;
 	HDC hdc = GetDC(mainWindow);
 	GetTextMetrics(hdc, &metric);
@@ -140,46 +139,11 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 		if (panel != 0) {
 			return panel->Callback(wParam);
 		}
-	} else if (message == MESSAGE_LAYOUT) {
+	} else if (message == LAYOUT_MESSAGE) {
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {
 			panel->layout();
 			return true;
-		}
-	}
-	return false;
-}
-
-BOOL CALLBACK W32DialogPanel::PSStaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
-	switch (message) {
-		case WM_INITDIALOG:
-			((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hDialog);
-			return true;
-		case WM_COMMAND:
-		{
-			W32DialogPanel *panel = ourPanels[hDialog];
-			if (panel != 0) {
-				return panel->Callback(wParam);
-			}
-		}
-		case MESSAGE_LAYOUT:
-		{
-			W32DialogPanel *panel = ourPanels[hDialog];
-			if (panel != 0) {
-				panel->layout();
-				return true;
-			}
-		}
-		case WM_NOTIFY:
-		{
-			PSHNOTIFY &notification = *(PSHNOTIFY*)lParam;
-			if ((int)notification.hdr.code == PSN_SETACTIVE) {
-				W32DialogPanel *panel = ourPanels[hDialog];
-				if (panel != 0) {
-					panel->fireEvent(SELECTED_EVENT);
-					return true;
-				}
-			}
 		}
 	}
 	return false;
@@ -196,7 +160,7 @@ bool W32DialogPanel::Callback(WPARAM wParam) {
 
 void W32DialogPanel::invalidate() {
 	if (myDialogWindow != 0) {
-		PostMessage(myDialogWindow, MESSAGE_LAYOUT, 0, 0);
+		PostMessage(myDialogWindow, LAYOUT_MESSAGE, 0, 0);
 		myDoLayout = true;
 	}
 }
@@ -214,4 +178,8 @@ void W32DialogPanel::layout() {
 
 const std::string &W32DialogPanel::caption() const {
 	return myCaption;
+}
+
+bool W32DialogPanel::runDialog() {
+	return DialogBoxIndirectParam(GetModuleHandle(0), dialogTemplate(), myMainWindow, StaticCallback, (LPARAM)this);
 }

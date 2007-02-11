@@ -26,6 +26,8 @@
 #include <windows.h>
 #include <prsht.h>
 
+#include <ZLUnicodeUtil.h>
+
 #include "W32Widget.h"
 #include "W32Event.h"
 #include "W32ControlCollection.h"
@@ -35,9 +37,9 @@ class W32DialogPanel : public W32ControlCollection, public W32EventSender {
 public:
 	static const std::string SELECTED_EVENT;
 
-public:
+private:
+	static const UINT LAYOUT_MESSAGE;
 	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
-	static BOOL CALLBACK PSStaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
 
 private:
 	static std::map<HWND,W32DialogPanel*> ourPanels;
@@ -48,18 +50,22 @@ public:
 	DLGTEMPLATE *dialogTemplate();
 	void setElement(W32WidgetPtr element);
 	W32Widget::Size charDimension() const;
+	const std::string &caption() const;
+
+	bool runDialog();
+
+private:
 	void calculateSize();
 	W32Widget::Size size() const;
 	void setSize(W32Widget::Size size);
-	const std::string &caption() const;
 
-private:
 	void init(HWND dialogWindow);
 	bool Callback(WPARAM wParam);
 	void invalidate();
 	void layout();
 
 private:
+	HWND myMainWindow;
 	W32Widget::Size myCharDimension;
 	W32Widget::Size mySize;
 	std::string myCaption;
@@ -69,6 +75,26 @@ private:
 	mutable WORD *myAddress;
 	HWND myDialogWindow;
 	bool myDoLayout;
+
+friend class W32PropertySheet;
+};
+
+class W32PropertySheet {
+
+private:
+	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
+
+public:
+	W32PropertySheet(HWND mainWindow, const std::string &caption);
+
+	W32DialogPanel &createPanel(const std::string &name);
+	bool run(const std::string &selectedTabName);
+
+private:
+	HWND myMainWindow;
+	ZLUnicodeUtil::Ucs2String myCaption;
+	typedef std::vector<shared_ptr<W32DialogPanel> > PanelList;
+	PanelList myPanels;
 };
 
 #endif /* __W32DIALOGPANEL_H__ */

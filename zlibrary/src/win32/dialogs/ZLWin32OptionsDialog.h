@@ -26,7 +26,6 @@
 
 #include <shared_ptr.h>
 #include <ZLOptionsDialog.h>
-#include <ZLUnicodeUtil.h>
 
 #include "../w32widgets/W32DialogPanel.h"
 
@@ -36,7 +35,6 @@ class ZLWin32OptionsDialog : public ZLOptionsDialog, public W32Listener {
 
 public:
 	ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption);
-	~ZLWin32OptionsDialog();
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:
@@ -48,17 +46,10 @@ private:
 	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
-	HWND myMainWindow;
+	W32PropertySheet myPropertySheet;
 
-	ZLUnicodeUtil::Ucs2String myCaption;
-
-	//Win32Dialog *myDialog;
-	//Win32Notebook *myNotebook;
-	std::vector<ZLWin32DialogContent*> myTabs;
-	std::vector<shared_ptr<W32DialogPanel> > myPanels;
-	std::vector<std::string> myTabNames;
-
-	int myTabIndex;
+	std::vector<shared_ptr<ZLWin32DialogContent> > myTabs;
+	std::string mySelectedTabName;
 };
 
 #endif /* __ZLWIN32OPTIONSDIALOG_H__ */

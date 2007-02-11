@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLWIN32WCHARUTIL_H__
-#define __ZLWIN32WCHARUTIL_H__
+#ifndef __W32WCHARUTIL_H__
+#define __W32WCHARUTIL_H__
 
 #include <windows.h>
 
@@ -40,4 +40,4 @@ inline void setWindowText(HWND window, const std::string &text) {
 	SetWindowTextW(window, ::wchar(::createNTWCHARString(str, text)));
 }
 
-#endif /* __ZLWIN32WCHARUTIL_H__ */
+#endif /* __W32WCHARUTIL_H__ */

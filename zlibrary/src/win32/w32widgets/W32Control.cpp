@@ -22,7 +22,7 @@
 
 #include "W32Control.h"
 #include "W32ControlCollection.h"
-#include "../util/ZLWin32WCHARUtil.h"
+#include "W32WCHARUtil.h"
 
 static const WORD CLASS_BUTTON = 0x0080;
 static const WORD CLASS_EDIT = 0x0081;
@@ -115,29 +115,6 @@ void W32Control::init(HWND parent, W32ControlCollection *collection) {
 	if (!myEnabled) {
 		EnableWindow(myWindow, false);
 	}
-	/*
-	static HFONT controlFont = 0;
-	if (controlFont == 0) {
-		LOGFONT logicalFont;
-		logicalFont.lfHeight = 15;
-		logicalFont.lfWidth = 0;
-		logicalFont.lfEscapement = 0;
-		logicalFont.lfOrientation = 0;
-		logicalFont.lfWeight = FW_NORMAL;
-		logicalFont.lfItalic = false;
-		logicalFont.lfUnderline = false;
-		logicalFont.lfStrikeOut = false;
-		logicalFont.lfCharSet = DEFAULT_CHARSET;
-		logicalFont.lfOutPrecision = 0;
-		logicalFont.lfClipPrecision = 0;
-		logicalFont.lfQuality = 0;
-		logicalFont.lfPitchAndFamily = 0;
-		ZLUnicodeUtil::Ucs2String str;
-		memcpy(logicalFont.lfFaceName, ::wchar(::createNTWCHARString(str, "Sans Serif")), str.size() * 2);
-		controlFont = CreateFontIndirect(&logicalFont);
-	}
-	SendMessage(myWindow, WM_SETFONT, (WPARAM)controlFont, 0);
-	*/
 }
 
 int W32Control::controlNumber() const {

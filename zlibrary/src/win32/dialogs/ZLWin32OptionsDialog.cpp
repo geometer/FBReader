@@ -17,135 +17,46 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <windows.h>
 #include <prsht.h>
 
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32DialogContent.h"
-#include "../util/ZLWin32WCHARUtil.h"
 
-ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myMainWindow(mainWindow), myTabIndex(0) {
-	::createNTWCHARString(myCaption, caption);
-}
-
-ZLWin32OptionsDialog::~ZLWin32OptionsDialog() {
-	for (std::vector<ZLWin32DialogContent*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
-		delete *tab;
-	}
+ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myPropertySheet(mainWindow, caption) {
 }
 
 ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
-	ZLWin32DialogContent *tab = new ZLWin32DialogContent();
-/*
-	Win32Widget *label = gtk_label_new(name.c_str());
-
-	gtk_notebook_append_page(myNotebook, tab->widget(), label);
-*/
-
+	shared_ptr<ZLWin32DialogContent> tab = new ZLWin32DialogContent();
 	myTabs.push_back(tab);
-	myTabNames.push_back(name);
+
+	W32DialogPanel &panel = myPropertySheet.createPanel(name);
+	panel.setListener(this);
+	panel.setElement(tab->contentPtr());
+	W32Table &table = tab->contentTable();
+	const int charHeight = panel.charDimension().Height;
+	table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+	table.setSpacings(charHeight / 2, charHeight);
 
 	return *tab;
 }
 
 const std::string &ZLWin32OptionsDialog::selectedTabName() const {
-	return myTabNames[myTabIndex];
+	return mySelectedTabName;
 }
 
 void ZLWin32OptionsDialog::selectTab(const std::string &name) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
-	if (it != myTabNames.end()) {
-		myTabIndex = it - myTabNames.begin();
-	}
+	mySelectedTabName = name;
 }
 
 void ZLWin32OptionsDialog::onEvent(const std::string &event, W32EventSender &sender) {
-	if (event == W32DialogPanel::SELECTED_EVENT) {
-		selectTab(((W32DialogPanel&)sender).caption());
-	}
-}
-
-int CALLBACK PropSheetProc(HWND hDialog, UINT message, LPARAM lParam) {
-	/*
-	if (message == PSCB_BUTTONPRESSED) {
-		if (lParam == PSBTN_OK) {
-			std::cerr << "ACCEPT\n";
-		}
-	}
-	*/
-	/*
-	if (message == PSCB_PRECREATE) {
-		std::cerr << (void*)lParam << "\n";
-		DLGTEMPLATE &dlg = *(DLGTEMPLATE*)lParam;
-		std::cerr << dlg.style << " : " << dlg.dwExtendedStyle << "\n";
-		std::cerr << dlg.x << " : " << dlg.y << " : " << dlg.cx << "x" << dlg.cy << "\n";
-	}
-	if (message == PSCB_INITIALIZED) {
-		RECT rectanlge;
-		GetWindowRect(hDialog, &rectanlge);
-		//std::cerr << "dlg = " << rectanlge.right - rectanlge.left + 1 << "x" << rectanlge.bottom - rectanlge.top + 1 << "\n";
-		std::cerr << hDialog << "\n";
-		char buffer[100];
-		SetWindowPos(hDialog, 0, 0, 0, 500, 500, 0);
-		GetWindowText(hDialog, buffer, 99);
-		std::cerr << buffer << "\n";
-	}
-	*/
-	return 0;
+	mySelectedTabName = ((W32DialogPanel&)sender).caption();
 }
 
 bool ZLWin32OptionsDialog::run() {
-	short maxPanelWidth = 0;
-	for (size_t i = 0; i < myTabs.size(); ++i) {
-		W32DialogPanel *panel = new W32DialogPanel(myMainWindow, myTabNames[i]);
-		panel->setListener(this);
-		panel->setElement(myTabs[i]->contentPtr());
-		W32Table &table = myTabs[i]->contentTable();
-		const int charHeight = panel->charDimension().Height;
-		table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-		table.setSpacings(charHeight / 2, charHeight);
-		panel->calculateSize();
-		maxPanelWidth = std::max(maxPanelWidth, panel->size().Width);
-		myPanels.push_back(panel);
-	}
-	for (size_t i = 0; i < myTabs.size(); ++i) {
-		W32DialogPanel &panel = *myPanels[i];
-		W32Widget::Size size = panel.size();
-		size.Width = maxPanelWidth;
-		panel.setSize(size);
-	}
-	PROPSHEETPAGE *pages = new PROPSHEETPAGE[myTabs.size()];
-	for (size_t i = 0; i < myTabs.size(); ++i) {
-		W32DialogPanel &panel = *myPanels[i];
-		pages[i].dwSize = sizeof(pages[i]);
-		pages[i].dwFlags = PSP_DLGINDIRECT;
-		pages[i].hInstance = 0;
-		pages[i].pResource = panel.dialogTemplate();
-		pages[i].hIcon = 0;
-	 	pages[i].pszTitle = 0;
-		pages[i].pfnDlgProc = W32DialogPanel::PSStaticCallback;
-		pages[i].lParam = (LPARAM)&panel;
-		pages[i].pfnCallback = 0;
-		pages[i].pcRefParent = 0;
-	}
-
-	PROPSHEETHEADER header;
-	header.dwSize = sizeof(header);
-	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP | PSH_USECALLBACK;
-	header.hwndParent = myMainWindow;
-	header.hInstance = 0;
-	header.hIcon = 0;
-	header.pszCaption = ::wchar(myCaption);
-	header.nPages = myTabs.size();
-	header.nStartPage = myTabIndex;
-	header.ppsp = pages;
-	header.pfnCallback = PropSheetProc; // TODO: !!!
-
-	bool result = PropertySheet(&header) == 1;
+	bool result = myPropertySheet.run(mySelectedTabName);
 	if (result) {
-		for (std::vector<ZLWin32DialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		for (std::vector<shared_ptr<ZLWin32DialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 			(*it)->accept();
 		}
 	}

@@ -23,7 +23,7 @@
 #include "ZLWin32PaintContext.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 #include "../image/ZLWin32ImageManager.h"
-#include "../util/ZLWin32WCHARUtil.h"
+#include "../w32widgets/W32WCHARUtil.h"
 
 ZLWin32PaintContext::ZLWin32PaintContext() : myDisplayContext(0), myBufferBitmap(0), myWidth(0), myHeight(0), myBackgroundBrush(0), myFillBrush(0), mySpaceWidth(-1) {
 }
