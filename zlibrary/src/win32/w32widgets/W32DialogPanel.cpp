@@ -112,7 +112,6 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 		p++;
 	}
 
-
 	short id = FirstControlId;
 	myElement->allocate(p, id);
 
