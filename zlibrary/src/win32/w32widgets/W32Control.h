@@ -67,14 +67,23 @@ protected:
 class W32PushButton : public W32Control {
 
 public:
-	W32PushButton(const std::string &text);
+	enum ButtonType {
+		NORMAL_BUTTON,
+		OK_BUTTON,
+		CANCEL_BUTTON
+	};
+
+public:
+	W32PushButton(const std::string &text, ButtonType type = NORMAL_BUTTON);
 	void setDimensions(Size charDimension);
 
+	void allocate(WORD *&p, short &id) const;
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
 
 private:
 	std::string myText;
+	ButtonType myType;
 };
 
 class W32Label : public W32Control {

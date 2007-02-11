@@ -138,7 +138,7 @@ void W32Control::setPosition(int x, int y, Size size) {
 void W32Control::callback(DWORD) {
 }
 
-W32PushButton::W32PushButton(const std::string &text) : W32Control(BS_PUSHBUTTON | WS_TABSTOP), myText(text) {
+W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32Control(BS_PUSHBUTTON | WS_TABSTOP), myText(text), myType(type) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
 
@@ -147,12 +147,31 @@ void W32PushButton::setDimensions(Size charDimension) {
 	mySize.Height = charDimension.Height * 3 / 2;
 }
 
+void W32PushButton::allocate(WORD *&p, short &id) const {
+	if (myType == NORMAL_BUTTON) {
+		W32Control::allocate(p, id);
+	} else {
+		short specialId = (myType == OK_BUTTON) ? IDOK : IDCANCEL;
+		W32Control::allocate(p, specialId);
+	}
+}
+
 WORD W32PushButton::classId() const {
 	return CLASS_BUTTON;
 }
 
 void W32PushButton::init(HWND parent, W32ControlCollection *collection) {
-	W32Control::init(parent, collection);
+	myOwner = collection;
+	short id = -1;
+	if (myType == OK_BUTTON) {
+		id = IDOK;
+	} else if (myType == CANCEL_BUTTON) {
+		id = IDCANCEL;
+	}
+	myWindow = GetDlgItem(parent, collection->addControl(this, id));
+	if (!myEnabled) {
+		EnableWindow(myWindow, false);
+	}
 	::setWindowText(myWindow, myText);
 }
 

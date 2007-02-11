@@ -32,9 +32,10 @@ openbook
 	KeyOptionView
 	менять шрифт диалогов в зависимости от системных настроек
 	selection dialog
-	реакция на кнопки в обычном диалоге
 	создавать окна для элементов управления по мере необходимости(?)
-	в неакитвном LineEditor позиционировать курсор слева
+	в неактивном LineEditor позиционировать курсор слева
+	informationBoxes
+	WaitMessage
 target 'install' в Makefile
 установщик
 конфиг в registry (?)

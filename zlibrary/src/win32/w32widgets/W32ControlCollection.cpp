@@ -25,9 +25,12 @@ W32ControlCollection::W32ControlCollection(int startId) : myCurrentId(startId) {
 W32ControlCollection::~W32ControlCollection() {
 }
 
-short W32ControlCollection::addControl(W32Control *control) {
-	myControlByIdMap[myCurrentId] = control;
-	return myCurrentId++;
+short W32ControlCollection::addControl(W32Control *control, short id) {
+	if (id == -1) {
+		id = myCurrentId++;
+	}
+	myControlByIdMap[id] = control;
+	return id;
 }
 
 W32Control *W32ControlCollection::operator[] (short id) {

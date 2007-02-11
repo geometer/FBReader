@@ -21,8 +21,7 @@
 #include "ZLWin32DialogContent.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name) : myWindow(window), myTitle(name), myPanel(myWindow->mainWindow(), myTitle) {
-	myWindow->blockMouseEvents(true);
+ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string &name) : myWindow(window), myTitle(name), myPanel(myWindow.mainWindow(), myTitle) {
 	const short charHeight = myPanel.charDimension().Height;
 
 	W32VBox *panelBox = new W32VBox();
@@ -42,16 +41,15 @@ ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string
 	myButtonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 }
 
-ZLWin32Dialog::~ZLWin32Dialog() {
-	myWindow->blockMouseEvents(false);
-}
-
 void ZLWin32Dialog::addButton(const std::string &text, bool accept) {
-	W32WidgetPtr button = new W32PushButton(text);
+	W32WidgetPtr button = new W32PushButton(text, accept ? W32PushButton::OK_BUTTON : W32PushButton::CANCEL_BUTTON);
 	button->setVisible(true);
 	myButtonBox->addElement(button);
 }
 
 bool ZLWin32Dialog::run() {
-	return myPanel.runDialog();
+	myWindow.blockMouseEvents(true);
+	bool result = myPanel.runDialog();
+	myWindow.blockMouseEvents(false);
+	return result;
 }

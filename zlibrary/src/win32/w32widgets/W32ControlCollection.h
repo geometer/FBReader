@@ -32,7 +32,7 @@ protected:
 	W32Control *operator[] (short id);
 
 public:
-	short addControl(W32Control *control);	
+	short addControl(W32Control *control, short id = -1);	
 	virtual void invalidate() = 0;
 
 private:

@@ -17,13 +17,11 @@
  * 02110-1301, USA.
  */
 
-#include <windows.h>
-#include <prsht.h>
-
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32DialogContent.h"
+#include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32OptionsDialog::ZLWin32OptionsDialog(HWND mainWindow, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myPropertySheet(mainWindow, caption) {
+ZLWin32OptionsDialog::ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myWindow(window), myPropertySheet(window.mainWindow(), caption) {
 }
 
 ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
@@ -54,11 +52,13 @@ void ZLWin32OptionsDialog::onEvent(const std::string &event, W32EventSender &sen
 }
 
 bool ZLWin32OptionsDialog::run() {
+	myWindow.blockMouseEvents(true);
 	bool result = myPropertySheet.run(mySelectedTabName);
 	if (result) {
 		for (std::vector<shared_ptr<ZLWin32DialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 			(*it)->accept();
 		}
 	}
+	myWindow.blockMouseEvents(false);
 	return result;
 }

@@ -32,14 +32,13 @@ class ZLWin32ApplicationWindow;
 class ZLWin32Dialog : public ZLDialog {
 
 public:
-	ZLWin32Dialog(ZLWin32ApplicationWindow *window, const std::string &name);
-	~ZLWin32Dialog();
+	ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string &name);
 
 	void addButton(const std::string &text, bool accept);
 	bool run();
 
 private:
-	ZLWin32ApplicationWindow *myWindow;
+	ZLWin32ApplicationWindow &myWindow;
 	const std::string myTitle;
 	W32DialogPanel myPanel;
 	W32HBox *myButtonBox;
