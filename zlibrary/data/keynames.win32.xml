@@ -35,6 +35,8 @@
 	<key code="0x79" name="&lt;F10&gt;"/>
 	<key code="0x7A" name="&lt;F11&gt;"/>
 	<key code="0x7B" name="&lt;F12&gt;"/>
+	<key code="0xBB" name="&lt;=&gt;"/>
+	<key code="0xBD" name="&lt;-&gt;"/>
 <!--
 	<key code="0xFFCA" name="&lt;F13&gt;"/>
 	<key code="0x20" name="&lt;Space&gt;"/>
