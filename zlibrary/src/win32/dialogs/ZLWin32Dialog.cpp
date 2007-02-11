@@ -21,9 +21,7 @@
 #include "ZLWin32DialogContent.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string &name) : myWindow(window), myTitle(name), myPanel(myWindow.mainWindow(), myTitle) {
-	const short charHeight = myPanel.charDimension().Height;
-
+ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string &name) : myWindow(window), myPanel(myWindow.mainWindow(), name) {
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
@@ -31,6 +29,8 @@ ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string
 	myTab = contentTab;
 	panelBox->addElement(contentTab->contentPtr());
 	W32Table &table = contentTab->contentTable();
+
+	const short charHeight = myPanel.charDimension().Height;
 	table.setSpacings(charHeight / 2, charHeight);
 	table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 

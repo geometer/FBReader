@@ -39,7 +39,6 @@ public:
 
 private:
 	ZLWin32ApplicationWindow &myWindow;
-	const std::string myTitle;
 	W32DialogPanel myPanel;
 	W32HBox *myButtonBox;
 };

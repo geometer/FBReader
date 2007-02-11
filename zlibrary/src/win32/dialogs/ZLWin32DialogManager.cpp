@@ -21,8 +21,8 @@
 #include "ZLWin32Dialog.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 #include "ZLWin32OptionsDialog.h"
-/*
 #include "ZLWin32SelectionDialog.h"
+/*
 #include "ZLWin32WaitMessage.h"
 */
 #include <ZLDialog.h>
@@ -56,9 +56,7 @@ int ZLWin32DialogManager::questionBox(const std::string &title, const std::strin
 }
 
 bool ZLWin32DialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	errorBox("Not Implemented Error", "Not Implemented Yet");
-	//return ZLWin32SelectionDialog(title.c_str(), handler).runWithSize();
-	return false;
+	return ZLWin32SelectionDialog(*myApplicationWindow, title, handler).runWithSize();
 }
 
 void ZLWin32DialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
