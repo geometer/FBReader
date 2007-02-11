@@ -87,12 +87,13 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	}
 	myElement->setPosition(0, 0, mySize);
 
-	int size = 12 + ZLUnicodeUtil::utf8Length(myCaption) + myElement->allocationSize();
+	const std::string fontName = "MS Shell Dlg";
+	int size = 14 + ZLUnicodeUtil::utf8Length(myCaption) + ZLUnicodeUtil::utf8Length(fontName) + myElement->allocationSize();
 	size += size % 2;
 	myAddress = new WORD[size];
 
 	WORD *p = myAddress;
-	const DWORD style = DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION;
+	const DWORD style = DS_SHELLFONT | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION;
 	*p++ = LOWORD(style);
 	*p++ = HIWORD(style);
 	*p++ = 0;
@@ -100,16 +101,17 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	*p++ = myElement->controlNumber();
 	*p++ = 0; // X
 	*p++ = 0; // Y
-	*p++ = mySize.Width + 120; // TODO: !!!
-	*p++ = mySize.Height + 40; // TODO: !!!
-	DWORD dlgUnit = GetDialogBaseUnits();
-	//std::cerr << "page = " << mySize.Width * LOWORD(dlgUnit) / 4 << "x" << mySize.Height * HIWORD(dlgUnit) / 8 << "\n";
+	*p++ = mySize.Width;
+	*p++ = mySize.Height;
 	*p++ = 0;
 	*p++ = 0;
 	allocateString(p, myCaption);
+	*p++ = 8; // FONT SIZE -- should be always 8?
+	allocateString(p, fontName);
 	if ((p - myAddress) % 2 == 1) {
 		p++;
 	}
+
 
 	short id = FirstControlId;
 	myElement->allocate(p, id);

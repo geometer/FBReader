@@ -28,11 +28,10 @@ openbook
 	перераскладка при необходимости
 		разобраться с размерами
 	  добавлять при необходимости scrollbar'ы
-	шрифты в диалогах (одинаковый шрифт в автоматически и вручную созданных частях диалогов)
-	размер options dialog
 	ColorOptionView
 	KeyOptionView
-selection dialog
+	менять шрифт диалогов в зависимости от системных настроек
+	selection dialog
 target 'install' в Makefile
 установщик
 конфиг в registry (?)
