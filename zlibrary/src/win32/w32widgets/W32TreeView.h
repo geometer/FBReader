@@ -21,6 +21,7 @@
 #define __W32TREEVIEW_H__
 
 #include <vector>
+#include <map>
 #include <string>
 
 #include <shared_ptr.h>
@@ -31,12 +32,14 @@
 class W32TreeViewItem {
 
 public:
-	W32TreeViewItem(const std::string &text);
+	W32TreeViewItem(const std::string &text, int iconIndex);
 
 	const ZLUnicodeUtil::Ucs2String &text() const;
+	int iconIndex() const;
 
 private:
 	ZLUnicodeUtil::Ucs2String myText;	
+	int myIconIndex;
 };
 
 class W32TreeView : public W32Control {
@@ -45,7 +48,7 @@ public:
 	W32TreeView();
 
 	void clear();
-	void insert(const std::string &itemName);
+	void insert(const std::string &itemName, HBITMAP icon);
 
 private:
 	int controlNumber() const;
@@ -55,9 +58,13 @@ private:
 	void init(HWND parent, W32ControlCollection *collection);
 
 	void showItem(W32TreeViewItem &item);
+	void addBitmapToList(HBITMAP bitmap);
 
 private:
 	std::vector<shared_ptr<W32TreeViewItem> > myItems;
+
+	std::vector<HBITMAP> myBitmaps;
+	std::map<HBITMAP,int> myBitmapToIndexMap;
 };
 
 #endif /* __W32TREEVIEW_H__ */

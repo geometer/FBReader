@@ -17,7 +17,10 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLApplication.h>
+#include <ZLFile.h>
 
 #include "ZLWin32SelectionDialog.h"
 
@@ -43,6 +46,10 @@ static gboolean clickHandler(Win32Widget*, GdkEventButton *event, gpointer self)
 ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window, const std::string &caption, ZLTreeHandler &handler) : ZLDesktopSelectionDialog(handler), myWindow(window), myPanel(myWindow.mainWindow(), caption) {
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
+
+	myLineEditor = new W32LineEditor("Status Line");
+	myLineEditor->setVisible(true);
+	panelBox->addElement(myLineEditor);
 
 	myTreeView = new W32TreeView();
 	myTreeView->setVisible(true);
@@ -139,19 +146,21 @@ ZLWin32SelectionDialog::~ZLWin32SelectionDialog() {
 */
 }
 
-/*
-GdkPixbuf *ZLWin32SelectionDialog::getPixmap(const ZLTreeNodePtr node) {
+const int ICON_SIZE = 22;
+
+HBITMAP ZLWin32SelectionDialog::getBitmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
-	std::map<std::string,GdkPixbuf*>::const_iterator it = myPixmaps.find(pixmapName);
-	if (it == myPixmaps.end()) {
-		GdkPixbuf *pixmap = gdk_pixbuf_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + pixmapName + ".png").c_str(), 0);
-		myPixmaps[pixmapName] = pixmap;
-		return pixmap;
+	std::map<std::string,HBITMAP>::const_iterator it = myBitmaps.find(pixmapName);
+	if (it == myBitmaps.end()) {
+		std::string imageFileName = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + pixmapName + ".bmp";
+		ZLFile file(imageFileName);
+		HBITMAP bitmap = (HBITMAP)LoadImageA(0, file.path().c_str(), IMAGE_BITMAP, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
+		myBitmaps[pixmapName] = bitmap;
+		return bitmap;
 	} else {
 		return it->second;
 	}
 }
-*/
 
 void ZLWin32SelectionDialog::updateStateLine() {
 	//gtk_entry_set_text(myStateLine, handler().stateDisplayName().c_str());
@@ -166,7 +175,7 @@ void ZLWin32SelectionDialog::updateList() {
 	}
 
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
-		myTreeView->insert((*it)->displayName());
+		myTreeView->insert((*it)->displayName(), getBitmap(*it));
 		/*
 		Win32TreeIter iter;
 		gtk_list_store_append(myStore, &iter);

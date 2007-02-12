@@ -23,10 +23,13 @@
 #include <vector>
 #include <map>
 
+#include <windows.h>
+
 #include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 #include "../w32widgets/W32DialogPanel.h"
 #include "../w32widgets/W32TreeView.h"
+#include "../w32widgets/W32Control.h"
 
 class ZLWin32ApplicationWindow;
 
@@ -50,10 +53,10 @@ protected:
 	void updateList();
 	void selectItem(int index);
 
-/*
 private:
-	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);
+	HBITMAP getBitmap(const ZLTreeNodePtr node);
 
+/*
 private:
 	bool myExitFlag;
 	bool myNodeSelected;
@@ -61,14 +64,15 @@ private:
 	Win32ListStore *myStore;
 	Win32TreeView *myView;
 	Win32Entry *myStateLine;
-
-	std::map<std::string,GdkPixbuf*> myPixmaps;
 */
 
 private:
 	ZLWin32ApplicationWindow &myWindow;
 	W32DialogPanel myPanel;
 	W32TreeView *myTreeView;
+	W32LineEditor *myLineEditor;
+
+	std::map<std::string,HBITMAP> myBitmaps;
 };
 
 #endif /* __ZLWIN32SELECTIONDIALOG_H__ */
