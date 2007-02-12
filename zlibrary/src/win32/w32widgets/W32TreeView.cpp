@@ -30,20 +30,18 @@
 
 static const WCHAR CLASSNAME_TREEVIEW[] = WC_TREEVIEW;
 
-static const int ICON_SIZE = 22;
-
-static HBITMAP maskBitmap(HWND window, HBITMAP original) {
+static HBITMAP maskBitmap(HWND window, HBITMAP original, int iconSize) {
 	HDC dc = GetDC(window);
 	HDC srcDC = CreateCompatibleDC(dc);
 	HDC dstDC = CreateCompatibleDC(dc);
-	HBITMAP result = CreateCompatibleBitmap(dc, ICON_SIZE, ICON_SIZE);
+	HBITMAP result = CreateCompatibleBitmap(dc, iconSize, iconSize);
 	SelectObject(srcDC, original);
 	SelectObject(dstDC, result);
 	static const COLORREF gray = RGB(0xC0, 0xC0, 0xC0);
 	static const COLORREF white = RGB(0xFF, 0xFF, 0xFF);
 	static const COLORREF black = RGB(0x00, 0x00, 0x00);
-	for (int i = 0; i < ICON_SIZE; ++i) {
-		for (int j = 0; j < ICON_SIZE; ++j) {
+	for (int i = 0; i < iconSize; ++i) {
+		for (int j = 0; j < iconSize; ++j) {
 			COLORREF pixel = GetPixel(srcDC, i, j);
 			SetPixel(dstDC, i, j, (pixel == gray) ? white : black);
 		}
@@ -66,7 +64,7 @@ int W32TreeViewItem::iconIndex() const {
 	return myIconIndex;
 }
 
-W32TreeView::W32TreeView() : W32Control(0) {
+W32TreeView::W32TreeView(short iconSize) : W32Control(WS_BORDER), myIconSize(iconSize) {
 }
 
 void W32TreeView::clear() {
@@ -79,10 +77,10 @@ void W32TreeView::clear() {
 void W32TreeView::addBitmapToList(HBITMAP bitmap) {
 	if (bitmap == 0) {
 		HDC dc = GetDC(myWindow);
-		bitmap = CreateCompatibleBitmap(dc, ICON_SIZE, ICON_SIZE);
+		bitmap = CreateCompatibleBitmap(dc, myIconSize, myIconSize);
 		ReleaseDC(myWindow, dc);
 	}
-	HBITMAP mask = maskBitmap(myWindow, bitmap);
+	HBITMAP mask = maskBitmap(myWindow, bitmap, myIconSize);
 	HIMAGELIST imageList = (HIMAGELIST)SendMessage(myWindow, TVM_GETIMAGELIST, 0, 0);
 	ImageList_Add(imageList, bitmap, mask);
 }
@@ -172,7 +170,7 @@ void W32TreeView::setDimensions(Size charDimension) {
 void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 
-	HIMAGELIST imageList = ImageList_Create(ICON_SIZE, ICON_SIZE, ILC_COLOR8 | ILC_MASK, 0, 100);
+	HIMAGELIST imageList = ImageList_Create(myIconSize, myIconSize, ILC_COLOR8 | ILC_MASK, 0, 100);
 	SendMessage(myWindow, TVM_SETIMAGELIST, 0, (LPARAM)imageList);
 
 	for (std::vector<shared_ptr<W32TreeViewItem> >::iterator it = myItems.begin(); it != myItems.end(); ++it) {

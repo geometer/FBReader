@@ -29,6 +29,8 @@
 
 #include "../application/ZLWin32ApplicationWindow.h"
 
+const int ICON_SIZE = 22;
+
 /*
 static void activatedHandler(Win32TreeView *view, Win32TreePath*, Win32TreeViewColumn*) {
 	((ZLWin32SelectionDialog*)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
@@ -51,7 +53,7 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	myLineEditor->setVisible(true);
 	panelBox->addElement(myLineEditor);
 
-	myTreeView = new W32TreeView();
+	myTreeView = new W32TreeView(ICON_SIZE);
 	myTreeView->setVisible(true);
 	panelBox->addElement(myTreeView);
 	/*
@@ -145,8 +147,6 @@ ZLWin32SelectionDialog::~ZLWin32SelectionDialog() {
 	destroyWin32Dialog(myDialog);
 */
 }
-
-const int ICON_SIZE = 22;
 
 HBITMAP ZLWin32SelectionDialog::getBitmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();

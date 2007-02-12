@@ -45,7 +45,7 @@ private:
 class W32TreeView : public W32Control {
 
 public:
-	W32TreeView();
+	W32TreeView(short iconSize);
 
 	void clear();
 	void insert(const std::string &itemName, HBITMAP icon);
@@ -61,6 +61,7 @@ private:
 	void addBitmapToList(HBITMAP bitmap);
 
 private:
+	short myIconSize;
 	std::vector<shared_ptr<W32TreeViewItem> > myItems;
 
 	std::vector<HBITMAP> myBitmaps;
