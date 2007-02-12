@@ -23,7 +23,6 @@
 
 #include "../w32widgets/W32Container.h"
 #include "../w32widgets/W32Control.h"
-#include "../w32widgets/W32TreeView.h"
 
 #include "../application/ZLWin32ApplicationWindow.h"
 
@@ -45,9 +44,9 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
-	W32TreeView *treeView = new W32TreeView();
-	treeView->setVisible(true);
-	panelBox->addElement(treeView);
+	myTreeView = new W32TreeView();
+	myTreeView->setVisible(true);
+	panelBox->addElement(myTreeView);
 	/*
 	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
 	myTab = contentTab;
@@ -58,8 +57,6 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	const short charHeight = myPanel.charDimension().Height;
 	panelBox->setSpacing(charHeight / 2);
 	panelBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-	//table.setSpacings(charHeight / 2, charHeight);
-	//table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 
 	W32HBox *buttonBox = new W32HBox();
 	panelBox->addElement(buttonBox);
@@ -125,9 +122,9 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	gtk_widget_show_all(scrolledWindow);
 
 	gtk_widget_grab_focus(GTK_WIDGET(myView));
+*/
 
 	update();
-*/
 }
 
 ZLWin32SelectionDialog::~ZLWin32SelectionDialog() {
@@ -161,16 +158,16 @@ void ZLWin32SelectionDialog::updateStateLine() {
 }
 
 void ZLWin32SelectionDialog::updateList() {
-/*
-	gtk_list_store_clear(myStore);
+	myTreeView->clear();
 
 	const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
 	if (nodes.empty()) {
 		return;
 	}
 
-	int index = 0;
-	for (std::vector<ZLTreeNodePtr>::const_iterator it = nodes.begin(); it != nodes.end(); ++it, ++index) {
+	for (std::vector<ZLTreeNodePtr>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
+		myTreeView->insert((*it)->displayName());
+		/*
 		Win32TreeIter iter;
 		gtk_list_store_append(myStore, &iter);
 		gtk_list_store_set(myStore, &iter,
@@ -178,8 +175,8 @@ void ZLWin32SelectionDialog::updateList() {
 					1, (*it)->displayName().c_str(),
 					2, index,
 					-1);
+		*/
 	}
-*/
 }
 
 void ZLWin32SelectionDialog::selectItem(int index) {

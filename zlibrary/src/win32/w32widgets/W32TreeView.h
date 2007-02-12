@@ -20,19 +20,44 @@
 #ifndef __W32TREEVIEW_H__
 #define __W32TREEVIEW_H__
 
+#include <vector>
+#include <string>
+
+#include <shared_ptr.h>
+#include <ZLUnicodeUtil.h>
+
 #include "W32Control.h"
+
+class W32TreeViewItem {
+
+public:
+	W32TreeViewItem(const std::string &text);
+
+	const ZLUnicodeUtil::Ucs2String &text() const;
+
+private:
+	ZLUnicodeUtil::Ucs2String myText;	
+};
 
 class W32TreeView : public W32Control {
 
 public:
 	W32TreeView();
 
-protected:
+	void clear();
+	void insert(const std::string &itemName);
+
+private:
 	int controlNumber() const;
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
 	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
+
+	void showItem(W32TreeViewItem &item);
+
+private:
+	std::vector<shared_ptr<W32TreeViewItem> > myItems;
 };
 
 #endif /* __W32TREEVIEW_H__ */

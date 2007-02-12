@@ -25,7 +25,48 @@
 
 static const WCHAR CLASSNAME_TREEVIEW[] = WC_TREEVIEW;
 
+W32TreeViewItem::W32TreeViewItem(const std::string &text) {
+	::createNTWCHARString(myText, text);
+}
+
+const ZLUnicodeUtil::Ucs2String &W32TreeViewItem::text() const {
+	return myText;
+}
+
 W32TreeView::W32TreeView() : W32Control(0) {
+}
+
+void W32TreeView::clear() {
+	myItems.clear();
+	if (myWindow != 0) {
+		SendMessage(myWindow, TVM_DELETEITEM, 0, (LPARAM)TVI_ROOT);
+	}
+}
+
+void W32TreeView::insert(const std::string &itemName) {
+	shared_ptr<W32TreeViewItem> item = new W32TreeViewItem(itemName);
+	myItems.push_back(item);
+	if (myWindow != 0) {
+		showItem(*item);
+	}
+}
+
+void W32TreeView::showItem(W32TreeViewItem &item) {
+	TVINSERTSTRUCT tvItem;
+	tvItem.hParent = TVI_ROOT;
+	tvItem.hInsertAfter = TVI_LAST;
+	tvItem.item.mask = TVIF_TEXT;
+	//tvItem.item.hItem = 0;
+	//tvItem.item.state = 0;
+	//tvItem.item.stateMask = 0;
+	tvItem.item.pszText = (WCHAR*)::wchar(item.text());
+	tvItem.item.cchTextMax = item.text().size();
+	//tvItem.item.iImage = 0;
+	//tvItem.item.iSelectedImage = 0;
+	//tvItem.item.cChildren = 0;
+	//tvItem.item.lParam = 0;
+
+	SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&tvItem);
 }
 
 int W32TreeView::controlNumber() const {
@@ -74,62 +115,7 @@ void W32TreeView::setDimensions(Size charDimension) {
 void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 
-	{
-		TVINSERTSTRUCT item;
-		item.hParent = TVI_ROOT;
-		item.hInsertAfter = TVI_LAST;
-		item.item.mask = TVIF_TEXT;
-		//item.item.hItem = 0;
-		//item.item.state = 0;
-		//item.item.stateMask = 0;
-		static ZLUnicodeUtil::Ucs2String text;
-		item.item.pszText = (WCHAR*)::wchar(::createNTWCHARString(text, "Text Item 0"));
-		item.item.cchTextMax = text.size();
-		//item.item.iImage = 0;
-		//item.item.iSelectedImage = 0;
-		//item.item.cChildren = 0;
-		//item.item.lParam = 0;
-
-		SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&item);
-	}
-	{
-		TVINSERTSTRUCT item;
-		item.hParent = TVI_ROOT;
-		item.hInsertAfter = TVI_LAST;
-		item.item.mask = TVIF_TEXT;
-		static ZLUnicodeUtil::Ucs2String text;
-		item.item.pszText = (WCHAR*)::wchar(::createNTWCHARString(text, "Text Item 1"));
-		item.item.cchTextMax = text.size();
-		SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&item);
-	}
-	{
-		TVINSERTSTRUCT item;
-		item.hParent = TVI_ROOT;
-		item.hInsertAfter = TVI_LAST;
-		item.item.mask = TVIF_TEXT;
-		static ZLUnicodeUtil::Ucs2String text;
-		item.item.pszText = (WCHAR*)::wchar(::createNTWCHARString(text, "Text Item 2"));
-		item.item.cchTextMax = text.size();
-		SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&item);
-	}
-	{
-		TVINSERTSTRUCT item;
-		item.hParent = TVI_ROOT;
-		item.hInsertAfter = TVI_LAST;
-		item.item.mask = TVIF_TEXT;
-		static ZLUnicodeUtil::Ucs2String text;
-		item.item.pszText = (WCHAR*)::wchar(::createNTWCHARString(text, "Text Item 3"));
-		item.item.cchTextMax = text.size();
-		SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&item);
-	}
-	{
-		TVINSERTSTRUCT item;
-		item.hParent = TVI_ROOT;
-		item.hInsertAfter = TVI_LAST;
-		item.item.mask = TVIF_TEXT;
-		static ZLUnicodeUtil::Ucs2String text;
-		item.item.pszText = (WCHAR*)::wchar(::createNTWCHARString(text, "Text Item 4"));
-		item.item.cchTextMax = text.size();
-		SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&item);
+	for (std::vector<shared_ptr<W32TreeViewItem> >::iterator it = myItems.begin(); it != myItems.end(); ++it) {
+		showItem(**it);
 	}
 }

@@ -26,6 +26,7 @@
 #include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 #include "../w32widgets/W32DialogPanel.h"
+#include "../w32widgets/W32TreeView.h"
 
 class ZLWin32ApplicationWindow;
 
@@ -67,6 +68,7 @@ private:
 private:
 	ZLWin32ApplicationWindow &myWindow;
 	W32DialogPanel myPanel;
+	W32TreeView *myTreeView;
 };
 
 #endif /* __ZLWIN32SELECTIONDIALOG_H__ */
