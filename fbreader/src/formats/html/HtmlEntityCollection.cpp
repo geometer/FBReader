@@ -41,7 +41,7 @@ std::map<std::string,int> HtmlEntityCollection::ourCollection;
 int HtmlEntityCollection::symbolNumber(const std::string &name) {
 	if (ourCollection.empty()) {
 		CollectionReader(ourCollection).readDocument(
-			ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "formats" + ZLApplication::PathDelimiter + "html" + ZLApplication::PathDelimiter + "html.ent"
+			ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "formats" + ZLApplication::FileNameDelimiter + "html" + ZLApplication::FileNameDelimiter + "html.ent"
 		);
 	}
 	std::map<std::string,int>::const_iterator it = ourCollection.find(name);

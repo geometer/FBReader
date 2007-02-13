@@ -366,8 +366,8 @@ static std::vector<std::string> EXTERNAL_DTDs;
 const std::vector<std::string> &XHTMLReader::externalDTDs() const {
 	if (EXTERNAL_DTDs.empty()) {
 		std::string directoryName =
-			ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter +
-			"formats" + ZLApplication::PathDelimiter + "xhtml";
+			ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter +
+			"formats" + ZLApplication::FileNameDelimiter + "xhtml";
 		shared_ptr<ZLDir> dtdPath = ZLFile(directoryName).directory();
 		if (!dtdPath.isNull()) {
 			std::vector<std::string> files;

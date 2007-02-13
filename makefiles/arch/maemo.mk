@@ -1,8 +1,11 @@
+include $(ROOTDIR)/makefiles/arch/unix.mk
+
 INSTALLDIR = /usr
 ifeq "$(UI_TYPE)" "maemo"
 	BASEDIR = /var/lib/install/usr/share
 endif
 IMAGEDIR = $(BASEDIR)/%APPLICATION_NAME%/icons
+APPIMAGEDIR = $(IMAGEDIR)/%APPLICATION_NAME%
 
 CC = gcc
 AR = ar rsu

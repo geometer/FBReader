@@ -147,7 +147,7 @@ W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32Stan
 
 void W32PushButton::setDimensions(Size charDimension) {
 	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
-	mySize.Height = charDimension.Height * 3 / 2;
+	mySize.Height = charDimension.Height * 7 / 4;
 }
 
 void W32PushButton::allocate(WORD *&p, short &id) const {

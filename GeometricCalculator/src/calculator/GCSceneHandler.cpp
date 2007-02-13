@@ -33,11 +33,11 @@ const std::string GCSceneHandler::AllScenesFolderName = "All Scenes";
 const std::string GCSceneHandler::UserFolderName = "User Created";
 
 shared_ptr<ZLDir> GCSceneHandler::SamplesDirectory() {
-	return ZLFile(ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "samples").directory();
+	return ZLFile(ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "samples").directory();
 }
 
 const std::string GCSceneHandler::UserDirectoryName() {
-	return GeometricCalculator::ConfigDirectory() + ZLApplication::PathDelimiter + "scenes";
+	return GeometricCalculator::ConfigDirectory() + ZLApplication::FileNameDelimiter + "scenes";
 }
 
 shared_ptr<ZLDir> GCSceneHandler::UserDirectory(bool create) {
@@ -52,13 +52,13 @@ GCSceneHandler::GCSceneHandler() {
 }
 
 void GCSceneHandler::addFolderSubnode(const std::string &id, const std::string &displayName) const {
-	static const std::string FolderIcon = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter + "folder";
+	static const std::string FolderIcon = "folder";
 
 	mySubnodes.push_back(new ZLTreeNode(id, displayName, FolderIcon, true));
 }
 
 void GCSceneHandler::collectScenes(shared_ptr<ZLDir> dir) const {
-	static const std::string SceneIcon = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter + "scene_file";
+	static const std::string SceneIcon = "scene_file";
 
 	if (!dir.isNull()) {
 		std::vector<std::string> names;
@@ -78,7 +78,7 @@ void GCSceneHandler::collectScenes(shared_ptr<ZLDir> dir) const {
 }
 
 void GCSceneHandler::collectSceneArchives(shared_ptr<ZLDir> dir) const {
-	static const std::string FolderIcon = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter + "folder";
+	static const std::string FolderIcon = "folder";
 
 	if (!dir.isNull()) {
 		std::vector<std::string> names;

@@ -49,7 +49,7 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
-	myLineEditor = new W32LineEditor("Status Line");
+	myLineEditor = new W32LineEditor("");
 	myLineEditor->setVisible(true);
 	panelBox->addElement(myLineEditor);
 
@@ -163,7 +163,7 @@ HBITMAP ZLWin32SelectionDialog::getBitmap(const ZLTreeNodePtr node) {
 }
 
 void ZLWin32SelectionDialog::updateStateLine() {
-	//gtk_entry_set_text(myStateLine, handler().stateDisplayName().c_str());
+	myLineEditor->setText(handler().stateDisplayName());
 }
 
 void ZLWin32SelectionDialog::updateList() {

@@ -135,7 +135,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	}
 
 	if (description.isNull()) {
-		std::string howToStartString = ApplicationDirectory() + PathDelimiter + "help" + PathDelimiter + "HowToStart.fb2";
+		std::string howToStartString = ApplicationDirectory() + FileNameDelimiter + "help" + FileNameDelimiter + "HowToStart.fb2";
 		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, howToStartString);
 		description = BookDescription::getDescription(bookName.value());
 

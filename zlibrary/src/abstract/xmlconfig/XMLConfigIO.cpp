@@ -34,7 +34,7 @@ const std::string XMLConfig::UNKNOWN_CATEGORY = ".unknown.";
 static const std::string CHANGES_FILE = "config.changes";
 
 std::string XMLConfig::configDirName() const {
-	return ZLApplication::HomeDirectory + ZLApplication::PathDelimiter + "." + ZLApplication::ApplicationName();
+	return ZLApplication::HomeDirectory + ZLApplication::FileNameDelimiter + "." + ZLApplication::ApplicationName();
 }
 
 void XMLConfig::load() {
@@ -78,7 +78,7 @@ void XMLConfig::saveAll() {
 		}
 		myDelta->clear();
 	} // TODO: show error message if config was not saved
-	ZLFile changesFile(configDirName() + ZLApplication::PathDelimiter + CHANGES_FILE);
+	ZLFile changesFile(configDirName() + ZLApplication::FileNameDelimiter + CHANGES_FILE);
 	changesFile.remove();
 }
 

@@ -59,7 +59,7 @@ bool GCRemoveSceneHandler::accept(const ZLTreeNode &node) {
 		++mySelectedIndex;
 	}
 	if (ZLDialogManager::instance().questionBox(title, "Remove Scene \"" + node.displayName() + "\"?", "&Yes", "&No") == 0) {
-		if (!ZLFile(UserDirectoryName() + ZLApplication::PathDelimiter + node.id()).remove()) {
+		if (!ZLFile(UserDirectoryName() + ZLApplication::FileNameDelimiter + node.id()).remove()) {
 			ZLDialogManager::instance().errorBox(title, "Couldn't Remove Scene");
 		} else {
 			resetSubnodesList();

@@ -26,7 +26,7 @@
 #include "EncodingReader.h"
 
 std::string ZLEncodingConverter::encodingDescriptionPath() {
-	return ZLApplication::ZLibraryDirectory() + ZLApplication::PathDelimiter + "encodings";
+	return ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + "encodings";
 }
 
 shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::string &encoding) {

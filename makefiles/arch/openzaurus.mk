@@ -1,3 +1,5 @@
+include $(ROOTDIR)/makefiles/arch/unix.mk
+
 ifeq "$(UI_TYPE)" "opie"
   INSTALLDIR = /opt/QtPalmtop
   IMAGEDIR = $(INSTALLDIR)/pics
@@ -5,7 +7,7 @@ else # UI_TYPE == gpe
   INSTALLDIR = /usr
   IMAGEDIR = /usr/share/pixmaps
 endif
-APPLICATIONSUBDIR = "%application_name%"
+APPIMAGEDIR = $(IMAGEDIR)/%application_name%
 
 BASEPATH = /opt/openzaurus-3.5.4/usr/local/arm/oe
 TOOLSPATH = $(BASEPATH)/bin

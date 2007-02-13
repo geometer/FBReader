@@ -38,11 +38,11 @@
 #include "../model/Scene.h"
 
 std::string GeometricCalculator::ConfigDirectory() {
-	return HomeDirectory + PathDelimiter + "." + ApplicationName();
+	return HomeDirectory + FileNameDelimiter + "." + ApplicationName();
 }
 
 const std::string GeometricCalculator::defaultSceneFileName() const {
-	return ConfigDirectory() + PathDelimiter + "current.scn";
+	return ConfigDirectory() + FileNameDelimiter + "current.scn";
 }
 
 GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplication("GeometricCalculator"), myBindings("Keys") {

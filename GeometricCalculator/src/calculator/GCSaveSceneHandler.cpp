@@ -90,5 +90,5 @@ const std::string GCSaveSceneHandler::fileName() const {
 			}
 		}
 	}
-	return UserDirectoryName() + ZLApplication::PathDelimiter + shortName;
+	return UserDirectoryName() + ZLApplication::FileNameDelimiter + shortName;
 }

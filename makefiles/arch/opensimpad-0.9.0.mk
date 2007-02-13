@@ -1,6 +1,8 @@
+include $(ROOTDIR)/makefiles/arch/unix.mk
+
 INSTALLDIR=/opt/QtPalmtop
 IMAGEDIR = $(INSTALLDIR)/pics
-APPLICATIONSUBDIR = "%application_name%"
+APPIMAGEDIR = $(IMAGEDIR)/%application_name%
 
 BASEPATH = /stuff/build/opensimpad-0.9.0
 

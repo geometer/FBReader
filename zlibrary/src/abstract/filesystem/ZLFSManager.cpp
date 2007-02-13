@@ -33,5 +33,5 @@ void ZLFSManager::deleteInstance() {
 }
 
 std::string ZLFSDir::delimiter() const {
-	return ZLApplication::PathDelimiter;
+	return ZLApplication::FileNameDelimiter;
 }

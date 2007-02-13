@@ -1,5 +1,8 @@
+include $(ROOTDIR)/makefiles/arch/unix.mk
+
 INSTALLDIR = /opt/QtPalmtop
 IMAGEDIR = $(INSTALLDIR)/pics
+APPIMAGEDIR = $(IMAGEDIR)/%APPLICATION_NAME%
 HOMEDIR = ~/Documents
 
 QTPATH = /opt/Qtopia/sharp

@@ -40,25 +40,31 @@ class ZLApplicationBase {
 public:
 	static const std::string BaseDirectory;
 	static const std::string HomeDirectory;
-	static const std::string PathDelimiter;
+
+	static const std::string FileNameDelimiter;
+
 	static const std::string &ApplicationName();
 	static const std::string &ImageDirectory();
-	static const std::string &ApplicationSubdirectory();
-	static const std::string ZLibraryDirectory();
-	static const std::string ApplicationDirectory();
-	static const std::string DefaultFilesPathPrefix();
+	static const std::string &ApplicationImageDirectory();
+
+	static const std::string &ZLibraryDirectory();
+	static const std::string &ApplicationDirectory();
+	static const std::string &DefaultFilesPathPrefix();
 
 private:
 	static std::string ourImageDirectory;
+	static std::string ourApplicationImageDirectory;
 	static std::string ourApplicationName;
-	static std::string ourApplicationSubdirectoryName;
+	static std::string ourZLibraryDirectory;
+	static std::string ourApplicationDirectory;
+	static std::string ourDefaultFilesPathPrefix;
 
 protected:
 	ZLApplicationBase(const std::string &name);
 	~ZLApplicationBase();
 
 private:
-	void replaceRegExps(std::string &str);
+	std::string replaceRegExps(const std::string &pattern);
 };
 
 class ZLApplication : public ZLApplicationBase {
@@ -410,7 +416,10 @@ friend class ZLApplication;
 
 inline const std::string &ZLApplicationBase::ApplicationName() { return ourApplicationName; }
 inline const std::string &ZLApplicationBase::ImageDirectory() { return ourImageDirectory; }
-inline const std::string &ZLApplicationBase::ApplicationSubdirectory() { return ourApplicationSubdirectoryName; }
+inline const std::string &ZLApplicationBase::ApplicationImageDirectory() { return ourApplicationImageDirectory; }
+inline const std::string &ZLApplicationBase::ApplicationDirectory() { return ourApplicationDirectory; }
+inline const std::string &ZLApplicationBase::ZLibraryDirectory() { return ourZLibraryDirectory; }
+inline const std::string &ZLApplicationBase::DefaultFilesPathPrefix() { return ourDefaultFilesPathPrefix; }
 
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
 inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }

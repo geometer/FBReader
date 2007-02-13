@@ -98,7 +98,7 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
+		static const std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
 		menuBar()->insertItem(QPixmap((imagePrefix + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
 	}
 }

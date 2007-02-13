@@ -163,7 +163,7 @@ int W32TreeView::allocationSize() const {
 }
 
 void W32TreeView::setDimensions(Size charDimension) {
-	mySize.Width = 20 * charDimension.Width;
+	mySize.Width = 60 * charDimension.Width;
 	mySize.Height = 20 * charDimension.Height;
 }
 
@@ -179,4 +179,8 @@ void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 	for (std::vector<HBITMAP>::iterator it = myBitmaps.begin(); it != myBitmaps.end(); ++it) {
 		addBitmapToList(*it);
 	}
+}
+
+void W32TreeView::callback(DWORD hiWParam) {
+	std::cerr << hiWParam << "\n";
 }

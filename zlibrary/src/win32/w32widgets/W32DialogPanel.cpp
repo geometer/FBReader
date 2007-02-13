@@ -139,6 +139,13 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 		if (panel != 0) {
 			return panel->Callback(wParam);
 		}
+	/*
+	} else if (message == WM_NOTIFY) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			return panel->Callback(wParam);
+		}
+	*/
 	} else if (message == LAYOUT_MESSAGE) {
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {

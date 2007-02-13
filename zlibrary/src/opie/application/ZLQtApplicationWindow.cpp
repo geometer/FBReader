@@ -125,7 +125,7 @@ void ZLQtApplicationWindow::refresh() {
 			if ((*it)->isButton()) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + ZLApplication::PathDelimiter + button.iconName()).c_str());
+					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + ZLApplication::FileNameDelimiter + button.iconName()).c_str());
 					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;

@@ -63,7 +63,7 @@ private:
 };
 
 const std::string TeXHyphenator::PatternZip() {
-	return ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "hyphenationPatterns.zip";
+	return ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "hyphenationPatterns.zip";
 }
 
 void TeXHyphenator::collectLanguages() {

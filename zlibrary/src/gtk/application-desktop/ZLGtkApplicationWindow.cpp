@@ -147,7 +147,7 @@ bool ZLGtkApplicationWindow::isFullscreen() const {
 void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
+		static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
 		GtkWidget *image = gtk_image_new_from_file((imagePrefix + buttonItem.iconName() + ".png").c_str());
 		GtkWidget *button = buttonItem.isToggleButton() ? gtk_toggle_button_new() : gtk_button_new();
 		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);

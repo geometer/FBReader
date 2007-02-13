@@ -80,7 +80,7 @@ DictionaryCollection::DictionaryCollection() :
 	EnableIntegrationOption(ZLOption::CONFIG_CATEGORY, DICTIONARY_GROUP, "Enabled", true),
 	CurrentNameOption(ZLOption::CONFIG_CATEGORY, DICTIONARY_GROUP, "Name", "") {
 	DictionaryCollectionBuilder builder(*this);
-	builder.readDocument(ZLApplication::ApplicationDirectory() + ZLApplication::PathDelimiter + "dictionary-integration.xml");
+	builder.readDocument(ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "dictionary-integration.xml");
 	if (!myNames.empty() && (myDictionaries.find(CurrentNameOption.value()) == myDictionaries.end())) {
 		CurrentNameOption.setValue(myNames[0]);
 	}

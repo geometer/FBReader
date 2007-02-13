@@ -56,6 +56,7 @@ private:
 	int allocationSize() const;
 	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
+	void callback(DWORD hiWParam);
 
 	void showItem(W32TreeViewItem &item);
 	void addBitmapToList(HBITMAP bitmap);

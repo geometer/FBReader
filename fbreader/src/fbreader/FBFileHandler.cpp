@@ -75,13 +75,12 @@ const std::string FBFileHandler::stateDisplayName() const {
 }
 
 const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
-	static const std::string prefix = ZLApplication::ApplicationSubdirectory() + ZLApplication::PathDelimiter;
-	static const std::string FolderIcon = prefix + "folder";
-	static const std::string ZipFolderIcon = prefix + "zipfolder";
+	static const std::string FolderIcon = "folder";
+	static const std::string ZipFolderIcon = "zipfolder";
 	static std::map<FormatPlugin*,std::string> PluginIcons;
 
 	if (!myIsUpToDate) {
-		if (myDir->name() != ZLApplication::PathDelimiter) {
+		if (myDir->name() != ZLApplication::FileNameDelimiter) {
 			mySubnodes.push_back(new ZLTreeNode("..", "..", FolderIcon, true));
 		}
 
@@ -106,7 +105,7 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 				if (plugin != 0) {
 					std::string icon = PluginIcons[plugin];
 					if (icon.empty()) {
-						icon = prefix + plugin->iconName();
+						icon = plugin->iconName();
 						PluginIcons[plugin] = icon;
 					}
 					const std::string displayName = file.utf8FullName();

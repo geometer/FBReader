@@ -1,6 +1,8 @@
+include $(ROOTDIR)/makefiles/arch/unix.mk
+
 INSTALLDIR = /opt/opie/opie
 IMAGEDIR = $(INSTALLDIR)/pics
-APPLICATIONSUBDIR = "%application_name%"
+APPIMAGEDIR = $(IMAGEDIR)/%application_name%
 
 QTPATH = /opt/opie/qt-2.3.10
 OPIEPATH = /opt/opie/opie

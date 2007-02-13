@@ -75,8 +75,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 
 	myFullScreen = false;
 
-	std::string lowerCaseName = ZLUnicodeUtil::toLower(ZLApplication::ApplicationName());
-	gtk_window_set_icon_name(myMainWindow, (ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + lowerCaseName + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ".png").c_str());
+	gtk_window_set_icon_name(myMainWindow, (ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + ZLApplication::ApplicationName() + ".png").c_str());
 }
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
@@ -121,8 +120,7 @@ bool ZLGtkApplicationWindow::isFullscreen() const {
 void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		const std::string lowerCaseName = ZLUnicodeUtil::toLower(ZLApplication::ApplicationName());
-		GtkWidget *image = gtk_image_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + lowerCaseName + ZLApplication::PathDelimiter + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".png").c_str());
 		GtkToolItem *button = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 

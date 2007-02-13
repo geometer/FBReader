@@ -54,7 +54,7 @@ void KeyNamesReader::startElementHandler(const char *tag, const char **attribute
 
 std::string ZLKeyUtil::keyName(int unicode, int key, int modifiersMask) {
 	if (!ourInitialized) {
-		KeyNamesReader().readDocument(ZLApplication::ZLibraryDirectory() + ZLApplication::PathDelimiter + "keynames.xml");
+		KeyNamesReader().readDocument(ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + "keynames.xml");
 		ourInitialized = true;
 	}
 

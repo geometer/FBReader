@@ -181,7 +181,7 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item
 	GtkToolItem *gtkItem;
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		GtkWidget *image = gtk_image_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter + buttonItem.iconName() + ".png").c_str());
+		GtkWidget *image = gtk_image_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".png").c_str());
 		gtkItem = gtk_tool_item_new();
 		GtkWidget *ebox = gtk_event_box_new();
 

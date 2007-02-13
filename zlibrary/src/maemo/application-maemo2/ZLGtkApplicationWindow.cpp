@@ -277,7 +277,7 @@ static void onGtkButtonRelease(GtkWidget*, GdkEventButton*, gpointer data) {
 ZLGtkApplicationWindow::ToolbarButton::ToolbarButton(ZLApplication::Toolbar::ButtonItem &buttonItem, ZLGtkApplicationWindow &window) : myButtonItem(buttonItem), myWindow(window) {
 	myAction = myWindow.application().action(buttonItem.actionId());
 
-	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
+	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
 
 	const int width = gdk_pixbuf_get_width(filePixbuf);
 	const int height = gdk_pixbuf_get_height(filePixbuf);

@@ -1,7 +1,10 @@
+include $(ROOTDIR)/makefiles/arch/unix.mk
+
 ifeq "$(INSTALLDIR)" ""
   INSTALLDIR=/usr
 endif
 IMAGEDIR = $(INSTALLDIR)/share/pixmaps
+APPIMAGEDIR = $(INSTALLDIR)/share/pixmaps/%APPLICATION_NAME%
 
 CC = gcc
 AR = ar rsu

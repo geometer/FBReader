@@ -36,7 +36,7 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 static const std::string OPTIONS = "Options";
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
-	static std::string imagePrefix = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + ZLApplication::ApplicationName() + ZLApplication::PathDelimiter;
+	static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
 	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
 	setIconSet(QIconSet(icon));
 	QSize size = icon.size();
