@@ -35,8 +35,8 @@ package:
 	@cd ..; DESTDIR=$(PWD)/$(DESTDIR) $(MAKE) do_install
 	@mkdir -p $(DESTDIR)/DEBIAN
 	@install -d $(SHARE_GCALCULATOR)
-	@install -d $(SHARE_GCALCULATOR)/icons/$(TARGET)
-	@install -m 0644 $(wildcard ../icons/maemo/$(TARGET)/*) $(SHARE_GCALCULATOR)/icons/$(TARGET)
+	@install -d $(SHARE_GCALCULATOR)/icons
+	@install -m 0644 $(wildcard ../icons/maemo/$(TARGET)/*.png) $(SHARE_GCALCULATOR)/icons
 	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/26x26/apps
 	@install -m 0644 ../icons/maemo/GeometricCalculator.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/26x26/apps
 	@install -d $(DESTDIR)$(SHAREDIR)/applications/hildon

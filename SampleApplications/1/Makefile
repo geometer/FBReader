@@ -23,8 +23,6 @@ all: .resources
 
 install: all do_install
 
-GC_SHAREDIR = $(DESTDIR)$(SHAREDIR)/$(TARGET)
-
 do_install:
 	@install -d $(DESTDIR)$(BINDIR)
 	@install $(TARGET) $(DESTDIR)$(BINDIR)

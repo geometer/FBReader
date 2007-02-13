@@ -104,7 +104,7 @@ void W32Box::setDimensions(Size charDimension) {
 	}
 }
 
-W32HBox::W32HBox() {
+W32HBox::W32HBox() : myAlignment(LEFT) {
 }
 
 W32Widget::Size W32HBox::minimumSize() const {
@@ -134,6 +134,10 @@ W32Widget::Size W32HBox::minimumSize() const {
 	return size;
 }
 
+void W32HBox::setAlignment(Alignment alignment) {
+	myAlignment = alignment;
+}
+
 void W32HBox::setPosition(int x, int y, Size size) {
 	int elementCounter = visibleElementsNumber();
 	if (elementCounter == 0) {
@@ -143,10 +147,21 @@ void W32HBox::setPosition(int x, int y, Size size) {
 	x += leftMargin();
 	y += topMargin();
 	if (homogeneous()) {
-		const Size elementSize(
-			(size.Width - leftMargin() - rightMargin() - spacing() * (elementCounter - 1)) / elementCounter,
-			size.Height - topMargin() - bottomMargin()
-		);
+		Size elementSize(0, size.Height - topMargin() - bottomMargin());
+		for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+			if ((*it)->isVisible()) {
+				Size currentSize = (*it)->minimumSize();
+				elementSize.Width = std::max(currentSize.Width, elementSize.Width);
+			}
+		}
+		if (myAlignment != LEFT) {
+			const short extraWidth = size.Width - leftMargin() - rightMargin() - elementSize.Width * elementCounter - spacing() * (elementCounter - 1);
+			if (myAlignment == CENTER) {
+				x += extraWidth / 2;
+			} else if (myAlignment == RIGHT) {
+				x += extraWidth;
+			}
+		}
 		const short deltaX = elementSize.Width + spacing();
 		for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
 			if ((*it)->isVisible()) {
@@ -155,6 +170,20 @@ void W32HBox::setPosition(int x, int y, Size size) {
 			}
 		}
 	} else {
+		if (myAlignment != LEFT) {
+			short extraWidth = size.Width - leftMargin() - rightMargin() - spacing() * (elementCounter - 1);
+			for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
+				if ((*it)->isVisible()) {
+					Size currentSize = (*it)->minimumSize();
+					extraWidth -= currentSize.Width;
+				}
+			}
+			if (myAlignment == CENTER) {
+				x += extraWidth / 2;
+			} else if (myAlignment == RIGHT) {
+				x += extraWidth;
+			}
+		}
 		const int elementHeight = size.Height - topMargin() - bottomMargin();
 		Size elementSize;
 		for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {

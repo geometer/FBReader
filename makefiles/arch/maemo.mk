@@ -5,7 +5,7 @@ ifeq "$(UI_TYPE)" "maemo"
 	BASEDIR = /var/lib/install/usr/share
 endif
 IMAGEDIR = $(BASEDIR)/%APPLICATION_NAME%/icons
-APPIMAGEDIR = $(IMAGEDIR)/%APPLICATION_NAME%
+APPIMAGEDIR = $(IMAGEDIR)
 
 CC = gcc
 AR = ar rsu

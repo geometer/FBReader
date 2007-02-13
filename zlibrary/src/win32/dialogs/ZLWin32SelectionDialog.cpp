@@ -70,9 +70,10 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	W32HBox *buttonBox = new W32HBox();
 	panelBox->addElement(buttonBox);
 	buttonBox->setHomogeneous(true);
+	buttonBox->setAlignment(W32HBox::RIGHT);
 	buttonBox->setSpacing(charHeight / 2);
 	buttonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-	buttonBox->addElement(new W32PushButton("&Ok", W32PushButton::OK_BUTTON));
+	buttonBox->addElement(new W32PushButton("&Ok"));
 	buttonBox->addElement(new W32PushButton("&Cancel", W32PushButton::CANCEL_BUTTON));
 	buttonBox->setVisible(true);
 /*

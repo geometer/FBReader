@@ -68,10 +68,21 @@ private:
 class W32HBox : public W32Box {
 
 public:
+	enum Alignment {
+		LEFT,
+		RIGHT,
+		CENTER
+	};
+
+public:
 	W32HBox();
 
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
+	void setAlignment(Alignment alignment);
+
+private:
+	Alignment myAlignment;
 };
 
 class W32VBox : public W32Box {

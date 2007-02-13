@@ -37,6 +37,7 @@ ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string
 	myButtonBox = new W32HBox();
 	panelBox->addElement(myButtonBox);
 	myButtonBox->setHomogeneous(true);
+	myButtonBox->setAlignment(W32HBox::RIGHT);
 	myButtonBox->setSpacing(charHeight / 2);
 	myButtonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 }
