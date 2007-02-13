@@ -152,7 +152,7 @@ HBITMAP ZLWin32SelectionDialog::getBitmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,HBITMAP>::const_iterator it = myBitmaps.find(pixmapName);
 	if (it == myBitmaps.end()) {
-		std::string imageFileName = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + pixmapName + ".bmp";
+		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + pixmapName + ".bmp";
 		ZLFile file(imageFileName);
 		HBITMAP bitmap = (HBITMAP)LoadImageA(0, file.path().c_str(), IMAGE_BITMAP, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
 		myBitmaps[pixmapName] = bitmap;

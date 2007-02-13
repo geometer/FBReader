@@ -282,7 +282,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 
-		std::string imageFileName = ZLApplication::ImageDirectory() + ZLApplication::PathDelimiter + buttonItem.iconName() + ".bmp";
+		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".bmp";
 		ZLFile file(imageFileName);
 		HBITMAP bitmap = (HBITMAP)LoadImageA(0, file.path().c_str(), IMAGE_BITMAP, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
 		if (bitmap == 0) {
