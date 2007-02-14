@@ -97,7 +97,7 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hDialog, UINT message, WPARA
 			if ((int)notification.hdr.code == PSN_SETACTIVE) {
 				W32DialogPanel *panel = W32DialogPanel::ourPanels[hDialog];
 				if (panel != 0) {
-					panel->fireEvent(W32DialogPanel::SELECTED_EVENT);
+					panel->fireEvent(W32DialogPanel::PANEL_SELECTED_EVENT);
 					return true;
 				}
 			}

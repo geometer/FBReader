@@ -35,7 +35,9 @@
 class W32DialogPanel : public W32ControlCollection, public W32EventSender {
 
 public:
-	static const std::string SELECTED_EVENT;
+	static const std::string PANEL_SELECTED_EVENT;
+	static const std::string CANCEL_EVENT;
+	static const std::string OK_EVENT;
 
 private:
 	static const UINT LAYOUT_MESSAGE;
@@ -54,6 +56,9 @@ public:
 
 	bool runDialog();
 
+	void setExitOnOk(bool exit);
+	void setExitOnCancel(bool exit);
+
 private:
 	void calculateSize();
 	W32Widget::Size size() const;
@@ -64,6 +69,7 @@ private:
 	bool notificationCallback(WPARAM wParam, LPARAM lParam);
 	void invalidate();
 	void layout();
+	void endDialog(bool code);
 
 private:
 	HWND myMainWindow;
@@ -76,6 +82,9 @@ private:
 	mutable WORD *myAddress;
 	HWND myDialogWindow;
 	bool myDoLayout;
+
+	bool myExitOnCancel;
+	bool myExitOnOk;
 
 friend class W32PropertySheet;
 };

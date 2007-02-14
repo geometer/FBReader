@@ -28,7 +28,9 @@
 static const int FirstControlId = 2001;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
-const std::string W32DialogPanel::SELECTED_EVENT = "Dialog Panel: Selected";
+const std::string W32DialogPanel::PANEL_SELECTED_EVENT = "Dialog Panel: Selected";
+const std::string W32DialogPanel::CANCEL_EVENT = "Dialog Panel: Cancel";
+const std::string W32DialogPanel::OK_EVENT = "Dialog Panel: Ok";
 const UINT W32DialogPanel::LAYOUT_MESSAGE = WM_USER + 10000;
 
 static void allocateString(WORD *&p, const std::string &text) {
@@ -38,7 +40,7 @@ static void allocateString(WORD *&p, const std::string &text) {
 	p += ucs2Str.size();
 }
 
-W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myMainWindow(mainWindow), myCaption(caption), myAddress(0), myDialogWindow(0) {
+W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myMainWindow(mainWindow), myCaption(caption), myAddress(0), myDialogWindow(0), myExitOnCancel(true), myExitOnOk(true) {
 	TEXTMETRIC metric;
 	HDC hdc = GetDC(mainWindow);
 	GetTextMetrics(hdc, &metric);
@@ -125,16 +127,17 @@ W32Widget::Size W32DialogPanel::charDimension() const {
 	return myCharDimension;
 }
 
+void W32DialogPanel::endDialog(bool code) {
+	if (myDialogWindow != 0) {
+		EndDialog(myDialogWindow, code);
+	}
+}
+
 BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
 	if (message == WM_INITDIALOG) {
 		((W32DialogPanel*)lParam)->init(hDialog);
 		return true;
 	} else if (message == WM_COMMAND) {
-		if ((wParam == IDOK) || (wParam == IDCANCEL)) {
-			EndDialog(hDialog, wParam == IDOK);
-			return true;
-		}
-
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {
 			return panel->commandCallback(wParam);
@@ -155,6 +158,24 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 }
 
 bool W32DialogPanel::commandCallback(WPARAM wParam) {
+	if (wParam == IDOK) {
+		if (myExitOnOk) {
+			endDialog(true);
+		} else {
+			fireEvent(OK_EVENT);
+		}
+		return true;
+	}
+
+	if (wParam == IDCANCEL) {
+		if (myExitOnCancel) {
+			endDialog(false);
+		} else {
+			fireEvent(CANCEL_EVENT);
+		}
+		return true;
+	}
+
 	W32Control *control = (*this)[LOWORD(wParam)];
 	if (control != 0) {
 		control->commandCallback(HIWORD(wParam));
@@ -192,6 +213,14 @@ void W32DialogPanel::layout() {
 
 const std::string &W32DialogPanel::caption() const {
 	return myCaption;
+}
+
+void W32DialogPanel::setExitOnOk(bool exit) {
+	myExitOnOk = exit;
+}
+
+void W32DialogPanel::setExitOnCancel(bool exit) {
+	myExitOnCancel = exit;
 }
 
 bool W32DialogPanel::runDialog() {

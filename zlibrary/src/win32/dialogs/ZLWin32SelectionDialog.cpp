@@ -46,6 +46,9 @@ static gboolean clickHandler(Win32Widget*, GdkEventButton *event, gpointer self)
 */
 
 ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window, const std::string &caption, ZLTreeHandler &handler) : ZLDesktopSelectionDialog(handler), myWindow(window), myPanel(myWindow.mainWindow(), caption) {
+	myPanel.setExitOnOk(false);
+	myPanel.setListener(this);
+
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
@@ -73,7 +76,9 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	buttonBox->setAlignment(W32HBox::RIGHT);
 	buttonBox->setSpacing(charHeight / 2);
 	buttonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-	buttonBox->addElement(new W32PushButton("&Ok"));
+	W32PushButton *okButton = new W32PushButton("&Ok", W32PushButton::OK_BUTTON);
+	okButton->setEnabled(false);
+	buttonBox->addElement(okButton);
 	buttonBox->addElement(new W32PushButton("&Cancel", W32PushButton::CANCEL_BUTTON));
 	buttonBox->setVisible(true);
 /*
@@ -273,4 +278,10 @@ int ZLWin32SelectionDialog::height() const {
 	return _height;
 	*/
 	return 200;
+}
+
+void ZLWin32SelectionDialog::onEvent(const std::string &event, W32EventSender &sender) {
+	if (event == W32DialogPanel::OK_EVENT) {
+		std::cerr << "ok pressed\n";
+	}
 }

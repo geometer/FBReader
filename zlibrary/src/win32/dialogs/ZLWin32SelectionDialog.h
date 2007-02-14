@@ -33,7 +33,7 @@
 
 class ZLWin32ApplicationWindow;
 
-class ZLWin32SelectionDialog : public ZLDesktopSelectionDialog {
+class ZLWin32SelectionDialog : public ZLDesktopSelectionDialog, public W32Listener {
 
 public:
 	ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window, const std::string &caption, ZLTreeHandler &handler); 
@@ -52,6 +52,9 @@ protected:
 	void updateStateLine();
 	void updateList();
 	void selectItem(int index);
+
+private:
+	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
 	HBITMAP getBitmap(const ZLTreeNodePtr node);
