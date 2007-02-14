@@ -64,7 +64,7 @@ int W32TreeViewItem::iconIndex() const {
 	return myIconIndex;
 }
 
-W32TreeView::W32TreeView(short iconSize) : W32Control(WS_BORDER), myIconSize(iconSize) {
+W32TreeView::W32TreeView(short iconSize) : W32Control(WS_BORDER | TVS_DISABLEDRAGDROP), myIconSize(iconSize) {
 }
 
 void W32TreeView::clear() {
@@ -181,6 +181,22 @@ void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 	}
 }
 
-void W32TreeView::callback(DWORD hiWParam) {
-	std::cerr << hiWParam << "\n";
+void W32TreeView::notificationCallback(LPARAM lParam) {
+	NMTREEVIEW &notification = *(NMTREEVIEW*)lParam;
+	switch (notification.hdr.code) {
+		case TVN_SELCHANGING:
+			std::cerr << "selection changing\n";
+			break;
+		case TVN_SELCHANGED:
+			std::cerr << "selection changed\n";
+			break;
+		case TVN_ITEMEXPANDING:
+			std::cerr << "item expanding\n";
+			break;
+		case TVN_DELETEITEM:
+			std::cerr << "delete item\n";
+			break;
+		default:
+			std::cerr << "code = " << (int)notification.hdr.code << "\n";
+	}
 }

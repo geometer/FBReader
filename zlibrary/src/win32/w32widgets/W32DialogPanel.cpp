@@ -137,15 +137,13 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {
-			return panel->Callback(wParam);
+			return panel->commandCallback(wParam);
 		}
-	/*
 	} else if (message == WM_NOTIFY) {
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {
-			return panel->Callback(wParam);
+			return panel->notificationCallback(wParam, lParam);
 		}
-	*/
 	} else if (message == LAYOUT_MESSAGE) {
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {
@@ -156,10 +154,19 @@ BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM 
 	return false;
 }
 
-bool W32DialogPanel::Callback(WPARAM wParam) {
+bool W32DialogPanel::commandCallback(WPARAM wParam) {
 	W32Control *control = (*this)[LOWORD(wParam)];
 	if (control != 0) {
-		control->callback(HIWORD(wParam));
+		control->commandCallback(HIWORD(wParam));
+		return true;
+	}
+	return false;
+}
+
+bool W32DialogPanel::notificationCallback(WPARAM wParam, LPARAM lParam) {
+	W32Control *control = (*this)[LOWORD(wParam)];
+	if (control != 0) {
+		control->notificationCallback(lParam);
 		return true;
 	}
 	return false;

@@ -88,7 +88,7 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hDialog, UINT message, WPARA
 		{
 			W32DialogPanel *panel = W32DialogPanel::ourPanels[hDialog];
 			if (panel != 0) {
-				return panel->Callback(wParam);
+				return panel->commandCallback(wParam);
 			}
 		}
 		case WM_NOTIFY:

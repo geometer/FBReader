@@ -60,7 +60,8 @@ private:
 	void setSize(W32Widget::Size size);
 
 	void init(HWND dialogWindow);
-	bool Callback(WPARAM wParam);
+	bool commandCallback(WPARAM wParam);
+	bool notificationCallback(WPARAM wParam, LPARAM lParam);
 	void invalidate();
 	void layout();
 

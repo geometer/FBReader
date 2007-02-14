@@ -46,7 +46,8 @@ public:
 	bool isVisible() const;
 
 public:
-	virtual void callback(DWORD hiWParam);
+	virtual void commandCallback(DWORD hiWParam);
+	virtual void notificationCallback(LPARAM lParam);
 
 protected:
 	DWORD myStyle;
@@ -122,7 +123,7 @@ public:
 	void setChecked(bool checked);
 	bool isChecked() const;
 
-	void callback(DWORD hiWParam);
+	void commandCallback(DWORD hiWParam);
 
 private:
 	std::string myText;
@@ -150,7 +151,7 @@ public:
 
 	void setEditable(bool editable);
 
-	void callback(DWORD hiWParam);
+	void commandCallback(DWORD hiWParam);
 
 	void setText(const std::string &text);
 	std::string text() const;
@@ -174,7 +175,7 @@ public:
 
 	void setVisible(bool visible);
 
-	void callback(DWORD hiWParam);
+	void commandCallback(DWORD hiWParam);
 
 	unsigned short value() const;
 
@@ -198,7 +199,7 @@ public:
 
 	void setEditable(bool editable);
 
-	void callback(DWORD hiWParam);
+	void commandCallback(DWORD hiWParam);
 
 	std::string text() const;
 
@@ -227,7 +228,7 @@ public:
 private:
 	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
-	void callback(DWORD hiWParam);
+	void commandCallback(DWORD hiWParam);
 
 	void setChecked(bool checked);
 

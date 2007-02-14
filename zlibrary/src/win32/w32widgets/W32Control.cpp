@@ -138,7 +138,10 @@ void W32Control::setPosition(int x, int y, Size size) {
 	}
 }
 
-void W32Control::callback(DWORD) {
+void W32Control::commandCallback(DWORD) {
+}
+
+void W32Control::notificationCallback(LPARAM) {
 }
 
 W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32StandardControl(BS_PUSHBUTTON | WS_TABSTOP), myText(text), myType(type) {
@@ -234,7 +237,7 @@ bool W32CheckBox::isChecked() const {
 	return myChecked;
 }
 
-void W32CheckBox::callback(DWORD) {
+void W32CheckBox::commandCallback(DWORD) {
 	if (myChecked != (SendMessage(myWindow, BM_GETCHECK, 0, 0) == BST_CHECKED)) {
 		myChecked = !myChecked;
 		fireEvent(STATE_CHANGED_EVENT);
@@ -276,7 +279,7 @@ W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUT
 	::createNTWCHARString(myBuffer, text);
 }
 
-void W32LineEditor::callback(DWORD hiWParam) {
+void W32LineEditor::commandCallback(DWORD hiWParam) {
 	if ((hiWParam == EN_CHANGE) && !myBlocked) {
 		getEditorString(myWindow, myBuffer);
 		fireEvent(VALUE_EDITED_EVENT);
@@ -391,7 +394,7 @@ void W32SpinBox::setVisible(bool visible) {
 	}
 }
 
-void W32SpinBox::callback(DWORD hiWParam) {
+void W32SpinBox::commandCallback(DWORD hiWParam) {
 	if (hiWParam == EN_CHANGE) {
 		myValue = SendMessage(myControlWindow, UDM_GETPOS, 0, 0);
 	}
@@ -454,7 +457,7 @@ HWND W32ComboBox::editorWindow() {
 	return myEditorWindow;
 }
 
-void W32ComboBox::callback(DWORD hiWParam) {
+void W32ComboBox::commandCallback(DWORD hiWParam) {
 	if (hiWParam == CBN_SELCHANGE) {
 		const int index = SendMessage(myWindow, CB_GETCURSEL, 0, 0);
 		const int length = SendMessage(myWindow, CB_GETLBTEXTLEN, index, 0);
@@ -510,7 +513,7 @@ void W32RadioButton::init(HWND parent, W32ControlCollection *collection) {
 	::setWindowText(myWindow, myText);
 }
 
-void W32RadioButton::callback(DWORD hiWParam) {
+void W32RadioButton::commandCallback(DWORD hiWParam) {
 	if (hiWParam == BN_CLICKED) {
 		if (SendMessage(myWindow, BM_GETCHECK, 0, 0) != BST_CHECKED) {
 			myGroup.setChecked(*this);
