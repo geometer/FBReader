@@ -49,6 +49,8 @@ public:
 
 	void clear();
 	void insert(const std::string &itemName, HBITMAP icon);
+	void select(int index);
+	int selectedIndex() const;
 
 private:
 	int controlNumber() const;
@@ -67,6 +69,8 @@ private:
 
 	std::vector<HBITMAP> myBitmaps;
 	std::map<HBITMAP,int> myBitmapToIndexMap;
+
+	int mySelectedIndex;
 };
 
 #endif /* __W32TREEVIEW_H__ */

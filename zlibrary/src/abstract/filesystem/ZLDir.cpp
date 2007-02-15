@@ -52,8 +52,7 @@ std::string ZLDir::shortName() const {
 }
 
 std::string ZLDir::itemName(const std::string &shortName) const {
-	if (shortName == "..") {
-		return parentName();
-	}
-	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
+	std::string name = (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
+	ZLFSManager::instance().normalize(name);
+	return name;
 }

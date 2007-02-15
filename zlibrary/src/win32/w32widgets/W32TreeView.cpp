@@ -185,18 +185,30 @@ void W32TreeView::notificationCallback(LPARAM lParam) {
 	NMTREEVIEW &notification = *(NMTREEVIEW*)lParam;
 	switch (notification.hdr.code) {
 		case TVN_SELCHANGING:
-			std::cerr << "selection changing\n";
+			//std::cerr << "selection changing\n";
 			break;
 		case TVN_SELCHANGED:
-			std::cerr << "selection changed\n";
+			//mySelectedIndex = ;
 			break;
 		case TVN_ITEMEXPANDING:
-			std::cerr << "item expanding\n";
+			//std::cerr << "item expanding\n";
 			break;
 		case TVN_DELETEITEM:
-			std::cerr << "delete item\n";
+			//std::cerr << "delete item\n";
 			break;
 		default:
-			std::cerr << "code = " << (int)notification.hdr.code << "\n";
+			//std::cerr << "code = " << (int)notification.hdr.code << "\n";
+			break;
 	}
+}
+
+void W32TreeView::select(int index) {
+	mySelectedIndex = index;
+	if (myWindow != 0) {
+		//SendMessage(myWindow, TVM_SELECTITEM, TVGN_FIRSTVISIBLE, );
+	}
+}
+
+int W32TreeView::selectedIndex() const {
+	return mySelectedIndex;
 }

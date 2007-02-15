@@ -173,6 +173,7 @@ void ZLWin32SelectionDialog::updateStateLine() {
 }
 
 void ZLWin32SelectionDialog::updateList() {
+	std::cerr << "updateList\n";
 	myTreeView->clear();
 
 	const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
@@ -282,6 +283,14 @@ int ZLWin32SelectionDialog::height() const {
 
 void ZLWin32SelectionDialog::onEvent(const std::string &event, W32EventSender &sender) {
 	if (event == W32DialogPanel::OK_EVENT) {
-		std::cerr << "ok pressed\n";
+		if (handler().isOpenHandler()) {
+			int index = 0;
+			const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
+			if ((index >= 0) && (index < (int)nodes.size())) {
+				runNode(nodes[index]);
+			}
+		} else {
+			//runState(gtk_entry_get_text(myStateLine));	
+		}
 	}
 }
