@@ -29,9 +29,7 @@ static const int FirstControlId = 2001;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
 const std::string W32DialogPanel::PANEL_SELECTED_EVENT = "Dialog Panel: Selected";
-const std::string W32DialogPanel::CANCEL_EVENT = "Dialog Panel: Cancel";
-const std::string W32DialogPanel::OK_EVENT = "Dialog Panel: Ok";
-const UINT W32DialogPanel::LAYOUT_MESSAGE = WM_USER + 10000;
+UINT W32DialogPanel::LAYOUT_MESSAGE = 0;
 
 static void allocateString(WORD *&p, const std::string &text) {
 	ZLUnicodeUtil::Ucs2String ucs2Str;
@@ -40,7 +38,10 @@ static void allocateString(WORD *&p, const std::string &text) {
 	p += ucs2Str.size();
 }
 
-W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myMainWindow(mainWindow), myCaption(caption), myAddress(0), myDialogWindow(0), myExitOnCancel(true), myExitOnOk(true) {
+W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myMainWindow(mainWindow), myCaption(caption), myAddress(0), myDialogWindow(0) {
+	if (LAYOUT_MESSAGE == 0) {
+		LAYOUT_MESSAGE = RegisterWindowMessageA("layout");
+	}
 	TEXTMETRIC metric;
 	HDC hdc = GetDC(mainWindow);
 	GetTextMetrics(hdc, &metric);
@@ -78,6 +79,14 @@ void W32DialogPanel::setSize(W32Widget::Size size) {
 	mySize = size;
 }
 
+void W32DialogPanel::updateElementSize() {
+	myElement->setPosition(0, 0, mySize);
+}
+
+DWORD W32DialogPanel::style() const {
+	return DS_SHELLFONT | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION;
+}
+
 DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	if (myAddress != 0) {
 		delete[] myAddress;
@@ -86,7 +95,7 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	if ((mySize.Width == 0) && (mySize.Height == 0)) {
 		calculateSize();
 	}
-	myElement->setPosition(0, 0, mySize);
+	updateElementSize();
 
 	const std::string fontName = "MS Shell Dlg";
 	int size = 14 + ZLUnicodeUtil::utf8Length(myCaption) + ZLUnicodeUtil::utf8Length(fontName) + myElement->allocationSize();
@@ -94,9 +103,8 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	myAddress = new WORD[size];
 
 	WORD *p = myAddress;
-	const DWORD style = DS_SHELLFONT | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION;
-	*p++ = LOWORD(style);
-	*p++ = HIWORD(style);
+	*p++ = LOWORD(style());
+	*p++ = HIWORD(style());
 	*p++ = 0;
 	*p++ = 0;
 	*p++ = myElement->controlNumber();
@@ -127,55 +135,7 @@ W32Widget::Size W32DialogPanel::charDimension() const {
 	return myCharDimension;
 }
 
-void W32DialogPanel::endDialog(bool code) {
-	if (myDialogWindow != 0) {
-		EndDialog(myDialogWindow, code);
-	}
-}
-
-BOOL CALLBACK W32DialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
-	if (message == WM_INITDIALOG) {
-		((W32DialogPanel*)lParam)->init(hDialog);
-		return true;
-	} else if (message == WM_COMMAND) {
-		W32DialogPanel *panel = ourPanels[hDialog];
-		if (panel != 0) {
-			return panel->commandCallback(wParam);
-		}
-	} else if (message == WM_NOTIFY) {
-		W32DialogPanel *panel = ourPanels[hDialog];
-		if (panel != 0) {
-			return panel->notificationCallback(wParam, lParam);
-		}
-	} else if (message == LAYOUT_MESSAGE) {
-		W32DialogPanel *panel = ourPanels[hDialog];
-		if (panel != 0) {
-			panel->layout();
-			return true;
-		}
-	}
-	return false;
-}
-
 bool W32DialogPanel::commandCallback(WPARAM wParam) {
-	if (wParam == IDOK) {
-		if (myExitOnOk) {
-			endDialog(true);
-		} else {
-			fireEvent(OK_EVENT);
-		}
-		return true;
-	}
-
-	if (wParam == IDCANCEL) {
-		if (myExitOnCancel) {
-			endDialog(false);
-		} else {
-			fireEvent(CANCEL_EVENT);
-		}
-		return true;
-	}
-
 	W32Control *control = (*this)[LOWORD(wParam)];
 	if (control != 0) {
 		control->commandCallback(HIWORD(wParam));
@@ -206,23 +166,11 @@ void W32DialogPanel::layout() {
 		calculateSize();
 		mySize.Width = std::max(mySize.Width, oldWidth);
 		// TODO: add scrollbars (?)
-		myElement->setPosition(0, 0, mySize);
+		updateElementSize();
 		myDoLayout = false;
 	}
 }
 
 const std::string &W32DialogPanel::caption() const {
 	return myCaption;
-}
-
-void W32DialogPanel::setExitOnOk(bool exit) {
-	myExitOnOk = exit;
-}
-
-void W32DialogPanel::setExitOnCancel(bool exit) {
-	myExitOnCancel = exit;
-}
-
-bool W32DialogPanel::runDialog() {
-	return DialogBoxIndirectParam(GetModuleHandle(0), dialogTemplate(), myMainWindow, StaticCallback, (LPARAM)this);
 }

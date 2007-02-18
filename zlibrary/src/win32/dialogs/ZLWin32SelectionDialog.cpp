@@ -31,40 +31,23 @@
 
 const int ICON_SIZE = 22;
 
-/*
-static void activatedHandler(Win32TreeView *view, Win32TreePath*, Win32TreeViewColumn*) {
-	((ZLWin32SelectionDialog*)gtk_object_get_user_data(GTK_OBJECT(view)))->activatedSlot();
-}
-
-static gboolean clickHandler(Win32Widget*, GdkEventButton *event, gpointer self) {
-	if (event->button == 1) {
-		((ZLWin32SelectionDialog*)self)->activatedSlot();
-	}
-
-	return false;
-}
-*/
-
 ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window, const std::string &caption, ZLTreeHandler &handler) : ZLDesktopSelectionDialog(handler), myWindow(window), myPanel(myWindow.mainWindow(), caption) {
+	myPanel.setResizeable(true);
 	myPanel.setExitOnOk(false);
-	myPanel.setListener(this);
+	myPanel.addListener(this);
 
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
 	myLineEditor = new W32LineEditor("");
 	myLineEditor->setVisible(true);
+	myLineEditor->setEnabled(!handler.isOpenHandler());
 	panelBox->addElement(myLineEditor);
 
 	myTreeView = new W32TreeView(ICON_SIZE);
 	myTreeView->setVisible(true);
+	myTreeView->addListener(this);
 	panelBox->addElement(myTreeView);
-	/*
-	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
-	myTab = contentTab;
-	panelBox->addElement(contentTab->contentPtr());
-	W32Table &table = contentTab->contentTable();
-	*/
 
 	const short charHeight = myPanel.charDimension().Height;
 	panelBox->setSpacing(charHeight / 2);
@@ -76,82 +59,20 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	buttonBox->setAlignment(W32HBox::RIGHT);
 	buttonBox->setSpacing(charHeight / 2);
 	buttonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-	W32PushButton *okButton = new W32PushButton("&Ok", W32PushButton::OK_BUTTON);
-	okButton->setEnabled(false);
-	buttonBox->addElement(okButton);
+	myOkButton = new W32PushButton("&Ok");
+	myOkButton->addListener(this);
+	buttonBox->addElement(myOkButton);
 	buttonBox->addElement(new W32PushButton("&Cancel", W32PushButton::CANCEL_BUTTON));
 	buttonBox->setVisible(true);
-/*
-	myExitFlag = false;
-	myNodeSelected = false;
-
-	myDialog = createWin32Dialog(caption);
-
-	std::string okString = gtkString("&Ok");
-	std::string cancelString = gtkString("&Cancel");
-	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
-	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
-
-	myStateLine = GTK_ENTRY(gtk_entry_new());
-
-	gtk_editable_set_editable(GTK_EDITABLE(myStateLine), !this->handler().isOpenHandler());
-	gtk_widget_set_sensitive(GTK_WIDGET(myStateLine), !this->handler().isOpenHandler());
-
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myStateLine), false, false, 2);
-
-	gtk_widget_show(GTK_WIDGET(myStateLine));
-
-	myStore = gtk_list_store_new(3, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_INT);
-	myView = GTK_TREE_VIEW(gtk_tree_view_new_with_model(GTK_TREE_MODEL(myStore)));
-
-	gtk_object_set_user_data(GTK_OBJECT(myView), this);
-	gtk_tree_view_set_headers_visible(myView, false);
-
-	Win32TreeSelection *selection = gtk_tree_view_get_selection(myView);
-
-	gtk_tree_selection_set_mode(selection, GTK_SELECTION_BROWSE);
-
-	// MSS: in case we do not want single click navigation, comment out the line below
-	g_signal_connect(myView, "button-press-event", G_CALLBACK(clickHandler), this);
-
-	Win32CellRenderer *renderer;
-	Win32TreeViewColumn *column;
-
-	column = gtk_tree_view_column_new();
-	gtk_tree_view_insert_column(myView, column, -1);
-	gtk_tree_view_column_set_resizable(column, true);
-
-	renderer = gtk_cell_renderer_pixbuf_new();
-	gtk_tree_view_column_pack_start(column, renderer, false);
-	gtk_tree_view_column_add_attribute(column, renderer, "pixbuf", 0);
-
-	renderer = gtk_cell_renderer_text_new();
-	gtk_tree_view_column_pack_start(column, renderer, true);
-	gtk_tree_view_column_add_attribute(column, renderer, "text", 1);
-
-	g_signal_connect(myView, "row-activated", G_CALLBACK(activatedHandler), 0);
-
-	Win32Widget *scrolledWindow = gtk_scrolled_window_new(0, 0);
-	gtk_container_add(GTK_CONTAINER(scrolledWindow), GTK_WIDGET(myView));
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), scrolledWindow, true, true, 2);
-	gtk_widget_show_all(scrolledWindow);
-
-	gtk_widget_grab_focus(GTK_WIDGET(myView));
-*/
 
 	update();
 }
 
 ZLWin32SelectionDialog::~ZLWin32SelectionDialog() {
-/*
-	for(std::map<std::string,GdkPixbuf*>::iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
-		if (it->second != 0) {
-			g_object_unref(G_OBJECT(it->second));
-		}
+	for(std::map<std::string,HBITMAP>::iterator it = myBitmaps.begin(); it != myBitmaps.end(); ++it) {
+		// TODO:
+		//ReleaseImage(it->second);
 	}
-
-	destroyWin32Dialog(myDialog);
-*/
 }
 
 HBITMAP ZLWin32SelectionDialog::getBitmap(const ZLTreeNodePtr node) {
@@ -173,7 +94,6 @@ void ZLWin32SelectionDialog::updateStateLine() {
 }
 
 void ZLWin32SelectionDialog::updateList() {
-	std::cerr << "updateList\n";
 	myTreeView->clear();
 
 	const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
@@ -183,81 +103,23 @@ void ZLWin32SelectionDialog::updateList() {
 
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
 		myTreeView->insert((*it)->displayName(), getBitmap(*it));
-		/*
-		Win32TreeIter iter;
-		gtk_list_store_append(myStore, &iter);
-		gtk_list_store_set(myStore, &iter,
-					0, getPixmap(*it),
-					1, (*it)->displayName().c_str(),
-					2, index,
-					-1);
-		*/
 	}
 }
 
 void ZLWin32SelectionDialog::selectItem(int index) {
-/*
-	Win32TreeIter iter;
-	if (!gtk_tree_model_get_iter_first(GTK_TREE_MODEL(myStore), &iter)) {
-		return;
-	}
-	while (index > 0) {
-		if (!gtk_tree_model_iter_next(GTK_TREE_MODEL(myStore), &iter)) {
-			return;
-		}
-		--index;
-	}
-	Win32TreeSelection *selection = gtk_tree_view_get_selection(myView);
-	gtk_tree_selection_select_iter(selection, &iter);
-	Win32TreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), &iter);
-	gtk_tree_view_scroll_to_cell(myView, path, 0, false, 0, 0);
-	gtk_tree_path_free(path);
-*/
+	myTreeView->select(index);
 }
 
 bool ZLWin32SelectionDialog::run() {
 	myWindow.blockMouseEvents(true);
 	bool result = myPanel.runDialog();
 	myWindow.blockMouseEvents(false);
-	return false;
-
-/*
-	while (gtk_dialog_run(myDialog) == GTK_RESPONSE_ACCEPT) {
-		if (myNodeSelected || handler().isOpenHandler()) {
-			Win32TreeSelection *selection = gtk_tree_view_get_selection(myView);
-			Win32TreeModel *dummy;
-			Win32TreeIter iter;
-
-			if (gtk_tree_selection_get_selected(selection, &dummy, &iter)) {
-				int index;
-				gtk_tree_model_get(GTK_TREE_MODEL(myStore), &iter, 2, &index, -1);
-				const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
-				if ((index >= 0) && (index < (int)nodes.size())) {
-					runNode(nodes[index]);
-				}
-			}
-			myNodeSelected = false;
-		} else {
-			runState(gtk_entry_get_text(myStateLine));	
-		}
-		if (myExitFlag) {
-			return true;
-		}
-	}
-	return false;
-*/
+	return result;
 }
 
 void ZLWin32SelectionDialog::exitDialog() {
-	//myExitFlag = true;
+	myPanel.endDialog(true);
 }
-
-/*
-void ZLWin32SelectionDialog::activatedSlot() {
-	myNodeSelected = true;
-	gtk_dialog_response(myDialog, GTK_RESPONSE_ACCEPT);
-}
-*/
 
 void ZLWin32SelectionDialog::setSize(int width, int height) {
 	//gtk_window_resize(GTK_WINDOW(myDialog), width, height);
@@ -282,15 +144,23 @@ int ZLWin32SelectionDialog::height() const {
 }
 
 void ZLWin32SelectionDialog::onEvent(const std::string &event, W32EventSender &sender) {
-	if (event == W32DialogPanel::OK_EVENT) {
+	if ((event == W32StandaloneDialogPanel::OK_EVENT) ||
+			(event == W32TreeView::ITEM_DOUBLE_CLICKED_EVENT) ||
+			(event == W32PushButton::RELEASED_EVENT)) {
 		if (handler().isOpenHandler()) {
-			int index = 0;
+			int index = myTreeView->selectedIndex();
 			const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
 			if ((index >= 0) && (index < (int)nodes.size())) {
 				runNode(nodes[index]);
 			}
 		} else {
 			//runState(gtk_entry_get_text(myStateLine));	
+		}
+	} else if (event == W32TreeView::ITEM_SELECTED_EVENT) {
+		int index = myTreeView->selectedIndex();
+		const std::vector<ZLTreeNodePtr> &nodes = handler().subnodes();
+		if ((index >= 0) && (index < (int)nodes.size())) {
+			myOkButton->setEnabled(!nodes[index]->isFolder());
 		}
 	}
 }

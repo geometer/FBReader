@@ -39,7 +39,7 @@ public:
 
 private:
 	ZLWin32ApplicationWindow &myWindow;
-	W32DialogPanel myPanel;
+	W32StandaloneDialogPanel myPanel;
 	W32HBox *myButtonBox;
 };
 

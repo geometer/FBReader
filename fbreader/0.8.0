@@ -31,11 +31,16 @@ openbook
 	ColorOptionView
 	KeyOptionView
 	менять шрифт диалогов в зависимости от системных настроек
-	selection dialog
 	создавать окна для элементов управления по мере необходимости(?)
 	в неактивном LineEditor позиционировать курсор слева
 	informationBoxes
 	WaitMessage
+	resize для selection dialog (border layout?)
+	selection dialog
+		падение под xp после item expanding message
+		перерисовка кнопок под xp после resize
+		save selection dialog
+утилита для создания inactive иконки
 target 'install' в Makefile
 установщик
 конфиг в registry (?)
@@ -58,6 +63,10 @@ iconv -> internal converter (?)
 коды клавиш
 запретить Drag'N'Drop в toolbar и listview (падения в wine)
 почему так странно резайзится indicator tab
+русские имена файлов
+проверить работу с архивами в unix и win32 (findLastFileNameDelimiter)
+открывать options/book info dialog по центру основного окна
+отрисовка кнопок на некоторых машинах с xp (45)
 
 ==============================================================================
 

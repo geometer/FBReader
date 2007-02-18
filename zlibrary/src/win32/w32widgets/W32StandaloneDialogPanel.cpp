@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 2007 Nikolay Pultsin <geometer@mawhrin.net>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
+#include <iostream>
+
+#include "W32DialogPanel.h"
+
+static const int FirstControlId = 2001;
+
+const std::string W32StandaloneDialogPanel::CANCEL_EVENT = "Standalone Dialog Panel: Cancel";
+const std::string W32StandaloneDialogPanel::OK_EVENT = "Standalone Dialog Panel: Ok";
+
+W32StandaloneDialogPanel::W32StandaloneDialogPanel(HWND mainWindow, const std::string &caption) : W32DialogPanel(mainWindow, caption), myResizeable(false), myExitOnCancel(true), myExitOnOk(true) {
+}
+
+void W32StandaloneDialogPanel::setResizeable(bool resizeable) {
+	myResizeable = resizeable;
+}
+
+DWORD W32StandaloneDialogPanel::style() const {
+	return myResizeable ? (W32DialogPanel::style() | WS_SIZEBOX) : W32DialogPanel::style();
+}
+
+void W32StandaloneDialogPanel::endDialog(bool code) {
+	if (myDialogWindow != 0) {
+		EndDialog(myDialogWindow, code);
+	}
+}
+
+BOOL CALLBACK W32StandaloneDialogPanel::StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
+	if (message == WM_INITDIALOG) {
+		((W32DialogPanel*)lParam)->init(hDialog);
+		return true;
+	} else if (message == WM_COMMAND) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			return panel->commandCallback(wParam);
+		}
+	} else if (message == WM_NOTIFY) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			return panel->notificationCallback(wParam, lParam);
+		}
+	} else if (message == WM_SIZE) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			panel->setSize(W32Widget::Size(LOWORD(lParam) / 2, HIWORD(lParam) / 2));
+			panel->updateElementSize();
+		}
+		return false;
+	} else if (message == LAYOUT_MESSAGE) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			panel->layout();
+			return true;
+		}
+	}
+	return false;
+}
+
+bool W32StandaloneDialogPanel::commandCallback(WPARAM wParam) {
+	if (wParam == IDOK) {
+		if (myExitOnOk) {
+			endDialog(true);
+		} else {
+			fireEvent(OK_EVENT);
+		}
+		return true;
+	}
+
+	if (wParam == IDCANCEL) {
+		if (myExitOnCancel) {
+			endDialog(false);
+		} else {
+			fireEvent(CANCEL_EVENT);
+		}
+		return true;
+	}
+
+	return W32DialogPanel::commandCallback(wParam);
+}
+
+void W32StandaloneDialogPanel::setExitOnOk(bool exit) {
+	myExitOnOk = exit;
+}
+
+void W32StandaloneDialogPanel::setExitOnCancel(bool exit) {
+	myExitOnCancel = exit;
+}
+
+bool W32StandaloneDialogPanel::runDialog() {
+	return DialogBoxIndirectParam(GetModuleHandle(0), dialogTemplate(), myMainWindow, StaticCallback, (LPARAM)this);
+}

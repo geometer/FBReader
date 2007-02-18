@@ -35,7 +35,7 @@ protected:
 	ZLFSDir *createNewDirectory(const std::string &path) const;
 
 	std::string convertFilenameToUtf8(const std::string &name) const;
-	int findArchivePathDelimiter(const std::string &path) const;
+	int findArchiveFileNameDelimiter(const std::string &path) const;
 
 	void moveFile(const std::string &oldName, const std::string &newName);
 	void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const;

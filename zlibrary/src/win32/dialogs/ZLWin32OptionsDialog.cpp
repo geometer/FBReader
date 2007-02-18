@@ -29,7 +29,7 @@ ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
 	myTabs.push_back(tab);
 
 	W32DialogPanel &panel = myPropertySheet.createPanel(name);
-	panel.setListener(this);
+	panel.addListener(this);
 	panel.setElement(tab->contentPtr());
 	W32Table &table = tab->contentTable();
 	const int charHeight = panel.charDimension().Height;

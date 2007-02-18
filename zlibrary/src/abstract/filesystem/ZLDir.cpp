@@ -36,23 +36,18 @@ std::string ZLDir::parentName() const {
 	if (myName == "/") {
 		return myName;
 	}
-	int index = myName.rfind(':');
-	if (index == -1) {
-		index = myName.rfind(delimiter());
-	}
+	int index = ZLFSManager::instance().findLastFileNameDelimiter(myName);
 	return (index <= 0) ? "/" : myName.substr(0, index);
 }
 
 std::string ZLDir::shortName() const {
-	int index = myName.rfind(':');
-	if (index == -1) {
-		index = myName.rfind(delimiter());
-	}
+	int index = ZLFSManager::instance().findLastFileNameDelimiter(myName);
 	return myName.substr(index + 1);
 }
 
 std::string ZLDir::itemName(const std::string &shortName) const {
-	std::string name = (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
-	ZLFSManager::instance().normalize(name);
-	return name;
+	if (shortName == "..") {
+		return parentName();
+	}
+	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
 }

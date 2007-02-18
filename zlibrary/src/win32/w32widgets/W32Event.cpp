@@ -17,36 +17,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __W32EVENT_H__
-#define __W32EVENT_H__
+#include "W32Event.h"
 
-#include <string>
-#include <list>
+W32Listener::W32Listener() {
+}
 
-class W32EventSender;
+W32Listener::~W32Listener() {
+}
 
-class W32Listener {
+W32EventSender::W32EventSender() {
+}
 
-protected:
-	W32Listener();
+void W32EventSender::addListener(W32Listener *listener) {
+	if (listener != 0) {
+		std::list<W32Listener*>::const_iterator it = std::find(myListeners.begin(), myListeners.end(), listener);
+		if (it == myListeners.end()) {
+			myListeners.push_back(listener);
+		}
+	}
+}
 
-public:
-	virtual ~W32Listener();
-	virtual void onEvent(const std::string &event, W32EventSender &sender) = 0;
-};
+void W32EventSender::removeListener(W32Listener *listener) {
+	myListeners.remove(listener);
+}
 
-class W32EventSender {
-
-public:
-	W32EventSender();
-	void addListener(W32Listener *listener);
-	void removeListener(W32Listener *listener);
-
-protected:
-	void fireEvent(const std::string &event);
-
-private:
-	std::list<W32Listener*> myListeners;
-};
-
-#endif /* __W32EVENT_H__ */
+void W32EventSender::fireEvent(const std::string &event) {
+	for (std::list<W32Listener*>::iterator it = myListeners.begin(); it != myListeners.end(); ++it) {
+		(*it)->onEvent(event, *this);
+	}
+}

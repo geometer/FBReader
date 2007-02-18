@@ -24,7 +24,6 @@
 #include <string>
 
 #include <windows.h>
-#include <prsht.h>
 
 #include <ZLUnicodeUtil.h>
 
@@ -36,40 +35,35 @@ class W32DialogPanel : public W32ControlCollection, public W32EventSender {
 
 public:
 	static const std::string PANEL_SELECTED_EVENT;
-	static const std::string CANCEL_EVENT;
-	static const std::string OK_EVENT;
 
 private:
-	static const UINT LAYOUT_MESSAGE;
-	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
+	static UINT LAYOUT_MESSAGE;
 
 private:
 	static std::map<HWND,W32DialogPanel*> ourPanels;
 
 public:
 	W32DialogPanel(HWND mainWindow, const std::string &caption);
-	~W32DialogPanel();
+	virtual ~W32DialogPanel();
 	DLGTEMPLATE *dialogTemplate();
 	void setElement(W32WidgetPtr element);
 	W32Widget::Size charDimension() const;
 	const std::string &caption() const;
 
-	bool runDialog();
-
-	void setExitOnOk(bool exit);
-	void setExitOnCancel(bool exit);
-
-private:
-	void calculateSize();
 	W32Widget::Size size() const;
 	void setSize(W32Widget::Size size);
 
+private:
+	void calculateSize();
+	void updateElementSize();
+
 	void init(HWND dialogWindow);
-	bool commandCallback(WPARAM wParam);
+	virtual bool commandCallback(WPARAM wParam);
 	bool notificationCallback(WPARAM wParam, LPARAM lParam);
 	void invalidate();
 	void layout();
-	void endDialog(bool code);
+
+	virtual DWORD style() const;
 
 private:
 	HWND myMainWindow;
@@ -83,10 +77,38 @@ private:
 	HWND myDialogWindow;
 	bool myDoLayout;
 
+friend class W32StandaloneDialogPanel;
+friend class W32PropertySheet;
+};
+
+class W32StandaloneDialogPanel : public W32DialogPanel {
+
+public:
+	static const std::string CANCEL_EVENT;
+	static const std::string OK_EVENT;
+
+private:
+	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
+
+public:
+	W32StandaloneDialogPanel(HWND mainWindow, const std::string &caption);
+
+	bool runDialog();
+	void endDialog(bool code);
+
+	void setResizeable(bool resizeable);
+
+	void setExitOnOk(bool exit);
+	void setExitOnCancel(bool exit);
+
+private:
+	bool commandCallback(WPARAM wParam);
+	DWORD style() const;
+
+private:
+	bool myResizeable;
 	bool myExitOnCancel;
 	bool myExitOnOk;
-
-friend class W32PropertySheet;
 };
 
 class W32PropertySheet {

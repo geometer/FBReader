@@ -56,13 +56,14 @@ protected:
 	virtual bool removeFile(const std::string &path) const = 0;
 	virtual std::string convertFilenameToUtf8(const std::string &name) const = 0;
 
-	virtual int findArchivePathDelimiter(const std::string &path) const = 0;
-	virtual int findLastPathDelimiter(const std::string &path) const = 0;
+	virtual int findArchiveFileNameDelimiter(const std::string &path) const = 0;
+	virtual int findLastFileNameDelimiter(const std::string &path) const = 0;
 
 private:
 	std::map<std::string,ZLFile::ArchiveType> myForcedFiles;
 
 friend class ZLFile;
+friend class ZLDir;
 };
 
 inline ZLFSManager &ZLFSManager::instance() { return *ourInstance; }

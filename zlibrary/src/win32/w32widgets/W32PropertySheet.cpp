@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <windows.h>
+#include <prsht.h>
+
 #include "W32DialogPanel.h"
 
 #include "W32WCHARUtil.h"

@@ -45,6 +45,10 @@ private:
 class W32TreeView : public W32Control {
 
 public:
+	static const std::string ITEM_DOUBLE_CLICKED_EVENT;
+	static const std::string ITEM_SELECTED_EVENT;
+
+public:
 	W32TreeView(short iconSize);
 
 	void clear();
@@ -60,7 +64,7 @@ private:
 	void init(HWND parent, W32ControlCollection *collection);
 	void notificationCallback(LPARAM lParam);
 
-	void showItem(W32TreeViewItem &item);
+	void showItem(W32TreeViewItem &item, int index);
 	void addBitmapToList(HBITMAP bitmap);
 
 private:

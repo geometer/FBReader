@@ -82,7 +82,7 @@ std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) con
 	return name;
 }
 
-int ZLWin32FSManager::findArchivePathDelimiter(const std::string &path) const {
+int ZLWin32FSManager::findArchiveFileNameDelimiter(const std::string &path) const {
 	int index = path.rfind(':');
 	return (index == 1) ? -1 : index;
 }

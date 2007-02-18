@@ -27,7 +27,7 @@ void ZLWin32OptionView::_createItem() {
 BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	myCheckBox = new W32CheckBox(myOption->name());
 	myCheckBox->setChecked(option->initialState());
-	myCheckBox->setListener(this);
+	myCheckBox->addListener(this);
 	tab.insertWidget(myCheckBox, from, to);
 }
 
@@ -85,7 +85,7 @@ ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogConten
 	}
 	myComboBox = new W32ComboBox(values, index);
 	myComboBox->setEditable(option->isEditable());
-	myComboBox->setListener(this);
+	myComboBox->addListener(this);
 	const std::string &name = option->name();
 	if (name.empty()) {
 		myLabel = 0;
@@ -204,7 +204,7 @@ void SpinOptionView::_hide() {
 
 StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	myLineEditor = new W32LineEditor(option->initialValue());
-	myLineEditor->setListener(this);
+	myLineEditor->addListener(this);
 	const std::string &name = option->name();
 	if (name.empty()) {
 		myLabel = 0;

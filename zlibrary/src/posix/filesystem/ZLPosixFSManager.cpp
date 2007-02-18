@@ -57,8 +57,8 @@ bool ZLPosixFSManager::removeFile(const std::string &path) const {
 	return unlink(path.c_str()) == 0;
 }
 
-int ZLPosixFSManager::findLastPathDelimiter(const std::string &path) const {
-	int index = findArchivePathDelimiter(path);
+int ZLPosixFSManager::findLastFileNameDelimiter(const std::string &path) const {
+	int index = findArchiveFileNameDelimiter(path);
 	if (index == -1) {
 		index = path.rfind(ZLApplication::FileNameDelimiter);
 	}

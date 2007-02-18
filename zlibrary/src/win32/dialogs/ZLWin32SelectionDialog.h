@@ -59,21 +59,12 @@ private:
 private:
 	HBITMAP getBitmap(const ZLTreeNodePtr node);
 
-/*
-private:
-	bool myExitFlag;
-	bool myNodeSelected;
-	Win32Dialog *myDialog;
-	Win32ListStore *myStore;
-	Win32TreeView *myView;
-	Win32Entry *myStateLine;
-*/
-
 private:
 	ZLWin32ApplicationWindow &myWindow;
-	W32DialogPanel myPanel;
+	W32StandaloneDialogPanel myPanel;
 	W32TreeView *myTreeView;
 	W32LineEditor *myLineEditor;
+	W32PushButton *myOkButton;
 
 	std::map<std::string,HBITMAP> myBitmaps;
 };

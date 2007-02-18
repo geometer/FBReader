@@ -32,7 +32,7 @@
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
 	{
-		int index = ZLFSManager::instance().findLastPathDelimiter(myPath);
+		int index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
 		myFullName = myPath.substr(index + 1);
 	}
 	myName = myFullName;
@@ -80,7 +80,7 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 
 	ZLInputStream *stream = 0;
 	
-	int index = ZLFSManager::instance().findArchivePathDelimiter(myPath);
+	int index = ZLFSManager::instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
 		stream = ZLFSManager::instance().createPlainInputStream(myPath);
 	} else {
@@ -110,7 +110,7 @@ shared_ptr<ZLOutputStream> ZLFile::outputStream() const {
 	if (isCompressed()) {
 		return 0;
 	}
-	if (ZLFSManager::instance().findArchivePathDelimiter(myPath) != -1) {
+	if (ZLFSManager::instance().findArchiveFileNameDelimiter(myPath) != -1) {
 		return 0;
 	}
 	return ZLFSManager::instance().createOutputStream(myPath);
@@ -133,7 +133,7 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 }
 
 void ZLFile::fillInfo() const {
-	int index = ZLFSManager::instance().findArchivePathDelimiter(myPath);
+	int index = ZLFSManager::instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
 		myInfo = ZLFSManager::instance().fileInfo(myPath);
 	} else {
@@ -162,7 +162,7 @@ void ZLFile::forceArchiveType(ArchiveType type) {
 std::string ZLFile::physicalFilePath() const {
 	std::string path = myPath;
 	int index;
-	while ((index = ZLFSManager::instance().findArchivePathDelimiter(path)) != -1) {
+	while ((index = ZLFSManager::instance().findArchiveFileNameDelimiter(path)) != -1) {
 		path = path.substr(0, index);
 	}
 	return path;

@@ -28,6 +28,9 @@
 #include "W32TreeView.h"
 #include "W32WCHARUtil.h"
 
+const std::string W32TreeView::ITEM_SELECTED_EVENT = "Tree View: Item Selected";
+const std::string W32TreeView::ITEM_DOUBLE_CLICKED_EVENT = "Tree View: Item Double-Clicked";
+
 static const WCHAR CLASSNAME_TREEVIEW[] = WC_TREEVIEW;
 
 static HBITMAP maskBitmap(HWND window, HBITMAP original, int iconSize) {
@@ -64,7 +67,7 @@ int W32TreeViewItem::iconIndex() const {
 	return myIconIndex;
 }
 
-W32TreeView::W32TreeView(short iconSize) : W32Control(WS_BORDER | TVS_DISABLEDRAGDROP), myIconSize(iconSize) {
+W32TreeView::W32TreeView(short iconSize) : W32Control(WS_BORDER | WS_TABSTOP | TVS_DISABLEDRAGDROP), myIconSize(iconSize), mySelectedIndex(-1) {
 }
 
 void W32TreeView::clear() {
@@ -102,15 +105,15 @@ void W32TreeView::insert(const std::string &itemName, HBITMAP icon) {
 	shared_ptr<W32TreeViewItem> item = new W32TreeViewItem(itemName, iconIndex);
 	myItems.push_back(item);
 	if (myWindow != 0) {
-		showItem(*item);
+		showItem(*item, myItems.size() - 1);
 	}
 }
 
-void W32TreeView::showItem(W32TreeViewItem &item) {
+void W32TreeView::showItem(W32TreeViewItem &item, int index) {
 	TVINSERTSTRUCT tvItem;
 	tvItem.hParent = TVI_ROOT;
 	tvItem.hInsertAfter = TVI_LAST;
-	tvItem.item.mask = TVIF_TEXT | TVIF_IMAGE;
+	tvItem.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_PARAM;
 	//tvItem.item.hItem = 0;
 	//tvItem.item.state = 0;
 	//tvItem.item.stateMask = 0;
@@ -119,7 +122,7 @@ void W32TreeView::showItem(W32TreeViewItem &item) {
 	tvItem.item.iImage = item.iconIndex();
 	//tvItem.item.iSelectedImage = 0;
 	//tvItem.item.cChildren = 0;
-	//tvItem.item.lParam = 0;
+	tvItem.item.lParam = index;
 
 	SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&tvItem);
 }
@@ -174,7 +177,7 @@ void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 	SendMessage(myWindow, TVM_SETIMAGELIST, 0, (LPARAM)imageList);
 
 	for (std::vector<shared_ptr<W32TreeViewItem> >::iterator it = myItems.begin(); it != myItems.end(); ++it) {
-		showItem(**it);
+		showItem(**it, it - myItems.begin());
 	}
 	for (std::vector<HBITMAP>::iterator it = myBitmaps.begin(); it != myBitmaps.end(); ++it) {
 		addBitmapToList(*it);
@@ -184,14 +187,22 @@ void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 void W32TreeView::notificationCallback(LPARAM lParam) {
 	NMTREEVIEW &notification = *(NMTREEVIEW*)lParam;
 	switch (notification.hdr.code) {
+		case TVN_ITEMEXPANDING:
+			std::cerr << "item expanding\n";
+			break;
+		case TVN_ITEMEXPANDED:
+			std::cerr << "item expanded\n";
+			break;
 		case TVN_SELCHANGING:
 			//std::cerr << "selection changing\n";
 			break;
 		case TVN_SELCHANGED:
-			//mySelectedIndex = ;
+			mySelectedIndex = notification.itemNew.lParam;
+			fireEvent(ITEM_SELECTED_EVENT);
 			break;
-		case TVN_ITEMEXPANDING:
-			//std::cerr << "item expanding\n";
+		// TODO: symbolic name?
+		case -3:
+			fireEvent(ITEM_DOUBLE_CLICKED_EVENT);
 			break;
 		case TVN_DELETEITEM:
 			//std::cerr << "delete item\n";
@@ -203,9 +214,16 @@ void W32TreeView::notificationCallback(LPARAM lParam) {
 }
 
 void W32TreeView::select(int index) {
-	mySelectedIndex = index;
-	if (myWindow != 0) {
-		//SendMessage(myWindow, TVM_SELECTITEM, TVGN_FIRSTVISIBLE, );
+	if ((index >= 0) && (index < (int)myItems.size())) {
+		mySelectedIndex = index;
+		if (myWindow != 0) {
+			HTREEITEM item = TreeView_GetChild(myWindow, TVI_ROOT);
+			for (int i = 0; i < mySelectedIndex; ++i) {
+				item = TreeView_GetNextSibling(myWindow, item);
+			}
+			TreeView_SelectItem(myWindow, item);
+			TreeView_EnsureVisible(myWindow, item);
+		}
 	}
 }
 

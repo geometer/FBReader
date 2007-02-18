@@ -74,6 +74,9 @@ protected:
 class W32PushButton : public W32StandardControl {
 
 public:
+	static const std::string RELEASED_EVENT;
+
+public:
 	enum ButtonType {
 		NORMAL_BUTTON,
 		OK_BUTTON,
@@ -87,6 +90,8 @@ public:
 	void allocate(WORD *&p, short &id) const;
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
+
+	void commandCallback(DWORD hiWParam);
 
 private:
 	std::string myText;

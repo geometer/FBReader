@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <windows.h>
 #include <commctrl.h>
 
@@ -32,25 +34,6 @@ static const WORD CLASS_SCROLLBAR = 0x0084;
 static const WORD CLASS_COMBOBOX = 0x0085;
 
 static const WCHAR CLASSNAME_SPINNER[] = UPDOWN_CLASSW;
-
-W32Listener::W32Listener() {
-}
-
-W32Listener::~W32Listener() {
-}
-
-W32EventSender::W32EventSender() : myListener(0) {
-}
-
-void W32EventSender::setListener(W32Listener *listener) {
-	myListener = listener;
-}
-
-void W32EventSender::fireEvent(const std::string &event) {
-	if (myListener != 0) {
-		myListener->onEvent(event, *this);
-	}
-}
 
 W32Control::W32Control(DWORD style) : myStyle(style | WS_CHILD), myX(1), myY(1), mySize(Size(1, 1)), myEnabled(true), myOwner(0), myWindow(0) {
 }
@@ -144,6 +127,8 @@ void W32Control::commandCallback(DWORD) {
 void W32Control::notificationCallback(LPARAM) {
 }
 
+const std::string W32PushButton::RELEASED_EVENT = "PushButton: released";
+
 W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32StandardControl(BS_PUSHBUTTON | WS_TABSTOP), myText(text), myType(type) {
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
@@ -179,6 +164,10 @@ void W32PushButton::init(HWND parent, W32ControlCollection *collection) {
 		EnableWindow(myWindow, false);
 	}
 	::setWindowText(myWindow, myText);
+}
+
+void W32PushButton::commandCallback(DWORD hiWParam) {
+	fireEvent(RELEASED_EVENT);
 }
 
 W32Label::W32Label(const std::string &text) : W32StandardControl(SS_RIGHT), myText(text), myVShift(0) {

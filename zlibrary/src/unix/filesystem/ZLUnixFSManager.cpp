@@ -74,7 +74,7 @@ ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
 	return (mkdir(path.c_str(), 0x1FF) == 0) ? createPlainDirectory(path) : 0;
 }
 
-int ZLUnixFSManager::findArchivePathDelimiter(const std::string &path) const {
+int ZLUnixFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
 	return path.rfind(':');
 }
 
