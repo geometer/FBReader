@@ -148,8 +148,6 @@ void W32TreeView::allocate(WORD *&p, short &id) const {
 	p += classNameLength;
 	*p++ = 0;
 
-	//*p++ = 0xFFFF;
-	//*p++ = classId();
 	*p++ = 0;
 	*p++ = 0;
 	*p++ = 0;
@@ -188,13 +186,13 @@ void W32TreeView::notificationCallback(LPARAM lParam) {
 	NMTREEVIEW &notification = *(NMTREEVIEW*)lParam;
 	switch (notification.hdr.code) {
 		case TVN_ITEMEXPANDING:
-			std::cerr << "item expanding\n";
-			std::cerr << notification.itemOld.lParam << " : ";
-			std::cerr << notification.itemNew.lParam << " : ";
-			std::cerr << myItems.size() << "\n";
+			//std::cerr << "item expanding\n";
+			//std::cerr << notification.itemOld.lParam << " : ";
+			//std::cerr << notification.itemNew.lParam << " : ";
+			//std::cerr << myItems.size() << "\n";
 			break;
 		case TVN_ITEMEXPANDED:
-			std::cerr << "item expanded\n";
+			//std::cerr << "item expanded\n";
 			break;
 		case TVN_SELCHANGING:
 			//std::cerr << "selection changing\n";

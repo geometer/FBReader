@@ -170,7 +170,7 @@ void W32PushButton::commandCallback(DWORD hiWParam) {
 	fireEvent(RELEASED_EVENT);
 }
 
-W32Label::W32Label(const std::string &text) : W32StandardControl(SS_RIGHT), myText(text), myVShift(0) {
+W32Label::W32Label(const std::string &text, Alignment alignment) : W32StandardControl(alignment), myText(text), myVShift(0) {
 }
 
 void W32Label::setDimensions(Size charDimension) {
@@ -190,6 +190,39 @@ WORD W32Label::classId() const {
 void W32Label::init(HWND parent, W32ControlCollection *collection) {
 	W32StandardControl::init(parent, collection);
 	::setWindowText(myWindow, myText);
+}
+
+W32StandardIcon::W32StandardIcon(IconId iconId) : W32StandardControl(SS_CENTER | SS_ICON), myIconId(iconId) {
+	// TODO: why multiplier 2?
+	mySize.Width = SM_CXICON * 2;
+	mySize.Height = SM_CYICON * 2;
+}
+
+void W32StandardIcon::setDimensions(Size) {
+}
+
+WORD W32StandardIcon::classId() const {
+	return CLASS_STATIC;
+}
+
+void W32StandardIcon::init(HWND parent, W32ControlCollection *collection) {
+	W32StandardControl::init(parent, collection);
+	WCHAR *icon;
+	switch (myIconId) {
+		case ID_INFORMATION:
+			icon = IDI_INFORMATION;
+			break;
+		case ID_QUESTION:
+			icon = IDI_QUESTION;
+			break;
+		case ID_ERROR:
+			icon = IDI_ERROR;
+			break;
+		default:
+			icon = IDI_APPLICATION;
+			break;
+	}
+	SendMessage(myWindow, STM_SETICON, (WPARAM)LoadIcon(0, icon), 0);
 }
 
 const std::string W32CheckBox::STATE_CHANGED_EVENT = "CheckBox: state changed";

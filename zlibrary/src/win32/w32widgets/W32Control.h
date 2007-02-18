@@ -101,7 +101,14 @@ private:
 class W32Label : public W32StandardControl {
 
 public:
-	W32Label(const std::string &text);
+	enum Alignment {
+		ALIGN_LEFT = SS_LEFT,
+		ALIGN_RIGHT = SS_RIGHT,
+		ALIGN_CENTER = SS_CENTER
+	};
+
+public:
+	W32Label(const std::string &text, Alignment alignment);
 	void setDimensions(Size charDimension);
 
 	WORD classId() const;
@@ -109,8 +116,28 @@ public:
 	void init(HWND parent, W32ControlCollection *collection);
 
 private:
-	std::string myText;
+	const std::string myText;
 	int myVShift;
+};
+
+class W32StandardIcon : public W32StandardControl {
+
+public:
+	enum IconId {
+		ID_INFORMATION,
+		ID_QUESTION,
+		ID_ERROR
+	};
+
+public:
+	W32StandardIcon(IconId iconId);
+	void setDimensions(Size charDimension);
+
+	WORD classId() const;
+	void init(HWND parent, W32ControlCollection *collection);
+
+private:
+	const IconId myIconId;
 };
 
 class W32CheckBox : public W32StandardControl {

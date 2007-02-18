@@ -22,11 +22,10 @@
 #include "../application/ZLWin32ApplicationWindow.h"
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32SelectionDialog.h"
+#include "ZLWin32MessageBox.h"
 /*
 #include "ZLWin32WaitMessage.h"
 */
-#include <ZLDialog.h>
-#include <ZLSelectionDialog.h>
 
 void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new ZLWin32ApplicationWindow(application);
@@ -41,18 +40,29 @@ shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std:
 }
 
 void ZLWin32DialogManager::informationBox(const std::string &title, const std::string &message) const {
-	// TODO: use utf8 strings
-	//MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONINFORMATION | MB_OK);
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_INFORMATION, title, message);
+	box.addButton("&Ok");
+	box.run();
 }
 
 void ZLWin32DialogManager::errorBox(const std::string &title, const std::string &message) const {
-	// TODO: use utf8 strings
-	//MessageBox(myApplicationWindow->mainWindow(), message.c_str(), title.c_str(), MB_APPLMODAL | MB_ICONERROR | MB_OK);
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_ERROR, title, message);
+	box.addButton("&Ok");
+	box.run();
 }
 
 int ZLWin32DialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	//return internalBox(GTK_STOCK_DIALOG_QUESTION, title, message, button0, button1, button2);
-	return 0;
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_ERROR, title, message);
+	if (!button0.empty()) {
+		box.addButton(button0);
+	}
+	if (!button1.empty()) {
+		box.addButton(button1);
+	}
+	if (!button2.empty()) {
+		box.addButton(button2);
+	}
+	return box.run();
 }
 
 bool ZLWin32DialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {

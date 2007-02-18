@@ -1,4 +1,4 @@
-*** 0.7.9
+*** 0.8.0
 
 DONE 16-bit images in plucker files
 
@@ -18,39 +18,30 @@ openbook
 вызов по ссылкам внешних программ
 кнопка End в plucker
 проверить все версии -- что не падает options dialog
+многократный перенос (оч. длинное слово)
 
 ==============================================================================
 
-*** win32 version
+*** win32 version (0.8.0)
 
 диалоги
   table layout
 	перераскладка при необходимости
 		разобраться с размерами
-	  добавлять при необходимости scrollbar'ы
 	ColorOptionView
 	KeyOptionView
-	менять шрифт диалогов в зависимости от системных настроек
-	создавать окна для элементов управления по мере необходимости(?)
-	в неактивном LineEditor позиционировать курсор слева
-	informationBoxes
 	WaitMessage
-	resize для selection dialog (border layout?)
 	selection dialog
-		падение под xp после item expanding message
+		resize (border layout?)
+		падение под xp после item expanding message (fixed?)
 		перерисовка кнопок под xp после resize
-		save selection dialog
 утилита для создания inactive иконки
 target 'install' в Makefile
 установщик
-конфиг в registry (?)
-expat -> msxml (?)
-iconv -> internal converter (?)
-оптимизировать PaintContext
+конфиг в registry
 рисунки в тексте
 поворот текста
 таймер
-удалить все #ifdef _WIN32
 удалить все #include <iostream>
 избавиться от явных упоминаний '/' и "/"
 не показывать в тулбаре 2 разделителя рядом
@@ -61,8 +52,7 @@ iconv -> internal converter (?)
 переход между дисками в файловой системе
 иконки
 коды клавиш
-запретить Drag'N'Drop в toolbar и listview (падения в wine)
-почему так странно резайзится indicator tab
+почему так странно ресайзится indicator tab
 русские имена файлов
 проверить работу с архивами в unix и win32 (findLastFileNameDelimiter)
 открывать options/book info dialog по центру основного окна
@@ -70,17 +60,12 @@ iconv -> internal converter (?)
 
 ==============================================================================
 
-*** 0.8.0
+*** после 0.8.0
 
-многократный перенос (оч. длинное слово)
 info dialog icon in contents tree
   for books
 	for authors
 	for series
-
-==============================================================================
-
-*** после 0.8.0
 
 tree-*.png
 	18x15
@@ -117,3 +102,20 @@ txt (письмо от Антона Фарыгина)
 options dialog -- создавать меньше объектов
 интеграция с каким-нибудь словарем в maemo
 хитрый контрол для кодировок
+
+==============================================================================
+
+*** win32 version (после 0.8.0)
+
+диалоги
+	перераскладка при необходимости
+	  добавлять при необходимости scrollbar'ы
+	менять шрифт диалогов в зависимости от системных настроек
+	создавать окна для элементов управления по мере необходимости(?)
+	в неактивном LineEditor позиционировать курсор слева
+	save selection dialog (для GC)
+expat -> msxml
+iconv -> internal converter
+	удалить все #ifdef _WIN32
+оптимизировать PaintContext
+запретить Drag'N'Drop в toolbar и listview (падения в wine)

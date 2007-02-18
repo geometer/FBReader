@@ -91,7 +91,7 @@ ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogConten
 		myLabel = 0;
 		tab.insertWidget(myComboBox, from, to);
 	} else {
-		myLabel = new W32Label(name);
+		myLabel = new W32Label(name, W32Label::ALIGN_RIGHT);
 		tab.insertWidget(myLabel, from, (from + to) / 2);
 		tab.insertWidget(myComboBox, (from + to) / 2 + 1, to);
 	}
@@ -162,7 +162,7 @@ SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent &
 		myLabel = 0;
 		tab.insertWidget(mySpinBox, from, to);
 	} else {
-		myLabel = new W32Label(name);
+		myLabel = new W32Label(name, W32Label::ALIGN_RIGHT);
 		tab.insertWidget(myLabel, from, (from + to) / 2);
 		tab.insertWidget(mySpinBox, (from + to) / 2 + 1, to);
 	}
@@ -210,7 +210,7 @@ StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogCon
 		myLabel = 0;
 		tab.insertWidget(myLineEditor, from, to);
 	} else {
-		myLabel = new W32Label(name);
+		myLabel = new W32Label(name, W32Label::ALIGN_RIGHT);
 		tab.insertWidget(myLabel, from, (from + to) / 2);
 		tab.insertWidget(myLineEditor, (from + to) / 2 + 1, to);
 	}
