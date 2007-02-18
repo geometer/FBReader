@@ -67,7 +67,7 @@ int W32TreeViewItem::iconIndex() const {
 	return myIconIndex;
 }
 
-W32TreeView::W32TreeView(short iconSize) : W32Control(WS_BORDER | WS_TABSTOP | TVS_DISABLEDRAGDROP), myIconSize(iconSize), mySelectedIndex(-1) {
+W32TreeView::W32TreeView(short iconSize) : W32Control(WS_BORDER | WS_TABSTOP | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | TVS_SINGLEEXPAND), myIconSize(iconSize), mySelectedIndex(-1) {
 }
 
 void W32TreeView::clear() {
@@ -113,7 +113,7 @@ void W32TreeView::showItem(W32TreeViewItem &item, int index) {
 	TVINSERTSTRUCT tvItem;
 	tvItem.hParent = TVI_ROOT;
 	tvItem.hInsertAfter = TVI_LAST;
-	tvItem.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_PARAM;
+	tvItem.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_PARAM | TVIF_CHILDREN;
 	//tvItem.item.hItem = 0;
 	//tvItem.item.state = 0;
 	//tvItem.item.stateMask = 0;
@@ -121,7 +121,7 @@ void W32TreeView::showItem(W32TreeViewItem &item, int index) {
 	tvItem.item.cchTextMax = item.text().size();
 	tvItem.item.iImage = item.iconIndex();
 	//tvItem.item.iSelectedImage = 0;
-	//tvItem.item.cChildren = 0;
+	tvItem.item.cChildren = 0;
 	tvItem.item.lParam = index;
 
 	SendMessage(myWindow, TVM_INSERTITEM, 0, (LPARAM)&tvItem);
@@ -189,6 +189,9 @@ void W32TreeView::notificationCallback(LPARAM lParam) {
 	switch (notification.hdr.code) {
 		case TVN_ITEMEXPANDING:
 			std::cerr << "item expanding\n";
+			std::cerr << notification.itemOld.lParam << " : ";
+			std::cerr << notification.itemNew.lParam << " : ";
+			std::cerr << myItems.size() << "\n";
 			break;
 		case TVN_ITEMEXPANDED:
 			std::cerr << "item expanded\n";

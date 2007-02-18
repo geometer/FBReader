@@ -148,7 +148,6 @@ bool W32DialogPanel::notificationCallback(WPARAM wParam, LPARAM lParam) {
 	W32Control *control = (*this)[LOWORD(wParam)];
 	if (control != 0) {
 		control->notificationCallback(lParam);
-		return true;
 	}
 	return false;
 }
