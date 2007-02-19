@@ -22,6 +22,7 @@
 #include <queue>
 #include <algorithm>
 
+#include <ZLApplication.h>
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
@@ -165,11 +166,11 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) const {
 	std::queue<std::string> nameQueue;
 
 	std::string path = myPath;
-	int pos = path.find(':');
+	int pos = path.find(ZLApplication::PathDelimiter);
 	while (pos != -1) {
 		nameQueue.push(path.substr(0, pos));
 		path.erase(0, pos + 1);
-		pos = path.find(':');
+		pos = path.find(ZLApplication::PathDelimiter);
 	}
 	if (!path.empty()) {
 		nameQueue.push(path);

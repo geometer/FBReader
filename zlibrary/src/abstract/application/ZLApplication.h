@@ -42,6 +42,7 @@ public:
 	static const std::string HomeDirectory;
 
 	static const std::string FileNameDelimiter;
+	static const std::string PathDelimiter;
 
 	static const std::string &ApplicationName();
 	static const std::string &ImageDirectory();

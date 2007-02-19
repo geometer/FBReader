@@ -36,6 +36,7 @@ public:
 const std::string ZLApplicationBase::BaseDirectory = std::string(BASEDIR);
 const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
 const std::string ZLApplicationBase::FileNameDelimiter = std::string(FILENAMEDELIMITER);
+const std::string ZLApplicationBase::PathDelimiter = std::string(PATHDELIMITER);
 
 std::string ZLApplicationBase::ourApplicationName;
 std::string ZLApplicationBase::ourImageDirectory;
