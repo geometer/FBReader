@@ -21,11 +21,12 @@
 #include <stdlib.h>
 
 #include <ZLUnicodeUtil.h>
+#include <ZLApplication.h>
 
 #include "EncodingReader.h"
 #include "ZLEncodingConverter.h"
 
-EncodingReader::EncodingReader(const std::string &encoding) : myFilePath(ZLEncodingConverter::encodingDescriptionPath() + '/' + encoding) {
+EncodingReader::EncodingReader(const std::string &encoding) : myFilePath(ZLEncodingConverter::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + encoding) {
 }
 
 EncodingReader::~EncodingReader() {

@@ -23,6 +23,7 @@
 #include <algorithm>
 
 #include <ZLFile.h>
+#include <ZLApplication.h>
 
 #include "../xml/ZLXMLReader.h"
 
@@ -74,7 +75,7 @@ std::vector<std::string> &ZLEncodingConverter::knownEncodings() {
 			if (converter != (iconv_t)-1) {
 				iconv_close(converter);
 				ourKnownEncodings.push_back(*it);
-			} else if (ZLFile(encodingDescriptionPath() + '/' + *it).exists()) {
+			} else if (ZLFile(encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it).exists()) {
 				ourKnownEncodings.push_back(*it);
 			}
 		}

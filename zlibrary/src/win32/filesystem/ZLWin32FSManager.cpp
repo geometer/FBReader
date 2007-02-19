@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 
 #include "ZLWin32FSManager.h"
-#include "ZLWin32FSDir.h"
+#include "ZLWin32RootDir.h"
 
 static std::string getPwdDir() {
 	char pwd[2048];
@@ -37,7 +37,7 @@ ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
 	if (path.empty()) {
 		return new ZLWin32RootDir();
 	} else {
-		return new ZLWin32FSDir(path);
+		return ZLPosixFSManager::createPlainDirectory(path);
 	}
 }
 
@@ -76,6 +76,10 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 	}
 	while ((index = path.find("\\\\")) != -1) {
 		path.erase(index, 1);
+	}
+
+	if (!path.empty()) {
+		path[0] = toupper(path[0]);
 	}
 }
 

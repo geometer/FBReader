@@ -18,24 +18,18 @@
  * 02110-1301, USA.
  */
 
-#include <dirent.h>
-#include <stdio.h>
+#ifndef __ZLWIN32ROOTDIR_H__
+#define __ZLWIN32ROOTDIR_H__
 
-#include "ZLWin32FSDir.h"
-#include "ZLWin32FSManager.h"
+#include "../../abstract/filesystem/ZLFSDir.h"
 
-void ZLWin32RootDir::collectSubDirs(std::vector<std::string> &names, bool) {
-	names.push_back("C:\\");
-	names.push_back("Z:\\");
-}
+class ZLWin32RootDir : public ZLFSDir {
 
-void ZLWin32RootDir::collectFiles(std::vector<std::string>&, bool) {
-}
+public:
+	ZLWin32RootDir() : ZLFSDir(std::string()) {}
 
-void ZLWin32FSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
-	ZLPosixFSDir::collectSubDirs(names, includeSymlinks);
-}
+	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
+	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+};
 
-void ZLWin32FSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
-	ZLPosixFSDir::collectFiles(names, includeSymlinks);
-}
+#endif /* __ZLWIN32ROOTDIR_H__ */
