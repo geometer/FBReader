@@ -40,15 +40,15 @@ bool ZLDir::isRoot() const {
 	return ZLFSManager::instance().isRootDirectoryPath(myPath);
 }
 
-std::string ZLDir::shortName() const {
+std::string ZLDir::name() const {
 	int index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
 	return myPath.substr(index + 1);
 }
 
-std::string ZLDir::itemPath(const std::string &shortName) const {
-	if (shortName == "..") {
+std::string ZLDir::itemPath(const std::string &itemName) const {
+	if (itemName == "..") {
 		return parentPath();
 	} else {
-		return ZLFSManager::instance().itemPath(myPath, shortName);
+		return isRoot() ? myPath + itemName : myPath + delimiter() + itemName;
 	}
 }

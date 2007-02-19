@@ -85,10 +85,6 @@ bool ZLUnixFSManager::isRootDirectoryPath(const std::string &path) const {
 	return path == "/";
 }
 
-std::string ZLUnixFSManager::itemPath(const std::string &path, const std::string &itemName) {
-	return (path == "/") ? path + itemName : path + delimiter() + itemName;
-}
-
 std::string ZLUnixFSManager::parentPath(const std::string &path) const {
 	if (path == "/") {
 		return path;

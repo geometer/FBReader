@@ -44,7 +44,7 @@ FBFileHandler::~FBFileHandler() {
 void FBFileHandler::changeFolder(const ZLTreeNode &node) {
 	shared_ptr<ZLDir> dir = ZLFile(myDir->itemPath(node.id())).directory();
 	if (!dir.isNull()) {
-		const std::string selectedId = myDir->shortName();
+		const std::string selectedId = myDir->name();
 		myDir = dir;
 		myIsUpToDate = false;
 		mySubnodes.clear();

@@ -106,10 +106,6 @@ bool ZLWin32FSManager::isRootDirectoryPath(const std::string &path) const {
 	return path == "";
 }
 
-std::string ZLWin32FSManager::itemPath(const std::string &path, const std::string &itemName) const {
-	return (path == "") ? itemName : path + '\\' + itemName;
-}
-
 std::string ZLWin32FSManager::parentPath(const std::string &path) const {
 	if (path.length() <= 3) {
 		return "";

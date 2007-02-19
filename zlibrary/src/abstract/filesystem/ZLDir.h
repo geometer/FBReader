@@ -30,7 +30,7 @@ public:
 	ZLDir(const std::string &path);
 	virtual ~ZLDir();
 	const std::string &path() const;
-	std::string shortName() const;
+	std::string name() const;
 	std::string parentPath() const;
 	std::string itemPath(const std::string &name) const;
 	bool isRoot() const;
