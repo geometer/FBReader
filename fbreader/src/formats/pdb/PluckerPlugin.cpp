@@ -42,7 +42,6 @@ bool PluckerPlugin::readDescription(const std::string &path, BookDescription &de
 	if (description.encoding().empty()) {
 		return false;
 	}
-	defaultTitle(description, file.name(true));
 
 	return true;
 }

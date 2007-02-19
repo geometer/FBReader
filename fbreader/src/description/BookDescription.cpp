@@ -98,15 +98,14 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 		BookDescriptionUtil::saveInfo(file);
 	}
 
-	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
+	ZLFile bookFile(fileName);
+	FormatPlugin *plugin = PluginCollection::instance().plugin(bookFile, false);
 	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
 		return 0;
 	}
 
 	if (description->myTitle.empty()) {
-		int slashPos = fileName.find('/');
-		int dotPos = fileName.rfind('.', slashPos + 1);
-		description->myTitle = fileName.substr(slashPos + 1, dotPos - slashPos - 1);
+		description->myTitle = bookFile.name(true);
 	}
 	if (description->myAuthor == 0) {
 		description->myAuthor = SingleAuthor::create();

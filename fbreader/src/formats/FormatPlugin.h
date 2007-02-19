@@ -64,7 +64,6 @@ public:
 
 protected:
 	static void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream);
-	static void defaultTitle(BookDescription &description, const std::string &title);
 };
 
 class PluginCollection {

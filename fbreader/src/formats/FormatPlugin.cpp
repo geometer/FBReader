@@ -54,12 +54,6 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 	}
 }
 
-void FormatPlugin::defaultTitle(BookDescription &description, const std::string &title) {
-	if (description.title().empty()) {
-		WritableBookDescription(description).title() = title;
-	}
-}
-
 const std::string &FormatPlugin::tryOpen(const std::string &path) const {
 	static const std::string EMPTY = "";
 	return EMPTY;
