@@ -30,9 +30,12 @@ protected:
 	ZLFSDir *createNewDirectory(const std::string &path) const;
 
 	int findArchiveFileNameDelimiter(const std::string &path) const;
+	bool isRootDirectoryPath(const std::string &path) const;
+	std::string parentPath(const std::string &path) const;
+	std::string itemPath(const std::string &path, const std::string &itemName) const;
 
 	void moveFile(const std::string &oldName, const std::string &newName);
-	void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const;
+	void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const;
 };
 
 #endif /* __ZLUNIXFSMANAGER_H__ */

@@ -37,7 +37,7 @@ protected:
 
 public:
 	virtual void moveFile(const std::string &oldName, const std::string &newName) = 0;
-	virtual void getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const = 0;
+	virtual void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const = 0;
 };
 
 #endif /* __ZLPOSIXFSMANAGER_H__ */

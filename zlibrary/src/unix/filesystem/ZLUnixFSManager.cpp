@@ -68,6 +68,9 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	while ((index = path.find("/./")) != -1) {
 		path.erase(index, 2);
 	}
+	while ((index = path.find("//")) != -1) {
+		path.erase(index, 1);
+	}
 }
 
 ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
@@ -78,14 +81,30 @@ int ZLUnixFSManager::findArchiveFileNameDelimiter(const std::string &path) const
 	return path.rfind(':');
 }
 
+bool ZLUnixFSManager::isRootDirectoryPath(const std::string &path) const {
+	return path == "/";
+}
+
+std::string ZLUnixFSManager::itemPath(const std::string &path, const std::string &itemName) {
+	return (path == "/") ? path + itemName : path + delimiter() + itemName;
+}
+
+std::string ZLUnixFSManager::parentPath(const std::string &path) const {
+	if (path == "/") {
+		return path;
+	}
+	int index = findLastFileNameDelimiter(path);
+	return (index <= 0) ? "/" : path.substr(0, index);
+}
+
 void ZLUnixFSManager::moveFile(const std::string &oldName, const std::string &newName) {
 	rename(oldName.c_str(), newName.c_str());
 }
 
-void ZLUnixFSManager::getStat(const std::string fullName, bool includeSymlinks, struct stat &fileInfo) const {
+void ZLUnixFSManager::getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const {
 	if (includeSymlinks) {
-		stat(fullName.c_str(), &fileInfo);
+		stat(path.c_str(), &fileInfo);
 	} else {
-		lstat(fullName.c_str(), &fileInfo);
+		lstat(path.c_str(), &fileInfo);
 	}
 }

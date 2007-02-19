@@ -38,11 +38,11 @@ FBFileHandler::FBFileHandler() :
 }
 
 FBFileHandler::~FBFileHandler() {
-	DirectoryOption.setValue(myDir->name());
+	DirectoryOption.setValue(myDir->path());
 }
 
 void FBFileHandler::changeFolder(const ZLTreeNode &node) {
-	shared_ptr<ZLDir> dir = ZLFile(myDir->itemName(node.id())).directory();
+	shared_ptr<ZLDir> dir = ZLFile(myDir->itemPath(node.id())).directory();
 	if (!dir.isNull()) {
 		const std::string selectedId = myDir->shortName();
 		myDir = dir;
@@ -65,7 +65,7 @@ void FBFileHandler::changeFolder(const ZLTreeNode &node) {
 }
 
 const std::string FBFileHandler::stateDisplayName() const {
-	return ZLFile(myDir->name()).utf8Path();
+	return ZLFile::fileNameToUtf8(myDir->path());
 }
 
 const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
@@ -74,7 +74,7 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 	static std::map<FormatPlugin*,std::string> PluginIcons;
 
 	if (!myIsUpToDate) {
-		if (myDir->name() != ZLApplication::FileNameDelimiter) {
+		if (!myDir->isRoot()) {
 			mySubnodes.push_back(new ZLTreeNode("..", "..", FolderIcon, true));
 		}
 
@@ -86,7 +86,7 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 
 		myDir->collectSubDirs(names, true);
 		for (it = names.begin(); it != names.end(); ++it) {
-			const std::string displayName = ZLFile(*it).utf8FullName();
+			const std::string displayName = ZLFile::fileNameToUtf8(ZLFile(*it).name(false));
 			folderNodes[displayName] = new ZLTreeNode(*it, displayName, FolderIcon, true);
 		}
 		names.clear();
@@ -94,7 +94,7 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 		myDir->collectFiles(names, true);
 		for (it = names.begin(); it != names.end(); ++it) {
 			if (!it->empty()) {
-				ZLFile file(myDir->itemName(*it));
+				ZLFile file(myDir->itemPath(*it));
 				FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
 				if (plugin != 0) {
 					std::string icon = PluginIcons[plugin];
@@ -102,10 +102,10 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 						icon = plugin->iconName();
 						PluginIcons[plugin] = icon;
 					}
-					const std::string displayName = file.utf8FullName();
+					const std::string displayName = ZLFile::fileNameToUtf8(file.name(false));
 					fileNodes[displayName] = new ZLTreeNode(*it, displayName, icon, false);
 				} else if (file.isArchive()) {
-					const std::string displayName = file.utf8FullName();
+					const std::string displayName = ZLFile::fileNameToUtf8(file.name(false));
 					folderNodes[displayName] = new ZLTreeNode(*it, displayName, ZipFolderIcon, true);
 				}
 			}
@@ -128,7 +128,7 @@ int FBFileHandler::selectedIndex() const {
 }
 
 bool FBFileHandler::accept(const ZLTreeNode &node) {
-	const std::string name = myDir->itemName(node.id());
+	const std::string name = myDir->itemPath(node.id());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(name), false);
 	const std::string message = (plugin == 0) ? "Unknown File Format" : plugin->tryOpen(name);
 	if (!message.empty()) {

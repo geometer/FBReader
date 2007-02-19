@@ -58,7 +58,7 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {
 	zipDir->collectFiles(fileNames, false);
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
 		if (ZLStringUtil::stringEndsWith(*it, ".opf")) {
-			return zipDir->itemName(*it);
+			return zipDir->itemPath(*it);
 		}
 	}
 	return "";

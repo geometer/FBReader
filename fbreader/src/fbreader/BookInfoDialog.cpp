@@ -299,7 +299,7 @@ void SeriesTitleEntry::onValueEdited(const std::string &value) {
 BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::string &fileName) : myCollection(collection), myBookInfo(fileName) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
 
-	myFileNameEntry = new ZLStringInfoEntry("File", ZLFile(fileName).utf8Path());
+	myFileNameEntry = new ZLStringInfoEntry("File", ZLFile::fileNameToUtf8(ZLFile(fileName).path()));
 	myBookTitleEntry = new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption);
 	myAuthorDisplayNameEntry = new AuthorDisplayNameEntry(*this);
 	myAuthorSortKeyEntry = new AuthorSortKeyEntry(*this);

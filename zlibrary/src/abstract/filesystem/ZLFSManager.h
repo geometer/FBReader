@@ -58,6 +58,9 @@ protected:
 
 	virtual int findArchiveFileNameDelimiter(const std::string &path) const = 0;
 	virtual int findLastFileNameDelimiter(const std::string &path) const = 0;
+	virtual bool isRootDirectoryPath(const std::string &path) const = 0;
+	virtual std::string parentPath(const std::string &path) const = 0;
+	virtual std::string itemPath(const std::string &path, const std::string &itemName) const = 0;
 
 private:
 	std::map<std::string,ZLFile::ArchiveType> myForcedFiles;

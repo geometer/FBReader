@@ -33,9 +33,14 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
 	{
 		int index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
-		myFullName = myPath.substr(index + 1);
+		// TODO: remove this hack
+		if (index < myPath.length() - 1) {
+			myNameWithExtension = myPath.substr(index + 1);
+		} else {
+			myNameWithExtension = myPath;
+		}
 	}
-	myName = myFullName;
+	myNameWithoutExtension = myNameWithExtension;
 
 	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::instance().myForcedFiles;
 	std::map<std::string,ArchiveType>::iterator it = forcedFiles.find(myPath);
@@ -43,15 +48,15 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 		myArchiveType = it->second;
 	} else {
 		myArchiveType = NONE;
-		std::string lowerCaseName = ZLUnicodeUtil::toLower(myName);
+		std::string lowerCaseName = ZLUnicodeUtil::toLower(myNameWithoutExtension);
 
 		if (ZLStringUtil::stringEndsWith(lowerCaseName, ".gz")) {
-			myName = myName.substr(0, myName.length() - 3);
+			myNameWithoutExtension = myNameWithoutExtension.substr(0, myNameWithoutExtension.length() - 3);
 			lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 3);
 			myArchiveType = (ArchiveType)(myArchiveType | GZIP);
 		}
 		if (ZLStringUtil::stringEndsWith(lowerCaseName, ".bz2")) {
-			myName = myName.substr(0, myName.length() - 4);
+			myNameWithoutExtension = myNameWithoutExtension.substr(0, myNameWithoutExtension.length() - 4);
 			lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 4);
 			myArchiveType = (ArchiveType)(myArchiveType | BZIP2);
 		}
@@ -61,15 +66,15 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 			myArchiveType = (ArchiveType)(myArchiveType | TAR);
 		} else if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz") ||
 							 ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
-			//myName = myName.substr(0, myName.length() - 3) + "tar";
+			//myNameWithoutExtension = myNameWithoutExtension.substr(0, myNameWithoutExtension.length() - 3) + "tar";
 			myArchiveType = (ArchiveType)(myArchiveType | TAR | GZIP);
 		}
 	}
 
-	int index = myName.rfind('.');
+	int index = myNameWithoutExtension.rfind('.');
 	if (index > 0) {
-		myExtension = myName.substr(index + 1);
-		myName = myName.substr(0, index);
+		myExtension = myNameWithoutExtension.substr(index + 1);
+		myNameWithoutExtension = myNameWithoutExtension.substr(0, index);
 	}
 }
 
@@ -168,18 +173,6 @@ std::string ZLFile::physicalFilePath() const {
 	return path;
 }
 
-std::string ZLFile::utf8Path() const {
-	return ZLFSManager::instance().convertFilenameToUtf8(myPath);
-}
-
-std::string ZLFile::utf8FullName() const {
-	return ZLFSManager::instance().convertFilenameToUtf8(myFullName);
-}
-
-std::string ZLFile::utf8Name() const {
-	return ZLFSManager::instance().convertFilenameToUtf8(myName);
-}
-
-std::string ZLFile::utf8Extension() const {
-	return ZLFSManager::instance().convertFilenameToUtf8(myExtension);
+std::string ZLFile::fileNameToUtf8(const std::string &fileName) {
+	return ZLFSManager::instance().convertFilenameToUtf8(fileName);
 }

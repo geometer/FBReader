@@ -28,7 +28,7 @@ std::string SceneSetNameReader::readSetName(const ZLFile &file) {
 	shared_ptr<ZLDir> archiveDir = file.directory();
 	mySetName = "";
 	if (!archiveDir.isNull()) {
-		ZLFile descriptionFile(archiveDir->itemName("description.xml"));
+		ZLFile descriptionFile(archiveDir->itemPath("description.xml"));
 		readDocument(descriptionFile.inputStream());
 	}
 	return mySetName;

@@ -139,7 +139,7 @@ size_t ZLTarInputStream::sizeOfOpened() {
 }
 
 void ZLTarDir::collectFiles(std::vector<std::string> &names, bool) {
-	shared_ptr<ZLInputStream> stream = ZLFile(name()).inputStream();
+	shared_ptr<ZLInputStream> stream = ZLFile(path()).inputStream();
 
 	if (!stream.isNull() && stream->open()) {
 		ZLTarHeader header;

@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 
 #include "ZLWin32FSManager.h"
+#include "ZLWin32FSDir.h"
 
 static std::string getPwdDir() {
 	char pwd[2048];
@@ -32,7 +33,19 @@ static std::string getHomeDir() {
 	return (home != 0) ? home : "";
 }
 
+ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
+	if (path.empty()) {
+		return new ZLWin32RootDir();
+	} else {
+		return new ZLWin32FSDir(path);
+	}
+}
+
 void ZLWin32FSManager::normalize(std::string &path) const {
+	if (path.empty()) {
+		return;
+	}
+
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
 	static std::string APPattern = "%APPLICATION_PATH%";
@@ -45,9 +58,7 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 		}
 	}
 
-	if (path.empty()) {
-		path = PwdDir;
-	} else if (path[0] == '~') {
+	if (path[0] == '~') {
 		path = HomeDir + path.substr(1);
 	} else if (path.substr(0, APPattern.length()) == APPattern) {
 		path = AP + path.substr(APPattern.length());
@@ -87,11 +98,41 @@ int ZLWin32FSManager::findArchiveFileNameDelimiter(const std::string &path) cons
 	return (index == 1) ? -1 : index;
 }
 
+bool ZLWin32FSManager::isRootDirectoryPath(const std::string &path) const {
+	return path == "";
+}
+
+std::string ZLWin32FSManager::itemPath(const std::string &path, const std::string &itemName) const {
+	return (path == "") ? itemName : path + '\\' + itemName;
+}
+
+std::string ZLWin32FSManager::parentPath(const std::string &path) const {
+	if (path.length() <= 3) {
+		return "";
+	}
+	int index = findLastFileNameDelimiter(path);
+	std::string result = path.substr(0, index);
+	return (result.length() == 2) ? result + '\\' : result;
+}
+
 void ZLWin32FSManager::moveFile(const std::string &oldName, const std::string &newName) {
 	remove(newName.c_str());
 	rename(oldName.c_str(), newName.c_str());
 }
 
-void ZLWin32FSManager::getStat(const std::string fullName, bool /*includeSymlinks*/, struct stat &fileInfo) const {
-	stat(fullName.c_str(), &fileInfo);
+ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
+	if (path.empty()) {
+		ZLFileInfo info;
+		info.Exists = true;
+		info.Size = 0;
+		info.MTime = 0;
+		info.IsDirectory = true;
+		return info;
+	} else {
+		return ZLPosixFSManager::fileInfo(path);
+	}
+}
+
+void ZLWin32FSManager::getStat(const std::string &path, bool /*includeSymlinks*/, struct stat &fileInfo) const {
+	stat(path.c_str(), &fileInfo);
 }

@@ -249,7 +249,7 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 		}
 		archiveDir->collectFiles(items, true);
 		for (std::vector<std::string>::const_iterator it = items.begin(); it != items.end(); ++it) {
-			const std::string itemName = archiveDir->itemName(*it);
+			const std::string itemName = archiveDir->itemPath(*it);
 			ZLFile subFile(itemName);
 			if (subFile.isArchive()) {
 				archiveNames.push(itemName);

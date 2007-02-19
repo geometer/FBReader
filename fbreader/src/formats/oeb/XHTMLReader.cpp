@@ -374,7 +374,7 @@ const std::vector<std::string> &XHTMLReader::externalDTDs() const {
 			dtdPath->collectFiles(files, false);
 			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it) {
 				if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
-					EXTERNAL_DTDs.push_back(dtdPath->itemName(*it));
+					EXTERNAL_DTDs.push_back(dtdPath->itemPath(*it));
 				}
 			}
 		}

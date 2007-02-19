@@ -28,9 +28,7 @@
 #include "../image/ZLWin32ImageManager.h"
 #include "../view/ZLWin32PaintContext.h"
 
-void ZLibrary::init(int &argc, char **&argv) {
-	//gtk_init(&argc, &argv);
-
+void ZLibrary::init(int&, char**&) {
 	ZLWin32FSManager::createInstance();
 	ZLWin32TimeManager::createInstance();
 	ZLWin32DialogManager::createInstance();
@@ -51,7 +49,4 @@ void ZLibrary::run(ZLApplication *application) {
 		DispatchMessage(&msg);
 	}
 	delete application;
-	/*
-	pthread_exit(0);
-	*/
 }

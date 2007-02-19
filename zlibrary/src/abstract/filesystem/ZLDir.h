@@ -27,12 +27,13 @@
 class ZLDir {
 
 public:
-	ZLDir(const std::string &name);
+	ZLDir(const std::string &path);
 	virtual ~ZLDir();
-	const std::string &name() const;
+	const std::string &path() const;
 	std::string shortName() const;
-	std::string parentName() const;
-	std::string itemName(const std::string &shortName) const;
+	std::string parentPath() const;
+	std::string itemPath(const std::string &name) const;
+	bool isRoot() const;
 
 	virtual void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) = 0;
 	virtual void collectFiles(std::vector<std::string> &names, bool includeSymlinks) = 0;
@@ -41,7 +42,7 @@ protected:
 	virtual std::string delimiter() const = 0;
 	
 private:
-	std::string myName;
+	std::string myPath;
 
 private:
 	ZLDir(const ZLDir&);

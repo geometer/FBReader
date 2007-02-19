@@ -18,29 +18,24 @@
  * 02110-1301, USA.
  */
 
-#include "ZLZip.h"
-#include "ZLZipHeader.h"
-#include "../ZLFile.h"
+#include <dirent.h>
+#include <stdio.h>
 
-void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
-	shared_ptr<ZLInputStream> stream = ZLFile(path()).inputStream();
+#include "ZLWin32FSDir.h"
+#include "ZLWin32FSManager.h"
 
-	if (!stream.isNull() && stream->open()) {
-		ZLZipHeader header;
-		while (header.readFrom(*stream)) {
-			char *buffer = new char[header.NameLength];
-			if ((unsigned int)stream->read(buffer, header.NameLength) == header.NameLength) {
-				std::string entryName;
-				entryName.append(buffer, header.NameLength);
-				names.push_back(entryName);
-			}
-			delete[] buffer;
-			ZLZipHeader::skipEntry(*stream, header);
-		}
-		stream->close();
-	}
+void ZLWin32RootDir::collectSubDirs(std::vector<std::string> &names, bool) {
+	names.push_back("C:\\");
+	names.push_back("Z:\\");
 }
 
-std::string ZLZipDir::delimiter() const {
-	return ":";
+void ZLWin32RootDir::collectFiles(std::vector<std::string>&, bool) {
+}
+
+void ZLWin32FSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
+	ZLPosixFSDir::collectSubDirs(names, includeSymlinks);
+}
+
+void ZLWin32FSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
+	ZLPosixFSDir::collectFiles(names, includeSymlinks);
 }

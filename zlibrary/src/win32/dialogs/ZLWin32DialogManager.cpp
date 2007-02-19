@@ -52,7 +52,7 @@ void ZLWin32DialogManager::errorBox(const std::string &title, const std::string 
 }
 
 int ZLWin32DialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_ERROR, title, message);
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_QUESTION, title, message);
 	if (!button0.empty()) {
 		box.addButton(button0);
 	}

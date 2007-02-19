@@ -96,7 +96,7 @@ int GCOpenSceneHandler::selectedIndex() const {
 
 bool GCOpenSceneHandler::accept(const ZLTreeNode &node) {
 	shared_ptr<ZLDir> dir = currentDirectory();
-	myFileName = (dir.isNull()) ? node.id() : dir->itemName(node.id());
+	myFileName = (dir.isNull()) ? node.id() : dir->itemPath(node.id());
 	return true;
 }
 

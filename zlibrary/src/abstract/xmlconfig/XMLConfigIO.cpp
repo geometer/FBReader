@@ -46,15 +46,15 @@ void XMLConfig::load() {
 	std::vector<std::string> fileNames;
 	configDir->collectFiles(fileNames, true);
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
-		ZLFile configFile(configDir->itemName(*it));
+		ZLFile configFile(configDir->itemPath(*it));
 		if (configFile.extension() == "xml") {
-			XMLConfigReader(*this, configFile.name()).readDocument(configFile.inputStream());
+			XMLConfigReader(*this, configFile.name(true)).readDocument(configFile.inputStream());
 		}
 	}
 	if (myDelta == 0) {
 		myDelta = new XMLConfigDelta();
 	}
-	XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(configDir->itemName(CHANGES_FILE));
+	XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(configDir->itemPath(CHANGES_FILE));
 }
 
 void XMLConfig::saveAll() {
@@ -68,7 +68,7 @@ void XMLConfig::saveAll() {
 			for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
 				if (!it->empty()) {
 	ZLTime t;
-					shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(*it + ".xml")).outputStream();
+					shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(*it + ".xml")).outputStream();
 					if (!stream.isNull() && stream->open()) {
 						XMLConfigWriter(*this, *stream, *it).write();
 						stream->close();
@@ -87,7 +87,7 @@ void XMLConfig::saveDelta() {
 		return;
 	}
 	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(true);
-	shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemName(CHANGES_FILE)).outputStream();
+	shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(CHANGES_FILE)).outputStream();
 	if (!stream.isNull() && stream->open()) {
 		XMLConfigDeltaWriter(*myDelta, *stream).write();
 		stream->close();

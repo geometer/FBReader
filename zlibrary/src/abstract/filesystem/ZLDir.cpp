@@ -21,33 +21,34 @@
 #include "ZLFSManager.h"
 #include "ZLDir.h"
 
-ZLDir::ZLDir(const std::string &name) : myName(name) {
-	ZLFSManager::instance().normalize(myName);
+ZLDir::ZLDir(const std::string &path) : myPath(path) {
+	ZLFSManager::instance().normalize(myPath);
 }
 
 ZLDir::~ZLDir() {
 }
 
-const std::string &ZLDir::name() const {
-	return myName;
+const std::string &ZLDir::path() const {
+	return myPath;
 }
 
-std::string ZLDir::parentName() const {
-	if (myName == "/") {
-		return myName;
-	}
-	int index = ZLFSManager::instance().findLastFileNameDelimiter(myName);
-	return (index <= 0) ? "/" : myName.substr(0, index);
+std::string ZLDir::parentPath() const {
+	return ZLFSManager::instance().parentPath(myPath);
+}
+
+bool ZLDir::isRoot() const {
+	return ZLFSManager::instance().isRootDirectoryPath(myPath);
 }
 
 std::string ZLDir::shortName() const {
-	int index = ZLFSManager::instance().findLastFileNameDelimiter(myName);
-	return myName.substr(index + 1);
+	int index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
+	return myPath.substr(index + 1);
 }
 
-std::string ZLDir::itemName(const std::string &shortName) const {
+std::string ZLDir::itemPath(const std::string &shortName) const {
 	if (shortName == "..") {
-		return parentName();
+		return parentPath();
+	} else {
+		return ZLFSManager::instance().itemPath(myPath, shortName);
 	}
-	return (myName == "/") ? "/" + shortName : myName + delimiter() + shortName;
 }

@@ -41,7 +41,7 @@ bool SimplePdbPlugin::readDescription(const std::string &path, BookDescription &
 	if (description.encoding().empty()) {
 		return false;
 	}
-	defaultTitle(description, file.name());
+	defaultTitle(description, file.name(true));
 
 	return true;
 }

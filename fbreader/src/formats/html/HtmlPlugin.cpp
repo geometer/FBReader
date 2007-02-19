@@ -46,7 +46,7 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 		return false;
 	}
 	HtmlDescriptionReader(description).readDocument(*stream);
-	defaultTitle(description, file.name());
+	defaultTitle(description, file.name(true));
 
 	return true;
 }

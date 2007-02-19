@@ -66,7 +66,7 @@ void GCSceneHandler::collectScenes(shared_ptr<ZLDir> dir) const {
 		std::map<std::string,ZLTreeNodePtr> nodeMap;
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
 			if (ZLFile(*it).extension() == "scn") {
-				std::string displayName = SceneNameReader().readSceneName(ZLFile(dir->itemName(*it)));
+				std::string displayName = SceneNameReader().readSceneName(ZLFile(dir->itemPath(*it)));
 				ZLTreeNodePtr node = new ZLTreeNode(*it, displayName, SceneIcon, false);
 				nodeMap.insert(std::pair<std::string,ZLTreeNodePtr>(displayName, node));
 			}
@@ -86,7 +86,7 @@ void GCSceneHandler::collectSceneArchives(shared_ptr<ZLDir> dir) const {
 		std::map<std::string,ZLTreeNodePtr> nodeMap;
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
 			if (ZLFile(*it).extension() == "tar") {
-				const std::string archiveName = dir->itemName(*it);
+				const std::string archiveName = dir->itemPath(*it);
 				ZLFile archiveFile(archiveName);
 				std::string displayName = SceneSetNameReader().readSetName(archiveFile);
 				if (!displayName.empty()) {

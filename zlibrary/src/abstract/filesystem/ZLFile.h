@@ -33,6 +33,9 @@ class ZLOutputStream;
 class ZLFile {
 
 public:
+	static std::string fileNameToUtf8(const std::string &fileName);
+
+public:
 	enum ArchiveType {
 		NONE = 0,
 		GZIP = 0x0001,
@@ -59,16 +62,10 @@ public:
 	bool remove() const;
 
 	const std::string &path() const;
-	const std::string &fullName() const;
-	const std::string &name() const;
+	const std::string &name(bool hideExtension) const;
 	const std::string &extension() const;
 
 	std::string physicalFilePath() const;
-
-	std::string utf8Path() const;
-	std::string utf8FullName() const;
-	std::string utf8Name() const;
-	std::string utf8Extension() const;
 
 	shared_ptr<ZLInputStream> inputStream() const;
 	shared_ptr<ZLOutputStream> outputStream() const;
@@ -79,8 +76,8 @@ private:
 
 private:
 	std::string myPath;
-	std::string myFullName;
-	std::string myName;
+	std::string myNameWithExtension;
+	std::string myNameWithoutExtension;
 	std::string myExtension;
 	ArchiveType myArchiveType;
 	mutable ZLFileInfo myInfo;
@@ -98,8 +95,7 @@ inline bool ZLFile::isDirectory() const { if (!myInfoIsFilled) fillInfo(); retur
 inline bool ZLFile::isArchive() const { return myArchiveType & ARCHIVE; }
 
 inline const std::string &ZLFile::path() const { return myPath; }
-inline const std::string &ZLFile::fullName() const { return myFullName; }
-inline const std::string &ZLFile::name() const { return myName; }
+inline const std::string &ZLFile::name(bool hideExtension) const { return hideExtension ? myNameWithoutExtension : myNameWithExtension; }
 inline const std::string &ZLFile::extension() const { return myExtension; }
 
 #endif /* __ZLFILE_H__ */

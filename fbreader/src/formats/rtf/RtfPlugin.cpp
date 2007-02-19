@@ -54,7 +54,7 @@ bool RtfPlugin::readDescription(const std::string &path, BookDescription &descri
 		return false;
 	}
 	
-	defaultTitle(description, file.name());
+	defaultTitle(description, file.name(true));
 	
 	return true;
 }
