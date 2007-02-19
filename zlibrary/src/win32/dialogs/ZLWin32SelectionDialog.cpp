@@ -36,25 +36,25 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	myPanel.setExitOnOk(false);
 	myPanel.addListener(this);
 
-	W32VBox *panelBox = new W32VBox();
+	W32VBorderBox *panelBox = new W32VBorderBox();
 	myPanel.setElement(panelBox);
 
 	myLineEditor = new W32LineEditor("");
 	myLineEditor->setVisible(true);
 	myLineEditor->setEnabled(!handler.isOpenHandler());
-	panelBox->addElement(myLineEditor);
+	panelBox->setTopElement(myLineEditor);
 
 	myTreeView = new W32TreeView(ICON_SIZE);
 	myTreeView->setVisible(true);
 	myTreeView->addListener(this);
-	panelBox->addElement(myTreeView);
+	panelBox->setCenterElement(myTreeView);
 
 	const short charHeight = myPanel.charDimension().Height;
 	panelBox->setSpacing(charHeight / 2);
 	panelBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
 
 	W32HBox *buttonBox = new W32HBox();
-	panelBox->addElement(buttonBox);
+	panelBox->setBottomElement(buttonBox);
 	buttonBox->setHomogeneous(true);
 	buttonBox->setAlignment(W32HBox::RIGHT);
 	buttonBox->setSpacing(charHeight / 2);

@@ -32,7 +32,10 @@ openbook
 	KeyOptionView
 	WaitMessage
 	selection dialog
-		resize (border layout?)
+		resize
+			почему-то меняются размеры кнопок и lineeditor'а при ресайзе
+			установить минимальный размер окна
+			перерисовка кнопок при ресайзе
 		падение под xp после item expanding message (fixed?)
 		перерисовка кнопок под xp после resize
 		разобраться со скоростью перехода в другой каталог

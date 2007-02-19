@@ -28,7 +28,25 @@
 
 #include "W32Widget.h"
 
-class W32Box : public W32Widget {
+class W32Container : public W32Widget {
+
+protected:
+	W32Container();
+
+public:
+	void setMargins(int top, int bottom, int left, int right);
+	
+protected:
+	int topMargin() const { return myTopMargin; }
+	int bottomMargin() const { return myBottomMargin; }
+	int leftMargin() const { return myLeftMargin; }
+	int rightMargin() const { return myRightMargin; }
+
+private:
+	int myTopMargin, myBottomMargin, myLeftMargin, myRightMargin;
+};
+
+class W32Box : public W32Container {
 
 public:
 	W32Box();
@@ -41,15 +59,10 @@ public:
 	int controlNumber() const;
 
 	void setHomogeneous(bool homogeneous);
-	void setMargins(int top, int bottom, int left, int right);
 	void setSpacing(int spacing);
 
 protected:
 	bool homogeneous() const { return myHomogeneous; }
-	int topMargin() const { return myTopMargin; }
-	int bottomMargin() const { return myBottomMargin; }
-	int leftMargin() const { return myLeftMargin; }
-	int rightMargin() const { return myRightMargin; }
 	int spacing() const { return mySpacing; }
 	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
@@ -61,7 +74,6 @@ protected:
 
 private:
 	bool myHomogeneous;
-	int myTopMargin, myBottomMargin, myLeftMargin, myRightMargin;
 	int mySpacing;
 };
 
@@ -94,13 +106,42 @@ public:
 	void setPosition(int x, int y, Size size);
 };
 
-class W32Table : public W32Widget {
+class W32VBorderBox : public W32Container {
+
+public:
+	W32VBorderBox();
+
+	void setTopElement(W32WidgetPtr widget);
+	void setCenterElement(W32WidgetPtr widget);
+	void setBottomElement(W32WidgetPtr widget);
+
+	void setSpacing(int spacing);
+
+private:
+	void allocate(WORD *&p, short &id) const;
+	int allocationSize() const;
+	void setVisible(bool visible);
+	bool isVisible() const;
+	int controlNumber() const;
+	Size minimumSize() const;
+	void setPosition(int x, int y, Size size);
+	void setDimensions(Size charDimension);
+	void init(HWND parent, W32ControlCollection *collection);
+
+private:
+	W32WidgetPtr myTopElement;
+	W32WidgetPtr myCenterElement;
+	W32WidgetPtr myBottomElement;
+
+	int mySpacing;
+};
+
+class W32Table : public W32Container {
 	
 public:
 	W32Table();
 	void setElement(W32WidgetPtr element, int row, int fromColumn, int toColumn);
 
-	void setMargins(int top, int bottom, int left, int right);
 	void setSpacings(int vertical, int horizontal);
 
 private:
@@ -125,7 +166,6 @@ private:
 	typedef std::list<CellInfo> RowList;
 
 	std::vector<RowList> myRows;
-	int myTopMargin, myBottomMargin, myLeftMargin, myRightMargin;
 	int myVerticalSpacing, myHorizontalSpacing;
 };
 

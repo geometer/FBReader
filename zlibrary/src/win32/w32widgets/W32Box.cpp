@@ -21,7 +21,7 @@
 
 #include "W32Container.h"
 
-W32Box::W32Box() : myHomogeneous(false), myTopMargin(0), myBottomMargin(0), myLeftMargin(0), myRightMargin(0), mySpacing(0) {
+W32Box::W32Box() : myHomogeneous(false), mySpacing(0) {
 }
 
 void W32Box::addElement(W32WidgetPtr element) {
@@ -85,13 +85,6 @@ int W32Box::controlNumber() const {
 
 void W32Box::setHomogeneous(bool homogeneous) {
 	myHomogeneous = homogeneous;
-}
-
-void W32Box::setMargins(int top, int bottom, int left, int right) {
-	myTopMargin = top;
-	myBottomMargin = bottom;
-	myLeftMargin = left;
-	myRightMargin = right;
 }
 
 void W32Box::setSpacing(int spacing) {

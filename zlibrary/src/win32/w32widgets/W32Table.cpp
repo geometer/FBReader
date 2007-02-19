@@ -21,14 +21,7 @@
 
 #include "W32Container.h"
 
-W32Table::W32Table() : myTopMargin(0), myBottomMargin(0), myLeftMargin(0), myRightMargin(0), myVerticalSpacing(0), myHorizontalSpacing(0) {
-}
-
-void W32Table::setMargins(int top, int bottom, int left, int right) {
-	myTopMargin = top;
-	myBottomMargin = bottom;
-	myLeftMargin = left;
-	myRightMargin = right;
+W32Table::W32Table() : myVerticalSpacing(0), myHorizontalSpacing(0) {
 }
 
 void W32Table::setSpacings(int vertical, int horizontal) {
@@ -132,7 +125,7 @@ W32Widget::Size W32Table::minimumSize() const {
 	std::vector<short> widths, heights;
 	calculateSizes(widths, heights);
 
-	Size size(myLeftMargin + myRightMargin, myTopMargin + myBottomMargin);
+	Size size(leftMargin() + rightMargin(), topMargin() + bottomMargin());
 
 	int wCount = 0;
 	for (std::vector<short>::const_iterator it = widths.begin(); it != widths.end(); ++it) {
@@ -163,7 +156,7 @@ void W32Table::setPosition(int x, int y, Size size) {
 	std::vector<short> widths, heights, lefts;
 	calculateSizes(widths, heights);
 
-	Size minSize(myLeftMargin + myRightMargin, myTopMargin + myBottomMargin);
+	Size minSize(leftMargin() + rightMargin(), topMargin() + bottomMargin());
 	int wCount = 0;
 	for (std::vector<short>::const_iterator it = widths.begin(); it != widths.end(); ++it) {
 		minSize.Width += *it;
@@ -199,7 +192,7 @@ void W32Table::setPosition(int x, int y, Size size) {
 		}
 	}
 	lefts.reserve(widths.size());
-	short current = myLeftMargin;
+	short current = leftMargin();
 	for (std::vector<short>::iterator it = widths.begin(); it != widths.end(); ++it) {
 		lefts.push_back(current);
 		if (*it > 0) {
@@ -221,7 +214,7 @@ void W32Table::setPosition(int x, int y, Size size) {
 	std::cerr << "\n";
 	*/
 
-	int ey = y + myTopMargin;
+	int ey = y + topMargin();
 	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
 		short h = heights[it - myRows.begin()];
 		if (h > 0) {
