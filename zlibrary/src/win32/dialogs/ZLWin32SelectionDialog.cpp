@@ -67,21 +67,20 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 }
 
 ZLWin32SelectionDialog::~ZLWin32SelectionDialog() {
-	for(std::map<std::string,HBITMAP>::iterator it = myBitmaps.begin(); it != myBitmaps.end(); ++it) {
-		// TODO:
-		//ReleaseImage(it->second);
+	for(std::map<std::string,HICON>::iterator it = myIcons.begin(); it != myIcons.end(); ++it) {
+		DestroyIcon(it->second);
 	}
 }
 
-HBITMAP ZLWin32SelectionDialog::getBitmap(const ZLTreeNodePtr node) {
+HICON ZLWin32SelectionDialog::getIcon(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
-	std::map<std::string,HBITMAP>::const_iterator it = myBitmaps.find(pixmapName);
-	if (it == myBitmaps.end()) {
-		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + pixmapName + ".bmp";
+	std::map<std::string,HICON>::const_iterator it = myIcons.find(pixmapName);
+	if (it == myIcons.end()) {
+		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + pixmapName + ".ico";
 		ZLFile file(imageFileName);
-		HBITMAP bitmap = (HBITMAP)LoadImageA(0, file.path().c_str(), IMAGE_BITMAP, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
-		myBitmaps[pixmapName] = bitmap;
-		return bitmap;
+		HICON icon = (HICON)LoadImageA(0, file.path().c_str(), IMAGE_ICON, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
+		myIcons[pixmapName] = icon;
+		return icon;
 	} else {
 		return it->second;
 	}
@@ -100,7 +99,7 @@ void ZLWin32SelectionDialog::updateList() {
 	}
 
 	for (std::vector<ZLTreeNodePtr>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
-		myTreeView->insert((*it)->displayName(), getBitmap(*it));
+		myTreeView->insert((*it)->displayName(), getIcon(*it));
 	}
 }
 
@@ -135,7 +134,7 @@ int ZLWin32SelectionDialog::height() const {
 	return myHeight;
 }
 
-void ZLWin32SelectionDialog::onEvent(const std::string &event, W32EventSender &sender) {
+void ZLWin32SelectionDialog::onEvent(const std::string &event, W32EventSender&) {
 	if ((event == W32StandaloneDialogPanel::OK_EVENT) ||
 			(event == W32TreeView::ITEM_DOUBLE_CLICKED_EVENT) ||
 			(event == W32PushButton::RELEASED_EVENT)) {

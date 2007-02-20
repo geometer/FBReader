@@ -53,7 +53,7 @@ public:
 	Size minimumSize() const;
 
 	void clear();
-	void insert(const std::string &itemName, HBITMAP icon);
+	void insert(const std::string &itemName, HICON icon);
 	void select(int index);
 	int selectedIndex() const;
 
@@ -65,14 +65,14 @@ private:
 	void notificationCallback(LPARAM lParam);
 
 	void showItem(W32TreeViewItem &item, int index);
-	void addBitmapToList(HBITMAP bitmap);
+	void addIconToList(HICON icon);
 
 private:
 	short myIconSize;
 	std::vector<shared_ptr<W32TreeViewItem> > myItems;
 
-	std::vector<HBITMAP> myBitmaps;
-	std::map<HBITMAP,int> myBitmapToIndexMap;
+	std::vector<HICON> myIcons;
+	std::map<HICON,int> myIconToIndexMap;
 
 	int mySelectedIndex;
 };

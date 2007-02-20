@@ -30,7 +30,7 @@
 #include "../view/ZLWin32ViewWidget.h"
 #include "../w32widgets/W32WCHARUtil.h"
 
-const int ICON_SIZE = 24;
+const int ICON_SIZE = 32;
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
@@ -148,9 +148,6 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	icex.dwICC = ICC_WIN95_CLASSES;
 	InitCommonControlsEx(&icex);
 
-/*
-	ZLWin32SignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
-*/
 	WNDCLASSEX wc;
 	wc.cbSize = sizeof(wc);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
@@ -218,62 +215,13 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-HBITMAP ZLWin32ApplicationWindow::maskBitmap(HBITMAP original) {
-	HDC toolbarDC = GetDC(myToolbar);
-	HDC srcDC = CreateCompatibleDC(toolbarDC);
-	HDC dstDC = CreateCompatibleDC(toolbarDC);
-	HBITMAP result = CreateCompatibleBitmap(toolbarDC, ICON_SIZE, ICON_SIZE);
-	SelectObject(srcDC, original);
-	SelectObject(dstDC, result);
-	static const COLORREF gray = RGB(0xC0, 0xC0, 0xC0);
-	static const COLORREF white = RGB(0xFF, 0xFF, 0xFF);
-	static const COLORREF black = RGB(0x00, 0x00, 0x00);
-	for (int i = 0; i < ICON_SIZE; ++i) {
-		for (int j = 0; j < ICON_SIZE; ++j) {
-			COLORREF pixel = GetPixel(srcDC, i, j);
-			SetPixel(dstDC, i, j, (pixel == gray) ? white : black);
-		}
-	}
-	DeleteDC(dstDC);
-	DeleteDC(srcDC);
-	ReleaseDC(myToolbar, toolbarDC);
-	return result;
-}
-
-HBITMAP ZLWin32ApplicationWindow::grayBitmap(HBITMAP original) {
-	HDC toolbarDC = GetDC(myToolbar);
-	HDC srcDC = CreateCompatibleDC(toolbarDC);
-	HDC dstDC = CreateCompatibleDC(toolbarDC);
-	HBITMAP result = CreateCompatibleBitmap(toolbarDC, ICON_SIZE, ICON_SIZE);
-	SelectObject(srcDC, original);
-	SelectObject(dstDC, result);
-	static const COLORREF gray = RGB(0xC0, 0xC0, 0xC0);
-	static const COLORREF dark = RGB(0x80, 0x80, 0x80);
-	for (int i = 0; i < ICON_SIZE; ++i) {
-		for (int j = 0; j < ICON_SIZE; ++j) {
-			COLORREF pixel = GetPixel(srcDC, i, j);
-			SetPixel(dstDC, i, j, (pixel == gray) ? gray : dark);
-		}
-	}
-	DeleteDC(dstDC);
-	DeleteDC(srcDC);
-	ReleaseDC(myToolbar, toolbarDC);
-	return result;
-}
-
-HBITMAP ZLWin32ApplicationWindow::ditheredBitmap(HBITMAP original) {
-	return original;
-}
-
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (myToolbar == 0) {
   	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(ICON_SIZE, ICON_SIZE));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
-		SendMessage(myToolbar, TB_SETIMAGELIST, 0, (LPARAM)ImageList_Create(ICON_SIZE, ICON_SIZE, ILC_COLOR8 | ILC_MASK, 0, 100));
-		SendMessage(myToolbar, TB_SETHOTIMAGELIST, 0, (LPARAM)ImageList_Create(ICON_SIZE, ICON_SIZE, ILC_COLOR8 | ILC_MASK, 0, 100));
-		SendMessage(myToolbar, TB_SETDISABLEDIMAGELIST, 0, (LPARAM)ImageList_Create(ICON_SIZE, ICON_SIZE, ILC_COLOR8 | ILC_MASK, 0, 100));
+		SendMessage(myToolbar, TB_SETIMAGELIST, 0, (LPARAM)ImageList_Create(ICON_SIZE, ICON_SIZE, ILC_COLOR32 | ILC_MASK, 0, 100));
 	}
 
 	TBBUTTON button;
@@ -282,18 +230,17 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 
-		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".bmp";
+		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".ico";
 		ZLFile file(imageFileName);
-		HBITMAP bitmap = (HBITMAP)LoadImageA(0, file.path().c_str(), IMAGE_BITMAP, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
+		HICON bitmap = (HICON)LoadImageA(0, file.path().c_str(), IMAGE_ICON, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
+		/*
 		if (bitmap == 0) {
 			HDC dc = GetDC(myToolbar);
 			bitmap = CreateCompatibleBitmap(dc, ICON_SIZE, ICON_SIZE);
 			ReleaseDC(myToolbar, dc);
 		}
-		HBITMAP mask = maskBitmap(bitmap);
-		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETIMAGELIST, 0, 0), bitmap, mask);
-		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETHOTIMAGELIST, 0, 0), ditheredBitmap(bitmap), mask);
-		ImageList_Add((HIMAGELIST)SendMessage(myToolbar, TB_GETDISABLEDIMAGELIST, 0, 0), grayBitmap(bitmap), mask);
+		*/
+		ImageList_AddIcon((HIMAGELIST)SendMessage(myToolbar, TB_GETIMAGELIST, 0, 0), bitmap);
 
 		button.iBitmap = buttonCounter;
 		button.fsStyle = buttonItem.isToggleButton() ? TBSTYLE_CHECK : TBSTYLE_BUTTON;

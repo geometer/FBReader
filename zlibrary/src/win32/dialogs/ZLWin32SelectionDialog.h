@@ -57,7 +57,7 @@ private:
 	void onEvent(const std::string &event, W32EventSender &sender);
 
 private:
-	HBITMAP getBitmap(const ZLTreeNodePtr node);
+	HICON getIcon(const ZLTreeNodePtr node);
 
 private:
 	ZLWin32ApplicationWindow &myWindow;
@@ -66,7 +66,7 @@ private:
 	W32LineEditor *myLineEditor;
 	W32PushButton *myOkButton;
 
-	std::map<std::string,HBITMAP> myBitmaps;
+	std::map<std::string,HICON> myIcons;
 
 	short myWidth;
 	short myHeight;

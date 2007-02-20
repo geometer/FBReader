@@ -33,28 +33,6 @@ const std::string W32TreeView::ITEM_DOUBLE_CLICKED_EVENT = "Tree View: Item Doub
 
 static const WCHAR CLASSNAME_TREEVIEW[] = WC_TREEVIEW;
 
-static HBITMAP maskBitmap(HWND window, HBITMAP original, int iconSize) {
-	HDC dc = GetDC(window);
-	HDC srcDC = CreateCompatibleDC(dc);
-	HDC dstDC = CreateCompatibleDC(dc);
-	HBITMAP result = CreateCompatibleBitmap(dc, iconSize, iconSize);
-	SelectObject(srcDC, original);
-	SelectObject(dstDC, result);
-	static const COLORREF gray = RGB(0xC0, 0xC0, 0xC0);
-	static const COLORREF white = RGB(0xFF, 0xFF, 0xFF);
-	static const COLORREF black = RGB(0x00, 0x00, 0x00);
-	for (int i = 0; i < iconSize; ++i) {
-		for (int j = 0; j < iconSize; ++j) {
-			COLORREF pixel = GetPixel(srcDC, i, j);
-			SetPixel(dstDC, i, j, (pixel == gray) ? white : black);
-		}
-	}
-	DeleteDC(dstDC);
-	DeleteDC(srcDC);
-	ReleaseDC(window, dc);
-	return result;
-}
-
 W32TreeViewItem::W32TreeViewItem(const std::string &text, int iconIndex) : myIconIndex(iconIndex) {
 	::createNTWCHARString(myText, text);
 }
@@ -77,28 +55,29 @@ void W32TreeView::clear() {
 	}
 }
 
-void W32TreeView::addBitmapToList(HBITMAP bitmap) {
+void W32TreeView::addIconToList(HICON icon) {
+	/*
 	if (bitmap == 0) {
 		HDC dc = GetDC(myWindow);
 		bitmap = CreateCompatibleBitmap(dc, myIconSize, myIconSize);
 		ReleaseDC(myWindow, dc);
 	}
-	HBITMAP mask = maskBitmap(myWindow, bitmap, myIconSize);
+	*/
 	HIMAGELIST imageList = (HIMAGELIST)SendMessage(myWindow, TVM_GETIMAGELIST, 0, 0);
-	ImageList_Add(imageList, bitmap, mask);
+	ImageList_AddIcon(imageList, icon);
 }
 
-void W32TreeView::insert(const std::string &itemName, HBITMAP icon) {
-	std::map<HBITMAP,int>::const_iterator it = myBitmapToIndexMap.find(icon);
+void W32TreeView::insert(const std::string &itemName, HICON icon) {
+	std::map<HICON,int>::const_iterator it = myIconToIndexMap.find(icon);
 	int iconIndex;
-	if (it != myBitmapToIndexMap.end()) {
+	if (it != myIconToIndexMap.end()) {
 		iconIndex = it->second;
 	} else {
-		myBitmaps.push_back(icon);
-		iconIndex = myBitmapToIndexMap.size();
-		myBitmapToIndexMap[icon] = iconIndex;
+		myIcons.push_back(icon);
+		iconIndex = myIconToIndexMap.size();
+		myIconToIndexMap[icon] = iconIndex;
 		if (myWindow != 0) {
-			addBitmapToList(icon);
+			addIconToList(icon);
 		}
 	}
 
@@ -170,14 +149,15 @@ W32Widget::Size W32TreeView::minimumSize() const {
 void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 
-	HIMAGELIST imageList = ImageList_Create(myIconSize, myIconSize, ILC_COLOR8 | ILC_MASK, 0, 100);
+	//HIMAGELIST imageList = ImageList_Create(myIconSize, myIconSize, ILC_COLOR8 | ILC_MASK, 0, 100);
+	HIMAGELIST imageList = ImageList_Create(myIconSize, myIconSize, ILC_COLOR32, 0, 100);
 	SendMessage(myWindow, TVM_SETIMAGELIST, 0, (LPARAM)imageList);
 
 	for (std::vector<shared_ptr<W32TreeViewItem> >::iterator it = myItems.begin(); it != myItems.end(); ++it) {
 		showItem(**it, it - myItems.begin());
 	}
-	for (std::vector<HBITMAP>::iterator it = myBitmaps.begin(); it != myBitmaps.end(); ++it) {
-		addBitmapToList(*it);
+	for (std::vector<HICON>::iterator it = myIcons.begin(); it != myIcons.end(); ++it) {
+		addIconToList(*it);
 	}
 }
 
