@@ -31,10 +31,10 @@ ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
 	W32DialogPanel &panel = myPropertySheet.createPanel(name);
 	panel.addListener(this);
 	panel.setElement(tab->contentPtr());
+
 	W32Table &table = tab->contentTable();
-	const int charHeight = panel.charDimension().Height;
-	table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-	table.setSpacings(charHeight / 2, charHeight);
+	table.setMargins(4, 4, 4, 4);
+	table.setSpacings(4, 8);
 
 	return *tab;
 }

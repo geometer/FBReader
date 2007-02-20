@@ -35,7 +35,6 @@ class W32Control : public W32Widget, public W32EventSender {
 protected:
 	W32Control(DWORD style);
 
-	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
 	void init(HWND parent, W32ControlCollection *collection);
 
@@ -85,7 +84,7 @@ public:
 
 public:
 	W32PushButton(const std::string &text, ButtonType type = NORMAL_BUTTON);
-	void setDimensions(Size charDimension);
+	Size minimumSize() const;
 
 	void allocate(WORD *&p, short &id) const;
 	WORD classId() const;
@@ -109,7 +108,7 @@ public:
 
 public:
 	W32Label(const std::string &text, Alignment alignment);
-	void setDimensions(Size charDimension);
+	Size minimumSize() const;
 
 	WORD classId() const;
 	void setPosition(int x, int y, Size size);
@@ -117,7 +116,6 @@ public:
 
 private:
 	const std::string myText;
-	int myVShift;
 };
 
 class W32StandardIcon : public W32StandardControl {
@@ -131,7 +129,7 @@ public:
 
 public:
 	W32StandardIcon(IconId iconId);
-	void setDimensions(Size charDimension);
+	Size minimumSize() const;
 
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
@@ -147,7 +145,7 @@ public:
 
 public:
 	W32CheckBox(const std::string &text);
-	void setDimensions(Size charDimension);
+	Size minimumSize() const;
 
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
@@ -178,7 +176,7 @@ public:
 
 public:
 	W32LineEditor(const std::string &text);
-	void setDimensions(Size charDimension);
+	Size minimumSize() const;
 	void init(HWND parent, W32ControlCollection *collection);
 
 	void setEditable(bool editable);
@@ -197,7 +195,7 @@ class W32SpinBox : public W32AbstractEditor {
 
 public:
 	W32SpinBox(WORD min, WORD max, WORD initial);
-	void setDimensions(Size charDimension);
+	Size minimumSize() const;
 
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
@@ -224,7 +222,7 @@ public:
 
 public:
 	W32ComboBox(const std::vector<std::string> &list, int initialIndex);
-	void setDimensions(Size charDimension);
+	Size minimumSize() const;
 
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
@@ -255,10 +253,10 @@ class W32RadioButton : public W32StandardControl {
 
 public:
 	W32RadioButton(W32RadioButtonGroup &group, const std::string &text);
+	Size minimumSize() const;
 	WORD classId() const;
 
 private:
-	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
 	void commandCallback(DWORD hiWParam);
 
@@ -275,6 +273,7 @@ class W32RadioButtonGroup : public W32StandardControl {
 
 public:
 	W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts);
+	Size minimumSize() const;
 
 	void setVisible(bool visible);
 	void setChecked(int index);
@@ -286,7 +285,6 @@ private:
 	int allocationSize() const;
 	int controlNumber() const;
 	void setPosition(int x, int y, Size size);
-	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
 
 	void setChecked(W32RadioButton &button);
@@ -295,8 +293,6 @@ private:
 	std::string myCaption;
 	W32WidgetList myButtons;
 	int myCheckedIndex;
-
-	int myLeftMargin;
 
 friend class W32RadioButton;
 };

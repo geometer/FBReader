@@ -24,11 +24,9 @@ ZLWin32MessageBox::ZLWin32MessageBox(ZLWin32ApplicationWindow &window, W32Standa
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
-	const short charHeight = myPanel.charDimension().Height;
-
 	W32HBox *textBox = new W32HBox();
-	textBox->setSpacing(charHeight / 2);
-	textBox->setMargins(charHeight / 2, 0, charHeight, charHeight);
+	textBox->setSpacing(4);
+	textBox->setMargins(4, 0, 8, 8);
 	textBox->addElement(new W32StandardIcon(iconId));
 	textBox->addElement(new W32Label(message, W32Label::ALIGN_CENTER));
 	textBox->setVisible(true);
@@ -38,8 +36,8 @@ ZLWin32MessageBox::ZLWin32MessageBox(ZLWin32ApplicationWindow &window, W32Standa
 	panelBox->addElement(myButtonBox);
 	myButtonBox->setHomogeneous(true);
 	myButtonBox->setAlignment(W32HBox::CENTER);
-	myButtonBox->setSpacing(charHeight / 2);
-	myButtonBox->setMargins(0, charHeight / 2, charHeight, charHeight);
+	myButtonBox->setSpacing(4);
+	myButtonBox->setMargins(0, 4, 8, 8);
 }
 
 void ZLWin32MessageBox::addButton(const std::string &text) {

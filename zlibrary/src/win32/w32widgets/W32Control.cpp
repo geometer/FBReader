@@ -97,6 +97,11 @@ void W32StandardControl::allocate(WORD *&p, short &id) const {
 	*p++ = 0;
 	*p++ = myX;
 	*p++ = myY;
+	/*
+	if ((mySize.Width == 0) || (mySize.Height == 0)) {
+		mySize = minimumSize();
+	}
+	*/
 	*p++ = mySize.Width;
 	*p++ = mySize.Height;
 	*p++ = id++;
@@ -107,17 +112,18 @@ void W32StandardControl::allocate(WORD *&p, short &id) const {
 	*p++ = 0;
 }
 
-W32Widget::Size W32Control::minimumSize() const {
-	return mySize;
-}
-
 void W32Control::setPosition(int x, int y, Size size) {
 	myX = x;
 	myY = y;
 	mySize = size;
 	if (myWindow != 0) {
-		// TODO: why multiplier 2?
-		SetWindowPos(myWindow, 0, x * 2, y * 2, size.Width * 2, size.Height * 2, 0);
+		RECT r;
+		r.left = x;
+		r.top = y;
+		r.right = x + size.Width;
+		r.bottom = y + size.Height;
+		MapDialogRect(GetParent(myWindow), &r);
+		SetWindowPos(myWindow, 0, r.left, r.top, r.right - r.left, r.bottom - r.top, 0);
 	}
 }
 
@@ -133,9 +139,8 @@ W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32Stan
 	//DWORD style = (it == myButtons.begin()) ? BS_DEFPUSHBUTTON : BS_PUSHBUTTON;
 }
 
-void W32PushButton::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 3);
-	mySize.Height = charDimension.Height * 7 / 4;
+W32Widget::Size W32PushButton::minimumSize() const {
+	return Size(4 * (ZLUnicodeUtil::utf8Length(myText) + 3), 15);
 }
 
 void W32PushButton::allocate(WORD *&p, short &id) const {
@@ -166,21 +171,19 @@ void W32PushButton::init(HWND parent, W32ControlCollection *collection) {
 	::setWindowText(myWindow, myText);
 }
 
-void W32PushButton::commandCallback(DWORD hiWParam) {
+void W32PushButton::commandCallback(DWORD) {
 	fireEvent(RELEASED_EVENT);
 }
 
-W32Label::W32Label(const std::string &text, Alignment alignment) : W32StandardControl(alignment), myText(text), myVShift(0) {
+W32Label::W32Label(const std::string &text, Alignment alignment) : W32StandardControl(alignment), myText(text) {
 }
 
-void W32Label::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 1);
-	mySize.Height = charDimension.Height * 3 / 2;
-	myVShift = charDimension.Height / 4;
+W32Widget::Size W32Label::minimumSize() const {
+	return Size(4 * (ZLUnicodeUtil::utf8Length(myText) + 1), 12);
 }
 
 void W32Label::setPosition(int x, int y, Size size) {
-	W32StandardControl::setPosition(x, y + myVShift, Size(size.Width, size.Height - myVShift));
+	W32StandardControl::setPosition(x, y + 2, Size(size.Width, size.Height - 2));
 }
 
 WORD W32Label::classId() const {
@@ -193,12 +196,11 @@ void W32Label::init(HWND parent, W32ControlCollection *collection) {
 }
 
 W32StandardIcon::W32StandardIcon(IconId iconId) : W32StandardControl(SS_CENTER | SS_ICON), myIconId(iconId) {
-	// TODO: why multiplier 2?
-	mySize.Width = SM_CXICON * 2;
-	mySize.Height = SM_CYICON * 2;
 }
 
-void W32StandardIcon::setDimensions(Size) {
+W32Widget::Size W32StandardIcon::minimumSize() const {
+	// TODO: why multiplier 2?
+	return Size(SM_CXICON * 2, SM_CYICON * 2);
 }
 
 WORD W32StandardIcon::classId() const {
@@ -230,9 +232,8 @@ const std::string W32CheckBox::STATE_CHANGED_EVENT = "CheckBox: state changed";
 W32CheckBox::W32CheckBox(const std::string &text) : W32StandardControl(BS_AUTOCHECKBOX | WS_TABSTOP), myText(text), myChecked(false) {
 }
 
-void W32CheckBox::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 1);
-	mySize.Height = charDimension.Height * 3 / 2;
+W32Widget::Size W32CheckBox::minimumSize() const {
+	return Size(4 * (ZLUnicodeUtil::utf8Length(myText) + 1), 12);
 }
 
 WORD W32CheckBox::classId() const {
@@ -319,9 +320,8 @@ std::string W32LineEditor::text() const {
 	return getTextFromBuffer(myBuffer);
 }
 
-void W32LineEditor::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * std::max(std::min((int)myBuffer.size() + 3, 25), 10);
-	mySize.Height = charDimension.Height * 3 / 2;
+W32Widget::Size W32LineEditor::minimumSize() const {
+	return Size(4 * std::max(std::min((int)myBuffer.size() + 3, 25), 10), 12);
 }
 
 void W32LineEditor::init(HWND parent, W32ControlCollection *collection) {
@@ -345,9 +345,8 @@ void W32LineEditor::setEditable(bool editable) {
 W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_NUMBER), myMin(min), myMax(max), myValue(initial) {
 }
 
-void W32SpinBox::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * 9;
-	mySize.Height = charDimension.Height * 3 / 2;
+W32Widget::Size W32SpinBox::minimumSize() const {
+	return Size(36, 12);
 }
 
 void W32SpinBox::allocate(WORD *&p, short &id) const {
@@ -383,7 +382,13 @@ void W32SpinBox::allocate(WORD *&p, short &id) const {
 void W32SpinBox::setPosition(int x, int y, Size size) {
 	W32StandardControl::setPosition(x, y, size);
 	if (myControlWindow != 0) {
-		SetWindowPos(myControlWindow, 0, (x + size.Width) * 2, y * 2, size.Width * 2, size.Height * 2, 0);
+		RECT r;
+		r.left = x + size.Width;
+		r.top = y;
+		r.right = x + 2 * size.Width;
+		r.bottom = y + size.Height;
+		MapDialogRect(GetParent(myControlWindow), &r);
+		SetWindowPos(myControlWindow, 0, r.left, r.top, r.right - r.left, r.bottom - r.top, 0);
 		SendMessage(myControlWindow, UDM_SETBUDDY, (WPARAM)myWindow, 0);
 		if (isVisible()) {
 			ShowWindow(myControlWindow, SW_SHOW);
@@ -433,15 +438,12 @@ W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex)
 	::createNTWCHARString(myBuffer, list[initialIndex]);
 }
 
-void W32ComboBox::setDimensions(Size charDimension) {
-	int len = 10;
+W32Widget::Size W32ComboBox::minimumSize() const {
+	int len = 0;
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 		len = std::max(ZLUnicodeUtil::utf8Length(*it), len);
 	}
-	len += 3;
-	len = std::min(len, 28);
-	mySize.Width = charDimension.Width * len;
-	mySize.Height = charDimension.Height * 3 / 2;
+	return Size(4 * std::min(len + 3, 28), 12);
 }
 
 WORD W32ComboBox::classId() const {
@@ -525,9 +527,8 @@ WORD W32RadioButton::classId() const {
 	return CLASS_BUTTON;
 }
 
-void W32RadioButton::setDimensions(Size charDimension) {
-	mySize.Width = charDimension.Width * (ZLUnicodeUtil::utf8Length(myText) + 2);
-	mySize.Height = charDimension.Height * 3 / 2;
+W32Widget::Size W32RadioButton::minimumSize() const {
+	return Size(4 * (ZLUnicodeUtil::utf8Length(myText) + 2), 12);
 }
 
 void W32RadioButton::init(HWND parent, W32ControlCollection *collection) {
@@ -593,23 +594,22 @@ int W32RadioButtonGroup::controlNumber() const {
 void W32RadioButtonGroup::setPosition(int x, int y, Size size) {
 	W32StandardControl::setPosition(x, y, size);
 	const short deltaY = size.Height / (myButtons.size() + 1);
-	size.Width -= 2 * myLeftMargin;
+	size.Width -= 16;
 	size.Height = deltaY;
 	for (W32WidgetList::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		y += deltaY;
-		(*it)->setPosition(x + myLeftMargin, y, size)	;
+		(*it)->setPosition(x + 8, y, size)	;
 	}
 }
 
-void W32RadioButtonGroup::setDimensions(Size charDimension) {
-	mySize.Width = 0;
+W32Widget::Size W32RadioButtonGroup::minimumSize() const {
+	Size size;
 	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
-		(*it)->setDimensions(charDimension);
-		mySize.Width = std::max(mySize.Width, (*it)->minimumSize().Width);
+		size.Width = std::max(size.Width, (*it)->minimumSize().Width);
 	}
-	mySize.Width += 4 * charDimension.Width;
-	mySize.Height = (3 * myButtons.size() + 4) * charDimension.Height / 2;
-	myLeftMargin = 2 * charDimension.Width;
+	size.Width += 16;
+	size.Height = 12 * myButtons.size() + 16;
+	return size;
 }
 
 void W32RadioButtonGroup::init(HWND parent, W32ControlCollection *collection) {

@@ -37,6 +37,8 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	myPanel.addListener(this);
 
 	W32VBorderBox *panelBox = new W32VBorderBox();
+	panelBox->setSpacing(4);
+	panelBox->setMargins(4, 4, 4, 4);
 	myPanel.setElement(panelBox);
 
 	myLineEditor = new W32LineEditor("");
@@ -49,16 +51,12 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	myTreeView->addListener(this);
 	panelBox->setCenterElement(myTreeView);
 
-	const short charHeight = myPanel.charDimension().Height;
-	panelBox->setSpacing(charHeight / 2);
-	panelBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
-
 	W32HBox *buttonBox = new W32HBox();
 	panelBox->setBottomElement(buttonBox);
 	buttonBox->setHomogeneous(true);
 	buttonBox->setAlignment(W32HBox::RIGHT);
-	buttonBox->setSpacing(charHeight / 2);
-	buttonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+	buttonBox->setSpacing(4);
+	buttonBox->setMargins(4, 4, 4, 4);
 	myOkButton = new W32PushButton("&Ok");
 	myOkButton->addListener(this);
 	buttonBox->addElement(myOkButton);
@@ -112,7 +110,10 @@ void ZLWin32SelectionDialog::selectItem(int index) {
 
 bool ZLWin32SelectionDialog::run() {
 	myWindow.blockMouseEvents(true);
-	bool result = myPanel.runDialog();
+	bool result = myPanel.runDialog(myWidth, myHeight);
+	W32Widget::Size size = myPanel.size();
+	myWidth = size.Width;
+	myHeight = size.Height;
 	myWindow.blockMouseEvents(false);
 	return result;
 }
@@ -122,25 +123,16 @@ void ZLWin32SelectionDialog::exitDialog() {
 }
 
 void ZLWin32SelectionDialog::setSize(int width, int height) {
-	//gtk_window_resize(GTK_WINDOW(myDialog), width, height);
+	myWidth = width;
+	myHeight = height;
 }
 
 int ZLWin32SelectionDialog::width() const {
-	/*
-	int _width;
-	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, 0);
-	return _width;
-	*/
-	return 200;
+	return myWidth;
 }
 
 int ZLWin32SelectionDialog::height() const {
-	/*
-	int _height;
-	gtk_window_get_size(GTK_WINDOW(myDialog), 0, &_height);
-	return _height;
-	*/
-	return 200;
+	return myHeight;
 }
 
 void ZLWin32SelectionDialog::onEvent(const std::string &event, W32EventSender &sender) {

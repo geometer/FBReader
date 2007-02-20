@@ -91,12 +91,6 @@ void W32Box::setSpacing(int spacing) {
 	mySpacing = spacing;
 }
 
-void W32Box::setDimensions(Size charDimension) {
-	for (W32WidgetList::const_iterator it = myElements.begin(); it != myElements.end(); ++it) {
-		(*it)->setDimensions(charDimension);
-	}
-}
-
 W32HBox::W32HBox() : myAlignment(LEFT) {
 }
 

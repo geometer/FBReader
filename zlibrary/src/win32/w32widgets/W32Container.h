@@ -64,7 +64,6 @@ public:
 protected:
 	bool homogeneous() const { return myHomogeneous; }
 	int spacing() const { return mySpacing; }
-	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
 
 	int visibleElementsNumber() const;
@@ -125,7 +124,6 @@ private:
 	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
-	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
 
 private:
@@ -154,7 +152,6 @@ private:
 	int controlNumber() const;
 	Size minimumSize() const;
 	void setPosition(int x, int y, Size size);
-	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
 
 private:

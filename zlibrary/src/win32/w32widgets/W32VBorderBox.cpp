@@ -159,18 +159,6 @@ void W32VBorderBox::setPosition(int x, int y, Size size) {
 	}
 }
 
-void W32VBorderBox::setDimensions(Size charDimension) {
-	if (!myTopElement.isNull()) {
-		myTopElement->setDimensions(charDimension);
-	}
-	if (!myCenterElement.isNull()) {
-		myCenterElement->setDimensions(charDimension);
-	}
-	if (!myBottomElement.isNull()) {
-		myBottomElement->setDimensions(charDimension);
-	}
-}
-
 void W32VBorderBox::init(HWND parent, W32ControlCollection *collection) {
 	if (!myTopElement.isNull()) {
 		myTopElement->init(parent, collection);

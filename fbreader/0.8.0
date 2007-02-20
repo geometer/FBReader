@@ -25,19 +25,12 @@ openbook
 *** win32 version (0.8.0)
 
 диалоги
-  table layout
-	перераскладка при необходимости
-		разобраться с размерами
+  table layout (multicell widgets)
 	ColorOptionView
 	KeyOptionView
 	WaitMessage
 	selection dialog
-		resize
-			почему-то меняются размеры кнопок и lineeditor'а при ресайзе
-			установить минимальный размер окна
-			перерисовка кнопок при ресайзе
 		падение под xp после item expanding message (fixed?)
-		перерисовка кнопок под xp после resize
 		разобраться со скоростью перехода в другой каталог
 утилита для создания inactive иконки
 target 'install' в Makefile
@@ -53,7 +46,6 @@ target 'install' в Makefile
 согласовать fullscreen action и кнопку maximize в правом верхнем углу
 иконки
 коды клавиш
-почему так странно ресайзится indicator tab
 русские имена файлов
 открывать options/book info dialog по центру основного окна
 отрисовка кнопок на некоторых машинах с xp (45)
@@ -115,6 +107,7 @@ options dialog -- создавать меньше объектов
 	создавать окна для элементов управления по мере необходимости(?)
 	в неактивном LineEditor позиционировать курсор слева
 	save selection dialog (для GC)
+	selection dialog resize: перерисовка кнопок
 expat -> msxml
 iconv -> internal converter
 	удалить все #ifdef _WIN32

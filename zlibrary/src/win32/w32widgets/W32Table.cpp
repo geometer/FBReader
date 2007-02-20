@@ -228,14 +228,6 @@ void W32Table::setPosition(int x, int y, Size size) {
 	}
 }
 
-void W32Table::setDimensions(Size charDimension) {
-	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
-		for (RowList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
-			jt->Widget->setDimensions(charDimension);
-		}
-	}
-}
-
 void W32Table::init(HWND parent, W32ControlCollection *collection) {
 	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
 		for (RowList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {

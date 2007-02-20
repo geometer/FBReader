@@ -47,7 +47,6 @@ public:
 	virtual ~W32DialogPanel();
 	DLGTEMPLATE *dialogTemplate();
 	void setElement(W32WidgetPtr element);
-	W32Widget::Size charDimension() const;
 	const std::string &caption() const;
 
 	W32Widget::Size size() const;
@@ -65,9 +64,12 @@ private:
 
 	virtual DWORD style() const;
 
+protected:
+	W32Widget::Size minimumSize() { return myMinimumSize; }
+
 private:
 	HWND myMainWindow;
-	W32Widget::Size myCharDimension;
+	W32Widget::Size myMinimumSize;
 	W32Widget::Size mySize;
 	std::string myCaption;
 
@@ -93,7 +95,7 @@ private:
 public:
 	W32StandaloneDialogPanel(HWND mainWindow, const std::string &caption);
 
-	bool runDialog();
+	bool runDialog(short width = 0, short height = 0);
 	void endDialog(bool code);
 
 	void setResizeable(bool resizeable);

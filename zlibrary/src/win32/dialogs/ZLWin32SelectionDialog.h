@@ -67,6 +67,9 @@ private:
 	W32PushButton *myOkButton;
 
 	std::map<std::string,HBITMAP> myBitmaps;
+
+	short myWidth;
+	short myHeight;
 };
 
 #endif /* __ZLWIN32SELECTIONDIALOG_H__ */

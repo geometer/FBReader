@@ -42,13 +42,6 @@ W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W3
 	if (LAYOUT_MESSAGE == 0) {
 		LAYOUT_MESSAGE = RegisterWindowMessageA("layout");
 	}
-	TEXTMETRIC metric;
-	HDC hdc = GetDC(mainWindow);
-	GetTextMetrics(hdc, &metric);
-	ReleaseDC(mainWindow, hdc);
-	DWORD dlgUnit = GetDialogBaseUnits();
-	myCharDimension.Width = (metric.tmAveCharWidth + 1) * 4 / LOWORD(dlgUnit);
-	myCharDimension.Height = (metric.tmHeight + metric.tmExternalLeading) * 8 / HIWORD(dlgUnit);
 }
 
 W32DialogPanel::~W32DialogPanel() {
@@ -67,8 +60,8 @@ void W32DialogPanel::init(HWND dialogWindow) {
 }
 
 void W32DialogPanel::calculateSize() {
-	myElement->setDimensions(myCharDimension);
-	mySize = myElement->minimumSize();
+	myMinimumSize = myElement->minimumSize();
+	mySize = myMinimumSize;
 }
 
 W32Widget::Size W32DialogPanel::size() const {
@@ -129,10 +122,6 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 
 void W32DialogPanel::setElement(W32WidgetPtr element) {
 	myElement = element;
-}
-
-W32Widget::Size W32DialogPanel::charDimension() const {
-	return myCharDimension;
 }
 
 bool W32DialogPanel::commandCallback(WPARAM wParam) {

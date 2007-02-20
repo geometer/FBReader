@@ -28,18 +28,17 @@ ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string
 	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
 	myTab = contentTab;
 	panelBox->addElement(contentTab->contentPtr());
-	W32Table &table = contentTab->contentTable();
 
-	const short charHeight = myPanel.charDimension().Height;
-	table.setSpacings(charHeight / 2, charHeight);
-	table.setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+	W32Table &table = contentTab->contentTable();
+	table.setSpacings(4, 8);
+	table.setMargins(4, 4, 4, 4);
 
 	myButtonBox = new W32HBox();
 	panelBox->addElement(myButtonBox);
 	myButtonBox->setHomogeneous(true);
 	myButtonBox->setAlignment(W32HBox::RIGHT);
-	myButtonBox->setSpacing(charHeight / 2);
-	myButtonBox->setMargins(charHeight / 2, charHeight / 2, charHeight / 2, charHeight / 2);
+	myButtonBox->setSpacing(4);
+	myButtonBox->setMargins(4, 4, 4, 4);
 }
 
 void ZLWin32Dialog::addButton(const std::string &text, bool accept) {

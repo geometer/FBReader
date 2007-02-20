@@ -57,10 +57,33 @@ BOOL CALLBACK W32StandaloneDialogPanel::StaticCallback(HWND hDialog, UINT messag
 		if (panel != 0) {
 			return panel->notificationCallback(wParam, lParam);
 		}
+	} else if (message == WM_GETMINMAXINFO) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			POINT &minTrackSize = ((MINMAXINFO*)lParam)->ptMinTrackSize;
+			W32Widget::Size minSize = panel->minimumSize();
+			RECT r;
+			r.left = 0;
+			r.top = 0;
+			r.right = minSize.Width;
+			r.bottom = minSize.Height;
+			MapDialogRect(hDialog, &r);
+			minTrackSize.x = std::max(minTrackSize.x, r.right);
+			minTrackSize.y += r.bottom;
+			return true;
+		}
 	} else if (message == WM_SIZE) {
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {
-			panel->setSize(W32Widget::Size(LOWORD(lParam) / 2, HIWORD(lParam) / 2));
+			RECT r;
+			r.left = 0;
+			r.top = 0;
+			r.right = 100;
+			r.bottom = 100;
+			MapDialogRect(hDialog, &r);
+			panel->setSize(W32Widget::Size(
+				(int)LOWORD(lParam) * 100 / r.right,
+				(int)HIWORD(lParam) * 100 / r.bottom));
 			panel->updateElementSize();
 		}
 		return false;
@@ -104,6 +127,13 @@ void W32StandaloneDialogPanel::setExitOnCancel(bool exit) {
 	myExitOnCancel = exit;
 }
 
-bool W32StandaloneDialogPanel::runDialog() {
+bool W32StandaloneDialogPanel::runDialog(short width, short height) {
+	if ((width > 0) && (height > 0)) {
+		calculateSize();
+		W32Widget::Size size = minimumSize();
+		size.Width = std::max(size.Width, width);
+		size.Height = std::max(size.Height, height);
+		setSize(size);
+	}
 	return DialogBoxIndirectParam(GetModuleHandle(0), dialogTemplate(), myMainWindow, StaticCallback, (LPARAM)this);
 }

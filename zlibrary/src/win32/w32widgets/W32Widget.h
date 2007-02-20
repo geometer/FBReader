@@ -52,7 +52,6 @@ public:
 	virtual int controlNumber() const = 0;
 	virtual Size minimumSize() const = 0;
 	virtual void setPosition(int x, int y, Size size) = 0;
-	virtual void setDimensions(Size charDimension) = 0;
 	virtual void init(HWND parent, W32ControlCollection *collection) = 0;
 
 private:

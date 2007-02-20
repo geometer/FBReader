@@ -50,6 +50,7 @@ public:
 
 public:
 	W32TreeView(short iconSize);
+	Size minimumSize() const;
 
 	void clear();
 	void insert(const std::string &itemName, HBITMAP icon);
@@ -60,7 +61,6 @@ private:
 	int controlNumber() const;
 	void allocate(WORD *&p, short &id) const;
 	int allocationSize() const;
-	void setDimensions(Size charDimension);
 	void init(HWND parent, W32ControlCollection *collection);
 	void notificationCallback(LPARAM lParam);
 

@@ -113,14 +113,14 @@ void W32TreeView::showItem(W32TreeViewItem &item, int index) {
 	TVINSERTSTRUCT tvItem;
 	tvItem.hParent = TVI_ROOT;
 	tvItem.hInsertAfter = TVI_LAST;
-	tvItem.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_PARAM | TVIF_CHILDREN;
+	tvItem.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_PARAM | TVIF_CHILDREN | TVIF_SELECTEDIMAGE;
 	//tvItem.item.hItem = 0;
 	//tvItem.item.state = 0;
 	//tvItem.item.stateMask = 0;
 	tvItem.item.pszText = (WCHAR*)::wchar(item.text());
 	tvItem.item.cchTextMax = item.text().size();
 	tvItem.item.iImage = item.iconIndex();
-	//tvItem.item.iSelectedImage = 0;
+	tvItem.item.iSelectedImage = item.iconIndex();
 	tvItem.item.cChildren = 0;
 	tvItem.item.lParam = index;
 
@@ -163,9 +163,8 @@ int W32TreeView::allocationSize() const {
 	return size + size % 2;
 }
 
-void W32TreeView::setDimensions(Size charDimension) {
-	mySize.Width = 60 * charDimension.Width;
-	mySize.Height = 20 * charDimension.Height;
+W32Widget::Size W32TreeView::minimumSize() const {
+	return Size(60, 36);
 }
 
 void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
