@@ -19,6 +19,9 @@
 
 #include <unistd.h>
 #include <sys/stat.h>
+#include <windows.h>
+
+#include <ZLUnicodeUtil.h>
 
 #include "ZLWin32FSManager.h"
 #include "ZLWin32RootDir.h"
@@ -88,13 +91,15 @@ ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
 }
 
 std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) const {
-	/*
-	char *gtkString = g_locale_to_utf8(name.data(), name.length(), 0, 0, 0);
-	std::string convertedName = gtkString;
-	g_free(gtkString);
-	return convertedName;
-	*/
-	return name;
+	int len = name.length();
+	ZLUnicodeUtil::Ucs2String ucs2String;
+	ucs2String.insert(ucs2String.end(), len, 0);
+	int ucs2Len = MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, name.c_str(), len, (WCHAR*)&ucs2String.front(), len);
+	ucs2String.erase(ucs2String.begin() + ucs2Len, ucs2String.end());
+
+	std::string utf8String;
+	ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
+	return utf8String;
 }
 
 int ZLWin32FSManager::findArchiveFileNameDelimiter(const std::string &path) const {
