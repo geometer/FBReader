@@ -251,6 +251,9 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 
 		++buttonCounter;
 	} else {
+		static int separatorCounter = -100;
+		button.idCommand = --separatorCounter;
+		mySeparatorNumbers[item] = button.idCommand;
 		button.iBitmap = 6;
 		button.fsStyle = TBSTYLE_SEP;
 	}
@@ -265,11 +268,9 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemP
 		if (buttonItem.isToggleButton()) {
 			setToggleButtonState(buttonItem);
 		}
+	} else {
+		PostMessage(myToolbar, TB_SETSTATE, mySeparatorNumbers[item], visible ? 0 : TBSTATE_HIDDEN);
 	}
-}
-
-void ZLWin32ApplicationWindow::refresh() {
-	ZLApplicationWindow::refresh();
 }
 
 ZLViewWidget *ZLWin32ApplicationWindow::createViewWidget() {

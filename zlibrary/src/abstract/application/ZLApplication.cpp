@@ -257,6 +257,7 @@ void ZLApplication::trackStylus(bool track) {
 void ZLApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	bool enableToolbarSpace = false;
+	ZLApplication::Toolbar::ItemPtr lastSeparator = 0;
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->isButton()) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
@@ -266,6 +267,10 @@ void ZLApplicationWindow::refresh() {
 			const bool enabled = application().isActionEnabled(id);
     
 			if (visible) {
+				if (!lastSeparator.isNull()) {
+					setToolbarItemState(lastSeparator, true, true);
+					lastSeparator = 0;
+				}
 				enableToolbarSpace = true;
 			}
 			if (!enabled && button.isPressed()) {
@@ -278,9 +283,16 @@ void ZLApplicationWindow::refresh() {
 			}
 			setToolbarItemState(*it, visible, enabled);
 		} else {
-			setToolbarItemState(*it, enableToolbarSpace, true);
-			enableToolbarSpace = false;
+			if (enableToolbarSpace) {
+				lastSeparator = *it;
+				enableToolbarSpace = false;
+			} else {
+				setToolbarItemState(*it, false, true);
+			}
 		}
+	}
+	if (!lastSeparator.isNull()) {
+		setToolbarItemState(lastSeparator, false, true);
 	}
 }
 

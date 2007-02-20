@@ -46,7 +46,6 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
-	void refresh();
 	void close();
 
 	bool isFullKeyboardControlSupported() const;
@@ -93,6 +92,7 @@ private:
 	ZLWin32ViewWidget *myWin32ViewWidget;
 
 	std::map<int,ZLApplication::Toolbar::ItemPtr> myButtonByActionCode;
+	std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorNumbers;
 
 	bool myBlockMouseEvents;
 	int myKeyboardModifierMask;
