@@ -173,9 +173,11 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 		}
 	} while (!current.sameElementAs(end));
 
-	const TextElement &element = paragraphCursor[current.wordNumber()];
-	if (TextStyleCollection::instance().baseStyle().AutoHyphenationOption.value() && myStyle.style()->allowHyphenations()) {
-		if (!current.sameElementAs(end) && (element.kind() == TextElement::WORD_ELEMENT)) {
+	if (!current.sameElementAs(end) &&
+		 TextStyleCollection::instance().baseStyle().AutoHyphenationOption.value() &&
+		 myStyle.style()->allowHyphenations()) {
+		const TextElement &element = paragraphCursor[current.wordNumber()];
+		if (element.kind() == TextElement::WORD_ELEMENT) {
 			newWidth -= myStyle.elementWidth(element, current.charNumber());
 			const Word &word = (Word&)element;
 			int spaceLeft = maxWidth - newWidth;
