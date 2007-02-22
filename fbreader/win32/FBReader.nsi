@@ -12,7 +12,6 @@ Page directory
 Page instfiles
 
 UninstPage uninstConfirm
-UninstPage components
 UninstPage instfiles
 
 Section "FBReader"
@@ -50,4 +49,8 @@ Section "Uninstall"
 
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP"
 	DeleteRegKey /ifempty HKCU "Software\FBReader"
+
+	MessageBox MB_YESNO "Delete FBReader configuration from registry?" IDNO Skip
+		DeleteRegKey HKCU "Software\FBReader"
+	Skip:
 SectionEnd
