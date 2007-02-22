@@ -100,8 +100,10 @@ do_install:
 	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/keynames.xml
 	@install -d $(SHARE_ZLIBRARY)/encodings
 	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
+ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
+endif
 
 package:
 	@if [ -d $(TARGET_ARCH) ]; then \

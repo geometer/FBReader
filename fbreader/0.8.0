@@ -16,6 +16,9 @@ openbook
 проверить все версии -- что не падает options dialog
 desktop: разделители на тулбаре
 вставить упоминание о сайтах в howtostart
+поправить HowToStart: вставить упоминание о bzip2, проверить списко форматов
+возможность посмотреть HowToStart в любой момент
+maemo: single-click installation
 
 ==============================================================================
 
@@ -27,10 +30,7 @@ desktop: разделители на тулбаре
 	KeyOptionView
 	WaitMessage
 	selection dialog
-		падение под xp после item expanding message (fixed?)
 		разобраться со скоростью перехода в другой каталог
-target 'install' в Makefile
-установщик
 конфиг в registry
 рисунки в тексте
 поворот текста
@@ -59,7 +59,6 @@ tree-*.png
 	22x18
 	34x28
 	blueset
-возможность посмотреть HowToStart в любой момент
 pocketpc version
 chm
 	как же все-таки искать .hhc?
