@@ -33,6 +33,10 @@ Section "FBReader"
   CreateDirectory "$SMPROGRAMS\FBReader for Windows XP"
   CreateShortCut "$SMPROGRAMS\FBReader for Windows XP\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\FBReader for Windows XP\FBReader.lnk" "$INSTDIR\FBReader.exe" "" "$INSTDIR\FBReader.exe" 0
+
+	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "BookPath"
+	StrCmp $0 "" 0 +2
+	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;C:\FBooks" 
 SectionEnd
 
 Section "Uninstall"
