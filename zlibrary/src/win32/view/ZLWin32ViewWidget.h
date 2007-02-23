@@ -45,6 +45,28 @@ private:
 	ZLWin32ApplicationWindow &myWindow;
 	bool myMouseCaptured;
 
+	class Rotator {
+
+	public:
+		Rotator(int width, int height);
+		~Rotator();
+		void setSize(int width, int height);
+
+		void setRotation(bool counterClockWise);
+		void retrieve(HDC dc, HBITMAP bitmap);
+		void rotate();
+		void draw(HDC dc, int topOffset);
+
+	private:
+		int myWidth;
+		int myHeight;
+		long *myBuffer;
+		long *myBuffer1;
+		int mySign;
+	};
+
+	Rotator *myRotator;
+
 friend class ZLWin32ApplicationWindow;
 };
 

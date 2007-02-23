@@ -56,7 +56,7 @@ void ZLWin32PaintContext::updateInfo(HWND window, int width, int height) {
 		myHeight = height;
 		HDC dc = GetDC(window);
 		myDisplayContext = CreateCompatibleDC(dc);
-		myBufferBitmap = CreateCompatibleBitmap(dc, myWidth, myHeight);
+		myBufferBitmap = CreateCompatibleBitmap(dc, myWidth + 1, myHeight + 1);
 		ReleaseDC(window, dc);
 		SelectObject(myDisplayContext, myBufferBitmap);
 	}
@@ -274,9 +274,9 @@ void ZLWin32PaintContext::clear(ZLColor color) {
 	}
 	RECT rectangle;
 	rectangle.top = 0;
-	rectangle.bottom = myHeight - 1;
+	rectangle.bottom = myHeight;
 	rectangle.left = 0;
-	rectangle.right = myWidth - 1;
+	rectangle.right = myWidth;
 	FillRect(myDisplayContext, &rectangle, myBackgroundBrush);
 	SetBkMode(myDisplayContext, TRANSPARENT);
 }
@@ -291,4 +291,8 @@ int ZLWin32PaintContext::height() const {
 
 HDC ZLWin32PaintContext::displayContext() const {
 	return myDisplayContext;
+}
+
+HBITMAP ZLWin32PaintContext::buffer() const {
+	return myBufferBitmap;
 }

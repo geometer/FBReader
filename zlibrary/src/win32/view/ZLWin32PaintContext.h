@@ -58,6 +58,7 @@ public:
 	void updateInfo(HWND window, int width, int height);
 
 	HDC displayContext() const;
+	HBITMAP buffer() const;
 
 private:
 	void adjustPoint(int &x, int &y) const;
