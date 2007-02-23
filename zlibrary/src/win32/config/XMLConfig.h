@@ -25,6 +25,8 @@
 #include <set>
 #include <string>
 
+#include <windows.h>
+
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
 
@@ -35,7 +37,6 @@ class XMLConfigGroup {
 public:
 	XMLConfigGroup(const std::string &groupName, std::set<std::string> &categories);
 	void setValue(const std::string &name, const std::string &value, const std::string &category);
-	void setValue1(const std::string &name, const std::string &value, const std::string &category);
 
 private:
 	std::string myName;
@@ -64,8 +65,21 @@ private:
 	void load();
 
 private:
+	std::string rootKeyName() const;
+
+	void collectSubKeys(std::set<std::string> &keySet, HKEY root);
+	void collectValues(std::set<std::string> &valueSet, HKEY key);
+	bool getValue(std::string &value, HKEY key, const std::string &name);
+
+	void removeValue(const std::string &keyName, const std::string &valueName);
+	void setValue(const std::string &keyName, const std::string &valueName, const std::string &value);
+
+private:
 	std::map<std::string,XMLConfigGroup*> myGroups;
 	std::set<std::string> myCategories;
+
+	const int myBufferSize;
+	char *myBuffer;
 };
 
 #endif /* __XMLCONFIG_H__ */

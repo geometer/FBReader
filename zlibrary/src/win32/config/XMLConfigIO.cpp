@@ -18,14 +18,11 @@
  * 02110-1301, USA.
  */
 
-#include "RegistryUtil.h"
 #include "AsciiEncoder.h"
 
 #include "XMLConfig.h"
 
 void XMLConfig::load() {
-	RegistryUtil util;
-
 	HKEY root;
 	HKEY categoryKey;
 	HKEY groupKey;
@@ -34,19 +31,19 @@ void XMLConfig::load() {
 	std::set<std::string> valueNames;
 	std::string value;
 
-	RegCreateKeyExA(HKEY_CURRENT_USER, util.rootKeyName().c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &root, 0);
-	util.collectSubKeys(categories, root);
+	RegCreateKeyExA(HKEY_CURRENT_USER, rootKeyName().c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &root, 0);
+	collectSubKeys(categories, root);
 	for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
 		RegCreateKeyExA(root, it->c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &categoryKey, 0);
 		groups.clear();
-		util.collectSubKeys(groups, categoryKey);
+		collectSubKeys(groups, categoryKey);
 		for (std::set<std::string>::const_iterator jt = groups.begin(); jt != groups.end(); ++jt) {
 			valueNames.clear();
 			RegCreateKeyExA(categoryKey, jt->c_str(), 0, 0, 0, KEY_QUERY_VALUE, 0, &groupKey, 0);
 			XMLConfigGroup *group = getGroup(AsciiEncoder::decode(*jt), true);
-			util.collectValues(valueNames, groupKey);
+			collectValues(valueNames, groupKey);
 			for (std::set<std::string>::const_iterator kt = valueNames.begin(); kt != valueNames.end(); ++kt) {
-				if (util.getValue(value, groupKey, *kt)) {
+				if (getValue(value, groupKey, *kt)) {
 					group->setValue(AsciiEncoder::decode(*kt), value, *it);
 				}
 			}

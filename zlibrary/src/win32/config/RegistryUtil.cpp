@@ -19,21 +19,13 @@
 
 #include <ZLApplication.h>
 
-#include "RegistryUtil.h"
+#include "XMLConfig.h"
 
-RegistryUtil::RegistryUtil() : myBufferSize(4096) {
-	myBuffer = new char[myBufferSize];
-}
-
-RegistryUtil::~RegistryUtil() {
-	delete[] myBuffer;
-}
-
-std::string RegistryUtil::rootKeyName() const {
+std::string XMLConfig::rootKeyName() const {
 	return "Software\\" + ZLApplication::ApplicationName();
 }
 
-void RegistryUtil::collectSubKeys(std::set<std::string> &keySet, HKEY root) {
+void XMLConfig::collectSubKeys(std::set<std::string> &keySet, HKEY root) {
 	DWORD index = 0;
 	DWORD len = myBufferSize;
 	while (RegEnumKeyExA(root, index, myBuffer, &len, 0, 0, 0, 0) == ERROR_SUCCESS) {
@@ -43,7 +35,7 @@ void RegistryUtil::collectSubKeys(std::set<std::string> &keySet, HKEY root) {
 	}
 }
 
-void RegistryUtil::collectValues(std::set<std::string> &valueSet, HKEY key) {
+void XMLConfig::collectValues(std::set<std::string> &valueSet, HKEY key) {
 	DWORD index = 0;
 	DWORD len = myBufferSize;
 	while (RegEnumValueA(key, index, myBuffer, &len, 0, 0, 0, 0) == ERROR_SUCCESS) {
@@ -53,7 +45,7 @@ void RegistryUtil::collectValues(std::set<std::string> &valueSet, HKEY key) {
 	}
 }
 
-bool RegistryUtil::getValue(std::string &value, HKEY key, const std::string &name) {
+bool XMLConfig::getValue(std::string &value, HKEY key, const std::string &name) {
 	DWORD size = myBufferSize;
 	DWORD type;
 	if ((RegQueryValueExA(key, name.c_str(), 0, &type, (BYTE*)myBuffer, &size) != ERROR_SUCCESS) ||
@@ -64,7 +56,7 @@ bool RegistryUtil::getValue(std::string &value, HKEY key, const std::string &nam
 	return true;
 }
 
-void RegistryUtil::removeValue(const std::string &keyName, const std::string &valueName) {
+void XMLConfig::removeValue(const std::string &keyName, const std::string &valueName) {
 	const std::string fullKeyName = rootKeyName() + "\\" + keyName;
 	HKEY key;
 	if (RegOpenKeyExA(HKEY_CURRENT_USER, fullKeyName.c_str(), 0, KEY_WRITE, &key) == ERROR_SUCCESS) {
@@ -74,7 +66,7 @@ void RegistryUtil::removeValue(const std::string &keyName, const std::string &va
 	}
 }
 
-void RegistryUtil::setValue(const std::string &keyName, const std::string &valueName, const std::string &value) {
+void XMLConfig::setValue(const std::string &keyName, const std::string &valueName, const std::string &value) {
 	const std::string fullKeyName = rootKeyName() + "\\" + keyName;
 	HKEY key;
 	if (RegCreateKeyExA(HKEY_CURRENT_USER, fullKeyName.c_str(), 0, 0, 0, KEY_WRITE, 0, &key, 0) == ERROR_SUCCESS) {

@@ -18,15 +18,10 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLTime.h>
 
 #include "XMLConfig.h"
-#include "RegistryUtil.h"
 #include "AsciiEncoder.h"
-
-static RegistryUtil util;
 
 XMLConfigGroup::XMLConfigGroup(const std::string &groupName, std::set<std::string> &categories) : myCategories(categories) {
 	myName = AsciiEncoder::encode(groupName);
@@ -51,29 +46,8 @@ void XMLConfigGroup::setValue(const std::string &name, const std::string &value,
 	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
 }
 
-void XMLConfigGroup::setValue1(const std::string &name, const std::string &value, const std::string &category) {
-	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
-	if (it != myValues.end()) {
-		if (category == it->second.Category) {
-			if (it->second.Value != value) {
-				it->second.Value = value;
-				util.setValue(category + "\\" + myName, name, value);
-			}
-			return;
-		} else {
-			util.removeValue(it->second.Category + "\\" + myName, name);
-			myValues.erase(it);
-		}
-	}
-	std::set<std::string>::iterator jt = myCategories.find(category);
-	if (jt == myCategories.end()) {
-		jt = myCategories.insert(category).first;
-	}
-	util.setValue(category + "\\" + myName, name, value);
-	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
-}
-
-XMLConfig::XMLConfig() {
+XMLConfig::XMLConfig() : myBufferSize(4096) {
+	myBuffer = new char[myBufferSize];
 	load();
 }
 
@@ -81,6 +55,7 @@ XMLConfig::~XMLConfig() {
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
 	}
+	delete[] myBuffer;
 }
 
 XMLConfigGroup *XMLConfig::getGroup(const std::string &name, bool createUnexisting) {
@@ -100,7 +75,7 @@ void XMLConfig::removeGroup(const std::string &name) {
 	std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.find(name);
 	if (it != myGroups.end()) {
 		HKEY key;
-		if (RegOpenKeyExA(HKEY_CURRENT_USER, util.rootKeyName().c_str(), 0, KEY_WRITE, &key) == ERROR_SUCCESS) {
+		if (RegOpenKeyExA(HKEY_CURRENT_USER, rootKeyName().c_str(), 0, KEY_WRITE, &key) == ERROR_SUCCESS) {
 			for (std::set<std::string>::const_iterator jt = myCategories.begin(); jt != myCategories.end(); ++jt) {
 				RegDeleteKeyA(key, (*jt + "\\" + it->second->myName).c_str()); 
 			}
@@ -120,11 +95,11 @@ void XMLConfig::setValue(const std::string &groupName, const std::string &name, 
 		if (category == it->second.Category) {
 			if (it->second.Value != value) {
 				it->second.Value = value;
-				util.setValue(category + "\\" + group->myName, name, value);
+				setValue(category + "\\" + group->myName, name, value);
 			}
 			return;
 		} else {
-			util.removeValue(it->second.Category + "\\" + group->myName, name);
+			removeValue(it->second.Category + "\\" + group->myName, name);
 			groupValues.erase(it);
 		}
 	}
@@ -132,7 +107,7 @@ void XMLConfig::setValue(const std::string &groupName, const std::string &name, 
 	if (jt == myCategories.end()) {
 		jt = myCategories.insert(category).first;
 	}
-	util.setValue(category + "\\" + group->myName, name, value);
+	setValue(category + "\\" + group->myName, name, value);
 	groupValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
 }
 
@@ -142,7 +117,7 @@ void XMLConfig::unsetValue(const std::string &groupName, const std::string &name
 		std::map<std::string,XMLConfigValue> &values = group->myValues;
 		std::map<std::string,XMLConfigValue>::iterator it = values.find(name);
 		if (it != values.end()) {
-			util.removeValue(it->second.Category + "\\" + group->myName, name);
+			removeValue(it->second.Category + "\\" + group->myName, name);
 			values.erase(it);
 		}
 	}
