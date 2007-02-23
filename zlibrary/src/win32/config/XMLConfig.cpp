@@ -18,26 +18,28 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLTime.h>
 
 #include "XMLConfig.h"
-#include "XMLConfigDelta.h"
+#include "RegistryUtil.h"
+#include "AsciiEncoder.h"
 
-const std::string &XMLConfigGroup::getValue(const std::string &name, const std::string &defaultValue) const {
-	std::map<std::string,XMLConfigValue>::const_iterator it = myValues.find(name);
-	return (it != myValues.end()) ? it->second.Value : defaultValue;
+static RegistryUtil util;
+
+XMLConfigGroup::XMLConfigGroup(const std::string &groupName, std::set<std::string> &categories) : myCategories(categories) {
+	myName = AsciiEncoder::encode(groupName);
 }
 
-bool XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
+void XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it != myValues.end()) {
-		if ((category == it->second.Category) || (category == XMLConfig::UNKNOWN_CATEGORY)) {
+		if (category == it->second.Category) {
 			if (it->second.Value != value) {
 				it->second.Value = value;
-				return true;
-			} else {
-				return false;
 			}
+			return;
 		} else {
 			myValues.erase(it);
 		}
@@ -47,52 +49,37 @@ bool XMLConfigGroup::setValue(const std::string &name, const std::string &value,
 		jt = myCategories.insert(category).first;
 	}
 	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
-	return true;
 }
 
-void XMLConfigGroup::unsetValue(const std::string &name) {
+void XMLConfigGroup::setValue1(const std::string &name, const std::string &value, const std::string &category) {
 	std::map<std::string,XMLConfigValue>::iterator it = myValues.find(name);
 	if (it != myValues.end()) {
-		myValues.erase(it);
+		if (category == it->second.Category) {
+			if (it->second.Value != value) {
+				it->second.Value = value;
+				util.setValue(category + "\\" + myName, name, value);
+			}
+			return;
+		} else {
+			util.removeValue(it->second.Category + "\\" + myName, name);
+			myValues.erase(it);
+		}
 	}
-}
-
-class ConfigSaveTask : public ZLRunnable {
-
-public:
-	ConfigSaveTask(XMLConfig &config);
-
-private:
-	void run();
-
-private:
-	XMLConfig &myConfig;
-};
-
-ConfigSaveTask::ConfigSaveTask(XMLConfig &config) : myConfig(config) {
-}
-
-void ConfigSaveTask::run() {
-	if (myConfig.changesCounter() >= 500) {
-		myConfig.saveAll();
-	} else {
-		myConfig.saveDelta();
+	std::set<std::string>::iterator jt = myCategories.find(category);
+	if (jt == myCategories.end()) {
+		jt = myCategories.insert(category).first;
 	}
+	util.setValue(category + "\\" + myName, name, value);
+	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
 }
 
-XMLConfig::XMLConfig() : myDelta(0) {
+XMLConfig::XMLConfig() {
 	load();
-	mySaver = new ConfigSaveTask(*this);
 }
 
 XMLConfig::~XMLConfig() {
-	ZLTimeManager::instance().removeTask(mySaver);
-	saveAll();
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
-	}
-	if (myDelta != 0) {
-		delete myDelta;
 	}
 }
 
@@ -102,58 +89,71 @@ XMLConfigGroup *XMLConfig::getGroup(const std::string &name, bool createUnexisti
 		return it-> second;
 	}
 	if (createUnexisting) {
-		XMLConfigGroup *group = new XMLConfigGroup(myCategories);
+		XMLConfigGroup *group = new XMLConfigGroup(name, myCategories);
 		myGroups.insert(std::pair<std::string,XMLConfigGroup*>(name, group));
 		return group;
 	}
 	return 0;
 }
 
-XMLConfigGroup *XMLConfig::getGroup(const std::string &name) const {
-	std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.find(name);
-	return (it != myGroups.end()) ? it-> second : 0;
-}
-
 void XMLConfig::removeGroup(const std::string &name) {
 	std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.find(name);
 	if (it != myGroups.end()) {
-		if (myDelta != 0) {
-			const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
-			for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
-				myDelta->unsetValue(name, jt->first);
-				myDelta->addCategory(jt->second.Category);
+		HKEY key;
+		if (RegOpenKeyExA(HKEY_CURRENT_USER, util.rootKeyName().c_str(), 0, KEY_WRITE, &key) == ERROR_SUCCESS) {
+			for (std::set<std::string>::const_iterator jt = myCategories.begin(); jt != myCategories.end(); ++jt) {
+				RegDeleteKeyA(key, (*jt + "\\" + it->second->myName).c_str()); 
 			}
+			RegCloseKey(key);
 		}
 		delete it->second;
 		myGroups.erase(it);
 	}
 }
 
-void XMLConfig::setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) {
-	if (getGroup(group, true)->setValue(name, value, category) && (myDelta != 0)) {
-		myDelta->setValue(group, name, value, category);
-	}
-}
+void XMLConfig::setValue(const std::string &groupName, const std::string &name, const std::string &value, const std::string &category) {
+	XMLConfigGroup *group = getGroup(groupName, true);
 
-void XMLConfig::unsetValue(const std::string &group, const std::string &name) {
-	XMLConfigGroup *configGroup = getGroup(group, false);
-	if (configGroup == 0) {
-		return;
-	}
-	std::map<std::string,XMLConfigValue>::iterator it = configGroup->myValues.find(name);
-	if (it != configGroup->myValues.end()) {
-		if (myDelta != 0) {
-			myDelta->addCategory(it->second.Category);
-			myDelta->unsetValue(group, name);
+	std::map<std::string,XMLConfigValue> &groupValues = group->myValues;
+	std::map<std::string,XMLConfigValue>::iterator it = groupValues.find(name);
+	if (it != groupValues.end()) {
+		if (category == it->second.Category) {
+			if (it->second.Value != value) {
+				it->second.Value = value;
+				util.setValue(category + "\\" + group->myName, name, value);
+			}
+			return;
+		} else {
+			util.removeValue(it->second.Category + "\\" + group->myName, name);
+			groupValues.erase(it);
 		}
-		configGroup->myValues.erase(it);
+	}
+	std::set<std::string>::iterator jt = myCategories.find(category);
+	if (jt == myCategories.end()) {
+		jt = myCategories.insert(category).first;
+	}
+	util.setValue(category + "\\" + group->myName, name, value);
+	groupValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
+}
+
+void XMLConfig::unsetValue(const std::string &groupName, const std::string &name) {
+	XMLConfigGroup *group = getGroup(groupName, false);
+	if (group != 0) {
+		std::map<std::string,XMLConfigValue> &values = group->myValues;
+		std::map<std::string,XMLConfigValue>::iterator it = values.find(name);
+		if (it != values.end()) {
+			util.removeValue(it->second.Category + "\\" + group->myName, name);
+			values.erase(it);
+		}
 	}
 }
 
-int XMLConfig::changesCounter() const {
-	return (myDelta != 0) ? myDelta->myChangesCounter : 0;
-}
-
-void XMLConfig::startAutoSave(int seconds) {
-	ZLTimeManager::instance().addTask(mySaver, 1000 * seconds);
+const std::string &XMLConfig::getValue(const std::string &groupName, const std::string &name, const std::string &defaultValue) const {
+	std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.find(groupName);
+	if (it == myGroups.end()) {
+		return defaultValue;
+	}
+	const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
+	std::map<std::string,XMLConfigValue>::const_iterator jt = values.find(name);
+	return (jt != values.end()) ? jt->second.Value : defaultValue;
 }

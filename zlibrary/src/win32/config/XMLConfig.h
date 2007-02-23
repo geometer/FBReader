@@ -33,23 +33,19 @@
 class XMLConfigGroup {
 
 public:
-	XMLConfigGroup(std::set<std::string> &categories) : myCategories(categories) {}
-	const std::string &getValue(const std::string &name, const std::string &defaultValue) const;
-	bool setValue(const std::string &name, const std::string &value, const std::string &category);
-	void unsetValue(const std::string &name);
+	XMLConfigGroup(const std::string &groupName, std::set<std::string> &categories);
+	void setValue(const std::string &name, const std::string &value, const std::string &category);
+	void setValue1(const std::string &name, const std::string &value, const std::string &category);
 
 private:
+	std::string myName;
 	std::map<std::string,XMLConfigValue> myValues;
 	std::set<std::string> &myCategories;
 
-friend class XMLConfigWriter;
 friend class XMLConfig;
 };
 
 class XMLConfig {
-
-public:
-	static const std::string UNKNOWN_CATEGORY;
 
 public:
 	XMLConfig();
@@ -61,35 +57,15 @@ public:
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
 
-	void startAutoSave(int seconds);
-
 private:
-	XMLConfigGroup *getGroup(const std::string &name) const;
 	XMLConfigGroup *getGroup(const std::string &name, bool createUnexisting);
 
 private:
 	void load();
-	void saveAll();
-	void saveDelta();
-	std::string configDirName() const;
-
-	int changesCounter() const;
 
 private:
 	std::map<std::string,XMLConfigGroup*> myGroups;
 	std::set<std::string> myCategories;
-	class XMLConfigDelta *myDelta;
-
-	shared_ptr<ZLRunnable> mySaver;
-
-friend class XMLConfigWriter;
-friend class XMLConfigReader;
-friend class ConfigSaveTask;
 };
-
-inline const std::string &XMLConfig::getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const {
-	XMLConfigGroup *configGroup = getGroup(group);
-	return (configGroup != 0) ? configGroup->getValue(name, defaultValue) : defaultValue;
-}
 
 #endif /* __XMLCONFIG_H__ */

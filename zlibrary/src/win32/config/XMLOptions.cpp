@@ -85,6 +85,5 @@ void XMLOptions::setValue(const std::string &name, const std::string &value, con
 	myConfig->setValue(myGroupName, name, value, category);
 }
 
-void XMLOptions::startAutoSave(int seconds) {
-	myConfig->startAutoSave(seconds);
+void XMLOptions::startAutoSave(int) {
 }

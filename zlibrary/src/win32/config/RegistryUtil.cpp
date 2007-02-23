@@ -63,3 +63,22 @@ bool RegistryUtil::getValue(std::string &value, HKEY key, const std::string &nam
 	value = myBuffer;
 	return true;
 }
+
+void RegistryUtil::removeValue(const std::string &keyName, const std::string &valueName) {
+	const std::string fullKeyName = rootKeyName() + "\\" + keyName;
+	HKEY key;
+	if (RegOpenKeyExA(HKEY_CURRENT_USER, fullKeyName.c_str(), 0, KEY_WRITE, &key) == ERROR_SUCCESS) {
+		RegDeleteValueA(key, valueName.c_str());
+		RegCloseKey(key);
+		// TODO: remove empty group
+	}
+}
+
+void RegistryUtil::setValue(const std::string &keyName, const std::string &valueName, const std::string &value) {
+	const std::string fullKeyName = rootKeyName() + "\\" + keyName;
+	HKEY key;
+	if (RegCreateKeyExA(HKEY_CURRENT_USER, fullKeyName.c_str(), 0, 0, 0, KEY_WRITE, 0, &key, 0) == ERROR_SUCCESS) {
+		RegSetValueExA(key, valueName.c_str(), 0, REG_SZ, (const BYTE*)value.c_str(), value.length() + 1);
+		RegCloseKey(key);
+	}
+}

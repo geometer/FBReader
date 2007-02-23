@@ -18,106 +18,41 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
-#include <ZLFile.h>
-#include <ZLDir.h>
-#include <ZLInputStream.h>
-#include <ZLApplication.h>
-
 #include "RegistryUtil.h"
 #include "AsciiEncoder.h"
 
 #include "XMLConfig.h"
-#include "XMLConfigDelta.h"
-#include "XMLConfigReader.h"
-#include "XMLConfigWriter.h"
-#include "XMLConfigDeltaWriter.h"
-
-const std::string XMLConfig::UNKNOWN_CATEGORY = ".unknown.";
-
-static const std::string CHANGES_FILE = "config.changes";
-
-std::string XMLConfig::configDirName() const {
-	return ZLApplication::HomeDirectory + ZLApplication::FileNameDelimiter + "." + ZLApplication::ApplicationName();
-}
 
 void XMLConfig::load() {
-	XMLConfigReader(*this, "").readDocument(ZLApplication::DefaultFilesPathPrefix() + "config.xml");
+	RegistryUtil util;
 
-	{
-		RegistryUtil util;
+	HKEY root;
+	HKEY categoryKey;
+	HKEY groupKey;
+	std::set<std::string> categories;
+	std::set<std::string> groups;
+	std::set<std::string> valueNames;
+	std::string value;
 
-		HKEY root;
-		HKEY categoryKey;
-		HKEY groupKey;
-		std::set<std::string> categories;
-		std::set<std::string> groups;
-		std::set<std::string> valueNames;
-		std::string value;
-
-		RegCreateKeyExA(HKEY_CURRENT_USER, util.rootKeyName().c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &root, 0);
-		util.collectSubKeys(categories, root);
-		for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
-			RegCreateKeyExA(root, it->c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &categoryKey, 0);
-			groups.clear();
-			util.collectSubKeys(groups, categoryKey);
-			for (std::set<std::string>::const_iterator jt = groups.begin(); jt != groups.end(); ++jt) {
-				valueNames.clear();
-				RegCreateKeyExA(categoryKey, jt->c_str(), 0, 0, 0, KEY_QUERY_VALUE, 0, &groupKey, 0);
-				XMLConfigGroup *group = getGroup(AsciiEncoder::decode(*jt), true);
-				util.collectValues(valueNames, groupKey);
-				for (std::set<std::string>::const_iterator kt = valueNames.begin(); kt != valueNames.end(); ++kt) {
-					if (util.getValue(value, groupKey, *kt)) {
-						group->setValue(AsciiEncoder::decode(*kt), value, *it);
-					}
-				}
-				RegCloseKey(groupKey);
-			}
-			RegCloseKey(categoryKey);
-		}
-		RegCloseKey(root);
-	}
-
-	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(false);
-	if (configDir.isNull()) {
-		return;
-	}
-	if (myDelta == 0) {
-		myDelta = new XMLConfigDelta();
-	}
-	XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(configDir->itemPath(CHANGES_FILE));
-}
-
-void XMLConfig::saveAll() {
-	saveDelta();
-
-	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(true);
-
-	if (myDelta != 0) {
-		if (!configDir.isNull()) {
-			std::set<std::string> &categories = myDelta->myCategories;
-			for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
-				if (!it->empty()) {
-					XMLConfigWriter(*this, *it).write();
+	RegCreateKeyExA(HKEY_CURRENT_USER, util.rootKeyName().c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &root, 0);
+	util.collectSubKeys(categories, root);
+	for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
+		RegCreateKeyExA(root, it->c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &categoryKey, 0);
+		groups.clear();
+		util.collectSubKeys(groups, categoryKey);
+		for (std::set<std::string>::const_iterator jt = groups.begin(); jt != groups.end(); ++jt) {
+			valueNames.clear();
+			RegCreateKeyExA(categoryKey, jt->c_str(), 0, 0, 0, KEY_QUERY_VALUE, 0, &groupKey, 0);
+			XMLConfigGroup *group = getGroup(AsciiEncoder::decode(*jt), true);
+			util.collectValues(valueNames, groupKey);
+			for (std::set<std::string>::const_iterator kt = valueNames.begin(); kt != valueNames.end(); ++kt) {
+				if (util.getValue(value, groupKey, *kt)) {
+					group->setValue(AsciiEncoder::decode(*kt), value, *it);
 				}
 			}
+			RegCloseKey(groupKey);
 		}
-		myDelta->clear();
-	} // TODO: show error message if config was not saved
-	ZLFile changesFile(configDirName() + ZLApplication::FileNameDelimiter + CHANGES_FILE);
-	changesFile.remove();
-}
-
-void XMLConfig::saveDelta() {
-	if ((myDelta == 0) || (myDelta->myIsUpToDate)) {
-		return;
+		RegCloseKey(categoryKey);
 	}
-	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(true);
-	shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(CHANGES_FILE)).outputStream();
-	if (!stream.isNull() && stream->open()) {
-		XMLConfigDeltaWriter(*myDelta, *stream).write();
-		stream->close();
-	}
-	myDelta->myIsUpToDate = true;
+	RegCloseKey(root);
 }

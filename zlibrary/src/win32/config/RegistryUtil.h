@@ -37,6 +37,9 @@ public:
 	void collectValues(std::set<std::string> &valueSet, HKEY key);
 	bool getValue(std::string &value, HKEY key, const std::string &name);
 
+	void removeValue(const std::string &keyName, const std::string &valueName);
+	void setValue(const std::string &keyName, const std::string &valueName, const std::string &value);
+
 private:
 	const int myBufferSize;
 	char *myBuffer;
