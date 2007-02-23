@@ -127,6 +127,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 		case WM_COMMAND:
 			onToolbarButtonPress(LOWORD(wParam));
 			return 0;
+		/*
 		case WM_NOTIFY:
 		{
 			TOOLTIPTEXT &tooltip = *(TOOLTIPTEXT*)lParam;
@@ -143,6 +144,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			}
 			return 0;
 		}
+		*/
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -233,7 +235,8 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (myToolbar == 0) {
-  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
+  	//myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
+  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | TBSTYLE_FLAT, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(ICON_SIZE, ICON_SIZE));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
