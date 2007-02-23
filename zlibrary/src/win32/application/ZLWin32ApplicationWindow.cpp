@@ -135,8 +135,10 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 				if (!item.isNull()) {
 					const ZLApplication::Toolbar::ButtonItem &button =
 						(const ZLApplication::Toolbar::ButtonItem&)*item;
-					static ZLUnicodeUtil::Ucs2String tooltipBuffer;
-					tooltip.lpszText = (WCHAR*)::wchar(::createNTWCHARString(tooltipBuffer, button.tooltip()));
+					if (!button.tooltip().empty()) {
+						static ZLUnicodeUtil::Ucs2String tooltipBuffer;
+						tooltip.lpszText = (WCHAR*)::wchar(::createNTWCHARString(tooltipBuffer, button.tooltip()));
+					}
 				}
 			}
 			return 0;
