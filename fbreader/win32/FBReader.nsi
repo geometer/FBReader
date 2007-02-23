@@ -7,7 +7,6 @@ OutFile "FBReaderSetup-pre0.8.0.exe"
 InstallDir $PROGRAMFILES\FBReader
 InstallDirRegKey HKCU "Software\FBReader" ""
 
-Page components
 Page directory
 Page instfiles
 
@@ -30,9 +29,7 @@ Section "FBReader"
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "NoModify" 1
   WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
-SectionEnd
 
-Section "Start Menu Shortcuts"
   CreateDirectory "$SMPROGRAMS\FBReader for Windows XP"
   CreateShortCut "$SMPROGRAMS\FBReader for Windows XP\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\FBReader for Windows XP\FBReader.lnk" "$INSTDIR\FBReader.exe" "" "$INSTDIR\FBReader.exe" 0
