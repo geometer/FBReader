@@ -18,7 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include "AsciiEncoder.h"
+#include "StringEncoder.h"
 
 #include "XMLConfig.h"
 
@@ -40,11 +40,11 @@ void XMLConfig::load() {
 		for (std::set<std::string>::const_iterator jt = groups.begin(); jt != groups.end(); ++jt) {
 			valueNames.clear();
 			RegCreateKeyExA(categoryKey, jt->c_str(), 0, 0, 0, KEY_QUERY_VALUE, 0, &groupKey, 0);
-			XMLConfigGroup *group = getGroup(AsciiEncoder::decode(*jt), true);
+			XMLConfigGroup *group = getGroup(StringEncoder::decode(*jt), true);
 			collectValues(valueNames, groupKey);
 			for (std::set<std::string>::const_iterator kt = valueNames.begin(); kt != valueNames.end(); ++kt) {
 				if (getValue(value, groupKey, *kt)) {
-					group->setValue(AsciiEncoder::decode(*kt), value, *it);
+					group->setValue(StringEncoder::decode(*kt), value, *it);
 				}
 			}
 			RegCloseKey(groupKey);

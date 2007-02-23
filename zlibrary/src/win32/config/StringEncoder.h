@@ -18,16 +18,16 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ASCIIENCODER_H__
-#define __ASCIIENCODER_H__
+#ifndef __STRINGENCODER_H__
+#define __STRINGENCODER_H__
 
 #include <string>
 
-class AsciiEncoder {
+class StringEncoder {
 
 public:
 	static std::string encode(const std::string &source);
 	static std::string decode(const std::string &source);
 };
 
-#endif /* __ASCIIENCODER_H__ */
+#endif /* __STRINGENCODER_H__ */

@@ -21,10 +21,10 @@
 #include <ZLTime.h>
 
 #include "XMLConfig.h"
-#include "AsciiEncoder.h"
+#include "StringEncoder.h"
 
 XMLConfigGroup::XMLConfigGroup(const std::string &groupName, std::set<std::string> &categories) : myCategories(categories) {
-	myName = AsciiEncoder::encode(groupName);
+	myName = StringEncoder::encode(groupName);
 }
 
 void XMLConfigGroup::setValue(const std::string &name, const std::string &value, const std::string &category) {

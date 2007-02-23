@@ -20,9 +20,9 @@
 
 #include <ZLUnicodeUtil.h>
 
-#include "AsciiEncoder.h"
+#include "StringEncoder.h"
 
-std::string AsciiEncoder::encode(const std::string &source) {
+std::string StringEncoder::encode(const std::string &source) {
 	const char *start = source.data();
 	const char *end = start + source.length();
 
@@ -58,7 +58,7 @@ std::string AsciiEncoder::encode(const std::string &source) {
 	return target;
 }
 
-std::string AsciiEncoder::decode(const std::string &source) {
+std::string StringEncoder::decode(const std::string &source) {
 	if ((int)source.find('$') == -1) {
 		return source;
 	}

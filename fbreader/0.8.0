@@ -51,6 +51,7 @@ maemo: single-click installation
 
 *** после 0.8.0
 
+отрефакторить XMLConfig (черт ногу сломит)
 tooltips в десктопных версиях
 восстановить GC и Sample Applications
 desktop: пакеты не должны мешать друг другу
