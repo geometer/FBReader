@@ -187,8 +187,8 @@ void ZLApplication::resetWindowCaption() {
 	}
 }
 
-void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group) {
-	ButtonItem *button = new ButtonItem(actionId, iconName);
+void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName, const std::string &tooltip, shared_ptr<ButtonGroup> group) {
+	ButtonItem *button = new ButtonItem(actionId, iconName, tooltip);
 	myItems.push_back(button);
 	button->setButtonGroup(group);
 }

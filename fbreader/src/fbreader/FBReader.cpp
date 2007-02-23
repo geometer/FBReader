@@ -177,24 +177,24 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_QUIT, new QuitAction(*this));
 	addAction(ACTION_OPEN_PREVIOUS_BOOK, new OpenPreviousBookAction(*this));
 
-	toolbar().addButton(ACTION_SHOW_COLLECTION, "books");
-	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history");
-	toolbar().addButton(ACTION_ADD_BOOK, "addbook");
+	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library");
+	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history", "Show Recent Books List");
+	toolbar().addButton(ACTION_ADD_BOOK, "addbook", "Add File To Library");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_BOOK_INFO, "bookinfo");
-	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings");
+	toolbar().addButton(ACTION_SHOW_BOOK_INFO, "bookinfo", "Show Book Info Dialog");
+	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings", "Show Options Dialog");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SCROLL_TO_HOME, "home");
-	toolbar().addButton(ACTION_UNDO, "leftarrow");
-	toolbar().addButton(ACTION_REDO, "rightarrow");
+	toolbar().addButton(ACTION_SCROLL_TO_HOME, "home", "Go To Start Of Text");
+	toolbar().addButton(ACTION_UNDO, "leftarrow", "Go Back");
+	toolbar().addButton(ACTION_REDO, "rightarrow", "Go Forward");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_CONTENTS, "contents");
+	toolbar().addButton(ACTION_SHOW_CONTENTS, "contents", "Table Of Contents");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SEARCH, "find");
-	toolbar().addButton(ACTION_FIND_NEXT, "findnext");
-	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev");
+	toolbar().addButton(ACTION_SEARCH, "find", "Text Search");
+	toolbar().addButton(ACTION_FIND_NEXT, "findnext", "Find Next");
+	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev", "Find Previous");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
+	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen", "Rotate Text");
 
 	menubar().addItem("Book Info...",	ACTION_SHOW_BOOK_INFO);
 	menubar().addItem("Table Of Contents", ACTION_SHOW_CONTENTS);
