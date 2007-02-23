@@ -28,8 +28,7 @@ std::string AsciiEncoder::encode(const std::string &source) {
 
 	bool doEncode = false;
 	for (const char *ptr = start; ptr < end; ++ptr) {
-		if ((*ptr == '&') || (*ptr == '<') || (*ptr == '>') ||
-				(*ptr == '"') || (*ptr == '\'') || (*ptr == '\\') ||
+		if ((*ptr == '"') || (*ptr == '\'') || (*ptr == '\\') ||
 				(*ptr == '/') || (*ptr == '$')) {
 			doEncode = true;
 			break;
@@ -44,19 +43,10 @@ std::string AsciiEncoder::encode(const std::string &source) {
 	target.reserve(6 * source.length());
 	for (const char *ptr = start; ptr < end; ++ptr) {
 		const unsigned char num = *ptr;
-		if (num == '>') {
-			target += "&gt;";
-		} else if (num == '<') {
-			target += "&lt;";
-		} else if (num == '&') {
-			target += "&amp;";
-		} else if (num == '\'') {
-			target += "&apos;";
-		} else if (num == '"') {
-			target += "&quot;";
-		} else if (num == '$') {
+		if (num == '$') {
 			target += "$$";
-		} else if ((num != '/') && (num != '\\') && (num < 0x7F)) {
+		} else if ((num < 0x7F) && (num != '"') && (num != '\'') &&
+							 (num != '\\') && (num != '/')) {
 			target += num;
 		} else {
 			target += '$';

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ * Copyright (C) 2007 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,22 +17,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __XMLCONFIGWRITER_H__
-#define __XMLCONFIGWRITER_H__
+#ifndef __REGISTRYUTIL_H__
+#define __REGISTRYUTIL_H__
 
+#include <set>
 #include <string>
 
-class XMLConfig;
+#include <windows.h>
 
-class XMLConfigWriter {
+class RegistryUtil {
 
 public:
-  XMLConfigWriter(XMLConfig &config, const std::string &category) : myConfig(config), myCategory(category) {}
-  void write();
+	RegistryUtil();
+	~RegistryUtil();
+
+	std::string rootKeyName() const;
+
+	void collectSubKeys(std::set<std::string> &keySet, HKEY root);
+	void collectValues(std::set<std::string> &valueSet, HKEY key);
+	bool getValue(std::string &value, HKEY key, const std::string &name);
 
 private:
-  XMLConfig &myConfig;
-  const std::string &myCategory;
+	const int myBufferSize;
+	char *myBuffer;
 };
 
-#endif /* __XMLCONFIGWRITER_H__ */
+#endif /* __REGISTRYUTIL_H__ */

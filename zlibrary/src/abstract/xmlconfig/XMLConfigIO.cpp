@@ -67,7 +67,6 @@ void XMLConfig::saveAll() {
 			std::set<std::string> &categories = myDelta->myCategories;
 			for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
 				if (!it->empty()) {
-	ZLTime t;
 					shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(*it + ".xml")).outputStream();
 					if (!stream.isNull() && stream->open()) {
 						XMLConfigWriter(*this, *stream, *it).write();

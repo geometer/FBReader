@@ -18,10 +18,15 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLInputStream.h>
 #include <ZLApplication.h>
+
+#include "RegistryUtil.h"
+#include "AsciiEncoder.h"
 
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"
@@ -39,17 +44,44 @@ std::string XMLConfig::configDirName() const {
 
 void XMLConfig::load() {
 	XMLConfigReader(*this, "").readDocument(ZLApplication::DefaultFilesPathPrefix() + "config.xml");
+
+	{
+		RegistryUtil util;
+
+		HKEY root;
+		HKEY categoryKey;
+		HKEY groupKey;
+		std::set<std::string> categories;
+		std::set<std::string> groups;
+		std::set<std::string> valueNames;
+		std::string value;
+
+		RegCreateKeyExA(HKEY_CURRENT_USER, util.rootKeyName().c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &root, 0);
+		util.collectSubKeys(categories, root);
+		for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
+			RegCreateKeyExA(root, it->c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &categoryKey, 0);
+			groups.clear();
+			util.collectSubKeys(groups, categoryKey);
+			for (std::set<std::string>::const_iterator jt = groups.begin(); jt != groups.end(); ++jt) {
+				valueNames.clear();
+				RegCreateKeyExA(categoryKey, jt->c_str(), 0, 0, 0, KEY_QUERY_VALUE, 0, &groupKey, 0);
+				XMLConfigGroup *group = getGroup(AsciiEncoder::decode(*jt), true);
+				util.collectValues(valueNames, groupKey);
+				for (std::set<std::string>::const_iterator kt = valueNames.begin(); kt != valueNames.end(); ++kt) {
+					if (util.getValue(value, groupKey, *kt)) {
+						group->setValue(AsciiEncoder::decode(*kt), value, *it);
+					}
+				}
+				RegCloseKey(groupKey);
+			}
+			RegCloseKey(categoryKey);
+		}
+		RegCloseKey(root);
+	}
+
 	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(false);
 	if (configDir.isNull()) {
 		return;
-	}
-	std::vector<std::string> fileNames;
-	configDir->collectFiles(fileNames, true);
-	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
-		ZLFile configFile(configDir->itemPath(*it));
-		if (configFile.extension() == "xml") {
-			XMLConfigReader(*this, configFile.name(true)).readDocument(configFile.inputStream());
-		}
 	}
 	if (myDelta == 0) {
 		myDelta = new XMLConfigDelta();
@@ -67,12 +99,7 @@ void XMLConfig::saveAll() {
 			std::set<std::string> &categories = myDelta->myCategories;
 			for (std::set<std::string>::const_iterator it = categories.begin(); it != categories.end(); ++it) {
 				if (!it->empty()) {
-	ZLTime t;
-					shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(*it + ".xml")).outputStream();
-					if (!stream.isNull() && stream->open()) {
-						XMLConfigWriter(*this, *stream, *it).write();
-						stream->close();
-					}
+					XMLConfigWriter(*this, *it).write();
 				}
 			}
 		}

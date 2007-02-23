@@ -19,10 +19,10 @@
  */
 
 #include <iostream>
-#include <set>
 
 #include <windows.h>
 
+#include "RegistryUtil.h"
 #include "XMLConfigWriter.h"
 #include "XMLConfig.h"
 #include "AsciiEncoder.h"
@@ -34,28 +34,18 @@ const std::string OPTION = "option";
 const std::string VALUE = "value";
 
 void XMLConfigWriter::write() {
-	static const int maxValueSize  = 4096;
-	char *buffer = new char[maxValueSize + 1];
+	RegistryUtil util;
 
-	const std::string categoryKeyName = "Software\\FBReader\\" + myCategory;
+	const std::string categoryKeyName = util.rootKeyName() + "\\" + myCategory;
 	HKEY categoryKey;
 	std::set<std::string> existingGroups;
-	RegCreateKeyExA(HKEY_CURRENT_USER, categoryKeyName.c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS, 0, &categoryKey, 0);
+	RegCreateKeyExA(HKEY_CURRENT_USER, categoryKeyName.c_str(), 0, 0, 0, KEY_ENUMERATE_SUB_KEYS | KEY_WRITE, 0, &categoryKey, 0);
 
-	{
-		DWORD index = 0;
-		DWORD len = maxValueSize;
-		while (RegEnumKeyExA(categoryKey, index, buffer, &len, 0, 0, 0, 0) == ERROR_SUCCESS) {
-			existingGroups.insert(buffer);
-			++index;
-			len = maxValueSize;
-		}
-	}
+	util.collectSubKeys(existingGroups, categoryKey);
 
 	HKEY groupKey;
 	std::set<std::string> existingKeys;
 
-	addTag(CONFIG, false);
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myConfig.myGroups.begin(); it != myConfig.myGroups.end(); ++it) {
 		existingKeys.clear();
 		const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
@@ -67,28 +57,16 @@ void XMLConfigWriter::write() {
 						std::string groupName = AsciiEncoder::encode(it->first);
 						existingGroups.erase(groupName);
 						RegCreateKeyExA(categoryKey, groupName.c_str(), 0, 0, 0, KEY_QUERY_VALUE | KEY_WRITE, 0, &groupKey, 0);
-						DWORD index = 0;
-						DWORD len = maxValueSize;
-						while (RegEnumValueA(groupKey, index, buffer, &len, 0, 0, 0, 0) == ERROR_SUCCESS) {
-							existingKeys.insert(buffer);
-							++index;
-							len = maxValueSize;
-						}
-						addTag(_GROUP, false);
-						addAttribute(NAME, AsciiEncoder::encode(it->first));
+						util.collectValues(existingKeys, groupKey);
 						emptyFlag = false;
 					}
-					addTag(OPTION, true);
-					addAttribute(NAME, AsciiEncoder::encode(jt->first));
-					addAttribute(VALUE, AsciiEncoder::encode(jt->second.Value));
 					const std::string name = AsciiEncoder::encode(jt->first);
-					const std::string value = AsciiEncoder::encode(jt->second.Value);
+					const std::string &value = jt->second.Value;
 					existingKeys.erase(name);
-					RegSetValueExA(groupKey, AsciiEncoder::encode(jt->first).c_str(), 0, REG_SZ, (const BYTE*)value.c_str(), value.length() + 1);
+					RegSetValueExA(groupKey, name.c_str(), 0, REG_SZ, (const BYTE*)value.c_str(), value.length() + 1);
 				}
 			}
 			if (!emptyFlag) {
-				closeTag();
 				for (std::set<std::string>::const_iterator set_it = existingKeys.begin(); set_it != existingKeys.end(); ++set_it) {
 					RegDeleteValueA(groupKey, set_it->c_str());
 				}
@@ -96,11 +74,8 @@ void XMLConfigWriter::write() {
 			}
 		}
 	}
-	closeTag();
 	for (std::set<std::string>::const_iterator set_it = existingGroups.begin(); set_it != existingGroups.end(); ++set_it) {
 		RegDeleteKeyA(categoryKey, set_it->c_str());
 	}
 	RegCloseKey(categoryKey);
-
-	delete[] buffer;
 }
