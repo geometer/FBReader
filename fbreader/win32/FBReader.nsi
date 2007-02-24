@@ -8,6 +8,7 @@ InstallDir $PROGRAMFILES\FBReader
 InstallDirRegKey HKCU "Software\FBReader" ""
 
 Page directory
+Page components
 Page instfiles
 
 UninstPage uninstConfirm
@@ -39,6 +40,10 @@ Section "FBReader"
 	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;C:\FBooks" 
 SectionEnd
 
+Section "Create Shortcut on Desktop"
+  CreateShortCut "$DESKTOP\FBReader.lnk" "$INSTDIR\FBReader.exe" "" "$INSTDIR\FBReader.exe" 0
+SectionEnd
+
 Section "Uninstall"
 	RMDir /r "$INSTDIR\share"
 	Delete "$INSTDIR\FBReader.exe"
@@ -47,6 +52,7 @@ Section "Uninstall"
 	RMDir "$INSTDIR"
 
 	RMDir /r "$SMPROGRAMS\FBReader for Windows XP"
+  Delete "$DESKTOP\FBReader.lnk"
 
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP"
 	DeleteRegKey /ifempty HKCU "Software\FBReader"

@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLUnicodeUtil.h>
+
 #include "CHMReferenceCollection.h"
 
 std::string CHMReferenceCollection::fullReference(const std::string &prefix, const std::string &reference) {
@@ -36,7 +38,8 @@ std::string CHMReferenceCollection::fullReference(const std::string &prefix, con
 	for (int i = 0; (i < counter) && (slashIndex > 0); ++i) {
 		slashIndex = prefix.rfind('/', slashIndex - 1);
 	}
-	return prefix.substr(0, slashIndex + 1) + reference.substr(counter * 3);
+	std::string full = prefix.substr(0, slashIndex + 1) + reference.substr(counter * 3);
+	return ZLUnicodeUtil::toLower(full);
 }
 
 CHMReferenceCollection::CHMReferenceCollection() : myPrefix("/") {
@@ -46,7 +49,7 @@ const std::string &CHMReferenceCollection::addReference(const std::string &refer
 	if (reference.empty()) {
 		return reference;
 	}
-	std::string fullRef = doConvert ? fullReference(myPrefix, reference) : reference;
+	std::string fullRef = doConvert ? fullReference(myPrefix, reference) : ZLUnicodeUtil::toLower(reference);
 	std::set<std::string>::const_iterator it = myReferences.find(fullRef);
 	if (it != myReferences.end()) {
 		return *it;
@@ -70,7 +73,7 @@ const std::string CHMReferenceCollection::nextReference() {
 }
 
 void CHMReferenceCollection::setPrefix(const std::string &fileName) {
-	myPrefix = fileName.substr(0, fileName.rfind('/') + 1);
+	myPrefix = ZLUnicodeUtil::toLower(fileName.substr(0, fileName.rfind('/') + 1));
 }
 
 const std::string &CHMReferenceCollection::prefix() const {

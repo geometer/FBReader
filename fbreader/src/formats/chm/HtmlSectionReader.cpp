@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLUnicodeUtil.h>
+
 #include "HtmlSectionReader.h"
 #include "CHMReferenceCollection.h"
 #include "CHMFileImage.h"
@@ -52,8 +54,8 @@ HtmlSectionReader::HtmlSectionReader(BookModel &model, const PlainTextFormat &fo
 }
 
 void HtmlSectionReader::setSectionName(const std::string &sectionName) {
-	myReferenceCollection.setPrefix(sectionName);
-	myCurrentSectionName = sectionName;
+	myCurrentSectionName = ZLUnicodeUtil::toLower(sectionName);
+	myReferenceCollection.setPrefix(myCurrentSectionName);
 }
 
 void HtmlSectionReader::startDocumentHandler() {
@@ -80,7 +82,7 @@ void HtmlSectionHrefTagAction::run(bool start, const std::vector<HtmlReader::Htm
 	if (start) {
 		for (unsigned int i = 0; i < attributes.size(); ++i) {
 			if (attributes[i].Name == "NAME") {
-				bookReader().addHyperlinkLabel(reader().myCurrentSectionName + '#' + attributes[i].Value);
+				bookReader().addHyperlinkLabel(reader().myCurrentSectionName + '#' + ZLUnicodeUtil::toLower(attributes[i].Value));
 			} else if (!reader().myIsHyperlink && (attributes[i].Name == "HREF")) {
 				const std::string &value = attributes[i].Value;
 				if (!value.empty() &&
@@ -88,7 +90,7 @@ void HtmlSectionHrefTagAction::run(bool start, const std::vector<HtmlReader::Htm
 						(value.substr(0, 7) != "mailto:")) {
 					const int index = value.find('#');
 					std::string sectionName = (index == -1) ? value : value.substr(0, index);
-					sectionName = HtmlReader::decodeURL(sectionName);
+					sectionName = ZLUnicodeUtil::toLower(HtmlReader::decodeURL(sectionName));
 					if (sectionName.empty()) {
 						sectionName = reader().myCurrentSectionName;
 					} else {
