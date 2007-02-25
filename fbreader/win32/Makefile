@@ -17,5 +17,11 @@ all:
 	@makensis FBReader.nsi
 	@rm -rf $(DESTDIR)/bin
 	@rm -rf $(DESTDIR)/share
+	@cp *.exe $(DEBIAN_PACKAGE) ../..
 
 install:
+
+clean:
+	@rm -rf $(DESTDIR)/bin
+	@rm -rf $(DESTDIR)/share
+	@rm -rf *.exe
