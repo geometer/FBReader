@@ -37,7 +37,7 @@ Section "FBReader"
 
 	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "BookPath"
 	StrCmp $0 "" 0 +2
-	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;C:\FBooks" 
+	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;$PROFILE\Books" 
 SectionEnd
 
 Section "Create Shortcut on Desktop"
