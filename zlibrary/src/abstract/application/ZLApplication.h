@@ -333,6 +333,8 @@ public:
 	bool isKeyboardPresented() const;
 	void trackStylus(bool track);
 
+	void setHyperlinkCursor(bool hyperlink);
+
 	shared_ptr<Action> action(int actionId) const;
 	bool isActionVisible(int actionId) const;
 	bool isActionEnabled(int actionId) const;
@@ -406,6 +408,9 @@ protected:
 	virtual void setFullscreen(bool fullscreen) = 0;
 	virtual bool isFullscreen() const = 0;
 
+	// TODO: change to pure virtual (?)
+	virtual void setHyperlinkCursor(bool) {}
+
 public:
 	virtual ~ZLApplicationWindow();
 
@@ -448,6 +453,11 @@ inline bool ZLApplication::isKeyboardPresented() const {
 inline void ZLApplication::grabAllKeys(bool grab) {
 	if (myWindow != 0) {
 		myWindow->grabAllKeys(grab);
+	}
+}
+inline void ZLApplication::setHyperlinkCursor(bool hyperlink) {
+	if (myWindow != 0) {
+		myWindow->setHyperlinkCursor(hyperlink);
 	}
 }
 inline bool ZLApplication::isFullscreen() const {

@@ -344,3 +344,10 @@ int ZLWin32ApplicationWindow::topOffset() const {
 void ZLWin32ApplicationWindow::blockMouseEvents(bool block) {
 	myBlockMouseEvents = block;
 }
+
+void ZLWin32ApplicationWindow::setHyperlinkCursor(bool hyperlink) {
+	if (hyperlink) {
+		static HCURSOR handCursor = LoadCursor(0, IDC_HAND);
+		SetCursor(handCursor);
+	}
+}

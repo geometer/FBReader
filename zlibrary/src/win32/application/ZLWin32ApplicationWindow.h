@@ -57,6 +57,8 @@ private:
 
 	void setCaption(const std::string &caption);
 
+	void setHyperlinkCursor(bool hyperlink);
+
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 

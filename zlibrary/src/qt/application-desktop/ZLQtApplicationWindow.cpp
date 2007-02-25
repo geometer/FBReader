@@ -59,7 +59,8 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myFullScreen(false),
-	myWasMaximized(false) {
+	myWasMaximized(false),
+	myCursorIsHyperlink(false) {
 	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLApplication::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
 	QPixmap icon(iconFileName.c_str());
 	setIcon(icon);
@@ -189,4 +190,17 @@ bool ZLQtApplicationWindow::isKeyboardPresented() const {
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 	QMainWindow::setCaption(QString::fromUtf8(caption.c_str()));
+}
+
+void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
+	if (hyperlink == myCursorIsHyperlink) {
+		return;
+	}
+	myCursorIsHyperlink = hyperlink;
+	if (hyperlink) {
+		myStoredCursor = cursor();
+		setCursor(Qt::pointingHandCursor);
+	} else {
+		setCursor(myStoredCursor);
+	}
 }

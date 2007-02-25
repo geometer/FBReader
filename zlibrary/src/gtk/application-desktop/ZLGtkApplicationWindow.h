@@ -49,6 +49,8 @@ private:
 
 	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
 
+	void setHyperlinkCursor(bool hyperlink);
+
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
@@ -74,6 +76,9 @@ private:
 	std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
 
 	bool myFullScreen;
+
+	GdkCursor *myHyperlinkCursor;
+	bool myHyperlinkCursorIsUsed;
 };
 
 #endif /* __ZLGTKAPPLICATIONWINDOW_H__ */

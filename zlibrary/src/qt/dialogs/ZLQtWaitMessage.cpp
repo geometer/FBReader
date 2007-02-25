@@ -33,11 +33,11 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WSt
 	if (main != 0) {
 		myCursorIsStored = true;
 		myStoredCursor = main->cursor();
-		main->setCursor(QCursor(WaitCursor));
+		main->setCursor(Qt::waitCursor);
 	} else {
 		myCursorIsStored = false;
 	}
-	setCursor(QCursor(WaitCursor));
+	setCursor(Qt::waitCursor);
 
 	qApp->processEvents();
 

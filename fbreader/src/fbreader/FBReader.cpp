@@ -229,6 +229,11 @@ FBReader::~FBReader() {
 	Hyphenator::deleteInstance();
 }
 
+void FBReader::initWindow() {
+	ZLApplication::initWindow();
+	trackStylus(true);
+}
+
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {
 	ZLFile bookFile = ZLFile(fileName);
 

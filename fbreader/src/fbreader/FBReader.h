@@ -328,6 +328,8 @@ public:
 	~FBReader();
 
 private:
+	void initWindow();
+
 	void setMode(ViewMode mode);
 
 	void searchSlot();

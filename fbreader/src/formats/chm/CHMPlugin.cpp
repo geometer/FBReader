@@ -21,6 +21,7 @@
 
 //#include <iostream>
 
+#include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 #include <ZLInputStream.h>
@@ -124,12 +125,13 @@ bool CHMPlugin::readModel(const BookDescription &description, BookModel &model) 
 		const std::string fileName = referenceCollection.nextReference();
 		if (ZLStringUtil::stringEndsWith(fileName, ".jpg") ||
 		    ZLStringUtil::stringEndsWith(fileName, ".gif")) {
+			std::string lowerCasedFileName = ZLUnicodeUtil::toLower(fileName);
 			BookReader bookReader(model);
 			bookReader.setMainTextModel();
-			bookReader.addHyperlinkLabel(fileName);
+			bookReader.addHyperlinkLabel(lowerCasedFileName);
 			bookReader.pushKind(REGULAR);
 			bookReader.beginParagraph();
-			bookReader.addImageReference(fileName);
+			bookReader.addImageReference(lowerCasedFileName);
 			bookReader.addImage(fileName, new CHMFileImage(info, fileName));
 			bookReader.endParagraph();
 			bookReader.insertEndOfTextParagraph();

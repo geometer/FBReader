@@ -62,7 +62,9 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
-	myFullScreen(false) {
+	myFullScreen(false),
+	myHyperlinkCursor(0),
+	myHyperlinkCursorIsUsed(false) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLApplication::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
@@ -217,4 +219,20 @@ bool ZLGtkApplicationWindow::isMousePresented() const {
 
 bool ZLGtkApplicationWindow::isKeyboardPresented() const {
 	return true;
+}
+
+void ZLGtkApplicationWindow::setHyperlinkCursor(bool hyperlink) {
+	if (hyperlink == myHyperlinkCursorIsUsed) {
+		return;
+	}
+	myHyperlinkCursorIsUsed = hyperlink;
+
+	if (hyperlink) {
+		if (myHyperlinkCursor == 0) {
+			myHyperlinkCursor = gdk_cursor_new(GDK_HAND1);
+		}
+		gdk_window_set_cursor(GTK_WIDGET(myMainWindow)->window, myHyperlinkCursor);
+	} else {
+		gdk_window_set_cursor(GTK_WIDGET(myMainWindow)->window, 0);
+	}
 }

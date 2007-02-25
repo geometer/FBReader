@@ -25,6 +25,7 @@
 
 #include <qmainwindow.h>
 #include <qaction.h>
+#include <qcursor.h>
 
 #include <ZLApplication.h>
 
@@ -50,6 +51,8 @@ private:
 
 	void setCaption(const std::string &caption);
 
+	void setHyperlinkCursor(bool hyperlink);
+
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
@@ -71,6 +74,9 @@ friend class ZLQtToolBarAction;
 
 	bool myFullScreen;
 	bool myWasMaximized;
+
+	bool myCursorIsHyperlink;
+	QCursor myStoredCursor;
 };
 
 class ZLQtToolBarAction : public QAction {

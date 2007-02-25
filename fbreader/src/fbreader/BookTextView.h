@@ -44,12 +44,15 @@ public:
 	void redoPageMove();
 
 	bool onStylusPress(int x, int y);
+	bool onStylusMove(int x, int y);
 
 private:
 	void pushCurrentPositionIntoStack();
 	void replaceCurrentPositionInStack();
 
 	void preparePaintInfo();
+
+	bool getHyperlinkId(const TextElementPosition &position, std::string &id) const;
 
 private:
 	typedef std::pair<int,int> Position;

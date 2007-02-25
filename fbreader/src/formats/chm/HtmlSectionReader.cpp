@@ -60,7 +60,7 @@ void HtmlSectionReader::setSectionName(const std::string &sectionName) {
 
 void HtmlSectionReader::startDocumentHandler() {
 	HtmlBookReader::startDocumentHandler();
-	myBookReader.addHyperlinkLabel(myCurrentSectionName);
+	myBookReader.addHyperlinkLabel(ZLUnicodeUtil::toLower(myCurrentSectionName));
 }
 
 void HtmlSectionReader::endDocumentHandler() {
@@ -82,7 +82,7 @@ void HtmlSectionHrefTagAction::run(bool start, const std::vector<HtmlReader::Htm
 	if (start) {
 		for (unsigned int i = 0; i < attributes.size(); ++i) {
 			if (attributes[i].Name == "NAME") {
-				bookReader().addHyperlinkLabel(reader().myCurrentSectionName + '#' + ZLUnicodeUtil::toLower(attributes[i].Value));
+				bookReader().addHyperlinkLabel(ZLUnicodeUtil::toLower(reader().myCurrentSectionName + '#' + attributes[i].Value));
 			} else if (!reader().myIsHyperlink && (attributes[i].Name == "HREF")) {
 				const std::string &value = attributes[i].Value;
 				if (!value.empty() &&
@@ -97,7 +97,7 @@ void HtmlSectionHrefTagAction::run(bool start, const std::vector<HtmlReader::Htm
 						sectionName = reader().myReferenceCollection.addReference(sectionName, true);
 					}
 					bookReader().addHyperlinkControl(
-						HYPERLINK, (index == -1) ? sectionName : (sectionName + value.substr(index))
+						HYPERLINK, ZLUnicodeUtil::toLower((index == -1) ? sectionName : (sectionName + value.substr(index)))
 					);
 					reader().myIsHyperlink = true;
 				}
@@ -119,7 +119,7 @@ void HtmlSectionImageTagAction::run(bool start, const std::vector<HtmlReader::Ht
 			if (attributes[i].Name == "SRC") {
 				std::string fileName = HtmlReader::decodeURL(attributes[i].Value);
 				fileName = CHMReferenceCollection::fullReference(reader().myReferenceCollection.prefix(), fileName);
-				bookReader().addImageReference(fileName);
+				bookReader().addImageReference(ZLUnicodeUtil::toLower(fileName));
 				bookReader().addImage(fileName, new CHMFileImage(reader().myInfo, fileName));
 				break;
 			}
