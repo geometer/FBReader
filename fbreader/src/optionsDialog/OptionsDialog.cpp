@@ -314,3 +314,6 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 		}
 	}
 }
+
+OptionsDialog::~OptionsDialog() {
+}
