@@ -60,6 +60,9 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myFullScreen(false),
 	myWasMaximized(false) {
+	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLApplication::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
+	QPixmap icon(iconFileName.c_str());
+	setIcon(icon);
 
 	setWFlags(getWFlags() | WStyle_Customize);
 
