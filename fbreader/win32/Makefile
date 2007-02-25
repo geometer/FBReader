@@ -13,7 +13,7 @@ all:
 	@install -m 0644 ../data/help/HowToStart.brownish.640x480.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2
 	@install -d $(SHARE_FBREADER)/default
 	@install -m 0644 ../data/default/keymap.desktop.xml $(SHARE_FBREADER)/default/keymap.xml
-	@install -m 0644 ../data/default/styles.desktop.xml $(SHARE_FBREADER)/default/styles.xml
+	@install -m 0644 ../data/default/styles.win32.xml $(SHARE_FBREADER)/default/styles.xml
 	@makensis FBReader.nsi
 	@rm -rf $(DESTDIR)/bin
 	@rm -rf $(DESTDIR)/share
