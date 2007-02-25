@@ -26,9 +26,9 @@ install:
 	@install -d $(DESTDIR)/usr/share/applications
 	@install -m 0644 desktop $(DESTDIR)/usr/share/applications/$(TARGET).desktop
 	@install -d $(DESTDIR)$(IMAGEDIR)
-	@install -m 0644 ../icons/34x28/FBReader.png $(DESTDIR)$(IMAGEDIR)
+	@install -m 0644 ../icons/tango-green-blue/FBReader.png $(DESTDIR)$(IMAGEDIR)
 	@install -d $(DESTDIR)$(IMAGEDIR)/FBReader
-	@install -m 0644 $(wildcard ../icons/34x28/FBReader/*) $(DESTDIR)$(IMAGEDIR)/FBReader
+	@install -m 0644 $(wildcard ../icons/tango-green-blue/FBReader/*) $(DESTDIR)$(IMAGEDIR)/FBReader
 	@install -d $(SHARE_FBREADER)/help
 	@install -m 0644 ../data/help/HowToStart.brownish.640x480.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2
 	@install -d $(SHARE_FBREADER)/default

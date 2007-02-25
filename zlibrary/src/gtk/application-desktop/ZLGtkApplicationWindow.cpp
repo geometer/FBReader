@@ -65,6 +65,8 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	myFullScreen(false) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLApplication::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
+	gtk_window_set_icon(myMainWindow, gdk_pixbuf_new_from_file(iconFileName.c_str(), 0));
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
 	myVBox = gtk_vbox_new(false, 0);
