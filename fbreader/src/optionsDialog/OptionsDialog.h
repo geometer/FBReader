@@ -40,17 +40,16 @@ class OptionsDialog {
 
 public:
 	OptionsDialog(FBReader &fbreader, ZLPaintContext &context);
-	~OptionsDialog();
 
 	ZLOptionsDialog &dialog();
 
 private:
 	shared_ptr<ZLOptionsDialog> myDialog;
-	ScrollingOptionsPage *myScrollingPage;
-	OptionsPage *myFormatPage;
-	OptionsPage *myStylePage;
-	KeyBindingsPage *myKeyBindingsPage;
-	ConfigPage *myConfigPage;
+	shared_ptr<ScrollingOptionsPage> myScrollingPage;
+	shared_ptr<OptionsPage> myFormatPage;
+	shared_ptr<OptionsPage> myStylePage;
+	shared_ptr<KeyBindingsPage> myKeyBindingsPage;
+	shared_ptr<ConfigPage> myConfigPage;
 };
 
 inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }

@@ -34,6 +34,7 @@ public:
 
 public:
 	static void clearGroup(const std::string &group);
+	static bool isAutoSavingSupported();
 	static void startAutoSave(int seconds);
 	
 public:

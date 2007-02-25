@@ -52,6 +52,10 @@ void ZLOption::startAutoSave(int seconds) {
 	ZLOptions::instance().startAutoSave(seconds);
 }
 
+bool ZLOption::isAutoSavingSupported() {
+	return ZLOptions::instance().isAutoSavingSupported();
+}
+
 ZLOption::ZLOption(const std::string &category, const std::string &group, const std::string &optionName) : myCategory(category), myGroup(group), myOptionName(optionName), myIsSynchronized(false) {
 }
 

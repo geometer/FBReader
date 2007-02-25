@@ -52,6 +52,7 @@ public:
 	std::string stringValue(const std::string &name, const std::string &defaultValue);
 	void setValue(const std::string &name, const std::string &value, const std::string &category);
 
+	bool isAutoSavingSupported() const;
 	void startAutoSave(int seconds);
 
 private:

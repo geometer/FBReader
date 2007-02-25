@@ -296,7 +296,9 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	colorsTab.addOption(builder.colorEntry());
 
 	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
-	myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
+	if (ZLOption::isAutoSavingSupported()) {
+		myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
+	}
 
 	const DictionaryCollection &collection = fbreader.dictionaryCollection();
 	const std::vector<std::string> &dictionaryNames = collection.names();
@@ -311,12 +313,4 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 			dictionaryTab.addOption(dictionaryChoiceEntry);
 		}
 	}
-}
-
-OptionsDialog::~OptionsDialog() {
-	delete myConfigPage;
-	delete myKeyBindingsPage;
-	delete myStylePage;
-	delete myFormatPage;
-	delete myScrollingPage;
 }

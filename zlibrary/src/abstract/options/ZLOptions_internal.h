@@ -54,6 +54,7 @@ public:
 	virtual void setValue(const std::string &name, const std::string &value, const std::string &category) = 0;
 
 	virtual void startAutoSave(int seconds) = 0;
+	virtual bool isAutoSavingSupported() const = 0;
 };
 
 #endif /* __ZLOPTIONS_INTERNAL_H__ */
