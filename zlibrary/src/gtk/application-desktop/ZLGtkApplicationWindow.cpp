@@ -74,9 +74,9 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	myVBox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
 
-	myToolbar = gtk_toolbar_new();
-	gtk_box_pack_start(GTK_BOX(myVBox), myToolbar, false, false, 0);
-	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_ICONS);
+	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
+	gtk_box_pack_start(GTK_BOX(myVBox), GTK_WIDGET(myToolbar), false, false, 0);
+	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
@@ -135,10 +135,10 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 
 	if (myFullScreen) {
 		gtk_window_fullscreen(myMainWindow);
-		gtk_widget_hide(myToolbar);
+		gtk_widget_hide(GTK_WIDGET(myToolbar));
 	} else {
 		gtk_window_unfullscreen(myMainWindow);
-		gtk_widget_show(myToolbar);
+		gtk_widget_show(GTK_WIDGET(myToolbar));
 	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
@@ -147,6 +147,8 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 bool ZLGtkApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
+
+static const int VISIBLE_SEPARATOR = 1 << 16;
 
 void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
@@ -162,6 +164,9 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item
 		myButtonToWidget[&*item] = button;
 		myWidgetToButton[button] = item;
 		gtk_widget_show_all(button);
+	} else {
+		int index = myButtonToWidget.size() + mySeparatorMap.size();
+		mySeparatorMap[item] = index;
 	}
 }
 
@@ -180,6 +185,19 @@ void ZLGtkApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr
 		bool alreadyEnabled = GTK_WIDGET_STATE(gtkButton) != GTK_STATE_INSENSITIVE;
 		if (enabled != alreadyEnabled) {
 			gtk_widget_set_sensitive(gtkButton, enabled);
+		}
+	} else {
+		int &index = mySeparatorMap[item];
+		if (visible) {
+			if ((index & VISIBLE_SEPARATOR) == 0) {
+				gtk_toolbar_insert_space(myToolbar, index);
+				index |= VISIBLE_SEPARATOR;
+			}
+		} else {
+			if ((index & VISIBLE_SEPARATOR) != 0) {
+				index &= ~VISIBLE_SEPARATOR;
+				gtk_toolbar_remove_space(myToolbar, index);
+			}
 		}
 	}
 }

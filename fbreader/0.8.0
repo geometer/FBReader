@@ -4,6 +4,7 @@ DONE 16-bit images in plucker files
 
 desktop-qt: set application icon
 desktop-qt: better disabled icons
+desktop-qt: разделители на тулбаре
 Khmer
 Chinese
 проценты на индикаторе
@@ -14,7 +15,6 @@ Chinese
 вызов по ссылкам внешних программ
 кнопка End в plucker
 проверить все версии -- что не падает options dialog
-desktop: разделители на тулбаре
 вставить упоминание о сайтах в howtostart
 поправить HowToStart: вставить упоминание о bzip2, проверить список форматов
 возможность посмотреть HowToStart в любой момент

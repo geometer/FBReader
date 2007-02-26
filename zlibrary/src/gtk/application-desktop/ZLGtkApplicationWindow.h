@@ -25,6 +25,7 @@
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
+#include <gtk/gtktoolbar.h>
 
 #include <ZLApplication.h>
 
@@ -69,11 +70,12 @@ private:
 	ZLIntegerRangeOption myHeightOption;
 
 	GtkWindow *myMainWindow;
-	GtkWidget *myToolbar;
+	GtkToolbar *myToolbar;
 	GtkWidget *myVBox;
 
 	std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
 	std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
+	std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorMap;
 
 	bool myFullScreen;
 
