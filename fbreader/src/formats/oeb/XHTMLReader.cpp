@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLFileImage.h>
 
 #include "XHTMLReader.h"
@@ -103,38 +105,26 @@ public:
 	void doAtEnd(XHTMLReader &reader);
 };
 
-static const std::string HASH = "#";
-
-void XHTMLTagAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-	const char *id = reader.attributeValue(xmlattributes, "id");
-	if (id != 0) {
-		reader.myModelReader.addHyperlinkLabel(reader.myFileName + HASH + id);
-	}
-}
-
-void XHTMLTagParagraphAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myModelReader.beginParagraph();
-	XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
 void XHTMLTagParagraphAction::doAtEnd(XHTMLReader &reader) {
 	reader.myModelReader.endParagraph();
 }
 
-void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myModelReader.endParagraph();
 	reader.myModelReader.beginParagraph();
-	XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
 void XHTMLTagRestartParagraphAction::doAtEnd(XHTMLReader&) {
 }
 
-void XHTMLTagItemAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagItemAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myModelReader.endParagraph();
 	// TODO: increase left indent
 	reader.myModelReader.beginParagraph();
-	XHTMLTagAction::doAtStart(reader, xmlattributes);
 	// TODO: replace bullet sign by number inside OL tag
 	const std::string bullet = "\xE2\x80\xA2\xC0\xA0";
 	reader.myModelReader.addData(bullet);
@@ -171,10 +161,9 @@ void XHTMLTagImageAction::doAtEnd(XHTMLReader&) {
 XHTMLTagControlAction::XHTMLTagControlAction(TextKind control) : myControl(control) {
 }
 
-void XHTMLTagControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagControlAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myModelReader.pushKind(myControl);
 	reader.myModelReader.addControl(myControl, true);
-	XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
 void XHTMLTagControlAction::doAtEnd(XHTMLReader &reader) {
@@ -186,10 +175,9 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	std::string link;
 	const char *href = reader.attributeValue(xmlattributes, "href");
 	if (href != 0) {
-		link = (*href == '#') ? (reader.myFileName + href) : href;
+		link = (*href == '#') ? (reader.myReferenceName + href) : href;
 	}
 	reader.myModelReader.addHyperlinkControl(HYPERLINK, link);
-	XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
 void XHTMLTagHyperlinkAction::doAtEnd(XHTMLReader &reader) {
@@ -199,13 +187,12 @@ void XHTMLTagHyperlinkAction::doAtEnd(XHTMLReader &reader) {
 XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(TextKind control) : myControl(control) {
 }
 
-void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char**) {
 	if ((myControl == TITLE) && (reader.myModelReader.model().bookTextModel()->paragraphsNumber() > 1)) {
 		reader.myModelReader.insertEndOfSectionParagraph();
 	}
 	reader.myModelReader.beginParagraph();
 	reader.myModelReader.addControl(myControl, true);
-	XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
 void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
@@ -213,11 +200,10 @@ void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
 	reader.myModelReader.endParagraph();
 }
 
-void XHTMLTagPreAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+void XHTMLTagPreAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myPreformatted = true;
 	reader.myModelReader.beginParagraph();
 	reader.myModelReader.addControl(CODE, true);
-	XHTMLTagAction::doAtStart(reader, xmlattributes);
 }
 
 void XHTMLTagPreAction::doAtEnd(XHTMLReader &reader) {
@@ -308,21 +294,29 @@ void XHTMLReader::fillTagTable() {
 XHTMLReader::XHTMLReader(BookReader &modelReader) : myModelReader(modelReader) {
 }
 
-bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &name) {
+bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &fileName, const std::string &referenceName) {
+	myModelReader.addHyperlinkLabel(referenceName);
+
 	fillTagTable();
 
 	myPathPrefix = pathPrefix;
-	myFileName = name;
-	myModelReader.addHyperlinkLabel(myFileName);
+	myReferenceName = referenceName;
 
 	myPreformatted = false;
 
-	return readDocument(pathPrefix + name);
+	return readDocument(pathPrefix + fileName);
 }
 
 
 void XHTMLReader::startElementHandler(const char *tag, const char **attributes) {
 	// TODO: tag -> lowercase
+
+	static const std::string HASH = "#";
+	const char *id = attributeValue(attributes, "id");
+	if (id != 0) {
+		myModelReader.addHyperlinkLabel(myReferenceName + HASH + id);
+	}
+
 	XHTMLTagAction *action = ourTagActions[tag];
 	if (action != 0) {
 		action->doAtStart(*this, attributes);

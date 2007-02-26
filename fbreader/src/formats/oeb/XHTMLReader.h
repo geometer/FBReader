@@ -35,7 +35,7 @@ class XHTMLTagAction {
 public:
 	virtual ~XHTMLTagAction();
 	
-	virtual void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+	virtual void doAtStart(XHTMLReader &reader, const char **xmlattributes) = 0;
 	virtual void doAtEnd(XHTMLReader &reader) = 0;
 };
 
@@ -48,7 +48,7 @@ private:
 
 public:
 	XHTMLReader(BookReader &modelReader);
-	bool readFile(const std::string &pathPrefix, const std::string &name);
+	bool readFile(const std::string &pathPrefix, const std::string &fileName, const std::string &referenceName);
 
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
@@ -59,7 +59,7 @@ public:
 private:
 	BookReader &myModelReader;
 	std::string myPathPrefix;
-	std::string myFileName;
+	std::string myReferenceName;
 	bool myPreformatted;
 
 	friend class XHTMLTagAction;

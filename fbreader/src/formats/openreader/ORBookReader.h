@@ -19,8 +19,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OEBBOOKREADER_H__
-#define __OEBBOOKREADER_H__
+#ifndef __ORBOOKREADER_H__
+#define __ORBOOKREADER_H__
 
 #include <map>
 #include <vector>
@@ -30,10 +30,10 @@
 
 #include "../../bookmodel/BookReader.h"
 
-class OEBBookReader : public ZLXMLReader {
+class ORBookReader : public ZLXMLReader {
 
 public:
-	OEBBookReader(BookModel &model);
+	ORBookReader(BookModel &model);
 	bool readBook(const std::string &fileName);
 
 	void startElementHandler(const char *tag, const char **attributes);
@@ -43,18 +43,17 @@ public:
 private:
 	enum ReaderState {
 		READ_NONE,
-		READ_MANIFEST,
-		READ_SPINE,
-		READ_GUIDE
+		READ_RESOURCES,
+		READ_NAVIGATION
 	};
 
 	BookReader myModelReader;
 	ReaderState myState;
 
 	std::string myFilePrefix;
-	std::map<std::string,std::string> myIdToHref;
-	std::vector<std::string> myHtmlFileNames;
+	std::map<std::string,std::string> myResources;
+	std::vector<std::string> myHtmlFileIDs;
 	std::vector<std::pair<std::string,std::string> > myTOC;
 };
 
-#endif /* __OEBBOOKREADER_H__ */
+#endif /* __ORBOOKREADER_H__ */

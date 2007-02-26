@@ -25,7 +25,7 @@
 
 #include "OpenReaderPlugin.h"
 #include "ORDescriptionReader.h"
-//#include "OpenReaderBookReader.h"
+#include "ORBookReader.h"
 
 OpenReaderPlugin::~OpenReaderPlugin() {
 }
@@ -43,8 +43,7 @@ bool OpenReaderPlugin::readDescription(const std::string &path, BookDescription 
 }
 
 bool OpenReaderPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	//return ORBookReader(model).readBook(description.fileName());
-	return true;
+	return ORBookReader(model).readBook(description.fileName());
 }
 
 const std::string &OpenReaderPlugin::iconName() const {

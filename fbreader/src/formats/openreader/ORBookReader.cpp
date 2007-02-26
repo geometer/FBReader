@@ -19,73 +19,69 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
 
-#include "OEBBookReader.h"
-#include "XHTMLReader.h"
+#include "ORBookReader.h"
+#include "../oeb/XHTMLReader.h"
 #include "../../bookmodel/BookModel.h"
 
-OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
+ORBookReader::ORBookReader(BookModel &model) : myModelReader(model) {
 }
 
-void OEBBookReader::characterDataHandler(const char*, int) {
+void ORBookReader::characterDataHandler(const char*, int) {
 }
 
-static const std::string MANIFEST = "manifest";
-static const std::string SPINE = "spine";
-static const std::string GUIDE = "guide";
+static const std::string RESOURCES = "resources";
+static const std::string NAVIGATION = "primarynav";
 
 static const std::string ITEM = "item";
 static const std::string ITEMREF = "itemref";
-static const std::string REFERENCE = "reference";
+static const std::string POINTER = "pointer";
 
-void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
+static const std::string xhtmlMediaType = "application/x-orp-bcd1+xml";
+
+void ORBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
 	std::string tagString = ZLUnicodeUtil::toLower(tag);
-	if (MANIFEST == tagString) {
-		myState = READ_MANIFEST;
-	} else if (SPINE == tagString) {
-		myState = READ_SPINE;
-	} else if (GUIDE == tagString) {
-		myState = READ_GUIDE;
-	} else if ((myState == READ_MANIFEST) && (ITEM == tagString)) {
-		const char *id = attributeValue(xmlattributes, "id");
-		const char *href = attributeValue(xmlattributes, "href");
-		if ((id != 0) && (href != 0)) {
-			myIdToHref[id] = href;
-		}
-	} else if ((myState == READ_SPINE) && (ITEMREF == tagString)) {
-		const char *id = attributeValue(xmlattributes, "idref");
-		if (id != 0) {
-			const std::string &fileName = myIdToHref[id];
-			if (!fileName.empty()) {
-				myHtmlFileNames.push_back(fileName);
+	if (RESOURCES == tagString) {
+		myState = READ_RESOURCES;
+	} else if (NAVIGATION == tagString) {
+		myState = READ_NAVIGATION;
+	} else if ((myState == READ_RESOURCES) && (ITEM == tagString)) {
+		const char *resid = attributeValue(xmlattributes, "resid");
+		const char *resource = attributeValue(xmlattributes, "resource");
+		const char *mediaType = attributeValue(xmlattributes, "media-type");
+		if ((resid != 0) && (resource != 0)) {
+			myResources[resid] = resource;
+			if ((mediaType != 0) && (xhtmlMediaType == mediaType)) {
+				myHtmlFileIDs.push_back(resid);
 			}
 		}
-	} else if ((myState == READ_GUIDE) && (REFERENCE == tagString)) {
-		const char *title = attributeValue(xmlattributes, "title");
-		const char *href = attributeValue(xmlattributes, "href");
+	} else if ((myState == READ_NAVIGATION) && (POINTER == tagString)) {
+		const char *title = attributeValue(xmlattributes, "targetclass");
+		const char *href = attributeValue(xmlattributes, "elemrefs");
 		if ((title != 0) && (href != 0)) {
 			myTOC.push_back(std::pair<std::string,std::string>(title, href));
 		}
 	}
 }
 
-void OEBBookReader::endElementHandler(const char *tag) {
+void ORBookReader::endElementHandler(const char *tag) {
 	std::string tagString = ZLUnicodeUtil::toLower(tag);
-	if ((MANIFEST == tagString) || (SPINE == tagString) || (GUIDE == tagString)) {
+	if ((RESOURCES == tagString) || (NAVIGATION == tagString)) {
 		myState = READ_NONE;
 	}
 }
 
-bool OEBBookReader::readBook(const std::string &fileName) {
+bool ORBookReader::readBook(const std::string &fileName) {
 	int index0 = fileName.rfind(':');
 	int index1 = fileName.rfind('/');
 	myFilePrefix = fileName.substr(0, std::max(index0, index1) + 1);
 
-	myIdToHref.clear();
-	myHtmlFileNames.clear();
+	myResources.clear();
+	myHtmlFileIDs.clear();
 	myTOC.clear();
 	myState = READ_NONE;
 
@@ -96,11 +92,12 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 	myModelReader.setMainTextModel();
 	myModelReader.pushKind(REGULAR);
 
-	for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
-		XHTMLReader(myModelReader).readFile(myFilePrefix, *it, *it);
+	for (std::vector<std::string>::const_iterator it = myHtmlFileIDs.begin(); it != myHtmlFileIDs.end(); ++it) {
+		XHTMLReader(myModelReader).readFile(myFilePrefix, myResources[*it], *it);
 	}
 
 	for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); ++it) {
+		std::cerr << it->first << "\n";
 		int index = myModelReader.model().paragraphNumberById(it->second);
 		if (index != -1) {
 			myModelReader.beginContentsParagraph(index);
