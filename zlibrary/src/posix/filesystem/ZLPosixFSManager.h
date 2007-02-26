@@ -21,8 +21,7 @@
 #ifndef __ZLPOSIXFSMANAGER_H__
 #define __ZLPOSIXFSMANAGER_H__
 
-#include <ZLFSManager.h>
-#include <ZLFile.h>
+#include "../../abstract/filesystem/ZLFSManager.h"
 
 class ZLPosixFSManager : public ZLFSManager {
 

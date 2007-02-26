@@ -42,7 +42,7 @@ static const std::string ITEMREF = "itemref";
 static const std::string REFERENCE = "reference";
 
 void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
-	std::string tagString = ZLUnicodeUtil::toLower(tag);
+	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (MANIFEST == tagString) {
 		myState = READ_MANIFEST;
 	} else if (SPINE == tagString) {
@@ -73,7 +73,7 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 }
 
 void OEBBookReader::endElementHandler(const char *tag) {
-	std::string tagString = ZLUnicodeUtil::toLower(tag);
+	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if ((MANIFEST == tagString) || (SPINE == tagString) || (GUIDE == tagString)) {
 		myState = READ_NONE;
 	}
@@ -101,7 +101,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 	}
 
 	for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); ++it) {
-		int index = myModelReader.model().paragraphNumberById(it->second);
+		int index = myModelReader.model().label(it->second).ParagraphNumber;
 		if (index != -1) {
 			myModelReader.beginContentsParagraph(index);
 			myModelReader.addContentsData(it->first);

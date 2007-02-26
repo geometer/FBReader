@@ -91,14 +91,14 @@ void ContentsView::setModel(shared_ptr<TextModel> model, const std::string &name
 }
 
 void ContentsView::gotoReference() {
-	const WordCursor &cursor = fbreader().bookTextView().endCursor();
+	const WordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
 		size_t length = model()->paragraphsNumber();
 		const ContentsModel &contentsModel = (const ContentsModel&)*model();
 		size_t selected =	length - 1;
 		for (size_t i = 1; i < length; ++i) {
-			if (contentsModel.reference(((const TreeParagraph*)contentsModel[i])) >= reference) {
+			if (contentsModel.reference(((const TreeParagraph*)contentsModel[i])) > reference) {
 				selected = i - 1;
 				break;
 			}

@@ -44,6 +44,14 @@ private:
 class BookModel {
 
 public:
+	struct Label {
+		Label(shared_ptr<TextModel> model, int paragraphNumber) : Model(model), ParagraphNumber(paragraphNumber) {}
+
+		const shared_ptr<TextModel> Model;
+		const int ParagraphNumber;
+	};
+
+public:
 	BookModel(const BookDescriptionPtr description);
 	~BookModel();
 
@@ -51,10 +59,9 @@ public:
 
 	shared_ptr<TextModel> bookTextModel() const;
 	shared_ptr<TextModel> contentsModel() const;
-	shared_ptr<TextModel> footnoteModel(const std::string &id) const;
 
 	const ImageMap &imageMap() const;
-	int paragraphNumberById(const std::string &id) const;
+	Label label(const std::string &id) const;
 
 	const BookDescriptionPtr description() const;
 
@@ -64,7 +71,7 @@ private:
 	shared_ptr<TextModel> myContentsModel;
 	ImageMap myImages;
 	std::map<std::string,shared_ptr<TextModel> > myFootnotes;
-	std::map<std::string,int> myInternalHyperlinks;
+	std::map<std::string,Label> myInternalHyperlinks;
 
 friend class BookReader;
 };

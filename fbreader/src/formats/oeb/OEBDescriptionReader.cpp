@@ -46,7 +46,7 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 }
 
 void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
-	std::string tagString = ZLUnicodeUtil::toLower(tag);
+	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (METADATA == tagString) {
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
@@ -62,7 +62,7 @@ void OEBDescriptionReader::startElementHandler(const char *tag, const char **att
 }
 
 void OEBDescriptionReader::endElementHandler(const char *tag) {
-	std::string tagString = ZLUnicodeUtil::toLower(tag);
+	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (METADATA == tagString) {
 		interrupt();
 	} else {

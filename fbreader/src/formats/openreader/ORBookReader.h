@@ -23,6 +23,7 @@
 #define __ORBOOKREADER_H__
 
 #include <map>
+#include <set>
 #include <vector>
 #include <string>
 
@@ -44,7 +45,10 @@ private:
 	enum ReaderState {
 		READ_NONE,
 		READ_RESOURCES,
-		READ_NAVIGATION
+		READ_USERSET,
+		READ_NAVIGATION,
+		READ_POINTER,
+		READ_TOCTITLE
 	};
 
 	BookReader myModelReader;
@@ -52,8 +56,24 @@ private:
 
 	std::string myFilePrefix;
 	std::map<std::string,std::string> myResources;
-	std::vector<std::string> myHtmlFileIDs;
-	std::vector<std::pair<std::string,std::string> > myTOC;
+	std::string myCoverReference;
+	std::set<std::string> myHtmlFileIDs;
+	std::map<std::string,std::string> myImageIDs;
+	std::vector<std::string> myHtmlFilesOrder;
+
+	struct TOCItem {
+		TOCItem(const std::string &reference, const std::string &text, int level) : Reference(reference), Text(text), Level(level) {
+		}
+
+		std::string Reference;
+		std::string Text;
+		int Level;
+	};
+	std::vector<TOCItem> myTOC;
+
+	std::string myTOCReference;
+	int myTOCLevel;
+	std::string myTOCTitle;
 };
 
 #endif /* __ORBOOKREADER_H__ */

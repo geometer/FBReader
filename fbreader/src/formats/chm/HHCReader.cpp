@@ -107,6 +107,6 @@ bool HHCReader::characterDataHandler(const char*, int, bool) {
 
 void HHCReader::setReferences() {
 	for (size_t i = 0; i < myReferenceVector.size(); ++i) {
-		myBookReader.setReference(i, myBookReader.model().paragraphNumberById(myReferenceVector[i]));
+		myBookReader.setReference(i, myBookReader.model().label(myReferenceVector[i]).ParagraphNumber);
 	}
 }

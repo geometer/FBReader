@@ -44,14 +44,9 @@ const std::string &BookModel::fileName() const {
 	return myDescription->fileName();
 }
 
-int BookModel::paragraphNumberById(const std::string &id) const {
-	std::map<std::string,int>::const_iterator it = myInternalHyperlinks.find(id);
-	return (it != myInternalHyperlinks.end()) ? (*it).second : -1;
-}
-
-shared_ptr<TextModel> BookModel::footnoteModel(const std::string &id) const {
-	std::map<std::string,shared_ptr<TextModel> >::const_iterator it = myFootnotes.find(id);
-	return (it != myFootnotes.end()) ? (*it).second : 0;
+BookModel::Label BookModel::label(const std::string &id) const {
+	std::map<std::string,Label>::const_iterator it = myInternalHyperlinks.find(id);
+	return (it != myInternalHyperlinks.end()) ? it->second : Label(0, -1);
 }
 
 void ContentsModel::setReference(const TreeParagraph *paragraph, int reference) {

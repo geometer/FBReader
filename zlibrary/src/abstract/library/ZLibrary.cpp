@@ -18,13 +18,13 @@
  * 02110-1301, USA.
  */
 
-#include <ZLFSManager.h>
 #include <ZLTime.h>
 #include <ZLDialogManager.h>
 #include <ZLImageManager.h>
 #include <ZLMessage.h>
 
-#include "../../abstract/library/ZLibrary.h"
+#include "ZLibrary.h"
+#include "../filesystem/ZLFSManager.h"
 
 void ZLibrary::shutdown() {
 	ZLImageManager::deleteInstance();

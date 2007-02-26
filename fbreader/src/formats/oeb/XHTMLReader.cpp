@@ -19,9 +19,8 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLFileImage.h>
+#include <ZLUnicodeUtil.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -309,23 +308,20 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &fil
 
 
 void XHTMLReader::startElementHandler(const char *tag, const char **attributes) {
-	// TODO: tag -> lowercase
-
 	static const std::string HASH = "#";
 	const char *id = attributeValue(attributes, "id");
 	if (id != 0) {
 		myModelReader.addHyperlinkLabel(myReferenceName + HASH + id);
 	}
 
-	XHTMLTagAction *action = ourTagActions[tag];
+	XHTMLTagAction *action = ourTagActions[ZLUnicodeUtil::toLower(tag)];
 	if (action != 0) {
 		action->doAtStart(*this, attributes);
 	}
 }
 
 void XHTMLReader::endElementHandler(const char *tag) {
-	// TODO: tag -> lowercase
-	XHTMLTagAction *action = ourTagActions[tag];
+	XHTMLTagAction *action = ourTagActions[ZLUnicodeUtil::toLower(tag)];
 	if (action != 0) {
 		action->doAtEnd(*this);
 	}
