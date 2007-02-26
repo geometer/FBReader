@@ -117,3 +117,4 @@ iconv -> internal converter
 оптимизировать PaintContext
 запретить Drag'N'Drop в toolbar и listview (падения в wine)
 предусмотреть возможность отсутствия файлов иконок
+иконку для инсталлятора
