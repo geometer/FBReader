@@ -1,7 +1,7 @@
 ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-DESTDIR = $(PWD)/data
+DESTDIR = data
 DEBDIR = $(DESTDIR)/DEBIAN
 
 version = $(shell cat ../VERSION)
