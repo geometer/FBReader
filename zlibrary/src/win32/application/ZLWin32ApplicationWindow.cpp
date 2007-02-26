@@ -174,7 +174,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetModuleHandle(0);
 	wc.hIcon = LoadIcon(wc.hInstance, TEXT("ApplicationIcon"));
-	wc.hCursor = LoadCursor(0, IDC_ARROW);
+	wc.hCursor = 0;
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
 	wc.lpszClassName = ::wchar(::createNTWCHARString(myClassName, ZLApplication::ApplicationName()));
@@ -346,8 +346,7 @@ void ZLWin32ApplicationWindow::blockMouseEvents(bool block) {
 }
 
 void ZLWin32ApplicationWindow::setHyperlinkCursor(bool hyperlink) {
-	if (hyperlink) {
-		static HCURSOR handCursor = LoadCursor(0, IDC_HAND);
-		SetCursor(handCursor);
-	}
+	static HCURSOR handCursor = LoadCursor(0, IDC_HAND);
+	static HCURSOR defaultCursor = LoadCursor(0, IDC_ARROW);
+	SetCursor(hyperlink ? handCursor : defaultCursor);
 }
