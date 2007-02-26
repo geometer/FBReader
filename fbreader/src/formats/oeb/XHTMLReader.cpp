@@ -19,13 +19,10 @@
  * 02110-1301, USA.
  */
 
-#include <ZLFile.h>
-#include <ZLDir.h>
-#include <ZLStringUtil.h>
 #include <ZLFileImage.h>
-#include <ZLApplication.h>
 
 #include "XHTMLReader.h"
+#include "../util/EntityFilesCollector.h"
 
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -361,24 +358,6 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
-static std::vector<std::string> EXTERNAL_DTDs;
-
 const std::vector<std::string> &XHTMLReader::externalDTDs() const {
-	if (EXTERNAL_DTDs.empty()) {
-		std::string directoryName =
-			ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter +
-			"formats" + ZLApplication::FileNameDelimiter + "xhtml";
-		shared_ptr<ZLDir> dtdPath = ZLFile(directoryName).directory();
-		if (!dtdPath.isNull()) {
-			std::vector<std::string> files;
-			dtdPath->collectFiles(files, false);
-			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it) {
-				if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
-					EXTERNAL_DTDs.push_back(dtdPath->itemPath(*it));
-				}
-			}
-		}
-	}
-
-	return EXTERNAL_DTDs;
+	return EntityFilesCollector::instance().externalDTDs("xhtml");
 }

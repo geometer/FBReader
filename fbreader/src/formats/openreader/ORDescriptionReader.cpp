@@ -21,18 +21,19 @@
 
 #include <ZLUnicodeUtil.h>
 
-#include "OEBDescriptionReader.h"
+#include "ORDescriptionReader.h"
+#include "../util/EntityFilesCollector.h"
 
-OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDescription(description) {
+ORDescriptionReader::ORDescriptionReader(BookDescription &description) : myDescription(description) {
 }
 
 // TODO: replace "dc" by real DC scheme name
-static const std::string METADATA = "dc-metadata";
+static const std::string METADATA = "metadata";
 static const std::string TITLE = "dc:title";
 static const std::string AUTHOR_TAG = "dc:creator";
 static const std::string AUTHOR_ROLE = "aut";
 
-void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
+void ORDescriptionReader::characterDataHandler(const char *text, int len) {
 	switch (myReadState) {
 		case READ_NONE:
 			break;
@@ -45,7 +46,7 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
-void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
+void ORDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
 	std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (METADATA == tagString) {
 		myReadMetaData = true;
@@ -61,7 +62,7 @@ void OEBDescriptionReader::startElementHandler(const char *tag, const char **att
 	}
 }
 
-void OEBDescriptionReader::endElementHandler(const char *tag) {
+void ORDescriptionReader::endElementHandler(const char *tag) {
 	std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (METADATA == tagString) {
 		interrupt();
@@ -74,8 +75,12 @@ void OEBDescriptionReader::endElementHandler(const char *tag) {
 	}
 }
 
-bool OEBDescriptionReader::readDescription(const std::string &fileName) {
+bool ORDescriptionReader::readDescription(const std::string &fileName) {
 	myReadMetaData = false;
 	myReadState = READ_NONE;
 	return readDocument(fileName);
+}
+
+const std::vector<std::string> &ORDescriptionReader::externalDTDs() const {
+	return EntityFilesCollector::instance().externalDTDs("xhtml");
 }

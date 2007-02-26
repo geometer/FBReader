@@ -68,21 +68,6 @@ const ZLXMLReader::Tag *DocBookReader::tags() const {
 	return TAGS;
 }
 
-static std::vector<std::string> EXTERNAL_DTDs;
-
 const std::vector<std::string> &DocBookReader::externalDTDs() const {
-	if (EXTERNAL_DTDs.empty()) {
-		shared_ptr<ZLDir> dtdPath = ZLFile(DTDDirectory).directory();
-		if (!dtdPath.isNull()) {
-			std::vector<std::string> files;
-			dtdPath->collectFiles(files, false);
-			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it) {
-				if (ZLStringUtil::stringEndsWith(*it, ".ent")) {
-					EXTERNAL_DTDs.push_back(dtdPath->name() + "/" + *it);
-				}
-			}
-		}
-	}
-
-	return EXTERNAL_DTDs;
+	return EntityFilesCollector::instance().externalDTDs("docbook");
 }

@@ -1,7 +1,7 @@
 ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-DESTDIR = $(PWD)/data
+DESTDIR = data
 
 ifeq "$(UI_TYPE)" "opie"
 	PICSDIR = $(INSTALLDIR)/pics/fbreader
