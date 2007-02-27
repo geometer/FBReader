@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLUnicodeUtil.h>
 
 #include "W32DialogPanel.h"
@@ -55,6 +53,7 @@ W32DialogPanel::~W32DialogPanel() {
 
 void W32DialogPanel::init(HWND dialogWindow) {
 	myDialogWindow = dialogWindow;
+	ShowScrollBar(myDialogWindow, SB_BOTH, false);
 	ourPanels[myDialogWindow] = this;	
 	myElement->init(dialogWindow, this);
 }
@@ -77,7 +76,7 @@ void W32DialogPanel::updateElementSize() {
 }
 
 DWORD W32DialogPanel::style() const {
-	return DS_SHELLFONT | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION;
+	return DS_SHELLFONT | DS_CENTER | DS_MODALFRAME | WS_POPUPWINDOW | WS_CAPTION | WS_VSCROLL | WS_HSCROLL;
 }
 
 DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
@@ -153,7 +152,32 @@ void W32DialogPanel::layout() {
 		const short oldWidth = mySize.Width;
 		calculateSize();
 		mySize.Width = std::max(mySize.Width, oldWidth);
-		// TODO: add scrollbars (?)
+		/*
+		if (myDialogWindow != 0) {
+			RECT panelRectangle;
+			panelRectangle.left = 0;
+			panelRectangle.top = 0;
+			panelRectangle.right = mySize.Width;
+			panelRectangle.bottom = mySize.Height;
+			MapDialogRect(myDialogWindow, &panelRectangle);
+			RECT windowRectangle;
+			GetClientRect(myDialogWindow, &windowRectangle);
+			const bool oversized =
+				(windowRectangle.right + 1 < panelRectangle.right) ||
+				(windowRectangle.bottom + 1 < panelRectangle.bottom);
+			ShowScrollBar(myDialogWindow, SB_BOTH, oversized);
+			if (oversized) {
+				SCROLLINFO info;
+				info.cbSize = sizeof(info);
+				info.fMask = SIF_RANGE;
+				info.nMin = 0;
+				info.nMax = panelRectangle.right;
+				SetScrollInfo(myDialogWindow, SB_HORZ, &info, false);
+				info.nMax = panelRectangle.bottom;
+				SetScrollInfo(myDialogWindow, SB_VERT, &info, true);
+			}
+		}
+		*/
 		updateElementSize();
 		myDoLayout = false;
 	}

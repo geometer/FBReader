@@ -20,6 +20,7 @@
 
 #include <qapplication.h>
 #include <qpixmap.h>
+#include <qimage.h>
 #include <qmenubar.h>
 #include <qaction.h>
 #include <qlayout.h>
@@ -35,6 +36,41 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 }
 
 static const std::string OPTIONS = "Options";
+
+class MyIconFactory : public QIconFactory {
+
+public:
+	QPixmap *createPixmap(const QIconSet &set, QIconSet::Size size, QIconSet::Mode mode, QIconSet::State state);
+};
+
+inline QRgb grayRgb(QRgb rgb) {
+	int gray = (qRed(rgb) + qGreen(rgb) + qBlue(rgb)) / 3;
+	return qRgba(gray, gray, gray, qAlpha(rgb) / 2);
+}
+
+QPixmap *MyIconFactory::createPixmap(const QIconSet &set, QIconSet::Size size, QIconSet::Mode mode, QIconSet::State state) {
+	if (mode != QIconSet::Disabled) {
+		return 0;
+	}
+	QImage image;
+	image = set.pixmap(size, QIconSet::Normal, state);
+	const int numColors = image.numColors();
+	if (numColors > 0) {
+		for (int i = 0; i < numColors; ++i) {
+			image.setColor(i, grayRgb(image.color(i)));
+		}
+	} else {
+		const int width = image.width();
+		const int height = image.height();
+		for (int i = 0; i < width; ++i) {
+			for (int j = 0; j < height; ++j) {
+				image.setPixel(i, j, grayRgb(image.pixel(i, j)));
+			}
+		}
+	}
+
+	return new QPixmap(image);
+}
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
 	static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
@@ -62,6 +98,9 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myFullScreen(false),
 	myWasMaximized(false),
 	myCursorIsHyperlink(false) {
+
+	QIconFactory::installDefaultFactory(new MyIconFactory());
+
 	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLApplication::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
 	QPixmap icon(iconFileName.c_str());
 	setIcon(icon);
