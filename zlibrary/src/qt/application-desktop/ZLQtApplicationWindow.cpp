@@ -23,6 +23,7 @@
 #include <qmenubar.h>
 #include <qaction.h>
 #include <qlayout.h>
+#include <qobjectlist.h>
 
 #include "ZLQtApplicationWindow.h"
 #include "../dialogs/ZLQtDialogManager.h"
@@ -142,7 +143,8 @@ void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item)
 		action->addTo(myToolBar);
 		myActions[&*item] = action;
 	} else {
-		//myToolBar->addSeparator();
+		myToolBar->addSeparator();
+		mySeparatorMap[item] = (QWidget*)myToolBar->children()->getLast();
 	}
 }
 
@@ -151,6 +153,11 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr 
 	if (action != 0) {
 		action->setEnabled(enabled);
 		action->setVisible(visible);
+	} else {
+		QWidget *separator = mySeparatorMap[item];
+		if (separator != 0) {
+			separator->setShown(visible);
+		}
 	}
 }
 
