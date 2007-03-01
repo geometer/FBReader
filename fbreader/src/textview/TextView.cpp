@@ -146,7 +146,9 @@ void TextView::scrollToEndOfText() {
 	}
 
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
-	gotoParagraph((i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber(), true);
+	const int index = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
+	gotoParagraph(index - 1, true);
+	myEndCursor.moveToParagraphEnd();
 	repaintView();
 }
 
