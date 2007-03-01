@@ -353,7 +353,7 @@ public:
 	ZLKeyBindings &keyBindings(ZLViewWidget::Angle angle);
 	const DictionaryCollection &dictionaryCollection() const;
 
-	void tryShowFootnoteView(const std::string &id);
+	void tryShowFootnoteView(const std::string &id, bool external);
 	BookTextView &bookTextView() const;
 	void showBookTextView();
 	void openBook(BookDescriptionPtr description);

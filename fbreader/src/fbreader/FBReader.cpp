@@ -315,19 +315,25 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 	}
 }
 
-void FBReader::tryShowFootnoteView(const std::string &id) {
-	if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
-		BookModel::Label label = myModel->label(id);
-		if (!label.Model.isNull()) {
-			if (label.Model == myModel->bookTextModel()) {
-				bookTextView().gotoParagraph(label.ParagraphNumber);
-			} else {
-				FootnoteView &view = ((FootnoteView&)*myFootnoteView);
-				view.setModel(label.Model, std::string());
-				setMode(FOOTNOTE_MODE);
-				view.gotoParagraph(label.ParagraphNumber);
+#include <iostream>
+
+void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
+	if (external) {
+		std::cerr << id << "\n";
+	} else {
+		if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
+			BookModel::Label label = myModel->label(id);
+			if (!label.Model.isNull()) {
+				if (label.Model == myModel->bookTextModel()) {
+					bookTextView().gotoParagraph(label.ParagraphNumber);
+				} else {
+					FootnoteView &view = ((FootnoteView&)*myFootnoteView);
+					view.setModel(label.Model, std::string());
+					setMode(FOOTNOTE_MODE);
+					view.gotoParagraph(label.ParagraphNumber);
+				}
+				refreshWindow();
 			}
-			refreshWindow();
 		}
 	}
 }

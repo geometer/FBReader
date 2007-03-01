@@ -52,7 +52,7 @@ private:
 
 	void preparePaintInfo();
 
-	bool getHyperlinkId(const TextElementPosition &position, std::string &id) const;
+	bool getHyperlinkId(const TextElementPosition &position, std::string &id, bool &isExternal) const;
 
 private:
 	typedef std::pair<int,int> Position;
