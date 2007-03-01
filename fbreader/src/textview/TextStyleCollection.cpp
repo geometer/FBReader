@@ -97,7 +97,18 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 			Boolean3 italic = b3Value(attributes, "italic");
 			int verticalShift = intValue(attributes, "vShift");
 			Boolean3 allowHyphenations = b3Value(attributes, "allowHyphenations");
-			bool isHyperlink = booleanValue(attributes, "isHyperlink");
+			TextStyleDecoration::HyperlinkStyle hyperlinkStyle = TextStyleDecoration::NONE;
+			const char *hyperlink = attributeValue(attributes, "hyperlink");
+			if (hyperlink != 0) {
+				static const std::string INTERNAL_STRING = "internal";
+				if (INTERNAL_STRING == hyperlink) {
+					hyperlinkStyle = TextStyleDecoration::INTERNAL;
+				}
+				static const std::string EXTERNAL_STRING = "external";
+				if (EXTERNAL_STRING == hyperlink) {
+					hyperlinkStyle = TextStyleDecoration::EXTERNAL;
+				}
+			}
 
 			if (booleanValue(attributes, "partial")) {
 				decoration = new TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations);
@@ -125,9 +136,7 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 
 				decoration = new FullTextStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
 			}
-			if (isHyperlink) {
-				decoration->setHyperlinkStyle();
-			}
+			decoration->setHyperlinkStyle(hyperlinkStyle);
 			myCollection.myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(id, decoration));
 		}
 	}

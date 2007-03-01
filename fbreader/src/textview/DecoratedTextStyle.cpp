@@ -34,7 +34,7 @@ TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDe
 	VerticalShiftOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":vShift", verticalShift),
 	AllowHyphenationsOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":allowHyphenations", allowHyphenations),
 	myName(name),
-	myIsHyperlinkStyle(false) {
+	myHyperlinkStyle(NONE) {
 }
 
 FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
@@ -115,15 +115,29 @@ bool FullDecoratedTextStyle::allowHyphenations() const {
 }
 
 ZLColor PartialDecoratedTextStyle::color() const {
-	return (myDecoration.isHyperlinkStyle()) ?
-		TextStyleCollection::instance().baseStyle().InternalHyperlinkTextColorOption.value() :
-		base()->color();
+	TextStyleDecoration::HyperlinkStyle hyperlinkStyle = myDecoration.hyperlinkStyle();
+	if (hyperlinkStyle == TextStyleDecoration::NONE) {
+		return base()->color();
+	}
+	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
+	if (hyperlinkStyle == TextStyleDecoration::INTERNAL) {
+		return baseStyle.InternalHyperlinkTextColorOption.value();
+	} else {
+		return baseStyle.ExternalHyperlinkTextColorOption.value();
+	}
 }
 
 ZLColor FullDecoratedTextStyle::color() const {
-	return (myDecoration.isHyperlinkStyle()) ?
-		TextStyleCollection::instance().baseStyle().InternalHyperlinkTextColorOption.value() :
-		base()->color();
+	TextStyleDecoration::HyperlinkStyle hyperlinkStyle = myDecoration.hyperlinkStyle();
+	if (hyperlinkStyle == TextStyleDecoration::NONE) {
+		return base()->color();
+	}
+	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
+	if (hyperlinkStyle == TextStyleDecoration::INTERNAL) {
+		return baseStyle.InternalHyperlinkTextColorOption.value();
+	} else {
+		return baseStyle.ExternalHyperlinkTextColorOption.value();
+	}
 }
 
 int ForcedTextStyle::leftIndent() const {

@@ -127,8 +127,13 @@ public:
 
 	const std::string &name() const;
 
-	bool isHyperlinkStyle() const;
-	void setHyperlinkStyle();
+	enum HyperlinkStyle {
+		NONE,
+		INTERNAL,
+		EXTERNAL
+	};
+	HyperlinkStyle hyperlinkStyle() const;
+	void setHyperlinkStyle(HyperlinkStyle hyperlinkStyle);
 
 public:
 	ZLStringOption FontFamilyOption;
@@ -143,7 +148,7 @@ public:
 private:
 	std::string myName;
 
-	bool myIsHyperlinkStyle;
+	HyperlinkStyle myHyperlinkStyle;
 };
 
 class FullTextStyleDecoration : public TextStyleDecoration {
@@ -336,8 +341,8 @@ inline bool BaseTextStyle::allowHyphenations() const { return true; }
 inline TextStyleDecoration::~TextStyleDecoration() {}
 inline bool TextStyleDecoration::isFullDecoration() const { return false; }
 inline const std::string &TextStyleDecoration::name() const { return myName; }
-inline bool TextStyleDecoration::isHyperlinkStyle() const { return myIsHyperlinkStyle; }
-inline void TextStyleDecoration::setHyperlinkStyle() { myIsHyperlinkStyle = true; }
+inline TextStyleDecoration::HyperlinkStyle TextStyleDecoration::hyperlinkStyle() const { return myHyperlinkStyle; }
+inline void TextStyleDecoration::setHyperlinkStyle(HyperlinkStyle hyperlinkStyle) { myHyperlinkStyle = hyperlinkStyle; }
 
 inline FullTextStyleDecoration::~FullTextStyleDecoration() {}
 inline bool FullTextStyleDecoration::isFullDecoration() const { return true; }
