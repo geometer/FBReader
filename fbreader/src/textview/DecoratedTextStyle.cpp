@@ -116,13 +116,13 @@ bool FullDecoratedTextStyle::allowHyphenations() const {
 
 ZLColor PartialDecoratedTextStyle::color() const {
 	return (myDecoration.isHyperlinkStyle()) ?
-		TextStyleCollection::instance().baseStyle().HyperlinkTextColorOption.value() :
+		TextStyleCollection::instance().baseStyle().InternalHyperlinkTextColorOption.value() :
 		base()->color();
 }
 
 ZLColor FullDecoratedTextStyle::color() const {
 	return (myDecoration.isHyperlinkStyle()) ?
-		TextStyleCollection::instance().baseStyle().HyperlinkTextColorOption.value() :
+		TextStyleCollection::instance().baseStyle().InternalHyperlinkTextColorOption.value() :
 		base()->color();
 }
 

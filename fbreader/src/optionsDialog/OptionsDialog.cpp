@@ -287,7 +287,8 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
 	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
 	builder.addOption("Regular Text", baseStyle.RegularTextColorOption);
-	builder.addOption("Hyperlink Text", baseStyle.HyperlinkTextColorOption);
+	builder.addOption("Internal Hyperlink Text", baseStyle.InternalHyperlinkTextColorOption);
+	builder.addOption("External Hyperlink Text", baseStyle.ExternalHyperlinkTextColorOption);
 	builder.addOption("Selected Text", baseStyle.SelectedTextColorOption);
 	builder.addOption("Tree Lines", baseStyle.TreeLinesColorOption);
 	builder.addOption("Position Indicator", TextStyleCollection::instance().indicatorStyle().ColorOption);

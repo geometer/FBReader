@@ -101,7 +101,8 @@ public:
 	ZLColorOption BackgroundColorOption;
 	ZLColorOption SelectedTextColorOption;
 	ZLColorOption RegularTextColorOption;
-	ZLColorOption HyperlinkTextColorOption;
+	ZLColorOption InternalHyperlinkTextColorOption;
+	ZLColorOption ExternalHyperlinkTextColorOption;
 	ZLColorOption TreeLinesColorOption;
 
 	ZLBooleanOption AutoHyphenationOption;
