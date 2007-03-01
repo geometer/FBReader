@@ -38,7 +38,7 @@
 #include "../fbreader/RecentBooksView.h"
 
 #include "../collection/BookCollection.h"
-#include "../dictionary/Dictionary.h"
+#include "../external/Dictionary.h"
 #include "../textview/TextView.h"
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"

@@ -33,7 +33,7 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-#include "../dictionary/Dictionary.h"
+#include "../external/Dictionary.h"
 
 static const std::string PARAGRAPH_OPTION_NAME = "Paragraph";
 static const std::string WORD_OPTION_NAME = "Word";

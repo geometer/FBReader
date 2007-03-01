@@ -32,7 +32,7 @@
 #include <ZLKeyBindings.h>
 
 #include "../description/BookDescription.h"
-#include "../dictionary/Dictionary.h"
+#include "../external/Dictionary.h"
 
 class BookModel;
 class BookTextView;
