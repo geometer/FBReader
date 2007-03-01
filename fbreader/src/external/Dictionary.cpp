@@ -39,7 +39,7 @@ private:
 };
 
 static const std::string DICTIONARY = "dictionary";
-static const std::string SHOW_WORD_COMMAND = "showWord";
+static const std::string ACTION = "action";
 
 DictionaryCollectionBuilder::DictionaryCollectionBuilder(DictionaryCollection &collection) :
 	myCollection(collection),
@@ -61,7 +61,7 @@ void DictionaryCollectionBuilder::startElementHandler(const char *tag, const cha
 				myCollection.myDictionaries[sName] = myCurrentDictionary;
 			}
 		}
-	} else if (!myCurrentDictionary.isNull() && (SHOW_WORD_COMMAND == tag)) {
+	} else if (!myCurrentDictionary.isNull() && (ACTION == tag)) {
 		for (const char **it = attributes; (*it != 0) && (*(it + 1) != 0); it += 2) {
 			myCurrentDictionary->myShowWordData[*it] = *(it + 1);
 		}

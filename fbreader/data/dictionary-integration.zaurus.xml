@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <DictionaryIntegration>
 	<dictionary name="ZBedic" protocol="QCop" testFile="/opt/QtPalmtop/bin/zbedic">
-		<showWord channel="QPE/Application/zbedic" method="find(QString)"/>
+		<action name="showWord" channel="QPE/Application/zbedic" method="find(QString)"/>
 	</dictionary>
 	<!--
 	<dictionary name="SdiQt" protocol="QCop" testFile="/opt/QtPalmtop/bin/sdiqt">
