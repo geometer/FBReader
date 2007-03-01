@@ -40,7 +40,7 @@ enum TextKind {
 	CITE = 12,
 	AUTHOR = 13,
 	DATE = 14,
-	HYPERLINK = 15,
+	INTERNAL_HYPERLINK = 15,
 	FOOTNOTE = 16,
 	EMPHASIS = 17,
 	STRONG = 18,
@@ -62,6 +62,7 @@ enum TextKind {
 	H4 = 34,
 	H5 = 35,
 	H6 = 36,
+	EXTERNAL_HYPERLINK = 37,
 };
 
 #endif /* __TEXTKIND_H__ */

@@ -56,7 +56,7 @@ void PluckerBookReader::safeAddControl(TextKind kind, bool start) {
 
 void PluckerBookReader::safeAddHyperlinkControl(const std::string &id) {
 	if (myParagraphStarted) {
-		addHyperlinkControl(HYPERLINK, id);
+		addHyperlinkControl(INTERNAL_HYPERLINK, id);
 	} else {
 		myDelayedHyperlinks.push_back(id);
 	}
@@ -80,7 +80,7 @@ void PluckerBookReader::safeBeginParagraph() {
 			addControl(REGULAR, true);
 		}
 		for (std::vector<std::string>::const_iterator it = myDelayedHyperlinks.begin(); it != myDelayedHyperlinks.end(); ++it) {
-			addHyperlinkControl(HYPERLINK, *it);
+			addHyperlinkControl(INTERNAL_HYPERLINK, *it);
 		}
 		myDelayedHyperlinks.clear();
 	}
@@ -197,7 +197,7 @@ static std::string fromNumber(unsigned int num) {
 void PluckerBookReader::processTextFunction(char *ptr) {
 	switch ((unsigned char)*ptr) {
 		case 0x08:
-			safeAddControl(HYPERLINK, false);
+			safeAddControl(INTERNAL_HYPERLINK, false);
 			break;
 		case 0x0A:
 			safeAddHyperlinkControl(fromNumber(twoBytes(ptr + 1)));

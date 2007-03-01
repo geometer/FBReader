@@ -24,6 +24,7 @@
 #include "HtmlSectionReader.h"
 #include "CHMReferenceCollection.h"
 #include "CHMFileImage.h"
+#include "../util/ReferenceUtil.h"
 
 class HtmlSectionTagAction : public HtmlTagAction {
 
@@ -83,29 +84,32 @@ void HtmlSectionHrefTagAction::run(bool start, const std::vector<HtmlReader::Htm
 		for (unsigned int i = 0; i < attributes.size(); ++i) {
 			if (attributes[i].Name == "NAME") {
 				bookReader().addHyperlinkLabel(ZLUnicodeUtil::toLower(reader().myCurrentSectionName + '#' + attributes[i].Value));
-			} else if (!reader().myIsHyperlink && (attributes[i].Name == "HREF")) {
+			} else if ((reader().hyperlinkType() == REGULAR) && (attributes[i].Name == "HREF")) {
 				const std::string &value = attributes[i].Value;
-				if (!value.empty() &&
-						(value.substr(0, 7) != "http://") &&
-						(value.substr(0, 7) != "mailto:")) {
-					const int index = value.find('#');
-					std::string sectionName = (index == -1) ? value : value.substr(0, index);
-					sectionName = ZLUnicodeUtil::toLower(HtmlReader::decodeURL(sectionName));
-					if (sectionName.empty()) {
-						sectionName = reader().myCurrentSectionName;
+				if (!value.empty()) {
+					if (ReferenceUtil::isReference(value)) {
+						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value);
+						reader().setHyperlinkType(INTERNAL_HYPERLINK);
 					} else {
-						sectionName = reader().myReferenceCollection.addReference(sectionName, true);
+						const int index = value.find('#');
+						std::string sectionName = (index == -1) ? value : value.substr(0, index);
+						sectionName = ZLUnicodeUtil::toLower(HtmlReader::decodeURL(sectionName));
+						if (sectionName.empty()) {
+							sectionName = reader().myCurrentSectionName;
+						} else {
+							sectionName = reader().myReferenceCollection.addReference(sectionName, true);
+						}
+						bookReader().addHyperlinkControl(
+							INTERNAL_HYPERLINK, ZLUnicodeUtil::toLower((index == -1) ? sectionName : (sectionName + value.substr(index)))
+						);
+						reader().setHyperlinkType(INTERNAL_HYPERLINK);
 					}
-					bookReader().addHyperlinkControl(
-						HYPERLINK, ZLUnicodeUtil::toLower((index == -1) ? sectionName : (sectionName + value.substr(index)))
-					);
-					reader().myIsHyperlink = true;
 				}
 			}
 		}
-	} else if (reader().myIsHyperlink) {
-		bookReader().addControl(HYPERLINK, false);
-		reader().myIsHyperlink = false;
+	} else if (reader().hyperlinkType() != REGULAR) {
+		bookReader().addControl(reader().hyperlinkType(), false);
+		reader().setHyperlinkType(REGULAR);
 	}
 }
 

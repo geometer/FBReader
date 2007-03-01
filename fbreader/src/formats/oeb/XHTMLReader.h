@@ -24,8 +24,11 @@
 
 #include <string>
 #include <map>
+#include <stack>
 
 #include <ZLXMLReader.h>
+
+#include "../../model/TextKind.h"
 
 class BookReader;
 class XHTMLReader;
@@ -61,6 +64,7 @@ private:
 	std::string myPathPrefix;
 	std::string myReferenceName;
 	bool myPreformatted;
+	std::stack<TextKind> myHyperlinkStack;
 
 	friend class XHTMLTagAction;
 	friend class XHTMLTagParagraphAction;

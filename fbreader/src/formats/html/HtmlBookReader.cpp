@@ -23,8 +23,9 @@
 
 #include <ZLFileImage.h>
 
-#include "../txt/PlainTextFormat.h"
 #include "HtmlBookReader.h"
+#include "../txt/PlainTextFormat.h"
+#include "../util/ReferenceUtil.h"
 #include "../../bookmodel/BookModel.h"
 
 class HtmlControlTagAction : public HtmlTagAction {
@@ -183,17 +184,22 @@ void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttrib
 		for (unsigned int i = 0; i < attributes.size(); ++i) {
 			if (attributes[i].Name == "NAME") {
 				bookReader().addHyperlinkLabel(attributes[i].Value);
-			} else if (!myReader.myIsHyperlink && (attributes[i].Name == "HREF")) {
+			} else if ((myReader.hyperlinkType() == REGULAR) && (attributes[i].Name == "HREF")) {
 				const std::string &value = attributes[i].Value;
-				if (!value.empty() && (value[0] == '#')) {
-					bookReader().addHyperlinkControl(HYPERLINK, value.substr(1));
-					myReader.myIsHyperlink = true;
+				if (!value.empty()) {
+					if (value[0] == '#') {
+						myReader.setHyperlinkType(INTERNAL_HYPERLINK);
+						bookReader().addHyperlinkControl(INTERNAL_HYPERLINK, value.substr(1));
+					} else if (ReferenceUtil::isReference(value)) {
+						myReader.setHyperlinkType(EXTERNAL_HYPERLINK);
+						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value.substr(1));
+					}
 				}
 			}
 		}
-	} else if (myReader.myIsHyperlink) {
-		bookReader().addControl(HYPERLINK, false);
-		myReader.myIsHyperlink = false;
+	} else if (myReader.hyperlinkType() != REGULAR) {
+		bookReader().addControl(myReader.hyperlinkType(), false);
+		myReader.setHyperlinkType(REGULAR);
 	}
 }
 
@@ -468,7 +474,7 @@ void HtmlBookReader::startDocumentHandler() {
 	myBookReader.beginParagraph();
 	myIgnoreDataCounter = 0;
 	myIsPreformatted = false;
-	myIsHyperlink = false;
+	myHyperlinkType = REGULAR;
 	myIsStarted = false;
 
 	mySpaceCounter = -1;
@@ -477,4 +483,12 @@ void HtmlBookReader::startDocumentHandler() {
 
 void HtmlBookReader::endDocumentHandler() {
 	myBookReader.endParagraph();
+}
+
+TextKind HtmlBookReader::hyperlinkType() const {
+	return myHyperlinkType;
+}
+
+void HtmlBookReader::setHyperlinkType(TextKind hyperlinkType) {
+	myHyperlinkType = hyperlinkType;
 }

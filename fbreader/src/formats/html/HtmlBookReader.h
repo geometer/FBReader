@@ -54,6 +54,10 @@ private:
 	void addConvertedDataToBuffer(const char *text, int len, bool convert);
 
 protected:
+	TextKind hyperlinkType() const;
+	void setHyperlinkType(TextKind hyperlinkType);
+
+protected:
 	BookReader myBookReader;
 	std::string myBaseDirPath;
 
@@ -62,10 +66,8 @@ private:
 	int myIgnoreDataCounter;
 	bool myIsPreformatted;
 
-protected:
-	bool myIsHyperlink;
+	TextKind myHyperlinkType;
 
-private:
 	bool myIsStarted;
 	bool myBuildTableOfContent;
 	std::stack<int> myListNumStack;
