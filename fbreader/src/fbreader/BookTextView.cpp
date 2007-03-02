@@ -33,7 +33,7 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-#include "../external/Dictionary.h"
+#include "../external/ProgramCollection.h"
 
 static const std::string PARAGRAPH_OPTION_NAME = "Paragraph";
 static const std::string WORD_OPTION_NAME = "Word";
@@ -238,27 +238,30 @@ bool BookTextView::onStylusPress(int x, int y) {
 		WordCursor cursor = startCursor();
 		cursor.moveToParagraph(position->ParagraphNumber);
 		cursor.moveTo(position->TextElementNumber, 0);
-		shared_ptr<Dictionary> dictionary = fbreader().dictionaryCollection().currentDictionary();
-		if (!dictionary.isNull()) {
-			const Word &word = (Word&)cursor.element();
-			ZLUnicodeUtil::Ucs2String ucs2;
-			ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);
-			ZLUnicodeUtil::Ucs2String::iterator it = ucs2.begin();
-			while ((it != ucs2.end()) && !ZLUnicodeUtil::isLetter(*it)) {
-				++it;
-			}
-			if (it != ucs2.end()) {
-				ucs2.erase(ucs2.begin(), it);
-				it = ucs2.end() - 1;
-				while (!ZLUnicodeUtil::isLetter(*it)) {
-					--it;
+		shared_ptr<ProgramCollection> dictionaryCollection = fbreader().dictionaryCollection();
+		if (!dictionaryCollection.isNull()) {
+			shared_ptr<Program> dictionary = dictionaryCollection->currentProgram();
+			if (!dictionary.isNull()) {
+				const Word &word = (Word&)cursor.element();
+				ZLUnicodeUtil::Ucs2String ucs2;
+				ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);
+				ZLUnicodeUtil::Ucs2String::iterator it = ucs2.begin();
+				while ((it != ucs2.end()) && !ZLUnicodeUtil::isLetter(*it)) {
+					++it;
 				}
-				ucs2.erase(it + 1, ucs2.end());
-    
-				std::string txt;
-				ZLUnicodeUtil::ucs2ToUtf8(txt, ucs2);
-				dictionary->openInDictionary(txt);
-				return true;
+				if (it != ucs2.end()) {
+					ucs2.erase(ucs2.begin(), it);
+					it = ucs2.end() - 1;
+					while (!ZLUnicodeUtil::isLetter(*it)) {
+						--it;
+					}
+					ucs2.erase(it + 1, ucs2.end());
+      
+					std::string txt;
+					ZLUnicodeUtil::ucs2ToUtf8(txt, ucs2);
+					dictionary->run("showWord", txt);
+					return true;
+				}
 			}
 		}
 	}

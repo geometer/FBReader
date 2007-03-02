@@ -315,11 +315,15 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 	}
 }
 
-#include <iostream>
-
 void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 	if (external) {
-		std::cerr << id << "\n";
+		shared_ptr<ProgramCollection> collection = webBrowserCollection();
+		if (!collection.isNull()) {
+			shared_ptr<Program> program = collection->currentProgram();
+			if (!program.isNull()) {
+				program->run("openLink", id);
+			}
+		}
 	} else {
 		if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
 			BookModel::Label label = myModel->label(id);
@@ -515,4 +519,12 @@ ZLKeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle) {
 		case ZLViewWidget::DEGREES270:
 			return myBindings270;
 	}
+}
+
+shared_ptr<ProgramCollection> FBReader::dictionaryCollection() const {
+	return myProgramCollectionMap.collection("Dictionary");
+}
+
+shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
+	return myProgramCollectionMap.collection("Web Browser");
 }

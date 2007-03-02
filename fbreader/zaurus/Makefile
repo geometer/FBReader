@@ -33,7 +33,7 @@ install:
 	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/default
 	@install -m 0644 ../data/default/config.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
 	@install -m 0644 ../data/default/keymap.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
-	@install -m 0644 ../data/dictionary-integration.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/dictionary-integration.xml
+	@install -m 0644 ../data/external.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/external.xml
 	@install -m 0644 ../data/default/styles.$(RESOLUTION).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
 	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
 	@install -m 0644 ../icons/$(PICS_FROM)/FBReader.png $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)

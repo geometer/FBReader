@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,52 +18,43 @@
  * 02110-1301, USA.
  */
 
-#ifndef __DICTIONARY_H__
-#define __DICTIONARY_H__
+#ifndef __ZLWIN32MESSAGE_H__
+#define __ZLWIN32MESSAGE_H__
 
 #include <string>
-#include <map>
-#include <vector>
 
-#include <shared_ptr.h>
-#include <ZLOptions.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLMessage.h>
 
-class Dictionary;
-
-class DictionaryCollection {
+class ZLWin32CommunicationManager : public ZLCommunicationManager {
 
 public:
-	DictionaryCollection();
+	static void createInstance();
 
-	const std::vector<std::string> &names() const;
-	shared_ptr<Dictionary> currentDictionary() const;
-
-public:
-	mutable ZLBooleanOption EnableIntegrationOption;
-	mutable ZLStringOption CurrentNameOption;
+	shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile);
 
 private:
-	std::vector<std::string> myNames;
-	std::map<std::string, shared_ptr<Dictionary> > myDictionaries;
-
-friend class DictionaryCollectionBuilder;
+	ZLWin32CommunicationManager();
 };
 
-class Dictionary {
-
-private:
-	Dictionary(shared_ptr<ZLCommunicator> communicator);
+class ZLWin32ExecCommunicator : public ZLCommunicator {
 
 public:
-	void openInDictionary(const std::string &word) const;
-
-private:
-	shared_ptr<ZLCommunicator> myCommunicator;
-	ZLCommunicationManager::Data myShowWordData;
-
-friend class DictionaryCollection;
-friend class DictionaryCollectionBuilder;
+	shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data);
 };
 
-#endif /* __DICTIONARY_H__ */
+class ZLWin32ExecMessageSender : public ZLMessageSender {
+
+private:
+	ZLWin32ExecMessageSender(const std::string &program);
+
+public:
+	void sendStringMessage(const std::string &message);
+
+private:
+	ZLUnicodeUtil::Ucs2String myProgram;
+
+friend class ZLWin32ExecCommunicator;
+};
+
+#endif /* __ZLWIN32MESSAGE_H__ */

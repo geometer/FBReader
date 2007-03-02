@@ -32,7 +32,7 @@
 #include <ZLKeyBindings.h>
 
 #include "../description/BookDescription.h"
-#include "../external/Dictionary.h"
+#include "../external/ProgramCollection.h"
 
 class BookModel;
 class BookTextView;
@@ -351,7 +351,8 @@ private:
 public:
 	ZLKeyBindings &keyBindings();
 	ZLKeyBindings &keyBindings(ZLViewWidget::Angle angle);
-	const DictionaryCollection &dictionaryCollection() const;
+	shared_ptr<ProgramCollection> dictionaryCollection() const;
+	shared_ptr<ProgramCollection> webBrowserCollection() const;
 
 	void tryShowFootnoteView(const std::string &id, bool external);
 	BookTextView &bookTextView() const;
@@ -382,14 +383,10 @@ private:
 	ZLKeyBindings myBindings180;
 	ZLKeyBindings myBindings270;
 
-	DictionaryCollection myDictionaryCollection;
+	ProgramCollectionMap myProgramCollectionMap;
 
 friend class OptionsDialog;
 friend class FBView;
 };
-
-inline const DictionaryCollection &FBReader::dictionaryCollection() const {
-	return myDictionaryCollection;
-}
 
 #endif /* __FBREADER_H__ */

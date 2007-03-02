@@ -27,11 +27,13 @@
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../image/ZLWin32ImageManager.h"
 #include "../view/ZLWin32PaintContext.h"
+#include "../message/ZLWin32Message.h"
 
 void ZLibrary::init(int&, char**&) {
 	ZLWin32FSManager::createInstance();
 	ZLWin32TimeManager::createInstance();
 	ZLWin32DialogManager::createInstance();
+	ZLWin32CommunicationManager::createInstance();
 	ZLWin32ImageManager::createInstance();
 }
 

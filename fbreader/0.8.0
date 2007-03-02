@@ -9,17 +9,14 @@ Chinese
 кодировки: корейская, вьетнамская
 иконка для пакета в pool
 вызов внешнего браузера
-	qtopia
 	opie
 	gpe
 	pdaxrom
 	linux-desktop
 	maemo
 	maemo2
-	win32
 проверить все версии -- что не падает options dialog
 вставить упоминание о сайтах в howtostart
-  какие сайты??
 поправить HowToStart: вставить упоминание о bzip2, проверить список форматов
 возможность посмотреть HowToStart в любой момент
 maemo: single-click installation
@@ -30,7 +27,7 @@ maemo: single-click installation
 *** win32 version (0.8.0)
 
 диалоги
-  table layout (multicell widgets)
+	table layout (multicell widgets)
 	ColorOptionView
 	KeyOptionView
 рисунки в тексте
@@ -51,7 +48,7 @@ selection dialog
 заменить явные размеры иконок на вычисляемые
 переименовать XMLConfig->RegistryConfig
 перераскладка при необходимости
-  добавлять при необходимости scrollbar'ы
+	добавлять при необходимости scrollbar'ы
 
 ==============================================================================
 
@@ -63,7 +60,7 @@ tooltips в десктопных версиях
 desktop: пакеты не должны мешать друг другу
 многократный перенос (оч. длинное слово)
 info dialog icon in contents tree
-  for books
+	for books
 	for authors
 	for series
 
@@ -102,7 +99,7 @@ options dialog -- создавать меньше объектов
 интеграция с каким-нибудь словарем в maemo
 хитрый контрол для кодировок
 mobipocket: где начинаются картинки?
-  ответить на письмо роберту м. (послать файл)
+	ответить на письмо роберту м. (послать файл)
 
 ==============================================================================
 

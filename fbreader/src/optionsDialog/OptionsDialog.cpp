@@ -38,7 +38,7 @@
 #include "../fbreader/RecentBooksView.h"
 
 #include "../collection/BookCollection.h"
-#include "../external/Dictionary.h"
+#include "../external/ProgramCollection.h"
 #include "../textview/TextView.h"
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
@@ -180,63 +180,6 @@ void DefaultLanguageEntry::onAccept(const std::string &value) {
 	PluginCollection::instance().DefaultLanguageOption.setValue(language);
 }
 
-class DictionaryEntry : public ZLComboOptionEntry {
-
-public:
-	DictionaryEntry(const DictionaryCollection &collection);
-
-private:
-	const std::string &name() const;
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
-
-private:
-	const DictionaryCollection &myCollection;
-};
-
-class EnableDictionaryEntry : public ZLSimpleBooleanOptionEntry {
-
-public:
-	EnableDictionaryEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *comboEntry);
-
-private:
-	void onStateChanged(bool state);
-
-private:
-	ZLOptionEntry *myComboEntry;
-};
-
-DictionaryEntry::DictionaryEntry(const DictionaryCollection &collection) : myCollection(collection) {
-}
-
-const std::string &DictionaryEntry::initialValue() const {
-	return myCollection.CurrentNameOption.value();
-}
-
-const std::string &DictionaryEntry::name() const {
-	static const std::string _name = "Integrate With";
-	return _name;
-}
-
-const std::vector<std::string> &DictionaryEntry::values() const {
-	return myCollection.names();
-}
-
-void DictionaryEntry::onAccept(const std::string &value) {
-	myCollection.CurrentNameOption.setValue(value);
-}
-
-EnableDictionaryEntry::EnableDictionaryEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *comboEntry) : ZLSimpleBooleanOptionEntry(name, option), myComboEntry(comboEntry) {
-	onStateChanged(initialState());
-}
-
-void EnableDictionaryEntry::onStateChanged(bool state) {
-	if (myComboEntry != 0) {
-		myComboEntry->setVisible(state);
-	}
-}
-
 OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
 
@@ -301,19 +244,8 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 		myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 	}
 
-	const DictionaryCollection &collection = fbreader.dictionaryCollection();
-	const std::vector<std::string> &dictionaryNames = collection.names();
-	if (!dictionaryNames.empty()) {
-		ZLDialogContent &dictionaryTab = myDialog->createTab("Dictionary");
-		ZLOptionEntry *dictionaryChoiceEntry =
-			(dictionaryNames.size() > 1) ? new DictionaryEntry(collection) : 0;
-		const std::string optionName = "Enable Integration With " +
-			((dictionaryNames.size() == 1) ? dictionaryNames[0] : "Dictionary");
-		dictionaryTab.addOption(new EnableDictionaryEntry(optionName, collection.EnableIntegrationOption, dictionaryChoiceEntry));
-		if (dictionaryChoiceEntry != 0) {
-			dictionaryTab.addOption(dictionaryChoiceEntry);
-		}
-	}
+	createCollectionTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With");
+	createCollectionTab(fbreader.webBrowserCollection(), "Web", "Open External Links In ", "Browser", "Use Browser");
 }
 
 OptionsDialog::~OptionsDialog() {

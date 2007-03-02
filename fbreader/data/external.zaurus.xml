@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalPrograms>
+	<section name="Dictionary">
+		<program name="ZBedic" protocol="QCop" testFile="/opt/QtPalmtop/bin/zbedic">
+			<action name="showWord" channel="QPE/Application/zbedic" method="find(QString)"/>
+		</program>
+		<!--
+		<program name="SdiQt" protocol="QCop" testFile="/opt/QtPalmtop/bin/sdiqt">
+			<action name="showWord" channel="QPE/Application/sdiqt" method="showWord(QString)"/>
+		</program>
+		-->
+	</section>
+	<section name="Web Browser">
+		<program name="Opera" protocol="QCop" testFile="/opt/QtPalmtop/bin/opera">
+			<action name="openLink" channel="QPE/Application/opera" method="setDocument(QString)"/>
+		</program>
+		<program name="NetFront" protocol="QCop" testFile="/opt/QtPalmtop/bin/netfront3">
+			<action name="openLink" channel="QPE/Application/netfront3" method="setDocument(QString)"/>
+		</program>
+	</section>
+</ExternalPrograms>

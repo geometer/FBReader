@@ -32,6 +32,7 @@ class ScrollingOptionsPage;
 class KeyBindingsPage;
 class ConfigPage;
 class ZLPaintContext;
+class ProgramCollection;
 
 class ZLBooleanOptionEntry;
 class ZLSpinOptionEntry;
@@ -43,6 +44,9 @@ public:
 	~OptionsDialog();
 
 	ZLOptionsDialog &dialog();
+
+private:
+	void createCollectionTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName);
 
 private:
 	shared_ptr<ZLOptionsDialog> myDialog;

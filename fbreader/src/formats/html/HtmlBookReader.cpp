@@ -192,7 +192,7 @@ void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttrib
 						bookReader().addHyperlinkControl(INTERNAL_HYPERLINK, value.substr(1));
 					} else if (ReferenceUtil::isReference(value)) {
 						myReader.setHyperlinkType(EXTERNAL_HYPERLINK);
-						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value.substr(1));
+						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value);
 					}
 				}
 			}
