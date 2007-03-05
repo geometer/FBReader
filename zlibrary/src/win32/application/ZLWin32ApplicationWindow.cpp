@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLFile.h>
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
@@ -75,6 +73,9 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 				} else {
 					myWin32ViewWidget->onMouseMove(x(lParam), y(lParam));
 				}
+			}
+			if (myCursor != 0) {
+				SetCursor(myCursor);
 			}
 			return 0;
 		case WM_MOUSEWHEEL:
@@ -159,7 +160,8 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myToolbar(0),
 	myBlockMouseEvents(false),
 	myKeyboardModifierMask(0),
-	myFullScreen(false) {
+	myFullScreen(false),
+	myCursor(0) {
 
 	INITCOMMONCONTROLSEX icex;
 	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
@@ -174,7 +176,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetModuleHandle(0);
 	wc.hIcon = LoadIcon(wc.hInstance, TEXT("ApplicationIcon"));
-	wc.hCursor = 0;
+	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
 	wc.lpszClassName = ::wchar(::createNTWCHARString(myClassName, ZLApplication::ApplicationName()));
@@ -347,6 +349,5 @@ void ZLWin32ApplicationWindow::blockMouseEvents(bool block) {
 
 void ZLWin32ApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 	static HCURSOR handCursor = LoadCursor(0, IDC_HAND);
-	static HCURSOR defaultCursor = LoadCursor(0, IDC_ARROW);
-	SetCursor(hyperlink ? handCursor : defaultCursor);
+	myCursor = hyperlink ? handCursor : 0;
 }

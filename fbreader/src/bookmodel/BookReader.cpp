@@ -172,16 +172,16 @@ void BookReader::insertEndOfTextParagraph() {
 	insertEndParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
 }
 
-void BookReader::addImageReference(const std::string &id) {
+void BookReader::addImageReference(const std::string &id, short vOffset) {
 	if (myCurrentTextModel != 0) {
 		mySectionContainsRegularContents = true;
 		if (myTextParagraphExists) {
 			flushTextBufferToParagraph();
-			myCurrentTextModel->addImage(id, myModel.imageMap());
+			myCurrentTextModel->addImage(id, myModel.imageMap(), vOffset);
 		} else {
 			beginParagraph();
 			myCurrentTextModel->addControl(IMAGE, true);
-			myCurrentTextModel->addImage(id, myModel.imageMap());
+			myCurrentTextModel->addImage(id, myModel.imageMap(), vOffset);
 			myCurrentTextModel->addControl(IMAGE, false);
 			endParagraph();
 		}

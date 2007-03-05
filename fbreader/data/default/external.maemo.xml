@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalPrograms>
+	<section name="Web Browser">
+		<program name="Default Browser" protocol="osso-rpc">
+			<action name="openLink" service="osso_browser" command="load_url"/>
+		</program>
+	</section>
+</ExternalPrograms>

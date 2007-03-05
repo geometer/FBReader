@@ -244,8 +244,12 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 		myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 	}
 
-	createCollectionTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With");
-	createCollectionTab(fbreader.webBrowserCollection(), "Web", "Open External Links In ", "Browser", "Use Browser");
+	createIntegrationTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With");
+	createIntegrationTab(fbreader.webBrowserCollection(), "Web", "Open External Links In ", "Browser", "Use Browser");
+}
+
+void OptionsDialog::storeTemporaryOption(ZLOption *option) {
+	myTemporaryOptions.push_back(option);
 }
 
 OptionsDialog::~OptionsDialog() {

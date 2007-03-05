@@ -165,14 +165,16 @@ private:
 class ImageEntry : public ParagraphEntry {
 
 public:
-	ImageEntry(const std::string &id, const ImageMap *imageMap);
+	ImageEntry(const std::string &id, const ImageMap *imageMap, short vOffset);
 	~ImageEntry();
 	const std::string &id() const;
 	shared_ptr<const ZLImage> image() const;
+	short vOffset() const;
 
 private:
-	std::string myId;
+	const std::string myId;
 	const ImageMap *myMap;
+	const short myVOffset;
 };
 
 class Paragraph {
@@ -308,9 +310,10 @@ inline TextEntry::TextEntry(const char *address) : myAddress(address) {}
 inline TextEntry::~TextEntry() {}
 inline const char *TextEntry::data() const { return myAddress + sizeof(size_t); }
 
-inline ImageEntry::ImageEntry(const std::string &id, const ImageMap *imageMap) : myId(id), myMap(imageMap) {}
+inline ImageEntry::ImageEntry(const std::string &id, const ImageMap *imageMap, short vOffset) : myId(id), myMap(imageMap), myVOffset(vOffset) {}
 inline ImageEntry::~ImageEntry() {}
 inline const std::string &ImageEntry::id() const { return myId; }
+inline short ImageEntry::vOffset() const { return myVOffset; }
 
 inline Paragraph::Paragraph() : myEntryNumber(0) {}
 inline Paragraph::~Paragraph() {}

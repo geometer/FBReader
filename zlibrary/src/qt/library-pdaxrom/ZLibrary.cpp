@@ -23,11 +23,12 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../../qt/filesystem/ZLQtFSManager.h"
+#include "../filesystem/ZLQtFSManager.h"
 #include "../time/ZLQtTime.h"
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
+#include "../../unix/message/ZLUnixMessage.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);
@@ -36,6 +37,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
 	ZLQtDialogManager::createInstance();
+	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
 }
 

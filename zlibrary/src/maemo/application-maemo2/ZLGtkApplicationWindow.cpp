@@ -21,6 +21,7 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include "../message/ZLMaemoMessage.h"
 #include "../view/ZLGtkViewWidget.h"
 #include "../../gtk/util/ZLGtkKeyUtil.h"
 #include "../../gtk/util/ZLGtkSignalUtil.h"
@@ -87,7 +88,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) : ZLA
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
-	osso_initialize(ZLApplication::ApplicationName().c_str(), "0.0", false, 0);
+	((ZLMaemoCommunicationManager&)ZLCommunicationManager::instance()).init();
 
 	myWindow = HILDON_WINDOW(hildon_window_new());
 
@@ -113,6 +114,8 @@ ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
 	for (std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*>::iterator it = myToolbarButtons.begin(); it != myToolbarButtons.end(); ++it) {
 		delete it->second;
 	}
+
+	((ZLMaemoCommunicationManager&)ZLCommunicationManager::instance()).shutdown();
 }
 
 void ZLGtkApplicationWindow::initMenu() {

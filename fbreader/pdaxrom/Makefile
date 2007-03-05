@@ -19,9 +19,6 @@ all: .tmpdir .copyfiles $(CTRLDIR)/control $(package) .rmtmpdir
 	@mv $(package) ../..
 
 install:
-	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/help
-	@install -m 0644 ../data/help/HowToStart.brownish.640x480.fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
-	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/default
 	@install -m 0644 ../data/default/config.pdaxrom.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
 	@install -m 0644 ../data/default/keymap.pdaxrom.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.640x480.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml

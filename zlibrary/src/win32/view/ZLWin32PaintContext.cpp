@@ -193,10 +193,11 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 
 void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	ZLWin32ImageData &win32Image = (ZLWin32ImageData&)image;
-	const BYTE *pixels = win32Image.pixels();
+	const BYTE *pixels = win32Image.pixels(myBackgroundColor);
 	if (pixels != 0) {
 		const int width = image.width();
 		const int height = image.height();
+		adjustPoint(x, y);
 		StretchDIBits(myDisplayContext,
 			x, y - height, width, height,
 			0, 0, width, height,
@@ -269,8 +270,8 @@ void ZLWin32PaintContext::clear(ZLColor color) {
 		if (myBackgroundBrush != 0) {
 			DeleteObject(myBackgroundBrush);
 		}
-		myBackgroundColor = RGB(color.Red, color.Green, color.Blue);
-		myBackgroundBrush = CreateSolidBrush(myBackgroundColor);
+		myBackgroundColor = color;
+		myBackgroundBrush = CreateSolidBrush(RGB(color.Red, color.Green, color.Blue));
 	}
 	RECT rectangle;
 	rectangle.top = 0;

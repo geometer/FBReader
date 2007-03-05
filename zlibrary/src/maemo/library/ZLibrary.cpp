@@ -28,6 +28,7 @@
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../../gtk/image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
+#include "../message/ZLMaemoMessage.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
@@ -35,6 +36,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();
+	ZLMaemoCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
 }
 

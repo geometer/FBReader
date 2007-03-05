@@ -23,3 +23,4 @@
 
 const std::string FBOptions::BOOKS_CATEGORY = "books";
 const std::string FBOptions::SEARCH_CATEGORY = "search";
+const std::string FBOptions::EXTERNAL_CATEGORY = "external";

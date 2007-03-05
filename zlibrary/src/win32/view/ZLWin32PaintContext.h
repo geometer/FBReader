@@ -73,7 +73,7 @@ private:
 	LineStyle myLineStyle;
 	COLORREF myColor;
 
-	COLORREF myBackgroundColor;
+	ZLColor myBackgroundColor;
 	HBRUSH myBackgroundBrush;
 
 	HBRUSH myFillBrush;

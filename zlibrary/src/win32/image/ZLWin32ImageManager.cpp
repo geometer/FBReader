@@ -8,7 +8,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -19,12 +19,15 @@
 
 #include "ZLWin32ImageManager.h"
 
-ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0) {
+ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0) {
 }
 
 ZLWin32ImageData::~ZLWin32ImageData() {
 	if (myArray != 0) {
 		delete[] myArray;
+	}
+	if (myArrayWithoutAlpha != 0) {
+		delete[] myArrayWithoutAlpha;
 	}
 }
 
@@ -37,11 +40,20 @@ unsigned int ZLWin32ImageData::height() const {
 }
 
 void ZLWin32ImageData::init(unsigned int width, unsigned int height) {
+	init(width, height, false, 0);
+}
+
+void ZLWin32ImageData::init(unsigned int width, unsigned int height, bool hasAlpha, unsigned int bytesPerLine) {
 	myWidth = width;
 	myHeight = height;
-	myBytesPerLine = (3 * width + 3) >> 2 << 2;
+	myBytesPerPixel = hasAlpha ? 4 : 3;
+	myBytesPerLine = std::max(bytesPerLine, (myBytesPerPixel * myWidth + 3) >> 2 << 2);
 	if (myArray != 0) {
 		delete[] myArray;
+	}
+	if (myArrayWithoutAlpha != 0) {
+		delete[] myArrayWithoutAlpha;
+		myArrayWithoutAlpha = 0;
 	}
 	myArray = new BYTE[myBytesPerLine * myHeight];
 	myPixelPointer = myArray;
@@ -64,11 +76,11 @@ void ZLWin32ImageData::init(unsigned int width, unsigned int height) {
 }
 
 void ZLWin32ImageData::setPosition(unsigned int x, unsigned int y) {
-	myPixelPointer = myArray + myBytesPerLine * (myHeight - y - 1) + 3 * x;
+	myPixelPointer = myArray + myBytesPerLine * (myHeight - y - 1) + myBytesPerPixel * x;
 }
 
 void ZLWin32ImageData::moveX(int delta) {
-	myPixelPointer += 3 * delta;
+	myPixelPointer += myBytesPerPixel * delta;
 }
 
 void ZLWin32ImageData::moveY(int delta) {
@@ -80,6 +92,9 @@ void ZLWin32ImageData::setPixel(unsigned char r, unsigned char g, unsigned char 
 		myPixelPointer[0] = b;
 		myPixelPointer[1] = g;
 		myPixelPointer[2] = r;
+		if (myBytesPerPixel == 4) {
+			myPixelPointer[3] = 255;
+		}
 	}
 }
 
@@ -89,9 +104,9 @@ void ZLWin32ImageData::copyFrom(const ZLImageData &source, unsigned int targetX,
 		return;
 	}
 	int height = source.height();
-	int bytes = source.width() * 3;
+	int bytes = source.width() * myBytesPerPixel;
 	BYTE *src = win32source.myArray + win32source.myBytesPerLine * (win32source.myHeight - 1);
-	BYTE *dst = myArray + (myHeight - targetY - 1) * myBytesPerLine + targetX * 3;
+	BYTE *dst = myArray + (myHeight - targetY - 1) * myBytesPerLine + targetX * myBytesPerPixel;
 	for (int i = 0; i < height; ++i) {
 		memcpy(dst, src, bytes);
 		dst -= myBytesPerLine;
@@ -99,8 +114,45 @@ void ZLWin32ImageData::copyFrom(const ZLImageData &source, unsigned int targetX,
 	}
 }
 
-const BYTE *ZLWin32ImageData::pixels() const {
-	return myArray;
+const BYTE *ZLWin32ImageData::pixels(ZLColor bgColor) const {
+	if (myArray == 0) {
+		return 0;
+	}
+
+	if (myBytesPerPixel == 3) {
+		return myArray;
+	} else {
+		if ((myArrayWithoutAlpha == 0) || (myBackgroundColor != bgColor)) {
+			myBackgroundColor = bgColor;
+			int bpl = (3 * myWidth + 3) >> 2 << 2;
+			if (myArrayWithoutAlpha == 0) {
+				myArrayWithoutAlpha = new BYTE[bpl * myHeight];	
+			}
+			const unsigned short R = myBackgroundColor.Red;
+			const unsigned short G = myBackgroundColor.Green;
+			const unsigned short B = myBackgroundColor.Blue;
+			BYTE *from, *to;
+			unsigned short b, g, r, a, a2;
+			for (unsigned int i = 0; i < myHeight; ++i) {
+				from = myArray + myBytesPerLine * i;
+				to = myArrayWithoutAlpha + bpl * i;
+				for (unsigned int j = 0; j < myWidth; ++j) {
+					b = *from++;
+					g = *from++;
+					r = *from++;
+					a = *from++;
+					a2 = 255 - a;
+					b = b * a + B * a2 + (unsigned short)128;
+					g = g * a + G * a2 + (unsigned short)128;
+					r = r * a + R * a2 + (unsigned short)128;
+					*to++ = (b + (b >> 8)) >> 8;
+					*to++ = (g + (g >> 8)) >> 8;
+					*to++ = (r + (r >> 8)) >> 8;
+				}
+			}
+		}
+		return myArrayWithoutAlpha;
+	}
 }
 
 const BITMAPINFO &ZLWin32ImageData::info() const {
@@ -112,22 +164,14 @@ shared_ptr<ZLImageData> ZLWin32ImageManager::createData() const {
 }
 
 void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
-	/*
-	GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
-	GError *error = 0;
-  
-	gdk_pixbuf_loader_write(loader, (const unsigned char*)stringData.data(), stringData.length(), &error);
-	if (error == 0) {
-		gdk_pixbuf_loader_close(loader, &error);
-		if (error == 0) {
-			((ZLWin32ImageData&)data).myPixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
-			g_object_ref(((ZLWin32ImageData&)data).myPixbuf);
-		}
+	ZLWin32ImageData &win32Data = (ZLWin32ImageData&)data;
+	if (pngConvert(stringData, win32Data)) {
+		return;
 	}
-  
-	if (error != 0) {
-		g_error_free(error);
+	if (gifConvert(stringData, win32Data)) {
+		return;
 	}
-	g_object_unref(loader);
-	*/
+	if (jpegConvert(stringData, win32Data)) {
+		return;
+	}
 }

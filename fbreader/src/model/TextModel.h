@@ -64,7 +64,7 @@ public:
 	void addHyperlinkControl(TextKind textKind, const std::string &label);
 	void addText(const std::string &text);
 	void addText(const std::vector<std::string> &text);
-	void addImage(const std::string &id, const ImageMap &imageMap);
+	void addImage(const std::string &id, const ImageMap &imageMap, short vOffset);
 	void addFixedHSpace(unsigned char length);
 
 protected:

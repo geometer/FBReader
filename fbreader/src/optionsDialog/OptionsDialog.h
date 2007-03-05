@@ -36,6 +36,7 @@ class ProgramCollection;
 
 class ZLBooleanOptionEntry;
 class ZLSpinOptionEntry;
+class ZLOption;
 
 class OptionsDialog {
 
@@ -46,7 +47,8 @@ public:
 	ZLOptionsDialog &dialog();
 
 private:
-	void createCollectionTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName);
+	void createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName);
+	void storeTemporaryOption(ZLOption *option);
 
 private:
 	shared_ptr<ZLOptionsDialog> myDialog;
@@ -55,6 +57,7 @@ private:
 	shared_ptr<OptionsPage> myStylePage;
 	shared_ptr<KeyBindingsPage> myKeyBindingsPage;
 	shared_ptr<ConfigPage> myConfigPage;
+	std::vector<shared_ptr<ZLOption> > myTemporaryOptions;
 };
 
 inline ZLOptionsDialog &OptionsDialog::dialog() { return *myDialog; }

@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include "ZLWin32ViewWidget.h"
 #include "ZLWin32PaintContext.h"
 

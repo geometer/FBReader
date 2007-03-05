@@ -116,6 +116,8 @@ public:
 
 private:
 	const std::string myText;
+	unsigned short myStringCounter;
+	unsigned short myMaxLength;
 };
 
 class W32StandardIcon : public W32StandardControl {

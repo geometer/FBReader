@@ -14,7 +14,7 @@ RESOURCE_COMPILER = i586-mingw32msvc-windres
 CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DUNICODE -D_WIN32_IE=0x0501 -D_WIN32_WINNT=0x0501
 LDFLAGS = -mwindows
 
-UILIBS = -lgdi32 -lcomctl32
+UILIBS = -lgdi32 -lcomctl32 -lpng12
 EXPATLIBS = -lexpat -lz -liconv
 ENCALIBS = -lenca
 BZIP2LIBS = -lbz2

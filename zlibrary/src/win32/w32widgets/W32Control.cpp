@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <windows.h>
 #include <commctrl.h>
 
@@ -176,10 +174,26 @@ void W32PushButton::commandCallback(DWORD) {
 }
 
 W32Label::W32Label(const std::string &text, Alignment alignment) : W32StandardControl(alignment), myText(text) {
+	myStringCounter = 1;
+	myMaxLength = 0;
+	int index = 0;
+	int newIndex;
+	while ((newIndex = myText.find('\n', index)) != -1) {
+		++myStringCounter;
+		myMaxLength = std::max(
+			myMaxLength,
+			(unsigned short)ZLUnicodeUtil::utf8Length(myText.data() + index, newIndex - index)
+		);
+		index = newIndex + 1;
+	}
+	myMaxLength = std::max(
+		myMaxLength,
+		(unsigned short)ZLUnicodeUtil::utf8Length(myText.data() + index, myText.length() - index)
+	);
 }
 
 W32Widget::Size W32Label::minimumSize() const {
-	return Size(4 * (ZLUnicodeUtil::utf8Length(myText) + 1), 12);
+	return Size(4 * (myMaxLength + 1), 12 * myStringCounter);
 }
 
 void W32Label::setPosition(int x, int y, Size size) {

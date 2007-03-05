@@ -147,7 +147,7 @@ void CollectionModel::insertText(TextKind kind, const std::string &text) {
 
 void CollectionModel::insertImage(const std::string &id) {
 	addFixedHSpace(1);
-	addImage(id, myImageMap);
+	addImage(id, myImageMap, 0);
 }
 
 CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context), myUpdateModel(true) {

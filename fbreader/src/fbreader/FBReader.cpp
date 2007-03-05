@@ -113,6 +113,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
 	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
 	UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false),
+	ShowHelpIconOption(ZLOption::CONFIG_CATEGORY, "Help", "ShowIcon", false),
 	myBindings0("Keys"),
 	myBindings90("Keys90"),
 	myBindings180("Keys180"),
@@ -135,12 +136,11 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	}
 
 	if (description.isNull()) {
-		std::string howToStartString = ApplicationDirectory() + FileNameDelimiter + "help" + FileNameDelimiter + "HowToStart.fb2";
-		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, howToStartString);
+		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, helpFileName());
 		description = BookDescription::getDescription(bookName.value());
 
 		if (description.isNull()) {
-			description = BookDescription::getDescription(howToStartString);
+			description = BookDescription::getDescription(helpFileName());
 		}
 	}
 	openBook(description);
@@ -176,6 +176,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_SHOW_HIDE_POSITION_INDICATOR, new ToggleIndicatorAction(*this));
 	addAction(ACTION_QUIT, new QuitAction(*this));
 	addAction(ACTION_OPEN_PREVIOUS_BOOK, new OpenPreviousBookAction(*this));
+	addAction(ACTION_SHOW_HELP, new ShowHelpAction(*this));
 
 	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library");
 	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history", "Show Recent Books List");
@@ -195,6 +196,10 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev", "Find Previous");
 	toolbar().addSeparator();
 	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen", "Rotate Text");
+	toolbar().addSeparator();
+	if (ShowHelpIconOption.value()) {
+		toolbar().addButton(ACTION_SHOW_HELP, "help", "About FBReader");
+	}
 
 	menubar().addItem("Book Info...",	ACTION_SHOW_BOOK_INFO);
 	menubar().addItem("Table Of Contents", ACTION_SHOW_CONTENTS);
@@ -204,6 +209,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	librarySubmenu.addItem("Previous Book", ACTION_OPEN_PREVIOUS_BOOK);
 	librarySubmenu.addItem("Recent", ACTION_SHOW_LAST_BOOKS);
 	librarySubmenu.addItem("Add Book...", ACTION_ADD_BOOK);
+	librarySubmenu.addItem("About FBReader", ACTION_SHOW_HELP);
 
 	Menu &findSubmenu = menubar().addSubmenu("Find");
 	findSubmenu.addItem("Find Text...", ACTION_SEARCH);
@@ -456,6 +462,10 @@ bool FBReader::closeView() {
 		restorePreviousMode();
 		return false;
 	}
+}
+
+std::string FBReader::helpFileName() const {
+	return ApplicationDirectory() + FileNameDelimiter + "help" + FileNameDelimiter + "MiniHelp.fb2";
 }
 
 void FBReader::openFile(const std::string &fileName) {

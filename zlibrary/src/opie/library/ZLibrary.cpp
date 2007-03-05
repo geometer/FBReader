@@ -28,6 +28,7 @@
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../../qt/image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
+#include "../../unix/message/ZLUnixMessage.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QPEApplication(argc, argv);
@@ -35,6 +36,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
 	ZLQtDialogManager::createInstance();
+	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
 }
 

@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include "W32Container.h"
 
 W32Table::W32Table() : myVerticalSpacing(0), myHorizontalSpacing(0) {
@@ -88,7 +86,6 @@ int W32Table::controlNumber() const {
 }
 
 void W32Table::calculateSizes(std::vector<short> &widths, std::vector<short> &heights) const {
-	//std::cerr << "calculateSizes...";
 	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
 		short currentHeight = 0;
 		if (!it->empty()) {
@@ -106,19 +103,6 @@ void W32Table::calculateSizes(std::vector<short> &widths, std::vector<short> &he
 		}
 		heights.push_back(currentHeight);
 	}
-	//std::cerr << "OK\n";
-	/*
-	std::cerr << "widths: ";
-	for (size_t i = 0; i < widths.size(); ++i) {
-		std::cerr << widths[i] << ' ';
-	}
-	std::cerr << "\n";
-	std::cerr << "heights: ";
-	for (size_t i = 0; i < heights.size(); ++i) {
-		std::cerr << heights[i] << ' ';
-	}
-	std::cerr << "\n";
-	*/
 }
 
 W32Widget::Size W32Table::minimumSize() const {
@@ -199,20 +183,6 @@ void W32Table::setPosition(int x, int y, Size size) {
 			current += *it + myHorizontalSpacing;
 		}
 	}
-
-
-	/*
-	std::cerr << "widths: ";
-	for (size_t i = 0; i < widths.size(); ++i) {
-		std::cerr << widths[i] << ' ';
-	}
-	std::cerr << "\n";
-	std::cerr << "heights: ";
-	for (size_t i = 0; i < heights.size(); ++i) {
-		std::cerr << heights[i] << ' ';
-	}
-	std::cerr << "\n";
-	*/
 
 	int ey = y + topMargin();
 	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {

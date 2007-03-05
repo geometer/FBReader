@@ -65,8 +65,7 @@ static const char *reference(const char **xmlattributes) {
 		}
 		++xmlattributes;
 	}
-	const char *ref = *xmlattributes;
-	return ((ref != 0) && (*ref == '#')) ? ref + 1 : 0;
+	return *xmlattributes;
 }
 	
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
@@ -172,16 +171,26 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		{
 			const char *ref = reference(xmlattributes);
 			if (ref != 0) {
-				myModelReader.addHyperlinkControl(FOOTNOTE, ref);
+				if (ref[0] == '#') {
+					myHyperlinkType = FOOTNOTE;
+					++ref;
+				} else {
+					myHyperlinkType = EXTERNAL_HYPERLINK;
+				}
+				myModelReader.addHyperlinkControl(myHyperlinkType, ref);
 			} else {
-				myModelReader.addControl(FOOTNOTE, true);
+				myHyperlinkType = FOOTNOTE;
+				myModelReader.addControl(myHyperlinkType, true);
 			}
 			break;
 		}
 		case _IMAGE:
 		{
 			const char *ref = reference(xmlattributes);
-			if (ref != 0) {
+			const char *vOffset = attributeValue(xmlattributes, "voffset");
+			char offset = (vOffset != 0) ? atoi(vOffset) : 0;
+			if ((ref != 0) && (*ref == '#')) {
+				++ref;
 				if ((myCoverImageReference != ref) ||
 						(myParagraphsBeforeBodyNumber != myModelReader.model().bookTextModel()->paragraphsNumber())) {
 					myModelReader.addImageReference(ref);
@@ -294,7 +303,7 @@ void FB2BookReader::endElementHandler(int tag) {
 			myModelReader.addControl(EMPHASIS, false);
 			break;
 		case _A:
-			myModelReader.addControl(FOOTNOTE, false);
+			myModelReader.addControl(myHyperlinkType, false);
 			break;
 		case _BINARY:
 			if (!myImageBuffer.empty() && (myCurrentImage != 0)) {

@@ -21,23 +21,29 @@
 #include "../application/ZLWin32ApplicationWindow.h"
 
 ZLWin32MessageBox::ZLWin32MessageBox(ZLWin32ApplicationWindow &window, W32StandardIcon::IconId iconId, const std::string &title, const std::string &message) : myWindow(window), myPanel(myWindow.mainWindow(), title), myReturnCode(-1) {
-	W32VBox *panelBox = new W32VBox();
+	W32HBox *panelBox = new W32HBox();
+	panelBox->setMargins(4, 4, 8, 8);
 	myPanel.setElement(panelBox);
 
-	W32HBox *textBox = new W32HBox();
+	W32VBox *imageBox = new W32VBox();
+	//imageBox->setAlignment(W32VBox::CENTER);
+	imageBox->setMargins(8, 8, 0, 0);
+	imageBox->addElement(new W32StandardIcon(iconId));
+	panelBox->addElement(imageBox);
+
+	W32VBox *textBox = new W32VBox();
 	textBox->setSpacing(4);
-	textBox->setMargins(4, 0, 8, 8);
-	textBox->addElement(new W32StandardIcon(iconId));
 	textBox->addElement(new W32Label(message, W32Label::ALIGN_CENTER));
-	textBox->setVisible(true);
 	panelBox->addElement(textBox);
 
 	myButtonBox = new W32HBox();
-	panelBox->addElement(myButtonBox);
+	textBox->addElement(myButtonBox);
 	myButtonBox->setHomogeneous(true);
 	myButtonBox->setAlignment(W32HBox::CENTER);
 	myButtonBox->setSpacing(4);
-	myButtonBox->setMargins(0, 4, 8, 8);
+	myButtonBox->setMargins(0, 0, 8, 8);
+
+	panelBox->setVisible(true);
 }
 
 void ZLWin32MessageBox::addButton(const std::string &text) {

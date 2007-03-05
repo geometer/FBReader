@@ -127,6 +127,7 @@ public:
 	ZLStringOption SearchPatternOption;
 
 	ZLBooleanOption UseSeparateBindingsOption;
+	ZLBooleanOption ShowHelpIconOption;
 
 private:
 	class FBAction : public Action {
@@ -146,6 +147,14 @@ private:
 		void run();
 	};
 	friend class ShowCollectionAction;
+
+	class ShowHelpAction : public FBAction {
+
+	public:
+		ShowHelpAction(FBReader &fbreader);
+		void run();
+	};
+	friend class ShowHelpAction;
 
 	class ShowRecentBooksListAction : public FBAction {
 
@@ -346,6 +355,7 @@ private:
 	void restorePreviousMode();
 
 	bool closeView();
+	std::string helpFileName() const;
 	void openFile(const std::string &fileName);
 
 public:

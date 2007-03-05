@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include "W32DialogPanel.h"
 
 static const int FirstControlId = 2001;

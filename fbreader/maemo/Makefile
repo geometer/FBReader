@@ -34,9 +34,6 @@ SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
 	@install -d $(SHARE_FBREADER)/icons
 	@install -m 0644 $(wildcard ../icons/blueset/FBReader/*.png) $(SHARE_FBREADER)/icons
-	@install -d $(SHARE_FBREADER)/help
-	@install -m 0644 ../data/help/HowToStart.blueish.fb2 $(SHARE_FBREADER)/help/HowToStart.fb2
-	@install -d $(SHARE_FBREADER)/default
 	@install -m 0644 ../data/default/config.maemo.xml $(SHARE_FBREADER)/default/config.xml
 	@install -m 0644 ../data/default/keymap.maemo.xml $(SHARE_FBREADER)/default/keymap.xml
 	@install -m 0644 ../data/default/styles.maemo.xml $(SHARE_FBREADER)/default/styles.xml

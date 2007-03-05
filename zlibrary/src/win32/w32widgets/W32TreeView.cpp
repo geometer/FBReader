@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <windows.h>
 #include <commctrl.h>
 
@@ -165,16 +163,10 @@ void W32TreeView::notificationCallback(LPARAM lParam) {
 	NMTREEVIEW &notification = *(NMTREEVIEW*)lParam;
 	switch (notification.hdr.code) {
 		case TVN_ITEMEXPANDING:
-			//std::cerr << "item expanding\n";
-			//std::cerr << notification.itemOld.lParam << " : ";
-			//std::cerr << notification.itemNew.lParam << " : ";
-			//std::cerr << myItems.size() << "\n";
 			break;
 		case TVN_ITEMEXPANDED:
-			//std::cerr << "item expanded\n";
 			break;
 		case TVN_SELCHANGING:
-			//std::cerr << "selection changing\n";
 			break;
 		case TVN_SELCHANGED:
 			mySelectedIndex = notification.itemNew.lParam;
@@ -185,10 +177,8 @@ void W32TreeView::notificationCallback(LPARAM lParam) {
 			fireEvent(ITEM_DOUBLE_CLICKED_EVENT);
 			break;
 		case TVN_DELETEITEM:
-			//std::cerr << "delete item\n";
 			break;
 		default:
-			//std::cerr << "code = " << (int)notification.hdr.code << "\n";
 			break;
 	}
 }

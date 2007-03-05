@@ -28,7 +28,6 @@
 #include <gtk/gtkwindow.h>
 
 #include <hildon-widgets/hildon-program.h>
-#include <libosso.h>
 
 #include <ZLApplication.h>
 

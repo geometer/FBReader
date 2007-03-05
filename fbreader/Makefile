@@ -23,15 +23,25 @@ all: .resources
 	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` $(LIBS)
 	@echo " OK"
 
+FBSHAREDIR = $(DESTDIR)$(SHAREDIR)/FBReader
+VARIANT = $(TARGET_ARCH)
+ifneq "$(RESOLUTION)" "" 
+  VARIANT = $(TARGET_ARCH)_$(RESOLUTION)
+endif
+
 do_install:
 	@install -d $(DESTDIR)$(BINDIR)
 	@install $(TARGET) $(DESTDIR)$(BINDIR)
-	@install -d $(DESTDIR)$(SHAREDIR)/FBReader
-	@install -m 0644 $(wildcard share/FBReader/hyphenationPatterns.zip) $(DESTDIR)$(SHAREDIR)/FBReader
-	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/formats/html
-	@install -m 0644 share/FBReader/formats/html/html.ent $(DESTDIR)$(SHAREDIR)/FBReader/formats/html
-	@install -d $(DESTDIR)$(SHAREDIR)/FBReader/formats/xhtml
-	@install -m 0644 $(wildcard share/FBReader/formats/xhtml/*.ent) $(DESTDIR)$(SHAREDIR)/FBReader/formats/xhtml
+	@install -d $(FBSHAREDIR)
+	@install -m 0644 $(wildcard share/FBReader/hyphenationPatterns.zip) $(FBSHAREDIR)
+	@install -d $(FBSHAREDIR)/help
+	@install -m 0644 data/help/MiniHelp.$(VARIANT).fb2 $(FBSHAREDIR)/help/MiniHelp.fb2
+	@install -d $(FBSHAREDIR)/formats/html
+	@install -m 0644 share/FBReader/formats/html/html.ent $(FBSHAREDIR)/formats/html
+	@install -d $(FBSHAREDIR)/formats/xhtml
+	@install -m 0644 $(wildcard share/FBReader/formats/xhtml/*.ent) $(FBSHAREDIR)/formats/xhtml
+	@install -d $(FBSHAREDIR)/default
+	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml
 	@cd $(TARGET_ARCH); make install 
 
 package:

@@ -25,11 +25,13 @@
 #include <ZLApplication.h>
 
 #include "ProgramCollection.h"
+#include "../FBOptions.h"
 
 class ProgramCollectionBuilder : public ZLXMLReader {
 
 public:
 	ProgramCollectionBuilder(ProgramCollectionMap &collectionMap);
+	~ProgramCollectionBuilder();
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);	
@@ -44,8 +46,12 @@ private:
 static const std::string SECTION = "section";
 static const std::string PROGRAM = "program";
 static const std::string ACTION = "action";
+static const std::string OPTION = "option";
 
 ProgramCollectionBuilder::ProgramCollectionBuilder(ProgramCollectionMap &collectionMap) : myCollectionMap(collectionMap) {
+}
+
+ProgramCollectionBuilder::~ProgramCollectionBuilder() {
 }
 
 void ProgramCollectionBuilder::startElementHandler(const char *tag, const char **attributes) {
@@ -67,9 +73,9 @@ void ProgramCollectionBuilder::startElementHandler(const char *tag, const char *
 				ZLCommunicationManager::instance().createCommunicator(protocol, (testFile != 0) ? testFile : "");
 			if (!communicator.isNull()) {
 				std::string sName = name;
-				myCurrentProgram = new Program(communicator);
+				myCurrentProgram = new Program(sName, communicator);
 				myCurrentCollection->myNames.push_back(sName);
-				myCurrentCollection->myDictionaries[sName] = myCurrentProgram;
+				myCurrentCollection->myPrograms[sName] = myCurrentProgram;
 			}
 		}
 	} else if (!myCurrentProgram.isNull() && (ACTION == tag)) {
@@ -80,6 +86,18 @@ void ProgramCollectionBuilder::startElementHandler(const char *tag, const char *
 				if (*it != "name") {
 					data[*it] = *(it + 1);
 				}
+			}
+		}
+	} else if (!myCurrentProgram.isNull() && (OPTION == tag)) {
+		const char *name = attributeValue(attributes, "name");
+		if (name != 0) {
+			const char *defaultValue = attributeValue(attributes, "defaultValue");
+			const char *displayName = attributeValue(attributes, "displayName");
+			if ((defaultValue != 0) && (displayName != 0)) {
+				const std::string sName = name;
+				const std::string sDefaultValue = defaultValue;
+				myCurrentProgram->myOptions.push_back(Program::OptionDescription(sName, sDefaultValue, displayName));
+				myCurrentProgram->myDefaultValues[sName] = sDefaultValue;
 			}
 		}
 	}
@@ -103,7 +121,7 @@ void ProgramCollectionBuilder::endElementHandler(const char *tag) {
 
 ProgramCollectionMap::ProgramCollectionMap() {
 	ProgramCollectionBuilder builder(*this);
-	builder.readDocument(ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "external.xml");
+	builder.readDocument(ZLApplication::DefaultFilesPathPrefix() + "external.xml");
 }
 
 shared_ptr<ProgramCollection> ProgramCollectionMap::collection(const std::string &name) const {
@@ -120,25 +138,48 @@ const std::vector<std::string> &ProgramCollection::names() const {
 	return myNames;
 }
 
+shared_ptr<Program> ProgramCollection::program(const std::string &name) const {
+	std::map<std::string,shared_ptr<Program> >::const_iterator it = myPrograms.find(name);
+	return (it != myPrograms.end()) ? it->second : 0;
+}
+
 shared_ptr<Program> ProgramCollection::currentProgram() const {
 	if (!EnableCollectionOption.value()) {
 		return 0;
 	}
-	std::map<std::string,shared_ptr<Program> >::const_iterator it = myDictionaries.find(CurrentNameOption.value());
-	return (it != myDictionaries.end()) ? it->second : 0;
+	return program(CurrentNameOption.value());
 }
 
-Program::Program(shared_ptr<ZLCommunicator> communicator) : myCommunicator(communicator) {
+Program::Program(const std::string &name, shared_ptr<ZLCommunicator> communicator) : myName(name), myCommunicator(communicator) {
 }
 
 void Program::run(const std::string &command, const std::string &parameter) const {
 	if (!myCommunicator.isNull()) {
 		std::map<std::string,ZLCommunicationManager::Data>::const_iterator it = myCommandData.find(command);
 		if (it != myCommandData.end()) {
-			shared_ptr<ZLMessageSender> sender = myCommunicator->createSender(it->second);
+			ZLCommunicationManager::Data data = it->second;
+			for (ZLCommunicationManager::Data::iterator jt = data.begin(); jt != data.end(); ++jt) {
+				if (!jt->second.empty() && jt->second[0] == '%') {
+					const std::string optionName = jt->second.substr(1);
+					std::map<std::string,std::string>::const_iterator st = myDefaultValues.find(optionName);
+					jt->second = ZLStringOption(
+						FBOptions::EXTERNAL_CATEGORY,
+						myName,
+						optionName,
+						(st != myDefaultValues.end()) ? st->second : "").value();
+				}
+			}
+			shared_ptr<ZLMessageSender> sender = myCommunicator->createSender(data);
 			if (!sender.isNull()) {
 				sender->sendStringMessage(parameter);
 			}
 		}
 	}
+}
+
+const std::vector<Program::OptionDescription> &Program::options() const {
+	return myOptions;
+}
+
+Program::OptionDescription::OptionDescription(const std::string &name, const std::string &defaultValue, const std::string &displayName) : OptionName(name), DefaultValue(defaultValue), DisplayName(displayName) {
 }

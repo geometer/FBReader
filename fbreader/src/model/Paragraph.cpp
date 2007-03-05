@@ -57,8 +57,10 @@ const shared_ptr<ParagraphEntry> Paragraph::Iterator::entry() const {
 			case ParagraphEntry::IMAGE_ENTRY:
 			{
 				ImageMap *imageMap = 0;
+				short vOffset = 0;
 				memcpy(&imageMap, myPointer + 1, sizeof(const ImageMap*));
-				myEntry = new ImageEntry(myPointer + sizeof(const ImageMap*) + 1, imageMap);
+				memcpy(&vOffset, myPointer + 1 + sizeof(const ImageMap*), sizeof(short));
+				myEntry = new ImageEntry(myPointer + sizeof(const ImageMap*) + sizeof(short) + 1, imageMap, vOffset);
 				break;
 			}
 			case ParagraphEntry::FORCED_CONTROL_ENTRY:
@@ -95,7 +97,7 @@ void Paragraph::Iterator::next() {
 				++myPointer;
 				break;
 			case ParagraphEntry::IMAGE_ENTRY:
-				myPointer += sizeof(const ImageMap*) + 1;
+				myPointer += sizeof(const ImageMap*) + sizeof(short) + 1;
 				while (*myPointer != '\0') {
 					++myPointer;
 				}

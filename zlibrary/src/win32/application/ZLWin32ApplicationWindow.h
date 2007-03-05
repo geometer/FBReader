@@ -100,6 +100,8 @@ private:
 	int myKeyboardModifierMask;
 
 	bool myFullScreen;
+
+	HCURSOR myCursor;
 };
 
 #endif /* __ZLWIN32APPLICATIONWINDOW_H__ */

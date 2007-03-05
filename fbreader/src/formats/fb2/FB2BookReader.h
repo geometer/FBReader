@@ -54,6 +54,8 @@ private:
 
 	bool mySectionStarted;
 	bool myInsideTitle;
+
+	TextKind myHyperlinkType;
 };
 
 inline FB2BookReader::~FB2BookReader() {}

@@ -29,6 +29,7 @@
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../../gtk/image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
+#include "../../unix/message/ZLUnixMessage.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gpe_application_init (&argc, &argv);
@@ -36,6 +37,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();
+	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
 }
 

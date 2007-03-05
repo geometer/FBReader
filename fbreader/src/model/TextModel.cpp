@@ -234,12 +234,13 @@ void TextModel::addHyperlinkControl(TextKind textKind, const std::string &label)
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void TextModel::addImage(const std::string &id, const ImageMap &imageMap) {
-	myLastEntryStart = myAllocator.allocate(sizeof(const ImageMap*) + id.length() + 2);
+void TextModel::addImage(const std::string &id, const ImageMap &imageMap, short vOffset) {
+	myLastEntryStart = myAllocator.allocate(sizeof(const ImageMap*) + sizeof(short) + id.length() + 2);
 	*myLastEntryStart = ParagraphEntry::IMAGE_ENTRY;
 	const ImageMap *imageMapAddress = &imageMap;
 	memcpy(myLastEntryStart + 1, &imageMapAddress, sizeof(const ImageMap*));
-	memcpy(myLastEntryStart + 1 + sizeof(const ImageMap*), id.data(), id.length());
-	*(myLastEntryStart + 1 + sizeof(const ImageMap*) + id.length()) = '\0';
+	memcpy(myLastEntryStart + 1 + sizeof(const ImageMap*), &vOffset, sizeof(short));
+	memcpy(myLastEntryStart + 1 + sizeof(const ImageMap*) + sizeof(short), id.data(), id.length());
+	*(myLastEntryStart + 1 + sizeof(const ImageMap*) + sizeof(short) + id.length()) = '\0';
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }

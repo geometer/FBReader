@@ -298,7 +298,6 @@ inline const ZLPaintContext &TextView::ViewStyle::context() const { return myCon
 inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
 inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
-inline TextView::LineInfo::~LineInfo() {}
 
 inline TextView::LineInfoPtr::LineInfoPtr(LineInfo *ptr) : shared_ptr<LineInfo>(ptr) {}
 inline bool TextView::LineInfoPtr::operator < (const LineInfoPtr &info) const { return (*this)->Start < info->Start; }

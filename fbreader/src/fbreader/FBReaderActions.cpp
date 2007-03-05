@@ -41,6 +41,14 @@ bool FBReader::ShowCollectionAction::isVisible() {
 	return (mode != FOOTNOTE_MODE) && (mode != BOOK_COLLECTION_MODE);
 }
 
+FBReader::ShowHelpAction::ShowHelpAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+void FBReader::ShowHelpAction::run() {
+	myFBReader.openFile(myFBReader.helpFileName());
+	myFBReader.setMode(BOOK_TEXT_MODE);
+}
+
 FBReader::ShowRecentBooksListAction::ShowRecentBooksListAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 

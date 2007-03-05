@@ -3,4 +3,7 @@
   <group name="Options">
     <option name="BookPath" value="~/FBooks:~/Books"/>
   </group>
+  <group name="Help">
+    <option name="ShowIcon" value="true"/>
+  </group>
 </config>

@@ -29,9 +29,6 @@ clean: .cleandir
 	@cp fbreader.desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications
 	@cp ../icons/22x18/FBReader.png $(DESTDIR)$(INSTALLDIR)/pics/fbreader
 	@cp ../icons/22x18/FBReader/*.png $(DESTDIR)$(INSTALLDIR)/pics/fbreader
-	@mkdir -p $(DESTDIR)$(SHAREDIR)/FBReader/help
-	@cp ../data/help/HowToStart.brownish.640x480.fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
-	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/default
 ifeq "$(TARGET_ARCH)" "opensimpad-0.9.0"
 	@cp ../data/default/config.opie.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
 	@cp ../data/default/keymap.opie-opensimpad.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml

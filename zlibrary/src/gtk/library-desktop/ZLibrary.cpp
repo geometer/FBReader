@@ -28,6 +28,7 @@
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../image/ZLGtkImageManager.h"
 #include "../view-desktop/ZLGtkPaintContext.h"
+#include "../../unix/message/ZLUnixMessage.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
@@ -35,6 +36,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();
+	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
 }
 

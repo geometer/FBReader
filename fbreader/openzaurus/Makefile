@@ -42,13 +42,10 @@ clean: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
 	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(DESTDIR) do_install
-	@cd ..; make DESTDIR=$(PWD)/$(DESTDIR) do_install
+	@cd ..; make RESOLUTION=$(RESOLUTION) DESTDIR=$(PWD)/$(DESTDIR) do_install
 	@mkdir -p $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(DESTDIR)$(PICSDIR)
-	@mkdir -p $(DESTDIR)$(SHAREDIR)/FBReader/help
-	@cp ../data/help/HowToStart.brownish.$(RESOLUTION).fb2 $(DESTDIR)$(SHAREDIR)/FBReader/help/HowToStart.fb2
-	@mkdir $(DESTDIR)$(SHAREDIR)/FBReader/default
 	@cp ../data/default/config.openzaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
 	@cp ../data/default/keymap.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
 	@cp ../data/default/styles.$(STYLE).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml

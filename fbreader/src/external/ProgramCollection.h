@@ -33,14 +33,26 @@
 class Program {
 
 private:
-	Program(shared_ptr<ZLCommunicator> communicator);
+	Program(const std::string &name, shared_ptr<ZLCommunicator> communicator);
 
 public:
 	void run(const std::string &command, const std::string &parameter) const;
 
+public:
+	struct OptionDescription {
+		OptionDescription(const std::string &name, const std::string &defaultValue, const std::string &displayName);
+		std::string OptionName;
+		std::string DefaultValue;
+		std::string DisplayName;
+	};
+	const std::vector<OptionDescription> &options() const;
+
 private:
+	const std::string myName;
 	shared_ptr<ZLCommunicator> myCommunicator;
 	std::map<std::string,ZLCommunicationManager::Data> myCommandData;
+	std::vector<OptionDescription> myOptions;
+	std::map<std::string,std::string> myDefaultValues;
 
 friend class ProgramCollection;
 friend class ProgramCollectionBuilder;
@@ -57,10 +69,11 @@ public:
 
 	const std::vector<std::string> &names() const;
 	shared_ptr<Program> currentProgram() const;
+	shared_ptr<Program> program(const std::string &name) const;
 
 private:
 	std::vector<std::string> myNames;
-	std::map<std::string,shared_ptr<Program> > myDictionaries;
+	std::map<std::string,shared_ptr<Program> > myPrograms;
 
 friend class ProgramCollectionBuilder;
 };

@@ -24,6 +24,7 @@
 
 #include <ZLImageManager.h>
 #include <ZLImage.h>
+#include <ZLColor.h>
 
 class ZLWin32ImageData : public ZLImageData {
 
@@ -35,6 +36,7 @@ public:
 	unsigned int height() const;
 
 	void init(unsigned int width, unsigned int height);
+	void init(unsigned int width, unsigned int height, bool hasAlpha, unsigned int bytesPerLine);
 	void setPosition(unsigned int x, unsigned int y);
 	void moveX(int delta);
 	void moveY(int delta);
@@ -42,15 +44,18 @@ public:
 
 	void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY);
 
-	const BYTE *pixels() const;
+	const BYTE *pixels(ZLColor bgColor) const;
 	const BITMAPINFO &info() const;
 
 private:
 	unsigned int myWidth;
 	unsigned int myHeight;
+	unsigned int myBytesPerPixel;
 	unsigned int myBytesPerLine;
 
 	BYTE *myArray;
+	mutable BYTE *myArrayWithoutAlpha;
+	mutable ZLColor myBackgroundColor;
 	BYTE *myPixelPointer;
 
 	BITMAPINFO myInfo;
@@ -69,6 +74,11 @@ private:
 protected:
 	shared_ptr<ZLImageData> createData() const;
 	void convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
+
+private:
+	bool pngConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
+	bool gifConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
+	bool jpegConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 };
 
 #endif /* __ZLWIN32IMAGEMANAGER_H__ */

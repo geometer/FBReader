@@ -23,11 +23,12 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../../gtk/filesystem/ZLGtkFSManager.h"
+#include "../filesystem/ZLGtkFSManager.h"
 #include "../time/ZLGtkTime.h"
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../image/ZLGtkImageManager.h"
 #include "../view-pdaxrom/ZLGtkPaintContext.h"
+#include "../../unix/message/ZLUnixMessage.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
@@ -35,6 +36,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();
+	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
 }
 
