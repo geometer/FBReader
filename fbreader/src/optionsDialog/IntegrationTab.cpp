@@ -21,6 +21,7 @@
 
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
+#include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include "OptionsDialog.h"
@@ -51,16 +52,14 @@ private:
 	std::map<ZLOptionEntry*,std::string> myDependentEntries;
 };
 
-class EnableIntegrationEntry : public ZLSimpleBooleanOptionEntry {
+class EnableIntegrationEntry : public ZLToggleBooleanOptionEntry {
 
 public:
 	EnableIntegrationEntry(const std::string &name, ZLBooleanOption &option);
 	void setProgramChoiceEntry(ProgramChoiceEntry *programChoiceEntry);
-	void addDependentEntry(ZLOptionEntry *dependentEntry);
 	void onStateChanged(bool state);
 
 private:
-	std::vector<ZLOptionEntry*> myDependentEntries;
 	ProgramChoiceEntry *myProgramChoiceEntry;
 };
 
@@ -99,7 +98,7 @@ void ProgramChoiceEntry::updateDependentEntries(bool visible) {
 	}
 }
 
-EnableIntegrationEntry::EnableIntegrationEntry(const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option), myProgramChoiceEntry(0) {
+EnableIntegrationEntry::EnableIntegrationEntry(const std::string &name, ZLBooleanOption &option) : ZLToggleBooleanOptionEntry(name, option), myProgramChoiceEntry(0) {
 }
 
 void EnableIntegrationEntry::setProgramChoiceEntry(ProgramChoiceEntry *programChoiceEntry) {
@@ -107,14 +106,7 @@ void EnableIntegrationEntry::setProgramChoiceEntry(ProgramChoiceEntry *programCh
 	myProgramChoiceEntry = programChoiceEntry;
 }
 
-void EnableIntegrationEntry::addDependentEntry(ZLOptionEntry *dependentEntry) {
-	myDependentEntries.push_back(dependentEntry);
-}
-
 void EnableIntegrationEntry::onStateChanged(bool state) {
-	for (std::vector<ZLOptionEntry*>::const_iterator it = myDependentEntries.begin(); it != myDependentEntries.end(); ++it) {
-		(*it)->setVisible(state);
-	}
 	if (myProgramChoiceEntry != 0) {
 		myProgramChoiceEntry->updateDependentEntries(state);
 	}

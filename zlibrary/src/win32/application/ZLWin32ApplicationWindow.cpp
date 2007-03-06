@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <windowsx.h>
+
 #include <ZLFile.h>
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
@@ -114,7 +116,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			myWin32ViewWidget->doPaint();
 			return 0;
 		case WM_CLOSE:
-			if (!myFullScreen) {
+			if (!myFullScreen && IsMaximized(myMainWindow)) {
 				RECT rectangle;
 				GetWindowRect(myMainWindow, &rectangle);
 				myWidthOption.setValue(rectangle.right - rectangle.left + 1);
@@ -224,11 +226,12 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 		SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
 	} else {
 		SetWindowLong(myMainWindow, GWL_STYLE, style | WS_CAPTION);
+		ShowWindow(myToolbar, SW_SHOWNORMAL);
+		ShowWindow(myMainWindow, SW_SHOWNORMAL);
 		SetWindowPlacement(myMainWindow, &mainPlacement);
 		SetWindowPlacement(myToolbar, &toolbarPlacement);
-		//ShowWindow(myToolbar, SW_SHOWNORMAL);
-		//ShowWindow(myMainWindow, SW_SHOWNORMAL);
 	}
+	myWin32ViewWidget->repaint();
 }
 
 bool ZLWin32ApplicationWindow::isFullscreen() const {
