@@ -107,6 +107,7 @@ void EnableIntegrationEntry::setProgramChoiceEntry(ProgramChoiceEntry *programCh
 }
 
 void EnableIntegrationEntry::onStateChanged(bool state) {
+	ZLToggleBooleanOptionEntry::onStateChanged(state);
 	if (myProgramChoiceEntry != 0) {
 		myProgramChoiceEntry->updateDependentEntries(state);
 	}
