@@ -1,0 +1,90 @@
+<known-encodings>
+	<group visibleName="West European">
+		<encoding visibleName="Western" name="ISO-8859-1"/>
+		<encoding visibleName="Western" name="ISO-8859-15"/>
+		<encoding visibleName="Western" name="IBM850" code ="850"/>
+		<encoding visibleName="Western" name="MacRoman"/>
+		<encoding visibleName="Western" name="US-ASCII"/>
+		<encoding visibleName="Western" name="windows-1252" code ="1252"/>
+		<encoding visibleName="Celtic" name="ISO-8859-14"/>
+		<encoding visibleName="Greek" name="ISO-8859-7"/>
+		<encoding visibleName="Greek" name="MacGreek"/>
+		<encoding visibleName="Greek" name="windows-1253" code ="1253"/>
+		<encoding visibleName="Icelandic" name="MacIcelandic"/>
+		<encoding visibleName="Nordic" name="ISO-8859-10"/>
+		<encoding visibleName="South European" name="ISO-8859-3"/>
+	</group>
+	<group visibleName="East European">
+		<encoding visibleName="Baltic" name="ISO-8859-4"/>
+		<encoding visibleName="Baltic" name="ISO-8859-13"/>
+		<encoding visibleName="Baltic" name="windows-1257" code ="1257"/>
+		<encoding visibleName="Central European" name="IBM852" code ="852"/>
+		<encoding visibleName="Central European" name="ISO-8859-2"/>
+		<encoding visibleName="Central European" name="MacCE"/>
+		<encoding visibleName="Central European" name="windows-1250" code ="1250"/>
+		<encoding visibleName="Croatian" name="MacCroatian"/>
+		<encoding visibleName="Cyrillic" name="IBM855" code ="855"/>
+		<encoding visibleName="Cyrillic" name="ISO-8859-5"/>
+		<encoding visibleName="Cyrillic" name="ISO-IR-111"/>
+		<encoding visibleName="Cyrillic" name="KOI8-R"/>
+		<encoding visibleName="Cyrillic" name="MacCyrillic"/>
+		<encoding visibleName="Cyrillic" name="windows-1251" code ="1251"/>
+		<encoding visibleName="Cyrillic/Russian" name="IBM866" code ="866"/>
+		<encoding visibleName="Cyrillic/Ukrainian" name="KOI8-U"/>
+		<encoding visibleName="Cyrillic/Ukrainian" name="MacUkrainian"/>
+		<encoding visibleName="Romanian" name="ISO-8859-16"/>
+		<encoding visibleName="Romanian" name="MacRomanian"/>
+	</group>
+	<group visibleName="East Asia">
+		<encoding visibleName="Chinese Simplified" name="GB2312"/>
+		<encoding visibleName="Chinese Simplified" name="GB18030"/>
+		<encoding visibleName="Chinese Simplified" name="GBK"/>
+		<encoding visibleName="Chinese Simplified" name="HZ"/>
+		<encoding visibleName="Chinese Simplified" name="ISO-2022-CN"/>
+		<encoding visibleName="Chinese Traditional" name="Big5"/>
+		<encoding visibleName="Chinese Traditional" name="Big5-HKSCS"/>
+		<encoding visibleName="Chinese Traditional" name="EUC-TW"/>
+		<encoding visibleName="Japanese" name="EUC-JP"/>
+		<encoding visibleName="Japanese" name="ISO-2022-JP"/>
+		<encoding visibleName="Japanese" name="Shift_JIS"/>
+		<encoding visibleName="Korean" name="EUC-KR"/>
+		<encoding visibleName="Korean" name="ISO-2022-KR"/>
+		<encoding visibleName="Korean" name="JOHAB"/>
+		<encoding visibleName="Korean" name="UHC"/>
+	</group>
+	<group visibleName="SW & SE Asia">
+		<encoding visibleName="Armenian" name="ARMSCII-8"/>
+		<encoding visibleName="Georgian" name="GEOSTD8"/>
+		<encoding visibleName="Thai" name="IBM874" code ="874"/>
+		<encoding visibleName="Thai" name="ISO-8859-11"/>
+		<encoding visibleName="Thai" name="TIS-620"/>
+		<encoding visibleName="Turkish" name="IBM857" code ="857"/>
+		<encoding visibleName="Turkish" name="ISO-8859-9"/>
+		<encoding visibleName="Turkish" name="MacTurkish"/>
+		<encoding visibleName="Turkish" name="windows-1254" code ="1254"/>
+		<encoding visibleName="Vietnamese" name="TCVN"/>
+		<encoding visibleName="Vietnamese" name="VISCII"/>
+		<encoding visibleName="Vietnamese" name="VPS"/>
+		<encoding visibleName="Vietnamese" name="windows-1258" code ="1258"/>
+		<encoding visibleName="Hindi" name="MacDevanagari"/>
+		<encoding visibleName="Gujarati" name="MacGujarati"/>
+		<encoding visibleName="Gurmukhi" name="MacGurmukhi"/>
+	</group>
+	<group visibleName="Middle Eastern">
+		<encoding visibleName="Arabic" name="ISO-8859-6"/>
+		<encoding visibleName="Arabic" name="IBM864" code ="864"/>
+		<encoding visibleName="Arabic" name="windows-1256" code ="1256"/>
+		<encoding visibleName="Arabic" name="MacArabic"/>
+		<encoding visibleName="Farsi" name="MacFarsi"/>
+		<encoding visibleName="Hebrew" name="IBM862" code ="862"/>
+		<encoding visibleName="Hebrew" name="ISO-8859-8"/>
+		<encoding visibleName="Hebrew" name="ISO-8859-8-I"/>
+		<encoding visibleName="Hebrew" name="MacHebrew"/>
+		<encoding visibleName="Hebrew" name="windows-1255" code ="1255"/>
+	</group>
+	<group visibleName="Unicode">
+		<encoding visibleName="Unicode" name="UTF-8"/>
+		<encoding visibleName="Unicode" name="UTF-7"/>
+		<encoding visibleName="Unicode" name="UTF-16"/>
+	</group>
+</known-encodings>
