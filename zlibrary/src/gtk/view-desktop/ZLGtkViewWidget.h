@@ -34,6 +34,7 @@ public:
 	GtkWidget *area() { return myArea; }
 	int width() const;
 	int height() const;
+	void doPaint();
 
 private:
 	void repaint();

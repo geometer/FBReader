@@ -88,6 +88,10 @@ static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
 	}
 }
 
+static void doPaint(GtkWidget*, GdkEventExpose *event, gpointer data) {
+	((ZLGtkViewWidget*)data)->doPaint();
+}
+
 int ZLGtkViewWidget::width() const {
 	return (myArea != 0) ? myArea->allocation.width : 0;
 }
@@ -104,6 +108,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), this);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "expose_event", GTK_SIGNAL_FUNC(::doPaint), this);
 }
 
 void ZLGtkViewWidget::trackStylus(bool track) {
@@ -111,6 +116,10 @@ void ZLGtkViewWidget::trackStylus(bool track) {
 }
 
 void ZLGtkViewWidget::repaint()	{
+	gtk_widget_queue_draw(myArea);
+}
+
+void ZLGtkViewWidget::doPaint()	{
 	ZLGtkPaintContext &gtkContext = (ZLGtkPaintContext&)view()->context();
 	const int w = myArea->allocation.width;
 	const int h = myArea->allocation.height;

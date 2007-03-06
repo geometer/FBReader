@@ -40,10 +40,6 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	return true;
 }
 
-static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
-	((ZLGtkApplicationWindow*)data)->application().refreshWindow();
-}
-
 static void onButtonClicked(GtkWidget *button, gpointer data) {
 	((ZLGtkApplicationWindow*)data)->onGtkButtonPress(button);
 }
@@ -209,8 +205,6 @@ void ZLGtkApplicationWindow::refresh() {
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	ZLGtkViewWidget *viewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myVBox), viewWidget->area());
-	// Was gtk_signal_connect_after(). Why?
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 	gtk_widget_show_all(myVBox);
 	return viewWidget;
 }
