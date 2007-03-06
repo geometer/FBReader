@@ -26,15 +26,13 @@
 class ZLToggleBooleanOptionEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	typedef std::vector<ZLOptionEntry*> Entries;
-	ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *slave0, ZLOptionEntry *slave1 = 0, ZLOptionEntry *slave2 = 0);
-	ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, const Entries &slaveEntries);
-
-private:
+	ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option);
+	void addDependentEntry(ZLOptionEntry *dependent);
 	void onStateChanged(bool state);
 
 private:
-	Entries mySlaveEntries;
+	typedef std::vector<ZLOptionEntry*> Entries;
+	Entries myDependentEntries;
 };
 
 #endif /* __ZLTOGGLEBOOLEANOPTIONENTRY_H__ */

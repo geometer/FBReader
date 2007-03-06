@@ -31,7 +31,7 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myPositionIndicator(*this), myTreeStateIsFrozen(false) {
+TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myTreeStateIsFrozen(false) {
 }
 
 TextView::~TextView() {
@@ -90,7 +90,7 @@ void TextView::paint() {
 		drawTextLine(**it);
 	}
 
-	myPositionIndicator.draw();
+	positionIndicator().draw();
 
 	ParagraphCursorCache::cleanup();
 }
@@ -416,7 +416,7 @@ bool TextView::onStylusPress(int x, int y) {
 	}
 
 	myTreeStateIsFrozen = true;
-	bool indicatorAnswer = myPositionIndicator.onStylusPress(x, y);
+	bool indicatorAnswer = positionIndicator().onStylusPress(x, y);
 	myTreeStateIsFrozen = false;
 	if (indicatorAnswer || (myModel->kind() != TextModel::TREE_MODEL)) {
 		return indicatorAnswer;

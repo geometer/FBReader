@@ -20,17 +20,15 @@
 
 #include "ZLToggleBooleanOptionEntry.h"
 
-ZLToggleBooleanOptionEntry::ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, const Entries &slaveEntries) : ZLSimpleBooleanOptionEntry(name, option), mySlaveEntries(slaveEntries) {
+ZLToggleBooleanOptionEntry::ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option) {
 }
 
-ZLToggleBooleanOptionEntry::ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option, ZLOptionEntry *slave0, ZLOptionEntry *slave1, ZLOptionEntry *slave2) : ZLSimpleBooleanOptionEntry(name, option) {
-	if (slave0 != 0) mySlaveEntries.push_back(slave0);
-	if (slave1 != 0) mySlaveEntries.push_back(slave1);
-	if (slave2 != 0) mySlaveEntries.push_back(slave2);
+void ZLToggleBooleanOptionEntry::addDependentEntry(ZLOptionEntry *dependent) {
+	myDependentEntries.push_back(dependent);
 }
 
 void ZLToggleBooleanOptionEntry::onStateChanged(bool state) {
-	for (Entries::const_iterator it = mySlaveEntries.begin(); it != mySlaveEntries.end(); ++it) {
+	for (Entries::const_iterator it = myDependentEntries.begin(); it != myDependentEntries.end(); ++it) {
 		(*it)->setVisible(state);
 	}
 }

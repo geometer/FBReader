@@ -73,9 +73,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	if (id != 0) {
 		if (myBodyCounter > 1) {
 			myModelReader.setFootnoteTextModel(id);
-		} else {
-			myModelReader.addHyperlinkLabel(id);
 		}
+		myModelReader.addHyperlinkLabel(id);
 	}
 	switch (tag) {
 		case _P:

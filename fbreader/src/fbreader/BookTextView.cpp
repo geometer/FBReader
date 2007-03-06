@@ -32,6 +32,7 @@
 
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
+#include "../bookmodel/BookModel.h"
 
 #include "../external/ProgramCollection.h"
 
@@ -43,7 +44,9 @@ static const std::string POSITION_IN_BUFFER = "PositionInBuffer";
 static const char * const BUFFER_PARAGRAPH_PREFIX = "Paragraph_";
 static const char * const BUFFER_WORD_PREFIX = "Word_";
 
-BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
+BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) :
+	FBView(reader, context),
+	ShowTOCMarksOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "Indicator", "ShowTOCMarks", true) {
 	myCurrentPointInStack = 0;
 	myMaxStackSize = 20;
 	myLockUndoStackChanges = false;
@@ -89,6 +92,10 @@ void BookTextView::setModel(shared_ptr<TextModel> model, const std::string &name
 			myPositionStack.push_back(pos);
 		}
 	}
+}
+
+void BookTextView::setContentsModel(shared_ptr<TextModel> contentsModel) {
+	myContentsModel = contentsModel;
 }
 
 void BookTextView::saveState() {
@@ -274,4 +281,41 @@ bool BookTextView::onStylusMove(int x, int y) {
 	bool isExternal;
 	fbreader().setHyperlinkCursor((position != 0) && getHyperlinkId(*position, id, isExternal));
 	return true;
+}
+
+shared_ptr<TextView::PositionIndicator> BookTextView::createPositionIndicator() {
+	return new PositionIndicatorWithLabels(*this);
+}
+
+BookTextView::PositionIndicatorWithLabels::PositionIndicatorWithLabels(BookTextView &bookTextView) : PositionIndicator(bookTextView) {
+}
+
+void BookTextView::PositionIndicatorWithLabels::draw() {
+	PositionIndicator::draw();
+
+	const BookTextView& bookTextView = (const BookTextView&)textView();
+
+	if (bookTextView.ShowTOCMarksOption.value()) {
+		shared_ptr<TextModel> contentsModelPtr = bookTextView.myContentsModel;
+		if (!contentsModelPtr.isNull()) {
+			ContentsModel &contentsModel = (ContentsModel&)*contentsModelPtr;
+			const int marksNumber = contentsModel.paragraphsNumber();
+			const size_t startIndex = startTextIndex();
+			const size_t endIndex = endTextIndex();
+			const std::vector<size_t> &textSizeVector = textSize();
+			const int fullWidth = right() - left() - 1;
+			const size_t startPosition = textSizeVector[startIndex];
+			const size_t fullTextSize = textSizeVector[endIndex] - startPosition;
+			const int bottom = this->bottom();
+			const int top = this->top();
+			for (int i = 0; i < marksNumber; ++i) {
+				size_t reference = contentsModel.reference((TreeParagraph*)contentsModel[i]);
+				if ((startIndex < reference) && (reference < endIndex)) {
+					int position = (int)
+						(1.0 * fullWidth * (textSizeVector[reference] - startPosition) / fullTextSize);
+					context().drawLine(position + 1, bottom, position + 1, top);
+				}
+			}
+		}
+	}
 }

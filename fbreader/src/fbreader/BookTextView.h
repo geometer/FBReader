@@ -24,9 +24,14 @@
 
 #include <deque>
 
+#include <ZLOptions.h>
+
 #include "FBView.h"
 
 class BookTextView : public FBView {
+
+public:
+	ZLBooleanOption ShowTOCMarksOption;
 
 public:
 	BookTextView(FBReader &reader, ZLPaintContext &context);
@@ -35,6 +40,7 @@ public:
 	void setCaption(const std::string &caption);
 
 	void setModel(shared_ptr<TextModel> model, const std::string &name);
+	void setContentsModel(shared_ptr<TextModel> contentsModel);
 	void saveState();
 
 	void gotoParagraph(int num, bool last = false);
@@ -54,7 +60,23 @@ private:
 
 	bool getHyperlinkId(const TextElementPosition &position, std::string &id, bool &isExternal) const;
 
+	shared_ptr<PositionIndicator> createPositionIndicator();
+
 private:
+	class PositionIndicatorWithLabels : public PositionIndicator {
+
+	public:
+		PositionIndicatorWithLabels(BookTextView &bookTextView);
+
+	private:
+		void draw();
+	};
+
+	friend class BookTextView::PositionIndicatorWithLabels;
+
+private:
+	shared_ptr<TextModel> myContentsModel;
+
 	typedef std::pair<int,int> Position;
 	typedef std::deque<Position> PositionStack;
 	PositionStack myPositionStack;

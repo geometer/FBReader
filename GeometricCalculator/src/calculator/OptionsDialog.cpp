@@ -70,12 +70,21 @@ void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 	pointTab.addOption(new ZLSimpleSpinOptionEntry("Point Radius", view.PointRadiusOption, 1));
-	ZLOptionEntry *fontFamilyEntry = new ZLFontFamilyOptionEntry("Font Family", view.PointFontFamilyOption, view.context());
-	ZLOptionEntry *fontSizeEntry = new ZLSimpleSpinOptionEntry("Font Size", view.PointFontSizeOption, 2);
-	ZLBooleanOptionEntry *showNamesEntry = new ZLToggleBooleanOptionEntry("Show Point Names", view.ShowPointNamesOption, fontFamilyEntry, fontSizeEntry);
+
+	ZLToggleBooleanOptionEntry *showNamesEntry =
+		new ZLToggleBooleanOptionEntry("Show Point Names", view.ShowPointNamesOption);
 	pointTab.addOption(showNamesEntry);
+
+	ZLOptionEntry *fontFamilyEntry =
+		new ZLFontFamilyOptionEntry("Font Family", view.PointFontFamilyOption, view.context());
+	showNamesEntry->addDependentEntry(fontFamilyEntry);
 	pointTab.addOption(fontFamilyEntry);
+
+	ZLOptionEntry *fontSizeEntry =
+		new ZLSimpleSpinOptionEntry("Font Size", view.PointFontSizeOption, 2);
+	showNamesEntry->addDependentEntry(fontSizeEntry);
 	pointTab.addOption(fontSizeEntry);
+
 	showNamesEntry->onStateChanged(showNamesEntry->initialState());
 }
 

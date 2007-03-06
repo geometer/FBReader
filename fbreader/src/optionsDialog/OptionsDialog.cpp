@@ -34,6 +34,7 @@
 #include "ConfigPage.h"
 
 #include "../fbreader/FBReader.h"
+#include "../fbreader/BookTextView.h"
 #include "../fbreader/CollectionView.h"
 #include "../fbreader/RecentBooksView.h"
 
@@ -211,14 +212,30 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 
 	ZLDialogContent &indicatorTab = myDialog->createTab("Indicator");
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
-	ZLOptionEntry *heightEntry = new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
-	ZLOptionEntry *offsetEntry = new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
-	ZLOptionEntry *navigationEntry = new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
-	ZLBooleanOptionEntry *showIndicatorEntry = new ZLToggleBooleanOptionEntry("Show Position Indicator", indicatorStyle.ShowOption, heightEntry, offsetEntry, navigationEntry);
+	ZLToggleBooleanOptionEntry *showIndicatorEntry =
+		new ZLToggleBooleanOptionEntry("Show Position Indicator", indicatorStyle.ShowOption);
 	indicatorTab.addOption(showIndicatorEntry);
+
+	ZLOptionEntry *heightEntry =
+		new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
 	indicatorTab.addOption(heightEntry);
+	showIndicatorEntry->addDependentEntry(heightEntry);
+	
+	ZLOptionEntry *offsetEntry =
+		new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
 	indicatorTab.addOption(offsetEntry);
+	showIndicatorEntry->addDependentEntry(offsetEntry);
+
+	ZLOptionEntry *navigationEntry =
+		new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
 	indicatorTab.addOption(navigationEntry);
+	showIndicatorEntry->addDependentEntry(navigationEntry);
+
+	ZLOptionEntry *tocMarksEntry =
+		new ZLSimpleBooleanOptionEntry("Show TOC Marks", fbreader.bookTextView().ShowTOCMarksOption);
+	indicatorTab.addOption(tocMarksEntry);
+	showIndicatorEntry->addDependentEntry(tocMarksEntry);
+
 	showIndicatorEntry->onStateChanged(showIndicatorEntry->initialState());
 
 	ZLDialogContent &rotationTab = myDialog->createTab("Rotation");

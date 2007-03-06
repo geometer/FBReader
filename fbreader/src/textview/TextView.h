@@ -53,9 +53,22 @@ public:
 
 	public:
 		PositionIndicator(TextView &textView);
+		virtual ~PositionIndicator();
 
-		void draw();
+		virtual void draw();
 		bool onStylusPress(int x, int y);
+
+	protected:
+		const TextView &textView() const;
+		ZLPaintContext &context() const;
+		int top() const;
+		int bottom() const;
+		int left() const;
+		int right() const;
+
+		const std::vector<size_t> &textSize() const;
+		size_t startTextIndex() const;
+		size_t endTextIndex() const;
 
 	private:
 		TextView &myTextView;
@@ -226,6 +239,8 @@ protected:
 	bool empty() const;
 
 	void selectParagraph(int paragraphNumber);
+	
+	virtual shared_ptr<PositionIndicator> createPositionIndicator();
 
 private:
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
@@ -256,6 +271,8 @@ private:
 	WordCursor buildInfos(const WordCursor &start);
 
 	std::vector<size_t>::const_iterator nextBreakIterator() const;
+
+	PositionIndicator &positionIndicator();
 
 private:
 	shared_ptr<TextModel> myModel;
@@ -288,7 +305,7 @@ private:
 
 	ViewStyle myStyle;
 
-	PositionIndicator myPositionIndicator;
+	shared_ptr<PositionIndicator> myPositionIndicator;
 
 	bool myTreeStateIsFrozen;
 };
