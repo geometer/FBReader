@@ -3,7 +3,7 @@
 	<section name="Web Browser">
 		<program name="Browser" protocol="execute">
 			<action name="openLink" command="%command"/>
-			<option name="command" displayName="Command To Execute" defaultValue="mozilla %1"/>
+			<option name="command" displayName="Command To Execute" defaultValue="mozilla %1 &amp;"/>
 		</program>
 	</section>
 </ExternalPrograms>
