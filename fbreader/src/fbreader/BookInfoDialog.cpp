@@ -205,7 +205,7 @@ static const std::string AUTO = "auto";
 EncodingEntry::EncodingEntry(ZLStringOption &encodingOption) : myEncodingOption(encodingOption) {
 	const std::string &value = myEncodingOption.value();
 	if (value == AUTO) {
-		mySetNames.push_back(value);
+		myInitialSetName = value;
 		myInitialValues[value] = value;
 		setActive(false);
 		return;
