@@ -27,7 +27,11 @@
 static const size_t BUFFER_SIZE = 2048;
 
 PPLBookReader::PPLBookReader(BookModel &model, const std::string &encoding) : myModelReader(model) {
-	myConverter = ZLEncodingConverter::createConverter(encoding);
+	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(encoding);
+	if (info.isNull()) {
+		info = ZLEncodingCollection::defaultInfo();
+	}
+	myConverter = info->createConverter();
 	myBuffer = new char[BUFFER_SIZE + 1];
 }
 

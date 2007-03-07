@@ -20,70 +20,86 @@
 
 #include <iconv.h>
 
-#include <algorithm>
-
 #include <ZLFile.h>
 #include <ZLApplication.h>
+#include <ZLUnicodeUtil.h>
 
 #include "../xml/ZLXMLReader.h"
 
 #include "ZLEncodingConverter.h"
 
-std::vector<std::string> ZLEncodingConverter::ourKnownEncodings;
-std::map<int,std::string> ZLEncodingConverter::ourEncodingsByCode;
+std::vector<ZLEncodingConverterInfoPtr> ZLEncodingCollection::ourInfos;
+std::map<std::string,ZLEncodingConverterInfoPtr> ZLEncodingCollection::ourInfosByName;
 
-class EncodingListReader : public ZLXMLReader {
+class EncodingCollectionReader : public ZLXMLReader {
 
 public:
-	EncodingListReader(std::vector<std::string> &knownEncodings, std::map<int,std::string> &encodingsByCode);
 	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
 
 private:
-	std::vector<std::string> &myKnownEncodings;
-	std::map<int,std::string> &myEncodingsByCode;
+	ZLEncodingConverterInfoPtr myCurrentInfo;
+	std::vector<std::string> myNames;
 };
 
-EncodingListReader::EncodingListReader(std::vector<std::string> &knownEncodings, std::map<int,std::string> &encodingsByCode) : myKnownEncodings(knownEncodings), myEncodingsByCode(encodingsByCode) {
-}
+static const std::string ENCODING = "encoding";
+static const std::string NAME = "name";
+static const std::string ALIAS = "alias";
+static const std::string CODE = "code";
+static const std::string NUMBER = "number";
 
-void EncodingListReader::startElementHandler(const char *tag, const char **attributes) {
-	static const std::string ENCODING = "encoding";
-	static const std::string NAME = "name";
-	static const std::string CODE = "code";
-
+void EncodingCollectionReader::startElementHandler(const char *tag, const char **attributes) {
 	if (ENCODING == tag) {
 		const char *name = attributeValue(attributes, NAME.c_str());
 		if (name != 0) {
-			myKnownEncodings.push_back(name);
-			const char *codeString = attributeValue(attributes, CODE.c_str());
-			if (codeString != 0) {
-				int code = atoi(codeString);
-				if (code != 0) {
-					myEncodingsByCode[code] = name;
-				}
+			const std::string sName = name;
+			myCurrentInfo = new ZLEncodingConverterInfo(sName);
+			myNames.push_back(sName);
+		}
+	} else if (myCurrentInfo != 0) {
+		if (CODE == tag) {
+			const char *name = attributeValue(attributes, NUMBER.c_str());
+			if (name != 0) {
+				myNames.push_back(name);
+			}
+		} else if (ALIAS == tag) {
+			const char *name = attributeValue(attributes, NAME.c_str());
+			if (name != 0) {
+				const std::string sName = name;
+				myCurrentInfo->addAlias(sName);
+				myNames.push_back(sName);
 			}
 		}
 	}
 }
 
-std::vector<std::string> &ZLEncodingConverter::knownEncodings() {
-	if (ourKnownEncodings.empty()) {
-		std::vector<std::string> candidates;
-		EncodingListReader(candidates, ourEncodingsByCode).readDocument(encodingDescriptionPath() + "/Encodings.list");
-		for (std::vector<std::string>::const_iterator it = candidates.begin(); it != candidates.end(); ++it) {
-			iconv_t converter = iconv_open("utf-8", it->c_str());
-			if (converter != (iconv_t)-1) {
-				iconv_close(converter);
-				ourKnownEncodings.push_back(*it);
-			} else if (ZLFile(encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it).exists()) {
-				ourKnownEncodings.push_back(*it);
+void EncodingCollectionReader::endElementHandler(const char *tag) {
+	if (!myCurrentInfo.isNull() && (ENCODING == tag)) {
+		if (myCurrentInfo->canCreateConverter()) {
+			ZLEncodingCollection::ourInfos.push_back(myCurrentInfo);
+			for (std::vector<std::string>::const_iterator it = myNames.begin(); it != myNames.end(); ++it) {
+				ZLEncodingCollection::ourInfosByName[ZLUnicodeUtil::toLower(*it)] = myCurrentInfo;
 			}
 		}
-		if (ourKnownEncodings.empty()) {
-			ourKnownEncodings.push_back("US-ASCII");
-			ourKnownEncodings.push_back("UTF-8");
-		}
-		std::sort(ourKnownEncodings.begin(), ourKnownEncodings.end());
+		myCurrentInfo = 0;
+		myNames.clear();
 	}
-	return ourKnownEncodings;
+}
+
+std::vector<ZLEncodingConverterInfoPtr> &ZLEncodingCollection::infos() {
+	if (ourInfos.empty()) {
+		const std::string prefix = encodingDescriptionPath() + ZLApplication::FileNameDelimiter;
+		EncodingCollectionReader().readDocument(prefix + "Encodings.xml");
+		if (ourInfosByName["utf-8"].isNull()) {
+			ZLEncodingConverterInfoPtr info = new ZLEncodingConverterInfo("UTF-8");
+			ourInfos.push_back(info);
+			ourInfosByName["utf-8"] = info;
+		}
+		if (ourInfosByName["us-ascii"].isNull()) {
+			ZLEncodingConverterInfoPtr info = new ZLEncodingConverterInfo("US-ASCII");
+			ourInfos.push_back(info);
+			ourInfosByName["us-ascii"] = info;
+		}
+	}
+	return ourInfos;
 }

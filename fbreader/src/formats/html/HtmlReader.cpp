@@ -49,7 +49,11 @@ std::string HtmlReader::decodeURL(const std::string &encoded) {
 }
 
 HtmlReader::HtmlReader(const std::string &encoding) {
-	myConverter = ZLEncodingConverter::createConverter(encoding);
+	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(encoding);
+	if (info.isNull()) {
+		info = ZLEncodingCollection::defaultInfo();
+	}
+	myConverter = info->createConverter();
 }
 
 HtmlReader::~HtmlReader() {

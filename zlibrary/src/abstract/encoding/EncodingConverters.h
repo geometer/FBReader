@@ -35,7 +35,7 @@ public:
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
 	bool fillTable(int *map);
 
-friend class ZLEncodingConverter;
+friend class ZLEncodingConverterInfo;
 };
 
 class OneByteEncodingConverter : public ZLEncodingConverter {
@@ -52,7 +52,7 @@ private:
 	const std::string myEncoding;
 	char *myEncodingMap;
 
-friend class ZLEncodingConverter;
+friend class ZLEncodingConverterInfo;
 };
 
 class TwoBytesEncodingConverter : public ZLEncodingConverter {
@@ -72,7 +72,7 @@ private:
 	char myLastChar;
 	bool myLastCharIsNotProcessed;
 
-friend class ZLEncodingConverter;
+friend class ZLEncodingConverterInfo;
 };
 
 class IconvEncodingConverter : public ZLEncodingConverter {
@@ -91,7 +91,7 @@ private:
 	iconv_t myIConverter;
 	std::string myBuffer;
 
-friend class ZLEncodingConverter;
+friend class ZLEncodingConverterInfo;
 };
 
 #endif /* __ENCODINGCONVERTERS_H__ */

@@ -26,7 +26,11 @@
 #include "TxtReader.h"
 
 TxtReader::TxtReader(const std::string &encoding) {
-	myConverter = ZLEncodingConverter::createConverter(encoding);
+	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(encoding);
+	if (info.isNull()) {
+		info = ZLEncodingCollection::defaultInfo();
+	}
+	myConverter = info->createConverter();
 }
 
 TxtReader::~TxtReader() {

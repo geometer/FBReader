@@ -43,10 +43,13 @@ static void fEndElementHandler(void *userData, const char *name) {
 	}
 }
 
-static int fUnknownEncodingHandler(void *, const XML_Char *name, XML_Encoding *info) {
-	shared_ptr<ZLEncodingConverter> converter = ZLEncodingConverter::createConverter(name);
-	if (!converter.isNull() && converter->fillTable(info->map)) {
-		return XML_STATUS_OK;
+static int fUnknownEncodingHandler(void*, const XML_Char *name, XML_Encoding *encoding) {
+	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(name);
+	if (!info.isNull()) {
+		shared_ptr<ZLEncodingConverter> converter = info->createConverter();
+		if (!converter.isNull() && converter->fillTable(encoding->map)) {
+			return XML_STATUS_OK;
+		}
 	}
 	return XML_STATUS_ERROR;
 }

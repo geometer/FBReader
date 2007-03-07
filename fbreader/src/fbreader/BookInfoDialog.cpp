@@ -192,7 +192,15 @@ const std::vector<std::string> &EncodingEntry::values() const {
 		}
 		return AUTO_ENCODING;
 	}
-	return ZLEncodingConverter::knownEncodings();
+	static std::vector<std::string> e;
+	if (e.empty()) {
+		const std::vector<ZLEncodingConverterInfoPtr> &infos = ZLEncodingCollection::infos();
+		for (std::vector<ZLEncodingConverterInfoPtr>::const_iterator it = infos.begin(); it != infos.end(); ++it) {
+			e.push_back((*it)->name());
+		}
+		std::sort(e.begin(), e.end());
+	}
+	return e;
 }
 
 const std::string &EncodingEntry::name() const {
@@ -223,7 +231,7 @@ const std::vector<std::string> &LanguageEntry::values() const {
 }
 
 const std::string &LanguageEntry::name() const {
-	static const std::string NAME = "Language";
+	static const std::string NAME = "Line breaking";
 	return NAME;
 }
 

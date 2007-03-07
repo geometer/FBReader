@@ -19,33 +19,47 @@
  */
 
 #include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
 #include <ZLApplication.h>
+#include <ZLFile.h>
 
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
 #include "EncodingReader.h"
 
-std::string ZLEncodingConverter::encodingDescriptionPath() {
+std::string ZLEncodingCollection::encodingDescriptionPath() {
 	return ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + "encodings";
 }
 
-shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::string &encoding) {
-	if (encoding.empty() ||
-			(strcasecmp(encoding.c_str(), "UTF-8") == 0) ||
-			(strcasecmp(encoding.c_str(), "US-ASCII") == 0)) {
-		return new DummyEncodingConverter();
-	}
+bool ZLEncodingConverterInfo::canCreateConverter() const {
+	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
+		const std::string lowerCasedName = ZLUnicodeUtil::toLower(*it);
+		if ((lowerCasedName == "utf-8") || (lowerCasedName == "us-ascii")) {
+			return true;
+		}
 
-	const std::vector<std::string> &encodingList = knownEncodings();
-	std::vector<std::string>::const_iterator it;
-	for (it = encodingList.begin(); it != encodingList.end(); ++it) {
-		if (strcasecmp(encoding.c_str(), it->c_str()) == 0) {
-			break;
+		iconv_t converter = iconv_open("utf-8", it->c_str());
+		if (converter != (iconv_t)-1) {
+			iconv_close(converter);
+			return true;
+		}
+
+		if (ZLFile(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it).exists()) {
+			return true;
 		}
 	}
 
-	if (it != encodingList.end()) {
-		EncodingCharReader er(*it);
+	return false;
+}
+
+shared_ptr<ZLEncodingConverter> ZLEncodingConverterInfo::createConverter() const {
+	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
+		const std::string lowerCasedName = ZLUnicodeUtil::toLower(*it);
+		if ((lowerCasedName == "utf-8") || (lowerCasedName == "us-ascii")) {
+			return new DummyEncodingConverter();
+		}
+
+		EncodingCharReader er(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it);
 		char **encodingMap = er.createTable();
 		if (encodingMap != 0) {
 			if (er.bytesNumber() == 1) {
@@ -54,13 +68,13 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverter::createConverter(const std::
 				return new TwoBytesEncodingConverter(encodingMap);
 			}
 		}
-	}
 
-	IconvEncodingConverter *converter = new IconvEncodingConverter(encoding);
-	if (converter->isInitialized()) {
-		return converter;
-	} else {
-		delete converter;
+		IconvEncodingConverter *converter = new IconvEncodingConverter(*it);
+		if (converter->isInitialized()) {
+			return converter;
+		} else {
+			delete converter;
+		}
 	}
 
 	return new DummyEncodingConverter();
@@ -275,12 +289,35 @@ bool IconvEncodingConverter::fillTable(int *map) {
 	return true;
 }
 
-const std::string &ZLEncodingConverter::encodingByCode(int code) {
-	static const std::string EMPTY;
-	std::map<int,std::string>::const_iterator it = ourEncodingsByCode.find(code);
-	return (it != ourEncodingsByCode.end()) ? it->second : EMPTY;
-}
-
 void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {
 	convert(dst, src.data(), src.data() + src.length());
+}
+
+ZLEncodingConverterInfoPtr ZLEncodingCollection::defaultInfo() {
+	infos();
+	return ourInfosByName["utf-8"];
+}
+
+ZLEncodingConverterInfoPtr ZLEncodingCollection::info(const std::string &name) {
+	infos();
+	return ourInfosByName[ZLUnicodeUtil::toLower(name)];
+}
+
+ZLEncodingConverterInfoPtr ZLEncodingCollection::info(int code) {
+	infos();
+	std::string name;
+	ZLStringUtil::appendNumber(name, code);
+	return ourInfosByName[name];
+}
+
+ZLEncodingConverterInfo::ZLEncodingConverterInfo(const std::string &name) : myName(name) {
+	addAlias(myName);
+}
+
+const std::string &ZLEncodingConverterInfo::name() const {
+	return myName;
+}
+
+void ZLEncodingConverterInfo::addAlias(const std::string &alias) {
+	myAliases.push_back(alias);
 }
