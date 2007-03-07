@@ -38,45 +38,75 @@ public:
 	void convert(std::string &dst, const std::string &src);
 	virtual void reset();
 	virtual bool fillTable(int *map) = 0;
+
+private:
+	ZLEncodingConverter(const ZLEncodingConverter&);
+	ZLEncodingConverter &operator=(const ZLEncodingConverter&);
 };
 
 class ZLEncodingConverterInfo {
 
 public:
-	ZLEncodingConverterInfo(const std::string &name);
+	ZLEncodingConverterInfo(const std::string &name, const std::string &region);
 	void addAlias(const std::string &alias);
 
 	const std::string &name() const;
+	const std::string &visibleName() const;
 	shared_ptr<ZLEncodingConverter> createConverter() const;
 	bool canCreateConverter() const;
 
 private:
-	std::string myName;
+	const std::string myName;
+	const std::string myVisibleName;
 	std::vector<std::string> myAliases;
+
+private:
+	ZLEncodingConverterInfo(const ZLEncodingConverterInfo&);
+	ZLEncodingConverterInfo &operator=(const ZLEncodingConverterInfo&);
 };
 
 typedef shared_ptr<ZLEncodingConverterInfo> ZLEncodingConverterInfoPtr;
 
+class ZLEncodingSet {
+
+public:
+	ZLEncodingSet(const std::string &name);
+	void addInfo(ZLEncodingConverterInfoPtr info);
+
+	const std::string &name() const;
+	const std::vector<ZLEncodingConverterInfoPtr> &infos() const;
+
+private:
+	const std::string myName;
+	std::vector<ZLEncodingConverterInfoPtr> myInfos;
+
+private:
+	ZLEncodingSet(const ZLEncodingSet&);
+	ZLEncodingSet &operator=(const ZLEncodingSet&);
+};
+
 class ZLEncodingCollection {
 
 public:
-	static std::vector<ZLEncodingConverterInfoPtr> &infos();
+	static const std::vector<shared_ptr<ZLEncodingSet> > &sets();
 	static ZLEncodingConverterInfoPtr info(const std::string &name);
 	static ZLEncodingConverterInfoPtr info(int code);
 	static ZLEncodingConverterInfoPtr defaultInfo();
 
 private:
+	static void init();
 	static std::string encodingDescriptionPath();
 	static void addInfo(ZLEncodingConverterInfoPtr info);
 
 private:
-	static std::vector<ZLEncodingConverterInfoPtr> ourInfos;
+	static std::vector<shared_ptr<ZLEncodingSet> > ourSets;
 	static std::map<std::string,ZLEncodingConverterInfoPtr> ourInfosByName;
 
 private:
 	ZLEncodingCollection();
 
 friend class ZLEncodingConverterInfo;
+friend class EncodingReader;
 friend class EncodingCollectionReader;
 };
 

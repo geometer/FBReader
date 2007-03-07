@@ -48,10 +48,9 @@ private:
 	BookInfo myBookInfo;
 	shared_ptr<FormatInfoPage> myFormatInfoPage;
 
-	ZLStringOptionEntry *myFileNameEntry;
-	ZLStringOptionEntry *myBookTitleEntry;
 	AuthorDisplayNameEntry *myAuthorDisplayNameEntry;
 	AuthorSortKeyEntry *myAuthorSortKeyEntry;
+	ZLComboOptionEntry *myEncodingSetEntry;
 	ZLComboOptionEntry *myEncodingEntry;
 	ZLComboOptionEntry *myLanguageEntry;
 	SeriesTitleEntry *mySeriesTitleEntry;

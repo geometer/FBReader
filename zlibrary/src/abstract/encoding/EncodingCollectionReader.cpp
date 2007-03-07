@@ -18,56 +18,46 @@
  * 02110-1301, USA.
  */
 
-#include <iconv.h>
-
-#include <ZLFile.h>
-#include <ZLApplication.h>
 #include <ZLUnicodeUtil.h>
 
-#include "../xml/ZLXMLReader.h"
+#include "EncodingCollectionReader.h"
 
-#include "ZLEncodingConverter.h"
-
-std::vector<ZLEncodingConverterInfoPtr> ZLEncodingCollection::ourInfos;
-std::map<std::string,ZLEncodingConverterInfoPtr> ZLEncodingCollection::ourInfosByName;
-
-class EncodingCollectionReader : public ZLXMLReader {
-
-public:
-	void startElementHandler(const char *tag, const char **attributes);
-	void endElementHandler(const char *tag);
-
-private:
-	ZLEncodingConverterInfoPtr myCurrentInfo;
-	std::vector<std::string> myNames;
-};
-
+static const std::string GROUP = "group";
 static const std::string ENCODING = "encoding";
 static const std::string NAME = "name";
+static const std::string REGION = "region";
 static const std::string ALIAS = "alias";
 static const std::string CODE = "code";
 static const std::string NUMBER = "number";
 
 void EncodingCollectionReader::startElementHandler(const char *tag, const char **attributes) {
-	if (ENCODING == tag) {
+	if (GROUP == tag) {
 		const char *name = attributeValue(attributes, NAME.c_str());
 		if (name != 0) {
-			const std::string sName = name;
-			myCurrentInfo = new ZLEncodingConverterInfo(sName);
-			myNames.push_back(sName);
+			myCurrentSet = new ZLEncodingSet(name);
 		}
-	} else if (myCurrentInfo != 0) {
-		if (CODE == tag) {
-			const char *name = attributeValue(attributes, NUMBER.c_str());
-			if (name != 0) {
-				myNames.push_back(name);
-			}
-		} else if (ALIAS == tag) {
+	} else if (!myCurrentSet.isNull()) {
+		if (ENCODING == tag) {
 			const char *name = attributeValue(attributes, NAME.c_str());
-			if (name != 0) {
+			const char *region = attributeValue(attributes, REGION.c_str());
+			if ((name != 0) && (region != 0)) {
 				const std::string sName = name;
-				myCurrentInfo->addAlias(sName);
+				myCurrentInfo = new ZLEncodingConverterInfo(sName, region);
 				myNames.push_back(sName);
+			}
+		} else if (!myCurrentInfo.isNull()) {
+			if (CODE == tag) {
+				const char *name = attributeValue(attributes, NUMBER.c_str());
+				if (name != 0) {
+					myNames.push_back(name);
+				}
+			} else if (ALIAS == tag) {
+				const char *name = attributeValue(attributes, NAME.c_str());
+				if (name != 0) {
+					const std::string sName = name;
+					myCurrentInfo->addAlias(sName);
+					myNames.push_back(sName);
+				}
 			}
 		}
 	}
@@ -76,30 +66,17 @@ void EncodingCollectionReader::startElementHandler(const char *tag, const char *
 void EncodingCollectionReader::endElementHandler(const char *tag) {
 	if (!myCurrentInfo.isNull() && (ENCODING == tag)) {
 		if (myCurrentInfo->canCreateConverter()) {
-			ZLEncodingCollection::ourInfos.push_back(myCurrentInfo);
+			myCurrentSet->addInfo(myCurrentInfo);
 			for (std::vector<std::string>::const_iterator it = myNames.begin(); it != myNames.end(); ++it) {
 				ZLEncodingCollection::ourInfosByName[ZLUnicodeUtil::toLower(*it)] = myCurrentInfo;
 			}
 		}
 		myCurrentInfo = 0;
 		myNames.clear();
-	}
-}
-
-std::vector<ZLEncodingConverterInfoPtr> &ZLEncodingCollection::infos() {
-	if (ourInfos.empty()) {
-		const std::string prefix = encodingDescriptionPath() + ZLApplication::FileNameDelimiter;
-		EncodingCollectionReader().readDocument(prefix + "Encodings.xml");
-		if (ourInfosByName["utf-8"].isNull()) {
-			ZLEncodingConverterInfoPtr info = new ZLEncodingConverterInfo("UTF-8");
-			ourInfos.push_back(info);
-			ourInfosByName["utf-8"] = info;
+	} else if (!myCurrentSet.isNull() && (GROUP == tag)) {
+		if (!myCurrentSet->infos().empty()) {
+			ZLEncodingCollection::ourSets.push_back(myCurrentSet);
 		}
-		if (ourInfosByName["us-ascii"].isNull()) {
-			ZLEncodingConverterInfoPtr info = new ZLEncodingConverterInfo("US-ASCII");
-			ourInfos.push_back(info);
-			ourInfosByName["us-ascii"] = info;
-		}
+		myCurrentSet = 0;
 	}
-	return ourInfos;
 }

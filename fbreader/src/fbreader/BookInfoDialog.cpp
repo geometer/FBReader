@@ -77,9 +77,32 @@ public:
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
+	void onValueSelected(int index);
 
 private:
+	std::vector<std::string> mySetNames;
+	std::map<std::string,std::vector<std::string> > myValues;
+	mutable std::map<std::string,std::string> myInitialValues;
+	std::map<std::string,std::string> myValueByName;
 	ZLStringOption &myEncodingOption;
+	std::string myInitialSetName;
+
+friend class EncodingSetEntry;
+};
+
+class EncodingSetEntry : public ZLComboOptionEntry {
+
+public:
+	EncodingSetEntry(EncodingEntry &encodingEntry);
+
+	const std::string &name() const;
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string&) {}
+	void onValueSelected(int index);
+
+private:
+	EncodingEntry &myEncodingEntry;
 };
 
 class LanguageEntry : public ZLComboOptionEntry {
@@ -115,8 +138,6 @@ private:
 	AuthorPtr myOriginalAuthor;
 	mutable std::vector<std::string> myValues;
 };
-
-static std::vector<std::string> AUTO_ENCODING;
 
 AuthorDisplayNameEntry::AuthorDisplayNameEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
 }
@@ -182,25 +203,44 @@ void AuthorSortKeyEntry::onAccept(const std::string &value) {
 static const std::string AUTO = "auto";
 
 EncodingEntry::EncodingEntry(ZLStringOption &encodingOption) : myEncodingOption(encodingOption) {
-	setActive(initialValue() != AUTO);
+	const std::string &value = myEncodingOption.value();
+	if (value == AUTO) {
+		mySetNames.push_back(value);
+		myInitialValues[value] = value;
+		setActive(false);
+		return;
+	}
+
+	const std::vector<shared_ptr<ZLEncodingSet> > &sets = ZLEncodingCollection::sets();
+	for (std::vector<shared_ptr<ZLEncodingSet> >::const_iterator it = sets.begin(); it != sets.end(); ++it) {
+		const std::vector<ZLEncodingConverterInfoPtr> &infos = (*it)->infos();
+		mySetNames.push_back((*it)->name());
+		std::vector<std::string> &names = myValues[(*it)->name()];
+		for (std::vector<ZLEncodingConverterInfoPtr>::const_iterator jt = infos.begin(); jt != infos.end(); ++jt) {
+			if ((*jt)->name() == value) {
+				myInitialSetName = (*it)->name();
+				myInitialValues[myInitialSetName] = (*jt)->visibleName();
+			}
+			names.push_back((*jt)->visibleName());
+			myValueByName[(*jt)->visibleName()] = (*jt)->name();
+		}
+	}
+
+	if (myInitialSetName.empty()) {
+		myInitialSetName = mySetNames[0];
+	}
 }
 
 const std::vector<std::string> &EncodingEntry::values() const {
 	if (initialValue() == AUTO) {
+		static std::vector<std::string> AUTO_ENCODING;
 		if (AUTO_ENCODING.empty()) {
 			AUTO_ENCODING.push_back(AUTO);
 		}
 		return AUTO_ENCODING;
 	}
-	static std::vector<std::string> e;
-	if (e.empty()) {
-		const std::vector<ZLEncodingConverterInfoPtr> &infos = ZLEncodingCollection::infos();
-		for (std::vector<ZLEncodingConverterInfoPtr>::const_iterator it = infos.begin(); it != infos.end(); ++it) {
-			e.push_back((*it)->name());
-		}
-		std::sort(e.begin(), e.end());
-	}
-	return e;
+	std::map<std::string,std::vector<std::string> >::const_iterator it = myValues.find(myInitialSetName);
+	return it->second;
 }
 
 const std::string &EncodingEntry::name() const {
@@ -209,11 +249,40 @@ const std::string &EncodingEntry::name() const {
 }
 
 const std::string &EncodingEntry::initialValue() const {
-	return myEncodingOption.value();
+	if (myInitialValues[myInitialSetName].empty()) {
+		std::map<std::string,std::vector<std::string> >::const_iterator it = myValues.find(myInitialSetName);
+		myInitialValues[myInitialSetName] = it->second[0];
+	}
+	return myInitialValues[myInitialSetName];
 }
 
 void EncodingEntry::onAccept(const std::string &value) {
-	myEncodingOption.setValue(value);
+	myEncodingOption.setValue(myValueByName[value]);
+}
+
+void EncodingEntry::onValueSelected(int index) {
+	myInitialValues[myInitialSetName] = values()[index];
+}
+
+EncodingSetEntry::EncodingSetEntry(EncodingEntry &encodingEntry) : myEncodingEntry(encodingEntry) {
+}
+
+const std::string &EncodingSetEntry::name() const {
+	static const std::string _name = "Encoding Set";
+	return _name;
+}
+
+const std::string &EncodingSetEntry::initialValue() const {
+	return myEncodingEntry.myInitialSetName;
+}
+
+const std::vector<std::string> &EncodingSetEntry::values() const {
+	return myEncodingEntry.mySetNames;
+}
+
+void EncodingSetEntry::onValueSelected(int index) {
+	myEncodingEntry.myInitialSetName = values()[index];
+	myEncodingEntry.resetView();
 }
 
 LanguageEntry::LanguageEntry(ZLStringOption &encodingOption) : myLanguageOption(encodingOption) {
@@ -307,27 +376,35 @@ void SeriesTitleEntry::onValueEdited(const std::string &value) {
 BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::string &fileName) : myCollection(collection), myBookInfo(fileName) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
 
-	myFileNameEntry = new ZLStringInfoEntry("File", ZLFile::fileNameToUtf8(ZLFile(fileName).path()));
-	myBookTitleEntry = new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption);
+	ZLDialogContent &commonTab = myDialog->createTab("Common");
+	commonTab.addOption(
+		new ZLStringInfoEntry("File", ZLFile::fileNameToUtf8(ZLFile(fileName).path()))
+	);
+	commonTab.addOption(new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption));
+
 	myAuthorDisplayNameEntry = new AuthorDisplayNameEntry(*this);
 	myAuthorSortKeyEntry = new AuthorSortKeyEntry(*this);
 	myEncodingEntry = new EncodingEntry(myBookInfo.EncodingOption);
+	myEncodingSetEntry =
+		(myEncodingEntry->initialValue() != AUTO) ?
+		new EncodingSetEntry(*(EncodingEntry*)myEncodingEntry) : 0;
 	myLanguageEntry = new LanguageEntry(myBookInfo.LanguageOption);
 	mySeriesTitleEntry = new SeriesTitleEntry(*this);
 	myBookNumberEntry = new ZLSimpleSpinOptionEntry("Book Number", myBookInfo.NumberInSequenceOption, 1);
-	mySeriesTitleEntry->onValueEdited(mySeriesTitleEntry->initialValue());
 
-	ZLDialogContent &commonTab = myDialog->createTab("Common");
-	commonTab.addOption(myFileNameEntry);
-	commonTab.addOption(myBookTitleEntry);
 	commonTab.addOption(myAuthorDisplayNameEntry);
 	commonTab.addOption(myAuthorSortKeyEntry);
+	if (myEncodingSetEntry != 0) {
+		commonTab.addOption(myEncodingSetEntry);
+	}
 	commonTab.addOption(myEncodingEntry);
 	commonTab.addOption(myLanguageEntry);
 
 	ZLDialogContent &seriesTab = myDialog->createTab("Series");
 	seriesTab.addOption(mySeriesTitleEntry);
 	seriesTab.addOption(myBookNumberEntry);
+
+	mySeriesTitleEntry->onValueEdited(mySeriesTitleEntry->initialValue());
 	/*
 	ZLOrderOptionEntry *orderEntry = new ZLOrderOptionEntry();
 	orderEntry->values().push_back("First");

@@ -1,11 +1,8 @@
 *** 0.8.0
 
-Khmer
 Chinese
 проценты на индикаторе
 
-кодировки: корейская, вьетнамская
-иконка для пакета в pool
 проверить все версии -- что не падает options dialog
 maemo: single-click installation
 desktop: зависимости в пакетах для etch
@@ -94,9 +91,25 @@ image scaling
 мягкие переносы
 options dialog -- создавать меньше объектов
 интеграция с каким-нибудь словарем в maemo
-хитрый контрол для кодировок
 mobipocket: где начинаются картинки?
 	ответить на письмо роберту м. (послать файл)
+разобраться с отсутствующими encoding'ами
+	MacGreek
+	MacIcelandic
+	MacCE
+	MacCroatian
+	MacRomanian
+	HZ
+	GEOSTD8
+	MacTurkish
+	VPS
+	MacDevanagari
+	MacGujarati
+	MacGurmukhi
+	MacArabic
+	MacFarsi
+	ISO-8859-8-I
+	MacHebrew
 
 ==============================================================================
 

@@ -19,17 +19,12 @@
  */
 
 #include <ZLUnicodeUtil.h>
-#include <ZLStringUtil.h>
 #include <ZLApplication.h>
 #include <ZLFile.h>
 
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
 #include "EncodingReader.h"
-
-std::string ZLEncodingCollection::encodingDescriptionPath() {
-	return ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + "encodings";
-}
 
 bool ZLEncodingConverterInfo::canCreateConverter() const {
 	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
@@ -38,13 +33,13 @@ bool ZLEncodingConverterInfo::canCreateConverter() const {
 			return true;
 		}
 
-		iconv_t converter = iconv_open("utf-8", it->c_str());
-		if (converter != (iconv_t)-1) {
-			iconv_close(converter);
+		if (ZLFile(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it).exists()) {
 			return true;
 		}
 
-		if (ZLFile(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it).exists()) {
+		iconv_t converter = iconv_open("utf-8", it->c_str());
+		if (converter != (iconv_t)-1) {
+			iconv_close(converter);
 			return true;
 		}
 	}
@@ -59,7 +54,7 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverterInfo::createConverter() const
 			return new DummyEncodingConverter();
 		}
 
-		EncodingCharReader er(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it);
+		EncodingCharReader er(*it);
 		char **encodingMap = er.createTable();
 		if (encodingMap != 0) {
 			if (er.bytesNumber() == 1) {
@@ -293,29 +288,17 @@ void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {
 	convert(dst, src.data(), src.data() + src.length());
 }
 
-ZLEncodingConverterInfoPtr ZLEncodingCollection::defaultInfo() {
-	infos();
-	return ourInfosByName["utf-8"];
-}
 
-ZLEncodingConverterInfoPtr ZLEncodingCollection::info(const std::string &name) {
-	infos();
-	return ourInfosByName[ZLUnicodeUtil::toLower(name)];
-}
-
-ZLEncodingConverterInfoPtr ZLEncodingCollection::info(int code) {
-	infos();
-	std::string name;
-	ZLStringUtil::appendNumber(name, code);
-	return ourInfosByName[name];
-}
-
-ZLEncodingConverterInfo::ZLEncodingConverterInfo(const std::string &name) : myName(name) {
+ZLEncodingConverterInfo::ZLEncodingConverterInfo(const std::string &name, const std::string &region) : myName(name), myVisibleName(region + " (" + name + ")") {
 	addAlias(myName);
 }
 
 const std::string &ZLEncodingConverterInfo::name() const {
 	return myName;
+}
+
+const std::string &ZLEncodingConverterInfo::visibleName() const {
+	return myVisibleName;
 }
 
 void ZLEncodingConverterInfo::addAlias(const std::string &alias) {
