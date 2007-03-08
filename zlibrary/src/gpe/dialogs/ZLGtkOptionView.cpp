@@ -352,8 +352,8 @@ void ColorOptionView::_hide() {
 	gtk_widget_hide(myWidget);
 }
 
-void ColorOptionView::_onSliderMove(GtkRange *, gpointer self) {
-	((ColorOptionView *)self)->onSliderMove();
+void ColorOptionView::_onSliderMove(GtkRange*, gpointer self) {
+	((ColorOptionView*)self)->onSliderMove();
 }
 
 void ColorOptionView::onSliderMove() {
