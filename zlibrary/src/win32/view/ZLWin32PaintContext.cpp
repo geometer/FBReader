@@ -105,6 +105,7 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 	logicalFont.lfHeight = size;
 	logicalFont.lfWeight = bold ? FW_BOLD : FW_REGULAR;
 	logicalFont.lfItalic = italic;
+	logicalFont.lfQuality = 5 /*CLEARTYPE_QUALITY*/;
 	const int len = std::min((int)family.length(), LF_FACESIZE - 1);
 	ZLUnicodeUtil::Ucs2String str;
 	ZLUnicodeUtil::utf8ToUcs2(str, family.data(), len);
