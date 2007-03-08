@@ -257,7 +257,9 @@ const std::string &EncodingEntry::initialValue() const {
 }
 
 void EncodingEntry::onAccept(const std::string &value) {
-	myEncodingOption.setValue(myValueByName[value]);
+	if (initialValue() != AUTO) {
+		myEncodingOption.setValue(myValueByName[value]);
+	}
 }
 
 void EncodingEntry::onValueSelected(int index) {

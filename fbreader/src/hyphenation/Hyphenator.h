@@ -59,7 +59,7 @@ public:
 
 	HyphenationInfo info(const Word &word) const;
 
-	virtual bool useBreakingAlgorithm() const = 0;
+	virtual const std::string &breakingAlgorithm() const = 0;
 
 protected:
 	virtual void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const = 0;

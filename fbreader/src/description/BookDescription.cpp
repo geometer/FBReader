@@ -98,8 +98,15 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 		BookDescriptionUtil::saveInfo(file);
 	}
 
+	ZLOption::clearGroup(fileName);
 	ZLFile bookFile(fileName);
 	FormatPlugin *plugin = PluginCollection::instance().plugin(bookFile, false);
+	description->myAuthor = 0;
+	description->myTitle.erase();
+	description->mySequenceName.erase();
+	description->myNumberInSequence = 0;
+	description->myLanguage.erase();
+	description->myEncoding.erase();
 	if ((plugin == 0) || !plugin->readDescription(fileName, *description)) {
 		return 0;
 	}

@@ -25,6 +25,7 @@
 #include "Word.h"
 
 #include "../model/Paragraph.h"
+#include "../hyphenation/Hyphenator.h"
 
 TextElementPool TextElementPool::Pool;
 
@@ -207,8 +208,17 @@ void ParagraphCursor::fill() {
 	switch (paragraph.kind()) {
 		case Paragraph::TEXT_PARAGRAPH:
 		case Paragraph::TREE_PARAGRAPH:
-			ParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+		{
+			const std::string &breakingAlgorithm = Hyphenator::instance().breakingAlgorithm();
+			if (breakingAlgorithm == "chinese") {
+				ChineseParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+			} else if (breakingAlgorithm == "anycharacter") {
+				AnyPlaceParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+			} else {
+				StandardParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+			}
 			break;
+		}
 		case Paragraph::EMPTY_LINE_PARAGRAPH:
 			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.EmptyLineElement);

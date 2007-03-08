@@ -222,9 +222,9 @@ void TeXHyphenator::unload() {
 		delete *it;
 	}
 	myPatternTable.clear();
-	myUseBreakingAlgorithm = false;
+	myBreakingAlgorithm.erase();
 }
 
-bool TeXHyphenator::useBreakingAlgorithm() const {
-	return myUseBreakingAlgorithm;
+const std::string &TeXHyphenator::breakingAlgorithm() const {
+	return myBreakingAlgorithm;
 }

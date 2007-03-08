@@ -72,16 +72,16 @@ class ParagraphCursor {
 private:
 	class ParagraphProcessor {
 
-	public:
+	protected:
 		ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
 
+	public:
+		virtual ~ParagraphProcessor();
 		void fill();
+		virtual void processTextEntry(const TextEntry &textEntry) = 0;
 
-	private:
+	protected:
 		void addWord(const char *ptr, int offset, int len);
-
-	private:
-		bool myCheckBreakableCharacters;
 
 	protected:
 		const Paragraph &myParagraph;
@@ -90,6 +90,27 @@ private:
 		std::vector<TextMark>::const_iterator myFirstMark;
 		std::vector<TextMark>::const_iterator myLastMark;
 		int myOffset;
+	};
+
+	class StandardParagraphProcessor : public ParagraphProcessor {
+
+	public:
+		StandardParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
+		void processTextEntry(const TextEntry &textEntry);
+	};
+
+	class ChineseParagraphProcessor : public ParagraphProcessor {
+
+	public:
+		ChineseParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
+		void processTextEntry(const TextEntry &textEntry);
+	};
+
+	class AnyPlaceParagraphProcessor : public ParagraphProcessor {
+
+	public:
+		AnyPlaceParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int index, TextElementVector &elements);
+		void processTextEntry(const TextEntry &textEntry);
 	};
 
 protected:

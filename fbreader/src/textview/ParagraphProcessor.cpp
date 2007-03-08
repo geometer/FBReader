@@ -28,14 +28,15 @@
 #include "Word.h"
 
 #include "../model/Paragraph.h"
-#include "../hyphenation/Hyphenator.h"
 
 ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
-	myCheckBreakableCharacters = Hyphenator::instance().useBreakingAlgorithm();
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
 	myOffset = 0;
+}
+
+ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
 }
 
 void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {
@@ -75,66 +76,8 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				break;
 			}
 			case ParagraphEntry::TEXT_ENTRY:
-			{
-				const TextEntry &textEntry = (TextEntry&)*it.entry();
-				if (textEntry.dataLength() != 0) {
-					const char *start = textEntry.data();
-					const char *end = start + textEntry.dataLength();
-					ZLUnicodeUtil::Ucs2Char ch;
-					ZLUnicodeUtil::firstChar(ch, start);
-					bool spaceInserted = false;
-					if (ZLUnicodeUtil::isSpace(ch)) {
-						myElements.push_back(TextElementPool::Pool.HSpaceElement);
-						spaceInserted = true;
-					}
-					const char *firstNonSpace = 0;
-					int charLength = 0;
-					bool breakableBefore = false;
-					for (const char *ptr = start; ptr < end; ptr += charLength) {
-						if (breakableBefore) {
-							if (firstNonSpace != 0) {
-								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
-								firstNonSpace = 0;
-								spaceInserted = false;
-							}
-							charLength = 0;
-							breakableBefore = false;
-							continue;
-						}
-						charLength = ZLUnicodeUtil::firstChar(ch, ptr);
-						if (ZLUnicodeUtil::isSpace(ch)) {
-							if (firstNonSpace != 0) {
-								addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
-								myElements.push_back(TextElementPool::Pool.HSpaceElement);
-								spaceInserted = true;
-								firstNonSpace = 0;
-							} else if (!spaceInserted) {
-								myElements.push_back(TextElementPool::Pool.HSpaceElement);
-								spaceInserted = true;
-							}
-						} else if (firstNonSpace == 0) {
-							firstNonSpace = ptr;
-						} else if (myCheckBreakableCharacters) {
-							switch (ZLUnicodeUtil::isBreakable(ch)) {
-								case ZLUnicodeUtil::NO_BREAKABLE:
-									break;
-								case ZLUnicodeUtil::BREAKABLE_BEFORE:
-									addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
-									firstNonSpace = ptr;
-									break;
-								case ZLUnicodeUtil::BREAKABLE_AFTER:
-									breakableBefore = true;
-									break;
-							}
-						}
-					}
-					if (firstNonSpace != 0) {
-						addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), end - firstNonSpace);
-					}
-					myOffset += textEntry.dataLength();
-				}
+				processTextEntry((const TextEntry&)*it.entry());
 				break;
-			}
 		}
 	}
 }
