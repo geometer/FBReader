@@ -24,6 +24,8 @@
 #include "OEBDescriptionReader.h"
 
 OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDescription(description) {
+	myDescription.clearAuthor();
+	myDescription.title().erase();
 }
 
 // TODO: replace "dc" by real DC scheme name

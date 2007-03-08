@@ -25,6 +25,9 @@
 #include "FB2DescriptionReader.h"
 
 FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : myDescription(description) {
+	myDescription.clearAuthor();
+	myDescription.title().erase();
+	myDescription.language().erase();
 }
 
 void FB2DescriptionReader::characterDataHandler(const char *text, int len) {

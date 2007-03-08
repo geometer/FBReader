@@ -25,6 +25,8 @@
 #include "../util/EntityFilesCollector.h"
 
 ORDescriptionReader::ORDescriptionReader(BookDescription &description) : myDescription(description) {
+	myDescription.clearAuthor();
+	myDescription.title().erase();
 }
 
 // TODO: replace "dc" by real DC scheme name

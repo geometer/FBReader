@@ -98,6 +98,7 @@ public:
 	WritableBookDescription(BookDescription &description);
 	~WritableBookDescription();
 	void addAuthor(const std::string &name, const std::string &sortKey = "");
+	void clearAuthor();
 	const AuthorPtr author() const;
 	std::string &title();
 	std::string &sequenceName();
