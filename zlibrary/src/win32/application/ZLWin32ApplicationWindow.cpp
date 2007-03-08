@@ -116,7 +116,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			myWin32ViewWidget->doPaint();
 			return 0;
 		case WM_CLOSE:
-			if (!myFullScreen && IsMaximized(myMainWindow)) {
+			if (!myFullScreen && !IsMaximized(myMainWindow)) {
 				RECT rectangle;
 				GetWindowRect(myMainWindow, &rectangle);
 				myWidthOption.setValue(rectangle.right - rectangle.left + 1);
