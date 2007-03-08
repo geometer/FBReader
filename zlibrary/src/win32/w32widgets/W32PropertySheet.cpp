@@ -37,11 +37,11 @@ W32DialogPanel &W32PropertySheet::createPanel(const std::string &name) {
 bool W32PropertySheet::run(const std::string &selectedTabName) {
 	PROPSHEETHEADER header;
 	header.dwSize = sizeof(header);
-	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP;
+	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP | PSH_USECALLBACK;
 	header.hInstance = 0;
 	header.hIcon = 0;
 	header.pszCaption = ::wchar(myCaption);
-	header.pfnCallback = 0;
+	header.pfnCallback = PSCallback;
 	header.hwndParent = myMainWindow;
 	header.nPages = myPanels.size();
 	header.nStartPage = 0;
@@ -82,14 +82,22 @@ bool W32PropertySheet::run(const std::string &selectedTabName) {
 	return code == 1;
 }
 
-BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam) {
+int CALLBACK W32PropertySheet::PSCallback(HWND, UINT message, LPARAM lParam) {
+	if (message == PSCB_PRECREATE) {
+		DLGTEMPLATE &dlgTemplate = *(DLGTEMPLATE*)lParam;
+		dlgTemplate.style |= DS_CENTER;
+	}
+	return 0;
+}
+
+BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 		case WM_INITDIALOG:
-			((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hDialog);
+			((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hPage);
 			return true;
 		case WM_COMMAND:
 		{
-			W32DialogPanel *panel = W32DialogPanel::ourPanels[hDialog];
+			W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
 			if (panel != 0) {
 				return panel->commandCallback(wParam);
 			}
@@ -98,7 +106,7 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hDialog, UINT message, WPARA
 		{
 			PSHNOTIFY &notification = *(PSHNOTIFY*)lParam;
 			if ((int)notification.hdr.code == PSN_SETACTIVE) {
-				W32DialogPanel *panel = W32DialogPanel::ourPanels[hDialog];
+				W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
 				if (panel != 0) {
 					panel->fireEvent(W32DialogPanel::PANEL_SELECTED_EVENT);
 					return true;
@@ -108,7 +116,7 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hDialog, UINT message, WPARA
 		}
 		default:
 			if (message == W32DialogPanel::LAYOUT_MESSAGE) {
-				W32DialogPanel *panel = W32DialogPanel::ourPanels[hDialog];
+				W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
 				if (panel != 0) {
 					panel->layout();
 					return true;
