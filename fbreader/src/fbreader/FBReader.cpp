@@ -302,6 +302,7 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 
 		bookTextView.saveState();
 		bookTextView.setModel(0, "");
+		bookTextView.setContentsModel(0);
 		contentsView.saveState();
 		contentsView.setModel(0, "");
 		if (myModel != 0) {
@@ -312,6 +313,7 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		Hyphenator::instance().load(description->language());
 		bookTextView.setModel(myModel->bookTextModel(), description->fileName());
 		bookTextView.setCaption(description->title());
+		bookTextView.setContentsModel(myModel->contentsModel());
 		footnoteView.setModel(0, std::string());
 		footnoteView.setCaption(description->title());
 		contentsView.setModel(myModel->contentsModel(), description->fileName());

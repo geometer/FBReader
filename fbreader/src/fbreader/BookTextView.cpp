@@ -46,7 +46,7 @@ static const char * const BUFFER_WORD_PREFIX = "Word_";
 
 BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) :
 	FBView(reader, context),
-	ShowTOCMarksOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "Indicator", "ShowTOCMarks", true) {
+	ShowTOCMarksOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "Indicator", "ShowTOCMarks", false) {
 	myCurrentPointInStack = 0;
 	myMaxStackSize = 20;
 	myLockUndoStackChanges = false;
