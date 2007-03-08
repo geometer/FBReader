@@ -168,22 +168,6 @@ SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent &
 	}
 }
 
-/*
-void SpinOptionView::_createItem() {
-	ZLSpinOptionEntry *tempo = (ZLSpinOptionEntry*)myOption;
-
-	myLabel = labelWithMyParams(myOption->name().c_str());
-
-	Win32Adjustment *adj = (Win32Adjustment *)gtk_adjustment_new(tempo->initialValue(), tempo->minValue(), tempo->maxValue(), tempo->step(), tempo->step(), 0);
-	mySpinBox = gtk_spin_button_new(adj, 1, 0);
-
-	int midColumn = (myFromColumn + myToColumn) / 2;
-
-	myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
-	myTab->addItem(mySpinBox, myRow, midColumn, myToColumn);
-}
-*/
-
 void SpinOptionView::_onAccept() const {
 	((ZLSpinOptionEntry*)myOption)->onAccept(mySpinBox->value());
 }
