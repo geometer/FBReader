@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <keymap>
 	<binding key="&lt;ZoomKey +&gt;" action="21"/>
 	<binding key="&lt;ZoomKey -&gt;" action="22"/>

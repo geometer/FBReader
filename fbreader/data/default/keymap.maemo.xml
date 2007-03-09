@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <keymap>
 	<binding key="&lt;ScrollKey Left&gt;" action="3"/>
 	<binding key="&lt;ScrollKey Right&gt;" action="4"/>
