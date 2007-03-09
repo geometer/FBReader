@@ -53,6 +53,7 @@ public:
 
 	virtual void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
 	virtual void selectParagraph(size_t index) const;
+	void removeAllMarks();
 
 	TextMark firstMark() const;
 	TextMark lastMark() const;
@@ -110,6 +111,7 @@ private:
 
 inline size_t TextModel::paragraphsNumber() const { return myParagraphs.size(); }
 inline const std::vector<TextMark> &TextModel::marks() const { return myMarks; }
+inline void TextModel::removeAllMarks() { myMarks.clear(); }
 
 inline Paragraph *TextModel::operator[] (size_t index) {
 	return myParagraphs[std::min(myParagraphs.size() - 1, index)];

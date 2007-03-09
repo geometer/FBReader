@@ -225,8 +225,16 @@ bool CollectionView::onStylusPress(int x, int y) {
 			if (!book.isNull()) {
 				const std::string question = "Remove Book\n\"" + book->title() + "\"\nfrom library?";
 				if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
+					collectionModel().removeAllMarks();
 					BookList().removeFileName(book->fileName());
-					collectionModel().removeParagraph(imagePosition->ParagraphNumber);
+					TreeParagraph *paragraph = (TreeParagraph*)collectionModel()[imagePosition->ParagraphNumber];
+					TreeParagraph *parent = paragraph->parent();
+					if (parent->children().size() == 1) {
+						collectionModel().removeParagraph(imagePosition->ParagraphNumber);
+						collectionModel().removeParagraph(imagePosition->ParagraphNumber - 1);
+					} else {
+						collectionModel().removeParagraph(imagePosition->ParagraphNumber);
+					}
 					rebuildPaintInfo(true);
 					repaintView();
 				}
