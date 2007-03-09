@@ -292,16 +292,6 @@ void W32AbstractEditor::init(HWND parent, W32ControlCollection *collection) {
 	W32StandardControl::init(parent, collection);
 }
 
-static void getEditorString(HWND editor, ZLUnicodeUtil::Ucs2String &buffer) {
-	const int length = SendMessage(editor, EM_LINELENGTH, 0, 0);
-	buffer.clear();
-	buffer.insert(buffer.end(), length + 1, 0);
-	if (length > 0) {
-		buffer[0] = length + 1;
-		SendMessage(editor, EM_GETLINE, 0, (LPARAM)&buffer.front());
-	}
-}
-
 static std::string getTextFromBuffer(const ZLUnicodeUtil::Ucs2String &buffer) {
 	ZLUnicodeUtil::Ucs2String copy = buffer;
 	copy.pop_back();
@@ -318,7 +308,13 @@ W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUT
 
 void W32LineEditor::commandCallback(DWORD hiWParam) {
 	if ((hiWParam == EN_CHANGE) && !myBlocked) {
-		getEditorString(myWindow, myBuffer);
+		const int length = SendMessage(myWindow, EM_LINELENGTH, 0, 0);
+		myBuffer.clear();
+		myBuffer.insert(myBuffer.end(), length + 1, 0);
+		if (length > 0) {
+			myBuffer[0] = length + 1;
+			SendMessage(myWindow, EM_GETLINE, 0, (LPARAM)&myBuffer.front());
+		}
 		fireEvent(VALUE_EDITED_EVENT);
 	}
 }
@@ -448,7 +444,7 @@ unsigned short W32SpinBox::value() const {
 const std::string W32ComboBox::SELECTION_CHANGED_EVENT = "ComboBox: selection changed";
 const std::string W32ComboBox::VALUE_EDITED_EVENT = "ComboBox: value edited";
 
-W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32StandardControl(CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex), myEditorWindow(0) {
+W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32StandardControl(CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex) {
 	::createNTWCHARString(myBuffer, list[initialIndex]);
 }
 
@@ -486,15 +482,6 @@ void W32ComboBox::setEditable(bool editable) {
 	}
 }
 
-HWND W32ComboBox::editorWindow() {
-	if (myEditorWindow == 0) {
-		COMBOBOXINFO info;
-		GetComboBoxInfo(myWindow, &info);
-		myEditorWindow = info.hwndItem;
-	}
-	return myEditorWindow;
-}
-
 void W32ComboBox::commandCallback(DWORD hiWParam) {
 	if (hiWParam == CBN_SELCHANGE) {
 		const int index = SendMessage(myWindow, CB_GETCURSEL, 0, 0);
@@ -506,7 +493,12 @@ void W32ComboBox::commandCallback(DWORD hiWParam) {
 		}
 		fireEvent(SELECTION_CHANGED_EVENT);
 	} else if (hiWParam == CBN_EDITCHANGE) {
-		getEditorString(editorWindow(), myBuffer);
+		const int length = SendMessage(myWindow, WM_GETTEXTLENGTH, 0, 0);
+		myBuffer.clear();
+		myBuffer.insert(myBuffer.end(), length + 1, 0);
+		if (length > 0) {
+			SendMessage(myWindow, WM_GETTEXT, length + 1, (LPARAM)&myBuffer.front());
+		}
 		fireEvent(VALUE_EDITED_EVENT);
 	}
 }

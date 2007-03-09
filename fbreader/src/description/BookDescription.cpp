@@ -82,13 +82,13 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 
 	if (!checkFile || BookDescriptionUtil::checkInfo(file)) {
 		BookInfo info(fileName);
+		description->myAuthor = SingleAuthor::create(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
+		description->myTitle = info.TitleOption.value();
+		description->mySequenceName = info.SequenceNameOption.value();
+		description->myNumberInSequence = info.NumberInSequenceOption.value();
+		description->myLanguage = info.LanguageOption.value();
+		description->myEncoding = info.EncodingOption.value();
 		if (info.isFull()) {
-			description->myAuthor = SingleAuthor::create(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
-			description->myTitle = info.TitleOption.value();
-			description->mySequenceName = info.SequenceNameOption.value();
-			description->myNumberInSequence = info.NumberInSequenceOption.value();
-			description->myLanguage = info.LanguageOption.value();
-			description->myEncoding = info.EncodingOption.value();
 			return description;
 		}
 	} else {

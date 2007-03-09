@@ -141,11 +141,16 @@ void BookCollection::synchronize() const {
 			}
 		}
 	} else {
+		BookList bookList;
+		const std::set<std::string> &bookListSet = bookList.fileNames();
 		std::vector<std::string> fileNames;
 		for (std::map<AuthorPtr,Books>::const_iterator it = myCollection.begin(); it != myCollection.end(); ++it) {
 			const Books &books = it->second;
 			for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
-				fileNames.push_back((*jt)->fileName());
+				if ((myExternalBooks.find(*jt) == myExternalBooks.end()) || 
+						(bookListSet.find((*jt)->fileName()) != bookListSet.end())) {
+					fileNames.push_back((*jt)->fileName());
+				}
 			}
 		}
 		myCollection.clear();

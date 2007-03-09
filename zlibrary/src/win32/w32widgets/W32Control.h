@@ -239,14 +239,10 @@ public:
 	void setSelection(int index);
 
 private:
-	HWND editorWindow();
-
-private:
 	std::vector<std::string> myList;
 	int myIndex;
 
 	ZLUnicodeUtil::Ucs2String myBuffer;
-	HWND myEditorWindow;
 };
 
 class W32RadioButtonGroup;
