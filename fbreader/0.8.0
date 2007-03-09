@@ -1,7 +1,5 @@
 *** 0.8.0
 
-проценты на индикаторе
-
 maemo: single-click installation
 desktop: зависимости в пакетах для etch
 
@@ -37,6 +35,7 @@ selection dialog
 
 *** после 0.8.0
 
+проценты на индикаторе
 часы на индикаторе
 desktop-qt: set application icon
 более удачный вызов внешнего браузера
