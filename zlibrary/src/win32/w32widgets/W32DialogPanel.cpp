@@ -51,8 +51,6 @@ W32DialogPanel::~W32DialogPanel() {
 	}
 }
 
-#include <iostream>
-
 void W32DialogPanel::init(HWND dialogWindow) {
 	myPanelWindow = dialogWindow;
 	ShowScrollBar(myPanelWindow, SB_BOTH, false);

@@ -90,8 +90,6 @@ int CALLBACK W32PropertySheet::PSCallback(HWND, UINT message, LPARAM lParam) {
 	return 0;
 }
 
-#include <iostream>
-
 BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 		case WM_INITDIALOG:
