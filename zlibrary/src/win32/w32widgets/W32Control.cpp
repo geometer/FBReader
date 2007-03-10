@@ -197,7 +197,9 @@ W32Widget::Size W32Label::minimumSize() const {
 }
 
 void W32Label::setPosition(int x, int y, Size size) {
+	::setWindowText(myWindow, "");
 	W32StandardControl::setPosition(x, y + 2, Size(size.Width, size.Height - 2));
+	::setWindowText(myWindow, myText);
 }
 
 WORD W32Label::classId() const {

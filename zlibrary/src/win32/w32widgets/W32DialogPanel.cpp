@@ -36,7 +36,7 @@ static void allocateString(WORD *&p, const std::string &text) {
 	p += ucs2Str.size();
 }
 
-W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myMainWindow(mainWindow), myCaption(caption), myAddress(0), myDialogWindow(0) {
+W32DialogPanel::W32DialogPanel(HWND mainWindow, const std::string &caption) : W32ControlCollection(FirstControlId), myMainWindow(mainWindow), myCaption(caption), myAddress(0), myPanelWindow(0) {
 	if (LAYOUT_MESSAGE == 0) {
 		LAYOUT_MESSAGE = RegisterWindowMessageA("layout");
 	}
@@ -46,15 +46,17 @@ W32DialogPanel::~W32DialogPanel() {
 	if (myAddress != 0) {
 		delete[] myAddress;
 	}
-	if (myDialogWindow != 0) {
-		ourPanels.erase(myDialogWindow);
+	if (myPanelWindow != 0) {
+		ourPanels.erase(myPanelWindow);
 	}
 }
 
+#include <iostream>
+
 void W32DialogPanel::init(HWND dialogWindow) {
-	myDialogWindow = dialogWindow;
-	ShowScrollBar(myDialogWindow, SB_BOTH, false);
-	ourPanels[myDialogWindow] = this;	
+	myPanelWindow = dialogWindow;
+	ShowScrollBar(myPanelWindow, SB_BOTH, false);
+	ourPanels[myPanelWindow] = this;	
 	myElement->init(dialogWindow, this);
 }
 
@@ -69,6 +71,7 @@ W32Widget::Size W32DialogPanel::size() const {
 
 void W32DialogPanel::setSize(W32Widget::Size size) {
 	mySize = size;
+	myRealSize = size;
 }
 
 void W32DialogPanel::updateElementSize() {
@@ -141,43 +144,71 @@ bool W32DialogPanel::notificationCallback(WPARAM wParam, LPARAM lParam) {
 }
 
 void W32DialogPanel::invalidate() {
-	if (myDialogWindow != 0) {
-		PostMessage(myDialogWindow, LAYOUT_MESSAGE, 0, 0);
+	if (myPanelWindow != 0) {
+		PostMessage(myPanelWindow, LAYOUT_MESSAGE, 0, 0);
 		myDoLayout = true;
 	}
 }
 
 void W32DialogPanel::layout() {
 	if (myDoLayout) {
-		const short oldWidth = mySize.Width;
 		calculateSize();
-		mySize.Width = std::max(mySize.Width, oldWidth);
-		/*
-		if (myDialogWindow != 0) {
-			RECT panelRectangle;
-			panelRectangle.left = 0;
-			panelRectangle.top = 0;
-			panelRectangle.right = mySize.Width;
-			panelRectangle.bottom = mySize.Height;
-			MapDialogRect(myDialogWindow, &panelRectangle);
-			RECT windowRectangle;
-			GetClientRect(myDialogWindow, &windowRectangle);
-			const bool oversized =
-				(windowRectangle.right + 1 < panelRectangle.right) ||
-				(windowRectangle.bottom + 1 < panelRectangle.bottom);
-			ShowScrollBar(myDialogWindow, SB_BOTH, oversized);
-			if (oversized) {
+		if (myRealSize.Width != 0) {
+			mySize.Width = std::max(mySize.Width, myRealSize.Width);
+		}
+		if (myPanelWindow != 0) {
+			RECT rectangle;
+			rectangle.left = 0;
+			rectangle.top = 0;
+			rectangle.right = mySize.Width;
+			rectangle.bottom = mySize.Height;
+			MapDialogRect(myPanelWindow, &rectangle);
+			RECT realRectangle;
+			GetClientRect(myPanelWindow, &realRectangle);
+			bool hOversized = rectangle.right > realRectangle.right + 1;
+			bool vOversized = rectangle.bottom > realRectangle.bottom + 1;
+			int rightBound = realRectangle.right;
+			int bottomBound = realRectangle.bottom;
+			if (hOversized || vOversized) {
+				if (!hOversized || !vOversized) {
+					SCROLLBARINFO info;
+					info.cbSize = sizeof(info);
+					if (hOversized) {
+						GetScrollBarInfo(myPanelWindow, OBJID_HSCROLL, &info);
+						vOversized = rectangle.bottom >= info.rcScrollBar.top;
+						if (vOversized) {
+							bottomBound = info.rcScrollBar.top - 1;
+						}
+					} else {
+						GetScrollBarInfo(myPanelWindow, OBJID_VSCROLL, &info);
+						hOversized = rectangle.right >= info.rcScrollBar.left;
+						if (hOversized) {
+							rightBound = info.rcScrollBar.left - 1;
+						}
+					}
+				}
+			}
+			ShowScrollBar(myPanelWindow, SB_HORZ, hOversized);
+			if (hOversized) {
 				SCROLLINFO info;
 				info.cbSize = sizeof(info);
-				info.fMask = SIF_RANGE;
+				info.fMask = SIF_RANGE | SIF_PAGE;
 				info.nMin = 0;
-				info.nMax = panelRectangle.right;
-				SetScrollInfo(myDialogWindow, SB_HORZ, &info, false);
-				info.nMax = panelRectangle.bottom;
-				SetScrollInfo(myDialogWindow, SB_VERT, &info, true);
+				info.nMax = rectangle.right - rightBound;
+				info.nPage = 1;
+				SetScrollInfo(myPanelWindow, SB_HORZ, &info, true);
+			}
+			ShowScrollBar(myPanelWindow, SB_VERT, vOversized);
+			if (hOversized) {
+				SCROLLINFO info;
+				info.cbSize = sizeof(info);
+				info.fMask = SIF_RANGE | SIF_PAGE;
+				info.nMin = 0;
+				info.nMax = rectangle.bottom - bottomBound;
+				info.nPage = 1;
+				SetScrollInfo(myPanelWindow, SB_VERT, &info, true);
 			}
 		}
-		*/
 		updateElementSize();
 		myDoLayout = false;
 	}
@@ -185,4 +216,74 @@ void W32DialogPanel::layout() {
 
 const std::string &W32DialogPanel::caption() const {
 	return myCaption;
+}
+
+void W32DialogPanel::hScroll(WORD command) {
+	SCROLLINFO info;
+	info.cbSize = sizeof(info);
+	info.fMask = SIF_ALL;
+	GetScrollInfo(myPanelWindow, SB_HORZ, &info);
+	int position = info.nPos;
+	switch (command) {
+		case SB_LINELEFT:
+			info.nPos -= 1;
+			break;
+		case SB_LINERIGHT:
+			info.nPos += 1;
+			break;
+		case SB_PAGELEFT:
+			info.nPos -= info.nPage;
+			break;
+		case SB_PAGERIGHT:
+			info.nPos += info.nPage;
+			break;
+		case SB_THUMBTRACK:
+			info.nPos = info.nTrackPos;
+			break;
+	}
+	info.fMask = SIF_POS;
+	SetScrollInfo(myPanelWindow, SB_HORZ, &info, true);
+	GetScrollInfo(myPanelWindow, SB_HORZ, &info);
+	if (info.nPos != position) {
+		ScrollWindow(myPanelWindow, position - info.nPos, 0, 0, 0);
+		UpdateWindow(myPanelWindow);
+	}
+}
+
+void W32DialogPanel::vScroll(WORD command) {
+	SCROLLINFO info;
+	info.cbSize = sizeof(info);
+	info.fMask = SIF_ALL;
+	GetScrollInfo(myPanelWindow, SB_HORZ, &info);
+	int position = info.nPos;
+	switch (command) {
+		case SB_TOP:
+			info.nPos = info.nMin;
+			break;
+		case SB_BOTTOM:
+			info.nPos = info.nMax;
+			break;
+		case SB_LINEUP:
+			info.nPos -= 1;
+			break;
+		case SB_LINEDOWN:
+			info.nPos += 1;
+			break;
+		case SB_PAGEUP:
+			info.nPos -= info.nPage;
+			break;
+		case SB_PAGEDOWN:
+			info.nPos += info.nPage;
+			break;
+		case SB_THUMBTRACK:
+			info.nPos = info.nTrackPos;
+			break;
+	}
+	info.fMask = SIF_POS;
+	SetScrollInfo(myPanelWindow, SB_VERT, &info, true);
+	GetScrollInfo(myPanelWindow, SB_VERT, &info);
+	if (info.nPos != position) {
+		ScrollWindow(myPanelWindow, 0, position - info.nPos, 0, 0);
+		UpdateWindow(myPanelWindow);
+	}
 }

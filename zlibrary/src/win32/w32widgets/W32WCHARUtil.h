@@ -36,8 +36,10 @@ inline const ZLUnicodeUtil::Ucs2String &createNTWCHARString(ZLUnicodeUtil::Ucs2S
 }
 
 inline void setWindowText(HWND window, const std::string &text) {
-	ZLUnicodeUtil::Ucs2String str;
-	SetWindowTextW(window, ::wchar(::createNTWCHARString(str, text)));
+	if (window != 0) {
+		ZLUnicodeUtil::Ucs2String str;
+		SetWindowTextW(window, ::wchar(::createNTWCHARString(str, text)));
+	}
 }
 
 #endif /* __W32WCHARUTIL_H__ */

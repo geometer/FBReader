@@ -36,8 +36,8 @@ DWORD W32StandaloneDialogPanel::style() const {
 }
 
 void W32StandaloneDialogPanel::endDialog(bool code) {
-	if (myDialogWindow != 0) {
-		EndDialog(myDialogWindow, code);
+	if (myPanelWindow != 0) {
+		EndDialog(myPanelWindow, code);
 	}
 }
 

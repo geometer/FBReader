@@ -90,6 +90,8 @@ int CALLBACK W32PropertySheet::PSCallback(HWND, UINT message, LPARAM lParam) {
 	return 0;
 }
 
+#include <iostream>
+
 BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
 		case WM_INITDIALOG:
@@ -113,6 +115,22 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM 
 				}
 			}
 			break;
+		}
+		case WM_HSCROLL:
+		{
+			W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
+			if (panel != 0) {
+				panel->hScroll(LOWORD(wParam));
+			}
+			return true;
+		}
+		case WM_VSCROLL:
+		{
+			W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
+			if (panel != 0) {
+				panel->vScroll(LOWORD(wParam));
+			}
+			return true;
 		}
 		default:
 			if (message == W32DialogPanel::LAYOUT_MESSAGE) {

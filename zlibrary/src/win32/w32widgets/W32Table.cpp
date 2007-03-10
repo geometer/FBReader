@@ -67,12 +67,22 @@ int W32Table::allocationSize() const {
 }
 
 void W32Table::setVisible(bool visible) {
-	// TODO: implement
+	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		for (RowList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+			jt->Widget->setVisible(visible);
+		}
+	}
 }
 
 bool W32Table::isVisible() const {
-	// TODO: implement
-	return true;
+	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		for (RowList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+			if (jt->Widget->isVisible()) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 int W32Table::controlNumber() const {
@@ -93,15 +103,37 @@ void W32Table::calculateSizes(std::vector<short> &widths, std::vector<short> &he
 				if (jt->Widget->isVisible()) {
 					Size elementSize = jt->Widget->minimumSize();
 					currentHeight = std::max(currentHeight, elementSize.Height);
-					size_t column = jt->XFrom;
-					if (column >= widths.size()) {
-						widths.insert(widths.end(), column - widths.size() + 1, 0);
+					if (jt->XTo >= widths.size()) {
+						widths.insert(widths.end(), jt->XTo - widths.size() + 1, 0);
 					}
-					widths[column] = std::max(widths[column], elementSize.Width); 
+					if (jt->XFrom == jt->XTo) {
+						widths[jt->XTo] = std::max(widths[jt->XTo], elementSize.Width); 
+					}
 				}
 			}
 		}
 		heights.push_back(currentHeight);
+	}
+	for (std::vector<RowList>::const_iterator it = myRows.begin(); it != myRows.end(); ++it) {
+		if (!it->empty()) {
+			for (RowList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
+				if ((jt->Widget->isVisible()) && (jt->XFrom < jt->XTo)) {
+					short spanSize = myHorizontalSpacing * (jt->XTo - jt->XFrom - 1);
+					for (int i = jt->XFrom; i <= jt->XTo; ++i) {
+						spanSize += widths[i];
+					}
+					Size elementSize = jt->Widget->minimumSize();
+					if (spanSize < elementSize.Width) {
+						short delta = elementSize.Width - spanSize;
+						for (int i = jt->XFrom; i <= jt->XTo; ++i) {
+							short d = delta / (jt->XTo - i + 1);
+							delta -= d;
+							widths[i] += d;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -137,7 +169,7 @@ W32Widget::Size W32Table::minimumSize() const {
 }
 
 void W32Table::setPosition(int x, int y, Size size) {
-	std::vector<short> widths, heights, lefts;
+	std::vector<short> widths, heights, lefts, rights;
 	calculateSizes(widths, heights);
 
 	Size minSize(leftMargin() + rightMargin(), topMargin() + bottomMargin());
@@ -176,12 +208,15 @@ void W32Table::setPosition(int x, int y, Size size) {
 		}
 	}
 	lefts.reserve(widths.size());
-	short current = leftMargin();
+	rights.reserve(widths.size());
+	short current = x + leftMargin();
 	for (std::vector<short>::iterator it = widths.begin(); it != widths.end(); ++it) {
 		lefts.push_back(current);
 		if (*it > 0) {
-			current += *it + myHorizontalSpacing;
+			current += *it;
 		}
+		rights.push_back(current);
+		current += myHorizontalSpacing;
 	}
 
 	int ey = y + topMargin();
@@ -190,7 +225,7 @@ void W32Table::setPosition(int x, int y, Size size) {
 		if (h > 0) {
 			for (RowList::const_iterator jt = it->begin(); jt != it->end(); ++jt) {
 				if (jt->Widget->isVisible()) {
-					jt->Widget->setPosition(lefts[jt->XFrom], ey, Size(widths[jt->XFrom], h));
+					jt->Widget->setPosition(lefts[jt->XFrom], ey, Size(rights[jt->XTo] - lefts[jt->XFrom], h));
 				}
 			}
 			ey += h + myVerticalSpacing;

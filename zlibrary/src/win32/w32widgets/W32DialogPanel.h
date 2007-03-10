@@ -64,6 +64,9 @@ private:
 
 	virtual DWORD style() const;
 
+	void hScroll(WORD command);
+	void vScroll(WORD command);
+
 protected:
 	W32Widget::Size minimumSize() { return myMinimumSize; }
 
@@ -71,12 +74,13 @@ private:
 	HWND myMainWindow;
 	W32Widget::Size myMinimumSize;
 	W32Widget::Size mySize;
+	W32Widget::Size myRealSize;
 	std::string myCaption;
 
 	W32WidgetPtr myElement;
 
 	mutable WORD *myAddress;
-	HWND myDialogWindow;
+	HWND myPanelWindow;
 	bool myDoLayout;
 
 friend class W32StandaloneDialogPanel;
