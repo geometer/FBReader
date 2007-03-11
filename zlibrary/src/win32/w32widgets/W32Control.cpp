@@ -121,7 +121,7 @@ void W32Control::setPosition(int x, int y, Size size) {
 		r.right = x + size.Width;
 		r.bottom = y + size.Height;
 		MapDialogRect(GetParent(myWindow), &r);
-		SetWindowPos(myWindow, 0, r.left, r.top, r.right - r.left, r.bottom - r.top, 0);
+		SetWindowPos(myWindow, 0, r.left, r.top, r.right - r.left, r.bottom - r.top, SWP_NOZORDER | SWP_NOOWNERZORDER);
 	}
 }
 

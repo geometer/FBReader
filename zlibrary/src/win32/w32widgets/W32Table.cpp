@@ -103,7 +103,7 @@ void W32Table::calculateSizes(std::vector<short> &widths, std::vector<short> &he
 				if (jt->Widget->isVisible()) {
 					Size elementSize = jt->Widget->minimumSize();
 					currentHeight = std::max(currentHeight, elementSize.Height);
-					if (jt->XTo >= widths.size()) {
+					if (jt->XTo >= (short)widths.size()) {
 						widths.insert(widths.end(), jt->XTo - widths.size() + 1, 0);
 					}
 					if (jt->XFrom == jt->XTo) {
@@ -141,23 +141,17 @@ W32Widget::Size W32Table::minimumSize() const {
 	std::vector<short> widths, heights;
 	calculateSizes(widths, heights);
 
-	Size size(leftMargin() + rightMargin(), topMargin() + bottomMargin());
-
-	int wCount = 0;
+	Size size(
+		leftMargin() + rightMargin() + myHorizontalSpacing * (widths.size() - 1),
+		topMargin() + bottomMargin()
+	);
 	for (std::vector<short>::const_iterator it = widths.begin(); it != widths.end(); ++it) {
 		size.Width += *it;
-		if (*it != 0) {
-			++wCount;
-		}
 	}
-	if (wCount > 1) {
-		size.Width += myHorizontalSpacing * (wCount - 1);
-	}
-
 	int hCount = 0;
 	for (std::vector<short>::const_iterator it = heights.begin(); it != heights.end(); ++it) {
-		size.Height += *it;
-		if (*it != 0) {
+		if (*it > 0) {
+			size.Height += *it;
 			++hCount;
 		}
 	}
@@ -172,51 +166,57 @@ void W32Table::setPosition(int x, int y, Size size) {
 	std::vector<short> widths, heights, lefts, rights;
 	calculateSizes(widths, heights);
 
-	Size minSize(leftMargin() + rightMargin(), topMargin() + bottomMargin());
-	int wCount = 0;
-	for (std::vector<short>::const_iterator it = widths.begin(); it != widths.end(); ++it) {
-		minSize.Width += *it;
-		if (*it != 0) {
-			++wCount;
-		}
-	}
-	int hCount = 0;
-	for (std::vector<short>::const_iterator it = heights.begin(); it != heights.end(); ++it) {
-		minSize.Height += *it;
-		if (*it != 0) {
-			++hCount;
-		}
-	}
-
-	if ((wCount == 0) || (hCount == 0)) {
+	if ((widths.size() == 0) || (heights.size() == 0)) {
 		return;
 	}
 
-	minSize.Width += myHorizontalSpacing * (wCount - 1);
+	Size minSize(
+		leftMargin() + rightMargin() + myHorizontalSpacing * (widths.size() - 1),
+		topMargin() + bottomMargin()
+	);
+	for (std::vector<short>::const_iterator it = widths.begin(); it != widths.end(); ++it) {
+		minSize.Width += *it;
+	}
+	int hCount = 0;
+	for (std::vector<short>::const_iterator it = heights.begin(); it != heights.end(); ++it) {
+		if (*it > 0) {
+			minSize.Height += *it;
+			++hCount;
+		}
+	}
+	if (hCount == 0) {
+		return;
+	}
 	minSize.Height += myVerticalSpacing * (hCount - 1);
 
-	const short deltaW = (size.Width - minSize.Width) / wCount;
-	for (std::vector<short>::iterator it = widths.begin(); it != widths.end(); ++it) {
-		if (*it != 0) {
-			*it += deltaW;
+	{
+		short delta = size.Width - minSize.Width;
+		int len = widths.size();
+		lefts.reserve(len);
+		rights.reserve(len);
+		short currentX = x + leftMargin();
+		for (int i = 0; i < len; ++i) {
+			short d = delta / (len - i);
+			widths[i] += d;
+			delta -= d;
+			lefts.push_back(currentX);
+			currentX += widths[i];
+			rights.push_back(currentX);
+			currentX += myHorizontalSpacing;
 		}
 	}
-	const short deltaH = (size.Height - minSize.Height) / hCount;
-	for (std::vector<short>::iterator it = heights.begin(); it != heights.end(); ++it) {
-		if (*it != 0) {
-			*it += deltaH;
+
+	{
+		short delta = size.Height - minSize.Height;
+		int len = hCount;
+		for (std::vector<short>::iterator it = heights.begin(); len > 0; ++it) {
+			if (*it > 0) {
+				short d = delta / len;
+				*it += d;
+				delta -= d;
+				--len;
+			}
 		}
-	}
-	lefts.reserve(widths.size());
-	rights.reserve(widths.size());
-	short current = x + leftMargin();
-	for (std::vector<short>::iterator it = widths.begin(); it != widths.end(); ++it) {
-		lefts.push_back(current);
-		if (*it > 0) {
-			current += *it;
-		}
-		rights.push_back(current);
-		current += myHorizontalSpacing;
 	}
 
 	int ey = y + topMargin();
