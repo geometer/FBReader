@@ -193,7 +193,7 @@ W32Label::W32Label(const std::string &text, Alignment alignment) : W32StandardCo
 }
 
 W32Widget::Size W32Label::minimumSize() const {
-	return Size(4 * (myMaxLength + 1), 12 * myStringCounter);
+	return Size(4 * myMaxLength, 12 * myStringCounter);
 }
 
 void W32Label::setPosition(int x, int y, Size size) {
@@ -451,11 +451,11 @@ W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex)
 }
 
 W32Widget::Size W32ComboBox::minimumSize() const {
-	int len = 0;
+	int len = ((myStyle & CBS_SIMPLE) == CBS_SIMPLE) ? 0 : 10;
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 		len = std::max(ZLUnicodeUtil::utf8Length(*it), len);
 	}
-	return Size(4 * std::min(len + 1, 28), 12);
+	return Size(4 * std::min(len, 25), 12);
 }
 
 WORD W32ComboBox::classId() const {
