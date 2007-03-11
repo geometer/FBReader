@@ -455,7 +455,7 @@ W32Widget::Size W32ComboBox::minimumSize() const {
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 		len = std::max(ZLUnicodeUtil::utf8Length(*it), len);
 	}
-	return Size(4 * std::min(len + 3, 28), 12);
+	return Size(4 * std::min(len + 1, 28), 12);
 }
 
 WORD W32ComboBox::classId() const {
