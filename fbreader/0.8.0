@@ -24,7 +24,6 @@ selection dialog
 	разобраться со скоростью перехода в другой каталог
 удалить все #include <iostream>
 избавиться от явных упоминаний '/' и "/"
-центрировать Options/Book Info dialogs (Windows XP)
 
 ==============================================================================
 
@@ -107,6 +106,7 @@ mobipocket: где начинаются картинки?
 
 *** win32 version (после 0.8.0)
 
+центрировать Options/Book Info dialogs (Windows XP)
 W32ColorComboBox::removeCustomColor()
 переименовать XMLConfig->RegistryConfig
 таймер
