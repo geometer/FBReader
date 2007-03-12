@@ -51,9 +51,6 @@ protected:
 	void _hide();
 
 private:
-	//void onEvent(const std::string &event, W32EventSender &sender);
-
-private:
 	W32RadioButtonGroup *myButtonGroup;
 };
 
