@@ -346,6 +346,7 @@ void ColorOptionView::_onAccept() const {
 
 KeyOptionView::KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	myVBox = new W32VBox();
+	myVBox->setSpacing(4);
 	myHBox = new W32HBox();
 	myHBox->setSpacing(8);
 	myHBox->setHomogeneous(true);
