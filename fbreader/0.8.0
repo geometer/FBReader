@@ -30,6 +30,8 @@ selection dialog
 
 *** после 0.8.0
 
+linux desktop: win32-like color selection control
+desktop: apply button in options dialog
 проценты на индикаторе
 часы на индикаторе
 desktop-qt: set application icon
