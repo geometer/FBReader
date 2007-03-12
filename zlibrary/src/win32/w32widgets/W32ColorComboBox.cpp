@@ -113,7 +113,7 @@ void W32ColorComboBox::commandCallback(DWORD hiWParam) {
 void W32ColorComboBox::drawItemCallback(DRAWITEMSTRUCT &di) {
 	RECT rectangle;
 	const int height = myPixelHeight - 4;
-	rectangle.top = di.rcItem.top + 2;
+	rectangle.top = di.rcItem.top + 1;
 	rectangle.bottom = di.rcItem.bottom - 2;
 	rectangle.left = di.rcItem.left + 2;
 	rectangle.right = rectangle.left + 3 * (myPixelHeight - 4) / 2;
