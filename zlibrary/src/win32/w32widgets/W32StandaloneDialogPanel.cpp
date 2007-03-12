@@ -85,6 +85,11 @@ BOOL CALLBACK W32StandaloneDialogPanel::StaticCallback(HWND hDialog, UINT messag
 			panel->updateElementSize();
 		}
 		return false;
+	} else if (message == WM_DRAWITEM) {
+		W32DialogPanel *panel = ourPanels[hDialog];
+		if (panel != 0) {
+			return panel->drawItemCallback(wParam, *(DRAWITEMSTRUCT*)lParam);
+		}
 	} else if (message == LAYOUT_MESSAGE) {
 		W32DialogPanel *panel = ourPanels[hDialog];
 		if (panel != 0) {

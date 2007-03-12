@@ -9,8 +9,6 @@ desktop: зависимости в пакетах для etch
 
 *** win32 version (0.8.0)
 
-диалоги
-	ColorOptionView
 рисунки в тексте
 	gif
 	jpeg
@@ -107,6 +105,7 @@ mobipocket: где начинаются картинки?
 
 *** win32 version (после 0.8.0)
 
+W32ColorComboBox::removeCustomColor()
 переименовать XMLConfig->RegistryConfig
 таймер
 заменить явные размеры иконок на вычисляемые

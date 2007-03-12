@@ -47,7 +47,7 @@ void ZLWin32OptionsDialog::selectTab(const std::string &name) {
 	mySelectedTabName = name;
 }
 
-void ZLWin32OptionsDialog::onEvent(const std::string &event, W32EventSender &sender) {
+void ZLWin32OptionsDialog::onEvent(const std::string&, W32EventSender &sender) {
 	mySelectedTabName = ((W32DialogPanel&)sender).caption();
 }
 

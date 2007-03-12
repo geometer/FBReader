@@ -37,11 +37,11 @@ W32DialogPanel &W32PropertySheet::createPanel(const std::string &name) {
 bool W32PropertySheet::run(const std::string &selectedTabName) {
 	PROPSHEETHEADER header;
 	header.dwSize = sizeof(header);
-	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP | PSH_USECALLBACK;
+	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP; // | PSH_USECALLBACK;
 	header.hInstance = 0;
 	header.hIcon = 0;
 	header.pszCaption = ::wchar(myCaption);
-	header.pfnCallback = PSCallback;
+	header.pfnCallback = 0;// PSCallback;
 	header.hwndParent = myMainWindow;
 	header.nPages = myPanels.size();
 	header.nStartPage = 0;
@@ -82,6 +82,7 @@ bool W32PropertySheet::run(const std::string &selectedTabName) {
 	return code == 1;
 }
 
+/*
 int CALLBACK W32PropertySheet::PSCallback(HWND, UINT message, LPARAM lParam) {
 	if (message == PSCB_PRECREATE) {
 		DLGTEMPLATE &dlgTemplate = *(DLGTEMPLATE*)lParam;
@@ -89,6 +90,7 @@ int CALLBACK W32PropertySheet::PSCallback(HWND, UINT message, LPARAM lParam) {
 	}
 	return 0;
 }
+*/
 
 BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
@@ -130,6 +132,12 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM 
 			}
 			return true;
 		}
+		case WM_DRAWITEM:
+			W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
+			if (panel != 0) {
+				return panel->drawItemCallback(wParam, *(DRAWITEMSTRUCT*)lParam);
+			}
+			return false;
 		default:
 			if (message == W32DialogPanel::LAYOUT_MESSAGE) {
 				W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];

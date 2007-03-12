@@ -92,9 +92,9 @@ private:
 
 inline bool operator == (const ZLColor &color, const COLORREF &colorref) {
 	return
-		(color.Red == (unsigned char)colorref) &&
-		(color.Green == (unsigned char)(colorref >> 8)) &&
-		(color.Blue == (unsigned char)(colorref >> 16));
+		(color.Red == GetRValue(colorref)) &&
+		(color.Green == GetGValue(colorref)) &&
+		(color.Blue == GetBValue(colorref));
 }
 
 inline bool operator != (const ZLColor &color, const COLORREF &colorref) {

@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <ZLOptions.h>
+#include <ZLStringUtil.h>
+
 #include "ZLWin32OptionView.h"
 #include "ZLWin32DialogContent.h"
 #include "ZLWin32DialogManager.h"
@@ -235,114 +238,85 @@ void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept(myLineEditor->text());
 }
 
-/*
-void ColorOptionView::_createItem() {
-	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
-
-	myDrawingArea = gtk_drawing_area_new();
-
-	gtk_widget_set_size_request(GTK_WIDGET(myDrawingArea), 60, 20);
-	myWidget = gtk_table_new(3, 4, false);
-
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(""), 0, 3, 0, 1, (Win32AttachOptions)(GTK_FILL|GTK_SHRINK), (Win32AttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 1, 2, (Win32AttachOptions)(GTK_FILL|GTK_SHRINK), (Win32AttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 2, 3, (Win32AttachOptions)(GTK_FILL|GTK_SHRINK), (Win32AttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 3, 4, (Win32AttachOptions)(GTK_FILL|GTK_SHRINK), (Win32AttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-
-	myRSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myRSlider), false);
-	gtk_range_set_value(GTK_RANGE(myRSlider), color.Red);
-	g_signal_connect(G_OBJECT(myRSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
-
-	myGSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myGSlider), false);
-	gtk_range_set_value(GTK_RANGE(myGSlider), color.Green);
-	g_signal_connect(G_OBJECT(myGSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
-
-	myBSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myBSlider), false);
-	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
-	g_signal_connect(G_OBJECT(myBSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
-
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myRSlider, 1, 2, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myGSlider, 1, 2, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myBSlider, 1, 2, 3, 4);
-
-	myColor.red = color.Red * 65535 / 255;
-	myColor.blue = color.Blue * 65535 / 255;
-	myColor.green = color.Green * 65535 / 255;
-
-	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
-
-	Win32Widget *frame = gtk_frame_new(NULL);
-
-	gtk_container_add(GTK_CONTAINER(frame), myDrawingArea);
-
-	gtk_table_attach(GTK_TABLE(myWidget), frame, 2, 3, 1, 4, (Win32AttachOptions)(GTK_FILL|GTK_SHRINK), (Win32AttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-
-	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 2);
-	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 2);
-
-	gtk_widget_show_all(myWidget);
-
-	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+ColorOptionView::ColorOptionView(ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+	myStandardColorComboBox = new W32ColorComboBox(option->color());
+	myStandardColorComboBox->addListener(this);
+	myCustomColorButton = new W32PushButton("Custom...");
+	myCustomColorButton->addListener(this);
+	int mid = (from + to) / 2 + 1;
+	tab.insertWidget(myStandardColorComboBox, from, mid);
+	tab.insertWidget(myCustomColorButton, mid + 1, to);
 }
 
-void ColorOptionView::reset() {
-	if (myDrawingArea == 0) {
-		return;
+void ColorOptionView::onEvent(const std::string &event, W32EventSender&) {
+	static std::string OPTION_PREFIX = "Color";
+	static std::string COLOR_GROUP_NAME = "ColorDialog";
+	if (event == W32PushButton::RELEASED_EVENT) {
+		CHOOSECOLOR chooser;
+		COLORREF refs[16];
+		for (int i = 0; i < 16; ++i) {
+			std::string optionName = OPTION_PREFIX;
+			ZLStringUtil::appendNumber(optionName, i);
+			ZLColor color = ZLColorOption(
+				ZLOption::LOOK_AND_FEEL_CATEGORY,
+				COLOR_GROUP_NAME,
+				optionName,
+				ZLColor(0, 0, 0)
+			).value();
+			refs[i] = RGB(color.Red, color.Green, color.Blue);
+		}
+		chooser.lStructSize = sizeof(chooser);
+		chooser.hwndOwner = 0; // TODO: !!!
+		//chooser.hInstance = 0;
+		ZLColor currentColor = myStandardColorComboBox->selectedColor();
+		chooser.rgbResult = RGB(currentColor.Red, currentColor.Green, currentColor.Blue);
+		chooser.lpCustColors = refs;
+		chooser.Flags = CC_RGBINIT | CC_FULLOPEN | CC_SOLIDCOLOR;
+		//chooser.lCustData = 0;
+		//chooser.lpfnHook = 0;
+		//chooser.lpTemplateName = 0;
+
+		bool code = ChooseColor(&chooser);
+
+		for (int i = 0; i < 16; ++i) {
+			std::string optionName = OPTION_PREFIX;
+			ZLStringUtil::appendNumber(optionName, i);
+			ZLColor color(GetRValue(refs[i]), GetGValue(refs[i]), GetBValue(refs[i]));
+			ZLColorOption(
+				ZLOption::LOOK_AND_FEEL_CATEGORY,
+				COLOR_GROUP_NAME,
+				optionName,
+				ZLColor(0, 0, 0)
+			).setValue(color);
+		}
+
+		if (code) {
+			ZLColor color(GetRValue(chooser.rgbResult), GetGValue(chooser.rgbResult), GetBValue(chooser.rgbResult));
+			myStandardColorComboBox->setSelectedColor(color);
+		}
 	}
-
-	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
-
-	colorEntry.onReset(ZLColor(
-		myColor.red * 255 / 65535,
-		myColor.green * 255 / 65535,
-		myColor.blue * 255 / 65535
-	));
-
-	const ZLColor &color = colorEntry.color();
-
-	gtk_range_set_value(GTK_RANGE(myRSlider), color.Red);
-	gtk_range_set_value(GTK_RANGE(myGSlider), color.Green);
-	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
-
-	myColor.red = color.Red * 65535 / 255;
-	myColor.blue = color.Blue * 65535 / 255;
-	myColor.green = color.Green * 65535 / 255;
-
-	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
 }
 
 void ColorOptionView::_show() {
-	gtk_widget_show(myWidget);
+	myStandardColorComboBox->setVisible(true);
+	myCustomColorButton->setVisible(true);
 }
 
 void ColorOptionView::_hide() {
-	gtk_widget_hide(myWidget);
+	myStandardColorComboBox->setVisible(false);
+	myCustomColorButton->setVisible(false);
 }
 
-void ColorOptionView::_onSliderMove(Win32Range *, gpointer self) {
-	((ColorOptionView *)self)->onSliderMove();
-}
-
-void ColorOptionView::onSliderMove() {
-	myColor.red = (int)(gtk_range_get_value(GTK_RANGE(myRSlider)) * 65535 / 255);
-	myColor.blue = (int)(gtk_range_get_value(GTK_RANGE(myBSlider)) * 65535 / 255);
-	myColor.green = (int)(gtk_range_get_value(GTK_RANGE(myGSlider)) * 65535 / 255);
-
-	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
+void ColorOptionView::reset() {
+	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
+	colorEntry.onReset(myStandardColorComboBox->selectedColor());
+	myStandardColorComboBox->removeCustomColor();
+	myStandardColorComboBox->setSelectedColor(colorEntry.color());
 }
 
 void ColorOptionView::_onAccept() const {
-	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(
-		myColor.red * 255 / 65535,
-		myColor.green * 255 / 65535,
-		myColor.blue * 255 / 65535
-	));
+	((ZLColorOptionEntry*)myOption)->onAccept(myStandardColorComboBox->selectedColor());
 }
-*/
 
 KeyOptionView::KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
 	myVBox = new W32VBox();

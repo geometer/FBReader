@@ -73,7 +73,7 @@ void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int from, in
 			view = new ComboOptionView((ZLComboOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::COLOR:
-			//view = new ColorOptionView((ZLColorOptionEntry*)option, *this, from, to);
+			view = new ColorOptionView((ZLColorOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::KEY:
 			view = new KeyOptionView((ZLKeyOptionEntry*)option, *this, from, to);

@@ -133,6 +133,9 @@ void W32Control::commandCallback(DWORD) {
 void W32Control::notificationCallback(LPARAM) {
 }
 
+void W32Control::drawItemCallback(DRAWITEMSTRUCT&) {
+}
+
 const std::string W32PushButton::RELEASED_EVENT = "PushButton: released";
 
 W32PushButton::W32PushButton(const std::string &text, ButtonType type) : W32StandardControl(BS_PUSHBUTTON | WS_TABSTOP), myText(text), myType(type) {

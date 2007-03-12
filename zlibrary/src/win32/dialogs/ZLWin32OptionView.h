@@ -25,6 +25,7 @@
 #include "../../abstract/dialogs/ZLOptionView.h"
 
 #include "../w32widgets/W32Control.h"
+#include "../w32widgets/W32ColorComboBox.h"
 #include "../w32widgets/W32Container.h"
 
 class ZLWin32DialogContent;
@@ -128,32 +129,28 @@ private:
 	W32Label *myLabel;
 };
 
-/*
-class ColorOptionView : public ZLWin32OptionView {
+class ColorOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
+	ColorOptionView(ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 private:
+	void onEvent(const std::string &event, W32EventSender &sender);
+
 	void _onAccept() const;
 	void reset();
-
-	void onSliderMove();
-	static void _onSliderMove(Win32Range*, gpointer);
+	void _show();
+	void _hide();
 
 private:
-	Win32Widget *myWidget, *myDrawingArea;
-	Win32Widget *myRSlider, *myGSlider, *myBSlider;
-	GdkColor myColor;
+	W32ColorComboBox *myStandardColorComboBox;
+	W32PushButton *myCustomColorButton;
 };
-*/
 
 class KeyOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
 	KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
-
-	//void setKey(const std::string &key);
 
 private:
 	void onEvent(const std::string &event, W32EventSender &sender);

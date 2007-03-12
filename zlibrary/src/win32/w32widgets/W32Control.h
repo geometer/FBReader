@@ -48,6 +48,7 @@ public:
 public:
 	virtual void commandCallback(DWORD hiWParam);
 	virtual void notificationCallback(LPARAM lParam);
+	virtual void drawItemCallback(DRAWITEMSTRUCT &di);
 
 protected:
 	DWORD myStyle;

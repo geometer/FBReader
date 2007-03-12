@@ -141,6 +141,15 @@ bool W32DialogPanel::notificationCallback(WPARAM wParam, LPARAM lParam) {
 	return false;
 }
 
+bool W32DialogPanel::drawItemCallback(WPARAM wParam, DRAWITEMSTRUCT &di) {
+	W32Control *control = (*this)[LOWORD(wParam)];
+	if (control != 0) {
+		control->drawItemCallback(di);
+		return true;
+	}
+	return false;
+}
+
 void W32DialogPanel::invalidate() {
 	if (myPanelWindow != 0) {
 		PostMessage(myPanelWindow, LAYOUT_MESSAGE, 0, 0);
