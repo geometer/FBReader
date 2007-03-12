@@ -18,7 +18,6 @@
  */
 
 #include "ZLWin32DialogContent.h"
-//#include "ZLWin32OptionView.h"
 
 ZLWin32DialogContent::ZLWin32DialogContent() : myRowCounter(0) {
 	myContentTable = new W32Table();
@@ -77,7 +76,7 @@ void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int from, in
 			//view = new ColorOptionView((ZLColorOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::KEY:
-			//view = new KeyOptionView((ZLKeyOptionEntry*)option, *this, from, to);
+			view = new KeyOptionView((ZLKeyOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::ORDER:
 			// TODO: implement

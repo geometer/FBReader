@@ -90,7 +90,9 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			}
 			return 0;
 		case WM_KEYDOWN:
-			if (wParam == 0x11) {
+			if (wParam == 0x10) {
+				myKeyboardModifierMask |= 0x1;
+			} else if (wParam == 0x11) {
 				myKeyboardModifierMask |= 0x2;
 			} else if (wParam == 0x12) {
 				myKeyboardModifierMask |= 0x4;
@@ -99,7 +101,9 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			}
 			return 0;
 		case WM_KEYUP:
-			if (wParam == 0x11) {
+			if (wParam == 0x10) {
+				myKeyboardModifierMask &= ~0x1;
+			} else if (wParam == 0x11) {
 				myKeyboardModifierMask &= ~0x2;
 			} else if (wParam == 0x12) {
 				myKeyboardModifierMask &= ~0x4;

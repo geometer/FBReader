@@ -20,6 +20,8 @@
 #include <windows.h>
 #include <commctrl.h>
 
+#include "../../abstract/util/ZLKeyUtil.h"
+
 #include "W32Control.h"
 #include "W32ControlCollection.h"
 #include "W32WCHARUtil.h"
@@ -354,6 +356,92 @@ void W32LineEditor::setEditable(bool editable) {
 	}
 }
 
+std::map<HWND,W32KeyNameEditor*> W32KeyNameEditor::ourEditors;
+const std::string W32KeyNameEditor::TEXT_CHANGED_EVENT = "KeyNameEditor: text changed";
+
+W32KeyNameEditor::W32KeyNameEditor() : W32AbstractEditor(ES_AUTOHSCROLL), myKeyboardModifierMask(0) {
+	::createNTWCHARString(myBuffer, "");
+}
+
+W32KeyNameEditor::~W32KeyNameEditor() {
+	if (myWindow != 0) {
+		ourEditors.erase(myWindow);
+	}
+}
+
+void W32KeyNameEditor::setText(const std::string &text) {
+	if (text != this->text()) {
+		::createNTWCHARString(myBuffer, text);
+		if (myWindow != 0) {
+			SetWindowTextW(myWindow, ::wchar(myBuffer));
+		}
+		fireEvent(TEXT_CHANGED_EVENT);
+	}
+}
+
+std::string W32KeyNameEditor::text() const {
+	return getTextFromBuffer(myBuffer);
+}
+
+W32Widget::Size W32KeyNameEditor::minimumSize() const {
+	return Size(40, 12);
+}
+
+LRESULT CALLBACK W32KeyNameEditor::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	W32KeyNameEditor *editor = ourEditors[hWnd];
+	if (editor == 0) {
+		return false;
+	}
+	int &mask = editor->myKeyboardModifierMask;
+	switch (uMsg) {
+		case WM_KEYDOWN:
+			if (wParam == 0x10) {
+				mask |= 0x1;
+			} else if (wParam == 0x11) {
+				mask |= 0x2;
+			} else if (wParam == 0x12) {
+				mask |= 0x4;
+			} else {
+				editor->setText(ZLKeyUtil::keyName(wParam, wParam, mask));
+			}
+			return true;
+		case WM_KEYUP:
+			if (wParam == 0x10) {
+				mask &= ~0x1;
+			} else if (wParam == 0x11) {
+				mask &= ~0x2;
+			} else if (wParam == 0x12) {
+				mask &= ~0x4;
+			}
+			return true;
+		case WM_CHAR:
+			return true;
+		case WM_SETFOCUS:
+			editor->setText("");
+			mask = 0;
+		default:
+			return editor->myOriginalWndProc(hWnd, uMsg, wParam, lParam);
+	}
+}
+
+void W32KeyNameEditor::init(HWND parent, W32ControlCollection *collection) {
+	W32AbstractEditor::init(parent, collection);
+	myOriginalWndProc = (WndProc)SetWindowLong(myWindow, GWL_WNDPROC, (LONG)Callback);
+	ourEditors[myWindow] = this;
+}
+
+void W32KeyNameEditor::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~ES_READONLY;
+	} else {
+		myStyle |= ES_READONLY;
+	}
+	if (myWindow != 0) {
+		// TODO: check
+		SetWindowLong(myWindow, GWL_STYLE, myStyle);
+	}
+}
+
 W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_NUMBER), myMin(min), myMax(max), myValue(initial) {
 }
 
@@ -447,7 +535,9 @@ const std::string W32ComboBox::SELECTION_CHANGED_EVENT = "ComboBox: selection ch
 const std::string W32ComboBox::VALUE_EDITED_EVENT = "ComboBox: value edited";
 
 W32ComboBox::W32ComboBox(const std::vector<std::string> &list, int initialIndex) : W32StandardControl(CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP), myList(list), myIndex(initialIndex) {
-	::createNTWCHARString(myBuffer, list[initialIndex]);
+	if ((initialIndex >= 0) && ((size_t)initialIndex < myList.size())) {
+		::createNTWCHARString(myBuffer, list[initialIndex]);
+	}
 }
 
 W32Widget::Size W32ComboBox::minimumSize() const {
@@ -468,8 +558,10 @@ void W32ComboBox::init(HWND parent, W32ControlCollection *collection) {
 	for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 		SendMessage(myWindow, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
 	}
-	SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
-	SendMessage(myWindow, CB_SETMINVISIBLE, std::min((int)myList.size(), 7), 0);
+	if (myList.size() > 0) {
+		SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
+		SendMessage(myWindow, CB_SETMINVISIBLE, std::min((int)myList.size(), 7), 0);
+	}
 }
 
 void W32ComboBox::setEditable(bool editable) {
@@ -486,12 +578,12 @@ void W32ComboBox::setEditable(bool editable) {
 
 void W32ComboBox::commandCallback(DWORD hiWParam) {
 	if (hiWParam == CBN_SELCHANGE) {
-		const int index = SendMessage(myWindow, CB_GETCURSEL, 0, 0);
-		const int length = SendMessage(myWindow, CB_GETLBTEXTLEN, index, 0);
+		myIndex = SendMessage(myWindow, CB_GETCURSEL, 0, 0);
+		const int length = SendMessage(myWindow, CB_GETLBTEXTLEN, myIndex, 0);
 		myBuffer.clear();
 		myBuffer.insert(myBuffer.end(), length + 1, 0);
 		if (length > 0) {
-			SendMessage(myWindow, CB_GETLBTEXT, index, (LPARAM)&myBuffer.front());
+			SendMessage(myWindow, CB_GETLBTEXT, myIndex, (LPARAM)&myBuffer.front());
 		}
 		fireEvent(SELECTION_CHANGED_EVENT);
 	} else if (hiWParam == CBN_EDITCHANGE) {
@@ -503,6 +595,10 @@ void W32ComboBox::commandCallback(DWORD hiWParam) {
 		}
 		fireEvent(VALUE_EDITED_EVENT);
 	}
+}
+
+int W32ComboBox::index() const {
+	return myIndex;
 }
 
 std::string W32ComboBox::text() const {
@@ -517,14 +613,25 @@ void W32ComboBox::setList(const std::vector<std::string> &list) {
 		for (std::vector<std::string>::const_iterator it = myList.begin(); it != myList.end(); ++it) {
 			SendMessage(myWindow, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
 		}
-		SendMessage(myWindow, CB_SETMINVISIBLE, std::min((int)myList.size(), 7), 0);
+		if (myList.size() > 0) {
+			SendMessage(myWindow, CB_SETMINVISIBLE, std::min((int)myList.size(), 7), 0);
+		}
+	}
+}
+
+void W32ComboBox::setSelection(const std::string &value) {
+	std::vector<std::string>::const_iterator it = std::find(myList.begin(), myList.end(), value);
+	if (it != myList.end()) {
+		setSelection(it - myList.begin());
 	}
 }
 
 void W32ComboBox::setSelection(int index) {
-	myIndex = index;
-	if (myWindow != 0) {
-		SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
+	if ((index >= 0) && (index < (short)myList.size())) {
+		myIndex = index;
+		if (myWindow != 0) {
+			SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
+		}
 	}
 }
 

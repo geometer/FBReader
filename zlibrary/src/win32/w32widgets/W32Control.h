@@ -21,6 +21,7 @@
 #define __W32CONTROL_H__
 
 #include <vector>
+#include <map>
 #include <string>
 
 #include <windows.h>
@@ -193,6 +194,35 @@ private:
 	bool myBlocked;
 };
 
+class W32KeyNameEditor : public W32AbstractEditor {
+
+public:
+	static const std::string TEXT_CHANGED_EVENT;
+
+private:
+	static std::map<HWND,W32KeyNameEditor*> ourEditors;
+	typedef LRESULT(CALLBACK *WndProc)(HWND, UINT, WPARAM, LPARAM);
+	static LRESULT CALLBACK Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+public:
+	W32KeyNameEditor();
+	~W32KeyNameEditor();
+	Size minimumSize() const;
+	void init(HWND parent, W32ControlCollection *collection);
+
+	void setEditable(bool editable);
+
+	std::string text() const;
+
+private:
+	void setText(const std::string &text);
+
+private:
+	ZLUnicodeUtil::Ucs2String myBuffer;
+	WndProc myOriginalWndProc;
+	int myKeyboardModifierMask;
+};
+
 class W32SpinBox : public W32AbstractEditor {
 
 public:
@@ -234,8 +264,10 @@ public:
 	void commandCallback(DWORD hiWParam);
 
 	std::string text() const;
+	int index() const;
 
 	void setList(const std::vector<std::string> &list);
+	void setSelection(const std::string &value);
 	void setSelection(int index);
 
 private:

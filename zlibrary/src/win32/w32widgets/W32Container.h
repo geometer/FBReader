@@ -82,7 +82,8 @@ public:
 	enum Alignment {
 		LEFT,
 		RIGHT,
-		CENTER
+		CENTER,
+		FILL
 	};
 
 public:

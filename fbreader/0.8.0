@@ -11,12 +11,10 @@ desktop: зависимости в пакетах для etch
 
 диалоги
 	ColorOptionView
-	KeyOptionView
 рисунки в тексте
 	gif
 	jpeg
 	tiff
-коды клавиш
 иконки
 	rotation
 	toc

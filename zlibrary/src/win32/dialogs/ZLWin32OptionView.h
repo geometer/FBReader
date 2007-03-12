@@ -146,24 +146,29 @@ private:
 	Win32Widget *myRSlider, *myGSlider, *myBSlider;
 	GdkColor myColor;
 };
+*/
 
-class KeyOptionView : public ZLWin32OptionView {
+class KeyOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent *tab, int row, int fromColumn, int toColumn) : ZLWin32OptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
-	void setKey(const std::string &key);
+	//void setKey(const std::string &key);
 
 private:
+	void onEvent(const std::string &event, W32EventSender &sender);
+
 	void _onAccept() const;
 	void onValueChanged();
-	void reset();
+	void _show();
+	void _hide();
 
 private:
-	Win32Widget *myWidget, *myKeyButton, *myLabel;
-	Win32ComboBox *myComboBox;
+	W32VBox *myVBox;
+	W32HBox *myHBox;
+	W32KeyNameEditor *myKeyNameEditor;
+	W32ComboBox *myComboBox;
 	std::string myCurrentKey;
 };
-*/
 
 #endif /* __ZLWIN32OPTIONVIEW_H__ */

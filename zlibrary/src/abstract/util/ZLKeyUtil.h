@@ -28,6 +28,7 @@ class ZLKeyUtil {
 
 private:
 	static bool ourInitialized;
+	static bool ourUseAutoNames;
 	static std::map<int,std::string> ourNames;
 	static std::map<int,std::string> ourModifiers;
 

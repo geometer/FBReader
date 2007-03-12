@@ -28,6 +28,7 @@
 #include "../application/ZLApplication.h"
 
 bool ZLKeyUtil::ourInitialized = false;
+bool ZLKeyUtil::ourUseAutoNames = true;
 std::map<int,std::string> ZLKeyUtil::ourNames;
 std::map<int,std::string> ZLKeyUtil::ourModifiers;
 
@@ -41,6 +42,10 @@ void KeyNamesReader::startElementHandler(const char *tag, const char **attribute
 	static const std::string KEY = "key";
 	static const std::string MODIFIER = "modifier";
 
+	const char *disableAutoNames = attributeValue(attributes, "disableAutoNames");
+	if ((disableAutoNames != 0) && ((std::string("true") == disableAutoNames))) {
+		ZLKeyUtil::ourUseAutoNames = false;
+	}
 	const char *codeString = attributeValue(attributes, "code");
 	const char *name = attributeValue(attributes, "name");
 	if ((codeString != 0) && (name != 0)) {
@@ -64,7 +69,7 @@ std::string ZLKeyUtil::keyName(int unicode, int key, int modifiersMask) {
 		name = it->second;
 	}
 
-	if (name.empty()) {
+	if (ourUseAutoNames && name.empty()) {
 		if (((unicode < 128) && isprint(unicode) && !isspace(unicode)) || ZLUnicodeUtil::isLetter(unicode)) {
 			name += '<';
 			char buf[5];

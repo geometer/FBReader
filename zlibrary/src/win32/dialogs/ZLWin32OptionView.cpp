@@ -342,101 +342,46 @@ void ColorOptionView::_onAccept() const {
 		myColor.blue * 255 / 65535
 	));
 }
+*/
 
-static void key_view_focus_in_event(Win32Widget *button, GdkEventFocus*, gpointer) {
-	gtk_button_set_label(GTK_BUTTON(button), "Press key to set action");
-	gdk_keyboard_grab(button->window, true, GDK_CURRENT_TIME);
-	((ZLWin32DialogManager&)ZLWin32DialogManager::instance()).grabKeyboard(true);
+KeyOptionView::KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+	myVBox = new W32VBox();
+	myHBox = new W32HBox();
+	myHBox->setSpacing(8);
+	myHBox->setHomogeneous(true);
+	myHBox->setAlignment(W32HBox::FILL);
+	myHBox->addElement(new W32Label("Action For Key", W32Label::ALIGN_RIGHT));
+	myKeyNameEditor = new W32KeyNameEditor();
+	myKeyNameEditor->addListener(this);
+	myHBox->addElement(myKeyNameEditor);
+	myComboBox = new W32ComboBox(((ZLKeyOptionEntry*)myOption)->actionNames(), 0);
+	myComboBox->addListener(this);
+	myVBox->addElement(myHBox);
+	myVBox->addElement(myComboBox);
+	tab.insertWidget(myVBox, from, to);
 }
 
-static void key_view_focus_out_event(Win32Widget *button, GdkEventFocus*, gpointer) {
-	gtk_button_set_label(GTK_BUTTON(button), "Press this button to select key");
-	((ZLWin32DialogManager&)ZLWin32DialogManager::instance()).grabKeyboard(false);
-	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
-}
-
-static bool key_view_key_press_event(Win32Widget*, GdkEventKey *event, gpointer data) {
-	((KeyOptionView*)data)->setKey(ZLWin32KeyUtil::keyName(event));
-	return true;
-}
-
-static void key_view_button_press_event(Win32Widget *button, GdkEventButton*, gpointer) {
-	gtk_widget_grab_focus(button);
-}
-
-void KeyOptionView::_createItem() {
-	myKeyButton = gtk_button_new();
-	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_in_event", G_CALLBACK(key_view_focus_in_event), 0);
-	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_out_event", G_CALLBACK(key_view_focus_out_event), 0);
-	gtk_signal_connect(GTK_OBJECT(myKeyButton), "key_press_event", G_CALLBACK(key_view_key_press_event), this);
-	gtk_signal_connect(GTK_OBJECT(myKeyButton), "button_press_event", G_CALLBACK(key_view_button_press_event), 0);
-	key_view_focus_out_event(myKeyButton, 0, 0);
-
-	myLabel = gtk_label_new("");
-
-	myComboBox = GTK_COMBO_BOX(gtk_combo_box_new_text());
-	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
-	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
-		gtk_combo_box_append_text(myComboBox, it->c_str());
+void KeyOptionView::onEvent(const std::string &event, W32EventSender&) {
+	if (event == W32KeyNameEditor::TEXT_CHANGED_EVENT) {
+		myCurrentKey = myKeyNameEditor->text();
+		myComboBox->setVisible(!myCurrentKey.empty());
+		myComboBox->setSelection(((ZLKeyOptionEntry*)myOption)->actionIndex(myCurrentKey));
+	} else if (event == W32ComboBox::SELECTION_CHANGED_EVENT) {
+		((ZLKeyOptionEntry*)myOption)->onValueChanged(myCurrentKey, myComboBox->index());
 	}
-
-	myWidget = gtk_table_new(2, 2, false);
-	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 5);
-	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 5);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myKeyButton, 0, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myLabel, 0, 1, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myComboBox), 1, 2, 1, 2);
-	g_signal_connect(GTK_WIDGET(myComboBox), "changed", G_CALLBACK(_onValueChanged), this);
-
-	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
-}
-
-void KeyOptionView::onValueChanged() {
-	if (!myCurrentKey.empty()) {
-		((ZLKeyOptionEntry*)myOption)->onValueChanged(
-			myCurrentKey,
-			gtk_combo_box_get_active(myComboBox)
-		);
-	}
-}
-
-void KeyOptionView::setKey(const std::string &key) {
-	if (!key.empty()) {
-		myCurrentKey = key;
-		gtk_label_set_text(GTK_LABEL(myLabel), ("Action For " + key).c_str());
-		gtk_widget_show(myLabel);
-		gtk_combo_box_set_active(myComboBox, ((ZLKeyOptionEntry*)myOption)->actionIndex(key));
-		gtk_widget_show(GTK_WIDGET(myComboBox));
-	}
-}
-
-void KeyOptionView::reset() {
-	if (myWidget == 0) {
-		return;
-	}
-	myCurrentKey.erase();
-	gtk_widget_hide(myLabel);
-	gtk_widget_hide(GTK_WIDGET(myComboBox));
 }
 
 void KeyOptionView::_show() {
-	gtk_widget_show(myWidget);
-	gtk_widget_show(myKeyButton);
+	myHBox->setVisible(true);
 	if (!myCurrentKey.empty()) {
-		gtk_widget_show(myLabel);
-		gtk_widget_show(GTK_WIDGET(myComboBox));
-	} else {
-		gtk_widget_hide(myLabel);
-		gtk_widget_hide(GTK_WIDGET(myComboBox));
+		myComboBox->setVisible(true);
 	}
 }
 
 void KeyOptionView::_hide() {
-	gtk_widget_hide(myWidget);
-	myCurrentKey.erase();
+	myVBox->setVisible(false);
 }
 
 void KeyOptionView::_onAccept() const {
 	((ZLKeyOptionEntry*)myOption)->onAccept();
 }
-*/

@@ -147,6 +147,8 @@ void W32HBox::setPosition(int x, int y, Size size) {
 				x += extraWidth / 2;
 			} else if (myAlignment == RIGHT) {
 				x += extraWidth;
+			} else if (myAlignment == FILL) {
+				elementSize.Width += extraWidth / elementCounter;
 			}
 		}
 		const short deltaX = elementSize.Width + spacing();
