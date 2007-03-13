@@ -22,7 +22,7 @@ Section "FBReader"
 	WriteRegStr HKCU "Software\FBReader" "" $INSTDIR
 
 	File /oname=FBReader.exe bin/FBReader
-	File ../../dlls/*.dll
+	File ../../dlls/*.*
 	File /r share
 
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "DisplayName" "FBReader for Windows XP"
