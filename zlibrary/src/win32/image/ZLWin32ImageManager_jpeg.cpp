@@ -18,141 +18,139 @@
  */
 
 #include <stdio.h>
+#include <setjmp.h>
 #include <jpeglib.h>
 
 #include "ZLWin32ImageManager.h"
 
-class Reader2 : public jpeg_source_mgr {
+struct JpegSourceManager : public jpeg_source_mgr {
+	static void initSourceCallback(j_decompress_ptr info);
+	static void termSourceCallback(j_decompress_ptr info);
+	static boolean fillBufferCallBack(j_decompress_ptr info);
+	static void skipDataCallback(j_decompress_ptr, long len);
 
-public:
-	Reader2(const std::string &data) : myData(data), myOffset(0) {
-	}
-	/*
-	bool read(png_bytep buffer, png_size_t length) {
-		if (myOffset + length > myData.length()) {
-			return false;
-		}
-		memcpy(buffer, myData.data() + myOffset, length);
-		myOffset += length;
-		return true;
-	}
-	*/
+	JpegSourceManager(const std::string &data);
+	~JpegSourceManager();
 
-private:
 	const std::string &myData;
-	size_t myOffset;
+	JOCTET *myBuffer;
+	unsigned int myOffset;
 };
 
-/*
-static void pngReadFunction(png_structp png_ptr, png_bytep data, png_size_t length) {
-	Reader2 &reader = *(Reader2*)png_get_io_ptr(png_ptr);
-	if (!reader.read(data, length)) {
-		png_error(png_ptr, "Read Error");
+JpegSourceManager::JpegSourceManager(const std::string &data) : myData(data), myOffset(0) {
+  init_source = initSourceCallback;
+  fill_input_buffer = fillBufferCallBack;
+  skip_input_data = skipDataCallback;
+  resync_to_restart = jpeg_resync_to_restart;
+  term_source = termSourceCallback;
+  bytes_in_buffer = 0;
+	myBuffer = new JOCTET[2048];
+  next_input_byte = myBuffer;
+}
+
+JpegSourceManager::~JpegSourceManager() {
+	delete[] myBuffer;
+}
+
+void JpegSourceManager::initSourceCallback(j_decompress_ptr) {
+}
+
+void JpegSourceManager::termSourceCallback(j_decompress_ptr) {
+}
+
+boolean JpegSourceManager::fillBufferCallBack(j_decompress_ptr info) {
+	JpegSourceManager &sourceManager = *(JpegSourceManager*)info->src;
+	const unsigned int len =
+		std::min((unsigned int)2048, sourceManager.myData.length() - sourceManager.myOffset);
+	if (len > 0) {
+		sourceManager.bytes_in_buffer = len;
+		memcpy(sourceManager.myBuffer, sourceManager.myData.data() + sourceManager.myOffset, len);
+		sourceManager.myOffset += len;
+	} else {
+		sourceManager.bytes_in_buffer = 2;
+		sourceManager.myBuffer[0] = (JOCTET)0xFF;
+		sourceManager.myBuffer[1] = (JOCTET)JPEG_EOI;
+	}
+	sourceManager.next_input_byte = sourceManager.myBuffer;
+	return true;
+}
+
+void JpegSourceManager::skipDataCallback(j_decompress_ptr info, long len) {
+	JpegSourceManager &sourceManager = *(JpegSourceManager*)info->src;
+	if ((long)sourceManager.bytes_in_buffer > len) {
+		sourceManager.bytes_in_buffer -= len;
+		sourceManager.next_input_byte += len;
+	} else {
+		sourceManager.myOffset += len - sourceManager.bytes_in_buffer;
+		sourceManager.myOffset = std::min(sourceManager.myOffset, sourceManager.myData.length());
+		fillBufferCallBack(info);
 	}
 }
-*/
+
+static void errorExit(j_common_ptr info);
+
+struct JpegErrorManager : public jpeg_error_mgr {
+  jmp_buf mySetjmpBuffer;
+};
+
+static void errorExit(j_common_ptr info) {
+	longjmp(((JpegErrorManager*)info->err)->mySetjmpBuffer, 1);
+}
 
 bool ZLWin32ImageManager::jpegConvert(const std::string &stringData, ZLWin32ImageData &data) const {
 	struct jpeg_decompress_struct info;
-	Reader2 reader(stringData);
-	struct jpeg_error_mgr errorManager;
+	JpegSourceManager reader(stringData);
+	JpegErrorManager errorManager;
 
-		/*
-		jpeg_create_decompress(&cinfo);
+	jpeg_create_decompress(&info);
 
-		cinfo.src = iod_src;
-		cinfo.err = jpeg_std_error(&jerr);
-		jerr.error_exit = my_error_exit;
+	info.src = &reader;
+	info.err = jpeg_std_error(&errorManager);
+	errorManager.error_exit = errorExit;
 
-		if (!setjmp(jerr.setjmp_buffer)) {
-#if defined(_OS_UNIXWARE7_)
-	(void) jpeg_read_header(&cinfo, B_TRUE);
-#else
-	(void) jpeg_read_header(&cinfo, TRUE);
-#endif
-	QString params = iio->parameters();
-	params.simplifyWhiteSpace();
-
-	if (params.contains("Fast")) {
-			cinfo.dct_method = JDCT_IFAST;
-			cinfo.do_fancy_upsampling = FALSE;
+	if (setjmp(errorManager.mySetjmpBuffer)) {
+		jpeg_destroy_decompress(&info);
+		return false;
 	}
 
-	//
-	// "Shrink" is a scaling factor.	By combining Shrink with
-	// Scale, it's possible to quickly load an image and smooth
-	// scale it.	The result is a lower quality image but generated
-	// in less time.
-	//
-	if (params.contains("Shrink")) {
-			sscanf(params.latin1() + params.find("Shrink"),
-		"Shrink( %i )", &cinfo.scale_denom);
+	jpeg_read_header(&info, true);
 
-			if (cinfo.scale_denom < 2) {
-		cinfo.scale_denom = 1;
-			} else if (cinfo.scale_denom < 4) {
-		cinfo.scale_denom = 2;
-			} else if (cinfo.scale_denom < 8) {
-		cinfo.scale_denom = 4;
-			} else {
-		cinfo.scale_denom = 8;
+	jpeg_start_decompress(&info);
+
+	if ((info.output_components != 1) &&
+			(info.output_components != 3) &&
+			(info.output_components != 4)) {
+		jpeg_destroy_decompress(&info);
+		return false;
+	}
+
+	data.init(info.output_width, info.output_height, info.output_components == 4, 0);
+
+	unsigned char **rowPointers = new unsigned char*[info.output_height];
+	for (unsigned int i = 0; i < info.output_height; ++i) {
+		rowPointers[i] = data.myArray + (info.output_height - i - 1) * data.myBytesPerLine;
+	}
+	while (info.output_scanline < info.output_height) {
+		jpeg_read_scanlines(&info, rowPointers + info.output_scanline, info.output_height);
+	}
+	delete[] rowPointers;
+
+	if (info.output_components == 1) {
+		for (unsigned int i = 0; i < data.myHeight; ++i) {
+			unsigned char *from = data.myArray + data.myBytesPerLine * i + data.myWidth - 1;
+			unsigned char *to = data.myArray + data.myBytesPerLine * i + 3 * (data.myWidth - 1);
+			for (unsigned int j = 0; j < data.myWidth; ++j, --from, to -= 3) {
+				to[0] = *from;
+				to[1] = *from;
+				to[2] = *from;
 			}
-	}
-
-	(void) jpeg_start_decompress(&cinfo);
-
-	if (params.contains("GetHeaderInformation")) {
-			image = qJpegHeaderInformation(&cinfo);
+		}
 	} else {
-#ifndef QT_NO_IMAGE_SMOOTHSCALE
-			if (params.contains("Scale")) {
-		jpegSmoothScaler scaler(&cinfo,
-				params.latin1() + params.find("Scale"));
-		image = scaler.scale();
-			} else
-#endif
-			{
-		if (cinfo.output_components == 3 ||
-			cinfo.output_components == 4) {
-				image.create(cinfo.output_width, cinfo.output_height, 32);
-		} else if (cinfo.output_components == 1) {
-				image.create(cinfo.output_width, cinfo.output_height, 8, 256);
-				for (int i = 0; i < 256; i++) {
-			image.setColor(i, qRgb(i, i, i));
-				}
-		} else {
-				// Unsupported format.
-		}
-
-		if (!image.isNull()) {
-				uchar **lines = image.jumpTable();
-				while (cinfo.output_scanline < cinfo.output_height) {
-			(void) jpeg_read_scanlines(&cinfo,
-					lines + cinfo.output_scanline, cinfo.output_height);
-				}
-
-				if ( cinfo.output_components == 3 ) {
-			// Expand 24->32 bpp.
-			for (uint j=0; j<cinfo.output_height; j++) {
-					uchar *in = image.scanLine(j) +
-				cinfo.output_width * 3;
-					QRgb *out = (QRgb*)image.scanLine(j);
-
-					for (uint i=cinfo.output_width; i--; ) {
-				in-=3;
-				out[i] = qRgb(in[0], in[1], in[2]);
-					}
-			}
-				}
-		}
-			}
-			(void) jpeg_finish_decompress(&cinfo);
+		data.bgr2rgb();
 	}
-	iio->setImage(image);
-	iio->setStatus(0);
-		}
 
-		jpeg_destroy_decompress(&cinfo);
-		delete iod_src;
-	*/
+	jpeg_finish_decompress(&info);
+	jpeg_destroy_decompress(&info);
+
+	return true;
 }

@@ -48,6 +48,9 @@ public:
 	const BITMAPINFO &info() const;
 
 private:
+	void bgr2rgb();
+
+private:
 	unsigned int myWidth;
 	unsigned int myHeight;
 	unsigned int myBytesPerPixel;
@@ -59,6 +62,7 @@ private:
 	BYTE *myPixelPointer;
 
 	BITMAPINFO myInfo;
+	bool myFailure;
 
 friend class ZLWin32ImageManager;
 };

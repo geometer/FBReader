@@ -115,14 +115,7 @@ bool ZLWin32ImageManager::pngConvert(const std::string &stringData, ZLWin32Image
 	png_read_image(pngStructure, rowPointers);
 	delete[] rowPointers;
 
-	for (png_uint_32 i = 0; i < height; ++i) {
-		BYTE *ptr = data.myArray + data.myBytesPerLine * i;
-		for (png_uint_32 j = 0; j < width; ++j, ptr += data.myBytesPerPixel) {
-			BYTE b = ptr[0];
-			ptr[0] = ptr[2];
-			ptr[2] = b;
-		}
-	}
+	data.bgr2rgb();
 
 	png_destroy_read_struct(&pngStructure, &pngInfo, 0);
 	return true;

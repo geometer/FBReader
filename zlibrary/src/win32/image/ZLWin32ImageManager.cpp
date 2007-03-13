@@ -19,7 +19,7 @@
 
 #include "ZLWin32ImageManager.h"
 
-ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0) {
+ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0), myFailure(false) {
 }
 
 ZLWin32ImageData::~ZLWin32ImageData() {
@@ -73,6 +73,19 @@ void ZLWin32ImageData::init(unsigned int width, unsigned int height, bool hasAlp
 	myInfo.bmiColors[0].rgbGreen = 1;
 	myInfo.bmiColors[0].rgbRed = 1;
 	myInfo.bmiColors[0].rgbReserved = 0;
+}
+
+void ZLWin32ImageData::bgr2rgb() {
+	if (myArray != 0) {
+		for (unsigned int i = 0; i < myHeight; ++i) {
+			BYTE *ptr = myArray + myBytesPerLine * i;
+			for (unsigned int j = 0; j < myWidth; ++j, ptr += myBytesPerPixel) {
+				BYTE b = ptr[0];
+				ptr[0] = ptr[2];
+				ptr[2] = b;
+			}
+		}
+	}
 }
 
 void ZLWin32ImageData::setPosition(unsigned int x, unsigned int y) {
@@ -165,6 +178,9 @@ shared_ptr<ZLImageData> ZLWin32ImageManager::createData() const {
 
 void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	ZLWin32ImageData &win32Data = (ZLWin32ImageData&)data;
+	if (win32Data.myFailure) {
+		return;
+	}
 	if (pngConvert(stringData, win32Data)) {
 		return;
 	}
@@ -174,4 +190,5 @@ void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLIm
 	if (jpegConvert(stringData, win32Data)) {
 		return;
 	}
+	win32Data.myFailure = true;
 }
