@@ -62,7 +62,6 @@ private:
 	BYTE *myPixelPointer;
 
 	BITMAPINFO myInfo;
-	bool myFailure;
 
 friend class ZLWin32ImageManager;
 };

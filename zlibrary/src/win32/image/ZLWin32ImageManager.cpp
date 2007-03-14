@@ -19,7 +19,7 @@
 
 #include "ZLWin32ImageManager.h"
 
-ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0), myFailure(false) {
+ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0) {
 }
 
 ZLWin32ImageData::~ZLWin32ImageData() {
@@ -178,9 +178,6 @@ shared_ptr<ZLImageData> ZLWin32ImageManager::createData() const {
 
 void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	ZLWin32ImageData &win32Data = (ZLWin32ImageData&)data;
-	if (win32Data.myFailure) {
-		return;
-	}
 	if (pngConvert(stringData, win32Data)) {
 		return;
 	}
@@ -190,5 +187,4 @@ void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLIm
 	if (jpegConvert(stringData, win32Data)) {
 		return;
 	}
-	win32Data.myFailure = true;
 }
