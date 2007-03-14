@@ -13,14 +13,9 @@ desktop: зависимости в пакетах для etch
 рисунки в тексте
 	gif
 	tiff
-
-==============================================================================
-
-WaitMessage
-selection dialog
-	разобраться со скоростью перехода в другой каталог
-удалить все #include <iostream>
 избавиться от явных упоминаний '/' и "/"
+WaitMessage
+удалить все #include <iostream>
 
 ==============================================================================
 
@@ -103,6 +98,8 @@ mobipocket: где начинаются картинки?
 
 *** win32 version (после 0.8.0)
 
+selection dialog
+	разобраться со скоростью перехода в другой каталог
 центрировать Options/Book Info dialogs (Windows XP)
 W32ColorComboBox::removeCustomColor()
 переименовать XMLConfig->RegistryConfig
