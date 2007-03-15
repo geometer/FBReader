@@ -81,8 +81,9 @@ protected:
 
 private:
 	bool pngConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
-	bool gifConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 	bool jpegConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
+	bool gifConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
+	bool tiffConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 };
 
 inline void ZLWin32ImageData::setPosition(unsigned int x, unsigned int y) {

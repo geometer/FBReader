@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <gif_lib.h>
 
 #include "ZLWin32ImageManager.h"

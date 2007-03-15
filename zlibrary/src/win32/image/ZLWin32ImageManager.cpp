@@ -158,10 +158,13 @@ void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLIm
 	if (pngConvert(stringData, win32Data)) {
 		return;
 	}
+	if (jpegConvert(stringData, win32Data)) {
+		return;
+	}
 	if (gifConvert(stringData, win32Data)) {
 		return;
 	}
-	if (jpegConvert(stringData, win32Data)) {
+	if (tiffConvert(stringData, win32Data)) {
 		return;
 	}
 }
