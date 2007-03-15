@@ -182,9 +182,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history", "Show Recent Books List");
 	toolbar().addButton(ACTION_ADD_BOOK, "addbook", "Add File To Library");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_BOOK_INFO, "bookinfo", "Show Book Info Dialog");
-	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings", "Show Options Dialog");
-	toolbar().addSeparator();
 	toolbar().addButton(ACTION_SCROLL_TO_HOME, "home", "Go To Start Of Text");
 	toolbar().addButton(ACTION_UNDO, "leftarrow", "Go Back");
 	toolbar().addButton(ACTION_REDO, "rightarrow", "Go Forward");
@@ -194,6 +191,9 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	toolbar().addButton(ACTION_SEARCH, "find", "Text Search");
 	toolbar().addButton(ACTION_FIND_NEXT, "findnext", "Find Next");
 	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev", "Find Previous");
+	toolbar().addSeparator();
+	toolbar().addButton(ACTION_SHOW_BOOK_INFO, "bookinfo", "Show Book Info Dialog");
+	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings", "Show Options Dialog");
 	toolbar().addSeparator();
 	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen", "Rotate Text");
 	toolbar().addSeparator();

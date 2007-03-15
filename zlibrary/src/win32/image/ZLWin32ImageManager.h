@@ -41,6 +41,7 @@ public:
 	void moveX(int delta);
 	void moveY(int delta);
 	void setPixel(unsigned char r, unsigned char g, unsigned char b);
+	void setPixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a);
 
 	void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY);
 
@@ -83,5 +84,37 @@ private:
 	bool gifConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 	bool jpegConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 };
+
+inline void ZLWin32ImageData::setPosition(unsigned int x, unsigned int y) {
+	myPixelPointer = myArray + myBytesPerLine * (myHeight - y - 1) + myBytesPerPixel * x;
+}
+
+inline void ZLWin32ImageData::moveX(int delta) {
+	myPixelPointer += myBytesPerPixel * delta;
+}
+
+inline void ZLWin32ImageData::moveY(int delta) {
+	myPixelPointer -= myBytesPerLine * delta;
+}
+
+inline void ZLWin32ImageData::setPixel(unsigned char r, unsigned char g, unsigned char b) {
+	if (myArray != 0) {
+		myPixelPointer[0] = b;
+		myPixelPointer[1] = g;
+		myPixelPointer[2] = r;
+		if (myBytesPerPixel == 4) {
+			myPixelPointer[3] = 255;
+		}
+	}
+}
+
+inline void ZLWin32ImageData::setPixel(unsigned char r, unsigned char g, unsigned char b, unsigned char a) {
+	if (myArray != 0) {
+		myPixelPointer[0] = b;
+		myPixelPointer[1] = g;
+		myPixelPointer[2] = r;
+		myPixelPointer[3] = a;
+	}
+}
 
 #endif /* __ZLWIN32IMAGEMANAGER_H__ */

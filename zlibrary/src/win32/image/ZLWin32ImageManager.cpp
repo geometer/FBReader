@@ -88,29 +88,6 @@ void ZLWin32ImageData::bgr2rgb() {
 	}
 }
 
-void ZLWin32ImageData::setPosition(unsigned int x, unsigned int y) {
-	myPixelPointer = myArray + myBytesPerLine * (myHeight - y - 1) + myBytesPerPixel * x;
-}
-
-void ZLWin32ImageData::moveX(int delta) {
-	myPixelPointer += myBytesPerPixel * delta;
-}
-
-void ZLWin32ImageData::moveY(int delta) {
-	myPixelPointer -= myBytesPerLine * delta;
-}
-
-void ZLWin32ImageData::setPixel(unsigned char r, unsigned char g, unsigned char b) {
-	if (myArray != 0) {
-		myPixelPointer[0] = b;
-		myPixelPointer[1] = g;
-		myPixelPointer[2] = r;
-		if (myBytesPerPixel == 4) {
-			myPixelPointer[3] = 255;
-		}
-	}
-}
-
 void ZLWin32ImageData::copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY) {
 	ZLWin32ImageData &win32source = (ZLWin32ImageData&)source;
 	if ((myArray == 0) || (win32source.myArray == 0)) {

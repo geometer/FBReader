@@ -21,10 +21,10 @@
 
 #include "ZLWin32ImageManager.h"
 
-class Reader {
+class PngReader {
 
 public:
-	Reader(const std::string &data) : myData(data), myOffset(0) {
+	PngReader(const std::string &data) : myData(data), myOffset(0) {
 	}
 	bool read(png_bytep buffer, png_size_t length) {
 		if (myOffset + length > myData.length()) {
@@ -41,7 +41,7 @@ private:
 };
 
 static void pngReadFunction(png_structp png_ptr, png_bytep data, png_size_t length) {
-	Reader &reader = *(Reader*)png_get_io_ptr(png_ptr);
+	PngReader &reader = *(PngReader*)png_get_io_ptr(png_ptr);
 	if (!reader.read(data, length)) {
 		png_error(png_ptr, "Read Error");
 	}
@@ -68,7 +68,7 @@ bool ZLWin32ImageManager::pngConvert(const std::string &stringData, ZLWin32Image
 		return true;
 	}
 
-	Reader reader(stringData);
+	PngReader reader(stringData);
 	png_set_read_fn(pngStructure, (void*)&reader, pngReadFunction);
 	png_read_info(pngStructure, pngInfo);
 	png_uint_32 width;
