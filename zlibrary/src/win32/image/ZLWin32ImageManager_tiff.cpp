@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <tiffio.h>
+
 #include "ZLWin32ImageManager.h"
 
 bool ZLWin32ImageManager::tiffConvert(const std::string &stringData, ZLWin32ImageData &data) const {

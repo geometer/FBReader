@@ -24,7 +24,7 @@
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
-#include "../util/ReferenceUtil.h"
+#include "../util/MiscUtil.h"
 
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -177,7 +177,7 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	if (href != 0) {
 		link = (*href == '#') ? (reader.myReferenceName + href) : href;
 	}
-	TextKind hyperlinkType = ReferenceUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
+	TextKind hyperlinkType = MiscUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
 	reader.myHyperlinkStack.push(hyperlinkType);
 	reader.myModelReader.addHyperlinkControl(hyperlinkType, link);
 }

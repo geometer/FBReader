@@ -19,18 +19,31 @@
  * 02110-1301, USA.
  */
 
-#ifndef __REFERENCEUTIL_H__
-#define __REFERENCEUTIL_H__
+#include <ZLApplication.h>
+#include <ZLFile.h>
 
-#include <string>
+#include "MiscUtil.h"
 
-class ReferenceUtil {
+static bool hasPrefix(const std::string &text, const std::string &prefix) {
+	return (text.length() >= prefix.length()) && (text.substr(0, prefix.length()) == prefix);
+}
 
-private:
-	ReferenceUtil();
+bool MiscUtil::isReference(const std::string &text) {
+	return
+		hasPrefix(text, "http://") ||
+		hasPrefix(text, "https://") ||
+		hasPrefix(text, "mailto:") ||
+		hasPrefix(text, "ftp://");
+}
 
-public:
-	static bool isReference(const std::string &text);
-};
-
-#endif /* __REFERENCEUTIL_H__ */
+std::string MiscUtil::htmlDirectoryPrefix(const std::string &fileName) {
+	ZLFile file(fileName);
+	std::string shortName = file.name(false);
+	std::string path = file.path();
+	int index = -1;
+	if ((path.length() > shortName.length()) &&
+			(path[path.length() - shortName.length() - 1] == ':')) {
+		index = shortName.rfind('/');
+	}
+	return path.substr(0, path.length() - shortName.length() + index + 1);
+}

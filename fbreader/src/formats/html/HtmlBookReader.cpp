@@ -25,7 +25,7 @@
 
 #include "HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
-#include "../util/ReferenceUtil.h"
+#include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
 
 class HtmlControlTagAction : public HtmlTagAction {
@@ -190,7 +190,7 @@ void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttrib
 					if (value[0] == '#') {
 						myReader.setHyperlinkType(INTERNAL_HYPERLINK);
 						bookReader().addHyperlinkControl(INTERNAL_HYPERLINK, value.substr(1));
-					} else if (ReferenceUtil::isReference(value)) {
+					} else if (MiscUtil::isReference(value)) {
 						myReader.setHyperlinkType(EXTERNAL_HYPERLINK);
 						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value);
 					}

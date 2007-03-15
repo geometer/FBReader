@@ -26,6 +26,7 @@
 
 #include "ORBookReader.h"
 #include "../oeb/XHTMLReader.h"
+#include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
 
 ORBookReader::ORBookReader(BookModel &model) : myModelReader(model) {
@@ -126,9 +127,7 @@ void ORBookReader::endElementHandler(const char *tag) {
 }
 
 bool ORBookReader::readBook(const std::string &fileName) {
-	int index0 = fileName.rfind(':');
-	int index1 = fileName.rfind('/');
-	myFilePrefix = fileName.substr(0, std::max(index0, index1) + 1);
+	myFilePrefix = MiscUtil::htmlDirectoryPrefix(fileName);
 
 	myResources.clear();
 	myCoverReference.erase();

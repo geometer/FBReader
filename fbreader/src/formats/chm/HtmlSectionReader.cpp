@@ -24,7 +24,7 @@
 #include "HtmlSectionReader.h"
 #include "CHMReferenceCollection.h"
 #include "CHMFileImage.h"
-#include "../util/ReferenceUtil.h"
+#include "../util/MiscUtil.h"
 
 class HtmlSectionTagAction : public HtmlTagAction {
 
@@ -87,7 +87,7 @@ void HtmlSectionHrefTagAction::run(bool start, const std::vector<HtmlReader::Htm
 			} else if ((reader().hyperlinkType() == REGULAR) && (attributes[i].Name == "HREF")) {
 				const std::string &value = attributes[i].Value;
 				if (!value.empty()) {
-					if (ReferenceUtil::isReference(value)) {
+					if (MiscUtil::isReference(value)) {
 						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value);
 						reader().setHyperlinkType(INTERNAL_HYPERLINK);
 					} else {

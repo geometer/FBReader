@@ -19,16 +19,19 @@
  * 02110-1301, USA.
  */
 
-#include "ReferenceUtil.h"
+#ifndef __MISCUTIL_H__
+#define __MISCUTIL_H__
 
-static bool hasPrefix(const std::string &text, const std::string &prefix) {
-	return (text.length() >= prefix.length()) && (text.substr(0, prefix.length()) == prefix);
-}
+#include <string>
 
-bool ReferenceUtil::isReference(const std::string &text) {
-	return
-		hasPrefix(text, "http://") ||
-		hasPrefix(text, "https://") ||
-		hasPrefix(text, "mailto:") ||
-		hasPrefix(text, "ftp://");
-}
+class MiscUtil {
+
+private:
+	MiscUtil();
+
+public:
+	static bool isReference(const std::string &text);
+	static std::string htmlDirectoryPrefix(const std::string &fileName);
+};
+
+#endif /* __MISCUTIL_H__ */

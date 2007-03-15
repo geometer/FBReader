@@ -25,6 +25,7 @@
 
 #include "OEBBookReader.h"
 #include "XHTMLReader.h"
+#include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
 
 OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
@@ -80,9 +81,7 @@ void OEBBookReader::endElementHandler(const char *tag) {
 }
 
 bool OEBBookReader::readBook(const std::string &fileName) {
-	int index0 = fileName.rfind(':');
-	int index1 = fileName.rfind('/');
-	myFilePrefix = fileName.substr(0, std::max(index0, index1) + 1);
+	myFilePrefix = MiscUtil::htmlDirectoryPrefix(fileName);
 
 	myIdToHref.clear();
 	myHtmlFileNames.clear();

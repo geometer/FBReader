@@ -28,6 +28,7 @@
 #include "HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
 #include "../../description/BookDescription.h"
+#include "../util/MiscUtil.h"
 
 bool HtmlPlugin::acceptsFile(const ZLFile &file) const {
 	const std::string &extension = file.extension();
@@ -63,9 +64,7 @@ bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model)
 		detector.detect(*stream, format);
 	}
 
-	int index0 = fileName.rfind('/');
-	int index1 = fileName.rfind(':');
-	HtmlBookReader(fileName.substr(0, std::max(index0, index1) + 1), model, format, description.encoding()).readDocument(*stream);
+	HtmlBookReader(MiscUtil::htmlDirectoryPrefix(fileName), model, format, description.encoding()).readDocument(*stream);
 
 	return true;
 }
