@@ -6,8 +6,8 @@ Section: @SECTION@
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Installed-Size: @SIZE@
 Description: Crossplatform UI library.
- Text 0
+ Platform-dependent part of FBReader
  .
- Text 1
+ Platform-dependent part of FBReader
  .
  Home page: http://only.mawhrin.net/zlibrary/

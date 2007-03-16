@@ -3,4 +3,4 @@ Section: qpe/applications
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Architecture: arm
 License: GPLv2
-Description: Crossplatform UI library.
+Description: Platform-dependent part of FBReader
