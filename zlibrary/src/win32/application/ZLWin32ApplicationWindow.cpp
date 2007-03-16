@@ -167,6 +167,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myBlockMouseEvents(false),
 	myKeyboardModifierMask(0),
 	myFullScreen(false),
+	myWait(false),
 	myCursor(0) {
 
 	INITCOMMONCONTROLSEX icex;
@@ -357,4 +358,11 @@ void ZLWin32ApplicationWindow::blockMouseEvents(bool block) {
 void ZLWin32ApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 	static HCURSOR handCursor = LoadCursor(0, IDC_HAND);
 	myCursor = hyperlink ? handCursor : 0;
+}
+
+void ZLWin32ApplicationWindow::setWait(bool wait) {
+	static HCURSOR waitCursor = LoadCursor(0, IDC_WAIT);
+	myCursor = wait ? waitCursor : 0;
+	SetCursor(myCursor);
+	myWait = wait;
 }

@@ -8,13 +8,6 @@ desktop: зависимости в пакетах для etch
 
 ==============================================================================
 
-*** win32 version (0.8.0)
-
-WaitMessage
-удалить все #include <iostream>
-
-==============================================================================
-
 *** после 0.8.0
 
 linux desktop: win32-like color selection control
@@ -95,6 +88,7 @@ mobipocket: где начинаются картинки?
 
 *** win32 version (после 0.8.0)
 
+WaitMessage
 selection dialog
 	разобраться со скоростью перехода в другой каталог
 центрировать Options/Book Info dialogs (Windows XP)

@@ -70,6 +70,11 @@ bool ZLWin32DialogManager::selectionDialog(const std::string &title, ZLTreeHandl
 }
 
 void ZLWin32DialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	//ZLWin32WaitMessage waitMessage(!myDialogs.empty() ? myDialogs.top() : myWindow, message);
+	if (myApplicationWindow != 0) {
+		myApplicationWindow->setWait(true);
+	}
 	runnable.run();
+	if (myApplicationWindow != 0) {
+		myApplicationWindow->setWait(false);
+	}
 }

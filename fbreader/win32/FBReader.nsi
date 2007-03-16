@@ -2,7 +2,7 @@
 
 Name "FBReader for Windows XP"
 
-OutFile "FBReaderSetup-pre0.8.0.exe"
+OutFile "FBReaderSetup-0.8.0.exe"
 
 InstallDir $PROGRAMFILES\FBReader
 InstallDirRegKey HKCU "Software\FBReader" ""

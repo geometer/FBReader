@@ -71,6 +71,7 @@ public:
 	HWND mainWindow() const;
 	int topOffset() const;
 	void blockMouseEvents(bool block);
+	void setWait(bool wait);
 
 private:
 	LRESULT mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -100,6 +101,7 @@ private:
 	int myKeyboardModifierMask;
 
 	bool myFullScreen;
+	bool myWait;
 
 	HCURSOR myCursor;
 };
