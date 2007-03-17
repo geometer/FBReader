@@ -66,7 +66,7 @@ ToolBarButton::~ToolBarButton() {
 
 QPixmap &ToolBarButton::pixmap() {
 	if (myReleasedPixmap == 0) {
-		myReleasedPixmap = new QPixmap(Resource::loadPixmap((ZLApplication::ApplicationName() + ZLApplication::FileNameSeparator + myButton.iconName()).c_str()));
+		myReleasedPixmap = new QPixmap(Resource::loadPixmap((ZLApplication::ApplicationName() + ZLApplication::FileNameDelimiter + myButton.iconName()).c_str()));
 	}
 	if (myButton.isPressed()) {
 		if (myPressedPixmap == 0) {

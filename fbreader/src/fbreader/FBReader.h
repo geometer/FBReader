@@ -393,6 +393,8 @@ private:
 	ZLKeyBindings myBindings180;
 	ZLKeyBindings myBindings270;
 
+	std::string myBookToOpen;
+
 	ProgramCollectionMap myProgramCollectionMap;
 
 friend class OptionsDialog;

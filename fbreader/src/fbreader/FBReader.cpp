@@ -117,7 +117,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBindings0("Keys"),
 	myBindings90("Keys90"),
 	myBindings180("Keys180"),
-	myBindings270("Keys270") {
+	myBindings270("Keys270"),
+	myBookToOpen(bookToOpen) {
 
 	myModel = 0;
 	myBookTextView = new BookTextView(*this, context());
@@ -128,22 +129,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
-
-	BookDescriptionPtr description;
-
-	if (!bookToOpen.empty()) {
-		description = createDescription(bookToOpen);
-	}
-
-	if (description.isNull()) {
-		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, helpFileName());
-		description = BookDescription::getDescription(bookName.value());
-
-		if (description.isNull()) {
-			description = BookDescription::getDescription(helpFileName());
-		}
-	}
-	openBook(description);
 
 	addAction(ACTION_SHOW_COLLECTION, new ShowCollectionAction(*this));
 	addAction(ACTION_SHOW_LAST_BOOKS, new ShowRecentBooksListAction(*this));
@@ -238,6 +223,21 @@ FBReader::~FBReader() {
 void FBReader::initWindow() {
 	ZLApplication::initWindow();
 	trackStylus(true);
+
+	BookDescriptionPtr description;
+	if (!myBookToOpen.empty()) {
+		description = createDescription(myBookToOpen);
+	}
+	if (description.isNull()) {
+		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, helpFileName());
+		description = BookDescription::getDescription(bookName.value());
+
+		if (description.isNull()) {
+			description = BookDescription::getDescription(helpFileName());
+		}
+	}
+	openBook(description);
+	refreshWindow();
 }
 
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {

@@ -64,7 +64,8 @@ bool HtmlPlugin::readModel(const BookDescription &description, BookModel &model)
 		detector.detect(*stream, format);
 	}
 
-	HtmlBookReader(MiscUtil::htmlDirectoryPrefix(fileName), model, format, description.encoding()).readDocument(*stream);
+	std::string directoryPrefix = MiscUtil::htmlDirectoryPrefix(fileName);
+	HtmlBookReader(directoryPrefix, model, format, description.encoding()).readDocument(*stream);
 
 	return true;
 }

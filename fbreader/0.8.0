@@ -1,10 +1,3 @@
-*** 0.8.0
-
-вставить в текст для windows упоминания о lib{ungif,tiff,jpeg,png}
-проблема с xxx.chm на maemo
-
-==============================================================================
-
 *** после 0.8.0
 
 linux desktop: win32-like color selection control
