@@ -90,7 +90,10 @@ void TextView::paint() {
 		drawTextLine(**it);
 	}
 
-	positionIndicator().draw();
+	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+	if (indicatorStyle.ShowOption.value()) {
+		positionIndicator().draw();
+	}
 
 	ParagraphCursorCache::cleanup();
 }
@@ -415,11 +418,14 @@ bool TextView::onStylusPress(int x, int y) {
 	  return false;
 	}
 
-	myTreeStateIsFrozen = true;
-	bool indicatorAnswer = positionIndicator().onStylusPress(x, y);
-	myTreeStateIsFrozen = false;
-	if (indicatorAnswer || (myModel->kind() != TextModel::TREE_MODEL)) {
-		return indicatorAnswer;
+	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+	if (indicatorStyle.ShowOption.value() && indicatorStyle.IsSensitiveOption.value()) {
+		myTreeStateIsFrozen = true;
+		bool indicatorAnswer = positionIndicator().onStylusPress(x, y);
+		myTreeStateIsFrozen = false;
+		if (indicatorAnswer || (myModel->kind() != TextModel::TREE_MODEL)) {
+			return indicatorAnswer;
+		}
 	}
 
 	std::vector<TreeNodePosition>::const_iterator it =

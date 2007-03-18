@@ -80,9 +80,6 @@ size_t TextView::PositionIndicator::endTextIndex() const {
 
 void TextView::PositionIndicator::draw() {
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
-	if (!indicatorStyle.ShowOption.value()) {
-		return;
-	}
 
 	ZLPaintContext &context = this->context();
 
@@ -130,11 +127,6 @@ void TextView::PositionIndicator::draw() {
 }
 
 bool TextView::PositionIndicator::onStylusPress(int x, int y) {
-	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
-	if (!indicatorStyle.ShowOption.value() || !indicatorStyle.IsSensitiveOption.value()) {
-		return false;
-	}
-
 	const long bottom = this->bottom();
 	const long top = this->top();
 	const long left = this->left();
