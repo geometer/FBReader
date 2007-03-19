@@ -107,7 +107,8 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 	if (description->myTitle.empty()) {
 		description->myTitle = ZLFile::fileNameToUtf8(bookFile.name(true));
 	}
-	if (description->myAuthor == 0) {
+	AuthorPtr author = description->myAuthor;
+	if (author.isNull() || author->displayName().empty()) {
 		description->myAuthor = SingleAuthor::create();
 	}
 	if (description->myEncoding.empty()) {
