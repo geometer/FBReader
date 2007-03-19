@@ -27,6 +27,7 @@
 #include <ZLFileInfo.h>
 #include <ZLFile.h>
 
+class ZLDir;
 class ZLFSDir;
 class ZLInputStream;
 class ZLOutputStream;
@@ -58,7 +59,8 @@ protected:
 
 	virtual int findArchiveFileNameDelimiter(const std::string &path) const = 0;
 	virtual int findLastFileNameDelimiter(const std::string &path) const = 0;
-	virtual bool isRootDirectoryPath(const std::string &path) const = 0;
+	virtual shared_ptr<ZLDir> rootDirectory() const = 0;
+	virtual const std::string &rootDirectoryPath() const = 0;
 	virtual std::string parentPath(const std::string &path) const = 0;
 
 private:

@@ -32,8 +32,7 @@
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
 	{
-		int index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
-		// TODO: remove this hack
+		size_t index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
 		if (index < myPath.length() - 1) {
 			myNameWithExtension = myPath.substr(index + 1);
 		} else {

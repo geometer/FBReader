@@ -107,13 +107,19 @@ int ZLWin32FSManager::findArchiveFileNameDelimiter(const std::string &path) cons
 	return (index == 1) ? -1 : index;
 }
 
-bool ZLWin32FSManager::isRootDirectoryPath(const std::string &path) const {
-	return path == "";
+static const std::string RootPath = "";
+
+shared_ptr<ZLDir> ZLUnixFSManager::rootDirectory() const {
+	return new ZLWin32RootDir();
+}
+
+const std::string &ZLWin32FSManager::rootDirectoryPath() const {
+	return RootPath;
 }
 
 std::string ZLWin32FSManager::parentPath(const std::string &path) const {
 	if (path.length() <= 3) {
-		return "";
+		return RootPath;
 	}
 	int index = findLastFileNameDelimiter(path);
 	std::string result = path.substr(0, index);

@@ -24,7 +24,12 @@
 #include <string>
 #include <vector>
 
+#include <shared_ptr.h>
+
 class ZLDir {
+
+public:
+	static shared_ptr<ZLDir> root();
 
 public:
 	ZLDir(const std::string &path);

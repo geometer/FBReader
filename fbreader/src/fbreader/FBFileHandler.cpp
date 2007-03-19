@@ -35,6 +35,9 @@ FBFileHandler::FBFileHandler() :
 	if (myDir.isNull()) {
 		myDir = ZLFile(ZLApplication::HomeDirectory).directory();
 	}
+	if (myDir.isNull()) {
+		myDir = ZLDir::root();
+	}
 }
 
 FBFileHandler::~FBFileHandler() {

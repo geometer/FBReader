@@ -30,7 +30,8 @@ protected:
 	ZLFSDir *createNewDirectory(const std::string &path) const;
 
 	int findArchiveFileNameDelimiter(const std::string &path) const;
-	bool isRootDirectoryPath(const std::string &path) const;
+	shared_ptr<ZLDir> rootDirectory() const;
+	const std::string &rootDirectoryPath() const;
 	std::string parentPath(const std::string &path) const;
 
 	void moveFile(const std::string &oldName, const std::string &newName);
