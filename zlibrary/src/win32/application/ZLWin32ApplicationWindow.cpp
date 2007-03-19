@@ -123,6 +123,8 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			if (!myFullScreen && !IsMaximized(myMainWindow)) {
 				RECT rectangle;
 				GetWindowRect(myMainWindow, &rectangle);
+				myXOption.setValue(rectangle.left);
+				myYOption.setValue(rectangle.top);
 				myWidthOption.setValue(rectangle.right - rectangle.left + 1);
 				myHeightOption.setValue(rectangle.bottom - rectangle.top + 1);
 			}
@@ -161,6 +163,8 @@ static const std::string OPTIONS = "Options";
 
 ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
+	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
+	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myToolbar(0),
@@ -196,7 +200,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 void ZLWin32ApplicationWindow::init() {
 	const WCHAR *aName = ::wchar(myClassName);
-	myMainWindow = CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 0, myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
+	myMainWindow = CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);

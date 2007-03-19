@@ -93,6 +93,8 @@ void ZLQtApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::B
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
+	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
+	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myFullScreen(false),
@@ -113,6 +115,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	setToolBarsMovable(false);
 
 	resize(myWidthOption.value(), myHeightOption.value());
+	move(myXOption.value(), myYOption.value());
 
 	qApp->setMainWidget(this);
 	menuBar()->hide();
@@ -121,6 +124,13 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 	if (!isFullscreen() && !isMaximized()) {
+		QPoint position = pos();
+		if (position.x() != -1) {
+			myXOption.setValue(position.x());
+		}
+		if (position.y() != -1) {
+			myYOption.setValue(position.y());
+		}
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}

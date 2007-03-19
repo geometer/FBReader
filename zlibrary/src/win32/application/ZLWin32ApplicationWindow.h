@@ -84,6 +84,8 @@ public:
 */
 
 private:
+	ZLIntegerRangeOption myXOption;
+	ZLIntegerRangeOption myYOption;
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
 

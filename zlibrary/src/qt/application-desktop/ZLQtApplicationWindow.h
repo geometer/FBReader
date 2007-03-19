@@ -70,6 +70,8 @@ friend class ZLQtToolBarAction;
 	std::map<const ZLApplication::Toolbar::Item*, class ZLQtToolBarAction*> myActions;
 	std::map<ZLApplication::Toolbar::ItemPtr,QWidget*> mySeparatorMap;
 
+	ZLIntegerRangeOption myXOption;
+	ZLIntegerRangeOption myYOption;
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
 

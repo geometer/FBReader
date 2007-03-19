@@ -66,6 +66,8 @@ public:
 	GtkWindow *getMainWindow() { return myMainWindow; }
 
 private:
+	ZLIntegerRangeOption myXOption;
+	ZLIntegerRangeOption myYOption;
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
 

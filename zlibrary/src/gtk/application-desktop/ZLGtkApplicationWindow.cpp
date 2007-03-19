@@ -56,6 +56,8 @@ static const std::string OPTIONS = "Options";
 
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
+	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
+	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
 	myFullScreen(false),
@@ -75,6 +77,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_ICONS);
 
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
+	gtk_window_move(myMainWindow, myXOption.value(), myYOption.value());
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
@@ -85,8 +88,11 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
 	if (!myFullScreen) {
-		int width, height;
+		int x, y, width, height;
+		gtk_window_get_position(myMainWindow, &x, &y);
 		gtk_window_get_size(myMainWindow, &width, &height);
+		myXOption.setValue(x);
+		myYOption.setValue(y);
 		myWidthOption.setValue(width);
 		myHeightOption.setValue(height);
 	}
