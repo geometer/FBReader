@@ -23,6 +23,10 @@
 #include "ZLGtkFSManager.h"
 
 std::string ZLGtkFSManager::convertFilenameToUtf8(const std::string &name) const {
+	if (name.empty()) {
+		return name;
+	}
+
 	char *gtkString = g_locale_to_utf8(name.data(), name.length(), 0, 0, 0);
 	std::string convertedName = gtkString;
 	g_free(gtkString);

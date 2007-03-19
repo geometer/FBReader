@@ -23,5 +23,9 @@
 #include "ZLQtFSManager.h"
 
 std::string ZLQtFSManager::convertFilenameToUtf8(const std::string &name) const {
+	if (name.empty()) {
+		return name;
+	}
+
 	return (const char*)QString::fromLocal8Bit(name.c_str()).utf8();
 }
