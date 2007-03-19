@@ -51,20 +51,35 @@ void ZLGtkViewWidget::updateCoordinates(int &x, int &y) {
 	y -= context.topMargin();
 }
 
+static bool isStylusEvent(GtkWidget *widget, GdkEventButton *event) {
+	if (event->button == 8) {
+		return false;
+	}
+	if (event->state & GDK_MOD4_MASK) {
+		return false;
+	}
+	if (gtk_widget_get_extension_events(widget) == GDK_EXTENSION_EVENTS_NONE) {
+		return true;
+	}
+	double pressure;
+	gdk_event_get_axis((GdkEvent*)event, GDK_AXIS_PRESSURE, &pressure);
+	return pressure < 0.4;
+}
+
 void ZLGtkViewWidget::onMousePressed(GdkEventButton *event) {
 	int x = (int)event->x;
 	int y = (int)event->y;
 	updateCoordinates(x, y);
-	if ((event->button == 1) && ((event->state & GDK_MOD4_MASK) == 0)) {
+	if (isStylusEvent(myArea, event)) {
 		view()->onStylusMove(x, y);
 		view()->onStylusPress(x, y);
-	} else if ((event->button == 1) || (event->button == 8)) {
+	} else {
 		view()->onFingerTap(x, y);
 	}
 }
 
 void ZLGtkViewWidget::onMouseReleased(GdkEventButton *event) {
-	if (event->button == 1) {
+	if (isStylusEvent(myArea, event)) {
 		int x = (int)event->x;
 		int y = (int)event->y;
 		updateCoordinates(x, y);
@@ -101,6 +116,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	myRotatedPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
+	gtk_widget_set_extension_events(myArea, GDK_EXTENSION_EVENTS_ALL);
 }
 
 ZLGtkViewWidget::~ZLGtkViewWidget() {
