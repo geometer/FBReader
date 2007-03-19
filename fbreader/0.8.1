@@ -24,6 +24,9 @@ selection dialog
 W32ColorComboBox::removeCustomColor()
 переименовать XMLConfig->RegistryConfig
 таймер
+expat -> msxml
+iconv -> internal converter
+	удалить все #ifdef _WIN32
 
 *** после 0.8.1
 
@@ -107,9 +110,6 @@ mobipocket: где начинаются картинки?
 	в неактивном LineEditor позиционировать курсор слева
 	save selection dialog (для GC)
 	selection dialog resize: перерисовка кнопок
-expat -> msxml
-iconv -> internal converter
-	удалить все #ifdef _WIN32
 оптимизировать PaintContext
 запретить Drag'N'Drop в toolbar и listview (падения в wine)
 предусмотреть возможность отсутствия файлов иконок
