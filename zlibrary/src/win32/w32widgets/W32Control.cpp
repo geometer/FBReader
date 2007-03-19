@@ -393,10 +393,12 @@ W32Widget::Size W32KeyNameEditor::minimumSize() const {
 LRESULT CALLBACK W32KeyNameEditor::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	W32KeyNameEditor *editor = ourEditors[hWnd];
 	if (editor == 0) {
-		return false;
+		return 0;
 	}
 	int &mask = editor->myKeyboardModifierMask;
 	switch (uMsg) {
+		case WM_GETDLGCODE:
+			return DLGC_WANTALLKEYS;	
 		case WM_KEYDOWN:
 			if (wParam == 0x10) {
 				mask |= 0x1;
@@ -407,7 +409,7 @@ LRESULT CALLBACK W32KeyNameEditor::Callback(HWND hWnd, UINT uMsg, WPARAM wParam,
 			} else {
 				editor->setText(ZLKeyUtil::keyName(wParam, wParam, mask));
 			}
-			return true;
+			return 0;
 		case WM_KEYUP:
 			if (wParam == 0x10) {
 				mask &= ~0x1;
@@ -416,9 +418,9 @@ LRESULT CALLBACK W32KeyNameEditor::Callback(HWND hWnd, UINT uMsg, WPARAM wParam,
 			} else if (wParam == 0x12) {
 				mask &= ~0x4;
 			}
-			return true;
+			return 0;
 		case WM_CHAR:
-			return true;
+			return 0;
 		case WM_SETFOCUS:
 			editor->setText("");
 			mask = 0;
