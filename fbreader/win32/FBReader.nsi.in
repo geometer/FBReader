@@ -1,8 +1,6 @@
-#!include "MUI.nsh"
-
 Name "FBReader for Windows XP"
 
-OutFile "FBReaderSetup-0.8.0.exe"
+OutFile "FBReaderSetup-@VERSION@.exe"
 
 InstallDir $PROGRAMFILES\FBReader
 InstallDirRegKey HKCU "Software\FBReader" ""
