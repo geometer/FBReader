@@ -38,6 +38,7 @@
 #include "RecentBooksView.h"
 #include "BookInfoDialog.h"
 #include "FBFileHandler.h"
+#include "TimeUpdater.h"
 
 #include "../FBOptions.h"
 #include "../optionsDialog/OptionsDialog.h"
@@ -238,6 +239,8 @@ void FBReader::initWindow() {
 	}
 	openBook(description);
 	refreshWindow();
+
+	ZLTimeManager::instance().addTask(new TimeUpdater(*this), 1000);
 }
 
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {

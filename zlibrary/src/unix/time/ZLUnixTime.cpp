@@ -19,6 +19,7 @@
  */
 
 #include <sys/timeb.h>
+#include <time.h>
 
 #include "ZLUnixTime.h"
 
@@ -26,4 +27,12 @@ ZLTime ZLUnixTimeManager::currentTime() const {
 	struct timeb timeB;
 	ftime(&timeB);
 	return ZLTime(timeB.time, timeB.millitm);
+}
+
+short ZLUnixTimeManager::hoursBySeconds(long seconds) const {
+	return localtime(&seconds)->tm_hour;
+}
+
+short ZLUnixTimeManager::minutesBySeconds(long seconds) const {
+	return localtime(&seconds)->tm_min;
 }

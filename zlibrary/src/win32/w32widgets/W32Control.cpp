@@ -113,17 +113,26 @@ void W32StandardControl::allocate(WORD *&p, short &id) const {
 }
 
 void W32Control::setPosition(int x, int y, Size size) {
+	bool doMove = (myX != x) || (myY != y);
+	bool doResize = mySize != size;
 	myX = x;
 	myY = y;
 	mySize = size;
-	if (myWindow != 0) {
+	if ((doResize || doMove) && (myWindow != 0)) {
 		RECT r;
 		r.left = x;
 		r.top = y;
 		r.right = x + size.Width;
 		r.bottom = y + size.Height;
 		MapDialogRect(GetParent(myWindow), &r);
-		SetWindowPos(myWindow, 0, r.left, r.top, r.right - r.left, r.bottom - r.top, SWP_NOZORDER | SWP_NOOWNERZORDER);
+		DWORD flags = SWP_NOZORDER | SWP_NOOWNERZORDER;
+		if (!doResize) {
+			flags |= SWP_NOSIZE;
+		}
+		if (!doMove) {
+			flags |= SWP_NOMOVE;
+		}
+		SetWindowPos(myWindow, 0, r.left, r.top, r.right - r.left, r.bottom - r.top, flags);
 	}
 }
 

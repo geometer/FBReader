@@ -25,8 +25,10 @@
 
 class ZLUnixTimeManager : public ZLTimeManager {
 
-public:
+private:
 	ZLTime currentTime() const;
+	short hoursBySeconds(long seconds) const;
+	short minutesBySeconds(long seconds) const;
 };
 
 #endif /* __ZLUNIXTIME_H__ */

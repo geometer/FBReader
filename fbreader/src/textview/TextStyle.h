@@ -286,9 +286,12 @@ class PositionIndicatorStyle {
 public:
 	ZLBooleanOption ShowOption;
 	ZLBooleanOption IsSensitiveOption;
+	ZLBooleanOption ShowTextPositionOption;
+	ZLBooleanOption ShowTimeOption;
 	ZLColorOption ColorOption;
 	ZLIntegerRangeOption HeightOption;
 	ZLIntegerRangeOption OffsetOption;
+	ZLIntegerRangeOption FontSizeOption;
 
 public:
 	PositionIndicatorStyle();

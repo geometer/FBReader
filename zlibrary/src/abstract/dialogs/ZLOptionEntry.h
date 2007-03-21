@@ -52,10 +52,10 @@ public:
 	void setView(ZLOptionView *view);
 	void resetView();
 
-	void setVisible(bool visible);
+	virtual void setVisible(bool visible);
 	bool isVisible() const;
 
-	void setActive(bool active);
+	virtual void setActive(bool active);
 	bool isActive() const;
 
 private:

@@ -29,6 +29,7 @@
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
 #include "../w32widgets/W32WCHARUtil.h"
+#include "../time/ZLWin32Time.h"
 
 const int ICON_SIZE = 32;
 
@@ -48,6 +49,9 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 
 LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
+		case WM_TIMER:
+			((ZLWin32TimeManager&)ZLTimeManager::instance()).execute(wParam);
+			return 0;
 		case WM_CREATE:
 			myMainWindow = hWnd;
 			ZLApplicationWindow::init();
@@ -167,6 +171,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
+	myMainWindow(0),
 	myToolbar(0),
 	myBlockMouseEvents(false),
 	myKeyboardModifierMask(0),
@@ -200,7 +205,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 void ZLWin32ApplicationWindow::init() {
 	const WCHAR *aName = ::wchar(myClassName);
-	myMainWindow = CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
+	CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);

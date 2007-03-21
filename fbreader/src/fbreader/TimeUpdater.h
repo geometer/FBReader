@@ -1,5 +1,7 @@
 /*
- * Copyright (C) 2007 Nikolay Pultsin <geometer@mawhrin.net>
+ * FBReader -- electronic book reader
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +19,23 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLWIN32TIME_H__
-#define __ZLWIN32TIME_H__
+#ifndef __TIMEUPDATER_H__
+#define __TIMEUPDATER_H__
 
-#include <map>
-#include <windows.h>
+#include <ZLRunnable.h>
+#include <ZLApplication.h>
 
-#include "../../unix/time/ZLUnixTime.h"
-
-class ZLWin32TimeManager : public ZLUnixTimeManager {
-
-private:
-	ZLWin32TimeManager();
+class TimeUpdater : public ZLRunnable {
 
 public:
-	static void createInstance() { ourInstance = new ZLWin32TimeManager(); }
-
-	void addTask(shared_ptr<ZLRunnable> task, int interval);
-	void removeTask(shared_ptr<ZLRunnable> task);
+	TimeUpdater(ZLApplication &application);
 
 private:
-	void execute(UINT taskId);
+	void run();
 
 private:
-	std::map<UINT,shared_ptr<ZLRunnable> > myTasks;
-	std::map<shared_ptr<ZLRunnable>,UINT> myIds;
-	UINT myMaxId;
-
-friend class ZLWin32ApplicationWindow;
+	ZLApplication &myApplication;
+	short myTime;
 };
 
-#endif /* __ZLWIN32TIME_H__ */
+#endif /* __TIMEUPDATER_H__ */

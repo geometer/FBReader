@@ -106,6 +106,8 @@ private:
 	bool myWait;
 
 	HCURSOR myCursor;
+
+friend class ZLWin32TimeManager;
 };
 
 #endif /* __ZLWIN32APPLICATIONWINDOW_H__ */

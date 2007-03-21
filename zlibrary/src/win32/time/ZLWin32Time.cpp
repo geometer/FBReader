@@ -18,29 +18,37 @@
  */
 
 #include "ZLWin32Time.h"
+#include "../application/ZLWin32ApplicationWindow.h"
 
-/*
-static bool taskFunction(gpointer *data) {
-	((ZLRunnable*)data)->run();
-	return true;
+ZLWin32TimeManager::ZLWin32TimeManager() : myMaxId(0) {
 }
-*/
+
+void ZLWin32TimeManager::execute(UINT taskId) {
+	shared_ptr<ZLRunnable> task = myTasks[taskId];
+	if (!task.isNull()) {
+		task->run();
+	}
+}
 
 void ZLWin32TimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
-	removeTask(task);
-	/*
-	if ((interval > 0) && !task.isNull()) {
-		myHandlers[task] = g_timeout_add(interval, (GSourceFunc)taskFunction, &*task);
+	if (ZLWin32ApplicationWindow::ourApplicationWindow != 0) {
+		HWND window = ZLWin32ApplicationWindow::ourApplicationWindow->myMainWindow;
+		if (window != 0) {
+			SetTimer(window, ++myMaxId, interval, 0);
+			myTasks[myMaxId] = task;
+			myIds[task] = myMaxId;
+		}
 	}
-	*/
 }
 
 void ZLWin32TimeManager::removeTask(shared_ptr<ZLRunnable> task) {
-	/*
-	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myHandlers.find(task);
-	if (it != myHandlers.end()) {
-		g_source_remove(it->second);
-		myHandlers.erase(it);
+	if (ZLWin32ApplicationWindow::ourApplicationWindow != 0) {
+		HWND window = ZLWin32ApplicationWindow::ourApplicationWindow->myMainWindow;
+		if (window != 0) {
+			UINT id = myIds[task];
+			KillTimer(window, id);
+			myIds.erase(task);
+			myTasks.erase(id);
+		}
 	}
-	*/
 }

@@ -10,7 +10,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
@@ -21,6 +21,9 @@
 
 #include <algorithm>
 
+#include <ZLTime.h>
+#include <ZLStringUtil.h>
+
 #include "TextView.h"
 #include "TextStyle.h"
 
@@ -29,12 +32,15 @@ static const std::string INDICATOR = "Indicator";
 PositionIndicatorStyle::PositionIndicatorStyle() :
 	ShowOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Show", true),
 	IsSensitiveOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "TouchSensitive", true),
+	ShowTextPositionOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "PositionText", true),
+	ShowTimeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Time", true),
 	ColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Color", ZLColor(127, 127, 127)),
 	HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Height", 1, 100, 16),
-	OffsetOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Offset", 0, 100, 4) {
+	OffsetOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Offset", 0, 100, 4),
+	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "FontSize", 4, 72, 14) {
 }
 
-TextView::PositionIndicator::PositionIndicator(TextView &textView) : myTextView(textView) {
+TextView::PositionIndicator::PositionIndicator(TextView &textView) : myTextView(textView), myExtraWidth(0) {
 }
 
 TextView::PositionIndicator::~PositionIndicator() {
@@ -61,7 +67,7 @@ int TextView::PositionIndicator::left() const {
 }
 
 int TextView::PositionIndicator::right() const {
-	return context().width() - 1;
+	return context().width() - myExtraWidth - 1;
 }
 
 const std::vector<size_t> &TextView::PositionIndicator::textSize() const {
@@ -78,18 +84,80 @@ size_t TextView::PositionIndicator::endTextIndex() const {
 	return (i != myTextView.myTextBreaks.end()) ? *i : myTextView.myModel->paragraphsNumber();
 }
 
+void TextView::PositionIndicator::drawExtraText(const std::string &text) {
+	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
+
+	context().setFont(baseStyle.fontFamily(), indicatorStyle.FontSizeOption.value(), false, false);
+	context().setColor(baseStyle.RegularTextColorOption.value());
+
+	int width = context().stringWidth(text.data(), text.length());
+	context().drawString(right() - width, bottom() - 2, text.data(), text.length());
+	myExtraWidth += text.length() * context().stringWidth("0", 1) + context().spaceWidth();
+}
+
+size_t TextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphNumber) const {
+	return myTextView.myTextSize[paragraphNumber] - myTextView.myTextSize[startTextIndex()];
+}
+
+size_t TextView::PositionIndicator::sizeOfParagraph(size_t paragraphNumber) const {
+	return myTextView.myTextSize[paragraphNumber + 1] - myTextView.myTextSize[paragraphNumber];
+}
+
+size_t TextView::PositionIndicator::sizeOfTextBeforeCursor() const {
+	WordCursor endCursor = myTextView.endCursor();
+	const size_t paragraphNumber = endCursor.paragraphCursor().index();
+	const size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
+
+	if (paragraphLength == 0) {
+		return sizeOfTextBeforeParagraph(paragraphNumber);
+	} else {
+		return
+			sizeOfTextBeforeParagraph(paragraphNumber) +
+			sizeOfParagraph(paragraphNumber) * endCursor.wordNumber() / paragraphLength;
+	}
+}
+
+std::string TextView::PositionIndicator::textPositionString() const {
+	std::string buffer;
+	ZLStringUtil::appendNumber(buffer, 1 + sizeOfTextBeforeCursor() / 2048);
+	buffer += '/';
+	ZLStringUtil::appendNumber(buffer, 1 + sizeOfTextBeforeParagraph(endTextIndex()) / 2048);
+
+	return buffer;
+
+	/*
+	std::string buffer;
+
+	const std::vector<size_t> &textSizeVector = myTextView.myTextSize;
+	const size_t fullTextSize = textSizeVector[endTextIndex()] - textSizeVector[startTextIndex()];
+	ZLStringUtil::appendNumber(buffer, 100 * sizeOfTextBeforeCursor() / fullTextSize);
+
+	return buffer + '%';
+	*/
+}
+
+std::string TextView::PositionIndicator::timeString() const {
+	std::string buffer;
+	ZLTime time;
+	const short hours = time.hours();
+	ZLStringUtil::appendNumber(buffer, hours / 10);
+	ZLStringUtil::appendNumber(buffer, hours % 10);
+
+	buffer += ':';
+
+	const short minutes = time.minutes();
+	ZLStringUtil::appendNumber(buffer, minutes / 10);
+	ZLStringUtil::appendNumber(buffer, minutes % 10);
+
+	return buffer;
+}
+
 void TextView::PositionIndicator::draw() {
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
 
 	ZLPaintContext &context = this->context();
-
-	const long bottom = this->bottom();
-	const long top = this->top();
-	const long left = this->left();
-	const long right = this->right();
-
-	const size_t startIndex = startTextIndex();
-	const size_t endIndex = endTextIndex();
 
 	WordCursor endCursor = myTextView.endCursor();
 	bool isEndOfText = false;
@@ -97,27 +165,27 @@ void TextView::PositionIndicator::draw() {
 		isEndOfText = !endCursor.nextParagraph();
 	}
 
+	myExtraWidth = 0;
+	if (indicatorStyle.ShowTimeOption.value()) {
+		drawExtraText(timeString());
+	}
+	if (indicatorStyle.ShowTextPositionOption.value()) {
+		drawExtraText(textPositionString());
+	}
+
+	const long bottom = this->bottom();
+	const long top = this->top();
+	const long left = this->left();
+	const long right = this->right();
+
 	size_t fillWidth = right - left - 1;
 
 	if (!isEndOfText) {
-		size_t paragraphNumber = endCursor.paragraphCursor().index();
-		const std::vector<size_t> &textSizeVector = myTextView.myTextSize;
-		size_t sizeOfTextBeforeParagraph = textSizeVector[paragraphNumber] - textSizeVector[startIndex];
-		size_t fullTextSize = textSizeVector[endIndex] - textSizeVector[startIndex];
-		size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
-	
-		if (paragraphLength == 0) {
-			fillWidth = (size_t)(1.0 * fillWidth * sizeOfTextBeforeParagraph / fullTextSize);
-		} else {
-			size_t sizeOfParagraph = textSizeVector[paragraphNumber + 1] - textSizeVector[paragraphNumber];
-			fillWidth = (size_t)(
-				(sizeOfTextBeforeParagraph + 1.0 * sizeOfParagraph * endCursor.wordNumber() / paragraphLength) *
-				fillWidth / fullTextSize
-			);
-		}
+		fillWidth =
+			(size_t)(1.0 * fillWidth * sizeOfTextBeforeCursor() / sizeOfTextBeforeParagraph(endTextIndex()));
 	}
 
-	context.setColor(TextStyleCollection::instance().baseStyle().RegularTextColorOption.value());
+	context.setColor(baseStyle.RegularTextColorOption.value());
 	context.setFillColor(indicatorStyle.ColorOption.value());
 	context.fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
 	context.drawLine(left, top, right, top);
@@ -159,12 +227,10 @@ bool TextView::PositionIndicator::onStylusPress(int x, int y) {
 			if (!endCursor.paragraphCursor().isLast() || !endCursor.isEndOfParagraph()) {
 				size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
 				if (paragraphLength > 0) {
-					size_t sizeOfTextBeforeParagraph = textSizeVector[paragraphNumber] - textSizeVector[startIndex];
-					size_t sizeOfParagraph = textSizeVector[paragraphNumber + 1] - textSizeVector[paragraphNumber];
 					size_t wordNum =
 						(size_t)((1.0 * (x - left - 1) / (right - left - 1) * fullTextSize
-											- 1.0 * sizeOfTextBeforeParagraph)
-										 / sizeOfParagraph * paragraphLength);
+											- 1.0 * sizeOfTextBeforeParagraph(paragraphNumber))
+										 / sizeOfParagraph(paragraphNumber) * paragraphLength);
 					myTextView.moveEndCursor(endCursor.paragraphCursor().index(), wordNum, 0);
 					myTextView.repaintView();
 				}

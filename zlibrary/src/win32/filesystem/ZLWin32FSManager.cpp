@@ -109,7 +109,7 @@ int ZLWin32FSManager::findArchiveFileNameDelimiter(const std::string &path) cons
 
 static const std::string RootPath = "";
 
-shared_ptr<ZLDir> ZLUnixFSManager::rootDirectory() const {
+shared_ptr<ZLDir> ZLWin32FSManager::rootDirectory() const {
 	return new ZLWin32RootDir();
 }
 

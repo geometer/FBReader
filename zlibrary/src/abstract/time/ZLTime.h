@@ -32,6 +32,8 @@ public:
 	~ZLTime();
 	long millisecondsTo(const ZLTime &time) const;
 	long millisecondsFrom(const ZLTime &time) const;
+	short hours() const;
+	short minutes() const;
 
 private:
 	long mySeconds;
@@ -52,7 +54,9 @@ protected:
 	ZLTimeManager();
 	virtual ~ZLTimeManager();
 	virtual ZLTime currentTime() const = 0;
-	
+	virtual short hoursBySeconds(long seconds) const = 0;
+	virtual short minutesBySeconds(long seconds) const = 0;
+
 protected:
 	static ZLTimeManager *ourInstance;
 

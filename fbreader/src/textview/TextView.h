@@ -71,7 +71,16 @@ public:
 		size_t endTextIndex() const;
 
 	private:
+		void drawExtraText(const std::string &text);
+		std::string textPositionString() const;
+		std::string timeString() const;
+		size_t sizeOfParagraph(size_t paragraphNumber) const;
+		size_t sizeOfTextBeforeParagraph(size_t paragraphNumber) const;
+		size_t sizeOfTextBeforeCursor() const;
+
+	private:
 		TextView &myTextView;
+		int myExtraWidth;
 	};
 
 	friend class TextView::PositionIndicator;

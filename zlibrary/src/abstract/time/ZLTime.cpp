@@ -40,6 +40,14 @@ long ZLTime::millisecondsFrom(const ZLTime &time) const {
 	return - millisecondsTo(time);
 }
 
+short ZLTime::hours() const {
+	return ZLTimeManager::instance().hoursBySeconds(mySeconds);
+}
+
+short ZLTime::minutes() const {
+	return ZLTimeManager::instance().minutesBySeconds(mySeconds);
+}
+
 ZLTimeManager &ZLTimeManager::instance() {
 	return *ourInstance;
 }

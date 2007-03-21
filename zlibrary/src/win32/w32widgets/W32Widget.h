@@ -37,6 +37,9 @@ public:
 
 		Size() : Width(0), Height(0) {}
 		Size(short w, short h) : Width(w), Height(h) {}
+
+		bool operator == (const Size &s) const { return (Width == s.Width) && (Height == s.Height); }
+		bool operator != (const Size &s) const { return !operator == (s); }
 	};
 
 protected:

@@ -48,6 +48,7 @@ public:
 
 private:
 	void createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName);
+	void createIndicatorTab(FBReader &fbreader);
 	void storeTemporaryOption(ZLOption *option);
 
 private:

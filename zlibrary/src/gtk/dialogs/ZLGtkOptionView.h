@@ -22,6 +22,8 @@
 #define __ZLGTKOPTIONVIEW_H__
 
 #include <gtk/gtkwidget.h>
+#include <gtk/gtklabel.h>
+#include <gtk/gtkspinbutton.h>
 #include <gtk/gtkrange.h>
 #include <gtk/gtkframe.h>
 #include <gtk/gtkradiobutton.h>
@@ -103,14 +105,14 @@ private:
 	void onValueChanged();
 
 private:
-	GtkWidget *myLabel;
+	GtkLabel *myLabel;
 	GtkEntry *myLineEdit;
 };
 
 class SpinOptionView : public ZLGtkOptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(ZLSpinOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), mySpinBox(0) {}
 
 protected:
 	void _createItem();
@@ -119,7 +121,8 @@ protected:
 	void _onAccept() const;
 
 private:
-	GtkWidget *myLabel, *mySpinBox;
+	GtkLabel *myLabel;
+	GtkSpinButton *mySpinBox;
 };
 
 class ComboOptionView : public ZLGtkOptionView {
@@ -137,7 +140,7 @@ private:
 	void onValueChanged();
 	
 private:
-	GtkWidget *myLabel;
+	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	int mySelectedIndex;
 	int myListSize;
@@ -180,7 +183,8 @@ private:
 	void reset();
 
 private:
-	GtkWidget *myWidget, *myKeyButton, *myLabel;
+	GtkWidget *myWidget, *myKeyButton;
+	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	std::string myCurrentKey;
 };

@@ -1,5 +1,7 @@
 /*
- * Copyright (C) 2007 Nikolay Pultsin <geometer@mawhrin.net>
+ * FBReader -- electronic book reader
+ * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
+ * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +19,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLWIN32TIME_H__
-#define __ZLWIN32TIME_H__
+#include <ZLTime.h>
 
-#include <map>
-#include <windows.h>
+#include "TimeUpdater.h"
 
-#include "../../unix/time/ZLUnixTime.h"
+TimeUpdater::TimeUpdater(ZLApplication &application) : myApplication(application), myTime(-1) {
+}
 
-class ZLWin32TimeManager : public ZLUnixTimeManager {
-
-private:
-	ZLWin32TimeManager();
-
-public:
-	static void createInstance() { ourInstance = new ZLWin32TimeManager(); }
-
-	void addTask(shared_ptr<ZLRunnable> task, int interval);
-	void removeTask(shared_ptr<ZLRunnable> task);
-
-private:
-	void execute(UINT taskId);
-
-private:
-	std::map<UINT,shared_ptr<ZLRunnable> > myTasks;
-	std::map<shared_ptr<ZLRunnable>,UINT> myIds;
-	UINT myMaxId;
-
-friend class ZLWin32ApplicationWindow;
-};
-
-#endif /* __ZLWIN32TIME_H__ */
+void TimeUpdater::run() {
+	ZLTime time;
+	short minutes = time.hours() * 60 + time.minutes();
+	if (myTime != minutes) {
+		myTime = minutes;
+		myApplication.refreshWindow();
+	}
+}
