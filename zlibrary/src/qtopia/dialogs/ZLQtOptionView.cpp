@@ -114,10 +114,7 @@ void ComboOptionView::reset() {
 		return;
 	}
 
-	const int count = myComboBox->count();
-	for (int i = 0; i < count; ++i) {
-		myComboBox->removeItem(0);
-	}
+	myComboBox->clear();
 
 	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
 	const std::vector<std::string> &values = comboOption.values();
