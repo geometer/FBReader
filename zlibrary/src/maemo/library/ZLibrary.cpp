@@ -22,6 +22,8 @@
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
+#include <ZLFile.h>
+#include <ZLDir.h>
 
 #include "../../gtk/filesystem/ZLGtkFSManager.h"
 #include "../time/ZLGtkTime.h"
@@ -38,6 +40,10 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkDialogManager::createInstance();
 	ZLMaemoCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
+
+	if (!ZLFile("/usr/lib/more-gconv").directory(false).isNull()) {
+		setenv("GCONV_PATH", "/usr/lib/more-gconv", 1);
+	}
 }
 
 ZLPaintContext *ZLibrary::createContext() {
