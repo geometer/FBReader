@@ -96,21 +96,24 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 
 		myDir->collectFiles(names, true);
 		for (it = names.begin(); it != names.end(); ++it) {
-			if (!it->empty()) {
-				ZLFile file(myDir->itemPath(*it));
-				FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
-				if (plugin != 0) {
-					std::string icon = PluginIcons[plugin];
-					if (icon.empty()) {
-						icon = plugin->iconName();
-						PluginIcons[plugin] = icon;
-					}
-					const std::string displayName = ZLFile::fileNameToUtf8(file.name(false));
-					fileNodes[displayName] = new ZLTreeNode(*it, displayName, icon, false);
-				} else if (file.isArchive()) {
-					const std::string displayName = ZLFile::fileNameToUtf8(file.name(false));
-					folderNodes[displayName] = new ZLTreeNode(*it, displayName, ZipFolderIcon, true);
+			if (it->empty()) {
+				continue;
+			}
+			ZLFile file(myDir->itemPath(*it));
+			const std::string displayName = ZLFile::fileNameToUtf8(file.name(false));
+			if (displayName.empty()) {
+				continue;
+			}
+			FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
+			if (plugin != 0) {
+				std::string icon = PluginIcons[plugin];
+				if (icon.empty()) {
+					icon = plugin->iconName();
+					PluginIcons[plugin] = icon;
 				}
+				fileNodes[displayName] = new ZLTreeNode(*it, displayName, icon, false);
+			} else if (file.isArchive()) {
+				folderNodes[displayName] = new ZLTreeNode(*it, displayName, ZipFolderIcon, true);
 			}
 		}
 
