@@ -1,12 +1,10 @@
 include $(ROOTDIR)/makefiles/platforms.mk
 
 MAKE = make ROOTDIR=$(ROOTDIR)
+LIBMAKE = $(MAKE) BUILD_SHARED_LIBRARY=$(BUILD_SHARED_LIBRARY)
 
 include $(ROOTDIR)/makefiles/arch/$(TARGET_ARCH).mk
 
-ifeq "$(BUILD_SHARED_LIBRARY)" ""
-  BUILD_SHARED_LIBRARY = yes
-endif
 ifeq "$(BINDIR)" ""
   BINDIR = $(INSTALLDIR)/bin
 endif
@@ -24,6 +22,9 @@ ifeq "$(HOMEDIR)" ""
 endif
 
 CFLAGS += -DINSTALLDIR=\"$(INSTALLDIR)\" -DBASEDIR=\"$(BASEDIR)\" -DHOMEDIR=\"$(HOMEDIR)\" -DIMAGEDIR=\"$(IMAGEDIR)\" -DAPPIMAGEDIR=\"$(APPIMAGEDIR)\" -DFILENAMEDELIMITER=\"$(FILENAMEDELIMITER)\" -DPATHDELIMITER=\"$(PATHDELIMITER)\"
+ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+  CFLAGS += -fPIC
+endif
 
 ifeq "$(TARGET_STATUS)" "release"
 	CFLAGS += -O3
@@ -37,6 +38,10 @@ ifeq "$(TARGET_STATUS)" "profile"
 endif
 
 ZINCLUDE = -I $(ROOTDIR)/zlibrary/include
+
+ifeq "$(BUILD_SHARED_LIBRARY)" ""
+  BUILD_SHARED_LIBRARY = yes
+endif
 
 ifneq "$(BUILD_RESOURCE_OBJECT)" "yes"
 .resources:

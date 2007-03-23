@@ -2,10 +2,6 @@ ROOTDIR = $(PWD)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-  CFLAGS += -fPIC
-endif
-
 VERSION = $(shell cat VERSION)
 
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
@@ -59,21 +55,21 @@ endif
 .objects:
 	@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \
-			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
 	done;
 	@for subdir in $(QTSUBDIRS); do \
 		if [ -d $$subdir ]; then \
-			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
 	done;
 	@for subdir in $(GTKSUBDIRS); do \
 		if [ -d $$subdir ]; then \
-			if ! $(MAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk; then \
+			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
