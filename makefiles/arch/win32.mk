@@ -15,9 +15,10 @@ CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DUNICODE -D_WIN3
 LDFLAGS = -mwindows
 
 UILIBS = -lgdi32 -lcomctl32 -lcomdlg32 -lpng12 -ljpeg -lungif -ltiff
-EXPATLIBS = -lexpat -lz -liconv
-ENCALIBS = -lenca
-BZIP2LIBS = -lbz2
+CONVERTER_LIB = -liconv
+XML_LIB = -lexpat
+ENCA_LIB = -lenca
+ARCHIVER_LIB = -lz -lbz2
 
 RM = rm -rvf
 RM_QUIET = rm -rf

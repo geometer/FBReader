@@ -115,6 +115,6 @@ void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	showIndicatorEntry->addDependentEntry(navigationEntry);
 
 	showIndicatorEntry->onStateChanged(showIndicatorEntry->initialState());
-	showTextPositionEntry->onStateChanged(showIndicatorEntry->initialState());
-	showTimeEntry->onStateChanged(showIndicatorEntry->initialState());
+	showTextPositionEntry->onStateChanged(showTextPositionEntry->initialState());
+	showTimeEntry->onStateChanged(showTimeEntry->initialState());
 }

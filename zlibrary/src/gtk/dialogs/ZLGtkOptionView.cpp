@@ -264,111 +264,68 @@ void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept(gtk_entry_get_text(myLineEdit));
 }
 
+static GdkColor convertColor(const ZLColor &color) {
+	GdkColor gdkColor;
+	gdkColor.red = color.Red * 65535 / 255;
+	gdkColor.blue = color.Blue * 65535 / 255;
+	gdkColor.green = color.Green * 65535 / 255;
+	return gdkColor;
+}
+
+static ZLColor convertColor(const GdkColor &color) {
+	ZLColor zlColor;
+	zlColor.Red = color.red * 255 / 65535;
+	zlColor.Blue = color.blue * 255 / 65535;
+	zlColor.Green = color.green * 255 / 65535;
+	return zlColor;
+}
+
 void ColorOptionView::_createItem() {
-	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
+	GdkColor initialColor = convertColor(((ZLColorOptionEntry*)myOption)->initialColor());
+	GdkColor currentColor = convertColor(((ZLColorOptionEntry*)myOption)->color());
 
-	myDrawingArea = gtk_drawing_area_new();
+	myWidget = GTK_COLOR_SELECTION(gtk_color_selection_new());
+	gtk_color_selection_set_has_opacity_control(myWidget, false);
+	gtk_color_selection_set_has_palette(myWidget, true);
+	gtk_color_selection_set_current_color(myWidget, &currentColor);
+	gtk_color_selection_set_previous_color(myWidget, &initialColor);
 
-	gtk_widget_set_size_request(GTK_WIDGET(myDrawingArea), 60, 20);
-	myWidget = gtk_table_new(3, 4, false);
-
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 3, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-
-	myRSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myRSlider), false);
-	gtk_range_set_value(GTK_RANGE(myRSlider), color.Red);
-	g_signal_connect(G_OBJECT(myRSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
-
-	myGSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myGSlider), false);
-	gtk_range_set_value(GTK_RANGE(myGSlider), color.Green);
-	g_signal_connect(G_OBJECT(myGSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
-
-	myBSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
-	gtk_scale_set_draw_value(GTK_SCALE(myBSlider), false);
-	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
-	g_signal_connect(G_OBJECT(myBSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
-
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myRSlider, 1, 2, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myGSlider, 1, 2, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myBSlider, 1, 2, 3, 4);
-
-	myColor.red = color.Red * 65535 / 255;
-	myColor.blue = color.Blue * 65535 / 255;
-	myColor.green = color.Green * 65535 / 255;
-
-	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
-
-	GtkWidget *frame = gtk_frame_new(NULL);
-
-	gtk_container_add(GTK_CONTAINER(frame), myDrawingArea);
-
-	gtk_table_attach(GTK_TABLE(myWidget), frame, 2, 3, 1, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-
-	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 2);
-	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 2);
-
-	gtk_widget_show_all(myWidget);
-
-	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+	GtkContainer *container = GTK_CONTAINER(gtk_vbox_new(true, 0));
+	gtk_container_set_border_width(container, 5);
+	gtk_container_add(container, GTK_WIDGET(myWidget));
+	myTab->addItem(GTK_WIDGET(container), myRow, myFromColumn, myToColumn);
+	gtk_widget_show(GTK_WIDGET(container));
 }
 
 void ColorOptionView::reset() {
-	if (myDrawingArea == 0) {
+	if (myWidget == 0) {
 		return;
 	}
 
 	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
 
-	colorEntry.onReset(ZLColor(
-		myColor.red * 255 / 65535,
-		myColor.green * 255 / 65535,
-		myColor.blue * 255 / 65535
-	));
+	GdkColor gdkColor;
+	gtk_color_selection_get_current_color(myWidget, &gdkColor);
+	colorEntry.onReset(convertColor(gdkColor));
 
-	const ZLColor &color = colorEntry.color();
-
-	gtk_range_set_value(GTK_RANGE(myRSlider), color.Red);
-	gtk_range_set_value(GTK_RANGE(myGSlider), color.Green);
-	gtk_range_set_value(GTK_RANGE(myBSlider), color.Blue);
-
-	myColor.red = color.Red * 65535 / 255;
-	myColor.blue = color.Blue * 65535 / 255;
-	myColor.green = color.Green * 65535 / 255;
-
-	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
+	GdkColor initialColor = convertColor(((ZLColorOptionEntry*)myOption)->initialColor());
+	GdkColor currentColor = convertColor(((ZLColorOptionEntry*)myOption)->color());
+	gtk_color_selection_set_current_color(myWidget, &currentColor);
+	gtk_color_selection_set_previous_color(myWidget, &initialColor);
 }
 
 void ColorOptionView::_show() {
-	gtk_widget_show(myWidget);
+	gtk_widget_show(GTK_WIDGET(myWidget));
 }
 
 void ColorOptionView::_hide() {
-	gtk_widget_hide(myWidget);
-}
-
-void ColorOptionView::_onSliderMove(GtkRange *, gpointer self) {
-	((ColorOptionView *)self)->onSliderMove();
-}
-
-void ColorOptionView::onSliderMove() {
-	myColor.red = (int)(gtk_range_get_value(GTK_RANGE(myRSlider)) * 65535 / 255);
-	myColor.blue = (int)(gtk_range_get_value(GTK_RANGE(myBSlider)) * 65535 / 255);
-	myColor.green = (int)(gtk_range_get_value(GTK_RANGE(myGSlider)) * 65535 / 255);
-
-	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
+	gtk_widget_hide(GTK_WIDGET(myWidget));
 }
 
 void ColorOptionView::_onAccept() const {
-	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(
-		myColor.red * 255 / 65535,
-		myColor.green * 255 / 65535,
-		myColor.blue * 255 / 65535
-	));
+	GdkColor gdkColor;
+	gtk_color_selection_get_current_color(myWidget, &gdkColor);
+	((ZLColorOptionEntry*)myOption)->onAccept(convertColor(gdkColor));
 }
 
 static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {

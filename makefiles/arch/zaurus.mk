@@ -22,6 +22,6 @@ LD = $(TOOLSPATH)/g++
 CFLAGS = -pipe -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DUSE_ZAURUS_FONTHACK -ftemplate-depth-30
 LDFLAGS = -Wl,-rpath,$(LIBDIR),-rpath,/usr/lib
 
-EXPATLIBS = -lexpat
-ENCALIBS = -lenca
-BZIP2LIBS = -lbz2
+XML_LIB = -lexpat
+ENCA_LIB = -lenca
+ARCHIVER_LIB = -lbz2

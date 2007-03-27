@@ -13,20 +13,31 @@ LD = g++
 CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 LDFLAGS = -Wl,-rpath,$(LIBDIR)
 
-MOC = moc-qt3
-QTINCLUDE = -I /usr/include/qt3
+ifeq "$(UI_TYPE)" "qt"
+  MOC = moc-qt3
+  QTINCLUDE = -I /usr/include/qt3
+else
+  MOC = moc-qt4
+  QTINCLUDE = -I /usr/include/qt4
+endif
 
 GTKINCLUDE = $(shell pkg-config --cflags gtk+-2.0 libpng xft)
 
 ifeq "$(UI_TYPE)" "qt"
-	UILIBS = -lqt-mt
-else
-	UILIBS = $(shell pkg-config --libs gtk+-2.0) -lpng -ljpeg
+  UILIBS = -lqt-mt
 endif
 
-EXPATLIBS = -lexpat
-ENCALIBS = -lenca
-BZIP2LIBS = -lbz2
+ifeq "$(UI_TYPE)" "qt4"
+  UILIBS = -lQtGui -lQt3Support
+endif
+
+ifeq "$(UI_TYPE)" "gtk"
+  UILIBS = $(shell pkg-config --libs gtk+-2.0) -lpng -ljpeg
+endif
+
+XML_LIB = -lexpat
+ENCA_LIB = -lenca
+ARCHIVER_LIB = -lbz2
 
 RM = rm -rvf
 RM_QUIET = rm -rf

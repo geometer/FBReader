@@ -163,6 +163,7 @@ protected:
 public:
 	ZLOptionKind kind() const;
 
+	virtual const ZLColor initialColor() const = 0;
 	virtual const ZLColor color() const = 0;
 	virtual void onAccept(ZLColor color) = 0;
 	virtual void onReset(ZLColor color);

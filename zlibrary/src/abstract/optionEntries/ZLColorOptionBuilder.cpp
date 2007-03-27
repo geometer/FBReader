@@ -63,6 +63,7 @@ public:
 
 private:
 	const std::string &name() const;
+	const ZLColor initialColor() const;
 	const ZLColor color() const;
 	void onReset(ZLColor color);
 	void onAccept(ZLColor color);
@@ -130,6 +131,10 @@ ZLMultiColorOptionEntry::ZLMultiColorOptionEntry(shared_ptr<ZLColorOptionsData> 
 const std::string &ZLMultiColorOptionEntry::name() const {
 	static const std::string EMPTY = "";
 	return EMPTY;
+}
+
+const ZLColor ZLMultiColorOptionEntry::initialColor() const {
+	return myData->myOptions[myData->myCurrentOptionName]->value();
 }
 
 const ZLColor ZLMultiColorOptionEntry::color() const {

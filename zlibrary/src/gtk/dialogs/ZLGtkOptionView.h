@@ -30,6 +30,7 @@
 #include <gtk/gtkbox.h>
 #include <gtk/gtkcombobox.h>
 #include <gtk/gtkentry.h>
+#include <gtk/gtkcolorsel.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -149,7 +150,7 @@ private:
 class ColorOptionView : public ZLGtkOptionView {
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
+	ColorOptionView(ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(option, tab, row, fromColumn, toColumn), myWidget(0) {}
 
 private:
 	void _createItem();
@@ -158,13 +159,8 @@ private:
 	void _onAccept() const;
 	void reset();
 
-	void onSliderMove();
-	static void _onSliderMove(GtkRange*, gpointer);
-
 private:
-	GtkWidget *myWidget, *myDrawingArea;
-	GtkWidget *myRSlider, *myGSlider, *myBSlider;
-	GdkColor myColor;
+	GtkColorSelection *myWidget;
 };
 
 class KeyOptionView : public ZLGtkOptionView {

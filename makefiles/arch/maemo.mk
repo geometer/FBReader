@@ -26,6 +26,6 @@ else # $(UI_TYPE) == maemo2
 	UILIBS = -lz -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangoxft-1.0 -lpangox-1.0 -lpango-1.0 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lm -lgmodule-2.0 -ldl -lgthread-2.0 -lhildonwidgets -losso
 endif
 
-EXPATLIBS = -lexpat
-ENCALIBS = -lenca
-BZIP2LIBS = -lbz2
+XML_LIB = -lexpat
+ENCA_LIB = -lenca
+ARCHIVER_LIB = -lbz2

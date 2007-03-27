@@ -23,9 +23,9 @@ CC = $(TOOLSPATH)/arm-linux-gcc
 AR = $(TOOLSPATH)/arm-linux-ar rsu
 LD = $(TOOLSPATH)/arm-linux-g++
 
-EXPATLIBS = -lexpat
-ENCALIBS = -lenca
-BZIP2LIBS = -lbz2
+XML_LIB = -lexpat
+ENCA_LIB = -lenca
+ARCHIVER_LIB = -lbz2
 
 ifeq "$(UI_TYPE)" "opie"
 	UILIBS = -lqte -lqpe

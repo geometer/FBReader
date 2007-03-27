@@ -18,11 +18,11 @@
  * 02110-1301, USA.
  */
 
-#include <qpainter.h>
-#include <qpixmap.h>
-#include <qfontmetrics.h>
-#include <qfontdatabase.h>
-#include <qimage.h>
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
+#include <QtGui/QFontMetrics>
+#include <QtGui/QFontDatabase>
+#include <QtGui/QImage>
 
 #include <ZLImage.h>
 
@@ -69,7 +69,7 @@ void ZLQtPaintContext::fillFamiliesList(std::vector<std::string> &families) cons
 	QStringList qFamilies = db.families();
 	bool helveticaFlag = false;
 	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); ++it) {
-		std::string family = (const char*)(*it).utf8();
+		std::string family = (const char*)(*it).toUtf8();
 		if (family == HELVETICA) {
 			helveticaFlag = true;
 		}
@@ -81,14 +81,12 @@ void ZLQtPaintContext::fillFamiliesList(std::vector<std::string> &families) cons
 }
 
 const std::string ZLQtPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	QString fullName = QFontInfo(QFont(fontFamily.c_str())).family();
+	QString fullName = QFontInfo(QFont(QString::fromUtf8(fontFamily.c_str()))).family();
 	if (fullName.isNull() || fullName.isEmpty()) {
-		fullName = QFontInfo(QFont::defaultFont()).family();
-		if (fullName.isNull() || fullName.isEmpty()) {
-			return HELVETICA;
-		}
+		return HELVETICA;
 	}
-	return fullName.left(fullName.find(" [")).ascii();
+	//return fullName.left(fullName.find(" [")).ascii();
+	return (const char*)fullName.toUtf8();
 }
 
 void ZLQtPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
@@ -133,14 +131,14 @@ void ZLQtPaintContext::setColor(ZLColor color, LineStyle style) {
 	myPainter->setPen(QPen(
 		QColor(color.Red, color.Green, color.Blue),
 		1,
-		(style == SOLID_LINE) ? QPainter::SolidLine : QPainter::DashLine
+		(style == SOLID_LINE) ? Qt::SolidLine : Qt::DashLine
 	));
 }
 
 void ZLQtPaintContext::setFillColor(ZLColor color, FillStyle style) {
 	myPainter->setBrush(QBrush(
 		QColor(color.Red, color.Green, color.Blue),
-		(style == SOLID_FILL) ? QPainter::SolidPattern : QPainter::Dense4Pattern
+		(style == SOLID_FILL) ? Qt::SolidPattern : Qt::Dense4Pattern
 	));
 }
 
@@ -165,8 +163,10 @@ void ZLQtPaintContext::drawString(int x, int y, const char *str, int len) {
 }
 
 void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	const QImage &qImage = (ZLQtImageData&)image;
-	myPainter->drawImage(x + leftMargin(), y + topMargin() - qImage.height(), qImage);
+	const QImage *qImage = ((ZLQtImageData&)image).image();
+	if (qImage != 0) {
+		myPainter->drawImage(x + leftMargin(), y + topMargin() - image.height(), *qImage);
+	}
 }
 
 void ZLQtPaintContext::drawLine(int x0, int y0, int x1, int y1) {
