@@ -29,6 +29,7 @@
 #include "../image/ZLGtkImageManager.h"
 #include "../view-desktop/ZLGtkPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
+#include "../../abstract/util/ZLKeyUtil.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
@@ -38,6 +39,8 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
+
+	ZLKeyUtil::setKeyNamesFileName("keynames-gtk.xml");
 }
 
 ZLPaintContext *ZLibrary::createContext() {

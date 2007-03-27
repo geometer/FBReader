@@ -29,6 +29,7 @@
 #include "../image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
+#include "../../abstract/util/ZLKeyUtil.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);
@@ -38,6 +39,8 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLQtDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
+
+	ZLKeyUtil::setKeyNamesFileName("keynames-qt4.xml");
 }
 
 ZLPaintContext *ZLibrary::createContext() {

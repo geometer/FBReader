@@ -31,6 +31,11 @@ bool ZLKeyUtil::ourInitialized = false;
 bool ZLKeyUtil::ourUseAutoNames = true;
 std::map<int,std::string> ZLKeyUtil::ourNames;
 std::map<int,std::string> ZLKeyUtil::ourModifiers;
+std::string ZLKeyUtil::ourKeyNamesFileName = "keynames.xml";
+
+void ZLKeyUtil::setKeyNamesFileName(const std::string &fileName) {
+	ourKeyNamesFileName = fileName;
+}
 
 class KeyNamesReader : public ZLXMLReader {
 
@@ -59,7 +64,7 @@ void KeyNamesReader::startElementHandler(const char *tag, const char **attribute
 
 std::string ZLKeyUtil::keyName(int unicode, int key, int modifiersMask) {
 	if (!ourInitialized) {
-		KeyNamesReader().readDocument(ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + "keynames.xml");
+		KeyNamesReader().readDocument(ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + ourKeyNamesFileName);
 		ourInitialized = true;
 	}
 

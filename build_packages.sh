@@ -2,6 +2,7 @@
 
 if [ "$1" = "rebuild" ]; then
 	FAILED_ONLY=yes
+	shift
 fi
 
 do_build() {
@@ -21,16 +22,25 @@ do_build() {
 	make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
 }
 
-do_build win32 win32
-do_build openzaurus opie
-do_build openzaurus gpe
-do_build opensimpad-0.9.0 opie
-do_build qvfb opie
-do_build desktop gtk
-do_build desktop qt
-do_build desktop qt4
-do_build zaurus qtopia-240x320
-do_build zaurus qtopia-640x480
-do_build pdaxrom gtk
-do_build pdaxrom qt
-do_build pma400 qtopia
+if [ "$1" = "all" ]; then
+	do_build win32 win32
+	do_build openzaurus opie
+	do_build openzaurus gpe
+	do_build opensimpad-0.9.0 opie
+	do_build qvfb opie
+	do_build desktop gtk
+	do_build desktop qt
+	do_build desktop qt4
+	do_build zaurus qtopia-240x320
+	do_build zaurus qtopia-640x480
+	do_build pdaxrom gtk
+	do_build pdaxrom qt
+	do_build pma400 qtopia
+elif [ "$#" == "2" ]; then 
+	do_build $@
+else
+	echo "usage:";
+	echo "  $0 [rebuild] all";
+	echo "or";
+	echo "  $0 [rebuild] <TARGET_ARCH> <UI_TYPE>";
+fi

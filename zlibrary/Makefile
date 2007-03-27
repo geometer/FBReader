@@ -102,9 +102,15 @@ ifeq "$(TARGET_ARCH)" "maemo"
   ENCODING_FILES = $(filter-out %/Big5,$(wildcard data/encodings/*))
 endif
 
+ifeq "$(TARGET_ARCH)" "desktop"
+  KEYNAMES = keynames-$(UI_TYPE).xml
+else
+  KEYNAMES = keynames.xml
+endif
+
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
-	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/keynames.xml
+	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/$(KEYNAMES)
 	@install -d $(SHARE_ZLIBRARY)/encodings
 	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"

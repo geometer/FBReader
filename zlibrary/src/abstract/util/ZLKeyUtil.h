@@ -31,9 +31,11 @@ private:
 	static bool ourUseAutoNames;
 	static std::map<int,std::string> ourNames;
 	static std::map<int,std::string> ourModifiers;
+	static std::string ourKeyNamesFileName;
 
 public:
 	static std::string keyName(int unicode, int key, int modifiersMask);
+	static void setKeyNamesFileName(const std::string &fileName);
 
 private:
 	// instance creation is disabled
