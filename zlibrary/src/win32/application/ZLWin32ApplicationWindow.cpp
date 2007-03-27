@@ -166,11 +166,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 static const std::string OPTIONS = "Options";
 
 ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
-	ZLApplicationWindow(application),
-	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
-	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
+	ZLDesktopApplicationWindow(application),
 	myMainWindow(0),
 	myToolbar(0),
 	myBlockMouseEvents(false),

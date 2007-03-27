@@ -55,11 +55,7 @@ static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) 
 static const std::string OPTIONS = "Options";
 
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
-	ZLApplicationWindow(application),
-	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
-	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
+	ZLDesktopApplicationWindow(application),
 	myFullScreen(false),
 	myHyperlinkCursor(0),
 	myHyperlinkCursorIsUsed(false) {

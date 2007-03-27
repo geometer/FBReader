@@ -25,12 +25,13 @@
 #include <windows.h>
 #include <commctrl.h>
 
-#include <ZLApplication.h>
 #include <ZLUnicodeUtil.h>
+
+#include "../../desktop/application/ZLDesktopApplicationWindow.h"
 
 class ZLWin32ViewWidget;
 
-class ZLWin32ApplicationWindow : public ZLApplicationWindow { 
+class ZLWin32ApplicationWindow : public ZLDesktopApplicationWindow { 
 
 private:
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -84,11 +85,6 @@ public:
 */
 
 private:
-	ZLIntegerRangeOption myXOption;
-	ZLIntegerRangeOption myYOption;
-	ZLIntegerRangeOption myWidthOption;
-	ZLIntegerRangeOption myHeightOption;
-
 	ZLUnicodeUtil::Ucs2String myClassName;
 
 	HWND myMainWindow;

@@ -27,9 +27,9 @@
 #include <gtk/gtkwindow.h>
 #include <gtk/gtktoolbar.h>
 
-#include <ZLApplication.h>
+#include "../../desktop/application/ZLDesktopApplicationWindow.h"
 
-class ZLGtkApplicationWindow : public ZLApplicationWindow { 
+class ZLGtkApplicationWindow : public ZLDesktopApplicationWindow { 
 
 public:
 	ZLGtkApplicationWindow(ZLApplication *application);
@@ -66,11 +66,6 @@ public:
 	GtkWindow *getMainWindow() { return myMainWindow; }
 
 private:
-	ZLIntegerRangeOption myXOption;
-	ZLIntegerRangeOption myYOption;
-	ZLIntegerRangeOption myWidthOption;
-	ZLIntegerRangeOption myHeightOption;
-
 	GtkWindow *myMainWindow;
 	GtkToolbar *myToolbar;
 	GtkWidget *myVBox;

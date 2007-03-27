@@ -38,8 +38,6 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 	new ZLQtApplicationWindow(application);
 }
 
-static const std::string OPTIONS = "Options";
-
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
 	static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
 	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
@@ -58,11 +56,7 @@ void ZLQtApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::B
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
-	ZLApplicationWindow(application),
-	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
-	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
+	ZLDesktopApplicationWindow(application),
 	myFullScreen(false),
 	myWasMaximized(false),
 	myCursorIsHyperlink(false) {

@@ -27,9 +27,9 @@
 #include <qaction.h>
 #include <qcursor.h>
 
-#include <ZLApplication.h>
+#include "../../desktop/application/ZLDesktopApplicationWindow.h"
 
-class ZLQtApplicationWindow : public QMainWindow, public ZLApplicationWindow {
+class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWindow {
 	Q_OBJECT
 
 public:
@@ -69,11 +69,6 @@ private:
 friend class ZLQtToolBarAction;
 	std::map<const ZLApplication::Toolbar::Item*, class ZLQtToolBarAction*> myActions;
 	std::map<ZLApplication::Toolbar::ItemPtr,QWidget*> mySeparatorMap;
-
-	ZLIntegerRangeOption myXOption;
-	ZLIntegerRangeOption myYOption;
-	ZLIntegerRangeOption myWidthOption;
-	ZLIntegerRangeOption myHeightOption;
 
 	bool myFullScreen;
 	bool myWasMaximized;
