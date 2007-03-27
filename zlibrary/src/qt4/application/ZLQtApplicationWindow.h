@@ -87,7 +87,7 @@ class ZLQtToolBarAction : public QAction {
 public:
 	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item);
 
-private slots:
+private Q_SLOTS:
 	void onActivated();
 
 private:

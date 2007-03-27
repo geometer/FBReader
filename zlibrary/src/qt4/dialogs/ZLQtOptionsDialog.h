@@ -48,7 +48,7 @@ protected:
 	int width() const { return QDialog::width(); }
 	int height() const { return QDialog::height(); }
 
-private slots:
+private Q_SLOTS:
 	void accept();
 
 private:

@@ -84,7 +84,7 @@ protected:
 	void _hide();
 	void _onAccept() const;
 
-private slots:
+private Q_SLOTS:
 	void onStateChanged(bool) const;
 
 private:
@@ -106,7 +106,7 @@ private:
 	void _onAccept() const;
 	void reset();
 
-private slots:
+private Q_SLOTS:
 	void onValueEdited(const QString &value);
 
 private:
@@ -145,7 +145,7 @@ private:
 	void _onAccept() const;
 	void reset();
 
-private slots:
+private Q_SLOTS:
 	void onValueSelected(int index);
 	void onValueEdited(const QString &value);
 	void onTabResized(const QSize &size);
@@ -169,7 +169,7 @@ private:
 	void _onAccept() const;
 	void reset();
 
-private slots:
+private Q_SLOTS:
 	void onValueChanged(int);
 
 private:
@@ -198,7 +198,7 @@ private:
 
 	QSlider *createColorSlider(int index, const char *name, int value);
 
-private slots:
+private Q_SLOTS:
 	void onSliderMove(int);
 
 private:

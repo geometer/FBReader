@@ -26,22 +26,37 @@
 
 #include <QtGui/QDialog>
 #include <QtGui/QPainter>
-#include <Qt3Support/Q3ListView>
+#include <QtGui/QListWidget>
 
 #include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 class QVBox;
 class QLineEdit;
 
-class ZLQtSelectionDialogItem : public Q3ListViewItem {
+class ZLQtSelectionDialogItem : public QListWidgetItem {
 
 public:
-	ZLQtSelectionDialogItem(Q3ListView *listView, Q3ListViewItem *previous, const ZLTreeNodePtr node);
+	ZLQtSelectionDialogItem(QListWidget *listWidget, const ZLTreeNodePtr node);
 	ZLTreeNodePtr node() const { return myNode; }
 
 private:
 	ZLTreeNodePtr myNode;
 };
+
+class ZLQListWidget : public QListWidget {
+
+Q_OBJECT
+
+public:
+	ZLQListWidget(QWidget *parent);
+
+Q_SIGNALS:
+	void returnPressed();
+
+private:
+	void keyPressEvent(QKeyEvent *event);
+};
+
 
 class ZLQtSelectionDialog : public QDialog, public ZLDesktopSelectionDialog {
 	Q_OBJECT
@@ -52,7 +67,7 @@ public:
 	bool run();
 
 private:
-	QPixmap &getPixmap(const ZLTreeNodePtr node);
+	QIcon &getIcon(const ZLTreeNodePtr node);
 
 protected:
 	void keyPressEvent(QKeyEvent *event);
@@ -66,14 +81,14 @@ protected:
 	void updateList();
 	void selectItem(int index);
 
-private slots:
+private Q_SLOTS:
 	void runNodeSlot();
 	void accept();
 
 private:
 	QLineEdit *myStateLine;
-	Q3ListView *myListView;
-	std::map<std::string,QPixmap*> myPixmaps;
+	ZLQListWidget *myListWidget;
+	std::map<std::string,QIcon*> myIcons;
 };
 
 #endif /* __ZLQTSELECTIONDIALOG_H__ */

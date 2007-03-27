@@ -25,14 +25,24 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QKeyEvent>
-#include <Qt3Support/Q3Header>
 
 #include <ZLApplication.h>
 
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtDialogManager.h"
 
-ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(Q3ListView *listView, Q3ListViewItem *previous, const ZLTreeNodePtr node) : Q3ListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
+ZLQListWidget::ZLQListWidget(QWidget *parent) : QListWidget(parent) {
+}
+
+void ZLQListWidget::keyPressEvent(QKeyEvent *event) {
+	if (event->key() == Qt::Key_Return) {
+		emit returnPressed();
+	}
+	QListWidget::keyPressEvent(event);
+}
+
+ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListWidget *listWidget, const ZLTreeNodePtr node) : QListWidgetItem(listWidget), myNode(node) {
+	setText(QString::fromUtf8(node->displayName().c_str()));
 }
 
 ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(qApp->activeWindow()), ZLDesktopSelectionDialog(handler) {
@@ -44,11 +54,8 @@ ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &han
 	myStateLine->setEnabled(!this->handler().isOpenHandler());
 	mainLayout->addWidget(myStateLine);
 
-	myListView = new Q3ListView(this);
-	myListView->addColumn("");
-	myListView->header()->hide();
-	myListView->setSorting(-1, true);
-	mainLayout->addWidget(myListView);
+	myListWidget = new ZLQListWidget(this);
+	mainLayout->addWidget(myListWidget);
 
 	QWidget *group = new QWidget(this);
 	QGridLayout *buttonLayout = new QGridLayout(group);
@@ -69,26 +76,28 @@ ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &han
 	buttonLayout->addWidget(cancelButton, 0, 3);
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
- 	connect(myListView, SIGNAL(clicked(Q3ListViewItem*)), this, SLOT(runNodeSlot()));
- 	connect(myListView, SIGNAL(returnPressed(Q3ListViewItem*)), this, SLOT(accept()));
+ 	connect(myListWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(runNodeSlot()));
+ 	connect(myListWidget, SIGNAL(returnPressed()), this, SLOT(runNodeSlot()));
  	connect(myStateLine, SIGNAL(returnPressed()), this, SLOT(accept()));
 
 	ZLSelectionDialog::update();
 }
 
 ZLQtSelectionDialog::~ZLQtSelectionDialog() {
-	for (std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.begin(); it != myPixmaps.end(); ++it) {
+	for (std::map<std::string,QIcon*>::const_iterator it = myIcons.begin(); it != myIcons.end(); ++it) {
 		delete it->second;
 	}
 }
 
-QPixmap &ZLQtSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
+QIcon &ZLQtSelectionDialog::getIcon(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
-	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
-	if (it == myPixmaps.end()) {
-		QPixmap *pixmap = new QPixmap((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + pixmapName + ".png").c_str());
-		myPixmaps[pixmapName] = pixmap;
-		return *pixmap;
+	std::map<std::string,QIcon*>::const_iterator it = myIcons.find(pixmapName);
+	if (it == myIcons.end()) {
+		QPixmap pixmap((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + pixmapName + ".png").c_str());
+		QIcon *icon = new QIcon(pixmap);
+		myIcons[pixmapName] = icon;
+		myListWidget->setIconSize(pixmap.size());
+		return *icon;
 	} else {
 		return *it->second;
 	}
@@ -105,34 +114,21 @@ void ZLQtSelectionDialog::updateStateLine() {
 }
 
 void ZLQtSelectionDialog::updateList() {
-	myListView->clear();
+	myListWidget->clear();
 
 	const std::vector<ZLTreeNodePtr> &subnodes = handler().subnodes();
 
 	if (subnodes.size() > 0) {
-		Q3ListViewItem *item = 0;
-
 		for (std::vector<ZLTreeNodePtr>::const_iterator it = subnodes.begin(); it != subnodes.end(); ++it) {
-		 	item = new ZLQtSelectionDialogItem(myListView, item, *it);
-			item->setPixmap(0, getPixmap(*it));
+		 	QListWidgetItem *item = new ZLQtSelectionDialogItem(myListWidget, *it);
+			item->setIcon(getIcon(*it));
 		}
 	}
 }
 
 void ZLQtSelectionDialog::selectItem(int index) {
-	Q3ListViewItem *item = myListView->firstChild();
-	if (item == 0) {
-		return;
-	}
-	for (; index > 0; --index) {
-		item = item->nextSibling();
-		if (item == 0) {
-			return;
-		}
-	}
-	myListView->setSelected(item, true);
-	if (item != myListView->firstChild()) {
-		myListView->ensureItemVisible(item);
+	if ((index >= 0) && (index < myListWidget->count())) {
+		myListWidget->setCurrentRow(index);
 	}
 }
 
@@ -141,7 +137,7 @@ void ZLQtSelectionDialog::exitDialog() {
 }
 
 void ZLQtSelectionDialog::runNodeSlot() {
-	Q3ListViewItem *item = myListView->currentItem();
+	QListWidgetItem *item = myListWidget->currentItem();
 	if (item != 0) {
 		runNode(((ZLQtSelectionDialogItem*)item)->node());
 	}
