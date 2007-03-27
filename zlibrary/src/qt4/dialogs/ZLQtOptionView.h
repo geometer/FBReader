@@ -30,12 +30,12 @@
 
 class ZLQtDialogContent;
 
-class QButtonGroup;
 class QLabel;
 class QSpinBox;
 class QCheckBox;
 class QLineEdit;
 class QPushButton;
+class QGroupBox;
 class QRadioButton;
 class QComboBox;
 class QSlider;
@@ -67,7 +67,7 @@ protected:
 	void _onAccept() const;
 
 private:
-	QWidget *myGroup;
+	QGroupBox *myGroupBox;
 	QRadioButton **myButtons;
 };
 

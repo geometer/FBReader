@@ -23,7 +23,7 @@
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
-#include <QtGui/QButtonGroup>
+#include <QtGui/QGroupBox>
 #include <QtGui/QRadioButton>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpinBox>
@@ -61,26 +61,24 @@ void BooleanOptionView::onStateChanged(bool state) const {
 }
 
 void ChoiceOptionView::_createItem() {
-	//myGroup = new QWidget(myOption->name().c_str(), myTab->widget());
-	myGroup = new QFrame(myTab->widget());
-	((QFrame*)myGroup)->setFrameShape(QFrame::StyledPanel);
-	QVBoxLayout *layout = new QVBoxLayout(myGroup);
+	myGroupBox = new QGroupBox(myOption->name().c_str());
+	QVBoxLayout *layout = new QVBoxLayout(myGroupBox);
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
-		myButtons[i] = new QRadioButton(myGroup);
+		myButtons[i] = new QRadioButton(myGroupBox);
 		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());
 		layout->addWidget(myButtons[i]);
 	}
 	myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]->setChecked(true);
-	myTab->addItem(myGroup, myRow, myFromColumn, myToColumn);
+	myTab->addItem(myGroupBox, myRow, myFromColumn, myToColumn);
 }
 
 void ChoiceOptionView::_show() {
-	myGroup->show();
+	myGroupBox->show();
 }
 
 void ChoiceOptionView::_hide() {
-	myGroup->hide();
+	myGroupBox->hide();
 }
 
 void ChoiceOptionView::_onAccept() const {
