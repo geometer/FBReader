@@ -36,6 +36,7 @@ package:
 	@sed -e "s/@DEBIANVERSION@/$(DEBIAN_VERSION)/" \
 		-e "s#@VERSION@#$(VERSION)#" \
 		shlibs.in > $(TMPDIR)/DEBIAN/shlibs
+	@install -m 0644 postinst $(TMPDIR)/DEBIAN/postinst
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 
