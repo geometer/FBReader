@@ -37,6 +37,7 @@ package:
 		-e "s#@VERSION@#$(VERSION)#" \
 		shlibs.in > $(TMPDIR)/DEBIAN/shlibs
 	@install -m 0644 postinst $(TMPDIR)/DEBIAN/postinst
+	@install -m 0644 postrm $(TMPDIR)/DEBIAN/postrm
 	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
 	@rm -rf $(TMPDIR)
 
