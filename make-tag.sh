@@ -12,4 +12,6 @@ fi
 
 version=`cat fbreader/VERSION`
 
+echo "Tagging $version of FBReader"
+
 svn cp $base/trunk $base/tags/fbreader-$version -m "(automatic) tagging version $version"
