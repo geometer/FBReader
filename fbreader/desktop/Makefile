@@ -14,9 +14,13 @@ SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
 DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
 ifeq "$(UI_TYPE)" "gtk"
-  CONFLICTS = qt
-else
-  CONFLICTS = gtk
+  CONFLICTS = fbreader-qt,fbreader-qt4
+endif
+ifeq "$(UI_TYPE)" "qt"
+  CONFLICTS = fbreader-gtk,fbreader-qt4
+endif
+ifeq "$(UI_TYPE)" "qt4"
+  CONFLICTS = fbreader-gtk,fbreader-qt
 endif
 
 all: tarball debpackage
