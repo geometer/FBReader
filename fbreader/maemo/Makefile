@@ -2,7 +2,8 @@ ROOTDIR = $(PWD)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
-DEBIAN_VERSION = $(VERSION)-1
+DEBIAN_REVISION ?= 1
+DEBIAN_VERSION = $(VERSION)-$(DEBIAN_REVISION)
 ARCH	= $(shell dpkg-architecture -qDEB_HOST_ARCH)
 PACKAGE_NAME = fbreader-$(UI_TYPE)
 PACKAGE_FILE = $(PACKAGE_NAME)_$(DEBIAN_VERSION)_$(ARCH).deb
