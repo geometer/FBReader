@@ -294,6 +294,7 @@ private:
 void FBReader::openBook(BookDescriptionPtr description) {
 	OpenBookRunnable runnable(*this, description);
 	ZLDialogManager::instance().wait(runnable, "Loading book. Please, wait...");
+	resetWindowCaption();
 }
 
 void FBReader::openBookInternal(BookDescriptionPtr description) {
@@ -477,7 +478,6 @@ void FBReader::openFile(const std::string &fileName) {
 	BookDescriptionPtr description = BookDescription::getDescription(fileName);
 	if (!description.isNull()) {
 		openBook(description);
-		resetWindowCaption();
 		refreshWindow();
 	}
 }
