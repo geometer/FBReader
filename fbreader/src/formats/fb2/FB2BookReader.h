@@ -42,6 +42,7 @@ public:
 private:
 	int mySectionDepth;
 	int myBodyCounter;
+	bool myReadMainText;
 	bool myInsideCoverpage;
 	size_t myParagraphsBeforeBodyNumber;
 	std::string myCoverImageReference;

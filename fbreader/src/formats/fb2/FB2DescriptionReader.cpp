@@ -81,18 +81,14 @@ void FB2DescriptionReader::startElementHandler(int tag, const char **attributes)
 			}
 			break;
 		case _SEQUENCE:
-			// We are don't interested in sequences
-			// which appear in publisher tag of document info
 			if (myReadSomething) {
 				const char *name = attributeValue(attributes, "name");
 				if (name != 0) {
+					std::string sequenceName = name;
+					ZLStringUtil::stripWhiteSpaces(sequenceName);
+					myDescription.sequenceName() = sequenceName;
 					const char *number = attributeValue(attributes, "number");
-					if (number != 0) {
-						std::string sequenceName = name;
-						ZLStringUtil::stripWhiteSpaces(sequenceName);
-						myDescription.sequenceName() = sequenceName;
-						myDescription.numberInSequence() = atoi(number);
-					}
+					myDescription.numberInSequence() = (number != 0) ? atoi(number) : 0;
 				}
 			}
 			break;

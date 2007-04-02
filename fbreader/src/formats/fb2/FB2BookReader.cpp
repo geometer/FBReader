@@ -32,6 +32,7 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myInsidePoem = false;
 	mySectionDepth = 0;
 	myBodyCounter = 0;
+	myReadMainText = false;
 	myCurrentImage = 0;
 	myProcessingImage = false;
 	mySectionStarted = false;
@@ -71,7 +72,7 @@ static const char *reference(const char **xmlattributes) {
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	const char *id = attributeValue(xmlattributes, "id");
 	if (id != 0) {
-		if (myBodyCounter > 1) {
+		if (!myReadMainText) {
 			myModelReader.setFootnoteTextModel(id);
 		}
 		myModelReader.addHyperlinkLabel(id);
@@ -106,7 +107,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			myModelReader.pushKind(CITE);
 			break;
 		case _SECTION:
-			if (myBodyCounter == 1) {
+			if (myReadMainText) {
 				myModelReader.insertEndOfSectionParagraph();
 				++mySectionDepth;
 				myModelReader.beginContentsParagraph();
@@ -218,8 +219,9 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		case _BODY:
 			++myBodyCounter;
 			myParagraphsBeforeBodyNumber = myModelReader.model().bookTextModel()->paragraphsNumber();
-			if (myBodyCounter == 1) {
+			if ((myBodyCounter == 1) || (attributeValue(xmlattributes, "name") == 0)) {
 				myModelReader.setMainTextModel();
+				myReadMainText = true;
 			}
 			myModelReader.pushKind(REGULAR);
 			break;
@@ -244,13 +246,12 @@ void FB2BookReader::endElementHandler(int tag) {
 			myModelReader.popKind();
 			break;
 		case _SECTION:
-			if (myBodyCounter > 1) {
-				myModelReader.unsetTextModel();
-			}
-			if (myBodyCounter == 1) {
+			if (myReadMainText) {
 				myModelReader.endContentsParagraph();
 				--mySectionDepth;
 				mySectionStarted = false;
+			} else {
+				myModelReader.unsetTextModel();
 			}
 			break;
 		case _TITLE:
@@ -315,6 +316,7 @@ void FB2BookReader::endElementHandler(int tag) {
 		case _BODY:
 			myModelReader.popKind();
 			myModelReader.unsetTextModel();
+			myReadMainText = false;
 			break;
 		default:
 			break;
