@@ -311,12 +311,18 @@ GotoNextTOCSectionAction::GotoNextTOCSectionAction(FBReader &fbreader) : FBActio
 }
 
 bool GotoNextTOCSectionAction::isVisible() {
-	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+	if (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) {
+		return false;
+	}
+	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	shared_ptr<TextModel> model = contentsView.model();
+	return !model.isNull() && (model->paragraphsNumber() > 1);
 }
 
 bool GotoNextTOCSectionAction::isEnabled() {
 	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
-	return contentsView.currentTextViewParagraph() < contentsView.model()->paragraphsNumber() - 1;
+	shared_ptr<TextModel> model = contentsView.model();
+	return !model.isNull() && ((int)contentsView.currentTextViewParagraph() < (int)model->paragraphsNumber() - 1);
 }
 
 void GotoNextTOCSectionAction::run() {
@@ -332,12 +338,18 @@ GotoPreviousTOCSectionAction::GotoPreviousTOCSectionAction(FBReader &fbreader) :
 }
 
 bool GotoPreviousTOCSectionAction::isVisible() {
-	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+	if (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) {
+		return false;
+	}
+	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	shared_ptr<TextModel> model = contentsView.model();
+	return !model.isNull() && (model->paragraphsNumber() > 1);
 }
 
 bool GotoPreviousTOCSectionAction::isEnabled() {
 	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
-	return contentsView.currentTextViewParagraph() > 0;
+	shared_ptr<TextModel> model = contentsView.model();
+	return !model.isNull() && ((int)contentsView.currentTextViewParagraph() > 0);
 }
 
 void GotoPreviousTOCSectionAction::run() {

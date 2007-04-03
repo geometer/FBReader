@@ -172,14 +172,17 @@ void XHTMLTagControlAction::doAtEnd(XHTMLReader &reader) {
 }
 
 void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-	std::string link;
 	const char *href = reader.attributeValue(xmlattributes, "href");
 	if (href != 0) {
-		link = (*href == '#') ? (reader.myReferenceName + href) : href;
+		const std::string link = (*href == '#') ? (reader.myReferenceName + href) : href;
+		TextKind hyperlinkType = MiscUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
+		reader.myHyperlinkStack.push(hyperlinkType);
+		reader.myModelReader.addHyperlinkControl(hyperlinkType, link);
 	}
-	TextKind hyperlinkType = MiscUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
-	reader.myHyperlinkStack.push(hyperlinkType);
-	reader.myModelReader.addHyperlinkControl(hyperlinkType, link);
+	const char *name = reader.attributeValue(xmlattributes, "name");
+	if (name != 0) {
+		reader.myModelReader.addHyperlinkLabel(reader.myReferenceName + "#" + name);
+	}
 }
 
 void XHTMLTagHyperlinkAction::doAtEnd(XHTMLReader &reader) {
