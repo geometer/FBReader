@@ -21,7 +21,9 @@
 #ifndef __ENCODINGCONVERTERS_H__
 #define __ENCODINGCONVERTERS_H__
 
+#ifndef DONT_USE_ICONV
 #include <iconv.h>
+#endif /* DONT_USE_ICONV */
 
 #include "ZLEncodingConverter.h"
 
@@ -75,6 +77,7 @@ private:
 friend class ZLEncodingConverterInfo;
 };
 
+#ifndef DONT_USE_ICONV
 class IconvEncodingConverter : public ZLEncodingConverter {
 
 private:
@@ -93,5 +96,6 @@ private:
 
 friend class ZLEncodingConverterInfo;
 };
+#endif /* DONT_USE_ICONV */
 
 #endif /* __ENCODINGCONVERTERS_H__ */

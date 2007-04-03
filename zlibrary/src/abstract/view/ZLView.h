@@ -51,6 +51,7 @@ public:
 
 protected:
 	ZLApplication &application();
+	const ZLApplication &application() const;
 
 private:
 	ZLApplication &myApplication;
@@ -102,5 +103,6 @@ inline ZLViewWidget::Angle ZLViewWidget::rotation() const { return myRotation; }
 
 inline ZLPaintContext &ZLView::context() const { return myContext; }
 inline ZLApplication &ZLView::application() { return myApplication; }
+inline const ZLApplication &ZLView::application() const { return myApplication; }
 
 #endif /* __ZLVIEW_H__ */

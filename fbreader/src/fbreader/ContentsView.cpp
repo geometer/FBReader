@@ -30,7 +30,6 @@ ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : FBView(r
 }
 
 ContentsView::~ContentsView() {
-	saveState();
 }
 
 bool ContentsView::onStylusPress(int x, int y) {
@@ -64,47 +63,25 @@ bool ContentsView::isEmpty() const {
 	return (model() == 0) || (model()->paragraphsNumber() == 0);
 }
 
-static const std::string PARAGRAPH_OPTION_NAME = "ContentsParagraph";
-static const std::string WORD_OPTION_NAME = "ContentsWord";
-static const std::string CHAR_OPTION_NAME = "ContentsChar";
-
-void ContentsView::saveState() {
-	const WordCursor &cursor = startCursor();
-
-	if (!cursor.isNull()) {
-		const std::string &group = fileName();
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
-	}
-}
-
-void ContentsView::setModel(shared_ptr<TextModel> model, const std::string &name) {
-	TextView::setModel(model, name);
-
-	const std::string &group = fileName();
-	gotoPosition(
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).value(),
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).value(),
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).value()
-	);
-}
-
-void ContentsView::gotoReference() {
+size_t ContentsView::currentTextViewParagraph() const {
 	const WordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
 		size_t length = model()->paragraphsNumber();
 		const ContentsModel &contentsModel = (const ContentsModel&)*model();
-		size_t selected =	length - 1;
 		for (size_t i = 1; i < length; ++i) {
 			if (contentsModel.reference(((const TreeParagraph*)contentsModel[i])) > reference) {
-				selected = i - 1;
-				break;
+				return i - 1;
 			}
 		}
-		selectParagraph(selected);
-		gotoParagraph(selected);
-		scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
+		return length - 1;
 	}
+	return (size_t)-1;
+}
+
+void ContentsView::gotoReference() {
+	const size_t selected = currentTextViewParagraph();
+	selectParagraph(selected);
+	gotoParagraph(selected);
+	scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
 }

@@ -191,7 +191,6 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Look For Books In Subdirectories", collectionView.collection().ScanSubdirsOption));
 	RecentBooksView &recentBooksView = (RecentBooksView&)*fbreader.myRecentBooksView;
 	generalTab.addOption(new ZLSimpleSpinOptionEntry("Recent Books List Size", recentBooksView.lastBooks().MaxListSizeOption, 1));
-	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Keep Position In Contents View", fbreader.StoreContentsPositionOption));
 	generalTab.addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
 	generalTab.addOption(new DefaultLanguageEntry());
 

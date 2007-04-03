@@ -221,6 +221,7 @@ public:
 	const WordCursor &endCursor() const;
 
 	virtual void setModel(shared_ptr<TextModel> model, const std::string &name);
+	const shared_ptr<TextModel> model() const;
 
 	bool hasMultiSectionModel() const;
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly);
@@ -231,11 +232,12 @@ public:
 
 	bool onStylusPress(int x, int y);
 
+	void selectParagraph(int paragraphNumber);
+	
 protected:
 	virtual void paint();
 
 	const std::string &fileName() const;
-	const shared_ptr<TextModel> model() const;
 
 	const ParagraphPosition *paragraphByCoordinate(int y) const;
 	const TextElementPosition *elementByCoordinates(int x, int y) const;
@@ -247,8 +249,6 @@ protected:
 
 	bool empty() const;
 
-	void selectParagraph(int paragraphNumber);
-	
 	virtual shared_ptr<PositionIndicator> createPositionIndicator();
 
 private:

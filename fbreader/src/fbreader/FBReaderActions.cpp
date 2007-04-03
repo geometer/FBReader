@@ -20,208 +20,213 @@
  */
 
 #include "FBReader.h"
+#include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
 #include "RecentBooksView.h"
 
+#include "../bookmodel/BookModel.h"
 #include "../textview/TextView.h"
 
-FBReader::FBAction::FBAction(FBReader &fbreader) : myFBReader(fbreader) {
+FBAction::FBAction(FBReader &fbreader) : myFBReader(fbreader) {
 }
 
-FBReader::ShowCollectionAction::ShowCollectionAction(FBReader &fbreader) : FBAction(fbreader) {
+ShowCollectionAction::ShowCollectionAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-void FBReader::ShowCollectionAction::run() {
-	myFBReader.setMode(BOOK_COLLECTION_MODE);
+void ShowCollectionAction::run() {
+	myFBReader.setMode(FBReader::BOOK_COLLECTION_MODE);
 }
 
-bool FBReader::ShowCollectionAction::isVisible() {
-	ViewMode mode = myFBReader.myMode;
-	return (mode != FOOTNOTE_MODE) && (mode != BOOK_COLLECTION_MODE);
+bool ShowCollectionAction::isVisible() {
+	FBReader::ViewMode mode = myFBReader.myMode;
+	return (mode != FBReader::FOOTNOTE_MODE) && (mode != FBReader::BOOK_COLLECTION_MODE);
 }
 
-FBReader::ShowHelpAction::ShowHelpAction(FBReader &fbreader) : FBAction(fbreader) {
+ShowHelpAction::ShowHelpAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-void FBReader::ShowHelpAction::run() {
+void ShowHelpAction::run() {
 	myFBReader.openFile(myFBReader.helpFileName());
-	myFBReader.setMode(BOOK_TEXT_MODE);
+	myFBReader.setMode(FBReader::BOOK_TEXT_MODE);
 }
 
-FBReader::ShowRecentBooksListAction::ShowRecentBooksListAction(FBReader &fbreader) : FBAction(fbreader) {
+ShowRecentBooksListAction::ShowRecentBooksListAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-void FBReader::ShowRecentBooksListAction::run() {
-	myFBReader.setMode(RECENT_BOOKS_MODE);
+void ShowRecentBooksListAction::run() {
+	myFBReader.setMode(FBReader::RECENT_BOOKS_MODE);
 }
 
-bool FBReader::ShowRecentBooksListAction::isVisible() {
-	ViewMode mode = myFBReader.myMode;
-	return (mode != FOOTNOTE_MODE) && (mode != BOOK_COLLECTION_MODE) && (mode != RECENT_BOOKS_MODE);
+bool ShowRecentBooksListAction::isVisible() {
+	FBReader::ViewMode mode = myFBReader.myMode;
+	return
+		(mode != FBReader::FOOTNOTE_MODE) &&
+		(mode != FBReader::BOOK_COLLECTION_MODE) &&
+		(mode != FBReader::RECENT_BOOKS_MODE);
 }
 
-FBReader::ShowOptionsDialogAction::ShowOptionsDialogAction(FBReader &fbreader) : FBAction(fbreader) {
+ShowOptionsDialogAction::ShowOptionsDialogAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-FBReader::ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) {
+ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::ShowContentsAction::isVisible() {
-	ViewMode mode = myFBReader.myMode;
-	return (mode == BOOK_TEXT_MODE) || (mode == FOOTNOTE_MODE);
+bool ShowContentsAction::isVisible() {
+	FBReader::ViewMode mode = myFBReader.myMode;
+	return (mode == FBReader::BOOK_TEXT_MODE) || (mode == FBReader::FOOTNOTE_MODE);
 }
 
-bool FBReader::ShowContentsAction::isEnabled() {
+bool ShowContentsAction::isEnabled() {
 	return isVisible() && !((ContentsView&)*myFBReader.myContentsView).isEmpty();
 }
 
-void FBReader::ShowContentsAction::run() {
-	myFBReader.setMode(CONTENTS_MODE);
+void ShowContentsAction::run() {
+	myFBReader.setMode(FBReader::CONTENTS_MODE);
 }
 
-FBReader::AddBookAction::AddBookAction(FBReader &fbreader) : FBAction(fbreader) {
+AddBookAction::AddBookAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::AddBookAction::isVisible() {
-	return myFBReader.myMode != FOOTNOTE_MODE;
+bool AddBookAction::isVisible() {
+	return myFBReader.myMode != FBReader::FOOTNOTE_MODE;
 }
 
-void FBReader::AddBookAction::run() {
+void AddBookAction::run() {
 	myFBReader.addBookSlot();
 }
 
-FBReader::ScrollToHomeAction::ScrollToHomeAction(FBReader &fbreader) : FBAction(fbreader) {
+ScrollToHomeAction::ScrollToHomeAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::ScrollToHomeAction::isVisible() {
-	return myFBReader.myMode == BOOK_TEXT_MODE;
+bool ScrollToHomeAction::isVisible() {
+	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
 }
 
-void FBReader::ScrollToHomeAction::run() {
+void ScrollToHomeAction::run() {
 	myFBReader.bookTextView().scrollToHome();
 }
 
-FBReader::ScrollToStartOfTextAction::ScrollToStartOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
+ScrollToStartOfTextAction::ScrollToStartOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::ScrollToStartOfTextAction::isVisible() {
-	return myFBReader.myMode == BOOK_TEXT_MODE;
+bool ScrollToStartOfTextAction::isVisible() {
+	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
 }
 
-void FBReader::ScrollToStartOfTextAction::run() {
+void ScrollToStartOfTextAction::run() {
 	myFBReader.bookTextView().scrollToStartOfText();
 }
 
-FBReader::ScrollToEndOfTextAction::ScrollToEndOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
+ScrollToEndOfTextAction::ScrollToEndOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::ScrollToEndOfTextAction::isVisible() {
-	return myFBReader.myMode == BOOK_TEXT_MODE;
+bool ScrollToEndOfTextAction::isVisible() {
+	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
 }
 
-void FBReader::ScrollToEndOfTextAction::run() {
+void ScrollToEndOfTextAction::run() {
 	myFBReader.bookTextView().scrollToEndOfText();
 }
 
-FBReader::ShowBookInfoAction::ShowBookInfoAction(FBReader &fbreader) : FBAction(fbreader) {
+ShowBookInfoAction::ShowBookInfoAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::ShowBookInfoAction::isVisible() {
+bool ShowBookInfoAction::isVisible() {
 	return
-		(myFBReader.myMode == BOOK_TEXT_MODE) ||
-		(myFBReader.myMode == CONTENTS_MODE) ||
-		(myFBReader.myMode == FOOTNOTE_MODE);
+		(myFBReader.myMode == FBReader::BOOK_TEXT_MODE) ||
+		(myFBReader.myMode == FBReader::CONTENTS_MODE) ||
+		(myFBReader.myMode == FBReader::FOOTNOTE_MODE);
 }
 
-void FBReader::ShowBookInfoAction::run() {
+void ShowBookInfoAction::run() {
 	myFBReader.bookInfoSlot();
 }
 
-FBReader::UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {
+UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::UndoAction::isEnabled() {
-	return (myFBReader.myMode != BOOK_TEXT_MODE) ||
+bool UndoAction::isEnabled() {
+	return (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) ||
 					myFBReader.bookTextView().canUndoPageMove();
 }
 
-void FBReader::UndoAction::run() {
-	if (myFBReader.myMode == BOOK_TEXT_MODE) {
+void UndoAction::run() {
+	if (myFBReader.myMode == FBReader::BOOK_TEXT_MODE) {
 		myFBReader.bookTextView().undoPageMove();
 	} else {
 		myFBReader.restorePreviousMode();
 	}
 }
 
-FBReader::RedoAction::RedoAction(FBReader &fbreader) : FBAction(fbreader) {
+RedoAction::RedoAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::RedoAction::isVisible() {
-	return myFBReader.myMode == BOOK_TEXT_MODE;
+bool RedoAction::isVisible() {
+	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
 }
 
-bool FBReader::RedoAction::isEnabled() {
+bool RedoAction::isEnabled() {
 	return isVisible() && myFBReader.bookTextView().canRedoPageMove();
 }
 
-void FBReader::RedoAction::run() {
+void RedoAction::run() {
 	myFBReader.bookTextView().redoPageMove();
 }
 
-void FBReader::ShowOptionsDialogAction::run() {
+void ShowOptionsDialogAction::run() {
 	myFBReader.optionsSlot();
 }
 
-FBReader::SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader) {
+SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::SearchAction::isVisible() {
+bool SearchAction::isVisible() {
 	return myFBReader.currentView() != 0;
 }
 
-void FBReader::SearchAction::run() {
+void SearchAction::run() {
 	myFBReader.searchSlot();
 }
 
-FBReader::FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader) {
+FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::FindNextAction::isEnabled() {
+bool FindNextAction::isEnabled() {
 	shared_ptr<ZLView> view = myFBReader.currentView();
 	return (!view.isNull()) && ((TextView&)*view).canFindNext();
 }
 
-void FBReader::FindNextAction::run() {
+void FindNextAction::run() {
 	((TextView&)*myFBReader.currentView()).findNext();
 }
 
-FBReader::FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
+FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::FindPreviousAction::isEnabled() {
+bool FindPreviousAction::isEnabled() {
 	shared_ptr<ZLView> view = myFBReader.currentView();
 	return (!view.isNull()) && ((TextView&)*view).canFindPrevious();
 }
 
-void FBReader::FindPreviousAction::run() {
+void FindPreviousAction::run() {
 	((TextView&)*myFBReader.currentView()).findPrevious();
 }
 
-FBReader::ScrollingAction::ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
+ScrollingAction::ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
 }
 
-bool FBReader::ScrollingAction::isEnabled() {
+bool ScrollingAction::isEnabled() {
 	return
 		(&myOptions != &myFBReader.FingerTapScrollingOptions) ||
 		myFBReader.EnableFingerScrollingOption.value();
 }
 
-bool FBReader::ScrollingAction::useKeyDelay() const {
+bool ScrollingAction::useKeyDelay() const {
 	return false;
 }
 
-void FBReader::ScrollingAction::run() {
+void ScrollingAction::run() {
 	int delay = myFBReader.myLastScrollingTime.millisecondsTo(ZLTime());
 	shared_ptr<ZLView> view = myFBReader.currentView();
 	if (!view.isNull() && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
@@ -246,38 +251,38 @@ void FBReader::ScrollingAction::run() {
 	}
 }
 
-FBReader::ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : FBAction(fbreader), myDelta(delta) {
+ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : FBAction(fbreader), myDelta(delta) {
 }
 
-void FBReader::ChangeFontSizeAction::run() {
+void ChangeFontSizeAction::run() {
 	ZLIntegerRangeOption &option = TextStyleCollection::instance().baseStyle().FontSizeOption;
 	option.setValue(option.value() + myDelta);
 	myFBReader.clearTextCaches();
 	myFBReader.refreshWindow();
 }
 
-FBReader::OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fbreader) {
+OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FBReader::OpenPreviousBookAction::isVisible() {
-	if ((myFBReader.myMode != BOOK_TEXT_MODE) && (myFBReader.myMode != CONTENTS_MODE)) {
+bool OpenPreviousBookAction::isVisible() {
+	if ((myFBReader.myMode != FBReader::BOOK_TEXT_MODE) && (myFBReader.myMode != FBReader::CONTENTS_MODE)) {
 		return false;
 	}
 	return ((RecentBooksView&)*myFBReader.myRecentBooksView).lastBooks().books().size() > 1;
 }
 
-void FBReader::OpenPreviousBookAction::run() {
+void OpenPreviousBookAction::run() {
 	Books books = ((RecentBooksView&)*myFBReader.myRecentBooksView).lastBooks().books();
 	myFBReader.openBook(books[1]);
 	myFBReader.refreshWindow();
 	myFBReader.resetWindowCaption();
 }
 
-FBReader::CancelAction::CancelAction(FBReader &fbreader) : FBAction(fbreader) {
+CancelAction::CancelAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-void FBReader::CancelAction::run() {
-	if (myFBReader.myMode != BOOK_TEXT_MODE) {
+void CancelAction::run() {
+	if (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) {
 		myFBReader.restorePreviousMode();
 	} else if (myFBReader.isFullscreen()) {
 		myFBReader.setFullscreen(false);
@@ -286,18 +291,60 @@ void FBReader::CancelAction::run() {
 	}
 }
 
-FBReader::ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbreader) {
+ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-void FBReader::ToggleIndicatorAction::run() {
+void ToggleIndicatorAction::run() {
 	ZLBooleanOption &option = TextStyleCollection::instance().indicatorStyle().ShowOption;
 	option.setValue(!option.value());
 	myFBReader.refreshWindow();
 }
 
-FBReader::QuitAction::QuitAction(FBReader &fbreader) : FBAction(fbreader) {
+QuitAction::QuitAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-void FBReader::QuitAction::run() {
+void QuitAction::run() {
 	myFBReader.closeView();
+}
+
+GotoNextTOCSectionAction::GotoNextTOCSectionAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool GotoNextTOCSectionAction::isVisible() {
+	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+}
+
+bool GotoNextTOCSectionAction::isEnabled() {
+	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	return contentsView.currentTextViewParagraph() < contentsView.model()->paragraphsNumber() - 1;
+}
+
+void GotoNextTOCSectionAction::run() {
+	ContentsView &contentsView = (ContentsView&)*myFBReader.myContentsView;
+	size_t current = contentsView.currentTextViewParagraph();
+	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
+	int reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current + 1]));
+	((TextView&)*myFBReader.myBookTextView).gotoParagraph(reference);
+	myFBReader.refreshWindow();
+}
+
+GotoPreviousTOCSectionAction::GotoPreviousTOCSectionAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool GotoPreviousTOCSectionAction::isVisible() {
+	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+}
+
+bool GotoPreviousTOCSectionAction::isEnabled() {
+	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	return contentsView.currentTextViewParagraph() > 0;
+}
+
+void GotoPreviousTOCSectionAction::run() {
+	ContentsView &contentsView = (ContentsView&)*myFBReader.myContentsView;
+	size_t current = contentsView.currentTextViewParagraph();
+	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
+	int reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current - 1]));
+	((TextView&)*myFBReader.myBookTextView).gotoParagraph(reference);
+	myFBReader.refreshWindow();
 }

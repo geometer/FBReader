@@ -26,4 +26,6 @@
 	<binding key="&lt;I&gt;" action="25"/>
 	<binding key="&lt;R&gt;" action="27"/>
 	<binding key="&lt;Z&gt;" action="28"/>
+	<binding key="&lt;Ctrl&gt;+&lt;DownArrow&gt;" action="33"/>
+	<binding key="&lt;Ctrl&gt;+&lt;UpArrow&gt;" action="34"/>
 </keymap>

@@ -27,6 +27,7 @@
 #include "KeyBindingsPage.h"
 
 #include "../fbreader/FBReader.h"
+#include "../fbreader/FBReaderActions.h"
 
 class KeyboardControlEntry : public ZLSimpleBooleanOptionEntry {
 
@@ -110,6 +111,8 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(FBReader &fbreader) :
 	addAction(ACTION_SCROLL_TO_HOME, "Go To Home");
 	addAction(ACTION_SCROLL_TO_START_OF_TEXT, "Go To Start Of Section");
 	addAction(ACTION_SCROLL_TO_END_OF_TEXT, "Go To End Of Section");
+	addAction(ACTION_GOTO_NEXT_TOC_SECTION, "Go To Next TOC Section");
+	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, "Go To Previous TOC Section");
 	addAction(ACTION_LARGE_SCROLL_FORWARD, "Large Scroll Forward");
 	addAction(ACTION_LARGE_SCROLL_BACKWARD, "Large Scroll Backward");
 	addAction(ACTION_SMALL_SCROLL_FORWARD, "Small Scroll Forward");

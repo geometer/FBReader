@@ -35,8 +35,10 @@ public:
 
 protected:
 	FBReader &fbreader();
+	const FBReader &fbreader() const;
 };
 
 inline FBReader &FBView::fbreader() { return (FBReader&)application(); }
+inline const FBReader &FBView::fbreader() const { return (const FBReader&)application(); }
 
 #endif /* __FBVIEW_H__ */

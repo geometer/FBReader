@@ -31,6 +31,7 @@
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include "FBReader.h"
+#include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "FootnoteView.h"
 #include "ContentsView.h"
@@ -78,7 +79,6 @@ FBReader::ScrollingOptions::ScrollingOptions(
 FBReader::FBReader(const std::string &bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
-	StoreContentsPositionOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "StoreContentsPosition", false),
 	LargeScrollingOptions(
 		OPTIONS, DELAY, 250,
 		LARGE_SCROLLING, MODE, TextView::NO_OVERLAPPING,
@@ -163,6 +163,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_QUIT, new QuitAction(*this));
 	addAction(ACTION_OPEN_PREVIOUS_BOOK, new OpenPreviousBookAction(*this));
 	addAction(ACTION_SHOW_HELP, new ShowHelpAction(*this));
+	addAction(ACTION_GOTO_NEXT_TOC_SECTION, new GotoNextTOCSectionAction(*this));
+	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, new GotoPreviousTOCSectionAction(*this));
 
 	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library");
 	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history", "Show Recent Books List");
@@ -196,6 +198,15 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	librarySubmenu.addItem("Recent", ACTION_SHOW_LAST_BOOKS);
 	librarySubmenu.addItem("Add Book...", ACTION_ADD_BOOK);
 	librarySubmenu.addItem("About FBReader", ACTION_SHOW_HELP);
+
+	Menu &navigationSubmenu = menubar().addSubmenu("Navigate");
+	navigationSubmenu.addItem("Go To Start Of Document", ACTION_SCROLL_TO_HOME);
+	navigationSubmenu.addItem("Go To Start Of Text Section", ACTION_SCROLL_TO_START_OF_TEXT);
+	navigationSubmenu.addItem("Go To End Of Text Section", ACTION_SCROLL_TO_END_OF_TEXT);
+	navigationSubmenu.addItem("Go To Next TOC Item", ACTION_GOTO_NEXT_TOC_SECTION);
+	navigationSubmenu.addItem("Go To Previous TOC Item", ACTION_GOTO_PREVIOUS_TOC_SECTION);
+	navigationSubmenu.addItem("Go Back", ACTION_UNDO);
+	navigationSubmenu.addItem("Go Forward", ACTION_REDO);
 
 	Menu &findSubmenu = menubar().addSubmenu("Find");
 	findSubmenu.addItem("Find Text...", ACTION_SEARCH);
@@ -307,7 +318,6 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		bookTextView.saveState();
 		bookTextView.setModel(0, "");
 		bookTextView.setContentsModel(0);
-		contentsView.saveState();
 		contentsView.setModel(0, "");
 		if (myModel != 0) {
 			delete myModel;
@@ -408,9 +418,7 @@ void FBReader::setMode(ViewMode mode) {
 			setView(myBookTextView);
 			break;
 		case CONTENTS_MODE:
-			if (!StoreContentsPositionOption.value()) {
-				((ContentsView&)*myContentsView).gotoReference();
-			}
+			((ContentsView&)*myContentsView).gotoReference();
 			setView(myContentsView);
 			break;
 		case FOOTNOTE_MODE:

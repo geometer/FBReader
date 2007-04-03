@@ -21,6 +21,7 @@
 
 #include "FBView.h"
 #include "FBReader.h"
+#include "FBReaderActions.h"
 
 FBView::FBView(FBReader &reader, ZLPaintContext &context) : TextView(reader, context) {
 }

@@ -42,44 +42,6 @@ class CollectionView;
 class RecentBooksView;
 class ZLViewWidget;
 
-enum ActionCode {
-	// please, don't change these numbers
-	// add new action id's at end of this enumeration
-	NO_ACTION = 0,
-	ACTION_SHOW_COLLECTION = 1,
-	ACTION_SHOW_OPTIONS = 2,
-	ACTION_UNDO = 3,
-	ACTION_REDO = 4,
-	ACTION_SHOW_CONTENTS = 5,
-	ACTION_SEARCH = 6,
-	ACTION_FIND_PREVIOUS = 7,
-	ACTION_FIND_NEXT = 8,
-	ACTION_LARGE_SCROLL_FORWARD = 9,
-	ACTION_LARGE_SCROLL_BACKWARD = 10,
-	ACTION_SMALL_SCROLL_FORWARD = 11,
-	ACTION_SMALL_SCROLL_BACKWARD = 12,
-	ACTION_MOUSE_SCROLL_FORWARD = 13,
-	ACTION_MOUSE_SCROLL_BACKWARD = 14,
-	ACTION_SCROLL_TO_HOME = 15,
-	ACTION_SCROLL_TO_START_OF_TEXT = 16,
-	ACTION_SCROLL_TO_END_OF_TEXT = 17,
-	ACTION_CANCEL = 18,
-	ACTION_INCREASE_FONT = 19,
-	ACTION_DECREASE_FONT = 20,
-	ACTION_SHOW_HIDE_POSITION_INDICATOR = 21,
-	ACTION_TOGGLE_FULLSCREEN = 22,
-	ACTION_FULLSCREEN_ON = 23,
-	ACTION_ADD_BOOK = 24,
-	ACTION_SHOW_BOOK_INFO = 25,
-	ACTION_SHOW_HELP = 26,
-	ACTION_ROTATE_SCREEN = 27,
-	ACTION_SHOW_LAST_BOOKS = 28,
-	ACTION_QUIT = 29,
-	ACTION_OPEN_PREVIOUS_BOOK = 30,
-	ACTION_FINGER_TAP_SCROLL_FORWARD = 31,
-	ACTION_FINGER_TAP_SCROLL_BACKWARD = 32,
-};
-
 class FBReader : public ZLApplication {
 
 protected:
@@ -112,7 +74,6 @@ public:
 
 public:
 	ZLBooleanOption QuitOnCancelOption;
-	ZLBooleanOption StoreContentsPositionOption;
 
 	ScrollingOptions LargeScrollingOptions;
 	ScrollingOptions SmallScrollingOptions;
@@ -129,209 +90,6 @@ public:
 	ZLBooleanOption UseSeparateBindingsOption;
 	ZLBooleanOption ShowHelpIconOption;
 
-private:
-	class FBAction : public Action {
-
-	protected:
-		FBAction(FBReader &fbreader);
-
-	protected:
-		FBReader &myFBReader;
-	};
-
-	class ShowCollectionAction : public FBAction {
-
-	public:
-		ShowCollectionAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class ShowCollectionAction;
-
-	class ShowHelpAction : public FBAction {
-
-	public:
-		ShowHelpAction(FBReader &fbreader);
-		void run();
-	};
-	friend class ShowHelpAction;
-
-	class ShowRecentBooksListAction : public FBAction {
-
-	public:
-		ShowRecentBooksListAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class ShowRecentBooksListAction;
-
-	class ShowOptionsDialogAction : public FBAction {
-
-	public:
-		ShowOptionsDialogAction(FBReader &fbreader);
-		void run();
-	};
-	friend class ShowOptionsDialogAction;
-
-	class ShowContentsAction : public FBAction {
-
-	public:
-		ShowContentsAction(FBReader &fbreader);
-		bool isVisible();
-		bool isEnabled();
-		void run();
-	};
-	friend class ShowContentsAction;
-
-	class AddBookAction : public FBAction {
-
-	public:
-		AddBookAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class AddBookAction;
-
-	class ShowBookInfoAction : public FBAction {
-
-	public:
-		ShowBookInfoAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class ShowBookInfoAction;
-
-	class ScrollToHomeAction : public FBAction {
-
-	public:
-		ScrollToHomeAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class ScrollToHomeAction;
-
-	class ScrollToStartOfTextAction : public FBAction {
-
-	public:
-		ScrollToStartOfTextAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class ScrollToStartOfTextAction;
-
-	class ScrollToEndOfTextAction : public FBAction {
-
-	public:
-		ScrollToEndOfTextAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class ScrollToEndOfTextAction;
-
-	class UndoAction : public FBAction {
-
-	public:
-		UndoAction(FBReader &fbreader);
-		bool isEnabled();
-		void run();
-	};
-	friend class UndoAction;
-	
-	class RedoAction : public FBAction {
-
-	public:
-		RedoAction(FBReader &fbreader);
-		bool isVisible();
-		bool isEnabled();
-		void run();
-	};
-	friend class RedoAction;
-	
-	class SearchAction : public FBAction {
-
-	public:
-		SearchAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class SearchAction;
-	
-	class FindNextAction : public FBAction {
-
-	public:
-		FindNextAction(FBReader &fbreader);
-		bool isEnabled();
-		void run();
-	};
-	friend class FindNextAction;
-	
-	class FindPreviousAction : public FBAction {
-
-	public:
-		FindPreviousAction(FBReader &fbreader);
-		bool isEnabled();
-		void run();
-	};
-	friend class FindPreviousAction;
-	
-	class ScrollingAction : public FBAction {
-
-	public:
-		ScrollingAction(FBReader &fbreader, const ScrollingOptions &options, bool forward);
-		bool isEnabled();
-		bool useKeyDelay() const;
-		void run();
-
-	private:
-		const ScrollingOptions &myOptions;
-		const bool myForward;
-	};
-	friend class ScrollingAction;
-	
-	class ChangeFontSizeAction : public FBAction {
-
-	public:
-		ChangeFontSizeAction(FBReader &fbreader, int delta);
-		void run();
-
-	private:
-		const int myDelta;
-	};
-	friend class ChangeFontSizeAction;
-	
-	class CancelAction : public FBAction {
-
-	public:
-		CancelAction(FBReader &fbreader);
-		void run();
-	};
-	friend class CancelAction;
-	
-	class ToggleIndicatorAction : public FBAction {
-
-	public:
-		ToggleIndicatorAction(FBReader &fbreader);
-		void run();
-	};
-	friend class ToggleIndicatorAction;
-	
-	class QuitAction : public FBAction {
-
-	public:
-		QuitAction(FBReader &fbreader);
-		void run();
-	};
-	friend class QuitAction;
-	
-	class OpenPreviousBookAction : public FBAction {
-
-	public:
-		OpenPreviousBookAction(FBReader &fbreader);
-		bool isVisible();
-		void run();
-	};
-	friend class OpenPreviousBookAction;
-	
 public:
 	FBReader(const std::string &bookToOpen);
 	~FBReader();
@@ -399,6 +157,30 @@ private:
 
 friend class OptionsDialog;
 friend class FBView;
+
+friend class ShowCollectionAction;
+friend class ShowHelpAction;
+friend class ShowRecentBooksListAction;
+friend class ShowOptionsDialogAction;
+friend class ShowContentsAction;
+friend class AddBookAction;
+friend class ShowBookInfoAction;
+friend class ScrollToHomeAction;
+friend class ScrollToStartOfTextAction;
+friend class ScrollToEndOfTextAction;
+friend class UndoAction;
+friend class RedoAction;
+friend class SearchAction;
+friend class FindNextAction;
+friend class FindPreviousAction;
+friend class ScrollingAction;
+friend class ChangeFontSizeAction;
+friend class CancelAction;
+friend class ToggleIndicatorAction;
+friend class QuitAction;
+friend class OpenPreviousBookAction;
+friend class GotoNextTOCSectionAction;
+friend class GotoPreviousTOCSectionAction;
 };
 
 #endif /* __FBREADER_H__ */

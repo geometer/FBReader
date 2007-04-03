@@ -37,11 +37,13 @@ bool ZLEncodingConverterInfo::canCreateConverter() const {
 			return true;
 		}
 
+#ifndef DONT_USE_ICONV
 		iconv_t converter = iconv_open("utf-8", it->c_str());
 		if (converter != (iconv_t)-1) {
 			iconv_close(converter);
 			return true;
 		}
+#endif /* DONT_USE_ICONV */
 	}
 
 	return false;
@@ -64,12 +66,14 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverterInfo::createConverter() const
 			}
 		}
 
+#ifndef DONT_USE_ICONV
 		IconvEncodingConverter *converter = new IconvEncodingConverter(*it);
 		if (converter->isInitialized()) {
 			return converter;
 		} else {
 			delete converter;
 		}
+#endif /* DONT_USE_ICONV */
 	}
 
 	return new DummyEncodingConverter();
@@ -188,6 +192,7 @@ bool TwoBytesEncodingConverter::fillTable(int*) {
 	return false;
 }
 
+#ifndef DONT_USE_ICONV
 IconvEncodingConverter::IconvEncodingConverter(const std::string &encoding) {
 	myIConverter = iconv_open("utf-8", encoding.c_str());
 }
@@ -283,6 +288,7 @@ bool IconvEncodingConverter::fillTable(int *map) {
 	}
 	return true;
 }
+#endif /* DONT_USE_ICONV */
 
 void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {
 	convert(dst, src.data(), src.data() + src.length());

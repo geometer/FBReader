@@ -32,16 +32,13 @@ public:
 	~ContentsView();
 
 	bool isEmpty() const;
+	size_t currentTextViewParagraph() const;
 	void gotoReference();
-	void saveState();
 	const std::string &caption() const;
 	void setCaption(const std::string &caption);
-	void setModel(shared_ptr<TextModel> model, const std::string &name);
 
 private:
 	bool onStylusPress(int x, int y);
-
-	void preparePaintInfo();
 
 private:
 	std::string myCaption;
@@ -49,9 +46,5 @@ private:
 
 inline const std::string &ContentsView::caption() const { return myCaption; }
 inline void ContentsView::setCaption(const std::string &caption) { myCaption = caption; }
-inline void ContentsView::preparePaintInfo() {
-	TextView::preparePaintInfo();
-	saveState();
-}
 
 #endif /* __CONTENTSVIEW_H__ */

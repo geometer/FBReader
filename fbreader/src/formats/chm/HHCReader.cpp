@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLUnicodeUtil.h>
+
 #include "HHCReader.h"
 #include "CHMReferenceCollection.h"
 
@@ -94,7 +96,7 @@ bool HHCReader::tagHandler(const HtmlTag &tag) {
 					myText = "...";
 				}
 				myBookReader.addContentsData(myText.empty() ? "..." : myText);
-				myReferenceVector.push_back(myReference);
+				myReferenceVector.push_back(ZLUnicodeUtil::toLower(myReference));
 			}
 		}
 	}
