@@ -3,6 +3,7 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Name=FBReader
+Comment=E-Book Reader
 Exec=@BINDIR@/FBReader
 Icon=FBReader
 X-Window-Icon=FBReader
