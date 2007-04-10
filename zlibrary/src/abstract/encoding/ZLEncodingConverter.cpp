@@ -18,10 +18,8 @@
  * 02110-1301, USA.
  */
 
-#include <ZLUnicodeUtil.h>
-
 #include "ZLEncodingConverter.h"
-#include "EncodingConverters.h"
+#include "DummyEncodingConverter.h"
 #include "IConvEncodingConverter.h"
 #include "MyEncodingConverter.h"
 
@@ -33,19 +31,25 @@ ZLEncodingConverterProvider::~ZLEncodingConverterProvider() {
 
 bool ZLEncodingConverterInfo::canCreateConverter() const {
 	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
-		const std::string lowerCasedName = ZLUnicodeUtil::toLower(*it);
-		if ((lowerCasedName == "utf-8") || (lowerCasedName == "us-ascii")) {
-			return true;
+		{
+			DummyEncodingConverterProvider provider;
+			if (provider.providesConverter(*it)) {
+				return true;
+			}
 		}
 
-		MyEncodingConverterProvider provider;
-		if (provider.providesConverter(*it)) {
-			return true;
+		{
+			MyEncodingConverterProvider provider;
+			if (provider.providesConverter(*it)) {
+				return true;
+			}
 		}
 
-		IConvEncodingConverterProvider provider;
-		if (provider.providesConverter(*it)) {
-			return true;
+		{
+			IConvEncodingConverterProvider provider;
+			if (provider.providesConverter(*it)) {
+				return true;
+			}
 		}
 	}
 
@@ -54,23 +58,29 @@ bool ZLEncodingConverterInfo::canCreateConverter() const {
 
 shared_ptr<ZLEncodingConverter> ZLEncodingConverterInfo::createConverter() const {
 	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
-		const std::string lowerCasedName = ZLUnicodeUtil::toLower(*it);
-		if ((lowerCasedName == "utf-8") || (lowerCasedName == "us-ascii")) {
-			return new DummyEncodingConverter();
+		{
+			DummyEncodingConverterProvider provider;
+			if (provider.providesConverter(*it)) {
+				return provider.createConverter(*it);
+			}
 		}
 
-		MyEncodingConverterProvider provider;
-		if (provider.providesConverter(*it)) {
-			return provider.createConverter(*it);
+		{
+			MyEncodingConverterProvider provider;
+			if (provider.providesConverter(*it)) {
+				return provider.createConverter(*it);
+			}
 		}
 
-		IConvEncodingConverterProvider provider;
-		if (provider.providesConverter(*it)) {
-			return provider.createConverter(*it);
+		{
+			IConvEncodingConverterProvider provider;
+			if (provider.providesConverter(*it)) {
+				return provider.createConverter(*it);
+			}
 		}
 	}
 
-	return new DummyEncodingConverter();
+	return DummyEncodingConverterProvider().createConverter("");
 }
 
 ZLEncodingConverter::ZLEncodingConverter() {
@@ -80,23 +90,6 @@ ZLEncodingConverter::~ZLEncodingConverter() {
 }
 
 void ZLEncodingConverter::reset() {
-}
-
-DummyEncodingConverter::DummyEncodingConverter() {
-}
-
-DummyEncodingConverter::~DummyEncodingConverter() {
-}
-
-void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	dst.append(srcStart, srcEnd - srcStart);
-}
-
-bool DummyEncodingConverter::fillTable(int *map) {
-	for (int i = 0; i < 255; ++i) {
-		map[i] = i;
-	}
-	return true;
 }
 
 void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {

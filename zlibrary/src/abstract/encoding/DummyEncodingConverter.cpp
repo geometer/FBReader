@@ -18,22 +18,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGCONVERTERS_H__
-#define __ENCODINGCONVERTERS_H__
+#include <ZLUnicodeUtil.h>
 
-#include "ZLEncodingConverter.h"
+#include "DummyEncodingConverter.h"
 
-class DummyEncodingConverter : public ZLEncodingConverter {
+bool DummyEncodingConverterProvider::providesConverter(const std::string &encoding) {
+	const std::string lowerCasedEncoding = ZLUnicodeUtil::toLower(encoding);
+	return (lowerCasedEncoding == "utf-8") || (lowerCasedEncoding == "us-ascii");
+}
 
-private:
-	DummyEncodingConverter();
+shared_ptr<ZLEncodingConverter> DummyEncodingConverterProvider::createConverter(const std::string&) {
+	return new DummyEncodingConverter();
+}
 
-public:
-	~DummyEncodingConverter();
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
-	bool fillTable(int *map);
+DummyEncodingConverter::DummyEncodingConverter() {
+}
 
-friend class ZLEncodingConverterInfo;
-};
+DummyEncodingConverter::~DummyEncodingConverter() {
+}
 
-#endif /* __ENCODINGCONVERTERS_H__ */
+void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
+	dst.append(srcStart, srcEnd - srcStart);
+}
+
+bool DummyEncodingConverter::fillTable(int *map) {
+	for (int i = 0; i < 255; ++i) {
+		map[i] = i;
+	}
+	return true;
+}
