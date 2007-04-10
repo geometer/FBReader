@@ -18,9 +18,28 @@
  * 02110-1301, USA.
  */
 
+#include <iconv.h>
+
 #include <ZLUnicodeUtil.h>
 
 #include "IConvEncodingConverter.h"
+
+class IConvEncodingConverter : public ZLEncodingConverter {
+
+private:
+	IConvEncodingConverter(const std::string &encoding);
+	~IConvEncodingConverter();
+
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	void reset();
+	bool fillTable(int *map);
+
+private:
+	iconv_t myIConverter;
+	std::string myBuffer;
+
+friend class IConvEncodingConverterProvider;
+};
 
 bool IConvEncodingConverterProvider::providesConverter(const std::string &encoding) {
 	iconv_t converter = iconv_open("utf-8", encoding.c_str());

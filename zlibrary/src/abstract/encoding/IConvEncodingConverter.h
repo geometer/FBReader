@@ -21,41 +21,13 @@
 #ifndef __ICONVENCODINGCONVERTERS_H__
 #define __ICONVENCODINGCONVERTERS_H__
 
-#include <iconv.h>
-
 #include "ZLEncodingConverter.h"
-
-class ZLEncodingConverterProvider {
-
-public:
-	virtual ~ZLEncodingConverterProvider();
-	virtual bool providesConverter(const std::string &encoding) = 0;
-	virtual shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding) = 0;
-};
 
 class IConvEncodingConverterProvider : public ZLEncodingConverterProvider {
 
 public:
 	bool providesConverter(const std::string &encoding);
 	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
-};
-
-class IConvEncodingConverter : public ZLEncodingConverter {
-
-private:
-	IConvEncodingConverter(const std::string &encoding);
-	~IConvEncodingConverter();
-
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
-	void reset();
-	//bool isInitialized() const;
-	bool fillTable(int *map);
-
-private:
-	iconv_t myIConverter;
-	std::string myBuffer;
-
-friend class IConvEncodingConverterProvider;
 };
 
 #endif /* __ENCODINGCONVERTERS_H__ */

@@ -23,8 +23,6 @@
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 
-#include "../encoding/EncodingReader.h"
-
 #include "ZLXMLReader.h"
 
 #include "expat/ZLXMLReaderInternal.h"

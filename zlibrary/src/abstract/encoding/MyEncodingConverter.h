@@ -18,22 +18,16 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGCONVERTERS_H__
-#define __ENCODINGCONVERTERS_H__
+#ifndef __MYENCODINGCONVERTER_H__
+#define __MYENCODINGCONVERTER_H__
 
 #include "ZLEncodingConverter.h"
 
-class DummyEncodingConverter : public ZLEncodingConverter {
-
-private:
-	DummyEncodingConverter();
+class MyEncodingConverterProvider : public ZLEncodingConverterProvider {
 
 public:
-	~DummyEncodingConverter();
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
-	bool fillTable(int *map);
-
-friend class ZLEncodingConverterInfo;
+	bool providesConverter(const std::string &encoding);
+	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
 };
 
-#endif /* __ENCODINGCONVERTERS_H__ */
+#endif /* __MYENCODINGCONVERTER_H__ */

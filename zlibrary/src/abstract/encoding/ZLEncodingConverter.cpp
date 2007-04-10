@@ -19,13 +19,14 @@
  */
 
 #include <ZLUnicodeUtil.h>
-#include <ZLApplication.h>
-#include <ZLFile.h>
 
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
 #include "IConvEncodingConverter.h"
-#include "EncodingReader.h"
+#include "MyEncodingConverter.h"
+
+ZLEncodingConverterProvider::ZLEncodingConverterProvider() {
+}
 
 ZLEncodingConverterProvider::~ZLEncodingConverterProvider() {
 }
@@ -37,7 +38,8 @@ bool ZLEncodingConverterInfo::canCreateConverter() const {
 			return true;
 		}
 
-		if (ZLFile(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + *it).exists()) {
+		MyEncodingConverterProvider provider;
+		if (provider.providesConverter(*it)) {
 			return true;
 		}
 
@@ -57,14 +59,9 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverterInfo::createConverter() const
 			return new DummyEncodingConverter();
 		}
 
-		EncodingCharReader er(*it);
-		char **encodingMap = er.createTable();
-		if (encodingMap != 0) {
-			if (er.bytesNumber() == 1) {
-				return new OneByteEncodingConverter(*it, encodingMap);
-			} else if (er.bytesNumber() == 2) {
-				return new TwoBytesEncodingConverter(encodingMap);
-			}
+		MyEncodingConverterProvider provider;
+		if (provider.providesConverter(*it)) {
+			return provider.createConverter(*it);
 		}
 
 		IConvEncodingConverterProvider provider;
@@ -102,97 +99,9 @@ bool DummyEncodingConverter::fillTable(int *map) {
 	return true;
 }
 
-OneByteEncodingConverter::OneByteEncodingConverter(const std::string &encoding, char **encodingMap) : myEncoding(encoding) {
-	myEncodingMap = new char[1024];
-	memset(myEncodingMap, '\0', 1024);
-	for (int i = 0; i < 256; ++i) {
-		ZLUnicodeUtil::ucs2ToUtf8(myEncodingMap + 4 * i, i);
-	}
-	if (encodingMap != 0) {
-		for (int i = 0; i < 256; ++i) {
-			if (encodingMap[i] != 0) {
-				strcpy(myEncodingMap + 4 * i, encodingMap[i]);
-			}
-		}
-	}
-}
-
-OneByteEncodingConverter::~OneByteEncodingConverter() {
-	delete[] myEncodingMap;
-}
-
-void OneByteEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	size_t oldLength = dst.length();
-	dst.append(3 * (srcEnd - srcStart), '\0');
-	char *dstStartPtr = (char*)dst.data() + oldLength;
-	char *dstPtr = dstStartPtr;
-	const char *p;
-	for (const char *ptr = srcStart; ptr != srcEnd; ++ptr) {
-		for (p = myEncodingMap + 4 * (unsigned char)*ptr; *p != '\0'; ++p) {
-			*(dstPtr++) = *p;
-		}
-	}
-	dst.erase(dstPtr - dstStartPtr + oldLength);
-}
-
-bool OneByteEncodingConverter::fillTable(int *map) {
-	return EncodingIntReader(myEncoding).fillTable(map);
-}
-
-TwoBytesEncodingConverter::TwoBytesEncodingConverter(char **encodingMap) : myEncodingMap(encodingMap), myLastCharIsNotProcessed(false) {
-}
-
-TwoBytesEncodingConverter::~TwoBytesEncodingConverter() {
-	for (int i = 0; i < 32768; ++i) {
-		if (myEncodingMap[i] != 0) {
-			delete[] myEncodingMap[i];
-		}
-	}
-	delete[] myEncodingMap;
-}
-
-void TwoBytesEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	if (srcStart == srcEnd) {
-		return;
-	}
-
-	dst.reserve(dst.length() + 3 * (srcEnd - srcStart) / 2);
-	if (myLastCharIsNotProcessed) {
-		const char *utf8 = myEncodingMap[0x100 * (myLastChar & 0x7F) + (unsigned char)*srcStart];
-		if (utf8 != 0) {
-			dst += utf8;
-		}
-		++srcStart;
-		myLastCharIsNotProcessed = false;
-	}
-	for (const char *ptr = srcStart; ptr != srcEnd; ++ptr) {
-		if (((*ptr) & 0x80) == 0) {
-			dst += *ptr;
-		} else if (ptr + 1 == srcEnd) {
-			myLastChar = *ptr;
-			myLastCharIsNotProcessed = true;
-		} else {
-			const char *utf8 = myEncodingMap[0x100 * ((*ptr) & 0x7F) + (unsigned char)*(ptr + 1)];
-			if (utf8 != 0) {
-				dst += utf8;
-			}
-			++ptr;
-		}
-	}
-}
-
-void TwoBytesEncodingConverter::reset() {
-	myLastCharIsNotProcessed = false;
-}
-
-bool TwoBytesEncodingConverter::fillTable(int*) {
-	return false;
-}
-
 void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {
 	convert(dst, src.data(), src.data() + src.length());
 }
-
 
 ZLEncodingConverterInfo::ZLEncodingConverterInfo(const std::string &name, const std::string &region) : myName(name), myVisibleName(region + " (" + name + ")") {
 	addAlias(myName);

@@ -93,9 +93,10 @@ public:
 	static ZLEncodingConverterInfoPtr info(int code);
 	static ZLEncodingConverterInfoPtr defaultInfo();
 
+	static std::string encodingDescriptionPath();
+
 private:
 	static void init();
-	static std::string encodingDescriptionPath();
 	static void addInfo(ZLEncodingConverterInfoPtr info);
 
 private:
@@ -108,6 +109,21 @@ private:
 friend class ZLEncodingConverterInfo;
 friend class EncodingReader;
 friend class EncodingCollectionReader;
+};
+
+class ZLEncodingConverterProvider {
+
+protected:
+	ZLEncodingConverterProvider();
+
+public:
+	virtual ~ZLEncodingConverterProvider();
+	virtual bool providesConverter(const std::string &encoding) = 0;
+	virtual shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding) = 0;
+
+private:
+	ZLEncodingConverterProvider(const ZLEncodingConverterProvider&);
+	const ZLEncodingConverterProvider &operator = (const ZLEncodingConverterProvider&);
 };
 
 #endif /* __ZLENCODINGCONVERTER_H__ */
