@@ -28,8 +28,10 @@
 #include "../image/ZLWin32ImageManager.h"
 #include "../view/ZLWin32PaintContext.h"
 #include "../message/ZLWin32Message.h"
+#include "../config/ZLWin32Config.h"
 
 void ZLibrary::init(int&, char**&) {
+	ZLWin32ConfigManager::createInstance();
 	ZLWin32FSManager::createInstance();
 	ZLWin32TimeManager::createInstance();
 	ZLWin32DialogManager::createInstance();

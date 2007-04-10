@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __XMLCONFIG_H__
-#define __XMLCONFIG_H__
+#ifndef __ZLWIN32CONFIG_H__
+#define __ZLWIN32CONFIG_H__
 
 #include <map>
 #include <set>
@@ -30,27 +30,45 @@
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
 
-#include "XMLConfigValue.h"
+#include "../../abstract/options/ZLConfig.h"
 
-class XMLConfigGroup {
+#include "ZLWin32ConfigValue.h"
+
+class ZLWin32ConfigManager : public ZLConfigManager {
 
 public:
-	XMLConfigGroup(const std::string &groupName, std::set<std::string> &categories);
+	static void createInstance();
+
+public:
+	ZLConfig *createConfig() const;
+
+private:
+	ZLWin32ConfigManager();
+};
+
+class ZLWin32ConfigGroup {
+
+public:
+	ZLWin32ConfigGroup(const std::string &groupName, std::set<std::string> &categories);
 	void setValue(const std::string &name, const std::string &value, const std::string &category);
 
 private:
 	std::string myName;
-	std::map<std::string,XMLConfigValue> myValues;
+	std::map<std::string,ZLWin32ConfigValue> myValues;
 	std::set<std::string> &myCategories;
 
-friend class XMLConfig;
+friend class ZLWin32Config;
 };
 
-class XMLConfig {
+class ZLWin32Config : public ZLConfig {
+
+private:
+	static const std::string PSEUDO_GROUPNAME_PREFIX;
+	static const std::string REAL_GROUPNAME_KEY;
 
 public:
-	XMLConfig();
-	~XMLConfig();
+	ZLWin32Config();
+	~ZLWin32Config();
 
 	void removeGroup(const std::string &name);
 
@@ -58,8 +76,11 @@ public:
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
 
+	bool isAutoSavingSupported() const;
+	void startAutoSave(int seconds);
+
 private:
-	XMLConfigGroup *getGroup(const std::string &name, bool createUnexisting);
+	ZLWin32ConfigGroup *getGroup(const std::string &name, bool createUnexisting);
 
 private:
 	void load();
@@ -69,17 +90,20 @@ private:
 
 	void collectSubKeys(std::set<std::string> &keySet, HKEY root);
 	void collectValues(std::set<std::string> &valueSet, HKEY key);
-	bool getValue(std::string &value, HKEY key, const std::string &name);
+	bool registryGetValue(std::string &value, HKEY key, const std::string &name);
 
-	void removeValue(const std::string &keyName, const std::string &valueName);
-	void setValue(const std::string &keyName, const std::string &valueName, const std::string &value);
+	void registryRemoveValue(const std::string &category, const std::string &group, const std::string &valueName);
+	void registrySetValue(const std::string &category, const std::string &group, const std::string &valueName, const std::string &value);
 
 private:
-	std::map<std::string,XMLConfigGroup*> myGroups;
+	std::map<std::string,ZLWin32ConfigGroup*> myGroups;
 	std::set<std::string> myCategories;
 
 	const int myBufferSize;
 	char *myBuffer;
+
+	int myPseudoGroupNameNumber;
+	std::map<std::string,std::string> myGroupAliases;
 };
 
-#endif /* __XMLCONFIG_H__ */
+#endif /* __ZLWIN32CONFIG_H__ */

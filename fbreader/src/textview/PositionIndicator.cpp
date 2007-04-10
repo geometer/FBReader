@@ -209,6 +209,9 @@ bool TextView::PositionIndicator::onStylusPress(int x, int y) {
 		return true;
 	}
 
+	if (myTextView.endCursor().isNull()) {
+		return false;
+	}
 	const size_t startIndex = startTextIndex();
 	const size_t endIndex = endTextIndex();
 

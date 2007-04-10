@@ -153,6 +153,7 @@ void HtmlHeaderTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttr
 			bookReader().insertEndOfSectionParagraph();
 			bookReader().enterTitle();
 			bookReader().beginContentsParagraph();
+			myReader.myIsStarted = false;
 		}
 		bookReader().pushKind(myKind);
 	} else {
@@ -185,7 +186,12 @@ void HtmlHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttrib
 			if (attributes[i].Name == "NAME") {
 				bookReader().addHyperlinkLabel(attributes[i].Value);
 			} else if ((myReader.hyperlinkType() == REGULAR) && (attributes[i].Name == "HREF")) {
-				const std::string &value = attributes[i].Value;
+				std::string value = attributes[i].Value;
+				if (!myReader.myFileName.empty() &&
+						(value.length() > myReader.myFileName.length()) &&
+						(value.substr(0, myReader.myFileName.length()) == myReader.myFileName)) {
+					value = value.substr(myReader.myFileName.length());
+				}
 				if (!value.empty()) {
 					if (value[0] == '#') {
 						myReader.setHyperlinkType(INTERNAL_HYPERLINK);
@@ -211,7 +217,7 @@ void HtmlImageTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttri
 		bookReader().endParagraph();
 		for (unsigned int i = 0; i < attributes.size(); ++i) {
 			if (attributes[i].Name == "SRC") {
-				std::string fileName = HtmlReader::decodeURL(attributes[i].Value);
+				std::string fileName = MiscUtil::decodeHtmlURL(attributes[i].Value);
 				bookReader().addImageReference(fileName);
 				bookReader().addImage(fileName,
 					new ZLFileImage("image/auto", myReader.myBaseDirPath + fileName, 0)
@@ -491,4 +497,8 @@ TextKind HtmlBookReader::hyperlinkType() const {
 
 void HtmlBookReader::setHyperlinkType(TextKind hyperlinkType) {
 	myHyperlinkType = hyperlinkType;
+}
+
+void HtmlBookReader::setFileName(const std::string fileName) {
+	myFileName = fileName;
 }

@@ -28,7 +28,21 @@
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
 
+#include "../../abstract/options/ZLConfig.h"
+
 #include "XMLConfigValue.h"
+
+class XMLConfigManager : public ZLConfigManager {
+
+public:
+	static void createInstance();
+
+public:
+	ZLConfig *createConfig() const;
+
+private:
+	XMLConfigManager();
+};
 
 class XMLConfigGroup {
 
@@ -46,7 +60,7 @@ friend class XMLConfigWriter;
 friend class XMLConfig;
 };
 
-class XMLConfig {
+class XMLConfig : public ZLConfig {
 
 public:
 	static const std::string UNKNOWN_CATEGORY;
@@ -61,6 +75,7 @@ public:
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
 
+	bool isAutoSavingSupported() const;
 	void startAutoSave(int seconds);
 
 private:

@@ -18,16 +18,16 @@
  * 02110-1301, USA.
  */
 
-#ifndef __XMLCONFIGVALUE_H__
-#define __XMLCONFIGVALUE_H__
+#ifndef __ZLWIN32CONFIGVALUE_H__
+#define __ZLWIN32CONFIGVALUE_H__
 
 #include <string>
 
-struct XMLConfigValue {
-  XMLConfigValue(const std::string &category, const std::string &value) : Category(category), Value(value) {}
+struct ZLWin32ConfigValue {
+  ZLWin32ConfigValue(const std::string &category, const std::string &value) : Category(category), Value(value) {}
 
   const std::string &Category;
   std::string Value;
 };
 
-#endif /* __XMLCONFIGVALUE_H__ */
+#endif /* __ZLWIN32CONFIGVALUE_H__ */

@@ -37,6 +37,7 @@ class HtmlBookReader : public HtmlReader {
 public:
 	HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
 	~HtmlBookReader();
+	void setFileName(const std::string fileName);
 
 protected:
 	void addAction(const std::string &tag, HtmlTagAction *action);
@@ -78,6 +79,8 @@ private:
 
 	std::map<std::string,HtmlTagAction*> myActionMap;
 	std::vector<TextKind> myKindList;
+
+	std::string myFileName;
 
 	friend class HtmlTagAction;
 	friend class HtmlControlTagAction;

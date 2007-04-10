@@ -21,6 +21,7 @@
 
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLInputStream.h>
 
 #include "CHMFile.h"
@@ -167,7 +168,7 @@ size_t CHMInputStream::sizeOfOpened() {
 }
 
 shared_ptr<ZLInputStream> CHMFileInfo::entryStream(shared_ptr<ZLInputStream> base, const std::string &name) const {
-	RecordMap::const_iterator it = myRecords.find(name);
+	RecordMap::const_iterator it = myRecords.find(ZLUnicodeUtil::toLower(name));
 	if (it == myRecords.end()) {
 		return 0;
 	}
@@ -279,6 +280,9 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 					int contentSection = readEncodedInteger(stream);
 					int offset = readEncodedInteger(stream);
 					int length = readEncodedInteger(stream);
+					if (name.substr(0, 2) != "::") {
+						name = ZLUnicodeUtil::toLower(name);
+					}
 					myRecords.insert(
 						std::pair<std::string,CHMFileInfo::RecordInfo>(
 							name,

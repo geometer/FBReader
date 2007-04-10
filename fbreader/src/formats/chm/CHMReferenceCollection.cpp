@@ -22,8 +22,13 @@
 #include <ZLUnicodeUtil.h>
 
 #include "CHMReferenceCollection.h"
+#include "../util/MiscUtil.h"
 
-std::string CHMReferenceCollection::fullReference(const std::string &prefix, const std::string &reference) {
+std::string CHMReferenceCollection::fullReference(const std::string &prefix, std::string reference) {
+	reference = MiscUtil::decodeHtmlURL(reference);
+	if ((reference.length() > 0) && (reference[0] == '/')) {
+		return reference;
+	}
 	const int index = reference.rfind("::");
 	if (index != -1) {
 		return reference.substr(index + 2);
@@ -48,7 +53,7 @@ const std::string &CHMReferenceCollection::addReference(const std::string &refer
 	if (reference.empty()) {
 		return reference;
 	}
-	std::string fullRef = doConvert ? fullReference(myPrefix, reference) : reference;
+	std::string fullRef = doConvert ? fullReference(myPrefix, reference) : MiscUtil::decodeHtmlURL(reference);
 	std::set<std::string>::const_iterator it = myReferences.find(fullRef);
 	if (it != myReferences.end()) {
 		return *it;
@@ -72,7 +77,7 @@ const std::string CHMReferenceCollection::nextReference() {
 }
 
 void CHMReferenceCollection::setPrefix(const std::string &fileName) {
-	myPrefix = fileName.substr(0, fileName.rfind('/') + 1);
+	myPrefix = MiscUtil::decodeHtmlURL(fileName.substr(0, fileName.rfind('/') + 1));
 }
 
 const std::string &CHMReferenceCollection::prefix() const {

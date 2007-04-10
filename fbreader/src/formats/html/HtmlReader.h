@@ -32,9 +32,6 @@ class ZLInputStream;
 class HtmlReader {
 
 public:
-	static std::string decodeURL(const std::string &encodedURL);
-
-public:
 	struct HtmlAttribute {
 		std::string Name;
 		std::string Value;
@@ -77,6 +74,9 @@ protected:
 
 	virtual bool tagHandler(const HtmlTag &tag) = 0;
 	virtual bool characterDataHandler(const char *text, int len, bool convert) = 0;
+
+private:
+	void appendString(std::string &to, std::string &from);
 
 protected:
 	shared_ptr<ZLEncodingConverter> myConverter;

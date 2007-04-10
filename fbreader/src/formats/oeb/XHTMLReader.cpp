@@ -72,6 +72,9 @@ class XHTMLTagHyperlinkAction : public XHTMLTagAction {
 public:
 	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
 	void doAtEnd(XHTMLReader &reader);
+
+private:
+	std::stack<TextKind> myHyperlinkStack;
 };
 
 class XHTMLTagControlAction : public XHTMLTagAction {
@@ -176,8 +179,10 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	if (href != 0) {
 		const std::string link = (*href == '#') ? (reader.myReferenceName + href) : href;
 		TextKind hyperlinkType = MiscUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
-		reader.myHyperlinkStack.push(hyperlinkType);
+		myHyperlinkStack.push(hyperlinkType);
 		reader.myModelReader.addHyperlinkControl(hyperlinkType, link);
+	} else {
+		myHyperlinkStack.push(REGULAR);
 	}
 	const char *name = reader.attributeValue(xmlattributes, "name");
 	if (name != 0) {
@@ -186,8 +191,11 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 }
 
 void XHTMLTagHyperlinkAction::doAtEnd(XHTMLReader &reader) {
-	reader.myModelReader.addControl(reader.myHyperlinkStack.top(), false);
-	reader.myHyperlinkStack.pop();
+	TextKind kind = myHyperlinkStack.top();
+	if (kind != REGULAR) {
+		reader.myModelReader.addControl(kind, false);
+	}
+	myHyperlinkStack.pop();
 }
 
 XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(TextKind control) : myControl(control) {

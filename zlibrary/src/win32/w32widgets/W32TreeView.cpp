@@ -54,13 +54,6 @@ void W32TreeView::clear() {
 }
 
 void W32TreeView::addIconToList(HICON icon) {
-	/*
-	if (bitmap == 0) {
-		HDC dc = GetDC(myWindow);
-		bitmap = CreateCompatibleBitmap(dc, myIconSize, myIconSize);
-		ReleaseDC(myWindow, dc);
-	}
-	*/
 	HIMAGELIST imageList = (HIMAGELIST)SendMessage(myWindow, TVM_GETIMAGELIST, 0, 0);
 	ImageList_AddIcon(imageList, icon);
 }
@@ -91,9 +84,6 @@ void W32TreeView::showItem(W32TreeViewItem &item, int index) {
 	tvItem.hParent = TVI_ROOT;
 	tvItem.hInsertAfter = TVI_LAST;
 	tvItem.item.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_PARAM | TVIF_CHILDREN | TVIF_SELECTEDIMAGE;
-	//tvItem.item.hItem = 0;
-	//tvItem.item.state = 0;
-	//tvItem.item.stateMask = 0;
 	tvItem.item.pszText = (WCHAR*)::wchar(item.text());
 	tvItem.item.cchTextMax = item.text().size();
 	tvItem.item.iImage = item.iconIndex();
@@ -147,7 +137,6 @@ W32Widget::Size W32TreeView::minimumSize() const {
 void W32TreeView::init(HWND parent, W32ControlCollection *collection) {
 	W32Control::init(parent, collection);
 
-	//HIMAGELIST imageList = ImageList_Create(myIconSize, myIconSize, ILC_COLOR8 | ILC_MASK, 0, 100);
 	HIMAGELIST imageList = ImageList_Create(myIconSize, myIconSize, ILC_COLOR32, 0, 100);
 	SendMessage(myWindow, TVM_SETIMAGELIST, 0, (LPARAM)imageList);
 

@@ -64,7 +64,6 @@ private:
 	std::string myPathPrefix;
 	std::string myReferenceName;
 	bool myPreformatted;
-	std::stack<TextKind> myHyperlinkStack;
 
 	friend class XHTMLTagAction;
 	friend class XHTMLTagParagraphAction;

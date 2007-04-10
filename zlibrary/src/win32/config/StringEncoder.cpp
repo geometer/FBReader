@@ -28,7 +28,8 @@ std::string StringEncoder::encode(const std::string &source) {
 
 	bool doEncode = false;
 	for (const char *ptr = start; ptr < end; ++ptr) {
-		if ((*ptr == '"') || (*ptr == '\'') || (*ptr == '\\') ||
+		if ((((const unsigned char)*ptr) >= 0x7F) ||
+				(*ptr == '"') || (*ptr == '\'') || (*ptr == '\\') ||
 				(*ptr == '/') || (*ptr == '$')) {
 			doEncode = true;
 			break;

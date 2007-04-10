@@ -18,20 +18,12 @@
  * 02110-1301, USA.
  */
 
-#include <ZLTime.h>
-#include <ZLDialogManager.h>
-#include <ZLImageManager.h>
-#include <ZLMessage.h>
+#include "ZLConfig.h"
 
-#include "ZLibrary.h"
-#include "../filesystem/ZLFSManager.h"
-#include "../options/ZLConfig.h"
+ZLConfigManager *ZLConfigManager::ourInstance = 0;
 
-void ZLibrary::shutdown() {
-	ZLImageManager::deleteInstance();
-	ZLCommunicationManager::deleteInstance();
-	ZLDialogManager::deleteInstance();
-	ZLFSManager::deleteInstance();
-	ZLTimeManager::deleteInstance();
-	ZLConfigManager::deleteInstance();
+ZLConfigManager::~ZLConfigManager() {
+}
+
+ZLConfig::~ZLConfig() {
 }

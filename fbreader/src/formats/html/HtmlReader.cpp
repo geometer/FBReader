@@ -31,23 +31,6 @@
 #include "HtmlReader.h"
 #include "HtmlEntityCollection.h"
 
-std::string HtmlReader::decodeURL(const std::string &encoded) {
-	std::string decoded;
-	const int len = encoded.length();
-	decoded.reserve(len);
-	for (int i = 0; i < len; i++) {
-		if ((encoded[i] == '%') && (i < len - 2)) {
-			const char *end = encoded.data() + i + 3;
-			char **endp = const_cast<char**>(&end);
-			decoded += (char)strtol(encoded.data() + i + 1, endp, 16);
-			i += 2;
-		} else {
-			decoded += encoded[i];
-		}
-	}
-	return decoded;
-}
-
 HtmlReader::HtmlReader(const std::string &encoding) {
 	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(encoding);
 	if (info.isNull()) {
@@ -121,6 +104,16 @@ static int specialSymbolNumber(SpecialType type, const std::string &txt) {
 	}
 }
 
+void HtmlReader::appendString(std::string &to, std::string &from) {
+	if (myConverter.isNull()) {
+		to += from;
+	} else {
+		myConverter->convert(to, from);
+		myConverter->reset();
+	}
+	from.erase();
+}
+
 void HtmlReader::readDocument(ZLInputStream &stream) {
 	if (!stream.open()) {
 		return;
@@ -131,6 +124,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 	ParseState state = PS_TEXT;
 	SpecialType state_special = ST_UNKNOWN;
 	std::string currentString;
+	std::string attributeValueString;
 	std::string specialString;
 	int quotationCounter = 0;
 	HtmlTag currentTag;
@@ -192,14 +186,14 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 								if (state == PS_SPECIAL) {
 									characterDataHandler(buffer, len, false);
 								} else {
-									currentString.append(buffer, len);
+									attributeValueString.append(buffer, len);
 								}
 							} else {
 								specialString = "&" + specialString + ";";
 								if (state == PS_SPECIAL) {
 									characterDataHandler(specialString.c_str(), specialString.length(), false);
 								} else {
-									currentString += specialString;
+									attributeValueString += specialString;
 								}
 							}
 							specialString.erase();
@@ -276,6 +270,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					} else if (*ptr == '&') {
 						currentString.append(start, ptr - start);
 						start = ptr + 1;
+						appendString(attributeValueString, currentString);
 						state = PS_SPECIAL_IN_ATTRIBUTEVALUE;
 						state_special = ST_UNKNOWN;
 					} else if ((quotationCounter != 1) && ((*ptr == '/') || (*ptr == '>') || isspace((unsigned char)*ptr))) {
@@ -284,8 +279,9 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 							if (currentString[0] == '"') {
 								currentString = currentString.substr(1, currentString.length() - 2);
 							}
-							currentTag.setLastAttributeValue(currentString);
-							currentString.erase();
+							appendString(attributeValueString, currentString);
+							currentTag.setLastAttributeValue(attributeValueString);
+							attributeValueString.erase();
 							quotationCounter = 0;
 						}
 						start = ptr + 1;

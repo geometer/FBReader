@@ -94,6 +94,9 @@ private:
 
 	std::vector<std::string> myBuffer;
 	std::vector<std::string> myContentsBuffer;
+
+	std::string myHyperlinkReference;
+	TextKind myHyperlinkKind;
 };
 
 inline bool BookReader::paragraphIsOpen() const {

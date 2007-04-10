@@ -18,59 +18,44 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGCONVERTERS_H__
-#define __ENCODINGCONVERTERS_H__
+#ifndef __ICONVENCODINGCONVERTERS_H__
+#define __ICONVENCODINGCONVERTERS_H__
+
+#include <iconv.h>
 
 #include "ZLEncodingConverter.h"
 
-class DummyEncodingConverter : public ZLEncodingConverter {
-
-private:
-	DummyEncodingConverter();
+class ZLEncodingConverterProvider {
 
 public:
-	~DummyEncodingConverter();
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
-	bool fillTable(int *map);
-
-friend class ZLEncodingConverterInfo;
+	virtual ~ZLEncodingConverterProvider();
+	virtual bool providesConverter(const std::string &encoding) = 0;
+	virtual shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding) = 0;
 };
 
-class OneByteEncodingConverter : public ZLEncodingConverter {
-
-private:
-	OneByteEncodingConverter(const std::string &encoding, char **encodingMap);
+class IConvEncodingConverterProvider : public ZLEncodingConverterProvider {
 
 public:
-	~OneByteEncodingConverter();
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
-	bool fillTable(int *map);
-
-private:
-	const std::string myEncoding;
-	char *myEncodingMap;
-
-friend class ZLEncodingConverterInfo;
+	bool providesConverter(const std::string &encoding);
+	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
 };
 
-class TwoBytesEncodingConverter : public ZLEncodingConverter {
+class IConvEncodingConverter : public ZLEncodingConverter {
 
 private:
-	TwoBytesEncodingConverter(char **encodingMap);
+	IConvEncodingConverter(const std::string &encoding);
+	~IConvEncodingConverter();
 
-public:
-	~TwoBytesEncodingConverter();
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
 	void reset();
+	//bool isInitialized() const;
 	bool fillTable(int *map);
 
 private:
-	char **myEncodingMap;
-	
-	char myLastChar;
-	bool myLastCharIsNotProcessed;
+	iconv_t myIConverter;
+	std::string myBuffer;
 
-friend class ZLEncodingConverterInfo;
+friend class IConvEncodingConverterProvider;
 };
 
 #endif /* __ENCODINGCONVERTERS_H__ */

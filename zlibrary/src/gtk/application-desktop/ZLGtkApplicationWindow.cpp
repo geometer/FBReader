@@ -157,7 +157,8 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item
 		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
 		GTK_WIDGET_UNSET_FLAGS(button, GTK_CAN_FOCUS);
 		gtk_container_add(GTK_CONTAINER(button), image);
-		gtk_container_add(GTK_CONTAINER(myToolbar), button);
+		//gtk_container_add(GTK_CONTAINER(myToolbar), button);
+		gtk_toolbar_append_widget(myToolbar, button, buttonItem.tooltip().c_str(), 0);
 		ZLGtkSignalUtil::connectSignal(GTK_OBJECT(button), "clicked", GTK_SIGNAL_FUNC(onButtonClicked), this);
 		myButtonToWidget[&*item] = button;
 		myWidgetToButton[button] = item;

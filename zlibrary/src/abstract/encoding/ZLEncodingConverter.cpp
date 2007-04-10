@@ -24,7 +24,11 @@
 
 #include "ZLEncodingConverter.h"
 #include "EncodingConverters.h"
+#include "IConvEncodingConverter.h"
 #include "EncodingReader.h"
+
+ZLEncodingConverterProvider::~ZLEncodingConverterProvider() {
+}
 
 bool ZLEncodingConverterInfo::canCreateConverter() const {
 	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
@@ -37,13 +41,10 @@ bool ZLEncodingConverterInfo::canCreateConverter() const {
 			return true;
 		}
 
-#ifndef DONT_USE_ICONV
-		iconv_t converter = iconv_open("utf-8", it->c_str());
-		if (converter != (iconv_t)-1) {
-			iconv_close(converter);
+		IConvEncodingConverterProvider provider;
+		if (provider.providesConverter(*it)) {
 			return true;
 		}
-#endif /* DONT_USE_ICONV */
 	}
 
 	return false;
@@ -66,14 +67,10 @@ shared_ptr<ZLEncodingConverter> ZLEncodingConverterInfo::createConverter() const
 			}
 		}
 
-#ifndef DONT_USE_ICONV
-		IconvEncodingConverter *converter = new IconvEncodingConverter(*it);
-		if (converter->isInitialized()) {
-			return converter;
-		} else {
-			delete converter;
+		IConvEncodingConverterProvider provider;
+		if (provider.providesConverter(*it)) {
+			return provider.createConverter(*it);
 		}
-#endif /* DONT_USE_ICONV */
 	}
 
 	return new DummyEncodingConverter();
@@ -191,104 +188,6 @@ void TwoBytesEncodingConverter::reset() {
 bool TwoBytesEncodingConverter::fillTable(int*) {
 	return false;
 }
-
-#ifndef DONT_USE_ICONV
-IconvEncodingConverter::IconvEncodingConverter(const std::string &encoding) {
-	myIConverter = iconv_open("utf-8", encoding.c_str());
-}
-
-IconvEncodingConverter::~IconvEncodingConverter() {
-	if (myIConverter != (iconv_t)-1) {
-		iconv_close(myIConverter);
-	}
-}
-
-void IconvEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	if ((srcStart == srcEnd) || (myIConverter == (iconv_t)-1)) {
-		return;
-	}
-
-	size_t inSize;
-	char *in;
-	if (myBuffer.empty()) {
-		inSize = srcEnd - srcStart;
-		in = (char*)srcStart;
-	} else {
-		myBuffer.append(srcStart, srcEnd - srcStart);
-		inSize = myBuffer.length();
-		in = (char*)myBuffer.data();
-	}
-
-	size_t outSize = 3 * inSize;
-	const size_t startOutSize = outSize;
-	size_t oldLength = dst.length();
-	dst.append(outSize, '\0');
-	char *out = (char*)dst.data() + oldLength;
-
-iconvlabel:
-#ifdef _WIN32
-	iconv(myIConverter, (const char**)&in, &inSize, &out, &outSize);
-#else
-	iconv(myIConverter, &in, &inSize, &out, &outSize);
-#endif
-	if (inSize != 0) {
-		if (myBuffer.empty()) {
-			myBuffer.append(in, inSize);
-		} else {
-			myBuffer.erase(0, myBuffer.length() - inSize);
-		}
-	} else {
-		myBuffer.erase();
-	}
-	if ((myBuffer.length() > 1) && (outSize == startOutSize)) {
-		// looks like myBuffer contains incorrect character at start
-		myBuffer.erase(0, 1);
-		in = (char*)myBuffer.data();
-		inSize = myBuffer.length();
-		goto iconvlabel;
-	}
-	dst.erase(oldLength + startOutSize - outSize);
-}
-
-void IconvEncodingConverter::reset() {
-	myBuffer.erase();
-}
-
-bool IconvEncodingConverter::isInitialized() const {
-	return myIConverter != (iconv_t)-1;
-}
-
-bool IconvEncodingConverter::fillTable(int *map) {
-	if (!isInitialized()) {
-		return false;
-	}
-
-	char inBuffer[1];
-	char outBuffer[3];
-	char *in, *out;
-	size_t inSize, outSize;
-	for (int i = 0; i < 256; ++i) {
-		in = inBuffer;
-		out = outBuffer;
-		inSize = 1;
-		outSize = 3;
-		inBuffer[0] = i;
-#ifdef _WIN32
-		iconv(myIConverter, (const char**)&in, &inSize, &out, &outSize);
-#else
-		iconv(myIConverter, &in, &inSize, &out, &outSize);
-#endif
-		if (inSize == 0) {
-			ZLUnicodeUtil::Ucs2Char ch;
-			ZLUnicodeUtil::firstChar(ch, outBuffer);
-			map[i] = ch;
-		} else {
-			map[i] = i;
-		}
-	}
-	return true;
-}
-#endif /* DONT_USE_ICONV */
 
 void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {
 	convert(dst, src.data(), src.data() + src.length());

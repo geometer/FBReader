@@ -258,6 +258,7 @@ public:
 	Size minimumSize() const;
 
 	WORD classId() const;
+	void setPosition(int x, int y, Size size);
 	void init(HWND parent, W32ControlCollection *collection);
 
 	void setEditable(bool editable);

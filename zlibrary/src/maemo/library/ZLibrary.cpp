@@ -31,10 +31,12 @@
 #include "../../gtk/image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
 #include "../message/ZLMaemoMessage.h"
+#include "../../abstract/xmlconfig/XMLConfig.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
 
+	XMLConfigManager::createInstance();
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();

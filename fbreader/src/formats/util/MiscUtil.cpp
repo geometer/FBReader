@@ -47,3 +47,36 @@ std::string MiscUtil::htmlDirectoryPrefix(const std::string &fileName) {
 	}
 	return path.substr(0, path.length() - shortName.length() + index + 1);
 }
+
+std::string MiscUtil::htmlFileName(const std::string &fileName) {
+	ZLFile file(fileName);
+	std::string shortName = file.name(false);
+	std::string path = file.path();
+	int index = -1;
+	if ((path.length() > shortName.length()) &&
+			(path[path.length() - shortName.length() - 1] == ':')) {
+		index = shortName.rfind('/');
+	}
+	return path.substr(path.length() - shortName.length() + index + 1);
+}
+
+std::string MiscUtil::decodeHtmlURL(const std::string &encoded) {
+	char buffer[3];
+	buffer[2] = '\0';
+
+	std::string decoded;
+	const int len = encoded.length();
+	decoded.reserve(len);
+	for (int i = 0; i < len; i++) {
+		if ((encoded[i] == '%') && (i < len - 2)) {
+			buffer[0] = *(encoded.data() + i + 1);
+			buffer[1] = *(encoded.data() + i + 2);
+			decoded += (char)strtol(buffer, 0, 16);
+			i += 2;
+		} else {
+			decoded += encoded[i];
+		}
+	}
+	return decoded;
+}
+

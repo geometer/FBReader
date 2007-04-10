@@ -20,9 +20,9 @@
 
 #include "StringEncoder.h"
 
-#include "XMLConfig.h"
+#include "ZLWin32Config.h"
 
-void XMLConfig::load() {
+void ZLWin32Config::load() {
 	HKEY root;
 	HKEY categoryKey;
 	HKEY groupKey;
@@ -40,10 +40,18 @@ void XMLConfig::load() {
 		for (std::set<std::string>::const_iterator jt = groups.begin(); jt != groups.end(); ++jt) {
 			valueNames.clear();
 			RegCreateKeyExA(categoryKey, jt->c_str(), 0, 0, 0, KEY_QUERY_VALUE, 0, &groupKey, 0);
-			XMLConfigGroup *group = getGroup(StringEncoder::decode(*jt), true);
 			collectValues(valueNames, groupKey);
+			std::set<std::string>::iterator nameIt = valueNames.find(REAL_GROUPNAME_KEY);
+			std::string groupName = *jt;
+			if (nameIt != valueNames.end()) {
+				valueNames.erase(nameIt);
+				registryGetValue(groupName, groupKey, REAL_GROUPNAME_KEY);
+				myGroupAliases[groupName] = *jt;
+				myPseudoGroupNameNumber = std::max(myPseudoGroupNameNumber, atoi(jt->substr(4).c_str()) + 1);
+			}
+			ZLWin32ConfigGroup *group = getGroup(StringEncoder::decode(groupName), true);
 			for (std::set<std::string>::const_iterator kt = valueNames.begin(); kt != valueNames.end(); ++kt) {
-				if (getValue(value, groupKey, *kt)) {
+				if (registryGetValue(value, groupKey, *kt)) {
 					group->setValue(StringEncoder::decode(*kt), value, *it);
 				}
 			}

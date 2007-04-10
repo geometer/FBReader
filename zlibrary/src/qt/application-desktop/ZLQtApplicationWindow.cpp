@@ -80,6 +80,7 @@ ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplicatio
 	QIconSet::setIconSize(QIconSet::Large, size);
 	QIconSet::setIconSize(QIconSet::Small, size);
 	setToggleAction(item.isToggleButton());
+	setToolTip(myItem.tooltip().c_str());
 	connect(this, SIGNAL(activated()), this, SLOT(onActivated()));
 }
 

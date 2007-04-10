@@ -23,6 +23,17 @@
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"
 
+void XMLConfigManager::createInstance() {
+	ourInstance = new XMLConfigManager();
+}
+
+XMLConfigManager::XMLConfigManager() {
+}
+
+ZLConfig *XMLConfigManager::createConfig() const {
+	return new XMLConfig();
+}
+
 const std::string &XMLConfigGroup::getValue(const std::string &name, const std::string &defaultValue) const {
 	std::map<std::string,XMLConfigValue>::const_iterator it = myValues.find(name);
 	return (it != myValues.end()) ? it->second.Value : defaultValue;
@@ -152,6 +163,10 @@ void XMLConfig::unsetValue(const std::string &group, const std::string &name) {
 
 int XMLConfig::changesCounter() const {
 	return (myDelta != 0) ? myDelta->myChangesCounter : 0;
+}
+
+bool XMLConfig::isAutoSavingSupported() const {
+	return true;
 }
 
 void XMLConfig::startAutoSave(int seconds) {

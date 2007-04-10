@@ -166,22 +166,22 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_GOTO_NEXT_TOC_SECTION, new GotoNextTOCSectionAction(*this));
 	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, new GotoPreviousTOCSectionAction(*this));
 
-	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library");
+	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library Tree");
 	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history", "Show Recent Books List");
-	toolbar().addButton(ACTION_ADD_BOOK, "addbook", "Add File To Library");
+	toolbar().addButton(ACTION_ADD_BOOK, "addbook", "Add File to Library");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SCROLL_TO_HOME, "home", "Go To Start Of Text");
+	toolbar().addButton(ACTION_SCROLL_TO_HOME, "home", "Go to Start of Text");
 	toolbar().addButton(ACTION_UNDO, "leftarrow", "Go Back");
 	toolbar().addButton(ACTION_REDO, "rightarrow", "Go Forward");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_CONTENTS, "contents", "Table Of Contents");
+	toolbar().addButton(ACTION_SHOW_CONTENTS, "contents", "Table of Contents");
 	toolbar().addSeparator();
 	toolbar().addButton(ACTION_SEARCH, "find", "Text Search");
 	toolbar().addButton(ACTION_FIND_NEXT, "findnext", "Find Next");
 	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev", "Find Previous");
 	toolbar().addSeparator();
 	toolbar().addButton(ACTION_SHOW_BOOK_INFO, "bookinfo", "Show Book Info Dialog");
-	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings", "Show Options Dialog");
+	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings", "Show Preferences Dialog");
 	toolbar().addSeparator();
 	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen", "Rotate Text");
 	toolbar().addSeparator();
@@ -190,7 +190,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	}
 
 	menubar().addItem("Book Info...",	ACTION_SHOW_BOOK_INFO);
-	menubar().addItem("Table Of Contents", ACTION_SHOW_CONTENTS);
+	menubar().addItem("Table of Contents", ACTION_SHOW_CONTENTS);
 
 	Menu &librarySubmenu = menubar().addSubmenu("Library");
 	librarySubmenu.addItem("Open", ACTION_SHOW_COLLECTION);
@@ -200,11 +200,11 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	librarySubmenu.addItem("About FBReader", ACTION_SHOW_HELP);
 
 	Menu &navigationSubmenu = menubar().addSubmenu("Navigate");
-	navigationSubmenu.addItem("Go To Start Of Document", ACTION_SCROLL_TO_HOME);
-	navigationSubmenu.addItem("Go To Start Of Text Section", ACTION_SCROLL_TO_START_OF_TEXT);
-	navigationSubmenu.addItem("Go To End Of Text Section", ACTION_SCROLL_TO_END_OF_TEXT);
-	navigationSubmenu.addItem("Go To Next TOC Item", ACTION_GOTO_NEXT_TOC_SECTION);
-	navigationSubmenu.addItem("Go To Previous TOC Item", ACTION_GOTO_PREVIOUS_TOC_SECTION);
+	navigationSubmenu.addItem("Go to Start of Document", ACTION_SCROLL_TO_HOME);
+	navigationSubmenu.addItem("Go to Start of Text Section", ACTION_SCROLL_TO_START_OF_TEXT);
+	navigationSubmenu.addItem("Go to End of Text Section", ACTION_SCROLL_TO_END_OF_TEXT);
+	navigationSubmenu.addItem("Go to Next TOC Item", ACTION_GOTO_NEXT_TOC_SECTION);
+	navigationSubmenu.addItem("Go to Previous TOC Item", ACTION_GOTO_PREVIOUS_TOC_SECTION);
 	navigationSubmenu.addItem("Go Back", ACTION_UNDO);
 	navigationSubmenu.addItem("Go Forward", ACTION_REDO);
 

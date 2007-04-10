@@ -12,7 +12,8 @@ AR = $(PREFIX)ar rsu
 LD = $(PREFIX)g++
 RESOURCE_COMPILER = $(PREFIX)windres
 
-CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DDONT_USE_ICONV
+CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W
+#-DDONT_USE_ICONV
 #-DUNICODE -D_WIN32_IE=0x0501 -D_WIN32_WINNT=0x0501 -DWINVER=0x0500
 #LDFLAGS = -mwindows
 

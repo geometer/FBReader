@@ -32,6 +32,8 @@ private:
 public:
 	static bool isReference(const std::string &text);
 	static std::string htmlDirectoryPrefix(const std::string &fileName);
+	static std::string htmlFileName(const std::string &fileName);
+	static std::string decodeHtmlURL(const std::string &encodedURL);
 };
 
 #endif /* __MISCUTIL_H__ */

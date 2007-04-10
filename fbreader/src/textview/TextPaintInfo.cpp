@@ -186,6 +186,9 @@ void TextView::preparePaintInfo() {
 						break;
 					case SCROLL_LINES:
 						startCursor = findLineFromStart(myOverlappingValue);
+						if (startCursor.isEndOfParagraph()) {
+							startCursor.nextParagraph();
+						}
 						break;
 					case SCROLL_PERCENTAGE:
 						startCursor = findPercentFromStart(myOverlappingValue);

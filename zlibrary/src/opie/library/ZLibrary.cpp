@@ -29,10 +29,12 @@
 #include "../../qt/image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
+#include "../../abstract/xmlconfig/XMLConfig.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QPEApplication(argc, argv);
 
+	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
 	ZLQtDialogManager::createInstance();

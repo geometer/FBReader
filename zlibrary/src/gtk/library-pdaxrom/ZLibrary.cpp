@@ -29,10 +29,12 @@
 #include "../image/ZLGtkImageManager.h"
 #include "../view-pdaxrom/ZLGtkPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
+#include "../../abstract/xmlconfig/XMLConfig.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
 
+	XMLConfigManager::createInstance();
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();

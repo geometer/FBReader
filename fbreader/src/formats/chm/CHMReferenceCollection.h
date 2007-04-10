@@ -29,7 +29,7 @@
 class CHMReferenceCollection {
 
 public:
-	static std::string fullReference(const std::string &prefix, const std::string &reference);
+	static std::string fullReference(const std::string &prefix, std::string reference);
 
 public:
 	CHMReferenceCollection();

@@ -122,14 +122,16 @@ void BookTextView::saveState() {
 
 void BookTextView::pushCurrentPositionIntoStack() {
 	const WordCursor &cursor = startCursor();
-	Position pos;
-	pos.first = cursor.paragraphCursor().index();
-	pos.second = cursor.wordNumber();
-	myPositionStack.push_back(pos);
-	while (myPositionStack.size() > myMaxStackSize) {
-		myPositionStack.erase(myPositionStack.begin());
-		if (myCurrentPointInStack > 0) {
-			--myCurrentPointInStack;
+	if (!cursor.isNull()) {
+		Position pos;
+		pos.first = cursor.paragraphCursor().index();
+		pos.second = cursor.wordNumber();
+		myPositionStack.push_back(pos);
+		while (myPositionStack.size() > myMaxStackSize) {
+			myPositionStack.erase(myPositionStack.begin());
+			if (myCurrentPointInStack > 0) {
+				--myCurrentPointInStack;
+			}
 		}
 	}
 }

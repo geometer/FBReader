@@ -185,6 +185,9 @@ bool ParagraphCursor::isEndOfSection() const {
 }
 
 TextMark WordCursor::position() const {
+	if (myParagraphCursor.isNull()) {
+		return TextMark();
+	}
 	const ParagraphCursor &paragraph = *myParagraphCursor;
 	size_t paragraphLength = paragraph.paragraphLength();
 	unsigned int wordNumber = myWordNumber;
@@ -292,7 +295,7 @@ void WordCursor::moveTo(int wordNumber, int charNumber) {
 			wordNumber = std::max(0, wordNumber);
 			int size = myParagraphCursor->paragraphLength();
 			if (wordNumber > size - 1) {
-				myWordNumber = size - 1;
+				myWordNumber = std::max(0, size - 1);
 				myCharNumber = 0;
 			} else {
 				myWordNumber = wordNumber;

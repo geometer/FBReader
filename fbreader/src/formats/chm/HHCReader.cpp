@@ -71,12 +71,7 @@ bool HHCReader::tagHandler(const HtmlTag &tag) {
 				}
 			}
 			if (name == NAME_VALUE) {
-				if (myConverter.isNull()) {
-					myText = value;
-				} else {
-					myConverter->convert(myText, value);
-					myConverter->reset();
-				}
+				myText = value;
 			} else if (name == LOCAL_VALUE) {
 				myReference = myReferenceCollection.addReference(value, true);
 			}

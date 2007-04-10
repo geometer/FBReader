@@ -23,13 +23,13 @@
 
 #include "ZLApplication.h"
 
-#include "../xmlconfig/XMLOptions.h"
+#include "../options/ZLOptions_internal.h"
 
 class ConfigSaverRunnable : public ZLRunnable {
 
 public:
 	void run() {
-		XMLOptions::deleteInstance();
+		ZLOptions::deleteInstance();
 	}
 };
 
@@ -68,7 +68,7 @@ ZLApplicationBase::ZLApplicationBase(const std::string &name) {
 	ourZLibraryDirectory = BaseDirectory + FileNameDelimiter + "zlibrary";
 	ourApplicationDirectory = BaseDirectory + FileNameDelimiter + ourApplicationName;
 	ourDefaultFilesPathPrefix = ourApplicationDirectory + FileNameDelimiter + "default" + FileNameDelimiter;
-	XMLOptions::createInstance();
+	ZLOptions::createInstance();
 }
 
 ZLApplicationBase::~ZLApplicationBase() {

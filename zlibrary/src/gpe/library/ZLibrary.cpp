@@ -30,10 +30,12 @@
 #include "../../gtk/image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
+#include "../../abstract/xmlconfig/XMLConfig.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gpe_application_init (&argc, &argv);
 
+	XMLConfigManager::createInstance();
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();
 	ZLGtkDialogManager::createInstance();

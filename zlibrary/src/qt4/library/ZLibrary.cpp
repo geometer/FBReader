@@ -30,10 +30,12 @@
 #include "../view/ZLQtPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../abstract/util/ZLKeyUtil.h"
+#include "../../abstract/xmlconfig/XMLConfig.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);
 
+	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
 	ZLQtDialogManager::createInstance();

@@ -1,12 +1,22 @@
 *** 0.8.2:
 
-linux desktop: пакеты не должны мешать друг другу
-gpe, maemo, gtk-pdxrom: correct repaint
 desktop: apply button in options dialog
 	gtk
 	qt3
 	qt4
 	win32
+
+*** win32 version (0.8.2)
+
+iconv -> internal converter
+	удалить все #ifdef _WIN32
+
+*** 0.8.3:
+
+linux desktop: пакеты не должны мешать друг другу
+debian (i386) repository
+debian sources
+gpe, maemo, gtk-pdxrom: correct repaint
 pepperpad
 qt/qt4 desktop: win32-like color selection control
 многократный перенос (оч. длинное слово)
@@ -18,20 +28,18 @@ customizable toolbar
 добавлять файл, открываемый из командной строки, в библиотеку
 настройка дефолтного действия 'при отсутствии файла по умолчанию'
 опциональное использование системного file dialog
+multihtml
 
-*** win32 version (0.8.2)
+*** win32 version (0.8.3)
 
 WaitMessage
 selection dialog
 	разобраться со скоростью перехода в другой каталог
 центрировать Options/Book Info dialogs (Windows XP)
 W32ColorComboBox::removeCustomColor()
-переименовать XMLConfig->RegistryConfig
 expat -> msxml
-iconv -> internal converter
-	удалить все #ifdef _WIN32
 
-*** после 0.8.2
+*** после 0.8.3
 
 desktop-qt: set application icon
 более удачный вызов внешнего браузера
@@ -41,7 +49,6 @@ desktop-qt: set application icon
 vOffset для картинок
 отрефакторить XMLConfig (черт ногу сломит)
 отрефакторить файловую систему (обрабатывать '.' и '..' и в архивах тоже, правильно определять 'имя книги по умолчанию')
-tooltips в десктопных версиях
 восстановить GC и Sample Applications
 info dialog icon in contents tree
 	for books
@@ -74,7 +81,6 @@ OrderOptionEntry
 fbreader as document handler in maemo fileviewer
 about dialog
 odt
-multihtml
 multichm
 image scaling
 разобраться с dos/unix-текстами (письмо от Антона Фарыгина)
@@ -102,7 +108,7 @@ mobipocket: где начинаются картинки?
 
 ==============================================================================
 
-*** win32 version (после 0.8.2)
+*** win32 version (после 0.8.3)
 
 заменить явные размеры иконок на вычисляемые
 стирать дефолтные значения в конфиге от предыдущей версии (?)

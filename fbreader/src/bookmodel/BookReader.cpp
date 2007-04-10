@@ -74,6 +74,9 @@ void BookReader::beginParagraph(Paragraph::Kind kind) {
 		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); ++it) {
 			myCurrentTextModel->addControl(*it, true);
 		}
+		if (!myHyperlinkReference.empty()) {
+			myCurrentTextModel->addHyperlinkControl(myHyperlinkKind, myHyperlinkReference);
+		}
 		myTextParagraphExists = true;
 	}
 }
@@ -89,6 +92,9 @@ void BookReader::addControl(TextKind kind, bool start) {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addControl(kind, start);
+	}
+	if (!start && !myHyperlinkReference.empty() && (kind == myHyperlinkKind)) {
+		myHyperlinkReference.erase();
 	}
 }
 
@@ -110,6 +116,8 @@ void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addHyperlinkControl(kind, label);
 	}
+	myHyperlinkKind = kind;
+	myHyperlinkReference = label;
 }
 
 void BookReader::addHyperlinkLabel(const std::string &label) {

@@ -578,6 +578,13 @@ void W32ComboBox::init(HWND parent, W32ControlCollection *collection) {
 	}
 }
 
+void W32ComboBox::setPosition(int x, int y, Size size) {
+	W32Control::setPosition(x, y, size);
+	if (myWindow != 0) {
+		SendMessage(myWindow, CB_SETMINVISIBLE, std::min((int)myList.size(), 7), 0);
+	}
+}
+
 void W32ComboBox::setEditable(bool editable) {
 	if (editable) {
 		myStyle &= ~CBS_SIMPLE;

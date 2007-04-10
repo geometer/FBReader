@@ -18,18 +18,16 @@
  * 02110-1301, USA.
  */
 
+#include <stdio.h>
+#include <locale.h>
+
 #include <algorithm>
 
 #include "ZLOptions.h"
 #include "ZLOptions_internal.h"
+#include "ZLConfig.h"
 
 ZLOptions *ZLOptions::ourInstance = 0;
-
-ZLOptions::ZLOptions() {
-}
-
-ZLOptions::~ZLOptions() {
-}
 
 ZLOptions &ZLOptions::instance() {
 	return *ourInstance;
@@ -37,6 +35,74 @@ ZLOptions &ZLOptions::instance() {
 
 void ZLOptions::deleteInstance() {
 	delete ourInstance;
+}
+
+ZLOptions::ZLOptions() {
+	myConfig = ZLConfigManager::instance().createConfig();
+}
+
+ZLOptions::~ZLOptions() {
+	delete myConfig;
+}
+
+void ZLOptions::setGroup(const std::string &name){
+	myGroupName = name;
+}
+
+void ZLOptions::clearGroup() {
+	myConfig->removeGroup(myGroupName);
+}
+
+void ZLOptions::unsetValue(const std::string &name) {
+	myConfig->unsetValue(myGroupName, name);
+}
+
+bool ZLOptions::booleanValue(const std::string &name, bool defaultValue) {
+	return stringValue(name, defaultValue ? "true" : "false") == "true";
+}
+
+void ZLOptions::setValue(const std::string &name, bool value, const std::string &category) {
+	setValue(name, std::string(value ? "true" : "false"), category);
+}
+
+long ZLOptions::integerValue(const std::string &name, long defaultValue) {
+	std::string value = stringValue(name, std::string());
+	return (!value.empty()) ? atoi(value.c_str()) : defaultValue;
+}
+
+void ZLOptions::setValue(const std::string &name, long value, const std::string &category) {
+	char buf[100];
+	sprintf(buf, "%ld", value);
+	setValue(name, std::string(buf), category);
+}
+
+double ZLOptions::doubleValue(const std::string &name, double defaultValue) {
+	std::string value = stringValue(name, std::string());
+	setlocale(LC_NUMERIC, "C");
+	return (!value.empty()) ? atof(value.c_str()) : defaultValue;
+}
+
+void ZLOptions::setValue(const std::string &name, double value, const std::string &category) {
+	char buf[100];
+	setlocale(LC_NUMERIC, "C");
+	sprintf(buf, "%f", value);
+	setValue(name, std::string(buf), category);
+}
+
+std::string ZLOptions::stringValue(const std::string &name, const std::string &defaultValue) {
+	return myConfig->getValue(myGroupName, name, defaultValue);
+}
+
+void ZLOptions::setValue(const std::string &name, const std::string &value, const std::string &category) {
+	myConfig->setValue(myGroupName, name, value, category);
+}
+
+bool ZLOptions::isAutoSavingSupported() const {
+	return myConfig->isAutoSavingSupported();
+}
+
+void ZLOptions::startAutoSave(int seconds) {
+	myConfig->startAutoSave(seconds);
 }
 
 const std::string ZLOption::LOOK_AND_FEEL_CATEGORY = "ui";
