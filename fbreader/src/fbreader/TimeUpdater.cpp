@@ -22,15 +22,18 @@
 #include <ZLTime.h>
 
 #include "TimeUpdater.h"
+#include "../textview/TextStyle.h"
 
 TimeUpdater::TimeUpdater(ZLApplication &application) : myApplication(application), myTime(-1) {
 }
 
 void TimeUpdater::run() {
-	ZLTime time;
-	short minutes = time.hours() * 60 + time.minutes();
-	if (myTime != minutes) {
-		myTime = minutes;
-		myApplication.refreshWindow();
+	if (TextStyleCollection::instance().indicatorStyle().ShowTimeOption.value()) {
+		ZLTime time;
+		short minutes = time.hours() * 60 + time.minutes();
+		if (myTime != minutes) {
+			myTime = minutes;
+			myApplication.refreshWindow();
+		}
 	}
 }
