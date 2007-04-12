@@ -22,6 +22,7 @@
 #define __MYENCODINGCONVERTER_H__
 
 #include "ZLEncodingConverter.h"
+#include "ZLEncodingConverterProvider.h"
 
 class MyEncodingConverterProvider : public ZLEncodingConverterProvider {
 

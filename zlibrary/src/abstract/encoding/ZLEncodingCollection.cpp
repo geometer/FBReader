@@ -26,36 +26,58 @@
 #include "../xml/ZLXMLReader.h"
 
 #include "ZLEncodingConverter.h"
+#include "DummyEncodingConverter.h"
+#include "MyEncodingConverter.h"
 #include "EncodingCollectionReader.h"
 
-std::vector<shared_ptr<ZLEncodingSet> > ZLEncodingCollection::ourSets;
-std::map<std::string,ZLEncodingConverterInfoPtr> ZLEncodingCollection::ourInfosByName;
+ZLEncodingCollection *ZLEncodingCollection::ourInstance = 0;
+
+ZLEncodingCollection &ZLEncodingCollection::instance() {
+	if (ourInstance == 0) {
+		ourInstance = new ZLEncodingCollection();
+	}
+	return *ourInstance;
+}
 
 std::string ZLEncodingCollection::encodingDescriptionPath() {
 	return ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + "encodings";
 }
 
-void ZLEncodingCollection::init() {
-	if (!ourSets.empty()) {
-		return;
-	}
+ZLEncodingCollection::ZLEncodingCollection() {
+	registerProvider(new DummyEncodingConverterProvider());
+	registerProvider(new MyEncodingConverterProvider());
+}
 
-	const std::string prefix = encodingDescriptionPath() + ZLApplication::FileNameDelimiter;
-	EncodingCollectionReader().readDocument(prefix + "Encodings.xml");
+void ZLEncodingCollection::registerProvider(shared_ptr<ZLEncodingConverterProvider> provider) {
+	myProviders.push_back(provider);
+}
+
+void ZLEncodingCollection::init() {
+	if (mySets.empty()) {
+		const std::string prefix = encodingDescriptionPath() + ZLApplication::FileNameDelimiter;
+		EncodingCollectionReader(*this).readDocument(prefix + "Encodings.xml");
+	}
+}
+
+ZLEncodingCollection::~ZLEncodingCollection() {
+}
+
+const std::vector<shared_ptr<ZLEncodingConverterProvider> > &ZLEncodingCollection::providers() const {
+	return myProviders;
 }
 
 const std::vector<shared_ptr<ZLEncodingSet> > &ZLEncodingCollection::sets() {
 	init();
-	return ourSets;
+	return mySets;
 }
 
 ZLEncodingConverterInfoPtr ZLEncodingCollection::info(const std::string &name) {
 	init();
-	return ourInfosByName[ZLUnicodeUtil::toLower(name)];
+	return myInfosByName[ZLUnicodeUtil::toLower(name)];
 }
 
-ZLEncodingConverterInfoPtr ZLEncodingCollection::defaultInfo() {
-	return info("UTF-8");
+shared_ptr<ZLEncodingConverter> ZLEncodingCollection::defaultConverter() {
+	return DummyEncodingConverterProvider().createConverter();
 }
 
 ZLEncodingConverterInfoPtr ZLEncodingCollection::info(int code) {

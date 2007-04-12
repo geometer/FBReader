@@ -19,9 +19,7 @@
  */
 
 #include "ZLEncodingConverter.h"
-#include "DummyEncodingConverter.h"
-#include "IConvEncodingConverter.h"
-#include "MyEncodingConverter.h"
+#include "ZLEncodingConverterProvider.h"
 
 ZLEncodingConverterProvider::ZLEncodingConverterProvider() {
 }
@@ -30,24 +28,11 @@ ZLEncodingConverterProvider::~ZLEncodingConverterProvider() {
 }
 
 bool ZLEncodingConverterInfo::canCreateConverter() const {
-	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
-		{
-			DummyEncodingConverterProvider provider;
-			if (provider.providesConverter(*it)) {
-				return true;
-			}
-		}
-
-		{
-			MyEncodingConverterProvider provider;
-			if (provider.providesConverter(*it)) {
-				return true;
-			}
-		}
-
-		{
-			IConvEncodingConverterProvider provider;
-			if (provider.providesConverter(*it)) {
+	ZLEncodingCollection &collection = ZLEncodingCollection::instance();
+	const std::vector<shared_ptr<ZLEncodingConverterProvider> > &providers = collection.providers();
+	for (std::vector<shared_ptr<ZLEncodingConverterProvider> >::const_iterator it = providers.begin(); it != providers.end(); ++it) {
+		for (std::vector<std::string>::const_iterator jt = myAliases.begin(); jt != myAliases.end(); ++jt) {
+			if ((*it)->providesConverter(*jt)) {
 				return true;
 			}
 		}
@@ -57,39 +42,23 @@ bool ZLEncodingConverterInfo::canCreateConverter() const {
 }
 
 shared_ptr<ZLEncodingConverter> ZLEncodingConverterInfo::createConverter() const {
-	for (std::vector<std::string>::const_iterator it = myAliases.begin(); it != myAliases.end(); ++it) {
-		{
-			DummyEncodingConverterProvider provider;
-			if (provider.providesConverter(*it)) {
-				return provider.createConverter(*it);
-			}
-		}
-
-		{
-			MyEncodingConverterProvider provider;
-			if (provider.providesConverter(*it)) {
-				return provider.createConverter(*it);
-			}
-		}
-
-		{
-			IConvEncodingConverterProvider provider;
-			if (provider.providesConverter(*it)) {
-				return provider.createConverter(*it);
+	ZLEncodingCollection &collection = ZLEncodingCollection::instance();
+	const std::vector<shared_ptr<ZLEncodingConverterProvider> > &providers = collection.providers();
+	for (std::vector<shared_ptr<ZLEncodingConverterProvider> >::const_iterator it = providers.begin(); it != providers.end(); ++it) {
+		for (std::vector<std::string>::const_iterator jt = myAliases.begin(); jt != myAliases.end(); ++jt) {
+			if ((*it)->providesConverter(*jt)) {
+				return (*it)->createConverter(*jt);
 			}
 		}
 	}
 
-	return DummyEncodingConverterProvider().createConverter("");
+	return ZLEncodingCollection::instance().defaultConverter();
 }
 
 ZLEncodingConverter::ZLEncodingConverter() {
 }
 
 ZLEncodingConverter::~ZLEncodingConverter() {
-}
-
-void ZLEncodingConverter::reset() {
 }
 
 void ZLEncodingConverter::convert(std::string &dst, const std::string &src) {

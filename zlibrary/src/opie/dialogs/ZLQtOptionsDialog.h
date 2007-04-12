@@ -29,14 +29,12 @@
 #include <ZLOptionsDialog.h>
 
 #include "ZLFullScreenDialog.h"
-#include "ZLQtDialogContent.h"
 
 class ZLQtOptionsDialog : public ZLFullScreenDialog, public ZLOptionsDialog {
 	Q_OBJECT
 
 public:
-	ZLQtOptionsDialog(const std::string &id, const std::string &caption);
-	~ZLQtOptionsDialog();
+	ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction);
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:
@@ -47,13 +45,9 @@ protected:
 	void resizeEvent(QResizeEvent *);
 	void keyPressEvent(QKeyEvent *event);
 
-private slots:
-	void accept();
-
 private:
 	QTabWidget *myTabWidget;
 
-	std::vector<ZLQtDialogContent*> myTabs;
 	std::vector<std::string> myTabNames;
 };
 

@@ -24,19 +24,15 @@
 #include <vector>
 
 #include <qwidget.h>
-#include <qtabwidget.h>
-#include <qdialog.h>
+#include <qtabdialog.h>
 
 #include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
-class ZLQtDialogContent;
-
-class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
+class ZLQtOptionsDialog : public QTabDialog, public ZLDesktopOptionsDialog {
 	Q_OBJECT
 
 public:
-	ZLQtOptionsDialog(const std::string &id, const std::string &caption);
-	~ZLQtOptionsDialog();
+	ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:
@@ -44,27 +40,13 @@ protected:
 	void selectTab(const std::string &name);
 	bool run();
 
-	void setSize(int width, int height) { QDialog::resize(width, height); }
-	int width() const { return QDialog::width(); }
-	int height() const { return QDialog::height(); }
+	void setSize(int width, int height) { QTabDialog::resize(width, height); }
+	int width() const { return QTabDialog::width(); }
+	int height() const { return QTabDialog::height(); }
 
 private slots:
 	void resizeEvent(QResizeEvent *);
-	void accept();
-
-private:
-	QTabWidget *myTabWidget;
-
-	std::vector<ZLQtDialogContent*> myTabs;
-	std::vector<std::string> myTabNames;
-};
-
-class MyQTabWidget : public QTabWidget {
-	Q_OBJECT
-
-public:
-	MyQTabWidget(QWidget *parent);
-	void resizeEvent(QResizeEvent *event);
+	void apply();
 
 signals:
 	void resized(const QSize &size);

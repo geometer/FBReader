@@ -42,7 +42,6 @@
 #include "TimeUpdater.h"
 
 #include "../FBOptions.h"
-#include "../optionsDialog/OptionsDialog.h"
 #include "../bookmodel/BookModel.h"
 #include "../collection/BookList.h"
 #include "../hyphenation/Hyphenator.h"
@@ -365,17 +364,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 }
 
 void FBReader::bookInfoSlot() {
-	if ((myMode == BOOK_TEXT_MODE) || (myMode == CONTENTS_MODE) || (myMode == FOOTNOTE_MODE)) {
-		runBookInfoDialog(myModel->fileName());
-	}
-}
-
-void FBReader::optionsSlot() {
-	OptionsDialog optionsDialog(*this, context());
-	optionsDialog.dialog().run("");
-	grabAllKeys(KeyboardControlOption.value());
-	clearTextCaches();
-	refreshWindow();
+	runBookInfoDialog(myModel->fileName());
 }
 
 void FBReader::addBookSlot() {

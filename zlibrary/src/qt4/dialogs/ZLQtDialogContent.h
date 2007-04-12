@@ -29,6 +29,7 @@ class QGridLayout;
 class ZLQtDialogContent : public ZLDialogContent {
 
 public:
+	ZLQtDialogContent(QWidget *parent, const std::string &name);
 	ZLQtDialogContent(QWidget *parent);
 	~ZLQtDialogContent();
 

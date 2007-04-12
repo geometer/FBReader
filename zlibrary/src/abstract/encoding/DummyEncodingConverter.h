@@ -22,25 +22,14 @@
 #define __DUMMYENCODINGCONVERTER_H__
 
 #include "ZLEncodingConverter.h"
+#include "ZLEncodingConverterProvider.h"
 
 class DummyEncodingConverterProvider : public ZLEncodingConverterProvider {
 
 public:
 	bool providesConverter(const std::string &encoding);
+	shared_ptr<ZLEncodingConverter> createConverter();
 	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
-};
-
-class DummyEncodingConverter : public ZLEncodingConverter {
-
-private:
-	DummyEncodingConverter();
-
-public:
-	~DummyEncodingConverter();
-	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
-	bool fillTable(int *map);
-
-friend class DummyEncodingConverterProvider;
 };
 
 #endif /* __DUMMYENCODINGCONVERTER_H__ */

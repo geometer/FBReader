@@ -21,6 +21,7 @@
 #ifndef __ZLDIALOGCONTENT_H__
 #define __ZLDIALOGCONTENT_H__
 
+#include <string>
 #include <vector>
 
 class ZLOptionEntry;
@@ -28,16 +29,25 @@ class ZLOptionView;
 
 class ZLDialogContent {
 
+protected:
+	ZLDialogContent();
+	ZLDialogContent(const std::string &name);
+
 public:
 	virtual ~ZLDialogContent();
+
+	const std::string &name() const;
+
 	virtual void addOption(ZLOptionEntry *option) = 0;
 	virtual void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) = 0;
+
 	void accept();
 
 protected:
 	void addView(ZLOptionView *view);
 
 private:
+	const std::string myName;
 	std::vector<ZLOptionView*> myViews;
 };
 

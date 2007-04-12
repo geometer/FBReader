@@ -28,12 +28,10 @@
 
 #include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
-class ZLGtkDialogContent;
-
 class ZLGtkOptionsDialog : public ZLDesktopOptionsDialog {
 
 public:
-	ZLGtkOptionsDialog(const std::string &id, const std::string &caption);
+	ZLGtkOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
 	~ZLGtkOptionsDialog();
 	ZLDialogContent &createTab(const std::string &name);
 
@@ -49,7 +47,6 @@ protected:
 private:
 	GtkDialog *myDialog;
 	GtkNotebook *myNotebook;
-	std::vector<ZLGtkDialogContent*> myTabs;
 	std::vector<std::string> myTabNames;
 };
 

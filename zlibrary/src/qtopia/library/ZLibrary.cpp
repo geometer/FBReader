@@ -30,6 +30,7 @@
 #include "../view/ZLQtPaintContext.h"
 #include "../message/ZLQtopiaMessage.h"
 #include "../../abstract/xmlconfig/XMLConfig.h"
+#include "../../unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QPEApplication(argc, argv);
@@ -40,6 +41,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLQtDialogManager::createInstance();
 	ZLQtopiaCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
+	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
 }
 
 ZLPaintContext *ZLibrary::createContext() {

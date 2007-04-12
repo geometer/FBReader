@@ -25,11 +25,12 @@
 #include <shared_ptr.h>
 #include <ZLEncodingConverter.h>
 #include "../../bookmodel/BookReader.h"
+#include "../EncodedTextReader.h"
 
 class ZLInputStream;
 class BookModel;
 
-class PPLBookReader {
+class PPLBookReader : public EncodedTextReader {
 
 public:
 	PPLBookReader(BookModel &model, const std::string &encoding);
@@ -43,7 +44,6 @@ private:
 
 private:
 	BookReader myModelReader;
-	shared_ptr<ZLEncodingConverter> myConverter;
 
 	char *myBuffer;
 	std::string myCurrentParagraph;

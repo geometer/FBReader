@@ -44,7 +44,7 @@ static void fEndElementHandler(void *userData, const char *name) {
 }
 
 static int fUnknownEncodingHandler(void*, const XML_Char *name, XML_Encoding *encoding) {
-	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(name);
+	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::instance().info(name);
 	if (!info.isNull()) {
 		shared_ptr<ZLEncodingConverter> converter = info->createConverter();
 		if (!converter.isNull() && converter->fillTable(encoding->map)) {

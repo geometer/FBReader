@@ -35,6 +35,7 @@ class W32DialogPanel : public W32ControlCollection, public W32EventSender {
 
 public:
 	static const std::string PANEL_SELECTED_EVENT;
+	static const std::string APPLY_BUTTON_PRESSED_EVENT;
 
 private:
 	static UINT LAYOUT_MESSAGE;
@@ -121,17 +122,19 @@ private:
 class W32PropertySheet {
 
 private:
-	//static int CALLBACK PSCallback(HWND, UINT message, LPARAM lParam);
+	static int CALLBACK PSCallback(HWND, UINT message, LPARAM lParam);
 	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
 
 public:
-	W32PropertySheet(HWND mainWindow, const std::string &caption);
+	W32PropertySheet(HWND mainWindow, const std::string &caption, bool showApplyButton);
 
 	W32DialogPanel &createPanel(const std::string &name);
 	bool run(const std::string &selectedTabName);
 
 private:
 	HWND myMainWindow;
+	HWND myDialogWindow;
+	const bool myShowApplyButton;
 	ZLUnicodeUtil::Ucs2String myCaption;
 	typedef std::vector<shared_ptr<W32DialogPanel> > PanelList;
 	PanelList myPanels;

@@ -22,13 +22,31 @@
 
 #include "DummyEncodingConverter.h"
 
+class DummyEncodingConverter : public ZLEncodingConverter {
+
+private:
+	DummyEncodingConverter();
+
+public:
+	~DummyEncodingConverter();
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	void reset();
+	bool fillTable(int *map);
+
+friend class DummyEncodingConverterProvider;
+};
+
 bool DummyEncodingConverterProvider::providesConverter(const std::string &encoding) {
 	const std::string lowerCasedEncoding = ZLUnicodeUtil::toLower(encoding);
 	return (lowerCasedEncoding == "utf-8") || (lowerCasedEncoding == "us-ascii");
 }
 
-shared_ptr<ZLEncodingConverter> DummyEncodingConverterProvider::createConverter(const std::string&) {
+shared_ptr<ZLEncodingConverter> DummyEncodingConverterProvider::createConverter() {
 	return new DummyEncodingConverter();
+}
+
+shared_ptr<ZLEncodingConverter> DummyEncodingConverterProvider::createConverter(const std::string&) {
+	return createConverter();
 }
 
 DummyEncodingConverter::DummyEncodingConverter() {
@@ -39,6 +57,9 @@ DummyEncodingConverter::~DummyEncodingConverter() {
 
 void DummyEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
 	dst.append(srcStart, srcEnd - srcStart);
+}
+
+void DummyEncodingConverter::reset() {
 }
 
 bool DummyEncodingConverter::fillTable(int *map) {

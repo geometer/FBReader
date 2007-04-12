@@ -39,8 +39,8 @@ void ZLQtDialogManager::fullScreenWorkaround() const {
 	}
 }
 
-shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new ZLQtOptionsDialog(id, title);
+shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool) const {
+	return new ZLQtOptionsDialog(id, title, applyAction);
 }
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const std::string &title) const {

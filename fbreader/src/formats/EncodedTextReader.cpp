@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,16 +19,13 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ICONVENCODINGCONVERTERS_H__
-#define __ICONVENCODINGCONVERTERS_H__
+#include "EncodedTextReader.h"
 
-#include "ZLEncodingConverter.h"
+EncodedTextReader::EncodedTextReader(const std::string &encoding) {
+	ZLEncodingCollection &collection = ZLEncodingCollection::instance();
+	ZLEncodingConverterInfoPtr info = collection.info(encoding);
+	myConverter = (!info.isNull()) ? info->createConverter() : collection.defaultConverter();
+}
 
-class IConvEncodingConverterProvider : public ZLEncodingConverterProvider {
-
-public:
-	bool providesConverter(const std::string &encoding);
-	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
-};
-
-#endif /* __ENCODINGCONVERTERS_H__ */
+EncodedTextReader::~EncodedTextReader() {
+}

@@ -41,7 +41,7 @@ class ZLOption;
 class OptionsDialog {
 
 public:
-	OptionsDialog(FBReader &fbreader, ZLPaintContext &context);
+	OptionsDialog(FBReader &fbreader);
 	~OptionsDialog();
 
 	ZLOptionsDialog &dialog();

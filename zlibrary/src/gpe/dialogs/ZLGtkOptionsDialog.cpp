@@ -26,13 +26,13 @@
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string &caption) : ZLOptionsDialog(id) {
+ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction) : ZLOptionsDialog(id, applyAction) {
 	myDialog = createGtkDialog(caption);
 
 	std::string okString = gtkString("&Ok");
 	std::string cancelString = gtkString("&Cancel");
-	gtk_dialog_add_button (myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
-	gtk_dialog_add_button (myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
+	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
+	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
 	gtk_notebook_set_scrollable(myNotebook, true);
@@ -46,10 +46,6 @@ ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string 
 
 ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 	// I do not have to destroy myNotebook as it's a myDialog child
-	for (std::vector<ZLGtkDialogContent*>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab) {
-		delete *tab;
-	}
-
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
 }
 
@@ -81,18 +77,7 @@ void ZLGtkOptionsDialog::selectTab(const std::string &name) {
 }
 
 bool ZLGtkOptionsDialog::run() {
-	gint response = gtk_dialog_run(myDialog);
-
-	switch (response) {
-		case GTK_RESPONSE_ACCEPT:
-			for (std::vector<ZLGtkDialogContent *>::iterator tab = myTabs.begin(); tab != myTabs.end(); ++tab)
-				(*tab)->accept();
-			break;
-		case GTK_RESPONSE_REJECT:
-			break;
-	}
-
+	bool code = gtk_dialog_run(myDialog) == GTK_RESPONSE_ACCEPT;
 	gtk_widget_hide(GTK_WIDGET(myDialog));
-
-	return response == GTK_RESPONSE_ACCEPT;
+	return code;
 }

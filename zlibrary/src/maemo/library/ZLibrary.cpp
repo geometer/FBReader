@@ -32,6 +32,7 @@
 #include "../view/ZLGtkPaintContext.h"
 #include "../message/ZLMaemoMessage.h"
 #include "../../abstract/xmlconfig/XMLConfig.h"
+#include "../../unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
@@ -46,6 +47,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	if (!ZLFile("/usr/lib/more-gconv").directory(false).isNull()) {
 		setenv("GCONV_PATH", "/usr/lib/more-gconv", 1);
 	}
+	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
 }
 
 ZLPaintContext *ZLibrary::createContext() {

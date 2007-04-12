@@ -31,6 +31,7 @@
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../abstract/util/ZLKeyUtil.h"
 #include "../../abstract/xmlconfig/XMLConfig.h"
+#include "../../unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
@@ -41,6 +42,7 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLGtkDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
+	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
 
 	ZLKeyUtil::setKeyNamesFileName("keynames-gtk.xml");
 }

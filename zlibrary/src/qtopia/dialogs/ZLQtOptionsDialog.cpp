@@ -22,6 +22,7 @@
 
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogManager.h"
+#include "ZLQtDialogContent.h"
 
 MyQTabWidget::MyQTabWidget(QWidget *parent) : QTabWidget(parent) {
 }
@@ -31,49 +32,37 @@ void MyQTabWidget::resizeEvent(QResizeEvent *event) {
 	emit resized(event->size());
 }
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption) : ZLFullScreenDialog(caption.c_str()), ZLOptionsDialog(id) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction) : ZLFullScreenDialog(caption.c_str()), ZLOptionsDialog(id, applyAction) {
 	myTabWidget = new MyQTabWidget(this);
 }
 
-ZLQtOptionsDialog::~ZLQtOptionsDialog() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		delete *it;
-	}
-}
-
 ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget);
+	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget, name);
 	myTabWidget->insertTab(tab->widget(), name.c_str());
 	myTabs.push_back(tab);
-	myTabNames.push_back(name);
 	return *tab;
 }
 
 const std::string &ZLQtOptionsDialog::selectedTabName() const {
-	return myTabNames[myTabWidget->currentPageIndex()];
+	return myTabs[myTabWidget->currentPageIndex()]->name();
 }
 
 void ZLQtOptionsDialog::selectTab(const std::string &name) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
-	if (it != myTabNames.end()) {
-		myTabWidget->setCurrentPage(it - myTabNames.begin());
+	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		if ((*it)->name() == name) {
+			myTabWidget->setCurrentPage(it - myTabs.begin());
+			break;
+		}
 	}
 }
 
 bool ZLQtOptionsDialog::run() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->close();
+	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		((ZLQtDialogContent&)**it).close();
 	}
 	bool code = exec();
 	((ZLQtDialogManager&)ZLQtDialogManager::instance()).fullScreenWorkaround();
 	return code;
-}
-
-void ZLQtOptionsDialog::accept() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->accept();
-	}
-	ZLFullScreenDialog::accept();
 }
 
 void ZLQtOptionsDialog::resizeEvent(QResizeEvent *) {
@@ -82,7 +71,7 @@ void ZLQtOptionsDialog::resizeEvent(QResizeEvent *) {
 
 void ZLQtOptionsDialog::keyPressEvent(QKeyEvent *event) {
 	if (event->key() == Key_Return) {
-		accept();
+		ZLFullScreenDialog::accept();
 	} else {
 		ZLFullScreenDialog::keyPressEvent(event);
 	}

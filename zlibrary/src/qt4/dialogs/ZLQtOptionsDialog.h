@@ -21,22 +21,17 @@
 #ifndef __ZLQTOPTIONSDIALOG_H__
 #define __ZLQTOPTIONSDIALOG_H__
 
-#include <vector>
-
 #include <QtGui/QWidget>
 #include <QtGui/QTabWidget>
 #include <QtGui/QDialog>
 
 #include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
 
-class ZLQtDialogContent;
-
 class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 	Q_OBJECT
 
 public:
-	ZLQtOptionsDialog(const std::string &id, const std::string &caption);
-	~ZLQtOptionsDialog();
+	ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:
@@ -49,13 +44,10 @@ protected:
 	int height() const { return QDialog::height(); }
 
 private Q_SLOTS:
-	void accept();
+	void apply();
 
 private:
 	QTabWidget *myTabWidget;
-
-	std::vector<ZLQtDialogContent*> myTabs;
-	std::vector<std::string> myTabNames;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

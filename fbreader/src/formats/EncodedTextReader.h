@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,27 +19,21 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGCOLLECTIONREADER_H__
-#define __ENCODINGCOLLECTIONREADER_H__
+#ifndef __ENCODEDTEXTREADER_H__
+#define __ENCODEDTEXTREADER_H__
 
-#include <vector>
 #include <string>
 
-#include "../xml/ZLXMLReader.h"
-#include "ZLEncodingConverter.h"
+#include <ZLEncodingConverter.h>
 
-class EncodingCollectionReader : public ZLXMLReader {
+class EncodedTextReader {
 
-public:
-	EncodingCollectionReader(ZLEncodingCollection &collection);
-	void startElementHandler(const char *tag, const char **attributes);
-	void endElementHandler(const char *tag);
+protected:
+	EncodedTextReader(const std::string &encoding);
+	virtual ~EncodedTextReader();
 
-private:
-	ZLEncodingCollection &myCollection;
-	shared_ptr<ZLEncodingSet> myCurrentSet;
-	ZLEncodingConverterInfoPtr myCurrentInfo;
-	std::vector<std::string> myNames;
+protected:
+	shared_ptr<ZLEncodingConverter> myConverter;
 };
 
-#endif /* __ENCODINGCOLLECTIONREADER_H__ */
+#endif /* __ENCODEDTEXTREADER_H__ */

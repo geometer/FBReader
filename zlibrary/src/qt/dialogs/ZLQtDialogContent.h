@@ -29,7 +29,7 @@ class QGridLayout;
 class ZLQtDialogContent : public ZLDialogContent {
 
 public:
-	ZLQtDialogContent(QWidget *parent);
+	ZLQtDialogContent(QWidget *parent, const std::string &name = "");
 	~ZLQtDialogContent();
 
 	void addOption(ZLOptionEntry *option);

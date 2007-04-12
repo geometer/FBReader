@@ -87,11 +87,7 @@ void IConvEncodingConverter::convert(std::string &dst, const char *srcStart, con
 	char *out = (char*)dst.data() + oldLength;
 
 iconvlabel:
-#ifdef _WIN32
-	iconv(myIConverter, (const char**)&in, &inSize, &out, &outSize);
-#else
 	iconv(myIConverter, &in, &inSize, &out, &outSize);
-#endif
 	if (inSize != 0) {
 		if (myBuffer.empty()) {
 			myBuffer.append(in, inSize);
@@ -130,11 +126,7 @@ bool IConvEncodingConverter::fillTable(int *map) {
 		inSize = 1;
 		outSize = 3;
 		inBuffer[0] = i;
-#ifdef _WIN32
-		iconv(myIConverter, (const char**)&in, &inSize, &out, &outSize);
-#else
 		iconv(myIConverter, &in, &inSize, &out, &outSize);
-#endif
 		if (inSize == 0) {
 			ZLUnicodeUtil::Ucs2Char ch;
 			ZLUnicodeUtil::firstChar(ch, outBuffer);

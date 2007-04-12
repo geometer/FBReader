@@ -31,8 +31,8 @@ shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const std::string &title) 
 	return new ZLGtkDialog(title);
 }
 
-shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new ZLGtkOptionsDialog(id, title);
+shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
+	return new ZLGtkOptionsDialog(id, title, applyAction, showApplyButton);
 }
 
 void ZLGtkDialogManager::informationBox(const std::string &title, const std::string &message) const {

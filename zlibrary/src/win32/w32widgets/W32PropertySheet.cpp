@@ -24,7 +24,7 @@
 
 #include "W32WCHARUtil.h"
 
-W32PropertySheet::W32PropertySheet(HWND mainWindow, const std::string &caption) : myMainWindow(mainWindow) {
+W32PropertySheet::W32PropertySheet(HWND mainWindow, const std::string &caption, bool showApplyButton) : myMainWindow(mainWindow), myDialogWindow(0), myShowApplyButton(showApplyButton) {
 	::createNTWCHARString(myCaption, caption);
 }
 
@@ -37,11 +37,14 @@ W32DialogPanel &W32PropertySheet::createPanel(const std::string &name) {
 bool W32PropertySheet::run(const std::string &selectedTabName) {
 	PROPSHEETHEADER header;
 	header.dwSize = sizeof(header);
-	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOAPPLYNOW | PSH_NOCONTEXTHELP; // | PSH_USECALLBACK;
+	header.dwFlags = PSH_PROPSHEETPAGE | PSH_NOCONTEXTHELP | PSH_USECALLBACK;
+	if (!myShowApplyButton) {
+		header.dwFlags |= PSH_NOAPPLYNOW;
+	}
 	header.hInstance = 0;
 	header.hIcon = 0;
 	header.pszCaption = ::wchar(myCaption);
-	header.pfnCallback = 0;// PSCallback;
+	header.pfnCallback = PSCallback;
 	header.hwndParent = myMainWindow;
 	header.nPages = myPanels.size();
 	header.nStartPage = 0;
@@ -82,15 +85,12 @@ bool W32PropertySheet::run(const std::string &selectedTabName) {
 	return code == 1;
 }
 
-/*
-int CALLBACK W32PropertySheet::PSCallback(HWND, UINT message, LPARAM lParam) {
-	if (message == PSCB_PRECREATE) {
-		DLGTEMPLATE &dlgTemplate = *(DLGTEMPLATE*)lParam;
-		dlgTemplate.style |= DS_CENTER;
+int CALLBACK W32PropertySheet::PSCallback(HWND hDialog, UINT message, LPARAM lParam) {
+	if (message == PSCB_INITIALIZED) {
+		SendMessage(hDialog, PSM_CHANGED, 0, 0);
 	}
 	return 0;
 }
-*/
 
 BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
@@ -103,15 +103,30 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM 
 			if (panel != 0) {
 				return panel->commandCallback(wParam);
 			}
+			break;
 		}
 		case WM_NOTIFY:
 		{
 			PSHNOTIFY &notification = *(PSHNOTIFY*)lParam;
-			if ((int)notification.hdr.code == PSN_SETACTIVE) {
-				W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
-				if (panel != 0) {
-					panel->fireEvent(W32DialogPanel::PANEL_SELECTED_EVENT);
-					return true;
+			switch ((int)notification.hdr.code) {
+				case PSN_APPLY:
+				{
+					W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
+					if (panel != 0) {
+						panel->fireEvent(W32DialogPanel::APPLY_BUTTON_PRESSED_EVENT);
+						PostMessage(GetParent(hPage), PSM_CHANGED, (WPARAM)hPage, 0);
+						return true;
+					}
+					break;
+				}
+				case PSN_SETACTIVE:
+				{
+					W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
+					if (panel != 0) {
+						panel->fireEvent(W32DialogPanel::PANEL_SELECTED_EVENT);
+						return true;
+					}
+					break;
 				}
 			}
 			break;

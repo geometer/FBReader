@@ -31,12 +31,7 @@ std::map<std::string, RtfCommand*> RtfReader::ourKeywordMap;
 
 static const int rtfStreamBufferSize = 4096;
 
-RtfReader::RtfReader(const std::string &encoding) {
-	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(encoding);
-	if (info.isNull()) {
-		info = ZLEncodingCollection::defaultInfo();
-	}
-	myConverter = info->createConverter();
+RtfReader::RtfReader(const std::string &encoding) : EncodedTextReader(encoding) {
 }
 
 RtfReader::~RtfReader() {

@@ -36,6 +36,7 @@ private:
 public:
 	~MyOneByteEncodingConverter();
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	void reset();
 	bool fillTable(int *map);
 
 private:
@@ -159,6 +160,9 @@ void MyOneByteEncodingConverter::convert(std::string &dst, const char *srcStart,
 		}
 	}
 	dst.erase(dstPtr - dstStartPtr + oldLength);
+}
+
+void MyOneByteEncodingConverter::reset() {
 }
 
 bool MyOneByteEncodingConverter::fillTable(int *map) {

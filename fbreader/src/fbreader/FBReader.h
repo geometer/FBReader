@@ -101,7 +101,6 @@ private:
 
 	void searchSlot();
 	void bookInfoSlot();
-	void optionsSlot();
 	void addBookSlot();
 
 	BookDescriptionPtr createDescription(const std::string &fileName) const;
@@ -132,6 +131,7 @@ private:
 	friend class OpenBookRunnable;
 	void rebuildCollectionInternal();
 	friend class RebuildCollectionRunnable;
+	friend class OptionsApplyRunnable;
 
 	ViewMode myMode;
 	ViewMode myPreviousMode;

@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLOptionsDialog.h>
+
 #include "FBReader.h"
 #include "FBReaderActions.h"
 #include "BookTextView.h"
@@ -27,6 +29,7 @@
 
 #include "../bookmodel/BookModel.h"
 #include "../textview/TextView.h"
+#include "../optionsDialog/OptionsDialog.h"
 
 FBAction::FBAction(FBReader &fbreader) : myFBReader(fbreader) {
 }
@@ -67,6 +70,10 @@ bool ShowRecentBooksListAction::isVisible() {
 }
 
 ShowOptionsDialogAction::ShowOptionsDialogAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+void ShowOptionsDialogAction::run() {
+	OptionsDialog(myFBReader).dialog().run("");
 }
 
 ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -172,10 +179,6 @@ bool RedoAction::isEnabled() {
 
 void RedoAction::run() {
 	myFBReader.bookTextView().redoPageMove();
-}
-
-void ShowOptionsDialogAction::run() {
-	myFBReader.optionsSlot();
 }
 
 SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -349,14 +352,41 @@ bool GotoPreviousTOCSectionAction::isVisible() {
 bool GotoPreviousTOCSectionAction::isEnabled() {
 	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
 	shared_ptr<TextModel> model = contentsView.model();
-	return !model.isNull() && ((int)contentsView.currentTextViewParagraph() > 0);
+	if (model.isNull()) {
+		return false;
+	}
+	const ContentsModel &contentsModel = (const ContentsModel&)*model;
+	int tocIndex = contentsView.currentTextViewParagraph();
+	if (tocIndex > 0) {
+		return true;
+	}
+	if (tocIndex == 0) {
+		const WordCursor &cursor = myFBReader.bookTextView().startCursor();
+		if (cursor.isNull()) {
+			return false;
+		}
+		if (cursor.wordNumber() > 0) {
+			return true;
+		}
+		return
+			contentsModel.reference(((const TreeParagraph*)contentsModel[tocIndex])) >
+			(int)cursor.paragraphCursor().index();
+	}
+	return false;
 }
 
 void GotoPreviousTOCSectionAction::run() {
 	ContentsView &contentsView = (ContentsView&)*myFBReader.myContentsView;
 	size_t current = contentsView.currentTextViewParagraph();
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
-	int reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current - 1]));
+
+	int reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current]));
+	const WordCursor &cursor = myFBReader.bookTextView().startCursor();
+	if (!cursor.isNull() &&
+			(cursor.wordNumber() == 0) &&
+			(reference == (int)cursor.paragraphCursor().index())) {
+		reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current - 1]));
+	}
 	((TextView&)*myFBReader.myBookTextView).gotoParagraph(reference);
 	myFBReader.refreshWindow();
 }

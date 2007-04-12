@@ -49,7 +49,7 @@ public:
 	virtual void createApplicationWindow(ZLApplication *application) const = 0;
 
 	virtual shared_ptr<ZLDialog> createDialog(const std::string &title) const = 0;
-	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const std::string &id, const std::string &title) const = 0;
+	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
 	virtual bool selectionDialog(const std::string &title, ZLTreeHandler &handler) const = 0;
 
 	virtual void informationBox(const std::string &title, const std::string &message) const = 0;

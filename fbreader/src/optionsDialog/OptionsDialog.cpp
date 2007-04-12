@@ -181,8 +181,27 @@ void DefaultLanguageEntry::onAccept(const std::string &value) {
 	PluginCollection::instance().DefaultLanguageOption.setValue(language);
 }
 
-OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
-	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options");
+class OptionsApplyRunnable : public ZLRunnable {
+
+public:
+	OptionsApplyRunnable(FBReader &fbreader);
+	void run();
+
+private:
+	FBReader &myFBReader;
+};
+
+OptionsApplyRunnable::OptionsApplyRunnable(FBReader &fbreader) : myFBReader(fbreader) {
+}
+
+void OptionsApplyRunnable::run() {
+	myFBReader.grabAllKeys(myFBReader.KeyboardControlOption.value());
+	myFBReader.clearTextCaches();
+	myFBReader.refreshWindow();
+}
+
+OptionsDialog::OptionsDialog(FBReader &fbreader) {
+	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options", new OptionsApplyRunnable(fbreader), true);
 
 	ZLDialogContent &generalTab = myDialog->createTab("General");
 	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
@@ -207,7 +226,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader, ZLPaintContext &context) {
 	);
 
 	myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));
-	myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), context);
+	myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), fbreader.context());
 
 	createIndicatorTab(fbreader);
 

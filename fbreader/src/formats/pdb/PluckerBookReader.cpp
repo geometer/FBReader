@@ -36,12 +36,7 @@
 #include "PluckerImages.h"
 #include "../../bookmodel/BookModel.h"
 
-PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), myFilePath(filePath), myFont(FT_REGULAR) {
-	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(encoding);
-	if (info.isNull()) {
-		info = ZLEncodingCollection::defaultInfo();
-	}
-	myConverter = info->createConverter();
+PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), EncodedTextReader(encoding), myFilePath(filePath), myFont(FT_REGULAR) {
 	myCharBuffer = new char[65535];
 	myForcedEntry = 0;
 }

@@ -36,7 +36,7 @@ public:
 	virtual ~ZLEncodingConverter();
 	virtual void convert(std::string &dst, const char *srcStart, const char *srcEnd) = 0;
 	void convert(std::string &dst, const std::string &src);
-	virtual void reset();
+	virtual void reset() = 0;
 	virtual bool fillTable(int *map) = 0;
 
 private:
@@ -85,45 +85,40 @@ private:
 	ZLEncodingSet &operator=(const ZLEncodingSet&);
 };
 
+class ZLEncodingConverterProvider;
+
 class ZLEncodingCollection {
 
 public:
-	static const std::vector<shared_ptr<ZLEncodingSet> > &sets();
-	static ZLEncodingConverterInfoPtr info(const std::string &name);
-	static ZLEncodingConverterInfoPtr info(int code);
-	static ZLEncodingConverterInfoPtr defaultInfo();
-
+	static ZLEncodingCollection &instance();
 	static std::string encodingDescriptionPath();
 
 private:
-	static void init();
-	static void addInfo(ZLEncodingConverterInfoPtr info);
+	static ZLEncodingCollection *ourInstance;
+
+public:
+	const std::vector<shared_ptr<ZLEncodingSet> > &sets();
+	ZLEncodingConverterInfoPtr info(const std::string &name);
+	ZLEncodingConverterInfoPtr info(int code);
+	shared_ptr<ZLEncodingConverter> defaultConverter();
+	void registerProvider(shared_ptr<ZLEncodingConverterProvider> provider);
 
 private:
-	static std::vector<shared_ptr<ZLEncodingSet> > ourSets;
-	static std::map<std::string,ZLEncodingConverterInfoPtr> ourInfosByName;
+	void addInfo(ZLEncodingConverterInfoPtr info);
+	const std::vector<shared_ptr<ZLEncodingConverterProvider> > &providers() const;
+
+private:
+	std::vector<shared_ptr<ZLEncodingSet> > mySets;
+	std::map<std::string,ZLEncodingConverterInfoPtr> myInfosByName;
+	std::vector<shared_ptr<ZLEncodingConverterProvider> > myProviders;
 
 private:
 	ZLEncodingCollection();
+	~ZLEncodingCollection();
+	void init();
 
 friend class ZLEncodingConverterInfo;
-friend class EncodingReader;
 friend class EncodingCollectionReader;
-};
-
-class ZLEncodingConverterProvider {
-
-protected:
-	ZLEncodingConverterProvider();
-
-public:
-	virtual ~ZLEncodingConverterProvider();
-	virtual bool providesConverter(const std::string &encoding) = 0;
-	virtual shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding) = 0;
-
-private:
-	ZLEncodingConverterProvider(const ZLEncodingConverterProvider&);
-	const ZLEncodingConverterProvider &operator = (const ZLEncodingConverterProvider&);
 };
 
 #endif /* __ZLENCODINGCONVERTER_H__ */

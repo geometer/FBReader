@@ -30,6 +30,11 @@ void ZLQtDialogContent::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
 }
 
+ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const std::string &name) : ZLDialogContent(name), myWidget(widget) {
+	myLayout = new QGridLayout(myWidget);
+	myRowCounter = 0;
+}
+
 ZLQtDialogContent::ZLQtDialogContent(QWidget *widget) : myWidget(widget) {
 	myLayout = new QGridLayout(myWidget);
 	myRowCounter = 0;

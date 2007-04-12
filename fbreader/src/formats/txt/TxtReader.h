@@ -26,9 +26,11 @@
 
 #include <ZLEncodingConverter.h>
 
+#include "../EncodedTextReader.h"
+
 class ZLInputStream;
 
-class TxtReader {
+class TxtReader : public EncodedTextReader {
 
 public:
 	void readDocument(ZLInputStream &stream);
@@ -43,9 +45,6 @@ protected:
 
 	virtual bool characterDataHandler(std::string &str) = 0;
 	virtual bool newLineHandler() = 0;
-
-private:
-	shared_ptr<ZLEncodingConverter> myConverter;
 };
 
 #endif /* __TXTREADER_H__ */

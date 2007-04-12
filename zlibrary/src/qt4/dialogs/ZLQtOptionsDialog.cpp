@@ -28,7 +28,7 @@
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(id) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(id, applyAction) {
 	setModal(true);
 	setWindowTitle(caption.c_str());
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -40,20 +40,23 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &c
 	layout->addWidget(group);
 	QGridLayout *buttonLayout = new QGridLayout(group);
 	buttonLayout->setColumnStretch(0, 3);
-	buttonLayout->setColumnStretch(1, 0);
-	buttonLayout->setColumnStretch(2, 1);
-	buttonLayout->setColumnStretch(3, 0);
-	buttonLayout->setColumnStretch(4, 3);
 
 	QPushButton *okButton = new QPushButton(group);
-	okButton->setText("OK");
+	okButton->setText("&Ok");
 	buttonLayout->addWidget(okButton, 0, 1);
 	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
 	QPushButton *cancelButton = new QPushButton(group);
-	cancelButton->setText("Cancel");
-	buttonLayout->addWidget(cancelButton, 0, 3);
+	cancelButton->setText("&Cancel");
+	buttonLayout->addWidget(cancelButton, 0, 2);
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+
+	if (showApplyButton) {
+		QPushButton *applyButton = new QPushButton(group);
+		applyButton->setText("&Apply");
+		buttonLayout->addWidget(applyButton, 0, 3);
+		connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
+	}
 
 	if (parent() == 0) {
 		QDesktopWidget *desktop = qApp->desktop();
@@ -63,41 +66,33 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &c
 	}
 }
 
-ZLQtOptionsDialog::~ZLQtOptionsDialog() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		delete *it;
-	}
+void ZLQtOptionsDialog::apply() {
+	ZLOptionsDialog::accept();
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget));
-	myTabWidget->insertTab(myTabs.size(), tab->widget(), name.c_str());
+	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget), name);
+	myTabWidget->addTab(tab->widget(), name.c_str());
 	myTabs.push_back(tab);
-	myTabNames.push_back(name);
 	return *tab;
 }
 
 const std::string &ZLQtOptionsDialog::selectedTabName() const {
-	return myTabNames[myTabWidget->currentIndex()];
+	return myTabs[myTabWidget->currentIndex()]->name();
 }
 
 void ZLQtOptionsDialog::selectTab(const std::string &name) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
-	if (it != myTabNames.end()) {
-		myTabWidget->setCurrentIndex(it - myTabNames.begin());
+	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		if ((*it)->name() == name) {
+			myTabWidget->setCurrentWidget(((ZLQtDialogContent&)**it).widget());
+			break;
+		}
 	}
 }
 
 bool ZLQtOptionsDialog::run() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->close();
+	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		((ZLQtDialogContent&)**it).close();
 	}
 	return exec() == QDialog::Accepted;
-}
-
-void ZLQtOptionsDialog::accept() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->accept();
-	}
-	QDialog::accept();
 }

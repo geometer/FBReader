@@ -142,19 +142,20 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			return 0;
 		case WM_NOTIFY:
 		{
-			const NMHDR *notifyHeader = (const NMHDR*)lParam;
-			if (notifyHeader->code == TTN_NEEDTEXT) {
-				TOOLTIPTEXT &tooltip = *(TOOLTIPTEXT*)lParam;
-				ZLApplication::Toolbar::ItemPtr item = myButtonByActionCode[tooltip.hdr.idFrom];
-				if (!item.isNull()) {
-					const ZLApplication::Toolbar::ButtonItem &button =
-						(const ZLApplication::Toolbar::ButtonItem&)*item;
-					if (!button.tooltip().empty()) {
+			const NMHDR *notificationHeader = (const NMHDR*)lParam;
+			switch (notificationHeader->code) {
+				case TTN_NEEDTEXT:
+				{
+					TOOLTIPTEXT &tooltip = *(TOOLTIPTEXT*)lParam;
+					ZLApplication::Toolbar::ItemPtr item = myButtonByActionCode[tooltip.hdr.idFrom];
+					if (!item.isNull()) {
+						const ZLApplication::Toolbar::ButtonItem &button =
+							(const ZLApplication::Toolbar::ButtonItem&)*item;
 						ZLUnicodeUtil::Ucs2String tooltipBuffer;
 						::createNTWCHARString(tooltipBuffer, button.tooltip());
 						size_t length = std::max(tooltipBuffer.size(), (size_t)80);
 						memcpy((char*)tooltip.szText, (char*)::wchar(tooltipBuffer), 2 * length);
-						tooltip.lpszText = tooltip.szText;
+						tooltip.uFlags = TTF_DI_SETITEM;
 					}
 				}
 			}

@@ -28,12 +28,14 @@ RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfRe
 }
 
 void RtfDescriptionReader::setEncoding(int code) {
-	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::info(code);
-	if (info.isNull()) {
-		info = ZLEncodingCollection::defaultInfo();
+	ZLEncodingCollection &collection = ZLEncodingCollection::instance();
+	ZLEncodingConverterInfoPtr info = collection.info(code);
+	if (!info.isNull()) {
+		myConverter = info->createConverter();
+		myDescription.encoding() = info->name();
+	} else {
+		myConverter = collection.defaultConverter();
 	}
-	myDescription.encoding() = info->name();
-	myConverter = info->createConverter();
 }
 
 bool RtfDescriptionReader::readDocument(const std::string &fileName) {

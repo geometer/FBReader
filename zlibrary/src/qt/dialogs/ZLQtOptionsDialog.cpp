@@ -20,84 +20,58 @@
 
 #include <qlayout.h>
 #include <qpushbutton.h>
-#include <qbuttongroup.h>
 
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 
-MyQTabWidget::MyQTabWidget(QWidget *parent) : QTabWidget(parent) {
-}
-
-void MyQTabWidget::resizeEvent(QResizeEvent *event) {
-	QTabWidget::resizeEvent(event);
-	emit resized(event->size());
-}
-
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption) : QDialog(0, caption.c_str(), true), ZLDesktopOptionsDialog(id) {
-	QVBoxLayout *layout = new QVBoxLayout(this);
-
-	myTabWidget = new MyQTabWidget(this);
-	layout->add(myTabWidget);
-
-	QButtonGroup *group = new QButtonGroup(this);
-	layout->add(group);
-	QGridLayout *buttonLayout = new QGridLayout(group, 1, 5, 8, 0);
-	buttonLayout->setColStretch(0, 3);
-	buttonLayout->setColStretch(1, 0);
-	buttonLayout->setColStretch(2, 1);
-	buttonLayout->setColStretch(3, 0);
-	buttonLayout->setColStretch(4, 3);
-
-	QPushButton *okButton = new QPushButton(group);
-	okButton->setText("OK");
-	buttonLayout->addWidget(okButton, 0, 1);
-	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
-
-	QPushButton *cancelButton = new QPushButton(group);
-	cancelButton->setText("Cancel");
-	buttonLayout->addWidget(cancelButton, 0, 3);
-	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
-}
-
-ZLQtOptionsDialog::~ZLQtOptionsDialog() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		delete *it;
+ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QTabDialog(0, caption.c_str(), true), ZLDesktopOptionsDialog(id, applyAction) {
+	setOkButton();
+	setCancelButton();
+	if (showApplyButton) {
+		setApplyButton();
+		connect(this, SIGNAL(applyButtonPressed()), this, SLOT(apply()));
 	}
 }
 
+void ZLQtOptionsDialog::apply() {
+	ZLOptionsDialog::accept();
+}
+
 ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget);
-	myTabWidget->insertTab(tab->widget(), name.c_str());
+	ZLQtDialogContent *tab = new ZLQtDialogContent(this, name);
+	addTab(tab->widget(), name.c_str());
 	myTabs.push_back(tab);
-	myTabNames.push_back(name);
 	return *tab;
 }
 
 const std::string &ZLQtOptionsDialog::selectedTabName() const {
-	return myTabNames[myTabWidget->currentPageIndex()];
+	QWidget *currentTab = currentPage();
+	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		if (((ZLQtDialogContent&)**it).widget() == currentTab) {
+			return (*it)->name();
+		}
+	}
+	return myTabs[0]->name();
 }
 
 void ZLQtOptionsDialog::selectTab(const std::string &name) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
-	if (it != myTabNames.end()) {
-		myTabWidget->setCurrentPage(it - myTabNames.begin());
+	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		if ((*it)->name() == name) {
+			showPage(((ZLQtDialogContent&)**it).widget());
+			break;
+		}
 	}
 }
 
 bool ZLQtOptionsDialog::run() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->close();
+	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		((ZLQtDialogContent&)**it).close();
 	}
 	return exec() == QDialog::Accepted;
 }
 
-void ZLQtOptionsDialog::accept() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->accept();
-	}
-	QDialog::accept();
+void ZLQtOptionsDialog::resizeEvent(QResizeEvent *event) {
+	QTabDialog::resizeEvent(event);
+	emit resized(event->size());
 }
 
-void ZLQtOptionsDialog::resizeEvent(QResizeEvent *) {
-  myTabWidget->resize(size());
-}

@@ -29,8 +29,8 @@
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtWaitMessage.h"
 
-shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new ZLQtOptionsDialog(id, title);
+shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
+	return new ZLQtOptionsDialog(id, title, applyAction, showApplyButton);
 }
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const std::string &title) const {

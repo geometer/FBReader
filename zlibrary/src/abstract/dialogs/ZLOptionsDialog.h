@@ -21,8 +21,12 @@
 #ifndef __ZLOPTIONSDIALOG_H__
 #define __ZLOPTIONSDIALOG_H__
 
+#include <vector>
 #include <string>
 
+#include <shared_ptr.h>
+
+#include <ZLRunnable.h>
 #include <ZLDialogContent.h>
 #include <ZLOptions.h>
 
@@ -31,7 +35,7 @@ class ZLOptionEntry;
 class ZLOptionsDialog {
 
 protected:
-	ZLOptionsDialog(const std::string &id);
+	ZLOptionsDialog(const std::string &id, shared_ptr<ZLRunnable> applyAction);
 	
 public:
 	virtual ~ZLOptionsDialog();
@@ -43,10 +47,13 @@ protected:
 	virtual void selectTab(const std::string &name) = 0;
 	virtual bool run() = 0;
 
+	void accept();
+
 protected:
 	ZLStringOption TabOption;
-};
 
-inline ZLOptionsDialog::~ZLOptionsDialog() {}
+	shared_ptr<ZLRunnable> myApplyAction;
+	std::vector<shared_ptr<ZLDialogContent> > myTabs;
+};
 
 #endif /* __ZLOPTIONSDIALOG_H__ */

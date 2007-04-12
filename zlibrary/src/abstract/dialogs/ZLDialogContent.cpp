@@ -21,10 +21,20 @@
 #include "ZLOptionView.h"
 #include "ZLDialogContent.h"
 
+ZLDialogContent::ZLDialogContent() {
+}
+
+ZLDialogContent::ZLDialogContent(const std::string &name) : myName(name) {
+}
+
 ZLDialogContent::~ZLDialogContent() {
 	for (std::vector<ZLOptionView*>::iterator it = myViews.begin(); it != myViews.end(); ++it) {
 		delete *it;
 	}
+}
+
+const std::string &ZLDialogContent::name() const {
+	return myName;
 }
 
 void ZLDialogContent::accept() {

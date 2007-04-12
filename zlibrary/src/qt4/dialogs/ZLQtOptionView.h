@@ -34,8 +34,6 @@ class QLabel;
 class QSpinBox;
 class QCheckBox;
 class QLineEdit;
-class QPushButton;
-class QGroupBox;
 class QRadioButton;
 class QComboBox;
 class QSlider;
@@ -47,27 +45,26 @@ class ZLQtOptionView : public ZLOptionView {
 protected:
 	ZLQtOptionView(ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
 
+	void _show();
+	void _hide();
+
 protected:
 	ZLQtDialogContent *myTab;
 	int myRow, myFromColumn, myToColumn;
+	std::vector<QWidget*> myWidgets;
 };
 
 class ChoiceOptionView : public ZLQtOptionView {
 
 public:
-	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {
-		myButtons = 0;
-	}
+	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myButtons(0) {}
 	~ChoiceOptionView() { if (myButtons != 0) delete[] myButtons; }
 
 protected:
 	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 
 private:
-	QGroupBox *myGroupBox;
 	QRadioButton **myButtons;
 };
 
@@ -80,8 +77,6 @@ public:
 
 protected:
 	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 
 private Q_SLOTS:
@@ -96,12 +91,10 @@ class StringOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
+	StringOptionView(ZLStringOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLineEdit(0) {}
 
 private:
 	void _createItem();
-	void _show();
-	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
@@ -110,23 +103,19 @@ private Q_SLOTS:
 	void onValueEdited(const QString &value);
 
 private:
-	QLabel *myLabel;
 	QLineEdit *myLineEdit;
 };
 
 class SpinOptionView : public ZLQtOptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(ZLSpinOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), mySpinBox(0) {}
 
 protected:
 	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 
 private:
-	QLabel *myLabel;
 	QSpinBox *mySpinBox;
 };
 
@@ -135,12 +124,10 @@ class ComboOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
+	ComboOptionView(ZLComboOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myComboBox(0) {}
 
 private:
 	void _createItem();
-	void _show();
-	void _hide();
 	void _setActive(bool active);
 	void _onAccept() const;
 	void reset();
@@ -148,10 +135,8 @@ private:
 private Q_SLOTS:
 	void onValueSelected(int index);
 	void onValueEdited(const QString &value);
-	void onTabResized(const QSize &size);
 	
 private:
-	QLabel *myLabel;
 	QComboBox *myComboBox;
 };
 
@@ -160,7 +145,7 @@ class KeyOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
 
 private:
 	void _createItem();
@@ -173,8 +158,6 @@ private Q_SLOTS:
 	void onValueChanged(int);
 
 private:
-	QWidget *myWidget;
-	QPushButton *myKeyButton;
 	QLabel *myLabel;
 	QComboBox *myComboBox;
 	std::string myCurrentKey;
@@ -187,23 +170,19 @@ class ColorOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myWidget(0), myLayout(0), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
+	ColorOptionView(ZLColorOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
 
 private:
 	void _createItem();
-	void _show();
-	void _hide();
 	void _onAccept() const;
 	void reset();
 
-	QSlider *createColorSlider(int index, const char *name, int value);
+	QSlider *createColorSlider(QGridLayout *layout, int index, const char *name, int value);
 
 private Q_SLOTS:
 	void onSliderMove(int);
 
 private:
-	QWidget *myWidget;
-	QGridLayout *myLayout;
 	QSlider *myRSlider, *myGSlider, *myBSlider;
 	QLabel *myColorBar;
 };

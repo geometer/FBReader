@@ -28,7 +28,7 @@
 class ZLDesktopOptionsDialog : public ZLOptionsDialog {
 
 protected:
-	ZLDesktopOptionsDialog(const std::string &id);
+	ZLDesktopOptionsDialog(const std::string &id, shared_ptr<ZLRunnable> applyAction);
 
 public:
 	bool run(const std::string &tabName);

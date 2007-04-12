@@ -37,19 +37,24 @@
 #include "ZLQtOptionView.h"
 #include "ZLQtDialogContent.h"
 
+void ZLQtOptionView::_show() {
+	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
+		(*it)->show();
+	}
+}
+
+void ZLQtOptionView::_hide() {
+	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
+		(*it)->hide();
+	}
+}
+
 void BooleanOptionView::_createItem() {
 	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab->widget());
 	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
+	myWidgets.push_back(myCheckBox);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
-}
-
-void BooleanOptionView::_show() {
-	myCheckBox->show();
-}
-
-void BooleanOptionView::_hide() {
-	myCheckBox->hide();
 }
 
 void BooleanOptionView::_onAccept() const {
@@ -61,24 +66,17 @@ void BooleanOptionView::onStateChanged(bool state) const {
 }
 
 void ChoiceOptionView::_createItem() {
-	myGroupBox = new QGroupBox(myOption->name().c_str());
-	QVBoxLayout *layout = new QVBoxLayout(myGroupBox);
+	QGroupBox *groupBox = new QGroupBox(myOption->name().c_str());
+	myWidgets.push_back(groupBox);
+	QVBoxLayout *layout = new QVBoxLayout(groupBox);
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
-		myButtons[i] = new QRadioButton(myGroupBox);
+		myButtons[i] = new QRadioButton(groupBox);
 		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());
 		layout->addWidget(myButtons[i]);
 	}
 	myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]->setChecked(true);
-	myTab->addItem(myGroupBox, myRow, myFromColumn, myToColumn);
-}
-
-void ChoiceOptionView::_show() {
-	myGroupBox->show();
-}
-
-void ChoiceOptionView::_hide() {
-	myGroupBox->hide();
+	myTab->addItem(groupBox, myRow, myFromColumn, myToColumn);
 }
 
 void ChoiceOptionView::_onAccept() const {
@@ -92,15 +90,18 @@ void ChoiceOptionView::_onAccept() const {
 
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
-	myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
+	QLabel *label = new QLabel(myOption->name().c_str(), myTab->widget());
 	myComboBox = new QComboBox(myTab->widget());
 	myComboBox->setEditable(comboOption.isEditable());
+
+	myWidgets.push_back(label);
+	myWidgets.push_back(myComboBox);
 
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueSelected(int)));
 	connect(myComboBox, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 
 	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 2 - 1);
+	myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
 	myTab->addItem(myComboBox, myRow, myToColumn - width / 2 + 1, myToColumn);
 
 	reset();
@@ -132,20 +133,6 @@ void ComboOptionView::reset() {
 	}
 }
 
-void ComboOptionView::onTabResized(const QSize &size) {
-	myComboBox->setMaximumWidth(size.width() / 2 - 30);
-}
-
-void ComboOptionView::_show() {
-	myLabel->show();
-	myComboBox->show();
-}
-
-void ComboOptionView::_hide() {
-	myLabel->hide();
-	myComboBox->hide();
-}
-
 void ComboOptionView::_setActive(bool active) {
 	myComboBox->setEnabled(active);
 }
@@ -170,25 +157,19 @@ void ComboOptionView::onValueEdited(const QString &value) {
 
 void SpinOptionView::_createItem() {
 	ZLSpinOptionEntry &entry = *(ZLSpinOptionEntry*)myOption;
-	myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
+	QLabel *label = new QLabel(myOption->name().c_str(), myTab->widget());
 	mySpinBox = new QSpinBox(myTab->widget());
+
+	myWidgets.push_back(label);
+	myWidgets.push_back(mySpinBox);
+
 	mySpinBox->setMinimum(entry.minValue());
 	mySpinBox->setMaximum(entry.maxValue());
 	mySpinBox->setSingleStep(entry.step());
 	mySpinBox->setValue(entry.initialValue());
 	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width * 2 / 3 - 1);
+	myTab->addItem(label, myRow, myFromColumn, myFromColumn + width * 2 / 3 - 1);
 	myTab->addItem(mySpinBox, myRow, myFromColumn + width * 2 / 3, myToColumn);
-}
-
-void SpinOptionView::_show() {
-	myLabel->show();
-	mySpinBox->show();
-}
-
-void SpinOptionView::_hide() {
-	myLabel->hide();
-	mySpinBox->hide();
 }
 
 void SpinOptionView::_onAccept() const {
@@ -197,31 +178,18 @@ void SpinOptionView::_onAccept() const {
 
 void StringOptionView::_createItem() {
 	myLineEdit = new QLineEdit(myTab->widget());
+	myWidgets.push_back(myLineEdit);
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 	if (!myOption->name().empty()) {
-		myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
+		QLabel *label = new QLabel(myOption->name().c_str(), myTab->widget());
+		myWidgets.push_back(label);
 		int width = myToColumn - myFromColumn + 1;
-		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
+		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 4 - 1);
 		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
 	} else {
-		myLabel = 0;
 		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
 	}
 	reset();
-}
-
-void StringOptionView::_show() {
-	if (myLabel != 0) {
-		myLabel->show();
-	}
-	myLineEdit->show();
-}
-
-void StringOptionView::_hide() {
-	if (myLabel != 0) {
-		myLabel->hide();
-	}
-	myLineEdit->hide();
 }
 
 void StringOptionView::_setActive(bool active) {
@@ -250,7 +218,7 @@ void StringOptionView::onValueEdited(const QString &value) {
 class KeyButton : public QPushButton {
 
 public:
-	KeyButton(KeyOptionView &keyView);
+	KeyButton(KeyOptionView &keyView, QWidget *parent);
 
 protected:
 	void focusInEvent(QFocusEvent*);
@@ -262,7 +230,7 @@ private:
 	KeyOptionView &myKeyView;
 };
 
-KeyButton::KeyButton(KeyOptionView &keyView) : QPushButton(keyView.myWidget), myKeyView(keyView) {
+KeyButton::KeyButton(KeyOptionView &keyView, QWidget *parent) : QPushButton(parent), myKeyView(keyView) {
 	focusOutEvent(0);
 }
 
@@ -292,25 +260,29 @@ void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
 }
 
 void KeyOptionView::_createItem() {
-	myWidget = new QWidget(myTab->widget());
-	QGridLayout *layout = new QGridLayout(myWidget);
-	myKeyButton = new KeyButton(*this);
-	layout->addWidget(myKeyButton, 0, 0, 1, 2);
-	myLabel = new QLabel(myWidget);
+	QWidget *widget = new QWidget(myTab->widget());
+	QGridLayout *layout = new QGridLayout(widget);
+	KeyButton *keyButton = new KeyButton(*this, widget);
+	layout->addWidget(keyButton, 0, 0, 1, 2);
+
+	myWidgets.push_back(widget);
+	myWidgets.push_back(keyButton);
+
+	myLabel = new QLabel(widget);
 	myLabel->setTextFormat(Qt::PlainText);
 	layout->addWidget(myLabel, 1, 0);
-	myComboBox = new QComboBox(myWidget);
+	myComboBox = new QComboBox(widget);
 	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
 		myComboBox->insertItem(it - actions.begin(), it->c_str());
 	}
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChanged(int)));
 	layout->addWidget(myComboBox, 1, 1);
-	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+	myTab->addItem(widget, myRow, myFromColumn, myToColumn);
 }
 
 void KeyOptionView::reset() {
-	if (myWidget == 0) {
+	if (myLabel == 0) {
 		return;
 	}
 	myCurrentKey.erase();
@@ -319,8 +291,7 @@ void KeyOptionView::reset() {
 }
 
 void KeyOptionView::_show() {
-	myWidget->show();
-	myKeyButton->show();
+	ZLQtOptionView::_show();
 	if (!myCurrentKey.empty()) {
 		myLabel->show();
 		myComboBox->show();
@@ -331,8 +302,7 @@ void KeyOptionView::_show() {
 }
 
 void KeyOptionView::_hide() {
-	myKeyButton->hide();
-	myWidget->hide();
+	ZLQtOptionView::_hide();
 	myLabel->hide();
 	myComboBox->hide();
 	myCurrentKey.erase();
@@ -348,10 +318,10 @@ void KeyOptionView::onValueChanged(int index) {
 	}
 }
 
-QSlider *ColorOptionView::createColorSlider(int index, const char *name, int value) {
-	myLayout->addWidget(new QLabel(name, myWidget), index, 0);
-	QSlider *slider = new QSlider(Qt::Horizontal, myWidget);
-	myLayout->addWidget(slider, index, 1);
+QSlider *ColorOptionView::createColorSlider(QGridLayout *layout, int index, const char *name, int value) {
+	layout->addWidget(new QLabel(name, layout->parentWidget()), index, 0);
+	QSlider *slider = new QSlider(Qt::Horizontal, layout->parentWidget());
+	layout->addWidget(slider, index, 1);
 	slider->setMinimum(0);
 	slider->setMaximum(255);
 	slider->setSingleStep(5);
@@ -362,26 +332,27 @@ QSlider *ColorOptionView::createColorSlider(int index, const char *name, int val
 }
 
 void ColorOptionView::_createItem() {
-	myWidget = new QWidget(myTab->widget());
-	myLayout = new QGridLayout(myWidget);
+	QWidget *widget = new QWidget(myTab->widget());
+	myWidgets.push_back(widget);
+	QGridLayout *layout = new QGridLayout(widget);
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
-	myRSlider = createColorSlider(0, "Red", color.Red);
-	myGSlider = createColorSlider(1, "Green", color.Green);
-	myBSlider = createColorSlider(2, "Blue", color.Blue);
+	myRSlider = createColorSlider(layout, 0, "Red", color.Red);
+	myGSlider = createColorSlider(layout, 1, "Green", color.Green);
+	myBSlider = createColorSlider(layout, 2, "Blue", color.Blue);
 
-	myColorBar = new QLabel("                  ", myWidget);
+	myColorBar = new QLabel("                  ", widget);
 	QPalette palette = myColorBar->palette();
 	palette.setColor(myColorBar->backgroundRole(), QColor(color.Red, color.Green, color.Blue));
 	myColorBar->setPalette(palette);
 	myColorBar->setFrameStyle(QFrame::Panel | QFrame::Plain);
-	myLayout->addWidget(myColorBar, 0, 2, 3, 1);
+	layout->addWidget(myColorBar, 0, 2, 3, 1);
 	myColorBar->setAutoFillBackground(true);
 
-	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+	myTab->addItem(widget, myRow, myFromColumn, myToColumn);
 }
 
 void ColorOptionView::reset() {
-	if (myWidget == 0) {
+	if (myColorBar == 0) {
 		return;
 	}
 	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
@@ -393,14 +364,6 @@ void ColorOptionView::reset() {
 	QPalette palette = myColorBar->palette();
 	palette.setColor(myColorBar->backgroundRole(), QColor(color.Red, color.Green, color.Blue));
 	myColorBar->setPalette(palette);
-}
-
-void ColorOptionView::_show() {
-	myWidget->show();
-}
-
-void ColorOptionView::_hide() {
-	myWidget->hide();
 }
 
 void ColorOptionView::onSliderMove(int) {

@@ -30,11 +30,12 @@
 #include <ZLEncodingConverter.h>
 
 #include "../../model/AlignmentType.h"
+#include "../EncodedTextReader.h"
 
 class ZLInputStream;
 class RtfCommand;
 
-class RtfReader {
+class RtfReader : public EncodedTextReader {
 
 private:
 	static void fillKeywordMap();
@@ -95,7 +96,6 @@ protected:
 	};
 
 	RtfReaderState myState;
-	shared_ptr<ZLEncodingConverter> myConverter;
 
 private:
 	bool mySpecialMode;

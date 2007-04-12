@@ -35,8 +35,8 @@ shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const std::string &title
 	return new ZLWin32Dialog(*myApplicationWindow, title);
 }
 
-shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std::string &id, const std::string &title) const {
-	return new ZLWin32OptionsDialog(*myApplicationWindow, id, title);
+shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
+	return new ZLWin32OptionsDialog(*myApplicationWindow, id, title, applyAction, showApplyButton);
 }
 
 void ZLWin32DialogManager::informationBox(const std::string &title, const std::string &message) const {

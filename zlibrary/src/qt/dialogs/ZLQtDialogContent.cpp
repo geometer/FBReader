@@ -28,7 +28,7 @@ void ZLQtDialogContent::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
 }
 
-ZLQtDialogContent::ZLQtDialogContent(QWidget *parent) : myParentWidget(parent) {
+ZLQtDialogContent::ZLQtDialogContent(QWidget *parent, const std::string &name) : ZLDialogContent(name), myParentWidget(parent) {
 	myWidget = new QWidget(myParentWidget);
 	const long displaySize = qApp->desktop()->height() * (long)qApp->desktop()->width();
 	const int space = (displaySize < 640 * 480) ? 3 : 10;

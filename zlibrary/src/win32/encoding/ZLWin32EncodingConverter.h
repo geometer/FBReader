@@ -18,27 +18,17 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGCOLLECTIONREADER_H__
-#define __ENCODINGCOLLECTIONREADER_H__
+#ifndef __ZLWIN32ENCODINGCONVERTERS_H__
+#define __ZLWIN32ENCODINGCONVERTERS_H__
 
-#include <vector>
-#include <string>
+#include "../../abstract/encoding/ZLEncodingConverter.h"
+#include "../../abstract/encoding/ZLEncodingConverterProvider.h"
 
-#include "../xml/ZLXMLReader.h"
-#include "ZLEncodingConverter.h"
-
-class EncodingCollectionReader : public ZLXMLReader {
+class ZLWin32EncodingConverterProvider : public ZLEncodingConverterProvider {
 
 public:
-	EncodingCollectionReader(ZLEncodingCollection &collection);
-	void startElementHandler(const char *tag, const char **attributes);
-	void endElementHandler(const char *tag);
-
-private:
-	ZLEncodingCollection &myCollection;
-	shared_ptr<ZLEncodingSet> myCurrentSet;
-	ZLEncodingConverterInfoPtr myCurrentInfo;
-	std::vector<std::string> myNames;
+	bool providesConverter(const std::string &encoding);
+	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
 };
 
-#endif /* __ENCODINGCOLLECTIONREADER_H__ */
+#endif /* __ENCODINGCONVERTERS_H__ */

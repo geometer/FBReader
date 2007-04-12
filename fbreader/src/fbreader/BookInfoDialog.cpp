@@ -211,7 +211,7 @@ EncodingEntry::EncodingEntry(ZLStringOption &encodingOption) : myEncodingOption(
 		return;
 	}
 
-	const std::vector<shared_ptr<ZLEncodingSet> > &sets = ZLEncodingCollection::sets();
+	const std::vector<shared_ptr<ZLEncodingSet> > &sets = ZLEncodingCollection::instance().sets();
 	for (std::vector<shared_ptr<ZLEncodingSet> >::const_iterator it = sets.begin(); it != sets.end(); ++it) {
 		const std::vector<ZLEncodingConverterInfoPtr> &infos = (*it)->infos();
 		mySetNames.push_back((*it)->name());

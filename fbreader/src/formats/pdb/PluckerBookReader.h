@@ -28,8 +28,9 @@
 #include <ZLEncodingConverter.h>
 
 #include "../../bookmodel/BookReader.h"
+#include "../EncodedTextReader.h"
 
-class PluckerBookReader : public BookReader {
+class PluckerBookReader : public BookReader, public EncodedTextReader {
 
 public:
 	PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding);
@@ -85,8 +86,6 @@ private:
 	std::map<int, std::vector<int> > myParagraphMap;
 	std::vector<int> *myParagraphVector;
 	bool myParagraphStored;
-
-	shared_ptr<ZLEncodingConverter> myConverter;
 };
 
 #endif /* __PLUCKERBOOKREADER_H__ */

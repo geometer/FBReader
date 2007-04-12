@@ -21,11 +21,11 @@
 #include "ZLWin32DialogContent.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32OptionsDialog::ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, const std::string &id, const std::string &caption) : ZLOptionsDialog(id), myWindow(window), myPropertySheet(window.mainWindow(), caption) {
+ZLWin32OptionsDialog::ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : ZLOptionsDialog(id, applyAction), myWindow(window), myPropertySheet(window.mainWindow(), caption, showApplyButton) {
 }
 
 ZLDialogContent &ZLWin32OptionsDialog::createTab(const std::string &name) {
-	shared_ptr<ZLWin32DialogContent> tab = new ZLWin32DialogContent();
+	ZLWin32DialogContent *tab = new ZLWin32DialogContent();
 	myTabs.push_back(tab);
 
 	W32DialogPanel &panel = myPropertySheet.createPanel(name);
@@ -47,18 +47,17 @@ void ZLWin32OptionsDialog::selectTab(const std::string &name) {
 	mySelectedTabName = name;
 }
 
-void ZLWin32OptionsDialog::onEvent(const std::string&, W32EventSender &sender) {
-	mySelectedTabName = ((W32DialogPanel&)sender).caption();
+void ZLWin32OptionsDialog::onEvent(const std::string &event, W32EventSender &sender) {
+	if (event == W32DialogPanel::PANEL_SELECTED_EVENT) {
+		mySelectedTabName = ((W32DialogPanel&)sender).caption();
+	} else if (event == W32DialogPanel::APPLY_BUTTON_PRESSED_EVENT) {
+		accept();
+	}
 }
 
 bool ZLWin32OptionsDialog::run() {
 	myWindow.blockMouseEvents(true);
-	bool result = myPropertySheet.run(mySelectedTabName);
-	if (result) {
-		for (std::vector<shared_ptr<ZLWin32DialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-			(*it)->accept();
-		}
-	}
+	bool code = myPropertySheet.run(mySelectedTabName);
 	myWindow.blockMouseEvents(false);
-	return result;
+	return code;
 }

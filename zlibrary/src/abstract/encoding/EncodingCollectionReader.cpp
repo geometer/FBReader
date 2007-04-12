@@ -30,6 +30,9 @@ static const std::string ALIAS = "alias";
 static const std::string CODE = "code";
 static const std::string NUMBER = "number";
 
+EncodingCollectionReader::EncodingCollectionReader(ZLEncodingCollection &collection) : myCollection(collection) {
+}
+
 void EncodingCollectionReader::startElementHandler(const char *tag, const char **attributes) {
 	if (GROUP == tag) {
 		const char *name = attributeValue(attributes, NAME.c_str());
@@ -68,14 +71,14 @@ void EncodingCollectionReader::endElementHandler(const char *tag) {
 		if (myCurrentInfo->canCreateConverter()) {
 			myCurrentSet->addInfo(myCurrentInfo);
 			for (std::vector<std::string>::const_iterator it = myNames.begin(); it != myNames.end(); ++it) {
-				ZLEncodingCollection::ourInfosByName[ZLUnicodeUtil::toLower(*it)] = myCurrentInfo;
+				myCollection.myInfosByName[ZLUnicodeUtil::toLower(*it)] = myCurrentInfo;
 			}
 		}
 		myCurrentInfo = 0;
 		myNames.clear();
 	} else if (!myCurrentSet.isNull() && (GROUP == tag)) {
 		if (!myCurrentSet->infos().empty()) {
-			ZLEncodingCollection::ourSets.push_back(myCurrentSet);
+			myCollection.mySets.push_back(myCurrentSet);
 		}
 		myCurrentSet = 0;
 	}

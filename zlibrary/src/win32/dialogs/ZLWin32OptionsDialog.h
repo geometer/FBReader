@@ -29,13 +29,12 @@
 
 #include "../w32widgets/W32DialogPanel.h"
 
-class ZLWin32DialogContent;
 class ZLWin32ApplicationWindow;
 
 class ZLWin32OptionsDialog : public ZLOptionsDialog, public W32Listener {
 
 public:
-	ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, const std::string &id, const std::string &caption);
+	ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:
@@ -50,7 +49,6 @@ private:
 	ZLWin32ApplicationWindow &myWindow;
 	W32PropertySheet myPropertySheet;
 
-	std::vector<shared_ptr<ZLWin32DialogContent> > myTabs;
 	std::string mySelectedTabName;
 };
 

@@ -20,12 +20,27 @@
 
 #include "ZLOptionsDialog.h"
 
-ZLOptionsDialog::ZLOptionsDialog(const std::string &id) : TabOption(ZLOption::LOOK_AND_FEEL_CATEGORY, id, "SelectedTab", "") {
+ZLOptionsDialog::ZLOptionsDialog(const std::string &id, shared_ptr<ZLRunnable> applyAction) : TabOption(ZLOption::LOOK_AND_FEEL_CATEGORY, id, "SelectedTab", ""), myApplyAction(applyAction) {
+}
+
+ZLOptionsDialog::~ZLOptionsDialog() {
 }
 
 bool ZLOptionsDialog::run(const std::string &tabName) {
 	selectTab(tabName.empty() ? TabOption.value() : tabName);
 	bool code = run();
+	if (code) {
+		accept();
+	}
 	TabOption.setValue(selectedTabName());
 	return code;
+}
+
+void ZLOptionsDialog::accept() {
+	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		(*it)->accept();
+	}
+	if (!myApplyAction.isNull()) {
+		myApplyAction->run();
+	}
 }

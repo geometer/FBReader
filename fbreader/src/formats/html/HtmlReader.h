@@ -26,10 +26,11 @@
 #include <vector>
 
 #include <ZLEncodingConverter.h>
+#include "../EncodedTextReader.h"
 
 class ZLInputStream;
 
-class HtmlReader {
+class HtmlReader : public EncodedTextReader {
 
 public:
 	struct HtmlAttribute {
@@ -77,9 +78,6 @@ protected:
 
 private:
 	void appendString(std::string &to, std::string &from);
-
-protected:
-	shared_ptr<ZLEncodingConverter> myConverter;
 };
 
 inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), hasValue(false) {}

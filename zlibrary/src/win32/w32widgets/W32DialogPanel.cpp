@@ -27,6 +27,7 @@ static const int FirstControlId = 2001;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;
 const std::string W32DialogPanel::PANEL_SELECTED_EVENT = "Dialog Panel: Selected";
+const std::string W32DialogPanel::APPLY_BUTTON_PRESSED_EVENT = "Dialog Panel: Apply Button Pressed";
 UINT W32DialogPanel::LAYOUT_MESSAGE = 0;
 
 static void allocateString(WORD *&p, const std::string &text) {

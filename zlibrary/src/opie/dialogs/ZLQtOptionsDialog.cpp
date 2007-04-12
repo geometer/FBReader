@@ -29,14 +29,8 @@ void MyQTabWidget::resizeEvent(QResizeEvent *event) {
 	emit resized(event->size());
 }
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption) : ZLFullScreenDialog(caption.c_str()), ZLOptionsDialog(id) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction) : ZLFullScreenDialog(caption.c_str()), ZLOptionsDialog(id, applyAction) {
 	myTabWidget = new MyQTabWidget(this);
-}
-
-ZLQtOptionsDialog::~ZLQtOptionsDialog() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		delete *it;
-	}
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
@@ -59,17 +53,10 @@ void ZLQtOptionsDialog::selectTab(const std::string &name) {
 }
 
 bool ZLQtOptionsDialog::run() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->close();
+	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		((ZLQtDialogContent&)**it).close();
 	}
 	return exec();
-}
-
-void ZLQtOptionsDialog::accept() {
-	for (std::vector<ZLQtDialogContent*>::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		(*it)->accept();
-	}
-	ZLFullScreenDialog::accept();
 }
 
 void ZLQtOptionsDialog::resizeEvent(QResizeEvent *) {
@@ -78,7 +65,7 @@ void ZLQtOptionsDialog::resizeEvent(QResizeEvent *) {
 
 void ZLQtOptionsDialog::keyPressEvent(QKeyEvent *event) {
 	if (event->key() == Key_Return) {
-		accept();
+		ZLFullScreenDialog::accept();
 	} else {
 		ZLFullScreenDialog::keyPressEvent(event);
 	}
