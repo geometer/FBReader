@@ -34,3 +34,11 @@ bool FBView::onFingerTap(int, int y) {
 	}
 	return true;
 }
+
+const std::string &FBView::caption() const {
+	return myCaption;
+}
+
+void FBView::setCaption(const std::string &caption) {
+	myCaption = caption;
+}

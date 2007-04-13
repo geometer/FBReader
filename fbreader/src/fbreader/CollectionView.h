@@ -44,6 +44,7 @@ public:
 
 	void paint();
 	void updateModel();
+	void synchronizeModel();
 
 	void selectBook(BookDescriptionPtr book);
 

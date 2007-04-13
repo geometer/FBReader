@@ -103,14 +103,14 @@ void BookCollection::collectBookFileNames(std::set<std::string> &bookFileNames) 
 	}
 }
 
-void BookCollection::synchronize() const {
+bool BookCollection::synchronize() const {
 	bool doStrongRebuild =
 		myDoStrongRebuild ||
 		(myScanSubdirs != ScanSubdirsOption.value()) ||
 		(myPath != PathOption.value());
 
 	if (!doStrongRebuild && !myDoWeakRebuild) {
-		return;
+		return false;
 	}
 
 	myPath = PathOption.value();
@@ -165,6 +165,7 @@ void BookCollection::synchronize() const {
 	for (std::map<AuthorPtr,Books>::iterator it = myCollection.begin(); it != myCollection.end(); ++it) {
 		std::sort((*it).second.begin(), (*it).second.end(), descriptionComparator);
 	}
+	return true;
 }
 
 void BookCollection::collectDirNames(std::set<std::string> &nameSet) const {

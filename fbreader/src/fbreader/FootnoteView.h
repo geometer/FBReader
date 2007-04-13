@@ -28,15 +28,8 @@ class FootnoteView : public FBView {
 
 public:
 	FootnoteView(FBReader &reader, ZLPaintContext &context);
-	const std::string &caption() const;
-	void setCaption(const std::string &caption);
-
-private:
-	std::string myCaption;
 };
 
 inline FootnoteView::FootnoteView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {}
-inline const std::string &FootnoteView::caption() const { return myCaption; }
-inline void FootnoteView::setCaption(const std::string &caption) { myCaption = caption; }
 
 #endif /* __FOOTNOTEVIEW_H__ */

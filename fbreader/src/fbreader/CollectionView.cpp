@@ -163,6 +163,12 @@ void CollectionView::updateModel() {
 	myUpdateModel = true;
 }
 
+void CollectionView::synchronizeModel() {
+	if (myCollection.synchronize()) {
+		updateModel();
+	}
+}
+
 const std::string &CollectionView::caption() const {
 	return LIBRARY;
 }

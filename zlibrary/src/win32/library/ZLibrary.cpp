@@ -29,6 +29,7 @@
 #include "../view/ZLWin32PaintContext.h"
 #include "../message/ZLWin32Message.h"
 #include "../config/ZLWin32Config.h"
+#include "../encoding/ZLWin32EncodingConverter.h"
 
 void ZLibrary::init(int&, char**&) {
 	ZLWin32ConfigManager::createInstance();
@@ -37,6 +38,7 @@ void ZLibrary::init(int&, char**&) {
 	ZLWin32DialogManager::createInstance();
 	ZLWin32CommunicationManager::createInstance();
 	ZLWin32ImageManager::createInstance();
+	ZLEncodingCollection::instance().registerProvider(new ZLWin32EncodingConverterProvider());
 }
 
 ZLPaintContext *ZLibrary::createContext() {

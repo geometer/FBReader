@@ -34,17 +34,9 @@ public:
 	bool isEmpty() const;
 	size_t currentTextViewParagraph() const;
 	void gotoReference();
-	const std::string &caption() const;
-	void setCaption(const std::string &caption);
 
 private:
 	bool onStylusPress(int x, int y);
-
-private:
-	std::string myCaption;
 };
-
-inline const std::string &ContentsView::caption() const { return myCaption; }
-inline void ContentsView::setCaption(const std::string &caption) { myCaption = caption; }
 
 #endif /* __CONTENTSVIEW_H__ */

@@ -15,7 +15,6 @@ CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DUNICODE -D_WIN3
 LDFLAGS = -mwindows
 
 UILIBS = -lgdi32 -lcomctl32 -lcomdlg32 -lpng12 -ljpeg -lungif -ltiff
-CONVERTER_LIB = -liconv
 XML_LIB = -lexpat
 ENCA_LIB = -lenca
 ARCHIVER_LIB = -lz -lbz2

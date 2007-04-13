@@ -49,18 +49,16 @@ void EncodingCollectionReader::startElementHandler(const char *tag, const char *
 				myNames.push_back(sName);
 			}
 		} else if (!myCurrentInfo.isNull()) {
+			const char *name = 0;
 			if (CODE == tag) {
-				const char *name = attributeValue(attributes, NUMBER.c_str());
-				if (name != 0) {
-					myNames.push_back(name);
-				}
+				name = attributeValue(attributes, NUMBER.c_str());
 			} else if (ALIAS == tag) {
-				const char *name = attributeValue(attributes, NAME.c_str());
-				if (name != 0) {
-					const std::string sName = name;
-					myCurrentInfo->addAlias(sName);
-					myNames.push_back(sName);
-				}
+				name = attributeValue(attributes, NAME.c_str());
+			}
+			if (name != 0) {
+				const std::string sName = name;
+				myCurrentInfo->addAlias(sName);
+				myNames.push_back(sName);
 			}
 		}
 	}

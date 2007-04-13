@@ -18,7 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include <iconv.h>
+#include <windows.h>
 
 #include <ZLUnicodeUtil.h>
 
@@ -27,7 +27,7 @@
 class ZLWin32EncodingConverter : public ZLEncodingConverter {
 
 private:
-	ZLWin32EncodingConverter(const std::string &encoding);
+	ZLWin32EncodingConverter(UINT code);
 	~ZLWin32EncodingConverter();
 
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
@@ -35,102 +35,67 @@ private:
 	bool fillTable(int *map);
 
 private:
-	iconv_t myZLWin32erter;
-	std::string myBuffer;
+	UINT myCode;
+	ZLUnicodeUtil::Ucs2String myBuffer;
 
 friend class ZLWin32EncodingConverterProvider;
 };
 
 bool ZLWin32EncodingConverterProvider::providesConverter(const std::string &encoding) {
-	iconv_t converter = iconv_open("utf-8", encoding.c_str());
-	if (converter != (iconv_t)-1) {
-		iconv_close(converter);
-		return true;
-	}
-	return false;
-}
-
-shared_ptr<ZLEncodingConverter> ZLWin32EncodingConverterProvider::createConverter(const std::string &encoding) {
-	return new ZLWin32EncodingConverter(encoding);
-}
-
-ZLWin32EncodingConverter::ZLWin32EncodingConverter(const std::string &encoding) {
-	myZLWin32erter = iconv_open("utf-8", encoding.c_str());
-}
-
-ZLWin32EncodingConverter::~ZLWin32EncodingConverter() {
-	if (myZLWin32erter != (iconv_t)-1) {
-		iconv_close(myZLWin32erter);
-	}
-}
-
-void ZLWin32EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	if ((srcStart == srcEnd) || (myZLWin32erter == (iconv_t)-1)) {
-		return;
-	}
-
-	size_t inSize;
-	char *in;
-	if (myBuffer.empty()) {
-		inSize = srcEnd - srcStart;
-		in = (char*)srcStart;
-	} else {
-		myBuffer.append(srcStart, srcEnd - srcStart);
-		inSize = myBuffer.length();
-		in = (char*)myBuffer.data();
-	}
-
-	size_t outSize = 3 * inSize;
-	const size_t startOutSize = outSize;
-	size_t oldLength = dst.length();
-	dst.append(outSize, '\0');
-	char *out = (char*)dst.data() + oldLength;
-
-iconvlabel:
-	iconv(myZLWin32erter, (const char**)&in, &inSize, &out, &outSize);
-	if (inSize != 0) {
-		if (myBuffer.empty()) {
-			myBuffer.append(in, inSize);
-		} else {
-			myBuffer.erase(0, myBuffer.length() - inSize);
-		}
-	} else {
-		myBuffer.erase();
-	}
-	if ((myBuffer.length() > 1) && (outSize == startOutSize)) {
-		// looks like myBuffer contains incorrect character at start
-		myBuffer.erase(0, 1);
-		in = (char*)myBuffer.data();
-		inSize = myBuffer.length();
-		goto iconvlabel;
-	}
-	dst.erase(oldLength + startOutSize - outSize);
-}
-
-void ZLWin32EncodingConverter::reset() {
-	myBuffer.erase();
-}
-
-bool ZLWin32EncodingConverter::fillTable(int *map) {
-	if (myZLWin32erter == (iconv_t)-1) {
+	UINT code = atoi(encoding.c_str());
+	if (code == 0) {
 		return false;
 	}
 
-	char inBuffer[1];
-	char outBuffer[3];
-	char *in, *out;
-	size_t inSize, outSize;
+	static const std::string TEST = "TEST";
+	int len = TEST.length();
+	ZLUnicodeUtil::Ucs2String ucs2String;
+	ucs2String.insert(ucs2String.end(), len, 0);
+	return MultiByteToWideChar(code, MB_PRECOMPOSED, TEST.c_str(), len, (WCHAR*)&ucs2String.front(), len) == len;
+}
+
+shared_ptr<ZLEncodingConverter> ZLWin32EncodingConverterProvider::createConverter(const std::string &encoding) {
+	return new ZLWin32EncodingConverter(atoi(encoding.c_str()));
+}
+
+ZLWin32EncodingConverter::ZLWin32EncodingConverter(UINT code) : myCode(code) {
+}
+
+ZLWin32EncodingConverter::~ZLWin32EncodingConverter() {
+}
+
+void ZLWin32EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
+	if ((srcStart == srcEnd) || (myCode == 0)) {
+		return;
+	}
+
+	myBuffer.clear();
+	int len = srcEnd - srcStart;
+	myBuffer.insert(myBuffer.end(), len, 0);
+	int ucs2Len = MultiByteToWideChar(myCode, MB_PRECOMPOSED, srcStart, len, (WCHAR*)&myBuffer.front(), len);
+	if (ucs2Len == 0) {
+		myBuffer.clear();
+		return;
+	}
+	myBuffer.erase(myBuffer.begin() + ucs2Len, myBuffer.end());
+	ZLUnicodeUtil::ucs2ToUtf8(dst, myBuffer);
+	myBuffer.clear();
+}
+
+void ZLWin32EncodingConverter::reset() {
+}
+
+bool ZLWin32EncodingConverter::fillTable(int *map) {
+	if (myCode == 0) {
+		return false;
+	}
+
+	char in;
+	WCHAR out;
 	for (int i = 0; i < 256; ++i) {
-		in = inBuffer;
-		out = outBuffer;
-		inSize = 1;
-		outSize = 3;
-		inBuffer[0] = i;
-		iconv(myZLWin32erter, (const char**)&in, &inSize, &out, &outSize);
-		if (inSize == 0) {
-			ZLUnicodeUtil::Ucs2Char ch;
-			ZLUnicodeUtil::firstChar(ch, outBuffer);
-			map[i] = ch;
+		in = i;
+		if (MultiByteToWideChar(myCode, MB_PRECOMPOSED, &in, 1, &out, 1) == 1) {
+			map[i] = out;
 		} else {
 			map[i] = i;
 		}

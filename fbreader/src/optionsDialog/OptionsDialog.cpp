@@ -197,6 +197,7 @@ OptionsApplyRunnable::OptionsApplyRunnable(FBReader &fbreader) : myFBReader(fbre
 void OptionsApplyRunnable::run() {
 	myFBReader.grabAllKeys(myFBReader.KeyboardControlOption.value());
 	myFBReader.clearTextCaches();
+	((CollectionView&)*myFBReader.myCollectionView).synchronizeModel();
 	myFBReader.refreshWindow();
 }
 

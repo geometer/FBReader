@@ -11,7 +11,7 @@ all:
 	@install -d $(DESTDIR)/share/icons
 	@install -m 0644 $(wildcard ../icons/win32/FBReader/*.ico) $(DESTDIR)/share/icons
 	@install -m 0644 $(wildcard ../icons/win32/FBReader/*.png) $(DESTDIR)/share/icons
-	@install -m 0644 ../data/default/keymap.desktop.xml $(SHARE_FBREADER)/default/keymap.xml
+	@install -m 0644 ../data/default/keymap.win32.xml $(SHARE_FBREADER)/default/keymap.xml
 	@install -m 0644 ../data/default/styles.win32.xml $(SHARE_FBREADER)/default/styles.xml
 	@sed "s/@VERSION@/$(VERSION)/" FBReader.nsi.in > FBReader.nsi
 	@makensis FBReader.nsi

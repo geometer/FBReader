@@ -115,11 +115,6 @@ inline void ZLPaintContext::moveX(int deltaX) { myX += deltaX; }
 inline void ZLPaintContext::moveYTo(int y) { myY = y; }
 inline void ZLPaintContext::moveY(int deltaY) { myY += deltaY; }
 
-inline void ZLPaintContext::setLeftMargin(int margin) { myLeftMargin = margin; }
-inline void ZLPaintContext::setRightMargin(int margin) { myRightMargin = margin; }
-inline void ZLPaintContext::setTopMargin(int margin) { myTopMargin = margin; }
-inline void ZLPaintContext::setBottomMargin(int margin) { myBottomMargin = margin; }
-
 inline int ZLPaintContext::leftMargin() const { return myLeftMargin; }
 inline int ZLPaintContext::rightMargin() const { return myRightMargin; }
 inline int ZLPaintContext::topMargin() const { return myTopMargin; }

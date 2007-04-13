@@ -28,10 +28,10 @@ static const std::string OPTIONS = "Options";
 static const std::string GROUP = "Style";
 
 BaseTextStyle::BaseTextStyle(const std::string &fontFamily, int fontSize) :
-	LeftMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "LeftMargin", 0, 100, 4),
-	RightMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "RightMargin", 0, 100, 4),
-	TopMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "TopMargin", 0, 100, 0),
-	BottomMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "BottomMargin", 0, 100, 4),
+	LeftMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "LeftMargin", 0, 1000, 4),
+	RightMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "RightMargin", 0, 1000, 4),
+	TopMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "TopMargin", 0, 1000, 0),
+	BottomMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "BottomMargin", 0, 1000, 4),
 	BackgroundColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "Background", ZLColor(255, 255, 255)),
 	SelectedTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "SelectedText", ZLColor(0, 0, 127)),
 	RegularTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "Text", ZLColor(0, 0, 0)),

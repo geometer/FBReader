@@ -56,9 +56,9 @@ public:
 	bool isBookExternal(BookDescriptionPtr description) const;
 
 	void rebuild(bool strong);
+	bool synchronize() const;
 	
 private:
-	void synchronize() const;
 
 	void collectDirNames(std::set<std::string> &names) const;
 	void collectBookFileNames(std::set<std::string> &bookFileNames) const;

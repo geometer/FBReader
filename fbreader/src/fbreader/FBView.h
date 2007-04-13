@@ -33,9 +33,15 @@ public:
 
 	bool onFingerTap(int x, int y);
 
+	const std::string &caption() const;
+	void setCaption(const std::string &caption);
+
 protected:
 	FBReader &fbreader();
 	const FBReader &fbreader() const;
+
+private:
+	std::string myCaption;
 };
 
 inline FBReader &FBView::fbreader() { return (FBReader&)application(); }

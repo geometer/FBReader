@@ -36,8 +36,6 @@ public:
 public:
 	BookTextView(FBReader &reader, ZLPaintContext &context);
 	~BookTextView();
-	const std::string &caption() const;
-	void setCaption(const std::string &caption);
 
 	void setModel(shared_ptr<TextModel> model, const std::string &name);
 	void setContentsModel(shared_ptr<TextModel> contentsModel);
@@ -83,12 +81,9 @@ private:
 	unsigned int myCurrentPointInStack;
 	unsigned int myMaxStackSize;
 
-	std::string myCaption;
 	bool myLockUndoStackChanges;
 };
 
-inline const std::string &BookTextView::caption() const { return myCaption; }
-inline void BookTextView::setCaption(const std::string &caption) { myCaption = caption; }
 inline void BookTextView::preparePaintInfo() {
 	TextView::preparePaintInfo();
 	saveState();
