@@ -148,11 +148,13 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM 
 			return true;
 		}
 		case WM_DRAWITEM:
+		{
 			W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
 			if (panel != 0) {
 				return panel->drawItemCallback(wParam, *(DRAWITEMSTRUCT*)lParam);
 			}
 			return false;
+		}
 		default:
 			if (message == W32DialogPanel::LAYOUT_MESSAGE) {
 				W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];

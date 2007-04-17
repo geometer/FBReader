@@ -36,7 +36,7 @@ void TextView::rebuildPaintInfo(bool strong) {
 		}
 		myEndCursor = 0;
 		myPaintState = START_IS_KNOWN;
-	} else {
+	} else if (!myEndCursor.isNull()) {
 		if (strong) {
 			myEndCursor.rebuild();
 			myLineInfoCache.clear();

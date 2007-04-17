@@ -241,6 +241,9 @@ bool CollectionView::onStylusPress(int x, int y) {
 					} else {
 						collectionModel().removeParagraph(imagePosition->ParagraphNumber);
 					}
+					if (collectionModel().paragraphsNumber() == 0) {
+						setStartCursor(0);
+					}
 					rebuildPaintInfo(true);
 					repaintView();
 				}

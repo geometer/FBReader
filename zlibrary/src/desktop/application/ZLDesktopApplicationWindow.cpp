@@ -27,5 +27,6 @@ ZLDesktopApplicationWindow::ZLDesktopApplicationWindow(ZLApplication *applicatio
 	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
 	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
 	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600) {
+	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
+	myWindowStateOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "WindowState", NORMAL) {
 }

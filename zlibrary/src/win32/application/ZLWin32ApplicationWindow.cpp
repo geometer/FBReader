@@ -124,7 +124,12 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			myWin32ViewWidget->doPaint();
 			return 0;
 		case WM_CLOSE:
-			if (!myFullScreen && !IsMaximized(myMainWindow)) {
+			if (myFullScreen) {
+				myWindowStateOption.setValue(FULLSCREEN);
+			} else if (IsMaximized(myMainWindow)) {
+				myWindowStateOption.setValue(MAXIMIZED);
+			} else {
+				myWindowStateOption.setValue(NORMAL);
 				RECT rectangle;
 				GetWindowRect(myMainWindow, &rectangle);
 				myXOption.setValue(rectangle.left);
@@ -208,6 +213,17 @@ void ZLWin32ApplicationWindow::init() {
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
+
+	switch (myWindowStateOption.value()) {
+		case NORMAL:
+			break;
+		case FULLSCREEN:
+			setFullscreen(true);
+			break;
+		case MAXIMIZED:
+			ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
+			break;
+	}
 }
 
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {

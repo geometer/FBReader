@@ -37,6 +37,9 @@ private:
 private:
 	UINT myCode;
 	ZLUnicodeUtil::Ucs2String myBuffer;
+	std::string myRBuffer;
+	bool myUseStoredCharacter;
+	char myStoredCharacter;
 
 friend class ZLWin32EncodingConverterProvider;
 };
@@ -58,7 +61,7 @@ shared_ptr<ZLEncodingConverter> ZLWin32EncodingConverterProvider::createConverte
 	return new ZLWin32EncodingConverter(atoi(encoding.c_str()));
 }
 
-ZLWin32EncodingConverter::ZLWin32EncodingConverter(UINT code) : myCode(code) {
+ZLWin32EncodingConverter::ZLWin32EncodingConverter(UINT code) : myCode(code), myUseStoredCharacter(false) {
 }
 
 ZLWin32EncodingConverter::~ZLWin32EncodingConverter() {
@@ -70,19 +73,48 @@ void ZLWin32EncodingConverter::convert(std::string &dst, const char *srcStart, c
 	}
 
 	myBuffer.clear();
-	int len = srcEnd - srcStart;
-	myBuffer.insert(myBuffer.end(), len, 0);
-	int ucs2Len = MultiByteToWideChar(myCode, MB_PRECOMPOSED, srcStart, len, (WCHAR*)&myBuffer.front(), len);
-	if (ucs2Len == 0) {
-		myBuffer.clear();
-		return;
+
+	bool hasFirstChar = false;
+	if (myUseStoredCharacter) {
+		WCHAR symbol;
+		char buf[2] = { myStoredCharacter, *srcStart };
+		if (MultiByteToWideChar(myCode, MB_PRECOMPOSED, buf, 2, &symbol, 1) == 1) {
+			hasFirstChar = true;
+			myBuffer.push_back(symbol);
+			srcStart++;
+		}
+		myUseStoredCharacter = false;
 	}
-	myBuffer.erase(myBuffer.begin() + ucs2Len, myBuffer.end());
+
+	int len = srcEnd - srcStart;
+	if (len > 0) {
+		myBuffer.insert(myBuffer.end(), len, 0);
+		WCHAR *bufferStart = (WCHAR*)&myBuffer.front();
+		if (hasFirstChar) {
+			bufferStart++;
+		}
+		int ucs2Len = MultiByteToWideChar(myCode, MB_PRECOMPOSED, srcStart, len, bufferStart, len);
+		myBuffer.erase(myBuffer.begin() + ucs2Len + (hasFirstChar ? 1 : 0), myBuffer.end());
+
+		if (ucs2Len != len) {
+			myRBuffer.append(len, '\0');
+			char defaultChar = 'X';
+			BOOL usedDefaultChar = false;
+			int len1 = WideCharToMultiByte(myCode, MB_PRECOMPOSED, bufferStart, ucs2Len, (char*)myRBuffer.data(), len, &defaultChar, &usedDefaultChar);
+			if (len1 == len - 1) {
+				myUseStoredCharacter = true;
+				myStoredCharacter = *(srcEnd - 1);
+			}
+			myRBuffer.erase();
+		}
+	}
+
 	ZLUnicodeUtil::ucs2ToUtf8(dst, myBuffer);
 	myBuffer.clear();
 }
 
 void ZLWin32EncodingConverter::reset() {
+	myUseStoredCharacter = false;
 }
 
 bool ZLWin32EncodingConverter::fillTable(int *map) {

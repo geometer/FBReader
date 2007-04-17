@@ -29,10 +29,17 @@ public:
 	ZLDesktopApplicationWindow(ZLApplication *application);
 
 protected:
+	enum WindowState {
+		NORMAL,
+		MAXIMIZED,
+		FULLSCREEN
+	};
+
 	ZLIntegerRangeOption myXOption;
 	ZLIntegerRangeOption myYOption;
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
+	ZLIntegerOption myWindowStateOption;
 };
 
 #endif /* __ZLDESKTOPAPPLICATIONWINDOW_H__ */

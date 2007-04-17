@@ -56,7 +56,6 @@ static const std::string OPTIONS = "Options";
 
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
-	myFullScreen(false),
 	myHyperlinkCursor(0),
 	myHyperlinkCursorIsUsed(false) {
 
@@ -82,18 +81,40 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "scroll_event", G_CALLBACK(handleScrollEvent), this);
 }
 
-ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
-	if (!myFullScreen) {
-		int x, y, width, height;
-		gtk_window_get_position(myMainWindow, &x, &y);
-		gtk_window_get_size(myMainWindow, &width, &height);
-		myXOption.setValue(x);
-		myYOption.setValue(y);
-		myWidthOption.setValue(width);
-		myHeightOption.setValue(height);
+void ZLGtkApplicationWindow::init() {
+	ZLDesktopApplicationWindow::init();
+	switch (myWindowStateOption.value()) {
+		case NORMAL:
+			break;
+		case FULLSCREEN:
+			setFullscreen(true);
+			break;
+		case MAXIMIZED:
+			gtk_window_maximize(myMainWindow);
+			break;
 	}
-	myButtonToWidget.clear();
-	myWidgetToButton.clear();
+}
+
+ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
+	switch (gdk_window_get_state(GTK_WIDGET(myMainWindow)->window)) {
+		case GDK_WINDOW_STATE_MAXIMIZED:
+			myWindowStateOption.setValue(MAXIMIZED);
+			break;
+		case GDK_WINDOW_STATE_FULLSCREEN:
+			myWindowStateOption.setValue(FULLSCREEN);
+			break;
+		default:
+		{
+			myWindowStateOption.setValue(NORMAL);
+			int x, y, width, height;
+			gtk_window_get_position(myMainWindow, &x, &y);
+			gtk_window_get_size(myMainWindow, &width, &height);
+			myXOption.setValue(x);
+			myYOption.setValue(y);
+			myWidthOption.setValue(width);
+			myHeightOption.setValue(height);
+		}
+	}
 }
 
 void ZLGtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
@@ -126,12 +147,11 @@ void ZLGtkApplicationWindow::onGtkButtonPress(GtkWidget *gtkButton) {
 }
 
 void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
-	if (fullscreen == myFullScreen) {
+	if (fullscreen == isFullscreen()) {
 		return;
 	}
-	myFullScreen = fullscreen;
 
-	if (myFullScreen) {
+	if (fullscreen) {
 		gtk_window_fullscreen(myMainWindow);
 		gtk_widget_hide(GTK_WIDGET(myToolbar));
 	} else {
@@ -143,7 +163,9 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 }
 
 bool ZLGtkApplicationWindow::isFullscreen() const {
-	return myFullScreen;
+	return
+		gdk_window_get_state(GTK_WIDGET(myMainWindow)->window) ==
+		GDK_WINDOW_STATE_FULLSCREEN;
 }
 
 static const int VISIBLE_SEPARATOR = 1 << 16;

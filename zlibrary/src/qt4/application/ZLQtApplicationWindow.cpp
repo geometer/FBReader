@@ -80,8 +80,27 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	show();
 }
 
+void ZLQtApplicationWindow::init() {
+	ZLDesktopApplicationWindow::init();
+	switch (myWindowStateOption.value()) {
+		case NORMAL:
+			break;
+		case FULLSCREEN:
+			setFullscreen(true);
+			break;
+		case MAXIMIZED:
+			showMaximized();
+			break;
+	}
+}
+
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
-	if (!isFullscreen() && !isMaximized()) {
+	if (isFullscreen()) {
+		myWindowStateOption.setValue(FULLSCREEN);
+	} else if (isMaximized()) {
+		myWindowStateOption.setValue(MAXIMIZED);
+	} else {
+		myWindowStateOption.setValue(NORMAL);
 		QPoint position = pos();
 		if (position.x() != -1) {
 			myXOption.setValue(position.x());

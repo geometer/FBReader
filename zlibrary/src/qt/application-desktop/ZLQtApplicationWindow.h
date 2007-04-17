@@ -39,6 +39,7 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void init();
 	void refresh();
 	void close();
 

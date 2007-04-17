@@ -4,7 +4,7 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-LIBS = -lm -L../zlibrary -lzlibrary-$(UI_TYPE) $(UILIBS) $(XML_LIB) $(CONVERTER_LIB) $(ARCHIVER_LIB)
+LIBS = -lm -L../zlibrary -lzlibrary-$(UI_TYPE) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
 
 TARGET = GeometricCalculator
 

@@ -38,6 +38,7 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void init();
 	void refresh();
 	void close();
 
@@ -73,8 +74,6 @@ private:
 	std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
 	std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
 	std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorMap;
-
-	bool myFullScreen;
 
 	GdkCursor *myHyperlinkCursor;
 	bool myHyperlinkCursorIsUsed;

@@ -650,6 +650,8 @@ void W32ComboBox::setSelection(const std::string &value) {
 void W32ComboBox::setSelection(int index) {
 	if ((index >= 0) && (index < (short)myList.size())) {
 		myIndex = index;
+		myBuffer.clear();
+		::createNTWCHARString(myBuffer, myList[index]);
 		if (myWindow != 0) {
 			SendMessage(myWindow, CB_SETCURSEL, myIndex, 0);
 		}
