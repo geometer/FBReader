@@ -89,7 +89,7 @@ void TextView::paint() {
 		drawTextLine(**it, true);
 	}
 
-	if (mySelectionModel.isActive()) {
+	if (!mySelectionModel.isEmpty()) {
 		context().setFillColor(TextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
 		std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> range =
 			mySelectionModel.range();
@@ -500,6 +500,11 @@ bool TextView::onStylusPress(int x, int y) {
 bool TextView::onStylusMovePressed(int x, int y) {
 	mySelectionModel.extendTo(x, y);
 	repaintView();
+	return true;
+}
+
+bool TextView::onStylusRelease(int x, int y) {
+	mySelectionModel.deactivate();
 	return true;
 }
 

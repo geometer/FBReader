@@ -34,8 +34,9 @@ public:
 	void activate(int x, int y);
 	void extendTo(int x, int y);
 	void deactivate();
+	void clear();
 
-	bool isActive() const { return myIsActive; }
+	bool isEmpty() const { return myIsEmpty; }
 	std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> range() const;
 
 private:
@@ -58,6 +59,7 @@ private:
 private:
 	const TextElementMap &myElementMap;
 	bool myIsActive;
+	bool myIsEmpty;
 
 	Bound myFirstBound;
 	Bound mySecondBound;

@@ -21,7 +21,7 @@
 
 #include "SelectionModel.h"
 
-SelectionModel::SelectionModel(TextElementMap &elementMap) : myElementMap(elementMap), myIsActive(false) {
+SelectionModel::SelectionModel(TextElementMap &elementMap) : myElementMap(elementMap), myIsActive(false), myIsEmpty(true) {
 }
 
 void SelectionModel::setBound(Bound &bound, int x, int y) {
@@ -49,6 +49,7 @@ void SelectionModel::activate(int x, int y) {
 	}
 
 	myIsActive = true;
+	myIsEmpty = false;
 	setBound(myFirstBound, x, y);
 	mySecondBound = myFirstBound;
 }
@@ -63,6 +64,10 @@ void SelectionModel::extendTo(int x, int y) {
 
 void SelectionModel::deactivate() {
 	myIsActive = false;
+}
+
+void SelectionModel::clear() {
+	myIsEmpty = true;
 }
 
 std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> SelectionModel::range() const {

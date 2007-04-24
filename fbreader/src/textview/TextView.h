@@ -184,6 +184,7 @@ public:
 
 	bool onStylusPress(int x, int y);
 	bool onStylusMovePressed(int x, int y);
+	bool onStylusRelease(int x, int y);
 
 	void selectParagraph(int paragraphNumber);
 	
