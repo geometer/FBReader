@@ -109,6 +109,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 
 	int newWidth = info.Width;
 	int newHeight = info.Height;
+	int newDescent = info.Descent;
 	int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
 	bool wordOccured = false;
 	bool isVisible = false;
@@ -122,6 +123,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 		const TextElement &element = paragraphCursor[current.wordNumber()];
 		newWidth += myStyle.elementWidth(element, current.charNumber());
 		newHeight = std::max(newHeight, myStyle.elementHeight(element));
+		newDescent = std::max(newDescent, myStyle.elementDescent(element));
 		switch (elementKind) {
 			case TextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ControlElement&)element);
@@ -166,6 +168,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 			info.IsVisible = isVisible;
 			info.Width = newWidth;
 			info.Height = std::max(info.Height, newHeight);
+			info.Descent = std::max(info.Descent, newDescent);
 			info.End = current;
 			storedStyle = myStyle.style();
 			info.SpaceCounter = internalSpaceCounter;
@@ -199,6 +202,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 					info.IsVisible = true;
 					info.Width = newWidth + subwordWidth;
 					info.Height = std::max(info.Height, newHeight);
+					info.Descent = std::max(info.Descent, newDescent);
 					info.End = current;
 					storedStyle = myStyle.style();
 					info.SpaceCounter = internalSpaceCounter;

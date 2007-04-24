@@ -56,7 +56,7 @@ private:
 
 	void preparePaintInfo();
 
-	bool getHyperlinkId(const TextElementPosition &position, std::string &id, bool &isExternal) const;
+	bool getHyperlinkId(const TextElementArea &area, std::string &id, bool &isExternal) const;
 
 	shared_ptr<PositionIndicator> createPositionIndicator();
 

@@ -69,12 +69,12 @@ bool RecentBooksView::onStylusPress(int x, int y) {
 
 	const Books &books = myLastBooks.books();
 
-	const ParagraphPosition *position = paragraphByCoordinate(y);
-	if ((position == 0) || (position->ParagraphNumber >= (int)books.size())) {
+	int index = paragraphIndexByCoordinate(y);
+	if ((index == -1) || (index >= (int)books.size())) {
 		return false;
 	}
 
-	fbreader().openBook(books[position->ParagraphNumber]);
+	fbreader().openBook(books[index]);
 	fbreader().showBookTextView();
 	return true;
 }

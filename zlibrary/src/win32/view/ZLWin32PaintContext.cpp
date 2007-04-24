@@ -174,6 +174,10 @@ int ZLWin32PaintContext::stringHeight() const {
 	return myTextMetric.tmHeight;
 }
 
+int ZLWin32PaintContext::descent() const {
+	return myTextMetric.tmDescent;
+}
+
 void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 	if (myDisplayContext == 0) {
 		return;

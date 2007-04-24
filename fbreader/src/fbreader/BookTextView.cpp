@@ -199,24 +199,23 @@ void BookTextView::redoPageMove() {
 	}
 }
 
-bool BookTextView::getHyperlinkId(const TextElementPosition &position, std::string &id, bool &isExternal) const {
-	if ((position.Kind != TextElement::WORD_ELEMENT) &&
-			(position.Kind != TextElement::IMAGE_ELEMENT)) {
+bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, bool &isExternal) const {
+	if ((area.Kind != TextElement::WORD_ELEMENT) &&
+			(area.Kind != TextElement::IMAGE_ELEMENT)) {
 		return false;
 	}
 	WordCursor cursor = startCursor();
-	cursor.moveToParagraph(position.ParagraphNumber);
+	cursor.moveToParagraph(area.ParagraphNumber);
 	cursor.moveToParagraphStart();
-	bool isHyperlink = false;
 	TextKind hyperlinkKind = REGULAR;
-	for (int i = 0; i < position.TextElementNumber; ++i) {
+	for (int i = 0; i < area.TextElementNumber; ++i) {
 		const TextElement &element = cursor.element();
 		if (element.kind() == TextElement::CONTROL_ELEMENT) {
 			const ControlEntry &control = ((const ControlElement&)element).entry();
 			if (control.isHyperlink()) {
 				hyperlinkKind = control.kind();
 				id = ((const HyperlinkControlEntry&)control).label();
-			} else if (isHyperlink && !control.isStart() && (control.kind() == hyperlinkKind)) {
+			} else if (!control.isStart() && (control.kind() == hyperlinkKind)) {
 				hyperlinkKind = REGULAR;
 			}
 		}
@@ -232,21 +231,21 @@ bool BookTextView::onStylusPress(int x, int y) {
 		return true;
 	}
 
-	const TextElementPosition *position = elementByCoordinates(x, y);
-	if (position == 0) {
+	const TextElementArea *area = elementByCoordinates(x, y);
+	if (area == 0) {
 		return false;
 	}
 	std::string id;
 	bool isExternal;
-	if (getHyperlinkId(*position, id, isExternal)) {
+	if (getHyperlinkId(*area, id, isExternal)) {
 		fbreader().tryShowFootnoteView(id, isExternal);
 		return true;
 	}
 	
-	if (position->Kind == TextElement::WORD_ELEMENT) {
+	if (area->Kind == TextElement::WORD_ELEMENT) {
 		WordCursor cursor = startCursor();
-		cursor.moveToParagraph(position->ParagraphNumber);
-		cursor.moveTo(position->TextElementNumber, 0);
+		cursor.moveToParagraph(area->ParagraphNumber);
+		cursor.moveTo(area->TextElementNumber, 0);
 		shared_ptr<ProgramCollection> dictionaryCollection = fbreader().dictionaryCollection();
 		if (!dictionaryCollection.isNull()) {
 			shared_ptr<Program> dictionary = dictionaryCollection->currentProgram();
@@ -278,10 +277,10 @@ bool BookTextView::onStylusPress(int x, int y) {
 }
 
 bool BookTextView::onStylusMove(int x, int y) {
-	const TextElementPosition *position = elementByCoordinates(x, y);
+	const TextElementArea *area = elementByCoordinates(x, y);
 	std::string id;
 	bool isExternal;
-	fbreader().setHyperlinkCursor((position != 0) && getHyperlinkId(*position, id, isExternal));
+	fbreader().setHyperlinkCursor((area != 0) && getHyperlinkId(*area, id, isExternal));
 	return true;
 }
 

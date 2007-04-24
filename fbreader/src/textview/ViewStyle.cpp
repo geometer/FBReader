@@ -124,6 +124,15 @@ int TextView::ViewStyle::elementHeight(const TextElement &element) const {
 	return 0;
 }
 
+int TextView::ViewStyle::elementDescent(const TextElement &element) const {
+	switch (element.kind()) {
+		case TextElement::WORD_ELEMENT:
+			return context().descent();
+		default:
+			return 0;
+	}
+}
+
 int TextView::ViewStyle::textAreaHeight() const {
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
 	return indicatorStyle.ShowOption.value() ?

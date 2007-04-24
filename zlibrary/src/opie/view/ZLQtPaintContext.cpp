@@ -33,6 +33,7 @@ ZLQtPaintContext::ZLQtPaintContext() {
 	myPainter = new QPainter();
 	myPixmap = NULL;
 	mySpaceWidth = -1;
+	myDescent = 0;
 	myFontIsStored = false;
 }
 
@@ -125,6 +126,7 @@ void ZLQtPaintContext::setFont(const std::string &family, int size, bool bold, b
 		if (fontChanged) {
 			myPainter->setFont(font);
 			mySpaceWidth = -1;
+			myDescent = myPainter->fontMetrics().descent();
 		}
 	}
 }
@@ -153,6 +155,10 @@ int ZLQtPaintContext::spaceWidth() const {
 		mySpaceWidth = myPainter->fontMetrics().width(" ");
 	}
 	return mySpaceWidth;
+}
+
+int ZLQtPaintContext::descent() const {
+	return myDescent;
 }
 
 int ZLQtPaintContext::stringHeight() const {

@@ -49,7 +49,8 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	if (acceptAction()) {
-		((ZLGtkApplicationWindow*)data)->application().refreshWindow();
+		((ZLGtkViewWidget*)data)->doPaint();
+		//((ZLGtkApplicationWindow*)data)->application().refreshWindow();
 	}
 }
 
@@ -238,7 +239,7 @@ void ZLGtkApplicationWindow::refresh() {
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	ZLGtkViewWidget *viewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myWindow), viewWidget->area());
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), viewWidget);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), viewWidget);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), viewWidget);

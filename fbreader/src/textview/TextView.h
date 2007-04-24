@@ -29,10 +29,11 @@
 #include <ZLOptions.h>
 #include <ZLView.h>
 
-#include "TextElement.h"
 #include "Word.h"
 #include "TextStyle.h"
 #include "ParagraphCursor.h"
+#include "SelectionModel.h"
+#include "TextArea.h"
 
 class TextModel;
 class Paragraph;
@@ -102,6 +103,7 @@ private:
 		const TextStylePtr style() const;
 		int elementWidth(const TextElement &element, unsigned int charNumber) const;
 		int elementHeight(const TextElement &element) const;
+		int elementDescent(const TextElement &element) const;
 		int textAreaHeight() const;
 
 		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
@@ -131,6 +133,7 @@ private:
 		int LeftIndent;
 		int Width;
 		int Height;
+		int Descent;
 		int VSpaceAfter;
 		int SpaceCounter;
 		TextStylePtr StartStyle;
@@ -148,57 +151,6 @@ private:
 		LineInfoPtr(LineInfo *ptr);
 
 		bool operator < (const LineInfoPtr &info) const;
-	};
-
-protected:
-	struct ParagraphPosition {
-		int ParagraphNumber;
-		int YStart, YEnd;
-		ParagraphPosition(int paragraphNumber, int yStart, int yEnd);
-
-		struct RangeChecker {
-			RangeChecker(int y) : myY(y) {}
-			bool operator()(const ParagraphPosition &position) const {
-				return (myY >= position.YStart) && (myY <= position.YEnd);
-			}
-
-			int myY;
-		};
-	};
-
-	struct TextElementPosition {
-		int ParagraphNumber, TextElementNumber;
-		TextElement::Kind Kind;
-		int XStart, XEnd, YStart, YEnd;
-		TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
-
-		struct RangeChecker {
-			RangeChecker(int x, int y) : myX(x), myY(y) {}
-			bool operator()(const TextElementPosition &position) const {
-				return
-					(myX >= position.XStart) && (myX <= position.XEnd) &&
-					(myY >= position.YStart) && (myY <= position.YEnd);
-			}
-
-			int myX, myY;
-		};
-	};
-
-	struct TreeNodePosition {
-		int ParagraphNumber;
-		int XStart, XEnd, YStart, YEnd;
-		TreeNodePosition(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd);
-
-		struct RangeChecker {
-			RangeChecker(int x, int y) : myX(x), myY(y) {}
-			bool operator()(const TreeNodePosition &position) const {
-				return
-					(myX >= position.XStart) && (myX <= position.XEnd) &&
-					(myY >= position.YStart) && (myY <= position.YEnd);
-			}
-
-			int myX, myY;
-		};
 	};
 
 protected:
@@ -231,6 +183,7 @@ public:
 	void findPrevious();
 
 	bool onStylusPress(int x, int y);
+	bool onStylusMovePressed(int x, int y);
 
 	void selectParagraph(int paragraphNumber);
 	
@@ -239,8 +192,8 @@ protected:
 
 	const std::string &fileName() const;
 
-	const ParagraphPosition *paragraphByCoordinate(int y) const;
-	const TextElementPosition *elementByCoordinates(int x, int y) const;
+	int paragraphIndexByCoordinate(int y) const;
+	const TextElementArea *elementByCoordinates(int x, int y) const;
 
 	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();
@@ -258,7 +211,7 @@ private:
 	void clear();
 
 	LineInfoPtr processTextLine(const WordCursor &start, const WordCursor &end);
-	void drawTextLine(const LineInfo &info);
+	void drawTextLine(const LineInfo &info, bool calculateNotDraw);
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift);
 	void drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter);
@@ -305,34 +258,30 @@ private:
 
 	int myOldWidth, myOldHeight;
 
-	std::vector<ParagraphPosition> myParagraphMap;
-	std::vector<TextElementPosition> myTextElementMap;
-	std::vector<TreeNodePosition> myTreeNodeMap;
+	TextElementMap myTextElementMap;
+	TreeNodeMap myTreeNodeMap;
 
 	std::vector<size_t> myTextSize;
 	std::vector<size_t> myTextBreaks;
 
 	ViewStyle myStyle;
+	SelectionModel mySelectionModel;
 
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
 	bool myTreeStateIsFrozen;
+
+friend class SelectionModel;
 };
 
 inline TextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
-inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
+inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
 
 inline TextView::LineInfoPtr::LineInfoPtr(LineInfo *ptr) : shared_ptr<LineInfo>(ptr) {}
 inline bool TextView::LineInfoPtr::operator < (const LineInfoPtr &info) const { return (*this)->Start < info->Start; }
-
-inline TextView::ParagraphPosition::ParagraphPosition(int paragraphNumber, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), YStart(yStart), YEnd(yEnd) {}
-
-inline TextView::TextElementPosition::TextElementPosition(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), Kind(kind), XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
-
-inline TextView::TreeNodePosition::TreeNodePosition(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd) : ParagraphNumber(paragraphNumber), XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 
 inline bool TextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const WordCursor &TextView::startCursor() const { return myStartCursor; }
@@ -340,7 +289,7 @@ inline const WordCursor &TextView::endCursor() const { return myEndCursor; }
 inline const std::string &TextView::fileName() const { return myFileName; }
 inline const shared_ptr<TextModel> TextView::model() const { return myModel; }
 inline int TextView::infoSize(const LineInfo &info, SizeUnit unit) {
-	return (unit == PIXEL_UNIT) ? (info.Height + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
+	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
 }
 
 #endif /* __TEXTVIEW_H__ */

@@ -68,7 +68,7 @@ void TextView::drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAft
 			} else {
 				context().drawLine(x + 2 * qstep, y0 - space, x + 2 * qstep, y1 + space);
 			}
-			myTreeNodeMap.push_back(TreeNodePosition(info.ParagraphNumber, x, x + 4 * qstep, y - height + 1, y));
+			myTreeNodeMap.push_back(TreeNodeArea(info.ParagraphNumber, x, x + 4 * qstep, y - height + 1, y));
 		}
 	} else if (!info.IsLeaf && info.IsOpen) {
 		context().drawLine(x + 2 * qstep, y + vSpaceAfter, x + 2 * qstep, y - height + 1);

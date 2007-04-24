@@ -144,7 +144,7 @@ WordCursor TextView::findPercentFromStart(unsigned int percent) const {
 		if (info.IsVisible) {
 			visibleLineOccured = true;
 		}
-		height -= info.Height + info.VSpaceAfter;
+		height -= info.Height + info.Descent + info.VSpaceAfter;
 		if (visibleLineOccured && (height <= 0)) {
 			break;
 		}
@@ -312,7 +312,7 @@ WordCursor TextView::buildInfos(const WordCursor &start) {
 
 		while (!infoPtr->End.isEndOfParagraph()) {
 			infoPtr = processTextLine(infoPtr->End, paragraphEnd);
-			textAreaHeight -= infoPtr->Height;
+			textAreaHeight -= infoPtr->Height + infoPtr->Descent;
 			if ((textAreaHeight < 0) && (counter > 0)) {
 				break;
 			}

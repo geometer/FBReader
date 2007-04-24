@@ -51,6 +51,7 @@ public:
 	int stringWidth(const char *str, int len) const;
 	int spaceWidth() const;
 	int stringHeight() const;
+	int descent() const;
 	void drawString(int x, int y, const char *str, int len);
 
 	void drawImage(int x, int y, const ZLImageData &image);
@@ -63,6 +64,7 @@ private:
 	QPainter *myPainter;
 	QPixmap *myPixmap;
 	mutable int mySpaceWidth;
+	int myDescent;
 
 	bool myFontIsStored;
 	std::string myStoredFamily;

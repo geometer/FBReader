@@ -76,6 +76,7 @@ public:
 	virtual int stringWidth(const char *str, int len) const = 0;
 	virtual int spaceWidth() const = 0;
 	virtual int stringHeight() const = 0;
+	virtual int descent() const = 0;
 	virtual void drawString(int x, int y, const char *str, int len) = 0;
 
 	int imageWidth(const ZLImageData &image) const;

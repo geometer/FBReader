@@ -58,6 +58,7 @@ ZLGtkPaintContext::ZLGtkPaintContext() {
 
 	myStringHeight = -1;
 	mySpaceWidth = -1;
+	myDescent = 0;
 }
 
 ZLGtkPaintContext::~ZLGtkPaintContext() {
@@ -111,6 +112,8 @@ void ZLGtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 		if (myFontDescription != 0) {
 			myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
 			myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
+			PangoFontMetrics *metrics = pango_font_get_metrics(myAnalysis.font, myAnalysis.language);
+			myDescent = pango_font_metrics_get_descent(metrics) / PANGO_SCALE;
 		}
 	}
 }
@@ -179,6 +182,8 @@ void ZLGtkPaintContext::setFont(const std::string &family, int size, bool bold, 
 		if (myContext != 0) {
 			myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
 			myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
+			PangoFontMetrics *metrics = pango_font_get_metrics(myAnalysis.font, myAnalysis.language);
+			myDescent = pango_font_metrics_get_descent(metrics) / PANGO_SCALE;
 		}
 		myStringHeight = -1;
 		mySpaceWidth = -1;
@@ -225,6 +230,10 @@ int ZLGtkPaintContext::stringHeight() const {
 		myStringHeight = pango_font_description_get_size(myFontDescription) / PANGO_SCALE + 2;
 	}
 	return myStringHeight;
+}
+
+int ZLGtkPaintContext::descent() const {
+	return myDescent;
 }
 
 void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len) {

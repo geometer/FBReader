@@ -47,6 +47,7 @@ public:
 	int stringWidth(const char *str, int len) const;
 	int spaceWidth() const;
 	int stringHeight() const;
+	int descent() const;
 	void drawString(int x, int y, const char *str, int len);
 
 	void drawImage(int x, int y, const ZLImageData &image);
@@ -81,13 +82,6 @@ private:
 	mutable int mySpaceWidth;
 
 	TEXTMETRIC myTextMetric;
-	/*
-	bool myFontIsStored;
-	std::string myStoredFamily;
-	int myStoredSize;
-	bool myStoredBold;
-	bool myStoredItalic;	
-	*/
 };
 
 inline bool operator == (const ZLColor &color, const COLORREF &colorref) {

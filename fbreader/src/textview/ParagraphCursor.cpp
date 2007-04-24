@@ -293,9 +293,9 @@ void WordCursor::moveTo(int wordNumber, int charNumber) {
 			myCharNumber = 0;
 		} else {
 			wordNumber = std::max(0, wordNumber);
-			int size = myParagraphCursor->paragraphLength();
-			if (wordNumber > size - 1) {
-				myWordNumber = std::max(0, size - 1);
+			size_t size = myParagraphCursor->paragraphLength();
+			if ((size_t)wordNumber > size) {
+				myWordNumber = size;
 				myCharNumber = 0;
 			} else {
 				myWordNumber = wordNumber;

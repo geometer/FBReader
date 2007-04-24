@@ -11,7 +11,7 @@
 <p>To read a file in another format, you need to add it to the library. Start <code>add to library dialog</code> (<image l:href="#addbook.png"/>), select a file and edit the file information. Next time you can open this file using <code>book selection dialog</code> (<image l:href="#books.png" voffset="-6"/>).</p>
 <empty-line/>
 <subtitle><p>Related sites</p></subtitle>
-<p>More information about this program can be found at <a l:href="http://only.mawhrin.net/fbreader">FBReader homepage</a>.</p>
+<p>More information about this program can be found at <a l:href="http://www.fbreader.org">FBReader homepage</a>.</p>
 <p>If you want to receive messages about new releases, please subscribe to <a l:href="http://freshmeat.net/projects/fbreader">FBReader project at freshmeat</a>.</p>
 <p>If you have any questions or suggestions, please use <a l:href="http://groups.google.com/group/fbreader">FBReader group at googlegroups</a>.</p>
 <empty-line/>

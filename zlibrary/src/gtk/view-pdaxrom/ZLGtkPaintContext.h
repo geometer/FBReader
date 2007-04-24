@@ -51,6 +51,7 @@ public:
 	int stringWidth(const char *str, int len) const;
 	int spaceWidth() const;
 	int stringHeight() const;
+	int descent() const;
 	void drawString(int x, int y, const char *str, int len);
 
 	void drawImage(int x, int y, const ZLImageData &image);
@@ -77,6 +78,7 @@ private:
 
 	mutable int myStringHeight;
 	mutable int mySpaceWidth;
+	int myDescent;
 };
 
 #endif /* __ZLGTKPAINTCONTEXT_H__ */

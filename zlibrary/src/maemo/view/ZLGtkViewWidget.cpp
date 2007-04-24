@@ -116,7 +116,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	myRotatedPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
-	gtk_widget_set_extension_events(myArea, GDK_EXTENSION_EVENTS_ALL);
+	//gtk_widget_set_extension_events(myArea, GDK_EXTENSION_EVENTS_CURSOR);
 }
 
 ZLGtkViewWidget::~ZLGtkViewWidget() {
@@ -144,6 +144,10 @@ void ZLGtkViewWidget::trackStylus(bool track) {
 }
 
 void ZLGtkViewWidget::repaint()	{
+	gtk_widget_queue_draw(myArea);
+}
+
+void ZLGtkViewWidget::doPaint()	{
 	ZLGtkPaintContext &gtkContext = (ZLGtkPaintContext&)view()->context();
 	Angle angle = rotation();
 	bool isRotated = (angle == DEGREES90) || (angle == DEGREES270);

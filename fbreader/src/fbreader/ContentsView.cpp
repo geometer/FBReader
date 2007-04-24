@@ -37,17 +37,13 @@ bool ContentsView::onStylusPress(int x, int y) {
 		return true;
 	}
 
-	const ParagraphPosition *position = paragraphByCoordinate(y);
-	if (position == 0) {
-		return false;
-	}
-	int paragraphNumber = position->ParagraphNumber;
-	if ((paragraphNumber < 0) || ((int)model()->paragraphsNumber() < paragraphNumber)) {
+	int index = paragraphIndexByCoordinate(y);
+	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
 		return false;
 	}
 
 	const ContentsModel &contentsModel = (const ContentsModel&)*model();
-	const TreeParagraph *paragraph = (const TreeParagraph*)contentsModel[paragraphNumber];
+	const TreeParagraph *paragraph = (const TreeParagraph*)contentsModel[index];
 	
 	int reference = contentsModel.reference(paragraph);
 

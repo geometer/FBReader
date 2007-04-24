@@ -27,11 +27,12 @@
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
 #include "Word.h"
+#include "SelectionModel.h"
 
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), myTreeStateIsFrozen(false) {
+TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(myTextElementMap), myTreeStateIsFrozen(false) {
 }
 
 TextView::~TextView() {
@@ -44,7 +45,6 @@ void TextView::clear() {
 	myLineInfos.clear();
 	myPaintState = NOTHING_TO_PAINT;
 
-	myParagraphMap.clear();
 	myTextElementMap.clear();
 	myTreeNodeMap.clear();
 	myTextSize.clear();
@@ -77,7 +77,6 @@ void TextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
 void TextView::paint() {
 	preparePaintInfo();
 
-	myParagraphMap.clear();
 	myTextElementMap.clear();
 	myTreeNodeMap.clear();
 	context().clear(TextStyleCollection::instance().baseStyle().BackgroundColorOption.value());
@@ -87,7 +86,21 @@ void TextView::paint() {
 	}
 	context().moveYTo(0);
 	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
-		drawTextLine(**it);
+		drawTextLine(**it, true);
+	}
+
+	if (mySelectionModel.isActive()) {
+		context().setFillColor(TextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
+		std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> range =
+			mySelectionModel.range();
+		for (TextElementMap::const_iterator it = range.first; it != range.second; ++it) {
+			context().fillRectangle(it->XStart, it->YStart, it->XEnd, it->YEnd);
+		}
+	}
+
+	context().moveYTo(0);
+	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+		drawTextLine(**it, false);
 	}
 
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
@@ -149,21 +162,33 @@ void TextView::scrollToEndOfText() {
 	}
 
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
-	const int index = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
-	gotoParagraph(index - 1, true);
+	if (i == myTextBreaks.end()) {
+		gotoParagraph(myModel->paragraphsNumber(), true);
+		myEndCursor.nextParagraph();
+	} else {
+		gotoParagraph(*i - 1, true);
+	}
 	myEndCursor.moveToParagraphEnd();
 	repaintView();
 }
 
-const TextView::ParagraphPosition *TextView::paragraphByCoordinate(int y) const {
-	std::vector<ParagraphPosition>::const_iterator it =
-		std::find_if(myParagraphMap.begin(), myParagraphMap.end(), ParagraphPosition::RangeChecker(y));
-	return (it != myParagraphMap.end()) ? &*it : 0;
+int TextView::paragraphIndexByCoordinate(int y) const {
+	int indexBefore = -1;
+	for (TextElementMap::const_iterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
+		if (it->YEnd < y) {
+			indexBefore = it->ParagraphNumber;
+		} else if ((it->YStart <= y) || (it->ParagraphNumber == indexBefore)) {
+			return it->ParagraphNumber;
+		} else {
+			return -1;
+		}
+	}
+	return -1;
 }
 
-const TextView::TextElementPosition *TextView::elementByCoordinates(int x, int y) const {
-	std::vector<TextElementPosition>::const_iterator it =
-		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), TextElementPosition::RangeChecker(x, y));
+const TextElementArea *TextView::elementByCoordinates(int x, int y) const {
+	TextElementMap::const_iterator it =
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), TextElementArea::RangeChecker(x, y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
@@ -243,12 +268,8 @@ void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber)
 	}
 }
 
-void TextView::drawTextLine(const LineInfo &info) {
+void TextView::drawTextLine(const LineInfo &info, bool calculateNotDraw) {
 	myStyle.setStyle(info.StartStyle);
-	int y = context().y();
-	myParagraphMap.push_back(
-		ParagraphPosition(info.RealStart.paragraphCursor().index(), y + 1, y + info.Height)
-	);
 	context().moveY(info.Height);
 	int maxY = myStyle.textAreaHeight();
 	if (context().y() > maxY) {
@@ -260,8 +281,8 @@ void TextView::drawTextLine(const LineInfo &info) {
 	bool wordOccured = false;
 
 	context().moveXTo(0);
-	if (!info.NodeInfo.isNull()) {
-		drawTreeLines(*info.NodeInfo, info.Height, info.VSpaceAfter);
+	if (!calculateNotDraw && !info.NodeInfo.isNull()) {
+		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
 	context().moveX(info.LeftIndent);
 
@@ -293,12 +314,15 @@ void TextView::drawTextLine(const LineInfo &info) {
 		switch (kind) {
 			case TextElement::WORD_ELEMENT:
 				wordOccured = true;
-				y -= myStyle.style()->verticalShift();
-				drawWord(x, y, (const Word&)element, pos.charNumber(), -1, false);
+				if (!calculateNotDraw) {
+					drawWord(x, y - myStyle.style()->verticalShift(), (const Word&)element, pos.charNumber(), -1, false);
+				}
 				break;
 			case TextElement::IMAGE_ELEMENT:
 				wordOccured = true;
-				context().drawImage(x, y, ((const ImageElement&)element).image());
+				if (!calculateNotDraw) {
+					context().drawImage(x, y, ((const ImageElement&)element).image());
+				}
 				break;
 			case TextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ControlElement&)element);
@@ -325,13 +349,14 @@ void TextView::drawTextLine(const LineInfo &info) {
 
 		int width = myStyle.elementWidth(element, pos.charNumber());
 		context().moveX(width);
-		if (width > 0) {
+		if (calculateNotDraw && (width > 0)) {
 			int height = myStyle.elementHeight(element);
+			int descent = myStyle.elementDescent(element);
 			if (height > 0) {
 				myTextElementMap.push_back(
-					TextElementPosition(
+					TextElementArea(
 						paragraphNumber, pos.wordNumber(), kind,
-						x, x + width - 1, y - height + 1, y
+						x, x + width - 1, y - height + 1, y + descent
 					)
 				);
 			}
@@ -347,18 +372,22 @@ void TextView::drawTextLine(const LineInfo &info) {
 			const bool addHyphenationSign = ucs2string[len - 1] != '-';
 			const int x = context().x(); 
 			const int y = context().y(); 
-			drawWord(x, y - myStyle.style()->verticalShift(), word, 0, len, addHyphenationSign);
-			const int width = myStyle.wordWidth(word, 0, len, addHyphenationSign);
-			const int height = myStyle.elementHeight(word);
-			myTextElementMap.push_back(
-				TextElementPosition(
-					paragraphNumber, info.End.wordNumber(), TextElement::WORD_ELEMENT,
-					x, x + width - 1, y - height + 1, y
-				)
-			);
+			if (!calculateNotDraw) {
+				drawWord(x, y - myStyle.style()->verticalShift(), word, 0, len, addHyphenationSign);
+			} else {
+				const int width = myStyle.wordWidth(word, 0, len, addHyphenationSign);
+				const int height = myStyle.elementHeight(word);
+				const int descent = myStyle.elementDescent(word);
+				myTextElementMap.push_back(
+					TextElementArea(
+						paragraphNumber, info.End.wordNumber(), TextElement::WORD_ELEMENT,
+						x, x + width - 1, y - height + 1, y + descent
+					)
+				);
+			}
 		}
 	}
-	context().moveY(info.VSpaceAfter);
+	context().moveY(info.Descent + info.VSpaceAfter);
 }
 
 bool TextView::hasMultiSectionModel() const {
@@ -423,44 +452,54 @@ bool TextView::onStylusPress(int x, int y) {
 		myTreeStateIsFrozen = true;
 		bool indicatorAnswer = positionIndicator().onStylusPress(x, y);
 		myTreeStateIsFrozen = false;
-		if (indicatorAnswer || (myModel->kind() != TextModel::TREE_MODEL)) {
-			return indicatorAnswer;
+		if (indicatorAnswer) {
+			return true;
 		}
 	}
 
-	std::vector<TreeNodePosition>::const_iterator it =
-		std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), TreeNodePosition::RangeChecker(x, y));
-	if (it == myTreeNodeMap.end()) {
-		return false;
-	}
+	if (myModel->kind() == TextModel::TREE_MODEL) {
+		TreeNodeMap::const_iterator it =
+			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), TreeNodeArea::RangeChecker(x, y));
+		if (it != myTreeNodeMap.end()) {
+			int paragraphNumber = it->ParagraphNumber;
+			TreeParagraph *paragraph = (TreeParagraph*)(*myModel)[paragraphNumber];
 
-	int paragraphNumber = it->ParagraphNumber;
-	TreeParagraph *paragraph = (TreeParagraph*)(*myModel)[paragraphNumber];
-
-	paragraph->open(!paragraph->isOpen());
-	rebuildPaintInfo(true);
-	preparePaintInfo();
-	if (paragraph->isOpen()) {
-		int nextParagraphNumber = paragraphNumber + paragraph->fullSize();
-		int lastParagraphNumber = endCursor().paragraphCursor().index();
-		if (endCursor().isEndOfParagraph()) {
-			++lastParagraphNumber;
-		}
-		if (lastParagraphNumber < nextParagraphNumber) {
-			gotoParagraph(nextParagraphNumber, true);
+			paragraph->open(!paragraph->isOpen());
+			rebuildPaintInfo(true);
 			preparePaintInfo();
+			if (paragraph->isOpen()) {
+				int nextParagraphNumber = paragraphNumber + paragraph->fullSize();
+				int lastParagraphNumber = endCursor().paragraphCursor().index();
+				if (endCursor().isEndOfParagraph()) {
+					++lastParagraphNumber;
+				}
+				if (lastParagraphNumber < nextParagraphNumber) {
+					gotoParagraph(nextParagraphNumber, true);
+					preparePaintInfo();
+				}
+			}
+			int firstParagraphNumber = startCursor().paragraphCursor().index();
+			if (startCursor().isStartOfParagraph()) {
+				--firstParagraphNumber;
+			}
+			if (firstParagraphNumber >= paragraphNumber) {
+				gotoParagraph(paragraphNumber);
+				preparePaintInfo();
+			}
+			repaintView();
+
+			return true;
 		}
 	}
-	int firstParagraphNumber = startCursor().paragraphCursor().index();
-	if (startCursor().isStartOfParagraph()) {
-		--firstParagraphNumber;
-	}
-	if (firstParagraphNumber >= paragraphNumber) {
-		gotoParagraph(paragraphNumber);
-		preparePaintInfo();
-	}
-	repaintView();
 
+	mySelectionModel.activate(x, y);
+	repaintView();
+	return false;
+}
+
+bool TextView::onStylusMovePressed(int x, int y) {
+	mySelectionModel.extendTo(x, y);
+	repaintView();
 	return true;
 }
 

@@ -1,4 +1,5 @@
 /*
+ * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -18,43 +19,48 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKVIEWWIDGET_H__
-#define __ZLGTKVIEWWIDGET_H__
+#ifndef __SELECTIONMODEL_H__
+#define __SELECTIONMODEL_H__
 
-#include <gtk/gtk.h>
+#include <map>
 
-#include <ZLView.h>
-#include <ZLApplication.h>
+#include "TextArea.h"
 
-class ZLGtkViewWidget : public ZLViewWidget {
+class SelectionModel {
 
 public:
-	ZLGtkViewWidget(ZLApplication *application, Angle initialAngle);
-	~ZLGtkViewWidget();
+	SelectionModel(TextElementMap &elementMap);
 
-	int width() const;
-	int height() const;
+	void activate(int x, int y);
+	void extendTo(int x, int y);
+	void deactivate();
 
-	GtkWidget *area() { return myArea; }
-	void onMousePressed(GdkEventButton *event);
-	void onMouseReleased(GdkEventButton *event);
-	void onMouseMoved(GdkEventMotion *event);
-	void doPaint();
+	bool isActive() const { return myIsActive; }
+	std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> range() const;
 
 private:
-	void trackStylus(bool track);
-	void repaint();
+	struct Bound {
+		int X;
+		int Y;
 
-	void cleanOriginalPixbuf();
-	void cleanRotatedPixbuf();
-	void updateCoordinates(int &x, int &y);
+		int ParagraphNumber;
+		int TextElementNumber;
+		bool InsideElement;
+
+		bool operator < (const Bound &bound) const;
+		bool operator < (const TextElementArea &area) const;
+		bool operator <= (const TextElementArea &area) const;
+	};
 
 private:
-	ZLApplication *myApplication;
-	GtkWidget *myArea;
-	GdkPixbuf *myOriginalPixbuf;
-	GdkPixbuf *myRotatedPixbuf;
-	GdkImage *myImage;
+	void setBound(Bound &bound, int x, int y);
+
+private:
+	const TextElementMap &myElementMap;
+	bool myIsActive;
+
+	Bound myFirstBound;
+	Bound mySecondBound;
 };
 
-#endif /* __ZLGTKVIEWWIDGET_H__ */
+#endif /* __SELECTIONMODEL_H__ */

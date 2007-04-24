@@ -99,6 +99,7 @@ public:
 	ZLIntegerRangeOption BottomMarginOption;
 
 	ZLColorOption BackgroundColorOption;
+	ZLColorOption SelectionBackgroundColorOption;
 	ZLColorOption SelectedTextColorOption;
 	ZLColorOption RegularTextColorOption;
 	ZLColorOption InternalHyperlinkTextColorOption;

@@ -205,11 +205,11 @@ bool CollectionView::onStylusPress(int x, int y) {
 		return true;
 	}
 
-	const TextElementPosition *imagePosition = elementByCoordinates(x, y);
-	if ((imagePosition != 0) && (imagePosition->Kind == TextElement::IMAGE_ELEMENT)) {
+	const TextElementArea *imageArea = elementByCoordinates(x, y);
+	if ((imageArea != 0) && (imageArea->Kind == TextElement::IMAGE_ELEMENT)) {
 		WordCursor cursor = startCursor();
-		cursor.moveToParagraph(imagePosition->ParagraphNumber);
-		cursor.moveTo(imagePosition->TextElementNumber, 0);
+		cursor.moveToParagraph(imageArea->ParagraphNumber);
+		cursor.moveTo(imageArea->TextElementNumber, 0);
 		const TextElement &element = cursor.element();
 		if (element.kind() != TextElement::IMAGE_ELEMENT) {
 			return false;
@@ -217,7 +217,7 @@ bool CollectionView::onStylusPress(int x, int y) {
 		const ImageElement &imageElement = (ImageElement&)element;
 
 		if (imageElement.id() == BOOK_INFO_IMAGE_ID) {
-			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imagePosition->ParagraphNumber);
+			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
 			if (!book.isNull()) {
 				if (BookInfoDialog(myCollection, book->fileName()).dialog().run("")) {
 					myCollection.rebuild(false);
@@ -227,19 +227,19 @@ bool CollectionView::onStylusPress(int x, int y) {
 				}
 			}
 		} else if (imageElement.id() == DELETE_IMAGE_ID) {
-			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imagePosition->ParagraphNumber);
+			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
 			if (!book.isNull()) {
 				const std::string question = "Remove Book\n\"" + book->title() + "\"\nfrom library?";
 				if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
 					collectionModel().removeAllMarks();
 					BookList().removeFileName(book->fileName());
-					TreeParagraph *paragraph = (TreeParagraph*)collectionModel()[imagePosition->ParagraphNumber];
+					TreeParagraph *paragraph = (TreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
 					TreeParagraph *parent = paragraph->parent();
 					if (parent->children().size() == 1) {
-						collectionModel().removeParagraph(imagePosition->ParagraphNumber);
-						collectionModel().removeParagraph(imagePosition->ParagraphNumber - 1);
+						collectionModel().removeParagraph(imageArea->ParagraphNumber);
+						collectionModel().removeParagraph(imageArea->ParagraphNumber - 1);
 					} else {
-						collectionModel().removeParagraph(imagePosition->ParagraphNumber);
+						collectionModel().removeParagraph(imageArea->ParagraphNumber);
 					}
 					if (collectionModel().paragraphsNumber() == 0) {
 						setStartCursor(0);
@@ -252,12 +252,12 @@ bool CollectionView::onStylusPress(int x, int y) {
 		return true;
 	}
 
-	const ParagraphPosition *position = paragraphByCoordinate(y);
-	if (position == 0) {
+	int index = paragraphIndexByCoordinate(y);
+	if (index == -1) {
 		return false;
 	}
 
-	BookDescriptionPtr book = collectionModel().bookByParagraphNumber(position->ParagraphNumber);
+	BookDescriptionPtr book = collectionModel().bookByParagraphNumber(index);
 	if (!book.isNull()) {
 		fbreader().openBook(book);
 		fbreader().showBookTextView();
