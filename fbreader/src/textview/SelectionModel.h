@@ -36,22 +36,25 @@ public:
 	void deactivate();
 	void clear();
 
-	bool isEmpty() const { return myIsEmpty; }
-	std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> range() const;
+	bool isEmpty() const;
+
+public:
+	struct BoundElement {
+		bool Exists;
+		int ParagraphNumber;
+		int TextElementNumber;
+	};
 
 private:
 	struct Bound {
-		int X;
-		int Y;
-
-		int ParagraphNumber;
-		int TextElementNumber;
-		bool InsideElement;
+		BoundElement Before;
+		BoundElement After;
 
 		bool operator < (const Bound &bound) const;
-		bool operator < (const TextElementArea &area) const;
-		bool operator <= (const TextElementArea &area) const;
 	};
+
+public:
+	std::pair<BoundElement,BoundElement> range() const;
 
 private:
 	void setBound(Bound &bound, int x, int y);

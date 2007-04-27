@@ -74,6 +74,37 @@ void TextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
 	}
 }
 
+bool operator <= (const TextElementArea &area, SelectionModel::BoundElement &element) {
+	return
+		(area.ParagraphNumber < element.ParagraphNumber) ||
+		((area.ParagraphNumber == element.ParagraphNumber) &&
+		 (area.TextElementNumber <= element.TextElementNumber));
+}
+
+bool operator < (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+	int pn = cursor.paragraphCursor().index();
+	return
+		(pn < element.ParagraphNumber) ||
+		((pn == element.ParagraphNumber) &&
+		 ((int)cursor.wordNumber() < element.TextElementNumber));
+}
+
+bool operator >= (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+	return !(cursor < element);
+}
+
+bool operator > (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+	int pn = cursor.paragraphCursor().index();
+	return
+		(pn > element.ParagraphNumber) ||
+		((pn == element.ParagraphNumber) &&
+		 ((int)cursor.wordNumber() > element.TextElementNumber));
+}
+
+bool operator <= (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+	return !(cursor > element);
+}
+
 void TextView::paint() {
 	preparePaintInfo();
 
@@ -91,11 +122,54 @@ void TextView::paint() {
 
 	if (!mySelectionModel.isEmpty()) {
 		context().setFillColor(TextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
+		std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> range = mySelectionModel.range();
+
+		int begin = context().width() - 1;
+		int end = 0;
+		for (TextElementMap::const_iterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
+			if (*it <= range.first) {
+				begin = it->XStart;
+			}
+			if (*it <= range.second) {
+				end = it->XEnd;
+			} else {
+				break;
+			}
+		}
+
+		int top = 0;
+		for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+			const LineInfo &info = **it;
+
+			int left = context().width() - 1;
+			if (info.Start > range.first) {
+				left = 0;
+			} else if (info.End >= range.first) {
+				left = begin;
+			}
+
+			int bottom = top + info.Height + info.Descent;
+			int right = 0;
+			if (info.End < range.second) {
+				right = context().width() - 1;
+				bottom += info.VSpaceAfter;
+			} else if (info.Start <= range.second) {
+				right = end;
+			}
+
+			if (left < right) {
+				context().fillRectangle(left, top, right, bottom);
+			}
+			top += info.Height + info.Descent + info.VSpaceAfter;
+		}
+		/*
+		context().setFillColor(TextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
 		std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> range =
 			mySelectionModel.range();
 		for (TextElementMap::const_iterator it = range.first; it != range.second; ++it) {
 			context().fillRectangle(it->XStart, it->YStart, it->XEnd, it->YEnd);
 		}
+		*/
 	}
 
 	context().moveYTo(0);

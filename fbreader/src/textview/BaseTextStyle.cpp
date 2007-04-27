@@ -45,7 +45,7 @@ BaseTextStyle::BaseTextStyle(const std::string &fontFamily, int fontSize) :
 	BoldOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:bold", false),
 	ItalicOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:italic", false),
 	AlignmentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:alignment", ALIGN_JUSTIFY),
-	LineSpaceOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:lineSpacing", 1.1) {
+	LineSpaceOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:lineSpacing", 1.2) {
 }
 
 ZLColor BaseTextStyle::color() const {

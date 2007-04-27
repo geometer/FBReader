@@ -25,22 +25,35 @@ SelectionModel::SelectionModel(TextElementMap &elementMap) : myElementMap(elemen
 }
 
 void SelectionModel::setBound(Bound &bound, int x, int y) {
-	bound.X = x;
-	bound.Y = y;
-
-	const TextElementArea &back = myElementMap.back();
-	bound.ParagraphNumber = back.ParagraphNumber;
-	bound.TextElementNumber = back.TextElementNumber + 1;
-	bound.InsideElement = false;
+	if (myElementMap.empty()) {
+		return;
+	}
 
 	for (TextElementMap::const_iterator it = myElementMap.begin(); it != myElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
-			bound.InsideElement = TextElementArea::RangeChecker(x, y)(*it);
-			bound.ParagraphNumber = it->ParagraphNumber;
-			bound.TextElementNumber = it->TextElementNumber;
-			break;
+			bound.After.ParagraphNumber = it->ParagraphNumber;
+			bound.After.TextElementNumber = it->TextElementNumber;
+			bound.After.Exists = true;
+			if (TextElementArea::RangeChecker(x, y)(*it)) {
+				bound.Before.ParagraphNumber = bound.After.ParagraphNumber;
+				bound.Before.TextElementNumber = bound.After.TextElementNumber;
+				bound.Before.Exists = true;
+			} else if (it == myElementMap.begin()) {
+				bound.Before.Exists = false;
+			} else {
+				bound.Before.ParagraphNumber = (it - 1)->ParagraphNumber;
+				bound.Before.TextElementNumber = (it - 1)->TextElementNumber;
+				bound.Before.Exists = true;
+			}
+			return;
 		}
 	}
+
+	const TextElementArea &back = myElementMap.back();
+	bound.Before.ParagraphNumber = back.ParagraphNumber;
+	bound.Before.TextElementNumber = back.TextElementNumber;
+	bound.Before.Exists = true;
+	bound.After.Exists = false;
 }
 
 void SelectionModel::activate(int x, int y) {
@@ -70,64 +83,41 @@ void SelectionModel::clear() {
 	myIsEmpty = true;
 }
 
-std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> SelectionModel::range() const {
-	std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> answer(myElementMap.end(), myElementMap.end());
-
-	bool changeOrder = mySecondBound < myFirstBound;
-	const Bound &leftBound = changeOrder ? mySecondBound : myFirstBound;
-	const Bound &rightBound = changeOrder ? myFirstBound : mySecondBound;
-
-	TextElementMap::const_iterator it = myElementMap.begin();
-	if (rightBound < *it) {
-		return answer;
-	}
-
-	if (leftBound < *it) {
-		answer.first = it;
-	} else {
-		for (; it != myElementMap.end(); ++it) {
-			if (leftBound <= *it) {
-				answer.first = it;
-				break;
-			}
-		}
-	}
-	for (; it != myElementMap.end(); ++it) {
-		if (rightBound <= *it) {
-			answer.second = rightBound.InsideElement ? (it + 1) : it;
-			break;
-		}
-	}
-
-	return answer;
+std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> SelectionModel::range() const {
+	return
+		(mySecondBound < myFirstBound) ?
+		std::pair<BoundElement,BoundElement>(mySecondBound.After, myFirstBound.Before) :
+		std::pair<BoundElement,BoundElement>(myFirstBound.After, mySecondBound.Before);
 }
 
 bool SelectionModel::Bound::operator < (const Bound &bound) const {
-	if (ParagraphNumber < bound.ParagraphNumber) {
-		return true;
-	}
-	if (ParagraphNumber > bound.ParagraphNumber) {
+	if (!bound.Before.Exists) {
 		return false;
 	}
-	if (TextElementNumber < bound.TextElementNumber) {
+	if (!Before.Exists) {
 		return true;
 	}
-	if (TextElementNumber > bound.TextElementNumber) {
+
+	if (!After.Exists) {
 		return false;
 	}
-	return !InsideElement && bound.InsideElement;
+	if (!bound.After.Exists) {
+		return true;
+	}
+
+	if (Before.ParagraphNumber < bound.Before.ParagraphNumber) {
+		return true;
+	}
+	if (Before.ParagraphNumber > bound.Before.ParagraphNumber) {
+		return false;
+	}
+	return Before.TextElementNumber < bound.Before.TextElementNumber;
 }
 
-bool SelectionModel::Bound::operator <= (const TextElementArea &area) const {
-	return
-		(ParagraphNumber < area.ParagraphNumber) ||
-		((ParagraphNumber == area.ParagraphNumber) &&
-		 (TextElementNumber <= area.TextElementNumber));
-}
-
-bool SelectionModel::Bound::operator < (const TextElementArea &area) const {
-	return
-		(ParagraphNumber < area.ParagraphNumber) ||
-		((ParagraphNumber == area.ParagraphNumber) &&
-		 (TextElementNumber < area.TextElementNumber));
+bool SelectionModel::isEmpty() const {
+	if (myIsEmpty) {
+		return true;
+	}
+	std::pair<BoundElement,BoundElement> r = range();
+	return !r.first.Exists || !r.second.Exists;
 }
