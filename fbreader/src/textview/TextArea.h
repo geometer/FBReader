@@ -43,9 +43,19 @@ struct RectangularArea {
 };
 
 struct TextElementArea : public RectangularArea {
-	int ParagraphNumber, TextElementNumber;
+	int ParagraphNumber;
+	int TextElementNumber;
+	/*
+	 * if CharacterNumber == N 
+	 *   area contains first N characters of the element
+	 * if CharacterNumber == -N 
+	 *   area contains last N characters of the element
+	 * if CharacterNumber == 0 
+	 *   area contains full element
+	 */
+	int CharacterNumber;
 	TextElement::Kind Kind;
-	TextElementArea(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
+	TextElementArea(int paragraphNumber, int textElementNumber, int characterNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
 };
 
 struct TreeNodeArea : public RectangularArea {
@@ -58,7 +68,7 @@ typedef std::vector<TextElementArea> TextElementMap;
 
 inline RectangularArea::RectangularArea(int xStart, int xEnd, int yStart, int yEnd) : XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 
-inline TextElementArea::TextElementArea(int paragraphNumber, int textElementNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), Kind(kind) {}
+inline TextElementArea::TextElementArea(int paragraphNumber, int textElementNumber, int characterNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), CharacterNumber(characterNumber), Kind(kind) {}
 
 inline TreeNodeArea::TreeNodeArea(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber) {}
 

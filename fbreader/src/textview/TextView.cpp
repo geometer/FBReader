@@ -162,14 +162,6 @@ void TextView::paint() {
 			}
 			top += info.Height + info.Descent + info.VSpaceAfter;
 		}
-		/*
-		context().setFillColor(TextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
-		std::pair<TextElementMap::const_iterator,TextElementMap::const_iterator> range =
-			mySelectionModel.range();
-		for (TextElementMap::const_iterator it = range.first; it != range.second; ++it) {
-			context().fillRectangle(it->XStart, it->YStart, it->XEnd, it->YEnd);
-		}
-		*/
 	}
 
 	context().moveYTo(0);
@@ -427,9 +419,13 @@ void TextView::drawTextLine(const LineInfo &info, bool calculateNotDraw) {
 			int height = myStyle.elementHeight(element);
 			int descent = myStyle.elementDescent(element);
 			if (height > 0) {
+				int characterNumber = pos.charNumber();
+				if (characterNumber > 0) {
+					characterNumber -= ((const Word&)element).Length;
+				}
 				myTextElementMap.push_back(
 					TextElementArea(
-						paragraphNumber, pos.wordNumber(), kind,
+						paragraphNumber, pos.wordNumber(), characterNumber, kind,
 						x, x + width - 1, y - height + 1, y + descent
 					)
 				);
@@ -454,7 +450,7 @@ void TextView::drawTextLine(const LineInfo &info, bool calculateNotDraw) {
 				const int descent = myStyle.elementDescent(word);
 				myTextElementMap.push_back(
 					TextElementArea(
-						paragraphNumber, info.End.wordNumber(), TextElement::WORD_ELEMENT,
+						paragraphNumber, info.End.wordNumber(), len, TextElement::WORD_ELEMENT,
 						x, x + width - 1, y - height + 1, y + descent
 					)
 				);

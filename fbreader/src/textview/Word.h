@@ -64,7 +64,9 @@ public:
 	WordMark *mark() const;
 
 	const char *Data;
+	/* size of data in bytes */
 	const unsigned short Size;
+	/* number of characters */
 	const unsigned short Length;
 	const size_t ParagraphOffset;
 
