@@ -29,6 +29,10 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 		return;
 	}
 
+	// TODO
+	bound.After.CharNumber = 1;
+	bound.Before.CharNumber = 1;
+
 	for (TextElementMap::const_iterator it = myElementMap.begin(); it != myElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
 			bound.After.ParagraphNumber = it->ParagraphNumber;
@@ -67,12 +71,25 @@ void SelectionModel::activate(int x, int y) {
 	mySecondBound = myFirstBound;
 }
 
-void SelectionModel::extendTo(int x, int y) {
+bool SelectionModel::BoundElement::operator != (const SelectionModel::BoundElement &element) const {
+	return
+		(Exists != element.Exists) ||
+		(ParagraphNumber != element.ParagraphNumber) ||
+		(TextElementNumber != element.TextElementNumber) ||
+		(CharNumber != element.CharNumber);
+}
+
+bool SelectionModel::extendTo(int x, int y) {
 	if (!myIsActive || myElementMap.empty()) {
-		return;
+		return false;
 	}
 
+	std::pair<BoundElement,BoundElement> oldRange = range();
 	setBound(mySecondBound, x, y);
+	std::pair<BoundElement,BoundElement> newRange = range();
+	return
+		(oldRange.first != newRange.first) ||
+		(oldRange.second != newRange.second);
 }
 
 void SelectionModel::deactivate() {
@@ -81,6 +98,7 @@ void SelectionModel::deactivate() {
 
 void SelectionModel::clear() {
 	myIsEmpty = true;
+	myIsActive = false;
 }
 
 std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> SelectionModel::range() const {

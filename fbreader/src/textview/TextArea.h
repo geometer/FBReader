@@ -25,6 +25,7 @@
 #include <vector>
 
 #include "TextElement.h"
+#include "TextStyle.h"
 
 struct RectangularArea {
 	int XStart, XEnd, YStart, YEnd;
@@ -45,17 +46,13 @@ struct RectangularArea {
 struct TextElementArea : public RectangularArea {
 	int ParagraphNumber;
 	int TextElementNumber;
-	/*
-	 * if CharacterNumber == N 
-	 *   area contains first N characters of the element
-	 * if CharacterNumber == -N 
-	 *   area contains last N characters of the element
-	 * if CharacterNumber == 0 
-	 *   area contains full element
-	 */
-	int CharacterNumber;
+	int StartCharNumber;
+	int Length;
+	bool AddHyphenationSign;
+	bool ChangeStyle;
+	TextStylePtr Style;
 	TextElement::Kind Kind;
-	TextElementArea(int paragraphNumber, int textElementNumber, int characterNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
+	TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, TextStylePtr style, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
 };
 
 struct TreeNodeArea : public RectangularArea {
@@ -68,7 +65,7 @@ typedef std::vector<TextElementArea> TextElementMap;
 
 inline RectangularArea::RectangularArea(int xStart, int xEnd, int yStart, int yEnd) : XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 
-inline TextElementArea::TextElementArea(int paragraphNumber, int textElementNumber, int characterNumber, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), CharacterNumber(characterNumber), Kind(kind) {}
+inline TextElementArea::TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, TextStylePtr style, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), StartCharNumber(startCharNumber), Length(length), AddHyphenationSign(addHyphenationSign), ChangeStyle(changeStyle), Style(style), Kind(kind) {}
 
 inline TreeNodeArea::TreeNodeArea(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber) {}
 

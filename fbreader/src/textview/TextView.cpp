@@ -40,6 +40,8 @@ TextView::~TextView() {
 }
 
 void TextView::clear() {
+	mySelectionModel.clear();
+
 	myStartCursor = 0;
 	myEndCursor = 0;
 	myLineInfos.clear();
@@ -115,58 +117,10 @@ void TextView::paint() {
 	if (empty()) {
 		return;
 	}
-	context().moveYTo(0);
-	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
-		drawTextLine(**it, true);
-	}
-
-	if (!mySelectionModel.isEmpty()) {
-		context().setFillColor(TextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
-		std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> range = mySelectionModel.range();
-
-		int begin = context().width() - 1;
-		int end = 0;
-		for (TextElementMap::const_iterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
-			if (*it <= range.first) {
-				begin = it->XStart;
-			}
-			if (*it <= range.second) {
-				end = it->XEnd;
-			} else {
-				break;
-			}
-		}
-
-		int top = 0;
-		for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
-			const LineInfo &info = **it;
-
-			int left = context().width() - 1;
-			if (info.Start > range.first) {
-				left = 0;
-			} else if (info.End >= range.first) {
-				left = begin;
-			}
-
-			int bottom = top + info.Height + info.Descent;
-			int right = 0;
-			if (info.End < range.second) {
-				right = context().width() - 1;
-				bottom += info.VSpaceAfter;
-			} else if (info.Start <= range.second) {
-				right = end;
-			}
-
-			if (left < right) {
-				context().fillRectangle(left, top, right, bottom);
-			}
-			top += info.Height + info.Descent + info.VSpaceAfter;
-		}
-	}
 
 	context().moveYTo(0);
 	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
-		drawTextLine(**it, false);
+		drawTextLine(**it);
 	}
 
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
@@ -334,23 +288,17 @@ void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber)
 	}
 }
 
-void TextView::drawTextLine(const LineInfo &info, bool calculateNotDraw) {
+void TextView::drawTextLine(const LineInfo &info) {
+	const size_t elementMapSize = myTextElementMap.size();
 	myStyle.setStyle(info.StartStyle);
-	context().moveY(info.Height);
-	int maxY = myStyle.textAreaHeight();
-	if (context().y() > maxY) {
-	  context().moveYTo(maxY);
-	}
+	const int y = std::min(context().y() + info.Height, myStyle.textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
 	bool wordOccured = false;
+	bool changeStyle = true;
 
-	context().moveXTo(0);
-	if (!calculateNotDraw && !info.NodeInfo.isNull()) {
-		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
-	}
-	context().moveX(info.LeftIndent);
+	context().moveXTo(info.LeftIndent);
 
 	switch (myStyle.style()->alignment()) {
 		case ALIGN_RIGHT:
@@ -374,27 +322,34 @@ void TextView::drawTextLine(const LineInfo &info, bool calculateNotDraw) {
 	for (WordCursor pos = info.RealStart; !pos.sameElementAs(info.End); pos.nextWord()) {
 		const TextElement &element = paragraph[pos.wordNumber()];
 		TextElement::Kind kind = element.kind();
-		int x = context().x();
-		int y = context().y();
+		const int x = context().x();
+		int width = myStyle.elementWidth(element, pos.charNumber());
 	
 		switch (kind) {
 			case TextElement::WORD_ELEMENT:
-				wordOccured = true;
-				if (!calculateNotDraw) {
-					drawWord(x, y - myStyle.style()->verticalShift(), (const Word&)element, pos.charNumber(), -1, false);
-				}
-				break;
 			case TextElement::IMAGE_ELEMENT:
+			{
+				const int height = myStyle.elementHeight(element);
+				const int descent = myStyle.elementDescent(element);
+				const int length = (kind == TextElement::WORD_ELEMENT) ? ((const Word&)element).Length : 0;
+				myTextElementMap.push_back(
+					TextElementArea(
+						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
+						changeStyle, myStyle.style(), kind,
+						x, x + width - 1, y - height + 1, y + descent
+					)
+				);
+				changeStyle = false;
 				wordOccured = true;
-				if (!calculateNotDraw) {
-					context().drawImage(x, y, ((const ImageElement&)element).image());
-				}
 				break;
+			}
 			case TextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ControlElement&)element);
+				changeStyle = true;
 				break;
 			case TextElement::FORCED_CONTROL_ELEMENT:
 				myStyle.applyControl((const ForcedControlElement&)element);
+				changeStyle = true;
 				break;
 			case TextElement::HSPACE_ELEMENT:
 				if (wordOccured && (spaceCounter > 0)) {
@@ -413,49 +368,102 @@ void TextView::drawTextLine(const LineInfo &info, bool calculateNotDraw) {
 				break;
 		}
 
-		int width = myStyle.elementWidth(element, pos.charNumber());
 		context().moveX(width);
-		if (calculateNotDraw && (width > 0)) {
-			int height = myStyle.elementHeight(element);
-			int descent = myStyle.elementDescent(element);
-			if (height > 0) {
-				int characterNumber = pos.charNumber();
-				if (characterNumber > 0) {
-					characterNumber -= ((const Word&)element).Length;
-				}
-				myTextElementMap.push_back(
-					TextElementArea(
-						paragraphNumber, pos.wordNumber(), characterNumber, kind,
-						x, x + width - 1, y - height + 1, y + descent
-					)
-				);
-			}
-		}
 	}
 	if (!endOfParagraph && (info.End.element().kind() == TextElement::WORD_ELEMENT)) {
 		int len = info.End.charNumber();
 		if (len > 0) {
 			const Word &word = (const Word&)info.End.element();
-			context().setColor(myStyle.style()->color());
 			ZLUnicodeUtil::Ucs2String ucs2string;
 			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
 			const bool addHyphenationSign = ucs2string[len - 1] != '-';
 			const int x = context().x(); 
-			const int y = context().y(); 
-			if (!calculateNotDraw) {
-				drawWord(x, y - myStyle.style()->verticalShift(), word, 0, len, addHyphenationSign);
-			} else {
-				const int width = myStyle.wordWidth(word, 0, len, addHyphenationSign);
-				const int height = myStyle.elementHeight(word);
-				const int descent = myStyle.elementDescent(word);
-				myTextElementMap.push_back(
-					TextElementArea(
-						paragraphNumber, info.End.wordNumber(), len, TextElement::WORD_ELEMENT,
-						x, x + width - 1, y - height + 1, y + descent
-					)
-				);
+			const int width = myStyle.wordWidth(word, 0, len, addHyphenationSign);
+			const int height = myStyle.elementHeight(word);
+			const int descent = myStyle.elementDescent(word);
+			myTextElementMap.push_back(
+				TextElementArea(
+					paragraphNumber, info.End.wordNumber(), 0, len, addHyphenationSign,
+					changeStyle, myStyle.style(), TextElement::WORD_ELEMENT,
+					x, x + width - 1, y - height + 1, y + descent
+				)
+			);
+		}
+	}
+
+	if (!mySelectionModel.isEmpty()) {
+		std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> range = mySelectionModel.range();
+
+		int left = context().width() - 1;
+		if (info.Start > range.first) {
+			left = 0;
+		} else if (info.End >= range.first) {
+			for (TextElementMap::const_iterator jt = myTextElementMap.begin() + elementMapSize; jt != myTextElementMap.end(); ++jt) {
+				if (*jt <= range.first) {
+					left = jt->XStart;
+				} else {
+					break;
+				}
 			}
 		}
+
+		const int top = context().y() + 1;
+		int bottom = context().y() + info.Height + info.Descent;
+		int right = 0;
+		if (info.End < range.second) {
+			right = context().width() - 1;
+			bottom += info.VSpaceAfter;
+		} else if (info.Start <= range.second) {
+			for (TextElementMap::const_iterator jt = myTextElementMap.begin() + elementMapSize; jt != myTextElementMap.end(); ++jt) {
+				if (*jt <= range.second) {
+					right = jt->XEnd;
+				} else {
+					break;
+				}
+			}
+		}
+
+		if (left < right) {
+			context().setFillColor(TextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
+			context().fillRectangle(left, top, right, bottom);
+		}
+	}
+
+	context().moveY(info.Height);
+	int maxY = myStyle.textAreaHeight();
+	if (context().y() > maxY) {
+	  context().moveYTo(maxY);
+	}
+	context().moveXTo(0);
+	if (!info.NodeInfo.isNull()) {
+		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
+	}
+	TextElementMap::const_iterator it = myTextElementMap.begin() + elementMapSize;
+	for (WordCursor pos = info.RealStart; !pos.sameElementAs(info.End); pos.nextWord()) {
+		const TextElement &element = paragraph[pos.wordNumber()];
+		TextElement::Kind kind = element.kind();
+	
+		if ((kind == TextElement::WORD_ELEMENT) || (kind == TextElement::IMAGE_ELEMENT)) {
+			if (it->ChangeStyle) {
+				myStyle.setStyle(it->Style);
+			}
+			const int x = it->XStart;
+			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.style()->verticalShift();
+			if (kind == TextElement::WORD_ELEMENT) {
+				drawWord(x, y, (const Word&)element, pos.charNumber(), -1, false);
+			} else {
+				context().drawImage(x, y, ((const ImageElement&)element).image());
+			}
+			++it;
+		}
+	}
+	if (it != myTextElementMap.end()) {
+		int len = info.End.charNumber();
+		const Word &word = (const Word&)info.End.element();
+		context().setColor(myStyle.style()->color());
+		const int x = it->XStart;
+		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.style()->verticalShift();
+		drawWord(x, y, word, 0, len, it->AddHyphenationSign);
 	}
 	context().moveY(info.Descent + info.VSpaceAfter);
 }
@@ -568,8 +576,9 @@ bool TextView::onStylusPress(int x, int y) {
 }
 
 bool TextView::onStylusMovePressed(int x, int y) {
-	mySelectionModel.extendTo(x, y);
-	repaintView();
+	if (mySelectionModel.extendTo(x, y)) {
+		repaintView();
+	}
 	return true;
 }
 

@@ -233,6 +233,11 @@ HtmlBreakTagAction::HtmlBreakTagAction(HtmlBookReader &reader, BreakType breakTy
 }
 
 void HtmlBreakTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
+	if (myReader.myDontBreakParagraph) {
+		myReader.myDontBreakParagraph = false;
+		return;
+	}
+
 	if ((start && (myBreakType & BREAK_AT_START)) ||
 			(!start && (myBreakType & BREAK_AT_END))) {
 		bookReader().endParagraph();
@@ -279,7 +284,10 @@ void HtmlListItemTagAction::run(bool start, const std::vector<HtmlReader::HtmlAt
 		if (!myReader.myListNumStack.empty()) {
 			//TODO: add spaces and number/bullet
 			myReader.addConvertedDataToBuffer("\342\200\242 ", 4, false);
+			myReader.myDontBreakParagraph = true;
 		}
+	} else {
+		myReader.myDontBreakParagraph = false;
 	}
 }
 
@@ -367,6 +375,7 @@ void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool co
 			myBookReader.addData(strText);
 			myBookReader.addContentsData(strText);
 		}
+		myDontBreakParagraph = false;
 	}
 }
 
@@ -480,6 +489,7 @@ void HtmlBookReader::startDocumentHandler() {
 	myBookReader.beginParagraph();
 	myIgnoreDataCounter = 0;
 	myIsPreformatted = false;
+	myDontBreakParagraph = false;
 	myHyperlinkType = REGULAR;
 	myIsStarted = false;
 

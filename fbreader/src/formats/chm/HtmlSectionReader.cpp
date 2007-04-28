@@ -123,7 +123,8 @@ void HtmlSectionImageTagAction::run(bool start, const std::vector<HtmlReader::Ht
 			if (attributes[i].Name == "SRC") {
 				std::string fileName = MiscUtil::decodeHtmlURL(attributes[i].Value);
 				fileName = CHMReferenceCollection::fullReference(reader().myReferenceCollection.prefix(), fileName);
-				bookReader().addImageReference(ZLUnicodeUtil::toLower(fileName));
+				fileName = ZLUnicodeUtil::toLower(fileName);
+				bookReader().addImageReference(fileName);
 				bookReader().addImage(fileName, new CHMFileImage(reader().myInfo, fileName));
 				break;
 			}

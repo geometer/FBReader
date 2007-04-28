@@ -212,7 +212,9 @@ private:
 	void clear();
 
 	LineInfoPtr processTextLine(const WordCursor &start, const WordCursor &end);
-	void drawTextLine(const LineInfo &info, bool calculateNotDraw);
+	void prepareTextLine(const LineInfo &info);
+	void drawTextLine(const LineInfo &info);
+	void drawTextLine1(const LineInfo &info, size_t skip);
 	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
 	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift);
 	void drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter);

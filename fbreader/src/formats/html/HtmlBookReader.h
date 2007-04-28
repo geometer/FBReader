@@ -66,6 +66,7 @@ private:
 	const PlainTextFormat &myFormat;
 	int myIgnoreDataCounter;
 	bool myIsPreformatted;
+	bool myDontBreakParagraph;
 
 	TextKind myHyperlinkType;
 

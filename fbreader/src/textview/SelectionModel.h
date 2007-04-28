@@ -32,7 +32,7 @@ public:
 	SelectionModel(TextElementMap &elementMap);
 
 	void activate(int x, int y);
-	void extendTo(int x, int y);
+	bool extendTo(int x, int y);
 	void deactivate();
 	void clear();
 
@@ -43,6 +43,9 @@ public:
 		bool Exists;
 		int ParagraphNumber;
 		int TextElementNumber;
+		size_t CharNumber;
+
+		bool operator != (const BoundElement &element) const;
 	};
 
 private:
