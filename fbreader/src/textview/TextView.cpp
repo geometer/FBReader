@@ -458,6 +458,9 @@ void TextView::drawTextLine(const LineInfo &info) {
 		}
 	}
 	if (it != myTextElementMap.end()) {
+		if (it->ChangeStyle) {
+			myStyle.setStyle(it->Style);
+		}
 		int len = info.End.charNumber();
 		const Word &word = (const Word&)info.End.element();
 		context().setColor(myStyle.style()->color());
