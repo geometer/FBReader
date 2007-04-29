@@ -521,6 +521,8 @@ void TextView::findPrevious() {
 }
 
 bool TextView::onStylusPress(int x, int y) {
+	mySelectionModel.deactivate();
+
   if (myModel.isNull()) {
 	  return false;
 	}
@@ -570,9 +572,12 @@ bool TextView::onStylusPress(int x, int y) {
 		}
 	}
 
+	return false;
+}
+
+void TextView::activateSelection(int x, int y) {
 	mySelectionModel.activate(x, y);
 	repaintView();
-	return false;
 }
 
 bool TextView::onStylusMovePressed(int x, int y) {
@@ -582,7 +587,7 @@ bool TextView::onStylusMovePressed(int x, int y) {
 	return true;
 }
 
-bool TextView::onStylusRelease(int x, int y) {
+bool TextView::onStylusRelease(int, int) {
 	mySelectionModel.deactivate();
 	return true;
 }

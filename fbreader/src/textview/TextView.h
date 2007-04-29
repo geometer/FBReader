@@ -182,13 +182,14 @@ public:
 	bool canFindPrevious() const;
 	void findPrevious();
 
-	bool onStylusPress(int x, int y);
-	bool onStylusMovePressed(int x, int y);
-	bool onStylusRelease(int x, int y);
-
 	void selectParagraph(int paragraphNumber);
 	
 protected:
+	bool onStylusPress(int x, int y);
+	bool onStylusMovePressed(int x, int y);
+	bool onStylusRelease(int x, int y);
+	void activateSelection(int x, int y);
+
 	virtual void paint();
 
 	const std::string &fileName() const;

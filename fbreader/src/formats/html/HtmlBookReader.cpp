@@ -22,6 +22,7 @@
 #include <cctype>
 
 #include <ZLFileImage.h>
+#include <ZLStringUtil.h>
 
 #include "HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
@@ -94,8 +95,11 @@ public:
 class HtmlListTagAction : public HtmlTagAction {
 
 public:
-	HtmlListTagAction(HtmlBookReader &reader);
+	HtmlListTagAction(HtmlBookReader &reader, int startIndex);
 	void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes);
+
+private:
+	int myStartIndex;
 };
 
 class HtmlListItemTagAction : public HtmlTagAction {
@@ -263,12 +267,12 @@ void HtmlPreTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribu
 	bookReader().beginParagraph();
 }
 
-HtmlListTagAction::HtmlListTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
+HtmlListTagAction::HtmlListTagAction(HtmlBookReader &reader, int startIndex) : HtmlTagAction(reader), myStartIndex(startIndex) {
 }
 
 void HtmlListTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
 	if (start) {
-		myReader.myListNumStack.push(0/*(tag.Code == _UL) ? 0 : 1*/);
+		myReader.myListNumStack.push(myStartIndex);
 	} else if (!myReader.myListNumStack.empty()) {
 		myReader.myListNumStack.pop();
 	}
@@ -282,8 +286,16 @@ void HtmlListItemTagAction::run(bool start, const std::vector<HtmlReader::HtmlAt
 		bookReader().endParagraph();
 		bookReader().beginParagraph();
 		if (!myReader.myListNumStack.empty()) {
-			//TODO: add spaces and number/bullet
-			myReader.addConvertedDataToBuffer("\342\200\242 ", 4, false);
+			bookReader().addFixedHSpace(3 * myReader.myListNumStack.size());
+			int &index = myReader.myListNumStack.top();
+			if (index == 0) {
+				myReader.addConvertedDataToBuffer("\342\200\242 ", 4, false);
+			} else {
+				std::string number;
+				ZLStringUtil::appendNumber(number, index++);
+				number += ". ";
+				myReader.addConvertedDataToBuffer(number.data(), number.length(), false);
+			}
 			myReader.myDontBreakParagraph = true;
 		}
 	} else {
@@ -334,10 +346,10 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 	addAction("P", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
 	addAction("BR", new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_START_AND_AT_END));
 	addAction("IMG", new HtmlImageTagAction(*this));
-	addAction("UL", new HtmlListTagAction(*this));
-	addAction("MENU", new HtmlListTagAction(*this));
-	addAction("DIR", new HtmlListTagAction(*this));
-	addAction("OL", new HtmlListTagAction(*this));
+	addAction("UL", new HtmlListTagAction(*this, 0));
+	addAction("MENU", new HtmlListTagAction(*this, 0));
+	addAction("DIR", new HtmlListTagAction(*this, 0));
+	addAction("OL", new HtmlListTagAction(*this, 1));
 	addAction("LI", new HtmlListItemTagAction(*this));
 	addAction("PRE", new HtmlPreTagAction(*this));
 	// addAction("DD", 0);
@@ -365,6 +377,15 @@ HtmlBookReader::~HtmlBookReader() {
 
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool convert) {
 	if (len > 0) {
+		if (myDontBreakParagraph) {
+			while ((len > 0) && isspace(*text)) {
+				--len;
+				++text;
+			}
+			if (len == 0) {
+				return;
+			}
+		}
 		if (convert) {
 			myConverter->convert(myConverterBuffer, text, text + len);
 			myBookReader.addData(myConverterBuffer);

@@ -59,12 +59,14 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	}
 
 	int index;
-	while ((index = path.find("/..")) != -1) {
-		int prevIndex = path.rfind('/', index - 1);
-		if (prevIndex == -1) {
-			break;
-		}
+	while ((index = path.find("/../")) != -1) {
+		int prevIndex = std::max((int)path.rfind('/', index - 1), 0);
 		path.erase(prevIndex, index + 3 - prevIndex);
+	}
+	const int len = path.length();
+	if ((len >= 3) && (path.substr(len - 3) == "/..")) {
+		int prevIndex = std::max((int)path.rfind('/', len - 4), 0);
+		path.erase(prevIndex, len - prevIndex);
 	}
 	while ((index = path.find("/./")) != -1) {
 		path.erase(index, 2);
