@@ -40,6 +40,9 @@ protected:
 	FBReader &fbreader();
 	const FBReader &fbreader() const;
 
+	bool onStylusPress(int x, int y);
+	virtual bool _onStylusPress(int x, int y);
+
 private:
 	std::string myCaption;
 };

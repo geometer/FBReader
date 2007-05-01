@@ -36,7 +36,7 @@ public:
 	void gotoReference();
 
 private:
-	bool onStylusPress(int x, int y);
+	bool _onStylusPress(int x, int y);
 };
 
 #endif /* __CONTENTSVIEW_H__ */

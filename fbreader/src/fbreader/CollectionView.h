@@ -40,7 +40,7 @@ public:
 	~CollectionView();
 	const std::string &caption() const;
 
-	bool onStylusPress(int x, int y);
+	bool _onStylusPress(int x, int y);
 
 	void paint();
 	void updateModel();

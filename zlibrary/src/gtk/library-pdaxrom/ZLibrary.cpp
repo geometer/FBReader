@@ -27,7 +27,7 @@
 #include "../time/ZLGtkTime.h"
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../image/ZLGtkImageManager.h"
-#include "../view-pdaxrom/ZLGtkPaintContext.h"
+#include "../view/ZLGtkPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../abstract/xmlconfig/XMLConfig.h"
 #include "../../unix/iconv/IConvEncodingConverter.h"

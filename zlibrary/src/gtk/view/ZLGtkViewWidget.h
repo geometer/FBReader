@@ -34,9 +34,9 @@ public:
 
 	int width() const;
 	int height() const;
+	void doPaint();
 
 	GtkWidget *area() { return myArea; }
-	void onMousePressed(GdkEventButton *event);
 
 private:
 	void trackStylus(bool track);

@@ -200,11 +200,7 @@ void CollectionView::paint() {
 	TextView::paint();
 }
 
-bool CollectionView::onStylusPress(int x, int y) {
-	if (FBView::onStylusPress(x, y)) {
-		return true;
-	}
-
+bool CollectionView::_onStylusPress(int x, int y) {
 	const TextElementArea *imageArea = elementByCoordinates(x, y);
 	if ((imageArea != 0) && (imageArea->Kind == TextElement::IMAGE_ELEMENT)) {
 		WordCursor cursor = startCursor();
@@ -216,40 +212,41 @@ bool CollectionView::onStylusPress(int x, int y) {
 		}
 		const ImageElement &imageElement = (ImageElement&)element;
 
-		if (imageElement.id() == BOOK_INFO_IMAGE_ID) {
-			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
-			if (!book.isNull()) {
-				if (BookInfoDialog(myCollection, book->fileName()).dialog().run("")) {
-					myCollection.rebuild(false);
-					myUpdateModel = true;
-					selectBook(book);
-					repaintView();
-				}
-			}
-		} else if (imageElement.id() == DELETE_IMAGE_ID) {
-			BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
-			if (!book.isNull()) {
-				const std::string question = "Remove Book\n\"" + book->title() + "\"\nfrom library?";
-				if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
-					collectionModel().removeAllMarks();
-					BookList().removeFileName(book->fileName());
-					TreeParagraph *paragraph = (TreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
-					TreeParagraph *parent = paragraph->parent();
-					if (parent->children().size() == 1) {
-						collectionModel().removeParagraph(imageArea->ParagraphNumber);
-						collectionModel().removeParagraph(imageArea->ParagraphNumber - 1);
-					} else {
-						collectionModel().removeParagraph(imageArea->ParagraphNumber);
-					}
-					if (collectionModel().paragraphsNumber() == 0) {
-						setStartCursor(0);
-					}
-					rebuildPaintInfo(true);
-					repaintView();
-				}
-			}
+		BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
+		if (book.isNull()) {
+			return false;
 		}
-		return true;
+
+		if (imageElement.id() == BOOK_INFO_IMAGE_ID) {
+			if (BookInfoDialog(myCollection, book->fileName()).dialog().run("")) {
+				myCollection.rebuild(false);
+				myUpdateModel = true;
+				selectBook(book);
+				repaintView();
+			}
+			return true;
+		} else if (imageElement.id() == DELETE_IMAGE_ID) {
+			const std::string question = "Remove Book\n\"" + book->title() + "\"\nfrom library?";
+			if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
+				collectionModel().removeAllMarks();
+				BookList().removeFileName(book->fileName());
+				TreeParagraph *paragraph = (TreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
+				TreeParagraph *parent = paragraph->parent();
+				if (parent->children().size() == 1) {
+					collectionModel().removeParagraph(imageArea->ParagraphNumber);
+					collectionModel().removeParagraph(imageArea->ParagraphNumber - 1);
+				} else {
+					collectionModel().removeParagraph(imageArea->ParagraphNumber);
+				}
+				if (collectionModel().paragraphsNumber() == 0) {
+					setStartCursor(0);
+				}
+				rebuildPaintInfo(true);
+				repaintView();
+			}
+			return true;
+		}
+		return false;
 	}
 
 	int index = paragraphIndexByCoordinate(y);
@@ -261,9 +258,10 @@ bool CollectionView::onStylusPress(int x, int y) {
 	if (!book.isNull()) {
 		fbreader().openBook(book);
 		fbreader().showBookTextView();
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 CollectionModel &CollectionView::collectionModel() {

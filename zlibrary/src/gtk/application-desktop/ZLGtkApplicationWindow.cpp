@@ -29,7 +29,7 @@
 
 #include "ZLGtkApplicationWindow.h"
 #include "../dialogs/ZLGtkDialogManager.h"
-#include "../view-desktop/ZLGtkViewWidget.h"
+#include "../view/ZLGtkViewWidget.h"
 
 void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myWindow = (new ZLGtkApplicationWindow(application))->getMainWindow();

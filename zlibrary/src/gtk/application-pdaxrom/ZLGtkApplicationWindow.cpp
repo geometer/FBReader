@@ -26,7 +26,7 @@
 #include "../util/ZLGtkKeyUtil.h"
 #include "../util/ZLGtkSignalUtil.h"
 #include "../dialogs/ZLGtkDialogManager.h"
-#include "../view-pdaxrom/ZLGtkViewWidget.h"
+#include "../view/ZLGtkViewWidget.h"
 
 #include "ZLGtkApplicationWindow.h"
 

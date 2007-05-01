@@ -33,31 +33,35 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 	bound.After.CharNumber = 1;
 	bound.Before.CharNumber = 1;
 
-	for (TextElementMap::const_iterator it = myElementMap.begin(); it != myElementMap.end(); ++it) {
+	TextElementMap::const_iterator it = myElementMap.begin();
+	for (; it != myElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
-			bound.After.ParagraphNumber = it->ParagraphNumber;
-			bound.After.TextElementNumber = it->TextElementNumber;
-			bound.After.Exists = true;
-			if (TextElementArea::RangeChecker(x, y)(*it)) {
-				bound.Before.ParagraphNumber = bound.After.ParagraphNumber;
-				bound.Before.TextElementNumber = bound.After.TextElementNumber;
-				bound.Before.Exists = true;
-			} else if (it == myElementMap.begin()) {
-				bound.Before.Exists = false;
-			} else {
-				bound.Before.ParagraphNumber = (it - 1)->ParagraphNumber;
-				bound.Before.TextElementNumber = (it - 1)->TextElementNumber;
-				bound.Before.Exists = true;
-			}
-			return;
+			break;
 		}
 	}
 
-	const TextElementArea &back = myElementMap.back();
-	bound.Before.ParagraphNumber = back.ParagraphNumber;
-	bound.Before.TextElementNumber = back.TextElementNumber;
-	bound.Before.Exists = true;
-	bound.After.Exists = false;
+	if (it != myElementMap.end()) {
+		bound.After.ParagraphNumber = it->ParagraphNumber;
+		bound.After.TextElementNumber = it->TextElementNumber;
+		bound.After.Exists = true;
+		if (TextElementArea::RangeChecker(x, y)(*it)) {
+			bound.Before.ParagraphNumber = bound.After.ParagraphNumber;
+			bound.Before.TextElementNumber = bound.After.TextElementNumber;
+			bound.Before.Exists = true;
+		} else if (it == myElementMap.begin()) {
+			bound.Before.Exists = false;
+		} else {
+			bound.Before.ParagraphNumber = (it - 1)->ParagraphNumber;
+			bound.Before.TextElementNumber = (it - 1)->TextElementNumber;
+			bound.Before.Exists = true;
+		}
+	} else {
+		const TextElementArea &back = myElementMap.back();
+		bound.Before.ParagraphNumber = back.ParagraphNumber;
+		bound.Before.TextElementNumber = back.TextElementNumber;
+		bound.Before.Exists = true;
+		bound.After.Exists = false;
+	}
 }
 
 void SelectionModel::activate(int x, int y) {

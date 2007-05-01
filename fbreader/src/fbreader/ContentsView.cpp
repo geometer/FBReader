@@ -32,11 +32,7 @@ ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : FBView(r
 ContentsView::~ContentsView() {
 }
 
-bool ContentsView::onStylusPress(int x, int y) {
-	if (FBView::onStylusPress(x, y)) {
-		return true;
-	}
-
+bool ContentsView::_onStylusPress(int x, int y) {
 	int index = paragraphIndexByCoordinate(y);
 	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
 		return false;

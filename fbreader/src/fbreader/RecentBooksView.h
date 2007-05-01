@@ -39,7 +39,7 @@ public:
 	const std::string &caption() const;
 
 	void rebuild();
-	bool onStylusPress(int x, int y);
+	bool _onStylusPress(int x, int y);
 
 	void paint();
 

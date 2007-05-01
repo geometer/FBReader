@@ -23,11 +23,11 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../../gtk/filesystem/ZLGtkFSManager.h"
+#include "../filesystem/ZLGtkFSManager.h"
 #include "../time/ZLGtkTime.h"
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../image/ZLGtkImageManager.h"
-#include "../view-desktop/ZLGtkPaintContext.h"
+#include "../view/ZLGtkPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../abstract/util/ZLKeyUtil.h"
 #include "../../abstract/xmlconfig/XMLConfig.h"

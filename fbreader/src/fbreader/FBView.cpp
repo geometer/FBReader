@@ -42,3 +42,20 @@ const std::string &FBView::caption() const {
 void FBView::setCaption(const std::string &caption) {
 	myCaption = caption;
 }
+
+bool FBView::onStylusPress(int x, int y) {
+	if (TextView::onStylusPress(x, y)) {
+		return true;
+	}
+	
+	if (_onStylusPress(x, y)) {
+		return true;
+	}
+
+	activateSelection(x, y);
+	return true;
+}
+
+bool FBView::_onStylusPress(int, int) {
+	return false;
+}

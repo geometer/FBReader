@@ -1,1 +1,1 @@
-../../gtk/view-pdaxrom/gdk-pixbuf-hack.cpp
+../../gtk/view/gdk-pixbuf-hack.cpp

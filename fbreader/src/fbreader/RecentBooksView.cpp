@@ -62,11 +62,7 @@ void RecentBooksView::rebuild() {
 	setModel(0, LIBRARY);
 }
 
-bool RecentBooksView::onStylusPress(int x, int y) {
-	if (TextView::onStylusPress(x, y)) {
-		return true;
-	}
-
+bool RecentBooksView::_onStylusPress(int x, int y) {
 	const Books &books = myLastBooks.books();
 
 	int index = paragraphIndexByCoordinate(y);

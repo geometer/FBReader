@@ -226,11 +226,7 @@ bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, 
 	return hyperlinkKind != REGULAR;
 }
 
-bool BookTextView::onStylusPress(int x, int y) {
-	if (TextView::onStylusPress(x, y)) {
-		return true;
-	}
-
+bool BookTextView::_onStylusPress(int x, int y) {
 	const TextElementArea *area = elementByCoordinates(x, y);
 	if (area != 0) {
 		std::string id;
@@ -273,8 +269,7 @@ bool BookTextView::onStylusPress(int x, int y) {
 		}
 	}
 
-	//activateSelection(x, y);
-	return true;
+	return false;
 }
 
 bool BookTextView::onStylusMove(int x, int y) {

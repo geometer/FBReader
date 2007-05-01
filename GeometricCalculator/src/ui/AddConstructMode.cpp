@@ -48,15 +48,17 @@ void AddConstructMode::release() {
 }
 
 void AddConstructMode::onMouseMove(int x, int y) {
-	bool doRepaint = isSelected(mySelectedObject);
-	unselect(mySelectedObject);
-	mySelectedObject = closestObject(x, y);
-	if (!mySelectedObject.isNull()) {
-		doRepaint = true;
-		select(mySelectedObject);
-	}
-	if (doRepaint) {
-		repaintView();
+	if (myMousePoint.isNull()) {
+		bool doRepaint = isSelected(mySelectedObject);
+		unselect(mySelectedObject);
+		mySelectedObject = closestObject(x, y);
+		if (!mySelectedObject.isNull()) {
+			doRepaint = true;
+			select(mySelectedObject);
+		}
+		if (doRepaint) {
+			repaintView();
+		}
 	}
 }
 
