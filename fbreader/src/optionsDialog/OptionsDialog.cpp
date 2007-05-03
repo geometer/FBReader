@@ -239,7 +239,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	static const std::string BACKGROUND = "Background";
 	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
 	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
-	builder.addOption("Selection Background", baseStyle.SelectionBackgroundColorOption);
+	//builder.addOption("Selection Background", baseStyle.SelectionBackgroundColorOption);
 	builder.addOption("Regular Text", baseStyle.RegularTextColorOption);
 	builder.addOption("Internal Hyperlink Text", baseStyle.InternalHyperlinkTextColorOption);
 	builder.addOption("External Hyperlink Text", baseStyle.ExternalHyperlinkTextColorOption);

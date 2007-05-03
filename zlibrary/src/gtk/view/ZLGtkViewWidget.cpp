@@ -21,8 +21,7 @@
 #include "ZLGtkViewWidget.h"
 #include "ZLGtkPaintContext.h"
 #include "../util/ZLGtkSignalUtil.h"
-
-#include "gdk-pixbuf-hack.h"
+#include "../pixbuf/ZLGtkPixbufHack.h"
 
 static void updatePoint(ZLGtkViewWidget *viewWidget, int &x, int &y) {
 	switch (viewWidget->rotation()) {

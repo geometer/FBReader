@@ -21,7 +21,7 @@
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "ZLGtkViewWidget.h"
 #include "ZLGtkPaintContext.h"
-#include "gdk-pixbuf-hack.h"
+#include "../../gtk/pixbuf/ZLGtkPixbufHack.h"
 
 void ZLGtkViewWidget::updateCoordinates(int &x, int &y) {
 	switch (rotation()) {

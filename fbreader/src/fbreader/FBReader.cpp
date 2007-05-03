@@ -498,6 +498,7 @@ void FBReader::searchSlot() {
 		searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&This section only", SearchThisSectionOnlyOption));
 	}
 	searchDialog->addButton("&Go!", true);
+	searchDialog->addButton("&Cancel", false);
 
 	if (searchDialog->run()) {
 		searchDialog->acceptValues();

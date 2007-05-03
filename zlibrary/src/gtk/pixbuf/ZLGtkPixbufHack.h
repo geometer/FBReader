@@ -18,12 +18,12 @@
  * 02110-1301, USA.
  */
 
-#ifndef __GDK_PIXBUF_HACK_H__
-#define __GDK_PIXBUF_HACK_H__
+#ifndef __ZLGTKPIXBUFHACK_H__
+#define __ZLGTKPIXBUFHACK_H__
 
 #include <gtk/gtk.h>
 
 void rotate90(GdkPixbuf *dst, const GdkPixbuf *src, bool counter_clockwise);
 void rotate180(GdkPixbuf *buffer);
 
-#endif /* __GDK_PIXBUF_HACK_H__ */
+#endif /* __ZLGTKPIXBUFHACK_H__ */

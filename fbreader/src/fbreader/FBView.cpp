@@ -52,7 +52,7 @@ bool FBView::onStylusPress(int x, int y) {
 		return true;
 	}
 
-	activateSelection(x, y);
+	//activateSelection(x, y);
 	return true;
 }
 

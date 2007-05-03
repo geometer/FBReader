@@ -22,7 +22,7 @@
  * 02110-1301, USA.
  */
 
-#include "gdk-pixbuf-hack.h"
+#include "ZLGtkPixbufHack.h"
 
 #include <string.h>
 

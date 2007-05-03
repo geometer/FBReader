@@ -54,10 +54,18 @@ const std::string &CHMReferenceCollection::addReference(const std::string &refer
 		return reference;
 	}
 	std::string fullRef = doConvert ? fullReference(myPrefix, reference) : MiscUtil::decodeHtmlURL(reference);
+
+	const int index = fullRef.find('#');
+	if (index == -1) {
+		fullRef = ZLUnicodeUtil::toLower(fullRef);
+	} else {
+		fullRef = ZLUnicodeUtil::toLower(fullRef.substr(0, index));
+	}
 	std::set<std::string>::const_iterator it = myReferences.find(fullRef);
 	if (it != myReferences.end()) {
 		return *it;
 	}
+
 	myReferences.insert(fullRef);
 	myReferenceQueue.push(fullRef);
 	return myReferenceQueue.back();

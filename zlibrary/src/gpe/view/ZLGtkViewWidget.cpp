@@ -20,7 +20,7 @@
 
 #include "ZLGtkViewWidget.h"
 #include "ZLGtkPaintContext.h"
-#include "gdk-pixbuf-hack.h"
+#include "../../gtk/pixbuf/ZLGtkPixbufHack.h"
 
 void ZLGtkViewWidget::onMousePressed(GdkEventButton *event) {
 	int x, y;
