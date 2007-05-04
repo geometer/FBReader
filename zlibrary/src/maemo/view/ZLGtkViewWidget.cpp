@@ -73,6 +73,7 @@ void ZLGtkViewWidget::onMousePressed(GdkEventButton *event) {
 	if (isStylusEvent(myArea, event)) {
 		view()->onStylusMove(x, y);
 		view()->onStylusPress(x, y);
+		gtk_widget_set_extension_events(myArea, GDK_EXTENSION_EVENTS_NONE);
 	} else {
 		view()->onFingerTap(x, y);
 	}
@@ -85,6 +86,7 @@ void ZLGtkViewWidget::onMouseReleased(GdkEventButton *event) {
 		updateCoordinates(x, y);
 		view()->onStylusRelease(x, y);
 	}
+	gtk_widget_set_extension_events(myArea, GDK_EXTENSION_EVENTS_CURSOR);
 }
 
 void ZLGtkViewWidget::onMouseMoved(GdkEventMotion *event) {
