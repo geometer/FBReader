@@ -24,12 +24,12 @@
 
 #include <map>
 
-#include "TextArea.h"
+class TextView;
 
 class SelectionModel {
 
 public:
-	SelectionModel(TextElementMap &elementMap);
+	SelectionModel(TextView &view);
 
 	void activate(int x, int y);
 	bool extendTo(int x, int y);
@@ -63,7 +63,7 @@ private:
 	void setBound(Bound &bound, int x, int y);
 
 private:
-	const TextElementMap &myElementMap;
+	TextView &myView;
 	bool myIsActive;
 	bool myIsEmpty;
 

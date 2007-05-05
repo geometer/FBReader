@@ -20,52 +20,74 @@
  */
 
 #include "SelectionModel.h"
+#include "TextView.h"
 
-SelectionModel::SelectionModel(TextElementMap &elementMap) : myElementMap(elementMap), myIsActive(false), myIsEmpty(true) {
+SelectionModel::SelectionModel(TextView &view) : myView(view), myIsActive(false), myIsEmpty(true) {
 }
 
 void SelectionModel::setBound(Bound &bound, int x, int y) {
-	if (myElementMap.empty()) {
+	if (myView.myTextElementMap.empty()) {
 		return;
 	}
 
-	// TODO
-	bound.After.CharNumber = 1;
-	bound.Before.CharNumber = 1;
-
-	TextElementMap::const_iterator it = myElementMap.begin();
-	for (; it != myElementMap.end(); ++it) {
+	TextElementMap::const_iterator it = myView.myTextElementMap.begin();
+	for (; it != myView.myTextElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
 			break;
 		}
 	}
 
-	if (it != myElementMap.end()) {
+	if (it != myView.myTextElementMap.end()) {
 		bound.After.ParagraphNumber = it->ParagraphNumber;
 		bound.After.TextElementNumber = it->TextElementNumber;
 		bound.After.Exists = true;
+		bound.After.CharNumber = it->StartCharNumber;
 		if (TextElementArea::RangeChecker(x, y)(*it)) {
 			bound.Before.ParagraphNumber = bound.After.ParagraphNumber;
 			bound.Before.TextElementNumber = bound.After.TextElementNumber;
 			bound.Before.Exists = true;
-		} else if (it == myElementMap.begin()) {
+			if (it->Kind == TextElement::WORD_ELEMENT) {
+				myView.myStyle.setStyle(it->Style);
+				WordCursor cursor = myView.startCursor();
+				cursor.moveToParagraph(it->ParagraphNumber);
+				const Word &word = (const Word&)cursor.paragraphCursor()[it->TextElementNumber];
+				const int deltaX = x - it->XStart;
+				const int len = it->Length;
+				const int start = it->StartCharNumber;
+				int diff = deltaX;
+				int previousDiff = diff;
+				int index;
+				for (index = 0; (index < len) && (diff > 0); ++index) {
+					previousDiff = diff;
+					diff = deltaX - myView.myStyle.wordWidth(word, start, index + 1);
+				}
+				if (previousDiff + diff < 0) {
+					--index;
+				}
+				bound.After.CharNumber = start + index;
+				bound.Before.CharNumber = bound.After.CharNumber;
+			}
+		} else if (it == myView.myTextElementMap.begin()) {
 			bound.Before.Exists = false;
 		} else {
-			bound.Before.ParagraphNumber = (it - 1)->ParagraphNumber;
-			bound.Before.TextElementNumber = (it - 1)->TextElementNumber;
+			const TextElementArea &previous = *(it - 1);
+			bound.Before.ParagraphNumber = previous.ParagraphNumber;
+			bound.Before.TextElementNumber = previous.TextElementNumber;
+			bound.Before.CharNumber = previous.StartCharNumber + previous.Length;
 			bound.Before.Exists = true;
 		}
 	} else {
-		const TextElementArea &back = myElementMap.back();
+		const TextElementArea &back = myView.myTextElementMap.back();
 		bound.Before.ParagraphNumber = back.ParagraphNumber;
 		bound.Before.TextElementNumber = back.TextElementNumber;
+		bound.Before.CharNumber = back.StartCharNumber + back.Length;
 		bound.Before.Exists = true;
 		bound.After.Exists = false;
 	}
 }
 
 void SelectionModel::activate(int x, int y) {
-	if (myElementMap.empty()) {
+	if (myView.myTextElementMap.empty()) {
 		return;
 	}
 
@@ -84,7 +106,7 @@ bool SelectionModel::BoundElement::operator != (const SelectionModel::BoundEleme
 }
 
 bool SelectionModel::extendTo(int x, int y) {
-	if (!myIsActive || myElementMap.empty()) {
+	if (!myIsActive || myView.myTextElementMap.empty()) {
 		return false;
 	}
 
@@ -133,7 +155,15 @@ bool SelectionModel::Bound::operator < (const Bound &bound) const {
 	if (Before.ParagraphNumber > bound.Before.ParagraphNumber) {
 		return false;
 	}
-	return Before.TextElementNumber < bound.Before.TextElementNumber;
+
+	if (Before.TextElementNumber < bound.Before.TextElementNumber) {
+		return true;
+	}
+	if (Before.TextElementNumber > bound.Before.TextElementNumber) {
+		return false;
+	}
+
+	return Before.CharNumber < bound.Before.CharNumber;
 }
 
 bool SelectionModel::isEmpty() const {

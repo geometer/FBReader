@@ -32,7 +32,7 @@
 #include "../model/TextModel.h"
 #include "../model/Paragraph.h"
 
-TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(myTextElementMap), myTreeStateIsFrozen(false) {
+TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this), myTreeStateIsFrozen(false) {
 }
 
 TextView::~TextView() {
@@ -88,7 +88,9 @@ bool operator < (const WordCursor &cursor, SelectionModel::BoundElement &element
 	return
 		(pn < element.ParagraphNumber) ||
 		((pn == element.ParagraphNumber) &&
-		 ((int)cursor.wordNumber() < element.TextElementNumber));
+		 (((int)cursor.wordNumber() < element.TextElementNumber) ||
+		  (((int)cursor.wordNumber() == element.TextElementNumber) &&
+			 (cursor.charNumber() < element.CharNumber))));
 }
 
 bool operator >= (const WordCursor &cursor, SelectionModel::BoundElement &element) {
@@ -100,7 +102,9 @@ bool operator > (const WordCursor &cursor, SelectionModel::BoundElement &element
 	return
 		(pn > element.ParagraphNumber) ||
 		((pn == element.ParagraphNumber) &&
-		 ((int)cursor.wordNumber() > element.TextElementNumber));
+		 (((int)cursor.wordNumber() > element.TextElementNumber) ||
+		  (((int)cursor.wordNumber() == element.TextElementNumber) &&
+			 (cursor.charNumber() > element.CharNumber))));
 }
 
 bool operator <= (const WordCursor &cursor, SelectionModel::BoundElement &element) {
@@ -391,18 +395,32 @@ void TextView::drawTextLine(const LineInfo &info) {
 		}
 	}
 
-	if (!mySelectionModel.isEmpty()) {
+	if (!mySelectionModel.isEmpty() && (myTextElementMap.size() != elementMapSize)) {
 		std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> range = mySelectionModel.range();
 
 		int left = context().width() - 1;
 		if (info.Start > range.first) {
 			left = 0;
 		} else if (info.End >= range.first) {
-			for (TextElementMap::const_iterator jt = myTextElementMap.begin() + elementMapSize; jt != myTextElementMap.end(); ++jt) {
-				if (*jt <= range.first) {
-					left = jt->XStart;
-				} else {
-					break;
+			TextElementMap::const_iterator lit = myTextElementMap.begin() + elementMapSize;
+			for (TextElementMap::const_iterator jt = lit;
+					 (jt != myTextElementMap.end()) && (*jt <= range.first);
+					 ++jt) {
+				lit = jt;
+			}
+			left = lit->XStart;
+			if (lit->Kind == TextElement::WORD_ELEMENT) {
+				myStyle.setStyle(lit->Style);
+				const Word &word =
+					(const Word&)info.Start.paragraphCursor()[lit->TextElementNumber];
+				int length = range.first.CharNumber - lit->StartCharNumber;
+				bool selectHyphenationSign = false;
+				if (length >= lit->Length) {
+					selectHyphenationSign = lit->AddHyphenationSign;
+					length = lit->Length;
+				}
+				if (length > 0) {
+					left += myStyle.wordWidth(word, lit->StartCharNumber, length, selectHyphenationSign);
 				}
 			}
 		}
@@ -414,12 +432,28 @@ void TextView::drawTextLine(const LineInfo &info) {
 			right = context().width() - 1;
 			bottom += info.VSpaceAfter;
 		} else if (info.Start <= range.second) {
-			for (TextElementMap::const_iterator jt = myTextElementMap.begin() + elementMapSize; jt != myTextElementMap.end(); ++jt) {
-				if (*jt <= range.second) {
-					right = jt->XEnd;
-				} else {
-					break;
+			TextElementMap::const_iterator rit = myTextElementMap.begin() + elementMapSize;
+			for (TextElementMap::const_iterator jt = rit;
+					 (jt != myTextElementMap.end()) && (*jt <= range.second);
+					 ++jt) {
+				rit = jt;
+			}
+			if (rit->Kind == TextElement::WORD_ELEMENT) {
+				right = rit->XStart - 1;
+				myStyle.setStyle(rit->Style);
+				const Word &word =
+					(const Word&)info.Start.paragraphCursor()[rit->TextElementNumber];
+				int length = range.second.CharNumber - rit->StartCharNumber;
+				bool selectHyphenationSign = false;
+				if (length >= rit->Length) {
+					selectHyphenationSign = rit->AddHyphenationSign;
+					length = rit->Length;
 				}
+				if (length > 0) {
+					right += myStyle.wordWidth(word, rit->StartCharNumber, length, selectHyphenationSign);
+				}
+			} else {
+				right = rit->XEnd - 1;
 			}
 		}
 
