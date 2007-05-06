@@ -49,6 +49,7 @@ public:
 		int TextElementNumber;
 		size_t CharNumber;
 
+		bool operator == (const BoundElement &element) const;
 		bool operator != (const BoundElement &element) const;
 	};
 

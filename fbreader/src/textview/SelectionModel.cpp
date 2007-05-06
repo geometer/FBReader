@@ -99,12 +99,16 @@ void SelectionModel::activate(int x, int y) {
 	mySecondBound = myFirstBound;
 }
 
-bool SelectionModel::BoundElement::operator != (const SelectionModel::BoundElement &element) const {
+bool SelectionModel::BoundElement::operator == (const SelectionModel::BoundElement &element) const {
 	return
-		(Exists != element.Exists) ||
-		(ParagraphNumber != element.ParagraphNumber) ||
-		(TextElementNumber != element.TextElementNumber) ||
-		(CharNumber != element.CharNumber);
+		(Exists == element.Exists) &&
+		(ParagraphNumber == element.ParagraphNumber) &&
+		(TextElementNumber == element.TextElementNumber) &&
+		(CharNumber == element.CharNumber);
+}
+
+bool SelectionModel::BoundElement::operator != (const SelectionModel::BoundElement &element) const {
+	return !operator == (element);
 }
 
 bool SelectionModel::extendTo(int x, int y) {
@@ -188,7 +192,7 @@ bool SelectionModel::isEmpty() const {
 		return true;
 	}
 	std::pair<BoundElement,BoundElement> r = range();
-	return !r.first.Exists || !r.second.Exists;
+	return !r.first.Exists || !r.second.Exists || (r.first == r.second);
 }
 
 void SelectionModel::startSelectionScrolling(bool forward) {
