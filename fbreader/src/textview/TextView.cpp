@@ -409,12 +409,7 @@ void TextView::prepareTextLine(const LineInfo &info) {
 		}
 	}
 
-	context().moveY(info.Height);
-	int maxY = myStyle.textAreaHeight();
-	if (context().y() > maxY) {
-	  context().moveYTo(maxY);
-	}
-	context().moveY(info.Descent + info.VSpaceAfter);
+	context().moveY(info.Height + info.Descent + info.VSpaceAfter);
 }
 
 static TextElementIterator findLast(TextElementIterator from, TextElementIterator to, const SelectionModel::BoundElement &bound) {
