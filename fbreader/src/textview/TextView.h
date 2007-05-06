@@ -212,6 +212,7 @@ private:
 
 	void clear();
 
+	int areaLength(const ParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber);
 	LineInfoPtr processTextLine(const WordCursor &start, const WordCursor &end);
 	void prepareTextLine(const LineInfo &info);
 	void drawTextLine(const LineInfo &info, size_t from, size_t to);

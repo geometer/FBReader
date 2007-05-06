@@ -62,6 +62,7 @@ struct TreeNodeArea : public RectangularArea {
 
 typedef std::vector<TreeNodeArea> TreeNodeMap;
 typedef std::vector<TextElementArea> TextElementMap;
+typedef TextElementMap::const_iterator TextElementIterator;
 
 inline RectangularArea::RectangularArea(int xStart, int xEnd, int yStart, int yEnd) : XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 

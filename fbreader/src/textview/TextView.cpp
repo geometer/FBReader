@@ -76,14 +76,18 @@ void TextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
 	}
 }
 
-bool operator <= (const TextElementArea &area, SelectionModel::BoundElement &element) {
+bool operator <= (const TextElementArea &area, const SelectionModel::BoundElement &element) {
 	return
 		(area.ParagraphNumber < element.ParagraphNumber) ||
 		((area.ParagraphNumber == element.ParagraphNumber) &&
 		 (area.TextElementNumber <= element.TextElementNumber));
 }
 
-bool operator < (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+bool operator > (const TextElementArea &area, const SelectionModel::BoundElement &element) {
+	return !(area <= element);
+}
+
+bool operator < (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
 	int pn = cursor.paragraphCursor().index();
 	return
 		(pn < element.ParagraphNumber) ||
@@ -93,11 +97,11 @@ bool operator < (const WordCursor &cursor, SelectionModel::BoundElement &element
 			 (cursor.charNumber() < element.CharNumber))));
 }
 
-bool operator >= (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+bool operator >= (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
 	return !(cursor < element);
 }
 
-bool operator > (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+bool operator > (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
 	int pn = cursor.paragraphCursor().index();
 	return
 		(pn > element.ParagraphNumber) ||
@@ -107,7 +111,7 @@ bool operator > (const WordCursor &cursor, SelectionModel::BoundElement &element
 			 (cursor.charNumber() > element.CharNumber))));
 }
 
-bool operator <= (const WordCursor &cursor, SelectionModel::BoundElement &element) {
+bool operator <= (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
 	return !(cursor > element);
 }
 
@@ -209,7 +213,7 @@ void TextView::scrollToEndOfText() {
 
 int TextView::paragraphIndexByCoordinate(int y) const {
 	int indexBefore = -1;
-	for (TextElementMap::const_iterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
+	for (TextElementIterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
 		if (it->YEnd < y) {
 			indexBefore = it->ParagraphNumber;
 		} else if ((it->YStart <= y) || (it->ParagraphNumber == indexBefore)) {
@@ -222,7 +226,7 @@ int TextView::paragraphIndexByCoordinate(int y) const {
 }
 
 const TextElementArea *TextView::elementByCoordinates(int x, int y) const {
-	TextElementMap::const_iterator it =
+	TextElementIterator it =
 		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), TextElementArea::RangeChecker(x, y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
@@ -413,11 +417,35 @@ void TextView::prepareTextLine(const LineInfo &info) {
 	context().moveY(info.Descent + info.VSpaceAfter);
 }
 
+static TextElementIterator findLast(TextElementIterator from, TextElementIterator to, const SelectionModel::BoundElement &bound) {
+	if (*from > bound) {
+		return from;
+	}
+	for (++from; (from != to) && (*from <= bound); ++from) {
+	}
+	return --from;
+}
+
+int TextView::areaLength(const ParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber) {
+	myStyle.setStyle(area.Style);
+	const Word &word = (const Word&)paragraph[area.TextElementNumber];
+	int length = toCharNumber - area.StartCharNumber;
+	bool selectHyphenationSign = false;
+	if (length >= area.Length) {
+		selectHyphenationSign = area.AddHyphenationSign;
+		length = area.Length;
+	}
+	if (length > 0) {
+		return myStyle.wordWidth(word, area.StartCharNumber, length, selectHyphenationSign);
+	}
+	return 0;
+}
+
 void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
-	const TextElementMap::const_iterator fromIt = myTextElementMap.begin() + from;
-	const TextElementMap::const_iterator toIt = myTextElementMap.begin() + to;
+	const TextElementIterator fromIt = myTextElementMap.begin() + from;
+	const TextElementIterator toIt = myTextElementMap.begin() + to;
 
 	if (!mySelectionModel.isEmpty() && (from != to)) {
 		std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> range = mySelectionModel.range();
@@ -426,23 +454,10 @@ void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 		if (info.Start > range.first) {
 			left = 0;
 		} else if (info.End >= range.first) {
-			TextElementMap::const_iterator lit = fromIt;
-			for (TextElementMap::const_iterator jt = lit; (jt != toIt) && (*jt <= range.first); ++jt) {
-				lit = jt;
-			}
-			left = lit->XStart;
-			if (lit->Kind == TextElement::WORD_ELEMENT) {
-				myStyle.setStyle(lit->Style);
-				const Word &word = (const Word&)paragraph[lit->TextElementNumber];
-				int length = range.first.CharNumber - lit->StartCharNumber;
-				bool selectHyphenationSign = false;
-				if (length >= lit->Length) {
-					selectHyphenationSign = lit->AddHyphenationSign;
-					length = lit->Length;
-				}
-				if (length > 0) {
-					left += myStyle.wordWidth(word, lit->StartCharNumber, length, selectHyphenationSign);
-				}
+			TextElementIterator jt = findLast(fromIt, toIt, range.first);
+			left = jt->XStart;
+			if (jt->Kind == TextElement::WORD_ELEMENT) {
+				left += areaLength(paragraph, *jt, range.first.CharNumber);
 			}
 		}
 
@@ -453,25 +468,11 @@ void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 			right = context().width() - 1;
 			bottom += info.VSpaceAfter;
 		} else if (info.Start <= range.second) {
-			TextElementMap::const_iterator rit = fromIt;
-			for (TextElementMap::const_iterator jt = rit; (jt != toIt) && (*jt <= range.second); ++jt) {
-				rit = jt;
-			}
-			if (rit->Kind == TextElement::WORD_ELEMENT) {
-				right = rit->XStart - 1;
-				myStyle.setStyle(rit->Style);
-				const Word &word = (const Word&)paragraph[rit->TextElementNumber];
-				int length = range.second.CharNumber - rit->StartCharNumber;
-				bool selectHyphenationSign = false;
-				if (length >= rit->Length) {
-					selectHyphenationSign = rit->AddHyphenationSign;
-					length = rit->Length;
-				}
-				if (length > 0) {
-					right += myStyle.wordWidth(word, rit->StartCharNumber, length, selectHyphenationSign);
-				}
+			TextElementIterator jt = findLast(fromIt, toIt, range.second);
+			if (jt->Kind == TextElement::WORD_ELEMENT) {
+				right = jt->XStart + areaLength(paragraph, *jt, range.second.CharNumber) - 1;
 			} else {
-				right = rit->XEnd - 1;
+				right = jt->XEnd - 1;
 			}
 		}
 
@@ -490,7 +491,7 @@ void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 	if (!info.NodeInfo.isNull()) {
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
-	TextElementMap::const_iterator it = fromIt;
+	TextElementIterator it = fromIt;
 	for (WordCursor pos = info.RealStart; !pos.sameElementAs(info.End); pos.nextWord()) {
 		const TextElement &element = paragraph[pos.wordNumber()];
 		TextElement::Kind kind = element.kind();
