@@ -127,7 +127,7 @@ void TextView::paint() {
 	}
 
 	std::vector<size_t> labels;
-	//labels.reserve(myLineInfos.size() + 1);
+	labels.reserve(myLineInfos.size() + 1);
 	labels.push_back(0);
 	context().moveYTo(0);
 	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
