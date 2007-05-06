@@ -79,7 +79,7 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseReleaseEvent(QMouseEvent *even
 }
 
 void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) {
-	switch (event->button()) {
+	switch (event->buttons()) {
 		case Qt::LeftButton:
 			myHolder.view()->onStylusMovePressed(x(event), y(event));
 			break;
