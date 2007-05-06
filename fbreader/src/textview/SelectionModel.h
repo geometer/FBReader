@@ -24,6 +24,9 @@
 
 #include <map>
 
+#include <shared_ptr.h>
+#include <ZLRunnable.h>
+
 class TextView;
 
 class SelectionModel {
@@ -33,6 +36,7 @@ public:
 
 	void activate(int x, int y);
 	bool extendTo(int x, int y);
+	void update();
 	void deactivate();
 	void clear();
 
@@ -61,6 +65,10 @@ public:
 
 private:
 	void setBound(Bound &bound, int x, int y);
+	void startSelectionScrolling(bool forward);
+	void stopSelectionScrolling();
+
+	void scrollAndExtend();
 
 private:
 	TextView &myView;
@@ -69,6 +77,39 @@ private:
 
 	Bound myFirstBound;
 	Bound mySecondBound;
+
+	shared_ptr<ZLRunnable> mySelectionScroller;
+	bool myDoUpdate;
+	int myStoredX;
+	int myStoredY;
+
+friend class SelectionScroller;
 };
+
+class SelectionScroller : public ZLRunnable {
+
+public:
+	enum Direction {
+		SCROLL_FORWARD,
+		SCROLL_BACKWARD,
+		DONT_SCROLL
+	};
+
+public:
+	SelectionScroller(SelectionModel &selectionModel);
+	void setDirection(Direction direction);
+	Direction direction() const;
+
+private:
+	void run();
+
+private:
+	SelectionModel &mySelectionModel;
+	Direction myDirection;
+};
+
+inline SelectionScroller::Direction SelectionScroller::direction() const {
+	return myDirection;
+}
 
 #endif /* __SELECTIONMODEL_H__ */

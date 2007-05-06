@@ -19,10 +19,12 @@
  * 02110-1301, USA.
  */
 
+#include <ZLTime.h>
+
 #include "SelectionModel.h"
 #include "TextView.h"
 
-SelectionModel::SelectionModel(TextView &view) : myView(view), myIsActive(false), myIsEmpty(true) {
+SelectionModel::SelectionModel(TextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false) {
 }
 
 void SelectionModel::setBound(Bound &bound, int x, int y) {
@@ -113,18 +115,33 @@ bool SelectionModel::extendTo(int x, int y) {
 	std::pair<BoundElement,BoundElement> oldRange = range();
 	setBound(mySecondBound, x, y);
 	std::pair<BoundElement,BoundElement> newRange = range();
+	myStoredX = x;
+	myStoredY = y;
+
+	if (!mySecondBound.Before.Exists) {
+		startSelectionScrolling(false);
+	} else if (!mySecondBound.After.Exists) {
+		startSelectionScrolling(true);
+	} else {
+		stopSelectionScrolling();
+	}
+
 	return
 		(oldRange.first != newRange.first) ||
 		(oldRange.second != newRange.second);
 }
 
 void SelectionModel::deactivate() {
+	stopSelectionScrolling();
 	myIsActive = false;
+	myDoUpdate = false;
 }
 
 void SelectionModel::clear() {
+	stopSelectionScrolling();
 	myIsEmpty = true;
 	myIsActive = false;
+	myDoUpdate = false;
 }
 
 std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> SelectionModel::range() const {
@@ -172,4 +189,57 @@ bool SelectionModel::isEmpty() const {
 	}
 	std::pair<BoundElement,BoundElement> r = range();
 	return !r.first.Exists || !r.second.Exists;
+}
+
+void SelectionModel::startSelectionScrolling(bool forward) {
+	if (mySelectionScroller.isNull()) {
+		mySelectionScroller = new SelectionScroller(*this);
+	}
+	SelectionScroller::Direction direction =
+		forward ?
+			SelectionScroller::SCROLL_FORWARD :
+			SelectionScroller::SCROLL_BACKWARD;
+	SelectionScroller &scroller = ((SelectionScroller&)*mySelectionScroller);
+	if (scroller.direction() != direction) {
+		if (scroller.direction() != SelectionScroller::DONT_SCROLL) {
+			ZLTimeManager::instance().removeTask(mySelectionScroller);
+		}
+		((SelectionScroller&)*mySelectionScroller).setDirection(direction);
+		ZLTimeManager::instance().addTask(mySelectionScroller, 400);
+	}
+}
+
+void SelectionModel::stopSelectionScrolling() {
+	if (!mySelectionScroller.isNull()) {
+		((SelectionScroller&)*mySelectionScroller).setDirection(SelectionScroller::DONT_SCROLL);
+		ZLTimeManager::instance().removeTask(mySelectionScroller);
+	}
+}
+
+void SelectionModel::update() {
+	if (myDoUpdate) {
+		myDoUpdate = false;
+		setBound(mySecondBound, myStoredX, myStoredY);
+	}
+}
+
+void SelectionModel::scrollAndExtend() {
+	SelectionScroller::Direction direction =
+		((SelectionScroller&)*mySelectionScroller).direction();
+	if (direction != SelectionScroller::DONT_SCROLL) {
+		myView.scrollPage(direction == SelectionScroller::SCROLL_FORWARD, TextView::SCROLL_LINES, 1);
+		myDoUpdate = true;
+		myView.repaintView();
+	}
+}
+
+SelectionScroller::SelectionScroller(SelectionModel &selectionModel) : mySelectionModel(selectionModel), myDirection(DONT_SCROLL) {
+}
+
+void SelectionScroller::setDirection(Direction direction) {
+	myDirection = direction;
+}
+
+void SelectionScroller::run() {
+	mySelectionModel.scrollAndExtend();
 }

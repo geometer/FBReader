@@ -122,9 +122,20 @@ void TextView::paint() {
 		return;
 	}
 
+	std::vector<size_t> labels;
+	//labels.reserve(myLineInfos.size() + 1);
+	labels.push_back(0);
 	context().moveYTo(0);
 	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
-		drawTextLine(**it);
+		prepareTextLine(**it);
+		labels.push_back(myTextElementMap.size());
+	}
+	mySelectionModel.update();
+	context().moveYTo(0);
+	int index = 0;
+	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+		drawTextLine(**it, labels[index], labels[index + 1]);
+		++index;
 	}
 
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
@@ -292,8 +303,7 @@ void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber)
 	}
 }
 
-void TextView::drawTextLine(const LineInfo &info) {
-	const size_t elementMapSize = myTextElementMap.size();
+void TextView::prepareTextLine(const LineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
 	const int y = std::min(context().y() + info.Height, myStyle.textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
@@ -395,24 +405,35 @@ void TextView::drawTextLine(const LineInfo &info) {
 		}
 	}
 
-	if (!mySelectionModel.isEmpty() && (myTextElementMap.size() != elementMapSize)) {
+	context().moveY(info.Height);
+	int maxY = myStyle.textAreaHeight();
+	if (context().y() > maxY) {
+	  context().moveYTo(maxY);
+	}
+	context().moveY(info.Descent + info.VSpaceAfter);
+}
+
+void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
+	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
+
+	const TextElementMap::const_iterator fromIt = myTextElementMap.begin() + from;
+	const TextElementMap::const_iterator toIt = myTextElementMap.begin() + to;
+
+	if (!mySelectionModel.isEmpty() && (from != to)) {
 		std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> range = mySelectionModel.range();
 
 		int left = context().width() - 1;
 		if (info.Start > range.first) {
 			left = 0;
 		} else if (info.End >= range.first) {
-			TextElementMap::const_iterator lit = myTextElementMap.begin() + elementMapSize;
-			for (TextElementMap::const_iterator jt = lit;
-					 (jt != myTextElementMap.end()) && (*jt <= range.first);
-					 ++jt) {
+			TextElementMap::const_iterator lit = fromIt;
+			for (TextElementMap::const_iterator jt = lit; (jt != toIt) && (*jt <= range.first); ++jt) {
 				lit = jt;
 			}
 			left = lit->XStart;
 			if (lit->Kind == TextElement::WORD_ELEMENT) {
 				myStyle.setStyle(lit->Style);
-				const Word &word =
-					(const Word&)info.Start.paragraphCursor()[lit->TextElementNumber];
+				const Word &word = (const Word&)paragraph[lit->TextElementNumber];
 				int length = range.first.CharNumber - lit->StartCharNumber;
 				bool selectHyphenationSign = false;
 				if (length >= lit->Length) {
@@ -432,17 +453,14 @@ void TextView::drawTextLine(const LineInfo &info) {
 			right = context().width() - 1;
 			bottom += info.VSpaceAfter;
 		} else if (info.Start <= range.second) {
-			TextElementMap::const_iterator rit = myTextElementMap.begin() + elementMapSize;
-			for (TextElementMap::const_iterator jt = rit;
-					 (jt != myTextElementMap.end()) && (*jt <= range.second);
-					 ++jt) {
+			TextElementMap::const_iterator rit = fromIt;
+			for (TextElementMap::const_iterator jt = rit; (jt != toIt) && (*jt <= range.second); ++jt) {
 				rit = jt;
 			}
 			if (rit->Kind == TextElement::WORD_ELEMENT) {
 				right = rit->XStart - 1;
 				myStyle.setStyle(rit->Style);
-				const Word &word =
-					(const Word&)info.Start.paragraphCursor()[rit->TextElementNumber];
+				const Word &word = (const Word&)paragraph[rit->TextElementNumber];
 				int length = range.second.CharNumber - rit->StartCharNumber;
 				bool selectHyphenationSign = false;
 				if (length >= rit->Length) {
@@ -472,7 +490,7 @@ void TextView::drawTextLine(const LineInfo &info) {
 	if (!info.NodeInfo.isNull()) {
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
-	TextElementMap::const_iterator it = myTextElementMap.begin() + elementMapSize;
+	TextElementMap::const_iterator it = fromIt;
 	for (WordCursor pos = info.RealStart; !pos.sameElementAs(info.End); pos.nextWord()) {
 		const TextElement &element = paragraph[pos.wordNumber()];
 		TextElement::Kind kind = element.kind();
@@ -491,7 +509,7 @@ void TextView::drawTextLine(const LineInfo &info) {
 			++it;
 		}
 	}
-	if (it != myTextElementMap.end()) {
+	if (it != toIt) {
 		if (it->ChangeStyle) {
 			myStyle.setStyle(it->Style);
 		}
