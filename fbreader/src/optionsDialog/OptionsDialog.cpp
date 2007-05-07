@@ -255,11 +255,13 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 		myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 	}
 
-	ZLDialogContent *dictionaryTab = createIntegrationTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With");
-	if (dictionaryTab != 0) {
-		dictionaryTab->addOption(new ZLSimpleBooleanOptionEntry("Open By Single Click", fbreader.EnableSingleClickDictionaryOption));
-	}
-	createIntegrationTab(fbreader.webBrowserCollection(), "Web", "Open External Links In ", "Browser", "Use Browser");
+	std::vector<ZLOptionEntry*> additional;
+	additional.push_back(new ZLSimpleBooleanOptionEntry(
+		"Open By Single Click", fbreader.EnableSingleClickDictionaryOption
+	));
+	createIntegrationTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With", additional);
+	additional.clear();
+	createIntegrationTab(fbreader.webBrowserCollection(), "Web", "Open External Links In ", "Browser", "Use Browser", additional);
 }
 
 void OptionsDialog::storeTemporaryOption(ZLOption *option) {

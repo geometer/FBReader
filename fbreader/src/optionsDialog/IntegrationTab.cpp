@@ -113,45 +113,48 @@ void EnableIntegrationEntry::onStateChanged(bool state) {
 	}
 }
 
-ZLDialogContent *OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName) {
-	if (collection.isNull()) {
-		return 0;
-	}
+void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName, std::vector<ZLOptionEntry*> &additionalOptions) {
+	if (!collection.isNull()) {
+		const std::vector<std::string> &programNames = collection->names();
+		if (!programNames.empty()) {
+			ZLDialogContent &integrationTab = myDialog->createTab(name);
+			const std::string optionName = checkBoxPrefix +
+				((programNames.size() == 1) ? programNames[0] : checkBoxSuffix);
+			EnableIntegrationEntry *enableIntegrationEntry =
+				new EnableIntegrationEntry(optionName, collection->EnableCollectionOption);
+			integrationTab.addOption(enableIntegrationEntry);
 
-	const std::vector<std::string> &programNames = collection->names();
-	if (programNames.empty()) {
-		return 0;
-	}
-
-	ZLDialogContent &integrationTab = myDialog->createTab(name);
-	const std::string optionName = checkBoxPrefix +
-		((programNames.size() == 1) ? programNames[0] : checkBoxSuffix);
-	EnableIntegrationEntry *enableIntegrationEntry =
-		new EnableIntegrationEntry(optionName, collection->EnableCollectionOption);
-	integrationTab.addOption(enableIntegrationEntry);
-
-	ProgramChoiceEntry *programChoiceEntry = 0;
-	if (programNames.size() > 1) {
-		programChoiceEntry = new ProgramChoiceEntry(*collection, comboBoxName);
-		integrationTab.addOption(programChoiceEntry);
-		enableIntegrationEntry->setProgramChoiceEntry(programChoiceEntry);
-	}
-
-	for (std::vector<std::string>::const_iterator it = programNames.begin(); it != programNames.end(); ++it) {
-		const std::vector<Program::OptionDescription> &options = collection->program(*it)->options();
-		for (std::vector<Program::OptionDescription>::const_iterator jt = options.begin(); jt != options.end(); ++jt) {
-			ZLStringOption *parameterOption = new ZLStringOption(FBOptions::EXTERNAL_CATEGORY, *it, jt->OptionName, jt->DefaultValue);
-			storeTemporaryOption(parameterOption);
-			ZLOptionEntry *parameterEntry = new ZLSimpleStringOptionEntry(jt->DisplayName, *parameterOption);
-			if (programChoiceEntry != 0) {
-				programChoiceEntry->addDependentEntry(*it, parameterEntry);
-			} else {
-				enableIntegrationEntry->addDependentEntry(parameterEntry);
+			ProgramChoiceEntry *programChoiceEntry = 0;
+			if (programNames.size() > 1) {
+				programChoiceEntry = new ProgramChoiceEntry(*collection, comboBoxName);
+				integrationTab.addOption(programChoiceEntry);
+				enableIntegrationEntry->setProgramChoiceEntry(programChoiceEntry);
 			}
-			integrationTab.addOption(parameterEntry);
+
+			for (std::vector<std::string>::const_iterator it = programNames.begin(); it != programNames.end(); ++it) {
+				const std::vector<Program::OptionDescription> &options = collection->program(*it)->options();
+				for (std::vector<Program::OptionDescription>::const_iterator jt = options.begin(); jt != options.end(); ++jt) {
+					ZLStringOption *parameterOption = new ZLStringOption(FBOptions::EXTERNAL_CATEGORY, *it, jt->OptionName, jt->DefaultValue);
+					storeTemporaryOption(parameterOption);
+					ZLOptionEntry *parameterEntry = new ZLSimpleStringOptionEntry(jt->DisplayName, *parameterOption);
+					if (programChoiceEntry != 0) {
+						programChoiceEntry->addDependentEntry(*it, parameterEntry);
+					} else {
+						enableIntegrationEntry->addDependentEntry(parameterEntry);
+					}
+					integrationTab.addOption(parameterEntry);
+				}
+			}
+			for (std::vector<ZLOptionEntry*>::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
+				enableIntegrationEntry->addDependentEntry(*it);
+				integrationTab.addOption(*it);
+			}
+			enableIntegrationEntry->onStateChanged(enableIntegrationEntry->initialState());
+			return;
 		}
 	}
-	enableIntegrationEntry->onStateChanged(enableIntegrationEntry->initialState());
 
-	return &integrationTab;
+	for (std::vector<ZLOptionEntry*>::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
+		delete *it;
+	}
 }
