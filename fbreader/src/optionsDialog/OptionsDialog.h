@@ -27,6 +27,7 @@
 class FBReader;
 
 class ZLOptionsDialog;
+class ZLDialogContent;
 class OptionsPage;
 class ScrollingOptionsPage;
 class KeyBindingsPage;
@@ -47,7 +48,7 @@ public:
 	ZLOptionsDialog &dialog();
 
 private:
-	void createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName);
+	ZLDialogContent *createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName);
 	void createIndicatorTab(FBReader &fbreader);
 	void storeTemporaryOption(ZLOption *option);
 

@@ -236,7 +236,8 @@ bool BookTextView::_onStylusPress(int x, int y) {
 			return true;
 		}
 		
-		if (area->Kind == TextElement::WORD_ELEMENT) {
+		if (fbreader().EnableSingleClickDictionaryOption.value() &&
+				(area->Kind == TextElement::WORD_ELEMENT)) {
 			WordCursor cursor = startCursor();
 			cursor.moveToParagraph(area->ParagraphNumber);
 			cursor.moveTo(area->TextElementNumber, 0);

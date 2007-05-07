@@ -122,6 +122,7 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(FBReader &fbreader) :
 
 	// selection
 	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, "Copy Selection To Clipboard");
+	addAction(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, "Open Selected Text In Dictionary");
 	addAction(ACTION_CLEAR_SELECTION, "Clear Selection");
 
 	// search

@@ -26,6 +26,8 @@
 
 #include "FBReader.h"
 
+class TextView;
+
 enum ActionCode {
 	// please, don't change these numbers
 	// add new action id's at end of this enumeration
@@ -66,14 +68,16 @@ enum ActionCode {
 	ACTION_GOTO_PREVIOUS_TOC_SECTION = 34,
 	ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD = 35,
 	ACTION_CLEAR_SELECTION = 36,
+	ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY = 37,
 };
 
 class FBAction : public ZLApplication::Action {
 
 protected:
 	FBAction(FBReader &fbreader);
+	FBReader &fbreader();
 
-protected:
+private:
 	FBReader &myFBReader;
 };
 
@@ -267,22 +271,42 @@ public:
 	void run();
 };
 
-class CopySelectedTextAction : public FBAction {
+class SelectionAction : public FBAction {
+
+public:
+	SelectionAction(FBReader &fbreader);
+	bool isVisible();
+	bool isEnabled();
+
+protected:
+	TextView &textView();
+};
+
+class CopySelectedTextAction : public SelectionAction {
 
 public:
 	CopySelectedTextAction(FBReader &fbreader);
 	bool isVisible();
-	bool isEnabled();
 	void run();
 };
 
-class ClearSelectionAction : public FBAction {
+class OpenSelectedTextInDictionaryAction : public SelectionAction {
+
+public:
+	OpenSelectedTextInDictionaryAction(FBReader &fbreader);
+	bool isVisible();
+	void run();
+};
+
+class ClearSelectionAction : public SelectionAction {
 
 public:
 	ClearSelectionAction(FBReader &fbreader);
-	bool isVisible();
-	bool isEnabled();
 	void run();
 };
+
+inline FBReader &FBAction::fbreader() {
+	return myFBReader;
+}
 
 #endif /* __FBREADERACTIONS_H__ */

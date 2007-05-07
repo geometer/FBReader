@@ -113,14 +113,14 @@ void EnableIntegrationEntry::onStateChanged(bool state) {
 	}
 }
 
-void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName) {
+ZLDialogContent *OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const std::string &name, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName) {
 	if (collection.isNull()) {
-		return;
+		return 0;
 	}
 
 	const std::vector<std::string> &programNames = collection->names();
 	if (programNames.empty()) {
-		return;
+		return 0;
 	}
 
 	ZLDialogContent &integrationTab = myDialog->createTab(name);
@@ -152,4 +152,6 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 		}
 	}
 	enableIntegrationEntry->onStateChanged(enableIntegrationEntry->initialState());
+
+	return &integrationTab;
 }

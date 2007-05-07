@@ -185,9 +185,8 @@ public:
 
 	void highlightParagraph(int paragraphNumber);
 
-	bool hasSelectedText() const;
+	SelectionModel &selectionModel();
 	void copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const;
-	void clearSelection();
 	
 protected:
 	bool onStylusPress(int x, int y);
@@ -300,5 +299,6 @@ inline const shared_ptr<TextModel> TextView::model() const { return myModel; }
 inline int TextView::infoSize(const LineInfo &info, SizeUnit unit) {
 	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
 }
+inline SelectionModel &TextView::selectionModel() { return mySelectionModel; }
 
 #endif /* __TEXTVIEW_H__ */

@@ -76,8 +76,12 @@ void ZLQtDialogManager::wait(ZLRunnable &runnable, const std::string &message) c
 	fullScreenWorkaround();
 }
 
-void ZLQtDialogManager::setClipboardText(const std::string &text) const {
-	if (!text.empty()) {
+bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {
+	return type == CLIPBOARD_MAIN;
+}
+
+void ZLQtDialogManager::setClipboardText(const std::string &text, ClipboardType type) const {
+	if ((type == CLIPBOARD_MAIN) && !text.empty()) {
 		qApp->clipboard()->setText(QString::fromUtf8(text.c_str()));
 	}
 }

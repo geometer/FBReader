@@ -639,23 +639,12 @@ bool TextView::onStylusMovePressed(int x, int y) {
 	return true;
 }
 
-bool TextView::hasSelectedText() const {
-	return !mySelectionModel.isEmpty() && !mySelectionModel.getText().empty();
-}
-
 void TextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const {
 	if (ZLDialogManager::instance().isClipboardSupported(type)) {
 		std::string text = mySelectionModel.getText();
 		if (!text.empty()) {
 			ZLDialogManager::instance().setClipboardText(text, type);
 		}
-	}
-}
-
-void TextView::clearSelection() {
-	if (!mySelectionModel.isEmpty()) {
-		mySelectionModel.clear();
-		repaintView();
 	}
 }
 

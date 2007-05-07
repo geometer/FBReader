@@ -255,7 +255,10 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 		myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
 	}
 
-	createIntegrationTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With");
+	ZLDialogContent *dictionaryTab = createIntegrationTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With");
+	if (dictionaryTab != 0) {
+		dictionaryTab->addOption(new ZLSimpleBooleanOptionEntry("Open By Single Click", fbreader.EnableSingleClickDictionaryOption));
+	}
 	createIntegrationTab(fbreader.webBrowserCollection(), "Web", "Open External Links In ", "Browser", "Use Browser");
 }
 

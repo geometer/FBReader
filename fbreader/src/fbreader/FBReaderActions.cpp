@@ -39,11 +39,11 @@ ShowCollectionAction::ShowCollectionAction(FBReader &fbreader) : FBAction(fbread
 }
 
 void ShowCollectionAction::run() {
-	myFBReader.setMode(FBReader::BOOK_COLLECTION_MODE);
+	fbreader().setMode(FBReader::BOOK_COLLECTION_MODE);
 }
 
 bool ShowCollectionAction::isVisible() {
-	FBReader::ViewMode mode = myFBReader.myMode;
+	FBReader::ViewMode mode = fbreader().myMode;
 	return (mode != FBReader::FOOTNOTE_MODE) && (mode != FBReader::BOOK_COLLECTION_MODE);
 }
 
@@ -51,19 +51,19 @@ ShowHelpAction::ShowHelpAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void ShowHelpAction::run() {
-	myFBReader.openFile(myFBReader.helpFileName());
-	myFBReader.setMode(FBReader::BOOK_TEXT_MODE);
+	fbreader().openFile(fbreader().helpFileName());
+	fbreader().setMode(FBReader::BOOK_TEXT_MODE);
 }
 
 ShowRecentBooksListAction::ShowRecentBooksListAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void ShowRecentBooksListAction::run() {
-	myFBReader.setMode(FBReader::RECENT_BOOKS_MODE);
+	fbreader().setMode(FBReader::RECENT_BOOKS_MODE);
 }
 
 bool ShowRecentBooksListAction::isVisible() {
-	FBReader::ViewMode mode = myFBReader.myMode;
+	FBReader::ViewMode mode = fbreader().myMode;
 	return
 		(mode != FBReader::FOOTNOTE_MODE) &&
 		(mode != FBReader::BOOK_COLLECTION_MODE) &&
@@ -74,67 +74,68 @@ ShowOptionsDialogAction::ShowOptionsDialogAction(FBReader &fbreader) : FBAction(
 }
 
 void ShowOptionsDialogAction::run() {
-	OptionsDialog(myFBReader).dialog().run("");
+	FBReader &f = fbreader();
+	OptionsDialog(f).dialog().run("");
 }
 
 ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool ShowContentsAction::isVisible() {
-	FBReader::ViewMode mode = myFBReader.myMode;
+	FBReader::ViewMode mode = fbreader().myMode;
 	return (mode == FBReader::BOOK_TEXT_MODE) || (mode == FBReader::FOOTNOTE_MODE);
 }
 
 bool ShowContentsAction::isEnabled() {
-	return isVisible() && !((ContentsView&)*myFBReader.myContentsView).isEmpty();
+	return isVisible() && !((ContentsView&)*fbreader().myContentsView).isEmpty();
 }
 
 void ShowContentsAction::run() {
-	myFBReader.setMode(FBReader::CONTENTS_MODE);
+	fbreader().setMode(FBReader::CONTENTS_MODE);
 }
 
 AddBookAction::AddBookAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool AddBookAction::isVisible() {
-	return myFBReader.myMode != FBReader::FOOTNOTE_MODE;
+	return fbreader().myMode != FBReader::FOOTNOTE_MODE;
 }
 
 void AddBookAction::run() {
-	myFBReader.addBookSlot();
+	fbreader().addBookSlot();
 }
 
 ScrollToHomeAction::ScrollToHomeAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool ScrollToHomeAction::isVisible() {
-	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+	return fbreader().myMode == FBReader::BOOK_TEXT_MODE;
 }
 
 void ScrollToHomeAction::run() {
-	myFBReader.bookTextView().scrollToHome();
+	fbreader().bookTextView().scrollToHome();
 }
 
 ScrollToStartOfTextAction::ScrollToStartOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool ScrollToStartOfTextAction::isVisible() {
-	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+	return fbreader().myMode == FBReader::BOOK_TEXT_MODE;
 }
 
 void ScrollToStartOfTextAction::run() {
-	myFBReader.bookTextView().scrollToStartOfText();
+	fbreader().bookTextView().scrollToStartOfText();
 }
 
 ScrollToEndOfTextAction::ScrollToEndOfTextAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool ScrollToEndOfTextAction::isVisible() {
-	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+	return fbreader().myMode == FBReader::BOOK_TEXT_MODE;
 }
 
 void ScrollToEndOfTextAction::run() {
-	myFBReader.bookTextView().scrollToEndOfText();
+	fbreader().bookTextView().scrollToEndOfText();
 }
 
 ShowBookInfoAction::ShowBookInfoAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -142,28 +143,28 @@ ShowBookInfoAction::ShowBookInfoAction(FBReader &fbreader) : FBAction(fbreader) 
 
 bool ShowBookInfoAction::isVisible() {
 	return
-		(myFBReader.myMode == FBReader::BOOK_TEXT_MODE) ||
-		(myFBReader.myMode == FBReader::CONTENTS_MODE) ||
-		(myFBReader.myMode == FBReader::FOOTNOTE_MODE);
+		(fbreader().myMode == FBReader::BOOK_TEXT_MODE) ||
+		(fbreader().myMode == FBReader::CONTENTS_MODE) ||
+		(fbreader().myMode == FBReader::FOOTNOTE_MODE);
 }
 
 void ShowBookInfoAction::run() {
-	myFBReader.bookInfoSlot();
+	fbreader().bookInfoSlot();
 }
 
 UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool UndoAction::isEnabled() {
-	return (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) ||
-					myFBReader.bookTextView().canUndoPageMove();
+	return (fbreader().myMode != FBReader::BOOK_TEXT_MODE) ||
+					fbreader().bookTextView().canUndoPageMove();
 }
 
 void UndoAction::run() {
-	if (myFBReader.myMode == FBReader::BOOK_TEXT_MODE) {
-		myFBReader.bookTextView().undoPageMove();
+	if (fbreader().myMode == FBReader::BOOK_TEXT_MODE) {
+		fbreader().bookTextView().undoPageMove();
 	} else {
-		myFBReader.restorePreviousMode();
+		fbreader().restorePreviousMode();
 	}
 }
 
@@ -171,50 +172,50 @@ RedoAction::RedoAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool RedoAction::isVisible() {
-	return myFBReader.myMode == FBReader::BOOK_TEXT_MODE;
+	return fbreader().myMode == FBReader::BOOK_TEXT_MODE;
 }
 
 bool RedoAction::isEnabled() {
-	return isVisible() && myFBReader.bookTextView().canRedoPageMove();
+	return isVisible() && fbreader().bookTextView().canRedoPageMove();
 }
 
 void RedoAction::run() {
-	myFBReader.bookTextView().redoPageMove();
+	fbreader().bookTextView().redoPageMove();
 }
 
 SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool SearchAction::isVisible() {
-	return myFBReader.currentView() != 0;
+	return fbreader().currentView() != 0;
 }
 
 void SearchAction::run() {
-	myFBReader.searchSlot();
+	fbreader().searchSlot();
 }
 
 FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool FindNextAction::isEnabled() {
-	shared_ptr<ZLView> view = myFBReader.currentView();
+	shared_ptr<ZLView> view = fbreader().currentView();
 	return (!view.isNull()) && ((TextView&)*view).canFindNext();
 }
 
 void FindNextAction::run() {
-	((TextView&)*myFBReader.currentView()).findNext();
+	((TextView&)*fbreader().currentView()).findNext();
 }
 
 FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool FindPreviousAction::isEnabled() {
-	shared_ptr<ZLView> view = myFBReader.currentView();
+	shared_ptr<ZLView> view = fbreader().currentView();
 	return (!view.isNull()) && ((TextView&)*view).canFindPrevious();
 }
 
 void FindPreviousAction::run() {
-	((TextView&)*myFBReader.currentView()).findPrevious();
+	((TextView&)*fbreader().currentView()).findPrevious();
 }
 
 ScrollingAction::ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
@@ -222,8 +223,8 @@ ScrollingAction::ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOp
 
 bool ScrollingAction::isEnabled() {
 	return
-		(&myOptions != &myFBReader.FingerTapScrollingOptions) ||
-		myFBReader.EnableFingerScrollingOption.value();
+		(&myOptions != &fbreader().FingerTapScrollingOptions) ||
+		fbreader().EnableFingerScrollingOption.value();
 }
 
 bool ScrollingAction::useKeyDelay() const {
@@ -231,8 +232,8 @@ bool ScrollingAction::useKeyDelay() const {
 }
 
 void ScrollingAction::run() {
-	int delay = myFBReader.myLastScrollingTime.millisecondsTo(ZLTime());
-	shared_ptr<ZLView> view = myFBReader.currentView();
+	int delay = fbreader().myLastScrollingTime.millisecondsTo(ZLTime());
+	shared_ptr<ZLView> view = fbreader().currentView();
 	if (!view.isNull() && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
 		TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
 		unsigned int oValue = 0;
@@ -250,8 +251,8 @@ void ScrollingAction::run() {
 				break;
 		}
 		((TextView&)*view).scrollPage(myForward, oType, oValue);
-		myFBReader.refreshWindow();
-		myFBReader.myLastScrollingTime = ZLTime();
+		fbreader().refreshWindow();
+		fbreader().myLastScrollingTime = ZLTime();
 	}
 }
 
@@ -261,37 +262,37 @@ ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : FBAc
 void ChangeFontSizeAction::run() {
 	ZLIntegerRangeOption &option = TextStyleCollection::instance().baseStyle().FontSizeOption;
 	option.setValue(option.value() + myDelta);
-	myFBReader.clearTextCaches();
-	myFBReader.refreshWindow();
+	fbreader().clearTextCaches();
+	fbreader().refreshWindow();
 }
 
 OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool OpenPreviousBookAction::isVisible() {
-	if ((myFBReader.myMode != FBReader::BOOK_TEXT_MODE) && (myFBReader.myMode != FBReader::CONTENTS_MODE)) {
+	if ((fbreader().myMode != FBReader::BOOK_TEXT_MODE) && (fbreader().myMode != FBReader::CONTENTS_MODE)) {
 		return false;
 	}
-	return ((RecentBooksView&)*myFBReader.myRecentBooksView).lastBooks().books().size() > 1;
+	return ((RecentBooksView&)*fbreader().myRecentBooksView).lastBooks().books().size() > 1;
 }
 
 void OpenPreviousBookAction::run() {
-	Books books = ((RecentBooksView&)*myFBReader.myRecentBooksView).lastBooks().books();
-	myFBReader.openBook(books[1]);
-	myFBReader.refreshWindow();
-	myFBReader.resetWindowCaption();
+	Books books = ((RecentBooksView&)*fbreader().myRecentBooksView).lastBooks().books();
+	fbreader().openBook(books[1]);
+	fbreader().refreshWindow();
+	fbreader().resetWindowCaption();
 }
 
 CancelAction::CancelAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void CancelAction::run() {
-	if (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) {
-		myFBReader.restorePreviousMode();
-	} else if (myFBReader.isFullscreen()) {
-		myFBReader.setFullscreen(false);
-	} else if (myFBReader.QuitOnCancelOption.value()) {
-		myFBReader.quit();
+	if (fbreader().myMode != FBReader::BOOK_TEXT_MODE) {
+		fbreader().restorePreviousMode();
+	} else if (fbreader().isFullscreen()) {
+		fbreader().setFullscreen(false);
+	} else if (fbreader().QuitOnCancelOption.value()) {
+		fbreader().quit();
 	}
 }
 
@@ -301,57 +302,57 @@ ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbre
 void ToggleIndicatorAction::run() {
 	ZLBooleanOption &option = TextStyleCollection::instance().indicatorStyle().ShowOption;
 	option.setValue(!option.value());
-	myFBReader.refreshWindow();
+	fbreader().refreshWindow();
 }
 
 QuitAction::QuitAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void QuitAction::run() {
-	myFBReader.closeView();
+	fbreader().closeView();
 }
 
 GotoNextTOCSectionAction::GotoNextTOCSectionAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool GotoNextTOCSectionAction::isVisible() {
-	if (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) {
+	if (fbreader().myMode != FBReader::BOOK_TEXT_MODE) {
 		return false;
 	}
-	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;
 	shared_ptr<TextModel> model = contentsView.model();
 	return !model.isNull() && (model->paragraphsNumber() > 1);
 }
 
 bool GotoNextTOCSectionAction::isEnabled() {
-	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;
 	shared_ptr<TextModel> model = contentsView.model();
 	return !model.isNull() && ((int)contentsView.currentTextViewParagraph() < (int)model->paragraphsNumber() - 1);
 }
 
 void GotoNextTOCSectionAction::run() {
-	ContentsView &contentsView = (ContentsView&)*myFBReader.myContentsView;
+	ContentsView &contentsView = (ContentsView&)*fbreader().myContentsView;
 	size_t current = contentsView.currentTextViewParagraph();
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
 	int reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current + 1]));
-	((TextView&)*myFBReader.myBookTextView).gotoParagraph(reference);
-	myFBReader.refreshWindow();
+	((TextView&)*fbreader().myBookTextView).gotoParagraph(reference);
+	fbreader().refreshWindow();
 }
 
 GotoPreviousTOCSectionAction::GotoPreviousTOCSectionAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool GotoPreviousTOCSectionAction::isVisible() {
-	if (myFBReader.myMode != FBReader::BOOK_TEXT_MODE) {
+	if (fbreader().myMode != FBReader::BOOK_TEXT_MODE) {
 		return false;
 	}
-	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;
 	shared_ptr<TextModel> model = contentsView.model();
 	return !model.isNull() && (model->paragraphsNumber() > 1);
 }
 
 bool GotoPreviousTOCSectionAction::isEnabled() {
-	const ContentsView &contentsView = (const ContentsView&)*myFBReader.myContentsView;
+	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;
 	shared_ptr<TextModel> model = contentsView.model();
 	if (model.isNull()) {
 		return false;
@@ -362,7 +363,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() {
 		return true;
 	}
 	if (tocIndex == 0) {
-		const WordCursor &cursor = myFBReader.bookTextView().startCursor();
+		const WordCursor &cursor = fbreader().bookTextView().startCursor();
 		if (cursor.isNull()) {
 			return false;
 		}
@@ -377,47 +378,68 @@ bool GotoPreviousTOCSectionAction::isEnabled() {
 }
 
 void GotoPreviousTOCSectionAction::run() {
-	ContentsView &contentsView = (ContentsView&)*myFBReader.myContentsView;
+	ContentsView &contentsView = (ContentsView&)*fbreader().myContentsView;
 	size_t current = contentsView.currentTextViewParagraph();
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
 
 	int reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current]));
-	const WordCursor &cursor = myFBReader.bookTextView().startCursor();
+	const WordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull() &&
 			(cursor.wordNumber() == 0) &&
 			(reference == (int)cursor.paragraphCursor().index())) {
 		reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current - 1]));
 	}
-	((TextView&)*myFBReader.myBookTextView).gotoParagraph(reference);
-	myFBReader.refreshWindow();
+	((TextView&)*fbreader().myBookTextView).gotoParagraph(reference);
+	fbreader().refreshWindow();
 }
 
-CopySelectedTextAction::CopySelectedTextAction(FBReader &fbreader) : FBAction(fbreader) {
+SelectionAction::SelectionAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool SelectionAction::isVisible() {
+	return fbreader().currentView() != 0;
+}
+
+bool SelectionAction::isEnabled() {
+	return isVisible() && !textView().selectionModel().getText().empty();
+}
+
+TextView &SelectionAction::textView() {
+	return (TextView&)*fbreader().currentView();
+}
+
+CopySelectedTextAction::CopySelectedTextAction(FBReader &fbreader) : SelectionAction(fbreader) {
 }
 
 bool CopySelectedTextAction::isVisible() {
-	return ZLDialogManager::instance().isClipboardSupported(ZLDialogManager::CLIPBOARD_MAIN);
-}
-
-bool CopySelectedTextAction::isEnabled() {
-	return isVisible() && ((const TextView&)*myFBReader.currentView()).hasSelectedText();
+	return SelectionAction::isVisible() && ZLDialogManager::instance().isClipboardSupported(ZLDialogManager::CLIPBOARD_MAIN);
 }
 
 void CopySelectedTextAction::run() {
-	((const TextView&)*myFBReader.currentView()).copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_MAIN);
+	textView().copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_MAIN);
 }
 
-ClearSelectionAction::ClearSelectionAction(FBReader &fbreader) : FBAction(fbreader) {
+OpenSelectedTextInDictionaryAction::OpenSelectedTextInDictionaryAction(FBReader &fbreader) : SelectionAction(fbreader) {
 }
 
-bool ClearSelectionAction::isVisible() {
-	return true;
+bool OpenSelectedTextInDictionaryAction::isVisible() {
+	if (!SelectionAction::isVisible()) {
+		return false;
+	}
+	shared_ptr<ProgramCollection> dictionaryCollection = fbreader().dictionaryCollection();
+	return !dictionaryCollection.isNull() && !dictionaryCollection->currentProgram().isNull();
 }
 
-bool ClearSelectionAction::isEnabled() {
-	return isVisible() && ((const TextView&)*myFBReader.currentView()).hasSelectedText();
+void OpenSelectedTextInDictionaryAction::run() {
+	fbreader().dictionaryCollection()->currentProgram()->run(
+		"showWord", textView().selectionModel().getText()
+	);
+}
+
+ClearSelectionAction::ClearSelectionAction(FBReader &fbreader) : SelectionAction(fbreader) {
 }
 
 void ClearSelectionAction::run() {
-	((TextView&)*myFBReader.currentView()).clearSelection();
+	textView().selectionModel().clear();
+	textView().repaintView();
 }

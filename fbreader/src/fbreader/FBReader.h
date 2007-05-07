@@ -90,6 +90,8 @@ public:
 	ZLBooleanOption UseSeparateBindingsOption;
 	ZLBooleanOption ShowHelpIconOption;
 
+	ZLBooleanOption EnableSingleClickDictionaryOption;
+
 public:
 	FBReader(const std::string &bookToOpen);
 	~FBReader();
@@ -161,7 +163,7 @@ friend class FBView;
 friend class ShowCollectionAction;
 friend class ShowHelpAction;
 friend class ShowRecentBooksListAction;
-friend class ShowOptionsDialogAction;
+//friend class ShowOptionsDialogAction;
 friend class ShowContentsAction;
 friend class AddBookAction;
 friend class ShowBookInfoAction;
@@ -176,13 +178,12 @@ friend class FindPreviousAction;
 friend class ScrollingAction;
 friend class ChangeFontSizeAction;
 friend class CancelAction;
-friend class ToggleIndicatorAction;
+//friend class ToggleIndicatorAction;
 friend class QuitAction;
 friend class OpenPreviousBookAction;
 friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
-friend class CopySelectedTextAction;
-friend class ClearSelectionAction;
+friend class SelectionAction;
 };
 
 #endif /* __FBREADER_H__ */

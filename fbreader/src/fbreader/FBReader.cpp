@@ -114,6 +114,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
 	UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false),
 	ShowHelpIconOption(ZLOption::CONFIG_CATEGORY, "Help", "ShowIcon", false),
+	EnableSingleClickDictionaryOption(ZLOption::CONFIG_CATEGORY, "Dictionary", "SingleClick", false),
 	myBindings0("Keys"),
 	myBindings90("Keys90"),
 	myBindings180("Keys180"),
@@ -165,6 +166,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_GOTO_NEXT_TOC_SECTION, new GotoNextTOCSectionAction(*this));
 	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, new GotoPreviousTOCSectionAction(*this));
 	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, new CopySelectedTextAction(*this));
+	addAction(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, new OpenSelectedTextInDictionaryAction(*this));
 	addAction(ACTION_CLEAR_SELECTION, new ClearSelectionAction(*this));
 
 	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library Tree");
@@ -211,6 +213,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 
 	Menu &selectionSubmenu = menubar().addSubmenu("Selection");
 	selectionSubmenu.addItem("Copy to Clipboard", ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD);
+	selectionSubmenu.addItem("Open in Dictionary", ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY);
 	selectionSubmenu.addItem("Clear", ACTION_CLEAR_SELECTION);
 
 	Menu &findSubmenu = menubar().addSubmenu("Find");
