@@ -20,6 +20,7 @@
  */
 
 #include <ZLTime.h>
+#include <ZLUnicodeUtil.h>
 
 #include "SelectionModel.h"
 #include "TextView.h"
@@ -97,6 +98,7 @@ void SelectionModel::activate(int x, int y) {
 	myIsEmpty = false;
 	setBound(myFirstBound, x, y);
 	mySecondBound = myFirstBound;
+	myCursors.clear();
 }
 
 bool SelectionModel::BoundElement::operator == (const SelectionModel::BoundElement &element) const {
@@ -146,6 +148,7 @@ void SelectionModel::clear() {
 	myIsEmpty = true;
 	myIsActive = false;
 	myDoUpdate = false;
+	myCursors.clear();
 }
 
 std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> SelectionModel::range() const {
@@ -224,6 +227,7 @@ void SelectionModel::update() {
 	if (myDoUpdate) {
 		myDoUpdate = false;
 		setBound(mySecondBound, myStoredX, myStoredY);
+		myView.copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 	}
 }
 
@@ -235,6 +239,67 @@ void SelectionModel::scrollAndExtend() {
 		myDoUpdate = true;
 		myView.repaintView();
 	}
+}
+
+std::string SelectionModel::getText() const {
+	if (isEmpty()) {
+		return std::string();
+	}
+		
+	std::string text;
+
+	std::pair<BoundElement,BoundElement> r = range();
+
+	WordCursor start = myView.startCursor();
+	start.moveToParagraph(r.first.ParagraphNumber);
+	start.moveTo(r.first.TextElementNumber, r.first.CharNumber);
+
+	WordCursor end = myView.startCursor();
+	end.moveToParagraph(r.second.ParagraphNumber);
+	end.moveTo(r.second.TextElementNumber, r.second.CharNumber);
+
+	std::set<ParagraphCursorPtr> pcursors;
+	pcursors.insert(start.paragraphCursorPtr());
+
+	for (WordCursor cursor = start; cursor < end; ) {
+		const TextElement &element = cursor.element();
+		switch (element.kind()) {
+			case TextElement::WORD_ELEMENT:
+			{
+				const Word &word = (const Word&)element;
+				if (cursor.sameElementAs(end)) {
+					if (start.sameElementAs(end)) {
+						int skip = ZLUnicodeUtil::length(word.Data, start.charNumber());
+						int length = ZLUnicodeUtil::length(word.Data, end.charNumber()) - skip;
+						text.append(word.Data + skip, length);
+					} else {
+						text.append(word.Data, ZLUnicodeUtil::length(word.Data, end.charNumber()));
+					}
+				} else if (cursor.charNumber() == 0) {
+					text.append(word.Data, word.Size);
+				} else /* cursor == start */ {
+					int skip = ZLUnicodeUtil::length(word.Data, cursor.charNumber());
+					text.append(word.Data + skip, word.Size - skip);
+				}
+				break;
+			}
+			case TextElement::HSPACE_ELEMENT:
+				text += ' ';
+				break;
+			default:
+				break;
+		}
+		cursor.nextWord();
+		if (cursor.isEndOfParagraph()) {
+			cursor.nextParagraph();
+			pcursors.insert(cursor.paragraphCursorPtr());
+			text.append("\n");
+		}
+	}
+
+	myCursors.swap(pcursors);
+
+	return text;
 }
 
 SelectionScroller::SelectionScroller(SelectionModel &selectionModel) : mySelectionModel(selectionModel), myDirection(DONT_SCROLL) {

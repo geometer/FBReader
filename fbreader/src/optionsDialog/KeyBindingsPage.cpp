@@ -120,6 +120,9 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(FBReader &fbreader) :
 	addAction(ACTION_UNDO, "Undo");
 	addAction(ACTION_REDO, "Redo");
 
+	// edit
+	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, "Copy Selection To Clipboard");
+
 	// search
 	addAction(ACTION_SEARCH, "Search");
 	addAction(ACTION_FIND_PREVIOUS, "Find Previous");

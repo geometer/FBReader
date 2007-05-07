@@ -181,6 +181,7 @@ friend class QuitAction;
 friend class OpenPreviousBookAction;
 friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
+friend class CopySelectedTextAction;
 };
 
 #endif /* __FBREADER_H__ */

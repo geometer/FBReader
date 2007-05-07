@@ -67,6 +67,9 @@ private:
 	Allocator<sizeof(ControlElement),32> myControlAllocator;
 };
 
+class ParagraphCursor;
+typedef shared_ptr<ParagraphCursor> ParagraphCursorPtr;
+
 class ParagraphCursor {
 
 private:
@@ -115,10 +118,9 @@ private:
 
 protected:
 	ParagraphCursor(const TextModel &model, size_t index);
-	virtual ParagraphCursor *createCursor(size_t index) const = 0;
 
 public:
-	static ParagraphCursor *createCursor(const TextModel &model);
+	static ParagraphCursorPtr cursor(const TextModel &model, size_t index = 0);
 	virtual ~ParagraphCursor();
 
 	bool isFirst() const;
@@ -128,9 +130,8 @@ public:
 	size_t paragraphLength() const;
 	size_t index() const;
 
-	virtual shared_ptr<ParagraphCursor> previous() const = 0;
-	virtual shared_ptr<ParagraphCursor> next() const = 0;
-	shared_ptr<ParagraphCursor> cursor(size_t index) const;
+	virtual ParagraphCursorPtr previous() const = 0;
+	virtual ParagraphCursorPtr next() const = 0;
 
 	const TextElement &operator [] (size_t index) const;
 	const Paragraph &paragraph() const;
@@ -158,14 +159,15 @@ friend class WordCursor;
 class ParagraphCursorCache {
 
 public:
-	static void put(const Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor);
-	static shared_ptr<ParagraphCursor> get(const Paragraph *paragraph);
+	static void put(const Paragraph *paragraph, ParagraphCursorPtr cursor);
+	static ParagraphCursorPtr get(const Paragraph *paragraph);
 
 	static void clear();
 	static void cleanup();
 
 private:
 	static std::map<const Paragraph*, weak_ptr<ParagraphCursor> > ourCache;
+	static ParagraphCursorPtr ourLastAdded;
 
 private:
 	// instance creation is disabled
@@ -178,7 +180,7 @@ public:
 	WordCursor();
 	WordCursor(const WordCursor &cursor);
 	const WordCursor &operator = (const WordCursor &cursor);
-	const WordCursor &operator = (ParagraphCursor *paragraphCursor);
+	const WordCursor &operator = (ParagraphCursorPtr paragraphCursor);
 
 	bool isNull() const;
 	bool sameElementAs(const WordCursor &cursor) const;
@@ -191,6 +193,7 @@ public:
 	unsigned int charNumber() const;
 	const TextElement &element() const;
 	TextMark position() const;
+	ParagraphCursorPtr paragraphCursorPtr() const;
 	const ParagraphCursor &paragraphCursor() const;
 
 	void nextWord();
@@ -206,7 +209,7 @@ public:
 	void rebuild();
 
 private:
-	shared_ptr<ParagraphCursor> myParagraphCursor;
+	ParagraphCursorPtr myParagraphCursor;
 	unsigned int myWordNumber;
 	unsigned int myCharNumber;
 };
@@ -216,14 +219,11 @@ class PlainTextParagraphCursor : public ParagraphCursor {
 private:
 	PlainTextParagraphCursor(const TextModel &model, size_t index);
 
-protected:
-	ParagraphCursor *createCursor(size_t index) const;
-
 public:
 	~PlainTextParagraphCursor();
 
-	shared_ptr<ParagraphCursor> previous() const;
-	shared_ptr<ParagraphCursor> next() const;
+	ParagraphCursorPtr previous() const;
+	ParagraphCursorPtr next() const;
 	bool isLast() const;
 
 friend class ParagraphCursor;
@@ -234,14 +234,11 @@ class TreeParagraphCursor : public ParagraphCursor {
 private:
 	TreeParagraphCursor(const TreeModel &model, size_t index);
 
-protected:
-	ParagraphCursor *createCursor(size_t index) const;
-
 public:
 	~TreeParagraphCursor();
 
-	shared_ptr<ParagraphCursor> previous() const;
-	shared_ptr<ParagraphCursor> next() const;
+	ParagraphCursorPtr previous() const;
+	ParagraphCursorPtr next() const;
 	bool isLast() const;
 
 friend class ParagraphCursor;
@@ -300,6 +297,7 @@ inline bool WordCursor::isEndOfParagraph() const {
 }
 inline unsigned int WordCursor::wordNumber() const { return myWordNumber; }
 inline unsigned int WordCursor::charNumber() const { return myCharNumber; }
+inline ParagraphCursorPtr WordCursor::paragraphCursorPtr() const { return myParagraphCursor; }
 inline const ParagraphCursor &WordCursor::paragraphCursor() const { return *myParagraphCursor; }
 
 inline void WordCursor::nextWord() { ++myWordNumber; myCharNumber = 0; }
@@ -307,10 +305,8 @@ inline void WordCursor::previousWord() { --myWordNumber; myCharNumber = 0; }
 
 inline PlainTextParagraphCursor::PlainTextParagraphCursor(const TextModel &model, size_t index) : ParagraphCursor(model, index) {}
 inline PlainTextParagraphCursor::~PlainTextParagraphCursor() {}
-inline ParagraphCursor *PlainTextParagraphCursor::createCursor(size_t index) const { return new PlainTextParagraphCursor(myModel, index); }
 
 inline TreeParagraphCursor::TreeParagraphCursor(const TreeModel &model, size_t index) : ParagraphCursor(model, index) {}
 inline TreeParagraphCursor::~TreeParagraphCursor() {}
-inline ParagraphCursor *TreeParagraphCursor::createCursor(size_t index) const { return new TreeParagraphCursor((const TreeModel&)myModel, index); }
 
 #endif /* __PARAGRAPHCURSOR_H__ */

@@ -61,7 +61,7 @@ void TextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
 	myModel = model;
 
 	if (!myModel.isNull() && (myModel->paragraphsNumber() != 0)) {
-		setStartCursor(ParagraphCursor::createCursor(*myModel));
+		setStartCursor(ParagraphCursor::cursor(*myModel));
 
 		myFileName = name;
 		size_t size = myModel->paragraphsNumber();
@@ -633,9 +633,23 @@ void TextView::activateSelection(int x, int y) {
 
 bool TextView::onStylusMovePressed(int x, int y) {
 	if (mySelectionModel.extendTo(x, y)) {
+		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		repaintView();
 	}
 	return true;
+}
+
+bool TextView::hasSelectedText() const {
+	return !mySelectionModel.isEmpty() && !mySelectionModel.getText().empty();
+}
+
+void TextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const {
+	if (ZLDialogManager::instance().isClipboardSupported(type)) {
+		std::string text = mySelectionModel.getText();
+		if (!text.empty()) {
+			ZLDialogManager::instance().setClipboardText(text, type);
+		}
+	}
 }
 
 bool TextView::onStylusRelease(int, int) {
@@ -706,7 +720,7 @@ void TextView::clearCaches() {
 	rebuildPaintInfo(true);
 }
 
-void TextView::selectParagraph(int paragraphNumber) {
+void TextView::highlightParagraph(int paragraphNumber) {
 	myModel->selectParagraph(paragraphNumber);
 	rebuildPaintInfo(true);
 }

@@ -1,16 +1,26 @@
 *** 0.8.3:
 
 text selection
-	построчная перерисовка
-	согласовать с листанием
-	treeview: не копировать текст из закрытых нод
-popup menu
+	setClipboardText() для всех платформ
+	разделитель строк в win32?
+	win32: копировать текст не сразу, а по нажатию Ctrl+C
+проверить реакцию на движение стилуса во всех версиях
 возможность узнать версию запущенной программы
-linux desktop: пакеты не должны мешать друг другу
+debian: пакеты не должны мешать друг другу
 debian (i386) repository
 debian sources
 gpe: correct repaint
 pepperpad
+
+*** 0.8.4:
+
+text selection
+	построчная перерисовка
+	переименовать ZLDialogManager в ZLUIManager?
+	оптимизировать вычисление текста (не делать это несколько раз)
+открывать текст в браузере, если он похож на ссылку
+искать текст в гугле (?)
+popup menu
 qt/qt4 desktop: win32-like color selection control
 многократный перенос (оч. длинное слово)
 мягкие переносы (symbol with code 173)
@@ -22,7 +32,7 @@ customizable toolbar
 опциональное использование системного file dialog
 multihtml
 
-*** win32 version (0.8.3)
+*** win32 version (0.8.4)
 
 WaitMessage
 selection dialog
@@ -32,7 +42,7 @@ W32ColorComboBox::removeCustomColor()
 expat -> msxml
 cleartype option
 
-*** после 0.8.3
+*** после 0.8.4
 
 desktop-qt: set application icon
 более удачный вызов внешнего браузера

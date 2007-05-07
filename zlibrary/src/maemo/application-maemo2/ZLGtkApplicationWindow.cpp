@@ -50,7 +50,6 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	if (acceptAction()) {
 		((ZLGtkViewWidget*)data)->doPaint();
-		//((ZLGtkApplicationWindow*)data)->application().refreshWindow();
 	}
 }
 

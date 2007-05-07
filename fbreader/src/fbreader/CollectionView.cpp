@@ -183,7 +183,7 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 	}
 	int toSelect = collectionModel().paragraphNumberByBook(book);
 	if (toSelect >= 0) {
-		selectParagraph(toSelect);
+		highlightParagraph(toSelect);
 		gotoParagraph(toSelect);
 		scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
 	}

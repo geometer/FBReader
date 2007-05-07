@@ -21,6 +21,7 @@
 #include <qapplication.h>
 #include <qmessagebox.h>
 #include <qfiledialog.h>
+#include <qclipboard.h>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
@@ -56,4 +57,17 @@ bool ZLQtDialogManager::selectionDialog(const std::string &title, ZLTreeHandler 
 void ZLQtDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
 	ZLQtWaitMessage waitMessage(message);
 	runnable.run();
+}
+
+bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {
+	return true;
+}
+
+void ZLQtDialogManager::setClipboardText(const std::string &text, ClipboardType type) const {
+	if (!text.empty()) {
+		qApp->clipboard()->setText(
+			QString::fromUtf8(text.c_str()),
+			(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
+		);
+	}
 }

@@ -43,6 +43,42 @@
 	<key code="0x01000021" name="&lt;Ctrl&gt;"/>
 	<key code="0x01000023" name="&lt;Alt&gt;"/>
 	<key code="0x01000053" name="&lt;Win&gt;"/>
+	<key code="0x30" name="&lt;0&gt;"/>
+	<key code="0x31" name="&lt;1&gt;"/>
+	<key code="0x32" name="&lt;2&gt;"/>
+	<key code="0x33" name="&lt;3&gt;"/>
+	<key code="0x34" name="&lt;4&gt;"/>
+	<key code="0x35" name="&lt;5&gt;"/>
+	<key code="0x36" name="&lt;6&gt;"/>
+	<key code="0x37" name="&lt;7&gt;"/>
+	<key code="0x38" name="&lt;8&gt;"/>
+	<key code="0x39" name="&lt;9&gt;"/>
+	<key code="0x41" name="&lt;A&gt;"/>
+	<key code="0x42" name="&lt;B&gt;"/>
+	<key code="0x43" name="&lt;C&gt;"/>
+	<key code="0x44" name="&lt;D&gt;"/>
+	<key code="0x45" name="&lt;E&gt;"/>
+	<key code="0x46" name="&lt;F&gt;"/>
+	<key code="0x47" name="&lt;G&gt;"/>
+	<key code="0x48" name="&lt;H&gt;"/>
+	<key code="0x49" name="&lt;I&gt;"/>
+	<key code="0x4A" name="&lt;J&gt;"/>
+	<key code="0x4B" name="&lt;K&gt;"/>
+	<key code="0x4C" name="&lt;L&gt;"/>
+	<key code="0x4D" name="&lt;M&gt;"/>
+	<key code="0x4E" name="&lt;N&gt;"/>
+	<key code="0x4F" name="&lt;O&gt;"/>
+	<key code="0x50" name="&lt;P&gt;"/>
+	<key code="0x51" name="&lt;Q&gt;"/>
+	<key code="0x52" name="&lt;R&gt;"/>
+	<key code="0x53" name="&lt;S&gt;"/>
+	<key code="0x54" name="&lt;T&gt;"/>
+	<key code="0x55" name="&lt;U&gt;"/>
+	<key code="0x56" name="&lt;V&gt;"/>
+	<key code="0x57" name="&lt;W&gt;"/>
+	<key code="0x58" name="&lt;X&gt;"/>
+	<key code="0x59" name="&lt;Y&gt;"/>
+	<key code="0x5A" name="&lt;Z&gt;"/>
 	<modifier code="0x08000000" name="&lt;Alt&gt;"/>
 	<modifier code="0x04000000" name="&lt;Ctrl&gt;"/>
 </keynames>

@@ -23,9 +23,13 @@
 #define __SELECTIONMODEL_H__
 
 #include <map>
+#include <set>
+#include <string>
 
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
+
+#include "ParagraphCursor.h"
 
 class TextView;
 
@@ -40,6 +44,7 @@ public:
 	void deactivate();
 	void clear();
 
+	std::string getText() const;
 	bool isEmpty() const;
 
 public:
@@ -83,6 +88,8 @@ private:
 	bool myDoUpdate;
 	int myStoredX;
 	int myStoredY;
+
+	mutable std::set<ParagraphCursorPtr> myCursors;
 
 friend class SelectionScroller;
 };

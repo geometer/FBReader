@@ -30,6 +30,7 @@
 TextElementPool TextElementPool::Pool;
 
 std::map<const Paragraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
+ParagraphCursorPtr ParagraphCursorCache::ourLastAdded;
 
 TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); ++it) {
@@ -69,11 +70,17 @@ TextElementPool::~TextElementPool() {
 	delete EmptyLineElement;
 }
 
-ParagraphCursor *ParagraphCursor::createCursor(const TextModel &model) {
-	if (model.kind() == TextModel::TREE_MODEL) {
-		return new TreeParagraphCursor((const TreeModel&)model, 0);
+ParagraphCursorPtr ParagraphCursor::cursor(const TextModel &model, size_t index) {
+	ParagraphCursorPtr result = ParagraphCursorCache::get(model[index]);
+	if (result.isNull()) {
+		if (model.kind() == TextModel::TREE_MODEL) {
+			result = new TreeParagraphCursor((const TreeModel&)model, index);
+		} else {
+			result = new PlainTextParagraphCursor((const PlainTextModel&)model, index);
+		}
+		ParagraphCursorCache::put(model[index], result);
 	}
-	return new PlainTextParagraphCursor((const PlainTextModel&)model, 0);
+	return result;
 }
 
 ParagraphCursor::ParagraphCursor(const TextModel &model, size_t index) : myModel(model) {
@@ -84,20 +91,11 @@ ParagraphCursor::ParagraphCursor(const TextModel &model, size_t index) : myModel
 ParagraphCursor::~ParagraphCursor() {
 }
 
-shared_ptr<ParagraphCursor> ParagraphCursor::cursor(size_t index) const {
-	shared_ptr<ParagraphCursor> result = ParagraphCursorCache::get(myModel[index]);
-	if (result.isNull()) {
-		result = createCursor(index);
-		ParagraphCursorCache::put(myModel[index], result);
-	}
-	return result;
+ParagraphCursorPtr PlainTextParagraphCursor::previous() const {
+	return isFirst() ? 0 : cursor(myModel, myIndex - 1);
 }
 
-shared_ptr<ParagraphCursor> PlainTextParagraphCursor::previous() const {
-	return isFirst() ? 0 : cursor(myIndex - 1);
-}
-
-shared_ptr<ParagraphCursor> TreeParagraphCursor::previous() const {
+ParagraphCursorPtr TreeParagraphCursor::previous() const {
 	if (isFirst()) {
 		return 0;
 	}
@@ -116,20 +114,20 @@ shared_ptr<ParagraphCursor> TreeParagraphCursor::previous() const {
 			--index;
 		}
 	}
-	return cursor(index);
+	return cursor(myModel, index);
 }
 
-shared_ptr<ParagraphCursor> PlainTextParagraphCursor::next() const {
-	return isLast() ? 0 : cursor(myIndex + 1);
+ParagraphCursorPtr PlainTextParagraphCursor::next() const {
+	return isLast() ? 0 : cursor(myModel, myIndex + 1);
 }
 
-shared_ptr<ParagraphCursor> TreeParagraphCursor::next() const {
+ParagraphCursorPtr TreeParagraphCursor::next() const {
 	if (myIndex + 1 == myModel.paragraphsNumber()) {
 		return 0;
 	}
 	const TreeParagraph *current = (const TreeParagraph*)myModel[myIndex];
 	if (!current->children().empty() && current->isOpen()) {
-		return cursor(myIndex + 1);
+		return cursor(myModel, myIndex + 1);
 	}
 
 	const TreeParagraph *parent = current->parent();
@@ -142,7 +140,7 @@ shared_ptr<ParagraphCursor> TreeParagraphCursor::next() const {
 		while (((const TreeParagraph*)myModel[index])->parent() != parent) {
 			++index;
 		}
-		return cursor(index);
+		return cursor(myModel, index);
 	}
 	return 0;
 }
@@ -244,15 +242,17 @@ void ParagraphCursor::clear() {
 	myElements.clear();
 }
 
-void ParagraphCursorCache::put(const Paragraph *paragraph, shared_ptr<ParagraphCursor> cursor) {
+void ParagraphCursorCache::put(const Paragraph *paragraph, ParagraphCursorPtr cursor) {
 	ourCache[paragraph] = cursor;
+	ourLastAdded = cursor;
 }
 
-shared_ptr<ParagraphCursor> ParagraphCursorCache::get(const Paragraph *paragraph) {
+ParagraphCursorPtr ParagraphCursorCache::get(const Paragraph *paragraph) {
 	return ourCache[paragraph];
 }
 
 void ParagraphCursorCache::clear() {
+	ourLastAdded.reset();
 	ourCache.clear();
 }
 
@@ -279,7 +279,7 @@ void WordCursor::setCharNumber(int charNumber) {
 	if (charNumber > 0) {
 		const TextElement &element = (*myParagraphCursor)[myWordNumber];
 		if (element.kind() == TextElement::WORD_ELEMENT) {
-			if (charNumber < (int)((const Word&)element).Length - 1) {
+			if (charNumber <= (int)((const Word&)element).Length) {
 				myCharNumber = charNumber;
 			}
 		}
@@ -305,7 +305,7 @@ void WordCursor::moveTo(int wordNumber, int charNumber) {
 	}
 }
 
-const WordCursor &WordCursor::operator = (ParagraphCursor *paragraphCursor) {
+const WordCursor &WordCursor::operator = (ParagraphCursorPtr paragraphCursor) {
 	myWordNumber = 0;
 	myCharNumber = 0;
 	myParagraphCursor = paragraphCursor;
@@ -315,7 +315,7 @@ const WordCursor &WordCursor::operator = (ParagraphCursor *paragraphCursor) {
 
 void WordCursor::moveToParagraph(int paragraphNumber) {
 	if (!isNull() && (paragraphNumber != (int)myParagraphCursor->index())) {
-		myParagraphCursor = myParagraphCursor->cursor(paragraphNumber);
+		myParagraphCursor = ParagraphCursor::cursor(myParagraphCursor->myModel, paragraphNumber);
 		moveToParagraphStart();
 	}
 }

@@ -73,7 +73,7 @@ size_t ContentsView::currentTextViewParagraph() const {
 
 void ContentsView::gotoReference() {
 	const size_t selected = currentTextViewParagraph();
-	selectParagraph(selected);
+	highlightParagraph(selected);
 	gotoParagraph(selected);
 	scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
 }

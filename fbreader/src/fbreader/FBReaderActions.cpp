@@ -19,6 +19,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 
 #include "FBReader.h"
@@ -389,4 +390,19 @@ void GotoPreviousTOCSectionAction::run() {
 	}
 	((TextView&)*myFBReader.myBookTextView).gotoParagraph(reference);
 	myFBReader.refreshWindow();
+}
+
+CopySelectedTextAction::CopySelectedTextAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool CopySelectedTextAction::isVisible() {
+	return ZLDialogManager::instance().isClipboardSupported(ZLDialogManager::CLIPBOARD_MAIN);
+}
+
+bool CopySelectedTextAction::isEnabled() {
+	return isVisible() && ((const TextView&)*myFBReader.currentView()).hasSelectedText();
+}
+
+void CopySelectedTextAction::run() {
+	((const TextView&)*myFBReader.currentView()).copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_MAIN);
 }

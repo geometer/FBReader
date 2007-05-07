@@ -57,6 +57,13 @@ public:
 	virtual int questionBox(const std::string &title, const std::string &message, const std::string &button0 = "", const std::string &button1 = "", const std::string &button2 = "") const = 0;
 
 	virtual void wait(ZLRunnable &runnable, const std::string &message) const = 0;
+
+	enum ClipboardType {
+		CLIPBOARD_MAIN,
+		CLIPBOARD_SELECTION
+	};
+	virtual bool isClipboardSupported(ClipboardType type) const = 0;
+	virtual void setClipboardText(const std::string &text, ClipboardType type) const = 0;
 };
 
 #endif /* __ZLDIALOGMANAGER_H__ */

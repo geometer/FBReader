@@ -46,7 +46,7 @@ void TextView::rebuildPaintInfo(bool strong) {
 	}
 }
 
-void TextView::setStartCursor(ParagraphCursor *cursor) {
+void TextView::setStartCursor(ParagraphCursorPtr cursor) {
 	myStartCursor = cursor;
 	myEndCursor = 0;
 	myLineInfos.clear();

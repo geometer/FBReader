@@ -20,6 +20,7 @@
 
 #include <qapplication.h>
 #include <qmessagebox.h>
+#include <qclipboard.h>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
@@ -73,4 +74,10 @@ void ZLQtDialogManager::wait(ZLRunnable &runnable, const std::string &message) c
 	ZLQtWaitMessage waitMessage(message);
 	runnable.run();
 	fullScreenWorkaround();
+}
+
+void ZLQtDialogManager::setClipboardText(const std::string &text) const {
+	if (!text.empty()) {
+		qApp->clipboard()->setText(QString::fromUtf8(text.c_str()));
+	}
 }

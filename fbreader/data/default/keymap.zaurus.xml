@@ -20,4 +20,5 @@
 	<binding key="&lt;I&gt;" action="25"/>
 	<binding key="&lt;R&gt;" action="27"/>
 	<binding key="&lt;Z&gt;" action="28"/>
+	<binding key="&lt;Ctrl&gt;+&lt;C&gt;" action="35"/>
 </keymap>

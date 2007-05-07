@@ -47,6 +47,9 @@ public:
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 	bool isWaiting() const { return myIsWaiting; }
 
+	bool isClipboardSupported(ClipboardType type) const;
+	void setClipboardText(const std::string &text, ClipboardType type) const;
+
 	void setMainWindow(GtkWindow *window) const { myIsInitialized = true; myWindow = window; }
 
 	void grabKeyboard(bool grab) { myIsKeyboardGrabbed = grab; }

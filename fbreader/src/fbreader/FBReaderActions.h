@@ -64,6 +64,7 @@ enum ActionCode {
 	ACTION_FINGER_TAP_SCROLL_BACKWARD = 32,
 	ACTION_GOTO_NEXT_TOC_SECTION = 33,
 	ACTION_GOTO_PREVIOUS_TOC_SECTION = 34,
+	ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD = 35,
 };
 
 class FBAction : public ZLApplication::Action {
@@ -260,6 +261,15 @@ class GotoPreviousTOCSectionAction : public FBAction {
 
 public:
 	GotoPreviousTOCSectionAction(FBReader &fbreader);
+	bool isVisible();
+	bool isEnabled();
+	void run();
+};
+
+class CopySelectedTextAction : public FBAction {
+
+public:
+	CopySelectedTextAction(FBReader &fbreader);
 	bool isVisible();
 	bool isEnabled();
 	void run();

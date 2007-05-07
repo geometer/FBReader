@@ -28,6 +28,7 @@
 
 #include <ZLOptions.h>
 #include <ZLView.h>
+#include <ZLDialogManager.h>
 
 #include "Word.h"
 #include "TextStyle.h"
@@ -182,7 +183,10 @@ public:
 	bool canFindPrevious() const;
 	void findPrevious();
 
-	void selectParagraph(int paragraphNumber);
+	void highlightParagraph(int paragraphNumber);
+
+	bool hasSelectedText() const;
+	void copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const;
 	
 protected:
 	bool onStylusPress(int x, int y);
@@ -200,7 +204,7 @@ protected:
 	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();
 
-	void setStartCursor(ParagraphCursor *cursor);
+	void setStartCursor(ParagraphCursorPtr cursor);
 
 	bool empty() const;
 
