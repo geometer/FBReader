@@ -652,6 +652,13 @@ void TextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) 
 	}
 }
 
+void TextView::clearSelection() {
+	if (!mySelectionModel.isEmpty()) {
+		mySelectionModel.clear();
+		repaintView();
+	}
+}
+
 bool TextView::onStylusRelease(int, int) {
 	mySelectionModel.deactivate();
 	return true;

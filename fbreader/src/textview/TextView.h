@@ -187,6 +187,7 @@ public:
 
 	bool hasSelectedText() const;
 	void copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const;
+	void clearSelection();
 	
 protected:
 	bool onStylusPress(int x, int y);

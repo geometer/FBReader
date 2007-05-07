@@ -165,6 +165,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_GOTO_NEXT_TOC_SECTION, new GotoNextTOCSectionAction(*this));
 	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, new GotoPreviousTOCSectionAction(*this));
 	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, new CopySelectedTextAction(*this));
+	addAction(ACTION_CLEAR_SELECTION, new ClearSelectionAction(*this));
 
 	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library Tree");
 	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history", "Show Recent Books List");
@@ -210,6 +211,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 
 	Menu &selectionSubmenu = menubar().addSubmenu("Selection");
 	selectionSubmenu.addItem("Copy to Clipboard", ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD);
+	selectionSubmenu.addItem("Clear", ACTION_CLEAR_SELECTION);
 
 	Menu &findSubmenu = menubar().addSubmenu("Find");
 	findSubmenu.addItem("Find Text...", ACTION_SEARCH);

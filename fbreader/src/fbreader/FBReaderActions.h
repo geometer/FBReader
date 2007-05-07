@@ -65,6 +65,7 @@ enum ActionCode {
 	ACTION_GOTO_NEXT_TOC_SECTION = 33,
 	ACTION_GOTO_PREVIOUS_TOC_SECTION = 34,
 	ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD = 35,
+	ACTION_CLEAR_SELECTION = 36,
 };
 
 class FBAction : public ZLApplication::Action {
@@ -270,6 +271,15 @@ class CopySelectedTextAction : public FBAction {
 
 public:
 	CopySelectedTextAction(FBReader &fbreader);
+	bool isVisible();
+	bool isEnabled();
+	void run();
+};
+
+class ClearSelectionAction : public FBAction {
+
+public:
+	ClearSelectionAction(FBReader &fbreader);
 	bool isVisible();
 	bool isEnabled();
 	void run();

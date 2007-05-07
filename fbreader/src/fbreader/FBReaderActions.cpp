@@ -406,3 +406,18 @@ bool CopySelectedTextAction::isEnabled() {
 void CopySelectedTextAction::run() {
 	((const TextView&)*myFBReader.currentView()).copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_MAIN);
 }
+
+ClearSelectionAction::ClearSelectionAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool ClearSelectionAction::isVisible() {
+	return true;
+}
+
+bool ClearSelectionAction::isEnabled() {
+	return isVisible() && ((const TextView&)*myFBReader.currentView()).hasSelectedText();
+}
+
+void ClearSelectionAction::run() {
+	((TextView&)*myFBReader.currentView()).clearSelection();
+}
