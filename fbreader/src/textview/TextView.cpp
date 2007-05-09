@@ -337,7 +337,7 @@ void TextView::prepareTextLine(const LineInfo &info) {
 
 	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 	int paragraphNumber = paragraph.index();
-	for (WordCursor pos = info.RealStart; !pos.sameElementAs(info.End); pos.nextWord()) {
+	for (WordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
 		const TextElement &element = paragraph[pos.wordNumber()];
 		TextElement::Kind kind = element.kind();
 		const int x = context().x();
@@ -487,7 +487,7 @@ void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
 	TextElementIterator it = fromIt;
-	for (WordCursor pos = info.RealStart; !pos.sameElementAs(info.End); pos.nextWord()) {
+	for (WordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
 		const TextElement &element = paragraph[pos.wordNumber()];
 		TextElement::Kind kind = element.kind();
 	

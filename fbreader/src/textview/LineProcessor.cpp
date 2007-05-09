@@ -82,7 +82,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 					break;
 			}
 			current.nextWord();
-			if (current.sameElementAs(end)) {
+			if (current.equalWordNumber(end)) {
 				break;
 			}
 			elementKind = paragraphCursor[current.wordNumber()].kind();
@@ -102,7 +102,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 	}
 	info.Width = info.LeftIndent;
 
-	if (info.RealStart.sameElementAs(end)) {
+	if (info.RealStart.equalWordNumber(end)) {
 	  info.End = info.RealStart;
 		return infoPtr;
 	}
@@ -150,13 +150,13 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 				break;
 		}
 
-		if ((newWidth > maxWidth) && !info.End.sameElementAs(start)) {
+		if ((newWidth > maxWidth) && !info.End.equalWordNumber(start)) {
 			break;
 		}
 
 		TextElement::Kind previousKind = elementKind;
 		current.nextWord();
-		bool allowBreak = current.sameElementAs(end);
+		bool allowBreak = current.equalWordNumber(end);
 		if (!allowBreak) {
 			elementKind = paragraphCursor[current.wordNumber()].kind();
 			allowBreak =
@@ -174,9 +174,9 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 			info.SpaceCounter = internalSpaceCounter;
 			removeLastSpace = !wordOccured && (info.SpaceCounter > 0);
 		}
-	} while (!current.sameElementAs(end));
+	} while (!current.equalWordNumber(end));
 
-	if (!current.sameElementAs(end) &&
+	if (!current.equalWordNumber(end) &&
 		 TextStyleCollection::instance().baseStyle().AutoHyphenationOption.value() &&
 		 myStyle.style()->allowHyphenations()) {
 		const TextElement &element = paragraphCursor[current.wordNumber()];
@@ -227,7 +227,7 @@ TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const W
 		info.VSpaceAfter = myStyle.style()->spaceAfter();
 	}
 
-	if (!info.End.sameElementAs(end) || end.isEndOfParagraph()) {
+	if (!info.End.equalWordNumber(end) || end.isEndOfParagraph()) {
 		myLineInfoCache.insert(infoPtr);
 	}
 

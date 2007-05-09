@@ -22,31 +22,61 @@
 #include "ZLGtkPaintContext.h"
 #include "../../gtk/pixbuf/ZLGtkPixbufHack.h"
 
-void ZLGtkViewWidget::onMousePressed(GdkEventButton *event) {
-	int x, y;
+void ZLGtkViewWidget::updateCoordinates(int &x, int &y) {
 	switch (rotation()) {
 		default:
-			x = (int)event->x;
-			y = (int)event->y;
 			break;
 		case ZLViewWidget::DEGREES90:
-			x = height() - (int)event->y;
-			y = (int)event->x;
+		{
+			int tmp = x;
+			x = height() - y;
+			y = tmp;
 			break;
+		}
 		case ZLViewWidget::DEGREES180:
-			x = width() - (int)event->x;
-			y = height() - (int)event->y;
+			x = width() - x;
+			y = height() - y;
 			break;
 		case ZLViewWidget::DEGREES270:
-			x = (int)event->y;
-			y = width() - (int)event->x;
+		{
+			int tmp = x;
+			x = y;
+			y = width() - tmp;
 			break;
+		}
 	}
 	ZLPaintContext &context = view()->context();
 	x -= context.leftMargin();
 	y -= context.topMargin();
+}
+
+void ZLGtkViewWidget::onMousePressed(GdkEventButton *event) {
+	int x = (int)event->x;
+	int y = (int)event->y;
+	updateCoordinates(x, y);
 	view()->onStylusMove(x, y);
 	view()->onStylusPress(x, y);
+}
+
+void ZLGtkViewWidget::onMouseReleased(GdkEventButton *event) {
+	int x = (int)event->x;
+	int y = (int)event->y;
+	updateCoordinates(x, y);
+	view()->onStylusRelease(x, y);
+}
+
+void ZLGtkViewWidget::onMouseMoved(GdkEventMotion *event) {
+	int x, y;
+	GdkModifierType state;
+	if (event->is_hint) {
+		gdk_window_get_pointer(event->window, &x, &y, &state);
+	} else {
+		x = (int)event->x;
+		y = (int)event->y;
+		state = (GdkModifierType)event->state;
+	}
+	updateCoordinates(x, y);
+	view()->onStylusMovePressed(x, y);
 }
 
 int ZLGtkViewWidget::width() const {

@@ -64,7 +64,7 @@ void TextView::ViewStyle::applyControl(const ForcedControlElement &control) {
 }
 
 void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {
-	for (WordCursor cursor = begin; !cursor.sameElementAs(end); cursor.nextWord()) {
+	for (WordCursor cursor = begin; !cursor.equalWordNumber(end); cursor.nextWord()) {
 		const TextElement &element = cursor.element();
 		if (element.kind() == TextElement::CONTROL_ELEMENT) {
 			applyControl((ControlElement&)element);

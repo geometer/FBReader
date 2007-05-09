@@ -341,7 +341,7 @@ int TextView::paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition
 
 	int size = 0;
 
-	while (!word.sameElementAs(end)) {
+	while (!word.equalWordNumber(end)) {
 		const LineInfoPtr info = processTextLine(word, end);
 		word = info->End;
 		size += infoSize(*info, unit);

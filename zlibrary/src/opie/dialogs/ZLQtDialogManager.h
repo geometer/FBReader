@@ -42,6 +42,9 @@ public:
 	bool selectionDialog(const std::string &title, ZLTreeHandler &handler) const;
 	void wait(ZLRunnable &runnable, const std::string &message) const;
 
+	bool isClipboardSupported(ClipboardType type) const;
+	void setClipboardText(const std::string &text, ClipboardType type) const;
+
 	void fullScreenWorkaround() const;
 };
 

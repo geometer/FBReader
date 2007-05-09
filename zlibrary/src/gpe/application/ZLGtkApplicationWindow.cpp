@@ -49,6 +49,15 @@ static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
 	((ZLGtkViewWidget*)data)->onMousePressed(event);
 }
 
+static void mouseReleased(GtkWidget*, GdkEventButton *event, gpointer data) {
+	((ZLGtkViewWidget*)data)->onMouseReleased(event);
+}
+
+static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
+	((ZLGtkViewWidget*)data)->onMouseMoved(event);
+}
+
+
 static const std::string OPTIONS = "Options";
 
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
@@ -173,6 +182,8 @@ ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	gtk_container_add(GTK_CONTAINER(myVBox), viewWidget->area());
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), viewWidget);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), viewWidget);
 	gtk_widget_show_all(myVBox);
 	return viewWidget;
 }

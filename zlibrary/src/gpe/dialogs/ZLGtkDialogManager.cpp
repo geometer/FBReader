@@ -93,3 +93,15 @@ void ZLGtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) 
 	ZLGtkWaitMessage waitMessage(myWindow, message);
 	runnable.run();
 }
+
+bool ZLGtkDialogManager::isClipboardSupported(ClipboardType) const {
+	return true;
+}
+
+void ZLGtkDialogManager::setClipboardText(const std::string &text, ClipboardType type) const {
+	if (!text.empty()) {
+		GdkAtom atom = (type == CLIPBOARD_MAIN) ? GDK_SELECTION_CLIPBOARD : GDK_SELECTION_PRIMARY;
+		GtkClipboard *clipboard = gtk_clipboard_get(atom);
+		gtk_clipboard_set_text(clipboard, text.data(), text.length());
+	}
+}

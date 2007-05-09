@@ -183,6 +183,7 @@ public:
 	const WordCursor &operator = (ParagraphCursorPtr paragraphCursor);
 
 	bool isNull() const;
+	bool equalWordNumber(const WordCursor &cursor) const;
 	bool sameElementAs(const WordCursor &cursor) const;
 	bool operator == (const WordCursor &cursor) const;
 	bool operator != (const WordCursor &cursor) const;
@@ -276,8 +277,11 @@ inline const WordCursor &WordCursor::operator = (const WordCursor &cursor) {
 }
 
 inline bool WordCursor::isNull() const { return myParagraphCursor.isNull(); }
-inline bool WordCursor::sameElementAs(const WordCursor &cursor) const {
+inline bool WordCursor::equalWordNumber(const WordCursor &cursor) const {
 	return myWordNumber == cursor.myWordNumber;
+}
+inline bool WordCursor::sameElementAs(const WordCursor &cursor) const {
+	return (myWordNumber == cursor.myWordNumber) && (myParagraphCursor->index() == cursor.myParagraphCursor->index());
 }
 inline bool WordCursor::operator == (const WordCursor &cursor) const {
 	return

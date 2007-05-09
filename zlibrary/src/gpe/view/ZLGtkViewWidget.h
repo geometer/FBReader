@@ -37,8 +37,12 @@ public:
 
 	GtkWidget *area() { return myArea; }
 	void onMousePressed(GdkEventButton *event);
+	void onMouseReleased(GdkEventButton *event);
+	void onMouseMoved(GdkEventMotion *event);
 
 private:
+	void updateCoordinates(int &x, int &y);
+
 	void trackStylus(bool track);
 	void repaint();
 

@@ -44,6 +44,8 @@ public:
 	static const std::string FileNameDelimiter;
 	static const std::string PathDelimiter;
 
+	static const std::string EndOfLine;
+
 	static const std::string &ApplicationName();
 	static const std::string &ImageDirectory();
 	static const std::string &ApplicationImageDirectory();

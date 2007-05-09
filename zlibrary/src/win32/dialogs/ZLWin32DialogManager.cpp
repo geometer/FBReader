@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include "../w32widgets/W32WCHARUtil.h"
 #include "ZLWin32DialogManager.h"
 #include "ZLWin32Dialog.h"
 #include "../application/ZLWin32ApplicationWindow.h"
@@ -76,5 +77,25 @@ void ZLWin32DialogManager::wait(ZLRunnable &runnable, const std::string &message
 	runnable.run();
 	if (myApplicationWindow != 0) {
 		myApplicationWindow->setWait(false);
+	}
+}
+
+bool ZLWin32DialogManager::isClipboardSupported(ClipboardType type) const {
+	return type == CLIPBOARD_MAIN;
+}
+
+void ZLWin32DialogManager::setClipboardText(const std::string &text, ClipboardType type) const {
+	if ((type == CLIPBOARD_MAIN) && !text.empty()) {
+		if (OpenClipboard(myApplicationWindow->mainWindow())) {
+			ZLUnicodeUtil::Ucs2String ucs2String;
+			::createNTWCHARString(ucs2String, text);
+			WCHAR *hData = (WCHAR*)GlobalAlloc(GMEM_MOVEABLE, ucs2String.size() * 2);
+			WCHAR *copy = (WCHAR*)GlobalLock(hData);
+			memcpy(copy, &ucs2String[0], ucs2String.size() * 2);
+			GlobalUnlock(hData);
+			EmptyClipboard();
+			SetClipboardData(CF_UNICODETEXT, hData);
+			CloseClipboard();
+		}
 	}
 }
