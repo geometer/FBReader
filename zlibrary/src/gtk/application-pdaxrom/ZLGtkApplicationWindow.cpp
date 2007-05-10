@@ -23,12 +23,12 @@
 
 #include <ZLUnicodeUtil.h>
 
+#include "ZLGtkApplicationWindow.h"
+
 #include "../util/ZLGtkKeyUtil.h"
 #include "../util/ZLGtkSignalUtil.h"
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../view/ZLGtkViewWidget.h"
-
-#include "ZLGtkApplicationWindow.h"
 
 void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myWindow = (new ZLGtkApplicationWindow(application))->getMainWindow();
@@ -64,9 +64,9 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	myVBox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
 
-	myToolbar = gtk_toolbar_new();
-	gtk_box_pack_start(GTK_BOX(myVBox), myToolbar, false, false, 0);
-	gtk_toolbar_set_style(GTK_TOOLBAR(myToolbar), GTK_TOOLBAR_BOTH);
+	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
+	gtk_box_pack_start(GTK_BOX(myVBox), GTK_WIDGET(myToolbar), false, false, 0);
+	gtk_toolbar_set_style(myToolbar, GTK_TOOLBAR_BOTH);
 
 	myFullScreen = false;
 
@@ -95,10 +95,10 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 	}
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
-		gtk_widget_hide(myToolbar);
+		gtk_widget_hide(GTK_WIDGET(myToolbar));
 		gtk_window_fullscreen(myMainWindow);
 	} else {
-		gtk_widget_show(myToolbar);
+		gtk_widget_show(GTK_WIDGET(myToolbar));
 		gtk_window_unfullscreen(myMainWindow);
 	}
 }
@@ -173,7 +173,6 @@ void ZLGtkApplicationWindow::setCaption(const std::string &caption) {
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	ZLGtkViewWidget *viewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myVBox), viewWidget->area());
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), this);
 	gtk_widget_show_all(myVBox);
 	return viewWidget;
 }

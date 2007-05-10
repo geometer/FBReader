@@ -52,7 +52,7 @@ void HtmlReader::setTag(HtmlTag &tag, const std::string &name) {
 		tag.Name = name.substr(1);
 	}
 
-	const size_t len = std::min(tag.Name.length(), (size_t)10);
+	const size_t len = tag.Name.length();
 	for (size_t i = 0; i < len; ++i) {
 		tag.Name[i] = toupper(tag.Name[i]);
 	}
@@ -128,6 +128,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 	const size_t BUFSIZE = 2048;
 	char *buffer = new char[BUFSIZE];
 	size_t length;
+	size_t offset = 0;
 	do {
 		length = stream.read(buffer, BUFSIZE);
 		char *start = buffer;
@@ -141,6 +142,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						}
 						start = ptr + 1;
 						state = PS_TAGSTART;
+						currentTag.Offset = offset + (ptr - buffer);
 					}
 					if (*ptr == '&') {
 						if (!characterDataHandler(start, ptr - start, true)) {
@@ -320,6 +322,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					break;
 			}
 		}
+		offset += length; 
 	} while (length == BUFSIZE);
 endOfProcessing:
 	delete[] buffer;

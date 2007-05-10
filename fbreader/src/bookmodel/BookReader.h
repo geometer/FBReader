@@ -63,6 +63,7 @@ public:
 
 	void beginContentsParagraph(int referenceNumber = -1);
 	void endContentsParagraph();
+	bool contentsParagraphIsOpen() const;
 	void setReference(size_t contentsParagraphNumber, int referenceNumber);
 
 	void addData(const std::string &data);
@@ -86,6 +87,7 @@ private:
 	std::vector<TextKind> myKindStack;
 
 	bool myTextParagraphExists;
+	bool myContentsParagraphExists;
 	std::stack<TreeParagraph*> myTOCStack;
 	bool myLastTOCParagraphIsEmpty;
 
@@ -101,6 +103,10 @@ private:
 
 inline bool BookReader::paragraphIsOpen() const {
 	return myTextParagraphExists;
+}
+
+inline bool BookReader::contentsParagraphIsOpen() const {
+	return myContentsParagraphExists;
 }
 
 #endif /* __BOOKREADER_H__ */

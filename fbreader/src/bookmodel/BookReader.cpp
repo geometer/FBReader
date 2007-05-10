@@ -30,6 +30,7 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	myLastTOCParagraphIsEmpty = false;
 
 	myTextParagraphExists = false;
+	myContentsParagraphExists = false;
 
 	myInsideTitle = false;
 	mySectionContainsRegularContents = false;
@@ -216,6 +217,7 @@ void BookReader::beginContentsParagraph(int referenceNumber) {
 		contentsModel.setReference(para, referenceNumber);
 		myTOCStack.push(para);
 		myLastTOCParagraphIsEmpty = true;
+		myContentsParagraphExists = true;
 	}
 }
 
@@ -233,6 +235,7 @@ void BookReader::endContentsParagraph() {
 		}
 		myTOCStack.pop();
 	}
+	myContentsParagraphExists = false;
 }
 
 void BookReader::setReference(size_t contentsParagraphNumber, int referenceNumber) {

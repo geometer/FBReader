@@ -31,6 +31,9 @@ public:
 	void readDocument(ZLInputStream &stream);
 
 private:
+	shared_ptr<HtmlTagAction> createAction(const std::string &tag);
+
+private:
 	int myImageCounter;
 	const std::string myFileName;
 

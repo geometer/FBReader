@@ -38,11 +38,13 @@ private:
 	void endDocumentHandler();
 
 private:
+	shared_ptr<HtmlTagAction> createAction(const std::string &tag);
+
+private:
 	shared_ptr<CHMFileInfo> myInfo;
 	CHMReferenceCollection &myReferenceCollection;
 	std::string myCurrentSectionName;
 
-friend class HtmlSectionTagAction;
 friend class HtmlSectionHrefTagAction;
 friend class HtmlSectionImageTagAction;
 };

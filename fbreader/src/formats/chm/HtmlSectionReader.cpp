@@ -25,32 +25,32 @@
 #include "CHMReferenceCollection.h"
 #include "CHMFileImage.h"
 #include "../util/MiscUtil.h"
+#include "../html/HtmlTagActions.h"
 
-class HtmlSectionTagAction : public HtmlTagAction {
-
-protected:
-	HtmlSectionTagAction(HtmlSectionReader &reader);
-	HtmlSectionReader &reader();
-};
-
-class HtmlSectionHrefTagAction : public HtmlSectionTagAction {
+class HtmlSectionHrefTagAction : public HtmlHrefTagAction {
 
 public:
 	HtmlSectionHrefTagAction(HtmlSectionReader &reader);
-	void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes);
+	void run(const HtmlReader::HtmlTag &tag);
 };
 
-class HtmlSectionImageTagAction : public HtmlSectionTagAction {
+class HtmlSectionImageTagAction : public HtmlTagAction {
 
 public:
 	HtmlSectionImageTagAction(HtmlSectionReader &reader);
-	void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes);
+	void run(const HtmlReader::HtmlTag &tag);
 };
 
+shared_ptr<HtmlTagAction> HtmlSectionReader::createAction(const std::string &tag) {
+	if (tag == "IMG") {
+		return new HtmlSectionImageTagAction(*this);
+	} else if (tag == "A") {
+		return new HtmlSectionHrefTagAction(*this);
+	}
+	return HtmlBookReader::createAction(tag);
+}
+
 HtmlSectionReader::HtmlSectionReader(BookModel &model, const PlainTextFormat &format, const std::string &encoding, shared_ptr<CHMFileInfo> info, CHMReferenceCollection &collection) : HtmlBookReader("", model, format, encoding), myInfo(info), myReferenceCollection(collection) {
-	addAction("IMG", new HtmlSectionImageTagAction(*this));
-	addAction("A", new HtmlSectionHrefTagAction(*this));
-	//addAction("PRE", 0);
 	setBuildTableOfContent(false);
 }
 
@@ -69,63 +69,58 @@ void HtmlSectionReader::endDocumentHandler() {
 	myBookReader.insertEndOfTextParagraph();
 }
 
-HtmlSectionTagAction::HtmlSectionTagAction(HtmlSectionReader &reader) : HtmlTagAction(reader) {
+HtmlSectionHrefTagAction::HtmlSectionHrefTagAction(HtmlSectionReader &reader) : HtmlHrefTagAction(reader) {
 }
 
-HtmlSectionReader &HtmlSectionTagAction::reader() {
-	return (HtmlSectionReader&)myReader;
-}
-
-HtmlSectionHrefTagAction::HtmlSectionHrefTagAction(HtmlSectionReader &reader) : HtmlSectionTagAction(reader) {
-}
-
-void HtmlSectionHrefTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
-	if (start) {
-		for (unsigned int i = 0; i < attributes.size(); ++i) {
-			if (attributes[i].Name == "NAME") {
-				bookReader().addHyperlinkLabel(ZLUnicodeUtil::toLower(reader().myCurrentSectionName + '#' + attributes[i].Value));
-			} else if ((reader().hyperlinkType() == REGULAR) && (attributes[i].Name == "HREF")) {
-				const std::string &value = attributes[i].Value;
+void HtmlSectionHrefTagAction::run(const HtmlReader::HtmlTag &tag) {
+	if (tag.Start) {
+		HtmlSectionReader &reader = (HtmlSectionReader&)myReader;
+		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
+			if (tag.Attributes[i].Name == "NAME") {
+				bookReader().addHyperlinkLabel(ZLUnicodeUtil::toLower(reader.myCurrentSectionName + '#' + tag.Attributes[i].Value));
+			} else if ((hyperlinkType() == REGULAR) && (tag.Attributes[i].Name == "HREF")) {
+				const std::string &value = tag.Attributes[i].Value;
 				if (!value.empty()) {
 					if (MiscUtil::isReference(value)) {
 						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value);
-						reader().setHyperlinkType(EXTERNAL_HYPERLINK);
+						setHyperlinkType(EXTERNAL_HYPERLINK);
 					} else {
 						const int index = value.find('#');
 						std::string sectionName = (index == -1) ? value : value.substr(0, index);
 						sectionName = ZLUnicodeUtil::toLower(MiscUtil::decodeHtmlURL(sectionName));
 						if (sectionName.empty()) {
-							sectionName = reader().myCurrentSectionName;
+							sectionName = reader.myCurrentSectionName;
 						} else {
-							sectionName = reader().myReferenceCollection.addReference(sectionName, true);
+							sectionName = reader.myReferenceCollection.addReference(sectionName, true);
 						}
 						bookReader().addHyperlinkControl(
 							INTERNAL_HYPERLINK, ZLUnicodeUtil::toLower((index == -1) ? sectionName : (sectionName + value.substr(index)))
 						);
-						reader().setHyperlinkType(INTERNAL_HYPERLINK);
+						setHyperlinkType(INTERNAL_HYPERLINK);
 					}
 				}
 			}
 		}
-	} else if (reader().hyperlinkType() != REGULAR) {
-		bookReader().addControl(reader().hyperlinkType(), false);
-		reader().setHyperlinkType(REGULAR);
+	} else if (hyperlinkType() != REGULAR) {
+		bookReader().addControl(hyperlinkType(), false);
+		setHyperlinkType(REGULAR);
 	}
 }
 
-HtmlSectionImageTagAction::HtmlSectionImageTagAction(HtmlSectionReader &reader) : HtmlSectionTagAction(reader) {
+HtmlSectionImageTagAction::HtmlSectionImageTagAction(HtmlSectionReader &reader) : HtmlTagAction(reader) {
 }
 
-void HtmlSectionImageTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
-	if (start) {
+void HtmlSectionImageTagAction::run(const HtmlReader::HtmlTag &tag) {
+	if (tag.Start) {
 		//bookReader().endParagraph();
-		for (unsigned int i = 0; i < attributes.size(); ++i) {
-			if (attributes[i].Name == "SRC") {
-				std::string fileName = MiscUtil::decodeHtmlURL(attributes[i].Value);
-				fileName = CHMReferenceCollection::fullReference(reader().myReferenceCollection.prefix(), fileName);
+		HtmlSectionReader &reader = (HtmlSectionReader&)myReader;
+		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
+			if (tag.Attributes[i].Name == "SRC") {
+				std::string fileName = MiscUtil::decodeHtmlURL(tag.Attributes[i].Value);
+				fileName = CHMReferenceCollection::fullReference(reader.myReferenceCollection.prefix(), fileName);
 				fileName = ZLUnicodeUtil::toLower(fileName);
 				bookReader().addImageReference(fileName);
-				bookReader().addImage(fileName, new CHMFileImage(reader().myInfo, fileName));
+				bookReader().addImage(fileName, new CHMFileImage(reader.myInfo, fileName));
 				break;
 			}
 		}

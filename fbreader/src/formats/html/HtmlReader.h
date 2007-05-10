@@ -43,9 +43,9 @@ public:
 		void setValue(const std::string &value);
 	};
 
-protected:
 	struct HtmlTag {
 		std::string Name;
+		size_t Offset;
 		bool Start;
 		std::vector<HtmlAttribute> Attributes;
 

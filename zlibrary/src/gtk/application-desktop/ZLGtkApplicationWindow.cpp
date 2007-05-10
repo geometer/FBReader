@@ -21,13 +21,10 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
-#include <ZLOptionEntry.h>
-#include <ZLDialog.h>
+#include "ZLGtkApplicationWindow.h"
 
 #include "../util/ZLGtkKeyUtil.h"
 #include "../util/ZLGtkSignalUtil.h"
-
-#include "ZLGtkApplicationWindow.h"
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../view/ZLGtkViewWidget.h"
 

@@ -24,32 +24,41 @@
 #include <ZLFile.h>
 #include <ZLFileImage.h>
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "MobipocketHtmlBookReader.h"
 #include "MobipocketStream.h"
+#include "../html/HtmlTagActions.h"
 
 class MobipocketHtmlImageTagAction : public HtmlTagAction {
 
 public:
 	MobipocketHtmlImageTagAction(HtmlBookReader &reader);
-	void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes);
+	void run(const HtmlReader::HtmlTag &tag);
 };
 
 class MobipocketHtmlHrTagAction : public HtmlTagAction {
 
 public:
 	MobipocketHtmlHrTagAction(HtmlBookReader &reader);
-	void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes);
+	void run(const HtmlReader::HtmlTag &tag);
+};
+
+class MobipocketHtmlHrefTagAction : public HtmlHrefTagAction {
+
+public:
+	MobipocketHtmlHrefTagAction(HtmlBookReader &reader);
+	void run(const HtmlReader::HtmlTag &tag);
 };
 
 MobipocketHtmlImageTagAction::MobipocketHtmlImageTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
 }
 
-void MobipocketHtmlImageTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) {
-	if (start) {
-		for (unsigned int i = 0; i < attributes.size(); ++i) {
-			if (attributes[i].Name == "RECINDEX") {
-				int index = atoi(attributes[i].Value.c_str());
+void MobipocketHtmlImageTagAction::run(const HtmlReader::HtmlTag &tag) {
+	if (tag.Start) {
+		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
+			if (tag.Attributes[i].Name == "RECINDEX") {
+				int index = atoi(tag.Attributes[i].Value.c_str());
 				if (index > 0) {
 					int &imageCounter = ((MobipocketHtmlBookReader&)myReader).myImageCounter;
 					imageCounter = std::max(imageCounter, index);
@@ -73,16 +82,53 @@ void MobipocketHtmlImageTagAction::run(bool start, const std::vector<HtmlReader:
 MobipocketHtmlHrTagAction::MobipocketHtmlHrTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
 }
 
-void MobipocketHtmlHrTagAction::run(bool start, const std::vector<HtmlReader::HtmlAttribute>&) {
-	if (start) {
+void MobipocketHtmlHrTagAction::run(const HtmlReader::HtmlTag &tag) {
+	if (tag.Start) {
+		if (bookReader().contentsParagraphIsOpen()) {
+			bookReader().endContentsParagraph();
+			bookReader().exitTitle();
+		}
 		bookReader().insertEndOfSectionParagraph();
 	}
 }
 
+MobipocketHtmlHrefTagAction::MobipocketHtmlHrefTagAction(HtmlBookReader &reader) : HtmlHrefTagAction(reader) {
+}
+
+void MobipocketHtmlHrefTagAction::run(const HtmlReader::HtmlTag &tag) {
+	if (tag.Start) {
+		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
+			if (ZLUnicodeUtil::toLower(tag.Attributes[i].Name) == "filepos") {
+				const std::string &value = tag.Attributes[i].Value;
+				if (!value.empty()) {
+					std::string label = "&";
+					ZLStringUtil::appendNumber(label, atoi(tag.Attributes[i].Value.c_str()));
+					setHyperlinkType(INTERNAL_HYPERLINK);
+					bookReader().addHyperlinkControl(INTERNAL_HYPERLINK, label);
+					return;
+				}
+			}
+		}
+		std::string label = "&";
+		ZLStringUtil::appendNumber(label, tag.Offset);
+		bookReader().addHyperlinkLabel(label);
+	}
+	HtmlHrefTagAction::run(tag);
+}
+
+shared_ptr<HtmlTagAction> MobipocketHtmlBookReader::createAction(const std::string &tag) {
+	if (tag == "IMG") {
+		return new MobipocketHtmlImageTagAction(*this);
+	} else if (tag == "HR") {
+		return new MobipocketHtmlHrTagAction(*this);
+	} else if (tag == "A") {
+		return new MobipocketHtmlHrefTagAction(*this);
+	}
+	return HtmlBookReader::createAction(tag);
+}
+
 MobipocketHtmlBookReader::MobipocketHtmlBookReader(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlBookReader("", model, format, encoding), myImageCounter(0), myFileName(fileName) {
-	addAction("IMG",	new MobipocketHtmlImageTagAction(*this));
-	addAction("HR",	new MobipocketHtmlHrTagAction(*this));
-	//addAction("A",	new MobipocketHtmlHrefTagAction(*this));
+	setBuildTableOfContent(false);
 }
 
 void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {

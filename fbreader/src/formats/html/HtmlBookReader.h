@@ -24,6 +24,8 @@
 
 #include <stack>
 
+#include <shared_ptr.h>
+
 #include "HtmlReader.h"
 #include "../../bookmodel/BookReader.h"
 
@@ -40,7 +42,7 @@ public:
 	void setFileName(const std::string fileName);
 
 protected:
-	void addAction(const std::string &tag, HtmlTagAction *action);
+	virtual shared_ptr<HtmlTagAction> createAction(const std::string &tag);
 	void setBuildTableOfContent(bool build);
 
 protected:
@@ -55,10 +57,6 @@ private:
 	void addConvertedDataToBuffer(const char *text, int len, bool convert);
 
 protected:
-	TextKind hyperlinkType() const;
-	void setHyperlinkType(TextKind hyperlinkType);
-
-protected:
 	BookReader myBookReader;
 	std::string myBaseDirPath;
 
@@ -68,17 +66,16 @@ private:
 	bool myIsPreformatted;
 	bool myDontBreakParagraph;
 
-	TextKind myHyperlinkType;
-
 	bool myIsStarted;
 	bool myBuildTableOfContent;
+	bool myIgnoreTitles;
 	std::stack<int> myListNumStack;
 
 	int mySpaceCounter;
 	int myBreakCounter;
 	std::string myConverterBuffer;
 
-	std::map<std::string,HtmlTagAction*> myActionMap;
+	std::map<std::string,shared_ptr<HtmlTagAction> > myActionMap;
 	std::vector<TextKind> myKindList;
 
 	std::string myFileName;
@@ -93,24 +90,7 @@ private:
 	friend class HtmlPreTagAction;
 	friend class HtmlListTagAction;
 	friend class HtmlListItemTagAction;
+	friend class HtmlTableTagAction;
 };
-
-class HtmlTagAction {
-
-protected:
-	HtmlTagAction(HtmlBookReader &reader);
-
-public:
-	virtual ~HtmlTagAction();
-	virtual void run(bool start, const std::vector<HtmlReader::HtmlAttribute> &attributes) = 0;
-
-protected:
-	BookReader &bookReader();
-
-protected:
-	HtmlBookReader &myReader;
-};
-
-inline BookReader &HtmlTagAction::bookReader() { return myReader.myBookReader; }
 
 #endif /* __HTMLBOOKREADER_H__ */
