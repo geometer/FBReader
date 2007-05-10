@@ -370,8 +370,6 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 HtmlBookReader::~HtmlBookReader() {
 }
 
-#include <iostream>
-
 void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool convert) {
 	if (len > 0) {
 		if (myDontBreakParagraph) {
