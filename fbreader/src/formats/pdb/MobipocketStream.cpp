@@ -54,15 +54,15 @@ bool MobipocketStream::open() {
 	}
 	unsigned short reserved2;
 	PdbUtil::readUnsignedShort(*myBase, reserved2);
-	if (reserved2 != 0) {
-		myErrorCode = ERROR_ENCRIPTION;
-		return false;
-	}
 	myBuffer = new char[myMaxRecordSize];
 
 	myRecordIndex = 0;
 
 	return true;
+}
+
+bool MobipocketStream::hasExtraSections() const {
+	return myMaxRecordIndex < myHeader.Offsets.size() - 1;
 }
 
 std::pair<int,int> MobipocketStream::imageLocation(int index) {

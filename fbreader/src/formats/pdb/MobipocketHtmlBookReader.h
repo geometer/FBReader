@@ -22,6 +22,8 @@
 #ifndef __MOBIPOCKETHTMLBOOKREADER_H__
 #define __MOBIPOCKETHTMLBOOKREADER_H__
 
+#include <set>
+
 #include "../html/HtmlBookReader.h"
 
 class MobipocketHtmlBookReader : public HtmlBookReader {
@@ -31,13 +33,23 @@ public:
 	void readDocument(ZLInputStream &stream);
 
 private:
+	void startDocumentHandler();
+	bool tagHandler(const HtmlTag &tag);
 	shared_ptr<HtmlTagAction> createAction(const std::string &tag);
 
 private:
 	int myImageCounter;
 	const std::string myFileName;
 
+	std::vector<std::pair<int, int> > myPositionToParagraphMap;
+	std::set<int> myFileposReferences;
+	bool myInsideGuide;
+	std::map<int,std::string> myTocEntries;
+
 friend class MobipocketHtmlImageTagAction;
+friend class MobipocketHtmlHrefTagAction;
+friend class MobipocketHtmlGuideTagAction;
+friend class MobipocketHtmlReferenceTagAction;
 };
 
 #endif /* __MOBIPOCKETHTMLBOOKREADER_H__ */

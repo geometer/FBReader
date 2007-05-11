@@ -19,33 +19,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __MOBIPOCKETSTREAM_H__
-#define __MOBIPOCKETSTREAM_H__
+#include <ZLFile.h>
 
-#include "PalmDocStream.h"
+#include "PdbPlugin.h"
+#include "MobipocketStream.h"
 
-class ZLFile;
+shared_ptr<ZLInputStream> PalmDocLikePlugin::createStream(ZLFile &file) const {
+	return new MobipocketStream(file);
+}
 
-class MobipocketStream : public PalmDocStream {
-
-public:
-	MobipocketStream(ZLFile &file);
-	bool open();
-
-	const std::string &error() const;
-
-	std::pair<int,int> imageLocation(int index);
-
-	bool hasExtraSections() const;
-
-private:
-	int myBaseSize;
-	enum {
-		ERROR_NONE,
-		ERROR_UNKNOWN,
-		ERROR_COMPRESSION,
-		ERROR_ENCRIPTION,
-	} myErrorCode;
-};
-
-#endif /* __MOBIPOCKETSTREAM_H__ */
+const std::string &PalmDocLikePlugin::tryOpen(const std::string &path) const {
+	ZLFile file(path);
+	MobipocketStream stream(file);
+	stream.open();
+	return stream.error();
+}

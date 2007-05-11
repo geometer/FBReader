@@ -48,8 +48,6 @@ protected:
 protected:
 	void startDocumentHandler();
 	void endDocumentHandler();
-
-private:
 	bool tagHandler(const HtmlTag &tag);
 
 private:

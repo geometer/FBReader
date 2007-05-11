@@ -27,18 +27,8 @@
 #include "MobipocketHtmlBookReader.h"
 
 bool MobipocketPlugin::acceptsFile(const ZLFile &file) const {
-	return PdbPlugin::fileType(file) == "BOOKMOBI";
-}
-
-shared_ptr<ZLInputStream> MobipocketPlugin::createStream(ZLFile &file) const {
-	return new MobipocketStream(file);
-}
-
-const std::string &MobipocketPlugin::tryOpen(const std::string &path) const {
-	ZLFile file(path);
-	MobipocketStream stream(file);
-	stream.open();
-	return stream.error();
+	const std::string type = PdbPlugin::fileType(file);
+	return type == "BOOKMOBI";
 }
 
 void MobipocketPlugin::readDocumentInternal(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {

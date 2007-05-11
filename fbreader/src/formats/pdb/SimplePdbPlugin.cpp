@@ -28,6 +28,7 @@
 #include "../txt/TxtBookReader.h"
 #include "../html/HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
+#include "HtmlMetainfoReader.h"
 
 bool SimplePdbPlugin::providesMetaInfo() const {
 	return false;
@@ -40,6 +41,10 @@ bool SimplePdbPlugin::readDescription(const std::string &path, BookDescription &
 	detectEncodingAndLanguage(description, *stream);
 	if (description.encoding().empty()) {
 		return false;
+	}
+	if (TextFormatDetector().isHtml(*stream)) {
+		HtmlMetainfoReader metainfoReader(description);
+		metainfoReader.readDocument(*stream);
 	}
 
 	return true;

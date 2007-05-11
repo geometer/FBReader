@@ -23,14 +23,22 @@
 #include <ZLInputStream.h>
 
 #include "PdbPlugin.h"
-#include "PalmDocStream.h"
+#include "MobipocketStream.h"
+#include "MobipocketHtmlBookReader.h"
 
 bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "TEXtREAd";
 }
 
-shared_ptr<ZLInputStream> PalmDocPlugin::createStream(ZLFile &file) const {
-	return new PalmDocStream(file);
+void PalmDocPlugin::readDocumentInternal(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
+	stream.open();
+	bool readAsMobipocket = ((MobipocketStream&)stream).hasExtraSections();
+	stream.close();
+	if (readAsMobipocket) {
+		MobipocketHtmlBookReader(fileName, model, format, encoding).readDocument(stream);
+	} else {
+		SimplePdbPlugin::readDocumentInternal(fileName, model, format, encoding, stream);
+	}
 }
 
 const std::string &PalmDocPlugin::iconName() const {
