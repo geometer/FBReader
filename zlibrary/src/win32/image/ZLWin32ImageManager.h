@@ -46,10 +46,11 @@ public:
 	void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY);
 
 	const BYTE *pixels(ZLColor bgColor) const;
-	const BITMAPINFO &info() const;
+	const BITMAPINFO *info() const;
 
 private:
 	void bgr2rgb();
+	void clear();
 
 private:
 	unsigned int myWidth;
@@ -62,7 +63,7 @@ private:
 	mutable ZLColor myBackgroundColor;
 	BYTE *myPixelPointer;
 
-	BITMAPINFO myInfo;
+	BITMAPINFO *myInfo;
 
 friend class ZLWin32ImageManager;
 };
@@ -80,6 +81,7 @@ protected:
 	void convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
 
 private:
+	bool bmpConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 	bool pngConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 	bool jpegConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;
 	bool gifConvert(const std::string &stringData, ZLWin32ImageData &imageData) const;

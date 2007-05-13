@@ -206,7 +206,7 @@ void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
 		StretchDIBits(myDisplayContext,
 			x, y - height, width, height,
 			0, 0, width, height,
-			pixels, &win32Image.info(), DIB_RGB_COLORS, SRCCOPY);
+			pixels, win32Image.info(), DIB_RGB_COLORS, SRCCOPY);
 	}
 }
 

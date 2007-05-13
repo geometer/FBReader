@@ -19,15 +19,25 @@
 
 #include "ZLWin32ImageManager.h"
 
-ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0) {
+ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0), myInfo(0) {
 }
 
 ZLWin32ImageData::~ZLWin32ImageData() {
+	clear();
+}
+
+void ZLWin32ImageData::clear() {
 	if (myArray != 0) {
 		delete[] myArray;
+		myArray = 0;
 	}
 	if (myArrayWithoutAlpha != 0) {
 		delete[] myArrayWithoutAlpha;
+		myArrayWithoutAlpha = 0;
+	}
+	if (myInfo != 0) {
+		delete[] (char*)myInfo;
+		myInfo = 0;
 	}
 }
 
@@ -44,35 +54,32 @@ void ZLWin32ImageData::init(unsigned int width, unsigned int height) {
 }
 
 void ZLWin32ImageData::init(unsigned int width, unsigned int height, bool hasAlpha, unsigned int bytesPerLine) {
+	clear();
+
 	myWidth = width;
 	myHeight = height;
 	myBytesPerPixel = hasAlpha ? 4 : 3;
 	myBytesPerLine = std::max(bytesPerLine, (myBytesPerPixel * myWidth + 3) >> 2 << 2);
-	if (myArray != 0) {
-		delete[] myArray;
-	}
-	if (myArrayWithoutAlpha != 0) {
-		delete[] myArrayWithoutAlpha;
-		myArrayWithoutAlpha = 0;
-	}
+
 	myArray = new BYTE[myBytesPerLine * myHeight];
 	myPixelPointer = myArray;
 
-	myInfo.bmiHeader.biSize = sizeof(myInfo.bmiHeader);
-	myInfo.bmiHeader.biWidth = width;
-	myInfo.bmiHeader.biHeight = height;
-	myInfo.bmiHeader.biPlanes = 1;
-	myInfo.bmiHeader.biBitCount = 24;
-	myInfo.bmiHeader.biCompression = BI_RGB;
-	myInfo.bmiHeader.biSizeImage = 0;
-	myInfo.bmiHeader.biXPelsPerMeter = 100; //?
-	myInfo.bmiHeader.biYPelsPerMeter = 100; //? 
-	myInfo.bmiHeader.biClrUsed = 0;
-	myInfo.bmiHeader.biClrImportant = 0;
-	myInfo.bmiColors[0].rgbBlue = 1;
-	myInfo.bmiColors[0].rgbGreen = 1;
-	myInfo.bmiColors[0].rgbRed = 1;
-	myInfo.bmiColors[0].rgbReserved = 0;
+	myInfo = (BITMAPINFO*)new char[sizeof(BITMAPINFO)];
+	myInfo->bmiHeader.biSize = sizeof(myInfo->bmiHeader);
+	myInfo->bmiHeader.biWidth = width;
+	myInfo->bmiHeader.biHeight = height;
+	myInfo->bmiHeader.biPlanes = 1;
+	myInfo->bmiHeader.biBitCount = 24;
+	myInfo->bmiHeader.biCompression = BI_RGB;
+	myInfo->bmiHeader.biSizeImage = 0;
+	myInfo->bmiHeader.biXPelsPerMeter = 100; //?
+	myInfo->bmiHeader.biYPelsPerMeter = 100; //? 
+	myInfo->bmiHeader.biClrUsed = 0;
+	myInfo->bmiHeader.biClrImportant = 0;
+	myInfo->bmiColors[0].rgbBlue = 1;
+	myInfo->bmiColors[0].rgbGreen = 1;
+	myInfo->bmiColors[0].rgbRed = 1;
+	myInfo->bmiColors[0].rgbReserved = 0;
 }
 
 void ZLWin32ImageData::bgr2rgb() {
@@ -109,7 +116,7 @@ const BYTE *ZLWin32ImageData::pixels(ZLColor bgColor) const {
 		return 0;
 	}
 
-	if (myBytesPerPixel == 3) {
+	if (myBytesPerPixel < 4) {
 		return myArray;
 	} else {
 		if ((myArrayWithoutAlpha == 0) || (myBackgroundColor != bgColor)) {
@@ -145,7 +152,7 @@ const BYTE *ZLWin32ImageData::pixels(ZLColor bgColor) const {
 	}
 }
 
-const BITMAPINFO &ZLWin32ImageData::info() const {
+const BITMAPINFO *ZLWin32ImageData::info() const {
 	return myInfo;
 }
 
@@ -155,6 +162,9 @@ shared_ptr<ZLImageData> ZLWin32ImageManager::createData() const {
 
 void ZLWin32ImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	ZLWin32ImageData &win32Data = (ZLWin32ImageData&)data;
+	if (bmpConvert(stringData, win32Data)) {
+		return;
+	}
 	if (pngConvert(stringData, win32Data)) {
 		return;
 	}
