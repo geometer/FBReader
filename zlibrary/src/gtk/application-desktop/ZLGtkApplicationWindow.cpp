@@ -93,24 +93,20 @@ void ZLGtkApplicationWindow::init() {
 }
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
-	switch (gdk_window_get_state(GTK_WIDGET(myMainWindow)->window)) {
-		case GDK_WINDOW_STATE_MAXIMIZED:
-			myWindowStateOption.setValue(MAXIMIZED);
-			break;
-		case GDK_WINDOW_STATE_FULLSCREEN:
-			myWindowStateOption.setValue(FULLSCREEN);
-			break;
-		default:
-		{
-			myWindowStateOption.setValue(NORMAL);
-			int x, y, width, height;
-			gtk_window_get_position(myMainWindow, &x, &y);
-			gtk_window_get_size(myMainWindow, &width, &height);
-			myXOption.setValue(x);
-			myYOption.setValue(y);
-			myWidthOption.setValue(width);
-			myHeightOption.setValue(height);
-		}
+	GdkWindowState state = gdk_window_get_state(GTK_WIDGET(myMainWindow)->window);
+	if (state & GDK_WINDOW_STATE_FULLSCREEN) {
+		myWindowStateOption.setValue(FULLSCREEN);
+	} else if (state & GDK_WINDOW_STATE_MAXIMIZED) {
+		myWindowStateOption.setValue(MAXIMIZED);
+	} else {
+		myWindowStateOption.setValue(NORMAL);
+		int x, y, width, height;
+		gtk_window_get_position(myMainWindow, &x, &y);
+		gtk_window_get_size(myMainWindow, &width, &height);
+		myXOption.setValue(x);
+		myYOption.setValue(y);
+		myWidthOption.setValue(width);
+		myHeightOption.setValue(height);
 	}
 }
 
@@ -161,7 +157,7 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 
 bool ZLGtkApplicationWindow::isFullscreen() const {
 	return
-		gdk_window_get_state(GTK_WIDGET(myMainWindow)->window) ==
+		gdk_window_get_state(GTK_WIDGET(myMainWindow)->window) &
 		GDK_WINDOW_STATE_FULLSCREEN;
 }
 
