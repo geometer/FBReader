@@ -45,7 +45,8 @@ private:
 		READ_NONE,
 		READ_MANIFEST,
 		READ_SPINE,
-		READ_GUIDE
+		READ_GUIDE,
+		READ_TOUR
 	};
 
 	BookReader myModelReader;
@@ -54,7 +55,8 @@ private:
 	std::string myFilePrefix;
 	std::map<std::string,std::string> myIdToHref;
 	std::vector<std::string> myHtmlFileNames;
-	std::vector<std::pair<std::string,std::string> > myTOC;
+	std::vector<std::pair<std::string,std::string> > myTourTOC;
+	std::vector<std::pair<std::string,std::string> > myGuideTOC;
 };
 
 #endif /* __OEBBOOKREADER_H__ */

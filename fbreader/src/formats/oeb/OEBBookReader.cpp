@@ -37,6 +37,8 @@ void OEBBookReader::characterDataHandler(const char*, int) {
 static const std::string MANIFEST = "manifest";
 static const std::string SPINE = "spine";
 static const std::string GUIDE = "guide";
+static const std::string TOUR = "tour";
+static const std::string SITE = "site";
 
 static const std::string ITEM = "item";
 static const std::string ITEMREF = "itemref";
@@ -50,6 +52,8 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 		myState = READ_SPINE;
 	} else if (GUIDE == tagString) {
 		myState = READ_GUIDE;
+	} else if (TOUR == tagString) {
+		myState = READ_TOUR;
 	} else if ((myState == READ_MANIFEST) && (ITEM == tagString)) {
 		const char *id = attributeValue(xmlattributes, "id");
 		const char *href = attributeValue(xmlattributes, "href");
@@ -68,14 +72,20 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 		const char *title = attributeValue(xmlattributes, "title");
 		const char *href = attributeValue(xmlattributes, "href");
 		if ((title != 0) && (href != 0)) {
-			myTOC.push_back(std::pair<std::string,std::string>(title, href));
+			myGuideTOC.push_back(std::pair<std::string,std::string>(title, href));
+		}
+	} else if ((myState == READ_TOUR) && (SITE == tagString)) {
+		const char *title = attributeValue(xmlattributes, "title");
+		const char *href = attributeValue(xmlattributes, "href");
+		if ((title != 0) && (href != 0)) {
+			myTourTOC.push_back(std::pair<std::string,std::string>(title, href));
 		}
 	}
 }
 
 void OEBBookReader::endElementHandler(const char *tag) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
-	if ((MANIFEST == tagString) || (SPINE == tagString) || (GUIDE == tagString)) {
+	if ((MANIFEST == tagString) || (SPINE == tagString) || (GUIDE == tagString) || (TOUR == tagString)) {
 		myState = READ_NONE;
 	}
 }
@@ -85,7 +95,8 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 
 	myIdToHref.clear();
 	myHtmlFileNames.clear();
-	myTOC.clear();
+	myTourTOC.clear();
+	myGuideTOC.clear();
 	myState = READ_NONE;
 
 	if (!readDocument(fileName)) {
@@ -99,7 +110,8 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 		XHTMLReader(myModelReader).readFile(myFilePrefix, *it, *it);
 	}
 
-	for (std::vector<std::pair<std::string, std::string> >::const_iterator it = myTOC.begin(); it != myTOC.end(); ++it) {
+	std::vector<std::pair<std::string,std::string> > &toc = myTourTOC.empty() ? myGuideTOC : myTourTOC;
+	for (std::vector<std::pair<std::string,std::string> >::const_iterator it = toc.begin(); it != toc.end(); ++it) {
 		int index = myModelReader.model().label(it->second).ParagraphNumber;
 		if (index != -1) {
 			myModelReader.beginContentsParagraph(index);
