@@ -12,7 +12,7 @@
 <empty-line/>
 <subtitle><p>Related sites</p></subtitle>
 <p>More information about this program can be found at <a l:href="http://www.fbreader.org">FBReader homepage</a>.</p>
-<p>If you want to receive messages about new releases, please subscribe to <a l:href="http://freshmeat.net/projects/fbreader">FBReader project at freshmeat</a>.</p>
+<p>If you want to be notified about new releases, please subscribe to <a l:href="http://freshmeat.net/projects/fbreader">FBReader project at freshmeat</a>.</p>
 <p>If you have any questions or suggestions, please use <a l:href="http://groups.google.com/group/fbreader">FBReader group at googlegroups</a>.</p>
 <empty-line/>
 <subtitle><p>Third-party libraries</p></subtitle>
