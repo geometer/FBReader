@@ -54,7 +54,6 @@ public:
 	bool providesMetaInfo() const;
 	bool readDescription(const std::string &path, BookDescription &description) const;
 	bool readModel(const BookDescription &description, BookModel &model) const;
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 
 protected:
 	virtual shared_ptr<ZLInputStream> createStream(ZLFile &file) const = 0;
@@ -77,6 +76,9 @@ public:
 	const std::string &iconName() const;
 
 	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
+
+private:
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 };
 
 class MobipocketPlugin : public PalmDocLikePlugin {
@@ -96,6 +98,9 @@ public:
 
 protected:
 	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
+
+private:
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 };
 
 inline PdbPlugin::PdbPlugin() {}

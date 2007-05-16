@@ -35,21 +35,56 @@ public:
 private:
 	void startDocumentHandler();
 	bool tagHandler(const HtmlTag &tag);
+	bool characterDataHandler(const char *text, int len, bool convert);
 	shared_ptr<HtmlTagAction> createAction(const std::string &tag);
+
+public:
+	class TOCReader {
+	
+	public:
+		TOCReader(MobipocketHtmlBookReader &reader);
+		void reset();
+
+		void addReference(size_t position, const std::string &text);
+
+		void setStartOffset(size_t position);
+		void setEndOffset(size_t position);
+
+		bool rangeContainsPosition(size_t position);
+
+		void startReadEntry(size_t position);
+		void endReadEntry();
+		void appendText(const char *text, size_t len);
+
+		const std::map<size_t,std::string> &entries() const;
+
+	private:	
+		MobipocketHtmlBookReader &myReader;
+
+		std::map<size_t,std::string> myEntries;
+
+		bool myIsActive;
+		size_t myStartOffset;
+		size_t myEndOffset;
+
+		size_t myCurrentReference;
+		std::string myCurrentEntryText;
+	};
 
 private:
 	int myImageCounter;
 	const std::string myFileName;
 
-	std::vector<std::pair<int, int> > myPositionToParagraphMap;
-	std::set<int> myFileposReferences;
+	std::vector<std::pair<size_t,size_t> > myPositionToParagraphMap;
+	std::set<size_t> myFileposReferences;
 	bool myInsideGuide;
-	std::map<int,std::string> myTocEntries;
+	TOCReader myTocReader;
 
 friend class MobipocketHtmlImageTagAction;
 friend class MobipocketHtmlHrefTagAction;
 friend class MobipocketHtmlGuideTagAction;
 friend class MobipocketHtmlReferenceTagAction;
+friend class TOCReader;
 };
 
 #endif /* __MOBIPOCKETHTMLBOOKREADER_H__ */

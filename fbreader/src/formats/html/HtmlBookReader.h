@@ -44,14 +44,16 @@ public:
 protected:
 	virtual shared_ptr<HtmlTagAction> createAction(const std::string &tag);
 	void setBuildTableOfContent(bool build);
+	void setProcessPreTag(bool process);
 
 protected:
 	void startDocumentHandler();
 	void endDocumentHandler();
 	bool tagHandler(const HtmlTag &tag);
+	bool characterDataHandler(const char *text, int len, bool convert);
 
 private:
-	bool characterDataHandler(const char *text, int len, bool convert);
+	void preformattedCharacterDataHandler(const char *text, int len, bool convert);
 	void addConvertedDataToBuffer(const char *text, int len, bool convert);
 
 protected:
@@ -66,6 +68,7 @@ private:
 
 	bool myIsStarted;
 	bool myBuildTableOfContent;
+	bool myProcessPreTag;
 	bool myIgnoreTitles;
 	std::stack<int> myListNumStack;
 

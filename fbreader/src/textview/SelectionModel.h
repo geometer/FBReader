@@ -44,7 +44,7 @@ public:
 	void deactivate();
 	void clear();
 
-	std::string getText() const;
+	const std::string &getText() const;
 	bool isEmpty() const;
 
 public:
@@ -90,6 +90,8 @@ private:
 	int myStoredY;
 
 	mutable std::set<ParagraphCursorPtr> myCursors;
+	mutable std::string myText;
+	mutable bool myTextIsUpToDate;
 
 friend class SelectionScroller;
 };

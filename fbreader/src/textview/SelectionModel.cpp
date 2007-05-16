@@ -26,7 +26,7 @@
 #include "SelectionModel.h"
 #include "TextView.h"
 
-SelectionModel::SelectionModel(TextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false) {
+SelectionModel::SelectionModel(TextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true) {
 }
 
 void SelectionModel::setBound(Bound &bound, int x, int y) {
@@ -100,6 +100,8 @@ void SelectionModel::activate(int x, int y) {
 	setBound(myFirstBound, x, y);
 	mySecondBound = myFirstBound;
 	myCursors.clear();
+	myText.erase();
+	myTextIsUpToDate = true;
 }
 
 bool SelectionModel::BoundElement::operator == (const SelectionModel::BoundElement &element) const {
@@ -133,9 +135,12 @@ bool SelectionModel::extendTo(int x, int y) {
 		stopSelectionScrolling();
 	}
 
-	return
-		(oldRange.first != newRange.first) ||
-		(oldRange.second != newRange.second);
+	if ((oldRange.first != newRange.first) || (oldRange.second != newRange.second)) {
+		myTextIsUpToDate = false;
+		myText.erase();
+		return true;
+	}
+	return false;
 }
 
 void SelectionModel::deactivate() {
@@ -150,6 +155,8 @@ void SelectionModel::clear() {
 	myIsActive = false;
 	myDoUpdate = false;
 	myCursors.clear();
+	myText.erase();
+	myTextIsUpToDate = true;
 }
 
 std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> SelectionModel::range() const {
@@ -229,6 +236,8 @@ void SelectionModel::update() {
 		myDoUpdate = false;
 		setBound(mySecondBound, myStoredX, myStoredY);
 		myView.copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
+		myTextIsUpToDate = false;
+		myText.erase();
 	}
 }
 
@@ -242,65 +251,62 @@ void SelectionModel::scrollAndExtend() {
 	}
 }
 
-std::string SelectionModel::getText() const {
-	if (isEmpty()) {
-		return std::string();
-	}
-		
-	std::string text;
+const std::string &SelectionModel::getText() const {
+	if (!myTextIsUpToDate && !isEmpty()) {
+		std::pair<BoundElement,BoundElement> r = range();
 
-	std::pair<BoundElement,BoundElement> r = range();
+		WordCursor start = myView.startCursor();
+		start.moveToParagraph(r.first.ParagraphNumber);
+		start.moveTo(r.first.TextElementNumber, r.first.CharNumber);
 
-	WordCursor start = myView.startCursor();
-	start.moveToParagraph(r.first.ParagraphNumber);
-	start.moveTo(r.first.TextElementNumber, r.first.CharNumber);
+		WordCursor end = myView.startCursor();
+		end.moveToParagraph(r.second.ParagraphNumber);
+		end.moveTo(r.second.TextElementNumber, r.second.CharNumber);
 
-	WordCursor end = myView.startCursor();
-	end.moveToParagraph(r.second.ParagraphNumber);
-	end.moveTo(r.second.TextElementNumber, r.second.CharNumber);
+		std::set<ParagraphCursorPtr> pcursors;
+		pcursors.insert(start.paragraphCursorPtr());
 
-	std::set<ParagraphCursorPtr> pcursors;
-	pcursors.insert(start.paragraphCursorPtr());
-
-	for (WordCursor cursor = start; cursor < end; ) {
-		const TextElement &element = cursor.element();
-		switch (element.kind()) {
-			case TextElement::WORD_ELEMENT:
-			{
-				const Word &word = (const Word&)element;
-				if (cursor.sameElementAs(end)) {
-					if (start.sameElementAs(end)) {
-						int skip = ZLUnicodeUtil::length(word.Data, start.charNumber());
-						int length = ZLUnicodeUtil::length(word.Data, end.charNumber()) - skip;
-						text.append(word.Data + skip, length);
-					} else {
-						text.append(word.Data, ZLUnicodeUtil::length(word.Data, end.charNumber()));
+		for (WordCursor cursor = start; cursor < end; ) {
+			const TextElement &element = cursor.element();
+			switch (element.kind()) {
+				case TextElement::WORD_ELEMENT:
+				{
+					const Word &word = (const Word&)element;
+					if (cursor.sameElementAs(end)) {
+						if (start.sameElementAs(end)) {
+							int skip = ZLUnicodeUtil::length(word.Data, start.charNumber());
+							int length = ZLUnicodeUtil::length(word.Data, end.charNumber()) - skip;
+							myText.append(word.Data + skip, length);
+						} else {
+							myText.append(word.Data, ZLUnicodeUtil::length(word.Data, end.charNumber()));
+						}
+					} else if (cursor.charNumber() == 0) {
+						myText.append(word.Data, word.Size);
+					} else /* cursor == start */ {
+						int skip = ZLUnicodeUtil::length(word.Data, cursor.charNumber());
+						myText.append(word.Data + skip, word.Size - skip);
 					}
-				} else if (cursor.charNumber() == 0) {
-					text.append(word.Data, word.Size);
-				} else /* cursor == start */ {
-					int skip = ZLUnicodeUtil::length(word.Data, cursor.charNumber());
-					text.append(word.Data + skip, word.Size - skip);
+					break;
 				}
-				break;
+				case TextElement::HSPACE_ELEMENT:
+					myText += ' ';
+					break;
+				default:
+					break;
 			}
-			case TextElement::HSPACE_ELEMENT:
-				text += ' ';
-				break;
-			default:
-				break;
+			cursor.nextWord();
+			if ((cursor < end) && cursor.isEndOfParagraph()) {
+				cursor.nextParagraph();
+				pcursors.insert(cursor.paragraphCursorPtr());
+				myText.append(ZLApplication::EndOfLine);
+			}
 		}
-		cursor.nextWord();
-		if (cursor.isEndOfParagraph()) {
-			cursor.nextParagraph();
-			pcursors.insert(cursor.paragraphCursorPtr());
-			text.append(ZLApplication::EndOfLine);
-		}
+
+		myCursors.swap(pcursors);
+		myTextIsUpToDate = true;
 	}
 
-	myCursors.swap(pcursors);
-
-	return text;
+	return myText;
 }
 
 SelectionScroller::SelectionScroller(SelectionModel &selectionModel) : mySelectionModel(selectionModel), myDirection(DONT_SCROLL) {

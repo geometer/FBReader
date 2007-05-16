@@ -324,11 +324,11 @@ shared_ptr<HtmlTagAction> HtmlBookReader::createAction(const std::string &tag) {
 	} else if (tag == "LI") {
 		return new HtmlListItemTagAction(*this);
 	} else if (tag == "PRE") {
-		return new HtmlPreTagAction(*this);
+		if (myProcessPreTag) {
+			return new HtmlPreTagAction(*this);
+		}
 	} else if (tag == "TABLE") {
 		return new HtmlTableTagAction(*this);
-	} else {
-		return new DummyHtmlTagAction(*this);
 	}
 	/*
 	} else if (tag == "DD") {
@@ -358,13 +358,18 @@ shared_ptr<HtmlTagAction> HtmlBookReader::createAction(const std::string &tag) {
 	} else if (tag == "BODY") {
 		return 0;
 	*/
+	return new DummyHtmlTagAction(*this);
 }
 
 void HtmlBookReader::setBuildTableOfContent(bool build) {
 	myBuildTableOfContent = build;
 }
 
-HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format), myBuildTableOfContent(true) {
+void HtmlBookReader::setProcessPreTag(bool process) {
+	myProcessPreTag = process;
+}
+
+HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlReader(encoding), myBookReader(model), myBaseDirPath(baseDirectoryPath), myFormat(format), myBuildTableOfContent(true), myProcessPreTag(true) {
 }
 
 HtmlBookReader::~HtmlBookReader() {
@@ -408,90 +413,100 @@ bool HtmlBookReader::tagHandler(const HtmlTag &tag) {
 	return true;
 }
 
-bool HtmlBookReader::characterDataHandler(const char *text, int len, bool convert) {
-	if (myIgnoreDataCounter == 0) {
-		const char *start = text;
-		const char *end = text + len;
-		if (myIsPreformatted) {
-			int breakType = myFormat.breakType();
-			if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
-				for (const char *ptr = text; ptr != end; ++ptr) {
-					if (*ptr == '\n') {
-						mySpaceCounter = 0;
-						if (start < ptr) {
-							addConvertedDataToBuffer(start, ptr - start, convert);
-						} else {
-							static const std::string SPACE = " ";
-							myBookReader.addData(SPACE);
-						}
-						myBookReader.endParagraph();
-						myBookReader.beginParagraph();
-						start = ptr + 1;
-					} else if (mySpaceCounter >= 0) {
-						if (isspace((unsigned char)*ptr)) {
-							++mySpaceCounter;
-						} else {
-							myBookReader.addFixedHSpace(mySpaceCounter);
-							mySpaceCounter = -1;
-						}
-					}
+void HtmlBookReader::preformattedCharacterDataHandler(const char *text, int len, bool convert) {
+	const char *start = text;
+	const char *end = text + len;
+
+	int breakType = myFormat.breakType();
+	if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) {
+		for (const char *ptr = text; ptr != end; ++ptr) {
+			if (*ptr == '\n') {
+				mySpaceCounter = 0;
+				if (start < ptr) {
+					addConvertedDataToBuffer(start, ptr - start, convert);
+				} else {
+					static const std::string SPACE = " ";
+					myBookReader.addData(SPACE);
 				}
-				addConvertedDataToBuffer(start, end - start, convert);
-			} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
-				for (const char *ptr = text; ptr != end; ++ptr) {
-					if (isspace((unsigned char)*ptr)) {
-						if (*ptr == '\n') {
-							mySpaceCounter = 0;
-						} else if (mySpaceCounter >= 0) {
-							++mySpaceCounter;
-						}
-					} else {
-						if (mySpaceCounter > myFormat.ignoredIndent()) {
-							if (ptr - start > mySpaceCounter) {
-								addConvertedDataToBuffer(start, ptr - start - mySpaceCounter, convert);
-								myBookReader.endParagraph();
-								myBookReader.beginParagraph();
-							}
-							start = ptr;
-						}
-						mySpaceCounter = -1;
-					}
+				myBookReader.endParagraph();
+				myBookReader.beginParagraph();
+				start = ptr + 1;
+			} else if (mySpaceCounter >= 0) {
+				if (isspace((unsigned char)*ptr)) {
+					++mySpaceCounter;
+				} else {
+					myBookReader.addFixedHSpace(mySpaceCounter);
+					mySpaceCounter = -1;
 				}
-				mySpaceCounter = std::max(mySpaceCounter, 0);
-				if (end - start > mySpaceCounter) {
-					addConvertedDataToBuffer(start, end - start - mySpaceCounter, convert);
-				}
-			} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
-				for (const char *ptr = start; ptr != end; ++ptr) {
-					if (isspace((unsigned char)*ptr)) {
-						if (*ptr == '\n') {
-							++myBreakCounter;
-						}
-					} else {
-						if (myBreakCounter > 1) {
-							addConvertedDataToBuffer(start, ptr - start, convert);
-							myBookReader.endParagraph();
-							myBookReader.beginParagraph();
-							start = ptr;
-						}
-						myBreakCounter = 0;
-					}
-				}
-				addConvertedDataToBuffer(start, end - start, convert);
-			}
-		} else {
-			if (!myIsStarted) {
-				for (; start != end; ++start) {
-					if (!isspace((unsigned char)*start)) {
-						myIsStarted = true;
-						break;
-					}
-				}
-			}
-			if (myIsStarted) {
-				addConvertedDataToBuffer(start, end - start, convert);
 			}
 		}
+		addConvertedDataToBuffer(start, end - start, convert);
+	} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
+		for (const char *ptr = text; ptr != end; ++ptr) {
+			if (isspace((unsigned char)*ptr)) {
+				if (*ptr == '\n') {
+					mySpaceCounter = 0;
+				} else if (mySpaceCounter >= 0) {
+					++mySpaceCounter;
+				}
+			} else {
+				if (mySpaceCounter > myFormat.ignoredIndent()) {
+					if (ptr - start > mySpaceCounter) {
+						addConvertedDataToBuffer(start, ptr - start - mySpaceCounter, convert);
+						myBookReader.endParagraph();
+						myBookReader.beginParagraph();
+					}
+					start = ptr;
+				}
+				mySpaceCounter = -1;
+			}
+		}
+		mySpaceCounter = std::max(mySpaceCounter, 0);
+		if (end - start > mySpaceCounter) {
+			addConvertedDataToBuffer(start, end - start - mySpaceCounter, convert);
+		}
+	} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
+		for (const char *ptr = start; ptr != end; ++ptr) {
+			if (isspace((unsigned char)*ptr)) {
+				if (*ptr == '\n') {
+					++myBreakCounter;
+				}
+			} else {
+				if (myBreakCounter > 1) {
+					addConvertedDataToBuffer(start, ptr - start, convert);
+					myBookReader.endParagraph();
+					myBookReader.beginParagraph();
+					start = ptr;
+				}
+				myBreakCounter = 0;
+			}
+		}
+		addConvertedDataToBuffer(start, end - start, convert);
+	}
+}
+
+bool HtmlBookReader::characterDataHandler(const char *text, int len, bool convert) {
+	if (myIgnoreDataCounter != 0) {
+		return true;
+	}
+
+	if (myIsPreformatted) {
+		preformattedCharacterDataHandler(text, len, convert);
+		return true;
+	}
+
+	const char *ptr = text;
+	const char *end = text + len;
+	if (!myIsStarted) {
+		for (; ptr != end; ++ptr) {
+			if (!isspace((unsigned char)*ptr)) {
+				myIsStarted = true;
+				break;
+			}
+		}
+	}
+	if (myIsStarted) {
+		addConvertedDataToBuffer(ptr, end - ptr, convert);
 	}
 	return true;
 }

@@ -36,7 +36,7 @@ public:
 	struct HtmlAttribute {
 		std::string Name;
 		std::string Value;
-		bool hasValue;
+		bool HasValue;
 
 		HtmlAttribute(const std::string &name);
 		~HtmlAttribute();
@@ -80,9 +80,9 @@ private:
 	void appendString(std::string &to, std::string &from);
 };
 
-inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), hasValue(false) {}
+inline HtmlReader::HtmlAttribute::HtmlAttribute(const std::string &name) : Name(name), HasValue(false) {}
 inline HtmlReader::HtmlAttribute::~HtmlAttribute() {}
-inline void HtmlReader::HtmlAttribute::setValue(const std::string &value) { Value = value; hasValue = true; }
+inline void HtmlReader::HtmlAttribute::setValue(const std::string &value) { Value = value; HasValue = true; }
 
 inline HtmlReader::HtmlTag::HtmlTag() : Start(true) {}
 inline HtmlReader::HtmlTag::~HtmlTag() {}

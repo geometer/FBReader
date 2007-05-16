@@ -25,6 +25,8 @@
 #include "PdbPlugin.h"
 #include "MobipocketStream.h"
 #include "MobipocketHtmlBookReader.h"
+#include "../txt/PlainTextFormat.h"
+#include "../util/TextFormatDetector.h"
 
 bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "TEXtREAd";
@@ -44,4 +46,17 @@ void PalmDocPlugin::readDocumentInternal(const std::string &fileName, BookModel 
 const std::string &PalmDocPlugin::iconName() const {
 	static const std::string ICON_NAME = "palm";
 	return ICON_NAME;
+}
+
+FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
+	ZLFile file(fileName);
+	shared_ptr<ZLInputStream> stream = createStream(file);
+	stream->open();
+	bool readAsMobipocket = ((MobipocketStream&)*stream).hasExtraSections();
+	stream->close();
+	if (!readAsMobipocket) {
+		return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
+	} else {
+		return 0;
+	}
 }

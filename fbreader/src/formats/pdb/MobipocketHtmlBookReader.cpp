@@ -110,17 +110,89 @@ void MobipocketHtmlHrTagAction::run(const HtmlReader::HtmlTag &tag) {
 MobipocketHtmlHrefTagAction::MobipocketHtmlHrefTagAction(HtmlBookReader &reader) : HtmlHrefTagAction(reader) {
 }
 
+MobipocketHtmlBookReader::TOCReader::TOCReader(MobipocketHtmlBookReader &reader) : myReader(reader) {
+	reset();
+}
+
+void MobipocketHtmlBookReader::TOCReader::reset() {
+	myEntries.clear();
+
+	myIsActive = false;
+	myStartOffset = (size_t)-1;
+	myEndOffset = (size_t)-1;
+	myCurrentEntryText.erase();
+}
+
+bool MobipocketHtmlBookReader::TOCReader::rangeContainsPosition(size_t position) {
+	return (myStartOffset <= position) && (myEndOffset > position);
+}
+
+void MobipocketHtmlBookReader::TOCReader::startReadEntry(size_t position) {
+	myCurrentReference = position;
+	myIsActive = true;
+}
+
+void MobipocketHtmlBookReader::TOCReader::endReadEntry() {
+	if (myIsActive && !myCurrentEntryText.empty()) {
+		std::string converted;
+		myReader.myConverter->convert(converted, myCurrentEntryText);
+		myReader.myConverter->reset();
+		myEntries[myCurrentReference] = converted;
+		myCurrentEntryText.erase();
+	}
+	myIsActive = false;
+}
+
+void MobipocketHtmlBookReader::TOCReader::appendText(const char *text, size_t len) {
+	if (myIsActive) {
+		myCurrentEntryText.append(text, len);
+	}
+}
+
+void MobipocketHtmlBookReader::TOCReader::addReference(size_t position, const std::string &text) {
+	myEntries[position] = text;
+	if (rangeContainsPosition(position)) {
+		setEndOffset(position);
+	}
+}
+
+void MobipocketHtmlBookReader::TOCReader::setStartOffset(size_t position) {
+	myStartOffset = position;
+	std::map<size_t,std::string>::const_iterator it = myEntries.lower_bound(position);
+	if (it != myEntries.end()) {
+		++it;
+		if (it != myEntries.end()) {
+			myEndOffset = it->first;
+		}
+	}
+}
+
+void MobipocketHtmlBookReader::TOCReader::setEndOffset(size_t position) {
+	myEndOffset = position;
+}
+
+const std::map<size_t,std::string> &MobipocketHtmlBookReader::TOCReader::entries() const {
+	return myEntries;
+}
+
 void MobipocketHtmlHrefTagAction::run(const HtmlReader::HtmlTag &tag) {
+	MobipocketHtmlBookReader &reader = (MobipocketHtmlBookReader&)myReader;
 	if (tag.Start) {
 		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
 			if (tag.Attributes[i].Name == "FILEPOS") {
 				const std::string &value = tag.Attributes[i].Value;
 				if (!value.empty()) {
 					std::string label = "&";
-					int ivalue = atoi(value.c_str());
-					if (ivalue > 0) {
-						((MobipocketHtmlBookReader&)myReader).myFileposReferences.insert(ivalue);
-						ZLStringUtil::appendNumber(label, ivalue);
+					int intValue = atoi(value.c_str());
+					if (intValue > 0) {
+						if (reader.myTocReader.rangeContainsPosition(tag.Offset)) {
+							reader.myTocReader.startReadEntry(intValue);
+							if (reader.myTocReader.rangeContainsPosition(intValue)) {
+								reader.myTocReader.setEndOffset(intValue);
+							}
+						}
+						reader.myFileposReferences.insert(intValue);
+						ZLStringUtil::appendNumber(label, intValue);
 						setHyperlinkType(INTERNAL_HYPERLINK);
 						bookReader().addHyperlinkControl(INTERNAL_HYPERLINK, label);
 						return;
@@ -128,6 +200,8 @@ void MobipocketHtmlHrefTagAction::run(const HtmlReader::HtmlTag &tag) {
 				}
 			}
 		}
+	} else {
+		reader.myTocReader.endReadEntry();
 	}
 	HtmlHrefTagAction::run(tag);
 }
@@ -136,7 +210,8 @@ MobipocketHtmlGuideTagAction::MobipocketHtmlGuideTagAction(HtmlBookReader &reade
 }
 
 void MobipocketHtmlGuideTagAction::run(const HtmlReader::HtmlTag &tag) {
-	((MobipocketHtmlBookReader&)myReader).myInsideGuide = tag.Start;
+	MobipocketHtmlBookReader &reader = (MobipocketHtmlBookReader&)myReader;
+	reader.myInsideGuide = tag.Start;
 }
 
 MobipocketHtmlReferenceTagAction::MobipocketHtmlReferenceTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
@@ -147,17 +222,25 @@ void MobipocketHtmlReferenceTagAction::run(const HtmlReader::HtmlTag &tag) {
 	if (reader.myInsideGuide) {
 		std::string title;
 		std::string filepos;
+		bool isTocReference = false;
 		for (size_t i = 0; i < tag.Attributes.size(); ++i) {
-			if (tag.Attributes[i].Name == "TITLE") {
-				title = tag.Attributes[i].Value;
-			} else if (tag.Attributes[i].Name == "FILEPOS") {
-				filepos = tag.Attributes[i].Value;
+			const std::string &name = tag.Attributes[i].Name;
+			const std::string &value = tag.Attributes[i].Value;
+			if (name == "TITLE") {
+				title = value;
+			} else if (name == "FILEPOS") {
+				filepos = value;
+			} else if ((name == "TYPE") && (ZLUnicodeUtil::toUpper(value) == "TOC")) {
+				isTocReference = true;
 			}
 		}
 		if (!title.empty() && !filepos.empty()) {
-			int pos = atoi(filepos.c_str());
-			if (pos > 0) {
-				reader.myTocEntries[pos] = title;
+			int position = atoi(filepos.c_str());
+			if (position > 0) {
+				reader.myTocReader.addReference(position, title);
+				if (isTocReference) {
+					reader.myTocReader.setStartOffset(position);
+				}
 			}
 		}
 	}
@@ -184,16 +267,26 @@ void MobipocketHtmlBookReader::startDocumentHandler() {
 	myInsideGuide = false;
 	myFileposReferences.clear();
 	myPositionToParagraphMap.clear();
-	myTocEntries.clear();
+	myTocReader.reset();
 }
 
 bool MobipocketHtmlBookReader::tagHandler(const HtmlTag &tag) {
-	myPositionToParagraphMap.push_back(std::pair<int,int>(tag.Offset, myBookReader.model().bookTextModel()->paragraphsNumber()));
+	size_t paragraphNumber = myBookReader.model().bookTextModel()->paragraphsNumber();
+	if (myBookReader.paragraphIsOpen()) {
+		--paragraphNumber;
+	}
+	myPositionToParagraphMap.push_back(std::pair<size_t,size_t>(tag.Offset, paragraphNumber));
 	return HtmlBookReader::tagHandler(tag);
 }
 
-MobipocketHtmlBookReader::MobipocketHtmlBookReader(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlBookReader("", model, format, encoding), myFileName(fileName) {
+MobipocketHtmlBookReader::MobipocketHtmlBookReader(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlBookReader("", model, format, encoding), myFileName(fileName), myTocReader(*this) {
 	setBuildTableOfContent(false);
+	setProcessPreTag(false);
+}
+
+bool MobipocketHtmlBookReader::characterDataHandler(const char *text, int len, bool convert) {
+	myTocReader.appendText(text, len);
+	return HtmlBookReader::characterDataHandler(text, len, convert);
 }
 
 void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
@@ -234,8 +327,8 @@ void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
 		}
 	}
 
-	std::vector<std::pair<int, int> >::const_iterator jt = myPositionToParagraphMap.begin();
-	for (std::set<int>::const_iterator it = myFileposReferences.begin(); it != myFileposReferences.end(); ++it) {
+	std::vector<std::pair<size_t,size_t> >::const_iterator jt = myPositionToParagraphMap.begin();
+	for (std::set<size_t>::const_iterator it = myFileposReferences.begin(); it != myFileposReferences.end(); ++it) {
 		while (jt != myPositionToParagraphMap.end() && jt->first < *it) {
 			++jt;
 		}
@@ -248,7 +341,8 @@ void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
 	}
 
 	jt = myPositionToParagraphMap.begin();
-	for (std::map<int,std::string>::const_iterator it = myTocEntries.begin(); it != myTocEntries.end(); ++it) {
+	const std::map<size_t,std::string> &entries = myTocReader.entries();
+	for (std::map<size_t,std::string>::const_iterator it = entries.begin(); it != entries.end(); ++it) {
 		while (jt != myPositionToParagraphMap.end() && jt->first < it->first) {
 			++jt;
 		}

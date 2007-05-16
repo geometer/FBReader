@@ -23,12 +23,11 @@
 #include <ZLInputStream.h>
 
 #include "PdbPlugin.h"
-#include "../util/TextFormatDetector.h"
 #include "../../description/BookDescription.h"
 #include "../txt/TxtBookReader.h"
 #include "../html/HtmlBookReader.h"
-#include "../txt/PlainTextFormat.h"
 #include "HtmlMetainfoReader.h"
+#include "../util/TextFormatDetector.h"
 
 bool SimplePdbPlugin::providesMetaInfo() const {
 	return false;
@@ -70,10 +69,4 @@ void SimplePdbPlugin::readDocumentInternal(const std::string&, BookModel &model,
 	} else {
 		TxtBookReader(model, format, encoding).readDocument(stream);
 	}
-}
-
-FormatInfoPage *SimplePdbPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	ZLFile file(fileName);
-	shared_ptr<ZLInputStream> stream = createStream(file);
-	return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
 }

@@ -24,6 +24,8 @@
 
 #include "PdbPlugin.h"
 #include "ZTXTStream.h"
+#include "../txt/PlainTextFormat.h"
+#include "../util/TextFormatDetector.h"
 
 bool ZTXTPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "zTXTGPlm";
@@ -36,4 +38,10 @@ shared_ptr<ZLInputStream> ZTXTPlugin::createStream(ZLFile &file) const {
 const std::string &ZTXTPlugin::iconName() const {
 	static const std::string ICON_NAME = "weasel";
 	return ICON_NAME;
+}
+
+FormatInfoPage *ZTXTPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
+	ZLFile file(fileName);
+	shared_ptr<ZLInputStream> stream = createStream(file);
+	return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
 }
