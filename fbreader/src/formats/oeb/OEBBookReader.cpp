@@ -22,6 +22,7 @@
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
+#include <ZLFileImage.h>
 
 #include "OEBBookReader.h"
 #include "XHTMLReader.h"
@@ -69,10 +70,19 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 			}
 		}
 	} else if ((myState == READ_GUIDE) && (REFERENCE == tagString)) {
+		const char *type = attributeValue(xmlattributes, "type");
 		const char *title = attributeValue(xmlattributes, "title");
 		const char *href = attributeValue(xmlattributes, "href");
-		if ((title != 0) && (href != 0)) {
-			myGuideTOC.push_back(std::pair<std::string,std::string>(title, href));
+		if (href != 0) {
+			if (title != 0) {
+				myGuideTOC.push_back(std::pair<std::string,std::string>(title, href));
+			}
+			static const std::string COVER_IMAGE = "other.ms-coverimage-standard";
+			if ((type != 0) && (COVER_IMAGE == type)) {
+				myModelReader.setMainTextModel();
+				myModelReader.addImageReference(href);
+				myModelReader.addImage(href, new ZLFileImage("image/auto", myFilePrefix + href, 0));
+			}
 		}
 	} else if ((myState == READ_TOUR) && (SITE == tagString)) {
 		const char *title = attributeValue(xmlattributes, "title");
