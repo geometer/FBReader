@@ -39,6 +39,9 @@
 class TextModel;
 class Paragraph;
 class TextMark;
+class LineInfo;
+class LineInfoPtr;
+class TreeNodeInfo;
 
 class TextView : public ZLView {
 
@@ -113,45 +116,6 @@ private:
 		TextStylePtr myStyle;
 		ZLPaintContext &myContext;
 		mutable int myWordHeight;
-	};
-
-	struct TreeNodeInfo {
-		bool IsLeaf;
-		bool IsOpen;
-		bool IsFirstLine;
-		int ParagraphNumber;
-		std::vector<bool> VerticalLinesStack;
-	};
-
-	struct LineInfo {
-		LineInfo(const WordCursor &word, TextStylePtr style);
-		~LineInfo();
-
-		WordCursor Start;
-		WordCursor RealStart;
-		WordCursor End;
-		bool IsVisible;
-		int LeftIndent;
-		int Width;
-		int Height;
-		int Descent;
-		int VSpaceAfter;
-		int SpaceCounter;
-		TextStylePtr StartStyle;
-		shared_ptr<TreeNodeInfo> NodeInfo;
-
-	private:
-		/* copy constructor & assignment are disabled */
-		LineInfo(const LineInfo&);
-		LineInfo &operator = (const LineInfo&);
-	};
-
-	class LineInfoPtr : public shared_ptr<LineInfo> {
-
-	public:
-		LineInfoPtr(LineInfo *ptr);
-
-		bool operator < (const LineInfoPtr &info) const;
 	};
 
 protected:
@@ -286,19 +250,11 @@ inline TextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
 inline const TextStylePtr TextView::ViewStyle::style() const { return myStyle; }
 
-inline TextView::LineInfo::LineInfo(const WordCursor &word, TextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
-
-inline TextView::LineInfoPtr::LineInfoPtr(LineInfo *ptr) : shared_ptr<LineInfo>(ptr) {}
-inline bool TextView::LineInfoPtr::operator < (const LineInfoPtr &info) const { return (*this)->Start < info->Start; }
-
 inline bool TextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const WordCursor &TextView::startCursor() const { return myStartCursor; }
 inline const WordCursor &TextView::endCursor() const { return myEndCursor; }
 inline const std::string &TextView::fileName() const { return myFileName; }
 inline const shared_ptr<TextModel> TextView::model() const { return myModel; }
-inline int TextView::infoSize(const LineInfo &info, SizeUnit unit) {
-	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
-}
 inline SelectionModel &TextView::selectionModel() { return mySelectionModel; }
 
 #endif /* __TEXTVIEW_H__ */

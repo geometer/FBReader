@@ -24,13 +24,14 @@
 #include <ZLUnicodeUtil.h>
 
 #include "TextView.h"
+#include "LineInfo.h"
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
 #include "Word.h"
 
 #include "../hyphenation/Hyphenator.h"
 
-TextView::LineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
+LineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
 	LineInfoPtr infoPtr = new LineInfo(start, myStyle.style());
 	LineInfo &info = *infoPtr;
 

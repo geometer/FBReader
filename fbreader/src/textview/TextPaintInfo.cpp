@@ -22,6 +22,7 @@
 #include <algorithm>
 
 #include "TextView.h"
+#include "LineInfo.h"
 
 void TextView::rebuildPaintInfo(bool strong) {
 	if (myPaintState == NOTHING_TO_PAINT) {

@@ -24,6 +24,7 @@
 #include <ZLPaintContext.h>
 
 #include "TextView.h"
+#include "LineInfo.h"
 
 void TextView::drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter) {
 	context().setColor(TextStyleCollection::instance().baseStyle().TreeLinesColorOption.value());
