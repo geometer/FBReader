@@ -70,27 +70,27 @@ void ZLQtOptionsDialog::apply() {
 	ZLOptionsDialog::accept();
 }
 
-ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget), name);
-	myTabWidget->addTab(tab->widget(), name.c_str());
+ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
+	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget), key.Name);
+	myTabWidget->addTab(tab->widget(), QString::fromUtf8(tabName(key).c_str()));
 	myTabs.push_back(tab);
 	return *tab;
 }
 
-const std::string &ZLQtOptionsDialog::selectedTabName() const {
+const std::string &ZLQtOptionsDialog::selectedTabKey() const {
 	return myTabs[myTabWidget->currentIndex()]->name();
 }
 
-void ZLQtOptionsDialog::selectTab(const std::string &name) {
+void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
 	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		if ((*it)->name() == name) {
+		if ((*it)->name() == key.Name) {
 			myTabWidget->setCurrentWidget(((ZLQtDialogContent&)**it).widget());
 			break;
 		}
 	}
 }
 
-bool ZLQtOptionsDialog::run() {
+bool ZLQtOptionsDialog::runInternal() {
 	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		((ZLQtDialogContent&)**it).close();
 	}

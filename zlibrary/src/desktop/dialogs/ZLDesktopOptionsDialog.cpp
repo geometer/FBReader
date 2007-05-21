@@ -23,9 +23,9 @@
 ZLDesktopOptionsDialog::ZLDesktopOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : ZLOptionsDialog(resource, applyAction), WidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, resource.name(), "Width", 10, 2000, 400), HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, resource.name(), "Height", 10, 2000, 300) {
 }
 
-bool ZLDesktopOptionsDialog::run(const std::string &tabName) {
+bool ZLDesktopOptionsDialog::run() {
 	setSize(WidthOption.value(), HeightOption.value());
-	bool code = ZLOptionsDialog::run(tabName);
+	bool code = ZLOptionsDialog::run();
 	WidthOption.setValue(width());
 	HeightOption.setValue(height());
 	return code;

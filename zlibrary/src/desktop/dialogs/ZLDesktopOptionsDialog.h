@@ -31,7 +31,7 @@ protected:
 	ZLDesktopOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
 
 public:
-	bool run(const std::string &tabName);
+	bool run();
 
 protected:
 	virtual void setSize(int width, int height) = 0;

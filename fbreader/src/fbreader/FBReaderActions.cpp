@@ -75,7 +75,7 @@ ShowOptionsDialogAction::ShowOptionsDialogAction(FBReader &fbreader) : FBAction(
 
 void ShowOptionsDialogAction::run() {
 	FBReader &f = fbreader();
-	OptionsDialog(f).dialog().run("");
+	OptionsDialog(f).dialog().run();
 }
 
 ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) {

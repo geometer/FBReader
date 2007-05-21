@@ -55,7 +55,7 @@ FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const std
 	bool readAsMobipocket = ((MobipocketStream&)*stream).hasExtraSections();
 	stream->close();
 	if (!readAsMobipocket) {
-		return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
+		return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
 	} else {
 		return 0;
 	}

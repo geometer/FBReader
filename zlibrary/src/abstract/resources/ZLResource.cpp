@@ -123,7 +123,7 @@ const std::string &ZLResource::name() const {
 void ZLTreeResource::buildTree() {
 	if (ourRoot.isNull()) {
 		ZLResourceTreeReader reader;
-		reader.readDocument(ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "resources/en.xml");
+		reader.readDocument(ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "resources/ru.xml");
 		ourRoot = reader.root();
 	}
 }

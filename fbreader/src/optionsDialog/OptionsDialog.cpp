@@ -204,7 +204,7 @@ void OptionsApplyRunnable::run() {
 OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(fbreader), true);
 
-	ZLDialogContent &generalTab = myDialog->createTab("General");
+	ZLDialogContent &generalTab = myDialog->createTab(ZLResourceKey("General"));
 	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));
 	CollectionView &collectionView = (CollectionView&)*fbreader.myCollectionView;
 	generalTab.addOption(new ZLSimpleStringOptionEntry("Book Path", collectionView.collection().PathOption));
@@ -214,9 +214,9 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	generalTab.addOption(new ZLSimpleSpinOptionEntry("Delay Between Accepted Key Pressings", fbreader.KeyDelayOption, 50));
 	generalTab.addOption(new DefaultLanguageEntry());
 
-	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab("Scrolling"), fbreader);
+	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 
-	ZLDialogContent &marginTab = myDialog->createTab("Margins");
+	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("Margins"));
 	marginTab.addOptions(
 		new ZLSimpleSpinOptionEntry("Left Margin", TextStyleCollection::instance().baseStyle().LeftMarginOption, 1),
 		new ZLSimpleSpinOptionEntry("Right Margin", TextStyleCollection::instance().baseStyle().RightMarginOption, 1)
@@ -226,15 +226,15 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 		new ZLSimpleSpinOptionEntry("Bottom Margin", TextStyleCollection::instance().baseStyle().BottomMarginOption, 1)
 	);
 
-	myFormatPage = new FormatOptionsPage(myDialog->createTab("Format"));
-	myStylePage = new StyleOptionsPage(myDialog->createTab("Styles"), fbreader.context());
+	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("Format")));
+	myStylePage = new StyleOptionsPage(myDialog->createTab(ZLResourceKey("Styles")), fbreader.context());
 
 	createIndicatorTab(fbreader);
 
-	ZLDialogContent &rotationTab = myDialog->createTab("Rotation");
+	ZLDialogContent &rotationTab = myDialog->createTab(ZLResourceKey("Rotation"));
 	rotationTab.addOption(new RotationTypeEntry(fbreader.RotationAngleOption));
 
-	ZLDialogContent &colorsTab = myDialog->createTab("Colors");
+	ZLDialogContent &colorsTab = myDialog->createTab(ZLResourceKey("Colors"));
 	ZLColorOptionBuilder builder;
 	static const std::string BACKGROUND = "Background";
 	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
@@ -250,18 +250,18 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	colorsTab.addOption(builder.comboEntry());
 	colorsTab.addOption(builder.colorEntry());
 
-	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab("Keys"));
+	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab(ZLResourceKey("Keys")));
 	if (ZLOption::isAutoSavingSupported()) {
-		myConfigPage = new ConfigPage(fbreader, myDialog->createTab("Config"));
+		myConfigPage = new ConfigPage(fbreader, myDialog->createTab(ZLResourceKey("Config")));
 	}
 
 	std::vector<ZLOptionEntry*> additional;
 	additional.push_back(new ZLSimpleBooleanOptionEntry(
 		"Open By Single Click", fbreader.EnableSingleClickDictionaryOption
 	));
-	createIntegrationTab(fbreader.dictionaryCollection(), "Dictionary", "Enable Integration With ", "Dictionary", "Integrate With", additional);
+	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), "Enable Integration With ", "Dictionary", "Integrate With", additional);
 	additional.clear();
-	createIntegrationTab(fbreader.webBrowserCollection(), "Web", "Open External Links In ", "Browser", "Use Browser", additional);
+	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), "Open External Links In ", "Browser", "Use Browser", additional);
 }
 
 void OptionsDialog::storeTemporaryOption(ZLOption *option) {

@@ -73,7 +73,7 @@ void SpecialFontSizeEntry::setVisible(bool) {
 }
 
 void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
-	ZLDialogContent &indicatorTab = myDialog->createTab("Indicator");
+	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
 	ZLToggleBooleanOptionEntry *showIndicatorEntry =
 		new ZLToggleBooleanOptionEntry("Show Position Indicator", indicatorStyle.ShowOption);

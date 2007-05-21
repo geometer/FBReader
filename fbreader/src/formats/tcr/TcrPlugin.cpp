@@ -78,5 +78,5 @@ FormatInfoPage *TcrPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::st
 	if (TextFormatDetector().isPPL(*stream)) {
 		return 0;
 	}
-	return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
+	return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
 }

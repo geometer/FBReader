@@ -30,13 +30,17 @@ const std::string &ZLOptionsDialog::caption() const {
 	return myResource[ZLResourceKey("title")].value();
 }
 
-bool ZLOptionsDialog::run(const std::string &tabName) {
-	selectTab(tabName.empty() ? TabOption.value() : tabName);
-	bool code = run();
+const std::string &ZLOptionsDialog::tabName(const ZLResourceKey &key) const {
+	return myResource[ZLResourceKey("tab")][key].value();
+}
+
+bool ZLOptionsDialog::run() {
+	selectTab(ZLResourceKey(TabOption.value()));
+	bool code = runInternal();
 	if (code) {
 		accept();
 	}
-	TabOption.setValue(selectedTabName());
+	TabOption.setValue(selectedTabKey());
 	return code;
 }
 

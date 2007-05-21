@@ -218,7 +218,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 		}
 
 		if (imageElement.id() == BOOK_INFO_IMAGE_ID) {
-			if (BookInfoDialog(myCollection, book->fileName()).dialog().run("")) {
+			if (BookInfoDialog(myCollection, book->fileName()).dialog().run()) {
 				myCollection.rebuild(false);
 				myUpdateModel = true;
 				selectBook(book);

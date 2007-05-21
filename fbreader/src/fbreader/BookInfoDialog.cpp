@@ -378,7 +378,7 @@ void SeriesTitleEntry::onValueEdited(const std::string &value) {
 BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::string &fileName) : myCollection(collection), myBookInfo(fileName) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
 
-	ZLDialogContent &commonTab = myDialog->createTab("Common");
+	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
 	commonTab.addOption(
 		new ZLStringInfoEntry("File", ZLFile::fileNameToUtf8(ZLFile(fileName).path()))
 	);
@@ -402,7 +402,7 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	commonTab.addOption(myEncodingEntry);
 	commonTab.addOption(myLanguageEntry);
 
-	ZLDialogContent &seriesTab = myDialog->createTab("Series");
+	ZLDialogContent &seriesTab = myDialog->createTab(ZLResourceKey("Series"));
 	seriesTab.addOption(mySeriesTitleEntry);
 	seriesTab.addOption(myBookNumberEntry);
 

@@ -50,30 +50,29 @@ ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 	destroyGtkDialog(myDialog);
 }
 
-ZLDialogContent &ZLGtkOptionsDialog::createTab(const std::string &name) {
+ZLDialogContent &ZLGtkOptionsDialog::createTab(const ZLResourceKey &key) {
 	ZLGtkDialogContent *tab = new ZLGtkDialogContent();
-	GtkWidget *label = gtk_label_new(name.c_str());
 
-	gtk_notebook_append_page(myNotebook, tab->widget(), label);
+	gtk_notebook_append_page(myNotebook, tab->widget(), gtk_label_new(tabName(key).c_str()));
 
 	myTabs.push_back(tab);
-	myTabNames.push_back(name);
+	myTabNames.push_back(key.Name);
 
 	return *tab;
 }
 
-const std::string &ZLGtkOptionsDialog::selectedTabName() const {
+const std::string &ZLGtkOptionsDialog::selectedTabKey() const {
 	return myTabNames[gtk_notebook_get_current_page(myNotebook)];
 }
 
-void ZLGtkOptionsDialog::selectTab(const std::string &name) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
+void ZLGtkOptionsDialog::selectTab(const ZLResourceKey &key) {
+	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), key.Name);
 	if (it != myTabNames.end()) {
 		gtk_notebook_set_current_page(myNotebook, it - myTabNames.begin());
 	}
 }
 
-bool ZLGtkOptionsDialog::run() {
+bool ZLGtkOptionsDialog::runInternal() {
 	int code;
 	while ((code = gtk_dialog_run(myDialog)) == GTK_RESPONSE_APPLY) {
 		accept();

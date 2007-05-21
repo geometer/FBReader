@@ -22,9 +22,29 @@
 	<node name="dialog">
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Настройки"/>
+			<node name="tab">
+				<node name="General" value="Общие настройки"/>
+				<node name="Indicator" value="Индикатор"/>
+				<node name="Scrolling" value="Прокрутка"/>
+				<node name="Margins" value="Отступы"/>
+				<node name="Format" value="Форматирование"/>
+				<node name="Styles" value="Стили"/>
+				<node name="Rotation" value="Поворот"/>
+				<node name="Colors" value="Цвета"/>
+				<node name="Keys" value="Клавиши"/>
+				<node name="Config" value="Настройки"/>
+				<node name="Dictionary" value="Словари"/>
+				<node name="Web" value="Web"/>
+			</node>
 		</node>
 		<node name="InfoDialog">
 			<node name="title" value="FBReader - Информация о книге"/>
+			<node name="tab">
+				<node name="Common" value="Основная информация"/>
+				<node name="Series" value="Серия"/>
+				<node name="Text" value="Текст"/>
+				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;"/>
+			</node>
 		</node>
 	</node>
 </resources>

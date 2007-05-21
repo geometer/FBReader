@@ -446,7 +446,7 @@ void FBReader::setMode(ViewMode mode) {
 
 bool FBReader::runBookInfoDialog(const std::string &fileName) {
 	BookCollection &collection = ((CollectionView&)*myCollectionView).collection();
-	if (BookInfoDialog(collection, fileName).dialog().run("")) {
+	if (BookInfoDialog(collection, fileName).dialog().run()) {
 		openFile(fileName);
 		collection.rebuild(false);
 		return true;

@@ -45,20 +45,20 @@ void ShowOptionsDialogAction::run() {
 	createColorsTab(*dialog);
 	createKeysTab(*dialog);
 
-	dialog->run("");
+	dialog->run();
 
 	myCalculator.refreshWindow();
 }
 
 void ShowOptionsDialogAction::createViewTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &viewTab = dialog.createTab("View");
+	ZLDialogContent &viewTab = dialog.createTab(ZLResourceKey("View"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 	viewTab.addOption(new ZLSimpleSpinOptionEntry("Zoom, %", view.ZoomOption, 10));
 }
 
 void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &drawingTab = dialog.createTab("Drawing");
+	ZLDialogContent &drawingTab = dialog.createTab(ZLResourceKey("Drawing"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 	drawingTab.addOption(new ZLSimpleBooleanOptionEntry("Connect New Lines To Existing Points Only", view.ExistingPointsOnlyOption));
@@ -66,7 +66,7 @@ void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
 }
 
 void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &pointTab = dialog.createTab("Points");
+	ZLDialogContent &pointTab = dialog.createTab(ZLResourceKey("Points"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 	pointTab.addOption(new ZLSimpleSpinOptionEntry("Point Radius", view.PointRadiusOption, 1));
@@ -89,7 +89,7 @@ void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
 }
 
 void ShowOptionsDialogAction::createColorsTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &colorsTab = dialog.createTab("Colors");
+	ZLDialogContent &colorsTab = dialog.createTab(ZLResourceKey("Colors"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 
@@ -157,6 +157,6 @@ void KeyOptionEntry::addAction(int code, const std::string &name) {
 }
 
 void ShowOptionsDialogAction::createKeysTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &keysTab = dialog.createTab("Keys");
+	ZLDialogContent &keysTab = dialog.createTab(ZLResourceKey("Keys"));
 	keysTab.addOption(new KeyOptionEntry(myCalculator.keyBindings()));
 }

@@ -41,7 +41,7 @@ void ShowInfoDialogAction::run() {
 	createInfoTab(*dialog);
 	createDescriptionTab(*dialog);
 
-	dialog->run("");
+	dialog->run();
 
 	myCalculator.resetWindowCaption();
 	myCalculator.refreshWindow();
@@ -78,7 +78,7 @@ void SceneNameEntry::onAccept(const std::string &value) {
 }
 
 void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &infoTab = dialog.createTab("Info");
+	ZLDialogContent &infoTab = dialog.createTab(ZLResourceKey("Info"));
 
 	Document &document = myCalculator.document();
 	const std::list<ObjectPtr> &objects = document.scene()->objects();
@@ -119,7 +119,7 @@ void DescriptionEntry::onAccept(const std::string &value) {
 }
 
 void ShowInfoDialogAction::createDescriptionTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &infoTab = dialog.createTab("Description");
+	ZLDialogContent &infoTab = dialog.createTab(ZLResourceKey("Description"));
 
 	infoTab.addOption(new DescriptionEntry(myCalculator.document()));
 }

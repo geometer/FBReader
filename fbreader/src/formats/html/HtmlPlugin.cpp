@@ -78,5 +78,5 @@ const std::string &HtmlPlugin::iconName() const {
 }
 
 FormatInfoPage *HtmlPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	return new PlainTextInfoPage(dialog, fileName, "<PRE>", false);
+	return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("<PRE>"), false);
 }

@@ -25,6 +25,7 @@
 #include <ZLInputStream.h>
 #include <ZLOptions.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
+#include <ZLResource.h>
 
 #include "../FormatPlugin.h"
 
@@ -60,7 +61,7 @@ friend class PlainTextFormatDetector;
 class PlainTextInfoPage : public FormatInfoPage {
 
 public:
-	PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const std::string &tabName, bool showContentsEntry);
+	PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const ZLResourceKey &key, bool showContentsEntry);
 	~PlainTextInfoPage();
 
 private:

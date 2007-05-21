@@ -43,5 +43,5 @@ const std::string &ZTXTPlugin::iconName() const {
 FormatInfoPage *ZTXTPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
 	ZLFile file(fileName);
 	shared_ptr<ZLInputStream> stream = createStream(file);
-	return new PlainTextInfoPage(dialog, fileName, "Text", !TextFormatDetector().isHtml(*stream));
+	return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
 }

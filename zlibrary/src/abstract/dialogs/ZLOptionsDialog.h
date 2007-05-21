@@ -40,22 +40,26 @@ protected:
 	
 public:
 	virtual ~ZLOptionsDialog();
-	virtual ZLDialogContent &createTab(const std::string &name) = 0;
-	virtual bool run(const std::string &tabName);
+	virtual ZLDialogContent &createTab(const ZLResourceKey &key) = 0;
+	virtual bool run();
 
 protected:
-	virtual const std::string &selectedTabName() const = 0;
-	virtual void selectTab(const std::string &name) = 0;
-	virtual bool run() = 0;
+	virtual const std::string &selectedTabKey() const = 0;
+	virtual void selectTab(const ZLResourceKey &key) = 0;
+	virtual bool runInternal() = 0;
 
 	void accept();
+
 	const std::string &caption() const;
+	const std::string &tabName(const ZLResourceKey &key) const;
 
 protected:
 	ZLStringOption TabOption;
 
+private:
 	const ZLResource &myResource;
 
+protected:
 	shared_ptr<ZLRunnable> myApplyAction;
 	std::vector<shared_ptr<ZLDialogContent> > myTabs;
 };

@@ -22,9 +22,29 @@
 	<node name="dialog">
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Options"/>
+			<node name="tab">
+				<node name="General" value="General"/>
+				<node name="Indicator" value="Indicator"/>
+				<node name="Scrolling" value="Scrolling"/>
+				<node name="Margins" value="Margins"/>
+				<node name="Format" value="Format"/>
+				<node name="Styles" value="Styles"/>
+				<node name="Rotation" value="Rotation"/>
+				<node name="Colors" value="Colors"/>
+				<node name="Keys" value="Keys"/>
+				<node name="Config" value="Config"/>
+				<node name="Dictionary" value="Dictionary"/>
+				<node name="Web" value="Web"/>
+			</node>
 		</node>
 		<node name="InfoDialog">
 			<node name="title" value="FBReader - Book Info"/>
+			<node name="tab">
+				<node name="Common" value="Common"/>
+				<node name="Series" value="Series"/>
+				<node name="Text" value="Text"/>
+				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;"/>
+			</node>
 		</node>
 	</node>
 </resources>

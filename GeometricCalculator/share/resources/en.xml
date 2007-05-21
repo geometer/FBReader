@@ -20,9 +20,20 @@
 	<node name="dialog">
 		<node name="optionsDialog">
 			<node name="title" value="GeometricCalculator - Preferences"/>
+			<node name="tab">
+				<node name="Drawing" value="Drawing"/>
+				<node name="Points" value="Points"/>
+				<node name="Colors" value="Colors"/>
+				<node name="Keys" value="Keys"/>
+				<node name="View" value="View"/>
+			</node>
 		</node>
 		<node name="sceneInfoDialog">
 			<node name="title" value="GeometricCalculator - Scene Info"/>
+			<node name="tab">
+				<node name="Info" value="Info"/>
+				<node name="Description" value="Description"/>
+			</node>
 		</node>
 	</node>
 </resources>

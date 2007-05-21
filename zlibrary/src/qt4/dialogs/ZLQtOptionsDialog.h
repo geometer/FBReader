@@ -32,12 +32,12 @@ class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 
 public:
 	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
-	ZLDialogContent &createTab(const std::string &name);
+	ZLDialogContent &createTab(const ZLResourceKey &key);
 
 protected:
-	const std::string &selectedTabName() const;
-	void selectTab(const std::string &name);
-	bool run();
+	const std::string &selectedTabKey() const;
+	void selectTab(const ZLResourceKey &key);
+	bool runInternal();
 
 	void setSize(int width, int height) { QDialog::resize(width, height); }
 	int width() const { return QDialog::width(); }
