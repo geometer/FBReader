@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<toolbar>
-		<arrow value="Edit Object Properties"/>
-		<point value="New Point"/>
-		<pointontheline value="New Point On A Line"/>
-		<middlepoint value="New Middle Point"/>
-		<line value="New Line"/>
-		<halfline value="New Halfline"/>
-		<segment value="New Segment"/>
-		<perpendicular value="New Perpendicular"/>
-		<copyobject value="Copy Object"/>
-		<circle value="New Circle"/>
-		<ruler value="New Ruler"/>
-		<movepoint value="Move Point"/>
-		<delete value="Delete Object"/>
-		<undo value="Undo"/>
-		<redo value="Redo"/>
-	<toolbar>
+	<node name="toolbar">
+		<node name="arrow" value="Edit Object Properties"/>
+		<node name="point" value="New Point"/>
+		<node name="pointontheline" value="New Point On A Line"/>
+		<node name="middlepoint" value="New Middle Point"/>
+		<node name="line" value="New Line"/>
+		<node name="halfline" value="New Halfline"/>
+		<node name="segment" value="New Segment"/>
+		<node name="perpendicular" value="New Perpendicular"/>
+		<node name="copyobject" value="Copy Object"/>
+		<node name="circle" value="New Circle"/>
+		<node name="ruler" value="New Ruler"/>
+		<node name="movepoint" value="Move Point"/>
+		<node name="delete" value="Delete Object"/>
+		<node name="undo" value="Undo"/>
+		<node name="redo" value="Redo"/>
+	</node>
+	<node name="dialog">
+		<node name="optionsDialog">
+			<node name="title" value="GeometricCalculator - Preferences"/>
+		</node>
+		<node name="sceneInfoDialog">
+			<node name="title" value="GeometricCalculator - Scene Info"/>
+		</node>
+	</node>
 </resources>

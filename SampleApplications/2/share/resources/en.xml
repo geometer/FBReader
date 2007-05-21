@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<toolbar>
-		<geo value="Geometric Objects"/>
-		<alpha value="Text"/>
-		<plus value="Increase"/>
-		<minus value="Decrease"/>
-	<toolbar>
+	<node name="toolbar">
+		<node name="geo" value="Geometric Objects"/>
+		<node name="alpha" value="Text"/>
+		<node name="plus" value="Increase"/>
+		<node name="minus" value="Decrease"/>
+	</node>
 </resources>

@@ -32,7 +32,7 @@ class ZLQtOptionsDialog : public QTabDialog, public ZLDesktopOptionsDialog {
 	Q_OBJECT
 
 public:
-	ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
+	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
 	ZLDialogContent &createTab(const std::string &name);
 
 protected:

@@ -20,10 +20,14 @@
 
 #include "ZLOptionsDialog.h"
 
-ZLOptionsDialog::ZLOptionsDialog(const std::string &id, shared_ptr<ZLRunnable> applyAction) : TabOption(ZLOption::LOOK_AND_FEEL_CATEGORY, id, "SelectedTab", ""), myApplyAction(applyAction) {
+ZLOptionsDialog::ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : TabOption(ZLOption::LOOK_AND_FEEL_CATEGORY, resource.name(), "SelectedTab", ""), myResource(resource), myApplyAction(applyAction) {
 }
 
 ZLOptionsDialog::~ZLOptionsDialog() {
+}
+
+const std::string &ZLOptionsDialog::caption() const {
+	return myResource[ZLResourceKey("title")].value();
 }
 
 bool ZLOptionsDialog::run(const std::string &tabName) {

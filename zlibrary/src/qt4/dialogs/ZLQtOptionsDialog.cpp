@@ -28,9 +28,9 @@
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(id, applyAction) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(resource, applyAction) {
 	setModal(true);
-	setWindowTitle(caption.c_str());
+	setWindowTitle(QString::fromUtf8(caption().c_str()));
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
 	myTabWidget = new QTabWidget(this);

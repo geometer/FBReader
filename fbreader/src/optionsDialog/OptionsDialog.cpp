@@ -202,7 +202,7 @@ void OptionsApplyRunnable::run() {
 }
 
 OptionsDialog::OptionsDialog(FBReader &fbreader) {
-	myDialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", "FBReader - Options", new OptionsApplyRunnable(fbreader), true);
+	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(fbreader), true);
 
 	ZLDialogContent &generalTab = myDialog->createTab("General");
 	generalTab.addOption(new ZLSimpleBooleanOptionEntry("Quit Application On Cancel", fbreader.QuitOnCancelOption));

@@ -1,22 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<resources language="Ð ÑƒÑÑÐºÐ¸Ð¹">
-  <menu>
-	  <bookInfo value="Ð˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ Ð¾ ÐºÐ½Ð¸Ð³Ðµ..."/>
-	</menu>
-	<toolbar>
-		<books value="Ð‘Ð¸Ð±Ð»Ð¸Ð¾Ñ‚ÐµÐºÐ°"/>
-		<history value="ÐÐµÐ´Ð°Ð²Ð½Ð¾ Ð¾Ñ‚ÐºÑ€Ñ‹Ð²Ð°Ð²ÑˆÐ¸ÐµÑÑ ÐºÐ½Ð¸Ð³Ð¸"/>
-		<addbook value="Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ñ„Ð°Ð¹Ð» Ð² Ð±Ð¸Ð±Ð»Ð¸Ð¾Ñ‚ÐµÐºÑƒ"/>
-		<home value="Ð’ Ð½Ð°Ñ‡Ð°Ð»Ð¾ ÐºÐ½Ð¸Ð³Ð¸"/>
-		<leftarrow value="ÐÐ°Ð·Ð°Ð´"/>
-		<rightarrow value="Ð’Ð¿ÐµÑ€ÐµÐ´"/>
-		<contents value="ÐžÐ³Ð»Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ"/>
-		<find value="ÐŸÐ¾Ð¸ÑÐº"/>
-		<findnext value="ÐÐ°Ð¹Ñ‚Ð¸ ÑÐ»ÐµÐ´ÑƒÑŽÑ‰Ð¸Ð¹"/>
-		<findprev value="ÐÐ°Ð¹Ñ‚Ð¸ Ð¿Ñ€ÐµÐ´Ñ‹Ð´ÑƒÑ‰Ð¸Ð¹"/>
-		<bookinfo value="Ð˜Ð½Ñ„Ð¾Ñ€Ð¼Ð°Ñ†Ð¸Ñ Ð¾ ÐºÐ½Ð¸Ð³Ðµ"/>
-		<settings value="ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸"/>
-		<rotatescreen value="ÐŸÐ¾Ð²Ð¾Ñ€Ð¾Ñ‚ Ñ‚ÐµÐºÑÑ‚Ð°"/>
-		<help value="Ðž Ð¿Ñ€Ð¾Ð³Ñ€Ð°Ð¼Ð¼Ðµ"/>
-	<toolbar>
+<?xml version="1.0" encoding="koi8-r"?>
+<resources language="òÕÓÓËÉÊ">
+  <node name="menu">
+	  <node name="bookInfo" value="éÎÆÏÒÍÁÃÉÑ Ï ËÎÉÇÅ..."/>
+	</node>
+	<node name="toolbar">
+		<node name="books" value="âÉÂÌÉÏÔÅËÁ"/>
+		<node name="history" value="îÅÄÁ×ÎÏ ÏÔËÒÙ×Á×ÛÉÅÓÑ ËÎÉÇÉ"/>
+		<node name="addbook" value="äÏÂÁ×ÉÔØ ÆÁÊÌ × ÂÉÂÌÉÏÔÅËÕ"/>
+		<node name="home" value="÷ ÎÁÞÁÌÏ ËÎÉÇÉ"/>
+		<node name="leftarrow" value="îÁÚÁÄ"/>
+		<node name="rightarrow" value="÷ÐÅÒÅÄ"/>
+		<node name="contents" value="ïÇÌÁ×ÌÅÎÉÅ"/>
+		<node name="find" value="ðÏÉÓË"/>
+		<node name="findnext" value="îÁÊÔÉ ÓÌÅÄÕÀÝÉÊ"/>
+		<node name="findprev" value="îÁÊÔÉ ÐÒÅÄÙÄÕÝÉÊ"/>
+		<node name="bookinfo" value="éÎÆÏÒÍÁÃÉÑ Ï ËÎÉÇÅ"/>
+		<node name="settings" value="îÁÓÔÒÏÊËÉ"/>
+		<node name="rotatescreen" value="ðÏ×ÏÒÏÔ ÔÅËÓÔÁ"/>
+		<node name="help" value="ï ÐÒÏÇÒÁÍÍÅ"/>
+	</node>
+	<node name="dialog">
+		<node name="OptionsDialog">
+			<node name="title" value="FBReader - îÁÓÔÒÏÊËÉ"/>
+		</node>
+		<node name="InfoDialog">
+			<node name="title" value="FBReader - éÎÆÏÒÍÁÃÉÑ Ï ËÎÉÇÅ"/>
+		</node>
+	</node>
 </resources>

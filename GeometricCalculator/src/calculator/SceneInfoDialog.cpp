@@ -36,7 +36,7 @@ ShowInfoDialogAction::ShowInfoDialogAction(GeometricCalculator &calculator) : my
 }
 
 void ShowInfoDialogAction::run() {
-	shared_ptr<ZLOptionsDialog> dialog = ZLDialogManager::instance().createOptionsDialog("SceneInfoDialog", "Scene Info");
+	shared_ptr<ZLOptionsDialog> dialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("sceneInfoDialog"));
 
 	createInfoTab(*dialog);
 	createDescriptionTab(*dialog);

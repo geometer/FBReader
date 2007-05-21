@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources language="English">
-  <menu>
-	  <bookInfo value="Book Info..."/>
-	</menu>
-	<toolbar>
-		<books value="Show Library Tree"/>
-		<history value="Show Recent Books List"/>
-		<addbook value="Add File to Library"/>
-		<home value="Go to Start of Text"/>
-		<leftarrow value="Go Back"/>
-		<rightarrow value="Go Forward"/>
-		<contents value="Table of Contents"/>
-		<find value="Text Search"/>
-		<findnext value="Find Next"/>
-		<findprev value="Find Previous"/>
-		<bookinfo value="Show Book Info Dialog"/>
-		<settings value="Show Preferences Dialog"/>
-		<rotatescreen value="Rotate Text"/>
-		<help value="About FBReader"/>
-	<toolbar>
+  <node name="menu">
+	  <node name="bookInfo" value="Book Info..."/>
+	</node>
+	<node name="toolbar">
+		<node name="books" value="Show Library Tree"/>
+		<node name="history" value="Show Recent Books List"/>
+		<node name="addbook" value="Add File to Library"/>
+		<node name="home" value="Go to Start of Text"/>
+		<node name="leftarrow" value="Go Back"/>
+		<node name="rightarrow" value="Go Forward"/>
+		<node name="contents" value="Table of Contents"/>
+		<node name="find" value="Text Search"/>
+		<node name="findnext" value="Find Next"/>
+		<node name="findprev" value="Find Previous"/>
+		<node name="bookinfo" value="Show Book Info Dialog"/>
+		<node name="settings" value="Show Preferences Dialog"/>
+		<node name="rotatescreen" value="Rotate Text"/>
+		<node name="help" value="About FBReader"/>
+	</node>
+	<node name="dialog">
+		<node name="OptionsDialog">
+			<node name="title" value="FBReader - Options"/>
+		</node>
+		<node name="InfoDialog">
+			<node name="title" value="FBReader - Book Info"/>
+		</node>
+	</node>
 </resources>

@@ -25,8 +25,8 @@
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : ZLDesktopOptionsDialog(id, applyAction) {
-	myDialog = createGtkDialog(caption);
+ZLGtkOptionsDialog::ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : ZLDesktopOptionsDialog(resource, applyAction) {
+	myDialog = createGtkDialog(caption());
 
 	std::string okString = gtkString("&Ok");
 	std::string cancelString = gtkString("&Cancel");

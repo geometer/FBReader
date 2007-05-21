@@ -376,7 +376,7 @@ void SeriesTitleEntry::onValueEdited(const std::string &value) {
 }
 
 BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::string &fileName) : myCollection(collection), myBookInfo(fileName) {
-	myDialog = ZLDialogManager::instance().createOptionsDialog("InfoDialog", "FBReader - Book Info");
+	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
 
 	ZLDialogContent &commonTab = myDialog->createTab("Common");
 	commonTab.addOption(

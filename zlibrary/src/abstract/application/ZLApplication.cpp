@@ -191,7 +191,7 @@ ZLApplication::Toolbar::Toolbar() : myResource(ZLResource::resource(ZLResourceKe
 }
 
 void ZLApplication::Toolbar::addButton(int actionId, const ZLResourceKey &key, shared_ptr<ButtonGroup> group) {
-	ButtonItem *button = new ButtonItem(actionId, key.Name, myResource.child(key));
+	ButtonItem *button = new ButtonItem(actionId, key.Name, myResource[key]);
 	myItems.push_back(button);
 	button->setButtonGroup(group);
 }

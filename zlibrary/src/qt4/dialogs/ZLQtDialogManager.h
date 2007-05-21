@@ -35,7 +35,7 @@ public:
 	void createApplicationWindow(ZLApplication *application) const;
 
 	shared_ptr<ZLDialog> createDialog(const std::string &title) const;
-	shared_ptr<ZLOptionsDialog> createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
+	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
 	void informationBox(const std::string &title, const std::string &message) const;
 	void errorBox(const std::string &title, const std::string &message) const;
 	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;

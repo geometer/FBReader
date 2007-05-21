@@ -35,13 +35,17 @@ public:
 	static const ZLResource &resource(const ZLResourceKey &key);
 
 protected:
-	ZLResource();
+	ZLResource(const std::string &name);
 
 public:
 	virtual ~ZLResource();
+	const std::string &name() const;
 	virtual bool hasValue() const = 0;
 	virtual const std::string &value() const = 0;
-	virtual const ZLResource &child(const ZLResourceKey &key) const = 0;
+	virtual const ZLResource &operator [] (const ZLResourceKey &key) const = 0;
+
+private:
+	const std::string myName;
 
 private:
 	// disable copying

@@ -24,7 +24,8 @@
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QTabDialog(0, caption.c_str(), true), ZLDesktopOptionsDialog(id, applyAction) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QTabDialog(0, 0, true), ZLDesktopOptionsDialog(resource, applyAction) {
+	setCaption(QString::fromUtf8(ZLOptionsDialog::caption().c_str()));
 	setOkButton();
 	setCancelButton();
 	if (showApplyButton) {

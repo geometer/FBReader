@@ -37,7 +37,7 @@ ShowOptionsDialogAction::ShowOptionsDialogAction(GeometricCalculator &calculator
 }
 
 void ShowOptionsDialogAction::run() {
-	shared_ptr<ZLOptionsDialog> dialog = ZLDialogManager::instance().createOptionsDialog("OptionsDialog", ZLApplication::ApplicationName() + " - Preferences");
+	shared_ptr<ZLOptionsDialog> dialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("optionsDialog"));
 
 	createViewTab(*dialog);
 	createDrawingTab(*dialog);

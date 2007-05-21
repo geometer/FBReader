@@ -29,13 +29,14 @@
 #include <ZLRunnable.h>
 #include <ZLDialogContent.h>
 #include <ZLOptions.h>
+#include <ZLResource.h>
 
 class ZLOptionEntry;
 
 class ZLOptionsDialog {
 
 protected:
-	ZLOptionsDialog(const std::string &id, shared_ptr<ZLRunnable> applyAction);
+	ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
 	
 public:
 	virtual ~ZLOptionsDialog();
@@ -48,9 +49,12 @@ protected:
 	virtual bool run() = 0;
 
 	void accept();
+	const std::string &caption() const;
 
 protected:
 	ZLStringOption TabOption;
+
+	const ZLResource &myResource;
 
 	shared_ptr<ZLRunnable> myApplyAction;
 	std::vector<shared_ptr<ZLDialogContent> > myTabs;

@@ -27,6 +27,8 @@
 
 #include "ZLResource.h"
 
+class ZLTreeResourcePtr;
+
 class ZLTreeResource : public ZLResource {
 
 public:
@@ -36,12 +38,12 @@ public:
 	static void buildTree();
 
 protected:
-	ZLTreeResource();
+	ZLTreeResource(const std::string &name);
 	bool hasValue() const;
 	const std::string &value() const;
 
 public:
-	const ZLResource &child(const ZLResourceKey &key) const;
+	const ZLResource &operator [] (const ZLResourceKey &key) const;
 
 private:
 	std::map<std::string,shared_ptr<ZLTreeResource> > myChildren;
@@ -52,7 +54,7 @@ friend class ZLResourceTreeReader;
 class ZLTreeResourceWithValue : public ZLTreeResource {
 
 private:
-	ZLTreeResourceWithValue(const std::string &value);
+	ZLTreeResourceWithValue(const std::string &name, const std::string &value);
 	bool hasValue() const;
 	const std::string &value() const;
 
@@ -93,25 +95,29 @@ public:
 private:
 	bool hasValue() const;
 	const std::string &value() const;
-	const ZLMissingResource &child(const ZLResourceKey &key) const;
+	const ZLMissingResource &operator [] (const ZLResourceKey &key) const;
 };
 
 shared_ptr<ZLTreeResource> ZLTreeResource::ourRoot;
 shared_ptr<ZLMissingResource> ZLMissingResource::ourInstance;
-const std::string ZLMissingResource::ourValue = "??????";
+const std::string ZLMissingResource::ourValue = "????????";
 
 const ZLResource &ZLResource::resource(const ZLResourceKey &key) {
 	ZLTreeResource::buildTree();
 	if (ZLTreeResource::ourRoot.isNull()) {
 		return ZLMissingResource::instance();
 	}
-	return ZLTreeResource::ourRoot->child(key);
+	return (*ZLTreeResource::ourRoot)[key];
 }
 
-ZLResource::ZLResource() {
+ZLResource::ZLResource(const std::string &name) : myName(name) {
 }
 
 ZLResource::~ZLResource() {
+}
+
+const std::string &ZLResource::name() const {
+	return myName;
 }
 
 void ZLTreeResource::buildTree() {
@@ -122,7 +128,7 @@ void ZLTreeResource::buildTree() {
 	}
 }
 
-ZLTreeResource::ZLTreeResource() {
+ZLTreeResource::ZLTreeResource(const std::string &name) : ZLResource(name) {
 }
 
 bool ZLTreeResource::hasValue() const {
@@ -133,7 +139,7 @@ const std::string &ZLTreeResource::value() const {
 	return ZLMissingResource::ourValue;
 }
 
-const ZLResource &ZLTreeResource::child(const ZLResourceKey &key) const {
+const ZLResource &ZLTreeResource::operator [] (const ZLResourceKey &key) const {
 	std::map<std::string,shared_ptr<ZLTreeResource> >::const_iterator it = myChildren.find(key.Name);
 	if (it != myChildren.end()) {
 		return *it->second;
@@ -142,7 +148,7 @@ const ZLResource &ZLTreeResource::child(const ZLResourceKey &key) const {
 	}
 }
 
-ZLTreeResourceWithValue::ZLTreeResourceWithValue(const std::string &value) : myValue(value) {
+ZLTreeResourceWithValue::ZLTreeResourceWithValue(const std::string &name, const std::string &value) : ZLTreeResource(name), myValue(value) {
 }
 
 bool ZLTreeResourceWithValue::hasValue() const {
@@ -160,7 +166,7 @@ const ZLMissingResource &ZLMissingResource::instance() {
 	return *ourInstance;
 }
 
-ZLMissingResource::ZLMissingResource() {
+ZLMissingResource::ZLMissingResource() : ZLResource(ourValue) {
 }
 
 bool ZLMissingResource::hasValue() const {
@@ -171,24 +177,29 @@ const std::string &ZLMissingResource::value() const {
 	return ourValue;
 }
 
-const ZLMissingResource &ZLMissingResource::child(const ZLResourceKey&) const {
+const ZLMissingResource &ZLMissingResource::operator [] (const ZLResourceKey&) const {
 	return *this;
 }
 
 void ZLResourceTreeReader::startElementHandler(const char *tag, const char **attributes) {
-	if (myRoot.isNull()) {
-		myRoot = new ZLTreeResource();
+	static const std::string RESOURCES = "resources";
+	static const std::string NODE = "node";
+	if (RESOURCES == tag) {
+		myRoot = new ZLTreeResource("");
 		myStack.push(myRoot);
-	} else {
-		shared_ptr<ZLTreeResource> node;
-		const char *value = attributeValue(attributes, "value");
-		if (value != 0) {
-			node = new ZLTreeResourceWithValue(value);
-		} else {
-			node = new ZLTreeResource();
+	} else if (NODE == tag) {
+		const char *name = attributeValue(attributes, "name");
+		if (name != 0) {
+			shared_ptr<ZLTreeResource> node;
+			const char *value = attributeValue(attributes, "value");
+			if (value != 0) {
+				node = new ZLTreeResourceWithValue(name, value);
+			} else {
+				node = new ZLTreeResource(name);
+			}
+			myStack.top()->myChildren[node->name()] = node;
+			myStack.push(node);
 		}
-		myStack.top()->myChildren[tag] = node;
-		myStack.push(node);
 	}
 }
 

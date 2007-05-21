@@ -42,3 +42,7 @@ ZLDialogManager::ZLDialogManager() {
 
 ZLDialogManager::~ZLDialogManager() {
 }
+
+const ZLResource &ZLDialogManager::resource() const {
+	return ZLResource::resource(ZLResourceKey("dialog"));
+}

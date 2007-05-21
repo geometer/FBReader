@@ -25,6 +25,7 @@
 
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
+#include <ZLResource.h>
 
 class ZLDialog;
 class ZLOptionsDialog;
@@ -49,7 +50,7 @@ public:
 	virtual void createApplicationWindow(ZLApplication *application) const = 0;
 
 	virtual shared_ptr<ZLDialog> createDialog(const std::string &title) const = 0;
-	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
+	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
 	virtual bool selectionDialog(const std::string &title, ZLTreeHandler &handler) const = 0;
 
 	virtual void informationBox(const std::string &title, const std::string &message) const = 0;
@@ -64,6 +65,9 @@ public:
 	};
 	virtual bool isClipboardSupported(ClipboardType type) const = 0;
 	virtual void setClipboardText(const std::string &text, ClipboardType type) const = 0;
+
+protected:
+	const ZLResource &resource() const;
 };
 
 #endif /* __ZLDIALOGMANAGER_H__ */
