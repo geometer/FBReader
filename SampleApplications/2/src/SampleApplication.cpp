@@ -62,11 +62,11 @@ SampleApplication::SampleApplication() : ZLApplication("SampleApplication"), myB
 	addAction(4, new SetModeAction(*view, SampleApplicationView::TEXT));
 
 	shared_ptr<Toolbar::ButtonGroup> group = toolbar().createButtonGroup(3);
-	toolbar().addButton(3, "geo", group);
-	toolbar().addButton(4, "alpha", group);
+	toolbar().addButton(3, ZLResourceKey("geo"), group);
+	toolbar().addButton(4, ZLResourceKey("alpha"), group);
 	toolbar().addSeparator();
-	toolbar().addButton(1, "plus");
-	toolbar().addButton(2, "minus");
+	toolbar().addButton(1, ZLResourceKey("plus"));
+	toolbar().addButton(2, ZLResourceKey("minus"));
 
 	setView(view);
 }

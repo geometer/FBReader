@@ -23,10 +23,16 @@
 
 #include <string>
 
+struct ZLResourceKey {
+	explicit ZLResourceKey(const std::string &name) : Name(name) {}
+
+	const std::string Name;
+};
+
 class ZLResource {
 
 public:
-	static const ZLResource &resource(const std::string &name);
+	static const ZLResource &resource(const ZLResourceKey &key);
 
 protected:
 	ZLResource();
@@ -35,7 +41,7 @@ public:
 	virtual ~ZLResource();
 	virtual bool hasValue() const = 0;
 	virtual const std::string &value() const = 0;
-	virtual const ZLResource &child(const std::string &name) const = 0;
+	virtual const ZLResource &child(const ZLResourceKey &key) const = 0;
 
 private:
 	// disable copying

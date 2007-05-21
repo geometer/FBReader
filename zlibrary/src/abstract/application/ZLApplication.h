@@ -203,7 +203,7 @@ public:
 		typedef std::vector<ItemPtr> ItemVector;
 
 		Toolbar();
-		void addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group = 0);
+		void addButton(int actionId, const ZLResourceKey &key, shared_ptr<ButtonGroup> group = 0);
 		shared_ptr<ButtonGroup> createButtonGroup(int unselectAllButtonsActionId);
 		void addSeparator();
 

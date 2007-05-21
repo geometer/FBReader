@@ -41,7 +41,7 @@ protected:
 	const std::string &value() const;
 
 public:
-	const ZLResource &child(const std::string &name) const;
+	const ZLResource &child(const ZLResourceKey &key) const;
 
 private:
 	std::map<std::string,shared_ptr<ZLTreeResource> > myChildren;
@@ -93,19 +93,19 @@ public:
 private:
 	bool hasValue() const;
 	const std::string &value() const;
-	const ZLMissingResource &child(const std::string &name) const;
+	const ZLMissingResource &child(const ZLResourceKey &key) const;
 };
 
 shared_ptr<ZLTreeResource> ZLTreeResource::ourRoot;
 shared_ptr<ZLMissingResource> ZLMissingResource::ourInstance;
 const std::string ZLMissingResource::ourValue = "??????";
 
-const ZLResource &ZLResource::resource(const std::string &name) {
+const ZLResource &ZLResource::resource(const ZLResourceKey &key) {
 	ZLTreeResource::buildTree();
 	if (ZLTreeResource::ourRoot.isNull()) {
 		return ZLMissingResource::instance();
 	}
-	return ZLTreeResource::ourRoot->child(name);
+	return ZLTreeResource::ourRoot->child(key);
 }
 
 ZLResource::ZLResource() {
@@ -133,8 +133,8 @@ const std::string &ZLTreeResource::value() const {
 	return ZLMissingResource::ourValue;
 }
 
-const ZLResource &ZLTreeResource::child(const std::string &name) const {
-	std::map<std::string,shared_ptr<ZLTreeResource> >::const_iterator it = myChildren.find(name);
+const ZLResource &ZLTreeResource::child(const ZLResourceKey &key) const {
+	std::map<std::string,shared_ptr<ZLTreeResource> >::const_iterator it = myChildren.find(key.Name);
 	if (it != myChildren.end()) {
 		return *it->second;
 	} else {
@@ -171,7 +171,7 @@ const std::string &ZLMissingResource::value() const {
 	return ourValue;
 }
 
-const ZLMissingResource &ZLMissingResource::child(const std::string&) const {
+const ZLMissingResource &ZLMissingResource::child(const ZLResourceKey&) const {
 	return *this;
 }
 

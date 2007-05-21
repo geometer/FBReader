@@ -187,11 +187,11 @@ void ZLApplication::resetWindowCaption() {
 	}
 }
 
-ZLApplication::Toolbar::Toolbar() : myResource(ZLResource::resource("toolbar")) {
+ZLApplication::Toolbar::Toolbar() : myResource(ZLResource::resource(ZLResourceKey("toolbar"))) {
 }
 
-void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group) {
-	ButtonItem *button = new ButtonItem(actionId, iconName, myResource.child(iconName));
+void ZLApplication::Toolbar::addButton(int actionId, const ZLResourceKey &key, shared_ptr<ButtonGroup> group) {
+	ButtonItem *button = new ButtonItem(actionId, key.Name, myResource.child(key));
 	myItems.push_back(button);
 	button->setButtonGroup(group);
 }
