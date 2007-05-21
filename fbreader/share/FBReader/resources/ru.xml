@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources language="Русский">
+  <menu>
+	  <bookInfo value="Информация о книге..."/>
+	</menu>
+	<toolbar>
+		<books value="Библиотека"/>
+		<history value="Недавно открывавшиеся книги"/>
+		<addbook value="Добавить файл в библиотеку"/>
+		<home value="В начало книги"/>
+		<leftarrow value="Назад"/>
+		<rightarrow value="Вперед"/>
+		<contents value="Оглавление"/>
+		<find value="Поиск"/>
+		<findnext value="Найти следующий"/>
+		<findprev value="Найти предыдущий"/>
+		<bookinfo value="Информация о книге"/>
+		<settings value="Настройки"/>
+		<rotatescreen value="Поворот текста"/>
+		<help value="О программе"/>
+	<toolbar>
+</resources>
