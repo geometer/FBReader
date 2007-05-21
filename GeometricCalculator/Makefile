@@ -33,6 +33,8 @@ do_install:
 	@install -m 0644 data/default/keymap.$(TARGET_ARCH).xml $(GC_SHAREDIR)/default/keymap.xml
 	@install -d $(GC_SHAREDIR)/samples
 	@install -m 0644 share/samples/*.tar $(GC_SHAREDIR)/samples
+	@install -d $(GC_SHAREDIR)/resources
+	@install -m 0644 share/resources/*.xml $(GC_SHAREDIR)/resources
 
 package:
 	@if [ -d $(TARGET_ARCH) ]; then \

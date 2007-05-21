@@ -29,6 +29,7 @@
 #include <shared_ptr.h>
 #include <ZLOptions.h>
 #include <ZLTime.h>
+#include <ZLResource.h>
 
 class ZLView;
 class ZLViewWidget;
@@ -150,7 +151,7 @@ public:
 		class ButtonItem : public Item {
 
 		public:
-			ButtonItem(int actionId, const std::string &iconName, const std::string &tooltip);
+			ButtonItem(int actionId, const std::string &iconName, const ZLResource &tooltip);
 
 			bool isButton() const;
 
@@ -169,7 +170,7 @@ public:
 		private:
 			const int myActionId;
 			const std::string myIconName;
-			const std::string myTooltip;
+			const ZLResource &myTooltip;
 			shared_ptr<ButtonGroup> myButtonGroup;
 
 		friend class Toolbar;
@@ -201,7 +202,8 @@ public:
 		typedef shared_ptr<Item> ItemPtr;
 		typedef std::vector<ItemPtr> ItemVector;
 
-		void addButton(int actionId, const std::string &iconName, const std::string &tooltip, shared_ptr<ButtonGroup> group = 0);
+		Toolbar();
+		void addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group = 0);
 		shared_ptr<ButtonGroup> createButtonGroup(int unselectAllButtonsActionId);
 		void addSeparator();
 
@@ -209,6 +211,7 @@ public:
 
 	private:
 		ItemVector myItems;
+		const ZLResource &myResource;
 
 	friend class ZLApplication;
 	};
@@ -484,11 +487,10 @@ inline ZLApplication::Toolbar::Item::Item() {}
 inline ZLApplication::Toolbar::Item::~Item() {}
 inline bool ZLApplication::Toolbar::Item::isSeparator() const { return !isButton(); }
 
-inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::string &iconName, const std::string &tooltip) : myActionId(actionId), myIconName(iconName), myTooltip(tooltip) {}
+inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::string &iconName, const ZLResource &tooltip) : myActionId(actionId), myIconName(iconName), myTooltip(tooltip) {}
 inline bool ZLApplication::Toolbar::ButtonItem::isButton() const { return true; }
 inline int ZLApplication::Toolbar::ButtonItem::actionId() const { return myActionId; }
 inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const { return myIconName; }
-inline const std::string &ZLApplication::Toolbar::ButtonItem::tooltip() const { return myTooltip; }
 inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::ButtonItem::buttonGroup() const { return myButtonGroup; }
 inline bool ZLApplication::Toolbar::ButtonItem::isToggleButton() const { return !myButtonGroup.isNull(); }
 inline void ZLApplication::Toolbar::ButtonItem::press() { if (isToggleButton()) { myButtonGroup->press(this); } }

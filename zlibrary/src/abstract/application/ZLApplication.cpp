@@ -187,8 +187,11 @@ void ZLApplication::resetWindowCaption() {
 	}
 }
 
-void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName, const std::string &tooltip, shared_ptr<ButtonGroup> group) {
-	ButtonItem *button = new ButtonItem(actionId, iconName, tooltip);
+ZLApplication::Toolbar::Toolbar() : myResource(ZLResource::resource("toolbar")) {
+}
+
+void ZLApplication::Toolbar::addButton(int actionId, const std::string &iconName, shared_ptr<ButtonGroup> group) {
+	ButtonItem *button = new ButtonItem(actionId, iconName, myResource.child(iconName));
 	myItems.push_back(button);
 	button->setButtonGroup(group);
 }
@@ -321,4 +324,12 @@ void ZLApplication::doActionByKey(const std::string &key) {
 		a->checkAndRun();
 		myLastKeyActionTime = ZLTime();
 	}
+}
+
+const std::string &ZLApplication::Toolbar::ButtonItem::tooltip() const {
+	if (!myTooltip.hasValue()) {
+		static const std::string EMPTY;
+		return EMPTY;
+	}
+	return myTooltip.value();
 }

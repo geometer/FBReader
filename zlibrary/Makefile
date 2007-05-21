@@ -16,7 +16,7 @@ QTSUBDIRS_ALL = src/qt/time src/qtopia/message src/qtopia/application src/qtopia
 GTKSUBDIRS_ALL = src/gtk/time src/gtk/dialogs src/gtk/view src/gtk/image src/gtk/util src/maemo/dialogs src/maemo/view src/gpe/dialogs src/gpe/view src/gtk/application-desktop src/gtk/application-pdaxrom src/maemo/application-maemo src/maemo/application-maemo2 src/gpe/application src/maemo/library src/gtk/library-desktop src/gtk/library-pdaxrom src/gpe/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
 ARCHSUBDIRS = zaurus maemo
 
-SUBDIRS = src/abstract/library src/abstract/message src/abstract/time src/abstract/dialogs src/abstract/filesystem src/abstract/filesystem/zip src/abstract/filesystem/bzip2 src/abstract/filesystem/tar src/abstract/options src/abstract/optionEntries src/abstract/util src/abstract/xml src/abstract/xml/expat src/abstract/encoding src/abstract/image src/abstract/application src/abstract/view src/posix/filesystem src/unix/time
+SUBDIRS = src/abstract/library src/abstract/message src/abstract/time src/abstract/dialogs src/abstract/filesystem src/abstract/filesystem/zip src/abstract/filesystem/bzip2 src/abstract/filesystem/tar src/abstract/options src/abstract/optionEntries src/abstract/util src/abstract/xml src/abstract/xml/expat src/abstract/encoding src/abstract/image src/abstract/application src/abstract/view src/posix/filesystem src/unix/time src/abstract/resources
 
 ifeq "$(TARGET_ARCH)" "desktop"
   SUBDIRS += src/desktop/application

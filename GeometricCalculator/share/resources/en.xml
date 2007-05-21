@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<toolbar>
+		<arrow value="Edit Object Properties"/>
+		<point value="New Point"/>
+		<pointontheline value="New Point On A Line"/>
+		<middlepoint value="New Middle Point"/>
+		<line value="New Line"/>
+		<halfline value="New Halfline"/>
+		<segment value="New Segment"/>
+		<perpendicular value="New Perpendicular"/>
+		<copyobject value="Copy Object"/>
+		<circle value="New Circle"/>
+		<ruler value="New Ruler"/>
+		<movepoint value="Move Point"/>
+		<delete value="Delete Object"/>
+		<undo value="Undo"/>
+		<redo value="Redo"/>
+	<toolbar>
+</resources>

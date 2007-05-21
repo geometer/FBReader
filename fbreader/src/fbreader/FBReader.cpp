@@ -27,6 +27,7 @@
 #include <ZLDialog.h>
 #include <ZLDir.h>
 #include <ZLStringUtil.h>
+#include <ZLResource.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
@@ -169,27 +170,27 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, new OpenSelectedTextInDictionaryAction(*this));
 	addAction(ACTION_CLEAR_SELECTION, new ClearSelectionAction(*this));
 
-	toolbar().addButton(ACTION_SHOW_COLLECTION, "books", "Show Library Tree");
-	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history", "Show Recent Books List");
-	toolbar().addButton(ACTION_ADD_BOOK, "addbook", "Add File to Library");
+	toolbar().addButton(ACTION_SHOW_COLLECTION, "books");
+	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, "history");
+	toolbar().addButton(ACTION_ADD_BOOK, "addbook");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SCROLL_TO_HOME, "home", "Go to Start of Text");
-	toolbar().addButton(ACTION_UNDO, "leftarrow", "Go Back");
-	toolbar().addButton(ACTION_REDO, "rightarrow", "Go Forward");
+	toolbar().addButton(ACTION_SCROLL_TO_HOME, "home");
+	toolbar().addButton(ACTION_UNDO, "leftarrow");
+	toolbar().addButton(ACTION_REDO, "rightarrow");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_CONTENTS, "contents", "Table of Contents");
+	toolbar().addButton(ACTION_SHOW_CONTENTS, "contents");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SEARCH, "find", "Text Search");
-	toolbar().addButton(ACTION_FIND_NEXT, "findnext", "Find Next");
-	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev", "Find Previous");
+	toolbar().addButton(ACTION_SEARCH, "find");
+	toolbar().addButton(ACTION_FIND_NEXT, "findnext");
+	toolbar().addButton(ACTION_FIND_PREVIOUS, "findprev");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_BOOK_INFO, "bookinfo", "Show Book Info Dialog");
-	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings", "Show Preferences Dialog");
+	toolbar().addButton(ACTION_SHOW_BOOK_INFO, "bookinfo");
+	toolbar().addButton(ACTION_SHOW_OPTIONS, "settings");
 	toolbar().addSeparator();
-	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen", "Rotate Text");
+	toolbar().addButton(ACTION_ROTATE_SCREEN, "rotatescreen");
 	toolbar().addSeparator();
 	if (ShowHelpIconOption.value()) {
-		toolbar().addButton(ACTION_SHOW_HELP, "help", "About FBReader");
+		toolbar().addButton(ACTION_SHOW_HELP, "help");
 	}
 
 	menubar().addItem("Book Info...",	ACTION_SHOW_BOOK_INFO);

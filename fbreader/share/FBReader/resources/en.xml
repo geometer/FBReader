@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <menu>
+	  <bookInfo value="Book Info..."/>
+	</menu>
+	<toolbar>
+		<books value="Show Library Tree"/>
+		<history value="Show Recent Books List"/>
+		<addbook value="Add File to Library"/>
+		<home value="Go to Start of Text"/>
+		<leftarrow value="Go Back"/>
+		<rightarrow value="Go Forward"/>
+		<contents value="Table of Contents"/>
+		<find value="Text Search"/>
+		<findnext value="Find Next"/>
+		<findprev value="Find Previous"/>
+		<bookinfo value="Show Book Info Dialog"/>
+		<settings value="Show Preferences Dialog"/>
+		<rotatescreen value="Rotate Text"/>
+		<help value="About FBReader"/>
+	<toolbar>
+</resources>
