@@ -56,3 +56,12 @@ void ZLibrary::run(ZLApplication *application) {
 	}
 	delete application;
 }
+
+std::string ZLibrary::language() {
+	switch (GetUserDefaultUILanguage()) {
+		case 0x0419:
+			return "ru";
+		default:
+			return "en";
+	}
+}

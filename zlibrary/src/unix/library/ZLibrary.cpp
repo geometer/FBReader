@@ -18,26 +18,15 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLIBRARY_H__
-#define __ZLIBRARY_H__
+#include <locale.h>
 
-#include <string>
+#include "../../abstract/library/ZLibrary.h"
 
-class ZLApplication;
-class ZLPaintContext;
-
-class ZLibrary {
-
-public:
-	static void init(int &argc, char **&argv);
-	static ZLPaintContext *createContext();
-	static void run(ZLApplication *application);
-	static void shutdown();
-
-	static std::string language();
-
-private:
-	ZLibrary();
-};
-
-#endif /* __ZLIBRARY_H__ */
+std::string ZLibrary::language() {
+	std::string lang = setlocale(LC_MESSAGES, "");
+	int index = std::min(lang.find('.'), std::min(lang.find('_'), lang.find('-')));
+	if (index != -1) {
+		lang = lang.substr(0, index);
+	}
+	return !lang.empty() ? lang : "en";
+}

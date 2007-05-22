@@ -24,6 +24,7 @@
 #include <shared_ptr.h>
 #include <ZLXMLReader.h>
 #include <ZLApplication.h>
+#include <ZLibrary.h>
 
 #include "ZLResource.h"
 
@@ -36,6 +37,7 @@ public:
 
 public:
 	static void buildTree();
+	static void loadData(const std::string &language);
 
 private:
 	ZLTreeResource(const std::string &name);
@@ -110,12 +112,20 @@ const std::string &ZLResource::name() const {
 	return myName;
 }
 
+void ZLTreeResource::loadData(const std::string &language) {
+	std::string filePath = ZLApplication::FileNameDelimiter + "resources" + ZLApplication::FileNameDelimiter + language + ".xml";
+	ZLResourceTreeReader(ourRoot).readDocument(ZLApplication::ZLibraryDirectory() + filePath);
+	ZLResourceTreeReader(ourRoot).readDocument(ZLApplication::ApplicationDirectory() + filePath);
+}
+
 void ZLTreeResource::buildTree() {
 	if (ourRoot.isNull()) {
 		ourRoot = new ZLTreeResource(std::string());
-		const std::string fileName = "resources/en.xml";
-		ZLResourceTreeReader(ourRoot).readDocument(ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + fileName);
-		ZLResourceTreeReader(ourRoot).readDocument(ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + fileName);
+		loadData("en");
+		const std::string language = ZLibrary::language();
+		if (language != "en") {
+			loadData(language);
+		}
 	}
 }
 
