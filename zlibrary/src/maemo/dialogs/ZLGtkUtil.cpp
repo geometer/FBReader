@@ -58,9 +58,13 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 	return false;
 }
 
-GtkDialog *createGtkDialog(const std::string& title) {
+std::string gtkButtonName(const ZLResourceKey &key) {
+	return gtkString(ZLDialogManager::buttonName(key));
+}
+
+GtkDialog *createGtkDialog(const std::string &caption) {
 	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
-	gtk_window_set_title(dialog, title.c_str());
+	gtk_window_set_title(dialog, caption.c_str());
 	
 	GtkWindow *window = ((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myWindow;
 	if (window != 0) {

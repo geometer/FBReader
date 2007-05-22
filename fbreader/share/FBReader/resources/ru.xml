@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="koi8-r"?>
-<resources language="Русский">
+<resources>
   <node name="menu">
 	  <node name="bookInfo" value="Информация о книге..."/>
 	</node>
@@ -20,6 +20,9 @@
 		<node name="help" value="О программе"/>
 	</node>
 	<node name="dialog">
+		<node name="button">
+			<node name="go" value="&amp;Искать"/>
+		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Настройки"/>
 			<node name="tab">
@@ -45,6 +48,25 @@
 				<node name="Text" value="Текст"/>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;"/>
 			</node>
+		</node>
+		<node name="addFileDialog">
+			<node name="title" value="FBReader - Добавление книги в библиотеку"/>
+		</node>
+		<node name="textSearchDialog">
+			<node name="title" value="Поиск по тексту"/>
+		</node>
+		<node name="removeBookBox">
+			<node name="title" value="Удаление книги"/>
+			<node name="message" value="Удалить книгу &#10;&quot;%s&quot;&#10; из библиотки?"/>
+		</node>
+		<node name="openBookErrorBox">
+			<node name="title" value="Ошибка"/>
+			<node name="message" value="Не могу открыть:&#10;%s"/>
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Сохранение настроек..."/>
+			<node name="loadingBook" value="Загрузка книги. Подождите, пожалуйста..."/>
+			<node name="loadingBookList" value="Загрузка списка книг. Подождите, пожалуйста..."/>
 		</node>
 	</node>
 </resources>

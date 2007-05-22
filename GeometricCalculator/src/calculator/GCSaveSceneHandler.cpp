@@ -63,9 +63,13 @@ bool GCSaveSceneHandler::accept(const std::string &state) {
 	if (state.empty()) {
 		return false;
 	}
-	if ((myFileNameBySceneName.find(state) != myFileNameBySceneName.end()) &&
-			(ZLDialogManager::instance().questionBox("Save scene", "Scene \"" + state + "\" already exists. Owerwrite?", "Yes", "No") == 1)) {
-		return false;
+	if (myFileNameBySceneName.find(state) != myFileNameBySceneName.end()) {
+		ZLResourceKey key("overwriteSceneBox");	
+		if (ZLDialogManager::instance().questionBox(
+					key, ZLStringUtil::printf(ZLDialogManager::dialogMessage(key), state),
+					ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON)) {
+			return false;
+		}
 	}
 	mySceneName = state;
 	return true;

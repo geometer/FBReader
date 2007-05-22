@@ -42,6 +42,10 @@ std::string gtkString(const std::string &str) {
 	return gtkString(str, true);
 }
 
+std::string gtkButtonName(const ZLResourceKey &key) {
+	return gtkString(ZLDialogManager::buttonName(key));
+}
+
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
 		if (key->keyval == GDK_Return) {

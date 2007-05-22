@@ -128,5 +128,5 @@ RemoveScenesAction::RemoveScenesAction() {
 
 void RemoveScenesAction::run() {
 	GCRemoveSceneHandler handler;
-	ZLDialogManager::instance().selectionDialog("Remove Scenes", handler);
+	ZLDialogManager::instance().selectionDialog(ZLResourceKey("removeScenesDialog"), handler);
 }

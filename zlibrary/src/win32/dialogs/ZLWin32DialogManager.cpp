@@ -32,45 +32,45 @@ void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) c
 	myApplicationWindow = new ZLWin32ApplicationWindow(application);
 }
 
-shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const std::string &title) const {
-	return new ZLWin32Dialog(*myApplicationWindow, title);
+shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const ZLResourceKey &key) const {
+	return new ZLWin32Dialog(*myApplicationWindow, dialogTitle(key));
 }
 
-shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
-	return new ZLWin32OptionsDialog(*myApplicationWindow, id, title, applyAction, showApplyButton);
+shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
+	return new ZLWin32OptionsDialog(*myApplicationWindow, resource()[key], applyAction, showApplyButton);
 }
 
-void ZLWin32DialogManager::informationBox(const std::string &title, const std::string &message) const {
-	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_INFORMATION, title, message);
-	box.addButton("&Ok");
+void ZLWin32DialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_INFORMATION, dialogTitle(key), message);
+	box.addButton(buttonName(OK_BUTTON));
 	box.run();
 }
 
-void ZLWin32DialogManager::errorBox(const std::string &title, const std::string &message) const {
-	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_ERROR, title, message);
-	box.addButton("&Ok");
+void ZLWin32DialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_ERROR, dialogTitle(key), message);
+	box.addButton(buttonName(OK_BUTTON));
 	box.run();
 }
 
-int ZLWin32DialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_QUESTION, title, message);
-	if (!button0.empty()) {
-		box.addButton(button0);
+int ZLWin32DialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_QUESTION, dialogTitle(key), message);
+	if (!button0.Name.empty()) {
+		box.addButton(buttonName(button0));
 	}
-	if (!button1.empty()) {
-		box.addButton(button1);
+	if (!button1.Name.empty()) {
+		box.addButton(buttonName(button1));
 	}
-	if (!button2.empty()) {
-		box.addButton(button2);
+	if (!button2.Name.empty()) {
+		box.addButton(buttonName(button2));
 	}
 	return box.run();
 }
 
-bool ZLWin32DialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	return ZLWin32SelectionDialog(*myApplicationWindow, title, handler).runWithSize();
+bool ZLWin32DialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
+	return ZLWin32SelectionDialog(*myApplicationWindow, dialogTitle(key), handler).runWithSize();
 }
 
-void ZLWin32DialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
+void ZLWin32DialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
 	if (myApplicationWindow != 0) {
 		myApplicationWindow->setWait(true);
 	}

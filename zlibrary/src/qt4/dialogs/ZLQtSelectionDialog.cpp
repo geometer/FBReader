@@ -30,6 +30,7 @@
 
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtDialogManager.h"
+#include "ZLQtUtil.h"
 
 ZLQListWidget::ZLQListWidget(QWidget *parent) : QListWidget(parent) {
 }
@@ -46,7 +47,7 @@ ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListWidget *listWidget, const 
 }
 
 ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(qApp->activeWindow()), ZLDesktopSelectionDialog(handler) {
-	setWindowTitle(caption);
+	setWindowTitle(QString::fromUtf8(caption));
 
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -60,20 +61,16 @@ ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &han
 	QWidget *group = new QWidget(this);
 	QGridLayout *buttonLayout = new QGridLayout(group);
 	buttonLayout->setColumnStretch(0, 3);
-	buttonLayout->setColumnStretch(1, 0);
-	buttonLayout->setColumnStretch(2, 1);
-	buttonLayout->setColumnStretch(3, 0);
-	buttonLayout->setColumnStretch(4, 3);
 	mainLayout->addWidget(group);
 
 	QPushButton *okButton = new QPushButton(group);
-	okButton->setText("OK");
+	okButton->setText(::qtButtonName(ZLDialogManager::OK_BUTTON));
 	buttonLayout->addWidget(okButton, 0, 1);
 	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
 	QPushButton *cancelButton = new QPushButton(group);
-	cancelButton->setText("Cancel");
-	buttonLayout->addWidget(cancelButton, 0, 3);
+	cancelButton->setText(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
+	buttonLayout->addWidget(cancelButton, 0, 2);
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
  	connect(myListWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(runNodeSlot()));

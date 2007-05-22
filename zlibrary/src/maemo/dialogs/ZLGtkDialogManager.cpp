@@ -28,37 +28,37 @@
 #include "ZLGtkSelectionDialog.h"
 #include "ZLGtkUtil.h"
 
-shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const std::string &title) const {
-	return new ZLGtkDialog(title);
+shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const ZLResourceKey &key) const {
+	return new ZLGtkDialog(dialogTitle(key));
 }
 
-shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool) const {
-	return new ZLGtkOptionsDialog(id, title, myWindow, applyAction);
+shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool) const {
+	return new ZLGtkOptionsDialog(resource()[key], applyAction);
 }
 
-void ZLGtkDialogManager::informationBox(const std::string&, const std::string &message) const {
+void ZLGtkDialogManager::informationBox(const ZLResourceKey&, const std::string &message) const {
 	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_information(myWindow, message.c_str()));
 	gtk_dialog_run(dialog);
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
-void ZLGtkDialogManager::errorBox(const std::string&, const std::string &message) const {
+void ZLGtkDialogManager::errorBox(const ZLResourceKey&, const std::string &message) const {
 	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_information_with_icon_name(myWindow, message.c_str(), GTK_STOCK_DIALOG_ERROR));
 	gtk_dialog_run(dialog);
 	gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
-int ZLGtkDialogManager::questionBox(const std::string&, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
+int ZLGtkDialogManager::questionBox(const ZLResourceKey&, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
 	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_confirmation_add_buttons(myWindow, message.c_str(), 0));
 
-	if (!button0.empty()) {
-		gtk_dialog_add_button(dialog, gtkString(button0).c_str(), 0);
+	if (!button0.Name.empty()) {
+		gtk_dialog_add_button(dialog, gtkButtonName(button0).c_str(), 0);
 	}
-	if (!button1.empty()) {
-		gtk_dialog_add_button(dialog, gtkString(button1).c_str(), 1);
+	if (!button1.Name.empty()) {
+		gtk_dialog_add_button(dialog, gtkButtonName(button1).c_str(), 1);
 	}
-	if (!button2.empty()) {
-		gtk_dialog_add_button(dialog, gtkString(button2).c_str(), 2);
+	if (!button2.Name.empty()) {
+		gtk_dialog_add_button(dialog, gtkButtonName(button2).c_str(), 2);
 	}
 
 	gint response = gtk_dialog_run(dialog);
@@ -68,8 +68,8 @@ int ZLGtkDialogManager::questionBox(const std::string&, const std::string &messa
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-bool ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	return ZLGtkSelectionDialog(title.c_str(), handler).run();
+bool ZLGtkDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
+	return ZLGtkSelectionDialog(dialogTitle(key).c_str(), handler).run();
 }
 
 struct RunnableWithFlag {
@@ -85,12 +85,12 @@ static void *runRunnable(void *data) {
 	return 0;
 }
 
-void ZLGtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
+void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
 	if (!myIsInitialized || myIsWaiting) {
 		runnable.run();
 	} else {
 		myIsWaiting = true;
-		gtk_banner_show_animation(myWindow, message.c_str());
+		gtk_banner_show_animation(myWindow, waitMessageText(key).c_str());
 		RunnableWithFlag rwf;
 		rwf.runnable = &runnable;
 		rwf.flag = true;

@@ -145,7 +145,7 @@ bool GeometricCalculator::saveIfChanged() {
 		return true;
 	}
 
-	int answer = ZLDialogManager::instance().questionBox("Unsaved Scene", "Save current scene?", "&Yes", "&No", "&Cancel");
+	int answer = ZLDialogManager::instance().questionBox(ZLResourceKey("unsavedSceneBox"), ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON, ZLDialogManager::CANCEL_BUTTON);
 
   if (answer == 0) { // answer is "Yes"
 		return save();
@@ -173,7 +173,7 @@ void GeometricCalculator::open() {
 	}
 
 	GCOpenSceneHandler handler;
-	if (ZLDialogManager::instance().selectionDialog("Open Scene", handler)) {
+	if (ZLDialogManager::instance().selectionDialog(ZLResourceKey("openSceneDialog"), handler)) {
 		open(handler.fileName());
 	}
 }
@@ -188,7 +188,7 @@ void GeometricCalculator::open(const std::string &fileName) {
 
 bool GeometricCalculator::save() {
 	GCSaveSceneHandler handler(document().scene()->name());
-	if (ZLDialogManager::instance().selectionDialog("Save Scene", handler)) {
+	if (ZLDialogManager::instance().selectionDialog(ZLResourceKey("saveSceneDialog"), handler)) {
 		save(handler.fileName(), handler.sceneName());
 		return true;
 	}

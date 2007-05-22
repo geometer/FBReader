@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="&amp;Ok"/>
+			<node name="cancel" value="&amp;Cancel"/>
+			<node name="yes" value="&amp;Yes"/>
+			<node name="no" value="&amp;No"/>
+			<node name="apply" value="&amp;Apply"/>
+		</node>
+	</node>
+</resources>

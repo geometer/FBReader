@@ -58,7 +58,7 @@ static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 	return false;
 }
 
-GtkDialog *createGtkDialog(const std::string& title) {
+GtkDialog *createGtkDialog(const std::string &title) {
 	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
 	gtk_window_set_title(dialog, title.c_str());
 	

@@ -31,14 +31,14 @@
 class ZLGtkOptionsDialog : public ZLOptionsDialog {
 
 public:
-	ZLGtkOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction);
+	ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
 	~ZLGtkOptionsDialog();
-	ZLDialogContent &createTab(const std::string &name);
+	ZLDialogContent &createTab(const ZLResourceKey &key);
 
 protected:
-	const std::string &selectedTabName() const;
-	void selectTab(const std::string &name);
-	bool run();
+	const std::string &selectedTabKey() const;
+	void selectTab(const ZLResourceKey &key);
+	bool runInternal();
 
 	void setSize(int width, int height);
 	int width() const;

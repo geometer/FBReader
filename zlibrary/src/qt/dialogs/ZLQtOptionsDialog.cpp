@@ -21,15 +21,18 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
+#include "ZLQtUtil.h"
 
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QTabDialog(0, 0, true), ZLDesktopOptionsDialog(resource, applyAction) {
 	setCaption(QString::fromUtf8(ZLOptionsDialog::caption().c_str()));
-	setOkButton();
-	setCancelButton();
+	setOkButton(::qtButtonName(ZLDialogManager::OK_BUTTON));
+	setCancelButton(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
 	if (showApplyButton) {
-		setApplyButton();
+		setApplyButton(::qtButtonName(ZLDialogManager::APPLY_BUTTON));
 		connect(this, SIGNAL(applyButtonPressed()), this, SLOT(apply()));
 	}
 }

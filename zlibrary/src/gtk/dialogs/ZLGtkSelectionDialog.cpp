@@ -39,14 +39,14 @@ static gboolean clickHandler(GtkWidget*, GdkEventButton *event, gpointer self) {
 	return false;
 }
 
-ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler) : ZLDesktopSelectionDialog(handler) {
+ZLGtkSelectionDialog::ZLGtkSelectionDialog(const std::string &caption, ZLTreeHandler &handler) : ZLDesktopSelectionDialog(handler) {
 	myExitFlag = false;
 	myNodeSelected = false;
 
 	myDialog = createGtkDialog(caption);
 
-	std::string okString = gtkString("&Ok");
-	std::string cancelString = gtkString("&Cancel");
+	std::string okString = gtkString(ZLDialogManager::buttonName(ZLDialogManager::OK_BUTTON));
+	std::string cancelString = gtkString(ZLDialogManager::buttonName(ZLDialogManager::CANCEL_BUTTON));
 	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
 	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 

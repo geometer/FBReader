@@ -77,3 +77,11 @@ void ZLStringUtil::stripWhiteSpaces(std::string &str) {
 	}
 	str.erase(r_counter, length - r_counter);
 }
+
+std::string ZLStringUtil::printf(const std::string &format, const std::string &arg0) {
+	int index = format.find("%s");
+	if (index == -1) {
+		return format;
+	}
+	return format.substr(0, index) + arg0 + format.substr(index + 2);
+}

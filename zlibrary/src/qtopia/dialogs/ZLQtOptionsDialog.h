@@ -34,13 +34,13 @@ class ZLQtOptionsDialog : public ZLFullScreenDialog, public ZLOptionsDialog {
 	Q_OBJECT
 
 public:
-	ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction);
-	ZLDialogContent &createTab(const std::string &name);
+	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
+	ZLDialogContent &createTab(const ZLResourceKey &key);
 
 protected:
-	const std::string &selectedTabName() const;
-	void selectTab(const std::string &name);
-	bool run();
+	const std::string &selectedTabKey() const;
+	void selectTab(const ZLResourceKey &key);
+	bool runInternal();
 
 	void resizeEvent(QResizeEvent *);
 	void keyPressEvent(QKeyEvent *event);

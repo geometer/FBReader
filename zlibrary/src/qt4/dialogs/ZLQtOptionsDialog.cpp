@@ -25,8 +25,11 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QResizeEvent>
 
+#include <ZLDialogManager.h>
+
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
+#include "ZLQtUtil.h"
 
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(resource, applyAction) {
 	setModal(true);
@@ -42,18 +45,18 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 	buttonLayout->setColumnStretch(0, 3);
 
 	QPushButton *okButton = new QPushButton(group);
-	okButton->setText("&Ok");
+	okButton->setText(::qtButtonName(ZLDialogManager::OK_BUTTON));
 	buttonLayout->addWidget(okButton, 0, 1);
 	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
 	QPushButton *cancelButton = new QPushButton(group);
-	cancelButton->setText("&Cancel");
+	cancelButton->setText(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
 	buttonLayout->addWidget(cancelButton, 0, 2);
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
 
 	if (showApplyButton) {
 		QPushButton *applyButton = new QPushButton(group);
-		applyButton->setText("&Apply");
+		applyButton->setText(::qtButtonName(ZLDialogManager::APPLY_BUTTON));
 		buttonLayout->addWidget(applyButton, 0, 3);
 		connect(applyButton, SIGNAL(clicked()), this, SLOT(apply()));
 	}

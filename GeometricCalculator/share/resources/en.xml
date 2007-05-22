@@ -35,5 +35,36 @@
 				<node name="Description" value="Description"/>
 			</node>
 		</node>
+		<node name="openSceneDialog">
+			<node name="title" value="Open Scene"/>
+		</node>
+		<node name="saveSceneDialog">
+			<node name="title" value="Save Scene"/>
+		</node>
+		<node name="removeScenesDialog">
+			<node name="title" value="Remove Scenes"/>
+		</node>
+		<node name="pointDialog">
+			<node name="title" value="Point"/>
+		</node>
+		<node name="removeSceneBox">
+			<node name="title" value="Remove Scene"/>
+			<node name="message" value="Remove Scene &quot;%s&quot;?"/>
+		</node>
+		<node name="cannotRemoveSceneBox">
+			<node name="title" value="Remove Scene"/>
+			<node name="message" value="Couldn't Remove Scene"/>
+		</node>
+		<node name="unsavedSceneBox">
+			<node name="title" value="Unsaved Scene"/>
+			<node name="message" value="Save current scene?"/>
+		</node>
+		<node name="overwriteSceneBox">
+			<node name="title" value="Save Scene"/>
+			<node name="message" value="Scene &quot;%s&quot; already exists. Overwrite?"/>
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Saving config..."/>
+		</node>
 	</node>
 </resources>

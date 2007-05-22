@@ -21,13 +21,15 @@
 #ifndef __ZLFULLSCREENDIALOG_H__
 #define __ZLFULLSCREENDIALOG_H__
 
+#include <string>
+
 #include <qdialog.h>
 
 class ZLFullScreenDialog : public QDialog {
 	Q_OBJECT
 
 protected:
-	ZLFullScreenDialog(const char *caption); 
+	ZLFullScreenDialog(const std::string &caption); 
 	virtual ~ZLFullScreenDialog(); 
 
 public:

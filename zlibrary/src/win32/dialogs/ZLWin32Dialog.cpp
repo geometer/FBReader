@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLDialogManager.h>
+
 #include "ZLWin32Dialog.h"
 #include "ZLWin32DialogContent.h"
 #include "../application/ZLWin32ApplicationWindow.h"
@@ -41,8 +43,8 @@ ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string
 	myButtonBox->setMargins(4, 4, 4, 4);
 }
 
-void ZLWin32Dialog::addButton(const std::string &text, bool accept) {
-	W32WidgetPtr button = new W32PushButton(text, accept ? W32PushButton::OK_BUTTON : W32PushButton::CANCEL_BUTTON);
+void ZLWin32Dialog::addButton(const ZLResourceKey &key, bool accept) {
+	W32WidgetPtr button = new W32PushButton(ZLDialogManager::buttonName(key), accept ? W32PushButton::OK_BUTTON : W32PushButton::CANCEL_BUTTON);
 	button->setVisible(true);
 	myButtonBox->addElement(button);
 }

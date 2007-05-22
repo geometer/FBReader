@@ -21,6 +21,8 @@
 #include <gtk/gtklabel.h>
 #include <gtk/gtkbox.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
@@ -28,12 +30,12 @@
 ZLGtkOptionsDialog::ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : ZLDesktopOptionsDialog(resource, applyAction) {
 	myDialog = createGtkDialog(caption());
 
-	std::string okString = gtkString("&Ok");
-	std::string cancelString = gtkString("&Cancel");
+	std::string okString = gtkString(ZLDialogManager::buttonName(ZLDialogManager::OK_BUTTON));
+	std::string cancelString = gtkString(ZLDialogManager::buttonName(ZLDialogManager::CANCEL_BUTTON));
 	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
 	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 	if (showApplyButton) {
-		std::string applyString = gtkString("&Apply");
+		std::string applyString = gtkString(ZLDialogManager::buttonName(ZLDialogManager::APPLY_BUTTON));
 		gtk_dialog_add_button(myDialog, applyString.c_str(), GTK_RESPONSE_APPLY);
 	}
 

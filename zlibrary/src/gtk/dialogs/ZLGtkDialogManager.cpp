@@ -27,37 +27,37 @@
 #include "ZLGtkWaitMessage.h"
 #include "ZLGtkUtil.h"
 
-shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const std::string &title) const {
-	return new ZLGtkDialog(title);
+shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const ZLResourceKey &key) const {
+	return new ZLGtkDialog(dialogTitle(key));
 }
 
 shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLResourceKey &id, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	return new ZLGtkOptionsDialog(resource()[id], applyAction, showApplyButton);
 }
 
-void ZLGtkDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	internalBox(GTK_STOCK_DIALOG_INFO, title, message, gtkString("&Ok"));
+void ZLGtkDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
+	internalBox(GTK_STOCK_DIALOG_INFO, key, message);
 }
 
-void ZLGtkDialogManager::errorBox(const std::string &title, const std::string &message) const {
-	internalBox(GTK_STOCK_DIALOG_ERROR, title, message, gtkString("&Ok"));
+void ZLGtkDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
+	internalBox(GTK_STOCK_DIALOG_ERROR, key, message);
 }
 
-int ZLGtkDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	return internalBox(GTK_STOCK_DIALOG_QUESTION, title, message, button0, button1, button2);
+int ZLGtkDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
+	return internalBox(GTK_STOCK_DIALOG_QUESTION, key, message, button0, button1, button2);
 }
 
-int ZLGtkDialogManager::internalBox(const gchar *icon, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	GtkDialog *dialog = createGtkDialog(title.c_str());
+int ZLGtkDialogManager::internalBox(const gchar *icon, const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
+	GtkDialog *dialog = createGtkDialog(dialogTitle(key));
 
-	if (!button0.empty()) {
-		gtk_dialog_add_button(dialog, gtkString(button0).c_str(), 0);
+	if (!button0.Name.empty()) {
+		gtk_dialog_add_button(dialog, gtkString(buttonName(button0)).c_str(), 0);
 	}
-	if (!button1.empty()) {
-		gtk_dialog_add_button(dialog, gtkString(button1).c_str(), 1);
+	if (!button1.Name.empty()) {
+		gtk_dialog_add_button(dialog, gtkString(buttonName(button1)).c_str(), 1);
 	}
-	if (!button2.empty()) {
-		gtk_dialog_add_button(dialog, gtkString(button2).c_str(), 2);
+	if (!button2.Name.empty()) {
+		gtk_dialog_add_button(dialog, gtkString(buttonName(button2)).c_str(), 2);
 	}
 
 	GtkWidget *contents = gtk_hbox_new(false, 10);
@@ -78,12 +78,12 @@ int ZLGtkDialogManager::internalBox(const gchar *icon, const std::string &title,
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-bool ZLGtkDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	return ZLGtkSelectionDialog(title.c_str(), handler).runWithSize();
+bool ZLGtkDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
+	return ZLGtkSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 
-void ZLGtkDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	ZLGtkWaitMessage waitMessage(!myDialogs.empty() ? myDialogs.top() : myWindow, message);
+void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
+	ZLGtkWaitMessage waitMessage(!myDialogs.empty() ? myDialogs.top() : myWindow, waitMessageText(key));
 	runnable.run();
 }
 

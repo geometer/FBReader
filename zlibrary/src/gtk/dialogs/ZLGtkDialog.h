@@ -24,14 +24,15 @@
 #include <gtk/gtkdialog.h>
 
 #include <ZLDialog.h>
+#include <ZLResource.h>
 
 class ZLGtkDialog : public ZLDialog {
 
 public:
-	ZLGtkDialog(const std::string &name);
+	ZLGtkDialog(const std::string &caption);
 	~ZLGtkDialog();
 
-	void addButton(const std::string &text, bool accept);
+	void addButton(const ZLResourceKey &key, bool accept);
 	bool run();
 
 private:

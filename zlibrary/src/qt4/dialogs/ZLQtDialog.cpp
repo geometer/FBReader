@@ -23,10 +23,11 @@
 
 #include "ZLQtDialog.h"
 #include "ZLQtDialogContent.h"
+#include "ZLQtUtil.h"
 
 ZLQtDialog::ZLQtDialog(const std::string &title) : QDialog(qApp->activeWindow()), myButtonNumber(0) {
 	setModal(true);
-	setWindowTitle(title.c_str());
+	setWindowTitle(QString::fromUtf8(title.c_str()));
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	QWidget *widget = new QWidget(this);
@@ -41,9 +42,9 @@ ZLQtDialog::ZLQtDialog(const std::string &title) : QDialog(qApp->activeWindow())
 ZLQtDialog::~ZLQtDialog() {
 }
 
-void ZLQtDialog::addButton(const std::string &text, bool accept) {
+void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 	QPushButton *button = new QPushButton(myButtonGroup);
-	button->setText(QString::fromUtf8(text.c_str()));
+	button->setText(::qtButtonName(key));
 	myButtonLayout->addWidget(button, 0, myButtonNumber++);
 	connect(button, SIGNAL(clicked()), this, accept ? SLOT(accept()) : SLOT(reject()));
 }

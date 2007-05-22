@@ -22,6 +22,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <ZLApplication.h>
+#include <ZLDialogManager.h>
 
 #include "ZLGtkSelectionDialog.h"
 #include "ZLGtkUtil.h"
@@ -44,8 +45,8 @@ ZLGtkSelectionDialog::ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &h
 
 	myDialog = createGtkDialog(caption);
 
-	std::string okString = gtkString("&Ok");
-	std::string cancelString = gtkString("&Cancel");
+	std::string okString = gtkButtonName(ZLDialogManager::OK_BUTTON);
+	std::string cancelString = gtkButtonName(ZLDialogManager::CANCEL_BUTTON);
 	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
 	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 

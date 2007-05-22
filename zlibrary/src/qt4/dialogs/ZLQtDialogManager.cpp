@@ -29,33 +29,34 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtWaitMessage.h"
+#include "ZLQtUtil.h"
 
 shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	return new ZLQtOptionsDialog(resource()[key], applyAction, showApplyButton);
 }
 
-shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const std::string &title) const {
-	return new ZLQtDialog(title);
+shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
+	return new ZLQtDialog(dialogTitle(key));
 }
 
-void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	QMessageBox::information(qApp->activeWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
+	QMessageBox::information(qApp->activeWindow(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(OK_BUTTON));
 }
 
-void ZLQtDialogManager::errorBox(const std::string &title, const std::string &message) const {
-	QMessageBox::critical(qApp->activeWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
+	QMessageBox::critical(qApp->activeWindow(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(OK_BUTTON));
 }
 
-int ZLQtDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	return QMessageBox::question(qApp->activeWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
+int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
+	return QMessageBox::question(qApp->activeWindow(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 }
 
-bool ZLQtDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	return ZLQtSelectionDialog(title.c_str(), handler).runWithSize();
+bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
+	return ZLQtSelectionDialog(dialogTitle(key).c_str(), handler).runWithSize();
 }
 
-void ZLQtDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	ZLQtWaitMessage waitMessage(message);
+void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
+	ZLQtWaitMessage waitMessage(waitMessageText(key));
 	runnable.run();
 }
 

@@ -20,21 +20,23 @@
 
 #include <gtk/gtkbox.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLGtkDialog.h"
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkDialog::ZLGtkDialog(const std::string &name) {
+ZLGtkDialog::ZLGtkDialog(const std::string &caption) {
 	myTab = new ZLGtkDialogContent();
-	myDialog = createGtkDialog(name.c_str());
+	myDialog = createGtkDialog(caption);
 }
 
 ZLGtkDialog::~ZLGtkDialog() {
 	destroyGtkDialog(myDialog);
 }
 
-void ZLGtkDialog::addButton(const std::string &text, bool accept) {
-	std::string buttonText = gtkString(text);
+void ZLGtkDialog::addButton(const ZLResourceKey &key, bool accept) {
+	std::string buttonText = gtkString(ZLDialogManager::buttonName(key));
 	gtk_dialog_add_button(myDialog, buttonText.c_str(), accept ? GTK_RESPONSE_ACCEPT : GTK_RESPONSE_REJECT);
 }
 

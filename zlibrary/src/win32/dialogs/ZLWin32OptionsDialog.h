@@ -34,13 +34,13 @@ class ZLWin32ApplicationWindow;
 class ZLWin32OptionsDialog : public ZLOptionsDialog, public W32Listener {
 
 public:
-	ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
-	ZLDialogContent &createTab(const std::string &name);
+	ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
+	ZLDialogContent &createTab(const ZLResourceKey &key);
 
 protected:
-	const std::string &selectedTabName() const;
-	void selectTab(const std::string &name);
-	bool run();
+	const std::string &selectedTabKey() const;
+	void selectTab(const ZLResourceKey &key);
+	bool runInternal();
 
 private:
 	void onEvent(const std::string &event, W32EventSender &sender);

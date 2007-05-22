@@ -34,6 +34,8 @@ public:
 	static void appendNumber(std::string &str, unsigned int n);
 	static void append(std::string &str, const std::vector<std::string> &buffer);
 	static void stripWhiteSpaces(std::string &str);
+
+	static std::string printf(const std::string &format, const std::string &arg0);
 };
 
 #endif /* __ZLSTRINGUTIL_H__ */

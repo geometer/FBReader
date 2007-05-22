@@ -30,12 +30,13 @@
 
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtDialogManager.h"
+#include "ZLQtUtil.h"
 
 ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
 }
 
 ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(), ZLDesktopSelectionDialog(handler) {
-	setCaption(caption);
+	setCaption(QString::fromUtf8(caption));
 
 	myMainBox = new QVBox(this);
 
@@ -47,22 +48,26 @@ ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &han
 	myListView->setSorting(-1, true);
 
 	QButtonGroup *group = new QButtonGroup(myMainBox);
-	QGridLayout *buttonLayout = new QGridLayout(group, 1, 5, 8, 0);
-	buttonLayout->setColStretch(0, 3);
-	buttonLayout->setColStretch(1, 0);
-	buttonLayout->setColStretch(2, 1);
-	buttonLayout->setColStretch(3, 0);
-	buttonLayout->setColStretch(4, 3);
+	QGridLayout *buttonLayout = new QGridLayout(group, 1, 0, 8, 6);
 
 	QPushButton *okButton = new QPushButton(group);
-	okButton->setText("OK");
+	okButton->setText(::qtButtonName(ZLDialogManager::OK_BUTTON));
 	buttonLayout->addWidget(okButton, 0, 1);
 	connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
 
 	QPushButton *cancelButton = new QPushButton(group);
-	cancelButton->setText("Cancel");
-	buttonLayout->addWidget(cancelButton, 0, 3);
+	cancelButton->setText(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
+	buttonLayout->addWidget(cancelButton, 0, 2);
 	connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+
+	QSize okSize = okButton->sizeHint();
+	QSize cancelSize = cancelButton->sizeHint();
+	QSize maxSize(
+		std::max(okSize.width(), cancelSize.width()),
+		std::max(okSize.height(), cancelSize.height())
+	);
+	okButton->setFixedSize(maxSize);
+	cancelButton->setFixedSize(maxSize);
 
  	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(runNodeSlot()));
  	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));

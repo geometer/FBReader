@@ -25,9 +25,12 @@
 
 #include <gtk/gtkdialog.h>
 
+#include <ZLResource.h>
+
 std::string gtkString(const std::string &str, bool useMnemonics);
 std::string gtkString(const std::string &str);
+std::string gtkButtonName(const ZLResourceKey &key);
 
-GtkDialog *createGtkDialog(const std::string& title);
+GtkDialog *createGtkDialog(const std::string &caption);
 
 #endif /* __ZLGTKUTIL_H__ */

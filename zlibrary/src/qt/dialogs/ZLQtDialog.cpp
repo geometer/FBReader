@@ -21,11 +21,14 @@
 #include <qvbox.h>
 #include <qpushbutton.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLQtDialog.h"
 #include "ZLQtDialogContent.h"
+#include "ZLQtUtil.h"
 
-ZLQtDialog::ZLQtDialog(const std::string &title) : QDialog(0, 0, true), myButtonNumber(0) {
-	setCaption(title.c_str());
+ZLQtDialog::ZLQtDialog(const std::string &title) : QDialog(0, 0, true) {
+	setCaption(QString::fromUtf8(title.c_str()));
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	QWidget *widget = new QVBox(this);
@@ -34,20 +37,32 @@ ZLQtDialog::ZLQtDialog(const std::string &title) : QDialog(0, 0, true), myButton
 
 	myButtonGroup = new QButtonGroup(this);
 	layout->add(myButtonGroup);
-	myButtonLayout = new QGridLayout(myButtonGroup, 1, 0, 8, 8);
+	myButtonLayout = new QGridLayout(myButtonGroup, 1, 0, 8, 6);
 }
 
 ZLQtDialog::~ZLQtDialog() {
 }
 
-void ZLQtDialog::addButton(const std::string &text, bool accept) {
+void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 	QPushButton *button = new QPushButton(myButtonGroup);
-	button->setText(text.c_str());
-	myButtonLayout->addWidget(button, 0, myButtonNumber++);
+	button->setText(::qtButtonName(key));
+	myButtons.push_back(button);
+	myButtonLayout->addWidget(button, 0, myButtons.size());
 	connect(button, SIGNAL(clicked()), this, accept ? SLOT(accept()) : SLOT(reject()));
 }
 
 bool ZLQtDialog::run() {
+	QSize maxSize(0, 0);
+	for (std::vector<QButton*>::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		QSize buttonSize = (*it)->sizeHint();
+		maxSize = QSize(
+			std::max(maxSize.width(), buttonSize.width()),
+			std::max(maxSize.height(), buttonSize.height())
+		);	
+	}
+	for (std::vector<QButton*>::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		(*it)->setFixedSize(maxSize);
+	}
 	((ZLQtDialogContent*)myTab)->close();
 	return exec();
 }

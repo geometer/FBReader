@@ -24,6 +24,7 @@
 #include <string>
 
 struct ZLResourceKey {
+	ZLResourceKey() {}
 	explicit ZLResourceKey(const std::string &name) : Name(name) {}
 
 	const std::string Name;

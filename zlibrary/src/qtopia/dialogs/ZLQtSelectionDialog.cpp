@@ -30,7 +30,7 @@
 ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
 }
 
-ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler) : ZLFullScreenDialog(caption), ZLSelectionDialog(handler) {
+ZLQtSelectionDialog::ZLQtSelectionDialog(const std::string &caption, ZLTreeHandler &handler) : ZLFullScreenDialog(caption), ZLSelectionDialog(handler) {
 	myMainBox = new QVBox(this);
 
 	myStateLine = new QLineEdit(myMainBox);

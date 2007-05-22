@@ -26,12 +26,14 @@
 #include <vector>
 #include <map>
 
+#include <ZLResource.h>
+
 #include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 class ZLGtkSelectionDialog : public ZLDesktopSelectionDialog {
 
 public:
-	ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler); 
+	ZLGtkSelectionDialog(const std::string &caption, ZLTreeHandler &handler); 
 	~ZLGtkSelectionDialog(); 
 
 	bool run();

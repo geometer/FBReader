@@ -29,30 +29,31 @@ void MyQTabWidget::resizeEvent(QResizeEvent *event) {
 	emit resized(event->size());
 }
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction) : ZLFullScreenDialog(caption.c_str()), ZLOptionsDialog(id, applyAction) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : ZLFullScreenDialog(std::string()), ZLOptionsDialog(resource, applyAction) {
+	setCaption(QString::fromUtf8(ZLOptionsDialog::caption().c_str()));
 	myTabWidget = new MyQTabWidget(this);
 }
 
-ZLDialogContent &ZLQtOptionsDialog::createTab(const std::string &name) {
+ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
 	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget);
-	myTabWidget->insertTab(tab->widget(), name.c_str());
+	myTabWidget->insertTab(tab->widget(), QString::fromUtf8(tabName(key).c_str()));
 	myTabs.push_back(tab);
-	myTabNames.push_back(name);
+	myTabNames.push_back(key.Name);
 	return *tab;
 }
 
-const std::string &ZLQtOptionsDialog::selectedTabName() const {
+const std::string &ZLQtOptionsDialog::selectedTabKey() const {
 	return myTabNames[myTabWidget->currentPageIndex()];
 }
 
-void ZLQtOptionsDialog::selectTab(const std::string &name) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
+void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
+	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), key.Name);
 	if (it != myTabNames.end()) {
 		myTabWidget->setCurrentPage(it - myTabNames.begin());
 	}
 }
 
-bool ZLQtOptionsDialog::run() {
+bool ZLQtOptionsDialog::runInternal() {
 	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		((ZLQtDialogContent&)**it).close();
 	}

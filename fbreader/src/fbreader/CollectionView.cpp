@@ -22,6 +22,7 @@
 #include <ZLFileImage.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
+#include <ZLStringUtil.h>
 
 #include "CollectionView.h"
 #include "FBReader.h"
@@ -226,8 +227,11 @@ bool CollectionView::_onStylusPress(int x, int y) {
 			}
 			return true;
 		} else if (imageElement.id() == DELETE_IMAGE_ID) {
-			const std::string question = "Remove Book\n\"" + book->title() + "\"\nfrom library?";
-			if (ZLDialogManager::instance().questionBox("Remove Book", question, "Yes", "No") == 0) {
+			ZLResourceKey boxKey("removeBookBox");
+			const std::string message =
+				ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book->title());
+			if (ZLDialogManager::instance().questionBox(boxKey, message,
+				ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
 				collectionModel().removeAllMarks();
 				BookList().removeFileName(book->fileName());
 				TreeParagraph *paragraph = (TreeParagraph*)collectionModel()[imageArea->ParagraphNumber];

@@ -313,7 +313,7 @@ private:
 
 void FBReader::openBook(BookDescriptionPtr description) {
 	OpenBookRunnable runnable(*this, description);
-	ZLDialogManager::instance().wait(runnable, "Loading book. Please, wait...");
+	ZLDialogManager::instance().wait(ZLResourceKey("loadingBook"), runnable);
 	resetWindowCaption();
 }
 
@@ -379,7 +379,7 @@ void FBReader::bookInfoSlot() {
 
 void FBReader::addBookSlot() {
 	FBFileHandler handler;
-	if (ZLDialogManager::instance().selectionDialog("FBReader - Add File To Library", handler)) {
+	if (ZLDialogManager::instance().selectionDialog(ZLResourceKey("addFileDialog"), handler)) {
 		BookDescriptionPtr description = handler.description();
 		if (!description.isNull() && runBookInfoDialog(description->fileName())) {
 			BookList().addFileName(description->fileName());
@@ -426,7 +426,7 @@ void FBReader::setMode(ViewMode mode) {
 		case BOOK_COLLECTION_MODE:
 			{
 				RebuildCollectionRunnable runnable(*this);
-				ZLDialogManager::instance().wait(runnable, "Loading book list. Please, wait...");
+				ZLDialogManager::instance().wait(ZLResourceKey("loadingBookList"), runnable);
 			}
 			if (myModel != 0) {
 				((CollectionView&)*myCollectionView).selectBook(myModel->description());
@@ -498,7 +498,7 @@ void FBReader::clearTextCaches() {
 }
 
 void FBReader::searchSlot() {
-	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::instance().createDialog("Text search");
+	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("textSearchDialog"));
 
 	searchDialog->addOption(new ZLSimpleStringOptionEntry("", SearchPatternOption));
 	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Ignore case", SearchIgnoreCaseOption));
@@ -507,8 +507,8 @@ void FBReader::searchSlot() {
 	if (((TextView&)*currentView()).hasMultiSectionModel()) {
 		searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&This section only", SearchThisSectionOnlyOption));
 	}
-	searchDialog->addButton("&Go!", true);
-	searchDialog->addButton("&Cancel", false);
+	searchDialog->addButton(ZLResourceKey("go"), true);
+	searchDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 
 	if (searchDialog->run()) {
 		searchDialog->acceptValues();

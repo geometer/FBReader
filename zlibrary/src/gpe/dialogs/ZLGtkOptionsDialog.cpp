@@ -22,15 +22,17 @@
 #include <gtk/gtkbox.h>
 #include <gtk/gtkscrolledwindow.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkOptionsDialog::ZLGtkOptionsDialog(const std::string &id, const std::string &caption, shared_ptr<ZLRunnable> applyAction) : ZLOptionsDialog(id, applyAction) {
-	myDialog = createGtkDialog(caption);
+ZLGtkOptionsDialog::ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : ZLOptionsDialog(resource, applyAction) {
+	myDialog = createGtkDialog(caption());
 
-	std::string okString = gtkString("&Ok");
-	std::string cancelString = gtkString("&Cancel");
+	std::string okString = gtkButtonName(ZLDialogManager::OK_BUTTON);
+	std::string cancelString = gtkButtonName(ZLDialogManager::CANCEL_BUTTON);
 	gtk_dialog_add_button(myDialog, okString.c_str(), GTK_RESPONSE_ACCEPT);
 	gtk_dialog_add_button(myDialog, cancelString.c_str(), GTK_RESPONSE_REJECT);
 
@@ -49,9 +51,9 @@ ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 	gtk_widget_destroy(GTK_WIDGET(myDialog));
 }
 
-ZLDialogContent &ZLGtkOptionsDialog::createTab(const std::string &name) {
+ZLDialogContent &ZLGtkOptionsDialog::createTab(const ZLResourceKey &key) {
 	ZLGtkDialogContent *tab = new ZLGtkDialogContent();
-	GtkWidget *label = gtk_label_new(name.c_str());
+	GtkWidget *label = gtk_label_new(tabName(key).c_str());
 
 	GtkScrolledWindow *scrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
 	gtk_scrolled_window_set_policy(scrolledWindow, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
@@ -60,23 +62,23 @@ ZLDialogContent &ZLGtkOptionsDialog::createTab(const std::string &name) {
 	gtk_notebook_append_page(myNotebook, GTK_WIDGET(scrolledWindow), label);
 
 	myTabs.push_back(tab);
-	myTabNames.push_back(name);
+	myTabNames.push_back(key.Name);
 
 	return *tab;
 }
 
-const std::string &ZLGtkOptionsDialog::selectedTabName() const {
+const std::string &ZLGtkOptionsDialog::selectedTabKey() const {
 	return myTabNames[gtk_notebook_get_current_page(myNotebook)];
 }
 
-void ZLGtkOptionsDialog::selectTab(const std::string &name) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), name);
+void ZLGtkOptionsDialog::selectTab(const ZLResourceKey &key) {
+	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), key.Name);
 	if (it != myTabNames.end()) {
 		gtk_notebook_set_current_page(myNotebook, it - myTabNames.begin());
 	}
 }
 
-bool ZLGtkOptionsDialog::run() {
+bool ZLGtkOptionsDialog::runInternal() {
 	bool code = gtk_dialog_run(myDialog) == GTK_RESPONSE_ACCEPT;
 	gtk_widget_hide(GTK_WIDGET(myDialog));
 	return code;

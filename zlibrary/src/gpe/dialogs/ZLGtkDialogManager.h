@@ -37,13 +37,13 @@ private:
 public:
 	void createApplicationWindow(ZLApplication *application) const;
 
-	shared_ptr<ZLDialog> createDialog(const std::string &title) const;
-	shared_ptr<ZLOptionsDialog> createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
-	void informationBox(const std::string &title, const std::string &message) const;
-	void errorBox(const std::string &title, const std::string &message) const;
-	int questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const;
-	bool selectionDialog(const std::string &title, ZLTreeHandler &handler) const;
-	void wait(ZLRunnable &runnable, const std::string &message) const;
+	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
+	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
+	void informationBox(const ZLResourceKey &key, const std::string &message) const;
+	void errorBox(const ZLResourceKey &key, const std::string &message) const;
+	int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const;
+	bool selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const;
+	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;
 
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;
@@ -52,7 +52,7 @@ public:
 	bool isKeyboardGrabbed() const { return myIsKeyboardGrabbed; }
 
 private:
-	int internalBox(const gchar *icon, const std::string &title, const std::string &message, const std::string &button0, const std::string &button1 = "", const std::string &button2 = "") const;
+	int internalBox(const gchar *icon, const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0 = OK_BUTTON, const ZLResourceKey &button1 = ZLResourceKey(), const ZLResourceKey &button2 = ZLResourceKey()) const;
 
 private:
 	mutable GtkWindow *myWindow;
@@ -60,7 +60,7 @@ private:
 
 friend class ZLGtkOptionsDialog;
 friend class ZLGtkSelectionDialog;
-friend GtkDialog *createGtkDialog(const std::string& title);
+friend GtkDialog *createGtkDialog(const std::string &caption);
 };
 
 #endif /* __ZLGTKDIALOGMANAGER_H__ */

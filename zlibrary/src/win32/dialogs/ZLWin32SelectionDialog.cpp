@@ -20,6 +20,8 @@
 #include <ZLApplication.h>
 #include <ZLFile.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLWin32SelectionDialog.h"
 
 #include "../w32widgets/W32Container.h"
@@ -55,10 +57,10 @@ ZLWin32SelectionDialog::ZLWin32SelectionDialog(ZLWin32ApplicationWindow &window,
 	buttonBox->setAlignment(W32HBox::RIGHT);
 	buttonBox->setSpacing(4);
 	buttonBox->setMargins(4, 4, 4, 4);
-	myOkButton = new W32PushButton("&Ok");
+	myOkButton = new W32PushButton(ZLDialogManager::buttonName(ZLDialogManager::OK_BUTTON));
 	myOkButton->addListener(this);
 	buttonBox->addElement(myOkButton);
-	buttonBox->addElement(new W32PushButton("&Cancel", W32PushButton::CANCEL_BUTTON));
+	buttonBox->addElement(new W32PushButton(ZLDialogManager::buttonName(ZLDialogManager::CANCEL_BUTTON), W32PushButton::CANCEL_BUTTON));
 	buttonBox->setVisible(true);
 
 	update();

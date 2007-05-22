@@ -27,6 +27,7 @@
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtWaitMessage.h"
+#include "ZLQtUtil.h"
 
 #include "../application/ZLQtApplicationWindow.h"
 
@@ -40,38 +41,38 @@ void ZLQtDialogManager::fullScreenWorkaround() const {
 	}
 }
 
-shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const std::string &id, const std::string &title, shared_ptr<ZLRunnable> applyAction, bool) const {
-	return new ZLQtOptionsDialog(id, title, applyAction);
+shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool) const {
+	return new ZLQtOptionsDialog(resource()[key], applyAction);
 }
 
-shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const std::string &title) const {
-	return new ZLQtDialog(myApplicationWindow->mainWindow(), title);
+shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
+	return new ZLQtDialog(myApplicationWindow->mainWindow(), dialogTitle(key));
 }
 
-void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	QMessageBox::information(myApplicationWindow->mainWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
+	QMessageBox::information(myApplicationWindow->mainWindow(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(OK_BUTTON));
 	fullScreenWorkaround();
 }
 
-void ZLQtDialogManager::errorBox(const std::string &title, const std::string &message) const {
-	QMessageBox::critical(myApplicationWindow->mainWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), "OK");
+void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
+	QMessageBox::critical(myApplicationWindow->mainWindow(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(OK_BUTTON));
 	fullScreenWorkaround();
 }
 
-int ZLQtDialogManager::questionBox(const std::string &title, const std::string &message, const std::string &button0, const std::string &button1, const std::string &button2) const {
-	int code = QMessageBox::information(myApplicationWindow->mainWindow(), QString::fromUtf8(title.c_str()), QString::fromUtf8(message.c_str()), button0.c_str(), button1.c_str(), button2.c_str());
+int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
+	int code = QMessageBox::information(myApplicationWindow->mainWindow(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 	fullScreenWorkaround();
 	return code;
 }
 
-bool ZLQtDialogManager::selectionDialog(const std::string &title, ZLTreeHandler &handler) const {
-	bool result = ZLQtSelectionDialog(title.c_str(), handler).run();
+bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
+	bool result = ZLQtSelectionDialog(dialogTitle(key).c_str(), handler).run();
 	fullScreenWorkaround();
 	return result;
 }
 
-void ZLQtDialogManager::wait(ZLRunnable &runnable, const std::string &message) const {
-	ZLQtWaitMessage waitMessage(message);
+void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
+	ZLQtWaitMessage waitMessage(waitMessageText(key));
 	runnable.run();
 	fullScreenWorkaround();
 }

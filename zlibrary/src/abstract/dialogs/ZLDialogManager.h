@@ -35,6 +35,21 @@ class ZLApplication;
 class ZLDialogManager {
 
 public:
+	static const ZLResourceKey OK_BUTTON;
+	static const ZLResourceKey CANCEL_BUTTON;
+	static const ZLResourceKey YES_BUTTON;
+	static const ZLResourceKey NO_BUTTON;
+	static const ZLResourceKey APPLY_BUTTON;
+
+	static const std::string &dialogTitle(const ZLResourceKey &key);
+	static const std::string &dialogMessage(const ZLResourceKey &key);
+	static const std::string &buttonName(const ZLResourceKey &key);
+	static const std::string &waitMessageText(const ZLResourceKey &key);
+
+protected:
+	static const ZLResource &resource();
+
+public:
 	static bool isInitialized();
 	static ZLDialogManager &instance();
 	static void deleteInstance();
@@ -49,15 +64,18 @@ protected:
 public:
 	virtual void createApplicationWindow(ZLApplication *application) const = 0;
 
-	virtual shared_ptr<ZLDialog> createDialog(const std::string &title) const = 0;
+	virtual shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const = 0;
 	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
-	virtual bool selectionDialog(const std::string &title, ZLTreeHandler &handler) const = 0;
+	virtual bool selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const = 0;
 
-	virtual void informationBox(const std::string &title, const std::string &message) const = 0;
-	virtual void errorBox(const std::string &title, const std::string &message) const = 0;
-	virtual int questionBox(const std::string &title, const std::string &message, const std::string &button0 = "", const std::string &button1 = "", const std::string &button2 = "") const = 0;
+	void informationBox(const ZLResourceKey &key) const;
+	virtual void informationBox(const ZLResourceKey &key, const std::string &message) const = 0;
+	void errorBox(const ZLResourceKey &key) const;
+	virtual void errorBox(const ZLResourceKey &key, const std::string &message) const = 0;
+	int questionBox(const ZLResourceKey &key, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const;
+	virtual int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const = 0;
 
-	virtual void wait(ZLRunnable &runnable, const std::string &message) const = 0;
+	virtual void wait(const ZLResourceKey &key, ZLRunnable &runnable) const = 0;
 
 	enum ClipboardType {
 		CLIPBOARD_MAIN,
@@ -65,9 +83,6 @@ public:
 	};
 	virtual bool isClipboardSupported(ClipboardType type) const = 0;
 	virtual void setClipboardText(const std::string &text, ClipboardType type) const = 0;
-
-protected:
-	const ZLResource &resource() const;
 };
 
 #endif /* __ZLDIALOGMANAGER_H__ */

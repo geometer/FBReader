@@ -23,6 +23,7 @@
 
 #include <string>
 #include <ZLDialogContent.h>
+#include <ZLResource.h>
 
 class ZLDialog {
 
@@ -32,7 +33,7 @@ protected:
 public:
 	virtual ~ZLDialog();
 
-	virtual void addButton(const std::string &text, bool accept) = 0;
+	virtual void addButton(const ZLResourceKey &key, bool accept) = 0;
 	void addOption(ZLOptionEntry *entry);
 
 	// TODO: change return type to int (or std::string?)

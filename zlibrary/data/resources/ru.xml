@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="koi8-r"?>
+<resources>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="&amp;ОК"/>
+			<node name="cancel" value="О&amp;тменить"/>
+			<node name="yes" value="&amp;Да"/>
+			<node name="no" value="&amp;Нет"/>
+			<node name="apply" value="&amp;Применить"/>
+		</node>
+	</node>
+</resources>
