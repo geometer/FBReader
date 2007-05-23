@@ -20,13 +20,21 @@
 
 #include <locale.h>
 
+#include <algorithm>
+
 #include "../../abstract/library/ZLibrary.h"
 
 std::string ZLibrary::language() {
-	std::string lang = setlocale(LC_MESSAGES, "");
-	int index = std::min(lang.find('.'), std::min(lang.find('_'), lang.find('-')));
-	if (index != -1) {
-		lang = lang.substr(0, index);
+	const char *locale = setlocale(LC_MESSAGES, ""); 
+	if (locale != 0) {
+		std::string lang = locale;
+		int index = std::min(lang.find('.'), std::min(lang.find('_'), lang.find('-')));
+		if (index != -1) {
+			lang = lang.substr(0, index);
+		}
+		if (!lang.empty()) {
+			return lang;
+		}
 	}
-	return !lang.empty() ? lang : "en";
+	return "en";
 }
