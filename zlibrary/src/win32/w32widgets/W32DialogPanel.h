@@ -122,6 +122,9 @@ private:
 class W32PropertySheet {
 
 private:
+	static bool ourPropertySheetStarted;
+
+private:
 	static int CALLBACK PSCallback(HWND, UINT message, LPARAM lParam);
 	static BOOL CALLBACK StaticCallback(HWND hDialog, UINT message, WPARAM wParam, LPARAM lParam);
 
