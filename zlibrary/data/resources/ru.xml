@@ -6,7 +6,7 @@
 			<node name="cancel" value="О&amp;тменить"/>
 			<node name="yes" value="&amp;Да"/>
 			<node name="no" value="&amp;Нет"/>
-			<node name="apply" value="&amp;Применить"/>
+			<node name="apply" value="При&amp;менить"/>
 		</node>
 	</node>
 </resources>
