@@ -20,9 +20,13 @@
 #include <windows.h>
 #include <prsht.h>
 
+#include <ZLDialogManager.h>
+
 #include "W32DialogPanel.h"
 
 #include "W32WCHARUtil.h"
+
+bool W32PropertySheet::ourPropertySheetStarted = false;
 
 W32PropertySheet::W32PropertySheet(HWND mainWindow, const std::string &caption, bool showApplyButton) : myMainWindow(mainWindow), myDialogWindow(0), myShowApplyButton(showApplyButton) {
 	::createNTWCHARString(myCaption, caption);
@@ -80,8 +84,10 @@ bool W32PropertySheet::run(const std::string &selectedTabName) {
 
 	header.ppsp = pages;
 
+	ourPropertySheetStarted = true;
 	int code = PropertySheet(&header);
 	delete[] pages;
+	W32DialogPanel::ourPanels.clear();
 	return code == 1;
 }
 
@@ -94,6 +100,26 @@ int CALLBACK W32PropertySheet::PSCallback(HWND hDialog, UINT message, LPARAM lPa
 
 BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM wParam, LPARAM lParam) {
 	switch (message) {
+		case WM_SHOWWINDOW:
+			if (ourPropertySheetStarted) {
+				ourPropertySheetStarted = false;
+				HWND parent = GetParent(hPage);
+				if (parent != 0) {
+					HWND okButton = GetDlgItem(GetParent(hPage), IDOK);
+					if (okButton != 0) {
+						::setWindowText(okButton, ZLDialogManager::buttonName(ZLDialogManager::OK_BUTTON));
+					}
+					HWND cancelButton = GetDlgItem(GetParent(hPage), IDCANCEL);
+					if (cancelButton != 0) {
+						::setWindowText(cancelButton, ZLDialogManager::buttonName(ZLDialogManager::CANCEL_BUTTON));
+					}
+					HWND applyButton = GetDlgItem(GetParent(hPage), 0x3021);
+					if (applyButton != 0) {
+						::setWindowText(applyButton, ZLDialogManager::buttonName(ZLDialogManager::APPLY_BUTTON));
+					}
+				}
+			}
+			return true;
 		case WM_INITDIALOG:
 			((W32DialogPanel*)((PROPSHEETPAGE*)lParam)->lParam)->init(hPage);
 			return true;
