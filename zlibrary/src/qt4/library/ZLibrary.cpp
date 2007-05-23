@@ -36,6 +36,8 @@
 void ZLibrary::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);
 
+	parseArguments(argc, argv);
+
 	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();

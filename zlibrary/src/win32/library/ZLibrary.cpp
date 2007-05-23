@@ -31,7 +31,9 @@
 #include "../config/ZLWin32Config.h"
 #include "../encoding/ZLWin32EncodingConverter.h"
 
-void ZLibrary::init(int&, char**&) {
+void ZLibrary::init(int &argc, char **&argv) {
+	parseArguments(argc, argv);
+
 	ZLWin32ConfigManager::createInstance();
 	ZLWin32FSManager::createInstance();
 	ZLWin32TimeManager::createInstance();
@@ -57,7 +59,11 @@ void ZLibrary::run(ZLApplication *application) {
 	delete application;
 }
 
-std::string ZLibrary::language() {
+std::string ZLibrary::Language() {
+	if (!ourLanguage.empty()) {
+		return ourLanguage;
+	}
+
 	LANGID id = GetUserDefaultUILanguage();
 	switch (id & 0xFF) {
 		case LANG_ARABIC:

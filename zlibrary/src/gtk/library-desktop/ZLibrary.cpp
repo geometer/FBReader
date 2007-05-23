@@ -36,6 +36,8 @@
 void ZLibrary::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
 
+	parseArguments(argc, argv);
+
 	XMLConfigManager::createInstance();
 	ZLGtkFSManager::createInstance();
 	ZLGtkTimeManager::createInstance();

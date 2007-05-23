@@ -122,7 +122,7 @@ void ZLTreeResource::buildTree() {
 	if (ourRoot.isNull()) {
 		ourRoot = new ZLTreeResource(std::string());
 		loadData("en");
-		const std::string language = ZLibrary::language();
+		const std::string language = ZLibrary::Language();
 		if (language != "en") {
 			loadData(language);
 		}

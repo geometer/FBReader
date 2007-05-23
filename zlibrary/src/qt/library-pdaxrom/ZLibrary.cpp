@@ -34,6 +34,9 @@
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);
+
+	parseArguments(argc, argv);
+
 	qApp->addLibraryPath("/usr/lib/qt/plugins");
 
 	XMLConfigManager::createInstance();

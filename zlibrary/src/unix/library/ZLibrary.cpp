@@ -22,9 +22,13 @@
 
 #include <algorithm>
 
-#include "../../abstract/library/ZLibrary.h"
+#include <ZLibrary.h>
 
-std::string ZLibrary::language() {
+std::string ZLibrary::Language() {
+	if (!ourLanguage.empty()) {
+		return ourLanguage;
+	}
+
 	const char *locale = setlocale(LC_MESSAGES, ""); 
 	if (locale != 0) {
 		std::string lang = locale;

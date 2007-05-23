@@ -34,7 +34,13 @@ public:
 	static void run(ZLApplication *application);
 	static void shutdown();
 
-	static std::string language();
+	static std::string Language();
+
+private:
+	static void parseArguments(int &argc, char **&argv);
+
+private:
+	static std::string ourLanguage;
 
 private:
 	ZLibrary();

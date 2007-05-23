@@ -27,6 +27,21 @@
 #include "../filesystem/ZLFSManager.h"
 #include "../options/ZLConfig.h"
 
+std::string ZLibrary::ourLanguage;
+
+void ZLibrary::parseArguments(int &argc, char **&argv) {
+	while ((argc > 2) && (argv[1] != 0) && (argv[2] != 0)) {
+		static const std::string LANGUAGE_OPTION = "-lang";
+		if (LANGUAGE_OPTION == argv[1]) {
+			ourLanguage = argv[2];
+		} else {
+			break;
+		}
+		argc -= 2;
+		argv += 2;
+	}
+}
+
 void ZLibrary::shutdown() {
 	ZLImageManager::deleteInstance();
 	ZLCommunicationManager::deleteInstance();
