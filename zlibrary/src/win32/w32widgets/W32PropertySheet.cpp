@@ -105,6 +105,19 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM 
 				ourPropertySheetStarted = false;
 				HWND parent = GetParent(hPage);
 				if (parent != 0) {
+					HWND main = GetParent(parent);
+					if (main != 0) {
+						RECT mainRectangle;
+						RECT rectangle;
+						GetWindowRect(main, &mainRectangle);
+						GetWindowRect(parent, &rectangle);
+						int left = (mainRectangle.left + mainRectangle.right + rectangle.left - rectangle.right) / 2; 
+						int top = (mainRectangle.top + mainRectangle.bottom + rectangle.top - rectangle.bottom) / 2; 
+						SetWindowPos(
+							parent, 0, left, top, 0, 0,
+							SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOSIZE
+						);
+					}
 					HWND okButton = GetDlgItem(GetParent(hPage), IDOK);
 					if (okButton != 0) {
 						::setWindowText(okButton, ZLDialogManager::buttonName(ZLDialogManager::OK_BUTTON));
