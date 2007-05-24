@@ -104,20 +104,20 @@ GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplic
 	toolbar().addButton(ACTION_UNDO, ZLResourceKey("undo"));
 	toolbar().addButton(ACTION_REDO, ZLResourceKey("redo"));
 
-	menubar().addItem("New Empty Scene", ACTION_NEW_SCENE);
-	menubar().addItem("Open Scene...", ACTION_OPEN_SCENE);
-	menubar().addItem("Save Scene...", ACTION_SAVE_SCENE);
-	menubar().addItem("Remove Scenes...", ACTION_REMOVE_SCENES);
+	menubar().addItem(ACTION_NEW_SCENE, ZLResourceKey("newScene"));
+	menubar().addItem(ACTION_OPEN_SCENE, ZLResourceKey("openScene"));
+	menubar().addItem(ACTION_SAVE_SCENE, ZLResourceKey("saveScene"));
+	menubar().addItem(ACTION_REMOVE_SCENES, ZLResourceKey("removeScenes"));
 	menubar().addSeparator();
-	Menu &viewSubmenu = menubar().addSubmenu("View");
-	viewSubmenu.addItem("Zoom In", ACTION_ZOOM_IN);
-	viewSubmenu.addItem("100%", ACTION_SET_DEFAULT_ZOOM);
-	viewSubmenu.addItem("Zoom Out", ACTION_ZOOM_OUT);
+	Menu &viewSubmenu = menubar().addSubmenu(ZLResourceKey("view"));
+	viewSubmenu.addItem(ACTION_ZOOM_IN, ZLResourceKey("zoomIn"));
+	viewSubmenu.addItem(ACTION_SET_DEFAULT_ZOOM, ZLResourceKey("zoomNormal"));
+	viewSubmenu.addItem(ACTION_ZOOM_OUT, ZLResourceKey("zoomOut"));
 	menubar().addSeparator();
-	menubar().addItem("Scene Info...", ACTION_SHOW_INFO);
-	menubar().addItem("Preferences...", ACTION_SHOW_OPTIONS);
+	menubar().addItem(ACTION_SHOW_INFO, ZLResourceKey("sceneInfo"));
+	menubar().addItem(ACTION_SHOW_OPTIONS, ZLResourceKey("settings"));
 	menubar().addSeparator();
-	menubar().addItem("Close", ACTION_QUIT);
+	menubar().addItem(ACTION_QUIT, ZLResourceKey("close"));
 
 	if (!fileName.empty() && saveIfChanged()) {
 		open(fileName);

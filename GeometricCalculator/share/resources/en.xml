@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+	<node name="menu">
+		<node name="newScene" value="New Empty Scene"/>
+		<node name="openScene" value="Open Scene..."/>
+		<node name="saveScene" value="Save Scene..."/>
+		<node name="removeScenes" value="Remove Scenes..."/>
+		<node name="view" value ="View">
+			<node name="zoomIn" value="Zoom In"/>
+			<node name="zoomNormal" value="100%"/>
+			<node name="zoomOut" value="Zoom Out"/>
+		</node>
+		<node name="sceneInfo" value="Scene Info..."/>
+		<node name="settings" value="Preferences..."/>
+		<node name="close" value="Close"/>
+	</node>
 	<node name="toolbar">
 		<node name="arrow" value="Edit Object Properties"/>
 		<node name="point" value="New Point"/>
