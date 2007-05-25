@@ -200,20 +200,6 @@ void ZLApplication::Toolbar::addSeparator() {
 	myItems.push_back(new SeparatorItem());
 }
 
-void ZLApplication::Menu::addItem(const std::string &itemName, int actionId) {
-	myItems.push_back(new Menubar::PlainItem(itemName, actionId));
-}
-
-void ZLApplication::Menu::addSeparator() {
-	myItems.push_back(new Menubar::Separator());
-}
-
-ZLApplication::Menu::Menu &ZLApplication::Menu::addSubmenu(const std::string &menuName) {
-	Menubar::Submenu *submenu = new Menubar::Submenu(menuName);
-	myItems.push_back(submenu);
-	return *submenu;
-}
-
 ZLApplication::Action::~Action() {
 }
 
@@ -227,28 +213,6 @@ bool ZLApplication::Action::isEnabled() {
 
 bool ZLApplication::Action::useKeyDelay() const {
 	return true;
-}
-
-void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {
-	const ZLApplication::Menu::ItemVector &items = menu.items();
-	for (ZLApplication::Menu::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		switch ((*it)->type()) {
-			case ZLApplication::Menu::Item::ITEM:
-				processItem((ZLApplication::Menubar::PlainItem&)**it);
-				break;
-			case ZLApplication::Menu::Item::SUBMENU:
-			{
-				ZLApplication::Menubar::Submenu &submenu = (ZLApplication::Menubar::Submenu&)**it;
-				processSubmenuBeforeItems(submenu);
-				processMenu(submenu);
-				processSubmenuAfterItems(submenu);
-				break;
-			}
-			case ZLApplication::Menu::Item::SEPARATOR:
-				processSepartor((ZLApplication::Menubar::Separator&)**it);
-				break;
-		}							
-	}
 }
 
 void ZLApplication::trackStylus(bool track) {

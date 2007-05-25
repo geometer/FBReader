@@ -242,16 +242,19 @@ public:
 		typedef shared_ptr<Item> ItemPtr;
 		typedef std::vector<ItemPtr> ItemVector;
 
-		void addItem(const std::string &itemName, int actionId);
+		void addItem(int actionId, const ZLResourceKey &key);
 		void addSeparator();
-		Menu& addSubmenu(const std::string &menuName);
+		Menu& addSubmenu(const ZLResourceKey &key);
 
 		const ItemVector &items() const;
 
 		virtual ~Menu();
 
 	protected:
-		Menu();
+		Menu(const ZLResource &resource);
+
+	protected:
+		const ZLResource &myResource;
 
 	private:
 		ItemVector myItems;
@@ -278,12 +281,9 @@ public:
 		class Submenu : public Menu::Item, public Menu {
 
 		public:
-			Submenu(const std::string &menuName);
+			Submenu(const ZLResource &resource);
 
 			const std::string &menuName() const;
-
-		private:
-			const std::string myMenuName;
 		};
 
 		class Separator : public Menu::Item {
@@ -501,27 +501,6 @@ inline bool ZLApplication::Toolbar::SeparatorItem::isButton() const { return fal
 inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::createButtonGroup(int unselectAllButtonsActionId) {
 	return new ButtonGroup(unselectAllButtonsActionId);
 }
-
-inline ZLApplication::Menu::Menu() {}
-inline ZLApplication::Menu::~Menu() {}
-inline const ZLApplication::Menu::ItemVector &ZLApplication::Menu::items() const { return myItems; }
-
-inline ZLApplication::Menu::Item::Item(ItemType type): myType(type) {}
-inline ZLApplication::Menu::Item::~Item() {}
-inline ZLApplication::Menu::Item::ItemType ZLApplication::Menubar::Item::type() const { return myType; }
-
-inline ZLApplication::Menubar::Menubar() {}
-
-inline ZLApplication::Menubar::PlainItem::PlainItem(const std::string& name, int actionId) : Item(ITEM), myName(name), myActionId(actionId) {}
-inline const std::string& ZLApplication::Menubar::PlainItem::name() const { return myName; }
-inline int ZLApplication::Menubar::PlainItem::actionId() const { return myActionId; }
-
-inline ZLApplication::Menubar::Submenu::Submenu(const std::string &menuName) : Menu::Item(SUBMENU), myMenuName(menuName) {}
-inline const std::string &ZLApplication::Menubar::Submenu::menuName() const { return myMenuName; }
-
-inline ZLApplication::Menubar::Separator::Separator() : Item(SEPARATOR) {}
-
-inline ZLApplication::MenuVisitor::~MenuVisitor() {}
 
 #endif /* __ZLAPPLICATION_H__ */
 

@@ -172,7 +172,7 @@ ZLQtApplicationWindow::MenuUpdater::MenuUpdater(ZLQtApplicationWindow &window) :
 
 void ZLQtApplicationWindow::MenuUpdater::processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu) {
 	QPopupMenu *qmenu = new QPopupMenu(myMenuStack.top());
-	myMenuStack.top()->insertItem(submenu.menuName().c_str(), qmenu);
+	myMenuStack.top()->insertItem(QString::fromUtf8(submenu.menuName().c_str()), qmenu);
 	myMenuStack.push(qmenu);
 }
 
@@ -364,7 +364,7 @@ bool ZLQtApplicationWindow::isKeyboardPresented() const {
 	return true;
 }
 
-ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item) : QAction(item.name().c_str(), 0, 0, 0), myWindow(window), myActionId(item.actionId()) {
+ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item) : QAction(QString::fromUtf8(item.name().c_str()), 0, 0, 0), myWindow(window), myActionId(item.actionId()) {
 	connect(this, SIGNAL(activated()), this, SLOT(doSlot()));
 }
 

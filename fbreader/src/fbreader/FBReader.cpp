@@ -193,43 +193,43 @@ FBReader::FBReader(const std::string &bookToOpen) :
 		toolbar().addButton(ACTION_SHOW_HELP, ZLResourceKey("help"));
 	}
 
-	menubar().addItem("Book Info...",	ACTION_SHOW_BOOK_INFO);
-	menubar().addItem("Table of Contents", ACTION_SHOW_CONTENTS);
+	menubar().addItem(ACTION_SHOW_BOOK_INFO, ZLResourceKey("bookInfo"));
+	menubar().addItem(ACTION_SHOW_CONTENTS, ZLResourceKey("toc"));
 
-	Menu &librarySubmenu = menubar().addSubmenu("Library");
-	librarySubmenu.addItem("Open", ACTION_SHOW_COLLECTION);
-	librarySubmenu.addItem("Previous Book", ACTION_OPEN_PREVIOUS_BOOK);
-	librarySubmenu.addItem("Recent", ACTION_SHOW_LAST_BOOKS);
-	librarySubmenu.addItem("Add Book...", ACTION_ADD_BOOK);
-	librarySubmenu.addItem("About FBReader", ACTION_SHOW_HELP);
+	Menu &librarySubmenu = menubar().addSubmenu(ZLResourceKey("library"));
+	librarySubmenu.addItem(ACTION_SHOW_COLLECTION, ZLResourceKey("open"));
+	librarySubmenu.addItem(ACTION_OPEN_PREVIOUS_BOOK, ZLResourceKey("previous"));
+	librarySubmenu.addItem(ACTION_SHOW_LAST_BOOKS, ZLResourceKey("recent"));
+	librarySubmenu.addItem(ACTION_ADD_BOOK, ZLResourceKey("addBook"));
+	librarySubmenu.addItem(ACTION_SHOW_HELP, ZLResourceKey("about"));
 
-	Menu &navigationSubmenu = menubar().addSubmenu("Navigate");
-	navigationSubmenu.addItem("Go to Start of Document", ACTION_SCROLL_TO_HOME);
-	navigationSubmenu.addItem("Go to Start of Text Section", ACTION_SCROLL_TO_START_OF_TEXT);
-	navigationSubmenu.addItem("Go to End of Text Section", ACTION_SCROLL_TO_END_OF_TEXT);
-	navigationSubmenu.addItem("Go to Next TOC Item", ACTION_GOTO_NEXT_TOC_SECTION);
-	navigationSubmenu.addItem("Go to Previous TOC Item", ACTION_GOTO_PREVIOUS_TOC_SECTION);
-	navigationSubmenu.addItem("Go Back", ACTION_UNDO);
-	navigationSubmenu.addItem("Go Forward", ACTION_REDO);
+	Menu &navigationSubmenu = menubar().addSubmenu(ZLResourceKey("navigate"));
+	navigationSubmenu.addItem(ACTION_SCROLL_TO_HOME, ZLResourceKey("gotoStartOfDocument"));
+	navigationSubmenu.addItem(ACTION_SCROLL_TO_START_OF_TEXT, ZLResourceKey("gotoStartOfSection"));
+	navigationSubmenu.addItem(ACTION_SCROLL_TO_END_OF_TEXT, ZLResourceKey("gotoEndOfSection"));
+	navigationSubmenu.addItem(ACTION_GOTO_NEXT_TOC_SECTION, ZLResourceKey("gotoNextTOCItem"));
+	navigationSubmenu.addItem(ACTION_GOTO_PREVIOUS_TOC_SECTION, ZLResourceKey("gotoPreviousTOCItem"));
+	navigationSubmenu.addItem(ACTION_UNDO, ZLResourceKey("goBack"));
+	navigationSubmenu.addItem(ACTION_REDO, ZLResourceKey("goForward"));
 
-	Menu &selectionSubmenu = menubar().addSubmenu("Selection");
-	selectionSubmenu.addItem("Copy to Clipboard", ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD);
-	selectionSubmenu.addItem("Open in Dictionary", ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY);
-	selectionSubmenu.addItem("Clear", ACTION_CLEAR_SELECTION);
+	Menu &selectionSubmenu = menubar().addSubmenu(ZLResourceKey("selection"));
+	selectionSubmenu.addItem(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, ZLResourceKey("clipboard"));
+	selectionSubmenu.addItem(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, ZLResourceKey("dictionary"));
+	selectionSubmenu.addItem(ACTION_CLEAR_SELECTION, ZLResourceKey("clear"));
 
-	Menu &findSubmenu = menubar().addSubmenu("Find");
-	findSubmenu.addItem("Find Text...", ACTION_SEARCH);
-	findSubmenu.addItem("Find Next", ACTION_FIND_NEXT);
-	findSubmenu.addItem("Find Previous", ACTION_FIND_PREVIOUS);
+	Menu &findSubmenu = menubar().addSubmenu(ZLResourceKey("search"));
+	findSubmenu.addItem(ACTION_SEARCH, ZLResourceKey("find"));
+	findSubmenu.addItem(ACTION_FIND_NEXT, ZLResourceKey("next"));
+	findSubmenu.addItem(ACTION_FIND_PREVIOUS, ZLResourceKey("previous"));
 
-	Menu &viewSubmenu = menubar().addSubmenu("View");
+	Menu &viewSubmenu = menubar().addSubmenu(ZLResourceKey("view"));
 	// MSS: these three actions can have a checkbox next to them
-	viewSubmenu.addItem("Rotate Screen", ACTION_ROTATE_SCREEN);
-	viewSubmenu.addItem("Full Screen", ACTION_TOGGLE_FULLSCREEN);
-	viewSubmenu.addItem("Toggle Indicator", ACTION_SHOW_HIDE_POSITION_INDICATOR);
+	viewSubmenu.addItem(ACTION_ROTATE_SCREEN, ZLResourceKey("rotate"));
+	viewSubmenu.addItem(ACTION_TOGGLE_FULLSCREEN, ZLResourceKey("fullScreen"));
+	viewSubmenu.addItem(ACTION_SHOW_HIDE_POSITION_INDICATOR, ZLResourceKey("toggleIndicator"));
 
-	menubar().addItem("Preferences...", ACTION_SHOW_OPTIONS);
-	menubar().addItem("Close", ACTION_QUIT);
+	menubar().addItem(ACTION_SHOW_OPTIONS, ZLResourceKey("settings"));
+	menubar().addItem(ACTION_QUIT, ZLResourceKey("close"));
 }
 
 FBReader::~FBReader() {
