@@ -60,7 +60,10 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Options"/>
 			<node name="tab">
-				<node name="General" value="General"/>
+				<node name="General" value="General">
+					<node name="quitOnCancel" value="Quit Application on Cancel"/>
+					<node name="bookPath" value="Book Path"/>
+				</node>
 				<node name="Indicator" value="Indicator"/>
 				<node name="Scrolling" value="Scrolling"/>
 				<node name="Margins" value="Margins">
@@ -119,7 +122,12 @@
 					<node name="buildTOC" value="Build Table of Contents"/>
 					<node name="emptyLines" value="Empty Lines Before New Section"/>
 				</node>
-				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;"/>
+				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
+					<node name="breakType" value="Break Paragraph at"/>
+					<node name="ignoreIndent" value="Ignore Indent Less than"/>
+					<node name="buildTOC" value="Build Table of Contents"/>
+					<node name="emptyLines" value="Empty Lines Before New Section"/>
+				</node>
 			</node>
 		</node>
 		<node name="addFileDialog">
