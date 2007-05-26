@@ -58,15 +58,15 @@ PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string 
 
 	BreakTypeOptionEntry *breakEntry = new BreakTypeOptionEntry(*this, myFormat.BreakTypeOption);
 	myIgnoredIndentEntry = new ZLSimpleSpinOptionEntry(myFormat.IgnoredIndentOption, 1);
-	tab.addOption("Break Paragraph At", "", breakEntry);
-	tab.addOption("Ignore Indent Less Than", "", myIgnoredIndentEntry);
+	tab.addOption(ZLResourceKey("breakType"), breakEntry);
+	tab.addOption(ZLResourceKey("ignoreIndent"), myIgnoredIndentEntry);
 	breakEntry->onValueSelected(breakEntry->initialIndex());
 
 	if (showContentsEntry) {
 		CreateContentsTableOptionEntry *contentsTableEntry = new CreateContentsTableOptionEntry(*this, myFormat.CreateContentsTableOption);
 		myEmptyLinesBeforeNewSectionEntry = new ZLSimpleSpinOptionEntry(myFormat.EmptyLinesBeforeNewSectionOption, 1);
-		tab.addOption("Build Contents Table", "", contentsTableEntry);
-		tab.addOption("Empty Lines Before New Section", "", myEmptyLinesBeforeNewSectionEntry);
+		tab.addOption(ZLResourceKey("buildTOC"), contentsTableEntry);
+		tab.addOption(ZLResourceKey("emptyLines"), myEmptyLinesBeforeNewSectionEntry);
 		contentsTableEntry->onStateChanged(contentsTableEntry->initialState());
 	}
 }

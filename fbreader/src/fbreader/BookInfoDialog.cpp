@@ -343,10 +343,10 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
 
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
-	commonTab.addOption("File", "", 
+	commonTab.addOption(ZLResourceKey("file"), 
 		new ZLStringInfoEntry(ZLFile::fileNameToUtf8(ZLFile(fileName).path()))
 	);
-	commonTab.addOption("Title", "", new ZLSimpleStringOptionEntry(myBookInfo.TitleOption));
+	commonTab.addOption(ZLResourceKey("title"), new ZLSimpleStringOptionEntry(myBookInfo.TitleOption));
 
 	myAuthorDisplayNameEntry = new AuthorDisplayNameEntry(*this);
 	myAuthorSortKeyEntry = new AuthorSortKeyEntry(*this);
@@ -358,17 +358,17 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	mySeriesTitleEntry = new SeriesTitleEntry(*this);
 	myBookNumberEntry = new ZLSimpleSpinOptionEntry(myBookInfo.NumberInSequenceOption, 1);
 
-	commonTab.addOption("Author (display name)", "", myAuthorDisplayNameEntry);
-	commonTab.addOption("Author (sort key)", "", myAuthorSortKeyEntry);
+	commonTab.addOption(ZLResourceKey("authorDisplayName"), myAuthorDisplayNameEntry);
+	commonTab.addOption(ZLResourceKey("authorSortKey"), myAuthorSortKeyEntry);
 	if (myEncodingSetEntry != 0) {
-		commonTab.addOption("Encoding Set", "", myEncodingSetEntry);
+		commonTab.addOption(ZLResourceKey("encodingSet"), myEncodingSetEntry);
 	}
-	commonTab.addOption("Encoding", "", myEncodingEntry);
-	commonTab.addOption("Line Breaking", "", myLanguageEntry);
+	commonTab.addOption(ZLResourceKey("encoding"), myEncodingEntry);
+	commonTab.addOption(ZLResourceKey("lineBreaking"), myLanguageEntry);
 
 	ZLDialogContent &seriesTab = myDialog->createTab(ZLResourceKey("Series"));
-	seriesTab.addOption("Series Title", "", mySeriesTitleEntry);
-	seriesTab.addOption("Book Number", "", myBookNumberEntry);
+	seriesTab.addOption(ZLResourceKey("seriesTitle"), mySeriesTitleEntry);
+	seriesTab.addOption(ZLResourceKey("bookNumber"), myBookNumberEntry);
 
 	mySeriesTitleEntry->onValueEdited(mySeriesTitleEntry->initialValue());
 	/*

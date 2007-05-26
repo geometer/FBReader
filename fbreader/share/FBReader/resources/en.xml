@@ -100,9 +100,25 @@
 		<node name="InfoDialog">
 			<node name="title" value="FBReader - Book Info"/>
 			<node name="tab">
-				<node name="Common" value="Common"/>
-				<node name="Series" value="Series"/>
-				<node name="Text" value="Text"/>
+				<node name="Common" value="Common">
+					<node name="file" value="File"/>
+					<node name="title" value="Title"/>
+					<node name="authorDisplayName" value="Author (Display Name)"/>
+					<node name="authorSortKey" value="Author (Sort Key)"/>
+					<node name="encodingSet" value="Encoding Set"/>
+					<node name="encoding" value="Encoding"/>
+					<node name="lineBreaking" value="Line Breaking"/>
+				</node>
+				<node name="Series" value="Series">
+					<node name="seriesTitle" value="Series Title"/>
+					<node name="bookNumber" value="Book Number"/>
+				</node>
+				<node name="Text" value="Text">
+					<node name="breakType" value="Break Paragraph at"/>
+					<node name="ignoreIndent" value="Ignore Indent Less than"/>
+					<node name="buildTOC" value="Build Table of Contents"/>
+					<node name="emptyLines" value="Empty Lines Before New Section"/>
+				</node>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;"/>
 			</node>
 		</node>
