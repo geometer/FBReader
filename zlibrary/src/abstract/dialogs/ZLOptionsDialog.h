@@ -51,7 +51,7 @@ protected:
 	void accept();
 
 	const std::string &caption() const;
-	const std::string &tabName(const ZLResourceKey &key) const;
+	const ZLResource &tabResource(const ZLResourceKey &key) const;
 
 protected:
 	ZLStringOption TabOption;

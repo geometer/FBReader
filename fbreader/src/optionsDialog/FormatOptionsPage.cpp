@@ -29,8 +29,17 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
+static const ZLResourceKey KEY_DUMMY("");
+static const ZLResourceKey KEY_LINESPACING("lineSpacing");
+static const ZLResourceKey KEY_FIRSTLINEINDENT("firstLineIndent");
+static const ZLResourceKey KEY_ALIGNMENT("alignment");
+static const ZLResourceKey KEY_SPACEBEFORE("spaceBefore");
+static const ZLResourceKey KEY_SPACEAFTER("spaceAfter");
+static const ZLResourceKey KEY_LEFTINDENT("leftIndent");
+static const ZLResourceKey KEY_RIGHTINDENT("rightIndent");
+
 FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
-	myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
+	myComboEntry = new ComboOptionEntry(*this, "Base");
 	myComboEntry->addValue(myComboEntry->initialValue());
 
 	TextStyleCollection &collection = TextStyleCollection::instance();
@@ -42,21 +51,21 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 			myComboEntry->addValue(decoration->name());
 		}
 	}
-	dialogTab.addOption(myComboEntry);
+	dialogTab.addOption(ZLResourceKey("optionsFor"), myComboEntry);
 
 	{
 		const std::string &name = myComboEntry->initialValue();
 		BaseTextStyle &baseStyle = collection.baseStyle();
 
 		registerEntries(dialogTab,
-			new LineSpacingOptionEntry(baseStyle.LineSpaceOption, false),
-			0,//new ZLSimpleSpinOptionEntry("First Line Indent", baseStyle.firstLineIndentDeltaOption(), -300, 300, 1),
+			KEY_LINESPACING, new LineSpacingOptionEntry(baseStyle.LineSpaceOption, false),
+			KEY_DUMMY, 0,//new ZLSimpleSpinOptionEntry("First Line Indent", baseStyle.firstLineIndentDeltaOption(), -300, 300, 1),
 			name
 		);
 
 		registerEntries(dialogTab,
-			new AlignmentOptionEntry(baseStyle.AlignmentOption, false),
-			0,
+			KEY_ALIGNMENT, new AlignmentOptionEntry(baseStyle.AlignmentOption, false),
+			KEY_DUMMY, 0,
 			name
 		);
 	}
@@ -68,26 +77,26 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 			const std::string &name = decoration->name();
 			
 			registerEntries(dialogTab,
-				new ZLSimpleSpinOptionEntry("Space Before", decoration->SpaceBeforeOption, 1),
-				new ZLSimpleSpinOptionEntry("Left Indent", decoration->LeftIndentOption, 1),
+				KEY_SPACEBEFORE, new ZLSimpleSpinOptionEntry(decoration->SpaceBeforeOption, 1),
+				KEY_LEFTINDENT, new ZLSimpleSpinOptionEntry(decoration->LeftIndentOption, 1),
 				name
 			);
 			
 			registerEntries(dialogTab,
-				new ZLSimpleSpinOptionEntry("Space After", decoration->SpaceAfterOption, 1),
-				new ZLSimpleSpinOptionEntry("Right Indent", decoration->RightIndentOption, 1),
+				KEY_SPACEAFTER, new ZLSimpleSpinOptionEntry(decoration->SpaceAfterOption, 1),
+				KEY_RIGHTINDENT, new ZLSimpleSpinOptionEntry(decoration->RightIndentOption, 1),
 				name
 			);
 			
 			registerEntries(dialogTab,
-				new LineSpacingOptionEntry(decoration->LineSpaceOption, true),
-				new ZLSimpleSpinOptionEntry("First Line Indent", decoration->FirstLineIndentDeltaOption, 1),
+				KEY_LINESPACING, new LineSpacingOptionEntry(decoration->LineSpaceOption, true),
+				KEY_FIRSTLINEINDENT, new ZLSimpleSpinOptionEntry(decoration->FirstLineIndentDeltaOption, 1),
 				name
 			);
 
 			registerEntries(dialogTab,
-				new AlignmentOptionEntry(decoration->AlignmentOption, true),
-				0,
+				KEY_ALIGNMENT, new AlignmentOptionEntry(decoration->AlignmentOption, true),
+				KEY_DUMMY, 0,
 				name
 			);
 		}

@@ -500,12 +500,12 @@ void FBReader::clearTextCaches() {
 void FBReader::searchSlot() {
 	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("textSearchDialog"));
 
-	searchDialog->addOption(new ZLSimpleStringOptionEntry("", SearchPatternOption));
-	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Ignore case", SearchIgnoreCaseOption));
-	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("In w&hole text", SearchInWholeTextOption));
-	searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&Backward", SearchBackwardOption));
+	searchDialog->addOption("", "", new ZLSimpleStringOptionEntry(SearchPatternOption));
+	searchDialog->addOption(ZLResourceKey("ignoreCase"), new ZLSimpleBooleanOptionEntry(SearchIgnoreCaseOption));
+	searchDialog->addOption(ZLResourceKey("wholeText"), new ZLSimpleBooleanOptionEntry(SearchInWholeTextOption));
+	searchDialog->addOption(ZLResourceKey("backward"), new ZLSimpleBooleanOptionEntry(SearchBackwardOption));
 	if (((TextView&)*currentView()).hasMultiSectionModel()) {
-		searchDialog->addOption(new ZLSimpleBooleanOptionEntry("&This section only", SearchThisSectionOnlyOption));
+		searchDialog->addOption(ZLResourceKey("currentSection"), new ZLSimpleBooleanOptionEntry(SearchThisSectionOnlyOption));
 	}
 	searchDialog->addButton(ZLResourceKey("go"), true);
 	searchDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);

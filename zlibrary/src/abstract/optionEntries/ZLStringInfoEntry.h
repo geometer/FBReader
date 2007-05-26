@@ -28,14 +28,12 @@
 class ZLStringInfoEntry : public ZLStringOptionEntry {
 
 public:
-	ZLStringInfoEntry(const std::string &name, const std::string &value);
-	ZLStringInfoEntry(const std::string &name, int value);
-	const std::string &name() const;
+	ZLStringInfoEntry(const std::string &value);
+	ZLStringInfoEntry(int value);
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 
 private:
-	std::string myName;
 	std::string myValue;
 };
 

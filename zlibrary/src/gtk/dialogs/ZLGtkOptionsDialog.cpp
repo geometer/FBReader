@@ -40,6 +40,7 @@ ZLGtkOptionsDialog::ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZL
 	}
 
 	myNotebook = GTK_NOTEBOOK(gtk_notebook_new());
+	gtk_notebook_set_scrollable(myNotebook, true);
 
 	gtk_container_set_border_width(GTK_CONTAINER(myNotebook), 8);
 	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(myNotebook), TRUE, TRUE, 0);
@@ -53,9 +54,9 @@ ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 }
 
 ZLDialogContent &ZLGtkOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLGtkDialogContent *tab = new ZLGtkDialogContent();
+	ZLGtkDialogContent *tab = new ZLGtkDialogContent(tabResource(key));
 
-	gtk_notebook_append_page(myNotebook, tab->widget(), gtk_label_new(tabName(key).c_str()));
+	gtk_notebook_append_page(myNotebook, tab->widget(), gtk_label_new(tab->name().c_str()));
 
 	myTabs.push_back(tab);
 	myTabNames.push_back(key.Name);

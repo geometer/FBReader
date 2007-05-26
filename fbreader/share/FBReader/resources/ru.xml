@@ -63,9 +63,32 @@
 				<node name="General" value="Общие настройки"/>
 				<node name="Indicator" value="Индикатор"/>
 				<node name="Scrolling" value="Прокрутка"/>
-				<node name="Margins" value="Отступы"/>
-				<node name="Format" value="Форматирование"/>
-				<node name="Styles" value="Стили"/>
+				<node name="Margins" value="Отступы">
+					<node name="left" value="Отступ слева"/>
+					<node name="right" value="Отступ справа"/>
+					<node name="top" value="Отступ сверху"/>
+					<node name="bottom" value="Отступ снизу"/>
+				</node>
+				<node name="Format" value="Форматирование">
+					<node name="optionsFor" value="Настройки для"/>
+					<node name="lineSpacing" value="Плотность строк"/>
+					<node name="firstLineIndent" value="Отступ красной строки"/>
+					<node name="alignment" value="Выравнивание"/>
+					<node name="spaceBefore" value="Пропуск перед параграфом"/>
+					<node name="spaceAfter" value="Пропуск после параграфа"/>
+					<node name="leftIndent" value="Отступ слева"/>
+					<node name="rightIndent" value="Отступ справа"/>
+				</node>
+				<node name="Styles" value="Стили">
+					<node name="optionsFor" value="Настройки для"/>
+					<node name="fontFamily" value="Шрифт"/>
+					<node name="fontSize" value="Размер"/>
+					<node name="fontSizeDifference" value="Отличие размера"/>
+					<node name="bold" value="Жирный"/>
+					<node name="italic" value="Курсив"/>
+					<node name="allowHyphenations" value="Расставлять переносы"/>
+					<node name="autoHyphenations" value="Расставлять переносы"/>
+				</node>
 				<node name="Rotation" value="Поворот"/>
 				<node name="Colors" value="Цвета"/>
 				<node name="Keys" value="Клавиши"/>

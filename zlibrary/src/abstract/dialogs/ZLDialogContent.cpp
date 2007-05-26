@@ -21,10 +21,7 @@
 #include "ZLOptionView.h"
 #include "ZLDialogContent.h"
 
-ZLDialogContent::ZLDialogContent() {
-}
-
-ZLDialogContent::ZLDialogContent(const std::string &name) : myName(name) {
+ZLDialogContent::ZLDialogContent(const ZLResource &resource) : myResource(resource) {
 }
 
 ZLDialogContent::~ZLDialogContent() {
@@ -34,7 +31,7 @@ ZLDialogContent::~ZLDialogContent() {
 }
 
 const std::string &ZLDialogContent::name() const {
-	return myName;
+	return myResource.value();
 }
 
 void ZLDialogContent::accept() {
@@ -47,4 +44,17 @@ void ZLDialogContent::addView(ZLOptionView *view) {
 	if (view != 0) {
 		myViews.push_back(view);
 	}
+}
+
+static const ZLResourceKey TOOLTIP_KEY("tooltip");
+
+void ZLDialogContent::addOption(const ZLResourceKey &key, ZLOptionEntry *option) {
+	const ZLResource &resource = myResource[key];
+	addOption(resource.value(), resource[TOOLTIP_KEY].value(), option);
+}
+
+void ZLDialogContent::addOptions(const ZLResourceKey &key0, ZLOptionEntry *option0, const ZLResourceKey &key1, ZLOptionEntry *option1) {
+	const ZLResource &resource0 = myResource[key0];
+	const ZLResource &resource1 = myResource[key1];
+	addOptions(resource0.value(), resource0[TOOLTIP_KEY].value(), option0, resource1.value(), resource1[TOOLTIP_KEY].value(), option1);
 }

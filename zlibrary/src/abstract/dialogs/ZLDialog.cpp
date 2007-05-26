@@ -27,8 +27,12 @@ ZLDialog::~ZLDialog() {
 	delete myTab;
 }
 
-void ZLDialog::addOption(ZLOptionEntry *entry) {
-	myTab->addOption(entry);
+void ZLDialog::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *entry) {
+	myTab->addOption(name, tooltip, entry);
+}
+
+void ZLDialog::addOption(const ZLResourceKey &key, ZLOptionEntry *entry) {
+	myTab->addOption(key, entry);
 }
 
 void ZLDialog::acceptValues() {

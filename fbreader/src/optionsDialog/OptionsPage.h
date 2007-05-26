@@ -33,8 +33,7 @@ class OptionsPage;
 class ComboOptionEntry : public ZLComboOptionEntry {
 
 public:
-	ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue);
-	const std::string &name() const;
+	ComboOptionEntry(OptionsPage &page, const std::string &initialValue);
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string&);
@@ -43,7 +42,6 @@ public:
 
 protected:
 	OptionsPage &myPage;
-	std::string myName;
 	std::vector<std::string> myValues;
 	std::string myInitialValue;
 };
@@ -56,8 +54,8 @@ public:
 protected:
 	OptionsPage();
 
-	void registerEntry(ZLDialogContent &tab, ZLOptionEntry *entry, const std::string &name);
-	void registerEntries(ZLDialogContent &tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name);
+	void registerEntry(ZLDialogContent &tab, const ZLResourceKey &entryKey, ZLOptionEntry *entry, const std::string &name);
+	void registerEntries(ZLDialogContent &tab, const ZLResourceKey &entry0Key, ZLOptionEntry *entry0, const ZLResourceKey &entry1Key, ZLOptionEntry *entry1, const std::string &name);
 	
 protected:
 	ComboOptionEntry *myComboEntry;
@@ -68,8 +66,7 @@ private:
 friend class ComboOptionEntry;
 };
 
-inline ComboOptionEntry::ComboOptionEntry(OptionsPage &page, const std::string &name, const std::string &initialValue) : myPage(page), myName(name), myInitialValue(initialValue) {}
-inline const std::string &ComboOptionEntry::name() const { return myName; }
+inline ComboOptionEntry::ComboOptionEntry(OptionsPage &page, const std::string &initialValue) : myPage(page), myInitialValue(initialValue) {}
 inline const std::string &ComboOptionEntry::initialValue() const { return myInitialValue; }
 inline const std::vector<std::string> &ComboOptionEntry::values() const { return myValues; }
 inline void ComboOptionEntry::onAccept(const std::string&) {}

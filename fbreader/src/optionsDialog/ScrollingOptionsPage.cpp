@@ -195,20 +195,20 @@ void ScrollingModeEntry::onValueSelected(int index) {
 }
 
 void ScrollingOptionsPage::ScrollingEntries::init(FBReader &fbreader, FBReader::ScrollingOptions &options) {
-	myDelayEntry = new ZLSimpleSpinOptionEntry("Delay Between Scrollings, msecs", options.DelayOption, 50);
+	myDelayEntry = new ZLSimpleSpinOptionEntry(options.DelayOption, 50);
 	myModeEntry = new ScrollingModeEntry(fbreader, *this, options.ModeOption, &options == &fbreader.FingerTapScrollingOptions);
-	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry("Lines To Keep", options.LinesToKeepOption, 1);
-	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry("Lines To Scroll", options.LinesToScrollOption, 1);
-	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry("Percent To Scroll", options.PercentToScrollOption, 5);
+	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry(options.LinesToKeepOption, 1);
+	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry(options.LinesToScrollOption, 1);
+	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry(options.PercentToScrollOption, 5);
 	myModeEntry->onStringValueSelected(myModeEntry->initialValue());
 }
 
 void ScrollingOptionsPage::ScrollingEntries::connect(ZLDialogContent &dialogTab) {
-	dialogTab.addOption(myDelayEntry);
-	dialogTab.addOption(myModeEntry);
-	dialogTab.addOption(myLinesToKeepEntry);
-	dialogTab.addOption(myLinesToScrollEntry);
-	dialogTab.addOption(myPercentToScrollEntry);
+	dialogTab.addOption("Delay Between Scrollings, msecs", "", myDelayEntry);
+	dialogTab.addOption("", "", myModeEntry);
+	dialogTab.addOption("Lines To Keep", "", myLinesToKeepEntry);
+	dialogTab.addOption("Lines To Scroll", "", myLinesToScrollEntry);
+	dialogTab.addOption("Percent To Scroll", "", myPercentToScrollEntry);
 }
 
 void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
@@ -227,7 +227,7 @@ void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
 
 ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader) {
 	ZLComboOptionEntry *mainEntry = new ScrollingTypeEntry(fbreader, *this);
-	dialogTab.addOption(mainEntry);
+	dialogTab.addOption("", "", mainEntry);
 
 	myLargeScrollingEntries.init(fbreader, fbreader.LargeScrollingOptions);
 	mySmallScrollingEntries.init(fbreader, fbreader.SmallScrollingOptions);

@@ -30,16 +30,14 @@ class ZLPaintContext;
 class ZLFontFamilyOptionEntry : public ZLComboOptionEntry {
 
 public:
-	ZLFontFamilyOptionEntry(const std::string &name, ZLStringOption &option, const ZLPaintContext &context);
+	ZLFontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context);
 
-	const std::string &name() const;
 	const std::vector<std::string> &values() const;
 	const std::string &initialValue() const;
 
 	void onAccept(const std::string &value);
 
 private:
-	const std::string myName;
 	ZLStringOption &myOption;
 	const ZLPaintContext &myContext;
 };

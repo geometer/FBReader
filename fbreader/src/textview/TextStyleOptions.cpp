@@ -24,7 +24,6 @@
 #include "TextStyleOptions.h"
 #include "TextStyle.h"
 
-static const std::string LINE_SPACING_STRING = "Line Spacing";
 static const std::string BASE_STRING = "<base>";
 
 std::vector<std::string> FontFamilyWithBaseOptionEntry::ourAllFamilies;
@@ -32,7 +31,7 @@ std::vector<std::string> FontFamilyWithBaseOptionEntry::ourAllFamilies;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValues;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValuesPlusBase;
 
-FontFamilyWithBaseOptionEntry::FontFamilyWithBaseOptionEntry(const std::string &name, ZLStringOption &option, const ZLPaintContext &context) : ZLFontFamilyOptionEntry(name, option, context) {
+FontFamilyWithBaseOptionEntry::FontFamilyWithBaseOptionEntry(ZLStringOption &option, const ZLPaintContext &context) : ZLFontFamilyOptionEntry(option, context) {
 }
 
 const std::vector<std::string> &FontFamilyWithBaseOptionEntry::values() const {
@@ -68,10 +67,6 @@ LineSpacingOptionEntry::~LineSpacingOptionEntry() {
 }
 
 const std::vector<std::string> &LineSpacingOptionEntry::values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
-
-const std::string &LineSpacingOptionEntry::name() const {
-	return LINE_SPACING_STRING;
-}
 
 const std::string &LineSpacingOptionEntry::initialValue() const {
 	int value = (int)(10 * myOption.value() + 0.5);
@@ -127,8 +122,6 @@ std::vector<std::string> &AlignmentOptionEntry::values5() {
 	return ourValues5;
 }
 
-static std::string ALIGNMENT_STRING = "Alignment";
-
 AlignmentOptionEntry::AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined) : myOption(option), myAllowUndefined(allowUndefined) {
 }
 
@@ -136,10 +129,6 @@ AlignmentOptionEntry::~AlignmentOptionEntry() {
 }
 
 const std::vector<std::string> &AlignmentOptionEntry::values() const { return myAllowUndefined ? values5() : values4(); }
-
-const std::string &AlignmentOptionEntry::name() const {
-	return ALIGNMENT_STRING;
-}
 
 const std::string &AlignmentOptionEntry::initialValue() const {
 	unsigned int value = myOption.value();

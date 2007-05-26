@@ -22,7 +22,7 @@
 
 #include "ZLFontFamilyOptionEntry.h"
 
-ZLFontFamilyOptionEntry::ZLFontFamilyOptionEntry(const std::string &name, ZLStringOption &option, const ZLPaintContext &context) : myName(name), myOption(option), myContext(context) {
+ZLFontFamilyOptionEntry::ZLFontFamilyOptionEntry(ZLStringOption &option, const ZLPaintContext &context) : myOption(option), myContext(context) {
 	std::string value = option.value();
 	if (!value.empty()) {
 		option.setValue(myContext.realFontFamilyName(value));
@@ -31,10 +31,6 @@ ZLFontFamilyOptionEntry::ZLFontFamilyOptionEntry(const std::string &name, ZLStri
 
 const std::vector<std::string> &ZLFontFamilyOptionEntry::values() const {
 	return myContext.fontFamilies();
-}
-
-const std::string &ZLFontFamilyOptionEntry::name() const {
-	return myName;
 }
 
 const std::string &ZLFontFamilyOptionEntry::initialValue() const {

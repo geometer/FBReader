@@ -41,6 +41,8 @@ public:
 	static const ZLResourceKey NO_BUTTON;
 	static const ZLResourceKey APPLY_BUTTON;
 
+	static const ZLResourceKey DIALOG_TITLE;
+
 	static const std::string &dialogTitle(const ZLResourceKey &key);
 	static const std::string &dialogMessage(const ZLResourceKey &key);
 	static const std::string &buttonName(const ZLResourceKey &key);

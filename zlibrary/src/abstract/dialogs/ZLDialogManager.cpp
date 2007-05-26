@@ -26,6 +26,8 @@ const ZLResourceKey ZLDialogManager::YES_BUTTON("yes");
 const ZLResourceKey ZLDialogManager::NO_BUTTON("no");
 const ZLResourceKey ZLDialogManager::APPLY_BUTTON("apply");
 
+const ZLResourceKey ZLDialogManager::DIALOG_TITLE("title");
+
 ZLDialogManager *ZLDialogManager::ourInstance = 0;
 
 ZLDialogManager &ZLDialogManager::instance() {

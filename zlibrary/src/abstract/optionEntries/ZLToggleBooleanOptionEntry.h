@@ -26,7 +26,7 @@
 class ZLToggleBooleanOptionEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option);
+	ZLToggleBooleanOptionEntry(ZLBooleanOption &option);
 	void addDependentEntry(ZLOptionEntry *dependent);
 	void onStateChanged(bool state);
 

@@ -33,7 +33,7 @@
 class StateOptionEntry : public ZLToggleBooleanOptionEntry {
 
 public:
-	StateOptionEntry(const std::string &name, ZLBooleanOption &option);
+	StateOptionEntry(ZLBooleanOption &option);
 	void onStateChanged(bool state);
 
 private:
@@ -45,7 +45,7 @@ friend class SpecialFontSizeEntry;
 class SpecialFontSizeEntry : public ZLSimpleSpinOptionEntry {
 
 public:
-	SpecialFontSizeEntry(const std::string &name, ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second);
+	SpecialFontSizeEntry(ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second);
 	void setVisible(bool state);
 
 private:
@@ -53,7 +53,7 @@ private:
 	StateOptionEntry &mySecond;
 };
 
-StateOptionEntry::StateOptionEntry(const std::string &name, ZLBooleanOption &option) : ZLToggleBooleanOptionEntry(name, option) {
+StateOptionEntry::StateOptionEntry(ZLBooleanOption &option) : ZLToggleBooleanOptionEntry(option) {
 	myState = option.value();
 }
 
@@ -62,7 +62,7 @@ void StateOptionEntry::onStateChanged(bool state) {
 	ZLToggleBooleanOptionEntry::onStateChanged(state);
 }
 
-SpecialFontSizeEntry::SpecialFontSizeEntry(const std::string &name, ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second) : ZLSimpleSpinOptionEntry(name, option, step), myFirst(first), mySecond(second) {
+SpecialFontSizeEntry::SpecialFontSizeEntry(ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second) : ZLSimpleSpinOptionEntry(option, step), myFirst(first), mySecond(second) {
 }
 
 void SpecialFontSizeEntry::setVisible(bool) {
@@ -76,42 +76,42 @@ void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
 	ZLToggleBooleanOptionEntry *showIndicatorEntry =
-		new ZLToggleBooleanOptionEntry("Show Position Indicator", indicatorStyle.ShowOption);
-	indicatorTab.addOption(showIndicatorEntry);
+		new ZLToggleBooleanOptionEntry(indicatorStyle.ShowOption);
+	indicatorTab.addOption("Show Position Indicator", "", showIndicatorEntry);
 
 	ZLOptionEntry *heightEntry =
-		new ZLSimpleSpinOptionEntry("Indicator Height", indicatorStyle.HeightOption, 1);
+		new ZLSimpleSpinOptionEntry(indicatorStyle.HeightOption, 1);
 	ZLOptionEntry *offsetEntry =
-		new ZLSimpleSpinOptionEntry("Offset From Text", indicatorStyle.OffsetOption, 1);
-	indicatorTab.addOptions(heightEntry, offsetEntry);
+		new ZLSimpleSpinOptionEntry(indicatorStyle.OffsetOption, 1);
+	indicatorTab.addOptions("Indicator Height", "", heightEntry, "Offset From Text", "", offsetEntry);
 	showIndicatorEntry->addDependentEntry(heightEntry);
 	showIndicatorEntry->addDependentEntry(offsetEntry);
 
 	StateOptionEntry *showTextPositionEntry =
-		new StateOptionEntry("Show Position As Numbers", indicatorStyle.ShowTextPositionOption);
-	indicatorTab.addOption(showTextPositionEntry);
+		new StateOptionEntry(indicatorStyle.ShowTextPositionOption);
+	indicatorTab.addOption("Show Position As Numbers", "", showTextPositionEntry);
 	showIndicatorEntry->addDependentEntry(showTextPositionEntry);
 
 	StateOptionEntry *showTimeEntry =
-		new StateOptionEntry("Show Time", indicatorStyle.ShowTimeOption);
-	indicatorTab.addOption(showTimeEntry);
+		new StateOptionEntry(indicatorStyle.ShowTimeOption);
+	indicatorTab.addOption("Show Time", "", showTimeEntry);
 	showIndicatorEntry->addDependentEntry(showTimeEntry);
 
 	SpecialFontSizeEntry *fontSizeEntry =
-		new SpecialFontSizeEntry("Font Size", indicatorStyle.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
-	indicatorTab.addOption(fontSizeEntry);
+		new SpecialFontSizeEntry(indicatorStyle.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
+	indicatorTab.addOption("Font Size", "", fontSizeEntry);
 	showIndicatorEntry->addDependentEntry(fontSizeEntry);
 	showTextPositionEntry->addDependentEntry(fontSizeEntry);
 	showTimeEntry->addDependentEntry(fontSizeEntry);
 
 	ZLOptionEntry *tocMarksEntry =
-		new ZLSimpleBooleanOptionEntry("Show TOC Marks", fbreader.bookTextView().ShowTOCMarksOption);
-	indicatorTab.addOption(tocMarksEntry);
+		new ZLSimpleBooleanOptionEntry(fbreader.bookTextView().ShowTOCMarksOption);
+	indicatorTab.addOption("Show TOC Marks", "", tocMarksEntry);
 	showIndicatorEntry->addDependentEntry(tocMarksEntry);
 
 	ZLOptionEntry *navigationEntry =
-		new ZLSimpleBooleanOptionEntry("Enable Navigation", indicatorStyle.IsSensitiveOption);
-	indicatorTab.addOption(navigationEntry);
+		new ZLSimpleBooleanOptionEntry(indicatorStyle.IsSensitiveOption);
+	indicatorTab.addOption("Enable Navigation", "", navigationEntry);
 	showIndicatorEntry->addDependentEntry(navigationEntry);
 
 	showIndicatorEntry->onStateChanged(showIndicatorEntry->initialState());

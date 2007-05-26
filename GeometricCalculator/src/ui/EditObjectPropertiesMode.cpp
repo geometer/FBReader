@@ -79,7 +79,7 @@ void EditObjectPropertiesMode::onMousePress(int, int) {
 		PointPtr point = mySelectedObject;
 		if (!point.isNull()) {
 			shared_ptr<ZLDialog> propertiesDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("pointDialog"));
-			propertiesDialog->addOption(new PointNameEntry(*point));
+			propertiesDialog->addOption(ZLResourceKey("name"), new PointNameEntry(*point));
 			propertiesDialog->addButton(ZLDialogManager::OK_BUTTON, true);
 			propertiesDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 			myDialogRuns = true;

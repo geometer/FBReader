@@ -24,22 +24,27 @@
 #include <string>
 #include <vector>
 
+#include <ZLResource.h>
+
 class ZLOptionEntry;
 class ZLOptionView;
 
 class ZLDialogContent {
 
 protected:
-	ZLDialogContent();
-	ZLDialogContent(const std::string &name);
+	ZLDialogContent(const ZLResource &resource);
 
 public:
 	virtual ~ZLDialogContent();
 
 	const std::string &name() const;
 
-	virtual void addOption(ZLOptionEntry *option) = 0;
-	virtual void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) = 0;
+	virtual void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) = 0;
+	void addOption(const ZLResourceKey &key, ZLOptionEntry *option);
+	virtual void addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0,
+													const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1) = 0;
+	void addOptions(const ZLResourceKey &key0, ZLOptionEntry *option0,
+									const ZLResourceKey &key1, ZLOptionEntry *option1);
 
 	void accept();
 
@@ -47,7 +52,7 @@ protected:
 	void addView(ZLOptionView *view);
 
 private:
-	const std::string myName;
+	const ZLResource &myResource;
 	std::vector<ZLOptionView*> myViews;
 };
 

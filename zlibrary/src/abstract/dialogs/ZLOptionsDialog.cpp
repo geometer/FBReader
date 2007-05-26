@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLDialogManager.h>
+
 #include "ZLOptionsDialog.h"
 
 ZLOptionsDialog::ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : TabOption(ZLOption::LOOK_AND_FEEL_CATEGORY, resource.name(), "SelectedTab", ""), myResource(resource), myApplyAction(applyAction) {
@@ -27,11 +29,11 @@ ZLOptionsDialog::~ZLOptionsDialog() {
 }
 
 const std::string &ZLOptionsDialog::caption() const {
-	return myResource[ZLResourceKey("title")].value();
+	return myResource[ZLDialogManager::DIALOG_TITLE].value();
 }
 
-const std::string &ZLOptionsDialog::tabName(const ZLResourceKey &key) const {
-	return myResource[ZLResourceKey("tab")][key].value();
+const ZLResource &ZLOptionsDialog::tabResource(const ZLResourceKey &key) const {
+	return myResource[ZLResourceKey("tab")][key];
 }
 
 bool ZLOptionsDialog::run() {

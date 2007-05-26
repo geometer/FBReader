@@ -63,9 +63,32 @@
 				<node name="General" value="General"/>
 				<node name="Indicator" value="Indicator"/>
 				<node name="Scrolling" value="Scrolling"/>
-				<node name="Margins" value="Margins"/>
-				<node name="Format" value="Format"/>
-				<node name="Styles" value="Styles"/>
+				<node name="Margins" value="Margins">
+					<node name="left" value="Left Margin"/>
+					<node name="right" value="Right Margin"/>
+					<node name="top" value="Top Margin"/>
+					<node name="bottom" value="Bottom Margin"/>
+				</node>
+				<node name="Format" value="Format">
+					<node name="optionsFor" value="Options for"/>
+					<node name="lineSpacing" value="Line Spacing"/>
+					<node name="firstLineIndent" value="First Line Indent"/>
+					<node name="alignment" value="Alignment"/>
+					<node name="spaceBefore" value="Space Before"/>
+					<node name="spaceAfter" value="Space After"/>
+					<node name="leftIndent" value="Left Indent"/>
+					<node name="rightIndent" value="Right Indent"/>
+				</node>
+				<node name="Styles" value="Styles">
+					<node name="optionsFor" value="Options for"/>
+					<node name="fontFamily" value="Family"/>
+					<node name="fontSize" value="Size"/>
+					<node name="fontSizeDifference" value="Size Difference"/>
+					<node name="bold" value="Bold"/>
+					<node name="italic" value="Italic"/>
+					<node name="allowHyphenations" value="Allow Hyphenations"/>
+					<node name="autoHyphenations" value="Auto Hyphenations"/>
+				</node>
 				<node name="Rotation" value="Rotation"/>
 				<node name="Colors" value="Colors"/>
 				<node name="Keys" value="Keys"/>
@@ -88,6 +111,10 @@
 		</node>
 		<node name="textSearchDialog">
 			<node name="title" value="Text Search"/>
+			<node name="ignoreCase" value="&amp;Ignore case"/>
+			<node name="wholeText" value="In w&amp;hole text"/>
+			<node name="backward" value="&amp;Backward"/>
+			<node name="currentSection" value="&amp;This section only"/>
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Remove Book"/>

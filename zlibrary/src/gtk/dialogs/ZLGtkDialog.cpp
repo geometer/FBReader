@@ -26,9 +26,9 @@
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkDialog::ZLGtkDialog(const std::string &caption) {
-	myTab = new ZLGtkDialogContent();
-	myDialog = createGtkDialog(caption);
+ZLGtkDialog::ZLGtkDialog(const ZLResource &resource) {
+	myTab = new ZLGtkDialogContent(resource);
+	myDialog = createGtkDialog(resource[ZLDialogManager::DIALOG_TITLE].value());
 }
 
 ZLGtkDialog::~ZLGtkDialog() {

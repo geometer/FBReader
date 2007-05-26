@@ -39,7 +39,7 @@ private:
 	FBReader &myFBReader;
 };
 
-KeyboardControlEntry::KeyboardControlEntry(FBReader &fbreader) : ZLSimpleBooleanOptionEntry("Grab System Keys", fbreader.KeyboardControlOption), myFBReader(fbreader) {
+KeyboardControlEntry::KeyboardControlEntry(FBReader &fbreader) : ZLSimpleBooleanOptionEntry(fbreader.KeyboardControlOption), myFBReader(fbreader) {
 }
 
 void KeyboardControlEntry::onStateChanged(bool state) {
@@ -93,7 +93,7 @@ void MultiKeyOptionEntry::addAction(int code, const std::string &name) {
 }
 
 MultiKeyOptionEntry::MultiKeyOptionEntry(FBReader &fbreader) :
-	ZLKeyOptionEntry("Key settings"),
+	ZLKeyOptionEntry(),
 	myEntry0(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES0)),
 	myEntry90(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES90)),
 	myEntry180(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES180)),
@@ -185,7 +185,6 @@ class OrientationEntry : public ZLComboOptionEntry {
 
 public:
 	OrientationEntry(MultiKeyOptionEntry &keyEntry);
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onValueSelected(int index);
@@ -196,11 +195,6 @@ private:
 };
 
 OrientationEntry::OrientationEntry(MultiKeyOptionEntry &keyEntry) : myKeyEntry(keyEntry) {
-}
-
-const std::string &OrientationEntry::name() const {
-	static std::string _name = "Orientation";
-	return _name;
 }
 
 const std::string &OrientationEntry::initialValue() const {
@@ -242,7 +236,7 @@ private:
 	OrientationEntry &myOrientationEntry;
 };
 
-UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry) : ZLSimpleBooleanOptionEntry("Keybindings Depend On Orientation", fbreader.UseSeparateBindingsOption), myKeyEntry(keyEntry), myOrientationEntry(orientationEntry) {
+UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry) : ZLSimpleBooleanOptionEntry(fbreader.UseSeparateBindingsOption), myKeyEntry(keyEntry), myOrientationEntry(orientationEntry) {
 }
 
 void UseSeparateOptionsEntry::onStateChanged(bool state) {
@@ -253,13 +247,13 @@ void UseSeparateOptionsEntry::onStateChanged(bool state) {
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
 	if (fbreader.isFullKeyboardControlSupported()) {
-		dialogTab.addOption(new KeyboardControlEntry(fbreader));
+		dialogTab.addOption("Grab System Keys", "", new KeyboardControlEntry(fbreader));
 	}
 	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(fbreader);
 	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
 	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(fbreader, *keyEntry, *orientationEntry);
-	dialogTab.addOption(useSeparateBindingsEntry);
-	dialogTab.addOption(orientationEntry);
-	dialogTab.addOption(keyEntry);
+	dialogTab.addOption("Keybindings Depend On Orientation", "", useSeparateBindingsEntry);
+	dialogTab.addOption("Orientation", "", orientationEntry);
+	dialogTab.addOption("", "", keyEntry);
 	useSeparateBindingsEntry->onStateChanged(useSeparateBindingsEntry->initialState());
 }

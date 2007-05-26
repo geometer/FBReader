@@ -40,7 +40,6 @@ class AuthorSortKeyEntry : public ZLStringOptionEntry {
 public:
 	AuthorSortKeyEntry(BookInfoDialog &dialog);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 
@@ -53,7 +52,6 @@ class AuthorDisplayNameEntry : public ZLComboOptionEntry {
 public:
 	AuthorDisplayNameEntry(BookInfoDialog &dialog);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
@@ -73,7 +71,6 @@ class EncodingEntry : public ZLComboOptionEntry {
 public:
 	EncodingEntry(ZLStringOption &encodingOption);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
@@ -95,7 +92,6 @@ class EncodingSetEntry : public ZLComboOptionEntry {
 public:
 	EncodingSetEntry(EncodingEntry &encodingEntry);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string&) {}
@@ -110,7 +106,6 @@ class LanguageEntry : public ZLComboOptionEntry {
 public:
 	LanguageEntry(ZLStringOption &encodingOption);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
@@ -124,7 +119,6 @@ class SeriesTitleEntry : public ZLComboOptionEntry {
 public:
 	SeriesTitleEntry(BookInfoDialog &dialog);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
@@ -140,11 +134,6 @@ private:
 };
 
 AuthorDisplayNameEntry::AuthorDisplayNameEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
-}
-
-const std::string &AuthorDisplayNameEntry::name() const {
-	static const std::string NAME = "Author (display name)";
-	return NAME;
 }
 
 const std::string &AuthorDisplayNameEntry::initialValue() const {
@@ -182,11 +171,6 @@ void AuthorDisplayNameEntry::onValueSelected(int index) {
 }
 
 AuthorSortKeyEntry::AuthorSortKeyEntry(BookInfoDialog &dialog) : myInfoDialog(dialog) {
-}
-
-const std::string &AuthorSortKeyEntry::name() const {
-	static const std::string NAME = "Author (sort key)";
-	return NAME;
 }
 
 const std::string &AuthorSortKeyEntry::initialValue() const {
@@ -243,11 +227,6 @@ const std::vector<std::string> &EncodingEntry::values() const {
 	return it->second;
 }
 
-const std::string &EncodingEntry::name() const {
-	static const std::string NAME = "Encoding";
-	return NAME;
-}
-
 const std::string &EncodingEntry::initialValue() const {
 	if (myInitialValues[myInitialSetName].empty()) {
 		std::map<std::string,std::vector<std::string> >::const_iterator it = myValues.find(myInitialSetName);
@@ -267,11 +246,6 @@ void EncodingEntry::onValueSelected(int index) {
 }
 
 EncodingSetEntry::EncodingSetEntry(EncodingEntry &encodingEntry) : myEncodingEntry(encodingEntry) {
-}
-
-const std::string &EncodingSetEntry::name() const {
-	static const std::string _name = "Encoding Set";
-	return _name;
 }
 
 const std::string &EncodingSetEntry::initialValue() const {
@@ -301,11 +275,6 @@ const std::vector<std::string> &LanguageEntry::values() const {
 	return TeXHyphenator::languageNames();
 }
 
-const std::string &LanguageEntry::name() const {
-	static const std::string NAME = "Line breaking";
-	return NAME;
-}
-
 void LanguageEntry::onAccept(const std::string &value) {
 	const std::vector<std::string> &codes = TeXHyphenator::languageCodes();
 	const std::vector<std::string> &names = TeXHyphenator::languageNames();
@@ -328,11 +297,6 @@ SeriesTitleEntry::SeriesTitleEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(
 
 const std::string &SeriesTitleEntry::initialValue() const {
 	return myInfoDialog.myBookInfo.SequenceNameOption.value();
-}
-
-const std::string &SeriesTitleEntry::name() const {
-	static const std::string NAME = "Series Title";
-	return NAME;
 }
 
 const std::vector<std::string> &SeriesTitleEntry::values() const {
@@ -379,10 +343,10 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("InfoDialog"));
 
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
-	commonTab.addOption(
-		new ZLStringInfoEntry("File", ZLFile::fileNameToUtf8(ZLFile(fileName).path()))
+	commonTab.addOption("File", "", 
+		new ZLStringInfoEntry(ZLFile::fileNameToUtf8(ZLFile(fileName).path()))
 	);
-	commonTab.addOption(new ZLSimpleStringOptionEntry("Title", myBookInfo.TitleOption));
+	commonTab.addOption("Title", "", new ZLSimpleStringOptionEntry(myBookInfo.TitleOption));
 
 	myAuthorDisplayNameEntry = new AuthorDisplayNameEntry(*this);
 	myAuthorSortKeyEntry = new AuthorSortKeyEntry(*this);
@@ -392,19 +356,19 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 		new EncodingSetEntry(*(EncodingEntry*)myEncodingEntry) : 0;
 	myLanguageEntry = new LanguageEntry(myBookInfo.LanguageOption);
 	mySeriesTitleEntry = new SeriesTitleEntry(*this);
-	myBookNumberEntry = new ZLSimpleSpinOptionEntry("Book Number", myBookInfo.NumberInSequenceOption, 1);
+	myBookNumberEntry = new ZLSimpleSpinOptionEntry(myBookInfo.NumberInSequenceOption, 1);
 
-	commonTab.addOption(myAuthorDisplayNameEntry);
-	commonTab.addOption(myAuthorSortKeyEntry);
+	commonTab.addOption("Author (display name)", "", myAuthorDisplayNameEntry);
+	commonTab.addOption("Author (sort key)", "", myAuthorSortKeyEntry);
 	if (myEncodingSetEntry != 0) {
-		commonTab.addOption(myEncodingSetEntry);
+		commonTab.addOption("Encoding Set", "", myEncodingSetEntry);
 	}
-	commonTab.addOption(myEncodingEntry);
-	commonTab.addOption(myLanguageEntry);
+	commonTab.addOption("Encoding", "", myEncodingEntry);
+	commonTab.addOption("Line Breaking", "", myLanguageEntry);
 
 	ZLDialogContent &seriesTab = myDialog->createTab(ZLResourceKey("Series"));
-	seriesTab.addOption(mySeriesTitleEntry);
-	seriesTab.addOption(myBookNumberEntry);
+	seriesTab.addOption("Series Title", "", mySeriesTitleEntry);
+	seriesTab.addOption("Book Number", "", myBookNumberEntry);
 
 	mySeriesTitleEntry->onValueEdited(mySeriesTitleEntry->initialValue());
 	/*

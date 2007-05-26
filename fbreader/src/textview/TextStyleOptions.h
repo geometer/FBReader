@@ -35,7 +35,7 @@ private:
 	static std::vector<std::string> ourAllFamilies;
 
 public:
-	FontFamilyWithBaseOptionEntry(const std::string &name, ZLStringOption &option, const ZLPaintContext &context);
+	FontFamilyWithBaseOptionEntry(ZLStringOption &option, const ZLPaintContext &context);
 
 	const std::vector<std::string> &values() const;
 	const std::string &initialValue() const;
@@ -53,7 +53,6 @@ public:
 	LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase);
 	~LineSpacingOptionEntry();
 
-	const std::string &name() const;
 	const std::vector<std::string> &values() const;
 	const std::string &initialValue() const;
 
@@ -78,7 +77,6 @@ public:
 	AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined);
 	~AlignmentOptionEntry();
 
-	const std::string &name() const;
 	const std::vector<std::string> &values() const;
 	const std::string &initialValue() const;
 

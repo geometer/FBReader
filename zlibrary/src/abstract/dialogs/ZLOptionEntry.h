@@ -47,7 +47,6 @@ public:
 	ZLOptionEntry();
 	virtual ~ZLOptionEntry();
 	virtual ZLOptionKind kind() const = 0;
-	virtual const std::string &name() const = 0;
 
 	void setView(ZLOptionView *view);
 	void resetView();
@@ -172,7 +171,7 @@ public:
 class ZLKeyOptionEntry : public ZLOptionEntry {
 
 public:
-	ZLKeyOptionEntry(const std::string &name);
+	ZLKeyOptionEntry();
 	void addActionName(const std::string &actionName);
 	const std::vector<std::string> &actionNames() const;
 	virtual void onAccept() = 0;
@@ -181,10 +180,8 @@ public:
 
 protected:
 	ZLOptionKind kind() const;
-	const std::string &name() const;
 
 private:
-	std::string myName;
 	std::vector<std::string> myActionNames;
 };
 
@@ -196,10 +193,8 @@ public:
 
 protected:
 	ZLOptionKind kind() const;
-	const std::string &name() const;
 
 private:
-	std::string myName;
 	std::vector<std::string> myValues;
 };
 
@@ -239,15 +234,13 @@ inline ZLColorOptionEntry::ZLColorOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLColorOptionEntry::kind() const { return COLOR; }
 inline void ZLColorOptionEntry::onReset(ZLColor) {}
 
-inline ZLKeyOptionEntry::ZLKeyOptionEntry(const std::string &name) : myName(name) {}
+inline ZLKeyOptionEntry::ZLKeyOptionEntry() {}
 inline void ZLKeyOptionEntry::addActionName(const std::string &actionName) { myActionNames.push_back(actionName); }
 inline const std::vector<std::string> &ZLKeyOptionEntry::actionNames() const { return myActionNames; }
 inline ZLOptionEntry::ZLOptionKind ZLKeyOptionEntry::kind() const { return KEY; }
-inline const std::string &ZLKeyOptionEntry::name() const { return myName; }
 
 inline ZLOrderOptionEntry::ZLOrderOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLOrderOptionEntry::kind() const { return ORDER; }
-inline const std::string &ZLOrderOptionEntry::name() const { return myName; }
 inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues; }
 
 #endif /* __ZLOPTIONENTRY_H__ */

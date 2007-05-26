@@ -54,36 +54,36 @@ void ShowOptionsDialogAction::createViewTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &viewTab = dialog.createTab(ZLResourceKey("View"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
-	viewTab.addOption(new ZLSimpleSpinOptionEntry("Zoom, %", view.ZoomOption, 10));
+	viewTab.addOption("Zoom, %", "", new ZLSimpleSpinOptionEntry(view.ZoomOption, 10));
 }
 
 void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &drawingTab = dialog.createTab(ZLResourceKey("Drawing"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
-	drawingTab.addOption(new ZLSimpleBooleanOptionEntry("Connect New Lines To Existing Points Only", view.ExistingPointsOnlyOption));
-	drawingTab.addOption(new ZLSimpleBooleanOptionEntry("Draw Segment For Middle Point", view.CreateSegmentForMiddlePointOption));
+	drawingTab.addOption("Connect New Lines To Existing Points Only", "", new ZLSimpleBooleanOptionEntry(view.ExistingPointsOnlyOption));
+	drawingTab.addOption("Draw Segment For Middle Point", "", new ZLSimpleBooleanOptionEntry(view.CreateSegmentForMiddlePointOption));
 }
 
 void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &pointTab = dialog.createTab(ZLResourceKey("Points"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
-	pointTab.addOption(new ZLSimpleSpinOptionEntry("Point Radius", view.PointRadiusOption, 1));
+	pointTab.addOption("Point Radius", "", new ZLSimpleSpinOptionEntry(view.PointRadiusOption, 1));
 
 	ZLToggleBooleanOptionEntry *showNamesEntry =
-		new ZLToggleBooleanOptionEntry("Show Point Names", view.ShowPointNamesOption);
-	pointTab.addOption(showNamesEntry);
+		new ZLToggleBooleanOptionEntry(view.ShowPointNamesOption);
+	pointTab.addOption("Show Point Names", "", showNamesEntry);
 
 	ZLOptionEntry *fontFamilyEntry =
-		new ZLFontFamilyOptionEntry("Font Family", view.PointFontFamilyOption, view.context());
+		new ZLFontFamilyOptionEntry(view.PointFontFamilyOption, view.context());
 	showNamesEntry->addDependentEntry(fontFamilyEntry);
-	pointTab.addOption(fontFamilyEntry);
+	pointTab.addOption("Font Family", "", fontFamilyEntry);
 
 	ZLOptionEntry *fontSizeEntry =
-		new ZLSimpleSpinOptionEntry("Font Size", view.PointFontSizeOption, 2);
+		new ZLSimpleSpinOptionEntry(view.PointFontSizeOption, 2);
 	showNamesEntry->addDependentEntry(fontSizeEntry);
-	pointTab.addOption(fontSizeEntry);
+	pointTab.addOption("Font Size", "", fontSizeEntry);
 
 	showNamesEntry->onStateChanged(showNamesEntry->initialState());
 }
@@ -101,8 +101,8 @@ void ShowOptionsDialogAction::createColorsTab(ZLOptionsDialog &dialog) {
 	builder.addOption("Selected Object", view.SelectedColorOption);
 	builder.addOption("Ruler", view.RulerColorOption);
 	builder.setInitial(BACKGROUND);
-	colorsTab.addOption(builder.comboEntry());
-	colorsTab.addOption(builder.colorEntry());
+	colorsTab.addOption("", "", builder.comboEntry());
+	colorsTab.addOption("", "", builder.colorEntry());
 }
 
 class KeyOptionEntry : public ZLSimpleKeyOptionEntry {
@@ -158,5 +158,5 @@ void KeyOptionEntry::addAction(int code, const std::string &name) {
 
 void ShowOptionsDialogAction::createKeysTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &keysTab = dialog.createTab(ZLResourceKey("Keys"));
-	keysTab.addOption(new KeyOptionEntry(myCalculator.keyBindings()));
+	keysTab.addOption("", "", new KeyOptionEntry(myCalculator.keyBindings()));
 }

@@ -22,17 +22,13 @@
 
 #include "ZLStringInfoEntry.h"
 
-ZLStringInfoEntry::ZLStringInfoEntry(const std::string &name, const std::string &value) : myName(name), myValue(value) {
+ZLStringInfoEntry::ZLStringInfoEntry(const std::string &value) : myValue(value) {
 	setActive(false);
 }
 
-ZLStringInfoEntry::ZLStringInfoEntry(const std::string &name, int value) : myName(name) {
+ZLStringInfoEntry::ZLStringInfoEntry(int value) {
 	ZLStringUtil::appendNumber(myValue, value);
 	setActive(false);
-}
-
-const std::string &ZLStringInfoEntry::name() const {
-	return myName;
 }
 
 const std::string &ZLStringInfoEntry::initialValue() const {

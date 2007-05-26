@@ -20,11 +20,7 @@
 
 #include "ZLSimpleOptionEntry.h"
 
-ZLSimpleStringOptionEntry::ZLSimpleStringOptionEntry(const std::string &name, ZLStringOption &option) : myName(name), myOption(option) {
-}
-
-const std::string &ZLSimpleStringOptionEntry::name() const {
-	return myName;
+ZLSimpleStringOptionEntry::ZLSimpleStringOptionEntry(ZLStringOption &option) : myOption(option) {
 }
 
 const std::string &ZLSimpleStringOptionEntry::initialValue() const {
@@ -35,11 +31,7 @@ void ZLSimpleStringOptionEntry::onAccept(const std::string &value) {
 	myOption.setValue(value);
 }
 
-ZLSimpleBooleanOptionEntry::ZLSimpleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option) : myName(name), myOption(option) {
-}
-
-const std::string &ZLSimpleBooleanOptionEntry::name() const {
-	return myName;
+ZLSimpleBooleanOptionEntry::ZLSimpleBooleanOptionEntry(ZLBooleanOption &option) : myOption(option) {
 }
 
 bool ZLSimpleBooleanOptionEntry::initialState() const {
@@ -50,11 +42,7 @@ void ZLSimpleBooleanOptionEntry::onAccept(bool state) {
 	myOption.setValue(state);
 }
 
-ZLSimpleSpinOptionEntry::ZLSimpleSpinOptionEntry(const std::string &name, ZLIntegerRangeOption &option, int step) : myName(name), myOption(option), myStep(step) {
-}
-
-const std::string &ZLSimpleSpinOptionEntry::name() const {
-	return myName;
+ZLSimpleSpinOptionEntry::ZLSimpleSpinOptionEntry(ZLIntegerRangeOption &option, int step) : myOption(option), myStep(step) {
 }
 
 int ZLSimpleSpinOptionEntry::initialValue() const {
@@ -79,11 +67,7 @@ void ZLSimpleSpinOptionEntry::onAccept(int value) {
 
 std::vector<std::string> ZLSimpleBoolean3OptionEntry::ourValues;
 
-ZLSimpleBoolean3OptionEntry::ZLSimpleBoolean3OptionEntry(const std::string &name, ZLBoolean3Option &option) : myName(name), myOption(option) {
-}
-
-const std::string &ZLSimpleBoolean3OptionEntry::name() const {
-	return myName;
+ZLSimpleBoolean3OptionEntry::ZLSimpleBoolean3OptionEntry(ZLBoolean3Option &option) : myOption(option) {
 }
 
 const std::string &ZLSimpleBoolean3OptionEntry::initialValue() const {
@@ -108,7 +92,7 @@ void ZLSimpleBoolean3OptionEntry::onAccept(const std::string &value) {
 	}
 }
 
-ZLSimpleColorOptionEntry::ZLSimpleColorOptionEntry(const std::string &name, ZLColorOption &option) : myName(name), myOption(option) {
+ZLSimpleColorOptionEntry::ZLSimpleColorOptionEntry(ZLColorOption &option) : myOption(option) {
 }
 
 const ZLColor ZLSimpleColorOptionEntry::color() const {
@@ -117,8 +101,4 @@ const ZLColor ZLSimpleColorOptionEntry::color() const {
 
 void ZLSimpleColorOptionEntry::onAccept(ZLColor color) {
 	myOption.setValue(color);
-}
-
-const std::string &ZLSimpleColorOptionEntry::name() const {
-	return myName;
 }

@@ -86,10 +86,9 @@ public:
 class BreakTypeOptionEntry : public ZLComboOptionEntry {
 
 public:
-	BreakTypeOptionEntry(PlainTextInfoPage &page, const std::string &name, ZLIntegerOption &breakTypeOption);
+	BreakTypeOptionEntry(PlainTextInfoPage &page, ZLIntegerOption &breakTypeOption);
 	~BreakTypeOptionEntry();
 
-	const std::string &name() const;
 	int initialIndex() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -98,14 +97,13 @@ public:
 
 private:
 	PlainTextInfoPage &myPage;
-	std::string myName;
 	ZLIntegerOption &myBreakTypeOption;
 };
 
 class CreateContentsTableOptionEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	CreateContentsTableOptionEntry(PlainTextInfoPage &page, const std::string &name, ZLBooleanOption &option);
+	CreateContentsTableOptionEntry(PlainTextInfoPage &page, ZLBooleanOption &option);
 	~CreateContentsTableOptionEntry();
 	void onStateChanged(bool state);
 

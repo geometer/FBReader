@@ -21,12 +21,14 @@
 #ifndef __ZLOPTIONVIEW_H__
 #define __ZLOPTIONVIEW_H__
 
+#include <string>
+
 class ZLOptionEntry;
 
 class ZLOptionView {
 
 public:
-	ZLOptionView(ZLOptionEntry *option);
+	ZLOptionView(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
 	virtual ~ZLOptionView();
 
 	// TODO: change to pure virtual
@@ -44,7 +46,12 @@ protected:
 	virtual void _setActive(bool active) {}
 	virtual void _onAccept() const = 0;
 
+	const std::string &name() const;
+	const std::string &tooltip() const;
+
 protected:
+	const std::string myName;
+	const std::string myTooltip;
 	ZLOptionEntry *myOption;
 
 private:

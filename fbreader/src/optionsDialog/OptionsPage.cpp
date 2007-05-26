@@ -33,15 +33,15 @@ void ComboOptionEntry::onValueSelected(int index) {
 	}
 }
 
-void OptionsPage::registerEntry(ZLDialogContent &tab, ZLOptionEntry *entry, const std::string &name) {
+void OptionsPage::registerEntry(ZLDialogContent &tab, const ZLResourceKey &entryKey, ZLOptionEntry *entry, const std::string &name) {
 	if (entry != 0) {
 		entry->setVisible(false);
 		myEntries[entry] = name;
 	}
-	tab.addOption(entry);
+	tab.addOption(entryKey, entry);
 }
 
-void OptionsPage::registerEntries(ZLDialogContent &tab, ZLOptionEntry *entry0, ZLOptionEntry *entry1, const std::string &name) {
+void OptionsPage::registerEntries(ZLDialogContent &tab, const ZLResourceKey &entry0Key, ZLOptionEntry *entry0, const ZLResourceKey &entry1Key, ZLOptionEntry *entry1, const std::string &name) {
 	if (entry0 != 0) {
 		entry0->setVisible(false);
 		myEntries[entry0] = name;
@@ -50,5 +50,5 @@ void OptionsPage::registerEntries(ZLDialogContent &tab, ZLOptionEntry *entry0, Z
 		entry1->setVisible(false);
 		myEntries[entry1] = name;
 	}
-	tab.addOptions(entry0, entry1);
+	tab.addOptions(entry0Key, entry0, entry1Key, entry1);
 }

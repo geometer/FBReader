@@ -21,7 +21,7 @@
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkOptionView.h"
 
-ZLGtkDialogContent::ZLGtkDialogContent() {
+ZLGtkDialogContent::ZLGtkDialogContent(const ZLResource &resource) : ZLDialogContent(resource) {
 	myTable = GTK_TABLE(gtk_table_new(0, 4, false));
 	gtk_container_set_border_width(GTK_CONTAINER(myTable), 2);
 
@@ -46,20 +46,20 @@ void ZLGtkDialogContent::addItem(GtkWidget *what, int row, int fromColumn, int t
 	gtk_table_attach(myTable, what, fromColumn, toColumn, row, row + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
 }
 
-void ZLGtkDialogContent::addOption(ZLOptionEntry *option) {
+void ZLGtkDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
 	int row = addRow();
 
-	createViewByEntry(option, row, 0, 4);
+	createViewByEntry(name, tooltip, option, row, 0, 4);
 }
 
-void ZLGtkDialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
+void ZLGtkDialogContent::addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0, const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1) {
 	int row = addRow();
 
-	createViewByEntry(option0, row, 0, 2);
-	createViewByEntry(option1, row, 2, 4);
+	createViewByEntry(name0, tooltip0, option0, row, 0, 2);
+	createViewByEntry(name1, tooltip1, option1, row, 2, 4);
 }
 
-void ZLGtkDialogContent::createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn) {
+void ZLGtkDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int row, int fromColumn, int toColumn) {
 	if (option == 0) {
 		return;
 	}
@@ -68,25 +68,25 @@ void ZLGtkDialogContent::createViewByEntry(ZLOptionEntry *option, int row, int f
 
 	switch (option->kind()) {
 		case ZLOptionEntry::BOOLEAN:
-			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::STRING:
-			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::CHOICE:
-			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::COMBO:
-			view = new ComboOptionView((ZLComboOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::COLOR:
-			view = new ColorOptionView((ZLColorOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new ColorOptionView(name, tooltip, (ZLColorOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::KEY:
-			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, row, fromColumn, toColumn);
+			view = new KeyOptionView(name, tooltip, (ZLKeyOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
 	}
 

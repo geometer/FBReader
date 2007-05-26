@@ -20,7 +20,7 @@
 
 #include "ZLToggleBooleanOptionEntry.h"
 
-ZLToggleBooleanOptionEntry::ZLToggleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(name, option) {
+ZLToggleBooleanOptionEntry::ZLToggleBooleanOptionEntry(ZLBooleanOption &option) : ZLSimpleBooleanOptionEntry(option) {
 }
 
 void ZLToggleBooleanOptionEntry::addDependentEntry(ZLOptionEntry *dependent) {

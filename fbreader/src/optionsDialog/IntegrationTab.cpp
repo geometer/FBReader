@@ -32,10 +32,9 @@
 class ProgramChoiceEntry : public ZLComboOptionEntry {
 
 public:
-	ProgramChoiceEntry(const ProgramCollection &collection, const std::string &name);
+	ProgramChoiceEntry(const ProgramCollection &collection);
 
 private:
-	const std::string &name() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 	void onValueSelected(int index);
@@ -47,7 +46,6 @@ public:
 
 private:
 	const ProgramCollection &myCollection;
-	const std::string myName;
 	std::string myValue;
 	std::map<ZLOptionEntry*,std::string> myDependentEntries;
 };
@@ -55,7 +53,7 @@ private:
 class EnableIntegrationEntry : public ZLToggleBooleanOptionEntry {
 
 public:
-	EnableIntegrationEntry(const std::string &name, ZLBooleanOption &option);
+	EnableIntegrationEntry(ZLBooleanOption &option);
 	void setProgramChoiceEntry(ProgramChoiceEntry *programChoiceEntry);
 	void onStateChanged(bool state);
 
@@ -63,16 +61,12 @@ private:
 	ProgramChoiceEntry *myProgramChoiceEntry;
 };
 
-ProgramChoiceEntry::ProgramChoiceEntry(const ProgramCollection &collection, const std::string &name) : myCollection(collection), myName(name) {
+ProgramChoiceEntry::ProgramChoiceEntry(const ProgramCollection &collection) : myCollection(collection) {
 	myValue = initialValue();
 }
 
 const std::string &ProgramChoiceEntry::initialValue() const {
 	return myCollection.CurrentNameOption.value();
-}
-
-const std::string &ProgramChoiceEntry::name() const {
-	return myName;
 }
 
 const std::vector<std::string> &ProgramChoiceEntry::values() const {
@@ -98,7 +92,7 @@ void ProgramChoiceEntry::updateDependentEntries(bool visible) {
 	}
 }
 
-EnableIntegrationEntry::EnableIntegrationEntry(const std::string &name, ZLBooleanOption &option) : ZLToggleBooleanOptionEntry(name, option), myProgramChoiceEntry(0) {
+EnableIntegrationEntry::EnableIntegrationEntry(ZLBooleanOption &option) : ZLToggleBooleanOptionEntry(option), myProgramChoiceEntry(0) {
 }
 
 void EnableIntegrationEntry::setProgramChoiceEntry(ProgramChoiceEntry *programChoiceEntry) {
@@ -121,13 +115,13 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 			const std::string optionName = checkBoxPrefix +
 				((programNames.size() == 1) ? programNames[0] : checkBoxSuffix);
 			EnableIntegrationEntry *enableIntegrationEntry =
-				new EnableIntegrationEntry(optionName, collection->EnableCollectionOption);
-			integrationTab.addOption(enableIntegrationEntry);
+				new EnableIntegrationEntry(collection->EnableCollectionOption);
+			integrationTab.addOption(optionName, "", enableIntegrationEntry);
 
 			ProgramChoiceEntry *programChoiceEntry = 0;
 			if (programNames.size() > 1) {
-				programChoiceEntry = new ProgramChoiceEntry(*collection, comboBoxName);
-				integrationTab.addOption(programChoiceEntry);
+				programChoiceEntry = new ProgramChoiceEntry(*collection);
+				integrationTab.addOption(comboBoxName, "", programChoiceEntry);
 				enableIntegrationEntry->setProgramChoiceEntry(programChoiceEntry);
 			}
 
@@ -136,18 +130,18 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 				for (std::vector<Program::OptionDescription>::const_iterator jt = options.begin(); jt != options.end(); ++jt) {
 					ZLStringOption *parameterOption = new ZLStringOption(FBOptions::EXTERNAL_CATEGORY, *it, jt->OptionName, jt->DefaultValue);
 					storeTemporaryOption(parameterOption);
-					ZLOptionEntry *parameterEntry = new ZLSimpleStringOptionEntry(jt->DisplayName, *parameterOption);
+					ZLOptionEntry *parameterEntry = new ZLSimpleStringOptionEntry(*parameterOption);
 					if (programChoiceEntry != 0) {
 						programChoiceEntry->addDependentEntry(*it, parameterEntry);
 					} else {
 						enableIntegrationEntry->addDependentEntry(parameterEntry);
 					}
-					integrationTab.addOption(parameterEntry);
+					integrationTab.addOption(jt->DisplayName, "", parameterEntry);
 				}
 			}
 			for (std::vector<ZLOptionEntry*>::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
 				enableIntegrationEntry->addDependentEntry(*it);
-				integrationTab.addOption(*it);
+				integrationTab.addOption("", "", *it);
 			}
 			enableIntegrationEntry->onStateChanged(enableIntegrationEntry->initialState());
 			return;

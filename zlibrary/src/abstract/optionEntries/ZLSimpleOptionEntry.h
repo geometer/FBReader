@@ -26,34 +26,29 @@
 class ZLSimpleStringOptionEntry : public ZLStringOptionEntry {
 
 public:
-	ZLSimpleStringOptionEntry(const std::string &name, ZLStringOption &option);
-	const std::string &name() const;
+	ZLSimpleStringOptionEntry(ZLStringOption &option);
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 
 private:
-	const std::string myName;
 	ZLStringOption &myOption;
 };
 
 class ZLSimpleBooleanOptionEntry : public ZLBooleanOptionEntry {
 
 public:
-	ZLSimpleBooleanOptionEntry(const std::string &name, ZLBooleanOption &option);
-	const std::string &name() const;
+	ZLSimpleBooleanOptionEntry(ZLBooleanOption &option);
 	bool initialState() const;
 	void onAccept(bool state);
 
 private:
-	const std::string myName;
 	ZLBooleanOption &myOption;
 };
 
 class ZLSimpleSpinOptionEntry : public ZLSpinOptionEntry {
 
 public:
-	ZLSimpleSpinOptionEntry(const std::string &name, ZLIntegerRangeOption &option, int step);
-	const std::string &name() const;
+	ZLSimpleSpinOptionEntry(ZLIntegerRangeOption &option, int step);
 	int initialValue() const;
 	int minValue() const;
 	int maxValue() const;
@@ -61,7 +56,6 @@ public:
 	void onAccept(int value);
 
 private:
-	const std::string myName;
 	ZLIntegerRangeOption &myOption;
 	int myStep;
 };
@@ -69,28 +63,24 @@ private:
 class ZLSimpleBoolean3OptionEntry : public ZLComboOptionEntry {
 
 public:
-	ZLSimpleBoolean3OptionEntry(const std::string &name, ZLBoolean3Option &option);
-	const std::string &name() const;
+	ZLSimpleBoolean3OptionEntry(ZLBoolean3Option &option);
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 
 private:
 	static std::vector<std::string> ourValues;
-	const std::string myName;
 	ZLBoolean3Option &myOption;
 };
 
 class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
 
 public:
-	ZLSimpleColorOptionEntry(const std::string &name, ZLColorOption &option);
-	const std::string &name() const;
+	ZLSimpleColorOptionEntry(ZLColorOption &option);
 	const ZLColor color() const;
 	void onAccept(ZLColor color);
 
 private:
-	const std::string myName;
 	ZLColorOption &myOption; 
 };
 

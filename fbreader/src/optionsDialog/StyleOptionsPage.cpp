@@ -30,12 +30,17 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
-static const std::string BOLD_STRING = "Bold";
-static const std::string ITALIC_STRING = "Italic";
-static const std::string FAMILY_STRING = "Family";
+static const ZLResourceKey KEY_BOLD("bold");
+static const ZLResourceKey KEY_ITALIC("italic");
+static const ZLResourceKey KEY_FONTFAMILY("fontFamily");
+static const ZLResourceKey KEY_FONTSIZE("fontSize");
+static const ZLResourceKey KEY_FONTSIZEDIFFERENCE("fontSizeDifference");
+static const ZLResourceKey KEY_ALLOWHYPHENATIONS("allowHyphenations");
+static const ZLResourceKey KEY_AUTOHYPHENATIONS("autoHyphenations");
+static const ZLResourceKey KEY_DUMMY("");
 
 StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &context) {
-	myComboEntry = new ComboOptionEntry(*this, "Options For", "Base");
+	myComboEntry = new ComboOptionEntry(*this, "Base");
 	myComboEntry->addValue(myComboEntry->initialValue());
 
 	TextStyleCollection &collection = TextStyleCollection::instance();
@@ -47,26 +52,26 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 			myComboEntry->addValue(decoration->name());
 		}
 	}
-	dialogTab.addOption(myComboEntry);
+	dialogTab.addOption(ZLResourceKey("optionsFor"), myComboEntry);
 
 	{
 		const std::string &name = myComboEntry->initialValue();
 		BaseTextStyle &baseStyle = collection.baseStyle();
 
 		registerEntries(dialogTab,
-			new ZLFontFamilyOptionEntry(FAMILY_STRING, baseStyle.FontFamilyOption, context),
-			new ZLSimpleBooleanOptionEntry(BOLD_STRING, baseStyle.BoldOption),
+			KEY_FONTFAMILY, new ZLFontFamilyOptionEntry(baseStyle.FontFamilyOption, context),
+			KEY_BOLD, new ZLSimpleBooleanOptionEntry(baseStyle.BoldOption),
 			name
 		);
 
 		registerEntries(dialogTab,
-			new ZLSimpleSpinOptionEntry("Size", baseStyle.FontSizeOption, 2),
-			new ZLSimpleBooleanOptionEntry(ITALIC_STRING, baseStyle.ItalicOption),
+			KEY_FONTSIZE, new ZLSimpleSpinOptionEntry(baseStyle.FontSizeOption, 2),
+			KEY_ITALIC, new ZLSimpleBooleanOptionEntry(baseStyle.ItalicOption),
 			name
 		);
 
 		registerEntry(dialogTab,
-			new ZLSimpleBooleanOptionEntry("Auto Hyphenations", baseStyle.AutoHyphenationOption),
+			KEY_AUTOHYPHENATIONS, new ZLSimpleBooleanOptionEntry(baseStyle.AutoHyphenationOption),
 			name
 		);
 	}
@@ -77,20 +82,20 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 			const std::string &name = decoration->name();
 
 			registerEntries(dialogTab,
-				new FontFamilyWithBaseOptionEntry(FAMILY_STRING, decoration->FontFamilyOption, context),
-				new ZLSimpleBoolean3OptionEntry(BOLD_STRING, decoration->BoldOption),
+				KEY_FONTFAMILY, new FontFamilyWithBaseOptionEntry(decoration->FontFamilyOption, context),
+				KEY_BOLD, new ZLSimpleBoolean3OptionEntry(decoration->BoldOption),
 				name
 			);
 
 			registerEntries(dialogTab,
-				new ZLSimpleSpinOptionEntry("Size Difference", decoration->FontSizeDeltaOption, 2),
-				new ZLSimpleBoolean3OptionEntry(ITALIC_STRING, decoration->ItalicOption),
+				KEY_FONTSIZEDIFFERENCE, new ZLSimpleSpinOptionEntry(decoration->FontSizeDeltaOption, 2),
+				KEY_ITALIC, new ZLSimpleBoolean3OptionEntry(decoration->ItalicOption),
 				name
 			);
 
 			registerEntries(dialogTab,
-				new ZLSimpleBoolean3OptionEntry("Allow Hyphenations", decoration->AllowHyphenationsOption),
-				0,
+				KEY_ALLOWHYPHENATIONS, new ZLSimpleBoolean3OptionEntry(decoration->AllowHyphenationsOption),
+				KEY_DUMMY, 0,
 				name
 			);
 		}

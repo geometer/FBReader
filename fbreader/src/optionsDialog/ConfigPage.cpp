@@ -35,7 +35,7 @@ public:
 	void onAccept(int value);
 };
 
-TimeoutEntry::TimeoutEntry(ZLIntegerRangeOption &option) : ZLSimpleSpinOptionEntry("Timeout Between Savings, Seconds", option, 5) {
+TimeoutEntry::TimeoutEntry(ZLIntegerRangeOption &option) : ZLSimpleSpinOptionEntry(option, 5) {
 }
 
 void TimeoutEntry::onAccept(int value) {
@@ -45,12 +45,12 @@ void TimeoutEntry::onAccept(int value) {
 
 ConfigPage::ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
 	ZLToggleBooleanOptionEntry *enableEntry =
-		new ZLToggleBooleanOptionEntry("Save State Automatically", fbreader.ConfigAutoSavingOption);
-	dialogTab.addOption(enableEntry);
+		new ZLToggleBooleanOptionEntry(fbreader.ConfigAutoSavingOption);
+	dialogTab.addOption("Save State Automatically", "", enableEntry);
 
 	ZLOptionEntry *timeoutEntry = new TimeoutEntry(fbreader.ConfigAutoSaveTimeoutOption);
 	enableEntry->addDependentEntry(timeoutEntry);
-	dialogTab.addOption(timeoutEntry);
+	dialogTab.addOption("Timeout Between Savings, Seconds", "", timeoutEntry);
 
 	enableEntry->onStateChanged(enableEntry->initialState());
 }

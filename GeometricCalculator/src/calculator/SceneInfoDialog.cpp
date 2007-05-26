@@ -53,7 +53,6 @@ public:
 	SceneNameEntry(Document &document);
 
 private:
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 
@@ -62,11 +61,6 @@ private:
 };
 
 SceneNameEntry::SceneNameEntry(Document &document) : myDocument(document) {
-}
-
-const std::string &SceneNameEntry::name() const {
-	static const std::string NAME = "Name";
-	return NAME;
 }
 
 const std::string &SceneNameEntry::initialValue() const {
@@ -83,9 +77,9 @@ void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
 	Document &document = myCalculator.document();
 	const std::list<ObjectPtr> &objects = document.scene()->objects();
 
-	infoTab.addOption(new SceneNameEntry(document));
-	infoTab.addOption(new ZLStringInfoEntry("Object Number", ObjectUtil::orderedClosure(objects).size()));
-	infoTab.addOption(new ZLStringInfoEntry("Visible Object Number", objects.size()));
+	infoTab.addOption("Name", "", new SceneNameEntry(document));
+	infoTab.addOption("Object Number", "", new ZLStringInfoEntry(ObjectUtil::orderedClosure(objects).size()));
+	infoTab.addOption("Visible Object Number", "", new ZLStringInfoEntry(objects.size()));
 }
 
 class DescriptionEntry : public ZLMultilineOptionEntry {
@@ -94,7 +88,6 @@ public:
 	DescriptionEntry(Document &document);
 
 private:
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 
@@ -103,11 +96,6 @@ private:
 };
 
 DescriptionEntry::DescriptionEntry(Document &document) : myDocument(document) {
-}
-
-const std::string &DescriptionEntry::name() const {
-	static const std::string EMPTY;
-	return EMPTY;
 }
 
 const std::string &DescriptionEntry::initialValue() const {
@@ -121,5 +109,5 @@ void DescriptionEntry::onAccept(const std::string &value) {
 void ShowInfoDialogAction::createDescriptionTab(ZLOptionsDialog &dialog) {
 	ZLDialogContent &infoTab = dialog.createTab(ZLResourceKey("Description"));
 
-	infoTab.addOption(new DescriptionEntry(myCalculator.document()));
+	infoTab.addOption("", "", new DescriptionEntry(myCalculator.document()));
 }

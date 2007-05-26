@@ -39,7 +39,7 @@ int ZLSimpleKeyOptionEntry::CodeIndexBimap::codeByIndex(int index) const {
 	return CodeByIndex[index];
 }
 
-ZLSimpleKeyOptionEntry::ZLSimpleKeyOptionEntry(ZLKeyBindings &bindings) : ZLKeyOptionEntry(""), myBindings(bindings) {
+ZLSimpleKeyOptionEntry::ZLSimpleKeyOptionEntry(ZLKeyBindings &bindings) : ZLKeyOptionEntry(), myBindings(bindings) {
 }
 
 void ZLSimpleKeyOptionEntry::onAccept() {

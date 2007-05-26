@@ -34,7 +34,9 @@ public:
 	virtual ~ZLDialog();
 
 	virtual void addButton(const ZLResourceKey &key, bool accept) = 0;
-	void addOption(ZLOptionEntry *entry);
+
+	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
+	void addOption(const ZLResourceKey &key, ZLOptionEntry *option);
 
 	// TODO: change return type to int (or std::string?)
 	virtual bool run() = 0;
