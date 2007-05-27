@@ -37,8 +37,10 @@ public:
 	static bool isAutoSavingSupported();
 	static void startAutoSave(int seconds);
 	
-public:
+protected:
 	ZLOption(const std::string &category, const std::string &group, const std::string &optionName);
+
+public:
 	virtual ~ZLOption();
 
 protected:
@@ -52,11 +54,29 @@ private:
 	const ZLOption& operator = (const ZLOption&);
 };
 
-class ZLBooleanOption : public ZLOption {
+class ZLSimpleOption : public ZLOption {
+
+public:
+	enum Type {
+		TYPE_BOOLEAN,
+		TYPE_BOOLEAN3,
+		//TYPE_COLOR,
+		TYPE_STRING,
+	};
+
+protected:
+	ZLSimpleOption(const std::string &category, const std::string &group, const std::string &optionName);
+
+public:
+	virtual Type type() const = 0;
+};
+
+class ZLBooleanOption : public ZLSimpleOption {
 
 public:
 	ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue);
 	~ZLBooleanOption();
+	Type type() const;
 
 	bool value() const;
 	void setValue(bool value);
@@ -72,11 +92,12 @@ enum Boolean3 {
 	B3_UNDEFINED = 2
 };
 
-class ZLBoolean3Option : public ZLOption {
+class ZLBoolean3Option : public ZLSimpleOption {
 
 public:
 	ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue);
 	~ZLBoolean3Option();
+	Type type() const;
 
 	Boolean3 value() const;
 	void setValue(Boolean3 value);
@@ -146,11 +167,12 @@ private:
 	const double myDefaultValue;
 };
 
-class ZLStringOption : public ZLOption {
+class ZLStringOption : public ZLSimpleOption {
 
 public:
 	ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue);
 	~ZLStringOption();
+	Type type() const;
 
 	const std::string &value() const;
 	void setValue(const std::string &value);

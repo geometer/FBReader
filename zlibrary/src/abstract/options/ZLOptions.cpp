@@ -128,10 +128,17 @@ ZLOption::ZLOption(const std::string &category, const std::string &group, const 
 ZLOption::~ZLOption() {
 }
 
-ZLBooleanOption::ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLSimpleOption::ZLSimpleOption(const std::string &category, const std::string &group, const std::string &optionName) : ZLOption(category, group, optionName) {
+}
+
+ZLBooleanOption::ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBooleanOption::~ZLBooleanOption() {
+}
+
+ZLSimpleOption::Type ZLBooleanOption::type() const {
+	return TYPE_BOOLEAN;
 }
 
 bool ZLBooleanOption::value() const {
@@ -158,10 +165,14 @@ void ZLBooleanOption::setValue(bool value) {
 	}
 }
 
-ZLBoolean3Option::ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLBoolean3Option::ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBoolean3Option::~ZLBoolean3Option() {
+}
+
+ZLSimpleOption::Type ZLBoolean3Option::type() const {
+	return TYPE_BOOLEAN3;
 }
 
 Boolean3 ZLBoolean3Option::value() const {
@@ -318,10 +329,14 @@ void ZLDoubleOption::setValue(double value) {
 	}
 }
 
-ZLStringOption::ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLStringOption::ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLStringOption::~ZLStringOption() {
+}
+
+ZLSimpleOption::Type ZLStringOption::type() const {
+	return TYPE_STRING;
 }
 
 const std::string &ZLStringOption::value() const {

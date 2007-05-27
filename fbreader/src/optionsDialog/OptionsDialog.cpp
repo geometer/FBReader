@@ -195,10 +195,10 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(fbreader), true);
 
 	ZLDialogContent &generalTab = myDialog->createTab(ZLResourceKey("General"));
-	generalTab.addOption(ZLResourceKey("quitOnCancel"), new ZLSimpleBooleanOptionEntry(fbreader.QuitOnCancelOption));
+	generalTab.addOption(ZLResourceKey("quitOnCancel"), fbreader.QuitOnCancelOption);
 	CollectionView &collectionView = (CollectionView&)*fbreader.myCollectionView;
-	generalTab.addOption(ZLResourceKey("bookPath"), new ZLSimpleStringOptionEntry(collectionView.collection().PathOption));
-	generalTab.addOption(ZLResourceKey("lookInSubdirectories"), new ZLSimpleBooleanOptionEntry(collectionView.collection().ScanSubdirsOption));
+	generalTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
+	generalTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
 	RecentBooksView &recentBooksView = (RecentBooksView&)*fbreader.myRecentBooksView;
 	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(recentBooksView.lastBooks().MaxListSizeOption, 1));
 	generalTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));

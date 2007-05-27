@@ -137,6 +137,41 @@
 					<node name="grabSystemKeys" value="Grab System Keys"/>
 					<node name="separate" value="Keybindings Depend on Orientation"/>
 					<node name="orientation" value="Orientation"/>
+					<node name="action">
+						<node name="none" value="None"/>
+						<node name="showLibrary" value="Show Library"/>
+						<node name="showRecent" value="Show Recent Books"/>
+						<node name="previousBook" value="Open Previous Book"/>
+						<node name="toc" value="Show Table of Contents"/>
+						<node name="gotoHome" value="Go to Home"/>
+						<node name="gotoSectionStart" value="Go to Start of Section"/>
+						<node name="gotoSectionEnd" value="Go to End of Section"/>
+						<node name="nextTOCSection" value="Go to Next TOC Section"/>
+						<node name="previousTOCSection" value="Go to Previous TOC Section"/>
+						<node name="largeScrollForward" value="Large Scroll Forward"/>
+						<node name="largeScrollBackward" value="Large Scroll Backward"/>
+						<node name="smallScrollForward" value="Small Scroll Forward"/>
+						<node name="smallScrollBackward" value="Small Scroll Backward"/>
+						<node name="undo" value="Undo"/>
+						<node name="redo" value="Redo"/>
+						<node name="copyToClipboard" value="Copy Selection to Clipboard"/>
+						<node name="openInDictionary" value="Open Selected Text in Dictionary"/>
+						<node name="clearSelection" value="Clear Selection"/>
+						<node name="search" value="Search"/>
+						<node name="findPrevious" value="Find Previous"/>
+						<node name="findNext" value="Find Next"/>
+						<node name="increaseFont" value="Increase Font Size"/>
+						<node name="decreaseFont" value="Decrease Font Size"/>
+						<node name="toggleIndicator" value="Toggle Position Indicator"/>
+						<node name="toggleFullscreen" value="Toggle Fullscreen Mode"/>
+						<node name="onFullscreen" value="Switch to Fullscreen Mode"/>
+						<node name="rotate" value="Rotate Screen"/>
+						<node name="preferences" value="Show Options Dialog"/>
+						<node name="bookInfo" value="Show Book Info Dialog"/>
+						<node name="addBook" value="Add Book"/>
+						<node name="cancel" value="Cancel"/>
+						<node name="quit" value="Quit"/>
+					</node>
 				</node>
 				<node name="Config" value="Config">
 					<node name="autoSave" value="Save State Automatically"/>
@@ -190,6 +225,7 @@
 		</node>
 		<node name="textSearchDialog">
 			<node name="title" value="Text Search"/>
+			<node name="text" value=""/>
 			<node name="ignoreCase" value="&amp;Ignore case"/>
 			<node name="wholeText" value="In w&amp;hole text"/>
 			<node name="backward" value="&amp;Backward"/>

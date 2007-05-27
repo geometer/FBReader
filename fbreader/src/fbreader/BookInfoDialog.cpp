@@ -346,7 +346,7 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	commonTab.addOption(ZLResourceKey("file"), 
 		new ZLStringInfoEntry(ZLFile::fileNameToUtf8(ZLFile(fileName).path()))
 	);
-	commonTab.addOption(ZLResourceKey("title"), new ZLSimpleStringOptionEntry(myBookInfo.TitleOption));
+	commonTab.addOption(ZLResourceKey("title"), myBookInfo.TitleOption);
 
 	myAuthorDisplayNameEntry = new AuthorDisplayNameEntry(*this);
 	myAuthorSortKeyEntry = new AuthorSortKeyEntry(*this);

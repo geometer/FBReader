@@ -92,6 +92,7 @@ void ZLSimpleBoolean3OptionEntry::onAccept(const std::string &value) {
 	}
 }
 
+/*
 ZLSimpleColorOptionEntry::ZLSimpleColorOptionEntry(ZLColorOption &option) : myOption(option) {
 }
 
@@ -102,3 +103,4 @@ const ZLColor ZLSimpleColorOptionEntry::color() const {
 void ZLSimpleColorOptionEntry::onAccept(ZLColor color) {
 	myOption.setValue(color);
 }
+*/

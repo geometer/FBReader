@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <optionEntries/ZLSimpleOptionEntry.h>
+
 #include "ZLOptionView.h"
 #include "ZLDialogContent.h"
 
@@ -56,13 +58,34 @@ void ZLDialogContent::addView(ZLOptionView *view) {
 
 static const ZLResourceKey TOOLTIP_KEY("tooltip");
 
+static ZLOptionEntry *createEntryByOption(ZLSimpleOption &option) {
+	switch (option.type()) {
+		case ZLSimpleOption::TYPE_BOOLEAN:
+			return new ZLSimpleBooleanOptionEntry((ZLBooleanOption&)option);
+		case ZLSimpleOption::TYPE_BOOLEAN3:
+			return new ZLSimpleBoolean3OptionEntry((ZLBoolean3Option&)option);
+		case ZLSimpleOption::TYPE_STRING:
+			return new ZLSimpleStringOptionEntry((ZLStringOption&)option);
+		default:
+			return 0;
+	}
+}
+
 void ZLDialogContent::addOption(const ZLResourceKey &key, ZLOptionEntry *option) {
 	const ZLResource &resource = myResource[key];
 	addOption(resource.value(), resource[TOOLTIP_KEY].value(), option);
+}
+
+void ZLDialogContent::addOption(const ZLResourceKey &key, ZLSimpleOption &option) {
+	addOption(key, createEntryByOption(option));
 }
 
 void ZLDialogContent::addOptions(const ZLResourceKey &key0, ZLOptionEntry *option0, const ZLResourceKey &key1, ZLOptionEntry *option1) {
 	const ZLResource &resource0 = myResource[key0];
 	const ZLResource &resource1 = myResource[key1];
 	addOptions(resource0.value(), resource0[TOOLTIP_KEY].value(), option0, resource1.value(), resource1[TOOLTIP_KEY].value(), option1);
+}
+
+void ZLDialogContent::addOptions(const ZLResourceKey &key0, ZLSimpleOption &option0, const ZLResourceKey &key1, ZLSimpleOption &option1) {
+	addOptions(key0, createEntryByOption(option0), key1, createEntryByOption(option1));
 }

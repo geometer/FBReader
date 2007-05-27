@@ -73,6 +73,7 @@ private:
 	ZLBoolean3Option &myOption;
 };
 
+/*
 class ZLSimpleColorOptionEntry : public ZLColorOptionEntry {
 
 public:
@@ -83,5 +84,6 @@ public:
 private:
 	ZLColorOption &myOption; 
 };
+*/
 
 #endif /* __ZLSIMPLEOPTIONENTRY_H__ */

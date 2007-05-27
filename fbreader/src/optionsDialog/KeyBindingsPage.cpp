@@ -67,7 +67,7 @@ const ZLSimpleKeyOptionEntry::CodeIndexBimap &SingleKeyOptionEntry::codeIndexBim
 class MultiKeyOptionEntry : public ZLKeyOptionEntry {
 
 public:
-	MultiKeyOptionEntry(FBReader &fbreader);
+	MultiKeyOptionEntry(const ZLResource &resource, FBReader &fbreader);
 	void onAccept();
 	int actionIndex(const std::string &key);
 	void onValueChanged(const std::string &key, int index);
@@ -75,9 +75,10 @@ public:
 	void setOrientation(ZLViewWidget::Angle);
 
 private:
-	void addAction(int code, const std::string &name);
+	void addAction(int code, const ZLResourceKey &key);
 
 private:
+	const ZLResource &myResource;
 	ZLSimpleKeyOptionEntry::CodeIndexBimap myBimap;
 
 	SingleKeyOptionEntry myEntry0;
@@ -87,65 +88,66 @@ private:
 	SingleKeyOptionEntry *myCurrentEntry;
 };
 
-void MultiKeyOptionEntry::addAction(int code, const std::string &name) {
+void MultiKeyOptionEntry::addAction(int code, const ZLResourceKey &key) {
 	myBimap.insert(code);
-	addActionName(name);
+	addActionName(myResource[key].value());
 }
 
-MultiKeyOptionEntry::MultiKeyOptionEntry(FBReader &fbreader) :
+MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &fbreader) :
 	ZLKeyOptionEntry(),
+	myResource(resource),
 	myEntry0(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES0)),
 	myEntry90(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES90)),
 	myEntry180(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES180)),
 	myEntry270(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES270)),
 	myCurrentEntry(&myEntry0) {
-	addAction(NO_ACTION, "None");
+	addAction(NO_ACTION, ZLResourceKey("none"));
 
 	// switch view
-	addAction(ACTION_SHOW_COLLECTION, "Show Library");
-	addAction(ACTION_SHOW_LAST_BOOKS, "Show Recent Books");
-	addAction(ACTION_OPEN_PREVIOUS_BOOK, "Open Previous Book");
-	addAction(ACTION_SHOW_CONTENTS, "Show Table Of Contents");
+	addAction(ACTION_SHOW_COLLECTION, ZLResourceKey("showLibrary"));
+	addAction(ACTION_SHOW_LAST_BOOKS, ZLResourceKey("showRecent"));
+	addAction(ACTION_OPEN_PREVIOUS_BOOK, ZLResourceKey("previousBook"));
+	addAction(ACTION_SHOW_CONTENTS, ZLResourceKey("toc"));
 
 	// navigation
-	addAction(ACTION_SCROLL_TO_HOME, "Go To Home");
-	addAction(ACTION_SCROLL_TO_START_OF_TEXT, "Go To Start Of Section");
-	addAction(ACTION_SCROLL_TO_END_OF_TEXT, "Go To End Of Section");
-	addAction(ACTION_GOTO_NEXT_TOC_SECTION, "Go To Next TOC Section");
-	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, "Go To Previous TOC Section");
-	addAction(ACTION_LARGE_SCROLL_FORWARD, "Large Scroll Forward");
-	addAction(ACTION_LARGE_SCROLL_BACKWARD, "Large Scroll Backward");
-	addAction(ACTION_SMALL_SCROLL_FORWARD, "Small Scroll Forward");
-	addAction(ACTION_SMALL_SCROLL_BACKWARD, "Small Scroll Backward");
-	addAction(ACTION_UNDO, "Undo");
-	addAction(ACTION_REDO, "Redo");
+	addAction(ACTION_SCROLL_TO_HOME, ZLResourceKey("gotoHome"));
+	addAction(ACTION_SCROLL_TO_START_OF_TEXT, ZLResourceKey("gotoSectionStart"));
+	addAction(ACTION_SCROLL_TO_END_OF_TEXT, ZLResourceKey("gotoSectionEnd"));
+	addAction(ACTION_GOTO_NEXT_TOC_SECTION, ZLResourceKey("nextTOCSection"));
+	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, ZLResourceKey("previousTOCSection"));
+	addAction(ACTION_LARGE_SCROLL_FORWARD, ZLResourceKey("largeScrollForward"));
+	addAction(ACTION_LARGE_SCROLL_BACKWARD, ZLResourceKey("largeScrollBackward"));
+	addAction(ACTION_SMALL_SCROLL_FORWARD, ZLResourceKey("smallScrollForward"));
+	addAction(ACTION_SMALL_SCROLL_BACKWARD, ZLResourceKey("smallScrollBackward"));
+	addAction(ACTION_UNDO, ZLResourceKey("undo"));
+	addAction(ACTION_REDO, ZLResourceKey("redo"));
 
 	// selection
-	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, "Copy Selection To Clipboard");
-	addAction(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, "Open Selected Text In Dictionary");
-	addAction(ACTION_CLEAR_SELECTION, "Clear Selection");
+	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, ZLResourceKey("copyToClipboard"));
+	addAction(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, ZLResourceKey("openInDictionary"));
+	addAction(ACTION_CLEAR_SELECTION, ZLResourceKey("clearSelection"));
 
 	// search
-	addAction(ACTION_SEARCH, "Search");
-	addAction(ACTION_FIND_PREVIOUS, "Find Previous");
-	addAction(ACTION_FIND_NEXT, "Find Next");
+	addAction(ACTION_SEARCH, ZLResourceKey("search"));
+	addAction(ACTION_FIND_PREVIOUS, ZLResourceKey("findPrevious"));
+	addAction(ACTION_FIND_NEXT, ZLResourceKey("findNext"));
 
 	// look
-	addAction(ACTION_INCREASE_FONT, "Increase Font Size");
-	addAction(ACTION_DECREASE_FONT, "Decrease Font Size");
-	addAction(ACTION_SHOW_HIDE_POSITION_INDICATOR, "Toggle Position Indicator");
-	addAction(ACTION_TOGGLE_FULLSCREEN, "Toggle Fullscreen Mode");
-	addAction(ACTION_FULLSCREEN_ON, "Switch To Fullscreen Mode");
-	addAction(ACTION_ROTATE_SCREEN, "Rotate Screen");
+	addAction(ACTION_INCREASE_FONT, ZLResourceKey("increaseFont"));
+	addAction(ACTION_DECREASE_FONT, ZLResourceKey("decreaseFont"));
+	addAction(ACTION_SHOW_HIDE_POSITION_INDICATOR, ZLResourceKey("toggleIndicator"));
+	addAction(ACTION_TOGGLE_FULLSCREEN, ZLResourceKey("toggleFullscreen"));
+	addAction(ACTION_FULLSCREEN_ON, ZLResourceKey("onFullscreen"));
+	addAction(ACTION_ROTATE_SCREEN, ZLResourceKey("rotate"));
 
 	// dialogs
-	addAction(ACTION_SHOW_OPTIONS, "Show Options Dialog");
-	addAction(ACTION_SHOW_BOOK_INFO, "Show Book Info Dialog");
-	addAction(ACTION_ADD_BOOK, "Add Book");
+	addAction(ACTION_SHOW_OPTIONS, ZLResourceKey("preferences"));
+	addAction(ACTION_SHOW_BOOK_INFO, ZLResourceKey("bookInfo"));
+	addAction(ACTION_ADD_BOOK, ZLResourceKey("addBook"));
 
 	// quit
-	addAction(ACTION_CANCEL, "Cancel");
-	addAction(ACTION_QUIT, "Quit");
+	addAction(ACTION_CANCEL, ZLResourceKey("cancel"));
+	addAction(ACTION_QUIT, ZLResourceKey("quit"));
 }
 
 void MultiKeyOptionEntry::setOrientation(ZLViewWidget::Angle angle) {
@@ -249,7 +251,8 @@ KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab)
 	if (fbreader.isFullKeyboardControlSupported()) {
 		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry(fbreader));
 	}
-	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(fbreader);
+	ZLResourceKey actionKey("action");
+	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(dialogTab.resource(actionKey), fbreader);
 	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
 	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(fbreader, *keyEntry, *orientationEntry);
 	dialogTab.addOption(ZLResourceKey("separate"), useSeparateBindingsEntry);

@@ -37,6 +37,7 @@ public:
 
 	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
 	void addOption(const ZLResourceKey &key, ZLOptionEntry *option);
+	void addOption(const ZLResourceKey &key, ZLSimpleOption &option);
 
 	// TODO: change return type to int (or std::string?)
 	virtual bool run() = 0;

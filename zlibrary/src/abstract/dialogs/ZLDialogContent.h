@@ -24,6 +24,7 @@
 #include <string>
 #include <vector>
 
+#include <ZLOptions.h>
 #include <ZLResource.h>
 
 class ZLOptionEntry;
@@ -43,10 +44,13 @@ public:
 
 	virtual void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) = 0;
 	void addOption(const ZLResourceKey &key, ZLOptionEntry *option);
+	void addOption(const ZLResourceKey &key, ZLSimpleOption &option);
 	virtual void addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0,
 													const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1) = 0;
 	void addOptions(const ZLResourceKey &key0, ZLOptionEntry *option0,
 									const ZLResourceKey &key1, ZLOptionEntry *option1);
+	void addOptions(const ZLResourceKey &key0, ZLSimpleOption &option0,
+									const ZLResourceKey &key1, ZLSimpleOption &option1);
 
 	void accept();
 
