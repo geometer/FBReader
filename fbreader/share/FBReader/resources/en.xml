@@ -63,9 +63,29 @@
 				<node name="General" value="General">
 					<node name="quitOnCancel" value="Quit Application on Cancel"/>
 					<node name="bookPath" value="Book Path"/>
+					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
+					<node name="recentListSize" value="Recent Books List Size"/>
+					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
+					<node name="defaultLanguage" value="Language For Encoding Detection"/>
 				</node>
-				<node name="Indicator" value="Indicator"/>
-				<node name="Scrolling" value="Scrolling"/>
+				<node name="Indicator" value="Indicator">
+					<node name="show" value="Show Position Indicator"/>
+					<node name="height" value="Indicator Height"/>
+					<node name="offset" value="Offset from Text"/>
+					<node name="pageNumber" value="Show Position as Numbers"/>
+					<node name="time" value="Show Time"/>
+					<node name="fontSize" value="Font Size"/>
+					<node name="tocMarks" value="Show TOC Marks"/>
+					<node name="navigation" value="Enable Navigation"/>
+				</node>
+				<node name="Scrolling" value="Scrolling">
+					<node name="optionsFor" value="Options for"/>
+					<node name="delay" value="Delay between Scrollings, msecs"/>
+					<node name="mode" value="Scrolling Mode"/>
+					<node name="linesToKeep" value="Lines to Keep"/>
+					<node name="linesToScroll" value="Lines to Scroll"/>
+					<node name="percentToScroll" value="Percent to Scroll"/>
+				</node>
 				<node name="Margins" value="Margins">
 					<node name="left" value="Left Margin"/>
 					<node name="right" value="Right Margin"/>
@@ -95,7 +115,10 @@
 				<node name="Rotation" value="Rotation"/>
 				<node name="Colors" value="Colors"/>
 				<node name="Keys" value="Keys"/>
-				<node name="Config" value="Config"/>
+				<node name="Config" value="Config">
+					<node name="autoSave" value="Save State Automatically"/>
+					<node name="timeout" value="Timeout between Savings, seconds"/>
+				</node>
 				<node name="Dictionary" value="Dictionary"/>
 				<node name="Web" value="Web"/>
 			</node>

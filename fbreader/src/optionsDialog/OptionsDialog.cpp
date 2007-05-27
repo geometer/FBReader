@@ -129,16 +129,10 @@ void RotationTypeEntry::onAccept(int index) {
 class DefaultLanguageEntry : public ZLComboOptionEntry {
 
 public:
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 };
-
-const std::string &DefaultLanguageEntry::name() const {
-	static const std::string _name = "Language For Encoding Detection";
-	return _name;
-}
 
 static std::string LANGUAGE_RUSSIAN = "Russian";
 static std::string LANGUAGE_CHINESE = "Chinese";
@@ -208,11 +202,11 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	generalTab.addOption(ZLResourceKey("quitOnCancel"), new ZLSimpleBooleanOptionEntry(fbreader.QuitOnCancelOption));
 	CollectionView &collectionView = (CollectionView&)*fbreader.myCollectionView;
 	generalTab.addOption(ZLResourceKey("bookPath"), new ZLSimpleStringOptionEntry(collectionView.collection().PathOption));
-	generalTab.addOption("Look For Books In Subdirectories", "", new ZLSimpleBooleanOptionEntry(collectionView.collection().ScanSubdirsOption));
+	generalTab.addOption(ZLResourceKey("lookInSubdirectories"), new ZLSimpleBooleanOptionEntry(collectionView.collection().ScanSubdirsOption));
 	RecentBooksView &recentBooksView = (RecentBooksView&)*fbreader.myRecentBooksView;
-	generalTab.addOption("Recent Books List Size", "", new ZLSimpleSpinOptionEntry(recentBooksView.lastBooks().MaxListSizeOption, 1));
-	generalTab.addOption("Delay Between Accepted Key Pressings", "", new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
-	generalTab.addOption("", "", new DefaultLanguageEntry());
+	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(recentBooksView.lastBooks().MaxListSizeOption, 1));
+	generalTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
+	generalTab.addOption(ZLResourceKey("defaultLanguage"), new DefaultLanguageEntry());
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 

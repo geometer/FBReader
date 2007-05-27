@@ -46,11 +46,11 @@ void TimeoutEntry::onAccept(int value) {
 ConfigPage::ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
 	ZLToggleBooleanOptionEntry *enableEntry =
 		new ZLToggleBooleanOptionEntry(fbreader.ConfigAutoSavingOption);
-	dialogTab.addOption("Save State Automatically", "", enableEntry);
+	dialogTab.addOption(ZLResourceKey("autoSave"), enableEntry);
 
 	ZLOptionEntry *timeoutEntry = new TimeoutEntry(fbreader.ConfigAutoSaveTimeoutOption);
 	enableEntry->addDependentEntry(timeoutEntry);
-	dialogTab.addOption("Timeout Between Savings, Seconds", "", timeoutEntry);
+	dialogTab.addOption(ZLResourceKey("timeout"), timeoutEntry);
 
 	enableEntry->onStateChanged(enableEntry->initialState());
 }

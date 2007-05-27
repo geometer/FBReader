@@ -42,7 +42,6 @@ class ScrollingTypeEntry : public ZLComboOptionEntry {
 public:
 	ScrollingTypeEntry(FBReader &fbreader, ScrollingOptionsPage &page);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &text);
@@ -51,7 +50,6 @@ public:
 private:
 	FBReader &myFBReader;
 	ScrollingOptionsPage &myPage;
-	std::string myName;
 	std::vector<std::string> myValues;
 };
 
@@ -64,7 +62,6 @@ private:
 public:
 	ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option, bool isFingerTapOption);
 
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &text);
@@ -75,7 +72,6 @@ private:
 	FBReader &myFBReader;
 	ScrollingOptionsPage::ScrollingEntries &myEntries;
 	ZLIntegerOption &myOption;
-	std::string myName;
 	std::vector<std::string> myValues;
 	int myCurrentIndex;
 	bool myIsFingerTapOption;
@@ -90,11 +86,6 @@ ScrollingTypeEntry::ScrollingTypeEntry(FBReader &fbreader, ScrollingOptionsPage 
 	if (myFBReader.isFingerTapEventSupported()) {
 		myValues.push_back(FINGER_TAP_SCROLLING);
 	}
-}
-
-const std::string &ScrollingTypeEntry::name() const {
-	static const std::string _name = "Options For";
-	return _name;
 }
 
 const std::string &ScrollingTypeEntry::initialValue() const {
@@ -156,11 +147,6 @@ ScrollingModeEntry::ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage:
 	}
 }
 
-const std::string &ScrollingModeEntry::name() const {
-	static const std::string _name = "Scrolling Mode";
-	return _name;
-}
-
 const std::string &ScrollingModeEntry::initialValue() const {
 	if (myIsFingerTapOption && !myFBReader.EnableFingerScrollingOption.value()) {
 		return DISABLE;
@@ -204,11 +190,11 @@ void ScrollingOptionsPage::ScrollingEntries::init(FBReader &fbreader, FBReader::
 }
 
 void ScrollingOptionsPage::ScrollingEntries::connect(ZLDialogContent &dialogTab) {
-	dialogTab.addOption("Delay Between Scrollings, msecs", "", myDelayEntry);
-	dialogTab.addOption("", "", myModeEntry);
-	dialogTab.addOption("Lines To Keep", "", myLinesToKeepEntry);
-	dialogTab.addOption("Lines To Scroll", "", myLinesToScrollEntry);
-	dialogTab.addOption("Percent To Scroll", "", myPercentToScrollEntry);
+	dialogTab.addOption(ZLResourceKey("delay"), myDelayEntry);
+	dialogTab.addOption(ZLResourceKey("mode"), myModeEntry);
+	dialogTab.addOption(ZLResourceKey("linesToKeep"), myLinesToKeepEntry);
+	dialogTab.addOption(ZLResourceKey("linesToScroll"), myLinesToScrollEntry);
+	dialogTab.addOption(ZLResourceKey("percentToScroll"), myPercentToScrollEntry);
 }
 
 void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
@@ -227,7 +213,7 @@ void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
 
 ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader) {
 	ZLComboOptionEntry *mainEntry = new ScrollingTypeEntry(fbreader, *this);
-	dialogTab.addOption("", "", mainEntry);
+	dialogTab.addOption(ZLResourceKey("optionsFor"), mainEntry);
 
 	myLargeScrollingEntries.init(fbreader, fbreader.LargeScrollingOptions);
 	mySmallScrollingEntries.init(fbreader, fbreader.SmallScrollingOptions);

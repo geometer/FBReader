@@ -77,41 +77,41 @@ void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
 	ZLToggleBooleanOptionEntry *showIndicatorEntry =
 		new ZLToggleBooleanOptionEntry(indicatorStyle.ShowOption);
-	indicatorTab.addOption("Show Position Indicator", "", showIndicatorEntry);
+	indicatorTab.addOption(ZLResourceKey("show"), showIndicatorEntry);
 
 	ZLOptionEntry *heightEntry =
 		new ZLSimpleSpinOptionEntry(indicatorStyle.HeightOption, 1);
 	ZLOptionEntry *offsetEntry =
 		new ZLSimpleSpinOptionEntry(indicatorStyle.OffsetOption, 1);
-	indicatorTab.addOptions("Indicator Height", "", heightEntry, "Offset From Text", "", offsetEntry);
+	indicatorTab.addOptions(ZLResourceKey("height"), heightEntry, ZLResourceKey("offset"), offsetEntry);
 	showIndicatorEntry->addDependentEntry(heightEntry);
 	showIndicatorEntry->addDependentEntry(offsetEntry);
 
 	StateOptionEntry *showTextPositionEntry =
 		new StateOptionEntry(indicatorStyle.ShowTextPositionOption);
-	indicatorTab.addOption("Show Position As Numbers", "", showTextPositionEntry);
+	indicatorTab.addOption(ZLResourceKey("pageNumber"), showTextPositionEntry);
 	showIndicatorEntry->addDependentEntry(showTextPositionEntry);
 
 	StateOptionEntry *showTimeEntry =
 		new StateOptionEntry(indicatorStyle.ShowTimeOption);
-	indicatorTab.addOption("Show Time", "", showTimeEntry);
+	indicatorTab.addOption(ZLResourceKey("time"), showTimeEntry);
 	showIndicatorEntry->addDependentEntry(showTimeEntry);
 
 	SpecialFontSizeEntry *fontSizeEntry =
 		new SpecialFontSizeEntry(indicatorStyle.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
-	indicatorTab.addOption("Font Size", "", fontSizeEntry);
+	indicatorTab.addOption(ZLResourceKey("fontSize"), fontSizeEntry);
 	showIndicatorEntry->addDependentEntry(fontSizeEntry);
 	showTextPositionEntry->addDependentEntry(fontSizeEntry);
 	showTimeEntry->addDependentEntry(fontSizeEntry);
 
 	ZLOptionEntry *tocMarksEntry =
 		new ZLSimpleBooleanOptionEntry(fbreader.bookTextView().ShowTOCMarksOption);
-	indicatorTab.addOption("Show TOC Marks", "", tocMarksEntry);
+	indicatorTab.addOption(ZLResourceKey("tocMarks"), tocMarksEntry);
 	showIndicatorEntry->addDependentEntry(tocMarksEntry);
 
 	ZLOptionEntry *navigationEntry =
 		new ZLSimpleBooleanOptionEntry(indicatorStyle.IsSensitiveOption);
-	indicatorTab.addOption("Enable Navigation", "", navigationEntry);
+	indicatorTab.addOption(ZLResourceKey("navigation"), navigationEntry);
 	showIndicatorEntry->addDependentEntry(navigationEntry);
 
 	showIndicatorEntry->onStateChanged(showIndicatorEntry->initialState());
