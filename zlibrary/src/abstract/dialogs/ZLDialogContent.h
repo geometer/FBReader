@@ -38,6 +38,7 @@ public:
 	virtual ~ZLDialogContent();
 
 	const std::string &name() const;
+	const std::string &getValue(const ZLResourceKey &key) const;
 
 	virtual void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) = 0;
 	void addOption(const ZLResourceKey &key, ZLOptionEntry *option);

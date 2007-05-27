@@ -253,9 +253,9 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	additional.push_back(new ZLSimpleBooleanOptionEntry(
 		/*"Open By Single Click",*/ fbreader.EnableSingleClickDictionaryOption
 	));
-	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), "Enable Integration With ", "Dictionary", "Integrate With", additional);
+	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), additional);
 	additional.clear();
-	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), "Open External Links In ", "Browser", "Use Browser", additional);
+	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), additional);
 }
 
 void OptionsDialog::storeTemporaryOption(ZLOption *option) {

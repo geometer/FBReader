@@ -34,6 +34,10 @@ const std::string &ZLDialogContent::name() const {
 	return myResource.value();
 }
 
+const std::string &ZLDialogContent::getValue(const ZLResourceKey &key) const {
+	return myResource[key].value();
+}
+
 void ZLDialogContent::accept() {
 	for (std::vector<ZLOptionView*>::iterator it = myViews.begin(); it != myViews.end(); ++it) {
 		(*it)->onAccept();

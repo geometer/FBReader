@@ -119,8 +119,16 @@
 					<node name="autoSave" value="Save State Automatically"/>
 					<node name="timeout" value="Timeout between Savings, seconds"/>
 				</node>
-				<node name="Dictionary" value="Dictionary"/>
-				<node name="Web" value="Web"/>
+				<node name="Dictionary" value="Dictionary">
+					<node name="enableIntegration" value="Enable Integration with %s"/>
+					<node name="defaultName" value="Dictionary"/>
+					<node name="choice" value="Integrate with"/>
+				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Open External Links in %s"/>
+					<node name="defaultName" value="Browser"/>
+					<node name="choice" value="Use Browser"/>
+				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">

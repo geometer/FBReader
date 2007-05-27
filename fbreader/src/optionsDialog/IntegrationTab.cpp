@@ -23,6 +23,7 @@
 #include <ZLOptionEntry.h>
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
+#include <ZLStringUtil.h>
 
 #include "OptionsDialog.h"
 #include "../FBOptions.h"
@@ -107,13 +108,19 @@ void EnableIntegrationEntry::onStateChanged(bool state) {
 	}
 }
 
-void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, const std::string &checkBoxPrefix, const std::string &checkBoxSuffix, const std::string &comboBoxName, std::vector<ZLOptionEntry*> &additionalOptions) {
+void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<ZLOptionEntry*> &additionalOptions) {
 	if (!collection.isNull()) {
 		const std::vector<std::string> &programNames = collection->names();
 		if (!programNames.empty()) {
 			ZLDialogContent &integrationTab = myDialog->createTab(key);
-			const std::string optionName = checkBoxPrefix +
-				((programNames.size() == 1) ? programNames[0] : checkBoxSuffix);
+			const std::string name =
+				(programNames.size() == 1) ?
+					programNames[0] :
+					integrationTab.getValue(ZLResourceKey("defaultName"));
+			const std::string optionName =
+				ZLStringUtil::printf(
+					integrationTab.getValue(ZLResourceKey("enableIntegration")), name
+				);
 			EnableIntegrationEntry *enableIntegrationEntry =
 				new EnableIntegrationEntry(collection->EnableCollectionOption);
 			integrationTab.addOption(optionName, "", enableIntegrationEntry);
@@ -121,7 +128,7 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 			ProgramChoiceEntry *programChoiceEntry = 0;
 			if (programNames.size() > 1) {
 				programChoiceEntry = new ProgramChoiceEntry(*collection);
-				integrationTab.addOption(comboBoxName, "", programChoiceEntry);
+				integrationTab.addOption(ZLResourceKey("choice"), programChoiceEntry);
 				enableIntegrationEntry->setProgramChoiceEntry(programChoiceEntry);
 			}
 
