@@ -76,15 +76,15 @@
 					<node name="time" value="Показывать текущее время"/>
 					<node name="fontSize" value="Размер шрифта"/>
 					<node name="tocMarks" value="Показывать пометки начала глав"/>
-					<node name="navigation" value="??????????"/>
+					<node name="navigation" value="Реагировать на нажатия стилусом"/>
 				</node>
 				<node name="Scrolling" value="Прокрутка">
 					<node name="optionsFor" value="Настройки для"/>
 					<node name="delay" value="Задержка между нажатиями на клавиши, мсек"/>
-					<node name="mode" value="??????????"/>
-					<node name="linesToKeep" value="??????????"/>
-					<node name="linesToScroll" value="??????????"/>
-					<node name="percentToScroll" value="??????????"/>
+					<node name="mode" value="Тип прокрутки"/>
+					<node name="linesToKeep" value="Оставлять строки"/>
+					<node name="linesToScroll" value="Прокручивать строки"/>
+					<node name="percentToScroll" value="Прокручивать процент изображения"/>
 				</node>
 				<node name="Margins" value="Отступы">
 					<node name="left" value="Отступ слева"/>
@@ -113,12 +113,12 @@
 					<node name="autoHyphenations" value="Расставлять переносы"/>
 				</node>
 				<node name="Rotation" value="Поворот">
-					<node name="direction" value="Rotation Type">
-						<node name="disabled" value="Disabled"/>
-						<node name="clockwise" value="90 Degrees Clockwise"/>
-						<node name="counterclockwise" value="90 Degrees Counterclockwise"/>
-						<node name="180" value="180 Degrees"/>
-						<node name="cycle" value="Cycle Through All 4 Directions"/>
+					<node name="direction" value="Куда поворачивать">
+						<node name="disabled" value="Никуда"/>
+						<node name="clockwise" value="На 90 градусов по часовой стрелке"/>
+						<node name="counterclockwise" value="На 90 градусов против часовой стрелки"/>
+						<node name="180" value="На 180 градусов"/>
+						<node name="cycle" value="Переключаться между 4 ориентациями"/>
 					</node>
 				</node>
 				<node name="Colors" value="Цвета">
@@ -134,43 +134,43 @@
 					</node>
 				</node>
 				<node name="Keys" value="Клавиши">
-					<node name="grabSystemKeys" value="Grab System Keys"/>
-					<node name="separate" value="Keybindings Depend on Orientation"/>
-					<node name="orientation" value="Orientation"/>
+					<node name="grabSystemKeys" value="Перехватывать системные клавиши"/>
+					<node name="separate" value="Свои настройки для каждой ориентации текста"/>
+					<node name="orientation" value="Ориентация"/>
 					<node name="action">
 						<node name="none" value="Никакого действия"/>
-						<node name="showLibrary" value="Show Library"/>
-						<node name="showRecent" value="Show Recent Books"/>
-						<node name="previousBook" value="Open Previous Book"/>
-						<node name="toc" value="Show Table of Contents"/>
-						<node name="gotoHome" value="Переход в начало текста"/>
-						<node name="gotoSectionStart" value="Переход в начало раздела"/>
-						<node name="gotoSectionEnd" value="Переход в конец раздела"/>
-						<node name="nextTOCSection" value="Go to Next TOC Section"/>
-						<node name="previousTOCSection" value="Go to Previous TOC Section"/>
-						<node name="largeScrollForward" value="Large Scroll Forward"/>
-						<node name="largeScrollBackward" value="Large Scroll Backward"/>
-						<node name="smallScrollForward" value="Small Scroll Forward"/>
-						<node name="smallScrollBackward" value="Small Scroll Backward"/>
-						<node name="undo" value="Назад"/>
-						<node name="redo" value="Вперед"/>
-						<node name="copyToClipboard" value="Copy Selection to Clipboard"/>
-						<node name="openInDictionary" value="Open Selected Text in Dictionary"/>
-						<node name="clearSelection" value="Clear Selection"/>
-						<node name="search" value="Search"/>
-						<node name="findPrevious" value="Find Previous"/>
-						<node name="findNext" value="Find Next"/>
-						<node name="increaseFont" value="Увеличение размера шрифта"/>
-						<node name="decreaseFont" value="Уменьшение размера шрифта"/>
-						<node name="toggleIndicator" value="Toggle Position Indicator"/>
-						<node name="toggleFullscreen" value="Toggle Fullscreen Mode"/>
-						<node name="onFullscreen" value="Переключение в полноэкранный режим"/>
-						<node name="rotate" value="Rotate Screen"/>
-						<node name="preferences" value="Диалог настроек"/>
-						<node name="bookInfo" value="Диалог с информацией о книге"/>
-						<node name="addBook" value="Добавление книги"/>
-						<node name="cancel" value="Отмена"/>
-						<node name="quit" value="Выход из программы"/>
+						<node name="showLibrary" value="Показать библиотеку"/>
+						<node name="showRecent" value="Список недавно прочитанных книг"/>
+						<node name="previousBook" value="Открыть предыдущую книгу"/>
+						<node name="toc" value="Показать оглавление"/>
+						<node name="gotoHome" value="Перейти в начало текста"/>
+						<node name="gotoSectionStart" value="Перейти в начало раздела"/>
+						<node name="gotoSectionEnd" value="Перейти в конец раздела"/>
+						<node name="nextTOCSection" value="Перейти к следующей главе"/>
+						<node name="previousTOCSection" value="Перейти к предыдущей главе"/>
+						<node name="largeScrollForward" value="Прокрутит вперед (на большое расстояние)"/>
+						<node name="largeScrollBackward" value="Прокрутить назад (на большое расстояние)"/>
+						<node name="smallScrollForward" value="Прокрутит вперед (на небольшое расстояние)"/>
+						<node name="smallScrollBackward" value="Прокрутить назад (на небольшое расстояние)"/>
+						<node name="undo" value="Отменить переход"/>
+						<node name="redo" value="Повторить переход"/>
+						<node name="copyToClipboard" value="Скопировать помеченный текст в буфер"/>
+						<node name="openInDictionary" value="Открыть помеченный текст в словаре"/>
+						<node name="clearSelection" value="Убрать пометку"/>
+						<node name="search" value="Показать диалог поиска"/>
+						<node name="findPrevious" value="Искать назад"/>
+						<node name="findNext" value="Искать вперед"/>
+						<node name="increaseFont" value="Увеличить размера шрифта"/>
+						<node name="decreaseFont" value="Уменьшить размера шрифта"/>
+						<node name="toggleIndicator" value="Включить/выключить индикатор"/>
+						<node name="toggleFullscreen" value="Включить/выключить полноэкранный режим"/>
+						<node name="onFullscreen" value="Включить полноэкранный режим"/>
+						<node name="rotate" value="Повернуть текст"/>
+						<node name="preferences" value="Показать диалог настроек"/>
+						<node name="bookInfo" value="Показать информацию о книге"/>
+						<node name="addBook" value="Добавить файл в библиотеку"/>
+						<node name="cancel" value="Отменить текущий режим"/>
+						<node name="quit" value="Выйти из программы"/>
 					</node>
 				</node>
 				<node name="Config" value="Настройки">
@@ -178,15 +178,15 @@
 					<node name="timeout" value="Время между сохранениями, секунды"/>
 				</node>
 				<node name="Dictionary" value="Словари">
-					<node name="enableIntegration" value="Enable Integration with %s"/>
-					<node name="defaultName" value="Dictionary"/>
-					<node name="choice" value="Integrate with"/>
-					<node name="singleClickOpen" value="Open by Single Click"/>
+					<node name="enableIntegration" value="Включить интеграцию с %s"/>
+					<node name="defaultText" value="Включить интеграцию со словарем"/>
+					<node name="choice" value="Использовать"/>
+					<node name="singleClickOpen" value="Открывать словарь по нажатию (без пометки)"/>
 				</node>
 				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Open External Links in %s"/>
-					<node name="defaultName" value="Browser"/>
-					<node name="choice" value="Use Browser"/>
+					<node name="enableIntegration" value="Открывать внешние ссылки в %s"/>
+					<node name="defaultText" value="Окрывать внешние ссылки в браузере"/>
+					<node name="choice" value="Браузер"/>
 				</node>
 			</node>
 		</node>

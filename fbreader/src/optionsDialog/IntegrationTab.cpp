@@ -113,8 +113,12 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 		const std::vector<std::string> &programNames = collection->names();
 		if (!programNames.empty()) {
 			ZLDialogContent &tab = myDialog->createTab(key);
-			const std::string name = (programNames.size() == 1) ? programNames[0] : tab.value(ZLResourceKey("defaultName"));
-			const std::string optionName = ZLStringUtil::printf(tab.value(ZLResourceKey("enableIntegration")), name);
+			std::string optionName;
+			if (programNames.size() == 1) {
+				optionName = ZLStringUtil::printf(tab.value(ZLResourceKey("enableIntegration")), programNames[0]);
+			} else {
+				optionName = tab.value(ZLResourceKey("defaultText"));
+			}
 			EnableIntegrationEntry *enableIntegrationEntry =
 				new EnableIntegrationEntry(collection->EnableCollectionOption);
 			tab.addOption(optionName, "", enableIntegrationEntry);
