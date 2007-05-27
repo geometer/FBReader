@@ -108,27 +108,21 @@ void EnableIntegrationEntry::onStateChanged(bool state) {
 	}
 }
 
-void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<ZLOptionEntry*> &additionalOptions) {
+void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > &additionalOptions) {
 	if (!collection.isNull()) {
 		const std::vector<std::string> &programNames = collection->names();
 		if (!programNames.empty()) {
-			ZLDialogContent &integrationTab = myDialog->createTab(key);
-			const std::string name =
-				(programNames.size() == 1) ?
-					programNames[0] :
-					integrationTab.getValue(ZLResourceKey("defaultName"));
-			const std::string optionName =
-				ZLStringUtil::printf(
-					integrationTab.getValue(ZLResourceKey("enableIntegration")), name
-				);
+			ZLDialogContent &tab = myDialog->createTab(key);
+			const std::string name = (programNames.size() == 1) ? programNames[0] : tab.value(ZLResourceKey("defaultName"));
+			const std::string optionName = ZLStringUtil::printf(tab.value(ZLResourceKey("enableIntegration")), name);
 			EnableIntegrationEntry *enableIntegrationEntry =
 				new EnableIntegrationEntry(collection->EnableCollectionOption);
-			integrationTab.addOption(optionName, "", enableIntegrationEntry);
+			tab.addOption(optionName, "", enableIntegrationEntry);
 
 			ProgramChoiceEntry *programChoiceEntry = 0;
 			if (programNames.size() > 1) {
 				programChoiceEntry = new ProgramChoiceEntry(*collection);
-				integrationTab.addOption(ZLResourceKey("choice"), programChoiceEntry);
+				tab.addOption(ZLResourceKey("choice"), programChoiceEntry);
 				enableIntegrationEntry->setProgramChoiceEntry(programChoiceEntry);
 			}
 
@@ -143,19 +137,19 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 					} else {
 						enableIntegrationEntry->addDependentEntry(parameterEntry);
 					}
-					integrationTab.addOption(jt->DisplayName, "", parameterEntry);
+					tab.addOption(jt->DisplayName, "", parameterEntry);
 				}
 			}
-			for (std::vector<ZLOptionEntry*>::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
-				enableIntegrationEntry->addDependentEntry(*it);
-				integrationTab.addOption("", "", *it);
+			for (std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> >::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
+				enableIntegrationEntry->addDependentEntry(it->second);
+				tab.addOption(it->first, it->second);
 			}
 			enableIntegrationEntry->onStateChanged(enableIntegrationEntry->initialState());
 			return;
 		}
 	}
 
-	for (std::vector<ZLOptionEntry*>::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
-		delete *it;
+	for (std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> >::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
+		delete it->second;
 	}
 }

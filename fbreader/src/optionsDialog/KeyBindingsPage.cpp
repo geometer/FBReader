@@ -247,13 +247,13 @@ void UseSeparateOptionsEntry::onStateChanged(bool state) {
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
 	if (fbreader.isFullKeyboardControlSupported()) {
-		dialogTab.addOption("Grab System Keys", "", new KeyboardControlEntry(fbreader));
+		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry(fbreader));
 	}
 	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(fbreader);
 	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
 	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(fbreader, *keyEntry, *orientationEntry);
-	dialogTab.addOption("Keybindings Depend On Orientation", "", useSeparateBindingsEntry);
-	dialogTab.addOption("Orientation", "", orientationEntry);
+	dialogTab.addOption(ZLResourceKey("separate"), useSeparateBindingsEntry);
+	dialogTab.addOption(ZLResourceKey("orientation"), orientationEntry);
 	dialogTab.addOption("", "", keyEntry);
 	useSeparateBindingsEntry->onStateChanged(useSeparateBindingsEntry->initialState());
 }

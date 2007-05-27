@@ -34,8 +34,12 @@ const std::string &ZLDialogContent::name() const {
 	return myResource.value();
 }
 
-const std::string &ZLDialogContent::getValue(const ZLResourceKey &key) const {
+const std::string &ZLDialogContent::value(const ZLResourceKey &key) const {
 	return myResource[key].value();
+}
+
+const ZLResource &ZLDialogContent::resource(const ZLResourceKey &key) const {
+	return myResource[key];
 }
 
 void ZLDialogContent::accept() {

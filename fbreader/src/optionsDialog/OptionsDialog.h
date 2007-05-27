@@ -48,7 +48,7 @@ public:
 	ZLOptionsDialog &dialog();
 
 private:
-	void createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<ZLOptionEntry*> &additionalOptions);
+	void createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > &additionalOptions);
 	void createIndicatorTab(FBReader &fbreader);
 	void storeTemporaryOption(ZLOption *option);
 

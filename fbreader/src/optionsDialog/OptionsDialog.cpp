@@ -48,44 +48,40 @@
 class RotationTypeEntry : public ZLChoiceOptionEntry {
 
 public:
-	RotationTypeEntry(ZLIntegerOption &angleOption);
-	const std::string &name() const;
+	RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption);
 	const std::string &text(int index) const;
 	int choiceNumber() const;
 	int initialCheckedIndex() const;
 	void onAccept(int index);
 
 private:
+	const ZLResource &myResource;
 	ZLIntegerOption &myAngleOption;
 };
 
-static const std::string ROTATION_TYPE = "Rotation Type";
-static const std::string ROTATION_0 = "Disabled";
-static const std::string ROTATION_90 = "90 Degrees Counterclockwise";
-static const std::string ROTATION_180 = "180 Degrees";
-static const std::string ROTATION_270 = "90 Degrees Clockwise";
-static const std::string ROTATION_USE_4_DIRECTIONS = "Cycle Through All 4 Directions";
-
-RotationTypeEntry::RotationTypeEntry(ZLIntegerOption &angleOption) : myAngleOption(angleOption) {
-}
-
-const std::string &RotationTypeEntry::name() const {
-	return ROTATION_TYPE;
+RotationTypeEntry::RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption) : myResource(resource), myAngleOption(angleOption) {
 }
 
 const std::string &RotationTypeEntry::text(int index) const {
+	std::string keyName;
 	switch (index) {
 		case 1:
-			return ROTATION_90;
+			keyName = "counterclockwise";
+			break;
 		case 2:
-			return ROTATION_180;
+			keyName = "180";
+			break;
 		case 3:
-			return ROTATION_270;
+			keyName = "clockwise";
+			break;
 		case 4:
-			return ROTATION_USE_4_DIRECTIONS;
+			keyName = "cycle";
+			break;
 		default:
-			return ROTATION_0;
+			keyName = "disabled";
+			break;
 	}
+	return myResource[ZLResourceKey(keyName)].value();
 }
 
 int RotationTypeEntry::choiceNumber() const {
@@ -226,22 +222,25 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	createIndicatorTab(fbreader);
 
 	ZLDialogContent &rotationTab = myDialog->createTab(ZLResourceKey("Rotation"));
-	rotationTab.addOption("", "", new RotationTypeEntry(fbreader.RotationAngleOption));
+	ZLResourceKey directionKey("direction");
+	rotationTab.addOption(directionKey, new RotationTypeEntry(rotationTab.resource(directionKey), fbreader.RotationAngleOption));
 
 	ZLDialogContent &colorsTab = myDialog->createTab(ZLResourceKey("Colors"));
+	ZLResourceKey colorKey("colorFor");
+	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
-	static const std::string BACKGROUND = "Background";
+	const std::string BACKGROUND = resource[ZLResourceKey("background")].value();
 	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
 	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
-	builder.addOption("Selection Background", baseStyle.SelectionBackgroundColorOption);
-	builder.addOption("Regular Text", baseStyle.RegularTextColorOption);
-	builder.addOption("Internal Hyperlink Text", baseStyle.InternalHyperlinkTextColorOption);
-	builder.addOption("External Hyperlink Text", baseStyle.ExternalHyperlinkTextColorOption);
-	builder.addOption("Highlighted Text", baseStyle.SelectedTextColorOption);
-	builder.addOption("Tree Lines", baseStyle.TreeLinesColorOption);
-	builder.addOption("Position Indicator", TextStyleCollection::instance().indicatorStyle().ColorOption);
+	builder.addOption(resource[ZLResourceKey("selectionBackground")].value(), baseStyle.SelectionBackgroundColorOption);
+	builder.addOption(resource[ZLResourceKey("text")].value(), baseStyle.RegularTextColorOption);
+	builder.addOption(resource[ZLResourceKey("internalLink")].value(), baseStyle.InternalHyperlinkTextColorOption);
+	builder.addOption(resource[ZLResourceKey("externalLink")].value(), baseStyle.ExternalHyperlinkTextColorOption);
+	builder.addOption(resource[ZLResourceKey("highlighted")].value(), baseStyle.SelectedTextColorOption);
+	builder.addOption(resource[ZLResourceKey("treeLines")].value(), baseStyle.TreeLinesColorOption);
+	builder.addOption(resource[ZLResourceKey("indicator")].value(), TextStyleCollection::instance().indicatorStyle().ColorOption);
 	builder.setInitial(BACKGROUND);
-	colorsTab.addOption("", "", builder.comboEntry());
+	colorsTab.addOption(colorKey, builder.comboEntry());
 	colorsTab.addOption("", "", builder.colorEntry());
 
 	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab(ZLResourceKey("Keys")));
@@ -249,9 +248,10 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 		myConfigPage = new ConfigPage(fbreader, myDialog->createTab(ZLResourceKey("Config")));
 	}
 
-	std::vector<ZLOptionEntry*> additional;
-	additional.push_back(new ZLSimpleBooleanOptionEntry(
-		/*"Open By Single Click",*/ fbreader.EnableSingleClickDictionaryOption
+	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;
+	additional.push_back(std::pair<ZLResourceKey,ZLOptionEntry*>(
+		ZLResourceKey("singleClickOpen"),
+		new ZLSimpleBooleanOptionEntry(fbreader.EnableSingleClickDictionaryOption)
 	));
 	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), additional);
 	additional.clear();

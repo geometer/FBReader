@@ -46,7 +46,6 @@ public:
 	ZLColorComboOptionEntry(shared_ptr<ZLColorOptionsData> data);
 
 private:
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onValueSelected(int index);
@@ -62,7 +61,6 @@ public:
 	ZLMultiColorOptionEntry(shared_ptr<ZLColorOptionsData> data);
 
 private:
-	const std::string &name() const;
 	const ZLColor initialColor() const;
 	const ZLColor color() const;
 	void onReset(ZLColor color);
@@ -103,11 +101,6 @@ ZLOptionEntry *ZLColorOptionBuilder::colorEntry() const {
 ZLColorComboOptionEntry::ZLColorComboOptionEntry(shared_ptr<ZLColorOptionsData> data) : myData(data) {
 }
 
-const std::string &ZLColorComboOptionEntry::name() const {
-	static const std::string NAME = "Color For";
-	return NAME;
-}
-
 const std::string &ZLColorComboOptionEntry::initialValue() const {
 	return myData->myCurrentOptionName;
 }
@@ -126,11 +119,6 @@ void ZLColorComboOptionEntry::onAccept(const std::string&) {
 }
 
 ZLMultiColorOptionEntry::ZLMultiColorOptionEntry(shared_ptr<ZLColorOptionsData> data) : myData(data) {
-}
-
-const std::string &ZLMultiColorOptionEntry::name() const {
-	static const std::string EMPTY = "";
-	return EMPTY;
 }
 
 const ZLColor ZLMultiColorOptionEntry::initialColor() const {

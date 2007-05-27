@@ -112,9 +112,32 @@
 					<node name="allowHyphenations" value="Allow Hyphenations"/>
 					<node name="autoHyphenations" value="Auto Hyphenations"/>
 				</node>
-				<node name="Rotation" value="Rotation"/>
-				<node name="Colors" value="Colors"/>
-				<node name="Keys" value="Keys"/>
+				<node name="Rotation" value="Rotation">
+					<node name="direction" value="Rotation Type">
+						<node name="disabled" value="Disabled"/>
+						<node name="clockwise" value="90 Degrees Clockwise"/>
+						<node name="counterclockwise" value="90 Degrees Counterclockwise"/>
+						<node name="180" value="180 Degrees"/>
+						<node name="cycle" value="Cycle Through All 4 Directions"/>
+					</node>
+				</node>
+				<node name="Colors" value="Colors">
+					<node name="colorFor" value="Color for">
+						<node name="background" value="Background"/>
+						<node name="selectionBackground" value="Selection Background"/>
+						<node name="text" value="Regular Text"/>
+						<node name="internalLink" value="Internal Hyperlink Text"/>
+						<node name="externalLink" value="External Hyperlink Text"/>
+						<node name="highlighted" value="Highlighted Text"/>
+						<node name="treeLines" value="Tree Lines"/>
+						<node name="indicator" value="Position Indicator"/>
+					</node>
+				</node>
+				<node name="Keys" value="Keys">
+					<node name="grabSystemKeys" value="Grab System Keys"/>
+					<node name="separate" value="Keybindings Depend on Orientation"/>
+					<node name="orientation" value="Orientation"/>
+				</node>
 				<node name="Config" value="Config">
 					<node name="autoSave" value="Save State Automatically"/>
 					<node name="timeout" value="Timeout between Savings, seconds"/>
@@ -123,6 +146,7 @@
 					<node name="enableIntegration" value="Enable Integration with %s"/>
 					<node name="defaultName" value="Dictionary"/>
 					<node name="choice" value="Integrate with"/>
+					<node name="singleClickOpen" value="Open by Single Click"/>
 				</node>
 				<node name="Web" value="Web">
 					<node name="enableIntegration" value="Open External Links in %s"/>

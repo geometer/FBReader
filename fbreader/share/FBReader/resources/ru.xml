@@ -90,7 +90,18 @@
 					<node name="autoHyphenations" value="Расставлять переносы"/>
 				</node>
 				<node name="Rotation" value="Поворот"/>
-				<node name="Colors" value="Цвета"/>
+				<node name="Colors" value="Цвета">
+					<node name="colorFor" value="Цвет для">
+						<node name="background" value="фона"/>
+						<node name="selectionBackground" value="фона пометки"/>
+						<node name="text" value="обычного текста"/>
+						<node name="internalLink" value="ссылки"/>
+						<node name="externalLink" value="внешней ссылки"/>
+						<node name="highlighted" value="подсвеченного текста"/>
+						<node name="treeLines" value="линий"/>
+						<node name="indicator" value="индикатора"/>
+					</node>
+				</node>
 				<node name="Keys" value="Клавиши"/>
 				<node name="Config" value="Настройки"/>
 				<node name="Dictionary" value="Словари"/>
