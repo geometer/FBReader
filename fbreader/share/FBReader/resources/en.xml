@@ -66,7 +66,7 @@
 					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
 					<node name="recentListSize" value="Recent Books List Size"/>
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
-					<node name="defaultLanguage" value="Language For Encoding Detection"/>
+					<node name="defaultLanguage" value="Language for Encoding Detection"/>
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="show" value="Show Position Indicator"/>
