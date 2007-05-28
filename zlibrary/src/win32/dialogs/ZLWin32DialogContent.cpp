@@ -19,7 +19,7 @@
 
 #include "ZLWin32DialogContent.h"
 
-ZLWin32DialogContent::ZLWin32DialogContent() : myRowCounter(0) {
+ZLWin32DialogContent::ZLWin32DialogContent(const ZLResource &resource) : ZLDialogContent(resource), myRowCounter(0) {
 	myContentTable = new W32Table();
 }
 
@@ -34,14 +34,14 @@ W32Table &ZLWin32DialogContent::contentTable() const {
 	return (W32Table&)*myContentTable;
 }
 
-void ZLWin32DialogContent::addOption(ZLOptionEntry *option) {
-	createViewByEntry(option, 0, 11);
+void ZLWin32DialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
+	createViewByEntry(name, tooltip, option, 0, 11);
 	++myRowCounter;
 }
 
-void ZLWin32DialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
-	createViewByEntry(option0, 0, 5);
-	createViewByEntry(option1, 6, 11);
+void ZLWin32DialogContent::addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0, const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1) {
+	createViewByEntry(name0, tooltip0, option0, 0, 5);
+	createViewByEntry(name1, tooltip1, option1, 6, 11);
 	++myRowCounter;
 }
 
@@ -49,7 +49,7 @@ void ZLWin32DialogContent::insertWidget(W32WidgetPtr widget, int from, int to) {
 	contentTable().setElement(widget, myRowCounter, from, to);
 }
 
-void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int from, int to) {
+void ZLWin32DialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int from, int to) {
 	if (option == 0) {
 		return;
 	}
@@ -58,25 +58,25 @@ void ZLWin32DialogContent::createViewByEntry(ZLOptionEntry *option, int from, in
 
 	switch (option->kind()) {
 		case ZLOptionEntry::BOOLEAN:
-			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, *this, from, to);
+			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::STRING:
-			view = new StringOptionView((ZLStringOptionEntry*)option, *this, from, to);
+			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::CHOICE:
-			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, *this, from, to);
+			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView((ZLSpinOptionEntry*)option, *this, from, to);
+			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::COMBO:
-			view = new ComboOptionView((ZLComboOptionEntry*)option, *this, from, to);
+			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::COLOR:
-			view = new ColorOptionView((ZLColorOptionEntry*)option, *this, from, to);
+			view = new ColorOptionView(name, tooltip, (ZLColorOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::KEY:
-			view = new KeyOptionView((ZLKeyOptionEntry*)option, *this, from, to);
+			view = new KeyOptionView(name, tooltip, (ZLKeyOptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::ORDER:
 			// TODO: implement

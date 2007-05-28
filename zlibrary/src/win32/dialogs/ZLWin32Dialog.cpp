@@ -23,11 +23,11 @@
 #include "ZLWin32DialogContent.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 
-ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string &name) : myWindow(window), myPanel(myWindow.mainWindow(), name) {
+ZLWin32Dialog::ZLWin32Dialog(ZLWin32ApplicationWindow &window, const ZLResource &resource) : myWindow(window), myPanel(myWindow.mainWindow(), resource[ZLDialogManager::DIALOG_TITLE].value()) {
 	W32VBox *panelBox = new W32VBox();
 	myPanel.setElement(panelBox);
 
-	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent();
+	ZLWin32DialogContent *contentTab = new ZLWin32DialogContent(resource);
 	myTab = contentTab;
 	panelBox->addElement(contentTab->contentPtr());
 

@@ -33,7 +33,7 @@ void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) c
 }
 
 shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const ZLResourceKey &key) const {
-	return new ZLWin32Dialog(*myApplicationWindow, dialogTitle(key));
+	return new ZLWin32Dialog(*myApplicationWindow, resource()[key]);
 }
 
 shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {

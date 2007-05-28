@@ -31,11 +31,12 @@
 class ZLWin32DialogContent : public ZLDialogContent {
 
 public:
-	ZLWin32DialogContent();
+	ZLWin32DialogContent(const ZLResource &resource);
 	~ZLWin32DialogContent();
 
-	void addOption(ZLOptionEntry *option);
-	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
+	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
+	void addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0,
+									const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1);
 
 	W32WidgetPtr contentPtr() const;
 	W32Table &contentTable() const;
@@ -43,7 +44,7 @@ public:
 	void insertWidget(W32WidgetPtr widget, int from, int to);
 
 private:
-	void createViewByEntry(ZLOptionEntry *option, int from, int to);
+	void createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int from, int to);
 
 private:
 	W32WidgetPtr myContentTable;

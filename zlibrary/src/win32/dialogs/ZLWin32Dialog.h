@@ -32,7 +32,7 @@ class ZLWin32ApplicationWindow;
 class ZLWin32Dialog : public ZLDialog {
 
 public:
-	ZLWin32Dialog(ZLWin32ApplicationWindow &window, const std::string &name);
+	ZLWin32Dialog(ZLWin32ApplicationWindow &window, const ZLResource &resource);
 
 	void addButton(const ZLResourceKey &key, bool accept);
 	bool run();

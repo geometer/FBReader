@@ -27,8 +27,8 @@
 void ZLWin32OptionView::_createItem() {
 }
 
-BooleanOptionView::BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
-	myCheckBox = new W32CheckBox(myOption->name());
+BooleanOptionView::BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
+	myCheckBox = new W32CheckBox(name);
 	myCheckBox->setChecked(option->initialState());
 	myCheckBox->addListener(this);
 	tab.insertWidget(myCheckBox, from, to);
@@ -52,14 +52,14 @@ void BooleanOptionView::_hide() {
 	myCheckBox->setVisible(false);
 }
 
-ChoiceOptionView::ChoiceOptionView(ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+ChoiceOptionView::ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	std::vector<std::string> names;
 	int num = option->choiceNumber();
 	names.reserve(num);
 	for (int i = 0; i < num; ++i) {
 		names.push_back(option->text(i));
 	}
-	myButtonGroup = new W32RadioButtonGroup(myOption->name(), names);
+	myButtonGroup = new W32RadioButtonGroup(name, names);
 	myButtonGroup->setChecked(option->initialCheckedIndex());
 	tab.insertWidget(myButtonGroup, from, to);
 }
@@ -76,7 +76,7 @@ void ChoiceOptionView::_onAccept() const {
 	((ZLChoiceOptionEntry*)myOption)->onAccept(myButtonGroup->checkedIndex());
 }
 
-ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+ComboOptionView::ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	const std::vector<std::string> &values = option->values();
 	const std::string &initialValue = option->initialValue();
 	int index = 0;
@@ -89,7 +89,6 @@ ComboOptionView::ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogConten
 	myComboBox = new W32ComboBox(values, index);
 	myComboBox->setEditable(option->isEditable());
 	myComboBox->addListener(this);
-	const std::string &name = option->name();
 	if (name.empty()) {
 		myLabel = 0;
 		tab.insertWidget(myComboBox, from, to);
@@ -158,9 +157,8 @@ void ComboOptionView::onEvent(const std::string &event, W32EventSender&) {
 	}
 }
 
-SpinOptionView::SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+SpinOptionView::SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	mySpinBox = new W32SpinBox(option->minValue(), option->maxValue(), option->initialValue());
-	const std::string &name = option->name();
 	if (name.empty()) {
 		myLabel = 0;
 		tab.insertWidget(mySpinBox, from, to);
@@ -189,10 +187,9 @@ void SpinOptionView::_hide() {
 	}
 }
 
-StringOptionView::StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+StringOptionView::StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	myLineEditor = new W32LineEditor(option->initialValue());
 	myLineEditor->addListener(this);
-	const std::string &name = option->name();
 	if (name.empty()) {
 		myLabel = 0;
 		tab.insertWidget(myLineEditor, from, to);
@@ -238,7 +235,7 @@ void StringOptionView::_onAccept() const {
 	((ZLStringOptionEntry*)myOption)->onAccept(myLineEditor->text());
 }
 
-ColorOptionView::ColorOptionView(ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+ColorOptionView::ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	myStandardColorComboBox = new W32ColorComboBox(option->color());
 	myStandardColorComboBox->addListener(this);
 	myCustomColorButton = new W32PushButton("Custom...");
@@ -318,7 +315,7 @@ void ColorOptionView::_onAccept() const {
 	((ZLColorOptionEntry*)myOption)->onAccept(myStandardColorComboBox->selectedColor());
 }
 
-KeyOptionView::KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(option) {
+KeyOptionView::KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	myVBox = new W32VBox();
 	myVBox->setSpacing(4);
 	myHBox = new W32HBox();

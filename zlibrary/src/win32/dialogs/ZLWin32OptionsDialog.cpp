@@ -25,10 +25,10 @@ ZLWin32OptionsDialog::ZLWin32OptionsDialog(ZLWin32ApplicationWindow &window, con
 }
 
 ZLDialogContent &ZLWin32OptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLWin32DialogContent *tab = new ZLWin32DialogContent();
+	ZLWin32DialogContent *tab = new ZLWin32DialogContent(tabResource(key));
 	myTabs.push_back(tab);
 
-	W32DialogPanel &panel = myPropertySheet.createPanel(tabName(key));
+	W32DialogPanel &panel = myPropertySheet.createPanel(tab->name());
 	panel.addListener(this);
 	panel.setElement(tab->contentPtr());
 

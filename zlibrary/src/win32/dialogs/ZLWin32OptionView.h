@@ -33,7 +33,7 @@ class ZLWin32DialogContent;
 class ZLWin32OptionView : public ZLOptionView {
 
 protected:
-	ZLWin32OptionView(ZLOptionEntry *option) : ZLOptionView(option) {
+	ZLWin32OptionView(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) : ZLOptionView(name, tooltip, option) {
 	}
 
 protected:
@@ -43,7 +43,7 @@ protected:
 class ChoiceOptionView : public ZLWin32OptionView {
 
 public:
-	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
 	void _onAccept() const;
@@ -57,7 +57,7 @@ private:
 class BooleanOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
 	void _onAccept() const;
@@ -74,7 +74,7 @@ private:
 class StringOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 private:
 	void _setActive(bool active);
@@ -94,7 +94,7 @@ private:
 class SpinOptionView : public ZLWin32OptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
 	void _onAccept() const;
@@ -109,7 +109,7 @@ private:
 class ComboOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 private:
 	void _setActive(bool active);
@@ -129,7 +129,7 @@ private:
 class ColorOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 private:
 	void onEvent(const std::string &event, W32EventSender &sender);
@@ -147,7 +147,7 @@ private:
 class KeyOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 private:
 	void onEvent(const std::string &event, W32EventSender &sender);
