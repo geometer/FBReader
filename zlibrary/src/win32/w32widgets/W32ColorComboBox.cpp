@@ -134,7 +134,6 @@ void W32ColorComboBox::drawItemCallback(DRAWITEMSTRUCT &di) {
 	TEXTMETRIC tm;
 	ZLUnicodeUtil::Ucs2String txt;
 	::createNTWCHARString(txt, text(di.itemID));
-	//const std::string &txt = text(di.itemID);
 	GetTextMetrics(di.hDC, &tm);
 	TextOutW(di.hDC, rectangle.right + 8, (rectangle.top + rectangle.bottom - tm.tmHeight) / 2, ::wchar(txt), txt.size() - 1);
 }
