@@ -20,6 +20,8 @@
 
 #include <gtk/gtk.h>
 
+#include <ZLResource.h>
+
 #include "ZLGtkOptionView.h"
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkDialogManager.h"
@@ -275,9 +277,10 @@ void ColorOptionView::_createItem() {
 
 	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 3, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(resource[ZLResourceKey("red")].value().c_str()), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(resource[ZLResourceKey("green")].value().c_str()), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(resource[ZLResourceKey("blue")].value().c_str()), 0, 1, 3, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
 	myRSlider = gtk_hscale_new_with_range(0.0, 255.0, 1.0);
 	gtk_scale_set_draw_value(GTK_SCALE(myRSlider), false);

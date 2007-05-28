@@ -9,4 +9,22 @@
 			<node name="apply" value="При&amp;менить"/>
 		</node>
 	</node>
+	<node name="color">
+		<node name="red" value="Красный"/>
+		<node name="green" value="Зеленый"/>
+		<node name="blue" value="Синий"/>
+		<node name="black" value="Черный"/>
+		<node name="white" value="Белый"/>
+		<node name="maroon" value="Бордовый"/>
+		<node name="olive" value="Оливковый"/>
+		<node name="navy" value="Navy"/>
+		<node name="purple" value="Фиолетовый"/>
+		<node name="teal" value="Teal"/>
+		<node name="silver" value="Серебристый"/>
+		<node name="gray" value="Серый"/>
+		<node name="lime" value="Lime"/>
+		<node name="yellow" value="Желтый"/>
+		<node name="magenta" value="Magenta"/>
+		<node name="cyan" value="Cyan"/>
+	</node>
 </resources>

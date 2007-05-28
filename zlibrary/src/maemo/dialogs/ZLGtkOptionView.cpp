@@ -20,6 +20,8 @@
 
 #include "../../gtk/util/ZLGtkKeyUtil.h"
 
+#include <ZLResource.h>
+
 #include "ZLGtkOptionView.h"
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkDialogManager.h"
@@ -307,17 +309,27 @@ void MultilineOptionView::_onAccept() const {
 
 static const int COLOR_STEPS_NUMBER = 32;
 
+static void attachColorLabel(GtkTable *table, const ZLResource &colorResource, int row) {
+	gtk_table_attach(
+		table,
+		gtk_label_new(colorResource.value().c_str()),
+		0, 1, row, row + 1,
+		(GtkAttachOptions)(GTK_FILL | GTK_SHRINK), (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0
+	);
+}
+
 void ColorOptionView::_createItem() {
 	myDrawingArea = gtk_drawing_area_new();
 
 	gtk_widget_set_size_request(GTK_WIDGET(myDrawingArea), 60, 20);
-	myWidget = gtk_table_new(3, 4, false);
+	myTable = GTK_TABLE(gtk_table_new(3, 4, false));
 
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(myTable, gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Red"), 0, 1, 1, 2, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Green"), 0, 1, 2, 3, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
-	gtk_table_attach(GTK_TABLE(myWidget), gtk_label_new("Blue"), 0, 1, 3, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
+	attachColorLabel(myTable, resource[ZLResourceKey("red")], 1);
+	attachColorLabel(myTable, resource[ZLResourceKey("green")], 2);
+	attachColorLabel(myTable, resource[ZLResourceKey("blue")], 3);
 
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
 
@@ -336,11 +348,11 @@ void ColorOptionView::_createItem() {
 	hildon_controlbar_set_value(myBSlider, (int)color.Blue * COLOR_STEPS_NUMBER / 255);
 	g_signal_connect(G_OBJECT(myBSlider), "value-changed", G_CALLBACK(_onSliderMove), this);
 
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myRSlider), 1, 2, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myGSlider), 1, 2, 2, 3);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myBSlider), 1, 2, 3, 4);
+	gtk_table_attach_defaults(myTable, GTK_WIDGET(myRSlider), 1, 2, 1, 2);
+	gtk_table_attach_defaults(myTable, GTK_WIDGET(myGSlider), 1, 2, 2, 3);
+	gtk_table_attach_defaults(myTable, GTK_WIDGET(myBSlider), 1, 2, 3, 4);
 
-	GtkWidget *frame = gtk_frame_new(NULL);
+	GtkWidget *frame = gtk_frame_new(0);
 
 	gtk_container_add(GTK_CONTAINER(frame), myDrawingArea);
 	myColor.red = color.Red * 65535 / 255;
@@ -348,14 +360,14 @@ void ColorOptionView::_createItem() {
 	myColor.green = color.Green * 65535 / 255;
 	gtk_widget_modify_bg(myDrawingArea, GTK_STATE_NORMAL, &myColor);
 
-	gtk_table_attach(GTK_TABLE(myWidget), frame, 2, 3, 1, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
+	gtk_table_attach(myTable, frame, 2, 3, 1, 4, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
-	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 2);
-	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 2);
+	gtk_table_set_col_spacings(myTable, 8);
+	gtk_table_set_row_spacings(myTable, 2);
 
-	gtk_widget_show_all(myWidget);
+	gtk_widget_show_all(GTK_WIDGET(myTable));
 
-	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+	myTab->addItem(GTK_WIDGET(myTable), myRow, myFromColumn, myToColumn);
 }
 
 void ColorOptionView::reset() {
@@ -386,11 +398,11 @@ void ColorOptionView::reset() {
 
 
 void ColorOptionView::_show() {
-	gtk_widget_show(myWidget);
+	gtk_widget_show(GTK_WIDGET(myTable));
 }
 
 void ColorOptionView::_hide() {
-	gtk_widget_hide(myWidget);
+	gtk_widget_hide(GTK_WIDGET(myTable));
 }
 
 void ColorOptionView::_onSliderMove(GtkRange *, gpointer self) {
@@ -452,15 +464,15 @@ void KeyOptionView::_createItem() {
 		gtk_combo_box_append_text(myComboBox, it->c_str());
 	}
 
-	myWidget = gtk_table_new(2, 2, false);
-	gtk_table_set_col_spacings(GTK_TABLE(myWidget), 5);
-	gtk_table_set_row_spacings(GTK_TABLE(myWidget), 5);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), myKeyButton, 0, 2, 0, 1);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myLabel), 0, 1, 1, 2);
-	gtk_table_attach_defaults(GTK_TABLE(myWidget), GTK_WIDGET(myComboBox), 1, 2, 1, 2);
+	myTable = GTK_TABLE(gtk_table_new(2, 2, false));
+	gtk_table_set_col_spacings(myTable, 5);
+	gtk_table_set_row_spacings(myTable, 5);
+	gtk_table_attach_defaults(myTable, myKeyButton, 0, 2, 0, 1);
+	gtk_table_attach_defaults(myTable, GTK_WIDGET(myLabel), 0, 1, 1, 2);
+	gtk_table_attach_defaults(myTable, GTK_WIDGET(myComboBox), 1, 2, 1, 2);
 	g_signal_connect(GTK_WIDGET(myComboBox), "changed", G_CALLBACK(_onValueChanged), this);
 
-	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
+	myTab->addItem(GTK_WIDGET(myTable), myRow, myFromColumn, myToColumn);
 }
 
 void KeyOptionView::onValueChanged() {
@@ -486,7 +498,7 @@ void KeyOptionView::setKey(const std::string &key) {
 }
 
 void KeyOptionView::reset() {
-	if (myWidget == 0) {
+	if (myTable == 0) {
 		return;
 	}
 	myCurrentKey.erase();
@@ -495,7 +507,7 @@ void KeyOptionView::reset() {
 }
 
 void KeyOptionView::_show() {
-	gtk_widget_show(myWidget);
+	gtk_widget_show(GTK_WIDGET(myTable));
 	gtk_widget_show(myKeyButton);
 	if (!myCurrentKey.empty()) {
 		gtk_widget_show(GTK_WIDGET(myLabel));
@@ -507,7 +519,7 @@ void KeyOptionView::_show() {
 }
 
 void KeyOptionView::_hide() {
-	gtk_widget_hide(myWidget);
+	gtk_widget_hide(GTK_WIDGET(myTable));
 	myCurrentKey.erase();
 }
 

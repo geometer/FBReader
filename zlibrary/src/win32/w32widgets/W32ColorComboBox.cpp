@@ -19,6 +19,8 @@
 
 #include <windows.h>
 
+#include <ZLResource.h>
+
 #include "W32ColorComboBox.h"
 
 static const WORD CLASS_COMBOBOX = 0x0085;
@@ -141,22 +143,23 @@ void W32ColorComboBox::addColor(const std::string &name, ZLColor color) {
 
 void W32ColorComboBox::initVectors() {
 	if (ourStrings.empty()) {
-		addColor("Black", ZLColor(0, 0, 0));
-		addColor("White", ZLColor(255, 255, 255));
-		addColor("Maroon", ZLColor(128, 0, 0));
-		addColor("Green", ZLColor(0, 128, 0));
-		addColor("Olive", ZLColor(128, 128, 0));
-		addColor("Navy", ZLColor(0, 0, 128));
-		addColor("Purple", ZLColor(128, 0, 128));
-		addColor("Teal", ZLColor(0, 128, 128));
-		addColor("Silver", ZLColor(192, 192, 192));
-		addColor("Gray", ZLColor(128, 128, 128));
-		addColor("Red", ZLColor(255, 0, 0));
-		addColor("Lime", ZLColor(0, 255, 0));
-		addColor("Yellow", ZLColor(255, 255, 0));
-		addColor("Blue", ZLColor(0, 0, 255));
-		addColor("Magenta", ZLColor(255, 0, 255));
-		addColor("Cyan", ZLColor(0, 255, 255));
+		const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
+		addColor(resource[ZLResourceKey("black")].value(), ZLColor(0, 0, 0));
+		addColor(resource[ZLResourceKey("white")].value(), ZLColor(255, 255, 255));
+		addColor(resource[ZLResourceKey("maroon")].value(), ZLColor(128, 0, 0));
+		addColor(resource[ZLResourceKey("green")].value(), ZLColor(0, 128, 0));
+		addColor(resource[ZLResourceKey("olive")].value(), ZLColor(128, 128, 0));
+		addColor(resource[ZLResourceKey("navy")].value(), ZLColor(0, 0, 128));
+		addColor(resource[ZLResourceKey("purple")].value(), ZLColor(128, 0, 128));
+		addColor(resource[ZLResourceKey("teal")].value(), ZLColor(0, 128, 128));
+		addColor(resource[ZLResourceKey("silver")].value(), ZLColor(192, 192, 192));
+		addColor(resource[ZLResourceKey("gray")].value(), ZLColor(128, 128, 128));
+		addColor(resource[ZLResourceKey("red")].value(), ZLColor(255, 0, 0));
+		addColor(resource[ZLResourceKey("lime")].value(), ZLColor(0, 255, 0));
+		addColor(resource[ZLResourceKey("yellow")].value(), ZLColor(255, 255, 0));
+		addColor(resource[ZLResourceKey("blue")].value(), ZLColor(0, 0, 255));
+		addColor(resource[ZLResourceKey("magenta")].value(), ZLColor(255, 0, 255));
+		addColor(resource[ZLResourceKey("cyan")].value(), ZLColor(0, 255, 255));
 	}
 }
 

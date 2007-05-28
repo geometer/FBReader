@@ -28,6 +28,7 @@
 #include "ZLQtMenuAction.h"
 #include "../view/ZLQtViewWidget.h"
 #include "../../qt/util/ZLQtKeyUtil.h"
+#include "../dialogs/ZLQtUtil.h"
 
 class MyMenuBar : public QPEMenuBar {
 
@@ -116,7 +117,7 @@ MyMenuBar::~MyMenuBar() {
 }
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
-	QString qCaption = QString::fromUtf8(caption.c_str());
+	QString qCaption = ::qtString(caption);
 	if (qCaption.length() > 60) {
 		qCaption = qCaption.left(57) + "...";
 	}
@@ -172,7 +173,7 @@ ZLQtApplicationWindow::MenuUpdater::MenuUpdater(ZLQtApplicationWindow &window) :
 
 void ZLQtApplicationWindow::MenuUpdater::processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu) {
 	QPopupMenu *qmenu = new QPopupMenu(myMenuStack.top());
-	myMenuStack.top()->insertItem(QString::fromUtf8(submenu.menuName().c_str()), qmenu);
+	myMenuStack.top()->insertItem(::qtString(submenu.menuName()), qmenu);
 	myMenuStack.push(qmenu);
 }
 
@@ -364,7 +365,7 @@ bool ZLQtApplicationWindow::isKeyboardPresented() const {
 	return true;
 }
 
-ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item) : QAction(QString::fromUtf8(item.name().c_str()), 0, 0, 0), myWindow(window), myActionId(item.actionId()) {
+ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item) : QAction(::qtString(item.name()), 0, 0, 0), myWindow(window), myActionId(item.actionId()) {
 	connect(this, SIGNAL(activated()), this, SLOT(doSlot()));
 }
 

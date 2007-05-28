@@ -31,7 +31,7 @@ class QButtonGroup;
 class ZLQtDialog : public QDialog, public ZLDialog {
 
 public:
-	ZLQtDialog(QWidget *parent, const std::string &name);
+	ZLQtDialog(QWidget *parent, const ZLResource &resource);
 	~ZLQtDialog();
 
 	void addButton(const ZLResourceKey &key, bool accept);

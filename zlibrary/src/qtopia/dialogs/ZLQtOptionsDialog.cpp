@@ -23,6 +23,7 @@
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialogContent.h"
+#include "ZLQtUtil.h"
 
 MyQTabWidget::MyQTabWidget(QWidget *parent) : QTabWidget(parent) {
 }
@@ -33,13 +34,13 @@ void MyQTabWidget::resizeEvent(QResizeEvent *event) {
 }
 
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : ZLFullScreenDialog(std::string()), ZLOptionsDialog(resource, applyAction) {
-	setCaption(QString::fromUtf8(ZLOptionsDialog::caption().c_str()));
+	setCaption(::qtString(ZLOptionsDialog::caption()));
 	myTabWidget = new MyQTabWidget(this);
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget, key.Name);
-	myTabWidget->insertTab(tab->widget(), QString::fromUtf8(tabName(key).c_str()));
+	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget, tabResource(key));
+	myTabWidget->insertTab(tab->widget(), ::qtString(tab->name()));
 	myTabs.push_back(tab);
 	return *tab;
 }

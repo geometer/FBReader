@@ -29,13 +29,13 @@
 #include "ZLQtDialogManager.h"
 #include "ZLQtUtil.h"
 
-ZLQtDialog::ZLQtDialog(QWidget *parent, const std::string &title) : QDialog(parent, 0, true), myButtonNumber(0) {
-	setCaption(QString::fromUtf8(title.c_str()));
+ZLQtDialog::ZLQtDialog(QWidget *parent, const ZLResource &resource) : QDialog(parent, 0, true), myButtonNumber(0) {
+	setCaption(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	QWidget *widget = new QVBox(this);
 	layout->add(widget);
-	myTab = new ZLQtDialogContent(widget);
+	myTab = new ZLQtDialogContent(widget, resource);
 
 	myButtonGroup = new QButtonGroup(this);
 	layout->add(myButtonGroup);

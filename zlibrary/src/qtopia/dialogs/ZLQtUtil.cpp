@@ -22,9 +22,13 @@
 
 #include "ZLQtUtil.h"
 
+QString qtString(const std::string &text) {
+	return QString::fromUtf8(text.c_str());
+}
+
 QString qtButtonName(const ZLResourceKey &key) {
 	if (key.Name.empty()) {
 		return QString::null;
 	}
-	return QString::fromUtf8(ZLDialogManager::buttonName(key).c_str());
+	return qtString(ZLDialogManager::buttonName(key));
 }

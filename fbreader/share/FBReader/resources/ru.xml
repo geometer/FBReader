@@ -197,7 +197,7 @@
 					<node name="enableIntegration" value="Включить интеграцию с %s"/>
 					<node name="defaultText" value="Включить интеграцию со словарем"/>
 					<node name="choice" value="Использовать"/>
-					<node name="singleClickOpen" value="Открывать словарь по нажатию (без пометки)"/>
+					<node name="singleClickOpen" value="Открывать словарь по нажатию на слово"/>
 				</node>
 				<node name="Web" value="Web">
 					<node name="enableIntegration" value="Открывать внешние ссылки в %s"/>

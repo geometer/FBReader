@@ -21,10 +21,13 @@
 #ifndef __ZLQTUTIL_H__
 #define __ZLQTUTIL_H__
 
+#include <string>
+
 #include <qstring.h>
 
 #include <ZLResource.h>
 
 QString qtButtonName(const ZLResourceKey &key);
+QString qtString(const std::string &text);
 
 #endif /* __ZLQTUTIL_H__ */

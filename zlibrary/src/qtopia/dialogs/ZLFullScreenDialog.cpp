@@ -19,11 +19,12 @@
  */
 
 #include "ZLFullScreenDialog.h"
+#include "ZLQtUtil.h"
 
 #include <qapplication.h>
 
 ZLFullScreenDialog::ZLFullScreenDialog(const std::string &caption) : QDialog(qApp->mainWidget(), NULL, true) {
-	setCaption(QString::fromUtf8(caption.c_str()));
+	setCaption(::qtString(caption));
 	myInLoop = false;
 }
 

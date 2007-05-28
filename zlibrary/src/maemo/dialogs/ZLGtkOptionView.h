@@ -162,7 +162,7 @@ private:
 class ColorOptionView : public ZLGtkOptionView {
 
 public:
-	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myWidget(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
+	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myTable(0), myDrawingArea(0), myRSlider(0), myGSlider(0), myBSlider(0) {}
 
 private:
 	void _createItem();
@@ -175,7 +175,8 @@ private:
 	static void _onSliderMove(GtkRange *, gpointer);
 
 private:
-	GtkWidget *myWidget, *myDrawingArea;
+	GtkTable *myTable;
+	GtkWidget *myDrawingArea;
 	HildonControlbar *myRSlider, *myGSlider, *myBSlider;
 	GdkColor myColor;
 };
@@ -183,7 +184,7 @@ private:
 class KeyOptionView : public ZLGtkOptionView {
 
 public:
-	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myTable(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 
 	void setKey(const std::string &key);
 
@@ -199,7 +200,8 @@ public:
 	GtkWidget *comboBox() const { return GTK_WIDGET(myComboBox); }
 
 private:
-	GtkWidget *myWidget, *myKeyButton;
+	GtkTable *myTable;
+	GtkWidget *myKeyButton;
 	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	std::string myCurrentKey;
