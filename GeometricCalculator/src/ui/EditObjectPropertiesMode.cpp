@@ -33,7 +33,6 @@ public:
 	PointNameEntry(Point &point);
 
 private:
-	const std::string &name() const;
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 
@@ -42,11 +41,6 @@ private:
 };
 
 PointNameEntry::PointNameEntry(Point &point) : myPoint(point) {
-}
-
-const std::string &PointNameEntry::name() const {
-	static const std::string NAME = "Name";
-	return NAME;
 }
 
 const std::string &PointNameEntry::initialValue() const {

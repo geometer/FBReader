@@ -124,48 +124,57 @@ void RotationTypeEntry::onAccept(int index) {
 
 class DefaultLanguageEntry : public ZLComboOptionEntry {
 
+private:
+	std::string myRussianString;
+	std::string myChineseString;
+	std::string myCzechString;
+	std::string myOtherString;
+
 public:
+	DefaultLanguageEntry(const ZLResource &resource);
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 };
 
-static std::string LANGUAGE_RUSSIAN = "Russian";
-static std::string LANGUAGE_CHINESE = "Chinese";
-static std::string LANGUAGE_CZECH = "Czech";
-static std::string LANGUAGE_OTHER = "Other";
+DefaultLanguageEntry::DefaultLanguageEntry(const ZLResource &resource) {
+	myRussianString = resource[ZLResourceKey("ru")].value();
+	myChineseString = resource[ZLResourceKey("zh")].value();
+	myCzechString = resource[ZLResourceKey("cz")].value();
+	myOtherString = resource[ZLResourceKey("other")].value();
+}
 
 const std::string &DefaultLanguageEntry::initialValue() const {
 	switch (PluginCollection::instance().DefaultLanguageOption.value()) {
 		case EncodingDetector::RUSSIAN:
-			return LANGUAGE_RUSSIAN;
+			return myRussianString;
 		case EncodingDetector::CHINESE:
-			return LANGUAGE_CHINESE;
+			return myChineseString;
 		case EncodingDetector::CZECH:
-			return LANGUAGE_CZECH;
+			return myCzechString;
 		default:
-			return LANGUAGE_OTHER;
+			return myOtherString;
 	}
 }
 
 const std::vector<std::string> &DefaultLanguageEntry::values() const {
 	static std::vector<std::string> _values;
 	if (_values.empty()) {
-		_values.push_back(LANGUAGE_CHINESE);
-		_values.push_back(LANGUAGE_CZECH);
-		_values.push_back(LANGUAGE_RUSSIAN);
-		_values.push_back(LANGUAGE_OTHER);
+		_values.push_back(myChineseString);
+		_values.push_back(myCzechString);
+		_values.push_back(myRussianString);
+		_values.push_back(myOtherString);
 	}
 	return _values;
 }
 
 void DefaultLanguageEntry::onAccept(const std::string &value) {
 	EncodingDetector::Language language = EncodingDetector::OTHER;
-	if (value == LANGUAGE_RUSSIAN) {
+	if (value == myRussianString) {
 		language = EncodingDetector::RUSSIAN;
-	} else if (value == LANGUAGE_CHINESE) {
+	} else if (value == myChineseString) {
 		language = EncodingDetector::CHINESE;
-	} else if (value == LANGUAGE_CZECH) {
+	} else if (value == myCzechString) {
 		language = EncodingDetector::CZECH;
 	}
 	PluginCollection::instance().DefaultLanguageOption.setValue(language);
@@ -195,14 +204,14 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(fbreader), true);
 
 	ZLDialogContent &generalTab = myDialog->createTab(ZLResourceKey("General"));
-	generalTab.addOption(ZLResourceKey("quitOnCancel"), fbreader.QuitOnCancelOption);
 	CollectionView &collectionView = (CollectionView&)*fbreader.myCollectionView;
 	generalTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
 	generalTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
 	RecentBooksView &recentBooksView = (RecentBooksView&)*fbreader.myRecentBooksView;
 	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(recentBooksView.lastBooks().MaxListSizeOption, 1));
 	generalTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
-	generalTab.addOption(ZLResourceKey("defaultLanguage"), new DefaultLanguageEntry());
+	const ZLResourceKey languageKey("defaultLanguage");
+	generalTab.addOption(languageKey, new DefaultLanguageEntry(generalTab.resource(languageKey)));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 

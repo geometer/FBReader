@@ -258,5 +258,6 @@ KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab)
 	dialogTab.addOption(ZLResourceKey("separate"), useSeparateBindingsEntry);
 	dialogTab.addOption(ZLResourceKey("orientation"), orientationEntry);
 	dialogTab.addOption("", "", keyEntry);
+	dialogTab.addOption(ZLResourceKey("quitOnCancel"), fbreader.QuitOnCancelOption);
 	useSeparateBindingsEntry->onStateChanged(useSeparateBindingsEntry->initialState());
 }

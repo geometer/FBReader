@@ -59,7 +59,9 @@
 			<node name="title" value="Remove Scenes"/>
 		</node>
 		<node name="pointDialog">
-			<node name="title" value="Point"/>
+			<node name="title" value="Point">
+				<node name="name" value="Name"/>
+			</node>
 		</node>
 		<node name="removeSceneBox">
 			<node name="title" value="Remove Scene"/>

@@ -26,21 +26,10 @@
 #include "ScrollingOptionsPage.h"
 #include "../textview/TextView.h"
 
-static const std::string LARGE_SCROLLING = "Large Scrollings";
-static const std::string SMALL_SCROLLING = "Small Scrollings";
-static const std::string MOUSE_SCROLLING = "Mouse Scrollings";
-static const std::string FINGER_TAP_SCROLLING = "Finger Tap Scrollings";
-
-static const std::string NO_OVERLAPPING = "No Overlapping";
-static const std::string KEEP_LINES = "Keep Lines";
-static const std::string SCROLL_LINES = "Scroll Lines";
-static const std::string SCROLL_PERCENTAGE = "Scroll Percentage";
-static const std::string DISABLE = "Disable";
-
 class ScrollingTypeEntry : public ZLComboOptionEntry {
 
 public:
-	ScrollingTypeEntry(FBReader &fbreader, ScrollingOptionsPage &page);
+	ScrollingTypeEntry(const ZLResource &resource, FBReader &fbreader, ScrollingOptionsPage &page);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -48,12 +37,26 @@ public:
 	void onValueSelected(int index);
 
 private:
+	std::string myLargeScrollingString;
+	std::string mySmallScrollingString;
+	std::string myMouseScrollingString;
+	std::string myFingerTapScrollingString;
+
+private:
+	const ZLResource &myResource;
 	FBReader &myFBReader;
 	ScrollingOptionsPage &myPage;
 	std::vector<std::string> myValues;
 };
 
 class ScrollingModeEntry : public ZLComboOptionEntry {
+
+public:
+	static std::string ourNoOverlappingString;
+	static std::string ourKeepLinesString;
+	static std::string ourScrollLinesString;
+	static std::string ourScrollPercentageString;
+	static std::string ourDisableString;
 
 private:
 	static const std::string &nameByCode(int code);
@@ -77,19 +80,24 @@ private:
 	bool myIsFingerTapOption;
 };
 
-ScrollingTypeEntry::ScrollingTypeEntry(FBReader &fbreader, ScrollingOptionsPage &page) : myFBReader(fbreader), myPage(page) {
-	myValues.push_back(LARGE_SCROLLING);
-	myValues.push_back(SMALL_SCROLLING);
+ScrollingTypeEntry::ScrollingTypeEntry(const ZLResource &resource, FBReader &fbreader, ScrollingOptionsPage &page) : myResource(resource), myFBReader(fbreader), myPage(page) {
+	myLargeScrollingString = resource[ZLResourceKey("large")].value();
+	mySmallScrollingString = resource[ZLResourceKey("small")].value();
+	myMouseScrollingString = resource[ZLResourceKey("mouse")].value();
+	myFingerTapScrollingString = resource[ZLResourceKey("finger")].value();
+
+	myValues.push_back(myLargeScrollingString);
+	myValues.push_back(mySmallScrollingString);
 	if (myFBReader.isMousePresented()) {
-		myValues.push_back(MOUSE_SCROLLING);
+		myValues.push_back(myMouseScrollingString);
 	}
 	if (myFBReader.isFingerTapEventSupported()) {
-		myValues.push_back(FINGER_TAP_SCROLLING);
+		myValues.push_back(myFingerTapScrollingString);
 	}
 }
 
 const std::string &ScrollingTypeEntry::initialValue() const {
-	return LARGE_SCROLLING;
+	return myLargeScrollingString;
 }
 
 const std::vector<std::string> &ScrollingTypeEntry::values() const {
@@ -101,55 +109,61 @@ void ScrollingTypeEntry::onAccept(const std::string&) {
 
 void ScrollingTypeEntry::onValueSelected(int index) {
 	const std::string &selectedValue = values()[index];
-	myPage.myLargeScrollingEntries.show(selectedValue == LARGE_SCROLLING);
-	myPage.mySmallScrollingEntries.show(selectedValue == SMALL_SCROLLING);
+	myPage.myLargeScrollingEntries.show(selectedValue == myLargeScrollingString);
+	myPage.mySmallScrollingEntries.show(selectedValue == mySmallScrollingString);
 	if (myFBReader.isMousePresented()) {
-		myPage.myMouseScrollingEntries.show(selectedValue == MOUSE_SCROLLING);
+		myPage.myMouseScrollingEntries.show(selectedValue == myMouseScrollingString);
 	}
 	if (myFBReader.isFingerTapEventSupported()) {
-		myPage.myFingerTapScrollingEntries.show(selectedValue == FINGER_TAP_SCROLLING);
+		myPage.myFingerTapScrollingEntries.show(selectedValue == myFingerTapScrollingString);
 	}
 }
+
+std::string ScrollingModeEntry::ourNoOverlappingString;
+std::string ScrollingModeEntry::ourKeepLinesString;
+std::string ScrollingModeEntry::ourScrollLinesString;
+std::string ScrollingModeEntry::ourScrollPercentageString;
+std::string ScrollingModeEntry::ourDisableString;
 
 const std::string &ScrollingModeEntry::nameByCode(int code) {
 	switch (code) {
 		case TextView::KEEP_LINES:
-			return KEEP_LINES;
+			return ourKeepLinesString;
 		case TextView::SCROLL_LINES:
-			return SCROLL_LINES;
+			return ourScrollLinesString;
 		case TextView::SCROLL_PERCENTAGE:
-			return SCROLL_PERCENTAGE;
+			return ourScrollPercentageString;
 		default:
-			return NO_OVERLAPPING;
+			return ourNoOverlappingString;
 	}
 }
 
 TextView::ScrollingMode ScrollingModeEntry::codeByName(const std::string &name) {
-	if (name == KEEP_LINES) {
+	if (name == ourKeepLinesString) {
 		return TextView::KEEP_LINES;
 	}
-	if (name == SCROLL_LINES) {
+	if (name == ourScrollLinesString) {
 		return TextView::SCROLL_LINES;
 	}
-	if (name == SCROLL_PERCENTAGE) {
+	if (name == ourScrollPercentageString) {
 		return TextView::SCROLL_PERCENTAGE;
 	}
 	return TextView::NO_OVERLAPPING;
 }
 
 ScrollingModeEntry::ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &page, ZLIntegerOption &option, bool isFingerTapOption) : myFBReader(fbreader), myEntries(page), myOption(option), myIsFingerTapOption(isFingerTapOption) {
-	myValues.push_back(NO_OVERLAPPING);
-	myValues.push_back(KEEP_LINES);
-	myValues.push_back(SCROLL_LINES);
-	myValues.push_back(SCROLL_PERCENTAGE);
+	myValues.push_back(ourNoOverlappingString);
+	myValues.push_back(ourKeepLinesString);
+	myValues.push_back(ourScrollLinesString);
+	myValues.push_back(ourScrollPercentageString);
 	if (myIsFingerTapOption) {
-		myValues.push_back(DISABLE);
+		myValues.push_back(ourDisableString);
 	}
 }
 
 const std::string &ScrollingModeEntry::initialValue() const {
 	if (myIsFingerTapOption && !myFBReader.EnableFingerScrollingOption.value()) {
-		return DISABLE;
+		return ourDisableString;
 	}
 	return nameByCode(myOption.value());
 }
@@ -159,7 +173,7 @@ const std::vector<std::string> &ScrollingModeEntry::values() const {
 }
 
 void ScrollingModeEntry::onAccept(const std::string &text) {
-	if (myIsFingerTapOption && (text == DISABLE)) {
+	if (myIsFingerTapOption && (text == ourDisableString)) {
 		myFBReader.EnableFingerScrollingOption.setValue(false);
 	} else {
 		myFBReader.EnableFingerScrollingOption.setValue(true);
@@ -174,11 +188,17 @@ void ScrollingModeEntry::onMadeVisible() {
 void ScrollingModeEntry::onValueSelected(int index) {
 	myCurrentIndex = index;
 	const std::string &selectedValue = values()[index];
-	myEntries.myDelayEntry->setVisible(selectedValue != DISABLE);
-	myEntries.myLinesToKeepEntry->setVisible(selectedValue == KEEP_LINES);
-	myEntries.myLinesToScrollEntry->setVisible(selectedValue == SCROLL_LINES);
-	myEntries.myPercentToScrollEntry->setVisible(selectedValue == SCROLL_PERCENTAGE);
+	myEntries.myDelayEntry->setVisible(selectedValue != ourDisableString);
+	myEntries.myLinesToKeepEntry->setVisible(selectedValue == ourKeepLinesString);
+	myEntries.myLinesToScrollEntry->setVisible(selectedValue == ourScrollLinesString);
+	myEntries.myPercentToScrollEntry->setVisible(selectedValue == ourScrollPercentageString);
 }
+
+static const ZLResourceKey delayKey("delay");
+static const ZLResourceKey modeKey("mode");
+static const ZLResourceKey linesToKeepKey("linesToKeep");
+static const ZLResourceKey linesToScrollKey("linesToScroll");
+static const ZLResourceKey percentToScrollKey("percentToScroll");
 
 void ScrollingOptionsPage::ScrollingEntries::init(FBReader &fbreader, FBReader::ScrollingOptions &options) {
 	myDelayEntry = new ZLSimpleSpinOptionEntry(options.DelayOption, 50);
@@ -190,11 +210,11 @@ void ScrollingOptionsPage::ScrollingEntries::init(FBReader &fbreader, FBReader::
 }
 
 void ScrollingOptionsPage::ScrollingEntries::connect(ZLDialogContent &dialogTab) {
-	dialogTab.addOption(ZLResourceKey("delay"), myDelayEntry);
-	dialogTab.addOption(ZLResourceKey("mode"), myModeEntry);
-	dialogTab.addOption(ZLResourceKey("linesToKeep"), myLinesToKeepEntry);
-	dialogTab.addOption(ZLResourceKey("linesToScroll"), myLinesToScrollEntry);
-	dialogTab.addOption(ZLResourceKey("percentToScroll"), myPercentToScrollEntry);
+	dialogTab.addOption(delayKey, myDelayEntry);
+	dialogTab.addOption(modeKey, myModeEntry);
+	dialogTab.addOption(linesToKeepKey, myLinesToKeepEntry);
+	dialogTab.addOption(linesToScrollKey, myLinesToScrollEntry);
+	dialogTab.addOption(percentToScrollKey, myPercentToScrollEntry);
 }
 
 void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
@@ -212,8 +232,16 @@ void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
 }
 
 ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader &fbreader) {
-	ZLComboOptionEntry *mainEntry = new ScrollingTypeEntry(fbreader, *this);
-	dialogTab.addOption(ZLResourceKey("optionsFor"), mainEntry);
+	const ZLResourceKey optionsForKey("optionsFor");
+	ZLComboOptionEntry *mainEntry = new ScrollingTypeEntry(dialogTab.resource(optionsForKey), fbreader, *this);
+	dialogTab.addOption(optionsForKey, mainEntry);
+
+	const ZLResource &modeResource = dialogTab.resource(modeKey);
+	ScrollingModeEntry::ourNoOverlappingString = modeResource[ZLResourceKey("noOverlapping")].value();
+	ScrollingModeEntry::ourKeepLinesString = modeResource[ZLResourceKey("keepLines")].value();
+	ScrollingModeEntry::ourScrollLinesString = modeResource[ZLResourceKey("scrollLines")].value();
+	ScrollingModeEntry::ourScrollPercentageString = modeResource[ZLResourceKey("scrollPercentage")].value();
+	ScrollingModeEntry::ourDisableString = modeResource[ZLResourceKey("disable")].value();
 
 	myLargeScrollingEntries.init(fbreader, fbreader.LargeScrollingOptions);
 	mySmallScrollingEntries.init(fbreader, fbreader.SmallScrollingOptions);

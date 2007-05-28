@@ -61,12 +61,16 @@
 			<node name="title" value="FBReader - Options"/>
 			<node name="tab">
 				<node name="General" value="General">
-					<node name="quitOnCancel" value="Quit Application on Cancel"/>
 					<node name="bookPath" value="Book Path"/>
 					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
 					<node name="recentListSize" value="Recent Books List Size"/>
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
-					<node name="defaultLanguage" value="Language for Encoding Detection"/>
+					<node name="defaultLanguage" value="Language for Encoding Detection">
+						<node name="ru" value="Russian"/>
+						<node name="zh" value="Chinese"/>
+						<node name="cz" value="Czech"/>
+						<node name="other" value="Other"/>
+					</node>
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="show" value="Show Position Indicator"/>
@@ -79,9 +83,20 @@
 					<node name="navigation" value="Enable Navigation"/>
 				</node>
 				<node name="Scrolling" value="Scrolling">
-					<node name="optionsFor" value="Options for"/>
+					<node name="optionsFor" value="Options for">
+						<node name="large" value="Large Scrollings"/>
+						<node name="small" value="Small Scrollings"/>
+						<node name="mouse" value="Mouse Scrollings"/>
+						<node name="finger" value="Finger Tap Scrollings"/>
+					</node>
 					<node name="delay" value="Delay between Scrollings, msecs"/>
-					<node name="mode" value="Scrolling Mode"/>
+					<node name="mode" value="Scrolling Mode">
+						<node name="noOverlapping" value="No Overlapping"/>
+						<node name="keepLines" value="Keep Lines"/>
+						<node name="scrollLines" value="Scroll Lines"/>
+						<node name="scrollPercentage" value="Scroll Percentage"/>
+						<node name="disable" value="Disable"/>
+					</node>
 					<node name="linesToKeep" value="Lines to Keep"/>
 					<node name="linesToScroll" value="Lines to Scroll"/>
 					<node name="percentToScroll" value="Percent to Scroll"/>
@@ -172,6 +187,7 @@
 						<node name="cancel" value="Cancel"/>
 						<node name="quit" value="Quit"/>
 					</node>
+					<node name="quitOnCancel" value="Quit Application on Cancel"/>
 				</node>
 				<node name="Config" value="Config">
 					<node name="autoSave" value="Save State Automatically"/>

@@ -28,11 +28,13 @@
 class ZLGtkDialogContent : public ZLDialogContent {
 
 public:
-	ZLGtkDialogContent();
+	ZLGtkDialogContent(const ZLResource &resource);
 	~ZLGtkDialogContent();
 
-	void addOption(ZLOptionEntry *option);
-	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
+	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
+	void addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0,
+									const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1);
+
 
 	GtkWidget *widget() { return GTK_WIDGET(myTable); }
 
@@ -40,7 +42,7 @@ public:
 
 private:
 	int addRow();
-	void createViewByEntry(ZLOptionEntry *option, int row, int fromColumn, int toColumn);
+	void createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int row, int fromColumn, int toColumn);
 
 private:
 	GtkTable *myTable;

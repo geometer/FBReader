@@ -25,8 +25,8 @@
 #include "ZLGtkDialogManager.h"
 #include "ZLGtkUtil.h"
 
-static GtkLabel *labelWithMyParams(const char *text) {
-	GtkLabel *label = GTK_LABEL(gtk_label_new(text));
+static GtkLabel *gtkLabel(const std::string &text) {
+	GtkLabel *label = GTK_LABEL(gtk_label_new(gtkString(text).c_str()));
 	gtk_label_set_justify(label, GTK_JUSTIFY_RIGHT);
 	return label;
 }
@@ -36,14 +36,7 @@ void ZLGtkOptionView::_onValueChanged(GtkWidget*, gpointer self) {
 }
 
 void BooleanOptionView::_createItem() {
-	/*
-	if (ZLApplication::isKeyboardPresented()) {
-		myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name(), true).c_str());
-	} else {
-		myCheckBox = gtk_check_button_new_with_label(gtkString(myOption->name(), false).c_str());
-	}
-	*/
-	myCheckBox = GTK_CHECK_BUTTON(gtk_check_button_new_with_label(gtkString(myOption->name()).c_str()));
+	myCheckBox = GTK_CHECK_BUTTON(gtk_check_button_new_with_label(gtkString(name()).c_str()));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
 	g_signal_connect(GTK_WIDGET(myCheckBox), "toggled", G_CALLBACK(_onValueChanged), this);
 	myTab->addItem(GTK_WIDGET(myCheckBox), myRow, myFromColumn, myToColumn);
@@ -66,7 +59,7 @@ void BooleanOptionView::onValueChanged() {
 }
 
 void ChoiceOptionView::_createItem() {
-	myFrame = GTK_FRAME(gtk_frame_new(myOption->name().c_str()));
+	myFrame = GTK_FRAME(gtk_frame_new(name().c_str()));
 	myVBox = GTK_BOX(gtk_vbox_new(true, 10));
 	gtk_container_set_border_width(GTK_CONTAINER(myVBox), 5);
 
@@ -110,7 +103,7 @@ void ChoiceOptionView::_onAccept() const {
 
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOptionEntry = *(ZLComboOptionEntry*)myOption;
-	myLabel = labelWithMyParams(myOption->name().c_str());
+	myLabel = gtkLabel(name());
 	myComboBox = comboOptionEntry.isEditable() ?
 		GTK_COMBO_BOX(gtk_combo_box_entry_new_text()) : 
 		GTK_COMBO_BOX(gtk_combo_box_new_text());
@@ -184,7 +177,7 @@ void ComboOptionView::onValueChanged() {
 void SpinOptionView::_createItem() {
 	ZLSpinOptionEntry *tempo = (ZLSpinOptionEntry*)myOption;
 
-	myLabel = labelWithMyParams(myOption->name().c_str());
+	myLabel = gtkLabel(name());
 
 	mySpinBox = HILDON_NUMBER_EDITOR(hildon_number_editor_new(tempo->minValue(), tempo->maxValue()));
 	hildon_number_editor_set_value(mySpinBox, tempo->initialValue());
@@ -213,8 +206,8 @@ void StringOptionView::_createItem() {
 	myLineEdit = GTK_ENTRY(gtk_entry_new());
 	g_signal_connect(myLineEdit, "changed", G_CALLBACK(_onValueChanged), this);
 
-	if (!myOption->name().empty()) {
-		myLabel = labelWithMyParams(myOption->name().c_str());
+	if (!name().empty()) {
+		myLabel = gtkLabel(name());
 		int width = myToColumn - myFromColumn;
 		myTab->addItem(GTK_WIDGET(myLabel), myRow, myFromColumn, myFromColumn + width / 4);
 		myTab->addItem(GTK_WIDGET(myLineEdit), myRow, myFromColumn + width / 4, myToColumn);

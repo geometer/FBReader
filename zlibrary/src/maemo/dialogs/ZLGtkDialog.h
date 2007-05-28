@@ -28,7 +28,7 @@
 class ZLGtkDialog : public ZLDialog {
 
 public:
-	ZLGtkDialog(const std::string &name);
+	ZLGtkDialog(const ZLResource &resource);
 	~ZLGtkDialog();
 
 	void addButton(const ZLResourceKey &key, bool accept);
