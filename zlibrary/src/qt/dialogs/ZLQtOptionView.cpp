@@ -37,9 +37,10 @@
 
 #include "ZLQtOptionView.h"
 #include "ZLQtDialogContent.h"
+#include "ZLQtUtil.h"
 
 void BooleanOptionView::_createItem() {
-	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab->widget());
+	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
 	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
@@ -62,13 +63,13 @@ void BooleanOptionView::onStateChanged(bool state) const {
 }
 
 void ChoiceOptionView::_createItem() {
-	myGroup = new QButtonGroup(myOption->name().c_str(), myTab->widget());
+	myGroup = new QButtonGroup(::qtString(ZLOptionView::name()), myTab->widget());
 	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
 	layout->addSpacing(myGroup->fontMetrics().height());
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
 		myButtons[i] = new QRadioButton((QButtonGroup*)layout->parent());
-		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());
+		myButtons[i]->setText(::qtString(((ZLChoiceOptionEntry*)myOption)->text(i)));
 		layout->addWidget(myButtons[i]);
 	}
 	myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]->setChecked(true);
@@ -94,7 +95,7 @@ void ChoiceOptionView::_onAccept() const {
 
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
-	myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
+	myLabel = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	myComboBox = new QComboBox(myTab->widget());
 	myComboBox->setEditable(comboOption.isEditable());
 
@@ -125,7 +126,7 @@ void ComboOptionView::reset() {
 	int selectedIndex = -1;
 	int index = 0;
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it, ++index) {
-		myComboBox->insertItem(QString::fromUtf8(it->c_str()));
+		myComboBox->insertItem(::qtString(*it));
 		if (*it == initial) {
 			selectedIndex = index;
 		}
@@ -172,7 +173,7 @@ void ComboOptionView::onValueEdited(const QString &value) {
 }
 
 void SpinOptionView::_createItem() {
-	myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
+	myLabel = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	mySpinBox = new QSpinBox(
 		((ZLSpinOptionEntry*)myOption)->minValue(),
 		((ZLSpinOptionEntry*)myOption)->maxValue(),
@@ -201,8 +202,8 @@ void SpinOptionView::_onAccept() const {
 void StringOptionView::_createItem() {
 	myLineEdit = new QLineEdit(myTab->widget());
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
-	if (!myOption->name().empty()) {
-		myLabel = new QLabel(myOption->name().c_str(), myTab->widget());
+	if (!ZLOptionView::name().empty()) {
+		myLabel = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 		int width = myToColumn - myFromColumn + 1;
 		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
 		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
@@ -239,7 +240,7 @@ void StringOptionView::reset() {
 	if (myLineEdit == 0) {
 		return;
 	}
-	myLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
+	myLineEdit->setText(::qtString(((ZLStringOptionEntry*)myOption)->initialValue()));
 	myLineEdit->cursorLeft(false, myLineEdit->text().length());
 }
 
@@ -287,7 +288,7 @@ void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
 	std::string keyText = ZLQtKeyUtil::keyName(keyEvent);
 	if (!keyText.empty()) {
 		myKeyView.myCurrentKey = keyText;
-		myKeyView.myLabel->setText("Action For " + QString::fromUtf8(keyText.c_str()));
+		myKeyView.myLabel->setText("Action For " + ::qtString(keyText));
 		myKeyView.myLabel->show();
 		myKeyView.myComboBox->setCurrentItem(((ZLKeyOptionEntry*)myKeyView.myOption)->actionIndex(keyText));
 		myKeyView.myComboBox->show();
@@ -305,7 +306,7 @@ void KeyOptionView::_createItem() {
 	myComboBox = new QComboBox(myWidget);
 	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
-		myComboBox->insertItem(it->c_str());
+		myComboBox->insertItem(::qtString(*it));
 	}
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChanged(int)));
 	layout->addWidget(myComboBox, 1, 1);
@@ -456,7 +457,7 @@ void OrderOptionView::_createItem() {
 
 	const std::vector<std::string> &values = ((ZLOrderOptionEntry&)*myOption).values();
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it) {
-		myListBox->insertItem(QString::fromUtf8(it->c_str()));
+		myListBox->insertItem(::qtString(*it));
 	}
 	myListBox->setSelected(0, true);
 

@@ -32,11 +32,11 @@
 #include "ZLQtDialogManager.h"
 #include "ZLQtUtil.h"
 
-ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, QString::fromUtf8(node->displayName().c_str())), myNode(node) {
+ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListView *listView, QListViewItem *previous, const ZLTreeNodePtr node) : QListViewItem(listView, previous, ::qtString(node->displayName())), myNode(node) {
 }
 
-ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(), ZLDesktopSelectionDialog(handler) {
-	setCaption(QString::fromUtf8(caption));
+ZLQtSelectionDialog::ZLQtSelectionDialog(const std::string &caption, ZLTreeHandler &handler) : QDialog(), ZLDesktopSelectionDialog(handler) {
+	setCaption(::qtString(caption));
 
 	myMainBox = new QVBox(this);
 
@@ -107,7 +107,7 @@ void ZLQtSelectionDialog::resizeEvent(QResizeEvent *event) {
 }
 
 void ZLQtSelectionDialog::updateStateLine() {
-	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
+	myStateLine->setText(::qtString(handler().stateDisplayName()));
 }
 
 void ZLQtSelectionDialog::updateList() {

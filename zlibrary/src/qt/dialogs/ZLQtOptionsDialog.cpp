@@ -28,7 +28,7 @@
 #include "ZLQtUtil.h"
 
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QTabDialog(0, 0, true), ZLDesktopOptionsDialog(resource, applyAction) {
-	setCaption(QString::fromUtf8(ZLOptionsDialog::caption().c_str()));
+	setCaption(::qtString(ZLOptionsDialog::caption()));
 	setOkButton(::qtButtonName(ZLDialogManager::OK_BUTTON));
 	setCancelButton(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
 	if (showApplyButton) {
@@ -42,8 +42,8 @@ void ZLQtOptionsDialog::apply() {
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(this, key.Name);
-	addTab(tab->widget(), QString::fromUtf8(tabName(key).c_str()));
+	ZLQtDialogContent *tab = new ZLQtDialogContent(this, tabResource(key));
+	addTab(tab->widget(), ::qtString(tab->name()));
 	myTabs.push_back(tab);
 	return *tab;
 }

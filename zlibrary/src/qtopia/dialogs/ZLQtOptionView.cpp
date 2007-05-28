@@ -63,7 +63,7 @@ void BooleanOptionView::onStateChanged(bool state) const {
 }
 
 void ChoiceOptionView::_createItem() {
-	myGroup = new QButtonGroup(::qtString(name()), myTab->widget());
+	myGroup = new QButtonGroup(::qtString(ZLOptionView::name()), myTab->widget());
 	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
 	layout->addSpacing(myGroup->fontMetrics().height());
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
@@ -170,7 +170,7 @@ void ComboOptionView::onValueEdited(const QString &value) {
 }
 
 void SpinOptionView::_createItem() {
-	myLabel = new QLabel(::qtString(name()), myTab->widget());
+	myLabel = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	mySpinBox = new QSpinBox(
 		((ZLSpinOptionEntry*)myOption)->minValue(),
 		((ZLSpinOptionEntry*)myOption)->maxValue(),
@@ -197,22 +197,31 @@ void SpinOptionView::_onAccept() const {
 }
 
 void StringOptionView::_createItem() {
-	myLabel = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	myLineEdit = new QLineEdit(myTab->widget());
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
-	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
-	myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+	if (!ZLOptionView::name().empty()) {
+		myLabel = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
+		int width = myToColumn - myFromColumn + 1;
+		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
+		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+	} else {
+		myLabel = 0;
+		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
+	}
 	reset();
 }
 
 void StringOptionView::_show() {
-	myLabel->show();
+	if (myLabel != 0) {
+		myLabel->show();
+	}
 	myLineEdit->show();
 }
 
 void StringOptionView::_hide() {
-	myLabel->hide();
+	if (myLabel != 0) {
+		myLabel->hide();
+	}
 	myLineEdit->hide();
 }
 

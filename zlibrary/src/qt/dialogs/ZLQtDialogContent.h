@@ -29,11 +29,12 @@ class QGridLayout;
 class ZLQtDialogContent : public ZLDialogContent {
 
 public:
-	ZLQtDialogContent(QWidget *parent, const std::string &name = "");
+	ZLQtDialogContent(QWidget *parent, const ZLResource &resource);
 	~ZLQtDialogContent();
 
-	void addOption(ZLOptionEntry *option);
-	void addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1);
+	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
+	void addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0,
+									const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1);
 
 	void addItem(QWidget *widget, int row, int fromColumn, int toColumn);
 
@@ -43,7 +44,7 @@ public:
 	QWidget *parentWidget();
 
 private:
-	void createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn);
+	void createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int fromColumn, int toColumn);
 
 private:
 	QWidget *myWidget;

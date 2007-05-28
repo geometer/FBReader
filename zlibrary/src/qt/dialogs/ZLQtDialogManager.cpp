@@ -36,14 +36,14 @@ shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResou
 }
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
-	return new ZLQtDialog(dialogTitle(key));
+	return new ZLQtDialog(resource()[key]);
 }
 
 void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
 	QMessageBox::information(
 		qApp->mainWidget(),
-		QString::fromUtf8(dialogTitle(key).c_str()),
-		QString::fromUtf8(message.c_str()),
+		::qtString(dialogTitle(key)),
+		::qtString(message),
 		::qtButtonName(OK_BUTTON)
 	);
 }
@@ -51,8 +51,8 @@ void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::stri
 void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
 	QMessageBox::critical(
 		qApp->mainWidget(),
-		QString::fromUtf8(dialogTitle(key).c_str()),
-		QString::fromUtf8(message.c_str()),
+		::qtString(dialogTitle(key)),
+		::qtString(message),
 		::qtButtonName(OK_BUTTON)
 	);
 }
@@ -60,8 +60,8 @@ void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &me
 int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
 	return QMessageBox::question(
 		qApp->mainWidget(),
-		QString::fromUtf8(dialogTitle(key).c_str()),
-		QString::fromUtf8(message.c_str()),
+		::qtString(dialogTitle(key)),
+		::qtString(message),
 		::qtButtonName(button0),
 		::qtButtonName(button1),
 		::qtButtonName(button2)
@@ -69,7 +69,7 @@ int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &
 }
 
 bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	return ZLQtSelectionDialog(dialogTitle(key).c_str(), handler).runWithSize();
+	return ZLQtSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 
 void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
@@ -84,7 +84,7 @@ bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {
 void ZLQtDialogManager::setClipboardText(const std::string &text, ClipboardType type) const {
 	if (!text.empty()) {
 		qApp->clipboard()->setText(
-			QString::fromUtf8(text.c_str()),
+			::qtString(text),
 			(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
 		);
 	}

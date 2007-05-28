@@ -27,6 +27,7 @@
 #include <qlayout.h>
 
 #include "ZLQtWaitMessage.h"
+#include "ZLQtUtil.h"
 
 ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Splash) {
 	QWidget *main = qApp->mainWidget();
@@ -42,7 +43,7 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WSt
 	qApp->processEvents();
 
 	QHBoxLayout layout(this, 10);
-	QLabel *label = new QLabel(QString::fromUtf8(message.c_str()), this);
+	QLabel *label = new QLabel(::qtString(message), this);
 	layout.add(label);
 
 	if (main == 0) {
