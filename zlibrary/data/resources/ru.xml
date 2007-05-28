@@ -25,6 +25,6 @@
 		<node name="lime" value="Lime"/>
 		<node name="yellow" value="Желтый"/>
 		<node name="magenta" value="Magenta"/>
-		<node name="cyan" value="Cyan"/>
+		<node name="cyan" value="Голубой"/>
 	</node>
 </resources>

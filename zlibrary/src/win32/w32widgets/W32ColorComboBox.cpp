@@ -22,6 +22,7 @@
 #include <ZLResource.h>
 
 #include "W32ColorComboBox.h"
+#include "W32WCHARUtil.h"
 
 static const WORD CLASS_COMBOBOX = 0x0085;
 
@@ -131,9 +132,11 @@ void W32ColorComboBox::drawItemCallback(DRAWITEMSTRUCT &di) {
 	DeleteObject(brush);
 
 	TEXTMETRIC tm;
-	const std::string &txt = text(di.itemID);
+	ZLUnicodeUtil::Ucs2String txt;
+	::createNTWCHARString(txt, text(di.itemID));
+	//const std::string &txt = text(di.itemID);
 	GetTextMetrics(di.hDC, &tm);
-	TextOutA(di.hDC, rectangle.right + 8, (rectangle.top + rectangle.bottom - tm.tmHeight) / 2, txt.data(), txt.length());
+	TextOutW(di.hDC, rectangle.right + 8, (rectangle.top + rectangle.bottom - tm.tmHeight) / 2, ::wchar(txt), txt.size() - 1);
 }
 
 void W32ColorComboBox::addColor(const std::string &name, ZLColor color) {
