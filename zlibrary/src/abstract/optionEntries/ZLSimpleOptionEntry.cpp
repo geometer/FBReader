@@ -42,6 +42,17 @@ void ZLSimpleBooleanOptionEntry::onAccept(bool state) {
 	myOption.setValue(state);
 }
 
+ZLSimpleBoolean3OptionEntry::ZLSimpleBoolean3OptionEntry(ZLBoolean3Option &option) : myOption(option) {
+}
+
+Boolean3 ZLSimpleBoolean3OptionEntry::initialState() const {
+	return myOption.value();
+}
+
+void ZLSimpleBoolean3OptionEntry::onAccept(Boolean3 state) {
+	myOption.setValue(state);
+}
+
 ZLSimpleSpinOptionEntry::ZLSimpleSpinOptionEntry(ZLIntegerRangeOption &option, int step) : myOption(option), myStep(step) {
 }
 
@@ -63,33 +74,6 @@ int ZLSimpleSpinOptionEntry::step() const {
 
 void ZLSimpleSpinOptionEntry::onAccept(int value) {
 	myOption.setValue(value);
-}
-
-std::vector<std::string> ZLSimpleBoolean3OptionEntry::ourValues;
-
-ZLSimpleBoolean3OptionEntry::ZLSimpleBoolean3OptionEntry(ZLBoolean3Option &option) : myOption(option) {
-}
-
-const std::string &ZLSimpleBoolean3OptionEntry::initialValue() const {
-	return values()[myOption.value()];
-}
-
-const std::vector<std::string> &ZLSimpleBoolean3OptionEntry::values() const {
-	if (ourValues.empty()) {
-		ourValues.push_back("No");
-		ourValues.push_back("Yes");
-		ourValues.push_back("<base>");
-	}
-	return ourValues;
-}
-
-void ZLSimpleBoolean3OptionEntry::onAccept(const std::string &value) {
-	for (unsigned int i = 0; i < values().size(); ++i) {
-		if (values()[i] == value) {
-			myOption.setValue((Boolean3)i);
-			return;
-		}
-	}
 }
 
 /*

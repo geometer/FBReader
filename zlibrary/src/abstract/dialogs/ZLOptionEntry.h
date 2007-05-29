@@ -34,6 +34,7 @@ public:
 	enum ZLOptionKind {
 		CHOICE,
 		BOOLEAN,
+		BOOLEAN3,
 		STRING,
 		SPIN,
 		COMBO,
@@ -115,6 +116,19 @@ public:
 	virtual bool initialState() const = 0;
 	virtual void onStateChanged(bool state);
 	virtual void onAccept(bool state) = 0;
+};
+
+class ZLBoolean3OptionEntry : public ZLOptionEntry {
+
+protected:
+	ZLBoolean3OptionEntry();
+
+public:
+	ZLOptionKind kind() const;
+
+	virtual Boolean3 initialState() const = 0;
+	virtual void onStateChanged(Boolean3 state);
+	virtual void onAccept(Boolean3 state) = 0;
 };
 
 class ZLSpinOptionEntry : public ZLOptionEntry {
@@ -219,6 +233,10 @@ inline ZLOptionEntry::ZLOptionKind ZLMultilineOptionEntry::kind() const { return
 inline ZLBooleanOptionEntry::ZLBooleanOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLBooleanOptionEntry::kind() const { return BOOLEAN; }
 inline void ZLBooleanOptionEntry::onStateChanged(bool) {}
+
+inline ZLBoolean3OptionEntry::ZLBoolean3OptionEntry() {}
+inline ZLOptionEntry::ZLOptionKind ZLBoolean3OptionEntry::kind() const { return BOOLEAN3; }
+inline void ZLBoolean3OptionEntry::onStateChanged(Boolean3) {}
 
 inline ZLSpinOptionEntry::ZLSpinOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLSpinOptionEntry::kind() const { return SPIN; }

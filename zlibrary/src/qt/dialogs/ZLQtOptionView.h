@@ -90,6 +90,26 @@ private:
 	QCheckBox *myCheckBox;
 };
 
+class Boolean3OptionView : public QObject, public ZLQtOptionView {
+
+Q_OBJECT
+
+public:
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+
+protected:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _onAccept() const;
+
+private slots:
+	void onStateChanged(int) const;
+
+private:
+	QCheckBox *myCheckBox;
+};
+
 class StringOptionView : public QObject, public ZLQtOptionView {
 
 Q_OBJECT

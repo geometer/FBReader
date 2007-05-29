@@ -60,16 +60,14 @@ private:
 	int myStep;
 };
 
-class ZLSimpleBoolean3OptionEntry : public ZLComboOptionEntry {
+class ZLSimpleBoolean3OptionEntry : public ZLBoolean3OptionEntry {
 
 public:
 	ZLSimpleBoolean3OptionEntry(ZLBoolean3Option &option);
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
+	Boolean3 initialState() const;
+	void onAccept(Boolean3 state);
 
 private:
-	static std::vector<std::string> ourValues;
 	ZLBoolean3Option &myOption;
 };
 
