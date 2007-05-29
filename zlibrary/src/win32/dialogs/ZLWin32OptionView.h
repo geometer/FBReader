@@ -71,6 +71,23 @@ private:
 	W32CheckBox *myCheckBox;
 };
 
+class Boolean3OptionView : public ZLWin32OptionView, public W32Listener {
+
+public:
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+
+protected:
+	void _onAccept() const;
+	void _show();
+	void _hide();
+
+private:
+	void onEvent(const std::string &event, W32EventSender &sender);
+
+private:
+	W32TristateBox *myTristateBox;
+};
+
 class StringOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:

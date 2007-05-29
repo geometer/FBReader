@@ -30,5 +30,5 @@ QString qtButtonName(const ZLResourceKey &key) {
 	if (key.Name.empty()) {
 		return QString::null;
 	}
-	return qtString(ZLDialogManager::buttonName(key));
+	return ::qtString(ZLDialogManager::buttonName(key));
 }

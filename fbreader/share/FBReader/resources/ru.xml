@@ -82,20 +82,20 @@
 					<node name="tocMarks" value="Показывать пометки начала глав"/>
 					<node name="navigation" value="Реагировать на нажатия"/>
 				</node>
-				<node name="Scrolling" value="Прокрутка">
-					<node name="optionsFor" value="Настройки прокрутки">
+				<node name="Scrolling" value="Перелистывание">
+					<node name="optionsFor" value="Настройки перелистывания">
 						<node name="large" value="на большое расстояние"/>
 						<node name="small" value="на небольшое расстояние"/>
 						<node name="mouse" value="колесом мышки"/>
 						<node name="finger" value="нажатием пальцем"/>
 					</node>
 					<node name="delay" value="Задержка, миллисекунды"/>
-					<node name="mode" value="Прокрутка">
+					<node name="mode" value="Перелистывание">
 						<node name="noOverlapping" value="без перекрытия"/>
 						<node name="keepLines" value="перекрывает несколько строк"/>
 						<node name="scrollLines" value="сдвигает несколько строк"/>
 						<node name="scrollPercentage" value="сдвигает часть текста"/>
-						<node name="disable" value="выключена"/>
+						<node name="disable" value="выключено"/>
 					</node>
 					<node name="linesToKeep" value="Сколько строк перекрывать"/>
 					<node name="linesToScroll" value="Сколько строк сдвигать"/>

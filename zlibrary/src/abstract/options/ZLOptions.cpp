@@ -165,7 +165,7 @@ void ZLBooleanOption::setValue(bool value) {
 	}
 }
 
-ZLBoolean3Option::ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLBoolean3Option::ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, ZLBoolean3 defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBoolean3Option::~ZLBoolean3Option() {
@@ -175,17 +175,17 @@ ZLSimpleOption::Type ZLBoolean3Option::type() const {
 	return TYPE_BOOLEAN3;
 }
 
-Boolean3 ZLBoolean3Option::value() const {
+ZLBoolean3 ZLBoolean3Option::value() const {
 	if (!myIsSynchronized) {
 		ZLOptions &options = ZLOptions::instance();
 		options.setGroup(myGroup);
-		myValue = (Boolean3)options.integerValue(myOptionName, myDefaultValue);
+		myValue = (ZLBoolean3)options.integerValue(myOptionName, myDefaultValue);
 		myIsSynchronized = true;
 	}
 	return myValue;
 }
 
-void ZLBoolean3Option::setValue(Boolean3 value) {
+void ZLBoolean3Option::setValue(ZLBoolean3 value) {
 	if (myIsSynchronized && (myValue == value)) {
 		return;
 	}

@@ -24,6 +24,7 @@
 #include <string>
 
 #include <ZLColor.h>
+#include <ZLBoolean3.h>
 
 class ZLOption {
 
@@ -86,25 +87,19 @@ private:
 	const bool myDefaultValue;
 };
 
-enum Boolean3 {
-	B3_FALSE = 0,
-	B3_TRUE = 1,
-	B3_UNDEFINED = 2
-};
-
 class ZLBoolean3Option : public ZLSimpleOption {
 
 public:
-	ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, Boolean3 defaultValue);
+	ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, ZLBoolean3 defaultValue);
 	~ZLBoolean3Option();
 	Type type() const;
 
-	Boolean3 value() const;
-	void setValue(Boolean3 value);
+	ZLBoolean3 value() const;
+	void setValue(ZLBoolean3 value);
 
 private:
-	mutable Boolean3 myValue;
-	const Boolean3 myDefaultValue;
+	mutable ZLBoolean3 myValue;
+	const ZLBoolean3 myDefaultValue;
 };
 
 class ZLIntegerOption : public ZLOption {

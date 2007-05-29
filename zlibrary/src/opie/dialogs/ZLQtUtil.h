@@ -21,6 +21,8 @@
 #ifndef __ZLQTUTIL_H__
 #define __ZLQTUTIL_H__
 
+#include <string>
+
 #include <qstring.h>
 
 #include <ZLResource.h>

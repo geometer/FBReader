@@ -89,7 +89,7 @@ void Boolean3OptionView::_hide() {
 }
 
 void Boolean3OptionView::_onAccept() const {
-	Boolean3 value = B3_UNDEFINED;
+	ZLBoolean3 value = B3_UNDEFINED;
 	switch (myCheckBox->state()) {
 		case QCheckBox::On:
 			value = B3_TRUE;
@@ -97,12 +97,15 @@ void Boolean3OptionView::_onAccept() const {
 		case QCheckBox::Off:
 			value = B3_FALSE;
 			break;
+		case QCheckBox::NoChange:
+			value = B3_UNDEFINED;
+			break;
 	}
 	((ZLBoolean3OptionEntry*)myOption)->onAccept(value);
 }
 
 void Boolean3OptionView::onStateChanged(int state) const {
-	Boolean3 value = B3_UNDEFINED;
+	ZLBoolean3 value = B3_UNDEFINED;
 	switch (state) {
 		case QCheckBox::On:
 			value = B3_TRUE;

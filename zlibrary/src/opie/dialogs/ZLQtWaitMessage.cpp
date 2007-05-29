@@ -24,11 +24,12 @@
 #include <qlayout.h>
 
 #include "ZLQtWaitMessage.h"
+#include "ZLQtUtil.h"
 
 ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WType_Popup) {
 	resize(1, 1);
 	QHBoxLayout layout(this, 24);
-	QLabel *label = new QLabel(QString::fromUtf8(message.c_str()), this);
+	QLabel *label = new QLabel(::qtString(message), this);
 	layout.add(label);
 
 	qApp->processEvents();
@@ -39,7 +40,4 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WTy
 	move(root->width() / 2 - width() / 2, root->height() / 2 - height() / 2);
 
 	qApp->processEvents();
-}
-
-ZLQtWaitMessage::~ZLQtWaitMessage() {
 }

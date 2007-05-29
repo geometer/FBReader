@@ -21,8 +21,6 @@
 #ifndef __ZLQTDIALOGCONTENT_H__
 #define __ZLQTDIALOGCONTENT_H__
 
-#include <qwidget.h>
-
 #include <ZLDialogContent.h>
 
 class QWidget;

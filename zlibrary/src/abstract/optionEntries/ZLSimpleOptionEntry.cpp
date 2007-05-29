@@ -45,11 +45,11 @@ void ZLSimpleBooleanOptionEntry::onAccept(bool state) {
 ZLSimpleBoolean3OptionEntry::ZLSimpleBoolean3OptionEntry(ZLBoolean3Option &option) : myOption(option) {
 }
 
-Boolean3 ZLSimpleBoolean3OptionEntry::initialState() const {
+ZLBoolean3 ZLSimpleBoolean3OptionEntry::initialState() const {
 	return myOption.value();
 }
 
-void ZLSimpleBoolean3OptionEntry::onAccept(Boolean3 state) {
+void ZLSimpleBoolean3OptionEntry::onAccept(ZLBoolean3 state) {
 	myOption.setValue(state);
 }
 

@@ -52,6 +52,31 @@ void BooleanOptionView::_hide() {
 	myCheckBox->setVisible(false);
 }
 
+Boolean3OptionView::Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
+	myTristateBox = new W32TristateBox(name);
+	myTristateBox->setState(option->initialState());
+	myTristateBox->addListener(this);
+	tab.insertWidget(myTristateBox, from, to);
+}
+
+void Boolean3OptionView::_onAccept() const {
+	((ZLBoolean3OptionEntry*)myOption)->onAccept(myTristateBox->state());
+}
+
+void Boolean3OptionView::onEvent(const std::string &event, W32EventSender&) {
+	if (event == W32CheckBox::STATE_CHANGED_EVENT) {
+		((ZLBoolean3OptionEntry*)myOption)->onStateChanged(myTristateBox->state());
+	}
+}
+
+void Boolean3OptionView::_show() {
+	myTristateBox->setVisible(true);
+}
+
+void Boolean3OptionView::_hide() {
+	myTristateBox->setVisible(false);
+}
+
 ChoiceOptionView::ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	std::vector<std::string> names;
 	int num = option->choiceNumber();

@@ -43,19 +43,19 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) c
 }
 
 void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
-	QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(OK_BUTTON));
+	QMessageBox::information(qApp->mainWidget(), ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
 }
 
 void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
-	QMessageBox::critical(qApp->mainWidget(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(OK_BUTTON));
+	QMessageBox::critical(qApp->mainWidget(), ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
 }
 
 int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	return QMessageBox::information(qApp->mainWidget(), QString::fromUtf8(dialogTitle(key).c_str()), QString::fromUtf8(message.c_str()), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
+	return QMessageBox::information(qApp->mainWidget(), ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 }
 
 bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	return ZLQtSelectionDialog(dialogTitle(key).c_str(), handler).run();
+	return ZLQtSelectionDialog(dialogTitle(key), handler).run();
 }
 
 void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
@@ -69,6 +69,6 @@ bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {
 
 void ZLQtDialogManager::setClipboardText(const std::string &text, ClipboardType type) const {
 	if ((type == CLIPBOARD_MAIN) && !text.empty()) {
-		qApp->clipboard()->setText(QString::fromUtf8(text.c_str()));
+		qApp->clipboard()->setText(::qtString(text));
 	}
 }

@@ -297,6 +297,69 @@ void W32CheckBox::commandCallback(DWORD) {
 	}
 }
 
+const std::string W32TristateBox::STATE_CHANGED_EVENT = "TristateBox: state changed";
+
+int W32TristateBox::buttonState(ZLBoolean3 state) {
+	switch (state) {
+		case B3_TRUE:
+			return BST_CHECKED;
+		case B3_FALSE:
+			return BST_UNCHECKED;
+		default:
+			return BST_INDETERMINATE;
+	}
+}
+
+ZLBoolean3 W32TristateBox::b3State(int state) {
+	switch (state) {
+		case BST_CHECKED:
+			return B3_TRUE;
+		case BST_UNCHECKED:
+			return B3_FALSE;
+		default:
+			return B3_UNDEFINED;
+	}
+}
+
+W32TristateBox::W32TristateBox(const std::string &text) : W32StandardControl(BS_AUTO3STATE | WS_TABSTOP), myText(text), myState(B3_UNDEFINED) {
+}
+
+W32Widget::Size W32TristateBox::minimumSize() const {
+	return Size(4 * (ZLUnicodeUtil::utf8Length(myText) + 1), 12);
+}
+
+WORD W32TristateBox::classId() const {
+	return CLASS_BUTTON;
+}
+
+void W32TristateBox::init(HWND parent, W32ControlCollection *collection) {
+	W32StandardControl::init(parent, collection);
+	::setWindowText(myWindow, myText);
+	SendMessage(myWindow, BM_SETCHECK, buttonState(myState), 0);
+}
+
+void W32TristateBox::setState(ZLBoolean3 state) {
+	if (state != myState) {
+		myState = state;
+		if (myWindow != 0) {
+			SendMessage(myWindow, BM_SETCHECK, buttonState(myState), 0);
+		}
+		fireEvent(STATE_CHANGED_EVENT);
+	}
+}
+
+ZLBoolean3 W32TristateBox::state() const {
+	return myState;
+}
+
+void W32TristateBox::commandCallback(DWORD) {
+	ZLBoolean3 state = b3State(SendMessage(myWindow, BM_GETCHECK, 0, 0));
+	if (state != myState) {
+		myState = state;
+		fireEvent(STATE_CHANGED_EVENT);
+	}
+}
+
 W32AbstractEditor::W32AbstractEditor(DWORD style) : W32StandardControl(style | WS_BORDER | WS_TABSTOP | ES_NOHIDESEL) {
 }
 

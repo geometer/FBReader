@@ -29,7 +29,7 @@ void ZLQtDialogContent::close() {
 }
 
 ZLQtDialogContent::ZLQtDialogContent(QWidget *parent, const ZLResource &resource) : ZLDialogContent(resource), myParentWidget(parent) {
-	myWidget = new QWidget(parent);
+	myWidget = new QWidget(myParentWidget);
 	const long displaySize = qApp->desktop()->height() * (long)qApp->desktop()->width();
 	const int space = (displaySize < 640 * 480) ? 3 : 10;
 	myLayout = new QGridLayout(myWidget, -1, 13, space, space);
@@ -64,8 +64,14 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 		case ZLOptionEntry::BOOLEAN:
 			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
+		case ZLOptionEntry::BOOLEAN3:
+			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
 		case ZLOptionEntry::STRING:
 			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
+		case ZLOptionEntry::MULTILINE:
+			view = new MultilineOptionView(name, tooltip, (ZLMultilineOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::CHOICE:
 			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
@@ -81,6 +87,9 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 			break;
 		case ZLOptionEntry::KEY:
 			view = new KeyOptionView(name, tooltip, (ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
+		case ZLOptionEntry::ORDER:
+			// TODO: implement
 			break;
 	}
 

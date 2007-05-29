@@ -26,7 +26,7 @@
 
 static const std::string STYLE = "Style";
 
-TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations) :
+TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int verticalShift, ZLBoolean3 allowHyphenations) :
 	FontFamilyOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":fontFamily", std::string()),
 	FontSizeDeltaOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":fontSize", -16, 16, fontSizeDelta),
 	BoldOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":bold", bold),
@@ -37,7 +37,7 @@ TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDe
 	myHyperlinkStyle(NONE) {
 }
 
-FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
+FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, ZLBoolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
 	SpaceBeforeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":spaceBefore", -10, 100, spaceBefore),
 	SpaceAfterOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":spaceAfter", -10, 100, spaceAfter),
 	LeftIndentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":leftIndent", -300, 300, leftIndent),
@@ -65,17 +65,17 @@ int PartialDecoratedTextStyle::fontSize() const {
 }
 
 bool PartialDecoratedTextStyle::bold() const {
-	Boolean3 b = myDecoration.BoldOption.value();
+	ZLBoolean3 b = myDecoration.BoldOption.value();
 	return (b == B3_UNDEFINED) ? base()->bold() : (b == B3_TRUE);
 }
 
 bool PartialDecoratedTextStyle::italic() const {
-	Boolean3 i = myDecoration.ItalicOption.value();
+	ZLBoolean3 i = myDecoration.ItalicOption.value();
 	return (i == B3_UNDEFINED) ? base()->italic() : (i == B3_TRUE);
 }
 
 bool PartialDecoratedTextStyle::allowHyphenations() const {
-	Boolean3 a = myDecoration.AllowHyphenationsOption.value();
+	ZLBoolean3 a = myDecoration.AllowHyphenationsOption.value();
 	return (a == B3_UNDEFINED) ? base()->allowHyphenations() : (a == B3_TRUE);
 	return true;
 }
@@ -94,12 +94,12 @@ int FullDecoratedTextStyle::fontSize() const {
 }
 
 bool FullDecoratedTextStyle::bold() const {
-	Boolean3 b = myDecoration.BoldOption.value();
+	ZLBoolean3 b = myDecoration.BoldOption.value();
 	return (b == B3_UNDEFINED) ? base()->bold() : (b == B3_TRUE);
 }
 
 bool FullDecoratedTextStyle::italic() const {
-	Boolean3 i = myDecoration.ItalicOption.value();
+	ZLBoolean3 i = myDecoration.ItalicOption.value();
 	return (i == B3_UNDEFINED) ? base()->italic() : (i == B3_TRUE);
 }
 
@@ -109,7 +109,7 @@ AlignmentType FullDecoratedTextStyle::alignment() const {
 }
 
 bool FullDecoratedTextStyle::allowHyphenations() const {
-	Boolean3 a = myDecoration.AllowHyphenationsOption.value();
+	ZLBoolean3 a = myDecoration.AllowHyphenationsOption.value();
 	return (a == B3_UNDEFINED) ? base()->allowHyphenations() : (a == B3_TRUE);
 	return true;
 }

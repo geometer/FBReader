@@ -51,7 +51,7 @@ private:
 	static int intValue(const char **attributes, const char *name);
 	static double doubleValue(const char **attributes, const char *name);
 	static bool booleanValue(const char **attributes, const char *name);
-	static Boolean3 b3Value(const char **attributes, const char *name);
+	static ZLBoolean3 b3Value(const char **attributes, const char *name);
 
 private:
 	TextStyleCollection &myCollection;
@@ -74,7 +74,7 @@ inline bool StyleReader::booleanValue(const char **attributes, const char *name)
 	return (stringValue != 0) && (TRUE_STRING == stringValue);
 }
 
-inline Boolean3 StyleReader::b3Value(const char **attributes, const char *name) {
+inline ZLBoolean3 StyleReader::b3Value(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
 	return (stringValue == 0) ? B3_UNDEFINED : ((TRUE_STRING == stringValue) ? B3_TRUE : B3_FALSE);
 }
@@ -93,10 +93,10 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 			TextStyleDecoration *decoration;
 
 			int fontSizeDelta = intValue(attributes, "fontSizeDelta");
-			Boolean3 bold = b3Value(attributes, "bold");
-			Boolean3 italic = b3Value(attributes, "italic");
+			ZLBoolean3 bold = b3Value(attributes, "bold");
+			ZLBoolean3 italic = b3Value(attributes, "italic");
 			int verticalShift = intValue(attributes, "vShift");
-			Boolean3 allowHyphenations = b3Value(attributes, "allowHyphenations");
+			ZLBoolean3 allowHyphenations = b3Value(attributes, "allowHyphenations");
 			TextStyleDecoration::HyperlinkStyle hyperlinkStyle = TextStyleDecoration::NONE;
 			const char *hyperlink = attributeValue(attributes, "hyperlink");
 			if (hyperlink != 0) {

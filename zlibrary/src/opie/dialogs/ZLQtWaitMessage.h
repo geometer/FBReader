@@ -29,7 +29,6 @@ class ZLQtWaitMessage : public QWidget {
 
 public:
 	ZLQtWaitMessage(const std::string &message);
-	~ZLQtWaitMessage();
 };
 
 #endif /* __ZLQTWAITMESSAGE_H__ */

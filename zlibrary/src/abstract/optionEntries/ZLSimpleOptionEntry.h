@@ -64,8 +64,8 @@ class ZLSimpleBoolean3OptionEntry : public ZLBoolean3OptionEntry {
 
 public:
 	ZLSimpleBoolean3OptionEntry(ZLBoolean3Option &option);
-	Boolean3 initialState() const;
-	void onAccept(Boolean3 state);
+	ZLBoolean3 initialState() const;
+	void onAccept(ZLBoolean3 state);
 
 private:
 	ZLBoolean3Option &myOption;

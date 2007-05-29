@@ -27,6 +27,7 @@
 #include <windows.h>
 
 #include <ZLUnicodeUtil.h>
+#include <ZLBoolean3.h>
 
 #include "W32Widget.h"
 #include "W32Event.h"
@@ -162,6 +163,32 @@ public:
 private:
 	std::string myText;
 	bool myChecked;
+};
+
+class W32TristateBox : public W32StandardControl {
+
+public:
+	static const std::string STATE_CHANGED_EVENT;
+
+private:
+	static int buttonState(ZLBoolean3 state);
+	static ZLBoolean3 b3State(int state);
+
+public:
+	W32TristateBox(const std::string &text);
+	Size minimumSize() const;
+
+	WORD classId() const;
+	void init(HWND parent, W32ControlCollection *collection);
+
+	void setState(ZLBoolean3 state);
+	ZLBoolean3 state() const;
+
+	void commandCallback(DWORD hiWParam);
+
+private:
+	std::string myText;
+	ZLBoolean3 myState;
 };
 
 class W32AbstractEditor : public W32StandardControl {

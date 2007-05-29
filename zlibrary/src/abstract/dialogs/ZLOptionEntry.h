@@ -126,9 +126,9 @@ protected:
 public:
 	ZLOptionKind kind() const;
 
-	virtual Boolean3 initialState() const = 0;
-	virtual void onStateChanged(Boolean3 state);
-	virtual void onAccept(Boolean3 state) = 0;
+	virtual ZLBoolean3 initialState() const = 0;
+	virtual void onStateChanged(ZLBoolean3 state);
+	virtual void onAccept(ZLBoolean3 state) = 0;
 };
 
 class ZLSpinOptionEntry : public ZLOptionEntry {
@@ -236,7 +236,7 @@ inline void ZLBooleanOptionEntry::onStateChanged(bool) {}
 
 inline ZLBoolean3OptionEntry::ZLBoolean3OptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLBoolean3OptionEntry::kind() const { return BOOLEAN3; }
-inline void ZLBoolean3OptionEntry::onStateChanged(Boolean3) {}
+inline void ZLBoolean3OptionEntry::onStateChanged(ZLBoolean3) {}
 
 inline ZLSpinOptionEntry::ZLSpinOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLSpinOptionEntry::kind() const { return SPIN; }

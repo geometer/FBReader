@@ -60,6 +60,9 @@ void ZLWin32DialogContent::createViewByEntry(const std::string &name, const std:
 		case ZLOptionEntry::BOOLEAN:
 			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, *this, from, to);
 			break;
+		case ZLOptionEntry::BOOLEAN3:
+			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, *this, from, to);
+			break;
 		case ZLOptionEntry::STRING:
 			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, *this, from, to);
 			break;

@@ -23,8 +23,6 @@
 
 #include <ZLDialogContent.h>
 
-#include "ZLFullScreenDialog.h"
-
 class QWidget;
 class QGridLayout;
 

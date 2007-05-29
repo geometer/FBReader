@@ -119,7 +119,7 @@ public:
 class TextStyleDecoration {
 
 public:
-	TextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int verticalShift, Boolean3 allowHyphenations);
+	TextStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int verticalShift, ZLBoolean3 allowHyphenations);
 	virtual ~TextStyleDecoration();
 
 	virtual bool isFullDecoration() const;
@@ -155,7 +155,7 @@ private:
 class FullTextStyleDecoration : public TextStyleDecoration {
 
 public:
-	FullTextStyleDecoration(const std::string &name, int fontSizeDelta, Boolean3 bold, Boolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, Boolean3 allowHyphenations);
+	FullTextStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, ZLBoolean3 allowHyphenations);
 	~FullTextStyleDecoration();
 
 	virtual bool isFullDecoration() const;

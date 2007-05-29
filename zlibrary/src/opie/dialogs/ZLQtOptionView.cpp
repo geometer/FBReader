@@ -27,6 +27,7 @@
 #include <qradiobutton.h>
 #include <qpushbutton.h>
 #include <qspinbox.h>
+#include <qmultilineedit.h>
 #include <qlineedit.h>
 #include <qslider.h>
 #include <qlayout.h>
@@ -59,6 +60,64 @@ void BooleanOptionView::_onAccept() const {
 
 void BooleanOptionView::onStateChanged(bool state) const {
 	((ZLBooleanOptionEntry*)myOption)->onStateChanged(state);
+}
+
+void Boolean3OptionView::_createItem() {
+	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
+	myCheckBox->setTristate(true);
+	switch (((ZLBoolean3OptionEntry*)myOption)->initialState()) {
+		case B3_FALSE:
+			myCheckBox->setChecked(false);
+			break;
+		case B3_TRUE:
+			myCheckBox->setChecked(true);
+			break;
+		case B3_UNDEFINED:
+			myCheckBox->setNoChange();
+			break;
+	}
+	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
+	connect(myCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
+}
+
+void Boolean3OptionView::_show() {
+	myCheckBox->show();
+}
+
+void Boolean3OptionView::_hide() {
+	myCheckBox->hide();
+}
+
+void Boolean3OptionView::_onAccept() const {
+	ZLBoolean3 value = B3_UNDEFINED;
+	switch (myCheckBox->state()) {
+		case QCheckBox::On:
+			value = B3_TRUE;
+			break;
+		case QCheckBox::Off:
+			value = B3_FALSE;
+			break;
+		case QCheckBox::NoChange:
+			value = B3_UNDEFINED;
+			break;
+	}
+	((ZLBoolean3OptionEntry*)myOption)->onAccept(value);
+}
+
+void Boolean3OptionView::onStateChanged(int state) const {
+	ZLBoolean3 value = B3_UNDEFINED;
+	switch (state) {
+		case QCheckBox::On:
+			value = B3_TRUE;
+			break;
+		case QCheckBox::Off:
+			value = B3_FALSE;
+			break;
+		case QCheckBox::NoChange:
+			value = B3_UNDEFINED;
+			break;
+	}
+	((ZLBoolean3OptionEntry*)myOption)->onStateChanged(value);
 }
 
 void ChoiceOptionView::_createItem() {
@@ -239,6 +298,47 @@ void StringOptionView::onValueEdited(const QString &value) {
 	ZLStringOptionEntry &o = (ZLStringOptionEntry&)*myOption;
 	if (o.useOnValueEdited()) {
 		o.onValueEdited((const char*)value.utf8());
+	}
+}
+
+void MultilineOptionView::_createItem() {
+	myMultiLineEdit = new QMultiLineEdit(myTab->widget());
+	myMultiLineEdit->setWordWrap(QMultiLineEdit::WidgetWidth);
+	myMultiLineEdit->setWrapPolicy(QMultiLineEdit::AtWhiteSpace);
+	connect(myMultiLineEdit, SIGNAL(textChanged()), this, SLOT(onValueEdited()));
+	myTab->addItem(myMultiLineEdit, myRow, myFromColumn, myToColumn);
+	reset();
+}
+
+void MultilineOptionView::_show() {
+	myMultiLineEdit->show();
+}
+
+void MultilineOptionView::_hide() {
+	myMultiLineEdit->hide();
+}
+
+void MultilineOptionView::_setActive(bool active) {
+	myMultiLineEdit->setReadOnly(!active);
+}
+
+void MultilineOptionView::_onAccept() const {
+	((ZLMultilineOptionEntry*)myOption)->onAccept((const char*)myMultiLineEdit->text().utf8());
+}
+
+void MultilineOptionView::reset() {
+	if (myMultiLineEdit == 0) {
+		return;
+	}
+
+	myMultiLineEdit->setText(::qtString(((ZLStringOptionEntry*)myOption)->initialValue()));
+	//myMultiLineEdit->home();
+}
+
+void MultilineOptionView::onValueEdited() {
+	ZLMultilineOptionEntry &o = (ZLMultilineOptionEntry&)*myOption;
+	if (o.useOnValueEdited()) {
+		o.onValueEdited((const char*)myMultiLineEdit->text().utf8());
 	}
 }
 

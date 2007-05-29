@@ -62,6 +62,64 @@ void BooleanOptionView::onStateChanged(bool state) const {
 	((ZLBooleanOptionEntry*)myOption)->onStateChanged(state);
 }
 
+void Boolean3OptionView::_createItem() {
+	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
+	myCheckBox->setTristate(true);
+	switch (((ZLBoolean3OptionEntry*)myOption)->initialState()) {
+		case B3_FALSE:
+			myCheckBox->setChecked(false);
+			break;
+		case B3_TRUE:
+			myCheckBox->setChecked(true);
+			break;
+		case B3_UNDEFINED:
+			myCheckBox->setNoChange();
+			break;
+	}
+	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
+	connect(myCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
+}
+
+void Boolean3OptionView::_show() {
+	myCheckBox->show();
+}
+
+void Boolean3OptionView::_hide() {
+	myCheckBox->hide();
+}
+
+void Boolean3OptionView::_onAccept() const {
+	ZLBoolean3 value = B3_UNDEFINED;
+	switch (myCheckBox->state()) {
+		case QCheckBox::On:
+			value = B3_TRUE;
+			break;
+		case QCheckBox::Off:
+			value = B3_FALSE;
+			break;
+		case QCheckBox::NoChange:
+			value = B3_UNDEFINED;
+			break;
+	}
+	((ZLBoolean3OptionEntry*)myOption)->onAccept(value);
+}
+
+void Boolean3OptionView::onStateChanged(int state) const {
+	ZLBoolean3 value = B3_UNDEFINED;
+	switch (state) {
+		case QCheckBox::On:
+			value = B3_TRUE;
+			break;
+		case QCheckBox::Off:
+			value = B3_FALSE;
+			break;
+		case QCheckBox::NoChange:
+			value = B3_UNDEFINED;
+			break;
+	}
+	((ZLBoolean3OptionEntry*)myOption)->onStateChanged(value);
+}
+
 void ChoiceOptionView::_createItem() {
 	myGroup = new QButtonGroup(::qtString(ZLOptionView::name()), myTab->widget());
 	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);

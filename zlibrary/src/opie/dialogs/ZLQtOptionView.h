@@ -34,6 +34,7 @@ class QLabel;
 class QSpinBox;
 class QCheckBox;
 class QLineEdit;
+class QMultiLineEdit;
 class QPushButton;
 class QRadioButton;
 class QComboBox;
@@ -89,6 +90,26 @@ private:
 	QCheckBox *myCheckBox;
 };
 
+class Boolean3OptionView : public QObject, public ZLQtOptionView {
+
+Q_OBJECT
+
+public:
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+
+protected:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _onAccept() const;
+
+private slots:
+	void onStateChanged(int) const;
+
+private:
+	QCheckBox *myCheckBox;
+};
+
 class StringOptionView : public QObject, public ZLQtOptionView {
 
 Q_OBJECT
@@ -110,6 +131,28 @@ private slots:
 private:
 	QLabel *myLabel;
 	QLineEdit *myLineEdit;
+};
+
+class MultilineOptionView : public QObject, public ZLQtOptionView {
+
+Q_OBJECT
+
+public:
+	MultilineOptionView(const std::string &name, const std::string &tooltip, ZLMultilineOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myMultiLineEdit(0) {}
+
+private:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _setActive(bool active);
+	void _onAccept() const;
+	void reset();
+
+private slots:
+	void onValueEdited();
+
+private:
+	QMultiLineEdit *myMultiLineEdit;
 };
 
 class SpinOptionView : public ZLQtOptionView {
