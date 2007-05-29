@@ -238,7 +238,9 @@ void StringOptionView::_onAccept() const {
 ColorOptionView::ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
 	myStandardColorComboBox = new W32ColorComboBox(option->color());
 	myStandardColorComboBox->addListener(this);
-	myCustomColorButton = new W32PushButton("Custom...");
+	myCustomColorButton = new W32PushButton(
+		ZLResource::resource(ZLResourceKey("color"))[ZLResourceKey("custom...")].value()
+	);
 	myCustomColorButton->addListener(this);
 	int mid = (from + to) / 2 + 1;
 	tab.insertWidget(myStandardColorComboBox, from, mid);

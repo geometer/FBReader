@@ -21,13 +21,14 @@
 #define __W32COLORCOMBOBOX_H__
 
 #include <ZLColor.h>
+#include <ZLUnicodeUtil.h>
 
 #include "W32Control.h"
 
 class W32ColorComboBox : public W32StandardControl {
 
 private:
-	static std::vector<std::string> ourStrings;
+	static std::vector<ZLUnicodeUtil::Ucs2String> ourStrings;
 	static std::vector<ZLColor> ourColors;
 
 public:
@@ -51,7 +52,7 @@ public:
 private:
 	static void addColor(const std::string &name, ZLColor color);
 	static void initVectors();
-	const std::string &text(int index) const;
+	const ZLUnicodeUtil::Ucs2String &text(int index) const;
 	const ZLColor color(int index) const;
 
 private:

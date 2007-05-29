@@ -26,5 +26,6 @@
 		<node name="yellow" value="Yellow"/>
 		<node name="magenta" value="Magenta"/>
 		<node name="cyan" value="Cyan"/>
+		<node name="custom..." value="Custom..."/>
 	</node>
 </resources>

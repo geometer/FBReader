@@ -20,6 +20,7 @@
 #include <windows.h>
 
 #include <ZLResource.h>
+#include <ZLStringUtil.h>
 
 #include "W32ColorComboBox.h"
 #include "W32WCHARUtil.h"
@@ -27,7 +28,7 @@
 static const WORD CLASS_COMBOBOX = 0x0085;
 
 const std::string W32ColorComboBox::SELECTION_CHANGED_EVENT = "ColorComboBox: selection changed";
-std::vector<std::string> W32ColorComboBox::ourStrings;
+std::vector<ZLUnicodeUtil::Ucs2String> W32ColorComboBox::ourStrings;
 std::vector<ZLColor> W32ColorComboBox::ourColors;
 
 W32ColorComboBox::W32ColorComboBox(ZLColor initialColor) : W32StandardControl(CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_OWNERDRAWFIXED | WS_VSCROLL | WS_TABSTOP), myUseCustomColor(false) {
@@ -132,14 +133,26 @@ void W32ColorComboBox::drawItemCallback(DRAWITEMSTRUCT &di) {
 	DeleteObject(brush);
 
 	TEXTMETRIC tm;
-	ZLUnicodeUtil::Ucs2String txt;
-	::createNTWCHARString(txt, text(di.itemID));
+	const ZLUnicodeUtil::Ucs2String &txt = text(di.itemID);
 	GetTextMetrics(di.hDC, &tm);
-	TextOutW(di.hDC, rectangle.right + 8, (rectangle.top + rectangle.bottom - tm.tmHeight) / 2, ::wchar(txt), txt.size() - 1);
+	if (!txt.empty()) {
+		TextOutW(di.hDC, rectangle.right + 8, (rectangle.top + rectangle.bottom - tm.tmHeight) / 2, ::wchar(txt), txt.size() - 1);
+	} else {
+		std::string colorString = "(";
+		ZLStringUtil::appendNumber(colorString, color.Red);
+		colorString += ",";
+		ZLStringUtil::appendNumber(colorString, color.Green);
+		colorString += ",";
+		ZLStringUtil::appendNumber(colorString, color.Blue);
+		colorString += ")";
+		TextOutA(di.hDC, rectangle.right + 8, (rectangle.top + rectangle.bottom - tm.tmHeight) / 2, colorString.data(), colorString.length());
+	}
 }
 
 void W32ColorComboBox::addColor(const std::string &name, ZLColor color) {
-	ourStrings.push_back(name);
+	ZLUnicodeUtil::Ucs2String txt;
+	::createNTWCHARString(txt, name);
+	ourStrings.push_back(txt);
 	ourColors.push_back(color);
 }
 
@@ -165,12 +178,12 @@ void W32ColorComboBox::initVectors() {
 	}
 }
 
-const std::string &W32ColorComboBox::text(int index) const {
+const ZLUnicodeUtil::Ucs2String &W32ColorComboBox::text(int index) const {
 	initVectors();
 	if (myUseCustomColor) {
 		if (index == 0) {
-			static const std::string CUSTOM = "Custom";
-			return CUSTOM;
+			static const ZLUnicodeUtil::Ucs2String EMPTY;
+			return EMPTY;
 		}
 		--index;
 	}
