@@ -318,8 +318,8 @@ void KeyOptionView::onValueChanged(int index) {
 	}
 }
 
-QSlider *ColorOptionView::createColorSlider(QGridLayout *layout, int index, const char *name, int value) {
-	layout->addWidget(new QLabel(name, layout->parentWidget()), index, 0);
+QSlider *ColorOptionView::createColorSlider(QGridLayout *layout, int index, const ZLResource &resource, int value) {
+	layout->addWidget(new QLabel(::qtString(resource.value()), name, layout->parentWidget()), index, 0);
 	QSlider *slider = new QSlider(Qt::Horizontal, layout->parentWidget());
 	layout->addWidget(slider, index, 1);
 	slider->setMinimum(0);
@@ -336,9 +336,10 @@ void ColorOptionView::_createItem() {
 	myWidgets.push_back(widget);
 	QGridLayout *layout = new QGridLayout(widget);
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
-	myRSlider = createColorSlider(layout, 0, "Red", color.Red);
-	myGSlider = createColorSlider(layout, 1, "Green", color.Green);
-	myBSlider = createColorSlider(layout, 2, "Blue", color.Blue);
+	const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
+	myRSlider = createColorSlider(layout, 0, resource[ZLResourceKey("red")], color.Red);
+	myGSlider = createColorSlider(layout, 1, resource[ZLResourceKey("green")], color.Green);
+	myBSlider = createColorSlider(layout, 2, resource[ZLResourceKey("blue")], color.Blue);
 
 	myColorBar = new QLabel("                  ", widget);
 	QPalette palette = myColorBar->palette();

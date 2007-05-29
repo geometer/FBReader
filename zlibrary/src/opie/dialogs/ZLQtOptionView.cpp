@@ -345,9 +345,10 @@ void KeyOptionView::onValueChanged(int index) {
 void ColorOptionView::_createItem() {
 	myWidget = new QWidget(myTab->widget());
 	QGridLayout *layout = new QGridLayout(myWidget, 3, 3, 0, 10);
-	layout->addWidget(new QLabel("Red", myWidget), 0, 0);
-	layout->addWidget(new QLabel("Green", myWidget), 1, 0);
-	layout->addWidget(new QLabel("Blue", myWidget), 2, 0);
+	const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
+	layout->addWidget(new QLabel(::qtString(resource[ZLResourceKey("red")].value()), myWidget), 0, 0);
+	layout->addWidget(new QLabel(::qtString(resource[ZLResourceKey("green")].value()), myWidget), 1, 0);
+	layout->addWidget(new QLabel(::qtString(resource[ZLResourceKey("blue")].value()), myWidget), 2, 0);
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
 	myRSlider = new QSlider(0, 255, 1, color.Red, QSlider::Horizontal, myWidget);
 	myGSlider = new QSlider(0, 255, 1, color.Green, QSlider::Horizontal, myWidget);
