@@ -39,7 +39,7 @@ shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResou
 }
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
-	return new ZLQtDialog(dialogTitle(key));
+	return new ZLQtDialog(resource()[key]);
 }
 
 void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
