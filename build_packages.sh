@@ -12,14 +12,35 @@ do_build() {
 		return;
 	fi
 	echo -n "Building $1 ($2) ...";
-	make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
-	if ! make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release packages 1> $1\($2\).log 2>&1; then
+	if [ "$1" = "maemo" ]; then
+		build_maemo $2;
+	else
+		make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
+		if ! make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release packages 1> $1\($2\).log 2>&1; then
+			echo " failure";
+		else
+			echo " OK"
+			rm $1\($2\).log;
+		fi
+		make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
+	fi
+}
+
+build_maemo() {
+	if [ $1 = "maemo" ]; then
+  	SDK=SDK_ARM
+	else
+  	SDK=SDK_ARMEL
+	fi
+	/scratchbox/login sbox-config -st $SDK
+	/scratchbox/login -d src/zaurus make TARGET_ARCH=maemo UI_TYPE=$1 TARGET_STATUS=release clean 1> /dev/null 2>&1;
+	if ! /scratchbox/login -d src/zaurus make TARGET_ARCH=maemo UI_TYPE=$1 TARGET_STATUS=release packages 1> maemo\($1\).log 2>&1; then
 		echo " failure";
 	else
 		echo " OK"
-		rm $1\($2\).log;
+		rm maemo\($1\).log;
 	fi
-	make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
+	/scratchbox/login -d src/zaurus make TARGET_ARCH=maemo UI_TYPE=$1 TARGET_STATUS=release clean 1> /dev/null 2>&1;
 }
 
 if [ "$1" = "all" ]; then
@@ -36,6 +57,8 @@ if [ "$1" = "all" ]; then
 	do_build pdaxrom gtk
 	do_build pdaxrom qt
 	do_build pma400 qtopia
+	do_build maemo maemo
+	do_build maemo maemo2
 elif [ "$#" == "2" ]; then 
 	do_build $@
 else
