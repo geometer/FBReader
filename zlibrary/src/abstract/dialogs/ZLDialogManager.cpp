@@ -26,6 +26,7 @@ const ZLResourceKey ZLDialogManager::YES_BUTTON("yes");
 const ZLResourceKey ZLDialogManager::NO_BUTTON("no");
 const ZLResourceKey ZLDialogManager::APPLY_BUTTON("apply");
 
+const ZLResourceKey ZLDialogManager::COLOR_KEY("color");
 const ZLResourceKey ZLDialogManager::DIALOG_TITLE("title");
 
 ZLDialogManager *ZLDialogManager::ourInstance = 0;
@@ -52,23 +53,23 @@ ZLDialogManager::~ZLDialogManager() {
 }
 
 const ZLResource &ZLDialogManager::resource() {
-	return ZLResource::resource(ZLResourceKey("dialog"));
+	return ZLResource::resource("dialog");
 }
 
 const std::string &ZLDialogManager::buttonName(const ZLResourceKey &key) {
-	return resource()[ZLResourceKey("button")][key].value();
+	return resource()["button"][key].value();
 }
 
 const std::string &ZLDialogManager::dialogTitle(const ZLResourceKey &key) {
-	return resource()[key][ZLResourceKey("title")].value();
+	return resource()[key][DIALOG_TITLE].value();
 }
 
 const std::string &ZLDialogManager::dialogMessage(const ZLResourceKey &key) {
-	return resource()[key][ZLResourceKey("message")].value();
+	return resource()[key]["message"].value();
 }
 
 const std::string &ZLDialogManager::waitMessageText(const ZLResourceKey &key) {
-	return resource()[ZLResourceKey("waitMessage")][key].value();
+	return resource()["waitMessage"][key].value();
 }
 
 void ZLDialogManager::informationBox(const ZLResourceKey &key) const {

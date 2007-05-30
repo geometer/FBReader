@@ -32,6 +32,7 @@
 #include <QtGui/QLayout>
 
 #include <ZLStringUtil.h>
+#include <ZLDialogManager.h>
 #include "../util/ZLQtKeyUtil.h"
 
 #include "ZLQtOptionView.h"
@@ -336,10 +337,10 @@ void ColorOptionView::_createItem() {
 	myWidgets.push_back(widget);
 	QGridLayout *layout = new QGridLayout(widget);
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
-	const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
-	myRSlider = createColorSlider(layout, 0, resource[ZLResourceKey("red")], color.Red);
-	myGSlider = createColorSlider(layout, 1, resource[ZLResourceKey("green")], color.Green);
-	myBSlider = createColorSlider(layout, 2, resource[ZLResourceKey("blue")], color.Blue);
+	const ZLResource &resource = ZLResource::resource(ZLDialogManager::COLOR_KEY);
+	myRSlider = createColorSlider(layout, 0, resource["red"], color.Red);
+	myGSlider = createColorSlider(layout, 1, resource["green"], color.Green);
+	myBSlider = createColorSlider(layout, 2, resource["blue"], color.Blue);
 
 	myColorBar = new QLabel("                  ", widget);
 	QPalette palette = myColorBar->palette();

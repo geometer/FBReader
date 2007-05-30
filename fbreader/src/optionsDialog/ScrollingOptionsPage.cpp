@@ -81,10 +81,10 @@ private:
 };
 
 ScrollingTypeEntry::ScrollingTypeEntry(const ZLResource &resource, FBReader &fbreader, ScrollingOptionsPage &page) : myResource(resource), myFBReader(fbreader), myPage(page) {
-	myLargeScrollingString = resource[ZLResourceKey("large")].value();
-	mySmallScrollingString = resource[ZLResourceKey("small")].value();
-	myMouseScrollingString = resource[ZLResourceKey("mouse")].value();
-	myFingerTapScrollingString = resource[ZLResourceKey("finger")].value();
+	myLargeScrollingString = resource["large"].value();
+	mySmallScrollingString = resource["small"].value();
+	myMouseScrollingString = resource["mouse"].value();
+	myFingerTapScrollingString = resource["finger"].value();
 
 	myValues.push_back(myLargeScrollingString);
 	myValues.push_back(mySmallScrollingString);
@@ -237,11 +237,11 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 	dialogTab.addOption(optionsForKey, mainEntry);
 
 	const ZLResource &modeResource = dialogTab.resource(modeKey);
-	ScrollingModeEntry::ourNoOverlappingString = modeResource[ZLResourceKey("noOverlapping")].value();
-	ScrollingModeEntry::ourKeepLinesString = modeResource[ZLResourceKey("keepLines")].value();
-	ScrollingModeEntry::ourScrollLinesString = modeResource[ZLResourceKey("scrollLines")].value();
-	ScrollingModeEntry::ourScrollPercentageString = modeResource[ZLResourceKey("scrollPercentage")].value();
-	ScrollingModeEntry::ourDisableString = modeResource[ZLResourceKey("disable")].value();
+	ScrollingModeEntry::ourNoOverlappingString = modeResource["noOverlapping"].value();
+	ScrollingModeEntry::ourKeepLinesString = modeResource["keepLines"].value();
+	ScrollingModeEntry::ourScrollLinesString = modeResource["scrollLines"].value();
+	ScrollingModeEntry::ourScrollPercentageString = modeResource["scrollPercentage"].value();
+	ScrollingModeEntry::ourDisableString = modeResource["disable"].value();
 
 	myLargeScrollingEntries.init(fbreader, fbreader.LargeScrollingOptions);
 	mySmallScrollingEntries.init(fbreader, fbreader.SmallScrollingOptions);

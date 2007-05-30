@@ -30,6 +30,9 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
+static const ZLResourceKey KEY_STYLE("style");
+static const ZLResourceKey KEY_BASE("Base");
+
 static const ZLResourceKey KEY_BOLD("bold");
 static const ZLResourceKey KEY_ITALIC("italic");
 static const ZLResourceKey KEY_FONTFAMILY("fontFamily");
@@ -40,7 +43,9 @@ static const ZLResourceKey KEY_AUTOHYPHENATIONS("autoHyphenations");
 static const ZLResourceKey KEY_DUMMY("");
 
 StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &context) {
-	myComboEntry = new ComboOptionEntry(*this, "Base");
+	const ZLResource &styleResource = ZLResource::resource(KEY_STYLE);
+
+	myComboEntry = new ComboOptionEntry(*this, styleResource[KEY_BASE].value());
 	myComboEntry->addValue(myComboEntry->initialValue());
 
 	TextStyleCollection &collection = TextStyleCollection::instance();
@@ -49,7 +54,7 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 	for (int i = 0; i < STYLES_NUMBER; ++i) {
 		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
 		if (decoration != 0) {
-			myComboEntry->addValue(decoration->name());
+			myComboEntry->addValue(styleResource[decoration->name()].value());
 		}
 	}
 	dialogTab.addOption(ZLResourceKey("optionsFor"), myComboEntry);
@@ -79,7 +84,7 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 	for (int i = 0; i < STYLES_NUMBER; ++i) {
 		TextStyleDecoration *decoration = collection.decoration(styles[i]);
 		if (decoration != 0) {
-			const std::string &name = decoration->name();
+			const std::string &name = styleResource[decoration->name()].value();
 
 			registerEntries(dialogTab,
 				KEY_FONTFAMILY, new FontFamilyWithBaseOptionEntry(decoration->FontFamilyOption, context),

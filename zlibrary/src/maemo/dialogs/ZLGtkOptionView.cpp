@@ -385,10 +385,10 @@ void ColorOptionView::_createItem() {
 
 	gtk_table_attach(myTable, gtk_label_new(""), 0, 3, 0, 1, (GtkAttachOptions)(GTK_FILL|GTK_SHRINK), (GtkAttachOptions)(GTK_FILL|GTK_EXPAND), 0, 0);
 
-	const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
-	attachColorLabel(myTable, resource[ZLResourceKey("red")], 1);
-	attachColorLabel(myTable, resource[ZLResourceKey("green")], 2);
-	attachColorLabel(myTable, resource[ZLResourceKey("blue")], 3);
+	const ZLResource &resource = ZLResource::resource(ZLDialogManager::COLOR_KEY);
+	attachColorLabel(myTable, resource["red"], 1);
+	attachColorLabel(myTable, resource["green"], 2);
+	attachColorLabel(myTable, resource["blue"], 3);
 
 	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
 

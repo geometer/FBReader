@@ -187,7 +187,7 @@ void ZLApplication::resetWindowCaption() {
 	}
 }
 
-ZLApplication::Toolbar::Toolbar() : myResource(ZLResource::resource(ZLResourceKey("toolbar"))) {
+ZLApplication::Toolbar::Toolbar() : myResource(ZLResource::resource("toolbar")) {
 }
 
 void ZLApplication::Toolbar::addButton(int actionId, const ZLResourceKey &key, shared_ptr<ButtonGroup> group) {

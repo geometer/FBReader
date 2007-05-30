@@ -33,7 +33,7 @@ const std::string &ZLOptionsDialog::caption() const {
 }
 
 const ZLResource &ZLOptionsDialog::tabResource(const ZLResourceKey &key) const {
-	return myResource[ZLResourceKey("tab")][key];
+	return myResource["tab"][key];
 }
 
 bool ZLOptionsDialog::run() {

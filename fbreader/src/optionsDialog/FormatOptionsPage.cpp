@@ -29,6 +29,9 @@
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
 
+static const ZLResourceKey KEY_STYLE("style");
+static const ZLResourceKey KEY_BASE("Base");
+
 static const ZLResourceKey KEY_DUMMY("");
 static const ZLResourceKey KEY_LINESPACING("lineSpacing");
 static const ZLResourceKey KEY_FIRSTLINEINDENT("firstLineIndent");
@@ -39,7 +42,9 @@ static const ZLResourceKey KEY_LEFTINDENT("leftIndent");
 static const ZLResourceKey KEY_RIGHTINDENT("rightIndent");
 
 FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
-	myComboEntry = new ComboOptionEntry(*this, "Base");
+	const ZLResource &styleResource = ZLResource::resource(KEY_STYLE);
+
+	myComboEntry = new ComboOptionEntry(*this, styleResource[KEY_BASE].value());
 	myComboEntry->addValue(myComboEntry->initialValue());
 
 	TextStyleCollection &collection = TextStyleCollection::instance();
@@ -48,7 +53,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 	for (int i = 0; i < STYLES_NUMBER; ++i) {
 		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
 		if (decoration != 0) {
-			myComboEntry->addValue(decoration->name());
+			myComboEntry->addValue(styleResource[decoration->name()].value());
 		}
 	}
 	dialogTab.addOption(ZLResourceKey("optionsFor"), myComboEntry);
@@ -74,7 +79,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 		TextStyleDecoration *d = collection.decoration(styles[i]);
 		if ((d != 0) && (d->isFullDecoration())) {
 			FullTextStyleDecoration *decoration = (FullTextStyleDecoration*)d;
-			const std::string &name = decoration->name();
+			const std::string &name = styleResource[decoration->name()].value();
 			
 			registerEntries(dialogTab,
 				KEY_SPACEBEFORE, new ZLSimpleSpinOptionEntry(decoration->SpaceBeforeOption, 1),

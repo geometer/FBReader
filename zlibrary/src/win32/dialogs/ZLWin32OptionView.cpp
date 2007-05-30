@@ -264,7 +264,7 @@ ColorOptionView::ColorOptionView(const std::string &name, const std::string &too
 	myStandardColorComboBox = new W32ColorComboBox(option->color());
 	myStandardColorComboBox->addListener(this);
 	myCustomColorButton = new W32PushButton(
-		ZLResource::resource(ZLResourceKey("color"))[ZLResourceKey("custom...")].value()
+		ZLResource::resource("color")["custom..."].value()
 	);
 	myCustomColorButton->addListener(this);
 	int mid = (from + to) / 2 + 1;

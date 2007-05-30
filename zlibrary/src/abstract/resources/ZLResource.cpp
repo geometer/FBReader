@@ -47,7 +47,7 @@ private:
 	const std::string &value() const;
 
 public:
-	const ZLResource &operator [] (const ZLResourceKey &key) const;
+	const ZLResource &operator [] (const std::string &key) const;
 
 private:
 	bool myHasValue;
@@ -87,19 +87,27 @@ public:
 private:
 	bool hasValue() const;
 	const std::string &value() const;
-	const ZLMissingResource &operator [] (const ZLResourceKey &key) const;
+	const ZLMissingResource &operator [] (const std::string &key) const;
 };
 
 shared_ptr<ZLTreeResource> ZLTreeResource::ourRoot;
 shared_ptr<ZLMissingResource> ZLMissingResource::ourInstance;
 const std::string ZLMissingResource::ourValue = "????????";
 
-const ZLResource &ZLResource::resource(const ZLResourceKey &key) {
+const ZLResource &ZLResource::operator [] (const ZLResourceKey &key) const {
+	return (*this)[key.Name];
+}
+
+const ZLResource &ZLResource::resource(const std::string &key) {
 	ZLTreeResource::buildTree();
 	if (ZLTreeResource::ourRoot.isNull()) {
 		return ZLMissingResource::instance();
 	}
 	return (*ZLTreeResource::ourRoot)[key];
+}
+
+const ZLResource &ZLResource::resource(const ZLResourceKey &key) {
+	return resource(key.Name);
 }
 
 ZLResource::ZLResource(const std::string &name) : myName(name) {
@@ -148,8 +156,8 @@ const std::string &ZLTreeResource::value() const {
 	return myHasValue ? myValue : ZLMissingResource::ourValue;
 }
 
-const ZLResource &ZLTreeResource::operator [] (const ZLResourceKey &key) const {
-	std::map<std::string,shared_ptr<ZLTreeResource> >::const_iterator it = myChildren.find(key.Name);
+const ZLResource &ZLTreeResource::operator [] (const std::string &key) const {
+	std::map<std::string,shared_ptr<ZLTreeResource> >::const_iterator it = myChildren.find(key);
 	if (it != myChildren.end()) {
 		return *it->second;
 	} else {
@@ -175,7 +183,7 @@ const std::string &ZLMissingResource::value() const {
 	return ourValue;
 }
 
-const ZLMissingResource &ZLMissingResource::operator [] (const ZLResourceKey&) const {
+const ZLMissingResource &ZLMissingResource::operator [] (const std::string&) const {
 	return *this;
 }
 

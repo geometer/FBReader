@@ -33,6 +33,7 @@ struct ZLResourceKey {
 class ZLResource {
 
 public:
+	static const ZLResource &resource(const std::string &key);
 	static const ZLResource &resource(const ZLResourceKey &key);
 
 protected:
@@ -43,7 +44,8 @@ public:
 	const std::string &name() const;
 	virtual bool hasValue() const = 0;
 	virtual const std::string &value() const = 0;
-	virtual const ZLResource &operator [] (const ZLResourceKey &key) const = 0;
+	virtual const ZLResource &operator [] (const std::string &key) const = 0;
+	const ZLResource &operator [] (const ZLResourceKey &key) const;
 
 private:
 	const std::string myName;

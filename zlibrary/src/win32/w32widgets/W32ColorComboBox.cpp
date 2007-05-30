@@ -21,6 +21,7 @@
 
 #include <ZLResource.h>
 #include <ZLStringUtil.h>
+#include <ZLDialogManager.h>
 
 #include "W32ColorComboBox.h"
 #include "W32WCHARUtil.h"
@@ -158,23 +159,23 @@ void W32ColorComboBox::addColor(const std::string &name, ZLColor color) {
 
 void W32ColorComboBox::initVectors() {
 	if (ourStrings.empty()) {
-		const ZLResource &resource = ZLResource::resource(ZLResourceKey("color"));
-		addColor(resource[ZLResourceKey("black")].value(), ZLColor(0, 0, 0));
-		addColor(resource[ZLResourceKey("white")].value(), ZLColor(255, 255, 255));
-		addColor(resource[ZLResourceKey("maroon")].value(), ZLColor(128, 0, 0));
-		addColor(resource[ZLResourceKey("green")].value(), ZLColor(0, 128, 0));
-		addColor(resource[ZLResourceKey("olive")].value(), ZLColor(128, 128, 0));
-		addColor(resource[ZLResourceKey("navy")].value(), ZLColor(0, 0, 128));
-		addColor(resource[ZLResourceKey("purple")].value(), ZLColor(128, 0, 128));
-		addColor(resource[ZLResourceKey("teal")].value(), ZLColor(0, 128, 128));
-		addColor(resource[ZLResourceKey("silver")].value(), ZLColor(192, 192, 192));
-		addColor(resource[ZLResourceKey("gray")].value(), ZLColor(128, 128, 128));
-		addColor(resource[ZLResourceKey("red")].value(), ZLColor(255, 0, 0));
-		addColor(resource[ZLResourceKey("lime")].value(), ZLColor(0, 255, 0));
-		addColor(resource[ZLResourceKey("yellow")].value(), ZLColor(255, 255, 0));
-		addColor(resource[ZLResourceKey("blue")].value(), ZLColor(0, 0, 255));
-		addColor(resource[ZLResourceKey("magenta")].value(), ZLColor(255, 0, 255));
-		addColor(resource[ZLResourceKey("cyan")].value(), ZLColor(0, 255, 255));
+		const ZLResource &resource = ZLResource::resource(ZLDialogManager::COLOR_KEY);
+		addColor(resource["black"].value(), ZLColor(0, 0, 0));
+		addColor(resource["white"].value(), ZLColor(255, 255, 255));
+		addColor(resource["maroon"].value(), ZLColor(128, 0, 0));
+		addColor(resource["green"].value(), ZLColor(0, 128, 0));
+		addColor(resource["olive"].value(), ZLColor(128, 128, 0));
+		addColor(resource["navy"].value(), ZLColor(0, 0, 128));
+		addColor(resource["purple"].value(), ZLColor(128, 0, 128));
+		addColor(resource["teal"].value(), ZLColor(0, 128, 128));
+		addColor(resource["silver"].value(), ZLColor(192, 192, 192));
+		addColor(resource["gray"].value(), ZLColor(128, 128, 128));
+		addColor(resource["red"].value(), ZLColor(255, 0, 0));
+		addColor(resource["lime"].value(), ZLColor(0, 255, 0));
+		addColor(resource["yellow"].value(), ZLColor(255, 255, 0));
+		addColor(resource["blue"].value(), ZLColor(0, 0, 255));
+		addColor(resource["magenta"].value(), ZLColor(255, 0, 255));
+		addColor(resource["cyan"].value(), ZLColor(0, 255, 255));
 	}
 }
 

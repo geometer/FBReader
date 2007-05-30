@@ -55,7 +55,7 @@ ZLApplication::Menu::Menu &ZLApplication::Menu::addSubmenu(const ZLResourceKey &
 }
 
 
-ZLApplication::Menubar::Menubar() : Menu(ZLResource::resource(ZLResourceKey("menu"))) {
+ZLApplication::Menubar::Menubar() : Menu(ZLResource::resource("menu")) {
 }
 
 ZLApplication::Menubar::PlainItem::PlainItem(const std::string& name, int actionId) : Item(ITEM), myName(name), myActionId(actionId) {

@@ -81,7 +81,7 @@ const std::string &RotationTypeEntry::text(int index) const {
 			keyName = "disabled";
 			break;
 	}
-	return myResource[ZLResourceKey(keyName)].value();
+	return myResource[keyName].value();
 }
 
 int RotationTypeEntry::choiceNumber() const {
@@ -138,10 +138,10 @@ public:
 };
 
 DefaultLanguageEntry::DefaultLanguageEntry(const ZLResource &resource) {
-	myRussianString = resource[ZLResourceKey("ru")].value();
-	myChineseString = resource[ZLResourceKey("zh")].value();
-	myCzechString = resource[ZLResourceKey("cz")].value();
-	myOtherString = resource[ZLResourceKey("other")].value();
+	myRussianString = resource["ru"].value();
+	myChineseString = resource["zh"].value();
+	myCzechString = resource["cz"].value();
+	myOtherString = resource["other"].value();
 }
 
 const std::string &DefaultLanguageEntry::initialValue() const {
@@ -238,16 +238,16 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	ZLResourceKey colorKey("colorFor");
 	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
-	const std::string BACKGROUND = resource[ZLResourceKey("background")].value();
+	const std::string BACKGROUND = resource["background"].value();
 	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
 	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
-	builder.addOption(resource[ZLResourceKey("selectionBackground")].value(), baseStyle.SelectionBackgroundColorOption);
-	builder.addOption(resource[ZLResourceKey("text")].value(), baseStyle.RegularTextColorOption);
-	builder.addOption(resource[ZLResourceKey("internalLink")].value(), baseStyle.InternalHyperlinkTextColorOption);
-	builder.addOption(resource[ZLResourceKey("externalLink")].value(), baseStyle.ExternalHyperlinkTextColorOption);
-	builder.addOption(resource[ZLResourceKey("highlighted")].value(), baseStyle.SelectedTextColorOption);
-	builder.addOption(resource[ZLResourceKey("treeLines")].value(), baseStyle.TreeLinesColorOption);
-	builder.addOption(resource[ZLResourceKey("indicator")].value(), TextStyleCollection::instance().indicatorStyle().ColorOption);
+	builder.addOption(resource["selectionBackground"].value(), baseStyle.SelectionBackgroundColorOption);
+	builder.addOption(resource["text"].value(), baseStyle.RegularTextColorOption);
+	builder.addOption(resource["internalLink"].value(), baseStyle.InternalHyperlinkTextColorOption);
+	builder.addOption(resource["externalLink"].value(), baseStyle.ExternalHyperlinkTextColorOption);
+	builder.addOption(resource["highlighted"].value(), baseStyle.SelectedTextColorOption);
+	builder.addOption(resource["treeLines"].value(), baseStyle.TreeLinesColorOption);
+	builder.addOption(resource["indicator"].value(), TextStyleCollection::instance().indicatorStyle().ColorOption);
 	builder.setInitial(BACKGROUND);
 	colorsTab.addOption(colorKey, builder.comboEntry());
 	colorsTab.addOption("", "", builder.colorEntry());
