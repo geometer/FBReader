@@ -21,6 +21,7 @@
 #define __ZLWIN32OPTIONSDIALOG_H__
 
 #include <vector>
+#include <map>
 
 #include <windows.h>
 
@@ -49,7 +50,9 @@ private:
 	ZLWin32ApplicationWindow &myWindow;
 	W32PropertySheet myPropertySheet;
 
-	std::string mySelectedTabName;
+	std::string mySelectedTabKey;
+
+	std::map<W32DialogPanel*,std::string> myPanelToKeyMap;
 };
 
 #endif /* __ZLWIN32OPTIONSDIALOG_H__ */

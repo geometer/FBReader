@@ -28,7 +28,8 @@ ZLDialogContent &ZLWin32OptionsDialog::createTab(const ZLResourceKey &key) {
 	ZLWin32DialogContent *tab = new ZLWin32DialogContent(tabResource(key));
 	myTabs.push_back(tab);
 
-	W32DialogPanel &panel = myPropertySheet.createPanel(tab->name());
+	W32DialogPanel &panel = myPropertySheet.createPanel(tab->displayName());
+	myPanelToKeyMap[&panel] = tab->key();
 	panel.addListener(this);
 	panel.setElement(tab->contentPtr());
 
@@ -40,16 +41,16 @@ ZLDialogContent &ZLWin32OptionsDialog::createTab(const ZLResourceKey &key) {
 }
 
 const std::string &ZLWin32OptionsDialog::selectedTabKey() const {
-	return mySelectedTabName;
+	return mySelectedTabKey;
 }
 
 void ZLWin32OptionsDialog::selectTab(const ZLResourceKey &key) {
-	mySelectedTabName = key.Name;
+	mySelectedTabKey = key.Name;
 }
 
 void ZLWin32OptionsDialog::onEvent(const std::string &event, W32EventSender &sender) {
 	if (event == W32DialogPanel::PANEL_SELECTED_EVENT) {
-		mySelectedTabName = ((W32DialogPanel&)sender).caption();
+		mySelectedTabKey = myPanelToKeyMap[&(W32DialogPanel&)sender];
 	} else if (event == W32DialogPanel::APPLY_BUTTON_PRESSED_EVENT) {
 		accept();
 	}
@@ -57,7 +58,7 @@ void ZLWin32OptionsDialog::onEvent(const std::string &event, W32EventSender &sen
 
 bool ZLWin32OptionsDialog::runInternal() {
 	myWindow.blockMouseEvents(true);
-	bool code = myPropertySheet.run(mySelectedTabName);
+	bool code = myPropertySheet.run(tabResource(ZLResourceKey(mySelectedTabKey)).value());
 	myWindow.blockMouseEvents(false);
 	return code;
 }

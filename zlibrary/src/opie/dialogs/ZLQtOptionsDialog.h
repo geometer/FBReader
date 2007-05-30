@@ -47,8 +47,6 @@ protected:
 
 private:
 	QTabWidget *myTabWidget;
-
-	std::vector<std::string> myTabNames;
 };
 
 class MyQTabWidget : public QTabWidget {

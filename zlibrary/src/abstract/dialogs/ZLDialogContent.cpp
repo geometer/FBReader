@@ -32,7 +32,11 @@ ZLDialogContent::~ZLDialogContent() {
 	}
 }
 
-const std::string &ZLDialogContent::name() const {
+const std::string &ZLDialogContent::key() const {
+	return myResource.name();
+}
+
+const std::string &ZLDialogContent::displayName() const {
 	return myResource.value();
 }
 

@@ -40,18 +40,18 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
 	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget, tabResource(key));
-	myTabWidget->insertTab(tab->widget(), ::qtString(tab->name()));
+	myTabWidget->insertTab(tab->widget(), ::qtString(tab->displayName()));
 	myTabs.push_back(tab);
 	return *tab;
 }
 
 const std::string &ZLQtOptionsDialog::selectedTabKey() const {
-	return myTabs[myTabWidget->currentPageIndex()]->name();
+	return myTabs[myTabWidget->currentPageIndex()]->key();
 }
 
 void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
 	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		if ((*it)->name() == key.Name) {
+		if ((*it)->key() == key.Name) {
 			myTabWidget->setCurrentPage(it - myTabs.begin());
 			break;
 		}

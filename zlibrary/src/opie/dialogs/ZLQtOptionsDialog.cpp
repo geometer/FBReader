@@ -37,20 +37,24 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
 	ZLQtDialogContent *tab = new ZLQtDialogContent(myTabWidget, tabResource(key));
-	myTabWidget->insertTab(tab->widget(), ::qtString(tab->name()));
+	myTabWidget->insertTab(tab->widget(), ::qtString(tab->displayName()));
 	myTabs.push_back(tab);
-	myTabNames.push_back(key.Name);
 	return *tab;
 }
 
 const std::string &ZLQtOptionsDialog::selectedTabKey() const {
-	return myTabNames[myTabWidget->currentPageIndex()];
+	return myTabs[myTabWidget->currentPageIndex()]->key();
 }
 
 void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
-	std::vector<std::string>::const_iterator it = std::find(myTabNames.begin(), myTabNames.end(), key.Name);
-	if (it != myTabNames.end()) {
-		myTabWidget->setCurrentPage(it - myTabNames.begin());
+	std::vector<shared_ptr<ZLDialogContent> >::const_iterator it;
+	for (it = myTabs.begin(); it != myTabs.end(); ++it) {
+		if ((*it)->key() == key.Name) {
+			break;
+		}
+	}
+	if (it != myTabs.end()) {
+		myTabWidget->setCurrentPage(it - myTabs.begin());
 	}
 }
 

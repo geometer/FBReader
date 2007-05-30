@@ -47,7 +47,6 @@ protected:
 private:
 	GtkDialog *myDialog;
 	GtkNotebook *myNotebook;
-	std::vector<std::string> myTabNames;
 };
 
 #endif /* __ZLGTKOPTIONSDIALOG_H__ */

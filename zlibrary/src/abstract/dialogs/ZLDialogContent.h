@@ -38,7 +38,8 @@ protected:
 public:
 	virtual ~ZLDialogContent();
 
-	const std::string &name() const;
+	const std::string &key() const;
+	const std::string &displayName() const;
 	const std::string &value(const ZLResourceKey &key) const;
 	const ZLResource &resource(const ZLResourceKey &key) const;
 

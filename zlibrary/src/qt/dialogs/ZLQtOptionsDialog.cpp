@@ -43,7 +43,7 @@ void ZLQtOptionsDialog::apply() {
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
 	ZLQtDialogContent *tab = new ZLQtDialogContent(this, tabResource(key));
-	addTab(tab->widget(), ::qtString(tab->name()));
+	addTab(tab->widget(), ::qtString(tab->displayName()));
 	myTabs.push_back(tab);
 	return *tab;
 }
@@ -52,15 +52,15 @@ const std::string &ZLQtOptionsDialog::selectedTabKey() const {
 	QWidget *currentTab = currentPage();
 	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		if (((ZLQtDialogContent&)**it).widget() == currentTab) {
-			return (*it)->name();
+			return (*it)->key();
 		}
 	}
-	return myTabs[0]->name();
+	return myTabs[0]->key();
 }
 
 void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
 	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
-		if ((*it)->name() == key.Name) {
+		if ((*it)->key() == key.Name) {
 			showPage(((ZLQtDialogContent&)**it).widget());
 			break;
 		}
