@@ -24,6 +24,10 @@
 
 #include <ZLibrary.h>
 
+const std::string ZLibrary::FileNameDelimiter("/");
+const std::string ZLibrary::PathDelimiter(":");
+const std::string ZLibrary::EndOfLine("\n");
+
 std::string ZLibrary::Language() {
 	if (!ourLanguage.empty()) {
 		return ourLanguage;

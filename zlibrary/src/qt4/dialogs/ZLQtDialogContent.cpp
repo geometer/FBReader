@@ -30,12 +30,7 @@ void ZLQtDialogContent::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
 }
 
-ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const std::string &name) : ZLDialogContent(name), myWidget(widget) {
-	myLayout = new QGridLayout(myWidget);
-	myRowCounter = 0;
-}
-
-ZLQtDialogContent::ZLQtDialogContent(QWidget *widget) : myWidget(widget) {
+ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const ZLResource &resource) : ZLDialogContent(resource), myWidget(widget) {
 	myLayout = new QGridLayout(myWidget);
 	myRowCounter = 0;
 }
@@ -43,14 +38,14 @@ ZLQtDialogContent::ZLQtDialogContent(QWidget *widget) : myWidget(widget) {
 ZLQtDialogContent::~ZLQtDialogContent() {
 }
 
-void ZLQtDialogContent::addOption(ZLOptionEntry *option) {
-	createViewByEntry(option, 0, 12);
+void ZLQtDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
+	createViewByEntry(name, tooltip, option, 0, 12);
 	++myRowCounter;
 }
 
-void ZLQtDialogContent::addOptions(ZLOptionEntry *option0, ZLOptionEntry *option1) {
-	createViewByEntry(option0, 0, 5);
-	createViewByEntry(option1, 7, 12);
+void ZLQtDialogContent::addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0, const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1) {
+	createViewByEntry(name0, tooltip0, option0, 0, 5);
+	createViewByEntry(name1, tooltip1, option1, 7, 12);
 	++myRowCounter;
 }
 
@@ -58,35 +53,38 @@ void ZLQtDialogContent::addItem(QWidget *widget, int row, int fromColumn, int to
 	myLayout->addWidget(widget, row, fromColumn, 1, toColumn - fromColumn + 1);
 }
 
-void ZLQtDialogContent::createViewByEntry(ZLOptionEntry *option, int fromColumn, int toColumn) {
+void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int fromColumn, int toColumn) {
 	if (option == 0) {
 		return;
 	}
 	ZLQtOptionView *view = 0;
 	switch (option->kind()) {
 		case ZLOptionEntry::BOOLEAN:
-			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
+		case ZLOptionEntry::BOOLEAN3:
+			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::STRING:
-			view = new StringOptionView((ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::CHOICE:
-			view = new ChoiceOptionView((ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView((ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::COMBO:
-			view = new ComboOptionView((ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::COLOR:
-			view = new ColorOptionView((ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new ColorOptionView(name, tooltip, (ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::KEY:
-			view = new KeyOptionView((ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new KeyOptionView(name, tooltip, (ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::ORDER:
-			//view = new OrderOptionView((ZLOrderOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			//view = new OrderOptionView(name, tooltip, (ZLOrderOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 	}
 

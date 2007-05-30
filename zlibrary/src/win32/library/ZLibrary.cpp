@@ -31,6 +31,10 @@
 #include "../config/ZLWin32Config.h"
 #include "../encoding/ZLWin32EncodingConverter.h"
 
+const std::string ZLibrary::FileNameDelimiter("\\");
+const std::string ZLibrary::PathDelimiter(";");
+const std::string ZLibrary::EndOfLine("\r\n");
+
 void ZLibrary::init(int &argc, char **&argv) {
 	parseArguments(argc, argv);
 

@@ -18,6 +18,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 #include <ZLDialogManager.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
@@ -63,7 +64,7 @@ bool GCRemoveSceneHandler::accept(const ZLTreeNode &node) {
 		questionBoxKey,
 		ZLStringUtil::printf(ZLDialogManager::dialogMessage(questionBoxKey), node.displayName()),
 		ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
-		if (!ZLFile(UserDirectoryName() + ZLApplication::FileNameDelimiter + node.id()).remove()) {
+		if (!ZLFile(UserDirectoryName() + ZLibrary::FileNameDelimiter + node.id()).remove()) {
 			ZLDialogManager::instance().errorBox(ZLResourceKey("cannotRemoveSceneBox"));
 		} else {
 			resetSubnodesList();

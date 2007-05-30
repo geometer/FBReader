@@ -21,7 +21,7 @@
 #include <stdlib.h>
 
 #include <ZLUnicodeUtil.h>
-#include <ZLApplication.h>
+#include <ZLibrary.h>
 #include <ZLFile.h>
 
 #include "MyEncodingConverter.h"
@@ -113,7 +113,7 @@ private:
 };
 
 bool MyEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	return ZLFile(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + encoding).exists();
+	return ZLFile(ZLEncodingCollection::encodingDescriptionPath() + ZLibrary::FileNameDelimiter + encoding).exists();
 }
 
 shared_ptr<ZLEncodingConverter> MyEncodingConverterProvider::createConverter(const std::string &encoding) {
@@ -219,7 +219,7 @@ bool MyTwoBytesEncodingConverter::fillTable(int*) {
 	return false;
 }
 
-EncodingReader::EncodingReader(const std::string &encoding) : myFilePath(ZLEncodingCollection::encodingDescriptionPath() + ZLApplication::FileNameDelimiter + encoding) {
+EncodingReader::EncodingReader(const std::string &encoding) : myFilePath(ZLEncodingCollection::encodingDescriptionPath() + ZLibrary::FileNameDelimiter + encoding) {
 }
 
 EncodingReader::~EncodingReader() {

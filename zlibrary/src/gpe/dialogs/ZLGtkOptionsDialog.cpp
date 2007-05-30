@@ -52,8 +52,8 @@ ZLGtkOptionsDialog::~ZLGtkOptionsDialog() {
 }
 
 ZLDialogContent &ZLGtkOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLGtkDialogContent *tab = new ZLGtkDialogContent();
-	GtkWidget *label = gtk_label_new(tabName(key).c_str());
+	ZLGtkDialogContent *tab = new ZLGtkDialogContent(tabResource(key));
+	GtkWidget *label = gtk_label_new(tab->name().c_str());
 
 	GtkScrolledWindow *scrolledWindow = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
 	gtk_scrolled_window_set_policy(scrolledWindow, GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);

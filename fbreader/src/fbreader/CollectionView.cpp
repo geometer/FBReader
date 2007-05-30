@@ -19,6 +19,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 #include <ZLFileImage.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
@@ -70,7 +71,7 @@ private:
 };
 
 CollectionModel::CollectionModel(BookCollection &collection) : TreeModel(), myCollection(collection) {
-	const std::string prefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
+	const std::string prefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	myImageMap[DELETE_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-remove.png", 0);
 	myImageMap[BOOK_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-bookinfo.png", 0);
 	myImageMap[AUTHOR_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-authorinfo.png", 0);

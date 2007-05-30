@@ -23,6 +23,7 @@
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLApplication.h>
+#include <ZLibrary.h>
 
 #include "GCSceneHandler.h"
 #include "GeometricCalculator.h"
@@ -33,11 +34,11 @@ const std::string GCSceneHandler::AllScenesFolderName = "All Scenes";
 const std::string GCSceneHandler::UserFolderName = "User Created";
 
 shared_ptr<ZLDir> GCSceneHandler::SamplesDirectory() {
-	return ZLFile(ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "samples").directory();
+	return ZLFile(ZLApplication::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "samples").directory();
 }
 
 const std::string GCSceneHandler::UserDirectoryName() {
-	return GeometricCalculator::ConfigDirectory() + ZLApplication::FileNameDelimiter + "scenes";
+	return GeometricCalculator::ConfigDirectory() + ZLibrary::FileNameDelimiter + "scenes";
 }
 
 shared_ptr<ZLDir> GCSceneHandler::UserDirectory(bool create) {

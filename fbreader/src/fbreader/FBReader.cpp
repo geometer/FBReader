@@ -21,6 +21,7 @@
 
 #include <queue>
 
+#include <ZLibrary.h>
 #include <ZLFile.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
@@ -476,7 +477,7 @@ bool FBReader::closeView() {
 }
 
 std::string FBReader::helpFileName() const {
-	return ApplicationDirectory() + FileNameDelimiter + "help" + FileNameDelimiter + "MiniHelp.fb2";
+	return ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp.fb2";
 }
 
 void FBReader::openFile(const std::string &fileName) {

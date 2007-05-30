@@ -29,7 +29,7 @@
 class ZLQtDialog : public QDialog, public ZLDialog {
 
 public:
-	ZLQtDialog(const std::string &name);
+	ZLQtDialog(const ZLResource &resource);
 	~ZLQtDialog();
 
 	void addButton(const ZLResourceKey &key, bool accept);

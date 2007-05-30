@@ -42,7 +42,7 @@ void ZLGtkOptionView::_onValueChanged(GtkWidget*, gpointer self) {
 }
 
 void BooleanOptionView::_createItem() {
-	myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(myOption->name()).c_str());
+	myCheckBox = gtk_check_button_new_with_mnemonic(gtkString(ZLOptionView::name()).c_str());
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
 	g_signal_connect(myCheckBox, "toggled", G_CALLBACK(_onValueChanged), this);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
@@ -124,7 +124,7 @@ void Boolean3OptionView::onValueChanged() {
 }
 
 void ChoiceOptionView::_createItem() {
-	myFrame = GTK_FRAME(gtk_frame_new(myOption->name().c_str()));
+	myFrame = GTK_FRAME(gtk_frame_new(ZLOptionView::name().c_str()));
 	myVBox = GTK_BOX(gtk_vbox_new(true, 10));
 	gtk_container_set_border_width(GTK_CONTAINER(myVBox), 5);
 
@@ -168,7 +168,7 @@ void ChoiceOptionView::_onAccept() const {
 
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOptionEntry = *(ZLComboOptionEntry*)myOption;
-	myLabel = labelWithMyParams(myOption->name().c_str());
+	myLabel = labelWithMyParams(ZLOptionView::name().c_str());
 	myComboBox = comboOptionEntry.isEditable() ?
 		GTK_COMBO_BOX(gtk_combo_box_entry_new_text()) : 
 		GTK_COMBO_BOX(gtk_combo_box_new_text());
@@ -240,7 +240,7 @@ void ComboOptionView::onValueChanged() {
 void SpinOptionView::_createItem() {
 	ZLSpinOptionEntry *tempo = (ZLSpinOptionEntry*)myOption;
 
-	myLabel = labelWithMyParams(myOption->name().c_str());
+	myLabel = labelWithMyParams(ZLOptionView::name().c_str());
 
 	GtkAdjustment *adj = (GtkAdjustment *)gtk_adjustment_new(tempo->initialValue(), tempo->minValue(), tempo->maxValue(), tempo->step(), tempo->step(), 0);
 	mySpinBox = gtk_spin_button_new(adj, 1, 0);
@@ -269,8 +269,8 @@ void StringOptionView::_createItem() {
 	myLineEdit = GTK_ENTRY(gtk_entry_new());
 	g_signal_connect(myLineEdit, "changed", G_CALLBACK(_onValueChanged), this);
 
-	if (!myOption->name().empty()) {
-		myLabel = labelWithMyParams(myOption->name().c_str());
+	if (!ZLOptionView::name().empty()) {
+		myLabel = labelWithMyParams(ZLOptionView::name().c_str());
 		int midColumn = (myFromColumn + myToColumn) / 2;
 		myTab->addItem(myLabel, myRow, myFromColumn, midColumn);
 		myTab->addItem(GTK_WIDGET(myLineEdit), myRow, midColumn, myToColumn);

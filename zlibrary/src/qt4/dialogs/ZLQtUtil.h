@@ -25,6 +25,7 @@
 
 #include <ZLResource.h>
 
+QString qtString(const std::string &text);
 QString qtButtonName(const ZLResourceKey &key);
 
 #endif /* __ZLQTUTIL_H__ */

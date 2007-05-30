@@ -18,7 +18,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLApplication.h>
+#include <ZLibrary.h>
 
 #include "ZLFSManager.h"
 #include "ZLFSDir.h"
@@ -33,5 +33,5 @@ void ZLFSManager::deleteInstance() {
 }
 
 std::string ZLFSDir::delimiter() const {
-	return ZLApplication::FileNameDelimiter;
+	return ZLibrary::FileNameDelimiter;
 }

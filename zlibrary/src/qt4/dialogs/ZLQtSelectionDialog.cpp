@@ -27,6 +27,7 @@
 #include <QtGui/QKeyEvent>
 
 #include <ZLApplication.h>
+#include <ZLibrary.h>
 
 #include "ZLQtSelectionDialog.h"
 #include "ZLQtDialogManager.h"
@@ -43,11 +44,11 @@ void ZLQListWidget::keyPressEvent(QKeyEvent *event) {
 }
 
 ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListWidget *listWidget, const ZLTreeNodePtr node) : QListWidgetItem(listWidget), myNode(node) {
-	setText(QString::fromUtf8(node->displayName().c_str()));
+	setText(::qtString(node->displayName()));
 }
 
-ZLQtSelectionDialog::ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler) : QDialog(qApp->activeWindow()), ZLDesktopSelectionDialog(handler) {
-	setWindowTitle(QString::fromUtf8(caption));
+ZLQtSelectionDialog::ZLQtSelectionDialog(const std::string &caption, ZLTreeHandler &handler) : QDialog(qApp->activeWindow()), ZLDesktopSelectionDialog(handler) {
+	setWindowTitle(::qtString(caption));
 
 	QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -90,7 +91,7 @@ QIcon &ZLQtSelectionDialog::getIcon(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QIcon*>::const_iterator it = myIcons.find(pixmapName);
 	if (it == myIcons.end()) {
-		QPixmap pixmap((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + pixmapName + ".png").c_str());
+		QPixmap pixmap((ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".png").c_str());
 		QIcon *icon = new QIcon(pixmap);
 		myIcons[pixmapName] = icon;
 		myListWidget->setIconSize(pixmap.size());
@@ -107,7 +108,7 @@ void ZLQtSelectionDialog::keyPressEvent(QKeyEvent *event) {
 }
 
 void ZLQtSelectionDialog::updateStateLine() {
-	myStateLine->setText(QString::fromUtf8(handler().stateDisplayName().c_str()));
+	myStateLine->setText(::qtString(handler().stateDisplayName()));
 }
 
 void ZLQtSelectionDialog::updateList() {

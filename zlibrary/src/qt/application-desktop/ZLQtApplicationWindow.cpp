@@ -26,6 +26,8 @@
 #include <qlayout.h>
 #include <qobjectlist.h>
 
+#include <ZLibrary.h>
+
 #include "ZLQtApplicationWindow.h"
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../view/ZLQtViewWidget.h"
@@ -73,7 +75,7 @@ QPixmap *MyIconFactory::createPixmap(const QIconSet &set, QIconSet::Size size, Q
 }
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
-	static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
+	static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
 	setIconSet(QIconSet(icon));
 	QSize size = icon.size();
@@ -100,7 +102,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 	QIconFactory::installDefaultFactory(new MyIconFactory());
 
-	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLApplication::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
+	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
 	QPixmap icon(iconFileName.c_str());
 	setIcon(icon);
 

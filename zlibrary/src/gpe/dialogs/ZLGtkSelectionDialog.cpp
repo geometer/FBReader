@@ -22,6 +22,7 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <ZLApplication.h>
+#include <ZLibrary.h>
 #include <ZLDialogManager.h>
 
 #include "ZLGtkSelectionDialog.h"
@@ -114,7 +115,7 @@ GdkPixbuf *ZLGtkSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,GdkPixbuf*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		GdkPixbuf *pixmap = gdk_pixbuf_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + pixmapName + ".png").c_str(), 0);
+		GdkPixbuf *pixmap = gdk_pixbuf_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".png").c_str(), 0);
 		myPixmaps[pixmapName] = pixmap;
 		return pixmap;
 	} else {

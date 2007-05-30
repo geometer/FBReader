@@ -19,6 +19,7 @@
 
 #include <windowsx.h>
 
+#include <ZLibrary.h>
 #include <ZLFile.h>
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
@@ -283,7 +284,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 
-		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".ico";
+		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + buttonItem.iconName() + ".ico";
 		ZLFile file(imageFileName);
 		HICON bitmap = (HICON)LoadImageA(0, file.path().c_str(), IMAGE_ICON, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
 		/*

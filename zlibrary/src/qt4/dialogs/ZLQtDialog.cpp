@@ -21,18 +21,20 @@
 #include <QtGui/QApplication>
 #include <QtGui/QPushButton>
 
+#include <ZLDialogManager.h>
+
 #include "ZLQtDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
 
-ZLQtDialog::ZLQtDialog(const std::string &title) : QDialog(qApp->activeWindow()), myButtonNumber(0) {
+ZLQtDialog::ZLQtDialog(const ZLResource &resource) : QDialog(qApp->activeWindow()), myButtonNumber(0) {
 	setModal(true);
-	setWindowTitle(QString::fromUtf8(title.c_str()));
+	setWindowTitle(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	QWidget *widget = new QWidget(this);
 	layout->addWidget(widget);
-	myTab = new ZLQtDialogContent(widget);
+	myTab = new ZLQtDialogContent(widget, resource);
 
 	myButtonGroup = new QWidget(this);
 	layout->addWidget(myButtonGroup);

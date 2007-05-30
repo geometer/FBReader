@@ -18,6 +18,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 #include <ZLDialogManager.h>
 #include <ZLFile.h>
 #include <ZLOutputStream.h>
@@ -38,11 +39,11 @@
 #include "../model/Scene.h"
 
 std::string GeometricCalculator::ConfigDirectory() {
-	return HomeDirectory + FileNameDelimiter + "." + ApplicationName();
+	return HomeDirectory + ZLibrary::FileNameDelimiter + "." + ApplicationName();
 }
 
 const std::string GeometricCalculator::defaultSceneFileName() const {
-	return ConfigDirectory() + FileNameDelimiter + "current.scn";
+	return ConfigDirectory() + ZLibrary::FileNameDelimiter + "current.scn";
 }
 
 GeometricCalculator::GeometricCalculator(const std::string &fileName) : ZLApplication("GeometricCalculator"), myBindings("Keys") {

@@ -20,6 +20,7 @@
 
 #include <ZLDialogManager.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLibrary.h>
 
 #include "ZLApplication.h"
 
@@ -35,9 +36,6 @@ public:
 
 const std::string ZLApplicationBase::BaseDirectory = std::string(BASEDIR);
 const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
-const std::string ZLApplicationBase::FileNameDelimiter = std::string(FILENAMEDELIMITER);
-const std::string ZLApplicationBase::PathDelimiter = std::string(PATHDELIMITER);
-const std::string ZLApplicationBase::EndOfLine = std::string(EOLCHARS);
 
 std::string ZLApplicationBase::ourApplicationName;
 std::string ZLApplicationBase::ourImageDirectory;
@@ -66,9 +64,9 @@ ZLApplicationBase::ZLApplicationBase(const std::string &name) {
 	ourApplicationName = name;
 	ourImageDirectory = replaceRegExps(IMAGEDIR);
 	ourApplicationImageDirectory = replaceRegExps(APPIMAGEDIR);
-	ourZLibraryDirectory = BaseDirectory + FileNameDelimiter + "zlibrary";
-	ourApplicationDirectory = BaseDirectory + FileNameDelimiter + ourApplicationName;
-	ourDefaultFilesPathPrefix = ourApplicationDirectory + FileNameDelimiter + "default" + FileNameDelimiter;
+	ourZLibraryDirectory = BaseDirectory + ZLibrary::FileNameDelimiter + "zlibrary";
+	ourApplicationDirectory = BaseDirectory + ZLibrary::FileNameDelimiter + ourApplicationName;
+	ourDefaultFilesPathPrefix = ourApplicationDirectory + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter;
 	ZLOptions::createInstance();
 }
 

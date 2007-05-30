@@ -21,6 +21,8 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
 
+#include <ZLibrary.h>
+
 #include "../message/ZLMaemoMessage.h"
 #include "../view/ZLGtkViewWidget.h"
 #include "../../gtk/util/ZLGtkKeyUtil.h"
@@ -280,7 +282,7 @@ static void onGtkButtonRelease(GtkWidget*, GdkEventButton*, gpointer data) {
 ZLGtkApplicationWindow::ToolbarButton::ToolbarButton(ZLApplication::Toolbar::ButtonItem &buttonItem, ZLGtkApplicationWindow &window) : myButtonItem(buttonItem), myWindow(window) {
 	myAction = myWindow.application().action(buttonItem.actionId());
 
-	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
+	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
 
 	const int width = gdk_pixbuf_get_width(filePixbuf);
 	const int height = gdk_pixbuf_get_height(filePixbuf);

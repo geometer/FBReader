@@ -21,7 +21,7 @@
 
 #include <ZLTime.h>
 #include <ZLUnicodeUtil.h>
-#include <ZLApplication.h>
+#include <ZLibrary.h>
 
 #include "SelectionModel.h"
 #include "TextView.h"
@@ -298,7 +298,7 @@ const std::string &SelectionModel::getText() const {
 			if ((cursor < end) && cursor.isEndOfParagraph()) {
 				cursor.nextParagraph();
 				pcursors.insert(cursor.paragraphCursorPtr());
-				myText.append(ZLApplication::EndOfLine);
+				myText.append(ZLibrary::EndOfLine);
 			}
 		}
 

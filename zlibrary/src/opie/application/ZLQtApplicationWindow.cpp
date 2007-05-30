@@ -23,6 +23,7 @@
 #include <qmenubar.h>
 #include <qpe/resource.h>
 
+#include <ZLibrary.h>
 #include <ZLUnicodeUtil.h>
 
 #include "ZLQtApplicationWindow.h"
@@ -125,7 +126,7 @@ void ZLQtApplicationWindow::refresh() {
 			if ((*it)->isButton()) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + ZLApplication::FileNameDelimiter + button.iconName()).c_str());
+					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + ZLibrary::FileNameDelimiter + button.iconName()).c_str());
 					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;

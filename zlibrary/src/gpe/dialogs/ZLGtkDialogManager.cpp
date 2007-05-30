@@ -35,7 +35,7 @@ void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) con
 }
 
 shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const ZLResourceKey &key) const {
-	return new ZLGtkDialog(dialogTitle(key));
+	return new ZLGtkDialog(resource()[key]);
 }
 
 shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool) const {

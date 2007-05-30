@@ -22,6 +22,8 @@
 #include <qpixmap.h>
 #include <qmenubar.h>
 
+#include <ZLibrary.h>
+
 #include "ZLQtApplicationWindow.h"
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../util/ZLQtKeyUtil.h"
@@ -98,7 +100,7 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	if (item->isButton()) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		static const std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLApplication::FileNameDelimiter;
+		static const std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 		menuBar()->insertItem(QPixmap((imagePrefix + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
 	}
 }

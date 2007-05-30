@@ -29,12 +29,16 @@ class ZLPaintContext;
 class ZLibrary {
 
 public:
+	static const std::string FileNameDelimiter;
+	static const std::string PathDelimiter;
+	static const std::string EndOfLine;
+	static std::string Language();
+
+public:
 	static void init(int &argc, char **&argv);
 	static ZLPaintContext *createContext();
 	static void run(ZLApplication *application);
 	static void shutdown();
-
-	static std::string Language();
 
 private:
 	static void parseArguments(int &argc, char **&argv);

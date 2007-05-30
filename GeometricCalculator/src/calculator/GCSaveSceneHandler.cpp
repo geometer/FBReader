@@ -18,6 +18,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 #include <ZLStringUtil.h>
 #include <ZLApplication.h>
 #include <ZLFile.h>
@@ -94,5 +95,5 @@ const std::string GCSaveSceneHandler::fileName() const {
 			}
 		}
 	}
-	return UserDirectoryName() + ZLApplication::FileNameDelimiter + shortName;
+	return UserDirectoryName() + ZLibrary::FileNameDelimiter + shortName;
 }

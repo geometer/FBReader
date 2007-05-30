@@ -23,6 +23,7 @@
 
 #include <ZLXMLReader.h>
 #include <ZLApplication.h>
+#include <ZLibrary.h>
 
 #include "HtmlEntityCollection.h"
 
@@ -41,7 +42,7 @@ std::map<std::string,int> HtmlEntityCollection::ourCollection;
 int HtmlEntityCollection::symbolNumber(const std::string &name) {
 	if (ourCollection.empty()) {
 		CollectionReader(ourCollection).readDocument(
-			ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter + "formats" + ZLApplication::FileNameDelimiter + "html" + ZLApplication::FileNameDelimiter + "html.ent"
+			ZLApplication::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "formats" + ZLibrary::FileNameDelimiter + "html" + ZLibrary::FileNameDelimiter + "html.ent"
 		);
 	}
 	std::map<std::string,int>::const_iterator it = ourCollection.find(name);

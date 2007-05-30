@@ -43,7 +43,7 @@ class QGridLayout;
 class ZLQtOptionView : public ZLOptionView {
 
 protected:
-	ZLQtOptionView(ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
+	ZLQtOptionView(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(name, tooltip, option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
 
 	void _show();
 	void _hide();
@@ -57,7 +57,7 @@ protected:
 class ChoiceOptionView : public ZLQtOptionView {
 
 public:
-	ChoiceOptionView(ZLChoiceOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myButtons(0) {}
+	ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myButtons(0) {}
 	~ChoiceOptionView() { if (myButtons != 0) delete[] myButtons; }
 
 protected:
@@ -73,7 +73,7 @@ class BooleanOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	BooleanOptionView(ZLBooleanOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
 
 protected:
 	void _createItem();
@@ -86,12 +86,30 @@ private:
 	QCheckBox *myCheckBox;
 };
 
+class Boolean3OptionView : public QObject, public ZLQtOptionView {
+
+Q_OBJECT
+
+public:
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+
+protected:
+	void _createItem();
+	void _onAccept() const;
+
+private Q_SLOTS:
+	void onStateChanged(int) const;
+
+private:
+	QCheckBox *myCheckBox;
+};
+
 class StringOptionView : public QObject, public ZLQtOptionView {
 
 Q_OBJECT
 
 public:
-	StringOptionView(ZLStringOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLineEdit(0) {}
+	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLineEdit(0) {}
 
 private:
 	void _createItem();
@@ -109,7 +127,7 @@ private:
 class SpinOptionView : public ZLQtOptionView {
 
 public:
-	SpinOptionView(ZLSpinOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), mySpinBox(0) {}
+	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), mySpinBox(0) {}
 
 protected:
 	void _createItem();
@@ -124,7 +142,7 @@ class ComboOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ComboOptionView(ZLComboOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myComboBox(0) {}
+	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myComboBox(0) {}
 
 private:
 	void _createItem();
@@ -145,7 +163,7 @@ class KeyOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	KeyOptionView(ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
 
 private:
 	void _createItem();
@@ -170,14 +188,14 @@ class ColorOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ColorOptionView(ZLColorOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(option, tab, row, fromColumn, toColumn), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
+	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
 
 private:
 	void _createItem();
 	void _onAccept() const;
 	void reset();
 
-	QSlider *createColorSlider(QGridLayout *layout, int index, const char *name, int value);
+	QSlider *createColorSlider(QGridLayout *layout, int index, const ZLResource &resource, int value);
 
 private Q_SLOTS:
 	void onSliderMove(int);

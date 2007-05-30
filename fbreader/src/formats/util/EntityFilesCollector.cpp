@@ -21,6 +21,7 @@
 
 #include <ZLStringUtil.h>
 #include <ZLApplication.h>
+#include <ZLibrary.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
 
@@ -44,8 +45,8 @@ const std::vector<std::string> &EntityFilesCollector::externalDTDs(const std::st
 	std::vector<std::string> &collection = myCollections[format];
 
 	std::string directoryName =
-		ZLApplication::ApplicationDirectory() + ZLApplication::FileNameDelimiter +
-		"formats" + ZLApplication::FileNameDelimiter + format;
+		ZLApplication::ApplicationDirectory() + ZLibrary::FileNameDelimiter +
+		"formats" + ZLibrary::FileNameDelimiter + format;
 	shared_ptr<ZLDir> dtdPath = ZLFile(directoryName).directory();
 	if (!dtdPath.isNull()) {
 		std::vector<std::string> files;

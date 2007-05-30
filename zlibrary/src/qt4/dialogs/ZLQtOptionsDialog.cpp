@@ -33,7 +33,7 @@
 
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(resource, applyAction) {
 	setModal(true);
-	setWindowTitle(QString::fromUtf8(caption().c_str()));
+	setWindowTitle(::qtString(caption()));
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
 	myTabWidget = new QTabWidget(this);
@@ -74,8 +74,8 @@ void ZLQtOptionsDialog::apply() {
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget), key.Name);
-	myTabWidget->addTab(tab->widget(), QString::fromUtf8(tabName(key).c_str()));
+	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget(myTabWidget), tabResource(key));
+	myTabWidget->addTab(tab->widget(), ::qtString(tab->name()));
 	myTabs.push_back(tab);
 	return *tab;
 }

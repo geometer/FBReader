@@ -20,13 +20,15 @@
 
 #include <gtk/gtkbox.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLGtkDialog.h"
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkDialog::ZLGtkDialog(const std::string &name) {
-	myTab = new ZLGtkDialogContent();
-	myDialog = createGtkDialog(name.c_str());
+ZLGtkDialog::ZLGtkDialog(const ZLResource &resource) {
+	myTab = new ZLGtkDialogContent(resource);
+	myDialog = createGtkDialog(resource[ZLDialogManager::DIALOG_TITLE].value().c_str());
 }
 
 ZLGtkDialog::~ZLGtkDialog() {

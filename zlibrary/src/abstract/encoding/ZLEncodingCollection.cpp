@@ -20,6 +20,7 @@
 
 #include <ZLFile.h>
 #include <ZLApplication.h>
+#include <ZLibrary.h>
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 
@@ -40,7 +41,7 @@ ZLEncodingCollection &ZLEncodingCollection::instance() {
 }
 
 std::string ZLEncodingCollection::encodingDescriptionPath() {
-	return ZLApplication::ZLibraryDirectory() + ZLApplication::FileNameDelimiter + "encodings";
+	return ZLApplication::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "encodings";
 }
 
 ZLEncodingCollection::ZLEncodingCollection() {
@@ -54,7 +55,7 @@ void ZLEncodingCollection::registerProvider(shared_ptr<ZLEncodingConverterProvid
 
 void ZLEncodingCollection::init() {
 	if (mySets.empty()) {
-		const std::string prefix = encodingDescriptionPath() + ZLApplication::FileNameDelimiter;
+		const std::string prefix = encodingDescriptionPath() + ZLibrary::FileNameDelimiter;
 		EncodingCollectionReader(*this).readDocument(prefix + "Encodings.xml");
 	}
 }

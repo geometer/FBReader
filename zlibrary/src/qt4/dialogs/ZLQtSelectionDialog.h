@@ -59,10 +59,11 @@ private:
 
 
 class ZLQtSelectionDialog : public QDialog, public ZLDesktopSelectionDialog {
-	Q_OBJECT
+
+Q_OBJECT
 
 public:
-	ZLQtSelectionDialog(const char *caption, ZLTreeHandler &handler); 
+	ZLQtSelectionDialog(const std::string &caption, ZLTreeHandler &handler); 
 	~ZLQtSelectionDialog();
 	bool run();
 

@@ -37,6 +37,7 @@
 
 #include "ZLQtOptionView.h"
 #include "ZLQtDialogContent.h"
+#include "ZLQtUtil.h"
 
 void ZLQtOptionView::_show() {
 	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
@@ -51,7 +52,7 @@ void ZLQtOptionView::_hide() {
 }
 
 void BooleanOptionView::_createItem() {
-	myCheckBox = new QCheckBox(myOption->name().c_str(), myTab->widget());
+	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
 	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
 	myWidgets.push_back(myCheckBox);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
@@ -66,14 +67,67 @@ void BooleanOptionView::onStateChanged(bool state) const {
 	((ZLBooleanOptionEntry*)myOption)->onStateChanged(state);
 }
 
+void Boolean3OptionView::_createItem() {
+	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
+	myCheckBox->setTristate(true);
+	Qt::CheckState state = Qt::PartiallyChecked;
+	switch (((ZLBoolean3OptionEntry*)myOption)->initialState()) {
+		case B3_FALSE:
+			state = Qt::Unchecked;
+			break;
+		case B3_TRUE:
+			state = Qt::Checked;
+			break;
+		case B3_UNDEFINED:
+			state = Qt::PartiallyChecked;
+			break;
+	}
+	myCheckBox->setCheckState(state);
+	myWidgets.push_back(myCheckBox);
+	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
+	connect(myCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
+}
+
+void Boolean3OptionView::_onAccept() const {
+	ZLBoolean3 value = B3_UNDEFINED;
+	switch (myCheckBox->checkState()) {
+		case Qt::Checked:
+			value = B3_TRUE;
+			break;
+		case Qt::Unchecked:
+			value = B3_FALSE;
+			break;
+		case Qt::PartiallyChecked:
+			value = B3_UNDEFINED;
+			break;
+	}
+	((ZLBoolean3OptionEntry*)myOption)->onAccept(value);
+}
+
+void Boolean3OptionView::onStateChanged(int state) const {
+	ZLBoolean3 value = B3_UNDEFINED;
+	switch (state) {
+		case Qt::Checked:
+			value = B3_TRUE;
+			break;
+		case Qt::Unchecked:
+			value = B3_FALSE;
+			break;
+		case Qt::PartiallyChecked:
+			value = B3_UNDEFINED;
+			break;
+	}
+	((ZLBoolean3OptionEntry*)myOption)->onStateChanged(value);
+}
+
 void ChoiceOptionView::_createItem() {
-	QGroupBox *groupBox = new QGroupBox(myOption->name().c_str());
+	QGroupBox *groupBox = new QGroupBox(::qtString(ZLOptionView::name()));
 	myWidgets.push_back(groupBox);
 	QVBoxLayout *layout = new QVBoxLayout(groupBox);
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
 		myButtons[i] = new QRadioButton(groupBox);
-		myButtons[i]->setText(((ZLChoiceOptionEntry*)myOption)->text(i).c_str());
+		myButtons[i]->setText(::qtString(((ZLChoiceOptionEntry*)myOption)->text(i)));
 		layout->addWidget(myButtons[i]);
 	}
 	myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]->setChecked(true);
@@ -91,7 +145,7 @@ void ChoiceOptionView::_onAccept() const {
 
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
-	QLabel *label = new QLabel(myOption->name().c_str(), myTab->widget());
+	QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	myComboBox = new QComboBox(myTab->widget());
 	myComboBox->setEditable(comboOption.isEditable());
 
@@ -124,7 +178,7 @@ void ComboOptionView::reset() {
 	int selectedIndex = -1;
 	int index = 0;
 	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it, ++index) {
-		myComboBox->insertItem(it - values.begin(), QString::fromUtf8(it->c_str()));
+		myComboBox->insertItem(it - values.begin(), ::qtString(*it));
 		if (*it == initial) {
 			selectedIndex = index;
 		}
@@ -158,7 +212,7 @@ void ComboOptionView::onValueEdited(const QString &value) {
 
 void SpinOptionView::_createItem() {
 	ZLSpinOptionEntry &entry = *(ZLSpinOptionEntry*)myOption;
-	QLabel *label = new QLabel(myOption->name().c_str(), myTab->widget());
+	QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	mySpinBox = new QSpinBox(myTab->widget());
 
 	myWidgets.push_back(label);
@@ -181,8 +235,8 @@ void StringOptionView::_createItem() {
 	myLineEdit = new QLineEdit(myTab->widget());
 	myWidgets.push_back(myLineEdit);
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
-	if (!myOption->name().empty()) {
-		QLabel *label = new QLabel(myOption->name().c_str(), myTab->widget());
+	if (!ZLOptionView::name().empty()) {
+		QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 		myWidgets.push_back(label);
 		int width = myToColumn - myFromColumn + 1;
 		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 4 - 1);
@@ -205,7 +259,7 @@ void StringOptionView::reset() {
 	if (myLineEdit == 0) {
 		return;
 	}
-	myLineEdit->setText(QString::fromUtf8(((ZLStringOptionEntry*)myOption)->initialValue().c_str()));
+	myLineEdit->setText(::qtString(((ZLStringOptionEntry*)myOption)->initialValue()));
 	myLineEdit->cursorForward(false, -myLineEdit->text().length());
 }
 
@@ -253,7 +307,7 @@ void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
 	std::string keyText = ZLQtKeyUtil::keyName(keyEvent);
 	if (!keyText.empty()) {
 		myKeyView.myCurrentKey = keyText;
-		myKeyView.myLabel->setText("Action For " + QString::fromUtf8(keyText.c_str()));
+		myKeyView.myLabel->setText("Action For " + ::qtString(keyText));
 		myKeyView.myLabel->show();
 		myKeyView.myComboBox->setCurrentIndex(((ZLKeyOptionEntry*)myKeyView.myOption)->actionIndex(keyText));
 		myKeyView.myComboBox->show();
@@ -275,7 +329,7 @@ void KeyOptionView::_createItem() {
 	myComboBox = new QComboBox(widget);
 	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
-		myComboBox->insertItem(it - actions.begin(), it->c_str());
+		myComboBox->insertItem(it - actions.begin(), ::qtString(*it));
 	}
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChanged(int)));
 	layout->addWidget(myComboBox, 1, 1);
@@ -320,7 +374,7 @@ void KeyOptionView::onValueChanged(int index) {
 }
 
 QSlider *ColorOptionView::createColorSlider(QGridLayout *layout, int index, const ZLResource &resource, int value) {
-	layout->addWidget(new QLabel(::qtString(resource.value()), name, layout->parentWidget()), index, 0);
+	layout->addWidget(new QLabel(::qtString(resource.value()), layout->parentWidget()), index, 0);
 	QSlider *slider = new QSlider(Qt::Horizontal, layout->parentWidget());
 	layout->addWidget(slider, index, 1);
 	slider->setMinimum(0);
