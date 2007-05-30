@@ -67,6 +67,9 @@ void ZLGtkDialogContent::createViewByEntry(const std::string &name, const std::s
 		case ZLOptionEntry::BOOLEAN:
 			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
+		case ZLOptionEntry::BOOLEAN3:
+			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, row, fromColumn, toColumn);
+			break;
 		case ZLOptionEntry::STRING:
 			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;

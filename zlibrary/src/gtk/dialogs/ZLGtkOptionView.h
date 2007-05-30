@@ -88,7 +88,30 @@ private:
 	void onValueChanged();
 
 private:
-	GtkWidget *myCheckBox;
+	GtkCheckButton *myCheckBox;
+};
+
+class Boolean3OptionView : public ZLGtkOptionView {
+
+private:
+	static void _onReleased(GtkButton *button, gpointer self);
+
+public:
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+
+protected:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _onAccept() const;
+
+private:
+	void setState(ZLBoolean3 state);
+	void onValueChanged();
+
+private:
+	ZLBoolean3 myState;
+	GtkCheckButton *myCheckBox;
 };
 
 class StringOptionView : public ZLGtkOptionView {

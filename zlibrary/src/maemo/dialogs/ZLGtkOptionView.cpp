@@ -60,6 +60,65 @@ void BooleanOptionView::onValueChanged() {
 	((ZLBooleanOptionEntry*)myOption)->onStateChanged(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
 
+void Boolean3OptionView::_onReleased(GtkButton *button, gpointer self) {
+	Boolean3OptionView &view = *(Boolean3OptionView*)self;
+	switch (view.myState) {
+		case B3_TRUE:
+			view.setState(B3_UNDEFINED);
+			break;
+		case B3_FALSE:
+			view.setState(B3_TRUE);
+			break;
+		case B3_UNDEFINED:
+			view.setState(B3_FALSE);
+			break;
+	}
+	view.onValueChanged();
+}
+
+void Boolean3OptionView::setState(ZLBoolean3 state) {
+	if (myState != state) {
+		myState = state;
+		bool active = false;
+		bool inconsistent = false;
+		switch (myState) {
+			case B3_TRUE:
+				active = true;
+				break;
+			case B3_FALSE:
+				break;
+			case B3_UNDEFINED:
+				inconsistent = true;
+				break;
+		}
+		gtk_toggle_button_set_inconsistent(GTK_TOGGLE_BUTTON(myCheckBox), inconsistent);
+		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), active);
+	}
+}
+
+void Boolean3OptionView::_createItem() {
+	myCheckBox = GTK_CHECK_BUTTON(gtk_check_button_new_with_label(gtkString(name()).c_str()));
+	setState(((ZLBoolean3OptionEntry*)myOption)->initialState());
+	g_signal_connect(GTK_WIDGET(myCheckBox), "released", G_CALLBACK(_onReleased), this);
+	myTab->addItem(GTK_WIDGET(myCheckBox), myRow, myFromColumn, myToColumn);
+}
+
+void Boolean3OptionView::_show() {
+	gtk_widget_show(GTK_WIDGET(myCheckBox));
+}
+
+void Boolean3OptionView::_hide() {
+	gtk_widget_hide(GTK_WIDGET(myCheckBox));
+}
+
+void Boolean3OptionView::_onAccept() const {
+	((ZLBooleanOptionEntry*)myOption)->onAccept(myState);
+}
+
+void Boolean3OptionView::onValueChanged() {
+	((ZLBooleanOptionEntry*)myOption)->onStateChanged(myState);
+}
+
 void ChoiceOptionView::_createItem() {
 	myFrame = GTK_FRAME(gtk_frame_new(name().c_str()));
 	myVBox = GTK_BOX(gtk_vbox_new(true, 10));

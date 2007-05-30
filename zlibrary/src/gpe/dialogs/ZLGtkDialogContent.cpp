@@ -67,6 +67,9 @@ void ZLGtkDialogContent::createViewByEntry(ZLOptionEntry *option, int row, int f
 		case ZLOptionEntry::BOOLEAN:
 			view = new BooleanOptionView((ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
+		case ZLOptionEntry::BOOLEAN3:
+			view = new Boolean3OptionView((ZLBoolean3OptionEntry*)option, this, row, fromColumn, toColumn);
+			break;
 		case ZLOptionEntry::STRING:
 			view = new StringOptionView((ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
 			break;
