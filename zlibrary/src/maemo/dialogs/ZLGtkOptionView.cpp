@@ -60,63 +60,76 @@ void BooleanOptionView::onValueChanged() {
 	((ZLBooleanOptionEntry*)myOption)->onStateChanged(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
 
-void Boolean3OptionView::_onReleased(GtkButton *button, gpointer self) {
-	Boolean3OptionView &view = *(Boolean3OptionView*)self;
-	switch (view.myState) {
-		case B3_TRUE:
-			view.setState(B3_UNDEFINED);
-			break;
-		case B3_FALSE:
-			view.setState(B3_TRUE);
-			break;
-		case B3_UNDEFINED:
-			view.setState(B3_FALSE);
-			break;
-	}
-	view.onValueChanged();
-}
-
-void Boolean3OptionView::setState(ZLBoolean3 state) {
-	if (myState != state) {
-		myState = state;
-		bool active = false;
-		bool inconsistent = false;
-		switch (myState) {
-			case B3_TRUE:
-				active = true;
-				break;
-			case B3_FALSE:
-				break;
-			case B3_UNDEFINED:
-				inconsistent = true;
-				break;
-		}
-		gtk_toggle_button_set_inconsistent(GTK_TOGGLE_BUTTON(myCheckBox), inconsistent);
-		gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), active);
+ZLBoolean3 Boolean3OptionView::stateByIndex(int index) {
+	switch (index) {
+		case 0:
+			return B3_TRUE;
+		case 1:
+			return B3_FALSE;
+		default:
+			return B3_UNDEFINED;
 	}
 }
 
 void Boolean3OptionView::_createItem() {
-	myCheckBox = GTK_CHECK_BUTTON(gtk_check_button_new_with_label(gtkString(name()).c_str()));
-	setState(((ZLBoolean3OptionEntry*)myOption)->initialState());
-	g_signal_connect(GTK_WIDGET(myCheckBox), "released", G_CALLBACK(_onReleased), this);
-	myTab->addItem(GTK_WIDGET(myCheckBox), myRow, myFromColumn, myToColumn);
+	myLabel = gtkLabel(name());
+	myComboBox = GTK_COMBO_BOX(gtk_combo_box_new_text());
+
+	g_signal_connect(GTK_WIDGET(myComboBox), "changed", G_CALLBACK(_onValueChanged), this);
+
+	int midColumn = (myFromColumn + myToColumn) / 2;
+	myTab->addItem(GTK_WIDGET(myLabel), myRow, myFromColumn, midColumn);
+	myTab->addItem(GTK_WIDGET(myComboBox), myRow, midColumn, myToColumn);
+
+	const ZLResource &resource = ZLResource::resource("boolean3");
+	gtk_combo_box_append_text(myComboBox, resource["on"].value().c_str());
+	gtk_combo_box_append_text(myComboBox, resource["off"].value().c_str());
+	gtk_combo_box_append_text(myComboBox, resource["unchanged"].value().c_str());
+
+	reset();
 }
 
 void Boolean3OptionView::_show() {
-	gtk_widget_show(GTK_WIDGET(myCheckBox));
+	gtk_widget_show(GTK_WIDGET(myLabel));
+	gtk_widget_show(GTK_WIDGET(myComboBox));
 }
 
 void Boolean3OptionView::_hide() {
-	gtk_widget_hide(GTK_WIDGET(myCheckBox));
+	gtk_widget_hide(GTK_WIDGET(myLabel));
+	gtk_widget_hide(GTK_WIDGET(myComboBox));
+}
+
+void Boolean3OptionView::_setActive(bool active) {
+	gtk_widget_set_sensitive(GTK_WIDGET(myComboBox), active);
 }
 
 void Boolean3OptionView::_onAccept() const {
-	((ZLBooleanOptionEntry*)myOption)->onAccept(myState);
+	((ZLBoolean3OptionEntry*)myOption)->onAccept(stateByIndex(gtk_combo_box_get_active(myComboBox)));
 }
 
 void Boolean3OptionView::onValueChanged() {
-	((ZLBooleanOptionEntry*)myOption)->onStateChanged(myState);
+	((ZLBoolean3OptionEntry*)myOption)->onStateChanged(stateByIndex(gtk_combo_box_get_active(myComboBox)));
+}
+
+void Boolean3OptionView::reset() {
+	if (myComboBox == 0) {
+		return;
+	}
+
+	int index;
+	switch (((ZLBoolean3OptionEntry*)myOption)->initialState()) {
+		case B3_TRUE:
+			index = 0;
+			break;
+		case B3_FALSE:
+			index = 1;
+			break;
+		default:
+			index = 2;
+			break;
+	}
+
+	gtk_combo_box_set_active(myComboBox, index);
 }
 
 void ChoiceOptionView::_createItem() {

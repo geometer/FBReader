@@ -28,4 +28,9 @@
 		<node name="cyan" value="Голубой"/>
 		<node name="custom..." value="Настроить..."/>
 	</node>
+	<node name="boolean3">
+		<node name="on" value="включить"/>
+		<node name="off" value="выключить"/>
+		<node name="unchanged" value="не менять"/>
+	</node>
 </resources>

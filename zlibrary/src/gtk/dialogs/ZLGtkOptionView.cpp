@@ -111,11 +111,11 @@ void Boolean3OptionView::_hide() {
 }
 
 void Boolean3OptionView::_onAccept() const {
-	((ZLBooleanOptionEntry*)myOption)->onAccept(myState);
+	((ZLBoolean3OptionEntry*)myOption)->onAccept(myState);
 }
 
 void Boolean3OptionView::onValueChanged() {
-	((ZLBooleanOptionEntry*)myOption)->onStateChanged(myState);
+	((ZLBoolean3OptionEntry*)myOption)->onStateChanged(myState);
 }
 
 void ChoiceOptionView::_createItem() {

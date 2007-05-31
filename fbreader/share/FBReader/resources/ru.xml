@@ -266,7 +266,7 @@
 		<node name="Regular Paragraph" value="обычного текста"/>
 		<node name="Title" value="заголовка"/>
 		<node name="Section Title" value="названия главы"/>
-		<node name="Poem Title" value="названия стихотворения"/>
+		<node name="Poem Title" value="названия стиха"/>
 		<node name="Subtitle" value="подзаголовка"/>
 		<node name="Annotation" value="аннотации"/>
 		<node name="Epigraph" value="эпиграфа"/>
@@ -286,7 +286,7 @@
 		<node name="Code" value="текста программы"/>
 		<node name="StrikeThrough" value="зачеркнутого текста"/>
 		<node name="Contents Table" value="оглавления"/>
-		<node name="Author in Library" value="имени автора в библиотеке"/>
+		<node name="Author in Library" value="библиотеки (автор)"/>
 		<node name="Book in Library" value="библиотеки"/>
 		<node name="Recent Book List" value="списка книг"/>
 		<node name="Italic" value="курсива"/>

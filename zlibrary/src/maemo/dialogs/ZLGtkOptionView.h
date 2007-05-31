@@ -87,7 +87,7 @@ private:
 class Boolean3OptionView : public ZLGtkOptionView {
 
 private:
-	static void _onReleased(GtkButton *button, gpointer self);
+	static ZLBoolean3 stateByIndex(int index);
 
 public:
 	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
@@ -96,15 +96,16 @@ protected:
 	void _createItem();
 	void _show();
 	void _hide();
+	void _setActive(bool active);
 	void _onAccept() const;
+	void reset();
 
 private:
-	void setState(ZLBoolean3 state);
 	void onValueChanged();
 
 private:
-	ZLBoolean3 myState;
-	GtkCheckButton *myCheckBox;
+	GtkLabel *myLabel;
+	GtkComboBox *myComboBox;
 };
 
 class StringOptionView : public ZLGtkOptionView {

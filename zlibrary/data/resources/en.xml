@@ -28,4 +28,9 @@
 		<node name="cyan" value="Cyan"/>
 		<node name="custom..." value="Custom..."/>
 	</node>
+	<node name="boolean3">
+		<node name="on" value="on"/>
+		<node name="off" value="off"/>
+		<node name="unchanged" value="unchanged"/>
+	</node>
 </resources>
