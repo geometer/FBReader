@@ -82,9 +82,11 @@ class ZLTextOptionEntry : public ZLOptionEntry {
 
 public:
 	virtual const std::string &initialValue() const = 0;
+	void onAccept(const char *value);
 	virtual void onAccept(const std::string &value) = 0;
 	virtual bool useOnValueEdited() const;
-	virtual void onValueEdited(const std::string&);
+	void onValueEdited(const char *value);
+	virtual void onValueEdited(const std::string &value);
 };
 
 class ZLStringOptionEntry : public ZLTextOptionEntry {

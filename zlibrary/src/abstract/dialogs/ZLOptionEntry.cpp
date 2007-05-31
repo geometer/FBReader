@@ -51,3 +51,11 @@ void ZLComboOptionEntry::onStringValueSelected(const std::string &value) {
 		}
 	}
 }
+
+void ZLTextOptionEntry::onAccept(const char *value) {
+	onAccept((value != 0) ? std::string(value) : std::string());
+}
+
+void ZLTextOptionEntry::onValueEdited(const char *value) {
+	onValueEdited((value != 0) ? std::string(value) : std::string());
+}
