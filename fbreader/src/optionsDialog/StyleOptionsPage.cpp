@@ -63,14 +63,22 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 		const std::string &name = myComboEntry->initialValue();
 		BaseTextStyle &baseStyle = collection.baseStyle();
 
-		registerEntries(dialogTab,
+		registerEntry(dialogTab,
 			KEY_FONTFAMILY, new ZLFontFamilyOptionEntry(baseStyle.FontFamilyOption, context),
+			name
+		);
+
+		registerEntry(dialogTab,
+			KEY_FONTSIZE, new ZLSimpleSpinOptionEntry(baseStyle.FontSizeOption, 2),
+			name
+		);
+
+		registerEntry(dialogTab,
 			KEY_BOLD, new ZLSimpleBooleanOptionEntry(baseStyle.BoldOption),
 			name
 		);
 
-		registerEntries(dialogTab,
-			KEY_FONTSIZE, new ZLSimpleSpinOptionEntry(baseStyle.FontSizeOption, 2),
+		registerEntry(dialogTab,
 			KEY_ITALIC, new ZLSimpleBooleanOptionEntry(baseStyle.ItalicOption),
 			name
 		);
@@ -86,21 +94,28 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 		if (decoration != 0) {
 			const std::string &name = styleResource[decoration->name()].value();
 
-			registerEntries(dialogTab,
+			registerEntry(dialogTab,
 				KEY_FONTFAMILY, new FontFamilyWithBaseOptionEntry(decoration->FontFamilyOption, context),
+				name
+			);
+
+			registerEntry(dialogTab,
+				KEY_FONTSIZEDIFFERENCE, new ZLSimpleSpinOptionEntry(decoration->FontSizeDeltaOption, 2),
+				name
+			);
+
+			registerEntry(dialogTab,
 				KEY_BOLD, new ZLSimpleBoolean3OptionEntry(decoration->BoldOption),
 				name
 			);
 
-			registerEntries(dialogTab,
-				KEY_FONTSIZEDIFFERENCE, new ZLSimpleSpinOptionEntry(decoration->FontSizeDeltaOption, 2),
+			registerEntry(dialogTab,
 				KEY_ITALIC, new ZLSimpleBoolean3OptionEntry(decoration->ItalicOption),
 				name
 			);
 
-			registerEntries(dialogTab,
+			registerEntry(dialogTab,
 				KEY_ALLOWHYPHENATIONS, new ZLSimpleBoolean3OptionEntry(decoration->AllowHyphenationsOption),
-				KEY_DUMMY, 0,
 				name
 			);
 		}
