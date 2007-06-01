@@ -41,7 +41,7 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
 	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, KEYBOARD, FULL_CONTROL, false),
 	ConfigAutoSavingOption(ZLOption::CONFIG_CATEGORY, CONFIG, AUTO_SAVE, true),
-	ConfigAutoSaveTimeoutOption(ZLOption::CONFIG_CATEGORY, CONFIG, TIMEOUT, 1, 6000, 10),
+	ConfigAutoSaveTimeoutOption(ZLOption::CONFIG_CATEGORY, CONFIG, TIMEOUT, 1, 6000, 30),
 	KeyDelayOption(ZLOption::CONFIG_CATEGORY, "Options", "KeyDelay", 0, 5000, 250),
 	myViewWidget(0),
 	myWindow(0) {
