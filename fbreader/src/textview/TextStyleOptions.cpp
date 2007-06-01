@@ -96,33 +96,34 @@ void LineSpacingOptionEntry::onAccept(const std::string &value) {
 std::vector<std::string> AlignmentOptionEntry::ourValues4;
 std::vector<std::string> AlignmentOptionEntry::ourValues5;
 
-static const std::string LEFT = "Left";
-static const std::string RIGHT = "Right";
-static const std::string CENTER = "Center";
-static const std::string JUSTIFY = "Justify";
+static const std::string KEY_UNCHANGED = "unchanged";
+static const std::string KEY_LEFT = "left";
+static const std::string KEY_RIGHT = "right";
+static const std::string KEY_CENTER = "center";
+static const std::string KEY_JUSTIFY = "justify";
 
-std::vector<std::string> &AlignmentOptionEntry::values4() {
+std::vector<std::string> &AlignmentOptionEntry::values4() const {
 	if (ourValues4.empty()) {
-		ourValues4.push_back(LEFT);
-		ourValues4.push_back(RIGHT);
-		ourValues4.push_back(CENTER);
-		ourValues4.push_back(JUSTIFY);
+		ourValues4.push_back(myResource[KEY_LEFT].value());
+		ourValues4.push_back(myResource[KEY_RIGHT].value());
+		ourValues4.push_back(myResource[KEY_CENTER].value());
+		ourValues4.push_back(myResource[KEY_JUSTIFY].value());
 	}
 	return ourValues4;
 }
 
-std::vector<std::string> &AlignmentOptionEntry::values5() {
+std::vector<std::string> &AlignmentOptionEntry::values5() const {
 	if (ourValues5.empty()) {
-		ourValues5.push_back(BASE_STRING);
-		ourValues5.push_back(LEFT);
-		ourValues5.push_back(RIGHT);
-		ourValues5.push_back(CENTER);
-		ourValues5.push_back(JUSTIFY);
+		ourValues5.push_back(myResource[KEY_UNCHANGED].value());
+		ourValues5.push_back(myResource[KEY_LEFT].value());
+		ourValues5.push_back(myResource[KEY_RIGHT].value());
+		ourValues5.push_back(myResource[KEY_CENTER].value());
+		ourValues5.push_back(myResource[KEY_JUSTIFY].value());
 	}
 	return ourValues5;
 }
 
-AlignmentOptionEntry::AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined) : myOption(option), myAllowUndefined(allowUndefined) {
+AlignmentOptionEntry::AlignmentOptionEntry(ZLIntegerOption &option, const ZLResource &resource, bool allowUndefined) : myResource(resource), myOption(option), myAllowUndefined(allowUndefined) {
 }
 
 AlignmentOptionEntry::~AlignmentOptionEntry() {

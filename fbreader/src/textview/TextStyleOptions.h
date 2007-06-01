@@ -24,6 +24,7 @@
 
 #include <string>
 
+#include <ZLResource.h>
 #include <ZLOptionEntry.h>
 #include <optionEntries/ZLFontFamilyOptionEntry.h>
 
@@ -66,15 +67,15 @@ private:
 class AlignmentOptionEntry : public ZLComboOptionEntry {
 
 private:
-	static std::vector<std::string> &values4();
-	static std::vector<std::string> &values5();
+	std::vector<std::string> &values4() const;
+	std::vector<std::string> &values5() const;
 
 private:
 	static std::vector<std::string> ourValues4;
 	static std::vector<std::string> ourValues5;
 	
 public:
-	AlignmentOptionEntry(ZLIntegerOption &option, bool allowUndefined);
+	AlignmentOptionEntry(ZLIntegerOption &option, const ZLResource &resource, bool allowUndefined);
 	~AlignmentOptionEntry();
 
 	const std::vector<std::string> &values() const;
@@ -83,6 +84,7 @@ public:
 	void onAccept(const std::string &value);
 
 private:
+	const ZLResource &myResource;
 	ZLIntegerOption &myOption;
 	bool myAllowUndefined;
 };

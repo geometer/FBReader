@@ -69,7 +69,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 		);
 
 		registerEntries(dialogTab,
-			KEY_ALIGNMENT, new AlignmentOptionEntry(baseStyle.AlignmentOption, false),
+			KEY_ALIGNMENT, new AlignmentOptionEntry(baseStyle.AlignmentOption, dialogTab.resource(KEY_ALIGNMENT), false),
 			KEY_DUMMY, 0,
 			name
 		);
@@ -100,7 +100,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 			);
 
 			registerEntries(dialogTab,
-				KEY_ALIGNMENT, new AlignmentOptionEntry(decoration->AlignmentOption, true),
+				KEY_ALIGNMENT, new AlignmentOptionEntry(decoration->AlignmentOption, dialogTab.resource(KEY_ALIGNMENT), true),
 				KEY_DUMMY, 0,
 				name
 			);
