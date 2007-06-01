@@ -95,7 +95,7 @@ StyleOptionsPage::StyleOptionsPage(ZLDialogContent &dialogTab, ZLPaintContext &c
 			const std::string &name = styleResource[decoration->name()].value();
 
 			registerEntry(dialogTab,
-				KEY_FONTFAMILY, new FontFamilyWithBaseOptionEntry(decoration->FontFamilyOption, context),
+				KEY_FONTFAMILY, new FontFamilyWithBaseOptionEntry(decoration->FontFamilyOption, dialogTab.resource(KEY_FONTFAMILY), context),
 				name
 			);
 

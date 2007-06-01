@@ -36,12 +36,15 @@ private:
 	static std::vector<std::string> ourAllFamilies;
 
 public:
-	FontFamilyWithBaseOptionEntry(ZLStringOption &option, const ZLPaintContext &context);
+	FontFamilyWithBaseOptionEntry(ZLStringOption &option, const ZLResource &resource, const ZLPaintContext &context);
 
 	const std::vector<std::string> &values() const;
 	const std::string &initialValue() const;
 
 	void onAccept(const std::string &value);
+
+private:
+	const ZLResource &myResource;
 };
 
 class LineSpacingOptionEntry : public ZLComboOptionEntry {
@@ -51,7 +54,7 @@ private:
 	static std::vector<std::string> ourAllValuesPlusBase;
 
 public:
-	LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase);
+	LineSpacingOptionEntry(ZLDoubleOption &option, const ZLResource &resource, bool allowBase);
 	~LineSpacingOptionEntry();
 
 	const std::vector<std::string> &values() const;
@@ -60,6 +63,7 @@ public:
 	void onAccept(const std::string &value);
 
 private:
+	const ZLResource &myResource;
 	ZLDoubleOption &myOption;
 	bool myAllowBase;
 };

@@ -24,21 +24,25 @@
 #include "TextStyleOptions.h"
 #include "TextStyle.h"
 
-static const std::string BASE_STRING = "<base>";
+static const std::string KEY_UNCHANGED = "unchanged";
+static const std::string KEY_LEFT = "left";
+static const std::string KEY_RIGHT = "right";
+static const std::string KEY_CENTER = "center";
+static const std::string KEY_JUSTIFY = "justify";
 
 std::vector<std::string> FontFamilyWithBaseOptionEntry::ourAllFamilies;
 
 std::vector<std::string> LineSpacingOptionEntry::ourAllValues;
 std::vector<std::string> LineSpacingOptionEntry::ourAllValuesPlusBase;
 
-FontFamilyWithBaseOptionEntry::FontFamilyWithBaseOptionEntry(ZLStringOption &option, const ZLPaintContext &context) : ZLFontFamilyOptionEntry(option, context) {
+FontFamilyWithBaseOptionEntry::FontFamilyWithBaseOptionEntry(ZLStringOption &option, const ZLResource &resource, const ZLPaintContext &context) : ZLFontFamilyOptionEntry(option, context), myResource(resource) {
 }
 
 const std::vector<std::string> &FontFamilyWithBaseOptionEntry::values() const {
 	if (ourAllFamilies.empty()) {
 		const std::vector<std::string> &families = ZLFontFamilyOptionEntry::values();
 		ourAllFamilies.reserve(families.size() + 1);
-		ourAllFamilies.push_back(BASE_STRING);
+		ourAllFamilies.push_back(myResource[KEY_UNCHANGED].value());
 		ourAllFamilies.insert(ourAllFamilies.end(), families.begin(), families.end());
 	}
 	return ourAllFamilies;
@@ -46,19 +50,19 @@ const std::vector<std::string> &FontFamilyWithBaseOptionEntry::values() const {
 
 const std::string &FontFamilyWithBaseOptionEntry::initialValue() const {
 	const std::string &value = ZLFontFamilyOptionEntry::initialValue();
-	return value.empty() ? BASE_STRING : value;
+	return value.empty() ? values()[0] : value;
 }
 
 void FontFamilyWithBaseOptionEntry::onAccept(const std::string &value) {
-	ZLFontFamilyOptionEntry::onAccept((value == BASE_STRING) ? std::string() : value);
+	ZLFontFamilyOptionEntry::onAccept((value == values()[0]) ? std::string() : value);
 }
 
-LineSpacingOptionEntry::LineSpacingOptionEntry(ZLDoubleOption &option, bool allowBase) : myOption(option), myAllowBase(allowBase) {
+LineSpacingOptionEntry::LineSpacingOptionEntry(ZLDoubleOption &option, const ZLResource &resource, bool allowBase) : myResource(resource), myOption(option), myAllowBase(allowBase) {
 	if (ourAllValuesPlusBase.empty()) {
 		for (int i = 5; i <= 20; ++i) {
 			ourAllValues.push_back(std::string() + (char)(i / 10 + '0') + '.' + (char)(i % 10 + '0'));
 		}
-		ourAllValuesPlusBase.push_back(BASE_STRING);
+		ourAllValuesPlusBase.push_back(myResource[KEY_UNCHANGED].value());
 		ourAllValuesPlusBase.insert(ourAllValuesPlusBase.end(), ourAllValues.begin(), ourAllValues.end());
 	}
 }
@@ -71,7 +75,7 @@ const std::vector<std::string> &LineSpacingOptionEntry::values() const { return 
 const std::string &LineSpacingOptionEntry::initialValue() const {
 	int value = (int)(10 * myOption.value() + 0.5);
 	if (value == 0) {
-		return BASE_STRING;
+		return ourAllValuesPlusBase[0];
 	}
 	for (int i = 5; i < 20; ++i) {
 		if (value <= i) {
@@ -82,7 +86,7 @@ const std::string &LineSpacingOptionEntry::initialValue() const {
 }
 
 void LineSpacingOptionEntry::onAccept(const std::string &value) {
-	if (value == BASE_STRING) {
+	if (value == ourAllValuesPlusBase[0]) {
 		myOption.setValue(0.0);
 	} else {
 		for (int i = 5; i <= 20; ++i) {
@@ -95,12 +99,6 @@ void LineSpacingOptionEntry::onAccept(const std::string &value) {
 
 std::vector<std::string> AlignmentOptionEntry::ourValues4;
 std::vector<std::string> AlignmentOptionEntry::ourValues5;
-
-static const std::string KEY_UNCHANGED = "unchanged";
-static const std::string KEY_LEFT = "left";
-static const std::string KEY_RIGHT = "right";
-static const std::string KEY_CENTER = "center";
-static const std::string KEY_JUSTIFY = "justify";
 
 std::vector<std::string> &AlignmentOptionEntry::values4() const {
 	if (ourValues4.empty()) {
