@@ -10,7 +10,7 @@
 			<node name="addBook" value="Добавить файл..."/>
 			<node name="about" value="О программе FBReader"/>
 		</node>
-		<node name="navigate" value="Перемещения">
+		<node name="navigate" value="Переход">
 			<node name="gotoStartOfDocument" value="В начало книги"/>
 			<node name="gotoStartOfSection" value="В начало раздела"/>
 			<node name="gotoEndOfSection" value="В конец раздела"/>
@@ -25,9 +25,9 @@
 			<node name="clear" value="Убрать пометку"/>
 		</node>
 		<node name="search" value="Поиск">
-			<node name="find" value="Новый поиск..."/>
-			<node name="next" value="Следующий"/>
-			<node name="previous" value="Предыдущий"/>
+			<node name="find" value="Искать..."/>
+			<node name="next" value="Искать дальше"/>
+			<node name="previous" value="Искать раньше"/>
 		</node>
 		<node name="view" value="Изображение">
 			<node name="rotate" value="Повернуть"/>
@@ -109,7 +109,7 @@
 				</node>
 				<node name="Format" value="Форматирование">
 					<node name="optionsFor" value="Настройки для"/>
-					<node name="lineSpacing" value="Плотность строк">
+					<node name="lineSpacing" value="Интервал">
 						<node name="unchanged" value="&lt;не менять&gt;"/>
 					</node>
 					<node name="firstLineIndent" value="Красная строка"/>
@@ -138,8 +138,8 @@
 					<node name="autoHyphenations" value="Переносы"/>
 				</node>
 				<node name="Rotation" value="Поворот">
-					<node name="direction" value="Куда поворачивать">
-						<node name="disabled" value="Никуда"/>
+					<node name="direction" value="Как поворачивать">
+						<node name="disabled" value="Не поворачивать вообще"/>
 						<node name="clockwise" value="На 90 градусов по часовой стрелке"/>
 						<node name="counterclockwise" value="На 90 градусов против часовой стрелки"/>
 						<node name="180" value="На 180 градусов"/>
@@ -147,7 +147,7 @@
 					</node>
 				</node>
 				<node name="Colors" value="Цвета">
-					<node name="colorFor" value="Цвет для">
+					<node name="colorFor" value="Цвет">
 						<node name="background" value="фона"/>
 						<node name="selectionBackground" value="фона пометки"/>
 						<node name="text" value="обычного текста"/>
@@ -223,7 +223,7 @@
 					<node name="file" value="Файл"/>
 					<node name="title" value="Название"/>
 					<node name="authorDisplayName" value="Имя автора"/>
-					<node name="authorSortKey" value="Для сортировки"/>
+					<node name="authorSortKey" value="Имя для сортировки"/>
 					<node name="encodingSet" value="Набор кодировок"/>
 					<node name="encoding" value="Кодировка"/>
 					<node name="lineBreaking" value="Разбиение на строки"/>

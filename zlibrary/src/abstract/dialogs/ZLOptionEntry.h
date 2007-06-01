@@ -159,9 +159,12 @@ public:
 	virtual const std::string &initialValue() const = 0;
 	virtual const std::vector<std::string> &values() const = 0;
 	virtual void onValueSelected(int index);
+	void onStringValueSelected(const char *value);
 	void onStringValueSelected(const std::string &value);
 	virtual bool useOnValueEdited() const;
+	void onValueEdited(const char *value);
 	virtual void onValueEdited(const std::string &value);
+	void onAccept(const char *value);
 	virtual void onAccept(const std::string &value) = 0;
 
 	bool isEditable() const;
