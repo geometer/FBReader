@@ -208,7 +208,7 @@ private:
 class KeyOptionView : public ZLGtkOptionView {
 
 public:
-	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myTable(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn);
 
 	void setKey(const std::string &key);
 
@@ -222,10 +222,12 @@ private:
 
 public:
 	GtkWidget *comboBox() const { return GTK_WIDGET(myComboBox); }
+	void setButtonText(const ZLResourceKey &key);
 
 private:
+	const ZLResource &myResource;
 	GtkTable *myTable;
-	GtkWidget *myKeyButton;
+	GtkButton *myKeyButton;
 	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	std::string myCurrentKey;

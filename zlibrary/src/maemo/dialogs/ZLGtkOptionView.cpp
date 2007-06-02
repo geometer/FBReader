@@ -497,14 +497,16 @@ void ColorOptionView::_onAccept() const {
 	));
 }
 
-static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer) {
-	gtk_button_set_label(GTK_BUTTON(button), "Press key to set action");
+static void key_view_focus_in_event(GtkWidget *button, GdkEventFocus*, gpointer data) {
+	static const ZLResourceKey pressKeyKey("pressKey");
+	((KeyOptionView*)data)->setButtonText(pressKeyKey);
 	gdk_keyboard_grab(button->window, true, GDK_CURRENT_TIME);
 	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(true);
 }
 
-static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer) {
-	gtk_button_set_label(GTK_BUTTON(button), "Press this button to select key");
+static void key_view_focus_out_event(GtkWidget *button, GdkEventFocus*, gpointer data) {
+	static const ZLResourceKey pressButtonKey("pressButton");
+	((KeyOptionView*)data)->setButtonText(pressButtonKey);
 	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(false);
 	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
 }
@@ -520,13 +522,20 @@ static void key_view_button_press_event(GtkWidget *button, GdkEventButton*, gpoi
 	gtk_widget_grab_focus(button);
 }
 
+KeyOptionView::KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myResource(ZLResource::resource("keyOptionView")), myTable(0), myKeyButton(0), myLabel(0), myComboBox(0) {
+}
+
+void KeyOptionView::setButtonText(const ZLResourceKey &key) {
+	gtk_button_set_label(myKeyButton, myResource[key].value().c_str());
+}
+
 void KeyOptionView::_createItem() {
-	myKeyButton = gtk_button_new();
-	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_in_event", G_CALLBACK(key_view_focus_in_event), 0);
-	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_out_event", G_CALLBACK(key_view_focus_out_event), 0);
+	myKeyButton = GTK_BUTTON(gtk_button_new());
+	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_in_event", G_CALLBACK(key_view_focus_in_event), this);
+	gtk_signal_connect(GTK_OBJECT(myKeyButton), "focus_out_event", G_CALLBACK(key_view_focus_out_event), this);
 	gtk_signal_connect(GTK_OBJECT(myKeyButton), "key_press_event", G_CALLBACK(key_view_key_press_event), this);
 	gtk_signal_connect(GTK_OBJECT(myKeyButton), "button_press_event", G_CALLBACK(key_view_button_press_event), this);
-	key_view_focus_out_event(myKeyButton, 0, 0);
+	key_view_focus_out_event(GTK_WIDGET(myKeyButton), 0, this);
 
 	myLabel = GTK_LABEL(gtk_label_new(""));
 
@@ -539,7 +548,7 @@ void KeyOptionView::_createItem() {
 	myTable = GTK_TABLE(gtk_table_new(2, 2, false));
 	gtk_table_set_col_spacings(myTable, 5);
 	gtk_table_set_row_spacings(myTable, 5);
-	gtk_table_attach_defaults(myTable, myKeyButton, 0, 2, 0, 1);
+	gtk_table_attach_defaults(myTable, GTK_WIDGET(myKeyButton), 0, 2, 0, 1);
 	gtk_table_attach_defaults(myTable, GTK_WIDGET(myLabel), 0, 1, 1, 2);
 	gtk_table_attach_defaults(myTable, GTK_WIDGET(myComboBox), 1, 2, 1, 2);
 	g_signal_connect(GTK_WIDGET(myComboBox), "changed", G_CALLBACK(_onValueChanged), this);
@@ -559,7 +568,7 @@ void KeyOptionView::onValueChanged() {
 void KeyOptionView::setKey(const std::string &key) {
 	myCurrentKey = key;
 	if (!key.empty()) {
-		gtk_label_set_text(myLabel, (ZLResource::resource("keyOptionView")["actionFor"].value() + " " + key).c_str());
+		gtk_label_set_text(myLabel, (myResource["actionFor"].value() + " " + key).c_str());
 		gtk_widget_show(GTK_WIDGET(myLabel));
 		gtk_combo_box_set_active(myComboBox, ((ZLKeyOptionEntry*)myOption)->actionIndex(key));
 		gtk_widget_show(GTK_WIDGET(myComboBox));
@@ -580,7 +589,7 @@ void KeyOptionView::reset() {
 
 void KeyOptionView::_show() {
 	gtk_widget_show(GTK_WIDGET(myTable));
-	gtk_widget_show(myKeyButton);
+	gtk_widget_show(GTK_WIDGET(myKeyButton));
 	if (!myCurrentKey.empty()) {
 		gtk_widget_show(GTK_WIDGET(myLabel));
 		gtk_widget_show(GTK_WIDGET(myComboBox));
@@ -598,5 +607,3 @@ void KeyOptionView::_hide() {
 void KeyOptionView::_onAccept() const {
 	((ZLKeyOptionEntry*)myOption)->onAccept();
 }
-
-// vim:ts=2:sw=2:noet

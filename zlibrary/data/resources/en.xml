@@ -35,5 +35,7 @@
 	</node>
 	<node name="keyOptionView">
 		<node name="actionFor" value="Action for Key"/>
+		<node name="pressKey" value="Press Key to Set Action"/>
+		<node name="pressButton" value="Press This Button to Select Key"/>
 	</node>
 </resources>
