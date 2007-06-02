@@ -459,6 +459,7 @@ void KeyOptionView::_show() {
 void KeyOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myTable));
 	myCurrentKey.erase();
+	gtk_entry_set_text(myKeyEntry, "");
 }
 
 void KeyOptionView::_onAccept() const {

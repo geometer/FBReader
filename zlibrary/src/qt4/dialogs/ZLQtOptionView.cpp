@@ -290,7 +290,7 @@ KeyLineEdit::KeyLineEdit(KeyOptionView &keyView, QWidget *parent) : QLineEdit(pa
 
 void KeyLineEdit::keyPressEvent(QKeyEvent *keyEvent) {
 	std::string keyText = ZLQtKeyUtil::keyName(keyEvent);
-	setText(::qtString(keyText));
+	setText(keyText.c_str());
 	if (!keyText.empty()) {
 		myKeyView.myCurrentKey = keyText;
 		myKeyView.myComboBox->setCurrentIndex(((ZLKeyOptionEntry*)myKeyView.myOption)->actionIndex(keyText));
@@ -311,7 +311,6 @@ void KeyOptionView::_createItem() {
 	QGridLayout *layout = new QGridLayout(widget);
 
 	QLabel *label = new QLabel(widget);
-	label->setTextFormat(Qt::PlainText);
 	label->setText(::qtString(ZLResource::resource("keyOptionView")["actionFor"].value()));
 	layout->addWidget(label, 0, 0);
 
@@ -354,6 +353,7 @@ void KeyOptionView::_hide() {
 	ZLQtOptionView::_hide();
 	myComboBox->hide();
 	myCurrentKey.erase();
+	myKeyEditor->setText("");
 }
 
 void KeyOptionView::_onAccept() const {
