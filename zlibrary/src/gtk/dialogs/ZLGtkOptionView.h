@@ -21,16 +21,7 @@
 #ifndef __ZLGTKOPTIONVIEW_H__
 #define __ZLGTKOPTIONVIEW_H__
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtklabel.h>
-#include <gtk/gtkspinbutton.h>
-#include <gtk/gtkrange.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtkbox.h>
-#include <gtk/gtkcombobox.h>
-#include <gtk/gtkentry.h>
-#include <gtk/gtkcolorsel.h>
+#include <gtk/gtk.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -173,7 +164,7 @@ private:
 class ColorOptionView : public ZLGtkOptionView {
 
 public:
-	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myWidget(0) {}
+	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myColorSelection(0) {}
 
 private:
 	void _createItem();
@@ -183,13 +174,13 @@ private:
 	void reset();
 
 private:
-	GtkColorSelection *myWidget;
+	GtkColorSelection *myColorSelection;
 };
 
 class KeyOptionView : public ZLGtkOptionView {
 
 public:
-	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myTable(0), myKeyEntry(0), myLabel(0), myComboBox(0) {}
 
 	void setKey(const std::string &key);
 
@@ -202,7 +193,8 @@ private:
 	void reset();
 
 private:
-	GtkWidget *myWidget, *myKeyButton;
+	GtkTable *myTable;
+	GtkEntry *myKeyEntry;
 	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	std::string myCurrentKey;

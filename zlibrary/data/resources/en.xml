@@ -33,4 +33,7 @@
 		<node name="off" value="off"/>
 		<node name="unchanged" value="unchanged"/>
 	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="Action for Key"/>
+	</node>
 </resources>

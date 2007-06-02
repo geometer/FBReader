@@ -33,4 +33,7 @@
 		<node name="off" value="выключить"/>
 		<node name="unchanged" value="не менять"/>
 	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="Действие для"/>
+	</node>
 </resources>

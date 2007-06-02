@@ -349,7 +349,7 @@ KeyOptionView::KeyOptionView(const std::string &name, const std::string &tooltip
 	myHBox->setSpacing(8);
 	myHBox->setHomogeneous(true);
 	myHBox->setAlignment(W32HBox::FILL);
-	myHBox->addElement(new W32Label("Action For Key", W32Label::ALIGN_RIGHT));
+	myHBox->addElement(new W32Label(ZLResource::resource("keyOptionView")["actionFor"].value(), W32Label::ALIGN_RIGHT));
 	myKeyNameEditor = new W32KeyNameEditor();
 	myKeyNameEditor->addListener(this);
 	myHBox->addElement(myKeyNameEditor);

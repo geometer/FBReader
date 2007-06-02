@@ -21,13 +21,7 @@
 #ifndef __ZLGTKOPTIONVIEW_H__
 #define __ZLGTKOPTIONVIEW_H__
 
-#include <gtk/gtkwidget.h>
-#include <gtk/gtkrange.h>
-#include <gtk/gtkframe.h>
-#include <gtk/gtkradiobutton.h>
-#include <gtk/gtkbox.h>
-#include <gtk/gtkcombobox.h>
-#include <gtk/gtkentry.h>
+#include <gtk/gtk.h>
 
 #include "../../abstract/dialogs/ZLOptionsDialog.h"
 #include "../../abstract/dialogs/ZLOptionEntry.h"
@@ -85,7 +79,7 @@ private:
 	void onValueChanged();
 
 private:
-	GtkWidget *myCheckBox;
+	GtkCheckButton *myCheckBox;
 };
 
 class Boolean3OptionView : public ZLGtkOptionView {
@@ -126,14 +120,14 @@ private:
 	void onValueChanged();
 
 private:
-	GtkWidget *myLabel;
+	GtkLabel *myLabel;
 	GtkEntry *myLineEdit;
 };
 
 class SpinOptionView : public ZLGtkOptionView {
 
 public:
-	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), mySpinBox(0) {}
 
 protected:
 	void _createItem();
@@ -142,7 +136,8 @@ protected:
 	void _onAccept() const;
 
 private:
-	GtkWidget *myLabel, *mySpinBox;
+	GtkLabel *myLabel;
+	GtkSpinButton *mySpinBox;
 };
 
 class ComboOptionView : public ZLGtkOptionView {
@@ -160,7 +155,7 @@ private:
 	void onValueChanged();
 	
 private:
-	GtkWidget *myLabel;
+	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	int mySelectedIndex;
 	int myListSize;
@@ -190,7 +185,7 @@ private:
 class KeyOptionView : public ZLGtkOptionView {
 
 public:
-	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myWidget(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myTable(0), myKeyButton(0), myLabel(0), myComboBox(0) {}
 
 	void setKey(const std::string &key);
 
@@ -203,7 +198,9 @@ private:
 	void reset();
 
 private:
-	GtkWidget *myWidget, *myKeyButton, *myLabel;
+	GtkTable *myTable;
+	GtkButton *myKeyButton;
+	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	std::string myCurrentKey;
 };

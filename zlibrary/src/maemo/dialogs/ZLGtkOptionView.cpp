@@ -559,7 +559,7 @@ void KeyOptionView::onValueChanged() {
 void KeyOptionView::setKey(const std::string &key) {
 	myCurrentKey = key;
 	if (!key.empty()) {
-		gtk_label_set_text(myLabel, ("Action For " + key).c_str());
+		gtk_label_set_text(myLabel, (ZLResource::resource("keyOptionView")["actionFor"].value() + " " + key).c_str());
 		gtk_widget_show(GTK_WIDGET(myLabel));
 		gtk_combo_box_set_active(myComboBox, ((ZLKeyOptionEntry*)myOption)->actionIndex(key));
 		gtk_widget_show(GTK_WIDGET(myComboBox));

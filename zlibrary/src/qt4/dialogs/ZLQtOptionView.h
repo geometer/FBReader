@@ -163,7 +163,7 @@ class KeyOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myComboBox(0), myKeyEditor(0) {}
 
 private:
 	void _createItem();
@@ -176,11 +176,11 @@ private Q_SLOTS:
 	void onValueChanged(int);
 
 private:
-	QLabel *myLabel;
 	QComboBox *myComboBox;
+	QLineEdit *myKeyEditor;
 	std::string myCurrentKey;
 
-friend class KeyButton;
+friend class KeyLineEdit;
 };
 
 class ColorOptionView : public QObject, public ZLQtOptionView {
