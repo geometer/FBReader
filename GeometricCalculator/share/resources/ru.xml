@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="koi8-r"?>
 <resources>
 	<node name="menu">
 		<node name="newScene" value="New Empty Scene"/>
@@ -43,45 +43,45 @@
 			</node>
 		</node>
 		<node name="sceneInfoDialog">
-			<node name="title" value="GeometricCalculator - Scene Info"/>
+			<node name="title" value="GeometricCalculator - информация о сцене"/>
 			<node name="tab">
-				<node name="Info" value="Info">
-					<node name="name" value="Name"/>
-					<node name="objectNumber" value="Object Number"/>
-					<node name="visibleObjectNumber" value="Visible Object Number"/>
+				<node name="Info" value="Общая информация">
+					<node name="name" value="Название"/>
+					<node name="objectNumber" value="Количество объектов"/>
+					<node name="visibleObjectNumber" value="Из них видимых"/>
 				</node>
-				<node name="Description" value="Description"/>
+				<node name="Description" value="Описание"/>
 			</node>
 		</node>
 		<node name="openSceneDialog">
-			<node name="title" value="Open Scene"/>
+			<node name="title" value="Чтение сцены"/>
 		</node>
 		<node name="saveSceneDialog">
-			<node name="title" value="Save Scene"/>
+			<node name="title" value="Сохранение сцены"/>
 		</node>
 		<node name="removeScenesDialog">
-			<node name="title" value="Remove Scenes"/>
+			<node name="title" value="Удаление сцен"/>
 		</node>
 		<node name="pointDialog">
-			<node name="title" value="Point">
-				<node name="name" value="Name"/>
+			<node name="title" value="Точка">
+				<node name="name" value="Название"/>
 			</node>
 		</node>
 		<node name="removeSceneBox">
-			<node name="title" value="Remove Scene"/>
-			<node name="message" value="Remove Scene &quot;%s&quot;?"/>
+			<node name="title" value="Удаление сцены"/>
+			<node name="message" value="Удалить сцену &quot;%s&quot;?"/>
 		</node>
 		<node name="cannotRemoveSceneBox">
-			<node name="title" value="Remove Scene"/>
-			<node name="message" value="Couldn't Remove Scene"/>
+			<node name="title" value="Удаление сцены"/>
+			<node name="message" value="Не удалось удалить сцену"/>
 		</node>
 		<node name="unsavedSceneBox">
-			<node name="title" value="Unsaved Scene"/>
-			<node name="message" value="Save current scene?"/>
+			<node name="title" value="Несохраненная сцена"/>
+			<node name="message" value="Сохранить сцену?"/>
 		</node>
 		<node name="overwriteSceneBox">
-			<node name="title" value="Save Scene"/>
-			<node name="message" value="Scene &quot;%s&quot; already exists. Overwrite?"/>
+			<node name="title" value="Сохранение сцены"/>
+			<node name="message" value="Сцена с именем&#13;&quot;%s&quot;&#13;уже существует. Переписывать?"/>
 		</node>
 		<node name="waitMessage">
 			<node name="savingConfig" value="Saving config..."/>

@@ -77,9 +77,9 @@ void ShowInfoDialogAction::createInfoTab(ZLOptionsDialog &dialog) {
 	Document &document = myCalculator.document();
 	const std::list<ObjectPtr> &objects = document.scene()->objects();
 
-	infoTab.addOption("Name", "", new SceneNameEntry(document));
-	infoTab.addOption("Object Number", "", new ZLStringInfoEntry(ObjectUtil::orderedClosure(objects).size()));
-	infoTab.addOption("Visible Object Number", "", new ZLStringInfoEntry(objects.size()));
+	infoTab.addOption(ZLResourceKey("name"), new SceneNameEntry(document));
+	infoTab.addOption(ZLResourceKey("objectNumber"), new ZLStringInfoEntry(ObjectUtil::orderedClosure(objects).size()));
+	infoTab.addOption(ZLResourceKey("visibleObjectNumber"), new ZLStringInfoEntry(objects.size()));
 }
 
 class DescriptionEntry : public ZLMultilineOptionEntry {
