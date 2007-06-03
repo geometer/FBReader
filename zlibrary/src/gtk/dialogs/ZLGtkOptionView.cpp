@@ -377,14 +377,16 @@ void ColorOptionView::_onAccept() const {
 	((ZLColorOptionEntry*)myOption)->onAccept(convertColor(gdkColor));
 }
 
-static void key_view_focus_in_event(GtkWidget *entry, GdkEventFocus*, gpointer) {
+static bool key_view_focus_in_event(GtkWidget *entry, GdkEventFocus*, gpointer) {
 	gdk_keyboard_grab(entry->window, true, GDK_CURRENT_TIME);
 	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(true);
+	return false;
 }
 
-static void key_view_focus_out_event(GtkWidget*, GdkEventFocus*, gpointer) {
+static bool key_view_focus_out_event(GtkWidget*, GdkEventFocus*, gpointer) {
 	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(false);
 	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
+	return false;
 }
 
 static bool key_view_key_press_event(GtkWidget *entry, GdkEventKey *event, gpointer data) {
