@@ -343,45 +343,37 @@ void MultilineOptionView::onValueEdited() {
 	}
 }
 
-class KeyButton : public QPushButton {
+class KeyLineEdit : public QLineEdit {
 
 public:
-	KeyButton(KeyOptionView &keyView);
+	KeyLineEdit(KeyOptionView &keyView);
 
 protected:
 	void focusInEvent(QFocusEvent*);
 	void focusOutEvent(QFocusEvent*);
-	void mousePressEvent(QMouseEvent *);
 	void keyPressEvent(QKeyEvent *keyEvent);
 
 private:
 	KeyOptionView &myKeyView;
 };
 
-KeyButton::KeyButton(KeyOptionView &keyView) : QPushButton(keyView.myWidget), myKeyView(keyView) {
+KeyLineEdit::KeyLineEdit(KeyOptionView &keyView) : QLineEdit(keyView.myWidget), myKeyView(keyView) {
 	focusOutEvent(0);
 }
 
-void KeyButton::focusInEvent(QFocusEvent*) {
-	setText("Press key to set action");
+void KeyLineEdit::focusInEvent(QFocusEvent*) {
 	grabKeyboard();
 }
 
-void KeyButton::focusOutEvent(QFocusEvent*) {
+void KeyLineEdit::focusOutEvent(QFocusEvent*) {
 	releaseKeyboard();
-	setText("Press this button to select key");
 }
 
-void KeyButton::mousePressEvent(QMouseEvent*) {
-	setFocus();
-}
-
-void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
+void KeyLineEdit::keyPressEvent(QKeyEvent *keyEvent) {
 	std::string keyText = ZLQtKeyUtil::keyName(keyEvent);
+	setText(keyText.c_str());
 	if (!keyText.empty()) {
 		myKeyView.myCurrentKey = keyText;
-		myKeyView.myLabel->setText("Action For " + ::qtString(keyText));
-		myKeyView.myLabel->show();
 		myKeyView.myComboBox->setCurrentItem(((ZLKeyOptionEntry*)myKeyView.myOption)->actionIndex(keyText));
 		myKeyView.myComboBox->show();
 	}
@@ -390,18 +382,21 @@ void KeyButton::keyPressEvent(QKeyEvent *keyEvent) {
 void KeyOptionView::_createItem() {
 	myWidget = new QWidget(myTab->widget());
 	QGridLayout *layout = new QGridLayout(myWidget, 2, 2, 0, 10);
-	myKeyButton = new KeyButton(*this);
-	layout->addMultiCellWidget(myKeyButton, 0, 0, 0, 1);
+
 	myLabel = new QLabel(myWidget);
-	myLabel->setTextFormat(QObject::PlainText);
-	layout->addWidget(myLabel, 1, 0);
+	myLabel->setText(::qtString(ZLResource::resource("keyOptionView")["actionFor"].value()));
+	layout->addWidget(myLabel, 0, 0);
+
+	myKeyEditor = new KeyLineEdit(*this);
+	layout->addWidget(myKeyEditor, 0, 1);
+
 	myComboBox = new QComboBox(myWidget);
 	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
 		myComboBox->insertItem(::qtString(*it));
 	}
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChanged(int)));
-	layout->addWidget(myComboBox, 1, 1);
+	layout->addMultiCellWidget(myComboBox, 1, 1, 0, 1);
 	myTab->addItem(myWidget, myRow, myFromColumn, myToColumn);
 }
 
@@ -410,28 +405,28 @@ void KeyOptionView::reset() {
 		return;
 	}
 	myCurrentKey.erase();
-	myLabel->hide();
+	myKeyEditor->setText("");
 	myComboBox->hide();
 }
 
 void KeyOptionView::_show() {
 	myWidget->show();
-	myKeyButton->show();
+	myLabel->show();
+	myKeyEditor->show();
 	if (!myCurrentKey.empty()) {
-		myLabel->show();
 		myComboBox->show();
 	} else {
-		myLabel->hide();
 		myComboBox->hide();
 	}
 }
 
 void KeyOptionView::_hide() {
-	myKeyButton->hide();
+	myKeyEditor->hide();
 	myWidget->hide();
 	myLabel->hide();
 	myComboBox->hide();
 	myCurrentKey.erase();
+	myKeyEditor->setText("");
 }
 
 void KeyOptionView::_onAccept() const {
