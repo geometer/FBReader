@@ -440,20 +440,26 @@ CHMFileInfo::FileNames CHMFileInfo::sectionNames(shared_ptr<ZLInputStream> base)
 		int indexIndex = -1;
 		for (int i = 0; i < 12; ++i) {
 			std::string argument = readNTString(*stringsStream);
-			if ((tocIndex == -1) && ZLStringUtil::stringEndsWith(argument, ".hhc")) {
-				tocIndex = i;
-				names.TOC = argument;
+			if (myRecords.find(argument) == myRecords.end()) {
+				continue;
 			}
-			if ((indexIndex == -1) && ZLStringUtil::stringEndsWith(argument, ".hhk")) {
-				indexIndex = i;
+			if ((tocIndex == -1) && ZLStringUtil::stringEndsWith(argument, ".hhc")) {
+				tocIndex = fileNames.size();
+				names.TOC = argument;
+			} else if ((indexIndex == -1) && ZLStringUtil::stringEndsWith(argument, ".hhk")) {
+				indexIndex = fileNames.size();
 				names.Index = argument;
 			}
 			fileNames.push_back(argument);
 		}
-		int startIndex = std::max(3, std::max(tocIndex, indexIndex) + 1);
+		size_t startIndex = std::max(3, std::max(tocIndex, indexIndex) + 1);
 		if (startIndex < 11) {
-			names.Start = fileNames[startIndex];
-			names.Home = fileNames[startIndex + 1];
+			if (startIndex < fileNames.size()) {
+				names.Start = fileNames[startIndex];
+			}
+			if (startIndex + 1 < fileNames.size()) {
+				names.Home = fileNames[startIndex + 1];
+			}
 		}
 		stringsStream->close();
 	}
