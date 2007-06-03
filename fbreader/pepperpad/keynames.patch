@@ -8,8 +8,8 @@
 -	<key code="0xFFBF" name="&lt;F2&gt;"/>
 -	<key code="0xFFC0" name="&lt;F3&gt;"/>
 -	<key code="0xFFC1" name="&lt;F4&gt;"/>
-+	<key code="0xFFBE" name="&lt;ScrollLeft&gt;"/>
-+	<key code="0xFFBF" name="&lt;ScrollRight&gt;"/>
++	<key code="0xFFBE" name="&lt;Scroll Backward&gt;"/>
++	<key code="0xFFBF" name="&lt;Scroll Forward&gt;"/>
 +	<key code="0xFFC0" name="&lt;Play/Stop&gt;"/>
 +	<key code="0xFFC1" name="&lt;Pause&gt;"/>
  	<key code="0xFFC2" name="&lt;F5&gt;"/>
