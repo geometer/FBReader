@@ -23,6 +23,7 @@ Section "FBReader"
 	File ../../dlls/*.*
 	File /r share
   Delete "$INSTDIR\libiconv-2.dll"
+  Delete "$INSTDIR\share\FBReader\help\MiniHelp.fb2"
 
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "DisplayName" "FBReader for Windows XP"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "UninstallString" '"$INSTDIR\uninstall.exe"'

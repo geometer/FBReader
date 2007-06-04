@@ -265,6 +265,10 @@
 			<node name="title" value="Error"/>
 			<node name="message" value="Couldn't open:&#13;%s"/>
 		</node>
+		<node name="noHelpBox">
+			<node name="title" value="Error"/>
+			<node name="message" value="Help file not found, sorry"/>
+		</node>
 		<node name="waitMessage">
 			<node name="savingConfig" value="Saving config..."/>
 			<node name="loadingBook" value="Loading book. Please, wait..."/>

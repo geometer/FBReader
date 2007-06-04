@@ -21,6 +21,7 @@
 
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
+#include <ZLibrary.h>
 
 #include "FBReader.h"
 #include "FBReaderActions.h"
@@ -51,8 +52,17 @@ ShowHelpAction::ShowHelpAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void ShowHelpAction::run() {
-	fbreader().openFile(fbreader().helpFileName());
-	fbreader().setMode(FBReader::BOOK_TEXT_MODE);
+	BookDescriptionPtr description = BookDescription::getDescription(fbreader().helpFileName(ZLibrary::Language()));
+	if (description.isNull()) {
+		description = BookDescription::getDescription(fbreader().helpFileName("en"));
+	}
+	if (!description.isNull()) {
+		fbreader().openBook(description);
+		fbreader().setMode(FBReader::BOOK_TEXT_MODE);
+		fbreader().refreshWindow();
+	} else {
+		ZLDialogManager::instance().errorBox(ZLResourceKey("noHelpBox"));
+	}
 }
 
 ShowRecentBooksListAction::ShowRecentBooksListAction(FBReader &fbreader) : FBAction(fbreader) {

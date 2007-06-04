@@ -35,7 +35,8 @@ do_install:
 	@install -d $(FBSHAREDIR)
 	@install -m 0644 $(wildcard share/FBReader/hyphenationPatterns.zip) $(FBSHAREDIR)
 	@install -d $(FBSHAREDIR)/help
-	@install -m 0644 data/help/MiniHelp.$(VARIANT).fb2 $(FBSHAREDIR)/help/MiniHelp.fb2
+	@install -m 0644 data/help/MiniHelp.$(VARIANT).en.fb2 $(FBSHAREDIR)/help/MiniHelp.en.fb2
+	@install -m 0644 data/help/MiniHelp.$(VARIANT).ru.fb2 $(FBSHAREDIR)/help/MiniHelp.ru.fb2
 	@install -d $(FBSHAREDIR)/formats/html
 	@install -m 0644 share/FBReader/formats/html/html.ent $(FBSHAREDIR)/formats/html
 	@install -d $(FBSHAREDIR)/formats/xhtml

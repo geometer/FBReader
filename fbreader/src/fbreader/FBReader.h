@@ -114,7 +114,7 @@ private:
 	void restorePreviousMode();
 
 	bool closeView();
-	std::string helpFileName() const;
+	std::string helpFileName(const std::string &language) const;
 	void openFile(const std::string &fileName);
 
 public:

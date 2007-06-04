@@ -265,6 +265,10 @@
 			<node name="title" value="Ошибка"/>
 			<node name="message" value="Не могу открыть:&#10;%s"/>
 		</node>
+		<node name="noHelpBox">
+			<node name="title" value="Ошибка"/>
+			<node name="message" value="Извините, нет файла с информацией"/>
+		</node>
 		<node name="waitMessage">
 			<node name="savingConfig" value="Сохранение настроек..."/>
 			<node name="loadingBook" value="Загрузка книги. Подождите, пожалуйста..."/>

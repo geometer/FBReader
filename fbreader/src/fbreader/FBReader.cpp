@@ -249,12 +249,14 @@ void FBReader::initWindow() {
 		description = createDescription(myBookToOpen);
 	}
 	if (description.isNull()) {
-		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, helpFileName());
+		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, "");
 		description = BookDescription::getDescription(bookName.value());
-
-		if (description.isNull()) {
-			description = BookDescription::getDescription(helpFileName());
-		}
+	}
+	if (description.isNull()) {
+		description = BookDescription::getDescription(helpFileName(ZLibrary::Language()));
+	}
+	if (description.isNull()) {
+		description = BookDescription::getDescription(helpFileName("en"));
 	}
 	openBook(description);
 	refreshWindow();
@@ -476,8 +478,8 @@ bool FBReader::closeView() {
 	}
 }
 
-std::string FBReader::helpFileName() const {
-	return ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp.fb2";
+std::string FBReader::helpFileName(const std::string &language) const {
+	return ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp." + language + ".fb2";
 }
 
 void FBReader::openFile(const std::string &fileName) {
