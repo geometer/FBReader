@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="koi8-r"?>
 <resources>
 	<node name="menu">
-		<node name="newScene" value="New Empty Scene"/>
-		<node name="openScene" value="Open Scene..."/>
-		<node name="saveScene" value="Save Scene..."/>
-		<node name="removeScenes" value="Remove Scenes..."/>
-		<node name="view" value ="View">
-			<node name="zoomIn" value="Zoom In"/>
+		<node name="newScene" value="Начать с пустой сцены"/>
+		<node name="openScene" value="Открыть сцену..."/>
+		<node name="saveScene" value="Сохранить сцену..."/>
+		<node name="removeScenes" value="Удалить сцены..."/>
+		<node name="view" value ="Масштаб">
+			<node name="zoomIn" value="Увеличить"/>
 			<node name="zoomNormal" value="100%"/>
-			<node name="zoomOut" value="Zoom Out"/>
+			<node name="zoomOut" value="Уменьшить"/>
 		</node>
-		<node name="sceneInfo" value="Scene Info..."/>
-		<node name="settings" value="Preferences..."/>
-		<node name="close" value="Close"/>
+		<node name="sceneInfo" value="Информация о сцене..."/>
+		<node name="settings" value="Настройки..."/>
+		<node name="close" value="Выход"/>
 	</node>
 	<node name="toolbar">
-		<node name="arrow" value="Edit Object Properties"/>
-		<node name="point" value="New Point"/>
-		<node name="pointontheline" value="New Point On A Line"/>
-		<node name="middlepoint" value="New Middle Point"/>
-		<node name="line" value="New Line"/>
-		<node name="halfline" value="New Halfline"/>
-		<node name="segment" value="New Segment"/>
-		<node name="perpendicular" value="New Perpendicular"/>
-		<node name="copyobject" value="Copy Object"/>
-		<node name="circle" value="New Circle"/>
-		<node name="ruler" value="New Ruler"/>
-		<node name="movepoint" value="Move Point"/>
-		<node name="delete" value="Delete Object"/>
-		<node name="undo" value="Undo"/>
-		<node name="redo" value="Redo"/>
+		<node name="arrow" value="Редактировать объект"/>
+		<node name="point" value="Поставить точку"/>
+		<node name="pointontheline" value="Поставить точку на линии"/>
+		<node name="middlepoint" value="Построить середину отрезка"/>
+		<node name="line" value="Провести прямую"/>
+		<node name="halfline" value="Провести луч"/>
+		<node name="segment" value="Провести отрезок"/>
+		<node name="perpendicular" value="Построить перпендикуляр к прямой"/>
+		<node name="copyobject" value="Скопировать линию"/>
+		<node name="circle" value="Нарисовать окружность"/>
+		<node name="ruler" value="Создать линейку"/>
+		<node name="movepoint" value="Двигать точку"/>
+		<node name="delete" value="Стереть объект"/>
+		<node name="undo" value="Отменить действие"/>
+		<node name="redo" value="Повторить отмененное действие"/>
 	</node>
 	<node name="dialog">
 		<node name="optionsDialog">
 			<node name="title" value="GeometricCalculator - Настройки"/>
 			<node name="tab">
 				<node name="drawing" value="Рисование">
-					<node name="connectPointsOnly" value="Connect New Lines to Existing Points Only"/>
-					<node name="drawSegmentForMiddlePoint" value="Draw Segment for Middle Point"/>
+					<node name="connectPointsOnly" value="Проводить линии только через существующие точки"/>
+					<node name="drawSegmentForMiddlePoint" value="Рисовать отрезок при построении его середины"/>
 				</node>
 				<node name="points" value="Точки">
 					<node name="radius" value="Радиус точки"/>
@@ -117,7 +117,11 @@
 			<node name="message" value="Сцена с именем&#13;&quot;%s&quot;&#13;уже существует. Переписывать?"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Saving config..."/>
+			<node name="savingConfig" value="Сохранение настроек..."/>
 		</node>
+	</node>
+	<node name="handler">
+		<node name="allScenes" value="Все сцены"/>
+		<node name="userCreated" value="Созданные пользователем"/>
 	</node>
 </resources>

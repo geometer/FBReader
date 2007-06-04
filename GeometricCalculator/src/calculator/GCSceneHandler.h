@@ -28,9 +28,6 @@ class ZLDir;
 class GCSceneHandler {
 
 protected:
-	static const std::string AllScenesFolderName;
-	static const std::string UserFolderName;
-
 	static shared_ptr<ZLDir> SamplesDirectory();
 	static const std::string UserDirectoryName();
 	static shared_ptr<ZLDir> UserDirectory(bool create);
@@ -43,6 +40,10 @@ protected:
 	void collectScenes(shared_ptr<ZLDir> dir) const;
 	void collectSceneArchives(shared_ptr<ZLDir> dir) const;
 	const std::vector<ZLTreeNodePtr> &subnodes() const;
+
+protected:
+	const std::string AllScenesFolderName;
+	const std::string UserFolderName;
 
 private:
 	mutable std::vector<ZLTreeNodePtr> mySubnodes;

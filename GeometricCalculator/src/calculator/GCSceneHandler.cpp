@@ -24,14 +24,12 @@
 #include <ZLDir.h>
 #include <ZLApplication.h>
 #include <ZLibrary.h>
+#include <ZLResource.h>
 
 #include "GCSceneHandler.h"
 #include "GeometricCalculator.h"
 #include "../io/SceneNameReader.h"
 #include "../io/SceneSetNameReader.h"
-
-const std::string GCSceneHandler::AllScenesFolderName = "All Scenes";
-const std::string GCSceneHandler::UserFolderName = "User Created";
 
 shared_ptr<ZLDir> GCSceneHandler::SamplesDirectory() {
 	return ZLFile(ZLApplication::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "samples").directory();
@@ -49,7 +47,11 @@ shared_ptr<ZLDir> GCSceneHandler::UserDirectory(bool create) {
 	return ZLFile(UserDirectoryName()).directory(create);
 }
 
-GCSceneHandler::GCSceneHandler() {
+static const ZLResourceKey handlerKey("handler");
+static const ZLResourceKey allScenesKey("allScenes");
+static const ZLResourceKey userCreatedKey("userCreated");
+
+GCSceneHandler::GCSceneHandler() : AllScenesFolderName(ZLResource::resource(handlerKey)[allScenesKey].value()), UserFolderName(ZLResource::resource(handlerKey)[userCreatedKey].value()) {
 }
 
 void GCSceneHandler::addFolderSubnode(const std::string &id, const std::string &displayName) const {

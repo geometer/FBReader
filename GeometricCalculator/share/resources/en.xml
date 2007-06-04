@@ -17,7 +17,7 @@
 	<node name="toolbar">
 		<node name="arrow" value="Edit Object Properties"/>
 		<node name="point" value="New Point"/>
-		<node name="pointontheline" value="New Point On A Line"/>
+		<node name="pointontheline" value="New Point on A Line"/>
 		<node name="middlepoint" value="New Middle Point"/>
 		<node name="line" value="New Line"/>
 		<node name="halfline" value="New Halfline"/>
@@ -119,5 +119,9 @@
 		<node name="waitMessage">
 			<node name="savingConfig" value="Saving config..."/>
 		</node>
+	</node>
+	<node name="handler">
+		<node name="allScenes" value="All Scenes"/>
+		<node name="userCreated" value="User Created"/>
 	</node>
 </resources>
