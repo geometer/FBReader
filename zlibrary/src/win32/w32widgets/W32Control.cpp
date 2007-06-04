@@ -444,6 +444,10 @@ W32KeyNameEditor::~W32KeyNameEditor() {
 	}
 }
 
+void W32KeyNameEditor::clear() {
+	setText(std::string());
+}
+
 void W32KeyNameEditor::setText(const std::string &text) {
 	if (text != this->text()) {
 		::createNTWCHARString(myBuffer, text);

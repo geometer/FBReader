@@ -71,8 +71,10 @@ public:
 	void onAccept();
 	int actionIndex(const std::string &key);
 	void onValueChanged(const std::string &key, int index);
+	void onKeySelected(const std::string &key);
 
 	void setOrientation(ZLViewWidget::Angle);
+	void setExitOnCancelEntry(ZLOptionEntry *exitOnCancelEntry);
 
 private:
 	void addAction(int code, const ZLResourceKey &key);
@@ -86,6 +88,7 @@ private:
 	SingleKeyOptionEntry myEntry180;
 	SingleKeyOptionEntry myEntry270;
 	SingleKeyOptionEntry *myCurrentEntry;
+	ZLOptionEntry *myExitOnCancelEntry;
 };
 
 void MultiKeyOptionEntry::addAction(int code, const ZLResourceKey &key) {
@@ -100,7 +103,8 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &f
 	myEntry90(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES90)),
 	myEntry180(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES180)),
 	myEntry270(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES270)),
-	myCurrentEntry(&myEntry0) {
+	myCurrentEntry(&myEntry0),
+	myExitOnCancelEntry(0) {
 	addAction(NO_ACTION, ZLResourceKey("none"));
 
 	// switch view
@@ -181,6 +185,19 @@ int MultiKeyOptionEntry::actionIndex(const std::string &key) {
 
 void MultiKeyOptionEntry::onValueChanged(const std::string &key, int index) {
 	myCurrentEntry->onValueChanged(key, index);
+	if (myExitOnCancelEntry != 0) {
+		myExitOnCancelEntry->setVisible(myBimap.codeByIndex(index) == ACTION_CANCEL);
+	}
+}
+
+void MultiKeyOptionEntry::setExitOnCancelEntry(ZLOptionEntry *exitOnCancelEntry) {
+	myExitOnCancelEntry = exitOnCancelEntry;
+}
+
+void MultiKeyOptionEntry::onKeySelected(const std::string &key) {
+	if (myExitOnCancelEntry != 0) {
+		myExitOnCancelEntry->setVisible(myBimap.codeByIndex(myCurrentEntry->actionIndex(key)) == ACTION_CANCEL);
+	}
 }
 
 class OrientationEntry : public ZLComboOptionEntry {
@@ -258,6 +275,9 @@ KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab)
 	dialogTab.addOption(ZLResourceKey("separate"), useSeparateBindingsEntry);
 	dialogTab.addOption(ZLResourceKey("orientation"), orientationEntry);
 	dialogTab.addOption("", "", keyEntry);
-	dialogTab.addOption(ZLResourceKey("quitOnCancel"), fbreader.QuitOnCancelOption);
+	ZLOptionEntry *exitOnCancelEntry = new ZLSimpleBooleanOptionEntry(fbreader.QuitOnCancelOption);
+	keyEntry->setExitOnCancelEntry(exitOnCancelEntry);
+	dialogTab.addOption(ZLResourceKey("quitOnCancel"), exitOnCancelEntry);
+	exitOnCancelEntry->setVisible(false);
 	useSeparateBindingsEntry->onStateChanged(useSeparateBindingsEntry->initialState());
 }

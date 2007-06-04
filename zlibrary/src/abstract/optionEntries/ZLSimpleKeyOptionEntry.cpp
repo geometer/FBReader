@@ -57,3 +57,6 @@ int ZLSimpleKeyOptionEntry::actionIndex(const std::string &key) {
 void ZLSimpleKeyOptionEntry::onValueChanged(const std::string &key, int index) {
 	myChangedCodes[key] = codeIndexBimap().codeByIndex(index);
 }
+
+void ZLSimpleKeyOptionEntry::onKeySelected(const std::string&) {
+}

@@ -241,6 +241,7 @@ public:
 	void setEditable(bool editable);
 
 	std::string text() const;
+	void clear();
 
 private:
 	void setText(const std::string &text);

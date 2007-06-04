@@ -173,6 +173,7 @@ private:
 	void onValueChanged();
 	void _show();
 	void _hide();
+	void reset();
 
 private:
 	W32VBox *myVBox;

@@ -48,6 +48,7 @@ public:
 	void onAccept();
 	int actionIndex(const std::string &key);
 	void onValueChanged(const std::string &key, int index);
+	void onKeySelected(const std::string &key);
 	virtual const CodeIndexBimap &codeIndexBimap() const = 0;
 
 private:

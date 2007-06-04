@@ -365,6 +365,7 @@ void KeyOptionView::onEvent(const std::string &event, W32EventSender&) {
 		myCurrentKey = myKeyNameEditor->text();
 		myComboBox->setVisible(!myCurrentKey.empty());
 		myComboBox->setSelection(((ZLKeyOptionEntry*)myOption)->actionIndex(myCurrentKey));
+		((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
 	} else if (event == W32ComboBox::SELECTION_CHANGED_EVENT) {
 		((ZLKeyOptionEntry*)myOption)->onValueChanged(myCurrentKey, myComboBox->index());
 	}
@@ -384,3 +385,10 @@ void KeyOptionView::_hide() {
 void KeyOptionView::_onAccept() const {
 	((ZLKeyOptionEntry*)myOption)->onAccept();
 }
+
+void KeyOptionView::reset() {
+	myCurrentKey.erase();
+	myKeyNameEditor->clear();
+	myComboBox->setVisible(false);
+}
+

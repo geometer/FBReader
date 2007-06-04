@@ -296,6 +296,7 @@ void KeyLineEdit::keyPressEvent(QKeyEvent *keyEvent) {
 		myKeyView.myComboBox->setCurrentIndex(((ZLKeyOptionEntry*)myKeyView.myOption)->actionIndex(keyText));
 		myKeyView.myComboBox->show();
 	}
+	((ZLKeyOptionEntry*)myKeyView.myOption)->onKeySelected(keyText);
 }
 
 void KeyLineEdit::focusInEvent(QFocusEvent*) {
@@ -337,6 +338,7 @@ void KeyOptionView::reset() {
 	}
 	myCurrentKey.erase();
 	myKeyEditor->setText("");
+	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
 	myComboBox->hide();
 }
 
@@ -354,6 +356,7 @@ void KeyOptionView::_hide() {
 	myComboBox->hide();
 	myCurrentKey.erase();
 	myKeyEditor->setText("");
+	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
 }
 
 void KeyOptionView::_onAccept() const {

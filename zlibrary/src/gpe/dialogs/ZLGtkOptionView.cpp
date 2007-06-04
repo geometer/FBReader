@@ -477,11 +477,12 @@ void KeyOptionView::onValueChanged() {
 }
 
 void KeyOptionView::setKey(const std::string &key) {
+	myCurrentKey = key;
 	if (!key.empty()) {
-		myCurrentKey = key;
 		gtk_combo_box_set_active(myComboBox, ((ZLKeyOptionEntry*)myOption)->actionIndex(key));
 		gtk_widget_show(GTK_WIDGET(myComboBox));
 	}
+	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
 }
 
 void KeyOptionView::reset() {
@@ -490,6 +491,7 @@ void KeyOptionView::reset() {
 	}
 	myCurrentKey.erase();
 	gtk_entry_set_text(myKeyEntry, "");
+	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
 	gtk_widget_hide(GTK_WIDGET(myComboBox));
 }
 
@@ -508,6 +510,7 @@ void KeyOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myTable));
 	myCurrentKey.erase();
 	gtk_entry_set_text(myKeyEntry, "");
+	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
 }
 
 void KeyOptionView::_onAccept() const {
