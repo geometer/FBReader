@@ -20,6 +20,7 @@
  */
 
 #include <ZLFile.h>
+#include <ZLResource.h>
 
 #include "MobipocketStream.h"
 
@@ -79,26 +80,18 @@ std::pair<int,int> MobipocketStream::imageLocation(int index) {
 }
 
 const std::string &MobipocketStream::error() const {
+	static const ZLResource &resource = ZLResource::resource("mobipocketPlugin");
 	switch (myErrorCode) {
 		default:
 		{
-			static const std::string message = "";
-			return message;
+			static const std::string EMPTY;
+			return EMPTY;
 		}
 		case ERROR_UNKNOWN:
-		{
-			static const std::string message = "Unknown Error";
-			return message;
-		}
+			return resource["unknown"].value();
 		case ERROR_COMPRESSION:
-		{
-			static const std::string message = "Unsupported Compression Method";
-			return message;
-		}
+			return resource["unsupportedCompressionMethod"].value();
 		case ERROR_ENCRIPTION:
-		{
-			static const std::string message = "Encrypted File";
-			return message;
-		}
+			return resource["encriptedFile"].value();
 	}
 }

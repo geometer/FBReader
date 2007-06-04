@@ -315,4 +315,9 @@
 		<node name="Header 6" value="текста внутри &lt;h6&gt;"/>
 		<node name="External Hyperlink" value="внешней ссылки"/>
 	</node>
+	<node name="mobipocketPlugin">
+		<node name="unknown" value="неизвестная ошибка"/>
+		<node name="unsupportedCompressionMethod" value="неподдерживаемый метод сжатия"/>
+		<node name="encriptedFile" value="файл защищен DRM"/>
+	</node>
 </resources>

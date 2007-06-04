@@ -315,4 +315,9 @@
 		<node name="Header 6" value="Header 6"/>
 		<node name="External Hyperlink" value="External Hyperlink"/>
 	</node>
+	<node name="mobipocketPlugin">
+		<node name="unknown" value="Unknown Error"/>
+		<node name="unsupportedCompressionMethod" value="Unsupported Compression Method"/>
+		<node name="encriptedFile" value="DRM-protected File"/>
+	</node>
 </resources>
