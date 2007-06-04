@@ -51,112 +51,115 @@ void ShowOptionsDialogAction::run() {
 }
 
 void ShowOptionsDialogAction::createViewTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &viewTab = dialog.createTab(ZLResourceKey("View"));
+	ZLDialogContent &viewTab = dialog.createTab(ZLResourceKey("view"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
-	viewTab.addOption("Zoom, %", "", new ZLSimpleSpinOptionEntry(view.ZoomOption, 10));
+	viewTab.addOption(ZLResourceKey("zoom"), new ZLSimpleSpinOptionEntry(view.ZoomOption, 10));
 }
 
 void ShowOptionsDialogAction::createDrawingTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &drawingTab = dialog.createTab(ZLResourceKey("Drawing"));
+	ZLDialogContent &drawingTab = dialog.createTab(ZLResourceKey("drawing"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
-	drawingTab.addOption("Connect New Lines To Existing Points Only", "", new ZLSimpleBooleanOptionEntry(view.ExistingPointsOnlyOption));
-	drawingTab.addOption("Draw Segment For Middle Point", "", new ZLSimpleBooleanOptionEntry(view.CreateSegmentForMiddlePointOption));
+	drawingTab.addOption(ZLResourceKey("connectPointsOnly"), view.ExistingPointsOnlyOption);
+	drawingTab.addOption(ZLResourceKey("drawSegmentForMiddlePoint"), view.CreateSegmentForMiddlePointOption);
 }
 
 void ShowOptionsDialogAction::createPointTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &pointTab = dialog.createTab(ZLResourceKey("Points"));
+	ZLDialogContent &pointTab = dialog.createTab(ZLResourceKey("points"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
-	pointTab.addOption("Point Radius", "", new ZLSimpleSpinOptionEntry(view.PointRadiusOption, 1));
+	pointTab.addOption(ZLResourceKey("radius"), new ZLSimpleSpinOptionEntry(view.PointRadiusOption, 1));
 
 	ZLToggleBooleanOptionEntry *showNamesEntry =
 		new ZLToggleBooleanOptionEntry(view.ShowPointNamesOption);
-	pointTab.addOption("Show Point Names", "", showNamesEntry);
+	pointTab.addOption(ZLResourceKey("showNames"), showNamesEntry);
 
 	ZLOptionEntry *fontFamilyEntry =
 		new ZLFontFamilyOptionEntry(view.PointFontFamilyOption, view.context());
 	showNamesEntry->addDependentEntry(fontFamilyEntry);
-	pointTab.addOption("Font Family", "", fontFamilyEntry);
+	pointTab.addOption(ZLResourceKey("fontFamily"), fontFamilyEntry);
 
 	ZLOptionEntry *fontSizeEntry =
 		new ZLSimpleSpinOptionEntry(view.PointFontSizeOption, 2);
 	showNamesEntry->addDependentEntry(fontSizeEntry);
-	pointTab.addOption("Font Size", "", fontSizeEntry);
+	pointTab.addOption(ZLResourceKey("fontSize"), fontSizeEntry);
 
 	showNamesEntry->onStateChanged(showNamesEntry->initialState());
 }
 
 void ShowOptionsDialogAction::createColorsTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &colorsTab = dialog.createTab(ZLResourceKey("Colors"));
+	ZLDialogContent &colorsTab = dialog.createTab(ZLResourceKey("colors"));
 
 	DiagramView &view = (DiagramView&)*myCalculator.currentView();
 
+	ZLResourceKey colorKey("colorFor");
+	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
-	static const std::string BACKGROUND = "Background";
+	const std::string BACKGROUND = resource["background"].value();
 	builder.addOption(BACKGROUND, view.BackgroundColorOption);
-	builder.addOption("Active Object", view.ActiveColorOption);
-	builder.addOption("Inactive Object", view.InactiveColorOption);
-	builder.addOption("Selected Object", view.SelectedColorOption);
-	builder.addOption("Ruler", view.RulerColorOption);
+	builder.addOption(resource["activeObject"].value(), view.ActiveColorOption);
+	builder.addOption(resource["inactiveObject"].value(), view.InactiveColorOption);
+	builder.addOption(resource["selectedObject"].value(), view.SelectedColorOption);
+	//builder.addOption(resource["ruler"], view.RulerColorOption);
 	builder.setInitial(BACKGROUND);
-	colorsTab.addOption("", "", builder.comboEntry());
+	colorsTab.addOption(colorKey, builder.comboEntry());
 	colorsTab.addOption("", "", builder.colorEntry());
 }
 
 class KeyOptionEntry : public ZLSimpleKeyOptionEntry {
 
 public:
-	KeyOptionEntry(ZLKeyBindings &bindings);
+	KeyOptionEntry(ZLKeyBindings &bindings, const ZLResource &resource);
 	const CodeIndexBimap &codeIndexBimap() const;
 
 private:
-	void addAction(int code, const std::string &name);
+	void addAction(int code, const ZLResourceKey &key);
 
 private:
+	const ZLResource &myResource;
 	CodeIndexBimap myBimap;
 };
 
-KeyOptionEntry::KeyOptionEntry(ZLKeyBindings &bindings) : ZLSimpleKeyOptionEntry(bindings) {
-	addAction(NO_ACTION, "None");
+KeyOptionEntry::KeyOptionEntry(ZLKeyBindings &bindings, const ZLResource &resource) : ZLSimpleKeyOptionEntry(bindings), myResource(resource) {
+	addAction(NO_ACTION, ZLResourceKey("none"));
 
-	addAction(ACTION_NEW_SCENE, "New Empty Scene");
-	addAction(ACTION_OPEN_SCENE, "Open Scene");
-	addAction(ACTION_SAVE_SCENE, "Save Scene");
-	//addAction(MODE_ADD_POINT, "");
-	//addAction(MODE_ADD_POINT_ON_THE_LINE, "");
-	//addAction(MODE_ADD_MIDDLE_POINT, "");
-	//addAction(MODE_ADD_LINE, "");
-	//addAction(MODE_ADD_HALFLINE, "");
-	//addAction(MODE_ADD_SEGMENT, "");
-	//addAction(MODE_ADD_PERPENDICULAR, "");
-	//addAction(MODE_COPY_OBJECT, "");
-	//addAction(MODE_ADD_CIRCLE, "");
-	//addAction(MODE_ADD_RULER, "");
-	//addAction(MODE_MOVE_POINT, "");
-	//addAction(MODE_DELETE, "");
-	//addAction(MODE_EDIT_OBJECT, "");
-	addAction(ACTION_SHOW_INFO, "Show Scene Info Dialog");
-	addAction(ACTION_SHOW_OPTIONS, "Show Options Dialog");
-	addAction(ACTION_UNDO, "Undo");
-	addAction(ACTION_REDO, "Redo");
-	addAction(ACTION_ZOOM_IN, "Zoom In");
-	addAction(ACTION_ZOOM_OUT, "Zoom Out");
-	addAction(ACTION_SET_DEFAULT_ZOOM, "Zoom 100%");
-	addAction(ACTION_QUIT, "Quit");
+	addAction(ACTION_NEW_SCENE, ZLResourceKey("newScene"));
+	addAction(ACTION_OPEN_SCENE, ZLResourceKey("open"));
+	addAction(ACTION_SAVE_SCENE, ZLResourceKey("save"));
+	//addAction(MODE_ADD_POINT, ZLResourceKey(""));
+	//addAction(MODE_ADD_POINT_ON_THE_LINE, ZLResourceKey(""));
+	//addAction(MODE_ADD_MIDDLE_POINT, ZLResourceKey(""));
+	//addAction(MODE_ADD_LINE, ZLResourceKey(""));
+	//addAction(MODE_ADD_HALFLINE, ZLResourceKey(""));
+	//addAction(MODE_ADD_SEGMENT, ZLResourceKey(""));
+	//addAction(MODE_ADD_PERPENDICULAR, ZLResourceKey(""));
+	//addAction(MODE_COPY_OBJECT, ZLResourceKey(""));
+	//addAction(MODE_ADD_CIRCLE, ZLResourceKey(""));
+	//addAction(MODE_ADD_RULER, ZLResourceKey(""));
+	//addAction(MODE_MOVE_POINT, ZLResourceKey(""));
+	//addAction(MODE_DELETE, ZLResourceKey(""));
+	//addAction(MODE_EDIT_OBJECT, ZLResourceKey(""));
+	addAction(ACTION_SHOW_INFO, ZLResourceKey("showInfoDialog"));
+	addAction(ACTION_SHOW_OPTIONS, ZLResourceKey("showOptionsDialog"));
+	addAction(ACTION_UNDO, ZLResourceKey("undo"));
+	addAction(ACTION_REDO, ZLResourceKey("redo"));
+	addAction(ACTION_ZOOM_IN, ZLResourceKey("zoomIn"));
+	addAction(ACTION_ZOOM_OUT, ZLResourceKey("zoomOut"));
+	addAction(ACTION_SET_DEFAULT_ZOOM, ZLResourceKey("zoomNormal"));
+	addAction(ACTION_QUIT, ZLResourceKey("quit"));
 }
 
 const ZLSimpleKeyOptionEntry::CodeIndexBimap &KeyOptionEntry::codeIndexBimap() const {
 	return myBimap;
 }
 
-void KeyOptionEntry::addAction(int code, const std::string &name) {
+void KeyOptionEntry::addAction(int code, const ZLResourceKey &key) {
 	myBimap.insert(code);
-	addActionName(name);
+	addActionName(myResource[key].value());
 }
 
 void ShowOptionsDialogAction::createKeysTab(ZLOptionsDialog &dialog) {
-	ZLDialogContent &keysTab = dialog.createTab(ZLResourceKey("Keys"));
-	keysTab.addOption("", "", new KeyOptionEntry(myCalculator.keyBindings()));
+	ZLDialogContent &keysTab = dialog.createTab(ZLResourceKey("keys"));
+	keysTab.addOption("", "", new KeyOptionEntry(myCalculator.keyBindings(), keysTab.resource(ZLResourceKey("action"))));
 }

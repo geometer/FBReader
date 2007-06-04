@@ -33,13 +33,46 @@
 	</node>
 	<node name="dialog">
 		<node name="optionsDialog">
-			<node name="title" value="GeometricCalculator - Preferences"/>
+			<node name="title" value="GeometricCalculator - Настройки"/>
 			<node name="tab">
-				<node name="Drawing" value="Drawing"/>
-				<node name="Points" value="Points"/>
-				<node name="Colors" value="Colors"/>
-				<node name="Keys" value="Keys"/>
-				<node name="View" value="View"/>
+				<node name="drawing" value="Рисование">
+					<node name="connectPointsOnly" value="Connect New Lines to Existing Points Only"/>
+					<node name="drawSegmentForMiddlePoint" value="Draw Segment for Middle Point"/>
+				</node>
+				<node name="points" value="Точки">
+					<node name="radius" value="Радиус точки"/>
+					<node name="showNames" value="Показывать имена точек"/>
+					<node name="fontFamily" value="Шрифт"/>
+					<node name="fontSize" value="Размер шрифта"/>
+				</node>
+				<node name="colors" value="Цвета">
+					<node name="colorFor" value="Цвет">
+						<node name="background" value="фона"/>
+						<node name="activeObject" value="активного объекта"/>
+						<node name="inactiveObject" value="неактивного объекта"/>
+						<node name="selectedObject" value="помеченного объекта"/>
+						<node name="ruler" value="линейки"/>
+					</node>
+				</node>
+				<node name="keys" value="Клавиши">
+					<node name="action">
+						<node name="none" value="Никакого действия"/>
+						<node name="newScene" value="Начать с пустой сцены"/>
+						<node name="open" value="Открыть сцену"/>
+						<node name="save" value="Сохранить сцену"/>
+						<node name="showInfoDialog" value="Показать информацию о сцене"/>
+						<node name="showOptionsDialog" value="Показать диалог настроек"/>
+						<node name="undo" value="Отменить действие"/>
+						<node name="redo" value="Повторить отмененное действие"/>
+						<node name="zoomIn" value="Увеличить масштаб"/>
+						<node name="zoomOut" value="Уменьшить масштаб"/>
+						<node name="zoomNormal" value="Установить стандартный масштаб"/>
+						<node name="quit" value="Выход из программы"/>
+					</node>
+				</node>
+				<node name="view" value="View">
+					<node name="zoom" value="Масштаб, в процентах"/>
+				</node>
 			</node>
 		</node>
 		<node name="sceneInfoDialog">

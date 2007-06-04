@@ -35,11 +35,44 @@
 		<node name="optionsDialog">
 			<node name="title" value="GeometricCalculator - Preferences"/>
 			<node name="tab">
-				<node name="Drawing" value="Drawing"/>
-				<node name="Points" value="Points"/>
-				<node name="Colors" value="Colors"/>
-				<node name="Keys" value="Keys"/>
-				<node name="View" value="View"/>
+				<node name="drawing" value="Drawing">
+					<node name="connectPointsOnly" value="Connect New Lines to Existing Points Only"/>
+					<node name="drawSegmentForMiddlePoint" value="Draw Segment for Middle Point"/>
+				</node>
+				<node name="points" value="Points">
+					<node name="radius" value="Point Radius"/>
+					<node name="showNames" value="Show Point Names"/>
+					<node name="fontFamily" value="Font Family"/>
+					<node name="fontSize" value="Font Size"/>
+				</node>
+				<node name="colors" value="Colors">
+					<node name="colorFor" value="Color for">
+						<node name="background" value="Background"/>
+						<node name="activeObject" value="Active Object"/>
+						<node name="inactiveObject" value="Inactive Object"/>
+						<node name="selectedObject" value="Selected Object"/>
+						<node name="ruler" value="Ruler"/>
+					</node>
+				</node>
+				<node name="keys" value="Keys">
+					<node name="action">
+						<node name="none" value="None"/>
+						<node name="newScene" value="New Empty Scene"/>
+						<node name="open" value="Open Scene"/>
+						<node name="save" value="Save Scene"/>
+						<node name="showInfoDialog" value="Show Scene Info Dialog"/>
+						<node name="showOptionsDialog" value="Show Options Dialog"/>
+						<node name="undo" value="Undo"/>
+						<node name="redo" value="Redo"/>
+						<node name="zoomIn" value="Zoom In"/>
+						<node name="zoomOut" value="Zoom Out"/>
+						<node name="zoomNormal" value="Zoom 100%"/>
+						<node name="quit" value="Quit"/>
+					</node>
+				</node>
+				<node name="view" value="View">
+					<node name="zoom" value="Zoom, %"/>
+				</node>
 			</node>
 		</node>
 		<node name="sceneInfoDialog">
