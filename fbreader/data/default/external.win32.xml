@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExternalPrograms>
 	<section name="Web Browser">
-		<program name="Default Browser" protocol="execute">
+		<program name="%defaultBrowser" protocol="execute">
 			<action name="openLink" program="open"/>
 		</program>
 	</section>

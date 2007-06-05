@@ -213,6 +213,7 @@
 					<node name="enableIntegration" value="Open External Links in %s"/>
 					<node name="defaultText" value="Open External Links in Browser"/>
 					<node name="choice" value="Use Browser"/>
+					<node name="command" value="Command to Execute"/>
 				</node>
 			</node>
 		</node>
@@ -314,6 +315,10 @@
 		<node name="Header 5" value="Header 5"/>
 		<node name="Header 6" value="Header 6"/>
 		<node name="External Hyperlink" value="External Hyperlink"/>
+	</node>
+	<node name="external">
+		<node name="browser" value="Browser"/>
+		<node name="defaultBrowser" value="Default Browser"/>
 	</node>
 	<node name="mobipocketPlugin">
 		<node name="unknown" value="Unknown Error"/>

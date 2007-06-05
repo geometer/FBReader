@@ -213,6 +213,7 @@
 					<node name="enableIntegration" value="Открывать внешние ссылки в %s"/>
 					<node name="defaultText" value="Окрывать внешние ссылки в браузере"/>
 					<node name="choice" value="Браузер"/>
+					<node name="command" value="Выполнять команду"/>
 				</node>
 			</node>
 		</node>
@@ -314,6 +315,10 @@
 		<node name="Header 5" value="текста внутри &lt;h5&gt;"/>
 		<node name="Header 6" value="текста внутри &lt;h6&gt;"/>
 		<node name="External Hyperlink" value="внешней ссылки"/>
+	</node>
+	<node name="external">
+		<node name="browser" value="браузере"/>
+		<node name="defaultBrowser" value="браузере"/>
 	</node>
 	<node name="mobipocketPlugin">
 		<node name="unknown" value="неизвестная ошибка"/>

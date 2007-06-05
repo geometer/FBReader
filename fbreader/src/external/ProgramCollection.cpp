@@ -73,9 +73,14 @@ void ProgramCollectionBuilder::startElementHandler(const char *tag, const char *
 				ZLCommunicationManager::instance().createCommunicator(protocol, (testFile != 0) ? testFile : "");
 			if (!communicator.isNull()) {
 				std::string sName = name;
-				myCurrentProgram = new Program(sName, communicator);
-				myCurrentCollection->myNames.push_back(sName);
-				myCurrentCollection->myPrograms[sName] = myCurrentProgram;
+				if (!sName.empty()) {
+					if (sName[0] == '%') {
+						sName = ZLResource::resource("external")[sName.substr(1)].value();
+					}
+					myCurrentProgram = new Program(sName, communicator);
+					myCurrentCollection->myNames.push_back(sName);
+					myCurrentCollection->myPrograms[sName] = myCurrentProgram;
+				}
 			}
 		}
 	} else if (!myCurrentProgram.isNull() && (ACTION == tag)) {
@@ -92,13 +97,10 @@ void ProgramCollectionBuilder::startElementHandler(const char *tag, const char *
 		const char *name = attributeValue(attributes, "name");
 		if (name != 0) {
 			const char *defaultValue = attributeValue(attributes, "defaultValue");
-			const char *displayName = attributeValue(attributes, "displayName");
-			if ((defaultValue != 0) && (displayName != 0)) {
-				const std::string sName = name;
-				const std::string sDefaultValue = defaultValue;
-				myCurrentProgram->myOptions.push_back(Program::OptionDescription(sName, sDefaultValue, displayName));
-				myCurrentProgram->myDefaultValues[sName] = sDefaultValue;
-			}
+			const std::string sName = name;
+			const std::string sDefaultValue = (defaultValue != 0) ? defaultValue : std::string();
+			myCurrentProgram->myOptions.push_back(Program::OptionDescription(sName, sDefaultValue));
+			myCurrentProgram->myDefaultValues[sName] = sDefaultValue;
 		}
 	}
 }
@@ -181,5 +183,5 @@ const std::vector<Program::OptionDescription> &Program::options() const {
 	return myOptions;
 }
 
-Program::OptionDescription::OptionDescription(const std::string &name, const std::string &defaultValue, const std::string &displayName) : OptionName(name), DefaultValue(defaultValue), DisplayName(displayName) {
+Program::OptionDescription::OptionDescription(const std::string &name, const std::string &defaultValue) : OptionName(name), DefaultValue(defaultValue) {
 }

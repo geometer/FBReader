@@ -40,10 +40,9 @@ public:
 
 public:
 	struct OptionDescription {
-		OptionDescription(const std::string &name, const std::string &defaultValue, const std::string &displayName);
+		OptionDescription(const std::string &name, const std::string &defaultValue);
 		std::string OptionName;
 		std::string DefaultValue;
-		std::string DisplayName;
 	};
 	const std::vector<OptionDescription> &options() const;
 

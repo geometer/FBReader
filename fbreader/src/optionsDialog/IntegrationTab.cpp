@@ -141,7 +141,7 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 					} else {
 						enableIntegrationEntry->addDependentEntry(parameterEntry);
 					}
-					tab.addOption(jt->DisplayName, "", parameterEntry);
+					tab.addOption(ZLResourceKey(jt->OptionName), parameterEntry);
 				}
 			}
 			for (std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> >::const_iterator it = additionalOptions.begin(); it != additionalOptions.end(); ++it) {
