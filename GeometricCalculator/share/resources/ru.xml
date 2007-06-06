@@ -70,7 +70,7 @@
 						<node name="quit" value="Выход из программы"/>
 					</node>
 				</node>
-				<node name="view" value="View">
+				<node name="view" value="Вид">
 					<node name="zoom" value="Масштаб, в процентах"/>
 				</node>
 			</node>
