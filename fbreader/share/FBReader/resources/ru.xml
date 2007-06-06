@@ -31,7 +31,7 @@
 		</node>
 		<node name="view" value="Изображение">
 			<node name="rotate" value="Повернуть"/>
-			<node name="fullScreen" value="Весь экран"/>
+			<node name="fullScreen" value="На весь экран"/>
 			<node name="toggleIndicator" value="Индикатор позиции"/>
 		</node>
 		<node name="settings" value="Настройки..."/>
