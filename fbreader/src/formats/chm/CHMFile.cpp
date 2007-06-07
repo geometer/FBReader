@@ -440,6 +440,9 @@ CHMFileInfo::FileNames CHMFileInfo::sectionNames(shared_ptr<ZLInputStream> base)
 		int indexIndex = -1;
 		for (int i = 0; i < 12; ++i) {
 			std::string argument = readNTString(*stringsStream);
+			if (argument.empty() || (argument[argument.length() - 1] == '/')) {
+				continue;
+			}
 			if (myRecords.find(argument) == myRecords.end()) {
 				continue;
 			}
@@ -467,6 +470,15 @@ CHMFileInfo::FileNames CHMFileInfo::sectionNames(shared_ptr<ZLInputStream> base)
 		for (RecordMap::const_iterator it = myRecords.begin(); it != myRecords.end(); ++it) {
 			if (ZLStringUtil::stringEndsWith(it->first, ".hhc")) {
 				names.TOC = it->first;
+				break;
+			}
+		}
+	}
+	if (names.empty()) {
+		for (RecordMap::const_iterator it = myRecords.begin(); it != myRecords.end(); ++it) {
+			if ((ZLStringUtil::stringEndsWith(it->first, ".htm")) ||
+			    (ZLStringUtil::stringEndsWith(it->first, ".html"))) {
+				names.Start = it->first;
 				break;
 			}
 		}
