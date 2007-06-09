@@ -12,7 +12,7 @@
 
 Summary: E-book reader
 Name: fbreader
-Version: 0.8.4
+Version: 0.8.4a
 Release: 1%{release_suffix}
 License: GPL
 Group: Applications/Multimedia
@@ -92,6 +92,9 @@ HTML, fb2, plain text, etc.
 %postun -p /sbin/ldconfig
 
 %changelog
+* Sat Jun 9 2007 Nikolay Pultsin <geometer@mawhrin.net> - 0.8.4a-1
+- new upstream version
+
 * Sun Jun 3 2007 Nikolay Pultsin <geometer@mawhrin.net> - 0.8.4-1
 - new upstream version
 - removed gcc.patch
