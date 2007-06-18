@@ -55,14 +55,22 @@ bool ContentsView::isEmpty() const {
 	return (model() == 0) || (model()->paragraphsNumber() == 0);
 }
 
-size_t ContentsView::currentTextViewParagraph() const {
+size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 	const WordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
+		bool startOfParagraph = cursor.wordNumber() == 0;
+		if (cursor.isEndOfParagraph()) {
+			++reference;
+			startOfParagraph = true;
+		}
 		size_t length = model()->paragraphsNumber();
 		const ContentsModel &contentsModel = (const ContentsModel&)*model();
 		for (size_t i = 1; i < length; ++i) {
-			if (contentsModel.reference(((const TreeParagraph*)contentsModel[i])) > reference) {
+			long contentsReference =
+				contentsModel.reference(((const TreeParagraph*)contentsModel[i]));
+			if ((contentsReference > reference) ||
+					(!includeStart && startOfParagraph && (contentsReference == reference))) {
 				return i - 1;
 			}
 		}

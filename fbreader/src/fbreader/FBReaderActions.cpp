@@ -368,7 +368,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() {
 		return false;
 	}
 	const ContentsModel &contentsModel = (const ContentsModel&)*model;
-	int tocIndex = contentsView.currentTextViewParagraph();
+	int tocIndex = contentsView.currentTextViewParagraph(false);
 	if (tocIndex > 0) {
 		return true;
 	}
@@ -389,7 +389,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() {
 
 void GotoPreviousTOCSectionAction::run() {
 	ContentsView &contentsView = (ContentsView&)*fbreader().myContentsView;
-	size_t current = contentsView.currentTextViewParagraph();
+	size_t current = contentsView.currentTextViewParagraph(false);
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
 
 	int reference = contentsModel.reference(((const TreeParagraph*)contentsModel[current]));

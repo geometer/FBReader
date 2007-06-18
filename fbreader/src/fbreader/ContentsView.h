@@ -32,7 +32,7 @@ public:
 	~ContentsView();
 
 	bool isEmpty() const;
-	size_t currentTextViewParagraph() const;
+	size_t currentTextViewParagraph(bool includeStart = true) const;
 	void gotoReference();
 
 private:
