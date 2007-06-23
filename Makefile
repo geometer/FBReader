@@ -6,6 +6,7 @@ ZLIBDIR = zlibrary
 APPDIRS = fbreader GeometricCalculator SampleApplications/0 SampleApplications/1 SampleApplications/2
 
 all:
+	@echo Target all: $(ZLIBDIR) $(APPDIRS)
 	@for dir in $(ZLIBDIR) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
 			cd $$dir; \
