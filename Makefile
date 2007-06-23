@@ -7,13 +7,17 @@ APPDIRS = fbreader GeometricCalculator SampleApplications/0 SampleApplications/1
 
 all:
 	@echo Target all: $(ZLIBDIR) $(APPDIRS)
+	@echo ROOTDIR: $(ROOTDIR)
 	@for dir in $(ZLIBDIR) $(APPDIRS); do \
+		@echo CHECKING: $$dir
 		if [ -d $$dir ]; then \
 			cd $$dir; \
 			if ! $(MAKE); then \
 				exit 1; \
 			fi; \
 			cd $(ROOTDIR); \
+		else \
+			echo Could not open $$dir; \
 		fi; \
 	done;
 
