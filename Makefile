@@ -1,4 +1,5 @@
-ROOTDIR = $(PWD)
+# as it turned out PWD might point to a wrong directory :(
+ROOTDIR = $(shell pwd)
 
 include makefiles/platforms.mk
 
@@ -7,8 +8,8 @@ APPDIRS = fbreader GeometricCalculator SampleApplications/0 SampleApplications/1
 
 all:
 	@echo Target all: $(ZLIBDIR) $(APPDIRS)
-	@echo ROOTDIR: $(ROOTDIR)
 	@echo PWDs: real $(shell pwd) vs variable $(PWD)
+	@echo ROOTDIR: $(ROOTDIR)
 	@for dir in $(ZLIBDIR) $(APPDIRS); do \
 		echo CHECKING: $$dir; \
 		if [ -d $$dir ]; then \
