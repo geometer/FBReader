@@ -8,8 +8,9 @@ APPDIRS = fbreader GeometricCalculator SampleApplications/0 SampleApplications/1
 all:
 	@echo Target all: $(ZLIBDIR) $(APPDIRS)
 	@echo ROOTDIR: $(ROOTDIR)
+	@echo PWDs: real $(shell pwd) vs variable $(PWD)
 	@for dir in $(ZLIBDIR) $(APPDIRS); do \
-		@echo CHECKING: $$dir; \
+		echo CHECKING: $$dir; \
 		if [ -d $$dir ]; then \
 			cd $$dir; \
 			if ! $(MAKE); then \
