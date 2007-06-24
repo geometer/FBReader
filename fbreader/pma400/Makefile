@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 DEB_VERSION = 2.0
@@ -39,8 +39,8 @@ install:
 	@rm -rf $(TDIR)
 
 .copyfiles:
-	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(DATADIR) do_install
-	@cd ..; make DESTDIR=$(PWD)/$(DATADIR) do_install
+	@cd ../../zlibrary; make DESTDIR=$(CURDIR)/$(DATADIR) do_install
+	@cd ..; make DESTDIR=$(CURDIR)/$(DATADIR) do_install
 
 $(CTRLDIR)/control:
 	@echo "Package: $(PACKAGENAME)" > $@

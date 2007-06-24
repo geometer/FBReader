@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
@@ -25,7 +25,7 @@ all: package
 	@mv $(PACKAGE_FILE) ../..
 
 package:
-	@cd ..; DESTDIR=$(PWD)/$(DESTDIR) $(MAKE) do_install
+	@cd ..; DESTDIR=$(CURDIR)/$(DESTDIR) $(MAKE) do_install
 	@mkdir -p $(DESTDIR)/DEBIAN
 	@sed -e "s/@DEBIANVERSION@/$(DEBIAN_VERSION)/" \
 		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \

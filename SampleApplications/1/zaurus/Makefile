@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../../..
+ROOTDIR = $(CURDIR)/../../..
 include $(ROOTDIR)/makefiles/config.mk
 
 ARCH = arm
@@ -20,7 +20,7 @@ all: package
 	@mv $(package) $(ROOTDIR)
 
 package:
-	@cd ..; DESTDIR=$(PWD)/$(DESTDIR) $(MAKE) do_install
+	@cd ..; DESTDIR=$(CURDIR)/$(DESTDIR) $(MAKE) do_install
 	@mkdir -p $(CTRLDIR)
 	@install -d $(DESTDIR)$(INSTALLDIR)/apps/Applications
 	@install -m 0644 desktop $(DESTDIR)$(INSTALLDIR)/apps/Applications/$(TARGET).desktop

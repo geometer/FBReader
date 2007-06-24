@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 ARCH = arm
@@ -41,7 +41,7 @@ install:
 .ipk:
 	@rm -rf $(TMPDIR)
 	@mkdir -p $(DESTDIR) $(CTRLDIR)
-	@cd ..; make RESOLUTION=$(RESOLUTION) DESTDIR=$(PWD)/$(DESTDIR) do_install
+	@cd ..; make RESOLUTION=$(RESOLUTION) DESTDIR=$(CURDIR)/$(DESTDIR) do_install
 	@echo "Package: $(PACKAGENAME)" > $(CTRLDIR)/control
 	@echo -n "Installed-Size: " >> $(CTRLDIR)/control
 	@du -b -s $(DESTDIR) | sed -e 's/[	 ].*//' >> $(CTRLDIR)/control

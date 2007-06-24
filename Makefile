@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)
+ROOTDIR = $(CURDIR)
 
 include makefiles/platforms.mk
 

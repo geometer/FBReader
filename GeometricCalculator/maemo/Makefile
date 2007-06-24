@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 VERSION = $(shell cat ../VERSION)
@@ -33,7 +33,7 @@ all: package
 SHARE_GCALCULATOR = $(DESTDIR)$(SHAREDIR)/$(TARGET)
 
 package:
-	@cd ..; DESTDIR=$(PWD)/$(DESTDIR) $(MAKE) do_install
+	@cd ..; DESTDIR=$(CURDIR)/$(DESTDIR) $(MAKE) do_install
 	@mkdir -p $(DESTDIR)/DEBIAN
 	@install -d $(SHARE_GCALCULATOR)
 	@install -d $(SHARE_GCALCULATOR)/icons

@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 ARCH = arm
@@ -20,7 +20,7 @@ all: package
 	@mv *.ipk ../..
 
 package:
-	@cd ..; DESTDIR=$(PWD)/$(DESTDIR) $(MAKE) do_install
+	@cd ..; DESTDIR=$(CURDIR)/$(DESTDIR) $(MAKE) do_install
 	@mkdir -p $(CTRLDIR)
 	@install -d $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)
 	@install -m 0644 ../icons/640x480/GeometricCalculator.png $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)

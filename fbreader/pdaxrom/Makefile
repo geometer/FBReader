@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 DEB_VERSION = 2.0
@@ -39,7 +39,7 @@ install:
 	@rm -rf $(TDIR)
 
 .copyfiles:
-	@cd ../..; make DESTDIR=$(PWD)/$(DATADIR) do_install
+	@cd ../..; make DESTDIR=$(CURDIR)/$(DATADIR) do_install
 
 $(CTRLDIR)/control: $(FILE)
 	@echo "Package: $(PACKAGENAME)" > $@

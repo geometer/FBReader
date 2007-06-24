@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../../..
+ROOTDIR = $(CURDIR)/../../..
 
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 

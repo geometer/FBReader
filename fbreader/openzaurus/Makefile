@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
 DESTDIR = data
@@ -41,8 +41,8 @@ clean: .cleandir
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
-	@cd ../../zlibrary; make DESTDIR=$(PWD)/$(DESTDIR) do_install
-	@cd ..; make RESOLUTION=$(RESOLUTION) DESTDIR=$(PWD)/$(DESTDIR) do_install
+	@cd ../../zlibrary; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
+	@cd ..; make RESOLUTION=$(RESOLUTION) DESTDIR=$(CURDIR)/$(DESTDIR) do_install
 	@mkdir -p $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
 	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(DESTDIR)$(PICSDIR)

@@ -1,7 +1,7 @@
-ROOTDIR = $(PWD)/../..
+ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-DESTDIR = $(PWD)/
+DESTDIR = $(CURDIR)/
 SHARE_FBREADER = $(DESTDIR)share/FBReader
 VERSION = $(shell cat ../VERSION)
 

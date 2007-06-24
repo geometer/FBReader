@@ -1,4 +1,4 @@
-ROOTDIR = $(PWD)/../../..
+ROOTDIR = $(CURDIR)/../../..
 include $(ROOTDIR)/makefiles/config.mk
 
 TARGET = SampleApplication
@@ -31,7 +31,7 @@ all: package
 	@mv $(PACKAGE_FILE) $(ROOTDIR)
 
 package:
-	@cd ..; DESTDIR=$(PWD)/$(DESTDIR) $(MAKE) do_install
+	@cd ..; DESTDIR=$(CURDIR)/$(DESTDIR) $(MAKE) do_install
 	@mkdir -p $(DESTDIR)/DEBIAN
 	@install -d $(DESTDIR)$(SHAREDIR)/applications/hildon
 	@install -m 0644 desktop $(DESTDIR)$(SHAREDIR)/applications/hildon/$(TARGET).desktop
