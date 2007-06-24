@@ -9,7 +9,7 @@ all:
 	@echo Target all: $(ZLIBDIR) $(APPDIRS)
 	@echo ROOTDIR: $(ROOTDIR)
 	@for dir in $(ZLIBDIR) $(APPDIRS); do \
-		@echo CHECKING: $$dir
+		@echo CHECKING: $$dir; \
 		if [ -d $$dir ]; then \
 			cd $$dir; \
 			if ! $(MAKE); then \
