@@ -24,16 +24,17 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLImage.h>
 
+#include <ZLTextParagraph.h>
+
 #include "ParagraphCursor.h"
 #include "Word.h"
 
-#include "../textmodel/Paragraph.h"
 #include "../hyphenation/Hyphenator.h"
 
-ParagraphCursor::ChineseParagraphProcessor::ChineseParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) : ParagraphProcessor(paragraph, marks, paragraphNumber, elements) {
+ParagraphCursor::ChineseParagraphProcessor::ChineseParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : ParagraphProcessor(paragraph, marks, paragraphNumber, elements) {
 }
 
-void ParagraphCursor::ChineseParagraphProcessor::processTextEntry(const TextEntry &textEntry) {
+void ParagraphCursor::ChineseParagraphProcessor::processTextEntry(const ZLTextEntry &textEntry) {
 	if (textEntry.dataLength() != 0) {
 		const char *start = textEntry.data();
 		const char *end = start + textEntry.dataLength();

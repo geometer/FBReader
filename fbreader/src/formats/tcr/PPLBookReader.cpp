@@ -51,7 +51,7 @@ void PPLBookReader::addParagraph() {
 		if (currentParagraphIsEmpty()) {
 			++myEmptyLineCounter;
 			if (myEmptyLineCounter >= 2) {
-				myModelReader.beginParagraph(Paragraph::EMPTY_LINE_PARAGRAPH);
+				myModelReader.beginParagraph(ZLTextParagraph::EMPTY_LINE_PARAGRAPH);
 				myModelReader.endParagraph();
 			}
 		} else if (myEmptyLineCounter < 2) {

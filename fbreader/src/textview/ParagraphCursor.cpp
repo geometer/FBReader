@@ -21,15 +21,16 @@
 
 #include <algorithm>
 
+#include <ZLTextParagraph.h>
+
 #include "ParagraphCursor.h"
 #include "Word.h"
 
-#include "../textmodel/Paragraph.h"
 #include "../hyphenation/Hyphenator.h"
 
 TextElementPool TextElementPool::Pool;
 
-std::map<const Paragraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
+std::map<const ZLTextParagraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
 ParagraphCursorPtr ParagraphCursorCache::ourLastAdded;
 
 TextElementVector::~TextElementVector() {
@@ -70,20 +71,20 @@ TextElementPool::~TextElementPool() {
 	delete EmptyLineElement;
 }
 
-ParagraphCursorPtr ParagraphCursor::cursor(const TextModel &model, size_t index) {
+ParagraphCursorPtr ParagraphCursor::cursor(const ZLTextModel &model, size_t index) {
 	ParagraphCursorPtr result = ParagraphCursorCache::get(model[index]);
 	if (result.isNull()) {
-		if (model.kind() == TextModel::TREE_MODEL) {
-			result = new TreeParagraphCursor((const TreeModel&)model, index);
+		if (model.kind() == ZLTextModel::TREE_MODEL) {
+			result = new TreeParagraphCursor((const ZLTextTreeModel&)model, index);
 		} else {
-			result = new PlainTextParagraphCursor((const PlainTextModel&)model, index);
+			result = new PlainTextParagraphCursor((const ZLTextPlainModel&)model, index);
 		}
 		ParagraphCursorCache::put(model[index], result);
 	}
 	return result;
 }
 
-ParagraphCursor::ParagraphCursor(const TextModel &model, size_t index) : myModel(model) {
+ParagraphCursor::ParagraphCursor(const ZLTextModel &model, size_t index) : myModel(model) {
 	myIndex = std::min(index, myModel.paragraphsNumber() - 1);
 	fill();
 }
@@ -99,13 +100,13 @@ ParagraphCursorPtr TreeParagraphCursor::previous() const {
 	if (isFirst()) {
 		return 0;
 	}
-	const TreeParagraph *oldTreeParagraph = (const TreeParagraph*)myModel[myIndex];
-	const TreeParagraph *parent = oldTreeParagraph->parent();
+	const ZLTextTreeParagraph *oldTreeParagraph = (const ZLTextTreeParagraph*)myModel[myIndex];
+	const ZLTextTreeParagraph *parent = oldTreeParagraph->parent();
 	size_t index = myIndex - 1;
-	const TreeParagraph *newTreeParagraph = (TreeParagraph*)myModel[index];
+	const ZLTextTreeParagraph *newTreeParagraph = (ZLTextTreeParagraph*)myModel[index];
 	if (newTreeParagraph != parent) {
-		const TreeParagraph *lastNotOpen = newTreeParagraph;
-		for (const TreeParagraph *p = newTreeParagraph->parent(); p != parent; p = p->parent()) {
+		const ZLTextTreeParagraph *lastNotOpen = newTreeParagraph;
+		for (const ZLTextTreeParagraph *p = newTreeParagraph->parent(); p != parent; p = p->parent()) {
 			if (!p->isOpen()) {
 				lastNotOpen = p;
 			}
@@ -125,19 +126,19 @@ ParagraphCursorPtr TreeParagraphCursor::next() const {
 	if (myIndex + 1 == myModel.paragraphsNumber()) {
 		return 0;
 	}
-	const TreeParagraph *current = (const TreeParagraph*)myModel[myIndex];
+	const ZLTextTreeParagraph *current = (const ZLTextTreeParagraph*)myModel[myIndex];
 	if (!current->children().empty() && current->isOpen()) {
 		return cursor(myModel, myIndex + 1);
 	}
 
-	const TreeParagraph *parent = current->parent();
+	const ZLTextTreeParagraph *parent = current->parent();
 	while ((parent != 0) && (current == parent->children().back())) {
 		current = parent;
 		parent = current->parent();
 	}
 	if (parent != 0) {
 		size_t index = myIndex + 1;
-		while (((const TreeParagraph*)myModel[index])->parent() != parent) {
+		while (((const ZLTextTreeParagraph*)myModel[index])->parent() != parent) {
 			++index;
 		}
 		return cursor(myModel, index);
@@ -148,26 +149,26 @@ ParagraphCursorPtr TreeParagraphCursor::next() const {
 bool ParagraphCursor::isFirst() const {
 	return
 		(myIndex == 0) ||
-		(myModel[myIndex]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) ||
-		(myModel[myIndex - 1]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
+		(myModel[myIndex]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH) ||
+		(myModel[myIndex - 1]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH);
 }
 
 bool PlainTextParagraphCursor::isLast() const {
 	return
 		(myIndex + 1 == myModel.paragraphsNumber()) ||
-		(myModel[myIndex + 1]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH);
+		(myModel[myIndex + 1]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH);
 }
 
 bool TreeParagraphCursor::isLast() const {
 	if ((myIndex + 1 == myModel.paragraphsNumber()) ||
-			(myModel[myIndex + 1]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH)) {
+			(myModel[myIndex + 1]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH)) {
 		return true;
 	}
-	const TreeParagraph *current = (const TreeParagraph*)myModel[myIndex];
+	const ZLTextTreeParagraph *current = (const ZLTextTreeParagraph*)myModel[myIndex];
 	if (current->isOpen() && !current->children().empty()) {
 		return false;
 	}
-	const TreeParagraph *parent = current->parent();
+	const ZLTextTreeParagraph *parent = current->parent();
 	while (parent != 0) {
 		if (current != parent->children().back()) {
 			return false;
@@ -179,12 +180,12 @@ bool TreeParagraphCursor::isLast() const {
 }
 
 bool ParagraphCursor::isEndOfSection() const {
-	return myModel[myIndex]->kind() == Paragraph::END_OF_SECTION_PARAGRAPH;
+	return myModel[myIndex]->kind() == ZLTextParagraph::END_OF_SECTION_PARAGRAPH;
 }
 
-TextMark WordCursor::position() const {
+ZLTextMark WordCursor::position() const {
 	if (myParagraphCursor.isNull()) {
-		return TextMark();
+		return ZLTextMark();
 	}
 	const ParagraphCursor &paragraph = *myParagraphCursor;
 	size_t paragraphLength = paragraph.paragraphLength();
@@ -193,22 +194,22 @@ TextMark WordCursor::position() const {
 		++wordNumber;
 	}
 	if (wordNumber != paragraphLength) {
-		return TextMark(paragraph.index(), ((Word&)paragraph[wordNumber]).ParagraphOffset, 0);
+		return ZLTextMark(paragraph.index(), ((Word&)paragraph[wordNumber]).ParagraphOffset, 0);
 	}
-	return TextMark(paragraph.index() + 1, 0, 0);
+	return ZLTextMark(paragraph.index() + 1, 0, 0);
 }
 
-void ParagraphCursor::processControlParagraph(const Paragraph &paragraph) {
-	for (Paragraph::Iterator it = paragraph; !it.isEnd(); it.next()) {
+void ParagraphCursor::processControlParagraph(const ZLTextParagraph &paragraph) {
+	for (ZLTextParagraph::Iterator it = paragraph; !it.isEnd(); it.next()) {
 		myElements.push_back(TextElementPool::Pool.getControlElement(it.entry()));
 	}
 }
 
 void ParagraphCursor::fill() {
-	const Paragraph &paragraph = *myModel[myIndex];
+	const ZLTextParagraph &paragraph = *myModel[myIndex];
 	switch (paragraph.kind()) {
-		case Paragraph::TEXT_PARAGRAPH:
-		case Paragraph::TREE_PARAGRAPH:
+		case ZLTextParagraph::TEXT_PARAGRAPH:
+		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
 			const std::string &breakingAlgorithm = Hyphenator::instance().breakingAlgorithm();
 			if (breakingAlgorithm == "chinese") {
@@ -220,20 +221,20 @@ void ParagraphCursor::fill() {
 			}
 			break;
 		}
-		case Paragraph::EMPTY_LINE_PARAGRAPH:
+		case ZLTextParagraph::EMPTY_LINE_PARAGRAPH:
 			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.EmptyLineElement);
 			break;
-		case Paragraph::BEFORE_SKIP_PARAGRAPH:
+		case ZLTextParagraph::BEFORE_SKIP_PARAGRAPH:
 			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.BeforeParagraphElement);
 			break;
-		case Paragraph::AFTER_SKIP_PARAGRAPH:
+		case ZLTextParagraph::AFTER_SKIP_PARAGRAPH:
 			processControlParagraph(paragraph);
 			myElements.push_back(TextElementPool::Pool.AfterParagraphElement);
 			break;
-		case Paragraph::END_OF_SECTION_PARAGRAPH:
-		case Paragraph::END_OF_TEXT_PARAGRAPH:
+		case ZLTextParagraph::END_OF_SECTION_PARAGRAPH:
+		case ZLTextParagraph::END_OF_TEXT_PARAGRAPH:
 			break;
 	}
 }
@@ -242,12 +243,12 @@ void ParagraphCursor::clear() {
 	myElements.clear();
 }
 
-void ParagraphCursorCache::put(const Paragraph *paragraph, ParagraphCursorPtr cursor) {
+void ParagraphCursorCache::put(const ZLTextParagraph *paragraph, ParagraphCursorPtr cursor) {
 	ourCache[paragraph] = cursor;
 	ourLastAdded = cursor;
 }
 
-ParagraphCursorPtr ParagraphCursorCache::get(const Paragraph *paragraph) {
+ParagraphCursorPtr ParagraphCursorCache::get(const ZLTextParagraph *paragraph) {
 	return ourCache[paragraph];
 }
 
@@ -257,8 +258,8 @@ void ParagraphCursorCache::clear() {
 }
 
 void ParagraphCursorCache::cleanup() {
-	std::map<const Paragraph*, weak_ptr<ParagraphCursor> > cleanedCache;
-	for (std::map<const Paragraph*, weak_ptr<ParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); ++it) {
+	std::map<const ZLTextParagraph*, weak_ptr<ParagraphCursor> > cleanedCache;
+	for (std::map<const ZLTextParagraph*, weak_ptr<ParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); ++it) {
 		if (!it->second.isNull()) {
 			cleanedCache.insert(*it);
 		}

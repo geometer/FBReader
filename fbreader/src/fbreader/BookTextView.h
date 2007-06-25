@@ -37,8 +37,8 @@ public:
 	BookTextView(FBReader &reader, ZLPaintContext &context);
 	~BookTextView();
 
-	void setModel(shared_ptr<TextModel> model, const std::string &name);
-	void setContentsModel(shared_ptr<TextModel> contentsModel);
+	void setModel(shared_ptr<ZLTextModel> model, const std::string &name);
+	void setContentsModel(shared_ptr<ZLTextModel> contentsModel);
 	void saveState();
 
 	void gotoParagraph(int num, bool last = false);
@@ -73,7 +73,7 @@ private:
 	friend class BookTextView::PositionIndicatorWithLabels;
 
 private:
-	shared_ptr<TextModel> myContentsModel;
+	shared_ptr<ZLTextModel> myContentsModel;
 
 	typedef std::pair<int,int> Position;
 	typedef std::deque<Position> PositionStack;

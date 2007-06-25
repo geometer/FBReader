@@ -89,7 +89,7 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 		const char *idString = attributeValue(attributes, "id");
 		const char *name = attributeValue(attributes, "name");
 		if ((idString != 0) && (name != 0)) {
-			TextKind id = (TextKind)atoi(idString);
+			ZLTextKind id = (ZLTextKind)atoi(idString);
 			TextStyleDecoration *decoration;
 
 			int fontSizeDelta = intValue(attributes, "fontSizeDelta");
@@ -119,7 +119,7 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 				int rightIndent = intValue(attributes, "rightIndent");
 				int firstLineIndentDelta = intValue(attributes, "firstLineIndentDelta");
 
-				AlignmentType alignment = ALIGN_UNDEFINED;
+				ZLTextAlignmentType alignment = ALIGN_UNDEFINED;
 				const char *alignmentString = attributeValue(attributes, "alignment");
 				if (alignmentString != 0) {
 					if (strcmp(alignmentString, "left") == 0) {
@@ -137,7 +137,7 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 				decoration = new FullTextStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
 			}
 			decoration->setHyperlinkStyle(hyperlinkStyle);
-			myCollection.myDecorationMap.insert(std::pair<TextKind,TextStyleDecoration*>(id, decoration));
+			myCollection.myDecorationMap.insert(std::pair<ZLTextKind,TextStyleDecoration*>(id, decoration));
 		}
 	}
 }
@@ -151,12 +151,12 @@ TextStyleCollection::TextStyleCollection() :
 }
 
 TextStyleCollection::~TextStyleCollection() {
-	for (std::map<TextKind,TextStyleDecoration*>::iterator it = myDecorationMap.begin(); it != myDecorationMap.end(); ++it) {
+	for (std::map<ZLTextKind,TextStyleDecoration*>::iterator it = myDecorationMap.begin(); it != myDecorationMap.end(); ++it) {
 		delete (*it).second;
 	}
 }
 
-TextStyleDecoration *TextStyleCollection::decoration(TextKind kind) const {
-	std::map<TextKind,TextStyleDecoration*>::const_iterator it = myDecorationMap.find(kind);
+TextStyleDecoration *TextStyleCollection::decoration(ZLTextKind kind) const {
+	std::map<ZLTextKind,TextStyleDecoration*>::const_iterator it = myDecorationMap.find(kind);
 	return (it != myDecorationMap.end()) ? (*it).second : 0;
 }

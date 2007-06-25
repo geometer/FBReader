@@ -28,9 +28,6 @@
 #include "../description/BookDescription.h"
 #include "../collection/BookCollection.h"
 
-class TreeModel;
-class PlainTextModel;
-class Paragraph;
 class CollectionModel;
 
 class CollectionView : public FBView {

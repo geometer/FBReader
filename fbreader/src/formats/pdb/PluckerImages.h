@@ -54,7 +54,7 @@ private:
 class PluckerMultiImage : public ZLMultiImage {
 
 public:
-	PluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap);
+	PluckerMultiImage(unsigned int rows, unsigned int columns, const ZLImageMap &imageMap);
 
 	void addId(const std::string &id);
 
@@ -64,7 +64,7 @@ public:
 
 private:
 	unsigned int myRows, myColumns;
-	const ImageMap &myImageMap;
+	const ZLImageMap &myImageMap;
 	std::vector<std::string> myIds;
 };
 
@@ -72,7 +72,7 @@ inline ZCompressedFileImage::ZCompressedFileImage(const std::string &mimeType, c
 
 inline DocCompressedFileImage::DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
 
-inline PluckerMultiImage::PluckerMultiImage(unsigned int rows, unsigned int columns, const ImageMap &imageMap) : myRows(rows), myColumns(columns), myImageMap(imageMap) {}
+inline PluckerMultiImage::PluckerMultiImage(unsigned int rows, unsigned int columns, const ZLImageMap &imageMap) : myRows(rows), myColumns(columns), myImageMap(imageMap) {}
 inline void PluckerMultiImage::addId(const std::string &id) { myIds.push_back(id); }
 inline unsigned int PluckerMultiImage::rows() const { return myRows; }
 inline unsigned int PluckerMultiImage::columns() const { return myColumns; }

@@ -25,16 +25,15 @@
 #include <ZLOptionsDialog.h>
 #include <ZLStringUtil.h>
 
+#include <ZLTextModel.h>
+#include <ZLTextParagraph.h>
+
 #include "CollectionView.h"
 #include "FBReader.h"
 #include "BookInfoDialog.h"
 
-#include "../textmodel/TextModel.h"
-#include "../textmodel/Paragraph.h"
 #include "../model/FBTextKind.h"
-
 #include "../textview/ParagraphCursor.h"
-
 #include "../collection/BookCollection.h"
 #include "../collection/BookList.h"
 #include "../description/BookDescription.h"
@@ -46,7 +45,7 @@ static const std::string BOOK_INFO_IMAGE_ID = "bookInfo";
 static const std::string AUTHOR_INFO_IMAGE_ID = "authorInfo";
 static const std::string SERIES_ORDER_IMAGE_ID = "seriesOrder";
 
-class CollectionModel : public TreeModel {
+class CollectionModel : public ZLTextTreeModel {
 
 public:
 	CollectionModel(BookCollection &collection);
@@ -66,12 +65,12 @@ private:
 private:
 	BookCollection &myCollection;
 
-	ImageMap myImageMap;
-	std::map<Paragraph*,BookDescriptionPtr> myParagraphToBook;
+	ZLImageMap myImageMap;
+	std::map<ZLTextParagraph*,BookDescriptionPtr> myParagraphToBook;
 	std::map<BookDescriptionPtr,int> myBookToParagraph;
 };
 
-CollectionModel::CollectionModel(BookCollection &collection) : TreeModel(), myCollection(collection) {
+CollectionModel::CollectionModel(BookCollection &collection) : ZLTextTreeModel(), myCollection(collection) {
 	const std::string prefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	myImageMap[DELETE_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-remove.png", 0);
 	myImageMap[BOOK_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-bookinfo.png", 0);
@@ -86,7 +85,7 @@ BookDescriptionPtr CollectionModel::bookByParagraphNumber(int num) {
 	if ((num < 0) || ((int)paragraphsNumber() <= num)) {
 		return 0;
 	}
-	std::map<Paragraph*,BookDescriptionPtr>::iterator it = myParagraphToBook.find((*this)[num]);
+	std::map<ZLTextParagraph*,BookDescriptionPtr>::iterator it = myParagraphToBook.find((*this)[num]);
 	return (it != myParagraphToBook.end()) ? it->second : 0;
 }
 
@@ -98,14 +97,14 @@ int CollectionModel::paragraphNumberByBook(BookDescriptionPtr book) {
 void CollectionModel::build() {
 	const std::vector<AuthorPtr> &authors = myCollection.authors();
 	std::string currentSequenceName;
-	TreeParagraph *sequenceParagraph;
+	ZLTextTreeParagraph *sequenceParagraph;
 	for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 		const Books &books = myCollection.books(*it);
 		if (!books.empty()) {
 			currentSequenceName.erase();
 			sequenceParagraph = 0;
 
-			TreeParagraph *authorParagraph = createParagraph();
+			ZLTextTreeParagraph *authorParagraph = createParagraph();
 			insertText(LIBRARY_AUTHOR_ENTRY, (*it)->displayName());
 			//insertImage(AUTHOR_INFO_IMAGE_ID);
 			for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
@@ -119,7 +118,7 @@ void CollectionModel::build() {
 					insertText(LIBRARY_BOOK_ENTRY, sequenceName);
 					//insertImage(SERIES_ORDER_IMAGE_ID);
 				}
-				TreeParagraph *bookParagraph = createParagraph(
+				ZLTextTreeParagraph *bookParagraph = createParagraph(
 					(sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
 				);
 				insertText(LIBRARY_BOOK_ENTRY, (*jt)->title());
@@ -178,7 +177,7 @@ const std::string &CollectionView::caption() const {
 
 void CollectionView::selectBook(BookDescriptionPtr book) {
 	if (myUpdateModel) {
-		shared_ptr<TextModel> oldModel = model();
+		shared_ptr<ZLTextModel> oldModel = model();
 		setModel(0, LIBRARY);
 		((CollectionModel&)*oldModel).update();
 		setModel(oldModel, LIBRARY);
@@ -194,7 +193,7 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 
 void CollectionView::paint() {
 	if (myUpdateModel) {
-		shared_ptr<TextModel> oldModel = model();
+		shared_ptr<ZLTextModel> oldModel = model();
 		setModel(0, LIBRARY);
 		((CollectionModel&)*oldModel).update();
 		setModel(oldModel, LIBRARY);
@@ -236,8 +235,8 @@ bool CollectionView::_onStylusPress(int x, int y) {
 				ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
 				collectionModel().removeAllMarks();
 				BookList().removeFileName(book->fileName());
-				TreeParagraph *paragraph = (TreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
-				TreeParagraph *parent = paragraph->parent();
+				ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
+				ZLTextTreeParagraph *parent = paragraph->parent();
 				if (parent->children().size() == 1) {
 					collectionModel().removeParagraph(imageArea->ParagraphNumber);
 					collectionModel().removeParagraph(imageArea->ParagraphNumber - 1);

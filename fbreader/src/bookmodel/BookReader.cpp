@@ -43,12 +43,12 @@ void BookReader::setMainTextModel() {
 }
 
 void BookReader::setFootnoteTextModel(const std::string &id) {
-	std::map<std::string,shared_ptr<TextModel> >::iterator it = myModel.myFootnotes.find(id);
+	std::map<std::string,shared_ptr<ZLTextModel> >::iterator it = myModel.myFootnotes.find(id);
 	if (it != myModel.myFootnotes.end()) {
 		myCurrentTextModel = (*it).second;
 	} else {
-		myCurrentTextModel = new PlainTextModel();
-		myModel.myFootnotes.insert(std::pair<std::string,shared_ptr<TextModel> >(id, myCurrentTextModel));
+		myCurrentTextModel = new ZLTextPlainModel();
+		myModel.myFootnotes.insert(std::pair<std::string,shared_ptr<ZLTextModel> >(id, myCurrentTextModel));
 	}
 }
 
@@ -68,9 +68,9 @@ bool BookReader::popKind() {
 	return false;
 }
 
-void BookReader::beginParagraph(Paragraph::Kind kind) {
+void BookReader::beginParagraph(ZLTextParagraph::Kind kind) {
 	if (myCurrentTextModel != 0) {
-		((PlainTextModel&)*myCurrentTextModel).createParagraph(kind);
+		((ZLTextPlainModel&)*myCurrentTextModel).createParagraph(kind);
 		for (std::vector<FBTextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); ++it) {
 			myCurrentTextModel->addControl(*it, true);
 		}
@@ -104,7 +104,7 @@ void BookReader::addFixedHSpace(unsigned char length) {
 	}
 }
 
-void BookReader::addControl(const ForcedControlEntry &entry) {
+void BookReader::addControl(const ZLTextForcedControlEntry &entry) {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addControl(entry);
@@ -162,22 +162,22 @@ void BookReader::addImage(const std::string &id, shared_ptr<const ZLImage> image
 	myModel.myImages[id] = image;
 }
 
-void BookReader::insertEndParagraph(Paragraph::Kind kind) {
+void BookReader::insertEndParagraph(ZLTextParagraph::Kind kind) {
 	if ((myCurrentTextModel != 0) && mySectionContainsRegularContents) {
 		size_t size = myCurrentTextModel->paragraphsNumber();
 		if ((size > 0) && (((*myCurrentTextModel)[(size_t)-1])->kind() != kind)) {
-			((PlainTextModel&)*myCurrentTextModel).createParagraph(kind);
+			((ZLTextPlainModel&)*myCurrentTextModel).createParagraph(kind);
 			mySectionContainsRegularContents = false;
 		}
 	}
 }
 
 void BookReader::insertEndOfSectionParagraph() {
-	insertEndParagraph(Paragraph::END_OF_SECTION_PARAGRAPH);
+	insertEndParagraph(ZLTextParagraph::END_OF_SECTION_PARAGRAPH);
 }
 
 void BookReader::insertEndOfTextParagraph() {
-	insertEndParagraph(Paragraph::END_OF_TEXT_PARAGRAPH);
+	insertEndParagraph(ZLTextParagraph::END_OF_TEXT_PARAGRAPH);
 }
 
 void BookReader::addImageReference(const std::string &id, short vOffset) {
@@ -202,7 +202,7 @@ void BookReader::beginContentsParagraph(int referenceNumber) {
 		if (referenceNumber == -1) {
 			referenceNumber = myCurrentTextModel->paragraphsNumber();
 		}
-		TreeParagraph *peek = myTOCStack.empty() ? 0 : myTOCStack.top();
+		ZLTextTreeParagraph *peek = myTOCStack.empty() ? 0 : myTOCStack.top();
 		if (!myContentsBuffer.empty()) {
 			contentsModel.addText(myContentsBuffer);
 			myContentsBuffer.clear();
@@ -211,7 +211,7 @@ void BookReader::beginContentsParagraph(int referenceNumber) {
 		if (myLastTOCParagraphIsEmpty) {
 			contentsModel.addText("...");
 		}
-		TreeParagraph *para = contentsModel.createParagraph(peek);
+		ZLTextTreeParagraph *para = contentsModel.createParagraph(peek);
 		contentsModel.addControl(CONTENTS_TABLE_ENTRY, true);
 		contentsModel.setReference(para, referenceNumber);
 		myTOCStack.push(para);
@@ -242,7 +242,7 @@ void BookReader::setReference(size_t contentsParagraphNumber, int referenceNumbe
 	if (contentsParagraphNumber >= contentsModel.paragraphsNumber()) {
 		return;
 	}
-	contentsModel.setReference((const TreeParagraph*)contentsModel[contentsParagraphNumber], referenceNumber);
+	contentsModel.setReference((const ZLTextTreeParagraph*)contentsModel[contentsParagraphNumber], referenceNumber);
 }
 
 void BookReader::reset() {

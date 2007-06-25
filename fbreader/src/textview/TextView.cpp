@@ -23,15 +23,15 @@
 
 #include <ZLUnicodeUtil.h>
 
+#include <ZLTextModel.h>
+#include <ZLTextParagraph.h>
+
 #include "TextView.h"
 #include "LineInfo.h"
 #include "ParagraphCursor.h"
 #include "TextStyle.h"
 #include "Word.h"
 #include "SelectionModel.h"
-
-#include "../textmodel/TextModel.h"
-#include "../textmodel/Paragraph.h"
 
 TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this), myTreeStateIsFrozen(false) {
 }
@@ -56,7 +56,7 @@ void TextView::clear() {
 	ParagraphCursorCache::clear();
 }
 
-void TextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
+void TextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
 	clear();
 
 	myModel = model;
@@ -70,7 +70,7 @@ void TextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
 		myTextSize.push_back(0);
 		for (size_t i= 0; i < size; ++i) {
 			myTextSize.push_back(myTextSize.back() + (*myModel)[i]->textLength());
-			if ((*myModel)[i]->kind() == Paragraph::END_OF_TEXT_PARAGRAPH) {
+			if ((*myModel)[i]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH) {
 				myTextBreaks.push_back(i);
 			}
 		}
@@ -158,7 +158,7 @@ const TextElementArea *TextView::elementByCoordinates(int x, int y) const {
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
-void TextView::gotoMark(TextMark mark) {
+void TextView::gotoMark(ZLTextMark mark) {
 	if (mark.ParagraphNumber < 0) {
 		return;
 	}
@@ -194,12 +194,12 @@ void TextView::gotoParagraph(int num, bool last) {
 		return;
 	}
 
-	if (myModel->kind() == TextModel::TREE_MODEL) {
+	if (myModel->kind() == ZLTextModel::TREE_MODEL) {
 		if ((num >= 0) && (num < (int)myModel->paragraphsNumber())) {
-			TreeParagraph *tp = (TreeParagraph*)(*myModel)[num];
+			ZLTextTreeParagraph *tp = (ZLTextTreeParagraph*)(*myModel)[num];
 			if (myTreeStateIsFrozen) {
 				int corrected = num;
-				TreeParagraph *parent = tp->parent();
+				ZLTextTreeParagraph *parent = tp->parent();
 				while ((corrected > 0) && (parent != 0) && !parent->isOpen()) {
 					for (--corrected; ((corrected > 0) && parent != (*myModel)[corrected]); --corrected);
 					parent = parent->parent();
@@ -258,7 +258,7 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 	myModel->search(text, startIndex, endIndex, ignoreCase);
 	if (!startCursor().isNull()) {
 		rebuildPaintInfo(true);
-		TextMark position = startCursor().position();
+		ZLTextMark position = startCursor().position();
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
 							(backward ? myModel->previousMark(position) : myModel->nextMark(position)));
@@ -303,12 +303,12 @@ bool TextView::onStylusPress(int x, int y) {
 		}
 	}
 
-	if (myModel->kind() == TextModel::TREE_MODEL) {
+	if (myModel->kind() == ZLTextModel::TREE_MODEL) {
 		TreeNodeMap::const_iterator it =
 			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), TreeNodeArea::RangeChecker(x, y));
 		if (it != myTreeNodeMap.end()) {
 			int paragraphNumber = it->ParagraphNumber;
-			TreeParagraph *paragraph = (TreeParagraph*)(*myModel)[paragraphNumber];
+			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)(*myModel)[paragraphNumber];
 
 			paragraph->open(!paragraph->isOpen());
 			rebuildPaintInfo(true);

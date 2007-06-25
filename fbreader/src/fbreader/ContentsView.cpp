@@ -19,12 +19,13 @@
  * 02110-1301, USA.
  */
 
+#include <ZLTextParagraph.h>
+
 #include "ContentsView.h"
 #include "BookTextView.h"
 #include "FBReader.h"
 
 #include "../bookmodel/BookModel.h"
-#include "../textmodel/Paragraph.h"
 
 ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
 }
@@ -39,7 +40,7 @@ bool ContentsView::_onStylusPress(int x, int y) {
 	}
 
 	const ContentsModel &contentsModel = (const ContentsModel&)*model();
-	const TreeParagraph *paragraph = (const TreeParagraph*)contentsModel[index];
+	const ZLTextTreeParagraph *paragraph = (const ZLTextTreeParagraph*)contentsModel[index];
 	
 	int reference = contentsModel.reference(paragraph);
 
@@ -68,7 +69,7 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 		const ContentsModel &contentsModel = (const ContentsModel&)*model();
 		for (size_t i = 1; i < length; ++i) {
 			long contentsReference =
-				contentsModel.reference(((const TreeParagraph*)contentsModel[i]));
+				contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[i]));
 			if ((contentsReference > reference) ||
 					(!includeStart && startOfParagraph && (contentsReference == reference))) {
 				return i - 1;

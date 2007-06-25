@@ -24,8 +24,8 @@
 
 #include <ZLImageManager.h>
 
-#include "../textmodel/TextKind.h"
-#include "../textmodel/Paragraph.h"
+#include <ZLTextKind.h>
+#include <ZLTextParagraph.h>
 
 class TextElement {
 
@@ -84,13 +84,13 @@ private:
 class ForcedControlElement : public TextElement {
 
 public:
-	ForcedControlElement(shared_ptr<ParagraphEntry> entry);
+	ForcedControlElement(shared_ptr<ZLTextParagraphEntry> entry);
 	~ForcedControlElement();
 	Kind kind() const;
-	const ForcedControlEntry &entry() const;
+	const ZLTextForcedControlEntry &entry() const;
 
 private:
-	const shared_ptr<ParagraphEntry> myEntry;
+	const shared_ptr<ZLTextParagraphEntry> myEntry;
 };
 
 class FixedHSpaceElement : public TextElement {
@@ -107,17 +107,17 @@ private:
 class ControlElement : public TextElement {
 
 private:
-	ControlElement(shared_ptr<ParagraphEntry> entry);
+	ControlElement(shared_ptr<ZLTextParagraphEntry> entry);
 	~ControlElement();
 
 public:
 	Kind kind() const;
-	const ControlEntry &entry() const;
-	TextKind textKind() const;
+	const ZLTextControlEntry &entry() const;
+	ZLTextKind textKind() const;
 	bool isStart() const;
 
 private:
-	const shared_ptr<ParagraphEntry> myEntry;
+	const shared_ptr<ZLTextParagraphEntry> myEntry;
 
 friend class TextElementPool;
 };
@@ -135,16 +135,16 @@ inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
 inline SpecialTextElement::~SpecialTextElement() {}
 inline TextElement::Kind SpecialTextElement::kind() const { return myKind; };
 
-inline ForcedControlElement::ForcedControlElement(const shared_ptr<ParagraphEntry> entry) : myEntry(entry) {}
+inline ForcedControlElement::ForcedControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
 inline ForcedControlElement::~ForcedControlElement() {}
 inline TextElement::Kind ForcedControlElement::kind() const { return FORCED_CONTROL_ELEMENT; };
-inline const ForcedControlEntry &ForcedControlElement::entry() const { return (const ForcedControlEntry&)*myEntry; }
+inline const ZLTextForcedControlEntry &ForcedControlElement::entry() const { return (const ZLTextForcedControlEntry&)*myEntry; }
 
-inline ControlElement::ControlElement(const shared_ptr<ParagraphEntry> entry) : myEntry(entry) {}
+inline ControlElement::ControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
 inline ControlElement::~ControlElement() {}
 inline TextElement::Kind ControlElement::kind() const { return CONTROL_ELEMENT; };
-inline const ControlEntry &ControlElement::entry() const { return (const ControlEntry&)*myEntry; }
-inline TextKind ControlElement::textKind() const { return entry().kind(); }
+inline const ZLTextControlEntry &ControlElement::entry() const { return (const ZLTextControlEntry&)*myEntry; }
+inline ZLTextKind ControlElement::textKind() const { return entry().kind(); }
 inline bool ControlElement::isStart() const { return entry().isStart(); }
 
 inline FixedHSpaceElement::FixedHSpaceElement(unsigned char length) : myLength(length) {}

@@ -19,29 +19,9 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ROWMEMORYALLOCATOR_H__
-#define __ROWMEMORYALLOCATOR_H__
+#ifndef __ZLTEXTKIND_H__
+#define __ZLTEXTKIND_H__
 
-#include <vector>
+typedef unsigned char ZLTextKind;
 
-class RowMemoryAllocator {
-
-public:
-	RowMemoryAllocator();
-	~RowMemoryAllocator();
-
-	char *allocate(size_t size);
-	char *reallocateLast(char *ptr, size_t newSize);
-
-private:
-	const size_t myRowSize;
-	size_t myCurrentRowSize;
-	std::vector<char*> myPool;
-	size_t myOffset;
-
-private: // disable copying
-	RowMemoryAllocator(const RowMemoryAllocator&);
-	const RowMemoryAllocator &operator = (const RowMemoryAllocator&);
-};
-
-#endif /* __ROWMEMORYALLOCATOR_H__ */
+#endif /* __ZLTEXTKIND_H__ */

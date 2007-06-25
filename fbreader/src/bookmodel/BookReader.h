@@ -26,12 +26,11 @@
 #include <stack>
 #include <string>
 
+#include <ZLTextParagraph.h>
 #include "../model/FBTextKind.h"
-#include "../textmodel/Paragraph.h"
 
 class BookModel;
-class TextModel;
-class PlainTextModel;
+class ZLTextModel;
 class ZLInputStream;
 
 class BookReader {
@@ -48,11 +47,11 @@ public:
 	void insertEndOfTextParagraph();
 	void pushKind(FBTextKind kind);
 	bool popKind();
-	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH);
+	void beginParagraph(ZLTextParagraph::Kind kind = ZLTextParagraph::TEXT_PARAGRAPH);
 	void endParagraph();
 	bool paragraphIsOpen() const;
 	void addControl(FBTextKind kind, bool start);
-	void addControl(const ForcedControlEntry &entry);
+	void addControl(const ZLTextForcedControlEntry &entry);
 	void addHyperlinkControl(FBTextKind kind, const std::string &label);
 	void addHyperlinkLabel(const std::string &label);
 	void addHyperlinkLabel(const std::string &label, int paragraphNumber);
@@ -77,18 +76,18 @@ public:
 	void reset();
 
 private:
-	void insertEndParagraph(Paragraph::Kind kind);
+	void insertEndParagraph(ZLTextParagraph::Kind kind);
 	void flushTextBufferToParagraph();
 
 private:
 	BookModel &myModel;
-	shared_ptr<TextModel> myCurrentTextModel;
+	shared_ptr<ZLTextModel> myCurrentTextModel;
 
 	std::vector<FBTextKind> myKindStack;
 
 	bool myTextParagraphExists;
 	bool myContentsParagraphExists;
-	std::stack<TreeParagraph*> myTOCStack;
+	std::stack<ZLTextTreeParagraph*> myTOCStack;
 	bool myLastTOCParagraphIsEmpty;
 
 	bool mySectionContainsRegularContents;

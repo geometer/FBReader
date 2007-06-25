@@ -36,9 +36,9 @@
 #include "SelectionModel.h"
 #include "TextArea.h"
 
-class TextModel;
-class Paragraph;
-class TextMark;
+class ZLTextModel;
+class ZLTextMark;
+
 class LineInfo;
 class LineInfoPtr;
 class TreeNodeInfo;
@@ -130,15 +130,15 @@ public:
 	void scrollToStartOfText();
 	void scrollToEndOfText();
 
-	void gotoMark(TextMark mark);
+	void gotoMark(ZLTextMark mark);
 	virtual void gotoParagraph(int num, bool last = false);
 	void gotoPosition(int paragraphNumber, int wordNumber, int charNumber);
 
 	const WordCursor &startCursor() const;
 	const WordCursor &endCursor() const;
 
-	virtual void setModel(shared_ptr<TextModel> model, const std::string &name);
-	const shared_ptr<TextModel> model() const;
+	virtual void setModel(shared_ptr<ZLTextModel> model, const std::string &name);
+	const shared_ptr<ZLTextModel> model() const;
 
 	bool hasMultiSectionModel() const;
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly);
@@ -209,7 +209,7 @@ private:
 	PositionIndicator &positionIndicator();
 
 private:
-	shared_ptr<TextModel> myModel;
+	shared_ptr<ZLTextModel> myModel;
 	std::string myFileName;
 
 	enum {
@@ -254,7 +254,7 @@ inline bool TextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const WordCursor &TextView::startCursor() const { return myStartCursor; }
 inline const WordCursor &TextView::endCursor() const { return myEndCursor; }
 inline const std::string &TextView::fileName() const { return myFileName; }
-inline const shared_ptr<TextModel> TextView::model() const { return myModel; }
+inline const shared_ptr<ZLTextModel> TextView::model() const { return myModel; }
 inline SelectionModel &TextView::selectionModel() { return mySelectionModel; }
 
 #endif /* __TEXTVIEW_H__ */

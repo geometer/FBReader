@@ -46,10 +46,10 @@ LineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor 
 	const ParagraphCursor &paragraphCursor = current.paragraphCursor();
 	const bool isFirstLine = current.isStartOfParagraph();
 
-	if (paragraphCursor.paragraph().kind() == Paragraph::TREE_PARAGRAPH) {
+	if (paragraphCursor.paragraph().kind() == ZLTextParagraph::TREE_PARAGRAPH) {
 		info.NodeInfo = new TreeNodeInfo();
 		TreeNodeInfo &nodeInfo = *info.NodeInfo;
-		const TreeParagraph &treeParagraph = (const TreeParagraph&)paragraphCursor.paragraph();
+		const ZLTextTreeParagraph &treeParagraph = (const ZLTextTreeParagraph&)paragraphCursor.paragraph();
 		nodeInfo.IsLeaf = treeParagraph.children().empty();
 		nodeInfo.IsOpen = treeParagraph.isOpen();
 		nodeInfo.IsFirstLine = isFirstLine;
@@ -57,10 +57,10 @@ LineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor 
 
 		nodeInfo.VerticalLinesStack.reserve(treeParagraph.depth() - 1);
 		if (treeParagraph.depth() > 1) {
-			const TreeParagraph *current = treeParagraph.parent();
+			const ZLTextTreeParagraph *current = treeParagraph.parent();
 			nodeInfo.VerticalLinesStack.push_back(current->children().back() != &treeParagraph);
 			for (int i = 1; i < treeParagraph.depth() - 1; ++i) {
-				const TreeParagraph *parent = current->parent();
+				const ZLTextTreeParagraph *parent = current->parent();
 				nodeInfo.VerticalLinesStack.push_back(current != parent->children().back());
 				current = parent;
 			}

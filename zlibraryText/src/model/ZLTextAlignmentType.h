@@ -19,9 +19,15 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TEXTKIND_H__
-#define __TEXTKIND_H__
+#ifndef __ZLTEXTALIGNMENTTYPE_H__
+#define __ZLTEXTALIGNMENTTYPE_H__
 
-typedef unsigned char TextKind;
+enum ZLTextAlignmentType {
+	ALIGN_UNDEFINED = 0,
+	ALIGN_LEFT = 1,
+	ALIGN_RIGHT = 2,
+	ALIGN_CENTER = 3,
+	ALIGN_JUSTIFY = 4
+};
 
-#endif /* __TEXTKIND_H__ */
+#endif /* __ZLTEXTALIGNMENTTYPE_H__ */

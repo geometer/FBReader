@@ -225,7 +225,7 @@ void RtfBookReader::setEncoding(int) {
 }
 
 void RtfBookReader::setAlignment() {
-	ForcedControlEntry entry;
+	ZLTextForcedControlEntry entry;
 	entry.setAlignmentType(myState.Alignment);
 	myBookReader.addControl(entry);
 }

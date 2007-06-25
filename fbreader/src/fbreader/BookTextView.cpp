@@ -23,6 +23,9 @@
 #include <ZLDialogManager.h>
 #include <ZLStringUtil.h>
 
+#include <ZLTextModel.h>
+#include <ZLTextParagraph.h>
+
 #include "BookTextView.h"
 #include "FBReader.h"
 
@@ -30,8 +33,6 @@
 #include "../textview/Word.h"
 
 #include "../model/FBTextKind.h"
-#include "../textmodel/TextModel.h"
-#include "../textmodel/Paragraph.h"
 #include "../bookmodel/BookModel.h"
 
 #include "../external/ProgramCollection.h"
@@ -56,7 +57,7 @@ BookTextView::~BookTextView() {
 	saveState();
 }
 
-void BookTextView::setModel(shared_ptr<TextModel> model, const std::string &name) {
+void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
 	TextView::setModel(model, name);
 
 	const std::string &group = fileName();
@@ -94,7 +95,7 @@ void BookTextView::setModel(shared_ptr<TextModel> model, const std::string &name
 	}
 }
 
-void BookTextView::setContentsModel(shared_ptr<TextModel> contentsModel) {
+void BookTextView::setContentsModel(shared_ptr<ZLTextModel> contentsModel) {
 	myContentsModel = contentsModel;
 }
 
@@ -207,14 +208,14 @@ bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, 
 	WordCursor cursor = startCursor();
 	cursor.moveToParagraph(area.ParagraphNumber);
 	cursor.moveToParagraphStart();
-	TextKind hyperlinkKind = REGULAR;
+	ZLTextKind hyperlinkKind = REGULAR;
 	for (int i = 0; i < area.TextElementNumber; ++i) {
 		const TextElement &element = cursor.element();
 		if (element.kind() == TextElement::CONTROL_ELEMENT) {
-			const ControlEntry &control = ((const ControlElement&)element).entry();
+			const ZLTextControlEntry &control = ((const ControlElement&)element).entry();
 			if (control.isHyperlink()) {
 				hyperlinkKind = control.kind();
-				id = ((const HyperlinkControlEntry&)control).label();
+				id = ((const ZLTextHyperlinkControlEntry&)control).label();
 			} else if (!control.isStart() && (control.kind() == hyperlinkKind)) {
 				hyperlinkKind = REGULAR;
 			}
@@ -272,7 +273,7 @@ void BookTextView::PositionIndicatorWithLabels::draw() {
 	const BookTextView& bookTextView = (const BookTextView&)textView();
 
 	if (bookTextView.ShowTOCMarksOption.value()) {
-		shared_ptr<TextModel> contentsModelPtr = bookTextView.myContentsModel;
+		shared_ptr<ZLTextModel> contentsModelPtr = bookTextView.myContentsModel;
 		if (!contentsModelPtr.isNull()) {
 			ContentsModel &contentsModel = (ContentsModel&)*contentsModelPtr;
 			const int marksNumber = contentsModel.paragraphsNumber();
@@ -285,7 +286,7 @@ void BookTextView::PositionIndicatorWithLabels::draw() {
 			const int bottom = this->bottom();
 			const int top = this->top();
 			for (int i = 0; i < marksNumber; ++i) {
-				size_t reference = contentsModel.reference((TreeParagraph*)contentsModel[i]);
+				size_t reference = contentsModel.reference((ZLTextTreeParagraph*)contentsModel[i]);
 				if ((startIndex < reference) && (reference < endIndex)) {
 					int position = (int)
 						(1.0 * fullWidth * (textSizeVector[reference] - startPosition) / fullTextSize);

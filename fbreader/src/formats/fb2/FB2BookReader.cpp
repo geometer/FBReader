@@ -21,10 +21,11 @@
 
 #include <ZLInputStream.h>
 
+#include <ZLTextParagraph.h>
+
 #include "FB2BookReader.h"
 #include "Base64EncodedImage.h"
 #include "../../bookmodel/BookModel.h"
-#include "../../textmodel/Paragraph.h"
 
 FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myInsideCoverpage = false;
@@ -131,7 +132,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _STANZA:
 			myModelReader.pushKind(STANZA);
-			myModelReader.beginParagraph(Paragraph::BEFORE_SKIP_PARAGRAPH);
+			myModelReader.beginParagraph(ZLTextParagraph::BEFORE_SKIP_PARAGRAPH);
 			myModelReader.endParagraph();
 			break;
 		case _EPIGRAPH:
@@ -213,7 +214,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		}
 		case _EMPTY_LINE:
-			myModelReader.beginParagraph(Paragraph::EMPTY_LINE_PARAGRAPH);
+			myModelReader.beginParagraph(ZLTextParagraph::EMPTY_LINE_PARAGRAPH);
 			myModelReader.endParagraph();
 			break;
 		case _BODY:
@@ -263,7 +264,7 @@ void FB2BookReader::endElementHandler(int tag) {
 			myInsidePoem = false;
 			break;
 		case _STANZA:
-			myModelReader.beginParagraph(Paragraph::AFTER_SKIP_PARAGRAPH);
+			myModelReader.beginParagraph(ZLTextParagraph::AFTER_SKIP_PARAGRAPH);
 			myModelReader.endParagraph();
 			myModelReader.popKind();
 			break;

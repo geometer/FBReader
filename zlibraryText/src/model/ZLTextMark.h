@@ -19,50 +19,48 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TEXTMARK_H__
-#define __TEXTMARK_H__
+#ifndef __ZLTEXTMARK_H__
+#define __ZLTEXTMARK_H__
 
-class TextParagraphData;
-
-struct TextMark {
+struct ZLTextMark {
 	int ParagraphNumber;
 	int Offset, Length;
 
-	TextMark();
-	TextMark(int paragraphNumber, int offset, int length);
-	TextMark(const TextMark &mark);
-	const TextMark &operator = (const TextMark &mark);
-	~TextMark();
+	ZLTextMark();
+	ZLTextMark(int paragraphNumber, int offset, int length);
+	ZLTextMark(const ZLTextMark &mark);
+	const ZLTextMark &operator = (const ZLTextMark &mark);
+	~ZLTextMark();
 
-	bool operator < (const TextMark &mark) const;
-	bool operator > (const TextMark &mark) const;
-	bool operator <= (const TextMark &mark) const;
-	bool operator >= (const TextMark &mark) const;
+	bool operator < (const ZLTextMark &mark) const;
+	bool operator > (const ZLTextMark &mark) const;
+	bool operator <= (const ZLTextMark &mark) const;
+	bool operator >= (const ZLTextMark &mark) const;
 };
 
-inline TextMark::TextMark() : ParagraphNumber(-1), Offset(-1), Length(-1) {}
-inline TextMark::TextMark(int paragraphNumber, int offset, int length) : ParagraphNumber(paragraphNumber), Offset(offset), Length(length) {}
-inline TextMark::TextMark(const TextMark &mark) : ParagraphNumber(mark.ParagraphNumber), Offset(mark.Offset), Length(mark.Length) {}
-inline const TextMark &TextMark::operator = (const TextMark &mark) {
+inline ZLTextMark::ZLTextMark() : ParagraphNumber(-1), Offset(-1), Length(-1) {}
+inline ZLTextMark::ZLTextMark(int paragraphNumber, int offset, int length) : ParagraphNumber(paragraphNumber), Offset(offset), Length(length) {}
+inline ZLTextMark::ZLTextMark(const ZLTextMark &mark) : ParagraphNumber(mark.ParagraphNumber), Offset(mark.Offset), Length(mark.Length) {}
+inline const ZLTextMark &ZLTextMark::operator = (const ZLTextMark &mark) {
 	ParagraphNumber = mark.ParagraphNumber;
 	Offset = mark.Offset;
 	Length = mark.Length;
 	return *this;
 }
-inline TextMark::~TextMark() {}
+inline ZLTextMark::~ZLTextMark() {}
 
-inline bool TextMark::operator < (const TextMark &mark) const {
+inline bool ZLTextMark::operator < (const ZLTextMark &mark) const {
 	return (ParagraphNumber < mark.ParagraphNumber) ||
 				 ((ParagraphNumber == mark.ParagraphNumber) && (Offset < mark.Offset));
 }
-inline bool TextMark::operator > (const TextMark &mark) const {
+inline bool ZLTextMark::operator > (const ZLTextMark &mark) const {
 	return mark < *this;
 }
-inline bool TextMark::operator <= (const TextMark &mark) const {
+inline bool ZLTextMark::operator <= (const ZLTextMark &mark) const {
 	return !(*this > mark);
 }
-inline bool TextMark::operator >= (const TextMark &mark) const {
+inline bool ZLTextMark::operator >= (const ZLTextMark &mark) const {
 	return !(*this < mark);
 }
 
-#endif /* __TEXTMARK_H__ */
+#endif /* __ZLTEXTMARK_H__ */

@@ -23,35 +23,35 @@
 
 #include <ZLSearchUtil.h>
 
-#include "TextModel.h"
-#include "Paragraph.h"
+#include "ZLTextModel.h"
+#include "ZLTextParagraph.h"
 
-TextModel::TextModel() : myLastEntryStart(0) {
+ZLTextModel::ZLTextModel() : myLastEntryStart(0) {
 }
 
-TextModel::~TextModel() {
-	for (std::vector<Paragraph*>::const_iterator it = myParagraphs.begin(); it != myParagraphs.end(); ++it) {
+ZLTextModel::~ZLTextModel() {
+	for (std::vector<ZLTextParagraph*>::const_iterator it = myParagraphs.begin(); it != myParagraphs.end(); ++it) {
 		delete *it;
 	}
 }
 
-void TextModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
+void ZLTextModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
 	ZLSearchPattern pattern(text, ignoreCase);
 	myMarks.clear();
 
-	std::vector<Paragraph*>::const_iterator start =
+	std::vector<ZLTextParagraph*>::const_iterator start =
 		(startIndex < myParagraphs.size()) ? myParagraphs.begin() + startIndex : myParagraphs.end();
-	std::vector<Paragraph*>::const_iterator end =
+	std::vector<ZLTextParagraph*>::const_iterator end =
 		(endIndex < myParagraphs.size()) ? myParagraphs.begin() + endIndex : myParagraphs.end();
-	for (std::vector<Paragraph*>::const_iterator it = start; it < end; ++it) {
+	for (std::vector<ZLTextParagraph*>::const_iterator it = start; it < end; ++it) {
 		int offset = 0;
-		for (Paragraph::Iterator jt = **it; !jt.isEnd(); jt.next()) {
-			if (jt.entryKind() == ParagraphEntry::TEXT_ENTRY) {
-				const TextEntry& textEntry = (TextEntry&)*jt.entry();
+		for (ZLTextParagraph::Iterator jt = **it; !jt.isEnd(); jt.next()) {
+			if (jt.entryKind() == ZLTextParagraphEntry::TEXT_ENTRY) {
+				const ZLTextEntry& textEntry = (ZLTextEntry&)*jt.entry();
 				const char *str = textEntry.data();
 				const size_t len = textEntry.dataLength();
 				for (int pos = ZLSearchUtil::find(str, len, pattern); pos != -1; pos = ZLSearchUtil::find(str, len, pattern, pos + 1)) {
-					myMarks.push_back(TextMark(it - myParagraphs.begin(), offset + pos, pattern.length()));
+					myMarks.push_back(ZLTextMark(it - myParagraphs.begin(), offset + pos, pattern.length()));
 				}
 				offset += len;
 			}
@@ -59,101 +59,101 @@ void TextModel::search(const std::string &text, size_t startIndex, size_t endInd
 	}
 }
 
-void TextModel::selectParagraph(size_t index) const {
+void ZLTextModel::selectParagraph(size_t index) const {
 	if (index < paragraphsNumber()) {
 		myMarks.clear();
-		myMarks.push_back(TextMark(index, 0, (*this)[index]->textLength()));
+		myMarks.push_back(ZLTextMark(index, 0, (*this)[index]->textLength()));
 	}
 }
 
-TextMark TextModel::firstMark() const {
-	return marks().empty() ? TextMark() : marks().front();
+ZLTextMark ZLTextModel::firstMark() const {
+	return marks().empty() ? ZLTextMark() : marks().front();
 }
 
-TextMark TextModel::lastMark() const {
-	return marks().empty() ? TextMark() : marks().back();
+ZLTextMark ZLTextModel::lastMark() const {
+	return marks().empty() ? ZLTextMark() : marks().back();
 }
 
-TextMark TextModel::nextMark(TextMark position) const {
-	std::vector<TextMark>::const_iterator it = std::upper_bound(marks().begin(), marks().end(), position);
-	return (it != marks().end()) ? *it : TextMark();
+ZLTextMark ZLTextModel::nextMark(ZLTextMark position) const {
+	std::vector<ZLTextMark>::const_iterator it = std::upper_bound(marks().begin(), marks().end(), position);
+	return (it != marks().end()) ? *it : ZLTextMark();
 }
 
-TextMark TextModel::previousMark(TextMark position) const {
+ZLTextMark ZLTextModel::previousMark(ZLTextMark position) const {
 	if (marks().empty()) {
-		return TextMark();
+		return ZLTextMark();
 	}
-	std::vector<TextMark>::const_iterator it = std::lower_bound(marks().begin(), marks().end(), position);
+	std::vector<ZLTextMark>::const_iterator it = std::lower_bound(marks().begin(), marks().end(), position);
 	if (it == marks().end()) {
 		--it;
 	}
 	if (*it >= position) {
 		if (it == marks().begin()) {
-			return TextMark();
+			return ZLTextMark();
 		}
 		--it;
 	}
 	return *it;
 }
 
-TreeModel::TreeModel() {
-	myRoot = new TreeParagraph();
+ZLTextTreeModel::ZLTextTreeModel() {
+	myRoot = new ZLTextTreeParagraph();
 	myRoot->open(true);
 }
 
-TreeModel::~TreeModel() {
+ZLTextTreeModel::~ZLTextTreeModel() {
 	delete myRoot;
 }
 
-void TextModel::addParagraphInternal(Paragraph *paragraph) {
+void ZLTextModel::addParagraphInternal(ZLTextParagraph *paragraph) {
 	myParagraphs.push_back(paragraph);
 	myLastEntryStart = 0;
 }
 
-void TextModel::removeParagraphInternal(int index) {
+void ZLTextModel::removeParagraphInternal(int index) {
 	if ((index >= 0) && (index < (int)myParagraphs.size())) {
 		myParagraphs.erase(myParagraphs.begin() + index);
 	}
 }
 
-void TreeModel::removeParagraph(int index) {
-	TreeParagraph *p = (TreeParagraph*)(*this)[index];
+void ZLTextTreeModel::removeParagraph(int index) {
+	ZLTextTreeParagraph *p = (ZLTextTreeParagraph*)(*this)[index];
 	p->removeFromParent();
 	removeParagraphInternal(index);
 	delete p;
 }
 
-TreeParagraph *TreeModel::createParagraph(TreeParagraph *parent) {
+ZLTextTreeParagraph *ZLTextTreeModel::createParagraph(ZLTextTreeParagraph *parent) {
 	if (parent == 0) {
 		parent = myRoot;
 	}
-	TreeParagraph *tp = new TreeParagraph(parent);
+	ZLTextTreeParagraph *tp = new ZLTextTreeParagraph(parent);
 	addParagraphInternal(tp);
 	return tp;
 }
 
-void TreeModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
-	TextModel::search(text, startIndex, endIndex, ignoreCase);
-	for (std::vector<TextMark>::const_iterator it = marks().begin(); it != marks().end(); ++it) {
-		((TreeParagraph*)(*this)[it->ParagraphNumber])->openTree();
+void ZLTextTreeModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
+	ZLTextModel::search(text, startIndex, endIndex, ignoreCase);
+	for (std::vector<ZLTextMark>::const_iterator it = marks().begin(); it != marks().end(); ++it) {
+		((ZLTextTreeParagraph*)(*this)[it->ParagraphNumber])->openTree();
 	}
 }
 
-void TreeModel::selectParagraph(size_t index) const {
+void ZLTextTreeModel::selectParagraph(size_t index) const {
 	if (index < paragraphsNumber()) {
-		TextModel::selectParagraph(index);
-		((TreeParagraph*)(*this)[index])->openTree();
+		ZLTextModel::selectParagraph(index);
+		((ZLTextTreeParagraph*)(*this)[index])->openTree();
 	}
 }
 
-void PlainTextModel::createParagraph(Paragraph::Kind kind) {
-	Paragraph *paragraph = (kind == Paragraph::TEXT_PARAGRAPH) ? new Paragraph() : new SpecialParagraph(kind);
+void ZLTextPlainModel::createParagraph(ZLTextParagraph::Kind kind) {
+	ZLTextParagraph *paragraph = (kind == ZLTextParagraph::TEXT_PARAGRAPH) ? new ZLTextParagraph() : new ZLTextSpecialParagraph(kind);
 	addParagraphInternal(paragraph);
 }
 
-void TextModel::addText(const std::string &text) {
+void ZLTextModel::addText(const std::string &text) {
 	size_t len = text.length();
-	if ((myLastEntryStart != 0) && (*myLastEntryStart == ParagraphEntry::TEXT_ENTRY)) {
+	if ((myLastEntryStart != 0) && (*myLastEntryStart == ZLTextParagraphEntry::TEXT_ENTRY)) {
 		size_t oldLen = 0;
 		memcpy(&oldLen, myLastEntryStart + 1, sizeof(size_t));
 		size_t newLen = oldLen + len;
@@ -162,14 +162,14 @@ void TextModel::addText(const std::string &text) {
 		memcpy(myLastEntryStart + sizeof(size_t) + 1 + oldLen, text.data(), len);
 	} else {
 		myLastEntryStart = myAllocator.allocate(len + sizeof(size_t) + 1);
-		*myLastEntryStart = ParagraphEntry::TEXT_ENTRY;
+		*myLastEntryStart = ZLTextParagraphEntry::TEXT_ENTRY;
 		memcpy(myLastEntryStart + 1, &len, sizeof(size_t));
 		memcpy(myLastEntryStart + sizeof(size_t) + 1, text.data(), len);
 		myParagraphs.back()->addEntry(myLastEntryStart);
 	}
 }
 
-void TextModel::addText(const std::vector<std::string> &text) {
+void ZLTextModel::addText(const std::vector<std::string> &text) {
 	if (text.size() == 0) {
 		return;
 	}
@@ -177,7 +177,7 @@ void TextModel::addText(const std::vector<std::string> &text) {
 	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); ++it) {
 		len += it->length();
 	}
-	if ((myLastEntryStart != 0) && (*myLastEntryStart == ParagraphEntry::TEXT_ENTRY)) {
+	if ((myLastEntryStart != 0) && (*myLastEntryStart == ZLTextParagraphEntry::TEXT_ENTRY)) {
 		size_t oldLen = 0;
 		memcpy(&oldLen, myLastEntryStart + 1, sizeof(size_t));
 		size_t newLen = oldLen + len;
@@ -190,7 +190,7 @@ void TextModel::addText(const std::vector<std::string> &text) {
 		}
 	} else {
 		myLastEntryStart = myAllocator.allocate(len + sizeof(size_t) + 1);
-		*myLastEntryStart = ParagraphEntry::TEXT_ENTRY;
+		*myLastEntryStart = ZLTextParagraphEntry::TEXT_ENTRY;
 		memcpy(myLastEntryStart + 1, &len, sizeof(size_t));
 		size_t offset = sizeof(size_t) + 1;
 		for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); ++it) {
@@ -201,23 +201,23 @@ void TextModel::addText(const std::vector<std::string> &text) {
 	}
 }
 
-void TextModel::addFixedHSpace(unsigned char length) {
+void ZLTextModel::addFixedHSpace(unsigned char length) {
 	myLastEntryStart = myAllocator.allocate(2);
-	*myLastEntryStart = ParagraphEntry::FIXED_HSPACE_ENTRY;
+	*myLastEntryStart = ZLTextParagraphEntry::FIXED_HSPACE_ENTRY;
 	*(myLastEntryStart + 1) = length;
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void TextModel::addControl(TextKind textKind, bool isStart) {
+void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 	myLastEntryStart = myAllocator.allocate(2);
-	*myLastEntryStart = ParagraphEntry::CONTROL_ENTRY;
+	*myLastEntryStart = ZLTextParagraphEntry::CONTROL_ENTRY;
 	*(myLastEntryStart + 1) = (textKind << 1) + (isStart ? 1 : 0);
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void TextModel::addControl(const ForcedControlEntry &entry) {
+void ZLTextModel::addControl(const ZLTextForcedControlEntry &entry) {
 	myLastEntryStart = myAllocator.allocate(3 + 2 * sizeof(short));
-	*myLastEntryStart = ParagraphEntry::FORCED_CONTROL_ENTRY;
+	*myLastEntryStart = ZLTextParagraphEntry::FORCED_CONTROL_ENTRY;
 	*(myLastEntryStart + 1) = entry.myMask;
 	memcpy(myLastEntryStart + 2, &entry.myLeftIndent, sizeof(short));
 	memcpy(myLastEntryStart + 2 + sizeof(short), &entry.myRightIndent, sizeof(short));
@@ -225,22 +225,22 @@ void TextModel::addControl(const ForcedControlEntry &entry) {
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void TextModel::addHyperlinkControl(TextKind textKind, const std::string &label) {
+void ZLTextModel::addHyperlinkControl(ZLTextKind textKind, const std::string &label) {
 	myLastEntryStart = myAllocator.allocate(label.length() + 3);
-	*myLastEntryStart = ParagraphEntry::HYPERLINK_CONTROL_ENTRY;
+	*myLastEntryStart = ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY;
 	*(myLastEntryStart + 1) = textKind;
 	memcpy(myLastEntryStart + 2, label.data(), label.length());
 	*(myLastEntryStart + label.length() + 2) = '\0';
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void TextModel::addImage(const std::string &id, const ImageMap &imageMap, short vOffset) {
-	myLastEntryStart = myAllocator.allocate(sizeof(const ImageMap*) + sizeof(short) + id.length() + 2);
-	*myLastEntryStart = ParagraphEntry::IMAGE_ENTRY;
-	const ImageMap *imageMapAddress = &imageMap;
-	memcpy(myLastEntryStart + 1, &imageMapAddress, sizeof(const ImageMap*));
-	memcpy(myLastEntryStart + 1 + sizeof(const ImageMap*), &vOffset, sizeof(short));
-	memcpy(myLastEntryStart + 1 + sizeof(const ImageMap*) + sizeof(short), id.data(), id.length());
-	*(myLastEntryStart + 1 + sizeof(const ImageMap*) + sizeof(short) + id.length()) = '\0';
+void ZLTextModel::addImage(const std::string &id, const ZLImageMap &imageMap, short vOffset) {
+	myLastEntryStart = myAllocator.allocate(sizeof(const ZLImageMap*) + sizeof(short) + id.length() + 2);
+	*myLastEntryStart = ZLTextParagraphEntry::IMAGE_ENTRY;
+	const ZLImageMap *imageMapAddress = &imageMap;
+	memcpy(myLastEntryStart + 1, &imageMapAddress, sizeof(const ZLImageMap*));
+	memcpy(myLastEntryStart + 1 + sizeof(const ZLImageMap*), &vOffset, sizeof(short));
+	memcpy(myLastEntryStart + 1 + sizeof(const ZLImageMap*) + sizeof(short), id.data(), id.length());
+	*(myLastEntryStart + 1 + sizeof(const ZLImageMap*) + sizeof(short) + id.length()) = '\0';
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }

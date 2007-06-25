@@ -21,8 +21,9 @@
 
 #include <ZLOptions.h>
 
+#include <ZLTextParagraph.h>
+
 #include "TextStyle.h"
-#include "../textmodel/Paragraph.h"
 
 static const std::string STYLE = "Style";
 
@@ -37,7 +38,7 @@ TextStyleDecoration::TextStyleDecoration(const std::string &name, int fontSizeDe
 	myHyperlinkStyle(NONE) {
 }
 
-FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, AlignmentType alignment, double lineSpace, ZLBoolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
+FullTextStyleDecoration::FullTextStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, ZLTextAlignmentType alignment, double lineSpace, ZLBoolean3 allowHyphenations) : TextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
 	SpaceBeforeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":spaceBefore", -10, 100, spaceBefore),
 	SpaceAfterOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":spaceAfter", -10, 100, spaceAfter),
 	LeftIndentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":leftIndent", -300, 300, leftIndent),
@@ -103,8 +104,8 @@ bool FullDecoratedTextStyle::italic() const {
 	return (i == B3_UNDEFINED) ? base()->italic() : (i == B3_TRUE);
 }
 
-AlignmentType FullDecoratedTextStyle::alignment() const {
-	AlignmentType a = (AlignmentType)myDecoration.AlignmentOption.value();
+ZLTextAlignmentType FullDecoratedTextStyle::alignment() const {
+	ZLTextAlignmentType a = (ZLTextAlignmentType)myDecoration.AlignmentOption.value();
 	return (a == ALIGN_UNDEFINED) ? base()->alignment() : a;
 }
 
@@ -148,6 +149,6 @@ int ForcedTextStyle::rightIndent() const {
 	return myEntry.rightIndentSupported() ? myEntry.rightIndent() : base()->rightIndent();
 }
 
-AlignmentType ForcedTextStyle::alignment() const {
+ZLTextAlignmentType ForcedTextStyle::alignment() const {
 	return myEntry.alignmentTypeSupported() ? myEntry.alignmentType() : base()->alignment();
 }

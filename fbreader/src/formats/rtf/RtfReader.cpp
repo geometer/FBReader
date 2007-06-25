@@ -71,7 +71,7 @@ void RtfFontPropertyCommand::run(RtfReader &reader, int *parameter) const {
 	}
 }
 
-RtfAlignmentCommand::RtfAlignmentCommand(AlignmentType alignment) : myAlignment(alignment) {
+RtfAlignmentCommand::RtfAlignmentCommand(ZLTextAlignmentType alignment) : myAlignment(alignment) {
 }
 
 void RtfAlignmentCommand::run(RtfReader &reader, int*) const {
@@ -273,7 +273,7 @@ bool RtfReader::parseDocument() {
 							bool oldItalic = myState.Italic;
 							bool oldBold = myState.Bold;
 							bool oldUnderlined = myState.Underlined;
-							AlignmentType oldAlignment = myState.Alignment;
+							ZLTextAlignmentType oldAlignment = myState.Alignment;
 							myState = myStateStack.top();
 							myStateStack.pop();
 					

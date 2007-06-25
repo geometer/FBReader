@@ -19,13 +19,13 @@
  * 02110-1301, USA.
  */
 
+#include <ZLTextModel.h>
+#include <ZLTextParagraph.h>
+
 #include "RecentBooksView.h"
 #include "FBReader.h"
 
-#include "../textmodel/TextModel.h"
-#include "../textmodel/Paragraph.h"
 #include "../model/FBTextKind.h"
-
 #include "../description/Author.h"
 
 static const std::string LIBRARY = "Recent Books";
@@ -43,10 +43,10 @@ const std::string &RecentBooksView::caption() const {
 
 void RecentBooksView::paint() {
 	if (model().isNull()) {
-		PlainTextModel *recentBooksModel = new PlainTextModel();
+		ZLTextPlainModel *recentBooksModel = new ZLTextPlainModel();
 		const Books &books = myLastBooks.books();
 		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
-			recentBooksModel->createParagraph(Paragraph::TEXT_PARAGRAPH);
+			recentBooksModel->createParagraph(ZLTextParagraph::TEXT_PARAGRAPH);
 			recentBooksModel->addControl(RECENT_BOOK_LIST, true);
 			recentBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
 			recentBooksModel->addText((*it)->author()->displayName() + ". ");

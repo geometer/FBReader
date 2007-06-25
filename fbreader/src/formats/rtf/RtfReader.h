@@ -29,7 +29,8 @@
 
 #include <ZLEncodingConverter.h>
 
-#include "../../textmodel/AlignmentType.h"
+#include <ZLTextAlignmentType.h>
+
 #include "../EncodedTextReader.h"
 
 class ZLInputStream;
@@ -89,7 +90,7 @@ protected:
 		bool Bold;
 		bool Italic;
 		bool Underlined;
-		AlignmentType Alignment;
+		ZLTextAlignmentType Alignment;
 		DestinationType Destination;
 	
 		bool ReadDataAsHex;
@@ -148,11 +149,11 @@ private:
 
 class RtfAlignmentCommand : public RtfCommand {
 public:
-	RtfAlignmentCommand(AlignmentType alignment);
+	RtfAlignmentCommand(ZLTextAlignmentType alignment);
 	void run(RtfReader &reader, int *parameter) const;
 
 private:
-	AlignmentType myAlignment;
+	ZLTextAlignmentType myAlignment;
 };
 
 class RtfCharCommand : public RtfCommand {

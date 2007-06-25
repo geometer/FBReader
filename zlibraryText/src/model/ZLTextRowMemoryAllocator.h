@@ -19,15 +19,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ALIGNMENTTYPE_H__
-#define __ALIGNMENTTYPE_H__
+#ifndef __ZLTEXTROWMEMORYALLOCATOR_H__
+#define __ZLTEXTROWMEMORYALLOCATOR_H__
 
-enum AlignmentType {
-	ALIGN_UNDEFINED = 0,
-	ALIGN_LEFT = 1,
-	ALIGN_RIGHT = 2,
-	ALIGN_CENTER = 3,
-	ALIGN_JUSTIFY = 4
+#include <vector>
+
+class ZLTextRowMemoryAllocator {
+
+public:
+	ZLTextRowMemoryAllocator();
+	~ZLTextRowMemoryAllocator();
+
+	char *allocate(size_t size);
+	char *reallocateLast(char *ptr, size_t newSize);
+
+private:
+	const size_t myRowSize;
+	size_t myCurrentRowSize;
+	std::vector<char*> myPool;
+	size_t myOffset;
+
+private: // disable copying
+	ZLTextRowMemoryAllocator(const ZLTextRowMemoryAllocator&);
+	const ZLTextRowMemoryAllocator &operator = (const ZLTextRowMemoryAllocator&);
 };
 
-#endif /* __ALIGNMENTTYPE_H__ */
+#endif /* __ZLTEXTROWMEMORYALLOCATOR_H__ */

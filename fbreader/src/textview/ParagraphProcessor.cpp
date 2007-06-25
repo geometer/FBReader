@@ -24,13 +24,13 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLImage.h>
 
+#include <ZLTextParagraph.h>
+
 #include "ParagraphCursor.h"
 #include "Word.h"
 
-#include "../textmodel/Paragraph.h"
-
-ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
-	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));
+ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
+	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
 	myOffset = 0;
@@ -41,8 +41,8 @@ ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
 
 void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {
 	Word *word = TextElementPool::Pool.getWord(ptr, len, offset);
-	for (std::vector<TextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
-		TextMark mark = *mit;
+	for (std::vector<ZLTextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
+		ZLTextMark mark = *mit;
 		if ((mark.Offset < offset + len) && (mark.Offset + mark.Length > offset)) {
 			word->addMark(mark.Offset - offset, mark.Length);
 		}
@@ -51,19 +51,19 @@ void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, i
 }
 
 void ParagraphCursor::ParagraphProcessor::fill() {
-	for (Paragraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
+	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
-			case ParagraphEntry::FORCED_CONTROL_ENTRY:
+			case ZLTextParagraphEntry::FORCED_CONTROL_ENTRY:
 				myElements.push_back(new ForcedControlElement(it.entry()));
 				break;
-			case ParagraphEntry::FIXED_HSPACE_ENTRY:
-				myElements.push_back(new FixedHSpaceElement(((FixedHSpaceEntry&)*it.entry()).length()));
+			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
+				myElements.push_back(new FixedHSpaceElement(((ZLTextFixedHSpaceEntry&)*it.entry()).length()));
 				break;
-			case ParagraphEntry::CONTROL_ENTRY:
-			case ParagraphEntry::HYPERLINK_CONTROL_ENTRY:
+			case ZLTextParagraphEntry::CONTROL_ENTRY:
+			case ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY:
 				myElements.push_back(TextElementPool::Pool.getControlElement(it.entry()));
 				break;
-			case ParagraphEntry::IMAGE_ENTRY:
+			case ZLTextParagraphEntry::IMAGE_ENTRY:
 			{
 				ImageEntry &imageEntry = (ImageEntry&)*it.entry();
 				shared_ptr<const ZLImage> image = imageEntry.image();
@@ -75,8 +75,8 @@ void ParagraphCursor::ParagraphProcessor::fill() {
 				}
 				break;
 			}
-			case ParagraphEntry::TEXT_ENTRY:
-				processTextEntry((const TextEntry&)*it.entry());
+			case ZLTextParagraphEntry::TEXT_ENTRY:
+				processTextEntry((const ZLTextEntry&)*it.entry());
 				break;
 		}
 	}

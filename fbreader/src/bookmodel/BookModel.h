@@ -25,29 +25,29 @@
 #include <map>
 #include <string>
 
-#include "../textmodel/TextModel.h"
-#include "../textmodel/Paragraph.h"
+#include <ZLTextModel.h>
+#include <ZLTextParagraph.h>
 #include "../description/BookDescription.h"
 
 class ZLImage;
 
-class ContentsModel : public TreeModel {
+class ContentsModel : public ZLTextTreeModel {
 
 public:
-	void setReference(const TreeParagraph *paragraph, int reference);
-	int reference(const TreeParagraph *paragraph) const;
+	void setReference(const ZLTextTreeParagraph *paragraph, int reference);
+	int reference(const ZLTextTreeParagraph *paragraph) const;
 
 private:
-	std::map<const TreeParagraph*,int> myReferenceByParagraph;
+	std::map<const ZLTextTreeParagraph*,int> myReferenceByParagraph;
 };
 
 class BookModel {
 
 public:
 	struct Label {
-		Label(shared_ptr<TextModel> model, int paragraphNumber) : Model(model), ParagraphNumber(paragraphNumber) {}
+		Label(shared_ptr<ZLTextModel> model, int paragraphNumber) : Model(model), ParagraphNumber(paragraphNumber) {}
 
-		const shared_ptr<TextModel> Model;
+		const shared_ptr<ZLTextModel> Model;
 		const int ParagraphNumber;
 	};
 
@@ -57,28 +57,28 @@ public:
 
 	const std::string &fileName() const;
 
-	shared_ptr<TextModel> bookTextModel() const;
-	shared_ptr<TextModel> contentsModel() const;
+	shared_ptr<ZLTextModel> bookTextModel() const;
+	shared_ptr<ZLTextModel> contentsModel() const;
 
-	const ImageMap &imageMap() const;
+	const ZLImageMap &imageMap() const;
 	Label label(const std::string &id) const;
 
 	const BookDescriptionPtr description() const;
 
 private:
 	const BookDescriptionPtr myDescription;
-	shared_ptr<TextModel> myBookTextModel;
-	shared_ptr<TextModel> myContentsModel;
-	ImageMap myImages;
-	std::map<std::string,shared_ptr<TextModel> > myFootnotes;
+	shared_ptr<ZLTextModel> myBookTextModel;
+	shared_ptr<ZLTextModel> myContentsModel;
+	ZLImageMap myImages;
+	std::map<std::string,shared_ptr<ZLTextModel> > myFootnotes;
 	std::map<std::string,Label> myInternalHyperlinks;
 
 friend class BookReader;
 };
 
-inline shared_ptr<TextModel> BookModel::bookTextModel() const { return myBookTextModel; }
-inline shared_ptr<TextModel> BookModel::contentsModel() const { return myContentsModel; }
-inline const ImageMap &BookModel::imageMap() const { return myImages; }
+inline shared_ptr<ZLTextModel> BookModel::bookTextModel() const { return myBookTextModel; }
+inline shared_ptr<ZLTextModel> BookModel::contentsModel() const { return myContentsModel; }
+inline const ZLImageMap &BookModel::imageMap() const { return myImages; }
 inline const BookDescriptionPtr BookModel::description() const { return myDescription; }
 
 #endif /* __BOOKMODEL_H__ */

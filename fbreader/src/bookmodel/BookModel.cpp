@@ -28,7 +28,7 @@
 #include "../formats/FormatPlugin.h"
 
 BookModel::BookModel(const BookDescriptionPtr description) : myDescription(description) {
-	myBookTextModel = new PlainTextModel();
+	myBookTextModel = new ZLTextPlainModel();
 	myContentsModel = new ContentsModel();
 	ZLFile file(description->fileName());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
@@ -49,11 +49,11 @@ BookModel::Label BookModel::label(const std::string &id) const {
 	return (it != myInternalHyperlinks.end()) ? it->second : Label(0, -1);
 }
 
-void ContentsModel::setReference(const TreeParagraph *paragraph, int reference) {
+void ContentsModel::setReference(const ZLTextTreeParagraph *paragraph, int reference) {
 	myReferenceByParagraph[paragraph] = reference;
 }
 
-int ContentsModel::reference(const TreeParagraph *paragraph) const {
-	std::map<const TreeParagraph*,int>::const_iterator it = myReferenceByParagraph.find(paragraph);
+int ContentsModel::reference(const ZLTextTreeParagraph *paragraph) const {
+	std::map<const ZLTextTreeParagraph*,int>::const_iterator it = myReferenceByParagraph.find(paragraph);
 	return (it != myReferenceByParagraph.end()) ? it->second : -1;
 }

@@ -77,6 +77,6 @@ shared_ptr<const ZLImage> PluckerMultiImage::subImage(unsigned int row, unsigned
 	if (index >= myIds.size()) {
 		return 0;
 	}
-	ImageMap::const_iterator entry = myImageMap.find(myIds[index]);
+	ZLImageMap::const_iterator entry = myImageMap.find(myIds[index]);
 	return (entry != myImageMap.end()) ? entry->second : 0;
 }
