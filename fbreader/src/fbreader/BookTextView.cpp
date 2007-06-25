@@ -22,7 +22,6 @@
 #include <ZLOptions.h>
 #include <ZLDialogManager.h>
 #include <ZLStringUtil.h>
-#include <ZLUnicodeUtil.h>
 
 #include "BookTextView.h"
 #include "FBReader.h"
@@ -145,8 +144,8 @@ void BookTextView::replaceCurrentPositionInStack() {
 void BookTextView::gotoParagraph(int num, bool last) {
 	if (!empty()) {
 		if (!myLockUndoStackChanges) {
-			while (myPositionStack.size() > myCurrentPointInStack) {
-				myPositionStack.pop_back();
+			if (myPositionStack.size() > myCurrentPointInStack) {
+				myPositionStack.erase(myPositionStack.begin() + myCurrentPointInStack, myPositionStack.end());
 			}
 			pushCurrentPositionIntoStack();
 			++myCurrentPointInStack;
@@ -236,39 +235,17 @@ bool BookTextView::_onStylusPress(int x, int y) {
 			return true;
 		}
 		
-		if (fbreader().EnableSingleClickDictionaryOption.value() &&
-				(area->Kind == TextElement::WORD_ELEMENT)) {
-			WordCursor cursor = startCursor();
-			cursor.moveToParagraph(area->ParagraphNumber);
-			cursor.moveTo(area->TextElementNumber, 0);
-			shared_ptr<ProgramCollection> dictionaryCollection = fbreader().dictionaryCollection();
-			if (!dictionaryCollection.isNull()) {
-				shared_ptr<Program> dictionary = dictionaryCollection->currentProgram();
-				if (!dictionary.isNull()) {
-					const Word &word = (Word&)cursor.element();
-					ZLUnicodeUtil::Ucs2String ucs2;
-					ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);
-					ZLUnicodeUtil::Ucs2String::iterator it = ucs2.begin();
-					while ((it != ucs2.end()) && !ZLUnicodeUtil::isLetter(*it)) {
-						++it;
-					}
-					if (it != ucs2.end()) {
-						ucs2.erase(ucs2.begin(), it);
-						it = ucs2.end() - 1;
-						while (!ZLUnicodeUtil::isLetter(*it)) {
-							--it;
-						}
-						ucs2.erase(it + 1, ucs2.end());
-        
-						std::string txt;
-						ZLUnicodeUtil::ucs2ToUtf8(txt, ucs2);
-						dictionary->run("showWord", txt);
-						return true;
-					}
-				}
+		if (fbreader().isDictionarySupported() &&
+				fbreader().EnableSingleClickDictionaryOption.value()) {
+			const std::string txt = word(*area);
+			if (!txt.empty()) {
+				fbreader().openInDictionary(txt);
+				return true;
 			}
 		}
 	}
+
+	fbreader().showDictionaryView();
 
 	return false;
 }

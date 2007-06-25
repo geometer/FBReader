@@ -66,4 +66,8 @@ void LastOpenedBooks::addBook(const std::string &fileName) {
 	if (!description.isNull()) {
 		myBooks.insert(myBooks.begin(), description);
 	}
+	const size_t maxSize = MaxListSizeOption.value();
+	if (myBooks.size() > maxSize) {
+		myBooks.erase(myBooks.begin() + maxSize, myBooks.end());
+	}
 }

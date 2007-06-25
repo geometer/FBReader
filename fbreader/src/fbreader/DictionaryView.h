@@ -19,44 +19,17 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FBFILEHANDLER_H__
-#define __FBFILEHANDLER_H__
+#ifndef __DICTIONARYVIEW_H__
+#define __DICTIONARYVIEW_H__
 
-#include <ZLSelectionDialog.h>
-#include <ZLDir.h>
+#include "FBView.h"
 
-#include "../description/BookDescription.h"
-
-class FBFileHandler : public ZLTreeOpenHandler {
+class DictionaryView : public FBView {
 
 public:
-	ZLStringOption DirectoryOption;
-
-public:
-	FBFileHandler();
-	~FBFileHandler();
-
-	BookDescriptionPtr description() const;
-
-private:
-	bool accept(const ZLTreeNode &node);
-	void changeFolder(const ZLTreeNode &node);
-
-	const std::string stateDisplayName() const;
-	const std::vector<ZLTreeNodePtr> &subnodes() const;
-	int selectedIndex() const;
-	//std::string relativeId(const ZLTreeNode &node) const;
-
-private:
-	shared_ptr<ZLDir> myDir;
-	mutable bool myIsUpToDate;
-	mutable std::vector<ZLTreeNodePtr> mySubnodes;
-
-	mutable BookDescriptionPtr myDescription;
-
-	int mySelectedIndex;
+	DictionaryView(FBReader &reader, ZLPaintContext &context);
 };
 
-inline BookDescriptionPtr FBFileHandler::description() const { return myDescription; }
+inline DictionaryView::DictionaryView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {}
 
-#endif /* __FBFILEHANDLER_H__ */
+#endif /* __DICTIONARYVIEW_H__ */

@@ -40,6 +40,7 @@ class FootnoteView;
 class ContentsView;
 class CollectionView;
 class RecentBooksView;
+class DictionaryView;
 class ZLViewWidget;
 
 class FBReader : public ZLApplication {
@@ -53,6 +54,7 @@ protected:
 		BOOKMARKS_MODE,
 		BOOK_COLLECTION_MODE,
 		RECENT_BOOKS_MODE,
+		DICTIONARY_MODE,
 	};
 
 public:
@@ -102,8 +104,6 @@ private:
 	void setMode(ViewMode mode);
 
 	void searchSlot();
-	void bookInfoSlot();
-	void addBookSlot();
 
 	BookDescriptionPtr createDescription(const std::string &fileName) const;
 
@@ -120,7 +120,11 @@ private:
 public:
 	ZLKeyBindings &keyBindings();
 	ZLKeyBindings &keyBindings(ZLViewWidget::Angle angle);
-	shared_ptr<ProgramCollection> dictionaryCollection() const;
+
+	bool isDictionarySupported() const;
+	void openInDictionary(const std::string &word);
+	void showDictionaryView();
+
 	shared_ptr<ProgramCollection> webBrowserCollection() const;
 
 	void tryShowFootnoteView(const std::string &id, bool external);
@@ -129,12 +133,15 @@ public:
 	void openBook(BookDescriptionPtr description);
 
 private:
+	shared_ptr<ProgramCollection> dictionaryCollection() const;
+
 	void openBookInternal(BookDescriptionPtr description);
 	friend class OpenBookRunnable;
 	void rebuildCollectionInternal();
 	friend class RebuildCollectionRunnable;
 	friend class OptionsApplyRunnable;
 
+private:
 	ViewMode myMode;
 	ViewMode myPreviousMode;
 
@@ -143,6 +150,7 @@ private:
 	shared_ptr<ZLView> myContentsView;	
 	shared_ptr<ZLView> myCollectionView;	
 	shared_ptr<ZLView> myRecentBooksView;	
+	shared_ptr<ZLView> myDictionaryView;	
 
 	ZLTime myLastScrollingTime;
 

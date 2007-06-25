@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLUnicodeUtil.h>
+
 #include "FBView.h"
 #include "FBReader.h"
 #include "FBReaderActions.h"
@@ -58,4 +60,32 @@ bool FBView::onStylusPress(int x, int y) {
 
 bool FBView::_onStylusPress(int, int) {
 	return false;
+}
+
+std::string FBView::word(const TextElementArea &area) const {
+	std::string txt;
+
+	if (area.Kind == TextElement::WORD_ELEMENT) {
+		WordCursor cursor = startCursor();
+		cursor.moveToParagraph(area.ParagraphNumber);
+		cursor.moveTo(area.TextElementNumber, 0);
+		const Word &word = (Word&)cursor.element();
+		ZLUnicodeUtil::Ucs2String ucs2;
+		ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);
+		ZLUnicodeUtil::Ucs2String::iterator it = ucs2.begin();
+		while ((it != ucs2.end()) && !ZLUnicodeUtil::isLetter(*it)) {
+			++it;
+		}
+		if (it != ucs2.end()) {
+			ucs2.erase(ucs2.begin(), it);
+			it = ucs2.end() - 1;
+			while (!ZLUnicodeUtil::isLetter(*it)) {
+				--it;
+			}
+			ucs2.erase(it + 1, ucs2.end());
+    
+			ZLUnicodeUtil::ucs2ToUtf8(txt, ucs2);
+		}
+	}
+	return txt;
 }

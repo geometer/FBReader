@@ -37,13 +37,12 @@
 #include "ContentsView.h"
 #include "CollectionView.h"
 #include "RecentBooksView.h"
+#include "DictionaryView.h"
 #include "BookInfoDialog.h"
-#include "FBFileHandler.h"
 #include "TimeUpdater.h"
 
 #include "../FBOptions.h"
 #include "../bookmodel/BookModel.h"
-#include "../collection/BookList.h"
 #include "../hyphenation/Hyphenator.h"
 #include "../formats/FormatPlugin.h"
 
@@ -127,6 +126,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myContentsView = new ContentsView(*this, context());
 	myCollectionView = new CollectionView(*this, context());
 	myRecentBooksView = new RecentBooksView(*this, context());
+	myDictionaryView = new DictionaryView(*this, context());
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
@@ -374,21 +374,6 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 	}
 }
 
-void FBReader::bookInfoSlot() {
-	runBookInfoDialog(myModel->fileName());
-}
-
-void FBReader::addBookSlot() {
-	FBFileHandler handler;
-	if (ZLDialogManager::instance().selectionDialog(ZLResourceKey("addFileDialog"), handler)) {
-		BookDescriptionPtr description = handler.description();
-		if (!description.isNull() && runBookInfoDialog(description->fileName())) {
-			BookList().addFileName(description->fileName());
-			setMode(BOOK_TEXT_MODE);
-		}
-	}
-}
-
 class RebuildCollectionRunnable : public ZLRunnable {
 
 public:
@@ -440,6 +425,9 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case BOOKMARKS_MODE:
 			break;
+		case DICTIONARY_MODE:
+			setView(myDictionaryView);
+			break;
 		case UNDEFINED_MODE:
 			break;
 	}
@@ -461,6 +449,10 @@ BookTextView &FBReader::bookTextView() const {
 
 void FBReader::showBookTextView() {
 	setMode(BOOK_TEXT_MODE);
+}
+
+void FBReader::showDictionaryView() {
+	setMode(DICTIONARY_MODE);
 }
 
 void FBReader::restorePreviousMode() {
@@ -547,6 +539,15 @@ ZLKeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle) {
 
 shared_ptr<ProgramCollection> FBReader::dictionaryCollection() const {
 	return myProgramCollectionMap.collection("Dictionary");
+}
+
+bool FBReader::isDictionarySupported() const {
+	shared_ptr<ProgramCollection> collection = dictionaryCollection();
+	return !collection.isNull() && !collection->currentProgram().isNull();
+}
+
+void FBReader::openInDictionary(const std::string &word) {
+	dictionaryCollection()->currentProgram()->run("showWord", word);
 }
 
 shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {

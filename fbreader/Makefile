@@ -8,7 +8,7 @@ LIBS = -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) $(ENCA_LIB) $(UILIBS) $(X
 
 TARGET = FBReader
 
-ALL_SUBDIRS = src src/model src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/dummy src/formats/util src/textview src/hyphenation src/external src/optionsDialog src/fbreader desktop pdaxrom
+ALL_SUBDIRS = src src/textmodel src/model src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/dummy src/formats/util src/textview src/hyphenation src/external src/optionsDialog src/fbreader desktop pdaxrom
 ALL_ARCHSUBDIRS = desktop pdaxrom opie zaurus maemo openzaurus pma400 win32
 
 SUBDIRS = src src/model src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/util src/textview src/hyphenation src/external src/optionsDialog src/fbreader

@@ -28,10 +28,12 @@
 #include "BookTextView.h"
 #include "ContentsView.h"
 #include "RecentBooksView.h"
+#include "FBFileHandler.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../textview/TextView.h"
 #include "../optionsDialog/OptionsDialog.h"
+#include "../collection/BookList.h"
 
 FBAction::FBAction(FBReader &fbreader) : myFBReader(fbreader) {
 }
@@ -112,7 +114,14 @@ bool AddBookAction::isVisible() {
 }
 
 void AddBookAction::run() {
-	fbreader().addBookSlot();
+	FBFileHandler handler;
+	if (ZLDialogManager::instance().selectionDialog(ZLResourceKey("addFileDialog"), handler)) {
+		BookDescriptionPtr description = handler.description();
+		if (!description.isNull() && fbreader().runBookInfoDialog(description->fileName())) {
+			BookList().addFileName(description->fileName());
+			fbreader().setMode(FBReader::BOOK_TEXT_MODE);
+		}
+	}
 }
 
 ScrollToHomeAction::ScrollToHomeAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -159,7 +168,7 @@ bool ShowBookInfoAction::isVisible() {
 }
 
 void ShowBookInfoAction::run() {
-	fbreader().bookInfoSlot();
+	fbreader().runBookInfoDialog(fbreader().myModel->fileName());
 }
 
 UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -433,17 +442,11 @@ OpenSelectedTextInDictionaryAction::OpenSelectedTextInDictionaryAction(FBReader 
 }
 
 bool OpenSelectedTextInDictionaryAction::isVisible() {
-	if (!SelectionAction::isVisible()) {
-		return false;
-	}
-	shared_ptr<ProgramCollection> dictionaryCollection = fbreader().dictionaryCollection();
-	return !dictionaryCollection.isNull() && !dictionaryCollection->currentProgram().isNull();
+	return SelectionAction::isVisible() && fbreader().isDictionarySupported();
 }
 
 void OpenSelectedTextInDictionaryAction::run() {
-	fbreader().dictionaryCollection()->currentProgram()->run(
-		"showWord", textView().selectionModel().getText()
-	);
+	fbreader().openInDictionary(textView().selectionModel().getText());
 }
 
 ClearSelectionAction::ClearSelectionAction(FBReader &fbreader) : SelectionAction(fbreader) {
