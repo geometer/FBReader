@@ -24,7 +24,7 @@
 #include "FBReader.h"
 
 #include "../bookmodel/BookModel.h"
-#include "../model/Paragraph.h"
+#include "../textmodel/Paragraph.h"
 
 ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
 }

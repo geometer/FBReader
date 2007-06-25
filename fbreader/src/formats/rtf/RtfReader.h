@@ -29,7 +29,7 @@
 
 #include <ZLEncodingConverter.h>
 
-#include "../../model/AlignmentType.h"
+#include "../../textmodel/AlignmentType.h"
 #include "../EncodedTextReader.h"
 
 class ZLInputStream;

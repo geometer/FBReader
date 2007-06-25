@@ -25,8 +25,8 @@
 #include <map>
 #include <string>
 
-#include "../model/TextModel.h"
-#include "../model/Paragraph.h"
+#include "../textmodel/TextModel.h"
+#include "../textmodel/Paragraph.h"
 #include "../description/BookDescription.h"
 
 class ZLImage;

@@ -29,7 +29,7 @@
 #include <shared_ptr.h>
 #include <allocator.h>
 
-#include "../model/TextModel.h"
+#include "../textmodel/TextModel.h"
 #include "TextElement.h"
 #include "Word.h"
 

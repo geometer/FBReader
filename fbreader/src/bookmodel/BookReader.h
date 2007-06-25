@@ -26,8 +26,8 @@
 #include <stack>
 #include <string>
 
-#include "../model/TextKind.h"
-#include "../model/Paragraph.h"
+#include "../model/FBTextKind.h"
+#include "../textmodel/Paragraph.h"
 
 class BookModel;
 class TextModel;
@@ -46,14 +46,14 @@ public:
 
 	void insertEndOfSectionParagraph();
 	void insertEndOfTextParagraph();
-	void pushKind(TextKind kind);
+	void pushKind(FBTextKind kind);
 	bool popKind();
 	void beginParagraph(Paragraph::Kind kind = Paragraph::TEXT_PARAGRAPH);
 	void endParagraph();
 	bool paragraphIsOpen() const;
-	void addControl(TextKind kind, bool start);
+	void addControl(FBTextKind kind, bool start);
 	void addControl(const ForcedControlEntry &entry);
-	void addHyperlinkControl(TextKind kind, const std::string &label);
+	void addHyperlinkControl(FBTextKind kind, const std::string &label);
 	void addHyperlinkLabel(const std::string &label);
 	void addHyperlinkLabel(const std::string &label, int paragraphNumber);
 	void addFixedHSpace(unsigned char length);
@@ -84,7 +84,7 @@ private:
 	BookModel &myModel;
 	shared_ptr<TextModel> myCurrentTextModel;
 
-	std::vector<TextKind> myKindStack;
+	std::vector<FBTextKind> myKindStack;
 
 	bool myTextParagraphExists;
 	bool myContentsParagraphExists;
@@ -98,7 +98,7 @@ private:
 	std::vector<std::string> myContentsBuffer;
 
 	std::string myHyperlinkReference;
-	TextKind myHyperlinkKind;
+	FBTextKind myHyperlinkKind;
 };
 
 inline bool BookReader::paragraphIsOpen() const {

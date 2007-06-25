@@ -24,7 +24,7 @@
 #include "ParagraphCursor.h"
 #include "Word.h"
 
-#include "../model/Paragraph.h"
+#include "../textmodel/Paragraph.h"
 #include "../hyphenation/Hyphenator.h"
 
 TextElementPool TextElementPool::Pool;

@@ -24,8 +24,8 @@
 
 #include <ZLImageManager.h>
 
-#include "../model/TextKind.h"
-#include "../model/Paragraph.h"
+#include "../textmodel/TextKind.h"
+#include "../textmodel/Paragraph.h"
 
 class TextElement {
 

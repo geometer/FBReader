@@ -30,8 +30,8 @@
 #include "Word.h"
 #include "SelectionModel.h"
 
-#include "../model/TextModel.h"
-#include "../model/Paragraph.h"
+#include "../textmodel/TextModel.h"
+#include "../textmodel/Paragraph.h"
 
 TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this), myTreeStateIsFrozen(false) {
 }

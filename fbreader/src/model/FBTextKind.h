@@ -19,12 +19,14 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TEXTKIND_H__
-#define __TEXTKIND_H__
+#ifndef __FBTEXTKIND_H__
+#define __FBTEXTKIND_H__
 
-enum TextKind {
+enum FBTextKind {
 	// please, don't change these numbers
 	// add new text kinds at end of this enumeration
+	//
+	// all the values must be in the range 0..255
 	REGULAR = 0,
 	TITLE = 1,
 	SECTION_TITLE = 2,
@@ -65,4 +67,4 @@ enum TextKind {
 	EXTERNAL_HYPERLINK = 37,
 };
 
-#endif /* __TEXTKIND_H__ */
+#endif /* __FBTEXTKIND_H__ */

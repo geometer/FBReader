@@ -29,8 +29,9 @@
 #include "FBReader.h"
 #include "BookInfoDialog.h"
 
-#include "../model/TextModel.h"
-#include "../model/Paragraph.h"
+#include "../textmodel/TextModel.h"
+#include "../textmodel/Paragraph.h"
+#include "../model/FBTextKind.h"
 
 #include "../textview/ParagraphCursor.h"
 
@@ -59,7 +60,7 @@ public:
 private:
 	void build();
 
-	void insertText(TextKind kind, const std::string &text);
+	void insertText(FBTextKind kind, const std::string &text);
 	void insertImage(const std::string &id);
 
 private:
@@ -142,7 +143,7 @@ void CollectionModel::update() {
 	build();
 }
 
-void CollectionModel::insertText(TextKind kind, const std::string &text) {
+void CollectionModel::insertText(FBTextKind kind, const std::string &text) {
 	addControl(kind, true);
 	addText(text);
 }

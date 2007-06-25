@@ -22,8 +22,9 @@
 #include "RecentBooksView.h"
 #include "FBReader.h"
 
-#include "../model/TextModel.h"
-#include "../model/Paragraph.h"
+#include "../textmodel/TextModel.h"
+#include "../textmodel/Paragraph.h"
+#include "../model/FBTextKind.h"
 
 #include "../description/Author.h"
 

@@ -51,21 +51,21 @@ public:
 class HtmlControlTagAction : public HtmlTagAction {
 
 public:
-	HtmlControlTagAction(HtmlBookReader &reader, TextKind kind);
+	HtmlControlTagAction(HtmlBookReader &reader, FBTextKind kind);
 	void run(const HtmlReader::HtmlTag &tag);
 
 private:
-	TextKind myKind;
+	FBTextKind myKind;
 };
 
 class HtmlHeaderTagAction : public HtmlTagAction {
 
 public:
-	HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind);
+	HtmlHeaderTagAction(HtmlBookReader &reader, FBTextKind kind);
 	void run(const HtmlReader::HtmlTag &tag);
 
 private:
-	TextKind myKind;
+	FBTextKind myKind;
 };
 
 class HtmlIgnoreTagAction : public HtmlTagAction {
@@ -83,11 +83,11 @@ public:
 	void reset();
 
 protected:
-	TextKind hyperlinkType() const;
-	void setHyperlinkType(TextKind hyperlinkType);
+	FBTextKind hyperlinkType() const;
+	void setHyperlinkType(FBTextKind hyperlinkType);
 
 private:
-	TextKind myHyperlinkType;
+	FBTextKind myHyperlinkType;
 };
 
 class HtmlImageTagAction : public HtmlTagAction {

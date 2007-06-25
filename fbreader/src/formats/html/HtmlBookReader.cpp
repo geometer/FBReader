@@ -45,11 +45,11 @@ DummyHtmlTagAction::DummyHtmlTagAction(HtmlBookReader &reader) : HtmlTagAction(r
 void DummyHtmlTagAction::run(const HtmlReader::HtmlTag&) {
 }
 
-HtmlControlTagAction::HtmlControlTagAction(HtmlBookReader &reader, TextKind kind) : HtmlTagAction(reader), myKind(kind) {
+HtmlControlTagAction::HtmlControlTagAction(HtmlBookReader &reader, FBTextKind kind) : HtmlTagAction(reader), myKind(kind) {
 }
 
 void HtmlControlTagAction::run(const HtmlReader::HtmlTag &tag) {
-	std::vector<TextKind> &list = myReader.myKindList;
+	std::vector<FBTextKind> &list = myReader.myKindList;
 	int index;
 	for (index = list.size() - 1; index >= 0; --index) {
 		if (list[index] == myKind) {
@@ -77,7 +77,7 @@ void HtmlControlTagAction::run(const HtmlReader::HtmlTag &tag) {
 	}
 }
 
-HtmlHeaderTagAction::HtmlHeaderTagAction(HtmlBookReader &reader, TextKind kind) : HtmlTagAction(reader), myKind(kind) {
+HtmlHeaderTagAction::HtmlHeaderTagAction(HtmlBookReader &reader, FBTextKind kind) : HtmlTagAction(reader), myKind(kind) {
 }
 
 void HtmlHeaderTagAction::run(const HtmlReader::HtmlTag &tag) {
@@ -149,11 +149,11 @@ void HtmlHrefTagAction::reset() {
 	setHyperlinkType(REGULAR);
 }
 
-TextKind HtmlHrefTagAction::hyperlinkType() const {
+FBTextKind HtmlHrefTagAction::hyperlinkType() const {
 	return myHyperlinkType;
 }
 
-void HtmlHrefTagAction::setHyperlinkType(TextKind hyperlinkType) {
+void HtmlHrefTagAction::setHyperlinkType(FBTextKind hyperlinkType) {
 	myHyperlinkType = hyperlinkType;
 }
 

@@ -23,7 +23,6 @@
 
 #include "BookReader.h"
 #include "BookModel.h"
-#include "../model/Paragraph.h"
 
 BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
@@ -57,7 +56,7 @@ void BookReader::unsetTextModel() {
 	myCurrentTextModel = 0;
 }
 
-void BookReader::pushKind(TextKind kind) {
+void BookReader::pushKind(FBTextKind kind) {
 	myKindStack.push_back(kind);
 }
 
@@ -72,7 +71,7 @@ bool BookReader::popKind() {
 void BookReader::beginParagraph(Paragraph::Kind kind) {
 	if (myCurrentTextModel != 0) {
 		((PlainTextModel&)*myCurrentTextModel).createParagraph(kind);
-		for (std::vector<TextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); ++it) {
+		for (std::vector<FBTextKind>::const_iterator it = myKindStack.begin(); it != myKindStack.end(); ++it) {
 			myCurrentTextModel->addControl(*it, true);
 		}
 		if (!myHyperlinkReference.empty()) {
@@ -89,7 +88,7 @@ void BookReader::endParagraph() {
 	}
 }
 
-void BookReader::addControl(TextKind kind, bool start) {
+void BookReader::addControl(FBTextKind kind, bool start) {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addControl(kind, start);
@@ -112,7 +111,7 @@ void BookReader::addControl(const ForcedControlEntry &entry) {
 	}
 }
 
-void BookReader::addHyperlinkControl(TextKind kind, const std::string &label) {
+void BookReader::addHyperlinkControl(FBTextKind kind, const std::string &label) {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addHyperlinkControl(kind, label);

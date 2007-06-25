@@ -24,7 +24,7 @@
 #include "FB2BookReader.h"
 #include "Base64EncodedImage.h"
 #include "../../bookmodel/BookModel.h"
-#include "../../model/Paragraph.h"
+#include "../../textmodel/Paragraph.h"
 
 FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myInsideCoverpage = false;

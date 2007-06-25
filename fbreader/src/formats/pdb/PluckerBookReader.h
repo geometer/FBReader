@@ -61,7 +61,7 @@ private:
 	void setFont(FontType font, bool start);
 	void changeFont(FontType font);
 
-	void safeAddControl(TextKind kind, bool start);
+	void safeAddControl(FBTextKind kind, bool start);
 	void safeAddHyperlinkControl(const std::string &id);
 	void safeBeginParagraph();
 	void safeEndParagraph();
@@ -77,7 +77,7 @@ private:
 	bool myParagraphStarted;
 	bool myBufferIsEmpty;
 	ForcedControlEntry *myForcedEntry;
-	std::vector<std::pair<TextKind,bool> > myDelayedControls;
+	std::vector<std::pair<FBTextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;
 	unsigned short myCompressionVersion;
 	unsigned char myBytesToSkip;

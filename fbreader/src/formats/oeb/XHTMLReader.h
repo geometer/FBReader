@@ -28,8 +28,6 @@
 
 #include <ZLXMLReader.h>
 
-#include "../../model/TextKind.h"
-
 class BookReader;
 class XHTMLReader;
 

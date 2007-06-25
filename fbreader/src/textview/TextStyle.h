@@ -29,8 +29,8 @@
 
 #include <ZLOptions.h>
 
-#include "../model/TextKind.h"
-#include "../model/AlignmentType.h"
+#include "../textmodel/TextKind.h"
+#include "../textmodel/AlignmentType.h"
 
 class TextStyle {
 

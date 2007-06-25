@@ -27,7 +27,7 @@
 #include "ParagraphCursor.h"
 #include "Word.h"
 
-#include "../model/Paragraph.h"
+#include "../textmodel/Paragraph.h"
 
 ParagraphCursor::ParagraphProcessor::ParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), TextMark(paragraphNumber, 0, 0));

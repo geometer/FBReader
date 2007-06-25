@@ -27,7 +27,7 @@
 #include "ParagraphCursor.h"
 #include "Word.h"
 
-#include "../model/Paragraph.h"
+#include "../textmodel/Paragraph.h"
 #include "../hyphenation/Hyphenator.h"
 
 ParagraphCursor::AnyPlaceParagraphProcessor::AnyPlaceParagraphProcessor(const Paragraph &paragraph, const std::vector<TextMark> &marks, int paragraphNumber, TextElementVector &elements) : ParagraphProcessor(paragraph, marks, paragraphNumber, elements) {

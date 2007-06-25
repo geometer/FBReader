@@ -29,8 +29,9 @@
 #include "../textview/ParagraphCursor.h"
 #include "../textview/Word.h"
 
-#include "../model/TextModel.h"
-#include "../model/Paragraph.h"
+#include "../model/FBTextKind.h"
+#include "../textmodel/TextModel.h"
+#include "../textmodel/Paragraph.h"
 #include "../bookmodel/BookModel.h"
 
 #include "../external/ProgramCollection.h"

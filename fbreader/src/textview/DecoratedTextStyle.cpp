@@ -22,7 +22,7 @@
 #include <ZLOptions.h>
 
 #include "TextStyle.h"
-#include "../model/Paragraph.h"
+#include "../textmodel/Paragraph.h"
 
 static const std::string STYLE = "Style";
 

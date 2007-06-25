@@ -77,7 +77,7 @@ private:
 	std::string myConverterBuffer;
 
 	std::map<std::string,shared_ptr<HtmlTagAction> > myActionMap;
-	std::vector<TextKind> myKindList;
+	std::vector<FBTextKind> myKindList;
 
 	std::string myFileName;
 

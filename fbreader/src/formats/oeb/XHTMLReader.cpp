@@ -74,31 +74,31 @@ public:
 	void doAtEnd(XHTMLReader &reader);
 
 private:
-	std::stack<TextKind> myHyperlinkStack;
+	std::stack<FBTextKind> myHyperlinkStack;
 };
 
 class XHTMLTagControlAction : public XHTMLTagAction {
 
 public:
-	XHTMLTagControlAction(TextKind control);
+	XHTMLTagControlAction(FBTextKind control);
 
 	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
 	void doAtEnd(XHTMLReader &reader);
 
 private:
-	TextKind myControl;
+	FBTextKind myControl;
 };
 
 class XHTMLTagParagraphWithControlAction : public XHTMLTagAction {
 
 public:
-	XHTMLTagParagraphWithControlAction(TextKind control);
+	XHTMLTagParagraphWithControlAction(FBTextKind control);
 
 	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
 	void doAtEnd(XHTMLReader &reader);
 
 private:
-	TextKind myControl;
+	FBTextKind myControl;
 };
 
 class XHTMLTagPreAction : public XHTMLTagAction {
@@ -161,7 +161,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 void XHTMLTagImageAction::doAtEnd(XHTMLReader&) {
 }
 
-XHTMLTagControlAction::XHTMLTagControlAction(TextKind control) : myControl(control) {
+XHTMLTagControlAction::XHTMLTagControlAction(FBTextKind control) : myControl(control) {
 }
 
 void XHTMLTagControlAction::doAtStart(XHTMLReader &reader, const char**) {
@@ -178,7 +178,7 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	const char *href = reader.attributeValue(xmlattributes, "href");
 	if (href != 0) {
 		const std::string link = (*href == '#') ? (reader.myReferenceName + href) : href;
-		TextKind hyperlinkType = MiscUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
+		FBTextKind hyperlinkType = MiscUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
 		myHyperlinkStack.push(hyperlinkType);
 		reader.myModelReader.addHyperlinkControl(hyperlinkType, link);
 	} else {
@@ -191,14 +191,14 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 }
 
 void XHTMLTagHyperlinkAction::doAtEnd(XHTMLReader &reader) {
-	TextKind kind = myHyperlinkStack.top();
+	FBTextKind kind = myHyperlinkStack.top();
 	if (kind != REGULAR) {
 		reader.myModelReader.addControl(kind, false);
 	}
 	myHyperlinkStack.pop();
 }
 
-XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(TextKind control) : myControl(control) {
+XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(FBTextKind control) : myControl(control) {
 }
 
 void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char**) {

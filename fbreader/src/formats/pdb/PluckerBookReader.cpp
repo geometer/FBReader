@@ -45,11 +45,11 @@ PluckerBookReader::~PluckerBookReader() {
 	delete[] myCharBuffer;
 }
 
-void PluckerBookReader::safeAddControl(TextKind kind, bool start) {
+void PluckerBookReader::safeAddControl(FBTextKind kind, bool start) {
 	if (myParagraphStarted) {
 		addControl(kind, start);
 	} else {
-		myDelayedControls.push_back(std::pair<TextKind,bool>(kind, start));
+		myDelayedControls.push_back(std::pair<FBTextKind,bool>(kind, start));
 	}
 }
 
@@ -70,7 +70,7 @@ void PluckerBookReader::safeBeginParagraph() {
 			myParagraphVector->push_back(model().bookTextModel()->paragraphsNumber() - 1);
 			myParagraphStored = true;
 		}
-		for (std::vector<std::pair<TextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); ++it) {
+		for (std::vector<std::pair<FBTextKind,bool> >::const_iterator it = myDelayedControls.begin(); it != myDelayedControls.end(); ++it) {
 			addControl(it->first, it->second);
 		}
 		if (myForcedEntry != 0) {
@@ -100,7 +100,7 @@ void PluckerBookReader::safeEndParagraph() {
 void PluckerBookReader::processHeader(FontType font, bool start) {
 	if (start) {
 		enterTitle();
-		TextKind kind;
+		FBTextKind kind;
 		switch (font) {
 			case FT_H1:
 				kind = H1;
