@@ -25,7 +25,7 @@
 #include "RecentBooksView.h"
 #include "FBReader.h"
 
-#include "../model/FBTextKind.h"
+#include "../bookmodel/FBTextKind.h"
 #include "../description/Author.h"
 
 static const std::string LIBRARY = "Recent Books";

@@ -31,10 +31,8 @@
 
 #include "../textview/ParagraphCursor.h"
 #include "../textview/Word.h"
-
-#include "../model/FBTextKind.h"
+#include "../bookmodel/FBTextKind.h"
 #include "../bookmodel/BookModel.h"
-
 #include "../external/ProgramCollection.h"
 
 static const std::string PARAGRAPH_OPTION_NAME = "Paragraph";

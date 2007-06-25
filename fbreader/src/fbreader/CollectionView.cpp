@@ -32,7 +32,7 @@
 #include "FBReader.h"
 #include "BookInfoDialog.h"
 
-#include "../model/FBTextKind.h"
+#include "../bookmodel/FBTextKind.h"
 #include "../textview/ParagraphCursor.h"
 #include "../collection/BookCollection.h"
 #include "../collection/BookList.h"

@@ -27,7 +27,8 @@
 #include <string>
 
 #include <ZLTextParagraph.h>
-#include "../model/FBTextKind.h"
+
+#include "FBTextKind.h"
 
 class BookModel;
 class ZLTextModel;

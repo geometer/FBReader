@@ -28,7 +28,7 @@
 #include "../textview/TextView.h"
 #include "../textview/TextStyle.h"
 #include "../textview/TextStyleOptions.h"
-#include "../model/FBTextKind.h"
+#include "../bookmodel/FBTextKind.h"
 
 static const ZLResourceKey KEY_STYLE("style");
 static const ZLResourceKey KEY_BASE("Base");
