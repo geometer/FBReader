@@ -21,7 +21,7 @@
 #ifndef __ZLQTKEYUTIL_H__
 #define __ZLQTKEYUTIL_H__
 
-#include "../../abstract/util/ZLKeyUtil.h"
+#include "../../../core/src/util/ZLKeyUtil.h"
 
 class QKeyEvent;
 

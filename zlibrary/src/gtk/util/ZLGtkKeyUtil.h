@@ -23,7 +23,7 @@
 
 #include <gdk/gdkevents.h>
 
-#include "../../abstract/util/ZLKeyUtil.h"
+#include "../../../core/src/util/ZLKeyUtil.h"
 
 class ZLGtkKeyUtil : ZLKeyUtil {
 
