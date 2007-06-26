@@ -212,11 +212,11 @@ void ParagraphCursor::fill() {
 		{
 			const std::string &breakingAlgorithm = ZLTextHyphenator::instance().breakingAlgorithm();
 			if (breakingAlgorithm == "chinese") {
-				ChineseParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+				ChineseProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			} else if (breakingAlgorithm == "anycharacter") {
-				AnyPlaceParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+				AnyPlaceProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			} else {
-				StandardParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+				StandardProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			}
 			break;
 		}

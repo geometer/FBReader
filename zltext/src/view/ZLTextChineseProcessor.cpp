@@ -29,10 +29,10 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-ParagraphCursor::StandardParagraphProcessor::StandardParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : ParagraphProcessor(paragraph, marks, paragraphNumber, elements) {
+ParagraphCursor::ChineseProcessor::ChineseProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : Processor(paragraph, marks, paragraphNumber, elements) {
 }
 
-void ParagraphCursor::StandardParagraphProcessor::processTextEntry(const ZLTextEntry &textEntry) {
+void ParagraphCursor::ChineseProcessor::processTextEntry(const ZLTextEntry &textEntry) {
 	if (textEntry.dataLength() != 0) {
 		const char *start = textEntry.data();
 		const char *end = start + textEntry.dataLength();
@@ -70,6 +70,18 @@ void ParagraphCursor::StandardParagraphProcessor::processTextEntry(const ZLTextE
 				}
 			} else if (firstNonSpace == 0) {
 				firstNonSpace = ptr;
+			} else {
+				switch (ZLUnicodeUtil::isBreakable(ch)) {
+					case ZLUnicodeUtil::NO_BREAKABLE:
+						break;
+					case ZLUnicodeUtil::BREAKABLE_BEFORE:
+						addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
+						firstNonSpace = ptr;
+						break;
+					case ZLUnicodeUtil::BREAKABLE_AFTER:
+						breakableBefore = true;
+						break;
+				}
 			}
 		}
 		if (firstNonSpace != 0) {

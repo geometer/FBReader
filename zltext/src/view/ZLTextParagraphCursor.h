@@ -73,13 +73,13 @@ typedef shared_ptr<ParagraphCursor> ParagraphCursorPtr;
 class ParagraphCursor {
 
 private:
-	class ParagraphProcessor {
+	class Processor {
 
 	protected:
-		ParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
+		Processor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
 
 	public:
-		virtual ~ParagraphProcessor();
+		virtual ~Processor();
 		void fill();
 		virtual void processTextEntry(const ZLTextEntry &textEntry) = 0;
 
@@ -95,24 +95,24 @@ private:
 		int myOffset;
 	};
 
-	class StandardParagraphProcessor : public ParagraphProcessor {
+	class StandardProcessor : public Processor {
 
 	public:
-		StandardParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
+		StandardProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
 		void processTextEntry(const ZLTextEntry &textEntry);
 	};
 
-	class ChineseParagraphProcessor : public ParagraphProcessor {
+	class ChineseProcessor : public Processor {
 
 	public:
-		ChineseParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
+		ChineseProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
 		void processTextEntry(const ZLTextEntry &textEntry);
 	};
 
-	class AnyPlaceParagraphProcessor : public ParagraphProcessor {
+	class AnyPlaceProcessor : public Processor {
 
 	public:
-		AnyPlaceParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
+		AnyPlaceProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, TextElementVector &elements);
 		void processTextEntry(const ZLTextEntry &textEntry);
 	};
 
