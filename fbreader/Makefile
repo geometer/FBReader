@@ -8,10 +8,10 @@ LIBS = -lm -L$(ROOTDIR)/zltext -lzltext-$(UI_TYPE) -L$(ROOTDIR)/zlibrary -lzlibr
 
 TARGET = FBReader
 
-ALL_SUBDIRS = src src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/dummy src/formats/util src/textview src/hyphenation src/external src/optionsDialog src/fbreader
+ALL_SUBDIRS = src src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/dummy src/formats/util src/external src/optionsDialog src/fbreader
 ALL_ARCHSUBDIRS = desktop pdaxrom opie zaurus maemo openzaurus pma400 win32
 
-SUBDIRS = src src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/util src/textview src/hyphenation src/external src/optionsDialog src/fbreader
+SUBDIRS = src src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/util src/external src/optionsDialog src/fbreader
 
 all: .resources
 	@for subdir in $(SUBDIRS); do \
