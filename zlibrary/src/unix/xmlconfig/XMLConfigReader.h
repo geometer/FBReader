@@ -21,7 +21,7 @@
 #ifndef __XMLCONFIGREADER_H__
 #define __XMLCONFIGREADER_H__
 
-#include "../../abstract/xml/ZLXMLReader.h"
+#include <ZLXMLReader.h>
 
 class XMLConfig;
 class XMLConfigGroup;

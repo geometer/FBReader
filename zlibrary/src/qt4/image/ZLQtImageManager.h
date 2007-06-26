@@ -24,7 +24,7 @@
 #include <map>
 #include <QtGui/QImage>
 
-#include "../../abstract/image/ZLImageManager.h"
+#include <ZLImageManager.h>
 
 class ZLImage;
 

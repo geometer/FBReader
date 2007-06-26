@@ -29,7 +29,7 @@
 #include "../image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
-#include "../../abstract/xmlconfig/XMLConfig.h"
+#include "../../unix/xmlconfig/XMLConfig.h"
 #include "../../unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {

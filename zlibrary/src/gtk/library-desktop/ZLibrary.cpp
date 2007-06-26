@@ -30,7 +30,7 @@
 #include "../view/ZLGtkPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../../core/src/util/ZLKeyUtil.h"
-#include "../../abstract/xmlconfig/XMLConfig.h"
+#include "../../unix/xmlconfig/XMLConfig.h"
 #include "../../unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {

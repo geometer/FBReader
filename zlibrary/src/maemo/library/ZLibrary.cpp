@@ -31,7 +31,7 @@
 #include "../../gtk/image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
 #include "../message/ZLMaemoMessage.h"
-#include "../../abstract/xmlconfig/XMLConfig.h"
+#include "../../unix/xmlconfig/XMLConfig.h"
 #include "../../unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
