@@ -5,10 +5,10 @@ include $(MAKEFILESDIR)/config.mk
 VERSION = $(shell cat ../VERSION)
 
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-  TARGET = libzltext-$(UI_TYPE).so.$(VERSION)
-  TARGET_SHORTNAME = libzltext-$(UI_TYPE).so
+  TARGET = libzlcore-$(UI_TYPE).so.$(VERSION)
+  TARGET_SHORTNAME = libzlcore-$(UI_TYPE).so
 else
-  TARGET = libzltext-$(UI_TYPE).a
+  TARGET = libzlcore-$(UI_TYPE).a
 endif
 
 SUBDIRS = src/model src/view src/hyphenation
@@ -37,7 +37,7 @@ SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
-	@install -m 0644 $(wildcard data/hyphenationPatterns.zip) $(SHARE_ZLIBRARY)
+	#@install -m 0644 $(wildcard data/hyphenationPatterns.zip) $(SHARE_ZLIBRARY)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)

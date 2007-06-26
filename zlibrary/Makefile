@@ -119,6 +119,7 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 endif
+	@$(MAKE) -C core do_install
 	@$(MAKE) -C text do_install
 
 package:
