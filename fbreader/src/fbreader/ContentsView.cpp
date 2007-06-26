@@ -57,7 +57,7 @@ bool ContentsView::isEmpty() const {
 }
 
 size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
-	const WordCursor &cursor = fbreader().bookTextView().startCursor();
+	const ZLTextWordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
 		bool startOfParagraph = cursor.wordNumber() == 0;

@@ -98,7 +98,7 @@ void BookTextView::setContentsModel(shared_ptr<ZLTextModel> contentsModel) {
 }
 
 void BookTextView::saveState() {
-	const WordCursor &cursor = startCursor();
+	const ZLTextWordCursor &cursor = startCursor();
 	const std::string &group = fileName();
 
 	if (!cursor.isNull()) {
@@ -120,7 +120,7 @@ void BookTextView::saveState() {
 }
 
 void BookTextView::pushCurrentPositionIntoStack() {
-	const WordCursor &cursor = startCursor();
+	const ZLTextWordCursor &cursor = startCursor();
 	if (!cursor.isNull()) {
 		Position pos;
 		pos.first = cursor.paragraphCursor().index();
@@ -136,7 +136,7 @@ void BookTextView::pushCurrentPositionIntoStack() {
 }
 
 void BookTextView::replaceCurrentPositionInStack() {
-	const WordCursor &cursor = startCursor();
+	const ZLTextWordCursor &cursor = startCursor();
 	myPositionStack[myCurrentPointInStack].first = cursor.paragraphCursor().index();
 	myPositionStack[myCurrentPointInStack].second = cursor.wordNumber();
 }
@@ -203,7 +203,7 @@ bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, 
 			(area.Kind != ZLTextElement::IMAGE_ELEMENT)) {
 		return false;
 	}
-	WordCursor cursor = startCursor();
+	ZLTextWordCursor cursor = startCursor();
 	cursor.moveToParagraph(area.ParagraphNumber);
 	cursor.moveToParagraphStart();
 	ZLTextKind hyperlinkKind = REGULAR;

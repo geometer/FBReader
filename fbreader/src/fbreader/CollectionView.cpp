@@ -205,7 +205,7 @@ void CollectionView::paint() {
 bool CollectionView::_onStylusPress(int x, int y) {
 	const TextElementArea *imageArea = elementByCoordinates(x, y);
 	if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {
-		WordCursor cursor = startCursor();
+		ZLTextWordCursor cursor = startCursor();
 		cursor.moveToParagraph(imageArea->ParagraphNumber);
 		cursor.moveTo(imageArea->TextElementNumber, 0);
 		const ZLTextElement &element = cursor.element();

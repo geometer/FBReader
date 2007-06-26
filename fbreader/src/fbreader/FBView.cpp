@@ -66,7 +66,7 @@ std::string FBView::word(const TextElementArea &area) const {
 	std::string txt;
 
 	if (area.Kind == ZLTextElement::WORD_ELEMENT) {
-		WordCursor cursor = startCursor();
+		ZLTextWordCursor cursor = startCursor();
 		cursor.moveToParagraph(area.ParagraphNumber);
 		cursor.moveTo(area.TextElementNumber, 0);
 		const ZLTextWord &word = (ZLTextWord&)cursor.element();

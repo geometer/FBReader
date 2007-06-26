@@ -383,7 +383,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() {
 		return true;
 	}
 	if (tocIndex == 0) {
-		const WordCursor &cursor = fbreader().bookTextView().startCursor();
+		const ZLTextWordCursor &cursor = fbreader().bookTextView().startCursor();
 		if (cursor.isNull()) {
 			return false;
 		}
@@ -403,7 +403,7 @@ void GotoPreviousTOCSectionAction::run() {
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
 
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current]));
-	const WordCursor &cursor = fbreader().bookTextView().startCursor();
+	const ZLTextWordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull() &&
 			(cursor.wordNumber() == 0) &&
 			(reference == (int)cursor.paragraphCursor().index())) {
