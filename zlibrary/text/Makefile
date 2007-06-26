@@ -1,4 +1,4 @@
-ROOTDIR = $(CURDIR)/..
+ROOTDIR = $(CURDIR)/../..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
@@ -37,6 +37,7 @@ SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
+	@install -m 0644 $(wildcard data/hyphenationPatterns.zip) $(SHARE_ZLIBRARY)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
