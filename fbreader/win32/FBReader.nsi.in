@@ -24,6 +24,7 @@ Section "FBReader"
 	File /r share
   Delete "$INSTDIR\libiconv-2.dll"
   Delete "$INSTDIR\share\FBReader\help\MiniHelp.fb2"
+  Delete "$INSTDIR\share\FBReader\hyphenationPatterns.zip"
 
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "DisplayName" "FBReader for Windows XP"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "UninstallString" '"$INSTDIR\uninstall.exe"'
