@@ -20,7 +20,7 @@
 #include <windows.h>
 #include <commctrl.h>
 
-#include "../../abstract/util/ZLKeyUtil.h"
+#include "../../../core/src/util/ZLKeyUtil.h"
 
 #include "W32Control.h"
 #include "W32ControlCollection.h"

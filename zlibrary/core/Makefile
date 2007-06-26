@@ -37,7 +37,10 @@ SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
-	#@install -m 0644 $(wildcard data/hyphenationPatterns.zip) $(SHARE_ZLIBRARY)
+	@install -d $(SHARE_ZLIBRARY)/encodings
+	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
+	@install -d $(SHARE_ZLIBRARY)/resources
+	@install -m 0644 $(wildcard data/resources/*.xml) $(SHARE_ZLIBRARY)/resources
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
