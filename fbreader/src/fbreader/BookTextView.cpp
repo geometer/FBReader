@@ -245,8 +245,6 @@ bool BookTextView::_onStylusPress(int x, int y) {
 		}
 	}
 
-	fbreader().showDictionaryView();
-
 	return false;
 }
 

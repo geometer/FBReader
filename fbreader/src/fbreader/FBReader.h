@@ -40,7 +40,6 @@ class FootnoteView;
 class ContentsView;
 class CollectionView;
 class RecentBooksView;
-class DictionaryView;
 class ZLViewWidget;
 
 class FBReader : public ZLApplication {
@@ -54,7 +53,6 @@ protected:
 		BOOKMARKS_MODE,
 		BOOK_COLLECTION_MODE,
 		RECENT_BOOKS_MODE,
-		DICTIONARY_MODE,
 	};
 
 public:
@@ -123,7 +121,6 @@ public:
 
 	bool isDictionarySupported() const;
 	void openInDictionary(const std::string &word);
-	void showDictionaryView();
 
 	shared_ptr<ProgramCollection> webBrowserCollection() const;
 
@@ -150,7 +147,6 @@ private:
 	shared_ptr<ZLView> myContentsView;	
 	shared_ptr<ZLView> myCollectionView;	
 	shared_ptr<ZLView> myRecentBooksView;	
-	shared_ptr<ZLView> myDictionaryView;	
 
 	ZLTime myLastScrollingTime;
 

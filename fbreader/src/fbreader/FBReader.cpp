@@ -39,7 +39,6 @@
 #include "ContentsView.h"
 #include "CollectionView.h"
 #include "RecentBooksView.h"
-#include "DictionaryView.h"
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
 
@@ -127,7 +126,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myContentsView = new ContentsView(*this, context());
 	myCollectionView = new CollectionView(*this, context());
 	myRecentBooksView = new RecentBooksView(*this, context());
-	myDictionaryView = new DictionaryView(*this, context());
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
@@ -426,9 +424,6 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case BOOKMARKS_MODE:
 			break;
-		case DICTIONARY_MODE:
-			setView(myDictionaryView);
-			break;
 		case UNDEFINED_MODE:
 			break;
 	}
@@ -450,10 +445,6 @@ BookTextView &FBReader::bookTextView() const {
 
 void FBReader::showBookTextView() {
 	setMode(BOOK_TEXT_MODE);
-}
-
-void FBReader::showDictionaryView() {
-	setMode(DICTIONARY_MODE);
 }
 
 void FBReader::restorePreviousMode() {
