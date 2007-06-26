@@ -2,7 +2,8 @@ ROOTDIR = $(CURDIR)
 
 include makefiles/platforms.mk
 
-ZLIBDIRS = zlibrary/core zlibrary zlibrary/text
+ZLIBDIRS = zlibrary/core zlibrary/text zlibrary/platform
+MAINZLIBDIR = zlibrary
 APPDIRS = fbreader GeometricCalculator SampleApplications/0 SampleApplications/1 SampleApplications/2
 
 all:
@@ -19,21 +20,21 @@ all:
 install: all do_install
 
 do_install:
-	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
+	@for dir in $(MAINZLIBDIR) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
 			cd $$dir; make $@; cd $(ROOTDIR); \
 		fi; \
 	done
 
 packages: all
-	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
+	@for dir in $(MAINZLIBDIR) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
 			cd $$dir; make package; cd $(ROOTDIR); \
 		fi; \
 	done
 
 clean:
-	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
+	@for dir in $(MAINZLIBDIR) $(ZLIBDIRS) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
 			cd $$dir; make $@; cd $(ROOTDIR); \
 		fi; \
