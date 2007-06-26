@@ -51,7 +51,7 @@ void TextView::clear() {
 	myTextSize.clear();
 	myTextBreaks.clear();
 
-	ParagraphCursorCache::clear();
+	ZLTextParagraphCursorCache::clear();
 }
 
 void TextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
@@ -60,7 +60,7 @@ void TextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) 
 	myModel = model;
 
 	if (!myModel.isNull() && (myModel->paragraphsNumber() != 0)) {
-		setStartCursor(ParagraphCursor::cursor(*myModel));
+		setStartCursor(ZLTextParagraphCursor::cursor(*myModel));
 
 		myFileName = name;
 		size_t size = myModel->paragraphsNumber();

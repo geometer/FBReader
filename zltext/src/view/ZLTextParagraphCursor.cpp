@@ -28,8 +28,8 @@
 
 ZLTextElementPool ZLTextElementPool::Pool;
 
-std::map<const ZLTextParagraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
-ParagraphCursorPtr ParagraphCursorCache::ourLastAdded;
+std::map<const ZLTextParagraph*, weak_ptr<ZLTextParagraphCursor> > ZLTextParagraphCursorCache::ourCache;
+ZLTextParagraphCursorPtr ZLTextParagraphCursorCache::ourLastAdded;
 
 ZLTextElementVector::~ZLTextElementVector() {
 	for (ZLTextElementVector::const_iterator it = begin(); it != end(); ++it) {
@@ -69,32 +69,32 @@ ZLTextElementPool::~ZLTextElementPool() {
 	delete EmptyLineElement;
 }
 
-ParagraphCursorPtr ParagraphCursor::cursor(const ZLTextModel &model, size_t index) {
-	ParagraphCursorPtr result = ParagraphCursorCache::get(model[index]);
+ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model, size_t index) {
+	ZLTextParagraphCursorPtr result = ZLTextParagraphCursorCache::get(model[index]);
 	if (result.isNull()) {
 		if (model.kind() == ZLTextModel::TREE_MODEL) {
-			result = new TreeParagraphCursor((const ZLTextTreeModel&)model, index);
+			result = new ZLTextTreeParagraphCursor((const ZLTextTreeModel&)model, index);
 		} else {
-			result = new PlainTextParagraphCursor((const ZLTextPlainModel&)model, index);
+			result = new ZLTextPlainParagraphCursor((const ZLTextPlainModel&)model, index);
 		}
-		ParagraphCursorCache::put(model[index], result);
+		ZLTextParagraphCursorCache::put(model[index], result);
 	}
 	return result;
 }
 
-ParagraphCursor::ParagraphCursor(const ZLTextModel &model, size_t index) : myModel(model) {
+ZLTextParagraphCursor::ZLTextParagraphCursor(const ZLTextModel &model, size_t index) : myModel(model) {
 	myIndex = std::min(index, myModel.paragraphsNumber() - 1);
 	fill();
 }
 
-ParagraphCursor::~ParagraphCursor() {
+ZLTextParagraphCursor::~ZLTextParagraphCursor() {
 }
 
-ParagraphCursorPtr PlainTextParagraphCursor::previous() const {
+ZLTextParagraphCursorPtr ZLTextPlainParagraphCursor::previous() const {
 	return isFirst() ? 0 : cursor(myModel, myIndex - 1);
 }
 
-ParagraphCursorPtr TreeParagraphCursor::previous() const {
+ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::previous() const {
 	if (isFirst()) {
 		return 0;
 	}
@@ -116,11 +116,11 @@ ParagraphCursorPtr TreeParagraphCursor::previous() const {
 	return cursor(myModel, index);
 }
 
-ParagraphCursorPtr PlainTextParagraphCursor::next() const {
+ZLTextParagraphCursorPtr ZLTextPlainParagraphCursor::next() const {
 	return isLast() ? 0 : cursor(myModel, myIndex + 1);
 }
 
-ParagraphCursorPtr TreeParagraphCursor::next() const {
+ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::next() const {
 	if (myIndex + 1 == myModel.paragraphsNumber()) {
 		return 0;
 	}
@@ -144,20 +144,20 @@ ParagraphCursorPtr TreeParagraphCursor::next() const {
 	return 0;
 }
 
-bool ParagraphCursor::isFirst() const {
+bool ZLTextParagraphCursor::isFirst() const {
 	return
 		(myIndex == 0) ||
 		(myModel[myIndex]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH) ||
 		(myModel[myIndex - 1]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH);
 }
 
-bool PlainTextParagraphCursor::isLast() const {
+bool ZLTextPlainParagraphCursor::isLast() const {
 	return
 		(myIndex + 1 == myModel.paragraphsNumber()) ||
 		(myModel[myIndex + 1]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH);
 }
 
-bool TreeParagraphCursor::isLast() const {
+bool ZLTextTreeParagraphCursor::isLast() const {
 	if ((myIndex + 1 == myModel.paragraphsNumber()) ||
 			(myModel[myIndex + 1]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH)) {
 		return true;
@@ -177,15 +177,15 @@ bool TreeParagraphCursor::isLast() const {
 	return true;
 }
 
-bool ParagraphCursor::isEndOfSection() const {
+bool ZLTextParagraphCursor::isEndOfSection() const {
 	return myModel[myIndex]->kind() == ZLTextParagraph::END_OF_SECTION_PARAGRAPH;
 }
 
-ZLTextMark WordCursor::position() const {
+ZLTextMark ZLTextWordCursor::position() const {
 	if (myParagraphCursor.isNull()) {
 		return ZLTextMark();
 	}
-	const ParagraphCursor &paragraph = *myParagraphCursor;
+	const ZLTextParagraphCursor &paragraph = *myParagraphCursor;
 	size_t paragraphLength = paragraph.paragraphLength();
 	unsigned int wordNumber = myWordNumber;
 	while ((wordNumber != paragraphLength) && (paragraph[wordNumber].kind() != ZLTextElement::WORD_ELEMENT)) {
@@ -197,13 +197,13 @@ ZLTextMark WordCursor::position() const {
 	return ZLTextMark(paragraph.index() + 1, 0, 0);
 }
 
-void ParagraphCursor::processControlParagraph(const ZLTextParagraph &paragraph) {
+void ZLTextParagraphCursor::processControlParagraph(const ZLTextParagraph &paragraph) {
 	for (ZLTextParagraph::Iterator it = paragraph; !it.isEnd(); it.next()) {
 		myElements.push_back(ZLTextElementPool::Pool.getControlElement(it.entry()));
 	}
 }
 
-void ParagraphCursor::fill() {
+void ZLTextParagraphCursor::fill() {
 	const ZLTextParagraph &paragraph = *myModel[myIndex];
 	switch (paragraph.kind()) {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
@@ -237,27 +237,27 @@ void ParagraphCursor::fill() {
 	}
 }
 
-void ParagraphCursor::clear() {
+void ZLTextParagraphCursor::clear() {
 	myElements.clear();
 }
 
-void ParagraphCursorCache::put(const ZLTextParagraph *paragraph, ParagraphCursorPtr cursor) {
+void ZLTextParagraphCursorCache::put(const ZLTextParagraph *paragraph, ZLTextParagraphCursorPtr cursor) {
 	ourCache[paragraph] = cursor;
 	ourLastAdded = cursor;
 }
 
-ParagraphCursorPtr ParagraphCursorCache::get(const ZLTextParagraph *paragraph) {
+ZLTextParagraphCursorPtr ZLTextParagraphCursorCache::get(const ZLTextParagraph *paragraph) {
 	return ourCache[paragraph];
 }
 
-void ParagraphCursorCache::clear() {
+void ZLTextParagraphCursorCache::clear() {
 	ourLastAdded.reset();
 	ourCache.clear();
 }
 
-void ParagraphCursorCache::cleanup() {
-	std::map<const ZLTextParagraph*, weak_ptr<ParagraphCursor> > cleanedCache;
-	for (std::map<const ZLTextParagraph*, weak_ptr<ParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); ++it) {
+void ZLTextParagraphCursorCache::cleanup() {
+	std::map<const ZLTextParagraph*, weak_ptr<ZLTextParagraphCursor> > cleanedCache;
+	for (std::map<const ZLTextParagraph*, weak_ptr<ZLTextParagraphCursor> >::iterator it = ourCache.begin(); it != ourCache.end(); ++it) {
 		if (!it->second.isNull()) {
 			cleanedCache.insert(*it);
 		}
@@ -265,14 +265,14 @@ void ParagraphCursorCache::cleanup() {
 	ourCache.swap(cleanedCache);
 }
 
-void WordCursor::rebuild() {
+void ZLTextWordCursor::rebuild() {
 	if (!isNull()) {
 		myParagraphCursor->clear();
 		myParagraphCursor->fill();
 	}
 }
 
-void WordCursor::setCharNumber(int charNumber) {
+void ZLTextWordCursor::setCharNumber(int charNumber) {
 	charNumber = std::max(charNumber, 0);
 	myCharNumber = 0;
 	if (charNumber > 0) {
@@ -285,7 +285,7 @@ void WordCursor::setCharNumber(int charNumber) {
 	}
 }
 
-void WordCursor::moveTo(int wordNumber, int charNumber) {
+void ZLTextWordCursor::moveTo(int wordNumber, int charNumber) {
 	if (!isNull()) {
 		if ((wordNumber == 0) && (charNumber == 0)) {
 			myWordNumber = 0;
@@ -304,7 +304,7 @@ void WordCursor::moveTo(int wordNumber, int charNumber) {
 	}
 }
 
-const WordCursor &WordCursor::operator = (ParagraphCursorPtr paragraphCursor) {
+const ZLTextWordCursor &ZLTextWordCursor::operator = (ZLTextParagraphCursorPtr paragraphCursor) {
 	myWordNumber = 0;
 	myCharNumber = 0;
 	myParagraphCursor = paragraphCursor;
@@ -312,14 +312,14 @@ const WordCursor &WordCursor::operator = (ParagraphCursorPtr paragraphCursor) {
 	return *this;
 }
 
-void WordCursor::moveToParagraph(int paragraphNumber) {
+void ZLTextWordCursor::moveToParagraph(int paragraphNumber) {
 	if (!isNull() && (paragraphNumber != (int)myParagraphCursor->index())) {
-		myParagraphCursor = ParagraphCursor::cursor(myParagraphCursor->myModel, paragraphNumber);
+		myParagraphCursor = ZLTextParagraphCursor::cursor(myParagraphCursor->myModel, paragraphNumber);
 		moveToParagraphStart();
 	}
 }
 
-bool WordCursor::nextParagraph() {
+bool ZLTextWordCursor::nextParagraph() {
 	if (!isNull()) {
 		if (!myParagraphCursor->isLast()) {
 			myParagraphCursor = myParagraphCursor->next();
@@ -330,7 +330,7 @@ bool WordCursor::nextParagraph() {
 	return false;
 }
 
-bool WordCursor::previousParagraph() {
+bool ZLTextWordCursor::previousParagraph() {
 	if (!isNull()) {
 		if (!myParagraphCursor->isFirst()) {
 			myParagraphCursor = myParagraphCursor->previous();
@@ -341,21 +341,21 @@ bool WordCursor::previousParagraph() {
 	return false;
 }
 
-void WordCursor::moveToParagraphStart() {
+void ZLTextWordCursor::moveToParagraphStart() {
 	if (!isNull()) {
 		myWordNumber = 0;
 		myCharNumber = 0;
 	}
 }
 
-void WordCursor::moveToParagraphEnd() {
+void ZLTextWordCursor::moveToParagraphEnd() {
 	if (!isNull()) {
 		myWordNumber = myParagraphCursor->paragraphLength();
 		myCharNumber = 0;
 	}
 }
 
-bool WordCursor::operator < (const WordCursor &cursor) const {
+bool ZLTextWordCursor::operator < (const ZLTextWordCursor &cursor) const {
 	int pn0 = myParagraphCursor->index();
 	int pn1 = cursor.myParagraphCursor->index();
 	if (pn0 < pn1) return true;

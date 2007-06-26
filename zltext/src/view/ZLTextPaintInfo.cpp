@@ -46,7 +46,7 @@ void TextView::rebuildPaintInfo(bool strong) {
 	}
 }
 
-void TextView::setStartCursor(ParagraphCursorPtr cursor) {
+void TextView::setStartCursor(ZLTextParagraphCursorPtr cursor) {
 	myStartCursor = cursor;
 	myEndCursor = 0;
 	myLineInfos.clear();
@@ -97,9 +97,9 @@ bool TextView::pageIsEmpty() const {
 	return true;
 }
 
-WordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
+ZLTextWordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
 	if (myLineInfos.empty() || (overlappingValue == 0)) {
-		return WordCursor();
+		return ZLTextWordCursor();
 	}
 
 	std::vector<ZLTextLineInfoPtr>::const_iterator it;
@@ -114,9 +114,9 @@ WordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
 	return (it != myLineInfos.end()) ? (*it)->End : (*myLineInfos.back()).End;
 }
 
-WordCursor TextView::findLineFromEnd(unsigned int overlappingValue) const {
+ZLTextWordCursor TextView::findLineFromEnd(unsigned int overlappingValue) const {
 	if (myLineInfos.empty() || (overlappingValue == 0)) {
-		return WordCursor();
+		return ZLTextWordCursor();
 	}
 
 	std::vector<ZLTextLineInfoPtr>::const_iterator it;
@@ -131,9 +131,9 @@ WordCursor TextView::findLineFromEnd(unsigned int overlappingValue) const {
 	return (*it)->Start;
 }
 
-WordCursor TextView::findPercentFromStart(unsigned int percent) const {
+ZLTextWordCursor TextView::findPercentFromStart(unsigned int percent) const {
 	if (myLineInfos.empty()) {
-		return WordCursor();
+		return ZLTextWordCursor();
 	}
 
 	int height = myStyle.textAreaHeight() * percent / 100;
@@ -177,7 +177,7 @@ void TextView::preparePaintInfo() {
 			break;
 		case TO_SCROLL_FORWARD:
 			if (!myEndCursor.paragraphCursor().isLast() || !myEndCursor.isEndOfParagraph()) {
-				WordCursor startCursor;
+				ZLTextWordCursor startCursor;
 				switch (myScrollingMode) {
 					case NO_OVERLAPPING:
 						break;
@@ -200,7 +200,7 @@ void TextView::preparePaintInfo() {
 				}
 
 				if (!startCursor.isNull()) {
-					WordCursor endCursor = buildInfos(startCursor);
+					ZLTextWordCursor endCursor = buildInfos(startCursor);
 					if (!pageIsEmpty() && ((myScrollingMode != KEEP_LINES) || (endCursor != myEndCursor))) {
 						myStartCursor = startCursor;
 						myEndCursor = endCursor;
@@ -219,12 +219,12 @@ void TextView::preparePaintInfo() {
 						break;
 					case KEEP_LINES:
 					{
-						WordCursor endCursor = findLineFromStart(myOverlappingValue);
+						ZLTextWordCursor endCursor = findLineFromStart(myOverlappingValue);
 						if (!endCursor.isNull() && (endCursor == myEndCursor)) {
 							endCursor = findLineFromEnd(1);
 						}
 						if (!endCursor.isNull()) {
-							WordCursor startCursor = findStart(endCursor, PIXEL_UNIT, myStyle.textAreaHeight());
+							ZLTextWordCursor startCursor = findStart(endCursor, PIXEL_UNIT, myStyle.textAreaHeight());
 							myStartCursor =
 								(startCursor != myStartCursor) ?
 									startCursor : findStart(myStartCursor, PIXEL_UNIT, myStyle.textAreaHeight());
@@ -260,8 +260,8 @@ void TextView::preparePaintInfo() {
 	myLineInfoCache.clear();
 }
 
-WordCursor TextView::findStart(const WordCursor &end, SizeUnit unit, int size) {
-	WordCursor start = end;
+ZLTextWordCursor TextView::findStart(const ZLTextWordCursor &end, SizeUnit unit, int size) {
+	ZLTextWordCursor start = end;
 	size -= paragraphSize(start, true, unit);
 	bool positionChanged = !start.isStartOfParagraph();
 	start.moveToParagraphStart();
@@ -282,7 +282,7 @@ WordCursor TextView::findStart(const WordCursor &end, SizeUnit unit, int size) {
 	if (unit != LINE_UNIT) {
 		bool sameStart = start == end;
 		if (!sameStart && start.isEndOfParagraph() && end.isStartOfParagraph()) {
-			WordCursor startCopy = start;
+			ZLTextWordCursor startCopy = start;
 			startCopy.nextParagraph();
 			sameStart = startCopy == end;
 		}
@@ -294,16 +294,16 @@ WordCursor TextView::findStart(const WordCursor &end, SizeUnit unit, int size) {
 	return start;
 }
 
-WordCursor TextView::buildInfos(const WordCursor &start) {
+ZLTextWordCursor TextView::buildInfos(const ZLTextWordCursor &start) {
 	myLineInfos.clear();
 
-	WordCursor cursor = start;
+	ZLTextWordCursor cursor = start;
 	int textAreaHeight = myStyle.textAreaHeight();
 	int counter = 0;
 	do {
-		WordCursor paragraphEnd = cursor;
+		ZLTextWordCursor paragraphEnd = cursor;
 		paragraphEnd.moveToParagraphEnd();
-		WordCursor paragraphStart = cursor;
+		ZLTextWordCursor paragraphStart = cursor;
 		paragraphStart.moveToParagraphStart();
 
 		myStyle.reset();
@@ -329,10 +329,10 @@ WordCursor TextView::buildInfos(const WordCursor &start) {
 	return cursor;
 }
 
-int TextView::paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit) {
-	WordCursor word = cursor;
+int TextView::paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit) {
+	ZLTextWordCursor word = cursor;
 	word.moveToParagraphStart();
-	WordCursor end = cursor;
+	ZLTextWordCursor end = cursor;
 	if (!beforeCurrentPosition) {
 		end.moveToParagraphEnd();
 	}
@@ -350,10 +350,10 @@ int TextView::paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition
 	return size;
 }
 
-void TextView::skip(WordCursor &cursor, SizeUnit unit, int size) {
-	WordCursor paragraphStart = cursor;
+void TextView::skip(ZLTextWordCursor &cursor, SizeUnit unit, int size) {
+	ZLTextWordCursor paragraphStart = cursor;
 	paragraphStart.moveToParagraphStart();
-	WordCursor paragraphEnd = cursor;
+	ZLTextWordCursor paragraphEnd = cursor;
 	paragraphEnd.moveToParagraphEnd();
 
 	myStyle.reset();

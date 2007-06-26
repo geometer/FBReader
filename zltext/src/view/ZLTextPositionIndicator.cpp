@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -105,7 +104,7 @@ size_t TextView::PositionIndicator::sizeOfParagraph(size_t paragraphNumber) cons
 }
 
 size_t TextView::PositionIndicator::sizeOfTextBeforeCursor() const {
-	WordCursor endCursor = myTextView.endCursor();
+	ZLTextWordCursor endCursor = myTextView.endCursor();
 	const size_t paragraphNumber = endCursor.paragraphCursor().index();
 	const size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
 
@@ -159,7 +158,7 @@ void TextView::PositionIndicator::draw() {
 
 	ZLPaintContext &context = this->context();
 
-	WordCursor endCursor = myTextView.endCursor();
+	ZLTextWordCursor endCursor = myTextView.endCursor();
 	bool isEndOfText = false;
 	if (endCursor.isEndOfParagraph()) {
 		isEndOfText = !endCursor.nextParagraph();
@@ -225,7 +224,7 @@ bool TextView::PositionIndicator::onStylusPress(int x, int y) {
 	} else {
 		myTextView.gotoParagraph(paragraphNumber, true);
 		myTextView.preparePaintInfo();
-		const WordCursor &endCursor = myTextView.endCursor();
+		const ZLTextWordCursor &endCursor = myTextView.endCursor();
 		if (!endCursor.isNull() && (paragraphNumber == endCursor.paragraphCursor().index())) {
 			if (!endCursor.paragraphCursor().isLast() || !endCursor.isEndOfParagraph()) {
 				size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();

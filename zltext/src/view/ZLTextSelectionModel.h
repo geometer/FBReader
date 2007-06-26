@@ -88,7 +88,7 @@ private:
 	int myStoredX;
 	int myStoredY;
 
-	mutable std::set<ParagraphCursorPtr> myCursors;
+	mutable std::set<ZLTextParagraphCursorPtr> myCursors;
 	mutable std::string myText;
 	mutable bool myTextIsUpToDate;
 

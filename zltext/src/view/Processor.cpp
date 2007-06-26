@@ -28,17 +28,17 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-ParagraphCursor::Processor::Processor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
+ZLTextParagraphCursor::Processor::Processor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
 	myOffset = 0;
 }
 
-ParagraphCursor::Processor::~Processor() {
+ZLTextParagraphCursor::Processor::~Processor() {
 }
 
-void ParagraphCursor::Processor::addWord(const char *ptr, int offset, int len) {
+void ZLTextParagraphCursor::Processor::addWord(const char *ptr, int offset, int len) {
 	ZLTextWord *word = ZLTextElementPool::Pool.getWord(ptr, len, offset);
 	for (std::vector<ZLTextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		ZLTextMark mark = *mit;
@@ -49,7 +49,7 @@ void ParagraphCursor::Processor::addWord(const char *ptr, int offset, int len) {
 	myElements.push_back(word);
 }
 
-void ParagraphCursor::Processor::fill() {
+void ZLTextParagraphCursor::Processor::fill() {
 	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
 			case ZLTextParagraphEntry::FORCED_CONTROL_ENTRY:

@@ -30,7 +30,7 @@
 #include "ZLTextStyle.h"
 #include "ZLTextWord.h"
 
-ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
+ZLTextLineInfoPtr TextView::processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
 	ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(start, myStyle.style());
 	ZLTextLineInfo &info = *infoPtr;
 
@@ -41,8 +41,8 @@ ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordC
 		return storedInfo;
 	}
 
-	WordCursor current = start;
-	const ParagraphCursor &paragraphCursor = current.paragraphCursor();
+	ZLTextWordCursor current = start;
+	const ZLTextParagraphCursor &paragraphCursor = current.paragraphCursor();
 	const bool isFirstLine = current.isStartOfParagraph();
 
 	if (paragraphCursor.paragraph().kind() == ZLTextParagraph::TREE_PARAGRAPH) {

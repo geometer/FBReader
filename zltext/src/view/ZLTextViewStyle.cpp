@@ -62,8 +62,8 @@ void TextView::ViewStyle::applyControl(const ZLTextForcedControlElement &control
 	setStyle(new ZLTextForcedStyle(myStyle, control.entry()));
 }
 
-void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {
-	for (WordCursor cursor = begin; !cursor.equalWordNumber(end); cursor.nextWord()) {
+void TextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
+	for (ZLTextWordCursor cursor = begin; !cursor.equalWordNumber(end); cursor.nextWord()) {
 		const ZLTextElement &element = cursor.element();
 		if (element.kind() == ZLTextElement::CONTROL_ELEMENT) {
 			applyControl((ZLTextControlElement&)element);

@@ -52,7 +52,7 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.Exists = true;
 			if (it->Kind == ZLTextElement::WORD_ELEMENT) {
 				myView.myStyle.setStyle(it->Style);
-				WordCursor cursor = myView.startCursor();
+				ZLTextWordCursor cursor = myView.startCursor();
 				cursor.moveToParagraph(it->ParagraphNumber);
 				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->TextElementNumber];
 				const int deltaX = x - it->XStart;
@@ -255,18 +255,18 @@ const std::string &SelectionModel::getText() const {
 	if (!myTextIsUpToDate && !isEmpty()) {
 		std::pair<BoundElement,BoundElement> r = range();
 
-		WordCursor start = myView.startCursor();
+		ZLTextWordCursor start = myView.startCursor();
 		start.moveToParagraph(r.first.ParagraphNumber);
 		start.moveTo(r.first.TextElementNumber, r.first.CharNumber);
 
-		WordCursor end = myView.startCursor();
+		ZLTextWordCursor end = myView.startCursor();
 		end.moveToParagraph(r.second.ParagraphNumber);
 		end.moveTo(r.second.TextElementNumber, r.second.CharNumber);
 
-		std::set<ParagraphCursorPtr> pcursors;
+		std::set<ZLTextParagraphCursorPtr> pcursors;
 		pcursors.insert(start.paragraphCursorPtr());
 
-		for (WordCursor cursor = start; cursor < end; ) {
+		for (ZLTextWordCursor cursor = start; cursor < end; ) {
 			const ZLTextElement &element = cursor.element();
 			switch (element.kind()) {
 				case ZLTextElement::WORD_ELEMENT:

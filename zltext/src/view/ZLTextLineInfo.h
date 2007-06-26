@@ -38,11 +38,11 @@ struct TreeNodeInfo {
 };
 
 struct ZLTextLineInfo {
-	ZLTextLineInfo(const WordCursor &word, ZLTextStylePtr style);
+	ZLTextLineInfo(const ZLTextWordCursor &word, ZLTextStylePtr style);
 
-	WordCursor Start;
-	WordCursor RealStart;
-	WordCursor End;
+	ZLTextWordCursor Start;
+	ZLTextWordCursor RealStart;
+	ZLTextWordCursor End;
 	bool IsVisible;
 	int LeftIndent;
 	int Width;
@@ -67,7 +67,7 @@ public:
 	bool operator < (const ZLTextLineInfoPtr &info) const;
 };
 
-inline ZLTextLineInfo::ZLTextLineInfo(const WordCursor &word, ZLTextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
+inline ZLTextLineInfo::ZLTextLineInfo(const ZLTextWordCursor &word, ZLTextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
 
 inline ZLTextLineInfoPtr::ZLTextLineInfoPtr(ZLTextLineInfo *ptr) : shared_ptr<ZLTextLineInfo>(ptr) {}
 inline bool ZLTextLineInfoPtr::operator < (const ZLTextLineInfoPtr &info) const { return (*this)->Start < info->Start; }

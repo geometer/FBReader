@@ -55,7 +55,7 @@ void TextView::paint() {
 		positionIndicator().draw();
 	}
 
-	ParagraphCursorCache::cleanup();
+	ZLTextParagraphCursorCache::cleanup();
 }
 
 static bool operator <= (const TextElementArea &area, const SelectionModel::BoundElement &element) {
@@ -69,7 +69,7 @@ static bool operator > (const TextElementArea &area, const SelectionModel::Bound
 	return !(area <= element);
 }
 
-static bool operator < (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator < (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
 	int pn = cursor.paragraphCursor().index();
 	return
 		(pn < element.ParagraphNumber) ||
@@ -79,11 +79,11 @@ static bool operator < (const WordCursor &cursor, const SelectionModel::BoundEle
 			 (cursor.charNumber() < element.CharNumber))));
 }
 
-static bool operator >= (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator >= (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
 	return !(cursor < element);
 }
 
-static bool operator > (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator > (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
 	int pn = cursor.paragraphCursor().index();
 	return
 		(pn > element.ParagraphNumber) ||
@@ -93,7 +93,7 @@ static bool operator > (const WordCursor &cursor, const SelectionModel::BoundEle
 			 (cursor.charNumber() > element.CharNumber))));
 }
 
-static bool operator <= (const WordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator <= (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
 	return !(cursor > element);
 }
 
@@ -106,7 +106,7 @@ static TextElementIterator findLast(TextElementIterator from, TextElementIterato
 	return --from;
 }
 
-int TextView::areaLength(const ParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber) {
+int TextView::areaLength(const ZLTextParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber) {
 	myStyle.setStyle(area.Style);
 	const ZLTextWord &word = (const ZLTextWord&)paragraph[area.TextElementNumber];
 	int length = toCharNumber - area.StartCharNumber;
@@ -122,7 +122,7 @@ int TextView::areaLength(const ParagraphCursor &paragraph, const TextElementArea
 }
 
 void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) {
-	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
+	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
 	const TextElementIterator fromIt = myTextElementMap.begin() + from;
 	const TextElementIterator toIt = myTextElementMap.begin() + to;
@@ -172,7 +172,7 @@ void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) 
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
 	TextElementIterator it = fromIt;
-	for (WordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
+	for (ZLTextWordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
 		const ZLTextElement &element = paragraph[pos.wordNumber()];
 		ZLTextElement::Kind kind = element.kind();
 	
@@ -232,9 +232,9 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 			break;
 	}
 
-	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
+	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 	int paragraphNumber = paragraph.index();
-	for (WordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
+	for (ZLTextWordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
 		const ZLTextElement &element = paragraph[pos.wordNumber()];
 		ZLTextElement::Kind kind = element.kind();
 		const int x = context().x();
