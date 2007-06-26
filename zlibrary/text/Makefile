@@ -36,8 +36,6 @@ endif
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 
 do_install:
-
-do_install1:
 	@install -d $(SHARE_ZLIBRARY)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)

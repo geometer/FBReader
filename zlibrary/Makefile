@@ -119,7 +119,7 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 endif
-	@$(MAKE) -C ../zltext do_install1
+	@$(MAKE) -C text do_install
 
 package:
 	@if [ -d $(TARGET_ARCH) ]; then \
