@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TEXHYPHENATOR_H__
-#define __TEXHYPHENATOR_H__
+#ifndef __ZLTEXTTEXHYPHENATOR_H__
+#define __ZLTEXTTEXHYPHENATOR_H__
 
 #include <vector>
 #include <string>
@@ -85,4 +85,4 @@ private:
 friend class ZLTextHyphenationReader;
 };
 
-#endif /* __TEXHYPHENATOR_H__ */
+#endif /* __ZLTEXTTEXHYPHENATOR_H__ */

@@ -18,19 +18,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGCOLLECTIONREADER_H__
-#define __ENCODINGCOLLECTIONREADER_H__
+#ifndef __ZLENCODINGCOLLECTIONREADER_H__
+#define __ZLENCODINGCOLLECTIONREADER_H__
 
 #include <vector>
 #include <string>
 
-#include "../xml/ZLXMLReader.h"
+#include <ZLXMLReader.h>
+
 #include "ZLEncodingConverter.h"
 
-class EncodingCollectionReader : public ZLXMLReader {
+class ZLEncodingCollectionReader : public ZLXMLReader {
 
 public:
-	EncodingCollectionReader(ZLEncodingCollection &collection);
+	ZLEncodingCollectionReader(ZLEncodingCollection &collection);
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 

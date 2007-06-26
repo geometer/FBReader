@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 
-#include "../../abstract/filesystem/ZLOutputStream.h"
+#include <ZLOutputStream.h>
 
 class ZLPosixFileOutputStream : public ZLOutputStream {
 

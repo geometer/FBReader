@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __HYPHENATOR_H__
-#define __HYPHENATOR_H__
+#ifndef __ZLTEXTHYPHENATOR_H__
+#define __ZLTEXTHYPHENATOR_H__
 
 #include <string>
 
@@ -74,4 +74,4 @@ inline bool ZLTextHyphenationInfo::isHyphenationPossible(size_t position) {
 	return (position < myMask.size()) && myMask[position];
 }
 
-#endif /* __HYPHENATOR_H__ */
+#endif /* __ZLTEXTHYPHENATOR_H__ */

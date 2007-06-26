@@ -25,7 +25,7 @@
 
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
-#include <ZLOptionView.h>
+#include "../../../core/src/dialogs/ZLOptionView.h"
 
 class ZLGtkDialogContent;
 

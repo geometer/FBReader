@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __TEXTELEMENT_H__
-#define __TEXTELEMENT_H__
+#ifndef __ZLTEXTELEMENT_H__
+#define __ZLTEXTELEMENT_H__
 
 #include <ZLImageManager.h>
 
@@ -150,4 +150,4 @@ inline ZLTextFixedHSpaceElement::ZLTextFixedHSpaceElement(unsigned char length) 
 inline ZLTextElement::Kind ZLTextFixedHSpaceElement::kind() const { return FIXED_HSPACE_ELEMENT; }
 inline unsigned char ZLTextFixedHSpaceElement::length() const { return myLength; }
 
-#endif /* __TEXTELEMENT_H__ */
+#endif /* __ZLTEXTELEMENT_H__ */

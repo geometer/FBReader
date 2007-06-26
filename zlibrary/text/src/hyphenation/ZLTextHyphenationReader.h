@@ -18,8 +18,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __HYPHENATIONREADER_H__
-#define __HYPHENATIONREADER_H__
+#ifndef __ZLTEXTHYPHENATIONREADER_H__
+#define __ZLTEXTHYPHENATIONREADER_H__
 
 #include <string>
 
@@ -43,4 +43,4 @@ private:
 	std::string myBuffer;
 };
 
-#endif /* __HYPHENATIONREADER_H__ */
+#endif /* __ZLTEXTHYPHENATIONREADER_H__ */

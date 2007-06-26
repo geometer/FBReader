@@ -11,7 +11,7 @@ else
   TARGET = libzlcore-$(UI_TYPE).a
 endif
 
-SUBDIRS = src/dialogs src/optionEntries
+SUBDIRS = src/library src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options
 
 .objects:
 	@for subdir in $(SUBDIRS); do \

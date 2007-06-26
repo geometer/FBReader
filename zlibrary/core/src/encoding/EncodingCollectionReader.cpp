@@ -30,10 +30,10 @@ static const std::string ALIAS = "alias";
 static const std::string CODE = "code";
 static const std::string NUMBER = "number";
 
-EncodingCollectionReader::EncodingCollectionReader(ZLEncodingCollection &collection) : myCollection(collection) {
+ZLEncodingCollectionReader::ZLEncodingCollectionReader(ZLEncodingCollection &collection) : myCollection(collection) {
 }
 
-void EncodingCollectionReader::startElementHandler(const char *tag, const char **attributes) {
+void ZLEncodingCollectionReader::startElementHandler(const char *tag, const char **attributes) {
 	if (GROUP == tag) {
 		const char *name = attributeValue(attributes, NAME.c_str());
 		if (name != 0) {
@@ -64,7 +64,7 @@ void EncodingCollectionReader::startElementHandler(const char *tag, const char *
 	}
 }
 
-void EncodingCollectionReader::endElementHandler(const char *tag) {
+void ZLEncodingCollectionReader::endElementHandler(const char *tag) {
 	if (!myCurrentInfo.isNull() && (ENCODING == tag)) {
 		if (myCurrentInfo->canCreateConverter()) {
 			myCurrentSet->addInfo(myCurrentInfo);

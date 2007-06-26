@@ -25,7 +25,7 @@
 #include <ZLStringUtil.h>
 
 #include "ZLUnixFSManager.h"
-#include "../../abstract/filesystem/ZLFSDir.h"
+#include "../../../core/src/filesystem/ZLFSDir.h"
 
 static std::string getPwdDir() {
 	char *pwd = getenv("PWD");

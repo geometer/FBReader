@@ -18,9 +18,10 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
+
 #include "ZLApplication.h"
 #include "ZLKeyBindings.h"
-#include "../library/ZLibrary.h"
 #include "../view/ZLView.h"
 #include "../view/ZLPaintContext.h"
 

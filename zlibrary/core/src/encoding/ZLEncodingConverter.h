@@ -118,7 +118,7 @@ private:
 	void init();
 
 friend class ZLEncodingConverterInfo;
-friend class EncodingCollectionReader;
+friend class ZLEncodingCollectionReader;
 };
 
 #endif /* __ZLENCODINGCONVERTER_H__ */

@@ -24,9 +24,9 @@
 #include <QtCore/QObject>
 #include <QtCore/QSize>
 
-#include "../../abstract/dialogs/ZLOptionsDialog.h"
-#include "../../abstract/dialogs/ZLOptionEntry.h"
-#include "../../abstract/dialogs/ZLOptionView.h"
+#include <ZLOptionsDialog.h>
+#include <ZLOptionEntry.h>
+#include "../../../core/src/dialogs/ZLOptionView.h"
 
 class ZLQtDialogContent;
 

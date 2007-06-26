@@ -21,8 +21,8 @@
 #ifndef __ICONVENCODINGCONVERTERS_H__
 #define __ICONVENCODINGCONVERTERS_H__
 
-#include "../../abstract/encoding/ZLEncodingConverter.h"
-#include "../../abstract/encoding/ZLEncodingConverterProvider.h"
+#include <ZLEncodingConverter.h>
+#include "../../../core/src/encoding/ZLEncodingConverterProvider.h"
 
 class IConvEncodingConverterProvider : public ZLEncodingConverterProvider {
 

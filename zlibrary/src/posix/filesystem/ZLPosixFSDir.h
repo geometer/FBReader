@@ -21,7 +21,7 @@
 #ifndef __ZLPOSIXFSDIR_H__
 #define __ZLPOSIXFSDIR_H__
 
-#include "../../abstract/filesystem/ZLFSDir.h"
+#include "../../../core/src/filesystem/ZLFSDir.h"
 
 #include <sys/stat.h>
 

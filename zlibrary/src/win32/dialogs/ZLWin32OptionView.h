@@ -22,7 +22,7 @@
 
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
-#include <ZLOptionView.h>
+#include "../../../core/src/dialogs/ZLOptionView.h"
 
 #include "../w32widgets/W32Control.h"
 #include "../w32widgets/W32ColorComboBox.h"

@@ -23,10 +23,9 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLibrary.h>
 #include <ZLFile.h>
+#include <ZLXMLReader.h>
 
 #include "MyEncodingConverter.h"
-
-#include "../xml/ZLXMLReader.h"
 
 class MyOneByteEncodingConverter : public ZLEncodingConverter {
 
