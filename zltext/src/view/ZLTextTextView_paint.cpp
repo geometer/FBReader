@@ -39,14 +39,14 @@ void TextView::paint() {
 	labels.reserve(myLineInfos.size() + 1);
 	labels.push_back(0);
 	context().moveYTo(0);
-	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		prepareTextLine(**it);
 		labels.push_back(myTextElementMap.size());
 	}
 	mySelectionModel.update();
 	context().moveYTo(0);
 	int index = 0;
-	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		drawTextLine(**it, labels[index], labels[index + 1]);
 		++index;
 	}
@@ -122,7 +122,7 @@ int TextView::areaLength(const ParagraphCursor &paragraph, const TextElementArea
 	return 0;
 }
 
-void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
+void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) {
 	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
 	const TextElementIterator fromIt = myTextElementMap.begin() + from;
@@ -205,7 +205,7 @@ void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 	context().moveY(info.Descent + info.VSpaceAfter);
 }
 
-void TextView::prepareTextLine(const LineInfo &info) {
+void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
 	const int y = std::min(context().y() + info.Height, myStyle.textAreaHeight());
 	int spaceCounter = info.SpaceCounter;

@@ -37,8 +37,8 @@ struct TreeNodeInfo {
 	std::vector<bool> VerticalLinesStack;
 };
 
-struct LineInfo {
-	LineInfo(const WordCursor &word, ZLTextStylePtr style);
+struct ZLTextLineInfo {
+	ZLTextLineInfo(const WordCursor &word, ZLTextStylePtr style);
 
 	WordCursor Start;
 	WordCursor RealStart;
@@ -55,21 +55,21 @@ struct LineInfo {
 
 private:
 	/* copy constructor & assignment are disabled */
-	LineInfo(const LineInfo&);
-	LineInfo &operator = (const LineInfo&);
+	ZLTextLineInfo(const ZLTextLineInfo&);
+	ZLTextLineInfo &operator = (const ZLTextLineInfo&);
 };
 
-class LineInfoPtr : public shared_ptr<LineInfo> {
+class ZLTextLineInfoPtr : public shared_ptr<ZLTextLineInfo> {
 
 public:
-	LineInfoPtr(LineInfo *ptr);
+	ZLTextLineInfoPtr(ZLTextLineInfo *ptr);
 
-	bool operator < (const LineInfoPtr &info) const;
+	bool operator < (const ZLTextLineInfoPtr &info) const;
 };
 
-inline LineInfo::LineInfo(const WordCursor &word, ZLTextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
+inline ZLTextLineInfo::ZLTextLineInfo(const WordCursor &word, ZLTextStylePtr style) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style) {}
 
-inline LineInfoPtr::LineInfoPtr(LineInfo *ptr) : shared_ptr<LineInfo>(ptr) {}
-inline bool LineInfoPtr::operator < (const LineInfoPtr &info) const { return (*this)->Start < info->Start; }
+inline ZLTextLineInfoPtr::ZLTextLineInfoPtr(ZLTextLineInfo *ptr) : shared_ptr<ZLTextLineInfo>(ptr) {}
+inline bool ZLTextLineInfoPtr::operator < (const ZLTextLineInfoPtr &info) const { return (*this)->Start < info->Start; }
 
 #endif /* __ZLTEXTLINEINFO_H__ */

@@ -90,7 +90,7 @@ void TextView::moveEndCursor(int paragraphNumber, int wordNumber, int charNumber
 }
 
 bool TextView::pageIsEmpty() const {
-	for (std::vector<LineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		if ((*it)->IsVisible) {
 			return false;
 		}
@@ -103,7 +103,7 @@ WordCursor TextView::findLineFromStart(unsigned int overlappingValue) const {
 		return WordCursor();
 	}
 
-	std::vector<LineInfoPtr>::const_iterator it;
+	std::vector<ZLTextLineInfoPtr>::const_iterator it;
 	for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		if ((*it)->IsVisible) {
 			--overlappingValue;
@@ -120,7 +120,7 @@ WordCursor TextView::findLineFromEnd(unsigned int overlappingValue) const {
 		return WordCursor();
 	}
 
-	std::vector<LineInfoPtr>::const_iterator it;
+	std::vector<ZLTextLineInfoPtr>::const_iterator it;
 	for (it = myLineInfos.end() - 1; it != myLineInfos.begin(); --it) {
 		if ((*it)->IsVisible) {
 			--overlappingValue;
@@ -139,9 +139,9 @@ WordCursor TextView::findPercentFromStart(unsigned int percent) const {
 
 	int height = myStyle.textAreaHeight() * percent / 100;
 	bool visibleLineOccured = false;
-	std::vector<LineInfoPtr>::const_iterator it;
+	std::vector<ZLTextLineInfoPtr>::const_iterator it;
 	for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
-		const LineInfo &info = **it;
+		const ZLTextLineInfo &info = **it;
 		if (info.IsVisible) {
 			visibleLineOccured = true;
 		}
@@ -309,7 +309,7 @@ WordCursor TextView::buildInfos(const WordCursor &start) {
 
 		myStyle.reset();
 		myStyle.applyControls(paragraphStart, cursor);
-		LineInfoPtr infoPtr = new LineInfo(cursor, myStyle.style());
+		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, myStyle.style());
 
 		while (!infoPtr->End.isEndOfParagraph()) {
 			infoPtr = processTextLine(infoPtr->End, paragraphEnd);
@@ -343,7 +343,7 @@ int TextView::paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition
 	int size = 0;
 
 	while (!word.equalWordNumber(end)) {
-		const LineInfoPtr info = processTextLine(word, end);
+		const ZLTextLineInfoPtr info = processTextLine(word, end);
 		word = info->End;
 		size += infoSize(*info, unit);
 	}
@@ -361,7 +361,7 @@ void TextView::skip(WordCursor &cursor, SizeUnit unit, int size) {
 	myStyle.applyControls(paragraphStart, cursor);
 
 	while (!cursor.isEndOfParagraph() && (size > 0)) {
-		const LineInfoPtr info = processTextLine(cursor, paragraphEnd);
+		const ZLTextLineInfoPtr info = processTextLine(cursor, paragraphEnd);
 		cursor = info->End;
 		size -= infoSize(*info, unit);
 	}

@@ -31,13 +31,13 @@
 #include "ZLTextStyle.h"
 #include "ZLTextWord.h"
 
-LineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
-	LineInfoPtr infoPtr = new LineInfo(start, myStyle.style());
-	LineInfo &info = *infoPtr;
+ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor &end) {
+	ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(start, myStyle.style());
+	ZLTextLineInfo &info = *infoPtr;
 
-	std::set<LineInfoPtr>::const_iterator it = myLineInfoCache.find(infoPtr);
+	std::set<ZLTextLineInfoPtr>::const_iterator it = myLineInfoCache.find(infoPtr);
 	if (it != myLineInfoCache.end()) {
-		const LineInfoPtr &storedInfo = *it;
+		const ZLTextLineInfoPtr &storedInfo = *it;
 		myStyle.applyControls(storedInfo->Start, storedInfo->End);
 		return storedInfo;
 	}

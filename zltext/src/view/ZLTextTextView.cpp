@@ -435,6 +435,6 @@ void TextView::highlightParagraph(int paragraphNumber) {
 	rebuildPaintInfo(true);
 }
 
-int TextView::infoSize(const LineInfo &info, SizeUnit unit) {
+int TextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
 	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
 }

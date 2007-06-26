@@ -38,8 +38,8 @@
 class ZLTextModel;
 class ZLTextMark;
 
-class LineInfo;
-class LineInfoPtr;
+class ZLTextLineInfo;
+class ZLTextLineInfoPtr;
 class TreeNodeInfo;
 
 class TextView : public ZLView {
@@ -180,9 +180,9 @@ private:
 	void clear();
 
 	int areaLength(const ParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber);
-	LineInfoPtr processTextLine(const WordCursor &start, const WordCursor &end);
-	void prepareTextLine(const LineInfo &info);
-	void drawTextLine(const LineInfo &info, size_t from, size_t to);
+	ZLTextLineInfoPtr processTextLine(const WordCursor &start, const WordCursor &end);
+	void prepareTextLine(const ZLTextLineInfo &info);
+	void drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to);
 	void drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift);
 	void drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter);
@@ -196,7 +196,7 @@ private:
 		PIXEL_UNIT,
 		LINE_UNIT
 	};
-	int infoSize(const LineInfo &info, SizeUnit unit);
+	int infoSize(const ZLTextLineInfo &info, SizeUnit unit);
 	int paragraphSize(const WordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
 	void skip(WordCursor &paragraph, SizeUnit unit, int size);
 	WordCursor findStart(const WordCursor &end, SizeUnit unit, int textHeight);
@@ -221,8 +221,8 @@ private:
 	} myPaintState;
 	WordCursor myStartCursor;
 	WordCursor myEndCursor;
-	std::vector<LineInfoPtr> myLineInfos;
-	std::set<LineInfoPtr> myLineInfoCache;
+	std::vector<ZLTextLineInfoPtr> myLineInfos;
+	std::set<ZLTextLineInfoPtr> myLineInfoCache;
 
 	ScrollingMode myScrollingMode;
 	unsigned int myOverlappingValue;
