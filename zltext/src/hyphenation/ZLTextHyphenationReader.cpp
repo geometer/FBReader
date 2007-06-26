@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -22,7 +21,7 @@
 #include "ZLTextHyphenationReader.h"
 #include "ZLTextTeXHyphenator.h"
 
-void HyphenationReader::characterDataHandler(const char *text, int len) {
+void ZLTextHyphenationReader::characterDataHandler(const char *text, int len) {
 	if (myReadPattern) {
 		myBuffer.append(text, len);
 	}
@@ -31,7 +30,7 @@ void HyphenationReader::characterDataHandler(const char *text, int len) {
 static const std::string PATTERN = "pattern";
 static const std::string LINE_BREAKING_ALGORITHM = "lineBreakingAlgorithm";
 
-void HyphenationReader::startElementHandler(const char *tag, const char **attributes) {
+void ZLTextHyphenationReader::startElementHandler(const char *tag, const char **attributes) {
 	if (PATTERN == tag) {
 		myReadPattern = true;
 	} else if (LINE_BREAKING_ALGORITHM == tag) {
@@ -42,20 +41,20 @@ void HyphenationReader::startElementHandler(const char *tag, const char **attrib
 	}
 }
 
-void HyphenationReader::endElementHandler(const char *tag) {
+void ZLTextHyphenationReader::endElementHandler(const char *tag) {
 	if (PATTERN == tag) {
 		myReadPattern = false;
 		if (!myBuffer.empty()) {
-			myHyphenator->myPatternTable.push_back(new TeXHyphenationPattern(myBuffer));
+			myHyphenator->myPatternTable.push_back(new ZLTextTeXHyphenationPattern(myBuffer));
 		}
 		myBuffer.erase();
 	}
 }
 
-HyphenationReader::HyphenationReader(TeXHyphenator *hyphenator) {
+ZLTextHyphenationReader::ZLTextHyphenationReader(ZLTextTeXHyphenator *hyphenator) {
 	myHyphenator = hyphenator;
 	myReadPattern = false;
 }
 
-HyphenationReader::~HyphenationReader() {
+ZLTextHyphenationReader::~ZLTextHyphenationReader() {
 }

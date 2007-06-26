@@ -36,7 +36,7 @@ TextElementVector::~TextElementVector() {
 	for (TextElementVector::const_iterator it = begin(); it != end(); ++it) {
 		switch ((*it)->kind()) {
 			case TextElement::WORD_ELEMENT:
-				TextElementPool::Pool.storeWord((Word*)*it);
+				TextElementPool::Pool.storeWord((ZLTextWord*)*it);
 				break;
 			case TextElement::CONTROL_ELEMENT:
 				TextElementPool::Pool.storeControlElement((ControlElement*)*it);
@@ -193,7 +193,7 @@ ZLTextMark WordCursor::position() const {
 		++wordNumber;
 	}
 	if (wordNumber != paragraphLength) {
-		return ZLTextMark(paragraph.index(), ((Word&)paragraph[wordNumber]).ParagraphOffset, 0);
+		return ZLTextMark(paragraph.index(), ((ZLTextWord&)paragraph[wordNumber]).ParagraphOffset, 0);
 	}
 	return ZLTextMark(paragraph.index() + 1, 0, 0);
 }
@@ -210,7 +210,7 @@ void ParagraphCursor::fill() {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
-			const std::string &breakingAlgorithm = Hyphenator::instance().breakingAlgorithm();
+			const std::string &breakingAlgorithm = ZLTextHyphenator::instance().breakingAlgorithm();
 			if (breakingAlgorithm == "chinese") {
 				ChineseParagraphProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			} else if (breakingAlgorithm == "anycharacter") {
@@ -279,7 +279,7 @@ void WordCursor::setCharNumber(int charNumber) {
 	if (charNumber > 0) {
 		const TextElement &element = (*myParagraphCursor)[myWordNumber];
 		if (element.kind() == TextElement::WORD_ELEMENT) {
-			if (charNumber <= (int)((const Word&)element).Length) {
+			if (charNumber <= (int)((const ZLTextWord&)element).Length) {
 				myCharNumber = charNumber;
 			}
 		}

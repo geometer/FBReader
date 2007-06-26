@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -24,9 +23,9 @@
 
 #include "ZLTextHyphenator.h"
 
-Hyphenator *Hyphenator::ourInstance = 0;
+ZLTextHyphenator *ZLTextHyphenator::ourInstance = 0;
 
-void Hyphenator::deleteInstance() {
+void ZLTextHyphenator::deleteInstance() {
 	if (ourInstance != 0) {
 		ourInstance->unload();
 		delete ourInstance;
@@ -34,7 +33,7 @@ void Hyphenator::deleteInstance() {
 	}
 }
 
-HyphenationInfo Hyphenator::info(const Word &word) const {
+ZLTextHyphenationInfo ZLTextHyphenator::info(const ZLTextWord &word) const {
 	ZLUnicodeUtil::Ucs2String ucs2Vector;
 	ZLUnicodeUtil::utf8ToUcs2(ucs2Vector, word.Data, word.Size, word.Length);
 
@@ -55,7 +54,7 @@ HyphenationInfo Hyphenator::info(const Word &word) const {
 	}
 	pattern.push_back(' ');
 
-	HyphenationInfo info(word.Length + 2);
+	ZLTextHyphenationInfo info(word.Length + 2);
 	hyphenate(pattern, info.myMask, word.Length + 2);
 
 	for (int i = 0; i < word.Length + 1; ++i) {

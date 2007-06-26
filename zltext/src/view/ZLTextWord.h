@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -29,31 +28,31 @@
 
 #include "ZLTextElement.h"
 
-class Word : public TextElement {
+class ZLTextWord : public TextElement {
 
 public:
-	class WordMark {
+	class Mark {
 
 	private:
-		WordMark(int start, int length);
-		void setNext(WordMark *mark);
-		~WordMark();
-		friend class Word;
+		Mark(int start, int length);
+		void setNext(Mark *mark);
+		~Mark();
+		friend class ZLTextWord;
 
 	public:
 		int start() const;
 		int length() const;
-		const WordMark *next() const;
+		const Mark *next() const;
 
 	private:
 		int myStart;
 		int myLength;
-		WordMark *myNext;
+		Mark *myNext;
 	};
 
 private:
-	Word(const char *data, unsigned short size, size_t paragraphOffset);
-	~Word();
+	ZLTextWord(const char *data, unsigned short size, size_t paragraphOffset);
+	~ZLTextWord();
 
 public:
 	Kind kind() const;
@@ -61,7 +60,7 @@ public:
 
 	void addMark(int start, int len);
 
-	WordMark *mark() const;
+	Mark *mark() const;
 
 	const char *Data;
 	/* size of data in bytes */
@@ -71,30 +70,30 @@ public:
 	const size_t ParagraphOffset;
 
 private:
-	WordMark *myMark;
+	Mark *myMark;
 	mutable short myWidth;
 	
 private:
 	// assignment and copy constructor are disabled
-	Word(const Word&);
-	Word &operator = (const Word&);
+	ZLTextWord(const ZLTextWord&);
+	ZLTextWord &operator = (const ZLTextWord&);
 
 friend class TextElementPool;
 };
 
-inline TextElement::Kind Word::kind() const { return WORD_ELEMENT; }
-inline Word::WordMark *Word::mark() const { return myMark; }
-inline short Word::width(const ZLPaintContext &context) const {
+inline TextElement::Kind ZLTextWord::kind() const { return WORD_ELEMENT; }
+inline ZLTextWord::Mark *ZLTextWord::mark() const { return myMark; }
+inline short ZLTextWord::width(const ZLPaintContext &context) const {
 	if (myWidth == -1) {
 		myWidth = context.stringWidth(Data, Size);
 	}
 	return myWidth;
 }
 
-inline Word::WordMark::WordMark(int start, int length) { myStart = start; myLength = length; myNext = 0; }
-inline void Word::WordMark::setNext(Word::WordMark *mark) { myNext = mark; }
-inline int Word::WordMark::start() const { return myStart; }
-inline int Word::WordMark::length() const { return myLength; }
-inline const Word::WordMark *Word::WordMark::next() const { return myNext; }
+inline ZLTextWord::Mark::Mark(int start, int length) { myStart = start; myLength = length; myNext = 0; }
+inline void ZLTextWord::Mark::setNext(ZLTextWord::Mark *mark) { myNext = mark; }
+inline int ZLTextWord::Mark::start() const { return myStart; }
+inline int ZLTextWord::Mark::length() const { return myLength; }
+inline const ZLTextWord::Mark *ZLTextWord::Mark::next() const { return myNext; }
 
 #endif /* __ZLTEXTWORD_H__ */

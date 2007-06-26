@@ -40,7 +40,7 @@ ParagraphCursor::ParagraphProcessor::~ParagraphProcessor() {
 }
 
 void ParagraphCursor::ParagraphProcessor::addWord(const char *ptr, int offset, int len) {
-	Word *word = TextElementPool::Pool.getWord(ptr, len, offset);
+	ZLTextWord *word = TextElementPool::Pool.getWord(ptr, len, offset);
 	for (std::vector<ZLTextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		ZLTextMark mark = *mit;
 		if ((mark.Offset < offset + len) && (mark.Offset + mark.Length > offset)) {

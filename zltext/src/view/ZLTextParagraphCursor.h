@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -58,13 +57,13 @@ public:
 	TextElement *AfterParagraphElement;
 	TextElement *EmptyLineElement;
 
-	Word *getWord(const char *data, unsigned short length, size_t paragraphOffset);
-	void storeWord(Word *word);
+	ZLTextWord *getWord(const char *data, unsigned short length, size_t paragraphOffset);
+	void storeWord(ZLTextWord *word);
 	ControlElement *getControlElement(shared_ptr<ZLTextParagraphEntry> entry);
 	void storeControlElement(ControlElement *element);
 
 private:
-	Allocator<sizeof(Word),64> myWordAllocator;
+	Allocator<sizeof(ZLTextWord),64> myWordAllocator;
 	Allocator<sizeof(ControlElement),32> myControlAllocator;
 };
 
@@ -248,11 +247,11 @@ friend class ParagraphCursor;
 
 inline TextElementVector::TextElementVector() {}
 
-inline Word *TextElementPool::getWord(const char *data, unsigned short length, size_t paragraphOffset) {
-	return new (myWordAllocator.allocate()) Word(data, length, paragraphOffset);
+inline ZLTextWord *TextElementPool::getWord(const char *data, unsigned short length, size_t paragraphOffset) {
+	return new (myWordAllocator.allocate()) ZLTextWord(data, length, paragraphOffset);
 }
-inline void TextElementPool::storeWord(Word *word) {
-	word->~Word();
+inline void TextElementPool::storeWord(ZLTextWord *word) {
+	word->~ZLTextWord();
 	myWordAllocator.free((void*)word);
 }
 inline ControlElement *TextElementPool::getControlElement(shared_ptr<ZLTextParagraphEntry> entry) {

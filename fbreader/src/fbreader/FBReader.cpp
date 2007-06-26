@@ -238,7 +238,7 @@ FBReader::~FBReader() {
 	}
 	ZLTextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
-	Hyphenator::deleteInstance();
+	ZLTextHyphenator::deleteInstance();
 }
 
 void FBReader::initWindow() {
@@ -335,7 +335,7 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		}
 		myModel = new BookModel(description);
 		ZLStringOption(ZLOption::STATE_CATEGORY, STATE, BOOK, std::string()).setValue(myModel->fileName());
-		Hyphenator::instance().load(description->language());
+		ZLTextHyphenator::instance().load(description->language());
 		bookTextView.setModel(myModel->bookTextModel(), description->fileName());
 		bookTextView.setCaption(description->title());
 		bookTextView.setContentsModel(myModel->contentsModel());

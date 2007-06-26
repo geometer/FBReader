@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -27,12 +26,12 @@
 
 #include "ZLTextHyphenator.h"
 
-class TeXHyphenationPattern {
+class ZLTextTeXHyphenationPattern {
 
 public:
-	TeXHyphenationPattern(unsigned short *ucs2String, int length);
-	TeXHyphenationPattern(const std::string &utf8String);
-	~TeXHyphenationPattern();
+	ZLTextTeXHyphenationPattern(unsigned short *ucs2String, int length);
+	ZLTextTeXHyphenationPattern(const std::string &utf8String);
+	~ZLTextTeXHyphenationPattern();
 
 	int length() const { return myLength; }
 	void apply(unsigned char *values) const;
@@ -42,16 +41,16 @@ private:
 	unsigned short *mySymbols;
 	unsigned char *myValues;
 
-friend class TeXPatternComparator;
+friend class ZLTextTeXPatternComparator;
 };
 
-class TeXPatternComparator {
+class ZLTextTeXPatternComparator {
 
 public:
-	bool operator() (const TeXHyphenationPattern *p1, const TeXHyphenationPattern *p2) const;
+	bool operator() (const ZLTextTeXHyphenationPattern *p1, const ZLTextTeXHyphenationPattern *p2) const;
 };
 
-class TeXHyphenator : public Hyphenator {
+class ZLTextTeXHyphenator : public ZLTextHyphenator {
 
 private:
 	static const std::string PatternZip();
@@ -64,8 +63,8 @@ public:
 	static const std::vector<std::string> &languageNames();
 
 public:
-	TeXHyphenator() : myBreakingAlgorithm("") {}
-	~TeXHyphenator();
+	ZLTextTeXHyphenator() : myBreakingAlgorithm("") {}
+	~ZLTextTeXHyphenator();
 
 	void load(const std::string &language);
 	void unload();
@@ -76,14 +75,14 @@ protected:
 	void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const;
 
 private:
-	typedef std::vector<TeXHyphenationPattern*>::const_iterator PatternIterator;
+	typedef std::vector<ZLTextTeXHyphenationPattern*>::const_iterator PatternIterator;
 
-	std::vector<TeXHyphenationPattern*> myPatternTable;
+	std::vector<ZLTextTeXHyphenationPattern*> myPatternTable;
 	std::string myLanguage;
 
 	std::string myBreakingAlgorithm;
 
-friend class HyphenationReader;
+friend class ZLTextHyphenationReader;
 };
 
 #endif /* __TEXHYPHENATOR_H__ */

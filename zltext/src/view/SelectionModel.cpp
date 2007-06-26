@@ -54,7 +54,7 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 				myView.myStyle.setStyle(it->Style);
 				WordCursor cursor = myView.startCursor();
 				cursor.moveToParagraph(it->ParagraphNumber);
-				const Word &word = (const Word&)cursor.paragraphCursor()[it->TextElementNumber];
+				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->TextElementNumber];
 				const int deltaX = x - it->XStart;
 				const int len = it->Length;
 				const int start = it->StartCharNumber;
@@ -271,7 +271,7 @@ const std::string &SelectionModel::getText() const {
 			switch (element.kind()) {
 				case TextElement::WORD_ELEMENT:
 				{
-					const Word &word = (const Word&)element;
+					const ZLTextWord &word = (const ZLTextWord&)element;
 					if (cursor.sameElementAs(end)) {
 						if (start.sameElementAs(end)) {
 							int skip = ZLUnicodeUtil::length(word.Data, start.charNumber());

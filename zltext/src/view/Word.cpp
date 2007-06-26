@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -23,18 +22,18 @@
 
 #include "ZLTextWord.h"
 
-Word::Word(const char *data, unsigned short size, size_t paragraphOffset) : Data(data), Size(size), Length(ZLUnicodeUtil::utf8Length(Data, size)), ParagraphOffset(paragraphOffset), myMark(0), myWidth(-1) {
+ZLTextWord::ZLTextWord(const char *data, unsigned short size, size_t paragraphOffset) : Data(data), Size(size), Length(ZLUnicodeUtil::utf8Length(Data, size)), ParagraphOffset(paragraphOffset), myMark(0), myWidth(-1) {
 }
 
-Word::~Word() {
+ZLTextWord::~ZLTextWord() {
 	if (myMark != 0) {
 		delete myMark;
 	}
 }
 
-void Word::addMark(int start, int len) {
-	WordMark *existingMark = myMark;
-	WordMark *mark = new WordMark(start, len);
+void ZLTextWord::addMark(int start, int len) {
+	Mark *existingMark = myMark;
+	Mark *mark = new Mark(start, len);
 
 	if ((existingMark == 0) || (existingMark->start() > start)) {
 		mark->setNext(existingMark);
@@ -48,7 +47,7 @@ void Word::addMark(int start, int len) {
 	}
 }
 
-Word::WordMark::~WordMark() {
+ZLTextWord::Mark::~Mark() {
 	if (myNext != 0) {
 		delete myNext;
 	}

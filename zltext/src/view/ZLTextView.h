@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -110,7 +109,7 @@ private:
 		int elementDescent(const TextElement &element) const;
 		int textAreaHeight() const;
 
-		int wordWidth(const Word &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
+		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
 	private:
 		ZLTextStylePtr myStyle;
@@ -184,8 +183,8 @@ private:
 	LineInfoPtr processTextLine(const WordCursor &start, const WordCursor &end);
 	void prepareTextLine(const LineInfo &info);
 	void drawTextLine(const LineInfo &info, size_t from, size_t to);
-	void drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign);
-	void drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift);
+	void drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
+	void drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift);
 	void drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;

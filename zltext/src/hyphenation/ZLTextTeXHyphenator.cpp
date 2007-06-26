@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -32,25 +31,25 @@
 #include "ZLTextTeXHyphenator.h"
 #include "ZLTextHyphenationReader.h"
 
-Hyphenator &Hyphenator::instance() {
+ZLTextHyphenator &ZLTextHyphenator::instance() {
 	if (ourInstance == 0) {
-		ourInstance = new TeXHyphenator();
+		ourInstance = new ZLTextTeXHyphenator();
 	}
 	return *ourInstance;
 }
 
-std::vector<std::string> TeXHyphenator::LanguageCodes;
-std::vector<std::string> TeXHyphenator::LanguageNames;
+std::vector<std::string> ZLTextTeXHyphenator::LanguageCodes;
+std::vector<std::string> ZLTextTeXHyphenator::LanguageNames;
 
 static const std::string POSTFIX = ".pattern";
 static const std::string NONE = "none";
 static const std::string UNKNOWN = "unknown";
 static const std::string LANGUAGE = "language";
 
-class LanguageReader : public ZLXMLReader {
+class ZLTextLanguageReader : public ZLXMLReader {
 
 public:
-	LanguageReader(std::string &name) : myLanguageName(name) {}
+	ZLTextLanguageReader(std::string &name) : myLanguageName(name) {}
 
 	void startElementHandler(const char*, const char **attributes) {
 		if ((attributes[0] != 0) && (LANGUAGE == attributes[0])) {
@@ -63,11 +62,11 @@ private:
 	std::string &myLanguageName;
 };
 
-const std::string TeXHyphenator::PatternZip() {
+const std::string ZLTextTeXHyphenator::PatternZip() {
 	return ZLApplication::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "hyphenationPatterns.zip";
 }
 
-void TeXHyphenator::collectLanguages() {
+void ZLTextTeXHyphenator::collectLanguages() {
 	if (LanguageNames.empty()) {
 		shared_ptr<ZLDir> patternDir = ZLFile(PatternZip()).directory(false);
 		if (!patternDir.isNull()) {
@@ -78,7 +77,7 @@ void TeXHyphenator::collectLanguages() {
 				if (ZLStringUtil::stringEndsWith(*it, POSTFIX)) {
 					std::string code = it->substr(0, it->size() - POSTFIX.size());
 					std::string name;
-					LanguageReader(name).readDocument(PatternZip() + ":" + *it);
+					ZLTextLanguageReader(name).readDocument(PatternZip() + ":" + *it);
 					if (!name.empty()) {
 						LanguageCodes.push_back(code);
 						LanguageNames.push_back(name);
@@ -91,23 +90,23 @@ void TeXHyphenator::collectLanguages() {
 	}
 }
 
-const std::vector<std::string> &TeXHyphenator::languageCodes() {
+const std::vector<std::string> &ZLTextTeXHyphenator::languageCodes() {
 	collectLanguages();
 	return LanguageCodes;
 }
 
-const std::vector<std::string> &TeXHyphenator::languageNames() {
+const std::vector<std::string> &ZLTextTeXHyphenator::languageNames() {
 	collectLanguages();
 	return LanguageNames;
 }
 
-TeXHyphenationPattern::TeXHyphenationPattern(unsigned short *ucs2String, int length) {
+ZLTextTeXHyphenationPattern::ZLTextTeXHyphenationPattern(unsigned short *ucs2String, int length) {
 	myLength = length;
 	mySymbols = ucs2String;
 	myValues = NULL;
 }
 
-TeXHyphenationPattern::TeXHyphenationPattern(const std::string &utf8String) {
+ZLTextTeXHyphenationPattern::ZLTextTeXHyphenationPattern(const std::string &utf8String) {
 	myLength = 0;
 
 	ZLUnicodeUtil::Ucs2String ucs2String;
@@ -135,14 +134,14 @@ TeXHyphenationPattern::TeXHyphenationPattern(const std::string &utf8String) {
 	}
 }
 
-TeXHyphenationPattern::~TeXHyphenationPattern() {
+ZLTextTeXHyphenationPattern::~ZLTextTeXHyphenationPattern() {
 	if (myValues != NULL) {
 		delete[] mySymbols;
 		delete[] myValues;
 	}
 }
 
-void TeXHyphenationPattern::apply(unsigned char *values) const {
+void ZLTextTeXHyphenationPattern::apply(unsigned char *values) const {
 	for (int i = 0; i <= myLength; ++i) {
 		if (values[i] < myValues[i]) {
 			values[i] = myValues[i];
@@ -150,7 +149,7 @@ void TeXHyphenationPattern::apply(unsigned char *values) const {
 	}
 }
 
-bool TeXPatternComparator::operator() (const TeXHyphenationPattern *p1, const TeXHyphenationPattern *p2) const {
+bool ZLTextTeXPatternComparator::operator() (const ZLTextTeXHyphenationPattern *p1, const ZLTextTeXHyphenationPattern *p2) const {
 	bool firstIsShorter = p1->myLength < p2->myLength;
 	int minLength = firstIsShorter ? p1->myLength : p2->myLength;
 	unsigned short *symbols1 = p1->mySymbols;
@@ -166,9 +165,9 @@ bool TeXPatternComparator::operator() (const TeXHyphenationPattern *p1, const Te
 }
 
 static std::vector<unsigned char> values;
-static TeXPatternComparator comparator = TeXPatternComparator();
+static ZLTextTeXPatternComparator comparator = ZLTextTeXPatternComparator();
 
-void TeXHyphenator::hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const {
+void ZLTextTeXHyphenator::hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const {
 	if (myPatternTable.empty()) {
 		for (int i = 0; i < length - 1; ++i) {
 			mask[i] = false;
@@ -179,9 +178,9 @@ void TeXHyphenator::hyphenate(std::vector<unsigned short> &ucs2String, std::vect
 	values.assign(length + 1, 0);
 	
 	for (int j = 0; j < length - 2; ++j) {
-		TeXHyphenator::PatternIterator dictionaryPattern = myPatternTable.begin();
+		ZLTextTeXHyphenator::PatternIterator dictionaryPattern = myPatternTable.begin();
 		for (int k = 1; k <= length - j; ++k) {
-			TeXHyphenationPattern pattern(&ucs2String[j], k);
+			ZLTextTeXHyphenationPattern pattern(&ucs2String[j], k);
 			if (comparator(&pattern, *dictionaryPattern)) {
 				continue;
 			}
@@ -201,11 +200,11 @@ void TeXHyphenator::hyphenate(std::vector<unsigned short> &ucs2String, std::vect
 	}
 }
 
-TeXHyphenator::~TeXHyphenator() {
+ZLTextTeXHyphenator::~ZLTextTeXHyphenator() {
 	unload();
 }
 
-void TeXHyphenator::load(const std::string &language) {
+void ZLTextTeXHyphenator::load(const std::string &language) {
 	if (language == myLanguage) {
 		return;
 	}
@@ -213,12 +212,12 @@ void TeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	HyphenationReader(this).readDocument(PatternZip() + ":" + language + POSTFIX);
+	ZLTextHyphenationReader(this).readDocument(PatternZip() + ":" + language + POSTFIX);
 	
-	std::sort(myPatternTable.begin(), myPatternTable.end(), TeXPatternComparator());
+	std::sort(myPatternTable.begin(), myPatternTable.end(), ZLTextTeXPatternComparator());
 }
 
-void TeXHyphenator::unload() {
+void ZLTextTeXHyphenator::unload() {
 	for (PatternIterator it = myPatternTable.begin(); it != myPatternTable.end(); ++it) {
 		delete *it;
 	}
@@ -226,6 +225,6 @@ void TeXHyphenator::unload() {
 	myBreakingAlgorithm.erase();
 }
 
-const std::string &TeXHyphenator::breakingAlgorithm() const {
+const std::string &ZLTextTeXHyphenator::breakingAlgorithm() const {
 	return myBreakingAlgorithm;
 }

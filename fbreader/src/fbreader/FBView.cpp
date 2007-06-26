@@ -69,7 +69,7 @@ std::string FBView::word(const TextElementArea &area) const {
 		WordCursor cursor = startCursor();
 		cursor.moveToParagraph(area.ParagraphNumber);
 		cursor.moveTo(area.TextElementNumber, 0);
-		const Word &word = (Word&)cursor.element();
+		const ZLTextWord &word = (ZLTextWord&)cursor.element();
 		ZLUnicodeUtil::Ucs2String ucs2;
 		ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);
 		ZLUnicodeUtil::Ucs2String::iterator it = ucs2.begin();

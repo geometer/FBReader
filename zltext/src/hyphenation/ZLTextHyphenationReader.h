@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -26,20 +25,20 @@
 
 #include <ZLXMLReader.h>
 
-class TeXHyphenator;
+class ZLTextTeXHyphenator;
 
-class HyphenationReader : public ZLXMLReader {
+class ZLTextHyphenationReader : public ZLXMLReader {
 
 public:
-	HyphenationReader(TeXHyphenator *hyphenator);
-	~HyphenationReader();
+	ZLTextHyphenationReader(ZLTextTeXHyphenator *hyphenator);
+	~ZLTextHyphenationReader();
 
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, int len);
 
 private:
-	TeXHyphenator *myHyphenator;
+	ZLTextTeXHyphenator *myHyphenator;
 	bool myReadPattern;
 	std::string myBuffer;
 };

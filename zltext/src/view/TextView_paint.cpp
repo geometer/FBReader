@@ -109,7 +109,7 @@ static TextElementIterator findLast(TextElementIterator from, TextElementIterato
 
 int TextView::areaLength(const ParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber) {
 	myStyle.setStyle(area.Style);
-	const Word &word = (const Word&)paragraph[area.TextElementNumber];
+	const ZLTextWord &word = (const ZLTextWord&)paragraph[area.TextElementNumber];
 	int length = toCharNumber - area.StartCharNumber;
 	bool selectHyphenationSign = false;
 	if (length >= area.Length) {
@@ -184,7 +184,7 @@ void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 			const int x = it->XStart;
 			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.style()->verticalShift();
 			if (kind == TextElement::WORD_ELEMENT) {
-				drawWord(x, y, (const Word&)element, pos.charNumber(), -1, false);
+				drawWord(x, y, (const ZLTextWord&)element, pos.charNumber(), -1, false);
 			} else {
 				context().drawImage(x, y, ((const ImageElement&)element).image());
 			}
@@ -196,7 +196,7 @@ void TextView::drawTextLine(const LineInfo &info, size_t from, size_t to) {
 			myStyle.setStyle(it->Style);
 		}
 		int len = info.End.charNumber();
-		const Word &word = (const Word&)info.End.element();
+		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 		context().setColor(myStyle.style()->color());
 		const int x = it->XStart;
 		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.style()->verticalShift();
@@ -247,7 +247,7 @@ void TextView::prepareTextLine(const LineInfo &info) {
 			{
 				const int height = myStyle.elementHeight(element);
 				const int descent = myStyle.elementDescent(element);
-				const int length = (kind == TextElement::WORD_ELEMENT) ? ((const Word&)element).Length : 0;
+				const int length = (kind == TextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length : 0;
 				myTextElementMap.push_back(
 					TextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
@@ -289,7 +289,7 @@ void TextView::prepareTextLine(const LineInfo &info) {
 	if (!endOfParagraph && (info.End.element().kind() == TextElement::WORD_ELEMENT)) {
 		int len = info.End.charNumber();
 		if (len > 0) {
-			const Word &word = (const Word&)info.End.element();
+			const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 			ZLUnicodeUtil::Ucs2String ucs2string;
 			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
 			const bool addHyphenationSign = ucs2string[len - 1] != '-';

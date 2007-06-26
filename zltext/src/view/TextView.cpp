@@ -367,7 +367,7 @@ bool TextView::onStylusRelease(int, int) {
 	return true;
 }
 
-void TextView::drawString(int x, int y, const char *str, int len, const Word::WordMark *mark, int shift) {
+void TextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift) {
 	context().setColor(myStyle.style()->color());
 	if (mark == 0) {
 		context().drawString(x, y, str, len);
@@ -409,7 +409,7 @@ void TextView::drawString(int x, int y, const char *str, int len, const Word::Wo
 	}
 }
 
-void TextView::drawWord(int x, int y, const Word &word, int start, int length, bool addHyphenationSign) {
+void TextView::drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
 		drawString(x, y, word.Data, word.Size, word.mark(), 0);
 	} else {

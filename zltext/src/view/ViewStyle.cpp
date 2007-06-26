@@ -77,7 +77,7 @@ void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCurso
 int TextView::ViewStyle::elementWidth(const TextElement &element, unsigned int charNumber) const {
 	switch (element.kind()) {
 		case TextElement::WORD_ELEMENT:
-			return wordWidth((const Word&)element, charNumber, -1, false);
+			return wordWidth((const ZLTextWord&)element, charNumber, -1, false);
 		case TextElement::IMAGE_ELEMENT:
 			return context().imageWidth(((const ImageElement&)element).image());
 		case TextElement::INDENT_ELEMENT:
@@ -140,7 +140,7 @@ int TextView::ViewStyle::textAreaHeight() const {
 		context().height();
 }
 
-int TextView::ViewStyle::wordWidth(const Word &word, int start, int length, bool addHyphenationSign) const {
+int TextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
 	if ((start == 0) && (length == -1)) {
 		return word.width(context());
 	}

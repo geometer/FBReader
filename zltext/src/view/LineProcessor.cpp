@@ -183,12 +183,12 @@ LineInfoPtr TextView::processTextLine(const WordCursor &start, const WordCursor 
 		const TextElement &element = paragraphCursor[current.wordNumber()];
 		if (element.kind() == TextElement::WORD_ELEMENT) {
 			newWidth -= myStyle.elementWidth(element, current.charNumber());
-			const Word &word = (Word&)element;
+			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newWidth;
 			if ((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
 				ZLUnicodeUtil::Ucs2String ucs2string;
 				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
-				HyphenationInfo hyphenationInfo = Hyphenator::instance().info(word);
+				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::instance().info(word);
 				int hyphenationPosition = word.Length - 1;
 				int subwordWidth = 0;
 				for (; hyphenationPosition > 0; --hyphenationPosition) {

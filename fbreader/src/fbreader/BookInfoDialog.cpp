@@ -266,19 +266,19 @@ LanguageEntry::LanguageEntry(ZLStringOption &encodingOption) : myLanguageOption(
 }
 
 const std::string &LanguageEntry::initialValue() const {
-	const std::vector<std::string> &codes = TeXHyphenator::languageCodes();
-	const std::vector<std::string> &names = TeXHyphenator::languageNames();
+	const std::vector<std::string> &codes = ZLTextTeXHyphenator::languageCodes();
+	const std::vector<std::string> &names = ZLTextTeXHyphenator::languageNames();
 	const size_t index = std::find(codes.begin(), codes.end(), myLanguageOption.value()) - codes.begin();
 	return (index < names.size()) ? names[index] : names.back();
 }
 
 const std::vector<std::string> &LanguageEntry::values() const {
-	return TeXHyphenator::languageNames();
+	return ZLTextTeXHyphenator::languageNames();
 }
 
 void LanguageEntry::onAccept(const std::string &value) {
-	const std::vector<std::string> &codes = TeXHyphenator::languageCodes();
-	const std::vector<std::string> &names = TeXHyphenator::languageNames();
+	const std::vector<std::string> &codes = ZLTextTeXHyphenator::languageCodes();
+	const std::vector<std::string> &names = ZLTextTeXHyphenator::languageNames();
 	const size_t index = std::find(names.begin(), names.end(), value) - names.begin();
 	myLanguageOption.setValue((index < codes.size()) ? codes[index] : codes.back());
 }
