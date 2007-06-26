@@ -25,9 +25,9 @@
 #include <hildon-controlbar.h>
 #include <hildon-number-editor.h>
 
-#include "../../abstract/dialogs/ZLOptionsDialog.h"
-#include "../../abstract/dialogs/ZLOptionEntry.h"
-#include "../../abstract/dialogs/ZLOptionView.h"
+#include <ZLOptionsDialog.h>
+#include <ZLOptionEntry.h>
+#include <ZLOptionView.h>
 
 class ZLGtkDialogContent;
 
