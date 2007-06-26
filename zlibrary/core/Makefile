@@ -35,6 +35,11 @@ endif
 
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 
+ENCODING_FILES = $(wildcard data/encodings/*)
+ifeq "$(TARGET_ARCH)" "maemo"
+  ENCODING_FILES = $(filter-out %/Big5,$(wildcard data/encodings/*))
+endif
+
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
 	@install -d $(SHARE_ZLIBRARY)/encodings
