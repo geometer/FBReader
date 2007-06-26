@@ -21,7 +21,7 @@
 #ifndef __ZLQTDIALOGMANAGER_H__
 #define __ZLQTDIALOGMANAGER_H__
 
-#include "../../abstract/dialogs/ZLDialogManager.h"
+#include <ZLDialogManager.h>
 
 class ZLQtDialogManager : public ZLDialogManager {
 
