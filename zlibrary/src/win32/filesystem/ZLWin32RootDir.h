@@ -21,7 +21,7 @@
 #ifndef __ZLWIN32ROOTDIR_H__
 #define __ZLWIN32ROOTDIR_H__
 
-#include "../../abstract/filesystem/ZLFSDir.h"
+#include "../../../core/src/filesystem/ZLFSDir.h"
 
 class ZLWin32RootDir : public ZLFSDir {
 

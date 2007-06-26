@@ -30,7 +30,7 @@
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
 
-#include "../../abstract/options/ZLConfig.h"
+#include "../../../core/src/options/ZLConfig.h"
 
 #include "ZLWin32ConfigValue.h"
 

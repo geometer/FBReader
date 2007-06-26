@@ -21,8 +21,8 @@
 #ifndef __ZLWIN32ENCODINGCONVERTERS_H__
 #define __ZLWIN32ENCODINGCONVERTERS_H__
 
-#include "../../abstract/encoding/ZLEncodingConverter.h"
-#include "../../abstract/encoding/ZLEncodingConverterProvider.h"
+#include <ZLEncodingConverter.h>
+#include "../../../core/src/encoding/ZLEncodingConverterProvider.h"
 
 class ZLWin32EncodingConverterProvider : public ZLEncodingConverterProvider {
 
