@@ -11,7 +11,7 @@ else
   TARGET = libzlcore-$(UI_TYPE).a
 endif
 
-SUBDIRS = src/model src/view src/hyphenation
+SUBDIRS = src/dialogs src/optionEntries
 
 .objects:
 	@for subdir in $(SUBDIRS); do \
