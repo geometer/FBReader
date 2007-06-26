@@ -8,7 +8,7 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
   TARGET = libzlplatform-$(UI_TYPE).so.$(VERSION)
   TARGET_SHORTNAME = libzlplatform-$(UI_TYPE).so
 else
-  TARGET = libZLplatform-$(UI_TYPE).a
+  TARGET = libzlplatform-$(UI_TYPE).a
 endif
 
 SUBDIRS_ALL = src/unix/xmlconfig src/desktop/application src/desktop/dialogs src/unix/filesystem src/unix/time src/unix/iconv src/win32/library src/win32/encoding src/win32/view src/win32/filesystem src/win32/time src/win32/w32widgets src/win32/dialogs src/win32/application src/win32/image src/win32/config src/win32/message src/posix/filesystem src/unix/message src/unix/library
