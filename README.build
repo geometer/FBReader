@@ -14,12 +14,13 @@ FBReader requires
      If you cannot find expat in your distribution, please visit
      http://expat.sourceforge.net
   ** enca -- encoding detection library (http://trific.ath.cx/software/enca/)
-	** libz and libbz2 -- libraries for zip and bzip2 (de)compression
+  ** libz and libbz2 -- libraries for zip and bzip2 (de)compression
   ** UI library -- this depends on your target platform. For desktop,
        Qt library, version 3.* or 4.*
      OR
        GTK+ library, version >= 2.4 
-     should be installed.
+     should be installed
+  ** for win32 version, we use also libpng, libungif, libjpeg and libtiff
 
 3. How to configure.
 
@@ -45,6 +46,7 @@ Before building FBReader, you should check (and may be edit) 2 files:
         TARGET_ARCH = maemo                 UI_TYPE = maemo
         TARGET_ARCH = maemo                 UI_TYPE = maemo2
         TARGET_ARCH = pma400                UI_TYPE = qtopia
+        TARGET_ARCH = win32                 UI_TYPE = win32
 
   ** makefiles/arch/$(TARGET_ARCH).mk
      This file defines compiler name and location, headers and libraries
