@@ -4,7 +4,7 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-LIBS = -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) -L$(ROOTDIR)/zlibrary/core -lzlcore-$(UI_TYPE) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+LIBS = -lm -L$(ROOTDIR)/zlibrary -lzlibrary-$(UI_TYPE) -L$(ROOTDIR)/zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
 
 TARGET = SampleApplication
 

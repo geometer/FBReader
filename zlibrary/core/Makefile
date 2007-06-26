@@ -5,10 +5,10 @@ include $(MAKEFILESDIR)/config.mk
 VERSION = $(shell cat ../VERSION)
 
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-  TARGET = libzlcore-$(UI_TYPE).so.$(VERSION)
-  TARGET_SHORTNAME = libzlcore-$(UI_TYPE).so
+  TARGET = libzlcore.so.$(VERSION)
+  TARGET_SHORTNAME = libzlcore.so
 else
-  TARGET = libzlcore-$(UI_TYPE).a
+  TARGET = libzlcore.a
 endif
 
 SUBDIRS = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image
@@ -26,7 +26,7 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIB) $(ARCHIVER_LIB)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))

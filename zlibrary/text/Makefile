@@ -5,10 +5,10 @@ include $(MAKEFILESDIR)/config.mk
 VERSION = $(shell cat ../VERSION)
 
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-  TARGET = libzltext-$(UI_TYPE).so.$(VERSION)
-  TARGET_SHORTNAME = libzltext-$(UI_TYPE).so
+  TARGET = libzltext.so.$(VERSION)
+  TARGET_SHORTNAME = libzltext.so
 else
-  TARGET = libzltext-$(UI_TYPE).a
+  TARGET = libzltext.a
 endif
 
 SUBDIRS = src/model src/view src/hyphenation
@@ -26,7 +26,9 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+
+	@echo $(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc -L $(ROOTDIR)/zlibrary/core -lzlcore $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIB) $(ARCHIVER_LIB)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc -L $(ROOTDIR)/zlibrary/core -lzlcore $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIB) $(ARCHIVER_LIB)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))
