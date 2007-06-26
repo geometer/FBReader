@@ -25,7 +25,7 @@
 #include <ZLDialog.h>
 #include <ZLPaintContext.h>
 
-#include "../../abstract/util/ZLKeyUtil.h"
+#include "../../../core/src/util/ZLKeyUtil.h"
 #include "ZLWin32ApplicationWindow.h"
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
