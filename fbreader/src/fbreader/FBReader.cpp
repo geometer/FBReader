@@ -30,6 +30,8 @@
 #include <ZLStringUtil.h>
 #include <ZLResource.h>
 
+#include <ZLTextHyphenator.h>
+
 #include "FBReader.h"
 #include "FBReaderActions.h"
 #include "BookTextView.h"
@@ -43,7 +45,6 @@
 
 #include "../FBOptions.h"
 #include "../bookmodel/BookModel.h"
-#include "../hyphenation/Hyphenator.h"
 #include "../formats/FormatPlugin.h"
 
 static const std::string OPTIONS = "Options";
@@ -235,7 +236,7 @@ FBReader::~FBReader() {
 	if (myModel != 0) {
 		delete myModel;
 	}
-	TextStyleCollection::deleteInstance();
+	ZLTextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
 	Hyphenator::deleteInstance();
 }

@@ -19,23 +19,30 @@
  * 02110-1301, USA.
  */
 
-#ifndef __CONTENTSVIEW_H__
-#define __CONTENTSVIEW_H__
+#include <algorithm>
 
-#include "FBView.h"
+#include <ZLUnicodeUtil.h>
+#include <ZLImage.h>
 
-class ContentsView : public FBView {
+#include <ZLTextParagraph.h>
 
-public:
-	ContentsView(FBReader &reader, ZLPaintContext &context);
-	~ContentsView();
+#include "ZLTextParagraphCursor.h"
+#include "ZLTextWord.h"
 
-	bool isEmpty() const;
-	size_t currentTextViewParagraph(bool includeStart = true) const;
-	void gotoReference();
+ParagraphCursor::AnyPlaceParagraphProcessor::AnyPlaceParagraphProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : ParagraphProcessor(paragraph, marks, paragraphNumber, elements) {
+}
 
-private:
-	bool _onStylusPress(int x, int y);
-};
-
-#endif /* __CONTENTSVIEW_H__ */
+void ParagraphCursor::AnyPlaceParagraphProcessor::processTextEntry(const ZLTextEntry &textEntry) {
+	if (textEntry.dataLength() != 0) {
+		const char *start = textEntry.data();
+		const char *end = start + textEntry.dataLength();
+		for (const char *ptr = start; ptr < end;) {
+			ZLUnicodeUtil::Ucs2Char ch;
+			int len = ZLUnicodeUtil::firstChar(ch, ptr);
+			if (ptr + len <= end) {
+				addWord(ptr, myOffset + (ptr - start), len);
+			}
+			ptr += len;
+		}
+	}
+}

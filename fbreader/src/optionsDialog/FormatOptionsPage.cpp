@@ -23,11 +23,11 @@
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
+#include <ZLTextStyle.h>
+#include <ZLTextStyleOptions.h>
+
 #include "FormatOptionsPage.h"
 
-#include "../textview/TextView.h"
-#include "../textview/TextStyle.h"
-#include "../textview/TextStyleOptions.h"
 #include "../bookmodel/FBTextKind.h"
 
 static const ZLResourceKey KEY_STYLE("style");
@@ -48,11 +48,11 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 	myComboEntry = new ComboOptionEntry(*this, styleResource[KEY_BASE].value());
 	myComboEntry->addValue(myComboEntry->initialValue());
 
-	TextStyleCollection &collection = TextStyleCollection::instance();
+	ZLTextStyleCollection &collection = ZLTextStyleCollection::instance();
 	ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE };
 	const int STYLES_NUMBER = sizeof(styles) / sizeof(ZLTextKind);
 	for (int i = 0; i < STYLES_NUMBER; ++i) {
-		const TextStyleDecoration *decoration = collection.decoration(styles[i]);
+		const ZLTextStyleDecoration *decoration = collection.decoration(styles[i]);
 		if (decoration != 0) {
 			myComboEntry->addValue(styleResource[decoration->name()].value());
 		}
@@ -61,25 +61,25 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 
 	{
 		const std::string &name = myComboEntry->initialValue();
-		BaseTextStyle &baseStyle = collection.baseStyle();
+		ZLTextBaseStyle &baseStyle = collection.baseStyle();
 
 		registerEntries(dialogTab,
-			KEY_LINESPACING, new LineSpacingOptionEntry(baseStyle.LineSpaceOption, dialogTab.resource(KEY_LINESPACING), false),
+			KEY_LINESPACING, new ZLTextLineSpacingOptionEntry(baseStyle.LineSpaceOption, dialogTab.resource(KEY_LINESPACING), false),
 			KEY_DUMMY, 0,//new ZLSimpleSpinOptionEntry("First Line Indent", baseStyle.firstLineIndentDeltaOption(), -300, 300, 1),
 			name
 		);
 
 		registerEntries(dialogTab,
-			KEY_ALIGNMENT, new AlignmentOptionEntry(baseStyle.AlignmentOption, dialogTab.resource(KEY_ALIGNMENT), false),
+			KEY_ALIGNMENT, new ZLTextAlignmentOptionEntry(baseStyle.AlignmentOption, dialogTab.resource(KEY_ALIGNMENT), false),
 			KEY_DUMMY, 0,
 			name
 		);
 	}
 
 	for (int i = 0; i < STYLES_NUMBER; ++i) {
-		TextStyleDecoration *d = collection.decoration(styles[i]);
+		ZLTextStyleDecoration *d = collection.decoration(styles[i]);
 		if ((d != 0) && (d->isFullDecoration())) {
-			FullTextStyleDecoration *decoration = (FullTextStyleDecoration*)d;
+			ZLTextFullStyleDecoration *decoration = (ZLTextFullStyleDecoration*)d;
 			const std::string &name = styleResource[decoration->name()].value();
 			
 			registerEntries(dialogTab,
@@ -95,13 +95,13 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 			);
 			
 			registerEntries(dialogTab,
-				KEY_LINESPACING, new LineSpacingOptionEntry(decoration->LineSpaceOption, dialogTab.resource(KEY_LINESPACING), true),
+				KEY_LINESPACING, new ZLTextLineSpacingOptionEntry(decoration->LineSpaceOption, dialogTab.resource(KEY_LINESPACING), true),
 				KEY_FIRSTLINEINDENT, new ZLSimpleSpinOptionEntry(decoration->FirstLineIndentDeltaOption, 1),
 				name
 			);
 
 			registerEntries(dialogTab,
-				KEY_ALIGNMENT, new AlignmentOptionEntry(decoration->AlignmentOption, dialogTab.resource(KEY_ALIGNMENT), true),
+				KEY_ALIGNMENT, new ZLTextAlignmentOptionEntry(decoration->AlignmentOption, dialogTab.resource(KEY_ALIGNMENT), true),
 				KEY_DUMMY, 0,
 				name
 			);

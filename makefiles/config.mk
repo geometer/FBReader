@@ -37,7 +37,7 @@ ifeq "$(TARGET_STATUS)" "profile"
 	CFLAGS += -O3 -g -pg
 endif
 
-ZINCLUDE = -I $(ROOTDIR)/zlibrary/include -I $(ROOTDIR)/zlibraryText/include
+ZINCLUDE = -I $(ROOTDIR)/zlibrary/include -I $(ROOTDIR)/zltext/include
 
 ifeq "$(BUILD_SHARED_LIBRARY)" ""
   BUILD_SHARED_LIBRARY = yes

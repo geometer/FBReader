@@ -22,7 +22,7 @@
 #ifndef __FBVIEW_H__
 #define __FBVIEW_H__
 
-#include "../textview/TextView.h"
+#include <ZLTextView.h>
 
 class FBReader;
 

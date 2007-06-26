@@ -25,12 +25,12 @@
 
 #include <ZLTextModel.h>
 #include <ZLTextParagraph.h>
+#include <ZLTextParagraphCursor.h>
+#include <ZLTextWord.h>
 
 #include "BookTextView.h"
 #include "FBReader.h"
 
-#include "../textview/ParagraphCursor.h"
-#include "../textview/Word.h"
 #include "../bookmodel/FBTextKind.h"
 #include "../bookmodel/BookModel.h"
 #include "../external/ProgramCollection.h"

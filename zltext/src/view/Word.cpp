@@ -19,23 +19,37 @@
  * 02110-1301, USA.
  */
 
-#ifndef __CONTENTSVIEW_H__
-#define __CONTENTSVIEW_H__
+#include <ZLUnicodeUtil.h>
 
-#include "FBView.h"
+#include "ZLTextWord.h"
 
-class ContentsView : public FBView {
+Word::Word(const char *data, unsigned short size, size_t paragraphOffset) : Data(data), Size(size), Length(ZLUnicodeUtil::utf8Length(Data, size)), ParagraphOffset(paragraphOffset), myMark(0), myWidth(-1) {
+}
 
-public:
-	ContentsView(FBReader &reader, ZLPaintContext &context);
-	~ContentsView();
+Word::~Word() {
+	if (myMark != 0) {
+		delete myMark;
+	}
+}
 
-	bool isEmpty() const;
-	size_t currentTextViewParagraph(bool includeStart = true) const;
-	void gotoReference();
+void Word::addMark(int start, int len) {
+	WordMark *existingMark = myMark;
+	WordMark *mark = new WordMark(start, len);
 
-private:
-	bool _onStylusPress(int x, int y);
-};
+	if ((existingMark == 0) || (existingMark->start() > start)) {
+		mark->setNext(existingMark);
+		myMark = mark;
+	} else {
+		while ((existingMark->next() != 0) && (existingMark->next()->start() < start)) {
+			existingMark = existingMark->myNext;
+		}
+		mark->setNext(existingMark->myNext);
+		existingMark->setNext(mark);
+	}
+}
 
-#endif /* __CONTENTSVIEW_H__ */
+Word::WordMark::~WordMark() {
+	if (myNext != 0) {
+		delete myNext;
+	}
+}

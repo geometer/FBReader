@@ -26,6 +26,10 @@
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLColorOptionBuilder.h>
 
+#include <ZLTextView.h>
+#include <ZLTextStyle.h>
+#include <ZLTextStyleOptions.h>
+
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"
 #include "ScrollingOptionsPage.h"
@@ -40,9 +44,6 @@
 
 #include "../collection/BookCollection.h"
 #include "../external/ProgramCollection.h"
-#include "../textview/TextView.h"
-#include "../textview/TextStyle.h"
-#include "../textview/TextStyleOptions.h"
 #include "../formats/FormatPlugin.h"
 
 class RotationTypeEntry : public ZLChoiceOptionEntry {
@@ -201,6 +202,9 @@ void OptionsApplyRunnable::run() {
 }
 
 OptionsDialog::OptionsDialog(FBReader &fbreader) {
+	ZLTextStyleCollection &collection = ZLTextStyleCollection::instance();
+	ZLTextBaseStyle &baseStyle = collection.baseStyle();
+
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(fbreader), true);
 
 	ZLDialogContent &generalTab = myDialog->createTab(ZLResourceKey("General"));
@@ -217,12 +221,12 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 
 	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("Margins"));
 	marginTab.addOptions(
-		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(TextStyleCollection::instance().baseStyle().LeftMarginOption, 1),
-		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(TextStyleCollection::instance().baseStyle().RightMarginOption, 1)
+		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(baseStyle.LeftMarginOption, 1),
+		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(baseStyle.RightMarginOption, 1)
 	);
 	marginTab.addOptions(
-		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(TextStyleCollection::instance().baseStyle().TopMarginOption, 1),
-		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(TextStyleCollection::instance().baseStyle().BottomMarginOption, 1)
+		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(baseStyle.TopMarginOption, 1),
+		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(baseStyle.BottomMarginOption, 1)
 	);
 
 	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("Format")));
@@ -239,7 +243,6 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
 	const std::string BACKGROUND = resource["background"].value();
-	BaseTextStyle &baseStyle = TextStyleCollection::instance().baseStyle();
 	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
 	builder.addOption(resource["selectionBackground"].value(), baseStyle.SelectionBackgroundColorOption);
 	builder.addOption(resource["text"].value(), baseStyle.RegularTextColorOption);
@@ -247,7 +250,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	builder.addOption(resource["externalLink"].value(), baseStyle.ExternalHyperlinkTextColorOption);
 	builder.addOption(resource["highlighted"].value(), baseStyle.SelectedTextColorOption);
 	builder.addOption(resource["treeLines"].value(), baseStyle.TreeLinesColorOption);
-	builder.addOption(resource["indicator"].value(), TextStyleCollection::instance().indicatorStyle().ColorOption);
+	builder.addOption(resource["indicator"].value(), collection.indicatorStyle().ColorOption);
 	builder.setInitial(BACKGROUND);
 	colorsTab.addOption(colorKey, builder.comboEntry());
 	colorsTab.addOption("", "", builder.colorEntry());

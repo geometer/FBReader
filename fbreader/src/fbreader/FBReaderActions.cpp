@@ -23,6 +23,8 @@
 #include <ZLOptionsDialog.h>
 #include <ZLibrary.h>
 
+#include <ZLTextView.h>
+
 #include "FBReader.h"
 #include "FBReaderActions.h"
 #include "BookTextView.h"
@@ -31,7 +33,6 @@
 #include "FBFileHandler.h"
 
 #include "../bookmodel/BookModel.h"
-#include "../textview/TextView.h"
 #include "../optionsDialog/OptionsDialog.h"
 #include "../collection/BookList.h"
 
@@ -279,7 +280,7 @@ ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : FBAc
 }
 
 void ChangeFontSizeAction::run() {
-	ZLIntegerRangeOption &option = TextStyleCollection::instance().baseStyle().FontSizeOption;
+	ZLIntegerRangeOption &option = ZLTextStyleCollection::instance().baseStyle().FontSizeOption;
 	option.setValue(option.value() + myDelta);
 	fbreader().clearTextCaches();
 	fbreader().refreshWindow();
@@ -319,7 +320,7 @@ ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbre
 }
 
 void ToggleIndicatorAction::run() {
-	ZLBooleanOption &option = TextStyleCollection::instance().indicatorStyle().ShowOption;
+	ZLBooleanOption &option = ZLTextStyleCollection::instance().indicatorStyle().ShowOption;
 	option.setValue(!option.value());
 	fbreader().refreshWindow();
 }

@@ -30,10 +30,11 @@
 #include <optionEntries/ZLStringInfoEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
+#include <ZLTextTeXHyphenator.h>
+
 #include "BookInfoDialog.h"
 
 #include "../description/Author.h"
-#include "../hyphenation/TeXHyphenator.h"
 
 class AuthorSortKeyEntry : public ZLStringOptionEntry {
 

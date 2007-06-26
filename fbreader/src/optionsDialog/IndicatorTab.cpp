@@ -23,12 +23,12 @@
 
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 
+#include <ZLTextStyleOptions.h>
+
 #include "OptionsDialog.h"
 
 #include "../fbreader/FBReader.h"
 #include "../fbreader/BookTextView.h"
-
-#include "../textview/TextStyleOptions.h"
 
 class StateOptionEntry : public ZLToggleBooleanOptionEntry {
 
@@ -74,7 +74,7 @@ void SpecialFontSizeEntry::setVisible(bool) {
 
 void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
-	PositionIndicatorStyle &indicatorStyle = TextStyleCollection::instance().indicatorStyle();
+	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
 	ZLToggleBooleanOptionEntry *showIndicatorEntry =
 		new ZLToggleBooleanOptionEntry(indicatorStyle.ShowOption);
 	indicatorTab.addOption(ZLResourceKey("show"), showIndicatorEntry);

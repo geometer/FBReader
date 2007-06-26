@@ -27,13 +27,13 @@
 
 #include <ZLTextModel.h>
 #include <ZLTextParagraph.h>
+#include <ZLTextParagraphCursor.h>
 
 #include "CollectionView.h"
 #include "FBReader.h"
 #include "BookInfoDialog.h"
 
 #include "../bookmodel/FBTextKind.h"
-#include "../textview/ParagraphCursor.h"
 #include "../collection/BookCollection.h"
 #include "../collection/BookList.h"
 #include "../description/BookDescription.h"

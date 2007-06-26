@@ -23,8 +23,9 @@
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
+#include <ZLTextView.h>
+
 #include "ScrollingOptionsPage.h"
-#include "../textview/TextView.h"
 
 class ScrollingTypeEntry : public ZLComboOptionEntry {
 
