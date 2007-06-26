@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -137,7 +136,7 @@ void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) 
 		} else if (info.End >= range.first) {
 			TextElementIterator jt = findLast(fromIt, toIt, range.first);
 			left = jt->XStart;
-			if (jt->Kind == TextElement::WORD_ELEMENT) {
+			if (jt->Kind == ZLTextElement::WORD_ELEMENT) {
 				left += areaLength(paragraph, *jt, range.first.CharNumber);
 			}
 		}
@@ -150,7 +149,7 @@ void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) 
 			bottom += info.VSpaceAfter;
 		} else if (info.Start <= range.second) {
 			TextElementIterator jt = findLast(fromIt, toIt, range.second);
-			if (jt->Kind == TextElement::WORD_ELEMENT) {
+			if (jt->Kind == ZLTextElement::WORD_ELEMENT) {
 				right = jt->XStart + areaLength(paragraph, *jt, range.second.CharNumber) - 1;
 			} else {
 				right = jt->XEnd - 1;
@@ -174,19 +173,19 @@ void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) 
 	}
 	TextElementIterator it = fromIt;
 	for (WordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
-		const TextElement &element = paragraph[pos.wordNumber()];
-		TextElement::Kind kind = element.kind();
+		const ZLTextElement &element = paragraph[pos.wordNumber()];
+		ZLTextElement::Kind kind = element.kind();
 	
-		if ((kind == TextElement::WORD_ELEMENT) || (kind == TextElement::IMAGE_ELEMENT)) {
+		if ((kind == ZLTextElement::WORD_ELEMENT) || (kind == ZLTextElement::IMAGE_ELEMENT)) {
 			if (it->ChangeStyle) {
 				myStyle.setStyle(it->Style);
 			}
 			const int x = it->XStart;
 			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.style()->verticalShift();
-			if (kind == TextElement::WORD_ELEMENT) {
+			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(x, y, (const ZLTextWord&)element, pos.charNumber(), -1, false);
 			} else {
-				context().drawImage(x, y, ((const ImageElement&)element).image());
+				context().drawImage(x, y, ((const ZLTextImageElement&)element).image());
 			}
 			++it;
 		}
@@ -224,7 +223,7 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 			context().moveX((context().width() - myStyle.style()->rightIndent() - info.Width) / 2);
 			break;
 		case ALIGN_JUSTIFY:
-			if (!endOfParagraph && (info.End.element().kind() != TextElement::AFTER_PARAGRAPH_ELEMENT)) {
+			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
 				fullCorrection = context().width() - myStyle.style()->rightIndent() - info.Width;
 			}
 			break;
@@ -236,18 +235,18 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 	const ParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 	int paragraphNumber = paragraph.index();
 	for (WordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
-		const TextElement &element = paragraph[pos.wordNumber()];
-		TextElement::Kind kind = element.kind();
+		const ZLTextElement &element = paragraph[pos.wordNumber()];
+		ZLTextElement::Kind kind = element.kind();
 		const int x = context().x();
 		int width = myStyle.elementWidth(element, pos.charNumber());
 	
 		switch (kind) {
-			case TextElement::WORD_ELEMENT:
-			case TextElement::IMAGE_ELEMENT:
+			case ZLTextElement::WORD_ELEMENT:
+			case ZLTextElement::IMAGE_ELEMENT:
 			{
 				const int height = myStyle.elementHeight(element);
 				const int descent = myStyle.elementDescent(element);
-				const int length = (kind == TextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length : 0;
+				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length : 0;
 				myTextElementMap.push_back(
 					TextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
@@ -259,15 +258,15 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 				wordOccured = true;
 				break;
 			}
-			case TextElement::CONTROL_ELEMENT:
-				myStyle.applyControl((const ControlElement&)element);
+			case ZLTextElement::CONTROL_ELEMENT:
+				myStyle.applyControl((const ZLTextControlElement&)element);
 				changeStyle = true;
 				break;
-			case TextElement::FORCED_CONTROL_ELEMENT:
-				myStyle.applyControl((const ForcedControlElement&)element);
+			case ZLTextElement::FORCED_CONTROL_ELEMENT:
+				myStyle.applyControl((const ZLTextForcedControlElement&)element);
 				changeStyle = true;
 				break;
-			case TextElement::HSPACE_ELEMENT:
+			case ZLTextElement::HSPACE_ELEMENT:
 				if (wordOccured && (spaceCounter > 0)) {
 					int correction = fullCorrection / spaceCounter;
 					context().moveX(context().spaceWidth() + correction);
@@ -276,17 +275,17 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 					--spaceCounter;
 				}
 				break;
-			case TextElement::INDENT_ELEMENT:
-			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-			case TextElement::AFTER_PARAGRAPH_ELEMENT:
-			case TextElement::EMPTY_LINE_ELEMENT:
-			case TextElement::FIXED_HSPACE_ELEMENT:
+			case ZLTextElement::INDENT_ELEMENT:
+			case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
+			case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
+			case ZLTextElement::EMPTY_LINE_ELEMENT:
+			case ZLTextElement::FIXED_HSPACE_ELEMENT:
 				break;
 		}
 
 		context().moveX(width);
 	}
-	if (!endOfParagraph && (info.End.element().kind() == TextElement::WORD_ELEMENT)) {
+	if (!endOfParagraph && (info.End.element().kind() == ZLTextElement::WORD_ELEMENT)) {
 		int len = info.End.charNumber();
 		if (len > 0) {
 			const ZLTextWord &word = (const ZLTextWord&)info.End.element();
@@ -300,7 +299,7 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 			myTextElementMap.push_back(
 				TextElementArea(
 					paragraphNumber, info.End.wordNumber(), 0, len, addHyphenationSign,
-					changeStyle, myStyle.style(), TextElement::WORD_ELEMENT,
+					changeStyle, myStyle.style(), ZLTextElement::WORD_ELEMENT,
 					x, x + width - 1, y - height + 1, y + descent
 				)
 			);

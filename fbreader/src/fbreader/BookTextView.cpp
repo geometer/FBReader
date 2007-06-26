@@ -199,8 +199,8 @@ void BookTextView::redoPageMove() {
 }
 
 bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, bool &isExternal) const {
-	if ((area.Kind != TextElement::WORD_ELEMENT) &&
-			(area.Kind != TextElement::IMAGE_ELEMENT)) {
+	if ((area.Kind != ZLTextElement::WORD_ELEMENT) &&
+			(area.Kind != ZLTextElement::IMAGE_ELEMENT)) {
 		return false;
 	}
 	WordCursor cursor = startCursor();
@@ -208,9 +208,9 @@ bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, 
 	cursor.moveToParagraphStart();
 	ZLTextKind hyperlinkKind = REGULAR;
 	for (int i = 0; i < area.TextElementNumber; ++i) {
-		const TextElement &element = cursor.element();
-		if (element.kind() == TextElement::CONTROL_ELEMENT) {
-			const ZLTextControlEntry &control = ((const ControlElement&)element).entry();
+		const ZLTextElement &element = cursor.element();
+		if (element.kind() == ZLTextElement::CONTROL_ELEMENT) {
+			const ZLTextControlEntry &control = ((const ZLTextControlElement&)element).entry();
 			if (control.isHyperlink()) {
 				hyperlinkKind = control.kind();
 				id = ((const ZLTextHyperlinkControlEntry&)control).label();

@@ -50,7 +50,7 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.ParagraphNumber = bound.After.ParagraphNumber;
 			bound.Before.TextElementNumber = bound.After.TextElementNumber;
 			bound.Before.Exists = true;
-			if (it->Kind == TextElement::WORD_ELEMENT) {
+			if (it->Kind == ZLTextElement::WORD_ELEMENT) {
 				myView.myStyle.setStyle(it->Style);
 				WordCursor cursor = myView.startCursor();
 				cursor.moveToParagraph(it->ParagraphNumber);
@@ -267,9 +267,9 @@ const std::string &SelectionModel::getText() const {
 		pcursors.insert(start.paragraphCursorPtr());
 
 		for (WordCursor cursor = start; cursor < end; ) {
-			const TextElement &element = cursor.element();
+			const ZLTextElement &element = cursor.element();
 			switch (element.kind()) {
-				case TextElement::WORD_ELEMENT:
+				case ZLTextElement::WORD_ELEMENT:
 				{
 					const ZLTextWord &word = (const ZLTextWord&)element;
 					if (cursor.sameElementAs(end)) {
@@ -288,7 +288,7 @@ const std::string &SelectionModel::getText() const {
 					}
 					break;
 				}
-				case TextElement::HSPACE_ELEMENT:
+				case ZLTextElement::HSPACE_ELEMENT:
 					myText += ' ';
 					break;
 				default:

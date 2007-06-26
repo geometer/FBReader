@@ -65,7 +65,7 @@ bool FBView::_onStylusPress(int, int) {
 std::string FBView::word(const TextElementArea &area) const {
 	std::string txt;
 
-	if (area.Kind == TextElement::WORD_ELEMENT) {
+	if (area.Kind == ZLTextElement::WORD_ELEMENT) {
 		WordCursor cursor = startCursor();
 		cursor.moveToParagraph(area.ParagraphNumber);
 		cursor.moveTo(area.TextElementNumber, 0);

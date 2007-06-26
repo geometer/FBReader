@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -29,7 +28,7 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-ParagraphCursor::StandardProcessor::StandardProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : Processor(paragraph, marks, paragraphNumber, elements) {
+ParagraphCursor::StandardProcessor::StandardProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : Processor(paragraph, marks, paragraphNumber, elements) {
 }
 
 void ParagraphCursor::StandardProcessor::processTextEntry(const ZLTextEntry &textEntry) {
@@ -40,7 +39,7 @@ void ParagraphCursor::StandardProcessor::processTextEntry(const ZLTextEntry &tex
 		ZLUnicodeUtil::firstChar(ch, start);
 		bool spaceInserted = false;
 		if (ZLUnicodeUtil::isSpace(ch)) {
-			myElements.push_back(TextElementPool::Pool.HSpaceElement);
+			myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
 			spaceInserted = true;
 		}
 		const char *firstNonSpace = 0;
@@ -61,11 +60,11 @@ void ParagraphCursor::StandardProcessor::processTextEntry(const ZLTextEntry &tex
 			if (ZLUnicodeUtil::isSpace(ch)) {
 				if (firstNonSpace != 0) {
 					addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
-					myElements.push_back(TextElementPool::Pool.HSpaceElement);
+					myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
 					spaceInserted = true;
 					firstNonSpace = 0;
 				} else if (!spaceInserted) {
-					myElements.push_back(TextElementPool::Pool.HSpaceElement);
+					myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
 					spaceInserted = true;
 				}
 			} else if (firstNonSpace == 0) {

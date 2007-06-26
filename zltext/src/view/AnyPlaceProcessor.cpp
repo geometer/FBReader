@@ -28,7 +28,7 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-ParagraphCursor::AnyPlaceProcessor::AnyPlaceProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : Processor(paragraph, marks, paragraphNumber, elements) {
+ParagraphCursor::AnyPlaceProcessor::AnyPlaceProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : Processor(paragraph, marks, paragraphNumber, elements) {
 }
 
 void ParagraphCursor::AnyPlaceProcessor::processTextEntry(const ZLTextEntry &textEntry) {

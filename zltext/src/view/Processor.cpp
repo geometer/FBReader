@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -29,7 +28,7 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-ParagraphCursor::Processor::Processor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, TextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
+ParagraphCursor::Processor::Processor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
@@ -40,7 +39,7 @@ ParagraphCursor::Processor::~Processor() {
 }
 
 void ParagraphCursor::Processor::addWord(const char *ptr, int offset, int len) {
-	ZLTextWord *word = TextElementPool::Pool.getWord(ptr, len, offset);
+	ZLTextWord *word = ZLTextElementPool::Pool.getWord(ptr, len, offset);
 	for (std::vector<ZLTextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		ZLTextMark mark = *mit;
 		if ((mark.Offset < offset + len) && (mark.Offset + mark.Length > offset)) {
@@ -54,14 +53,14 @@ void ParagraphCursor::Processor::fill() {
 	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
 			case ZLTextParagraphEntry::FORCED_CONTROL_ENTRY:
-				myElements.push_back(new ForcedControlElement(it.entry()));
+				myElements.push_back(new ZLTextForcedControlElement(it.entry()));
 				break;
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
-				myElements.push_back(new FixedHSpaceElement(((ZLTextFixedHSpaceEntry&)*it.entry()).length()));
+				myElements.push_back(new ZLTextFixedHSpaceElement(((ZLTextFixedHSpaceEntry&)*it.entry()).length()));
 				break;
 			case ZLTextParagraphEntry::CONTROL_ENTRY:
 			case ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY:
-				myElements.push_back(TextElementPool::Pool.getControlElement(it.entry()));
+				myElements.push_back(ZLTextElementPool::Pool.getControlElement(it.entry()));
 				break;
 			case ZLTextParagraphEntry::IMAGE_ENTRY:
 			{
@@ -70,7 +69,7 @@ void ParagraphCursor::Processor::fill() {
 				if (!image.isNull()) {
 					shared_ptr<ZLImageData> data = ZLImageManager::instance().imageData(*image);
 					if (!data.isNull()) {
-						myElements.push_back(new ImageElement(imageEntry.id(), data));
+						myElements.push_back(new ZLTextImageElement(imageEntry.id(), data));
 					}
 				}
 				break;

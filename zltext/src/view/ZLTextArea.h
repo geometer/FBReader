@@ -50,8 +50,8 @@ struct TextElementArea : public RectangularArea {
 	bool AddHyphenationSign;
 	bool ChangeStyle;
 	ZLTextStylePtr Style;
-	TextElement::Kind Kind;
-	TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
+	ZLTextElement::Kind Kind;
+	TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
 };
 
 struct TreeNodeArea : public RectangularArea {
@@ -65,7 +65,7 @@ typedef TextElementMap::const_iterator TextElementIterator;
 
 inline RectangularArea::RectangularArea(int xStart, int xEnd, int yStart, int yEnd) : XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 
-inline TextElementArea::TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, TextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), StartCharNumber(startCharNumber), Length(length), AddHyphenationSign(addHyphenationSign), ChangeStyle(changeStyle), Style(style), Kind(kind) {}
+inline TextElementArea::TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), StartCharNumber(startCharNumber), Length(length), AddHyphenationSign(addHyphenationSign), ChangeStyle(changeStyle), Style(style), Kind(kind) {}
 
 inline TreeNodeArea::TreeNodeArea(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber) {}
 

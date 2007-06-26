@@ -204,15 +204,15 @@ void CollectionView::paint() {
 
 bool CollectionView::_onStylusPress(int x, int y) {
 	const TextElementArea *imageArea = elementByCoordinates(x, y);
-	if ((imageArea != 0) && (imageArea->Kind == TextElement::IMAGE_ELEMENT)) {
+	if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {
 		WordCursor cursor = startCursor();
 		cursor.moveToParagraph(imageArea->ParagraphNumber);
 		cursor.moveTo(imageArea->TextElementNumber, 0);
-		const TextElement &element = cursor.element();
-		if (element.kind() != TextElement::IMAGE_ELEMENT) {
+		const ZLTextElement &element = cursor.element();
+		if (element.kind() != ZLTextElement::IMAGE_ELEMENT) {
 			return false;
 		}
-		const ImageElement &imageElement = (ImageElement&)element;
+		const ZLTextImageElement &imageElement = (ZLTextImageElement&)element;
 
 		BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
 		if (book.isNull()) {

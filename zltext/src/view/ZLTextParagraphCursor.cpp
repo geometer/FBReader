@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -27,43 +26,43 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-TextElementPool TextElementPool::Pool;
+ZLTextElementPool ZLTextElementPool::Pool;
 
 std::map<const ZLTextParagraph*, weak_ptr<ParagraphCursor> > ParagraphCursorCache::ourCache;
 ParagraphCursorPtr ParagraphCursorCache::ourLastAdded;
 
-TextElementVector::~TextElementVector() {
-	for (TextElementVector::const_iterator it = begin(); it != end(); ++it) {
+ZLTextElementVector::~ZLTextElementVector() {
+	for (ZLTextElementVector::const_iterator it = begin(); it != end(); ++it) {
 		switch ((*it)->kind()) {
-			case TextElement::WORD_ELEMENT:
-				TextElementPool::Pool.storeWord((ZLTextWord*)*it);
+			case ZLTextElement::WORD_ELEMENT:
+				ZLTextElementPool::Pool.storeWord((ZLTextWord*)*it);
 				break;
-			case TextElement::CONTROL_ELEMENT:
-				TextElementPool::Pool.storeControlElement((ControlElement*)*it);
+			case ZLTextElement::CONTROL_ELEMENT:
+				ZLTextElementPool::Pool.storeControlElement((ZLTextControlElement*)*it);
 				break;
-			case TextElement::IMAGE_ELEMENT:
-			case TextElement::FORCED_CONTROL_ELEMENT:
-			case TextElement::FIXED_HSPACE_ELEMENT:
+			case ZLTextElement::IMAGE_ELEMENT:
+			case ZLTextElement::FORCED_CONTROL_ELEMENT:
+			case ZLTextElement::FIXED_HSPACE_ELEMENT:
 				delete *it;
 				break;
-			case TextElement::INDENT_ELEMENT:
-			case TextElement::HSPACE_ELEMENT:
-			case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-			case TextElement::AFTER_PARAGRAPH_ELEMENT:
-			case TextElement::EMPTY_LINE_ELEMENT:
+			case ZLTextElement::INDENT_ELEMENT:
+			case ZLTextElement::HSPACE_ELEMENT:
+			case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
+			case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
+			case ZLTextElement::EMPTY_LINE_ELEMENT:
 				break;
 		}
 	}
 }
 
-TextElementPool::TextElementPool() {
-	HSpaceElement = new SpecialTextElement(TextElement::HSPACE_ELEMENT);
-	BeforeParagraphElement = new SpecialTextElement(TextElement::BEFORE_PARAGRAPH_ELEMENT);
-	AfterParagraphElement = new SpecialTextElement(TextElement::AFTER_PARAGRAPH_ELEMENT);
-	EmptyLineElement = new SpecialTextElement(TextElement::EMPTY_LINE_ELEMENT);
+ZLTextElementPool::ZLTextElementPool() {
+	HSpaceElement = new ZLTextSpecialElement(ZLTextElement::HSPACE_ELEMENT);
+	BeforeParagraphElement = new ZLTextSpecialElement(ZLTextElement::BEFORE_PARAGRAPH_ELEMENT);
+	AfterParagraphElement = new ZLTextSpecialElement(ZLTextElement::AFTER_PARAGRAPH_ELEMENT);
+	EmptyLineElement = new ZLTextSpecialElement(ZLTextElement::EMPTY_LINE_ELEMENT);
 }
 
-TextElementPool::~TextElementPool() {
+ZLTextElementPool::~ZLTextElementPool() {
 	delete HSpaceElement;
 	delete BeforeParagraphElement;
 	delete AfterParagraphElement;
@@ -189,7 +188,7 @@ ZLTextMark WordCursor::position() const {
 	const ParagraphCursor &paragraph = *myParagraphCursor;
 	size_t paragraphLength = paragraph.paragraphLength();
 	unsigned int wordNumber = myWordNumber;
-	while ((wordNumber != paragraphLength) && (paragraph[wordNumber].kind() != TextElement::WORD_ELEMENT)) {
+	while ((wordNumber != paragraphLength) && (paragraph[wordNumber].kind() != ZLTextElement::WORD_ELEMENT)) {
 		++wordNumber;
 	}
 	if (wordNumber != paragraphLength) {
@@ -200,7 +199,7 @@ ZLTextMark WordCursor::position() const {
 
 void ParagraphCursor::processControlParagraph(const ZLTextParagraph &paragraph) {
 	for (ZLTextParagraph::Iterator it = paragraph; !it.isEnd(); it.next()) {
-		myElements.push_back(TextElementPool::Pool.getControlElement(it.entry()));
+		myElements.push_back(ZLTextElementPool::Pool.getControlElement(it.entry()));
 	}
 }
 
@@ -222,15 +221,15 @@ void ParagraphCursor::fill() {
 		}
 		case ZLTextParagraph::EMPTY_LINE_PARAGRAPH:
 			processControlParagraph(paragraph);
-			myElements.push_back(TextElementPool::Pool.EmptyLineElement);
+			myElements.push_back(ZLTextElementPool::Pool.EmptyLineElement);
 			break;
 		case ZLTextParagraph::BEFORE_SKIP_PARAGRAPH:
 			processControlParagraph(paragraph);
-			myElements.push_back(TextElementPool::Pool.BeforeParagraphElement);
+			myElements.push_back(ZLTextElementPool::Pool.BeforeParagraphElement);
 			break;
 		case ZLTextParagraph::AFTER_SKIP_PARAGRAPH:
 			processControlParagraph(paragraph);
-			myElements.push_back(TextElementPool::Pool.AfterParagraphElement);
+			myElements.push_back(ZLTextElementPool::Pool.AfterParagraphElement);
 			break;
 		case ZLTextParagraph::END_OF_SECTION_PARAGRAPH:
 		case ZLTextParagraph::END_OF_TEXT_PARAGRAPH:
@@ -277,8 +276,8 @@ void WordCursor::setCharNumber(int charNumber) {
 	charNumber = std::max(charNumber, 0);
 	myCharNumber = 0;
 	if (charNumber > 0) {
-		const TextElement &element = (*myParagraphCursor)[myWordNumber];
-		if (element.kind() == TextElement::WORD_ELEMENT) {
+		const ZLTextElement &element = (*myParagraphCursor)[myWordNumber];
+		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
 			if (charNumber <= (int)((const ZLTextWord&)element).Length) {
 				myCharNumber = charNumber;
 			}

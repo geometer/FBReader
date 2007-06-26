@@ -28,7 +28,7 @@
 
 #include "ZLTextElement.h"
 
-class ZLTextWord : public TextElement {
+class ZLTextWord : public ZLTextElement {
 
 public:
 	class Mark {
@@ -78,10 +78,10 @@ private:
 	ZLTextWord(const ZLTextWord&);
 	ZLTextWord &operator = (const ZLTextWord&);
 
-friend class TextElementPool;
+friend class ZLTextElementPool;
 };
 
-inline TextElement::Kind ZLTextWord::kind() const { return WORD_ELEMENT; }
+inline ZLTextElement::Kind ZLTextWord::kind() const { return WORD_ELEMENT; }
 inline ZLTextWord::Mark *ZLTextWord::mark() const { return myMark; }
 inline short ZLTextWord::width(const ZLPaintContext &context) const {
 	if (myWidth == -1) {

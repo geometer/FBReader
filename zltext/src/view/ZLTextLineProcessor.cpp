@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -68,16 +67,16 @@ ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordC
 	}
 
 	if (isFirstLine) {
-		TextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
-		while ((elementKind == TextElement::CONTROL_ELEMENT) ||
-					 (elementKind == TextElement::FORCED_CONTROL_ELEMENT)) {
-			const TextElement &element = paragraphCursor[current.wordNumber()];
+		ZLTextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
+		while ((elementKind == ZLTextElement::CONTROL_ELEMENT) ||
+					 (elementKind == ZLTextElement::FORCED_CONTROL_ELEMENT)) {
+			const ZLTextElement &element = paragraphCursor[current.wordNumber()];
 			switch (elementKind) {
-				case TextElement::CONTROL_ELEMENT:
-					myStyle.applyControl((const ControlElement&)element);
+				case ZLTextElement::CONTROL_ELEMENT:
+					myStyle.applyControl((const ZLTextControlElement&)element);
 					break;
-				case TextElement::FORCED_CONTROL_ELEMENT:
-					myStyle.applyControl((const ForcedControlElement&)element);
+				case ZLTextElement::FORCED_CONTROL_ELEMENT:
+					myStyle.applyControl((const ZLTextForcedControlElement&)element);
 					break;
 				default:
 					break;
@@ -118,26 +117,26 @@ ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordC
 	int internalSpaceCounter = 0;
 	int removeLastSpace = false;
 
-	TextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
+	ZLTextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
 
 	do {
-		const TextElement &element = paragraphCursor[current.wordNumber()];
+		const ZLTextElement &element = paragraphCursor[current.wordNumber()];
 		newWidth += myStyle.elementWidth(element, current.charNumber());
 		newHeight = std::max(newHeight, myStyle.elementHeight(element));
 		newDescent = std::max(newDescent, myStyle.elementDescent(element));
 		switch (elementKind) {
-			case TextElement::CONTROL_ELEMENT:
-				myStyle.applyControl((const ControlElement&)element);
+			case ZLTextElement::CONTROL_ELEMENT:
+				myStyle.applyControl((const ZLTextControlElement&)element);
 				break;
-			case TextElement::FORCED_CONTROL_ELEMENT:
-				myStyle.applyControl((const ForcedControlElement&)element);
+			case ZLTextElement::FORCED_CONTROL_ELEMENT:
+				myStyle.applyControl((const ZLTextForcedControlElement&)element);
 				break;
-			case TextElement::WORD_ELEMENT:
-			case TextElement::IMAGE_ELEMENT:
+			case ZLTextElement::WORD_ELEMENT:
+			case ZLTextElement::IMAGE_ELEMENT:
 				wordOccured = true;
 				isVisible = true;
 				break;
-			case TextElement::HSPACE_ELEMENT:
+			case ZLTextElement::HSPACE_ELEMENT:
 				if (wordOccured) {
 					wordOccured = false;
 					++internalSpaceCounter;
@@ -145,7 +144,7 @@ ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordC
 					newWidth += lastSpaceWidth;
 				}
 				break;
-			case TextElement::EMPTY_LINE_ELEMENT:
+			case ZLTextElement::EMPTY_LINE_ELEMENT:
 				isVisible = true;
 			default:
 				break;
@@ -155,15 +154,15 @@ ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordC
 			break;
 		}
 
-		TextElement::Kind previousKind = elementKind;
+		ZLTextElement::Kind previousKind = elementKind;
 		current.nextWord();
 		bool allowBreak = current.equalWordNumber(end);
 		if (!allowBreak) {
 			elementKind = paragraphCursor[current.wordNumber()].kind();
 			allowBreak =
-				((elementKind != TextElement::WORD_ELEMENT) || (previousKind == TextElement::WORD_ELEMENT)) &&
-				(elementKind != TextElement::IMAGE_ELEMENT) &&
-				(elementKind != TextElement::CONTROL_ELEMENT);
+				((elementKind != ZLTextElement::WORD_ELEMENT) || (previousKind == ZLTextElement::WORD_ELEMENT)) &&
+				(elementKind != ZLTextElement::IMAGE_ELEMENT) &&
+				(elementKind != ZLTextElement::CONTROL_ELEMENT);
 		}
 		if (allowBreak) {
 			info.IsVisible = isVisible;
@@ -180,8 +179,8 @@ ZLTextLineInfoPtr TextView::processTextLine(const WordCursor &start, const WordC
 	if (!current.equalWordNumber(end) &&
 		 ZLTextStyleCollection::instance().baseStyle().AutoHyphenationOption.value() &&
 		 myStyle.style()->allowHyphenations()) {
-		const TextElement &element = paragraphCursor[current.wordNumber()];
-		if (element.kind() == TextElement::WORD_ELEMENT) {
+		const ZLTextElement &element = paragraphCursor[current.wordNumber()];
+		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
 			newWidth -= myStyle.elementWidth(element, current.charNumber());
 			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newWidth;

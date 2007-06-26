@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -27,13 +26,13 @@
 #include <ZLTextKind.h>
 #include <ZLTextParagraph.h>
 
-class TextElement {
+class ZLTextElement {
 
 protected:
-	TextElement();
+	ZLTextElement();
 
 public:
-	virtual ~TextElement();
+	virtual ~ZLTextElement();
 
 	enum Kind {
 		WORD_ELEMENT,
@@ -52,15 +51,15 @@ public:
 
 private:
 	// assignment and copy constructor are disabled
-	TextElement(const TextElement&);
-	TextElement &operator = (const TextElement&);
+	ZLTextElement(const ZLTextElement&);
+	ZLTextElement &operator = (const ZLTextElement&);
 };
 
-class ImageElement : public TextElement {
+class ZLTextImageElement : public ZLTextElement {
 
 public:
-	ImageElement(const std::string &id, const shared_ptr<ZLImageData> image);
-	~ImageElement();
+	ZLTextImageElement(const std::string &id, const shared_ptr<ZLImageData> image);
+	~ZLTextImageElement();
 	Kind kind() const;
 	const ZLImageData &image() const;
 	const std::string &id() const;
@@ -70,22 +69,22 @@ private:
 	const shared_ptr<ZLImageData> myImage;
 };
 
-class SpecialTextElement : public TextElement {
+class ZLTextSpecialElement : public ZLTextElement {
 
 public:
-	SpecialTextElement(Kind kind);
-	~SpecialTextElement();
+	ZLTextSpecialElement(Kind kind);
+	~ZLTextSpecialElement();
 	Kind kind() const;
 
 private:
 	Kind myKind;
 };
 
-class ForcedControlElement : public TextElement {
+class ZLTextForcedControlElement : public ZLTextElement {
 
 public:
-	ForcedControlElement(shared_ptr<ZLTextParagraphEntry> entry);
-	~ForcedControlElement();
+	ZLTextForcedControlElement(shared_ptr<ZLTextParagraphEntry> entry);
+	~ZLTextForcedControlElement();
 	Kind kind() const;
 	const ZLTextForcedControlEntry &entry() const;
 
@@ -93,10 +92,10 @@ private:
 	const shared_ptr<ZLTextParagraphEntry> myEntry;
 };
 
-class FixedHSpaceElement : public TextElement {
+class ZLTextFixedHSpaceElement : public ZLTextElement {
 
 public:
-	FixedHSpaceElement(unsigned char length);
+	ZLTextFixedHSpaceElement(unsigned char length);
 	Kind kind() const;
 	unsigned char length() const;
 
@@ -104,11 +103,11 @@ private:
 	const unsigned char myLength;
 };
 
-class ControlElement : public TextElement {
+class ZLTextControlElement : public ZLTextElement {
 
 private:
-	ControlElement(shared_ptr<ZLTextParagraphEntry> entry);
-	~ControlElement();
+	ZLTextControlElement(shared_ptr<ZLTextParagraphEntry> entry);
+	~ZLTextControlElement();
 
 public:
 	Kind kind() const;
@@ -119,36 +118,36 @@ public:
 private:
 	const shared_ptr<ZLTextParagraphEntry> myEntry;
 
-friend class TextElementPool;
+friend class ZLTextElementPool;
 };
 
-inline TextElement::TextElement() {}
-inline TextElement::~TextElement() {}
+inline ZLTextElement::ZLTextElement() {}
+inline ZLTextElement::~ZLTextElement() {}
 
-inline ImageElement::ImageElement(const std::string &id, const shared_ptr<ZLImageData> image) : myId(id), myImage(image) {}
-inline ImageElement::~ImageElement() {}
-inline TextElement::Kind ImageElement::kind() const { return IMAGE_ELEMENT; };
-inline const ZLImageData &ImageElement::image() const { return *myImage; }
-inline const std::string &ImageElement::id() const { return myId; }
+inline ZLTextImageElement::ZLTextImageElement(const std::string &id, const shared_ptr<ZLImageData> image) : myId(id), myImage(image) {}
+inline ZLTextImageElement::~ZLTextImageElement() {}
+inline ZLTextElement::Kind ZLTextImageElement::kind() const { return IMAGE_ELEMENT; };
+inline const ZLImageData &ZLTextImageElement::image() const { return *myImage; }
+inline const std::string &ZLTextImageElement::id() const { return myId; }
 
-inline SpecialTextElement::SpecialTextElement(Kind kind) : myKind(kind) {}
-inline SpecialTextElement::~SpecialTextElement() {}
-inline TextElement::Kind SpecialTextElement::kind() const { return myKind; };
+inline ZLTextSpecialElement::ZLTextSpecialElement(Kind kind) : myKind(kind) {}
+inline ZLTextSpecialElement::~ZLTextSpecialElement() {}
+inline ZLTextElement::Kind ZLTextSpecialElement::kind() const { return myKind; };
 
-inline ForcedControlElement::ForcedControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
-inline ForcedControlElement::~ForcedControlElement() {}
-inline TextElement::Kind ForcedControlElement::kind() const { return FORCED_CONTROL_ELEMENT; };
-inline const ZLTextForcedControlEntry &ForcedControlElement::entry() const { return (const ZLTextForcedControlEntry&)*myEntry; }
+inline ZLTextForcedControlElement::ZLTextForcedControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
+inline ZLTextForcedControlElement::~ZLTextForcedControlElement() {}
+inline ZLTextElement::Kind ZLTextForcedControlElement::kind() const { return FORCED_CONTROL_ELEMENT; };
+inline const ZLTextForcedControlEntry &ZLTextForcedControlElement::entry() const { return (const ZLTextForcedControlEntry&)*myEntry; }
 
-inline ControlElement::ControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
-inline ControlElement::~ControlElement() {}
-inline TextElement::Kind ControlElement::kind() const { return CONTROL_ELEMENT; };
-inline const ZLTextControlEntry &ControlElement::entry() const { return (const ZLTextControlEntry&)*myEntry; }
-inline ZLTextKind ControlElement::textKind() const { return entry().kind(); }
-inline bool ControlElement::isStart() const { return entry().isStart(); }
+inline ZLTextControlElement::ZLTextControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
+inline ZLTextControlElement::~ZLTextControlElement() {}
+inline ZLTextElement::Kind ZLTextControlElement::kind() const { return CONTROL_ELEMENT; };
+inline const ZLTextControlEntry &ZLTextControlElement::entry() const { return (const ZLTextControlEntry&)*myEntry; }
+inline ZLTextKind ZLTextControlElement::textKind() const { return entry().kind(); }
+inline bool ZLTextControlElement::isStart() const { return entry().isStart(); }
 
-inline FixedHSpaceElement::FixedHSpaceElement(unsigned char length) : myLength(length) {}
-inline TextElement::Kind FixedHSpaceElement::kind() const { return FIXED_HSPACE_ELEMENT; }
-inline unsigned char FixedHSpaceElement::length() const { return myLength; }
+inline ZLTextFixedHSpaceElement::ZLTextFixedHSpaceElement(unsigned char length) : myLength(length) {}
+inline ZLTextElement::Kind ZLTextFixedHSpaceElement::kind() const { return FIXED_HSPACE_ELEMENT; }
+inline unsigned char ZLTextFixedHSpaceElement::length() const { return myLength; }
 
 #endif /* __TEXTELEMENT_H__ */

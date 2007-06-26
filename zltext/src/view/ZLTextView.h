@@ -98,15 +98,15 @@ private:
 
 		void reset();
 		void setStyle(const ZLTextStylePtr style);
-		void applyControl(const ControlElement &control);
-		void applyControl(const ForcedControlElement &control);
+		void applyControl(const ZLTextControlElement &control);
+		void applyControl(const ZLTextForcedControlElement &control);
 		void applyControls(const WordCursor &begin, const WordCursor &end);
 
 		const ZLPaintContext &context() const;
 		const ZLTextStylePtr style() const;
-		int elementWidth(const TextElement &element, unsigned int charNumber) const;
-		int elementHeight(const TextElement &element) const;
-		int elementDescent(const TextElement &element) const;
+		int elementWidth(const ZLTextElement &element, unsigned int charNumber) const;
+		int elementHeight(const ZLTextElement &element) const;
+		int elementDescent(const ZLTextElement &element) const;
 		int textAreaHeight() const;
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;

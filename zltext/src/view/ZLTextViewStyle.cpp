@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -46,7 +45,7 @@ void TextView::ViewStyle::setStyle(const ZLTextStylePtr style) {
 	myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
 }
 
-void TextView::ViewStyle::applyControl(const ControlElement &control) {
+void TextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 	if (control.isStart()) {
 		const ZLTextStyleDecoration *decoration = ZLTextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
@@ -59,74 +58,74 @@ void TextView::ViewStyle::applyControl(const ControlElement &control) {
 	}
 }
 
-void TextView::ViewStyle::applyControl(const ForcedControlElement &control) {
+void TextView::ViewStyle::applyControl(const ZLTextForcedControlElement &control) {
 	setStyle(new ZLTextForcedStyle(myStyle, control.entry()));
 }
 
 void TextView::ViewStyle::applyControls(const WordCursor &begin, const WordCursor &end) {
 	for (WordCursor cursor = begin; !cursor.equalWordNumber(end); cursor.nextWord()) {
-		const TextElement &element = cursor.element();
-		if (element.kind() == TextElement::CONTROL_ELEMENT) {
-			applyControl((ControlElement&)element);
-		} else if (element.kind() == TextElement::FORCED_CONTROL_ELEMENT) {
-			applyControl((ForcedControlElement&)element);
+		const ZLTextElement &element = cursor.element();
+		if (element.kind() == ZLTextElement::CONTROL_ELEMENT) {
+			applyControl((ZLTextControlElement&)element);
+		} else if (element.kind() == ZLTextElement::FORCED_CONTROL_ELEMENT) {
+			applyControl((ZLTextForcedControlElement&)element);
 		}
 	}
 }
 
-int TextView::ViewStyle::elementWidth(const TextElement &element, unsigned int charNumber) const {
+int TextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charNumber) const {
 	switch (element.kind()) {
-		case TextElement::WORD_ELEMENT:
+		case ZLTextElement::WORD_ELEMENT:
 			return wordWidth((const ZLTextWord&)element, charNumber, -1, false);
-		case TextElement::IMAGE_ELEMENT:
-			return context().imageWidth(((const ImageElement&)element).image());
-		case TextElement::INDENT_ELEMENT:
+		case ZLTextElement::IMAGE_ELEMENT:
+			return context().imageWidth(((const ZLTextImageElement&)element).image());
+		case ZLTextElement::INDENT_ELEMENT:
 			return style()->firstLineIndentDelta();
-		case TextElement::HSPACE_ELEMENT:
+		case ZLTextElement::HSPACE_ELEMENT:
 			return 0;
-		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
-		case TextElement::AFTER_PARAGRAPH_ELEMENT:
-		case TextElement::EMPTY_LINE_ELEMENT:
+		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
+		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
+		case ZLTextElement::EMPTY_LINE_ELEMENT:
 			return context().width() + abs(style()->leftIndent()) + abs(style()->rightIndent()) + abs(style()->firstLineIndentDelta()) + 1;
-		case TextElement::FORCED_CONTROL_ELEMENT:
-		case TextElement::CONTROL_ELEMENT:
+		case ZLTextElement::FORCED_CONTROL_ELEMENT:
+		case ZLTextElement::CONTROL_ELEMENT:
 			return 0;
-		case TextElement::FIXED_HSPACE_ELEMENT:
-			return context().spaceWidth() * ((const FixedHSpaceElement&)element).length();
+		case ZLTextElement::FIXED_HSPACE_ELEMENT:
+			return context().spaceWidth() * ((const ZLTextFixedHSpaceElement&)element).length();
 	}
 	return 0;
 }
 
-int TextView::ViewStyle::elementHeight(const TextElement &element) const {
+int TextView::ViewStyle::elementHeight(const ZLTextElement &element) const {
 	switch (element.kind()) {
-		case TextElement::WORD_ELEMENT:
+		case ZLTextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {
 				myWordHeight = (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
 			}
 			return myWordHeight;
-		case TextElement::IMAGE_ELEMENT:
+		case ZLTextElement::IMAGE_ELEMENT:
 			return
-				context().imageHeight(((const ImageElement&)element).image()) +
+				context().imageHeight(((const ZLTextImageElement&)element).image()) +
 				std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 3);
-		case TextElement::BEFORE_PARAGRAPH_ELEMENT:
+		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 			return - style()->spaceAfter();
-		case TextElement::AFTER_PARAGRAPH_ELEMENT:
+		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
 			return - style()->spaceBefore();
-		case TextElement::EMPTY_LINE_ELEMENT:
+		case ZLTextElement::EMPTY_LINE_ELEMENT:
 			return context().stringHeight();
-		case TextElement::INDENT_ELEMENT:
-		case TextElement::HSPACE_ELEMENT:
-		case TextElement::FORCED_CONTROL_ELEMENT:
-		case TextElement::CONTROL_ELEMENT:
-		case TextElement::FIXED_HSPACE_ELEMENT:
+		case ZLTextElement::INDENT_ELEMENT:
+		case ZLTextElement::HSPACE_ELEMENT:
+		case ZLTextElement::FORCED_CONTROL_ELEMENT:
+		case ZLTextElement::CONTROL_ELEMENT:
+		case ZLTextElement::FIXED_HSPACE_ELEMENT:
 			return 0;
 	}
 	return 0;
 }
 
-int TextView::ViewStyle::elementDescent(const TextElement &element) const {
+int TextView::ViewStyle::elementDescent(const ZLTextElement &element) const {
 	switch (element.kind()) {
-		case TextElement::WORD_ELEMENT:
+		case ZLTextElement::WORD_ELEMENT:
 			return context().descent();
 		default:
 			return 0;
