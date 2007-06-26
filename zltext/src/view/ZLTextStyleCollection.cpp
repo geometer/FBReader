@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -40,10 +39,10 @@ void ZLTextStyleCollection::deleteInstance() {
 	}
 }
 
-class StyleReader : public ZLXMLReader {
+class ZLTextStyleReader : public ZLXMLReader {
 
 public:
-	StyleReader(ZLTextStyleCollection &collection) : myCollection(collection) {}
+	ZLTextStyleReader(ZLTextStyleCollection &collection) : myCollection(collection) {}
 
 	void startElementHandler(const char *tag, const char **attributes);
 
@@ -59,27 +58,27 @@ private:
 
 static const std::string TRUE_STRING = "true";
 
-inline int StyleReader::intValue(const char **attributes, const char *name) {
+inline int ZLTextStyleReader::intValue(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
 	return (stringValue == 0) ? 0 : atoi(stringValue);
 }
 
-inline double StyleReader::doubleValue(const char **attributes, const char *name) {
+inline double ZLTextStyleReader::doubleValue(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
 	return (stringValue == 0) ? 0 : atof(stringValue);
 }
 
-inline bool StyleReader::booleanValue(const char **attributes, const char *name) {
+inline bool ZLTextStyleReader::booleanValue(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
 	return (stringValue != 0) && (TRUE_STRING == stringValue);
 }
 
-inline ZLBoolean3 StyleReader::b3Value(const char **attributes, const char *name) {
+inline ZLBoolean3 ZLTextStyleReader::b3Value(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
 	return (stringValue == 0) ? B3_UNDEFINED : ((TRUE_STRING == stringValue) ? B3_TRUE : B3_FALSE);
 }
 
-void StyleReader::startElementHandler(const char *tag, const char **attributes) {
+void ZLTextStyleReader::startElementHandler(const char *tag, const char **attributes) {
 	static const std::string BASE = "base";
 	static const std::string STYLE = "style";
 
@@ -144,7 +143,7 @@ void StyleReader::startElementHandler(const char *tag, const char **attributes) 
 
 ZLTextStyleCollection::ZLTextStyleCollection() :
 	myBaseStyle(0) {
-	StyleReader(*this).readDocument(ZLApplication::DefaultFilesPathPrefix() + "styles.xml");
+	ZLTextStyleReader(*this).readDocument(ZLApplication::DefaultFilesPathPrefix() + "styles.xml");
 	if (myBaseStyle.isNull()) {
 		myBaseStyle = new ZLTextBaseStyle("", 20);
 	}

@@ -61,7 +61,7 @@ public:
 
 private:
 	static const std::string &nameByCode(int code);
-	static TextView::ScrollingMode codeByName(const std::string &name);
+	static ZLTextView::ScrollingMode codeByName(const std::string &name);
 	
 public:
 	ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option, bool isFingerTapOption);
@@ -128,28 +128,28 @@ std::string ScrollingModeEntry::ourDisableString;
 
 const std::string &ScrollingModeEntry::nameByCode(int code) {
 	switch (code) {
-		case TextView::KEEP_LINES:
+		case ZLTextView::KEEP_LINES:
 			return ourKeepLinesString;
-		case TextView::SCROLL_LINES:
+		case ZLTextView::SCROLL_LINES:
 			return ourScrollLinesString;
-		case TextView::SCROLL_PERCENTAGE:
+		case ZLTextView::SCROLL_PERCENTAGE:
 			return ourScrollPercentageString;
 		default:
 			return ourNoOverlappingString;
 	}
 }
 
-TextView::ScrollingMode ScrollingModeEntry::codeByName(const std::string &name) {
+ZLTextView::ScrollingMode ScrollingModeEntry::codeByName(const std::string &name) {
 	if (name == ourKeepLinesString) {
-		return TextView::KEEP_LINES;
+		return ZLTextView::KEEP_LINES;
 	}
 	if (name == ourScrollLinesString) {
-		return TextView::SCROLL_LINES;
+		return ZLTextView::SCROLL_LINES;
 	}
 	if (name == ourScrollPercentageString) {
-		return TextView::SCROLL_PERCENTAGE;
+		return ZLTextView::SCROLL_PERCENTAGE;
 	}
-	return TextView::NO_OVERLAPPING;
+	return ZLTextView::NO_OVERLAPPING;
 }
 
 ScrollingModeEntry::ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &page, ZLIntegerOption &option, bool isFingerTapOption) : myFBReader(fbreader), myEntries(page), myOption(option), myIsFingerTapOption(isFingerTapOption) {

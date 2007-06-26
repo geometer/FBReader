@@ -25,7 +25,7 @@
 #include "FBReader.h"
 #include "FBReaderActions.h"
 
-FBView::FBView(FBReader &reader, ZLPaintContext &context) : TextView(reader, context) {
+FBView::FBView(FBReader &reader, ZLPaintContext &context) : ZLTextView(reader, context) {
 }
 
 bool FBView::onFingerTap(int, int y) {
@@ -46,7 +46,7 @@ void FBView::setCaption(const std::string &caption) {
 }
 
 bool FBView::onStylusPress(int x, int y) {
-	if (TextView::onStylusPress(x, y)) {
+	if (ZLTextView::onStylusPress(x, y)) {
 		return true;
 	}
 	
@@ -62,7 +62,7 @@ bool FBView::_onStylusPress(int, int) {
 	return false;
 }
 
-std::string FBView::word(const TextElementArea &area) const {
+std::string FBView::word(const ZLTextElementArea &area) const {
 	std::string txt;
 
 	if (area.Kind == ZLTextElement::WORD_ELEMENT) {

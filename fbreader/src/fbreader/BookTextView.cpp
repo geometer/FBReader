@@ -56,7 +56,7 @@ BookTextView::~BookTextView() {
 }
 
 void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
-	TextView::setModel(model, name);
+	FBView::setModel(model, name);
 
 	const std::string &group = fileName();
 
@@ -151,7 +151,7 @@ void BookTextView::gotoParagraph(int num, bool last) {
 			++myCurrentPointInStack;
 		}
 
-		TextView::gotoParagraph(num, last);
+		FBView::gotoParagraph(num, last);
 	}
 }
 
@@ -198,7 +198,7 @@ void BookTextView::redoPageMove() {
 	}
 }
 
-bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, bool &isExternal) const {
+bool BookTextView::getHyperlinkId(const ZLTextElementArea &area, std::string &id, bool &isExternal) const {
 	if ((area.Kind != ZLTextElement::WORD_ELEMENT) &&
 			(area.Kind != ZLTextElement::IMAGE_ELEMENT)) {
 		return false;
@@ -226,7 +226,7 @@ bool BookTextView::getHyperlinkId(const TextElementArea &area, std::string &id, 
 }
 
 bool BookTextView::_onStylusPress(int x, int y) {
-	const TextElementArea *area = elementByCoordinates(x, y);
+	const ZLTextElementArea *area = elementByCoordinates(x, y);
 	if (area != 0) {
 		std::string id;
 		bool isExternal;
@@ -251,14 +251,14 @@ bool BookTextView::_onStylusPress(int x, int y) {
 }
 
 bool BookTextView::onStylusMove(int x, int y) {
-	const TextElementArea *area = elementByCoordinates(x, y);
+	const ZLTextElementArea *area = elementByCoordinates(x, y);
 	std::string id;
 	bool isExternal;
 	fbreader().setHyperlinkCursor((area != 0) && getHyperlinkId(*area, id, isExternal));
 	return true;
 }
 
-shared_ptr<TextView::PositionIndicator> BookTextView::createPositionIndicator() {
+shared_ptr<ZLTextView::PositionIndicator> BookTextView::createPositionIndicator() {
 	return new PositionIndicatorWithLabels(*this);
 }
 

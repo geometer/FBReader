@@ -84,5 +84,5 @@ void ContentsView::gotoReference() {
 	const size_t selected = currentTextViewParagraph();
 	highlightParagraph(selected);
 	gotoParagraph(selected);
-	scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
+	scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
 }

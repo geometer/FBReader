@@ -31,14 +31,14 @@
 #include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
 
-TextView::TextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this), myTreeStateIsFrozen(false) {
+ZLTextView::ZLTextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this), myTreeStateIsFrozen(false) {
 }
 
-TextView::~TextView() {
+ZLTextView::~ZLTextView() {
 	clear();
 }
 
-void TextView::clear() {
+void ZLTextView::clear() {
 	mySelectionModel.clear();
 
 	myStartCursor = 0;
@@ -54,7 +54,7 @@ void TextView::clear() {
 	ZLTextParagraphCursorCache::clear();
 }
 
-void TextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
+void ZLTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
 	clear();
 
 	myModel = model;
@@ -75,7 +75,7 @@ void TextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) 
 	}
 }
 
-void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) {
+void ZLTextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) {
 	preparePaintInfo();
 	if (myPaintState == READY) {
 		myPaintState = forward ? TO_SCROLL_FORWARD : TO_SCROLL_BACKWARD;
@@ -84,11 +84,11 @@ void TextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value) 
 	}
 }
 
-std::vector<size_t>::const_iterator TextView::nextBreakIterator() const {
+std::vector<size_t>::const_iterator ZLTextView::nextBreakIterator() const {
 	return std::lower_bound(myTextBreaks.begin(), myTextBreaks.end(), endCursor().paragraphCursor().index());
 }
 
-void TextView::scrollToHome() {
+void ZLTextView::scrollToHome() {
 	if (!startCursor().isNull() &&
 			startCursor().isStartOfParagraph() &&
 			startCursor().paragraphCursor().index() == 0) {
@@ -99,7 +99,7 @@ void TextView::scrollToHome() {
 	repaintView();
 }
 
-void TextView::scrollToStartOfText() {
+void ZLTextView::scrollToStartOfText() {
 	if (endCursor().isNull()) {
 		return;
 	}
@@ -115,7 +115,7 @@ void TextView::scrollToStartOfText() {
 	repaintView();
 }
 
-void TextView::scrollToEndOfText() {
+void ZLTextView::scrollToEndOfText() {
 	if (endCursor().isNull() || myModel.isNull()) {
 		return;
 	}
@@ -136,9 +136,9 @@ void TextView::scrollToEndOfText() {
 	repaintView();
 }
 
-int TextView::paragraphIndexByCoordinate(int y) const {
+int ZLTextView::paragraphIndexByCoordinate(int y) const {
 	int indexBefore = -1;
-	for (TextElementIterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
+	for (ZLTextElementIterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
 		if (it->YEnd < y) {
 			indexBefore = it->ParagraphNumber;
 		} else if ((it->YStart <= y) || (it->ParagraphNumber == indexBefore)) {
@@ -150,13 +150,13 @@ int TextView::paragraphIndexByCoordinate(int y) const {
 	return -1;
 }
 
-const TextElementArea *TextView::elementByCoordinates(int x, int y) const {
-	TextElementIterator it =
-		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), TextElementArea::RangeChecker(x, y));
+const ZLTextElementArea *ZLTextView::elementByCoordinates(int x, int y) const {
+	ZLTextElementIterator it =
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementArea::RangeChecker(x, y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
-void TextView::gotoMark(ZLTextMark mark) {
+void ZLTextView::gotoMark(ZLTextMark mark) {
 	if (mark.ParagraphNumber < 0) {
 		return;
 	}
@@ -187,7 +187,7 @@ void TextView::gotoMark(ZLTextMark mark) {
 	}
 }
 
-void TextView::gotoParagraph(int num, bool last) {
+void ZLTextView::gotoParagraph(int num, bool last) {
 	if (myModel.isNull()) {
 		return;
 	}
@@ -224,7 +224,7 @@ void TextView::gotoParagraph(int num, bool last) {
 	}
 }
 
-void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber) {
+void ZLTextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber) {
 	gotoParagraph(paragraphNumber, false);
 	if (!myStartCursor.isNull() && 
 			((int)myStartCursor.paragraphCursor().index() == paragraphNumber)) {
@@ -232,11 +232,11 @@ void TextView::gotoPosition(int paragraphNumber, int wordNumber, int charNumber)
 	}
 }
 
-bool TextView::hasMultiSectionModel() const {
+bool ZLTextView::hasMultiSectionModel() const {
 	return !myTextBreaks.empty();
 }
 
-void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly) {
+void ZLTextView::search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly) {
 	if (text.empty()) {
 		return;
 	}
@@ -264,27 +264,27 @@ void TextView::search(const std::string &text, bool ignoreCase, bool wholeText, 
 	}
 }
 
-bool TextView::canFindNext() const {
+bool ZLTextView::canFindNext() const {
 	return !endCursor().isNull() && (myModel->nextMark(endCursor().position()).ParagraphNumber > -1);
 }
 
-void TextView::findNext() {
+void ZLTextView::findNext() {
 	if (!endCursor().isNull()) {
 		gotoMark(myModel->nextMark(endCursor().position()));
 	}
 }
 
-bool TextView::canFindPrevious() const {
+bool ZLTextView::canFindPrevious() const {
 	return !startCursor().isNull() && (myModel->previousMark(startCursor().position()).ParagraphNumber > -1);
 }
 
-void TextView::findPrevious() {
+void ZLTextView::findPrevious() {
 	if (!startCursor().isNull()) {
 		gotoMark(myModel->previousMark(startCursor().position()));
 	}
 }
 
-bool TextView::onStylusPress(int x, int y) {
+bool ZLTextView::onStylusPress(int x, int y) {
 	mySelectionModel.deactivate();
 
   if (myModel.isNull()) {
@@ -302,8 +302,8 @@ bool TextView::onStylusPress(int x, int y) {
 	}
 
 	if (myModel->kind() == ZLTextModel::TREE_MODEL) {
-		TreeNodeMap::const_iterator it =
-			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), TreeNodeArea::RangeChecker(x, y));
+		ZLTextTreeNodeMap::const_iterator it =
+			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeArea::RangeChecker(x, y));
 		if (it != myTreeNodeMap.end()) {
 			int paragraphNumber = it->ParagraphNumber;
 			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)(*myModel)[paragraphNumber];
@@ -339,12 +339,12 @@ bool TextView::onStylusPress(int x, int y) {
 	return false;
 }
 
-void TextView::activateSelection(int x, int y) {
+void ZLTextView::activateSelection(int x, int y) {
 	mySelectionModel.activate(x, y);
 	repaintView();
 }
 
-bool TextView::onStylusMovePressed(int x, int y) {
+bool ZLTextView::onStylusMovePressed(int x, int y) {
 	if (mySelectionModel.extendTo(x, y)) {
 		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		repaintView();
@@ -352,7 +352,7 @@ bool TextView::onStylusMovePressed(int x, int y) {
 	return true;
 }
 
-void TextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const {
+void ZLTextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const {
 	if (ZLDialogManager::instance().isClipboardSupported(type)) {
 		std::string text = mySelectionModel.getText();
 		if (!text.empty()) {
@@ -361,12 +361,12 @@ void TextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) 
 	}
 }
 
-bool TextView::onStylusRelease(int, int) {
+bool ZLTextView::onStylusRelease(int, int) {
 	mySelectionModel.deactivate();
 	return true;
 }
 
-void TextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift) {
+void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift) {
 	context().setColor(myStyle.style()->color());
 	if (mark == 0) {
 		context().drawString(x, y, str, len);
@@ -408,7 +408,7 @@ void TextView::drawString(int x, int y, const char *str, int len, const ZLTextWo
 	}
 }
 
-void TextView::drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
+void ZLTextView::drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
 		drawString(x, y, word.Data, word.Size, word.mark(), 0);
 	} else {
@@ -425,15 +425,15 @@ void TextView::drawWord(int x, int y, const ZLTextWord &word, int start, int len
 	}
 }
 
-void TextView::clearCaches() {
+void ZLTextView::clearCaches() {
 	rebuildPaintInfo(true);
 }
 
-void TextView::highlightParagraph(int paragraphNumber) {
+void ZLTextView::highlightParagraph(int paragraphNumber) {
 	myModel->selectParagraph(paragraphNumber);
 	rebuildPaintInfo(true);
 }
 
-int TextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
+int ZLTextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
 	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
 }

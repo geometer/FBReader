@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -26,15 +25,15 @@
 #include "ZLTextSelectionModel.h"
 #include "ZLTextView.h"
 
-SelectionModel::SelectionModel(TextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true) {
+ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true) {
 }
 
-void SelectionModel::setBound(Bound &bound, int x, int y) {
+void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 	if (myView.myTextElementMap.empty()) {
 		return;
 	}
 
-	TextElementMap::const_iterator it = myView.myTextElementMap.begin();
+	ZLTextElementMap::const_iterator it = myView.myTextElementMap.begin();
 	for (; it != myView.myTextElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
 			break;
@@ -46,7 +45,7 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 		bound.After.TextElementNumber = it->TextElementNumber;
 		bound.After.Exists = true;
 		bound.After.CharNumber = it->StartCharNumber;
-		if (TextElementArea::RangeChecker(x, y)(*it)) {
+		if (ZLTextElementArea::RangeChecker(x, y)(*it)) {
 			bound.Before.ParagraphNumber = bound.After.ParagraphNumber;
 			bound.Before.TextElementNumber = bound.After.TextElementNumber;
 			bound.Before.Exists = true;
@@ -74,14 +73,14 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 		} else if (it == myView.myTextElementMap.begin()) {
 			bound.Before.Exists = false;
 		} else {
-			const TextElementArea &previous = *(it - 1);
+			const ZLTextElementArea &previous = *(it - 1);
 			bound.Before.ParagraphNumber = previous.ParagraphNumber;
 			bound.Before.TextElementNumber = previous.TextElementNumber;
 			bound.Before.CharNumber = previous.StartCharNumber + previous.Length;
 			bound.Before.Exists = true;
 		}
 	} else {
-		const TextElementArea &back = myView.myTextElementMap.back();
+		const ZLTextElementArea &back = myView.myTextElementMap.back();
 		bound.Before.ParagraphNumber = back.ParagraphNumber;
 		bound.Before.TextElementNumber = back.TextElementNumber;
 		bound.Before.CharNumber = back.StartCharNumber + back.Length;
@@ -90,7 +89,7 @@ void SelectionModel::setBound(Bound &bound, int x, int y) {
 	}
 }
 
-void SelectionModel::activate(int x, int y) {
+void ZLTextSelectionModel::activate(int x, int y) {
 	if (myView.myTextElementMap.empty()) {
 		return;
 	}
@@ -104,7 +103,7 @@ void SelectionModel::activate(int x, int y) {
 	myTextIsUpToDate = true;
 }
 
-bool SelectionModel::BoundElement::operator == (const SelectionModel::BoundElement &element) const {
+bool ZLTextSelectionModel::BoundElement::operator == (const ZLTextSelectionModel::BoundElement &element) const {
 	return
 		(Exists == element.Exists) &&
 		(ParagraphNumber == element.ParagraphNumber) &&
@@ -112,11 +111,11 @@ bool SelectionModel::BoundElement::operator == (const SelectionModel::BoundEleme
 		(CharNumber == element.CharNumber);
 }
 
-bool SelectionModel::BoundElement::operator != (const SelectionModel::BoundElement &element) const {
+bool ZLTextSelectionModel::BoundElement::operator != (const ZLTextSelectionModel::BoundElement &element) const {
 	return !operator == (element);
 }
 
-bool SelectionModel::extendTo(int x, int y) {
+bool ZLTextSelectionModel::extendTo(int x, int y) {
 	if (!myIsActive || myView.myTextElementMap.empty()) {
 		return false;
 	}
@@ -143,13 +142,13 @@ bool SelectionModel::extendTo(int x, int y) {
 	return false;
 }
 
-void SelectionModel::deactivate() {
+void ZLTextSelectionModel::deactivate() {
 	stopSelectionScrolling();
 	myIsActive = false;
 	myDoUpdate = false;
 }
 
-void SelectionModel::clear() {
+void ZLTextSelectionModel::clear() {
 	stopSelectionScrolling();
 	myIsEmpty = true;
 	myIsActive = false;
@@ -159,14 +158,14 @@ void SelectionModel::clear() {
 	myTextIsUpToDate = true;
 }
 
-std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> SelectionModel::range() const {
+std::pair<ZLTextSelectionModel::BoundElement,ZLTextSelectionModel::BoundElement> ZLTextSelectionModel::range() const {
 	return
 		(mySecondBound < myFirstBound) ?
 		std::pair<BoundElement,BoundElement>(mySecondBound.After, myFirstBound.Before) :
 		std::pair<BoundElement,BoundElement>(myFirstBound.After, mySecondBound.Before);
 }
 
-bool SelectionModel::Bound::operator < (const Bound &bound) const {
+bool ZLTextSelectionModel::Bound::operator < (const Bound &bound) const {
 	if (!bound.Before.Exists) {
 		return false;
 	}
@@ -198,7 +197,7 @@ bool SelectionModel::Bound::operator < (const Bound &bound) const {
 	return Before.CharNumber < bound.Before.CharNumber;
 }
 
-bool SelectionModel::isEmpty() const {
+bool ZLTextSelectionModel::isEmpty() const {
 	if (myIsEmpty) {
 		return true;
 	}
@@ -206,32 +205,32 @@ bool SelectionModel::isEmpty() const {
 	return !r.first.Exists || !r.second.Exists || (r.first == r.second);
 }
 
-void SelectionModel::startSelectionScrolling(bool forward) {
+void ZLTextSelectionModel::startSelectionScrolling(bool forward) {
 	if (mySelectionScroller.isNull()) {
-		mySelectionScroller = new SelectionScroller(*this);
+		mySelectionScroller = new ZLTextSelectionScroller(*this);
 	}
-	SelectionScroller::Direction direction =
+	ZLTextSelectionScroller::Direction direction =
 		forward ?
-			SelectionScroller::SCROLL_FORWARD :
-			SelectionScroller::SCROLL_BACKWARD;
-	SelectionScroller &scroller = ((SelectionScroller&)*mySelectionScroller);
+			ZLTextSelectionScroller::SCROLL_FORWARD :
+			ZLTextSelectionScroller::SCROLL_BACKWARD;
+	ZLTextSelectionScroller &scroller = ((ZLTextSelectionScroller&)*mySelectionScroller);
 	if (scroller.direction() != direction) {
-		if (scroller.direction() != SelectionScroller::DONT_SCROLL) {
+		if (scroller.direction() != ZLTextSelectionScroller::DONT_SCROLL) {
 			ZLTimeManager::instance().removeTask(mySelectionScroller);
 		}
-		((SelectionScroller&)*mySelectionScroller).setDirection(direction);
+		((ZLTextSelectionScroller&)*mySelectionScroller).setDirection(direction);
 		ZLTimeManager::instance().addTask(mySelectionScroller, 400);
 	}
 }
 
-void SelectionModel::stopSelectionScrolling() {
+void ZLTextSelectionModel::stopSelectionScrolling() {
 	if (!mySelectionScroller.isNull()) {
-		((SelectionScroller&)*mySelectionScroller).setDirection(SelectionScroller::DONT_SCROLL);
+		((ZLTextSelectionScroller&)*mySelectionScroller).setDirection(ZLTextSelectionScroller::DONT_SCROLL);
 		ZLTimeManager::instance().removeTask(mySelectionScroller);
 	}
 }
 
-void SelectionModel::update() {
+void ZLTextSelectionModel::update() {
 	if (myDoUpdate) {
 		myDoUpdate = false;
 		setBound(mySecondBound, myStoredX, myStoredY);
@@ -241,17 +240,17 @@ void SelectionModel::update() {
 	}
 }
 
-void SelectionModel::scrollAndExtend() {
-	SelectionScroller::Direction direction =
-		((SelectionScroller&)*mySelectionScroller).direction();
-	if (direction != SelectionScroller::DONT_SCROLL) {
-		myView.scrollPage(direction == SelectionScroller::SCROLL_FORWARD, TextView::SCROLL_LINES, 1);
+void ZLTextSelectionModel::scrollAndExtend() {
+	ZLTextSelectionScroller::Direction direction =
+		((ZLTextSelectionScroller&)*mySelectionScroller).direction();
+	if (direction != ZLTextSelectionScroller::DONT_SCROLL) {
+		myView.scrollPage(direction == ZLTextSelectionScroller::SCROLL_FORWARD, ZLTextView::SCROLL_LINES, 1);
 		myDoUpdate = true;
 		myView.repaintView();
 	}
 }
 
-const std::string &SelectionModel::getText() const {
+const std::string &ZLTextSelectionModel::getText() const {
 	if (!myTextIsUpToDate && !isEmpty()) {
 		std::pair<BoundElement,BoundElement> r = range();
 
@@ -309,13 +308,13 @@ const std::string &SelectionModel::getText() const {
 	return myText;
 }
 
-SelectionScroller::SelectionScroller(SelectionModel &selectionModel) : mySelectionModel(selectionModel), myDirection(DONT_SCROLL) {
+ZLTextSelectionScroller::ZLTextSelectionScroller(ZLTextSelectionModel &selectionModel) : mySelectionModel(selectionModel), myDirection(DONT_SCROLL) {
 }
 
-void SelectionScroller::setDirection(Direction direction) {
+void ZLTextSelectionScroller::setDirection(Direction direction) {
 	myDirection = direction;
 }
 
-void SelectionScroller::run() {
+void ZLTextSelectionScroller::run() {
 	mySelectionModel.scrollAndExtend();
 }

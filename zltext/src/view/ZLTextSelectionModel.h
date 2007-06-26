@@ -30,12 +30,12 @@
 
 #include "ZLTextParagraphCursor.h"
 
-class TextView;
+class ZLTextView;
 
-class SelectionModel {
+class ZLTextSelectionModel {
 
 public:
-	SelectionModel(TextView &view);
+	ZLTextSelectionModel(ZLTextView &view);
 
 	void activate(int x, int y);
 	bool extendTo(int x, int y);
@@ -76,7 +76,7 @@ private:
 	void scrollAndExtend();
 
 private:
-	TextView &myView;
+	ZLTextView &myView;
 	bool myIsActive;
 	bool myIsEmpty;
 
@@ -92,10 +92,10 @@ private:
 	mutable std::string myText;
 	mutable bool myTextIsUpToDate;
 
-friend class SelectionScroller;
+friend class ZLTextSelectionScroller;
 };
 
-class SelectionScroller : public ZLRunnable {
+class ZLTextSelectionScroller : public ZLRunnable {
 
 public:
 	enum Direction {
@@ -105,7 +105,7 @@ public:
 	};
 
 public:
-	SelectionScroller(SelectionModel &selectionModel);
+	ZLTextSelectionScroller(ZLTextSelectionModel &selectionModel);
 	void setDirection(Direction direction);
 	Direction direction() const;
 
@@ -113,11 +113,11 @@ private:
 	void run();
 
 private:
-	SelectionModel &mySelectionModel;
+	ZLTextSelectionModel &mySelectionModel;
 	Direction myDirection;
 };
 
-inline SelectionScroller::Direction SelectionScroller::direction() const {
+inline ZLTextSelectionScroller::Direction ZLTextSelectionScroller::direction() const {
 	return myDirection;
 }
 

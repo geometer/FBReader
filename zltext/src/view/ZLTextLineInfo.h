@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -29,7 +28,7 @@
 #include <ZLTextStyle.h>
 #include <ZLTextParagraphCursor.h>
 
-struct TreeNodeInfo {
+struct ZLTextTreeNodeInfo {
 	bool IsLeaf;
 	bool IsOpen;
 	bool IsFirstLine;
@@ -51,7 +50,7 @@ struct ZLTextLineInfo {
 	int VSpaceAfter;
 	int SpaceCounter;
 	ZLTextStylePtr StartStyle;
-	shared_ptr<TreeNodeInfo> NodeInfo;
+	shared_ptr<ZLTextTreeNodeInfo> NodeInfo;
 
 private:
 	/* copy constructor & assignment are disabled */

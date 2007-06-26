@@ -187,7 +187,7 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 	if (toSelect >= 0) {
 		highlightParagraph(toSelect);
 		gotoParagraph(toSelect);
-		scrollPage(false, TextView::SCROLL_PERCENTAGE, 40);
+		scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
 	}
 }
 
@@ -199,11 +199,11 @@ void CollectionView::paint() {
 		setModel(oldModel, LIBRARY);
 		myUpdateModel = false;
 	}
-	TextView::paint();
+	FBView::paint();
 }
 
 bool CollectionView::_onStylusPress(int x, int y) {
-	const TextElementArea *imageArea = elementByCoordinates(x, y);
+	const ZLTextElementArea *imageArea = elementByCoordinates(x, y);
 	if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {
 		ZLTextWordCursor cursor = startCursor();
 		cursor.moveToParagraph(imageArea->ParagraphNumber);

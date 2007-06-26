@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -26,7 +25,7 @@
 #include "ZLTextView.h"
 #include "ZLTextLineInfo.h"
 
-void TextView::drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter) {
+void ZLTextView::drawTreeLines(const ZLTextTreeNodeInfo &info, int height, int vSpaceAfter) {
 	context().setColor(ZLTextStyleCollection::instance().baseStyle().TreeLinesColorOption.value());
 
 	int x = context().x();
@@ -69,7 +68,7 @@ void TextView::drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAft
 			} else {
 				context().drawLine(x + 2 * qstep, y0 - space, x + 2 * qstep, y1 + space);
 			}
-			myTreeNodeMap.push_back(TreeNodeArea(info.ParagraphNumber, x, x + 4 * qstep, y - height + 1, y));
+			myTreeNodeMap.push_back(ZLTextTreeNodeArea(info.ParagraphNumber, x, x + 4 * qstep, y - height + 1, y));
 		}
 	} else if (!info.IsLeaf && info.IsOpen) {
 		context().drawLine(x + 2 * qstep, y + vSpaceAfter, x + 2 * qstep, y - height + 1);

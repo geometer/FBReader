@@ -39,51 +39,51 @@ ZLTextPositionIndicatorStyle::ZLTextPositionIndicatorStyle() :
 	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "FontSize", 4, 72, 14) {
 }
 
-TextView::PositionIndicator::PositionIndicator(TextView &textView) : myTextView(textView), myExtraWidth(0) {
+ZLTextView::PositionIndicator::PositionIndicator(ZLTextView &textView) : myTextView(textView), myExtraWidth(0) {
 }
 
-TextView::PositionIndicator::~PositionIndicator() {
+ZLTextView::PositionIndicator::~PositionIndicator() {
 }
 
-const TextView &TextView::PositionIndicator::textView() const {
+const ZLTextView &ZLTextView::PositionIndicator::textView() const {
 	return myTextView;
 }
 
-ZLPaintContext &TextView::PositionIndicator::context() const {
+ZLPaintContext &ZLTextView::PositionIndicator::context() const {
 	return myTextView.context();
 }
 
-int TextView::PositionIndicator::bottom() const {
+int ZLTextView::PositionIndicator::bottom() const {
 	return context().height();
 }
 
-int TextView::PositionIndicator::top() const {
+int ZLTextView::PositionIndicator::top() const {
 	return bottom() - ZLTextStyleCollection::instance().indicatorStyle().HeightOption.value() + 1;
 }
 
-int TextView::PositionIndicator::left() const {
+int ZLTextView::PositionIndicator::left() const {
 	return 0;
 }
 
-int TextView::PositionIndicator::right() const {
+int ZLTextView::PositionIndicator::right() const {
 	return context().width() - myExtraWidth - 1;
 }
 
-const std::vector<size_t> &TextView::PositionIndicator::textSize() const {
+const std::vector<size_t> &ZLTextView::PositionIndicator::textSize() const {
 	return myTextView.myTextSize;
 }
 
-size_t TextView::PositionIndicator::startTextIndex() const {
+size_t ZLTextView::PositionIndicator::startTextIndex() const {
 	std::vector<size_t>::const_iterator i = myTextView.nextBreakIterator();
 	return (i != myTextView.myTextBreaks.begin()) ? *(i - 1) : 0;
 }
 
-size_t TextView::PositionIndicator::endTextIndex() const {
+size_t ZLTextView::PositionIndicator::endTextIndex() const {
 	std::vector<size_t>::const_iterator i = myTextView.nextBreakIterator();
 	return (i != myTextView.myTextBreaks.end()) ? *i : myTextView.myModel->paragraphsNumber();
 }
 
-void TextView::PositionIndicator::drawExtraText(const std::string &text) {
+void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
 	ZLTextBaseStyle &baseStyle = ZLTextStyleCollection::instance().baseStyle();
 
@@ -95,15 +95,15 @@ void TextView::PositionIndicator::drawExtraText(const std::string &text) {
 	myExtraWidth += text.length() * context().stringWidth("0", 1) + context().spaceWidth();
 }
 
-size_t TextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphNumber) const {
+size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphNumber) const {
 	return myTextView.myTextSize[paragraphNumber] - myTextView.myTextSize[startTextIndex()];
 }
 
-size_t TextView::PositionIndicator::sizeOfParagraph(size_t paragraphNumber) const {
+size_t ZLTextView::PositionIndicator::sizeOfParagraph(size_t paragraphNumber) const {
 	return myTextView.myTextSize[paragraphNumber + 1] - myTextView.myTextSize[paragraphNumber];
 }
 
-size_t TextView::PositionIndicator::sizeOfTextBeforeCursor() const {
+size_t ZLTextView::PositionIndicator::sizeOfTextBeforeCursor() const {
 	ZLTextWordCursor endCursor = myTextView.endCursor();
 	const size_t paragraphNumber = endCursor.paragraphCursor().index();
 	const size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
@@ -117,7 +117,7 @@ size_t TextView::PositionIndicator::sizeOfTextBeforeCursor() const {
 	}
 }
 
-std::string TextView::PositionIndicator::textPositionString() const {
+std::string ZLTextView::PositionIndicator::textPositionString() const {
 	std::string buffer;
 	ZLStringUtil::appendNumber(buffer, 1 + sizeOfTextBeforeCursor() / 2048);
 	buffer += '/';
@@ -136,7 +136,7 @@ std::string TextView::PositionIndicator::textPositionString() const {
 	*/
 }
 
-std::string TextView::PositionIndicator::timeString() const {
+std::string ZLTextView::PositionIndicator::timeString() const {
 	std::string buffer;
 	ZLTime time;
 	const short hours = time.hours();
@@ -152,7 +152,7 @@ std::string TextView::PositionIndicator::timeString() const {
 	return buffer;
 }
 
-void TextView::PositionIndicator::draw() {
+void ZLTextView::PositionIndicator::draw() {
 	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
 	ZLTextBaseStyle &baseStyle = ZLTextStyleCollection::instance().baseStyle();
 
@@ -193,7 +193,7 @@ void TextView::PositionIndicator::draw() {
 	context.drawLine(right, bottom, right, top);
 }
 
-bool TextView::PositionIndicator::onStylusPress(int x, int y) {
+bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	const long bottom = this->bottom();
 	const long top = this->top();
 	const long left = this->left();
@@ -244,11 +244,11 @@ bool TextView::PositionIndicator::onStylusPress(int x, int y) {
 	return true;
 }
 
-shared_ptr<TextView::PositionIndicator> TextView::createPositionIndicator() {
+shared_ptr<ZLTextView::PositionIndicator> ZLTextView::createPositionIndicator() {
 	return new PositionIndicator(*this);
 }
 
-TextView::PositionIndicator &TextView::positionIndicator() {
+ZLTextView::PositionIndicator &ZLTextView::positionIndicator() {
 	if (myPositionIndicator.isNull()) {
 		myPositionIndicator = createPositionIndicator();
 	}

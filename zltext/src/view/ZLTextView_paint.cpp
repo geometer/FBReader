@@ -23,7 +23,7 @@
 #include "ZLTextView.h"
 #include "ZLTextLineInfo.h"
 
-void TextView::paint() {
+void ZLTextView::paint() {
 	preparePaintInfo();
 
 	myTextElementMap.clear();
@@ -58,18 +58,18 @@ void TextView::paint() {
 	ZLTextParagraphCursorCache::cleanup();
 }
 
-static bool operator <= (const TextElementArea &area, const SelectionModel::BoundElement &element) {
+static bool operator <= (const ZLTextElementArea &area, const ZLTextSelectionModel::BoundElement &element) {
 	return
 		(area.ParagraphNumber < element.ParagraphNumber) ||
 		((area.ParagraphNumber == element.ParagraphNumber) &&
 		 (area.TextElementNumber <= element.TextElementNumber));
 }
 
-static bool operator > (const TextElementArea &area, const SelectionModel::BoundElement &element) {
+static bool operator > (const ZLTextElementArea &area, const ZLTextSelectionModel::BoundElement &element) {
 	return !(area <= element);
 }
 
-static bool operator < (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator < (const ZLTextWordCursor &cursor, const ZLTextSelectionModel::BoundElement &element) {
 	int pn = cursor.paragraphCursor().index();
 	return
 		(pn < element.ParagraphNumber) ||
@@ -79,11 +79,11 @@ static bool operator < (const ZLTextWordCursor &cursor, const SelectionModel::Bo
 			 (cursor.charNumber() < element.CharNumber))));
 }
 
-static bool operator >= (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator >= (const ZLTextWordCursor &cursor, const ZLTextSelectionModel::BoundElement &element) {
 	return !(cursor < element);
 }
 
-static bool operator > (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator > (const ZLTextWordCursor &cursor, const ZLTextSelectionModel::BoundElement &element) {
 	int pn = cursor.paragraphCursor().index();
 	return
 		(pn > element.ParagraphNumber) ||
@@ -93,11 +93,11 @@ static bool operator > (const ZLTextWordCursor &cursor, const SelectionModel::Bo
 			 (cursor.charNumber() > element.CharNumber))));
 }
 
-static bool operator <= (const ZLTextWordCursor &cursor, const SelectionModel::BoundElement &element) {
+static bool operator <= (const ZLTextWordCursor &cursor, const ZLTextSelectionModel::BoundElement &element) {
 	return !(cursor > element);
 }
 
-static TextElementIterator findLast(TextElementIterator from, TextElementIterator to, const SelectionModel::BoundElement &bound) {
+static ZLTextElementIterator findLast(ZLTextElementIterator from, ZLTextElementIterator to, const ZLTextSelectionModel::BoundElement &bound) {
 	if (*from > bound) {
 		return from;
 	}
@@ -106,7 +106,7 @@ static TextElementIterator findLast(TextElementIterator from, TextElementIterato
 	return --from;
 }
 
-int TextView::areaLength(const ZLTextParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber) {
+int ZLTextView::areaLength(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharNumber) {
 	myStyle.setStyle(area.Style);
 	const ZLTextWord &word = (const ZLTextWord&)paragraph[area.TextElementNumber];
 	int length = toCharNumber - area.StartCharNumber;
@@ -121,20 +121,20 @@ int TextView::areaLength(const ZLTextParagraphCursor &paragraph, const TextEleme
 	return 0;
 }
 
-void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) {
+void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) {
 	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
-	const TextElementIterator fromIt = myTextElementMap.begin() + from;
-	const TextElementIterator toIt = myTextElementMap.begin() + to;
+	const ZLTextElementIterator fromIt = myTextElementMap.begin() + from;
+	const ZLTextElementIterator toIt = myTextElementMap.begin() + to;
 
 	if (!mySelectionModel.isEmpty() && (from != to)) {
-		std::pair<SelectionModel::BoundElement,SelectionModel::BoundElement> range = mySelectionModel.range();
+		std::pair<ZLTextSelectionModel::BoundElement,ZLTextSelectionModel::BoundElement> range = mySelectionModel.range();
 
 		int left = context().width() - 1;
 		if (info.Start > range.first) {
 			left = 0;
 		} else if (info.End >= range.first) {
-			TextElementIterator jt = findLast(fromIt, toIt, range.first);
+			ZLTextElementIterator jt = findLast(fromIt, toIt, range.first);
 			left = jt->XStart;
 			if (jt->Kind == ZLTextElement::WORD_ELEMENT) {
 				left += areaLength(paragraph, *jt, range.first.CharNumber);
@@ -148,7 +148,7 @@ void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) 
 			right = context().width() - 1;
 			bottom += info.VSpaceAfter;
 		} else if (info.Start <= range.second) {
-			TextElementIterator jt = findLast(fromIt, toIt, range.second);
+			ZLTextElementIterator jt = findLast(fromIt, toIt, range.second);
 			if (jt->Kind == ZLTextElement::WORD_ELEMENT) {
 				right = jt->XStart + areaLength(paragraph, *jt, range.second.CharNumber) - 1;
 			} else {
@@ -171,7 +171,7 @@ void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) 
 	if (!info.NodeInfo.isNull()) {
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
-	TextElementIterator it = fromIt;
+	ZLTextElementIterator it = fromIt;
 	for (ZLTextWordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
 		const ZLTextElement &element = paragraph[pos.wordNumber()];
 		ZLTextElement::Kind kind = element.kind();
@@ -204,7 +204,7 @@ void TextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) 
 	context().moveY(info.Descent + info.VSpaceAfter);
 }
 
-void TextView::prepareTextLine(const ZLTextLineInfo &info) {
+void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	myStyle.setStyle(info.StartStyle);
 	const int y = std::min(context().y() + info.Height, myStyle.textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
@@ -248,7 +248,7 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 				const int descent = myStyle.elementDescent(element);
 				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length : 0;
 				myTextElementMap.push_back(
-					TextElementArea(
+					ZLTextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
 						changeStyle, myStyle.style(), kind,
 						x, x + width - 1, y - height + 1, y + descent
@@ -297,7 +297,7 @@ void TextView::prepareTextLine(const ZLTextLineInfo &info) {
 			const int height = myStyle.elementHeight(word);
 			const int descent = myStyle.elementDescent(word);
 			myTextElementMap.push_back(
-				TextElementArea(
+				ZLTextElementArea(
 					paragraphNumber, info.End.wordNumber(), 0, len, addHyphenationSign,
 					changeStyle, myStyle.style(), ZLTextElement::WORD_ELEMENT,
 					x, x + width - 1, y - height + 1, y + descent

@@ -40,9 +40,10 @@ class ZLTextMark;
 
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
-class TreeNodeInfo;
+struct ZLTextTreeNodeInfo;
+struct ZLTextElementArea;
 
-class TextView : public ZLView {
+class ZLTextView : public ZLView {
 
 public:
 	enum ScrollingMode {
@@ -56,14 +57,14 @@ public:
 	class PositionIndicator {
 
 	public:
-		PositionIndicator(TextView &textView);
+		PositionIndicator(ZLTextView &textView);
 		virtual ~PositionIndicator();
 
 		virtual void draw();
 		bool onStylusPress(int x, int y);
 
 	protected:
-		const TextView &textView() const;
+		const ZLTextView &textView() const;
 		ZLPaintContext &context() const;
 		int top() const;
 		int bottom() const;
@@ -83,11 +84,11 @@ public:
 		size_t sizeOfTextBeforeCursor() const;
 
 	private:
-		TextView &myTextView;
+		ZLTextView &myTextView;
 		int myExtraWidth;
 	};
 
-	friend class TextView::PositionIndicator;
+	friend class ZLTextView::PositionIndicator;
 	
 private:
 	class ViewStyle {
@@ -118,8 +119,8 @@ private:
 	};
 
 protected:
-	TextView(ZLApplication &application, ZLPaintContext &context);
-	virtual ~TextView();
+	ZLTextView(ZLApplication &application, ZLPaintContext &context);
+	virtual ~ZLTextView();
 
 public:
 	void clearCaches();
@@ -148,7 +149,7 @@ public:
 
 	void highlightParagraph(int paragraphNumber);
 
-	SelectionModel &selectionModel();
+	ZLTextSelectionModel &selectionModel();
 	void copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const;
 	
 protected:
@@ -162,7 +163,7 @@ protected:
 	const std::string &fileName() const;
 
 	int paragraphIndexByCoordinate(int y) const;
-	const TextElementArea *elementByCoordinates(int x, int y) const;
+	const ZLTextElementArea *elementByCoordinates(int x, int y) const;
 
 	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();
@@ -179,13 +180,13 @@ private:
 
 	void clear();
 
-	int areaLength(const ZLTextParagraphCursor &paragraph, const TextElementArea &area, int toCharNumber);
+	int areaLength(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharNumber);
 	ZLTextLineInfoPtr processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 	void prepareTextLine(const ZLTextLineInfo &info);
 	void drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to);
 	void drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift);
-	void drawTreeLines(const TreeNodeInfo &info, int height, int vSpaceAfter);
+	void drawTreeLines(const ZLTextTreeNodeInfo &info, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
@@ -229,31 +230,31 @@ private:
 
 	int myOldWidth, myOldHeight;
 
-	TextElementMap myTextElementMap;
-	TreeNodeMap myTreeNodeMap;
+	ZLTextElementMap myTextElementMap;
+	ZLTextTreeNodeMap myTreeNodeMap;
 
 	std::vector<size_t> myTextSize;
 	std::vector<size_t> myTextBreaks;
 
 	ViewStyle myStyle;
-	SelectionModel mySelectionModel;
+	ZLTextSelectionModel mySelectionModel;
 
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
 	bool myTreeStateIsFrozen;
 
-friend class SelectionModel;
+friend class ZLTextSelectionModel;
 };
 
-inline TextView::ViewStyle::~ViewStyle() {}
-inline const ZLPaintContext &TextView::ViewStyle::context() const { return myContext; }
-inline const ZLTextStylePtr TextView::ViewStyle::style() const { return myStyle; }
+inline ZLTextView::ViewStyle::~ViewStyle() {}
+inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return myContext; }
+inline const ZLTextStylePtr ZLTextView::ViewStyle::style() const { return myStyle; }
 
-inline bool TextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
-inline const ZLTextWordCursor &TextView::startCursor() const { return myStartCursor; }
-inline const ZLTextWordCursor &TextView::endCursor() const { return myEndCursor; }
-inline const std::string &TextView::fileName() const { return myFileName; }
-inline const shared_ptr<ZLTextModel> TextView::model() const { return myModel; }
-inline SelectionModel &TextView::selectionModel() { return mySelectionModel; }
+inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
+inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }
+inline const ZLTextWordCursor &ZLTextView::endCursor() const { return myEndCursor; }
+inline const std::string &ZLTextView::fileName() const { return myFileName; }
+inline const shared_ptr<ZLTextModel> ZLTextView::model() const { return myModel; }
+inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
 
 #endif /* __ZLTEXTVIEW_H__ */

@@ -320,7 +320,7 @@ private:
 	ZLTextPositionIndicatorStyle myIndicatorStyle;
 	std::map<ZLTextKind,ZLTextStyleDecoration*> myDecorationMap;
 
-friend class StyleReader;
+friend class ZLTextStyleReader;
 };
 
 inline ZLTextStyle::ZLTextStyle() {}

@@ -28,16 +28,16 @@
 #include "ZLTextStyle.h"
 #include "ZLTextElement.h"
 
-TextView::ViewStyle::ViewStyle(ZLPaintContext &context) : myContext(context) {
+ZLTextView::ViewStyle::ViewStyle(ZLPaintContext &context) : myContext(context) {
 	setStyle(ZLTextStyleCollection::instance().baseStylePtr());
 	myWordHeight = -1;
 }
 
-void TextView::ViewStyle::reset() {
+void ZLTextView::ViewStyle::reset() {
 	setStyle(ZLTextStyleCollection::instance().baseStylePtr());
 }
 
-void TextView::ViewStyle::setStyle(const ZLTextStylePtr style) {
+void ZLTextView::ViewStyle::setStyle(const ZLTextStylePtr style) {
 	if (myStyle != style) {
 		myStyle = style;
 		myWordHeight = -1;
@@ -45,7 +45,7 @@ void TextView::ViewStyle::setStyle(const ZLTextStylePtr style) {
 	myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
 }
 
-void TextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
+void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 	if (control.isStart()) {
 		const ZLTextStyleDecoration *decoration = ZLTextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
@@ -58,11 +58,11 @@ void TextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 	}
 }
 
-void TextView::ViewStyle::applyControl(const ZLTextForcedControlElement &control) {
+void ZLTextView::ViewStyle::applyControl(const ZLTextForcedControlElement &control) {
 	setStyle(new ZLTextForcedStyle(myStyle, control.entry()));
 }
 
-void TextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
+void ZLTextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
 	for (ZLTextWordCursor cursor = begin; !cursor.equalWordNumber(end); cursor.nextWord()) {
 		const ZLTextElement &element = cursor.element();
 		if (element.kind() == ZLTextElement::CONTROL_ELEMENT) {
@@ -73,7 +73,7 @@ void TextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLT
 	}
 }
 
-int TextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charNumber) const {
+int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charNumber) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			return wordWidth((const ZLTextWord&)element, charNumber, -1, false);
@@ -96,7 +96,7 @@ int TextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int
 	return 0;
 }
 
-int TextView::ViewStyle::elementHeight(const ZLTextElement &element) const {
+int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {
@@ -123,7 +123,7 @@ int TextView::ViewStyle::elementHeight(const ZLTextElement &element) const {
 	return 0;
 }
 
-int TextView::ViewStyle::elementDescent(const ZLTextElement &element) const {
+int ZLTextView::ViewStyle::elementDescent(const ZLTextElement &element) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			return context().descent();
@@ -132,14 +132,14 @@ int TextView::ViewStyle::elementDescent(const ZLTextElement &element) const {
 	}
 }
 
-int TextView::ViewStyle::textAreaHeight() const {
+int ZLTextView::ViewStyle::textAreaHeight() const {
 	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
 	return indicatorStyle.ShowOption.value() ?
 		context().height() - indicatorStyle.HeightOption.value() - indicatorStyle.OffsetOption.value() :
 		context().height();
 }
 
-int TextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
+int ZLTextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
 	if ((start == 0) && (length == -1)) {
 		return word.width(context());
 	}

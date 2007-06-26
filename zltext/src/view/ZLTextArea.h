@@ -26,13 +26,13 @@
 #include "ZLTextElement.h"
 #include <ZLTextStyle.h>
 
-struct RectangularArea {
+struct ZLTextRectangularArea {
 	int XStart, XEnd, YStart, YEnd;
-	RectangularArea(int xStart, int xEnd, int yStart, int yEnd);
+	ZLTextRectangularArea(int xStart, int xEnd, int yStart, int yEnd);
 
 	struct RangeChecker {
 		RangeChecker(int x, int y) : myX(x), myY(y) {}
-		bool operator()(const RectangularArea &position) const {
+		bool operator()(const ZLTextRectangularArea &position) const {
 			return
 				(myX >= position.XStart) && (myX <= position.XEnd) &&
 				(myY >= position.YStart) && (myY <= position.YEnd);
@@ -42,7 +42,7 @@ struct RectangularArea {
 	};
 };
 
-struct TextElementArea : public RectangularArea {
+struct ZLTextElementArea : public ZLTextRectangularArea {
 	int ParagraphNumber;
 	int TextElementNumber;
 	int StartCharNumber;
@@ -51,22 +51,22 @@ struct TextElementArea : public RectangularArea {
 	bool ChangeStyle;
 	ZLTextStylePtr Style;
 	ZLTextElement::Kind Kind;
-	TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
+	ZLTextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd);
 };
 
-struct TreeNodeArea : public RectangularArea {
+struct ZLTextTreeNodeArea : public ZLTextRectangularArea {
 	int ParagraphNumber;
-	TreeNodeArea(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd);
+	ZLTextTreeNodeArea(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd);
 };
 
-typedef std::vector<TreeNodeArea> TreeNodeMap;
-typedef std::vector<TextElementArea> TextElementMap;
-typedef TextElementMap::const_iterator TextElementIterator;
+typedef std::vector<ZLTextTreeNodeArea> ZLTextTreeNodeMap;
+typedef std::vector<ZLTextElementArea> ZLTextElementMap;
+typedef ZLTextElementMap::const_iterator ZLTextElementIterator;
 
-inline RectangularArea::RectangularArea(int xStart, int xEnd, int yStart, int yEnd) : XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
+inline ZLTextRectangularArea::ZLTextRectangularArea(int xStart, int xEnd, int yStart, int yEnd) : XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 
-inline TextElementArea::TextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), StartCharNumber(startCharNumber), Length(length), AddHyphenationSign(addHyphenationSign), ChangeStyle(changeStyle), Style(style), Kind(kind) {}
+inline ZLTextElementArea::ZLTextElementArea(int paragraphNumber, int textElementNumber, int startCharNumber, int length, bool addHyphenationSign, bool changeStyle, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd) : ZLTextRectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber), TextElementNumber(textElementNumber), StartCharNumber(startCharNumber), Length(length), AddHyphenationSign(addHyphenationSign), ChangeStyle(changeStyle), Style(style), Kind(kind) {}
 
-inline TreeNodeArea::TreeNodeArea(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd) : RectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber) {}
+inline ZLTextTreeNodeArea::ZLTextTreeNodeArea(int paragraphNumber, int xStart, int xEnd, int yStart, int yEnd) : ZLTextRectangularArea(xStart, xEnd, yStart, yEnd), ParagraphNumber(paragraphNumber) {}
 
 #endif /* __ZLTEXTAREA_H__ */

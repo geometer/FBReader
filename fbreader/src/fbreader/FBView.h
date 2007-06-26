@@ -26,7 +26,7 @@
 
 class FBReader;
 
-class FBView : public TextView {
+class FBView : public ZLTextView {
 
 public:
 	FBView(FBReader &reader, ZLPaintContext &context);
@@ -43,7 +43,7 @@ protected:
 	bool onStylusPress(int x, int y);
 	virtual bool _onStylusPress(int x, int y);
 
-	std::string word(const TextElementArea &area) const;
+	std::string word(const ZLTextElementArea &area) const;
 
 private:
 	std::string myCaption;

@@ -56,7 +56,7 @@ private:
 
 	void preparePaintInfo();
 
-	bool getHyperlinkId(const TextElementArea &area, std::string &id, bool &isExternal) const;
+	bool getHyperlinkId(const ZLTextElementArea &area, std::string &id, bool &isExternal) const;
 
 	shared_ptr<PositionIndicator> createPositionIndicator();
 
@@ -85,7 +85,7 @@ private:
 };
 
 inline void BookTextView::preparePaintInfo() {
-	TextView::preparePaintInfo();
+	ZLTextView::preparePaintInfo();
 	saveState();
 }
 

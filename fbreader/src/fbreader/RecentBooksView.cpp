@@ -56,7 +56,7 @@ void RecentBooksView::paint() {
 		}
 		setModel(recentBooksModel, LIBRARY);
 	}
-	TextView::paint();
+	FBView::paint();
 }
 
 void RecentBooksView::rebuild() {

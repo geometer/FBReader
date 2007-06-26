@@ -26,7 +26,7 @@
 
 #include "FBReader.h"
 
-class TextView;
+class ZLTextView;
 
 enum ActionCode {
 	// please, don't change these numbers
@@ -279,7 +279,7 @@ public:
 	bool isEnabled();
 
 protected:
-	TextView &textView();
+	ZLTextView &textView();
 };
 
 class CopySelectedTextAction : public SelectionAction {

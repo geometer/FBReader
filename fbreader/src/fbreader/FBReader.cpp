@@ -80,28 +80,28 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
 	LargeScrollingOptions(
 		OPTIONS, DELAY, 250,
-		LARGE_SCROLLING, MODE, TextView::NO_OVERLAPPING,
+		LARGE_SCROLLING, MODE, ZLTextView::NO_OVERLAPPING,
 		LARGE_SCROLLING, LINES_TO_KEEP, 1,
 		LARGE_SCROLLING, LINES_TO_SCROLL, 1,
 		LARGE_SCROLLING, PERCENT_TO_SCROLL, 50
 	),
 	SmallScrollingOptions(
 		SMALL_SCROLLING, DELAY, 50,
-		SMALL_SCROLLING, MODE, TextView::SCROLL_LINES,
+		SMALL_SCROLLING, MODE, ZLTextView::SCROLL_LINES,
 		SMALL_SCROLLING, LINES_TO_KEEP, 1,
 		SMALL_SCROLLING, LINES_TO_SCROLL, 1,
 		SMALL_SCROLLING, PERCENT_TO_SCROLL, 50
 	),
 	MouseScrollingOptions(
 		MOUSE_SCROLLING, DELAY, 0,
-		MOUSE_SCROLLING, MODE, TextView::SCROLL_LINES,
+		MOUSE_SCROLLING, MODE, ZLTextView::SCROLL_LINES,
 		MOUSE_SCROLLING, LINES_TO_KEEP, 1,
 		MOUSE_SCROLLING, LINES_TO_SCROLL, 1,
 		MOUSE_SCROLLING, PERCENT_TO_SCROLL, 50
 	),
 	FingerTapScrollingOptions(
 		FINGER_TAP_SCROLLING, DELAY, 0,
-		FINGER_TAP_SCROLLING, MODE, TextView::NO_OVERLAPPING,
+		FINGER_TAP_SCROLLING, MODE, ZLTextView::NO_OVERLAPPING,
 		FINGER_TAP_SCROLLING, LINES_TO_KEEP, 1,
 		FINGER_TAP_SCROLLING, LINES_TO_SCROLL, 1,
 		FINGER_TAP_SCROLLING, PERCENT_TO_SCROLL, 50
@@ -484,11 +484,11 @@ void FBReader::openFile(const std::string &fileName) {
 }
 
 void FBReader::clearTextCaches() {
-	((TextView&)*myBookTextView).clearCaches();
-	((TextView&)*myFootnoteView).clearCaches();
-	((TextView&)*myContentsView).clearCaches();
-	((TextView&)*myCollectionView).clearCaches();
-	((TextView&)*myRecentBooksView).clearCaches();
+	((ZLTextView&)*myBookTextView).clearCaches();
+	((ZLTextView&)*myFootnoteView).clearCaches();
+	((ZLTextView&)*myContentsView).clearCaches();
+	((ZLTextView&)*myCollectionView).clearCaches();
+	((ZLTextView&)*myRecentBooksView).clearCaches();
 }
 
 void FBReader::searchSlot() {
@@ -498,7 +498,7 @@ void FBReader::searchSlot() {
 	searchDialog->addOption(ZLResourceKey("ignoreCase"), SearchIgnoreCaseOption);
 	searchDialog->addOption(ZLResourceKey("wholeText"), SearchInWholeTextOption);
 	searchDialog->addOption(ZLResourceKey("backward"), SearchBackwardOption);
-	if (((TextView&)*currentView()).hasMultiSectionModel()) {
+	if (((ZLTextView&)*currentView()).hasMultiSectionModel()) {
 		searchDialog->addOption(ZLResourceKey("currentSection"), SearchThisSectionOnlyOption);
 	}
 	searchDialog->addButton(ZLResourceKey("go"), true);
@@ -509,7 +509,7 @@ void FBReader::searchSlot() {
 		std::string pattern = SearchPatternOption.value();
 		ZLStringUtil::stripWhiteSpaces(pattern);
 		SearchPatternOption.setValue(pattern);
-		((TextView&)*currentView()).search(
+		((ZLTextView&)*currentView()).search(
 			SearchPatternOption.value(),
 			SearchIgnoreCaseOption.value(),
 			SearchInWholeTextOption.value(),

@@ -219,11 +219,11 @@ FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader) {
 
 bool FindNextAction::isEnabled() {
 	shared_ptr<ZLView> view = fbreader().currentView();
-	return (!view.isNull()) && ((TextView&)*view).canFindNext();
+	return (!view.isNull()) && ((ZLTextView&)*view).canFindNext();
 }
 
 void FindNextAction::run() {
-	((TextView&)*fbreader().currentView()).findNext();
+	((ZLTextView&)*fbreader().currentView()).findNext();
 }
 
 FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -231,11 +231,11 @@ FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) 
 
 bool FindPreviousAction::isEnabled() {
 	shared_ptr<ZLView> view = fbreader().currentView();
-	return (!view.isNull()) && ((TextView&)*view).canFindPrevious();
+	return (!view.isNull()) && ((ZLTextView&)*view).canFindPrevious();
 }
 
 void FindPreviousAction::run() {
-	((TextView&)*fbreader().currentView()).findPrevious();
+	((ZLTextView&)*fbreader().currentView()).findPrevious();
 }
 
 ScrollingAction::ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
@@ -255,22 +255,22 @@ void ScrollingAction::run() {
 	int delay = fbreader().myLastScrollingTime.millisecondsTo(ZLTime());
 	shared_ptr<ZLView> view = fbreader().currentView();
 	if (!view.isNull() && ((delay < 0) || (delay >= myOptions.DelayOption.value()))) {
-		TextView::ScrollingMode oType = (TextView::ScrollingMode)myOptions.ModeOption.value();
+		ZLTextView::ScrollingMode oType = (ZLTextView::ScrollingMode)myOptions.ModeOption.value();
 		unsigned int oValue = 0;
 		switch (oType) {
-			case TextView::KEEP_LINES:
+			case ZLTextView::KEEP_LINES:
 				oValue = myOptions.LinesToKeepOption.value();
 				break;
-			case TextView::SCROLL_LINES:
+			case ZLTextView::SCROLL_LINES:
 				oValue = myOptions.LinesToScrollOption.value();
 				break;
-			case TextView::SCROLL_PERCENTAGE:
+			case ZLTextView::SCROLL_PERCENTAGE:
 				oValue = myOptions.PercentToScrollOption.value();
 				break;
 			default:
 				break;
 		}
-		((TextView&)*view).scrollPage(myForward, oType, oValue);
+		((ZLTextView&)*view).scrollPage(myForward, oType, oValue);
 		fbreader().refreshWindow();
 		fbreader().myLastScrollingTime = ZLTime();
 	}
@@ -355,7 +355,7 @@ void GotoNextTOCSectionAction::run() {
 	size_t current = contentsView.currentTextViewParagraph();
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current + 1]));
-	((TextView&)*fbreader().myBookTextView).gotoParagraph(reference);
+	((ZLTextView&)*fbreader().myBookTextView).gotoParagraph(reference);
 	fbreader().refreshWindow();
 }
 
@@ -409,7 +409,7 @@ void GotoPreviousTOCSectionAction::run() {
 			(reference == (int)cursor.paragraphCursor().index())) {
 		reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current - 1]));
 	}
-	((TextView&)*fbreader().myBookTextView).gotoParagraph(reference);
+	((ZLTextView&)*fbreader().myBookTextView).gotoParagraph(reference);
 	fbreader().refreshWindow();
 }
 
@@ -424,8 +424,8 @@ bool SelectionAction::isEnabled() {
 	return isVisible() && !textView().selectionModel().getText().empty();
 }
 
-TextView &SelectionAction::textView() {
-	return (TextView&)*fbreader().currentView();
+ZLTextView &SelectionAction::textView() {
+	return (ZLTextView&)*fbreader().currentView();
 }
 
 CopySelectedTextAction::CopySelectedTextAction(FBReader &fbreader) : SelectionAction(fbreader) {
