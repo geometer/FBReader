@@ -20,10 +20,13 @@
 
 #include <locale.h>
 #include <dlfcn.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 #include <algorithm>
 
 #include <ZLibrary.h>
+#include <ZLStringUtil.h>
 
 #include "ZLibraryImplementation.h"
 
@@ -60,29 +63,45 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary::init(int &argc, char **&argv) {
-	const char* platforms[] = {
-		"gtk", "qt", "qt4",
-		"qtopia", "qtopia-240x320", "qtopia-640x480",
-		"opie", "gpe",
-		"maemo", "maemo2"
-	};
-	const int platformNumber = sizeof(platforms) / sizeof(const char*);
-
-	const std::string pluginPrefix = std::string(INSTALLDIR) + "/share/zlibrary/ui/zlui-";
-	const std::string pluginSuffix = ".so";
+	const std::string pluginPath = std::string(INSTALLDIR) + "/share/zlibrary/ui";
 
 	void *handle = 0;
 
 	if ((argc > 2) && std::string("-zlui") == argv[1]) {
-		handle = dlopen((pluginPrefix + argv[2] + pluginSuffix).c_str(), RTLD_NOW);
+		handle = dlopen((pluginPath + "/zlui-" + argv[2] + ".so").c_str(), RTLD_NOW);
 		argc -= 2;
 		argv += 2;
 	}
 
 	if (handle == 0) {
-		for (int i = 0; (handle == 0) && (i < platformNumber); ++i) {
-			handle = dlopen((pluginPrefix + platforms[i] + pluginSuffix).c_str(), RTLD_NOW);
+		DIR *dir = opendir(pluginPath.c_str());
+		if (dir == 0) {
+			return false;
 		}
+		std::vector<std::string> names;
+		const dirent *file;
+		struct stat fileInfo;
+		while ((file = readdir(dir)) != 0) {
+			const std::string shortName = file->d_name;
+			if ((shortName.substr(0, 5) != "zlui-") ||
+					!ZLStringUtil::stringEndsWith(shortName, ".so")) {
+				continue;
+			}
+			const std::string fullName = pluginPath + "/" + shortName;
+			stat(fullName.c_str(), &fileInfo);
+			if (!S_ISREG(fileInfo.st_mode)) {
+				continue;
+			}
+			names.push_back(fullName);
+		}
+		closedir(dir);
+
+		std::sort(names.begin(), names.end());
+		for (std::vector<std::string>::const_iterator it = names.begin();
+				 (it != names.end()) && (handle == 0); ++it) {
+			handle = dlopen(it->c_str(), RTLD_NOW);
+		}
+
 		if (handle == 0) {
 			return false;
 		}

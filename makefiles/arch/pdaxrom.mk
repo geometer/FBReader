@@ -1,9 +1,6 @@
 include $(ROOTDIR)/makefiles/arch/unix.mk
 
 INSTALLDIR = /usr
-ifeq "$(UI_TYPE)" "qt"
-  BINDIR = /usr/lib/qt/bin
-endif
 IMAGEDIR = /usr/share/pixmaps
 APPIMAGEDIR = $(IMAGEDIR)/%APPLICATION_NAME%
 
