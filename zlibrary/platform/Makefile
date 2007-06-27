@@ -5,10 +5,9 @@ include $(MAKEFILESDIR)/config.mk
 VERSION = $(shell cat ../VERSION)
 
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-  TARGET = libzlplatform-$(UI_TYPE).so.$(VERSION)
-  TARGET_SHORTNAME = libzlplatform-$(UI_TYPE).so
+  TARGET = zlui-$(UI_TYPE).so
 else
-  TARGET = libzlplatform-$(UI_TYPE).a
+  TARGET = libzlui-$(UI_TYPE).a
 endif
 
 SUBDIRS_ALL = src/win32/library src/win32/encoding src/win32/view src/win32/filesystem src/win32/time src/win32/w32widgets src/win32/dialogs src/win32/application src/win32/image src/win32/config src/win32/message
@@ -76,8 +75,7 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc -L $(ROOTDIR)/zlibrary/core -lzlcore $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
-	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc -L $(ROOTDIR)/zlibrary/core -lzlcore $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB) -ldl
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
 endif
@@ -95,8 +93,8 @@ do_install:
 	@install -d $(SHARE_ZLIBRARY)
 	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/$(KEYNAMES)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	@install -d $(DESTDIR)$(LIBDIR)
-	@install $(TARGET) $(DESTDIR)$(LIBDIR)
+	@install -d $(SHARE_ZLIBRARY)/ui
+	@install $(TARGET) $(SHARE_ZLIBRARY)/ui
 endif
 
 package:

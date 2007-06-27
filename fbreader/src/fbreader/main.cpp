@@ -24,7 +24,9 @@
 #include "FBReader.h"
 
 int main(int argc, char **argv) {
-	ZLibrary::init(argc, argv);
+	if (!ZLibrary::init(argc, argv)) {
+		return 1;
+	}
 	ZLibrary::run(new FBReader(argc == 1 ? std::string() : argv[1]));
 	ZLibrary::shutdown();
 	return 0;

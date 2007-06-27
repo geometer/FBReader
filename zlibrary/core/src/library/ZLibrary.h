@@ -35,13 +35,11 @@ public:
 	static std::string Language();
 
 public:
-	static void init(int &argc, char **&argv);
+	static bool init(int &argc, char **&argv);
+	static void parseArguments(int &argc, char **&argv);
 	static ZLPaintContext *createContext();
 	static void run(ZLApplication *application);
 	static void shutdown();
-
-private:
-	static void parseArguments(int &argc, char **&argv);
 
 private:
 	static std::string ourLanguage;

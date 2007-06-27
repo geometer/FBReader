@@ -37,7 +37,7 @@ endif
 
 XML_LIB = -lexpat
 ENCA_LIB = -lenca
-ARCHIVER_LIB = -lbz2
+ARCHIVER_LIB = -lz -lbz2
 
 RM = rm -rvf
 RM_QUIET = rm -rf
