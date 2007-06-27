@@ -7,7 +7,7 @@ include $(MAKEFILESDIR)/config.mk
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB) -ldl
 else
-	LIBS = -lm -L$(ROOTDIR)/zlibrary/platform -lzlplatform-$(UI_TYPE) -L$(ROOTDIR)/zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+	LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -lzlui-$(UI_TYPE) -L$(ROOTDIR)/zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
 endif
 
 TARGET = SampleApplication

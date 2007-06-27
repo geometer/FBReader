@@ -7,7 +7,7 @@ include $(MAKEFILESDIR)/config.mk
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	LIBS = -lm -L../zlibrary/core -lzlcore $(XML_LIB) $(ARCHIVER_LIB) -ldl
 else
-	LIBS = -lm -L../zlibrary/platform -lzlplatform-$(UI_TYPE) -L../zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+	LIBS = -lm -L../zlibrary/ui -lzlui-$(UI_TYPE) -L../zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
 endif
 
 TARGET = GeometricCalculator

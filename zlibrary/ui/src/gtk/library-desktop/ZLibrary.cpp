@@ -35,10 +35,6 @@
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
-extern "C" {
-	void initLibrary();
-}
-
 class ZLGtkLibraryImplementation : public ZLibraryImplementation {
 
 private:

@@ -2,7 +2,7 @@ ROOTDIR = $(CURDIR)
 
 include makefiles/platforms.mk
 
-ZLIBDIRS = zlibrary/core zlibrary/text zlibrary/platform
+ZLIBDIRS = zlibrary/core zlibrary/text zlibrary/ui
 MAINZLIBDIR = zlibrary
 APPDIRS = fbreader GeometricCalculator SampleApplications/0 SampleApplications/1 SampleApplications/2
 

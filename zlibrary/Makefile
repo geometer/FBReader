@@ -9,7 +9,7 @@ default:
 do_install:
 	@$(MAKE) -C core do_install
 	@$(MAKE) -C text do_install
-	@$(MAKE) -C platform do_install
+	@$(MAKE) -C ui do_install
 
 package:
 	@if [ -d $(TARGET_ARCH) ]; then \
