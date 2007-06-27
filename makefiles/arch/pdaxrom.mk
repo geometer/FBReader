@@ -21,7 +21,7 @@ GTKINCLUDE = -I$(INCPATH)/libxml2 -I$(INCPATH)/libglade-2.0 -I$(INCPATH)/gtk-2.0
 
 XML_LIB = -lexpat
 ENCA_LIB = -L $(USRPATH)/lib -lenca
-ARCHIVER_LIB = -lbz2
+ARCHIVER_LIB = -lz -lbz2
 
 ifeq "$(UI_TYPE)" "qt"
 	UILIBS = -L $(USRPATH)/qt/lib -lqt-mt -L $(USRPATH)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE

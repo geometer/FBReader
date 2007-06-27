@@ -28,4 +28,4 @@ endif
 
 XML_LIB = -lexpat
 ENCA_LIB = -lenca
-ARCHIVER_LIB = -lbz2
+ARCHIVER_LIB = -lz -lbz2

@@ -21,7 +21,7 @@ LD = $(TOOLSPATH)/g++
 
 XML_LIB = -L $(OEPATH)/lib -lexpat
 ENCA_LIB = -L $(OEPATH)/lib -lenca
-ARCHIVER_LIB = -L $(OEPATH)/lib -lbz2
+ARCHIVER_LIB = -L $(OEPATH)/lib -lz -lbz2
 
 CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale -mfloat-abi=soft --param large-function-growth=2000 --param inline-unit-growth=200 -Wall -Wno-ctor-dtor-privacy -W -Winline
 LDFLAGS = -Wl,-rpath,$(LIBDIR)

@@ -25,7 +25,7 @@ LD = $(TOOLSPATH)/arm-linux-g++
 
 XML_LIB = -lexpat
 ENCA_LIB = -lenca
-ARCHIVER_LIB = -lbz2
+ARCHIVER_LIB = -lz -lbz2
 
 ifeq "$(UI_TYPE)" "opie"
 	UILIBS = -lqte -lqpe
