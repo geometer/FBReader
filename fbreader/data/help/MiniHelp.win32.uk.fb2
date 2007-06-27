@@ -15,10 +15,9 @@
 <p>Якщо ви бажаєте отримувати повідомлення про нові версії, підпишіться на <a l:href="http://freshmeat.net/projects/fbreader">проект FBReader на freshmeat</a>.</p>
 <p>Щоб зв'язатися з авторами програми, скористуйтесь <a l:href="http://groups.google.com/group/fbreader">групою FBReader на googlegroups</a>.</p>
 <empty-line/>
-<subtitle>
-  <p>Використанi бiблiотеки</p>
-</subtitle>
-<p>Windows XP розповсюджується у комплекті з декількома бiблiотеками, ліцензії на якi вiдрiзняються вiд GPL. Нижче перелiченi цi бiблiотеки та обмеження на їх використання (англiйською мовою).</p>  <p><a l:href="http://expat.sourceforge.net">Expat</a> &#8211; бiблiотека для розбору XML. Copyright &#169; 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper.</p>
+<subtitle><p>Використанi бiблiотеки</p></subtitle>
+<p>Windows XP розповсюджується у комплекті з декількома бiблiотеками, ліцензії на якi вiдрiзняються вiд GPL. Нижче перелiченi цi бiблiотеки та обмеження на їх використання (англiйською мовою).</p>
+<p><a l:href="http://expat.sourceforge.net">Expat</a> &#8211; бiблiотека для розбору XML. Copyright &#169; 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper.</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p><a l:href="http://libungif.sourceforge.net">Libungif</a> &#8211; библиотека для работы с изображениями в формате GIF. Copyright &#169; 1997 Eric S. Raymond &lt;<a l:href="mailto:esr@thyrsus.com">esr@thyrsus.com</a>&gt;.</p>
