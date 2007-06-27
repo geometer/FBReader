@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="koi8-r"?>
-<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>� ��������� FBReader</book-title> <lang>ru</lang></title-info></description>
+<?xml version="1.0" encoding="utf-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>Про програму FBReader</book-title> <lang>ua</lang></title-info></description>
 <body>
 <title><p>Про програму FBReader</p></title>
 <p>FBReader &#8211; програма для читання електронних книг, яка працює під операційними системами Linux, FreeBSD, Windows XP. FBReader дозволяє читати книги у багатьох форматах: <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, і&#160;т.&#160;п. Файли можна читати напряму із архівів <code>zip</code>, <code>tar</code>, <code>gzip</code> та <code>bzip2</code>.</p>
@@ -15,7 +15,6 @@
 <p>Якщо ви бажаєте отримувати повідомлення про нові версії, підпишіться на <a l:href="http://freshmeat.net/projects/fbreader">проект FBReader на freshmeat</a>.</p>
 <p>Щоб зв'язатися з авторами програми, скористуйтесь <a l:href="http://groups.google.com/group/fbreader">групою FBReader на googlegroups</a>.</p>
 </body>
-
 <binary content-type="image/png" id="settings.png">
 iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABHNCSVQICAgI
 fAhkiAAACAhJREFUWIXtlmtQVOcZx//nuvddgWXBZUEuahWQmzqI8UKsouJE
