@@ -28,7 +28,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QListWidget>
 
-#include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 class QVBox;
 class QLineEdit;

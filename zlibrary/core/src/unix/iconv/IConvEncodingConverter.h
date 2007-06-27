@@ -18,20 +18,17 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLPOSIXFSDIR_H__
-#define __ZLPOSIXFSDIR_H__
+#ifndef __ICONVENCODINGCONVERTERS_H__
+#define __ICONVENCODINGCONVERTERS_H__
 
-#include "../../../../core/src/filesystem/ZLFSDir.h"
+#include <ZLEncodingConverter.h>
+#include "../../encoding/ZLEncodingConverterProvider.h"
 
-#include <sys/stat.h>
-
-class ZLPosixFSDir : public ZLFSDir {
+class IConvEncodingConverterProvider : public ZLEncodingConverterProvider {
 
 public:
-	ZLPosixFSDir(const std::string &name) : ZLFSDir(name) {}
-
-	void collectSubDirs(std::vector<std::string> &names, bool includeSymlinks);
-	void collectFiles(std::vector<std::string> &names, bool includeSymlinks);
+	bool providesConverter(const std::string &encoding);
+	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
 };
 
-#endif /* __ZLPOSIXFSDIR_H__ */
+#endif /* __ENCODINGCONVERTERS_H__ */

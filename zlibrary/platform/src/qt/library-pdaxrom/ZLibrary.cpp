@@ -28,9 +28,9 @@
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
-#include "../../unix/message/ZLUnixMessage.h"
-#include "../../unix/xmlconfig/XMLConfig.h"
-#include "../../unix/iconv/IConvEncodingConverter.h"
+#include "../../../../core/src/unix/message/ZLUnixMessage.h"
+#include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
+#include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);

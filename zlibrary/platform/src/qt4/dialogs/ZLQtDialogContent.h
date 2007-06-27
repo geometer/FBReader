@@ -21,7 +21,7 @@
 #ifndef __ZLQTDIALOGCONTENT_H__
 #define __ZLQTDIALOGCONTENT_H__
 
-#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
 
 class QWidget;
 class QGridLayout;

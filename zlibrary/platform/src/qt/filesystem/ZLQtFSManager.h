@@ -21,7 +21,7 @@
 #ifndef __ZLQTFSMANAGER_H__
 #define __ZLQTFSMANAGER_H__
 
-#include "../../unix/filesystem/ZLUnixFSManager.h"
+#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
 
 class ZLQtFSManager : public ZLUnixFSManager {
 

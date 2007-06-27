@@ -25,7 +25,7 @@
 
 #include <windows.h>
 
-#include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 #include "../w32widgets/W32DialogPanel.h"
 #include "../w32widgets/W32TreeView.h"

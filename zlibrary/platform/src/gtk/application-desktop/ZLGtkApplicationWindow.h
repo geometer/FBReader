@@ -27,7 +27,7 @@
 #include <gtk/gtkwindow.h>
 #include <gtk/gtktoolbar.h>
 
-#include "../../desktop/application/ZLDesktopApplicationWindow.h"
+#include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 
 class ZLGtkApplicationWindow : public ZLDesktopApplicationWindow { 
 

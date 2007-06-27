@@ -27,7 +27,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QCursor>
 
-#include "../../desktop/application/ZLDesktopApplicationWindow.h"
+#include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 
 class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWindow {
 	Q_OBJECT

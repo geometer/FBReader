@@ -26,7 +26,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimerEvent>
 
-#include "../../unix/time/ZLUnixTime.h"
+#include "../../../../core/src/unix/time/ZLUnixTime.h"
 
 class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
 

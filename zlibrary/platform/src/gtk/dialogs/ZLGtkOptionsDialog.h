@@ -26,7 +26,7 @@
 #include <gtk/gtkdialog.h>
 #include <gtk/gtknotebook.h>
 
-#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
 
 class ZLGtkOptionsDialog : public ZLDesktopOptionsDialog {
 

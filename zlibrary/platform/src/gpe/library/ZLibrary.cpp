@@ -29,9 +29,9 @@
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../../gtk/image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
-#include "../../unix/message/ZLUnixMessage.h"
-#include "../../unix/xmlconfig/XMLConfig.h"
-#include "../../unix/iconv/IConvEncodingConverter.h"
+#include "../../../../core/src/unix/message/ZLUnixMessage.h"
+#include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
+#include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
 void ZLibrary::init(int &argc, char **&argv) {
 	gpe_application_init (&argc, &argv);

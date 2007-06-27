@@ -26,7 +26,7 @@
 #include <qwidget.h>
 #include <qtabdialog.h>
 
-#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
 
 class ZLQtOptionsDialog : public QTabDialog, public ZLDesktopOptionsDialog {
 	Q_OBJECT

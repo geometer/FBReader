@@ -20,7 +20,7 @@
 #ifndef __ZLWIN32FSMANAGER_H__
 #define __ZLWIN32FSMANAGER_H__
 
-#include "../../posix/filesystem/ZLPosixFSManager.h"
+#include "../../../../core/src/posix/filesystem/ZLPosixFSManager.h"
 
 class ZLWin32FSManager : public ZLPosixFSManager {
 

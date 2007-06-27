@@ -28,7 +28,7 @@
 
 #include <ZLResource.h>
 
-#include "../../desktop/dialogs/ZLDesktopSelectionDialog.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopSelectionDialog.h"
 
 class ZLGtkSelectionDialog : public ZLDesktopSelectionDialog {
 

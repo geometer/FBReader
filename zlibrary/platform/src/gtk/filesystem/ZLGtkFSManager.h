@@ -21,7 +21,7 @@
 #ifndef __ZLGTKFSMANAGER_H__
 #define __ZLGTKFSMANAGER_H__
 
-#include "../../unix/filesystem/ZLUnixFSManager.h"
+#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
 
 class ZLGtkFSManager : public ZLUnixFSManager {
 

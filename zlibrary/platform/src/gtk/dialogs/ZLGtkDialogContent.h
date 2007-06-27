@@ -23,7 +23,7 @@
 
 #include <gtk/gtktable.h>
 
-#include "../../desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
 
 class ZLGtkDialogContent : public ZLDialogContent {
 

@@ -27,7 +27,7 @@
 
 #include <ZLUnicodeUtil.h>
 
-#include "../../desktop/application/ZLDesktopApplicationWindow.h"
+#include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 
 class ZLWin32ViewWidget;
 

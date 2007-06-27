@@ -11,7 +11,27 @@ else
   TARGET = libzlcore.a
 endif
 
-SUBDIRS = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image
+SUBDIRS_ALL = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/desktop/application src/desktop/dialogs src/posix/filesystem src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/message src/unix/library
+
+SUBDIRS = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/posix/filesystem src/unix/time
+
+ifeq "$(TARGET_ARCH)" "desktop"
+  SUBDIRS += src/desktop/application src/desktop/dialogs src/unix/message
+endif
+
+ifeq "$(TARGET_ARCH)" "pdaxrom"
+  SUBDIRS += src/desktop/dialogs src/unix/message
+endif
+
+ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <gpe> <opie>)"
+  SUBDIRS += src/unix/message
+endif
+
+ifeq "$(TARGET_ARCH)" "win32"
+  SUBDIRS += src/desktop/application src/desktop/dialogs
+else
+  SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library
+endif
 
 .objects:
 	@for subdir in $(SUBDIRS); do \
@@ -54,7 +74,7 @@ endif
 package:
 
 clean:
-	@for subdir in $(SUBDIRS); do \
+	@for subdir in $(SUBDIRS_ALL); do \
 		if [ -d $$subdir ]; then \
 			$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 		fi; \
