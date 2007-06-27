@@ -35,7 +35,7 @@ const std::string ZLibrary::FileNameDelimiter("\\");
 const std::string ZLibrary::PathDelimiter(";");
 const std::string ZLibrary::EndOfLine("\r\n");
 
-void ZLibrary::init(int &argc, char **&argv) {
+bool ZLibrary::init(int &argc, char **&argv) {
 	parseArguments(argc, argv);
 
 	ZLWin32ConfigManager::createInstance();
@@ -45,6 +45,8 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLWin32CommunicationManager::createInstance();
 	ZLWin32ImageManager::createInstance();
 	ZLEncodingCollection::instance().registerProvider(new ZLWin32EncodingConverterProvider());
+
+	return true;
 }
 
 ZLPaintContext *ZLibrary::createContext() {
