@@ -25,6 +25,8 @@
 #include <ZLFile.h>
 #include <ZLDir.h>
 
+#include "../../../../core/src/unix/library/ZLibraryImplementation.h"
+
 #include "../../gtk/filesystem/ZLGtkFSManager.h"
 #include "../time/ZLGtkTime.h"
 #include "../dialogs/ZLGtkDialogManager.h"
@@ -34,10 +36,22 @@
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
-void ZLibrary::init(int &argc, char **&argv) {
+class ZLGtkLibraryImplementation : public ZLibraryImplementation {
+
+private:
+	void init(int &argc, char **&argv);
+	ZLPaintContext *createContext();
+	void run(ZLApplication *application);
+};
+
+void initLibrary() {
+	new ZLGtkLibraryImplementation();
+}
+
+void ZLGtkLibraryImplementation::init(int &argc, char **&argv) {
 	gtk_init(&argc, &argv);
 
-	parseArguments(argc, argv);
+	ZLibrary::parseArguments(argc, argv);
 
 	XMLConfigManager::createInstance();
 	ZLGtkFSManager::createInstance();
@@ -52,11 +66,11 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
 }
 
-ZLPaintContext *ZLibrary::createContext() {
+ZLPaintContext *ZLGtkLibraryImplementation::createContext() {
 	return new ZLGtkPaintContext();
 }
 
-void ZLibrary::run(ZLApplication *application) {
+void ZLGtkLibraryImplementation::run(ZLApplication *application) {
 	ZLDialogManager::instance().createApplicationWindow(application);
 	application->initWindow();
 	gtk_main();

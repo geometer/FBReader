@@ -23,6 +23,8 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
+#include "../../../../core/src/unix/library/ZLibraryImplementation.h"
+
 #include "../../qt/filesystem/ZLQtFSManager.h"
 #include "../../qt/time/ZLQtTime.h"
 #include "../dialogs/ZLQtDialogManager.h"
@@ -32,10 +34,22 @@
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
-void ZLibrary::init(int &argc, char **&argv) {
+class ZLQtLibraryImplementation : public ZLibraryImplementation {
+
+private:
+	void init(int &argc, char **&argv);
+	ZLPaintContext *createContext();
+	void run(ZLApplication *application);
+};
+
+void initLibrary() {
+	new ZLQtLibraryImplementation();
+}
+
+void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	new QPEApplication(argc, argv);
 
-	parseArguments(argc, argv);
+	ZLibrary::parseArguments(argc, argv);
 
 	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
@@ -46,11 +60,11 @@ void ZLibrary::init(int &argc, char **&argv) {
 	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
 }
 
-ZLPaintContext *ZLibrary::createContext() {
+ZLPaintContext *ZLQtLibraryImplementation::createContext() {
 	return new ZLQtPaintContext();
 }
 
-void ZLibrary::run(ZLApplication *application) {
+void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	ZLDialogManager::instance().createApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();
