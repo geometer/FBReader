@@ -75,7 +75,7 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc -L $(ROOTDIR)/zlibrary/core -lzlcore $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB) -ldl
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
 endif
@@ -83,7 +83,7 @@ endif
 
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 
-ifeq "<$(TARGET_ARCH)>" "$(findstring <$(UI_TYPE)>, <desktop> <pdaxrom>)"
+ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pdaxrom>)"
   KEYNAMES = keynames-$(UI_TYPE).xml
 else
   KEYNAMES = keynames.xml

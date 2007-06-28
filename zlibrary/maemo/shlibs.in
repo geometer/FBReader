@@ -1,1 +1,2 @@
-libzlibrary-maemo2 @VERSION@ libzlibrary-maemo2 (= @DEBIANVERSION@)
+libzlcore @VERSION@ libzlibrary-maemo2 (= @DEBIANVERSION@)
+libzltext @VERSION@ libzlibrary-maemo2 (= @DEBIANVERSION@)

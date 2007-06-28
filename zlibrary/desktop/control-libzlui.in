@@ -1,0 +1,12 @@
+Package: @PACKAGE@
+Version: @DEBIANVERSION@
+Architecture: @ARCH@
+Depends: @DEPENDS@
+Provides: libzlui
+Section: libs
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Installed-Size: @SIZE@
+Description: Interface module for zlibrary
+ This package provides @UI@-based UI for zlibrary.
+ .
+ Home page: http://www.fbreader.org/

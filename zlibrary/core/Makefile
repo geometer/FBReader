@@ -23,7 +23,7 @@ ifeq "$(TARGET_ARCH)" "pdaxrom"
   SUBDIRS += src/desktop/dialogs src/unix/message
 endif
 
-ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <gpe> <opie>)"
+ifeq "<$(TARGET_ARCH)>" "$(findstring <$TARGET_ARCH()>, <openzaurus> <opensimpad-0.9.0> <qvfb>)"
   SUBDIRS += src/unix/message
 endif
 

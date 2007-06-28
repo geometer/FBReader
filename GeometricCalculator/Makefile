@@ -4,12 +4,6 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	LIBS = -lm -L../zlibrary/core -lzlcore $(XML_LIB) $(ARCHIVER_LIB) -ldl
-else
-	LIBS = -lm -L../zlibrary/ui -lzlui-$(UI_TYPE) -L../zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
-endif
-
 TARGET = GeometricCalculator
 
 SUBDIRS = src src/document src/io src/model src/modelDecorator src/polynom src/translator src/ui src/calculator
@@ -22,7 +16,7 @@ all: .resources
 		fi; \
 	done;
 	@echo -n "Linking $(TARGET) ..."
-	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` $(LIBS)
+	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` $(CORE_LIBS)
 	@echo " OK"
 
 install: all do_install

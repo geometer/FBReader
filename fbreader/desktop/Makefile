@@ -4,24 +4,18 @@ include $(ROOTDIR)/makefiles/config.mk
 TARGET = FBReader
 
 VERSION = $(shell cat ../VERSION)
+DEBIAN_REVISION ?= 1
+DEBIAN_VERSION = $(VERSION)-$(DEBIAN_REVISION)
+ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
-TARBALL = fbreader-$(UI_TYPE)-$(VERSION).tgz
-DEBIAN_PACKAGE = fbreader-$(UI_TYPE)_$(VERSION)-1_i386.deb
+TARBALL = fbreader-$(VERSION).tgz
+DEBIAN_PACKAGE = fbreader-$(DEBIAN_VERSION)_i386.deb
 
 TMPDIR = tmp
 
 SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
-DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
-ifeq "$(UI_TYPE)" "gtk"
-  CONFLICTS = fbreader-qt,fbreader-qt4
-endif
-ifeq "$(UI_TYPE)" "qt"
-  CONFLICTS = fbreader-gtk,fbreader-qt4
-endif
-ifeq "$(UI_TYPE)" "qt4"
-  CONFLICTS = fbreader-gtk,fbreader-qt
-endif
+DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`, libzlui
 
 all: tarball debpackage
 	@cp $(TARBALL) $(DEBIAN_PACKAGE) ../..
@@ -44,13 +38,11 @@ tarball:
 	@$(RM_QUIET) $(TMPDIR)
 
 debpackage:
-	@cd ../../zlibrary; make DESTDIR=$(CURDIR)/$(TMPDIR) do_install
 	@cd ..; make DESTDIR=$(CURDIR)/$(TMPDIR) do_install
 	@mkdir -p $(TMPDIR)/DEBIAN
 	@sed -e "s/@VERSION@/$(VERSION)/" \
-		-e "s#@UI_TYPE@#$(UI_TYPE)#" \
 		-e "s#@DEPENDS@#$(DEPENDS)#" \
-		-e "s#@CONFLICTS@#$(CONFLICTS)#" \
+		-e "s#@ARCH@#$(ARCH)#" \
 		debian/control.in > $(TMPDIR)/DEBIAN/control
 	@fakeroot dpkg -b $(TMPDIR) $(DEBIAN_PACKAGE)
 	@$(RM_QUIET) $(TMPDIR)

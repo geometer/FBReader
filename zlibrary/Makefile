@@ -2,9 +2,12 @@ ROOTDIR = $(CURDIR)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-ARCHSUBDIRS = zaurus maemo
+ARCHSUBDIRS = zaurus maemo desktop
 
-default:
+all:
+	@$(MAKE) -C core
+	@$(MAKE) -C text
+	@$(MAKE) -C ui
 
 do_install:
 	@$(MAKE) -C core do_install
@@ -17,6 +20,9 @@ package:
 	fi;
 
 clean:
+	@$(MAKE) -C core clean
+	@$(MAKE) -C text clean
+	@$(MAKE) -C ui clean
 	@for target in $(ARCHSUBDIRS); do \
 		$(MAKE) -C $$target clean; \
 	done;

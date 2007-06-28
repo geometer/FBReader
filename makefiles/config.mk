@@ -43,6 +43,12 @@ ifeq "$(BUILD_SHARED_LIBRARY)" ""
   BUILD_SHARED_LIBRARY = yes
 endif
 
+ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore $(XML_LIB) $(ARCHIVER_LIB) -ldl
+else
+  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -lzlui-$(UI_TYPE) -L$(ROOTDIR)/zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+endif
+
 ifneq "$(BUILD_RESOURCE_OBJECT)" "yes"
 .resources:
 endif

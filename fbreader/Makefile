@@ -4,12 +4,6 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 
 include $(MAKEFILESDIR)/config.mk
 
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	LIBS = -lm -L$(ROOTDIR)/zlibrary/text -lzltext -L$(ROOTDIR)/zlibrary/core -lzlcore $(ENCA_LIB) $(XML_LIB) $(ARCHIVER_LIB) -ldl
-else
-	LIBS = -lm -L$(ROOTDIR)/zlibrary/text -lzltext -L$(ROOTDIR)/zlibrary/ui -lzlui-$(UI_TYPE) -L$(ROOTDIR)/zlibrary/core -lzlcore $(ENCA_LIB) $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
-endif
-
 TARGET = FBReader
 
 ALL_SUBDIRS = src src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/dummy src/formats/util src/external src/optionsDialog src/fbreader
@@ -24,7 +18,7 @@ all: .resources
 		fi; \
 	done;
 	@echo -n "Linking $(TARGET) ..."
-	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` $(LIBS)
+	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` -L$(ROOTDIR)/zlibrary/text -lzltext $(CORE_LIBS) $(ENCA_LIB)
 	@echo " OK"
 
 FBSHAREDIR = $(DESTDIR)$(SHAREDIR)/FBReader

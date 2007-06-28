@@ -1,7 +1,6 @@
-Package: fbreader-@UI_TYPE@
+Package: fbreader
 Version: @VERSION@
 Architecture: i386
 Depends: @DEPENDS@
-Conflicts: @CONFLICTS@
 Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
 Description: E-Book reader.
