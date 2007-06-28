@@ -5,21 +5,11 @@ LIBMAKE = $(MAKE) BUILD_SHARED_LIBRARY=$(BUILD_SHARED_LIBRARY)
 
 include $(ROOTDIR)/makefiles/arch/$(TARGET_ARCH).mk
 
-ifeq "$(BINDIR)" ""
-  BINDIR = $(INSTALLDIR)/bin
-endif
-ifeq "$(LIBDIR)" ""
-  LIBDIR = $(INSTALLDIR)/lib
-endif
-ifeq "$(SHAREDIR)" ""
-  SHAREDIR = $(INSTALLDIR)/share
-endif
-ifeq "$(BASEDIR)" ""
-  BASEDIR = $(SHAREDIR)
-endif
-ifeq "$(HOMEDIR)" ""
-  HOMEDIR = "~"
-endif
+BINDIR ?= $(INSTALLDIR)/bin
+LIBDIR ?= $(INSTALLDIR)/lib
+SHAREDIR ?= $(INSTALLDIR)/share
+BASEDIR ?= $(SHAREDIR)
+HOMEDIR ?= "~"
 
 CFLAGS += -DINSTALLDIR=\"$(INSTALLDIR)\" -DBASEDIR=\"$(BASEDIR)\" -DHOMEDIR=\"$(HOMEDIR)\" -DIMAGEDIR=\"$(IMAGEDIR)\" -DAPPIMAGEDIR=\"$(APPIMAGEDIR)\"
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
@@ -39,9 +29,7 @@ endif
 
 ZINCLUDE = -I $(ROOTDIR)/zlibrary/core/include -I $(ROOTDIR)/zlibrary/text/include
 
-ifeq "$(BUILD_SHARED_LIBRARY)" ""
-  BUILD_SHARED_LIBRARY = yes
-endif
+BUILD_SHARED_LIBRARY ?= yes
 
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
   CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore $(XML_LIB) $(ARCHIVER_LIB) -ldl
