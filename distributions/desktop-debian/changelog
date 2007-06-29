@@ -1,5 +1,6 @@
+fbreader (0.8.4z-2) stable; urgency=low
+  * postinst/postrm scripts were added
+ -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 29 Jun 2007 21:23:00 +0400
 fbreader (0.8.4z-1) stable; urgency=low
-
   * Initial release.
-
  -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 29 Jun 2007 17:53:00 +0400

@@ -40,6 +40,6 @@ clean:
 	done
 
 distclean: clean
-	rm -vf *.tgz *.ipk *.deb *.prc *.exe *.log
+	rm -vf *.tgz *.tar.gz *.ipk *.deb *.prc *.exe *.log *.dsc *.changes *.rpm
 
 archives: clean
