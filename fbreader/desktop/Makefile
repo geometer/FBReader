@@ -4,12 +4,8 @@ include $(ROOTDIR)/makefiles/config.mk
 TARGET = FBReader
 
 VERSION = $(shell cat ../VERSION)
-DEBIAN_REVISION ?= 1
-DEBIAN_VERSION = $(VERSION)-$(DEBIAN_REVISION)
-ARCH = $(shell dpkg-architecture -qDEB_HOST_ARCH)
 
 TARBALL = fbreader-$(VERSION).tgz
-DEBIAN_PACKAGE = fbreader-$(DEBIAN_VERSION)_i386.deb
 
 TMPDIR = tmp
 
@@ -17,8 +13,8 @@ SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
 DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`, libzlui
 
-all: tarball debpackage
-	@cp $(TARBALL) $(DEBIAN_PACKAGE) ../..
+all: tarball
+	@cp $(TARBALL) ../..
 
 install:
 	@install -d $(DESTDIR)/usr/share/applications
@@ -37,15 +33,5 @@ tarball:
 	@fakeroot tar czf $(TARBALL) -C $(TMPDIR) .
 	@$(RM_QUIET) $(TMPDIR)
 
-debpackage:
-	@cd ..; make DESTDIR=$(CURDIR)/$(TMPDIR) do_install
-	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(VERSION)/" \
-		-e "s#@DEPENDS@#$(DEPENDS)#" \
-		-e "s#@ARCH@#$(ARCH)#" \
-		debian/control.in > $(TMPDIR)/DEBIAN/control
-	@fakeroot dpkg -b $(TMPDIR) $(DEBIAN_PACKAGE)
-	@$(RM_QUIET) $(TMPDIR)
-
 clean:
-	@$(RM) $(TMPDIR) *.tgz *.deb *.rpm
+	@$(RM) $(TMPDIR) *.tgz *.rpm

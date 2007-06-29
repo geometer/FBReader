@@ -11,6 +11,6 @@ build_archive() {
 	rm -rf $dir
 }
 
-build_archive zlibrary "Makefile zlibrary makefiles"
+#build_archive zlibrary "Makefile zlibrary makefiles"
 build_archive fbreader "Makefile zlibrary fbreader makefiles README.build"
-build_archive GeometricCalculator "Makefile zlibrary GeometricCalculator makefiles"
+#build_archive GeometricCalculator "Makefile zlibrary GeometricCalculator makefiles"
