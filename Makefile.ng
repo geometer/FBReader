@@ -1,34 +1,37 @@
-#!/bin/sh
+VERSION = $(shell cat fbreader/VERSION)
+SRCDIR = $(CURDIR)/fbreader-$(VERSION)
+TMPDIR = $(CURDIR)/tmp
 
-build_source_archive() {
-	version=`cat fbreader/VERSION`
-	tmpdir=fbreader-$version
-	echo -en "Building source archive..."
-	mkdir $tmpdir
-	cp -r Makefile zlibrary fbreader makefiles README.build $tmpdir
-	rm -rf `find $tmpdir -name ".svn"`
-	pushd $tmpdir; make distclean 1> /dev/null; popd
-	tar czf fbreader-sources-$version.tgz $tmpdir
-	rm -rf $tmpdir
-	echo " OK"
-}
+#all: source_archive desktop_tarball desktop_debian
+all: desktop_debian
 
-build_desktop_debian_package() {
-	tmpdir=fbreader-desktop-debian
-	logfile=$PWD/build_desktop_debian_package.log
-	echo -en "Building desktop debian package..."
-	mkdir $tmpdir
-	cp -r Makefile zlibrary fbreader makefiles README.build $tmpdir
-	rm -rf `find $tmpdir -name ".svn"`
-	cp -r distributions/desktop-debian $tmpdir/debian
-	pushd $tmpdir; fakeroot dpkg-buildpackage 1>&2 2> $logfile; popd
-	rm -rf $tmpdir
-	rm $logfile
-	echo " OK"
-}
+source_archive:
+	@echo -en "Building source archive..."
+	@mkdir $(SRCDIR)
+	@cp -r Makefile zlibrary fbreader makefiles README.build $(SRCDIR)
+	@rm -rf `find $(SRCDIR) -name ".svn"`
+	@make -C $(SRCDIR) distclean 1> /dev/null 2>&1
+	@tar czf fbreader-sources-$(VERSION).tgz $(SRCDIR)
+	@rm -rf $(SRCDIR)
+	@echo " OK"
 
-build_source_archive
-build_desktop_debian_package
+desktop_tarball:
+	@echo -en "Building desktop tarball package..."
+	@touch desktop_tarball.log
+	@make -f distributions/desktop-tarball/Makefile 1> $@.log 2>&1
+	@rm $@.log
+	@echo " OK"
+
+desktop_debian:
+	@echo -en "Building desktop debian package..."
+	@mkdir $(TMPDIR)
+	@cp -r Makefile zlibrary fbreader makefiles $(TMPDIR)
+	@rm -rf `find $(TMPDIR) -name ".svn"`
+	@cp -r distributions/desktop-debian $(TMPDIR)/debian
+	@cd $(TMPDIR); fakeroot dpkg-buildpackage 1> $(CURDIR)/$@.log 2>&1; cd $(CURDIR)
+	@rm -rf $(TMPDIR)
+	@rm $@.log
+	@echo " OK"
 
 #if [ "$1" = "rebuild" ]; then
 #	FAILED_ONLY=yes

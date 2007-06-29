@@ -3,18 +3,9 @@ include $(ROOTDIR)/makefiles/config.mk
 
 TARGET = FBReader
 
-VERSION = $(shell cat ../VERSION)
-
-TARBALL = fbreader-$(VERSION).tgz
-
-TMPDIR = tmp
-
 SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
-DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`, libzlui
-
-all: tarball
-	@cp $(TARBALL) ../..
+default:
 
 install:
 	@install -d $(DESTDIR)/usr/share/applications
@@ -27,11 +18,5 @@ install:
 	@install -m 0644 ../data/default/keymap.desktop.xml $(SHARE_FBREADER)/default/keymap.xml
 	@install -m 0644 ../data/default/styles.desktop.xml $(SHARE_FBREADER)/default/styles.xml
 
-tarball:
-	@cd ../../zlibrary; make DESTDIR=$(CURDIR)/$(TMPDIR) do_install
-	@cd ..; make DESTDIR=$(CURDIR)/$(TMPDIR) do_install
-	@fakeroot tar czf $(TARBALL) -C $(TMPDIR) .
-	@$(RM_QUIET) $(TMPDIR)
-
 clean:
-	@$(RM) $(TMPDIR) *.tgz *.rpm
+	@$(RM) *.tgz *.rpm
