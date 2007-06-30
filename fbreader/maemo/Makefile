@@ -1,31 +1,17 @@
 ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-VERSION = $(shell cat ../VERSION)
-DEBIAN_REVISION ?= 1
-DEBIAN_VERSION = $(VERSION)-$(DEBIAN_REVISION)
-ARCH	= $(shell dpkg-architecture -qDEB_HOST_ARCH)
-PACKAGE_NAME = fbreader-$(UI_TYPE)
-PACKAGE_FILE = $(PACKAGE_NAME)_$(DEBIAN_VERSION)_$(ARCH).deb
-
 ifeq "$(UI_TYPE)" "maemo"
-PREFIX = /var/lib/install
 DBUSDIR = /usr/lib/dbus-1.0/services
-DEPENDS = maemo,libenca0,libzlibrary-maemo
 MENUDIR = $(DESTDIR)/etc/others-menu/extra_applications
-SECTION = utils
 else
-PREFIX =
 DBUSDIR = /usr/share/dbus-1/services
-DEPENDS = `dpkg-shlibdeps -O ../FBReader | sed -e 's/shlibs:Depends=//'`
 MENUDIR = $(DESTDIR)/etc/others-menu
-SECTION = user/tools
 endif
 
 TMPDIR = tmp
 
-all: package
-	@mv $(PACKAGE_FILE) ../..
+default:
 
 DESKTOP_FILE = FBReader.desktop
 SERVICE_FILE = FBReader.service
@@ -55,22 +41,5 @@ $(DESKTOP_FILE): $(DESKTOP_FILE).in
 $(SERVICE_FILE): $(SERVICE_FILE).in
 	@sed -e "s#@BINDIR@#$(BINDIR)#" < $< > $@
 
-package:
-	@mkdir -p $(TMPDIR)
-	@cd ..; make DESTDIR=$(CURDIR)/$(TMPDIR) do_install
-	@mkdir -p $(TMPDIR)/DEBIAN
-	@sed -e "s/@VERSION@/$(DEBIAN_VERSION)/" \
-		-e "s#@PACKAGE@#$(PACKAGE_NAME)#" \
-		-e "s#@ARCH@#$(ARCH)#" \
-		-e "s#@SIZE@#`du -s -k $(TMPDIR) | cut -f1`#" \
-		-e "s#@DEPENDS@#$(DEPENDS)#" \
-		-e "s#@SECTION@#$(SECTION)#" \
-		FBReader.control.in > $(TMPDIR)/DEBIAN/control
-ifeq "$(UI_TYPE)" "maemo2"
-	@install FBReader.postinst $(TMPDIR)/DEBIAN/postinst
-endif
-	@fakeroot dpkg-deb -b $(TMPDIR) $(PACKAGE_FILE)
-	@rm -rf $(TMPDIR)
-
 clean:
-	@$(RM) $(DESKTOP_FILE) $(SERVICE_FILE) *.deb
+	@$(RM) $(DESKTOP_FILE) $(SERVICE_FILE)

@@ -2,7 +2,7 @@ ROOTDIR = $(CURDIR)/..
 MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
-ARCHSUBDIRS = zaurus maemo
+ARCHSUBDIRS = zaurus
 
 all:
 	@$(MAKE) -C core

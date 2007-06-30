@@ -1,0 +1,37 @@
+Source: fbreader
+Priority: optional
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Standards-Version: 3.6.1
+Build-Depends: debhelper, libexpat1-dev
+
+Package: libzlibrary-maemo
+Section: libs
+Priority: optional
+Architecture: any
+Conflicts: fbreader-maemo (<< 0.8.0)
+Depends: ${shlibs:Depends}
+Description: Platform-dependent part of fbreader
+ Home page: http://www.fbreader.org/
+
+Package: fbreader-maemo
+Section: utils
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}, libenca0
+Description: e-book reader
+ FBReader is an e-book reader for UNIX/Windows computers.
+ .
+ Main features:
+  * supports several open e-book formats: fb2, html, chm, plucker,
+    palmdoc, ztxt, tcr (psion text), rtf, oeb, openreader, non-DRM'ed
+    mobipocket, plain text
+  * reads directly from tar, zip, gzip, bzip2 archives (you can have
+    several books in one archive)
+  * supports structured view for your e-book collection
+  * automatically determines encoding
+  * automatically generates table of contents
+  * keeps the last open book and the last read positions for all open books
+    between runs
+  * automatic hyphenation (patterns for several languages are included)
+ .
+ Home page: http://www.fbreader.org/

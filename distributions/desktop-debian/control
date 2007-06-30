@@ -3,7 +3,7 @@ Section: text
 Priority: optional
 Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Standards-Version: 3.6.1
-Build-Depends: debhelper (>= 5.0.22), libgtk2.0-dev, libqt3-mt-dev, libqt4-dev
+Build-Depends: debhelper (>= 5.0.22), libgtk2.0-dev, libqt3-mt-dev, libqt4-dev, libexpat1-dev, libenca-dev, libbz2-dev, libz-dev
 
 Package: libzlcore
 Section: libs

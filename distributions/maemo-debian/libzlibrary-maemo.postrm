@@ -2,6 +2,6 @@
 
 set -e
 
-if [ "$1" = "remove" ]; then
+if [ "$1" = "configure" ]; then
 	ldconfig
 fi

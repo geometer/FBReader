@@ -1,11 +1,23 @@
 VERSION = $(shell cat fbreader/VERSION)
-SRCDIR = $(CURDIR)/fbreader-$(VERSION)
+SRCDIR = fbreader-$(VERSION)
 TMPDIR = $(CURDIR)/tmp
 
-#all: source_archive desktop_tarball desktop_debian
-all: desktop_debian
+default:
+	@echo "usage:"
+	@echo "  make -f Makefile.ng <architecture>"
+	@echo "or"
+	@echo "  make -f Makefile.ng all"
+	@echo ""
+	@echo "available architectures are:"
+	@echo "  source-archive"
+	@echo "  maemo-debian"
+	@echo "  maemo2-debian"
+	@echo "  desktop-tarball"
+	@echo "  desktop-debian"
 
-source_archive:
+all: source-archive maemo-debian maemo2-debian desktop-tarball desktop-debian
+
+source-archive:
 	@echo -en "Building source archive..."
 	@mkdir $(SRCDIR)
 	@cp -r Makefile zlibrary fbreader makefiles README.build $(SRCDIR)
@@ -15,23 +27,52 @@ source_archive:
 	@rm -rf $(SRCDIR)
 	@echo " OK"
 
-desktop_tarball:
+desktop-tarball:
 	@echo -en "Building desktop tarball package..."
-	@touch desktop_tarball.log
 	@make -f distributions/desktop-tarball/Makefile 1> $@.log 2>&1
 	@rm $@.log
 	@echo " OK"
 
-desktop_debian:
+desktop-debian:
 	@echo -en "Building desktop debian package..."
 	@mkdir $(TMPDIR)
 	@cp -r Makefile zlibrary fbreader makefiles $(TMPDIR)
 	@rm -rf `find $(TMPDIR) -name ".svn"`
 	@cp -r distributions/desktop-debian $(TMPDIR)/debian
-	@cd $(TMPDIR); fakeroot dpkg-buildpackage 1> $(CURDIR)/$@.log 2>&1; cd $(CURDIR)
+	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot 1> $(CURDIR)/$@.log 2>&1; cd $(CURDIR)
 	@rm -rf $(TMPDIR)
 	@rm $@.log
 	@echo " OK"
+
+maemo2-debian:
+	@echo -en "Building maemo2 debian package..."
+	@/scratchbox/login sbox-config -st SDK_ARMEL
+	@/scratchbox/login -d src/zaurus make -f Makefile.ng maemo2-debian-scratchbox 1> /dev/null
+	@echo " OK"
+
+maemo2-debian-scratchbox:
+	@mkdir $(TMPDIR)
+	@cp -r Makefile zlibrary fbreader makefiles $(TMPDIR)
+	@rm -rf `find $(TMPDIR) -name ".svn"`
+	@cp -r distributions/maemo2-debian $(TMPDIR)/debian
+	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$@.log 2>&1; cd $(CURDIR)
+	@rm -rf $(TMPDIR)
+	@rm $@.log
+
+maemo-debian:
+	@echo -en "Building maemo debian package..."
+	@/scratchbox/login sbox-config -st SDK_ARM
+	@/scratchbox/login -d src/zaurus make -f Makefile.ng maemo-debian-scratchbox 1> /dev/null
+	@echo " OK"
+
+maemo-debian-scratchbox:
+	@mkdir $(TMPDIR)
+	@cp -r Makefile zlibrary fbreader makefiles $(TMPDIR)
+	@rm -rf `find $(TMPDIR) -name ".svn"`
+	@cp -r distributions/maemo-debian $(TMPDIR)/debian
+	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$@.log 2>&1; cd $(CURDIR)
+	@rm -rf $(TMPDIR)
+	@rm $@.log
 
 #if [ "$1" = "rebuild" ]; then
 #	FAILED_ONLY=yes
