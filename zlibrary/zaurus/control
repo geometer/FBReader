@@ -1,6 +1,6 @@
 Priority: optional
 Section: qpe/applications
-Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Architecture: arm
 License: GPLv2
 Description: Platform-dependent part of FBReader
