@@ -1,22 +1,7 @@
 ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-DEB_VERSION = 2.0
-
-TDIR = __ipk
-
-DATADIR = $(TDIR)/data
-CTRLDIR = $(TDIR)/control
-
-PACKAGENAME = FBReader-$(UI_TYPE)
-FILE = $(PACKAGENAME).control
-
-version = $(shell cat ../VERSION)
-depends = $(shell sed -n -e "s/^Depends: *//p" $(FILE))
-package = $(PACKAGENAME)_$(version)_$(TARGET_ARCH)_armv5tel.ipk
-
-all: .tmpdir .copyfiles $(CTRLDIR)/control $(package) .rmtmpdir
-	@mv $(package) ../..
+default:
 
 install:
 	@install -m 0644 ../data/default/config.pdaxrom.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
@@ -31,30 +16,4 @@ install:
 	@install -d $(DESTDIR)/$(SHAREDIR)/applications
 	@install -m 0644 data/share/applications/FBReader.desktop $(DESTDIR)/$(SHAREDIR)/applications
 
-.tmpdir:
-	@rm -rf $(TDIR)
-	@mkdir -p $(DATADIR) $(CTRLDIR)
-
-.rmtmpdir:
-	@rm -rf $(TDIR)
-
-.copyfiles:
-	@cd ../..; make DESTDIR=$(CURDIR)/$(DATADIR) do_install
-
-$(CTRLDIR)/control: $(FILE)
-	@echo "Package: $(PACKAGENAME)" > $@
-	@echo "Version: $(version)" >> $@
-	@echo "Depends: $(depends)" >> $@
-	@egrep -v "^(Depends):" $(FILE) >> $@
-
-$(package):
-	@echo -n "Packaging..."
-	@echo "$(DEB_VERSION)" > $(TDIR)/debian-binary
-	@tar czf $(TDIR)/control.tar.gz -C $(CTRLDIR) .
-	@tar czf $(TDIR)/data.tar.gz -C $(DATADIR) .
-	@rm -rf $(CTRLDIR) $(DATADIR)
-	@tar czf $(package) -C $(TDIR) ./debian-binary ./control.tar.gz ./data.tar.gz
-	@echo " OK"
-
-clean: .rmtmpdir
-	@rm -vf *.ipk
+clean:

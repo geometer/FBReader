@@ -1,0 +1,10 @@
+Package: FBReader
+Version: @VERSION@
+Filename: ./FBReader_@VERSION@_pdaxrom_armv5tel.ipk
+Depends: expat,libenca,bzip2
+Priority: optional
+Section: Office
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Architecture: armv5tel
+License: GPLv2
+Description: e-book reader (http://www.fbreader.org/)

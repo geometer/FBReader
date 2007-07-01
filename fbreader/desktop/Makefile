@@ -19,4 +19,3 @@ install:
 	@install -m 0644 ../data/default/styles.desktop.xml $(SHARE_FBREADER)/default/styles.xml
 
 clean:
-	@$(RM) *.tgz *.rpm

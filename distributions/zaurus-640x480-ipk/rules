@@ -1,5 +1,8 @@
 build:
-	@make TARGET_ARCH=zaurus UI_TYPE=qtopia-640x480
+	@make -C zlibrary/core TARGET_ARCH=zaurus UI_TYPE=qtopia-640x480
+	@make -C zlibrary/text TARGET_ARCH=zaurus UI_TYPE=qtopia-640x480
+	@make -C zlibrary/ui TARGET_ARCH=zaurus UI_TYPE=qtopia-640x480
+	@make -C fbreader TARGET_ARCH=zaurus UI_TYPE=qtopia-640x480
 
 clean:
 	@make TARGET_ARCH=zaurus UI_TYPE=qtopia-640x480 clean

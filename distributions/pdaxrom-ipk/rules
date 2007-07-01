@@ -1,0 +1,16 @@
+build:
+	@make -C zlibrary/core TARGET_ARCH=pdaxrom UI_TYPE=dummy
+	@make -C zlibrary/text TARGET_ARCH=pdaxrom UI_TYPE=dummy
+	@make -C zlibrary/ui TARGET_ARCH=pdaxrom UI_TYPE=gtk
+	@make -C zlibrary/ui TARGET_ARCH=pdaxrom UI_TYPE=qt
+	@make -C fbreader TARGET_ARCH=pdaxrom UI_TYPE=dummy
+
+clean:
+	@make TARGET_ARCH=pdaxrom UI_TYPE=dummy clean
+
+install-fbreader:
+	@make -C zlibrary/core TARGET_ARCH=pdaxrom UI_TYPE=dummy DESTDIR=$(DESTDIR) do_install
+	@make -C zlibrary/text TARGET_ARCH=pdaxrom UI_TYPE=dummy DESTDIR=$(DESTDIR) do_install
+	@make -C zlibrary/ui TARGET_ARCH=pdaxrom UI_TYPE=gtk DESTDIR=$(DESTDIR) do_install
+	@make -C zlibrary/ui TARGET_ARCH=pdaxrom UI_TYPE=qt DESTDIR=$(DESTDIR) do_install
+	@make -C fbreader TARGET_ARCH=pdaxrom UI_TYPE=dummy DESTDIR=$(DESTDIR) do_install

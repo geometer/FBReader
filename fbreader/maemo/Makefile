@@ -9,8 +9,6 @@ DBUSDIR = /usr/share/dbus-1/services
 MENUDIR = $(DESTDIR)/etc/others-menu
 endif
 
-TMPDIR = tmp
-
 default:
 
 DESKTOP_FILE = FBReader.desktop
