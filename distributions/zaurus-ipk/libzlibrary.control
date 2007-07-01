@@ -1,3 +1,8 @@
+Package: libzlibrary-qtopia-@RESOLUTION@
+Installed-Size: @SIZE@
+Filename: ./libzlibrary-qtopia-@RESOLUTION@_@VERSION@_arm.ipk
+Version: @VERSION@
+Depends: expat,libbz2
 Priority: optional
 Section: qpe/applications
 Maintainer: Nikolay Pultsin <geometer@fbreader.org>

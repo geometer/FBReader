@@ -1,6 +1,0 @@
-Priority: optional
-Section: qpe/applications
-Maintainer: Nikolay Pultsin <geometer@fbreader.org>
-Architecture: arm
-License: GPLv2
-Description: E-book reader.
