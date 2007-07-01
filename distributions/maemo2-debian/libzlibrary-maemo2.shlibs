@@ -1,2 +1,2 @@
-libzlcore 0.8.4z libzlibrary-maemo2 (= 0.8.4z-1)
-libzltext 0.8.4z libzlibrary-maemo2 (= 0.8.4z-1)
+libzlcore @VERSION@ libzlibrary-maemo2 (= @VERSION@-1)
+libzltext @VERSION@ libzlibrary-maemo2 (= @VERSION@-1)

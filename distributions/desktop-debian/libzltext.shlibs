@@ -1,1 +1,1 @@
-libzltext 0.8.4z libzltext (= 0.8.4z-1)
+libzltext @VERSION@ libzltext (= @VERSION@-1)

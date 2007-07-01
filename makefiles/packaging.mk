@@ -1,9 +1,15 @@
+VERSION = $(shell cat fbreader/VERSION)
+
 .debian:
 	@echo -en "Building $(ARCHITECTURE) debian package..."
 	@mkdir $(TMPDIR)
 	@cp -r Makefile zlibrary fbreader makefiles $(TMPDIR)
 	@rm -rf `find $(TMPDIR) -name ".svn"`
-	@cp -r distributions/$(ARCHITECTURE)-debian $(TMPDIR)/debian
+	@mkdir $(TMPDIR)/debian
+	@for file in distributions/$(ARCHITECTURE)-debian/*; do \
+		sed -e "s#@VERSION@#$(VERSION)#g" $$file > $(TMPDIR)/debian/`basename $$file`; \
+		chmod --reference $$file $(TMPDIR)/debian/`basename $$file`; \
+	done
 	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$(ARCHITECTURE)-debian.log 2>&1; cd $(CURDIR)
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-debian.log
@@ -12,12 +18,12 @@
 .ipk:
 	@echo -en "Building $(ARCHITECTURE) ipk package..."
 	@make -f distributions/$(ARCHITECTURE)-ipk/rules build 1> $(ARCHITECTURE)-ipk.log 2>&1
-	@for controlfile in $(wildcard distributions/$(ARCHITECTURE)-ipk/*.control); do \
+	@for controlfile in distributions/$(ARCHITECTURE)-ipk/*.control; do \
 		mkdir $(TMPDIR); \
 		mkdir $(TMPDIR)/data; \
 		make -f distributions/$(ARCHITECTURE)-ipk/rules DESTDIR=$(TMPDIR)/data install-`basename $$controlfile .control` 1>> $(ARCHITECTURE)-ipk.log 2>&1; \
 		sed \
-			-e "s#@VERSION@#`cat zlibrary/VERSION`#" \
+			-e "s#@VERSION@#$(VERSION)#" \
 			-e "s#@SIZE@#`du -s -b $(TMPDIR)/data | cut -f1`#" \
 			$$controlfile > $(TMPDIR)/control; \
 		tar czf $(TMPDIR)/control.tar.gz -C $(TMPDIR) ./control; \

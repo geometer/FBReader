@@ -1,1 +1,1 @@
-libzlcore 0.8.4z libzlcore (= 0.8.4z-1)
+libzlcore @VERSION@ libzlcore (= @VERSION@-1)
