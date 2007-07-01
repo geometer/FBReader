@@ -1,7 +1,0 @@
-Priority: optional
-Section: Office
-Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
-Architecture: armv5tel
-Depends: gtk,expat,libenca,bzip2
-License: GPLv2
-Description: E-book reader.

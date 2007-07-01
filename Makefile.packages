@@ -20,7 +20,7 @@ default:
 	@echo "  zaurus-240x320-ipk"
 	@echo "  pdaxrom-ipk"
 
-all: source-archive maemo-debian maemo2-debian desktop-tarball desktop-debian zaurus-640x480-ipk zaurus-240x320-ipk
+all: source-archive maemo-debian maemo2-debian desktop-tarball desktop-debian zaurus-640x480-ipk zaurus-240x320-ipk pdaxrom-ipk
 
 source-archive:
 	@echo -en "Building source archive..."
