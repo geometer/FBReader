@@ -1,8 +1,8 @@
 Package: FBReader
 Installed-Size: @SIZE@
-Filename: ./FBReader_@VERSION@_@RESOLUTION@_arm.ipk
+Filename: ./FBReader_@VERSION@_640x480_arm.ipk
 Version: @VERSION@
-Depends: libzlibrary-qtopia-@RESOLUTION@,libenca
+Depends: libzlibrary-qtopia-640x480,libenca
 Priority: optional
 Section: qpe/applications
 Maintainer: Nikolay Pultsin <geometer@fbreader.org>

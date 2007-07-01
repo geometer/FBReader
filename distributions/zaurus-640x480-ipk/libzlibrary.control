@@ -1,0 +1,11 @@
+Package: libzlibrary-qtopia-640x480
+Installed-Size: @SIZE@
+Filename: ./libzlibrary-qtopia-640x480_@VERSION@_arm.ipk
+Version: @VERSION@
+Depends: expat,libbz2
+Priority: optional
+Section: qpe/applications
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Architecture: arm
+License: GPLv2
+Description: Platform-dependent part of FBReader

@@ -1,0 +1,11 @@
+Package: FBReader
+Installed-Size: @SIZE@
+Filename: ./FBReader_@VERSION@_240x320_arm.ipk
+Version: @VERSION@
+Depends: libzlibrary-qtopia-240x320,libenca
+Priority: optional
+Section: qpe/applications
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Architecture: arm
+License: GPLv2
+Description: E-book reader.
