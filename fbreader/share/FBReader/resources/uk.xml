@@ -48,7 +48,7 @@
 		<node name="find" value="Пошук"/>
 		<node name="findnext" value="Знайти наступний"/>
 		<node name="findprev" value="Знайти попередній"/>
-		<node name="bookinfo" value="Інформация про книгу"/>
+		<node name="bookinfo" value="Інформацiя про книгу"/>
 		<node name="settings" value="Налаштування"/>
 		<node name="rotatescreen" value="Повернути текст"/>
 		<node name="help" value="Про програму"/>
@@ -61,7 +61,7 @@
 			<node name="title" value="FBReader - Налаштування"/>
 			<node name="tab">
 				<node name="General" value="Загальні налаштування">
-					<node name="bookPath" value="Теки з книгами"/>
+					<node name="bookPath" value="Каталоги з книгами"/>
 					<node name="lookInSubdirectories" value="Шукати книги в підтеках"/>
 					<node name="recentListSize" value="Розмір списку прочитаних книг"/>
 					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
@@ -82,15 +82,15 @@
 					<node name="tocMarks" value="Показувати помітки початку"/>
 					<node name="navigation" value="Реагувати на натискання"/>
 				</node>
-				<node name="Scrolling" value="Листання">
-					<node name="optionsFor" value="Налаштування листання">
+				<node name="Scrolling" value="Перегортання">
+					<node name="optionsFor" value="Налаштування перегортання">
 						<node name="large" value="на велику відстань"/>
 						<node name="small" value="на невелику відстань"/>
 						<node name="mouse" value="колесом мишки"/>
 						<node name="finger" value="натисканням пальця"/>
 					</node>
 					<node name="delay" value="Затримка, мілісекунд"/>
-					<node name="mode" value="Листання">
+					<node name="mode" value="Перегортання">
 						<node name="noOverlapping" value="без перекриття"/>
 						<node name="keepLines" value="перекриває кілька рядків"/>
 						<node name="scrollLines" value="зсовує кілька рядків"/>
@@ -170,7 +170,7 @@
 						<node name="toc" value="Показати зміст"/>
 						<node name="gotoHome" value="Перейти до початку тексту"/>
 						<node name="gotoSectionStart" value="Перейти до початку розділу"/>
-						<node name="gotoSectionEnd" value="Перейти до кінця рщзділу"/>
+						<node name="gotoSectionEnd" value="Перейти до кінця розділу"/>
 						<node name="nextTOCSection" value="Перейти до наступної глави"/>
 						<node name="previousTOCSection" value="Перейти до попередньої глави"/>
 						<node name="largeScrollForward" value="Прокрутити вперед (на більшу відстань)"/>
@@ -179,9 +179,9 @@
 						<node name="smallScrollBackward" value="Прокрутити назад (на невелику відстань)"/>
 						<node name="undo" value="Скасувати перехід"/>
 						<node name="redo" value="Повторити перехід"/>
-						<node name="copyToClipboard" value="Скопіювати помічений текст до буфера"/>
-						<node name="openInDictionary" value="Відкрити помічений текст у словнику"/>
-						<node name="clearSelection" value="Зняти помітку"/>
+						<node name="copyToClipboard" value="Скопіювати позначений текст до буфера"/>
+						<node name="openInDictionary" value="Відкрити позначений текст у словнику"/>
+						<node name="clearSelection" value="Зняти позначку"/>
 						<node name="search" value="Показати діалог пошуку"/>
 						<node name="findPrevious" value="Шукати назад"/>
 						<node name="findNext" value="Шукати вперед"/>
@@ -197,7 +197,7 @@
 						<node name="cancel" value="Відмінити поточний режим"/>
 						<node name="quit" value="Вийти з програми"/>
 					</node>
-					<node name="quitOnCancel" value="Виходити з програми"/>
+					<node name="quitOnCancel" value="Вийти з програми"/>
 				</node>
 				<node name="Config" value="Налаштування">
 					<node name="autoSave" value="Автоматично зберігати стан"/>
@@ -322,7 +322,7 @@
 	</node>
 	<node name="mobipocketPlugin">
 		<node name="unknown" value="невідома помилка"/>
-		<node name="unsupportedCompressionMethod" value="метод стискання, що не підтримується"/>
+		<node name="unsupportedCompressionMethod" value="метод натискання, що не підтримується"/>
 		<node name="encriptedFile" value="файл захищений DRM"/>
 	</node>
 </resources>
