@@ -57,7 +57,7 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WSt
 	if (main == 0) {
 		main = QApplication::desktop();
 	}
-	std::cerr << main->x() << ";" << main->y() << ";" << main->width() << ";" main->height() << "\n";
+	std::cerr << main->x() << ";" << main->y() << ";" << main->width() << ";" << main->height() << "\n";
 	move(
 		main->x() + main->width() / 2 - label->width() / 2 - 10,
 		main->y() + main->height() / 2 - label->height() / 2 - 10
