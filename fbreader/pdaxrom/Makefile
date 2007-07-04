@@ -1,7 +1,7 @@
 ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-default:
+all:
 
 install:
 	@install -m 0644 ../data/default/config.pdaxrom.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml

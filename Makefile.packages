@@ -48,7 +48,7 @@ maemo2-debian:
 
 maemo-debian:
 	@/scratchbox/login sbox-config -st SDK_ARM
-	@/scratchbox/login -d src/zaurus $(MAKE_PACKAGE) Makefile.packages ARCHITECTURE=maemo TMPDIR=$(TMPDIR) .debian
+	@/scratchbox/login -d src/zaurus $(MAKE_PACKAGE) ARCHITECTURE=maemo TMPDIR=$(TMPDIR) .debian
 
 zaurus-640x480-ipk:
 	@$(MAKE_PACKAGE) ARCHITECTURE=zaurus-640x480 TMPDIR=$(TMPDIR) .ipk

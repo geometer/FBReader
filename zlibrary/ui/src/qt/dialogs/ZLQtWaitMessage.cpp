@@ -20,6 +20,8 @@
 
 #include <unistd.h>
 
+#include <iostream>
+
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qwidget.h>
@@ -47,8 +49,15 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WSt
 	layout.add(label);
 
 	if (main == 0) {
+		std::cerr << "main is null\n";
+	} else {
+		std::cerr << "main is not null\n";
+	}
+
+	if (main == 0) {
 		main = QApplication::desktop();
 	}
+	std::cerr << main->x() << ";" << main->y() << ";" << main->width() << ";" main->height() << "\n";
 	move(
 		main->x() + main->width() / 2 - label->width() / 2 - 10,
 		main->y() + main->height() / 2 - label->height() / 2 - 10

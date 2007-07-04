@@ -26,6 +26,22 @@
 #include <ZLView.h>
 #include <ZLApplication.h>
 
+class ZLQtApplicationWindow;
+
+class ZLQtViewWidgetPositionInfo {
+
+public:
+	ZLQtViewWidgetPositionInfo(const ZLQtApplicationWindow &window);
+
+	int x() const;
+	int y() const;
+	int width() const;
+	int height() const;
+
+private:
+	const ZLQtApplicationWindow &myWindow;
+};
+
 class ZLQtViewWidget : public ZLViewWidget {
 
 private:
@@ -39,6 +55,7 @@ private:
 		void mousePressEvent(QMouseEvent *event);
 		void mouseReleaseEvent(QMouseEvent *event);
 		void mouseMoveEvent(QMouseEvent *event);
+		void resizeEvent(QResizeEvent *event);
 
 		int x(const QMouseEvent *event) const;
 		int y(const QMouseEvent *event) const;
@@ -48,8 +65,9 @@ private:
 	};
 	
 public:
-	ZLQtViewWidget(QWidget *parent, ZLApplication *application);
+	ZLQtViewWidget(QWidget *parent, ZLApplication *application, const ZLQtViewWidgetPositionInfo &positionInfo);
 	QWidget *widget();
+	const ZLQtViewWidgetPositionInfo &positionInfo() const;
 
 private:
 	void repaint();
@@ -58,6 +76,7 @@ private:
 private:
 	ZLQtViewWidgetInternal *myQWidget;
 	ZLApplication *myApplication;
+	const ZLQtViewWidgetPositionInfo myPositionInfo;
 };
 
 inline QWidget *ZLQtViewWidget::widget() { return myQWidget; }

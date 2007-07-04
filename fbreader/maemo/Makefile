@@ -9,7 +9,7 @@ DBUSDIR = /usr/share/dbus-1/services
 MENUDIR = $(DESTDIR)/etc/others-menu
 endif
 
-default:
+all:
 
 DESKTOP_FILE = FBReader.desktop
 SERVICE_FILE = FBReader.service

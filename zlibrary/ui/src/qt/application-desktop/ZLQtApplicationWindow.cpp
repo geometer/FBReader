@@ -232,8 +232,29 @@ void ZLQtApplicationWindow::refresh() {
 	ZLApplicationWindow::refresh();
 }
 
+ZLQtViewWidgetPositionInfo::ZLQtViewWidgetPositionInfo(const ZLQtApplicationWindow &window) : myWindow(window) {
+}
+
+int ZLQtViewWidgetPositionInfo::x() const {
+	return 0;
+}
+
+int ZLQtViewWidgetPositionInfo::y() const {
+	return ((myWindow.myToolBar != 0) && myWindow.myToolBar->isVisible()) ?
+		myWindow.myToolBar->height() : 0;
+}
+
+int ZLQtViewWidgetPositionInfo::width() const {
+	return myWindow.width();
+}
+
+int ZLQtViewWidgetPositionInfo::height() const {
+	return myWindow.height() - y();
+}
+
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
-	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
+	ZLQtViewWidgetPositionInfo positionInfo(*this);
+	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application(), positionInfo);
 	setCentralWidget(viewWidget->widget());
 	viewWidget->widget()->show();
 	return viewWidget;

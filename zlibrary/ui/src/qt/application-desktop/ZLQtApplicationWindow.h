@@ -76,6 +76,8 @@ friend class ZLQtToolBarAction;
 
 	bool myCursorIsHyperlink;
 	QCursor myStoredCursor;
+
+friend class ZLQtViewWidgetPositionInfo;
 };
 
 class ZLQtToolBarAction : public QAction {
@@ -90,6 +92,5 @@ private slots:
 private:
 	ZLApplication::Toolbar::ButtonItem &myItem;
 };
-
 
 #endif /* __ZLQTAPPLICATIONWINDOW_H__ */

@@ -28,8 +28,12 @@ ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, 
 	setBackgroundMode(NoBackground);
 }
 
-ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application) : ZLViewWidget((ZLViewWidget::Angle)application->AngleStateOption.value()), myApplication(application) {
+ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application, const ZLQtViewWidgetPositionInfo &positionInfo) : ZLViewWidget((ZLViewWidget::Angle)application->AngleStateOption.value()), myApplication(application), myPositionInfo(positionInfo) {
 	myQWidget = new ZLQtViewWidgetInternal(parent, *this);
+}
+
+const ZLQtViewWidgetPositionInfo &ZLQtViewWidget::positionInfo() const {
+	return myPositionInfo;
 }
 
 void ZLQtViewWidget::trackStylus(bool track) {
@@ -134,4 +138,21 @@ int ZLQtViewWidget::ZLQtViewWidgetInternal::y(const QMouseEvent *event) const {
 
 void ZLQtViewWidget::repaint()	{
 	myQWidget->repaint(false);
+}
+
+void ZLQtViewWidget::ZLQtViewWidgetInternal::resizeEvent(QResizeEvent*) {
+	const ZLQtViewWidgetPositionInfo &info = myHolder.positionInfo();
+
+	const int x = info.x();
+	const int y = info.y();
+	const QPoint position = pos();
+	if ((x != position.x()) || (y != position.y())) {
+		move(x, y);
+	}
+
+	const int width = info.width();
+	const int height = info.height();
+	if ((width != this->width()) || (height != this->height())) {
+		resize(width, height);
+	}
 }

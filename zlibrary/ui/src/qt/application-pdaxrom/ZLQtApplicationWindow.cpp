@@ -138,8 +138,29 @@ bool ZLQtApplicationWindow::isFullKeyboardControlSupported() const {
 void ZLQtApplicationWindow::grabAllKeys(bool) {
 }
 
+ZLQtViewWidgetPositionInfo::ZLQtViewWidgetPositionInfo(const ZLQtApplicationWindow &window) : myWindow(window) {
+}
+
+int ZLQtViewWidgetPositionInfo::x() const {
+	return 0;
+}
+
+int ZLQtViewWidgetPositionInfo::y() const {
+	return ((myWindow.menuBar() != 0) && myWindow.menuBar()->isVisible()) ?
+		myWindow.menuBar()->height() : 0;
+}
+
+int ZLQtViewWidgetPositionInfo::width() const {
+	return myWindow.width();
+}
+
+int ZLQtViewWidgetPositionInfo::height() const {
+	return myWindow.height() - y();
+}
+
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
-	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
+	ZLQtViewWidgetPositionInfo positionInfo(*this);
+	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application(), positionInfo);
 	setCentralWidget(viewWidget->widget());
 	viewWidget->widget()->show();
 	return viewWidget;

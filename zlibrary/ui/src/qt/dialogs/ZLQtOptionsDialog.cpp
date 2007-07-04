@@ -30,7 +30,8 @@
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QTabDialog(0, 0, true), ZLDesktopOptionsDialog(resource, applyAction) {
 	setCaption(::qtString(ZLOptionsDialog::caption()));
 	setOkButton(::qtButtonName(ZLDialogManager::OK_BUTTON));
-	setCancelButton(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
+	setHelpButton(::qtButtonName(ZLDialogManager::CANCEL_BUTTON));
+	connect(this, SIGNAL(helpButtonPressed()), this, SLOT(reject()));
 	if (showApplyButton) {
 		setApplyButton(::qtButtonName(ZLDialogManager::APPLY_BUTTON));
 		connect(this, SIGNAL(applyButtonPressed()), this, SLOT(apply()));
