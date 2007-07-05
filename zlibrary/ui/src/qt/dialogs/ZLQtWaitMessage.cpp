@@ -20,18 +20,15 @@
 
 #include <unistd.h>
 
-#include <iostream>
-
 #include <qapplication.h>
 #include <qcursor.h>
 #include <qwidget.h>
-#include <qlabel.h>
-#include <qlayout.h>
+#include <qpainter.h>
 
 #include "ZLQtWaitMessage.h"
 #include "ZLQtUtil.h"
 
-ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Splash) {
+ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WStyle_Splash), myLabelText(::qtString(message)) {
 	QWidget *main = qApp->mainWidget();
 	if (main != 0) {
 		myCursorIsStored = true;
@@ -44,25 +41,20 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WSt
 
 	qApp->processEvents();
 
-	QHBoxLayout layout(this, 10);
-	QLabel *label = new QLabel(::qtString(message), this);
-	layout.add(label);
-
-	if (main == 0) {
-		std::cerr << "main is null\n";
-	} else {
-		std::cerr << "main is not null\n";
-	}
-
 	if (main == 0) {
 		main = QApplication::desktop();
 	}
-	std::cerr << main->x() << ";" << main->y() << ";" << main->width() << ";" << main->height() << "\n";
-	move(
-		main->x() + main->width() / 2 - label->width() / 2 - 10,
-		main->y() + main->height() / 2 - label->height() / 2 - 10
-	);
+	QPoint position = main->mapToGlobal(main->pos());
+	QFontMetrics metrics = fontMetrics();
+	const int w = metrics.width(myLabelText) + 20;
+	const int h = metrics.height() + 20;
+	resize(1, 1);
 	show();
+	setGeometry(
+		position.x() + (main->width() - w) / 2,
+		position.y() + (main->height() - h) / 2,
+		w, h
+	);
 
 	qApp->processEvents();
 	usleep(5000);
@@ -76,4 +68,11 @@ ZLQtWaitMessage::~ZLQtWaitMessage() {
 			main->setCursor(myStoredCursor);
 		}
 	}
+}
+
+void ZLQtWaitMessage::paintEvent(QPaintEvent *event) {
+	QPainter painter;
+	painter.begin(this);
+	painter.drawText(10, fontMetrics().height() - fontMetrics().descent() + 10, myLabelText);
+	painter.end();
 }

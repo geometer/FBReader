@@ -32,9 +32,12 @@ public:
 	ZLQtWaitMessage(const std::string &message);
 	~ZLQtWaitMessage();
 
+	void paintEvent(QPaintEvent *event);
+
 private:
 	QCursor myStoredCursor;
 	bool myCursorIsStored;
+	const QString myLabelText;
 };
 
 #endif /* __ZLQTWAITMESSAGE_H__ */

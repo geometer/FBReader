@@ -177,7 +177,14 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						if (*ptr == ';') {
 							specialString.append(start, ptr - start);
 							int number = specialSymbolNumber(state_special, specialString);
-							if (number != 0) {
+							if ((128 <= number) && (number <= 159)) {
+								char ch = number;
+								if (state == PS_SPECIAL) {
+									characterDataHandler(&ch, 1, true);
+								} else {
+									myConverter->convert(attributeValueString, &ch, &ch + 1);
+								}
+							} else if (number != 0) {
 								char buffer[4];
 								int len = ZLUnicodeUtil::ucs2ToUtf8(buffer, number);
 								if (state == PS_SPECIAL) {
