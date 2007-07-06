@@ -76,7 +76,7 @@ nsi:
 	@sed "s#@VERSION@#$(VERSION)#" distributions/nsi/$(ARCHITECTURE)/control.nsi > $(TMPDIR)/control.nsi
 	@cd $(TMPDIR); makensis control.nsi 1>> $(CURDIR)/$(ARCHITECTURE)-nsi.log 2>&1
 	@mv $(TMPDIR)/*.exe .
-	#@make -f distributions/nsi/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
+	@make -f distributions/nsi/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-nsi.log
 	@echo " OK"
