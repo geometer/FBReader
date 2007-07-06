@@ -35,7 +35,7 @@ source-archive:
 
 desktop-tarball:
 	@echo -en "Building desktop tarball package..."
-	@make -f distributions/desktop-tarball/Makefile 1> $@.log 2>&1
+	@make -f distributions/tarball/desktop/Makefile 1> $@.log 2>&1
 	@make clean 1> /dev/null 2>&1
 	@rm $@.log
 	@echo " OK"

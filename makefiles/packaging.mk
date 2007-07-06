@@ -1,3 +1,4 @@
+TMPDIR=$(CURDIR)/tmp
 VERSION = $(shell cat fbreader/VERSION)
 
 .debian:
@@ -6,7 +7,7 @@ VERSION = $(shell cat fbreader/VERSION)
 	@cp -r Makefile zlibrary fbreader makefiles $(TMPDIR)
 	@rm -rf `find $(TMPDIR) -name ".svn"`
 	@mkdir $(TMPDIR)/debian
-	@for file in distributions/$(ARCHITECTURE)-debian/*; do \
+	@for file in distributions/debian/$(ARCHITECTURE)/*; do \
 		sed -e "s#@VERSION@#$(VERSION)#g" $$file > $(TMPDIR)/debian/`basename $$file`; \
 		chmod --reference $$file $(TMPDIR)/debian/`basename $$file`; \
 	done
@@ -17,11 +18,11 @@ VERSION = $(shell cat fbreader/VERSION)
 
 .ipk:
 	@echo -en "Building $(ARCHITECTURE) ipk package..."
-	@make -f distributions/$(ARCHITECTURE)-ipk/rules build 1> $(ARCHITECTURE)-ipk.log 2>&1
-	@for controlfile in distributions/$(ARCHITECTURE)-ipk/*.control; do \
+	@make -f distributions/ipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-ipk.log 2>&1
+	@for controlfile in distributions/ipk/$(ARCHITECTURE)/*.control; do \
 		mkdir $(TMPDIR); \
 		mkdir $(TMPDIR)/data; \
-		make -f distributions/$(ARCHITECTURE)-ipk/rules DESTDIR=$(TMPDIR)/data install-`basename $$controlfile .control` 1>> $(ARCHITECTURE)-ipk.log 2>&1; \
+		make -f distributions/ipk/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR)/data install-`basename $$controlfile .control` 1>> $(ARCHITECTURE)-ipk.log 2>&1; \
 		sed \
 			-e "s#@VERSION@#$(VERSION)#" \
 			-e "s#@SIZE@#`du -s -b $(TMPDIR)/data | cut -f1`#" \
@@ -34,4 +35,4 @@ VERSION = $(shell cat fbreader/VERSION)
 	done
 	@echo " OK"
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-ipk.log
-	@make -f distributions/$(ARCHITECTURE)-ipk/rules clean 1> /dev/null 2>&1;
+	@make -f distributions/ipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1;
