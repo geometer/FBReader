@@ -1,4 +1,4 @@
-TMPDIR=$(CURDIR)/tmp
+TMPDIR = $(CURDIR)/tmp
 VERSION = $(shell cat fbreader/VERSION)
 
 .tarball:
@@ -44,6 +44,11 @@ VERSION = $(shell cat fbreader/VERSION)
 		tar czf `egrep ^Filename: $(TMPDIR)/control | cut -d' ' -f2` -C $(TMPDIR) ./debian-binary ./control.tar.gz ./data.tar.gz; \
 		rm -rf $(TMPDIR); \
 	done
-	@echo " OK"
-	@rm -f $(CURDIR)/$(ARCHITECTURE)-ipk.log
 	@make -f distributions/ipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1;
+	@rm -f $(CURDIR)/$(ARCHITECTURE)-ipk.log
+	@echo " OK"
+
+.debipk:
+	@echo -en "Building $(ARCHITECTURE) debipk package..."
+	@rm -f $(CURDIR)/$(ARCHITECTURE)-debipk.log
+	@echo " OK"

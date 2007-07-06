@@ -34,6 +34,14 @@ ipk:
 	@make .cleandir
 
 install:
+	@install -d $(DESTDIR)$(PICSDIR)
+	@install -m 0644 ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
+	@install -m 0644 $(wildcard ../icons/$(ICONSIZE)/FBReader/*.png) $(DESTDIR)$(PICSDIR)
+	@install -m 0644 ../data/default/config.openzaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
+	@install -m 0644 ../data/default/keymap.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
+	@install -m 0644 ../data/default/styles.$(STYLE).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
+	@install -d $(DESTDIR)$(APPDIR)
+	@install -m 0644 $(UI_TYPE)/fbreader.desktop $(DESTDIR)$(APPDIR)
 
 clean: .cleandir
 	@rm -f *.ipk
@@ -41,16 +49,10 @@ clean: .cleandir
 .builddir: .cleandir
 	@mkdir -p $(DEBDIR)
 	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
-	@cd ../../zlibrary; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
+	@cd ../../zlibrary/core; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
+	@cd ../../zlibrary/text; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
+	@cd ../../zlibrary/ui; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
 	@cd ..; make RESOLUTION=$(RESOLUTION) DESTDIR=$(CURDIR)/$(DESTDIR) do_install
-	@mkdir -p $(DESTDIR)$(PICSDIR)
-	@cp ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
-	@cp ../icons/$(ICONSIZE)/FBReader/*.png $(DESTDIR)$(PICSDIR)
-	@cp ../data/default/config.openzaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
-	@cp ../data/default/keymap.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
-	@cp ../data/default/styles.$(STYLE).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
-	@mkdir -p $(DESTDIR)$(APPDIR)
-	@cp $(UI_TYPE)/fbreader.desktop $(DESTDIR)$(APPDIR)
 
 .buildpackage:
 	@dpkg -b data $(package)

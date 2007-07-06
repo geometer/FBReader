@@ -23,28 +23,28 @@ build_package() {
 			case "$1" in
 				maemo)
 					/scratchbox/login sbox-config -st SDK_ARM
-					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=maemo .debian
+					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=$1 .$2
 					;;
 				maemo2)
 					/scratchbox/login sbox-config -st SDK_ARMEL
-					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=maemo2 .debian
+					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=$1 .$2
 					;;
 				*)
-					$make_package ARCHITECTURE=desktop .debian
+					$make_package ARCHITECTURE=$1 .$2
 					;;
 			esac;
 			mkdirhier packages/$1
-			mv -f *.deb *.ipk *.dsc *changes *.tar.gz packages/$1
+			mv -f *.deb *.dsc *.changes *.tar.gz packages/$1
 			;;
-		tarball)
-			$make_package ARCHITECTURE=$1 .tarball
-			mkdirhier packages/$1
-			mv -f *.tgz packages/$1
-			;;
-		ipk)
-			$make_package ARCHITECTURE=$1 .ipk
+		ipk|debipk)
+			$make_package ARCHITECTURE=$1 .$2
 			mkdirhier packages/$1
 			mv -f *.ipk packages/$1
+			;;
+		tarball)
+			$make_package ARCHITECTURE=$1 .$2
+			mkdirhier packages/$1
+			mv -f *.tgz packages/$1
 			;;
 		*)
 			echo no rule is defined for package type ''$2'';
