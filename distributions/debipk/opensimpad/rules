@@ -1,0 +1,17 @@
+clean:
+	make -C zlibrary/core TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie clean
+	make -C zlibrary/text TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie clean
+	make -C zlibrary/ui TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie clean
+	make -C fbreader TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie clean
+
+build:
+	make -C zlibrary/core TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie
+	make -C zlibrary/text TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie
+	make -C zlibrary/ui TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie
+	make -C fbreader TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie
+
+install-fbreader:
+	make -C zlibrary/core TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie do_install
+	make -C zlibrary/text TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie do_install
+	make -C zlibrary/ui TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie do_install
+	make -C fbreader TARGET_ARCH=opensimpad-0.9.0 UI_TYPE=opie do_install
