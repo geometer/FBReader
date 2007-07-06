@@ -1,0 +1,11 @@
+Package: FBReader
+Installed-Size: @SIZE@
+Filename: ./FBReader_@VERSION@_pma400_arm.ipk
+Version: @VERSION@
+Depends: expat,libenca,libbz2
+Priority: optional
+Section: qpe/applications
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Architecture: arm
+License: GPLv2
+Description: E-book reader.

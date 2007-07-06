@@ -1,0 +1,14 @@
+build:
+	@make -C zlibrary/core TARGET_ARCH=pma400 UI_TYPE=qtopia
+	@make -C zlibrary/text TARGET_ARCH=pma400 UI_TYPE=qtopia
+	@make -C zlibrary/ui TARGET_ARCH=pma400 UI_TYPE=qtopia
+	@make -C fbreader TARGET_ARCH=pma400 UI_TYPE=qtopia
+
+clean:
+	@make TARGET_ARCH=pma400 UI_TYPE=qtopia clean
+
+install-fbreader:
+	@make -C zlibrary/core TARGET_ARCH=pma400 UI_TYPE=qtopia DESTDIR=$(DESTDIR) do_install
+	@make -C zlibrary/text TARGET_ARCH=pma400 UI_TYPE=qtopia DESTDIR=$(DESTDIR) do_install
+	@make -C zlibrary/ui TARGET_ARCH=pma400 UI_TYPE=qtopia DESTDIR=$(DESTDIR) do_install
+	@make -C fbreader TARGET_ARCH=pma400 UI_TYPE=qtopia DESTDIR=$(DESTDIR) do_install
