@@ -1,27 +1,15 @@
 ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-DESTDIR = $(CURDIR)/
-SHARE_FBREADER = $(DESTDIR)share/FBReader
-VERSION = $(shell cat ../VERSION)
+SHARE_FBREADER = $(DESTDIR)/share/FBReader
 
 all:
-	@cd ../../zlibrary; make DESTDIR=$(DESTDIR) SHAREDIR=share do_install
-	@cd ..; make DESTDIR=$(DESTDIR) SHAREDIR=share do_install
+
+install:
 	@install -d $(DESTDIR)/share/icons
 	@install -m 0644 $(wildcard ../icons/win32/FBReader/*.ico) $(DESTDIR)/share/icons
 	@install -m 0644 $(wildcard ../icons/win32/FBReader/*.png) $(DESTDIR)/share/icons
 	@install -m 0644 ../data/default/keymap.win32.xml $(SHARE_FBREADER)/default/keymap.xml
 	@install -m 0644 ../data/default/styles.win32.xml $(SHARE_FBREADER)/default/styles.xml
-	@sed "s/@VERSION@/$(VERSION)/" FBReader.nsi.in > FBReader.nsi
-	@makensis FBReader.nsi
-	@rm -rf $(DESTDIR)/bin
-	@rm -rf $(DESTDIR)/share
-	@cp *.exe $(DEBIAN_PACKAGE) ../..
-
-install:
 
 clean:
-	@rm -rf $(DESTDIR)/bin
-	@rm -rf $(DESTDIR)/share
-	@rm -rf *.nsi *.exe

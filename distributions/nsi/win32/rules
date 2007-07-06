@@ -1,0 +1,17 @@
+build:
+	make -C zlibrary/core TARGET_ARCH=win32 UI_TYPE=win32
+	make -C zlibrary/text TARGET_ARCH=win32 UI_TYPE=win32
+	make -C zlibrary/ui TARGET_ARCH=win32 UI_TYPE=win32
+	make -C fbreader TARGET_ARCH=win32 UI_TYPE=win32
+
+install:
+	make -C zlibrary/core TARGET_ARCH=win32 UI_TYPE=win32 DESTDIR=$(DESTDIR) SHAREDIR=/share do_install
+	make -C zlibrary/text TARGET_ARCH=win32 UI_TYPE=win32 DESTDIR=$(DESTDIR) SHAREDIR=/share do_install
+	make -C zlibrary/ui TARGET_ARCH=win32 UI_TYPE=win32 DESTDIR=$(DESTDIR) SHAREDIR=/share do_install
+	make -C fbreader TARGET_ARCH=win32 UI_TYPE=win32 DESTDIR=$(DESTDIR) SHAREDIR=/share do_install
+
+clean:
+	make -C zlibrary/core TARGET_ARCH=win32 UI_TYPE=win32 clean
+	make -C zlibrary/text TARGET_ARCH=win32 UI_TYPE=win32 clean
+	make -C zlibrary/ui TARGET_ARCH=win32 UI_TYPE=win32 clean
+	make -C fbreader TARGET_ARCH=win32 UI_TYPE=win32 clean

@@ -46,6 +46,11 @@ build_package() {
 			mkdirhier packages/$1
 			mv -f *.tgz packages/$1
 			;;
+		nsi)
+			$make_package ARCHITECTURE=$1 $2
+			mkdirhier packages/$1
+			mv -f *.exe packages/$1
+			;;
 		*)
 			echo no rule is defined for package type ''$2'';
 			;;
