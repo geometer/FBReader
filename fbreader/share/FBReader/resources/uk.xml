@@ -158,7 +158,7 @@
 						<node name="indicator" value="індикатора"/>
 					</node>
 				</node>
-				<node name="Keys" value="Клавиші">
+				<node name="Keys" value="Клавіші">
 					<node name="grabSystemKeys" value="Перехоплювати системні клавиші"/>
 					<node name="separate" value="Свої налаштування для кожної орієнтації тексту"/>
 					<node name="orientation" value="Орієнтація"/>
@@ -280,7 +280,7 @@
 		<node name="Base" value="тексту типово"/>
 		<node name="Regular Paragraph" value="звичайного тексту"/>
 		<node name="Title" value="заголовку"/>
-		<node name="Section Title" value="назви глави"/>
+		<node name="Section Title" value="назви розділу"/>
 		<node name="Poem Title" value="назви вірша"/>
 		<node name="Subtitle" value="підзаголовку"/>
 		<node name="Annotation" value="анотації"/>
