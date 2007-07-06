@@ -64,6 +64,6 @@ debipk:
 		dpkg -b $(TMPDIR) `sed "s#@VERSION@#$(VERSION)#" distributions/debipk/$(ARCHITECTURE)/$$controlname.name` 1>> $(ARCHITECTURE)-debipk.log 2>&1; \
 		rm -rf $(TMPDIR); \
 	done
-	#@make -f distributions/debipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
+	@make -f distributions/debipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-debipk.log
 	@echo " OK"
