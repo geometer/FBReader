@@ -73,6 +73,4 @@ fi;
 echo "unknown architecture: $1"
 
 #	do_build win32 win32
-#	do_build openzaurus gpe
 #	do_build opensimpad-0.9.0 opie
-#	do_build qvfb opie
