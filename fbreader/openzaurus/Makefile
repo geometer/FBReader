@@ -1,8 +1,6 @@
 ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-DESTDIR = data
-
 ifeq "$(UI_TYPE)" "opie"
 	PICSDIR = $(INSTALLDIR)/pics/fbreader
 	APPDIR = $(INSTALLDIR)/apps/Applications
@@ -19,19 +17,7 @@ else
   ICONSIZE = 34x28
 endif
 
-DEBDIR = data/DEBIAN
-
-version = $(shell cat ../VERSION)
-package = fbreader-$(UI_TYPE)_$(version)_$(TARGET_ARCH)_$(RESOLUTION)_arm.ipk
-
 all:
-	@RESOLUTION=240x320 $(MAKE) ipk
-	@RESOLUTION=640x480 $(MAKE) ipk
-
-ipk:
-	@make .builddir
-	@make .buildpackage
-	@make .cleandir
 
 install:
 	@install -d $(DESTDIR)$(PICSDIR)
@@ -43,20 +29,4 @@ install:
 	@install -d $(DESTDIR)$(APPDIR)
 	@install -m 0644 $(UI_TYPE)/fbreader.desktop $(DESTDIR)$(APPDIR)
 
-clean: .cleandir
-	@rm -f *.ipk
-
-.builddir: .cleandir
-	@mkdir -p $(DEBDIR)
-	@sed "s/VERSION/$(version)/" $(UI_TYPE)/control.in > $(DEBDIR)/control
-	@cd ../../zlibrary/core; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
-	@cd ../../zlibrary/text; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
-	@cd ../../zlibrary/ui; make DESTDIR=$(CURDIR)/$(DESTDIR) do_install
-	@cd ..; make RESOLUTION=$(RESOLUTION) DESTDIR=$(CURDIR)/$(DESTDIR) do_install
-
-.buildpackage:
-	@dpkg -b data $(package)
-	@cp $(package) ../..
-
-.cleandir:
-	@rm -rf data
+clean:

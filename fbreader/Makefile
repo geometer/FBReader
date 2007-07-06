@@ -44,7 +44,7 @@ do_install:
 	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml
 	@install -d $(FBSHAREDIR)/resources
 	@install -m 0644 $(wildcard share/FBReader/resources/*.xml) $(FBSHAREDIR)/resources
-	@cd $(TARGET_ARCH); make install 
+	@make -C $(TARGET_ARCH) RESOLUTION=$(RESOLUTION) install
 
 package:
 	@cd $(TARGET_ARCH); make all 

@@ -1,0 +1,23 @@
+clean:
+	make -C zlibrary/core TARGET_ARCH=openzaurus UI_TYPE=opie clean
+	make -C zlibrary/text TARGET_ARCH=openzaurus UI_TYPE=opie clean
+	make -C zlibrary/ui TARGET_ARCH=openzaurus UI_TYPE=opie clean
+	make -C fbreader TARGET_ARCH=openzaurus UI_TYPE=opie clean
+
+build:
+	make -C zlibrary/core TARGET_ARCH=openzaurus UI_TYPE=opie
+	make -C zlibrary/text TARGET_ARCH=openzaurus UI_TYPE=opie
+	make -C zlibrary/ui TARGET_ARCH=openzaurus UI_TYPE=opie
+	make -C fbreader TARGET_ARCH=openzaurus UI_TYPE=opie
+
+install-240x320:
+	make -C zlibrary/core TARGET_ARCH=openzaurus UI_TYPE=opie do_install
+	make -C zlibrary/text TARGET_ARCH=openzaurus UI_TYPE=opie do_install
+	make -C zlibrary/ui TARGET_ARCH=openzaurus UI_TYPE=opie do_install
+	make -C fbreader TARGET_ARCH=openzaurus UI_TYPE=opie RESOLUTION=240x320 do_install
+
+install-640x480:
+	make -C zlibrary/core TARGET_ARCH=openzaurus UI_TYPE=opie do_install
+	make -C zlibrary/text TARGET_ARCH=openzaurus UI_TYPE=opie do_install
+	make -C zlibrary/ui TARGET_ARCH=openzaurus UI_TYPE=opie do_install
+	make -C fbreader TARGET_ARCH=openzaurus UI_TYPE=opie RESOLUTION=640x480 do_install
