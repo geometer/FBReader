@@ -1,6 +1,17 @@
 TMPDIR=$(CURDIR)/tmp
 VERSION = $(shell cat fbreader/VERSION)
 
+.tarball:
+	@echo -en "Building $(ARCHITECTURE) tarball package..."
+	@make -f distributions/tarball/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-tarball.log 2>&1
+	@mkdir $(TMPDIR)
+	@make -f distributions/tarball/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-tarball.log 2>&1
+	@make -f distributions/tarball/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) tarball 1>> $(ARCHITECTURE)-tarball.log 2>&1
+	@make -f distributions/tarball/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
+	@rm -rf $(TMPDIR)
+	@rm -f $(CURDIR)/$(ARCHITECTURE)-tarball.log
+	@echo " OK"
+
 .debian:
 	@echo -en "Building $(ARCHITECTURE) debian package..."
 	@mkdir $(TMPDIR)

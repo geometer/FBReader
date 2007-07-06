@@ -1,0 +1,26 @@
+clean:
+	make -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy clean
+	make -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy clean
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=gtk clean
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt clean
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4 clean
+	make -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy clean
+
+build:
+	make -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy
+	make -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=gtk
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4
+	make -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy
+
+install:
+	make -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DESTDIR) do_install
+	make -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DESTDIR) do_install
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=gtk DESTDIR=$(DESTDIR) do_install
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt DESTDIR=$(DESTDIR) do_install
+	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4 DESTDIR=$(DESTDIR) do_install
+	make -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DESTDIR) do_install
+
+tarball:
+	tar czf fbreader-`cat fbreader/VERSION`.tgz -C $(DESTDIR) .

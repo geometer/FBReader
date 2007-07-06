@@ -1,69 +1,79 @@
 #!/bin/sh
 
-if [ "$1" = "rebuild" ]; then
-	FAILED_ONLY=yes
-	shift
+if [ $# != 1 ]; then
+	echo "usage:"
+	echo "  $0 <architecture>"
+	echo "or"
+	echo "  $0 all"
+	echo ""
+	echo "available architectures are:"
+	for pkgdir in distributions/*; do
+		for archdir in $pkgdir/*; do
+			echo "  `basename $archdir`-`basename $pkgdir`";
+		done;
+	done;
+	exit 1;
 fi
 
-do_build() {
-	LOG_FILE=$1\($2\).log
-	if [ "$FAILED_ONLY" = "yes" -a ! -f $LOG_FILE ]; then
-		echo "Skipping $1 ($2)"
-		return;
-	fi
-	echo -n "Building $1 ($2) ...";
-	if [ "$1" = "maemo" ]; then
-		build_maemo $2;
-	else
-		make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
-		if ! make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release packages 1> $1\($2\).log 2>&1; then
-			echo " failure";
-		else
-			echo " OK"
-			rm $1\($2\).log;
-		fi
-		make TARGET_ARCH=$1 UI_TYPE=$2 TARGET_STATUS=release clean 1> /dev/null 2>&1;
-	fi
+build_package() {
+	make_package="make -f makefiles/packaging.mk"
+
+	case "$2" in
+		debian)
+			case "$1" in
+				maemo)
+					/scratchbox/login sbox-config -st SDK_ARM
+					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=maemo .debian
+					;;
+				maemo2)
+					/scratchbox/login sbox-config -st SDK_ARMEL
+					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=maemo2 .debian
+					;;
+				*)
+					$make_package ARCHITECTURE=desktop .debian
+					;;
+			esac;
+			mkdirhier packages/$1
+			mv -f *.deb *.ipk *.dsc *changes *.tar.gz packages/$1
+			;;
+		tarball)
+			$make_package ARCHITECTURE=$1 .tarball
+			mkdirhier packages/$1
+			mv -f *.tgz packages/$1
+			;;
+		ipk)
+			$make_package ARCHITECTURE=$1 .ipk
+			mkdirhier packages/$1
+			mv -f *.ipk packages/$1
+			;;
+		*)
+			echo no rule is defined for package type ''$2'';
+			;;
+	esac;
 }
 
-build_maemo() {
-	if [ $1 = "maemo" ]; then
-  	SDK=SDK_ARM
-	else
-  	SDK=SDK_ARMEL
-	fi
-	/scratchbox/login sbox-config -st $SDK
-	/scratchbox/login -d src/zaurus make TARGET_ARCH=maemo UI_TYPE=$1 TARGET_STATUS=release clean 1> /dev/null 2>&1;
-	if ! /scratchbox/login -d src/zaurus make TARGET_ARCH=maemo UI_TYPE=$1 TARGET_STATUS=release packages 1> maemo\($1\).log 2>&1; then
-		echo " failure";
-	else
-		echo " OK"
-		rm maemo\($1\).log;
-	fi
-	/scratchbox/login -d src/zaurus make TARGET_ARCH=maemo UI_TYPE=$1 TARGET_STATUS=release clean 1> /dev/null 2>&1;
-}
-
-if [ "$1" = "all" ]; then
-	do_build win32 win32
-	do_build openzaurus opie
-	do_build openzaurus gpe
-	do_build opensimpad-0.9.0 opie
-	do_build qvfb opie
-	do_build desktop gtk
-	do_build desktop qt
-	do_build desktop qt4
-	do_build zaurus qtopia-240x320
-	do_build zaurus qtopia-640x480
-	do_build pdaxrom gtk
-	do_build pdaxrom qt
-	do_build pma400 qtopia
-	do_build maemo maemo
-	do_build maemo maemo2
-elif [ "$#" == "2" ]; then 
-	do_build $@
-else
-	echo "usage:";
-	echo "  $0 [rebuild] all";
-	echo "or";
-	echo "  $0 [rebuild] <TARGET_ARCH> <UI_TYPE>";
+if [ $1 == all ]; then
+	for pkgdir in distributions/*; do
+		for archdir in $pkgdir/*; do
+			build_package `basename $archdir` `basename $pkgdir`;
+		done;
+	done;
+	exit 1;
 fi
+
+archtype=`echo $1 | cut -d "-" -f 1`
+pkgtype=`echo $1 | cut -d "-" -f 2`
+extra=`echo $1 | cut -d "-" -f 3`
+
+if [ "$pkgtype" != "" -a "$extra" == "" -a -d distributions/$pkgtype/$archtype ]; then
+	build_package $archtype $pkgtype
+	exit 1;
+fi;
+
+echo "unknown architecture: $1"
+
+#	do_build win32 win32
+#	do_build openzaurus opie
+#	do_build openzaurus gpe
+#	do_build opensimpad-0.9.0 opie
+#	do_build qvfb opie

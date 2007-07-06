@@ -1,0 +1,15 @@
+VERSION = $(shell cat $(CURDIR)/fbreader/VERSION)
+SRCDIR = fbreader-$(VERSION)
+
+clean:
+
+build:
+
+install:
+	mkdir $(DESTDIR)/$(SRCDIR)
+	cp -r Makefile zlibrary fbreader makefiles README.build $(DESTDIR)/$(SRCDIR)
+	rm -rf `find $(DESTDIR)/$(SRCDIR) -name ".svn"`
+	make -C $(DESTDIR)/$(SRCDIR) distclean 1> /dev/null 2>&1
+
+tarball:
+	tar czf fbreader-sources-$(VERSION).tgz -C $(DESTDIR) $(SRCDIR)
