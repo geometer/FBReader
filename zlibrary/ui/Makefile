@@ -97,8 +97,6 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install $(TARGET) $(SHARE_ZLIBRARY)/ui
 endif
 
-package:
-
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \
 		if [ -d $$subdir ]; then \

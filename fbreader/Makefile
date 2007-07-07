@@ -46,9 +46,6 @@ do_install:
 	@install -m 0644 $(wildcard share/FBReader/resources/*.xml) $(FBSHAREDIR)/resources
 	@make -C $(TARGET_ARCH) RESOLUTION=$(RESOLUTION) install
 
-package:
-	@cd $(TARGET_ARCH); make all 
-
 clean:
 	@for subdir in $(ALL_SUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \

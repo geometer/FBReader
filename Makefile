@@ -25,13 +25,6 @@ do_install:
 		fi; \
 	done
 
-packages: all
-	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
-		if [ -d $$dir ]; then \
-			cd $$dir; make package; cd $(ROOTDIR); \
-		fi; \
-	done
-
 clean:
 	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
@@ -42,5 +35,3 @@ clean:
 distclean: clean
 	@rm -rvf *.tgz *.tar.gz *.ipk *.deb *.prc *.exe *.log *.dsc *.changes *.rpm
 	@rm -rf tmp packages
-
-archives: clean

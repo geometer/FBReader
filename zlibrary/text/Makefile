@@ -43,8 +43,6 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 endif
 
-package:
-
 clean:
 	@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \

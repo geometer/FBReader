@@ -1,8 +1,6 @@
 ROOTDIR = $(CURDIR)/../..
 include $(ROOTDIR)/makefiles/config.mk
 
-all:
-
 install:
 	@install -d $(DESTDIR)$(INSTALLDIR)/apps/Applications
 	@install -d $(DESTDIR)$(INSTALLDIR)/pics/fbreader

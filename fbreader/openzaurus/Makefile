@@ -17,8 +17,6 @@ else
   ICONSIZE = 34x28
 endif
 
-all:
-
 install:
 	@install -d $(DESTDIR)$(PICSDIR)
 	@install -m 0644 ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)

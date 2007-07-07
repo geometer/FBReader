@@ -23,7 +23,7 @@ ifeq "$(TARGET_ARCH)" "pdaxrom"
   SUBDIRS += src/desktop/dialogs src/unix/message
 endif
 
-ifeq "<$(TARGET_ARCH)>" "$(findstring <$TARGET_ARCH()>, <openzaurus> <opensimpad-0.9.0> <qvfb>)"
+ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <openzaurus> <opensimpad-0.9.0> <qvfb>)"
   SUBDIRS += src/unix/message
 endif
 
@@ -70,8 +70,6 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 endif
-
-package:
 
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \

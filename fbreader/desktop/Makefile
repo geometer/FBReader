@@ -5,8 +5,6 @@ TARGET = FBReader
 
 SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
-all:
-
 install:
 	@install -d $(DESTDIR)/usr/share/applications
 	@install -m 0644 desktop $(DESTDIR)/usr/share/applications/$(TARGET).desktop

@@ -3,8 +3,6 @@ include $(ROOTDIR)/makefiles/config.mk
 
 SHARE_FBREADER = $(DESTDIR)/share/FBReader
 
-all:
-
 install:
 	@install -d $(DESTDIR)/share/icons
 	@install -m 0644 $(wildcard ../icons/win32/FBReader/*.ico) $(DESTDIR)/share/icons
