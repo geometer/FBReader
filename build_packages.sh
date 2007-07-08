@@ -76,5 +76,3 @@ if [ "$pkgtype" != "" -a "$extra" == "" -a -d distributions/$pkgtype/$archtype ]
 fi;
 
 echo "unknown architecture: $1"
-
-#	do_build win32 win32
