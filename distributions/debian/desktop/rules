@@ -1,21 +1,4 @@
 #!/usr/bin/make -f
-## ----------------------------------------------------------------------
-## debian/rules : package script for fbreader
-## ----------------------------------------------------------------------
-
-## ----------------------------------------------------------------------
-## uncomment this to turn on verbose mode
-#export DH_VERBOSE=1
-
-## ----------------------------------------------------------------------
-DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
-DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
-
-## ----------------------------------------------------------------------
-DEB_DIR		= $(CURDIR)/debian
-
-## ----------------------------------------------------------------------
-## targets
 
 clean:
 		dh_testdir
@@ -23,7 +6,7 @@ clean:
 		[ ! -f Makefile ] || $(MAKE) distclean
 		dh_clean build-stamp install-stamp
 
-build:		build-stamp
+build: build-stamp
 build-stamp:
 		dh_testdir
 		$(MAKE) -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy
@@ -34,8 +17,9 @@ build-stamp:
 		$(MAKE) -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy
 		touch build-stamp 
 
-install:	install-stamp
-install-stamp:	build
+install: install-stamp
+install-stamp: DEB_DIR = $(CURDIR)/debian
+install-stamp: build
 		dh_testdir
 		dh_testroot
 		dh_clean -k
@@ -48,22 +32,28 @@ install-stamp:	build
 		$(MAKE) -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/fbreader do_install
 		touch install-stamp
 
-binary-indep:
-
-binary-arch:	build install
+binary-arch: VERSION=$(shell expr "`dpkg-parsechangelog |grep Version:`" : '.*Version: \(.*\)')
+binary-arch: build install
 		dh_testdir
 		dh_testroot
-		dh_compress -a
-		dh_fixperms -a
-		dh_installdeb -a
-		dh_shlibdeps -a -l $(PWD)/debian/libzlcore/usr/lib
-		dh_shlibdeps -a -l $(PWD)/debian/libzltext/usr/lib
-		dh_gencontrol -a
-		dh_md5sums -a
-		dh_builddeb -a
+		dh_desktop
+		dh_installmenu
+		dh_installdocs
+		dh_installman fbreader/desktop/FBReader.1
+		dh_installchangelogs
+		dh_strip
+		dh_compress
+		dh_fixperms
+		dh_makeshlibs -plibzlcore -V"libzlcore (= $(VERSION))"
+		dh_makeshlibs -plibzltext -V"libzltext (= $(VERSION))"
+		dh_installdeb
+		dh_shlibdeps -l debian/libzlcore/usr/lib:debian/libzltext/usr/lib
+		dh_gencontrol
+		dh_md5sums
+		dh_builddeb
 
-binary:		binary-indep binary-arch
+binary-indep:
 
-.PHONY:		clean build install binary-indep binary-arch binary
+binary:	binary-indep binary-arch
 
-## ----------------------------------------------------------------------
+.PHONY: clean build install binary-indep binary-arch binary

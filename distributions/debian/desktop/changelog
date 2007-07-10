@@ -1,12 +1,43 @@
+fbreader (0.8.5b-1) stable; urgency=low
+
+  * new upstream version
+  * almost all changes from the previous change are now included into
+    the upstream version: zlibrary shared objects moving, rpath deletion,
+    and the man page.
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Tue, 10 Jul 2007 21:50:00 +0400
+
+fbreader (0.8.5a-1) unstable; urgency=low
+
+  * First upload to Debian. Closes: #432274
+  * Misc debianisation changes.
+  * Move zlibrary shared object files to /usr/lib from /usr/share.
+  * Remove use of rpath.
+  * Use sensible-browser.
+  * Added a basic man page.
+
+ -- Joey Hess <joeyh@debian.org>  Mon, 09 Jul 2007 15:04:31 -0400
+
 fbreader (0.8.5-1) stable; urgency=low
+
   * new upstream version
+
  -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 7 Jul 2007 02:12:00 +0400
+
 fbreader (0.8.4zz-1) stable; urgency=low
+
   * new upstream version
- -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 5 Jul 2007 03:17:00 +0400
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thu, 5 Jul 2007 03:17:00 +0400
+
 fbreader (0.8.4z-2) stable; urgency=low
+
   * postinst/postrm scripts were added
+
  -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 29 Jun 2007 21:23:00 +0400
+
 fbreader (0.8.4z-1) stable; urgency=low
+
   * Initial release.
+
  -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 29 Jun 2007 17:53:00 +0400

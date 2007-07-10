@@ -63,7 +63,7 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary::init(int &argc, char **&argv) {
-	const std::string pluginPath = std::string(INSTALLDIR) + "/share/zlibrary/ui";
+	const std::string pluginPath = std::string(INSTALLDIR) + "/lib/zlibrary/ui";
 
 	void *handle = 0;
 

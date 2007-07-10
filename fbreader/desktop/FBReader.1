@@ -1,0 +1,35 @@
+.TH FBREADER 1
+.SH NAME
+FBReader \- e-book reader
+.SH SYNOPSIS
+.B FBReader [\fB\-zlui \fIui-type\fP] [\fIui-specific options\fP] [\fB\-lang \fIlanguage\fP] [\fIe-book\fP]
+.SH DESCRIPTION
+FBReader is an e-book reader. It supports most open e-book formats, and can
+read compressed e-book archives.
+.PP
+For more information on using the program, see the "About FBReader" button
+on its toolbar.
+.SH OPTIONS
+.TP
+\fB-zlui \fIui-type\fP
+Try to start FBReader with the specified uu type. Supported ui types are
+\fBgtk\fP (to use Gtk+ library), \fBqt\fP (Qt 3 library) and \fBqt4\fP (Qt 4
+library).
+.TP
+\fIui-specific options\fP
+Standard options from the UI library you use (Gtk+, Qt3 or Qt4).
+.TP
+\fB-lang \fIlanguage\fP
+Language for user interface. Current version of fbreader supports English
+(specify \fB\-lang en\fP option), French (\fB\-lang fr\fP), Russian
+(\fB\-lang ru\fP) and Ukrainian (\fB\-lang uk\fP).
+.TP
+\fIe-book\fP
+Name of file to open. If this parameter is missing or if FBReader cannot open
+the specified file, the last opened file will be reopened. If you start FBReader
+for the first time or the last opened file is missing, "About FBReader" text
+will be opened.
+.SH AUTHOR
+This man page was written by Joey Hess <joeyh@debian.org> and Nikolay Pultsin
+<geometer@fbreader.org> for the Debian system, but may be freely reused on other
+systems.

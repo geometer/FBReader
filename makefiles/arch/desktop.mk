@@ -11,7 +11,7 @@ AR = ar rsu
 LD = g++
 
 CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
-LDFLAGS = -Wl,-rpath,$(LIBDIR)
+LDFLAGS =
 
 ifeq "$(UI_TYPE)" "qt"
   MOC = moc-qt3

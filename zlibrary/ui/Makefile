@@ -82,6 +82,7 @@ endif
 	@echo " OK"
 
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
+LIB_ZLIBRARY = $(DESTDIR)$(LIBDIR)/zlibrary
 
 ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pdaxrom>)"
   KEYNAMES = keynames-$(UI_TYPE).xml
@@ -93,8 +94,8 @@ do_install:
 	@install -d $(SHARE_ZLIBRARY)
 	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/$(KEYNAMES)
 ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
-	@install -d $(SHARE_ZLIBRARY)/ui
-	@install $(TARGET) $(SHARE_ZLIBRARY)/ui
+	@install -d $(LIB_ZLIBRARY)/ui
+	@install $(TARGET) $(LIB_ZLIBRARY)/ui
 endif
 
 clean:
