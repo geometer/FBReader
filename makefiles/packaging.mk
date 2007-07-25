@@ -2,7 +2,7 @@ TMPDIR = $(CURDIR)/tmp
 VERSION = $(shell cat fbreader/VERSION)
 
 tarball:
-	@echo -en "Building $(ARCHITECTURE) tarball package..."
+	@echo -n "Building $(ARCHITECTURE) tarball package..."
 	@make -f distributions/tarball/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-tarball.log 2>&1
 	@mkdir $(TMPDIR)
 	@make -f distributions/tarball/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-tarball.log 2>&1
@@ -13,7 +13,7 @@ tarball:
 	@echo " OK"
 
 debian:
-	@echo -en "Building $(ARCHITECTURE) debian package..."
+	@echo -n "Building $(ARCHITECTURE) debian package..."
 	@mkdir $(TMPDIR)
 	@cp -r Makefile zlibrary fbreader makefiles $(TMPDIR)
 	@rm -rf `find $(TMPDIR) -name ".svn"`
@@ -28,7 +28,7 @@ debian:
 	@echo " OK"
 
 ipk:
-	@echo -en "Building $(ARCHITECTURE) ipk package..."
+	@echo -n "Building $(ARCHITECTURE) ipk package..."
 	@make -f distributions/ipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-ipk.log 2>&1
 	@for controlfile in distributions/ipk/$(ARCHITECTURE)/*.control; do \
 		controlname=`basename $$controlfile .control`; \
@@ -50,7 +50,7 @@ ipk:
 	@echo " OK"
 
 debipk:
-	@echo -en "Building $(ARCHITECTURE) debipk package..."
+	@echo -n "Building $(ARCHITECTURE) debipk package..."
 	@make -f distributions/debipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-debipk.log 2>&1
 	@for controlfile in distributions/debipk/$(ARCHITECTURE)/*.control; do \
 		controlname=`basename $$controlfile .control`; \
@@ -69,7 +69,7 @@ debipk:
 	@echo " OK"
 
 nsi:
-	@echo -en "Building $(ARCHITECTURE) nsi package..."
+	@echo -n "Building $(ARCHITECTURE) nsi package..."
 	@make -f distributions/nsi/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-nsi.log 2>&1
 	@mkdir $(TMPDIR)
 	@make -f distributions/nsi/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-nsi.log 2>&1
