@@ -136,6 +136,12 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 				decoration = new ZLTextFullStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
 			}
 			decoration->setHyperlinkStyle(hyperlinkStyle);
+
+			const char *fontFamily = attributeValue(attributes, "family");
+			if (fontFamily != 0) {
+				decoration->FontFamilyOption.setValue(fontFamily);
+			}
+
 			myCollection.myDecorationMap.insert(std::pair<ZLTextKind,ZLTextStyleDecoration*>(id, decoration));
 		}
 	}

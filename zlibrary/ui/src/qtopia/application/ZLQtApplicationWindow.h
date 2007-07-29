@@ -28,7 +28,7 @@
 
 #include <qmainwindow.h>
 
-#include <ZLApplication.h>
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 
 class QMenuBar;
 class QPopupMenu;

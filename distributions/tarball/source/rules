@@ -7,7 +7,7 @@ build:
 
 install:
 	mkdir $(DESTDIR)/$(SRCDIR)
-	cp -r Makefile build_packages.sh zlibrary fbreader makefiles distributions README.build $(DESTDIR)/$(SRCDIR)
+	cp -r Makefile build_packages.sh zlibrary fbreader fbdictionary makefiles distributions README.build $(DESTDIR)/$(SRCDIR)
 	rm -rf `find $(DESTDIR)/$(SRCDIR) -name ".svn"`
 	make -C $(DESTDIR)/$(SRCDIR) distclean 1> /dev/null 2>&1
 

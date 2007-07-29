@@ -21,6 +21,7 @@
 #ifndef __ZLGTKAPPLICATIONWINDOW_H__
 #define __ZLGTKAPPLICATIONWINDOW_H__
 
+#include <vector>
 #include <map>
 #include <stack>
 
@@ -29,7 +30,7 @@
 
 #include <hildon-widgets/hildon-program.h>
 
-#include <ZLApplication.h>
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 
 class ZLGtkApplicationWindow : public ZLApplicationWindow { 
 
@@ -115,6 +116,7 @@ private:
 	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myToolItems;
 	std::map<int,GtkMenuItem*> myMenuItems;
 	std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*> myToolbarButtons;
+	std::vector<shared_ptr<ZLOptionView> > myViews;
 
 friend class MenuBuilder;
 friend class ToolbarButton;

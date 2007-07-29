@@ -27,12 +27,12 @@
 #include <ZLOptionEntry.h>
 #include "../../../../core/src/dialogs/ZLOptionView.h"
 
-class ZLGtkDialogContent;
+class ZLGtkOptionViewHolder;
 
 class ZLGtkOptionView : public ZLOptionView {
 
 protected:
-	ZLGtkOptionView(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(name, tooltip, option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
+	ZLGtkOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLOptionView(name, tooltip, option), myHolder(holder) {}
 
 protected:
 	static void _onValueChanged(GtkWidget*, gpointer self);
@@ -40,14 +40,13 @@ protected:
 	virtual void onValueChanged() {}
 
 protected:
-	ZLGtkDialogContent *myTab;
-	int myRow, myFromColumn, myToColumn;
+	ZLGtkOptionViewHolder &myHolder;
 };
 
 class ChoiceOptionView : public ZLGtkOptionView {
 
 public:
-	ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {
+	ChoiceOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder) {
 		myFrame = 0;
 	}
 	~ChoiceOptionView() { if (myFrame != 0) delete[] myButtons; }
@@ -67,7 +66,7 @@ private:
 class BooleanOptionView : public ZLGtkOptionView {
 
 public:
-	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder) {}
 
 protected:
 	void _createItem();
@@ -88,7 +87,7 @@ private:
 	static void _onReleased(GtkButton *button, gpointer self);
 
 public:
-	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder) {}
 
 protected:
 	void _createItem();
@@ -108,7 +107,7 @@ private:
 class StringOptionView : public ZLGtkOptionView {
 
 public:
-	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
+	StringOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myLabel(0), myLineEdit(0) {}
 
 private:
 	void _createItem();
@@ -127,7 +126,7 @@ private:
 class SpinOptionView : public ZLGtkOptionView {
 
 public:
-	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), mySpinBox(0) {}
+	SpinOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myLabel(0), mySpinBox(0) {}
 
 protected:
 	void _createItem();
@@ -143,7 +142,7 @@ private:
 class ComboOptionView : public ZLGtkOptionView {
 
 public:
-	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0), myListSize(0) {}
+	ComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myLabel(0), myComboBox(0), myListSize(0) {}
 
 private:
 	void _createItem();
@@ -164,7 +163,7 @@ private:
 class ColorOptionView : public ZLGtkOptionView {
 
 public:
-	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myColorSelection(0) {}
+	ColorOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myColorSelection(0) {}
 
 private:
 	void _createItem();
@@ -180,7 +179,7 @@ private:
 class KeyOptionView : public ZLGtkOptionView {
 
 public:
-	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLGtkDialogContent *tab, int row, int fromColumn, int toColumn) : ZLGtkOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myTable(0), myKeyEntry(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myTable(0), myKeyEntry(0), myLabel(0), myComboBox(0) {}
 
 	void setKey(const std::string &key);
 

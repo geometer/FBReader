@@ -21,11 +21,15 @@
 #ifndef __ZLGTKDIALOGCONTENT_H__
 #define __ZLGTKDIALOGCONTENT_H__
 
+#include <map>
+
 #include <gtk/gtktable.h>
 
 #include <ZLDialogContent.h>
 
-class ZLGtkDialogContent : public ZLDialogContent {
+#include "../optionView/ZLGtkOptionViewHolder.h"
+
+class ZLGtkDialogContent : public ZLDialogContent, public ZLGtkOptionViewHolder {
 
 public:
 	ZLGtkDialogContent(const ZLResource &resource);
@@ -37,15 +41,27 @@ public:
 
 	GtkWidget *widget() { return GTK_WIDGET(myTable); }
 
-	void addItem(GtkWidget *what, int row, int fromColumn, int toColumn);
-
 private:
 	int addRow();
-	void createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int row, int fromColumn, int toColumn);
+	void createViewByEntry(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, int row, int fromColumn, int toColumn);
+
+	void attachWidget(ZLOptionView &view, GtkWidget *widget);
+	void attachWidgets(ZLOptionView &view, GtkWidget *widget0, int weight0, GtkWidget *widget1, int weight1);
+	void attachWidget(GtkWidget *what, int row, int fromColumn, int toColumn);
 
 private:
 	GtkTable *myTable;
 	gint myRowCounter;
+
+	struct Position {
+		Position(int row, int fromColumn, int toColumn);
+		int Row;
+		int FromColumn;
+		int ToColumn;
+	};
+	std::map<ZLOptionView*,Position> myOptionPositions;
 };
+
+inline ZLGtkDialogContent::Position::Position(int row, int fromColumn, int toColumn) : Row(row), FromColumn(fromColumn), ToColumn(toColumn) {}
 
 #endif /* __ZLGTKDIALOGCONTENT_H__ */

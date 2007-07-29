@@ -30,6 +30,7 @@ build-stamp:
 		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo2
 		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo2
 		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=maemo2
+		$(MAKE) -C fbdictionary TARGET_ARCH=maemo UI_TYPE=maemo2
 		touch build-stamp 
 
 install:	install-stamp
@@ -42,6 +43,7 @@ install-stamp:	build
 		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
 		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
 		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/fbreader-maemo2 do_install
+		$(MAKE) -C fbdictionary TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/fbdictionary-maemo2 do_install
 		touch install-stamp
 
 binary-indep:

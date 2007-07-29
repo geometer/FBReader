@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <gtk/gtkwindow.h>
+
 #include "ZLGtkViewWidget.h"
 #include "ZLGtkPaintContext.h"
 #include "../util/ZLGtkSignalUtil.h"
@@ -51,7 +53,8 @@ static void updatePoint(ZLGtkViewWidget *viewWidget, int &x, int &y) {
 	y -= context.topMargin();
 }
 
-static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
+static void mousePressed(GtkWidget *area, GdkEventButton *event, gpointer data) {
+	gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(area)), area);
 	ZLGtkViewWidget *viewWidget = (ZLGtkViewWidget*)data;
 	int x = (int)event->x;
 	int y = (int)event->y;
@@ -102,6 +105,7 @@ int ZLGtkViewWidget::height() const {
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle) : ZLViewWidget(initialAngle) {
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
+	GTK_OBJECT_SET_FLAGS(myArea, GTK_CAN_FOCUS);
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);

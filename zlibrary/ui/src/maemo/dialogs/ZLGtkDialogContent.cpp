@@ -18,8 +18,10 @@
  * 02110-1301, USA.
  */
 
+#include <ZLOptionEntry.h>
+
 #include "ZLGtkDialogContent.h"
-#include "ZLGtkOptionView.h"
+#include "../../../../core/src/dialogs/ZLOptionView.h"
 
 ZLGtkDialogContent::ZLGtkDialogContent(const ZLResource &resource) : ZLDialogContent(resource) {
 	myRowCounter = 0;
@@ -39,10 +41,6 @@ int ZLGtkDialogContent::addRow() {
 	return row;
 }
 
-void ZLGtkDialogContent::addItem(GtkWidget *what, int row, int fromColumn, int toColumn) {
-	gtk_table_attach(myTable, what, fromColumn, toColumn, row, row + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
-}
-
 void ZLGtkDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
 	int row = addRow();
 
@@ -56,45 +54,35 @@ void ZLGtkDialogContent::addOptions(const std::string &name0, const std::string 
 	createViewByEntry(name1, tooltip1, option1, row, 6, 12);
 }
 
-void ZLGtkDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int row, int fromColumn, int toColumn) {
-	if (option == 0) {
-		return;
-	}
-
-	ZLGtkOptionView *view = 0;
-
-	switch (option->kind()) {
-		case ZLOptionEntry::BOOLEAN:
-			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::BOOLEAN3:
-			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::STRING:
-			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::MULTILINE:
-			view = new MultilineOptionView(name, tooltip, (ZLMultilineOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::CHOICE:
-			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::COMBO:
-			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::COLOR:
-			view = new ColorOptionView(name, tooltip, (ZLColorOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::KEY:
-			view = new KeyOptionView(name, tooltip, (ZLKeyOptionEntry*)option, this, row, fromColumn, toColumn);
-			break;
-	}
-
+void ZLGtkDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, int row, int fromColumn, int toColumn) {
+	ZLOptionView *view = ZLGtkOptionViewHolder::createViewByEntry(name, tooltip, option);
 	if (view != 0) {
+		myOptionPositions.insert(
+			std::pair<ZLOptionView*,Position>(view, Position(row, fromColumn, toColumn))
+		);
 		view->setVisible(option->isVisible());
 		addView(view);
+	}
+}
+
+void ZLGtkDialogContent::attachWidget(GtkWidget *what, int row, int fromColumn, int toColumn) {
+	gtk_table_attach(myTable, what, fromColumn, toColumn, row, row + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 2, 1);
+}
+
+void ZLGtkDialogContent::attachWidget(ZLOptionView &view, GtkWidget *widget) {
+	std::map<ZLOptionView*,Position>::const_iterator it = myOptionPositions.find(&view);
+	if (it != myOptionPositions.end()) {
+		Position position = it->second;
+		attachWidget(widget, position.Row, position.FromColumn, position.ToColumn);
+	}
+}
+
+void ZLGtkDialogContent::attachWidgets(ZLOptionView &view, GtkWidget *widget0, int weight0, GtkWidget *widget1, int weight1) {
+	std::map<ZLOptionView*,Position>::const_iterator it = myOptionPositions.find(&view);
+	if (it != myOptionPositions.end()) {
+		Position position = it->second;
+		int midColumn = position.FromColumn + (position.ToColumn - position.FromColumn) * weight0 / (weight0 + weight1);
+		attachWidget(widget0, position.Row, position.FromColumn, midColumn);
+		attachWidget(widget1, position.Row, midColumn, position.ToColumn);
 	}
 }

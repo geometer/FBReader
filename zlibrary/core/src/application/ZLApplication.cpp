@@ -21,6 +21,7 @@
 #include <ZLibrary.h>
 
 #include "ZLApplication.h"
+#include "ZLApplicationWindow.h"
 #include "ZLKeyBindings.h"
 #include "../view/ZLView.h"
 #include "../view/ZLPaintContext.h"
@@ -197,6 +198,12 @@ void ZLApplication::Toolbar::addButton(int actionId, const ZLResourceKey &key, s
 	button->setButtonGroup(group);
 }
 
+void ZLApplication::Toolbar::addOptionEntry(shared_ptr<ZLOptionEntry> entry) {
+	if (!entry.isNull()) {
+		myItems.push_back(new OptionEntryItem(entry));
+	}
+}
+
 void ZLApplication::Toolbar::addSeparator() {
 	myItems.push_back(new SeparatorItem());
 }
@@ -227,36 +234,50 @@ void ZLApplicationWindow::refresh() {
 	bool enableToolbarSpace = false;
 	ZLApplication::Toolbar::ItemPtr lastSeparator = 0;
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
-			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			int id = button.actionId();
-    
-			const bool visible = application().isActionVisible(id);
-			const bool enabled = application().isActionEnabled(id);
-    
-			if (visible) {
-				if (!lastSeparator.isNull()) {
-					setToolbarItemState(lastSeparator, true, true);
-					lastSeparator = 0;
+		switch ((*it)->type()) {
+			case ZLApplication::Toolbar::Item::OPTION_ENTRY:
+				if (((const ZLApplication::Toolbar::OptionEntryItem&)**it).entry()->isVisible()) {
+					if (!lastSeparator.isNull()) {
+						setToolbarItemState(lastSeparator, true, true);
+						lastSeparator = 0;
+					}
+					enableToolbarSpace = true;
 				}
-				enableToolbarSpace = true;
-			}
-			if (!enabled && button.isPressed()) {
-				shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
-				group->press(0);
-				application().doAction(group->UnselectAllButtonsActionId);
-				myToggleButtonLock = true;
-				setToggleButtonState(button);
-				myToggleButtonLock = false;
-			}
-			setToolbarItemState(*it, visible, enabled);
-		} else {
-			if (enableToolbarSpace) {
-				lastSeparator = *it;
-				enableToolbarSpace = false;
-			} else {
-				setToolbarItemState(*it, false, true);
-			}
+				break;
+			case ZLApplication::Toolbar::Item::BUTTON:
+				{
+					const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+					int id = button.actionId();
+        
+					const bool visible = application().isActionVisible(id);
+					const bool enabled = application().isActionEnabled(id);
+        
+					if (visible) {
+						if (!lastSeparator.isNull()) {
+							setToolbarItemState(lastSeparator, true, true);
+							lastSeparator = 0;
+						}
+						enableToolbarSpace = true;
+					}
+					if (!enabled && button.isPressed()) {
+						shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
+						group->press(0);
+						application().doAction(group->UnselectAllButtonsActionId);
+						myToggleButtonLock = true;
+						setToggleButtonState(button);
+						myToggleButtonLock = false;
+					}
+					setToolbarItemState(*it, visible, enabled);
+				}
+				break;
+			case ZLApplication::Toolbar::Item::SEPARATOR:
+				if (enableToolbarSpace) {
+					lastSeparator = *it;
+					enableToolbarSpace = false;
+				} else {
+					setToolbarItemState(*it, false, true);
+				}
+				break;
 		}
 	}
 	if (!lastSeparator.isNull()) {
@@ -297,4 +318,67 @@ const std::string &ZLApplication::Toolbar::ButtonItem::tooltip() const {
 		return EMPTY;
 	}
 	return myTooltip.value();
+}
+
+bool ZLApplication::isFullKeyboardControlSupported() const {
+	return (myWindow != 0) && myWindow->isFullKeyboardControlSupported();
+}
+
+bool ZLApplication::isFingerTapEventSupported() const {
+	return (myWindow != 0) && myWindow->isFingerTapEventSupported();
+}
+
+bool ZLApplication::isMousePresented() const {
+	return (myWindow != 0) && myWindow->isMousePresented();
+}
+
+bool ZLApplication::isKeyboardPresented() const {
+	return (myWindow != 0) && myWindow->isKeyboardPresented();
+}
+
+void ZLApplication::grabAllKeys(bool grab) {
+	if (myWindow != 0) {
+		myWindow->grabAllKeys(grab);
+	}
+}
+
+void ZLApplication::setHyperlinkCursor(bool hyperlink) {
+	if (myWindow != 0) {
+		myWindow->setHyperlinkCursor(hyperlink);
+	}
+}
+
+bool ZLApplication::isFullscreen() const {
+	return (myWindow != 0) && myWindow->isFullscreen();
+}
+
+void ZLApplication::setFullscreen(bool fullscreen) {
+	if (myWindow != 0) {
+		myWindow->setFullscreen(fullscreen);
+	}
+}
+
+void ZLApplication::quit() {
+	if (myWindow != 0) {
+		myWindow->close();
+	}
+}
+
+ZLApplication::Toolbar::Item::Type ZLApplication::Toolbar::ButtonItem::type() const {
+	return BUTTON;
+}
+
+ZLApplication::Toolbar::Item::Type ZLApplication::Toolbar::SeparatorItem::type() const {
+	return SEPARATOR;
+}
+
+ZLApplication::Toolbar::OptionEntryItem::OptionEntryItem(shared_ptr<ZLOptionEntry> entry) : myOptionEntry(entry) {
+}
+
+shared_ptr<ZLOptionEntry> ZLApplication::Toolbar::OptionEntryItem::entry() const {
+	return myOptionEntry;
+}
+
+ZLApplication::Toolbar::Item::Type ZLApplication::Toolbar::OptionEntryItem::type() const {
+	return OPTION_ENTRY;
 }

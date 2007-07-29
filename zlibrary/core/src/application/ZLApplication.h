@@ -28,6 +28,7 @@
 
 #include <shared_ptr.h>
 #include <ZLOptions.h>
+#include <ZLOptionEntry.h>
 #include <ZLTime.h>
 #include <ZLResource.h>
 
@@ -132,11 +133,19 @@ public:
 		class Item {
 
 		public:
+			enum Type {
+				BUTTON,
+				OPTION_ENTRY,
+				SEPARATOR
+			};
+
+		public:
 			Item();
 			virtual ~Item();
 
-			virtual bool isButton() const = 0;
-			bool isSeparator() const;
+			virtual Type type() const = 0;
+			// TODO: remove
+			bool isButton() const { return type() == BUTTON; }
 
 		friend class Toolbar;
 		};
@@ -148,7 +157,7 @@ public:
 		public:
 			ButtonItem(int actionId, const std::string &iconName, const ZLResource &tooltip);
 
-			bool isButton() const;
+			Type type() const;
 
 			int actionId() const;
 			const std::string &iconName() const;
@@ -190,7 +199,18 @@ public:
 		class SeparatorItem : public Item {
 
 		public:
-			bool isButton() const;
+			Type type() const;
+		};
+
+		class OptionEntryItem : public Item {
+
+		public:
+			OptionEntryItem(shared_ptr<ZLOptionEntry> entry);
+			Type type() const;
+			shared_ptr<ZLOptionEntry> entry() const;
+
+		private:
+			shared_ptr<ZLOptionEntry> myOptionEntry;
 		};
 
 	public:
@@ -200,6 +220,7 @@ public:
 		Toolbar();
 		void addButton(int actionId, const ZLResourceKey &key, shared_ptr<ButtonGroup> group = 0);
 		shared_ptr<ButtonGroup> createButtonGroup(int unselectAllButtonsActionId);
+		void addOptionEntry(shared_ptr<ZLOptionEntry> entry);
 		void addSeparator();
 
 		const ItemVector &items() const;
@@ -369,59 +390,6 @@ private:
 friend class ZLApplicationWindow;
 };
 
-class ZLApplicationWindow {
-
-protected:
-	ZLApplicationWindow(ZLApplication *application);
-
-public:
-	ZLApplication &application() const;
-
-protected:
-	virtual void init();
-	// TODO: change to pure virtual
-	virtual void initMenu() {}
-
-	void onButtonPress(ZLApplication::Toolbar::ButtonItem &button);
-	// TODO: change to pure virtual
-	virtual void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem&) {}
-	// TODO: change to pure virtual
-	virtual void setToolbarItemState(ZLApplication::Toolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
-
-	virtual ZLViewWidget *createViewWidget() = 0;
-	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
-
-	// TODO: change to non-virtual (?)
-	virtual void refresh();
-
-	virtual void close() = 0;
-
-	virtual void setCaption(const std::string &caption) = 0;
-
-	virtual bool isFullKeyboardControlSupported() const = 0;
-	virtual void grabAllKeys(bool grab) = 0;
-
-	virtual bool isFingerTapEventSupported() const = 0;
-	virtual bool isMousePresented() const = 0;
-	virtual bool isKeyboardPresented() const = 0;
-
-	virtual void setFullscreen(bool fullscreen) = 0;
-	virtual bool isFullscreen() const = 0;
-
-	// TODO: change to pure virtual (?)
-	virtual void setHyperlinkCursor(bool) {}
-
-public:
-	virtual ~ZLApplicationWindow();
-
-private:
-	ZLApplication *myApplication;
-	bool myToggleButtonLock;
-
-friend class ZLApplication;
-};
-
-
 inline const std::string &ZLApplicationBase::ApplicationName() { return ourApplicationName; }
 inline const std::string &ZLApplicationBase::ImageDirectory() { return ourImageDirectory; }
 inline const std::string &ZLApplicationBase::ApplicationImageDirectory() { return ourApplicationImageDirectory; }
@@ -438,52 +406,12 @@ inline ZLPaintContext &ZLApplication::context() {
 	return *myContext;
 }
 
-inline bool ZLApplication::isFullKeyboardControlSupported() const {
-	return (myWindow != 0) && myWindow->isFullKeyboardControlSupported();
-}
-inline bool ZLApplication::isFingerTapEventSupported() const {
-	return (myWindow != 0) && myWindow->isFingerTapEventSupported();
-}
-inline bool ZLApplication::isMousePresented() const {
-	return (myWindow != 0) && myWindow->isMousePresented();
-}
-inline bool ZLApplication::isKeyboardPresented() const {
-	return (myWindow != 0) && myWindow->isKeyboardPresented();
-}
-inline void ZLApplication::grabAllKeys(bool grab) {
-	if (myWindow != 0) {
-		myWindow->grabAllKeys(grab);
-	}
-}
-inline void ZLApplication::setHyperlinkCursor(bool hyperlink) {
-	if (myWindow != 0) {
-		myWindow->setHyperlinkCursor(hyperlink);
-	}
-}
-inline bool ZLApplication::isFullscreen() const {
-	return (myWindow != 0) && myWindow->isFullscreen();
-}
-inline void ZLApplication::setFullscreen(bool fullscreen) {
-	if (myWindow != 0) {
-		myWindow->setFullscreen(fullscreen);
-	}
-}
-inline void ZLApplication::quit() {
-	if (myWindow != 0) {
-		myWindow->close();
-	}
-}
-inline ZLApplicationWindow::~ZLApplicationWindow() {}
-inline ZLApplication &ZLApplicationWindow::application() const { return *myApplication; }
-
 inline const ZLApplication::Toolbar::ItemVector &ZLApplication::Toolbar::items() const { return myItems; }
 
 inline ZLApplication::Toolbar::Item::Item() {}
 inline ZLApplication::Toolbar::Item::~Item() {}
-inline bool ZLApplication::Toolbar::Item::isSeparator() const { return !isButton(); }
 
 inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::string &iconName, const ZLResource &tooltip) : myActionId(actionId), myIconName(iconName), myTooltip(tooltip) {}
-inline bool ZLApplication::Toolbar::ButtonItem::isButton() const { return true; }
 inline int ZLApplication::Toolbar::ButtonItem::actionId() const { return myActionId; }
 inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const { return myIconName; }
 inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::ButtonItem::buttonGroup() const { return myButtonGroup; }
@@ -491,12 +419,8 @@ inline bool ZLApplication::Toolbar::ButtonItem::isToggleButton() const { return 
 inline void ZLApplication::Toolbar::ButtonItem::press() { if (isToggleButton()) { myButtonGroup->press(this); } }
 inline bool ZLApplication::Toolbar::ButtonItem::isPressed() const { return isToggleButton() && (this == myButtonGroup->PressedItem); }
 
-inline bool ZLApplication::Toolbar::SeparatorItem::isButton() const { return false; }
-
 inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::createButtonGroup(int unselectAllButtonsActionId) {
 	return new ButtonGroup(unselectAllButtonsActionId);
 }
 
 #endif /* __ZLAPPLICATION_H__ */
-
-// vim:noet:ts=2:sw=2

@@ -73,7 +73,8 @@ static bool handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 	return false;
 }
 
-static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
+static void mousePressed(GtkWidget *area, GdkEventButton *event, gpointer data) {
+	gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(area)), area);
 	if (acceptAction()) {
 		((ZLGtkViewWidget*)data)->onMousePressed(event);
 	}

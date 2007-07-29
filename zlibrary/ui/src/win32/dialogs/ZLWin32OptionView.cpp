@@ -35,12 +35,12 @@ BooleanOptionView::BooleanOptionView(const std::string &name, const std::string 
 }
 
 void BooleanOptionView::_onAccept() const {
-	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
+	((ZLBooleanOptionEntry&)*myOption).onAccept(myCheckBox->isChecked());
 }
 
 void BooleanOptionView::onEvent(const std::string &event, W32EventSender&) {
 	if (event == W32CheckBox::STATE_CHANGED_EVENT) {
-		((ZLBooleanOptionEntry*)myOption)->onStateChanged(myCheckBox->isChecked());
+		((ZLBooleanOptionEntry&)*myOption).onStateChanged(myCheckBox->isChecked());
 	}
 }
 
@@ -60,12 +60,12 @@ Boolean3OptionView::Boolean3OptionView(const std::string &name, const std::strin
 }
 
 void Boolean3OptionView::_onAccept() const {
-	((ZLBoolean3OptionEntry*)myOption)->onAccept(myTristateBox->state());
+	((ZLBoolean3OptionEntry&)*myOption).onAccept(myTristateBox->state());
 }
 
 void Boolean3OptionView::onEvent(const std::string &event, W32EventSender&) {
 	if (event == W32CheckBox::STATE_CHANGED_EVENT) {
-		((ZLBoolean3OptionEntry*)myOption)->onStateChanged(myTristateBox->state());
+		((ZLBoolean3OptionEntry&)*myOption).onStateChanged(myTristateBox->state());
 	}
 }
 
@@ -98,7 +98,7 @@ void ChoiceOptionView::_hide() {
 }
 
 void ChoiceOptionView::_onAccept() const {
-	((ZLChoiceOptionEntry*)myOption)->onAccept(myButtonGroup->checkedIndex());
+	((ZLChoiceOptionEntry&)*myOption).onAccept(myButtonGroup->checkedIndex());
 }
 
 ComboOptionView::ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
@@ -143,7 +143,7 @@ void ComboOptionView::_setActive(bool active) {
 }
 
 void ComboOptionView::_onAccept() const {
-	((ZLComboOptionEntry*)myOption)->onAccept(myComboBox->text());
+	((ZLComboOptionEntry&)*myOption).onAccept(myComboBox->text());
 }
 
 void ComboOptionView::reset() {
@@ -195,7 +195,7 @@ SpinOptionView::SpinOptionView(const std::string &name, const std::string &toolt
 }
 
 void SpinOptionView::_onAccept() const {
-	((ZLSpinOptionEntry*)myOption)->onAccept(mySpinBox->value());
+	((ZLSpinOptionEntry&)*myOption).onAccept(mySpinBox->value());
 }
 
 void SpinOptionView::_show() {
@@ -226,7 +226,7 @@ StringOptionView::StringOptionView(const std::string &name, const std::string &t
 }
 
 void StringOptionView::reset() {
-	myLineEditor->setText(((ZLStringOptionEntry*)myOption)->initialValue());
+	myLineEditor->setText(((ZLStringOptionEntry&)*myOption).initialValue());
 }
 
 void StringOptionView::_show() {
@@ -257,7 +257,7 @@ void StringOptionView::_setActive(bool active) {
 }
 
 void StringOptionView::_onAccept() const {
-	((ZLStringOptionEntry*)myOption)->onAccept(myLineEditor->text());
+	((ZLStringOptionEntry&)*myOption).onAccept(myLineEditor->text());
 }
 
 ColorOptionView::ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
@@ -332,14 +332,14 @@ void ColorOptionView::_hide() {
 }
 
 void ColorOptionView::reset() {
-	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
+	ZLColorOptionEntry &colorEntry = (ZLColorOptionEntry&)*myOption;
 	colorEntry.onReset(myStandardColorComboBox->selectedColor());
 	myStandardColorComboBox->removeCustomColor();
 	myStandardColorComboBox->setSelectedColor(colorEntry.color());
 }
 
 void ColorOptionView::_onAccept() const {
-	((ZLColorOptionEntry*)myOption)->onAccept(myStandardColorComboBox->selectedColor());
+	((ZLColorOptionEntry&)*myOption).onAccept(myStandardColorComboBox->selectedColor());
 }
 
 KeyOptionView::KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
@@ -353,7 +353,7 @@ KeyOptionView::KeyOptionView(const std::string &name, const std::string &tooltip
 	myKeyNameEditor = new W32KeyNameEditor();
 	myKeyNameEditor->addListener(this);
 	myHBox->addElement(myKeyNameEditor);
-	myComboBox = new W32ComboBox(((ZLKeyOptionEntry*)myOption)->actionNames(), 0);
+	myComboBox = new W32ComboBox(((ZLKeyOptionEntry&)*myOption).actionNames(), 0);
 	myComboBox->addListener(this);
 	myVBox->addElement(myHBox);
 	myVBox->addElement(myComboBox);
@@ -364,10 +364,10 @@ void KeyOptionView::onEvent(const std::string &event, W32EventSender&) {
 	if (event == W32KeyNameEditor::TEXT_CHANGED_EVENT) {
 		myCurrentKey = myKeyNameEditor->text();
 		myComboBox->setVisible(!myCurrentKey.empty());
-		myComboBox->setSelection(((ZLKeyOptionEntry*)myOption)->actionIndex(myCurrentKey));
-		((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
+		myComboBox->setSelection(((ZLKeyOptionEntry&)*myOption).actionIndex(myCurrentKey));
+		((ZLKeyOptionEntry&)*myOption).onKeySelected(myCurrentKey);
 	} else if (event == W32ComboBox::SELECTION_CHANGED_EVENT) {
-		((ZLKeyOptionEntry*)myOption)->onValueChanged(myCurrentKey, myComboBox->index());
+		((ZLKeyOptionEntry&)*myOption).onValueChanged(myCurrentKey, myComboBox->index());
 	}
 }
 
@@ -383,7 +383,7 @@ void KeyOptionView::_hide() {
 }
 
 void KeyOptionView::_onAccept() const {
-	((ZLKeyOptionEntry*)myOption)->onAccept();
+	((ZLKeyOptionEntry&)*myOption).onAccept();
 }
 
 void KeyOptionView::reset() {

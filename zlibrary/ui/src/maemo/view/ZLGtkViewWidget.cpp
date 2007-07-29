@@ -116,6 +116,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	myArea = gtk_drawing_area_new();
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;
+	GTK_OBJECT_SET_FLAGS(myArea, GTK_CAN_FOCUS);
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
 	gtk_widget_set_extension_events(myArea, GDK_EXTENSION_EVENTS_CURSOR);

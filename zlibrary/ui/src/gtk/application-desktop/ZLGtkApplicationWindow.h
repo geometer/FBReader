@@ -21,6 +21,7 @@
 #ifndef __ZLGTKAPPLICATIONWINDOW_H__
 #define __ZLGTKAPPLICATIONWINDOW_H__
 
+#include <vector>
 #include <map>
 
 #include <gtk/gtkwidget.h>
@@ -28,6 +29,9 @@
 #include <gtk/gtktoolbar.h>
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
+#include "../optionView/ZLGtkOptionViewHolder.h"
+
+class ZLOptionView;
 
 class ZLGtkApplicationWindow : public ZLDesktopApplicationWindow { 
 
@@ -39,7 +43,6 @@ private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
 	void init();
-	void refresh();
 	void close();
 
 	bool isFullKeyboardControlSupported() const;
@@ -60,7 +63,7 @@ private:
 	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 
 public:
-	void handleKeyEventSlot(GdkEventKey *event);
+	bool handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);
 	void onGtkButtonPress(GtkWidget *gtkButton);
 
@@ -68,15 +71,39 @@ public:
 
 private:
 	GtkWindow *myMainWindow;
-	GtkToolbar *myToolbar;
-	GtkWidget *myVBox;
 
-	std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
-	std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
-	std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorMap;
+	GtkWidget *myVBox;
 
 	GdkCursor *myHyperlinkCursor;
 	bool myHyperlinkCursorIsUsed;
+
+	class Toolbar : public ZLGtkOptionViewHolder {
+
+	public:
+		Toolbar(ZLGtkApplicationWindow *window);
+
+		GtkWidget *toolbarWidget() const;
+
+		void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+		void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+		void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+		ZLApplication::Toolbar::ButtonItem &buttonItemByWidget(GtkWidget *gtkButton);
+
+	private:
+		void attachWidget(ZLOptionView &view, GtkWidget *widget);
+		void attachWidgets(ZLOptionView &view, GtkWidget *widget0, GtkWidget *widget1);
+
+	private:
+		ZLGtkApplicationWindow *myWindow;
+		GtkToolbar *myGtkToolbar;
+		std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
+		std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
+		std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorMap;
+		std::vector<shared_ptr<ZLOptionView> > myViews;
+		int myWidgetCounter;
+	};
+
+	Toolbar myToolbar;
 };
 
 #endif /* __ZLGTKAPPLICATIONWINDOW_H__ */

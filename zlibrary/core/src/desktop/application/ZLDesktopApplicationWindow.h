@@ -21,7 +21,9 @@
 #ifndef __ZLDESKTOPAPPLICATIONWINDOW_H__
 #define __ZLDESKTOPAPPLICATIONWINDOW_H__
 
-#include <ZLApplication.h>
+#include <ZLOptions.h>
+
+#include "../../application/ZLApplicationWindow.h"
 
 class ZLDesktopApplicationWindow : public ZLApplicationWindow {
 

@@ -143,9 +143,9 @@ void rotate180(GdkPixbuf *buffer) {
 
 	const gint a = gdk_pixbuf_get_has_alpha(buffer) ? 4 : 3;
 
-	guchar *sbuf = new guchar[width * a];
-	guchar *dbuf = new guchar[width * a];
-	guchar *tmp = new guchar[a];
+	guchar * const sbuf = new guchar[width * a];
+	guchar * const dbuf = new guchar[width * a];
+	guchar * const tmp = new guchar[a];
 
 	while (s_pix < d_pix) {
 		memcpy(sbuf, s_pix, width * a);
@@ -167,7 +167,7 @@ void rotate180(GdkPixbuf *buffer) {
 	if (s_pix == d_pix) {
 		memcpy(sbuf, s_pix, width * a);
 		guchar *s = sbuf;
-		guchar *d = dbuf + (width - 1) * a;
+		guchar *d = sbuf + (width - 1) * a;
 		while (s < d) {
 			memcpy(tmp, s, a);
 			memcpy(s, d, a);

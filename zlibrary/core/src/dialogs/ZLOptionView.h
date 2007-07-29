@@ -23,12 +23,14 @@
 
 #include <string>
 
+#include <shared_ptr.h>
+
 class ZLOptionEntry;
 
 class ZLOptionView {
 
 public:
-	ZLOptionView(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
+	ZLOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	virtual ~ZLOptionView();
 
 	// TODO: change to pure virtual
@@ -52,7 +54,7 @@ protected:
 protected:
 	const std::string myName;
 	const std::string myTooltip;
-	ZLOptionEntry *myOption;
+	shared_ptr<ZLOptionEntry> myOption;
 
 private:
 	bool myInitialized;

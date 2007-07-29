@@ -28,7 +28,7 @@
 #include <gtk/gtktoolitem.h>
 #include <gtk/gtkwindow.h>
 
-#include <ZLApplication.h>
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 
 class ZLGtkApplicationWindow : public ZLApplicationWindow { 
 

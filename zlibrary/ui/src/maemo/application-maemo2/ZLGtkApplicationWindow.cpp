@@ -22,12 +22,15 @@
 #include <gdk/gdkkeysyms.h>
 
 #include <ZLibrary.h>
+#include <ZLOptionEntry.h>
 
 #include "../message/ZLMaemoMessage.h"
 #include "../view/ZLGtkViewWidget.h"
 #include "../../gtk/util/ZLGtkKeyUtil.h"
 #include "../../gtk/util/ZLGtkSignalUtil.h"
 #include "../dialogs/ZLGtkDialogManager.h"
+#include "../optionView/ZLGtkOptionViewHolder.h"
+#include "../../../../core/src/dialogs/ZLOptionView.h"
 
 #include "ZLGtkApplicationWindow.h"
 
@@ -68,7 +71,8 @@ static bool handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
 	return false;
 }
 
-static void mousePressed(GtkWidget*, GdkEventButton *event, gpointer data) {
+static void mousePressed(GtkWidget *area, GdkEventButton *event, gpointer data) {
+	gtk_window_set_focus(GTK_WINDOW(gtk_widget_get_toplevel(area)), area);
 	if (acceptAction()) {
 		((ZLGtkViewWidget*)data)->onMousePressed(event);
 	}
@@ -187,26 +191,78 @@ void ZLGtkApplicationWindow::close() {
 	gtk_main_quit();
 }
 
-void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
-	GtkToolItem *gtkItem;
-	if (item->isButton()) {
-		ZLApplication::Toolbar::ButtonItem &buttonItem = (ZLApplication::Toolbar::ButtonItem&)*item;
+class ZLGtkToolItemWrapper : public ZLGtkOptionViewHolder {
 
-		ToolbarButton *toolbarButton = new ToolbarButton(buttonItem, *this);
-		gtkItem = toolbarButton->toolItem();
-		myToolbarButtons[&buttonItem] = toolbarButton;
-	} else {
-		gtkItem = gtk_separator_tool_item_new();
-		gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
+public:
+	ZLGtkToolItemWrapper(GtkToolItem *item);
+
+private:
+	void attachWidget(ZLOptionView &view, GtkWidget *widget);
+	void attachWidgets(ZLOptionView &view, GtkWidget *widget0, int weight0, GtkWidget *widget1, int weight1);
+
+private:
+	GtkToolItem *myItem;
+};
+
+ZLGtkToolItemWrapper::ZLGtkToolItemWrapper(GtkToolItem *item) : myItem(item) {
+}
+
+void ZLGtkToolItemWrapper::attachWidget(ZLOptionView&, GtkWidget *widget) {
+	gtk_container_add(GTK_CONTAINER(myItem), widget);
+}
+
+void ZLGtkToolItemWrapper::attachWidgets(ZLOptionView&, GtkWidget *widget0, int weight0, GtkWidget *widget1, int weight1) {
+	// TODO: implement
+}
+
+void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
+	GtkToolItem *gtkItem = 0;
+	switch (item->type()) {
+		case ZLApplication::Toolbar::Item::OPTION_ENTRY:
+			{
+				shared_ptr<ZLOptionEntry> entry = ((const ZLApplication::Toolbar::OptionEntryItem&)*item).entry();
+				gtkItem = gtk_tool_item_new();
+				ZLGtkToolItemWrapper wrapper(gtkItem);
+				ZLOptionView *view = wrapper.createViewByEntry("", "", entry);
+				if (view != 0) {
+					gtk_tool_item_set_homogeneous(gtkItem, false);
+					gtk_tool_item_set_expand(gtkItem, false);
+					GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
+					myViews.push_back(view);
+					entry->setVisible(true);
+				} else {
+					// TODO: remove *gtkItem
+					gtkItem = 0;
+				}
+			}
+			break;
+		case ZLApplication::Toolbar::Item::BUTTON:
+			{
+				ZLApplication::Toolbar::ButtonItem &buttonItem = (ZLApplication::Toolbar::ButtonItem&)*item;
+      
+				ToolbarButton *toolbarButton = new ToolbarButton(buttonItem, *this);
+				gtkItem = toolbarButton->toolItem();
+				myToolbarButtons[&buttonItem] = toolbarButton;
+			}
+			break;
+		case ZLApplication::Toolbar::Item::SEPARATOR:
+			{
+				gtkItem = gtk_separator_tool_item_new();
+				gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
+			}
+			break;
 	}
-	gtk_toolbar_insert(myToolbar, gtkItem, -1);
-	myToolItems[item] = gtkItem;
-	gtk_widget_show_all(GTK_WIDGET(gtkItem));
+	if (gtkItem != 0) {
+		gtk_toolbar_insert(myToolbar, gtkItem, -1);
+		myToolItems[item] = gtkItem;
+		gtk_widget_show_all(GTK_WIDGET(gtkItem));
+	}
 }
 
 void ZLGtkApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
-	GtkToolItem *toolItem = myToolItems[item];
-	if (toolItem != 0) {
+	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*>::iterator it = myToolItems.find(item);
+	if (it != myToolItems.end()) {
+		GtkToolItem *toolItem = it->second;
 		gtk_tool_item_set_visible_horizontal(toolItem, visible);
 		/*
 		 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
@@ -239,11 +295,13 @@ void ZLGtkApplicationWindow::refresh() {
 
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	ZLGtkViewWidget *viewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
-	gtk_container_add(GTK_CONTAINER(myWindow), viewWidget->area());
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "expose_event", GTK_SIGNAL_FUNC(repaint), viewWidget);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), viewWidget);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(viewWidget->area()), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), viewWidget);
+	GtkWidget *area = viewWidget->area();
+	gtk_container_add(GTK_CONTAINER(myWindow), area);
+	GtkObject *areaObject = GTK_OBJECT(area);
+	ZLGtkSignalUtil::connectSignal(areaObject, "expose_event", GTK_SIGNAL_FUNC(repaint), viewWidget);
+	ZLGtkSignalUtil::connectSignal(areaObject, "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
+	ZLGtkSignalUtil::connectSignal(areaObject, "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), viewWidget);
+	ZLGtkSignalUtil::connectSignal(areaObject, "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), viewWidget);
 	gtk_widget_show_all(GTK_WIDGET(myWindow));
 	return viewWidget;
 }

@@ -21,12 +21,11 @@
 #include "ZLOptionView.h"
 #include "ZLOptionEntry.h"
 
-ZLOptionView::ZLOptionView(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) : myName(name), myTooltip(tooltip), myOption(option), myInitialized(false) {
+ZLOptionView::ZLOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option) : myName(name), myTooltip(tooltip), myOption(option), myInitialized(false) {
 	myOption->setView(this);
 }
 
 ZLOptionView::~ZLOptionView() {
-	delete myOption;
 }
 
 const std::string &ZLOptionView::name() const {

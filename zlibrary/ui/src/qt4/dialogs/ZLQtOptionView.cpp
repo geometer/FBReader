@@ -53,25 +53,25 @@ void ZLQtOptionView::_hide() {
 
 void BooleanOptionView::_createItem() {
 	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
-	myCheckBox->setChecked(((ZLBooleanOptionEntry*)myOption)->initialState());
+	myCheckBox->setChecked(((ZLBooleanOptionEntry&)*myOption).initialState());
 	myWidgets.push_back(myCheckBox);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
 }
 
 void BooleanOptionView::_onAccept() const {
-	((ZLBooleanOptionEntry*)myOption)->onAccept(myCheckBox->isChecked());
+	((ZLBooleanOptionEntry&)*myOption).onAccept(myCheckBox->isChecked());
 }
 
 void BooleanOptionView::onStateChanged(bool state) const {
-	((ZLBooleanOptionEntry*)myOption)->onStateChanged(state);
+	((ZLBooleanOptionEntry&)*myOption).onStateChanged(state);
 }
 
 void Boolean3OptionView::_createItem() {
 	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myTab->widget());
 	myCheckBox->setTristate(true);
 	Qt::CheckState state = Qt::PartiallyChecked;
-	switch (((ZLBoolean3OptionEntry*)myOption)->initialState()) {
+	switch (((ZLBoolean3OptionEntry&)*myOption).initialState()) {
 		case B3_FALSE:
 			state = Qt::Unchecked;
 			break;
@@ -101,7 +101,7 @@ void Boolean3OptionView::_onAccept() const {
 			value = B3_UNDEFINED;
 			break;
 	}
-	((ZLBoolean3OptionEntry*)myOption)->onAccept(value);
+	((ZLBoolean3OptionEntry&)*myOption).onAccept(value);
 }
 
 void Boolean3OptionView::onStateChanged(int state) const {
@@ -117,34 +117,34 @@ void Boolean3OptionView::onStateChanged(int state) const {
 			value = B3_UNDEFINED;
 			break;
 	}
-	((ZLBoolean3OptionEntry*)myOption)->onStateChanged(value);
+	((ZLBoolean3OptionEntry&)*myOption).onStateChanged(value);
 }
 
 void ChoiceOptionView::_createItem() {
 	QGroupBox *groupBox = new QGroupBox(::qtString(ZLOptionView::name()));
 	myWidgets.push_back(groupBox);
 	QVBoxLayout *layout = new QVBoxLayout(groupBox);
-	myButtons = new QRadioButton*[((ZLChoiceOptionEntry*)myOption)->choiceNumber()];
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
+	myButtons = new QRadioButton*[((ZLChoiceOptionEntry&)*myOption).choiceNumber()];
+	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		myButtons[i] = new QRadioButton(groupBox);
-		myButtons[i]->setText(::qtString(((ZLChoiceOptionEntry*)myOption)->text(i)));
+		myButtons[i]->setText(::qtString(((ZLChoiceOptionEntry&)*myOption).text(i)));
 		layout->addWidget(myButtons[i]);
 	}
-	myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]->setChecked(true);
+	myButtons[((ZLChoiceOptionEntry&)*myOption).initialCheckedIndex()]->setChecked(true);
 	myTab->addItem(groupBox, myRow, myFromColumn, myToColumn);
 }
 
 void ChoiceOptionView::_onAccept() const {
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		if (myButtons[i]->isChecked()) {
-			((ZLChoiceOptionEntry*)myOption)->onAccept(i);
+			((ZLChoiceOptionEntry&)*myOption).onAccept(i);
 			return;
 		}
 	}
 }
 
 void ComboOptionView::_createItem() {
-	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
+	const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*myOption;
 	QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	myComboBox = new QComboBox(myTab->widget());
 	myComboBox->setEditable(comboOption.isEditable());
@@ -172,7 +172,7 @@ void ComboOptionView::reset() {
 		myComboBox->removeItem(0);
 	}
 
-	const ZLComboOptionEntry &comboOption = *(ZLComboOptionEntry*)myOption;
+	const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*myOption;
 	const std::vector<std::string> &values = comboOption.values();
 	const std::string &initial = comboOption.initialValue();
 	int selectedIndex = -1;
@@ -193,13 +193,13 @@ void ComboOptionView::_setActive(bool active) {
 }
 
 void ComboOptionView::_onAccept() const {
-	((ZLComboOptionEntry*)myOption)->onAccept((const char*)myComboBox->currentText().toUtf8());
+	((ZLComboOptionEntry&)*myOption).onAccept((const char*)myComboBox->currentText().toUtf8());
 }
 
 void ComboOptionView::onValueSelected(int index) {
-	ZLComboOptionEntry *o = (ZLComboOptionEntry*)myOption;
-	if ((index >= 0) && (index < (int)o->values().size())) {
-		o->onValueSelected(index);
+	ZLComboOptionEntry &o = (ZLComboOptionEntry&)*myOption;
+	if ((index >= 0) && (index < (int)o.values().size())) {
+		o.onValueSelected(index);
 	}
 }
 
@@ -211,7 +211,7 @@ void ComboOptionView::onValueEdited(const QString &value) {
 }
 
 void SpinOptionView::_createItem() {
-	ZLSpinOptionEntry &entry = *(ZLSpinOptionEntry*)myOption;
+	ZLSpinOptionEntry &entry = (ZLSpinOptionEntry&)*myOption;
 	QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 	mySpinBox = new QSpinBox(myTab->widget());
 
@@ -228,7 +228,7 @@ void SpinOptionView::_createItem() {
 }
 
 void SpinOptionView::_onAccept() const {
-	((ZLSpinOptionEntry*)myOption)->onAccept(mySpinBox->value());
+	((ZLSpinOptionEntry&)*myOption).onAccept(mySpinBox->value());
 }
 
 void StringOptionView::_createItem() {
@@ -252,14 +252,14 @@ void StringOptionView::_setActive(bool active) {
 }
 
 void StringOptionView::_onAccept() const {
-	((ZLStringOptionEntry*)myOption)->onAccept((const char*)myLineEdit->text().toUtf8());
+	((ZLStringOptionEntry&)*myOption).onAccept((const char*)myLineEdit->text().toUtf8());
 }
 
 void StringOptionView::reset() {
 	if (myLineEdit == 0) {
 		return;
 	}
-	myLineEdit->setText(::qtString(((ZLStringOptionEntry*)myOption)->initialValue()));
+	myLineEdit->setText(::qtString(((ZLStringOptionEntry&)*myOption).initialValue()));
 	myLineEdit->cursorForward(false, -myLineEdit->text().length());
 }
 
@@ -293,10 +293,10 @@ void KeyLineEdit::keyPressEvent(QKeyEvent *keyEvent) {
 	setText(keyText.c_str());
 	if (!keyText.empty()) {
 		myKeyView.myCurrentKey = keyText;
-		myKeyView.myComboBox->setCurrentIndex(((ZLKeyOptionEntry*)myKeyView.myOption)->actionIndex(keyText));
+		myKeyView.myComboBox->setCurrentIndex(((ZLKeyOptionEntry&)*myKeyView.myOption).actionIndex(keyText));
 		myKeyView.myComboBox->show();
 	}
-	((ZLKeyOptionEntry*)myKeyView.myOption)->onKeySelected(keyText);
+	((ZLKeyOptionEntry&)*myKeyView.myOption).onKeySelected(keyText);
 }
 
 void KeyLineEdit::focusInEvent(QFocusEvent*) {
@@ -323,7 +323,7 @@ void KeyOptionView::_createItem() {
 	myWidgets.push_back(myKeyEditor);
 
 	myComboBox = new QComboBox(widget);
-	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
+	const std::vector<std::string> &actions = ((ZLKeyOptionEntry&)*myOption).actionNames();
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
 		myComboBox->insertItem(it - actions.begin(), ::qtString(*it));
 	}
@@ -338,7 +338,7 @@ void KeyOptionView::reset() {
 	}
 	myCurrentKey.erase();
 	myKeyEditor->setText("");
-	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
+	((ZLKeyOptionEntry&)*myOption).onKeySelected(myCurrentKey);
 	myComboBox->hide();
 }
 
@@ -356,16 +356,16 @@ void KeyOptionView::_hide() {
 	myComboBox->hide();
 	myCurrentKey.erase();
 	myKeyEditor->setText("");
-	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
+	((ZLKeyOptionEntry&)*myOption).onKeySelected(myCurrentKey);
 }
 
 void KeyOptionView::_onAccept() const {
-	((ZLKeyOptionEntry*)myOption)->onAccept();
+	((ZLKeyOptionEntry&)*myOption).onAccept();
 }
 
 void KeyOptionView::onValueChanged(int index) {
 	if (!myCurrentKey.empty()) {
-		((ZLKeyOptionEntry*)myOption)->onValueChanged(myCurrentKey, index);
+		((ZLKeyOptionEntry&)*myOption).onValueChanged(myCurrentKey, index);
 	}
 }
 
@@ -386,7 +386,7 @@ void ColorOptionView::_createItem() {
 	QWidget *widget = new QWidget(myTab->widget());
 	myWidgets.push_back(widget);
 	QGridLayout *layout = new QGridLayout(widget);
-	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
+	const ZLColor &color = ((ZLColorOptionEntry&)*myOption).color();
 	const ZLResource &resource = ZLResource::resource(ZLDialogManager::COLOR_KEY);
 	myRSlider = createColorSlider(layout, 0, resource["red"], color.Red);
 	myGSlider = createColorSlider(layout, 1, resource["green"], color.Green);
@@ -407,7 +407,7 @@ void ColorOptionView::reset() {
 	if (myColorBar == 0) {
 		return;
 	}
-	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
+	ZLColorOptionEntry &colorEntry = (ZLColorOptionEntry&)*myOption;
 	colorEntry.onReset(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
 	const ZLColor &color = colorEntry.color();
 	myRSlider->setValue(color.Red);
@@ -425,5 +425,5 @@ void ColorOptionView::onSliderMove(int) {
 }
 
 void ColorOptionView::_onAccept() const {
-	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
+	((ZLColorOptionEntry&)*myOption).onAccept(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
 }

@@ -39,7 +39,7 @@ void ZLGtkOptionView::_onValueChanged(GtkWidget*, gpointer self) {
 
 void BooleanOptionView::_createItem() {
 	myCheckBox = GTK_CHECK_BUTTON(gtk_check_button_new_with_mnemonic(gtkString(ZLOptionView::name()).c_str()));
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry*)myOption)->initialState());
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myCheckBox), ((ZLBooleanOptionEntry&)*myOption).initialState());
 	g_signal_connect(GTK_WIDGET(myCheckBox), "toggled", G_CALLBACK(_onValueChanged), this);
 	myTab->addItem(GTK_WIDGET(myCheckBox), myRow, myFromColumn, myToColumn);
 }
@@ -53,11 +53,11 @@ void BooleanOptionView::_hide() {
 }
 
 void BooleanOptionView::_onAccept() const {
-	((ZLBooleanOptionEntry*)myOption)->onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
+	((ZLBooleanOptionEntry&)*myOption).onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
 
 void BooleanOptionView::onValueChanged() {
-	((ZLBooleanOptionEntry*)myOption)->onStateChanged(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
+	((ZLBooleanOptionEntry&)*myOption).onStateChanged(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
 
 void Boolean3OptionView::_onReleased(GtkButton *button, gpointer self) {
@@ -98,7 +98,7 @@ void Boolean3OptionView::setState(ZLBoolean3 state) {
 
 void Boolean3OptionView::_createItem() {
 	myCheckBox = GTK_CHECK_BUTTON(gtk_check_button_new_with_mnemonic(gtkString(name()).c_str()));
-	setState(((ZLBoolean3OptionEntry*)myOption)->initialState());
+	setState(((ZLBoolean3OptionEntry&)*myOption).initialState());
 	g_signal_connect(GTK_WIDGET(myCheckBox), "released", G_CALLBACK(_onReleased), this);
 	myTab->addItem(GTK_WIDGET(myCheckBox), myRow, myFromColumn, myToColumn);
 }
@@ -112,11 +112,11 @@ void Boolean3OptionView::_hide() {
 }
 
 void Boolean3OptionView::_onAccept() const {
-	((ZLBoolean3OptionEntry*)myOption)->onAccept(myState);
+	((ZLBoolean3OptionEntry&)*myOption).onAccept(myState);
 }
 
 void Boolean3OptionView::onValueChanged() {
-	((ZLBoolean3OptionEntry*)myOption)->onStateChanged(myState);
+	((ZLBoolean3OptionEntry&)*myOption).onStateChanged(myState);
 }
 
 void ChoiceOptionView::_createItem() {
@@ -124,15 +124,15 @@ void ChoiceOptionView::_createItem() {
 	myVBox = GTK_BOX(gtk_vbox_new(true, 10));
 	gtk_container_set_border_width(GTK_CONTAINER(myVBox), 5);
 
-	int num = ((ZLChoiceOptionEntry*)myOption)->choiceNumber();
+	int num = ((ZLChoiceOptionEntry&)*myOption).choiceNumber();
 	myButtons = new GtkRadioButton* [num];
 	GSList *group = 0;
 	for (int i = 0; i < num; ++i) {
-		myButtons[i] = GTK_RADIO_BUTTON(gtk_radio_button_new_with_label(group, ((ZLChoiceOptionEntry*)myOption)->text(i).c_str()));
+		myButtons[i] = GTK_RADIO_BUTTON(gtk_radio_button_new_with_label(group, ((ZLChoiceOptionEntry&)*myOption).text(i).c_str()));
 		group = gtk_radio_button_get_group(myButtons[i]);
 		gtk_box_pack_start (myVBox, GTK_WIDGET(myButtons[i]), true, true, 0);
 	}
-	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myButtons[((ZLChoiceOptionEntry*)myOption)->initialCheckedIndex()]), true);
+	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myButtons[((ZLChoiceOptionEntry&)*myOption).initialCheckedIndex()]), true);
 	gtk_container_add(GTK_CONTAINER(myFrame), GTK_WIDGET(myVBox));
 	myTab->addItem(GTK_WIDGET(myFrame), myRow, myFromColumn, myToColumn);
 }
@@ -140,7 +140,7 @@ void ChoiceOptionView::_createItem() {
 void ChoiceOptionView::_show() {
 	gtk_widget_show(GTK_WIDGET(myFrame));
 	gtk_widget_show(GTK_WIDGET(myVBox));
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		gtk_widget_show(GTK_WIDGET(myButtons[i]));
 	}
 }
@@ -148,22 +148,22 @@ void ChoiceOptionView::_show() {
 void ChoiceOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myFrame));
 	gtk_widget_hide(GTK_WIDGET(myVBox));
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		gtk_widget_hide(GTK_WIDGET(myButtons[i]));
 	}
 }
 
 void ChoiceOptionView::_onAccept() const {
-	for (int i = 0; i < ((ZLChoiceOptionEntry*)myOption)->choiceNumber(); ++i) {
+	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myButtons[i]))) {
-			((ZLChoiceOptionEntry*)myOption)->onAccept(i);
+			((ZLChoiceOptionEntry&)*myOption).onAccept(i);
 			return;
 		}
 	}
 }
 
 void ComboOptionView::_createItem() {
-	const ZLComboOptionEntry &comboOptionEntry = *(ZLComboOptionEntry*)myOption;
+	const ZLComboOptionEntry &comboOptionEntry = (ZLComboOptionEntry&)*myOption;
 	myLabel = gtkLabel(ZLOptionView::name());
 	myComboBox = comboOptionEntry.isEditable() ?
 		GTK_COMBO_BOX(gtk_combo_box_entry_new_text()) : 
@@ -193,7 +193,7 @@ void ComboOptionView::_setActive(bool active) {
 }
 
 void ComboOptionView::_onAccept() const {
-	((ZLComboOptionEntry*)myOption)->onAccept(gtk_combo_box_get_active_text(myComboBox));
+	((ZLComboOptionEntry&)*myOption).onAccept(gtk_combo_box_get_active_text(myComboBox));
 }
 
 void ComboOptionView::reset() {
@@ -204,7 +204,7 @@ void ComboOptionView::reset() {
 	for (; myListSize > 0; --myListSize) {
 		gtk_combo_box_remove_text(myComboBox, 0);
 	}
-	const ZLComboOptionEntry &comboOptionEntry = *(ZLComboOptionEntry*)myOption;
+	const ZLComboOptionEntry &comboOptionEntry = (ZLComboOptionEntry&)*myOption;
 	const std::vector<std::string> &values = comboOptionEntry.values();
 	const std::string &initial = comboOptionEntry.initialValue();
 	myListSize = values.size();
@@ -223,7 +223,7 @@ void ComboOptionView::reset() {
 
 void ComboOptionView::onValueChanged() {
 	int index = gtk_combo_box_get_active(myComboBox);
-	ZLComboOptionEntry& o = *(ZLComboOptionEntry*)myOption;
+	ZLComboOptionEntry& o = (ZLComboOptionEntry&)*myOption;
 	if ((index != mySelectedIndex) && (index >= 0) && (index < (int)o.values().size())) {
 		mySelectedIndex = index;
   	o.onValueSelected(mySelectedIndex);
@@ -234,11 +234,11 @@ void ComboOptionView::onValueChanged() {
 }
 
 void SpinOptionView::_createItem() {
-	ZLSpinOptionEntry *tempo = (ZLSpinOptionEntry*)myOption;
+	ZLSpinOptionEntry &option = (ZLSpinOptionEntry&)*myOption;
 
 	myLabel = gtkLabel(ZLOptionView::name());
 
-	GtkAdjustment *adj = (GtkAdjustment *)gtk_adjustment_new(tempo->initialValue(), tempo->minValue(), tempo->maxValue(), tempo->step(), tempo->step(), 0);
+	GtkAdjustment *adj = (GtkAdjustment *)gtk_adjustment_new(option.initialValue(), option.minValue(), option.maxValue(), option.step(), option.step(), 0);
 	mySpinBox = GTK_SPIN_BUTTON(gtk_spin_button_new(adj, 1, 0));
 
 	int midColumn = (myFromColumn + myToColumn) / 2;
@@ -258,7 +258,7 @@ void SpinOptionView::_hide() {
 }
 
 void SpinOptionView::_onAccept() const {
-	((ZLSpinOptionEntry*)myOption)->onAccept((int)gtk_spin_button_get_value(mySpinBox));
+	((ZLSpinOptionEntry&)*myOption).onAccept((int)gtk_spin_button_get_value(mySpinBox));
 }
 
 void StringOptionView::_createItem() {
@@ -283,7 +283,7 @@ void StringOptionView::reset() {
 		return;
 	}
 
-	gtk_entry_set_text(myLineEdit, ((ZLStringOptionEntry*)myOption)->initialValue().c_str());
+	gtk_entry_set_text(myLineEdit, ((ZLStringOptionEntry&)*myOption).initialValue().c_str());
 }
 
 void StringOptionView::onValueChanged() {
@@ -312,11 +312,11 @@ void StringOptionView::_setActive(bool active) {
 }
 
 void StringOptionView::_onAccept() const {
-	((ZLStringOptionEntry*)myOption)->onAccept(gtk_entry_get_text(myLineEdit));
+	((ZLStringOptionEntry&)*myOption).onAccept(gtk_entry_get_text(myLineEdit));
 }
 
 void ColorOptionView::_createItem() {
-	const ZLColor &color = ((ZLColorOptionEntry*)myOption)->color();
+	const ZLColor &color = ((ZLColorOptionEntry&)*myOption).color();
 
 	myDrawingArea = gtk_drawing_area_new();
 
@@ -374,7 +374,7 @@ void ColorOptionView::reset() {
 		return;
 	}
 
-	ZLColorOptionEntry &colorEntry = *(ZLColorOptionEntry*)myOption;
+	ZLColorOptionEntry &colorEntry = (ZLColorOptionEntry&)*myOption;
 
 	colorEntry.onReset(ZLColor(
 		myColor.red * 255 / 65535,
@@ -416,7 +416,7 @@ void ColorOptionView::onSliderMove() {
 }
 
 void ColorOptionView::_onAccept() const {
-	((ZLColorOptionEntry*)myOption)->onAccept(ZLColor(
+	((ZLColorOptionEntry&)*myOption).onAccept(ZLColor(
 		myColor.red * 255 / 65535,
 		myColor.green * 255 / 65535,
 		myColor.blue * 255 / 65535
@@ -451,7 +451,7 @@ void KeyOptionView::_createItem() {
 	myLabel = GTK_LABEL(gtkLabel(ZLResource::resource("keyOptionView")["actionFor"].value()));
 
 	myComboBox = GTK_COMBO_BOX(gtk_combo_box_new_text());
-	const std::vector<std::string> &actions = ((ZLKeyOptionEntry*)myOption)->actionNames();
+	const std::vector<std::string> &actions = ((ZLKeyOptionEntry&)*myOption).actionNames();
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
 		gtk_combo_box_append_text(myComboBox, it->c_str());
 	}
@@ -469,7 +469,7 @@ void KeyOptionView::_createItem() {
 
 void KeyOptionView::onValueChanged() {
 	if (!myCurrentKey.empty()) {
-		((ZLKeyOptionEntry*)myOption)->onValueChanged(
+		((ZLKeyOptionEntry&)*myOption).onValueChanged(
 			myCurrentKey,
 			gtk_combo_box_get_active(myComboBox)
 		);
@@ -479,10 +479,10 @@ void KeyOptionView::onValueChanged() {
 void KeyOptionView::setKey(const std::string &key) {
 	myCurrentKey = key;
 	if (!key.empty()) {
-		gtk_combo_box_set_active(myComboBox, ((ZLKeyOptionEntry*)myOption)->actionIndex(key));
+		gtk_combo_box_set_active(myComboBox, ((ZLKeyOptionEntry&)*myOption).actionIndex(key));
 		gtk_widget_show(GTK_WIDGET(myComboBox));
 	}
-	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
+	((ZLKeyOptionEntry&)*myOption).onKeySelected(myCurrentKey);
 }
 
 void KeyOptionView::reset() {
@@ -491,7 +491,7 @@ void KeyOptionView::reset() {
 	}
 	myCurrentKey.erase();
 	gtk_entry_set_text(myKeyEntry, "");
-	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
+	((ZLKeyOptionEntry&)*myOption).onKeySelected(myCurrentKey);
 	gtk_widget_hide(GTK_WIDGET(myComboBox));
 }
 
@@ -510,9 +510,9 @@ void KeyOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myTable));
 	myCurrentKey.erase();
 	gtk_entry_set_text(myKeyEntry, "");
-	((ZLKeyOptionEntry*)myOption)->onKeySelected(myCurrentKey);
+	((ZLKeyOptionEntry&)*myOption).onKeySelected(myCurrentKey);
 }
 
 void KeyOptionView::_onAccept() const {
-	((ZLKeyOptionEntry*)myOption)->onAccept();
+	((ZLKeyOptionEntry&)*myOption).onAccept();
 }

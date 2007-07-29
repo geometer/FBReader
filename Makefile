@@ -3,7 +3,7 @@ ROOTDIR = $(CURDIR)
 include makefiles/platforms.mk
 
 ZLIBDIRS = zlibrary/core zlibrary/text zlibrary/ui
-APPDIRS = fbreader GeometricCalculator SampleApplications/0 SampleApplications/1 SampleApplications/2
+APPDIRS = fbreader fbdictionary GeometricCalculator SampleApplications/0 SampleApplications/1 SampleApplications/2
 
 all:
 	@for dir in $(ZLIBDIRS) $(APPDIRS); do \

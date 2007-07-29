@@ -31,7 +31,7 @@
 #include <hildon-widgets/hildon-appview.h>
 #include <libosso.h>
 
-#include <ZLApplication.h>
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 
 class ZLGtkApplicationWindow : public ZLApplicationWindow { 
 

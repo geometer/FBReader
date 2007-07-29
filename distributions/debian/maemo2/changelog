@@ -1,13 +1,30 @@
+fbreader (0.8.5c-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 19 Jul 2007 15:20:00 +0400
+
 fbreader (0.8.5a-1) stable; urgency=low
+
   * new upstream version
   * maemo package icon has been restored
+
  -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 7 Jul 2007 02:12:00 +0400
+
 fbreader (0.8.5-1) stable; urgency=low
+
   * new upstream version
+
  -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 7 Jul 2007 02:12:00 +0400
+
 fbreader (0.8.4zz-1) stable; urgency=low
+
   * new upstream version
+
  -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 5 Jul 2007 03:17:00 +0400
+
 fbreader (0.8.4z-1) stable; urgency=low
+
   * Initial release.
+
  -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 30 Jun 2007 01:48:00 +0400
