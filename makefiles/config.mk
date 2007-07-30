@@ -7,6 +7,7 @@ include $(ROOTDIR)/makefiles/arch/$(TARGET_ARCH).mk
 
 BINDIR ?= $(INSTALLDIR)/bin
 LIBDIR ?= $(INSTALLDIR)/lib
+INCDIR ?= $(INSTALLDIR)/include
 SHAREDIR ?= $(INSTALLDIR)/share
 BASEDIR ?= $(SHAREDIR)
 HOMEDIR ?= "~"

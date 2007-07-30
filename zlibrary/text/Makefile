@@ -43,6 +43,16 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 endif
 
+do_install_dev:
+	@install -d $(DESTDIR)$(LIBDIR)
+ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SHORTNAME)
+else
+	@install $(TARGET) $(DESTDIR)$(LIBDIR)
+endif
+	@install -d $(DESTDIR)$(INCDIR)/zlibrary/text
+	@install -m 0644 $(wildcard include/*.h) $(DESTDIR)$(INCDIR)/zlibrary/text
+
 clean:
 	@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \

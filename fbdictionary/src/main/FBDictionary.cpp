@@ -52,8 +52,8 @@ FBDictionary::FBDictionary() : ZLApplication("FBDictionary"), myBindings("Keys")
 
 	addAction(FBAction::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction(*this));
 
-	toolbar().addButton(FBAction::SHOW_OPTIONS_DIALOG, ZLResourceKey("settings"));
 	toolbar().addOptionEntry(new WordEntry(*this));
+	toolbar().addButton(FBAction::SHOW_OPTIONS_DIALOG, ZLResourceKey("settings"));
 }
 
 FBDictionary::~FBDictionary() {

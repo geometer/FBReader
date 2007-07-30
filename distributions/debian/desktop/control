@@ -72,3 +72,20 @@ Depends: ${shlibs:Depends}
 Provides: libzlui
 Description: Qt4 interface module for zlibrary
  This package provides a qt4-based UI for zlibrary.
+
+Package: libzlcore-dev
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: libzlcore
+Description: zlibrary core - development files
+ This is the core of zlibrary, the library that the fbreader e-book reader
+ is based on.
+
+Package: libzltext-dev
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: libzltext
+Description: zlibrary text model/viewer -development files
+ This package provides text model/viewer part of zlibrary.

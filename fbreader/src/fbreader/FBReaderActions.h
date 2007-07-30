@@ -116,7 +116,6 @@ class ShowContentsAction : public FBAction {
 public:
 	ShowContentsAction(FBReader &fbreader);
 	bool isVisible();
-	bool isEnabled();
 	void run();
 };
 

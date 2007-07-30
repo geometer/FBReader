@@ -25,6 +25,13 @@ do_install:
 		fi; \
 	done
 
+do_install_dev:
+	@for dir in $(ZLIBDIRS); do \
+		if [ -d $$dir ]; then \
+			cd $$dir; make $@; cd $(ROOTDIR); \
+		fi; \
+	done
+
 clean:
 	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
 		if [ -d $$dir ]; then \

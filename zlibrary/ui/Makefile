@@ -98,6 +98,8 @@ ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
 	@install $(TARGET) $(LIB_ZLIBRARY)/ui
 endif
 
+do_install_dev:
+
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \
 		if [ -d $$subdir ]; then \

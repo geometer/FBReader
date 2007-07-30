@@ -11,16 +11,9 @@ else # UI_TYPE == gpe
 	STYLE = gpe$(RESOLUTION)
 endif
 
-ifeq "$(RESOLUTION)" "240x320"
-  ICONSIZE = 18x15
-else
-  ICONSIZE = 34x28
-endif
-
 install:
 	@install -d $(DESTDIR)$(PICSDIR)
-	@install -m 0644 ../icons/$(ICONSIZE)/FBReader.png $(DESTDIR)$(PICSDIR)
-	@install -m 0644 $(wildcard ../icons/$(ICONSIZE)/FBReader/*.png) $(DESTDIR)$(PICSDIR)
+	@install -m 0644 ../icons/application/$(TARGET_ARCH)_$(RESOLUTION).png $(DESTDIR)$(PICSDIR)/FBReader.png
 	@install -m 0644 ../data/default/config.openzaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
 	@install -m 0644 ../data/default/keymap.zaurus.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.$(STYLE).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml

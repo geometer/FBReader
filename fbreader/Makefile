@@ -5,6 +5,7 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
 TARGET = FBReader
+target = fbreader
 
 ALL_SUBDIRS = src src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/oeb src/formats/rtf src/formats/openreader src/formats/dummy src/formats/util src/external src/optionsDialog src/fbreader
 ALL_ARCHSUBDIRS = desktop pdaxrom opie zaurus maemo openzaurus pma400 win32
@@ -27,6 +28,8 @@ ifneq "$(RESOLUTION)" ""
   VARIANT = $(TARGET_ARCH)_$(RESOLUTION)
 endif
 
+APPIMAGEDIR_REAL = $(subst %application_name%,$(target),$(subst %APPLICATION_NAME%,$(TARGET),$(APPIMAGEDIR)))
+
 do_install:
 	@install -d $(DESTDIR)$(BINDIR)
 	@install $(TARGET) $(DESTDIR)$(BINDIR)
@@ -44,6 +47,10 @@ do_install:
 	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml
 	@install -d $(FBSHAREDIR)/resources
 	@install -m 0644 $(wildcard share/FBReader/resources/*.xml) $(FBSHAREDIR)/resources
+	@install -d $(DESTDIR)$(APPIMAGEDIR_REAL)
+	@install -m 0644 $(wildcard icons/toolbar/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
+	@install -m 0644 $(wildcard icons/filetree/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
+	@install -m 0644 $(wildcard icons/booktree/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@make -C $(TARGET_ARCH) RESOLUTION=$(RESOLUTION) install
 
 clean:

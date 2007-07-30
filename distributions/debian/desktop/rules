@@ -26,6 +26,8 @@ install-stamp: build
 		dh_installdirs
 		$(MAKE) -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzlcore do_install
 		$(MAKE) -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzltext do_install
+		$(MAKE) -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzlcore-dev do_install_dev
+		$(MAKE) -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzltext-dev do_install_dev
 		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=gtk DESTDIR=$(DEB_DIR)/libzlui-gtk do_install
 		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt DESTDIR=$(DEB_DIR)/libzlui-qt do_install
 		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4 DESTDIR=$(DEB_DIR)/libzlui-qt4 do_install

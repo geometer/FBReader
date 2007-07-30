@@ -208,6 +208,7 @@ ZLGtkToolItemWrapper::ZLGtkToolItemWrapper(GtkToolItem *item) : myItem(item) {
 }
 
 void ZLGtkToolItemWrapper::attachWidget(ZLOptionView&, GtkWidget *widget) {
+	gtk_container_set_border_width(GTK_CONTAINER(myItem), 2);
 	gtk_container_add(GTK_CONTAINER(myItem), widget);
 }
 

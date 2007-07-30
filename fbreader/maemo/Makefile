@@ -15,13 +15,17 @@ BACKUP_CONF = FBReader.backup
 SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
 
 install: $(DESKTOP_FILE) $(SERVICE_FILE)
-	@install -d $(SHARE_FBREADER)/icons
-	@install -m 0644 $(wildcard ../icons/tango-green-blue/FBReader/*.png) $(SHARE_FBREADER)/icons
 	@install -m 0644 ../data/default/config.maemo.xml $(SHARE_FBREADER)/default/config.xml
 	@install -m 0644 ../data/default/keymap.maemo.xml $(SHARE_FBREADER)/default/keymap.xml
 	@install -m 0644 ../data/default/styles.maemo.xml $(SHARE_FBREADER)/default/styles.xml
+	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/16x16/apps
+	@install -m 0644 ../icons/application/16x16.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/16x16/apps/FBReader.png
 	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/26x26/apps
-	@install -m 0644 ../icons/blueset/FBReader.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/26x26/apps
+	@install -m 0644 ../icons/application/26x26.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/26x26/apps/FBReader.png
+	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/48x48/apps
+	@install -m 0644 ../icons/application/48x48.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/48x48/apps/FBReader.png
+	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/64x64/apps
+	@install -m 0644 ../icons/application/64x64.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/64x64/apps/FBReader.png
 	@install -d $(DESTDIR)$(SHAREDIR)/applications/hildon
 	@install -m 0644 $(DESKTOP_FILE) $(DESTDIR)$(SHAREDIR)/applications/hildon
 	@install -d $(MENUDIR)

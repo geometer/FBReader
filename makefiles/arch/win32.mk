@@ -24,7 +24,7 @@ BUILD_RESOURCE_OBJECT = yes
 
 .resources:
 	@echo -n "Creating resource object..."
-	@echo "ApplicationIcon ICON icons/win32/$(TARGET).ico" > $(TARGET).rc
+	@echo "ApplicationIcon ICON icons/application/win32.ico" > $(TARGET).rc
 	@echo "1 24 win32/manifest" >> $(TARGET).rc
 	@$(RESOURCE_COMPILER) $(TARGET).rc -o src/$(TARGET)_rc.o
 	@$(RM_QUIET) $(TARGET).rc

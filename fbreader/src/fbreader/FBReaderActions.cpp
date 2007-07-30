@@ -95,12 +95,11 @@ ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) 
 }
 
 bool ShowContentsAction::isVisible() {
+	if (((ContentsView&)*fbreader().myContentsView).isEmpty()) {
+		return false;
+	}
 	FBReader::ViewMode mode = fbreader().myMode;
 	return (mode == FBReader::BOOK_TEXT_MODE) || (mode == FBReader::FOOTNOTE_MODE);
-}
-
-bool ShowContentsAction::isEnabled() {
-	return isVisible() && !((ContentsView&)*fbreader().myContentsView).isEmpty();
 }
 
 void ShowContentsAction::run() {
