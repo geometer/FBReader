@@ -40,7 +40,7 @@ public:
 	virtual void attachWidgets(ZLOptionView &view, GtkWidget *widget0, GtkWidget *widget1) = 0;
 
 protected:
-	virtual ZLOptionView *createViewByEntry(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
+	ZLOptionView *createViewByEntry(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 };
 
 inline ZLGtkOptionViewHolder::~ZLGtkOptionViewHolder() {}

@@ -99,6 +99,7 @@ private:
 		std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
 		std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
 		std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorMap;
+		std::vector<std::pair<ZLApplication::Toolbar::ItemPtr,bool> > mySeparatorVisibilityMap;
 		std::vector<shared_ptr<ZLOptionView> > myViews;
 		int myWidgetCounter;
 	};

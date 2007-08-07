@@ -21,12 +21,16 @@
 #ifndef __ZLQTDIALOGCONTENT_H__
 #define __ZLQTDIALOGCONTENT_H__
 
+#include <map>
+
 #include <ZLDialogContent.h>
+
+#include "../optionView/ZLQtOptionViewHolder.h"
 
 class QWidget;
 class QGridLayout;
 
-class ZLQtDialogContent : public ZLDialogContent {
+class ZLQtDialogContent : public ZLDialogContent, public ZLQtOptionViewHolder {
 
 public:
 	ZLQtDialogContent(QWidget *parent, const ZLResource &resource);
@@ -36,14 +40,16 @@ public:
 	void addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0,
 									const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1);
 
-	void addItem(QWidget *widget, int row, int fromColumn, int toColumn);
-
 	void close();
 
 	QWidget *widget();
 	QWidget *parentWidget();
 
 private:
+	void attachWidget(QWidget *widget, int row, int fromColumn, int toColumn);
+	void attachWidget(ZLOptionView &view, QWidget *widget);
+	void attachWidgets(ZLOptionView &view, QWidget *widget0, int weight0, QWidget *widget1, int weight1);
+
 	void createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int fromColumn, int toColumn);
 
 private:
@@ -51,6 +57,16 @@ private:
 	QGridLayout *myLayout;
 	int myRowCounter;
 	QWidget *myParentWidget;
+
+	struct Position {
+		Position(int row, int fromColumn, int toColumn);
+		int Row;
+		int FromColumn;
+		int ToColumn;
+	};
+	std::map<ZLOptionView*,Position> myOptionPositions;
 };
+
+inline ZLQtDialogContent::Position::Position(int row, int fromColumn, int toColumn) : Row(row), FromColumn(fromColumn), ToColumn(toColumn) {}
 
 #endif /* __ZLQTDIALOGCONTENT_H__ */

@@ -30,13 +30,14 @@ class ZLUnixCommunicationManager : public ZLCommunicationManager {
 public:
 	static void createInstance();
 
-	shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile);
+	shared_ptr<ZLMessageOutputChannel> createMessageOutputChannel(const std::string &protocol, const std::string &testFile);
+	void addInputMessageDescription(const std::string&, const std::string&, const Data&) {}
 
 private:
 	ZLUnixCommunicationManager();
 };
 
-class ZLUnixExecCommunicator : public ZLCommunicator {
+class ZLUnixExecMessageOutputChannel : public ZLMessageOutputChannel {
 
 public:
 	shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data);
@@ -53,7 +54,7 @@ public:
 private:
 	std::string myCommand;
 
-friend class ZLUnixExecCommunicator;
+friend class ZLUnixExecMessageOutputChannel;
 };
 
 #endif /* __ZLUNIXMESSAGE_H__ */

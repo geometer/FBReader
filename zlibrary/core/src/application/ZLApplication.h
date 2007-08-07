@@ -31,6 +31,7 @@
 #include <ZLOptionEntry.h>
 #include <ZLTime.h>
 #include <ZLResource.h>
+#include <ZLMessage.h>
 
 class ZLView;
 class ZLViewWidget;
@@ -327,6 +328,19 @@ public:
 		virtual void processSepartor(ZLApplication::Menubar::Separator &separator) = 0;
 	};
 
+	class PresentWindowHandler : public ZLMessageHandler {
+
+	public:
+		PresentWindowHandler(ZLApplication &application);
+		void onMessageReceived(const std::vector<std::string> &arguments);
+		const std::string &lastCaller() const;
+		void resetLastCaller();
+
+	private:
+		ZLApplication &myApplication;
+		std::string myLastCaller;
+	};
+
 protected:
 	ZLApplication(const std::string &name);
 
@@ -374,6 +388,10 @@ public:
 	const Menubar &menubar() const;
 
 	void refreshWindow();
+	void presentWindow();
+
+	const std::string &lastCaller() const;
+	void resetLastCaller();
 
 protected:
 	ZLViewWidget *myViewWidget;
@@ -386,6 +404,7 @@ private:
 	ZLPaintContext *myContext;
 	class ZLApplicationWindow *myWindow;
 	ZLTime myLastKeyActionTime;
+	shared_ptr<ZLMessageHandler> myPresentWindowHandler;
 
 friend class ZLApplicationWindow;
 };

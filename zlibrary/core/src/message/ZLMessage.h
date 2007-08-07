@@ -21,12 +21,16 @@
 #ifndef __ZLMESSAGE_H__
 #define __ZLMESSAGE_H__
 
-#include <shared_ptr.h>
+#include <vector>
 #include <map>
 #include <string>
 
-class ZLCommunicator;
+#include <shared_ptr.h>
+
+class ZLMessageOutputChannel;
 class ZLMessageSender;
+
+class ZLMessageHandler;
 
 class ZLCommunicationManager {
 
@@ -34,27 +38,39 @@ public:
 	static ZLCommunicationManager &instance();
 	static void deleteInstance();
 
+protected:
+	static ZLCommunicationManager *ourInstance;
+
 public:
 	typedef std::map<std::string,std::string> Data;
-
-	virtual shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile) = 0;
 
 protected:
 	ZLCommunicationManager();
 	virtual ~ZLCommunicationManager();
+	void init();
+	void onMessageReceived(const std::string &command, const std::vector<std::string> &arguments);
 
-protected:
-	static ZLCommunicationManager *ourInstance;
+public:
+	virtual shared_ptr<ZLMessageOutputChannel> createMessageOutputChannel(const std::string &protocol, const std::string &testFile) = 0;
+	virtual void addInputMessageDescription(const std::string &command, const std::string &protocol, const Data &data) = 0;
+	void registerHandler(const std::string &command, shared_ptr<ZLMessageHandler> receiver);
+
+private:
+	shared_ptr<ZLMessageHandler> handler(const std::string &command);
+
+private:
+	std::map<std::string,weak_ptr<ZLMessageHandler> >	myRegisteredHandlers;
+	bool myInitialized;
 
 private:
 	ZLCommunicationManager(const ZLCommunicationManager&);
 	const ZLCommunicationManager &operator = (const ZLCommunicationManager&);
 };
 
-class ZLCommunicator {
+class ZLMessageOutputChannel {
 
 public:
-	virtual ~ZLCommunicator();
+	virtual ~ZLMessageOutputChannel();
 
 	virtual shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data) = 0;
 };
@@ -65,6 +81,13 @@ public:
 	virtual ~ZLMessageSender();
 
 	virtual void sendStringMessage(const std::string &message) = 0;
+};
+
+class ZLMessageHandler {
+
+public:
+	virtual ~ZLMessageHandler();
+	virtual void onMessageReceived(const std::vector<std::string> &arguments) = 0;
 };
 
 #endif /* __ZLMESSAGE_H__ */

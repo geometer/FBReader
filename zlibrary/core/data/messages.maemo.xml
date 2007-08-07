@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+	<message command="present" protocol="osso-rpc" method="present"/>
+</messages>

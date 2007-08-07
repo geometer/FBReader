@@ -32,7 +32,7 @@ APPIMAGEDIR_REAL = $(subst %application_name%,$(target),$(subst %APPLICATION_NAM
 
 do_install:
 	@install -d $(DESTDIR)$(BINDIR)
-	@install $(TARGET) $(DESTDIR)$(BINDIR)
+	@install $(TARGET) $(DESTDIR)$(BINDIR)/FBReader
 	@install -d $(FBSHAREDIR)
 	@install -d $(FBSHAREDIR)/help
 	@install -m 0644 data/help/MiniHelp.$(VARIANT).en.fb2 $(FBSHAREDIR)/help/MiniHelp.en.fb2
@@ -45,6 +45,9 @@ do_install:
 	@install -m 0644 $(wildcard share/FBReader/formats/xhtml/*.ent) $(FBSHAREDIR)/formats/xhtml
 	@install -d $(FBSHAREDIR)/default
 	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml
+	@if [ -f data/default/messages.$(TARGET_ARCH).xml ]; then \
+		install -m 0644 data/default/messages.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/messages.xml; \
+	fi
 	@install -d $(FBSHAREDIR)/resources
 	@install -m 0644 $(wildcard share/FBReader/resources/*.xml) $(FBSHAREDIR)/resources
 	@install -d $(DESTDIR)$(APPIMAGEDIR_REAL)

@@ -272,7 +272,6 @@
 			<node name="message" value="Fichier d'aide non trouvé, désolé"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Enregistrement de la configuration..."/>
 			<node name="loadingBook" value="Chargement du livre. Veuillez patienter..."/>
 			<node name="loadingBookList" value="Chargement de la liste des livres. Veuillez patitenter..."/>
 		</node>

@@ -195,8 +195,6 @@ bool ZLGtkApplicationWindow::isFullscreen() const {
 		GDK_WINDOW_STATE_FULLSCREEN;
 }
 
-static const int VISIBLE_SEPARATOR = 1 << 16;
-
 void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	myToolbar.addToolbarItem(item);
 }
@@ -230,10 +228,8 @@ void ZLGtkApplicationWindow::Toolbar::addToolbarItem(ZLApplication::Toolbar::Ite
 			}
 			break;
 		case ZLApplication::Toolbar::Item::SEPARATOR:
-			{
-				int index = myButtonToWidget.size() + myWidgetCounter + mySeparatorMap.size();
-				mySeparatorMap[item] = index;
-			}
+			mySeparatorMap[item] = myButtonToWidget.size() + myWidgetCounter;
+			mySeparatorVisibilityMap.push_back(std::pair<ZLApplication::Toolbar::ItemPtr,bool>(item, false));
 			break;
 	}
 }
@@ -271,18 +267,27 @@ void ZLGtkApplicationWindow::Toolbar::setToolbarItemState(ZLApplication::Toolbar
 			{
 				std::map<const shared_ptr<ZLApplication::Toolbar::Item>,int>::iterator it = mySeparatorMap.find(item);
 				if (it != mySeparatorMap.end()) {
-					int &index = it->second;
+					int index = it->second;
+					bool *wasVisiblePtr = 0;
+					for (std::vector<std::pair<ZLApplication::Toolbar::ItemPtr,bool> >::iterator jt = mySeparatorVisibilityMap.begin(); jt != mySeparatorVisibilityMap.end(); ++jt) {
+						if (jt->first == it->first) {
+							wasVisiblePtr = &jt->second;
+							break;
+						}
+						if (jt->second) {
+							++index;
+						}
+					}
 					if (visible) {
-						if ((index & VISIBLE_SEPARATOR) == 0) {
+						if (!*wasVisiblePtr) {
 							gtk_toolbar_insert_space(myGtkToolbar, index);
-							index |= VISIBLE_SEPARATOR;
 						}
 					} else {
-						if ((index & VISIBLE_SEPARATOR) != 0) {
-							index &= ~VISIBLE_SEPARATOR;
+						if (*wasVisiblePtr) {
 							gtk_toolbar_remove_space(myGtkToolbar, index);
 						}
 					}
+					*wasVisiblePtr = visible;
 				}
 			}
 			break;

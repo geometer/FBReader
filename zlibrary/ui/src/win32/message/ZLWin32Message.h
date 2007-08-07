@@ -31,13 +31,14 @@ class ZLWin32CommunicationManager : public ZLCommunicationManager {
 public:
 	static void createInstance();
 
-	shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile);
+	shared_ptr<ZLMessageOutputChannel> createMessageOutputChannel(const std::string &protocol, const std::string &testFile);
+	void addInputMessageDescription(const std::string&, const std::string&, const Data&) {}
 
 private:
 	ZLWin32CommunicationManager();
 };
 
-class ZLWin32ExecCommunicator : public ZLCommunicator {
+class ZLWin32ExecMessageOutputChannel : public ZLMessageOutputChannel {
 
 public:
 	shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data);
@@ -54,7 +55,7 @@ public:
 private:
 	ZLUnicodeUtil::Ucs2String myProgram;
 
-friend class ZLWin32ExecCommunicator;
+friend class ZLWin32ExecMessageOutputChannel;
 };
 
 #endif /* __ZLWIN32MESSAGE_H__ */

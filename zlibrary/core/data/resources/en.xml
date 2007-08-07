@@ -8,6 +8,9 @@
 			<node name="no" value="&amp;No"/>
 			<node name="apply" value="&amp;Apply"/>
 		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Saving config..."/>
+		</node>
 	</node>
 	<node name="color">
 		<node name="red" value="Red"/>

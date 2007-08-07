@@ -23,11 +23,11 @@ build_package() {
 			case "$1" in
 				maemo)
 					/scratchbox/login sbox-config -st SDK_ARM
-					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=$1 $2
+					/scratchbox/login -d src/projects/fbreader $make_package ARCHITECTURE=$1 $2
 					;;
 				maemo2)
 					/scratchbox/login sbox-config -st SDK_ARMEL
-					/scratchbox/login -d src/zaurus $make_package ARCHITECTURE=$1 $2
+					/scratchbox/login -d src/projects/fbreader $make_package ARCHITECTURE=$1 $2
 					;;
 				*)
 					$make_package ARCHITECTURE=$1 $2

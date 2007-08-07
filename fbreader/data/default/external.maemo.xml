@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExternalPrograms>
+	<section name="Dictionary">
+		<program name="FBDictionary" protocol="osso-rpc" testFile="/usr/bin/FBDictionary">
+			<action name="present" service="FBDictionary" command="present"/>
+			<action name="showWord" service="FBDictionary" command="openWord"/>
+		</program>
+	</section>
 	<section name="Web Browser">
 		<program name="%defaultBrowser" protocol="osso-rpc">
 			<action name="openLink" service="osso_browser" command="load_url"/>

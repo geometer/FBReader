@@ -271,7 +271,6 @@
 			<node name="message" value="Извините, нет файла с информацией"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Сохранение настроек..."/>
 			<node name="loadingBook" value="Загрузка книги. Подождите, пожалуйста..."/>
 			<node name="loadingBookList" value="Загрузка списка книг. Подождите, пожалуйста..."/>
 		</node>

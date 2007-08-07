@@ -30,26 +30,38 @@ class ZLMaemoCommunicationManager : public ZLCommunicationManager {
 public:
 	static void createInstance();
 
-	shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile);
+	shared_ptr<ZLMessageOutputChannel> createMessageOutputChannel(const std::string &protocol, const std::string &testFile);
+	void addInputMessageDescription(const std::string &command, const std::string &protocol, const Data &data);
 
 	void init();
 	void shutdown();
+
+	gint onMessageReceived(const gchar *interface, const gchar *method, GArray *arguments, osso_rpc_t *retval);
 
 private:
 	ZLMaemoCommunicationManager();
 
 private:
 	osso_context_t *myContext;
+	std::map<std::string,std::string> myOssoMethodToCommand;
+	std::map<std::string,std::string> myOssoMethodToConverter;
 };
 
-class ZLMaemoRpcCommunicator : public ZLCommunicator {
+class ZLMaemoRpcMessageOutputChannel : public ZLMessageOutputChannel {
 
 public:
-	ZLMaemoRpcCommunicator(osso_context_t *&context);
+	ZLMaemoRpcMessageOutputChannel(osso_context_t *&context);
 	shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data);
 
 private:
 	osso_context_t *&myContext;
+};
+
+class ZLMaemoPresentMessageOutputChannel : public ZLMaemoRpcMessageOutputChannel {
+
+public:
+	ZLMaemoPresentMessageOutputChannel(osso_context_t *&context);
+	shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data);
 };
 
 class ZLMaemoRpcMessageSender : public ZLMessageSender {
@@ -65,7 +77,7 @@ private:
 	const std::string myService;
 	const std::string myCommand;
 
-friend class ZLMaemoRpcCommunicator;
+friend class ZLMaemoRpcMessageOutputChannel;
 };
 
 #endif /* __ZLMAEMOMESSAGE_H__ */

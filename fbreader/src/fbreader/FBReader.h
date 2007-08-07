@@ -34,13 +34,15 @@
 #include "../description/BookDescription.h"
 #include "../external/ProgramCollection.h"
 
+class ZLViewWidget;
+class ZLMessageHandler;
+
 class BookModel;
 class BookTextView;
 class FootnoteView;
 class ContentsView;
 class CollectionView;
 class RecentBooksView;
-class ZLViewWidget;
 
 class FBReader : public ZLApplication {
 
@@ -158,8 +160,13 @@ private:
 	ZLKeyBindings myBindings270;
 
 	std::string myBookToOpen;
+	bool myBookAlreadyOpen;
 
 	ProgramCollectionMap myProgramCollectionMap;
+
+	shared_ptr<ZLMessageHandler> myOpenFileHandler;
+
+friend class OpenFileHandler;
 
 friend class OptionsDialog;
 friend class FBView;

@@ -33,7 +33,7 @@
 class Program {
 
 private:
-	Program(const std::string &name, shared_ptr<ZLCommunicator> communicator);
+	Program(const std::string &name, shared_ptr<ZLMessageOutputChannel> channel);
 
 public:
 	void run(const std::string &command, const std::string &parameter) const;
@@ -48,7 +48,7 @@ public:
 
 private:
 	const std::string myName;
-	shared_ptr<ZLCommunicator> myCommunicator;
+	shared_ptr<ZLMessageOutputChannel> myChannel;
 	std::map<std::string,ZLCommunicationManager::Data> myCommandData;
 	std::vector<OptionDescription> myOptions;
 	std::map<std::string,std::string> myDefaultValues;

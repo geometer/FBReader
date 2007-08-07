@@ -34,7 +34,7 @@ void ZLUnixCommunicationManager::createInstance() {
 	}
 }
 
-shared_ptr<ZLCommunicator> ZLUnixCommunicationManager::createCommunicator(const std::string &protocol, const std::string &testFile) {
+shared_ptr<ZLMessageOutputChannel> ZLUnixCommunicationManager::createMessageOutputChannel(const std::string &protocol, const std::string &testFile) {
 	if (protocol != "execute") {
 		return 0;
 	}
@@ -43,10 +43,10 @@ shared_ptr<ZLCommunicator> ZLUnixCommunicationManager::createCommunicator(const 
 		return 0;
 	}
 
-	return new ZLUnixExecCommunicator();
+	return new ZLUnixExecMessageOutputChannel();
 }
 
-shared_ptr<ZLMessageSender> ZLUnixExecCommunicator::createSender(const ZLCommunicationManager::Data &data) {
+shared_ptr<ZLMessageSender> ZLUnixExecMessageOutputChannel::createSender(const ZLCommunicationManager::Data &data) {
 	ZLCommunicationManager::Data::const_iterator it = data.find("command");
 	if (it == data.end()) {
 		return 0;

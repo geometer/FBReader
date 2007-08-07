@@ -49,6 +49,8 @@ protected:
 
 	// TODO: change to non-virtual (?)
 	virtual void refresh();
+	// TODO: change to pure virtual
+	virtual void present() {}
 
 	virtual void close() = 0;
 

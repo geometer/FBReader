@@ -33,7 +33,7 @@ void ZLQtopiaCommunicationManager::createInstance() {
 	}
 }
 
-shared_ptr<ZLCommunicator> ZLQtopiaCommunicationManager::createCommunicator(const std::string &protocol, const std::string &testFile) {
+shared_ptr<ZLMessageOutputChannel> ZLQtopiaCommunicationManager::createMessageOutputChannel(const std::string &protocol, const std::string &testFile) {
 	if (protocol != "QCop") {
 		return 0;
 	}
@@ -42,10 +42,10 @@ shared_ptr<ZLCommunicator> ZLQtopiaCommunicationManager::createCommunicator(cons
 		return 0;
 	}
 
-	return new ZLQCopCommunicator();
+	return new ZLQCopMessageOutputChannel();
 }
 
-shared_ptr<ZLMessageSender> ZLQCopCommunicator::createSender(const ZLCommunicationManager::Data &data) {
+shared_ptr<ZLMessageSender> ZLQCopMessageOutputChannel::createSender(const ZLCommunicationManager::Data &data) {
 	ZLCommunicationManager::Data::const_iterator it = data.find("channel");
 	if (it == data.end()) {
 		return 0;

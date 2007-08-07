@@ -29,6 +29,7 @@
 #include <ZLDir.h>
 #include <ZLStringUtil.h>
 #include <ZLResource.h>
+#include <ZLMessage.h>
 
 #include <ZLTextHyphenator.h>
 
@@ -74,6 +75,22 @@ FBReader::ScrollingOptions::ScrollingOptions(
 		LinesToScrollOption(ZLOption::CONFIG_CATEGORY, linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
 		PercentToScrollOption(ZLOption::CONFIG_CATEGORY, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
 
+class OpenFileHandler : public ZLMessageHandler {
+
+public:
+	OpenFileHandler(FBReader &fbreader) : myFBReader(fbreader) {}
+	void onMessageReceived(const std::vector<std::string> &arguments) {
+		if (arguments.size() == 1) {
+			myFBReader.myBookAlreadyOpen = true;
+			myFBReader.presentWindow();
+			myFBReader.openFile(arguments[0]);
+		}
+	}
+
+private:
+	FBReader &myFBReader;
+};
+
 FBReader::FBReader(const std::string &bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
@@ -118,7 +135,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBindings90("Keys90"),
 	myBindings180("Keys180"),
 	myBindings270("Keys270"),
-	myBookToOpen(bookToOpen) {
+	myBookToOpen(bookToOpen),
+	myBookAlreadyOpen(false) {
 
 	myModel = 0;
 	myBookTextView = new BookTextView(*this, context());
@@ -186,8 +204,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	toolbar().addButton(ACTION_SHOW_OPTIONS, ZLResourceKey("settings"));
 	toolbar().addSeparator();
 	toolbar().addButton(ACTION_ROTATE_SCREEN, ZLResourceKey("rotatescreen"));
-	toolbar().addSeparator();
 	if (ShowHelpIconOption.value()) {
+		toolbar().addSeparator();
 		toolbar().addButton(ACTION_SHOW_HELP, ZLResourceKey("help"));
 	}
 
@@ -228,6 +246,9 @@ FBReader::FBReader(const std::string &bookToOpen) :
 
 	menubar().addItem(ACTION_SHOW_OPTIONS, ZLResourceKey("settings"));
 	menubar().addItem(ACTION_QUIT, ZLResourceKey("close"));
+
+	myOpenFileHandler = new OpenFileHandler(*this);
+	ZLCommunicationManager::instance().registerHandler("openFile", myOpenFileHandler);
 }
 
 FBReader::~FBReader() {
@@ -243,21 +264,23 @@ void FBReader::initWindow() {
 	ZLApplication::initWindow();
 	trackStylus(true);
 
-	BookDescriptionPtr description;
-	if (!myBookToOpen.empty()) {
-		description = createDescription(myBookToOpen);
+	if (!myBookAlreadyOpen) {
+		BookDescriptionPtr description;
+		if (!myBookToOpen.empty()) {
+			description = createDescription(myBookToOpen);
+		}
+		if (description.isNull()) {
+			ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, "");
+			description = BookDescription::getDescription(bookName.value());
+		}
+		if (description.isNull()) {
+			description = BookDescription::getDescription(helpFileName(ZLibrary::Language()));
+		}
+		if (description.isNull()) {
+			description = BookDescription::getDescription(helpFileName("en"));
+		}
+		openBook(description);
 	}
-	if (description.isNull()) {
-		ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, "");
-		description = BookDescription::getDescription(bookName.value());
-	}
-	if (description.isNull()) {
-		description = BookDescription::getDescription(helpFileName(ZLibrary::Language()));
-	}
-	if (description.isNull()) {
-		description = BookDescription::getDescription(helpFileName("en"));
-	}
-	openBook(description);
 	refreshWindow();
 
 	ZLTimeManager::instance().addTask(new TimeUpdater(*this), 1000);
@@ -539,7 +562,9 @@ bool FBReader::isDictionarySupported() const {
 }
 
 void FBReader::openInDictionary(const std::string &word) {
-	dictionaryCollection()->currentProgram()->run("showWord", word);
+	shared_ptr<Program> dictionary = dictionaryCollection()->currentProgram();
+	dictionary->run("present", ZLApplication::ApplicationName());
+	dictionary->run("showWord", word);
 }
 
 shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {

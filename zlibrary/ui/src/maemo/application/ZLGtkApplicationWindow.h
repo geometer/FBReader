@@ -21,15 +21,14 @@
 #ifndef __ZLGTKAPPLICATIONWINDOW_H__
 #define __ZLGTKAPPLICATIONWINDOW_H__
 
+#include <vector>
 #include <map>
 #include <stack>
 
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
-#include <hildon-widgets/hildon-app.h>
-#include <hildon-widgets/hildon-appview.h>
-#include <libosso.h>
+#include <hildon-widgets/hildon-program.h>
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"
 
@@ -41,7 +40,9 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
+	void init();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+
 	class MenuBuilder : public ZLApplication::MenuVisitor {
 
 	public:
@@ -59,9 +60,10 @@ private:
 	};
 	void initMenu();
 	void refresh();
+	void present();
 	void close();
 
-	void setCaption(const std::string &caption) { hildon_app_set_title(myApp, caption.c_str()); }
+	void setCaption(const std::string &caption) { gtk_window_set_title(GTK_WINDOW(myWindow), caption.c_str()); }
 
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
@@ -73,22 +75,53 @@ private:
 	bool isMousePresented() const;
 	bool isKeyboardPresented() const;
 
+	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
+	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+
 public:
 	void handleKeyEventSlot(GdkEventKey*);
-	HildonApp *getMainWindow() const { return myApp; }
+	HildonWindow *getMainWindow() const { return myWindow; }
+
+public:
+	class ToolbarButton {
+
+	public:
+		void press(bool state);
+
+	private:
+		ToolbarButton(ZLApplication::Toolbar::ButtonItem &buttonItem, ZLGtkApplicationWindow &window);
+		void forcePress(bool state);
+		GtkToolItem *toolItem() const { return myToolItem; }
+
+	private:
+		ZLApplication::Toolbar::ButtonItem &myButtonItem;
+		ZLGtkApplicationWindow &myWindow;
+		shared_ptr<ZLApplication::Action> myAction;
+
+		GtkToolItem *myToolItem;
+		GtkWidget *myEventBox;
+		GtkImage *myCurrentImage;
+		GtkImage *myReleasedImage;
+		GtkImage *myPressedImage;
+
+	friend class ZLGtkApplicationWindow;
+	};
 
 private:
-	HildonApp *myApp;
-	HildonAppView *myAppView;
+	HildonProgram *myProgram;
+	HildonWindow *myWindow;
 	GtkToolbar *myToolbar;
 	GtkMenu *myMenu;
 
 	bool myFullScreen;
 
-	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myButtons;
+	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myToolItems;
 	std::map<int,GtkMenuItem*> myMenuItems;
+	std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*> myToolbarButtons;
+	std::vector<shared_ptr<ZLOptionView> > myViews;
 
 friend class MenuBuilder;
+friend class ToolbarButton;
 };
 
 #endif /* __ZLGTKAPPLICATIONWINDOW_H__ */

@@ -1,1 +1,1 @@
-SRCMOC = ZLFullScreenDialog.moc.cpp ZLQtOptionsDialog.moc.cpp ZLQtOptionView.moc.cpp ZLQtSelectionDialog.moc.cpp
+SRCMOC = ZLFullScreenDialog.moc.cpp ZLQtOptionsDialog.moc.cpp ZLQtSelectionDialog.moc.cpp

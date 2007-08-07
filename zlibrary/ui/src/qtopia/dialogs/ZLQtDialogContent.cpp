@@ -21,8 +21,10 @@
 #include <qapplication.h>
 #include <qlayout.h>
 
+#include <ZLOptionEntry.h>
+
 #include "ZLQtDialogContent.h"
-#include "ZLQtOptionView.h"
+#include "../../../../core/src/dialogs/ZLOptionView.h"
 
 void ZLQtDialogContent::close() {
 	myLayout->setRowStretch(myRowCounter, 10);
@@ -50,52 +52,41 @@ void ZLQtDialogContent::addOptions(const std::string &name0, const std::string &
 	++myRowCounter;
 }
 
-void ZLQtDialogContent::addItem(QWidget *widget, int row, int fromColumn, int toColumn) {
+void ZLQtDialogContent::attachWidget(QWidget *widget, int row, int fromColumn, int toColumn) {
 	myLayout->addMultiCellWidget(widget, row, row, fromColumn, toColumn);
 }
+
+void ZLQtDialogContent::attachWidget(ZLOptionView &view, QWidget *widget) {
+	std::map<ZLOptionView*,Position>::const_iterator it = myOptionPositions.find(&view);
+	if (it != myOptionPositions.end()) {
+		Position position = it->second;
+		attachWidget(widget, position.Row, position.FromColumn, position.ToColumn);
+	}
+}	
+
+void ZLQtDialogContent::attachWidgets(ZLOptionView &view, QWidget *widget0, int weight0, QWidget *widget1, int weight1) {
+	std::map<ZLOptionView*,Position>::const_iterator it = myOptionPositions.find(&view);
+	if (it != myOptionPositions.end()) {
+		Position position = it->second;
+		int secondStart = position.FromColumn + (position.ToColumn - position.FromColumn + 1) * weight0 / (weight0 + weight1);
+		attachWidget(widget0, position.Row, position.FromColumn, secondStart - 1);
+		attachWidget(widget1, position.Row, secondStart, position.ToColumn);
+	}
+}	
 
 void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int fromColumn, int toColumn) {
 	if (option == 0) {
 		return;
 	}
 
-	ZLQtOptionView *view = 0;
-	switch (option->kind()) {
-		case ZLOptionEntry::BOOLEAN:
-			view = new BooleanOptionView(name, tooltip, (ZLBooleanOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::BOOLEAN3:
-			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::STRING:
-			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::MULTILINE:
-			view = new MultilineOptionView(name, tooltip, (ZLMultilineOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::CHOICE:
-			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::COMBO:
-			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::COLOR:
-			view = new ColorOptionView(name, tooltip, (ZLColorOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::KEY:
-			view = new KeyOptionView(name, tooltip, (ZLKeyOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
-			break;
-		case ZLOptionEntry::ORDER:
-			// TODO: implement
-			break;
-	}
+	ZLOptionView *view = ZLQtOptionViewHolder::createViewByEntry(name, tooltip, option);
 
 	if (view != 0) {
-		view->setVisible(option->isVisible());
+		myOptionPositions.insert(
+			std::pair<ZLOptionView*,Position>(view, Position(myRowCounter, fromColumn, toColumn))
+		);
 		addView(view);
+		view->setVisible(option->isVisible());
 	}
 }
 

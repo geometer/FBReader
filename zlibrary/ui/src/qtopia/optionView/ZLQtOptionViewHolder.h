@@ -18,30 +18,33 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKOPTIONVIEWHOLDER_H__
-#define __ZLGTKOPTIONVIEWHOLDER_H__
+#ifndef __ZLQTOPTIONVIEWHOLDER_H__
+#define __ZLQTOPTIONVIEWHOLDER_H__
 
 #include <string>
 
-#include <gtk/gtkwidget.h>
+#include <qwidget.h>
 
 #include <shared_ptr.h>
 
 class ZLOptionView;
 class ZLOptionEntry;
-class ZLGtkOptionView;
+class ZLQtOptionView;
 
-class ZLGtkOptionViewHolder {
+class ZLQtOptionViewHolder {
 
 public:
-	virtual ~ZLGtkOptionViewHolder();
+	virtual ~ZLQtOptionViewHolder();
 
-	virtual void attachWidget(ZLOptionView &view, GtkWidget *widget) = 0;
-	virtual void attachWidgets(ZLOptionView &view, GtkWidget *widget0, int weight0, GtkWidget *widget1, int weight1) = 0;
+	virtual void attachWidget(ZLOptionView &view, QWidget *widget) = 0;
+	virtual void attachWidgets(ZLOptionView &view, QWidget *widget0, int weight0, QWidget *widget1, int weight1) = 0;
+	virtual QWidget *widget() = 0;
+	virtual QWidget *parentWidget() = 0;
 
+protected:
 	ZLOptionView *createViewByEntry(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 };
 
-inline ZLGtkOptionViewHolder::~ZLGtkOptionViewHolder() {}
+inline ZLQtOptionViewHolder::~ZLQtOptionViewHolder() {}
 
-#endif /* __ZLGTKOPTIONVIEWHOLDER_H__ */
+#endif /* __ZLQTOPTIONVIEWHOLDER_H__ */

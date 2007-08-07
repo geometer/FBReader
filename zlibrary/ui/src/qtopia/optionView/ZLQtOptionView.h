@@ -27,7 +27,7 @@
 #include <ZLOptionEntry.h>
 #include "../../../../core/src/dialogs/ZLOptionView.h"
 
-class ZLQtDialogContent;
+class ZLQtOptionViewHolder;
 
 class QButtonGroup;
 class QLabel;
@@ -44,17 +44,16 @@ class QWidget;
 class ZLQtOptionView : public ZLOptionView {
 
 protected:
-	ZLQtOptionView(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLOptionView(name, tooltip, option), myTab(tab), myRow(row), myFromColumn(fromColumn), myToColumn(toColumn) {}
+	ZLQtOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLOptionView(name, tooltip, option), myHolder(holder) {}
 
 protected:
-	ZLQtDialogContent *myTab;
-	int myRow, myFromColumn, myToColumn;
+	ZLQtOptionViewHolder &myHolder;
 };
 
 class ChoiceOptionView : public ZLQtOptionView {
 
 public:
-	ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {
+	ChoiceOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {
 		myButtons = 0;
 	}
 	~ChoiceOptionView() { if (myButtons != 0) delete[] myButtons; }
@@ -75,7 +74,7 @@ class BooleanOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	BooleanOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 protected:
 	void _createItem();
@@ -95,7 +94,7 @@ class Boolean3OptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	Boolean3OptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 protected:
 	void _createItem();
@@ -115,7 +114,7 @@ class StringOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
+	StringOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 private:
 	void _createItem();
@@ -138,7 +137,7 @@ class MultilineOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	MultilineOptionView(const std::string &name, const std::string &tooltip, ZLMultilineOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myMultiLineEdit(0) {}
+	MultilineOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 private:
 	void _createItem();
@@ -158,7 +157,7 @@ private:
 class SpinOptionView : public ZLQtOptionView {
 
 public:
-	SpinOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn) {}
+	SpinOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 protected:
 	void _createItem();
@@ -176,7 +175,7 @@ class ComboOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ComboOptionView(const std::string &name, const std::string &tooltip, ZLComboOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myComboBox(0) {}
+	ComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 private:
 	void _createItem();
@@ -201,7 +200,7 @@ class KeyOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	KeyOptionView(const std::string &name, const std::string &tooltip, ZLKeyOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myWidget(0), myKeyEditor(0), myLabel(0), myComboBox(0) {}
+	KeyOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 private:
 	void _createItem();
@@ -228,7 +227,7 @@ class ColorOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ColorOptionView(const std::string &name, const std::string &tooltip, ZLColorOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myWidget(0), myRSlider(0), myGSlider(0), myBSlider(0), myColorBar(0) {}
+	ColorOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
 
 private:
 	void _createItem();

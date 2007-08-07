@@ -271,7 +271,6 @@
 			<node name="message" value="Help file not found, sorry"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Saving config..."/>
 			<node name="loadingBook" value="Loading book. Please, wait..."/>
 			<node name="loadingBookList" value="Loading book list. Please, wait..."/>
 		</node>

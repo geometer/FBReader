@@ -34,7 +34,7 @@ void ZLWin32CommunicationManager::createInstance() {
 	}
 }
 
-shared_ptr<ZLCommunicator> ZLWin32CommunicationManager::createCommunicator(const std::string &protocol, const std::string &testFile) {
+shared_ptr<ZLMessageOutputChannel> ZLWin32CommunicationManager::createMessageOutputChannel(const std::string &protocol, const std::string &testFile) {
 	if (protocol != "execute") {
 		return 0;
 	}
@@ -43,10 +43,10 @@ shared_ptr<ZLCommunicator> ZLWin32CommunicationManager::createCommunicator(const
 		return 0;
 	}
 
-	return new ZLWin32ExecCommunicator();
+	return new ZLWin32ExecMessageOutputChannel();
 }
 
-shared_ptr<ZLMessageSender> ZLWin32ExecCommunicator::createSender(const ZLCommunicationManager::Data &data) {
+shared_ptr<ZLMessageSender> ZLWin32ExecMessageOutputChannel::createSender(const ZLCommunicationManager::Data &data) {
 	ZLCommunicationManager::Data::const_iterator it = data.find("program");
 	if (it == data.end()) {
 		return 0;

@@ -30,13 +30,14 @@ class ZLQtopiaCommunicationManager : public ZLCommunicationManager {
 public:
 	static void createInstance();
 
-	shared_ptr<ZLCommunicator> createCommunicator(const std::string &protocol, const std::string &testFile);
+	shared_ptr<ZLMessageOutputChannel> createMessageOutputChannel(const std::string &protocol, const std::string &testFile);
+	void addInputMessageDescription(const std::string&, const std::string&, const Data&) {}
 
 private:
 	ZLQtopiaCommunicationManager();
 };
 
-class ZLQCopCommunicator : public ZLCommunicator {
+class ZLQCopMessageOutputChannel : public ZLMessageOutputChannel {
 
 public:
 	shared_ptr<ZLMessageSender> createSender(const ZLCommunicationManager::Data &data);
@@ -54,7 +55,7 @@ private:
 	const QCString myChannel;
 	const QCString myMethod;
 
-friend class ZLQCopCommunicator;
+friend class ZLQCopMessageOutputChannel;
 };
 
 #endif /* __ZLQTOPIAMESSAGE_H__ */

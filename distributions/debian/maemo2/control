@@ -13,12 +13,12 @@ Depends: ${shlibs:Depends}
 Description: Platform-dependent part of fbreader
  Home page: http://www.fbreader.org/
 
-Package: fbdictionary-maemo2
-Section: user/tools
+Package: libzlibrary-dev
+Section: libdevel
 Priority: optional
 Architecture: armel
-Depends: ${shlibs:Depends}
-Description: multi-format dictionary viewer
+Depends: libzlibrary-maemo2
+Description: zlibrary - development files
  Home page: http://www.fbreader.org/
 
 Package: fbreader-maemo2

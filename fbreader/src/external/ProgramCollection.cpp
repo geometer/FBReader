@@ -69,15 +69,15 @@ void ProgramCollectionBuilder::startElementHandler(const char *tag, const char *
 		const char *protocol = attributeValue(attributes, "protocol");
 		const char *testFile = attributeValue(attributes, "testFile");
 		if ((name != 0) && (protocol != 0)) {
-			shared_ptr<ZLCommunicator> communicator =
-				ZLCommunicationManager::instance().createCommunicator(protocol, (testFile != 0) ? testFile : "");
-			if (!communicator.isNull()) {
+			shared_ptr<ZLMessageOutputChannel> channel =
+				ZLCommunicationManager::instance().createMessageOutputChannel(protocol, (testFile != 0) ? testFile : "");
+			if (!channel.isNull()) {
 				std::string sName = name;
 				if (!sName.empty()) {
 					if (sName[0] == '%') {
 						sName = ZLResource::resource("external")[sName.substr(1)].value();
 					}
-					myCurrentProgram = new Program(sName, communicator);
+					myCurrentProgram = new Program(sName, channel);
 					myCurrentCollection->myNames.push_back(sName);
 					myCurrentCollection->myPrograms[sName] = myCurrentProgram;
 				}
@@ -152,11 +152,11 @@ shared_ptr<Program> ProgramCollection::currentProgram() const {
 	return program(CurrentNameOption.value());
 }
 
-Program::Program(const std::string &name, shared_ptr<ZLCommunicator> communicator) : myName(name), myCommunicator(communicator) {
+Program::Program(const std::string &name, shared_ptr<ZLMessageOutputChannel> channel) : myName(name), myChannel(channel) {
 }
 
 void Program::run(const std::string &command, const std::string &parameter) const {
-	if (!myCommunicator.isNull()) {
+	if (!myChannel.isNull()) {
 		std::map<std::string,ZLCommunicationManager::Data>::const_iterator it = myCommandData.find(command);
 		if (it != myCommandData.end()) {
 			ZLCommunicationManager::Data data = it->second;
@@ -171,7 +171,7 @@ void Program::run(const std::string &command, const std::string &parameter) cons
 						(st != myDefaultValues.end()) ? st->second : "").value();
 				}
 			}
-			shared_ptr<ZLMessageSender> sender = myCommunicator->createSender(data);
+			shared_ptr<ZLMessageSender> sender = myChannel->createSender(data);
 			if (!sender.isNull()) {
 				sender->sendStringMessage(parameter);
 			}

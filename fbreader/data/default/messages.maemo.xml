@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+	<message command="openFile" protocol="osso-rpc" method="openFile"/>
+	<message command="openFile" protocol="osso-rpc" method="mime_open" converter="UrlToFilename"/>
+</messages>

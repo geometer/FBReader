@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<DefaultStyles>
-	<base family="Georgia" fontSize="16"/>
-	<style id="1" name="Word" bold="true" allowHyphenations="false"/>
-	<style id="2" name="Pronouncation" family="Doulos SIL" italic="true" allowHyphenations="false"/>
-	<style id="3" name="Definition" firstLineIndentDelta="20" allowHyphenations="true"/>
-</DefaultStyles>

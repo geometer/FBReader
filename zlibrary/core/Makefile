@@ -62,6 +62,9 @@ endif
 
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
+	@if [ -f data/messages.$(TARGET_ARCH).xml ]; then \
+		install -m 0644 data/messages.$(TARGET_ARCH).xml $(SHARE_ZLIBRARY)/messages.xml; \
+	fi
 	@install -d $(SHARE_ZLIBRARY)/encodings
 	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
 	@install -d $(SHARE_ZLIBRARY)/resources

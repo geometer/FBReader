@@ -51,6 +51,9 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	if (ConfigAutoSavingOption.value()) {
 		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
 	}
+
+	myPresentWindowHandler = new PresentWindowHandler(*this);
+	ZLCommunicationManager::instance().registerHandler("present", myPresentWindowHandler);
 }
 
 ZLApplication::~ZLApplication() {
@@ -151,6 +154,12 @@ void ZLApplication::refreshWindow() {
 	}
 }
 
+void ZLApplication::presentWindow() {
+	if (myWindow != 0) {
+		myWindow->present();
+	}
+}
+
 void ZLApplication::Action::checkAndRun() {
 	if (isEnabled()) {
 		run();
@@ -236,12 +245,16 @@ void ZLApplicationWindow::refresh() {
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		switch ((*it)->type()) {
 			case ZLApplication::Toolbar::Item::OPTION_ENTRY:
-				if (((const ZLApplication::Toolbar::OptionEntryItem&)**it).entry()->isVisible()) {
-					if (!lastSeparator.isNull()) {
-						setToolbarItemState(lastSeparator, true, true);
-						lastSeparator = 0;
+				{
+					bool visible = ((const ZLApplication::Toolbar::OptionEntryItem&)**it).entry()->isVisible();
+					if (visible) {
+						if (!lastSeparator.isNull()) {
+							setToolbarItemState(lastSeparator, true, true);
+							lastSeparator = 0;
+						}
+						enableToolbarSpace = true;
 					}
-					enableToolbarSpace = true;
+					setToolbarItemState(*it, visible, true);
 				}
 				break;
 			case ZLApplication::Toolbar::Item::BUTTON:
@@ -381,4 +394,30 @@ shared_ptr<ZLOptionEntry> ZLApplication::Toolbar::OptionEntryItem::entry() const
 
 ZLApplication::Toolbar::Item::Type ZLApplication::Toolbar::OptionEntryItem::type() const {
 	return OPTION_ENTRY;
+}
+
+ZLApplication::PresentWindowHandler::PresentWindowHandler(ZLApplication &application) : myApplication(application) {
+}
+
+void ZLApplication::PresentWindowHandler::onMessageReceived(const std::vector<std::string> &arguments) {
+	myApplication.presentWindow();
+	if (arguments.size() == 1) {
+		myLastCaller = arguments[0];
+	}
+}
+
+const std::string &ZLApplication::PresentWindowHandler::lastCaller() const {
+	return myLastCaller;
+}
+
+void ZLApplication::PresentWindowHandler::resetLastCaller() {
+	myLastCaller.erase();
+}
+
+const std::string &ZLApplication::lastCaller() const {
+	return ((PresentWindowHandler&)*myPresentWindowHandler).lastCaller();
+}
+
+void ZLApplication::resetLastCaller() {
+	((PresentWindowHandler&)*myPresentWindowHandler).resetLastCaller();
 }

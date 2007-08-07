@@ -31,8 +31,10 @@
 #include "../view/ZLQtViewWidget.h"
 #include "../../qt/util/ZLQtKeyUtil.h"
 #include "../dialogs/ZLQtUtil.h"
+#include "../optionView/ZLQtOptionViewHolder.h"
+#include "../../../../core/src/dialogs/ZLOptionView.h"
 
-class MyMenuBar : public QPEMenuBar {
+class MyMenuBar : public QPEMenuBar, public ZLQtOptionViewHolder {
 
 public:
 	MyMenuBar(QWidget *parent, ZLQtApplicationWindow &window) : QPEMenuBar(parent), myWindow(window), myIndex(-1) {}
@@ -41,6 +43,10 @@ public:
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
 
 private:
+	void attachWidget(ZLOptionView &view, QWidget *widget);
+	void attachWidgets(ZLOptionView &view, QWidget *widget0, int weight0, QWidget *widget1, int weight1);
+	QWidget *widget();
+	QWidget *parentWidget();
 	void keyPressEvent(QKeyEvent *event) {
 		if (event->key() == Key_Escape) {
 			QPEMenuBar::keyPressEvent(event);
@@ -116,6 +122,23 @@ MyMenuBar::~MyMenuBar() {
 	for (std::map<int,ToolBarButton*>::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		delete it->second;
 	}
+}
+
+void MyMenuBar::attachWidget(ZLOptionView&, QWidget *widget) {
+	insertItem(widget, 10001, myIndex++);
+}
+
+void MyMenuBar::attachWidgets(ZLOptionView&, QWidget *widget0, int, QWidget *widget1, int) {
+	insertItem(widget0, 10001, myIndex++);
+	insertItem(widget1, 10001, myIndex++);
+}
+
+QWidget *MyMenuBar::widget() {
+	return this;
+}
+
+QWidget *MyMenuBar::parentWidget() {
+	return 0;
 }
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
@@ -201,25 +224,42 @@ void ZLQtApplicationWindow::MenuUpdater::processSepartor(ZLApplication::Menubar:
 }
 
 void MyMenuBar::setItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
-	if (item->isButton()) {
-		ZLApplication::Toolbar::ButtonItem &button = (ZLApplication::Toolbar::ButtonItem&)*item;
-		int id = button.actionId();
-		if (visible) {
-			if (idAt(myIndex) != id) {
-				ToolBarButton *tbButton = myButtons[id];
-				if (tbButton == 0) {
-					tbButton = new ToolBarButton(myWindow, button);
-					myButtons[id] = tbButton;
+	switch (item->type()) {
+		case ZLApplication::Toolbar::Item::BUTTON:
+			{
+				ZLApplication::Toolbar::ButtonItem &button = (ZLApplication::Toolbar::ButtonItem&)*item;
+				int id = button.actionId();
+				if (visible) {
+					if (idAt(myIndex) != id) {
+						ToolBarButton *tbButton = myButtons[id];
+						if (tbButton == 0) {
+							tbButton = new ToolBarButton(myWindow, button);
+							myButtons[id] = tbButton;
+						}
+						insertItem(tbButton->pixmap(), tbButton, SLOT(doActionSlot()), 0, id, myIndex);
+					}
+					setItemEnabled(id, enabled);
+					++myIndex;
+				} else {
+					if (idAt(myIndex) == id) {
+						removeItem(id);
+					}
 				}
-				insertItem(tbButton->pixmap(), tbButton, SLOT(doActionSlot()), 0, id, myIndex);
 			}
-			setItemEnabled(id, enabled);
-			++myIndex;
-		} else {
-			if (idAt(myIndex) == id) {
-				removeItem(id);
+			break;
+		case ZLApplication::Toolbar::Item::OPTION_ENTRY:
+			if (idAt(myIndex) < 10001) {
+				shared_ptr<ZLOptionEntry> entry = ((ZLApplication::Toolbar::OptionEntryItem&)*item).entry();
+				if (entry->isVisible()) {
+					ZLOptionView *view = createViewByEntry("", "", entry);
+					view->setVisible(true);
+				}
+			} else {
+				++myIndex;
 			}
-		}
+			break;
+		case ZLApplication::Toolbar::Item::SEPARATOR:
+			break;
 	}
 }
 

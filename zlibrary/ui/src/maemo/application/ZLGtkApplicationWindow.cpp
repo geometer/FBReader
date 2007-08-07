@@ -52,10 +52,17 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	return true;
 }
 
+#include <iostream>
+
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
+	//FILE *err = fopen("/tmp/repaint-err", "w");
+	//fprintf(err, "+ repaint"); fflush(err);
+	std::cerr << "+ repaint\n";
 	if (acceptAction()) {
 		((ZLGtkViewWidget*)data)->doPaint();
 	}
+	std::cerr << "- repaint\n";
+	//fprintf(err, "- repaint"); fclose(err);
 }
 
 static void menuActionSlot(GtkWidget*, gpointer data) {
@@ -94,9 +101,9 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) : ZLA
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
-	((ZLMaemoCommunicationManager&)ZLCommunicationManager::instance()).init();
-
 	myWindow = HILDON_WINDOW(hildon_window_new());
+
+	((ZLMaemoCommunicationManager&)ZLCommunicationManager::instance()).init();
 
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
 	gtk_toolbar_set_show_arrow(myToolbar, false);
@@ -122,6 +129,15 @@ ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
 	}
 
 	((ZLMaemoCommunicationManager&)ZLCommunicationManager::instance()).shutdown();
+}
+
+void ZLGtkApplicationWindow::init() {
+	ZLApplicationWindow::init();
+	gtk_main_iteration();
+	usleep(5000);
+	gtk_main_iteration();
+	usleep(5000);
+	gtk_main_iteration();
 }
 
 void ZLGtkApplicationWindow::initMenu() {
@@ -274,6 +290,10 @@ void ZLGtkApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr
 			gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
 		}
 	}
+}
+
+void ZLGtkApplicationWindow::present() {
+	gtk_window_present(GTK_WINDOW(myWindow));
 }
 
 void ZLGtkApplicationWindow::refresh() {

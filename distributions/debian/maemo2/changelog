@@ -1,3 +1,10 @@
+fbreader (0.8.6-1) stable; urgency=low
+
+  * new upstream version
+  * added libzlibrary-dev package
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 5 Aug 2007 23:49:00 +0400
+
 fbreader (0.8.5c-1) stable; urgency=low
 
   * new upstream version

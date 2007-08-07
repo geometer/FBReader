@@ -8,6 +8,9 @@
 			<node name="no" value="&amp;Нет"/>
 			<node name="apply" value="При&amp;менить"/>
 		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Сохранение настроек..."/>
+		</node>
 	</node>
 	<node name="color">
 		<node name="red" value="Красный"/>
