@@ -61,7 +61,7 @@ static bool isStylusEvent(GtkWidget *widget, GdkEventButton *event) {
 	if (gtk_widget_get_extension_events(widget) == GDK_EXTENSION_EVENTS_NONE) {
 		return true;
 	}
-	double pressure;
+	double pressure = 0.0;
 	gdk_event_get_axis((GdkEvent*)event, GDK_AXIS_PRESSURE, &pressure);
 	return pressure < 0.4;
 }

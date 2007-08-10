@@ -1,3 +1,21 @@
+fbreader (0.8.6a-1) stable; urgency=low
+
+  * fixed stylus/finger pressing detection problem on Nokia 770 device
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 8 Aug 2007 18:47:00 +0400
+
+fbreader (0.8.6-3) stable; urgency=low
+
+  * fixed fbreader-maemo2 package icon
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 8 Aug 2007 01:55:00 +0400
+
+fbreader (0.8.6-2) stable; urgency=low
+
+  * fixed fbreader-maemo2 package icon
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 8 Aug 2007 01:09:00 +0400
+
 fbreader (0.8.6-1) stable; urgency=low
 
   * new upstream version
