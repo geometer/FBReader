@@ -22,13 +22,13 @@ all: .resources
 	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` -L$(ROOTDIR)/zlibrary/text -lzltext $(CORE_LIBS) $(ENCA_LIB)
 	@echo " OK"
 
-FBSHAREDIR = $(DESTDIR)$(SHAREDIR)/FBReader
+FBSHAREDIR = $(DESTDIR)$(subst %APPLICATION_PATH%\\\\,/,$(SHAREDIR))/FBReader
 VARIANT = $(TARGET_ARCH)
 ifneq "$(RESOLUTION)" "" 
   VARIANT = $(TARGET_ARCH)_$(RESOLUTION)
 endif
 
-APPIMAGEDIR_REAL = $(subst %application_name%,$(target),$(subst %APPLICATION_NAME%,$(TARGET),$(APPIMAGEDIR)))
+APPIMAGEDIR_REAL = $(subst \\\\,/,$(subst %APPLICATION_PATH%\\\\,/,$(subst %application_name%,$(target),$(subst %APPLICATION_NAME%,$(TARGET),$(APPIMAGEDIR)))))
 
 do_install:
 	@install -d $(DESTDIR)$(BINDIR)
