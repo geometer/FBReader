@@ -19,8 +19,14 @@
  */
 
 #include <gtk/gtk.h>
+
+#ifndef MAEMO4
 #include <hildon-widgets/gtk-infoprint.h>
 #include <hildon-note.h>
+#else
+#include <hildon/hildon-note.h>
+#include <hildon/hildon-banner.h>
+#endif
 
 #include "ZLGtkDialogManager.h"
 #include "ZLGtkDialog.h"
@@ -90,7 +96,11 @@ void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) co
 		runnable.run();
 	} else {
 		myIsWaiting = true;
+#ifndef MAEMO4
 		gtk_banner_show_animation(myWindow, waitMessageText(key).c_str());
+#else
+		GtkWidget *banner = hildon_banner_show_animation(GTK_WIDGET(myWindow), NULL, waitMessageText(key).c_str());
+#endif
 		RunnableWithFlag rwf;
 		rwf.runnable = &runnable;
 		rwf.flag = true;
@@ -100,7 +110,11 @@ void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) co
 			gtk_main_iteration();
 		}
 		pthread_join(thread, 0);
+#ifndef MAEMO4
 		gtk_banner_close(myWindow);
+#else
+		gtk_widget_destroy(banner);
+#endif
 		myIsWaiting = false;
 	}
 }

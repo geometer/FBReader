@@ -22,8 +22,14 @@
 #define __ZLGTKOPTIONVIEW_H__
 
 #include <gtk/gtk.h>
+
+#ifndef MAEMO4
 #include <hildon-controlbar.h>
 #include <hildon-number-editor.h>
+#else
+#include <hildon/hildon-controlbar.h>
+#include <hildon/hildon-number-editor.h>
+#endif
 
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
