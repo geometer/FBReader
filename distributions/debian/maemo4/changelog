@@ -1,0 +1,61 @@
+fbreader (0.8.6c-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 30 Aug 2007 02:30:00 +0400
+
+fbreader (0.8.6a-1) stable; urgency=low
+
+  * fixed stylus/finger pressing detection problem on Nokia 770 device
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 8 Aug 2007 18:47:00 +0400
+
+fbreader (0.8.6-3) stable; urgency=low
+
+  * fixed fbreader-maemo2 package icon
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 8 Aug 2007 01:55:00 +0400
+
+fbreader (0.8.6-2) stable; urgency=low
+
+  * fixed fbreader-maemo2 package icon
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 8 Aug 2007 01:09:00 +0400
+
+fbreader (0.8.6-1) stable; urgency=low
+
+  * new upstream version
+  * added libzlibrary-dev package
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 5 Aug 2007 23:49:00 +0400
+
+fbreader (0.8.5c-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 19 Jul 2007 15:20:00 +0400
+
+fbreader (0.8.5a-1) stable; urgency=low
+
+  * new upstream version
+  * maemo package icon has been restored
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 7 Jul 2007 02:12:00 +0400
+
+fbreader (0.8.5-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 7 Jul 2007 02:12:00 +0400
+
+fbreader (0.8.4zz-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thr, 5 Jul 2007 03:17:00 +0400
+
+fbreader (0.8.4z-1) stable; urgency=low
+
+  * Initial release.
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 30 Jun 2007 01:48:00 +0400

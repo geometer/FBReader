@@ -44,6 +44,10 @@ ifeq "$(UI_TYPE)" "maemo2"
   GTKSUBDIRS = src/gtk/time src/maemo/dialogs src/maemo/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
 endif
 
+ifeq "$(UI_TYPE)" "maemo4"
+  GTKSUBDIRS = src/gtk/time src/maemo/dialogs src/maemo/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
+endif
+
 ifeq "$(UI_TYPE)" "win32"
   SUBDIRS += src/win32/library src/win32/view src/win32/filesystem src/win32/time src/win32/w32widgets src/win32/dialogs src/win32/application src/win32/image src/win32/config src/win32/message src/win32/encoding
 endif
