@@ -33,7 +33,7 @@
 #elif MAEMO_VERSION == 4
 	#include <hildon/hildon-program.h>
 #else
-    #error Unknown MAEMO_VERSION
+	#error Unknown MAEMO_VERSION
 #endif
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"

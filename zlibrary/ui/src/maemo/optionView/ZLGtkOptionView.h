@@ -30,7 +30,7 @@
 	#include <hildon/hildon-controlbar.h>
 	#include <hildon/hildon-number-editor.h>
 #else
-    #error Unknown MAEMO_VERSION
+	#error Unknown MAEMO_VERSION
 #endif
 
 #include <ZLOptionsDialog.h>

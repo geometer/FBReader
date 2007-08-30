@@ -27,7 +27,7 @@
 	#include <hildon/hildon-note.h>
 	#include <hildon/hildon-banner.h>
 #else
-    #error Unknown MAEMO_VERSION
+	#error Unknown MAEMO_VERSION
 #endif
 
 #include "ZLGtkDialogManager.h"
