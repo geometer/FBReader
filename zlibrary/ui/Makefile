@@ -40,11 +40,7 @@ ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <qtopia> <qtopia-240x320> <qtopi
   QTSUBDIRS = src/qtopia/message src/qtopia/library src/qt/time src/qtopia/application src/qtopia/dialogs src/qtopia/optionView src/qtopia/view src/qt/util src/qt/image src/qt/filesystem
 endif
 
-ifeq "$(UI_TYPE)" "maemo2"
-  GTKSUBDIRS = src/gtk/time src/maemo/dialogs src/maemo/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
-endif
-
-ifeq "$(UI_TYPE)" "maemo4"
+ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo2> <maemo4>)"
   GTKSUBDIRS = src/gtk/time src/maemo/dialogs src/maemo/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
 endif
 

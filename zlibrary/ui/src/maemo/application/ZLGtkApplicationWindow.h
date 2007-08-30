@@ -28,10 +28,12 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 
-#ifndef MAEMO4
-#include <hildon-widgets/hildon-program.h>
+#if MAEMO_VERSION == 2
+	#include <hildon-widgets/hildon-program.h>
+#elif MAEMO_VERSION == 4
+	#include <hildon/hildon-program.h>
 #else
-#include <hildon/hildon-program.h>
+    #error Unknown MAEMO_VERSION
 #endif
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"

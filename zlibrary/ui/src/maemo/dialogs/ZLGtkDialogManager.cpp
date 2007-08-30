@@ -20,12 +20,14 @@
 
 #include <gtk/gtk.h>
 
-#ifndef MAEMO4
-#include <hildon-widgets/gtk-infoprint.h>
-#include <hildon-note.h>
+#if MAEMO_VERSION == 2
+	#include <hildon-widgets/gtk-infoprint.h>
+	#include <hildon-note.h>
+#elif MAEMO_VERSION == 4
+	#include <hildon/hildon-note.h>
+	#include <hildon/hildon-banner.h>
 #else
-#include <hildon/hildon-note.h>
-#include <hildon/hildon-banner.h>
+    #error Unknown MAEMO_VERSION
 #endif
 
 #include "ZLGtkDialogManager.h"
@@ -96,10 +98,12 @@ void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) co
 		runnable.run();
 	} else {
 		myIsWaiting = true;
-#ifndef MAEMO4
+#if MAEMO_VERSION == 2
 		gtk_banner_show_animation(myWindow, waitMessageText(key).c_str());
-#else
+#elif MAEMO_VERSION == 4
 		GtkWidget *banner = hildon_banner_show_animation(GTK_WIDGET(myWindow), NULL, waitMessageText(key).c_str());
+#else
+		#error Unknown value for MAEMO_VERSION
 #endif
 		RunnableWithFlag rwf;
 		rwf.runnable = &runnable;
@@ -110,10 +114,12 @@ void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) co
 			gtk_main_iteration();
 		}
 		pthread_join(thread, 0);
-#ifndef MAEMO4
+#if MAEMO_VERSION == 2
 		gtk_banner_close(myWindow);
-#else
+#elif MAEMO_VERSION == 4
 		gtk_widget_destroy(banner);
+#else
+		#error Unknown value for MAEMO_VERSION
 #endif
 		myIsWaiting = false;
 	}

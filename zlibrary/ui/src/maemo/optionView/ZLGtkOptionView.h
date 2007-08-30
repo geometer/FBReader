@@ -23,12 +23,14 @@
 
 #include <gtk/gtk.h>
 
-#ifndef MAEMO4
-#include <hildon-controlbar.h>
-#include <hildon-number-editor.h>
+#if MAEMO_VERSION == 2
+	#include <hildon-controlbar.h>
+	#include <hildon-number-editor.h>
+#elif MAEMO_VERSION == 4
+	#include <hildon/hildon-controlbar.h>
+	#include <hildon/hildon-number-editor.h>
 #else
-#include <hildon/hildon-controlbar.h>
-#include <hildon/hildon-number-editor.h>
+    #error Unknown MAEMO_VERSION
 #endif
 
 #include <ZLOptionsDialog.h>
