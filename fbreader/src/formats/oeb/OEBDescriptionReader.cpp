@@ -19,6 +19,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 
 #include "OEBDescriptionReader.h"
@@ -29,9 +30,10 @@ OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDes
 }
 
 // TODO: replace "dc" by real DC scheme name
-static const std::string METADATA = "dc-metadata";
-static const std::string TITLE = "dc:title";
-static const std::string AUTHOR_TAG = "dc:creator";
+static const std::string METADATA = "metadata";
+static const std::string DC_METADATA = "dc-metadata";
+static const std::string TITLE = ":title";
+static const std::string AUTHOR_TAG = ":creator";
 static const std::string AUTHOR_ROLE = "aut";
 
 void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
@@ -39,6 +41,7 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 		case READ_NONE:
 			break;
 		case READ_AUTHOR:
+		case READ_AUTHOR2:
 			myCurrentAuthor.append(text, len);
 			break;
 		case READ_TITLE:
@@ -47,16 +50,31 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
+static const std::string XMLNS_PREFIX = "xmlns:";
+static const std::string DC_SCHEME_PREFIX = "http://purl.org/dc/elements";
+
 void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
-	if (METADATA == tagString) {
+	if ((METADATA == tagString) || (DC_METADATA == tagString)) {
+		if (attributes != 0) {
+			for (; *attributes != 0; attributes += 2) {
+				if (ZLStringUtil::stringStartsWith(*attributes, XMLNS_PREFIX) &&
+						ZLStringUtil::stringStartsWith(*(attributes + 1), DC_SCHEME_PREFIX)) {
+					myDCSchemeName = *attributes + 6;
+					myDCMetadataTag = tagString;
+					break;
+				}
+			}
+		}
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
-		if (TITLE == tagString) {
+		if (myDCSchemeName + TITLE == tagString) {
 			myReadState = READ_TITLE;
-		} else if (AUTHOR_TAG == tagString) {
+		} else if (myDCSchemeName + AUTHOR_TAG == tagString) {
 			const char *role = attributeValue(attributes, "role");
-			if ((role != 0) && (AUTHOR_ROLE == role)) {
+			if (role == 0) {
+				myReadState = READ_AUTHOR2;
+			} else if (AUTHOR_ROLE == role) {
 				myReadState = READ_AUTHOR;
 			}
 		}
@@ -65,11 +83,15 @@ void OEBDescriptionReader::startElementHandler(const char *tag, const char **att
 
 void OEBDescriptionReader::endElementHandler(const char *tag) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
-	if (METADATA == tagString) {
+	if (myDCMetadataTag == tagString) {
 		interrupt();
 	} else {
 		if (!myCurrentAuthor.empty()) {
-			myDescription.addAuthor(myCurrentAuthor);
+			if (myReadState == READ_AUTHOR) {
+				myAuthorList.push_back(myCurrentAuthor);
+			} else /* if (myReadState == READ_AUTHOR2) */ {
+				myAuthorList2.push_back(myCurrentAuthor);
+			}
 			myCurrentAuthor.erase();
 		}
 		myReadState = READ_NONE;
@@ -79,5 +101,17 @@ void OEBDescriptionReader::endElementHandler(const char *tag) {
 bool OEBDescriptionReader::readDescription(const std::string &fileName) {
 	myReadMetaData = false;
 	myReadState = READ_NONE;
-	return readDocument(fileName);
+	bool code = readDocument(fileName);
+	if (code) {
+		if (!myAuthorList.empty()) {
+			for (std::vector<std::string>::const_iterator it = myAuthorList.begin(); it != myAuthorList.end(); ++it) {
+				myDescription.addAuthor(*it);
+			}
+		} else {
+			for (std::vector<std::string>::const_iterator it = myAuthorList2.begin(); it != myAuthorList2.end(); ++it) {
+				myDescription.addAuthor(*it);
+			}
+		}
+	}
+	return code;
 }

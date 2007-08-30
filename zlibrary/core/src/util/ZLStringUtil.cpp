@@ -32,6 +32,16 @@ bool ZLStringUtil::stringEndsWith(const std::string &str, const std::string &end
 #endif
 }
 
+bool ZLStringUtil::stringStartsWith(const std::string &str, const std::string &start) {
+	return
+		(start.length() <= str.length()) &&
+#if __GNUC__ == 2
+		(str.compare(start, 0, start.length()) == 0);
+#else
+		(str.compare(0, start.length(), start) == 0);
+#endif
+}
+
 void ZLStringUtil::appendNumber(std::string &str, unsigned int n) {
 	int len;
 	if (n > 0) {

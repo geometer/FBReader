@@ -30,6 +30,7 @@
 
 static const std::string OPF = "opf";
 static const std::string OEBZIP = "oebzip";
+static const std::string EPUB = "epub";
 
 OEBPlugin::~OEBPlugin() {
 }
@@ -40,7 +41,7 @@ bool OEBPlugin::providesMetaInfo() const {
 
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
 	const std::string &extension = file.extension();
-	return (extension == OPF) || (extension == OEBZIP);
+	return (extension == OPF) || (extension == OEBZIP) || (extension == EPUB);
 }
 
 std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {

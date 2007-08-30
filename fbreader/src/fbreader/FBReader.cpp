@@ -289,8 +289,9 @@ void FBReader::initWindow() {
 BookDescriptionPtr FBReader::createDescription(const std::string& fileName) const {
 	ZLFile bookFile = ZLFile(fileName);
 
-	if (!bookFile.isArchive()) {
-		return BookDescription::getDescription(bookFile.path());
+	BookDescriptionPtr description = BookDescription::getDescription(bookFile.path());
+	if (!description.isNull() || !bookFile.isArchive()) {
+		return description;
 	}
 
 	std::queue<std::string> archiveNames;
@@ -308,13 +309,12 @@ BookDescriptionPtr FBReader::createDescription(const std::string& fileName) cons
 		for (std::vector<std::string>::const_iterator it = items.begin(); it != items.end(); ++it) {
 			const std::string itemName = archiveDir->itemPath(*it);
 			ZLFile subFile(itemName);
+			description = BookDescription::getDescription(itemName);
+			if (!description.isNull()) {
+				return description;
+			}
 			if (subFile.isArchive()) {
 				archiveNames.push(itemName);
-			} else if (!subFile.isDirectory()) {
-				BookDescriptionPtr description = BookDescription::getDescription(itemName);
-				if (!description.isNull()) {
-					return description;
-				}
 			}
 		}
 		items.clear();

@@ -30,6 +30,7 @@ private:
 	ZLStringUtil();
 
 public:
+	static bool stringStartsWith(const std::string &str, const std::string &start);
 	static bool stringEndsWith(const std::string &str, const std::string &end);
 	static void appendNumber(std::string &str, unsigned int n);
 	static void append(std::string &str, const std::vector<std::string> &buffer);

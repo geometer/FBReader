@@ -22,6 +22,8 @@
 #ifndef __OEBDESCRIPTIONREADER_H__
 #define __OEBDESCRIPTIONREADER_H__
 
+#include <vector>
+
 #include <ZLXMLReader.h>
 
 #include "../../description/BookDescription.h"
@@ -43,10 +45,15 @@ private:
 	enum {
 		READ_NONE,
 		READ_AUTHOR,
+		READ_AUTHOR2,
 		READ_TITLE
 	} myReadState;
 
+	std::string myDCMetadataTag;
+	std::string myDCSchemeName;
 	std::string myCurrentAuthor;
+	std::vector<std::string> myAuthorList;
+	std::vector<std::string> myAuthorList2;
 };
 
 #endif /* __OEBDESCRIPTIONREADER_H__ */
