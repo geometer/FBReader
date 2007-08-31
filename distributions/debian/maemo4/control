@@ -4,11 +4,11 @@ Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Standards-Version: 3.6.1
 Build-Depends: debhelper, libexpat1-dev, libbz2-dev, libz-dev, libenca-dev, libhildon1-dev, libosso-dev
 
-Package: libzlibrary-maemo4
+Package: libzlibrary
 Section: user/libs
 Priority: optional
 Architecture: armel
-Conflicts: fbreader-maemo4 (<< 0.8.0)
+Conflicts: fbreader (<< 0.8.0)
 Depends: ${shlibs:Depends}
 Description: Platform-dependent part of fbreader
  Home page: http://www.fbreader.org/
@@ -17,11 +17,11 @@ Package: libzlibrary-dev
 Section: libdevel
 Priority: optional
 Architecture: armel
-Depends: libzlibrary-maemo4
+Depends: libzlibrary
 Description: zlibrary - development files
  Home page: http://www.fbreader.org/
 
-Package: fbreader-maemo4
+Package: fbreader
 Section: user/tools
 Priority: optional
 Architecture: armel
