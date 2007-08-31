@@ -2,7 +2,7 @@ Source: fbreader
 Priority: optional
 Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Standards-Version: 3.6.1
-Build-Depends: debhelper, libhildon1-dev, libexpat1-dev, libbz2-dev, libz-dev, libenca-dev
+Build-Depends: debhelper, libexpat1-dev, libbz2-dev, libz-dev, libenca-dev, libhildon1-dev, libosso-dev
 
 Package: libzlibrary-maemo4
 Section: user/libs
