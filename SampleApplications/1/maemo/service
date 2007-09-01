@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=com.nokia.SampleApplication
-Exec=/usr/bin/SampleApplication

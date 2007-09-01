@@ -1,6 +1,0 @@
-Priority: optional
-Section: qpe/applications
-Maintainer: Nikolay Pultsin <geometer@mawhrin.net>
-Architecture: arm
-License: GPLv2
-Description: ZLibrary Sample Application
