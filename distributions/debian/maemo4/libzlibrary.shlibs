@@ -1,2 +1,2 @@
-libzlcore @VERSION@ libzlibrary-maemo4 (= @VERSION@-1)
-libzltext @VERSION@ libzlibrary-maemo4 (= @VERSION@-1)
+libzlcore @VERSION@ libzlibrary (= @VERSION@-1)
+libzltext @VERSION@ libzlibrary (= @VERSION@-1)
