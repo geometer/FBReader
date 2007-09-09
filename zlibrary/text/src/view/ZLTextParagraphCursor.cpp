@@ -47,6 +47,7 @@ ZLTextElementVector::~ZLTextElementVector() {
 				break;
 			case ZLTextElement::INDENT_ELEMENT:
 			case ZLTextElement::HSPACE_ELEMENT:
+			case ZLTextElement::NB_HSPACE_ELEMENT:
 			case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 			case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
 			case ZLTextElement::EMPTY_LINE_ELEMENT:
@@ -57,6 +58,7 @@ ZLTextElementVector::~ZLTextElementVector() {
 
 ZLTextElementPool::ZLTextElementPool() {
 	HSpaceElement = new ZLTextSpecialElement(ZLTextElement::HSPACE_ELEMENT);
+	NBHSpaceElement = new ZLTextSpecialElement(ZLTextElement::NB_HSPACE_ELEMENT);
 	BeforeParagraphElement = new ZLTextSpecialElement(ZLTextElement::BEFORE_PARAGRAPH_ELEMENT);
 	AfterParagraphElement = new ZLTextSpecialElement(ZLTextElement::AFTER_PARAGRAPH_ELEMENT);
 	EmptyLineElement = new ZLTextSpecialElement(ZLTextElement::EMPTY_LINE_ELEMENT);
@@ -64,6 +66,7 @@ ZLTextElementPool::ZLTextElementPool() {
 
 ZLTextElementPool::~ZLTextElementPool() {
 	delete HSpaceElement;
+	delete NBHSpaceElement;
 	delete BeforeParagraphElement;
 	delete AfterParagraphElement;
 	delete EmptyLineElement;

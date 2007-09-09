@@ -290,6 +290,9 @@ const std::string &ZLTextSelectionModel::getText() const {
 				case ZLTextElement::HSPACE_ELEMENT:
 					myText += ' ';
 					break;
+				case ZLTextElement::NB_HSPACE_ELEMENT:
+					myText += "\xC2\x20"; // &nbsp;
+					break;
 				default:
 					break;
 			}

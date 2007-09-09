@@ -41,6 +41,9 @@ void ZLTextParagraphCursor::StandardProcessor::processTextEntry(const ZLTextEntr
 		if (ZLUnicodeUtil::isSpace(ch)) {
 			myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
 			spaceInserted = true;
+		} else if (ZLUnicodeUtil::isNBSpace(ch)) {
+			myElements.push_back(ZLTextElementPool::Pool.NBHSpaceElement);
+			spaceInserted = true;
 		}
 		const char *firstNonSpace = 0;
 		int charLength = 0;
@@ -57,14 +60,15 @@ void ZLTextParagraphCursor::StandardProcessor::processTextEntry(const ZLTextEntr
 				continue;
 			}
 			charLength = ZLUnicodeUtil::firstChar(ch, ptr);
-			if (ZLUnicodeUtil::isSpace(ch)) {
-				if (firstNonSpace != 0) {
-					addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
-					myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
-					spaceInserted = true;
-					firstNonSpace = 0;
-				} else if (!spaceInserted) {
-					myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
+			if (ZLUnicodeUtil::isSpace(ch) || ZLUnicodeUtil::isNBSpace(ch)) {
+				if ((firstNonSpace != 0) || !spaceInserted) {
+					if (firstNonSpace != 0) {
+						addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
+						firstNonSpace = 0;
+					}
+					myElements.push_back(ZLUnicodeUtil::isNBSpace(ch) ?
+						ZLTextElementPool::Pool.NBHSpaceElement :
+						ZLTextElementPool::Pool.HSpaceElement);
 					spaceInserted = true;
 				}
 			} else if (firstNonSpace == 0) {

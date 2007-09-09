@@ -267,6 +267,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				changeStyle = true;
 				break;
 			case ZLTextElement::HSPACE_ELEMENT:
+			case ZLTextElement::NB_HSPACE_ELEMENT:
 				if (wordOccured && (spaceCounter > 0)) {
 					int correction = fullCorrection / spaceCounter;
 					context().moveX(context().spaceWidth() + correction);

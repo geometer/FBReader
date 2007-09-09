@@ -52,6 +52,7 @@ public:
 	static int ucs2ToUtf8(char *to, Ucs2Char ch);
 	static bool isLetter(Ucs2Char ch);
 	static bool isSpace(Ucs2Char ch);
+	static bool isNBSpace(Ucs2Char ch);
 	static Breakable isBreakable(Ucs2Char ch);
 
 	static Ucs2Char toLower(Ucs2Char ch);
@@ -62,5 +63,9 @@ public:
 	static void toUpper(Ucs2String &str);
 	static std::string toUpper(const std::string &utf8String);
 };
+
+inline bool ZLUnicodeUtil::isNBSpace(Ucs2Char ch) {
+	return ch == 160;
+}
 
 #endif /* __ZLUNICODEUTIL_H__ */

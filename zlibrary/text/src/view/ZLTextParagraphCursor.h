@@ -53,6 +53,7 @@ public:
 	
 public:
 	ZLTextElement *HSpaceElement;
+	ZLTextElement *NBHSpaceElement;
 	ZLTextElement *BeforeParagraphElement;
 	ZLTextElement *AfterParagraphElement;
 	ZLTextElement *EmptyLineElement;

@@ -30,9 +30,38 @@
 #include "ZLTextStyle.h"
 #include "ZLTextWord.h"
 
+struct ZLTextPartialInfo {
+	//ZLTextWordCursor Start;
+	//ZLTextWordCursor RealStart;
+	ZLTextWordCursor End;
+	bool IsVisible;
+	//int LeftIndent;
+	int Width;
+	int Height;
+	int Descent;
+	//int VSpaceAfter;
+	int SpaceCounter;
+	//ZLTextStylePtr StartStyle;
+	//shared_ptr<ZLTextTreeNodeInfo> NodeInfo;
+
+	ZLTextPartialInfo(const ZLTextLineInfo &lineInfo, const ZLTextWordCursor &end);
+	void setTo(ZLTextLineInfo &lineInfo) const;
+};
+
+ZLTextPartialInfo::ZLTextPartialInfo(const ZLTextLineInfo &lineInfo, const ZLTextWordCursor &end) : End(end), IsVisible(false), Width(lineInfo.Width), Height(lineInfo.Height), Descent(lineInfo.Descent), SpaceCounter(0) {
+}
+
+void ZLTextPartialInfo::setTo(ZLTextLineInfo &lineInfo) const {
+	lineInfo.End = End;
+	lineInfo.IsVisible = IsVisible;
+	lineInfo.Width = Width;
+	lineInfo.Height = std::max(lineInfo.Height, Height);
+	lineInfo.Descent = std::max(lineInfo.Descent, Descent);
+	lineInfo.SpaceCounter = SpaceCounter;
+}
+
 ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
 	ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(start, myStyle.style());
-	ZLTextLineInfo &info = *infoPtr;
 
 	std::set<ZLTextLineInfoPtr>::const_iterator it = myLineInfoCache.find(infoPtr);
 	if (it != myLineInfoCache.end()) {
@@ -41,6 +70,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		return storedInfo;
 	}
 
+	ZLTextLineInfo &info = *infoPtr;
 	ZLTextWordCursor current = start;
 	const ZLTextParagraphCursor &paragraphCursor = current.paragraphCursor();
 	const bool isFirstLine = current.isStartOfParagraph();
@@ -56,12 +86,12 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 		nodeInfo.VerticalLinesStack.reserve(treeParagraph.depth() - 1);
 		if (treeParagraph.depth() > 1) {
-			const ZLTextTreeParagraph *current = treeParagraph.parent();
-			nodeInfo.VerticalLinesStack.push_back(current->children().back() != &treeParagraph);
+			const ZLTextTreeParagraph *ctp = treeParagraph.parent();
+			nodeInfo.VerticalLinesStack.push_back(ctp->children().back() != &treeParagraph);
 			for (int i = 1; i < treeParagraph.depth() - 1; ++i) {
-				const ZLTextTreeParagraph *parent = current->parent();
-				nodeInfo.VerticalLinesStack.push_back(current != parent->children().back());
-				current = parent;
+				const ZLTextTreeParagraph *parent = ctp->parent();
+				nodeInfo.VerticalLinesStack.push_back(ctp != parent->children().back());
+				ctp = parent;
 			}
 		}
 	}
@@ -107,23 +137,20 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		return infoPtr;
 	}
 
-	int newWidth = info.Width;
-	int newHeight = info.Height;
-	int newDescent = info.Descent;
-	int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
+	ZLTextPartialInfo newInfo(info, current);
+	bool allowBreakAtNBSpace = true;
+	const int maxWidth = myStyle.context().width() - myStyle.style()->rightIndent();
 	bool wordOccured = false;
-	bool isVisible = false;
 	int lastSpaceWidth = 0;
-	int internalSpaceCounter = 0;
 	int removeLastSpace = false;
 
-	ZLTextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
+	ZLTextElement::Kind elementKind = paragraphCursor[newInfo.End.wordNumber()].kind();
 
 	do {
-		const ZLTextElement &element = paragraphCursor[current.wordNumber()];
-		newWidth += myStyle.elementWidth(element, current.charNumber());
-		newHeight = std::max(newHeight, myStyle.elementHeight(element));
-		newDescent = std::max(newDescent, myStyle.elementDescent(element));
+		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
+		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charNumber());
+		newInfo.Height = std::max(newInfo.Height, myStyle.elementHeight(element));
+		newInfo.Descent = std::max(newInfo.Descent, myStyle.elementDescent(element));
 		switch (elementKind) {
 			case ZLTextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ZLTextControlElement&)element);
@@ -134,56 +161,61 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			case ZLTextElement::WORD_ELEMENT:
 			case ZLTextElement::IMAGE_ELEMENT:
 				wordOccured = true;
-				isVisible = true;
+				newInfo.IsVisible = true;
 				break;
 			case ZLTextElement::HSPACE_ELEMENT:
+			case ZLTextElement::NB_HSPACE_ELEMENT:
 				if (wordOccured) {
 					wordOccured = false;
-					++internalSpaceCounter;
+					++newInfo.SpaceCounter;
 					lastSpaceWidth = myStyle.context().spaceWidth();
-					newWidth += lastSpaceWidth;
+					newInfo.Width += lastSpaceWidth;
 				}
 				break;
 			case ZLTextElement::EMPTY_LINE_ELEMENT:
-				isVisible = true;
+				newInfo.IsVisible = true;
 			default:
 				break;
 		}
 
-		if ((newWidth > maxWidth) && !info.End.equalWordNumber(start)) {
+		if ((newInfo.Width > maxWidth) && !info.End.equalWordNumber(start)) {
 			break;
 		}
 
 		ZLTextElement::Kind previousKind = elementKind;
-		current.nextWord();
-		bool allowBreak = current.equalWordNumber(end);
+		newInfo.End.nextWord();
+		bool allowBreak = newInfo.End.equalWordNumber(end);
+		bool nbspaceBreak = false;
 		if (!allowBreak) {
-			elementKind = paragraphCursor[current.wordNumber()].kind();
-			allowBreak =
-				((elementKind != ZLTextElement::WORD_ELEMENT) || (previousKind == ZLTextElement::WORD_ELEMENT)) &&
-				(elementKind != ZLTextElement::IMAGE_ELEMENT) &&
-				(elementKind != ZLTextElement::CONTROL_ELEMENT);
+			elementKind = paragraphCursor[newInfo.End.wordNumber()].kind();
+			if (elementKind == ZLTextElement::NB_HSPACE_ELEMENT) {
+				if (allowBreakAtNBSpace) {
+					allowBreak = true;
+					nbspaceBreak = true;
+				}
+			} else {
+				allowBreak =
+					((elementKind != ZLTextElement::WORD_ELEMENT) || (previousKind == ZLTextElement::WORD_ELEMENT)) &&
+					(elementKind != ZLTextElement::IMAGE_ELEMENT) &&
+					(elementKind != ZLTextElement::CONTROL_ELEMENT);
+			}
 		}
 		if (allowBreak) {
-			info.IsVisible = isVisible;
-			info.Width = newWidth;
-			info.Height = std::max(info.Height, newHeight);
-			info.Descent = std::max(info.Descent, newDescent);
-			info.End = current;
+			newInfo.setTo(info);
+			allowBreakAtNBSpace = nbspaceBreak;
 			storedStyle = myStyle.style();
-			info.SpaceCounter = internalSpaceCounter;
 			removeLastSpace = !wordOccured && (info.SpaceCounter > 0);
 		}
-	} while (!current.equalWordNumber(end));
+	} while (!newInfo.End.equalWordNumber(end));
 
-	if (!current.equalWordNumber(end) &&
+	if (!newInfo.End.equalWordNumber(end) &&
 		 ZLTextStyleCollection::instance().baseStyle().AutoHyphenationOption.value() &&
 		 myStyle.style()->allowHyphenations()) {
-		const ZLTextElement &element = paragraphCursor[current.wordNumber()];
+		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
 		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
-			newWidth -= myStyle.elementWidth(element, current.charNumber());
+			newInfo.Width -= myStyle.elementWidth(element, newInfo.End.charNumber());
 			const ZLTextWord &word = (ZLTextWord&)element;
-			int spaceLeft = maxWidth - newWidth;
+			int spaceLeft = maxWidth - newInfo.Width;
 			if ((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
 				ZLUnicodeUtil::Ucs2String ucs2string;
 				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
@@ -199,13 +231,9 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 					}
 				}
 				if (hyphenationPosition > 0) {
-					info.IsVisible = true;
-					info.Width = newWidth + subwordWidth;
-					info.Height = std::max(info.Height, newHeight);
-					info.Descent = std::max(info.Descent, newDescent);
-					info.End = current;
+					newInfo.Width += subwordWidth;
+					newInfo.setTo(info);
 					storedStyle = myStyle.style();
-					info.SpaceCounter = internalSpaceCounter;
 					removeLastSpace = false;
 					info.End.setCharNumber(hyphenationPosition);
 				}
