@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExternalPrograms>
 	<section name="Dictionary">
-		<program name="FBDictionary" protocol="osso-rpc" testFile="/usr/bin/FBDictionary">
-			<action name="present" service="FBDictionary" command="present"/>
-			<action name="showWord" service="FBDictionary" command="openWord"/>
+		<program name="FDictionary" protocol="osso-rpc" testFile="/usr/bin/FDictionary">
+			<action name="present" service="FDictionary" command="present"/>
+			<action name="showWord" service="FDictionary" command="openWord"/>
 		</program>
 	</section>
 	<section name="Web Browser">
