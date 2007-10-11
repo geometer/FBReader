@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config>
-  <group name="Point">
-    <option name="FontFamily" value="helvetica"/>
-    <option name="FontSize" value="18"/>
-  </group>
-</config>
