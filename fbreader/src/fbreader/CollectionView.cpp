@@ -224,7 +224,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 				myCollection.rebuild(false);
 				myUpdateModel = true;
 				selectBook(book);
-				repaintView();
+				application().refreshWindow();
 			}
 			return true;
 		} else if (imageElement.id() == DELETE_IMAGE_ID) {
@@ -247,7 +247,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 					setStartCursor(0);
 				}
 				rebuildPaintInfo(true);
-				repaintView();
+				application().refreshWindow();
 			}
 			return true;
 		}

@@ -31,10 +31,6 @@ void ZLViewWidget::setView(shared_ptr<ZLView> view) {
 	myView = view;
 }
 
-void ZLView::repaintView() {
-	myApplication.refreshWindow();
-}
-
 bool ZLView::onStylusPress(int, int) {
 	return false;
 }

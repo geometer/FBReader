@@ -454,5 +454,5 @@ ClearSelectionAction::ClearSelectionAction(FBReader &fbreader) : SelectionAction
 
 void ClearSelectionAction::run() {
 	textView().selectionModel().clear();
-	textView().repaintView();
+	fbreader().refreshWindow();
 }

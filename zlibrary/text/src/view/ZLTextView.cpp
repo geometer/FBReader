@@ -21,6 +21,7 @@
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
+#include <ZLApplication.h>
 
 #include <ZLTextModel.h>
 #include <ZLTextParagraph.h>
@@ -31,7 +32,7 @@
 #include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
 
-ZLTextView::ZLTextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this), myTreeStateIsFrozen(false) {
+ZLTextView::ZLTextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -96,7 +97,7 @@ void ZLTextView::scrollToHome() {
 	}
 
 	gotoParagraph(0, false);
-	repaintView();
+	application().refreshWindow();
 }
 
 void ZLTextView::scrollToStartOfText() {
@@ -112,7 +113,7 @@ void ZLTextView::scrollToStartOfText() {
 
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
 	gotoParagraph((i != myTextBreaks.begin()) ? *(i - 1) : 0, false);
-	repaintView();
+	application().refreshWindow();
 }
 
 void ZLTextView::scrollToEndOfText() {
@@ -133,7 +134,7 @@ void ZLTextView::scrollToEndOfText() {
 		gotoParagraph(*i - 1, true);
 	}
 	myEndCursor.moveToParagraphEnd();
-	repaintView();
+	application().refreshWindow();
 }
 
 int ZLTextView::paragraphIndexByCoordinate(int y) const {
@@ -183,7 +184,7 @@ void ZLTextView::gotoMark(ZLTextMark mark) {
 		preparePaintInfo();
 	}
 	if (doRepaint) {
-		repaintView();
+		application().refreshWindow();
 	}
 }
 
@@ -260,7 +261,7 @@ void ZLTextView::search(const std::string &text, bool ignoreCase, bool wholeText
 		gotoMark(wholeText ?
 							(backward ? myModel->lastMark() : myModel->firstMark()) :
 							(backward ? myModel->previousMark(position) : myModel->nextMark(position)));
-		repaintView();
+		application().refreshWindow();
 	}
 }
 
@@ -297,6 +298,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 		bool indicatorAnswer = positionIndicator().onStylusPress(x, y);
 		myTreeStateIsFrozen = false;
 		if (indicatorAnswer) {
+			application().refreshWindow();
 			return true;
 		}
 	}
@@ -330,7 +332,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 				gotoParagraph(paragraphNumber);
 				preparePaintInfo();
 			}
-			repaintView();
+			application().refreshWindow();
 
 			return true;
 		}
@@ -341,13 +343,13 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 void ZLTextView::activateSelection(int x, int y) {
 	mySelectionModel.activate(x, y);
-	repaintView();
+	application().refreshWindow();
 }
 
 bool ZLTextView::onStylusMovePressed(int x, int y) {
 	if (mySelectionModel.extendTo(x, y)) {
 		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
-		repaintView();
+		application().refreshWindow();
 	}
 	return true;
 }

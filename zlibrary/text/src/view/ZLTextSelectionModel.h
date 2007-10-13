@@ -31,11 +31,12 @@
 #include "ZLTextParagraphCursor.h"
 
 class ZLTextView;
+class ZLApplication;
 
 class ZLTextSelectionModel {
 
 public:
-	ZLTextSelectionModel(ZLTextView &view);
+	ZLTextSelectionModel(ZLTextView &view, ZLApplication &application);
 
 	void activate(int x, int y);
 	bool extendTo(int x, int y);
@@ -77,6 +78,7 @@ private:
 
 private:
 	ZLTextView &myView;
+	ZLApplication &myApplication;
 	bool myIsActive;
 	bool myIsEmpty;
 

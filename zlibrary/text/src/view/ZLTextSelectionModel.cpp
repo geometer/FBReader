@@ -18,6 +18,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLApplication.h>
 #include <ZLTime.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLibrary.h>
@@ -25,7 +26,7 @@
 #include "ZLTextSelectionModel.h"
 #include "ZLTextView.h"
 
-ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true) {
+ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view, ZLApplication &application) : myView(view), myApplication(application), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true) {
 }
 
 void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
@@ -246,7 +247,7 @@ void ZLTextSelectionModel::scrollAndExtend() {
 	if (direction != ZLTextSelectionScroller::DONT_SCROLL) {
 		myView.scrollPage(direction == ZLTextSelectionScroller::SCROLL_FORWARD, ZLTextView::SCROLL_LINES, 1);
 		myDoUpdate = true;
-		myView.repaintView();
+		myApplication.refreshWindow();
 	}
 }
 

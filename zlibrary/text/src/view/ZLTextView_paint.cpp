@@ -246,7 +246,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			{
 				const int height = myStyle.elementHeight(element);
 				const int descent = myStyle.elementDescent(element);
-				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length : 0;
+				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length - pos.charNumber() : 0;
 				myTextElementMap.push_back(
 					ZLTextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,

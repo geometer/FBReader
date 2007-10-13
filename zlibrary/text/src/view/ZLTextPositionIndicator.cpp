@@ -220,7 +220,6 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	size_t paragraphNumber = std::min((size_t)(it - textSizeVector.begin()), endIndex) - 1;
 	if (paragraphNumber == startIndex) {
 		myTextView.gotoParagraph(startIndex, false);
-		myTextView.repaintView();
 	} else {
 		myTextView.gotoParagraph(paragraphNumber, true);
 		myTextView.preparePaintInfo();
@@ -234,11 +233,8 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 											- 1.0 * sizeOfTextBeforeParagraph(paragraphNumber))
 										 / sizeOfParagraph(paragraphNumber) * paragraphLength);
 					myTextView.moveEndCursor(endCursor.paragraphCursor().index(), wordNum, 0);
-					myTextView.repaintView();
 				}
 			}
-		} else {
-			myTextView.repaintView();
 		}
 	}
 	return true;

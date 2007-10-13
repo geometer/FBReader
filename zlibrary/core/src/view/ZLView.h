@@ -47,8 +47,6 @@ public:
 	virtual bool onStylusMovePressed(int x, int y);
 	virtual bool onFingerTap(int x, int y);
 
-	void repaintView();
-
 protected:
 	ZLApplication &application();
 	const ZLApplication &application() const;

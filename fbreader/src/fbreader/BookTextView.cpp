@@ -173,7 +173,7 @@ void BookTextView::undoPageMove() {
 		gotoPosition(pos.first, pos.second, 0);
 		myLockUndoStackChanges = false;
 
-		repaintView();
+		application().refreshWindow();
 	}
 }
 
@@ -194,7 +194,7 @@ void BookTextView::redoPageMove() {
 			myPositionStack.pop_back();
 		}
 
-		repaintView();
+		application().refreshWindow();
 	}
 }
 
