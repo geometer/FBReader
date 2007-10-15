@@ -66,7 +66,6 @@ ZLApplication::~ZLApplication() {
 	if (myViewWidget != 0) {
 		delete myViewWidget;
 	}
-	delete myContext;
 }
 
 void ZLApplication::initWindow() {
@@ -420,4 +419,8 @@ const std::string &ZLApplication::lastCaller() const {
 
 void ZLApplication::resetLastCaller() {
 	((PresentWindowHandler&)*myPresentWindowHandler).resetLastCaller();
+}
+
+shared_ptr<ZLPaintContext> ZLApplication::context() {
+	return myContext;
 }

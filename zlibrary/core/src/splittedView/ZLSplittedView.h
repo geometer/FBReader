@@ -1,5 +1,4 @@
 /*
- * FBReader -- electronic book reader
  * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
  * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
  *
@@ -19,23 +18,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __CONTENTSVIEW_H__
-#define __CONTENTSVIEW_H__
+#ifndef __ZLSPLITTEDVIEW_H__
+#define __ZLSPLITTEDVIEW_H__
 
-#include "FBView.h"
+#include <ZLView.h>
 
-class ContentsView : public FBView {
+class ZLSplittedView : public ZLView {
 
 public:
-	ContentsView(FBReader &reader, shared_ptr<ZLPaintContext> context);
-	~ContentsView();
+	ZLSplittedView(ZLApplication &application, shared_ptr<ZLPaintContext> context = 0);
+	~ZLSplittedView();
+	void setPaintContext(shared_ptr<ZLPaintContext> context);
 
-	bool isEmpty() const;
-	size_t currentTextViewParagraph(bool includeStart = true) const;
-	void gotoReference();
+	void paint();
+
+	void setLeftView(shared_ptr<ZLView> view);
+	void setRightView(shared_ptr<ZLView> view);
+
+	bool onStylusPress(int x, int y);
+	bool onStylusRelease(int x, int y);
+	bool onStylusMove(int x, int y);
+	bool onStylusMovePressed(int x, int y);
+	bool onFingerTap(int x, int y);
 
 private:
-	bool _onStylusPress(int x, int y);
+	shared_ptr<ZLView> myLeftView;
+	shared_ptr<ZLView> myRightView;
 };
 
-#endif /* __CONTENTSVIEW_H__ */
+#endif /* __ZLSPLITTEDVIEW_H__ */

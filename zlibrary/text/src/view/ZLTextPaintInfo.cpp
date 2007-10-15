@@ -308,7 +308,7 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 
 		myStyle.reset();
 		myStyle.applyControls(paragraphStart, cursor);
-		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, myStyle.style());
+		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, myStyle.textStyle());
 
 		while (!infoPtr->End.isEndOfParagraph()) {
 			infoPtr = processTextLine(infoPtr->End, paragraphEnd);

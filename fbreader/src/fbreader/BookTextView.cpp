@@ -43,7 +43,7 @@ static const std::string POSITION_IN_BUFFER = "PositionInBuffer";
 static const char * const BUFFER_PARAGRAPH_PREFIX = "Paragraph_";
 static const char * const BUFFER_WORD_PREFIX = "Word_";
 
-BookTextView::BookTextView(FBReader &reader, ZLPaintContext &context) :
+BookTextView::BookTextView(FBReader &reader, shared_ptr<ZLPaintContext> context) :
 	FBView(reader, context),
 	ShowTOCMarksOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "Indicator", "ShowTOCMarks", false) {
 	myCurrentPointInStack = 0;

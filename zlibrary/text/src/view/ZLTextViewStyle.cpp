@@ -28,38 +28,44 @@
 #include "ZLTextStyle.h"
 #include "ZLTextElement.h"
 
-ZLTextView::ViewStyle::ViewStyle(ZLPaintContext &context) : myContext(context) {
-	setStyle(ZLTextStyleCollection::instance().baseStylePtr());
+ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context) {
+	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr());
 	myWordHeight = -1;
 }
 
-void ZLTextView::ViewStyle::reset() {
-	setStyle(ZLTextStyleCollection::instance().baseStylePtr());
+void ZLTextView::ViewStyle::setPaintContext(shared_ptr<ZLPaintContext> context) {
+	myContext = context;
 }
 
-void ZLTextView::ViewStyle::setStyle(const ZLTextStylePtr style) {
-	if (myStyle != style) {
-		myStyle = style;
+void ZLTextView::ViewStyle::reset() {
+	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr());
+}
+
+void ZLTextView::ViewStyle::setTextStyle(const ZLTextStylePtr style) {
+	if (myTextStyle != style) {
+		myTextStyle = style;
 		myWordHeight = -1;
 	}
-	myContext.setFont(myStyle->fontFamily(), myStyle->fontSize(), myStyle->bold(), myStyle->italic());
+	if (!myContext.isNull()) {
+		myContext->setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
+	}
 }
 
 void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 	if (control.isStart()) {
 		const ZLTextStyleDecoration *decoration = ZLTextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
-			setStyle(decoration->createDecoratedStyle(myStyle));
+			setTextStyle(decoration->createDecoratedStyle(myTextStyle));
 		}
 	} else {
-		if (myStyle->isDecorated()) {
-			setStyle(((ZLTextDecoratedStyle&)*myStyle).base());
+		if (myTextStyle->isDecorated()) {
+			setTextStyle(((ZLTextDecoratedStyle&)*myTextStyle).base());
 		}
 	}
 }
 
 void ZLTextView::ViewStyle::applyControl(const ZLTextForcedControlElement &control) {
-	setStyle(new ZLTextForcedStyle(myStyle, control.entry()));
+	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()));
 }
 
 void ZLTextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
@@ -80,14 +86,14 @@ int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned i
 		case ZLTextElement::IMAGE_ELEMENT:
 			return context().imageWidth(((const ZLTextImageElement&)element).image());
 		case ZLTextElement::INDENT_ELEMENT:
-			return style()->firstLineIndentDelta();
+			return textStyle()->firstLineIndentDelta();
 		case ZLTextElement::HSPACE_ELEMENT:
 		case ZLTextElement::NB_HSPACE_ELEMENT:
 			return 0;
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
 		case ZLTextElement::EMPTY_LINE_ELEMENT:
-			return context().width() + abs(style()->leftIndent()) + abs(style()->rightIndent()) + abs(style()->firstLineIndentDelta()) + 1;
+			return context().width() + abs(textStyle()->leftIndent()) + abs(textStyle()->rightIndent()) + abs(textStyle()->firstLineIndentDelta()) + 1;
 		case ZLTextElement::FORCED_CONTROL_ELEMENT:
 		case ZLTextElement::CONTROL_ELEMENT:
 			return 0;
@@ -101,17 +107,17 @@ int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {
-				myWordHeight = (int)(context().stringHeight() * style()->lineSpace()) + style()->verticalShift();
+				myWordHeight = (int)(context().stringHeight() * textStyle()->lineSpace()) + textStyle()->verticalShift();
 			}
 			return myWordHeight;
 		case ZLTextElement::IMAGE_ELEMENT:
 			return
 				context().imageHeight(((const ZLTextImageElement&)element).image()) +
-				std::max((int)(context().stringHeight() * (style()->lineSpace() - 1)), 3);
+				std::max((int)(context().stringHeight() * (textStyle()->lineSpace() - 1)), 3);
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
-			return - style()->spaceAfter();
+			return - textStyle()->spaceAfter();
 		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
-			return - style()->spaceBefore();
+			return - textStyle()->spaceBefore();
 		case ZLTextElement::EMPTY_LINE_ELEMENT:
 			return context().stringHeight();
 		case ZLTextElement::INDENT_ELEMENT:

@@ -29,7 +29,7 @@ class FBReader;
 class FBView : public ZLTextView {
 
 public:
-	FBView(FBReader &reader, ZLPaintContext &context);
+	FBView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 
 	bool onFingerTap(int x, int y);
 

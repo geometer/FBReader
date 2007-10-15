@@ -27,7 +27,7 @@
 
 #include "../bookmodel/BookModel.h"
 
-ContentsView::ContentsView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
+ContentsView::ContentsView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context) {
 }
 
 ContentsView::~ContentsView() {

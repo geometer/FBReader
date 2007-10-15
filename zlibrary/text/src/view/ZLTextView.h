@@ -94,17 +94,18 @@ private:
 	class ViewStyle {
 
 	public:
-		ViewStyle(ZLPaintContext &context);
+		ViewStyle(shared_ptr<ZLPaintContext> context);
 		~ViewStyle();
+		void setPaintContext(shared_ptr<ZLPaintContext> context);
 
 		void reset();
-		void setStyle(const ZLTextStylePtr style);
+		void setTextStyle(const ZLTextStylePtr style);
 		void applyControl(const ZLTextControlElement &control);
 		void applyControl(const ZLTextForcedControlElement &control);
 		void applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end);
 
 		const ZLPaintContext &context() const;
-		const ZLTextStylePtr style() const;
+		const ZLTextStylePtr textStyle() const;
 		int elementWidth(const ZLTextElement &element, unsigned int charNumber) const;
 		int elementHeight(const ZLTextElement &element) const;
 		int elementDescent(const ZLTextElement &element) const;
@@ -113,14 +114,15 @@ private:
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
 	private:
-		ZLTextStylePtr myStyle;
-		ZLPaintContext &myContext;
+		ZLTextStylePtr myTextStyle;
+		shared_ptr<ZLPaintContext> myContext;
 		mutable int myWordHeight;
 	};
 
 protected:
-	ZLTextView(ZLApplication &application, ZLPaintContext &context);
+	ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context = 0);
 	virtual ~ZLTextView();
+	void setPaintContext(shared_ptr<ZLPaintContext> context);
 
 public:
 	void clearCaches();
@@ -247,8 +249,8 @@ friend class ZLTextSelectionModel;
 };
 
 inline ZLTextView::ViewStyle::~ViewStyle() {}
-inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return myContext; }
-inline const ZLTextStylePtr ZLTextView::ViewStyle::style() const { return myStyle; }
+inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return *myContext; }
+inline const ZLTextStylePtr ZLTextView::ViewStyle::textStyle() const { return myTextStyle; }
 
 inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }

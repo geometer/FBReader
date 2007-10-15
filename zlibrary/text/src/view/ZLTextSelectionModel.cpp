@@ -51,7 +51,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.TextElementNumber = bound.After.TextElementNumber;
 			bound.Before.Exists = true;
 			if (it->Kind == ZLTextElement::WORD_ELEMENT) {
-				myView.myStyle.setStyle(it->Style);
+				myView.myStyle.setTextStyle(it->Style);
 				ZLTextWordCursor cursor = myView.startCursor();
 				cursor.moveToParagraph(it->ParagraphNumber);
 				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->TextElementNumber];

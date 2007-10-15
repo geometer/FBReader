@@ -106,6 +106,10 @@ inline MultiAuthor::MultiAuthor(AuthorPtr author) { addAuthor(author); }
 
 inline AuthorComparator::AuthorComparator() {}
 inline AuthorComparator::~AuthorComparator() {}
-inline bool AuthorComparator::operator() (const AuthorPtr a1, const AuthorPtr a2) { return a1->sortKey() < a2->sortKey(); }
+inline bool AuthorComparator::operator() (const AuthorPtr a1, const AuthorPtr a2) {
+	return
+		(a1->sortKey() < a2->sortKey()) ||
+		((a1->sortKey() == a2->sortKey()) && (a1->displayName() < a2->displayName()));
+}
 
 #endif /* __AUTHOR_H__ */

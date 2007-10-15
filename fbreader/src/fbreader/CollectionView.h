@@ -33,7 +33,7 @@ class CollectionModel;
 class CollectionView : public FBView {
 
 public:
-	CollectionView(FBReader &reader, ZLPaintContext &context);
+	CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 	~CollectionView();
 	const std::string &caption() const;
 

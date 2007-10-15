@@ -30,7 +30,7 @@
 
 static const std::string LIBRARY = "Recent Books";
 
-RecentBooksView::RecentBooksView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {
+RecentBooksView::RecentBooksView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context) {
 }
 
 RecentBooksView::~RecentBooksView() {

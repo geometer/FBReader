@@ -106,6 +106,8 @@ private:
 private:
 	ZLPaintContext(const ZLPaintContext&);
 	const ZLPaintContext& operator = (const ZLPaintContext&);
+
+friend class ZLPartialPaintContext;
 };
 
 inline int ZLPaintContext::x() const { return myX; }

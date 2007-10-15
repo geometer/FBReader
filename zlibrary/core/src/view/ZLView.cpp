@@ -21,10 +21,14 @@
 #include "ZLView.h"
 #include "../application/ZLApplication.h"
 
-ZLView::ZLView(ZLApplication &application, ZLPaintContext &context) : myApplication(application), myContext(context) {
+ZLView::ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : myApplication(application), myContext(context) {
 }
 
 ZLView::~ZLView() {
+}
+
+void ZLView::setPaintContext(shared_ptr<ZLPaintContext> context) {
+	myContext = context;
 }
 
 void ZLViewWidget::setView(shared_ptr<ZLView> view) {

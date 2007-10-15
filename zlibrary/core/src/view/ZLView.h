@@ -25,14 +25,16 @@
 
 #include <shared_ptr.h>
 
-class ZLPaintContext;
+#include <ZLPaintContext.h>
+
 class ZLApplication;
 
 class ZLView {
 
 public:
-	ZLView(ZLApplication &application, ZLPaintContext &context);
+	ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context = 0);
 	virtual ~ZLView();
+	virtual void setPaintContext(shared_ptr<ZLPaintContext> context);
 
 	virtual const std::string &caption() const = 0;
 	virtual void paint() = 0;
@@ -51,9 +53,11 @@ protected:
 	ZLApplication &application();
 	const ZLApplication &application() const;
 
+	bool hasContext() const;
+
 private:
 	ZLApplication &myApplication;
-	ZLPaintContext &myContext;
+	shared_ptr<ZLPaintContext> myContext;
 
 private:
 	ZLView(const ZLView&);
@@ -99,7 +103,8 @@ inline shared_ptr<ZLView> ZLViewWidget::view() const { return myView; }
 inline void ZLViewWidget::rotate(Angle rotation) { myRotation = rotation; }
 inline ZLViewWidget::Angle ZLViewWidget::rotation() const { return myRotation; }
 
-inline ZLPaintContext &ZLView::context() const { return myContext; }
+inline bool ZLView::hasContext() const { return !myContext.isNull(); }
+inline ZLPaintContext &ZLView::context() const { return *myContext; }
 inline ZLApplication &ZLView::application() { return myApplication; }
 inline const ZLApplication &ZLView::application() const { return myApplication; }
 

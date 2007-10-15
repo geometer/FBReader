@@ -358,7 +358,7 @@ public:
 	virtual ~ZLApplication();
 	virtual void initWindow();
 
-	ZLPaintContext &context();
+	shared_ptr<ZLPaintContext> context();
 
 	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
@@ -401,7 +401,7 @@ private:
 	std::map<int,shared_ptr<Action> > myActionMap;
 	Toolbar myToolbar;
 	Menubar myMenubar;
-	ZLPaintContext *myContext;
+	shared_ptr<ZLPaintContext> myContext;
 	class ZLApplicationWindow *myWindow;
 	ZLTime myLastKeyActionTime;
 	shared_ptr<ZLMessageHandler> myPresentWindowHandler;
@@ -420,10 +420,6 @@ inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
 inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }
 inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }
 inline const ZLApplication::Menubar &ZLApplication::menubar() const { return myMenubar; }
-
-inline ZLPaintContext &ZLApplication::context() {
-	return *myContext;
-}
 
 inline const ZLApplication::Toolbar::ItemVector &ZLApplication::Toolbar::items() const { return myItems; }
 

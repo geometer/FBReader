@@ -27,9 +27,9 @@
 class FootnoteView : public FBView {
 
 public:
-	FootnoteView(FBReader &reader, ZLPaintContext &context);
+	FootnoteView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 };
 
-inline FootnoteView::FootnoteView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context) {}
+inline FootnoteView::FootnoteView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context) {}
 
 #endif /* __FOOTNOTEVIEW_H__ */

@@ -107,7 +107,7 @@ static ZLTextElementIterator findLast(ZLTextElementIterator from, ZLTextElementI
 }
 
 int ZLTextView::areaLength(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharNumber) {
-	myStyle.setStyle(area.Style);
+	myStyle.setTextStyle(area.Style);
 	const ZLTextWord &word = (const ZLTextWord&)paragraph[area.TextElementNumber];
 	int length = toCharNumber - area.StartCharNumber;
 	bool selectHyphenationSign = false;
@@ -178,10 +178,10 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	
 		if ((kind == ZLTextElement::WORD_ELEMENT) || (kind == ZLTextElement::IMAGE_ELEMENT)) {
 			if (it->ChangeStyle) {
-				myStyle.setStyle(it->Style);
+				myStyle.setTextStyle(it->Style);
 			}
 			const int x = it->XStart;
-			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.style()->verticalShift();
+			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.textStyle()->verticalShift();
 			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(x, y, (const ZLTextWord&)element, pos.charNumber(), -1, false);
 			} else {
@@ -192,20 +192,20 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	}
 	if (it != toIt) {
 		if (it->ChangeStyle) {
-			myStyle.setStyle(it->Style);
+			myStyle.setTextStyle(it->Style);
 		}
 		int len = info.End.charNumber();
 		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
-		context().setColor(myStyle.style()->color());
+		context().setColor(myStyle.textStyle()->color());
 		const int x = it->XStart;
-		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.style()->verticalShift();
+		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.textStyle()->verticalShift();
 		drawWord(x, y, word, 0, len, it->AddHyphenationSign);
 	}
 	context().moveY(info.Descent + info.VSpaceAfter);
 }
 
 void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
-	myStyle.setStyle(info.StartStyle);
+	myStyle.setTextStyle(info.StartStyle);
 	const int y = std::min(context().y() + info.Height, myStyle.textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
@@ -215,16 +215,16 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 
 	context().moveXTo(info.LeftIndent);
 
-	switch (myStyle.style()->alignment()) {
+	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			context().moveX(context().width() - myStyle.style()->rightIndent() - info.Width);
+			context().moveX(context().width() - myStyle.textStyle()->rightIndent() - info.Width);
 			break;
 		case ALIGN_CENTER:
-			context().moveX((context().width() - myStyle.style()->rightIndent() - info.Width) / 2);
+			context().moveX((context().width() - myStyle.textStyle()->rightIndent() - info.Width) / 2);
 			break;
 		case ALIGN_JUSTIFY:
 			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
-				fullCorrection = context().width() - myStyle.style()->rightIndent() - info.Width;
+				fullCorrection = context().width() - myStyle.textStyle()->rightIndent() - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:
@@ -250,7 +250,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				myTextElementMap.push_back(
 					ZLTextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
-						changeStyle, myStyle.style(), kind,
+						changeStyle, myStyle.textStyle(), kind,
 						x, x + width - 1, y - height + 1, y + descent
 					)
 				);
@@ -300,7 +300,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			myTextElementMap.push_back(
 				ZLTextElementArea(
 					paragraphNumber, info.End.wordNumber(), 0, len, addHyphenationSign,
-					changeStyle, myStyle.style(), ZLTextElement::WORD_ELEMENT,
+					changeStyle, myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
 					x, x + width - 1, y - height + 1, y + descent
 				)
 			);

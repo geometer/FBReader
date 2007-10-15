@@ -230,7 +230,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	);
 
 	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("Format")));
-	myStylePage = new StyleOptionsPage(myDialog->createTab(ZLResourceKey("Styles")), fbreader.context());
+	myStylePage = new StyleOptionsPage(myDialog->createTab(ZLResourceKey("Styles")), *fbreader.context());
 
 	createIndicatorTab(fbreader);
 

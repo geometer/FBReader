@@ -152,7 +152,7 @@ void CollectionModel::insertImage(const std::string &id) {
 	addImage(id, myImageMap, 0);
 }
 
-CollectionView::CollectionView(FBReader &reader, ZLPaintContext &context) : FBView(reader, context), myUpdateModel(true) {
+CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context), myUpdateModel(true) {
 	setModel(new CollectionModel(myCollection), LIBRARY);
 }
 

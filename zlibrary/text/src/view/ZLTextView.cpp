@@ -32,11 +32,16 @@
 #include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
 
-ZLTextView::ZLTextView(ZLApplication &application, ZLPaintContext &context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false) {
+ZLTextView::ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false) {
 }
 
 ZLTextView::~ZLTextView() {
 	clear();
+}
+
+void ZLTextView::setPaintContext(shared_ptr<ZLPaintContext> context) {
+	ZLView::setPaintContext(context);
+	myStyle.setPaintContext(context);
 }
 
 void ZLTextView::clear() {
@@ -369,7 +374,7 @@ bool ZLTextView::onStylusRelease(int, int) {
 }
 
 void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift) {
-	context().setColor(myStyle.style()->color());
+	context().setColor(myStyle.textStyle()->color());
 	if (mark == 0) {
 		context().drawString(x, y, str, len);
 	} else {
@@ -399,7 +404,7 @@ void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLText
 					context().drawString(x, y, str + markStart, endPos - markStart);
 					x += context().stringWidth(str + markStart, endPos - markStart);
 				}
-				context().setColor(myStyle.style()->color());
+				context().setColor(myStyle.textStyle()->color());
 			}
 			pos = markStart + markLen;
 		}

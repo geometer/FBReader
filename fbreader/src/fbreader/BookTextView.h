@@ -34,7 +34,7 @@ public:
 	ZLBooleanOption ShowTOCMarksOption;
 
 public:
-	BookTextView(FBReader &reader, ZLPaintContext &context);
+	BookTextView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 	~BookTextView();
 
 	void setModel(shared_ptr<ZLTextModel> model, const std::string &name);

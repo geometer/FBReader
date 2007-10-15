@@ -34,7 +34,7 @@ class Paragraph;
 class RecentBooksView : public FBView {
 
 public:
-	RecentBooksView(FBReader &reader, ZLPaintContext &context);
+	RecentBooksView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 	~RecentBooksView();
 	const std::string &caption() const;
 
