@@ -23,10 +23,12 @@
 
 #include <ZLPaintContext.h>
 
+class ZLSplittedView;
+
 class ZLPartialPaintContext : public ZLPaintContext {
 
 public:
-	ZLPartialPaintContext(ZLPaintContext &base, bool left);
+	ZLPartialPaintContext(ZLSplittedView &splittedView, bool left);
 
 	void clear(ZLColor color);
 
@@ -51,14 +53,13 @@ public:
 
 	const std::string realFontFamilyName(std::string &fontFamily) const;
 
-	int xBaseToPartial(int x) const;
-	int xPartialToBase(int x) const;
+	int xDelta() const;
 
 protected:
 	void fillFamiliesList(std::vector<std::string> &families) const;
 
 private:
-	ZLPaintContext &myBaseContext;
+	ZLSplittedView &mySplittedView;
 	bool myIsLeft;
 };
 

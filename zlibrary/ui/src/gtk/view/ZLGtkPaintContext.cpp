@@ -88,8 +88,6 @@ ZLGtkPaintContext::~ZLGtkPaintContext() {
 
 void ZLGtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 	if ((myPixmap != 0) && ((myWidth != w) || (myHeight != h))) {
-		gdk_pixmap_unref(myPixmap);
-		myPixmap = 0;
 		if (myTextGC != 0) {
 			gdk_gc_unref(myTextGC);
 			gdk_gc_unref(myFillGC);
@@ -98,6 +96,8 @@ void ZLGtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 			myFillGC = 0;
 			myBackGC = 0;
 		}
+		gdk_pixmap_unref(myPixmap);
+		myPixmap = 0;
 	}
 
 	if (myPixmap == 0) {
@@ -325,21 +325,21 @@ void ZLGtkPaintContext::drawFilledCircle(int x, int y, int r) {
 }
 
 void ZLGtkPaintContext::clear(ZLColor color) {
-	if (myPixmap != NULL) {
+	if (myPixmap != 0) {
 		::setColor(myBackGC, color);
 		gdk_draw_rectangle(myPixmap, myBackGC, true, 0, 0, myWidth, myHeight);
 	}
 }
 
 int ZLGtkPaintContext::width() const {
-	if (myPixmap == NULL) {
+	if (myPixmap == 0) {
 		return 0;
 	}
 	return myWidth - leftMargin() - rightMargin();
 }
 
 int ZLGtkPaintContext::height() const {
-	if (myPixmap == NULL) {
+	if (myPixmap == 0) {
 		return 0;
 	}
 	return myHeight - bottomMargin() - topMargin();

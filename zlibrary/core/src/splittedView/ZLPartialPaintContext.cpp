@@ -19,74 +19,93 @@
  */
 
 #include "ZLPartialPaintContext.h"
+#include "ZLSplittedView.h"
 
-ZLPartialPaintContext::ZLPartialPaintContext(ZLPaintContext &base, bool left) : myBaseContext(base), myIsLeft(left) {
+ZLPartialPaintContext::ZLPartialPaintContext(ZLSplittedView &splittedView, bool left) : mySplittedView(splittedView), myIsLeft(left) {
 }
 
 void ZLPartialPaintContext::clear(ZLColor color) {
-	// TODO: implement
+	mySplittedView.context().setFillColor(color);
+	int delta = xDelta();
+	mySplittedView.context().fillRectangle(delta, 0, mySplittedView.partWidth(myIsLeft) + delta, mySplittedView.context().height());
 }
 
 void ZLPartialPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	myBaseContext.setFont(family, size, bold, italic);
+	mySplittedView.context().setFont(family, size, bold, italic);
 }
 
 void ZLPartialPaintContext::setColor(ZLColor color, LineStyle style) {
-	myBaseContext.setColor(color, style);
+	mySplittedView.context().setColor(color, style);
 }
 
 void ZLPartialPaintContext::setFillColor(ZLColor color, FillStyle style) {
-	myBaseContext.setFillColor(color, style);
+	mySplittedView.context().setFillColor(color, style);
 }
 
 int ZLPartialPaintContext::width() const {
-	return myBaseContext.width() / 2 - 1;
+	return mySplittedView.partWidth(myIsLeft) - leftMargin() - rightMargin();
 }
 
 int ZLPartialPaintContext::height() const {
-	return myBaseContext.height();
+	return mySplittedView.context().height() - topMargin() - bottomMargin();
 }
 
 int ZLPartialPaintContext::stringWidth(const char *str, int len) const {
-	return myBaseContext.stringWidth(str, len);
+	return mySplittedView.context().stringWidth(str, len);
 }
 
 int ZLPartialPaintContext::spaceWidth() const {
-	return myBaseContext.spaceWidth();
+	return mySplittedView.context().spaceWidth();
 }
 
 int ZLPartialPaintContext::stringHeight() const {
-	return myBaseContext.stringHeight();
+	return mySplittedView.context().stringHeight();
 }
 
 int ZLPartialPaintContext::descent() const {
-	return myBaseContext.descent();
+	return mySplittedView.context().descent();
 }
 
 void ZLPartialPaintContext::drawString(int x, int y, const char *str, int len) {
-	// TODO: implement
+	mySplittedView.context().drawString(x + xDelta() + leftMargin(), y + topMargin(), str, len);
 }
 
 void ZLPartialPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	// TODO: implement
+	mySplittedView.context().drawImage(x + xDelta() + leftMargin(), y + topMargin(), image);
 }
 
 void ZLPartialPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	// TODO: implement
+	int delta = xDelta();
+	mySplittedView.context().drawLine(
+		x0 + delta + leftMargin(), y0 + topMargin(),
+		x1 + delta + leftMargin(), y1 + topMargin()
+	);
 }
 
 void ZLPartialPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
-	// TODO: implement
+	int delta = xDelta();
+	mySplittedView.context().fillRectangle(
+		x0 + delta + leftMargin(), y0 + topMargin(),
+		x1 + delta + leftMargin(), y1 + topMargin()
+	);
 }
 
 void ZLPartialPaintContext::drawFilledCircle(int x, int y, int r) {
-	// TODO: implement
+	mySplittedView.context().drawFilledCircle(x + xDelta() + leftMargin(), y + topMargin(), r);
 }
 
 const std::string ZLPartialPaintContext::realFontFamilyName(std::string &fontFamily) const {
-	return myBaseContext.realFontFamilyName(fontFamily);
+	return mySplittedView.context().realFontFamilyName(fontFamily);
 }
 
 void ZLPartialPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
-	myBaseContext.fillFamiliesList(families);
+	mySplittedView.context().fillFamiliesList(families);
+}
+
+int ZLPartialPaintContext::xDelta() const {
+	if (myIsLeft) {
+		return 0;
+	} else {
+		return mySplittedView.partWidth(true) + mySplittedView.splitterWidth() + 1;
+	}
 }

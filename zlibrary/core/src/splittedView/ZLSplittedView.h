@@ -28,7 +28,6 @@ class ZLSplittedView : public ZLView {
 public:
 	ZLSplittedView(ZLApplication &application, shared_ptr<ZLPaintContext> context = 0);
 	~ZLSplittedView();
-	void setPaintContext(shared_ptr<ZLPaintContext> context);
 
 	void paint();
 
@@ -41,9 +40,18 @@ public:
 	bool onStylusMovePressed(int x, int y);
 	bool onFingerTap(int x, int y);
 
+	virtual int splitterWidth() const = 0;
+	virtual ZLColor splitterColor() const = 0;
+	virtual int leftRatioN() const = 0;
+	virtual int leftRatioD() const = 0;
+	virtual void moveSplitterTo(int x) = 0;
+
+	int partWidth(bool left) const;
+
 private:
 	shared_ptr<ZLView> myLeftView;
 	shared_ptr<ZLView> myRightView;
+	bool myMoveSplitter;
 };
 
 #endif /* __ZLSPLITTEDVIEW_H__ */
