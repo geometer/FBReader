@@ -50,9 +50,9 @@ void ZLTextView::paint() {
 		++index;
 	}
 
-	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
-	if (indicatorStyle.ShowOption.value()) {
-		positionIndicator().draw();
+	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
+	if (!indicatorInfo.isNull() && indicatorInfo->isVisible()) {
+		positionIndicator()->draw();
 	}
 
 	ZLTextParagraphCursorCache::cleanup();
@@ -163,7 +163,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	}
 
 	context().moveY(info.Height);
-	int maxY = myStyle.textAreaHeight();
+	int maxY = textAreaHeight();
 	if (context().y() > maxY) {
 	  context().moveYTo(maxY);
 	}
@@ -206,7 +206,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 
 void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	myStyle.setTextStyle(info.StartStyle);
-	const int y = std::min(context().y() + info.Height, myStyle.textAreaHeight());
+	const int y = std::min(context().y() + info.Height, textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();

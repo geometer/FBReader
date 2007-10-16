@@ -57,7 +57,7 @@ public:
 	class PositionIndicator {
 
 	public:
-		PositionIndicator(ZLTextView &textView);
+		PositionIndicator(ZLTextView &textView, const ZLTextPositionIndicatorInfo &info);
 		virtual ~PositionIndicator();
 
 		virtual void draw();
@@ -85,6 +85,7 @@ public:
 
 	private:
 		ZLTextView &myTextView;
+		const ZLTextPositionIndicatorInfo &myInfo;
 		int myExtraWidth;
 	};
 
@@ -109,7 +110,6 @@ private:
 		int elementWidth(const ZLTextElement &element, unsigned int charNumber) const;
 		int elementHeight(const ZLTextElement &element) const;
 		int elementDescent(const ZLTextElement &element) const;
-		int textAreaHeight() const;
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
@@ -123,6 +123,7 @@ protected:
 	ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context = 0);
 	virtual ~ZLTextView();
 	void setPaintContext(shared_ptr<ZLPaintContext> context);
+	virtual shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo() const = 0;
 
 public:
 	void clearCaches();
@@ -174,7 +175,7 @@ protected:
 
 	bool empty() const;
 
-	virtual shared_ptr<PositionIndicator> createPositionIndicator();
+	virtual shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo&);
 
 private:
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
@@ -208,7 +209,9 @@ private:
 
 	std::vector<size_t>::const_iterator nextBreakIterator() const;
 
-	PositionIndicator &positionIndicator();
+	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
+
+	int textAreaHeight() const;
 
 private:
 	shared_ptr<ZLTextModel> myModel;

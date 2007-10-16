@@ -28,6 +28,7 @@
 #include "OptionsDialog.h"
 
 #include "../fbreader/FBReader.h"
+#include "../fbreader/FBView.h"
 #include "../fbreader/BookTextView.h"
 
 class StateOptionEntry : public ZLToggleBooleanOptionEntry {
@@ -74,31 +75,31 @@ void SpecialFontSizeEntry::setVisible(bool) {
 
 void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
-	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
+	FBIndicatorStyle &indicatorInfo = FBView::commonIndicatorInfo();
 	ZLToggleBooleanOptionEntry *showIndicatorEntry =
-		new ZLToggleBooleanOptionEntry(indicatorStyle.ShowOption);
+		new ZLToggleBooleanOptionEntry(indicatorInfo.ShowOption);
 	indicatorTab.addOption(ZLResourceKey("show"), showIndicatorEntry);
 
 	ZLOptionEntry *heightEntry =
-		new ZLSimpleSpinOptionEntry(indicatorStyle.HeightOption, 1);
+		new ZLSimpleSpinOptionEntry(indicatorInfo.HeightOption, 1);
 	ZLOptionEntry *offsetEntry =
-		new ZLSimpleSpinOptionEntry(indicatorStyle.OffsetOption, 1);
+		new ZLSimpleSpinOptionEntry(indicatorInfo.OffsetOption, 1);
 	indicatorTab.addOptions(ZLResourceKey("height"), heightEntry, ZLResourceKey("offset"), offsetEntry);
 	showIndicatorEntry->addDependentEntry(heightEntry);
 	showIndicatorEntry->addDependentEntry(offsetEntry);
 
 	StateOptionEntry *showTextPositionEntry =
-		new StateOptionEntry(indicatorStyle.ShowTextPositionOption);
+		new StateOptionEntry(indicatorInfo.ShowTextPositionOption);
 	indicatorTab.addOption(ZLResourceKey("pageNumber"), showTextPositionEntry);
 	showIndicatorEntry->addDependentEntry(showTextPositionEntry);
 
 	StateOptionEntry *showTimeEntry =
-		new StateOptionEntry(indicatorStyle.ShowTimeOption);
+		new StateOptionEntry(indicatorInfo.ShowTimeOption);
 	indicatorTab.addOption(ZLResourceKey("time"), showTimeEntry);
 	showIndicatorEntry->addDependentEntry(showTimeEntry);
 
 	SpecialFontSizeEntry *fontSizeEntry =
-		new SpecialFontSizeEntry(indicatorStyle.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
+		new SpecialFontSizeEntry(indicatorInfo.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
 	indicatorTab.addOption(ZLResourceKey("fontSize"), fontSizeEntry);
 	showIndicatorEntry->addDependentEntry(fontSizeEntry);
 	showTextPositionEntry->addDependentEntry(fontSizeEntry);
@@ -110,7 +111,7 @@ void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	showIndicatorEntry->addDependentEntry(tocMarksEntry);
 
 	ZLOptionEntry *navigationEntry =
-		new ZLSimpleBooleanOptionEntry(indicatorStyle.IsSensitiveOption);
+		new ZLSimpleBooleanOptionEntry(indicatorInfo.IsSensitiveOption);
 	indicatorTab.addOption(ZLResourceKey("navigation"), navigationEntry);
 	showIndicatorEntry->addDependentEntry(navigationEntry);
 

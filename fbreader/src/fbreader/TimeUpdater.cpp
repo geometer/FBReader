@@ -23,13 +23,14 @@
 
 #include <ZLTextStyle.h>
 
+#include "FBView.h"
 #include "TimeUpdater.h"
 
 TimeUpdater::TimeUpdater(ZLApplication &application) : myApplication(application), myTime(-1) {
 }
 
 void TimeUpdater::run() {
-	if (ZLTextStyleCollection::instance().indicatorStyle().ShowTimeOption.value()) {
+	if (FBView::commonIndicatorInfo().ShowTimeOption.value()) {
 		ZLTime time;
 		short minutes = time.hours() * 60 + time.minutes();
 		if (myTime != minutes) {

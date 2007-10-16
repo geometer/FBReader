@@ -25,7 +25,68 @@
 #include "FBReader.h"
 #include "FBReaderActions.h"
 
+static const std::string INDICATOR = "Indicator";
+
+FBIndicatorStyle::FBIndicatorStyle() :
+	ShowOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Show", true),
+	IsSensitiveOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "TouchSensitive", true),
+	ShowTextPositionOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "PositionText", true),
+	ShowTimeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Time", true),
+	ColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Color", ZLColor(127, 127, 127)),
+	HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Height", 1, 100, 16),
+	OffsetOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Offset", 0, 100, 3),
+	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "FontSize", 4, 72, 14) {
+}
+
+bool FBIndicatorStyle::isVisible() const {
+	return ShowOption.value();
+}
+
+bool FBIndicatorStyle::isSensitive() const {
+	return IsSensitiveOption.value();
+}
+
+bool FBIndicatorStyle::isTextPositionShown() const {
+	return ShowTextPositionOption.value();
+}
+
+bool FBIndicatorStyle::isTimeShown() const {
+	return ShowTimeOption.value();
+}
+
+ZLColor FBIndicatorStyle::color() const {
+	return ColorOption.value();
+}
+
+int FBIndicatorStyle::height() const {
+	return HeightOption.value();
+}
+
+int FBIndicatorStyle::offset() const {
+	return OffsetOption.value();
+}
+
+int FBIndicatorStyle::fontSize() const {
+	return FontSizeOption.value();
+}
+
+shared_ptr<ZLTextPositionIndicatorInfo> FBView::ourIndicatorInfo;
+
+FBIndicatorStyle& FBView::commonIndicatorInfo() {
+	if (ourIndicatorInfo.isNull()) {
+		ourIndicatorInfo = new FBIndicatorStyle();
+	}
+	return (FBIndicatorStyle&)*ourIndicatorInfo;
+}
+
 FBView::FBView(FBReader &reader, shared_ptr<ZLPaintContext> context) : ZLTextView(reader, context) {
+}
+
+shared_ptr<ZLTextPositionIndicatorInfo> FBView::indicatorInfo() const {
+	if (ourIndicatorInfo.isNull()) {
+		ourIndicatorInfo = new FBIndicatorStyle();
+	}
+	return ourIndicatorInfo;
 }
 
 bool FBView::onFingerTap(int, int y) {

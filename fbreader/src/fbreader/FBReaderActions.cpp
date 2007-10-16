@@ -319,7 +319,7 @@ ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbre
 }
 
 void ToggleIndicatorAction::run() {
-	ZLBooleanOption &option = ZLTextStyleCollection::instance().indicatorStyle().ShowOption;
+	ZLBooleanOption &option = FBView::commonIndicatorInfo().ShowOption;
 	option.setValue(!option.value());
 	fbreader().refreshWindow();
 }

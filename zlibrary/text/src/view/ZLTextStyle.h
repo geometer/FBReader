@@ -254,7 +254,7 @@ class ZLTextFullDecoratedStyle : public ZLTextDecoratedStyle {
 
 private:
 	ZLTextFullDecoratedStyle(const ZLTextStylePtr base, const ZLTextFullStyleDecoration &decoration);
-	friend ZLTextStylePtr ZLTextFullStyleDecoration::createDecoratedStyle(const ZLTextStylePtr base) const;
+	friend ZLTextStylePtr createDecoratedStyle(const ZLTextStylePtr base) const;
 
 public:
 	~ZLTextFullDecoratedStyle();
@@ -281,20 +281,26 @@ private:
 	const ZLTextFullStyleDecoration &myDecoration;
 };
 
-class ZLTextPositionIndicatorStyle {
+class ZLTextPositionIndicatorInfo {
+
+protected:
+	ZLTextPositionIndicatorInfo();
 
 public:
-	ZLBooleanOption ShowOption;
-	ZLBooleanOption IsSensitiveOption;
-	ZLBooleanOption ShowTextPositionOption;
-	ZLBooleanOption ShowTimeOption;
-	ZLColorOption ColorOption;
-	ZLIntegerRangeOption HeightOption;
-	ZLIntegerRangeOption OffsetOption;
-	ZLIntegerRangeOption FontSizeOption;
+	virtual ~ZLTextPositionIndicatorInfo();
 
-public:
-	ZLTextPositionIndicatorStyle();
+	virtual bool isVisible() const = 0;
+	virtual bool isSensitive() const = 0;
+	virtual bool isTextPositionShown() const = 0;
+	virtual bool isTimeShown() const = 0;
+	virtual ZLColor color() const = 0;
+	virtual int height() const = 0;
+	virtual int offset() const = 0;
+	virtual int fontSize() const = 0;
+
+private:
+	ZLTextPositionIndicatorInfo(const ZLTextPositionIndicatorInfo&);
+	const ZLTextPositionIndicatorInfo operator = (const ZLTextPositionIndicatorInfo&);
 };
 
 class ZLTextStyleCollection {
@@ -306,7 +312,6 @@ public:
 	ZLTextStylePtr baseStylePtr() const;
 	ZLTextBaseStyle &baseStyle() const;
 	ZLTextStyleDecoration *decoration(ZLTextKind kind) const;
-	ZLTextPositionIndicatorStyle &indicatorStyle();
 
 private:
 	ZLTextStyleCollection();
@@ -317,7 +322,6 @@ private:
 	
 private:
 	ZLTextStylePtr myBaseStyle;
-	ZLTextPositionIndicatorStyle myIndicatorStyle;
 	std::map<ZLTextKind,ZLTextStyleDecoration*> myDecorationMap;
 
 friend class ZLTextStyleReader;
@@ -391,6 +395,5 @@ inline double ZLTextFullDecoratedStyle::lineSpace() const { double space = myDec
 
 inline ZLTextStylePtr ZLTextStyleCollection::baseStylePtr() const { return myBaseStyle; }
 inline ZLTextBaseStyle &ZLTextStyleCollection::baseStyle() const { return (ZLTextBaseStyle&)*myBaseStyle; }
-inline ZLTextPositionIndicatorStyle &ZLTextStyleCollection::indicatorStyle() { return myIndicatorStyle; }
 
 #endif /* __ZLTEXTSTYLE_H__ */

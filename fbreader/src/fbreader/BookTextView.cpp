@@ -256,11 +256,11 @@ bool BookTextView::onStylusMove(int x, int y) {
 	return true;
 }
 
-shared_ptr<ZLTextView::PositionIndicator> BookTextView::createPositionIndicator() {
-	return new PositionIndicatorWithLabels(*this);
+shared_ptr<ZLTextView::PositionIndicator> BookTextView::createPositionIndicator(const ZLTextPositionIndicatorInfo &info) {
+	return new PositionIndicatorWithLabels(*this, info);
 }
 
-BookTextView::PositionIndicatorWithLabels::PositionIndicatorWithLabels(BookTextView &bookTextView) : PositionIndicator(bookTextView) {
+BookTextView::PositionIndicatorWithLabels::PositionIndicatorWithLabels(BookTextView &bookTextView, const ZLTextPositionIndicatorInfo &info) : PositionIndicator(bookTextView, info) {
 }
 
 void BookTextView::PositionIndicatorWithLabels::draw() {

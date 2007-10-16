@@ -250,7 +250,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	builder.addOption(resource["externalLink"].value(), baseStyle.ExternalHyperlinkTextColorOption);
 	builder.addOption(resource["highlighted"].value(), baseStyle.SelectedTextColorOption);
 	builder.addOption(resource["treeLines"].value(), baseStyle.TreeLinesColorOption);
-	builder.addOption(resource["indicator"].value(), collection.indicatorStyle().ColorOption);
+	builder.addOption(resource["indicator"].value(), (FBView::commonIndicatorInfo().ColorOption));
 	builder.setInitial(BACKGROUND);
 	colorsTab.addOption(colorKey, builder.comboEntry());
 	colorsTab.addOption("", "", builder.colorEntry());

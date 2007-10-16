@@ -26,20 +26,13 @@
 #include "ZLTextView.h"
 #include "ZLTextStyle.h"
 
-static const std::string INDICATOR = "Indicator";
-
-ZLTextPositionIndicatorStyle::ZLTextPositionIndicatorStyle() :
-	ShowOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Show", true),
-	IsSensitiveOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "TouchSensitive", true),
-	ShowTextPositionOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "PositionText", true),
-	ShowTimeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Time", true),
-	ColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Color", ZLColor(127, 127, 127)),
-	HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Height", 1, 100, 16),
-	OffsetOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Offset", 0, 100, 3),
-	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "FontSize", 4, 72, 14) {
+ZLTextPositionIndicatorInfo::ZLTextPositionIndicatorInfo() {
 }
 
-ZLTextView::PositionIndicator::PositionIndicator(ZLTextView &textView) : myTextView(textView), myExtraWidth(0) {
+ZLTextPositionIndicatorInfo::~ZLTextPositionIndicatorInfo() {
+}
+
+ZLTextView::PositionIndicator::PositionIndicator(ZLTextView &textView, const ZLTextPositionIndicatorInfo &info) : myTextView(textView), myInfo(info), myExtraWidth(0) {
 }
 
 ZLTextView::PositionIndicator::~PositionIndicator() {
@@ -58,7 +51,7 @@ int ZLTextView::PositionIndicator::bottom() const {
 }
 
 int ZLTextView::PositionIndicator::top() const {
-	return bottom() - ZLTextStyleCollection::instance().indicatorStyle().HeightOption.value() + 1;
+	return bottom() - myInfo.height() + 1;
 }
 
 int ZLTextView::PositionIndicator::left() const {
@@ -84,10 +77,9 @@ size_t ZLTextView::PositionIndicator::endTextIndex() const {
 }
 
 void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
-	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
 	ZLTextBaseStyle &baseStyle = ZLTextStyleCollection::instance().baseStyle();
 
-	context().setFont(baseStyle.fontFamily(), indicatorStyle.FontSizeOption.value(), false, false);
+	context().setFont(baseStyle.fontFamily(), myInfo.fontSize(), false, false);
 	context().setColor(baseStyle.RegularTextColorOption.value());
 
 	int width = context().stringWidth(text.data(), text.length());
@@ -153,7 +145,6 @@ std::string ZLTextView::PositionIndicator::timeString() const {
 }
 
 void ZLTextView::PositionIndicator::draw() {
-	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
 	ZLTextBaseStyle &baseStyle = ZLTextStyleCollection::instance().baseStyle();
 
 	ZLPaintContext &context = this->context();
@@ -165,10 +156,10 @@ void ZLTextView::PositionIndicator::draw() {
 	}
 
 	myExtraWidth = 0;
-	if (indicatorStyle.ShowTimeOption.value()) {
+	if (myInfo.isTimeShown()) {
 		drawExtraText(timeString());
 	}
-	if (indicatorStyle.ShowTextPositionOption.value()) {
+	if (myInfo.isTextPositionShown()) {
 		drawExtraText(textPositionString());
 	}
 
@@ -185,7 +176,7 @@ void ZLTextView::PositionIndicator::draw() {
 	}
 
 	context.setColor(baseStyle.RegularTextColorOption.value());
-	context.setFillColor(indicatorStyle.ColorOption.value());
+	context.setFillColor(myInfo.color());
 	context.fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
 	context.drawLine(left, top, right, top);
 	context.drawLine(left, bottom, right, bottom);
@@ -240,13 +231,16 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	return true;
 }
 
-shared_ptr<ZLTextView::PositionIndicator> ZLTextView::createPositionIndicator() {
-	return new PositionIndicator(*this);
+shared_ptr<ZLTextView::PositionIndicator> ZLTextView::createPositionIndicator(const ZLTextPositionIndicatorInfo &info) {
+	return new PositionIndicator(*this, info);
 }
 
-ZLTextView::PositionIndicator &ZLTextView::positionIndicator() {
+shared_ptr<ZLTextView::PositionIndicator> ZLTextView::positionIndicator() {
 	if (myPositionIndicator.isNull()) {
-		myPositionIndicator = createPositionIndicator();
+		shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
+		if (!indicatorInfo.isNull()) {
+			myPositionIndicator = createPositionIndicator(*indicatorInfo);
+		}
 	}
-	return *myPositionIndicator;
+	return myPositionIndicator;
 }

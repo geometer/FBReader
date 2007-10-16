@@ -23,10 +23,42 @@
 #define __FBVIEW_H__
 
 #include <ZLTextView.h>
+#include <ZLTextStyle.h>
 
 class FBReader;
 
+class FBIndicatorStyle : public ZLTextPositionIndicatorInfo {
+
+public:
+	ZLBooleanOption ShowOption;
+	ZLBooleanOption IsSensitiveOption;
+	ZLBooleanOption ShowTextPositionOption;
+	ZLBooleanOption ShowTimeOption;
+	ZLColorOption ColorOption;
+	ZLIntegerRangeOption HeightOption;
+	ZLIntegerRangeOption OffsetOption;
+	ZLIntegerRangeOption FontSizeOption;
+
+public:
+	FBIndicatorStyle();
+
+	bool isVisible() const;
+	bool isSensitive() const;
+	bool isTextPositionShown() const;
+	bool isTimeShown() const;
+	ZLColor color() const;
+	int height() const;
+	int offset() const;
+	int fontSize() const;
+};
+
 class FBView : public ZLTextView {
+
+public:
+	static FBIndicatorStyle& commonIndicatorInfo();
+
+private:
+	static shared_ptr<ZLTextPositionIndicatorInfo> ourIndicatorInfo;
 
 public:
 	FBView(FBReader &reader, shared_ptr<ZLPaintContext> context);
@@ -44,6 +76,8 @@ protected:
 	virtual bool _onStylusPress(int x, int y);
 
 	std::string word(const ZLTextElementArea &area) const;
+
+	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo() const;
 
 private:
 	std::string myCaption;

@@ -140,13 +140,6 @@ int ZLTextView::ViewStyle::elementDescent(const ZLTextElement &element) const {
 	}
 }
 
-int ZLTextView::ViewStyle::textAreaHeight() const {
-	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
-	return indicatorStyle.ShowOption.value() ?
-		context().height() - indicatorStyle.HeightOption.value() - indicatorStyle.OffsetOption.value() :
-		context().height();
-}
-
 int ZLTextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
 	if ((start == 0) && (length == -1)) {
 		return word.width(context());

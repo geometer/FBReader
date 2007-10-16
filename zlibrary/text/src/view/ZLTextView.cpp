@@ -297,10 +297,12 @@ bool ZLTextView::onStylusPress(int x, int y) {
 	  return false;
 	}
 
-	ZLTextPositionIndicatorStyle &indicatorStyle = ZLTextStyleCollection::instance().indicatorStyle();
-	if (indicatorStyle.ShowOption.value() && indicatorStyle.IsSensitiveOption.value()) {
+	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
+	if (!indicatorInfo.isNull() &&
+			indicatorInfo->isVisible() &&
+			indicatorInfo->isSensitive()) {
 		myTreeStateIsFrozen = true;
-		bool indicatorAnswer = positionIndicator().onStylusPress(x, y);
+		bool indicatorAnswer = positionIndicator()->onStylusPress(x, y);
 		myTreeStateIsFrozen = false;
 		if (indicatorAnswer) {
 			application().refreshWindow();
@@ -443,4 +445,13 @@ void ZLTextView::highlightParagraph(int paragraphNumber) {
 
 int ZLTextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
 	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
+}
+
+int ZLTextView::textAreaHeight() const {
+	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
+	if (!indicatorInfo.isNull() && indicatorInfo->isVisible()) {
+		return myStyle.context().height() - indicatorInfo->height() - indicatorInfo->offset();
+	} else {
+		return myStyle.context().height();
+	}
 }

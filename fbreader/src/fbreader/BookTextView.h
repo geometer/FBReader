@@ -58,13 +58,13 @@ private:
 
 	bool getHyperlinkId(const ZLTextElementArea &area, std::string &id, bool &isExternal) const;
 
-	shared_ptr<PositionIndicator> createPositionIndicator();
+	shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo &info);
 
 private:
 	class PositionIndicatorWithLabels : public PositionIndicator {
 
 	public:
-		PositionIndicatorWithLabels(BookTextView &bookTextView);
+		PositionIndicatorWithLabels(BookTextView &bookTextView, const ZLTextPositionIndicatorInfo &info);
 
 	private:
 		void draw();
