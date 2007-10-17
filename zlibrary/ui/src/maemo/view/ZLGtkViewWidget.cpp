@@ -18,6 +18,12 @@
  * 02110-1301, USA.
  */
 
+#if MAEMO_VERSION == 4
+	#include <hildon/hildon-helper.h>
+#elif MAEMO_VERSION != 2
+	#error Unknown MAEMO_VERSION
+#endif
+
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "ZLGtkViewWidget.h"
 #include "ZLGtkPaintContext.h"
@@ -52,6 +58,7 @@ void ZLGtkViewWidget::updateCoordinates(int &x, int &y) {
 }
 
 static bool isStylusEvent(GtkWidget *widget, GdkEventButton *event) {
+#if MAEMO_VERSION == 2
 	if (event->button == 8) {
 		return false;
 	}
@@ -64,6 +71,9 @@ static bool isStylusEvent(GtkWidget *widget, GdkEventButton *event) {
 	double pressure = 0.0;
 	gdk_event_get_axis((GdkEvent*)event, GDK_AXIS_PRESSURE, &pressure);
 	return pressure < 0.4;
+#elif MAEMO_VERSION == 4
+	return !hildon_helper_event_button_is_finger(event);
+#endif
 }
 
 void ZLGtkViewWidget::onMousePressed(GdkEventButton *event) {
