@@ -50,7 +50,7 @@ const shared_ptr<std::string> ZCompressedFileImage::stringData() const {
 		} while (s == charBufferSize);
 		ZLStringUtil::append(*imageData, buffer);
 
-		delete charBuffer;
+		delete[] charBuffer;
 	}
 
 	return imageData;
