@@ -254,7 +254,7 @@ class ZLTextFullDecoratedStyle : public ZLTextDecoratedStyle {
 
 private:
 	ZLTextFullDecoratedStyle(const ZLTextStylePtr base, const ZLTextFullStyleDecoration &decoration);
-	friend ZLTextStylePtr createDecoratedStyle(const ZLTextStylePtr base) const;
+	friend ZLTextStylePtr ZLTextFullStyleDecoration::createDecoratedStyle(const ZLTextStylePtr base) const;
 
 public:
 	~ZLTextFullDecoratedStyle();
