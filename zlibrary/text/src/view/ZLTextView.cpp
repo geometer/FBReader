@@ -450,8 +450,8 @@ int ZLTextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
 int ZLTextView::textAreaHeight() const {
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() && indicatorInfo->isVisible()) {
-		return myStyle.context().height() - indicatorInfo->height() - indicatorInfo->offset();
+		return viewHeight() - indicatorInfo->height() - indicatorInfo->offset();
 	} else {
-		return myStyle.context().height();
+		return viewHeight();
 	}
 }

@@ -20,7 +20,7 @@
 
 #include "ZLPaintContext.h"
 
-ZLPaintContext::ZLPaintContext() : myLeftMargin(0), myRightMargin(0), myTopMargin(0), myBottomMargin(0) {
+ZLPaintContext::ZLPaintContext() {
 }
 
 ZLPaintContext::~ZLPaintContext() {
@@ -31,28 +31,4 @@ const std::vector<std::string> &ZLPaintContext::fontFamilies() const {
 		fillFamiliesList(myFamilies);
 	}
 	return myFamilies;
-}
-
-void ZLPaintContext::setLeftMargin(int margin) {
-	if (width() + myLeftMargin - margin > 0) {
-		myLeftMargin = margin;
-	}
-}
-
-void ZLPaintContext::setRightMargin(int margin) {
-	if (width() + myRightMargin - margin > 0) {
-		myRightMargin = margin;
-	}
-}
-
-void ZLPaintContext::setTopMargin(int margin) {
-	if (height() + myTopMargin - margin > 0) {
-		myTopMargin = margin;
-	}
-}
-
-void ZLPaintContext::setBottomMargin(int margin) {
-	if (height() + myBottomMargin - margin > 0) {
-		myBottomMargin = margin;
-	}
 }

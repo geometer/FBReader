@@ -24,6 +24,7 @@
 #include <vector>
 #include <set>
 #include <string>
+#include <algorithm>
 
 #include <ZLOptions.h>
 #include <ZLView.h>
@@ -177,6 +178,11 @@ protected:
 
 	virtual shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo&);
 
+	virtual int leftMargin() const = 0;
+	virtual int rightMargin() const = 0;
+	virtual int topMargin() const = 0;
+	virtual int bottomMargin() const = 0;
+
 private:
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
@@ -211,6 +217,8 @@ private:
 
 	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
 
+	int viewWidth() const;
+	int viewHeight() const;
 	int textAreaHeight() const;
 
 private:
@@ -261,5 +269,13 @@ inline const ZLTextWordCursor &ZLTextView::endCursor() const { return myEndCurso
 inline const std::string &ZLTextView::fileName() const { return myFileName; }
 inline const shared_ptr<ZLTextModel> ZLTextView::model() const { return myModel; }
 inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
+
+inline int ZLTextView::viewWidth() const {
+	return std::max(myStyle.context().width() - leftMargin() - rightMargin(), 1);
+}
+
+inline int ZLTextView::viewHeight() const {
+	return std::max(myStyle.context().height() - topMargin() - bottomMargin(), 1);
+}
 
 #endif /* __ZLTEXTVIEW_H__ */

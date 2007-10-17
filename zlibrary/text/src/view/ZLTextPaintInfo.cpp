@@ -153,12 +153,7 @@ ZLTextWordCursor ZLTextView::findPercentFromStart(unsigned int percent) const {
 }
 
 void ZLTextView::preparePaintInfo() {
-	context().setLeftMargin(ZLTextStyleCollection::instance().baseStyle().LeftMarginOption.value());
-	context().setRightMargin(ZLTextStyleCollection::instance().baseStyle().RightMarginOption.value());
-	context().setTopMargin(ZLTextStyleCollection::instance().baseStyle().TopMarginOption.value());
-	context().setBottomMargin(ZLTextStyleCollection::instance().baseStyle().BottomMarginOption.value());
-
-	int newWidth = context().width();
+	int newWidth = viewWidth();
 	int newHeight = textAreaHeight();
 	if ((newWidth != myOldWidth) || (newHeight != myOldHeight)) {
 		myOldWidth = newWidth;

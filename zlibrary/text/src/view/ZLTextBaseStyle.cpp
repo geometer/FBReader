@@ -23,14 +23,9 @@
 #include "ZLTextStyle.h"
 
 static const std::string COLORS = "Colors";
-static const std::string OPTIONS = "Options";
 static const std::string GROUP = "Style";
 
 ZLTextBaseStyle::ZLTextBaseStyle(const std::string &fontFamily, int fontSize) :
-	LeftMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "LeftMargin", 0, 1000, 4),
-	RightMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "RightMargin", 0, 1000, 4),
-	TopMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "TopMargin", 0, 1000, 0),
-	BottomMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "BottomMargin", 0, 1000, 4),
 	BackgroundColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "Background", ZLColor(255, 255, 255)),
 	SelectionBackgroundColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "SelectionBackground", ZLColor(82, 131, 194)),
 	SelectedTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "SelectedText", ZLColor(60, 139, 255)),
@@ -38,7 +33,7 @@ ZLTextBaseStyle::ZLTextBaseStyle(const std::string &fontFamily, int fontSize) :
 	InternalHyperlinkTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "Hyperlink", ZLColor(33, 96, 180)),
 	ExternalHyperlinkTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "ExternalHyperlink", ZLColor(98, 174, 26)),
 	TreeLinesColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "TreeLines", ZLColor(127, 127, 127)),
-	AutoHyphenationOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "AutoHyphenation", true),
+	AutoHyphenationOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "Options", "AutoHyphenation", true),
 	FontFamilyOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:fontFamily", fontFamily),
 	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:fontSize", 0, 72, fontSize),
 	BoldOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:bold", false),

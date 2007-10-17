@@ -48,9 +48,6 @@ static void updatePoint(ZLGtkViewWidget *viewWidget, int &x, int &y) {
 			break;
 		}
 	}
-	ZLPaintContext &context = viewWidget->view()->context();
-	x -= context.leftMargin();
-	y -= context.topMargin();
 }
 
 static void mousePressed(GtkWidget *area, GdkEventButton *event, gpointer data) {

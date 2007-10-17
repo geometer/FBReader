@@ -268,10 +268,9 @@ void ZLGtkApplicationWindow::Toolbar::setToolbarItemState(ZLApplication::Toolbar
 				std::map<const shared_ptr<ZLApplication::Toolbar::Item>,int>::iterator it = mySeparatorMap.find(item);
 				if (it != mySeparatorMap.end()) {
 					int index = it->second;
-					bool *wasVisiblePtr = 0;
-					for (std::vector<std::pair<ZLApplication::Toolbar::ItemPtr,bool> >::iterator jt = mySeparatorVisibilityMap.begin(); jt != mySeparatorVisibilityMap.end(); ++jt) {
+					std::vector<std::pair<ZLApplication::Toolbar::ItemPtr,bool> >::iterator jt;
+					for (jt = mySeparatorVisibilityMap.begin(); jt != mySeparatorVisibilityMap.end(); ++jt) {
 						if (jt->first == it->first) {
-							wasVisiblePtr = &jt->second;
 							break;
 						}
 						if (jt->second) {
@@ -279,15 +278,15 @@ void ZLGtkApplicationWindow::Toolbar::setToolbarItemState(ZLApplication::Toolbar
 						}
 					}
 					if (visible) {
-						if (!*wasVisiblePtr) {
+						if (!jt->second) {
 							gtk_toolbar_insert_space(myGtkToolbar, index);
 						}
 					} else {
-						if (*wasVisiblePtr) {
+						if (jt->second) {
 							gtk_toolbar_remove_space(myGtkToolbar, index);
 						}
 					}
-					*wasVisiblePtr = visible;
+					jt->second = visible;
 				}
 			}
 			break;

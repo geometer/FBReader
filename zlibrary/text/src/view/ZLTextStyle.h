@@ -92,11 +92,6 @@ public:
 	bool allowHyphenations() const;
 
 public:
-	ZLIntegerRangeOption LeftMarginOption;
-	ZLIntegerRangeOption RightMarginOption;
-	ZLIntegerRangeOption TopMarginOption;
-	ZLIntegerRangeOption BottomMarginOption;
-
 	ZLColorOption BackgroundColorOption;
 	ZLColorOption SelectionBackgroundColorOption;
 	ZLColorOption SelectedTextColorOption;

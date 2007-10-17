@@ -165,21 +165,17 @@ int ZLQtPaintContext::stringHeight() const {
 
 void ZLQtPaintContext::drawString(int x, int y, const char *str, int len) {
 	QString qStr = QString::fromUtf8(str, len);
-	myPainter->drawText(x + leftMargin(), y + topMargin(), qStr);
+	myPainter->drawText(x, y, qStr);
 }
 
 void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	const QImage *qImage = ((ZLQtImageData&)image).image();
 	if (qImage != 0) {
-		myPainter->drawImage(x + leftMargin(), y + topMargin() - image.height(), *qImage);
+		myPainter->drawImage(x, y - image.height(), *qImage);
 	}
 }
 
 void ZLQtPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	x0 += leftMargin();
-	x1 += leftMargin();
-	y0 += topMargin();
-	y1 += topMargin();
 	myPainter->drawPoint(x0, y0);
 	myPainter->drawLine(x0, y0, x1, y1);
 	myPainter->drawPoint(x1, y1);
@@ -196,14 +192,12 @@ void ZLQtPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 		y1 = y0;
 		y0 = tmp;
 	}
-	myPainter->fillRect(x0 + leftMargin(), y0 + topMargin(),
+	myPainter->fillRect(x0, y0,
 											x1 - x0 + 1, y1 - y0 + 1,
 											myPainter->brush());
 }
 
 void ZLQtPaintContext::drawFilledCircle(int x, int y, int r) {
-	x += leftMargin();
-	y += topMargin();
 	myPainter->drawEllipse(x - r, y - r, 2 * r + 1, 2 * r + 1);
 }
 
@@ -217,12 +211,12 @@ int ZLQtPaintContext::width() const {
 	if (myPixmap == 0) {
 		return 0;
 	}
-	return myPixmap->width() - leftMargin() - rightMargin();
+	return myPixmap->width();
 }
 
 int ZLQtPaintContext::height() const {
 	if (myPixmap == 0) {
 		return 0;
 	}
-	return myPixmap->height() - bottomMargin() - topMargin();
+	return myPixmap->height();
 }

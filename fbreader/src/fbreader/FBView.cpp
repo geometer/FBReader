@@ -25,6 +25,15 @@
 #include "FBReader.h"
 #include "FBReaderActions.h"
 
+static const std::string OPTIONS = "Options";
+
+FBMargins::FBMargins() :
+	LeftMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "LeftMargin", 0, 1000, 4),
+	RightMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "RightMargin", 0, 1000, 4),
+	TopMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "TopMargin", 0, 1000, 0),
+	BottomMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "BottomMargin", 0, 1000, 4) {
+}
+
 static const std::string INDICATOR = "Indicator";
 
 FBIndicatorStyle::FBIndicatorStyle() :
@@ -71,6 +80,7 @@ int FBIndicatorStyle::fontSize() const {
 }
 
 shared_ptr<ZLTextPositionIndicatorInfo> FBView::ourIndicatorInfo;
+shared_ptr<FBMargins> FBView::ourMargins;
 
 FBIndicatorStyle& FBView::commonIndicatorInfo() {
 	if (ourIndicatorInfo.isNull()) {
@@ -149,4 +159,20 @@ std::string FBView::word(const ZLTextElementArea &area) const {
 		}
 	}
 	return txt;
+}
+
+int FBView::leftMargin() const {
+	return margins().LeftMarginOption.value();
+}
+
+int FBView::rightMargin() const {
+	return margins().RightMarginOption.value();
+}
+
+int FBView::topMargin() const {
+	return margins().TopMarginOption.value();
+}
+
+int FBView::bottomMargin() const {
+	return margins().BottomMarginOption.value();
 }

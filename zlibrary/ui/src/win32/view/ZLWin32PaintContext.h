@@ -62,9 +62,6 @@ public:
 	HBITMAP buffer() const;
 
 private:
-	void adjustPoint(int &x, int &y) const;
-
-private:
 	HDC myDisplayContext;
 	HBITMAP myBufferBitmap;
 	int myWidth;

@@ -105,43 +105,31 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) 
 int ZLQtViewWidget::ZLQtViewWidgetInternal::x(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
 	const int maxY = height() + myHolder.myApplicationWindow.verticalAdjustment() - 1;
-	int logicalX;
 	switch (myHolder.rotation()) {
 		default:
-			logicalX = std::min(std::max(event->x(), 0), maxX);
-			break;
+			return std::min(std::max(event->x(), 0), maxX);
 		case DEGREES90:
-			logicalX = maxY - std::min(std::max(event->y(), 0), maxY);
-			break;
+			return maxY - std::min(std::max(event->y(), 0), maxY);
 		case DEGREES180:
-			logicalX = maxX - std::min(std::max(event->x(), 0), maxX);
-			break;
+			return maxX - std::min(std::max(event->x(), 0), maxX);
 		case DEGREES270:
-			logicalX = std::min(std::max(event->y(), 0), maxY);
-			break;
+			return std::min(std::max(event->y(), 0), maxY);
 	}
-	return logicalX - myHolder.view()->context().leftMargin();
 }
 
 int ZLQtViewWidget::ZLQtViewWidgetInternal::y(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
 	const int maxY = height() + myHolder.myApplicationWindow.verticalAdjustment() - 1;
-	int logicalY;
 	switch (myHolder.rotation()) {
 		default:
-			logicalY = std::min(std::max(event->y(), 0), maxY);
-			break;
+			return std::min(std::max(event->y(), 0), maxY);
 		case DEGREES90:
-			logicalY = std::min(std::max(event->x(), 0), maxX);
-			break;
+			return std::min(std::max(event->x(), 0), maxX);
 		case DEGREES180:
-			logicalY = maxY - std::min(std::max(event->y(), 0), maxY);
-			break;
+			return maxY - std::min(std::max(event->y(), 0), maxY);
 		case DEGREES270:
-			logicalY = maxX - std::min(std::max(event->x(), 0), maxX);
-			break;
+			return maxX - std::min(std::max(event->x(), 0), maxX);
 	}
-	return logicalY - myHolder.view()->context().topMargin();
 }
 
 void ZLQtViewWidget::repaint()	{

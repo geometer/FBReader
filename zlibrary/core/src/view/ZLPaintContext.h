@@ -54,16 +54,6 @@ public:
 	void moveYTo(int y);
 	void moveY(int deltaY);
 
-	void setLeftMargin(int margin);
-	void setRightMargin(int margin);
-	void setTopMargin(int margin);
-	void setBottomMargin(int margin);
-
-	int leftMargin() const;
-	int rightMargin() const;
-	int topMargin() const;
-	int bottomMargin() const;
-
 	virtual void clear(ZLColor color) = 0;
 
 	virtual void setFont(const std::string &family, int size, bool bold, bool italic) = 0;
@@ -96,11 +86,6 @@ protected:
 private:
 	int myX, myY;
 
-	int myLeftMargin;
-	int myRightMargin;
-	int myTopMargin;
-	int myBottomMargin;
-
 	mutable std::vector<std::string> myFamilies;
 
 private:
@@ -117,11 +102,6 @@ inline void ZLPaintContext::moveXTo(int x) { myX = x; }
 inline void ZLPaintContext::moveX(int deltaX) { myX += deltaX; }
 inline void ZLPaintContext::moveYTo(int y) { myY = y; }
 inline void ZLPaintContext::moveY(int deltaY) { myY += deltaY; }
-
-inline int ZLPaintContext::leftMargin() const { return myLeftMargin; }
-inline int ZLPaintContext::rightMargin() const { return myRightMargin; }
-inline int ZLPaintContext::topMargin() const { return myTopMargin; }
-inline int ZLPaintContext::bottomMargin() const { return myBottomMargin; }
 
 inline int ZLPaintContext::imageWidth(const ZLImageData &image) const { return image.width(); }
 inline int ZLPaintContext::imageHeight(const ZLImageData &image) const { return image.height(); }

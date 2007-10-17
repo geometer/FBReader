@@ -52,9 +52,6 @@ void ZLGtkViewWidget::updateCoordinates(int &x, int &y) {
 			break;
 		}
 	}
-	ZLPaintContext &context = view()->context();
-	x -= context.leftMargin();
-	y -= context.topMargin();
 }
 
 static bool isStylusEvent(GtkWidget *widget, GdkEventButton *event) {

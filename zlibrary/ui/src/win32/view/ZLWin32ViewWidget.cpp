@@ -164,30 +164,19 @@ void ZLWin32ViewWidget::doPaint()	{
 }
 
 void ZLWin32ViewWidget::onMousePress(int x, int y) {
-	ZLPaintContext &context = view()->context();
-	x -= context.leftMargin();
-	y -= context.topMargin();
 	view()->onStylusPress(x, y);
 }
 
 void ZLWin32ViewWidget::onMouseRelease(int x, int y) {
-	ZLPaintContext &context = view()->context();
-	x -= context.leftMargin();
-	y -= context.topMargin();
 	view()->onStylusRelease(x, y);
 }
 
 void ZLWin32ViewWidget::onMouseMove(int x, int y) {
-	ZLPaintContext &context = view()->context();
-	x -= context.leftMargin();
-	y -= context.topMargin();
 	view()->onStylusMove(x, y);
 }
 
 void ZLWin32ViewWidget::onMouseMovePressed(int x, int y) {
 	ZLPaintContext &context = view()->context();
-	x -= context.leftMargin();
-	y -= context.topMargin();
 	if (x < 0) {
 		x = 0;
 	} else if (x >= context.width()) {

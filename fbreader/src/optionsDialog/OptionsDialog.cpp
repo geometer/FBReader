@@ -220,13 +220,14 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 
 	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("Margins"));
+	FBMargins &margins = FBView::margins();
 	marginTab.addOptions(
-		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(baseStyle.LeftMarginOption, 1),
-		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(baseStyle.RightMarginOption, 1)
+		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(margins.LeftMarginOption, 1),
+		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(margins.RightMarginOption, 1)
 	);
 	marginTab.addOptions(
-		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(baseStyle.TopMarginOption, 1),
-		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(baseStyle.BottomMarginOption, 1)
+		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(margins.TopMarginOption, 1),
+		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(margins.BottomMarginOption, 1)
 	);
 
 	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("Format")));

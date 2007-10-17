@@ -37,13 +37,13 @@ void ZLTextView::paint() {
 	std::vector<size_t> labels;
 	labels.reserve(myLineInfos.size() + 1);
 	labels.push_back(0);
-	context().moveYTo(0);
+	context().moveYTo(topMargin());
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		prepareTextLine(**it);
 		labels.push_back(myTextElementMap.size());
 	}
 	mySelectionModel.update();
-	context().moveYTo(0);
+	context().moveYTo(topMargin());
 	int index = 0;
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		drawTextLine(**it, labels[index], labels[index + 1]);
@@ -130,9 +130,9 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	if (!mySelectionModel.isEmpty() && (from != to)) {
 		std::pair<ZLTextSelectionModel::BoundElement,ZLTextSelectionModel::BoundElement> range = mySelectionModel.range();
 
-		int left = context().width() - 1;
+		int left = viewWidth() + leftMargin() - 1;
 		if (info.Start > range.first) {
-			left = 0;
+			left = leftMargin();
 		} else if (info.End >= range.first) {
 			ZLTextElementIterator jt = findLast(fromIt, toIt, range.first);
 			left = jt->XStart;
@@ -143,9 +143,9 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 
 		const int top = context().y() + 1;
 		int bottom = context().y() + info.Height + info.Descent;
-		int right = 0;
+		int right = leftMargin();
 		if (info.End < range.second) {
-			right = context().width() - 1;
+			right = viewWidth() + leftMargin() - 1;
 			bottom += info.VSpaceAfter;
 		} else if (info.Start <= range.second) {
 			ZLTextElementIterator jt = findLast(fromIt, toIt, range.second);
@@ -163,11 +163,11 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	}
 
 	context().moveY(info.Height);
-	int maxY = textAreaHeight();
+	int maxY = topMargin() + textAreaHeight();
 	if (context().y() > maxY) {
 	  context().moveYTo(maxY);
 	}
-	context().moveXTo(0);
+	context().moveXTo(leftMargin());
 	if (!info.NodeInfo.isNull()) {
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
@@ -206,25 +206,25 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 
 void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	myStyle.setTextStyle(info.StartStyle);
-	const int y = std::min(context().y() + info.Height, textAreaHeight());
+	const int y = std::min(context().y() + info.Height, topMargin() + textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
 	bool wordOccured = false;
 	bool changeStyle = true;
 
-	context().moveXTo(info.LeftIndent);
+	context().moveXTo(leftMargin() + info.LeftIndent);
 
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			context().moveX(context().width() - myStyle.textStyle()->rightIndent() - info.Width);
+			context().moveX(leftMargin() + viewWidth() - myStyle.textStyle()->rightIndent() - info.Width);
 			break;
 		case ALIGN_CENTER:
-			context().moveX((context().width() - myStyle.textStyle()->rightIndent() - info.Width) / 2);
+			context().moveX(leftMargin() + (viewWidth() - myStyle.textStyle()->rightIndent() - info.Width) / 2);
 			break;
 		case ALIGN_JUSTIFY:
 			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
-				fullCorrection = context().width() - myStyle.textStyle()->rightIndent() - info.Width;
+				fullCorrection = viewWidth() - myStyle.textStyle()->rightIndent() - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:

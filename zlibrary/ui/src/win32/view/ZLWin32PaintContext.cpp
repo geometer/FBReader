@@ -182,7 +182,6 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 	if (myDisplayContext == 0) {
 		return;
 	}
-	adjustPoint(x, y);
 	y -= stringHeight();
 	y += myTextMetric.tmDescent;
 	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
@@ -202,7 +201,6 @@ void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	if (pixels != 0) {
 		const int width = image.width();
 		const int height = image.height();
-		adjustPoint(x, y);
 		StretchDIBits(myDisplayContext,
 			x, y - height, width, height,
 			0, 0, width, height,
@@ -210,18 +208,10 @@ void ZLWin32PaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	}
 }
 
-void ZLWin32PaintContext::adjustPoint(int &x, int &y) const {
-	x += leftMargin();
-	y += topMargin();
-}
-
 void ZLWin32PaintContext::drawLine(int x0, int y0, int x1, int y1) {
 	if (myDisplayContext == 0) {
 		return;
 	}
-
-	adjustPoint(x0, y0);
-	adjustPoint(x1, y1);
 
 	MoveToEx(myDisplayContext, x0, y0, 0);
 	LineTo(myDisplayContext, x1, y1);
@@ -233,9 +223,6 @@ void ZLWin32PaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	if (myDisplayContext == 0) {
 		return;
 	}
-
-	adjustPoint(x0, y0);
-	adjustPoint(x1, y1);
 
 	RECT rectangle;
 	if (x0 < x1) {
@@ -259,8 +246,6 @@ void ZLWin32PaintContext::drawFilledCircle(int x, int y, int r) {
 	if (myDisplayContext == 0) {
 		return;
 	}
-
-	adjustPoint(x, y);
 
 	HBRUSH oldBrush = (HBRUSH)SelectObject(myDisplayContext, myFillBrush);
 	Ellipse(myDisplayContext, x - r, y - r, x + r, y + r);
@@ -288,11 +273,11 @@ void ZLWin32PaintContext::clear(ZLColor color) {
 }
 
 int ZLWin32PaintContext::width() const {
-	return myWidth - leftMargin() - rightMargin();
+	return myWidth;
 }
 
 int ZLWin32PaintContext::height() const {
-	return myHeight - topMargin() - bottomMargin();
+	return myHeight;
 }
 
 HDC ZLWin32PaintContext::displayContext() const {

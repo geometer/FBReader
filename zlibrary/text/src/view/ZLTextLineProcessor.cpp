@@ -139,7 +139,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextPartialInfo newInfo(info, current);
 	bool allowBreakAtNBSpace = true;
-	const int maxWidth = myStyle.context().width() - myStyle.textStyle()->rightIndent();
+	const int maxWidth = viewWidth() - myStyle.textStyle()->rightIndent();
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
 	int removeLastSpace = false;

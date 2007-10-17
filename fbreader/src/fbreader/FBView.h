@@ -27,6 +27,21 @@
 
 class FBReader;
 
+class FBMargins {
+
+public:
+	ZLIntegerRangeOption LeftMarginOption;
+	ZLIntegerRangeOption RightMarginOption;
+	ZLIntegerRangeOption TopMarginOption;
+	ZLIntegerRangeOption BottomMarginOption;
+
+	FBMargins();
+
+private:
+	FBMargins(const FBMargins&);
+	const FBMargins& operator = (const FBMargins&);
+};
+
 class FBIndicatorStyle : public ZLTextPositionIndicatorInfo {
 
 public:
@@ -55,10 +70,12 @@ public:
 class FBView : public ZLTextView {
 
 public:
+	static FBMargins& margins();
 	static FBIndicatorStyle& commonIndicatorInfo();
 
 private:
 	static shared_ptr<ZLTextPositionIndicatorInfo> ourIndicatorInfo;
+	static shared_ptr<FBMargins> ourMargins;
 
 public:
 	FBView(FBReader &reader, shared_ptr<ZLPaintContext> context);
@@ -67,6 +84,11 @@ public:
 
 	const std::string &caption() const;
 	void setCaption(const std::string &caption);
+
+	int leftMargin() const;
+	int rightMargin() const;
+	int topMargin() const;
+	int bottomMargin() const;
 
 protected:
 	FBReader &fbreader();
@@ -85,5 +107,12 @@ private:
 
 inline FBReader &FBView::fbreader() { return (FBReader&)application(); }
 inline const FBReader &FBView::fbreader() const { return (const FBReader&)application(); }
+
+inline FBMargins& FBView::margins() {
+	if (ourMargins.isNull()) {
+		ourMargins = new FBMargins();
+	}
+	return *ourMargins;
+}
 
 #endif /* __FBVIEW_H__ */

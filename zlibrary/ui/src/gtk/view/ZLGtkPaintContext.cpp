@@ -264,8 +264,6 @@ void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len) {
 		return;
 	}
 
-	x += leftMargin();
-	y += topMargin();
 	pango_shape(str, len, &myAnalysis, myString);
 	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }
@@ -276,14 +274,14 @@ void ZLGtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 		gdk_pixbuf_render_to_drawable(
 			imageRef, myPixmap,
 			0, 0, 0,
-			x + leftMargin(), y + topMargin() - gdk_pixbuf_get_height(imageRef),
+			x, y - gdk_pixbuf_get_height(imageRef),
 			-1, -1, GDK_RGB_DITHER_NONE, 0, 0
 		);
 	}
 	// for gtk+ v2.2
 	// 		gdk_draw_pixbuf(
 	// 			myPixmap, 0, imageRef, 0, 0,
-	// 			x + leftMargin(), y + topMargin() - gdk_pixbuf_get_height(imageRef),
+	// 			x, y - gdk_pixbuf_get_height(imageRef),
 	// 			-1, -1, GDK_RGB_DITHER_NONE, 0, 0
 	// 		);
 	//
@@ -295,9 +293,7 @@ void ZLGtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 }
 
 void ZLGtkPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	gdk_draw_line(myPixmap, myTextGC,
-								x0 + leftMargin(), y0 + topMargin(),
-								x1 + leftMargin(), y1 + topMargin());
+	gdk_draw_line(myPixmap, myTextGC, x0, y0, x1, y1);
 }
 
 void ZLGtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
@@ -312,14 +308,11 @@ void ZLGtkPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 		y0 = tmp;
 	}
 	gdk_draw_rectangle(myPixmap, myFillGC, true,
-										 x0 + leftMargin(), y0 + topMargin(),
+										 x0, y0,
 										 x1 - x0 + 1, y1 - y0 + 1);
 }
 
 void ZLGtkPaintContext::drawFilledCircle(int x, int y, int r) {
-	x += leftMargin();
-	y += topMargin();
-
 	gdk_draw_arc(myPixmap, myFillGC, true, x - r, y - r, 2 * r + 1, 2 * r + 1, 0, 360 * 64);
 	gdk_draw_arc(myPixmap, myTextGC, false, x - r, y - r, 2 * r + 1, 2 * r + 1, 0, 360 * 64);
 }
@@ -335,14 +328,14 @@ int ZLGtkPaintContext::width() const {
 	if (myPixmap == 0) {
 		return 0;
 	}
-	return myWidth - leftMargin() - rightMargin();
+	return myWidth;
 }
 
 int ZLGtkPaintContext::height() const {
 	if (myPixmap == 0) {
 		return 0;
 	}
-	return myHeight - bottomMargin() - topMargin();
+	return myHeight;
 }
 
 // vim:ts=2:sw=2:noet

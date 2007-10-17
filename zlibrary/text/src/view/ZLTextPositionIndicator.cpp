@@ -47,7 +47,7 @@ ZLPaintContext &ZLTextView::PositionIndicator::context() const {
 }
 
 int ZLTextView::PositionIndicator::bottom() const {
-	return context().height();
+	return context().height() - myTextView.bottomMargin();
 }
 
 int ZLTextView::PositionIndicator::top() const {
@@ -55,11 +55,11 @@ int ZLTextView::PositionIndicator::top() const {
 }
 
 int ZLTextView::PositionIndicator::left() const {
-	return 0;
+	return myTextView.leftMargin();
 }
 
 int ZLTextView::PositionIndicator::right() const {
-	return context().width() - myExtraWidth - 1;
+	return myTextView.leftMargin() + myTextView.viewWidth() - myExtraWidth - 1;
 }
 
 const std::vector<size_t> &ZLTextView::PositionIndicator::textSize() const {
@@ -167,6 +167,10 @@ void ZLTextView::PositionIndicator::draw() {
 	const long top = this->top();
 	const long left = this->left();
 	const long right = this->right();
+
+	if (left >= right) {
+		return;
+	}
 
 	size_t fillWidth = right - left - 1;
 

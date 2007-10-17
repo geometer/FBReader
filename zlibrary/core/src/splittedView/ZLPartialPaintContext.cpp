@@ -43,11 +43,11 @@ void ZLPartialPaintContext::setFillColor(ZLColor color, FillStyle style) {
 }
 
 int ZLPartialPaintContext::width() const {
-	return mySplittedView.partWidth(myIsLeft) - leftMargin() - rightMargin();
+	return mySplittedView.partWidth(myIsLeft);
 }
 
 int ZLPartialPaintContext::height() const {
-	return mySplittedView.context().height() - topMargin() - bottomMargin();
+	return mySplittedView.context().height();
 }
 
 int ZLPartialPaintContext::stringWidth(const char *str, int len) const {
@@ -67,31 +67,25 @@ int ZLPartialPaintContext::descent() const {
 }
 
 void ZLPartialPaintContext::drawString(int x, int y, const char *str, int len) {
-	mySplittedView.context().drawString(x + xDelta() + leftMargin(), y + topMargin(), str, len);
+	mySplittedView.context().drawString(x + xDelta(), y, str, len);
 }
 
 void ZLPartialPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	mySplittedView.context().drawImage(x + xDelta() + leftMargin(), y + topMargin(), image);
+	mySplittedView.context().drawImage(x + xDelta(), y, image);
 }
 
 void ZLPartialPaintContext::drawLine(int x0, int y0, int x1, int y1) {
 	int delta = xDelta();
-	mySplittedView.context().drawLine(
-		x0 + delta + leftMargin(), y0 + topMargin(),
-		x1 + delta + leftMargin(), y1 + topMargin()
-	);
+	mySplittedView.context().drawLine(x0 + delta, y0, x1 + delta, y1);
 }
 
 void ZLPartialPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	int delta = xDelta();
-	mySplittedView.context().fillRectangle(
-		x0 + delta + leftMargin(), y0 + topMargin(),
-		x1 + delta + leftMargin(), y1 + topMargin()
-	);
+	mySplittedView.context().fillRectangle(x0 + delta, y0, x1 + delta, y1);
 }
 
 void ZLPartialPaintContext::drawFilledCircle(int x, int y, int r) {
-	mySplittedView.context().drawFilledCircle(x + xDelta() + leftMargin(), y + topMargin(), r);
+	mySplittedView.context().drawFilledCircle(x + xDelta(), y, r);
 }
 
 const std::string ZLPartialPaintContext::realFontFamilyName(std::string &fontFamily) const {
