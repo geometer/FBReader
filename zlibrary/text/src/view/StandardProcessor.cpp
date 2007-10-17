@@ -47,18 +47,7 @@ void ZLTextParagraphCursor::StandardProcessor::processTextEntry(const ZLTextEntr
 		}
 		const char *firstNonSpace = 0;
 		int charLength = 0;
-		bool breakableBefore = false;
 		for (const char *ptr = start; ptr < end; ptr += charLength) {
-			if (breakableBefore) {
-				if (firstNonSpace != 0) {
-					addWord(firstNonSpace, myOffset + (firstNonSpace - textEntry.data()), ptr - firstNonSpace);
-					firstNonSpace = 0;
-					spaceInserted = false;
-				}
-				charLength = 0;
-				breakableBefore = false;
-				continue;
-			}
 			charLength = ZLUnicodeUtil::firstChar(ch, ptr);
 			if (ZLUnicodeUtil::isSpace(ch) || ZLUnicodeUtil::isNBSpace(ch)) {
 				if ((firstNonSpace != 0) || !spaceInserted) {
