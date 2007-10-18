@@ -61,7 +61,7 @@ bool ZLGzipInputStream::open() {
 		unsigned char b0, b1;
 		myFileStream->read((char*)&b0, 1);
 		myFileStream->read((char*)&b1, 1);
-		unsigned short xlen = ((unsigned short)b1) << 8 + b0;
+		unsigned short xlen = (((unsigned short)b1) << 8) + b0;
 		myFileStream->seek(xlen, false);
 	}
 	if (flg & FNAME) {
