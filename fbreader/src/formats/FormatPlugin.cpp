@@ -30,7 +30,7 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 	if (encoding.empty()) {
 		encoding = EncodingDetector::detect(stream, (EncodingDetector::Language)PluginCollection::instance().DefaultLanguageOption.value());
 		if (encoding == "unknown") {
-			encoding = "windows-1252";
+			encoding = PluginCollection::instance().DefaultEncodingOption.value();
 		}
 		WritableBookDescription(description).encoding() = encoding;
 	}

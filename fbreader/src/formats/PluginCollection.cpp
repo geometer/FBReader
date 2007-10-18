@@ -64,7 +64,8 @@ void PluginCollection::deleteInstance() {
 }
 
 PluginCollection::PluginCollection() :
-	DefaultLanguageOption(ZLOption::CONFIG_CATEGORY, "Format", "DefaultLanguage", EncodingDetector::RUSSIAN) {
+	DefaultLanguageOption(ZLOption::CONFIG_CATEGORY, "Format", "DefaultLanguage", EncodingDetector::RUSSIAN),
+	DefaultEncodingOption(ZLOption::CONFIG_CATEGORY, "Format", "DefaultEncoding", "ISO-8859-1") {
 }
 
 PluginCollection::~PluginCollection() {

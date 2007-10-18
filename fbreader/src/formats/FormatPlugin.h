@@ -70,6 +70,7 @@ class PluginCollection {
 
 public:
 	ZLIntegerOption DefaultLanguageOption;
+	ZLStringOption DefaultEncodingOption;
 	
 public:
 	static PluginCollection &instance();

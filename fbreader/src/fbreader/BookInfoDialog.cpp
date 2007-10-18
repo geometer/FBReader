@@ -21,7 +21,6 @@
 
 #include <algorithm>
 
-#include <ZLEncodingConverter.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
@@ -35,6 +34,7 @@
 #include "BookInfoDialog.h"
 
 #include "../description/Author.h"
+#include "../encodingOption/EncodingOptionEntry.h"
 
 class AuthorSortKeyEntry : public ZLStringOptionEntry {
 
@@ -65,41 +65,6 @@ private:
 
 friend class AuthorSortKeyEntry;
 friend class SeriesTitleEntry;
-};
-
-class EncodingEntry : public ZLComboOptionEntry {
-
-public:
-	EncodingEntry(ZLStringOption &encodingOption);
-
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
-	void onValueSelected(int index);
-
-private:
-	std::vector<std::string> mySetNames;
-	std::map<std::string,std::vector<std::string> > myValues;
-	mutable std::map<std::string,std::string> myInitialValues;
-	std::map<std::string,std::string> myValueByName;
-	ZLStringOption &myEncodingOption;
-	std::string myInitialSetName;
-
-friend class EncodingSetEntry;
-};
-
-class EncodingSetEntry : public ZLComboOptionEntry {
-
-public:
-	EncodingSetEntry(EncodingEntry &encodingEntry);
-
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string&) {}
-	void onValueSelected(int index);
-
-private:
-	EncodingEntry &myEncodingEntry;
 };
 
 class LanguageEntry : public ZLComboOptionEntry {
@@ -183,83 +148,6 @@ const std::string &AuthorSortKeyEntry::initialValue() const {
 
 void AuthorSortKeyEntry::onAccept(const std::string &value) {
 	myInfoDialog.myBookInfo.AuthorSortKeyOption.setValue(value);
-}
-
-static const std::string AUTO = "auto";
-
-EncodingEntry::EncodingEntry(ZLStringOption &encodingOption) : myEncodingOption(encodingOption) {
-	const std::string &value = myEncodingOption.value();
-	if (value == AUTO) {
-		myInitialSetName = value;
-		myInitialValues[value] = value;
-		setActive(false);
-		return;
-	}
-
-	const std::vector<shared_ptr<ZLEncodingSet> > &sets = ZLEncodingCollection::instance().sets();
-	for (std::vector<shared_ptr<ZLEncodingSet> >::const_iterator it = sets.begin(); it != sets.end(); ++it) {
-		const std::vector<ZLEncodingConverterInfoPtr> &infos = (*it)->infos();
-		mySetNames.push_back((*it)->name());
-		std::vector<std::string> &names = myValues[(*it)->name()];
-		for (std::vector<ZLEncodingConverterInfoPtr>::const_iterator jt = infos.begin(); jt != infos.end(); ++jt) {
-			if ((*jt)->name() == value) {
-				myInitialSetName = (*it)->name();
-				myInitialValues[myInitialSetName] = (*jt)->visibleName();
-			}
-			names.push_back((*jt)->visibleName());
-			myValueByName[(*jt)->visibleName()] = (*jt)->name();
-		}
-	}
-
-	if (myInitialSetName.empty()) {
-		myInitialSetName = mySetNames[0];
-	}
-}
-
-const std::vector<std::string> &EncodingEntry::values() const {
-	if (initialValue() == AUTO) {
-		static std::vector<std::string> AUTO_ENCODING;
-		if (AUTO_ENCODING.empty()) {
-			AUTO_ENCODING.push_back(AUTO);
-		}
-		return AUTO_ENCODING;
-	}
-	std::map<std::string,std::vector<std::string> >::const_iterator it = myValues.find(myInitialSetName);
-	return it->second;
-}
-
-const std::string &EncodingEntry::initialValue() const {
-	if (myInitialValues[myInitialSetName].empty()) {
-		std::map<std::string,std::vector<std::string> >::const_iterator it = myValues.find(myInitialSetName);
-		myInitialValues[myInitialSetName] = it->second[0];
-	}
-	return myInitialValues[myInitialSetName];
-}
-
-void EncodingEntry::onAccept(const std::string &value) {
-	if (initialValue() != AUTO) {
-		myEncodingOption.setValue(myValueByName[value]);
-	}
-}
-
-void EncodingEntry::onValueSelected(int index) {
-	myInitialValues[myInitialSetName] = values()[index];
-}
-
-EncodingSetEntry::EncodingSetEntry(EncodingEntry &encodingEntry) : myEncodingEntry(encodingEntry) {
-}
-
-const std::string &EncodingSetEntry::initialValue() const {
-	return myEncodingEntry.myInitialSetName;
-}
-
-const std::vector<std::string> &EncodingSetEntry::values() const {
-	return myEncodingEntry.mySetNames;
-}
-
-void EncodingSetEntry::onValueSelected(int index) {
-	myEncodingEntry.myInitialSetName = values()[index];
-	myEncodingEntry.resetView();
 }
 
 LanguageEntry::LanguageEntry(ZLStringOption &encodingOption) : myLanguageOption(encodingOption) {
@@ -353,7 +241,7 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	myAuthorSortKeyEntry = new AuthorSortKeyEntry(*this);
 	myEncodingEntry = new EncodingEntry(myBookInfo.EncodingOption);
 	myEncodingSetEntry =
-		(myEncodingEntry->initialValue() != AUTO) ?
+		(myEncodingEntry->initialValue() != "auto") ?
 		new EncodingSetEntry(*(EncodingEntry*)myEncodingEntry) : 0;
 	myLanguageEntry = new LanguageEntry(myBookInfo.LanguageOption);
 	mySeriesTitleEntry = new SeriesTitleEntry(*this);

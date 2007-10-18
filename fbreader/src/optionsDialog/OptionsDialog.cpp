@@ -45,6 +45,7 @@
 #include "../collection/BookCollection.h"
 #include "../external/ProgramCollection.h"
 #include "../formats/FormatPlugin.h"
+#include "../encodingOption/EncodingOptionEntry.h"
 
 class RotationTypeEntry : public ZLChoiceOptionEntry {
 
@@ -214,8 +215,14 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	RecentBooksView &recentBooksView = (RecentBooksView&)*fbreader.myRecentBooksView;
 	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(recentBooksView.lastBooks().MaxListSizeOption, 1));
 	generalTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
+
+	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Encoding"));
+	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::instance().DefaultEncodingOption);
+	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);
+	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
+	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
 	const ZLResourceKey languageKey("defaultLanguage");
-	generalTab.addOption(languageKey, new DefaultLanguageEntry(generalTab.resource(languageKey)));
+	encodingTab.addOption(languageKey, new DefaultLanguageEntry(encodingTab.resource(languageKey)));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 

@@ -24,11 +24,12 @@
 #include <ZLInputStream.h>
 
 #include "EncodingDetector.h"
+#include "../FormatPlugin.h"
 
 static const int BUFSIZE = 65536;
 
 std::string EncodingDetector::detect(ZLInputStream &stream, Language language) {
-	std::string encodingString = "ISO-8859-1";
+	std::string encodingString = PluginCollection::instance().DefaultEncodingOption.value();
 	if (stream.open()) {
 		std::string languageString = "none";
 		switch (language) {

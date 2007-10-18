@@ -23,6 +23,7 @@
 #include <ZLInputStream.h>
 
 #include "RtfDescriptionReader.h"
+#include "../FormatPlugin.h"
 
 RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfReader(description.encoding()), myDescription(description) {
 }
@@ -42,7 +43,7 @@ bool RtfDescriptionReader::readDocument(const std::string &fileName) {
 	myDoRead = false;
 	bool code = RtfReader::readDocument(fileName);
 	if (myDescription.encoding().empty()) {
-		myDescription.encoding() = "windows-1252";
+		myDescription.encoding() = PluginCollection::instance().DefaultEncodingOption.value();
 	}
 	return code;
 }
