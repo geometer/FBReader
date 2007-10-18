@@ -66,6 +66,10 @@
 					<node name="lookInSubdirectories" value="Chercher des livres dans les sous-répertoires"/>
 					<node name="recentListSize" value="Taille de la liste de livres récents"/>
 					<node name="keyDelay" value="Délai entre appui sur les touches"/>
+				</node>
+				<node name="Encoding" value="Général">
+					<node name="defaultEncodingSet" value="Default Encoding Set"/>
+					<node name="defaultEncoding" value="Default Encoding"/>
 					<node name="defaultLanguage" value="Langue pour la détection d'encodage">
 						<node name="ru" value="Russe"/>
 						<node name="zh" value="Chinois"/>

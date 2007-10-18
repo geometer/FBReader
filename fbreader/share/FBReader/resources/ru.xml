@@ -65,6 +65,10 @@
 					<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
 					<node name="recentListSize" value="Размер списка прочитанных книг"/>
 					<node name="keyDelay" value="Задержка между нажатиями на клавиши"/>
+				</node>
+				<node name="Encoding" value="Кодировка текста">
+					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию"/>
+					<node name="defaultEncoding" value="Кодировка по умолчанию"/>
 					<node name="defaultLanguage" value="Язык для автоопределения кодировки">
 						<node name="ru" value="Русский"/>
 						<node name="zh" value="Китайский"/>
