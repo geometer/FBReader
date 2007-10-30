@@ -27,6 +27,8 @@
 #include "CHMFile.h"
 #include "CHMReferenceCollection.h"
 
+#include "LZXDecompressor.h"
+
 static std::string readString(ZLInputStream &stream, size_t length) {
 	std::string string(length, ' ');
 	stream.read(const_cast<char*>(string.data()), length);
@@ -65,7 +67,7 @@ static unsigned long long readEncodedInteger(ZLInputStream &stream) {
 	return result;
 }
 
-CHMInputStream::CHMInputStream(shared_ptr<ZLInputStream> base, const CHMFileInfo::SectionInfo &sectionInfo, size_t offset, size_t size) : myBase(base), mySectionInfo(sectionInfo), mySize(size), myLZXState(0) {
+CHMInputStream::CHMInputStream(shared_ptr<ZLInputStream> base, const CHMFileInfo::SectionInfo &sectionInfo, size_t offset, size_t size) : myBase(base), mySectionInfo(sectionInfo), mySize(size) {
 	myBaseStartIndex = offset / 0x8000;
 	myBaseStartIndex -= myBaseStartIndex % sectionInfo.ResetInterval;
 	myBytesToSkip = offset - myBaseStartIndex * 0x8000;
@@ -81,10 +83,10 @@ bool CHMInputStream::open() {
 	myOffset = 0;
 	myDoSkip = true;
 	myBaseIndex = myBaseStartIndex;
-	if (myLZXState == 0) {
-		myLZXState = LZXinit(mySectionInfo.WindowSizeIndex);
+	if (myDecompressor.isNull()) {
+		myDecompressor = new LZXDecompressor(mySectionInfo.WindowSizeIndex);
 	} else {
-		LZXreset(myLZXState);
+		myDecompressor->reset();
 	}
 	myOutDataOffset = 0;
 	myOutDataLength = 0;
@@ -113,18 +115,17 @@ size_t CHMInputStream::do_read(char *buffer, size_t maxSize) {
 			const size_t end = isTail ? mySectionInfo.CompressedSize : mySectionInfo.ResetTable[myBaseIndex + 1];
 			myOutDataLength = isTail ? mySectionInfo.UncompressedSize % 0x8000 : 0x8000;
 			myOutDataOffset = 0;
-			const size_t compressedSize = end - start;
 
 			myInData.erase();
-			myInData.append(compressedSize, '\0');
+			myInData.append(end - start, '\0');
 			myBase->seek(mySectionInfo.Offset + start, true);
-			myBase->read((char*)myInData.data(), compressedSize);
+			myBase->read((char*)myInData.data(), myInData.length());
 			if (myBaseIndex % mySectionInfo.ResetInterval == 0) {
-				LZXreset(myLZXState);
+				myDecompressor->reset();
 			}
 			++myBaseIndex;
 
-			if (LZXdecompress(myLZXState, (unsigned char*)myInData.data(), myOutData, compressedSize, myOutDataLength) != DECR_OK) {
+			if (!myDecompressor->decompress(myInData, myOutData, myOutDataLength)) {
 				break;
 			}
 		}
@@ -141,10 +142,7 @@ size_t CHMInputStream::do_read(char *buffer, size_t maxSize) {
 }
 
 void CHMInputStream::close() {
-	if (myLZXState != 0) {
-		LZXteardown(myLZXState);
-		myLZXState = 0;
-	}
+	myDecompressor = 0;
 }
 
 void CHMInputStream::seek(int offset, bool absoluteOffset) {

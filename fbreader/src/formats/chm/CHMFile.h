@@ -26,10 +26,10 @@
 #include <map>
 #include <vector>
 
-#include "lzx.h"
-
 #include <shared_ptr.h>
 #include <ZLInputStream.h>
+
+class LZXDecompressor;
 
 class CHMFileInfo {
 
@@ -117,7 +117,7 @@ private:
 	size_t myOffset;
 	bool myDoSkip;
 
-	LZXstate *myLZXState;
+	shared_ptr<LZXDecompressor> myDecompressor;
 	std::string myInData;
 	
 	unsigned char *myOutData;
