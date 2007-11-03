@@ -76,9 +76,9 @@ public:
 	void setAlignmentType(ZLTextAlignmentType alignmentType);
 
 	enum {
-		SUPPORT_LEFT_INDENT = 1,
-		SUPPORT_RIGHT_INDENT = 2,
-		SUPPORT_ALIGNMENT_TYPE = 4,
+		SUPPORT_LEFT_INDENT = 1 << 0,
+		SUPPORT_RIGHT_INDENT = 1 << 1,
+		SUPPORT_ALIGNMENT_TYPE = 1 << 2,
 	};
 
 private:

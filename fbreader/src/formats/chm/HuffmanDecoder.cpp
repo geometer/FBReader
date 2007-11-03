@@ -35,7 +35,7 @@ bool HuffmanDecoder::buildTable() {
 	for (unsigned short symbol = 0; symbol < CodeLengths.size(); symbol++) {
 		myMaxBitsNumber = std::max(CodeLengths[symbol], myMaxBitsNumber);
 	}
-	if ((myMaxBitsNumber == 0) || (myMaxBitsNumber > 16)) {
+	if (myMaxBitsNumber > 16) {
 		return false;
 	}
 

@@ -75,9 +75,7 @@ private:
 	class E8Decoder {
 
 	public:
-		E8Decoder();
-		void reset();
-		void setFileSize(unsigned int fileSize);
+		void reset(unsigned int fileSize);
 		void decode(unsigned char *buffer, const size_t size);
 
 	private:

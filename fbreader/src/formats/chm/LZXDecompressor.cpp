@@ -51,7 +51,7 @@ void LZXDecompressor::reset() {
 
 	myBlockBytesLeft = 0;
 
-	myE8Decoder.reset();
+	myE8Decoder.reset(0);
 }
 
 static bool fill(std::vector<unsigned char> &data, std::vector<unsigned char>::iterator &it, int num, unsigned char value) {
@@ -206,7 +206,7 @@ bool LZXDecompressor::decompress(const std::string &data, unsigned char *outBuff
 
 	if (myReadHeader) {
 		if (myBitStream.get(1) == 1) {
-			myE8Decoder.setFileSize(myBitStream.get(32));
+			myE8Decoder.reset(myBitStream.get(32));
 		}
 		myReadHeader = false;
 	}

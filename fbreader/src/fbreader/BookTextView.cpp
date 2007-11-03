@@ -284,9 +284,9 @@ void BookTextView::PositionIndicatorWithLabels::draw() {
 			for (int i = 0; i < marksNumber; ++i) {
 				size_t reference = contentsModel.reference((ZLTextTreeParagraph*)contentsModel[i]);
 				if ((startIndex < reference) && (reference < endIndex)) {
-					int position = (int)
+					int position = left() + 2 + (int)
 						(1.0 * fullWidth * (textSizeVector[reference] - startPosition) / fullTextSize);
-					context().drawLine(position + 1, bottom, position + 1, top);
+					context().drawLine(position, bottom, position, top);
 				}
 			}
 		}

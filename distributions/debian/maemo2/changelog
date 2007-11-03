@@ -1,3 +1,21 @@
+fbreader (0.8.7a-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 3 Nov 2007 00:00:00 +0400
+
+fbreader (0.8.7-3) stable; urgency=low
+
+  * dependencies list has been fixed
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 20 Oct 2007 00:00:00 +0400
+
+fbreader (0.8.7-2) stable; urgency=low
+
+  * dependencies list has been fixed
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 19 Oct 2007 00:00:00 +0400
+
 fbreader (0.8.7-1) stable; urgency=low
 
   * new upstream version

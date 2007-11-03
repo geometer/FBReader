@@ -210,7 +210,7 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	const size_t endIndex = endTextIndex();
 
 	size_t fullTextSize = textSizeVector[endIndex] - textSizeVector[startIndex];
-	size_t textSize = (size_t)(1.0 * fullTextSize * (x - left - 1) / (right - left - 1)) + textSizeVector[startIndex];
+	size_t textSize = (size_t)(1.0 * fullTextSize * (x - left + 1) / (right - left + 1)) + textSizeVector[startIndex];
 	std::vector<size_t>::const_iterator it = std::lower_bound(textSizeVector.begin(), textSizeVector.end(), textSize);
 	size_t paragraphNumber = std::min((size_t)(it - textSizeVector.begin()), endIndex) - 1;
 	if (paragraphNumber == startIndex) {

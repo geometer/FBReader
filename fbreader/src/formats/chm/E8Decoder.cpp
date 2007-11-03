@@ -21,18 +21,10 @@
 
 #include "LZXDecompressor.h"
 
-LZXDecompressor::E8Decoder::E8Decoder() {
-	reset();
-}
-
-void LZXDecompressor::E8Decoder::reset() {
-	myFramesCounter = 0;
-	myFileSize = 0;
-	myPosition = 0;
-}
-
-void LZXDecompressor::E8Decoder::setFileSize(unsigned int fileSize) {
+void LZXDecompressor::E8Decoder::reset(unsigned int fileSize) {
 	myFileSize = fileSize;
+	myFramesCounter = 0;
+	myPosition = 0;
 }
 
 void LZXDecompressor::E8Decoder::decode(unsigned char *buffer, const size_t size) {
