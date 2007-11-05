@@ -62,8 +62,8 @@ private:
 
 	DecodingState myState;
 
-	unsigned int myBlockSize;
-	unsigned int myBlockBytesLeft;
+	size_t myBlockSize;
+	size_t myBlockBytesLeft;
 
 	const unsigned int mySlotNumber;
 	HuffmanDecoder myMainTree;
