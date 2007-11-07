@@ -46,8 +46,11 @@ public:
 
 	void insertEndOfSectionParagraph();
 	void insertEndOfTextParagraph();
+
 	void pushKind(FBTextKind kind);
 	bool popKind();
+	bool isKindStackEmpty() const;
+
 	void beginParagraph(ZLTextParagraph::Kind kind = ZLTextParagraph::TEXT_PARAGRAPH);
 	void endParagraph();
 	bool paragraphIsOpen() const;

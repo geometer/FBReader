@@ -143,6 +143,13 @@ public:
 	void run(const HtmlReader::HtmlTag &tag);
 };
 
+class HtmlStyleTagAction : public HtmlTagAction {
+
+public:
+	HtmlStyleTagAction(HtmlBookReader &reader);
+	void run(const HtmlReader::HtmlTag &tag);
+};
+
 inline BookReader &HtmlTagAction::bookReader() { return myReader.myBookReader; }
 
 #endif /* __HTMLTAGACTIONS_H__ */

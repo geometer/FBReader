@@ -29,6 +29,7 @@
 #include "../txt/PlainTextFormat.h"
 #include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
+#include "StyleSheetParser.h"
 
 HtmlTagAction::HtmlTagAction(HtmlBookReader &reader) : myReader(reader) {
 }
@@ -189,6 +190,9 @@ void HtmlBreakTagAction::run(const HtmlReader::HtmlTag &tag) {
 	if ((tag.Start && (myBreakType & BREAK_AT_START)) ||
 			(!tag.Start && (myBreakType & BREAK_AT_END))) {
 		bookReader().endParagraph();
+		if (bookReader().isKindStackEmpty()) {
+			bookReader().pushKind(REGULAR);
+		}
 		bookReader().beginParagraph();
 	}
 }
@@ -258,6 +262,18 @@ void HtmlTableTagAction::run(const HtmlReader::HtmlTag &tag) {
 	}
 }
 
+HtmlStyleTagAction::HtmlStyleTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
+}
+
+void HtmlStyleTagAction::run(const HtmlReader::HtmlTag &tag) {
+	myReader.myStyleSheetParser = tag.Start ? new StyleSheetParser(myReader.myStyleSheetTable) : 0;
+	/*
+	if (!tag.Start) {
+		myReader.myStyleSheetTable.dump();
+	}
+	*/
+}
+
 shared_ptr<HtmlTagAction> HtmlBookReader::createAction(const std::string &tag) {
 	if (tag == "EM") {
 		return new HtmlControlTagAction(*this, EMPHASIS);
@@ -294,7 +310,7 @@ shared_ptr<HtmlTagAction> HtmlBookReader::createAction(const std::string &tag) {
 	} else if (tag == "TITLE") {
 		return new HtmlIgnoreTagAction(*this);
 	} else if (tag == "STYLE") {
-		return new HtmlIgnoreTagAction(*this);
+		return new HtmlStyleTagAction(*this);
 	} else if (tag == "SELECT") {
 		return new HtmlIgnoreTagAction(*this);
 	} else if (tag == "SCRIPT") {
@@ -486,6 +502,11 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, int len,
 }
 
 bool HtmlBookReader::characterDataHandler(const char *text, int len, bool convert) {
+	if (!myStyleSheetParser.isNull()) {
+		myStyleSheetParser->parse(text, len);
+		return true;
+	}
+
 	if (myIgnoreDataCounter != 0) {
 		return true;
 	}
@@ -530,6 +551,8 @@ void HtmlBookReader::startDocumentHandler() {
 	}
 	myIsStarted = false;
 	myIgnoreTitles = false;
+
+	myStyleSheetParser = 0;
 
 	mySpaceCounter = -1;
 	myBreakCounter = 0;

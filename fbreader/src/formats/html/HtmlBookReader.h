@@ -28,9 +28,11 @@
 
 #include "HtmlReader.h"
 #include "../../bookmodel/BookReader.h"
+#include "StyleSheetTable.h"
 
 class BookModel;
 class PlainTextFormat;
+class StyleSheetParser;
 
 class HtmlTagAction;
 
@@ -72,6 +74,9 @@ private:
 	bool myIgnoreTitles;
 	std::stack<int> myListNumStack;
 
+	StyleSheetTable myStyleSheetTable;
+	shared_ptr<StyleSheetParser> myStyleSheetParser;
+
 	int mySpaceCounter;
 	int myBreakCounter;
 	std::string myConverterBuffer;
@@ -92,6 +97,7 @@ private:
 	friend class HtmlListTagAction;
 	friend class HtmlListItemTagAction;
 	friend class HtmlTableTagAction;
+	friend class HtmlStyleTagAction;
 };
 
 #endif /* __HTMLBOOKREADER_H__ */

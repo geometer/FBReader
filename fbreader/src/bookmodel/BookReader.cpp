@@ -68,6 +68,10 @@ bool BookReader::popKind() {
 	return false;
 }
 
+bool BookReader::isKindStackEmpty() const {
+	return myKindStack.empty();
+}
+
 void BookReader::beginParagraph(ZLTextParagraph::Kind kind) {
 	if (myCurrentTextModel != 0) {
 		((ZLTextPlainModel&)*myCurrentTextModel).createParagraph(kind);
