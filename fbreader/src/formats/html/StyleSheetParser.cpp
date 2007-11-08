@@ -84,7 +84,9 @@ void StyleSheetParser::processControl(const char control) {
 			myElement = StyleSheetTable::Element();
 			break;
 		case ';':
-			myReadState = (myReadState == ATTRIBUTE_VALUE) ? ATTRIBUTE_NAME : BROKEN;
+			myReadState =
+				((myReadState == ATTRIBUTE_VALUE) ||
+				 (myReadState == ATTRIBUTE_NAME)) ? ATTRIBUTE_NAME : BROKEN;
 			break;
 		case ':':
 			myReadState = (myReadState == ATTRIBUTE_NAME) ? ATTRIBUTE_VALUE : BROKEN;
