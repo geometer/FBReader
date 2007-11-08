@@ -267,6 +267,12 @@ const std::string &ZLTextSelectionModel::getText() const {
 		pcursors.insert(start.paragraphCursorPtr());
 
 		for (ZLTextWordCursor cursor = start; cursor < end; ) {
+			if ((cursor < end) && cursor.isEndOfParagraph()) {
+				cursor.nextParagraph();
+				pcursors.insert(cursor.paragraphCursorPtr());
+				myText.append(ZLibrary::EndOfLine);
+				continue;
+			}
 			const ZLTextElement &element = cursor.element();
 			switch (element.kind()) {
 				case ZLTextElement::WORD_ELEMENT:
@@ -298,11 +304,6 @@ const std::string &ZLTextSelectionModel::getText() const {
 					break;
 			}
 			cursor.nextWord();
-			if ((cursor < end) && cursor.isEndOfParagraph()) {
-				cursor.nextParagraph();
-				pcursors.insert(cursor.paragraphCursorPtr());
-				myText.append(ZLibrary::EndOfLine);
-			}
 		}
 
 		myCursors.swap(pcursors);
