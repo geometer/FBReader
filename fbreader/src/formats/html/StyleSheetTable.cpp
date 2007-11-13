@@ -28,9 +28,10 @@ void StyleSheetTable::addElement(const Element &element) {
 	}
 }
 
-#include <iostream>
+//#include <iostream>
 
 void StyleSheetTable::dump() const {
+/*
 	for (std::map<Key,AttributeMap>::const_iterator it = myMap.begin(); it != myMap.end(); ++it) {
 		std::cerr << it->first.TagName << " . " << it->first.ClassName << "\n";
 		for (AttributeMap::const_iterator jt = it->second.begin(); jt != it->second.end(); ++jt) {
@@ -41,4 +42,5 @@ void StyleSheetTable::dump() const {
 			std::cerr << "\n";
 		}
 	}
+*/
 }
