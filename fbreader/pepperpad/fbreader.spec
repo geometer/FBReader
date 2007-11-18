@@ -1,37 +1,23 @@
-# Upstream: Nikolay Pultsin <geometer$mawhrin,net>
-
-%if "%{_vendor}" == "montavista"
-%define release_suffix .chuma.pepper
-%define pepper_pad_2 1
-%else
-%define release_suffix %{?dist}
-%define pepper_pad_2 0
-%endif
+# Upstream: Nikolay Pultsin <geometer@fbreader.org>
 
 %define desktop_vendor rpmforge
 
 Summary: E-book reader
 Name: fbreader
-Version: 0.8.4a
-Release: 1%{release_suffix}
+Version: 0.8.8
+Release: 1
 License: GPL
 Group: Applications/Multimedia
 URL: http://www.fbreader.org/
 
-Packager: Nikolay Pultsin <geometer@mawhrin.net>
+Packager: Nikolay Pultsin <geometer@fbreader.org>
 
 Source: http://www.fbreader.org/fbreader-sources-%{version}.tgz
-Patch0: rpath.patch
-Patch1: keynames.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires: enca-devel, zlib-devel, libpng-devel, gtk2-devel
-%if %{pepper_pad_2}
-BuildRequires: bzip2-dev, expat, libjpeg-dev
-%else
 BuildRequires: desktop-file-utils
 BuildRequires: bzip2-devel, expat-devel, libjpeg-devel
-%endif
 
 %description
 FBReader is an e-book reader for Linux PDAs and desktop computers.
@@ -40,36 +26,13 @@ HTML, fb2, plain text, etc.
 
 %prep
 %setup
-%patch0 -p1
-%patch1 -p1
-
-#%if %{!pepper_pad_2}
-#%{__cat} <<EOF >fbreader.desktop
-#[Desktop Entry]
-#Name=FBReader
-#Comment=Read various ebook formats
-#Exec=FBReader
-#Terminal=false
-#Type=Application
-#StartupNotify=true
-#Categories=Application;AudioVideo;
-#EOF
-#%endif
 
 %build
-%{__make} %{?_smp_mflags} INSTALLDIR=%{_prefix} TARGET_ARCH=desktop UI_TYPE=gtk TARGET_STATUS=release
+%{__make} %{?_smp_mflags} INSTALLDIR=%{_prefix} TARGET_ARCH=pepperpad3 UI_TYPE=gtk TARGET_STATUS=release
 
 %install
 %{__rm} -rf %{buildroot}
-%makeinstall INSTALLDIR=%{_prefix} TARGET_ARCH=desktop UI_TYPE=gtk TARGET_STATUS=release DESTDIR=%{buildroot}
-
-#%{__install} -d -m0755 %{buildroot}%{_datadir}/applications/
-#%if %{!pepper_pad_2}
-#desktop-file-install --vendor %{desktop_vendor}    \
-#	--add-category X-Red-Hat-Base              \
-#	--dir %{buildroot}%{_datadir}/applications \
-#	fbreader.desktop
-#%endif
+%makeinstall INSTALLDIR=%{_prefix} TARGET_ARCH=pepperpad3 UI_TYPE=gtk TARGET_STATUS=release DESTDIR=%{buildroot}
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -81,10 +44,9 @@ HTML, fb2, plain text, etc.
 %{_datadir}/pixmaps/FBReader.png
 %{_datadir}/pixmaps/FBReader
 %{_datadir}/applications/FBReader.desktop
-#%if %{!pepper_pad_2}
-#%{_datadir}/applications/%{desktop_vendor}-fbreader.desktop
-#%endif
-%{_libdir}/libzlibrary-gtk.so.%{version}
+%{_libdir}/libzlcore.so.%{version}
+%{_libdir}/libzltext.so.%{version}
+%{_libdir}/zlibrary/ui/zlui-gtk.so
 %{_datadir}/zlibrary
 
 %post -p /sbin/ldconfig
@@ -92,10 +54,16 @@ HTML, fb2, plain text, etc.
 %postun -p /sbin/ldconfig
 
 %changelog
-* Sat Jun 9 2007 Nikolay Pultsin <geometer@mawhrin.net> - 0.8.4a-1
+* Sun Nov 18 2007 Nikolay Pultsin <geometer@fbreader.org> - 0.8.8-1
 - new upstream version
+- excluded keynames.patch
 
-* Sun Jun 3 2007 Nikolay Pultsin <geometer@mawhrin.net> - 0.8.4-1
+* Sun Nov 18 2007 Nikolay Pultsin <geometer@fbreader.org> - 0.8.7b-1
+- new upstream version
+- excluded rpath.patch
+- spec file cleanup
+
+* Sun Jun 3 2007 Nikolay Pultsin <geometer@fbreader.org> - 0.8.4-1
 - new upstream version
 - removed gcc.patch
 - added keynames.patch

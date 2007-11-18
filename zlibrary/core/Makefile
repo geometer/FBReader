@@ -15,7 +15,7 @@ SUBDIRS_ALL = src/library src/util src/filesystem src/filesystem/zip src/filesys
 
 SUBDIRS = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/posix/filesystem src/unix/time
 
-ifeq "$(TARGET_ARCH)" "desktop"
+ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3>)"
   SUBDIRS += src/desktop/application src/desktop/dialogs src/unix/message
 endif
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keynames>
+	<key code="0xFF1B" name="&lt;Esc&gt;"/>
+	<key code="0x1B" name="&lt;Esc&gt;"/>
+	<key code="0xFF09" name="&lt;Tab&gt;"/>
+	<key code="0xFF08" name="&lt;BackSpace&gt;"/>
+	<key code="0xFF0D" name="&lt;Return&gt;"/>
+	<key code="0xD" name="&lt;Return&gt;"/>
+	<key code="0xFF63" name="&lt;Insert&gt;"/>
+	<key code="0xFFFF" name="&lt;Delete&gt;"/>
+	<key code="0xFF13" name="&lt;Pause&gt;"/>
+	<key code="0xFF61" name="&lt;Print&gt;"/>
+	<key code="0xFF15" name="&lt;SysReq&gt;"/>
+	<key code="0xFF0B" name="&lt;Clear&gt;"/>
+	<key code="0xFF50" name="&lt;Home&gt;"/>
+	<key code="0xFF57" name="&lt;End&gt;"/>
+	<key code="0xFF51" name="&lt;LeftArrow&gt;"/>
+	<key code="0xFF52" name="&lt;UpArrow&gt;"/>
+	<key code="0xFF53" name="&lt;RightArrow&gt;"/>
+	<key code="0xFF54" name="&lt;DownArrow&gt;"/>
+	<key code="0xFF55" name="&lt;PageUp&gt;"/>
+	<key code="0xFF56" name="&lt;PageDown&gt;"/>
+	<key code="0xFFBE" name="&lt;Scroll Backward&gt;"/>
+	<key code="0xFFBF" name="&lt;Scroll Forward&gt;"/>
+	<key code="0xFFC0" name="&lt;Play/Stop&gt;"/>
+	<key code="0xFFC1" name="&lt;Pause&gt;"/>
+	<key code="0xFFC2" name="&lt;F5&gt;"/>
+	<key code="0xFFC3" name="&lt;F6&gt;"/>
+	<key code="0xFFC4" name="&lt;F7&gt;"/>
+	<key code="0xFFC5" name="&lt;Volume -&gt;"/>
+	<key code="0xFFC6" name="&lt;Volume +&gt;"/>
+	<key code="0xFFC7" name="&lt;F10&gt;"/>
+	<key code="0xFFC8" name="&lt;F11&gt;"/>
+	<key code="0xFFC9" name="&lt;F12&gt;"/>
+	<key code="0xFFCA" name="&lt;F13&gt;"/>
+	<key code="0x20" name="&lt;Space&gt;"/>
+	<key code="0xFFE5" name="&lt;CapsLock&gt;"/>
+	<key code="0xFF7F" name="&lt;NumLock&gt;"/>
+	<key code="0xFF14" name="&lt;ScrollLock&gt;"/>
+	<key code="0xFFE1" name="&lt;Shift&gt;"/>
+	<key code="0xFFE2" name="&lt;RShift&gt;"/>
+	<key code="0xFFE3" name="&lt;Ctrl&gt;"/>
+	<key code="0xFE08" name="&lt;RCtrl&gt;"/>
+	<key code="0xFFE9" name="&lt;Alt&gt;"/>
+	<key code="0xFFEA" name="&lt;RAlt&gt;"/>
+	<key code="0xFFEB" name="&lt;Win&gt;"/>
+	<key code="0xFF6B" name="&lt;Break&gt;"/>
+	<key code="0xFF67" name="&lt;Menu&gt;"/>
+	<modifier code="0x8" name="&lt;Alt&gt;"/>
+	<modifier code="0x4" name="&lt;Ctrl&gt;"/>
+</keynames>
