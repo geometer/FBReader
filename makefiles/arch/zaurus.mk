@@ -23,5 +23,4 @@ CFLAGS = -pipe -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wal
 LDFLAGS = -Wl,-rpath,$(LIBDIR),-rpath,/usr/lib
 
 XML_LIB = -lexpat
-ENCA_LIB = -lenca
 ARCHIVER_LIB = -lz -lbz2

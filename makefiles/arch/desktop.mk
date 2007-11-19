@@ -36,7 +36,6 @@ ifeq "$(UI_TYPE)" "gtk"
 endif
 
 XML_LIB = -lexpat
-ENCA_LIB = -lenca
 ARCHIVER_LIB = -lz -lbz2
 
 RM = rm -rvf

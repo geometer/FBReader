@@ -28,6 +28,9 @@
 #include "../options/ZLConfig.h"
 
 std::string ZLibrary::ourLanguage;
+std::string ZLibrary::ourZLibraryDirectory;
+
+const std::string ZLibrary::BaseDirectory = std::string(BASEDIR);
 
 void ZLibrary::parseArguments(int &argc, char **&argv) {
 	while ((argc > 2) && (argv[1] != 0) && (argv[2] != 0)) {
@@ -40,6 +43,7 @@ void ZLibrary::parseArguments(int &argc, char **&argv) {
 		argc -= 2;
 		argv += 2;
 	}
+	ourZLibraryDirectory = BaseDirectory + FileNameDelimiter + "zlibrary";
 }
 
 void ZLibrary::shutdown() {

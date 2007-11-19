@@ -19,38 +19,40 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLInputStream.h>
+#include <ZLLanguageDetector.h>
 
 #include "FormatPlugin.h"
 
 #include "../description/BookDescription.h"
 
 void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) {
+	std::string language = description.language();
 	std::string encoding = description.encoding();
-	if (encoding.empty()) {
-		encoding = EncodingDetector::detect(stream, (EncodingDetector::Language)PluginCollection::instance().DefaultLanguageOption.value());
-		if (encoding == "unknown") {
-			encoding = PluginCollection::instance().DefaultEncodingOption.value();
+	if (encoding.empty() || language.empty()) {
+		language = PluginCollection::instance().DefaultLanguageOption.value();
+		encoding = PluginCollection::instance().DefaultEncodingOption.value();
+		if (stream.open()) {
+			static const int BUFSIZE = 65536;
+			char *buffer = new char[BUFSIZE];
+			const size_t size = stream.read(buffer, BUFSIZE);
+			stream.close();
+			shared_ptr<ZLLanguageDetector::LanguageInfo> info =
+				ZLLanguageDetector().findInfo(buffer, size);
+			delete[] buffer;
+			if (!info.isNull()) {
+				language = info->Language;
+				encoding = info->Encoding;
+				if ((encoding == "US-ASCII") || (encoding == "ISO-8859-1")) {
+					encoding = "windows-1252";
+				}
+			}
 		}
+		std::cerr << language << " : " << encoding << "\n";
 		WritableBookDescription(description).encoding() = encoding;
-	}
-
-	if (description.language() == "") {
-		if ((encoding == "US-ASCII") ||
-				(encoding == "ISO-8859-1")) {
-			WritableBookDescription(description).language() = "en";
-		} else if ((description.encoding() == "KOI8-R") ||
-				(encoding == "windows-1251") ||
-				(encoding == "ISO-8859-5") ||
-				(encoding == "IBM866")) {
-			WritableBookDescription(description).language() = "ru";
-		} else if (
-			(PluginCollection::instance().DefaultLanguageOption.value() == EncodingDetector::CZECH) &&
-			((encoding == "windows-1250") ||
-			 (encoding == "ISO-8859-2") ||
-			 (encoding == "IBM852"))) {
-			WritableBookDescription(description).language() = "cs";
-		}
+		WritableBookDescription(description).language() = language;
 	}
 }
 

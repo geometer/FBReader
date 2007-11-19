@@ -20,5 +20,4 @@ CFLAGS = -pipe -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wal
 DEPGEN = $(CC) -MM
 
 XML_LIB = -lexpat
-ENCA_LIB = -lenca
 ARCHIVER_LIB = -lz -lbz2

@@ -69,7 +69,7 @@
 				<node name="Encoding" value="Кодировка текста">
 					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию"/>
 					<node name="defaultEncoding" value="Кодировка по умолчанию"/>
-					<node name="defaultLanguage" value="Язык для автоопределения кодировки">
+					<node name="defaultLanguage" value="Язык по умолчанию">
 						<node name="ru" value="Русский"/>
 						<node name="zh" value="Китайский"/>
 						<node name="cz" value="Чешский"/>

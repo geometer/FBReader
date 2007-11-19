@@ -21,7 +21,7 @@ run: ModelTest
 	@cmp test4.tmp test4.out
 
 ModelTest: ModelTest.o
-	@g++ -o $@ $< `find ../../common -name "*.o"` -L ../../../zlibrary -lzlibrary -lbz2 -lz -lexpat -lenca
+	@g++ -o $@ $< `find ../../common -name "*.o"` -L ../../../zlibrary -lzlibrary -lbz2 -lz -lexpat
 
 ModelTest.o: ModelTest.cpp
 

@@ -24,7 +24,6 @@ AR = $(TOOLSPATH)/arm-linux-ar rsu
 LD = $(TOOLSPATH)/arm-linux-g++
 
 XML_LIB = -lexpat
-ENCA_LIB = -lenca
 ARCHIVER_LIB = -lz -lbz2
 
 ifeq "$(UI_TYPE)" "opie"

@@ -94,7 +94,7 @@ void ZLMessageDescriptionReader::startElementHandler(const char *tag, const char
 }
 
 void ZLCommunicationManager::init() {
-	ZLMessageDescriptionReader(*this).readDocument(ZLApplication::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "messages.xml");
+	ZLMessageDescriptionReader(*this).readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "messages.xml");
 	ZLMessageDescriptionReader(*this).readDocument(ZLApplication::DefaultFilesPathPrefix() + "messages.xml");
 	myInitialized = true;
 }

@@ -69,7 +69,7 @@
 				<node name="Encoding" value="Encoding">
 					<node name="defaultEncodingSet" value="Default Encoding Set"/>
 					<node name="defaultEncoding" value="Default Encoding"/>
-					<node name="defaultLanguage" value="Language for Encoding Detection">
+					<node name="defaultLanguage" value="Default Language">
 						<node name="ru" value="Russian"/>
 						<node name="zh" value="Chinese"/>
 						<node name="cz" value="Czech"/>

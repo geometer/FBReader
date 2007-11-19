@@ -19,7 +19,6 @@
  */
 
 #include <ZLFile.h>
-#include <ZLApplication.h>
 #include <ZLibrary.h>
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
@@ -40,7 +39,7 @@ ZLEncodingCollection &ZLEncodingCollection::instance() {
 }
 
 std::string ZLEncodingCollection::encodingDescriptionPath() {
-	return ZLApplication::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "encodings";
+	return ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "encodings";
 }
 
 ZLEncodingCollection::ZLEncodingCollection() {

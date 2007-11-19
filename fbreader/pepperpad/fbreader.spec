@@ -15,7 +15,7 @@ Packager: Nikolay Pultsin <geometer@fbreader.org>
 Source: http://www.fbreader.org/fbreader-sources-%{version}.tgz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires: enca-devel, zlib-devel, libpng-devel, gtk2-devel
+BuildRequires: zlib-devel, libpng-devel, gtk2-devel
 BuildRequires: desktop-file-utils
 BuildRequires: bzip2-devel, expat-devel, libjpeg-devel
 

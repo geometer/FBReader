@@ -27,8 +27,6 @@
 
 #include <ZLOptions.h>
 
-#include "util/EncodingDetector.h"
-
 class BookDescription;
 class BookModel;
 class ZLOptionsDialog;
@@ -69,7 +67,7 @@ protected:
 class PluginCollection {
 
 public:
-	ZLIntegerOption DefaultLanguageOption;
+	ZLStringOption DefaultLanguageOption;
 	ZLStringOption DefaultEncodingOption;
 	
 public:

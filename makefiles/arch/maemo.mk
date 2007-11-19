@@ -23,5 +23,4 @@ else # ifeq "$(UI_TYPE)" "maemo2"
 endif
 
 XML_LIB = -lexpat
-ENCA_LIB = -lenca
 ARCHIVER_LIB = -lz -lbz2

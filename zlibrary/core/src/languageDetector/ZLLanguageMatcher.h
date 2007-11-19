@@ -1,7 +1,5 @@
 /*
- * FBReader -- electronic book reader
- * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
+ * Copyright (C) 2007 Nikolay Pultsin <geometer@mawhrin.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +17,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ENCODINGDETECTOR_H__
-#define __ENCODINGDETECTOR_H__
+#ifndef __ZLLANGUAGEMATCHER_H__
+#define __ZLLANGUAGEMATCHER_H__
 
-class ZLInputStream;
+#include <set>
 
-class EncodingDetector {
+#include "ZLLanguageDetector.h"
 
-public:
-	enum Language {
-		OTHER,
-		RUSSIAN,
-		CHINESE,
-		CZECH,
-	};
+class ZLLanguageMatcher {
 
 public:
-	static std::string detect(ZLInputStream &stream, Language language);
+	ZLLanguageMatcher(const std::string &fileName, shared_ptr<ZLLanguageDetector::LanguageInfo> info);
+
+	void reset();
+	void processWord(const std::string &word);
+
+	int matchingCriteria() const;
+	shared_ptr<ZLLanguageDetector::LanguageInfo> info() const;
 
 private:
-	EncodingDetector();
+	unsigned int myProCounter;
+	unsigned int myContraCounter;
+	std::set<std::string> myDictionary;
+	shared_ptr<ZLLanguageDetector::LanguageInfo> myInfo;
 };
 
-#endif /* __ENCODINGDETECTOR_H__ */
+#endif /* __ZLLANGUAGEMATCHER_H__ */

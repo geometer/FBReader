@@ -122,7 +122,7 @@ const std::string &ZLResource::name() const {
 
 void ZLTreeResource::loadData(const std::string &language) {
 	std::string filePath = ZLibrary::FileNameDelimiter + "resources" + ZLibrary::FileNameDelimiter + language + ".xml";
-	ZLResourceTreeReader(ourRoot).readDocument(ZLApplication::ZLibraryDirectory() + filePath);
+	ZLResourceTreeReader(ourRoot).readDocument(ZLibrary::ZLibraryDirectory() + filePath);
 	ZLResourceTreeReader(ourRoot).readDocument(ZLApplication::ApplicationDirectory() + filePath);
 }
 

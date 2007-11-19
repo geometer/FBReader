@@ -3,7 +3,7 @@ Version: @VERSION@
 Section: apps
 Priority: extra
 Architecture: arm
-Depends: libstdc++6, libexpat0, libenca0, bzip2
+Depends: libstdc++6, libexpat0, bzip2
 Installed-Size: @SIZE@
 Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Description: E-Book reader.

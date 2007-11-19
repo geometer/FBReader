@@ -31,8 +31,10 @@ class ZLDir {
 public:
 	static shared_ptr<ZLDir> root();
 
-public:
+protected:
 	ZLDir(const std::string &path);
+
+public:
 	virtual ~ZLDir();
 	const std::string &path() const;
 	std::string name() const;

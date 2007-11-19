@@ -41,22 +41,21 @@ class ZLKeyBindings;
 class ZLApplicationBase {
 
 public:
-	static const std::string BaseDirectory;
 	static const std::string HomeDirectory;
 
-	static const std::string &ApplicationName();
 	static const std::string &ImageDirectory();
+
+	static const std::string &ApplicationName();
 	static const std::string &ApplicationImageDirectory();
 
-	static const std::string &ZLibraryDirectory();
 	static const std::string &ApplicationDirectory();
 	static const std::string &DefaultFilesPathPrefix();
 
 private:
 	static std::string ourImageDirectory;
+
 	static std::string ourApplicationImageDirectory;
 	static std::string ourApplicationName;
-	static std::string ourZLibraryDirectory;
 	static std::string ourApplicationDirectory;
 	static std::string ourDefaultFilesPathPrefix;
 
@@ -413,7 +412,6 @@ inline const std::string &ZLApplicationBase::ApplicationName() { return ourAppli
 inline const std::string &ZLApplicationBase::ImageDirectory() { return ourImageDirectory; }
 inline const std::string &ZLApplicationBase::ApplicationImageDirectory() { return ourApplicationImageDirectory; }
 inline const std::string &ZLApplicationBase::ApplicationDirectory() { return ourApplicationDirectory; }
-inline const std::string &ZLApplicationBase::ZLibraryDirectory() { return ourZLibraryDirectory; }
 inline const std::string &ZLApplicationBase::DefaultFilesPathPrefix() { return ourDefaultFilesPathPrefix; }
 
 inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }

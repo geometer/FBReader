@@ -34,6 +34,9 @@ public:
 	static const std::string EndOfLine;
 	static std::string Language();
 
+	static const std::string BaseDirectory;
+	static const std::string &ZLibraryDirectory();
+
 public:
 	static bool init(int &argc, char **&argv);
 	static void parseArguments(int &argc, char **&argv);
@@ -43,9 +46,12 @@ public:
 
 private:
 	static std::string ourLanguage;
+	static std::string ourZLibraryDirectory;
 
 private:
 	ZLibrary();
 };
+
+inline const std::string &ZLibrary::ZLibraryDirectory() { return ourZLibraryDirectory; }
 
 #endif /* __ZLIBRARY_H__ */

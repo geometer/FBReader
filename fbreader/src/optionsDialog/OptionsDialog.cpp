@@ -124,6 +124,7 @@ void RotationTypeEntry::onAccept(int index) {
 	myAngleOption.setValue(angle);
 }
 
+/*
 class DefaultLanguageEntry : public ZLComboOptionEntry {
 
 private:
@@ -181,6 +182,7 @@ void DefaultLanguageEntry::onAccept(const std::string &value) {
 	}
 	PluginCollection::instance().DefaultLanguageOption.setValue(language);
 }
+*/
 
 class OptionsApplyRunnable : public ZLRunnable {
 
@@ -221,8 +223,8 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
-	const ZLResourceKey languageKey("defaultLanguage");
-	encodingTab.addOption(languageKey, new DefaultLanguageEntry(encodingTab.resource(languageKey)));
+	//const ZLResourceKey languageKey("defaultLanguage");
+	//encodingTab.addOption(languageKey, new DefaultLanguageEntry(encodingTab.resource(languageKey)));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 

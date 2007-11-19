@@ -34,13 +34,11 @@ public:
 	}
 };
 
-const std::string ZLApplicationBase::BaseDirectory = std::string(BASEDIR);
 const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
 
 std::string ZLApplicationBase::ourApplicationName;
 std::string ZLApplicationBase::ourImageDirectory;
 std::string ZLApplicationBase::ourApplicationImageDirectory;
-std::string ZLApplicationBase::ourZLibraryDirectory;
 std::string ZLApplicationBase::ourApplicationDirectory;
 std::string ZLApplicationBase::ourDefaultFilesPathPrefix;
 
@@ -64,8 +62,7 @@ ZLApplicationBase::ZLApplicationBase(const std::string &name) {
 	ourApplicationName = name;
 	ourImageDirectory = replaceRegExps(IMAGEDIR);
 	ourApplicationImageDirectory = replaceRegExps(APPIMAGEDIR);
-	ourZLibraryDirectory = BaseDirectory + ZLibrary::FileNameDelimiter + "zlibrary";
-	ourApplicationDirectory = BaseDirectory + ZLibrary::FileNameDelimiter + ourApplicationName;
+	ourApplicationDirectory = ZLibrary::BaseDirectory + ZLibrary::FileNameDelimiter + ourApplicationName;
 	ourDefaultFilesPathPrefix = ourApplicationDirectory + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter;
 	ZLOptions::createInstance();
 }
