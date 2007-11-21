@@ -143,7 +143,7 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 		}
 	}
 
-	int maxMatchingCriteria = -1000;
+	int maxMatchingCriteria = 0;
 	shared_ptr<LanguageInfo> info;
 	for (Vector::const_iterator it = matchers.begin(); it != matchers.end(); ++it) {
 		int matchingCriteria = (*it)->matchingCriteria();
