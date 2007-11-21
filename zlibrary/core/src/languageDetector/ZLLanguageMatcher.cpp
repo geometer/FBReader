@@ -58,7 +58,7 @@ void ZLLanguageMatcher::processWord(const std::string &word) {
 	}
 }
 
-int ZLLanguageMatcher::matchingCriteria() const {
+int ZLLanguageMatcher::criterion() const {
 	if ((myProCounter == 0) && (myContraCounter == 0)) {
 		return -1000;
 	}

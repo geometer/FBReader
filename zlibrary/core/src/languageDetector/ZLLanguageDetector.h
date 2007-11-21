@@ -40,7 +40,7 @@ public:
 	ZLLanguageDetector();
 	~ZLLanguageDetector();
 
-	shared_ptr<LanguageInfo> findInfo(const char *buffer, size_t length);
+	shared_ptr<LanguageInfo> findInfo(const char *buffer, size_t length, int matchingCriterion = 0);
 
 private:
 	typedef std::vector<shared_ptr<ZLLanguageMatcher> > Vector;

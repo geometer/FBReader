@@ -82,7 +82,9 @@ ZLLanguageDetector::ZLLanguageDetector() {
 ZLLanguageDetector::~ZLLanguageDetector() {
 }
 
-shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const char *buffer, size_t length) {
+#include <iostream>
+
+shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const char *buffer, size_t length, int matchingCriterion) {
 	const char *start = buffer;
 	const char *end = start + length;
 
@@ -128,6 +130,7 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 						for (Vector::iterator it = matchers.begin(); it != matchers.end(); ++it) {
 							(*it)->processWord(word);
 						}
+						std::cerr << word << "\n";
 					}
 				}
 				wordStart = ptr + 1;
@@ -143,13 +146,12 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 		}
 	}
 
-	int maxMatchingCriteria = 0;
 	shared_ptr<LanguageInfo> info;
 	for (Vector::const_iterator it = matchers.begin(); it != matchers.end(); ++it) {
-		int matchingCriteria = (*it)->matchingCriteria();
-		if (matchingCriteria > maxMatchingCriteria) {
+		int criterion = (*it)->criterion();
+		if (criterion > matchingCriterion) {
 			info = (*it)->info();
-			maxMatchingCriteria = matchingCriteria;
+			matchingCriterion = criterion;
 		}
 		(*it)->reset();
 	}

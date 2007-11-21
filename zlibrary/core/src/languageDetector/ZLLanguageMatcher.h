@@ -32,7 +32,7 @@ public:
 	void reset();
 	void processWord(const std::string &word);
 
-	int matchingCriteria() const;
+	int criterion() const;
 	shared_ptr<ZLLanguageDetector::LanguageInfo> info() const;
 
 private:
