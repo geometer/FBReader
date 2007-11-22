@@ -67,7 +67,7 @@
 					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
 				</node>
 				<node name="Encoding" value="Набiр символiв">
-					<node name="defaultEncodingSet" value="Набiр символiв"/>
+					<node name="defaultEncodingSet" value="Default Encoding Set"/>
 					<node name="defaultEncoding" value="Типовий набiр символiв"/>
 					<node name="defaultLanguage" value="Типова мова">
 						<node name="ru" value="Російська"/>
