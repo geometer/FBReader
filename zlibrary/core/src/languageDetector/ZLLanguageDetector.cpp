@@ -82,8 +82,6 @@ ZLLanguageDetector::ZLLanguageDetector() {
 ZLLanguageDetector::~ZLLanguageDetector() {
 }
 
-#include <iostream>
-
 shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const char *buffer, size_t length, int matchingCriterion) {
 	const char *start = buffer;
 	const char *end = start + length;
@@ -115,6 +113,7 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 
 	const char *wordStart = start;
 	bool containsSpecialSymbols = false;
+	std::string word;
 	for (const char *ptr = start; ptr != end; ++ptr) {
 		switch (SYMBOL_TYPE[(unsigned char)*ptr]) {
 			case 0:
@@ -126,11 +125,11 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 						length = ZLUnicodeUtil::utf8Length(wordStart, length);
 					}
 					if (length < 5) {
-						std::string word(wordStart, ptr - wordStart);	
+						word.append(wordStart, ptr - wordStart);	
 						for (Vector::iterator it = matchers.begin(); it != matchers.end(); ++it) {
 							(*it)->processWord(word);
 						}
-						std::cerr << word << "\n";
+						word.erase();
 					}
 				}
 				wordStart = ptr + 1;
