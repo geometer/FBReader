@@ -71,6 +71,7 @@
 					<node name="defaultLanguage" value="Типова мова"/>
 					<node name="defaultEncodingSet" value="Default Encoding Set" toBeTranslated="true"/>
 					<node name="defaultEncoding" value="Типовий набiр символiв"/>
+					<node name="chineseBreakAtAnyPosition" value="In Chinese Break Line at Any Position" toBeTranslated="true"/>
 				</node>
 				<node name="Indicator" value="Індикатор">
 					<node name="show" value="Показувати індикатор"/>
@@ -225,9 +226,9 @@
 					<node name="title" value="Назва"/>
 					<node name="authorDisplayName" value="Ім'я автора"/>
 					<node name="authorSortKey" value="Ім'я для сортування"/>
+					<node name="language" value="Language" toBeTranslated="true"/>
 					<node name="encodingSet" value="Набір кодувань"/>
 					<node name="encoding" value="Кодування"/>
-					<node name="lineBreaking" value="Розбивання на рядки"/>
 				</node>
 				<node name="Series" value="Серія">
 					<node name="seriesTitle" value="Назва серії"/>

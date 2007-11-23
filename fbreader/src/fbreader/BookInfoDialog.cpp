@@ -214,11 +214,11 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 
 	commonTab.addOption(ZLResourceKey("authorDisplayName"), myAuthorDisplayNameEntry);
 	commonTab.addOption(ZLResourceKey("authorSortKey"), myAuthorSortKeyEntry);
+	commonTab.addOption(ZLResourceKey("language"), myLanguageEntry);
 	if (myEncodingSetEntry != 0) {
 		commonTab.addOption(ZLResourceKey("encodingSet"), myEncodingSetEntry);
 	}
 	commonTab.addOption(ZLResourceKey("encoding"), myEncodingEntry);
-	commonTab.addOption(ZLResourceKey("lineBreaking"), myLanguageEntry);
 
 	ZLDialogContent &seriesTab = myDialog->createTab(ZLResourceKey("Series"));
 	seriesTab.addOption(ZLResourceKey("seriesTitle"), mySeriesTitleEntry);

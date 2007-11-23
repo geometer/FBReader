@@ -71,6 +71,7 @@
 					<node name="defaultLanguage" value="Oletuskieli"/>
 					<node name="defaultEncodingSet" value="Oletusmerkistöalue"/>
 					<node name="defaultEncoding" value="Oletusmerkistö"/>
+					<node name="chineseBreakAtAnyPosition" value="In Chinese Break Line at Any Position" toBeTranslated="true"/>
 				</node>
 				<node name="Indicator" value="Ilmaisin">
 					<node name="show" value="Näytä sijainninilmaisin"/>
@@ -225,9 +226,9 @@
 					<node name="title" value="Nimi"/>
 					<node name="authorDisplayName" value="Tekijä (Näytä nimi)"/>
 					<node name="authorSortKey" value="Tekijä (Lajitteluavain)"/>
+					<node name="language" value="Language" toBeTranslated="true"/>
 					<node name="encodingSet" value="Merkistöalue"/>
 					<node name="encoding" value="Merkistö"/>
-					<node name="lineBreaking" value="Rivin katkaisu"/>
 				</node>
 				<node name="Series" value="Kirjasarja">
 					<node name="seriesTitle" value="Sarjan nimi"/>

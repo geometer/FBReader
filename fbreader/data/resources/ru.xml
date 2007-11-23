@@ -71,6 +71,7 @@
 					<node name="defaultLanguage" value="Язык по умолчанию"/>
 					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию"/>
 					<node name="defaultEncoding" value="Кодировка по умолчанию"/>
+					<node name="chineseBreakAtAnyPosition" value="В китайском языке разрыв строки в любом месте"/>
 				</node>
 				<node name="Indicator" value="Индикатор">
 					<node name="show" value="Показывать индикатор"/>
@@ -225,9 +226,9 @@
 					<node name="title" value="Название"/>
 					<node name="authorDisplayName" value="Имя автора"/>
 					<node name="authorSortKey" value="Имя для сортировки"/>
+					<node name="language" value="Язык"/>
 					<node name="encodingSet" value="Набор кодировок"/>
 					<node name="encoding" value="Кодировка"/>
-					<node name="lineBreaking" value="Разбиение на строки"/>
 				</node>
 				<node name="Series" value="Серия">
 					<node name="seriesTitle" value="Название серии"/>

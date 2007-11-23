@@ -71,6 +71,7 @@
 					<node name="defaultLanguage" value="Default Language"/>
 					<node name="defaultEncodingSet" value="Default Encoding Set"/>
 					<node name="defaultEncoding" value="Default Encoding"/>
+					<node name="chineseBreakAtAnyPosition" value="In Chinese Break Line at Any Position"/>
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="show" value="Show Position Indicator"/>
@@ -225,9 +226,9 @@
 					<node name="title" value="Title"/>
 					<node name="authorDisplayName" value="Author (Display Name)"/>
 					<node name="authorSortKey" value="Author (Sort Key)"/>
+					<node name="language" value="Language"/>
 					<node name="encodingSet" value="Encoding Set"/>
 					<node name="encoding" value="Encoding"/>
-					<node name="lineBreaking" value="Line Breaking"/>
 				</node>
 				<node name="Series" value="Series">
 					<node name="seriesTitle" value="Series Title"/>

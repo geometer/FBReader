@@ -25,6 +25,7 @@
 
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
+#include "ZLChineseBreakingAlgorithm.h"
 
 ZLTextElementPool ZLTextElementPool::Pool;
 
@@ -213,19 +214,14 @@ void ZLTextParagraphCursor::fill() {
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
 			if (ZLTextHyphenator::instance().language() == "zh") {
-				AnyPlaceProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+				if (ZLChineseBreakingAlgorithm::instance().AnyPositionBreakingOption.value()) {
+					AnyPlaceProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+				} else {
+					ChineseProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+				}
 			} else {
 				StandardProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			}
-			/*
-			if (breakingAlgorithm == "chinese") {
-				ChineseProcessor(paragraph, myModel.marks(), index(), myElements).fill();
-			} else if (breakingAlgorithm == "anycharacter") {
-				AnyPlaceProcessor(paragraph, myModel.marks(), index(), myElements).fill();
-			} else {
-				StandardProcessor(paragraph, myModel.marks(), index(), myElements).fill();
-			}
-			*/
 			break;
 		}
 		case ZLTextParagraph::EMPTY_LINE_PARAGRAPH:
