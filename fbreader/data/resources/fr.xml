@@ -68,6 +68,7 @@
 					<node name="keyDelay" value="Délai entre appui sur les touches"/>
 				</node>
 				<node name="Language" value="Langue">
+					<node name="autoDetect" value="Detect Language and Encoding Automatically" toBeTranslated="true"/>
 					<node name="defaultLanguage" value="Langue par défaut "/>
 					<node name="defaultEncodingSet" value="Ensemble d'encodages par défaut"/>
 					<node name="defaultEncoding" value="Encodage par défaut"/>

@@ -67,6 +67,7 @@
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
 				</node>
 				<node name="Language" value="Language">
+					<node name="autoDetect" value="Detect Language and Encoding Automatically"/>
 					<node name="defaultLanguage" value="Default Language"/>
 					<node name="defaultEncodingSet" value="Default Encoding Set"/>
 					<node name="defaultEncoding" value="Default Encoding"/>

@@ -26,6 +26,7 @@
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLColorOptionBuilder.h>
 #include <optionEntries/ZLLanguageOptionEntry.h>
+#include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include <ZLTextView.h>
 #include <ZLTextStyle.h>
@@ -125,66 +126,6 @@ void RotationTypeEntry::onAccept(int index) {
 	myAngleOption.setValue(angle);
 }
 
-/*
-class DefaultLanguageEntry : public ZLComboOptionEntry {
-
-private:
-	std::string myRussianString;
-	std::string myChineseString;
-	std::string myCzechString;
-	std::string myOtherString;
-
-public:
-	DefaultLanguageEntry(const ZLResource &resource);
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
-};
-
-DefaultLanguageEntry::DefaultLanguageEntry(const ZLResource &resource) {
-	myRussianString = resource["ru"].value();
-	myChineseString = resource["zh"].value();
-	myCzechString = resource["cz"].value();
-	myOtherString = resource["other"].value();
-}
-
-const std::string &DefaultLanguageEntry::initialValue() const {
-	switch (PluginCollection::instance().DefaultLanguageOption.value()) {
-		case EncodingDetector::RUSSIAN:
-			return myRussianString;
-		case EncodingDetector::CHINESE:
-			return myChineseString;
-		case EncodingDetector::CZECH:
-			return myCzechString;
-		default:
-			return myOtherString;
-	}
-}
-
-const std::vector<std::string> &DefaultLanguageEntry::values() const {
-	static std::vector<std::string> _values;
-	if (_values.empty()) {
-		_values.push_back(myChineseString);
-		_values.push_back(myCzechString);
-		_values.push_back(myRussianString);
-		_values.push_back(myOtherString);
-	}
-	return _values;
-}
-
-void DefaultLanguageEntry::onAccept(const std::string &value) {
-	EncodingDetector::Language language = EncodingDetector::OTHER;
-	if (value == myRussianString) {
-		language = EncodingDetector::RUSSIAN;
-	} else if (value == myChineseString) {
-		language = EncodingDetector::CHINESE;
-	} else if (value == myCzechString) {
-		language = EncodingDetector::CZECH;
-	}
-	PluginCollection::instance().DefaultLanguageOption.setValue(language);
-}
-*/
-
 class OptionsApplyRunnable : public ZLRunnable {
 
 public:
@@ -220,6 +161,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	generalTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
+	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));
 	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::instance().DefaultLanguageOption));
 	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::instance().DefaultEncodingOption);
 	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);

@@ -67,6 +67,7 @@ protected:
 class PluginCollection {
 
 public:
+	ZLBooleanOption LanguageAutoDetectOption;
 	ZLStringOption DefaultLanguageOption;
 	ZLStringOption DefaultEncodingOption;
 	

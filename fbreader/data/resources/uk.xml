@@ -67,6 +67,7 @@
 					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
 				</node>
 				<node name="Language" value="Language" toBeTranslated="true"/>
+					<node name="autoDetect" value="Detect Language and Encoding Automatically" toBeTranslated="true"/>
 					<node name="defaultLanguage" value="Типова мова"/>
 					<node name="defaultEncodingSet" value="Default Encoding Set" toBeTranslated="true"/>
 					<node name="defaultEncoding" value="Типовий набiр символiв"/>

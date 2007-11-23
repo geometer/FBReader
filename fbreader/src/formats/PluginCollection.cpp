@@ -64,6 +64,7 @@ void PluginCollection::deleteInstance() {
 }
 
 PluginCollection::PluginCollection() :
+	LanguageAutoDetectOption(ZLOption::CONFIG_CATEGORY, "Format", "AutoDetect", true),
 	DefaultLanguageOption(ZLOption::CONFIG_CATEGORY, "Format", "DefaultLanguageS", "en"),
 	DefaultEncodingOption(ZLOption::CONFIG_CATEGORY, "Format", "DefaultEncoding", "windows-1252") {
 }

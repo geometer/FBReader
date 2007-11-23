@@ -19,8 +19,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLInputStream.h>
 #include <ZLLanguageDetector.h>
 
@@ -32,9 +30,10 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 	std::string language = description.language();
 	std::string encoding = description.encoding();
 	if (encoding.empty() || language.empty()) {
-		language = PluginCollection::instance().DefaultLanguageOption.value();
-		encoding = PluginCollection::instance().DefaultEncodingOption.value();
-		if (stream.open()) {
+		PluginCollection &collection = PluginCollection::instance();
+		language = collection.DefaultLanguageOption.value();
+		encoding = collection.DefaultEncodingOption.value();
+		if (collection.LanguageAutoDetectOption.value() && stream.open()) {
 			static const int BUFSIZE = 65536;
 			char *buffer = new char[BUFSIZE];
 			const size_t size = stream.read(buffer, BUFSIZE);
@@ -50,7 +49,6 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 				}
 			}
 		}
-		std::cerr << language << " : " << encoding << "\n";
 		WritableBookDescription(description).encoding() = encoding;
 		WritableBookDescription(description).language() = language;
 	}

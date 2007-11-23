@@ -50,7 +50,7 @@ do_install:
 		install -m 0644 data/default/messages.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/messages.xml; \
 	fi
 	@install -d $(FBSHAREDIR)/resources
-	@install -m 0644 $(wildcard share/FBReader/resources/*.xml) $(FBSHAREDIR)/resources
+	@install -m 0644 $(wildcard data/resources/*.xml) $(FBSHAREDIR)/resources
 	@install -d $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@install -m 0644 $(wildcard icons/toolbar/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@install -m 0644 $(wildcard icons/filetree/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)

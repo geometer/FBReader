@@ -67,6 +67,7 @@
 					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive"/>
 				</node>
 				<node name="Language" value="Language" toBeTranslated="true"/>
+					<node name="autoDetect" value="Detect Language and Encoding Automatically" toBeTranslated="true"/>
 					<node name="defaultLanguage" value="Oletuskieli"/>
 					<node name="defaultEncodingSet" value="Oletusmerkistöalue"/>
 					<node name="defaultEncoding" value="Oletusmerkistö"/>

@@ -67,6 +67,7 @@
 					<node name="keyDelay" value="Задержка между нажатиями на клавиши"/>
 				</node>
 				<node name="Language" value="Язык">
+					<node name="autoDetect" value="Автоматически определять язык и кодировку"/>
 					<node name="defaultLanguage" value="Язык по умолчанию"/>
 					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию"/>
 					<node name="defaultEncoding" value="Кодировка по умолчанию"/>
