@@ -84,6 +84,8 @@ else
 endif
 	@install -d $(DESTDIR)$(INCDIR)/zlibrary/core
 	@install -m 0644 $(wildcard include/*.h) $(DESTDIR)$(INCDIR)/zlibrary/core
+	@install -d $(DESTDIR)$(INCDIR)/zlibrary/core/optionEntries
+	@install -m 0644 $(wildcard include/optionEntries/*.h) $(DESTDIR)$(INCDIR)/zlibrary/core/optionEntries
 
 clean:
 	@for subdir in $(SUBDIRS_ALL); do \
