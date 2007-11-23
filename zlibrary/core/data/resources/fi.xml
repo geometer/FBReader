@@ -9,7 +9,7 @@
 			<node name="apply" value="&amp;Toteuta"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Tallennetan asetuksia..."/>
+			<node name="savingConfig" value="Tallennetaan asetuksia..."/>
 		</node>
 	</node>
 	<node name="color">
@@ -33,17 +33,17 @@
 	</node>
 	<node name="language">
 		<node name="cs" value="Tsekki"/>
-		<node name="de" value="German" toBeTranslated="true"/>
-		<node name="de-traditional" value="German (traditional orphography)" toBeTranslated="true"/>
-		<node name="en" value="English" toBeTranslated="true"/>
-		<node name="eo" value="Esperanto" toBeTranslated="true"/>
-		<node name="es" value="Spanish" toBeTranslated="true"/>
-		<node name="fi" value="Finnish" toBeTranslated="true"/>
-		<node name="fr" value="French" toBeTranslated="true"/>
-		<node name="it" value="Italian" toBeTranslated="true"/>
-		<node name="pt" value="Portuguese" toBeTranslated="true"/>
+		<node name="de" value="Saksa"/>
+		<node name="de-traditional" value="Saksa (perinteinen oikeinkirjoitus)"/>
+		<node name="en" value="Englanti"/>
+		<node name="eo" value="Esperanto"/>
+		<node name="es" value="Espanja"/>
+		<node name="fi" value="Suomi"/>
+		<node name="fr" value="Ranska"/>
+		<node name="it" value="Italia"/>
+		<node name="pt" value="Portugali"/>
 		<node name="ru" value="Venäjä"/>
-		<node name="uk" value="Ukrainian" toBeTranslated="true"/>
+		<node name="uk" value="Ukraina"/>
 		<node name="zh" value="Kiina"/>
 		<node name="other" value="Muu"/>
 	</node>

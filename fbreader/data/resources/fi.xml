@@ -66,12 +66,12 @@
 					<node name="recentListSize" value="Viimeisimmät kirjat listan koko"/>
 					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive"/>
 				</node>
-				<node name="Language" value="Language" toBeTranslated="true"/>
-					<node name="autoDetect" value="Detect Language and Encoding Automatically" toBeTranslated="true"/>
+				<node name="Language" value="Kieli">
+					<node name="autoDetect" value="Tunnista kieli ja merkistö automaattisesti"/>
 					<node name="defaultLanguage" value="Oletuskieli"/>
 					<node name="defaultEncodingSet" value="Oletusmerkistöalue"/>
 					<node name="defaultEncoding" value="Oletusmerkistö"/>
-					<node name="chineseBreakAtAnyPosition" value="In Chinese Break Line at Any Position" toBeTranslated="true"/>
+					<node name="chineseBreakAtAnyPosition" value="Katkaise Kiinaksi oleva teksti mistä tahansa kohdasta"/>
 				</node>
 				<node name="Indicator" value="Ilmaisin">
 					<node name="show" value="Näytä sijainninilmaisin"/>
@@ -103,10 +103,10 @@
 					<node name="percentToScroll" value="Vieritysprosentti"/>
 				</node>
 				<node name="Margins" value="Reunus">
-					<node name="left" value="Vasen reunus"/>
-					<node name="right" value="Oikea reunus"/>
-					<node name="top" value="Ylä-reunus"/>
-					<node name="bottom" value="Ala-reunus"/>
+					<node name="left" value="Vasenreunus"/>
+					<node name="right" value="Oikeareunus"/>
+					<node name="top" value="Yläreunus"/>
+					<node name="bottom" value="Alareunus"/>
 				</node>
 				<node name="Format" value="Muotoilu">
 					<node name="optionsFor" value="Asetukset"/>
@@ -156,7 +156,7 @@
 						<node name="externalLink" value="Ulkoisen linkin tekstille"/>
 						<node name="highlighted" value="Korostetulle tekstille"/>
 						<node name="treeLines" value="Kirjapuun viivoille"/>
-						<node name="indicator" value="Sijainin ilmaisimelle"/>
+						<node name="indicator" value="Sijainnin ilmaisimelle"/>
 					</node>
 				</node>
 				<node name="Keys" value="Näpäimet">
@@ -207,7 +207,7 @@
 				<node name="Dictionary" value="Sanakirja">
 					<node name="enableIntegration" value="Käytä sanakirjaa: %s"/>
 					<node name="defaultText" value="Käyttöönotettava sanakirja"/>
-					<node name="choice" value="Integroi seuravan kanssa:"/>
+					<node name="choice" value="Integroi seuraavan kanssa:"/>
 					<node name="singleClickOpen" value="Avaa yhdellä kosketuksella"/>
 				</node>
 				<node name="Web" value="Web">
@@ -226,7 +226,7 @@
 					<node name="title" value="Nimi"/>
 					<node name="authorDisplayName" value="Tekijä (Näytä nimi)"/>
 					<node name="authorSortKey" value="Tekijä (Lajitteluavain)"/>
-					<node name="language" value="Language" toBeTranslated="true"/>
+					<node name="language" value="Kieli"/>
 					<node name="encodingSet" value="Merkistöalue"/>
 					<node name="encoding" value="Merkistö"/>
 				</node>
@@ -269,7 +269,7 @@
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Virhe"/>
-			<node name="message" value="Ohje-tiedostoa ei löytynyt"/>
+			<node name="message" value="Ohjetiedostoa ei löytynyt"/>
 		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Avataan kirjaa..."/>
