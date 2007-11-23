@@ -56,13 +56,11 @@ private:
 	static const std::string PatternZip();
 
 public:
-	ZLTextTeXHyphenator() : myBreakingAlgorithm("") {}
 	~ZLTextTeXHyphenator();
 
 	void load(const std::string &language);
 	void unload();
-
-	const std::string &breakingAlgorithm() const;
+	const std::string &language() const;
 
 protected:
 	void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const;
@@ -72,8 +70,6 @@ private:
 
 	std::vector<ZLTextTeXHyphenationPattern*> myPatternTable;
 	std::string myLanguage;
-
-	std::string myBreakingAlgorithm;
 
 friend class ZLTextHyphenationReader;
 };

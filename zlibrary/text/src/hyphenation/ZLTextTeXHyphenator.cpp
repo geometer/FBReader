@@ -168,9 +168,8 @@ void ZLTextTeXHyphenator::unload() {
 		delete *it;
 	}
 	myPatternTable.clear();
-	myBreakingAlgorithm.erase();
 }
 
-const std::string &ZLTextTeXHyphenator::breakingAlgorithm() const {
-	return myBreakingAlgorithm;
+const std::string &ZLTextTeXHyphenator::language() const {
+	return myLanguage;
 }

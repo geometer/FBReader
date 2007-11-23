@@ -212,7 +212,12 @@ void ZLTextParagraphCursor::fill() {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
-			const std::string &breakingAlgorithm = ZLTextHyphenator::instance().breakingAlgorithm();
+			if (ZLTextHyphenator::instance().language() == "zh") {
+				AnyPlaceProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+			} else {
+				StandardProcessor(paragraph, myModel.marks(), index(), myElements).fill();
+			}
+			/*
 			if (breakingAlgorithm == "chinese") {
 				ChineseProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			} else if (breakingAlgorithm == "anycharacter") {
@@ -220,6 +225,7 @@ void ZLTextParagraphCursor::fill() {
 			} else {
 				StandardProcessor(paragraph, myModel.marks(), index(), myElements).fill();
 			}
+			*/
 			break;
 		}
 		case ZLTextParagraph::EMPTY_LINE_PARAGRAPH:

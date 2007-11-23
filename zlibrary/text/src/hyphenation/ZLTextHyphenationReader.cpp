@@ -28,16 +28,10 @@ void ZLTextHyphenationReader::characterDataHandler(const char *text, int len) {
 }
 
 static const std::string PATTERN = "pattern";
-static const std::string LINE_BREAKING_ALGORITHM = "lineBreakingAlgorithm";
 
 void ZLTextHyphenationReader::startElementHandler(const char *tag, const char **attributes) {
 	if (PATTERN == tag) {
 		myReadPattern = true;
-	} else if (LINE_BREAKING_ALGORITHM == tag) {
-		const char *algorithm = attributeValue(attributes, "name");
-		if (algorithm != 0) {
-			myHyphenator->myBreakingAlgorithm = algorithm;
-		}
 	}
 }
 

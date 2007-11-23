@@ -55,10 +55,9 @@ public:
 
 	virtual void load(const std::string &language) = 0;
 	virtual void unload() = 0;
+	virtual const std::string &language() const = 0;
 
 	ZLTextHyphenationInfo info(const ZLTextWord &word) const;
-
-	virtual const std::string &breakingAlgorithm() const = 0;
 
 protected:
 	virtual void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const = 0;

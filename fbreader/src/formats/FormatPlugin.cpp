@@ -31,8 +31,12 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 	std::string encoding = description.encoding();
 	if (encoding.empty() || language.empty()) {
 		PluginCollection &collection = PluginCollection::instance();
-		language = collection.DefaultLanguageOption.value();
-		encoding = collection.DefaultEncodingOption.value();
+		if (language.empty()) {
+			language = collection.DefaultLanguageOption.value();
+		}
+		if (encoding.empty()) {
+			encoding = collection.DefaultEncodingOption.value();
+		}
 		if (collection.LanguageAutoDetectOption.value() && stream.open()) {
 			static const int BUFSIZE = 65536;
 			char *buffer = new char[BUFSIZE];
