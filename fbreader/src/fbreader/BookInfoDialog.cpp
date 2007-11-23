@@ -28,8 +28,7 @@
 
 #include <optionEntries/ZLStringInfoEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
-
-#include <ZLTextTeXHyphenator.h>
+#include <optionEntries/ZLLanguageOptionEntry.h>
 
 #include "BookInfoDialog.h"
 
@@ -65,19 +64,6 @@ private:
 
 friend class AuthorSortKeyEntry;
 friend class SeriesTitleEntry;
-};
-
-class LanguageEntry : public ZLComboOptionEntry {
-
-public:
-	LanguageEntry(ZLStringOption &encodingOption);
-
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
-
-private:
-	ZLStringOption &myLanguageOption;
 };
 
 class SeriesTitleEntry : public ZLComboOptionEntry {
@@ -148,27 +134,6 @@ const std::string &AuthorSortKeyEntry::initialValue() const {
 
 void AuthorSortKeyEntry::onAccept(const std::string &value) {
 	myInfoDialog.myBookInfo.AuthorSortKeyOption.setValue(value);
-}
-
-LanguageEntry::LanguageEntry(ZLStringOption &encodingOption) : myLanguageOption(encodingOption) {
-}
-
-const std::string &LanguageEntry::initialValue() const {
-	const std::vector<std::string> &codes = ZLTextTeXHyphenator::languageCodes();
-	const std::vector<std::string> &names = ZLTextTeXHyphenator::languageNames();
-	const size_t index = std::find(codes.begin(), codes.end(), myLanguageOption.value()) - codes.begin();
-	return (index < names.size()) ? names[index] : names.back();
-}
-
-const std::vector<std::string> &LanguageEntry::values() const {
-	return ZLTextTeXHyphenator::languageNames();
-}
-
-void LanguageEntry::onAccept(const std::string &value) {
-	const std::vector<std::string> &codes = ZLTextTeXHyphenator::languageCodes();
-	const std::vector<std::string> &names = ZLTextTeXHyphenator::languageNames();
-	const size_t index = std::find(names.begin(), names.end(), value) - names.begin();
-	myLanguageOption.setValue((index < codes.size()) ? codes[index] : codes.back());
 }
 
 SeriesTitleEntry::SeriesTitleEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
@@ -243,7 +208,7 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	myEncodingSetEntry =
 		(myEncodingEntry->initialValue() != "auto") ?
 		new EncodingSetEntry(*(EncodingEntry*)myEncodingEntry) : 0;
-	myLanguageEntry = new LanguageEntry(myBookInfo.LanguageOption);
+	myLanguageEntry = new ZLLanguageOptionEntry(myBookInfo.LanguageOption);
 	mySeriesTitleEntry = new SeriesTitleEntry(*this);
 	myBookNumberEntry = new ZLSimpleSpinOptionEntry(myBookInfo.NumberInSequenceOption, 1);
 

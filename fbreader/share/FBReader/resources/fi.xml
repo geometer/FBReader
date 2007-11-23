@@ -66,16 +66,10 @@
 					<node name="recentListSize" value="Viimeisimmät kirjat listan koko"/>
 					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive"/>
 				</node>
-				<node name="Encoding" value="Merkistökoodaus">
+				<node name="Language" value="Language" toBeTranslated="true"/>
+					<node name="defaultLanguage" value="Oletuskieli"/>
 					<node name="defaultEncodingSet" value="Oletusmerkistöalue"/>
 					<node name="defaultEncoding" value="Oletusmerkistö"/>
-					<!-- node name="defaultLanguage" value="Merkistön tunnistuskieli" -->
-					<node name="defaultLanguage" value="Oletuskieli">
-						<node name="ru" value="Venäjä"/>
-						<node name="zh" value="Kiina"/>
-						<node name="cz" value="Tsekki"/>
-						<node name="other" value="Muu"/>
-					</node>
 				</node>
 				<node name="Indicator" value="Ilmaisin">
 					<node name="show" value="Näytä sijainninilmaisin"/>

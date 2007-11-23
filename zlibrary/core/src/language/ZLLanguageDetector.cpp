@@ -18,12 +18,11 @@
  */
 
 #include <ZLDir.h>
-#include <ZLFile.h>
-#include <ZLibrary.h>
 #include <ZLUnicodeUtil.h>
 
 #include "ZLLanguageDetector.h"
 #include "ZLLanguageMatcher.h"
+#include "ZLLanguageList.h"
 
 // 0: no break
 // 1: break and skip
@@ -52,9 +51,7 @@ ZLLanguageDetector::LanguageInfo::LanguageInfo(const std::string &language, cons
 }
 
 ZLLanguageDetector::ZLLanguageDetector() {
-	const std::string dirName =
-		ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "languagePatterns.zip";
-	shared_ptr<ZLDir> dir = ZLFile(dirName).directory(false);
+	shared_ptr<ZLDir> dir = ZLLanguageList::patternsDirectory();
 	if (!dir.isNull()) {
 		std::vector<std::string> fileNames;
 		dir->collectFiles(fileNames, false);

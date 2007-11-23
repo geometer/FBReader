@@ -67,15 +67,10 @@
 					<node name="recentListSize" value="Taille de la liste de livres récents"/>
 					<node name="keyDelay" value="Délai entre appui sur les touches"/>
 				</node>
-				<node name="Encoding" value="Encodage">
+				<node name="Language" value="Langue">
+					<node name="defaultLanguage" value="Langue par défaut "/>
 					<node name="defaultEncodingSet" value="Ensemble d'encodages par défaut"/>
 					<node name="defaultEncoding" value="Encodage par défaut"/>
-					<node name="defaultLanguage" value="Langue par défaut ">
-						<node name="ru" value="Russe"/>
-						<node name="zh" value="Chinois"/>
-						<node name="cz" value="Tchèque"/>
-						<node name="other" value="Autre"/>
-					</node>
 				</node>
 				<node name="Indicator" value="Indicateur">
 					<node name="show" value="Montrer l'indicateur de position"/>

@@ -66,15 +66,10 @@
 					<node name="recentListSize" value="Recent Books List Size"/>
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
 				</node>
-				<node name="Encoding" value="Encoding">
+				<node name="Language" value="Language">
+					<node name="defaultLanguage" value="Default Language"/>
 					<node name="defaultEncodingSet" value="Default Encoding Set"/>
 					<node name="defaultEncoding" value="Default Encoding"/>
-					<node name="defaultLanguage" value="Default Language">
-						<node name="ru" value="Russian"/>
-						<node name="zh" value="Chinese"/>
-						<node name="cz" value="Czech"/>
-						<node name="other" value="Other"/>
-					</node>
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="show" value="Show Position Indicator"/>

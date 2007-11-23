@@ -31,6 +31,22 @@
 		<node name="cyan" value="Голубой"/>
 		<node name="custom..." value="Настроить..."/>
 	</node>
+	<node name="language">
+		<node name="cs" value="чешский"/>
+		<node name="de" value="немецкий"/>
+		<node name="de-traditional" value="немецкий (старая орфография)"/>
+		<node name="en" value="английский"/>
+		<node name="eo" value="эсперанто"/>
+		<node name="es" value="испанский"/>
+		<node name="fi" value="финский"/>
+		<node name="fr" value="французский"/>
+		<node name="it" value="итальянский"/>
+		<node name="pt" value="португальский"/>
+		<node name="ru" value="русский"/>
+		<node name="uk" value="украинский"/>
+		<node name="zh" value="китайский"/>
+		<node name="other" value="другой"/>
+	</node>
 	<node name="boolean3">
 		<node name="on" value="включить"/>
 		<node name="off" value="выключить"/>

@@ -25,6 +25,7 @@
 
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLColorOptionBuilder.h>
+#include <optionEntries/ZLLanguageOptionEntry.h>
 
 #include <ZLTextView.h>
 #include <ZLTextStyle.h>
@@ -218,13 +219,12 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(recentBooksView.lastBooks().MaxListSizeOption, 1));
 	generalTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
 
-	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Encoding"));
+	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
+	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::instance().DefaultLanguageOption));
 	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::instance().DefaultEncodingOption);
 	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
-	//const ZLResourceKey languageKey("defaultLanguage");
-	//encodingTab.addOption(languageKey, new DefaultLanguageEntry(encodingTab.resource(languageKey)));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 

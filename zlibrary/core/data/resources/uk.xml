@@ -31,6 +31,22 @@
 		<node name="cyan" value="Блакитний"/>
 		<node name="custom..." value="Налаштувати..."/>
 	</node>
+	<node name="language">
+		<node name="cs" value="Чешська"/>
+		<node name="de" value="German" toBeTranslated="true"/>
+		<node name="de-traditional" value="German (traditional orphography)" toBeTranslated="true"/>
+		<node name="en" value="English" toBeTranslated="true"/>
+		<node name="eo" value="Esperanto" toBeTranslated="true"/>
+		<node name="es" value="Spanish" toBeTranslated="true"/>
+		<node name="fi" value="Finnish" toBeTranslated="true"/>
+		<node name="fr" value="French" toBeTranslated="true"/>
+		<node name="it" value="Italian" toBeTranslated="true"/>
+		<node name="pt" value="Portuguese" toBeTranslated="true"/>
+		<node name="ru" value="Російська"/>
+		<node name="uk" value="Ukrainian" toBeTranslated="true"/>
+		<node name="zh" value="Китайська"/>
+		<node name="other" value="Інша"/>
+	</node>
 	<node name="boolean3">
 		<node name="on" value="ввімкнути"/>
 		<node name="off" value="вимкнути"/>

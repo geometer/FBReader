@@ -26,6 +26,7 @@
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLibrary.h>
+#include <ZLResource.h>
 
 #include "ZLTextTeXHyphenator.h"
 #include "ZLTextHyphenationReader.h"
@@ -37,66 +38,12 @@ ZLTextHyphenator &ZLTextHyphenator::instance() {
 	return *ourInstance;
 }
 
-std::vector<std::string> ZLTextTeXHyphenator::LanguageCodes;
-std::vector<std::string> ZLTextTeXHyphenator::LanguageNames;
-
 static const std::string POSTFIX = ".pattern";
 static const std::string NONE = "none";
 static const std::string UNKNOWN = "unknown";
-static const std::string LANGUAGE = "language";
-
-class ZLTextLanguageReader : public ZLXMLReader {
-
-public:
-	ZLTextLanguageReader(std::string &name) : myLanguageName(name) {}
-
-	void startElementHandler(const char*, const char **attributes) {
-		if ((attributes[0] != 0) && (LANGUAGE == attributes[0])) {
-			myLanguageName = attributes[1];
-		}
-		interrupt();
-	}
-
-private:
-	std::string &myLanguageName;
-};
 
 const std::string ZLTextTeXHyphenator::PatternZip() {
 	return ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "hyphenationPatterns.zip";
-}
-
-void ZLTextTeXHyphenator::collectLanguages() {
-	if (LanguageNames.empty()) {
-		shared_ptr<ZLDir> patternDir = ZLFile(PatternZip()).directory(false);
-		if (!patternDir.isNull()) {
-			std::vector<std::string> files;
-			patternDir->collectFiles(files, false);
-			std::sort(files.begin(), files.end());
-			for (std::vector<std::string>::const_iterator it = files.begin(); it != files.end(); ++it) {
-				if (ZLStringUtil::stringEndsWith(*it, POSTFIX)) {
-					std::string code = it->substr(0, it->size() - POSTFIX.size());
-					std::string name;
-					ZLTextLanguageReader(name).readDocument(PatternZip() + ":" + *it);
-					if (!name.empty()) {
-						LanguageCodes.push_back(code);
-						LanguageNames.push_back(name);
-					}
-				}
-			}
-		}
-		LanguageCodes.push_back(NONE);
-		LanguageNames.push_back("unknown");
-	}
-}
-
-const std::vector<std::string> &ZLTextTeXHyphenator::languageCodes() {
-	collectLanguages();
-	return LanguageCodes;
-}
-
-const std::vector<std::string> &ZLTextTeXHyphenator::languageNames() {
-	collectLanguages();
-	return LanguageNames;
 }
 
 ZLTextTeXHyphenationPattern::ZLTextTeXHyphenationPattern(unsigned short *ucs2String, int length) {

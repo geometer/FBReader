@@ -54,13 +54,6 @@ class ZLTextTeXHyphenator : public ZLTextHyphenator {
 
 private:
 	static const std::string PatternZip();
-	static std::vector<std::string> LanguageCodes;
-	static std::vector<std::string> LanguageNames;
-	static void collectLanguages();
-
-public:
-	static const std::vector<std::string> &languageCodes();
-	static const std::vector<std::string> &languageNames();
 
 public:
 	ZLTextTeXHyphenator() : myBreakingAlgorithm("") {}

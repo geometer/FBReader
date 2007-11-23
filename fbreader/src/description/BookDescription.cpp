@@ -46,6 +46,15 @@ BookInfo::BookInfo(const std::string &fileName) :
 	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", UNKNOWN),
 	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY),
 	IsSequenceDefinedOption(FBOptions::BOOKS_CATEGORY, fileName, "SequenceDefined", ZLFile(fileName).extension() != "fb2") {
+	// this is just hack for compatibility with versions < 0.8.8
+	std::string language = LanguageOption.value();
+	if (language == "cz") {
+		LanguageOption.setValue("cs");
+	} else if (language == "none") {
+		LanguageOption.setValue("other");
+	} else if ((language == "chinese") || (language == "anycharacter")) {
+		LanguageOption.setValue("zh");
+	}
 }
 
 void BookInfo::reset() {
