@@ -25,7 +25,8 @@
 
 #include <shared_ptr.h>
 
-class ZLLanguageMatcher;
+class ZLWordBasedMatcher;
+class ZLChineseMatcher;
 
 class ZLLanguageDetector {
 
@@ -43,9 +44,11 @@ public:
 	shared_ptr<LanguageInfo> findInfo(const char *buffer, size_t length, int matchingCriterion = 0);
 
 private:
-	typedef std::vector<shared_ptr<ZLLanguageMatcher> > Vector;
-	Vector myUtf8Matchers;
-	Vector myNonUtf8Matchers;
+	typedef std::vector<shared_ptr<ZLWordBasedMatcher> > WBVector;
+	typedef std::vector<shared_ptr<ZLChineseMatcher> > ZHVector;
+	WBVector myUtf8Matchers;
+	WBVector myNonUtf8Matchers;
+	ZHVector myChineseMatchers;
 };
 
 #endif /* __ZLLANGUAGEDETECTOR_H__ */

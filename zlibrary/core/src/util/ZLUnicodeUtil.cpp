@@ -20,33 +20,33 @@
 
 #include "ZLUnicodeUtil.h"
 
-int ZLUnicodeUtil::isUtf8String(const char *str, int len) {
+bool ZLUnicodeUtil::isUtf8String(const char *str, int len) {
 	const char *last = str + len;
+	int nonLeadingCharsCounter = 0;
 	for (; str < last; ++str) {
-		if ((*str & 0x80) != 0) {
-			if ((*str & 0xE0) == 0xC0) {
-				++str;
-				if ((str == last) || (*str & 0xC0) != 0x80) {
+		if (nonLeadingCharsCounter == 0) {
+			if ((*str & 0x80) != 0) {
+				if ((*str & 0xE0) == 0xC0) {
+					nonLeadingCharsCounter = 1;
+				} else if ((*str & 0xF0) == 0xE0) {
+					nonLeadingCharsCounter = 2;
+				} else if ((*str & 0xF8) == 0xF0) {
+					nonLeadingCharsCounter = 3;
+				} else {
 					return false;
 				}
-			} else if ((*str & 0xF0) == 0xE0) {
-				++str;
-				if ((str == last) || (*str & 0xC0) != 0x80) {
-					return false;
-				}
-				++str;
-				if ((str == last) || (*str & 0xC0) != 0x80) {
-					return false;
-				}
-			} else {
+			}
+		} else {
+			if ((*str & 0xC0) != 0x80) {
 				return false;
 			}
+			--nonLeadingCharsCounter;
 		}
 	}
-	return true;
+	return nonLeadingCharsCounter == 0;
 }
 
-int ZLUnicodeUtil::isUtf8String(const std::string &str) {
+bool ZLUnicodeUtil::isUtf8String(const std::string &str) {
 	return isUtf8String(str.data(), str.length());
 }
 
@@ -58,8 +58,10 @@ int ZLUnicodeUtil::utf8Length(const char *str, int len) {
 			++str;
 		} else if ((*str & 0x20) == 0) {
 			str += 2;
-		} else {
+		} else if ((*str & 0x10) == 0) {
 			str += 3;
+		} else {
+			str += 4;
 		}
 		++counter;
 	}
@@ -77,8 +79,10 @@ int ZLUnicodeUtil::length(const char *str, int utf8Length) {
 			++ptr;
 		} else if ((*ptr & 0x20) == 0) {
 			ptr += 2;
-		} else {
+		} else if ((*ptr & 0x10) == 0) {
 			ptr += 3;
+		} else {
+			ptr += 4;
 		}
 	}
 	return ptr - str;
@@ -106,7 +110,7 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const char *from, int length, int
 			ch += *ptr & 0x3f;
 			to.push_back(ch);
 			++ptr;
-		} else {
+		} else if ((*ptr & 0x10) == 0) {
 			Ucs2Char ch = *ptr & 0x0f;
 			++ptr;
 			ch <<= 6;
@@ -116,6 +120,10 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const char *from, int length, int
 			ch += *ptr & 0x3f;
 			to.push_back(ch);
 			++ptr;
+		} else {
+			// symbol number is > 0xffff :(
+			to.push_back('X');
+			ptr += 4;
 		}
 	}
 }

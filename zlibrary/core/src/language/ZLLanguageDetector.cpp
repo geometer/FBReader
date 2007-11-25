@@ -60,10 +60,10 @@ ZLLanguageDetector::ZLLanguageDetector() {
 			if (index != -1) {
 				const std::string language = it->substr(0, index);
 				const std::string encoding = it->substr(index + 1);
-				shared_ptr<ZLLanguageMatcher> matcher = new ZLLanguageMatcher(
+				shared_ptr<ZLWordBasedMatcher> matcher = new ZLLanguagePatternBasedMatcher(
 					dir->itemPath(*it), new LanguageInfo(language, encoding)
 				);
-				if (encoding == "UTF-8") {
+				if (encoding == ZLLanguageMatcher::UTF8_ENCODING_NAME) {
 					myUtf8Matchers.push_back(matcher);
 				} else if (encoding == "US-ASCII") {
 					myUtf8Matchers.push_back(matcher);
@@ -74,6 +74,9 @@ ZLLanguageDetector::ZLLanguageDetector() {
 			}
 		}
 	}
+	myUtf8Matchers.push_back(new ZLChineseUtf8Matcher());
+	myChineseMatchers.push_back(new ZLChineseBig5Matcher());
+	myChineseMatchers.push_back(new ZLChineseGBKMatcher());
 }
 
 ZLLanguageDetector::~ZLLanguageDetector() {
@@ -93,6 +96,8 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 					nonLeadingCharsCounter = 1;
 				} else if ((*ptr & 0xF0) == 0xE0) {
 					nonLeadingCharsCounter = 2;
+				} else if ((*ptr & 0xF8) == 0xF0) {
+					nonLeadingCharsCounter = 3;
 				} else {
 					encodingType = OTHER;
 					break;
@@ -106,7 +111,7 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 			--nonLeadingCharsCounter;
 		}
 	}
-	Vector &matchers = (encodingType == UTF8) ? myUtf8Matchers : myNonUtf8Matchers;
+	WBVector &wbMatchers = (encodingType == UTF8) ? myUtf8Matchers : myNonUtf8Matchers;
 
 	const char *wordStart = start;
 	bool containsSpecialSymbols = false;
@@ -121,13 +126,11 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 					if (encodingType == UTF8) {
 						length = ZLUnicodeUtil::utf8Length(wordStart, length);
 					}
-					if (length < 5) {
-						word.append(wordStart, ptr - wordStart);	
-						for (Vector::iterator it = matchers.begin(); it != matchers.end(); ++it) {
-							(*it)->processWord(word);
-						}
-						word.erase();
+					word.append(wordStart, ptr - wordStart);	
+					for (WBVector::iterator it = wbMatchers.begin(); it != wbMatchers.end(); ++it) {
+						(*it)->processWord(word, length);
 					}
+					word.erase();
 				}
 				wordStart = ptr + 1;
 				containsSpecialSymbols = false;
@@ -143,7 +146,7 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 	}
 
 	shared_ptr<LanguageInfo> info;
-	for (Vector::const_iterator it = matchers.begin(); it != matchers.end(); ++it) {
+	for (WBVector::const_iterator it = wbMatchers.begin(); it != wbMatchers.end(); ++it) {
 		int criterion = (*it)->criterion();
 		if (criterion > matchingCriterion) {
 			info = (*it)->info();
@@ -151,6 +154,22 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 		}
 		(*it)->reset();
 	}
+	if (encodingType == OTHER) {
+		for (ZHVector::const_iterator it = myChineseMatchers.begin(); it != myChineseMatchers.end(); ++it) {
+			(*it)->processBuffer((const unsigned char*)start, (const unsigned char*)end);
+			int criterion = (*it)->criterion();
+			if (criterion > matchingCriterion) {
+				info = (*it)->info();
+				matchingCriterion = criterion;
+			}
+			(*it)->reset();
+		}
+	}
 
+	if (!info.isNull() &&
+			(encodingType == UTF8) &&
+			(info->Encoding != ZLLanguageMatcher::UTF8_ENCODING_NAME)) {
+		return new LanguageInfo(info->Language, ZLLanguageMatcher::UTF8_ENCODING_NAME);
+	}
 	return info;
 }

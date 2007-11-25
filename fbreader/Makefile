@@ -41,9 +41,9 @@ do_install:
 	@install -m 0644 data/help/MiniHelp.$(VARIANT).ru.fb2 $(FBSHAREDIR)/help/MiniHelp.ru.fb2
 	@install -m 0644 data/help/MiniHelp.$(VARIANT).uk.fb2 $(FBSHAREDIR)/help/MiniHelp.uk.fb2
 	@install -d $(FBSHAREDIR)/formats/html
-	@install -m 0644 share/FBReader/formats/html/html.ent $(FBSHAREDIR)/formats/html
+	@install -m 0644 data/formats/html/html.ent $(FBSHAREDIR)/formats/html
 	@install -d $(FBSHAREDIR)/formats/xhtml
-	@install -m 0644 $(wildcard share/FBReader/formats/xhtml/*.ent) $(FBSHAREDIR)/formats/xhtml
+	@install -m 0644 $(wildcard data/formats/xhtml/*.ent) $(FBSHAREDIR)/formats/xhtml
 	@install -d $(FBSHAREDIR)/default
 	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml
 	@if [ -f data/default/messages.$(TARGET_ARCH).xml ]; then \
