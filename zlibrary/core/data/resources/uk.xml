@@ -43,6 +43,7 @@
 		<node name="it" value="Italian" toBeTranslated="true"/>
 		<node name="pt" value="Portuguese" toBeTranslated="true"/>
 		<node name="ru" value="Російська"/>
+		<node name="sv" value="Swedish" toBeTranslated="true"/>
 		<node name="uk" value="Ukrainian" toBeTranslated="true"/>
 		<node name="zh" value="Китайська"/>
 		<node name="other" value="Інша"/>

@@ -43,6 +43,7 @@
 		<node name="it" value="Italia"/>
 		<node name="pt" value="Portugali"/>
 		<node name="ru" value="Venäjä"/>
+		<node name="sv" value="Ruotsi"/>
 		<node name="uk" value="Ukraina"/>
 		<node name="zh" value="Kiina"/>
 		<node name="other" value="Muu"/>

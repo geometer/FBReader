@@ -43,6 +43,7 @@
 		<node name="it" value="Italian"/>
 		<node name="pt" value="Portuguese"/>
 		<node name="ru" value="Russian"/>
+		<node name="sv" value="Swedish"/>
 		<node name="uk" value="Ukrainian"/>
 		<node name="zh" value="Chinese"/>
 		<node name="other" value="Other"/>
