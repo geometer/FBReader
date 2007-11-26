@@ -34,7 +34,7 @@
 	<node name="language">
 		<node name="cs" value="Czech"/>
 		<node name="de" value="German"/>
-		<node name="de-traditional" value="German (traditional orphography)"/>
+		<node name="de-traditional" value="German (traditional orthography)"/>
 		<node name="en" value="English"/>
 		<node name="eo" value="Esperanto"/>
 		<node name="es" value="Spanish"/>
