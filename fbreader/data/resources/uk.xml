@@ -66,7 +66,7 @@
 					<node name="recentListSize" value="Розмір списку прочитаних книг"/>
 					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
 				</node>
-				<node name="Language" value="Language" toBeTranslated="true">
+				<node name="Language" value="Мова">
 					<node name="autoDetect" value="Detect Language and Encoding Automatically" toBeTranslated="true"/>
 					<node name="defaultLanguage" value="Типова мова"/>
 					<node name="defaultEncodingSet" value="Default Encoding Set" toBeTranslated="true"/>
@@ -226,7 +226,7 @@
 					<node name="title" value="Назва"/>
 					<node name="authorDisplayName" value="Ім'я автора"/>
 					<node name="authorSortKey" value="Ім'я для сортування"/>
-					<node name="language" value="Language" toBeTranslated="true"/>
+					<node name="language" value="Мова"/>
 					<node name="encodingSet" value="Набір кодувань"/>
 					<node name="encoding" value="Кодування"/>
 				</node>
