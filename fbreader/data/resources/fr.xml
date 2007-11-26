@@ -227,7 +227,7 @@
 					<node name="title" value="Titre"/>
 					<node name="authorDisplayName" value="Auteur (nom affiché)"/>
 					<node name="authorSortKey" value="Auteur (clef de tri)"/>
-					<node name="language" value="Language" toBeTranslated="true"/>
+					<node name="language" value="Langue"/>
 					<node name="encodingSet" value="Ensemble d'encodages"/>
 					<node name="encoding" value="Encodage"/>
 				</node>
