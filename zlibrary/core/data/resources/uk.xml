@@ -32,7 +32,7 @@
 		<node name="custom..." value="Налаштувати..."/>
 	</node>
 	<node name="language">
-		<node name="cs" value="Чешська"/>
+		<node name="cs" value="Чеська"/>
 		<node name="de" value="Німецька"/>
 		<node name="de-traditional" value="German (traditional orphography)" toBeTranslated="true"/>
 		<node name="en" value="Англійська"/>
@@ -41,6 +41,7 @@
 		<node name="fi" value="Фінська"/>
 		<node name="fr" value="Французька"/>
 		<node name="it" value="Італійська"/>
+		<node name="no" value="Норвезька"/>
 		<node name="pt" value="Португальська"/>
 		<node name="ru" value="Російська"/>
 		<node name="sv" value="Шведська"/>
