@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <ZLLanguageList.h>
 
 #include "ZLLanguageOptionEntry.h"
