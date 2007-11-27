@@ -17,23 +17,30 @@
  * 02110-1301, USA.
  */
 
-#include <algorithm>
+#include <map>
 
 #include <ZLLanguageList.h>
 
 #include "ZLLanguageOptionEntry.h"
 
-ZLLanguageOptionEntry::ZLLanguageOptionEntry(ZLStringOption &languageOption) : myLanguageOption(languageOption) {
-	const std::vector<std::string> &codes = ZLLanguageList::languageCodes();
+ZLLanguageOptionEntry::ZLLanguageOptionEntry(ZLStringOption &languageOption, const std::vector<std::string> &languageCodes) : myLanguageOption(languageOption) {
 	const std::string initialCode = myLanguageOption.value();
-	for (std::vector<std::string>::const_iterator it = codes.begin(); it != codes.end(); ++it) {
-		myValues.push_back(ZLLanguageList::languageName(*it));
+	for (std::vector<std::string>::const_iterator it = languageCodes.begin(); it != languageCodes.end(); ++it) {
+		const std::string name = ZLLanguageList::languageName(*it);
+		myValuesToCodes[name] = *it;
 		if (initialCode == *it) {
-			myInitialValue = myValues.back();
+			myInitialValue = name;
 		}
 	}
+	for (std::map<std::string,std::string>::const_iterator it = myValuesToCodes.begin(); it != myValuesToCodes.end(); ++it) {
+		myValues.push_back(it->first);
+	}
+	static const std::string otherCode = "other";
+	std::string otherName = ZLLanguageList::languageName(otherCode);
+	myValues.push_back(otherName);
+	myValuesToCodes[otherName] = otherCode;
 	if (myInitialValue.empty()) {
-		myInitialValue = ZLLanguageList::languageName("other");
+		myInitialValue = otherName;
 	}
 }
 
@@ -46,7 +53,5 @@ const std::vector<std::string> &ZLLanguageOptionEntry::values() const {
 }
 
 void ZLLanguageOptionEntry::onAccept(const std::string &value) {
-	const std::vector<std::string> &codes = ZLLanguageList::languageCodes();
-	const size_t index = std::find(myValues.begin(), myValues.end(), value) - myValues.begin();
-	myLanguageOption.setValue((index < codes.size()) ? codes[index] : codes.back());
+	myLanguageOption.setValue(myValuesToCodes[value]);
 }

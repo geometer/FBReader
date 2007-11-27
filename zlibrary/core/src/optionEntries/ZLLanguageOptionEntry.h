@@ -20,12 +20,14 @@
 #ifndef __ZLLANGUAGEOPTIONENTRY_H__
 #define __ZLLANGUAGEOPTIONENTRY_H__
 
+#include <map>
+
 #include <ZLOptionEntry.h>
 
 class ZLLanguageOptionEntry : public ZLComboOptionEntry {
 
 public:
-	ZLLanguageOptionEntry(ZLStringOption &languageOption);
+	ZLLanguageOptionEntry(ZLStringOption &languageOption, const std::vector<std::string> &languageCodes);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -33,6 +35,7 @@ public:
 
 private:
 	std::vector<std::string> myValues;
+	std::map<std::string,std::string> myValuesToCodes;
 	std::string myInitialValue;
 	ZLStringOption &myLanguageOption;
 };

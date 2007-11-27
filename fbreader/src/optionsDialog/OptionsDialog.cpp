@@ -23,6 +23,7 @@
 #include <ZLOptionsDialog.h>
 #include <ZLPaintContext.h>
 #include <ZLChineseBreakingAlgorithm.h>
+#include <ZLLanguageList.h>
 
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLColorOptionBuilder.h>
@@ -163,7 +164,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));
-	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::instance().DefaultLanguageOption));
+	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::instance().DefaultLanguageOption, ZLLanguageList::languageCodes()));
 	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::instance().DefaultEncodingOption);
 	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);

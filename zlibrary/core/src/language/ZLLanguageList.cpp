@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <map>
+#include <set>
 
 #include <ZLibrary.h>
 #include <ZLResource.h>
@@ -39,9 +39,8 @@ std::string ZLLanguageList::languageName(const std::string &code) {
 
 const std::vector<std::string> &ZLLanguageList::languageCodes() {
 	if (ourLanguageCodes.empty()) {
-		std::map<std::string,std::string> languages;
-		languages[languageName("zh")] = "zh";
-
+		std::set<std::string> codes;
+		codes.insert("zh");
 		shared_ptr<ZLDir> dir = patternsDirectory();
 		if (!dir.isNull()) {
 			std::vector<std::string> fileNames;
@@ -49,16 +48,15 @@ const std::vector<std::string> &ZLLanguageList::languageCodes() {
 			for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
 				const int index = it->find('_');
 				if (index != -1) {
-					const std::string code = it->substr(0, index);
-					languages[languageName(code)] = code;
+					codes.insert(it->substr(0, index));
 				}
 			}
 		}
 
-		for (std::map<std::string,std::string>::const_iterator it = languages.begin(); it != languages.end(); ++it) {
-			ourLanguageCodes.push_back(it->second);
+		for (std::set<std::string>::const_iterator it = codes.begin(); it != codes.end(); ++it) {
+			ourLanguageCodes.push_back(*it);
 		}
-		ourLanguageCodes.push_back("other");
 	}
+
 	return ourLanguageCodes;
 }

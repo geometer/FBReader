@@ -25,6 +25,7 @@
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
 #include <ZLFile.h>
+#include <ZLLanguageList.h>
 
 #include <optionEntries/ZLStringInfoEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
@@ -208,7 +209,9 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	myEncodingSetEntry =
 		(myEncodingEntry->initialValue() != "auto") ?
 		new EncodingSetEntry(*(EncodingEntry*)myEncodingEntry) : 0;
-	myLanguageEntry = new ZLLanguageOptionEntry(myBookInfo.LanguageOption);
+	std::vector<std::string> languageCodes = ZLLanguageList::languageCodes();
+	languageCodes.push_back("de-traditional");
+	myLanguageEntry = new ZLLanguageOptionEntry(myBookInfo.LanguageOption, languageCodes);
 	mySeriesTitleEntry = new SeriesTitleEntry(*this);
 	myBookNumberEntry = new ZLSimpleSpinOptionEntry(myBookInfo.NumberInSequenceOption, 1);
 
