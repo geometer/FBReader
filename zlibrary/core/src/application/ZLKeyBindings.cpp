@@ -18,6 +18,8 @@
  * 02110-1301, USA.
  */
 
+#include <stdlib.h>
+
 #include <ZLXMLReader.h>
 #include <ZLStringUtil.h>
 #include <ZLApplication.h>
