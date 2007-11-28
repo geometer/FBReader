@@ -156,13 +156,13 @@ int ZLUnicodeUtil::ucs2ToUtf8(char *to, Ucs2Char ch) {
 		*to = (char)ch;
 		return 1;
 	} else if (ch < 0x800) {
-		*to = (char)(0xC0 | ch >> 6);
-		*(to + 1) = (char)(0x80 | ch & 0x3F);
+		*to = (char)(0xC0 | (ch >> 6));
+		*(to + 1) = (char)(0x80 | (ch & 0x3F));
 		return 2;
 	} else {
 		*to = (char)(0xE0 | ch >> 12);
-		*(to + 1) = (char)(0x80 | ch >> 6 & 0x3F);
-		*(to + 2) = (char)(0x80 | ch & 0x3F);
+		*(to + 1) = (char)(0x80 | ((ch >> 6) & 0x3F));
+		*(to + 2) = (char)(0x80 | (ch & 0x3F));
 		return 3;
 	}
 }
