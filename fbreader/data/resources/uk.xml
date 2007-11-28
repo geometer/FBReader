@@ -67,11 +67,11 @@
 					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
 				</node>
 				<node name="Language" value="Мова">
-					<node name="autoDetect" value="Detect Language and Encoding Automatically" toBeTranslated="true"/>
+					<node name="autoDetect" value="Визначити мову та кодувати автоматично"/>
 					<node name="defaultLanguage" value="Типова мова"/>
-					<node name="defaultEncodingSet" value="Default Encoding Set" toBeTranslated="true"/>
+					<node name="defaultEncodingSet" value="Набiр символiв"/>
 					<node name="defaultEncoding" value="Типовий набiр символiв"/>
-					<node name="chineseBreakAtAnyPosition" value="In Chinese Break Line at Any Position" toBeTranslated="true"/>
+					<node name="chineseBreakAtAnyPosition" value="В китайскому розбивати строку у будь якому мiсцi"/>
 				</node>
 				<node name="Indicator" value="Індикатор">
 					<node name="show" value="Показувати індикатор"/>
