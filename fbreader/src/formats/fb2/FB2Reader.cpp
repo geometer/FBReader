@@ -19,6 +19,8 @@
  * 02110-1301, USA.
  */
 
+#include <string.h>
+
 #include "FB2Reader.h"
 
 void FB2Reader::startElementHandler(const char *t, const char **attributes) {
