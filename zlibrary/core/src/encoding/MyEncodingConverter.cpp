@@ -19,6 +19,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include <ZLUnicodeUtil.h>
 #include <ZLibrary.h>

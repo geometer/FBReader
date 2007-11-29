@@ -20,6 +20,8 @@
  * 02110-1301, USA.
  */
 
+#include <stdlib.h>
+
 #include <cctype>
 
 #include <ZLFile.h>
