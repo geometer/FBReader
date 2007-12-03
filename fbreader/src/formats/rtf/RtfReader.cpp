@@ -1,8 +1,5 @@
 /*
- * FBReader -- electronic book reader
- * Copyright (C) 2004-2007 Nikolay Pultsin <geometer@mawhrin.net>
- * Copyright (C) 2005 Mikhail Sobolev <mss@mawhrin.net>
- * Copyright (C) 2006 Vladimir Sorokin <s_v_d_2000@mail.ru>
+ * Copyright (C) 2004-2007 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
