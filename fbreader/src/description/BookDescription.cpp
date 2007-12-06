@@ -33,7 +33,6 @@
 std::map<std::string,BookDescriptionPtr> BookDescription::ourDescriptions;
 
 static const std::string EMPTY = "";
-static const std::string UNKNOWN = "unknown";
 
 BookInfo::BookInfo(const std::string &fileName) : 
 	AuthorDisplayNameOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayName", EMPTY),
@@ -41,12 +40,14 @@ BookInfo::BookInfo(const std::string &fileName) :
 	TitleOption(FBOptions::BOOKS_CATEGORY, fileName, "Title", EMPTY),
 	SequenceNameOption(FBOptions::BOOKS_CATEGORY, fileName, "Sequence", EMPTY),
 	NumberInSequenceOption(FBOptions::BOOKS_CATEGORY, fileName, "Number in seq", 0, 100, 0),
-	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", UNKNOWN),
+	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", PluginCollection::instance().DefaultLanguageOption.value()),
 	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY),
 	IsSequenceDefinedOption(FBOptions::BOOKS_CATEGORY, fileName, "SequenceDefined", ZLFile(fileName).extension() != "fb2") {
 	// this is just hack for compatibility with versions < 0.8.8
 	std::string language = LanguageOption.value();
-	if (language == "cz") {
+	if (language == "") {
+		LanguageOption.setValue(PluginCollection::instance().DefaultLanguageOption.value());
+	} else if (language == "cz") {
 		LanguageOption.setValue("cs");
 	} else if (language == "none") {
 		LanguageOption.setValue("other");
@@ -61,7 +62,7 @@ void BookInfo::reset() {
 	TitleOption.setValue(EMPTY);
 	SequenceNameOption.setValue(EMPTY);
 	NumberInSequenceOption.setValue(0);
-	LanguageOption.setValue(UNKNOWN);
+	LanguageOption.setValue(PluginCollection::instance().DefaultLanguageOption.value());
 	EncodingOption.setValue(EMPTY);
 }
 
@@ -120,6 +121,9 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 	}
 	if (description->myEncoding.empty()) {
 		description->myEncoding = "auto";
+	}
+	if (description->myLanguage.empty()) {
+		description->myLanguage = PluginCollection::instance().DefaultLanguageOption.value();
 	}
 	{
 		BookInfo info(fileName);
