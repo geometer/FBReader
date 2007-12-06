@@ -1,15 +1,15 @@
-TMPDIR = $(CURDIR)/tmp
 VERSION = $(shell cat fbreader/VERSION)
+TMPDIR = $(CURDIR)/fbreader-$(VERSION)
 
 tarball:
-	@echo -n "Building $(ARCHITECTURE) tarball package..."
-	@make -f distributions/tarball/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-tarball.log 2>&1
+	@echo -n "Building $(ARCHITECTURE) $@ package..."
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-$@.log 2>&1
 	@mkdir $(TMPDIR)
-	@make -f distributions/tarball/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-tarball.log 2>&1
-	@make -f distributions/tarball/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) tarball 1>> $(ARCHITECTURE)-tarball.log 2>&1
-	@make -f distributions/tarball/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-$@.log 2>&1
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) tarball 1>> $(ARCHITECTURE)-$@.log 2>&1
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -rf $(TMPDIR)
-	@rm -f $(CURDIR)/$(ARCHITECTURE)-tarball.log
+	@rm -f $(CURDIR)/$(ARCHITECTURE)-$@.log
 	@echo " OK"
 
 debian:
@@ -29,12 +29,12 @@ debian:
 
 ipk:
 	@echo -n "Building $(ARCHITECTURE) ipk package..."
-	@make -f distributions/ipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-ipk.log 2>&1
-	@for controlfile in distributions/ipk/$(ARCHITECTURE)/*.control; do \
+	@make -f $(DIST_DIR)/ipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-ipk.log 2>&1
+	@for controlfile in $(DIST_DIR)/ipk/$(ARCHITECTURE)/*.control; do \
 		controlname=`basename $$controlfile .control`; \
 		mkdir $(TMPDIR); \
 		mkdir $(TMPDIR)/data; \
-		make -f distributions/ipk/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR)/data install-$$controlname 1>> $(ARCHITECTURE)-ipk.log 2>&1; \
+		make -f $(DIST_DIR)/ipk/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR)/data install-$$controlname 1>> $(ARCHITECTURE)-ipk.log 2>&1; \
 		sed \
 			-e "s#@VERSION@#$(VERSION)#" \
 			-e "s#@SIZE@#`du -s -b $(TMPDIR)/data | cut -f1`#" \
@@ -45,38 +45,38 @@ ipk:
 		tar czf `egrep ^Filename: $(TMPDIR)/control | cut -d' ' -f2` -C $(TMPDIR) ./debian-binary ./control.tar.gz ./data.tar.gz; \
 		rm -rf $(TMPDIR); \
 	done
-	@make -f distributions/ipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1;
+	@make -f $(DIST_DIR)/ipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1;
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-ipk.log
 	@echo " OK"
 
 debipk:
 	@echo -n "Building $(ARCHITECTURE) debipk package..."
-	@make -f distributions/debipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-debipk.log 2>&1
-	@for controlfile in distributions/debipk/$(ARCHITECTURE)/*.control; do \
+	@make -f $(DIST_DIR)/debipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-debipk.log 2>&1
+	@for controlfile in $(DIST_DIR)/debipk/$(ARCHITECTURE)/*.control; do \
 		controlname=`basename $$controlfile .control`; \
 		mkdir $(TMPDIR); \
-		make -f distributions/debipk/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install-$$controlname 1>> $(ARCHITECTURE)-debipk.log 2>&1; \
+		make -f $(DIST_DIR)/debipk/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install-$$controlname 1>> $(ARCHITECTURE)-debipk.log 2>&1; \
 		mkdir $(TMPDIR)/DEBIAN; \
 		sed \
 			-e "s#@VERSION@#$(VERSION)#" \
 			-e "s#@SIZE@#`du -s -b $(TMPDIR) | cut -f1`#" \
 			$$controlfile > $(TMPDIR)/DEBIAN/control; \
-		dpkg -b $(TMPDIR) `sed "s#@VERSION@#$(VERSION)#" distributions/debipk/$(ARCHITECTURE)/$$controlname.name` 1>> $(ARCHITECTURE)-debipk.log 2>&1; \
+		dpkg -b $(TMPDIR) `sed "s#@VERSION@#$(VERSION)#" $(DIST_DIR)/debipk/$(ARCHITECTURE)/$$controlname.name` 1>> $(ARCHITECTURE)-debipk.log 2>&1; \
 		rm -rf $(TMPDIR); \
 	done
-	@make -f distributions/debipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
+	@make -f $(DIST_DIR)/debipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-debipk.log
 	@echo " OK"
 
 nsi:
 	@echo -n "Building $(ARCHITECTURE) nsi package..."
-	@make -f distributions/nsi/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-nsi.log 2>&1
+	@make -f $(DIST_DIR)/nsi/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-nsi.log 2>&1
 	@mkdir $(TMPDIR)
-	@make -f distributions/nsi/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-nsi.log 2>&1
-	@sed "s#@VERSION@#$(VERSION)#" distributions/nsi/$(ARCHITECTURE)/control.nsi > $(TMPDIR)/control.nsi
+	@make -f $(DIST_DIR)/nsi/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-nsi.log 2>&1
+	@sed "s#@VERSION@#$(VERSION)#" $(DIST_DIR)/nsi/$(ARCHITECTURE)/control.nsi > $(TMPDIR)/control.nsi
 	@cd $(TMPDIR); makensis control.nsi 1>> $(CURDIR)/$(ARCHITECTURE)-nsi.log 2>&1
 	@mv $(TMPDIR)/*.exe .
-	@make -f distributions/nsi/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
+	@make -f $(DIST_DIR)/nsi/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-nsi.log
 	@echo " OK"

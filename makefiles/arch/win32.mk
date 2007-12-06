@@ -2,7 +2,7 @@ SHAREDIR = %APPLICATION_PATH%\\\\share
 IMAGEDIR = $(SHAREDIR)\\\\icons
 APPIMAGEDIR = $(IMAGEDIR)
 
-BUILD_SHARED_LIBRARY = no
+ZLSHARED = no
 
 CC = i586-mingw32msvc-gcc
 AR = i586-mingw32msvc-ar rsu

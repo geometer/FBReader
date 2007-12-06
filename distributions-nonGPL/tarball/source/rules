@@ -1,0 +1,13 @@
+VERSION = $(shell cat $(CURDIR)/fbreader/VERSION)
+SRCDIR = fbreader-$(VERSION)
+
+clean:
+
+build:
+
+install:
+	mkdir $(DESTDIR)/$(SRCDIR)
+	cp -r Makefile build_packages.sh zlibrary fbreader makefiles distributions-nonGPL $(DESTDIR)/$(SRCDIR)
+
+tarball:
+	tar czf ebooks-fbreader-sources-$(VERSION).tgz -C $(DESTDIR) $(SRCDIR)

@@ -1,7 +1,7 @@
 include $(ROOTDIR)/makefiles/platforms.mk
 
 MAKE = make ROOTDIR=$(ROOTDIR)
-LIBMAKE = $(MAKE) BUILD_SHARED_LIBRARY=$(BUILD_SHARED_LIBRARY)
+LIBMAKE = $(MAKE) ZLSHARED=$(ZLSHARED)
 
 include $(ROOTDIR)/makefiles/arch/$(TARGET_ARCH).mk
 
@@ -13,7 +13,7 @@ BASEDIR ?= $(SHAREDIR)
 HOMEDIR ?= "~"
 
 CFLAGS += -DINSTALLDIR=\"$(INSTALLDIR)\" -DBASEDIR=\"$(BASEDIR)\" -DLIBDIR=\"$(LIBDIR)\" -DHOMEDIR=\"$(HOMEDIR)\" -DIMAGEDIR=\"$(IMAGEDIR)\" -DAPPIMAGEDIR=\"$(APPIMAGEDIR)\"
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
   CFLAGS += -fPIC
 endif
 
@@ -30,9 +30,9 @@ endif
 
 ZINCLUDE = -I $(ROOTDIR)/zlibrary/core/include -I $(ROOTDIR)/zlibrary/text/include
 
-BUILD_SHARED_LIBRARY ?= yes
+ZLSHARED ?= yes
 
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
   CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore $(XML_LIB) $(ARCHIVER_LIB) -ldl
 else
   CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -lzlui-$(UI_TYPE) -L$(ROOTDIR)/zlibrary/core -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)

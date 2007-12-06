@@ -41,4 +41,4 @@ clean:
 
 distclean: clean
 	@rm -rvf *.tgz *.tar.gz *.ipk *.deb *.prc *.exe *.log *.dsc *.changes *.rpm
-	@rm -rf tmp packages
+	@rm -rf tmp packages packages-nonGPL fbreader-*

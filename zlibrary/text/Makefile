@@ -4,7 +4,7 @@ include $(MAKEFILESDIR)/config.mk
 
 VERSION = $(shell cat ../VERSION)
 
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
   TARGET = libzltext.so.$(VERSION)
   TARGET_SHORTNAME = libzltext.so
 else
@@ -25,7 +25,7 @@ SUBDIRS = src/model src/view src/hyphenation
 $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) 
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
@@ -38,14 +38,14 @@ SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
 	@install -m 0644 $(wildcard data/hyphenationPatterns.zip) $(SHARE_ZLIBRARY)
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 endif
 
 do_install_dev:
 	@install -d $(DESTDIR)$(LIBDIR)
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
 	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SHORTNAME)
 else
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)

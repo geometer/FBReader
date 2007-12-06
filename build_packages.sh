@@ -1,22 +1,59 @@
 #!/bin/sh
 
+version=`cat fbreader/VERSION`
+tmpdir=fbreader-$version
+
+if [ "$1" == "-non-GPL" ]; then
+	distdir=distributions-nonGPL
+	pkgdir=packages-nonGPL
+	prepare_nonGPL=true
+	shift;
+else
+	distdir=distributions
+	pkgdir=packages
+	prepare_nonGPL=false
+fi
+
 if [ $# != 1 ]; then
 	echo "usage:"
-	echo "  $0 <architecture>"
+	echo "  $0 [-non-GPL] <architecture>"
 	echo "or"
-	echo "  $0 all"
+	echo "  $0 [-non-GPL] all"
 	echo ""
 	echo "available architectures are:"
-	for pkgdir in distributions/*; do
-		for archdir in $pkgdir/*; do
-			echo "  `basename $archdir`-`basename $pkgdir`";
+	for pkgtype in $distdir/*; do
+		for archtype in $pkgtype/*; do
+			echo "  `basename $archtype`-`basename $pkgtype`";
 		done;
 	done;
 	exit 1;
 fi
 
+create_tmpdir() {
+	mkdir $tmpdir
+	cp -r Makefile build_packages.sh zlibrary fbreader makefiles README.build $distdir $tmpdir
+	ln -sf ../dlls $tmpdir
+	rm -rf `find $tmpdir -name ".svn"`
+	make -C $tmpdir distclean 1> /dev/null 2>&1
+
+	if [ "$prepare_nonGPL" == "true" ]; then
+		pushd $tmpdir > /dev/null;
+		echo -en "Removing Finnish localization... ";
+		rm -rf fbreader/data/resources/fi.xml zlibrary/core/data/resources/fi.xml fbreader/data/help/MiniHelp.*.fi.fb2;
+		echo OK;
+		echo -en "Removing Czech hyphenation patterns... ";
+		zip -dq zlibrary/text/data/hyphenationPatterns.zip cs.pattern;
+		echo OK;
+		popd > /dev/null;
+	fi;
+}
+
+remove_tmpdir() {
+	rm -rf $tmpdir
+}
+
 build_package() {
-	make_package="make -f makefiles/packaging.mk"
+	make_package="make -f makefiles/packaging.mk -C $tmpdir DIST_DIR=$distdir"
 
 	case "$2" in
 		debian)
@@ -37,23 +74,23 @@ build_package() {
 					$make_package ARCHITECTURE=$1 $2
 					;;
 			esac;
-			mkdirhier packages/$1
-			mv -f *.deb *.dsc *.changes *.tar.gz packages/$1
+			mkdirhier $pkgdir/$1
+			mv -f $tmpdir/*.deb $tmpdir/*.dsc $tmpdir/*.changes $tmpdir/*.tar.gz $pkgdir/$1
 			;;
 		ipk|debipk)
 			$make_package ARCHITECTURE=$1 $2
-			mkdirhier packages/$1
-			mv -f *.ipk packages/$1
+			mkdirhier $pkgdir/$1
+			mv -f $tmpdir/*.ipk $pkgdir/$1
 			;;
 		tarball)
 			$make_package ARCHITECTURE=$1 $2
-			mkdirhier packages/$1
-			mv -f *.tgz packages/$1
+			mkdirhier $pkgdir/$1
+			mv -f $tmpdir/*.tgz $pkgdir/$1
 			;;
 		nsi)
 			$make_package ARCHITECTURE=$1 $2
-			mkdirhier packages/$1
-			mv -f *.exe packages/$1
+			mkdirhier $pkgdir/$1
+			mv -f $tmpdir/*.exe $pkgdir/$1
 			;;
 		*)
 			echo no rule is defined for package type ''$2'';
@@ -62,21 +99,23 @@ build_package() {
 }
 
 if [ $1 == all ]; then
-	for pkgdir in distributions/*; do
-		for archdir in $pkgdir/*; do
-			build_package `basename $archdir` `basename $pkgdir`;
+	create_tmpdir
+	for pkgtype in $distdir/*; do
+		for archtype in $pkgtype/*; do
+			build_package `basename $archtype` `basename $pkgtype`;
 		done;
 	done;
-	exit 1;
-fi
+	remove_tmpdir
+else
+	archtype=`echo $1 | cut -d "-" -f 1`;
+	pkgtype=`echo $1 | cut -d "-" -f 2`;
+	extra=`echo $1 | cut -d "-" -f 3`;
 
-archtype=`echo $1 | cut -d "-" -f 1`
-pkgtype=`echo $1 | cut -d "-" -f 2`
-extra=`echo $1 | cut -d "-" -f 3`
-
-if [ "$pkgtype" != "" -a "$extra" == "" -a -d distributions/$pkgtype/$archtype ]; then
-	build_package $archtype $pkgtype
-	exit 1;
+	if [ "$pkgtype" != "" -a "$extra" == "" -a -d $distdir/$pkgtype/$archtype ]; then
+		create_tmpdir
+		build_package $archtype $pkgtype
+		remove_tmpdir
+	else 
+		echo "unknown architecture: $1"
+	fi;
 fi;
-
-echo "unknown architecture: $1"

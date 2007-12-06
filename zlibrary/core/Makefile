@@ -4,7 +4,7 @@ include $(MAKEFILESDIR)/config.mk
 
 VERSION = $(shell cat ../VERSION)
 
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
   TARGET = libzlcore.so.$(VERSION)
   TARGET_SHORTNAME = libzlcore.so
 else
@@ -45,7 +45,7 @@ endif
 $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIB) $(ARCHIVER_LIB) -ldl
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
@@ -70,14 +70,14 @@ do_install:
 	@install -d $(SHARE_ZLIBRARY)/resources
 	@install -m 0644 $(wildcard data/resources/*.xml) $(SHARE_ZLIBRARY)/resources
 	@install -m 0644 $(wildcard data/languagePatterns.zip) $(SHARE_ZLIBRARY)
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 endif
 
 do_install_dev:
 	@install -d $(DESTDIR)$(LIBDIR)
-ifeq "$(BUILD_SHARED_LIBRARY)" "yes"
+ifeq "$(ZLSHARED)" "yes"
 	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SHORTNAME)
 else
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)

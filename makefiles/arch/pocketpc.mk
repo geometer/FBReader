@@ -5,7 +5,7 @@ FILENAMEDELIMITER = "\\\\"
 PATHDELIMITER = ";"
 EOLCHARS = "\\r\\n"
 
-BUILD_SHARED_LIBRARY = no
+ZLSHARED = no
 
 PREFIX = /usr/ppc/arm-wince-cegcc/bin/
 CC = $(PREFIX)gcc
