@@ -1,0 +1,29 @@
+Source: ebooks-fbreader
+Section: text
+Priority: optional
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Standards-Version: 3.7.2
+Build-Depends: debhelper (>= 5.0.22), libgtk2.0-dev, libexpat1-dev, libbz2-dev, libz-dev
+
+Package: ebooks-fbreader
+Priority: optional
+Architecture: any
+Replaces: fbreader
+Depends: ${shlibs:Depends}
+Description: e-book reader
+ EBooks FBReader is an e-book reader.
+ .
+ Main features:
+  * supports several open e-book formats: fb2, html, chm, plucker,
+    palmdoc, ztxt, tcr (psion text), rtf, oeb, openreader, non-DRM'ed
+    mobipocket, plain text
+  * reads directly from tar, zip, gzip, bzip2 archives (you can have
+    several books in one archive)
+  * supports a structured view of your e-book collection
+  * automatically determines encodings
+  * automatically generates a table of contents
+  * keeps the last open book and the last read positions for all open books
+    between runs
+  * automatic hyphenation (patterns for several languages are included)
+ .
+  Homepage: http://www.fbreader.org/
