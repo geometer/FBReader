@@ -32,7 +32,6 @@ fi
 create_tmpdir() {
 	mkdir $tmpdir
 	cp -r Makefile build_packages.sh zlibrary fbreader makefiles README.build $distdir $tmpdir
-	ln -sf ../dlls $tmpdir
 	rm -rf `find $tmpdir -name ".svn"`
 	make -C $tmpdir distclean 1> /dev/null 2>&1
 
@@ -43,6 +42,9 @@ create_tmpdir() {
 		echo OK;
 		echo -en "Removing Czech hyphenation patterns... ";
 		zip -dq zlibrary/text/data/hyphenationPatterns.zip cs.pattern;
+		echo OK;
+		echo -en "Removing Qt-based interface... ";
+		rm -rf zlibrary/ui/src/qt zlibrary/ui/src/qt4
 		echo OK;
 		popd > /dev/null;
 	fi;

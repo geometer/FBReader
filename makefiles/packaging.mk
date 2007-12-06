@@ -18,7 +18,7 @@ debian:
 	@cp -a Makefile zlibrary fbreader makefiles $(TMPDIR)
 	@rm -rf `find $(TMPDIR) -name ".svn"`
 	@mkdir $(TMPDIR)/debian
-	@for file in distributions/debian/$(ARCHITECTURE)/*; do \
+	@for file in $(DIST_DIR)/debian/$(ARCHITECTURE)/*; do \
 		sed -e "s#@VERSION@#$(VERSION)#g" $$file > $(TMPDIR)/debian/`basename $$file`; \
 		chmod --reference $$file $(TMPDIR)/debian/`basename $$file`; \
 	done

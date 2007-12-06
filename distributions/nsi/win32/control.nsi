@@ -20,7 +20,7 @@ Section "FBReader"
 	WriteRegStr HKCU "Software\FBReader" "" $INSTDIR
 
 	File /oname=FBReader.exe bin/FBReader
-	File ../dlls/*.*
+	File ../../dlls/*.*
 	File /r share
   Delete "$INSTDIR\libiconv-2.dll"
   Delete "$INSTDIR\share\FBReader\help\MiniHelp.fb2"

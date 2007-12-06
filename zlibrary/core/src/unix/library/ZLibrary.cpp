@@ -62,6 +62,7 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary::init(int &argc, char **&argv) {
+#ifdef ZLSHARED
 	const std::string pluginPath = std::string(LIBDIR) + "/zlibrary/ui";
 
 	void *handle = 0;
@@ -112,6 +113,7 @@ bool ZLibrary::init(int &argc, char **&argv) {
 	if (dlerror() != 0) {
 		return false;
 	}
+#endif /* ZLSHARED */
 	initLibrary();
 
 	if (ZLibraryImplementation::Instance == 0) {

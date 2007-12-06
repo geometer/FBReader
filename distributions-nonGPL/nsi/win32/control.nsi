@@ -20,11 +20,8 @@ Section "EBooks FBReader"
 	WriteRegStr HKCU "Software\EBooks FBReader" "" $INSTDIR
 
 	File /oname=EBooksFBReader.exe bin/FBReader
-	File ../dlls/*.*
+	File ../../dlls/*.*
 	File /r share
-  Delete "$INSTDIR\libiconv-2.dll"
-  Delete "$INSTDIR\share\FBReader\help\MiniHelp.fb2"
-  Delete "$INSTDIR\share\FBReader\hyphenationPatterns.zip"
 
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EBooks FBReader for Windows XP" "DisplayName" "EBooks FBReader for Windows XP"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\EBooks FBReader for Windows XP" "UninstallString" '"$INSTDIR\uninstall.exe"'
