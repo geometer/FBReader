@@ -25,19 +25,19 @@
 
 #include "ZLTextStyle.h"
 
-ZLTextStyleCollection *ZLTextStyleCollection::ourInstance = NULL;
+ZLTextStyleCollection *ZLTextStyleCollection::ourInstance = 0;
 
 ZLTextStyleCollection &ZLTextStyleCollection::instance() {
-	if (ourInstance == NULL) {
+	if (ourInstance == 0) {
 		ourInstance = new ZLTextStyleCollection();
 	}
 	return *ourInstance;
 }
 
 void ZLTextStyleCollection::deleteInstance() {
-	if (ourInstance != NULL) {
+	if (ourInstance != 0) {
 		delete ourInstance;
-		ourInstance = NULL;
+		ourInstance = 0;
 	}
 }
 
