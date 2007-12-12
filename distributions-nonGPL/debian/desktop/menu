@@ -1,2 +1,0 @@
-?package(fbreader):needs="x11" section="Applications/Viewers" \
-	title="E-book reader" command="FBReader"
