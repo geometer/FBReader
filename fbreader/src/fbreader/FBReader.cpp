@@ -388,6 +388,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 					setMode(FOOTNOTE_MODE);
 					view.gotoParagraph(label.ParagraphNumber);
 				}
+				setHyperlinkCursor(false);
 				refreshWindow();
 			}
 		}
