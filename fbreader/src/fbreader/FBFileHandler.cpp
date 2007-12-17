@@ -71,13 +71,14 @@ const std::string FBFileHandler::stateDisplayName() const {
 }
 
 const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
+	static const std::string UpFolderIcon = "upfolder";
 	static const std::string FolderIcon = "folder";
 	static const std::string ZipFolderIcon = "zipfolder";
 	static std::map<FormatPlugin*,std::string> PluginIcons;
 
 	if (!myIsUpToDate) {
 		if (!myDir->isRoot()) {
-			mySubnodes.push_back(new ZLTreeNode("..", "..", FolderIcon, true));
+			mySubnodes.push_back(new ZLTreeNode("..", "..", UpFolderIcon, true));
 		}
 
 		std::map<std::string,ZLTreeNodePtr> folderNodes;
