@@ -37,7 +37,6 @@
 #include "../description/BookDescription.h"
 #include "../description/Author.h"
 
-static const std::string LIBRARY = "Library";
 static const std::string DELETE_IMAGE_ID = "delete";
 static const std::string BOOK_INFO_IMAGE_ID = "bookInfo";
 static const std::string AUTHOR_INFO_IMAGE_ID = "authorInfo";
@@ -151,11 +150,11 @@ void CollectionModel::insertImage(const std::string &id) {
 }
 
 CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context), myUpdateModel(true) {
-	setModel(new CollectionModel(myCollection), LIBRARY);
+	setModel(new CollectionModel(myCollection));
 }
 
 CollectionView::~CollectionView() {
-	setModel(0, LIBRARY);
+	setModel(0);
 }
 
 void CollectionView::updateModel() {
@@ -170,15 +169,16 @@ void CollectionView::synchronizeModel() {
 }
 
 const std::string &CollectionView::caption() const {
+	static const std::string LIBRARY = "Library";
 	return LIBRARY;
 }
 
 void CollectionView::selectBook(BookDescriptionPtr book) {
 	if (myUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
-		setModel(0, LIBRARY);
+		setModel(0);
 		((CollectionModel&)*oldModel).update();
-		setModel(oldModel, LIBRARY);
+		setModel(oldModel);
 		myUpdateModel = false;
 	}
 	int toSelect = collectionModel().paragraphNumberByBook(book);
@@ -192,9 +192,9 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 void CollectionView::paint() {
 	if (myUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
-		setModel(0, LIBRARY);
+		setModel(0);
 		((CollectionModel&)*oldModel).update();
-		setModel(oldModel, LIBRARY);
+		setModel(oldModel);
 		myUpdateModel = false;
 	}
 	FBView::paint();

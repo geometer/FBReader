@@ -23,9 +23,15 @@
 
 #include <ZLDialogManager.h>
 
+#include "../../../../core/src/dialogs/ZLDialogContentBuilder.h"
+
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
+
+void ZLGtkOptionsDialog::addMaemoBuilder(shared_ptr<ZLDialogContentBuilder> builder) {
+	addPlatformDependentBuilder(builder);
+}
 
 ZLGtkOptionsDialog::ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : ZLOptionsDialog(resource, applyAction) {
 	myDialog = createGtkDialog(caption());

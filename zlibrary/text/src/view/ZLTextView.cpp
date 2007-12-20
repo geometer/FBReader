@@ -59,7 +59,7 @@ void ZLTextView::clear() {
 	ZLTextParagraphCursorCache::clear();
 }
 
-void ZLTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
+void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
 	clear();
 
 	myModel = model;
@@ -67,7 +67,6 @@ void ZLTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name
 	if (!myModel.isNull() && (myModel->paragraphsNumber() != 0)) {
 		setStartCursor(ZLTextParagraphCursor::cursor(*myModel));
 
-		myFileName = name;
 		size_t size = myModel->paragraphsNumber();
 		myTextSize.reserve(size + 1);
 		myTextSize.push_back(0);

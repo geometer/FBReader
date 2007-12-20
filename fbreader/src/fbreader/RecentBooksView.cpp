@@ -26,8 +26,6 @@
 #include "../bookmodel/FBTextKind.h"
 #include "../description/Author.h"
 
-static const std::string LIBRARY = "Recent Books";
-
 RecentBooksView::RecentBooksView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context) {
 }
 
@@ -36,6 +34,7 @@ RecentBooksView::~RecentBooksView() {
 }
 
 const std::string &RecentBooksView::caption() const {
+	static const std::string LIBRARY = "Recent Books";
 	return LIBRARY;
 }
 
@@ -52,13 +51,13 @@ void RecentBooksView::paint() {
 			recentBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
 			recentBooksModel->addText((*it)->title());
 		}
-		setModel(recentBooksModel, LIBRARY);
+		setModel(recentBooksModel);
 	}
 	FBView::paint();
 }
 
 void RecentBooksView::rebuild() {
-	setModel(0, LIBRARY);
+	setModel(0);
 }
 
 bool RecentBooksView::_onStylusPress(int x, int y) {

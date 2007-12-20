@@ -348,7 +348,7 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		bookTextView.saveState();
 		bookTextView.setModel(0, "");
 		bookTextView.setContentsModel(0);
-		contentsView.setModel(0, "");
+		contentsView.setModel(0);
 		if (myModel != 0) {
 			delete myModel;
 		}
@@ -358,9 +358,9 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		bookTextView.setModel(myModel->bookTextModel(), description->fileName());
 		bookTextView.setCaption(description->title());
 		bookTextView.setContentsModel(myModel->contentsModel());
-		footnoteView.setModel(0, std::string());
+		footnoteView.setModel(0);
 		footnoteView.setCaption(description->title());
-		contentsView.setModel(myModel->contentsModel(), description->fileName());
+		contentsView.setModel(myModel->contentsModel());
 		contentsView.setCaption(description->title());
 
 		recentBooksView.lastBooks().addBook(description->fileName());
@@ -384,7 +384,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 					bookTextView().gotoParagraph(label.ParagraphNumber);
 				} else {
 					FootnoteView &view = ((FootnoteView&)*myFootnoteView);
-					view.setModel(label.Model, std::string());
+					view.setModel(label.Model);
 					setMode(FOOTNOTE_MODE);
 					view.gotoParagraph(label.ParagraphNumber);
 				}

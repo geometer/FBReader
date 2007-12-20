@@ -17,38 +17,26 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKOPTIONSDIALOG_H__
-#define __ZLGTKOPTIONSDIALOG_H__
-
-#include <vector>
-
-#include <gtk/gtkdialog.h>
-#include <gtk/gtknotebook.h>
-
 #include <ZLOptionsDialog.h>
+#include <optionEntries/ZLSimpleOptionEntry.h>
 
-class ZLGtkOptionsDialog : public ZLOptionsDialog {
+#include "ZLMaemoTapDetectorInfo.h"
 
-public:
-	static void addMaemoBuilder(shared_ptr<ZLDialogContentBuilder> builder);
+static const std::string GROUP = "StylusPressure";
 
-public:
-	ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
-	~ZLGtkOptionsDialog();
-	ZLDialogContent &createTab(const ZLResourceKey &key);
+ZLMaemoTapDetectorInfo::ZLMaemoTapDetectorInfo() :
+	MinPressureOption(ZLOption::CONFIG_CATEGORY, GROUP, "Minimum", 0, 100, 0),
+	MaxPressureOption(ZLOption::CONFIG_CATEGORY, GROUP, "Maximum", 0, 100, 40) {
+}
 
-protected:
-	const std::string &selectedTabKey() const;
-	void selectTab(const ZLResourceKey &key);
-	bool runInternal();
-
-	void setSize(int width, int height);
-	int width() const;
-	int height() const;
-
-private:
-	GtkDialog *myDialog;
-	GtkNotebook *myNotebook;
-};
-
-#endif /* __ZLGTKOPTIONSDIALOG_H__ */
+void ZLMaemoTapDetectorInfo::buildTabs(ZLOptionsDialog &dialog) {
+	ZLDialogContent &tab = dialog.createTab(ZLResourceKey("Tap"));
+	tab.addOption(
+		ZLResourceKey("minStylusPressure"),
+		new ZLSimpleSpinOptionEntry(MinPressureOption, 1)
+	);
+	tab.addOption(
+		ZLResourceKey("maxStylusPressure"),
+		new ZLSimpleSpinOptionEntry(MaxPressureOption, 1)
+	);
+}

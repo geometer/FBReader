@@ -32,7 +32,15 @@
 
 class ZLOptionEntry;
 
+class ZLDialogContentBuilder;
+
 class ZLOptionsDialog {
+
+protected:
+	static void addPlatformDependentBuilder(shared_ptr<ZLDialogContentBuilder> builder);
+
+private:
+	static std::vector<shared_ptr<ZLDialogContentBuilder> > ourPlatformDependentBuilders;
 
 protected:
 	ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
@@ -40,6 +48,7 @@ protected:
 public:
 	virtual ~ZLOptionsDialog();
 	virtual ZLDialogContent &createTab(const ZLResourceKey &key) = 0;
+	void createPlatformDependentTabs();
 	virtual bool run();
 
 protected:

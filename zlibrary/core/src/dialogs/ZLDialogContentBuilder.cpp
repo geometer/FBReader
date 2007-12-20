@@ -17,38 +17,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKOPTIONSDIALOG_H__
-#define __ZLGTKOPTIONSDIALOG_H__
+#include "ZLDialogContentBuilder.h"
+#include "ZLOptionsDialog.h"
 
-#include <vector>
+std::vector<shared_ptr<ZLDialogContentBuilder> > ZLOptionsDialog::ourPlatformDependentBuilders;
 
-#include <gtk/gtkdialog.h>
-#include <gtk/gtknotebook.h>
+void ZLOptionsDialog::addPlatformDependentBuilder(shared_ptr<ZLDialogContentBuilder> builder) {
+	ourPlatformDependentBuilders.push_back(builder);
+}
 
-#include <ZLOptionsDialog.h>
+void ZLOptionsDialog::createPlatformDependentTabs() {
+	for (std::vector<shared_ptr<ZLDialogContentBuilder> >::const_iterator it = ourPlatformDependentBuilders.begin(); it != ourPlatformDependentBuilders.end(); ++it) {
+		(*it)->buildTabs(*this);	
+	}
+}
 
-class ZLGtkOptionsDialog : public ZLOptionsDialog {
-
-public:
-	static void addMaemoBuilder(shared_ptr<ZLDialogContentBuilder> builder);
-
-public:
-	ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
-	~ZLGtkOptionsDialog();
-	ZLDialogContent &createTab(const ZLResourceKey &key);
-
-protected:
-	const std::string &selectedTabKey() const;
-	void selectTab(const ZLResourceKey &key);
-	bool runInternal();
-
-	void setSize(int width, int height);
-	int width() const;
-	int height() const;
-
-private:
-	GtkDialog *myDialog;
-	GtkNotebook *myNotebook;
-};
-
-#endif /* __ZLGTKOPTIONSDIALOG_H__ */
+ZLDialogContentBuilder::~ZLDialogContentBuilder() {
+}

@@ -35,7 +35,7 @@ public:
 	BookTextView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 	~BookTextView();
 
-	void setModel(shared_ptr<ZLTextModel> model, const std::string &name);
+	void setModel(shared_ptr<ZLTextModel> model, const std::string &fileName);
 	void setContentsModel(shared_ptr<ZLTextModel> contentsModel);
 	void saveState();
 
@@ -72,6 +72,8 @@ private:
 
 private:
 	shared_ptr<ZLTextModel> myContentsModel;
+
+	std::string myFileName;
 
 	typedef std::pair<int,int> Position;
 	typedef std::deque<Position> PositionStack;

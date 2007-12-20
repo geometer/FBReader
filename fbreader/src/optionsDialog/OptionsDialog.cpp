@@ -221,6 +221,8 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), additional);
 	additional.clear();
 	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), additional);
+
+	myDialog->createPlatformDependentTabs();
 }
 
 void OptionsDialog::storeTemporaryOption(ZLOption *option) {

@@ -53,26 +53,26 @@ BookTextView::~BookTextView() {
 	saveState();
 }
 
-void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &name) {
-	FBView::setModel(model, name);
+void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &fileName) {
+	FBView::setModel(model);
 
-	const std::string &group = fileName();
+	myFileName = fileName;
 
 	gotoPosition(
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).value(),
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).value(),
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).value()
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, fileName, PARAGRAPH_OPTION_NAME, 0).value(),
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, fileName, WORD_OPTION_NAME, 0).value(),
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, fileName, CHAR_OPTION_NAME, 0).value()
 	);
 
 	myPositionStack.clear();
 	myCurrentPointInStack = 0;
 
-	int stackSize = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, BUFFER_SIZE, 0).value();
+	int stackSize = ZLIntegerOption(ZLOption::STATE_CATEGORY, fileName, BUFFER_SIZE, 0).value();
 	if (stackSize > 0) {
 		if (stackSize > (int)myMaxStackSize) {
 			stackSize = myMaxStackSize;
 		}
-		int pointInStack = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, POSITION_IN_BUFFER, 0).value();
+		int pointInStack = ZLIntegerOption(ZLOption::STATE_CATEGORY, fileName, POSITION_IN_BUFFER, 0).value();
 		if ((pointInStack < 0) || (pointInStack > stackSize)) {
 			pointInStack = stackSize;
 		}
@@ -84,8 +84,8 @@ void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &na
 			ZLStringUtil::appendNumber(bufferParagraph, i);
 			ZLStringUtil::appendNumber(bufferWord, i);
 			Position pos;
-			pos.first = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferParagraph, -1).value();
-			pos.second = ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferWord, -1).value();
+			pos.first = ZLIntegerOption(ZLOption::STATE_CATEGORY, fileName, bufferParagraph, -1).value();
+			pos.second = ZLIntegerOption(ZLOption::STATE_CATEGORY, fileName, bufferWord, -1).value();
 			myPositionStack.push_back(pos);
 		}
 	}
@@ -97,22 +97,21 @@ void BookTextView::setContentsModel(shared_ptr<ZLTextModel> contentsModel) {
 
 void BookTextView::saveState() {
 	const ZLTextWordCursor &cursor = startCursor();
-	const std::string &group = fileName();
 
 	if (!cursor.isNull()) {
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, BUFFER_SIZE, 0).setValue(myPositionStack.size());
-		ZLIntegerOption(ZLOption::STATE_CATEGORY, group, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, myFileName, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, myFileName, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, myFileName, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, myFileName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
+		ZLIntegerOption(ZLOption::STATE_CATEGORY, myFileName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
 		for (unsigned int i = 0; i < myPositionStack.size(); ++i) {
 			std::string bufferParagraph = BUFFER_PARAGRAPH_PREFIX;
 			std::string bufferWord = BUFFER_WORD_PREFIX;
 			ZLStringUtil::appendNumber(bufferParagraph, i);
 			ZLStringUtil::appendNumber(bufferWord, i);
-			ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferParagraph, -1).setValue(myPositionStack[i].first);
-			ZLIntegerOption(ZLOption::STATE_CATEGORY, group, bufferWord, -1).setValue(myPositionStack[i].second);
+			ZLIntegerOption(ZLOption::STATE_CATEGORY, myFileName, bufferParagraph, -1).setValue(myPositionStack[i].first);
+			ZLIntegerOption(ZLOption::STATE_CATEGORY, myFileName, bufferWord, -1).setValue(myPositionStack[i].second);
 		}
 	}
 }

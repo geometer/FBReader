@@ -51,16 +51,16 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	return true;
 }
 
-#include <iostream>
+//#include <iostream>
 
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
 	//FILE *err = fopen("/tmp/repaint-err", "w");
 	//fprintf(err, "+ repaint"); fflush(err);
-	std::cerr << "+ repaint\n";
+	//std::cerr << "+ repaint\n";
 	if (acceptAction()) {
 		((ZLGtkViewWidget*)data)->doPaint();
 	}
-	std::cerr << "- repaint\n";
+	//std::cerr << "- repaint\n";
 	//fprintf(err, "- repaint"); fclose(err);
 }
 

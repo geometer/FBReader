@@ -17,38 +17,21 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKOPTIONSDIALOG_H__
-#define __ZLGTKOPTIONSDIALOG_H__
+#ifndef __ZLMAEMOTAPDETECTORINFO_H__
+#define __ZLMAEMOTAPDETECTORINFO_H__
 
-#include <vector>
+#include <ZLOptions.h>
 
-#include <gtk/gtkdialog.h>
-#include <gtk/gtknotebook.h>
+#include "../../../../core/src/dialogs/ZLDialogContentBuilder.h"
 
-#include <ZLOptionsDialog.h>
-
-class ZLGtkOptionsDialog : public ZLOptionsDialog {
+class ZLMaemoTapDetectorInfo : public ZLDialogContentBuilder {
 
 public:
-	static void addMaemoBuilder(shared_ptr<ZLDialogContentBuilder> builder);
-
-public:
-	ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
-	~ZLGtkOptionsDialog();
-	ZLDialogContent &createTab(const ZLResourceKey &key);
-
-protected:
-	const std::string &selectedTabKey() const;
-	void selectTab(const ZLResourceKey &key);
-	bool runInternal();
-
-	void setSize(int width, int height);
-	int width() const;
-	int height() const;
-
-private:
-	GtkDialog *myDialog;
-	GtkNotebook *myNotebook;
+	ZLIntegerRangeOption MinPressureOption;
+	ZLIntegerRangeOption MaxPressureOption;
+	
+	ZLMaemoTapDetectorInfo();
+	void buildTabs(ZLOptionsDialog &dialog);
 };
 
-#endif /* __ZLGTKOPTIONSDIALOG_H__ */
+#endif /* __ZLMAEMOTAPDETECTORINFO_H__ */

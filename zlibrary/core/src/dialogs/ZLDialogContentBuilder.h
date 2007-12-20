@@ -17,38 +17,16 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKOPTIONSDIALOG_H__
-#define __ZLGTKOPTIONSDIALOG_H__
+#ifndef __ZLDIALOGCONTENTBUILDER_H__
+#define __ZLDIALOGCONTENTBUILDER_H__
 
-#include <vector>
+class ZLOptionsDialog;
 
-#include <gtk/gtkdialog.h>
-#include <gtk/gtknotebook.h>
-
-#include <ZLOptionsDialog.h>
-
-class ZLGtkOptionsDialog : public ZLOptionsDialog {
+class ZLDialogContentBuilder {
 
 public:
-	static void addMaemoBuilder(shared_ptr<ZLDialogContentBuilder> builder);
-
-public:
-	ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
-	~ZLGtkOptionsDialog();
-	ZLDialogContent &createTab(const ZLResourceKey &key);
-
-protected:
-	const std::string &selectedTabKey() const;
-	void selectTab(const ZLResourceKey &key);
-	bool runInternal();
-
-	void setSize(int width, int height);
-	int width() const;
-	int height() const;
-
-private:
-	GtkDialog *myDialog;
-	GtkNotebook *myNotebook;
+	virtual ~ZLDialogContentBuilder();
+	virtual void buildTabs(ZLOptionsDialog &dialog) = 0;
 };
 
-#endif /* __ZLGTKOPTIONSDIALOG_H__ */
+#endif /* __ZLDIALOGCONTENTBUILDER_H__ */

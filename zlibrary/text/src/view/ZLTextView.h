@@ -140,7 +140,7 @@ public:
 	const ZLTextWordCursor &startCursor() const;
 	const ZLTextWordCursor &endCursor() const;
 
-	virtual void setModel(shared_ptr<ZLTextModel> model, const std::string &name);
+	virtual void setModel(shared_ptr<ZLTextModel> model);
 	const shared_ptr<ZLTextModel> model() const;
 
 	bool hasMultiSectionModel() const;
@@ -162,8 +162,6 @@ protected:
 	void activateSelection(int x, int y);
 
 	virtual void paint();
-
-	const std::string &fileName() const;
 
 	int paragraphIndexByCoordinate(int y) const;
 	const ZLTextElementArea *elementByCoordinates(int x, int y) const;
@@ -265,7 +263,6 @@ inline const ZLTextStylePtr ZLTextView::ViewStyle::textStyle() const { return my
 inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }
 inline const ZLTextWordCursor &ZLTextView::endCursor() const { return myEndCursor; }
-inline const std::string &ZLTextView::fileName() const { return myFileName; }
 inline const shared_ptr<ZLTextModel> ZLTextView::model() const { return myModel; }
 inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
 

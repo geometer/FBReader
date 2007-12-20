@@ -216,6 +216,10 @@
 					<node name="choice" value="Use Browser"/>
 					<node name="command" value="Command to Execute"/>
 				</node>
+				<node name="Tap" value="Tap">
+					<node name="minStylusPressure" value="Minimal Stylus Pressure"/>
+					<node name="maxStylusPressure" value="Maximal Stylus Pressure"/>
+				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">

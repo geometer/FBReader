@@ -25,6 +25,8 @@
 #include <ZLView.h>
 #include <ZLApplication.h>
 
+class ZLMaemoTapDetectorInfo;
+
 class ZLGtkViewWidget : public ZLViewWidget {
 
 public:
@@ -47,6 +49,7 @@ private:
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
 	void updateCoordinates(int &x, int &y);
+	bool isStylusEvent(GtkWidget *widget, GdkEventButton *event);
 
 private:
 	ZLApplication *myApplication;
@@ -54,6 +57,8 @@ private:
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;
+
+	ZLMaemoTapDetectorInfo *myTapDetectorInfo;
 };
 
 #endif /* __ZLGTKVIEWWIDGET_H__ */
