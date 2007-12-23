@@ -60,6 +60,9 @@ void ZLTextPartialInfo::setTo(ZLTextLineInfo &lineInfo) const {
 }
 
 ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
+	const bool useHyphenator =
+		ZLTextStyleCollection::instance().baseStyle().AutoHyphenationOption.value();
+
 	ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(start, myStyle.textStyle());
 
 	std::set<ZLTextLineInfoPtr>::const_iterator it = myLineInfoCache.find(infoPtr);
@@ -177,8 +180,13 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				break;
 		}
 
-		if ((newInfo.Width > maxWidth) && !info.End.equalWordNumber(start)) {
-			break;
+		if (newInfo.Width > maxWidth) {
+			if (!info.End.equalWordNumber(start)) {
+				break;
+			}
+			if (elementKind == ZLTextElement::WORD_ELEMENT) {
+				break;
+			}
 		}
 
 		ZLTextElement::Kind previousKind = elementKind;
@@ -207,12 +215,12 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		}
 	} while (!newInfo.End.equalWordNumber(end));
 
-	if (!newInfo.End.equalWordNumber(end) &&
-		 ZLTextStyleCollection::instance().baseStyle().AutoHyphenationOption.value() &&
+	if (!newInfo.End.equalWordNumber(end) && useHyphenator &&
 		 myStyle.textStyle()->allowHyphenations()) {
 		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
 		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
-			newInfo.Width -= myStyle.elementWidth(element, newInfo.End.charNumber());
+			const int startCharNumber = newInfo.End.charNumber();
+			newInfo.Width -= myStyle.elementWidth(element, startCharNumber);
 			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newInfo.Width;
 			if ((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
@@ -221,15 +229,20 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::instance().info(word);
 				int hyphenationPosition = word.Length - 1;
 				int subwordWidth = 0;
-				for (; hyphenationPosition > 0; --hyphenationPosition) {
+				for (; hyphenationPosition > startCharNumber; --hyphenationPosition) {
 					if (hyphenationInfo.isHyphenationPossible(hyphenationPosition)) {
-						subwordWidth = myStyle.wordWidth(word, 0, hyphenationPosition, ucs2string[hyphenationPosition - 1] != '-');
+						subwordWidth = myStyle.wordWidth(word, startCharNumber, hyphenationPosition - startCharNumber, ucs2string[hyphenationPosition - 1] != '-');
 						if (subwordWidth <= spaceLeft) {
 							break;
 						}
 					}
 				}
-				if (hyphenationPosition > 0) {
+				if ((hyphenationPosition == startCharNumber) &&
+						newInfo.End.equalWordNumber(info.RealStart)) {
+					hyphenationPosition = word.Length - 1;
+					subwordWidth = myStyle.elementWidth(element, startCharNumber);
+				}
+				if (hyphenationPosition > startCharNumber) {
 					newInfo.Width += subwordWidth;
 					newInfo.setTo(info);
 					storedStyle = myStyle.textStyle();

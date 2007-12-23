@@ -102,6 +102,9 @@
 					<node name="linesToScroll" value="Скільки рядків зсувати"/>
 					<node name="percentToScroll" value="Скільки відсотків зсувати"/>
 				</node>
+				<node name="Selection" value="Помітка">
+					<node name="enableSelection" value="Enable Text Selection" toBeTranslated="true"/>
+				</node>
 				<node name="Margins" value="Відступи">
 					<node name="left" value="Відступ зліва"/>
 					<node name="right" value="Відступ зправа"/>
@@ -215,6 +218,10 @@
 					<node name="defaultText" value="Відкривати зовнішні посилання у переглядачі"/>
 					<node name="choice" value="Переглядач"/>
 					<node name="command" value="Виконати команду"/>
+				</node>
+				<node name="Tap" value="Tap" toBeTranslated="true">
+					<node name="minStylusPressure" value="Minimal Stylus Pressure" toBeTranslated="true"/>
+					<node name="maxStylusPressure" value="Maximal Stylus Pressure" toBeTranslated="true"/>
 				</node>
 			</node>
 		</node>

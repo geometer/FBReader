@@ -102,6 +102,9 @@
 					<node name="linesToScroll" value="Lines to Scroll"/>
 					<node name="percentToScroll" value="Percent to Scroll"/>
 				</node>
+				<node name="Selection" value="Selection">
+					<node name="enableSelection" value="Enable Text Selection"/>
+				</node>
 				<node name="Margins" value="Margins">
 					<node name="left" value="Left Margin"/>
 					<node name="right" value="Right Margin"/>

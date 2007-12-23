@@ -193,12 +193,16 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		if (it->ChangeStyle) {
 			myStyle.setTextStyle(it->Style);
 		}
-		int len = info.End.charNumber();
+		int start = 0;
+		if (info.Start.equalWordNumber(info.End)) {
+			start = info.Start.charNumber();
+		}
+		int len = info.End.charNumber() - start;
 		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 		context().setColor(myStyle.textStyle()->color());
 		const int x = it->XStart;
 		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.textStyle()->verticalShift();
-		drawWord(x, y, word, 0, len, it->AddHyphenationSign);
+		drawWord(x, y, word, start, len, it->AddHyphenationSign);
 	}
 	context().moveY(info.Descent + info.VSpaceAfter);
 }
@@ -286,19 +290,23 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 		context().moveX(width);
 	}
 	if (!endOfParagraph && (info.End.element().kind() == ZLTextElement::WORD_ELEMENT)) {
-		int len = info.End.charNumber();
+		int start = 0;
+		if (info.End.equalWordNumber(info.RealStart)) {
+			start = info.RealStart.charNumber();
+		}
+		const int len = info.End.charNumber() - start;
 		if (len > 0) {
 			const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 			ZLUnicodeUtil::Ucs2String ucs2string;
 			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
-			const bool addHyphenationSign = ucs2string[len - 1] != '-';
+			const bool addHyphenationSign = ucs2string[start + len - 1] != '-';
 			const int x = context().x(); 
-			const int width = myStyle.wordWidth(word, 0, len, addHyphenationSign);
+			const int width = myStyle.wordWidth(word, start, len, addHyphenationSign);
 			const int height = myStyle.elementHeight(word);
 			const int descent = myStyle.elementDescent(word);
 			myTextElementMap.push_back(
 				ZLTextElementArea(
-					paragraphNumber, info.End.wordNumber(), 0, len, addHyphenationSign,
+					paragraphNumber, info.End.wordNumber(), start, len, addHyphenationSign,
 					changeStyle, myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
 					x, x + width - 1, y - height + 1, y + descent
 				)

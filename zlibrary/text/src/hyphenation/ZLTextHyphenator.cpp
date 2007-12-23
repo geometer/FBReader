@@ -61,10 +61,10 @@ ZLTextHyphenationInfo ZLTextHyphenator::info(const ZLTextWord &word) const {
 			info.myMask[i] = false;
 		} else if (ucs2Vector[i - 1] == '-') {
 			info.myMask[i] = (i >= 3) &&
-				isLetter[i - 3] &&
-				isLetter[i - 2] &&
-				isLetter[i] &&
-				isLetter[i + 1];
+				(isLetter[i - 3] || (ucs2Vector[i - 3] == '-')) &&
+				(isLetter[i - 2] || (ucs2Vector[i - 2] == '-')) &&
+				(isLetter[i] || (ucs2Vector[i] == '-')) &&
+				(isLetter[i + 1] || (ucs2Vector[i + 1] == '-'));
 		} else {
 			info.myMask[i] = info.myMask[i] &&
 				isLetter[i - 2] &&

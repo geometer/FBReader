@@ -179,6 +179,7 @@ protected:
 	virtual int rightMargin() const = 0;
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
+	virtual bool isSelectionEnabled() const = 0;
 
 private:
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);

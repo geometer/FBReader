@@ -171,6 +171,9 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 
+	ZLDialogContent &selectionTab = myDialog->createTab(ZLResourceKey("Selection"));
+	selectionTab.addOption(ZLResourceKey("enableSelection"), FBView::selectionOption());
+
 	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("Margins"));
 	FBMargins &margins = FBView::margins();
 	marginTab.addOptions(

@@ -347,8 +347,10 @@ bool ZLTextView::onStylusPress(int x, int y) {
 }
 
 void ZLTextView::activateSelection(int x, int y) {
-	mySelectionModel.activate(x, y);
-	application().refreshWindow();
+	if (isSelectionEnabled()) {
+		mySelectionModel.activate(x, y);
+		application().refreshWindow();
+	}
 }
 
 bool ZLTextView::onStylusMovePressed(int x, int y) {

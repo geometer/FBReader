@@ -70,10 +70,12 @@ class FBView : public ZLTextView {
 public:
 	static FBMargins& margins();
 	static FBIndicatorStyle& commonIndicatorInfo();
+	static ZLBooleanOption &selectionOption();
 
 private:
 	static shared_ptr<ZLTextPositionIndicatorInfo> ourIndicatorInfo;
 	static shared_ptr<FBMargins> ourMargins;
+	static shared_ptr<ZLBooleanOption> ourSelectionOption;
 
 public:
 	FBView(FBReader &reader, shared_ptr<ZLPaintContext> context);
@@ -87,6 +89,8 @@ public:
 	int rightMargin() const;
 	int topMargin() const;
 	int bottomMargin() const;
+
+	bool isSelectionEnabled() const;
 
 protected:
 	FBReader &fbreader();

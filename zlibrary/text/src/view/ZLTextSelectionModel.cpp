@@ -231,7 +231,9 @@ void ZLTextSelectionModel::stopSelectionScrolling() {
 }
 
 void ZLTextSelectionModel::update() {
-	if (myDoUpdate) {
+	if (!myView.isSelectionEnabled()) {
+		clear();
+	} else if (myDoUpdate) {
 		myDoUpdate = false;
 		setBound(mySecondBound, myStoredX, myStoredY);
 		myView.copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);

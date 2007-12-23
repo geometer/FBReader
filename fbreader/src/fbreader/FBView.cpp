@@ -79,6 +79,7 @@ int FBIndicatorStyle::fontSize() const {
 
 shared_ptr<ZLTextPositionIndicatorInfo> FBView::ourIndicatorInfo;
 shared_ptr<FBMargins> FBView::ourMargins;
+shared_ptr<ZLBooleanOption> FBView::ourSelectionOption;
 
 FBIndicatorStyle& FBView::commonIndicatorInfo() {
 	if (ourIndicatorInfo.isNull()) {
@@ -173,4 +174,15 @@ int FBView::topMargin() const {
 
 int FBView::bottomMargin() const {
 	return margins().BottomMarginOption.value();
+}
+
+ZLBooleanOption &FBView::selectionOption() {
+	if (ourSelectionOption.isNull()) {
+		ourSelectionOption = new ZLBooleanOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "IsSelectionEnabled", true);
+	}
+	return *ourSelectionOption;
+}
+
+bool FBView::isSelectionEnabled() const {
+	return selectionOption().value();
 }

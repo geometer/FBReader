@@ -102,6 +102,9 @@
 					<node name="linesToScroll" value="Rivien määrä"/>
 					<node name="percentToScroll" value="Vieritysprosentti"/>
 				</node>
+				<node name="Selection" value="Valinta">
+					<node name="enableSelection" value="Enable Text Selection" toBeTranslated="true"/>
+				</node>
 				<node name="Margins" value="Reunus">
 					<node name="left" value="Vasenreunus"/>
 					<node name="right" value="Oikeareunus"/>
@@ -215,6 +218,10 @@
 					<node name="defaultText" value="Avaa ulkoiset linkit selaimessa"/>
 					<node name="choice" value="Käytä selainta"/>
 					<node name="command" value="Suorituskomento"/>
+				</node>
+				<node name="Tap" value="Tap" toBeTranslated="true">
+					<node name="minStylusPressure" value="Minimal Stylus Pressure" toBeTranslated="true"/>
+					<node name="maxStylusPressure" value="Maximal Stylus Pressure" toBeTranslated="true"/>
 				</node>
 			</node>
 		</node>

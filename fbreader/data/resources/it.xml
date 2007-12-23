@@ -102,6 +102,9 @@
 					<node name="linesToScroll" value="Righe da Scorrere"/>
 					<node name="percentToScroll" value="Percentuale da Scorrere"/>
 				</node>
+				<node name="Selection" value="Selezione">
+					<node name="enableSelection" value="Enable Text Selection" toBeTranslated="true"/>
+				</node>
 				<node name="Margins" value="Margini">
 					<node name="left" value="Margine Sinistro"/>
 					<node name="right" value="Margine Destro"/>
@@ -215,6 +218,10 @@
 					<node name="defaultText" value="Apri Collegamenti Esterni in Browser"/>
 					<node name="choice" value="Usa Browser"/>
 					<node name="command" value="Comando da Eseguire"/>
+				</node>
+				<node name="Tap" value="Tap" toBeTranslated="true">
+					<node name="minStylusPressure" value="Minimal Stylus Pressure" toBeTranslated="true"/>
+					<node name="maxStylusPressure" value="Maximal Stylus Pressure" toBeTranslated="true"/>
 				</node>
 			</node>
 		</node>
