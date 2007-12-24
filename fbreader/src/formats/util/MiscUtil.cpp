@@ -76,4 +76,3 @@ std::string MiscUtil::decodeHtmlURL(const std::string &encoded) {
 	}
 	return decoded;
 }
-
