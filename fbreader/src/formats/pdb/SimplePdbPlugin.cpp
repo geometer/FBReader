@@ -39,8 +39,15 @@ bool SimplePdbPlugin::readDescription(const std::string &path, BookDescription &
 	if (description.encoding().empty()) {
 		return false;
 	}
-	if (TextFormatDetector().isHtml(*stream)) {
-		HtmlMetainfoReader metainfoReader(description);
+	int readType = HtmlMetainfoReader::NONE;
+	if (description.title().empty()) {
+		readType |= HtmlMetainfoReader::TITLE;
+	}
+	if (description.author().isNull()) {
+		readType |= HtmlMetainfoReader::AUTHOR;
+	}
+	if ((readType != HtmlMetainfoReader::NONE) && TextFormatDetector().isHtml(*stream)) {
+		HtmlMetainfoReader metainfoReader(description, (HtmlMetainfoReader::ReadType)readType);
 		metainfoReader.readDocument(*stream);
 	}
 

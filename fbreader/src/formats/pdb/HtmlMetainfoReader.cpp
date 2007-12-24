@@ -21,19 +21,19 @@
 
 #include "HtmlMetainfoReader.h"
 
-HtmlMetainfoReader::HtmlMetainfoReader(BookDescription &description) : HtmlReader(description.encoding()), myDescription(description) {
+HtmlMetainfoReader::HtmlMetainfoReader(BookDescription &description, ReadType readType) : HtmlReader(description.encoding()), myDescription(description), myReadType(readType) {
 }
 
 bool HtmlMetainfoReader::tagHandler(const HtmlReader::HtmlTag &tag) {
 	if (tag.Name == "BODY") {
 		return false;
-	} else if (tag.Name == "DC:TITLE") {
+	} else if (((myReadType & TITLE) == TITLE) && (tag.Name == "DC:TITLE")) {
 		myReadTitle = tag.Start;
 		if (!tag.Start && !myTitle.empty()) {
 			myDescription.title() = myTitle;
 			myTitle.erase();
 		}
-	} else if (tag.Name == "DC:CREATOR") {
+	} else if (((myReadType & AUTHOR) == AUTHOR) && (tag.Name == "DC:CREATOR")) {
 		if (tag.Start) {
 			bool flag = false;
 			for (size_t i = 0; i < tag.Attributes.size(); ++i) {

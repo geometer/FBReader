@@ -26,7 +26,15 @@
 class HtmlMetainfoReader : public HtmlReader {
 
 public:
-	HtmlMetainfoReader(BookDescription &description);
+	enum ReadType {
+		NONE = 0,
+		TITLE = 1,
+		AUTHOR = 2,
+		TITLE_AND_AUTHOR = TITLE | AUTHOR
+	};
+
+public:
+	HtmlMetainfoReader(BookDescription &description, ReadType readType);
 
 	const std::string &title() const;
 	const std::string &author() const;
@@ -40,6 +48,7 @@ private:
 
 private:
 	WritableBookDescription myDescription;
+	const ReadType myReadType;
 
 	bool myReadTitle;
 	bool myReadAuthor;
