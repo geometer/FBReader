@@ -21,19 +21,16 @@
 
 #include <ZLApplication.h>
 #include <ZLFile.h>
+#include <ZLStringUtil.h>
 
 #include "MiscUtil.h"
 
-static bool hasPrefix(const std::string &text, const std::string &prefix) {
-	return (text.length() >= prefix.length()) && (text.substr(0, prefix.length()) == prefix);
-}
-
 bool MiscUtil::isReference(const std::string &text) {
 	return
-		hasPrefix(text, "http://") ||
-		hasPrefix(text, "https://") ||
-		hasPrefix(text, "mailto:") ||
-		hasPrefix(text, "ftp://");
+		ZLStringUtil::stringStartsWith(text, "http://") ||
+		ZLStringUtil::stringStartsWith(text, "https://") ||
+		ZLStringUtil::stringStartsWith(text, "mailto:") ||
+		ZLStringUtil::stringStartsWith(text, "ftp://");
 }
 
 std::string MiscUtil::htmlDirectoryPrefix(const std::string &fileName) {
