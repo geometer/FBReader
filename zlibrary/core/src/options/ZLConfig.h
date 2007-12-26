@@ -32,6 +32,9 @@ private:
 	}
 
 public:
+	static bool isInitialised() {
+		return ourIsInitialised;
+	}
 	static void deleteInstance() {
 		if (ourInstance != 0) {
 			delete ourInstance;
@@ -46,6 +49,7 @@ private:
 
 protected:
 	static ZLConfigManager *ourInstance;
+	static bool ourIsInitialised;
 
 friend class ZLOptions;
 };

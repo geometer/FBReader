@@ -70,7 +70,10 @@ static void menuActionSlot(GtkWidget*, gpointer data) {
 	}
 }
 
+#include <iostream>
+
 static bool handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
+	std::cerr << "time = " << key->time << "\n";
 	if (acceptAction()) {
 		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key);
 	}

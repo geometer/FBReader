@@ -30,7 +30,9 @@ XMLConfigManager::XMLConfigManager() {
 }
 
 ZLConfig *XMLConfigManager::createConfig() const {
-	return new XMLConfig();
+	ZLConfig *config = new XMLConfig();
+	ourIsInitialised = true;
+	return config;
 }
 
 const std::string &XMLConfigGroup::getValue(const std::string &name, const std::string &defaultValue) const {

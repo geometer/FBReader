@@ -20,6 +20,7 @@
 #include "ZLConfig.h"
 
 ZLConfigManager *ZLConfigManager::ourInstance = 0;
+bool ZLConfigManager::ourIsInitialised = false;
 
 ZLConfigManager::~ZLConfigManager() {
 }

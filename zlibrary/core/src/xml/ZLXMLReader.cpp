@@ -23,10 +23,14 @@
 
 #include <ZLFile.h>
 #include <ZLInputStream.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLEncodingConverter.h>
 
 #include "ZLXMLReader.h"
 
 #include "expat/ZLXMLReaderInternal.h"
+
+static const size_t BUFFER_SIZE = 2048;
 
 void ZLXMLReader::startElementHandler(const char*, const char**) {
 }
@@ -39,7 +43,7 @@ void ZLXMLReader::characterDataHandler(const char*, int) {
 
 ZLXMLReader::ZLXMLReader(const char *encoding) {
 	myInternalReader = new ZLXMLReaderInternal(*this, encoding);
-	myParserBuffer = new char[bufferSize()];
+	myParserBuffer = new char[BUFFER_SIZE];
 }
 
 ZLXMLReader::~ZLXMLReader() {
@@ -56,17 +60,31 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 		return false;
 	}
 
-	myInternalReader->init();
+	bool useWindows1252 = false;
+	if (ZLEncodingCollection::useWindows1252Hack()) {
+		stream->read(myParserBuffer, 256);
+		std::string stringBuffer(myParserBuffer, 256);
+		stream->seek(0, true);
+		int index = stringBuffer.find('>');
+		if (index > 0) {
+			stringBuffer = ZLUnicodeUtil::toLower(stringBuffer.substr(0, index));
+			int index = stringBuffer.find("\"iso-8859-1\"");
+			if (index > 0) {
+				useWindows1252 = true;
+			}
+		}
+	}
+	myInternalReader->init(useWindows1252 ? "windows-1252" : 0);
 
 	myInterrupted = false;
 
 	size_t length;
 	do {
-		length = stream->read(myParserBuffer, bufferSize());
+		length = stream->read(myParserBuffer, BUFFER_SIZE);
 		if (!myInternalReader->parseBuffer(myParserBuffer, length)) {
 			break;
 		}
-	} while ((length == bufferSize()) && !myInterrupted);
+	} while ((length == BUFFER_SIZE) && !myInterrupted);
 
 	stream->close();
 

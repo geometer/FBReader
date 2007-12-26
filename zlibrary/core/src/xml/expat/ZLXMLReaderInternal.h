@@ -29,7 +29,7 @@ class ZLXMLReaderInternal {
 public:
 	ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding);
 	~ZLXMLReaderInternal();
-	void init();
+	void init(const char *encoding = 0);
 	bool parseBuffer(const char *buffer, size_t len);
 
 private:

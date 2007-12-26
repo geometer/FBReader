@@ -30,7 +30,9 @@ ZLWin32ConfigManager::ZLWin32ConfigManager() {
 }
 
 ZLConfig *ZLWin32ConfigManager::createConfig() const {
-	return new ZLWin32Config();
+	ZLConfig *config = new ZLWin32Config();
+	ourIsInitialised = true;
+	return config;
 }
 
 ZLWin32ConfigGroup::ZLWin32ConfigGroup(const std::string &groupName, std::set<std::string> &categories) : myCategories(categories) {

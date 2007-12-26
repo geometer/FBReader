@@ -79,7 +79,7 @@ ZLXMLReaderInternal::~ZLXMLReaderInternal() {
 	XML_ParserFree(myParser);
 }
 
-void ZLXMLReaderInternal::init() {
+void ZLXMLReaderInternal::init(const char *encoding) {
 	if (!myInitialized) {
 		myInitialized = true;
 		XML_UseForeignDTD(myParser, XML_TRUE);
@@ -90,10 +90,13 @@ void ZLXMLReaderInternal::init() {
 		}
 
 		XML_SetUserData(myParser, &myReader);
+		if (encoding != 0) {
+			XML_SetEncoding(myParser, encoding);
+		}
 		XML_SetStartElementHandler(myParser, fStartElementHandler);
 		XML_SetEndElementHandler(myParser, fEndElementHandler);
 		XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
-		XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, NULL);
+		XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, 0);
 	}
 }
 

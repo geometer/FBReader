@@ -30,9 +30,6 @@ class ZLXMLReaderInternal;
 
 class ZLXMLReader {
 
-public:
-	static size_t bufferSize() { return 2048; }
-
 protected:
   static const char *attributeValue(const char **xmlattributes, const char *name);
   static const char *attributeValue(const char **xmlattributes, const std::string &name);

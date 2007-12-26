@@ -1,3 +1,9 @@
+fbreader (0.8.8d1-1) stable; urgency=low
+
+  * added Windows-1252 hack
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Mon, 25 Dec 2007 08:14:00 +0300
+
 fbreader (0.8.8d-1) stable; urgency=low
 
   * new upstream version
