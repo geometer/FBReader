@@ -29,4 +29,5 @@
 	<binding key="&lt;Ctrl&gt;+&lt;DownArrow&gt;" action="33"/>
 	<binding key="&lt;Ctrl&gt;+&lt;UpArrow&gt;" action="34"/>
 	<binding key="&lt;Ctrl&gt;+&lt;C&gt;" action="35"/>
+	<binding key="&lt;G&gt;" action="38"/>
 </keymap>

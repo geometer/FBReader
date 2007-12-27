@@ -53,6 +53,9 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 
 	myPresentWindowHandler = new PresentWindowHandler(*this);
 	ZLCommunicationManager::instance().registerHandler("present", myPresentWindowHandler);
+
+	createToolbar();
+	createMenubar();
 }
 
 ZLApplication::~ZLApplication() {

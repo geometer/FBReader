@@ -143,7 +143,7 @@ void ZLGtkApplicationWindow::init() {
 }
 
 void ZLGtkApplicationWindow::initMenu() {
-	MenuBuilder(*this).processMenu(application().menubar());
+	MenuBuilder(*this).processMenu(application());
 }
 
 ZLGtkApplicationWindow::MenuBuilder::MenuBuilder(ZLGtkApplicationWindow &window) : myWindow(window) {

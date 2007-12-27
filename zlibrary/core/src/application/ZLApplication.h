@@ -259,7 +259,7 @@ public:
 
 		void addItem(int actionId, const ZLResourceKey &key);
 		void addSeparator();
-		Menu& addSubmenu(const ZLResourceKey &key);
+		ItemPtr addSubmenu(const ZLResourceKey &key);
 
 		const ItemVector &items() const;
 
@@ -317,6 +317,9 @@ public:
 
 	public:
 		virtual ~MenuVisitor();
+		void processMenu(ZLApplication &application);
+
+	private:
 		void processMenu(ZLApplication::Menu &menu);
 
 	protected:
@@ -379,17 +382,18 @@ public:
 	virtual bool closeView();
 	virtual void openFile(const std::string &fileName);
 
-	Toolbar &toolbar();
-	const Toolbar &toolbar() const;
-
-	Menubar &menubar();
-	const Menubar &menubar() const;
-
 	void refreshWindow();
 	void presentWindow();
 
 	const std::string &lastCaller() const;
 	void resetLastCaller();
+
+private:
+	void createToolbar();
+	const Toolbar &toolbar() const;
+
+	void createMenubar();
+	const Menubar &menubar() const;
 
 protected:
 	ZLViewWidget *myViewWidget;
@@ -405,6 +409,7 @@ private:
 	shared_ptr<ZLMessageHandler> myPresentWindowHandler;
 
 friend class ZLApplicationWindow;
+friend class MenuVisitor;
 };
 
 inline const std::string &ZLApplicationBase::ApplicationName() { return ourApplicationName; }
@@ -413,8 +418,6 @@ inline const std::string &ZLApplicationBase::ApplicationImageDirectory() { retur
 inline const std::string &ZLApplicationBase::ApplicationDirectory() { return ourApplicationDirectory; }
 inline const std::string &ZLApplicationBase::DefaultFilesPathPrefix() { return ourDefaultFilesPathPrefix; }
 
-inline ZLApplication::Toolbar &ZLApplication::toolbar() { return myToolbar; }
-inline ZLApplication::Menubar &ZLApplication::menubar() { return myMenubar; }
 inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }
 inline const ZLApplication::Menubar &ZLApplication::menubar() const { return myMenubar; }
 

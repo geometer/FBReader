@@ -274,10 +274,10 @@ void ZLQtApplicationWindow::refresh() {
 	}
 
 	MenuMaskCalculator calculator(*this);
-	calculator.processMenu(application().menubar());
+	calculator.processMenu(application());
 	if (calculator.shouldBeUpdated()) {
 		myMenu->clear();
-		MenuUpdater(*this).processMenu(application().menubar());
+		MenuUpdater(*this).processMenu(application());
 	} else {
 		for (std::map<int,ZLQtMenuAction*>::iterator it = myMenuMap.begin(); it != myMenuMap.end(); ++it) {
 			it->second->setEnabled(application().isActionEnabled(it->first));

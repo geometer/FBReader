@@ -44,18 +44,17 @@ class RecentBooksView;
 
 class FBReader : public ZLApplication {
 
-protected:
+public:
 	enum ViewMode {
-		UNDEFINED_MODE,
-		BOOK_TEXT_MODE,
-		FOOTNOTE_MODE,
-		CONTENTS_MODE,
-		BOOKMARKS_MODE,
-		BOOK_COLLECTION_MODE,
-		RECENT_BOOKS_MODE,
+		UNDEFINED_MODE = 0,
+		BOOK_TEXT_MODE = 1 << 0,
+		FOOTNOTE_MODE = 1 << 1,
+		CONTENTS_MODE = 1 << 2,
+		BOOKMARKS_MODE = 1 << 3,
+		BOOK_COLLECTION_MODE = 1 << 4,
+		RECENT_BOOKS_MODE = 1 << 5,
 	};
 
-public:
 	struct ScrollingOptions {
 		ScrollingOptions(
 			const std::string &delayGroup, const std::string &delayName, long delayValue,
@@ -88,7 +87,6 @@ public:
 	ZLStringOption SearchPatternOption;
 
 	ZLBooleanOption UseSeparateBindingsOption;
-	ZLBooleanOption ShowHelpIconOption;
 
 	ZLBooleanOption EnableSingleClickDictionaryOption;
 
@@ -96,12 +94,11 @@ public:
 	FBReader(const std::string &bookToOpen);
 	~FBReader();
 
+	void setMode(ViewMode mode);
+	ViewMode getMode() const;
+
 private:
 	void initWindow();
-
-	void setMode(ViewMode mode);
-
-	void searchSlot();
 
 	BookDescriptionPtr createDescription(const std::string &fileName) const;
 
@@ -169,18 +166,18 @@ friend class OpenFileHandler;
 friend class OptionsDialog;
 friend class FBView;
 
-friend class ShowCollectionAction;
+//friend class ShowCollectionAction;
 friend class ShowHelpAction;
-friend class ShowRecentBooksListAction;
+//friend class ShowRecentBooksListAction;
 //friend class ShowOptionsDialogAction;
 friend class ShowContentsAction;
 friend class AddBookAction;
 friend class ShowBookInfoAction;
-friend class ScrollToHomeAction;
-friend class ScrollToStartOfTextAction;
-friend class ScrollToEndOfTextAction;
+//friend class ScrollToHomeAction;
+//friend class ScrollToStartOfTextAction;
+//friend class ScrollToEndOfTextAction;
 friend class UndoAction;
-friend class RedoAction;
+//friend class RedoAction;
 friend class SearchAction;
 friend class FindNextAction;
 friend class FindPreviousAction;
@@ -192,6 +189,7 @@ friend class QuitAction;
 friend class OpenPreviousBookAction;
 friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
+//friend class GotoPageNumber;
 friend class SelectionAction;
 };
 

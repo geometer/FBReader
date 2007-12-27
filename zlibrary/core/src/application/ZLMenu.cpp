@@ -17,7 +17,57 @@
  * 02110-1301, USA.
  */
 
+#include <ZLXMLReader.h>
+#include <ZLResource.h>
+
 #include "ZLApplication.h"
+
+class ZLMenubarCreator : public ZLXMLReader {
+
+public:
+	ZLMenubarCreator(ZLApplication::Menubar &menubar);
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
+
+private:
+	ZLApplication::Menu &myMenubar;
+	std::vector<ZLApplication::Menu::ItemPtr> mySubmenuStack;
+};
+
+void ZLApplication::createMenubar() {
+	ZLMenubarCreator(myMenubar).readDocument(ZLApplication::DefaultFilesPathPrefix() + "menubar.xml");
+}
+
+ZLMenubarCreator::ZLMenubarCreator(ZLApplication::Menubar &menubar) : myMenubar(menubar) {
+}
+
+static const std::string ITEM = "item";
+static const std::string SUBMENU = "submenu";
+
+void ZLMenubarCreator::startElementHandler(const char *tag, const char **attributes) {
+	ZLApplication::Menu &menu =
+		mySubmenuStack.empty() ?  myMenubar : (ZLApplication::Menubar::Submenu&)*mySubmenuStack.back();
+	if (ITEM == tag) {
+		const char *action = attributeValue(attributes, "action");
+		const char *key = attributeValue(attributes, "key");
+		if ((action != 0) && (key != 0)) {
+			menu.addItem(atoi(action), ZLResourceKey(key));
+		}
+	} else if (SUBMENU == tag) {
+		const char *key = attributeValue(attributes, "key");
+		if (key != 0) {
+			mySubmenuStack.push_back(menu.addSubmenu(ZLResourceKey(key)));
+		}
+	}
+}
+
+void ZLMenubarCreator::endElementHandler(const char *tag) {
+	if (SUBMENU == tag) {
+		if (!mySubmenuStack.empty()) {
+			mySubmenuStack.pop_back();
+		}
+	}
+}
 
 ZLApplication::Menu::Menu(const ZLResource &resource) : myResource(resource) {
 }
@@ -47,10 +97,10 @@ void ZLApplication::Menu::addSeparator() {
 	myItems.push_back(new Menubar::Separator());
 }
 
-ZLApplication::Menu::Menu &ZLApplication::Menu::addSubmenu(const ZLResourceKey &key) {
-	Menubar::Submenu *submenu = new Menubar::Submenu(myResource[key]);
+ZLApplication::Menu::ItemPtr ZLApplication::Menu::addSubmenu(const ZLResourceKey &key) {
+	ItemPtr submenu = new Menubar::Submenu(myResource[key]);
 	myItems.push_back(submenu);
-	return *submenu;
+	return submenu;
 }
 
 
@@ -79,6 +129,10 @@ ZLApplication::Menubar::Separator::Separator() : Item(SEPARATOR) {
 }
 
 ZLApplication::MenuVisitor::~MenuVisitor() {
+}
+
+void ZLApplication::MenuVisitor::processMenu(ZLApplication &application) {
+	processMenu(application.myMenubar);
 }
 
 void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {

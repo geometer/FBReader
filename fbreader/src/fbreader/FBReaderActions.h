@@ -67,6 +67,7 @@ enum ActionCode {
 	ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD = 35,
 	ACTION_CLEAR_SELECTION = 36,
 	ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY = 37,
+	ACTION_GOTO_PAGE_NUMBER = 38,
 };
 
 class FBAction : public ZLApplication::Action {
@@ -79,11 +80,22 @@ private:
 	FBReader &myFBReader;
 };
 
-class ShowCollectionAction : public FBAction {
+class ModeDependentAction : public FBAction {
+
+protected:
+	ModeDependentAction(FBReader &fbreader, int visibleInModes);
+
+public:
+	bool isVisible();
+
+private:
+	int myVisibleInModes;
+};
+
+class ShowCollectionAction : public ModeDependentAction {
 
 public:
 	ShowCollectionAction(FBReader &fbreader);
-	bool isVisible();
 	void run();
 };
 
@@ -94,11 +106,10 @@ public:
 	void run();
 };
 
-class ShowRecentBooksListAction : public FBAction {
+class ShowRecentBooksListAction : public ModeDependentAction {
 
 public:
 	ShowRecentBooksListAction(FBReader &fbreader);
-	bool isVisible();
 	void run();
 };
 
@@ -125,11 +136,10 @@ public:
 	void run();
 };
 
-class ShowBookInfoAction : public FBAction {
+class ShowBookInfoAction : public ModeDependentAction {
 
 public:
 	ShowBookInfoAction(FBReader &fbreader);
-	bool isVisible();
 	void run();
 };
 
@@ -146,27 +156,24 @@ private:
 	const bool myForward;
 };
 
-class ScrollToHomeAction : public FBAction {
+class ScrollToHomeAction : public ModeDependentAction {
 
 public:
 	ScrollToHomeAction(FBReader &fbreader);
-	bool isVisible();
 	void run();
 };
 
-class ScrollToStartOfTextAction : public FBAction {
+class ScrollToStartOfTextAction : public ModeDependentAction {
 
 public:
 	ScrollToStartOfTextAction(FBReader &fbreader);
-	bool isVisible();
 	void run();
 };
 
-class ScrollToEndOfTextAction : public FBAction {
+class ScrollToEndOfTextAction : public ModeDependentAction {
 
 public:
 	ScrollToEndOfTextAction(FBReader &fbreader);
-	bool isVisible();
 	void run();
 };
 
@@ -178,11 +185,10 @@ public:
 	void run();
 };
 
-class RedoAction : public FBAction {
+class RedoAction : public ModeDependentAction {
 
 public:
 	RedoAction(FBReader &fbreader);
-	bool isVisible();
 	bool isEnabled();
 	void run();
 };
@@ -265,6 +271,13 @@ public:
 	GotoPreviousTOCSectionAction(FBReader &fbreader);
 	bool isVisible();
 	bool isEnabled();
+	void run();
+};
+
+class GotoPageNumber : public ModeDependentAction {
+
+public:
+	GotoPageNumber(FBReader &fbreader);
 	void run();
 };
 

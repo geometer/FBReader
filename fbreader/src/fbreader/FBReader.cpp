@@ -23,7 +23,6 @@
 #include <ZLFile.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
-#include <ZLDialog.h>
 #include <ZLDir.h>
 #include <ZLStringUtil.h>
 #include <ZLResource.h>
@@ -127,7 +126,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
 	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
 	UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false),
-	ShowHelpIconOption(ZLOption::CONFIG_CATEGORY, "Help", "ShowIcon", false),
 	EnableSingleClickDictionaryOption(ZLOption::CONFIG_CATEGORY, "Dictionary", "SingleClick", false),
 	myBindings0("Keys"),
 	myBindings90("Keys90"),
@@ -183,67 +181,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, new CopySelectedTextAction(*this));
 	addAction(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, new OpenSelectedTextInDictionaryAction(*this));
 	addAction(ACTION_CLEAR_SELECTION, new ClearSelectionAction(*this));
-
-	toolbar().addButton(ACTION_SHOW_COLLECTION, ZLResourceKey("books"));
-	toolbar().addButton(ACTION_SHOW_LAST_BOOKS, ZLResourceKey("history"));
-	toolbar().addButton(ACTION_ADD_BOOK, ZLResourceKey("addbook"));
-	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SCROLL_TO_HOME, ZLResourceKey("home"));
-	toolbar().addButton(ACTION_UNDO, ZLResourceKey("leftarrow"));
-	toolbar().addButton(ACTION_REDO, ZLResourceKey("rightarrow"));
-	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_CONTENTS, ZLResourceKey("contents"));
-	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SEARCH, ZLResourceKey("find"));
-	toolbar().addButton(ACTION_FIND_NEXT, ZLResourceKey("findnext"));
-	toolbar().addButton(ACTION_FIND_PREVIOUS, ZLResourceKey("findprev"));
-	toolbar().addSeparator();
-	toolbar().addButton(ACTION_SHOW_BOOK_INFO, ZLResourceKey("bookinfo"));
-	toolbar().addButton(ACTION_SHOW_OPTIONS, ZLResourceKey("settings"));
-	toolbar().addSeparator();
-	toolbar().addButton(ACTION_ROTATE_SCREEN, ZLResourceKey("rotatescreen"));
-	if (ShowHelpIconOption.value()) {
-		toolbar().addSeparator();
-		toolbar().addButton(ACTION_SHOW_HELP, ZLResourceKey("help"));
-	}
-
-	menubar().addItem(ACTION_SHOW_BOOK_INFO, ZLResourceKey("bookInfo"));
-	menubar().addItem(ACTION_SHOW_CONTENTS, ZLResourceKey("toc"));
-
-	Menu &librarySubmenu = menubar().addSubmenu(ZLResourceKey("library"));
-	librarySubmenu.addItem(ACTION_SHOW_COLLECTION, ZLResourceKey("open"));
-	librarySubmenu.addItem(ACTION_OPEN_PREVIOUS_BOOK, ZLResourceKey("previous"));
-	librarySubmenu.addItem(ACTION_SHOW_LAST_BOOKS, ZLResourceKey("recent"));
-	librarySubmenu.addItem(ACTION_ADD_BOOK, ZLResourceKey("addBook"));
-	librarySubmenu.addItem(ACTION_SHOW_HELP, ZLResourceKey("about"));
-
-	Menu &navigationSubmenu = menubar().addSubmenu(ZLResourceKey("navigate"));
-	navigationSubmenu.addItem(ACTION_SCROLL_TO_HOME, ZLResourceKey("gotoStartOfDocument"));
-	navigationSubmenu.addItem(ACTION_SCROLL_TO_START_OF_TEXT, ZLResourceKey("gotoStartOfSection"));
-	navigationSubmenu.addItem(ACTION_SCROLL_TO_END_OF_TEXT, ZLResourceKey("gotoEndOfSection"));
-	navigationSubmenu.addItem(ACTION_GOTO_NEXT_TOC_SECTION, ZLResourceKey("gotoNextTOCItem"));
-	navigationSubmenu.addItem(ACTION_GOTO_PREVIOUS_TOC_SECTION, ZLResourceKey("gotoPreviousTOCItem"));
-	navigationSubmenu.addItem(ACTION_UNDO, ZLResourceKey("goBack"));
-	navigationSubmenu.addItem(ACTION_REDO, ZLResourceKey("goForward"));
-
-	Menu &selectionSubmenu = menubar().addSubmenu(ZLResourceKey("selection"));
-	selectionSubmenu.addItem(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, ZLResourceKey("clipboard"));
-	selectionSubmenu.addItem(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, ZLResourceKey("dictionary"));
-	selectionSubmenu.addItem(ACTION_CLEAR_SELECTION, ZLResourceKey("clear"));
-
-	Menu &findSubmenu = menubar().addSubmenu(ZLResourceKey("search"));
-	findSubmenu.addItem(ACTION_SEARCH, ZLResourceKey("find"));
-	findSubmenu.addItem(ACTION_FIND_NEXT, ZLResourceKey("next"));
-	findSubmenu.addItem(ACTION_FIND_PREVIOUS, ZLResourceKey("previous"));
-
-	Menu &viewSubmenu = menubar().addSubmenu(ZLResourceKey("view"));
-	// MSS: these three actions can have a checkbox next to them
-	viewSubmenu.addItem(ACTION_ROTATE_SCREEN, ZLResourceKey("rotate"));
-	viewSubmenu.addItem(ACTION_TOGGLE_FULLSCREEN, ZLResourceKey("fullScreen"));
-	viewSubmenu.addItem(ACTION_SHOW_HIDE_POSITION_INDICATOR, ZLResourceKey("toggleIndicator"));
-
-	menubar().addItem(ACTION_SHOW_OPTIONS, ZLResourceKey("settings"));
-	menubar().addItem(ACTION_QUIT, ZLResourceKey("close"));
+	addAction(ACTION_GOTO_PAGE_NUMBER, new GotoPageNumber(*this));
 
 	myOpenFileHandler = new OpenFileHandler(*this);
 	ZLCommunicationManager::instance().registerHandler("openFile", myOpenFileHandler);
@@ -411,6 +349,10 @@ void FBReader::rebuildCollectionInternal() {
 	collectionView.collection().authors();
 }
 
+FBReader::ViewMode FBReader::getMode() const {
+	return myMode;
+}
+
 void FBReader::setMode(ViewMode mode) {
 	if (mode == myMode) {
 		return;
@@ -502,34 +444,6 @@ void FBReader::clearTextCaches() {
 	((ZLTextView&)*myContentsView).clearCaches();
 	((ZLTextView&)*myCollectionView).clearCaches();
 	((ZLTextView&)*myRecentBooksView).clearCaches();
-}
-
-void FBReader::searchSlot() {
-	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("textSearchDialog"));
-
-	searchDialog->addOption(ZLResourceKey("text"), SearchPatternOption);
-	searchDialog->addOption(ZLResourceKey("ignoreCase"), SearchIgnoreCaseOption);
-	searchDialog->addOption(ZLResourceKey("wholeText"), SearchInWholeTextOption);
-	searchDialog->addOption(ZLResourceKey("backward"), SearchBackwardOption);
-	if (((ZLTextView&)*currentView()).hasMultiSectionModel()) {
-		searchDialog->addOption(ZLResourceKey("currentSection"), SearchThisSectionOnlyOption);
-	}
-	searchDialog->addButton(ZLResourceKey("go"), true);
-	searchDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
-
-	if (searchDialog->run()) {
-		searchDialog->acceptValues();
-		std::string pattern = SearchPatternOption.value();
-		ZLStringUtil::stripWhiteSpaces(pattern);
-		SearchPatternOption.setValue(pattern);
-		((ZLTextView&)*currentView()).search(
-			SearchPatternOption.value(),
-			SearchIgnoreCaseOption.value(),
-			SearchInWholeTextOption.value(),
-			SearchBackwardOption.value(),
-			SearchThisSectionOnlyOption.value()
-		);
-	}
 }
 
 ZLKeyBindings &FBReader::keyBindings() {

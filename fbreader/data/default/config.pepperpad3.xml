@@ -8,7 +8,4 @@
     <option name="ScrollingDelay" value="0"/>
     <option name="BookPath" value="~/FBooks:~/Books"/>
   </group>
-  <group name="Help">
-    <option name="ShowIcon" value="true"/>
-  </group>
 </config>
