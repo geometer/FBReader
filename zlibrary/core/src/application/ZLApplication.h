@@ -390,8 +390,11 @@ public:
 
 private:
 	void createToolbar();
+public:
+	// TODO: change to private
 	const Toolbar &toolbar() const;
 
+private:
 	void createMenubar();
 	const Menubar &menubar() const;
 
