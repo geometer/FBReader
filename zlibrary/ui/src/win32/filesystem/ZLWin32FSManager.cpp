@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 #include <windows.h>
 
+#include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 
 #include "ZLWin32FSManager.h"
@@ -63,9 +64,10 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 
 	if (path[0] == '~') {
 		path = HomeDir + path.substr(1);
-	} else if (path.substr(0, APPattern.length()) == APPattern) {
+	} else if (ZLStringUtil::stringStartsWith(path, APPattern)) {
 		path = AP + path.substr(APPattern.length());
-	} else if ((path.length() > 1) && (path[1] != ':')) {
+	} else if ((path.length() > 1) && (path[1] != ':') &&
+							!ZLStringUtil::stringStartsWith(path, "\\\\")) {
 		path = PwdDir + "\\" + path;
 	}
 	
@@ -77,7 +79,7 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 		}
 		path.erase(prevIndex, index + 3 - prevIndex);
 	}
-	while ((index = path.find("\\\\")) != -1) {
+	while ((index = path.find("\\\\", 1)) > 0) {
 		path.erase(index, 1);
 	}
 
