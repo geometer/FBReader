@@ -49,6 +49,7 @@ Section "Uninstall"
 	RMDir /r "$INSTDIR\share"
 	Delete "$INSTDIR\FBReader.exe"
 	Delete "$INSTDIR\*.dll"
+	Delete "$INSTDIR\*.license"
 	Delete "$INSTDIR\uninstall.exe"
 	RMDir "$INSTDIR"
 

@@ -51,17 +51,10 @@ static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
 	return true;
 }
 
-//#include <iostream>
-
 static void repaint(GtkWidget*, GdkEvent*, gpointer data) {
-	//FILE *err = fopen("/tmp/repaint-err", "w");
-	//fprintf(err, "+ repaint"); fflush(err);
-	//std::cerr << "+ repaint\n";
 	if (acceptAction()) {
 		((ZLGtkViewWidget*)data)->doPaint();
 	}
-	//std::cerr << "- repaint\n";
-	//fprintf(err, "- repaint"); fclose(err);
 }
 
 static void menuActionSlot(GtkWidget*, gpointer data) {
@@ -70,10 +63,7 @@ static void menuActionSlot(GtkWidget*, gpointer data) {
 	}
 }
 
-#include <iostream>
-
 static bool handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
-	std::cerr << "time = " << key->time << "\n";
 	if (acceptAction()) {
 		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key);
 	}

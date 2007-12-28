@@ -184,7 +184,8 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			if (!info.End.equalWordNumber(start)) {
 				break;
 			}
-			if (elementKind == ZLTextElement::WORD_ELEMENT) {
+			if (useHyphenator && myStyle.textStyle()->allowHyphenations() &&
+					(elementKind == ZLTextElement::WORD_ELEMENT)) {
 				break;
 			}
 		}
