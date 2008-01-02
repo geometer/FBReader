@@ -61,7 +61,7 @@
 			<node name="title" value="FBReader - Asetukset"/>
 			<node name="tab">
 				<node name="General" value="Yleinen">
-					<node name="bookPath" value="Kirjan hakemistopolku"/>
+					<node name="bookPath" value="Kirjaston polku"/>
 					<node name="lookInSubdirectories" value="Hae kirjoja alihakemistoista"/>
 					<node name="recentListSize" value="Viimeisimmät kirjat listan koko"/>
 					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive"/>
@@ -71,7 +71,7 @@
 					<node name="defaultLanguage" value="Oletuskieli"/>
 					<node name="defaultEncodingSet" value="Oletusmerkistöalue"/>
 					<node name="defaultEncoding" value="Oletusmerkistö"/>
-					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1" toBeTranslated="true"/>
+					<node name="useWindows1252Hack" value="Käytä windows-1252 merkistöä iso-8859-1 sijaan"/>
 					<node name="chineseBreakAtAnyPosition" value="Katkaise Kiinaksi oleva teksti mistä tahansa kohdasta"/>
 				</node>
 				<node name="Indicator" value="Ilmaisin">
@@ -104,7 +104,7 @@
 					<node name="percentToScroll" value="Vieritysprosentti"/>
 				</node>
 				<node name="Selection" value="Valinta">
-					<node name="enableSelection" value="Enable Text Selection" toBeTranslated="true"/>
+					<node name="enableSelection" value="Ota käyttöön tekstin valinta"/>
 				</node>
 				<node name="Margins" value="Reunus">
 					<node name="left" value="Vasenreunus"/>
@@ -222,8 +222,8 @@
 				</node>
 				<node name="Maemo" value="Maemo">
 					<node name="keyActionOnRelease" value="Key Action on Release, Not on Press" toBeTranslated="true"/>
-					<node name="minStylusPressure" value="Minimal Stylus Pressure" toBeTranslated="true"/>
-					<node name="maxStylusPressure" value="Maximal Stylus Pressure" toBeTranslated="true"/>
+					<node name="minStylusPressure" value="Styluksen minimi paine"/>
+					<node name="maxStylusPressure" value="Styluksen maksimi paine"/>
 				</node>
 			</node>
 		</node>
@@ -292,8 +292,8 @@
 		<node name="Section Title" value="Valinnan otsikolle"/>
 		<node name="Poem Title" value="Runon otsikolle"/>
 		<node name="Subtitle" value="Alaotsikolle"/>
-		<node name="Annotation" value="Sivuhuomautukselle"/>
-		<node name="Epigraph" value="Johdannolle"/>
+		<node name="Annotation" value="Huomautukselle"/>
+		<node name="Epigraph" value="Epigraphille"/>
 		<node name="Stanza" value="Säkeistölle"/>
 		<node name="Verse" value="Jakeelle"/>
 		<node name="Preformatted text" value="Esimuotoillulle tekstille"/>
