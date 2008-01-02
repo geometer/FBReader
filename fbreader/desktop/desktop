@@ -12,4 +12,4 @@ StartupNotify=true
 Terminal=false
 Type=Application
 Icon=FBReader.png
-Categories=Application;Office;Viewer;
+Categories=Office;Viewer;Literature;
