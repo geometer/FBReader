@@ -49,7 +49,6 @@ public:
 class SimplePdbPlugin : public PdbPlugin {
 
 public:
-	bool providesMetaInfo() const;
 	bool readDescription(const std::string &path, BookDescription &description) const;
 	bool readModel(const BookDescription &description, BookModel &model) const;
 
@@ -61,6 +60,7 @@ protected:
 class PalmDocLikePlugin : public SimplePdbPlugin {
 
 public:
+	bool providesMetaInfo() const;
 	const std::string &tryOpen(const std::string &path) const;
 
 protected:
@@ -91,6 +91,7 @@ public:
 class ZTXTPlugin : public SimplePdbPlugin {
 
 public:
+	bool providesMetaInfo() const;
 	bool acceptsFile(const ZLFile &file) const;
 	const std::string &iconName() const;
 

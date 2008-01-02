@@ -22,6 +22,10 @@
 #include "PdbPlugin.h"
 #include "MobipocketStream.h"
 
+bool PalmDocLikePlugin::providesMetaInfo() const {
+	return true;
+}
+
 shared_ptr<ZLInputStream> PalmDocLikePlugin::createStream(ZLFile &file) const {
 	return new MobipocketStream(file);
 }

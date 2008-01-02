@@ -24,15 +24,28 @@
 #include "../../bookmodel/BookReader.h"
 
 void PdbUtil::readUnsignedShort(ZLInputStream &stream, unsigned short &N) {
+	unsigned char data[2];
+	stream.read((char*)data, 2);
+	N = (((unsigned short)data[0]) << 8) + data[1];
+	/*
 	stream.read((char*)&N + 1, 1);
 	stream.read((char*)&N, 1);
+	*/
 }
 
 void PdbUtil::readUnsignedLong(ZLInputStream &stream, unsigned long &N) {
+	unsigned char data[4];
+	stream.read((char*)data, 4);
+	N = (((unsigned long)data[0]) << 24) +
+			(((unsigned long)data[1]) << 16) +
+			(((unsigned long)data[2]) << 8) +
+			(unsigned long)data[3];
+	/*
 	stream.read((char*)&N + 3, 1);
 	stream.read((char*)&N + 2, 1);
 	stream.read((char*)&N + 1, 1);
 	stream.read((char*)&N, 1);
+	*/
 }
 
 bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {

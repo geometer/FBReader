@@ -27,10 +27,6 @@
 #include "HtmlMetainfoReader.h"
 #include "../util/TextFormatDetector.h"
 
-bool SimplePdbPlugin::providesMetaInfo() const {
-	return false;
-}
-
 bool SimplePdbPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	ZLFile file(path);
 

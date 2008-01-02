@@ -25,6 +25,10 @@
 #include "../txt/PlainTextFormat.h"
 #include "../util/TextFormatDetector.h"
 
+bool ZTXTPlugin::providesMetaInfo() const {
+	return false;
+}
+
 bool ZTXTPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "zTXTGPlm";
 }

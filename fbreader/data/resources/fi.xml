@@ -221,7 +221,7 @@
 					<node name="command" value="Suorituskomento"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Key Action on Release, Not on Press" toBeTranslated="true"/>
+					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press" toBeTranslated="true"/>
 					<node name="minStylusPressure" value="Styluksen minimi paine"/>
 					<node name="maxStylusPressure" value="Styluksen maksimi paine"/>
 				</node>
