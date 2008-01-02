@@ -25,9 +25,13 @@
 #include <ZLView.h>
 #include <ZLApplication.h>
 
-class ZLMaemoTapDetectorInfo;
+class ZLMaemoSpecificOptions;
 
 class ZLGtkViewWidget : public ZLViewWidget {
+
+public:
+	ZLIntegerRangeOption MinPressureOption;
+	ZLIntegerRangeOption MaxPressureOption;
 
 public:
 	ZLGtkViewWidget(ZLApplication *application, Angle initialAngle);
@@ -58,7 +62,7 @@ private:
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;
 
-	ZLMaemoTapDetectorInfo *myTapDetectorInfo;
+	ZLMaemoSpecificOptions *mySpecificOptions;
 };
 
 #endif /* __ZLGTKVIEWWIDGET_H__ */

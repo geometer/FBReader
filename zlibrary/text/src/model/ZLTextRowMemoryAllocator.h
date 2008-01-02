@@ -25,7 +25,7 @@
 class ZLTextRowMemoryAllocator {
 
 public:
-	ZLTextRowMemoryAllocator();
+	ZLTextRowMemoryAllocator(const size_t rowSize);
 	~ZLTextRowMemoryAllocator();
 
 	char *allocate(size_t size);

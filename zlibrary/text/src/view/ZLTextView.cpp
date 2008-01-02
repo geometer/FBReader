@@ -92,17 +92,6 @@ std::vector<size_t>::const_iterator ZLTextView::nextBreakIterator() const {
 	return std::lower_bound(myTextBreaks.begin(), myTextBreaks.end(), endCursor().paragraphCursor().index());
 }
 
-void ZLTextView::scrollToHome() {
-	if (!startCursor().isNull() &&
-			startCursor().isStartOfParagraph() &&
-			startCursor().paragraphCursor().index() == 0) {
-		return;
-	}
-
-	gotoParagraph(0, false);
-	application().refreshWindow();
-}
-
 void ZLTextView::scrollToStartOfText() {
 	if (endCursor().isNull()) {
 		return;

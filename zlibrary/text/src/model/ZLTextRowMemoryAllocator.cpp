@@ -23,7 +23,7 @@
 
 #include "ZLTextRowMemoryAllocator.h"
 
-ZLTextRowMemoryAllocator::ZLTextRowMemoryAllocator() : myRowSize(102400), myOffset(0) {
+ZLTextRowMemoryAllocator::ZLTextRowMemoryAllocator(const size_t rowSize) : myRowSize(rowSize), myOffset(0) {
 }
 
 ZLTextRowMemoryAllocator::~ZLTextRowMemoryAllocator() {

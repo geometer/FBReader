@@ -17,14 +17,11 @@
  * 02110-1301, USA.
  */
 
-//#include <iostream>
-
 #include <ZLOptions.h>
 
 #include "../dialogs/ZLGtkOptionsDialog.h"
 #include "ZLGtkViewWidget.h"
 #include "ZLGtkPaintContext.h"
-#include "ZLMaemoTapDetectorInfo.h"
 #include "../../gtk/pixbuf/ZLGtkPixbufHack.h"
 
 void ZLGtkViewWidget::updateCoordinates(int &x, int &y) {
@@ -67,15 +64,15 @@ bool ZLGtkViewWidget::isStylusEvent(GtkWidget *widget, GdkEventButton *event) {
 	gdk_event_get_axis((GdkEvent*)event, GDK_AXIS_PRESSURE, &pressure);
 	int intPressure = (int)(100 * pressure);
 	return
-		(myTapDetectorInfo->MinPressureOption.value() <= intPressure) &&
-		(intPressure <= myTapDetectorInfo->MaxPressureOption.value());
+		(MinPressureOption.value() <= intPressure) &&
+		(intPressure <= MaxPressureOption.value());
 #elif MAEMO_VERSION == 4
 	gdouble pressure;
 	if (gdk_event_get_axis((GdkEvent*)event, GDK_AXIS_PRESSURE, &pressure)) {
 		int intPressure = (int)(100 * pressure);
 		return
-			(myTapDetectorInfo->MinPressureOption.value() <= intPressure) &&
-			(intPressure <= myTapDetectorInfo->MaxPressureOption.value());
+			(MinPressureOption.value() <= intPressure) &&
+			(intPressure <= MaxPressureOption.value());
 	}
 	
 	if (event->button == 8)
@@ -136,7 +133,13 @@ int ZLGtkViewWidget::height() const {
 	return (myArea != 0) ? myArea->allocation.height : 0;
 }
 
-ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle) : ZLViewWidget(initialAngle) {
+static const std::string GROUP = "StylusPressure";
+
+ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle) :
+	ZLViewWidget(initialAngle),
+	MinPressureOption(ZLOption::CONFIG_CATEGORY, GROUP, "Minimum", 0, 100, 0),
+	MaxPressureOption(ZLOption::CONFIG_CATEGORY, GROUP, "Maximum", 0, 100, 40) {
+
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
 	myOriginalPixbuf = 0;
@@ -145,8 +148,6 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
 	gtk_widget_set_extension_events(myArea, GDK_EXTENSION_EVENTS_CURSOR);
-	myTapDetectorInfo = new ZLMaemoTapDetectorInfo();
-	ZLGtkOptionsDialog::addMaemoBuilder(myTapDetectorInfo);
 }
 
 ZLGtkViewWidget::~ZLGtkViewWidget() {

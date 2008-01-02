@@ -26,7 +26,7 @@
 #include "ZLTextModel.h"
 #include "ZLTextParagraph.h"
 
-ZLTextModel::ZLTextModel() : myLastEntryStart(0) {
+ZLTextModel::ZLTextModel(const size_t rowSize) : myAllocator(rowSize), myLastEntryStart(0) {
 }
 
 ZLTextModel::~ZLTextModel() {
@@ -96,7 +96,7 @@ ZLTextMark ZLTextModel::previousMark(ZLTextMark position) const {
 	return *it;
 }
 
-ZLTextTreeModel::ZLTextTreeModel() {
+ZLTextTreeModel::ZLTextTreeModel() : ZLTextModel(8192) {
 	myRoot = new ZLTextTreeParagraph();
 	myRoot->open(true);
 }
@@ -144,6 +144,9 @@ void ZLTextTreeModel::selectParagraph(size_t index) const {
 		ZLTextModel::selectParagraph(index);
 		((ZLTextTreeParagraph*)(*this)[index])->openTree();
 	}
+}
+
+ZLTextPlainModel::ZLTextPlainModel(const size_t rowSize) : ZLTextModel(rowSize) {
 }
 
 void ZLTextPlainModel::createParagraph(ZLTextParagraph::Kind kind) {

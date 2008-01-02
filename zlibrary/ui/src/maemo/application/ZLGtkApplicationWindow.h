@@ -36,8 +36,14 @@
 #endif
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"
+#include "../../../../core/src/dialogs/ZLDialogContentBuilder.h"
 
-class ZLGtkApplicationWindow : public ZLApplicationWindow { 
+class ZLGtkViewWidget;
+
+class ZLGtkApplicationWindow : public ZLApplicationWindow, public ZLDialogContentBuilder { 
+
+private:
+	ZLBooleanOption KeyActionOnReleaseNotOnPressOption;
 
 public:
 	ZLGtkApplicationWindow(ZLApplication *application);
@@ -47,6 +53,7 @@ private:
 	ZLViewWidget *createViewWidget();
 	void init();
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void buildTabs(ZLOptionsDialog &dialog);
 
 	class MenuBuilder : public ZLApplication::MenuVisitor {
 
@@ -84,7 +91,7 @@ private:
 	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 
 public:
-	void handleKeyEventSlot(GdkEventKey*);
+	void handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease);
 	HildonWindow *getMainWindow() const { return myWindow; }
 
 public:
@@ -117,6 +124,7 @@ private:
 	HildonWindow *myWindow;
 	GtkToolbar *myToolbar;
 	GtkMenu *myMenu;
+	ZLGtkViewWidget *myViewWidget;
 
 	bool myFullScreen;
 

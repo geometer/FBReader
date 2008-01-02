@@ -289,3 +289,14 @@ void BookTextView::PositionIndicatorWithLabels::draw() {
 		}
 	}
 }
+
+void BookTextView::scrollToHome() {
+	if (!startCursor().isNull() &&
+			startCursor().isStartOfParagraph() &&
+			startCursor().paragraphCursor().index() == 0) {
+		return;
+	}
+
+	gotoParagraph(0, false);
+	fbreader().refreshWindow();
+}

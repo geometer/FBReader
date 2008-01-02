@@ -129,7 +129,6 @@ public:
 	void clearCaches();
 
 	void scrollPage(bool forward, ScrollingMode mode, unsigned int value);
-	void scrollToHome();
 	void scrollToStartOfText();
 	void scrollToEndOfText();
 
@@ -221,7 +220,6 @@ private:
 
 private:
 	shared_ptr<ZLTextModel> myModel;
-	std::string myFileName;
 
 	enum {
 		NOTHING_TO_PAINT,

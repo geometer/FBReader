@@ -22,12 +22,14 @@
 
 #include <ZLibrary.h>
 #include <ZLOptionEntry.h>
+#include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include "../message/ZLMaemoMessage.h"
 #include "../view/ZLGtkViewWidget.h"
 #include "../../gtk/util/ZLGtkKeyUtil.h"
 #include "../../gtk/util/ZLGtkSignalUtil.h"
 #include "../dialogs/ZLGtkDialogManager.h"
+#include "../dialogs/ZLGtkOptionsDialog.h"
 #include "../optionView/ZLGtkOptionViewHolder.h"
 #include "../../../../core/src/dialogs/ZLOptionView.h"
 
@@ -63,9 +65,16 @@ static void menuActionSlot(GtkWidget*, gpointer data) {
 	}
 }
 
-static bool handleKey(GtkWidget*, GdkEventKey *key, gpointer data) {
+static bool handleKeyPress(GtkWidget*, GdkEventKey *key, gpointer data) {
 	if (acceptAction()) {
-		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key);
+		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, false);
+	}
+	return false;
+}
+
+static bool handleKeyRelease(GtkWidget*, GdkEventKey *key, gpointer data) {
+	if (acceptAction()) {
+		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, true);
 	}
 	return false;
 }
@@ -89,7 +98,10 @@ static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
 	}
 }
 
-ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application), myFullScreen(false) {
+ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
+	ZLApplicationWindow(application),
+	KeyActionOnReleaseNotOnPressOption(ZLOption::CONFIG_CATEGORY, "KeyAction", "OnRelease", false),
+	myFullScreen(false) {
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
@@ -110,8 +122,11 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) : ZLA
 	hildon_program_add_window(myProgram, myWindow);
 	gtk_widget_show_all(GTK_WIDGET(myWindow));
 
+	myViewWidget = 0;
+
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "key_press_event", GTK_SIGNAL_FUNC(handleKey), this);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "key_press_event", GTK_SIGNAL_FUNC(handleKeyPress), this);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "key_release_event", GTK_SIGNAL_FUNC(handleKeyRelease), this);
 }
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
@@ -171,8 +186,10 @@ void ZLGtkApplicationWindow::MenuBuilder::processSepartor(ZLApplication::Menubar
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
-void ZLGtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
-	application().doActionByKey(ZLGtkKeyUtil::keyName(event));
+void ZLGtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease) {
+	if ((myViewWidget != 0) && (KeyActionOnReleaseNotOnPressOption.value() == isKeyRelease)) {
+		application().doActionByKey(ZLGtkKeyUtil::keyName(event));
+	}
 }
 
 void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
@@ -307,16 +324,19 @@ void ZLGtkApplicationWindow::refresh() {
 }
 
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
-	ZLGtkViewWidget *viewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
-	GtkWidget *area = viewWidget->area();
+	myViewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
+	GtkWidget *area = myViewWidget->area();
 	gtk_container_add(GTK_CONTAINER(myWindow), area);
 	GtkObject *areaObject = GTK_OBJECT(area);
-	ZLGtkSignalUtil::connectSignal(areaObject, "expose_event", GTK_SIGNAL_FUNC(repaint), viewWidget);
-	ZLGtkSignalUtil::connectSignal(areaObject, "button_press_event", GTK_SIGNAL_FUNC(mousePressed), viewWidget);
-	ZLGtkSignalUtil::connectSignal(areaObject, "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), viewWidget);
-	ZLGtkSignalUtil::connectSignal(areaObject, "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), viewWidget);
+	ZLGtkSignalUtil::connectSignal(areaObject, "expose_event", GTK_SIGNAL_FUNC(repaint), myViewWidget);
+	ZLGtkSignalUtil::connectSignal(areaObject, "button_press_event", GTK_SIGNAL_FUNC(mousePressed), myViewWidget);
+	ZLGtkSignalUtil::connectSignal(areaObject, "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), myViewWidget);
+	ZLGtkSignalUtil::connectSignal(areaObject, "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), myViewWidget);
 	gtk_widget_show_all(GTK_WIDGET(myWindow));
-	return viewWidget;
+
+	ZLGtkOptionsDialog::addMaemoBuilder(this);
+
+	return myViewWidget;
 }
 
 bool ZLGtkApplicationWindow::isFullKeyboardControlSupported() const {
@@ -415,4 +435,20 @@ void ZLGtkApplicationWindow::ToolbarButton::press(bool state) {
 		}
 	}
 	myWindow.onButtonPress(myButtonItem);
+}
+
+void ZLGtkApplicationWindow::buildTabs(ZLOptionsDialog &dialog) {
+	ZLDialogContent &tab = dialog.createTab(ZLResourceKey("Maemo"));
+	tab.addOption(
+		ZLResourceKey("keyActionOnRelease"),
+		KeyActionOnReleaseNotOnPressOption
+	);
+	tab.addOption(
+		ZLResourceKey("minStylusPressure"),
+		new ZLSimpleSpinOptionEntry(myViewWidget->MinPressureOption, 1)
+	);
+	tab.addOption(
+		ZLResourceKey("maxStylusPressure"),
+		new ZLSimpleSpinOptionEntry(myViewWidget->MaxPressureOption, 1)
+	);
 }

@@ -9,6 +9,9 @@ case "$1" in
 	desktop|win32|pepperpad3)
 		toolbar_file=data/default/toolbar.full.xml
 		;;
+	zaurus_640x480)
+		toolbar_file=data/default/toolbar.zaurus.xml
+		;;
 	*)
 		toolbar_file=data/default/toolbar.short.xml
 		;;

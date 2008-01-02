@@ -220,7 +220,8 @@
 					<node name="choice" value="Usa Browser"/>
 					<node name="command" value="Comando da Eseguire"/>
 				</node>
-				<node name="Tap" value="Tap" toBeTranslated="true">
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Key Action on Release, Not on Press" toBeTranslated="true"/>
 					<node name="minStylusPressure" value="Minimal Stylus Pressure" toBeTranslated="true"/>
 					<node name="maxStylusPressure" value="Maximal Stylus Pressure" toBeTranslated="true"/>
 				</node>

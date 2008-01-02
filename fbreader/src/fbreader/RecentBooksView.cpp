@@ -40,7 +40,7 @@ const std::string &RecentBooksView::caption() const {
 
 void RecentBooksView::paint() {
 	if (model().isNull()) {
-		ZLTextPlainModel *recentBooksModel = new ZLTextPlainModel();
+		ZLTextPlainModel *recentBooksModel = new ZLTextPlainModel(8192);
 		const Books &books = myLastBooks.books();
 		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
 			recentBooksModel->createParagraph(ZLTextParagraph::TEXT_PARAGRAPH);

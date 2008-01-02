@@ -220,7 +220,8 @@
 					<node name="choice" value="Браузер"/>
 					<node name="command" value="Выполнять команду"/>
 				</node>
-				<node name="Tap" value="Нажатие">
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Key Action on Release, Not on Press" toBeTranslated="true"/>
 					<node name="minStylusPressure" value="Минимальное давление стилуса"/>
 					<node name="maxStylusPressure" value="Максимальное давление стилуса"/>
 				</node>

@@ -26,7 +26,7 @@
 #include "../formats/FormatPlugin.h"
 
 BookModel::BookModel(const BookDescriptionPtr description) : myDescription(description) {
-	myBookTextModel = new ZLTextPlainModel();
+	myBookTextModel = new ZLTextPlainModel(102400);
 	myContentsModel = new ContentsModel();
 	ZLFile file(description->fileName());
 	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);

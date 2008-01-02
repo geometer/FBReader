@@ -40,7 +40,10 @@ public:
 		TREE_MODEL,
 	};
 
-	ZLTextModel();
+protected:
+	ZLTextModel(const size_t rowSize);
+
+public:
 	virtual ~ZLTextModel();
 	virtual Kind kind() const = 0;
 
@@ -85,6 +88,7 @@ private:
 class ZLTextPlainModel : public ZLTextModel {
 
 public:
+	ZLTextPlainModel(const size_t rowSize);
 	Kind kind() const;
 	void createParagraph(ZLTextParagraph::Kind kind);
 };
