@@ -71,7 +71,7 @@
 					<node name="defaultLanguage" value="Язык по умолчанию"/>
 					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию"/>
 					<node name="defaultEncoding" value="Кодировка по умолчанию"/>
-					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1" toBeTranslated="true"/>
+					<node name="useWindows1252Hack" value="Использовать windows-1252 вместо iso-8859-1"/>
 					<node name="chineseBreakAtAnyPosition" value="В китайском языке разрыв строки в любом месте"/>
 				</node>
 				<node name="Indicator" value="Индикатор">
@@ -221,7 +221,7 @@
 					<node name="command" value="Выполнять команду"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press" toBeTranslated="true"/>
+					<node name="keyActionOnRelease" value="Реагировать на отпускание клавиши, а не на нажатие"/>
 					<node name="minStylusPressure" value="Минимальное давление стилуса"/>
 					<node name="maxStylusPressure" value="Максимальное давление стилуса"/>
 				</node>
