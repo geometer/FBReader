@@ -205,13 +205,13 @@ void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const ch
 	if ((myControl == TITLE) && (reader.myModelReader.model().bookTextModel()->paragraphsNumber() > 1)) {
 		reader.myModelReader.insertEndOfSectionParagraph();
 	}
+	reader.myModelReader.pushKind(myControl);
 	reader.myModelReader.beginParagraph();
-	reader.myModelReader.addControl(myControl, true);
 }
 
 void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
-	reader.myModelReader.addControl(myControl, false);
 	reader.myModelReader.endParagraph();
+	reader.myModelReader.popKind();
 }
 
 void XHTMLTagPreAction::doAtStart(XHTMLReader &reader, const char**) {
