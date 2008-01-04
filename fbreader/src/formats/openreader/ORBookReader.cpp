@@ -26,7 +26,7 @@
 #include <ZLFileImage.h>
 
 #include "ORBookReader.h"
-#include "../oeb/XHTMLReader.h"
+#include "../xhtml/XHTMLReader.h"
 #include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
 

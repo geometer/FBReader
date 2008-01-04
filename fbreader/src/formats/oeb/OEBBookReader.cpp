@@ -23,7 +23,7 @@
 #include <ZLFileImage.h>
 
 #include "OEBBookReader.h"
-#include "XHTMLReader.h"
+#include "../xhtml/XHTMLReader.h"
 #include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
 
