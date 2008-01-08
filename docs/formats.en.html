@@ -1,0 +1,135 @@
+<html>
+<head>
+  <title>Electronic Book Formats (supported and unsupported)</title>
+</head>
+<body>
+<h2><center>Electronic Book Formats (supported and unsupported)</center></h2>
+<p>First of all, FBReader is an open source application, and as result all formats FBReader
+currently supports are open formats.  Theoretically, FBReader's engine could be used as a part of a
+proprietary application that would be supporting books in some DRM-ed/non-open format.  However this
+requires desire not only of FBReader developers, but also that of owners of the corresponding
+format.</p>
+
+<p>Since FBReader's authors have limited resources, formats that have the following properties are
+considered first:<ul>
+  <li>the format is quite popular <!-- (usually this means that there are at least several places where users can get
+  books in this format) --></li>
+  <li>the format is expected to be used for books and, first of all, fiction books (it's quite
+  unlikely that we will support any format for electronic sheets)</li>
+  <li>the format is text based, and not image based (e.g. if a book is just a collection of
+  TIFF-images within a container of some sort (archive or other), then it's quite unlikely that
+  implementation of this format will be prioritized highly enough)</li>
+</ul></p>
+
+<p>We do not aim to make support for a particular format as complete as possible so it would cover
+all options listed in the format description, including those that would unlikely to be used in real
+life.  In many cases that would require a significant effort that would not result in anyhow
+significant visible effect for the end user.  However if a particular file is rendered incorrectly
+from your point of view, please contact us and, if possible, include the offensive file and we will
+try to fix the situation.</p>
+
+<p>In the foreseen future we plan to make format support pluggable, this will help to separate the
+application from the actual format support.</p>
+
+<h3>Issues Common for All Formats</h3>
+<p>There are two non-implemented features that many formats required.  These are:<ul>
+  <li>support of style sheets included in the book (e.g. for HTML that would be CSS declarations)</li>
+  <li>table support</li>
+</ul>
+We plan to implement both, when it becomes clear how they should be rendered (this is especially
+important for small screens).</p>
+
+<p>These features are not metioned in the table below.</p>
+
+<h3>List of formats and information about their support in FBReader</h3>
+<table border="1">
+<tr>
+  <td>plucker</td>
+  <td>This format has commands for &ldquo;absolute positioning&rdquo;, which are targetted to the
+  devices with specific screen resolution (e.g. &lquo;put the item 2 pixels away from the left
+  border&rdquo;.) Since FBReader aims to allow reading on devices with different screen sizes and
+  resolutions, such commands may be interpreted depending on the context and, in some cases, be
+  completely ignored.</td>
+</tr>
+<tr>
+  <td>Open E-Book (oeb)</td>
+  <td>The format specification is quite extensive, while there's no a great deal of available books
+  [yet?]. As far as we know, FBReader reasonably well renders books in this format.</td>
+</tr>
+<tr>
+  <td>OpenReader</td>
+  <td>The situation is the same as with the previous format.</td>
+</tr>
+<tr>
+  <td>epub</td>
+  <td>Support for this format is far from being complete, however we plan to improve it.</td>
+</tr>
+<tr>
+  <td>html</td>
+  <td>Generally speaking, HTML is not a book format.  It has many elements that are related to the
+  visual rendering, while it lacks elements related to the book structure (as result, it's quite
+  impossible to determine a table of contents for an arbitrary book in HTML format).  FBReader has
+  limited support for HTML, however it proved to be sufficient for the majority of books available
+  out there.</td>
+</tr>
+<tr>
+  <td>fb2</td>
+  <td>From practical point of view, version 2.0 of the format specification is fully supported. To
+  be compliant with version 2.1 of the standard, FBReader lacks support of tables.</td>
+</tr>
+<tr>
+  <td>plain text</td>
+  <td>This format is supported.  However FBReader might not always correctly split text into
+  paragraphs.</td>
+</tr>
+<tr>
+  <td>ztxt</td>
+  <td>This is just a compressed text.  Comments for the previous format are also applicable for this
+  one.</td>
+</tr>
+<tr>
+  <td>Palmdoc (Aportis Doc)</td>
+  <td>This format is fully supported.</td>
+</tr>
+<tr>
+  <td>tcr</td>
+  <td>This format is fully supported.</td>
+</tr>
+<tr>
+  <td>Mobipocket</td>
+  <td>DRM-ed and/or files compressed with secret algorithm of Mobipocket are not supported.</td>
+</tr>
+<tr>
+  <td>chm</td>
+  <td>There's no complete open description of this format, while there is an open source library
+  called chmlib that allows to work with the format as well as many open source applications that
+  use this library to read and render files in this format.  FBReader's support is implemented
+  independently from chmlib as result rendering might be different.</td>
+</tr>
+<tr>
+  <td>rtf</td>
+  <td>FBReader has minimal support for RTF.</td>
+</tr>
+<tr>
+  <td>pdf</td>
+  <td>This format is not supported. Files in this format may contain just text as well as image
+  representation of pages.  We plan to include PDF support in FBReader: first support for files
+  that are using text only.</td>
+</tr>
+<tr><td>djvu</td><td>Не поддерживается. Планов пока нет.</td></tr>
+<tr><td>doc (Microsoft Word)</td><td>Не поддерживается. Возможно, частичная поддержка будет реализована со временем, например с помощью catdoc.</td></tr>
+<tr><td>odt</td><td>Не поддерживается. Возможно, буде поддерживаться со временем, но формат слишком велик, чтобы рассчитывать на полную поддержку в обозримом будущем.</td></tr>
+<tr><td>lrf</td><td>Не поддерживается. Планов пока нет.</td></tr>
+<tr><td>iSilo</td><td>Не поддерживается. На самом деле, есть 2 формата iSilo, старый и новый (iSiloX). Старый формат открыт, но, насколько нам известно, практически не используется к настоящему моменту. Формат iSiloX является секретным и поэтому не может быть поддержан FBReader'ом.</td></tr>
+<tr><td>.lit</td><td>Не поддерживается и вряд ли когда-нибудь будет поддерживаться. Это закрытый формат, созданный Microsoft и все попытки его поддержки сомнительны с точки зрения закона.</td></tr>
+</table>
+
+<h3>Conclusion.</h3>
+<p>If your favourite format is not listed here, please tell us about it.  If you are able to give us
+[a link to] the format description and can give a few books in this very format, we might be able to
+implement support for it.</p>
+</body>
+
+<!--
+  vim:tw=100
+  -->
