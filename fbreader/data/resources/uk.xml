@@ -71,7 +71,7 @@
 					<node name="defaultLanguage" value="Типова мова"/>
 					<node name="defaultEncodingSet" value="Набiр символiв"/>
 					<node name="defaultEncoding" value="Типовий набiр символiв"/>
-					<node name="useWindows1252Hack" value="Використати windows-1252 замiсть iso-8859-1" toBeTranslated="true"/>
+					<node name="useWindows1252Hack" value="Використати windows-1252 замiсть iso-8859-1"/>
 					<node name="chineseBreakAtAnyPosition" value="В китайскому розбивати строку у будь якому мiсцi"/>
 				</node>
 				<node name="Indicator" value="Індикатор">
@@ -104,7 +104,7 @@
 					<node name="percentToScroll" value="Скільки відсотків зсувати"/>
 				</node>
 				<node name="Selection" value="Помітка">
-					<node name="enableSelection" value="Дозволити помiчати текст" toBeTranslated="true"/>
+					<node name="enableSelection" value="Дозволити помiчати текст"/>
 				</node>
 				<node name="Margins" value="Відступи">
 					<node name="left" value="Відступ зліва"/>
@@ -221,9 +221,9 @@
 					<node name="command" value="Виконати команду"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Виконувати при вiдпусканнi клавiши, нe при натисненнi" toBeTranslated="true"/>
-					<node name="minStylusPressure" value="Мiнiмальне натискування стiлусом" toBeTranslated="true"/>
-					<node name="maxStylusPressure" value="Максимальне натискування стiлусом" toBeTranslated="true"/>
+					<node name="keyActionOnRelease" value="Виконувати при вiдпусканнi клавiши, нe при натисненнi"/>
+					<node name="minStylusPressure" value="Мiнiмальне натискування стiлусом"/>
+					<node name="maxStylusPressure" value="Максимальне натискування стiлусом"/>
 				</node>
 			</node>
 		</node>
