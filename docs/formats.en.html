@@ -4,35 +4,35 @@
 </head>
 <body>
 <h2><center>Electronic Book Formats (supported and unsupported)</center></h2>
-<p>First of all, FBReader is an open source application, and as result all formats FBReader
+<p>Firstly, FBReader is an open source application, and as result all formats FBReader
 currently supports are open formats.  Theoretically, FBReader's engine could be used as a part of a
 proprietary application that would be supporting books in some DRM-ed/non-open format.  However this
 requires desire not only of FBReader developers, but also that of owners of the corresponding
 format.</p>
 
-<p>Since FBReader's authors have limited resources, formats that have the following properties are
+<p>Secondly, since FBReader's authors have limited resources, formats that have the following properties are
 considered first:<ul>
-  <li>the format is quite popular <!-- (usually this means that there are at least several places where users can get
+  <li>popularity of the format <!-- (usually this means that there are at least several places where users can get
   books in this format) --></li>
   <li>the format is expected to be used for books and, first of all, fiction books (it's quite
-  unlikely that we will support any format for electronic sheets)</li>
+  unlikely that we will support any format for spreadsheets)</li>
   <li>the format is text based, and not image based (e.g. if a book is just a collection of
   TIFF-images within a container of some sort (archive or other), then it's quite unlikely that
   implementation of this format will be prioritized highly enough)</li>
 </ul></p>
 
 <p>We do not aim to make support for a particular format as complete as possible so it would cover
-all options listed in the format description, including those that would unlikely to be used in real
-life.  In many cases that would require a significant effort that would not result in anyhow
+all options listed in the format description, e.g. those that would unlikely to be used in real
+life.  In many cases that would require a significant effort that would not result in 
 significant visible effect for the end user.  However if a particular file is rendered incorrectly
-from your point of view, please contact us and, if possible, include the offensive file and we will
+from your point of view, please contact us and if possible include the offensive file and we will
 try to fix the situation.</p>
 
-<p>In the foreseen future we plan to make format support pluggable, this will help to separate the
+<p>In the foreseen future we plan to make format support pluggable &mdash; this will help to separate the
 application from the actual format support.</p>
 
 <h3>Issues Common for All Formats</h3>
-<p>There are two non-implemented features that many formats required.  These are:<ul>
+<p>There are two non-implemented features that many formats required:<ul>
   <li>support of style sheets included in the book (e.g. for HTML that would be CSS declarations)</li>
   <li>table support</li>
 </ul>
@@ -44,8 +44,12 @@ important for small screens).</p>
 <h3>List of formats and information about their support in FBReader</h3>
 <table border="1">
 <tr>
+    <th>Format</th>
+    <th>Comments</th>
+</tr>
+<tr>
   <td>plucker</td>
-  <td>This format has commands for &ldquo;absolute positioning&rdquo;, which are targetted to the
+  <td>This format has commands for &ldquo;absolute positioning&rdquo;, which are targeted to the
   devices with specific screen resolution (e.g. &lquo;put the item 2 pixels away from the left
   border&rdquo;.) Since FBReader aims to allow reading on devices with different screen sizes and
   resolutions, such commands may be interpreted depending on the context and, in some cases, be
@@ -58,7 +62,7 @@ important for small screens).</p>
 </tr>
 <tr>
   <td>OpenReader</td>
-  <td>The situation is the same as with the previous format.</td>
+  <td>The situation is the same as with the Open E-Book.</td>
 </tr>
 <tr>
   <td>epub</td>
