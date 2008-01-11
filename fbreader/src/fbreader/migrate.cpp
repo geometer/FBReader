@@ -39,6 +39,6 @@ void migrateFromOldVersions() {
 	moveOption(
 		ZLCategoryKey::CONFIG, "Options", "ScrollingDelay",
 		ZLCategoryKey::CONFIG, "LargeScrolling", "ScrollingDelay",
-		"0"	
+		"250"	
 	);
 }
