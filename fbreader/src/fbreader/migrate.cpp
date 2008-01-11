@@ -20,10 +20,11 @@
 #include <iostream>
 
 #include <ZLOptions.h>
+#include "../options/FBOptions.h"
 
 #include "migrate.h"
 
-void moveOption(
+static void moveOption(
 	const ZLCategoryKey &oldCategory, const std::string &oldGroup, const std::string &oldName,
 	const ZLCategoryKey &newCategory, const std::string &newGroup, const std::string &newName,
 	const std::string &defaultValue
@@ -32,13 +33,25 @@ void moveOption(
 	ZLStringOption newOption(newCategory, newGroup, newName, defaultValue);
 	if (newOption.value() != oldOption.value()) {
 		newOption.setValue(oldOption.value());
+		oldOption.setValue(defaultValue);
 	}
 }
 
-void migrateFromOldVersions() {
+void migrateTo_0_8_11() {
 	moveOption(
 		ZLCategoryKey::CONFIG, "Options", "ScrollingDelay",
 		ZLCategoryKey::CONFIG, "LargeScrolling", "ScrollingDelay",
 		"250"	
 	);
+}
+
+void migrateFromOldVersions() {
+	ZLStringOption versionOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0");
+	const std::string version = versionOption.value();
+
+	if (version < "0.8.11") {
+		migrateTo_0_8_11();
+	}
+
+	versionOption.setValue("0.8.11");
 }

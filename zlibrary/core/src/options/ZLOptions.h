@@ -32,6 +32,7 @@ public:
 	static const ZLCategoryKey LOOK_AND_FEEL;
 	static const ZLCategoryKey CONFIG;
 	static const ZLCategoryKey STATE;
+	static const ZLCategoryKey SYSTEM;
 
 protected:
 	explicit ZLCategoryKey(const std::string &name);
