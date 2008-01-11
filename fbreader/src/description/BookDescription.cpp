@@ -27,22 +27,21 @@
 #include "Author.h"
 
 #include "../formats/FormatPlugin.h"
-
-#include "../FBOptions.h"
+#include "../options/FBOptions.h"
 
 std::map<std::string,BookDescriptionPtr> BookDescription::ourDescriptions;
 
 static const std::string EMPTY = "";
 
 BookInfo::BookInfo(const std::string &fileName) : 
-	AuthorDisplayNameOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorDisplayName", EMPTY),
-	AuthorSortKeyOption(FBOptions::BOOKS_CATEGORY, fileName, "AuthorSortKey", EMPTY),
-	TitleOption(FBOptions::BOOKS_CATEGORY, fileName, "Title", EMPTY),
-	SequenceNameOption(FBOptions::BOOKS_CATEGORY, fileName, "Sequence", EMPTY),
-	NumberInSequenceOption(FBOptions::BOOKS_CATEGORY, fileName, "Number in seq", 0, 100, 0),
-	LanguageOption(FBOptions::BOOKS_CATEGORY, fileName, "Language", PluginCollection::instance().DefaultLanguageOption.value()),
-	EncodingOption(FBOptions::BOOKS_CATEGORY, fileName, "Encoding", EMPTY),
-	IsSequenceDefinedOption(FBOptions::BOOKS_CATEGORY, fileName, "SequenceDefined", ZLFile(fileName).extension() != "fb2") {
+	AuthorDisplayNameOption(FBCategoryKey::BOOKS, fileName, "AuthorDisplayName", EMPTY),
+	AuthorSortKeyOption(FBCategoryKey::BOOKS, fileName, "AuthorSortKey", EMPTY),
+	TitleOption(FBCategoryKey::BOOKS, fileName, "Title", EMPTY),
+	SequenceNameOption(FBCategoryKey::BOOKS, fileName, "Sequence", EMPTY),
+	NumberInSequenceOption(FBCategoryKey::BOOKS, fileName, "Number in seq", 0, 100, 0),
+	LanguageOption(FBCategoryKey::BOOKS, fileName, "Language", PluginCollection::instance().DefaultLanguageOption.value()),
+	EncodingOption(FBCategoryKey::BOOKS, fileName, "Encoding", EMPTY),
+	IsSequenceDefinedOption(FBCategoryKey::BOOKS, fileName, "SequenceDefined", ZLFile(fileName).extension() != "fb2") {
 	// this is just hack for compatibility with versions < 0.8.8
 	std::string language = LanguageOption.value();
 	if (language == "") {

@@ -24,7 +24,7 @@
 #include <ZLStringUtil.h>
 
 #include "OptionsDialog.h"
-#include "../FBOptions.h"
+#include "../options/FBOptions.h"
 
 #include "../external/ProgramCollection.h"
 
@@ -131,7 +131,7 @@ void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collectio
 			for (std::vector<std::string>::const_iterator it = programNames.begin(); it != programNames.end(); ++it) {
 				const std::vector<Program::OptionDescription> &options = collection->program(*it)->options();
 				for (std::vector<Program::OptionDescription>::const_iterator jt = options.begin(); jt != options.end(); ++jt) {
-					ZLStringOption *parameterOption = new ZLStringOption(FBOptions::EXTERNAL_CATEGORY, *it, jt->OptionName, jt->DefaultValue);
+					ZLStringOption *parameterOption = new ZLStringOption(FBCategoryKey::EXTERNAL, *it, jt->OptionName, jt->DefaultValue);
 					storeTemporaryOption(parameterOption);
 					ZLOptionEntry *parameterEntry = new ZLSimpleStringOptionEntry(*parameterOption);
 					if (programChoiceEntry != 0) {

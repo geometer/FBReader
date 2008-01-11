@@ -38,12 +38,12 @@ static const std::string AUTO_SAVE = "AutoSave";
 static const std::string TIMEOUT = "Timeout";
 
 ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
-	RotationAngleOption(ZLOption::CONFIG_CATEGORY, ROTATION, ANGLE, ZLViewWidget::DEGREES90),
-	AngleStateOption(ZLOption::CONFIG_CATEGORY, STATE, ANGLE, ZLViewWidget::DEGREES0),
-	KeyboardControlOption(ZLOption::CONFIG_CATEGORY, KEYBOARD, FULL_CONTROL, false),
-	ConfigAutoSavingOption(ZLOption::CONFIG_CATEGORY, CONFIG, AUTO_SAVE, true),
-	ConfigAutoSaveTimeoutOption(ZLOption::CONFIG_CATEGORY, CONFIG, TIMEOUT, 1, 6000, 30),
-	KeyDelayOption(ZLOption::CONFIG_CATEGORY, "Options", "KeyDelay", 0, 5000, 250),
+	RotationAngleOption(ZLCategoryKey::CONFIG, ROTATION, ANGLE, ZLViewWidget::DEGREES90),
+	AngleStateOption(ZLCategoryKey::CONFIG, STATE, ANGLE, ZLViewWidget::DEGREES0),
+	KeyboardControlOption(ZLCategoryKey::CONFIG, KEYBOARD, FULL_CONTROL, false),
+	ConfigAutoSavingOption(ZLCategoryKey::CONFIG, CONFIG, AUTO_SAVE, true),
+	ConfigAutoSaveTimeoutOption(ZLCategoryKey::CONFIG, CONFIG, TIMEOUT, 1, 6000, 30),
+	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250),
 	myViewWidget(0),
 	myWindow(0) {
 	myContext = ZLibrary::createContext();
@@ -192,9 +192,9 @@ void ZLApplication::doAction(int actionId) {
 void ZLApplication::resetWindowCaption() {
 	if (myWindow != 0) {
 		if ((currentView() == 0) || (currentView()->caption().empty())) {
-			myWindow->setCaption(ApplicationName());
+			myWindow->setCaption(ZLibrary::ApplicationName());
 		} else {
-			myWindow->setCaption(ApplicationName() + " - " + currentView()->caption());
+			myWindow->setCaption(ZLibrary::ApplicationName() + " - " + currentView()->caption());
 		}
 	}
 }
@@ -332,22 +332,6 @@ const std::string &ZLApplication::Toolbar::ButtonItem::tooltip() const {
 		return EMPTY;
 	}
 	return myTooltip.value();
-}
-
-bool ZLApplication::isFullKeyboardControlSupported() const {
-	return (myWindow != 0) && myWindow->isFullKeyboardControlSupported();
-}
-
-bool ZLApplication::isFingerTapEventSupported() const {
-	return (myWindow != 0) && myWindow->isFingerTapEventSupported();
-}
-
-bool ZLApplication::isMousePresented() const {
-	return (myWindow != 0) && myWindow->isMousePresented();
-}
-
-bool ZLApplication::isKeyboardPresented() const {
-	return (myWindow != 0) && myWindow->isKeyboardPresented();
 }
 
 void ZLApplication::grabAllKeys(bool grab) {

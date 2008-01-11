@@ -21,7 +21,7 @@
 
 #include "ZLOptionsDialog.h"
 
-ZLOptionsDialog::ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : TabOption(ZLOption::LOOK_AND_FEEL_CATEGORY, resource.name(), "SelectedTab", ""), myResource(resource), myApplyAction(applyAction) {
+ZLOptionsDialog::ZLOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : TabOption(ZLCategoryKey::LOOK_AND_FEEL, resource.name(), "SelectedTab", ""), myResource(resource), myApplyAction(applyAction) {
 }
 
 ZLOptionsDialog::~ZLOptionsDialog() {

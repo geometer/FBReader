@@ -100,7 +100,7 @@ static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
 
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	KeyActionOnReleaseNotOnPressOption(ZLOption::CONFIG_CATEGORY, "KeyAction", "OnRelease", false),
+	KeyActionOnReleaseNotOnPressOption(ZLCategoryKey::CONFIG, "KeyAction", "OnRelease", false),
 	myFullScreen(false) {
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
@@ -339,23 +339,7 @@ ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	return myViewWidget;
 }
 
-bool ZLGtkApplicationWindow::isFullKeyboardControlSupported() const {
-	return false;
-}
-
 void ZLGtkApplicationWindow::grabAllKeys(bool) {
-}
-
-bool ZLGtkApplicationWindow::isFingerTapEventSupported() const {
-	return true;
-}
-
-bool ZLGtkApplicationWindow::isMousePresented() const {
-	return false;
-}
-
-bool ZLGtkApplicationWindow::isKeyboardPresented() const {
-	return false;
 }
 
 static void onGtkButtonPress(GtkWidget*, GdkEventButton*, gpointer data) {
@@ -373,7 +357,7 @@ static void onGtkButtonRelease(GtkWidget*, GdkEventButton*, gpointer data) {
 ZLGtkApplicationWindow::ToolbarButton::ToolbarButton(ZLApplication::Toolbar::ButtonItem &buttonItem, ZLGtkApplicationWindow &window) : myButtonItem(buttonItem), myWindow(window) {
 	myAction = myWindow.application().action(buttonItem.actionId());
 
-	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
+	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
 
 	const int width = gdk_pixbuf_get_width(filePixbuf);
 	const int height = gdk_pixbuf_get_height(filePixbuf);

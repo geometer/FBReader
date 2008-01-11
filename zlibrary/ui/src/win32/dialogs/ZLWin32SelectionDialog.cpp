@@ -77,7 +77,7 @@ HICON ZLWin32SelectionDialog::getIcon(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,HICON>::const_iterator it = myIcons.find(pixmapName);
 	if (it == myIcons.end()) {
-		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".ico";
+		std::string imageFileName = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".ico";
 		ZLFile file(imageFileName);
 		HICON icon = (HICON)LoadImageA(0, file.path().c_str(), IMAGE_ICON, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
 		myIcons[pixmapName] = icon;

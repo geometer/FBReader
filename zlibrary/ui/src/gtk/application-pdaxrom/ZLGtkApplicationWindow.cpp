@@ -55,8 +55,8 @@ static const std::string OPTIONS = "Options";
 
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350) {
+	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Width", 10, 800, 350),
+	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Height", 10, 800, 350) {
 
 	myMainWindow = (GtkWindow*)gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
@@ -108,9 +108,9 @@ bool ZLGtkApplicationWindow::isFullscreen() const {
 }
 
 void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
-	if (item->isButton()) {
+	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		static const std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+		static const std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 		GtkWidget *image = gtk_image_new_from_file((imagePrefix + buttonItem.iconName() + ".png").c_str());
 		GtkWidget *button = gtk_button_new();
 		gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
@@ -136,7 +136,7 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item
 void ZLGtkApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
+		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
 			GtkWidget *gtkButton = myButtons[*it];
 			if (gtkButton != 0) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
@@ -182,21 +182,5 @@ void ZLGtkApplicationWindow::close() {
 	gtk_main_quit();
 }
 
-bool ZLGtkApplicationWindow::isFullKeyboardControlSupported() const {
-	return false;
-}
-
 void ZLGtkApplicationWindow::grabAllKeys(bool) {
-}
-
-bool ZLGtkApplicationWindow::isFingerTapEventSupported() const {
-	return false;
-}
-
-bool ZLGtkApplicationWindow::isMousePresented() const {
-	return false;
-}
-
-bool ZLGtkApplicationWindow::isKeyboardPresented() const {
-	return true;
 }

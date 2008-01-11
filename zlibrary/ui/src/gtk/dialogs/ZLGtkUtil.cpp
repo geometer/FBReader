@@ -37,7 +37,6 @@ std::string gtkString(const std::string &str, bool useMnemonics) {
 }
 
 std::string gtkString(const std::string &str) {
-	//return gtkString(str, ZLApplication::isKeyboardPresented());
 	return gtkString(str, true);
 }
 

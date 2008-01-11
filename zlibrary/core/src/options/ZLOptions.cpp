@@ -61,7 +61,7 @@ bool ZLOptions::booleanValue(const std::string &name, bool defaultValue) {
 	return stringValue(name, defaultValue ? "true" : "false") == "true";
 }
 
-void ZLOptions::setValue(const std::string &name, bool value, const std::string &category) {
+void ZLOptions::setValue(const std::string &name, bool value, const ZLCategoryKey &category) {
 	setValue(name, std::string(value ? "true" : "false"), category);
 }
 
@@ -70,7 +70,7 @@ long ZLOptions::integerValue(const std::string &name, long defaultValue) {
 	return (!value.empty()) ? atoi(value.c_str()) : defaultValue;
 }
 
-void ZLOptions::setValue(const std::string &name, long value, const std::string &category) {
+void ZLOptions::setValue(const std::string &name, long value, const ZLCategoryKey &category) {
 	char buf[100];
 	sprintf(buf, "%ld", value);
 	setValue(name, std::string(buf), category);
@@ -82,7 +82,7 @@ double ZLOptions::doubleValue(const std::string &name, double defaultValue) {
 	return (!value.empty()) ? atof(value.c_str()) : defaultValue;
 }
 
-void ZLOptions::setValue(const std::string &name, double value, const std::string &category) {
+void ZLOptions::setValue(const std::string &name, double value, const ZLCategoryKey &category) {
 	char buf[100];
 	setlocale(LC_NUMERIC, "C");
 	sprintf(buf, "%f", value);
@@ -93,8 +93,10 @@ std::string ZLOptions::stringValue(const std::string &name, const std::string &d
 	return myConfig->getValue(myGroupName, name, defaultValue);
 }
 
-void ZLOptions::setValue(const std::string &name, const std::string &value, const std::string &category) {
-	myConfig->setValue(myGroupName, name, value, category);
+void ZLOptions::setValue(const std::string &name, const std::string &value, const ZLCategoryKey &category) {
+	if (category != ZLCategoryKey::EMPTY) { 
+		myConfig->setValue(myGroupName, name, value, category.Name);
+	}
 }
 
 bool ZLOptions::isAutoSavingSupported() const {
@@ -105,9 +107,12 @@ void ZLOptions::startAutoSave(int seconds) {
 	myConfig->startAutoSave(seconds);
 }
 
-const std::string ZLOption::LOOK_AND_FEEL_CATEGORY = "ui";
-const std::string ZLOption::CONFIG_CATEGORY = "options";
-const std::string ZLOption::STATE_CATEGORY = "state";
+const std::string ZLOption::PLATFORM_GROUP = "PlatformOptions";
+const std::string ZLOption::FULL_KEYBOARD_CONTROL = "FullKeyboardControlSupported";
+const std::string ZLOption::KEYBOARD_PRESENTED = "KeyboardPresented";
+const std::string ZLOption::MOUSE_PRESENTED = "MousePresented";
+const std::string ZLOption::TOUCHSCREEN_PRESENTED = "TouchScreenPresented";
+const std::string ZLOption::FINGER_TAP_DETECTABLE = "FingerTapDetectable";
 
 void ZLOption::clearGroup(const std::string &group) {
 	ZLOptions::instance().setGroup(group);
@@ -122,16 +127,16 @@ bool ZLOption::isAutoSavingSupported() {
 	return ZLOptions::instance().isAutoSavingSupported();
 }
 
-ZLOption::ZLOption(const std::string &category, const std::string &group, const std::string &optionName) : myCategory(category), myGroup(group), myOptionName(optionName), myIsSynchronized(false) {
+ZLOption::ZLOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName) : myCategory(category), myGroup(group), myOptionName(optionName), myIsSynchronized(false) {
 }
 
 ZLOption::~ZLOption() {
 }
 
-ZLSimpleOption::ZLSimpleOption(const std::string &category, const std::string &group, const std::string &optionName) : ZLOption(category, group, optionName) {
+ZLSimpleOption::ZLSimpleOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName) : ZLOption(category, group, optionName) {
 }
 
-ZLBooleanOption::ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLBooleanOption::ZLBooleanOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, bool defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBooleanOption::~ZLBooleanOption() {
@@ -165,7 +170,7 @@ void ZLBooleanOption::setValue(bool value) {
 	}
 }
 
-ZLBoolean3Option::ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, ZLBoolean3 defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLBoolean3Option::ZLBoolean3Option(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, ZLBoolean3 defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLBoolean3Option::~ZLBoolean3Option() {
@@ -199,7 +204,7 @@ void ZLBoolean3Option::setValue(ZLBoolean3 value) {
 	}
 }
 
-ZLColorOption::ZLColorOption(const std::string &category, const std::string &group, const std::string &optionName, ZLColor defaultValue) : ZLOption(category, group, optionName), myDefaultIntValue(defaultValue.intValue()) {
+ZLColorOption::ZLColorOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, ZLColor defaultValue) : ZLOption(category, group, optionName), myDefaultIntValue(defaultValue.intValue()) {
 }
 
 ZLColorOption::~ZLColorOption() {
@@ -229,7 +234,7 @@ void ZLColorOption::setValue(ZLColor value) {
 	}
 }
 
-ZLIntegerOption::ZLIntegerOption(const std::string &category, const std::string &group, const std::string &optionName, long defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLIntegerOption::ZLIntegerOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, long defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLIntegerOption::~ZLIntegerOption() {
@@ -259,7 +264,7 @@ void ZLIntegerOption::setValue(long value) {
 	}
 }
 
-ZLIntegerRangeOption::ZLIntegerRangeOption(const std::string &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue) : ZLOption(category, group, optionName), myMinValue(minValue), myMaxValue(maxValue), myDefaultValue(defaultValue) {
+ZLIntegerRangeOption::ZLIntegerRangeOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue) : ZLOption(category, group, optionName), myMinValue(minValue), myMaxValue(maxValue), myDefaultValue(defaultValue) {
 }
 
 ZLIntegerRangeOption::~ZLIntegerRangeOption() {
@@ -299,7 +304,7 @@ long ZLIntegerRangeOption::maxValue() const {
 	return myMaxValue;
 }
 
-ZLDoubleOption::ZLDoubleOption(const std::string &category, const std::string &group, const std::string &optionName, double defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLDoubleOption::ZLDoubleOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, double defaultValue) : ZLOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLDoubleOption::~ZLDoubleOption() {
@@ -329,7 +334,7 @@ void ZLDoubleOption::setValue(double value) {
 	}
 }
 
-ZLStringOption::ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
+ZLStringOption::ZLStringOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, const std::string &defaultValue) : ZLSimpleOption(category, group, optionName), myDefaultValue(defaultValue) {
 }
 
 ZLStringOption::~ZLStringOption() {

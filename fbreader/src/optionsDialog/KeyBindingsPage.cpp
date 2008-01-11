@@ -263,7 +263,7 @@ void UseSeparateOptionsEntry::onStateChanged(bool state) {
 }
 
 KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
-	if (fbreader.isFullKeyboardControlSupported()) {
+	if (ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FULL_KEYBOARD_CONTROL, false).value()) {
 		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry(fbreader));
 	}
 	ZLResourceKey actionKey("action");

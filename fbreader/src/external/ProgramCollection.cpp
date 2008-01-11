@@ -20,10 +20,11 @@
 #include <algorithm>
 
 #include <ZLXMLReader.h>
-#include <ZLApplication.h>
+#include <ZLibrary.h>
+#include <ZLResource.h>
 
 #include "ProgramCollection.h"
-#include "../FBOptions.h"
+#include "../options/FBOptions.h"
 
 class ProgramCollectionBuilder : public ZLXMLReader {
 
@@ -84,9 +85,10 @@ void ProgramCollectionBuilder::startElementHandler(const char *tag, const char *
 	} else if (!myCurrentProgram.isNull() && (ACTION == tag)) {
 		const char *name = attributeValue(attributes, "name");
 		if (name != 0) {
+			static const std::string NAME = "name";
 			ZLCommunicationManager::Data &data = myCurrentProgram->myCommandData[name];
 			for (const char **it = attributes; (*it != 0) && (*(it + 1) != 0); it += 2) {
-				if (*it != "name") {
+				if (NAME != *it) {
 					data[*it] = *(it + 1);
 				}
 			}
@@ -121,7 +123,7 @@ void ProgramCollectionBuilder::endElementHandler(const char *tag) {
 
 ProgramCollectionMap::ProgramCollectionMap() {
 	ProgramCollectionBuilder builder(*this);
-	builder.readDocument(ZLApplication::DefaultFilesPathPrefix() + "external.xml");
+	builder.readDocument(ZLibrary::DefaultFilesPathPrefix() + "external.xml");
 }
 
 shared_ptr<ProgramCollection> ProgramCollectionMap::collection(const std::string &name) const {
@@ -130,8 +132,8 @@ shared_ptr<ProgramCollection> ProgramCollectionMap::collection(const std::string
 }
 
 ProgramCollection::ProgramCollection(const std::string &name) :
-	EnableCollectionOption(ZLOption::CONFIG_CATEGORY, name, "Enabled", true),
-	CurrentNameOption(ZLOption::CONFIG_CATEGORY, name, "Name", "") {
+	EnableCollectionOption(ZLCategoryKey::CONFIG, name, "Enabled", true),
+	CurrentNameOption(ZLCategoryKey::CONFIG, name, "Name", "") {
 }
 
 const std::vector<std::string> &ProgramCollection::names() const {
@@ -163,7 +165,7 @@ void Program::run(const std::string &command, const std::string &parameter) cons
 					const std::string optionName = jt->second.substr(1);
 					std::map<std::string,std::string>::const_iterator st = myDefaultValues.find(optionName);
 					jt->second = ZLStringOption(
-						FBOptions::EXTERNAL_CATEGORY,
+						FBCategoryKey::EXTERNAL,
 						myName,
 						optionName,
 						(st != myDefaultValues.end()) ? st->second : "").value();

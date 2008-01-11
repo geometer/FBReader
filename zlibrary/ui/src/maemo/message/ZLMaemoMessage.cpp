@@ -18,7 +18,7 @@
  */
 
 #include <ZLFile.h>
-#include <ZLApplication.h>
+#include <ZLibrary.h>
 
 #include "ZLMaemoMessage.h"
 
@@ -56,12 +56,12 @@ gint ZLMaemoCommunicationManager::onMessageReceived(const gchar*, const gchar *m
 }
 
 void ZLMaemoCommunicationManager::init() {
-	myContext = osso_initialize(ZLApplication::ApplicationName().c_str(), "0.0", false, 0);
+	myContext = osso_initialize(ZLibrary::ApplicationName().c_str(), "0.0", false, 0);
 	osso_rpc_set_cb_f_with_free(
 		myContext,
-		("com.nokia." + ZLApplication::ApplicationName()).c_str(),
-		("com/nokia/" + ZLApplication::ApplicationName()).c_str(),
-		("com.nokia." + ZLApplication::ApplicationName()).c_str(),
+		("com.nokia." + ZLibrary::ApplicationName()).c_str(),
+		("com/nokia/" + ZLibrary::ApplicationName()).c_str(),
+		("com.nokia." + ZLibrary::ApplicationName()).c_str(),
 		::onMessageReceived,
 		this,
 		(osso_rpc_retval_free_f*)osso_rpc_free_val

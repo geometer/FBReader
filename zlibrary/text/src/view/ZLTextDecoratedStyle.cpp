@@ -26,24 +26,24 @@
 static const std::string STYLE = "Style";
 
 ZLTextStyleDecoration::ZLTextStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int verticalShift, ZLBoolean3 allowHyphenations) :
-	FontFamilyOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":fontFamily", std::string()),
-	FontSizeDeltaOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":fontSize", -16, 16, fontSizeDelta),
-	BoldOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":bold", bold),
-	ItalicOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":italic", italic),
-	VerticalShiftOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":vShift", verticalShift),
-	AllowHyphenationsOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":allowHyphenations", allowHyphenations),
+	FontFamilyOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":fontFamily", std::string()),
+	FontSizeDeltaOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":fontSize", -16, 16, fontSizeDelta),
+	BoldOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":bold", bold),
+	ItalicOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":italic", italic),
+	VerticalShiftOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":vShift", verticalShift),
+	AllowHyphenationsOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":allowHyphenations", allowHyphenations),
 	myName(name),
 	myHyperlinkStyle(NONE) {
 }
 
 ZLTextFullStyleDecoration::ZLTextFullStyleDecoration(const std::string &name, int fontSizeDelta, ZLBoolean3 bold, ZLBoolean3 italic, int spaceBefore, int spaceAfter, int leftIndent, int rightIndent, int firstLineIndentDelta, int verticalShift, ZLTextAlignmentType alignment, double lineSpace, ZLBoolean3 allowHyphenations) : ZLTextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations),
-	SpaceBeforeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":spaceBefore", -10, 100, spaceBefore),
-	SpaceAfterOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":spaceAfter", -10, 100, spaceAfter),
-	LeftIndentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":leftIndent", -300, 300, leftIndent),
-	RightIndentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":rightIndent", -300, 300, rightIndent),
-	FirstLineIndentDeltaOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":firstLineIndentDelta", -300, 300, firstLineIndentDelta),
-	AlignmentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":alignment", alignment),
-	LineSpaceOption(ZLOption::LOOK_AND_FEEL_CATEGORY, STYLE, name + ":lineSpace", lineSpace) {
+	SpaceBeforeOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":spaceBefore", -10, 100, spaceBefore),
+	SpaceAfterOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":spaceAfter", -10, 100, spaceAfter),
+	LeftIndentOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":leftIndent", -300, 300, leftIndent),
+	RightIndentOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":rightIndent", -300, 300, rightIndent),
+	FirstLineIndentDeltaOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":firstLineIndentDelta", -300, 300, firstLineIndentDelta),
+	AlignmentOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":alignment", alignment),
+	LineSpaceOption(ZLCategoryKey::LOOK_AND_FEEL, STYLE, name + ":lineSpace", lineSpace) {
 }
 
 ZLTextStylePtr ZLTextStyleDecoration::createDecoratedStyle(const ZLTextStylePtr base) const {

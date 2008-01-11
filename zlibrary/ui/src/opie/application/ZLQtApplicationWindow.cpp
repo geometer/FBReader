@@ -108,7 +108,7 @@ void ZLQtApplicationWindow::refresh() {
 	}
 	std::vector<bool>::iterator bt = myToolbarMask.begin();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
+		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			if (application().isActionVisible(button.actionId()) != *bt) {
 				*bt = !*bt;
@@ -122,10 +122,10 @@ void ZLQtApplicationWindow::refresh() {
 		centralWidget()->hide();
 		menuBar()->clear();
 		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-			if ((*it)->isButton()) {
+			if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + ZLibrary::FileNameDelimiter + button.iconName()).c_str());
+					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLibrary::ApplicationName()) + ZLibrary::FileNameDelimiter + button.iconName()).c_str());
 					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
 				}
 				++bt;
@@ -135,7 +135,7 @@ void ZLQtApplicationWindow::refresh() {
 	}
 
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
+		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 			if (menuBar()->findItem(id) != 0) {
@@ -157,10 +157,6 @@ void ZLQtApplicationWindow::doActionSlot(int buttonNumber) {
 	application().doAction(buttonNumber);
 }
 
-bool ZLQtApplicationWindow::isFullKeyboardControlSupported() const {
-	return true;
-}
-
 void ZLQtApplicationWindow::grabAllKeys(bool grab) {
 	if (grab) {
 		QPEApplication::grabKeyboard();
@@ -179,17 +175,4 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 void ZLQtApplicationWindow::close() {
 	myCloseFlag = true;
 	QMainWindow::close();
-}
-
-bool ZLQtApplicationWindow::isFingerTapEventSupported() const {
-	return false;
-}
-
-bool ZLQtApplicationWindow::isMousePresented() const {
-	return false;
-}
-
-bool ZLQtApplicationWindow::isKeyboardPresented() const {
-	// TODO: implement
-	return true;
 }

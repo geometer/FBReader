@@ -49,12 +49,7 @@ private:
 	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
 	void close();
 
-	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
-
-	bool isFingerTapEventSupported() const;
-	bool isMousePresented() const;
-	bool isKeyboardPresented() const;
 
 	void setCaption(const std::string &caption);
 

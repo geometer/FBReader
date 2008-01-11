@@ -25,7 +25,6 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QKeyEvent>
 
-#include <ZLApplication.h>
 #include <ZLibrary.h>
 
 #include "ZLQtSelectionDialog.h"
@@ -90,7 +89,7 @@ QIcon &ZLQtSelectionDialog::getIcon(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QIcon*>::const_iterator it = myIcons.find(pixmapName);
 	if (it == myIcons.end()) {
-		QPixmap pixmap((ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".png").c_str());
+		QPixmap pixmap((ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".png").c_str());
 		QIcon *icon = new QIcon(pixmap);
 		myIcons[pixmapName] = icon;
 		myListWidget->setIconSize(pixmap.size());

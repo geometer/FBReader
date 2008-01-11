@@ -25,7 +25,6 @@
 #include <qpushbutton.h>
 #include <qbuttongroup.h>
 
-#include <ZLApplication.h>
 #include <ZLibrary.h>
 
 #include "ZLQtSelectionDialog.h"
@@ -86,7 +85,7 @@ QPixmap &ZLQtSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		QPixmap *pixmap = new QPixmap((ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".png").c_str());
+		QPixmap *pixmap = new QPixmap((ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".png").c_str());
 		myPixmaps[pixmapName] = pixmap;
 		return *pixmap;
 	} else {

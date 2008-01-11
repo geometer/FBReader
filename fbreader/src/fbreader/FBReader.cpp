@@ -40,7 +40,7 @@
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
 
-#include "../FBOptions.h"
+#include "../options/FBOptions.h"
 #include "../bookmodel/BookModel.h"
 #include "../formats/FormatPlugin.h"
 
@@ -66,11 +66,11 @@ FBReader::ScrollingOptions::ScrollingOptions(
 	const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
 	const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
 	const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
-) : DelayOption(ZLOption::CONFIG_CATEGORY, delayGroup, delayName, 0, 5000, delayValue),
-		ModeOption(ZLOption::CONFIG_CATEGORY, modeGroup, modeName, modeValue),
-		LinesToKeepOption(ZLOption::CONFIG_CATEGORY, linesToKeepGroup, linesToKeepName, 1, 100, linesToKeepValue),
-		LinesToScrollOption(ZLOption::CONFIG_CATEGORY, linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
-		PercentToScrollOption(ZLOption::CONFIG_CATEGORY, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
+) : DelayOption(ZLCategoryKey::CONFIG, delayGroup, delayName, 0, 5000, delayValue),
+		ModeOption(ZLCategoryKey::CONFIG, modeGroup, modeName, modeValue),
+		LinesToKeepOption(ZLCategoryKey::CONFIG, linesToKeepGroup, linesToKeepName, 1, 100, linesToKeepValue),
+		LinesToScrollOption(ZLCategoryKey::CONFIG, linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
+		PercentToScrollOption(ZLCategoryKey::CONFIG, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
 
 class OpenFileHandler : public ZLMessageHandler {
 
@@ -90,7 +90,7 @@ private:
 
 FBReader::FBReader(const std::string &bookToOpen) :
 	ZLApplication("FBReader"),
-	QuitOnCancelOption(ZLOption::CONFIG_CATEGORY, OPTIONS, "QuitOnCancel", false),
+	QuitOnCancelOption(ZLCategoryKey::CONFIG, OPTIONS, "QuitOnCancel", false),
 	LargeScrollingOptions(
 		OPTIONS, DELAY, 250,
 		LARGE_SCROLLING, MODE, ZLTextView::NO_OVERLAPPING,
@@ -119,14 +119,14 @@ FBReader::FBReader(const std::string &bookToOpen) :
 		FINGER_TAP_SCROLLING, LINES_TO_SCROLL, 1,
 		FINGER_TAP_SCROLLING, PERCENT_TO_SCROLL, 50
 	),
-	EnableFingerScrollingOption(ZLOption::CONFIG_CATEGORY, FINGER_TAP_SCROLLING, "Enabled", true),
-	SearchBackwardOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Backward", false),
-	SearchIgnoreCaseOption(FBOptions::SEARCH_CATEGORY, SEARCH, "IgnoreCase", true),
-	SearchInWholeTextOption(FBOptions::SEARCH_CATEGORY, SEARCH, "WholeText", false),
-	SearchThisSectionOnlyOption(FBOptions::SEARCH_CATEGORY, SEARCH, "ThisSectionOnly", false),
-	SearchPatternOption(FBOptions::SEARCH_CATEGORY, SEARCH, "Pattern", ""),
-	UseSeparateBindingsOption(ZLOption::CONFIG_CATEGORY, "KeysOptions", "UseSeparateBindings", false),
-	EnableSingleClickDictionaryOption(ZLOption::CONFIG_CATEGORY, "Dictionary", "SingleClick", false),
+	EnableFingerScrollingOption(ZLCategoryKey::CONFIG, FINGER_TAP_SCROLLING, "Enabled", true),
+	SearchBackwardOption(FBCategoryKey::SEARCH, SEARCH, "Backward", false),
+	SearchIgnoreCaseOption(FBCategoryKey::SEARCH, SEARCH, "IgnoreCase", true),
+	SearchInWholeTextOption(FBCategoryKey::SEARCH, SEARCH, "WholeText", false),
+	SearchThisSectionOnlyOption(FBCategoryKey::SEARCH, SEARCH, "ThisSectionOnly", false),
+	SearchPatternOption(FBCategoryKey::SEARCH, SEARCH, "Pattern", ""),
+	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
+	EnableSingleClickDictionaryOption(ZLCategoryKey::CONFIG, "Dictionary", "SingleClick", false),
 	myBindings0("Keys"),
 	myBindings90("Keys90"),
 	myBindings180("Keys180"),
@@ -206,7 +206,7 @@ void FBReader::initWindow() {
 			description = createDescription(myBookToOpen);
 		}
 		if (description.isNull()) {
-			ZLStringOption bookName(ZLOption::STATE_CATEGORY, STATE, BOOK, "");
+			ZLStringOption bookName(ZLCategoryKey::STATE, STATE, BOOK, "");
 			description = BookDescription::getDescription(bookName.value());
 		}
 		if (description.isNull()) {
@@ -291,7 +291,7 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 			delete myModel;
 		}
 		myModel = new BookModel(description);
-		ZLStringOption(ZLOption::STATE_CATEGORY, STATE, BOOK, std::string()).setValue(myModel->fileName());
+		ZLStringOption(ZLCategoryKey::STATE, STATE, BOOK, std::string()).setValue(myModel->fileName());
 		ZLTextHyphenator::instance().load(description->language());
 		bookTextView.setModel(myModel->bookTextModel(), description->fileName());
 		bookTextView.setCaption(description->title());
@@ -427,7 +427,7 @@ bool FBReader::closeView() {
 }
 
 std::string FBReader::helpFileName(const std::string &language) const {
-	return ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp." + language + ".fb2";
+	return ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp." + language + ".fb2";
 }
 
 void FBReader::openFile(const std::string &fileName) {
@@ -476,7 +476,7 @@ bool FBReader::isDictionarySupported() const {
 
 void FBReader::openInDictionary(const std::string &word) {
 	shared_ptr<Program> dictionary = dictionaryCollection()->currentProgram();
-	dictionary->run("present", ZLApplication::ApplicationName());
+	dictionary->run("present", ZLibrary::ApplicationName());
 	dictionary->run("showWord", word);
 }
 

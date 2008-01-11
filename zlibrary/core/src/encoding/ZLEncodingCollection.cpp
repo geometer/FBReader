@@ -42,7 +42,7 @@ ZLEncodingCollection &ZLEncodingCollection::instance() {
 ZLBooleanOption &ZLEncodingCollection::useWindows1252HackOption() {
 	if (ourUseWindows1252HackOption == 0) {
 		ourUseWindows1252HackOption =
-			new ZLBooleanOption(ZLOption::CONFIG_CATEGORY, "Encoding", "UseWindows1252Hack", true);
+			new ZLBooleanOption(ZLCategoryKey::CONFIG, "Encoding", "UseWindows1252Hack", true);
 	}
 	return *ourUseWindows1252HackOption;
 }

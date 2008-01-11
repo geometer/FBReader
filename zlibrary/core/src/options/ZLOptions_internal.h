@@ -44,16 +44,16 @@ public:
 	virtual void unsetValue(const std::string &name);
 
 	virtual bool booleanValue(const std::string &name, bool defaultValue);
-	virtual void setValue(const std::string &name, bool value, const std::string &category);
+	virtual void setValue(const std::string &name, bool value, const ZLCategoryKey &category);
 
 	virtual long integerValue(const std::string &name, long defaultValue);
-	virtual void setValue(const std::string &name, long value, const std::string &category);
+	virtual void setValue(const std::string &name, long value, const ZLCategoryKey &category);
 
 	virtual double doubleValue(const std::string &name, double defaultValue);
-	virtual void setValue(const std::string &name, double value, const std::string &category);
+	virtual void setValue(const std::string &name, double value, const ZLCategoryKey &category);
 
 	virtual std::string stringValue(const std::string &name, const std::string &defaultValue);
-	virtual void setValue(const std::string &name, const std::string &value, const std::string &category);
+	virtual void setValue(const std::string &name, const std::string &value, const ZLCategoryKey &category);
 
 	virtual void startAutoSave(int seconds);
 	virtual bool isAutoSavingSupported() const;

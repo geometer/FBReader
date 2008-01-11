@@ -40,7 +40,7 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 }
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
-	static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
 	setIcon(QIcon(icon));
 	QSize size = icon.size();
@@ -63,7 +63,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myWasMaximized(false),
 	myCursorIsHyperlink(false) {
 
-	//const std::string iconFileName = ZLApplication::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
+	//const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
 	//QPixmap icon(iconFileName.c_str());
 	//setIcon(icon);
 
@@ -165,7 +165,7 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 
 void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
 	QAction *action;
-	if (item->isButton()) {
+	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
 		ZLApplication::Toolbar::ButtonItem &buttonItem = (ZLApplication::Toolbar::ButtonItem&)*item;
 		action = new ZLQtToolBarAction(this, buttonItem);
 		myToolBar->addAction(action);
@@ -198,23 +198,7 @@ void ZLQtApplicationWindow::close() {
 	QMainWindow::close();
 }
 
-bool ZLQtApplicationWindow::isFullKeyboardControlSupported() const {
-	return false;
-}
-
 void ZLQtApplicationWindow::grabAllKeys(bool) {
-}
-
-bool ZLQtApplicationWindow::isFingerTapEventSupported() const {
-	return false;
-}
-
-bool ZLQtApplicationWindow::isMousePresented() const {
-	return true;
-}
-
-bool ZLQtApplicationWindow::isKeyboardPresented() const {
-	return true;
 }
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {

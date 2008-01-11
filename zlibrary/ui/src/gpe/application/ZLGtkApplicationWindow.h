@@ -41,12 +41,7 @@ protected:
 	void refresh();
 	void close();
 
-	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
-
-	bool isFingerTapEventSupported() const;
-	bool isMousePresented() const;
-	bool isKeyboardPresented() const;
 
 	void setCaption(const std::string &caption) { gtk_window_set_title (myMainWindow, caption.c_str ()); }
 

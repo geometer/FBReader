@@ -25,8 +25,7 @@
 #include "BookDescriptionUtil.h"
 #include "BookDescription.h"
 #include "../formats/FormatPlugin.h"
-
-#include "../FBOptions.h"
+#include "../options/FBOptions.h"
 
 static const std::string SIZE = "Size";
 static const std::string ENTRY = "Entry";
@@ -34,23 +33,23 @@ static const std::string ENTRIES_NUMBER = "EntriesNumber";
 
 bool BookDescriptionUtil::checkInfo(const ZLFile &file) {
 	return
-		(ZLIntegerOption(FBOptions::BOOKS_CATEGORY, file.path(), SIZE, -1).value() == (int)file.size());
+		(ZLIntegerOption(FBCategoryKey::BOOKS, file.path(), SIZE, -1).value() == (int)file.size());
 }
 
 void BookDescriptionUtil::saveInfo(const ZLFile &file) {
-	ZLIntegerOption(FBOptions::BOOKS_CATEGORY, file.path(), SIZE, -1).setValue(file.size());
+	ZLIntegerOption(FBCategoryKey::BOOKS, file.path(), SIZE, -1).setValue(file.size());
 }
 
 void BookDescriptionUtil::listZipEntries(const ZLFile &zipFile, std::vector<std::string> &entries) {
-	int entriesNumber = ZLIntegerOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), ENTRIES_NUMBER, -1).value();
+	int entriesNumber = ZLIntegerOption(FBCategoryKey::BOOKS, zipFile.path(), ENTRIES_NUMBER, -1).value();
 	if (entriesNumber == -1) {
 		resetZipInfo(zipFile.path());
-		entriesNumber = ZLIntegerOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), ENTRIES_NUMBER, -1).value();
+		entriesNumber = ZLIntegerOption(FBCategoryKey::BOOKS, zipFile.path(), ENTRIES_NUMBER, -1).value();
 	}
 	for (int i = 0; i < entriesNumber; ++i) {
 		std::string optionName = ENTRY;
 		ZLStringUtil::appendNumber(optionName, i);
-		std::string entry = ZLStringOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), optionName, "").value();
+		std::string entry = ZLStringOption(FBCategoryKey::BOOKS, zipFile.path(), optionName, "").value();
 		if (!entry.empty()) {
 			entries.push_back(entry);
 		}
@@ -71,11 +70,11 @@ void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 				std::string optionName = ENTRY;
 				ZLStringUtil::appendNumber(optionName, counter);
 				std::string fullName = zipPrefix + *zit;
-				ZLStringOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), optionName, "").setValue(fullName);
+				ZLStringOption(FBCategoryKey::BOOKS, zipFile.path(), optionName, "").setValue(fullName);
 				BookInfo(fullName).reset();
 				++counter;
 			}
 		}
-		ZLIntegerOption(FBOptions::BOOKS_CATEGORY, zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);
+		ZLIntegerOption(FBCategoryKey::BOOKS, zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);
 	}
 }

@@ -83,7 +83,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	myToolbar(this) {
 
 	myMainWindow = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
-	const std::string iconFileName = ZLApplication::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLApplication::ApplicationName() + ".png";
+	const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
 	gtk_window_set_icon(myMainWindow, gdk_pixbuf_new_from_file(iconFileName.c_str(), 0));
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myMainWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 
@@ -213,7 +213,7 @@ void ZLGtkApplicationWindow::Toolbar::addToolbarItem(ZLApplication::Toolbar::Ite
 		case ZLApplication::Toolbar::Item::BUTTON:
 			{
 				const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-				static std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+				static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 				GtkWidget *image = gtk_image_new_from_file((imagePrefix + buttonItem.iconName() + ".png").c_str());
 				GtkWidget *button = buttonItem.isToggleButton() ? gtk_toggle_button_new() : gtk_button_new();
 				gtk_button_set_relief((GtkButton*)button, GTK_RELIEF_NONE);
@@ -304,23 +304,7 @@ void ZLGtkApplicationWindow::close() {
 	gtk_main_quit();
 }
 
-bool ZLGtkApplicationWindow::isFullKeyboardControlSupported() const {
-	return false;
-}
-
 void ZLGtkApplicationWindow::grabAllKeys(bool) {
-}
-
-bool ZLGtkApplicationWindow::isFingerTapEventSupported() const {
-	return false;
-}
-
-bool ZLGtkApplicationWindow::isMousePresented() const {
-	return true;
-}
-
-bool ZLGtkApplicationWindow::isKeyboardPresented() const {
-	return true;
 }
 
 void ZLGtkApplicationWindow::setHyperlinkCursor(bool hyperlink) {

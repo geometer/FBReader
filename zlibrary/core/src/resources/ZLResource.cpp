@@ -22,7 +22,6 @@
 
 #include <shared_ptr.h>
 #include <ZLXMLReader.h>
-#include <ZLApplication.h>
 #include <ZLibrary.h>
 
 #include "ZLResource.h"
@@ -122,7 +121,7 @@ const std::string &ZLResource::name() const {
 void ZLTreeResource::loadData(const std::string &language) {
 	std::string filePath = ZLibrary::FileNameDelimiter + "resources" + ZLibrary::FileNameDelimiter + language + ".xml";
 	ZLResourceTreeReader(ourRoot).readDocument(ZLibrary::ZLibraryDirectory() + filePath);
-	ZLResourceTreeReader(ourRoot).readDocument(ZLApplication::ApplicationDirectory() + filePath);
+	ZLResourceTreeReader(ourRoot).readDocument(ZLibrary::ApplicationDirectory() + filePath);
 }
 
 void ZLTreeResource::buildTree() {

@@ -28,13 +28,13 @@ const std::string GROUP = "LastOpenedBooks";
 const std::string BOOK = "Book";
 
 LastOpenedBooks::LastOpenedBooks() :
-	MaxListSizeOption(ZLOption::STATE_CATEGORY, GROUP, "MaxSize", 1, 100, 10) {
+	MaxListSizeOption(ZLCategoryKey::STATE, GROUP, "MaxSize", 1, 100, 10) {
 
 	const int size = MaxListSizeOption.value();
 	for (int i = 0; i < size; ++i) {
 		std::string num = BOOK;
 		ZLStringUtil::appendNumber(num, i);
-		std::string name = ZLStringOption(ZLOption::STATE_CATEGORY, GROUP, num, "").value();
+		std::string name = ZLStringOption(ZLCategoryKey::STATE, GROUP, num, "").value();
 		if (!name.empty()) {
 			BookDescriptionPtr description = BookDescription::getDescription(name);
 			if (!description.isNull()) {
@@ -49,7 +49,7 @@ LastOpenedBooks::~LastOpenedBooks() {
 	for (int i = 0; i < size; ++i) {
 		std::string num = BOOK;
 		ZLStringUtil::appendNumber(num, i);
-		ZLStringOption(ZLOption::STATE_CATEGORY, GROUP, num, "").setValue(myBooks[i]->fileName());
+		ZLStringOption(ZLCategoryKey::STATE, GROUP, num, "").setValue(myBooks[i]->fileName());
 	}
 }
 

@@ -36,6 +36,12 @@ public:
 	static const std::string BaseDirectory;
 	static const std::string &ZLibraryDirectory();
 
+	static const std::string &ImageDirectory();
+	static const std::string &ApplicationName();
+	static const std::string &ApplicationImageDirectory();
+	static const std::string &ApplicationDirectory();
+	static const std::string &DefaultFilesPathPrefix();
+
 public:
 	static bool init(int &argc, char **&argv);
 	static void parseArguments(int &argc, char **&argv);
@@ -47,10 +53,27 @@ private:
 	static std::string ourLanguage;
 	static std::string ourZLibraryDirectory;
 
+	static std::string ourImageDirectory;
+	static std::string ourApplicationImageDirectory;
+	static std::string ourApplicationName;
+	static std::string ourApplicationDirectory;
+	static std::string ourDefaultFilesPathPrefix;
+
+private:
+	static std::string replaceRegExps(const std::string &pattern);
+	static void initApplication(const std::string &name);
+
 private:
 	ZLibrary();
+
+friend class ZLApplicationBase;
 };
 
 inline const std::string &ZLibrary::ZLibraryDirectory() { return ourZLibraryDirectory; }
+inline const std::string &ZLibrary::ApplicationName() { return ourApplicationName; }
+inline const std::string &ZLibrary::ImageDirectory() { return ourImageDirectory; }
+inline const std::string &ZLibrary::ApplicationImageDirectory() { return ourApplicationImageDirectory; }
+inline const std::string &ZLibrary::ApplicationDirectory() { return ourApplicationDirectory; }
+inline const std::string &ZLibrary::DefaultFilesPathPrefix() { return ourDefaultFilesPathPrefix; }
 
 #endif /* __ZLIBRARY_H__ */

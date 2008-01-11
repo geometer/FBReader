@@ -21,7 +21,8 @@
 
 #include <ZLXMLReader.h>
 #include <ZLStringUtil.h>
-#include <ZLApplication.h>
+#include <ZLibrary.h>
+#include <ZLOptions.h>
 #include <ZLKeyBindings.h>
 
 static const std::string BINDINGS_NUMBER = "Number";
@@ -56,7 +57,7 @@ void ZLKeyBindingsReader::startElementHandler(const char *tag, const char **attr
 static const std::string KeymapFile = "keymap.xml";
 
 void ZLKeyBindingsReader::readBindings() {
-	readDocument(ZLApplication::DefaultFilesPathPrefix() + KeymapFile);
+	readDocument(ZLibrary::DefaultFilesPathPrefix() + KeymapFile);
 }
 
 ZLKeyBindings::ZLKeyBindings(const std::string &name) : myName(name) {
@@ -74,15 +75,15 @@ void ZLKeyBindings::loadDefaultBindings() {
 }
 
 void ZLKeyBindings::loadCustomBindings() {
-	int size = ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myName, BINDINGS_NUMBER, 0, 256, 0).value();
+	int size = ZLIntegerRangeOption(ZLCategoryKey::CONFIG, myName, BINDINGS_NUMBER, 0, 256, 0).value();
 	for (int i = 0; i < size; ++i) {
 		std::string key = BINDED_KEY;
 		ZLStringUtil::appendNumber(key, i);
-		std::string keyValue = ZLStringOption(ZLOption::CONFIG_CATEGORY, myName, key, "").value();
+		std::string keyValue = ZLStringOption(ZLCategoryKey::CONFIG, myName, key, "").value();
 		if (!keyValue.empty()) {
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, i);
-			int actionValue = ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myName, action, -1).value();
+			int actionValue = ZLIntegerOption(ZLCategoryKey::CONFIG, myName, action, -1).value();
 			if (actionValue != -1) {
 				bindKey(keyValue, actionValue);
 			}
@@ -107,12 +108,12 @@ void ZLKeyBindings::saveCustomBindings() {
 			ZLStringUtil::appendNumber(key, counter);
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, counter);
-			ZLStringOption(ZLOption::CONFIG_CATEGORY, myName, key, "").setValue(it->first);
-			ZLIntegerOption(ZLOption::CONFIG_CATEGORY, myName, action, -1).setValue(it->second);
+			ZLStringOption(ZLCategoryKey::CONFIG, myName, key, "").setValue(it->first);
+			ZLIntegerOption(ZLCategoryKey::CONFIG, myName, action, -1).setValue(it->second);
 			++counter;
 		}
 	}
-	ZLIntegerRangeOption(ZLOption::CONFIG_CATEGORY, myName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
+	ZLIntegerRangeOption(ZLCategoryKey::CONFIG, myName, BINDINGS_NUMBER, 0, 256, 0).setValue(counter);
 }
 
 ZLKeyBindings::~ZLKeyBindings() {

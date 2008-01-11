@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2008 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,8 +17,20 @@
  * 02110-1301, USA.
  */
 
-#include "FBOptions.h"
+#include "ZLOptions.h"
 
-const std::string FBOptions::BOOKS_CATEGORY = "books";
-const std::string FBOptions::SEARCH_CATEGORY = "search";
-const std::string FBOptions::EXTERNAL_CATEGORY = "external";
+const ZLCategoryKey ZLCategoryKey::EMPTY("");
+const ZLCategoryKey ZLCategoryKey::LOOK_AND_FEEL("ui");
+const ZLCategoryKey ZLCategoryKey::CONFIG("options");
+const ZLCategoryKey ZLCategoryKey::STATE("state");
+
+ZLCategoryKey::ZLCategoryKey(const std::string &name) : Name(name) {
+}
+
+bool ZLCategoryKey::operator == (const ZLCategoryKey &key) const {
+	return key.Name == Name;
+}
+
+bool ZLCategoryKey::operator != (const ZLCategoryKey &key) const {
+	return !operator==(key);
+}

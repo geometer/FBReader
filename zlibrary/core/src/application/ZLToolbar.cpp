@@ -22,6 +22,7 @@
 #include <ZLApplication.h>
 #include <ZLXMLReader.h>
 #include <ZLResource.h>
+#include <ZLibrary.h>
 
 class ZLToolbarCreator : public ZLXMLReader {
 
@@ -34,7 +35,7 @@ private:
 };
 
 void ZLApplication::createToolbar() {
-	ZLToolbarCreator(myToolbar).readDocument(ZLApplication::DefaultFilesPathPrefix() + "toolbar.xml");
+	ZLToolbarCreator(myToolbar).readDocument(ZLibrary::DefaultFilesPathPrefix() + "toolbar.xml");
 }
 
 ZLToolbarCreator::ZLToolbarCreator(ZLApplication::Toolbar &toolbar) : myToolbar(toolbar) {

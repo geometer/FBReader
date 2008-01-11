@@ -137,8 +137,8 @@ static const std::string GROUP = "StylusPressure";
 
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle) :
 	ZLViewWidget(initialAngle),
-	MinPressureOption(ZLOption::CONFIG_CATEGORY, GROUP, "Minimum", 0, 100, 0),
-	MaxPressureOption(ZLOption::CONFIG_CATEGORY, GROUP, "Maximum", 0, 100, 40) {
+	MinPressureOption(ZLCategoryKey::CONFIG, GROUP, "Minimum", 0, 100, 0),
+	MaxPressureOption(ZLCategoryKey::CONFIG, GROUP, "Maximum", 0, 100, 40) {
 
 	myApplication = application;
 	myArea = gtk_drawing_area_new();

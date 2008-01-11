@@ -21,6 +21,7 @@
 #include <ZLDialogManager.h>
 #include <ZLImageManager.h>
 #include <ZLMessage.h>
+#include <ZLUnicodeUtil.h>
 
 #include "ZLibrary.h"
 #include "../filesystem/ZLFSManager.h"
@@ -28,6 +29,12 @@
 
 std::string ZLibrary::ourLanguage;
 std::string ZLibrary::ourZLibraryDirectory;
+
+std::string ZLibrary::ourApplicationName;
+std::string ZLibrary::ourImageDirectory;
+std::string ZLibrary::ourApplicationImageDirectory;
+std::string ZLibrary::ourApplicationDirectory;
+std::string ZLibrary::ourDefaultFilesPathPrefix;
 
 const std::string ZLibrary::BaseDirectory = std::string(BASEDIR);
 
@@ -52,4 +59,28 @@ void ZLibrary::shutdown() {
 	ZLFSManager::deleteInstance();
 	ZLTimeManager::deleteInstance();
 	ZLConfigManager::deleteInstance();
+}
+
+std::string ZLibrary::replaceRegExps(const std::string &pattern) {
+	static const std::string NAME_PATTERN = "%APPLICATION_NAME%";
+	static const std::string LOWERCASENAME_PATTERN = "%application_name%";
+	std::string str = pattern;
+	int index = -1;
+	while ((index = str.find(NAME_PATTERN)) != -1) {
+	  str.erase(index, NAME_PATTERN.length());
+		str.insert(index, ourApplicationName);
+	}
+	while ((index = str.find(LOWERCASENAME_PATTERN)) != -1) {
+	  str.erase(index, LOWERCASENAME_PATTERN.length());
+		str.insert(index, ZLUnicodeUtil::toLower(ourApplicationName));
+	}
+	return str;
+}
+
+void ZLibrary::initApplication(const std::string &name) {
+	ourApplicationName = name;
+	ourImageDirectory = replaceRegExps(IMAGEDIR);
+	ourApplicationImageDirectory = replaceRegExps(APPIMAGEDIR);
+	ourApplicationDirectory = BaseDirectory + FileNameDelimiter + ourApplicationName;
+	ourDefaultFilesPathPrefix = ourApplicationDirectory + FileNameDelimiter + "default" + FileNameDelimiter;
 }

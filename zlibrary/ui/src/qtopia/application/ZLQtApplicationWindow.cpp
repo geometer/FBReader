@@ -74,7 +74,7 @@ ToolBarButton::~ToolBarButton() {
 
 QPixmap &ToolBarButton::pixmap() {
 	if (myReleasedPixmap == 0) {
-		myReleasedPixmap = new QPixmap(Resource::loadPixmap((ZLApplication::ApplicationName() + ZLibrary::FileNameDelimiter + myButton.iconName()).c_str()));
+		myReleasedPixmap = new QPixmap(Resource::loadPixmap((ZLibrary::ApplicationName() + ZLibrary::FileNameDelimiter + myButton.iconName()).c_str()));
 	}
 	if (myButton.isPressed()) {
 		if (myPressedPixmap == 0) {
@@ -146,10 +146,6 @@ void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 		qCaption = qCaption.left(57) + "...";
 	}
 	myMainWindow->setCaption(qCaption);
-}
-
-bool ZLQtApplicationWindow::isFullKeyboardControlSupported() const {
-	return true;
 }
 
 void ZLQtApplicationWindow::grabAllKeys(bool grab) {
@@ -391,19 +387,6 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(myMainWindow, *this);
 	myMainWindow->setCentralWidget(viewWidget->widget());
 	return viewWidget;
-}
-
-bool ZLQtApplicationWindow::isFingerTapEventSupported() const {
-	return false;
-}
-
-bool ZLQtApplicationWindow::isMousePresented() const {
-	return false;
-}
-
-bool ZLQtApplicationWindow::isKeyboardPresented() const {
-	// TODO: implement
-	return true;
 }
 
 ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item) : QAction(::qtString(item.name()), 0, 0, 0), myWindow(window), myActionId(item.actionId()) {

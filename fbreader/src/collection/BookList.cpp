@@ -27,11 +27,11 @@ static std::string BOOK = "Book";
 static std::string SIZE = "Size";
 
 BookList::BookList() {
-	int size = ZLIntegerOption(ZLOption::STATE_CATEGORY, GROUP, SIZE, 0).value();
+	int size = ZLIntegerOption(ZLCategoryKey::STATE, GROUP, SIZE, 0).value();
 	for (int i = 0; i < size; ++i) {
 		std::string optionName = BOOK;
 		ZLStringUtil::appendNumber(optionName, i);
-		ZLStringOption bookOption(ZLOption::STATE_CATEGORY, GROUP, optionName, "");
+		ZLStringOption bookOption(ZLCategoryKey::STATE, GROUP, optionName, "");
 		const std::string &fileName = bookOption.value();
 		if (!fileName.empty()) {
 			addFileName(fileName);
@@ -40,12 +40,12 @@ BookList::BookList() {
 }
 
 BookList::~BookList() {
-	ZLIntegerOption(ZLOption::STATE_CATEGORY, GROUP, SIZE, 0).setValue(myFileNames.size());
+	ZLIntegerOption(ZLCategoryKey::STATE, GROUP, SIZE, 0).setValue(myFileNames.size());
 	int i = 0;
 	for (std::set<std::string>::const_iterator it = myFileNames.begin(); it != myFileNames.end(); ++i, ++it) {
 		std::string optionName = BOOK;
 		ZLStringUtil::appendNumber(optionName, i);
-		ZLStringOption(ZLOption::STATE_CATEGORY, GROUP, optionName, "").setValue(*it);
+		ZLStringOption(ZLCategoryKey::STATE, GROUP, optionName, "").setValue(*it);
 	}
 }
 

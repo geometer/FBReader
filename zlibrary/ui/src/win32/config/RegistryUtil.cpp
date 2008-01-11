@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLApplication.h>
+#include <ZLibrary.h>
 #include <ZLStringUtil.h>
 
 #include "ZLWin32Config.h"
@@ -26,7 +26,7 @@ const std::string ZLWin32Config::PSEUDO_GROUPNAME_PREFIX = "____";
 const std::string ZLWin32Config::REAL_GROUPNAME_KEY = "____realGroupName";
 
 std::string ZLWin32Config::rootKeyName() const {
-	return "Software\\" + ZLApplication::ApplicationName();
+	return "Software\\" + ZLibrary::ApplicationName();
 }
 
 void ZLWin32Config::collectSubKeys(std::set<std::string> &keySet, HKEY root) {

@@ -23,7 +23,6 @@
 #include <qpe/resource.h>
 
 #include <ZLibrary.h>
-#include <ZLApplication.h>
 #include <ZLUnicodeUtil.h>
 
 #include "ZLQtSelectionDialog.h"
@@ -59,7 +58,7 @@ QPixmap &ZLQtSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		QPixmap *pixmap = new QPixmap(Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLApplication::ApplicationName()) + ZLibrary::FileNameDelimiter + pixmapName).c_str()));
+		QPixmap *pixmap = new QPixmap(Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLibrary::ApplicationName()) + ZLibrary::FileNameDelimiter + pixmapName).c_str()));
 		myPixmaps[pixmapName] = pixmap;
 		return *pixmap;
 	} else {

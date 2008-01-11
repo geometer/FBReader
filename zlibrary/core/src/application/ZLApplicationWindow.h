@@ -55,12 +55,7 @@ protected:
 
 	virtual void setCaption(const std::string &caption) = 0;
 
-	virtual bool isFullKeyboardControlSupported() const = 0;
 	virtual void grabAllKeys(bool grab) = 0;
-
-	virtual bool isFingerTapEventSupported() const = 0;
-	virtual bool isMousePresented() const = 0;
-	virtual bool isKeyboardPresented() const = 0;
 
 	virtual void setFullscreen(bool fullscreen) = 0;
 	virtual bool isFullscreen() const = 0;

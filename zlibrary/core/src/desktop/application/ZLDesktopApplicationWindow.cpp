@@ -23,9 +23,9 @@ static const std::string OPTIONS = "Options";
 
 ZLDesktopApplicationWindow::ZLDesktopApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	myXOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "XPosition", 0, 2000, 10),
-	myYOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "YPosition", 0, 2000, 10),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 2000, 800),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 2000, 600),
-	myWindowStateOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "WindowState", NORMAL) {
+	myXOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "XPosition", 0, 2000, 10),
+	myYOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "YPosition", 0, 2000, 10),
+	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Width", 10, 2000, 800),
+	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Height", 10, 2000, 600),
+	myWindowStateOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "WindowState", NORMAL) {
 }

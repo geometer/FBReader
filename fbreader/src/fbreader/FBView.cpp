@@ -26,23 +26,23 @@
 static const std::string OPTIONS = "Options";
 
 FBMargins::FBMargins() :
-	LeftMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "LeftMargin", 0, 1000, 4),
-	RightMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "RightMargin", 0, 1000, 4),
-	TopMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "TopMargin", 0, 1000, 0),
-	BottomMarginOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "BottomMargin", 0, 1000, 4) {
+	LeftMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "LeftMargin", 0, 1000, 4),
+	RightMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "RightMargin", 0, 1000, 4),
+	TopMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "TopMargin", 0, 1000, 0),
+	BottomMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "BottomMargin", 0, 1000, 4) {
 }
 
 static const std::string INDICATOR = "Indicator";
 
 FBIndicatorStyle::FBIndicatorStyle() :
-	ShowOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Show", true),
-	IsSensitiveOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "TouchSensitive", true),
-	ShowTextPositionOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "PositionText", true),
-	ShowTimeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Time", true),
-	ColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Color", ZLColor(127, 127, 127)),
-	HeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Height", 1, 100, 16),
-	OffsetOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "Offset", 0, 100, 3),
-	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, INDICATOR, "FontSize", 4, 72, 14) {
+	ShowOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Show", true),
+	IsSensitiveOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "TouchSensitive", true),
+	ShowTextPositionOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "PositionText", true),
+	ShowTimeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Time", true),
+	ColorOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Color", ZLColor(127, 127, 127)),
+	HeightOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Height", 1, 100, 16),
+	OffsetOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Offset", 0, 100, 3),
+	FontSizeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "FontSize", 4, 72, 14) {
 }
 
 bool FBIndicatorStyle::isVisible() const {
@@ -178,7 +178,7 @@ int FBView::bottomMargin() const {
 
 ZLBooleanOption &FBView::selectionOption() {
 	if (ourSelectionOption.isNull()) {
-		ourSelectionOption = new ZLBooleanOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "IsSelectionEnabled", true);
+		ourSelectionOption = new ZLBooleanOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "IsSelectionEnabled", true);
 	}
 	return *ourSelectionOption;
 }

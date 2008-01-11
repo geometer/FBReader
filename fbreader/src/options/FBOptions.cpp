@@ -17,20 +17,11 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FBOPTIONS_H__
-#define __FBOPTIONS_H__
+#include "FBOptions.h"
 
-#include <string>
+FBCategoryKey::FBCategoryKey(const std::string &name) : ZLCategoryKey(name) {
+}
 
-class FBOptions {
-
-public:
-	static const std::string BOOKS_CATEGORY;
-	static const std::string SEARCH_CATEGORY;
-	static const std::string EXTERNAL_CATEGORY;
-
-private:
-	FBOptions();
-};
-
-#endif /* __FBOPTIONS_H__ */
+const FBCategoryKey FBCategoryKey::BOOKS("books");
+const FBCategoryKey FBCategoryKey::SEARCH("search");
+const FBCategoryKey FBCategoryKey::EXTERNAL("external");

@@ -29,10 +29,10 @@
 #include "../formats/FormatPlugin.h"
 
 FBFileHandler::FBFileHandler() :
-	DirectoryOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "OpenFileDialog", "Directory", ZLApplication::HomeDirectory), myIsUpToDate(false), mySelectedIndex(0) {
+	DirectoryOption(ZLCategoryKey::LOOK_AND_FEEL, "OpenFileDialog", "Directory", "~"), myIsUpToDate(false), mySelectedIndex(0) {
 	myDir = ZLFile(DirectoryOption.value()).directory();
 	if (myDir.isNull()) {
-		myDir = ZLFile(ZLApplication::HomeDirectory).directory();
+		myDir = ZLFile("~").directory();
 	}
 	if (myDir.isNull()) {
 		myDir = ZLDir::root();

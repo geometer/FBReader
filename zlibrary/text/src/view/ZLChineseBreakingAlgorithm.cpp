@@ -29,5 +29,5 @@ ZLChineseBreakingAlgorithm &ZLChineseBreakingAlgorithm::instance() {
 }
 
 ZLChineseBreakingAlgorithm::ZLChineseBreakingAlgorithm() :
-	AnyPositionBreakingOption(ZLOption::CONFIG_CATEGORY, "ChineseBreakingAgorithm", "BreakAtAnyPlace", true) {
+	AnyPositionBreakingOption(ZLCategoryKey::CONFIG, "ChineseBreakingAgorithm", "BreakAtAnyPlace", true) {
 }

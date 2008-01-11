@@ -25,12 +25,33 @@
 #include <ZLColor.h>
 #include <ZLBoolean3.h>
 
+class ZLCategoryKey {
+
+public:
+	static const ZLCategoryKey EMPTY;
+	static const ZLCategoryKey LOOK_AND_FEEL;
+	static const ZLCategoryKey CONFIG;
+	static const ZLCategoryKey STATE;
+
+protected:
+	explicit ZLCategoryKey(const std::string &name);
+
+public:
+	bool operator == (const ZLCategoryKey &key) const;
+	bool operator != (const ZLCategoryKey &key) const;
+
+	const std::string Name;
+};
+
 class ZLOption {
 
 public:
-	static const std::string LOOK_AND_FEEL_CATEGORY;
-	static const std::string CONFIG_CATEGORY;
-	static const std::string STATE_CATEGORY;
+	static const std::string PLATFORM_GROUP;
+	static const std::string FULL_KEYBOARD_CONTROL;
+	static const std::string KEYBOARD_PRESENTED;
+	static const std::string MOUSE_PRESENTED;
+	static const std::string TOUCHSCREEN_PRESENTED;
+	static const std::string FINGER_TAP_DETECTABLE;
 
 public:
 	static void clearGroup(const std::string &group);
@@ -38,13 +59,13 @@ public:
 	static void startAutoSave(int seconds);
 	
 protected:
-	ZLOption(const std::string &category, const std::string &group, const std::string &optionName);
+	ZLOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName);
 
 public:
 	virtual ~ZLOption();
 
 protected:
-	std::string myCategory;
+	const ZLCategoryKey &myCategory;
 	std::string myGroup;
 	std::string myOptionName;
 	mutable bool myIsSynchronized;
@@ -65,7 +86,7 @@ public:
 	};
 
 protected:
-	ZLSimpleOption(const std::string &category, const std::string &group, const std::string &optionName);
+	ZLSimpleOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName);
 
 public:
 	virtual Type type() const = 0;
@@ -74,7 +95,7 @@ public:
 class ZLBooleanOption : public ZLSimpleOption {
 
 public:
-	ZLBooleanOption(const std::string &category, const std::string &group, const std::string &optionName, bool defaultValue);
+	ZLBooleanOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, bool defaultValue);
 	~ZLBooleanOption();
 	Type type() const;
 
@@ -89,7 +110,7 @@ private:
 class ZLBoolean3Option : public ZLSimpleOption {
 
 public:
-	ZLBoolean3Option(const std::string &category, const std::string &group, const std::string &optionName, ZLBoolean3 defaultValue);
+	ZLBoolean3Option(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, ZLBoolean3 defaultValue);
 	~ZLBoolean3Option();
 	Type type() const;
 
@@ -104,7 +125,7 @@ private:
 class ZLIntegerOption : public ZLOption {
 
 public:
-	ZLIntegerOption(const std::string &category, const std::string &group, const std::string &optionName, long defaultValue);
+	ZLIntegerOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, long defaultValue);
 	~ZLIntegerOption();
 
 	long value() const;
@@ -118,7 +139,7 @@ private:
 class ZLIntegerRangeOption : public ZLOption {
 
 public:
-	ZLIntegerRangeOption(const std::string &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue);
+	ZLIntegerRangeOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue);
 	~ZLIntegerRangeOption();
 
 	long value() const;
@@ -136,7 +157,7 @@ private:
 class ZLColorOption : public ZLOption {
 
 public:
-	ZLColorOption(const std::string &category, const std::string &group, const std::string &optionName, ZLColor defaultValue);
+	ZLColorOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, ZLColor defaultValue);
 	~ZLColorOption();
 
 	ZLColor value() const;
@@ -150,7 +171,7 @@ private:
 class ZLDoubleOption : public ZLOption {
 
 public:
-	ZLDoubleOption(const std::string &category, const std::string &group, const std::string &optionName, double defaultValue);
+	ZLDoubleOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, double defaultValue);
 	~ZLDoubleOption();
 
 	double value() const;
@@ -164,7 +185,7 @@ private:
 class ZLStringOption : public ZLSimpleOption {
 
 public:
-	ZLStringOption(const std::string &category, const std::string &group, const std::string &optionName, const std::string &defaultValue);
+	ZLStringOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, const std::string &defaultValue);
 	~ZLStringOption();
 	Type type() const;
 

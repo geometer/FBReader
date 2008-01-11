@@ -18,7 +18,6 @@
  */
 
 #include <ZLDialogManager.h>
-#include <ZLUnicodeUtil.h>
 #include <ZLibrary.h>
 
 #include "ZLApplication.h"
@@ -33,36 +32,8 @@ public:
 	}
 };
 
-const std::string ZLApplicationBase::HomeDirectory = std::string(HOMEDIR);
-
-std::string ZLApplicationBase::ourApplicationName;
-std::string ZLApplicationBase::ourImageDirectory;
-std::string ZLApplicationBase::ourApplicationImageDirectory;
-std::string ZLApplicationBase::ourApplicationDirectory;
-std::string ZLApplicationBase::ourDefaultFilesPathPrefix;
-
-std::string ZLApplicationBase::replaceRegExps(const std::string &pattern) {
-	static const std::string NAME_PATTERN = "%APPLICATION_NAME%";
-	static const std::string LOWERCASENAME_PATTERN = "%application_name%";
-	std::string str = pattern;
-	int index = -1;
-	while ((index = str.find(NAME_PATTERN)) != -1) {
-	  str.erase(index, NAME_PATTERN.length());
-		str.insert(index, ourApplicationName);
-	}
-	while ((index = str.find(LOWERCASENAME_PATTERN)) != -1) {
-	  str.erase(index, LOWERCASENAME_PATTERN.length());
-		str.insert(index, ZLUnicodeUtil::toLower(ourApplicationName));
-	}
-	return str;
-}
-
 ZLApplicationBase::ZLApplicationBase(const std::string &name) {
-	ourApplicationName = name;
-	ourImageDirectory = replaceRegExps(IMAGEDIR);
-	ourApplicationImageDirectory = replaceRegExps(APPIMAGEDIR);
-	ourApplicationDirectory = ZLibrary::BaseDirectory + ZLibrary::FileNameDelimiter + ourApplicationName;
-	ourDefaultFilesPathPrefix = ourApplicationDirectory + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter;
+	ZLibrary::initApplication(name);
 	ZLOptions::createInstance();
 }
 

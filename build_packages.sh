@@ -40,6 +40,9 @@ create_tmpdir() {
 		echo -en "Removing Finnish localization... ";
 		rm -rf fbreader/data/resources/fi.xml zlibrary/core/data/resources/fi.xml fbreader/data/help/MiniHelp.*.fi.fb2;
 		echo OK;
+		echo -en "Removing Swedish localization... ";
+		rm -rf fbreader/data/resources/sv.xml zlibrary/core/data/resources/sv.xml fbreader/data/help/MiniHelp.*.sv.fb2;
+		echo OK;
 		echo -en "Removing Czech hyphenation patterns... ";
 		zip -dq zlibrary/text/data/hyphenationPatterns.zip cs.pattern;
 		echo OK;

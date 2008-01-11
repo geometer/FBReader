@@ -87,10 +87,16 @@ ScrollingTypeEntry::ScrollingTypeEntry(const ZLResource &resource, FBReader &fbr
 
 	myValues.push_back(myLargeScrollingString);
 	myValues.push_back(mySmallScrollingString);
-	if (myFBReader.isMousePresented()) {
+
+	const bool isMousePresented = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::MOUSE_PRESENTED, false).value();
+	const bool isFingerTapDetectionSupported = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+
+	if (isMousePresented) {
 		myValues.push_back(myMouseScrollingString);
 	}
-	if (myFBReader.isFingerTapEventSupported()) {
+	if (isFingerTapDetectionSupported) {
 		myValues.push_back(myFingerTapScrollingString);
 	}
 }
@@ -110,10 +116,16 @@ void ScrollingTypeEntry::onValueSelected(int index) {
 	const std::string &selectedValue = values()[index];
 	myPage.myLargeScrollingEntries.show(selectedValue == myLargeScrollingString);
 	myPage.mySmallScrollingEntries.show(selectedValue == mySmallScrollingString);
-	if (myFBReader.isMousePresented()) {
+
+	const bool isMousePresented = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::MOUSE_PRESENTED, false).value();
+	const bool isFingerTapDetectionSupported = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+
+	if (isMousePresented) {
 		myPage.myMouseScrollingEntries.show(selectedValue == myMouseScrollingString);
 	}
-	if (myFBReader.isFingerTapEventSupported()) {
+	if (isFingerTapDetectionSupported) {
 		myPage.myFingerTapScrollingEntries.show(selectedValue == myFingerTapScrollingString);
 	}
 }
@@ -244,10 +256,16 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 
 	myLargeScrollingEntries.init(fbreader, fbreader.LargeScrollingOptions);
 	mySmallScrollingEntries.init(fbreader, fbreader.SmallScrollingOptions);
-	if (fbreader.isMousePresented()) {
+
+	const bool isMousePresented = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::MOUSE_PRESENTED, false).value();
+	const bool isFingerTapDetectionSupported = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+
+	if (isMousePresented) {
 		myMouseScrollingEntries.init(fbreader, fbreader.MouseScrollingOptions);
 	}
-	if (fbreader.isFingerTapEventSupported()) {
+	if (isFingerTapDetectionSupported) {
 		myFingerTapScrollingEntries.init(fbreader, fbreader.FingerTapScrollingOptions);
 	}
 
@@ -255,10 +273,10 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 
 	myLargeScrollingEntries.connect(dialogTab);
 	mySmallScrollingEntries.connect(dialogTab);
-	if (fbreader.isMousePresented()) {
+	if (isMousePresented) {
 		myMouseScrollingEntries.connect(dialogTab);
 	}
-	if (fbreader.isFingerTapEventSupported()) {
+	if (isFingerTapDetectionSupported) {
 		myFingerTapScrollingEntries.connect(dialogTab);
 	}
 }

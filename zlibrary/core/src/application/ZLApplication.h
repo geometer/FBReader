@@ -39,25 +39,6 @@ class ZLKeyBindings;
 
 class ZLApplicationBase {
 
-public:
-	static const std::string HomeDirectory;
-
-	static const std::string &ImageDirectory();
-
-	static const std::string &ApplicationName();
-	static const std::string &ApplicationImageDirectory();
-
-	static const std::string &ApplicationDirectory();
-	static const std::string &DefaultFilesPathPrefix();
-
-private:
-	static std::string ourImageDirectory;
-
-	static std::string ourApplicationImageDirectory;
-	static std::string ourApplicationName;
-	static std::string ourApplicationDirectory;
-	static std::string ourDefaultFilesPathPrefix;
-
 protected:
 	ZLApplicationBase(const std::string &name);
 	~ZLApplicationBase();
@@ -143,8 +124,6 @@ public:
 			virtual ~Item();
 
 			virtual Type type() const = 0;
-			// TODO: remove
-			bool isButton() const { return type() == BUTTON; }
 
 		friend class Toolbar;
 		};
@@ -361,12 +340,7 @@ public:
 
 	shared_ptr<ZLPaintContext> context();
 
-	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
-
-	bool isFingerTapEventSupported() const;
-	bool isMousePresented() const;
-	bool isKeyboardPresented() const;
 	void trackStylus(bool track);
 
 	void setHyperlinkCursor(bool hyperlink);
@@ -414,12 +388,6 @@ private:
 friend class ZLApplicationWindow;
 friend class MenuVisitor;
 };
-
-inline const std::string &ZLApplicationBase::ApplicationName() { return ourApplicationName; }
-inline const std::string &ZLApplicationBase::ImageDirectory() { return ourImageDirectory; }
-inline const std::string &ZLApplicationBase::ApplicationImageDirectory() { return ourApplicationImageDirectory; }
-inline const std::string &ZLApplicationBase::ApplicationDirectory() { return ourApplicationDirectory; }
-inline const std::string &ZLApplicationBase::DefaultFilesPathPrefix() { return ourDefaultFilesPathPrefix; }
 
 inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }
 inline const ZLApplication::Menubar &ZLApplication::menubar() const { return myMenubar; }

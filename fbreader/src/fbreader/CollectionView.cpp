@@ -68,7 +68,7 @@ private:
 };
 
 CollectionModel::CollectionModel(BookCollection &collection) : ZLTextTreeModel(), myCollection(collection) {
-	const std::string prefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+	const std::string prefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	myImageMap[DELETE_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-remove.png", 0);
 	myImageMap[BOOK_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-bookinfo.png", 0);
 	myImageMap[AUTHOR_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-authorinfo.png", 0);

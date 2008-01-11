@@ -36,8 +36,8 @@ static const std::string OPTIONS = "Options";
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
-	myWidthOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Width", 10, 800, 350),
-	myHeightOption(ZLOption::LOOK_AND_FEEL_CATEGORY, OPTIONS, "Height", 10, 800, 350),
+	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Width", 10, 800, 350),
+	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Height", 10, 800, 350),
 	myFullScreen(false),
 	myWasMaximized(false) {
 
@@ -97,9 +97,9 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 }
 
 void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
-	if (item->isButton()) {
+	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
-		static const std::string imagePrefix = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+		static const std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 		menuBar()->insertItem(QPixmap((imagePrefix + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
 	}
 }
@@ -107,7 +107,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item)
 void ZLQtApplicationWindow::refresh() {
 	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->isButton()) {
+		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 			int id = button.actionId();
 			if (menuBar()->findItem(id) != 0) {
@@ -128,10 +128,6 @@ void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 
 void ZLQtApplicationWindow::doActionSlot(int buttonNumber) {
 	application().doAction(buttonNumber);
-}
-
-bool ZLQtApplicationWindow::isFullKeyboardControlSupported() const {
-	return false;
 }
 
 void ZLQtApplicationWindow::grabAllKeys(bool) {
@@ -163,16 +159,4 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 	setCentralWidget(viewWidget->widget());
 	viewWidget->widget()->show();
 	return viewWidget;
-}
-
-bool ZLQtApplicationWindow::isFingerTapEventSupported() const {
-	return false;
-}
-
-bool ZLQtApplicationWindow::isMousePresented() const {
-	return false;
-}
-
-bool ZLQtApplicationWindow::isKeyboardPresented() const {
-	return true;
 }

@@ -20,8 +20,8 @@
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLInputStream.h>
-#include <ZLApplication.h>
 #include <ZLibrary.h>
+#include <ZLOptions.h>
 
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"
@@ -34,11 +34,17 @@ const std::string XMLConfig::UNKNOWN_CATEGORY = ".unknown.";
 static const std::string CHANGES_FILE = "config.changes";
 
 std::string XMLConfig::configDirName() const {
-	return ZLApplication::HomeDirectory + ZLibrary::FileNameDelimiter + "." + ZLApplication::ApplicationName();
+#ifdef XMLCONFIGHOMEDIR
+	const std::string home = XMLCONFIGHOMEDIR;
+#else
+	const std::string home = "~";
+#endif
+	return home + ZLibrary::FileNameDelimiter + "." + ZLibrary::ApplicationName();
 }
 
 void XMLConfig::load() {
-	XMLConfigReader(*this, "").readDocument(ZLApplication::DefaultFilesPathPrefix() + "config.xml");
+	XMLConfigReader(*this, "").readDocument(ZLibrary::DefaultFilesPathPrefix() + "config.xml");
+	XMLConfigReader(*this, "").readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter + "config.xml");
 	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(false);
 	if (configDir.isNull()) {
 		return;

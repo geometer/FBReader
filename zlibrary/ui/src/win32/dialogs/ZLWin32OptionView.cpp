@@ -282,7 +282,7 @@ void ColorOptionView::onEvent(const std::string &event, W32EventSender&) {
 			std::string optionName = OPTION_PREFIX;
 			ZLStringUtil::appendNumber(optionName, i);
 			ZLColor color = ZLColorOption(
-				ZLOption::LOOK_AND_FEEL_CATEGORY,
+				ZLCategoryKey::LOOK_AND_FEEL,
 				COLOR_GROUP_NAME,
 				optionName,
 				ZLColor(0, 0, 0)
@@ -307,7 +307,7 @@ void ColorOptionView::onEvent(const std::string &event, W32EventSender&) {
 			ZLStringUtil::appendNumber(optionName, i);
 			ZLColor color(GetRValue(refs[i]), GetGValue(refs[i]), GetBValue(refs[i]));
 			ZLColorOption(
-				ZLOption::LOOK_AND_FEEL_CATEGORY,
+				ZLCategoryKey::LOOK_AND_FEEL,
 				COLOR_GROUP_NAME,
 				optionName,
 				ZLColor(0, 0, 0)

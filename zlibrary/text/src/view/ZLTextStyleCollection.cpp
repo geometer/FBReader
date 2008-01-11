@@ -20,7 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <ZLApplication.h>
+#include <ZLibrary.h>
 #include <ZLXMLReader.h>
 
 #include "ZLTextStyle.h"
@@ -151,7 +151,7 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 
 ZLTextStyleCollection::ZLTextStyleCollection() :
 	myBaseStyle(0) {
-	ZLTextStyleReader(*this).readDocument(ZLApplication::DefaultFilesPathPrefix() + "styles.xml");
+	ZLTextStyleReader(*this).readDocument(ZLibrary::DefaultFilesPathPrefix() + "styles.xml");
 	if (myBaseStyle.isNull()) {
 		myBaseStyle = new ZLTextBaseStyle("", 20);
 	}

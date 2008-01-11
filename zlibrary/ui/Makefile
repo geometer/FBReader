@@ -92,7 +92,14 @@ endif
 
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
+	@install -d $(SHARE_ZLIBRARY)/default
 	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/$(KEYNAMES)
+	@if [ -e data/default/config.$(TARGET_ARCH).xml ]; then \
+		install -m 0644 data/default/config.$(TARGET_ARCH).xml $(SHARE_ZLIBRARY)/default/config.xml; \
+	fi
+	@if [ -e data/default/config.$(TARGET_ARCH)-$(UI_TYPE).xml ]; then \
+		install -m 0644 data/default/config.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/default/config.xml; \
+	fi
 ifeq "$(ZLSHARED)" "yes"
 	@install -d $(LIB_ZLIBRARY)/ui
 	@install $(TARGET) $(LIB_ZLIBRARY)/ui

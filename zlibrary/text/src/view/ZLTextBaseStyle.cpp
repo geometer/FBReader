@@ -25,20 +25,20 @@ static const std::string COLORS = "Colors";
 static const std::string GROUP = "Style";
 
 ZLTextBaseStyle::ZLTextBaseStyle(const std::string &fontFamily, int fontSize) :
-	BackgroundColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "Background", ZLColor(255, 255, 255)),
-	SelectionBackgroundColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "SelectionBackground", ZLColor(82, 131, 194)),
-	SelectedTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "SelectedText", ZLColor(60, 139, 255)),
-	RegularTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "Text", ZLColor(0, 0, 0)),
-	InternalHyperlinkTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "Hyperlink", ZLColor(33, 96, 180)),
-	ExternalHyperlinkTextColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "ExternalHyperlink", ZLColor(98, 174, 26)),
-	TreeLinesColorOption(ZLOption::LOOK_AND_FEEL_CATEGORY, COLORS, "TreeLines", ZLColor(127, 127, 127)),
-	AutoHyphenationOption(ZLOption::LOOK_AND_FEEL_CATEGORY, "Options", "AutoHyphenation", true),
-	FontFamilyOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:fontFamily", fontFamily),
-	FontSizeOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:fontSize", 0, 72, fontSize),
-	BoldOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:bold", false),
-	ItalicOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:italic", false),
-	AlignmentOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:alignment", ALIGN_JUSTIFY),
-	LineSpaceOption(ZLOption::LOOK_AND_FEEL_CATEGORY, GROUP, "Base:lineSpacing", 1.2) {
+	BackgroundColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Background", ZLColor(255, 255, 255)),
+	SelectionBackgroundColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "SelectionBackground", ZLColor(82, 131, 194)),
+	SelectedTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "SelectedText", ZLColor(60, 139, 255)),
+	RegularTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Text", ZLColor(0, 0, 0)),
+	InternalHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Hyperlink", ZLColor(33, 96, 180)),
+	ExternalHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "ExternalHyperlink", ZLColor(98, 174, 26)),
+	TreeLinesColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "TreeLines", ZLColor(127, 127, 127)),
+	AutoHyphenationOption(ZLCategoryKey::LOOK_AND_FEEL, "Options", "AutoHyphenation", true),
+	FontFamilyOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontFamily", fontFamily),
+	FontSizeOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontSize", 0, 72, fontSize),
+	BoldOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:bold", false),
+	ItalicOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:italic", false),
+	AlignmentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:alignment", ALIGN_JUSTIFY),
+	LineSpaceOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:lineSpacing", 1.2) {
 }
 
 ZLColor ZLTextBaseStyle::color() const {

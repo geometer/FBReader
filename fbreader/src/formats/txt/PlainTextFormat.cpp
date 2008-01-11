@@ -27,7 +27,7 @@
 
 #include "PlainTextFormat.h"
 
-#include "../../FBOptions.h"
+#include "../../options/FBOptions.h"
 
 const std::string OPTION_Initialized = "Initialized";
 const std::string OPTION_BreakType = "BreakType";
@@ -36,11 +36,11 @@ const std::string OPTION_EmptyLinesBeforeNewSection = "EmptyLinesBeforeNewSectio
 const std::string OPTION_CreateContentsTable = "CreateContentsTable";
 
 PlainTextFormat::PlainTextFormat(const std::string &fileName) :
-	InitializedOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_Initialized, false),
-	BreakTypeOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_BreakType, 1),
-	IgnoredIndentOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_IgnoredIndent, 1, 100, 1),
-	EmptyLinesBeforeNewSectionOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
-	CreateContentsTableOption(FBOptions::BOOKS_CATEGORY, fileName, OPTION_CreateContentsTable, false) {
+	InitializedOption(FBCategoryKey::BOOKS, fileName, OPTION_Initialized, false),
+	BreakTypeOption(FBCategoryKey::BOOKS, fileName, OPTION_BreakType, 1),
+	IgnoredIndentOption(FBCategoryKey::BOOKS, fileName, OPTION_IgnoredIndent, 1, 100, 1),
+	EmptyLinesBeforeNewSectionOption(FBCategoryKey::BOOKS, fileName, OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
+	CreateContentsTableOption(FBCategoryKey::BOOKS, fileName, OPTION_CreateContentsTable, false) {
 }
 
 PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const ZLResourceKey &key, bool showContentsEntry) : myFormat(fileName) {

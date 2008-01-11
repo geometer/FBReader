@@ -200,7 +200,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
-	wc.lpszClassName = ::wchar(::createNTWCHARString(myClassName, ZLApplication::ApplicationName()));
+	wc.lpszClassName = ::wchar(::createNTWCHARString(myClassName, ZLibrary::ApplicationName()));
 	wc.hIconSm = wc.hIcon;
 
 	RegisterClassEx(&wc);
@@ -280,11 +280,11 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 
 	TBBUTTON button;
 	button.fsState = TBSTATE_ENABLED;
-	if (item->isButton()) {
+	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
 		static int buttonCounter = 0;
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 
-		std::string imageFileName = ZLApplication::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + buttonItem.iconName() + ".ico";
+		std::string imageFileName = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + buttonItem.iconName() + ".ico";
 		ZLFile file(imageFileName);
 		HICON bitmap = (HICON)LoadImageA(0, file.path().c_str(), IMAGE_ICON, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
 		/*
@@ -315,7 +315,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 }
 
 void ZLWin32ApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
-	if (item->isButton()) {
+	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		LPARAM state = (visible ? 0 : TBSTATE_HIDDEN) | (enabled ? TBSTATE_ENABLED : 0);
 		PostMessage(myToolbar, TB_SETSTATE, (WPARAM)buttonItem.actionId(), state);
@@ -336,23 +336,7 @@ void ZLWin32ApplicationWindow::close() {
 	DestroyWindow(myMainWindow);
 }
 
-bool ZLWin32ApplicationWindow::isFullKeyboardControlSupported() const {
-	return false;
-}
-
 void ZLWin32ApplicationWindow::grabAllKeys(bool) {
-}
-
-bool ZLWin32ApplicationWindow::isFingerTapEventSupported() const {
-	return false;
-}
-
-bool ZLWin32ApplicationWindow::isMousePresented() const {
-	return true;
-}
-
-bool ZLWin32ApplicationWindow::isKeyboardPresented() const {
-	return true;
 }
 
 void ZLWin32ApplicationWindow::setCaption(const std::string &caption) {

@@ -21,6 +21,7 @@
 
 #include <ZLXMLReader.h>
 #include <ZLResource.h>
+#include <ZLibrary.h>
 
 #include "ZLApplication.h"
 
@@ -37,7 +38,7 @@ private:
 };
 
 void ZLApplication::createMenubar() {
-	ZLMenubarCreator(myMenubar).readDocument(ZLApplication::DefaultFilesPathPrefix() + "menubar.xml");
+	ZLMenubarCreator(myMenubar).readDocument(ZLibrary::DefaultFilesPathPrefix() + "menubar.xml");
 }
 
 ZLMenubarCreator::ZLMenubarCreator(ZLApplication::Menubar &menubar) : myMenubar(menubar) {

@@ -80,12 +80,7 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
-	bool isFullKeyboardControlSupported() const;
 	void grabAllKeys(bool grab);
-
-	bool isFingerTapEventSupported() const;
-	bool isMousePresented() const;
-	bool isKeyboardPresented() const;
 
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
 	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
