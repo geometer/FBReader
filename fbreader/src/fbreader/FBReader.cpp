@@ -40,6 +40,8 @@
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
 
+#include "migrate.h"
+
 #include "../options/FBOptions.h"
 #include "../bookmodel/BookModel.h"
 #include "../formats/FormatPlugin.h"
@@ -61,16 +63,17 @@ const std::string LINES_TO_SCROLL = "LinesToScroll";
 const std::string PERCENT_TO_SCROLL = "PercentToScroll";
 
 FBReader::ScrollingOptions::ScrollingOptions(
-	const std::string &delayGroup, const std::string &delayName, long delayValue,
-	const std::string &modeGroup, const std::string &modeName, long modeValue,
-	const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
-	const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
-	const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
-) : DelayOption(ZLCategoryKey::CONFIG, delayGroup, delayName, 0, 5000, delayValue),
-		ModeOption(ZLCategoryKey::CONFIG, modeGroup, modeName, modeValue),
-		LinesToKeepOption(ZLCategoryKey::CONFIG, linesToKeepGroup, linesToKeepName, 1, 100, linesToKeepValue),
-		LinesToScrollOption(ZLCategoryKey::CONFIG, linesToScrollGroup, linesToScrollName, 1, 100, linesToScrollValue),
-		PercentToScrollOption(ZLCategoryKey::CONFIG, percentToScrollGroup, percentToScrollName, 1, 100, percentToScrollValue) {}
+	const std::string &groupName,
+	long delayValue,
+	long modeValue,
+	long linesToKeepValue,
+	long linesToScrollValue,
+	long percentToScrollValue
+) : DelayOption(ZLCategoryKey::CONFIG, groupName, DELAY, 0, 5000, delayValue),
+		ModeOption(ZLCategoryKey::CONFIG, groupName, MODE, modeValue),
+		LinesToKeepOption(ZLCategoryKey::CONFIG, groupName, LINES_TO_KEEP, 1, 100, linesToKeepValue),
+		LinesToScrollOption(ZLCategoryKey::CONFIG, groupName, LINES_TO_SCROLL, 1, 100, linesToScrollValue),
+		PercentToScrollOption(ZLCategoryKey::CONFIG, groupName, PERCENT_TO_SCROLL, 1, 100, percentToScrollValue) {}
 
 class OpenFileHandler : public ZLMessageHandler {
 
@@ -91,34 +94,10 @@ private:
 FBReader::FBReader(const std::string &bookToOpen) :
 	ZLApplication("FBReader"),
 	QuitOnCancelOption(ZLCategoryKey::CONFIG, OPTIONS, "QuitOnCancel", false),
-	LargeScrollingOptions(
-		OPTIONS, DELAY, 250,
-		LARGE_SCROLLING, MODE, ZLTextView::NO_OVERLAPPING,
-		LARGE_SCROLLING, LINES_TO_KEEP, 1,
-		LARGE_SCROLLING, LINES_TO_SCROLL, 1,
-		LARGE_SCROLLING, PERCENT_TO_SCROLL, 50
-	),
-	SmallScrollingOptions(
-		SMALL_SCROLLING, DELAY, 50,
-		SMALL_SCROLLING, MODE, ZLTextView::SCROLL_LINES,
-		SMALL_SCROLLING, LINES_TO_KEEP, 1,
-		SMALL_SCROLLING, LINES_TO_SCROLL, 1,
-		SMALL_SCROLLING, PERCENT_TO_SCROLL, 50
-	),
-	MouseScrollingOptions(
-		MOUSE_SCROLLING, DELAY, 0,
-		MOUSE_SCROLLING, MODE, ZLTextView::SCROLL_LINES,
-		MOUSE_SCROLLING, LINES_TO_KEEP, 1,
-		MOUSE_SCROLLING, LINES_TO_SCROLL, 1,
-		MOUSE_SCROLLING, PERCENT_TO_SCROLL, 50
-	),
-	FingerTapScrollingOptions(
-		FINGER_TAP_SCROLLING, DELAY, 0,
-		FINGER_TAP_SCROLLING, MODE, ZLTextView::NO_OVERLAPPING,
-		FINGER_TAP_SCROLLING, LINES_TO_KEEP, 1,
-		FINGER_TAP_SCROLLING, LINES_TO_SCROLL, 1,
-		FINGER_TAP_SCROLLING, PERCENT_TO_SCROLL, 50
-	),
+	LargeScrollingOptions(LARGE_SCROLLING, 250, ZLTextView::NO_OVERLAPPING, 1, 1, 50),
+	SmallScrollingOptions(SMALL_SCROLLING, 50, ZLTextView::SCROLL_LINES, 1, 1, 50),
+	MouseScrollingOptions(MOUSE_SCROLLING, 0, ZLTextView::SCROLL_LINES, 1, 1, 50),
+	FingerTapScrollingOptions(FINGER_TAP_SCROLLING, 0, ZLTextView::NO_OVERLAPPING, 1, 1, 50),
 	EnableFingerScrollingOption(ZLCategoryKey::CONFIG, FINGER_TAP_SCROLLING, "Enabled", true),
 	SearchBackwardOption(FBCategoryKey::SEARCH, SEARCH, "Backward", false),
 	SearchIgnoreCaseOption(FBCategoryKey::SEARCH, SEARCH, "IgnoreCase", true),
@@ -133,6 +112,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBindings270("Keys270"),
 	myBookToOpen(bookToOpen),
 	myBookAlreadyOpen(false) {
+
+	migrateFromOldVersions();
 
 	myModel = 0;
 	myBookTextView = new BookTextView(*this, context());

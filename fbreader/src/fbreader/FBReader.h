@@ -57,11 +57,12 @@ public:
 
 	struct ScrollingOptions {
 		ScrollingOptions(
-			const std::string &delayGroup, const std::string &delayName, long delayValue,
-			const std::string &modeGroup, const std::string &modeName, long modeValue,
-			const std::string &linesToKeepGroup, const std::string &linesToKeepName, long linesToKeepValue,
-			const std::string &linesToScrollGroup, const std::string &linesToScrollName, long linesToScrollValue,
-			const std::string &percentToScrollGroup, const std::string &percentToScrollName, long percentToScrollValue
+			const std::string &groupName,
+			long delayValue,
+			long modeValue,
+			long linesToKeepValue,
+			long linesToScrollValue,
+			long percentToScrollValue
 		);
 		
 		ZLIntegerRangeOption DelayOption;
