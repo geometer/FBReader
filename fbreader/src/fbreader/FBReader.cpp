@@ -62,18 +62,13 @@ const std::string LINES_TO_KEEP = "LinesToKeep";
 const std::string LINES_TO_SCROLL = "LinesToScroll";
 const std::string PERCENT_TO_SCROLL = "PercentToScroll";
 
-FBReader::ScrollingOptions::ScrollingOptions(
-	const std::string &groupName,
-	long delayValue,
-	long modeValue,
-	long linesToKeepValue,
-	long linesToScrollValue,
-	long percentToScrollValue
-) : DelayOption(ZLCategoryKey::CONFIG, groupName, DELAY, 0, 5000, delayValue),
-		ModeOption(ZLCategoryKey::CONFIG, groupName, MODE, modeValue),
-		LinesToKeepOption(ZLCategoryKey::CONFIG, groupName, LINES_TO_KEEP, 1, 100, linesToKeepValue),
-		LinesToScrollOption(ZLCategoryKey::CONFIG, groupName, LINES_TO_SCROLL, 1, 100, linesToScrollValue),
-		PercentToScrollOption(ZLCategoryKey::CONFIG, groupName, PERCENT_TO_SCROLL, 1, 100, percentToScrollValue) {}
+FBReader::ScrollingOptions::ScrollingOptions(const std::string &groupName, long delayValue, long modeValue, long linesToKeepValue, long linesToScrollValue, long percentToScrollValue) :
+	DelayOption(ZLCategoryKey::CONFIG, groupName, DELAY, 0, 5000, delayValue),
+	ModeOption(ZLCategoryKey::CONFIG, groupName, MODE, modeValue),
+	LinesToKeepOption(ZLCategoryKey::CONFIG, groupName, LINES_TO_KEEP, 1, 100, linesToKeepValue),
+	LinesToScrollOption(ZLCategoryKey::CONFIG, groupName, LINES_TO_SCROLL, 1, 100, linesToScrollValue),
+	PercentToScrollOption(ZLCategoryKey::CONFIG, groupName, PERCENT_TO_SCROLL, 1, 100, percentToScrollValue) {
+}
 
 class OpenFileHandler : public ZLMessageHandler {
 

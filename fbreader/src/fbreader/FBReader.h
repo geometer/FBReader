@@ -56,14 +56,7 @@ public:
 	};
 
 	struct ScrollingOptions {
-		ScrollingOptions(
-			const std::string &groupName,
-			long delayValue,
-			long modeValue,
-			long linesToKeepValue,
-			long linesToScrollValue,
-			long percentToScrollValue
-		);
+		ScrollingOptions(const std::string &groupName, long delayValue, long modeValue, long linesToKeepValue, long linesToScrollValue, long percentToScrollValue);
 		
 		ZLIntegerRangeOption DelayOption;
 		ZLIntegerOption ModeOption;
