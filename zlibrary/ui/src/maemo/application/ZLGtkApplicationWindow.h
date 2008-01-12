@@ -124,7 +124,7 @@ private:
 	bool myFullScreen;
 
 	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myToolItems;
-	std::map<int,GtkMenuItem*> myMenuItems;
+	std::map<std::string,GtkMenuItem*> myMenuItems;
 	std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*> myToolbarButtons;
 	std::vector<shared_ptr<ZLOptionView> > myViews;
 

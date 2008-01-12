@@ -140,7 +140,7 @@ void ZLGtkApplicationWindow::refresh() {
 			GtkWidget *gtkButton = myButtons[*it];
 			if (gtkButton != 0) {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-				int actionId = button.actionId();
+				const std::string &actionId = button.actionId();
 				if (application().isActionVisible(actionId)) {
 					gtk_widget_show(gtkButton);
 				} else {

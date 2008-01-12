@@ -170,7 +170,7 @@ void ZLGtkApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLApplication
 
 void ZLGtkApplicationWindow::MenuBuilder::processItem(ZLApplication::Menubar::PlainItem &item) {
 	GtkMenuItem *gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(item.name().c_str()));
-	const int id = item.actionId();
+	const std::string &id = item.actionId();
 	shared_ptr<ZLApplication::Action> action = myWindow.application().action(id);
 	if (!action.isNull()) {
 		ZLGtkSignalUtil::connectSignal(GTK_OBJECT(gtkItem), "activate", GTK_SIGNAL_FUNC(menuActionSlot), &*action);
@@ -308,8 +308,8 @@ void ZLGtkApplicationWindow::present() {
 void ZLGtkApplicationWindow::refresh() {
 	ZLApplicationWindow::refresh();
 
-	for (std::map<int,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
-		int id = it->first;
+	for (std::map<std::string,GtkMenuItem*>::iterator it = myMenuItems.begin(); it != myMenuItems.end(); it++) {
+		const std::string &id = it->first;
 		GtkWidget *gtkItem = GTK_WIDGET(it->second);
 		if (application().isActionVisible(id)) {
 			gtk_widget_show(gtkItem);

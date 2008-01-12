@@ -100,7 +100,17 @@ void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item)
 	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		static const std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-		menuBar()->insertItem(QPixmap((imagePrefix + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, buttonItem.actionId());
+		const std::string &actionId = buttonItem.actionId();
+		std::map<std::string,int>::const_iterator iter = myActionIndices.find(actionId);
+		int actionIndex;
+		if (iter != myActionIndices.end()) {
+			actionIndex = iter->second;
+		} else {
+			actionIndex = myActionIndices.size() + 1;
+			myActionIndices[actionId] = actionIndex;
+			myActionIds[actionIndex] = actionId;
+		}
+		menuBar()->insertItem(QPixmap((imagePrefix + buttonItem.iconName() + ".png").c_str()), this, SLOT(emptySlot()), 0, actionIndex);
 	}
 }
 
@@ -109,10 +119,11 @@ void ZLQtApplicationWindow::refresh() {
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			int id = button.actionId();
+			const std::string &actionId = button.actionId();
+			const int id = myActionIndices[actionId];
 			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemVisible(id, application().isActionVisible(id));
-				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
+				menuBar()->setItemVisible(id, application().isActionVisible(actionId));
+				menuBar()->setItemEnabled(id, application().isActionEnabled(actionId));
 			}
 		}
 	}
@@ -127,7 +138,7 @@ void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 }
 
 void ZLQtApplicationWindow::doActionSlot(int buttonNumber) {
-	application().doAction(buttonNumber);
+	application().doAction(myActionIds[buttonNumber]);
 }
 
 void ZLQtApplicationWindow::grabAllKeys(bool) {

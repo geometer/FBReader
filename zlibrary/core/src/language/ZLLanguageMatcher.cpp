@@ -28,6 +28,9 @@ const std::string ZLLanguageMatcher::UTF8_ENCODING_NAME = "UTF-8";
 ZLLanguageMatcher::ZLLanguageMatcher(shared_ptr<ZLLanguageDetector::LanguageInfo> info) : myInfo(info) {
 }
 
+ZLLanguageMatcher::~ZLLanguageMatcher() {
+}
+
 shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageMatcher::info() const {
 	return myInfo;
 }

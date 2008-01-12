@@ -59,6 +59,9 @@ private:
 
 	bool myFullScreen;
 	bool myWasMaximized;
+
+	std::map<std::string,int> myActionIndices;
+	std::map<int,std::string> myActionIds;
 };
 
 #endif /* __ZLQTAPPLICATIONWINDOW_H__ */

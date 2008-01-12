@@ -123,7 +123,7 @@ private:
 private:
 	std::vector<bool> myToolbarMask;
 	std::vector<bool> myMenuMask;
-	std::map<int,ZLQtMenuAction*> myMenuMap;
+	std::map<std::string,ZLQtMenuAction*> myMenuMap;
 
 	bool myFullScreen;
 	int myTitleHeight;

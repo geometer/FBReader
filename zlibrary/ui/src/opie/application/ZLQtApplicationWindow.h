@@ -22,7 +22,6 @@
 
 #include <vector>
 #include <map>
-#include <set>
 
 #include <qmainwindow.h>
 
@@ -62,6 +61,8 @@ private:
 	bool myFullScreen;
 	bool myCloseFlag;
 	std::vector<bool> myToolbarMask;
+	std::map<std::string,int> myActionIndices;
+	std::map<int,std::string> myActionIds;
 };
 
 #endif /* __ZLQTAPPLICATIONWINDOW_H__ */

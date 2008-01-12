@@ -31,6 +31,7 @@ public:
 
 public:
 	ZLLanguageMatcher(shared_ptr<ZLLanguageDetector::LanguageInfo> info);
+	virtual ~ZLLanguageMatcher();
 
 	virtual void reset() = 0;
 

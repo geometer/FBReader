@@ -53,7 +53,8 @@ private:
 	}
 
 private:
-	std::map<int,ToolBarButton*> myButtons;
+	std::map<std::string,ToolBarButton*> myButtons;
+	std::map<std::string,int> myActionIndices;
 	ZLQtApplicationWindow &myWindow;
 
 public:
@@ -118,7 +119,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *a) : ZLApplicationWi
 }
 
 MyMenuBar::~MyMenuBar() {
-	for (std::map<int,ToolBarButton*>::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+	for (std::map<std::string,ToolBarButton*>::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		delete it->second;
 	}
 }
@@ -203,7 +204,7 @@ void ZLQtApplicationWindow::MenuUpdater::processSubmenuAfterItems(ZLApplication:
 
 void ZLQtApplicationWindow::MenuUpdater::processItem(ZLApplication::Menubar::PlainItem &item) {
 	if (myWindow.myMenuMask[myCounter++]) {
-		const int id = item.actionId();
+		const std::string &id = item.actionId();
 		ZLQtMenuAction *action = myWindow.myMenuMap[id];
 		if (action == 0) {
 			action = new ZLQtMenuAction(myWindow, item);
@@ -223,21 +224,25 @@ void MyMenuBar::setItemState(ZLApplication::Toolbar::ItemPtr item, bool visible,
 		case ZLApplication::Toolbar::Item::BUTTON:
 			{
 				ZLApplication::Toolbar::ButtonItem &button = (ZLApplication::Toolbar::ButtonItem&)*item;
-				int id = button.actionId();
+				const std::string &id = button.actionId();
+				std::map<std::string,int> ::const_iterator iter = myActionIndices.find(id);
+				int actionIndex = (iter != myActionIndices.end()) ? iter->second : 0;
 				if (visible) {
-					if (idAt(myIndex) != id) {
+					if ((actionIndex == 0) || (idAt(myIndex) != actionIndex)) {
 						ToolBarButton *tbButton = myButtons[id];
-						if (tbButton == 0) {
+						if (actionIndex == 0) {
 							tbButton = new ToolBarButton(myWindow, button);
 							myButtons[id] = tbButton;
+							actionIndex = myActionIndices.size() + 1;
+							myActionIndices[id] = actionIndex;
 						}
-						insertItem(tbButton->pixmap(), tbButton, SLOT(doActionSlot()), 0, id, myIndex);
+						insertItem(tbButton->pixmap(), tbButton, SLOT(doActionSlot()), 0, actionIndex, myIndex);
 					}
-					setItemEnabled(id, enabled);
+					setItemEnabled(actionIndex, enabled);
 					++myIndex;
 				} else {
-					if (idAt(myIndex) == id) {
-						removeItem(id);
+					if ((actionIndex != 0) && (idAt(myIndex) == actionIndex)) {
+						removeItem(actionIndex);
 					}
 				}
 			}
@@ -275,7 +280,7 @@ void ZLQtApplicationWindow::refresh() {
 		myMenu->clear();
 		MenuUpdater(*this).processMenu(application());
 	} else {
-		for (std::map<int,ZLQtMenuAction*>::iterator it = myMenuMap.begin(); it != myMenuMap.end(); ++it) {
+		for (std::map<std::string,ZLQtMenuAction*>::iterator it = myMenuMap.begin(); it != myMenuMap.end(); ++it) {
 			it->second->setEnabled(application().isActionEnabled(it->first));
 		}
 	}
@@ -399,10 +404,10 @@ void ZLQtMenuAction::doSlot() {
 }
 
 void MyMenuBar::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
-	const int actionId = button.actionId();
+	const std::string &actionId = button.actionId();
 	ToolBarButton *tbButton = myButtons[actionId];
 	if ((tbButton != 0) && (tbButton->toggle())) {
-		changeItem(actionId, tbButton->pixmap());
+		changeItem(myActionIndices[actionId], tbButton->pixmap());
 	}
 }
 

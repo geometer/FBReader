@@ -36,8 +36,8 @@ private slots:
 	void doSlot();
 
 private:
-	ZLQtApplicationWindow &myWindow;
-	int myActionId;
+	const ZLQtApplicationWindow &myWindow;
+	const std::string &myActionId;
 };
 
 #endif /* __ZLQTMENUACTION_H__ */

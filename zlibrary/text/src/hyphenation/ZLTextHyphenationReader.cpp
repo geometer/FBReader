@@ -28,7 +28,7 @@ void ZLTextHyphenationReader::characterDataHandler(const char *text, int len) {
 
 static const std::string PATTERN = "pattern";
 
-void ZLTextHyphenationReader::startElementHandler(const char *tag, const char **attributes) {
+void ZLTextHyphenationReader::startElementHandler(const char *tag, const char**) {
 	if (PATTERN == tag) {
 		myReadPattern = true;
 	}

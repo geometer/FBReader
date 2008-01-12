@@ -126,7 +126,17 @@ void ZLQtApplicationWindow::refresh() {
 				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
 				if (*bt) {
 					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLibrary::ApplicationName()) + ZLibrary::FileNameDelimiter + button.iconName()).c_str());
-					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, button.actionId());
+					const std::string &actionId = button.actionId();
+					std::map<std::string,int>::const_iterator iter = myActionIndices.find(actionId);
+					int actionIndex;
+					if (iter != myActionIndices.end()) {
+						actionIndex = iter->second;
+					} else {
+						actionIndex = myActionIndices.size() + 1;
+						myActionIndices[actionId] = actionIndex;
+						myActionIds[actionIndex] = actionId;
+					}
+					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, actionIndex);
 				}
 				++bt;
 			}
@@ -137,9 +147,10 @@ void ZLQtApplicationWindow::refresh() {
 	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
 			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			int id = button.actionId();
+			const std::string &actionId = button.actionId();
+			const int id = myActionIndices[actionId];
 			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemEnabled(id, application().isActionEnabled(id));
+				menuBar()->setItemEnabled(id, application().isActionEnabled(actionId));
 			}
 		}
 	}
@@ -154,7 +165,7 @@ void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 }
 
 void ZLQtApplicationWindow::doActionSlot(int buttonNumber) {
-	application().doAction(buttonNumber);
+	application().doAction(myActionIds[buttonNumber]);
 }
 
 void ZLQtApplicationWindow::grabAllKeys(bool grab) {
