@@ -4,54 +4,54 @@
 	  <node name="bookInfo" value="Kirjan tiedot..."/>
 	  <node name="toc" value="Sisällysluettolo"/>
 		<node name="library" value="Kirjasto">
-			<node name="open" value="Avaa"/>
-			<node name="previous" value="Edellinen kirja"/>
-			<node name="recent" value="Viimeisin"/>
+			<node name="showLibrary" value="Avaa"/>
+			<node name="previousBook" value="Edellinen kirja"/>
+			<node name="showRecent" value="Viimeisin"/>
 			<node name="addBook" value="Lisää kirja..."/>
-			<node name="about" value="Tietoja FBReaderista"/>
+			<node name="showHelp" value="Tietoja FBReaderista"/>
 		</node>
 		<node name="navigate" value="Navigoi">
-			<node name="gotoStartOfDocument" value="Siirry dokumentin alkuun"/>
-			<node name="gotoStartOfSection" value="Siirry tekstiosion alkuun"/>
-			<node name="gotoEndOfSection" value="Siirry tekstiosion loppuun"/>
-			<node name="gotoNextTOCItem" value="Sisällysluettelon seuraavaan kohtaan"/>
-			<node name="gotoPreviousTOCItem" value="Sisällysluettelon edelliseen kohtaan"/>
-			<node name="goBack" value="Siirry edelliseen kohtaan"/>
-			<node name="goForward" value="Siirry eteenpäin"/>
+			<node name="gotoHome" value="Siirry dokumentin alkuun"/>
+			<node name="gotoSectionStart" value="Siirry tekstiosion alkuun"/>
+			<node name="gotoSectionEnd" value="Siirry tekstiosion loppuun"/>
+			<node name="nextTOCSection" value="Sisällysluettelon seuraavaan kohtaan"/>
+			<node name="previousTOCSection" value="Sisällysluettelon edelliseen kohtaan"/>
+			<node name="undo" value="Siirry edelliseen kohtaan"/>
+			<node name="redo" value="Siirry eteenpäin"/>
 		</node>
 		<node name="selection" value="Valinta">
-			<node name="clipboard" value="Kopioi leikepöydälle"/>
-			<node name="dictionary" value="Avaa sanakirjassa"/>
-			<node name="clear" value="Tyhjennä"/>
+			<node name="copyToClipboard" value="Kopioi leikepöydälle"/>
+			<node name="openInDictionary" value="Avaa sanakirjassa"/>
+			<node name="clearSelection" value="Tyhjennä"/>
 		</node>
 		<node name="search" value="Etsi">
-			<node name="find" value="Etsi teksti..."/>
-			<node name="next" value="Etsi seuraava"/>
-			<node name="previous" value="Etsi edellinen"/>
+			<node name="search" value="Etsi teksti..."/>
+			<node name="findNext" value="Etsi seuraava"/>
+			<node name="findPrevious" value="Etsi edellinen"/>
 		</node>
 		<node name="view" value="Näytä">
 			<node name="rotate" value="Kierrä näyttö"/>
-			<node name="fullScreen" value="Koko näyttö"/>
+			<node name="toggleFullscreen" value="Koko näyttö"/>
 			<node name="toggleIndicator" value="Sijainninilmaisin päällä/pois"/>
 		</node>
-		<node name="settings" value="Asetukset..."/>
-		<node name="close" value="Sulje"/>
+		<node name="preferences" value="Asetukset..."/>
+		<node name="quit" value="Sulje"/>
 	</node>
 	<node name="toolbar">
-		<node name="books" value="Näytä kirjastopuu"/>
-		<node name="history" value="Näytä viimeisimmät kirjat"/>
-		<node name="addbook" value="Lisää tiedosto kirjastoon"/>
-		<node name="home" value="Siirry tekstin alkuun"/>
-		<node name="leftarrow" value="Siirry edelliseen kohtaan"/>
-		<node name="rightarrow" value="Siirry eteenpäin"/>
-		<node name="contents" value="Sisällysluettelo"/>
-		<node name="find" value="Etsi teksti"/>
-		<node name="findnext" value="Etsi seuraava"/>
-		<node name="findprev" value="Etsi edellinen"/>
-		<node name="bookinfo" value="Näytä kirjan tiedot valintaikkuna"/>
-		<node name="settings" value="Näytä asetukset valintaikkuna"/>
-		<node name="rotatescreen" value="Kierrä teksti"/>
-		<node name="help" value="Tietoja FBReaderista"/>
+		<node name="showLibrary" value="Näytä kirjastopuu"/>
+		<node name="showRecent" value="Näytä viimeisimmät kirjat"/>
+		<node name="addBook" value="Lisää tiedosto kirjastoon"/>
+		<node name="gotoHome" value="Siirry tekstin alkuun"/>
+		<node name="undo" value="Siirry edelliseen kohtaan"/>
+		<node name="redo" value="Siirry eteenpäin"/>
+		<node name="toc" value="Sisällysluettelo"/>
+		<node name="search" value="Etsi teksti"/>
+		<node name="findNext" value="Etsi seuraava"/>
+		<node name="findPrevious" value="Etsi edellinen"/>
+		<node name="bookInfo" value="Näytä kirjan tiedot valintaikkuna"/>
+		<node name="preferences" value="Näytä asetukset valintaikkuna"/>
+		<node name="rotate" value="Kierrä teksti"/>
+		<node name="showHelp" value="Tietoja FBReaderista"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

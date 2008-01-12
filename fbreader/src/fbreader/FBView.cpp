@@ -100,9 +100,9 @@ shared_ptr<ZLTextPositionIndicatorInfo> FBView::indicatorInfo() const {
 
 bool FBView::onFingerTap(int, int y) {
 	if (2 * y < context().height()) {
-		fbreader().doAction(ACTION_FINGER_TAP_SCROLL_BACKWARD);
+		fbreader().doAction(ActionCode::FINGER_TAP_SCROLL_BACKWARD);
 	} else {
-		fbreader().doAction(ACTION_FINGER_TAP_SCROLL_FORWARD);
+		fbreader().doAction(ActionCode::FINGER_TAP_SCROLL_FORWARD);
 	}
 	return true;
 }

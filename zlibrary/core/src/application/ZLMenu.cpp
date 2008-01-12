@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <stdlib.h>
-
 #include <ZLXMLReader.h>
 #include <ZLResource.h>
 #include <ZLibrary.h>
@@ -51,15 +49,15 @@ void ZLMenubarCreator::startElementHandler(const char *tag, const char **attribu
 	ZLApplication::Menu &menu =
 		mySubmenuStack.empty() ?  myMenubar : (ZLApplication::Menubar::Submenu&)*mySubmenuStack.back();
 	if (ITEM == tag) {
-		const char *action = attributeValue(attributes, "action");
-		const char *key = attributeValue(attributes, "key");
-		if ((action != 0) && (key != 0)) {
-			menu.addItem(atoi(action), ZLResourceKey(key));
+		const char *id = attributeValue(attributes, "id");
+		if (id != 0) {
+			const std::string sid = id;
+			menu.addItem(sid, ZLResourceKey(sid));
 		}
 	} else if (SUBMENU == tag) {
-		const char *key = attributeValue(attributes, "key");
-		if (key != 0) {
-			mySubmenuStack.push_back(menu.addSubmenu(ZLResourceKey(key)));
+		const char *id = attributeValue(attributes, "id");
+		if (id != 0) {
+			mySubmenuStack.push_back(menu.addSubmenu(ZLResourceKey(id)));
 		}
 	}
 }
@@ -92,7 +90,7 @@ ZLApplication::Menu::Item::ItemType ZLApplication::Menubar::Item::type() const {
 	return myType;
 }
 
-void ZLApplication::Menu::addItem(int actionId, const ZLResourceKey &key) {
+void ZLApplication::Menu::addItem(const std::string &actionId, const ZLResourceKey &key) {
 	myItems.push_back(new Menubar::PlainItem(myResource[key].value(), actionId));
 }
 
@@ -110,14 +108,14 @@ ZLApplication::Menu::ItemPtr ZLApplication::Menu::addSubmenu(const ZLResourceKey
 ZLApplication::Menubar::Menubar() : Menu(ZLResource::resource("menu")) {
 }
 
-ZLApplication::Menubar::PlainItem::PlainItem(const std::string& name, int actionId) : Item(ITEM), myName(name), myActionId(actionId) {
+ZLApplication::Menubar::PlainItem::PlainItem(const std::string& name, const std::string &actionId) : Item(ITEM), myName(name), myActionId(actionId) {
 }
 
 const std::string& ZLApplication::Menubar::PlainItem::name() const {
 	return myName;
 }
 
-int ZLApplication::Menubar::PlainItem::actionId() const {
+const std::string &ZLApplication::Menubar::PlainItem::actionId() const {
 	return myActionId;
 }
 
@@ -158,4 +156,8 @@ void ZLApplication::MenuVisitor::processMenu(ZLApplication::Menu &menu) {
 				break;
 		}							
 	}
+}
+
+const ZLApplication::Menubar &ZLApplication::menubar() const {
+	return myMenubar;
 }

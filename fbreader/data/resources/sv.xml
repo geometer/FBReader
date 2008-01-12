@@ -4,54 +4,54 @@
 	  <node name="bookInfo" value="Bokinformation..."/>
 	  <node name="toc" value="Innehållsförteckning"/>
 		<node name="library" value="Bibliotek">
-			<node name="open" value="Öppna"/>
-			<node name="previous" value="Föregående bok"/>
-			<node name="recent" value="Tidigare"/>
+			<node name="showLibrary" value="Öppna"/>
+			<node name="previousBook" value="Föregående bok"/>
+			<node name="showRecent" value="Tidigare"/>
 			<node name="addBook" value="Lägg till bok..."/>
-			<node name="about" value="Om FBReader"/>
+			<node name="showHelp" value="Om FBReader"/>
 		</node>
 		<node name="navigate" value="Navigation">
-			<node name="gotoStartOfDocument" value="Gå till början av dokumentet"/>
-			<node name="gotoStartOfSection" value="Gå till början av textavsnitt"/>
-			<node name="gotoEndOfSection" value="Gå till slutet av textavsnitt"/>
-			<node name="gotoNextTOCItem" value="Gå till nästa post i innehållsförteckning"/>
-			<node name="gotoPreviousTOCItem" value="Gå till föregående post i innehållsförteckning"/>
-			<node name="goBack" value="Gå bakåt"/>
-			<node name="goForward" value="Gå framåt"/>
+			<node name="gotoHome" value="Gå till början av dokumentet"/>
+			<node name="gotoSectionStart" value="Gå till början av textavsnitt"/>
+			<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt"/>
+			<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning"/>
+			<node name="previousTOCSection" value="Gå till föregående post i innehållsförteckning"/>
+			<node name="undo" value="Gå bakåt"/>
+			<node name="redo" value="Gå framåt"/>
 		</node>
 		<node name="selection" value="Markering">
-			<node name="clipboard" value="Kopiera till urklipp"/>
-			<node name="dictionary" value="Öppna i ordbok"/>
-			<node name="clear" value="Töm"/>
+			<node name="copyToClipboard" value="Kopiera till urklipp"/>
+			<node name="openInDictionary" value="Öppna i ordbok"/>
+			<node name="clearSelection" value="Töm"/>
 		</node>
 		<node name="search" value="Sök">
-			<node name="find" value="Sök text..."/>
-			<node name="next" value="Sök nästa"/>
-			<node name="previous" value="Sök föregående"/>
+			<node name="search" value="Sök text..."/>
+			<node name="findNext" value="Sök nästa"/>
+			<node name="findPrevious" value="Sök föregående"/>
 		</node>
 		<node name="view" value="Visa">
 			<node name="rotate" value="Rotera skärm"/>
-			<node name="fullScreen" value="Helskärm"/>
+			<node name="toggleFullscreen" value="Helskärm"/>
 			<node name="toggleIndicator" value="Växla indikator"/>
 		</node>
-		<node name="settings" value="Inställningar..."/>
-		<node name="close" value="Stäng"/>
+		<node name="preferences" value="Inställningar..."/>
+		<node name="quit" value="Stäng"/>
 	</node>
 	<node name="toolbar">
-		<node name="books" value="Visa biblioteksträd"/>
-		<node name="history" value="Visa tidigare bokhistorik"/>
-		<node name="addbook" value="Lägg till fil till bibliotek"/>
-		<node name="home" value="Gå till början av text"/>
-		<node name="leftarrow" value="Gå bakåt"/>
-		<node name="rightarrow" value="Gå framåt"/>
-		<node name="contents" value="Innehållsförteckning"/>
-		<node name="find" value="Textsökning"/>
-		<node name="findnext" value="Sök nästa"/>
-		<node name="findprev" value="Sök föregående"/>
-		<node name="bookinfo" value="Visa bokinformation"/>
-		<node name="settings" value="Visa inställningar"/>
-		<node name="rotatescreen" value="Rotera text"/>
-		<node name="help" value="Om FBReader"/>
+		<node name="showLibrary" value="Visa biblioteksträd"/>
+		<node name="showRecent" value="Visa tidigare bokhistorik"/>
+		<node name="addBook" value="Lägg till fil till bibliotek"/>
+		<node name="gotoHome" value="Gå till början av text"/>
+		<node name="undo" value="Gå bakåt"/>
+		<node name="redo" value="Gå framåt"/>
+		<node name="toc" value="Innehållsförteckning"/>
+		<node name="search" value="Textsökning"/>
+		<node name="findNext" value="Sök nästa"/>
+		<node name="findPrevious" value="Sök föregående"/>
+		<node name="bookInfo" value="Visa bokinformation"/>
+		<node name="preferences" value="Visa inställningar"/>
+		<node name="rotate" value="Rotera text"/>
+		<node name="showHelp" value="Om FBReader"/>
 	</node>
 	<node name="dialog">
 		<node name="button">

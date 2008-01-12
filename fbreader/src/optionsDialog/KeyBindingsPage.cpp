@@ -18,6 +18,7 @@
  */
 
 #include <ZLOptionsDialog.h>
+#include <ZLApplication.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLSimpleKeyOptionEntry.h>
@@ -75,7 +76,7 @@ public:
 	void setExitOnCancelEntry(ZLOptionEntry *exitOnCancelEntry);
 
 private:
-	void addAction(int code, const ZLResourceKey &key);
+	void addAction(const std::string &actionId);
 
 private:
 	const ZLResource &myResource;
@@ -89,9 +90,9 @@ private:
 	ZLOptionEntry *myExitOnCancelEntry;
 };
 
-void MultiKeyOptionEntry::addAction(int code, const ZLResourceKey &key) {
-	myBimap.insert(code);
-	addActionName(myResource[key].value());
+void MultiKeyOptionEntry::addAction(const std::string &actionId) {
+	myBimap.insert(actionId);
+	addActionName(myResource[ZLResourceKey(actionId)].value());
 }
 
 MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &fbreader) :
@@ -103,53 +104,53 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &f
 	myEntry270(myBimap, fbreader.keyBindings(ZLViewWidget::DEGREES270)),
 	myCurrentEntry(&myEntry0),
 	myExitOnCancelEntry(0) {
-	addAction(NO_ACTION, ZLResourceKey("none"));
+	addAction(ZLApplication::NoAction);
 
 	// switch view
-	addAction(ACTION_SHOW_COLLECTION, ZLResourceKey("showLibrary"));
-	addAction(ACTION_SHOW_LAST_BOOKS, ZLResourceKey("showRecent"));
-	addAction(ACTION_OPEN_PREVIOUS_BOOK, ZLResourceKey("previousBook"));
-	addAction(ACTION_SHOW_CONTENTS, ZLResourceKey("toc"));
+	addAction(ActionCode::SHOW_COLLECTION);
+	addAction(ActionCode::SHOW_LAST_BOOKS);
+	addAction(ActionCode::OPEN_PREVIOUS_BOOK);
+	addAction(ActionCode::SHOW_CONTENTS);
 
 	// navigation
-	addAction(ACTION_SCROLL_TO_HOME, ZLResourceKey("gotoHome"));
-	addAction(ACTION_SCROLL_TO_START_OF_TEXT, ZLResourceKey("gotoSectionStart"));
-	addAction(ACTION_SCROLL_TO_END_OF_TEXT, ZLResourceKey("gotoSectionEnd"));
-	addAction(ACTION_GOTO_NEXT_TOC_SECTION, ZLResourceKey("nextTOCSection"));
-	addAction(ACTION_GOTO_PREVIOUS_TOC_SECTION, ZLResourceKey("previousTOCSection"));
-	addAction(ACTION_LARGE_SCROLL_FORWARD, ZLResourceKey("largeScrollForward"));
-	addAction(ACTION_LARGE_SCROLL_BACKWARD, ZLResourceKey("largeScrollBackward"));
-	addAction(ACTION_SMALL_SCROLL_FORWARD, ZLResourceKey("smallScrollForward"));
-	addAction(ACTION_SMALL_SCROLL_BACKWARD, ZLResourceKey("smallScrollBackward"));
-	addAction(ACTION_UNDO, ZLResourceKey("undo"));
-	addAction(ACTION_REDO, ZLResourceKey("redo"));
+	addAction(ActionCode::SCROLL_TO_HOME);
+	addAction(ActionCode::SCROLL_TO_START_OF_TEXT);
+	addAction(ActionCode::SCROLL_TO_END_OF_TEXT);
+	addAction(ActionCode::GOTO_NEXT_TOC_SECTION);
+	addAction(ActionCode::GOTO_PREVIOUS_TOC_SECTION);
+	addAction(ActionCode::LARGE_SCROLL_FORWARD);
+	addAction(ActionCode::LARGE_SCROLL_BACKWARD);
+	addAction(ActionCode::SMALL_SCROLL_FORWARD);
+	addAction(ActionCode::SMALL_SCROLL_BACKWARD);
+	addAction(ActionCode::UNDO);
+	addAction(ActionCode::REDO);
 
 	// selection
-	addAction(ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD, ZLResourceKey("copyToClipboard"));
-	addAction(ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY, ZLResourceKey("openInDictionary"));
-	addAction(ACTION_CLEAR_SELECTION, ZLResourceKey("clearSelection"));
+	addAction(ActionCode::COPY_SELECTED_TEXT_TO_CLIPBOARD);
+	addAction(ActionCode::OPEN_SELECTED_TEXT_IN_DICTIONARY);
+	addAction(ActionCode::CLEAR_SELECTION);
 
 	// search
-	addAction(ACTION_SEARCH, ZLResourceKey("search"));
-	addAction(ACTION_FIND_PREVIOUS, ZLResourceKey("findPrevious"));
-	addAction(ACTION_FIND_NEXT, ZLResourceKey("findNext"));
+	addAction(ActionCode::SEARCH);
+	addAction(ActionCode::FIND_PREVIOUS);
+	addAction(ActionCode::FIND_NEXT);
 
 	// look
-	addAction(ACTION_INCREASE_FONT, ZLResourceKey("increaseFont"));
-	addAction(ACTION_DECREASE_FONT, ZLResourceKey("decreaseFont"));
-	addAction(ACTION_SHOW_HIDE_POSITION_INDICATOR, ZLResourceKey("toggleIndicator"));
-	addAction(ACTION_TOGGLE_FULLSCREEN, ZLResourceKey("toggleFullscreen"));
-	addAction(ACTION_FULLSCREEN_ON, ZLResourceKey("onFullscreen"));
-	addAction(ACTION_ROTATE_SCREEN, ZLResourceKey("rotate"));
+	addAction(ActionCode::INCREASE_FONT);
+	addAction(ActionCode::DECREASE_FONT);
+	addAction(ActionCode::SHOW_HIDE_POSITION_INDICATOR);
+	addAction(ActionCode::TOGGLE_FULLSCREEN);
+	addAction(ActionCode::FULLSCREEN_ON);
+	addAction(ActionCode::ROTATE_SCREEN);
 
 	// dialogs
-	addAction(ACTION_SHOW_OPTIONS, ZLResourceKey("preferences"));
-	addAction(ACTION_SHOW_BOOK_INFO, ZLResourceKey("bookInfo"));
-	addAction(ACTION_ADD_BOOK, ZLResourceKey("addBook"));
+	addAction(ActionCode::SHOW_OPTIONS);
+	addAction(ActionCode::SHOW_BOOK_INFO);
+	addAction(ActionCode::ADD_BOOK);
 
 	// quit
-	addAction(ACTION_CANCEL, ZLResourceKey("cancel"));
-	addAction(ACTION_QUIT, ZLResourceKey("quit"));
+	addAction(ActionCode::CANCEL);
+	addAction(ActionCode::QUIT);
 }
 
 void MultiKeyOptionEntry::setOrientation(ZLViewWidget::Angle angle) {
@@ -184,7 +185,7 @@ int MultiKeyOptionEntry::actionIndex(const std::string &key) {
 void MultiKeyOptionEntry::onValueChanged(const std::string &key, int index) {
 	myCurrentEntry->onValueChanged(key, index);
 	if (myExitOnCancelEntry != 0) {
-		myExitOnCancelEntry->setVisible(myBimap.codeByIndex(index) == ACTION_CANCEL);
+		myExitOnCancelEntry->setVisible(myBimap.codeByIndex(index) == ActionCode::CANCEL);
 	}
 }
 
@@ -194,7 +195,7 @@ void MultiKeyOptionEntry::setExitOnCancelEntry(ZLOptionEntry *exitOnCancelEntry)
 
 void MultiKeyOptionEntry::onKeySelected(const std::string &key) {
 	if (myExitOnCancelEntry != 0) {
-		myExitOnCancelEntry->setVisible(myBimap.codeByIndex(myCurrentEntry->actionIndex(key)) == ACTION_CANCEL);
+		myExitOnCancelEntry->setVisible(myBimap.codeByIndex(myCurrentEntry->actionIndex(key)) == ActionCode::CANCEL);
 	}
 }
 

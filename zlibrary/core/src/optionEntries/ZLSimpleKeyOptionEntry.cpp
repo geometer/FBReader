@@ -18,22 +18,23 @@
  */
 
 #include <ZLKeyBindings.h>
+#include <ZLApplication.h>
 
 #include "ZLSimpleKeyOptionEntry.h"
 
-void ZLSimpleKeyOptionEntry::CodeIndexBimap::insert(int code) {
+void ZLSimpleKeyOptionEntry::CodeIndexBimap::insert(const std::string &code) {
 	IndexByCode[code] = CodeByIndex.size();
 	CodeByIndex.push_back(code);
 }
 
-int ZLSimpleKeyOptionEntry::CodeIndexBimap::indexByCode(int code) const {
-	std::map<int,int>::const_iterator it = IndexByCode.find(code);
+int ZLSimpleKeyOptionEntry::CodeIndexBimap::indexByCode(const std::string &code) const {
+	std::map<std::string,int>::const_iterator it = IndexByCode.find(code);
 	return (it != IndexByCode.end()) ? it->second : 0;
 }
 
-int ZLSimpleKeyOptionEntry::CodeIndexBimap::codeByIndex(int index) const {
+const std::string &ZLSimpleKeyOptionEntry::CodeIndexBimap::codeByIndex(int index) const {
 	if ((index < 0) || (index >= (int)CodeByIndex.size())) {
-		return 0;
+		return ZLApplication::NoAction;
 	}
 	return CodeByIndex[index];
 }
@@ -42,15 +43,15 @@ ZLSimpleKeyOptionEntry::ZLSimpleKeyOptionEntry(ZLKeyBindings &bindings) : ZLKeyO
 }
 
 void ZLSimpleKeyOptionEntry::onAccept() {
-	for (std::map<std::string,int>::const_iterator it = myChangedCodes.begin(); it != myChangedCodes.end(); ++it) {
+	for (std::map<std::string,std::string>::const_iterator it = myChangedCodes.begin(); it != myChangedCodes.end(); ++it) {
 		myBindings.bindKey(it->first, it->second);
 	}
 	myBindings.saveCustomBindings();
 }
 
 int ZLSimpleKeyOptionEntry::actionIndex(const std::string &key) {
-	std::map<std::string,int>::const_iterator it = myChangedCodes.find(key);
-	return codeIndexBimap().indexByCode((it != myChangedCodes.end()) ? it->second : (int)myBindings.getBinding(key));
+	std::map<std::string,std::string>::const_iterator it = myChangedCodes.find(key);
+	return codeIndexBimap().indexByCode((it != myChangedCodes.end()) ? it->second : myBindings.getBinding(key));
 }
 
 void ZLSimpleKeyOptionEntry::onValueChanged(const std::string &key, int index) {

@@ -29,8 +29,8 @@ public:
 	ZLKeyBindings(const std::string &name);
 	~ZLKeyBindings();
 
-	void bindKey(const std::string &key, int code);
-	int getBinding(const std::string &key);
+	void bindKey(const std::string &key, const std::string &code);
+	const std::string &getBinding(const std::string &key);
 
 private:
 	void loadDefaultBindings();
@@ -41,7 +41,7 @@ public:
 
 private:
 	const std::string myName;
-	std::map<std::string,int> myBindingsMap;
+	std::map<std::string,std::string> myBindingsMap;
 	bool myIsChanged;
 };
 

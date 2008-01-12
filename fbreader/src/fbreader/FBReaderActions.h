@@ -26,48 +26,50 @@
 
 class ZLTextView;
 
-enum ActionCode {
-	// please, don't change these numbers
-	// add new action id's at end of this enumeration
-	NO_ACTION = 0,
-	ACTION_SHOW_COLLECTION = 1,
-	ACTION_SHOW_OPTIONS = 2,
-	ACTION_UNDO = 3,
-	ACTION_REDO = 4,
-	ACTION_SHOW_CONTENTS = 5,
-	ACTION_SEARCH = 6,
-	ACTION_FIND_PREVIOUS = 7,
-	ACTION_FIND_NEXT = 8,
-	ACTION_LARGE_SCROLL_FORWARD = 9,
-	ACTION_LARGE_SCROLL_BACKWARD = 10,
-	ACTION_SMALL_SCROLL_FORWARD = 11,
-	ACTION_SMALL_SCROLL_BACKWARD = 12,
-	ACTION_MOUSE_SCROLL_FORWARD = 13,
-	ACTION_MOUSE_SCROLL_BACKWARD = 14,
-	ACTION_SCROLL_TO_HOME = 15,
-	ACTION_SCROLL_TO_START_OF_TEXT = 16,
-	ACTION_SCROLL_TO_END_OF_TEXT = 17,
-	ACTION_CANCEL = 18,
-	ACTION_INCREASE_FONT = 19,
-	ACTION_DECREASE_FONT = 20,
-	ACTION_SHOW_HIDE_POSITION_INDICATOR = 21,
-	ACTION_TOGGLE_FULLSCREEN = 22,
-	ACTION_FULLSCREEN_ON = 23,
-	ACTION_ADD_BOOK = 24,
-	ACTION_SHOW_BOOK_INFO = 25,
-	ACTION_SHOW_HELP = 26,
-	ACTION_ROTATE_SCREEN = 27,
-	ACTION_SHOW_LAST_BOOKS = 28,
-	ACTION_QUIT = 29,
-	ACTION_OPEN_PREVIOUS_BOOK = 30,
-	ACTION_FINGER_TAP_SCROLL_FORWARD = 31,
-	ACTION_FINGER_TAP_SCROLL_BACKWARD = 32,
-	ACTION_GOTO_NEXT_TOC_SECTION = 33,
-	ACTION_GOTO_PREVIOUS_TOC_SECTION = 34,
-	ACTION_COPY_SELECTED_TEXT_TO_CLIPBOARD = 35,
-	ACTION_CLEAR_SELECTION = 36,
-	ACTION_OPEN_SELECTED_TEXT_IN_DICTIONARY = 37,
-	ACTION_GOTO_PAGE_NUMBER = 38,
+class ActionCode {
+
+public:
+	static const std::string SHOW_COLLECTION;
+	static const std::string SHOW_OPTIONS;
+	static const std::string UNDO;
+	static const std::string REDO;
+	static const std::string SHOW_CONTENTS;
+	static const std::string SEARCH;
+	static const std::string FIND_PREVIOUS;
+	static const std::string FIND_NEXT;
+	static const std::string LARGE_SCROLL_FORWARD;
+	static const std::string LARGE_SCROLL_BACKWARD;
+	static const std::string SMALL_SCROLL_FORWARD;
+	static const std::string SMALL_SCROLL_BACKWARD;
+	static const std::string MOUSE_SCROLL_FORWARD;
+	static const std::string MOUSE_SCROLL_BACKWARD;
+	static const std::string SCROLL_TO_HOME;
+	static const std::string SCROLL_TO_START_OF_TEXT;
+	static const std::string SCROLL_TO_END_OF_TEXT;
+	static const std::string CANCEL;
+	static const std::string INCREASE_FONT;
+	static const std::string DECREASE_FONT;
+	static const std::string SHOW_HIDE_POSITION_INDICATOR;
+	static const std::string TOGGLE_FULLSCREEN;
+	static const std::string FULLSCREEN_ON;
+	static const std::string ADD_BOOK;
+	static const std::string SHOW_BOOK_INFO;
+	static const std::string SHOW_HELP;
+	static const std::string ROTATE_SCREEN;
+	static const std::string SHOW_LAST_BOOKS;
+	static const std::string QUIT;
+	static const std::string OPEN_PREVIOUS_BOOK;
+	static const std::string FINGER_TAP_SCROLL_FORWARD;
+	static const std::string FINGER_TAP_SCROLL_BACKWARD;
+	static const std::string GOTO_NEXT_TOC_SECTION;
+	static const std::string GOTO_PREVIOUS_TOC_SECTION;
+	static const std::string COPY_SELECTED_TEXT_TO_CLIPBOARD;
+	static const std::string CLEAR_SELECTION;
+	static const std::string OPEN_SELECTED_TEXT_IN_DICTIONARY;
+	static const std::string GOTO_PAGE_NUMBER;
+
+private:
+	ActionCode();
 };
 
 class FBAction : public ZLApplication::Action {

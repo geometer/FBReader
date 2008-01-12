@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keymap>
-	<binding key="&lt;Left&gt;" action="3"/>
-	<binding key="&lt;Right&gt;" action="4"/>
-	<binding key="&lt;Down&gt;" action="9"/>
-	<binding key="&lt;Up&gt;" action="10"/>
-	<binding key="&lt;Esc&gt;" action="18"/>
-	<binding key="&lt;OK&gt;" action="22"/>
-	<binding key="&lt;OK&gt;+&lt;Left&gt;" action="20"/>
-	<binding key="&lt;OK&gt;+&lt;Right&gt;" action="19"/>
-	<binding key="&lt;OK&gt;+&lt;Down&gt;" action="5"/>
-	<binding key="&lt;OK&gt;+&lt;Up&gt;" action="1"/>
-	<binding key="&lt;Esc&gt;+&lt;Left&gt;" action="16"/>
-	<binding key="&lt;Esc&gt;+&lt;Right&gt;" action="17"/>
-	<binding key="&lt;Esc&gt;+&lt;Down&gt;" action="21"/>
-	<binding key="&lt;Esc&gt;+&lt;Up&gt;" action="15"/>
+	<binding key="&lt;Left&gt;" action="undo"/>
+	<binding key="&lt;Right&gt;" action="redo"/>
+	<binding key="&lt;Down&gt;" action="largeScrollForward"/>
+	<binding key="&lt;Up&gt;" action="largeScrollBackward"/>
+	<binding key="&lt;Esc&gt;" action="cancel"/>
+	<binding key="&lt;OK&gt;" action="toggleFullscreen"/>
+	<binding key="&lt;OK&gt;+&lt;Left&gt;" action="decreaseFont"/>
+	<binding key="&lt;OK&gt;+&lt;Right&gt;" action="increaseFont"/>
+	<binding key="&lt;OK&gt;+&lt;Down&gt;" action="toc"/>
+	<binding key="&lt;OK&gt;+&lt;Up&gt;" action="showLibrary"/>
+	<binding key="&lt;Esc&gt;+&lt;Left&gt;" action="gotoSectionStart"/>
+	<binding key="&lt;Esc&gt;+&lt;Right&gt;" action="gotoSectionEnd"/>
+	<binding key="&lt;Esc&gt;+&lt;Down&gt;" action="toggleIndicator"/>
+	<binding key="&lt;Esc&gt;+&lt;Up&gt;" action="gotoHome"/>
 </keymap>

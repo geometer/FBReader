@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keymap>
-	<binding key="&lt;ScrollKey Left&gt;" action="3"/>
-	<binding key="&lt;ScrollKey Right&gt;" action="4"/>
-	<binding key="&lt;ZoomKey +&gt;" action="9"/>
-	<binding key="&lt;ZoomKey -&gt;" action="10"/>
-	<binding key="&lt;ScrollKey Down&gt;" action="11"/>
-	<binding key="&lt;ScrollKey Up&gt;" action="12"/>
-	<binding key="&lt;Escape&gt;" action="18"/>
-	<binding key="&lt;FullScreen&gt;" action="22"/>
-  <binding key="&lt;ScrollKey Center&gt;" action="27"/>
+	<binding key="&lt;ScrollKey Left&gt;" action="undo"/>
+	<binding key="&lt;ScrollKey Right&gt;" action="redo"/>
+	<binding key="&lt;ZoomKey +&gt;" action="largeScrollForward"/>
+	<binding key="&lt;ZoomKey -&gt;" action="largeScrollBackward"/>
+	<binding key="&lt;ScrollKey Down&gt;" action="smallScrollForward"/>
+	<binding key="&lt;ScrollKey Up&gt;" action="smallScrollBackward"/>
+	<binding key="&lt;Escape&gt;" action="cancel"/>
+	<binding key="&lt;FullScreen&gt;" action="toggleFullscreen"/>
+  <binding key="&lt;ScrollKey Center&gt;" action="rotate"/>
 </keymap>

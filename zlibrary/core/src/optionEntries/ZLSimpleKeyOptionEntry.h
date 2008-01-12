@@ -33,13 +33,13 @@ public:
 	class CodeIndexBimap {
 
 	public:
-		void insert(int code);
-		int indexByCode(int code) const;
-		int codeByIndex(int index) const;
+		void insert(const std::string &code);
+		int indexByCode(const std::string &code) const;
+		const std::string &codeByIndex(int index) const;
 
 	private:
-		std::vector<int> CodeByIndex;
-		std::map<int,int> IndexByCode;
+		std::vector<std::string> CodeByIndex;
+		std::map<std::string,int> IndexByCode;
 	};
 
 public:
@@ -52,7 +52,7 @@ public:
 
 private:
 	ZLKeyBindings &myBindings;
-	std::map<std::string,int> myChangedCodes;
+	std::map<std::string,std::string> myChangedCodes;
 };
 
 #endif /* __ZLSIMPLEKEYOPTIONENTRY_H__ */

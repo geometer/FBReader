@@ -24,6 +24,7 @@
 #include <ZLibrary.h>
 #include <ZLOptions.h>
 #include <ZLKeyBindings.h>
+#include <ZLApplication.h>
 
 static const std::string BINDINGS_NUMBER = "Number";
 static const std::string BINDED_KEY = "Key";
@@ -32,14 +33,14 @@ static const std::string BINDED_ACTION = "Action";
 class ZLKeyBindingsReader : public ZLXMLReader {
 
 public:
-	ZLKeyBindingsReader(std::map<std::string,int> &keymap) : myKeymap(keymap) {}
+	ZLKeyBindingsReader(std::map<std::string,std::string> &keymap) : myKeymap(keymap) {}
 
 	void startElementHandler(const char *tag, const char **attributes);
 
 	void readBindings();
 
 private:
-	std::map<std::string,int> &myKeymap;
+	std::map<std::string,std::string> &myKeymap;
 };
 
 void ZLKeyBindingsReader::startElementHandler(const char *tag, const char **attributes) {
@@ -49,7 +50,7 @@ void ZLKeyBindingsReader::startElementHandler(const char *tag, const char **attr
 		const char *key = attributeValue(attributes, "key");
 		const char *action = attributeValue(attributes, "action");
 		if ((key != 0) && (action != 0)) {
-			myKeymap[key] = atoi(action);
+			myKeymap[key] = action;
 		}
 	}
 }
@@ -67,9 +68,9 @@ ZLKeyBindings::ZLKeyBindings(const std::string &name) : myName(name) {
 }
 
 void ZLKeyBindings::loadDefaultBindings() {
-	std::map<std::string,int> keymap;
+	std::map<std::string,std::string> keymap;
 	ZLKeyBindingsReader(keymap).readBindings();
-	for (std::map<std::string,int>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
+	for (std::map<std::string,std::string>::const_iterator it = keymap.begin(); it != keymap.end(); ++it) {
 		bindKey(it->first, it->second);
 	}
 }
@@ -83,8 +84,8 @@ void ZLKeyBindings::loadCustomBindings() {
 		if (!keyValue.empty()) {
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, i);
-			int actionValue = ZLIntegerOption(ZLCategoryKey::CONFIG, myName, action, -1).value();
-			if (actionValue != -1) {
+			std::string actionValue = ZLStringOption(ZLCategoryKey::CONFIG, myName, action, "").value();
+			if (!actionValue.empty()) {
 				bindKey(keyValue, actionValue);
 			}
 		}
@@ -95,21 +96,21 @@ void ZLKeyBindings::saveCustomBindings() {
 	if (!myIsChanged) {
 		return;
 	}
-	std::map<std::string,int> keymap;
+	std::map<std::string,std::string> keymap;
 	ZLKeyBindingsReader(keymap).readBindings();
 
 	ZLOption::clearGroup(myName);
 	int counter = 0;
-	for (std::map<std::string,int>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); ++it) {
-		std::map<std::string,int>::const_iterator original = keymap.find(it->first);
-		int defaultAction = (original == keymap.end()) ? 0 : original->second;
+	for (std::map<std::string,std::string>::const_iterator it = myBindingsMap.begin(); it != myBindingsMap.end(); ++it) {
+		std::map<std::string,std::string>::const_iterator original = keymap.find(it->first);
+		std::string defaultAction = (original == keymap.end()) ? ZLApplication::NoAction : original->second;
 		if (defaultAction != it->second) {
 			std::string key = BINDED_KEY;
 			ZLStringUtil::appendNumber(key, counter);
 			std::string action = BINDED_ACTION;
 			ZLStringUtil::appendNumber(action, counter);
 			ZLStringOption(ZLCategoryKey::CONFIG, myName, key, "").setValue(it->first);
-			ZLIntegerOption(ZLCategoryKey::CONFIG, myName, action, -1).setValue(it->second);
+			ZLStringOption(ZLCategoryKey::CONFIG, myName, action, "").setValue(it->second);
 			++counter;
 		}
 	}
@@ -120,12 +121,12 @@ ZLKeyBindings::~ZLKeyBindings() {
 	saveCustomBindings();
 }
 
-void ZLKeyBindings::bindKey(const std::string &key, int code) {
+void ZLKeyBindings::bindKey(const std::string &key, const std::string &code) {
 	myBindingsMap[key] = code;
 	myIsChanged = true;
 }
 
-int ZLKeyBindings::getBinding(const std::string &key) {
-	std::map<std::string,int>::const_iterator it = myBindingsMap.find(key);
-	return (it != myBindingsMap.end()) ? it->second : 0;
+const std::string &ZLKeyBindings::getBinding(const std::string &key) {
+	std::map<std::string,std::string>::const_iterator it = myBindingsMap.find(key);
+	return (it != myBindingsMap.end()) ? it->second : ZLApplication::NoAction;
 }

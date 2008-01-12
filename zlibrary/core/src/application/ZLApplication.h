@@ -52,6 +52,7 @@ class ZLApplication : public ZLApplicationBase {
 public:
 	static const std::string MouseScrollUpKey;
 	static const std::string MouseScrollDownKey;
+	static const std::string NoAction;
 
 public:
 	ZLIntegerOption RotationAngleOption;
@@ -133,11 +134,11 @@ public:
 		class ButtonItem : public Item {
 
 		public:
-			ButtonItem(int actionId, const std::string &iconName, const ZLResource &tooltip);
+			ButtonItem(const std::string &actionId, const ZLResource &tooltip);
 
 			Type type() const;
 
-			int actionId() const;
+			const std::string &actionId() const;
 			const std::string &iconName() const;
 			const std::string &tooltip() const;
 
@@ -150,8 +151,7 @@ public:
 			void setButtonGroup(shared_ptr<ButtonGroup>);
 
 		private:
-			const int myActionId;
-			const std::string myIconName;
+			const std::string myActionId;
 			const ZLResource &myTooltip;
 			shared_ptr<ButtonGroup> myButtonGroup;
 
@@ -161,11 +161,11 @@ public:
 		struct ButtonGroup {
 
 		private:
-			ButtonGroup(int unselectAllButtonsActionId);
+			ButtonGroup(const std::string &unselectAllButtonsActionId);
 			void press(const ButtonItem *item);
 
 		private:
-			const int UnselectAllButtonsActionId;
+			const std::string UnselectAllButtonsActionId;
 			std::set<const ButtonItem*> Items;
 			const ButtonItem *PressedItem;
 
@@ -196,8 +196,8 @@ public:
 		typedef std::vector<ItemPtr> ItemVector;
 
 		Toolbar();
-		void addButton(int actionId, const ZLResourceKey &key, shared_ptr<ButtonGroup> group = 0);
-		shared_ptr<ButtonGroup> createButtonGroup(int unselectAllButtonsActionId);
+		void addButton(const std::string &actionId, shared_ptr<ButtonGroup> group = 0);
+		shared_ptr<ButtonGroup> createButtonGroup(const std::string &unselectAllButtonsActionId);
 		void addOptionEntry(shared_ptr<ZLOptionEntry> entry);
 		void addSeparator();
 
@@ -236,7 +236,7 @@ public:
 		typedef shared_ptr<Item> ItemPtr;
 		typedef std::vector<ItemPtr> ItemVector;
 
-		void addItem(int actionId, const ZLResourceKey &key);
+		void addItem(const std::string &actionId, const ZLResourceKey &key);
 		void addSeparator();
 		ItemPtr addSubmenu(const ZLResourceKey &key);
 
@@ -262,14 +262,14 @@ public:
 		class PlainItem : public Menu::Item {
 
 		public:
-			PlainItem(const std::string &name, int actionId);
+			PlainItem(const std::string &name, const std::string &actionId);
 
 			const std::string &name() const;
-			int actionId() const;
+			const std::string &actionId() const;
 
 		private:
 			const std::string myName;
-			int myActionId;
+			const std::string myActionId;
 		};
 
 		class Submenu : public Menu::Item, public Menu {
@@ -324,7 +324,7 @@ public:
 protected:
 	ZLApplication(const std::string &name);
 
-	void addAction(int actionId, shared_ptr<Action> action);
+	void addAction(const std::string &actionId, shared_ptr<Action> action);
 
 	void setView(shared_ptr<ZLView> view);
 	shared_ptr<ZLView> currentView() const;
@@ -345,10 +345,10 @@ public:
 
 	void setHyperlinkCursor(bool hyperlink);
 
-	shared_ptr<Action> action(int actionId) const;
-	bool isActionVisible(int actionId) const;
-	bool isActionEnabled(int actionId) const;
-	void doAction(int actionId);
+	shared_ptr<Action> action(const std::string &actionId) const;
+	bool isActionVisible(const std::string &actionId) const;
+	bool isActionEnabled(const std::string &actionId) const;
+	void doAction(const std::string &actionId);
 
 	virtual ZLKeyBindings &keyBindings() = 0;	
 	void doActionByKey(const std::string &key);
@@ -377,7 +377,7 @@ protected:
 
 private:
 	shared_ptr<ZLView> myInitialView;
-	std::map<int,shared_ptr<Action> > myActionMap;
+	std::map<std::string,shared_ptr<Action> > myActionMap;
 	Toolbar myToolbar;
 	Menubar myMenubar;
 	shared_ptr<ZLPaintContext> myContext;
@@ -388,25 +388,5 @@ private:
 friend class ZLApplicationWindow;
 friend class MenuVisitor;
 };
-
-inline const ZLApplication::Toolbar &ZLApplication::toolbar() const { return myToolbar; }
-inline const ZLApplication::Menubar &ZLApplication::menubar() const { return myMenubar; }
-
-inline const ZLApplication::Toolbar::ItemVector &ZLApplication::Toolbar::items() const { return myItems; }
-
-inline ZLApplication::Toolbar::Item::Item() {}
-inline ZLApplication::Toolbar::Item::~Item() {}
-
-inline ZLApplication::Toolbar::ButtonItem::ButtonItem(int actionId, const std::string &iconName, const ZLResource &tooltip) : myActionId(actionId), myIconName(iconName), myTooltip(tooltip) {}
-inline int ZLApplication::Toolbar::ButtonItem::actionId() const { return myActionId; }
-inline const std::string &ZLApplication::Toolbar::ButtonItem::iconName() const { return myIconName; }
-inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::ButtonItem::buttonGroup() const { return myButtonGroup; }
-inline bool ZLApplication::Toolbar::ButtonItem::isToggleButton() const { return !myButtonGroup.isNull(); }
-inline void ZLApplication::Toolbar::ButtonItem::press() { if (isToggleButton()) { myButtonGroup->press(this); } }
-inline bool ZLApplication::Toolbar::ButtonItem::isPressed() const { return isToggleButton() && (this == myButtonGroup->PressedItem); }
-
-inline shared_ptr<ZLApplication::Toolbar::ButtonGroup> ZLApplication::Toolbar::createButtonGroup(int unselectAllButtonsActionId) {
-	return new ButtonGroup(unselectAllButtonsActionId);
-}
 
 #endif /* __ZLAPPLICATION_H__ */

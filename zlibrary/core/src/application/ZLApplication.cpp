@@ -27,6 +27,7 @@
 
 const std::string ZLApplication::MouseScrollDownKey = "<MouseScrollDown>";
 const std::string ZLApplication::MouseScrollUpKey = "<MouseScrollUp>";
+const std::string ZLApplication::NoAction = "none";
 
 static const std::string ROTATION = "Rotation";
 static const std::string ANGLE = "Angle";
@@ -101,30 +102,7 @@ void ZLApplicationWindow::init() {
 	initMenu();
 }
 
-void ZLApplicationWindow::onButtonPress(ZLApplication::Toolbar::ButtonItem &button) {
-	if (myToggleButtonLock) {
-		return;
-	}
-	if (button.isToggleButton()) {
-		myToggleButtonLock = true;
-		if (button.isPressed()) {
-			setToggleButtonState(button);
-			myToggleButtonLock = false;
-			return;
-		} else {
-			button.press();
-			shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
-			const std::set<const ZLApplication::Toolbar::ButtonItem*> &items = group->Items;
-			for (std::set<const ZLApplication::Toolbar::ButtonItem*>::const_iterator it = items.begin(); it != items.end(); ++it) {
-				setToggleButtonState(**it);
-			}
-		}
-		myToggleButtonLock = false;
-	}
-	application().doAction(button.actionId());
-}
-
-void ZLApplication::addAction(int actionId, shared_ptr<Action> action) {
+void ZLApplication::addAction(const std::string &actionId, shared_ptr<Action> action) {
 	myActionMap[actionId] = action;
 }
 
@@ -167,22 +145,22 @@ void ZLApplication::Action::checkAndRun() {
 	}
 }
 
-shared_ptr<ZLApplication::Action> ZLApplication::action(int actionId) const {
-	std::map<int,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
+shared_ptr<ZLApplication::Action> ZLApplication::action(const std::string &actionId) const {
+	std::map<std::string,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
 	return (it != myActionMap.end()) ? it->second : 0;
 }
 
-bool ZLApplication::isActionVisible(int actionId) const {
+bool ZLApplication::isActionVisible(const std::string &actionId) const {
 	shared_ptr<Action> a = action(actionId);
 	return !a.isNull() && a->isVisible();
 }
 
-bool ZLApplication::isActionEnabled(int actionId) const {
+bool ZLApplication::isActionEnabled(const std::string &actionId) const {
 	shared_ptr<Action> _action = action(actionId);
 	return !_action.isNull() && _action->isEnabled();
 }
 
-void ZLApplication::doAction(int actionId) {
+void ZLApplication::doAction(const std::string &actionId) {
 	shared_ptr<Action> _action = action(actionId);
 	if (!_action.isNull()) {
 		_action->checkAndRun();
@@ -197,25 +175,6 @@ void ZLApplication::resetWindowCaption() {
 			myWindow->setCaption(ZLibrary::ApplicationName() + " - " + currentView()->caption());
 		}
 	}
-}
-
-ZLApplication::Toolbar::Toolbar() : myResource(ZLResource::resource("toolbar")) {
-}
-
-void ZLApplication::Toolbar::addButton(int actionId, const ZLResourceKey &key, shared_ptr<ButtonGroup> group) {
-	ButtonItem *button = new ButtonItem(actionId, key.Name, myResource[key]);
-	myItems.push_back(button);
-	button->setButtonGroup(group);
-}
-
-void ZLApplication::Toolbar::addOptionEntry(shared_ptr<ZLOptionEntry> entry) {
-	if (!entry.isNull()) {
-		myItems.push_back(new OptionEntryItem(entry));
-	}
-}
-
-void ZLApplication::Toolbar::addSeparator() {
-	myItems.push_back(new SeparatorItem());
 }
 
 ZLApplication::Action::~Action() {
@@ -261,7 +220,7 @@ void ZLApplicationWindow::refresh() {
 			case ZLApplication::Toolbar::Item::BUTTON:
 				{
 					const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-					int id = button.actionId();
+					const std::string &id = button.actionId();
         
 					const bool visible = application().isActionVisible(id);
 					const bool enabled = application().isActionEnabled(id);
@@ -299,23 +258,6 @@ void ZLApplicationWindow::refresh() {
 	}
 }
 
-ZLApplication::Toolbar::ButtonGroup::ButtonGroup(int unselectAllButtonsActionId) : UnselectAllButtonsActionId(unselectAllButtonsActionId), PressedItem(0) {
-}
-
-void ZLApplication::Toolbar::ButtonGroup::press(const ButtonItem *item) {
-	PressedItem = item;
-}
-
-void ZLApplication::Toolbar::ButtonItem::setButtonGroup(shared_ptr<ButtonGroup> group) {
-	if (!myButtonGroup.isNull()) {
-		myButtonGroup->Items.erase(this);
-	}
-	myButtonGroup = group;
-	if (!myButtonGroup.isNull()) {
-		myButtonGroup->Items.insert(this);
-	}
-}
-
 void ZLApplication::doActionByKey(const std::string &key) {
 	shared_ptr<Action> a = action(keyBindings().getBinding(key));
 	if (!a.isNull() &&
@@ -324,14 +266,6 @@ void ZLApplication::doActionByKey(const std::string &key) {
 		a->checkAndRun();
 		myLastKeyActionTime = ZLTime();
 	}
-}
-
-const std::string &ZLApplication::Toolbar::ButtonItem::tooltip() const {
-	if (!myTooltip.hasValue()) {
-		static const std::string EMPTY;
-		return EMPTY;
-	}
-	return myTooltip.value();
 }
 
 void ZLApplication::grabAllKeys(bool grab) {
@@ -362,25 +296,6 @@ void ZLApplication::quit() {
 	}
 }
 
-ZLApplication::Toolbar::Item::Type ZLApplication::Toolbar::ButtonItem::type() const {
-	return BUTTON;
-}
-
-ZLApplication::Toolbar::Item::Type ZLApplication::Toolbar::SeparatorItem::type() const {
-	return SEPARATOR;
-}
-
-ZLApplication::Toolbar::OptionEntryItem::OptionEntryItem(shared_ptr<ZLOptionEntry> entry) : myOptionEntry(entry) {
-}
-
-shared_ptr<ZLOptionEntry> ZLApplication::Toolbar::OptionEntryItem::entry() const {
-	return myOptionEntry;
-}
-
-ZLApplication::Toolbar::Item::Type ZLApplication::Toolbar::OptionEntryItem::type() const {
-	return OPTION_ENTRY;
-}
-
 ZLApplication::PresentWindowHandler::PresentWindowHandler(ZLApplication &application) : myApplication(application) {
 }
 
@@ -409,4 +324,27 @@ void ZLApplication::resetLastCaller() {
 
 shared_ptr<ZLPaintContext> ZLApplication::context() {
 	return myContext;
+}
+
+void ZLApplicationWindow::onButtonPress(ZLApplication::Toolbar::ButtonItem &button) {
+	if (myToggleButtonLock) {
+		return;
+	}
+	if (button.isToggleButton()) {
+		myToggleButtonLock = true;
+		if (button.isPressed()) {
+			setToggleButtonState(button);
+			myToggleButtonLock = false;
+			return;
+		} else {
+			button.press();
+			shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
+			const std::set<const ZLApplication::Toolbar::ButtonItem*> &items = group->Items;
+			for (std::set<const ZLApplication::Toolbar::ButtonItem*>::const_iterator it = items.begin(); it != items.end(); ++it) {
+				setToggleButtonState(**it);
+			}
+		}
+		myToggleButtonLock = false;
+	}
+	application().doAction(button.actionId());
 }
