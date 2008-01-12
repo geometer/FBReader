@@ -1,9 +1,4 @@
-<html>
-<head>
-  <title>Electronic Book Formats (supported and unsupported)</title>
-</head>
-<body>
-<h2><center>Electronic Book Formats (supported and unsupported)</center></h2>
+<h3><center>Electronic Book Formats (supported and unsupported)</center></h3>
 <p>Firstly, FBReader is an open source application, and as result all formats FBReader
 currently supports are open formats.  Theoretically, FBReader's engine could be used as a part of a
 closed-source application that would be supporting books in some DRM-ed/non-open format.  However this
@@ -31,7 +26,7 @@ try to fix the situation.</p>
 <p>In the foreseen future we plan to make format support pluggable &mdash; this will help to separate the
 application from the actual format support.</p>
 
-<h3>Issues Common for All Formats</h3>
+<h4>Issues Common for All Formats</h4>
 <p>There are two non-implemented features that many formats required:<ul>
   <li>support of style sheets included in the book (e.g. for HTML that would be CSS declarations)</li>
   <li>table support</li>
@@ -41,122 +36,118 @@ important for small screens).</p>
 
 <p>These features are not metioned in the table below.</p>
 
-<h3>List of formats and information about their support in FBReader</h3>
-<table border="1">
-<tr>
-    <th>Format</th>
-    <th>Comments</th>
+<h4>Missing formats</h4>
+<p>If your favourite format is not listed here, please tell us about it.  If you are able to give us
+[a link to] the format description and can give a few books in this very format, we might be able to
+implement support for it.</p>
+
+<h4>List of formats and information about their support in FBReader</h4>
+<table class="formats" align="center" width="90%" border="0">
+  <tr style="line-height:150%;font-weight:bold;">
+    <td class="formats">Format</td>
+    <td class="formats">Comments</td>
 </tr>
 <tr>
-  <td>plucker</td>
-  <td>This format has commands for &ldquo;absolute positioning&rdquo;, which are targeted to the
-  devices with specific screen resolution (e.g. &lquo;put the item 2 pixels away from the left
+  <td class="formats"><a href="http://www.plkr.org/">plucker</a></td>
+  <td class="formats">This format has commands for &ldquo;absolute positioning&rdquo;, which are targeted to the
+  devices with specific screen resolution (e.g. &ldquo;put the item 2 pixels away from the left
   border&rdquo;.) Since FBReader aims to allow reading on devices with different screen sizes and
   resolutions, such commands may be interpreted depending on the context and, in some cases, be
   completely ignored.</td>
 </tr>
 <tr>
-  <td>Open E-Book (oeb)</td>
-  <td>The format specification is quite extensive, while there's no a great deal of available books
+  <td class="formats"><a href="http://en.wikipedia.org/wiki/Open_eBook">Open E-Book (oeb)</a></td>
+  <td class="formats">The format specification is quite extensive, while there's no a great deal of available books
   [yet?]. As far as we know, FBReader reasonably well renders books in this format.</td>
 </tr>
 <tr>
-  <td>OpenReader</td>
-  <td>The situation is the same as with the Open E-Book.</td>
+  <td class="formats"><a href="http://www.openreader.org/">OpenReader</a></td>
+  <td class="formats">The situation is the same as with the Open E-Book.</td>
 </tr>
 <tr>
-  <td>epub</td>
-  <td>Support for this format is far from being complete, however we plan to improve it.</td>
+  <td class="formats"><a href="http://www.idpf.org/">epub</a></td>
+  <td class="formats">Support for this format is far from being complete, however we plan to improve it.</td>
 </tr>
 <tr>
-  <td>html</td>
-  <td>Generally speaking, HTML is not a book format.  It has many elements that are related to the
+  <td class="formats">html</td>
+  <td class="formats">Generally speaking, HTML is not a book format.  It has many elements that are related to the
   visual rendering, while it lacks elements related to the book structure (as result, it's quite
   impossible to determine a table of contents for an arbitrary book in HTML format).  FBReader has
   limited support for HTML, however it proved to be sufficient for the majority of books available
   out there.</td>
 </tr>
 <tr>
-  <td>fb2</td>
-  <td>From practical point of view, version 2.0 of the format specification is fully supported. To
+  <td class="formats"><a href="http://www.fictionbook.org/index.php/English">fb2</a></td>
+  <td class="formats">From practical point of view, version 2.0 of the format specification is fully supported. To
   be compliant with version 2.1 of the standard, FBReader lacks support of tables.</td>
 </tr>
 <tr>
-  <td>plain text</td>
-  <td>This format is supported.  However FBReader might not always correctly split text into
+  <td class="formats">plain text</td>
+  <td class="formats">This format is supported.  However FBReader might not always correctly split text into
   paragraphs.</td>
 </tr>
 <tr>
-  <td>ztxt</td>
-  <td>This is just a compressed text.  Comments for the previous format are also applicable for this
+  <td class="formats">ztxt (<a href="http://gutenpalm.sourceforge.net/">Weasel Reader</a> format)</td>
+  <td class="formats">This is just a compressed text.  Comments for the previous format are also applicable for this
   one.</td>
 </tr>
 <tr>
-  <td>Palmdoc (Aportis Doc)</td>
-  <td>This format is fully supported.</td>
+  <td class="formats"><a href="http://en.wikipedia.org/wiki/PalmDoc">Palmdoc (Aportis Doc)</a></td>
+  <td class="formats">This format is fully supported.</td>
 </tr>
 <tr>
-  <td>tcr (Psion Text)</td>
-  <td>This format is fully supported.</td>
+  <td class="formats">tcr (Psion Text)</td>
+  <td class="formats">This format is fully supported.</td>
 </tr>
 <tr>
-  <td>Mobipocket</td>
-  <td>DRM-ed and/or files compressed with secret algorithm of Mobipocket are not supported.</td>
+  <td class="formats"><a href="http://www.mobipocket.com/">Mobipocket</a></td>
+  <td class="formats">DRM-ed and/or files compressed with secret algorithm of Mobipocket are not supported.</td>
 </tr>
 <tr>
-  <td>chm</td>
-  <td>There's no complete open description of this format, while there is an open source library
+  <td class="formats">chm</td>
+  <td class="formats">There's no complete open description of this format, while there is an open source library
   called chmlib that allows to work with the format as well as many open source applications that
   use this library to read and render files in this format.  FBReader's support is implemented
   independently from chmlib as result rendering might be different.</td>
 </tr>
 <tr>
-  <td>rtf</td>
-  <td>FBReader has minimal support for RTF.</td>
+  <td class="formats"><a href="http://en.wikipedia.org/wiki/Rich_Text_Format">rtf</a></td>
+  <td class="formats">FBReader has minimal support for RTF.</td>
 </tr>
 <tr>
-  <td>pdf</td>
-  <td>This format is not supported. Files in this format may contain just text as well as image
+  <td class="formats"><a href="http://en.wikipedia.org/wiki/Portable_Document_Format">pdf</a></td>
+  <td class="formats">This format is not supported. Files in this format may contain just text as well as image
   representation of pages.  We plan to include PDF support in FBReader: first support for files
   that are using text only.</td>
 </tr>
 <tr>
-  <td>djvu</td>
-  <td>This format is not supported.  Our current plans do not include this format either.</td>
+  <td class="formats"><a href="http://djvu.org/">djvu</a></td>
+  <td class="formats">This format is not supported.  Our current plans do not include this format either.</td>
 </tr>
 <tr>
-  <td>doc (Microsoft Word)</td>
-  <td>This format is not supported. Probably this format will be partially supported using catdoc.</td>
+  <td class="formats">doc (Microsoft Word)</td>
+  <td class="formats">This format is not supported. Probably this format will be partially supported using catdoc.</td>
 </tr>
 <tr>
-  <td>odt</td>
-  <td>This format is not supported. It might be supported in future, however the specification is
+  <td class="formats">odt</td>
+  <td class="formats">This format is not supported. It might be supported in future, however the specification is
   way too big, so most likely there will be some limitations.</td>
   </tr>
 <tr>
-  <td>lrf</td>
-  <td>This format is not supported.  Unfortunately our current plans do not include this format
+  <td class="formats"><a href="http://www.msh-tools.com/ebook/lrfformat.html">lrf</a></td>
+  <td class="formats">This format is not supported.  Our current plans do not include this format
   either.</td>
 <tr>
-  <td>iSilo</td>
-  <td>This format is not supported. Actually there are two kinds of iSilo format: old one and new
+  <td class="formats"><a href="http://www.isilo.com/">iSilo</a></td>
+  <td class="formats">This format is not supported. Actually there are two kinds of iSilo format: old one and new
   one (iSiloX).  Old format is open however, to the best of our knowledge, currently it is
   practically not used at all. On the other hand iSiloX is a proprietary format, so as result it cannot
   be supported in FBReader.</td>
 </tr>
 <tr>
-  <td>.lit</td>
-  <td>This format is not supported and is unlikely to be ever supported.  It is a closed format
+  <td class="formats">.lit</td>
+  <td class="formats">This format is not supported and is unlikely to be ever supported.  It is a closed format
   created and owned by Microsoft and any attempts to support it would be quite questionable from
   legal point of view.</td></tr>
 </table>
-
-<h3>Conclusion.</h3>
-<p>If your favourite format is not listed here, please tell us about it.  If you are able to give us
-[a link to] the format description and can give a few books in this very format, we might be able to
-implement support for it.</p>
 </body>
-
-<!--
-  vim:tw=100
-  -->
